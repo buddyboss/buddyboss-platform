@@ -1,0 +1,4504 @@
+/**
+ * BuddyBoss Admin Settings 2.0 - Main Styles
+ * Based on ReadyLaunch design system
+ *
+ * @package BuddyBoss\Core\Administration
+ * @since BuddyBoss 3.0.0
+ */
+
+ @import '_variables.scss';
+
+ // Reset for component
+.bb-rl-settings *,
+.bb-rl-settings *::before,
+.bb-rl-settings *::after {
+	box-sizing: border-box;
+}
+
+// Main App Container
+.bb-admin-app {
+	background: #fff;
+	min-height: calc(100vh - 32px);
+}
+
+// Loading States
+.bb-admin-loading {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-height: 400px;
+}
+
+// Error Boundary
+.bb-admin-error-boundary {
+	padding: $bb-spacing;
+	text-align: center;
+
+	&__content {
+		max-width: 600px;
+		margin: 0 auto;
+	}
+
+	&__details {
+		margin-top: $bb-spacing;
+		text-align: left;
+		background: $bb-background-color;
+		padding: $bb-spacing;
+		border-radius: $bb-border-radius-md;
+
+		pre {
+			overflow-x: auto;
+			font-size: 12px;
+		}
+	}
+}
+
+// Header (matching ReadyLaunch .bb-rl-tab-header)
+.bb-admin-header {
+	background-color: #fff;
+	margin: 0 -20px;
+	padding: 12px 24px;
+	border-bottom: 1px solid $bb-border-color;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	position: sticky;
+	top: 32px;
+	z-index: 100;
+
+	&__container {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+	}
+
+	&__left {
+		margin-right: auto;
+	}
+
+	&__logo {
+		display: flex;
+		align-items: center;
+
+		a {
+			display: flex;
+		}
+
+		&-img {
+			max-width: 130px;
+			height: auto;
+		}
+	}
+
+	&__center {
+		flex: 1 1 auto;
+		display: flex;
+		justify-content: center;
+		margin: 0 40px;
+		position: relative;
+	}
+
+	&__search {
+		position: relative;
+		width: 500px;
+		max-width: 100%;
+
+		&-wrapper {
+			position: relative;
+			width: 100%;
+		}
+
+		input.bb-admin-header__search-input {
+			width: 100%;
+			height: 32px;
+			background-color: $bb-background-color;
+			border: 1px solid #e5e5e5;
+			border-radius: $bb-border-radius-md;
+			padding: 0 36px 0 8px;
+			font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif;
+			font-size: 13px;
+			line-height: 32px;
+			font-weight: 400;
+			color: $bb-text-tertiary;
+			outline: none;
+
+			&::placeholder {
+				color: #999;
+				font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif;
+				font-size: 13px;
+			}
+
+			&:focus {
+				outline: none;
+				border-color: #d9d9d9;
+			}
+		}
+
+		&-icon {
+			position: absolute;
+			right: 8px;
+			top: 50%;
+			transform: translateY(-50%);
+			font-size: 20px;
+			color: #6a6a6a;
+			width: 20px;
+			height: 20px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			pointer-events: none;
+		}
+
+		&-spinner {
+			position: absolute;
+			right: 35px;
+			top: 50%;
+			transform: translateY(-50%);
+		}
+
+		&-results {
+			position: absolute;
+			top: 100%;
+			left: 0;
+			right: 0;
+			background: #fff;
+			border: 1px solid $bb-border-color;
+			border-radius: $bb-border-radius-lg;
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+			max-height: 400px;
+			overflow-y: auto;
+			z-index: 1000;
+			margin-top: 5px;
+		}
+
+		&-result {
+			display: flex;
+			align-items: center;
+			padding: 12px 15px;
+			border-bottom: 1px solid $bb-background-color;
+			cursor: pointer;
+			width: 100%;
+			text-align: left;
+			background: none;
+			border-left: none;
+			border-right: none;
+			border-top: none;
+
+			&:hover {
+				background: $bb-background-color;
+			}
+
+			&:last-child {
+				border-bottom: none;
+			}
+
+			&--no-results {
+				cursor: default;
+				color: #999;
+			}
+
+			&-icon {
+				margin-right: 12px;
+				font-size: 20px;
+			}
+
+			&-content {
+				flex: 1;
+			}
+
+			&-label {
+				font-weight: 600;
+				margin-bottom: 4px;
+			}
+
+			&-breadcrumb {
+				font-size: 12px;
+				color: $bb-text-tertiary;
+			}
+		}
+	}
+
+	&__right {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+	}
+
+	&__icon-button {
+		background-color: transparent;
+		border: none;
+		border-radius: $bb-border-radius-md;
+		color: #2f2f2f;
+		cursor: pointer;
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 4px;
+		text-decoration: none;
+
+		i[class*="bb-icons-"] {
+			color: $bb-icon-secondary-color;
+			font-size: 24px;
+
+			&:before {
+				margin: 0;
+			}
+		}
+
+		&:hover {
+			background-color: $bb-background-color;
+		}
+
+		&--notifications {
+			position: relative;
+		}
+	}
+
+	&__notification-badge {
+		position: absolute;
+		top: 2px;
+		right: 5px;
+		background-color: #ff0000;
+		color: white;
+		font-size: 9px;
+		line-height: 8px;
+		padding: 2px 0;
+		border-radius: 16px;
+		min-width: 12px;
+		text-align: center;
+		font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif;
+		font-weight: 400;
+		letter-spacing: -0.045px;
+	}
+}
+
+// Dashboard
+.bb-admin-dashboard {
+	padding: $bb-spacing;
+	max-width: 1600px;
+	margin: 0 auto;
+
+	&__container {
+		display: grid;
+		grid-template-columns: 2fr 1fr;
+		gap: $bb-spacing;
+	}
+
+	&__left,
+	&__right {
+		display: flex;
+		flex-direction: column;
+		gap: $bb-spacing;
+	}
+
+	&__welcome {
+		&-video {
+			margin-bottom: $bb-spacing;
+		}
+
+		&-quick-actions {
+			display: flex;
+			gap: 10px;
+		}
+	}
+
+	&__analytics {
+		&-grid {
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			gap: $bb-spacing;
+		}
+
+		&-item {
+			text-align: center;
+		}
+
+		&-label {
+			font-size: 14px;
+			color: $bb-text-tertiary;
+			margin-bottom: 8px;
+		}
+
+		&-value {
+			font-size: 32px;
+			font-weight: 600;
+			color: $bb-primary-color;
+		}
+	}
+}
+
+// Settings Grid (Features List)
+.bb-admin-settings {
+	padding: 0;
+	max-width: 1600px;
+	margin: 0 auto;
+
+	&__container {
+		padding: 0 24px 24px;
+	}
+
+	&__filters {
+		display: flex;
+		gap: 24px;
+		margin-bottom: 24px;
+		align-items: center;
+		justify-content: space-between;
+		padding: 0 0 24px 0;
+		border-bottom: 1px solid #e5e5e5;
+		min-height: 56px;
+	}
+
+	&__filter-tabs {
+		display: flex;
+		gap: 8px;
+		align-items: center;
+	}
+
+	&__filter-tab {
+		background: transparent;
+		border: 0.5px solid #ccc;
+		border-radius: 999px;
+		padding: 7px 16px;
+		font-size: 13px;
+		line-height: 18px;
+		font-weight: 500;
+		color: $bb-text-tertiary;
+		cursor: pointer;
+		transition: all 0.2s ease;
+		white-space: nowrap;
+
+		&:hover {
+			background: $bb-sidebar-bg;
+		}
+
+		&--active {
+			background: $bb-sidebar-bg;
+			border-color: #999;
+			border-width: 1px;
+			color: $bb-text-color;
+		}
+	}
+
+	&__filter-right {
+		display: flex;
+		align-items: center;
+		gap: 24px;
+	}
+
+	&__filter-select {
+		background: $bb-background-color;
+		border: 0.5px solid #ccc;
+		border-radius: $bb-border-radius-md;
+		padding: 7px 8px;
+		min-width: 120px;
+		font-size: 13px;
+		line-height: 18px;
+		color: $bb-text-color;
+		cursor: pointer;
+		appearance: none;
+		background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 6L8 10L12 6' stroke='%23666' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+		background-repeat: no-repeat;
+		background-position: right 8px center;
+		padding-right: 32px;
+
+		&:hover {
+			background-color: $bb-sidebar-bg;
+		}
+
+		&:focus {
+			outline: none;
+			border-color: #2271b1;
+			box-shadow: 0 0 0 1px #2271b1;
+		}
+	}
+
+	&__grid {
+		display: flex;
+		flex-direction: column;
+		gap: 40px;
+	}
+
+	&__category {
+		&-divider {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			margin-bottom: 16px;
+		}
+
+		&-title {
+			font-size: 13px;
+			font-weight: 500;
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+			color: $bb-text-color;
+			margin: 0;
+			white-space: nowrap;
+		}
+
+		&-line {
+			flex: 1;
+			height: 1px;
+			background: #ccc;
+			margin-left: 8px;
+		}
+	}
+
+	&__features-grid {
+		display: grid;
+		grid-template-columns: repeat(4, 328px);
+		gap: 16px;
+		justify-content: start;
+
+		@media (max-width: 1400px) {
+			grid-template-columns: repeat(3, 328px);
+		}
+
+		@media (max-width: 1100px) {
+			grid-template-columns: repeat(2, 328px);
+		}
+
+		@media (max-width: 700px) {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	&__feature-card {
+		background: #fff;
+		border: 0.5px solid #ccc;
+		border-radius: 12px;
+		padding: 16px;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		min-height: 208px;
+		transition: box-shadow 0.2s ease;
+
+		&:hover {
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+		}
+
+		&--active {
+			border-color: #00a32a;
+		}
+
+		&--inactive {
+			border-color: #ccc;
+			opacity: 0.8;
+		}
+	}
+
+	&__feature-body {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		flex: 1;
+	}
+
+	&__feature-top {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+
+	&__feature-name {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		flex: 1;
+	}
+
+	&__feature-icon-frame {
+		width: 28px;
+		height: 28px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+
+		.dashicons {
+			font-size: 28px;
+			width: 28px;
+			height: 28px;
+			line-height: 28px;
+			color: $bb-primary-color;
+		}
+
+		// BuddyBoss ReadyLaunch font icons
+		.bb-icons-rl {
+			font-size: 28px;
+			width: 28px;
+			height: 28px;
+			line-height: 28px;
+			color: $bb-primary-color;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+	}
+
+	&__feature-icon-img {
+		width: 28px;
+		height: 28px;
+		object-fit: contain;
+	}
+
+	&__feature-title {
+		margin: 0;
+		font-size: 16px;
+		font-weight: 500;
+		line-height: 22px;
+		color: $bb-text-color;
+	}
+
+	&__feature-description {
+		margin: 0;
+		color: $bb-text-tertiary;
+		font-size: 13px;
+		line-height: 18px;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	&__feature-bottom {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-top: auto;
+		padding-top: 8px;
+	}
+
+	&__feature-left {
+		flex: 1;
+		min-width: 0;
+	}
+
+	&__feature-settings-btn {
+		display: inline-flex !important;
+		align-items: center !important;
+		gap: 4px !important;
+		background: $bb-sidebar-bg !important;
+		border: 0.5px solid $bb-border-color !important;
+		border-radius: $bb-border-radius-lg !important;
+		padding: 6px 16px !important;
+		min-height: 32px !important;
+		font-size: 14px !important;
+		line-height: 20px !important;
+		color: $bb-text-color !important;
+		font-weight: 400 !important;
+		cursor: pointer;
+		transition: background 0.2s ease, opacity 0.2s ease;
+		text-decoration: none !important;
+		box-shadow: none !important;
+
+		i[class*="bb-icon-"] {
+			font-size: 16px;
+			width: 16px;
+			height: 16px;
+			line-height: 16px;
+			color: $bb-text-color;
+			margin: 0;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		&:hover {
+			background: #e0e0e0 !important;
+			border: 0.5px solid $bb-border-color !important;
+			box-shadow: none !important;
+		}
+
+		&:focus {
+			background: $bb-sidebar-bg !important;
+			border: 0.5px solid $bb-border-color !important;
+			box-shadow: 0 0 0 1px #2271b1 !important;
+		}
+
+		&--disabled,
+		&:disabled {
+			opacity: 0.5 !important;
+			cursor: not-allowed !important;
+			pointer-events: none;
+			background: $bb-sidebar-bg !important;
+
+			i[class*="bb-icon-"] {
+				color: $bb-text-muted;
+			}
+
+			&:hover {
+				background: $bb-sidebar-bg;
+			}
+		}
+	}
+
+	&__feature-right {
+		flex-shrink: 0;
+		margin-left: 16px;
+	}
+
+	&__empty {
+		text-align: center;
+		padding: $bb-spacing * 2;
+		color: $bb-text-tertiary;
+	}
+}
+
+// Override WordPress component button styles specifically for settings button
+.bb-admin-settings .components-button.bb-admin-settings__feature-settings-btn {
+	background: $bb-sidebar-bg !important;
+	border: 0.5px solid $bb-border-color !important;
+
+	&:hover {
+		background: #e0e0e0 !important;
+		border: 0.5px solid $bb-border-color !important;
+	}
+
+	&:focus {
+		background: $bb-sidebar-bg !important;
+		border: 0.5px solid $bb-border-color !important;
+	}
+}
+
+// Feature Settings Container (matching Figma exactly)
+.bb-admin-feature-settings {
+	// Main container with sidebar + content
+	&__container {
+		display: flex;
+		min-height: calc(100vh - 88px);
+		margin: 0 -20px;
+	}
+
+	// Left Sidebar (248px, #f0f0f0 background)
+	&__sidebar {
+		width: 248px;
+		min-width: 248px;
+		background-color: $bb-sidebar-bg;
+		border-right: 0.5px solid $bb-border-color;
+		padding: 16px;
+		flex-shrink: 0;
+		box-sizing: border-box;
+	}
+
+	// Right Main Content Area (#f6f6f6 background)
+	&__main {
+		flex: 1;
+		min-width: 0;
+		background-color: $bb-background-color;
+		padding: 24px 32px;
+	}
+
+	// Content wrapper (centered, max 984px)
+	&__content-wrap {
+		max-width: 984px;
+		margin: 0 auto;
+	}
+
+	// Content area for sections
+	&__content {
+		// Container for section cards
+	}
+
+	// Section Card (white background, rounded corners, shadow)
+	&__section {
+		background-color: #fff;
+		border-radius: $bb-border-radius;
+		box-shadow: 0 1.5px 1px 0 rgba(0, 0, 0, 0.16);
+		margin-bottom: 24px;
+		overflow: hidden;
+	}
+
+	// Section Header (64px min-height, bottom border)
+	&__section-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		min-height: 64px;
+		padding: 0 24px;
+		border-bottom: 1px solid $bb-border-color;
+		background-color: #fff;
+
+		// Help icon button on right
+		.help-icon {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 4px;
+			cursor: pointer;
+			background: transparent;
+			border: none;
+			
+			.dashicons {
+				font-size: 24px;
+				width: 24px;
+				height: 24px;
+				line-height: 24px;
+				color: $bb-text-tertiary;
+			}
+		}
+	}
+
+	// Section Title
+	&__section-title {
+		font-size: 18px;
+		font-weight: 500;
+		line-height: 26px;
+		margin: 0;
+		color: $bb-text-color;
+	}
+
+	// Section Body (contains form fields)
+	&__section-body {
+		padding: 32px 24px 0;
+	}
+
+	// Save Actions at bottom
+	&__actions {
+		display: flex;
+		gap: 10px;
+		padding: 24px;
+	}
+
+	// Empty state
+	&__no-section {
+		padding: 40px;
+		text-align: center;
+		color: $bb-text-tertiary;
+		background: #fff;
+		border-radius: $bb-border-radius;
+		box-shadow: 0 1.5px 1px 0 rgba(0, 0, 0, 0.16);
+	}
+}
+
+// Side Navigation (matching Figma navMenu exactly)
+.bb-admin-side-nav {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+
+	// Back button at top of sidebar
+	&__back-btn {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+		width: 100%;
+		padding: 6px 16px;
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 20px;
+		color: $bb-text-color;
+		background-color: transparent;
+		border: 1px solid $bb-border-tertiary-color;
+		border-radius: $bb-border-radius-lg;
+		cursor: pointer;
+		transition: background-color 0.2s ease;
+		text-decoration: none;
+
+		[class*="bb-icons-"] {
+			color: $bb-icon-primary-color;
+			font-size: 16px;
+		}
+
+		&:hover {
+			background-color: #fff;
+		}
+	}
+
+	// Navigation list
+	&__list {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		display: flex;
+		flex-direction: column;
+		gap: 0;
+	}
+
+	&__item {
+		margin: 0;
+	}
+
+	// Menu item link
+	&__link {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		width: 100%;
+		padding: 10px 16px;
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 18px;
+		color: $bb-text-tertiary;
+		background: transparent;
+		border: 0.5px solid transparent;
+		border-radius: $bb-border-radius-lg;
+		cursor: pointer;
+		transition: all 0.2s ease;
+		text-align: left;
+		text-decoration: none;
+
+		&:hover {
+			background-color: #fff;
+		}
+
+		// Active state - white background with border
+		&--active {
+			color: $bb-text-color;
+			background-color: #fff;
+			border-color: $bb-border-color;
+
+			.bb-admin-side-nav__icon .dashicons,
+			.bb-admin-side-nav__icon .bb-icons-rl {
+				color: $bb-text-color;
+			}
+		}
+	}
+
+	// Icon container
+	&__icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 20px;
+		height: 20px;
+		flex-shrink: 0;
+
+		.dashicons {
+			font-size: 20px;
+			width: 20px;
+			height: 20px;
+			line-height: 20px;
+			color: $bb-text-tertiary;
+		}
+
+		// BuddyBoss ReadyLaunch font icons
+		.bb-icons-rl {
+			font-size: 20px;
+			width: 20px;
+			height: 20px;
+			line-height: 20px;
+			color: $bb-text-tertiary;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+	}
+
+	&__icon-img {
+		width: 20px;
+		height: 20px;
+		object-fit: contain;
+	}
+
+	&__text {
+		flex: 1;
+	}
+
+	// Divider between side panels and nav items
+	&__divider {
+		height: 1px;
+		background-color: $bb-border-color;
+		margin: 8px 0;
+	}
+
+	// Nav items list (e.g., "All Activities")
+	&__list--nav-items {
+		.bb-admin-side-nav__link--nav-item {
+			color: $bb-text-muted;
+
+			.dashicons {
+				color: $bb-text-muted;
+			}
+
+			&:hover {
+				background-color: #e5e5e5;
+			}
+		}
+	}
+}
+
+// Settings Form Field (matching Figma settingsSection exactly)
+.bb-admin-settings-form {
+	// Each field row
+	&__field {
+		display: flex;
+		gap: 56px;
+		padding: 0 0 24px 0;
+		margin-bottom: 0;
+		border-bottom: 0.5px solid $bb-border-color;
+		align-items: flex-start;
+
+		&:last-child {
+			border-bottom: none;
+			padding-bottom: 24px;
+		}
+
+		// Add top padding for spacing between rows
+		& + & {
+			padding-top: 24px;
+		}
+
+		@media screen and (max-width: 992px) {
+			flex-direction: column;
+			gap: 16px;
+		}
+	}
+
+	// Left column - Label (248px fixed width)
+	&__field-label {
+		width: 248px;
+		flex-shrink: 0;
+		padding-top: 2px; // Align with toggle center
+
+		label {
+			font-size: 14px;
+			font-weight: 500;
+			line-height: 20px;
+			display: block;
+			margin: 0;
+			color: $bb-text-color;
+			max-width: 224px;
+		}
+
+		@media screen and (max-width: 992px) {
+			width: 100%;
+			padding-top: 0;
+		}
+	}
+
+	// Right column - Control and description
+	&__field-content {
+		flex: 1;
+		min-width: 0;
+	}
+
+	// Toggle wrapper for toggle + inline label (horizontal layout)
+	&__toggle-wrapper {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		min-width: 0;
+
+		// Toggle and its inline label should be horizontal
+		.components-toggle-control {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			gap: 8px;
+		}
+
+		@media screen and (max-width: 992px) {
+			width: 100%;
+		}
+
+		// Text inputs
+		input[type='email'],
+		input[type='number'],
+		input[type='text'],
+		input[type='url'] {
+			width: 100%;
+			max-width: 300px;
+		}
+
+		// Inline toggle label
+		label {
+			font-size: 14px;
+			font-weight: 400;
+			line-height: 20px;
+			color: $bb-text-color;
+		}
+	}
+
+	// Input wrapper for prefix/suffix text
+	&__field-input-wrapper {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+
+		// Number inputs with suffix should be smaller
+		input[type='number'] {
+			width: 80px;
+			max-width: 80px;
+		}
+	}
+
+	// Prefix text before input
+	&__field-prefix {
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 20px;
+		color: $bb-text-tertiary;
+		white-space: nowrap;
+	}
+
+	// Suffix text after input (e.g., "Minutes", "Levels")
+	&__field-suffix {
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 20px;
+		color: $bb-text-tertiary;
+		white-space: nowrap;
+	}
+
+	// Child fields container (nested under parent toggle)
+	&__child-fields {
+		margin-top: 16px;
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+	}
+
+	// Individual child field (inline layout - no full row)
+	&__child-field {
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+
+		&--disabled {
+			opacity: 0.5;
+			pointer-events: none;
+		}
+	}
+
+	&__child-field-label {
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 18px;
+		color: $bb-text-color;
+	}
+
+	&__child-field-control {
+		.components-select-control__input {
+			min-width: 200px;
+		}
+	}
+
+	&__child-field-description {
+		margin: 0;
+		font-size: 12px;
+		line-height: 16px;
+		color: $bb-text-tertiary;
+	}
+
+	// Field with children modifier (toggle + nested fields)
+	&__field--has-children {
+		.bb-admin-settings-form__field-content {
+			display: flex;
+			flex-direction: column;
+		}
+	}
+
+	// Nested field modifier
+	&__field--nested {
+		// Not used anymore - using child-field instead
+	}
+
+	// Child field modifier (legacy)
+	&__field--child {
+		// Not used anymore - using child-field instead
+	}
+
+	// Disabled field modifier (when parent toggle is OFF)
+	&__field--disabled {
+		opacity: 0.5;
+		pointer-events: none;
+		
+		.components-toggle-control,
+		.components-text-control__input,
+		.components-select-control__input,
+		input,
+		select {
+			cursor: not-allowed;
+		}
+	}
+
+	// Description text below control
+	&__field-description {
+		margin: 0;
+		padding: 3px 0;
+		color: $bb-text-tertiary;
+		font-size: 13px;
+		line-height: 18px;
+		max-width: 632px;
+
+		a {
+			color: $bb-primary-color;
+			text-decoration: none;
+
+			&:hover {
+				text-decoration: underline;
+			}
+		}
+	}
+}
+
+// Dimensions Field Type (Width x Height)
+.bb-admin-settings-field__dimensions {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	flex-wrap: wrap;
+}
+
+.bb-admin-settings-field__dimension-item {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.bb-admin-settings-field__dimension-label {
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 20px;
+	color: $bb-text-color;
+}
+
+.bb-admin-settings-field__dimension-input-wrap {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+}
+
+.bb-admin-settings-field__dimension-input {
+	width: 80px !important;
+	max-width: 80px !important;
+	padding: 7px 8px !important;
+	font-size: 13px !important;
+	border: 1px solid $bb-border-color !important;
+	border-radius: $bb-border-radius-md !important;
+	background-color: $bb-background-color !important;
+}
+
+.bb-admin-settings-field__dimension-suffix {
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 20px;
+	color: $bb-text-tertiary;
+}
+
+.bb-admin-settings-field__dimension-separator {
+	font-size: 16px;
+	font-weight: 400;
+	color: $bb-text-muted;
+	margin: 0 4px;
+}
+
+// Child Render Field Type (stacked child fields - Width/Height)
+.bb-admin-settings-field__child-render {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+}
+
+.bb-admin-settings-field__child-item {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	width: 272px;
+}
+
+.bb-admin-settings-field__child-label {
+	font-size: 13px;
+	font-weight: 500;
+	line-height: 18px;
+	color: #2f2f2f;
+	padding: 3px 0;
+}
+
+.bb-admin-settings-field__child-control {
+	.components-select-control__input {
+		width: 100%;
+		min-width: 120px;
+		padding: 7px 8px;
+		font-size: 13px;
+		line-height: 18px;
+		border: 0.5px solid #ccc;
+		border-radius: 6px;
+		background-color: #f6f6f6;
+		color: $bb-text-color;
+	}
+}
+
+.bb-admin-settings-field__child-number-wrap {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+}
+
+.bb-admin-settings-field__child-number-input {
+	width: 80px !important;
+	max-width: 80px !important;
+	padding: 7px 8px !important;
+	font-size: 13px !important;
+	border: 1px solid $bb-border-color !important;
+	border-radius: $bb-border-radius-md !important;
+	background-color: $bb-background-color !important;
+}
+
+.bb-admin-settings-field__child-suffix {
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 20px;
+	color: $bb-text-tertiary;
+}
+
+// Image Radio Field Type (visual preview cards like Default Cover Image)
+.bb-admin-settings-field__image-radio {
+	display: flex;
+	gap: 16px;
+	flex-wrap: wrap;
+}
+
+.bb-admin-settings-field__image-radio-option {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	align-items: flex-start;
+	padding: 0;
+	background: none;
+	border: none;
+	cursor: pointer;
+
+	&--selected {
+		.bb-admin-settings-field__image-radio-preview {
+			border-color: $bb-primary-color;
+			border-width: 1px;
+		}
+	}
+
+	&:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+}
+
+.bb-admin-settings-field__image-radio-preview {
+	width: 112px;
+	height: 112px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: #f6f6f6;
+	border: 0.5px solid #d9d9d9;
+	border-radius: 12px;
+	overflow: hidden;
+}
+
+.bb-admin-settings-field__image-radio-icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	.dashicons {
+		font-size: 48px;
+		width: 48px;
+		height: 48px;
+		color: #666;
+	}
+
+	&--buddyboss .dashicons {
+		color: #999;
+	}
+
+	&--none .dashicons {
+		color: #666;
+	}
+
+	&--custom .dashicons {
+		color: $bb-primary-color;
+	}
+
+	// Avatar-specific icons
+	&--avatar-group .dashicons {
+		color: #999;
+	}
+
+	&--avatar-name {
+		.bb-admin-settings-field__avatar-initials {
+			font-family: 'Inter', sans-serif;
+			font-size: 36px;
+			font-weight: 600;
+			letter-spacing: 1.44px;
+			color: #999;
+		}
+	}
+}
+
+.bb-admin-settings-field__avatar-initials {
+	font-family: 'Inter', sans-serif;
+	font-size: 36px;
+	font-weight: 600;
+	letter-spacing: 1.44px;
+	color: #999;
+}
+
+// Header Style Preview (Group Headers)
+.bb-admin-settings-field__header-preview {
+	width: 100%;
+	height: 100%;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+}
+
+.bb-admin-settings-field__header-preview-cover {
+	height: 28.57%;
+	background-color: #e5e5e5;
+}
+
+.bb-admin-settings-field__header-preview-content {
+	flex: 1;
+	background-color: #fff;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	padding: 8px;
+}
+
+.bb-admin-settings-field__header-preview-avatar {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	background-color: #f6f6f6;
+	border: 0.5px solid #d9d9d9;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: absolute;
+	top: -20px;
+
+	.dashicons {
+		font-size: 24px;
+		width: 24px;
+		height: 24px;
+		color: #999;
+	}
+}
+
+.bb-admin-settings-field__header-preview-lines {
+	margin-top: 24px;
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.bb-admin-settings-field__header-preview-line {
+	height: 4px;
+	background-color: #ccc;
+	border-radius: 999px;
+}
+
+.bb-admin-settings-field__header-preview-line--short {
+	width: 45px;
+}
+
+.bb-admin-settings-field__header-preview-line--long {
+	width: 72px;
+}
+
+// Left aligned header preview
+.bb-admin-settings-field__header-preview--left {
+	.bb-admin-settings-field__header-preview-avatar {
+		left: 8px;
+	}
+
+	.bb-admin-settings-field__header-preview-lines {
+		align-items: flex-start;
+	}
+}
+
+// Centered header preview
+.bb-admin-settings-field__header-preview--centered {
+	.bb-admin-settings-field__header-preview-avatar {
+		left: 50%;
+		transform: translateX(-50%);
+	}
+
+	.bb-admin-settings-field__header-preview-lines {
+		align-items: center;
+	}
+}
+
+// Toggle List Field Type (multiple stacked toggles)
+.bb-admin-settings-field__toggle-list {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.bb-admin-settings-field__toggle-list-item {
+	.components-toggle-control {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		gap: 8px;
+
+		.components-base-control__field {
+			margin-bottom: 0;
+		}
+
+		.components-toggle-control__label {
+			font-size: 14px;
+			font-weight: 400;
+			line-height: 20px;
+			color: $bb-text-color;
+		}
+	}
+}
+
+.bb-admin-settings-field__image-radio-label {
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 20px;
+	color: $bb-text-color;
+	padding-left: 4px;
+}
+
+// Checkbox List Field Type
+.bb-admin-settings-field__checkbox-list {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+
+	// WordPress checkbox control
+	.components-checkbox-control {
+		margin-bottom: 0;
+
+		.components-base-control__field {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			margin-bottom: 0;
+		}
+
+		// Checkbox input
+		.components-checkbox-control__input[type='checkbox'] {
+			width: 16px;
+			height: 16px;
+			border: 1px solid $bb-border-color;
+			border-radius: 4px;
+			margin: 0;
+
+			&:checked {
+				background-color: $bb-primary-color;
+				border-color: $bb-primary-color;
+			}
+
+			&:focus {
+				outline: 2px solid $bb-primary-color;
+				outline-offset: 2px;
+			}
+		}
+
+		// Checkbox label
+		.components-checkbox-control__label {
+			font-size: 14px;
+			font-weight: 400;
+			line-height: 20px;
+			color: $bb-text-color;
+		}
+	}
+}
+
+// Toggle Control Styling (matching Figma switch size=small: 30x18px)
+.bb-admin-feature-settings,
+.bb-admin-settings-form,
+.bb-admin-settings {
+	// WordPress toggle control wrapper
+	.components-toggle-control {
+		margin-bottom: 0;
+
+		.components-base-control__field {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			margin-bottom: 0;
+		}
+
+		// Inline label next to toggle
+		.components-toggle-control__label {
+			font-size: 14px;
+			font-weight: 400;
+			line-height: 20px;
+			color: $bb-text-color;
+			order: 1; // Put label after toggle
+		}
+	}
+
+	// Toggle switch itself (30x18px)
+	.components-form-toggle {
+		width: 30px;
+		height: 18px;
+		min-width: 30px;
+		flex-shrink: 0;
+
+		// Track (background)
+		.components-form-toggle__track {
+			width: 30px;
+			height: 18px;
+			border-radius: 99px;
+			background-color: #b2b2b2;
+			border: none;
+		}
+
+		// Thumb (circle)
+		.components-form-toggle__thumb {
+			width: 12px;
+			height: 12px;
+			background-color: #fff;
+			box-shadow: none;
+			top: 3px;
+			left: 3px;
+			transition: left 0.15s ease, right 0.15s ease;
+		}
+
+		// Checked/Active state
+		&.is-checked {
+			.components-form-toggle__track {
+				background-color: #fff;
+				border: 1px solid $bb-primary-color;
+			}
+
+			.components-form-toggle__thumb {
+				background-color: $bb-primary-color;
+				left: 0;
+				right: 0;
+			}
+		}
+	}
+}
+
+// Input Styling (matching ReadyLaunch)
+.bb-admin-feature-settings,
+.bb-admin-settings-form {
+	input[type='text'],
+	input[type='email'],
+	input[type='password'],
+	input[type='tel'],
+	input[type='url'],
+	input[type='search'],
+	input[type='number'],
+	input[type='date'],
+	input[type='datetime-local'],
+	input[type='month'],
+	input[type='week'],
+	input[type='time'],
+	textarea {
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 18px;
+		background-color: $bb-background-color;
+		border: 1px solid $bb-border-color;
+		display: inline-block;
+		font-family: inherit;
+		font-style: inherit;
+		outline: none;
+		vertical-align: middle;
+		border-radius: $bb-border-radius-md;
+		padding: 7px 8px;
+		color: $bb-text-tertiary;
+	}
+
+	select {
+		appearance: none;
+		background-image: url("data:image/svg+xml,%3Csvg width='12' height='7' viewBox='0 0 12 7' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11.3535 1.35378L6.35354 6.35378C6.3071 6.40027 6.25196 6.43715 6.19126 6.46231C6.13056 6.48748 6.0655 6.50043 5.99979 6.50043C5.93408 6.50043 5.86902 6.48748 5.80832 6.46231C5.74762 6.43715 5.69248 6.40027 5.64604 6.35378L0.64604 1.35378C0.552219 1.25996 0.499512 1.13272 0.499512 1.00003C0.499512 0.867352 0.552219 0.740104 0.64604 0.646284C0.73986 0.552463 0.867108 0.499756 0.99979 0.499756C1.13247 0.499756 1.25972 0.552463 1.35354 0.646284L5.99979 5.29316L10.646 0.646284C10.6925 0.599829 10.7476 0.562978 10.8083 0.537837C10.869 0.512696 10.9341 0.499756 10.9998 0.499756C11.0655 0.499756 11.1305 0.512696 11.1912 0.537837C11.2519 0.562978 11.3071 0.599829 11.3535 0.646284C11.4 0.692739 11.4368 0.747889 11.462 0.808586C11.4871 0.869282 11.5001 0.934336 11.5001 1.00003C11.5001 1.06573 11.4871 1.13079 11.462 1.19148C11.4368 1.25218 11.4 1.30733 11.3535 1.35378Z' fill='%236D6D6E'/%3E%3C/svg%3E");
+		background-size: 11px 6px;
+		background-repeat: no-repeat;
+		background-position: right 0.8rem center;
+		background-color: $bb-background-color;
+		padding: 7px 24px 7px 8px;
+		border: 1px solid $bb-border-color;
+		display: inline-block;
+		font-family: inherit;
+		font-style: inherit;
+		outline: none;
+		vertical-align: middle;
+		border-radius: $bb-border-radius-md;
+		color: $bb-text-tertiary;
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 18px;
+	}
+}
+
+// Button Styling (matching ReadyLaunch .bb-rl-button)
+.bb-rl-button,
+.bb-admin-feature-settings .components-button.is-primary {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 1rem;
+	text-align: center;
+	cursor: pointer;
+	border-radius: $bb-border-radius-md;
+	padding: 8px 16px;
+	transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+	text-decoration: none;
+	box-shadow: none;
+	outline: none;
+	background-color: $bb-primary-color;
+	color: #fff;
+	border: 1px solid $bb-primary-color;
+
+	&:hover {
+		background-color: #d7542e;
+		color: #fff;
+	}
+
+	&:focus {
+		background-color: $bb-primary-color;
+		outline: 2px solid $bb-text-muted;
+	}
+
+	&:disabled {
+		background-color: #fcdfd6;
+		cursor: not-allowed;
+	}
+}
+
+.bb-admin-feature-settings .components-button.is-secondary {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 1rem;
+	text-align: center;
+	cursor: pointer;
+	border-radius: $bb-border-radius-md;
+	padding: 8px 16px;
+	transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+	text-decoration: none;
+	box-shadow: none;
+	outline: none;
+	background-color: $bb-sidebar-bg;
+	color: $bb-text-color;
+	border: 1px solid transparent;
+
+	&:hover {
+		background-color: $bb-border-color;
+		color: $bb-text-color;
+	}
+
+	&:focus {
+		outline: 2px solid $bb-text-muted;
+		background-color: $bb-border-color;
+	}
+
+	&:disabled {
+		background-color: $bb-sidebar-bg;
+		color: #b2b2b2;
+		cursor: not-allowed;
+	}
+}
+
+// Notice Styling
+.bb-admin-feature-settings {
+	.components-notice {
+		margin: 16px 0;
+
+		&.is-success {
+			border-left-color: #009951;
+			background-color: #ebffee;
+		}
+	}
+}
+
+// Settings Field (legacy)
+.bb-admin-settings-field {
+	&__label {
+		display: block;
+		font-weight: 600;
+		margin-bottom: 8px;
+	}
+
+	&__description {
+		font-size: 13px;
+		color: $bb-text-tertiary;
+		margin: 8px 0;
+	}
+
+	&__unsupported {
+		color: #dba617;
+		font-style: italic;
+	}
+}
+
+// =============================================================================
+// ACTIVITY LIST SCREEN (Figma: allActivities)
+// =============================================================================
+// =============================================================================
+// ACTIVITY LIST SCREEN (Figma: allActivities)
+// Based on: https://www.figma.com/design/XS2Hf0smlEnhWfoKyks7ku/Backend-Settings-2.0?node-id=2580-61804
+// =============================================================================
+.bb-admin-activity-list {
+	max-width: 1112px;
+	margin: 0;
+	padding: 0;
+
+	// Feature Card (main white container)
+	&__card {
+		background-color: #fff;
+		border: 0.5px solid #e5e5e5;
+		border-radius: $bb-border-radius;
+		box-shadow: 0 1.5px 1px 0 rgba(0, 0, 0, 0.16);
+		overflow: hidden;
+	}
+
+	// Section Header (Activities title inside card)
+	&__section-header {
+		padding: 0 24px;
+		border-bottom: 1px solid $bb-border-color;
+	}
+
+	&__section-header-content {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		min-height: 64px;
+		padding: 16px 0;
+
+		h2 {
+			font-family: inherit;
+			font-size: 18px;
+			font-weight: 500;
+			line-height: 26px;
+			color: $bb-text-color;
+			margin: 0;
+		}
+	}
+
+	// Action Bar
+	&__action-bar {
+		padding: 0 24px;
+		border-bottom: 0.5px solid $bb-border-color;
+	}
+
+	&__action-bar-wrap {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 16px 0;
+	}
+
+	&__action-left {
+		display: flex;
+		align-items: center;
+		gap: 24px;
+	}
+
+	&__filter {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	// Select wrapper
+	&__select-wrap {
+		position: relative;
+		display: inline-flex;
+		align-items: center;
+		min-width: 160px;
+
+		&--count {
+			width: 136px;
+			min-width: 136px;
+		}
+
+		&--actions {
+			width: 224px;
+			min-width: 224px;
+		}
+	}
+
+	&__select {
+		appearance: none;
+		width: 100%;
+		background-color: $bb-background-color;
+		background-image: url("data:image/svg+xml,%3Csvg width='12' height='7' viewBox='0 0 12 7' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11.3535 1.35378L6.35354 6.35378C6.3071 6.40027 6.25196 6.43715 6.19126 6.46231C6.13056 6.48748 6.0655 6.50043 5.99979 6.50043C5.93408 6.50043 5.86902 6.48748 5.80832 6.46231C5.74762 6.43715 5.69248 6.40027 5.64604 6.35378L0.64604 1.35378C0.552219 1.25996 0.499512 1.13272 0.499512 1.00003C0.499512 0.867352 0.552219 0.740104 0.64604 0.646284C0.73986 0.552463 0.867108 0.499756 0.99979 0.499756C1.13247 0.499756 1.25972 0.552463 1.35354 0.646284L5.99979 5.29316L10.646 0.646284C10.6925 0.599829 10.7476 0.562978 10.8083 0.537837C10.869 0.512696 10.9341 0.499756 10.9998 0.499756C11.0655 0.499756 11.1305 0.512696 11.1912 0.537837C11.2519 0.562978 11.3071 0.599829 11.3535 0.646284C11.4 0.692739 11.4368 0.747889 11.462 0.808586C11.4871 0.869282 11.5001 0.934336 11.5001 1.00003C11.5001 1.06573 11.4871 1.13079 11.462 1.19148C11.4368 1.25218 11.4 1.30733 11.3535 1.35378Z' fill='%23666'/%3E%3C/svg%3E");
+		background-size: 11px 6px;
+		background-repeat: no-repeat;
+		background-position: right 8px center;
+		border: 0.5px solid $bb-border-color;
+		border-radius: 6px;
+		padding: 7px 28px 7px 8px;
+		font-size: 13px;
+		font-weight: 400;
+		line-height: 18px;
+		color: $bb-text-color;
+		cursor: pointer;
+
+		&:focus {
+			outline: none;
+			border-color: #2271b1;
+		}
+	}
+
+	// Apply Button (disabled by default - outline orange)
+	&__apply-btn {
+		background: transparent;
+		border: 1px solid $bb-primary-color;
+		border-radius: 8px;
+		padding: 6px 16px;
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 20px;
+		color: $bb-primary-color;
+		cursor: pointer;
+		transition: all 0.2s ease;
+
+		&:hover:not(.bb-admin-activity-list__apply-btn--disabled):not(:disabled) {
+			background: #fef2ef;
+		}
+
+		&--disabled,
+		&:disabled {
+			border-color: #f7ae99;
+			color: #f9bead;
+			cursor: not-allowed;
+		}
+	}
+
+	&__action-right {
+		display: flex;
+		align-items: center;
+		gap: 13px;
+	}
+
+	// Search Input
+	&__search-wrap {
+		position: relative;
+		width: 224px;
+	}
+
+	&__search-input {
+		width: 100%;
+		background-color: $bb-background-color;
+		border: 0.5px solid $bb-border-color;
+		border-radius: 6px;
+		padding: 7px 36px 7px 8px;
+		font-size: 13px;
+		font-weight: 400;
+		line-height: 18px;
+		color: $bb-text-color;
+		max-height: 32px;
+
+		&::placeholder {
+			color: $bb-text-muted;
+		}
+
+		&:focus {
+			outline: none;
+			border-color: #2271b1;
+		}
+	}
+
+	&__search-icon {
+		position: absolute;
+		right: 8px;
+		top: 50%;
+		transform: translateY(-50%);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 20px;
+		height: 20px;
+		pointer-events: none;
+
+		svg {
+			width: 20px;
+			height: 20px;
+		}
+	}
+
+	// Table Header
+	&__table-header {
+		padding: 0 24px;
+		border-bottom: 0.5px solid $bb-border-color;
+	}
+
+	&__table-header-wrap {
+		display: flex;
+		align-items: center;
+		gap: 32px;
+		padding: 8px 0;
+	}
+
+	&__header-label {
+		font-family: inherit;
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 20px;
+		color: $bb-text-color;
+
+		&--muted {
+			font-size: 13px;
+			line-height: 18px;
+			color: $bb-text-muted;
+		}
+	}
+
+	// Table List
+	&__list {
+		padding: 16px 24px;
+	}
+
+	&__loading,
+	&__empty {
+		padding: 48px;
+		text-align: center;
+		color: $bb-text-muted;
+	}
+
+	// Table Item/Row
+	&__item {
+		border-bottom: 0.5px solid #e5e5e5;
+		padding-bottom: 16px;
+		margin-bottom: 16px;
+
+		&:last-child {
+			border-bottom: none;
+			margin-bottom: 0;
+			padding-bottom: 0;
+		}
+	}
+
+	&__item-wrap {
+		display: flex;
+		align-items: flex-start;
+		gap: 32px;
+		position: relative;
+	}
+
+	// Checkbox
+	&__checkbox {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 3px;
+		background: transparent;
+		border: none;
+		cursor: pointer;
+		flex-shrink: 0;
+
+		svg {
+			width: 18px;
+			height: 18px;
+		}
+
+		&--checked svg rect {
+			fill: $bb-primary-color;
+		}
+	}
+
+	// Table Columns
+	&__col {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+
+		&--author {
+			width: 264px;
+			min-width: 264px;
+			align-items: center;
+		}
+
+		&--activity {
+			flex: 1;
+			min-width: 520px;
+			flex-direction: column;
+			align-items: flex-start;
+			justify-content: center;
+			gap: 0;
+		}
+
+		&--submitted {
+			width: 136px;
+			min-width: 136px;
+			gap: 8px;
+			color: $bb-text-muted;
+			font-size: 13px;
+			line-height: 18px;
+
+			svg {
+				flex-shrink: 0;
+			}
+		}
+	}
+
+	// User cell
+	&__user {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	&__avatar {
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		object-fit: cover;
+		flex-shrink: 0;
+
+		&--placeholder {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			width: 40px;
+			height: 40px;
+			flex-shrink: 0;
+
+			svg {
+				width: 40px;
+				height: 40px;
+			}
+		}
+	}
+
+	&__user-info {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+	}
+
+	&__username {
+		font-family: inherit;
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 20px;
+		color: #2c6bff;
+		text-decoration: none;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+
+	&__spam-badge {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0 4px;
+		background-color: #fffbeb;
+		border: 0.5px solid #e5a000;
+		border-radius: 999px;
+		font-size: 11px;
+		font-weight: 400;
+		line-height: 16px;
+		color: #df7d05;
+	}
+
+	// Activity cell - two row structure
+	&__action-row {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 4px;
+		padding: 3px 0;
+		max-width: 520px;
+	}
+
+	&__action-user {
+		font-family: inherit;
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 18px;
+		color: $bb-text-tertiary;
+	}
+
+	&__action-desc {
+		font-family: inherit;
+		font-size: 13px;
+		font-weight: 400;
+		line-height: 18px;
+		color: $bb-text-muted;
+	}
+
+	&__content-row {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 4px;
+		padding: 3px 0;
+		max-width: 520px;
+	}
+
+	&__content-link {
+		font-family: inherit;
+		font-size: 13px;
+		font-weight: 400;
+		line-height: 18px;
+		color: #2c6bff;
+		text-decoration: none;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+
+	&__content-text {
+		font-family: inherit;
+		font-size: 13px;
+		font-weight: 400;
+		line-height: 18px;
+		color: $bb-text-color;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+
+		p {
+			margin: 0;
+		}
+	}
+
+	// Date column
+	&__date {
+		font-family: inherit;
+		font-size: 13px;
+		font-weight: 400;
+		line-height: 18px;
+		color: $bb-text-muted;
+	}
+
+	// Actions menu (ellipsis button)
+	&__actions {
+		position: relative;
+		margin-left: auto;
+		flex-shrink: 0;
+	}
+
+	&__ellipsis-btn {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 32px;
+		height: 32px;
+		padding: 4px;
+		background: transparent;
+		border: none;
+		border-radius: 4px;
+		cursor: pointer;
+
+		&:hover {
+			background: $bb-background-color;
+		}
+
+		svg {
+			width: 24px;
+			height: 24px;
+		}
+	}
+
+	&__menu {
+		position: absolute;
+		right: 0;
+		top: 100%;
+		background: #fff;
+		border: 1px solid $bb-border-color;
+		border-radius: 8px;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+		z-index: 100;
+		min-width: 140px;
+		overflow: hidden;
+
+		button {
+			display: block;
+			width: 100%;
+			padding: 10px 16px;
+			border: none;
+			background: transparent;
+			font-size: 14px;
+			font-weight: 400;
+			text-align: left;
+			color: $bb-text-color;
+			cursor: pointer;
+
+			&:hover {
+				background: $bb-background-color;
+			}
+		}
+	}
+
+	// Pagination
+	&__pagination {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 16px;
+		padding: 24px 0;
+		margin-top: 24px;
+	}
+
+	&__pagination-info {
+		font-size: 14px;
+		color: $bb-text-muted;
+	}
+
+	&__pagination-buttons {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	&__pagination-btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		background: transparent;
+		border: 1px solid $bb-border-color;
+		border-radius: 6px;
+		padding: 6px 16px;
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 20px;
+		color: $bb-text-color;
+		cursor: pointer;
+		transition: all 0.2s ease;
+
+		&:hover:not(:disabled) {
+			background: $bb-background-color;
+			border-color: $bb-text-tertiary;
+		}
+
+		&:disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+		}
+
+		.dashicons {
+			font-size: 16px;
+			width: 16px;
+			height: 16px;
+		}
+	}
+}
+
+// =============================================================================
+// GROUPS LIST SCREEN (Figma: allGroups)
+// Based on: https://www.figma.com/design/XS2Hf0smlEnhWfoKyks7ku/Backend-Settings-2.0?node-id=2611-123285
+// =============================================================================
+.bb-admin-groups-list {
+	max-width: 1112px;
+	margin: 0;
+	padding: 0;
+
+	// Feature Card (main white container)
+	&__card {
+		background-color: #fff;
+		border: 0.5px solid #e5e5e5;
+		border-radius: $bb-border-radius;
+		box-shadow: 0 1.5px 1px 0 rgba(0, 0, 0, 0.16);
+		overflow: hidden;
+	}
+
+	// Section Header (Groups title + Create button)
+	&__section-header {
+		padding: 0 24px;
+		border-bottom: 1px solid $bb-border-color;
+	}
+
+	&__section-header-content {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 16px 0;
+	}
+
+	&__section-title {
+		font-size: 18px;
+		font-weight: 500;
+		line-height: 26px;
+		color: $bb-text-color;
+		margin: 0;
+	}
+
+	// Create New Group Button (orange)
+	&__create-btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		background-color: $bb-primary-color;
+		color: #fff;
+		border: none;
+		border-radius: $bb-border-radius-lg;
+		padding: 6px 16px;
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 20px;
+		cursor: pointer;
+		transition: background-color 0.2s ease;
+
+		&:hover {
+			background-color: #d7542e;
+		}
+
+		svg {
+			width: 16px;
+			height: 16px;
+		}
+	}
+
+	// Action Bar
+	&__action-bar {
+		padding: 0 24px;
+	}
+
+	&__action-wrap {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 16px 0;
+		border-bottom: 0.5px solid $bb-border-color;
+	}
+
+	&__action-left {
+		display: flex;
+		align-items: center;
+		gap: 24px;
+	}
+
+	&__filter-group {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	// Select wrapper with chevron
+	&__select-wrap {
+		position: relative;
+		display: inline-flex;
+		align-items: center;
+
+		svg {
+			position: absolute;
+			right: 8px;
+			top: 50%;
+			transform: translateY(-50%);
+			pointer-events: none;
+		}
+	}
+
+	&__select {
+		appearance: none;
+		background-color: $bb-background-color;
+		border: 0.5px solid $bb-border-color;
+		border-radius: 6px;
+		padding: 7px 32px 7px 8px;
+		font-size: 13px;
+		font-weight: 400;
+		line-height: 18px;
+		color: $bb-text-color;
+		cursor: pointer;
+		min-width: 120px;
+
+		&:focus {
+			outline: none;
+			border-color: #2271b1;
+		}
+	}
+
+	// Apply Button (disabled style - outline orange)
+	&__apply-btn {
+		background: transparent;
+		border: 1px solid #f7ae99;
+		border-radius: 8px;
+		padding: 6px 16px;
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 20px;
+		color: #f9bead;
+		cursor: pointer;
+		transition: all 0.2s ease;
+
+		&:hover:not(.bb-admin-groups-list__apply-btn--disabled):not(:disabled) {
+			background: #fef2ef;
+			border-color: $bb-primary-color;
+			color: $bb-primary-color;
+		}
+
+		&--disabled,
+		&:disabled {
+			cursor: not-allowed;
+			opacity: 0.7;
+		}
+	}
+
+	&__action-right {
+		display: flex;
+		align-items: center;
+		gap: 13px;
+	}
+
+	// Search Input
+	&__search-wrap {
+		position: relative;
+		width: 224px;
+
+		svg {
+			position: absolute;
+			right: 8px;
+			top: 50%;
+			transform: translateY(-50%);
+			pointer-events: none;
+		}
+	}
+
+	&__search-input {
+		width: 100%;
+		background-color: $bb-background-color;
+		border: 0.5px solid $bb-border-color;
+		border-radius: 6px;
+		padding: 7px 36px 7px 8px;
+		font-size: 13px;
+		font-weight: 400;
+		line-height: 18px;
+		color: $bb-text-color;
+
+		&::placeholder {
+			color: $bb-text-tertiary;
+		}
+
+		&:focus {
+			outline: none;
+			border-color: #2271b1;
+		}
+	}
+
+	// Table Header
+	&__table-header {
+		padding: 0 24px;
+	}
+
+	&__table-header-wrap {
+		display: flex;
+		align-items: center;
+		gap: 32px;
+		padding: 8px 0;
+		border-bottom: 0.5px solid $bb-border-color;
+
+		// Column text styling for header
+		font-size: 13px;
+		font-weight: 400;
+		line-height: 18px;
+		color: $bb-text-tertiary;
+	}
+
+	// Table Body
+	&__table-body {
+		padding: 16px 24px;
+	}
+
+	&__loading,
+	&__empty {
+		padding: 48px;
+		text-align: center;
+		color: $bb-text-tertiary;
+	}
+
+	// Table Row
+	&__row {
+		border-bottom: 0.5px solid #e5e5e5;
+
+		&:last-child {
+			border-bottom: none;
+		}
+	}
+
+	&__row-wrap {
+		display: flex;
+		align-items: center;
+		gap: 32px;
+		padding: 16px 0;
+		position: relative;
+	}
+
+	// Table Columns
+	&__col {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+
+		// Name column (264px) - checkbox + avatar + name
+		&--name {
+			width: 264px;
+			min-width: 264px;
+
+			.components-checkbox-control {
+				margin-bottom: 0;
+			}
+
+			.components-checkbox-control__input-container {
+				margin-right: 0;
+			}
+
+			span {
+				font-size: 14px;
+				font-weight: 400;
+				line-height: 20px;
+				color: $bb-text-color;
+			}
+		}
+
+		// Privacy column (104px)
+		&--privacy {
+			width: 104px;
+			min-width: 104px;
+		}
+
+		// Members column (136px)
+		&--members {
+			width: 136px;
+			min-width: 136px;
+
+			svg {
+				flex-shrink: 0;
+			}
+		}
+
+		// Group Type column (176px)
+		&--type {
+			width: 176px;
+			min-width: 176px;
+		}
+
+		// Last Active column (136px)
+		&--activity {
+			width: 136px;
+			min-width: 136px;
+
+			svg {
+				flex-shrink: 0;
+			}
+		}
+
+		// Actions column
+		&--actions {
+			position: absolute;
+			right: 0;
+			top: 50%;
+			transform: translateY(-50%);
+		}
+	}
+
+	// Group Avatar
+	&__avatar {
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		border: 0.5px solid $bb-border-color;
+		object-fit: cover;
+		flex-shrink: 0;
+	}
+
+	// Default Group Icon (when no avatar)
+	&__default-avatar {
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		background-color: $bb-background-color;
+		border: 0.5px solid $bb-border-color;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+
+		svg {
+			width: 24px;
+			height: 24px;
+		}
+	}
+
+	// Group Name Link
+	&__name-link {
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 20px;
+		color: #2c6bff;
+		text-decoration: none;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		max-width: 184px;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+
+	// Privacy Badge (pill style with icon)
+	&__privacy-badge {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		background-color: $bb-sidebar-bg;
+		border: 0.5px solid #ccc;
+		border-radius: 999px;
+		padding: 0 4px;
+		font-size: 11px;
+		font-weight: 400;
+		line-height: 16px;
+		color: $bb-text-color;
+
+		svg {
+			flex-shrink: 0;
+		}
+
+		&--public svg {
+			color: $bb-text-color;
+		}
+
+		&--private svg {
+			color: $bb-text-color;
+		}
+
+		&--hidden svg {
+			color: $bb-text-color;
+		}
+	}
+
+	// Members Link
+	&__members-link {
+		font-size: 13px;
+		font-weight: 400;
+		line-height: 18px;
+		color: #2c6bff;
+		text-decoration: none;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+
+	// Group Type Badge (pill style)
+	&__type-badge {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		background-color: $bb-sidebar-bg;
+		border: 0.5px solid #ccc;
+		border-radius: 999px;
+		padding: 4px 8px;
+		font-size: 11px;
+		font-weight: 500;
+		line-height: 16px;
+		color: $bb-text-color;
+	}
+
+	// Activity Text
+	&__activity-text {
+		font-size: 13px;
+		font-weight: 400;
+		line-height: 18px;
+		color: $bb-text-tertiary;
+	}
+
+	// Action Button (ellipsis)
+	&__action-btn {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 32px;
+		height: 32px;
+		background: transparent;
+		border: none;
+		border-radius: 4px;
+		cursor: pointer;
+		color: $bb-text-tertiary;
+
+		&:hover {
+			background: $bb-background-color;
+		}
+	}
+
+	// Action Menu Dropdown
+	&__action-menu {
+		position: absolute;
+		right: 0;
+		top: 100%;
+		background: #fff;
+		border: 1px solid $bb-border-color;
+		border-radius: 8px;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+		z-index: 100;
+		min-width: 140px;
+		overflow: hidden;
+
+		button {
+			display: block;
+			width: 100%;
+			padding: 10px 16px;
+			border: none;
+			background: transparent;
+			font-size: 14px;
+			font-weight: 400;
+			text-align: left;
+			color: $bb-text-color;
+			cursor: pointer;
+
+			&:hover {
+				background: $bb-background-color;
+			}
+		}
+
+		&-delete {
+			color: #dc3545 !important;
+
+			&:hover {
+				background: #fef2f2 !important;
+			}
+		}
+	}
+
+	// Pagination
+	&__pagination {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 16px;
+		padding: 24px 0;
+	}
+
+	&__pagination-info {
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 20px;
+		color: $bb-text-tertiary;
+	}
+
+	&__pagination-buttons {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	&__pagination-btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		background: transparent;
+		border: 1px solid $bb-border-color;
+		border-radius: 6px;
+		padding: 6px 16px;
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 20px;
+		color: $bb-text-color;
+		cursor: pointer;
+		transition: all 0.2s ease;
+
+		&:hover:not(:disabled) {
+			background: $bb-background-color;
+			border-color: $bb-text-tertiary;
+		}
+
+		&:disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+		}
+	}
+}
+
+// Responsive
+@media (max-width: 782px) {
+	.bb-admin-dashboard__container {
+		grid-template-columns: 1fr;
+	}
+
+	.bb-admin-feature-settings__container {
+		flex-direction: column;
+	}
+
+	.bb-admin-feature-settings__sidebar {
+		width: 100%;
+		border-right: none;
+		border-bottom: 1px solid #e5e5e5;
+	}
+
+	.bb-admin-header__container {
+		flex-wrap: wrap;
+	}
+
+	.bb-admin-header__center {
+		order: 3;
+		width: 100%;
+		margin: 10px 0 0 0;
+	}
+}
+
+// Group Types Screen
+// Design: https://www.figma.com/design/XS2Hf0smlEnhWfoKyks7ku/Backend-Settings-2.0?node-id=2611-123236
+.bb-admin-group-types {
+	max-width: 984px;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+
+	// Card styling (shared between both cards)
+	&__card {
+		background-color: #fff;
+		border: 0.5px solid #e5e5e5;
+		border-radius: 16px;
+		box-shadow: 0 1.5px 1px 0 rgba(0, 0, 0, 0.16);
+		overflow: hidden;
+
+		&--list {
+			// Second card for list has different padding
+			overflow: visible;
+		}
+	}
+
+	// Card header (for settings card)
+	&__card-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 16px 24px;
+		border-bottom: 1px solid #d9d9d9;
+
+		h2 {
+			font-size: 18px;
+			font-weight: 500;
+			line-height: 26px;
+			color: #000;
+			margin: 0;
+		}
+	}
+
+	&__help-btn {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 32px;
+		height: 32px;
+		padding: 4px;
+		background: transparent;
+		border: none;
+		cursor: pointer;
+		color: #666;
+
+		svg {
+			width: 24px;
+			height: 24px;
+		}
+
+		&:hover {
+			color: #000;
+		}
+	}
+
+	// Settings section (toggles)
+	&__settings {
+		padding: 32px 24px 8px;
+	}
+
+	&__setting-row {
+		display: flex;
+		gap: 56px;
+		align-items: flex-start;
+		padding-bottom: 24px;
+		border-bottom: 0.5px solid #d9d9d9;
+
+		&--last {
+			border-bottom: none;
+			padding-top: 24px;
+		}
+	}
+
+	&__setting-label {
+		width: 248px;
+		flex-shrink: 0;
+		padding: 8px 0;
+
+		span {
+			font-size: 14px;
+			font-weight: 500;
+			line-height: 20px;
+			color: #000;
+		}
+	}
+
+	&__setting-control {
+		flex: 1;
+		min-width: 0;
+	}
+
+	&__toggle-wrap {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		margin-bottom: 8px;
+
+		.components-form-toggle {
+			margin: 0;
+		}
+	}
+
+	&__toggle-label {
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 20px;
+		color: #000;
+	}
+
+	&__setting-desc {
+		font-size: 13px;
+		font-weight: 400;
+		line-height: 18px;
+		color: #666;
+		margin: 0;
+		padding: 3px 0;
+		max-width: 632px;
+	}
+
+	&__setting-link {
+		color: #666;
+	}
+
+	// List header (for list card)
+	&__list-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 16px 24px;
+		border-bottom: 1px solid #d9d9d9;
+
+		h2 {
+			font-size: 18px;
+			font-weight: 500;
+			line-height: 26px;
+			color: #000;
+			margin: 0;
+		}
+	}
+
+	&__add-btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		background: #ef5d33;
+		border: none;
+		border-radius: 8px;
+		padding: 6px 16px;
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 20px;
+		color: #fff;
+		cursor: pointer;
+		transition: background 0.2s ease;
+
+		svg {
+			width: 16px;
+			height: 16px;
+		}
+
+		&:hover {
+			background: #d7542e;
+		}
+	}
+
+	// Loading and empty states
+	&__loading,
+	&__empty {
+		padding: 48px 24px;
+		text-align: center;
+		color: #2f2f2f;
+	}
+
+	// List styles
+	&__list {
+		display: flex;
+		flex-direction: column;
+		padding: 32px 24px 8px;
+		overflow: visible;
+	}
+
+	&__item {
+		display: flex;
+		align-items: center;
+		gap: 32px;
+		min-height: 48px;
+		padding-bottom: 16px;
+		border-bottom: 0.5px solid #d9d9d9;
+		overflow: visible;
+
+		&:last-child {
+			border-bottom: none;
+		}
+	}
+
+	// Column styles
+	&__col {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+
+		&--name {
+			width: 264px;
+			flex-shrink: 0;
+		}
+
+		&--label {
+			width: 200px;
+			flex-shrink: 0;
+		}
+
+		&--groups {
+			width: 152px;
+			flex-shrink: 0;
+			padding: 3px 0;
+		}
+
+		&--visibility {
+			width: 152px;
+			flex-shrink: 0;
+		}
+
+		&--actions {
+			flex-shrink: 0;
+			width: 32px;
+			position: relative;
+		}
+	}
+
+	&__item-icon {
+		flex-shrink: 0;
+		width: 32px;
+		height: 32px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: #f6f6f6;
+		border-radius: 50%;
+		color: #666;
+
+		svg {
+			width: 20px;
+			height: 20px;
+		}
+	}
+
+	&__item-name {
+		font-size: 14px;
+		font-weight: 500;
+		line-height: 20px;
+		color: #000;
+	}
+
+	// Badge styles (for label column)
+	&__badge {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 4px 8px;
+		background: #f0f0f0;
+		border: 0.5px solid #ccc;
+		border-radius: 999px;
+		font-size: 11px;
+		font-weight: 500;
+		line-height: 16px;
+		color: #000;
+	}
+
+	// Groups link
+	&__groups-link {
+		font-size: 13px;
+		font-weight: 400;
+		line-height: 18px;
+		color: #2c6bff;
+		text-decoration: none;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+
+	// Visibility badge
+	&__visibility-badge {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		padding: 0 4px;
+		background: #f0f0f0;
+		border: 0.5px solid #ccc;
+		border-radius: 999px;
+
+		svg {
+			width: 12px;
+			height: 12px;
+			color: #000;
+		}
+
+		span {
+			font-size: 11px;
+			font-weight: 400;
+			line-height: 16px;
+			color: #000;
+		}
+	}
+
+	// Actions column - needs position relative for menu
+	&__col--actions {
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	// Ellipsis button
+	&__ellipsis-btn {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 32px;
+		height: 32px;
+		padding: 4px;
+		background: transparent;
+		border: none;
+		border-radius: 4px;
+		cursor: pointer;
+		transition: background-color 0.2s;
+
+		svg {
+			width: 24px;
+			height: 24px;
+		}
+
+		&:hover {
+			background: #f0f0f0;
+		}
+
+		&:active {
+			background: #e8e8e8;
+		}
+	}
+
+	// Dropdown menu
+	&__menu {
+		position: absolute;
+		right: 0;
+		top: calc(100% + 4px);
+		background: #fff !important;
+		border: 1px solid #d9d9d9 !important;
+		border-radius: 8px !important;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12) !important;
+		z-index: 1000;
+		min-width: 140px;
+		max-width: 200px;
+		overflow: visible;
+		padding: 8px 0 !important;
+		margin: 0 !important;
+	}
+
+	// Menu item styling
+	&__menu-item {
+		display: flex !important;
+		align-items: center !important;
+		gap: 8px !important;
+		width: 100% !important;
+		min-height: 40px !important;
+		max-height: 40px !important;
+		height: 40px !important;
+		padding: 10px 8px 10px 16px !important;
+		border: none !important;
+		background: transparent !important;
+		font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif !important;
+		font-size: 13px !important;
+		font-weight: 500 !important;
+		line-height: 18px !important;
+		text-align: left !important;
+		color: #666 !important;
+		cursor: pointer !important;
+		transition: background-color 0.2s !important;
+		white-space: nowrap !important;
+		text-decoration: none !important;
+		box-shadow: none !important;
+		outline: none !important;
+
+		svg {
+			width: 20px !important;
+			height: 20px !important;
+			flex-shrink: 0 !important;
+			margin: 0 !important;
+		}
+
+		span {
+			color: #666 !important;
+			font-size: 13px !important;
+			font-weight: 500 !important;
+			line-height: 18px !important;
+			margin: 0 !important;
+			padding: 0 !important;
+		}
+
+		&:hover {
+			background: #f6f6f6 !important;
+		}
+
+		&:focus {
+			outline: none !important;
+			box-shadow: none !important;
+		}
+	}
+
+	&__menu-delete {
+		span {
+			color: #666 !important;
+		}
+
+		&:hover {
+			background: #f6f6f6 !important;
+		}
+	}
+}
+
+// Group Navigation Screen
+// Design: https://www.figma.com/design/XS2Hf0smlEnhWfoKyks7ku/Backend-Settings-2.0?node-id=2611-123338
+.bb-admin-group-navigation {
+	max-width: 984px;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+
+	// Loading state
+	&__loading {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		padding: 64px;
+	}
+
+	// Card styling
+	&__card {
+		background-color: #fff;
+		border: 0.5px solid #e5e5e5;
+		border-radius: 16px;
+		box-shadow: 0 1.5px 1px 0 rgba(0, 0, 0, 0.16);
+		overflow: hidden;
+	}
+
+	// Card header
+	&__card-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 16px 24px;
+		border-bottom: 1px solid #d9d9d9;
+
+		h2 {
+			font-size: 18px;
+			font-weight: 500;
+			line-height: 26px;
+			color: #000;
+			margin: 0;
+		}
+	}
+
+	&__help-btn {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 32px;
+		height: 32px;
+		padding: 4px;
+		background: transparent;
+		border: none;
+		cursor: pointer;
+		color: #666;
+
+		svg {
+			width: 24px;
+			height: 24px;
+		}
+
+		&:hover {
+			color: #000;
+		}
+	}
+
+	// Settings section
+	&__settings {
+		padding: 32px 24px 8px;
+	}
+
+	&__setting-row {
+		display: flex;
+		gap: 56px;
+		align-items: flex-start;
+		padding-bottom: 24px;
+		border-bottom: 0.5px solid #d9d9d9;
+
+		&--last {
+			border-bottom: none;
+			padding-top: 24px;
+		}
+	}
+
+	&__setting-label {
+		width: 248px;
+		flex-shrink: 0;
+		padding: 8px 0;
+
+		span {
+			font-size: 14px;
+			font-weight: 500;
+			line-height: 20px;
+			color: #000;
+		}
+	}
+
+	&__setting-control {
+		flex: 1;
+		min-width: 0;
+	}
+
+	&__toggle-wrap {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		margin-bottom: 0;
+
+		.components-form-toggle {
+			margin: 0;
+		}
+	}
+
+	&__toggle-label {
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 20px;
+		color: #000;
+	}
+
+	&__select-wrap {
+		width: 272px;
+		margin-bottom: 8px;
+
+		.components-select-control__input {
+			background: #f6f6f6;
+			border: 0.5px solid #ccc;
+			border-radius: 6px;
+			min-height: 36px;
+			padding: 7px 8px;
+			font-size: 13px;
+			line-height: 18px;
+			color: #000;
+		}
+	}
+
+	&__setting-desc {
+		font-size: 13px;
+		font-weight: 400;
+		line-height: 18px;
+		color: #666;
+		margin: 0;
+		padding: 3px 0;
+		max-width: 632px;
+	}
+
+	// Navigation list
+	&__list {
+		padding: 32px 24px 8px;
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+	}
+
+	&__item {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 32px;
+		min-height: 48px;
+		padding-bottom: 16px;
+		border-bottom: 0.5px solid #d9d9d9;
+		cursor: grab;
+		transition: opacity 0.2s ease;
+
+		&:last-child {
+			border-bottom: none;
+		}
+
+		&--dragging {
+			opacity: 0.5;
+		}
+	}
+
+	&__item-left {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		flex: 1;
+	}
+
+	&__drag-handle {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 24px;
+		height: 24px;
+		color: #666;
+		cursor: grab;
+
+		svg {
+			width: 24px;
+			height: 24px;
+		}
+	}
+
+	&__item-info {
+		display: flex;
+		align-items: center;
+		gap: 16px;
+	}
+
+	&__item-name {
+		font-size: 14px;
+		font-weight: 500;
+		line-height: 20px;
+		color: #000;
+		min-width: 264px;
+	}
+
+	&__item-badge {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 4px 8px;
+		background: #f0f0f0;
+		border: 0.5px solid #ccc;
+		border-radius: 999px;
+		font-size: 11px;
+		font-weight: 500;
+		line-height: 16px;
+		color: #000;
+	}
+
+	&__item-right {
+		flex-shrink: 0;
+
+		.components-form-toggle {
+			margin: 0;
+		}
+	}
+}
+
+// ==================================================
+// Group Type Modal
+// ==================================================
+.bb-admin-modal-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0, 0, 0, 0.5);
+	z-index: 9999;
+	display: flex;
+	align-items: flex-start;
+	justify-content: center;
+	padding: 80px 24px 24px;
+	overflow-y: auto;
+}
+
+.bb-admin-group-type-modal {
+	position: relative;
+	width: 100%;
+	max-width: 680px;
+	background: #fff;
+	border-radius: 16px;
+	border: 1px solid #d9d9d9;
+	box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.12);
+	display: flex;
+	flex-direction: column;
+	max-height: calc(100vh - 104px);
+
+	&__header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 16px 16px 16px 24px;
+		border-bottom: 1px solid #d9d9d9;
+		border-radius: 12px 12px 0 0;
+
+		h2 {
+			font-size: 18px;
+			font-weight: 500;
+			line-height: 26px;
+			color: #000;
+			margin: 0;
+		}
+	}
+
+	&__close {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 4px;
+		background: transparent;
+		border: none;
+		cursor: pointer;
+		color: #2f2f2f;
+		transition: opacity 0.2s;
+
+		&:hover {
+			opacity: 0.7;
+		}
+
+		svg {
+			width: 24px;
+			height: 24px;
+		}
+	}
+
+	&__body {
+		flex: 1;
+		overflow-y: auto;
+		padding: 16px 24px 8px;
+		display: flex;
+		flex-direction: column;
+		gap: 24px;
+	}
+
+	&__section {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+		padding-bottom: 24px;
+		border-bottom: 1px solid #d9d9d9;
+
+		&--last {
+			border-bottom: none;
+			padding-bottom: 0;
+		}
+
+		// WordPress components styling
+		.components-base-control {
+			margin-bottom: 0;
+			width: 100%;
+		}
+
+		.components-text-control__input,
+		.components-select-control__input {
+			background: #f6f6f6;
+			border: 0.5px solid #d9d9d9;
+			border-radius: 8px;
+			padding: 10px 8px;
+			font-size: 14px;
+			line-height: 20px;
+			color: #000;
+			width: 100%;
+
+			&:focus {
+				border-color: #ef5d33;
+				box-shadow: none;
+			}
+
+			&::placeholder {
+				color: #666;
+			}
+		}
+
+		.components-base-control__label {
+			font-size: 13px;
+			font-weight: 500;
+			line-height: 18px;
+			color: #2f2f2f;
+			margin-bottom: 8px;
+			text-transform: none !important;
+		}
+
+		.components-checkbox-control__input[type="checkbox"] {
+			border: 1px solid #999;
+			border-radius: 4px;
+			width: 18px;
+			height: 18px;
+			margin-top: 0;
+			margin-right: 8px;
+
+			&:checked {
+				background: #ef5d33;
+				border-color: #ef5d33;
+			}
+		}
+
+		.components-checkbox-control__label {
+			font-size: 14px;
+			font-weight: 400;
+			line-height: 20px;
+			color: #000;
+		}
+	}
+
+	&__section-label {
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 18px;
+		color: #2f2f2f;
+		padding: 3px 0;
+	}
+
+	&__subsection {
+		margin-top: 16px;
+		padding-left: 16px;
+		border-left: 2px solid #f0f0f0;
+
+		&:first-of-type {
+			margin-top: 8px;
+		}
+	}
+
+	&__subsection-label {
+		font-size: 12px;
+		font-weight: 600;
+		line-height: 18px;
+		color: #666;
+		padding: 3px 0;
+		margin-bottom: 8px;
+	}
+
+	&__checkboxes {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+
+		.components-base-control {
+			margin-bottom: 0;
+		}
+	}
+
+	&__description {
+		font-size: 13px;
+		font-weight: 400;
+		line-height: 18px;
+		color: #666;
+		margin: 0;
+		padding: 3px 0;
+	}
+
+	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 8px;
+		padding: 8px 24px;
+		border-top: 1px solid #d9d9d9;
+		border-radius: 0 0 12px 12px;
+
+		.components-button {
+			min-height: 32px;
+			padding: 6px 16px;
+			border-radius: 8px;
+			font-size: 14px;
+			line-height: 20px;
+
+			&.is-secondary {
+				background: #f0f0f0;
+				border: 0.5px solid #d9d9d9;
+				color: #000;
+
+				&:hover:not(:disabled) {
+					background: #e8e8e8;
+					border-color: #d9d9d9;
+					color: #000;
+				}
+			}
+
+			&.is-primary {
+				background: #ef5d33;
+				border-color: #ef5d33;
+				color: #fff;
+
+				&:hover:not(:disabled) {
+					background: #d74d23;
+					border-color: #d74d23;
+				}
+
+				&:disabled {
+					opacity: 0.5;
+				}
+			}
+		}
+	}
+}
+
+// ==================================================
+// Group Modal (Create/Edit Group)
+// ==================================================
+.bb-admin-group-modal {
+	position: relative;
+	background: #fff;
+	border-radius: 12px;
+	max-width: 600px;
+	width: 90%;
+	max-height: 90vh;
+	display: flex;
+	flex-direction: column;
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+
+	&__header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 16px 16px 16px 24px;
+		border-bottom: 1px solid #d9d9d9;
+		border-radius: 12px 12px 0 0;
+
+		h2 {
+			font-size: 18px;
+			font-weight: 500;
+			line-height: 26px;
+			color: #000;
+			margin: 0;
+		}
+	}
+
+	&__close {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 4px;
+		background: transparent;
+		border: none;
+		cursor: pointer;
+		color: #2f2f2f;
+		transition: opacity 0.2s;
+
+		&:hover {
+			opacity: 0.7;
+		}
+	}
+
+	&__body {
+		flex: 1;
+		overflow-y: auto;
+		padding: 24px;
+	}
+
+	&__section {
+		margin-bottom: 24px;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+
+		&--last {
+			margin-bottom: 0;
+		}
+
+		.components-base-control {
+			margin-bottom: 0;
+		}
+
+		.components-base-control__label {
+			font-size: 13px;
+			font-weight: 500;
+			line-height: 18px;
+			color: #2f2f2f;
+			padding: 3px 0;
+			text-transform: none !important;
+		}
+
+		.components-base-control__field {
+			margin-bottom: 0;
+		}
+
+		.components-text-control__input,
+		.components-textarea-control__input,
+		.components-select-control__input {
+			width: 100%;
+			padding: 8px 12px;
+			border: 1px solid #d9d9d9;
+			border-radius: 6px;
+			font-size: 14px;
+			line-height: 20px;
+			color: #000;
+		}
+	}
+
+	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 8px;
+		padding: 8px 24px;
+		border-top: 1px solid #d9d9d9;
+		border-radius: 0 0 12px 12px;
+
+		.components-button {
+			min-height: 32px;
+			padding: 6px 16px;
+			border-radius: 8px;
+			font-size: 14px;
+			line-height: 20px;
+
+			&.is-secondary {
+				background: #f0f0f0;
+				border: 0.5px solid #d9d9d9;
+				color: #000;
+
+				&:hover:not(:disabled) {
+					background: #e8e8e8;
+					border-color: #d9d9d9;
+					color: #000;
+				}
+			}
+
+			&.is-primary {
+				background: #ef5d33;
+				border-color: #ef5d33;
+				color: #fff;
+
+				&:hover:not(:disabled) {
+					background: #d74d23;
+					border-color: #d74d23;
+				}
+
+				&:disabled {
+					opacity: 0.5;
+				}
+			}
+		}
+	}
+
+	// Tabs
+	&__tabs {
+		display: flex;
+		gap: 0;
+		padding: 0 24px;
+		border-bottom: 1px solid #d9d9d9;
+	}
+
+	&__tab {
+		padding: 12px 16px;
+		background: transparent;
+		border: none;
+		font-size: 13px;
+		font-weight: 400;
+		line-height: 18px;
+		color: #666;
+		cursor: pointer;
+		border-bottom: 2px solid transparent;
+		transition: all 0.2s;
+		white-space: nowrap;
+
+		&:hover:not(:disabled) {
+			color: #2f2f2f;
+		}
+
+		&--active {
+			color: #ef5d33;
+			font-weight: 500;
+			border-bottom-color: #ef5d33;
+		}
+
+		&:disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+		}
+	}
+
+	// Permalink preview
+	&__permalink-preview {
+		margin-top: 4px;
+		padding: 3px 0;
+		font-size: 13px;
+		line-height: 18px;
+		color: #666;
+		font-family: 'Inter', sans-serif;
+	}
+
+	// Tab content
+	&__tab-content {
+		padding: 24px 0;
+
+		p {
+			margin: 0;
+			color: #666;
+			font-size: 13px;
+			line-height: 18px;
+		}
+	}
+
+	// Wider modal for edit view with tabs
+	&--edit {
+		max-width: 680px;
+	}
+}
+
+// ==================================================
+// Activity Edit Modal
+// ==================================================
+.bb-admin-activity-modal {
+	position: relative;
+	width: 100%;
+	max-width: 680px;
+	background: #fff;
+	border-radius: 16px;
+	border: 1px solid #d9d9d9;
+	box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.12);
+	display: flex;
+	flex-direction: column;
+	max-height: calc(100vh - 104px);
+
+	&--wide {
+		max-width: 800px;
+	}
+
+	&__header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 16px 16px 16px 24px;
+		border-bottom: 1px solid #d9d9d9;
+		border-radius: 12px 12px 0 0;
+		background: #fff;
+		flex-shrink: 0;
+		z-index: 1;
+
+		h2 {
+			font-size: 18px;
+			font-weight: 500;
+			line-height: 26px;
+			color: #000;
+			margin: 0;
+		}
+	}
+
+	&__close {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 4px;
+		background: transparent;
+		border: none;
+		cursor: pointer;
+		color: #2f2f2f;
+		transition: opacity 0.2s;
+
+		&:hover {
+			opacity: 0.7;
+		}
+
+		svg {
+			width: 24px;
+			height: 24px;
+		}
+	}
+
+	&__body {
+		flex: 1;
+		overflow-y: auto;
+		padding: 16px 24px 8px;
+		display: flex;
+		flex-direction: column;
+		gap: 24px;
+	}
+
+	&__section {
+		display: flex;
+		flex-direction: column;
+		gap: 0;
+		padding-bottom: 24px;
+		border-bottom: 1px solid #d9d9d9;
+
+		&--last {
+			border-bottom: none;
+			padding-bottom: 0;
+		}
+
+		// WordPress components styling
+		.components-base-control {
+			margin-bottom: 0;
+			width: 100%;
+		}
+
+		.components-base-control__label {
+			display: none; // Hide default label, we use our own
+		}
+
+		.components-text-control__input,
+		.components-textarea-control__input,
+		.components-select-control__input {
+			background: #f6f6f6;
+			border: 0.5px solid #d9d9d9;
+			border-radius: 8px;
+			padding: 10px 12px;
+			font-size: 14px;
+			line-height: 20px;
+			color: #000;
+			width: 100%;
+
+			&:focus {
+				border-color: #ef5d33;
+				box-shadow: none;
+				outline: none;
+			}
+
+			&::placeholder {
+				color: #666;
+			}
+		}
+
+		.components-textarea-control__input {
+			resize: vertical;
+			min-height: 100px;
+		}
+
+		// Override WordPress components label text-transform
+		.components-base-control__label {
+			text-transform: none !important;
+		}
+
+		// Number input specific styling
+		input[type="number"] {
+			-moz-appearance: textfield;
+			
+			&::-webkit-outer-spin-button,
+			&::-webkit-inner-spin-button {
+				-webkit-appearance: none;
+				margin: 0;
+			}
+		}
+	}
+
+	&__section-label {
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 18px;
+		color: #2f2f2f;
+		padding: 3px 0;
+		display: block;
+		margin-bottom: 8px;
+	}
+
+	&__description {
+		font-size: 13px;
+		font-weight: 400;
+		line-height: 18px;
+		color: #666;
+		margin: 8px 0 0;
+		padding: 0;
+	}
+
+	&__row {
+		display: flex;
+		gap: 16px;
+	}
+
+	&__field-half {
+		flex: 1;
+	}
+
+	&__sub-label {
+		font-size: 12px;
+		font-weight: 400;
+		line-height: 16px;
+		color: #666;
+		display: block;
+		margin-bottom: 6px;
+	}
+
+	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 8px;
+		padding: 16px 24px;
+		border-top: 1px solid #d9d9d9;
+		border-radius: 0 0 12px 12px;
+		background: #fff;
+		flex-shrink: 0;
+		z-index: 1;
+
+		.components-button {
+			min-height: 32px;
+			padding: 6px 16px;
+			border-radius: 8px;
+			font-size: 14px;
+			line-height: 20px;
+
+			&.is-secondary {
+				background: #f0f0f0;
+				border: 0.5px solid #d9d9d9;
+				color: #000;
+
+				&:hover:not(:disabled) {
+					background: #e8e8e8;
+					border-color: #d9d9d9;
+					color: #000;
+				}
+			}
+
+			&.is-primary {
+				background: #ef5d33;
+				border-color: #ef5d33;
+				color: #fff;
+
+				&:hover:not(:disabled) {
+					background: #d74d23;
+					border-color: #d74d23;
+				}
+
+				&:disabled {
+					opacity: 0.5;
+				}
+			}
+		}
+	}
+}
+
+// Rich Text Editor styles
+.bb-admin-rich-editor {
+	width: 100%;
+
+	&__tabs {
+		display: flex;
+		justify-content: flex-end;
+		gap: 4px;
+		margin-bottom: -1px;
+		position: relative;
+		z-index: 1;
+	}
+
+	&__tab {
+		background: #f6f6f6;
+		border: 1px solid #d9d9d9;
+		border-bottom: none;
+		border-radius: 4px 4px 0 0;
+		color: #666;
+		padding: 6px 12px;
+		font-size: 13px;
+		cursor: pointer;
+		transition: background 0.2s;
+
+		&:hover {
+			background: #e6e6e6;
+		}
+
+		&.active {
+			background: #fff;
+			color: #000;
+			border-bottom: 1px solid #fff;
+			margin-bottom: -1px;
+		}
+	}
+
+	&__textarea {
+		width: 100%;
+		min-height: 200px;
+	}
+
+	// Hide WordPress editor tabs (we use our own)
+	.wp-editor-tabs {
+		display: none !important;
+	}
+
+	// Hide media buttons
+	.wp-media-buttons {
+		display: none !important;
+	}
+
+	// TinyMCE overrides
+	.mce-tinymce {
+		border-radius: 0 0 8px 8px !important;
+		border-color: #d9d9d9 !important;
+	}
+
+	.mce-toolbar-grp {
+		background: #f6f6f6 !important;
+		border-bottom-color: #d9d9d9 !important;
+	}
+
+	.mce-btn {
+		background: transparent !important;
+		border: none !important;
+
+		&:hover,
+		&:focus {
+			background: #e6e6e6 !important;
+		}
+
+		&.mce-active {
+			background: #e0e0e0 !important;
+		}
+	}
+
+	.mce-edit-area {
+		background: #fff !important;
+	}
+
+	.mce-edit-area iframe {
+		min-height: 150px;
+	}
+
+	.mce-statusbar {
+		background: #f6f6f6 !important;
+		border-top-color: #d9d9d9 !important;
+	}
+
+	.wp-editor-container {
+		border: 1px solid #d9d9d9;
+		border-radius: 0 0 8px 8px;
+		overflow: hidden;
+	}
+
+	.quicktags-toolbar {
+		background: #f6f6f6;
+		border-bottom-color: #d9d9d9;
+		padding: 5px;
+	}
+
+	.wp-editor-area {
+		background: #fff;
+		border: none;
+		padding: 10px;
+		min-height: 150px;
+		width: 100%;
+		box-sizing: border-box;
+	}
+
+	&__sub-label {
+		font-size: 12px;
+		font-weight: 400;
+		line-height: 16px;
+		color: #666;
+		display: block;
+		margin-bottom: 6px;
+	}
+
+	&__row {
+		display: flex;
+		gap: 16px;
+	}
+
+	&__field-half {
+		flex: 1;
+	}
+
+	&__toggle-row {
+		.components-base-control {
+			margin-bottom: 0;
+		}
+
+		.components-toggle-control {
+			margin-bottom: 0;
+		}
+
+		.components-form-toggle {
+			margin-right: 12px;
+		}
+
+		.components-toggle-control__label {
+			font-size: 14px;
+			font-weight: 400;
+			line-height: 20px;
+			color: #000;
+		}
+	}
+
+	&__author {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+	}
+
+	&__avatar {
+		width: 48px;
+		height: 48px;
+		border-radius: 50%;
+		object-fit: cover;
+		border: 0.5px solid #d9d9d9;
+	}
+
+	&__author-info {
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+	}
+
+	&__author-name {
+		font-size: 14px;
+		font-weight: 500;
+		line-height: 20px;
+		color: #000;
+	}
+
+	&__author-date {
+		font-size: 13px;
+		font-weight: 400;
+		line-height: 18px;
+		color: #666;
+	}
+
+	&__info-row {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 8px 0;
+
+		&:not(:last-child) {
+			border-bottom: 0.5px solid #e5e5e5;
+		}
+	}
+
+	&__info-label {
+		font-size: 13px;
+		font-weight: 400;
+		line-height: 18px;
+		color: #666;
+	}
+
+	&__info-value {
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 18px;
+		color: #000;
+		text-transform: capitalize;
+	}
+
+	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 8px;
+		padding: 16px 24px;
+		border-top: 1px solid #d9d9d9;
+		border-radius: 0 0 12px 12px;
+		background: #fff;
+		flex-shrink: 0;
+		z-index: 1;
+
+		.components-button {
+			min-height: 32px;
+			padding: 6px 16px;
+			border-radius: 8px;
+			font-size: 14px;
+			line-height: 20px;
+
+			&.is-secondary {
+				background: #f0f0f0;
+				border: 0.5px solid #d9d9d9;
+				color: #000;
+
+				&:hover:not(:disabled) {
+					background: #e8e8e8;
+					border-color: #d9d9d9;
+					color: #000;
+				}
+			}
+
+			&.is-primary {
+				background: #ef5d33;
+				border-color: #ef5d33;
+				color: #fff;
+
+				&:hover:not(:disabled) {
+					background: #d74d23;
+					border-color: #d74d23;
+				}
+
+				&:disabled {
+					opacity: 0.5;
+				}
+			}
+		}
+
+		.components-spinner {
+			margin: 0;
+		}
+	}
+}
+
+// Global override for WordPress components label text-transform
+.bb-admin-group-type-modal__section .components-base-control__label,
+.bb-admin-group-modal__section .components-base-control__label,
+.bb-admin-modal-overlay .components-base-control__label,
+.components-base-control__label,
+.bb-admin-group-type-modal [class*="css-"],
+.bb-admin-group-modal [class*="css-"],
+.bb-admin-modal-overlay [class*="css-"],
+label[class*="css-"],
+.components-base-control label,
+.components-select-control label,
+.components-text-control label,
+.components-textarea-control label {
+	text-transform: none !important;
+}
+
+// Feature Disabled Screen
+.bb-admin-feature-disabled {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	min-height: 400px;
+	padding: 60px 40px;
+	text-align: center;
+	background: #fff;
+	margin: 20px;
+	border-radius: 16px;
+	border: 1px solid #e5e7eb;
+
+	&__icon {
+		margin-bottom: 24px;
+		
+		svg {
+			width: 64px;
+			height: 64px;
+		}
+	}
+
+	&__title {
+		font-size: 24px;
+		font-weight: 600;
+		color: #1f2937;
+		margin: 0 0 12px 0;
+	}
+
+	&__description {
+		font-size: 16px;
+		color: #6b7280;
+		margin: 0 0 32px 0;
+		max-width: 400px;
+		line-height: 1.5;
+	}
+
+	&__actions {
+		display: flex;
+		gap: 12px;
+
+		.components-button {
+			&.is-primary {
+				background: #ef5d33;
+				border-color: #ef5d33;
+				padding: 10px 24px;
+				height: auto;
+				font-size: 14px;
+				font-weight: 500;
+				border-radius: 8px;
+
+				&:hover {
+					background: #d74d23;
+					border-color: #d74d23;
+				}
+			}
+
+			&.is-secondary {
+				padding: 10px 24px;
+				height: auto;
+				font-size: 14px;
+				font-weight: 500;
+				border-radius: 8px;
+			}
+		}
+	}
+}
