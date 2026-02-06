@@ -21536,6 +21536,7 @@ table.profile-settings tbody td select {
   align-items: center;
   gap: var(--bb-rl-space-100);
   color: var(--bb-rl-text-color);
+  word-break: break-word;
 }
 
 .bb-rl-ac-results .bp-search-ac > li .item-title a {
