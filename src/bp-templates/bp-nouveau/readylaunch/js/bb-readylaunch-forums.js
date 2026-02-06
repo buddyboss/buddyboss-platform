@@ -38,7 +38,7 @@ window.bp = window.bp || {};
 			$document.on( 'click', '.bb-rl-forum-modal-close, .bb-rl-forum-modal-overlay', this.closeForumModal );
 			$document.on( 'click', '.bb-rl-forum-modal-overlay', this.closeForumModalOverlay );
 			$document.on( 'click', '[id*="single-forum-description-popup"] .bb-close-action-popup', this.closeForumDescriptionPopup );
-			
+
 			// Initialize emoji when forum modals are opened
 			$document.on( 'bbp_after_load_topic_form', this.initialize_emoji_for_modal );
 			$document.on( 'bbp_after_load_reply_form', this.initialize_emoji_for_modal );
@@ -127,7 +127,7 @@ window.bp = window.bp || {};
 			}
 
 			e.preventDefault();
-				
+
 			$('.bbp-reply-form.bb-rl-forum-modal').addClass( 'bb-rl-forum-modal-visible' );
 
 			var $reply_header_title = '';
@@ -219,7 +219,7 @@ window.bp = window.bp || {};
 				window.bb_rl_forums_medium_forum_editor = [];
 				window.bb_rl_forums_medium_reply_editor = [];
 				window.bb_rl_forums_medium_topic_editor = [];
-	
+
 				var toolbarOptions = {
 					buttons: ['bold', 'italic', 'unorderedlist','orderedlist', 'quote', 'anchor', 'pre' ],
 					relativeContainer: document.getElementById( 'bb-rl-editor-toolbar' ),
@@ -228,12 +228,12 @@ window.bp = window.bp || {};
 				};
 				if ( jQuery( '.bbp_editor_forum_content' ).length ) {
 					jQuery( '.bbp_editor_forum_content' ).each(function(i,element){
-	
+
 						// added support for shortcode in elementor popup.
 						if ( jQuery( element ).parents( '.elementor-popup-modal' ).length > 0 ) {
 							return;
 						}
-	
+
 						var key = jQuery(element).data('key');
 						window.bb_rl_forums_medium_forum_editor[key] = new window.MediumEditor(
 							element,
@@ -264,7 +264,7 @@ window.bp = window.bp || {};
 								}
 							}
 						);
-	
+
 						window.bb_rl_forums_medium_forum_editor[key].subscribe(
 							'editableInput',
 							function () {
@@ -277,7 +277,7 @@ window.bp = window.bp || {};
 										return this.innerText;
 									}
 								);
-	
+
 								// transform other emoji into emojionearea emoji.
 								jQuery(dummy_element).find( 'img.emoji' ).each(function( index, Obj) {
 									jQuery( Obj ).addClass( 'emojioneemoji' );
@@ -285,21 +285,21 @@ window.bp = window.bp || {};
 									jQuery( Obj ).attr( 'data-emoji-char', emojis );
 									jQuery( Obj ).removeClass( 'emoji' );
 								});
-	
+
 								// Transform emoji image into emoji unicode.
-								jQuery(dummy_element).find( 'img.emojioneemoji' ).replaceWith(
+								jQuery(dummy_element).find( 'img.emojioneemoji, img.bb-rl-emojioneemoji' ).replaceWith(
 									function () {
 										return this.dataset.emojiChar;
 									}
 								);
 								bbp_forum_content.val( jQuery(dummy_element).html() );
-	
+
 								// Enable submit button if content is available.
 								var $reply_content   = jQuery( element ).html();
-	
+
 								$reply_content = jQuery.trim( $reply_content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
 								$reply_content = $reply_content.replace( /&nbsp;/g, ' ' );
-	
+
 								var content_text = jQuery( '<p>' + $reply_content + '</p>' ).text();
 								if ( content_text !== '' || $reply_content.indexOf( 'emojioneemoji' ) >= 0 ) {
 									jQuery( element ).closest( 'form' ).addClass( 'has-content' );
@@ -308,7 +308,7 @@ window.bp = window.bp || {};
 								}
 							}
 						);
-	
+
 						window.bb_rl_forums_medium_forum_editor[key].subscribe( 'editablePaste', function ( e ) {
 							// Wrap all target <li> elements in a single <ul>
 							var targetLiElements = jQuery(e.target).find('li').filter(function() {
@@ -317,13 +317,25 @@ window.bp = window.bp || {};
 							if (targetLiElements.length > 0) {
 								targetLiElements.wrapAll('<ul></ul>');
 								// Update content into input field
-								jQuery( e.target ).closest( 'form' ).find( '#bbp_forum_content' ).val( window.bb_rl_forums_medium_forum_editor[key].getContent() );
+								// Convert emoji before setting value
+								var raw_content = window.bb_rl_forums_medium_forum_editor[key].getContent();
+								var dummy_element = document.createElement( 'div' );
+								dummy_element.innerHTML = raw_content;
+
+								// Transform emoji image into emoji unicode
+								jQuery(dummy_element).find( 'img.emojioneemoji, img.bb-rl-emojioneemoji' ).replaceWith(
+									function () {
+										return this.dataset.emojiChar;
+									}
+								);
+
+								jQuery( e.target ).closest( 'form' ).find( '#bbp_forum_content' ).val( jQuery(dummy_element).html() );
 							}
 						});
-	
+
 					});
 				}
-	
+
 				// Add Click event to show / hide text formatting Toolbar for forum form.
 				jQuery( document ).on( 'click', '.bbp-forum-form #whats-new-toolbar .show-toolbar', function ( e ) {
 					e.preventDefault();
@@ -344,15 +356,15 @@ window.bp = window.bp || {};
 					jQuery( window.bb_rl_forums_medium_forum_editor[ key ].elements[ 0 ] ).focus();
 					medium_editor.toggleClass( 'active' );
 				} );
-	
+
 				if ( jQuery( '.bbp_editor_reply_content' ).length ) {
 					jQuery( '.bbp_editor_reply_content' ).each(function(i,element){
-	
+
 						// added support for shortcode in elementor popup.
 						if ( jQuery( element ).parents( '.elementor-popup-modal' ).length > 0 ) {
 							return;
 						}
-	
+
 						var key = jQuery(element).data('key');
 						window.bb_rl_forums_medium_reply_editor[key] = new window.MediumEditor(
 							element,
@@ -383,7 +395,7 @@ window.bp = window.bp || {};
 								}
 							}
 						);
-	
+
 						window.bb_rl_forums_medium_reply_editor[key].subscribe(
 							'editableInput',
 							function () {
@@ -396,7 +408,7 @@ window.bp = window.bp || {};
 										return this.innerText;
 									}
 								);
-	
+
 								// transform other emoji into emojionearea emoji.
 								jQuery(dummy_element).find( 'img.emoji' ).each(function( index, Obj) {
 									jQuery( Obj ).addClass( 'emojioneemoji' );
@@ -404,33 +416,33 @@ window.bp = window.bp || {};
 									jQuery( Obj ).attr( 'data-emoji-char', emojis );
 									jQuery( Obj ).removeClass( 'emoji' );
 								});
-	
+
 								// Transform emoji image into emoji unicode.
-								jQuery(dummy_element).find( 'img.emojioneemoji' ).replaceWith(
+								jQuery(dummy_element).find( 'img.emojioneemoji, img.bb-rl-emojioneemoji' ).replaceWith(
 									function () {
 										return this.dataset.emojiChar;
 									}
 								);
 								bbp_reply_content.val( jQuery(dummy_element).html() );
-	
+
 								// Enable submit button if content is available.
 								var $reply_content   = jQuery( element ).html();
-	
+
 								$reply_content = jQuery.trim( $reply_content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
 								$reply_content = $reply_content.replace( /&nbsp;/g, ' ' );
-	
+
 								var content_text = jQuery( '<p>' + $reply_content + '</p>' ).text();
 								if ( content_text !== '' || $reply_content.indexOf( 'emojioneemoji' ) >= 0 ) {
 									jQuery( element ).closest( 'form' ).addClass( 'has-content' );
 								} else {
 									jQuery( element ).closest( 'form' ).removeClass( 'has-content' );
 								}
-	
+
 								if ( ! _.isUndefined( BP_Nouveau.forums.params.link_preview ) && BP_Nouveau.forums.params.link_preview ) {
 									if ( window.bb_rl_forums_medium_reply_editor[key].linkTimeout != null ) {
 										clearTimeout( window.bb_rl_forums_medium_reply_editor[key].linkTimeout );
 									}
-	
+
 									window.bb_rl_forums_medium_reply_editor[key].linkTimeout = setTimeout(
 										function () {
 											var form = jQuery(element).closest( 'form' );
@@ -443,7 +455,7 @@ window.bp = window.bp || {};
 								}
 							}
 						);
-	
+
 						window.bb_rl_forums_medium_reply_editor[key].subscribe( 'editablePaste', function ( e ) {
 							// Wrap all target <li> elements in a single <ul>
 							var targetLiElements = jQuery(e.target).find('li').filter(function() {
@@ -452,15 +464,27 @@ window.bp = window.bp || {};
 							if (targetLiElements.length > 0) {
 								targetLiElements.wrapAll('<ul></ul>');
 								// Update content into input field
-								jQuery( e.target ).closest( 'form' ).find( '#bbp_reply_content' ).val( window.bb_rl_forums_medium_reply_editor[key].getContent() );
+								// Convert emoji before setting value
+								var raw_content = window.bb_rl_forums_medium_reply_editor[key].getContent();
+								var dummy_element = document.createElement( 'div' );
+								dummy_element.innerHTML = raw_content;
+
+								// Transform emoji image into emoji unicode
+								jQuery(dummy_element).find( 'img.emojioneemoji, img.bb-rl-emojioneemoji' ).replaceWith(
+									function () {
+										return this.dataset.emojiChar;
+									}
+								);
+
+								jQuery( e.target ).closest( 'form' ).find( '#bbp_reply_content' ).val( jQuery(dummy_element).html() );
 							}
 						});
-	
+
 						if ( ! _.isUndefined( BP_Nouveau.forums.params.link_preview ) && BP_Nouveau.forums.params.link_preview ) {
 							var bbp_reply_content = jQuery(element).closest('form').find( '#bbp_reply_content' );
 							var form = jQuery(element).closest( 'form' );
 							bp.Nouveau.linkPreviews.scrapURL( bbp_reply_content.val(), form.find( '#whats-new-attachments' ), form.find( '#link_preview_data' ) );
-	
+
 							var link_preview_input = jQuery( element ).closest( 'form' ).find( '#link_preview_data' );
 							if( link_preview_input.length > 0) {
 								link_preview_input.on( 'change', function() {
@@ -475,7 +499,7 @@ window.bp = window.bp || {};
 								});
 							}
 						}
-	
+
 						jQuery('a.bp-suggestions-mention:empty').remove();
 						setTimeout(
 							function () {
@@ -483,11 +507,11 @@ window.bp = window.bp || {};
 							},
 							500
 						);
-	
+
 					});
-	
+
 				}
-	
+
 				// Add Click event to show / hide text formatting Toolbar for reply form.
 				jQuery( document ).on( 'click', '.bbp-reply-form #whats-new-toolbar .bb-rl-show-toolbar', function ( e ) {
 					e.preventDefault();
@@ -511,15 +535,15 @@ window.bp = window.bp || {};
 					jQuery( window.bb_rl_forums_medium_reply_editor[ key ].elements[ 0 ] ).focus();
 					medium_editor.toggleClass( 'active' );
 				} );
-	
+
 				if ( jQuery( '.bbp_editor_topic_content' ).length ) {
 					jQuery( '.bbp_editor_topic_content' ).each(function(i,element){
-	
+
 						// added support for shortcode in elementor popup.
 						if ( jQuery( element ).parents( '.elementor-location-popup' ).length > 0 ) {
 							return;
 						}
-	
+
 						var key = jQuery(element).data('key');
 						window.bb_rl_forums_medium_topic_editor[key] = new window.MediumEditor(
 							element,
@@ -550,13 +574,13 @@ window.bp = window.bp || {};
 								}
 							}
 						);
-	
+
 						window.bb_rl_forums_medium_topic_editor[key].subscribe(
 							'editableInput',
 							function () {
 								jQuery(element).closest('form').find( '#bbp_topic_content' ).val( window.bb_rl_forums_medium_topic_editor[key].getContent() );
 								var bbp_topic_content = jQuery(element).closest('form').find( '#bbp_topic_content' );
-	
+
 								var html = window.bb_rl_forums_medium_topic_editor[key].getContent();
 								var dummy_element = document.createElement( 'div' );
 								dummy_element.innerHTML = html;
@@ -565,7 +589,7 @@ window.bp = window.bp || {};
 										return this.innerText;
 									}
 								);
-	
+
 								// transform other emoji into emojionearea emoji.
 								jQuery(dummy_element).find( 'img.emoji' ).each(function( index, Obj) {
 									jQuery( Obj ).addClass( 'emojioneemoji' );
@@ -573,33 +597,33 @@ window.bp = window.bp || {};
 									jQuery( Obj ).attr( 'data-emoji-char', emojis );
 									jQuery( Obj ).removeClass( 'emoji' );
 								});
-	
+
 								// Transform emoji image into emoji unicode.
-								jQuery(dummy_element).find( 'img.emojioneemoji' ).replaceWith(
+								jQuery(dummy_element).find( 'img.emojioneemoji, img.bb-rl-emojioneemoji' ).replaceWith(
 									function () {
 										return this.dataset.emojiChar;
 									}
 								);
 								bbp_topic_content.val( jQuery(dummy_element).html() );
-	
+
 								// Enable submit button if content is available.
 								var $reply_content   = jQuery( element ).html();
-	
+
 								$reply_content = jQuery.trim( $reply_content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
 								$reply_content = $reply_content.replace( /&nbsp;/g, ' ' );
-	
+
 								var content_text = jQuery( '<p>' + $reply_content + '</p>' ).text();
 								if ( content_text !== '' || $reply_content.indexOf( 'emojioneemoji' ) >= 0 ) {
 									jQuery( element ).closest( 'form' ).addClass( 'has-content' );
 								} else {
 									jQuery( element ).closest( 'form' ).removeClass( 'has-content' );
 								}
-	
+
 								if ( ! _.isUndefined( BP_Nouveau.forums.params.link_preview ) && BP_Nouveau.forums.params.link_preview ) {
 									if ( window.bb_rl_forums_medium_topic_editor[key].linkTimeout != null ) {
 										clearTimeout( window.bb_rl_forums_medium_topic_editor[key].linkTimeout );
 									}
-	
+
 									window.bb_rl_forums_medium_topic_editor[key].linkTimeout = setTimeout(
 										function () {
 											var form = jQuery(element).closest('form');
@@ -612,7 +636,7 @@ window.bp = window.bp || {};
 								}
 							}
 						);
-	
+
 						window.bb_rl_forums_medium_topic_editor[key].subscribe( 'editablePaste', function ( e ) {
 							// Wrap all target <li> elements in a single <ul>
 							var targetLiElements = jQuery(e.target).find('li').filter(function() {
@@ -621,15 +645,27 @@ window.bp = window.bp || {};
 							if (targetLiElements.length > 0) {
 								targetLiElements.wrapAll('<ul></ul>');
 								// Update content into input field
-								jQuery( e.target ).closest( 'form' ).find( '#bbp_topic_content' ).val( window.bb_rl_forums_medium_topic_editor[key].getContent() );
+								// Convert emoji before setting value
+								var raw_content = window.bb_rl_forums_medium_topic_editor[key].getContent();
+								var dummy_element = document.createElement( 'div' );
+								dummy_element.innerHTML = raw_content;
+
+								// Transform emoji image into emoji unicode
+								jQuery(dummy_element).find( 'img.emojioneemoji, img.bb-rl-emojioneemoji' ).replaceWith(
+									function () {
+										return this.dataset.emojiChar;
+									}
+								);
+
+								jQuery( e.target ).closest( 'form' ).find( '#bbp_topic_content' ).val( jQuery(dummy_element).html() );
 							}
 						});
-	
+
 						if ( ! _.isUndefined( BP_Nouveau.forums.params.link_preview ) && BP_Nouveau.forums.params.link_preview ) {
 							var bbp_topic_content = jQuery(element).closest('form').find( '#bbp_topic_content' );
 							var form = jQuery(element).closest( 'form' );
 							bp.Nouveau.linkPreviews.scrapURL( bbp_topic_content.val(), form.find( '#whats-new-attachments' ), form.find( '#link_preview_data' ) );
-	
+
 							var link_preview_input = jQuery( element ).closest( 'form' ).find( '#link_preview_data' );
 							if( link_preview_input.length > 0) {
 								link_preview_input.on( 'change', function() {
@@ -644,7 +680,7 @@ window.bp = window.bp || {};
 								});
 							}
 						}
-	
+
 						jQuery('a.bp-suggestions-mention:empty').remove();
 						setTimeout(
 							function () {
@@ -652,11 +688,11 @@ window.bp = window.bp || {};
 							},
 							500
 						);
-	
+
 					});
-	
+
 				}
-	
+
 				// Add Click event to show / hide text formatting Toolbar for topic form.
 				jQuery( document ).on( 'click', '.bbp-topic-form #whats-new-toolbar .bb-rl-show-toolbar', function ( e ) {
 					e.preventDefault();
@@ -677,20 +713,20 @@ window.bp = window.bp || {};
 					jQuery( window.bb_rl_forums_medium_topic_editor[ key ].elements[ 0 ] ).focus();
 					medium_editor.toggleClass( 'active' );
 				} );
-	
+
 				jQuery( document ).on ( 'keyup', '#bbpress-forums .medium-editor-toolbar-input', function( event ) {
-	
+
 					var URL = event.target.value;
-	
+
 					if ( bp.Nouveau.isURL( URL ) ) {
 						jQuery( event.target ).removeClass('isNotValid').addClass('isValid');
 					} else {
 						jQuery( event.target ).removeClass('isValid').addClass('isNotValid');
 					}
-	
+
 				});
 			}
-	
+
 			/* Use backticks instead of <code> for the Code button in the editor */
 			if ( typeof( edButtons ) !== 'undefined' ) {
 				/*globals edButtons:false */
@@ -698,7 +734,7 @@ window.bp = window.bp || {};
 				/*globals QTags:false */
 				QTags._buttonsInit();
 			}
-	
+
 			/* Tab from topic title */
 			jQuery( '#bbp_topic_title' ).bind(
 				'keydown.editor-focus',
@@ -706,7 +742,7 @@ window.bp = window.bp || {};
 					if ( e.which !== 9 ) {
 						return;
 					}
-	
+
 					if ( ! e.ctrlKey && ! e.altKey && ! e.shiftKey ) {
 						if ( typeof( tinymce ) !== 'undefined' ) {
 							/*globals tinymce:false */
@@ -719,7 +755,7 @@ window.bp = window.bp || {};
 						} else {
 							jQuery( 'textarea.bbp-the-content' ).focus();
 						}
-	
+
 						e.preventDefault();
 					}
 				}
@@ -732,7 +768,7 @@ window.bp = window.bp || {};
 					jQuery( e.currentTarget ).closest( 'form' ).removeClass( 'has-title' );
 				}
 			} );
-	
+
 			if ( jQuery( 'textarea#bbp_topic_content' ).length !== 0 ) {
 				// Enable submit button if content is available.
 				jQuery( '#bbp_topic_content' ).on( 'keyup', function() {
@@ -744,7 +780,7 @@ window.bp = window.bp || {};
 					}
 				} );
 			}
-	
+
 			if ( jQuery( 'textarea#bbp_reply_content' ).length !== 0 ) {
 				// Enable submit button if content is available.
 				jQuery( '#bbp_reply_content' ).on( 'keyup', function() {
@@ -756,7 +792,7 @@ window.bp = window.bp || {};
 					}
 				} );
 			}
-	
+
 			jQuery( document ).on( 'input', '.bbp_editor_topic_content', function ( e ) {
 				var content = jQuery( e.currentTarget )[ 0 ];
 				if ( content.innerHTML.replace( /<p>/gi, '' ).replace( /<\/p>/gi, '' ).replace( /<br>/gi, '' ) === '' ) {
@@ -765,7 +801,7 @@ window.bp = window.bp || {};
 					jQuery( '#bbp_topic_content' ).val( topic_content );
 				}
 			} );
-	
+
 			jQuery( document ).on( 'input', '.bbp_editor_reply_content', function ( e ) {
 				var content = jQuery( e.currentTarget )[ 0 ];
 				if ( content.innerHTML.replace( /<p>/gi, '' ).replace( /<\/p>/gi, '' ).replace( /<br>/gi, '' ) === '' ) {
@@ -774,7 +810,7 @@ window.bp = window.bp || {};
 					jQuery( '#bbp_reply_content' ).val( reply_content );
 				}
 			} );
-			
+
 		},
 
 		forumSelect2: function () {
@@ -857,7 +893,7 @@ window.bp = window.bp || {};
 
 					// Apply CSS classes after initialization
 					jQuery( element ).next( '.select2-container' ).find( '.select2-selection' ).addClass( 'bb-select-container' );
-					
+
 					// Add class to dropdown when it opens
 					jQuery( element ).on( 'select2:open', function() {
 						jQuery( '.select2-dropdown' ).addClass( 'bb-select-dropdown bb-tag-list-dropdown' );
@@ -925,12 +961,12 @@ window.bp = window.bp || {};
 						var $element = jQuery( element );
 						var elem_id = $element.attr( 'id' );
 						var key = $element.data( 'key' );
-						
+
 						// Check if emojioneArea is already initialized on this element
 						if ( $element.data( 'emojioneArea' ) || ( element.emojioneArea !== undefined ) ) {
 							// Clean up the existing instance
 							var emojiContainer = $element.closest( 'form' ).find( '#whats-new-toolbar > .bb-rl-post-emoji' );
-							
+
 							// Remove the emojioneArea instance
 							if ( element.emojioneArea ) {
 								try {
@@ -940,14 +976,14 @@ window.bp = window.bp || {};
 								}
 								delete element.emojioneArea;
 							}
-							
+
 							// Clean up the container
 							emojiContainer.empty();
-							
+
 							// Remove data attribute
 							$element.removeData( 'emojioneArea' );
 						}
-						
+
 						jQuery( '#' + elem_id ).emojioneArea(
 							{
 								standalone: true,
@@ -989,11 +1025,11 @@ window.bp = window.bp || {};
 										var small = _this.search.val().toLowerCase();
 										_this.search.val(small);
 									},
-	
+
 									picker_show: function () {
 										$( this.button[0] ).closest( '.bb-rl-post-emoji' ).addClass('active');
 									},
-	
+
 									picker_hide: function () {
 										$( this.button[0] ).closest( '.bb-rl-post-emoji' ).removeClass('active');
 									},
@@ -1077,7 +1113,7 @@ window.bp = window.bp || {};
 								} else {
 									var oldRedirectUrl = response.redirect_url;
 									var newRedirectUrl = oldRedirectUrl.substring( 0, oldRedirectUrl.indexOf( '#' ) );
-		
+
 									// Prevent redirect for quick reply form for titmeline.
 									if ( ! replyForm.length && ! replyForm.is(':visible') ) {
 										window.location.href = newRedirectUrl;
@@ -1197,7 +1233,7 @@ window.bp = window.bp || {};
 						bp.Readylaunch.Forums.reset_reply_form( $bbpress_forums_element, media_element_key, media );
 						bp.Readylaunch.Forums.reset_reply_form( $bbpress_forums_element, document_element_key, document );
 						bp.Readylaunch.Forums.reset_reply_form( $bbpress_forums_element, video_element_key, video );
-						
+
 					} else {
 						if ( typeof response.content !== 'undefined' ) {
 							$bbpress_forums_element.find( '.bbp-reply-form form' ).find( '#bbp-template-notices' ).html( response.content );
@@ -1206,8 +1242,8 @@ window.bp = window.bp || {};
 					$bbpress_forums_element.find( '.bbp-reply-form form' ).removeClass( 'submitting' );
 
 					$( '.bbp-reply-form' ).trigger( 'bbp_after_submit_reply_form', {
-						response: response, 
-						topic_id: $data.bbp_topic_id 
+						response: response,
+						topic_id: $data.bbp_topic_id
 					} );
 				}
 			);
@@ -1248,7 +1284,7 @@ window.bp = window.bp || {};
 				}
 			}
 		},
-		
+
 		bbp_reply_hide_single_url: function( container, selector ) {
 			var _findtext  = $( container ).find( selector + ' > p' ).removeAttr( 'br' ).removeAttr( 'a' ).text();
 			var _url       = '',
@@ -1299,6 +1335,7 @@ window.bp = window.bp || {};
 						var media_valid = true;
 						var editor_key = $( e.target ).find( '.bbp-the-content' ).data( 'key' );
 						var editor = false;
+
 						if ( typeof window.bb_rl_forums_medium_reply_editor !== 'undefined' && typeof window.bb_rl_forums_medium_reply_editor[editor_key] !== 'undefined' ) {
 							editor = window.bb_rl_forums_medium_reply_editor[editor_key];
 						}
@@ -1342,12 +1379,26 @@ window.bp = window.bp || {};
 								media_valid = true;
 							}
 						}
-						
+
 						if ( editor ) {
-							// Check raw editor content instead of processed content
+							// Get raw editor content
 							var editor_content = editor.getContent();
-							var editor_text = $( $.parseHTML( editor_content ) ).text().trim();
-							var has_mentions = editor_content.indexOf( 'atwho-inserted' ) >= 0 || editor_content.indexOf( 'bp-suggestions-mention' ) >= 0;
+
+							// Convert emoji <img> tags to actual emoji characters BEFORE validation
+							var dummy_element = document.createElement( 'div' );
+							dummy_element.innerHTML = editor_content;
+
+							// Transform emoji image into emoji unicode
+							jQuery(dummy_element).find( 'img.emojioneemoji, img.bb-rl-emojioneemoji' ).replaceWith(
+								function () {
+									return this.dataset.emojiChar;
+								}
+							);
+
+							// Get converted content for validation
+							var converted_content = dummy_element.innerHTML;
+							var editor_text = $( $.parseHTML( converted_content ) ).text().trim();
+							var has_mentions = converted_content.indexOf( 'atwho-inserted' ) >= 0 || converted_content.indexOf( 'bp-suggestions-mention' ) >= 0;
 
 							if ( ( editor_text === '' && !has_mentions ) && media_valid == false ) {
 								$( this ).find( '.bbp-the-content' ).addClass( 'error' );
@@ -1375,9 +1426,22 @@ window.bp = window.bp || {};
 							// Use raw editor content instead of processed content to preserve mentions
 							if ( editor ) {
 								var raw_content = editor.getContent();
+
+								// Convert emoji <img> tags to actual emoji characters
+								var submit_dummy = document.createElement( 'div' );
+								submit_dummy.innerHTML = raw_content;
+
+								// Transform emoji image into emoji unicode
+								jQuery(submit_dummy).find( 'img.emojioneemoji, img.bb-rl-emojioneemoji' ).replaceWith(
+									function () {
+										return this.dataset.emojiChar;
+									}
+								);
+
+								raw_content = submit_dummy.innerHTML;
 								$( this ).find( '#bbp_reply_content' ).val( raw_content );
 							}
-							
+
 							bp.Readylaunch.Forums.bbp_reply_ajax_call( 'reply', window.bbpReplyAjaxJS.reply_nonce, $( this ).serializeArray(), $( this ) );
 						} else {
 							$( this ).removeClass( 'submitting' );
@@ -1490,7 +1554,7 @@ window.bp = window.bp || {};
 					}
 				);
 			},
-			
+
 			// When click on notification then move to particular reply.
 			moveToReply: function () {
 				if ( window.location.href.indexOf( '#post-' ) > 0 ) {
@@ -1500,11 +1564,11 @@ window.bp = window.bp || {};
 						return;
 					}
 					var scrollTop, admin_bar_height = 0;
-			
+
 					if ( $( '#wpadminbar' ).length > 0 ) {
 						admin_bar_height = $( '#wpadminbar' ).innerHeight();
 					}
-			
+
 					if ( $( 'body' ).hasClass( 'sticky-header' ) ) {
 						scrollTop = ( $( '#post-' + postID ).parent().offset().top - $( '#masthead' ).innerHeight() - admin_bar_height );
 					} else {
@@ -1523,10 +1587,10 @@ window.bp = window.bp || {};
 				sURLVariables = sPageURL.split( '&' ),
 				sParameterName,
 				i;
-	
+
 			for ( i = 0; i < sURLVariables.length; i++ ) {
 				sParameterName = sURLVariables[ i ].split( '=' );
-	
+
 				if ( sParameterName[ 0 ] === sParam ) {
 					return sParameterName[ 1 ] === undefined ? true : decodeURIComponent( sParameterName[ 1 ] );
 				}
