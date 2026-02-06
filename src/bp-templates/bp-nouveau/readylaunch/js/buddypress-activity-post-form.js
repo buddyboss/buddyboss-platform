@@ -815,6 +815,13 @@ window.bp = window.bp || {};
 				self.postForm.$el.removeClass( 'bb-rl-focus-in--empty loading' );
 			}
 
+			// Validate Post title after draft/activity is loaded.
+			if ( self.postForm && typeof self.postForm.postValidate === 'function' ) {
+				setTimeout( function() {
+					self.postForm.postValidate();
+				}, 100 );
+			}
+
 			if (
 				! _.isUndefined( BP_Nouveau.activity.params.topics ) &&
 				BP_Nouveau.activity.params.topics.topic_lists.length > 0 &&
@@ -834,7 +841,7 @@ window.bp = window.bp || {};
 			}
 
 			if ( activity_data && activity_data.topics ) {
-				if ( '' === bp.draft_activity.display_post ) {
+				if ( '' === bp.draft_activity.display_post || 'edit' === bp.draft_activity.display_post ) {
 					if ( 'scheduled' !== activity_data.status ) {
 						self.postForm.model.set( 'topics', activity_data.topics );
 						bp.draft_activity.data.topics = activity_data.topics;
@@ -4930,14 +4937,43 @@ window.bp = window.bp || {};
 					this.$el.addClass( 'bb-rl-focus-in--empty' );
 				}
 
-				// Validate topic content.
+				// Validate Post title first (priority over Topic).
+				var isTitleRequired   = BP_Nouveau.activity.params.is_activity_post_title_required;
+				var postTitle         = isTitleRequired ? $.trim( $( '#bb-rl-whats-new-title' ).val() || '' ) : '';
+				var $submitWrapper    = $( '#whats-new-submit' );
+				var titleTooltipError = ! _.isUndefined( BP_Nouveau.activity.params.post_title_tooltip_error ) ? BP_Nouveau.activity.params.post_title_tooltip_error : 'Please enter a title for your activity.';
+
+				if ( isTitleRequired ) {
+					if ( '' === postTitle ) {
+						// Post title is required and empty - show title tooltip, hide topic tooltip.
+						$( 'body' ).addClass( 'bb-rl-ac-title-required' );
+						if ( $submitWrapper.find( '.bb-title-tooltip-wrapper' ).length === 0 ) {
+							var $titleTooltipWrapper = $( '<div class="bb-title-tooltip-wrapper"><div class="bb-title-tooltip"></div></div>' );
+							$titleTooltipWrapper.find( '.bb-title-tooltip' ).text( titleTooltipError );
+							$submitWrapper.prepend( $titleTooltipWrapper );
+						}
+						// Hide topic tooltip if title is missing (priority).
+						$submitWrapper.find( '.bb-topic-tooltip-wrapper' ).remove();
+					} else {
+						// Post title is filled - remove title tooltip and class.
+						$( 'body' ).removeClass( 'bb-rl-ac-title-required' );
+						$submitWrapper.find( '.bb-title-tooltip-wrapper' ).remove();
+					}
+				} else {
+					// Post title is not required - remove title tooltip and class.
+					$( 'body' ).removeClass( 'bb-rl-ac-title-required' );
+					$submitWrapper.find( '.bb-title-tooltip-wrapper' ).remove();
+				}
+
+				// Validate topic content (only if title is not required or title is filled).
 				if (
 					! _.isUndefined( BP_Nouveau.activity.params.topics ) &&
 					! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics ) &&
 					BP_Nouveau.activity.params.topics.bb_is_enabled_activity_topics &&
 					! _.isUndefined( BP_Nouveau.activity.params.topics.bb_is_activity_topic_required ) &&
 					BP_Nouveau.activity.params.topics.bb_is_activity_topic_required &&
-					! _.isUndefined( BBTopicsManager )
+					! _.isUndefined( BBTopicsManager ) &&
+					( ! isTitleRequired || '' !== postTitle )
 				) {
 					BBTopicsManager.bbTopicValidateContent( {
 						self         : this,
@@ -5026,6 +5062,20 @@ window.bp = window.bp || {};
 				this.views.add( bp.Nouveau.Activity.postForm.activityAttachments );
 				bp.Nouveau.Activity.postForm.activityToolbar = new bp.Views.ActivityToolbar( { model: this.model } );
 				this.views.add( bp.Nouveau.Activity.postForm.activityToolbar );
+
+				// Initialize Post title tooltip if title is required.
+				var isTitleRequired = BP_Nouveau.activity.params.is_activity_post_title_required;
+				if ( isTitleRequired ) {
+					$( document ).on( 'bb_display_full_form', function () {
+						var $submitWrapper = $( '.bb-rl-activity-update-form.modal-popup #whats-new-submit' );
+						var titleTooltipError = ! _.isUndefined( BP_Nouveau.activity.params.post_title_tooltip_error ) ? BP_Nouveau.activity.params.post_title_tooltip_error : 'Please enter a title for your activity.';
+						if ( $submitWrapper.length > 0 && $submitWrapper.find( '.bb-title-tooltip-wrapper' ).length === 0 ) {
+							var $titleTooltipWrapper = $( '<div class="bb-title-tooltip-wrapper"><div class="bb-title-tooltip"></div></div>' );
+							$titleTooltipWrapper.find( '.bb-title-tooltip' ).text( titleTooltipError );
+							$submitWrapper.prepend( $titleTooltipWrapper );
+						}
+					} );
+				}
 
 				this.views.add( new bp.Views.FormSubmitWrapper( { model: this.model } ) );
 
@@ -5231,6 +5281,9 @@ window.bp = window.bp || {};
 			},
 
 			resetForm: function () {
+				// Remove Post title tooltip on reset.
+				$( 'body' ).removeClass( 'bb-rl-ac-title-required' );
+				$( '#whats-new-submit' ).find( '.bb-title-tooltip-wrapper' ).remove();
 				_.each(
 					this.views._views[ '' ],
 					function ( view, index ) {
@@ -5766,6 +5819,14 @@ window.bp = window.bp || {};
 								).addClass( 'selected' );
 							}
 
+							// Trigger GIF autoplay check for edited activity
+							// Use setTimeout to ensure DOM is updated and video elements are rendered
+							setTimeout( function() {
+								if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.autoPlayGifVideos ) {
+									bp.Nouveau.Media.autoPlayGifVideos();
+								}
+							}, 100 );
+
 							// Inject the activity into the stream only if it hasn't been done already (HeartBeat).
 						} else if ( ! activityElemSel.length ) {
 
@@ -5789,6 +5850,14 @@ window.bp = window.bp || {};
 
 							// replace dummy image with original image by faking scroll event.
 							jQuery( window ).scroll();
+
+							// Trigger GIF autoplay check for newly posted activity
+							// Use setTimeout to ensure DOM is updated and video elements are rendered
+							setTimeout( function() {
+								if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.autoPlayGifVideos ) {
+									bp.Nouveau.Media.autoPlayGifVideos();
+								}
+							}, 100 );
 
 							if ( link_embed ) {
 								if ( ! _.isUndefined( window.instgrm ) ) {

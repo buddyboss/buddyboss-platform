@@ -48,6 +48,7 @@
 	.document-list {
 
 		.load-more {
+			grid-column: 1 / -1;
 			display: flex;
 			align-items: center;
 			justify-content: flex-start;
@@ -68,6 +69,10 @@
 
 			}
 
+		}
+
+		.pager {
+			grid-column: 1 / -1;
 		}
 	}
 
@@ -564,6 +569,18 @@
 		font-size: 14px;
 		color: var(--bb-rl-text-secondary-color);
 		text-align: center;
+	}
+
+	@media screen and (max-width: $sm) {
+		padding: var(--bb-rl-space-300) 0;
+
+		.bb-media-actions-wrap {
+
+			.bb-media-actions,
+			.bb-video-actions {
+				flex-direction: column;
+			}
+		}
 	}
 }
 

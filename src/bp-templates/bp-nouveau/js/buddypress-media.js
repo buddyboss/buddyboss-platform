@@ -341,8 +341,59 @@ window.bp = window.bp || {};
 
 			// Gifs autoplay.
 			if ( !_.isUndefined( BP_Nouveau.media.gif_api_key ) ) {
-				window.addEventListener( 'scroll', this.autoPlayGifVideos, false );
-				window.addEventListener( 'resize', this.autoPlayGifVideos, false );
+				window.addEventListener( 'scroll', this.throttledAutoPlayGifVideos.bind( this ), false );
+				window.addEventListener( 'resize', this.throttledAutoPlayGifVideos.bind( this ), false );
+
+				// Add scroll event listener for message thread container
+				var messageThreadList = $( '#bp-message-thread-list' );
+				if ( messageThreadList.length ) {
+					messageThreadList.on( 'scroll', this.throttledAutoPlayGifVideos.bind( this ) );
+				}
+
+				// Add scroll event listener for activity modal body
+				var activityModalBody = $( '.bb-modal-activity-body' );
+				if ( activityModalBody.length ) {
+					activityModalBody.on( 'scroll', this.throttledAutoPlayGifVideos.bind( this ) );
+				}
+
+				// Add scroll event listener for media modal activity item
+				var mediaModalActivityItem = $( '.bb-media-model-container .activity-list .activity-item' );
+				if ( mediaModalActivityItem.length ) {
+					mediaModalActivityItem.on( 'scroll', this.throttledAutoPlayGifVideos.bind( this ) );
+				}
+
+				// Add document-level scroll event delegation as fallback
+				$( document ).on( 'scroll', '#bp-message-thread-list', this.throttledAutoPlayGifVideos.bind( this ) );
+				$( document ).on( 'scroll', '.bb-modal-activity-body', this.throttledAutoPlayGifVideos.bind( this ) );
+				$( document ).on( 'scroll', '.bb-media-model-container .activity-list .activity-item', this.throttledAutoPlayGifVideos.bind( this ) );
+
+				// Use addEventListener directly
+				setTimeout( function() {
+					var messageThreadList = document.getElementById( 'bp-message-thread-list' );
+					if ( messageThreadList ) {
+						messageThreadList.addEventListener( 'scroll', bp.Nouveau.Media.throttledAutoPlayGifVideos.bind( bp.Nouveau.Media ), false );
+					}
+					
+					var activityModalBody = document.querySelector( '.bb-modal-activity-body' );
+					if ( activityModalBody ) {
+						activityModalBody.addEventListener( 'scroll', bp.Nouveau.Media.throttledAutoPlayGifVideos.bind( bp.Nouveau.Media ), false );
+					}
+					
+					var mediaModalActivityItem = document.querySelector( '.bb-media-model-container .activity-list .activity-item' );
+					if ( mediaModalActivityItem ) {
+						mediaModalActivityItem.addEventListener( 'scroll', bp.Nouveau.Media.throttledAutoPlayGifVideos.bind( bp.Nouveau.Media ), false );
+					}
+				}, 1000 );
+
+				// Trigger initial GIF autoplay check for server-side rendered activities
+				// This handles the case when activities are loaded on page load (non-AJAX)
+				$( window ).on( 'load', function() {
+					setTimeout( function() {
+						if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media.autoPlayGifVideos ) {
+							bp.Nouveau.Media.autoPlayGifVideos();
+						}
+					}, 300 );
+				});
 
 				document.addEventListener( 'keydown', _.bind( this.closePickersOnEsc, this ) );
 				$( document ).on( 'click', _.bind( this.closePickersOnClick, this ) );
@@ -482,7 +533,7 @@ window.bp = window.bp || {};
 								targetPopup.find( '.location-folder-list-wrap .location-folder-list' ).remove();
 								targetPopup.find( '.location-folder-list-wrap' ).append( response.data.tree_view );
 
-								var targetPopupID = '#' + $( targetPopup ).attr( 'id' );
+								var targetPopupID = '#' + $( targetPopup ).attr( 'id' ) + '.open-popup';
 
 								if ( bp.Nouveau.Media.folderLocationUI ) {
 									bp.Nouveau.Media.folderLocationUI( targetPopupID, response.data.folder_id );
@@ -1077,6 +1128,7 @@ window.bp = window.bp || {};
 								target.removeClass( 'loading' );
 								$( document ).removeClass( 'open-popup' );
 							}
+							target.closest( '.bb-activity-media-wrap' ).find( '.bb-activity-media-elem.document-activity' ).attr( 'data-parent-id', folder_id );
 							target.closest( '.bp-media-move-file' ).find( '.ac-document-close-button' ).trigger( 'click' );
 						} else {
 							/* jshint ignore:start */
@@ -1142,7 +1194,13 @@ window.bp = window.bp || {};
 									$( document ).find( 'li#media-all' ).trigger( 'click' );
 								}
 							} else {
-								if ( parseInt( BP_Nouveau.media.current_album ) > 0 ) {
+								if (
+									parseInt( BP_Nouveau.media.current_album ) > 0 ||
+									(
+										'group' === BP_Nouveau.media.current_type &&
+										parseInt( BP_Nouveau.media.album_id ) > 0
+									)
+								) {
 									$( '#media-stream ul.media-list li[data-id="' + media_id + '"]' ).remove();
 								} else if ( $( '#activity-stream ul.activity-list li .activity-content .activity-inner .bb-activity-media-wrap div[data-id="' + media_id + '"]' ).length && !$( '#activity-stream ul.activity-list li .activity-content .activity-inner .bb-activity-media-wrap div[data-id="' + media_id + '"]' ).parent().hasClass( 'bb-media-length-1' ) ) {
 									$( '#activity-stream ul.activity-list li .activity-content .activity-inner .bb-activity-media-wrap div[data-id="' + media_id + '"]' ).remove();
@@ -1206,7 +1264,7 @@ window.bp = window.bp || {};
 					}
 				);
 
-				if ( $media_list.parent().parent().hasClass( 'album-single-view' ) ) {
+				if ( $media_list.parents( '.album-single-view' ).length > 0 ) {
 					$media_list.find( '.bb-video-check-wrap [name="bb-video-select"]:checked' ).each(
 						function () {
 							$( this ).closest( '.bb-item-thumb' ).addClass( 'loading deleting' );
@@ -1298,7 +1356,7 @@ window.bp = window.bp || {};
 										'undefined' !== typeof response.data.media_personal_count &&
 										$( '#buddypress .bp-wrap .users-nav' ).length > 0 
 									) {
-										if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.media.is_media_directory ) {
+										if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.media.is_media_directory && ! BP_Nouveau.media.current_album ) {
 											dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'media' ) ?
 											(
 												1 === parseInt( response.data.media_personal_count ) ?
@@ -1366,7 +1424,7 @@ window.bp = window.bp || {};
 									$( '#buddypress .bp-wrap .users-nav' ).length > 0
 								) {
 
-									if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.media.is_media_directory ) {
+									if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.media.is_media_directory && ! BP_Nouveau.media.current_album ) {
 										dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'media' ) ?
 										(
 											1 === parseInt( response.data.media_personal_count ) ?
@@ -1554,6 +1612,7 @@ window.bp = window.bp || {};
 			$( '#bp-media-uploader-modal-title' ).text( BP_Nouveau.media.i18n_strings.upload );
 			$( '#bp-media-uploader-modal-status-text' ).text( '' );
 			$( '#bp-media-post-content' ).val( '' );
+			$( '#bp-dropzone-content .bp-feedback' ).remove();
 			this.dropzone_obj.element ? this.dropzone_obj.destroy() : '';
 			this.dropzone_media = [];
 
@@ -4117,6 +4176,7 @@ window.bp = window.bp || {};
 									action: 'document_get_folder_view',
 									id: this.moveToIdPopup,
 									type: this.moveToTypePopup,
+									_wpnonce: BP_Nouveau.nonces.media,
 								}, success: function ( response ) {
 									$( document ).find( '.bp-media-document-uploader .location-folder-list-wrap h4 span.where-to-move-profile-or-group-document' ).html( response.data.first_span_text );
 									if ( '' === response.data.html ) {
@@ -4582,6 +4642,7 @@ window.bp = window.bp || {};
 							action: 'document_get_folder_view',
 							id: this.moveToIdPopup,
 							type: this.moveToTypePopup,
+							_wpnonce: BP_Nouveau.nonces.media,
 						}, success: function ( response ) {
 							$( document ).find( '.location-folder-list-wrap h4 span.where-to-move-profile-or-group-document' ).html( response.data.first_span_text );
 							if ( '' === response.data.html ) {
@@ -4911,6 +4972,7 @@ window.bp = window.bp || {};
 						action: 'document_get_folder_view',
 						id: id,
 						type: type,
+						_wpnonce: BP_Nouveau.nonces.media,
 					}, success: function ( response ) {
 						$( document ).find( '.location-folder-list-wrap h4 span.where-to-move-profile-or-group-document' ).html( response.data.first_span_text );
 						$( '.location-folder-list-wrap .location-folder-list' ).remove();
@@ -5014,7 +5076,7 @@ window.bp = window.bp || {};
 								$( this ).show();
 							} );
 
-							if ( currentTargetParent === $( targetPopup ).find( '.breadcrumbs-append-ul-li .item > span:last-child' ).attr( 'data-id' ) && ( $( targetPopup ).hasClass( 'bp-media-move-file' ) || $( targetPopup ).hasClass( 'bp-media-move-folder' ) ) ) {
+							if ( currentTargetParent === $( targetPopup ).find( '.breadcrumbs-append-ul-li .item > span[data-id]' ).last().attr( 'data-id' ) && ( $( targetPopup ).hasClass( 'bp-media-move-file' ) || $( targetPopup ).hasClass( 'bp-media-move-folder' ) ) ) {
 								$( targetPopup ).find( '.bp-document-move' ).addClass( 'is-disabled' );
 								$( targetPopup ).find( '.bp-folder-move' ).addClass( 'is-disabled' );
 							} else {
@@ -5025,14 +5087,13 @@ window.bp = window.bp || {};
 							//Disable move button if current folder is already a parent
 							setTimeout( function () {
 
-								var fileID = 0;
-
+								var fileID = 0, currentParentId =  $( targetPopup ).closest( '.bb-activity-media-wrap' ).find( '.bb-activity-media-elem.document-activity' ).attr( 'data-parent-id' );
 								if ( $( targetPopup ).find( '.breadcrumbs-append-ul-li .item > span:last-child' ).hasClass( 'hidden' ) ) {
 									fileID = $( targetPopup ).find( '.breadcrumbs-append-ul-li .item > span:last-child' ).prev().attr( 'id' );
 								} else {
 									fileID = $( targetPopup ).find( '.breadcrumbs-append-ul-li .item > span:last-child' ).attr( 'id' );
 								}
-								if ( currentTargetParent === fileID && ( $( targetPopup ).hasClass( 'bp-media-move-file' ) || $( targetPopup ).hasClass( 'bp-media-move-folder' ) ) ) {
+								if ( currentParentId === fileID && ( $( targetPopup ).hasClass( 'bp-media-move-file' ) || $( targetPopup ).hasClass( 'bp-media-move-folder' ) ) ) {
 									$( targetPopup ).find( '.bp-document-move' ).addClass( 'is-disabled' );
 									$( targetPopup ).find( '.bp-folder-move' ).addClass( 'is-disabled' );
 								} else {
@@ -5087,7 +5148,10 @@ window.bp = window.bp || {};
 
 							$( event.currentTarget ).nextAll().remove();
 
-							if ( currentTargetParent === $( targetPopup ).find( '.breadcrumbs-append-ul-li .item > span:last-child' ).attr( 'data-id' ) && ( $( targetPopup ).hasClass( 'bp-media-move-file' ) || $( targetPopup ).hasClass( 'bp-media-move-folder' ) ) ) {
+							if (
+								currentTargetParent === $( targetPopup ).find( '.breadcrumbs-append-ul-li .item > span[data-id]' ).last().attr( 'data-id' ) &&
+								( $( targetPopup ).hasClass( 'bp-media-move-file' ) || $( targetPopup ).hasClass( 'bp-media-move-folder' ) )
+							) {
 								$( targetPopup ).find( '.bp-document-move' ).addClass( 'is-disabled' );
 								$( targetPopup ).find( '.bp-folder-move' ).addClass( 'is-disabled' );
 							} else {
@@ -5190,7 +5254,7 @@ window.bp = window.bp || {};
 					} else {
 						fileID = $( targetPopup ).find( '.breadcrumbs-append-ul-li .item > span:last-child' ).attr( 'id' );
 					}
-					if ( currentTargetParent === fileID && ( $( targetPopup ).hasClass( 'bp-media-move-file' ) || $( targetPopup ).hasClass( 'bp-media-move-folder' ) ) ) {
+					if ( currentTargetParent === parseInt( fileID ) && ( $( targetPopup ).hasClass( 'bp-media-move-file' ) || $( targetPopup ).hasClass( 'bp-media-move-folder' ) ) ) {
 						$( targetPopup ).find( '.bp-document-move' ).addClass( 'is-disabled' );
 						$( targetPopup ).find( '.bp-folder-move' ).addClass( 'is-disabled' );
 					} else {
@@ -5327,70 +5391,74 @@ window.bp = window.bp || {};
 								) {
 									bp.Nouveau.inject( '#media-stream ul.media-list', response.data.media, 'prepend' );
 								}
-								var dir_label;
-								if ( response.data.media_personal_count ) {
-									if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.media.is_media_directory ) {
-										dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'media' ) ?
-										(
-											1 === parseInt( response.data.media_personal_count ) ?
-											BP_Nouveau.dir_labels.media.singular : BP_Nouveau.dir_labels.media.plural
-										)
-										: '';
-										$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + response.data.media_personal_count + '</span> ' + dir_label );
-									} else if ( $( '#buddypress' ).find( '.bp-wrap .users-nav ul li#media-personal-li a span.count' ).length ) {
-										$( '#buddypress' ).find( '.bp-wrap .users-nav ul li#media-personal-li a span.count' ).text( response.data.media_personal_count );
-									} else if ( '1' === BP_Nouveau.bb_enable_content_counts ) {
-										var mediaPersonalSpanTag = document.createElement( 'span' );
-										mediaPersonalSpanTag.setAttribute( 'class', 'count' );
-										var mediaPersonalSpanTagTextNode = document.createTextNode( response.data.media_personal_count );
-										mediaPersonalSpanTag.appendChild( mediaPersonalSpanTagTextNode );
-										$( '#buddypress' ).find( '.bp-wrap .users-nav ul li#media-personal-li a' ).append( mediaPersonalSpanTag );
-									}
-								}
 
-								if ( response.data.media_group_count ) {
-									if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.media.is_media_directory ) {
-										dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'media' ) ?
-										(
-											1 === parseInt( response.data.media_group_count ) ?
-											BP_Nouveau.dir_labels.media.singular : BP_Nouveau.dir_labels.media.plural
-										)
-										: '';
-										$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + response.data.media_group_count + '</span> ' + dir_label );
-									} else if ( $( '#buddypress' ).find( '.bp-wrap .groups-nav ul li#photos-groups-li a span.count' ).length ) {
-										$( '#buddypress' ).find( '.bp-wrap .groups-nav ul li#photos-groups-li a span.count' ).text( response.data.media_group_count );
-									} else if ( '1' === BP_Nouveau.bb_enable_content_counts ) {
-										var photoGroupSpanTag = document.createElement( 'span' );
-										photoGroupSpanTag.setAttribute( 'class', 'count' );
-										var photoGroupSpanTagTextNode = document.createTextNode( response.data.media_group_count );
-										photoGroupSpanTag.appendChild( photoGroupSpanTagTextNode );
-										$( '#buddypress' ).find( '.bp-wrap .users-nav ul li#photos-groups-li a' ).append( photoGroupSpanTag );
-									}
-								}
-
-								if ( 'yes' === BP_Nouveau.media.is_media_directory ) {
-
-									if ( $( '#buddypress .bb-item-count' ).length > 0 ) {
-										var dir_scope = $( '#buddypress .bp-navs.dir-navs > ul > li.selected' ).data( 'bp-scope' );
-										var dir_count = 0;
-										if ( 'all' === dir_scope ) {
-											dir_count = response.data.media_all_count;
-										} else if ( 'personal' === dir_scope ) {
-											dir_count = response.data.media_personal_count;
-										} else if ( 'groups' === dir_scope ) {
-											dir_count = response.data.media_group_count;
+								// Do not show count on single album page.
+								if ( ! $( '#buddypress #bp-media-single-album' ).length ) {
+									var dir_label;
+									if ( response.data.media_personal_count ) {
+										if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.media.is_media_directory ) {
+											dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'media' ) ?
+											(
+												1 === parseInt( response.data.media_personal_count ) ?
+												BP_Nouveau.dir_labels.media.singular : BP_Nouveau.dir_labels.media.plural
+											)
+											: '';
+											$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + response.data.media_personal_count + '</span> ' + dir_label );
+										} else if ( $( '#buddypress' ).find( '.bp-wrap .users-nav ul li#media-personal-li a span.count' ).length ) {
+											$( '#buddypress' ).find( '.bp-wrap .users-nav ul li#media-personal-li a span.count' ).text( response.data.media_personal_count );
+										} else if ( '1' === BP_Nouveau.bb_enable_content_counts ) {
+											var mediaPersonalSpanTag = document.createElement( 'span' );
+											mediaPersonalSpanTag.setAttribute( 'class', 'count' );
+											var mediaPersonalSpanTagTextNode = document.createTextNode( response.data.media_personal_count );
+											mediaPersonalSpanTag.appendChild( mediaPersonalSpanTagTextNode );
+											$( '#buddypress' ).find( '.bp-wrap .users-nav ul li#media-personal-li a' ).append( mediaPersonalSpanTag );
 										}
+									}
 
-										dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'media' ) ?
-										(
-											1 === dir_count ? BP_Nouveau.dir_labels.media.singular : BP_Nouveau.dir_labels.media.plural
-										)
-										: '';
-										$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + dir_count + '</span> ' + dir_label );
-									} else {
-										$( '#buddypress' ).find( '.media-type-navs ul.media-nav li#media-all a span.count' ).text( response.data.media_all_count );
-										$( '#buddypress' ).find( '.media-type-navs ul.media-nav li#media-personal a span.count' ).text( response.data.media_personal_count );
-										$( '#buddypress' ).find( '.media-type-navs ul.media-nav li#media-groups a span.count' ).text( response.data.media_group_count );
+									if ( response.data.media_group_count ) {
+										if ( $( '#buddypress .bb-item-count' ).length > 0 && 'yes' !== BP_Nouveau.media.is_media_directory ) {
+											dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'media' ) ?
+											(
+												1 === parseInt( response.data.media_group_count ) ?
+												BP_Nouveau.dir_labels.media.singular : BP_Nouveau.dir_labels.media.plural
+											)
+											: '';
+											$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + response.data.media_group_count + '</span> ' + dir_label );
+										} else if ( $( '#buddypress' ).find( '.bp-wrap .groups-nav ul li#photos-groups-li a span.count' ).length ) {
+											$( '#buddypress' ).find( '.bp-wrap .groups-nav ul li#photos-groups-li a span.count' ).text( response.data.media_group_count );
+										} else if ( '1' === BP_Nouveau.bb_enable_content_counts ) {
+											var photoGroupSpanTag = document.createElement( 'span' );
+											photoGroupSpanTag.setAttribute( 'class', 'count' );
+											var photoGroupSpanTagTextNode = document.createTextNode( response.data.media_group_count );
+											photoGroupSpanTag.appendChild( photoGroupSpanTagTextNode );
+											$( '#buddypress' ).find( '.bp-wrap .users-nav ul li#photos-groups-li a' ).append( photoGroupSpanTag );
+										}
+									}
+
+									if ( 'yes' === BP_Nouveau.media.is_media_directory ) {
+
+										if ( $( '#buddypress .bb-item-count' ).length > 0 ) {
+											var dir_scope = $( '#buddypress .bp-navs.dir-navs > ul > li.selected' ).data( 'bp-scope' );
+											var dir_count = 0;
+											if ( 'all' === dir_scope ) {
+												dir_count = response.data.media_all_count;
+											} else if ( 'personal' === dir_scope ) {
+												dir_count = response.data.media_personal_count;
+											} else if ( 'groups' === dir_scope ) {
+												dir_count = response.data.media_group_count;
+											}
+
+											dir_label = BP_Nouveau.dir_labels.hasOwnProperty( 'media' ) ?
+											(
+												1 === dir_count ? BP_Nouveau.dir_labels.media.singular : BP_Nouveau.dir_labels.media.plural
+											)
+											: '';
+											$( '#buddypress .bb-item-count' ).html( '<span class="bb-count">' + dir_count + '</span> ' + dir_label );
+										} else {
+											$( '#buddypress' ).find( '.media-type-navs ul.media-nav li#media-all a span.count' ).text( response.data.media_all_count );
+											$( '#buddypress' ).find( '.media-type-navs ul.media-nav li#media-personal a span.count' ).text( response.data.media_personal_count );
+											$( '#buddypress' ).find( '.media-type-navs ul.media-nav li#media-groups a span.count' ).text( response.data.media_group_count );
+										}
 									}
 								}
 
@@ -5408,6 +5476,14 @@ window.bp = window.bp || {};
 
 							} else {
 								$( '#bp-dropzone-content' ).prepend( response.data.feedback );
+								targetPopup.find( '.bb-album-selected-id' ).val( 0 );
+								var $media_single_album = targetPopup.parents( '#bp-media-single-album' );
+								if ( $media_single_album.length ) {
+									var $media_back_button = $media_single_album.find( '#bp-media-prev.bb-uploader-steps-prev' );
+									if ( $media_back_button.length && $media_back_button.is(':visible') ) {
+										$media_back_button.trigger( 'click' );
+									}
+								}
 							}
 
 							target.removeClass( 'saving' );
@@ -6335,7 +6411,10 @@ window.bp = window.bp || {};
 				$button = $( event.currentTarget ).find( '.gif-play-button' );
 			if ( video.paused == true ) {
 				// Play the video.
-				video.play();
+				video.play().catch( function( error ) {
+					// Silently handle play errors (e.g., user hasn't interacted with page yet)
+					console.debug( 'GIF play failed:', error );
+				});
 
 				// Update the button text to 'Pause'.
 				$button.hide();
@@ -6349,6 +6428,68 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * Check if element is visible within its scrollable container
+		 */
+		isElementInScrollableContainer: function( element ) {
+			var $element = $( element );
+			var elementRect = element.getBoundingClientRect();
+			
+			// Find the closest scrollable container
+			var $scrollableContainer = $element.closest( '#bp-message-thread-list' );
+			
+			// Check for activity modal body
+			if ( !$scrollableContainer.length ) {
+				$scrollableContainer = $element.closest( '.bb-modal-activity-body' );
+			}
+			
+			// Check for media modal activity item
+			if ( !$scrollableContainer.length ) {
+				$scrollableContainer = $element.closest( '.bb-media-model-container .activity-list .activity-item' );
+			}
+			
+			if ( $scrollableContainer.length ) {
+				// Check if element is visible within the scrollable container
+				var containerRect = $scrollableContainer[0].getBoundingClientRect();
+				
+				// Element is visible if it overlaps with the container bounds (allows partial visibility)
+				var isVisible = (
+					elementRect.bottom > containerRect.top &&
+					elementRect.top < containerRect.bottom &&
+					elementRect.right > containerRect.left &&
+					elementRect.left < containerRect.right
+				);
+				
+				return isVisible;
+			} else {
+				// Fallback to regular viewport check
+				return $element.is( ':in-viewport' );
+			}
+		},
+
+		/**
+		 * Throttle function to limit how often autoPlayGifVideos runs
+		 */
+		throttledAutoPlayGifVideos: function() {
+			if ( this.throttleTimer ) {
+				return;
+			}
+			
+			this.throttleTimer = setTimeout( function() {
+				bp.Nouveau.Media.throttleTimer = null;
+				bp.Nouveau.Media.autoPlayGifVideos();
+			}, 100 ); // Throttle to max 10 times per second
+		},
+
+		/**
+		 * Common function to safely call Media functions
+		 */
+		invokeMediaFn: function( functionName ) {
+			if ( 'undefined' !== typeof bp.Nouveau.Media && 'function' === typeof bp.Nouveau.Media[ functionName ] ) {
+				bp.Nouveau.Media[ functionName ]();
+			}
+		},
+
+		/**
 		 * When the GIF comes into your screen it should auto play
 		 */
 		autoPlayGifVideos: function () {
@@ -6357,21 +6498,71 @@ window.bp = window.bp || {};
 					var video = $( this ).find( 'video' ).get( 0 ),
 						$button = $( this ).find( '.gif-play-button' );
 
-					if ( $( this ).is( ':in-viewport' ) ) {
-						// Play the video.
-						video.play();
+					// Skip if video element doesn't exist
+					if ( !video ) {
+						return;
+					}
 
+					var isVisible = bp.Nouveau.Media.isElementInScrollableContainer( this );
+					
+					if ( isVisible ) {
+						// Play the video.
+						video.play().catch( function( error ) {
+							// Silently handle play errors (e.g., user hasn't interacted with page yet)
+							console.debug( 'GIF autoplay failed:', error );
+						});
+						
 						// Update the button text to 'Pause'.
 						$button.hide();
 					} else {
 						// Pause the video
 						video.pause();
-
+						
 						// Update the button text to 'Play'.
 						$button.show();
 					}
 				}
 			);
+		},
+
+		/**
+		 * Setup GIF autoplay for media modal when it's opened
+		 */
+		setupMediaModalGifAutoplay: function() {
+			var retryCount = 0;
+			var maxRetries = 10;
+			var setupCompleted = false;
+			
+			function attemptSetup() {
+				if ( setupCompleted ) {
+					return;
+				}
+				
+				var mediaModalActivityItem = document.querySelector( '.bb-media-model-container .activity-list .activity-item' );
+				
+				if ( mediaModalActivityItem ) {
+					setupCompleted = true;
+					try {
+						// Remove existing listener to avoid duplicates
+						mediaModalActivityItem.removeEventListener( 'scroll', bp.Nouveau.Media.throttledAutoPlayGifVideos.bind( bp.Nouveau.Media ) );
+						// Add scroll event listener
+						mediaModalActivityItem.addEventListener( 'scroll', bp.Nouveau.Media.throttledAutoPlayGifVideos.bind( bp.Nouveau.Media ), false );
+						
+						// Trigger initial check for GIFs in the modal
+						bp.Nouveau.Media.invokeMediaFn( 'autoPlayGifVideos' );
+						
+					} catch ( error ) {
+						console.debug( 'Error setting up media modal GIF autoplay:', error );
+					}
+				} else if ( retryCount < maxRetries ) {
+					// Retry after a short delay
+					retryCount++;
+					setTimeout( attemptSetup, 200 );
+				}
+			}
+			
+			// Start the setup process
+			setTimeout( attemptSetup, 100 );
 		},
 
 		/**
@@ -6789,11 +6980,19 @@ window.bp = window.bp || {};
 			if( currentVideo ) {
 				currentVideo.pause();
 			}
-			$( '.bb-media-model-wrapper.video' ).hide();
-			$( '.bb-media-model-wrapper.media' ).show();
+							$( '.bb-media-model-wrapper.video' ).hide();
+				$( '.bb-media-model-wrapper.media' ).show();
+				
+				// Setup GIF autoplay for the newly shown media modal
+				bp.Nouveau.Media.invokeMediaFn( 'setupMediaModalGifAutoplay' );
 			self.is_open_media = true;
 
 			self.bodySelector.addClass( 'media-modal-open' );
+
+			// Trigger GIF autoplay check when media modal is opened
+			setTimeout( function() {
+				bp.Nouveau.Media.invokeMediaFn( 'autoPlayGifVideos' );
+			}, 500 );
 
 			//document.addEventListener( 'keyup', self.checkPressedKey.bind( self ) );
 		},
@@ -6904,6 +7103,12 @@ window.bp = window.bp || {};
 			self.is_open_document = true;
 
 			self.bodySelector.addClass( 'document-modal-open' );
+			
+			// Setup GIF autoplay for the newly shown document modal
+			setTimeout( function() {
+				bp.Nouveau.Media.invokeMediaFn( 'setupMediaModalGifAutoplay' );
+			}, 500 );
+			
 			//document.addEventListener( 'keyup', self.checkPressedKeyDocuments.bind( self ) );
 		},
 
@@ -7332,6 +7537,11 @@ window.bp = window.bp || {};
 				self.current_media = self.medias[ self.current_index ];
 				self.showMedia();
 				self.getMediasDescription();
+				
+				// Trigger GIF autoplay check when navigating to next media
+				setTimeout( function() {
+					bp.Nouveau.Media.invokeMediaFn( 'autoPlayGifVideos' );
+				}, 500 );
 			} else {
 				self.nextLink.hide();
 			}
@@ -7347,6 +7557,11 @@ window.bp = window.bp || {};
 				self.current_media = self.medias[ self.current_index ];
 				self.showMedia();
 				self.getMediasDescription();
+				
+				// Trigger GIF autoplay check when navigating to previous media
+				setTimeout( function() {
+					bp.Nouveau.Media.invokeMediaFn( 'autoPlayGifVideos' );
+				}, 500 );
 			} else {
 				self.previousLink.hide();
 			}

@@ -640,11 +640,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 							$is_active   = true;
 							$item['url'] = get_post_type_archive_link( memberpress\courses\models\Course::$cpt );
 						}
-					} elseif ( 'messages' === $key && bp_is_active( 'messages' ) ) {
+					} elseif ( 'messages' === $key && bp_is_active( 'messages' ) && is_user_logged_in() ) {
 						$is_active     = true;
 						$item['url']   = trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() );
 						$item['label'] = __( 'Messages', 'buddyboss' );
-					} elseif ( 'notifications' === $key && bp_is_active( 'notifications' ) ) {
+					} elseif ( 'notifications' === $key && bp_is_active( 'notifications' ) && is_user_logged_in() ) {
 						$is_active     = true;
 						$item['url']   = bp_get_notifications_permalink();
 						$item['label'] = __( 'Notifications', 'buddyboss' );

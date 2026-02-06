@@ -25,6 +25,7 @@ $profile_url = trailingslashit( bp_loggedin_user_domain() . bp_get_profile_slug(
 		<a href="<?php echo esc_url( $profile_url ); ?>" class="bb-rl-profile-list-link">
 			<i class="bb-icons-rl-user"></i>
 			<?php esc_html_e( 'View profile', 'buddyboss' ); ?>
+			<span class="bb-rl-profile-list-item--after"><i class="bb-icons-rl-caret-right"></i></span>
 		</a>
 
 		<ul class="bb-profile-submenu-lists">
@@ -103,6 +104,7 @@ $profile_url = trailingslashit( bp_loggedin_user_domain() . bp_get_profile_slug(
 			<a href="<?php echo esc_url( bp_loggedin_user_domain() ); ?>" class="bb-rl-profile-list-link">
 				<i class="bb-icons-rl-pencil-simple"></i>
 				<?php esc_html_e( 'Edit profile', 'buddyboss' ); ?>
+				<span class="bb-rl-profile-list-item--after"><i class="bb-icons-rl-caret-right"></i></span>
 			</a>
 
 			<ul class="bb-profile-submenu-lists">
@@ -158,6 +160,7 @@ $profile_url = trailingslashit( bp_loggedin_user_domain() . bp_get_profile_slug(
 			<a href="<?php echo esc_url( $settings_link ); ?>" class="bb-rl-profile-list-link">
 				<i class="bb-icons-rl-user-gear"></i>
 				<?php esc_html_e( 'Account settings', 'buddyboss' ); ?>
+				<span class="bb-rl-profile-list-item--after"><i class="bb-icons-rl-caret-right"></i></span>
 			</a>
 
 			<ul class="bb-profile-submenu-lists">
@@ -238,6 +241,7 @@ $profile_url = trailingslashit( bp_loggedin_user_domain() . bp_get_profile_slug(
 			<a href="#" class="bb-rl-profile-list-link">
 				<i class="bb-icons-rl-sun"></i>
 				<?php esc_html_e( 'Theme', 'buddyboss' ); ?>
+				<span class="bb-rl-profile-list-item--after"><i class="bb-icons-rl-caret-right"></i></span>
 			</a>
 
 			<ul class="bb-profile-submenu-lists">
