@@ -12,8 +12,8 @@
 $topic_id = get_the_ID();
 $total    = bbp_get_topic_reply_count( $topic_id );
 ?>
-<div class="bp-search-ajax-item bp-search-ajax-item_topic">
-	<a href="<?php echo esc_url( add_query_arg( array( 'no_frame' => '1' ), bbp_get_topic_permalink( $topic_id ) ) ); ?>">
+<a href="<?php echo esc_url( bbp_get_topic_permalink( $topic_id ) ); ?>" class="bb-search-item-anchor">
+	<div class="bp-search-ajax-item bp-search-ajax-item_topic">
 		<div class="item-avatar">
 			<?php
 			$args   = array(
@@ -23,7 +23,9 @@ $total    = bbp_get_topic_reply_count( $topic_id );
 			$avatar = bbp_get_topic_author_link( $args );
 
 			if ( $avatar ) {
-				echo wp_kses_post( $avatar );
+				?>
+				<?php echo wp_kses_post( strip_tags( $avatar, '<img>' ) ); ?>
+				<?php
 			} else {
 				?>
 				<i class="<?php echo esc_attr( bp_search_get_post_thumbnail_default( get_post_type(), 'icon' ) ); ?>"></i>
@@ -33,7 +35,9 @@ $total    = bbp_get_topic_reply_count( $topic_id );
 		</div>
 		<div class="item">
 			<div class="item-title">
-				<?php echo wp_kses_post( stripslashes( wp_strip_all_tags( bbp_get_topic_title( $topic_id ) ) ) ); ?>
+				<span class="bb-search-item-author-name">
+					<?php echo wp_kses_post( stripslashes( wp_strip_all_tags( bbp_get_topic_title( $topic_id ) ) ) ); ?>
+				</span>
 			</div>
 			<div class="item-desc">
 				<span><?php echo wp_kses_post( wp_trim_words( bbp_get_topic_content( $topic_id ), 30, '...' ) ); ?></span><br>
@@ -53,5 +57,5 @@ $total    = bbp_get_topic_reply_count( $topic_id );
 				</span>
 			</div>
 		</div>
-	</a>
-</div>
+	</div>
+</a>
