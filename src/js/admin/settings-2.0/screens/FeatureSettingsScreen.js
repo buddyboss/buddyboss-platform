@@ -14,7 +14,9 @@ import { getCachedFeatureData, setCachedFeatureData, invalidateFeatureCache } fr
 import { SettingsForm } from '../components/SettingsForm';
 import { SideNavigation } from './SideNavigation';
 import { Toast } from '../components/Toast';
-import { debounce } from '../../utils/api';
+import { debounce, fetchHelpContent, clearHelpContentCache } from '../../utils/api';
+import { HelpIcon } from '../components/HelpIcon';
+import { HelpSliderModal } from '../components/HelpSliderModal';
 
 /**
  * AJAX request helper for fetching feature data.
@@ -58,6 +60,12 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 	const [originalSettings, setOriginalSettings] = useState({}); // Track original values
 	const [isLoading, setIsLoading] = useState(true);
 	const [activePanelId, setActivePanelId] = useState(sidePanelId || null);
+
+	// Help modal state.
+	const [isHelpOpen, setHelpOpen] = useState(false);
+	const [helpContent, setHelpContent] = useState(null);
+	const [isHelpLoading, setHelpLoading] = useState(false);
+	const [helpError, setHelpError] = useState(null);
 
 	// Auto-save state.
 	const [toast, setToast] = useState(null);
@@ -269,6 +277,29 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 		onNavigate('/settings');
 	};
 
+	// Help modal handlers.
+	const handleHelpClick = async (contentId) => {
+		setHelpOpen(true);
+		setHelpLoading(true);
+		setHelpError(null);
+
+		try {
+			const content = await fetchHelpContent(contentId);
+			setHelpContent(content);
+		} catch (error) {
+			setHelpError(__('Failed to load help content. Please try again later.', 'buddyboss'));
+			clearHelpContentCache(contentId);
+		} finally {
+			setHelpLoading(false);
+		}
+	};
+
+	const handleHelpClose = () => {
+		setHelpOpen(false);
+		setHelpContent(null);
+		setHelpError(null);
+	};
+
 	if (isLoading) {
 		return (
 			<div className="bb-admin-feature-settings bb-admin-loading">
@@ -323,22 +354,12 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 											{/* Section Header */}
 											<div className="bb-admin-feature-settings__section-header">
 												<h3 className="bb-admin-feature-settings__section-title">{section.title}</h3>
-												{/* Help icon - links to side panel's help_url */}
-												{activePanel.help_url ? (
-													<a
-														href={activePanel.help_url}
-														target="_blank"
-														rel="noopener noreferrer"
-														className="help-icon"
-														aria-label={__('Help', 'buddyboss')}
-														title={__('View documentation', 'buddyboss')}
-													>
-														<span className="bb-icons-rl-question"></span>
-													</a>
-												) : (
-													<button className="help-icon" aria-label={__('Help', 'buddyboss')}>
-														<span className="bb-icons-rl-question"></span>
-													</button>
+												{/* Help icon - opens help slider modal */}
+												{activePanel.help_url && (
+													<HelpIcon
+														onClick={handleHelpClick}
+														contentId={activePanel.help_url}
+													/>
 												)}
 											</div>
 											{/* Section Body */}
@@ -376,6 +397,52 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 					/>
 				</div>
 			)}
+
+			{/* Help Slider Modal */}
+			<HelpSliderModal
+				isOpen={isHelpOpen}
+				onClose={handleHelpClose}
+				title={helpContent?.title || __('Help', 'buddyboss')}
+			>
+				{isHelpLoading ? (
+					<div className="help-content-loading">
+						<Spinner />
+						<p>{__('Loading help content...', 'buddyboss')}</p>
+					</div>
+				) : helpError ? (
+					<div className="help-content-error">
+						<p>{helpError}</p>
+					</div>
+				) : helpContent ? (
+					<>
+						{helpContent.videoId && (
+							<div style={{ marginBottom: 16 }}>
+								<iframe
+									width="100%"
+									height="315"
+									src={`https://www.youtube.com/embed/${helpContent.videoId}`}
+									title={__('Video tutorial', 'buddyboss')}
+									frameBorder="0"
+									allowFullScreen
+								></iframe>
+							</div>
+						)}
+						<div
+							className="help-content"
+							dangerouslySetInnerHTML={{ __html: helpContent.content }}
+						/>
+						{helpContent.imageUrl && (
+							<img
+								src={helpContent.imageUrl}
+								alt={__('Help content illustration', 'buddyboss')}
+								style={{ width: '100%', borderRadius: 8, marginBottom: 16 }}
+							/>
+						)}
+					</>
+				) : (
+					<p>{__('No help content available.', 'buddyboss')}</p>
+				)}
+			</HelpSliderModal>
 		</div>
 	);
 }
