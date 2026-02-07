@@ -1283,6 +1283,17 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 	$thread_messages  = BP_Messages_Thread::get_messages( $thread_id, null, 99999999 );
 	$recepients       = BP_Messages_Thread::get_recipients_for_thread( $thread_id );
 
+	// Ensure $thread_messages is an array to prevent PHP 8+ fatal errors.
+	if ( ! is_array( $thread_messages ) ) {
+		// If it's a single object, wrap it in an array to preserve data.
+		if ( is_object( $thread_messages ) ) {
+			$thread_messages = array( $thread_messages );
+		} else {
+			// For strings or other types, use empty array.
+			$thread_messages = array();
+		}
+	}
+
 	if ( count( $recepients ) > 2 ) {
 		foreach ( $thread_messages as $message ) {
 			if ( $message->sender_id !== $user_id ) {
