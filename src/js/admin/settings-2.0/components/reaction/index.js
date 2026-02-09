@@ -5,6 +5,7 @@
  * @since BuddyBoss 3.0.0
  */
 
+export { applyReactionPostSave } from './applyReactionPostSave';
 export { ReactionModeField } from './ReactionModeField';
 export { useReactionCallbacks } from './useReactionCallbacks';
 export { ReactionMigration } from './ReactionMigration';

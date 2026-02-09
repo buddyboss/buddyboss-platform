@@ -11,6 +11,7 @@ import { useState, useEffect, useRef, useCallback } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { Spinner } from '@wordpress/components';
 import { getCachedFeatureData, setCachedFeatureData, invalidateFeatureCache } from '../utils/featureCache';
+import { applyReactionPostSave } from '../components/reaction/applyReactionPostSave';
 import { SettingsForm } from '../components/SettingsForm';
 import { SideNavigation } from './SideNavigation';
 import { Toast } from '../components/Toast';
@@ -162,30 +163,19 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 						});
 						setChangedFields({});
 
-						// Check if reaction_items were saved (need to refetch to get real IDs from server)
-						const savedReactionItems = fieldsToSave.reaction_items !== undefined;
-
-						// For reactions feature, refetch data when:
-						// 1. reaction_items were saved (to get real DB IDs replacing react_key_ IDs)
-						// 2. migration data is returned
-						// This ensures delete checks work correctly (need real IDs for AJAX validation)
-						if ( 'reactions' === featureId && ( savedReactionItems || response.data?.migration_data || response.data?.migration_status ) ) {
-							ajaxFetch('bb_admin_get_feature_settings', { feature_id: featureId })
-								.then((featureResponse) => {
-									if (featureResponse.success && featureResponse.data) {
-										// Update cache with fresh data
-										setCachedFeatureData(featureId, featureResponse.data);
-										setFeature(featureResponse.data);
-										setSidePanels(featureResponse.data.side_panels || []);
-										const freshSettings = featureResponse.data.settings || {};
-										setSettings(freshSettings);
-										setOriginalSettings(freshSettings);
-									}
-								});
+						// Reactions: refetch when reaction_items saved, or inject migration data (handled in reaction module).
+						if ( 'reactions' === featureId ) {
+							applyReactionPostSave( response, fieldsToSave, featureId, {
+								ajaxFetch,
+								getCachedFeatureData,
+								setCachedFeatureData,
+								setFeature,
+								setSidePanels,
+								setSettings,
+								setOriginalSettings,
+							} );
 						} else {
-							// Update original settings
 							setOriginalSettings((prev) => ({ ...prev, ...fieldsToSave }));
-							// Update cache
 							const cachedData = getCachedFeatureData(featureId);
 							if (cachedData) {
 								setCachedFeatureData(featureId, {

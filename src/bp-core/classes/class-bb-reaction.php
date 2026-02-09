@@ -1089,17 +1089,29 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 
 			// reaction_id.
 			if ( ! empty( $r['reaction_id'] ) ) {
-				$reaction_id_in                  = implode( ',', wp_parse_id_list( $r['reaction_id'] ) );
-				$where_conditions['reaction_id'] = "ur.reaction_id IN ({$reaction_id_in})";
+				$reaction_id_in = implode( ',', wp_parse_id_list( $r['reaction_id'] ) );
+				if ( ! empty( $reaction_id_in ) ) {
+					$where_conditions['reaction_id'] = "ur.reaction_id IN ({$reaction_id_in})";
+				} else {
+					$where_conditions['reaction_id'] = '1=0';
+				}
 			} else {
 				// If no reaction_id is specified, get all reactions having active emotions.
 				if ( bb_is_reaction_emotions_enabled() ) {
-					$reactions                       = $this->bb_get_reactions( 'emotions' );
-					$reaction_id_in                  = implode( ',', wp_list_pluck( $reactions, 'id' ) );
-					$where_conditions['reaction_id'] = "ur.reaction_id IN ({$reaction_id_in})";
+					$reactions      = $this->bb_get_reactions( 'emotions' );
+					$reaction_id_in = implode( ',', wp_list_pluck( $reactions, 'id' ) );
+					if ( ! empty( $reaction_id_in ) ) {
+						$where_conditions['reaction_id'] = "ur.reaction_id IN ({$reaction_id_in})";
+					} else {
+						$where_conditions['reaction_id'] = '1=0';
+					}
 				} else {
-					$reaction_id_in                  = $this->bb_reactions_get_like_reaction_id();
-					$where_conditions['reaction_id'] = "ur.reaction_id = {$reaction_id_in}";
+					$reaction_id_in = $this->bb_reactions_get_like_reaction_id();
+					if ( ! empty( $reaction_id_in ) ) {
+						$where_conditions['reaction_id'] = "ur.reaction_id = {$reaction_id_in}";
+					} else {
+						$where_conditions['reaction_id'] = '1=0';
+					}
 				}
 			}
 
