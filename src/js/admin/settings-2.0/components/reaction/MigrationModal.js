@@ -31,6 +31,32 @@ export function MigrationModal({ isOpen, onClose, migrationData }) {
             return;
         }
 
+        /**
+         * Update the Continue button state based on current selections.
+         * Handles both checkbox-based (emotions to likes) and dropdown-based (likes to emotion) flows.
+         */
+        const updateContinueButtonState = () => {
+            const continueBtn = document.querySelector('button.footer_next_wizard_screen');
+            if (!continueBtn) {
+                return;
+            }
+
+            // Check for checkbox-based selection (emotions to likes flow).
+            const emotionInputs = document.querySelectorAll('input.migrate_emotion_input');
+            const isAnyEmotionChecked = Array.from(emotionInputs).some(input => input.checked);
+
+            // Check for dropdown-based selection (likes to emotion flow).
+            const toReactionSelect = document.querySelector('select[name="to_reactions"]');
+            const isDropdownSelected = toReactionSelect && toReactionSelect.value && toReactionSelect.value !== '';
+
+            // Enable button if either condition is met.
+            if (isAnyEmotionChecked || isDropdownSelected) {
+                continueBtn.classList.remove('disabled');
+            } else {
+                continueBtn.classList.add('disabled');
+            }
+        };
+
         const handleFromAllEmotionsChange = (e) => {
             if (e.target.name === 'from_all_emotions') {
                 const reactionInputs = document.querySelectorAll('input[name="from_reactions[]"]');
@@ -40,13 +66,12 @@ export function MigrationModal({ isOpen, onClose, migrationData }) {
                 });
             }
 
-            const emotionInputs = document.querySelectorAll('input.migrate_emotion_input');
-            const isAnyEmotionChecked = Array.from(emotionInputs).some(input => input.checked);
+            updateContinueButtonState();
+        };
 
-            if(isAnyEmotionChecked) {
-                document.querySelector('button.footer_next_wizard_screen').classList.remove( 'disabled' );
-            } else {
-                document.querySelector('button.footer_next_wizard_screen').classList.add( 'disabled' );
+        const handleDropdownChange = (e) => {
+            if (e.target.name === 'to_reactions') {
+                updateContinueButtonState();
             }
         };
 
@@ -64,11 +89,16 @@ export function MigrationModal({ isOpen, onClose, migrationData }) {
         };
 
         document.addEventListener('change', handleFromAllEmotionsChange);
+        document.addEventListener('change', handleDropdownChange);
         document.addEventListener('click', handleFooterNextWizardScreenClick);
         document.addEventListener('click', handleCloseMigrationWizard);
 
+        // Initialize button state after content loads (handles pre-selected dropdown values).
+        updateContinueButtonState();
+
         return () => {
             document.removeEventListener('change', handleFromAllEmotionsChange);
+            document.removeEventListener('change', handleDropdownChange);
             document.removeEventListener('click', handleFooterNextWizardScreenClick);
             document.removeEventListener('click', handleCloseMigrationWizard);
         };
