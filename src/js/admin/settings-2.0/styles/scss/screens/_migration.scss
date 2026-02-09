@@ -222,21 +222,25 @@
 
 		// Success state (completed migration)
 		&--success {
-			background-color: #ecfdf5;
-			border-color: #a7f3d0;
+			background-color: $bb-background-positive-primary-color;
+			border-color: $bb-border-positive-secondary-color;
 
 			.bb-admin-notice__icon [class*="bb-icon"] {
-				color: #10b981;
+				color: $bb-icon-positive-primary-color;
+			}
+
+			.bb-admin-notice__content {
+				color: $bb-text-positive-primary-color;
 			}
 		}
 
 		// Info state (in-progress migration)
 		&--info {
-			background-color: #eff6ff;
-			border-color: #bfdbfe;
+			background-color: $bb-background-primary-color;
+			border-color: $bb-border-tertiary-color;
 
 			.bb-admin-notice__icon [class*="bb-icon"] {
-				color: $bb-primary-color;
+				color: $bb-icon-color;
 			}
 		}
 
@@ -278,6 +282,10 @@
 			[class*="bb-icon"] {
 				font-size: 20px;
 				font-weight: 500;
+
+				&.bb-icons-rl-spinner {
+					font-weight: 400;
+				}
 			}
 		}
 
