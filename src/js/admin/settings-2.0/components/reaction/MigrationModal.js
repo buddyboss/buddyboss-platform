@@ -63,14 +63,24 @@ export function MigrationModal({ isOpen, onClose, migrationData }) {
             }
         };
 
+        const handleFromLimitChange = (e) => {
+            if (e.target.name === 'to_reactions' && e.target.value !== '') {
+                document.querySelector('button.footer_next_wizard_screen').classList.remove( 'disabled' );
+            } else {
+                document.querySelector('button.footer_next_wizard_screen').classList.add( 'disabled' );
+            }
+        };
+
         document.addEventListener('change', handleFromAllEmotionsChange);
         document.addEventListener('click', handleFooterNextWizardScreenClick);
         document.addEventListener('click', handleCloseMigrationWizard);
+        document.addEventListener('change', handleFromLimitChange);
 
         return () => {
             document.removeEventListener('change', handleFromAllEmotionsChange);
             document.removeEventListener('click', handleFooterNextWizardScreenClick);
             document.removeEventListener('click', handleCloseMigrationWizard);
+            document.removeEventListener('change', handleFromLimitChange);
         };
     }, [wizardContent]);
 

@@ -90,15 +90,18 @@
 	}
 
 	&__content {
-		padding: 24px 24px 0; 
-		min-height: 250px;
+		padding: 24px 24px 0;
+
+		&:has(.bb-admin-migration-modal__loader) {
+			min-height: 250px;
+		}
 	}
 
 	&__loader {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		min-height: 300px;
+		min-height: 250px;
 		font-size: 32px;
 		color: $bb-primary-color;
 
@@ -140,6 +143,16 @@
 					list-style: none;
 					padding: 0;
 				}
+			}
+
+			.text-center {
+				text-align: center;
+			}
+
+			> select {
+
+				@include bb-admin-settings-select;
+				margin-bottom: 25px;
 			}
 		}
 
