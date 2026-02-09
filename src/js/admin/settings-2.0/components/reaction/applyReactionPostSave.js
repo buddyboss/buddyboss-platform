@@ -45,7 +45,8 @@ export function applyReactionPostSave(response, fieldsToSave, featureId, context
 	const savedReactionItems = fieldsToSave.reaction_items !== undefined;
 	const saveMigrationData = response.data?.migration_data;
 	const saveMigrationStatus = response.data?.migration_status || '';
-	const hasMigrationData = !!saveMigrationData || !!response.data?.migration_status;
+	// Check if response includes migration fields (even if empty - we need to clear old data).
+	const hasMigrationResponse = 'migration_data' in (response.data || {});
 
 	if (savedReactionItems) {
 		// Refetch to get real DB IDs replacing react_key_ IDs
@@ -54,12 +55,13 @@ export function applyReactionPostSave(response, fieldsToSave, featureId, context
 				return;
 			}
 			let updatedData = featureResponse.data;
-			if (saveMigrationData) {
+			// Always inject migration data from save response (even if empty to clear old notice).
+			if (hasMigrationResponse) {
 				updatedData = {
 					...updatedData,
 					side_panels: injectMigrationDataIntoPanels(
 						updatedData.side_panels,
-						saveMigrationData,
+						saveMigrationData || {},
 						saveMigrationStatus
 					),
 				};
@@ -74,9 +76,9 @@ export function applyReactionPostSave(response, fieldsToSave, featureId, context
 		return;
 	}
 
-	if (hasMigrationData) {
-		// Mode-only change with migration data - inject directly, no refetch
-		const inject = (panels) => injectMigrationDataIntoPanels(panels, saveMigrationData, saveMigrationStatus);
+	if (hasMigrationResponse) {
+		// Mode-only change - inject migration data (or clear if empty), no refetch.
+		const inject = (panels) => injectMigrationDataIntoPanels(panels, saveMigrationData || {}, saveMigrationStatus);
 		context.setSidePanels((prev) => inject(prev));
 		context.setFeature((prev) => {
 			if (!prev) return prev;

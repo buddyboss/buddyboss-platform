@@ -549,8 +549,21 @@ export function SettingsForm({ fields, values, onChange }) {
 					/>
 				);
 
-			case 'reaction_migration':
-				// Reaction migration: warning notice for pending migration with "Start Conversion" button
+			case 'reaction_migration': {
+				// Reaction migration: warning notice for pending migration with "Start Conversion" button.
+				// Check conditions here to avoid rendering empty wrapper div.
+				const migrationData = field.migration_data || {};
+				const migrationStatus = field.migration_status || '';
+				const hasPendingMigration =
+					migrationData.action &&
+					migrationData.total_reactions > 0 &&
+					'inprogress' !== migrationStatus &&
+					'completed' !== migrationStatus;
+
+				if ( ! hasPendingMigration ) {
+					return null;
+				}
+
 				return (
 					<ReactionMigration
 						key={field.name}
@@ -561,15 +574,23 @@ export function SettingsForm({ fields, values, onChange }) {
 						}}
 					/>
 				);
+			}
 
-			case 'reaction_notice':
-				// Reaction notice: status display for in-progress or completed migrations
+			case 'reaction_notice': {
+				// Reaction notice: status display for in-progress or completed migrations.
+				// Check conditions here to avoid rendering empty wrapper div.
+				const noticeStatus = field.migration_status || '';
+				if ( 'inprogress' !== noticeStatus && 'completed' !== noticeStatus ) {
+					return null;
+				}
+
 				return (
 					<ReactionNotice
 						key={field.name}
 						field={field}
 					/>
 				);
+			}
 
 			case 'reaction_info':
 				// Reaction info: informational text with inline link
