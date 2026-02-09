@@ -7,16 +7,56 @@
  * @since BuddyBoss 3.0.0
  */
 
-import { useState } from '@wordpress/element';
+import { useState, useEffect, useRef } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
 export function ReactionNotice({ field }) {
     const [isDismissed, setIsDismissed] = useState(false);
     const [migrationData, setMigrationData] = useState(field.migration_data || {});
-    const migrationStatus = field.migration_status || '';
+    const [migrationStatus, setMigrationStatus] = useState(field.migration_status || '');
+    const autoRefreshRef = useRef(null);
+
+    // Check if migration is in-progress (either by status or by migration_data.status)
+    const isInProgress = 'inprogress' === migrationStatus || 'running' === migrationData.status;
+    // Check if migration is completed (either by status or by migration_data.status)
+    const isCompleted = 'completed' === migrationStatus || 'completed' === migrationData.status;
+
+    // Auto-refresh progress every 30 seconds when in-progress
+    useEffect(() => {
+        if (isInProgress && !isDismissed) {
+            autoRefreshRef.current = setInterval(() => {
+                if (window.bbReactionAdminVars && window.bbReactionAdminVars.ajax_url) {
+                    jQuery.ajax({
+                        url: window.bbReactionAdminVars.ajax_url,
+                        method: 'POST',
+                        data: {
+                            action: 'bb_pro_reaction_check_migration',
+                            nonce: window.bbReactionAdminVars.nonce?.check_migration || '',
+                        },
+                        success: (response) => {
+                            if (response.success && response.data) {
+                                setMigrationData(response.data.migration_data || {});
+                                // Update status directly if changed to completed
+                                if ('completed' === response.data.migration_status) {
+                                    clearInterval(autoRefreshRef.current);
+                                    setMigrationStatus('completed');
+                                }
+                            }
+                        },
+                    });
+                }
+            }, 30000); // 30 seconds
+
+            return () => {
+                if (autoRefreshRef.current) {
+                    clearInterval(autoRefreshRef.current);
+                }
+            };
+        }
+    }, [isInProgress, isDismissed]);
 
     // Only show for 'inprogress' or 'completed' status
-    if ( isDismissed || ( ! migrationStatus || ( 'inprogress' !== migrationStatus && 'completed' !== migrationStatus ) ) ) {
+    if (isDismissed || (!isInProgress && !isCompleted)) {
         return null;
     }
 
@@ -24,7 +64,7 @@ export function ReactionNotice({ field }) {
         setIsDismissed(true);
 
         // For completed status, call dismiss endpoint
-        if ( 'completed' === migrationStatus && window.bbReactionAdminVars && window.bbReactionAdminVars.ajax_url ) {
+        if ( isCompleted && window.bbReactionAdminVars && window.bbReactionAdminVars.ajax_url ) {
             jQuery.ajax({
                 url: window.bbReactionAdminVars.ajax_url,
                 method: 'POST',
@@ -50,9 +90,9 @@ export function ReactionNotice({ field }) {
                 success: (response) => {
                     if (response.success && response.data) {
                         setMigrationData(response.data.migration_data || {});
-                        // Reload page if status changed to completed
+                        // Update status directly if changed to completed
                         if ( 'completed' === response.data.migration_status ) {
-                            window.location.reload();
+                            setMigrationStatus('completed');
                         }
                     }
                 },
@@ -74,7 +114,8 @@ export function ReactionNotice({ field }) {
                     },
                     success: (response) => {
                         if (response.success) {
-                            window.location.reload();
+                            // Refetch feature data to update UI
+                            window.dispatchEvent(new CustomEvent('bb-admin-refetch-feature'));
                         }
                     },
                 });
@@ -87,7 +128,7 @@ export function ReactionNotice({ field }) {
     };
 
     // Render completed notice
-    if ( 'completed' === migrationStatus ) {
+    if ( isCompleted ) {
         const action = migrationData.action || '';
         const totalReactions = migrationData.total_reactions || 0;
         const fromEmotionsName = migrationData.from_emotions_name || '';
@@ -127,7 +168,7 @@ export function ReactionNotice({ field }) {
     }
 
     // Render in-progress notice
-    if ( 'inprogress' === migrationStatus ) {
+    if ( isInProgress ) {
         const total = parseInt(migrationData.total_reactions || 0);
         const updatedEmotions = parseInt(migrationData.updated_emotions || 0);
         const percentage = total > 0 ? Math.ceil((updatedEmotions * 100) / total) : 0;

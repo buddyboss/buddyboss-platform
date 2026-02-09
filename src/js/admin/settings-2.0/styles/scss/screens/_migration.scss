@@ -198,7 +198,9 @@
 
 }
 
-.bb-admin-reaction-migration-wrapper {
+// Notice styles for both migration-wrapper and notice-wrapper
+.bb-admin-reaction-migration-wrapper,
+.bb-admin-reaction-notice-wrapper {
 
 	.bb-admin-notice {
 		display: flex;
@@ -208,13 +210,39 @@
 		border: 1px solid transparent;
 		border-radius: $bb-border-radius-lg;
 
+		// Warning state (pending migration)
 		&--warning {
 			background-color: $bb-background-warning-primary-color;
 			border-color: $bb-border-warning-secondary-color;
+
+			.bb-admin-notice__icon [class*="bb-icon"] {
+				color: $bb-icon-warning-primary-color;
+			}
+		}
+
+		// Success state (completed migration)
+		&--success {
+			background-color: #ecfdf5;
+			border-color: #a7f3d0;
+
+			.bb-admin-notice__icon [class*="bb-icon"] {
+				color: #10b981;
+			}
+		}
+
+		// Info state (in-progress migration)
+		&--info {
+			background-color: #eff6ff;
+			border-color: #bfdbfe;
+
+			.bb-admin-notice__icon [class*="bb-icon"] {
+				color: $bb-primary-color;
+			}
 		}
 
 		.bb-admin-notice__content {
-			color: text-color;
+			flex: 1;
+			color: $bb-text-color;
 			font-size: 13px;
 
 			p {
@@ -224,6 +252,9 @@
 
 		.bb-admin-notice__actions {
 			margin-left: auto;
+			display: flex;
+			align-items: center;
+			gap: 8px;
 
 			button {
 				color: $bb-text-color;
@@ -233,14 +264,18 @@
 				background: none;
 				padding: 2px 4px;
 				cursor: pointer;
+
+				&:hover {
+					opacity: 0.8;
+				}
 			}
 		}
 
 		.bb-admin-notice__icon {
 			display: flex;
+			flex-shrink: 0;
 
 			[class*="bb-icon"] {
-				color: $bb-icon-warning-primary-color;
 				font-size: 20px;
 				font-weight: 500;
 			}
@@ -252,11 +287,16 @@
 			background: none;
 			padding: 0;
 			cursor: pointer;
+			flex-shrink: 0;
 
 			[class*="bb-icon"] {
 				color: $bb-icon-tertiary-color;
 				font-size: 16px;
 				font-weight: 400;
+			}
+
+			&:hover [class*="bb-icon"] {
+				color: $bb-text-color;
 			}
 		}
 	}

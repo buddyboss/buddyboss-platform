@@ -554,11 +554,14 @@ export function SettingsForm({ fields, values, onChange }) {
 				// Check conditions here to avoid rendering empty wrapper div.
 				const migrationData = field.migration_data || {};
 				const migrationStatus = field.migration_status || '';
+				// Don't show pending notice if migration is running or completed
+				const isMigrationRunning = 'inprogress' === migrationStatus || 'running' === migrationData.status;
+				const isMigrationCompleted = 'completed' === migrationStatus;
 				const hasPendingMigration =
 					migrationData.action &&
 					migrationData.total_reactions > 0 &&
-					'inprogress' !== migrationStatus &&
-					'completed' !== migrationStatus;
+					!isMigrationRunning &&
+					!isMigrationCompleted;
 
 				if ( ! hasPendingMigration ) {
 					return null;
@@ -580,7 +583,12 @@ export function SettingsForm({ fields, values, onChange }) {
 				// Reaction notice: status display for in-progress or completed migrations.
 				// Check conditions here to avoid rendering empty wrapper div.
 				const noticeStatus = field.migration_status || '';
-				if ( 'inprogress' !== noticeStatus && 'completed' !== noticeStatus ) {
+				const noticeMigrationData = field.migration_data || {};
+				// Also check migration_data.status === 'running' as fallback for in-progress
+				const isNoticeInProgress = 'inprogress' === noticeStatus || 'running' === noticeMigrationData.status;
+				const isNoticeCompleted = 'completed' === noticeStatus;
+
+				if ( !isNoticeInProgress && !isNoticeCompleted ) {
 					return null;
 				}
 

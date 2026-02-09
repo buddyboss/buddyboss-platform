@@ -142,6 +142,27 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 		}
 	}, [sidePanelId, sidePanels]);
 
+	// Generic event listener for refetching feature data.
+	// Any component can dispatch 'bb-admin-refetch-feature' to trigger a data refresh.
+	useEffect(() => {
+		const handleRefetchFeature = () => {
+			ajaxFetch('bb_admin_get_feature_settings', { feature_id: featureId })
+				.then((response) => {
+					if (response.success && response.data) {
+						setCachedFeatureData(featureId, response.data);
+						setFeature(response.data);
+						setSidePanels(response.data.side_panels || []);
+						const refreshedSettings = response.data.settings || {};
+						setSettings(refreshedSettings);
+						setOriginalSettings(JSON.parse(JSON.stringify(refreshedSettings)));
+					}
+				});
+		};
+
+		window.addEventListener('bb-admin-refetch-feature', handleRefetchFeature);
+		return () => window.removeEventListener('bb-admin-refetch-feature', handleRefetchFeature);
+	}, [featureId]);
+
 	// Setup debounced save (auto-save on change)
 	// Uses AJAX endpoint for feature settings.
 	useEffect(() => {

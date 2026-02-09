@@ -96,11 +96,91 @@ export function MigrationModal({ isOpen, onClose, migrationData }) {
             }
         };
 
+        /**
+         * Handle "Start conversion" button click.
+         * Sends migration data via the feature settings save endpoint.
+         */
+        const handleStartMigration = (e) => {
+            if (!e.target.classList.contains('start_migration_wizard')) {
+                return;
+            }
+
+            // Get selected reaction ID from dropdown (likes to emotion flow).
+            const toReactionSelect = document.querySelector('select[name="to_reactions"]');
+            const toReactions = toReactionSelect ? toReactionSelect.value : '';
+
+            // Get selected emotions from checkboxes (emotions to likes flow).
+            const fromReactionsInputs = document.querySelectorAll('input[name="from_reactions[]"]:checked');
+            const fromReactions = Array.from(fromReactionsInputs).map(input => input.value);
+
+            // Disable buttons and show loading state.
+            e.target.disabled = true;
+            e.target.textContent = __('Converting...', 'buddyboss');
+            const cancelBtn = document.querySelector('.cancel_migration_wizard');
+            if (cancelBtn) {
+                cancelBtn.disabled = true;
+            }
+
+            // Build settings payload for migration.
+            const settings = {
+                migration_action: 'switch',
+            };
+
+            if (toReactions) {
+                settings.to_reactions = toReactions;
+            }
+
+            if (fromReactions.length > 0) {
+                settings.from_reactions = fromReactions;
+            }
+
+            // Call feature settings save endpoint.
+            const formData = new FormData();
+            formData.append('action', 'bb_admin_save_feature_settings');
+            formData.append('nonce', window.bbAdminData?.ajaxNonce || '');
+            formData.append('feature_id', 'reactions');
+            formData.append('settings', JSON.stringify(settings));
+
+            fetch(window.bbAdminData?.ajaxUrl || '/wp-admin/admin-ajax.php', {
+                method: 'POST',
+                credentials: 'same-origin',
+                body: formData,
+            })
+                .then((response) => response.json())
+                .then((response) => {
+                    if (response.success) {
+                        e.target.textContent = __('Conversion started!', 'buddyboss');
+
+                        setTimeout(() => {
+                            onClose();
+                            // Dispatch generic event to refetch feature data (no page reload needed).
+                            window.dispatchEvent(new CustomEvent('bb-admin-refetch-feature'));
+                        }, 1000);
+                    } else {
+                        e.target.disabled = false;
+                        e.target.textContent = __('Start conversion', 'buddyboss');
+                        if (cancelBtn) {
+                            cancelBtn.disabled = false;
+                        }
+                        alert(response.data?.message || __('Migration failed. Please try again.', 'buddyboss'));
+                    }
+                })
+                .catch(() => {
+                    e.target.disabled = false;
+                    e.target.textContent = __('Start conversion', 'buddyboss');
+                    if (cancelBtn) {
+                        cancelBtn.disabled = false;
+                    }
+                    alert(__('Migration failed. Please try again.', 'buddyboss'));
+                });
+        };
+
         document.addEventListener('change', handleFromAllEmotionsChange);
         document.addEventListener('change', handleDropdownChange);
         document.addEventListener('click', handleFooterNextWizardScreenClick);
         document.addEventListener('click', handleCloseMigrationWizard);
         document.addEventListener('change', handleFromLimitChange);
+        document.addEventListener('click', handleStartMigration);
 
         // Initialize button state after content loads (handles pre-selected dropdown values).
         updateContinueButtonState();
@@ -111,8 +191,9 @@ export function MigrationModal({ isOpen, onClose, migrationData }) {
             document.removeEventListener('click', handleFooterNextWizardScreenClick);
             document.removeEventListener('click', handleCloseMigrationWizard);
             document.removeEventListener('change', handleFromLimitChange);
+            document.removeEventListener('click', handleStartMigration);
         };
-    }, [wizardContent]);
+    }, [wizardContent, onClose]);
 
     const loadWizardData = () => {
         setLoading(true);
