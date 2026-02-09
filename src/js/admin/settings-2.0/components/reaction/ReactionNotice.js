@@ -55,6 +55,17 @@ export function ReactionNotice({ field }) {
         }
     }, [isInProgress, isDismissed]);
 
+    // Auto-dismiss success notice after 5 seconds
+    useEffect(() => {
+        if (isCompleted && !isDismissed) {
+            const autoDismissTimer = setTimeout(() => {
+                setIsDismissed(true);
+            }, 5000); // 5 seconds
+
+            return () => clearTimeout(autoDismissTimer);
+        }
+    }, [isCompleted, isDismissed]);
+
     // Only show for 'inprogress' or 'completed' status
     if (isDismissed || (!isInProgress && !isCompleted)) {
         return null;
