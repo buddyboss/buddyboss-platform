@@ -42,8 +42,15 @@ export function MigrationModal({ isOpen, onClose, migrationData }) {
             }
 
             // Check for checkbox-based selection (emotions to likes flow).
-            const emotionInputs = document.querySelectorAll('input.migrate_emotion_input');
-            const isAnyEmotionChecked = Array.from(emotionInputs).some(input => input.checked);
+            // Check both by class and by name for compatibility.
+            const emotionInputsByClass = document.querySelectorAll('input.migrate_emotion_input');
+            const emotionInputsByName = document.querySelectorAll('input[name="from_reactions[]"]');
+            const allEmotionsCheckbox = document.querySelector('input[name="from_all_emotions"]');
+
+            const isAnyEmotionChecked =
+                Array.from(emotionInputsByClass).some(input => input.checked) ||
+                Array.from(emotionInputsByName).some(input => input.checked) ||
+                (allEmotionsCheckbox && allEmotionsCheckbox.checked);
 
             // Check for dropdown-based selection (likes to emotion flow).
             const toReactionSelect = document.querySelector('select[name="to_reactions"]');
@@ -69,6 +76,13 @@ export function MigrationModal({ isOpen, onClose, migrationData }) {
             updateContinueButtonState();
         };
 
+        // Handle individual emotion checkbox changes.
+        const handleIndividualEmotionChange = (e) => {
+            if (e.target.name === 'from_reactions[]' || e.target.classList.contains('migrate_emotion_input')) {
+                updateContinueButtonState();
+            }
+        };
+
         const handleDropdownChange = (e) => {
             if (e.target.name === 'to_reactions') {
                 updateContinueButtonState();
@@ -89,11 +103,11 @@ export function MigrationModal({ isOpen, onClose, migrationData }) {
         };
 
         const handleFromLimitChange = (e) => {
-            if (e.target.name === 'to_reactions' && e.target.value !== '') {
-                document.querySelector('button.footer_next_wizard_screen').classList.remove( 'disabled' );
-            } else {
-                document.querySelector('button.footer_next_wizard_screen').classList.add( 'disabled' );
+            // Only handle to_reactions dropdown changes, ignore other inputs.
+            if (e.target.name !== 'to_reactions') {
+                return;
             }
+            updateContinueButtonState();
         };
 
         /**
@@ -176,17 +190,28 @@ export function MigrationModal({ isOpen, onClose, migrationData }) {
         };
 
         document.addEventListener('change', handleFromAllEmotionsChange);
+        document.addEventListener('change', handleIndividualEmotionChange);
         document.addEventListener('change', handleDropdownChange);
         document.addEventListener('click', handleFooterNextWizardScreenClick);
         document.addEventListener('click', handleCloseMigrationWizard);
         document.addEventListener('change', handleFromLimitChange);
         document.addEventListener('click', handleStartMigration);
 
+        // Initialize checkbox state - enable individual checkboxes if "All emotions" is not checked.
+        const allEmotionsCheckbox = document.querySelector('input[name="from_all_emotions"]');
+        const individualCheckboxes = document.querySelectorAll('input[name="from_reactions[]"]');
+        if (allEmotionsCheckbox && !allEmotionsCheckbox.checked) {
+            individualCheckboxes.forEach(input => {
+                input.disabled = false;
+            });
+        }
+
         // Initialize button state after content loads (handles pre-selected dropdown values).
         updateContinueButtonState();
 
         return () => {
             document.removeEventListener('change', handleFromAllEmotionsChange);
+            document.removeEventListener('change', handleIndividualEmotionChange);
             document.removeEventListener('change', handleDropdownChange);
             document.removeEventListener('click', handleFooterNextWizardScreenClick);
             document.removeEventListener('click', handleCloseMigrationWizard);
