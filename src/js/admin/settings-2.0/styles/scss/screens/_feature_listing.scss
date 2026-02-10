@@ -209,7 +209,7 @@
 		min-width: 0;
 	}
 
-	&__feature-settings-btn.components-button {
+	&__feature-settings-btn.components-button.is-secondary {
 		display: inline-flex;
 		align-items: center;
 		gap: 4px;
@@ -240,6 +240,7 @@
 		}
 
 		&:hover {
+			color: inherit;
 			background: #e0e0e0;
 			border: 0.5px solid $bb-border-color;
 			box-shadow: none;
