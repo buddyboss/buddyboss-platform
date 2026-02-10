@@ -126,6 +126,8 @@ export function MigrationModal({ isOpen, onClose, migrationData }) {
             // Get selected emotions from checkboxes (emotions to likes flow).
             const fromReactionsInputs = document.querySelectorAll('input[name="from_reactions[]"]:checked');
             const fromReactions = Array.from(fromReactionsInputs).map(input => input.value);
+            const allEmotionsCheckbox = document.querySelector('input[name="from_all_emotions"]');
+            const fromAllEmotions = allEmotionsCheckbox && allEmotionsCheckbox.checked;
 
             // Disable buttons and show loading state.
             e.target.disabled = true;
@@ -136,8 +138,10 @@ export function MigrationModal({ isOpen, onClose, migrationData }) {
             }
 
             // Build settings payload for migration.
+            // 'footer' = wizard opened from "migration wizard" link; 'switch' = from "Start conversion" notice.
+            const migrationAction = migrationData?.wizardType === 'footer' ? 'footer' : 'switch';
             const settings = {
-                migration_action: 'switch',
+                migration_action: migrationAction,
             };
 
             if (toReactions) {
@@ -146,6 +150,9 @@ export function MigrationModal({ isOpen, onClose, migrationData }) {
 
             if (fromReactions.length > 0) {
                 settings.from_reactions = fromReactions;
+            }
+            if (fromAllEmotions) {
+                settings.from_all_emotions = true;
             }
 
             // Call feature settings save endpoint.
@@ -218,7 +225,7 @@ export function MigrationModal({ isOpen, onClose, migrationData }) {
             document.removeEventListener('change', handleFromLimitChange);
             document.removeEventListener('click', handleStartMigration);
         };
-    }, [wizardContent, onClose]);
+    }, [wizardContent, onClose, migrationData]);
 
     const loadWizardData = () => {
         setLoading(true);
