@@ -10,71 +10,120 @@
 import { useState, useEffect, useRef } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
+// Module-level store so dismissed migrations stay hidden after remount (e.g. navigate away/back).
+// Resets on full page reload; per admin session only.
+const dismissedMigrationSignatures = {};
+
 export function ReactionNotice({ field }) {
-    const [isDismissed, setIsDismissed] = useState(false);
-    const [migrationData, setMigrationData] = useState(field.migration_data || {});
-    const [migrationStatus, setMigrationStatus] = useState(field.migration_status || '');
-    const autoRefreshRef = useRef(null);
+	const [isDismissed, setIsDismissed] = useState(false);
+	const [migrationData, setMigrationData] = useState(field.migration_data || {});
+	const [migrationStatus, setMigrationStatus] = useState(field.migration_status || '');
+	const autoRefreshRef = useRef(null);
 
-    // Check if migration is in-progress (either by status or by migration_data.status)
-    const isInProgress = 'inprogress' === migrationStatus || 'running' === migrationData.status;
-    // Check if migration is completed (either by status or by migration_data.status)
-    const isCompleted = 'completed' === migrationStatus || 'completed' === migrationData.status;
+	// Build a stable signature for the current migration so dismissal
+	// is scoped to this specific migration within the current admin session.
+	const migrationSignature = (() => {
+		const data = field.migration_data || {};
+		if (!data.action || !data.type || !data.total_reactions) {
+			return '';
+		}
+		return JSON.stringify({
+			action: data.action,
+			type: data.type,
+			total: data.total_reactions,
+			from: data.from_emotions || [],
+			to: data.to_emotions || 0,
+		});
+	})();
 
-    // Auto-refresh progress every 30 seconds when in-progress
-    useEffect(() => {
-        if (isInProgress && !isDismissed) {
-            autoRefreshRef.current = setInterval(() => {
-                if (window.bbReactionAdminVars && window.bbReactionAdminVars.ajax_url) {
-                    jQuery.ajax({
-                        url: window.bbReactionAdminVars.ajax_url,
-                        method: 'POST',
-                        data: {
-                            action: 'bb_pro_reaction_check_migration',
-                            nonce: window.bbReactionAdminVars.nonce?.check_migration || '',
-                        },
-                        success: (response) => {
-                            if (response.success && response.data) {
-                                setMigrationData(response.data.migration_data || {});
-                                // Update status directly if changed to completed
-                                if ('completed' === response.data.migration_status) {
-                                    clearInterval(autoRefreshRef.current);
-                                    setMigrationStatus('completed');
-                                }
-                            }
-                        },
-                    });
-                }
-            }, 30000); // 30 seconds
+	// Whether this migration was already dismissed in this session (survives remount).
+	const isDismissedInSession = !!(migrationSignature && dismissedMigrationSignatures[migrationSignature]);
 
-            return () => {
-                if (autoRefreshRef.current) {
-                    clearInterval(autoRefreshRef.current);
-                }
-            };
-        }
-    }, [isInProgress, isDismissed]);
+	// When migration data from the server changes, refresh local state.
+	useEffect(() => {
+		setMigrationData(field.migration_data || {});
+		setMigrationStatus(field.migration_status || '');
+		if (migrationSignature && !dismissedMigrationSignatures[migrationSignature]) {
+			setIsDismissed(false);
+		}
+	}, [field.migration_data, field.migration_status, migrationSignature]);
 
-    // Only show for 'inprogress' or 'completed' status
-    if (isDismissed || (!isInProgress && !isCompleted)) {
-        return null;
-    }
+	// Check if migration is in-progress (either by status or by migration_data.status)
+	const isInProgress = 'inprogress' === migrationStatus || 'running' === migrationData.status;
+	// Check if migration is completed (either by status or by migration_data.status)
+	const isCompleted = 'completed' === migrationStatus || 'completed' === migrationData.status;
 
-    const handleDismiss = () => {
-        setIsDismissed(true);
+	// Auto-refresh progress every 30 seconds when in-progress
+	useEffect(() => {
+		if (isInProgress && !isDismissed) {
+			autoRefreshRef.current = setInterval(() => {
+				if (window.bbReactionAdminVars && window.bbReactionAdminVars.ajax_url) {
+					jQuery.ajax({
+						url: window.bbReactionAdminVars.ajax_url,
+						method: 'POST',
+						data: {
+							action: 'bb_pro_reaction_check_migration',
+							nonce: window.bbReactionAdminVars.nonce?.check_migration || '',
+						},
+						success: (response) => {
+							if (response.success && response.data) {
+								setMigrationData(response.data.migration_data || {});
+								// Update status directly if changed to completed
+								if ('completed' === response.data.migration_status) {
+									clearInterval(autoRefreshRef.current);
+									setMigrationStatus('completed');
+									// Also refetch feature data so that any cached migration_data/migration_status
+									// coming from bb_admin_get_feature_settings is updated to the completed state.
+									if (typeof window !== 'undefined') {
+										window.dispatchEvent(new CustomEvent('bb-admin-refetch-feature'));
+									}
+								}
+							}
+						},
+					});
+				}
+			}, 30000); // 30 seconds
 
-        // For completed status, call dismiss endpoint
-        if ( isCompleted && window.bbReactionAdminVars && window.bbReactionAdminVars.ajax_url ) {
-            jQuery.ajax({
-                url: window.bbReactionAdminVars.ajax_url,
-                method: 'POST',
-                data: {
-                    action: 'bb_pro_reaction_dismiss_migration_notice',
-                    nonce: window.bbReactionAdminVars.nonce?.dismiss_migration_notice || '',
-                },
-            });
-        }
-    };
+			return () => {
+				if (autoRefreshRef.current) {
+					clearInterval(autoRefreshRef.current);
+				}
+			};
+		}
+	}, [isInProgress, isDismissed]);
+
+	// If this migration was dismissed in this session (module-level store survives remount),
+	// or currently dismissed in state, or not in-progress/completed, hide the notice.
+	if (isDismissedInSession || isDismissed || (!isInProgress && !isCompleted)) {
+		return null;
+	}
+
+	const handleDismiss = () => {
+		setIsDismissed(true);
+		if (migrationSignature) {
+			dismissedMigrationSignatures[migrationSignature] = true;
+		}
+
+		// For completed status, call dismiss endpoint
+		if (isCompleted && window.bbReactionAdminVars && window.bbReactionAdminVars.ajax_url) {
+			jQuery.ajax({
+				url: window.bbReactionAdminVars.ajax_url,
+				method: 'POST',
+				data: {
+					action: 'bb_pro_reaction_dismiss_migration_notice',
+					nonce: window.bbReactionAdminVars.nonce?.dismiss_migration_notice || '',
+				},
+				success: () => {
+					// After dismissing on the server, refetch feature data so that
+					// migration_data/migration_status are cleared and the success
+					// notice does not reappear when navigating back.
+					if (typeof window !== 'undefined') {
+						window.dispatchEvent(new CustomEvent('bb-admin-refetch-feature'));
+					}
+				},
+			});
+		}
+	};
 
     const handleRecheckStatus = (e) => {
         e.preventDefault();
@@ -91,7 +140,7 @@ export function ReactionNotice({ field }) {
                     if (response.success && response.data) {
                         setMigrationData(response.data.migration_data || {});
                         // Update status directly if changed to completed
-                        if ( 'completed' === response.data.migration_status ) {
+						if ('completed' === response.data.migration_status) {
                             setMigrationStatus('completed');
                         }
                     }

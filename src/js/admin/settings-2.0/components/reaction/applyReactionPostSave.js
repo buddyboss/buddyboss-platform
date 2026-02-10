@@ -43,10 +43,19 @@ function injectMigrationDataIntoPanels(panels, migrationData, migrationStatus) {
  */
 export function applyReactionPostSave(response, fieldsToSave, featureId, context) {
 	const savedReactionItems = fieldsToSave.reaction_items !== undefined;
-	const saveMigrationData = response.data?.migration_data;
-	const saveMigrationStatus = response.data?.migration_status || '';
+	let saveMigrationData = response.data?.migration_data;
+	let saveMigrationStatus = response.data?.migration_status || '';
 	// Check if response includes migration fields (even if empty - we need to clear old data).
 	const hasMigrationResponse = 'migration_data' in (response.data || {});
+
+	// Normalise "dismissed" status so React behaves like the Pro field callbacks:
+	// when migration_data.status is 'dismissed', we should treat it as "no migration"
+	// and clear both migration_data and migration_status. This prevents the success
+	// notice from reappearing after the user dismisses it and then triggers another save.
+	if (saveMigrationData && saveMigrationData.status === 'dismissed') {
+		saveMigrationData = {};
+		saveMigrationStatus = '';
+	}
 
 	if (savedReactionItems) {
 		// Refetch to get real DB IDs replacing react_key_ IDs
