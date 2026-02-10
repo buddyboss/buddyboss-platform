@@ -37,11 +37,14 @@ const saveToCache = (cacheKey, data) => {
 
 /**
  * Clears the help content cache for a specific content ID or all help content.
- * @param {string} [contentId] - Optional content ID. If not provided, clears all help content cache.
+ * @param {string} [contentId] - Optional content ID or URL (with article=). If not provided, clears all help content cache.
  */
 export const clearHelpContentCache = (contentId = null) => {
 	if (contentId) {
-		localStorage.removeItem(`bb_help_content_${contentId}`);
+		const kbId = resolveHelpContentId(contentId);
+		if (kbId) {
+			localStorage.removeItem(`bb_help_content_${kbId}`);
+		}
 	} else {
 		// Clear all help content cache entries
 		for (let i = 0; i < localStorage.length; i++) {
@@ -174,10 +177,38 @@ export const fetchMenus = async () => {
   };
 
 /**
+ * Resolve help content ID from a URL or raw ID.
+ * Backend may pass help_url as full URL (e.g. admin.php?page=bp-help&article=127197).
+ *
+ * @param {string} contentId - URL with article= param or numeric/slug ID.
+ * @returns {string} Resolved article ID for the ht-kb API.
+ */
+const resolveHelpContentId = (contentId) => {
+	if (!contentId || typeof contentId !== 'string') {
+		return '';
+	}
+	const trimmed = contentId.trim();
+	// Full URL: extract article query param.
+	if (trimmed.startsWith('http') || trimmed.includes('?')) {
+		try {
+			const url = trimmed.startsWith('http') ? trimmed : `https://example.com?${trimmed.split('?')[1] || ''}`;
+			const params = new URL(url).searchParams;
+			const article = params.get('article');
+			if (article) {
+				return String(article);
+			}
+		} catch (e) {
+			// Fall through to use trimmed as-is.
+		}
+	}
+	return trimmed;
+};
+
+/**
  * Fetch help content from the BuddyBoss knowledge base API.
  * Implements caching to avoid unnecessary API calls.
  *
- * @param {string} contentId - The ID of the help content to fetch.
+ * @param {string} contentId - The ID of the help content to fetch, or a URL containing article=.
  * @returns {Promise} Promise that resolves to help content object.
  */
 export const fetchHelpContent = async (contentId) => {
@@ -185,31 +216,38 @@ export const fetchHelpContent = async (contentId) => {
 		throw new Error('Content ID is required');
 	}
 
-	const cacheKey = `bb_help_content_${contentId}`;
+	const kbId = resolveHelpContentId(contentId);
+	if (!kbId) {
+		throw new Error('Could not determine help article ID');
+	}
+
+	const cacheKey = `bb_help_content_${kbId}`;
 	const cached = getFromCache(cacheKey);
 	if (cached) {
 		return cached;
 	}
 
 	try {
-		const response = await fetch(`https://buddyboss.com/wp-json/wp/v2/ht-kb/${contentId}`);
+		const response = await fetch(`https://buddyboss.com/wp-json/wp/v2/ht-kb/${kbId}`);
 		if (!response.ok) {
-			throw new Error('Failed to fetch help content');
+			const message = `Failed to fetch help content (${response.status})`;
+			throw new Error(message);
 		}
 		const data = await response.json();
 
 		// Prepare content object
 		const contentObject = {
-			title: data.title.rendered,
-			content: data.content.rendered,
+			title: data.title?.rendered ?? '',
+			content: data.content?.rendered ?? '',
 			videoId: data.acf?.video_id || null,
-			imageUrl: data.acf?.featured_image || null
+			imageUrl: data.acf?.featured_image || null,
 		};
 
 		saveToCache(cacheKey, contentObject);
 		return contentObject;
 	} catch (error) {
-		console.error('Error fetching help content:', error);
+		// Log with context; rethrow so caller can show user message.
+		console.error('Error fetching help content:', error.message || error);
 		throw error;
 	}
 };

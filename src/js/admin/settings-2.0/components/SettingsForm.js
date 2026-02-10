@@ -52,7 +52,7 @@ export function SettingsForm({ fields, values, onChange }) {
 		if (field.conditional) {
 			const condValue = values[field.conditional.field];
 			// Only show if conditional field matches the expected value
-			return condValue === field.conditional.value || condValue == field.conditional.value;
+			return condValue === field.conditional.value;
 		}
 
 		// For parent_field (nesting), always show the field but it may be disabled
@@ -76,7 +76,7 @@ export function SettingsForm({ fields, values, onChange }) {
 
 		// If parent_value is specified, check for exact match
 		if (field.parent_value !== undefined) {
-			return !(parentValue === field.parent_value || parentValue == field.parent_value);
+			return parentValue !== field.parent_value;
 		}
 
 		// For inverted parent: enabled when parent actual value is falsy (display is truthy)
