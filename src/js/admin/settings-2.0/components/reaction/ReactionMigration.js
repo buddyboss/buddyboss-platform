@@ -60,7 +60,7 @@ export function ReactionMigration({ field, onStartConversion }) {
     };
 
     return (
-        <div className="bb-admin-reaction-migration-wrapper">
+        <div className="bb-admin-settings-form__field bb-admin-settings-form__field--full-width bb-admin-reaction-migration-wrapper">
             <div className="bb-admin-notice bb-admin-notice--warning">
                 <div className="bb-admin-notice__icon">
                     <span className="bb-icons-rl bb-icons-rl-warning-circle" />

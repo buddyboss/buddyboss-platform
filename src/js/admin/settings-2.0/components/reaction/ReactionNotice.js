@@ -146,7 +146,7 @@ export function ReactionNotice({ field }) {
         }
 
         return (
-            <div className="bb-admin-reaction-notice-wrapper">
+            <div className="bb-admin-settings-form__field bb-admin-settings-form__field--full-width bb-admin-reaction-notice-wrapper">
                 <div className="bb-admin-notice bb-admin-notice--success">
                     <div className="bb-admin-notice__icon">
                         <span className="bb-icons-rl bb-icons-rl-check-circle" />
@@ -174,7 +174,7 @@ export function ReactionNotice({ field }) {
         const percentage = total > 0 ? Math.ceil((updatedEmotions * 100) / total) : 0;
 
         return (
-            <div className="bb-admin-reaction-notice-wrapper">
+            <div className="bb-admin-settings-form__field bb-admin-settings-form__field--full-width bb-admin-reaction-notice-wrapper">
                 <div className="bb-admin-notice bb-admin-notice--info bb-admin-notice--progress">
                     <div className="bb-admin-notice__icon">
                         <span className="bb-icons-rl bb-icons-rl-spinner animate-spin" />

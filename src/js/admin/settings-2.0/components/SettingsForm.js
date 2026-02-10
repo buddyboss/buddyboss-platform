@@ -664,12 +664,19 @@ export function SettingsForm({ fields, values, onChange }) {
 
 		// Notice fields render full-width without the label column.
 		// This includes standard notices and custom migration/info notice components.
-		if ( 'notice' === field.type || 'reaction_migration' === field.type || 'reaction_notice' === field.type || 'reaction_info' === field.type ) {
+		// Note: reaction_migration and reaction_notice handle their own wrapper internally
+		// so they can return null without leaving an empty wrapper div.
+		if ( 'notice' === field.type || 'reaction_info' === field.type ) {
 			return (
 				<div key={field.name} className="bb-admin-settings-form__field bb-admin-settings-form__field--full-width">
 					{controlOutput}
 				</div>
 			);
+		}
+
+		// reaction_migration and reaction_notice return their own wrapper or null
+		if ( 'reaction_migration' === field.type || 'reaction_notice' === field.type ) {
+			return controlOutput;
 		}
 
 		// Get child fields that depend on this field
