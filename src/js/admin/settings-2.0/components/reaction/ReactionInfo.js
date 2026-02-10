@@ -14,13 +14,13 @@ import { __ } from '@wordpress/i18n';
  *
  * @param {Object} props Component props
  * @param {Object} props.field Field configuration
+ * @param {Function} props.onOpenMigrationWizard Callback to open migration wizard modal
  * @returns {JSX.Element|null} Info notice or null
  */
-export function ReactionInfo({ field }) {
+export function ReactionInfo({ field, onOpenMigrationWizard }) {
     // Get the description text and link from field config
     const description = field.description || '';
     const link = field.link || {};
-    const linkUrl = link.url || '';
     const linkText = link.text || __('migration wizard', 'buddyboss');
 
     if (!description) {
@@ -31,23 +31,25 @@ export function ReactionInfo({ field }) {
     // Expected format: "Text before {link} text after"
     const parts = description.split('{link}');
 
+    const handleLinkClick = (e) => {
+        e.preventDefault();
+        if (onOpenMigrationWizard) {
+            onOpenMigrationWizard();
+        }
+    };
+
     return (
         <div className="bb-admin-reaction-info-wrapper">
             <div className="bb-admin-reaction-info">
                 <p className="bb-admin-reaction-info__text">
                     {parts[0]}
-                    {linkUrl ? (
-                        <a
-                            href={linkUrl}
-                            className="bb-admin-reaction-info__link"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            {linkText}
-                        </a>
-                    ) : (
-                        <span className="bb-admin-reaction-info__link">{linkText}</span>
-                    )}
+                    <a
+                        href="#"
+                        className="bb-admin-reaction-info__link"
+                        onClick={handleLinkClick}
+                    >
+                        {linkText}
+                    </a>
                     {parts[1] || ''}
                 </p>
             </div>

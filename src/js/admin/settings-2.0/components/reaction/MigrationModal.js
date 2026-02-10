@@ -230,18 +230,29 @@ export function MigrationModal({ isOpen, onClose, migrationData }) {
             return;
         }
 
+        // Determine which AJAX action to use based on wizardType
+        // 'footer' = footer migration wizard link (always available)
+        // 'switch' = pending migration notice "Start Conversion" button
+        const isFooterWizard = migrationData?.wizardType === 'footer';
+        const ajaxAction = isFooterWizard
+            ? 'bb_pro_reaction_footer_migration'
+            : 'bb_pro_reaction_migration_start_conversion';
+        const ajaxNonce = isFooterWizard
+            ? window.bbReactionAdminVars.nonce?.footer_migration || ''
+            : window.bbReactionAdminVars.nonce?.migration_start_conversion || '';
+
         // Set hidden input for migration action
         const migrationActionInput = document.getElementById('migration_action');
         if (migrationActionInput) {
-            migrationActionInput.value = 'switch';
+            migrationActionInput.value = isFooterWizard ? 'footer' : 'switch';
         }
 
         jQuery.ajax({
             url: window.bbReactionAdminVars.ajax_url,
             method: 'POST',
             data: {
-                action: 'bb_pro_reaction_migration_start_conversion',
-                nonce: window.bbReactionAdminVars.nonce?.migration_start_conversion || '',
+                action: ajaxAction,
+                nonce: ajaxNonce,
             },
             success: (response) => {
                 if (response.success && response.data) {

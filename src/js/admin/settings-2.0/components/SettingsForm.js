@@ -602,10 +602,15 @@ export function SettingsForm({ fields, values, onChange }) {
 
 			case 'reaction_info':
 				// Reaction info: informational text with inline link
+				// Opens migration modal on click instead of navigating to separate page
 				return (
 					<ReactionInfo
 						key={field.name}
 						field={field}
+						onOpenMigrationWizard={() => {
+							setCurrentMigrationData({ wizardType: 'footer' });
+							setIsMigrationModalOpen(true);
+						}}
 					/>
 				);
 
