@@ -10,6 +10,7 @@ import { __ } from '@wordpress/i18n';
 import { Button, Spinner, ToggleControl } from '@wordpress/components';
 import { getCachedFeatures, toggleFeature, updateFeatureInCache } from '../utils/ajax';
 import { urlToRoute } from '../utils/url';
+import { Toast } from '../components/Toast';
 
 /**
  * Settings Screen Component
@@ -25,6 +26,7 @@ export function SettingsScreen({ onNavigate }) {
 	const [activeFilter, setActiveFilter] = useState('all'); // 'all', 'active', 'inactive'
 	const [selectedCategory, setSelectedCategory] = useState(''); // 'community', 'add-ons', 'integrations'
 	const [searchQuery, setSearchQuery] = useState('');
+	const [toast, setToast] = useState(null);
 
 	useEffect(() => {
 		// Load features via shared cache (prevents duplicate AJAX calls with Router)
@@ -87,8 +89,8 @@ export function SettingsScreen({ onNavigate }) {
 	// Get filter counts
 	const filterCounts = {
 		all: features.length,
-		active: features.filter((f) => 'active' === f.status).length,
-		inactive: features.filter((f) => 'inactive' === f.status).length,
+		active: features.filter((item) => 'active' === item.status).length,
+		inactive: features.filter((item) => 'inactive' === item.status).length,
 	};
 
 	// Get category counts
@@ -98,6 +100,18 @@ export function SettingsScreen({ onNavigate }) {
 		return acc;
 	}, {});
 
+	// Auto-dismiss success toast after 3 seconds.
+	useEffect(() => {
+		if (!toast) return;
+
+		if ('success' === toast.status) {
+			const timer = setTimeout(() => {
+				setToast(null);
+			}, 3000);
+			return () => clearTimeout(timer);
+		}
+	}, [toast]);
+
 	// Track in-flight toggle requests per feature for abort on rapid clicks.
 	const toggleControllers = useRef({});
 
@@ -105,9 +119,16 @@ export function SettingsScreen({ onNavigate }) {
 		const newStatus = checked ? 'active' : 'inactive';
 		const prevStatus = checked ? 'inactive' : 'active';
 
+		// Get feature label for toast message.
+		const currentFeature = features.find((item) => item.id === featureId);
+		const featureLabel = currentFeature?.label || featureId;
+
+		// Show saving toast.
+		setToast({ status: 'saving', message: __('Saving changes...', 'buddyboss') });
+
 		// 1. Optimistic update — instant UI feedback.
 		setFeatures((prev) =>
-			prev.map((f) => (f.id === featureId ? { ...f, status: newStatus } : f))
+			prev.map((item) => (item.id === featureId ? { ...item, status: newStatus } : item))
 		);
 		updateFeatureInCache(featureId, { status: newStatus });
 
@@ -130,19 +151,31 @@ export function SettingsScreen({ onNavigate }) {
 					// Confirm with server data.
 					const updatedFeature = response.data?.data;
 					setFeatures((prev) =>
-						prev.map((f) =>
-							f.id === featureId ? { ...f, ...updatedFeature } : f
+						prev.map((item) =>
+							item.id === featureId ? { ...item, ...updatedFeature } : item
 						)
 					);
 					updateFeatureInCache(featureId, updatedFeature);
+
+					// Show success toast.
+					const successMessage = checked
+						? __('%s has been enabled.', 'buddyboss').replace('%s', featureLabel)
+						: __('%s has been disabled.', 'buddyboss').replace('%s', featureLabel);
+					setToast({ status: 'success', message: successMessage });
 				} else {
 					// Server rejected — revert.
 					setFeatures((prev) =>
-						prev.map((f) =>
-							f.id === featureId ? { ...f, status: prevStatus } : f
+						prev.map((item) =>
+							item.id === featureId ? { ...item, status: prevStatus } : item
 						)
 					);
 					updateFeatureInCache(featureId, { status: prevStatus });
+
+					// Show error toast.
+					setToast({
+						status: 'error',
+						message: response.data?.message || __('Failed to update feature. Please try again.', 'buddyboss'),
+					});
 				}
 			})
 			.catch((error) => {
@@ -158,11 +191,17 @@ export function SettingsScreen({ onNavigate }) {
 
 				// Network/other error — revert.
 				setFeatures((prev) =>
-					prev.map((f) =>
-						f.id === featureId ? { ...f, status: prevStatus } : f
+					prev.map((item) =>
+						item.id === featureId ? { ...item, status: prevStatus } : item
 					)
 				);
 				updateFeatureInCache(featureId, { status: prevStatus });
+
+				// Show error toast.
+				setToast({
+					status: 'error',
+					message: __('Failed to update feature. Please try again.', 'buddyboss'),
+				});
 			});
 	};
 
@@ -333,6 +372,17 @@ export function SettingsScreen({ onNavigate }) {
 					</div>
 				)}
 			</div>
+
+			{/* Toast notification for feature toggle status */}
+			{toast && (
+				<div className="bb-toast-container">
+					<Toast
+						status={toast.status}
+						message={toast.message}
+						onDismiss={() => setToast(null)}
+					/>
+				</div>
+			)}
 		</div>
 	);
 }
