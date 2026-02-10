@@ -795,7 +795,12 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			require_once $this->admin_dir . '/settings/bp-admin-setting-moderation.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-video.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-labs.php';
-			require_once $this->admin_dir . '/settings/bb-admin-setting-reactions.php';
+
+			// Only load old Reactions settings tab if Settings 2.0 is not active.
+			if ( ! function_exists( 'bb_register_feature' ) ) {
+				require_once $this->admin_dir . '/settings/bb-admin-setting-reactions.php';
+			}
+
 			require_once $this->admin_dir . '/settings/bb-admin-setting-performance.php';
 
 			// @todo: used for bp-performance will enable in feature.

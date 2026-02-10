@@ -56,6 +56,7 @@ add_action( 'bp_admin_init', 'bp_register_admin_settings' );
 add_action( 'bp_admin_init', 'bp_register_admin_integrations' );
 add_action( 'bp_admin_init', 'bp_do_activation_redirect', 1 );
 add_action( 'bp_admin_init', 'bp_check_for_legacy_theme' );
+add_action( 'bp_admin_init', 'bb_redirect_legacy_settings_to_settings_2', 1 );
 
 // Show notice when Profile Avatars is BuddyBoss.
 add_action( 'bp_admin_head', 'bb_discussion_page_show_notice_in_avatar_section' );
@@ -591,3 +592,47 @@ function bb_render_admin_header() {
 }
 
 add_action( 'in_admin_header', 'bb_render_admin_header', 999 );
+
+/**
+ * Redirect legacy Settings 1.0 tabs to Settings 2.0.
+ *
+ * When Settings 2.0 is active, redirect users accessing old
+ * ?page=bp-settings&tab={old-tab} URLs to the new Settings 2.0 feature pages.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_redirect_legacy_settings_to_settings_2() {
+	// Only redirect if Settings 2.0 is active.
+	if ( ! function_exists( 'bb_register_feature' ) ) {
+		return;
+	}
+
+	// Check if we're on the old settings page.
+	$page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
+	$tab  = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : '';
+
+	if ( 'bp-settings' !== $page || empty( $tab ) ) {
+		return;
+	}
+
+	// Mapping of old Settings 1.0 tab names to new Settings 2.0 feature IDs.
+	$legacy_tabs_mapping = array(
+		'bp-reactions' => 'reactions',
+		// Add more mappings here as more tabs are migrated to Settings 2.0.
+	);
+
+	/**
+	 * Filter the legacy settings tabs mapping.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $legacy_tabs_mapping Array of old tab name => new feature ID.
+	 */
+	$legacy_tabs_mapping = apply_filters( 'bb_legacy_settings_tabs_mapping', $legacy_tabs_mapping );
+
+	if ( isset( $legacy_tabs_mapping[ $tab ] ) ) {
+		$redirect_url = admin_url( 'admin.php?page=bb-settings&tab=' . $legacy_tabs_mapping[ $tab ] );
+		wp_safe_redirect( $redirect_url );
+		exit;
+	}
+}
