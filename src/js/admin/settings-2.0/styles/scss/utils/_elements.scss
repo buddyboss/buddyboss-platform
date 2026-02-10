@@ -1,3 +1,11 @@
+/* Loading Spinner */
+.bb-admin-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 130px);
+}
+
 select.bb-admin-settings__select {
     @include bb-admin-settings-select;
 
