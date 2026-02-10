@@ -37,7 +37,7 @@ defined( 'ABSPATH' ) || exit;
 								<?php
 								$searchable_items = BP_Search::instance()->get_available_search();
 								if ( ! empty( $searchable_items ) ) {
-									echo '<select class="bb-rl-search-filter-select" name="subset" data-bb-caret="caret-arrow" data-bb-border="rounded">';
+									echo '<select class="bb-rl-search-filter-select" name="subset" data-bb-caret="caret-arrow" data-bb-border="rounded" data-dropdown-align="true">';
 									foreach ( $searchable_items as $key => $label ) {
 										echo '<option value="' . esc_attr( $key ) . '" ' . selected( $key, 'all', false ) . '>' . esc_html( $label ) . '</option>';
 									}
