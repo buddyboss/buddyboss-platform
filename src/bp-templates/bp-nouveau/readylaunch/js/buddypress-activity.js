@@ -2153,7 +2153,7 @@ window.bp = window.bp || {};
 
 			var content_text = input.text().trim();
 			var form         = input.closest( 'form' );
-			if ( '' !== content_text || content.indexOf( 'bb-rl-emojioneemoji' ) >= 0 ) {
+			if ( '' !== content_text || content.indexOf( 'emojioneemoji' ) >= 0 ) {
 				form.addClass( 'has-content' );
 			} else {
 				if ( form.hasClass( 'acomment-edit' ) ) {
@@ -2217,7 +2217,7 @@ window.bp = window.bp || {};
 							content = content.replace( /&nbsp;/g, ' ' );
 
 							var content_text = $( e.currentTarget ).text().trim();
-							if ( '' !== content_text || content.indexOf( 'bb-rl-emojioneemoji' ) >= 0 ) {
+							if ( '' !== content_text || content.indexOf( 'emojioneemoji' ) >= 0 ) {
 								$( e.currentTarget ).closest( 'form' ).addClass( 'has-content' );
 							} else {
 								$( e.currentTarget ).closest( 'form' ).removeClass( 'has-content' );
@@ -3479,7 +3479,7 @@ window.bp = window.bp || {};
 			);
 
 			// Transform emoji image into emoji unicode.
-			commentContent.find( 'img.emojioneemoji' ).replaceWith(
+			commentContent.find( 'img.emojioneemoji, img.bb-rl-emojioneemoji' ).replaceWith(
 				function () {
 					return this.dataset.emojiChar;
 				}
