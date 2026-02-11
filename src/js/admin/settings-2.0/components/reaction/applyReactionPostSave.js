@@ -102,6 +102,9 @@ export function applyReactionPostSave(response, fieldsToSave, featureId, context
 			}
 			return { ...prev, side_panels: updatedPanels };
 		});
+		// Keep local state in sync with saved values. Refetch for reactions no longer
+		// replaces settings (it only updates panels), so this merge is still correct.
+		context.setSettings((prev) => ({ ...prev, ...fieldsToSave }));
 		context.setOriginalSettings((prev) => ({ ...prev, ...fieldsToSave }));
 		return;
 	}

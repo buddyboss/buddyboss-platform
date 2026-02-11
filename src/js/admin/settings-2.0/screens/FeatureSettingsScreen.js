@@ -74,6 +74,12 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 	const [initialLoad, setInitialLoad] = useState(true);
 	const debouncedSaveRef = useRef();
 
+	// Ref for latest settings so refetch (reactions) can update cache without replacing state.
+	const settingsRef = useRef(settings);
+	useEffect(() => {
+		settingsRef.current = settings;
+	}, [settings]);
+
 	// Load feature settings via AJAX - only when featureId changes
 	// Uses caching to prevent re-fetching on navigation within the same feature
 	useEffect(() => {
@@ -143,18 +149,29 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 	}, [sidePanelId, sidePanels]);
 
 	// Generic event listener for refetching feature data.
-	// Any component can dispatch 'bb-admin-refetch-feature' to trigger a data refresh.
+	// Refetch is used after dismiss/complete to refresh migration state (panels). For reactions,
+	// we only need updated panels (migration_data); we must not replace settings or we overwrite
+	// the user's mode (e.g. Likes) with stale server data.
 	useEffect(() => {
 		const handleRefetchFeature = () => {
 			ajaxFetch('bb_admin_get_feature_settings', { feature_id: featureId })
 				.then((response) => {
 					if (response.success && response.data) {
-						setCachedFeatureData(featureId, response.data);
-						setFeature(response.data);
-						setSidePanels(response.data.side_panels || []);
-						const refreshedSettings = response.data.settings || {};
-						setSettings(refreshedSettings);
-						setOriginalSettings(JSON.parse(JSON.stringify(refreshedSettings)));
+						if (featureId === 'reactions') {
+							// Refresh panels only; preserve current settings so mode doesn't flip back.
+							const currentSettings = settingsRef.current;
+							setCachedFeatureData(featureId, { ...response.data, settings: currentSettings });
+							setFeature(response.data);
+							setSidePanels(response.data.side_panels || []);
+							// Do not setSettings/setOriginalSettings – refetch is for migration state only.
+						} else {
+							const refreshedSettings = response.data.settings || {};
+							setCachedFeatureData(featureId, response.data);
+							setFeature(response.data);
+							setSidePanels(response.data.side_panels || []);
+							setSettings(refreshedSettings);
+							setOriginalSettings(JSON.parse(JSON.stringify(refreshedSettings)));
+						}
 					}
 				});
 		};
