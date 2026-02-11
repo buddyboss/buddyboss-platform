@@ -77,6 +77,15 @@ class BB_Feature_Registry {
 	private $nav_items = array();
 
 	/**
+	 * Field name index for O(1) conflict detection.
+	 * Maps field name => array( feature_id, side_panel_id, section_id ).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 * @var array
+	 */
+	private $field_name_index = array();
+
+	/**
 	 * Feature dependency graph (for circular dependency detection).
 	 *
 	 * @since BuddyBoss 3.0.0
@@ -623,23 +632,18 @@ class BB_Feature_Registry {
 
 		$field_name = $args['name'];
 
-		// Check for field name conflicts (field names are option keys, must be unique).
-		foreach ( $this->fields as $fid => $side_panels ) {
-			foreach ( $side_panels as $spid => $sections ) {
-				foreach ( $sections as $sid => $fields ) {
-					foreach ( $fields as $existing_field ) {
-						if ( $existing_field['name'] === $field_name && ( $fid !== $feature_id || $spid !== $side_panel_id || $sid !== $section_id ) ) {
-							return new WP_Error(
-								'field_name_conflict',
-								sprintf(
-									/* translators: %s: field name */
-									__( 'Field name "%s" is already registered. Field names must be unique as they are used as option keys.', 'buddyboss' ),
-									$field_name
-								)
-							);
-						}
-					}
-				}
+		// Check for field name conflicts using index (O(1) lookup instead of nested loops).
+		if ( isset( $this->field_name_index[ $field_name ] ) ) {
+			list( $existing_feature_id, $existing_panel_id, $existing_section_id ) = $this->field_name_index[ $field_name ];
+			if ( $existing_feature_id !== $feature_id || $existing_panel_id !== $side_panel_id || $existing_section_id !== $section_id ) {
+				return new WP_Error(
+					'field_name_conflict',
+					sprintf(
+						/* translators: %s: field name */
+						__( 'Field name "%s" is already registered. Field names must be unique as they are used as option keys.', 'buddyboss' ),
+						$field_name
+					)
+				);
 			}
 		}
 
@@ -668,8 +672,9 @@ class BB_Feature_Registry {
 			$args['sanitize_callback'] = $this->bb_get_default_sanitize_callback( $args['type'] );
 		}
 
-		// Register field.
+		// Register field and update name index.
 		$this->fields[ $feature_id ][ $side_panel_id ][ $section_id ][ $field_name ] = $args;
+		$this->field_name_index[ $field_name ] = array( $feature_id, $side_panel_id, $section_id );
 
 		/**
 		 * Fired after a field is registered.
