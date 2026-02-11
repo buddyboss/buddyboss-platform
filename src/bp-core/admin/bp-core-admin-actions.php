@@ -562,7 +562,8 @@ function bb_render_admin_header() {
 				! empty( $screen->id ) &&
 				(
 					'buddyboss_page_bb-upgrade' !== $screen->id &&
-					'buddyboss_page_bb-readylaunch' !== $screen->id
+					'buddyboss_page_bb-readylaunch' !== $screen->id &&
+					'buddyboss_page_bb-settings' !== $screen->id
 				)
 			)
 		) ||
