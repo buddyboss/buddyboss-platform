@@ -112,6 +112,63 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * Update album photo and video counts in single album view.
+		 * Works for both Standard and ReadyLaunch modes.
+		 *
+		 * @param {Object} albumCounts - Album count data from server response
+		 * @param {number} albumCounts.album_media_count - Number of photos
+		 * @param {number} albumCounts.album_video_count - Number of videos
+		 */
+		updateAlbumCounts: function ( albumCounts ) {
+			// Check if we're in a single album view.
+			if ( ! $( '#buddypress #bp-media-single-album' ).length ) {
+				return;
+			}
+
+			var photoCount = parseInt( albumCounts.album_media_count ) || 0;
+			var videoCount = parseInt( albumCounts.album_video_count ) || 0;
+
+			// Format number with thousands separator.
+			var formatNumber = function( num ) {
+				return num.toString().replace( /\B(?=(\d{3})+(?!\d))/g, ',' );
+			};
+
+			// Update the photo count display.
+			var $photoCountSpan = $( '#buddypress .bb-album-photo-count' );
+			if ( $photoCountSpan.length > 0 ) {
+				// Check if this is ReadyLaunch mode (has icon element).
+				if ( $photoCountSpan.find( 'i' ).length > 0 ) {
+					// ReadyLaunch mode: preserve icon, update number only.
+					$photoCountSpan.contents().filter( function() {
+						return 3 === this.nodeType;
+					} ).remove();
+					$photoCountSpan.append( formatNumber( photoCount ) );
+				} else {
+					// Standard mode: update with label.
+					var photoLabel = 1 === photoCount ? BP_Nouveau.media.i18n_strings.photo : BP_Nouveau.media.i18n_strings.photos;
+					$photoCountSpan.text( formatNumber( photoCount ) + ' ' + photoLabel );
+				}
+			}
+
+			// Update the video count display.
+			var $videoCountSpan = $( '#buddypress .bb-album-video-count' );
+			if ( $videoCountSpan.length > 0 ) {
+				// Check if this is ReadyLaunch mode (has icon element).
+				if ( $videoCountSpan.find( 'i' ).length > 0 ) {
+					// ReadyLaunch mode: preserve icon, update number only.
+					$videoCountSpan.contents().filter( function() {
+						return 3 === this.nodeType;
+					} ).remove();
+					$videoCountSpan.append( formatNumber( videoCount ) );
+				} else {
+					// Standard mode: update with label.
+					var videoLabel = 1 === videoCount ? BP_Nouveau.media.i18n_strings.video : BP_Nouveau.media.i18n_strings.videos;
+					$videoCountSpan.text( formatNumber( videoCount ) + ' ' + videoLabel );
+				}
+			}
+		},
+
+		/**
 		 * [addListeners description]
 		 */
 		addListeners: function () {
@@ -478,33 +535,9 @@ window.bp = window.bp || {};
 								}
 
 								// Update album counts if uploading to an album.
-								if ( response.data.album_total_count !== undefined && $( '#buddypress #bp-media-single-album' ).length ) {
-									var photoCount = parseInt( response.data.album_media_count ) || 0;
-									var videoCount = parseInt( response.data.album_video_count ) || 0;
-
-									// Format number with thousands separator.
-									var formatNumber = function( num ) {
-										return num.toString().replace( /\B(?=(\d{3})+(?!\d))/g, ',' );
-									};
-
-									// Update the photo count display (preserve icon, update number only).
-									var $photoCountSpan = $( '#buddypress .bb-album-photo-count' );
-									if ( $photoCountSpan.length > 0 ) {
-										$photoCountSpan.contents().filter( function() {
-											return 3 === this.nodeType;
-										} ).remove();
-										$photoCountSpan.append( formatNumber( photoCount ) );
+								if ( response.data.album_total_count !== undefined ) {
+									self.updateAlbumCounts( response.data );
 									}
-
-									// Update the video count display (preserve icon, update number only).
-									var $videoCountSpan = $( '#buddypress .bb-album-video-count' );
-									if ( $videoCountSpan.length > 0 ) {
-										$videoCountSpan.contents().filter( function() {
-											return 3 === this.nodeType;
-										} ).remove();
-										$videoCountSpan.append( formatNumber( videoCount ) );
-									}
-								}
 
 								var videoLength = self.dropzone_video.length;
 								for ( var i = 0; i < videoLength; i++ ) {
@@ -586,41 +619,19 @@ window.bp = window.bp || {};
 									if ( $albumContainer.length ) {
 										// Determine which album we're currently viewing from the DOM (ReadyLaunch uses data-id).
 										var currentAlbumId = parseInt( $albumContainer.attr( 'data-id' ) || $albumContainer.attr( 'data-album-id' ) ) || 0;
-										var photoCount = 0;
-										var videoCount = 0;
+										var albumCounts = {};
 
 										// If we're viewing the source album, use source counts (item was removed).
 										// If we're viewing the destination album, use dest counts (item was added).
 										if ( currentAlbumId === response.data.source_album_id ) {
-											photoCount = parseInt( response.data.source_album_media_count ) || 0;
-											videoCount = parseInt( response.data.source_album_video_count ) || 0;
+											albumCounts.album_media_count = response.data.source_album_media_count;
+											albumCounts.album_video_count = response.data.source_album_video_count;
 										} else if ( currentAlbumId === response.data.dest_album_id ) {
-											photoCount = parseInt( response.data.dest_album_media_count ) || 0;
-											videoCount = parseInt( response.data.dest_album_video_count ) || 0;
+											albumCounts.album_media_count = response.data.dest_album_media_count;
+											albumCounts.album_video_count = response.data.dest_album_video_count;
 										}
 
-										// Format number with thousands separator.
-										var formatNumber = function( num ) {
-											return num.toString().replace( /\B(?=(\d{3})+(?!\d))/g, ',' );
-										};
-
-										// Update the photo count display (preserve icon, update number only).
-										var $photoCountSpan = $( '#buddypress .bb-album-photo-count' );
-										if ( $photoCountSpan.length > 0 ) {
-											$photoCountSpan.contents().filter( function() {
-												return 3 === this.nodeType;
-											} ).remove();
-											$photoCountSpan.append( formatNumber( photoCount ) );
-										}
-
-										// Update the video count display (preserve icon, update number only).
-										var $videoCountSpan = $( '#buddypress .bb-album-video-count' );
-										if ( $videoCountSpan.length > 0 ) {
-											$videoCountSpan.contents().filter( function() {
-												return 3 === this.nodeType;
-											} ).remove();
-											$videoCountSpan.append( formatNumber( videoCount ) );
-										}
+										self.updateAlbumCounts( albumCounts );
 									}
 								}
 
@@ -1721,33 +1732,9 @@ window.bp = window.bp || {};
 									}
 
 									// Update album counts if deleting from an album.
-									if ( response.data.album_total_count !== undefined && $( '#buddypress #bp-media-single-album' ).length ) {
-										var photoCount = parseInt( response.data.album_media_count ) || 0;
-										var videoCount = parseInt( response.data.album_video_count ) || 0;
-
-										// Format number with thousands separator.
-										var formatNumber = function( num ) {
-											return num.toString().replace( /\B(?=(\d{3})+(?!\d))/g, ',' );
-										};
-
-										// Update the photo count display (preserve icon, update number only).
-										var $photoCountSpan = $( '#buddypress .bb-album-photo-count' );
-										if ( $photoCountSpan.length > 0 ) {
-											$photoCountSpan.contents().filter( function() {
-												return 3 === this.nodeType;
-											} ).remove();
-											$photoCountSpan.append( formatNumber( photoCount ) );
+									if ( response.data.album_total_count !== undefined ) {
+										self.updateAlbumCounts( response.data );
 										}
-
-										// Update the video count display (preserve icon, update number only).
-										var $videoCountSpan = $( '#buddypress .bb-album-video-count' );
-										if ( $videoCountSpan.length > 0 ) {
-											$videoCountSpan.contents().filter( function() {
-												return 3 === this.nodeType;
-											} ).remove();
-											$videoCountSpan.append( formatNumber( videoCount ) );
-										}
-									}
 								}
 							}
 						} else {
