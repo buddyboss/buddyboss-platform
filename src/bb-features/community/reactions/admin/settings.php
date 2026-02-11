@@ -237,6 +237,10 @@ function bb_admin_settings_register_reactions_settings() {
 			),
 			'order'             => 20,
 			'pro_only'          => true,
+			'conditional'       => array(
+				'field' => 'bb_reaction_mode',
+				'value' => 'emotions',
+			),
 		)
 	);
 
