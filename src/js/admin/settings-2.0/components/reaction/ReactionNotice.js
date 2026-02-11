@@ -7,18 +7,42 @@
  * @since BuddyBoss 3.0.0
  */
 
-import { useState, useEffect, useRef } from '@wordpress/element';
+import { useState, useEffect, useRef, useCallback } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
 // Module-level store so dismissed migrations stay hidden after remount (e.g. navigate away/back).
 // Resets on full page reload; per admin session only.
 const dismissedMigrationSignatures = {};
 
+// Module-level store for live migration progress so it survives unmount/remount
+// when navigating between side panels. Without this, progress resets to 0
+// because the component re-initializes from stale cached field data.
+let liveMigrationProgress = null;
+
 export function ReactionNotice({ field }) {
 	const [isDismissed, setIsDismissed] = useState(false);
-	const [migrationData, setMigrationData] = useState(field.migration_data || {});
-	const [migrationStatus, setMigrationStatus] = useState(field.migration_status || '');
+	// Use module-level progress cache if available (survives panel navigation),
+	// otherwise fall back to the field data from the feature cache.
+	const [migrationData, setMigrationData] = useState(
+		liveMigrationProgress ? liveMigrationProgress.migrationData : ( field.migration_data || {} )
+	);
+	const [migrationStatus, setMigrationStatus] = useState(
+		liveMigrationProgress ? liveMigrationProgress.migrationStatus : ( field.migration_status || '' )
+	);
 	const autoRefreshRef = useRef(null);
+
+	const updateProgress = useCallback( ( data, status ) => {
+		setMigrationData( data );
+		setMigrationStatus( status );
+		liveMigrationProgress = status === 'completed' ? null : { migrationData: data, migrationStatus: status };
+	}, [] );
+
+	const applyMigrationResponse = useCallback( ( data, status ) => {
+		updateProgress( data || {}, status || '' );
+		if ( status === 'completed' ) {
+			window.dispatchEvent( new CustomEvent( 'bb-admin-refetch-feature' ) );
+		}
+	}, [ updateProgress ] );
 
 	// Build a stable signature for the current migration so dismissal
 	// is scoped to this specific migration within the current admin session.
@@ -39,58 +63,110 @@ export function ReactionNotice({ field }) {
 	// Whether this migration was already dismissed in this session (survives remount).
 	const isDismissedInSession = !!(migrationSignature && dismissedMigrationSignatures[migrationSignature]);
 
-	// When migration data from the server changes, refresh local state.
-	useEffect(() => {
-		setMigrationData(field.migration_data || {});
-		setMigrationStatus(field.migration_status || '');
-		if (migrationSignature && !dismissedMigrationSignatures[migrationSignature]) {
+	// Sync with field (server/cache). Don't overwrite live in-progress with stale cache when user navigates back.
+	useEffect( () => {
+		const serverData = field.migration_data || {};
+		const serverStatus = field.migration_status || '';
+
+		if ( 'completed' === serverStatus || 'dismissed' === serverData.status ) {
+			updateProgress( serverData, serverStatus );
+			liveMigrationProgress = null;
+		} else if ( ! serverData.action ) {
+			const liveIsInProgress = liveMigrationProgress && (
+				'inprogress' === liveMigrationProgress.migrationStatus ||
+				'running' === liveMigrationProgress.migrationData?.status
+			);
+			if ( ! liveIsInProgress ) {
+				updateProgress( serverData, serverStatus );
+				liveMigrationProgress = null;
+			}
+		} else if ( ! liveMigrationProgress ) {
+			updateProgress( serverData, serverStatus );
+		}
+
+		if ( migrationSignature && ! dismissedMigrationSignatures[ migrationSignature ] ) {
 			setIsDismissed(false);
 		}
-	}, [field.migration_data, field.migration_status, migrationSignature]);
+	}, [ field.migration_data, field.migration_status, migrationSignature, updateProgress ] );
 
-	// Check if migration is in-progress (either by status or by migration_data.status)
 	const isInProgress = 'inprogress' === migrationStatus || 'running' === migrationData.status;
-	// Check if migration is completed (either by status or by migration_data.status)
 	const isCompleted = 'completed' === migrationStatus || 'completed' === migrationData.status;
 
-	// Auto-refresh progress every 30 seconds when in-progress
-	useEffect(() => {
-		if (isInProgress && !isDismissed) {
-			autoRefreshRef.current = setInterval(() => {
-				if (window.bbReactionAdminVars && window.bbReactionAdminVars.ajax_url) {
-					jQuery.ajax({
-						url: window.bbReactionAdminVars.ajax_url,
-						method: 'POST',
-						data: {
-							action: 'bb_pro_reaction_check_migration',
-							nonce: window.bbReactionAdminVars.nonce?.check_migration || '',
-						},
-						success: (response) => {
-							if (response.success && response.data) {
-								setMigrationData(response.data.migration_data || {});
-								// Update status directly if changed to completed
-								if ('completed' === response.data.migration_status) {
-									clearInterval(autoRefreshRef.current);
-									setMigrationStatus('completed');
-									// Also refetch feature data so that any cached migration_data/migration_status
-									// coming from bb_admin_get_feature_settings is updated to the completed state.
-									if (typeof window !== 'undefined') {
-										window.dispatchEvent(new CustomEvent('bb-admin-refetch-feature'));
-									}
-								}
-							}
-						},
-					});
-				}
-			}, 30000); // 30 seconds
+	// On mount (and when navigating back): show last-known progress, then fetch latest via AJAX.
+	useEffect( () => {
+		const initialStatus = field.migration_status || '';
+		const initialDataStatus = field.migration_data?.status || '';
+		const liveStatus = liveMigrationProgress?.migrationStatus || '';
+		const liveDataStatus = liveMigrationProgress?.migrationData?.status || '';
 
-			return () => {
-				if (autoRefreshRef.current) {
-					clearInterval(autoRefreshRef.current);
-				}
-			};
+		if (
+			'completed' === initialStatus ||
+			'completed' === initialDataStatus ||
+			'completed' === liveStatus ||
+			'completed' === liveDataStatus
+		) {
+			return;
 		}
-	}, [isInProgress, isDismissed]);
+
+		const hasFieldMigration = field.migration_data?.action || ( initialStatus && '' !== initialStatus );
+		const hasLiveProgress = liveMigrationProgress && (
+			'inprogress' === liveStatus || 'running' === liveDataStatus
+		);
+
+		if ( ( hasFieldMigration || hasLiveProgress ) && window.bbReactionAdminVars?.ajax_url ) {
+			jQuery.ajax( {
+				url: window.bbReactionAdminVars.ajax_url,
+				method: 'POST',
+				data: {
+					action: 'bb_pro_reaction_check_migration',
+					nonce: window.bbReactionAdminVars.nonce?.check_migration || '',
+				},
+				success: ( response ) => {
+					if ( response.success && response.data ) {
+						applyMigrationResponse(
+							response.data.migration_data,
+							response.data.migration_status
+						);
+					}
+				},
+			} );
+		}
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [] );
+
+	useEffect( () => {
+		if ( ! isInProgress || isDismissed ) {
+			return;
+		}
+		autoRefreshRef.current = setInterval( () => {
+			if ( ! window.bbReactionAdminVars?.ajax_url ) {
+				return;
+			}
+			jQuery.ajax( {
+				url: window.bbReactionAdminVars.ajax_url,
+				method: 'POST',
+				data: {
+					action: 'bb_pro_reaction_check_migration',
+					nonce: window.bbReactionAdminVars.nonce?.check_migration || '',
+				},
+				success: ( response ) => {
+					if ( response.success && response.data ) {
+						const newStatus = response.data.migration_status || '';
+						applyMigrationResponse( response.data.migration_data, newStatus );
+						if ( newStatus === 'completed' ) {
+							clearInterval( autoRefreshRef.current );
+						}
+					}
+				},
+			} );
+		}, 30000 );
+
+		return () => {
+			if ( autoRefreshRef.current ) {
+				clearInterval( autoRefreshRef.current );
+			}
+		};
+	}, [ isInProgress, isDismissed, applyMigrationResponse ] );
 
 	// If this migration was dismissed in this session (module-level store survives remount),
 	// or currently dismissed in state, or not in-progress/completed, hide the notice.
@@ -100,13 +176,14 @@ export function ReactionNotice({ field }) {
 
 	const handleDismiss = () => {
 		setIsDismissed(true);
+		liveMigrationProgress = null;
 		if (migrationSignature) {
 			dismissedMigrationSignatures[migrationSignature] = true;
 		}
 
 		// For completed status, call dismiss endpoint
-		if (isCompleted && window.bbReactionAdminVars && window.bbReactionAdminVars.ajax_url) {
-			jQuery.ajax({
+		if ( isCompleted && window.bbReactionAdminVars?.ajax_url ) {
+			jQuery.ajax( {
 				url: window.bbReactionAdminVars.ajax_url,
 				method: 'POST',
 				data: {
@@ -114,62 +191,57 @@ export function ReactionNotice({ field }) {
 					nonce: window.bbReactionAdminVars.nonce?.dismiss_migration_notice || '',
 				},
 				success: () => {
-					// After dismissing on the server, refetch feature data so that
-					// migration_data/migration_status are cleared and the success
-					// notice does not reappear when navigating back.
-					if (typeof window !== 'undefined') {
-						window.dispatchEvent(new CustomEvent('bb-admin-refetch-feature'));
-					}
+					window.dispatchEvent( new CustomEvent( 'bb-admin-refetch-feature' ) );
 				},
-			});
+			} );
 		}
 	};
 
-	const handleRecheckStatus = (e) => {
+	const handleRecheckStatus = ( e ) => {
 		e.preventDefault();
-
-		if (window.bbReactionAdminVars && window.bbReactionAdminVars.ajax_url) {
-			jQuery.ajax({
-				url: window.bbReactionAdminVars.ajax_url,
-				method: 'POST',
-				data: {
-					action: 'bb_pro_reaction_check_migration',
-					nonce: window.bbReactionAdminVars.nonce?.check_migration || '',
-				},
-				success: (response) => {
-					if (response.success && response.data) {
-						setMigrationData(response.data.migration_data || {});
-						// Update status directly if changed to completed
-						if ('completed' === response.data.migration_status) {
-							setMigrationStatus('completed');
-						}
-					}
-				},
-			});
+		if ( ! window.bbReactionAdminVars?.ajax_url ) {
+			return;
 		}
+		jQuery.ajax( {
+			url: window.bbReactionAdminVars.ajax_url,
+			method: 'POST',
+			data: {
+				action: 'bb_pro_reaction_check_migration',
+				nonce: window.bbReactionAdminVars.nonce?.check_migration || '',
+			},
+			success: ( response ) => {
+				if ( response.success && response.data ) {
+					applyMigrationResponse(
+						response.data.migration_data,
+						response.data.migration_status
+					);
+				}
+			},
+		} );
 	};
 
-	const handleStopMigration = (e) => {
+	const handleStopMigration = ( e ) => {
 		e.preventDefault();
-
-		if (window.bbReactionAdminVars && window.bbReactionAdminVars.ajax_url) {
-			if (confirm(__('Are you sure you want to stop the migration?', 'buddyboss'))) {
-				jQuery.ajax({
-					url: window.bbReactionAdminVars.ajax_url,
-					method: 'POST',
-					data: {
-						action: 'bb_pro_reaction_migration_stop_conversion',
-						nonce: window.bbReactionAdminVars.nonce?.migration_stop_conversion || '',
-					},
-					success: (response) => {
-						if (response.success) {
-							// Refetch feature data to update UI
-							window.dispatchEvent(new CustomEvent('bb-admin-refetch-feature'));
-						}
-					},
-				});
-			}
+		if ( ! window.bbReactionAdminVars?.ajax_url ) {
+			return;
 		}
+		if ( ! confirm( __( 'Are you sure you want to stop the migration?', 'buddyboss' ) ) ) {
+			return;
+		}
+		jQuery.ajax( {
+			url: window.bbReactionAdminVars.ajax_url,
+			method: 'POST',
+			data: {
+				action: 'bb_pro_reaction_migration_stop_conversion',
+				nonce: window.bbReactionAdminVars.nonce?.migration_stop_conversion || '',
+			},
+			success: ( response ) => {
+				if ( response.success ) {
+					liveMigrationProgress = null;
+					window.dispatchEvent( new CustomEvent( 'bb-admin-refetch-feature' ) );
+				}
+			},
+		} );
 	};
 
 	const formatNumber = (num) => {
