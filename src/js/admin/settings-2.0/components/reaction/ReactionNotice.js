@@ -255,12 +255,22 @@ export function ReactionNotice({ field }) {
 		const fromEmotionsName = migrationData.from_emotions_name || '';
 		const toEmotionsName = migrationData.to_emotions_name || '';
 
+		// Normalize footer migration action values to match switch migration actions.
+		// Footer migrations set action to the reaction mode ('emotions'/'likes'),
+		// while switch migrations use 'like_to_emotions_action'/'emotions_to_like_action'.
+		let normalizedAction = action;
+		if ( 'emotions' === action ) {
+			normalizedAction = 'like_to_emotions_action';
+		} else if ( 'likes' === action ) {
+			normalizedAction = 'emotions_to_like_action';
+		}
+
 		let message = '';
-		if ('like_to_emotions_action' === action) {
+		if ('like_to_emotions_action' === normalizedAction) {
 			message = __('%1$s were successfully converted to the %2$s emotion.', 'buddyboss')
 				.replace('%1$s', `<strong>${formatNumber(totalReactions)} ${fromEmotionsName}</strong>`)
 				.replace('%2$s', `<strong>${toEmotionsName}</strong>`);
-		} else if ('emotions_to_like_action' === action) {
+		} else if ('emotions_to_like_action' === normalizedAction) {
 			message = __('%1$s reactions were successfully converted to %2$s.', 'buddyboss')
 				.replace('%1$s', `<strong>${formatNumber(totalReactions)}</strong>`)
 				.replace('%2$s', `<strong>${toEmotionsName}</strong>`);
