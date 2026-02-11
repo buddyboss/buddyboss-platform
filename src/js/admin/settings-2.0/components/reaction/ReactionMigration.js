@@ -39,7 +39,7 @@ export function ReactionMigration({ field, onStartConversion }) {
 		e.preventDefault();
 		setIsDismissed(true);
 
-		// Call "Do Later" endpoint
+		// Call "Do Later" endpoint.
 		if (window.bbReactionAdminVars && window.bbReactionAdminVars.ajax_url) {
 			jQuery.ajax({
 				url: window.bbReactionAdminVars.ajax_url,
@@ -47,6 +47,12 @@ export function ReactionMigration({ field, onStartConversion }) {
 				data: {
 					action: 'bb_pro_reaction_migration_do_later',
 					nonce: window.bbReactionAdminVars.nonce?.migration_do_later || '',
+				},
+				success: () => {
+					// Refetch feature data so the notice won't reappear when navigating back.
+					if (typeof window !== 'undefined') {
+						window.dispatchEvent(new CustomEvent('bb-admin-refetch-feature'));
+					}
 				},
 			});
 		}
