@@ -398,6 +398,22 @@ class BB_Admin_Settings_Ajax {
 				$field_value = $toggle_values;
 			}
 
+			// Handle description_controls: read each control's value from DB.
+			// Each control maps to one %s placeholder in the description string (in order).
+			// Use sequential %s placeholders — %1$s/%2$s are NOT supported by the frontend split logic.
+			if ( ! empty( $field['description_controls'] ) && is_array( $field['description_controls'] ) ) {
+				foreach ( $field['description_controls'] as $idx => $control ) {
+					// 'self' type means the control uses the field's own name/options/value.
+					if ( 'self' === ( $control['type'] ?? '' ) ) {
+						continue;
+					}
+					if ( ! empty( $control['name'] ) ) {
+						$control_default = $control['default'] ?? '';
+						$field['description_controls'][ $idx ]['value'] = get_option( $control['name'], $control_default );
+					}
+				}
+			}
+
 			if ( 'toggle_list' === ( $field['type'] ?? '' ) && ! empty( $field['option_prefix'] ) ) {
 				// Read each option as a separate WordPress option.
 				$option_prefix = $field['option_prefix'];
@@ -472,7 +488,9 @@ class BB_Admin_Settings_Ajax {
 				// PRO notice badge data (for pro_only fields).
 				'pro_notice'    => $field['pro_notice'] ?? null,
 				// Notice type for notice fields (info, warning, error, success).
-				'notice_type'   => $field['notice_type'] ?? null,
+				'notice_type'           => $field['notice_type'] ?? null,
+				// Inline controls embedded in description (replaces %s placeholders).
+				'description_controls'  => $field['description_controls'] ?? null,
 			);
 
 			// Auto-compute pro_notice for pro_only fields when not set at registration time.
@@ -593,6 +611,34 @@ class BB_Admin_Settings_Ajax {
 
 			update_option( $name, $value );
 			$saved[ $name ] = $value;
+
+			// Handle description_controls: save each control's value alongside the main field.
+			// Each control maps to one %s placeholder in description (in order). Use %s, not %1$s/%2$s.
+			if ( ! empty( $field['description_controls'] ) && is_array( $field['description_controls'] ) ) {
+				foreach ( $field['description_controls'] as $control ) {
+					// 'self' type uses the field's own name — already saved above.
+					if ( 'self' === ( $control['type'] ?? '' ) || empty( $control['name'] ) ) {
+						continue;
+					}
+					$control_name = $control['name'];
+					if ( array_key_exists( $control_name, $settings ) ) {
+						$control_value = $settings[ $control_name ];
+						$control_type  = $control['type'] ?? 'text';
+
+						// Apply control-specific sanitize callback if registered.
+						if ( ! empty( $control['sanitize_callback'] ) && is_callable( $control['sanitize_callback'] ) ) {
+							$control_value = call_user_func( $control['sanitize_callback'], $control_value );
+						} elseif ( 'number' === $control_type || 'select' === $control_type ) {
+							// Numeric types: use intval as default sanitizer.
+							$control_value = intval( $control_value );
+						} else {
+							$control_value = sanitize_text_field( $control_value );
+						}
+						update_option( $control_name, $control_value );
+						$saved[ $control_name ] = $control_value;
+					}
+				}
+			}
 		}
 
 		/**

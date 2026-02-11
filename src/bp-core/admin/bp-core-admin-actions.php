@@ -619,6 +619,7 @@ function bb_redirect_legacy_settings_to_settings_2() {
 	// Mapping of old Settings 1.0 tab names to new Settings 2.0 feature IDs.
 	$legacy_tabs_mapping = array(
 		'bp-reactions' => 'reactions',
+		'bp-activity'  => 'activity',
 		// Add more mappings here as more tabs are migrated to Settings 2.0.
 	);
 

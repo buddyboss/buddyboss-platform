@@ -737,13 +737,84 @@ export function SettingsForm({ fields, values, onChange }) {
 						)}
 					</div>
 
-					{/* Description (skip for notice type — already rendered inside the field) */}
-					{ field.description && 'notice' !== field.type && (
-						<p
-							className="bb-admin-settings-form__field-description"
-							dangerouslySetInnerHTML={{ __html: field.description }}
-						/>
-					)}
+					{/* Description: skip for notice type (rendered by notice component itself).
+				    When description contains %s and field has description_controls,
+				    render inline controls (select, text, number) in place of each %s placeholder. */}
+					{ field.description && 'notice' !== field.type && ( () => {
+						const desc = field.description;
+						const controls = field.description_controls;
+						const hasControls = desc.indexOf( '%s' ) !== -1 && controls && controls.length > 0;
+
+						if ( hasControls ) {
+							const parts = desc.split( '%s' );
+							const isToggleOff = ( 'toggle' === field.type || 'checkbox' === field.type ) && ! values[ field.name ];
+
+							return (
+								<p className="bb-admin-settings-form__field-description bb-admin-settings-form__field-description--has-controls">
+									{ parts.map( ( part, index ) => {
+										const control = index < controls.length ? controls[ index ] : null;
+										// 'self' type: use the field's own name, options, and value.
+										const isSelf = control && 'self' === control.type;
+										const controlName = isSelf ? field.name : ( control ? control.name : null );
+										const controlOptions = isSelf ? field.options : ( control ? control.options : [] );
+										const controlDefault = isSelf ? field.default : ( control ? ( control.value ?? control.default ?? '' ) : '' );
+										const controlVal = controlName && values[ controlName ] !== undefined
+											? values[ controlName ]
+											: controlDefault;
+										const controlDisabled = disabled || isToggleOff;
+
+										return (
+											<span key={ index }>
+												<span dangerouslySetInnerHTML={{ __html: part }} />
+												{ control && ( control.type === 'select' || control.type === 'self' ) && (
+													<select
+														name={ controlName }
+														className="bb-admin-settings-form__inline-select"
+														value={ controlVal }
+														onChange={ ( e ) => onChange( controlName, e.target.value ) }
+														disabled={ controlDisabled }
+													>
+														{ ( controlOptions || [] ).map( ( opt ) => (
+															<option key={ opt.value } value={ opt.value }>{ opt.label }</option>
+														) ) }
+													</select>
+												) }
+												{ control && 'text' === control.type && (
+													<input
+														type="text"
+														name={ controlName }
+														className="bb-admin-settings-form__inline-text"
+														value={ controlVal }
+														onChange={ ( e ) => onChange( controlName, e.target.value ) }
+														disabled={ controlDisabled }
+													/>
+												) }
+												{ control && 'number' === control.type && (
+													<input
+														type="number"
+														name={ controlName }
+														className="bb-admin-settings-form__inline-number"
+														value={ controlVal }
+														min={ control.min }
+														max={ control.max }
+														onChange={ ( e ) => onChange( controlName, e.target.value ) }
+														disabled={ controlDisabled }
+													/>
+												) }
+											</span>
+										);
+									} ) }
+								</p>
+							);
+						}
+
+						return (
+							<p
+								className="bb-admin-settings-form__field-description"
+								dangerouslySetInnerHTML={{ __html: desc }}
+							/>
+						);
+					} )() }
 
 					{/* Render child fields inline/nested */}
 					{childFields.length > 0 && (
