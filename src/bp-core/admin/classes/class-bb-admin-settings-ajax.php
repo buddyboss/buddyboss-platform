@@ -260,7 +260,7 @@ class BB_Admin_Settings_Ajax {
 				$formatted_sections[] = array(
 					'id'          => $section_id,
 					'title'       => $section['title'],
-					'description' => $section['description'] ?? '',
+					'description' => wp_kses_post( $section['description'] ?? '' ),
 					'order'       => $section['order'] ?? 100,
 					'fields'      => $this->bb_format_fields_for_response( $section_fields, $settings, $feature_id ),
 				);
@@ -498,6 +498,11 @@ class BB_Admin_Settings_Ajax {
 			 * @return array|void Formatted field data or void if no changes are needed.
 			 */
 			$field_data = apply_filters( 'bb_admin_settings_format_field_data', $field_data, $field );
+
+			// Sanitize description for safe use with dangerouslySetInnerHTML (XSS prevention).
+			if ( isset( $field_data['description'] ) && is_string( $field_data['description'] ) ) {
+				$field_data['description'] = wp_kses_post( $field_data['description'] );
+			}
 
 			// Add sub-fields for dimensions/child_render type.
 			if ( isset( $field['fields'] ) && is_array( $field['fields'] ) ) {

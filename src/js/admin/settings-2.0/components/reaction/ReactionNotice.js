@@ -265,16 +265,34 @@ export function ReactionNotice({ field }) {
 			normalizedAction = 'emotions_to_like_action';
 		}
 
-		let message = '';
-		if ('like_to_emotions_action' === normalizedAction) {
-			message = __('%1$s were successfully converted to the %2$s emotion.', 'buddyboss')
-				.replace('%1$s', `<strong>${formatNumber(totalReactions)} ${fromEmotionsName}</strong>`)
-				.replace('%2$s', `<strong>${toEmotionsName}</strong>`);
-		} else if ('emotions_to_like_action' === normalizedAction) {
-			message = __('%1$s reactions were successfully converted to %2$s.', 'buddyboss')
-				.replace('%1$s', `<strong>${formatNumber(totalReactions)}</strong>`)
-				.replace('%2$s', `<strong>${toEmotionsName}</strong>`);
-		}
+		// Render as JSX so dynamic values are escaped (no dangerouslySetInnerHTML).
+		const completedMessageJsx = (() => {
+			if ('like_to_emotions_action' === normalizedAction) {
+				return (
+					<p>
+						<strong>{formatNumber(totalReactions)} {fromEmotionsName}</strong>
+						{' '}
+						{__('were successfully converted to the', 'buddyboss')}
+						{' '}
+						<strong>{toEmotionsName}</strong>
+						{' '}
+						{__('emotion.', 'buddyboss')}
+					</p>
+				);
+			}
+			if ('emotions_to_like_action' === normalizedAction) {
+				return (
+					<p>
+						<strong>{formatNumber(totalReactions)}</strong>
+						{' '}
+						{__('reactions were successfully converted to', 'buddyboss')}
+						{' '}
+						<strong>{toEmotionsName}</strong>.
+					</p>
+				);
+			}
+			return null;
+		})();
 
 		return (
 			<div className="bb-admin-settings-form__field bb-admin-settings-form__field--full-width bb-admin-reaction-notice-wrapper">
@@ -283,7 +301,7 @@ export function ReactionNotice({ field }) {
 						<span className="bb-icons-rl bb-icons-rl-check-circle" />
 					</div>
 					<div className="bb-admin-notice__content">
-						<p dangerouslySetInnerHTML={{ __html: message }} />
+						{completedMessageJsx}
 					</div>
 					<button
 						type="button"
