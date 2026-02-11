@@ -375,16 +375,8 @@ class BB_Admin_Settings_Ajax {
 			 * @since BuddyBoss [BBVERSION]
 			 */
 			if ( 'checkbox_list' === ( $field['type'] ?? '' ) ) {
-				// Read directly from database without any defaults or filters.
-				global $wpdb;
-				$blog_id    = function_exists( 'bp_get_root_blog_id' ) ? bp_get_root_blog_id() : get_current_blog_id();
-				$table_name = $wpdb->get_blog_prefix( $blog_id ) . 'options';
-				$row        = $wpdb->get_row( $wpdb->prepare( "SELECT option_value FROM {$table_name} WHERE option_name = %s", $field['name'] ) );
-
-				$stored_value = array();
-				if ( $row && ! empty( $row->option_value ) ) {
-					$stored_value = maybe_unserialize( $row->option_value );
-				}
+				$blog_id      = function_exists( 'bp_get_root_blog_id' ) ? bp_get_root_blog_id() : get_current_blog_id();
+				$stored_value = get_blog_option( $blog_id, $field['name'], array() );
 
 				// If no stored value, use field defaults.
 				if ( empty( $stored_value ) || ! is_array( $stored_value ) ) {
