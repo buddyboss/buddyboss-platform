@@ -45,6 +45,10 @@ class BB_Admin_Settings_Ajax {
 		add_action( 'wp_ajax_bb_admin_toggle_feature', array( $this, 'bb_admin_toggle_feature' ) );
 		add_action( 'wp_ajax_bb_admin_get_feature_settings', array( $this, 'bb_admin_get_feature_settings' ) );
 		add_action( 'wp_ajax_bb_admin_save_feature_settings', array( $this, 'bb_admin_save_feature_settings' ) );
+
+		add_action( 'wp_ajax_bb_admin_search_settings', array( $this, 'bb_admin_search_settings' ) );
+
+		add_action( 'bb_admin_save_feature_settings_after', array( $this, 'bb_invalidate_search_index_after_save' ), 10, 3 );
 	}
 
 	/**
@@ -154,6 +158,9 @@ class BB_Admin_Settings_Ajax {
 			wp_send_json_error( array( 'message' => $result->get_error_message() ) );
 		}
 
+		// Invalidate search index so it rebuilds with updated feature status.
+		delete_transient( 'bb_settings_search_index' );
+
 		// Get feature data (status will be overridden since bp_is_active() cache isn't updated yet).
 		$feature   = $registry->bb_get_feature( $feature_id );
 		$formatted = $this->bb_format_feature_for_response( $feature_id, $feature, $registry, $icon_registry );
@@ -249,7 +256,6 @@ class BB_Admin_Settings_Ajax {
 			foreach ( $sections as $section_id => $section ) {
 				// Get fields for this section.
 				$section_fields = $registry->bb_get_fields( $feature_id, $side_panel_id, $section_id );
-
 
 				$formatted_sections[] = array(
 					'id'          => $section_id,
@@ -393,7 +399,7 @@ class BB_Admin_Settings_Ajax {
 					$is_enabled = false;
 					if ( isset( $stored_value[ $option_key ] ) ) {
 						$val        = $stored_value[ $option_key ];
-						$is_enabled = ( $val === 1 || $val === '1' || $val === true );
+						$is_enabled = ( 1 === $val || '1' === $val || true === $val );
 					}
 					$toggle_values[ $option_key ] = $is_enabled ? 1 : 0;
 				}
@@ -472,9 +478,9 @@ class BB_Admin_Settings_Ajax {
 				// Invert value for "disable" toggles shown as "enable".
 				'invert_value'  => $field['invert_value'] ?? false,
 				// PRO notice badge data (for pro_only fields).
-				'pro_notice'  => $field['pro_notice'] ?? null,
+				'pro_notice'    => $field['pro_notice'] ?? null,
 				// Notice type for notice fields (info, warning, error, success).
-				'notice_type' => $field['notice_type'] ?? null,
+				'notice_type'   => $field['notice_type'] ?? null,
 			);
 
 			// Auto-compute pro_notice for pro_only fields when not set at registration time.
@@ -485,7 +491,7 @@ class BB_Admin_Settings_Ajax {
 				empty( $field_data['pro_notice'] ) &&
 				function_exists( 'bb_admin_settings_get_pro_notice' )
 			) {
-				$pro_notice = bb_admin_settings_get_pro_notice( $feature_id );
+				$pro_notice               = bb_admin_settings_get_pro_notice( $feature_id );
 				$field_data['pro_notice'] = ! empty( $pro_notice['show'] ) ? $pro_notice : null;
 			}
 
@@ -623,6 +629,222 @@ class BB_Admin_Settings_Ajax {
 		$response_data = apply_filters( 'bb_admin_save_feature_settings_response', $response_data, $feature_id, $settings, $saved );
 
 		wp_send_json_success( $response_data );
+	}
+
+	/**
+	 * Search settings.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_admin_search_settings() {
+		$this->bb_verify_request();
+
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified in bb_verify_request().
+		$query = isset( $_POST['query'] ) ? sanitize_text_field( wp_unslash( $_POST['query'] ) ) : '';
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
+
+		if ( strlen( $query ) < 2 ) {
+			wp_send_json_success(
+				array(
+					'query'   => $query,
+					'results' => array(),
+					'count'   => 0,
+				)
+			);
+		}
+
+		$results = $this->bb_perform_search( $query );
+
+		wp_send_json_success(
+			array(
+				'query'   => $query,
+				'results' => $results,
+				'count'   => count( $results ),
+			)
+		);
+	}
+
+	/**
+	 * Perform search across settings.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $query Search query.
+	 *
+	 * @return array Array of search results.
+	 */
+	private function bb_perform_search( $query ) {
+		if ( ! function_exists( 'bb_feature_registry' ) || ! function_exists( 'bb_icon_registry' ) ) {
+			return array();
+		}
+
+		$registry      = bb_feature_registry();
+		$icon_registry = bb_icon_registry();
+
+		// Get search index (cached or build on the fly).
+		$cache_key = 'bb_settings_search_index';
+		$index     = get_transient( $cache_key );
+
+		if ( false === $index ) {
+			$index = $this->bb_build_search_index();
+			set_transient( $cache_key, $index, HOUR_IN_SECONDS );
+		}
+
+		// Search index.
+		$matches = array();
+
+		foreach ( $index as $entry ) {
+			$score = 0;
+
+			// Check field label (the highest priority).
+			if ( isset( $entry['field_label'] ) && stripos( $entry['field_label'], $query ) !== false ) {
+				$score += 10;
+			}
+
+			// Check field description.
+			if ( isset( $entry['field_description'] ) && stripos( $entry['field_description'], $query ) !== false ) {
+				$score += 5;
+			}
+
+			// Check section title.
+			if ( isset( $entry['section_title'] ) && stripos( $entry['section_title'], $query ) !== false ) {
+				$score += 3;
+			}
+
+			// Check the feature label.
+			if ( isset( $entry['feature_label'] ) && stripos( $entry['feature_label'], $query ) !== false ) {
+				$score += 2;
+			}
+
+			// Check the option name.
+			if ( isset( $entry['field_name'] ) && stripos( $entry['field_name'], $query ) !== false ) {
+				++$score;
+			}
+
+			if ( $score > 0 ) {
+				$entry['score'] = $score;
+				$matches[]      = $entry;
+			}
+		}
+
+		// Sort by score (descending).
+		usort(
+			$matches,
+			function ( $a, $b ) {
+				return ( $b['score'] ?? 0 ) - ( $a['score'] ?? 0 );
+			}
+		);
+
+		// Format results for response.
+		$formatted_results = array();
+		foreach ( $matches as $match ) {
+			$feature   = $registry->bb_get_feature( $match['feature_id'] );
+			$icon_data = null;
+
+			if ( $feature && ! empty( $feature['icon'] ) ) {
+				$icon_data = $icon_registry->bb_get_icon_for_rest( $feature['icon'] );
+			}
+
+			$formatted_results[] = array(
+				'feature_id'    => $match['feature_id'],
+				'feature_label' => $match['feature_label'],
+				'feature_icon'  => $icon_data,
+				'side_panel_id' => $match['side_panel_id'],
+				'section_id'    => $match['section_id'],
+				'section_title' => $match['section_title'],
+				'field_name'    => $match['field_name'],
+				'field_label'   => $match['field_label'],
+				'breadcrumb'    => $match['breadcrumb'],
+				'route'         => '/settings/' . $match['feature_id'] . '/' . $match['side_panel_id'],
+			);
+		}
+
+		return $formatted_results;
+	}
+
+	/**
+	 * Build search index from Feature Registry.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return array Search index.
+	 */
+	private function bb_build_search_index() {
+		$registry = bb_feature_registry();
+		$index    = array();
+
+		// Non-interactive field types to exclude from search (notices, status displays, info blocks).
+		$excluded_types = array( 'notice', 'info', 'status', 'reaction_migration', 'reaction_notice', 'reaction_info', 'html' );
+
+		/**
+		 * Filters the field types excluded from the settings search index.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $excluded_types Field types to exclude.
+		 */
+		$excluded_types = apply_filters( 'bb_admin_search_excluded_field_types', $excluded_types );
+
+		// Get all features.
+		$features = $registry->bb_get_features();
+
+		foreach ( $features as $feature_id => $feature ) {
+			// Get side panels for this feature.
+			$side_panels = $registry->bb_get_side_panels( $feature_id );
+
+			foreach ( $side_panels as $side_panel_id => $side_panel ) {
+				// Get sections for this side panel.
+				$sections = $registry->bb_get_sections( $feature_id, $side_panel_id );
+
+				foreach ( $sections as $section_id => $section ) {
+					// Get fields for this section.
+					$fields = $registry->bb_get_fields( $feature_id, $side_panel_id, $section_id );
+
+					foreach ( $fields as $field_name => $field ) {
+						// Skip non-interactive field types.
+						if ( ! empty( $field['type'] ) && in_array( $field['type'], $excluded_types, true ) ) {
+							continue;
+						}
+
+						// Build breadcrumb.
+						$breadcrumb = sprintf(
+							'%s → %s → %s',
+							$feature['label'],
+							$section['title'],
+							$field['label']
+						);
+
+						$index[] = array(
+							'feature_id'        => $feature_id,
+							'feature_label'     => $feature['label'],
+							'side_panel_id'     => $side_panel_id,
+							'section_id'        => $section_id,
+							'section_title'     => $section['title'],
+							'field_name'        => $field_name,
+							'field_label'       => $field['label'],
+							'field_description' => $field['description'] ?? '',
+							'breadcrumb'        => $breadcrumb,
+						);
+					}
+				}
+			}
+		}
+
+		return $index;
+	}
+
+	/**
+	 * Invalidate settings search index after feature settings are saved.
+	 * Hooked to bb_admin_save_feature_settings_after so the next search rebuilds the index.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $feature_id Feature ID.
+	 * @param array  $settings   Submitted settings.
+	 * @param array  $saved      Saved keys and values.
+	 */
+	public function bb_invalidate_search_index_after_save( $feature_id, $settings, $saved ) {
+		delete_transient( 'bb_settings_search_index' );
 	}
 }
 
