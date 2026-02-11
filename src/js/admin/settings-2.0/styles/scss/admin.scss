@@ -14,16 +14,22 @@
 }
 
  /* Header */
+ #wpbody-content:has(.bb-admin-app > .bb-admin-header) {
+	padding-top: 60px;
+ }
+
  .bb-admin-header {
 	background-color: #fff;
-	margin: 0 -20px;
+	margin: 0 0 0 -20px;
 	padding: 12px 24px;
 	border-bottom: 1px solid $bb-border-color;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	position: sticky;
-	top: 32px;
+	position: fixed;
+    top: 32px;
+    left: 180px;
+    right: 0;
 	z-index: 100;
 
 	&__container {
@@ -231,6 +237,44 @@
 		font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif;
 		font-weight: 400;
 		letter-spacing: -0.045px;
+	}
+}
+
+@media screen and (max-width: 960px) {
+
+	.bb-admin-header {
+		left: 56px;
+	}
+
+	.bb-admin-header__center {
+		width: 50%;
+		margin: 0;
+	}
+
+	.bb-admin-header__search {
+		width: 80%;
+		max-width: initial;
+	}
+
+}
+
+@media screen and (max-width: 782px) {
+
+	.bb-admin-header {
+		top: 46px;
+		left: 20px;
+	}
+
+	#wpbody-content:has(.bb-admin-app>.bb-admin-header) {
+		padding-top: 68px;
+	}
+}
+
+@media screen and (max-width: 600px) {
+
+	.bb-admin-header {
+		position: absolute;
+		left: 10px;
 	}
 }
 
