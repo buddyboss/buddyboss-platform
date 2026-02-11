@@ -149,15 +149,12 @@ export function Header({ onNavigate }) {
 									>
 										<div className="bb-admin-header__search-result-icon">
 											{result.feature_icon && (
-												<i className={result.feature_icon.slug || 'bb-icon-settings'}></i>
+												<i className={result.feature_icon.class || 'bb-icon-settings'}></i>
 											)}
 										</div>
 										<div className="bb-admin-header__search-result-content">
 											<div className="bb-admin-header__search-result-label">
-												{result.feature_label} → {result.section_title} → {result.field_label}
-											</div>
-											<div className="bb-admin-header__search-result-breadcrumb">
-												{result.breadcrumb}
+												{result.feature_label} / {result.section_title} / <span className="bb-admin-header__search-result-label-field">{result.field_label}</span>
 											</div>
 										</div>
 									</button>
