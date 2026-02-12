@@ -9,6 +9,11 @@
  * Child fields use `conditional` to show/hide based on parent field values,
  * supporting unlimited depth via chaining (A -> B -> C).
  *
+ * Post type fields (WordPress + CPTs) are registered via the late-binding
+ * `bb_admin_settings_before_get_feature` hook because custom post types from
+ * third-party plugins (e.g., LearnDash) are not available at the early
+ * `bb_register_features` time.
+ *
  * @package BuddyBoss\Features\Community\Activity
  * @since BuddyBoss [BBVERSION]
  */
@@ -18,6 +23,9 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Register Posts Visibility panel sections and fields.
+ *
+ * Only registers the section and BuddyBoss Platform activity types field,
+ * which are available at early registration time.
  *
  * @since BuddyBoss [BBVERSION]
  */
@@ -65,15 +73,32 @@ function bb_activity_register_visibility_panel_fields() {
 			'order'             => 10,
 		)
 	);
+}
+
+/**
+ * Register post type fields for Posts Visibility panel (late-binding).
+ *
+ * Hooked to `bb_admin_settings_before_get_feature` which fires during the
+ * AJAX request, when all custom post types from third-party plugins are
+ * already registered.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id The feature being loaded.
+ */
+function bb_activity_register_visibility_post_type_fields( $feature_id ) {
+	// Only run for the activity feature.
+	if ( 'activity' !== $feature_id ) {
+		return;
+	}
+
+	$all_feed_post_types = function_exists( 'bb_feed_post_types' ) ? bb_feed_post_types() : array();
+	$field_order         = 20;
 
 	// -------------------------------------------------------------------------
 	// WordPress post type fields.
 	// Toggle + checkbox grouped together. Checkbox depends on toggle via conditional.
-	// Option names: bp-feed-custom-post-type-post / bp-feed-custom-post-type-post-comments
 	// -------------------------------------------------------------------------
-	$all_feed_post_types = function_exists( 'bb_feed_post_types' ) ? bb_feed_post_types() : array();
-	$field_order         = 20;
-
 	if ( in_array( 'post', $all_feed_post_types, true ) ) {
 		$wp_post_option_name    = bb_post_type_feed_option_name( 'post' );
 		$wp_comment_option_name = bb_post_type_feed_comment_option_name( 'post' );
@@ -181,6 +206,7 @@ function bb_activity_register_visibility_panel_fields() {
 		}
 
 		// Help text for Custom Post Types section.
+		// Use the last CPT's group_id so the notice is visually inside the CPT section.
 		bb_register_feature_field(
 			'activity',
 			'posts_visibility',
@@ -192,7 +218,10 @@ function bb_activity_register_visibility_panel_fields() {
 				'notice_type' => 'info',
 				'description' => __( 'Select the custom post types to display in the activity feed when members publish them. For each type, you can also choose whether to include comments in the activity posts (if comments are supported).', 'buddyboss' ),
 				'order'       => $field_order,
+				'group'       => $group_id,
 			)
 		);
 	}
 }
+
+add_action( 'bb_admin_settings_before_get_feature', 'bb_activity_register_visibility_post_type_fields' );

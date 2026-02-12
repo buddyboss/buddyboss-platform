@@ -234,6 +234,19 @@ class BB_Admin_Settings_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Feature not found.', 'buddyboss' ) ) );
 		}
 
+		/**
+		 * Fires before feature settings are retrieved for the AJAX response.
+		 *
+		 * Allows late registration of fields that depend on data not available
+		 * at the early `bb_register_features` hook (e.g., custom post types
+		 * from third-party plugins that register on `init`).
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $feature_id The feature being loaded.
+		 */
+		do_action( 'bb_admin_settings_before_get_feature', $feature_id );
+
 		// Get all fields for current values.
 		$all_fields = $registry->bb_get_all_fields( $feature_id );
 
@@ -592,7 +605,22 @@ class BB_Admin_Settings_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Invalid settings data.', 'buddyboss' ) ) );
 		}
 
-		$registry   = bb_feature_registry();
+		$registry = bb_feature_registry();
+
+		/** This action is documented in class-bb-admin-settings-ajax.php */
+		/**
+		 * Fires before feature settings are retrieved for the AJAX response.
+		 *
+		 * Allows late registration of fields that depend on data not available
+		 * at the early `bb_register_features` hook (e.g., custom post types
+		 * from third-party plugins that register on `init`).
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $feature_id The feature being loaded.
+		 */
+		do_action( 'bb_admin_settings_before_get_feature', $feature_id );
+
 		$all_fields = $registry->bb_get_all_fields( $feature_id );
 
 		if ( empty( $all_fields ) ) {
