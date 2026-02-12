@@ -190,6 +190,16 @@
 
     &-content {
         flex: 1;
+
+        &--inline {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+
+            .bb-admin-settings-form__field-description {
+                margin: 0;
+            }
+        }
     }
 
     &-description {
@@ -202,12 +212,13 @@
 
     &-help-text {
         color: $bb-text-tertiary-color;
-        font-size: 12px;
+        font-size: 13px;
         font-weight: 400;
         font-style: italic;
         line-height: 1.5;
-        margin: 8px 0 0 0;
+        margin: 10x 0 0 0;
         opacity: 0.8;
+        width: 100%;
     }
 
     // Grouped fields: remove border/spacing between consecutive fields in same group.
