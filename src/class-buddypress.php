@@ -727,7 +727,6 @@ class BuddyPress {
 			'BP_Suspend_Message'                           => 'suspend',
 			'BB_Subscriptions'                             => 'core',
 			'BB_Background_Updater'                        => 'core',
-			'BB_Reaction'                                  => 'core',
 			'BB_BG_Process_Log'                            => 'core',
 			'BB_Telemetry'                                 => 'core',
 			'BB_Topics_Manager'                            => 'core',
@@ -796,7 +795,6 @@ class BuddyPress {
 			'BP_REST_Moderation_Endpoint'                  => 'moderation',
 			'BP_REST_Moderation_Report_Endpoint'           => 'moderation',
 			'BB_REST_Subscriptions_Endpoint'               => 'core',
-			'BB_REST_Reactions_Endpoint'                   => 'core',
 		);
 
 		$component = null;

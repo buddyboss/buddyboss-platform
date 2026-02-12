@@ -286,17 +286,18 @@ function bp_nouveau_activity_state() {
 	$activity_id    = bp_get_activity_id();
 	$comment_count  = bp_activity_get_comment_count();
 	$reactions      = bb_active_reactions();
-	$reaction_count = bb_load_reaction()->bb_get_user_reactions_count(
+	$reaction       = bb_load_reaction();
+	$reaction_count = $reaction ? $reaction->bb_get_user_reactions_count(
 		array(
 			'item_id'     => $activity_id,
 			'item_type'   => 'activity',
-			'reaction_id' => array_keys( $reactions )
+			'reaction_id' => array_keys( $reactions ),
 		)
-	);
+	) : 0;
 	?>
 	<div class="activity-state <?php echo ! empty( $reaction_count ) ? 'has-likes' : ''; ?> <?php echo $comment_count ? 'has-comments' : ''; ?>">
 		<?php
-		if ( bb_is_reaction_activity_posts_enabled() ) {
+		if ( bb_is_reaction_activity_posts_enabled() && function_exists( 'bb_get_activity_post_user_reactions_html' ) ) {
 			echo bb_get_activity_post_user_reactions_html( $activity_id );
 		}
 
@@ -459,7 +460,9 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 	$has_content = trim( $output, ' ' );
 
 	// Added emotion list.
-	$output .= bb_get_activity_post_emotions_popup();
+	if ( function_exists( 'bb_get_activity_post_emotions_popup' ) ) {
+		$output .= bb_get_activity_post_emotions_popup();
+	}
 
 	if ( ! $has_content ) {
 		return;
@@ -519,7 +522,7 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 		$button_element = $args['button_element'];
 	}
 
-	if ( bp_activity_can_favorite() && bp_is_activity_like_active() ) {
+	if ( bp_activity_can_favorite() && bp_is_activity_like_active() && function_exists( 'bb_get_reaction_button_settings' ) ) {
 
 		// If button element set attr needs to be data-* else 'href'.
 		if ( 'button' === $button_element ) {
@@ -907,7 +910,9 @@ function bp_nouveau_activity_comment_buttons( $args = array() ) {
 	$has_content = trim( $output, ' ' );
 
 	// Added emotion list.
-	$output .= bb_get_activity_post_comment_emotions_popup();
+	if ( function_exists( 'bb_get_activity_post_comment_emotions_popup' ) ) {
+		$output .= bb_get_activity_post_comment_emotions_popup();
+	}
 
 	if ( ! $has_content ) {
 		return;

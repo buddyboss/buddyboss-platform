@@ -8,6 +8,10 @@
 
 defined( 'ABSPATH' ) || exit;
 
+if ( class_exists( 'BB_REST_Reactions_Endpoint' ) ) {
+	return;
+}
+
 /**
  * Reactions endpoints.
  *

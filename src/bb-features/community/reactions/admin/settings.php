@@ -81,16 +81,21 @@ function bb_admin_settings_register_reactions_settings() {
 		)
 	);
 
+	// Use titles (and optional sanitize_callback) from bb_reactions_get_settings_fields() so the filter applies to Settings 2.0.
+	$reactions_legacy_fields = bb_reactions_get_settings_fields();
+	$reaction_titles         = isset( $reactions_legacy_fields['bp_reaction_settings_section'] ) ? $reactions_legacy_fields['bp_reaction_settings_section'] : array();
+
 	// -------------------------------------------------------------------------
 	// FIELD: Enable Reactions (Toggle list for content types)
 	// -------------------------------------------------------------------------
+	$field_all_reactions = isset( $reaction_titles['bb_all_reactions'] ) ? $reaction_titles['bb_all_reactions'] : array();
 	bb_register_feature_field(
 		'reactions',
 		'display_settings',
 		'enable_reactions',
 		array(
 			'name'              => 'bb_all_reactions',
-			'label'             => __( 'Enable Reactions', 'buddyboss' ),
+			'label'             => isset( $field_all_reactions['title'] ) ? $field_all_reactions['title'] : __( 'Enable Reactions', 'buddyboss' ),
 			'type'              => 'toggle_list',
 			'description'       => __( 'Select the types of content that members are allowed to react to.', 'buddyboss' ),
 			'options'           => array(
@@ -107,7 +112,7 @@ function bb_admin_settings_register_reactions_settings() {
 				'activity'         => 1,
 				'activity_comment' => 1,
 			),
-			'sanitize_callback' => 'bb_reactions_sanitize_content_types',
+			'sanitize_callback' => ! empty( $field_all_reactions['sanitize_callback'] ) && is_callable( $field_all_reactions['sanitize_callback'] ) ? $field_all_reactions['sanitize_callback'] : 'bb_reactions_sanitize_content_types',
 			'order'             => 10,
 		)
 	);
@@ -194,18 +199,19 @@ function bb_admin_settings_register_reactions_settings() {
 		)
 	);
 
+	$field_reaction_mode = isset( $reaction_titles['bb_reaction_mode'] ) ? $reaction_titles['bb_reaction_mode'] : array();
 	bb_register_feature_field(
 		'reactions',
 		'reactions',
 		'reactions_settings',
 		array(
 			'name'              => 'bb_reaction_mode',
-			'label'             => __( 'Reaction Mode', 'buddyboss' ),
+			'label'             => isset( $field_reaction_mode['title'] ) ? $field_reaction_mode['title'] : __( 'Reaction Mode', 'buddyboss' ),
 			'type'              => 'reaction_mode',
 			'description'       => '',
 			'options'           => $reaction_mode_options,
 			'default'           => function_exists( 'bb_get_reaction_mode' ) ? bb_get_reaction_mode() : 'likes',
-			'sanitize_callback' => 'sanitize_text_field',
+			'sanitize_callback' => ! empty( $field_reaction_mode['sanitize_callback'] ) && is_callable( $field_reaction_mode['sanitize_callback'] ) ? $field_reaction_mode['sanitize_callback'] : 'sanitize_text_field',
 			'order'             => 10,
 			'pro_only'          => true,
 		)
@@ -214,9 +220,10 @@ function bb_admin_settings_register_reactions_settings() {
 	// -------------------------------------------------------------------------
 	// FIELD: Reaction Button (icon + text customization, Pro-only)
 	// -------------------------------------------------------------------------
-	$button_settings = function_exists( 'bb_reaction_button_options' ) ? bb_reaction_button_options() : array();
-	$button_icon     = isset( $button_settings['icon'] ) ? $button_settings['icon'] : 'thumbs-up';
-	$button_text     = isset( $button_settings['text'] ) ? trim( $button_settings['text'] ) : __( 'Like', 'buddyboss' );
+	$button_settings       = function_exists( 'bb_reaction_button_options' ) ? bb_reaction_button_options() : array();
+	$button_icon           = isset( $button_settings['icon'] ) ? $button_settings['icon'] : 'thumbs-up';
+	$button_text           = isset( $button_settings['text'] ) ? trim( $button_settings['text'] ) : __( 'Like', 'buddyboss' );
+	$field_reactions_button = isset( $reaction_titles['bb_reactions_button'] ) ? $reaction_titles['bb_reactions_button'] : array();
 
 	bb_register_feature_field(
 		'reactions',
@@ -224,13 +231,13 @@ function bb_admin_settings_register_reactions_settings() {
 		'reactions_settings',
 		array(
 			'name'              => 'bb_reactions_button',
-			'label'             => __( 'Reaction Button', 'buddyboss' ),
+			'label'             => isset( $field_reactions_button['title'] ) ? $field_reactions_button['title'] : __( 'Reaction Button', 'buddyboss' ),
 			'type'              => 'reaction_button',
 			'description'       => __( 'This label and icon indicate the default reaction before any reaction is selected. In \'Emotions\' mode, clicking the button applies the first reaction in the configured list.', 'buddyboss' ),
 			'icon'              => $button_icon,
 			'text'              => $button_text,
 			'maxlength'         => 12,
-			'sanitize_callback' => 'bb_reactions_sanitize_button_settings',
+			'sanitize_callback' => ! empty( $field_reactions_button['sanitize_callback'] ) && is_callable( $field_reactions_button['sanitize_callback'] ) ? $field_reactions_button['sanitize_callback'] : 'bb_reactions_sanitize_button_settings',
 			'default'           => array(
 				'icon' => $button_icon,
 				'text' => $button_text,

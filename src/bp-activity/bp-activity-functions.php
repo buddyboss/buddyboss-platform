@@ -931,7 +931,9 @@ function bp_activity_get_user_favorites( $user_id = 0, $activity_type = 'activit
 	}
 
 	// Get favorites for user.
-	$favs = bb_activity_get_user_reacted_item_ids( $user_id, $activity_type );
+	$favs = function_exists( 'bb_activity_get_user_reacted_item_ids' )
+		? bb_activity_get_user_reacted_item_ids( $user_id, $activity_type )
+		: array();
 
 	/**
 	 * Filters the favorited activity items for a specified user.
@@ -956,14 +958,24 @@ function bp_activity_get_user_favorites( $user_id = 0, $activity_type = 'activit
  * @return WP_Error|object|bool Object on success, WP_Error on failure.
  */
 function bp_activity_add_user_favorite( $activity_id, $user_id = 0, $args = array() ) {
+	$reaction = bb_load_reaction();
+
 	$r = bp_parse_args(
 		$args,
 		array(
 			'type'        => 'activity',
-			'reaction_id' => bb_load_reaction()->bb_reactions_reaction_id(),
+			'reaction_id' => $reaction ? $reaction->bb_reactions_reaction_id() : 0,
 			'error_type'  => 'bool',
 		)
 	);
+
+	// If reaction system is not loaded, bail.
+	if ( ! $reaction ) {
+		return ( 'bool' === $r['error_type'] ) ? false : new WP_Error(
+			'bp_activity_add_user_favorite_disabled',
+			esc_html__( 'Reactions are not available.', 'buddyboss' )
+		);
+	}
 
 	// Fallback to logged in user if no user_id is passed.
 	if ( empty( $user_id ) ) {
@@ -996,7 +1008,7 @@ function bp_activity_add_user_favorite( $activity_id, $user_id = 0, $args = arra
 		}
 	}
 
-	$reacted = bb_load_reaction()->bb_add_user_item_reaction(
+	$reacted = $reaction->bb_add_user_item_reaction(
 		array(
 			'item_type'   => $r['type'],
 			'reaction_id' => $r['reaction_id'],
@@ -1073,6 +1085,15 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0, $args = a
 		$user_id = bp_loggedin_user_id();
 	}
 
+	// If reaction system is not loaded, bail.
+	$reaction = bb_load_reaction();
+	if ( ! $reaction ) {
+		return ( 'bool' === $r['error_type'] ) ? false : new WP_Error(
+			'bp_activity_remove_user_favorite_disabled',
+			esc_html__( 'Reactions are not available.', 'buddyboss' )
+		);
+	}
+
 	// Check if migration is in progress.
 	if (
 		function_exists( 'bb_pro_reaction_get_migration_status' ) &&
@@ -1089,7 +1110,7 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0, $args = a
 	}
 
 	// Check if user try to un-react but there is no reaction id as per current reaction mode.
-	$reacted_reaction_id = bb_load_reaction()->bb_user_reacted_reaction_id(
+	$reacted_reaction_id = $reaction->bb_user_reacted_reaction_id(
 		array(
 			'item_id'   => $activity_id,
 			'item_type' => $r['type'],
@@ -1108,7 +1129,7 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0, $args = a
 		}
 	}
 
-	$un_reacted = bb_load_reaction()->bb_remove_user_item_reactions(
+	$un_reacted = $reaction->bb_remove_user_item_reactions(
 		array(
 			'item_type'  => $r['type'],
 			'item_id'    => $activity_id,
@@ -1432,11 +1453,14 @@ function bp_activity_remove_all_user_data( $user_id = 0 ) {
 	bp_delete_user_meta( $user_id, 'bp_favorite_activities' );
 
 	// Remove user reactions from reactions table.
-	bb_load_reaction()->bb_remove_user_item_reactions(
-		array(
-			'user_id' => $user_id,
-		)
-	);
+	$reaction = bb_load_reaction();
+	if ( $reaction ) {
+		$reaction->bb_remove_user_item_reactions(
+			array(
+				'user_id' => $user_id,
+			)
+		);
+	}
 
 	// Execute additional code
 	do_action( 'bp_activity_remove_data', $user_id ); // Deprecated! Do not use!
@@ -6213,7 +6237,12 @@ function bb_activity_migration( $raw_db_version, $current_db ) {
 function bb_migrate_activity_like_reaction( $paged = 1 ) {
 	global $wpdb, $bp, $bb_background_updater;
 
-	$reaction_id = bb_load_reaction()->bb_reactions_get_like_reaction_id();
+	$reaction = bb_load_reaction();
+	if ( ! $reaction ) {
+		return;
+	}
+
+	$reaction_id = $reaction->bb_reactions_get_like_reaction_id();
 
 	if ( empty( $paged ) ) {
 		$paged = 1;
@@ -6271,7 +6300,12 @@ function bb_migrate_activity_like_reaction( $paged = 1 ) {
 function bb_activity_like_reaction_background_process_migration( $results, $paged, $reaction_id ) {
 	global $wpdb, $bb_background_updater;
 
-	$user_reaction_table = bb_load_reaction()::$user_reaction_table;
+	$reaction = bb_load_reaction();
+	if ( ! $reaction ) {
+		return;
+	}
+
+	$user_reaction_table = $reaction::$user_reaction_table;
 
 	if ( empty( $results ) ) {
 		return;
@@ -6336,8 +6370,13 @@ function bb_activity_like_reaction_background_process_migration( $results, $page
  * @return void
  */
 function bb_update_users_like_reaction( $user_ids, $activity_id, $reaction_id ) {
+	$reaction = bb_load_reaction();
+	if ( ! $reaction ) {
+		return;
+	}
+
 	foreach ( $user_ids as $user_id ) {
-		bb_load_reaction()->bb_add_user_item_reaction(
+		$reaction->bb_add_user_item_reaction(
 			array(
 				'user_id'     => $user_id,
 				'reaction_id' => $reaction_id,
