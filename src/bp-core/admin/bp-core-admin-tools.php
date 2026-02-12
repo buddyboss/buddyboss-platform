@@ -443,8 +443,8 @@ function bp_admin_repair_list() {
 		}
 	}
 
-	// Update user activity favorites data.
-	if ( bp_is_active( 'activity' ) ) {
+	// Update user activity favorites data (only when Reactions feature is enabled).
+	if ( bp_is_active( 'activity' ) && function_exists( 'bb_is_reactions_feature_enabled' ) && bb_is_reactions_feature_enabled() ) {
 		$repair_list[85] = array(
 			'bp-sync-activity-favourite',
 			esc_html__( 'Migrate BuddyPress activity favourites to BuddyBoss reactions table', 'buddyboss' ),
