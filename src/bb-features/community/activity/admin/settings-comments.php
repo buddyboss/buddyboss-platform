@@ -83,7 +83,7 @@ function bb_activity_register_comments_panel_fields( $edit_time_options ) {
 		array(
 			'name'                 => '_bb_activity_comment_visibility',
 			'label'                => __( 'Comment Visibility', 'buddyboss' ),
-			'type'                 => 'select',
+			'type'                 => 'toggle',
 			'description'          => __( 'Display a maximum %s comments per post in activity feeds. Load more using the "View more comments" links. Higher comment counts will increase the time it takes members to scroll through activity feeds. This only applies to platform not app.', 'buddyboss' ),
 			'default'              => bb_get_activity_comment_visibility(),
 			'options'              => array(

@@ -491,6 +491,8 @@ class BB_Admin_Settings_Ajax {
 				'notice_type'           => $field['notice_type'] ?? null,
 				// Inline controls embedded in description (replaces %s placeholders).
 				'description_controls'  => $field['description_controls'] ?? null,
+				// Help text displayed below description in lighter style.
+				'help_text'             => $field['help_text'] ?? null,
 			);
 
 			// Auto-compute pro_notice for pro_only fields when not set at registration time.
@@ -517,9 +519,12 @@ class BB_Admin_Settings_Ajax {
 			 */
 			$field_data = apply_filters( 'bb_admin_settings_format_field_data', $field_data, $field );
 
-			// Sanitize description for safe use with dangerouslySetInnerHTML (XSS prevention).
+			// Sanitize description and help_text for safe use with dangerouslySetInnerHTML (XSS prevention).
 			if ( isset( $field_data['description'] ) && is_string( $field_data['description'] ) ) {
 				$field_data['description'] = wp_kses_post( $field_data['description'] );
+			}
+			if ( isset( $field_data['help_text'] ) && is_string( $field_data['help_text'] ) ) {
+				$field_data['help_text'] = wp_kses_post( $field_data['help_text'] );
 			}
 
 			// Add sub-fields for dimensions/child_render type.

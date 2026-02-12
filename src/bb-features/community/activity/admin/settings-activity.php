@@ -111,7 +111,7 @@ function bb_activity_register_settings_panel_fields() {
 		'activity_settings',
 		array(
 			'name'              => '_bp_enable_heartbeat_refresh',
-			'label'             => __( 'Activity Auto-Refresh', 'buddyboss' ),
+			'label'             => __( 'Activity auto-refresh', 'buddyboss' ),
 			'type'              => 'toggle',
 			'description'       => __( 'Automatically check for new activity posts', 'buddyboss' ),
 			'default'           => bp_is_activity_heartbeat_active(),
@@ -212,6 +212,7 @@ function bb_activity_register_settings_panel_fields() {
 			'label'             => __( 'Relevant Activity', 'buddyboss' ),
 			'type'              => 'toggle',
 			'description'       => __( 'Show only relevant posts to the logged-in member in the activity feed.', 'buddyboss' ),
+			'help_text'         => __( 'When checked, logged-in members will see activity from their timeline, connections, followed members, joined groups, subscribed forums, and mentions.', 'buddyboss' ),
 			'default'           => bp_is_relevant_feed_enabled(),
 			'sanitize_callback' => 'intval',
 			'order'             => 110,

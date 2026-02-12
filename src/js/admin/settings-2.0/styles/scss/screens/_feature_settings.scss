@@ -200,6 +200,16 @@
         margin: 20px 0 0 0;
     }
 
+    &-help-text {
+        color: $bb-text-tertiary-color;
+        font-size: 12px;
+        font-weight: 400;
+        font-style: italic;
+        line-height: 1.5;
+        margin: 8px 0 0 0;
+        opacity: 0.8;
+    }
+
     .bb-admin-reaction-info {
         color: $bb-text-tertiary-color;
         font-size: 13px;

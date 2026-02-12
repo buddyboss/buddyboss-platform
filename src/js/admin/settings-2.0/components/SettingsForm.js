@@ -816,6 +816,14 @@ export function SettingsForm({ fields, values, onChange }) {
 						);
 					} )() }
 
+					{/* Help text: lighter sub-description below the main description. */}
+					{ field.help_text && (
+						<p
+							className="bb-admin-settings-form__field-help-text"
+							dangerouslySetInnerHTML={{ __html: field.help_text }}
+						/>
+					) }
+
 					{/* Render child fields inline/nested */}
 					{childFields.length > 0 && (
 						<div className="bb-admin-settings-form__child-fields">
