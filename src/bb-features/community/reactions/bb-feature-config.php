@@ -61,12 +61,17 @@ add_action(
 		}
 
 		// Load class definitions.
-		require_once __DIR__ . '/classes/class-bb-reaction.php';
+		if ( file_exists( __DIR__ . '/classes/class-bb-reaction.php' ) ) {
+			require_once __DIR__ . '/classes/class-bb-reaction.php';
+		}
+
+		if ( file_exists( __DIR__ . '/classes/class-bb-rest-reactions-endpoint.php' ) ) {
+			require_once __DIR__ . '/classes/class-bb-rest-reactions-endpoint.php';
+		}
 
 		// Load reaction functions (AJAX handlers, template helpers, etc.).
-		$reactions_file = __DIR__ . '/bb-activity-reactions.php';
-		if ( file_exists( $reactions_file ) ) {
-			require_once $reactions_file;
+		if ( file_exists( __DIR__ . '/bb-activity-reactions.php' ) ) {
+			require_once __DIR__ . '/bb-activity-reactions.php';
 		}
 
 		// Initialize the reaction system on 'init' to ensure WordPress is fully loaded.
