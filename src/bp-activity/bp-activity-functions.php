@@ -3180,9 +3180,14 @@ function bp_activity_new_comment( $args = '' ) {
 	wp_cache_delete( $activity_id, 'bp_activity_comments' );
 	wp_cache_delete( 'bp_get_child_comments_' . $activity_id, 'bp_activity_comments' );
 
+	// Clear comment chain cache for the parent comment.
+	if ( ! empty( $r['parent_id'] ) && (int) $r['parent_id'] !== (int) $activity_id ) {
+		wp_cache_delete( 'bb_comment_chain_' . (int) $r['parent_id'] . '_' . (int) $activity_id, 'bp_activity_comments' );
+	}
+
 	// Walk the tree to clear caches for all parent items.
 	$clear_id = $r['parent_id'];
-	while ( $clear_id != $activity_id ) {
+	while ( (int) $clear_id !== (int) $activity_id ) {
 		$clear_object = new BP_Activity_Activity( $clear_id );
 		wp_cache_delete( $clear_id, 'bp_activity' );
 		$clear_id = intval( $clear_object->secondary_item_id );
@@ -3582,6 +3587,9 @@ function bp_activity_delete_comment( $activity_id, $comment_id ) {
 	// Purge comment cache for the root activity update.
 	wp_cache_delete( $activity_id, 'bp_activity_comments' );
 	wp_cache_delete( 'bp_get_child_comments_' . $activity_id, 'bp_activity_comments' );
+
+	// Clear comment chain cache for the deleted comment.
+	wp_cache_delete( 'bb_comment_chain_' . (int) $comment_id . '_' . (int) $activity_id, 'bp_activity_comments' );
 
 	// Recalculate the comment tree.
 	BP_Activity_Activity::rebuild_activity_comment_tree( $activity_id );
