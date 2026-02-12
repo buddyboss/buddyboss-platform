@@ -1268,4 +1268,4 @@ function bb_load_readylaunch() {
 	}
 }
 
-add_action( 'bp_loaded', 'bb_load_readylaunch', 99 );
+add_action( 'bp_init', 'bb_load_readylaunch', 1 );
