@@ -4645,7 +4645,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			if ( 'document' === $type ) {
 				// Check permission.
 				if ( ! bp_document_user_can_edit( $document_id ) ) {
-					$response['feedback'] = esc_html__( "You don't have permission to edit this document.", 'buddyboss' );
+					$response['feedback'] = esc_html__( 'You don\'t have permission to edit this document.', 'buddyboss' );
 					wp_send_json_error( $response );
 				}
 
@@ -4656,21 +4656,31 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 						$result['name']    = $name;
 						$result['renamed'] = true;
 					} else {
-						$response['feedback'] = ! empty( $renamed ) ? $renamed : esc_html__( 'Failed to rename document.', 'buddyboss' );
+						$response['feedback'] = is_string( $renamed ) && '' !== $renamed ? $renamed : esc_html__( 'Failed to rename document.', 'buddyboss' );
 						wp_send_json_error( $response );
 					}
 				}
 
 				// Update privacy if requested.
 				if ( $update_privacy && ! empty( $privacy ) ) {
-					if ( ! array_key_exists( $privacy, bp_document_get_visibility_levels() ) ) {
+					$document_visibilities = bp_document_get_visibility_levels();
+					if ( ! array_key_exists( $privacy, $document_visibilities ) ) {
 						$response['feedback'] = esc_html__( 'Invalid privacy status.', 'buddyboss' );
 						wp_send_json_error( $response );
 					}
-					bp_document_update_privacy( $document_id, $privacy, 'document' );
-					$result['privacy']         = $privacy;
-					$result['privacy_label']   = bp_document_get_visibility_levels()[ $privacy ] ?? '';
-					$result['privacy_updated'] = true;
+
+					$document_object = new BP_Document( $document_id );
+					if (
+						'grouponly' !== $privacy &&
+						! empty( $document_object->id ) &&
+						0 === (int) $document_object->group_id &&
+						0 === (int) $document_object->folder_id
+					) {
+						bp_document_update_privacy( $document_id, $privacy, 'document' );
+						$result['privacy']         = $privacy;
+						$result['privacy_label']   = isset( $document_visibilities[ $privacy ] ) ? $document_visibilities[ $privacy ] : '';
+						$result['privacy_updated'] = true;
+					}
 				}
 
 				// Only generate document HTML if name was updated (needed for updated file links).
@@ -4702,7 +4712,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				// Handle folder type.
 				// Check permission.
 				if ( ! bp_folder_user_can_edit( $document_id ) ) {
-					$response['feedback'] = esc_html__( "You don't have permission to edit this folder.", 'buddyboss' );
+					$response['feedback'] = esc_html__( 'You don\'t have permission to edit this folder.', 'buddyboss' );
 					wp_send_json_error( $response );
 				}
 
@@ -4720,14 +4730,24 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 				// Update privacy if requested.
 				if ( $update_privacy && ! empty( $privacy ) ) {
-					if ( ! array_key_exists( $privacy, bp_document_get_visibility_levels() ) ) {
+					$document_visibilities = bp_document_get_visibility_levels();
+					if ( ! array_key_exists( $privacy, $document_visibilities ) ) {
 						$response['feedback'] = esc_html__( 'Invalid privacy status.', 'buddyboss' );
 						wp_send_json_error( $response );
 					}
-					bp_document_update_privacy( $document_id, $privacy, 'folder' );
-					$result['privacy']         = $privacy;
-					$result['privacy_label']   = bp_document_get_visibility_levels()[ $privacy ] ?? '';
-					$result['privacy_updated'] = true;
+
+					$folder_object = new BP_Document_Folder( $document_id );
+					if (
+						'grouponly' !== $privacy &&
+						! empty( $folder_object->id ) &&
+						0 === (int) $folder_object->group_id &&
+						0 === (int) $folder_object->parent
+					) {
+						bp_document_update_privacy( $document_id, $privacy, 'folder' );
+						$result['privacy']         = $privacy;
+						$result['privacy_label']   = isset( $document_visibilities[ $privacy ] ) ? $document_visibilities[ $privacy ] : '';
+						$result['privacy_updated'] = true;
+					}
 				}
 			}
 

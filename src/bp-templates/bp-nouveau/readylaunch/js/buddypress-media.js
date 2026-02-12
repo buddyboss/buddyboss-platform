@@ -3518,6 +3518,10 @@ window.bp = window.bp || {};
 						// Trigger the close modal function.
 						$modal.find( '#bp-media-edit-document-close' ).trigger( 'click' );
 					},
+					error: function () {
+						eventTarget.removeClass( 'saving' );
+						$modal.find( '#bp-media-edit-document-close' ).trigger( 'click' );
+					},
 				}
 			);
 			event.preventDefault();
