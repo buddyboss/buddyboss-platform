@@ -3472,8 +3472,10 @@ window.bp = window.bp || {};
 			var commentsList = target.closest( '.bb-rl-activity-comments' );
 			commentsList.addClass( 'active' );
 
-			var form   = target.closest( 'form' );
-			var itemId = activityId;
+			var form                 = target.closest( 'form' );
+			var itemId               = activityId;
+			var isInsideMediaTheatre = target.closest( '.bb-rl-internal-model' ).length > 0;
+			var $internalModel       = $( '.bb-rl-internal-model' );
 
 			// Stop event propagation.
 			event.preventDefault();
