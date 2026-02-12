@@ -52,13 +52,11 @@ bb_register_feature(
 	)
 );
 
-// Load reactions core when activity is active.
-// These must always be available (regardless of feature toggle) because
-// BP_Activity_Template depends on bb_activity_get_user_reacted_item_ids().
+// Load reactions core when activity and like/reactions feature are active.
 add_action(
 	'bp_loaded',
 	function () {
-		if ( ! bp_is_active( 'activity' ) ) {
+		if ( ! bp_is_active( 'activity' ) || ! bp_is_activity_like_active() ) {
 			return;
 		}
 

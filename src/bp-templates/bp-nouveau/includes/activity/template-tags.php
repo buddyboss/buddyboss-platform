@@ -910,7 +910,9 @@ function bp_nouveau_activity_comment_buttons( $args = array() ) {
 	$has_content = trim( $output, ' ' );
 
 	// Added emotion list.
-	$output .= bb_get_activity_post_comment_emotions_popup();
+	if ( function_exists( 'bb_get_activity_post_comment_emotions_popup' ) ) {
+		$output .= bb_get_activity_post_comment_emotions_popup();
+	}
 
 	if ( ! $has_content ) {
 		return;
