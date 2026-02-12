@@ -640,6 +640,15 @@ export function SettingsForm({ fields, values, onChange }) {
 					/>
 				);
 
+			case 'hidden':
+				// With description_controls: render hidden span so the field row shows
+				// and description_controls handles the inline select/input.
+				// Without description_controls: return null to skip the entire field (true hidden).
+				if ( field.description_controls && field.description_controls.length > 0 ) {
+					return <span className="bb-admin-settings-field__control--hidden" aria-hidden="true" />;
+				}
+				return null;
+
 			default:
 				return (
 					<p className="bb-admin-settings-field__unsupported">

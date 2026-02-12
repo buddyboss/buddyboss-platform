@@ -175,7 +175,7 @@ function bb_activity_register_comments_panel_fields( $edit_time_options ) {
 		array(
 			'name'                 => '_bb_activity_comment_loading',
 			'label'                => __( 'Comments Loading', 'buddyboss' ),
-			'type'                 => '',
+			'type'                 => 'hidden',
 			'description'          => __( 'Load %s Additional comments on each request', 'buddyboss' ),
 			'help_text'            => __( 'Increasing the number of comments retrieved in each request may negatively impact site performance.', 'buddyboss' ),
 			'default'              => bb_get_activity_comment_loading(),
