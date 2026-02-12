@@ -250,10 +250,27 @@ class BB_Admin_Settings_Ajax {
 		// Get all fields for current values.
 		$all_fields = $registry->bb_get_all_fields( $feature_id );
 
-		// Get current values.
+		// Get current values. BuddyBoss stores options via bp_get_option/bp_update_option (root blog on multisite).
 		$settings = array();
 		foreach ( $all_fields as $field_name => $field ) {
-			$settings[ $field['name'] ] = get_option( $field['name'], $field['default'] ?? '' );
+			// toggle_list with option_prefix: each option is stored as a separate key (e.g. bp-feed-platform-{key}).
+			if ( 'toggle_list' === ( $field['type'] ?? '' ) && ! empty( $field['option_prefix'] ) && ! empty( $field['options'] ) ) {
+				$prefix = $field['option_prefix'];
+				$truthy = isset( $field['option_value_truthy'] ) ? (array) $field['option_value_truthy'] : array( 1, '1', true );
+				$mapped = array();
+				foreach ( $field['options'] as $option ) {
+					$key = $option['value'] ?? '';
+					if ( '' === $key ) {
+						continue;
+					}
+					$opt_name = $prefix . $key;
+					$stored   = bp_get_option( $opt_name, 1 );
+					$mapped[ $key ] = in_array( $stored, $truthy, true ) ? 1 : 0;
+				}
+				$settings[ $field['name'] ] = $mapped;
+			} else {
+				$settings[ $field['name'] ] = bp_get_option( $field['name'], $field['default'] ?? '' );
+			}
 		}
 
 		// Get side panels.
@@ -411,7 +428,17 @@ class BB_Admin_Settings_Ajax {
 				$field_value = $toggle_values;
 			}
 
-			// Handle description_controls: read each control's value from DB.
+			// Single toggle/checkbox: normalize to 0|1 so React's !!value shows off when stored is 0 (not string "0").
+			if ( in_array( $field['type'] ?? '', array( 'toggle', 'checkbox' ), true ) ) {
+				$field_value = absint( $field_value );
+			}
+
+			// toggle_list: value from $values (or filter); normalize to int 0|1 for JS.
+			if ( 'toggle_list' === ( $field['type'] ?? '' ) && is_array( $field_value ) ) {
+				$field_value = array_map( 'absint', $field_value );
+			}
+
+			// Handle description_controls: read each control's value from DB (same storage as main options).
 			// Each control maps to one %s placeholder in the description string (in order).
 			// Use sequential %s placeholders — %1$s/%2$s are NOT supported by the frontend split logic.
 			if ( ! empty( $field['description_controls'] ) && is_array( $field['description_controls'] ) ) {
@@ -422,23 +449,9 @@ class BB_Admin_Settings_Ajax {
 					}
 					if ( ! empty( $control['name'] ) ) {
 						$control_default = $control['default'] ?? '';
-						$field['description_controls'][ $idx ]['value'] = get_option( $control['name'], $control_default );
+						$field['description_controls'][ $idx ]['value'] = bp_get_option( $control['name'], $control_default );
 					}
 				}
-			}
-
-			if ( 'toggle_list' === ( $field['type'] ?? '' ) && ! empty( $field['option_prefix'] ) ) {
-				// Read each option as a separate WordPress option.
-				$option_prefix = $field['option_prefix'];
-				$toggle_values = array();
-				foreach ( $field['options'] ?? array() as $option ) {
-					$option_key   = $option['value'];
-					$option_name  = $option_prefix . $option_key;
-					$stored_value = get_option( $option_name, '' );
-					// Check if the stored value matches the option key (means enabled).
-					$toggle_values[ $option_key ] = ( $stored_value === $option_key ) ? 1 : 0;
-				}
-				$field_value = $toggle_values;
 			}
 
 			// Handle toggle_list_array (stored as array of enabled values).
@@ -449,8 +462,8 @@ class BB_Admin_Settings_Ajax {
 					$default_array[] = $option['value'];
 				}
 
-				// Get stored value with proper default.
-				$stored_array = get_option( $field['name'], $default_array );
+				// Get stored value with proper default (same storage as legacy).
+				$stored_array = bp_get_option( $field['name'], $default_array );
 
 				// Handle edge cases: empty string, false, or non-array values.
 				if ( empty( $stored_array ) || ! is_array( $stored_array ) ) {
@@ -481,8 +494,6 @@ class BB_Admin_Settings_Ajax {
 				'license_tier'  => $field['license_tier'] ?? 'free',
 				'order'         => $field['order'] ?? 100,
 				'value'         => $field_value,
-				// Option prefix for toggle_list fields.
-				'option_prefix' => $field['option_prefix'] ?? null,
 				// Nested field support.
 				'parent_field'  => $field['parent_field'] ?? null,
 				'parent_value'  => $field['parent_value'] ?? null,
@@ -607,7 +618,6 @@ class BB_Admin_Settings_Ajax {
 
 		$registry = bb_feature_registry();
 
-		/** This action is documented in class-bb-admin-settings-ajax.php */
 		/**
 		 * Fires before feature settings are retrieved for the AJAX response.
 		 *
@@ -644,8 +654,19 @@ class BB_Admin_Settings_Ajax {
 				$value = call_user_func( $field['sanitize_callback'], $value );
 			}
 
-			update_option( $name, $value );
-			$saved[ $name ] = $value;
+			// toggle_list with option_prefix: persist each key to option_prefix + key (e.g. bp-feed-platform-{key}).
+			if ( 'toggle_list' === ( $field['type'] ?? '' ) && ! empty( $field['option_prefix'] ) && is_array( $value ) ) {
+				$prefix = $field['option_prefix'];
+				foreach ( $value as $opt_key => $opt_val ) {
+					$opt_name = $prefix . $opt_key;
+					bp_update_option( $opt_name, absint( $opt_val ) );
+				}
+				$saved[ $name ] = $value;
+			} else {
+				// BuddyBoss stores options via bp_update_option (same storage as legacy).
+				bp_update_option( $name, $value );
+				$saved[ $name ] = $value;
+			}
 
 			// Handle description_controls: save each control's value alongside the main field.
 			// Each control maps to one %s placeholder in description (in order). Use %s, not %1$s/%2$s.
@@ -669,7 +690,7 @@ class BB_Admin_Settings_Ajax {
 						} else {
 							$control_value = sanitize_text_field( $control_value );
 						}
-						update_option( $control_name, $control_value );
+						bp_update_option( $control_name, $control_value );
 						$saved[ $control_name ] = $control_value;
 					}
 				}

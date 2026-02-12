@@ -46,15 +46,15 @@ function bb_activity_register_visibility_panel_fields() {
 	);
 
 	// FIELD: BuddyBoss Platform activity types (toggle list).
+	// Legacy stores each type in a separate option (bp-feed-platform-{activity_name}). Core AJAX
+	// reads/writes per-option when option_prefix is set (see class-bb-admin-settings-ajax.php).
 	$platform_activity_types = function_exists( 'bp_platform_default_activity_types' ) ? bp_platform_default_activity_types() : array();
 	$platform_type_options   = array();
 
 	foreach ( $platform_activity_types as $type ) {
-		$option_name            = 'bp-feed-platform-' . $type['activity_name'];
 		$platform_type_options[] = array(
-			'label'   => $type['activity_label'],
-			'value'   => $type['activity_name'],
-			'enabled' => function_exists( 'bp_platform_is_feed_enable' ) ? bp_platform_is_feed_enable( $option_name, true ) : true,
+			'label' => $type['activity_label'],
+			'value' => $type['activity_name'],
 		);
 	}
 
@@ -63,14 +63,16 @@ function bb_activity_register_visibility_panel_fields() {
 		'posts_visibility',
 		'posts_visibility',
 		array(
-			'name'              => 'bp_platform_activity_types',
-			'label'             => __( 'BuddyBoss Platform', 'buddyboss' ),
-			'type'              => 'toggle_list',
-			'description'       => '',
-			'options'           => $platform_type_options,
-			'default'           => array(),
-			'sanitize_callback' => 'bb_activity_sanitize_platform_activity_types',
-			'order'             => 10,
+			'name'                 => 'bp_platform_activity_types',
+			'label'                => __( 'BuddyBoss Platform', 'buddyboss' ),
+			'type'                 => 'toggle_list',
+			'description'          => '',
+			'options'              => $platform_type_options,
+			'default'              => array(),
+			'sanitize_callback'    => 'bb_activity_sanitize_platform_activity_types',
+			'order'                => 10,
+			'option_prefix'        => 'bp-feed-platform-',
+			'option_value_truthy'  => array( 1, '1', true ),
 		)
 	);
 }

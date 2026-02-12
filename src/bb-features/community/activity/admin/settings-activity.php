@@ -130,7 +130,7 @@ function bb_activity_register_settings_panel_fields() {
 			'label'             => __( 'Close Comments', 'buddyboss' ),
 			'type'              => 'toggle',
 			'description'       => __( 'Allow your users to stop users commenting on their posts', 'buddyboss' ),
-			'default'           => bb_is_close_activity_comments_enabled( true ),
+			'default'           => bb_is_close_activity_comments_enabled(),
 			'sanitize_callback' => 'intval',
 			'order'             => 50,
 		)
@@ -257,7 +257,18 @@ function bb_activity_register_settings_panel_fields() {
 		)
 	);
 
-	// FIELD: Activity Feed Filters (checkbox list).
+	// Activity Feed Filters: options from core labels (same keys/labels as legacy).
+	$activity_feed_filter_options = array();
+	if ( function_exists( 'bb_get_activity_filter_options_labels' ) ) {
+		foreach ( bb_get_activity_filter_options_labels() as $value => $label_or ) {
+			$label                          = is_array( $label_or ) && isset( $label_or['default'] ) ? $label_or['default'] : ( is_array( $label_or ) ? '' : $label_or );
+			$activity_feed_filter_options[] = array(
+				'label' => $label,
+				'value' => $value,
+			);
+		}
+	}
+	// FIELD: Activity Feed Filters (toggle list). Option name and value keys match legacy (bp_get_option( 'bb_activity_filter_options' )).
 	bb_register_feature_field(
 		'activity',
 		'activity_settings',
@@ -265,49 +276,27 @@ function bb_activity_register_settings_panel_fields() {
 		array(
 			'name'              => 'bb_activity_filter_options',
 			'label'             => __( 'Activity Feed Filters', 'buddyboss' ),
-			'type'              => 'checkbox_list',
+			'type'              => 'toggle_list',
 			'description'       => __( 'Allow members to filter activity posts by:', 'buddyboss' ),
 			'default'           => bb_get_enabled_activity_filter_options(),
-			'options'           => array(
-				array(
-					'label' => __( 'All updates', 'buddyboss' ),
-					'value' => 'all',
-				),
-				array(
-					'label' => __( 'Created by me', 'buddyboss' ),
-					'value' => 'just-me',
-				),
-				array(
-					'label' => __( "I've reacted to", 'buddyboss' ),
-					'value' => 'favorites',
-				),
-				array(
-					'label' => __( 'From my groups', 'buddyboss' ),
-					'value' => 'groups',
-				),
-				array(
-					'label' => __( 'From my connections', 'buddyboss' ),
-					'value' => 'friends',
-				),
-				array(
-					'label' => __( "I'm mentioned in", 'buddyboss' ),
-					'value' => 'mentions',
-				),
-				array(
-					'label' => __( "I'm following", 'buddyboss' ),
-					'value' => 'following',
-				),
-				array(
-					'label' => __( 'Unanswered', 'buddyboss' ),
-					'value' => 'unanswered',
-				),
-			),
+			'options'           => $activity_feed_filter_options,
 			'sanitize_callback' => 'bb_sanitize_checkbox_list',
 			'order'             => 20,
 		)
 	);
 
-	// FIELD: Profile Timeline Filters (checkbox list).
+	// Profile Timeline Filters: options from core labels (same keys/labels as legacy).
+	$activity_timeline_filter_options = array();
+	if ( function_exists( 'bb_get_activity_timeline_filter_options_labels' ) ) {
+		foreach ( bb_get_activity_timeline_filter_options_labels() as $value => $label_or ) {
+			$label                              = is_array( $label_or ) && isset( $label_or['default'] ) ? $label_or['default'] : ( is_array( $label_or ) ? '' : $label_or );
+			$activity_timeline_filter_options[] = array(
+				'label' => $label,
+				'value' => $value,
+			);
+		}
+	}
+	// FIELD: Profile Timeline Filters (toggle list). Option name and value keys match legacy (bp_get_option( 'bb_activity_timeline_filter_options' )).
 	bb_register_feature_field(
 		'activity',
 		'activity_settings',
@@ -315,7 +304,7 @@ function bb_activity_register_settings_panel_fields() {
 		array(
 			'name'              => 'bb_activity_timeline_filter_options',
 			'label'             => __( 'Profile Timeline Filters', 'buddyboss' ),
-			'type'              => 'checkbox_list',
+			'type'              => 'toggle_list',
 			'description'       => __( 'Allow members to filter activity posts by:', 'buddyboss' ),
 			'default'           => array(
 				'just-me'   => 1,
@@ -325,38 +314,24 @@ function bb_activity_register_settings_panel_fields() {
 				'mentions'  => 1,
 				'following' => 1,
 			),
-			'options'           => array(
-				array(
-					'label' => __( 'Personal posts', 'buddyboss' ),
-					'value' => 'just-me',
-				),
-				array(
-					'label' => __( 'Reacted to', 'buddyboss' ),
-					'value' => 'favorites',
-				),
-				array(
-					'label' => __( 'From groups', 'buddyboss' ),
-					'value' => 'groups',
-				),
-				array(
-					'label' => __( 'From connections', 'buddyboss' ),
-					'value' => 'friends',
-				),
-				array(
-					'label' => __( 'Mentioned in', 'buddyboss' ),
-					'value' => 'mentions',
-				),
-				array(
-					'label' => __( 'Following', 'buddyboss' ),
-					'value' => 'following',
-				),
-			),
+			'options'           => $activity_timeline_filter_options,
 			'sanitize_callback' => 'bb_sanitize_checkbox_list',
 			'order'             => 30,
 		)
 	);
 
-	// FIELD: Activity Sorting (checkbox list).
+	// Activity Sorting: options from core labels (New Posts, Recent Activity).
+	$activity_sorting_options = array();
+	if ( function_exists( 'bb_get_activity_sorting_options_labels' ) ) {
+		foreach ( bb_get_activity_sorting_options_labels() as $value => $label_or ) {
+			$label                      = is_array( $label_or ) && isset( $label_or['default'] ) ? $label_or['default'] : ( is_array( $label_or ) ? '' : $label_or );
+			$activity_sorting_options[] = array(
+				'label' => $label,
+				'value' => $value,
+			);
+		}
+	}
+	// FIELD: Activity Sorting (toggle list). Option name and value keys match legacy (bp_get_option( 'bb_activity_sorting_options' )).
 	bb_register_feature_field(
 		'activity',
 		'activity_settings',
@@ -364,19 +339,10 @@ function bb_activity_register_settings_panel_fields() {
 		array(
 			'name'              => 'bb_activity_sorting_options',
 			'label'             => __( 'Activity Sorting', 'buddyboss' ),
-			'type'              => 'checkbox_list',
+			'type'              => 'toggle_list',
 			'description'       => __( 'Allow members to sort activity posts by:', 'buddyboss' ),
 			'default'           => bb_get_enabled_activity_sorting_options(),
-			'options'           => array(
-				array(
-					'label' => __( 'Newest', 'buddyboss' ),
-					'value' => 'date_recorded',
-				),
-				array(
-					'label' => __( 'Popular', 'buddyboss' ),
-					'value' => 'date_updated',
-				),
-			),
+			'options'           => $activity_sorting_options,
 			'sanitize_callback' => 'bb_sanitize_checkbox_list',
 			'order'             => 40,
 		)
