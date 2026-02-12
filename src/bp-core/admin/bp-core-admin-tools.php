@@ -1350,9 +1350,15 @@ function bp_admin_update_activity_favourite() {
 					continue;
 				}
 
+				$reaction = bb_load_reaction();
+				if ( ! $reaction ) {
+					++$offset;
+					continue;
+				}
+
 				$migrated_fav_user_ids = $wpdb->get_col(
 					$wpdb->prepare(
-						'SELECT user_id FROM ' . bb_load_reaction()::$user_reaction_table . ' WHERE item_id = %d AND user_id IN (' . implode( ',', $fav_user_ids ) . ')',
+						'SELECT user_id FROM ' . $reaction::$user_reaction_table . ' WHERE item_id = %d AND user_id IN (' . implode( ',', $fav_user_ids ) . ')',
 						$item_id
 					)
 				);
@@ -1418,6 +1424,11 @@ function bb_admin_tool_migration_reaction( $item_id, $user_ids = array() ) {
 		return;
 	}
 
+	$reaction = bb_load_reaction();
+	if ( ! $reaction ) {
+		return;
+	}
+
 	// Validate the user ids.
 	$filtered_user_ids = get_users(
 		array(
@@ -1432,8 +1443,8 @@ function bb_admin_tool_migration_reaction( $item_id, $user_ids = array() ) {
 		return;
 	}
 
-	$user_reaction_tbl    = bb_load_reaction()::$user_reaction_table;
-	$reaction_id          = bb_load_reaction()->bb_reactions_get_like_reaction_id();
+	$user_reaction_tbl    = $reaction::$user_reaction_table;
+	$reaction_id          = $reaction->bb_reactions_get_like_reaction_id();
 	$place_holder_queries = array();
 
 	foreach ( $filtered_user_ids as $user_id ) {
@@ -1446,7 +1457,7 @@ function bb_admin_tool_migration_reaction( $item_id, $user_ids = array() ) {
 
 		bp_core_reset_incrementor( 'bb_reactions' );
 
-		bb_load_reaction()->bb_prepare_reaction_summary_data(
+		$reaction->bb_prepare_reaction_summary_data(
 			array(
 				'reaction_id' => $reaction_id,
 				'item_id'     => $item_id,

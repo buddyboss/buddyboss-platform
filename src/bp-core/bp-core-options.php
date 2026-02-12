@@ -2746,10 +2746,15 @@ function bb_reaction_button_options( $key = '' ) {
  * @return array
  */
 function bb_active_reactions() {
+	$reaction = bb_load_reaction();
+	if ( ! $reaction ) {
+		return array();
+	}
+
 	if ( bb_is_reaction_emotions_enabled() ) {
-		$all_emotions = bb_load_reaction()->bb_get_reactions( 'emotions' );
+		$all_emotions = $reaction->bb_get_reactions( 'emotions' );
 	} else {
-		$all_emotions = bb_load_reaction()->bb_get_reactions();
+		$all_emotions = $reaction->bb_get_reactions();
 	}
 
 	return ( ! empty( $all_emotions ) ? array_column( $all_emotions, null, 'id' ) : array() );

@@ -4557,7 +4557,11 @@ function bb_get_activity_comment_is_favorite() {
 	 *
 	 * @param bool $value Whether the current activity item is in the current user's favorites.
 	 */
-	return (bool) apply_filters( 'bb_get_activity_comment_is_favorite', bb_activity_is_item_favorite( bp_get_activity_comment_id(), 'activity_comment' ) );
+	$is_favorite = function_exists( 'bb_activity_is_item_favorite' )
+		? bb_activity_is_item_favorite( bp_get_activity_comment_id(), 'activity_comment' )
+		: false;
+
+	return (bool) apply_filters( 'bb_get_activity_comment_is_favorite', $is_favorite );
 }
 
 /**

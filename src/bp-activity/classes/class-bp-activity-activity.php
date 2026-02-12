@@ -2278,7 +2278,9 @@ class BP_Activity_Activity {
 	public static function total_favorite_count( $user_id, $activity_type = 'activity' ) {
 
 		// Get activities from user meta.
-		$favorite_activity_entries = bb_activity_get_user_reacted_item_ids( $user_id, $activity_type );
+		$favorite_activity_entries = function_exists( 'bb_activity_get_user_reacted_item_ids' )
+			? bb_activity_get_user_reacted_item_ids( $user_id, $activity_type )
+			: array();
 		if ( ! empty( $favorite_activity_entries ) ) {
 			return count( $favorite_activity_entries );
 		}
