@@ -45,22 +45,24 @@ function bb_activity_register_topics_panel_fields() {
 			'default'           => bb_is_enabled_activity_topics(),
 			'sanitize_callback' => 'intval',
 			'order'             => 10,
+			'group'             => 'activity_topics_group',
 		)
 	);
 
-	// FIELD: Topic Required (conditional on bb_enable_activity_topics).
+	// FIELD: Topic Required (sub-toggle, grouped with Enable Topics).
 	bb_register_feature_field(
 		'activity',
 		'activity_topics',
 		'activity_topics',
 		array(
 			'name'              => 'bb_activity_topic_required',
-			'label'             => __( 'Topic Required', 'buddyboss' ),
+			'label'             => '',
 			'type'              => 'toggle',
-			'description'       => __( 'Require users to select a topic before posting in activity feed.', 'buddyboss' ),
+			'description'       => __( 'Require users to select a topic before posting in activity feed', 'buddyboss' ),
 			'default'           => bb_is_activity_topic_required(),
 			'sanitize_callback' => 'intval',
 			'order'             => 20,
+			'group'             => 'activity_topics_group',
 			'conditional'       => array(
 				'field' => 'bb_enable_activity_topics',
 				'value' => true,
@@ -80,7 +82,6 @@ function bb_activity_register_topics_panel_fields() {
 			'description' => __( 'You can add up to a maximum of 20 topics', 'buddyboss' ),
 			'default'     => array(),
 			'order'       => 30,
-			'pro_only'    => true,
 			'conditional' => array(
 				'field' => 'bb_enable_activity_topics',
 				'value' => true,
@@ -112,7 +113,8 @@ function bb_activity_register_topics_panel_fields() {
 				'name'              => 'bb-enable-group-activity-topics',
 				'label'             => __( 'Group Topics', 'buddyboss' ),
 				'type'              => 'toggle',
-				'description'       => __( 'Allow group organizers to set categories for members to use in group posts.', 'buddyboss' ),
+				'description'       => __( 'Enable topics for groups', 'buddyboss' ),
+				'help_text'         => __( 'Allow group organizers to set topics for members to use in group posts.', 'buddyboss' ),
 				'default'           => function_exists( 'bb_is_enabled_group_activity_topics' ) && bb_is_enabled_group_activity_topics(),
 				'sanitize_callback' => 'intval',
 				'order'             => 10,
