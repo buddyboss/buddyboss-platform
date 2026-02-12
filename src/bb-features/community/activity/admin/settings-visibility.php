@@ -164,6 +164,10 @@ function bb_activity_register_visibility_post_type_fields( $feature_id ) {
 			$comment_option_name = bb_post_type_feed_comment_option_name( $post_type );
 			$group_id            = 'cpt_feed_' . sanitize_key( $post_type );
 
+			// Check if the post type supports comments (same logic as legacy).
+			$no_comment_post_types  = function_exists( 'bb_feed_not_allowed_comment_post_types' ) ? bb_feed_not_allowed_comment_post_types() : array();
+			$comments_not_supported = in_array( $post_type, $no_comment_post_types, true );
+
 			// Toggle: Post type name.
 			// Only first CPT gets the "Custom Post Types" label.
 			bb_register_feature_field(
@@ -182,26 +186,52 @@ function bb_activity_register_visibility_post_type_fields( $feature_id ) {
 				)
 			);
 
-			// Checkbox: Enable comments.
-			bb_register_feature_field(
-				'activity',
-				'posts_visibility',
-				'posts_visibility',
-				array(
-					'name'              => $comment_option_name,
-					'label'             => '',
-					'type'              => 'checkbox',
-					'description'       => __( 'Enable comments', 'buddyboss' ),
-					'default'           => function_exists( 'bb_is_post_type_feed_comment_enable' ) ? bb_is_post_type_feed_comment_enable( $post_type, false ) : false,
-					'sanitize_callback' => 'intval',
-					'order'             => $field_order + 1,
-					'group'             => $group_id,
-					'conditional'       => array(
-						'field' => $post_option_name,
-						'value' => true,
-					),
-				)
-			);
+			if ( $comments_not_supported ) {
+				// Notice: Comments not supported (shown only when toggle is ON).
+				bb_register_feature_field(
+					'activity',
+					'posts_visibility',
+					'posts_visibility',
+					array(
+						'name'        => 'bb_cpt_no_comments_' . sanitize_key( $post_type ),
+						'label'       => '',
+						'type'        => 'notice',
+						'notice_type' => 'info',
+						'description' => sprintf(
+							/* translators: %s: Post type name (e.g. "Quizzes"). */
+							__( 'Comments are not supported for %s.', 'buddyboss' ),
+							$post_type_label
+						),
+						'order'       => $field_order + 1,
+						'group'       => $group_id,
+						'conditional' => array(
+							'field' => $post_option_name,
+							'value' => true,
+						),
+					)
+				);
+			} else {
+				// Checkbox: Enable comments.
+				bb_register_feature_field(
+					'activity',
+					'posts_visibility',
+					'posts_visibility',
+					array(
+						'name'              => $comment_option_name,
+						'label'             => '',
+						'type'              => 'checkbox',
+						'description'       => __( 'Enable comments', 'buddyboss' ),
+						'default'           => function_exists( 'bb_is_post_type_feed_comment_enable' ) ? bb_is_post_type_feed_comment_enable( $post_type, false ) : false,
+						'sanitize_callback' => 'intval',
+						'order'             => $field_order + 1,
+						'group'             => $group_id,
+						'conditional'       => array(
+							'field' => $post_option_name,
+							'value' => true,
+						),
+					)
+				);
+			}
 
 			$field_order += 10;
 			$cpt_index++;

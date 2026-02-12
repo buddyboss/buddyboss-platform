@@ -698,11 +698,14 @@ export function SettingsForm({ fields, values, onChange }) {
 		// Note: reaction_migration and reaction_notice handle their own wrapper internally
 		// so they can return null without leaving an empty wrapper div.
 		if ( 'notice' === field.type || 'reaction_info' === field.type ) {
-			return (
-				<div key={field.name} className="bb-admin-settings-form__field bb-admin-settings-form__field--full-width">
-					{controlOutput}
-				</div>
-			);
+			// Grouped notices render inline within their group (no full-width).
+			if ( ! field.group ) {
+				return (
+					<div key={field.name} className="bb-admin-settings-form__field bb-admin-settings-form__field--full-width">
+						{controlOutput}
+					</div>
+				);
+			}
 		}
 
 		// reaction_migration and reaction_notice return their own wrapper or null
