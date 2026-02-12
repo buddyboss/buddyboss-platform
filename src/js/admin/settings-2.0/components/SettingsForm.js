@@ -18,6 +18,7 @@ import {
 	MenuItem,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import {
 	ReactionModeField,
 	useReactionCallbacks,
@@ -152,7 +153,7 @@ export function SettingsForm({ fields, values, onChange }) {
 				);
 
 			case 'checkbox_list':
-				// Checkbox list for multiple selections (e.g., Activity Feed Filters)
+				// Checkbox list with drag-and-drop reordering (e.g., Activity Feed Filters)
 				// Value can be either:
 				// - An object like {"just-me": 1, "favorites": 0, ...} (from AJAX)
 				// - An array like ["just-me", "favorites", ...] (legacy)
@@ -162,29 +163,104 @@ export function SettingsForm({ fields, values, onChange }) {
 				// Helper to check if option is selected
 				const isOptionChecked = (optionKey) => {
 					if (isObjectValue) {
-						// Object format: check if value is truthy (1, "1", true)
 						return !!checkboxValue[optionKey] && checkboxValue[optionKey] !== '0' && checkboxValue[optionKey] !== 0;
 					}
-					// Array format
 					return Array.isArray(value) && value.includes(optionKey);
 				};
 
+				// Build sorted options: use value key order first, then append remaining options.
+				const optionMap = {};
+				(field.options || []).forEach(function( opt ) { optionMap[opt.value] = opt; });
+				const valueKeys = Object.keys(checkboxValue);
+				const orderedOptions = [];
+
+				valueKeys.forEach(function( key ) {
+					if ( optionMap[key] ) {
+						orderedOptions.push(optionMap[key]);
+					}
+				});
+				(field.options || []).forEach(function( opt ) {
+					if ( ! valueKeys.includes(opt.value) ) {
+						orderedOptions.push(opt);
+					}
+				});
+
+				// Handle drag end: reorder items and rebuild value object with new key order.
+				const handleCheckboxListDragEnd = (result) => {
+					if ( ! result.destination ) {
+						return;
+					}
+					if ( result.destination.index === result.source.index ) {
+						return;
+					}
+
+					const items = Array.from(orderedOptions);
+					const [moved] = items.splice(result.source.index, 1);
+					items.splice(result.destination.index, 0, moved);
+
+					const newValue = {};
+					items.forEach(function( item ) {
+						newValue[item.value] = checkboxValue[item.value] !== undefined
+							? ( typeof checkboxValue[item.value] === 'string' ? parseInt(checkboxValue[item.value], 10) : checkboxValue[item.value] )
+							: 0;
+					});
+
+					onChange(field.name, newValue);
+				};
+
 				return (
-					<div key={field.name} className="bb-admin-settings-field__checkbox-list">
-						{(field.options || []).map((option) => (
-							<CheckboxControl
-								key={option.value}
-								label={option.label}
-								checked={isOptionChecked(option.value)}
-								onChange={(checked) => {
-									// Always save as object format for consistency
-									const newValue = { ...checkboxValue, [option.value]: checked ? 1 : 0 };
-									onChange(field.name, newValue);
-								}}
-								__nextHasNoMarginBottom
+					<DragDropContext onDragEnd={handleCheckboxListDragEnd}>
+						{field.description && (
+							<p
+								className="bb-admin-settings-form__field-description"
+								dangerouslySetInnerHTML={{ __html: field.description }}
 							/>
-						))}
-					</div>
+						)}
+						<Droppable droppableId={field.name}>
+							{(provided) => (
+								<div
+									ref={provided.innerRef}
+									{...provided.droppableProps}
+									className="bb-admin-settings-field__checkbox-list"
+								>
+									{orderedOptions.map((option, index) => (
+										<Draggable key={option.value} draggableId={option.value} index={index}>
+											{(providedDraggable, snapshot) => (
+												<div
+													ref={providedDraggable.innerRef}
+													{...providedDraggable.draggableProps}
+													{...providedDraggable.dragHandleProps}
+													className={ 'bb-admin-settings-field__checkbox-list-item' + ( snapshot.isDragging ? ' is-dragging' : '' ) }
+												>
+													<i className="bb-icons-rl bb-icons-rl-list" />
+													<ToggleControl
+														label={option.label}
+														checked={isOptionChecked(option.value)}
+														onChange={(checked) => {
+															// Preserve key order by rebuilding the object.
+															const newValue = {};
+															orderedOptions.forEach(function( opt ) {
+																if ( opt.value === option.value ) {
+																	newValue[opt.value] = checked ? 1 : 0;
+																} else {
+																	newValue[opt.value] = checkboxValue[opt.value] !== undefined
+																		? ( typeof checkboxValue[opt.value] === 'string' ? parseInt(checkboxValue[opt.value], 10) : checkboxValue[opt.value] )
+																		: 0;
+																}
+															});
+															onChange(field.name, newValue);
+														}}
+														__nextHasNoMarginBottom
+													/>
+												</div>
+											)}
+										</Draggable>
+									))}
+									{provided.placeholder}
+								</div>
+							)}
+						</Droppable>
+					</DragDropContext>
 				);
 
 			case 'text':
@@ -783,7 +859,7 @@ export function SettingsForm({ fields, values, onChange }) {
 					{/* Description: skip for notice type (rendered by notice component itself).
 				    When description contains %s and field has description_controls,
 				    render inline controls (select, text, number) in place of each %s placeholder. */}
-					{ field.description && 'notice' !== field.type && ( () => {
+					{ field.description && 'notice' !== field.type && 'checkbox_list' !== field.type && ( () => {
 						const desc = field.description;
 						const controls = field.description_controls;
 						const hasControls = desc.indexOf( '%s' ) !== -1 && controls && controls.length > 0;

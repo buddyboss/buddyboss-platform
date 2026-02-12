@@ -268,7 +268,7 @@ function bb_activity_register_settings_panel_fields() {
 			);
 		}
 	}
-	// FIELD: Activity Feed Filters (toggle list). Option name and value keys match legacy (bp_get_option( 'bb_activity_filter_options' )).
+	// FIELD: Activity Feed Filters (checkbox list with drag-and-drop). Option name and value keys match legacy (bp_get_option( 'bb_activity_filter_options' )).
 	bb_register_feature_field(
 		'activity',
 		'activity_settings',
@@ -276,7 +276,7 @@ function bb_activity_register_settings_panel_fields() {
 		array(
 			'name'              => 'bb_activity_filter_options',
 			'label'             => __( 'Activity Feed Filters', 'buddyboss' ),
-			'type'              => 'toggle_list',
+			'type'              => 'checkbox_list',
 			'description'       => __( 'Allow members to filter activity posts by:', 'buddyboss' ),
 			'default'           => bb_get_enabled_activity_filter_options(),
 			'options'           => $activity_feed_filter_options,
@@ -296,7 +296,7 @@ function bb_activity_register_settings_panel_fields() {
 			);
 		}
 	}
-	// FIELD: Profile Timeline Filters (toggle list). Option name and value keys match legacy (bp_get_option( 'bb_activity_timeline_filter_options' )).
+	// FIELD: Profile Timeline Filters (checkbox list with drag-and-drop). Option name and value keys match legacy (bp_get_option( 'bb_activity_timeline_filter_options' )).
 	bb_register_feature_field(
 		'activity',
 		'activity_settings',
@@ -304,7 +304,7 @@ function bb_activity_register_settings_panel_fields() {
 		array(
 			'name'              => 'bb_activity_timeline_filter_options',
 			'label'             => __( 'Profile Timeline Filters', 'buddyboss' ),
-			'type'              => 'toggle_list',
+			'type'              => 'checkbox_list',
 			'description'       => __( 'Allow members to filter activity posts by:', 'buddyboss' ),
 			'default'           => array(
 				'just-me'   => 1,
@@ -331,7 +331,7 @@ function bb_activity_register_settings_panel_fields() {
 			);
 		}
 	}
-	// FIELD: Activity Sorting (toggle list). Option name and value keys match legacy (bp_get_option( 'bb_activity_sorting_options' )).
+	// FIELD: Activity Sorting (checkbox list with drag-and-drop). Option name and value keys match legacy (bp_get_option( 'bb_activity_sorting_options' )).
 	bb_register_feature_field(
 		'activity',
 		'activity_settings',
@@ -339,7 +339,7 @@ function bb_activity_register_settings_panel_fields() {
 		array(
 			'name'              => 'bb_activity_sorting_options',
 			'label'             => __( 'Activity Sorting', 'buddyboss' ),
-			'type'              => 'toggle_list',
+			'type'              => 'checkbox_list',
 			'description'       => __( 'Allow members to sort activity posts by:', 'buddyboss' ),
 			'default'           => bb_get_enabled_activity_sorting_options(),
 			'options'           => $activity_sorting_options,
