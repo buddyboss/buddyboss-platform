@@ -51,8 +51,17 @@ export function SettingsForm({ fields, values, onChange }) {
 		// If field has a "conditional" property, check it
 		if (field.conditional) {
 			const condValue = values[field.conditional.field];
-			// Only show if conditional field matches the expected value
-			return condValue === field.conditional.value;
+			const expectedValue = field.conditional.value;
+
+			// When expected value is boolean, use truthy/falsy comparison
+			// because DB values can be 1, 0, "1", "0" while conditional uses true/false.
+			if (expectedValue === true || expectedValue === false) {
+				const isTruthy = !!condValue && condValue !== '0' && condValue !== 0;
+				return isTruthy === expectedValue;
+			}
+
+			// For non-boolean values, use strict comparison.
+			return condValue === expectedValue;
 		}
 
 		// For parent_field (nesting), always show the field but it may be disabled
@@ -102,7 +111,6 @@ export function SettingsForm({ fields, values, onChange }) {
 
 		switch (field.type) {
 			case 'toggle':
-			case 'checkbox':
 				// Figma: Toggle with toggle_label displayed next to the switch
 				const toggleLabel = field.toggle_label || field.inline_label || '';
 				// Handle inverted values (e.g., "disable" options shown as "enable" toggles)
@@ -123,6 +131,24 @@ export function SettingsForm({ fields, values, onChange }) {
 							__nextHasNoMarginBottom
 						/>
 					</div>
+				);
+
+			case 'checkbox':
+				// Render as actual checkbox (square) control.
+				const cbIsInverted = true === field.invert_value;
+				const cbDisplayValue = cbIsInverted ? !value : !!value;
+				return (
+					<CheckboxControl
+						key={field.name}
+						label=""
+						checked={cbDisplayValue}
+						onChange={(checked) => {
+							const saveValue = cbIsInverted ? !checked : checked;
+							onChange(field.name, saveValue ? 1 : 0);
+						}}
+						disabled={disabled}
+						__nextHasNoMarginBottom
+					/>
 				);
 
 			case 'checkbox_list':
@@ -697,34 +723,39 @@ export function SettingsForm({ fields, values, onChange }) {
 			field.parent_field ? 'bb-admin-settings-form__field--nested' : '',
 			disabled ? 'bb-admin-settings-form__field--disabled' : '',
 			isToggleWithChildren ? 'bb-admin-settings-form__field--has-children' : '',
+			field.group ? 'bb-admin-settings-form__field--grouped' : '',
 		].filter(Boolean).join(' ');
 
+		const hasLabel = field.label && field.label.trim() !== '';
+
 		return (
-			<div key={field.name} className={fieldClasses + ( 'reaction_mode' !== field.type && field.pro_notice?.show ? ' bb-admin-settings-form__field--pro-locked' : '' )}>
-				<div className="bb-admin-settings-form__field-label">
-					<label>
-						<span className="bb-admin-settings-form__field-label-text">{field.label}</span>
-						{ 'reaction_mode' !== field.type && field.pro_notice?.show && (
-							<>
-								<span className="bb-pro-badge">
-									<i className={field.pro_notice.badge_icon || ''} />
-									<span>{field.pro_notice.badge_text || 'PRO'}</span>
-								</span>
-								{field.pro_notice.link_url && (
-									<a
-										href={field.pro_notice.link_url}
-										target="_blank"
-										rel="noopener noreferrer"
-										className="bb-pro-badge__play-link"
-										aria-label={__('Learn more about PRO', 'buddyboss')}
-									>
-										<i className={field.pro_notice.link_icon || ''} />
-									</a>
-								)}
-							</>
-						)}
-					</label>
-				</div>
+			<div key={field.name} className={fieldClasses + ( ! hasLabel ? ' bb-admin-settings-form__field--no-label' : '' ) + ( 'reaction_mode' !== field.type && field.pro_notice?.show ? ' bb-admin-settings-form__field--pro-locked' : '' )} data-group={field.group || undefined}>
+				{ hasLabel && (
+					<div className="bb-admin-settings-form__field-label">
+						<label>
+							<span className="bb-admin-settings-form__field-label-text">{field.label}</span>
+							{ 'reaction_mode' !== field.type && field.pro_notice?.show && (
+								<>
+									<span className="bb-pro-badge">
+										<i className={field.pro_notice.badge_icon || ''} />
+										<span>{field.pro_notice.badge_text || 'PRO'}</span>
+									</span>
+									{field.pro_notice.link_url && (
+										<a
+											href={field.pro_notice.link_url}
+											target="_blank"
+											rel="noopener noreferrer"
+											className="bb-pro-badge__play-link"
+											aria-label={__('Learn more about PRO', 'buddyboss')}
+										>
+											<i className={field.pro_notice.link_icon || ''} />
+										</a>
+									)}
+								</>
+							)}
+						</label>
+					</div>
+				)}
 				<div className="bb-admin-settings-form__field-content">
 					{/* Field with optional prefix/suffix */}
 					<div className="bb-admin-settings-form__field-input-wrapper">

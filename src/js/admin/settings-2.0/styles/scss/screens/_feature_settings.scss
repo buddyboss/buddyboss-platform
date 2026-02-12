@@ -210,6 +210,34 @@
         opacity: 0.8;
     }
 
+    // Grouped fields: remove border/spacing between consecutive fields in same group.
+    &--grouped + &--grouped[data-group] {
+        margin-top: 0;
+        padding-top: 0;
+    }
+
+    &--grouped:not(.bb-admin-settings-form__field--full-width) {
+        border-bottom: none;
+        padding-bottom: 12px;
+
+        // Last field in a group restores the bottom border.
+        &:has(+ :not([data-group])),
+        &:has(+ .bb-admin-settings-form__field:not(.bb-admin-settings-form__field--grouped)),
+        &:last-child {
+            border-bottom: 1px solid $bb-border-secondary-color;
+            padding-bottom: 24px;
+        }
+    }
+
+    // No-label fields: indent content to align with parent's content area.
+    &--no-label {
+        .bb-admin-settings-form__field-content {
+            flex: 1;
+            // 245px (label width) + 32px (gap) = 277px offset to align with sibling field content.
+            margin-left: 277px;
+        }
+    }
+
     .bb-admin-reaction-info {
         color: $bb-text-tertiary-color;
         font-size: 13px;

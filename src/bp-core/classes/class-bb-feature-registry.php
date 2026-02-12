@@ -619,7 +619,7 @@ class BB_Feature_Registry {
 			);
 		}
 
-		if ( empty( $args['label'] ) ) {
+		if ( ! isset( $args['label'] ) ) {
 			return new WP_Error(
 				'missing_field_label',
 				sprintf(

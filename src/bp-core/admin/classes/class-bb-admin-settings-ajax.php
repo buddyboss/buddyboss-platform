@@ -493,6 +493,8 @@ class BB_Admin_Settings_Ajax {
 				'description_controls'  => $field['description_controls'] ?? null,
 				// Help text displayed below description in lighter style.
 				'help_text'             => $field['help_text'] ?? null,
+				// Group ID for visual grouping of related fields (removes borders between them).
+				'group'                 => $field['group'] ?? null,
 			);
 
 			// Auto-compute pro_notice for pro_only fields when not set at registration time.
