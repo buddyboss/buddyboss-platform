@@ -2966,8 +2966,11 @@ function bb_add_max_depth_class_to_comment_ul( $ul_html ) {
 	// The UL being created will contain comments at depth = current_depth + 1.
 	// If current_depth + 1 equals max_depth, this UL is the max level.
 	if ( ( $current_depth + 1 ) === $max_depth ) {
-		// Add the max-depth class to the UL.
-		$ul_html = str_replace( '<ul ', '<ul class="bb-threaded-level-max" ', $ul_html );
+		if ( false !== strpos( $ul_html, 'class="' ) ) {
+			$ul_html = str_replace( 'class="', 'class="bb-threaded-level-max ', $ul_html );
+		} else {
+			$ul_html = str_replace( '<ul ', '<ul class="bb-threaded-level-max" ', $ul_html );
+		}
 	}
 
 	return $ul_html;

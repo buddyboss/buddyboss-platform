@@ -299,9 +299,11 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 	);
 
 	// Comment threading settings for JavaScript.
+	$threading_enabled = bb_is_activity_comment_threading_enabled();
+
 	$activity_params['comment_threading'] = array(
-		'enabled'   => bb_is_activity_comment_threading_enabled(),
-		'max_depth' => bb_is_activity_comment_threading_enabled() ? (int) bb_get_activity_comment_threading_depth() : 1,
+		'enabled'   => $threading_enabled,
+		'max_depth' => $threading_enabled ? (int) bb_get_activity_comment_threading_depth() : 1,
 	);
 
 	$params['activity'] = array(

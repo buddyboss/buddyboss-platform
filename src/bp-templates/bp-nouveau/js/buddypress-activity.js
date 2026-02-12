@@ -1508,17 +1508,11 @@ window.bp = window.bp || {};
 							var $clickedComment = $searchContext.find( '[data-bp-activity-comment-id="' + item_id + '"]' );
 							var commentDepth = $clickedComment.parents( '.activity-comments > ul li.comment-item' ).length + 1;
 
-							// If at max depth, find the actual parent and position form after the last sibling.
+							// If at max depth, position form at the parent level (server redirects reply to parent).
 							if ( commentDepth >= maxDepth ) {
 								var $parentComment = $clickedComment.parent().closest( 'li.comment-item' );
 								if ( $parentComment.length ) {
-									// Find the last direct child comment of the parent.
-									var $siblings = $parentComment.children( 'ul' ).children( 'li.comment-item' );
-									if ( $siblings.length ) {
-										$targetComment = $siblings.last();
-									} else {
-										$targetComment = $clickedComment;
-									}
+									$targetComment = $parentComment;
 								} else {
 									$targetComment = $clickedComment;
 								}
@@ -1795,7 +1789,7 @@ window.bp = window.bp || {};
 
 							// If the parent was redirected (due to max depth), find the correct parent element.
 							if ( wasParentRedirected ) {
-								var $searchContext = isInsideModal ? $( '#activity-modal' ) : $( document );
+								var $searchContext = isInsideModal ? $( '#activity-modal' ) : ( isInsideMediaTheatre ? $( '.bb-internal-model' ) : $( document ) );
 								// Find the actual parent comment element or activity comments container.
 								if ( actualParentId === parseInt( activity_id, 10 ) ) {
 									// Parent is the root activity, insert in main activity-comments.
