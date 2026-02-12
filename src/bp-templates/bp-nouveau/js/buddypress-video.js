@@ -2541,7 +2541,10 @@ window.bp = window.bp || {};
 			}
 
 			if ( $( '.bb-media-model-wrapper.video .bb-media-section' ).find( 'video' ).length ) {
-				videojs( $('.bb-media-model-wrapper.video .bb-media-section').find('video').attr('id') ).reset();
+				// Check if videojs is available before using it
+				if ( typeof videojs !== 'undefined' ) {
+					videojs( $('.bb-media-model-wrapper.video .bb-media-section').find('video').attr('id') ).reset();
+				}
 			}
 			$('.bb-media-model-wrapper').hide();
 			self.is_open_video = false;
@@ -3340,6 +3343,16 @@ window.bp = window.bp || {};
 					var player_id 	= $( this ).attr( 'id' );
 
 					var videoIndex                   = $( this ).attr( 'id' );
+					
+					// Check if videojs is available before using it
+					if ( typeof videojs === 'undefined' ) {
+						console.warn( 'VideoJS is not loaded yet. Retrying in 100ms...' );
+						setTimeout( function() {
+							bp.Nouveau.Video.openPlayer();
+						}, 100 );
+						return;
+					}
+					
 					player[ $( this ).attr( 'id' ) ] = videojs(
 						self,
 						options,

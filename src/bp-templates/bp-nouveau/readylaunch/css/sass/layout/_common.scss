@@ -568,6 +568,11 @@
 	gap: var(--bb-rl-space-200);
 	justify-content: flex-end;
 
+	.bb-rl-groups &,
+	.bb-rl-members & {
+		flex: auto;
+	}
+
 	.bb-rl-skeleton-data-bit {
 		height: var(--bb-rl-space-300);
 

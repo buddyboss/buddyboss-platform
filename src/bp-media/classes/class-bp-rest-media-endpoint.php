@@ -621,13 +621,30 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 					);
 				}
 
-				$album_privacy = bb_media_user_can_access( $parent_album->id, 'album' );
-				if ( true === $retval && true !== (bool) $album_privacy['can_add'] ) {
+				// If the album is not a group album, check if the user has permission to add media to the album.
+				if ( 'grouponly' !== $parent_album->privacy ) {
+					$album_privacy = bb_media_user_can_access( $parent_album->id, 'album' );
+					if ( true === $retval && true !== (bool) $album_privacy['can_add'] ) {
+						$retval = new WP_Error(
+							'bp_rest_invalid_permission',
+							__( 'You don\'t have a permission to create a media inside this album.', 'buddyboss' ),
+							array(
+								'status' => rest_authorization_required_code(),
+							)
+						);
+					}
+				} elseif (
+					'grouponly' === $parent_album->privacy &&
+					(
+						empty( $request['group_id'] ) ||
+						(int) $request['group_id'] !== (int) $parent_album->group_id
+					)
+				) {
 					$retval = new WP_Error(
 						'bp_rest_invalid_permission',
-						__( 'You don\'t have a permission to create a media inside this album.', 'buddyboss' ),
+						__( 'Invalid request. Group not associated with the respective album.', 'buddyboss' ),
 						array(
-							'status' => rest_authorization_required_code(),
+							'status' => 404,
 						)
 					);
 				}
