@@ -43,7 +43,8 @@ function bb_activity_register_comments_panel_fields( $edit_time_options ) {
 			'name'              => '_bb_enable_activity_comments',
 			'label'             => __( 'Enable Comments', 'buddyboss' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Allow members to comment on activity posts. Comments on an individual activity post can be closed or disabled all together by site admins.', 'buddyboss' ),
+			'description'       => __( 'Allow members to comment on activity posts', 'buddyboss' ),
+			'help_text'         => __( 'Comments on an individual activity post can be closed or disabled all together by site admins.', 'buddyboss' ),
 			'default'           => bb_is_activity_comments_enabled(),
 			'sanitize_callback' => 'intval',
 			'order'             => 10,
@@ -59,7 +60,7 @@ function bb_activity_register_comments_panel_fields( $edit_time_options ) {
 			'name'                 => '_bb_enable_activity_comment_edit',
 			'label'                => __( 'Edit Activity Comments', 'buddyboss' ),
 			'type'                 => 'toggle',
-			'description'          => __( 'Allow members to edit their activity comments for a duration of %s', 'buddyboss' ),
+			'description'          => __( 'Allow members to edit their comment for a duration of %s', 'buddyboss' ),
 			'default'              => bb_is_activity_comment_edit_enabled(),
 			'sanitize_callback'    => 'intval',
 			'description_controls' => array(
@@ -75,7 +76,7 @@ function bb_activity_register_comments_panel_fields( $edit_time_options ) {
 		)
 	);
 
-	// FIELD: Comment Visibility (select rendered inline in description via description_controls).
+	// FIELD: Comment Visibility (toggle with inline select in description).
 	bb_register_feature_field(
 		'activity',
 		'activity_comments',
@@ -84,7 +85,8 @@ function bb_activity_register_comments_panel_fields( $edit_time_options ) {
 			'name'                 => '_bb_activity_comment_visibility',
 			'label'                => __( 'Comment Visibility', 'buddyboss' ),
 			'type'                 => 'toggle',
-			'description'          => __( 'Display a maximum %s comments per post in activity feeds. Load more using the "View more comments" links. Higher comment counts will increase the time it takes members to scroll through activity feeds. This only applies to platform not app.', 'buddyboss' ),
+			'description'          => __( 'Display a maximum %s comments per post in activity feeds', 'buddyboss' ),
+			'help_text'            => __( 'Load more via "View more comments." High comment counts may slow scrolling. Applies to platform only, not app.', 'buddyboss' ),
 			'default'              => bb_get_activity_comment_visibility(),
 			'options'              => array(
 				array(
@@ -131,7 +133,8 @@ function bb_activity_register_comments_panel_fields( $edit_time_options ) {
 			'name'                 => '_bb_enable_activity_comment_threading',
 			'label'                => __( 'Comment Threading', 'buddyboss' ),
 			'type'                 => 'toggle',
-			'description'          => __( 'Organize replies into threads %s levels deep. Replies to an activity comment will be shown in separate threads, except when replying to a comment at the deepest level. This only applies to platform not app.', 'buddyboss' ),
+			'description'          => __( 'Organize replies into threads %s levels deep', 'buddyboss' ),
+			'help_text'            => __( 'Replies to activity comments appear in threads, except for replies at the deepest level. Applies to platform only, not app.', 'buddyboss' ),
 			'default'              => bb_is_activity_comment_threading_enabled(),
 			'sanitize_callback'    => 'intval',
 			'description_controls' => array(
@@ -164,7 +167,7 @@ function bb_activity_register_comments_panel_fields( $edit_time_options ) {
 		)
 	);
 
-	// FIELD: Comments Loading (select rendered inline in description via description_controls).
+	// FIELD: Comments Loading (inline select in description via description_controls).
 	bb_register_feature_field(
 		'activity',
 		'activity_comments',
@@ -172,8 +175,9 @@ function bb_activity_register_comments_panel_fields( $edit_time_options ) {
 		array(
 			'name'                 => '_bb_activity_comment_loading',
 			'label'                => __( 'Comments Loading', 'buddyboss' ),
-			'type'                 => 'select',
-			'description'          => __( 'Load %s additional comments on each request. Increasing the number may negatively impact site performance.', 'buddyboss' ),
+			'type'                 => '',
+			'description'          => __( 'Load %s Additional comments on each request', 'buddyboss' ),
+			'help_text'            => __( 'Increasing the number of comments retrieved in each request may negatively impact site performance.', 'buddyboss' ),
 			'default'              => bb_get_activity_comment_loading(),
 			'options'              => array(
 				array(
@@ -218,14 +222,10 @@ function bb_activity_register_comments_panel_fields( $edit_time_options ) {
 		'activity_comments',
 		array(
 			'name'        => 'bb_activity_comments_info',
-			'label'       => '',
+			'label'       => 'Notice',
 			'type'        => 'notice',
 			'notice_type' => 'info',
-			'description' => sprintf(
-				/* translators: %s: Link to WordPress Discussion settings */
-				__( 'Comments on WordPress Posts and Custom Post Types will inherit from your WordPress %s settings.', 'buddyboss' ),
-				'<a href="' . esc_url( admin_url( 'options-discussion.php' ) ) . '" target="_blank">' . __( 'Discussion', 'buddyboss' ) . '</a>'
-			),
+			'description' => __( 'Comments on WordPress Posts and Custom Post Types will inherit from your WordPress Discussion settings.', 'buddyboss' ),
 			'order'       => 60,
 		)
 	);
