@@ -276,6 +276,13 @@
     }
 }
 
+.bb-admin-settings-field__checkbox-list-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    max-width: 656px;
+}
+
 .bb-admin-settings-field__checkbox-list-item {
     display: flex;
     align-items: center;
@@ -517,6 +524,22 @@
                     display: none;
                 }
             }
+        }
+    }
+
+    // Checkbox control inside card footer (used by checkbox_cards field type).
+    .bb_emotions_footer .components-checkbox-control {
+        margin-bottom: 0;
+        flex-shrink: 0;
+
+        .components-base-control__field {
+            margin-bottom: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .components-checkbox-control__input-container {
+            margin-right: 0;
         }
     }
 

@@ -83,15 +83,16 @@ function bb_sanitize_sharing_platforms( $value ) {
 		return array();
 	}
 
-	$allowed   = array( 'messenger', 'whatsapp', 'facebook', 'twitter', 'linkedin' );
-	$sanitized = array();
+	$allowed = array( 'messenger', 'whatsapp', 'facebook', 'twitter', 'linkedin' );
+	$enabled = array();
 	foreach ( $value as $key => $val ) {
-		if ( in_array( $key, $allowed, true ) ) {
-			$sanitized[ $key ] = absint( $val );
+		if ( in_array( $key, $allowed, true ) && absint( $val ) ) {
+			$enabled[] = $key;
 		}
 	}
 
-	return $sanitized;
+	// Save as indexed array (legacy format) so both legacy and Settings 2.0 can read it.
+	return $enabled;
 }
 
 /**

@@ -428,6 +428,35 @@ class BB_Admin_Settings_Ajax {
 				$field_value = $toggle_values;
 			}
 
+			/*
+			 * Handle share_platforms (stored as indexed array of enabled platform slugs).
+			 * Legacy format: ['messenger', 'facebook', 'twitter'] — only checked platforms.
+			 * Converts to { messenger: 1, facebook: 1, twitter: 1, linkedin: 0 } for React.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 */
+			if ( 'share_platforms' === ( $field['type'] ?? '' ) ) {
+				$blog_id      = function_exists( 'bp_get_root_blog_id' ) ? bp_get_root_blog_id() : get_current_blog_id();
+				$stored_value = get_blog_option( $blog_id, $field['name'], null );
+
+				// Only use field defaults when option doesn't exist at all.
+				if ( null === $stored_value ) {
+					$stored_value = $field['default'] ?? array();
+				}
+
+				if ( ! is_array( $stored_value ) ) {
+					$stored_value = array();
+				}
+
+				// Convert an indexed array of enabled slugs to key => 0/1 for React.
+				$toggle_values = array();
+				foreach ( $field['options'] ?? array() as $option ) {
+					$option_key                   = $option['value'];
+					$toggle_values[ $option_key ] = in_array( $option_key, $stored_value, true ) ? 1 : 0;
+				}
+				$field_value = $toggle_values;
+			}
+
 			// Single toggle/checkbox: normalize to 0|1 so React's !!value shows off when stored is 0 (not string "0").
 			if ( in_array( $field['type'] ?? '', array( 'toggle', 'checkbox' ), true ) ) {
 				$field_value = absint( $field_value );

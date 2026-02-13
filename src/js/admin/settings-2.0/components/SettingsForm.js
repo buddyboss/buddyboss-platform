@@ -28,6 +28,7 @@ import {
 	MigrationModal,
 } from './reaction';
 import { TopicListField } from './activity/topics/topic-list';
+import { SharePlatformsField } from './activity/sharing';
 
 /**
  * Settings Form Component (matching Figma settingsSection)
@@ -262,6 +263,16 @@ export function SettingsForm({ fields, values, onChange }) {
 							)}
 						</Droppable>
 					</DragDropContext>
+				);
+
+			case 'share_platforms':
+				// Delegate to SharePlatformsField component (same pattern as reaction_mode).
+				return (
+					<SharePlatformsField
+						field={field}
+						value={value}
+						onChange={onChange}
+					/>
 				);
 
 			case 'text':
@@ -870,7 +881,7 @@ export function SettingsForm({ fields, values, onChange }) {
 					{/* Description: skip for notice type (rendered by notice component itself).
 				    When description contains %s and field has description_controls,
 				    render inline controls (select, text, number) in place of each %s placeholder. */}
-					{ field.description && -1 === [ 'notice', 'checkbox_list', 'topic_list' ].indexOf( field.type ) && ( () => {
+					{ field.description && -1 === [ 'notice', 'checkbox_list', 'share_platforms', 'topic_list' ].indexOf( field.type ) && ( () => {
 						const desc = field.description;
 						const controls = field.description_controls;
 						const hasControls = desc.indexOf( '%s' ) !== -1 && controls && controls.length > 0;
