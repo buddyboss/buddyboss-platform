@@ -65,7 +65,8 @@ add_action(
 			require_once __DIR__ . '/classes/class-bb-reaction.php';
 		}
 
-		if ( file_exists( __DIR__ . '/classes/class-bb-rest-reactions-endpoint.php' ) ) {
+		// Only load REST endpoint class when the API plugin is not active (it provides its own copy).
+		if ( function_exists( 'bp_rest_in_buddypress' ) && bp_rest_in_buddypress() && file_exists( __DIR__ . '/classes/class-bb-rest-reactions-endpoint.php' ) ) {
 			require_once __DIR__ . '/classes/class-bb-rest-reactions-endpoint.php';
 		}
 
@@ -86,6 +87,17 @@ add_action(
 		);
 	},
 	5
+);
+
+// Register Reactions REST API endpoint (only when API plugin is not active).
+add_action(
+	'bp_rest_api_init',
+	function () {
+		if ( bp_rest_in_buddypress() && class_exists( 'BB_REST_Reactions_Endpoint' ) ) {
+			$controller = new BB_REST_Reactions_Endpoint();
+			$controller->register_routes();
+		}
+	}
 );
 
 // Load Settings 2.0 configuration (side panels, sections, fields).
