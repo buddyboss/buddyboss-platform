@@ -694,34 +694,32 @@ class BB_Admin_Settings_Ajax {
 		foreach ( $all_fields as $field_key => $field ) {
 			$name = $field['name'];
 
-			// Only save settings that were submitted.
-			if ( ! array_key_exists( $name, $settings ) ) {
-				continue;
-			}
+			// Save the main field if it was submitted.
+			if ( array_key_exists( $name, $settings ) ) {
+				$value = $settings[ $name ];
 
-			$value = $settings[ $name ];
-
-			// Apply registered sanitize callback if present.
-			if ( ! empty( $field['sanitize_callback'] ) && is_callable( $field['sanitize_callback'] ) ) {
-				$value = call_user_func( $field['sanitize_callback'], $value );
-			}
-
-			// toggle_list with option_prefix: persist each key to option_prefix + key (e.g. bp-feed-platform-{key}).
-			if ( 'toggle_list' === ( $field['type'] ?? '' ) && ! empty( $field['option_prefix'] ) && is_array( $value ) ) {
-				$prefix = $field['option_prefix'];
-				foreach ( $value as $opt_key => $opt_val ) {
-					$opt_name = $prefix . $opt_key;
-					bp_update_option( $opt_name, absint( $opt_val ) );
+				// Apply registered sanitize callback if present.
+				if ( ! empty( $field['sanitize_callback'] ) && is_callable( $field['sanitize_callback'] ) ) {
+					$value = call_user_func( $field['sanitize_callback'], $value );
 				}
-				$saved[ $name ] = $value;
-			} else {
-				// BuddyBoss stores options via bp_update_option (same storage as legacy).
-				bp_update_option( $name, $value );
-				$saved[ $name ] = $value;
+
+				// toggle_list with option_prefix: persist each key to option_prefix + key (e.g. bp-feed-platform-{key}).
+				if ( 'toggle_list' === ( $field['type'] ?? '' ) && ! empty( $field['option_prefix'] ) && is_array( $value ) ) {
+					$prefix = $field['option_prefix'];
+					foreach ( $value as $opt_key => $opt_val ) {
+						$opt_name = $prefix . $opt_key;
+						bp_update_option( $opt_name, absint( $opt_val ) );
+					}
+					$saved[ $name ] = $value;
+				} else {
+					// BuddyBoss stores options via bp_update_option (same storage as legacy).
+					bp_update_option( $name, $value );
+					$saved[ $name ] = $value;
+				}
 			}
 
 			// Handle description_controls: save each control's value alongside the main field.
-			// Each control maps to one %s placeholder in description (in order). Use %s, not %1$s/%2$s.
+			// Runs even when the parent field is not submitted (e.g. only the inline select changed).
 			if ( ! empty( $field['description_controls'] ) && is_array( $field['description_controls'] ) ) {
 				foreach ( $field['description_controls'] as $control ) {
 					// 'self' type uses the field's own name — already saved above.
