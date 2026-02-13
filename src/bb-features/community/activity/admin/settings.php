@@ -20,6 +20,7 @@ require_once __DIR__ . '/settings-activity.php';
 require_once __DIR__ . '/settings-comments.php';
 require_once __DIR__ . '/settings-topics.php';
 require_once __DIR__ . '/settings-visibility.php';
+require_once __DIR__ . '/settings-sharing.php';
 
 /**
  * Register Activity feature settings in Feature Registry.
@@ -122,6 +123,22 @@ function bb_admin_settings_register_activity_settings() {
 		)
 	);
 
+	// Side Panel 5: Activity Sharing.
+	bb_register_side_panel(
+		'activity',
+		'activity_sharing',
+		array(
+			'title'      => __( 'Activity Sharing', 'buddyboss' ),
+			'icon'       => array(
+				'type'  => 'font',
+				'class' => 'bb-icons-rl bb-icons-rl-share-network',
+			),
+			'help_url'   => '',
+			'order'      => 50,
+			'is_default' => false,
+		)
+	);
+
 	// Side Panel: All Activities (navigation link).
 	bb_register_side_panel(
 		'activity',
@@ -165,6 +182,9 @@ function bb_admin_settings_register_activity_settings() {
 
 	// Panel 4: Posts Visibility.
 	bb_activity_register_visibility_panel_fields();
+
+	// Panel 5: Activity Sharing.
+	bb_activity_register_sharing_panel_fields();
 
 	/**
 	 * Fires after all Activity settings panels are registered.

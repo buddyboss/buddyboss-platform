@@ -68,6 +68,33 @@ function bb_activity_sanitize_comment_edit_time( $value ) {
 }
 
 /**
+ * Sanitize sharing platforms checkbox_list.
+ *
+ * Expects an associative array where keys are platform slugs and values are 0/1.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed $value The value to sanitize.
+ *
+ * @return array Sanitized array of platform_slug => 0|1.
+ */
+function bb_sanitize_sharing_platforms( $value ) {
+	if ( ! is_array( $value ) ) {
+		return array();
+	}
+
+	$allowed   = array( 'messenger', 'whatsapp', 'facebook', 'twitter', 'linkedin' );
+	$sanitized = array();
+	foreach ( $value as $key => $val ) {
+		if ( in_array( $key, $allowed, true ) ) {
+			$sanitized[ $key ] = absint( $val );
+		}
+	}
+
+	return $sanitized;
+}
+
+/**
  * Sanitize sortable toggle list options (activity filters, timeline filters, sorting).
  *
  * Expects an associative array where keys are option slugs and values are 0/1.
