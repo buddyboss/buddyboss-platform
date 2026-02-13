@@ -151,8 +151,11 @@ export function TopicListField( { field, value, values, onChange } ) {
 			setIsSaving( false );
 			if ( response.success && response.data && response.data.content && response.data.content.topic ) {
 				var updatedTopic = response.data.content.topic;
+				// Compare using the original topic_id sent in the request,
+				// because editing a topic name may create a new topic_id.
+				var originalTopicId = String( data.topic_id );
 				var updatedTopics = topics.map( function ( t ) {
-					if ( String( t.topic_id ) === String( updatedTopic.topic_id ) ) {
+					if ( String( t.topic_id ) === originalTopicId ) {
 						return updatedTopic;
 					}
 					return t;

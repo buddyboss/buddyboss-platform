@@ -25,7 +25,8 @@ import { __ } from '@wordpress/i18n';
  * @returns {JSX.Element} Topic item component.
  */
 export function TopicItem( { topic, onEdit, onDelete, dragHandleProps, isDragging, isDragOver } ) {
-	var permissionLabel = 'mods_admins' === topic.permission_type
+	var pType = topic.permission_type;
+	var permissionLabel = 'mods_admins' === pType || 'Admins' === pType
 		? __( 'Admins', 'buddyboss' )
 		: __( 'Anyone', 'buddyboss' );
 

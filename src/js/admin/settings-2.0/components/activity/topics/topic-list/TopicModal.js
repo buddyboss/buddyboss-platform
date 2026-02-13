@@ -28,7 +28,12 @@ import { __ } from '@wordpress/i18n';
 export function TopicModal( { isOpen, onClose, onSave, topic, isSaving } ) {
 	var isEditing = !! topic;
 	var initialName = isEditing ? ( topic.name || '' ) : '';
-	var initialPermission = isEditing ? ( topic.permission_type || 'anyone' ) : 'anyone';
+	// Normalize permission_type: the AJAX response may return display labels
+	// ('Admins', 'Anyone') instead of raw values ('mods_admins', 'anyone').
+	var rawPermission = isEditing ? ( topic.permission_type || 'anyone' ) : 'anyone';
+	var initialPermission = 'mods_admins' === rawPermission || 'Admins' === rawPermission
+		? 'mods_admins'
+		: 'anyone';
 
 	var nameState = useState( initialName );
 	var name = nameState[ 0 ];
@@ -46,7 +51,12 @@ export function TopicModal( { isOpen, onClose, onSave, topic, isSaving } ) {
 	useEffect( function () {
 		if ( isOpen ) {
 			setName( isEditing ? ( topic.name || '' ) : '' );
-			setPermission( isEditing ? ( topic.permission_type || 'anyone' ) : 'anyone' );
+			var resetPermission = isEditing ? ( topic.permission_type || 'anyone' ) : 'anyone';
+			setPermission(
+				'mods_admins' === resetPermission || 'Admins' === resetPermission
+					? 'mods_admins'
+					: 'anyone'
+			);
 			setError( '' );
 		}
 	}, [ isOpen, topic ] );
