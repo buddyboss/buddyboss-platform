@@ -75,7 +75,7 @@ select.bb-admin-settings__select {
 	}
 }
 
-.bb-admin-settings-form {
+.buddyboss_page_bb-settings {
     
     .components-form-toggle {
         width: 30px;
@@ -110,25 +110,35 @@ select.bb-admin-settings__select {
 }
 
 /* Radio Buttons */
-.bb-admin-settings-form {
+.buddyboss_page_bb-settings {
     
-    input[type="radio"] {
-        border-color: $bb-background-brand-primary-color;
+    input[type="radio"],
+	.components-radio-control__input {
+        border: 1px solid $bb-background-brand-primary-color !important;
         height: 18px;
         width: 18px;
+		max-width: initial;
 
-        &:checked::before {
-            height: 12px;
-            width: 12px;
-            background-color: $bb-background-brand-primary-color;
-            border-radius: 50%;
-            margin: 2px;
-        }
+        &:checked {
+			background-color: transparent;
+			border: 1px solid $bb-background-brand-primary-color !important;
+
+			&::before {
+				height: 12px;
+				width: 12px;
+				background-color: $bb-background-brand-primary-color;
+				border-radius: 50%;
+				margin: 2px;
+				border: none;
+				position: static;
+				transform: none;
+			}
+		}
     }
 }
 
 /* Checkbox */
-.bb-admin-settings-form .components-checkbox-control__input {
+.buddyboss_page_bb-settings .components-checkbox-control__input {
     border-color: $bb-border-quaternary-color;
     border-radius: $bb-border-radius-sm;
 
@@ -136,6 +146,19 @@ select.bb-admin-settings__select {
         background-color: $bb-background-brand-primary-color;
         border-color: $bb-background-brand-primary-color;
     }
+}
+
+/* Inputs */
+.buddyboss_page_bb-settings  .components-text-control__input {
+	background-color: $bb-background-primary-color;
+	border-color: $bb-border-tertiary-color;
+	border-radius: $bb-border-radius-md;
+	color: $bb-text-color;
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 1.4;
+	padding: 6px 12px;
+	box-shadow: none;
 }
 
 /* WordPress DropdownMenu */
@@ -374,7 +397,7 @@ select.bb-admin-settings__select {
 		.components-button {
 
 			&.is-secondary {
-				background-color: $bb-background-base-color;
+				background-color: $bb-background-secondary-color;
 				border-color: $bb-border-secondary-color;
 				color: $bb-text-color;
 				font-size: 14px;

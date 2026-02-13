@@ -1230,6 +1230,19 @@
         padding: 16px 24px;
         border-top: 1px solid $bb-border-secondary-color;
     }
+
+    .bb-topic-modal__permission-label,
+    .components-base-control__label {
+        color: $bb-text-secondary-color;
+        font-size: 13px;
+        font-weight: 400;
+        text-transform: none;
+    }
+
+    .components-radio-control__group-wrapper {
+        flex-direction: row;
+        justify-content: flex-start;
+    }
 }
 
 /* Topic Delete Modal */
