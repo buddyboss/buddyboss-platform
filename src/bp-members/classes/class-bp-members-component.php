@@ -517,18 +517,7 @@ class BP_Members_Component extends BP_Component {
 			'BP_REST_Members_Details_Endpoint',
 			'BP_REST_Attachments_Member_Avatar_Endpoint',
 			'BB_REST_Subscriptions_Endpoint',
-			'BB_REST_Reactions_Endpoint',
 		);
-
-		// Remove reactions endpoint if class doesn't exist (feature disabled).
-		if ( ! class_exists( 'BB_REST_Reactions_Endpoint' ) ) {
-			$controllers = array_filter(
-				$controllers,
-				function ( $c ) {
-					return 'BB_REST_Reactions_Endpoint' !== $c;
-				}
-			);
-		}
 
 		if ( function_exists( 'bp_core_get_suggestions' ) ) {
 			$controllers[] = 'BP_REST_Mention_Endpoint';

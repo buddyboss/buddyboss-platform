@@ -66,6 +66,7 @@
 	&.components-modal__frame {
 		border-radius: $bb-border-radius-xl;
 		max-width: 850px;
+		width: 100%;
 	}
 
 	.components-modal__header {
@@ -143,6 +144,10 @@
 					list-style: none;
 					padding: 0;
 				}
+			}
+
+			h3 {
+				margin: 0 0 10px 0;
 			}
 
 			.text-center {
