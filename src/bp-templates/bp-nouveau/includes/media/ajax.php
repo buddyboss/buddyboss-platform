@@ -784,12 +784,10 @@ function bp_nouveau_ajax_media_album_save() {
 
 	$user_id = bp_loggedin_user_id();
 	if ( $id ) {
-		$has_access = bp_album_user_can_edit( $id );
-
-		if ( ! $has_access ) {
+		if ( ! bp_album_user_can_edit( $id ) ) {
 			$response['feedback'] = sprintf(
-				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-				esc_html__( "You don't have a permission to rename the album.", 'buddyboss' )
+				'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+				esc_html__( 'You don\'t have permission to edit this album.', 'buddyboss' )
 			);
 			wp_send_json_error( $response );
 		}
