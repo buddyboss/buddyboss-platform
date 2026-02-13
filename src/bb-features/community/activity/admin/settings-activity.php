@@ -105,19 +105,27 @@ function bb_activity_register_settings_panel_fields() {
 	);
 
 	// FIELD: Activity auto-refresh.
+	$heartbeat_disabled = '1' === get_option( 'bp_wp_heartbeat_disabled' );
+	$heartbeat_args     = array(
+		'name'              => '_bp_enable_heartbeat_refresh',
+		'label'             => __( 'Activity auto-refresh', 'buddyboss' ),
+		'type'              => 'toggle',
+		'description'       => __( 'Automatically check for new activity posts', 'buddyboss' ),
+		'default'           => bp_is_activity_heartbeat_active(),
+		'sanitize_callback' => 'intval',
+		'order'             => 40,
+	);
+
+	if ( $heartbeat_disabled ) {
+		$heartbeat_args['disabled']  = true;
+		$heartbeat_args['help_text'] = __( 'This feature requires the WordPress <a href="https://developer.wordpress.org/plugins/javascript/heartbeat-api/" target="_blank">Heartbeat API</a> to function, which is disabled on your server.', 'buddyboss' );
+	}
+
 	bb_register_feature_field(
 		'activity',
 		'activity_settings',
 		'activity_settings',
-		array(
-			'name'              => '_bp_enable_heartbeat_refresh',
-			'label'             => __( 'Activity auto-refresh', 'buddyboss' ),
-			'type'              => 'toggle',
-			'description'       => __( 'Automatically check for new activity posts', 'buddyboss' ),
-			'default'           => bp_is_activity_heartbeat_active(),
-			'sanitize_callback' => 'intval',
-			'order'             => 40,
-		)
+		$heartbeat_args
 	);
 
 	// FIELD: Close Comments.

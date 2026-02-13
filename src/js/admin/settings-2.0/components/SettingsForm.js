@@ -791,8 +791,8 @@ export function SettingsForm({ fields, values, onChange }) {
 			return null;
 		}
 
-		// Check if field should be disabled (parent toggle is OFF)
-		const disabled = isFieldDisabled(field);
+		// Check if field should be disabled (parent toggle is OFF or field-level disabled flag).
+		const disabled = isFieldDisabled(field) || !!field.disabled;
 
 		// Render the control first — if it returns null, skip the entire field row.
 		const controlOutput = renderFieldControl(field, disabled);

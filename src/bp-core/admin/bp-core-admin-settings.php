@@ -216,59 +216,6 @@ function bp_posts_in_activity_tutorial() {
 }
 
 /**
- * Allow Heartbeat to refresh activity stream.
- *
- * @since BuddyPress 2.0.0
- */
-function bp_admin_setting_callback_heartbeat() {
-	// NOTE: this request is made to check for Heartbeat API on front end if it enabled or not.
-	wp_remote_get( bp_core_get_user_domain( bp_loggedin_user_id() ) );
-	$heartbeat_disabled = get_option( 'bp_wp_heartbeat_disabled' );
-	?>
-
-	<input id="_bp_enable_heartbeat_refresh" name="_bp_enable_heartbeat_refresh" type="checkbox" value="1"
-	<?php
-	if ( '1' != $heartbeat_disabled ) {
-		checked( bp_is_activity_heartbeat_active( true ) );
-	} else {
-		echo 'disabled="disabled"'; }
-	?>
-	/>
-	<label for="_bp_enable_heartbeat_refresh"><?php esc_html_e( 'Automatically check for new activity posts', 'buddyboss' ); ?></label>
-	<?php if ( '1' == $heartbeat_disabled ) { ?>
-		<p class="description"><?php _e( 'This feature requires the WordPress <a href="https://developer.wordpress.org/plugins/javascript/heartbeat-api/" target="_blank">Heartbeat API</a> to function, which is disabled on your server.', 'buddyboss' ); ?></p>
-	<?php } ?>
-	<?php
-}
-
-/**
- * Enable activity edit
- *
- * @since BuddyBoss 1.5.0
- */
-function bp_admin_setting_callback_enable_activity_edit() {
-	$edit_times = bp_activity_edit_times();
-	$edit_time  = bp_get_activity_edit_time();
-	?>
-
-	<input id="_bp_enable_activity_edit" name="_bp_enable_activity_edit" type="checkbox" value="1" <?php checked( bp_is_activity_edit_enabled( false ) ); ?> />
-	<label for="_bp_enable_activity_edit"><?php esc_html_e( 'Allow members to edit their activity posts for a duration of', 'buddyboss' ); ?></label>
-
-	<select name="_bp_activity_edit_time">
-		<option value="-1"><?php esc_html_e( 'Forever', 'buddyboss' ); ?></option>
-		<?php
-		foreach ( $edit_times as $time ) {
-			$value      = isset( $time['value'] ) ? $time['value'] : 0;
-			$time_level = isset( $time['label'] ) ? $time['label'] : 0;
-			echo '<option value="' . esc_attr( $value ) . '" ' . selected( $edit_time, $value, false ) . '>' . esc_html( $time_level ) . '</option>';
-		}
-		?>
-	</select>
-
-	<?php
-}
-
-/**
  * Enable relevant activity.
  *
  * @since BuddyBoss 1.5.5

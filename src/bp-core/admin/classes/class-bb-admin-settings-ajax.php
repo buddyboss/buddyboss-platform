@@ -512,42 +512,44 @@ class BB_Admin_Settings_Ajax {
 			}
 
 			$field_data = array(
-				'name'          => $field['name'],
-				'label'         => $field['label'],
-				'type'          => $field['type'] ?? 'text',
-				'description'   => $field['description'] ?? '',
-				'default'       => $field['default'] ?? '',
-				'options'       => $field['options'] ?? array(),
-				'conditional'   => $field['conditional'] ?? null,
-				'pro_only'      => $field['pro_only'] ?? false,
-				'license_tier'  => $field['license_tier'] ?? 'free',
-				'order'         => $field['order'] ?? 100,
-				'value'         => $field_value,
+				'name'                 => $field['name'],
+				'label'                => $field['label'],
+				'type'                 => $field['type'] ?? 'text',
+				'description'          => $field['description'] ?? '',
+				'default'              => $field['default'] ?? '',
+				'options'              => $field['options'] ?? array(),
+				'conditional'          => $field['conditional'] ?? null,
+				'pro_only'             => $field['pro_only'] ?? false,
+				'license_tier'         => $field['license_tier'] ?? 'free',
+				'order'                => $field['order'] ?? 100,
+				'value'                => $field_value,
 				// Nested field support.
-				'parent_field'  => $field['parent_field'] ?? null,
-				'parent_value'  => $field['parent_value'] ?? null,
+				'parent_field'         => $field['parent_field'] ?? null,
+				'parent_value'         => $field['parent_value'] ?? null,
 				// Prefix/suffix text support.
-				'prefix'        => $field['prefix'] ?? null,
-				'suffix'        => $field['suffix'] ?? null,
+				'prefix'               => $field['prefix'] ?? null,
+				'suffix'               => $field['suffix'] ?? null,
 				// Toggle label (displayed next to toggle switch).
-				'toggle_label'  => $field['toggle_label'] ?? null,
+				'toggle_label'         => $field['toggle_label'] ?? null,
 				// Inline label for toggles (alias for toggle_label).
-				'inline_label'  => $field['inline_label'] ?? $field['toggle_label'] ?? null,
+				'inline_label'         => $field['inline_label'] ?? $field['toggle_label'] ?? null,
 				// Min/max for number fields.
-				'min'           => $field['min'] ?? null,
-				'max'           => $field['max'] ?? null,
+				'min'                  => $field['min'] ?? null,
+				'max'                  => $field['max'] ?? null,
 				// Invert value for "disable" toggles shown as "enable".
-				'invert_value'  => $field['invert_value'] ?? false,
+				'invert_value'         => $field['invert_value'] ?? false,
 				// PRO notice badge data (for pro_only fields).
-				'pro_notice'    => $field['pro_notice'] ?? null,
+				'pro_notice'           => $field['pro_notice'] ?? null,
 				// Notice type for notice fields (info, warning, error, success).
-				'notice_type'           => $field['notice_type'] ?? null,
+				'notice_type'          => $field['notice_type'] ?? null,
 				// Inline controls embedded in description (replaces %s placeholders).
-				'description_controls'  => $field['description_controls'] ?? null,
+				'description_controls' => $field['description_controls'] ?? null,
 				// Help text displayed below description in lighter style.
-				'help_text'             => $field['help_text'] ?? null,
+				'help_text'            => $field['help_text'] ?? null,
+				// Disabled flag to prevent user interaction.
+				'disabled'             => ! empty( $field['disabled'] ),
 				// Group ID for visual grouping of related fields (removes borders between them).
-				'group'                 => $field['group'] ?? null,
+				'group'                => $field['group'] ?? null,
 			);
 
 			// Auto-compute pro_notice for pro_only fields when not set at registration time.
