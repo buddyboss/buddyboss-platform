@@ -7,7 +7,7 @@
  * @since BuddyBoss 3.0.0
  */
 
-import { useState, useEffect, useRef, useCallback } from '@wordpress/element';
+import { useState, useEffect, useRef, useCallback, RawHTML } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { Spinner } from '@wordpress/components';
 import { getCachedFeatureData, setCachedFeatureData, invalidateFeatureCache } from '../utils/featureCache';
@@ -393,7 +393,9 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 											{/* Section Body */}
 											<div className="bb-admin-feature-settings__section-body">
 												{section.description && (
-													<p className="bb-admin-feature-settings__section-description" dangerouslySetInnerHTML={{ __html: section.description }} />
+													<RawHTML className="bb-admin-feature-settings__section-description">
+														{section.description}
+													</RawHTML>
 												)}
 												<SettingsForm
 													fields={section.fields || []}
