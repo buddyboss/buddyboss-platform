@@ -281,3 +281,28 @@ select.bb-admin-settings__select {
         }
     }
 }
+
+/* Notice */
+.bb-admin-notice {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    font-size: 13px;
+    font-weight: 400;
+    color: $bb-text-color;
+    border-radius: $bb-border-radius-lg;
+    background-color: $bb-background-primary-hover-color;
+    border: 1px solid $bb-border-tertiary-color;
+    border-radius: $bb-border-radius-lg;
+    margin-bottom: 16px;
+    width: 100%;
+
+    &:before {
+        content: "\e2ce";
+        color: $bb-icon-color;
+        font-size: 20px;
+        font-weight: 500;
+        font-family: bb-icons-rl;
+    }
+}
