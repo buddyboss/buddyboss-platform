@@ -304,6 +304,18 @@ body.bb-readylaunch-template {
 	.select2-container--rl.select2-container--open:has(.bb-rl-dropdown-align-adaptive) {
 		width: 100% !important;
 	}
+
+	.bb-rl-network-search-filter {
+
+		@media (min-width: 1000px) {
+
+			.bb-rl-dropdown-align-adaptive,
+			.select2-container .bb-rl-select2-dropdown.bb-rl-dropdown-align-adaptive {
+				left: 0;
+				right: unset;
+			}
+		}
+	}
 }
 
 .select2-container--bb-rl-select2 {

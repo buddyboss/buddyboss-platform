@@ -227,6 +227,10 @@
 		position: sticky;
 		z-index: calc(var(--bb-rl-z-index-fixed) - 1);
 
+		&:has(.bb-leave-group-popup.is-visible) {
+			z-index: var(--bb-rl-z-index-tooltip);
+		}
+
 		.admin-bar & {
 			top: 103px;
 		}
