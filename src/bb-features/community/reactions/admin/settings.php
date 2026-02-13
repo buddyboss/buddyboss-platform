@@ -112,7 +112,7 @@ function bb_admin_settings_register_reactions_settings() {
 				'activity'         => 1,
 				'activity_comment' => 1,
 			),
-			'sanitize_callback' => ! empty( $field_all_reactions['sanitize_callback'] ) && is_callable( $field_all_reactions['sanitize_callback'] ) ? $field_all_reactions['sanitize_callback'] : 'bb_reactions_sanitize_content_types',
+			'sanitize_callback' => 'bb_reactions_sanitize_content_types',
 			'order'             => 10,
 		)
 	);
@@ -211,7 +211,7 @@ function bb_admin_settings_register_reactions_settings() {
 			'description'       => '',
 			'options'           => $reaction_mode_options,
 			'default'           => function_exists( 'bb_get_reaction_mode' ) ? bb_get_reaction_mode() : 'likes',
-			'sanitize_callback' => ! empty( $field_reaction_mode['sanitize_callback'] ) && is_callable( $field_reaction_mode['sanitize_callback'] ) ? $field_reaction_mode['sanitize_callback'] : 'sanitize_text_field',
+			'sanitize_callback' => 'sanitize_text_field',
 			'order'             => 10,
 			'pro_only'          => true,
 		)
@@ -237,7 +237,7 @@ function bb_admin_settings_register_reactions_settings() {
 			'icon'              => $button_icon,
 			'text'              => $button_text,
 			'maxlength'         => 12,
-			'sanitize_callback' => ! empty( $field_reactions_button['sanitize_callback'] ) && is_callable( $field_reactions_button['sanitize_callback'] ) ? $field_reactions_button['sanitize_callback'] : 'bb_reactions_sanitize_button_settings',
+			'sanitize_callback' => 'bb_reactions_sanitize_button_settings',
 			'default'           => array(
 				'icon' => $button_icon,
 				'text' => $button_text,
