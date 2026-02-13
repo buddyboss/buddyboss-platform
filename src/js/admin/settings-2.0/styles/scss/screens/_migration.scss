@@ -63,54 +63,6 @@
 // Migration modal specific styles
 .bb-admin-migration-modal {
 
-	&.components-modal__frame {
-		border-radius: $bb-border-radius-xl;
-		max-width: 850px;
-		width: 100%;
-	}
-
-	.components-modal__header {
-		padding: 10px 24px;
-		height: auto;
-		border-bottom: 1px solid $bb-border-secondary-color;
-
-		.components-button svg {
-			fill: $bb-icon-secondary-color;
-		}
-	}
-
-	.components-modal__header-heading {
-		color: $bb-text-color;
-		font-size: 18px;
-		font-weight: 500;
-	}
-
-	.components-modal__content {
-		padding: 0;
-		margin-top: 52px;
-	}
-
-	&__content {
-		padding: 24px 24px 0;
-
-		&:has(.bb-admin-migration-modal__loader) {
-			min-height: 250px;
-		}
-	}
-
-	&__loader {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		min-height: 250px;
-		font-size: 32px;
-		color: $bb-primary-color;
-
-		.bb-icons-rl {
-			display: block;
-		}
-	}
-
 	&__wizard {
 
 		.bbpro_migration_wizard_screens {

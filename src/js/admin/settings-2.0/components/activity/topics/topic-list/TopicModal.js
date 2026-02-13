@@ -83,7 +83,7 @@ export function TopicModal( { isOpen, onClose, onSave, topic, isSaving } ) {
 		<Modal
 			title={ isEditing ? __( 'Edit Topic', 'buddyboss' ) : __( 'Add New Topic', 'buddyboss' ) }
 			onRequestClose={ onClose }
-			className="bb-topic-modal"
+			className="bb-topic-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
 		>
 			<div className="bb-topic-modal__body">
@@ -118,7 +118,7 @@ export function TopicModal( { isOpen, onClose, onSave, topic, isSaving } ) {
 				</div>
 			</div>
 
-			<div className="bb-topic-modal__footer">
+			<div className="bb-topic-modal__footer bb-admin-settings-modal__footer">
 				<Button
 					variant="secondary"
 					onClick={ onClose }

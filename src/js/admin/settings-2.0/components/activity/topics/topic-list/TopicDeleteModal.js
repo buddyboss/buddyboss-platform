@@ -68,7 +68,7 @@ export function TopicDeleteModal( { isOpen, onClose, onConfirm, topic, available
 		<Modal
 			title={ __( 'Delete Topic', 'buddyboss' ) }
 			onRequestClose={ onClose }
-			className="bb-topic-delete-modal"
+			className="bb-topic-delete-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
 		>
 			<div className="bb-topic-delete-modal__body">

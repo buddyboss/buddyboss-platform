@@ -293,7 +293,7 @@ export function MigrationModal({ isOpen, onClose, migrationData }) {
 		<Modal
 			title={wizardLabel}
 			onRequestClose={onClose}
-			className="bb-admin-migration-modal"
+			className="bb-admin-migration-modal bb-admin-settings-modal"
 			__experimentalHideHeader={false}
 		>
 			<div className="bb-admin-migration-modal__content">
