@@ -48,7 +48,7 @@ export function TopicItem( { topic, onEdit, onDelete, dragHandleProps, isDraggin
 				className="bb-topic-list__drag-handle"
 				{ ...dragHandleProps }
 			>
-				<BBIcon name="dots-six-vertical" />
+				<BBIcon name="list" />
 			</span>
 			<span className="bb-topic-list__name">{ topic.name }</span>
 			<span className="bb-topic-list__permission">{ permissionLabel }</span>

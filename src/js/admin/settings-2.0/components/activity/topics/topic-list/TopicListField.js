@@ -299,19 +299,22 @@ export function TopicListField( { field, value, values, onChange } ) {
 						</div>
 					);
 				} ) }
+
+				{ canAddMore && (
+					<Button
+						variant="secondary"
+						className="bb-topic-list__add-btn"
+						onClick={ function () {
+							setIsAddModalOpen( true );
+						} }
+					>
+						<span className="bb-icons-rl-plus"></span>
+						{ __( 'Add New Topic', 'buddyboss' ) }
+					</Button>
+				) }
 			</div>
 
-			{ canAddMore && (
-				<Button
-					variant="secondary"
-					className="bb-topic-list__add-btn"
-					onClick={ function () {
-						setIsAddModalOpen( true );
-					} }
-				>
-					{ __( '+ Add New Topic', 'buddyboss' ) }
-				</Button>
-			) }
+			
 
 			{ field.description && (
 				<p className="bb-topic-list__description">{ field.description }</p>
