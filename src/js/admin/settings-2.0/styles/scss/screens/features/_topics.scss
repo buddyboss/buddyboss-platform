@@ -1,0 +1,224 @@
+/* ----------------------------------------------------------------
+   Topic List Field
+   ---------------------------------------------------------------- */
+
+   .bb-topic-list {
+
+    &__items {
+        display: flex;
+        flex-direction: column;
+        border: 1px solid $bb-border-secondary-color;
+        border-radius: $bb-border-radius-xl;
+        overflow: hidden;
+        padding: 16px;
+
+        &:empty {
+            display: none;
+        }
+
+        > div:last-child .bb-topic-list__item {
+            margin-bottom: 0;
+        }
+    }
+
+    &__item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 8px;
+        background: $bb-background-primary-color;
+        border: 1px solid $bb-border-secondary-color;
+        border-radius: $bb-border-radius-lg;
+        margin-bottom: 16px;
+
+        &--dragging {
+            opacity: 0.5;
+        }
+
+        &--drag-over {
+            border-color: $bb-background-brand-primary-color;
+        }
+    }
+
+    &__drag-handle {
+        display: flex;
+        align-items: center;
+        cursor: grab;
+        color: $bb-icon-tertiary-color;
+        font-size: 16px;
+        line-height: 1;
+        flex-shrink: 0;
+
+        &:active {
+            cursor: grabbing;
+        }
+    }
+
+    &__name {
+        flex: 1;
+        font-size: 12px;
+        font-weight: 500;
+        color: $bb-text-secondary-color;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    &__permission {
+        font-size: 11px;
+        font-weight: 400;
+        color: $bb-text-tertiary-color;
+        flex-shrink: 0;
+    }
+
+    &__actions {
+        flex-shrink: 0;
+
+        .components-dropdown-menu__toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            min-width: auto;
+            height: auto;
+            color: $bb-icon-tertiary-color;
+
+            i {
+                font-size: 16px;
+                line-height: 1;
+                font-weight: 700;
+            }
+
+            &:hover,
+            &:focus,
+            &.is-pressed {
+                color: $bb-text-color;
+                background: none;
+                box-shadow: none;
+            }
+
+            .dashicon,
+            svg:not(:first-child) {
+                display: none;
+            }
+        }
+    }
+
+    &__add-btn.is-secondary {
+        color: $bb-text-brand-primary-color;
+        border: 1px solid $bb-border-brand-primary-color;
+        border-radius: $bb-border-radius-lg;
+        box-shadow: none;
+        font-size: 14px;
+        font-weight: 400;
+        align-self: flex-start;
+
+        &:hover {
+            color: $bb-text-brand-primary-color !important;
+            border-color: $bb-border-brand-primary-color !important;
+            box-shadow: none !important;
+        }
+
+        [class*="bb-icon"] {
+            font-size: 16px;
+            line-height: 1;
+            font-weight: 400;
+            margin-right: 4px;
+        }
+    }
+
+    &__description {
+        color: $bb-text-tertiary-color;
+        font-size: 13px;
+        font-weight: 400;
+        line-height: 1.5;
+        margin: 12px 0 0 0;
+    }
+}
+
+/* Topic Modal Styles */
+
+.bb-topic-modal {
+
+    .components-modal__content {
+        padding: 0;
+    }
+
+    &__body {
+        padding: 16px 24px;
+    }
+
+    &__error {
+        color: #cc1818;
+        font-size: 13px;
+        margin: 4px 0 0 0;
+    }
+
+    &__permission {
+        margin-top: 16px;
+    }
+
+    &__permission-label {
+        display: block;
+        font-size: 14px;
+        font-weight: 500;
+        color: $bb-text-color;
+        margin-bottom: 8px;
+    }
+
+    &__footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        padding: 16px 24px;
+        border-top: 1px solid $bb-border-secondary-color;
+    }
+
+    .bb-topic-modal__permission-label,
+    .components-base-control__label {
+        color: $bb-text-secondary-color;
+        font-size: 13px;
+        font-weight: 400;
+        text-transform: none;
+    }
+
+    .components-radio-control__group-wrapper {
+        flex-direction: row;
+        justify-content: flex-start;
+    }
+}
+
+/* Topic Delete Modal */
+
+.bb-topic-delete-modal {
+
+    .components-modal__content {
+        padding: 0;
+    }
+
+    &__body {
+        padding: 16px 24px;
+    }
+
+    &__warning {
+        font-size: 14px;
+        color: $bb-text-color;
+        margin: 0 0 16px 0;
+    }
+
+    &__migrate-select {
+        margin-top: 12px;
+        padding-left: 28px;
+    }
+
+    &__footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        padding: 16px 24px;
+        border-top: 1px solid $bb-border-secondary-color;
+    }
+}
