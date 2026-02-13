@@ -211,7 +211,7 @@ function bb_admin_settings_register_reactions_settings() {
 			'description'       => '',
 			'options'           => $reaction_mode_options,
 			'default'           => function_exists( 'bb_get_reaction_mode' ) ? bb_get_reaction_mode() : 'likes',
-			'sanitize_callback' => 'sanitize_text_field',
+			'sanitize_callback' => ! empty( $field_reaction_mode['sanitize_callback'] ) && is_callable( $field_reaction_mode['sanitize_callback'] ) ? $field_reaction_mode['sanitize_callback'] : '',
 			'order'             => 10,
 			'pro_only'          => true,
 		)
@@ -237,7 +237,6 @@ function bb_admin_settings_register_reactions_settings() {
 			'icon'              => $button_icon,
 			'text'              => $button_text,
 			'maxlength'         => 12,
-			'sanitize_callback' => 'bb_reactions_sanitize_button_settings',
 			'default'           => array(
 				'icon' => $button_icon,
 				'text' => $button_text,
