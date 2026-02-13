@@ -9232,21 +9232,18 @@ function bb_reactions_get_settings_fields() {
 
 	$fields['bp_reaction_settings_section'] = array(
 		'bb_all_reactions' => array(
-			'title'    => esc_html__( 'Enable Reactions', 'buddyboss' ),
-			'callback' => 'bb_reactions_settings_callback_all_reactions',
+			'title' => esc_html__( 'Enable Reactions', 'buddyboss' ),
 		),
 
 		'bb_reaction_mode' => array(
 			'title'             => esc_html__( 'Reactions Mode', 'buddyboss' ),
-			'callback'          => 'bb_reactions_settings_callback_reaction_mode',
 			'sanitize_callback' => 'sanitize_text_field',
 		),
 
 		'bb_reaction_emotions' => array(),
 
 		'bb_reactions_button' => array(
-			'title'    => esc_html__( 'Reactions Button', 'buddyboss' ),
-			'callback' => 'bb_reactions_settings_callback_reactions_button',
+			'title' => esc_html__( 'Reactions Button', 'buddyboss' ),
 		),
 	);
 
