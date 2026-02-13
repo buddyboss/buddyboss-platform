@@ -247,7 +247,7 @@ export function TopicListField( { field, value, values, onChange } ) {
 
 			// Persist order via AJAX.
 			var topicIds = reordered.map( function ( t ) {
-				return t.id || t.topic_id;
+				return t.topic_id;
 			} );
 			ajaxRequest( 'bb_update_topics_order', {
 				topic_ids: topicIds,
