@@ -573,6 +573,29 @@ class BB_Admin_Settings_Ajax {
 				$field_data['fields'] = $sub_fields;
 			}
 
+			// Attach topic data and nonces for topic_list fields.
+			if ( 'topic_list' === ( $field['type'] ?? '' ) && function_exists( 'bb_topics_manager_instance' ) ) {
+				$topics_manager = bb_topics_manager_instance();
+				$topics_data    = array();
+				if ( $topics_manager ) {
+					$result      = $topics_manager->bb_get_topics(
+						array(
+							'item_id'   => 0,
+							'item_type' => 'activity',
+							'per_page'  => -1,
+						)
+					);
+					$topics_data = ! empty( $result['topics'] ) ? $result['topics'] : array();
+				}
+				$field_data['topics_data']  = $topics_data;
+				$field_data['nonces']       = array(
+					'add'    => wp_create_nonce( 'bb_add_topic' ),
+					'delete' => wp_create_nonce( 'bb_delete_topic' ),
+					'order'  => wp_create_nonce( 'bb_update_topics_order' ),
+				);
+				$field_data['topics_limit'] = 20;
+			}
+
 			$formatted[] = $field_data;
 		}
 

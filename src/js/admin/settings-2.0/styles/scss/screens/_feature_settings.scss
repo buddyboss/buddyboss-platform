@@ -1020,3 +1020,204 @@
         }
     }
 }
+
+/* ----------------------------------------------------------------
+   Topic List Field
+   ---------------------------------------------------------------- */
+
+.bb-topic-list {
+
+    &__items {
+        display: flex;
+        flex-direction: column;
+        border: 1px solid $bb-border-secondary-color;
+        border-radius: $bb-border-radius-lg;
+        overflow: hidden;
+
+        &:empty {
+            display: none;
+        }
+    }
+
+    &__item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+        background: $bb-background-base-color;
+        border-bottom: 1px solid $bb-border-secondary-color;
+        transition: opacity 0.15s ease, background-color 0.15s ease;
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+        &--dragging {
+            opacity: 0.5;
+        }
+
+        &--drag-over {
+            border-top: 2px solid $bb-background-brand-primary-color;
+        }
+    }
+
+    &__drag-handle {
+        display: flex;
+        align-items: center;
+        cursor: grab;
+        color: $bb-icon-tertiary-color;
+        font-size: 20px;
+        line-height: 1;
+        flex-shrink: 0;
+
+        &:active {
+            cursor: grabbing;
+        }
+    }
+
+    &__name {
+        flex: 1;
+        font-size: 14px;
+        font-weight: 400;
+        color: $bb-text-color;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    &__permission {
+        font-size: 13px;
+        font-weight: 400;
+        color: $bb-text-tertiary-color;
+        flex-shrink: 0;
+    }
+
+    &__actions {
+        flex-shrink: 0;
+
+        .components-dropdown-menu__toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            min-width: auto;
+            height: auto;
+            color: $bb-icon-tertiary-color;
+
+            i {
+                font-size: 16px;
+                line-height: 1;
+                font-weight: 700;
+            }
+
+            &:hover,
+            &:focus,
+            &.is-pressed {
+                color: $bb-text-color;
+                background: none;
+                box-shadow: none;
+            }
+
+            .dashicon,
+            svg:not(:first-child) {
+                display: none;
+            }
+        }
+    }
+
+    &__add-btn {
+        margin-top: 16px;
+        color: $bb-background-brand-primary-color;
+        border-color: $bb-background-brand-primary-color;
+        font-size: 14px;
+        font-weight: 400;
+
+        &:hover {
+            color: $bb-background-brand-primary-color;
+            border-color: $bb-background-brand-primary-color;
+            opacity: 0.9;
+        }
+    }
+
+    &__description {
+        color: $bb-text-tertiary-color;
+        font-size: 13px;
+        font-weight: 400;
+        line-height: 1.5;
+        margin: 12px 0 0 0;
+    }
+}
+
+/* Topic Modal Styles */
+
+.bb-topic-modal {
+
+    .components-modal__content {
+        padding: 0;
+    }
+
+    &__body {
+        padding: 16px 24px;
+    }
+
+    &__error {
+        color: #cc1818;
+        font-size: 13px;
+        margin: 4px 0 0 0;
+    }
+
+    &__permission {
+        margin-top: 16px;
+    }
+
+    &__permission-label {
+        display: block;
+        font-size: 14px;
+        font-weight: 500;
+        color: $bb-text-color;
+        margin-bottom: 8px;
+    }
+
+    &__footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        padding: 16px 24px;
+        border-top: 1px solid $bb-border-secondary-color;
+    }
+}
+
+/* Topic Delete Modal */
+
+.bb-topic-delete-modal {
+
+    .components-modal__content {
+        padding: 0;
+    }
+
+    &__body {
+        padding: 16px 24px;
+    }
+
+    &__warning {
+        font-size: 14px;
+        color: $bb-text-color;
+        margin: 0 0 16px 0;
+    }
+
+    &__migrate-select {
+        margin-top: 12px;
+        padding-left: 28px;
+    }
+
+    &__footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        padding: 16px 24px;
+        border-top: 1px solid $bb-border-secondary-color;
+    }
+}

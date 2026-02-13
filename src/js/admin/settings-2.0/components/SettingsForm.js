@@ -27,6 +27,7 @@ import {
 	ReactionInfo,
 	MigrationModal,
 } from './reaction';
+import { TopicListField } from './activity/topics/topic-list';
 
 /**
  * Settings Form Component (matching Figma settingsSection)
@@ -713,6 +714,16 @@ export function SettingsForm({ fields, values, onChange }) {
 							setCurrentMigrationData({ wizardType: 'footer' });
 							setIsMigrationModalOpen(true);
 						}}
+					/>
+				);
+
+			case 'topic_list':
+				return (
+					<TopicListField
+						field={field}
+						value={value}
+						values={values}
+						onChange={onChange}
 					/>
 				);
 
