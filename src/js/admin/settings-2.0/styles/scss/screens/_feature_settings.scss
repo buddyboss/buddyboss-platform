@@ -188,6 +188,10 @@
         }
     }
 
+    select {
+        @include bb-admin-settings-select;
+    }
+
     &-content {
         flex: 1;
 
@@ -198,6 +202,10 @@
 
             .bb-admin-settings-form__field-description {
                 margin: 0;
+
+                &--has-controls  .bb-admin-settings-form__inline-select {
+                    margin-left: 8px;
+                }
             }
         }
     }
