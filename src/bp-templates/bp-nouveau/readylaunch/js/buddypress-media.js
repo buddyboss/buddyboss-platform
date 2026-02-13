@@ -368,10 +368,10 @@ window.bp = window.bp || {};
 			$document.on( 'click', '.activity .bb-rl-media-move-activity, #media-stream .bb-rl-media-move-activity', this.moveMediaIntoAlbum.bind( this ) );
 
 			// Document move option.
-			var activityListSelector = '#buddypress .bb-rl-activity-list';
-			var activityDataSelector = '#buddypress [data-bp-list="activity"]';
-			var modalListSelector = '#bb-rl-media-model-container .bb-rl-activity-list';
-			var mediaStreamSelector = '#media-stream';
+			var activityListSelector = '#buddypress .bb-rl-activity-list',
+				activityDataSelector = '#buddypress [data-bp-list="activity"]',
+				modalListSelector = '#bb-rl-media-model-container .bb-rl-activity-list',
+				mediaStreamSelector = '#media-stream';
 			$document.on( 'click',
 				activityListSelector + ' .ac-document-move, ' + activityDataSelector + ' .ac-document-move, ' +
 				activityListSelector + ' .ac-folder-move, ' + activityDataSelector + ' .ac-folder-move, ' +
