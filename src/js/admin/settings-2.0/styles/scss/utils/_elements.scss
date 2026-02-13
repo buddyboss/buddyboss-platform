@@ -127,6 +127,17 @@ select.bb-admin-settings__select {
     }
 }
 
+/* Checkbox */
+.bb-admin-settings-form .components-checkbox-control__input {
+    border-color: $bb-border-quaternary-color;
+    border-radius: $bb-border-radius-sm;
+
+    &:checked {
+        background-color: $bb-background-brand-primary-color;
+        border-color: $bb-background-brand-primary-color;
+    }
+}
+
 /* WordPress DropdownMenu */
 .components-popover__content:has(.bb_dropdown_menu_group) {
     box-shadow: none;
