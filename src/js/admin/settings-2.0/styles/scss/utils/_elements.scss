@@ -332,7 +332,7 @@ select.bb-admin-settings__select {
     margin-bottom: 16px;
     width: 100%;
 
-    &:before {
+    &:not(:has(.bb-admin-notice__icon)):before {
         content: "\e2ce";
         color: $bb-icon-color;
         font-size: 20px;
