@@ -9,6 +9,7 @@
  */
 
 import { CheckboxControl } from '@wordpress/components';
+import { RawHTML } from '@wordpress/element';
 
 /**
  * Share Platforms Field Component
@@ -31,28 +32,23 @@ export function SharePlatformsField({ field, value, onChange }) {
 
 	return (
 		<div>
-			{field.description && (
-				<p
-					className="bb-admin-settings-form__field-description"
-					dangerouslySetInnerHTML={{ __html: field.description }}
-				/>
-			)}
 			<div className="bb-admin-settings-field__checkbox-list-cards">
 				{(field.options || []).map((option) => (
 					<div
 						key={option.value}
-						className="bb_emotions_item"
+						className={`bb_share_item bb_share_item_${option.label}`}
 					>
-						<div className="bb_emotions_icon">
+						<div className="bb_share_icon">
 							{option.icon && (
 								<i className={option.icon}></i>
 							)}
 						</div>
 
-						<div className="bb_emotions_footer">
+						<div className="bb_share_footer">
 							<span>{option.label}</span>
 							<CheckboxControl
 								checked={isPlatformChecked(option.value)}
+								className="bb_share_checkbox"
 								onChange={(checked) => {
 									const newValue = {};
 									(field.options || []).forEach(function( opt ) {
@@ -72,6 +68,11 @@ export function SharePlatformsField({ field, value, onChange }) {
 					</div>
 				))}
 			</div>
+			{field.description && (
+				<RawHTML className="bb-admin-settings-form__field-description">
+					{field.description}
+				</RawHTML>
+			)}
 		</div>
 	);
 }

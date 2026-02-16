@@ -294,6 +294,7 @@
     flex-wrap: wrap;
     gap: 8px;
     max-width: 656px;
+    margin-top: 15px;
 }
 
 .bb-admin-settings-field__checkbox-list-item {
@@ -1071,5 +1072,84 @@
                 box-shadow: 0 0 0 1px $bb-background-brand-primary-color;
             }
         }
+    }
+}
+
+/* Share Platforms Field */
+
+.bb_share_item {
+    height: 96px;
+    width: 96px;
+    background: $bb-background-base-color;
+    border: 0.5px solid $bb-border-secondary-color;
+    border-radius: $bb-border-radius-lg;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    &_Messenger {
+        color: #447cff;
+    }
+
+    &_Facebook {
+        color: #1877f2;
+    }
+
+    &_X {
+        color: #0C0C0d;
+    }
+
+    &_Linkedin {
+        color: #0076b2;
+    }
+
+    &_Whatsapp {
+        color: #1faf38;
+    }
+
+    .bb_share_icon {
+        height: 64px;
+        background: $bb-background-primary-color;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+
+        [class*="bb-icon"] {
+            font-size: 32px;
+            line-height: 1;
+            font-weight: 500;
+        }
+    }
+
+    .bb_share_footer {
+        min-height: 32px;
+        background: $bb-background-base-color;
+        border-top: 0.5px solid $bb-border-secondary-color;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 4px 8px;
+        gap: 4px;
+        box-sizing: border-box;
+
+        span {
+            font-size: 12px;
+            font-weight: 400;
+            line-height: 18px;
+            color: $bb-text-color;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            flex: 1;
+            margin: 0;
+        }
+    }
+
+    .bb_share_checkbox {
+        position: absolute;
+        top: 5px;
+        right: 5px;
     }
 }
