@@ -200,7 +200,34 @@
     }
 
     &__body {
-        padding: 16px 24px;
+        padding: 24px;
+
+        .components-v-stack {
+            flex-direction: row;
+            justify-content: flex-start;
+        }
+
+        .bb-topic-delete-modal__migrate-select {
+
+            .components-input-control__label {
+                color: $bb-text-secondary-color;
+                text-transform: none;
+                font-size: 13px;
+                font-weight: 500;
+            }
+
+            .components-select-control__input {
+                @include bb-admin-settings-select;
+            }
+
+            .components-input-control-suffix-wrapper {
+                display: none;
+            }
+
+            .components-input-control__backdrop {
+                border-color: transparent;
+            }
+        }
     }
 
     &__warning {
@@ -220,6 +247,45 @@
         gap: 8px;
         padding: 16px 24px;
         border-top: 1px solid $bb-border-secondary-color;
+
+        .components-button {
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 20px;
+            padding: 6px 16px;
+            border-radius: $bb-border-radius-lg;
+            box-shadow: none;
+
+            &.is-secondary {
+                color: $bb-text-color;
+                border: 1px solid $bb-border-secondary-color;
+                background: $bb-background-secondary-color;
+
+                &:hover {
+                    color: $bb-text-color;
+                    border: 1px solid $bb-border-secondary-color;
+                    background: $bb-background-secondary-color;
+                    box-shadow: none;
+                }
+            }
+
+            &.is-primary {
+                color: $bb-text-inverse-color;
+                background: $bb-background-brand-primary-color;
+                border: none;
+
+                &:hover {
+                    color: $bb-text-inverse-color;
+                    background: $bb-background-brand-primary-color;
+                    border: none;
+                }
+
+                &[disabled] {
+                    opacity: 0.5;
+                    pointer-events: none;
+                }
+            }
+        }
     }
 
     .components-radio-control__group-wrapper {
