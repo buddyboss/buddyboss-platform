@@ -414,16 +414,19 @@ class BB_Admin_Settings_Ajax {
 				}
 
 				// Convert to toggle format for React (key => 0/1).
+				// Iterate stored_value keys first to preserve user-saved order (drag-and-drop).
 				$toggle_values = array();
+				foreach ( $stored_value as $option_key => $val ) {
+					$is_enabled                   = ( 1 === $val || '1' === $val || true === $val );
+					$toggle_values[ $option_key ] = $is_enabled ? 1 : 0;
+				}
+
+				// Append any options not yet in stored_value (e.g., newly added options).
 				foreach ( $field['options'] ?? array() as $option ) {
 					$option_key = $option['value'];
-					// Check if key exists and has truthy value (handle "1", 1, true, "0", 0, false).
-					$is_enabled = false;
-					if ( isset( $stored_value[ $option_key ] ) ) {
-						$val        = $stored_value[ $option_key ];
-						$is_enabled = ( 1 === $val || '1' === $val || true === $val );
+					if ( ! isset( $toggle_values[ $option_key ] ) ) {
+						$toggle_values[ $option_key ] = 0;
 					}
-					$toggle_values[ $option_key ] = $is_enabled ? 1 : 0;
 				}
 				$field_value = $toggle_values;
 			}
