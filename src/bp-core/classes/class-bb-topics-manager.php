@@ -124,7 +124,6 @@ class BB_Topics_Manager {
 	 * @since BuddyBoss 2.8.80
 	 */
 	private function setup_hooks() {
-		add_action( 'bp_admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'bp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'wp_ajax_bb_add_topic', array( $this, 'bb_add_topic_ajax' ) );
 		add_action( 'wp_ajax_bb_edit_topic', array( $this, 'bb_edit_topic_ajax' ) );
@@ -138,24 +137,9 @@ class BB_Topics_Manager {
 	 * Enqueue scripts.
 	 *
 	 * @since BuddyBoss 2.8.80
-	 *
-	 * @param string $hook_suffix The current admin page.
 	 */
-	public function enqueue_scripts( $hook_suffix ) {
-		if (
-			is_admin() &&
-			(
-				false === strpos( $hook_suffix, 'bp-groups' ) &&
-				false === strpos( $hook_suffix, 'bp-settings' )
-			)
-		) {
-			return;
-		}
-
-		if (
-			! is_admin() &&
-			$this->bb_load_topics_scripts()
-		) {
+	public function enqueue_scripts() {
+		if ( $this->bb_load_topics_scripts() ) {
 			return;
 		}
 
