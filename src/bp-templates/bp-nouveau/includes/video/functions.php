@@ -130,7 +130,7 @@ function bp_nouveau_video_localize_scripts( $params = array() ) {
 		'video_dict_file_exceeded'           => sprintf( /* translators: 1: per batch */ __( 'You can upload a maximum of %s videos to a post.', 'buddyboss' ), bp_core_number_format( bp_video_allowed_upload_video_per_batch() ) ),
 		'thumb_dict_file_exceeded'           => __( 'You are allowed to upload only 1 thumb at a time.', 'buddyboss' ),
 		'dictInvalidFileType'                => __( 'Please upload only the following file types: ', 'buddyboss' ) . '<br /><div class="bb-allowed-file-types">' . implode( ', ', array_unique( $allowed ) ) . '</div>',
-		'is_ffpmeg_installed'                => bb_video_is_ffmpeg_installed(),
+		'is_ffmpeg_installed'                => bb_video_is_ffmpeg_installed(),
 		'generating_thumb'                   => 'Generating thumbnail…',
 		'dictCancelUploadConfirmation'       => __( 'Are you sure you want to cancel this upload?', 'buddyboss' ),
 	);
