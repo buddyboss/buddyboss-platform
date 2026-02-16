@@ -373,6 +373,641 @@
     }
 }
 
+.bb_emotions_item {
+    height: 96px;
+    width: 96px;
+    background: $bb-background-base-color;
+    border: 0.5px solid $bb-border-secondary-color;
+    border-radius: $bb-border-radius-lg;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    &.is-disabled {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+
+    .bb_emotions_icon {
+        height: 64px;
+        background: $bb-background-primary-color;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+
+        i.bb-icon-rf {
+            font-size: 32px;
+            line-height: 1;
+        }
+
+        img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+
+        .bbpro-icon-emoji {
+            font-size: 32px;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            img {
+                width: 32px;
+                height: 32px;
+            }
+        }
+    }
+
+    .bb_emotions_footer {
+        min-height: 32px;
+        background: $bb-background-base-color;
+        border-top: 0.5px solid $bb-border-secondary-color;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 4px 8px;
+        gap: 4px;
+        box-sizing: border-box;
+
+        span {
+            font-size: 13px;
+            font-weight: 400;
+            line-height: 18px;
+            color: $bb-text-color;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            flex: 1;
+        }
+
+        .bb_emotions_actions {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+
+            // WordPress DropdownMenu toggle button
+            .components-dropdown-menu__toggle {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0;
+                min-width: auto;
+                height: auto;
+                color: $bb-icon-tertiary-color;
+
+                i {
+                    font-size: 16px;
+                    line-height: 1;
+                    font-weight: 700;
+                }
+
+                &:hover,
+                &:focus,
+                &.is-pressed {
+                    color: $bb-text-color;
+                    background: none;
+                    box-shadow: none;
+                }
+
+                // Hide default WordPress icon if present
+                .dashicon,
+                svg:not(:first-child) {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    &.bb_emotions_item_action {
+        background: $bb-background-primary-color;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+
+        &:hover {
+            background: $bb-background-primary-color;
+        }
+
+        .bb_emotions_add_new {
+            width: 100%;
+            height: 100%;
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+
+            i {
+                font-size: 32px;
+                line-height: 1;
+                color: $bb-text-tertiary-color;
+            }
+        }
+
+        &:hover .bb_emotions_add_new i {
+            color: $bb-text-color;
+        }
+    }
+}
+
+.bb-reaction-button-field {
+    display: flex;
+}
+
+.bb-reaction-button-card {
+    width: 96px;
+    height: 96px;
+    background: $bb-background-base-color;
+    border: 0.5px solid $bb-border-secondary-color;
+    border-radius: $bb-border-radius-lg;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+
+    &__preview {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    &__icon-wrapper {
+        height: 64px;
+        background: $bb-background-primary-color;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &__icon-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+
+        [class*="bb-icon"] {
+            font-size: 32px;
+            line-height: 1;
+            color: $bb-text-color;
+        }
+
+        &:hover i {
+            color: $bb-icon-color;
+        }
+    }
+
+    &__footer {
+        min-height: 32px;
+        background: $bb-background-base-color;
+        border-top: 0.5px solid $bb-border-secondary-color;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 4px 8px;
+        gap: 4px;
+        box-sizing: border-box;
+
+        input[type="text"] {
+            font-size: 13px;
+            font-weight: 400;
+            line-height: 1;
+            color: $bb-text-color;
+            border: none;
+            background: transparent;
+            padding: 0;
+            margin: 0;
+            outline: none;
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            min-height: auto;
+
+            &:focus {
+                outline: none;
+                box-shadow: none;
+            }
+
+            &::placeholder {
+                color: $bb-text-tertiary-color;
+            }
+        }
+    }
+
+    &__menu-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        flex-shrink: 0;
+        color: $bb-text-tertiary-color;
+
+        // WordPress DropdownMenu toggle button
+        .components-dropdown-menu__toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            min-width: auto;
+            height: auto;
+            color: $bb-icon-tertiary-color;
+
+            i {
+                font-size: 16px;
+                line-height: 1;
+                font-weight: 700;
+            }
+
+            &:hover,
+            &:focus,
+            &.is-pressed {
+                color: $bb-text-color;
+                background: none;
+                box-shadow: none;
+            }
+
+            // Hide default WordPress icon if present
+            .dashicon,
+            svg:not(:first-child) {
+                display: none;
+            }
+        }
+    }
+}
+
+/* Emotions modal */
+#bbpro_emotion_modal {
+
+    .media-modal-content {
+        background: transparent;
+        box-shadow: none;
+
+        .bbpro-modal-box__header {
+            background-color: $bb-background-base-color;
+            border-bottom: 1px solid $bb-border-secondary-color;
+            border: 1px solid $bb-border-secondary-color;
+            border-radius: $bb-border-radius-xl $bb-border-radius-xl 0 0;
+            padding: 22px 24px;
+
+            h3 {
+                color: $bb-text-color;
+                font-size: 18px;
+                font-weight: 500;
+                line-height: 1;
+            }
+        }
+
+        .bbpro-modal-box__body {
+            height: calc(100% - 115px);
+        }
+
+        .bbpro-modal-box__footer {
+            background-color: $bb-background-base-color;
+            border-top: 1px solid $bb-border-secondary-color;
+            border-radius: 0 0 $bb-border-radius-xl $bb-border-radius-xl;
+            padding: 8px 16px;
+
+            .bbpro_select_icon {
+                font-size: 14px;
+                font-weight: 400;
+                line-height: 18px;
+                color: $bb-text-inverse-color;
+                background-color: $bb-background-brand-primary-color;
+                padding: 8px 16px;
+                border: none;
+                border-radius: $bb-border-radius-lg;
+            }
+        }
+    }
+
+    .media-modal-close {
+        top: 20px;
+        right: 20px;
+        width: auto;
+        height: auto;
+        box-shadow: none;
+
+        .media-modal-icon {
+            display: flex;
+
+            &:before {
+                content: "\e4f6";
+                color: $bb-icon-secondary-color;
+                font-size: 24px;
+                font-family: "bb-icons-rl";
+                font-weight: 400;
+            }
+        }
+
+        &:hover {
+            background-color: $bb-background-primary-color;
+        }
+
+        &:focus {
+            outline: none;
+        }
+    }
+
+    #bbpro-icon-left-section {
+        background-color: $bb-background-base-color;
+        border-right: 1px solid $bb-border-secondary-color;
+
+        .bbpro-icon-filters {
+            border-bottom: 1px solid $bb-border-secondary-color;
+
+            select {
+                @include bb-admin-settings-select;
+
+                &:hover {
+                    color: $bb-text-color;
+                }
+            }
+        }
+    }
+
+    #bbpro-icon-right-section {
+        background-color: $bb-background-base-color;
+    }
+
+    #bbpro_icon_preview {
+
+        h3 {
+            color: $bb-text-color;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1;
+        }
+
+        > div[class*="bbpro-new-icon"] {
+
+            input[type="text"] {
+                background-color: $bb-background-primary-color;
+                border: 1px solid $bb-border-secondary-color;
+                color: $bb-text-color;
+                font-size: 13px;
+                font-weight: 400;
+                padding: 2px 8px;
+                border-radius: $bb-border-radius-md;
+            }
+
+            label {
+                color: $bb-text-secondary-color;
+                font-size: 13px;
+                font-weight: 500;
+            }
+
+            .wp-picker-container {
+
+                .wp-color-result {
+                    border-color: $bb-border-secondary-color;
+
+                    span {
+                        background-color: $bb-background-secondary-color;
+                    }
+                }
+
+                .wp-picker-default {
+                    background-color: $bb-background-secondary-color;
+                    border-color: $bb-border-secondary-color;
+                    color: $bb-text-color;
+                    font-size: 13px;
+                    font-weight: 400;
+                    padding: 4px 8px;
+                    border-radius: $bb-border-radius-md;
+                    line-height: 1.8;
+                    min-height: auto;
+                }
+
+                .iris-picker {
+                    background-color: $bb-background-base-color;
+                    border: 1px solid $bb-border-secondary-color;
+                    border-radius: $bb-border-radius-xl;
+                    box-shadow: none;
+
+                    .iris-picker-inner {
+                        background-color: $bb-background-base-color;
+                    }
+
+                    .iris-square,
+                    .iris-slider,
+                    .iris-square-inner,
+                    .iris-palette {
+                        border-radius: $bb-border-radius-xl;
+                    }
+                }
+            }
+        }
+
+        .bbpro-new-icon-text-wrp .bbpro-icon-text-limit {
+            color: $bb-text-tertiary-color;
+        }
+    }
+
+    .bbpro_icon_picker_preview  {
+
+        .icon-picker-preview {
+            background-color: $bb-background-base-color;
+            border: 1px solid $bb-border-secondary-color;
+            border-radius: $bb-border-radius-md;
+            box-shadow: none;
+        }
+    }
+
+    .bbpro-icon-search {
+        position: relative;
+
+        input.bbpro-icon-search-input {
+            background-color: $bb-background-primary-color;
+            border: 1px solid $bb-border-secondary-color;
+            color: $bb-text-color;
+            font-size: 13px;
+            font-weight: 400;
+            padding: 2px 8px 2px 30px;
+            border-radius: $bb-border-radius-md;
+
+            &:focus {
+                outline: none;
+                box-shadow: none;
+                border-color: $bb-border-primary-color;
+            }
+        }
+
+        [class*="bb-icon"] {
+            position: absolute;
+            left: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 0;
+
+            &:before {
+                content: "\e30c";
+                font-size: 16px;
+                font-family: "bb-icons-rl";
+                line-height: 1;
+                font-weight: 400;
+                color: $bb-icon-tertiary-color;
+            }
+        }
+    }
+
+    .bbpro-dialog-icon-picker a.bbpro-icon {
+        background-color: $bb-background-primary-color;
+        border-radius: $bb-border-radius-md;
+        box-shadow: none;
+        border: 1px solid $bb-border-secondary-color;
+
+        &:after {
+            display: none;
+        }
+
+        .bbpro-icon-title {
+            background-color: $bb-background-base-color;
+            border-top: 1px solid $bb-border-secondary-color;
+            box-shadow: none;
+            border-radius: 0 0 $bb-border-radius-md $bb-border-radius-md;
+
+            span {
+                color: $bb-text-color;
+                font-size: 12px;
+            }
+        }
+
+        .bbpro-icon-emoji {
+            font-size: 4rem;
+            width: 100%;
+            height: calc(100% - 30px);
+            top: 0;
+        }
+
+        img {
+            width: 50px;
+        }
+    }
+
+    .bbpro-icons-list {
+        max-height: calc(100% - 55px);
+
+        .bbpro-icon > i:before {
+            color: $bb-text-color;
+            font-size: 5em;
+        }
+    }
+
+    .bbpro-icon-uploader-main,
+    .bbpro-emojis-list {
+        max-height: calc(100% - 55px);
+        overflow: auto;
+    }
+
+
+}
+
+/* Delete Emotion Modal */
+.bbpro_reaction_delete_confirmation {
+
+    .media-modal-content {
+        background: rgba(0, 0, 0, 0);
+        box-shadow: none;
+    }
+
+    .media-modal-close .media-modal-icon:before {
+        content: "";
+        color: $bb-icon-secondary-color;
+        font-size: 24px;
+        font-family: "bb-icons-rl";
+        font-weight: 400;
+    }
+
+    .bbpro-modal-box__header {
+        background-color: $bb-background-base-color;
+        border-bottom: 1px solid $bb-border-secondary-color;
+        border: 1px solid $bb-border-secondary-color;
+        border-radius: $bb-border-radius-xl $bb-border-radius-xl 0 0;
+        padding: 22px 24px;
+
+        h3 {
+            color: $bb-text-color;
+            font-size: 18px;
+            font-weight: 500;
+            line-height: 1;
+        }
+    }
+
+    .bbpro-modal-box__body {
+        background-color: $bb-background-base-color;
+    }
+
+    .bbpro-modal-box__footer {
+        background-color: $bb-background-base-color;
+        border-top: 1px solid $bb-border-secondary-color;
+        border-radius: 0 0 $bb-border-radius-xl $bb-border-radius-xl;
+        padding: 8px 16px;
+    }
+
+    .bb-pro-reaction-cancel-delete-emotion {
+        background-color: $bb-background-base-color;
+        border-color: $bb-border-secondary-color;
+        color: $bb-text-color;
+        font-size: 13px;
+        font-weight: 400;
+        padding: 4px 8px;
+        border-radius: 8px;
+        line-height: 1.8;
+        min-height: auto;
+
+        &:hover {
+            background-color: $bb-background-secondary-color;
+            border-color: $bb-border-secondary-color;
+            color: $bb-text-color;
+        }
+    }
+
+    .bb-pro-reaction-delete-emotion {
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 18px;
+        color: $bb-text-inverse-color !important;
+        background-color: $bb-background-brand-primary-color !important;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 8px;
+        margin-left: 8px;
+    }
+
+    .bbpro-modal-box_loader {
+        background-color: $bb-background-base-color;
+        margin: 0 -20px;
+        border-radius: 0 0 $bb-border-radius-xl $bb-border-radius-xl;
+
+        .bb-icon-spinner:before {
+            content: "\e66a";
+            font-size: 28px;
+            color: $bb-icon-color;
+            font-family: "bb-icons-rl";
+            font-weight: 400;
+        }
+    }
+}
+
 /* Feature Disabled State */
 .bb-admin-feature-disabled {
     display: flex;
