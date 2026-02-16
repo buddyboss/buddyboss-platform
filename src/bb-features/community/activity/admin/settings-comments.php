@@ -76,7 +76,7 @@ function bb_activity_register_comments_panel_fields( $edit_time_options ) {
 		)
 	);
 
-	// FIELD: Comment Visibility (toggle with inline select in description).
+	// FIELD: Comment Visibility (inline select in description via description_controls).
 	bb_register_feature_field(
 		'activity',
 		'activity_comments',
@@ -84,7 +84,7 @@ function bb_activity_register_comments_panel_fields( $edit_time_options ) {
 		array(
 			'name'                 => '_bb_activity_comment_visibility',
 			'label'                => __( 'Comment Visibility', 'buddyboss' ),
-			'type'                 => 'toggle',
+			'type'                 => 'hidden',
 			'description'          => __( 'Display a maximum %s comments per post in activity feeds', 'buddyboss' ),
 			'help_text'            => __( 'Load more via "View more comments." High comment counts may slow scrolling. Applies to platform only, not app.', 'buddyboss' ),
 			'default'              => bb_get_activity_comment_visibility(),
