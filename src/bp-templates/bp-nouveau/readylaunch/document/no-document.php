@@ -29,7 +29,7 @@ $can_create_folder  = false;
 
 // Check if user can create folders.
 if ( is_user_logged_in() && ! empty( $active_extensions ) ) {
-	if ( bp_is_group ) {
+	if ( $bp_is_group ) {
 		$can_create_folder = groups_can_user_manage_document( bp_loggedin_user_id(), bp_get_current_group_id() );
 	} elseif ( bp_is_my_profile() && bb_user_can_create_document() ) {
 		$can_create_folder = true;
@@ -46,7 +46,7 @@ if ( is_user_logged_in() && ! empty( $active_extensions ) ) {
 	<p class="bb-rl-media-none-description"><?php esc_html_e( 'It looks like there aren\'t any documents in this directory.', 'buddyboss' ); ?></p>
 	<div class="bb-rl-media-none-actions">
 		<?php
-		if ( $is_inside_folder && $can_create_folder) {
+		if ( $is_inside_folder && $can_create_folder ) {
 			?>
 			<div class="bb-media-actions-wrap album-actions-wrap">
 				<div class="bb-media-actions">
