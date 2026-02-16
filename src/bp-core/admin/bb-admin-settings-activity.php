@@ -13,14 +13,14 @@
 defined( 'ABSPATH' ) || exit;
 
 // Load sanitize callbacks.
-require_once __DIR__ . '/settings-activity/callbacks.php';
+require_once __DIR__ . '/settings/activity/callbacks.php';
 
 // Load panel field registrations.
-require_once __DIR__ . '/settings-activity/settings-activity.php';
-require_once __DIR__ . '/settings-activity/settings-comments.php';
-require_once __DIR__ . '/settings-activity/settings-topics.php';
-require_once __DIR__ . '/settings-activity/settings-visibility.php';
-require_once __DIR__ . '/settings-activity/settings-sharing.php';
+require_once __DIR__ . '/settings/activity/settings-activity.php';
+require_once __DIR__ . '/settings/activity/settings-comments.php';
+require_once __DIR__ . '/settings/activity/settings-topics.php';
+require_once __DIR__ . '/settings/activity/settings-visibility.php';
+require_once __DIR__ . '/settings/activity/settings-sharing.php';
 
 /**
  * Register Activity feature and settings in Feature Registry.
