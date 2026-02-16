@@ -269,11 +269,18 @@ function bb_activity_register_settings_panel_fields() {
 	$activity_feed_filter_options = array();
 	if ( function_exists( 'bb_get_activity_filter_options_labels' ) ) {
 		foreach ( bb_get_activity_filter_options_labels() as $value => $label_or ) {
-			$label                          = is_array( $label_or ) && isset( $label_or['default'] ) ? $label_or['default'] : ( is_array( $label_or ) ? '' : $label_or );
-			$activity_feed_filter_options[] = array(
+			$label  = is_array( $label_or ) && isset( $label_or['default'] ) ? $label_or['default'] : ( is_array( $label_or ) ? '' : $label_or );
+			$option = array(
 				'label' => $label,
 				'value' => $value,
 			);
+
+			// "All Updates" must always remain enabled.
+			if ( 'all' === $value ) {
+				$option['disabled'] = true;
+			}
+
+			$activity_feed_filter_options[] = $option;
 		}
 	}
 	// FIELD: Activity Feed Filters (checkbox list with drag-and-drop). Option name and value keys match legacy (bp_get_option( 'bb_activity_filter_options' )).
@@ -297,11 +304,18 @@ function bb_activity_register_settings_panel_fields() {
 	$activity_timeline_filter_options = array();
 	if ( function_exists( 'bb_get_activity_timeline_filter_options_labels' ) ) {
 		foreach ( bb_get_activity_timeline_filter_options_labels() as $value => $label_or ) {
-			$label                              = is_array( $label_or ) && isset( $label_or['default'] ) ? $label_or['default'] : ( is_array( $label_or ) ? '' : $label_or );
-			$activity_timeline_filter_options[] = array(
+			$label  = is_array( $label_or ) && isset( $label_or['default'] ) ? $label_or['default'] : ( is_array( $label_or ) ? '' : $label_or );
+			$option = array(
 				'label' => $label,
 				'value' => $value,
 			);
+
+			// "Personal Posts" must always remain enabled.
+			if ( 'just-me' === $value ) {
+				$option['disabled'] = true;
+			}
+
+			$activity_timeline_filter_options[] = $option;
 		}
 	}
 	// FIELD: Profile Timeline Filters (checkbox list with drag-and-drop). Option name and value keys match legacy (bp_get_option( 'bb_activity_timeline_filter_options' )).
@@ -332,11 +346,18 @@ function bb_activity_register_settings_panel_fields() {
 	$activity_sorting_options = array();
 	if ( function_exists( 'bb_get_activity_sorting_options_labels' ) ) {
 		foreach ( bb_get_activity_sorting_options_labels() as $value => $label_or ) {
-			$label                      = is_array( $label_or ) && isset( $label_or['default'] ) ? $label_or['default'] : ( is_array( $label_or ) ? '' : $label_or );
-			$activity_sorting_options[] = array(
+			$label  = is_array( $label_or ) && isset( $label_or['default'] ) ? $label_or['default'] : ( is_array( $label_or ) ? '' : $label_or );
+			$option = array(
 				'label' => $label,
 				'value' => $value,
 			);
+
+			// "New Posts" must always remain enabled.
+			if ( 'date_recorded' === $value ) {
+				$option['disabled'] = true;
+			}
+
+			$activity_sorting_options[] = $option;
 		}
 	}
 	// FIELD: Activity Sorting (checkbox list with drag-and-drop). Option name and value keys match legacy (bp_get_option( 'bb_activity_sorting_options' )).

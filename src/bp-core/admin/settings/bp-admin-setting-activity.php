@@ -67,48 +67,8 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 
 		$this->add_section( 'bp_activity', __( 'Activity Settings', 'buddyboss' ), '', 'bp_activity_settings_tutorial' );
 
-		// Close comments.
-		$this->add_field( '_bb_enable_close_activity_comments', __( 'Close comments', 'buddyboss' ), array( $this, 'bb_admin_setting_callback_enable_close_activity_comments' ), 'intval' );
-
-		// Pin posts.
-		$this->add_field( '_bb_enable_activity_pinned_posts', __( 'Pinned Post', 'buddyboss' ), 'bb_admin_setting_callback_enable_activity_pinned_posts', 'intval' );
-
-		// Allow Poll.
-		$polls_pro_class     = bb_get_pro_fields_class( 'polls' );
-		$polls_notice        = bb_get_pro_label_notice( 'polls' );
-		$poll_args           = array();
-		$poll_args['class']  = esc_attr( $polls_pro_class );
-		$poll_args['notice'] = $polls_notice;
-		$this->add_field( '_bb_enable_activity_post_polls', __( 'Polls', 'buddyboss' ) . $polls_notice, array( $this, 'bb_admin_setting_callback_enable_activity_post_polls' ), 'intval', $poll_args );
-
-		$pro_class     = bb_get_pro_fields_class( 'schedule_posts' );
-		$args          = array();
-		$args['class'] = esc_attr( $pro_class );
-
-		$schedule_posts_pro_notice = bb_get_pro_label_notice( 'schedule_posts' );
-		$schedule_posts_field_name = empty( $schedule_posts_pro_notice ) ? '_bb_enable_activity_schedule_posts' : '';
-		$this->add_field( $schedule_posts_field_name, __( 'Schedule posts', 'buddyboss' ) . $schedule_posts_pro_notice, array( $this, 'bb_admin_setting_callback_enable_activity_schedule_posts' ), 'intval', $args );
-
-		// Allow follow.
-		$this->add_field( '_bp_enable_activity_follow', __( 'Follow', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_follow', 'intval' );
-
 		// Allow link preview.
 		$this->add_field( '_bp_enable_activity_link_preview', __( 'Link Previews', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_link_preview', 'intval' );
-
-		// Relevant Activity Feeds.
-		$this->add_field( '_bp_enable_relevant_feed', __( 'Relevant Activity', 'buddyboss' ), 'bp_admin_setting_callback_enable_relevant_feed', 'intval' );
-
-		// Activity search.
-		$this->add_field( 'bb_enable_activity_search', __( 'Activity search', 'buddyboss' ), 'bb_admin_setting_callback_enable_activity_search' );
-
-		// Activity filters.
-		$this->add_field( 'bb_activity_filter_options', __( 'Activity feed filters', 'buddyboss' ), 'bb_admin_setting_callback_activity_filters' );
-
-		// Timeline filters.
-		$this->add_field( 'bb_activity_timeline_filter_options', __( 'Profile timeline filters', 'buddyboss' ), 'bb_admin_setting_callback_activity_timeline_filters' );
-
-		// Activity sorting.
-		$this->add_field( 'bb_activity_sorting_options', __( 'Activity sorting', 'buddyboss' ), 'bb_admin_setting_callback_activity_sorting' );
 
 		// Allow subscriptions setting.
 		if ( is_plugin_active( 'akismet/akismet.php' ) && defined( 'AKISMET_VERSION' ) ) {
@@ -275,20 +235,6 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	}
 
 	/**
-	 * Enable close activity comments settings.
-	 *
-	 * @since BuddyBoss 2.5.80
-	 */
-	public function bb_admin_setting_callback_enable_close_activity_comments() {
-		?>
-
-		<input id="_bb_enable_close_activity_comments" name="_bb_enable_close_activity_comments" type="checkbox" value="1" <?php checked( bb_is_close_activity_comments_enabled( true ) ); ?> />
-		<label for="_bb_enable_close_activity_comments"><?php esc_html_e( 'Allow your users to stop users commenting on their posts', 'buddyboss' ); ?></label>
-
-		<?php
-	}
-
-	/**
 	 * Enable activity comments.
 	 *
 	 * @since BuddyBoss 2.5.80
@@ -437,36 +383,6 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 			?>
 		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
 		</p>
-		<?php
-	}
-
-	/**
-	 * Allow schedule activity posts.
-	 *
-	 * @since BuddyBoss 2.6.10
-	 */
-	public function bb_admin_setting_callback_enable_activity_schedule_posts() {
-		$val    = function_exists( 'bb_is_enabled_activity_schedule_posts_filter' ) ? bb_is_enabled_activity_schedule_posts_filter() : false;
-		$notice = bb_get_pro_label_notice( 'schedule_posts' );
-		?>
-			<input id="bb_enable_activity_schedule_posts" name="<?php echo empty( $notice ) ? '_bb_enable_activity_schedule_posts' : ''; ?>" type="checkbox" value="1" <?php echo empty( $notice ) ? checked( $val, true, false ) : ''; ?> />
-			<label for="bb_enable_activity_schedule_posts"><?php esc_html_e( 'Allow group owners and moderators to schedule their posts', 'buddyboss' ); ?></label>
-		<?php
-	}
-
-	/**
-	 * Allow activity poll.
-	 *
-	 * @param array $args Arguments.
-	 *
-	 * @since BuddyBoss 2.6.90
-	 */
-	public function bb_admin_setting_callback_enable_activity_post_polls( $args ) {
-		$val    = function_exists( 'bb_is_enabled_activity_post_polls' ) ? bb_is_enabled_activity_post_polls( false ) : false;
-		$notice = ! empty( $args['notice'] ) ? $args['notice'] : '';
-		?>
-		<input id="bb_enable_activity_post_polls" name="<?php echo empty( $notice ) ? '_bb_enable_activity_post_polls' : ''; ?>" type="checkbox" value="1" <?php echo empty( $notice ) ? checked( $val, true, false ) : ''; ?> />
-		<label for="bb_enable_activity_post_polls"><?php esc_html_e( 'Allow group owners and moderators to post polls', 'buddyboss' ); ?></label>
 		<?php
 	}
 

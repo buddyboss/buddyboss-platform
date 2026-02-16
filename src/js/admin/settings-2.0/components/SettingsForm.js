@@ -252,6 +252,7 @@ export function SettingsForm({ fields, values, onChange }) {
 															});
 															onChange(field.name, newValue);
 														}}
+														disabled={disabled || !!option.disabled}
 														__nextHasNoMarginBottom
 													/>
 												</div>
