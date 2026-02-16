@@ -225,29 +225,36 @@ function bb_admin_settings_register_reactions_settings() {
 	$button_text           = isset( $button_settings['text'] ) ? trim( $button_settings['text'] ) : __( 'Like', 'buddyboss' );
 	$field_reactions_button = isset( $reaction_titles['bb_reactions_button'] ) ? $reaction_titles['bb_reactions_button'] : array();
 
+	$reactions_button_field_args = array(
+		'name'              => 'bb_reactions_button',
+		'label'             => isset( $field_reactions_button['title'] ) ? $field_reactions_button['title'] : __( 'Reaction Button', 'buddyboss' ),
+		'type'              => 'reaction_button',
+		'description'       => __( 'This label and icon indicate the default reaction before any reaction is selected. In \'Emotions\' mode, clicking the button applies the first reaction in the configured list.', 'buddyboss' ),
+		'icon'              => $button_icon,
+		'text'              => $button_text,
+		'maxlength'         => 12,
+		'default'           => array(
+			'icon' => $button_icon,
+			'text' => $button_text,
+		),
+		'order'             => 20,
+		'pro_only'          => true,
+	);
+
+	// When PRO is active, hide field when Reaction Mode is not Emotions.
+	// When PRO is not active, always show for upsell visibility.
+	if ( class_exists( 'BB_Reactions' ) ) {
+		$reactions_button_field_args['conditional'] = array(
+			'field' => 'bb_reaction_mode',
+			'value' => 'emotions',
+		);
+	}
+
 	bb_register_feature_field(
 		'reactions',
 		'reactions',
 		'reactions_settings',
-		array(
-			'name'              => 'bb_reactions_button',
-			'label'             => isset( $field_reactions_button['title'] ) ? $field_reactions_button['title'] : __( 'Reaction Button', 'buddyboss' ),
-			'type'              => 'reaction_button',
-			'description'       => __( 'This label and icon indicate the default reaction before any reaction is selected. In \'Emotions\' mode, clicking the button applies the first reaction in the configured list.', 'buddyboss' ),
-			'icon'              => $button_icon,
-			'text'              => $button_text,
-			'maxlength'         => 12,
-			'default'           => array(
-				'icon' => $button_icon,
-				'text' => $button_text,
-			),
-			'order'             => 20,
-			'pro_only'          => true,
-			'conditional'       => array(
-				'field' => 'bb_reaction_mode',
-				'value' => 'emotions',
-			),
-		)
+		$reactions_button_field_args
 	);
 
 	/**
