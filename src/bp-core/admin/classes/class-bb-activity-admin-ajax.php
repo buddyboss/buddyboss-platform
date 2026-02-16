@@ -410,6 +410,17 @@ class BB_Activity_Admin_Ajax {
 		do_action( 'bp_activity_list_table_get_views', '', $current_view );
 		ob_end_clean();
 
+		/**
+		 * Fires before the activity admin index screen is displayed.
+		 * Same hook as legacy bp_activity_admin_index().
+		 *
+		 * @since BuddyPress 1.6.0
+		 * @since BuddyBoss [BBVERSION] Added to Settings 2.0 AJAX activity listing.
+		 *
+		 * @param array $messages Array of messages to display at top of page (empty in AJAX context).
+		 */
+		do_action( 'bp_activity_admin_index', array() );
+
 		wp_send_json_success(
 			array(
 				'activities'       => $items,
@@ -465,6 +476,18 @@ class BB_Activity_Admin_Ajax {
 		$item = $activity['activities'][0];
 
 		/**
+		 * Fires after the registration of all of the default activity meta boxes.
+		 * Same hook as legacy bp_activity_admin_load() edit screen setup.
+		 * Allows plugins to register additional data for the activity edit form.
+		 *
+		 * @since BuddyPress 2.4.0
+		 * @since BuddyBoss [BBVERSION] Added to Settings 2.0 AJAX get activity.
+		 */
+		ob_start();
+		do_action( 'bp_activity_admin_meta_boxes' );
+		ob_end_clean();
+
+		/**
 		 * Fires before activity edit form is displayed so plugins can modify the activity.
 		 * Same hook as legacy bp_activity_admin_edit().
 		 *
@@ -483,6 +506,42 @@ class BB_Activity_Admin_Ajax {
 			$activity_actions = bp_activity_admin_get_activity_actions();
 		}
 
+		// Get topic data if topics are enabled (same as legacy bb_activity_admin_edit_metabox_topic_content).
+		$topic_data = array(
+			'id'   => 0,
+			'name' => '',
+		);
+		$topics     = array();
+		if ( function_exists( 'bb_activity_topics_manager_instance' ) ) {
+			$activity_topics_manager = bb_activity_topics_manager_instance();
+
+			// Get current topic for this activity.
+			if ( $activity_topics_manager && method_exists( $activity_topics_manager, 'bb_get_activity_topic' ) ) {
+				$current_topic_id = (int) $activity_topics_manager->bb_get_activity_topic( $item->id, 'id' );
+				if ( $current_topic_id ) {
+					$topic_all = $activity_topics_manager->bb_get_activity_topic( $item->id, 'all' );
+					if ( $topic_all ) {
+						$topic_data = array(
+							'id'   => $current_topic_id,
+							'name' => $topic_all->name ?? '',
+						);
+					}
+				}
+			}
+
+			// Get available topics list (same logic as legacy metabox).
+			if ( 'groups' === $item->component && function_exists( 'bb_get_group_activity_topics' ) ) {
+				$topics = bb_get_group_activity_topics(
+					array(
+						'item_id'   => $item->item_id,
+						'item_type' => 'groups',
+					)
+				);
+			} elseif ( $activity_topics_manager && method_exists( $activity_topics_manager, 'bb_get_activity_topics' ) ) {
+				$topics = $activity_topics_manager->bb_get_activity_topics();
+			}
+		}
+
 		wp_send_json_success(
 			array(
 				'activity'         => array(
@@ -497,9 +556,11 @@ class BB_Activity_Admin_Ajax {
 					'item_id'           => (int) $item->item_id,
 					'secondary_item_id' => (int) $item->secondary_item_id,
 					'component'         => $item->component,
-					'post_title'        => isset( $item->post_title ) ? $item->post_title : '',
+					'post_title'        => $item->post_title ?? '',
+					'topic'             => $topic_data,
 				),
 				'activity_actions' => $activity_actions,
+				'topics'           => $topics,
 			)
 		);
 	}
@@ -644,6 +705,54 @@ class BB_Activity_Admin_Ajax {
 
 		if ( 0 !== $error ) {
 			wp_send_json_error( array( 'message' => __( 'Failed to save activity.', 'buddyboss' ) ) );
+		}
+
+		// Save activity topic relationship (same as legacy bb_save_activity_topic_metabox).
+		// phpcs:disable WordPress.Security.NonceVerification.Missing
+		if ( isset( $_POST['activity_topic'] ) && function_exists( 'bb_activity_topics_manager_instance' ) ) {
+			$topic_id = absint( $_POST['activity_topic'] );
+			// phpcs:enable WordPress.Security.NonceVerification.Missing
+
+			$activity_topics_manager = bb_activity_topics_manager_instance();
+
+			if ( $activity_topics_manager && method_exists( $activity_topics_manager, 'bb_add_activity_topic_relationship' ) ) {
+
+				/**
+				 * Fires before saving the activity topic metabox.
+				 * Same hook as legacy bb_save_activity_topic_metabox().
+				 *
+				 * @since BuddyBoss 2.8.80
+				 * @since BuddyBoss [BBVERSION] Added to Settings 2.0 AJAX save activity.
+				 *
+				 * @param object $activity The activity object.
+				 */
+				do_action( 'bb_before_save_activity_topic_metabox', $activity );
+
+				if ( $activity->id && $topic_id ) {
+					$topic_args = array(
+						'topic_id'    => $topic_id,
+						'activity_id' => $activity->id,
+						'component'   => $activity->component,
+						'item_id'     => 0,
+					);
+					if ( 'groups' === $activity->component ) {
+						$topic_args['item_id'] = $activity->item_id;
+					}
+					$activity_topics_manager->bb_add_activity_topic_relationship( $topic_args );
+				}
+
+				/**
+				 * Fires after saving the activity topic metabox.
+				 * Same hook as legacy bb_save_activity_topic_metabox().
+				 *
+				 * @since BuddyBoss 2.8.80
+				 * @since BuddyBoss [BBVERSION] Added to Settings 2.0 AJAX save activity.
+				 *
+				 * @param int $activity_id The ID of the activity.
+				 * @param int $topic_id    The ID of the topic.
+				 */
+				do_action( 'bb_after_save_activity_topic_metabox', $activity->id, $topic_id );
+			}
 		}
 
 		wp_send_json_success(

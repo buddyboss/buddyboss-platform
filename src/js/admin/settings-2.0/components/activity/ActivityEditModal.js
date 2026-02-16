@@ -5,7 +5,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useEffect, useRef, useCallback } from '@wordpress/element';
+import { useState, useEffect, useRef } from '@wordpress/element';
 import {
 	Modal,
 	TextControl,
@@ -28,8 +28,8 @@ function RichTextEditor( { id, label, value, onChange } ) {
 	var containerRef = useRef( null );
 	var editorInitialized = useRef( false );
 
+	// Initialize TinyMCE on mount.
 	useEffect( function () {
-		// Initialize TinyMCE if wp.editor is available.
 		if ( window.wp && window.wp.editor && ! editorInitialized.current ) {
 			// Small delay to ensure the textarea DOM element is ready.
 			var timer = setTimeout( function () {
@@ -96,12 +96,13 @@ function RichTextEditor( { id, label, value, onChange } ) {
  * @param {boolean}  props.isOpen           Whether the modal is open.
  * @param {Object}   props.activity         Activity object to edit.
  * @param {Object}   props.activityActions  Available activity types.
+ * @param {Array}    props.topics           Available topics list.
  * @param {Function} props.onClose          Close handler.
  * @param {Function} props.onSave           Save handler.
  * @param {boolean}  props.isSaving         Whether save is in progress.
  * @returns {JSX.Element|null} Modal component or null.
  */
-export function ActivityEditModal( { isOpen, activity, activityActions, onClose, onSave, isSaving } ) {
+export function ActivityEditModal( { isOpen, activity, activityActions, topics, onClose, onSave, isSaving } ) {
 	var actionState = useState( '' );
 	var actionText = actionState[ 0 ];
 	var setActionText = actionState[ 1 ];
@@ -134,6 +135,10 @@ export function ActivityEditModal( { isOpen, activity, activityActions, onClose,
 	var secondaryItemId = secondaryItemIdState[ 0 ];
 	var setSecondaryItemId = secondaryItemIdState[ 1 ];
 
+	var topicIdState = useState( '' );
+	var topicId = topicIdState[ 0 ];
+	var setTopicId = topicIdState[ 1 ];
+
 	var errorState = useState( '' );
 	var error = errorState[ 0 ];
 	var setError = errorState[ 1 ];
@@ -146,9 +151,11 @@ export function ActivityEditModal( { isOpen, activity, activityActions, onClose,
 			setPostTitle( activity.post_title || '' );
 			setType( activity.type || '' );
 			setPrimaryLink( activity.primary_link || '' );
-			setUserId( String( activity.user_id || '' ) );
-			setItemId( String( activity.item_id || '' ) );
-			setSecondaryItemId( String( activity.secondary_item_id || '' ) );
+			// Use nullish coalescing style to preserve 0 values (0 is valid, not empty).
+			setUserId( String( null != activity.user_id ? activity.user_id : '' ) );
+			setItemId( String( null != activity.item_id ? activity.item_id : '' ) );
+			setSecondaryItemId( String( null != activity.secondary_item_id ? activity.secondary_item_id : '' ) );
+			setTopicId( activity.topic && activity.topic.id ? String( activity.topic.id ) : '' );
 			setError( '' );
 		}
 	}, [ isOpen, activity ] );
@@ -164,6 +171,16 @@ export function ActivityEditModal( { isOpen, activity, activityActions, onClose,
 			typeOptions.push( { label: activityActions[ key ], value: key } );
 		} );
 	}
+
+	// Build topic options (topics use topic_id as value, same as legacy metabox).
+	var topicOptions = [ { label: __( '--- Select a topic ---', 'buddyboss' ), value: '' } ];
+	if ( topics && Array.isArray( topics ) ) {
+		topics.forEach( function ( topic ) {
+			var tid = topic.topic_id || topic.id;
+			topicOptions.push( { label: topic.name, value: String( tid ) } );
+		} );
+	}
+	var hasTopics = topics && Array.isArray( topics ) && topics.length > 0;
 
 	var handleSave = function () {
 		setError( '' );
@@ -194,6 +211,7 @@ export function ActivityEditModal( { isOpen, activity, activityActions, onClose,
 			user_id: userId,
 			item_id: itemId,
 			secondary_item_id: secondaryItemId,
+			activity_topic: topicId,
 		} );
 	};
 
@@ -210,16 +228,18 @@ export function ActivityEditModal( { isOpen, activity, activityActions, onClose,
 				) }
 
 				<RichTextEditor
+					key={ 'action-' + activity.id }
 					id="bb-activity-edit-action"
 					label={ __( 'Action', 'buddyboss' ) }
-					value={ actionText }
+					value={ activity.action || '' }
 					onChange={ setActionText }
 				/>
 
 				<RichTextEditor
+					key={ 'content-' + activity.id }
 					id="bb-activity-edit-content"
 					label={ __( 'Content', 'buddyboss' ) }
-					value={ content }
+					value={ activity.content || '' }
 					onChange={ setContent }
 				/>
 
@@ -237,6 +257,16 @@ export function ActivityEditModal( { isOpen, activity, activityActions, onClose,
 					onChange={ setType }
 					__nextHasNoMarginBottom
 				/>
+
+				{ hasTopics && (
+					<SelectControl
+						label={ __( 'Topic', 'buddyboss' ) }
+						value={ topicId }
+						options={ topicOptions }
+						onChange={ setTopicId }
+						__nextHasNoMarginBottom
+					/>
+				) }
 
 				<TextControl
 					label={ __( 'Link', 'buddyboss' ) }
