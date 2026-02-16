@@ -1783,7 +1783,7 @@ class BB_Topics_Manager {
 		wp_send_json_success(
 			array(
 				'message' => __( 'Topic migrated successfully.', 'buddyboss' ),
-				'topic'   => $result,
+				'topic'   => isset( $result ) ? $result : array(),
 			)
 		);
 	}
