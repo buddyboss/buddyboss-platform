@@ -221,4 +221,9 @@
         padding: 16px 24px;
         border-top: 1px solid $bb-border-secondary-color;
     }
+
+    .components-radio-control__group-wrapper {
+        flex-direction: row;
+        justify-content: flex-start;
+    }
 }

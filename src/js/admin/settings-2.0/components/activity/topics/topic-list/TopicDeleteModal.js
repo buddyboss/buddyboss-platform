@@ -49,7 +49,7 @@ export function TopicDeleteModal( { isOpen, onClose, onConfirm, topic, available
 
 	// Add a default empty option.
 	topicOptions.unshift( {
-		label: __( '-- Select a topic --', 'buddyboss' ),
+		label: __( 'Select topic', 'buddyboss' ),
 		value: '',
 	} );
 
@@ -66,20 +66,20 @@ export function TopicDeleteModal( { isOpen, onClose, onConfirm, topic, available
 
 	return (
 		<Modal
-			title={ __( 'Delete Topic', 'buddyboss' ) }
+			title={
+				/* translators: %s: Topic name. */
+				wp.i18n.sprintf(
+					__( 'Deleting "%s"?', 'buddyboss' ),
+					topic.name
+				)
+			}
 			onRequestClose={ onClose }
 			className="bb-topic-delete-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
 		>
 			<div className="bb-topic-delete-modal__body">
 				<p className="bb-topic-delete-modal__warning">
-					{
-						/* translators: %s: Topic name. */
-						wp.i18n.sprintf(
-							__( 'Deleting "%s"? This will remove the topic from all posts.', 'buddyboss' ),
-							topic.name
-						)
-					}
+					{ __( 'Deleting this topic will remove it from all posts it is assigned to and cannot be undone. Those posts will have no topic unless you assign a new one using the options below.', 'buddyboss' ) }
 				</p>
 
 				<RadioControl
@@ -100,7 +100,6 @@ export function TopicDeleteModal( { isOpen, onClose, onConfirm, topic, available
 				{ 'migrate' === migrateType && (
 					<div className="bb-topic-delete-modal__migrate-select">
 						<SelectControl
-							label={ __( 'Move to:', 'buddyboss' ) }
 							value={ newTopicId }
 							options={ topicOptions }
 							onChange={ setNewTopicId }
