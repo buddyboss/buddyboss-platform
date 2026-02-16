@@ -659,6 +659,7 @@ function bp_nouveau_ajax_video_delete() {
 			if ( bp_has_activities(
 				array(
 					'include' => $activity_id,
+					'scope'   => false,
 				)
 			) ) {
 				while ( bp_activities() ) {

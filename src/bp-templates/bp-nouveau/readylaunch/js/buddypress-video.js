@@ -1596,40 +1596,35 @@ window.bp = window.bp || {};
 								$.each(
 									video,
 									function ( index, value ) {
-										var videoElem = $( '#activity-stream ul.bb-rl-activity-list li.activity .activity-content .activity-inner .bb-activity-video-wrap div[data-id="' + value + '"]' );
+										var videoElem = $( '#bb-rl-activity-stream ul.bb-rl-activity-list li.activity .bb-rl-activity-content .bb-rl-activity-inner .bb-activity-video-wrap div[data-id="' + value + '"]' );
 										if ( videoElem.length ) {
 											videoElem.remove();
 										}
-										var activityElem = $( 'body .bb-activity-video-elem.' + value );
+										var activityElem = $( 'body .bb-rl-activity-video-elem.' + value );
 										if ( activityElem.length ) {
 											activityElem.remove();
 										}
 									}
 								);
 
-								var length = $( '#activity-stream ul.bb-rl-activity-list li[data-bp-activity-id="' + activityId + '"] .activity-content .activity-inner .bb-activity-video-elem' ).length;
-								if ( length === 0 ) {
-									$( '#activity-stream ul.bb-rl-activity-list li[data-bp-activity-id="' + activityId + '"]' ).remove();
-								}
-
 								if ( true === response.data.delete_activity ) {
-									$( 'body #buddypress .bb-rl-activity-list li#activity-' + activityId ).remove();
-									$( 'body .bb-activity-video-elem.video-activity.' + id ).remove();
+									$( 'body #buddypress .bb-rl-activity-list li#bb-rl-activity-' + activityId ).remove();
+									$( 'body .bb-rl-activity-video-elem.' + id ).remove();
 									$( 'body .bb-rl-activity-comments li#bb-rl-acomment-' + activityId ).remove();
 
 									if ( rootParentActivity && $( '.bb-rl-activity-list' ).length ) {
 										var liCount = $( '.bb-rl-activity-list li#activity-' + rootParentActivity + ' .activity-comments > ul > li' ).length;
 										if ( 0 === liCount ) {
 											$( '.bb-rl-activity-list li#activity-' + rootParentActivity + ' .activity-comments ul' ).remove();
-											var act_comments_text = $( '.bb-rl-activity-list li#activity-' + rootParentActivity + ' .activity-state .activity-state-comments .comments-count' );
+											var act_comments_text = $( '.bb-rl-activity-list li#bb-rl-activity-' + rootParentActivity + ' .activity-state .activity-state-comments .comments-count' );
 											if ( act_comments_text.length ) {
 												var commentLabelSingle = bbRlActivity.strings.commentLabel;
 												act_comments_text.text( commentLabelSingle.replace( '%d', 0 ) );
 											}
-											$( '.bb-rl-activity-list li#activity-' + rootParentActivity + ' .activity-content .activity-state' ).removeClass( 'has-comments' );
+											$( '.bb-rl-activity-list li#bb-rl-activity-' + rootParentActivity + ' .bb-rl-activity-content .activity-state' ).removeClass( 'has-comments' );
 										} else {
 											var totalLi         = parseInt( liCount ),
-												actCommentsText = $( '.bb-rl-activity-list li#activity-' + rootParentActivity + ' .activity-state .activity-state-comments .comments-count' );
+												actCommentsText = $( '.bb-rl-activity-list li#bb-rl-activity-' + rootParentActivity + ' .activity-state .activity-state-comments .comments-count' );
 											if ( actCommentsText.length ) {
 												var multipleCommentLabel = totalLi > 1 ? bbRlActivity.strings.commentsLabel : bbRlActivity.strings.commentLabel;
 												actCommentsText.text( multipleCommentLabel.replace( '%d', totalLi ) );
@@ -1637,7 +1632,7 @@ window.bp = window.bp || {};
 										}
 									}
 								} else {
-									$( 'body #buddypress .bb-rl-activity-list li#activity-' + activityId ).replaceWith( response.data.activity_content );
+									$( 'body #buddypress .bb-rl-activity-list li#bb-rl-activity-' + activityId ).replaceWith( response.data.activity_content );
 								}
 							}
 						} else if ( fromWhere && fromWhere.length && 'video' === fromWhere ) {
@@ -2941,27 +2936,27 @@ window.bp = window.bp || {};
 		/**
 		 * Pause all YouTube/Vimeo iframe embeds in activity posts
 		 * This prevents YouTube videos from playing when Video.js videos are active
-		 * 
+		 *
 		 * @param {boolean} quiet - If true, suppresses debug logs
 		 * @param {string} additionalSelector - Optional additional CSS selector for iframes (e.g., '.bb-rl-activity-video-elem iframe')
 		 */
 		pauseEmbeddedVideos: function( quiet, additionalSelector ) {
 			quiet = quiet || false;
 			additionalSelector = additionalSelector || '.bb-rl-activity-video-elem iframe';
-			
+
 			// Base selector for activity iframes
 			var baseSelector = '.activity-list iframe, .activity-item iframe, .bb-activity-video-elem iframe';
 			// Append additional selector if provided
 			var selector = additionalSelector ? baseSelector + ', ' + additionalSelector : baseSelector;
-			
+
 			// Find all YouTube and Vimeo iframes in activity posts
 			var iframes = $( selector );
-			
+
 			iframes.each(
 				function() {
 					var $iframe = $( this );
 					var src = $iframe.attr( 'src' ) || '';
-					
+
 					// Check if it's a YouTube or Vimeo iframe
 					if ( src.indexOf( 'youtube.com' ) !== -1 || src.indexOf( 'youtu.be' ) !== -1 || src.indexOf( 'vimeo.com' ) !== -1 ) {
 						try {
@@ -2969,40 +2964,40 @@ window.bp = window.bp || {};
 							var isYouTube = src.indexOf( 'youtube.com' ) !== -1 || src.indexOf( 'youtu.be' ) !== -1;
 							var hasEnableJsApi = src.indexOf( 'enablejsapi=1' ) !== -1;
 							var hasAutoplay = src.indexOf( 'autoplay=1' ) !== -1;
-							
+
 							// For YouTube: Try postMessage first
 							if ( isYouTube && iframe.contentWindow ) {
 								// Always try postMessage first
 								iframe.contentWindow.postMessage( '{"event":"command","func":"pauseVideo","args":""}', '*' );
-								
+
 								setTimeout( function() {
 									if ( iframe.contentWindow ) {
 										iframe.contentWindow.postMessage( '{"event":"command","func":"stopVideo","args":""}', '*' );
 									}
 								}, 100 );
 							}
-							
+
 							// Only reload iframe if we need to add enablejsapi=1 (required for postMessage to work reliably)
 							// If enablejsapi is already present, we can use postMessage without reloading
 							if ( isYouTube && ! hasEnableJsApi ) {
 								var newSrc = src;
 								var separator = src.indexOf( '?' ) !== -1 ? '&' : '?';
 								newSrc = src + separator + 'enablejsapi=1';
-								
+
 								// While we're reloading, also remove autoplay if present
 								if ( hasAutoplay ) {
 									newSrc = newSrc.replace( /[?&]autoplay=1(&|$)/g, '$1' );
 									newSrc = newSrc.replace( /^([^?]*)\?&/, '$1?' );
 								}
-								
+
 								// Reload iframe with enablejsapi=1
 								$iframe.attr( 'src', newSrc );
-								
+
 								// Wait for iframe to reload, then send pause commands
 								setTimeout( function() {
 									if ( iframe.contentWindow ) {
 										iframe.contentWindow.postMessage( '{"event":"command","func":"pauseVideo","args":""}', '*' );
-										
+
 										setTimeout( function() {
 											if ( iframe.contentWindow ) {
 												iframe.contentWindow.postMessage( '{"event":"command","func":"stopVideo","args":""}', '*' );
@@ -3036,7 +3031,7 @@ window.bp = window.bp || {};
 		 * Setup picture-in-picture event handlers for a video element
 		 * NOTE: This function is identical to the one in buddypress-video.js
 		 * Keep both in sync - any changes must be made in both files
-		 * 
+		 *
 		 * @param {HTMLElement} videoElement - The video element to setup PiP handlers for
 		 */
 		setupPictureInPictureHandlers: function( videoElement ) {
@@ -3154,7 +3149,7 @@ window.bp = window.bp || {};
 		addListeners: function () {
 
 			$( document ).on( 'click', '.video-js', this.openPlayer.bind( this ) );
-			
+
 			// Global listener for any clicks that might trigger YouTube videos
 			// This catches clicks even in picture-in-picture windows
 			// Namespaced for potential cleanup: .video-player
@@ -3167,7 +3162,7 @@ window.bp = window.bp || {};
 					}, 50 );
 				}
 			} );
-			
+
 			// Listen for any iframe load events (YouTube might reload when we change src)
 			// Namespaced for potential cleanup: .video-player
 			$( document ).on( 'load.video-player', 'iframe[src*="youtube"], iframe[src*="youtu.be"]', function() {
@@ -3219,12 +3214,12 @@ window.bp = window.bp || {};
 											}
 										}
 									);
-									
+
 									// Pause YouTube/Vimeo iframes
 									bp.Nouveau.Video.Player.pauseEmbeddedVideos();
 								}
 							);
-							
+
 							// Handle picture-in-picture events (only if PiP is supported)
 							var videoElement = this.el().querySelector( 'video' );
 							if ( videoElement ) {
