@@ -7,7 +7,7 @@
  * @since BuddyBoss 3.0.0
  */
 
-import { useState, useEffect, useRef, useCallback, RawHTML } from '@wordpress/element';
+import { useState, useEffect, useRef, useCallback, lazy, Suspense, RawHTML } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { Spinner } from '@wordpress/components';
 import { getCachedFeatureData, setCachedFeatureData, invalidateFeatureCache } from '../utils/featureCache';
@@ -18,6 +18,18 @@ import { Toast } from '../components/Toast';
 import { debounce, fetchHelpContent, clearHelpContentCache } from '../../utils/api';
 import { HelpIcon } from '../components/HelpIcon';
 import { HelpSliderModal } from '../components/HelpSliderModal';
+
+// Lazy load custom panel screens.
+const ActivityListScreen = lazy(() => import('./ActivityListScreen'));
+const GroupsListScreen = lazy(() => import('./GroupsListScreen'));
+
+/**
+ * Map of feature + panel combinations that render custom screens instead of settings forms.
+ */
+const CUSTOM_PANEL_SCREENS = {
+	'activity:all_activities': ActivityListScreen,
+	'groups:all_groups': GroupsListScreen,
+};
 
 /**
  * AJAX request helper for fetching feature data.
@@ -348,6 +360,10 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 	// Get the active side panel
 	const activePanel = sidePanels.find(p => p.id === activePanelId);
 
+	// Check if this panel has a custom screen (e.g., ActivityListScreen).
+	const customScreenKey = featureId + ':' + activePanelId;
+	const CustomScreen = CUSTOM_PANEL_SCREENS[customScreenKey] || null;
+
 	return (
 		<div className="bb-admin-feature-settings">
 			<div className="bb-admin-feature-settings__container">
@@ -364,7 +380,14 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 				</aside>
 
 				{/* Main Content */}
-				<main className="bb-admin-feature-settings__main">
+				<main className={ 'bb-admin-feature-settings__main' + ( CustomScreen ? ' bb-admin-feature-settings__main--custom-panel' : '' ) }>
+					{/* Custom Panel Screen (e.g., All Activities, All Groups) */}
+					{CustomScreen ? (
+						<Suspense fallback={<div className="bb-admin-loading"><Spinner /></div>}>
+							<CustomScreen onNavigate={onNavigate} />
+						</Suspense>
+					) : (
+					<>
 					{/* Content wrapper */}
 					<div className="bb-admin-feature-settings__content-wrap">
 
@@ -437,6 +460,8 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 
 						</div>
 					</div>
+					</>
+					)}
 				</main>
 			</div>
 

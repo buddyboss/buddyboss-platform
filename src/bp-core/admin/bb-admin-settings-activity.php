@@ -1,11 +1,11 @@
 <?php
 /**
- * BuddyBoss Admin Settings - Activity Feature Settings Registration.
+ * BuddyBoss Admin Settings - Activity Feature Registration.
  *
- * Orchestrates Activity feature settings by registering side panels
- * and loading panel-specific field registrations.
+ * Registers the Activity feature in the Feature Registry and loads
+ * all Activity settings (side panels, sections, fields).
  *
- * @package BuddyBoss\Features\Community\Activity
+ * @package BuddyBoss\Core\Administration
  * @since BuddyBoss [BBVERSION]
  */
 
@@ -13,23 +13,48 @@
 defined( 'ABSPATH' ) || exit;
 
 // Load sanitize callbacks.
-require_once __DIR__ . '/callbacks.php';
+require_once __DIR__ . '/settings-activity/callbacks.php';
 
 // Load panel field registrations.
-require_once __DIR__ . '/settings-activity.php';
-require_once __DIR__ . '/settings-comments.php';
-require_once __DIR__ . '/settings-topics.php';
-require_once __DIR__ . '/settings-visibility.php';
-require_once __DIR__ . '/settings-sharing.php';
+require_once __DIR__ . '/settings-activity/settings-activity.php';
+require_once __DIR__ . '/settings-activity/settings-comments.php';
+require_once __DIR__ . '/settings-activity/settings-topics.php';
+require_once __DIR__ . '/settings-activity/settings-visibility.php';
+require_once __DIR__ . '/settings-activity/settings-sharing.php';
 
 /**
- * Register Activity feature settings in Feature Registry.
+ * Register Activity feature and settings in Feature Registry.
  *
- * Registers side panels and delegates field registration to panel-specific functions.
+ * Registers the feature, side panels, and delegates field registration
+ * to panel-specific functions.
  *
  * @since BuddyBoss [BBVERSION]
  */
-function bb_admin_settings_register_activity_settings() {
+function bb_admin_settings_register_activity_feature() {
+
+	// =========================================================================
+	// REGISTER FEATURE
+	// =========================================================================
+
+	bb_register_feature(
+		'activity',
+		array(
+			'label'              => __( 'Activity Feeds', 'buddyboss' ),
+			'description'        => __( 'Provide global, personal, and group activity feeds that support threaded commenting, direct posting, @mentions, and email notifications.', 'buddyboss' ),
+			'icon'               => array(
+				'type'  => 'font',
+				'class' => 'bb-icons-rl bb-icons-rl-lightning',
+			),
+			'license_tier'       => 'free',
+			'category'           => 'community',
+			'standalone'         => true,
+			'is_active_callback' => function () {
+				return bp_is_active( 'activity' );
+			},
+			'settings_route'     => '/settings/activity',
+			'order'              => 40,
+		)
+	);
 
 	// =========================================================================
 	// SIDE PANELS
@@ -195,4 +220,4 @@ function bb_admin_settings_register_activity_settings() {
 	do_action( 'bb_activity_after_register_settings_fields' );
 }
 
-add_action( 'bb_register_features', 'bb_admin_settings_register_activity_settings', 20 );
+add_action( 'bb_register_features', 'bb_admin_settings_register_activity_feature', 20 );

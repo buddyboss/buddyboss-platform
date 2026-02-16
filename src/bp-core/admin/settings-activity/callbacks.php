@@ -4,7 +4,7 @@
  *
  * Sanitize callback functions for Activity feature settings.
  *
- * @package BuddyBoss\Features\Community\Activity
+ * @package BuddyBoss\Core\Administration
  * @since BuddyBoss [BBVERSION]
  */
 

@@ -6,7 +6,7 @@
  * When the BuddyBoss Sharing plugin is active, it registers its own
  * full fields via the `bb_activity_after_register_settings_fields` hook.
  *
- * @package BuddyBoss\Features\Community\Activity
+ * @package BuddyBoss\Core\Administration
  * @since BuddyBoss [BBVERSION]
  */
 

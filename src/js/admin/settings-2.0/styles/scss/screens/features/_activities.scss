@@ -1,0 +1,601 @@
+/* ----------------------------------------------------------------
+   Activity List Screen
+   ---------------------------------------------------------------- */
+
+.bb-activity-list {
+	max-width: 100%;
+	padding: 24px;
+
+	// Notice
+	&__notice {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 8px 16px;
+		border-radius: $bb-border-radius-lg;
+		margin-bottom: 16px;
+		font-size: 13px;
+
+		&--success {
+			background-color: $bb-background-positive-primary-color;
+			color: $bb-text-positive-primary-color;
+			border: 1px solid $bb-border-positive-secondary-color;
+		}
+
+		&--error {
+			background-color: #fef2f2;
+			color: $bb-error-color;
+			border: 1px solid $bb-error-color;
+		}
+	}
+
+	&__notice-dismiss {
+		background: none;
+		border: none;
+		cursor: pointer;
+		font-size: 18px;
+		line-height: 1;
+		padding: 0 0 0 8px;
+		color: inherit;
+		opacity: 0.7;
+
+		&:hover {
+			opacity: 1;
+		}
+	}
+
+	// Header
+	&__header {
+		margin-bottom: 16px;
+	}
+
+	&__title {
+		font-size: 20px;
+		font-weight: 600;
+		color: $bb-text-color;
+		margin: 0;
+	}
+
+	// Toolbar
+	&__toolbar {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+		margin-bottom: 16px;
+		flex-wrap: wrap;
+	}
+
+	&__toolbar-left {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		flex-wrap: wrap;
+	}
+
+	&__toolbar-right {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+	}
+
+	// Bulk Actions
+	&__bulk-actions {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+
+		.components-select-control {
+			margin-bottom: 0;
+		}
+
+		select {
+			min-width: 140px;
+			height: 32px;
+			font-size: 13px;
+		}
+	}
+
+	&__bulk-apply.is-secondary {
+		height: 32px;
+		font-size: 13px;
+		padding: 0 12px;
+	}
+
+	// Filter Dropdown
+	&__filter-select {
+		.components-select-control {
+			margin-bottom: 0;
+		}
+
+		select {
+			min-width: 100px;
+			height: 32px;
+			font-size: 13px;
+		}
+	}
+
+	// Action Type Filter
+	&__action-filter {
+		.components-select-control {
+			margin-bottom: 0;
+		}
+
+		select {
+			min-width: 140px;
+			height: 32px;
+			font-size: 13px;
+		}
+	}
+
+	// Search
+	&__search {
+		position: relative;
+	}
+
+	&__search-input {
+		width: 200px;
+		height: 32px;
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-md;
+		padding: 0 32px 0 8px;
+		font-size: 13px;
+		color: $bb-text-color;
+		background-color: $bb-background-base-color;
+		outline: none;
+
+		&::placeholder {
+			color: $bb-text-disabled-color;
+		}
+
+		&:focus {
+			border-color: $bb-border-brand-primary-color;
+		}
+	}
+
+	&__search-icon {
+		position: absolute;
+		right: 8px;
+		top: 50%;
+		transform: translateY(-50%);
+		color: $bb-icon-tertiary-color;
+		font-size: 16px;
+		pointer-events: none;
+	}
+
+	// Table
+	&__table-wrapper {
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-xl;
+		overflow: hidden;
+		background: $bb-background-base-color;
+	}
+
+	&__loading {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 60px 0;
+	}
+
+	&__edit-loading {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: rgba(0, 0, 0, 0.1);
+		z-index: 100000;
+	}
+
+	&__empty {
+		padding: 40px;
+		text-align: center;
+		color: $bb-text-tertiary-color;
+		font-size: 14px;
+	}
+
+	&__table {
+		width: 100%;
+		border-collapse: collapse;
+		table-layout: fixed;
+	}
+
+	// Table Header
+	&__table thead {
+		border-bottom: 1px solid $bb-border-secondary-color;
+	}
+
+	&__table th {
+		padding: 10px 12px;
+		font-size: 12px;
+		font-weight: 500;
+		color: $bb-text-tertiary-color;
+		text-align: left;
+		text-transform: capitalize;
+		letter-spacing: 0.02em;
+		white-space: nowrap;
+		background: $bb-background-primary-color;
+	}
+
+	&__th--checkbox {
+		width: 40px;
+	}
+
+	&__th--author {
+		width: 180px;
+	}
+
+	&__th--activity {
+		// Takes remaining space
+	}
+
+	&__th--date {
+		width: 180px;
+	}
+
+	&__th--actions {
+		width: 48px;
+	}
+
+	// Table Rows
+	&__table tbody tr {
+		border-bottom: 1px solid $bb-border-primary-color;
+
+		&:last-child {
+			border-bottom: none;
+		}
+	}
+
+	&__row {
+		transition: background-color 0.15s ease;
+
+		&:hover {
+			background-color: $bb-background-primary-hover-color;
+		}
+
+		&--selected {
+			background-color: $bb-background-positive-primary-color;
+		}
+
+		&--spam {
+			opacity: 0.7;
+		}
+	}
+
+	&__table td {
+		padding: 10px 12px;
+		font-size: 13px;
+		color: $bb-text-secondary-color;
+		vertical-align: middle;
+	}
+
+	// Checkbox cells
+	&__th--checkbox,
+	&__td--checkbox {
+		.components-checkbox-control {
+			margin-bottom: 0;
+		}
+
+		.components-base-control__field {
+			margin-bottom: 0;
+		}
+	}
+
+	// Author Column
+	&__author {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	&__avatar {
+		width: 32px;
+		height: 32px;
+		border-radius: $bb-border-radius-full;
+		flex-shrink: 0;
+		object-fit: cover;
+	}
+
+	&__author-info {
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+		overflow: hidden;
+	}
+
+	&__author-name {
+		font-size: 13px;
+		font-weight: 500;
+		color: $bb-link-color;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		text-decoration: none;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+
+	&__spam-badge {
+		display: inline-flex;
+		align-items: center;
+		gap: 2px;
+		padding: 1px 6px;
+		background-color: $bb-error-color;
+		color: $bb-text-inverse-color;
+		font-size: 11px;
+		font-weight: 500;
+		border-radius: $bb-border-radius-sm;
+		align-self: flex-start;
+
+		i {
+			font-size: 10px;
+		}
+	}
+
+	// Activity Column
+	&__content {
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+		min-width: 0;
+	}
+
+	&__action-text {
+		font-size: 13px;
+		color: $bb-text-color;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		display: block;
+	}
+
+	&__content-preview {
+		font-size: 12px;
+		color: $bb-link-color;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		display: block;
+	}
+
+	// Date Column
+	&__td--date {
+		white-space: nowrap;
+		font-size: 13px;
+		color: $bb-text-tertiary-color;
+	}
+
+	&__date {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+		color: $bb-text-tertiary-color;
+
+		i {
+			font-size: 14px;
+			color: $bb-icon-tertiary-color;
+		}
+	}
+
+	// Actions Column
+	&__td--actions {
+		text-align: center;
+
+		.components-dropdown-menu__toggle {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background: none;
+			border: none;
+			cursor: pointer;
+			padding: 4px;
+			min-width: auto;
+			height: auto;
+			color: $bb-icon-tertiary-color;
+			border-radius: $bb-border-radius-sm;
+
+			i {
+				font-size: 16px;
+				line-height: 1;
+				font-weight: 700;
+			}
+
+			&:hover,
+			&:focus,
+			&.is-pressed {
+				color: $bb-text-color;
+				background: $bb-background-primary-hover-color;
+				box-shadow: none;
+			}
+
+			.dashicon,
+			svg:not(:first-child) {
+				display: none;
+			}
+		}
+	}
+
+	// Footer
+	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 16px 0;
+		margin-top: 8px;
+	}
+
+	// Item Count
+	&__item-count {
+		font-size: 13px;
+		color: $bb-text-tertiary-color;
+		white-space: nowrap;
+	}
+
+	// Pagination
+	&__pagination {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+	}
+
+	&__pagination-btn.is-secondary,
+	&__pagination-btn.is-primary {
+		min-width: 32px;
+		height: 32px;
+		padding: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 13px;
+		line-height: 1;
+	}
+
+	&__pagination-btn--current.is-primary {
+		background-color: $bb-text-color;
+		border-color: $bb-text-color;
+		color: $bb-text-inverse-color;
+	}
+
+	&__pagination-ellipsis {
+		font-size: 13px;
+		color: $bb-text-tertiary-color;
+		min-width: 24px;
+		text-align: center;
+		line-height: 32px;
+	}
+}
+
+// Custom panel main - Allow full width for custom screens (ActivityList, GroupsList).
+.bb-admin-feature-settings__main--custom-panel {
+	padding: 0;
+
+	.bb-activity-list {
+		max-width: 100%;
+	}
+}
+
+/* ----------------------------------------------------------------
+   Activity Edit Modal
+   ---------------------------------------------------------------- */
+
+.bb-activity-edit-modal {
+	width: 720px;
+	max-width: 90vw;
+
+	.components-modal__content {
+		padding: 0;
+	}
+
+	&__body {
+		padding: 16px 24px;
+		max-height: 70vh;
+		overflow-y: auto;
+
+		.components-base-control {
+			margin-bottom: 16px;
+		}
+
+		.components-text-control__input,
+		.components-select-control select {
+			font-size: 13px;
+		}
+	}
+
+	&__error {
+		color: $bb-error-color;
+		font-size: 13px;
+		margin: 0 0 12px 0;
+	}
+
+	&__label {
+		display: block;
+		font-size: 13px;
+		font-weight: 400;
+		color: $bb-text-secondary-color;
+		margin-bottom: 8px;
+	}
+
+	&__editor-field {
+		margin-bottom: 16px;
+	}
+
+	&__editor-wrapper {
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-md;
+		overflow: hidden;
+
+		.wp-editor-container {
+			border: none;
+		}
+
+		.mce-panel {
+			border: none;
+			border-bottom: 1px solid $bb-border-primary-color;
+		}
+	}
+
+	&__textarea {
+		width: 100%;
+		min-height: 120px;
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-md;
+		padding: 8px;
+		font-size: 13px;
+		resize: vertical;
+	}
+
+	&__row {
+		display: flex;
+		gap: 16px;
+
+		> * {
+			flex: 1;
+		}
+	}
+
+	&__footer {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 8px;
+		padding: 16px 24px;
+		border-top: 1px solid $bb-border-secondary-color;
+	}
+
+	&__footer-left {
+		display: flex;
+		align-items: center;
+	}
+
+	&__footer-right {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	&__view-link {
+		display: flex;
+		align-items: center;
+		font-size: 13px;
+		color: $bb-link-color;
+		text-decoration: none;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+
+	// Override label styles within modal.
+	.components-base-control__label {
+		color: $bb-text-secondary-color;
+		font-size: 13px;
+		font-weight: 400;
+		text-transform: none;
+	}
+}

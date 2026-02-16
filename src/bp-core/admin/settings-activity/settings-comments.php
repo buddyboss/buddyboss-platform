@@ -4,7 +4,7 @@
  *
  * Registers sections and fields for the Activity Comments side panel.
  *
- * @package BuddyBoss\Features\Community\Activity
+ * @package BuddyBoss\Core\Administration
  * @since BuddyBoss [BBVERSION]
  */
 

@@ -14,7 +14,7 @@
  * third-party plugins (e.g., LearnDash) are not available at the early
  * `bb_register_features` time.
  *
- * @package BuddyBoss\Features\Community\Activity
+ * @package BuddyBoss\Core\Administration
  * @since BuddyBoss [BBVERSION]
  */
 

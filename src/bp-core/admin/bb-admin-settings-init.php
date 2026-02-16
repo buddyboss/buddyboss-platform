@@ -42,12 +42,22 @@ function bb_admin_settings_init() {
 	bb_feature_registry();
 	bb_feature_loader();
 
+	// AJAX handlers.
 	if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-settings-ajax.php' ) ) {
 		require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-settings-ajax.php';
 	}
 
+	if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-activity-admin-ajax.php' ) ) {
+		require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-activity-admin-ajax.php';
+	}
+
 	if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-page.php' ) ) {
 		require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-page.php';
+	}
+
+	// Feature settings registration.
+	if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-activity.php' ) ) {
+		require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-activity.php';
 	}
 
 	if ( file_exists( buddypress()->plugin_dir . 'bp-core/classes/class-bb-icon-registry.php' ) ) {
