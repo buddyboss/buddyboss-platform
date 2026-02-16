@@ -51,7 +51,12 @@ const ajaxFetch = (action, data = {}) => {
 		method: 'POST',
 		credentials: 'same-origin',
 		body: formData,
-	}).then((response) => response.json());
+	}).then((response) => {
+		if (!response.ok) {
+			throw new Error('HTTP ' + response.status + ': ' + response.statusText);
+		}
+		return response.json();
+	});
 };
 
 /**

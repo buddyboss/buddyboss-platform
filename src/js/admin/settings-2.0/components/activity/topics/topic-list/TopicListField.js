@@ -43,6 +43,9 @@ function ajaxRequest( action, data ) {
 		credentials: 'same-origin',
 		body: formData,
 	} ).then( function ( response ) {
+		if ( ! response.ok ) {
+			throw new Error( 'HTTP ' + response.status + ': ' + response.statusText );
+		}
 		return response.json();
 	} );
 }

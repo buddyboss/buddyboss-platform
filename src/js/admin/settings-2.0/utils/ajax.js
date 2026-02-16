@@ -31,7 +31,12 @@ export function ajaxFetch(action, data = {}, options = {}) {
 		credentials: 'same-origin',
 		body: formData,
 		signal: options.signal,
-	}).then((response) => response.json());
+	}).then((response) => {
+		if (!response.ok) {
+			throw new Error('HTTP ' + response.status + ': ' + response.statusText);
+		}
+		return response.json();
+	});
 }
 
 /**
