@@ -4923,6 +4923,10 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   padding-left: var(--bb-rl-space-300);
 }
 
+#bb-rl-media-create-album-popup > .bb-rl-field-wrap {
+  padding: var(--bb-rl-space-200) var(--bb-rl-space-300);
+}
+
 .bb-rl-location-album-list-wrap {
   padding-top: var(--bb-rl-space-100);
 }
@@ -5259,7 +5263,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 }
 
 .bb-rl-video-thumbnail-content .bb-rl-video-thumbnail-auto-generated .bb-rl-video-thumb-list li .bb-rl-custom-check:checked ~ a img {
-  border-radius: var(--bb-rl-radius-md);
+  border-radius: 0;
 }
 
 .bb-rl-video-thumbnail-content .bb-rl-video-thumbnail-auto-generated .bb-rl-video-thumb-list li > div > label {
@@ -5393,19 +5397,19 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   z-index: 999991;
 }
 
-.bb-rl-video-thumbnail-uploader.no_ffmpeg .bb-rl-video-thumbnail-content .bb-rl-video-thumbnail-auto-generated {
+.bb-rl-video-thumbnail-uploader.no_ffmpeg .bb-rl-video-thumbnail-content .bb-rl-video-thumbnail-auto-generated, .bb-rl-video-thumbnail-uploader.ffmpeg_failed .bb-rl-video-thumbnail-content .bb-rl-video-thumbnail-auto-generated {
   width: 33.3333%;
   display: inline-block;
 }
 
-.bb-rl-video-thumbnail-uploader.no_ffmpeg .bb-rl-video-thumbnail-content .bb-rl-video-thumbnail-auto-generated .bb-rl-video-thumb-list li {
+.bb-rl-video-thumbnail-uploader.no_ffmpeg .bb-rl-video-thumbnail-content .bb-rl-video-thumbnail-auto-generated .bb-rl-video-thumb-list li, .bb-rl-video-thumbnail-uploader.ffmpeg_failed .bb-rl-video-thumbnail-content .bb-rl-video-thumbnail-auto-generated .bb-rl-video-thumb-list li {
   width: 100%;
   flex: 0 0 100%;
   max-width: 100%;
   height: 100%;
 }
 
-.bb-rl-video-thumbnail-uploader.no_ffmpeg .bb-rl-video-thumbnail-content .bb-dropzone-wrap {
+.bb-rl-video-thumbnail-uploader.no_ffmpeg .bb-rl-video-thumbnail-content .bb-dropzone-wrap, .bb-rl-video-thumbnail-uploader.ffmpeg_failed .bb-rl-video-thumbnail-content .bb-dropzone-wrap {
   width: 33.333334%;
   display: inline-block;
   vertical-align: text-bottom;

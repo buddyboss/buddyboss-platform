@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.19.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-02-16 08:14:14+00:00\n"
+"POT-Creation-Date: 2026-02-16 13:54:18+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -4517,8 +4517,8 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/video/ajax.php:1033
 #: bp-templates/bp-nouveau/includes/video/ajax.php:1706
 #: bp-templates/bp-nouveau/includes/video/ajax.php:1818
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1919
-#: bp-templates/bp-nouveau/includes/video/ajax.php:2004
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1925
+#: bp-templates/bp-nouveau/includes/video/ajax.php:2010
 #: bp-templates/bp-nouveau/includes/xprofile/ajax.php:49
 msgid "There was a problem performing this action. Please try again."
 msgstr ""
@@ -33934,6 +33934,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/readylaunch/document/create-folder.php:40
 #: bp-templates/bp-nouveau/readylaunch/document/document-uploader.php:77
 #: bp-templates/bp-nouveau/readylaunch/document/index.php:36
+#: bp-templates/bp-nouveau/readylaunch/document/no-document.php:54
 #: bp-templates/bp-nouveau/readylaunch/document/single-folder.php:75
 #: bp-templates/bp-nouveau/readylaunch/document/single-folder.php:85
 msgid "Create Folder"
@@ -37321,11 +37322,11 @@ msgstr ""
 msgid "You don't have permission to move this video."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/ajax.php:1949
+#: bp-templates/bp-nouveau/includes/video/ajax.php:1955
 msgid "You do not have permission to update this video's thumbnail."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/video/ajax.php:2036
+#: bp-templates/bp-nouveau/includes/video/ajax.php:2042
 msgid "You do not have permission to delete this video's thumbnail."
 msgstr ""
 
@@ -37558,11 +37559,11 @@ msgstr ""
 msgid "Search documents"
 msgstr ""
 
-#: bp-templates/bp-nouveau/readylaunch/document/no-document.php:22
+#: bp-templates/bp-nouveau/readylaunch/document/no-document.php:44
 msgid "No documents found"
 msgstr ""
 
-#: bp-templates/bp-nouveau/readylaunch/document/no-document.php:24
+#: bp-templates/bp-nouveau/readylaunch/document/no-document.php:46
 msgid "It looks like there aren't any documents in this directory."
 msgstr ""
 
@@ -38107,116 +38108,116 @@ msgstr ""
 msgid "Error while uploading video."
 msgstr ""
 
-#: bp-video/bp-video-functions.php:4313
+#: bp-video/bp-video-functions.php:4321
 msgid "FFMpeg\\FFMpeg class not found"
 msgstr ""
 
-#: bp-video/bp-video-functions.php:4361
+#: bp-video/bp-video-functions.php:4369
 msgid "FFMpeg\\FFProbe class not found"
 msgstr ""
 
-#: bp-video/bp-video-functions.php:4897
+#: bp-video/bp-video-functions.php:4905
 msgid "Invalid upload identifier"
 msgstr ""
 
-#: bp-video/bp-video-functions.php:4912
+#: bp-video/bp-video-functions.php:4920
 msgid "Failed to create upload directory"
 msgstr ""
 
 #. translators: %s: file extension
-#: bp-video/bp-video-functions.php:4944
+#: bp-video/bp-video-functions.php:4952
 msgid "File type %s is not allowed"
 msgstr ""
 
-#: bp-video/bp-video-functions.php:4966
+#: bp-video/bp-video-functions.php:4974
 msgid "Invalid chunk parameters"
 msgstr ""
 
 #. translators: %s: file size
-#: bp-video/bp-video-functions.php:4981
+#: bp-video/bp-video-functions.php:4989
 msgid "File size exceeds maximum allowed size of %s"
 msgstr ""
 
-#: bp-video/bp-video-functions.php:4996
+#: bp-video/bp-video-functions.php:5004
 msgid "Uploaded chunk is empty"
 msgstr ""
 
-#: bp-video/bp-video-functions.php:5017
+#: bp-video/bp-video-functions.php:5025
 msgid "Total uploaded size exceeds declared file size"
 msgstr ""
 
 #. translators: %d: chunk index
-#: bp-video/bp-video-functions.php:5033
+#: bp-video/bp-video-functions.php:5041
 msgid "Failed to save chunk %d"
 msgstr ""
 
-#: bp-video/bp-video-functions.php:5118
+#: bp-video/bp-video-functions.php:5126
 msgid "Failed to create lock file"
 msgstr ""
 
-#: bp-video/bp-video-functions.php:5126
+#: bp-video/bp-video-functions.php:5134
 msgid "Failed to acquire lock"
 msgstr ""
 
 #. translators: %1$d: parts count, %2$d: total chunks
-#: bp-video/bp-video-functions.php:5149
+#: bp-video/bp-video-functions.php:5157
 msgid "%1$d of %2$d parts received"
 msgstr ""
 
 #. translators: %d: chunk index
-#: bp-video/bp-video-functions.php:5170
+#: bp-video/bp-video-functions.php:5178
 msgid "Missing chunk %d"
 msgstr ""
 
 #. translators: %1$s: expected size, %2$s: got size
-#: bp-video/bp-video-functions.php:5191
+#: bp-video/bp-video-functions.php:5199
 msgid "File size mismatch. Expected: %1$s, Got: %2$s"
 msgstr ""
 
-#: bp-video/bp-video-functions.php:5277
+#: bp-video/bp-video-functions.php:5285
 msgid "Cannot create destination directory"
 msgstr ""
 
-#: bp-video/bp-video-functions.php:5300
+#: bp-video/bp-video-functions.php:5308
 msgid "Cannot create the destination file"
 msgstr ""
 
 #. translators: %d: chunk index
-#: bp-video/bp-video-functions.php:5316
+#: bp-video/bp-video-functions.php:5324
 msgid "Chunk %d not found"
 msgstr ""
 
 #. translators: %d: chunk index
-#: bp-video/bp-video-functions.php:5327
+#: bp-video/bp-video-functions.php:5335
 msgid "Failed to open chunk %d"
 msgstr ""
 
 #. translators: %d: chunk index
-#: bp-video/bp-video-functions.php:5341
+#: bp-video/bp-video-functions.php:5349
 msgid "Failed to read chunk %d"
 msgstr ""
 
 #. translators: %d: chunk index
-#: bp-video/bp-video-functions.php:5353
+#: bp-video/bp-video-functions.php:5361
 msgid "Failed to write data from chunk %d"
 msgstr ""
 
 #. translators: %1$s: expected size, %2$s: got size
-#: bp-video/bp-video-functions.php:5392
+#: bp-video/bp-video-functions.php:5400
 msgid "Final file size mismatch. Expected: %1$s, Got: %2$s"
 msgstr ""
 
 #. translators: %s: file name
-#: bp-video/bp-video-functions.php:5405
+#: bp-video/bp-video-functions.php:5413
 msgid "File successfully created: %s"
 msgstr ""
 
-#: bp-video/bp-video-functions.php:5441
+#: bp-video/bp-video-functions.php:5449
 msgid "Invalid filename"
 msgstr ""
 
 #. translators: %1$s: file name, %2$s: file extension
-#: bp-video/bp-video-functions.php:5477
+#: bp-video/bp-video-functions.php:5485
 msgid "Cannot create unique name for saving file %1$s%2$s"
 msgstr ""
 
