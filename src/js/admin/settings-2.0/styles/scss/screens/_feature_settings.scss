@@ -869,6 +869,93 @@
 
 }
 
+/* Delete Emotion Modal */
+.bbpro_reaction_delete_confirmation {
+
+    .media-modal-content {
+        background: rgba(0, 0, 0, 0);
+        box-shadow: none;
+    }
+
+    .media-modal-close .media-modal-icon:before {
+        content: "";
+        color: $bb-icon-secondary-color;
+        font-size: 24px;
+        font-family: "bb-icons-rl";
+        font-weight: 400;
+    }
+
+    .bbpro-modal-box__header {
+        background-color: $bb-background-base-color;
+        border-bottom: 1px solid $bb-border-secondary-color;
+        border: 1px solid $bb-border-secondary-color;
+        border-radius: $bb-border-radius-xl $bb-border-radius-xl 0 0;
+        padding: 22px 24px;
+
+        h3 {
+            color: $bb-text-color;
+            font-size: 18px;
+            font-weight: 500;
+            line-height: 1;
+        }
+    }
+
+    .bbpro-modal-box__body {
+        background-color: $bb-background-base-color;
+    }
+
+    .bbpro-modal-box__footer {
+        background-color: $bb-background-base-color;
+        border-top: 1px solid $bb-border-secondary-color;
+        border-radius: 0 0 $bb-border-radius-xl $bb-border-radius-xl;
+        padding: 8px 16px;
+    }
+
+    .bb-pro-reaction-cancel-delete-emotion {
+        background-color: $bb-background-base-color;
+        border-color: $bb-border-secondary-color;
+        color: $bb-text-color;
+        font-size: 13px;
+        font-weight: 400;
+        padding: 4px 8px;
+        border-radius: 8px;
+        line-height: 1.8;
+        min-height: auto;
+
+        &:hover {
+            background-color: $bb-background-secondary-color;
+            border-color: $bb-border-secondary-color;
+            color: $bb-text-color;
+        }
+    }
+
+    .bb-pro-reaction-delete-emotion {
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 18px;
+        color: $bb-text-inverse-color !important;
+        background-color: $bb-background-brand-primary-color !important;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 8px;
+        margin-left: 8px;
+    }
+
+    .bbpro-modal-box_loader {
+        background-color: $bb-background-base-color;
+        margin: 0 -20px;
+        border-radius: 0 0 $bb-border-radius-xl $bb-border-radius-xl;
+
+        .bb-icon-spinner:before {
+            content: "\e66a";
+            font-size: 28px;
+            color: $bb-icon-color;
+            font-family: "bb-icons-rl";
+            font-weight: 400;
+        }
+    }
+}
+
 /* Feature Disabled State */
 .bb-admin-feature-disabled {
     display: flex;
