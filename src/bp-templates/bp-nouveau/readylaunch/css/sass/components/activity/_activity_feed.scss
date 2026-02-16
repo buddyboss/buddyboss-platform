@@ -224,7 +224,6 @@
 		padding: 6px 8px;
 		border-radius: var(--bb-rl-radius-full);
 		cursor: pointer;
-		text-transform: capitalize;
 
 		&:before {
 			content: "\e268";
@@ -1171,6 +1170,20 @@
 
 .bb-rl-activity-media-elem {
 
+	.bb-rl-more_dropdown-wrap {
+
+		ul {
+
+			li {
+
+				&.bb_rl_move_file {
+
+					@include bb-rl-move-disabled-styles;
+				}
+			}
+		}
+	}
+
 	&:hover {
 
 		.bb-rl-more_dropdown-wrap {
@@ -1218,6 +1231,21 @@
 /* Video */
 .bb-rl-activity-video-elem {
 	position: relative;
+
+
+	.bb-rl-more_dropdown-wrap {
+
+		ul {
+
+			li {
+
+				&.bb_rl_move_video {
+
+					@include bb-rl-move-disabled-styles;
+				}
+			}
+		}
+	}
 
 	&:hover {
 

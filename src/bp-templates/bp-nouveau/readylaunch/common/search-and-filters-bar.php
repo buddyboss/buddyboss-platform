@@ -95,7 +95,7 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 	<div class="activity-head-bar">
 		<?php
 
-		// Timeline filters.
+		// Timeline filters - ReadyLaunch uses Title Case (default labels) for both dropdown and button.
 		if ( bp_is_user_activity() ) {
 			$activity_filters = bb_get_enabled_activity_timeline_filter_options();
 			$filters_labels   = bb_get_activity_timeline_filter_options_labels();
@@ -116,17 +116,7 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 			<div class="bb-subnav-filters-container bb-subnav-filters-filtering">
 
 				<button class="subnav-filters-opener" aria-expanded="false" aria-controls="bb-subnav-filter-show">
-					<span class="selected">
-						<?php
-							$default_filter_label = $filters_labels[ $default_selected ];
-						if ( ! preg_match( '/^(I\'ve|I\'m)/i', $default_filter_label ) ) {
-							echo esc_html( strtolower( $default_filter_label ) );
-						} else {
-							echo esc_html( $default_filter_label );
-						}
-							unset( $default_filter_label );
-						?>
-					</span>
+					<span class="selected"><?php echo isset( $filters_labels[ $default_selected ] ) ? esc_html( $filters_labels[ $default_selected ] ) : ''; ?></span>
 					<i class="bb-icons-rl-caret-down"></i>
 				</button>
 				<div id="bb-subnav-filter-show" class="subnav-filters-modal">
@@ -145,7 +135,7 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 								}
 
 								?>
-									<li class="<?php echo ( $key === $default_selected ) ? 'selected' : ''; ?>" role="option" data-bp-scope="<?php echo esc_attr( $key ); ?>" data-bp-object="activity"><a href="#"><?php echo esc_html( $filters_labels[ $key ] ); ?></a></li>
+									<li class="<?php echo ( $key === $default_selected ) ? 'selected' : ''; ?>" role="option" data-bp-scope="<?php echo esc_attr( $key ); ?>" data-bp-object="activity" data-filter-label="<?php echo esc_attr( $filters_labels[ $key ] ); ?>"><a href="#"><?php echo esc_html( $filters_labels[ $key ] ); ?></a></li>
 									<?php
 							}
 
@@ -169,13 +159,15 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 				$avail_sorting_options = array( 'date_recorded' => 1 );
 			}
 		}
+
+		// ReadyLaunch uses Title Case (default labels) for sorting.
+		$sorting_labels = bb_get_activity_sorting_options_labels();
 		?>
 		<div class='<?php echo esc_attr( $hide_class ); ?> bb-subnav-filters-container-main'>
 			<span class="bb-subnav-filters-label"><?php echo esc_html_e( 'by', 'buddyboss' ); ?></span>
 			<div class="bb-subnav-filters-container bb-subnav-filters-filtering">
-				<?php $sorting_labels = bb_get_activity_sorting_options_labels(); ?>
 				<button class="subnav-filters-opener" aria-expanded="false" aria-controls="bb-subnav-filter-by">
-					<span class="selected"><?php echo esc_html( strtolower( $sorting_labels[ $default_selected ] ) ); ?></span>
+					<span class="selected"><?php echo isset( $sorting_labels[ $default_selected ] ) ? esc_html( $sorting_labels[ $default_selected ] ) : ''; ?></span>
 					<i class="bb-icons-rl-caret-down"></i>
 				</button>
 
@@ -188,7 +180,7 @@ if ( bp_is_activity_directory() || bp_is_user_activity() ) {
 									continue;
 								}
 								?>
-								<li class="<?php echo ( $key === $default_selected ) ? 'selected' : ''; ?>" role="option" data-bp-order="activity" data-bp-orderby="<?php echo esc_attr( $key ); ?>"><a href="#"><?php echo esc_html( $sorting_labels[ $key ] ); ?></a></li>
+								<li class="<?php echo ( $key === $default_selected ) ? 'selected' : ''; ?>" role="option" data-bp-order="activity" data-bp-orderby="<?php echo esc_attr( $key ); ?>" data-filter-label="<?php echo esc_attr( $sorting_labels[ $key ] ); ?>"><a href="#"><?php echo esc_html( $sorting_labels[ $key ] ); ?></a></li>
 								<?php
 							}
 						}
