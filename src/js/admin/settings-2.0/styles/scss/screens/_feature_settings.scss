@@ -144,6 +144,11 @@
         &-body {
             padding: 32px 24px;
         }
+
+        &--disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
     }
 }
 

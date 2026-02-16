@@ -93,37 +93,56 @@ function bb_activity_register_topics_panel_fields() {
 	// SECTION: Group Topics (Pro hooks in here)
 	// -------------------------------------------------------------------------
 	if ( bp_is_active( 'groups' ) ) {
+		$group_topics_section_args = array(
+			'title'       => __( 'Group Topics', 'buddyboss' ),
+			'description' => '',
+			'order'       => 20,
+		);
+
+		// When PRO is active, hide section when Activity Topics is disabled.
+		// When PRO is not active, always show for upsell visibility.
+		if ( function_exists( 'bb_is_enabled_group_activity_topics' ) ) {
+			$group_topics_section_args['conditional'] = array(
+				'field'  => 'bb_enable_activity_topics',
+				'value'  => true,
+				'action' => 'hide',
+			);
+		}
+
 		bb_register_feature_section(
 			'activity',
 			'activity_topics',
 			'group_topics',
-			array(
-				'title'       => __( 'Group Topics', 'buddyboss' ),
-				'description' => '',
-				'order'       => 20,
-			)
+			$group_topics_section_args
 		);
 
 		// FIELD: Group Topics (Pro only).
+		$group_topics_field_args = array(
+			'name'              => 'bb-enable-group-activity-topics',
+			'label'             => __( 'Group Topics', 'buddyboss' ),
+			'type'              => 'toggle',
+			'description'       => __( 'Enable topics for groups', 'buddyboss' ),
+			'help_text'         => __( 'Allow group organizers to set topics for members to use in group posts.', 'buddyboss' ),
+			'default'           => function_exists( 'bb_is_enabled_group_activity_topics' ) && bb_is_enabled_group_activity_topics(),
+			'sanitize_callback' => 'intval',
+			'order'             => 10,
+			'pro_only'          => true,
+		);
+
+		// When PRO is active, hide field when Activity Topics is disabled.
+		// When PRO is not active, always show for upsell visibility.
+		if ( function_exists( 'bb_is_enabled_group_activity_topics' ) ) {
+			$group_topics_field_args['conditional'] = array(
+				'field' => 'bb_enable_activity_topics',
+				'value' => true,
+			);
+		}
+
 		bb_register_feature_field(
 			'activity',
 			'activity_topics',
 			'group_topics',
-			array(
-				'name'              => 'bb-enable-group-activity-topics',
-				'label'             => __( 'Group Topics', 'buddyboss' ),
-				'type'              => 'toggle',
-				'description'       => __( 'Enable topics for groups', 'buddyboss' ),
-				'help_text'         => __( 'Allow group organizers to set topics for members to use in group posts.', 'buddyboss' ),
-				'default'           => function_exists( 'bb_is_enabled_group_activity_topics' ) && bb_is_enabled_group_activity_topics(),
-				'sanitize_callback' => 'intval',
-				'order'             => 10,
-				'pro_only'          => true,
-				'conditional'       => array(
-					'field' => 'bb_enable_activity_topics',
-					'value' => true,
-				),
-			)
+			$group_topics_field_args
 		);
 	}
 

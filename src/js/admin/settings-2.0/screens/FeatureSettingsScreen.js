@@ -373,11 +373,33 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 							{activePanel ? (
 								<>
 									{/* Render all sections within the active side panel */}
-									{(activePanel.sections || []).map((section) => (
+									{(activePanel.sections || []).map((section) => {
+										// Check section-level conditional (hide or disable).
+										var isSectionDisabled = false;
+										var isSectionHidden = false;
+										if ( section.conditional ) {
+											var condVal = settings[section.conditional.field];
+											var expected = section.conditional.value;
+											var isTruthy = !!condVal && condVal !== '0' && condVal !== 0;
+											var condMet = ( expected === true || expected === false ) ? isTruthy === expected : condVal === expected;
+											if ( ! condMet ) {
+												if ( 'disable' === section.conditional.action ) {
+													isSectionDisabled = true;
+												} else {
+													isSectionHidden = true;
+												}
+											}
+										}
+
+										if ( isSectionHidden ) {
+											return null;
+										}
+
+										return (
 										<div
 											key={section.id}
 											id={`section-${section.id}`}
-											className="bb-admin-feature-settings__section"
+											className={ 'bb-admin-feature-settings__section' + ( isSectionDisabled ? ' bb-admin-feature-settings__section--disabled' : '' ) }
 										>
 											{/* Section Header */}
 											<div className="bb-admin-feature-settings__section-header">
@@ -404,7 +426,8 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 												/>
 											</div>
 										</div>
-									))}
+									);
+									})}
 								</>
 							) : (
 								<div className="bb-admin-feature-settings__no-section">

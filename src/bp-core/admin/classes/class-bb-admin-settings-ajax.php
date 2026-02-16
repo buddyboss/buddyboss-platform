@@ -287,13 +287,20 @@ class BB_Admin_Settings_Ajax {
 				// Get fields for this section.
 				$section_fields = $registry->bb_get_fields( $feature_id, $side_panel_id, $section_id );
 
-				$formatted_sections[] = array(
+				$formatted_section = array(
 					'id'          => $section_id,
 					'title'       => $section['title'],
 					'description' => wp_kses_post( $section['description'] ?? '' ),
 					'order'       => $section['order'] ?? 100,
 					'fields'      => $this->bb_format_fields_for_response( $section_fields, $settings, $feature_id ),
 				);
+
+				// Include conditional if set.
+				if ( ! empty( $section['conditional'] ) ) {
+					$formatted_section['conditional'] = $section['conditional'];
+				}
+
+				$formatted_sections[] = $formatted_section;
 			}
 
 			// Sort sections by order.
