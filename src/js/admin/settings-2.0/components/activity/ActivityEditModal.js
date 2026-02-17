@@ -304,17 +304,15 @@ export function ActivityEditModal( { isOpen, activity, activityActions, topics, 
 
 			<div className="bb-activity-edit-modal__footer bb-admin-settings-modal__footer">
 				<div className="bb-activity-edit-modal__footer-left">
-					{ activity.primary_link && (
-						<a
-							href={ activity.primary_link }
-							target="_blank"
-							rel="noopener noreferrer"
-							className="bb-activity-edit-modal__view-link"
-						>
-							{ __( 'View Activity', 'buddyboss' ) }
-							<i className="bb-icons-rl bb-icons-rl-external-link" style={ { marginLeft: '4px', fontSize: '14px' } }></i>
-						</a>
-					) }
+					<a
+						href={ activity.permalink || activity.primary_link || '#' }
+						target="_blank"
+						rel="noopener noreferrer"
+						className="bb-activity-edit-modal__view-link"
+					>
+						{ __( 'View Activity', 'buddyboss' ) }
+						<i className="bb-icons-rl bb-icons-rl-external-link" style={ { marginLeft: '4px', fontSize: '14px' } }></i>
+					</a>
 				</div>
 				<div className="bb-activity-edit-modal__footer-right">
 					<Button

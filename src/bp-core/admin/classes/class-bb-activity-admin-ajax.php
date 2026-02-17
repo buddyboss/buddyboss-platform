@@ -553,6 +553,7 @@ class BB_Activity_Admin_Ajax {
 					'date_recorded'     => $item->date_recorded,
 					'is_spam'           => (int) $item->is_spam,
 					'primary_link'      => $item->primary_link,
+					'permalink'         => bp_activity_get_permalink( $item->id, $item ),
 					'item_id'           => (int) $item->item_id,
 					'secondary_item_id' => (int) $item->secondary_item_id,
 					'component'         => $item->component,
