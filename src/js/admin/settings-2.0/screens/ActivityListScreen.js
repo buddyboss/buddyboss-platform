@@ -78,6 +78,10 @@ export function ActivityListScreen( { onNavigate } ) {
 	var activityActions = activityActionsState[ 0 ];
 	var setActivityActions = activityActionsState[ 1 ];
 
+	var activityActionsGroupedState = useState( [] );
+	var activityActionsGrouped = activityActionsGroupedState[ 0 ];
+	var setActivityActionsGrouped = activityActionsGroupedState[ 1 ];
+
 	var bulkActionsState = useState( {} );
 	var bulkActions = bulkActionsState[ 0 ];
 	var setBulkActions = bulkActionsState[ 1 ];
@@ -143,6 +147,9 @@ export function ActivityListScreen( { onNavigate } ) {
 				}
 				if ( response.data.activity_actions ) {
 					setActivityActions( response.data.activity_actions );
+				}
+				if ( response.data.activity_actions_grouped ) {
+					setActivityActionsGrouped( response.data.activity_actions_grouped );
 				}
 				if ( response.data.bulk_actions ) {
 					setBulkActions( response.data.bulk_actions );
@@ -540,13 +547,29 @@ export function ActivityListScreen( { onNavigate } ) {
 					/>
 
 					{ /* Action Type Filter */ }
-					<SelectControl
-						value={ actionFilter }
-						options={ actionOptions }
-						onChange={ handleActionFilterChange }
-						className="bb-activity-list__action-filter"
-						__nextHasNoMarginBottom
-					/>
+					<div className="bb-activity-list__action-filter">
+						<select
+							value={ actionFilter }
+							onChange={ function ( e ) {
+								handleActionFilterChange( e.target.value );
+							} }
+						>
+							<option value="">{ __( 'All Actions', 'buddyboss' ) }</option>
+							{ activityActionsGrouped.map( function ( group, idx ) {
+								return (
+									<optgroup key={ group.label || idx } label=" ">
+										{ group.options.map( function ( opt ) {
+											return (
+												<option key={ opt.value } value={ opt.value }>
+													{ opt.label }
+												</option>
+											);
+										} ) }
+									</optgroup>
+								);
+							} ) }
+						</select>
+					</div>
 					{ /* Search */ }
 					<div className="bb-activity-list__search">
 						<input

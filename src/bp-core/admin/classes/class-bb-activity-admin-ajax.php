@@ -333,10 +333,52 @@ class BB_Activity_Admin_Ajax {
 			}
 		}
 
-		// Get activity action types for filter dropdown.
+		// Get activity action types for filter dropdown (flat list for backward compat).
 		$activity_actions = array();
 		if ( function_exists( 'bp_activity_admin_get_activity_actions' ) ) {
 			$activity_actions = bp_activity_admin_get_activity_actions();
+		}
+
+		// Build grouped activity actions for optgroup-style dropdown.
+		$activity_actions_grouped = array();
+		if ( function_exists( 'bp_activity_get_actions' ) ) {
+			foreach ( bp_activity_get_actions() as $component => $actions ) {
+				// Resolve component display name (same as legacy list table).
+				if ( 'profile' === $component ) {
+					$component = 'xprofile';
+				}
+
+				if ( bp_is_active( $component ) ) {
+					if ( 'xprofile' === $component ) {
+						$component_name = buddypress()->profile->name;
+					} else {
+						$component_name = buddypress()->$component->name;
+					}
+				} else {
+					$component_name = ucfirst( $component );
+				}
+
+				$component_name = ( 'Bbpress' === $component_name ) ? __( 'Forums', 'buddyboss' ) : $component_name;
+
+				$group_options = array();
+				$actions_arr   = (array) $actions;
+				foreach ( $actions_arr as $action_key => $action_values ) {
+					if ( 'friends_register_activity_action' === $action_key ) {
+						continue;
+					}
+					$group_options[] = array(
+						'label' => $action_values['value'],
+						'value' => $action_key,
+					);
+				}
+
+				if ( ! empty( $group_options ) ) {
+					$activity_actions_grouped[] = array(
+						'label'   => $component_name,
+						'options' => $group_options,
+					);
+				}
+			}
 		}
 
 		// Get bulk actions (same as legacy BP_Activity_List_Table::get_bulk_actions()).
@@ -429,9 +471,10 @@ class BB_Activity_Admin_Ajax {
 			'page'             => $page,
 			'spam_count'       => $spam_count,
 			'views'            => $views,
-			'activity_actions' => $activity_actions,
-			'bulk_actions'     => $bulk_actions,
-			'columns'          => $columns_response,
+			'activity_actions'         => $activity_actions,
+			'activity_actions_grouped' => $activity_actions_grouped,
+			'bulk_actions'             => $bulk_actions,
+			'columns'                  => $columns_response,
 		);
 
 		/**
