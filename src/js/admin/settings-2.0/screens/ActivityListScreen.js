@@ -687,15 +687,16 @@ export function ActivityListScreen( { onNavigate } ) {
 												{ function ( { onClose } ) {
 													return (
 														<MenuGroup>
-															{ activity.primary_link && (
+															{ ( activity.permalink || activity.primary_link ) && (
 																<MenuItem
 																	onClick={ function () {
-																		window.open( activity.primary_link, '_blank' );
+																		window.open( activity.permalink || activity.primary_link, '_blank' );
 																		onClose();
 																	} }
 																>
+																	<i className="bb-icons-rl bb-icons-rl-eye" style={ { marginRight: '8px', fontSize: '14px' } }></i>
 																	{ __( 'View Activity', 'buddyboss' ) }
-																	<i className="bb-icons-rl bb-icons-rl-external-link" style={ { marginLeft: 'auto', fontSize: '14px' } }></i>
+																	<i className="bb-icons-rl bb-icons-rl-arrow-square-out" style={ { marginLeft: 'auto', fontSize: '14px' } }></i>
 																</MenuItem>
 															) }
 															<MenuItem
@@ -714,6 +715,7 @@ export function ActivityListScreen( { onNavigate } ) {
 																		onClose();
 																	} }
 																>
+																	<i className="bb-icons-rl bb-icons-rl-chat-circle-text" style={ { marginRight: '8px', fontSize: '14px' } }></i>
 																	{ __( 'Not Spam', 'buddyboss' ) }
 																</MenuItem>
 															) : (
@@ -723,6 +725,7 @@ export function ActivityListScreen( { onNavigate } ) {
 																		onClose();
 																	} }
 																>
+																	<i className="bb-icons-rl bb-icons-rl-chat-circle-text" style={ { marginRight: '8px', fontSize: '14px' } }></i>
 																	{ __( 'Spam', 'buddyboss' ) }
 																</MenuItem>
 															) }
@@ -733,6 +736,7 @@ export function ActivityListScreen( { onNavigate } ) {
 																	onClose();
 																} }
 															>
+																<i className="bb-icons-rl bb-icons-rl-trash" style={ { marginRight: '8px', fontSize: '14px' } }></i>
 																{ __( 'Delete', 'buddyboss' ) }
 															</MenuItem>
 														</MenuGroup>
