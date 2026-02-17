@@ -534,7 +534,9 @@ export function ActivityListScreen( { onNavigate } ) {
 							{ __( 'Apply', 'buddyboss' ) }
 						</Button>
 					</div>
+				</div>
 
+				<div className="bb-activity-list__toolbar-right">
 					{ /* Filter Dropdown */ }
 					<SelectControl
 						value={ filter }
@@ -552,9 +554,6 @@ export function ActivityListScreen( { onNavigate } ) {
 						className="bb-activity-list__action-filter"
 						__nextHasNoMarginBottom
 					/>
-				</div>
-
-				<div className="bb-activity-list__toolbar-right">
 					{ /* Search */ }
 					<div className="bb-activity-list__search">
 						<input

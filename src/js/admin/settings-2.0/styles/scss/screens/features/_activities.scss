@@ -4,7 +4,11 @@
 
 .bb-activity-list {
 	max-width: 100%;
-	padding: 24px;
+	padding: 0 24px 16px;
+	background-color: $bb-background-base-color;
+	border: 1px solid $bb-border-primary-color;
+	border-radius: $bb-border-radius-2xl;
+	box-shadow: 0px 1.5px 1px 0px rgba(0, 0, 0, 0.16);
 
 	// Notice
 	&__notice {
@@ -46,12 +50,14 @@
 
 	// Header
 	&__header {
-		margin-bottom: 16px;
+		border-bottom: 1px solid $bb-border-secondary-color;
+		padding: 18px 0;
+		margin-bottom: 24px;
 	}
 
 	&__title {
-		font-size: 20px;
-		font-weight: 600;
+		font-size: 18px;
+		font-weight: 500;
 		color: $bb-text-color;
 		margin: 0;
 	}
@@ -64,6 +70,30 @@
 		gap: 12px;
 		margin-bottom: 16px;
 		flex-wrap: wrap;
+
+		.components-select-control {
+			margin-bottom: 0;
+
+			.components-input-control__label {
+                color: $bb-text-secondary-color;
+                text-transform: none;
+                font-size: 13px;
+                font-weight: 500;
+            }
+
+            .components-select-control__input {
+                @include bb-admin-settings-select;
+            }
+
+            .components-input-control-suffix-wrapper {
+                display: none;
+            }
+
+            .components-input-control__backdrop {
+                border-color: transparent;
+            }
+
+		}
 	}
 
 	&__toolbar-left {
@@ -85,10 +115,6 @@
 		align-items: center;
 		gap: 4px;
 
-		.components-select-control {
-			margin-bottom: 0;
-		}
-
 		select {
 			min-width: 140px;
 			height: 32px;
@@ -97,9 +123,7 @@
 	}
 
 	&__bulk-apply.is-secondary {
-		height: 32px;
-		font-size: 13px;
-		padding: 0 12px;
+		@include bb-button-primary;
 	}
 
 	// Filter Dropdown
@@ -131,6 +155,24 @@
 	// Search
 	&__search {
 		position: relative;
+		min-width: 225px;
+
+		input {
+			@include bb-input-text;
+			padding-right: 30px;
+		}
+
+		&:after {
+			content: "\e30c";
+			font-family: "bb-icons-rl";
+			font-size: 20px;
+			color: $bb-icon-tertiary-color;
+			position: absolute;
+			right: 8px;
+			top: 50%;
+			transform: translateY(-50%);
+			pointer-events: none;
+		}
 	}
 
 	&__search-input {
@@ -474,6 +516,7 @@
 // Custom panel main - Allow full width for custom screens (ActivityList, GroupsList).
 .bb-admin-feature-settings__main--custom-panel {
 	padding: 0;
+	margin-left: 32px;
 
 	.bb-activity-list {
 		max-width: 100%;
