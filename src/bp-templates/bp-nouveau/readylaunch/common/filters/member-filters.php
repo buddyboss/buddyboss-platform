@@ -69,6 +69,9 @@ if ( $is_member_type_enabled ) {
 
 // Member scope as a dropdown.
 if ( bp_nouveau_has_nav( array( 'object' => 'directory' ) ) ) {
+	// Get the scope from URL parameter for pre-selection.
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	$url_scope = isset( $_GET['bb-rl-scope'] ) ? sanitize_text_field( wp_unslash( $_GET['bb-rl-scope'] ) ) : '';
 	?>
 	<div id="bb-rl-members-scope-filters" class="component-filters clearfix">
 		<div id="bb-rl-members-scope-select" class="last filter bb-rl-scope-filter bb-rl-filter">
@@ -80,8 +83,11 @@ if ( bp_nouveau_has_nav( array( 'object' => 'directory' ) ) ) {
 					<?php
 					while ( bp_nouveau_nav_items() ) :
 						bp_nouveau_nav_item();
+						$nav_item      = bp_nouveau()->current_nav_item;
+						$current_scope = isset( $nav_item->slug ) ? $nav_item->slug : '';
+						$is_selected   = ( ! empty( $url_scope ) && $url_scope === $current_scope );
 						?>
-						<option id="<?php bp_nouveau_nav_id(); ?>" <?php bp_nouveau_nav_scope(); ?> data-bp-object="<?php bp_nouveau_directory_nav_object(); ?>">
+						<option id="<?php bp_nouveau_nav_id(); ?>" <?php bp_nouveau_nav_scope(); ?> data-bp-object="<?php bp_nouveau_directory_nav_object(); ?>" <?php selected( $is_selected, true ); ?>>
 							<?php
 							if ( 'bb-rl-members-all' === bp_nouveau_get_nav_id() ) {
 								esc_html_e( 'All', 'buddyboss' );
