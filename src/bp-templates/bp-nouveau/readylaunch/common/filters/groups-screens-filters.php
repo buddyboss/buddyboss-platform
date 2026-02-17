@@ -25,14 +25,16 @@ if ( ! empty( $avail_sorting_options ) && in_array( 1, $avail_sorting_options, t
 		$avail_sorting_options = array( 'date_recorded' => 1 );
 	}
 }
+
+// ReadyLaunch uses Title Case (default labels) for sorting.
+$sorting_labels = bb_get_activity_sorting_options_labels();
 ?>
 <i class="bb-rl-loader"></i>
 <div class='<?php echo esc_attr( $hide_class ); ?> bb-subnav-filters-container-main'>
 	<span class="bb-subnav-filters-label"><?php echo esc_html_e( 'by', 'buddyboss' ); ?></span>
 	<div class="bb-subnav-filters-container bb-subnav-filters-filtering">
-		<?php $sorting_labels = bb_get_activity_sorting_options_labels(); ?>
 		<button class="subnav-filters-opener" aria-expanded="false" aria-controls="bb-subnav-filter-by">
-			<span class="selected"><?php echo esc_html( strtolower( $sorting_labels[ $default_selected ] ) ); ?></span>
+			<span class="selected"><?php echo isset( $sorting_labels[ $default_selected ] ) ? esc_html( $sorting_labels[ $default_selected ] ) : ''; ?></span>
 			<i class="bb-icons-rl-caret-down"></i>
 		</button>
 
@@ -45,7 +47,7 @@ if ( ! empty( $avail_sorting_options ) && in_array( 1, $avail_sorting_options, t
 							continue;
 						}
 						?>
-						<li class="<?php echo ( $key === $default_selected ) ? 'selected' : ''; ?>" role="option" data-bp-order="activity" data-bp-orderby="<?php echo esc_attr( $key ); ?>"><a href="#"><?php echo esc_html( $sorting_labels[ $key ] ); ?></a></li>
+						<li class="<?php echo ( $key === $default_selected ) ? 'selected' : ''; ?>" role="option" data-bp-order="activity" data-bp-orderby="<?php echo esc_attr( $key ); ?>" data-filter-label="<?php echo esc_attr( $sorting_labels[ $key ] ); ?>"><a href="#"><?php echo esc_html( $sorting_labels[ $key ] ); ?></a></li>
 						<?php
 					}
 				}
