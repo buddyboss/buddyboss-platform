@@ -3077,8 +3077,7 @@ window.bp = window.bp || {};
 		openDocumentMove: function ( event ) {
 			event.preventDefault();
 			var $document        = $( document ),
-				currentTarget,
-				$currentTarget,
+				$currentTarget   = $(),
 				eventTarget      = $( event.currentTarget );
 			this.moveToIdPopup   = eventTarget.attr( 'id' );
 			this.moveToTypePopup = eventTarget.attr( 'data-type' );
@@ -3167,7 +3166,6 @@ window.bp = window.bp || {};
 
 			var parentsOpen = this.currentTargetParent;
 			var getFrom     = this.moveToTypePopup;
-			var self        = this;
 
 			if ( '' !== this.moveToIdPopup ) {
 				$.ajax(
