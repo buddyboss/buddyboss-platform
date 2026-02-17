@@ -124,7 +124,7 @@ export function ActivityListScreen( { onNavigate } ) {
 	var fetchActivities = useCallback( function () {
 		setIsLoading( true );
 
-		var spam = 'ham_only';
+		var spam = 'all';
 		if ( 'spam' === filter ) {
 			spam = 'spam_only';
 		}
@@ -557,7 +557,7 @@ export function ActivityListScreen( { onNavigate } ) {
 							<option value="">{ __( 'All Actions', 'buddyboss' ) }</option>
 							{ activityActionsGrouped.map( function ( group, idx ) {
 								return (
-									<optgroup key={ group.label || idx } label=" ">
+									<optgroup key={ idx } label=" ">
 										{ group.options.map( function ( opt ) {
 											return (
 												<option key={ opt.value } value={ opt.value }>
