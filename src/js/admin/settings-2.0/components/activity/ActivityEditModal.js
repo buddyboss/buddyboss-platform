@@ -90,19 +90,99 @@ function RichTextEditor( { id, label, value, onChange } ) {
 }
 
 /**
+ * Render a single registered field based on its type.
+ *
+ * @param {Object}   field            Field data from the registry.
+ * @param {*}        value            Current value.
+ * @param {Function} onChange         Change handler.
+ * @returns {JSX.Element|null} Field component or null.
+ */
+function RegisteredField( { field, value, onChange } ) {
+	if ( ! field.visible ) {
+		return null;
+	}
+
+	// Read-only field (e.g. Activity History).
+	if ( 'readonly' === field.type ) {
+		// History-style: value is an object with time_since + message.
+		if ( value && 'object' === typeof value && value.time_since ) {
+			return (
+				<div className="bb-activity-edit-modal__history">
+					<h4 className="bb-activity-edit-modal__history-title">
+						{ field.label }
+					</h4>
+					<div className="bb-activity-edit-modal__history-entry">
+						<span className="bb-activity-edit-modal__history-time">{ value.time_since }</span>
+						{ ' – ' }
+						<span className="bb-activity-edit-modal__history-message">{ value.message }</span>
+					</div>
+				</div>
+			);
+		}
+
+		// Generic read-only: simple string display.
+		if ( value ) {
+			return (
+				<div className="bb-activity-edit-modal__readonly-field">
+					<label className="bb-activity-edit-modal__label">{ field.label }</label>
+					<span className="bb-activity-edit-modal__readonly-value">{ String( value ) }</span>
+				</div>
+			);
+		}
+
+		return null;
+	}
+
+	// Select field.
+	if ( 'select' === field.type ) {
+		var options = field.options && Array.isArray( field.options ) ? field.options : [];
+		if ( 0 === options.length ) {
+			return null;
+		}
+
+		return (
+			<SelectControl
+				label={ field.label }
+				value={ String( null != value ? value : '' ) }
+				options={ options }
+				onChange={ onChange }
+				__nextHasNoMarginBottom
+			/>
+		);
+	}
+
+	// Text / number / url fields.
+	var inputType = 'text';
+	if ( 'number' === field.type ) {
+		inputType = 'number';
+	} else if ( 'url' === field.type ) {
+		inputType = 'url';
+	}
+
+	return (
+		<TextControl
+			label={ field.label }
+			value={ null != value ? String( value ) : '' }
+			onChange={ onChange }
+			type={ inputType }
+			__nextHasNoMarginBottom
+		/>
+	);
+}
+
+/**
  * Activity Edit Modal Component
  *
  * @param {Object}   props                  Component props.
  * @param {boolean}  props.isOpen           Whether the modal is open.
  * @param {Object}   props.activity         Activity object to edit.
  * @param {Object}   props.activityActions  Available activity types.
- * @param {Array}    props.topics           Available topics list.
  * @param {Function} props.onClose          Close handler.
  * @param {Function} props.onSave           Save handler.
  * @param {boolean}  props.isSaving         Whether save is in progress.
  * @returns {JSX.Element|null} Modal component or null.
  */
-export function ActivityEditModal( { isOpen, activity, activityActions, topics, onClose, onSave, isSaving } ) {
+export function ActivityEditModal( { isOpen, activity, activityActions, onClose, onSave, isSaving } ) {
 	var actionState = useState( '' );
 	var actionText = actionState[ 0 ];
 	var setActionText = actionState[ 1 ];
@@ -135,9 +215,10 @@ export function ActivityEditModal( { isOpen, activity, activityActions, topics, 
 	var secondaryItemId = secondaryItemIdState[ 0 ];
 	var setSecondaryItemId = secondaryItemIdState[ 1 ];
 
-	var topicIdState = useState( '' );
-	var topicId = topicIdState[ 0 ];
-	var setTopicId = topicIdState[ 1 ];
+	// Dynamic registered field values keyed by field ID.
+	var registeredValuesState = useState( {} );
+	var registeredValues = registeredValuesState[ 0 ];
+	var setRegisteredValues = registeredValuesState[ 1 ];
 
 	var errorState = useState( '' );
 	var error = errorState[ 0 ];
@@ -155,8 +236,16 @@ export function ActivityEditModal( { isOpen, activity, activityActions, topics, 
 			setUserId( String( null != activity.user_id ? activity.user_id : '' ) );
 			setItemId( String( null != activity.item_id ? activity.item_id : '' ) );
 			setSecondaryItemId( String( null != activity.secondary_item_id ? activity.secondary_item_id : '' ) );
-			setTopicId( activity.topic && activity.topic.id ? String( activity.topic.id ) : '' );
 			setError( '' );
+
+			// Initialize registered field values from activity data.
+			var initialValues = {};
+			if ( activity.registered_fields && Array.isArray( activity.registered_fields ) ) {
+				activity.registered_fields.forEach( function ( field ) {
+					initialValues[ field.id ] = field.value;
+				} );
+			}
+			setRegisteredValues( initialValues );
 		}
 	}, [ isOpen, activity ] );
 
@@ -172,15 +261,35 @@ export function ActivityEditModal( { isOpen, activity, activityActions, topics, 
 		} );
 	}
 
-	// Build topic options (topics use topic_id as value, same as legacy metabox).
-	var topicOptions = [ { label: __( '--- Select a topic ---', 'buddyboss' ), value: '' } ];
-	if ( topics && Array.isArray( topics ) ) {
-		topics.forEach( function ( topic ) {
-			var tid = topic.topic_id || topic.id;
-			topicOptions.push( { label: topic.name, value: String( tid ) } );
+	// Separate registered fields by context.
+	var normalFields = [];
+	var afterFields = [];
+	if ( activity.registered_fields && Array.isArray( activity.registered_fields ) ) {
+		activity.registered_fields.forEach( function ( field ) {
+			if ( 'after' === field.context ) {
+				afterFields.push( field );
+			} else {
+				normalFields.push( field );
+			}
 		} );
 	}
-	var hasTopics = topics && Array.isArray( topics ) && topics.length > 0;
+
+	/**
+	 * Handle change for a registered field.
+	 *
+	 * @param {string} fieldId Field ID.
+	 * @param {*}      val     New value.
+	 */
+	var handleRegisteredFieldChange = function ( fieldId, val ) {
+		setRegisteredValues( function ( prev ) {
+			var next = {};
+			Object.keys( prev ).forEach( function ( k ) {
+				next[ k ] = prev[ k ];
+			} );
+			next[ fieldId ] = val;
+			return next;
+		} );
+	};
 
 	var handleSave = function () {
 		setError( '' );
@@ -201,7 +310,7 @@ export function ActivityEditModal( { isOpen, activity, activityActions, topics, 
 			}
 		}
 
-		onSave( {
+		var payload = {
 			activity_id: activity.id,
 			action_text: finalAction,
 			content: finalContent,
@@ -211,8 +320,18 @@ export function ActivityEditModal( { isOpen, activity, activityActions, topics, 
 			user_id: userId,
 			item_id: itemId,
 			secondary_item_id: secondaryItemId,
-			activity_topic: topicId,
-		} );
+		};
+
+		// Append registered field values with prefixed keys.
+		if ( activity.registered_fields && Array.isArray( activity.registered_fields ) ) {
+			activity.registered_fields.forEach( function ( field ) {
+				if ( ! field.readonly ) {
+					payload[ 'registered_field_' + field.id ] = null != registeredValues[ field.id ] ? registeredValues[ field.id ] : '';
+				}
+			} );
+		}
+
+		onSave( payload );
 	};
 
 	return (
@@ -258,15 +377,19 @@ export function ActivityEditModal( { isOpen, activity, activityActions, topics, 
 					__nextHasNoMarginBottom
 				/>
 
-				{ hasTopics && (
-					<SelectControl
-						label={ __( 'Topic', 'buddyboss' ) }
-						value={ topicId }
-						options={ topicOptions }
-						onChange={ setTopicId }
-						__nextHasNoMarginBottom
-					/>
-				) }
+				{ /* Registered fields with context=normal */ }
+				{ normalFields.map( function ( field ) {
+					return (
+						<RegisteredField
+							key={ field.id }
+							field={ field }
+							value={ registeredValues[ field.id ] }
+							onChange={ function ( val ) {
+								handleRegisteredFieldChange( field.id, val );
+							} }
+						/>
+					);
+				} ) }
 
 				<TextControl
 					label={ __( 'Link', 'buddyboss' ) }
@@ -300,6 +423,20 @@ export function ActivityEditModal( { isOpen, activity, activityActions, topics, 
 						__nextHasNoMarginBottom
 					/>
 				</div>
+
+				{ /* Registered fields with context=after */ }
+				{ afterFields.map( function ( field ) {
+					return (
+						<RegisteredField
+							key={ field.id }
+							field={ field }
+							value={ registeredValues[ field.id ] }
+							onChange={ function ( val ) {
+								handleRegisteredFieldChange( field.id, val );
+							} }
+						/>
+					);
+				} ) }
 			</div>
 
 			<div className="bb-activity-edit-modal__footer bb-admin-settings-modal__footer">

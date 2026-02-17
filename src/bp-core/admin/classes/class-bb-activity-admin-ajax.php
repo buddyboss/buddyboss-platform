@@ -421,19 +421,30 @@ class BB_Activity_Admin_Ajax {
 		 */
 		do_action( 'bp_activity_admin_index', array() );
 
-		wp_send_json_success(
-			array(
-				'activities'       => $items,
-				'total'            => $total,
-				'per_page'         => $per_page,
-				'page'             => $page,
-				'spam_count'       => $spam_count,
-				'views'            => $views,
-				'activity_actions' => $activity_actions,
-				'bulk_actions'     => $bulk_actions,
-				'columns'          => $columns_response,
-			)
+		$response_data = array(
+			'activities'       => $items,
+			'total'            => $total,
+			'per_page'         => $per_page,
+			'page'             => $page,
+			'spam_count'       => $spam_count,
+			'views'            => $views,
+			'activity_actions' => $activity_actions,
+			'bulk_actions'     => $bulk_actions,
+			'columns'          => $columns_response,
 		);
+
+		/**
+		 * Filters the full response data for the admin activities list AJAX endpoint.
+		 *
+		 * Allows third-party plugins to add extra data to the activities listing response.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $response_data Response data array.
+		 */
+		$response_data = apply_filters( 'bb_admin_get_activities_response', $response_data );
+
+		wp_send_json_success( $response_data );
 	}
 
 	/**
@@ -506,64 +517,57 @@ class BB_Activity_Admin_Ajax {
 			$activity_actions = bp_activity_admin_get_activity_actions();
 		}
 
-		// Get topic data if topics are enabled (same as legacy bb_activity_admin_edit_metabox_topic_content).
-		$topic_data = array(
-			'id'   => 0,
-			'name' => '',
+		// Build activity data.
+		$activity_data = array(
+			'id'                => (int) $item->id,
+			'user_id'           => (int) $item->user_id,
+			'action'            => $item->action,
+			'content'           => $item->content,
+			'type'              => $item->type,
+			'date_recorded'     => $item->date_recorded,
+			'is_spam'           => (int) $item->is_spam,
+			'primary_link'      => $item->primary_link,
+			'permalink'         => bp_activity_get_permalink( $item->id, $item ),
+			'item_id'           => (int) $item->item_id,
+			'secondary_item_id' => (int) $item->secondary_item_id,
+			'component'         => $item->component,
+			'post_title'        => $item->post_title ?? '',
 		);
-		$topics     = array();
-		if ( function_exists( 'bb_activity_topics_manager_instance' ) ) {
-			$activity_topics_manager = bb_activity_topics_manager_instance();
 
-			// Get current topic for this activity.
-			if ( $activity_topics_manager && method_exists( $activity_topics_manager, 'bb_get_activity_topic' ) ) {
-				$current_topic_id = (int) $activity_topics_manager->bb_get_activity_topic( $item->id, 'id' );
-				if ( $current_topic_id ) {
-					$topic_all = $activity_topics_manager->bb_get_activity_topic( $item->id, 'all' );
-					if ( $topic_all ) {
-						$topic_data = array(
-							'id'   => $current_topic_id,
-							'name' => $topic_all->name ?? '',
-						);
-					}
-				}
-			}
+		// Get registered field data via the field registry.
+		$activity_data['registered_fields'] = bb_admin_meta_field_registry()->get_fields_data( 'activity', $item );
 
-			// Get available topics list (same logic as legacy metabox).
-			if ( 'groups' === $item->component && function_exists( 'bb_get_group_activity_topics' ) ) {
-				$topics = bb_get_group_activity_topics(
-					array(
-						'item_id'   => $item->item_id,
-						'item_type' => 'groups',
-					)
-				);
-			} elseif ( $activity_topics_manager && method_exists( $activity_topics_manager, 'bb_get_activity_topics' ) ) {
-				$topics = $activity_topics_manager->bb_get_activity_topics();
-			}
-		}
+		/**
+		 * Filters the single activity data returned by the admin AJAX endpoint.
+		 *
+		 * Allows third-party plugins to add or modify data in the activity edit response.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array              $activity_data Activity data array.
+		 * @param BP_Activity_Activity $item         Activity object.
+		 */
+		$activity_data = apply_filters( 'bb_admin_get_activity_data', $activity_data, $item );
 
-		wp_send_json_success(
-			array(
-				'activity'         => array(
-					'id'                => (int) $item->id,
-					'user_id'           => (int) $item->user_id,
-					'action'            => $item->action,
-					'content'           => $item->content,
-					'type'              => $item->type,
-					'date_recorded'     => $item->date_recorded,
-					'is_spam'           => (int) $item->is_spam,
-					'primary_link'      => $item->primary_link,
-					'permalink'         => bp_activity_get_permalink( $item->id, $item ),
-					'item_id'           => (int) $item->item_id,
-					'secondary_item_id' => (int) $item->secondary_item_id,
-					'component'         => $item->component,
-					'post_title'        => $item->post_title ?? '',
-					'topic'             => $topic_data,
-				),
-				'activity_actions' => $activity_actions,
-				'topics'           => $topics,
-			)
+		// Build response data.
+		$response_data = array(
+			'activity'         => $activity_data,
+			'activity_actions' => $activity_actions,
 		);
+
+		/**
+		 * Filters the full response data for the admin get activity AJAX endpoint.
+		 *
+		 * Allows third-party plugins to add extra data to the response.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array              $response_data Response data array.
+		 * @param BP_Activity_Activity $item         Activity object.
+		 */
+		$response_data = apply_filters( 'bb_admin_get_activity_response', $response_data, $item );
+
+		wp_send_json_success( $response_data );
 	}
 
 	/**
@@ -708,53 +712,8 @@ class BB_Activity_Admin_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Failed to save activity.', 'buddyboss' ) ) );
 		}
 
-		// Save activity topic relationship (same as legacy bb_save_activity_topic_metabox).
-		// phpcs:disable WordPress.Security.NonceVerification.Missing
-		if ( isset( $_POST['activity_topic'] ) && function_exists( 'bb_activity_topics_manager_instance' ) ) {
-			$topic_id = absint( $_POST['activity_topic'] );
-			// phpcs:enable WordPress.Security.NonceVerification.Missing
-
-			$activity_topics_manager = bb_activity_topics_manager_instance();
-
-			if ( $activity_topics_manager && method_exists( $activity_topics_manager, 'bb_add_activity_topic_relationship' ) ) {
-
-				/**
-				 * Fires before saving the activity topic metabox.
-				 * Same hook as legacy bb_save_activity_topic_metabox().
-				 *
-				 * @since BuddyBoss 2.8.80
-				 * @since BuddyBoss [BBVERSION] Added to Settings 2.0 AJAX save activity.
-				 *
-				 * @param object $activity The activity object.
-				 */
-				do_action( 'bb_before_save_activity_topic_metabox', $activity );
-
-				if ( $activity->id && $topic_id ) {
-					$topic_args = array(
-						'topic_id'    => $topic_id,
-						'activity_id' => $activity->id,
-						'component'   => $activity->component,
-						'item_id'     => 0,
-					);
-					if ( 'groups' === $activity->component ) {
-						$topic_args['item_id'] = $activity->item_id;
-					}
-					$activity_topics_manager->bb_add_activity_topic_relationship( $topic_args );
-				}
-
-				/**
-				 * Fires after saving the activity topic metabox.
-				 * Same hook as legacy bb_save_activity_topic_metabox().
-				 *
-				 * @since BuddyBoss 2.8.80
-				 * @since BuddyBoss [BBVERSION] Added to Settings 2.0 AJAX save activity.
-				 *
-				 * @param int $activity_id The ID of the activity.
-				 * @param int $topic_id    The ID of the topic.
-				 */
-				do_action( 'bb_after_save_activity_topic_metabox', $activity->id, $topic_id );
-			}
-		}
+		// Save registered field values via the field registry.
+		bb_admin_meta_field_registry()->save_fields_data( 'activity', $activity );
 
 		wp_send_json_success(
 			array(

@@ -10143,6 +10143,36 @@ function bb_register_feature_field( $feature_id, $side_panel_id, $section_id, $a
 }
 
 /**
+ * Register a meta field for admin edit modals (Activity, Groups, Forums, etc.).
+ *
+ * Fields registered via this API are fetched, rendered, and saved by the modal automatically.
+ * Same pattern as register_post_meta + show_in_rest.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $component Component identifier (e.g. 'activity', 'groups', 'forums').
+ * @param string $field_id  Unique field ID within the component.
+ * @param array  $args      Field arguments: label, type (text|number|url|select|readonly),
+ *                          order, context (normal|after), get_value, get_options (for select),
+ *                          save_value, sanitize_callback, is_visible.
+ * @return bool True on success.
+ */
+function bb_register_admin_meta_field( $component, $field_id, $args = array() ) {
+	return BB_Admin_Meta_Field_Registry::instance()->register( $component, $field_id, $args );
+}
+
+/**
+ * Get the Admin Meta Field Registry instance.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return BB_Admin_Meta_Field_Registry
+ */
+function bb_admin_meta_field_registry() {
+	return BB_Admin_Meta_Field_Registry::instance();
+}
+
+/**
  * Register a feature navigation item.
  *
  * @since BuddyBoss [BBVERSION]

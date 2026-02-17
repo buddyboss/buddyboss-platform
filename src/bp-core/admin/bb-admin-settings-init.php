@@ -42,6 +42,11 @@ function bb_admin_settings_init() {
 	bb_feature_registry();
 	bb_feature_loader();
 
+	// Admin Meta Field Registry (global, component-based).
+	if ( ! class_exists( 'BB_Admin_Meta_Field_Registry' ) ) {
+		require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-meta-field-registry.php';
+	}
+
 	// AJAX handlers.
 	if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-settings-ajax.php' ) ) {
 		require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-settings-ajax.php';

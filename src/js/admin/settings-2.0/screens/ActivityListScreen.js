@@ -98,10 +98,6 @@ export function ActivityListScreen( { onNavigate } ) {
 	var editActivity = editActivityState[ 0 ];
 	var setEditActivity = editActivityState[ 1 ];
 
-	var topicsState = useState( [] );
-	var topics = topicsState[ 0 ];
-	var setTopics = topicsState[ 1 ];
-
 	var isSavingState = useState( false );
 	var isSaving = isSavingState[ 0 ];
 	var setIsSaving = isSavingState[ 1 ];
@@ -333,9 +329,6 @@ export function ActivityListScreen( { onNavigate } ) {
 				setEditActivity( response.data.activity );
 				if ( response.data.activity_actions ) {
 					setActivityActions( response.data.activity_actions );
-				}
-				if ( response.data.topics ) {
-					setTopics( response.data.topics );
 				}
 			} else {
 				setNotice( { type: 'error', message: response.data?.message || __( 'Failed to load activity.', 'buddyboss' ) } );
@@ -828,7 +821,6 @@ export function ActivityListScreen( { onNavigate } ) {
 				isOpen={ !! editActivity }
 				activity={ editActivity }
 				activityActions={ activityActions }
-				topics={ topics }
 				onClose={ function () {
 					setEditActivity( null );
 				} }
