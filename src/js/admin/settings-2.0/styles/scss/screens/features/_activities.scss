@@ -9,8 +9,7 @@
 	border: 1px solid $bb-border-primary-color;
 	border-radius: $bb-border-radius-2xl;
 	box-shadow: 0px 1.5px 1px 0px rgba(0, 0, 0, 0.16);
-	margin-left: 32px;
-	margin-right: 32px;
+	margin: 32px 32px 0;
 
 	// Notice
 	&__notice {
@@ -289,10 +288,6 @@
 	// Table Rows
 	&__table tbody tr {
 		border-bottom: 0.5px solid $bb-border-primary-color;
-
-		&:last-child {
-			border-bottom: none;
-		}
 	}
 
 	&__row {
@@ -300,10 +295,6 @@
 
 		&--selected {
 			background-color: $bb-background-positive-primary-color;
-		}
-
-		&--spam {
-			opacity: 0.7;
 		}
 	}
 
@@ -371,17 +362,18 @@
 	&__spam-badge {
 		display: inline-flex;
 		align-items: center;
-		gap: 2px;
-		padding: 1px 6px;
-		background-color: $bb-error-color;
-		color: $bb-text-inverse-color;
+		gap: 4px;
+		padding: 2px 4px;
+		background-color: $bb-background-warning-primary-color;
+		border: 1px solid $bb-border-warning-secondary-color;
+		color: $bb-text-warning-primary-color;
 		font-size: 11px;
-		font-weight: 500;
-		border-radius: $bb-border-radius-sm;
-		align-self: flex-start;
+		line-height: 1.2;
+		border-radius: $bb-border-radius-full;
 
 		i {
-			font-size: 10px;
+			color: $bb-icon-warning-primary-color;
+			font-size: 12px;
 		}
 	}
 
@@ -495,7 +487,8 @@
 	&__footer {
 		display: flex;
 		align-items: center;
-		justify-content: space-between;
+		justify-content: flex-end;
+		gap: 16px;
 		padding: 16px 0;
 		margin-top: 8px;
 	}
@@ -503,8 +496,7 @@
 	// Item Count
 	&__item-count {
 		font-size: 13px;
-		color: $bb-text-tertiary-color;
-		white-space: nowrap;
+		color: $bb-text-secondary-color;
 	}
 
 	// Pagination
@@ -518,26 +510,72 @@
 	&__pagination-btn.is-primary {
 		min-width: 32px;
 		height: 32px;
-		padding: 0;
+		padding: 0 6px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		color: $bb-text-tertiary-color;
 		font-size: 13px;
+		font-weight: 500;
 		line-height: 1;
+		border: 1px solid transparent;
+		box-shadow: none;
+		border-radius: $bb-border-radius-md;
+
+		&:hover {
+			background-color: $bb-background-base-color !important;
+			border-color: $bb-border-secondary-color;
+			box-shadow: none !important;
+			color: $bb-text-tertiary-color !important;
+		}
 	}
 
 	&__pagination-btn--current.is-primary {
-		background-color: $bb-text-color;
-		border-color: $bb-text-color;
-		color: $bb-text-inverse-color;
+		background-color: $bb-background-base-color;
+		border-color: $bb-border-quinery;
+		color: $bb-text-color;
+		border-radius: $bb-border-radius-md;
+
+		&:hover {
+			background-color: $bb-background-base-color !important;
+			color: $bb-text-color !important;
+			border-color: $bb-border-quinery;
+			box-shadow: none;
+		}
 	}
 
 	&__pagination-ellipsis {
 		font-size: 13px;
+		font-weight: 500;
 		color: $bb-text-tertiary-color;
 		min-width: 24px;
 		text-align: center;
 		line-height: 32px;
+	}
+
+	&__pagination-btn--previous,
+	&__pagination-btn--next {
+		border: none !important;
+		box-shadow: none !important;
+		color: transparent !important;
+		font-size: 0 !important;
+
+		&:before {
+			content: "\e138";
+			font-family: "bb-icons-rl";
+			font-size: 16px;
+			color: $bb-icon-secondary-color;
+			font-weight: 400;
+		}
+
+		&[disabled] {
+			opacity: 0.5;
+			pointer-events: none;
+		}
+	}
+
+	&__pagination-btn--next:before {
+		content: "\e13a";
 	}
 }
 
