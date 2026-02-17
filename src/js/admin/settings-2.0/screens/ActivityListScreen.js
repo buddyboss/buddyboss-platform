@@ -668,7 +668,7 @@ export function ActivityListScreen( { onNavigate } ) {
 													</a>
 													{ isSpam && (
 														<span className="bb-activity-list__spam-badge">
-															<i className="bb-icons-rl bb-icons-rl-spam"></i>
+															<i className="bb-icons-rl bb-icons-rl-flag"></i>
 															{ __( 'Spam', 'buddyboss' ) }
 														</span>
 													) }
@@ -738,7 +738,7 @@ export function ActivityListScreen( { onNavigate } ) {
 																		onClose();
 																	} }
 																>
-																	<i className="bb-icons-rl bb-icons-rl-chat-circle-text"></i>
+																	<i className="bb-icons-rl bb-icons-rl-flag"></i>
 																	{ __( 'Not Spam', 'buddyboss' ) }
 																</MenuItem>
 															) : (
@@ -748,7 +748,7 @@ export function ActivityListScreen( { onNavigate } ) {
 																		onClose();
 																	} }
 																>
-																	<i className="bb-icons-rl bb-icons-rl-chat-circle-text"></i>
+																	<i className="bb-icons-rl bb-icons-rl-flag"></i>
 																	{ __( 'Spam', 'buddyboss' ) }
 																</MenuItem>
 															) }

@@ -9,8 +9,7 @@
 	border: 1px solid $bb-border-primary-color;
 	border-radius: $bb-border-radius-2xl;
 	box-shadow: 0px 1.5px 1px 0px rgba(0, 0, 0, 0.16);
-	margin-left: 32px;
-	margin-right: 32px;
+	margin: 32px 32px 0;
 
 	// Notice
 	&__notice {
@@ -297,10 +296,6 @@
 		&--selected {
 			background-color: $bb-background-positive-primary-color;
 		}
-
-		&--spam {
-			opacity: 0.7;
-		}
 	}
 
 	&__table td {
@@ -367,17 +362,18 @@
 	&__spam-badge {
 		display: inline-flex;
 		align-items: center;
-		gap: 2px;
-		padding: 1px 6px;
-		background-color: $bb-error-color;
-		color: $bb-text-inverse-color;
+		gap: 4px;
+		padding: 2px 4px;
+		background-color: $bb-background-warning-primary-color;
+		border: 1px solid $bb-border-warning-secondary-color;
+		color: $bb-text-warning-primary-color;
 		font-size: 11px;
-		font-weight: 500;
-		border-radius: $bb-border-radius-sm;
-		align-self: flex-start;
+		line-height: 1.2;
+		border-radius: $bb-border-radius-full;
 
 		i {
-			font-size: 10px;
+			color: $bb-icon-warning-primary-color;
+			font-size: 12px;
 		}
 	}
 
