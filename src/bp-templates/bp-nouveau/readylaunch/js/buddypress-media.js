@@ -1296,7 +1296,7 @@ window.bp = window.bp || {};
 
 			if ( isStandalone ) {
 				$targetForm = $standalonePopup.data( 'target-form' );
-				if ( ! $targetForm || ! $targetForm.length ) {
+				if ( ! $targetForm || ! $targetForm.length || ! $.contains( document, $targetForm[ 0 ] ) ) {
 					e.preventDefault();
 					return;
 				}
@@ -1731,12 +1731,22 @@ window.bp = window.bp || {};
 
 			// Position the standalone popup near the button when inside forum modal.
 			if ( isInsideForumModal && gif_search_dropdown.hasClass( 'open' ) ) {
-				var scrollTop        = $( window ).scrollTop(),
-					offset           = target.offset(),
-					topPosition      = Math.round( offset.top ),
-					leftPosition     = Math.round( offset.left ),
-					pickerLeftPosition = leftPosition + gif_search_dropdown.width() - 70,
-					transformValue   = 'translate(' + pickerLeftPosition + 'px, ' + ( topPosition - scrollTop - 5 ) + 'px) translate(-100%, -100%)';
+				var scrollTop      = $( window ).scrollTop(),
+					btnOffset      = target.offset(),
+					topPosition    = Math.round( btnOffset.top ),
+					leftPosition   = Math.round( btnOffset.left ),
+					isRtl          = $( 'body' ).hasClass( 'rtl' ),
+					pickerWidth    = gif_search_dropdown.outerWidth(),
+					pickerXPos, transformValue;
+
+				if ( isRtl ) {
+					// In RTL, position the popup to the right of the button.
+					pickerXPos     = $( window ).width() - leftPosition - target.outerWidth() + pickerWidth - 70;
+					transformValue = 'translate(-' + pickerXPos + 'px, ' + ( topPosition - scrollTop - 5 ) + 'px) translate(0, -100%)';
+				} else {
+					pickerXPos     = leftPosition + pickerWidth - 70;
+					transformValue = 'translate(' + pickerXPos + 'px, ' + ( topPosition - scrollTop - 5 ) + 'px) translate(-100%, -100%)';
+				}
 
 				gif_search_dropdown.css( 'transform', transformValue );
 
