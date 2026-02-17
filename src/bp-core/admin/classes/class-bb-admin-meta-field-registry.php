@@ -110,7 +110,7 @@ class BB_Admin_Meta_Field_Registry {
 	 *     Field arguments.
 	 *
 	 *     @type string   $label             Field label.
-	 *     @type string   $type              Field type: 'text', 'number', 'url', 'select', 'radio', 'richtext', 'readonly'.
+	 *     @type string   $type              Field type: 'text', 'number', 'url', 'select', 'richtext', 'readonly'.
 	 *     @type int      $order             Display order. Default 100.
 	 *     @type string   $context           'normal' (inside form) or 'after' (below form). Default 'normal'.
 	 *     @type string   $layout            'default' (full width) or 'half' (half width, grouped with adjacent half fields). Default 'default'.
@@ -223,8 +223,8 @@ class BB_Admin_Meta_Field_Registry {
 				$field_data['value'] = call_user_func( $args['get_value'], $item );
 			}
 
-			// Get options for select/radio type.
-			if ( in_array( $args['type'], array( 'select', 'radio' ), true ) && is_callable( $args['get_options'] ) ) {
+			// Get options for select type.
+			if ( 'select' === $args['type'] && is_callable( $args['get_options'] ) ) {
 				$field_data['options'] = call_user_func( $args['get_options'], $item );
 			}
 

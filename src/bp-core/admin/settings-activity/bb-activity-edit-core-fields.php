@@ -224,55 +224,6 @@ function bb_register_activity_edit_core_fields( $registry, $component = 'activit
 			'sanitize_callback' => 'absint',
 		)
 	);
-	// 9. Spam status (radio — matches legacy "Status" meta box).
-	$registry->register(
-		$component,
-		'is_spam',
-		array(
-			'label'             => __( 'Status', 'buddyboss' ),
-			'type'              => 'radio',
-			'order'             => 85,
-			'context'           => 'normal',
-			'layout'            => 'default',
-			'save_phase'        => 'before',
-			'get_value'         => function ( $activity ) {
-				return (string) ( (int) $activity->is_spam );
-			},
-			'get_options'       => function ( $activity ) {
-				return array(
-					array(
-						'label' => __( 'Approved', 'buddyboss' ),
-						'value' => '0',
-					),
-					array(
-						'label' => __( 'Spam', 'buddyboss' ),
-						'value' => '1',
-					),
-				);
-			},
-			'save_value'        => function ( $activity, $value ) {
-				$prev_spam_status = (bool) $activity->is_spam;
-				$new_spam_status  = (bool) absint( $value );
-
-				if ( $new_spam_status !== $prev_spam_status ) {
-					if ( $new_spam_status ) {
-						bp_activity_mark_as_spam( $activity );
-					} else {
-						/**
-						 * Remove moderation and blacklist checks in case we want to
-						 * ham an activity which contains one of these listed keys
-						 * (same as legacy admin).
-						 */
-						remove_action( 'bp_activity_before_save', 'bp_activity_check_moderation_keys', 2 );
-						remove_action( 'bp_activity_before_save', 'bp_activity_check_blacklist_keys', 2 );
-
-						bp_activity_mark_as_ham( $activity );
-					}
-				}
-			},
-			'sanitize_callback' => 'absint',
-		)
-	);
 }
 
 add_action( 'bb_register_activity_meta_fields', 'bb_register_activity_edit_core_fields', 1, 2 );

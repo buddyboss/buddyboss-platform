@@ -2,7 +2,7 @@
  * BuddyBoss Admin Settings 2.0 - Registered Meta Field
  *
  * Shared component that renders a single registry field based on its type.
- * Supports: text, number, url, select, radio, richtext, readonly.
+ * Supports: text, number, url, select, richtext, readonly.
  *
  * @package BuddyBoss\Core\Administration
  * @since BuddyBoss [BBVERSION]
@@ -11,7 +11,6 @@
 import {
 	TextControl,
 	SelectControl,
-	RadioControl,
 } from '@wordpress/components';
 
 import { RichTextEditor } from './RichTextEditor';
@@ -87,24 +86,6 @@ export function RegisteredMetaField( { field, value, onChange, activityId } ) {
 				label={ field.label }
 				value={ String( null != value ? value : '' ) }
 				options={ options }
-				onChange={ onChange }
-				__nextHasNoMarginBottom
-			/>
-		);
-	}
-
-	// Radio field.
-	if ( 'radio' === field.type ) {
-		var radioOptions = field.options && Array.isArray( field.options ) ? field.options : [];
-		if ( 0 === radioOptions.length ) {
-			return null;
-		}
-
-		return (
-			<RadioControl
-				label={ field.label }
-				selected={ String( null != value ? value : '' ) }
-				options={ radioOptions }
 				onChange={ onChange }
 				__nextHasNoMarginBottom
 			/>

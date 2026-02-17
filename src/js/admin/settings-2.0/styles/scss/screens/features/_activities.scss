@@ -669,14 +669,4 @@
 		text-transform: none;
 	}
 
-	// Radio group (e.g. Status: Approved / Spam).
-	.components-radio-control {
-		.components-flex {
-			gap: 12px;
-		}
-
-		label {
-			font-size: 13px;
-		}
-	}
 }
