@@ -18,6 +18,7 @@ import {
 import { __ } from '@wordpress/i18n';
 import { ajaxFetch } from '../utils/ajax';
 import { ActivityEditModal } from '../components/activity/ActivityEditModal';
+import { ActivityCommentModal } from '../components/activity/ActivityCommentModal';
 
 /**
  * Activity List Screen Component
@@ -102,9 +103,17 @@ export function ActivityListScreen( { onNavigate } ) {
 	var editActivity = editActivityState[ 0 ];
 	var setEditActivity = editActivityState[ 1 ];
 
+	var commentActivityState = useState( null );
+	var commentActivity = commentActivityState[ 0 ];
+	var setCommentActivity = commentActivityState[ 1 ];
+
 	var isSavingState = useState( false );
 	var isSaving = isSavingState[ 0 ];
 	var setIsSaving = isSavingState[ 1 ];
+
+	var isCommentSavingState = useState( false );
+	var isCommentSaving = isCommentSavingState[ 0 ];
+	var setIsCommentSaving = isCommentSavingState[ 1 ];
 
 	var isEditLoadingState = useState( false );
 	var isEditLoading = isEditLoadingState[ 0 ];
@@ -124,7 +133,7 @@ export function ActivityListScreen( { onNavigate } ) {
 	var fetchActivities = useCallback( function () {
 		setIsLoading( true );
 
-		var spam = 'all';
+		var spam = 'ham_only';
 		if ( 'spam' === filter ) {
 			spam = 'spam_only';
 		}
@@ -364,6 +373,28 @@ export function ActivityListScreen( { onNavigate } ) {
 			}
 		} ).catch( function () {
 			setIsSaving( false );
+			setNotice( { type: 'error', message: __( 'An error occurred.', 'buddyboss' ) } );
+		} );
+	};
+
+	/**
+	 * Handle save from comment modal.
+	 *
+	 * @param {Object} data The comment data ({ activity_id, content }).
+	 */
+	var handleCommentSave = function ( data ) {
+		setIsCommentSaving( true );
+		ajaxFetch( 'bb_admin_add_activity_comment', data ).then( function ( response ) {
+			setIsCommentSaving( false );
+			if ( response.success ) {
+				setNotice( { type: 'success', message: response.data.message } );
+				setCommentActivity( null );
+				fetchActivities();
+			} else {
+				setNotice( { type: 'error', message: response.data?.message || __( 'Failed to post comment.', 'buddyboss' ) } );
+			}
+		} ).catch( function () {
+			setIsCommentSaving( false );
 			setNotice( { type: 'error', message: __( 'An error occurred.', 'buddyboss' ) } );
 		} );
 	};
@@ -752,6 +783,17 @@ export function ActivityListScreen( { onNavigate } ) {
 																	{ __( 'Spam', 'buddyboss' ) }
 																</MenuItem>
 															) }
+															{ activity.can_comment && ! isSpam && (
+																<MenuItem
+																	onClick={ function () {
+																		setCommentActivity( activity );
+																		onClose();
+																	} }
+																>
+																	<i className="bb-icons-rl bb-icons-rl-chat-text"></i>
+																	{ __( 'Comment', 'buddyboss' ) }
+																</MenuItem>
+															) }
 															<MenuItem
 																isDestructive
 																onClick={ function () {
@@ -853,6 +895,17 @@ export function ActivityListScreen( { onNavigate } ) {
 				} }
 				onSave={ handleEditSave }
 				isSaving={ isSaving }
+			/>
+
+			{ /* Comment Modal */ }
+			<ActivityCommentModal
+				isOpen={ !! commentActivity }
+				activity={ commentActivity }
+				onClose={ function () {
+					setCommentActivity( null );
+				} }
+				onSave={ handleCommentSave }
+				isSaving={ isCommentSaving }
 			/>
 		</div>
 	);

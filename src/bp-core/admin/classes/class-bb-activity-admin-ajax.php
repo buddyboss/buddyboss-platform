@@ -45,6 +45,7 @@ class BB_Activity_Admin_Ajax {
 		add_action( 'wp_ajax_bb_admin_get_activity', array( $this, 'bb_admin_get_activity' ) );
 		add_action( 'wp_ajax_bb_admin_save_activity', array( $this, 'bb_admin_save_activity' ) );
 		add_action( 'wp_ajax_bb_admin_activity_action', array( $this, 'bb_admin_activity_action' ) );
+		add_action( 'wp_ajax_bb_admin_add_activity_comment', array( $this, 'bb_admin_add_activity_comment' ) );
 	}
 
 	/**
@@ -136,6 +137,19 @@ class BB_Activity_Admin_Ajax {
 			)
 		);
 		$spam_count = isset( $spams['total'] ) ? (int) $spams['total'] : 0;
+
+		// Get ham (non-spam) count for "All" tab (ignoring search/filter).
+		$hams      = bp_activity_get(
+			array(
+				'display_comments' => 'stream',
+				'show_hidden'      => true,
+				'spam'             => 'ham_only',
+				'count_total'      => 'count_query',
+				'per_page'         => 1,
+				'page'             => 1,
+			)
+		);
+		$ham_count = isset( $hams['total'] ) ? (int) $hams['total'] : 0;
 
 		// Get activities (same args as legacy BP_Activity_List_Table::prepare_items()).
 		$get_args = array(
@@ -409,11 +423,11 @@ class BB_Activity_Admin_Ajax {
 		}
 
 		// Build views (All / Spam tabs) with new structured filter.
-		$current_view = ! empty( $spam ) ? 'spam' : 'all';
+		$current_view = 'spam_only' === $spam ? 'spam' : 'all';
 		$views        = array(
 			'all'  => array(
 				'label' => __( 'All', 'buddyboss' ),
-				'count' => $total,
+				'count' => $ham_count,
 			),
 			'spam' => array(
 				'label' => __( 'Spam', 'buddyboss' ),
@@ -823,6 +837,68 @@ class BB_Activity_Admin_Ajax {
 				'message'   => $messages[ $do_action ],
 				'processed' => $processed,
 				'errors'    => $errors,
+			)
+		);
+	}
+	/**
+	 * Add a comment to an activity.
+	 *
+	 * Expects POST parameters:
+	 * - activity_id: The activity ID to comment on.
+	 * - content: Comment content (HTML).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_admin_add_activity_comment() {
+		$this->bb_verify_request();
+
+		if ( ! bp_is_active( 'activity' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Activity component is not active.', 'buddyboss' ) ) );
+		}
+
+		// phpcs:disable WordPress.Security.NonceVerification.Missing
+		$activity_id = isset( $_POST['activity_id'] ) ? absint( $_POST['activity_id'] ) : 0;
+		$content     = isset( $_POST['content'] ) ? wp_kses_post( wp_unslash( $_POST['content'] ) ) : '';
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
+
+		if ( empty( $activity_id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Activity ID is required.', 'buddyboss' ) ) );
+		}
+
+		if ( empty( trim( $content ) ) ) {
+			wp_send_json_error( array( 'message' => __( 'Comment content is required.', 'buddyboss' ) ) );
+		}
+
+		// Get the activity to determine the root activity ID.
+		$activity = new BP_Activity_Activity( $activity_id );
+
+		if ( empty( $activity->component ) ) {
+			wp_send_json_error( array( 'message' => __( 'Activity not found.', 'buddyboss' ) ) );
+		}
+
+		// Determine root activity ID: if this is already a comment, use its item_id.
+		$root_activity_id = $activity_id;
+		if ( 'activity_comment' === $activity->type ) {
+			$root_activity_id = (int) $activity->item_id;
+		}
+
+		$comment_id = bp_activity_new_comment(
+			array(
+				'activity_id' => $root_activity_id,
+				'parent_id'   => $activity_id,
+				'content'     => $content,
+				'error_type'  => 'wp_error',
+			)
+		);
+
+		if ( is_wp_error( $comment_id ) ) {
+			wp_send_json_error( array( 'message' => $comment_id->get_error_message() ) );
+		}
+
+		wp_send_json_success(
+			array(
+				'message'    => __( 'Comment posted successfully.', 'buddyboss' ),
+				'comment_id' => $comment_id,
 			)
 		);
 	}
