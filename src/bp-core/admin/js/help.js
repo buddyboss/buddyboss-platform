@@ -44,10 +44,8 @@
 						var bp_help_cards = '';
 						$.each( docs, function ( index, value ) {
 							// Use excerpt if available, otherwise generate one from content.
-							var card_excerpt = value.excerpt && value.excerpt.rendered ? value.excerpt.rendered : '';
-							if ( ! card_excerpt ) {
-								card_excerpt = bp_help_generate_excerpt( value.content.rendered );
-							}
+							var raw_excerpt = ( value.excerpt && value.excerpt.rendered ) ? value.excerpt.rendered : value.content.rendered;
+							var card_excerpt = bb_help_generate_excerpt( raw_excerpt );
 
 							bp_help_cards += '<div class="bp-help-card bp-help-menu-wrap">\n' +
 								'\t\t\t<div class="inside">';
@@ -91,11 +89,9 @@
 							var bp_help_cards = '';
 							$.each( doc.hierarchy, function ( index, value ) {
 
-								var card_excerpt = value.post_excerpt;
-								// If excerpt empty then generate one from post content
-								if ( !( card_excerpt ) ) {
-									card_excerpt = bp_help_generate_excerpt( value.post_content );
-								}
+								// Use excerpt if available, otherwise generate one from post content.
+								var raw_excerpt = value.post_excerpt ? value.post_excerpt : value.post_content;
+								var card_excerpt = bb_help_generate_excerpt( raw_excerpt );
 
 								bp_help_cards += '<div class="bp-help-card bp-help-menu-wrap">\n' +
 									'\t\t\t<div class="inside">';
@@ -202,15 +198,15 @@
 			 * Generate an excerpt from HTML content by stripping tags and truncating.
 			 *
 			 * @param {string} content - The HTML content to generate excerpt from.
-			 * @param {number} maxLength - Maximum character length (default: 150).
+			 * @param {number} maxLength - Maximum character length (default: 160).
 			 * @return {string} The generated excerpt wrapped in a paragraph tag.
 			 */
-			function bp_help_generate_excerpt( content, maxLength ) {
+			function bb_help_generate_excerpt( content, maxLength ) {
 				if ( ! content ) {
 					return '';
 				}
 
-				maxLength = maxLength || 150;
+				maxLength = maxLength || 160;
 
 				// Use DOMParser for safer HTML parsing.
 				var parser = new DOMParser();
@@ -218,7 +214,7 @@
 				var textContent = doc.body.textContent || '';
 
 				// Remove YouTube URLs.
-				textContent = textContent.replace( /https?:\/\/(www\.)?(youtube\.com|youtu\.be)\/[^\s]+/gi, '' );
+				textContent = textContent.replace( /https?:\/\/(www\.|m\.)?(youtube\.com|youtu\.be|youtube-nocookie\.com)\/[^\s]+/gi, '' );
 
 				// Trim whitespace and normalize spaces.
 				textContent = textContent.replace( /\s+/g, ' ' ).trim();
