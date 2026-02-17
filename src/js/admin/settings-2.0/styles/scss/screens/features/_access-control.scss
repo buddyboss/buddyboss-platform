@@ -1,0 +1,60 @@
+/**
+ * Access Control Field Styles.
+ *
+ * Styles for the access_control field type used in Activity (and
+ * future components) Access Controls settings panel.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+
+.bb-access-control-field {
+
+	// Selects row (type + sub-type side by side).
+	&__selects {
+		display: flex;
+		gap: 8px;
+	}
+
+	// Type select dropdown.
+	.components-select-control {
+		max-width: 280px;
+		margin-bottom: 0;
+	}
+
+	// Toggle list.
+	&__toggle-list {
+		margin-top: 16px;
+	}
+
+	&__toggle-item {
+		padding: 8px 0;
+		border-bottom: 1px solid $bb-border-primary-color;
+
+		&:last-child {
+			border-bottom: none;
+		}
+
+		.components-toggle-control {
+			margin-bottom: 0;
+		}
+	}
+
+	// Info notice bar.
+	&__notice {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 10px 16px;
+		margin-top: 16px;
+		background-color: $bb-background-primary-color;
+		border: 1px solid $bb-border-primary-color;
+		border-radius: $bb-border-radius-lg;
+		font-size: 13px;
+		color: $bb-text-secondary-color;
+
+		i {
+			font-size: 16px;
+			color: $bb-icon-tertiary-color;
+		}
+	}
+}

@@ -29,6 +29,7 @@ import {
 } from './reaction';
 import { TopicListField } from './activity/topics/topic-list';
 import { SharePlatformsField } from './activity/sharing';
+import { AccessControlField } from './access-control/AccessControlField';
 
 /**
  * Settings Form Component (matching Figma settingsSection)
@@ -736,6 +737,15 @@ export function SettingsForm({ fields, values, onChange }) {
 						value={value}
 						values={values}
 						onChange={onChange}
+					/>
+				);
+
+			case 'access_control':
+				return (
+					<AccessControlField
+						field={field}
+						value={value}
+						onChange={(newValue) => onChange(field.name, newValue)}
 					/>
 				);
 

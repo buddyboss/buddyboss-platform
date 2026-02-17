@@ -22,6 +22,9 @@ require_once __DIR__ . '/settings/activity/settings-topics.php';
 require_once __DIR__ . '/settings/activity/settings-visibility.php';
 require_once __DIR__ . '/settings/activity/settings-sharing.php';
 
+// Load access control registration + AJAX handlers.
+require_once __DIR__ . '/settings-activity/bb-activity-access-control.php';
+
 /**
  * Register Activity feature and settings in Feature Registry.
  *
@@ -164,6 +167,20 @@ function bb_admin_settings_register_activity_feature() {
 		)
 	);
 
+	// Side Panel 6: Access Controls.
+	bb_register_side_panel(
+		'activity',
+		'access_controls',
+		array(
+			'title' => __( 'Access Controls', 'buddyboss' ),
+			'icon'  => array(
+				'type'  => 'font',
+				'class' => 'bb-icons-rl bb-icons-rl-lock-simple',
+			),
+			'order' => 60,
+		)
+	);
+
 	// Side Panel: All Activities (navigation link).
 	bb_register_side_panel(
 		'activity',
@@ -210,6 +227,9 @@ function bb_admin_settings_register_activity_feature() {
 
 	// Panel 5: Activity Sharing.
 	bb_activity_register_sharing_panel_fields();
+
+	// Panel 6: Access Controls.
+	bb_activity_register_access_control_fields();
 
 	/**
 	 * Fires after all Activity settings panels are registered.
