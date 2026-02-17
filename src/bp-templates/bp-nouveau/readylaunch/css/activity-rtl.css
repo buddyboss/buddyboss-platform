@@ -5236,6 +5236,7 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   padding: 0;
   display: flex;
   height: 100%;
+  gap: 0;
 }
 
 .bb-rl-video-thumbnail-content .bb-rl-video-thumbnail-auto-generated .bb-rl-video-thumb-list.loading {
