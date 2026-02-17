@@ -891,13 +891,16 @@ window.bp = window.bp || {};
 								$( '.document-detail-wrap.document-detail-wrap-description-popup' ).attr( 'data-extension', response.data.extension );
 							}
 
-							var myPlayer = videojs( response.data.video_js_id );
-							myPlayer.src(
-								{
-									type: response.data.video_extension,
-									src: response.data.video_symlink
-								}
-							);
+							// Check if videojs is available before using it
+							if ( typeof videojs !== 'undefined' ) {
+								var myPlayer = videojs( response.data.video_js_id );
+								myPlayer.src(
+									{
+										type: response.data.video_extension,
+										src: response.data.video_symlink
+									}
+								);
+							}
 						}
 
 						// Update the edited text.
@@ -4053,13 +4056,16 @@ window.bp = window.bp || {};
 
 							video_element.addClass('video-js');
 
-							videojs(video_element_id, {
-									'controls': true,
-									'aspectRatio': '16:9',
-									'fluid': true,
-									'playbackRates': [0.5, 1, 1.5, 2],
-									'fullscreenToggle': false,
-							});
+							// Check if videojs is available before using it
+							if ( typeof videojs !== 'undefined' ) {
+								videojs(video_element_id, {
+										'controls': true,
+										'aspectRatio': '16:9',
+										'fluid': true,
+										'playbackRates': [0.5, 1, 1.5, 2],
+										'fullscreenToggle': false,
+								});
+							}
 					});
 			});
 
@@ -4422,7 +4428,9 @@ window.bp = window.bp || {};
 			var $parent = $this.closest( '.bb-subnav-filters-container' );
 			$this.parent().addClass( 'selected' ).siblings().removeClass( 'selected' );
 			$parent.removeClass( 'active' ).find( '.subnav-filters-opener' ).attr( 'aria-expanded', 'false' );
-			$parent.find( '.subnav-filters-opener .selected' ).text( $this.text() );
+			// Use data-filter-label attribute for proper context-aware label (translatable).
+			var filterLabel = $this.parent().data( 'filter-label' );
+			$parent.find( '.subnav-filters-opener .selected' ).text( filterLabel ? filterLabel : $this.text() );
 
 			// Reset the pagination for the scope.
 			bp.Nouveau.Activity.current_page = 1;
