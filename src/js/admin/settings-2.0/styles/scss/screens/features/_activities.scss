@@ -68,7 +68,8 @@
 		align-items: center;
 		justify-content: space-between;
 		gap: 12px;
-		margin-bottom: 16px;
+		padding-bottom: 16px;
+		border-bottom: 1px solid $bb-border-secondary-color;
 		flex-wrap: wrap;
 
 		.components-select-control {
@@ -207,8 +208,6 @@
 
 	// Table
 	&__table-wrapper {
-		border: 1px solid $bb-border-secondary-color;
-		border-radius: $bb-border-radius-xl;
 		overflow: hidden;
 		background: $bb-background-base-color;
 	}
@@ -248,44 +247,42 @@
 
 	// Table Header
 	&__table thead {
-		border-bottom: 1px solid $bb-border-secondary-color;
+		border-bottom: 0.5px solid $bb-border-secondary-color;
 	}
 
 	&__table th {
-		padding: 10px 12px;
-		font-size: 12px;
-		font-weight: 500;
+		padding: 10px 16px 10px 0;
+		font-size: 13px;
+		font-weight: 400;
 		color: $bb-text-tertiary-color;
 		text-align: left;
-		text-transform: capitalize;
-		letter-spacing: 0.02em;
 		white-space: nowrap;
-		background: $bb-background-primary-color;
+
+		&:first-child {
+			padding: 10px 0 10px 4px;
+		}
+
+		&:last-child {
+			padding: 10px 4px 10px 0;
+		}
+
+		&.bb-activity-list__th--author {
+			font-size: 14px;
+			color: $bb-text-color;
+		}
 	}
 
 	&__th--checkbox {
-		width: 40px;
-	}
-
-	&__th--author {
-		width: 180px;
-	}
-
-	&__th--activity {
-		// Takes remaining space
-	}
-
-	&__th--date {
-		width: 180px;
+		width: 30px;
 	}
 
 	&__th--actions {
-		width: 48px;
+		width: 30px;
 	}
 
 	// Table Rows
 	&__table tbody tr {
-		border-bottom: 1px solid $bb-border-primary-color;
+		border-bottom: 0.5px solid $bb-border-primary-color;
 
 		&:last-child {
 			border-bottom: none;
@@ -294,10 +291,6 @@
 
 	&__row {
 		transition: background-color 0.15s ease;
-
-		&:hover {
-			background-color: $bb-background-primary-hover-color;
-		}
 
 		&--selected {
 			background-color: $bb-background-positive-primary-color;
@@ -309,10 +302,18 @@
 	}
 
 	&__table td {
-		padding: 10px 12px;
+		padding: 16px 10px 16px 0;
 		font-size: 13px;
 		color: $bb-text-secondary-color;
 		vertical-align: middle;
+
+		&:first-child {
+			padding-left: 4px;
+		}
+
+		&:last-child {
+			padding-right: 4px;
+		}
 	}
 
 	// Checkbox cells
@@ -335,11 +336,12 @@
 	}
 
 	&__avatar {
-		width: 32px;
-		height: 32px;
+		width: 40px;
+		height: 40px;
 		border-radius: $bb-border-radius-full;
 		flex-shrink: 0;
 		object-fit: cover;
+		border: 0.5px solid $bb-border-secondary-color;
 	}
 
 	&__author-info {
@@ -350,17 +352,14 @@
 	}
 
 	&__author-name {
-		font-size: 13px;
-		font-weight: 500;
+		font-size: 14px;
+		font-weight: 400;
 		color: $bb-link-color;
+		line-height: 20px;
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		text-decoration: none;
-
-		&:hover {
-			text-decoration: underline;
-		}
 	}
 
 	&__spam-badge {
@@ -384,26 +383,43 @@
 	&__content {
 		display: flex;
 		flex-direction: column;
-		gap: 2px;
 		min-width: 0;
+		line-height: 18px;
 	}
 
 	&__action-text {
+		font-size: 13px;
+		color: $bb-text-tertiary-color;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 4px;
+		align-items: center;
+		padding: 3px 0;
+
+		a {
+			font-weight: 500;
+			color: $bb-text-secondary-color;
+			text-decoration: none;
+
+			&:hover {
+				text-decoration: underline;
+			}
+		}
+	}
+
+	&__content-preview {
 		font-size: 13px;
 		color: $bb-text-color;
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		display: block;
-	}
+		padding: 3px 0;
 
-	&__content-preview {
-		font-size: 12px;
-		color: $bb-link-color;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-		display: block;
+		a {
+			color: $bb-link-color;
+			text-decoration: none;
+		}
 	}
 
 	// Date Column
@@ -416,12 +432,15 @@
 	&__date {
 		display: flex;
 		align-items: center;
-		gap: 4px;
+		gap: 8px;
 		color: $bb-text-tertiary-color;
+		font-size: 13px;
+		line-height: 18px;
 
 		i {
-			font-size: 14px;
+			font-size: 20px;
 			color: $bb-icon-tertiary-color;
+			line-height: 1;
 		}
 	}
 
@@ -437,13 +456,15 @@
 			border: none;
 			cursor: pointer;
 			padding: 4px;
-			min-width: auto;
-			height: auto;
+			min-width: 32px;
+			width: 32px;
+			height: 32px;
 			color: $bb-icon-tertiary-color;
 			border-radius: $bb-border-radius-sm;
 
 			i {
-				font-size: 16px;
+				color: $bb-icon-secondary-color;
+				font-size: 24px;
 				line-height: 1;
 				font-weight: 700;
 			}
@@ -517,6 +538,8 @@
 .bb-admin-feature-settings__main--custom-panel {
 	padding: 0;
 	margin-left: 32px;
+	margin-right: 32px;
+    max-width: 1600px;
 
 	.bb-activity-list {
 		max-width: 100%;
