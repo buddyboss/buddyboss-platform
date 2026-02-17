@@ -60,6 +60,11 @@ function bb_admin_settings_init() {
 		require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-page.php';
 	}
 
+	// Core activity edit fields (registry-based).
+	if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/settings-activity/bb-activity-edit-core-fields.php' ) ) {
+		require_once buddypress()->plugin_dir . 'bp-core/admin/settings-activity/bb-activity-edit-core-fields.php';
+	}
+
 	// Feature settings registration.
 	if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-activity.php' ) ) {
 		require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-activity.php';

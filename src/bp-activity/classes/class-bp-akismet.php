@@ -647,7 +647,7 @@ class BP_Akismet {
 		}
 
 		// This is a single event, wrap it in an array.
-		if ( isset( $history['event'] ) ) {			
+		if ( isset( $history['event'] ) ) {
 			$history = array( $history );
 		}
 

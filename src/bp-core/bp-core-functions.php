@@ -10152,8 +10152,9 @@ function bb_register_feature_field( $feature_id, $side_panel_id, $section_id, $a
  *
  * @param string $component Component identifier (e.g. 'activity', 'groups', 'forums').
  * @param string $field_id  Unique field ID within the component.
- * @param array  $args      Field arguments: label, type (text|number|url|select|readonly),
- *                          order, context (normal|after), get_value, get_options (for select),
+ * @param array  $args      Field arguments: label, type (text|number|url|select|richtext|readonly),
+ *                          order, context (normal|after), layout (default|half),
+ *                          save_phase (before|after), get_value, get_options (for select),
  *                          save_value, sanitize_callback, is_visible.
  * @return bool True on success.
  */

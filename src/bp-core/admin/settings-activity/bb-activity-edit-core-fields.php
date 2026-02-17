@@ -1,0 +1,278 @@
+<?php
+/**
+ * Register core Activity fields in the Admin Meta Field Registry.
+ *
+ * These fields replace the hardcoded field handling in the AJAX handler
+ * and Activity Edit Modal so that ALL fields flow through the registry.
+ *
+ * @package BuddyBoss\Core\Administration
+ * @since   BuddyBoss [BBVERSION]
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Register core activity edit fields via the global field registry.
+ *
+ * Hooked to `bb_register_activity_meta_fields` at priority 1 so core
+ * fields are registered before any third-party additions.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param BB_Admin_Meta_Field_Registry $registry  The registry instance.
+ * @param string                       $component The component identifier.
+ */
+function bb_register_activity_edit_core_fields( $registry, $component = 'activity' ) {
+
+	// 1. Action (rich text).
+	$registry->register(
+		$component,
+		'action_text',
+		array(
+			'label'             => __( 'Action', 'buddyboss' ),
+			'type'              => 'richtext',
+			'order'             => 10,
+			'context'           => 'normal',
+			'layout'            => 'default',
+			'save_phase'        => 'before',
+			'get_value'         => function ( $activity ) {
+				return $activity->action;
+			},
+			'save_value'        => function ( $activity, $value ) {
+				$activity->action = $value;
+			},
+			'sanitize_callback' => 'wp_kses_post',
+		)
+	);
+
+	// 2. Content (rich text).
+	$registry->register(
+		$component,
+		'content',
+		array(
+			'label'             => __( 'Content', 'buddyboss' ),
+			'type'              => 'richtext',
+			'order'             => 20,
+			'context'           => 'normal',
+			'layout'            => 'default',
+			'save_phase'        => 'before',
+			'get_value'         => function ( $activity ) {
+				return $activity->content;
+			},
+			'save_value'        => function ( $activity, $value ) {
+				$activity->content = $value;
+
+				// Extract embed URL if content has one (same as legacy).
+				$urls = wp_extract_urls( $value );
+				if ( is_array( $urls ) && count( $urls ) > 0 ) {
+					$_POST['link_url']   = ! empty( $urls[0] ) ? filter_var( $urls[0], FILTER_VALIDATE_URL ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+					$_POST['link_embed'] = true; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+				}
+			},
+			'sanitize_callback' => 'wp_kses_post',
+		)
+	);
+
+	// 3. Title.
+	$registry->register(
+		$component,
+		'post_title',
+		array(
+			'label'             => __( 'Title', 'buddyboss' ),
+			'type'              => 'text',
+			'order'             => 30,
+			'context'           => 'normal',
+			'layout'            => 'default',
+			'save_phase'        => 'before',
+			'get_value'         => function ( $activity ) {
+				return isset( $activity->post_title ) ? $activity->post_title : '';
+			},
+			'save_value'        => function ( $activity, $value ) {
+				$activity->post_title = $value;
+			},
+			'sanitize_callback' => 'sanitize_text_field',
+		)
+	);
+
+	// 4. Type (select).
+	$registry->register(
+		$component,
+		'type',
+		array(
+			'label'             => __( 'Type', 'buddyboss' ),
+			'type'              => 'select',
+			'order'             => 35,
+			'context'           => 'normal',
+			'layout'            => 'default',
+			'save_phase'        => 'before',
+			'get_value'         => function ( $activity ) {
+				return $activity->type;
+			},
+			'get_options'       => function ( $activity ) {
+				$options = array(
+					array(
+						'label' => __( 'Select type', 'buddyboss' ),
+						'value' => '',
+					),
+				);
+
+				if ( function_exists( 'bp_activity_admin_get_activity_actions' ) ) {
+					$actions = bp_activity_admin_get_activity_actions();
+					foreach ( $actions as $key => $label ) {
+						$options[] = array(
+							'label' => $label,
+							'value' => $key,
+						);
+					}
+				}
+
+				return $options;
+			},
+			'save_value'        => function ( $activity, $value ) {
+				if ( function_exists( 'bp_activity_admin_get_activity_actions' ) ) {
+					$actions = bp_activity_admin_get_activity_actions();
+					if ( in_array( $value, array_keys( $actions ), true ) ) {
+						$activity->type = $value;
+					}
+				}
+			},
+			'sanitize_callback' => 'sanitize_text_field',
+		)
+	);
+
+	// 5. Link (url).
+	$registry->register(
+		$component,
+		'primary_link',
+		array(
+			'label'             => __( 'Link', 'buddyboss' ),
+			'type'              => 'url',
+			'order'             => 50,
+			'context'           => 'normal',
+			'layout'            => 'default',
+			'save_phase'        => 'before',
+			'get_value'         => function ( $activity ) {
+				return $activity->primary_link;
+			},
+			'save_value'        => function ( $activity, $value ) {
+				$activity->primary_link = $value;
+			},
+			'sanitize_callback' => 'esc_url_raw',
+		)
+	);
+
+	// 6. Author ID (number).
+	$registry->register(
+		$component,
+		'user_id',
+		array(
+			'label'             => __( 'Author ID', 'buddyboss' ),
+			'type'              => 'number',
+			'order'             => 60,
+			'context'           => 'normal',
+			'layout'            => 'default',
+			'save_phase'        => 'before',
+			'get_value'         => function ( $activity ) {
+				return (int) $activity->user_id;
+			},
+			'save_value'        => function ( $activity, $value ) {
+				$activity->user_id = $value;
+			},
+			'sanitize_callback' => 'absint',
+		)
+	);
+
+	// 7. Primary Item ID (number, half width).
+	$registry->register(
+		$component,
+		'item_id',
+		array(
+			'label'             => __( 'Primary Item ID', 'buddyboss' ),
+			'type'              => 'number',
+			'order'             => 70,
+			'context'           => 'normal',
+			'layout'            => 'half',
+			'save_phase'        => 'before',
+			'get_value'         => function ( $activity ) {
+				return (int) $activity->item_id;
+			},
+			'save_value'        => function ( $activity, $value ) {
+				$activity->item_id = $value;
+			},
+			'sanitize_callback' => 'absint',
+		)
+	);
+
+	// 8. Secondary Item ID (number, half width).
+	$registry->register(
+		$component,
+		'secondary_item_id',
+		array(
+			'label'             => __( 'Secondary Item ID', 'buddyboss' ),
+			'type'              => 'number',
+			'order'             => 80,
+			'context'           => 'normal',
+			'layout'            => 'half',
+			'save_phase'        => 'before',
+			'get_value'         => function ( $activity ) {
+				return (int) $activity->secondary_item_id;
+			},
+			'save_value'        => function ( $activity, $value ) {
+				$activity->secondary_item_id = $value;
+			},
+			'sanitize_callback' => 'absint',
+		)
+	);
+	// 9. Spam status (radio — matches legacy "Status" meta box).
+	$registry->register(
+		$component,
+		'is_spam',
+		array(
+			'label'             => __( 'Status', 'buddyboss' ),
+			'type'              => 'radio',
+			'order'             => 85,
+			'context'           => 'normal',
+			'layout'            => 'default',
+			'save_phase'        => 'before',
+			'get_value'         => function ( $activity ) {
+				return (string) ( (int) $activity->is_spam );
+			},
+			'get_options'       => function ( $activity ) {
+				return array(
+					array(
+						'label' => __( 'Approved', 'buddyboss' ),
+						'value' => '0',
+					),
+					array(
+						'label' => __( 'Spam', 'buddyboss' ),
+						'value' => '1',
+					),
+				);
+			},
+			'save_value'        => function ( $activity, $value ) {
+				$prev_spam_status = (bool) $activity->is_spam;
+				$new_spam_status  = (bool) absint( $value );
+
+				if ( $new_spam_status !== $prev_spam_status ) {
+					if ( $new_spam_status ) {
+						bp_activity_mark_as_spam( $activity );
+					} else {
+						/**
+						 * Remove moderation and blacklist checks in case we want to
+						 * ham an activity which contains one of these listed keys
+						 * (same as legacy admin).
+						 */
+						remove_action( 'bp_activity_before_save', 'bp_activity_check_moderation_keys', 2 );
+						remove_action( 'bp_activity_before_save', 'bp_activity_check_blacklist_keys', 2 );
+
+						bp_activity_mark_as_ham( $activity );
+					}
+				}
+			},
+			'sanitize_callback' => 'absint',
+		)
+	);
+}
+
+add_action( 'bb_register_activity_meta_fields', 'bb_register_activity_edit_core_fields', 1, 2 );

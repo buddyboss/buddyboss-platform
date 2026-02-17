@@ -110,9 +110,11 @@ class BB_Admin_Meta_Field_Registry {
 	 *     Field arguments.
 	 *
 	 *     @type string   $label             Field label.
-	 *     @type string   $type              Field type: 'text', 'number', 'url', 'select', 'readonly'.
+	 *     @type string   $type              Field type: 'text', 'number', 'url', 'select', 'radio', 'richtext', 'readonly'.
 	 *     @type int      $order             Display order. Default 100.
 	 *     @type string   $context           'normal' (inside form) or 'after' (below form). Default 'normal'.
+	 *     @type string   $layout            'default' (full width) or 'half' (half width, grouped with adjacent half fields). Default 'default'.
+	 *     @type string   $save_phase        'before' (set object properties before save) or 'after' (save meta after save). Default 'after'.
 	 *     @type callable $get_value         Required. function( $item ) returning mixed.
 	 *     @type callable $get_options       Optional. function( $item ) returning array for 'select' type.
 	 *     @type callable $save_value        Optional. function( $item, $value ). Null = read-only.
@@ -131,6 +133,8 @@ class BB_Admin_Meta_Field_Registry {
 			'type'              => 'text',
 			'order'             => 100,
 			'context'           => 'normal',
+			'layout'            => 'default',
+			'save_phase'        => 'after',
 			'get_value'         => null,
 			'get_options'       => null,
 			'save_value'        => null,
@@ -207,6 +211,7 @@ class BB_Admin_Meta_Field_Registry {
 				'label'    => $args['label'],
 				'type'     => $args['type'],
 				'context'  => $args['context'],
+				'layout'   => $args['layout'],
 				'visible'  => $visible,
 				'value'    => null,
 				'options'  => array(),
@@ -218,8 +223,8 @@ class BB_Admin_Meta_Field_Registry {
 				$field_data['value'] = call_user_func( $args['get_value'], $item );
 			}
 
-			// Get options for select type.
-			if ( 'select' === $args['type'] && is_callable( $args['get_options'] ) ) {
+			// Get options for select/radio type.
+			if ( in_array( $args['type'], array( 'select', 'radio' ), true ) && is_callable( $args['get_options'] ) ) {
 				$field_data['options'] = call_user_func( $args['get_options'], $item );
 			}
 
@@ -232,15 +237,25 @@ class BB_Admin_Meta_Field_Registry {
 	/**
 	 * Save fields data from POST for a specific item.
 	 *
+	 * Fields are filtered by save_phase so callers can run "before" fields
+	 * (which set object properties) prior to $item->save(), then run "after"
+	 * fields (which persist meta) afterward.
+	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $component Component identifier.
 	 * @param object $item      The item being saved.
+	 * @param string $phase     Save phase to process: 'before', 'after', or 'all'. Default 'all'.
 	 */
-	public function save_fields_data( $component, $item ) {
+	public function save_fields_data( $component, $item, $phase = 'all' ) {
 		$fields = $this->get_fields( $component );
 
 		foreach ( $fields as $field_id => $args ) {
+			// Filter by phase.
+			if ( 'all' !== $phase && $args['save_phase'] !== $phase ) {
+				continue;
+			}
+
 			// Skip read-only fields.
 			if ( null === $args['save_value'] || ! is_callable( $args['save_value'] ) ) {
 				continue;

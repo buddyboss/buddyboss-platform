@@ -97,6 +97,10 @@ class BB_Activity_Topics_Manager {
 	private function setup_hooks() {
 		add_action( 'bp_activity_get_edit_data', array( $this, 'bb_activity_get_edit_topic_data' ), 10, 1 );
 
+		// Add custom column to activity admin list table.
+		add_filter( 'bp_activity_list_table_get_columns', array( $this, 'bb_add_activity_admin_topic_column' ) );
+		add_filter( 'bp_activity_admin_get_custom_column', array( $this, 'bb_activity_admin_topic_column_content' ), 10, 3 );
+
 		// Register topic field in the Settings 2.0 Activity Edit Modal.
 		add_action( 'bb_register_activity_meta_fields', array( $this, 'bb_register_activity_edit_field_topic' ) );
 
@@ -1012,6 +1016,52 @@ class BB_Activity_Topics_Manager {
 			}
 		}
 		return $args;
+	}
+
+	/**
+	 * Add the Topic column to the activity admin list table.
+	 *
+	 * @since BuddyBoss 2.8.80
+	 *
+	 * @param array $columns Array of columns.
+	 *
+	 * @return array Modified array of columns.
+	 */
+	public function bb_add_activity_admin_topic_column( $columns ) {
+		$new_columns = array();
+		foreach ( $columns as $key => $value ) {
+			$new_columns[ $key ] = $value;
+			if ( 'comment' === $key ) {
+				$new_columns['activity_topic'] = __( 'Topics', 'buddyboss' );
+			}
+		}
+
+		return $new_columns;
+	}
+
+	/**
+	 * Render the Topic column content in the activity admin list table.
+	 *
+	 * @since BuddyBoss 2.8.80
+	 *
+	 * @param string $content     Column content.
+	 * @param string $column_name Column name.
+	 * @param array  $item        Activity item data.
+	 *
+	 * @return string Modified column content.
+	 */
+	public function bb_activity_admin_topic_column_content( $content, $column_name, $item ) {
+		if ( 'activity_topic' === $column_name && ! empty( $item['id'] ) ) {
+			return $this->bb_get_activity_topic_url(
+				array(
+					'activity_id' => $item['id'],
+					'html'        => true,
+					'target'      => true,
+				)
+			);
+		}
+
+		return $content;
 	}
 
 	/**

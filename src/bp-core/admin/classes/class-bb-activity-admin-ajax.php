@@ -517,25 +517,15 @@ class BB_Activity_Admin_Ajax {
 			$activity_actions = bp_activity_admin_get_activity_actions();
 		}
 
-		// Build activity data.
+		// Build activity data — non-editable metadata plus all fields from registry.
 		$activity_data = array(
 			'id'                => (int) $item->id,
-			'user_id'           => (int) $item->user_id,
-			'action'            => $item->action,
-			'content'           => $item->content,
-			'type'              => $item->type,
 			'date_recorded'     => $item->date_recorded,
 			'is_spam'           => (int) $item->is_spam,
-			'primary_link'      => $item->primary_link,
 			'permalink'         => bp_activity_get_permalink( $item->id, $item ),
-			'item_id'           => (int) $item->item_id,
-			'secondary_item_id' => (int) $item->secondary_item_id,
 			'component'         => $item->component,
-			'post_title'        => $item->post_title ?? '',
+			'registered_fields' => bb_admin_meta_field_registry()->get_fields_data( 'activity', $item ),
 		);
-
-		// Get registered field data via the field registry.
-		$activity_data['registered_fields'] = bb_admin_meta_field_registry()->get_fields_data( 'activity', $item );
 
 		/**
 		 * Filters the single activity data returned by the admin AJAX endpoint.
@@ -608,83 +598,9 @@ class BB_Activity_Admin_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Activity not found.', 'buddyboss' ) ) );
 		}
 
-		// phpcs:disable WordPress.Security.NonceVerification.Missing
-
-		// Activity action.
-		if ( isset( $_POST['action_text'] ) ) {
-			$activity->action = wp_kses_post( wp_unslash( $_POST['action_text'] ) );
-		}
-
-		// Activity content (same as legacy bp_activity_admin_load save handler).
-		if ( isset( $_POST['content'] ) ) {
-			$activity->content = wp_kses_post( wp_unslash( $_POST['content'] ) );
-
-			// For embed URL if content has one (same as legacy).
-			$urls = wp_extract_urls( $activity->content );
-			if ( is_array( $urls ) && count( $urls ) > 0 ) {
-				$_POST['link_url']   = ! empty( $urls[0] ) ? filter_var( $urls[0], FILTER_VALIDATE_URL ) : '';
-				$_POST['link_embed'] = true;
-			}
-		}
-
-		// Activity title.
-		if ( isset( $_POST['post_title'] ) ) {
-			$activity->post_title = sanitize_text_field( wp_unslash( $_POST['post_title'] ) );
-		}
-
-		// Activity primary link.
-		if ( isset( $_POST['primary_link'] ) ) {
-			$activity->primary_link = esc_url_raw( wp_unslash( $_POST['primary_link'] ) );
-		}
-
-		// Activity user ID.
-		if ( isset( $_POST['user_id'] ) ) {
-			$activity->user_id = absint( $_POST['user_id'] );
-		}
-
-		// Activity item primary ID.
-		if ( isset( $_POST['item_id'] ) ) {
-			$activity->item_id = absint( $_POST['item_id'] );
-		}
-
-		// Activity item secondary ID.
-		if ( isset( $_POST['secondary_item_id'] ) ) {
-			$activity->secondary_item_id = absint( $_POST['secondary_item_id'] );
-		}
-
-		// Activity type.
-		if ( isset( $_POST['type'] ) ) {
-			$new_type = sanitize_text_field( wp_unslash( $_POST['type'] ) );
-			if ( function_exists( 'bp_activity_admin_get_activity_actions' ) ) {
-				$actions = bp_activity_admin_get_activity_actions();
-				if ( in_array( $new_type, array_keys( $actions ), true ) ) {
-					$activity->type = $new_type;
-				}
-			}
-		}
-
-		// Activity spam status (same as legacy bp_activity_admin_load save handler).
-		if ( isset( $_POST['is_spam'] ) ) {
-			$prev_spam_status = (bool) $activity->is_spam;
-			$new_spam_status  = (bool) absint( $_POST['is_spam'] );
-
-			if ( $new_spam_status !== $prev_spam_status ) {
-				if ( $new_spam_status ) {
-					bp_activity_mark_as_spam( $activity );
-				} else {
-					/**
-					 * Remove moderation and blacklist checks in case we want to ham an activity
-					 * which contains one of these listed keys (same as legacy).
-					 */
-					remove_action( 'bp_activity_before_save', 'bp_activity_check_moderation_keys', 2 );
-					remove_action( 'bp_activity_before_save', 'bp_activity_check_blacklist_keys', 2 );
-
-					bp_activity_mark_as_ham( $activity );
-				}
-			}
-		}
-
-		// phpcs:enable WordPress.Security.NonceVerification.Missing
+		// Phase 1: Set core object properties from registry fields before save.
+		// This includes spam/ham status via the is_spam registry field.
+		bb_admin_meta_field_registry()->save_fields_data( 'activity', $activity, 'before' );
 
 		// Prevent title validation from blocking save in admin context.
 		$activity->title_required = false;
@@ -712,8 +628,8 @@ class BB_Activity_Admin_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Failed to save activity.', 'buddyboss' ) ) );
 		}
 
-		// Save registered field values via the field registry.
-		bb_admin_meta_field_registry()->save_fields_data( 'activity', $activity );
+		// Phase 2: Save meta fields via the field registry after save.
+		bb_admin_meta_field_registry()->save_fields_data( 'activity', $activity, 'after' );
 
 		wp_send_json_success(
 			array(
