@@ -1094,10 +1094,18 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			wp_enqueue_style( 'bb-readylaunch-font', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/assets/fonts/fonts.css', array(), bp_get_version() );
 			wp_enqueue_style( 'bb-readylaunch-style-main', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/main{$min}.css", array(), bp_get_version() );
+			wp_style_add_data( 'bb-readylaunch-style-main', 'rtl', 'replace' );
+			if ( $min ) {
+				wp_style_add_data( 'bb-readylaunch-style-main', 'suffix', $min );
+			}
 
 			// Register only if it's an Activity component.
 			if ( bp_is_active( 'activity' ) && bp_is_activity_component() ) {
 				wp_enqueue_style( 'bb-readylaunch-activity', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/activity{$min}.css", array(), bp_get_version() );
+				wp_style_add_data( 'bb-readylaunch-activity', 'rtl', 'replace' );
+				if ( $min ) {
+					wp_style_add_data( 'bb-readylaunch-activity', 'suffix', $min );
+				}
 
 				// BB icon version.
 				$bb_icon_version = function_exists( 'bb_icon_font_map_data' ) ? bb_icon_font_map_data( 'version' ) : '';
@@ -1109,6 +1117,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			// Register only if it's Message component.
 			if ( bp_is_active( 'messages' ) && bp_is_messages_component() ) {
 				wp_enqueue_style( 'bb-readylaunch-message', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/message{$min}.css", array(), bp_get_version() );
+				wp_style_add_data( 'bb-readylaunch-message', 'rtl', 'replace' );
+				if ( $min ) {
+					wp_style_add_data( 'bb-readylaunch-message', 'suffix', $min );
+				}
 			}
 
 			// Register only if it's Groups component.
@@ -1119,6 +1131,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					bp_is_user_groups()
 				) {
 					wp_enqueue_style( 'bb-readylaunch-group-single', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/groups-single{$min}.css", array(), bp_get_version() );
+					wp_style_add_data( 'bb-readylaunch-group-single', 'rtl', 'replace' );
+					if ( $min ) {
+						wp_style_add_data( 'bb-readylaunch-group-single', 'suffix', $min );
+					}
 					wp_enqueue_script( 'bb-rl-groups' );
 					wp_localize_script(
 						'bb-rl-groups',
@@ -1135,6 +1151,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			wp_enqueue_style( 'bb-icons-rl-css', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css", array(), bp_get_version() );
+			wp_style_add_data( 'bb-icons-rl-css', 'rtl', 'replace' );
+			if ( $min ) {
+				wp_style_add_data( 'bb-icons-rl-css', 'suffix', $min );
+			}
 
 			if ( bp_is_members_directory() ) {
 				wp_register_script(
@@ -1188,6 +1208,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		public function bb_admin_enqueue_scripts() {
 			$min = bp_core_get_minified_asset_suffix();
 			wp_enqueue_style( 'bb-icons-rl-css', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css", array(), bp_get_version() );
+			wp_style_add_data( 'bb-icons-rl-css', 'rtl', 'replace' );
+			if ( $min ) {
+				wp_style_add_data( 'bb-icons-rl-css', 'suffix', $min );
+			}
 		}
 
 		/**
@@ -2547,7 +2571,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		public function bb_rl_login_enqueue_scripts() {
 			wp_enqueue_style( 'bb-rl-login-fonts', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/assets/fonts/fonts.css', array(), bp_get_version() );
 			wp_enqueue_style( 'bb-rl-login-style', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/css/login.css', array(), bp_get_version() );
+			wp_style_add_data( 'bb-rl-login-style', 'rtl', 'replace' );
 			wp_enqueue_style( 'bb-rl-login-style-icons', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl.min.css', array(), bp_get_version() );
+			wp_style_add_data( 'bb-rl-login-style-icons', 'rtl', 'replace' );
 		}
 
 		/**
@@ -3211,6 +3237,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				array(),
 				bp_get_version()
 			);
+			wp_style_add_data( 'bb-readylaunch-lms', 'rtl', 'replace' );
 		}
 
 		/**
@@ -3230,6 +3257,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				array(),
 				bp_get_version()
 			);
+			wp_style_add_data( 'bb-readylaunch-meprlms', 'rtl', 'replace' );
 
 			// Enqueue our MemberPress Courses helper JavaScript.
 			wp_enqueue_script(
@@ -3738,6 +3766,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				array(),
 				bp_get_version()
 			);
+			wp_style_add_data( 'bb-readylaunch-forums', 'rtl', 'replace' );
+			if ( $min ) {
+				wp_style_add_data( 'bb-readylaunch-forums', 'suffix', $min );
+			}
 
 			// Dequeue default bbpress scripts to avoid conflict with readylaunch scripts.
 			// Should load after readylaunch scripts.
