@@ -346,6 +346,25 @@ select.bb-admin-settings__select {
         font-weight: 500;
         font-family: bb-icons-rl;
     }
+
+    &.bb-admin-notice--success {
+        color: $bb-text-positive-primary-color;
+        background-color: $bb-background-positive-primary-color;
+        border-color: $bb-border-positive-secondary-color;
+
+        &:before {
+            color: $bb-icon-positive-primary-color;
+        }
+    }
+
+    &--dismiss {
+        margin-left: auto;
+
+        i {
+            font-size: 18px;
+            color: $bb-icon-color;
+        }
+    }
 }
 
 /* Modal */

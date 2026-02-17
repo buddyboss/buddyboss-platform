@@ -492,15 +492,15 @@ export function ActivityListScreen( { onNavigate } ) {
 		<div className="bb-activity-list">
 			{ /* Notice */ }
 			{ notice && (
-				<div className={ 'bb-activity-list__notice bb-activity-list__notice--' + notice.type }>
+				<div className={ 'bb-admin-notice bb-admin-notice--' + notice.type }>
 					<span>{ notice.message }</span>
 					<button
-						className="bb-activity-list__notice-dismiss"
+						className="bb-admin-notice--dismiss"
 						onClick={ function () {
 							setNotice( null );
 						} }
 					>
-						&times;
+						<i className='bb-icons-rl bb-icons-rl-x'></i>
 					</button>
 				</div>
 			) }

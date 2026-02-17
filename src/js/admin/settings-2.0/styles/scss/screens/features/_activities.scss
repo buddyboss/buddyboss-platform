@@ -12,41 +12,14 @@
 	margin: 32px 32px 0;
 
 	// Notice
-	&__notice {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		padding: 8px 16px;
-		border-radius: $bb-border-radius-lg;
-		margin-bottom: 16px;
-		font-size: 13px;
-
-		&--success {
-			background-color: $bb-background-positive-primary-color;
-			color: $bb-text-positive-primary-color;
-			border: 1px solid $bb-border-positive-secondary-color;
-		}
-
-		&--error {
-			background-color: #fef2f2;
-			color: $bb-error-color;
-			border: 1px solid $bb-error-color;
-		}
+	.bb-admin-notice {
+		margin-top: 16px;
 	}
 
-	&__notice-dismiss {
+	.bb-admin-notice--dismiss {
 		background: none;
 		border: none;
 		cursor: pointer;
-		font-size: 18px;
-		line-height: 1;
-		padding: 0 0 0 8px;
-		color: inherit;
-		opacity: 0.7;
-
-		&:hover {
-			opacity: 1;
-		}
 	}
 
 	// Header
