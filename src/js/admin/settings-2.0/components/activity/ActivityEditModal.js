@@ -154,9 +154,21 @@ export function ActivityEditModal( { isOpen, activity, activityActions, onClose,
 	var renderGroupedFields = function ( grouped ) {
 		return grouped.map( function ( item, idx ) {
 			if ( 'row' === item.type ) {
+				// Collect description from any half field in the row.
+				var rowDescription = '';
+				item.fields.forEach( function ( f ) {
+					if ( f.description ) {
+						rowDescription = f.description;
+					}
+				} );
 				return (
-					<div className="bb-admin-meta-field__row" key={ 'row-' + idx }>
-						{ item.fields.map( renderField ) }
+					<div key={ 'row-' + idx }>
+						<div className="bb-admin-meta-field__row">
+							{ item.fields.map( renderField ) }
+						</div>
+						{ rowDescription && (
+							<p className="bb-admin-meta-field__description">{ rowDescription }</p>
+						) }
 					</div>
 				);
 			}

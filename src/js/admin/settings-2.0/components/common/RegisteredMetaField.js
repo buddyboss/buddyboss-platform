@@ -82,13 +82,18 @@ export function RegisteredMetaField( { field, value, onChange, activityId } ) {
 		}
 
 		return (
-			<SelectControl
-				label={ field.label }
-				value={ String( null != value ? value : '' ) }
-				options={ options }
-				onChange={ onChange }
-				__nextHasNoMarginBottom
-			/>
+			<div>
+				<SelectControl
+					label={ field.label }
+					value={ String( null != value ? value : '' ) }
+					options={ options }
+					onChange={ onChange }
+					__nextHasNoMarginBottom
+				/>
+				{ field.description && (
+					<p className="bb-admin-meta-field__description">{ field.description }</p>
+				) }
+			</div>
 		);
 	}
 
@@ -100,13 +105,21 @@ export function RegisteredMetaField( { field, value, onChange, activityId } ) {
 		inputType = 'url';
 	}
 
+	var showDescription = field.description && 'half' !== field.layout;
+
 	return (
-		<TextControl
-			label={ field.label }
-			value={ null != value ? String( value ) : '' }
-			onChange={ onChange }
-			type={ inputType }
-			__nextHasNoMarginBottom
-		/>
+		<div>
+			<TextControl
+				label={ field.label }
+				value={ null != value ? String( value ) : '' }
+				onChange={ onChange }
+				type={ inputType }
+				placeholder={ field.placeholder || '' }
+				__nextHasNoMarginBottom
+			/>
+			{ showDescription && (
+				<p className="bb-admin-meta-field__description">{ field.description }</p>
+			) }
+		</div>
 	);
 }

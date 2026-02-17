@@ -130,6 +130,8 @@ class BB_Admin_Meta_Field_Registry {
 
 		$defaults = array(
 			'label'             => '',
+			'description'       => '',
+			'placeholder'       => '',
 			'type'              => 'text',
 			'order'             => 100,
 			'context'           => 'normal',
@@ -207,15 +209,17 @@ class BB_Admin_Meta_Field_Registry {
 			}
 
 			$field_data = array(
-				'id'       => $field_id,
-				'label'    => $args['label'],
-				'type'     => $args['type'],
-				'context'  => $args['context'],
-				'layout'   => $args['layout'],
-				'visible'  => $visible,
-				'value'    => null,
-				'options'  => array(),
-				'readonly' => ( null === $args['save_value'] ),
+				'id'          => $field_id,
+				'label'       => $args['label'],
+				'description' => $args['description'],
+				'placeholder' => $args['placeholder'],
+				'type'        => $args['type'],
+				'context'     => $args['context'],
+				'layout'      => $args['layout'],
+				'visible'     => $visible,
+				'value'       => null,
+				'options'     => array(),
+				'readonly'    => ( null === $args['save_value'] ),
 			);
 
 			// Get current value.
