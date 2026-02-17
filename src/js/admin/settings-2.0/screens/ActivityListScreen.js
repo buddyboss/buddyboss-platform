@@ -792,7 +792,7 @@ export function ActivityListScreen( { onNavigate } ) {
 										return Math.max( 1, p - 1 );
 									} );
 								} }
-								className="bb-activity-list__pagination-btn"
+								className="bb-activity-list__pagination-btn bb-activity-list__pagination-btn--previous"
 							>
 								&lsaquo;
 							</Button>
@@ -827,7 +827,7 @@ export function ActivityListScreen( { onNavigate } ) {
 										return Math.min( totalPages, p + 1 );
 									} );
 								} }
-								className="bb-activity-list__pagination-btn"
+								className="bb-activity-list__pagination-btn bb-activity-list__pagination-btn--next"
 							>
 								&rsaquo;
 							</Button>
