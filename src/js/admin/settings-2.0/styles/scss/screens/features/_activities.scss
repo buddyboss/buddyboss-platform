@@ -3,12 +3,14 @@
    ---------------------------------------------------------------- */
 
 .bb-activity-list {
-	max-width: 100%;
+	max-width: calc(100% - 64px);
 	padding: 0 24px 16px;
 	background-color: $bb-background-base-color;
 	border: 1px solid $bb-border-primary-color;
 	border-radius: $bb-border-radius-2xl;
 	box-shadow: 0px 1.5px 1px 0px rgba(0, 0, 0, 0.16);
+	margin-left: 32px;
+	margin-right: 32px;
 
 	// Notice
 	&__notice {
@@ -94,6 +96,10 @@
                 border-color: transparent;
             }
 
+		}
+
+		select {
+			@include bb-admin-settings-select;
 		}
 	}
 
@@ -471,7 +477,8 @@
 
 			&:hover,
 			&:focus,
-			&.is-pressed {
+			&.is-pressed,
+			&.is-opened {
 				color: $bb-text-color;
 				background: $bb-background-primary-hover-color;
 				box-shadow: none;
@@ -537,9 +544,8 @@
 // Custom panel main - Allow full width for custom screens (ActivityList, GroupsList).
 .bb-admin-feature-settings__main--custom-panel {
 	padding: 0;
-	margin-left: 32px;
-	margin-right: 32px;
     max-width: 1600px;
+	margin: 0 auto;
 
 	.bb-activity-list {
 		max-width: 100%;

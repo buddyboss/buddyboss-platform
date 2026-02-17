@@ -210,9 +210,14 @@ select.bb-admin-settings__select {
 
             [class*="bb-icons-"] {
                 color: $bb-icon-tertiary-color;
-                font-size: 20px;
+                font-size: 20px !important;
                 line-height: 1;
                 font-weight: 400;
+                margin-right: 8px;
+            }
+
+            .bb-icons-external {
+                margin-left: auto;
             }
 
             .components-menu-item__item {
@@ -221,6 +226,7 @@ select.bb-admin-settings__select {
                 line-height: 18px;
                 color: $bb-text-tertiary-color;
                 min-width: auto;
+                width: 100%;
             }
         }
     }

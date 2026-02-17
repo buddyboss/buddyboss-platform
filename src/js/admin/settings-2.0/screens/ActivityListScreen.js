@@ -709,7 +709,7 @@ export function ActivityListScreen( { onNavigate } ) {
 											>
 												{ function ( { onClose } ) {
 													return (
-														<MenuGroup>
+														<MenuGroup className="bb_dropdown_menu_group">
 															{ ( activity.permalink || activity.primary_link ) && (
 																<MenuItem
 																	onClick={ function () {
@@ -717,9 +717,9 @@ export function ActivityListScreen( { onNavigate } ) {
 																		onClose();
 																	} }
 																>
-																	<i className="bb-icons-rl bb-icons-rl-eye" style={ { marginRight: '8px', fontSize: '14px' } }></i>
+																	<i className="bb-icons-rl bb-icons-rl-eye"></i>
 																	{ __( 'View Activity', 'buddyboss' ) }
-																	<i className="bb-icons-rl bb-icons-rl-arrow-square-out" style={ { marginLeft: 'auto', fontSize: '14px' } }></i>
+																	<i className="bb-icons-rl bb-icons-rl-arrow-up-right bb-icons-external"></i>
 																</MenuItem>
 															) }
 															<MenuItem
@@ -728,7 +728,7 @@ export function ActivityListScreen( { onNavigate } ) {
 																	onClose();
 																} }
 															>
-																<i className="bb-icons-rl bb-icons-rl-pencil-simple" style={ { marginRight: '8px', fontSize: '14px' } }></i>
+																<i className="bb-icons-rl bb-icons-rl-pencil-simple"></i>
 																{ __( 'Edit', 'buddyboss' ) }
 															</MenuItem>
 															{ isSpam ? (
@@ -738,7 +738,7 @@ export function ActivityListScreen( { onNavigate } ) {
 																		onClose();
 																	} }
 																>
-																	<i className="bb-icons-rl bb-icons-rl-chat-circle-text" style={ { marginRight: '8px', fontSize: '14px' } }></i>
+																	<i className="bb-icons-rl bb-icons-rl-chat-circle-text"></i>
 																	{ __( 'Not Spam', 'buddyboss' ) }
 																</MenuItem>
 															) : (
@@ -748,7 +748,7 @@ export function ActivityListScreen( { onNavigate } ) {
 																		onClose();
 																	} }
 																>
-																	<i className="bb-icons-rl bb-icons-rl-chat-circle-text" style={ { marginRight: '8px', fontSize: '14px' } }></i>
+																	<i className="bb-icons-rl bb-icons-rl-chat-circle-text"></i>
 																	{ __( 'Spam', 'buddyboss' ) }
 																</MenuItem>
 															) }
@@ -759,7 +759,7 @@ export function ActivityListScreen( { onNavigate } ) {
 																	onClose();
 																} }
 															>
-																<i className="bb-icons-rl bb-icons-rl-trash" style={ { marginRight: '8px', fontSize: '14px' } }></i>
+																<i className="bb-icons-rl bb-icons-rl-trash"></i>
 																{ __( 'Delete', 'buddyboss' ) }
 															</MenuItem>
 														</MenuGroup>
