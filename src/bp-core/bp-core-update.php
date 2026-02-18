@@ -539,6 +539,11 @@ function bp_version_updater() {
 			bb_update_to_2_16_1();
 		}
 
+		// Version 3.0.0 - Settings 2.0 feature migration.
+		if ( $raw_db_version < 23561 ) {
+			bb_update_to_3_0_0();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -4089,4 +4094,36 @@ function bb_update_to_2_16_1() {
 		// Clear activity API cache.
 		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp_activity' );
 	}
+}
+
+/**
+ * Migration for BuddyBoss 3.0.0 - Settings 2.0 feature activation.
+ *
+ * Seeds bb-active-features based on existing settings so the new
+ * feature cards reflect the user's prior configuration.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_update_to_3_0_0() {
+	// Only run if bb-active-features hasn't been set yet (first upgrade to 3.0).
+	$active_features = bp_get_option( 'bb-active-features', array() );
+	if ( isset( $active_features['reactions'] ) ) {
+		return; // Already migrated — don't overwrite user's Settings 2.0 choice.
+	}
+
+	// Check the legacy bb_all_reactions option.
+	// Default: array( 'activity' => true, 'activity_comment' => true ).
+	$all_reactions = (array) bp_get_option( 'bb_all_reactions', array() );
+
+	// If ANY reaction type was enabled, enable the reactions feature.
+	$any_enabled = false;
+	foreach ( $all_reactions as $value ) {
+		if ( ! empty( $value ) ) {
+			$any_enabled = true;
+			break;
+		}
+	}
+
+	$active_features['reactions'] = $any_enabled ? 1 : 0;
+	bp_update_option( 'bb-active-features', $active_features );
 }
