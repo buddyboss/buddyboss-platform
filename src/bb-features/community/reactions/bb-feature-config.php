@@ -29,6 +29,7 @@ bb_register_feature(
 		'license_tier'       => 'free',
 		'category'           => 'community',
 		'standalone'         => true,
+		'depends_on'         => array( 'activity' ),
 		'php_loader'         => function () {
 			// Note: Core functions are loaded separately to ensure availability.
 			// This loader only loads UI/admin components when feature is active.

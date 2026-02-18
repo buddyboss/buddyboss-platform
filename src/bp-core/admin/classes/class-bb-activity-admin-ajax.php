@@ -772,12 +772,16 @@ class BB_Activity_Admin_Ajax {
 			switch ( $do_action ) {
 				case 'delete':
 					if ( 'activity_comment' === $activity->type ) {
-						bp_activity_delete_comment( $activity->item_id, $activity->id );
+						$result = bp_activity_delete_comment( $activity->item_id, $activity->id );
 					} else {
-						bp_activity_delete( array( 'id' => $activity->id ) );
+						$result = bp_activity_delete( array( 'id' => $activity->id ) );
 					}
-					++$processed;
-					++$deleted;
+					if ( false !== $result ) {
+						++$processed;
+						++$deleted;
+					} else {
+						$errors[] = $activity_id;
+					}
 					break;
 
 				case 'ham':

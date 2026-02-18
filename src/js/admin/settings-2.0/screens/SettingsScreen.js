@@ -150,12 +150,32 @@ export function SettingsScreen({ onNavigate }) {
 				if (response.success) {
 					// Confirm with server data.
 					const updatedFeature = response.data?.data;
+					const deactivatedDependents = response.data?.deactivated_dependents || [];
+					const reactivatableDependents = response.data?.reactivatable_dependents || [];
+
 					setFeatures((prev) =>
-						prev.map((item) =>
-							item.id === featureId ? { ...item, ...updatedFeature } : item
-						)
+						prev.map((item) => {
+							if (item.id === featureId) {
+								return { ...item, ...updatedFeature };
+							}
+							// Cascade deactivation: mark dependent features as inactive + unavailable.
+							if (deactivatedDependents.indexOf(item.id) !== -1) {
+								return { ...item, status: 'inactive', available: false };
+							}
+							// Re-activation: dependents become available again (but stay inactive).
+							if (reactivatableDependents.indexOf(item.id) !== -1) {
+								return { ...item, available: true };
+							}
+							return item;
+						})
 					);
 					updateFeatureInCache(featureId, updatedFeature);
+					deactivatedDependents.forEach(function (depId) {
+						updateFeatureInCache(depId, { status: 'inactive', available: false });
+					});
+					reactivatableDependents.forEach(function (depId) {
+						updateFeatureInCache(depId, { available: true });
+					});
 
 					// Show success toast.
 					const successMessage = checked
@@ -279,7 +299,7 @@ export function SettingsScreen({ onNavigate }) {
 								{categoryFeatures.map((feature) => (
 									<div
 										key={feature.id}
-										className={`bb-admin-settings__feature-card bb-admin-settings__feature-card--${feature.status}`}
+										className={`bb-admin-settings__feature-card bb-admin-settings__feature-card--${feature.status}${!feature.available ? ' bb-admin-settings__feature-card--unavailable' : ''}`}
 									>
 										{/* Card Body */}
 										<div className="bb-admin-settings__feature-body">

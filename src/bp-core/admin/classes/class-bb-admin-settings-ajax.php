@@ -168,17 +168,35 @@ class BB_Admin_Settings_Ajax {
 		// Override status since bp_is_active() cache isn't updated yet.
 		$formatted['status'] = $status;
 
-		wp_send_json_success(
-			array(
-				'data'    => $formatted,
-				'message' => sprintf(
-					/* translators: 1: feature label, 2: activated/deactivated */
-					__( 'Feature "%1$s" %2$s successfully.', 'buddyboss' ),
-					$feature['label'],
-					$activate ? __( 'activated', 'buddyboss' ) : __( 'deactivated', 'buddyboss' )
-				),
-			)
+		$response = array(
+			'data'    => $formatted,
+			'message' => sprintf(
+				/* translators: 1: feature label, 2: activated/deactivated */
+				__( 'Feature "%1$s" %2$s successfully.', 'buddyboss' ),
+				$feature['label'],
+				$activate ? __( 'activated', 'buddyboss' ) : __( 'deactivated', 'buddyboss' )
+			),
 		);
+
+		// Include cascade-deactivated dependents so React can update their cards.
+		if ( ! $activate && ! empty( $registry->last_deactivated_dependents ) ) {
+			$response['deactivated_dependents'] = $registry->last_deactivated_dependents;
+		}
+
+		// When activating a feature, notify React about dependents that become available again.
+		if ( $activate ) {
+			$reactivatable = array();
+			foreach ( $registry->bb_get_features() as $fid => $f ) {
+				if ( ! empty( $f['depends_on'] ) && in_array( $feature_id, $f['depends_on'], true ) ) {
+					$reactivatable[] = $fid;
+				}
+			}
+			if ( ! empty( $reactivatable ) ) {
+				$response['reactivatable_dependents'] = $reactivatable;
+			}
+		}
+
+		wp_send_json_success( $response );
 	}
 
 	/**

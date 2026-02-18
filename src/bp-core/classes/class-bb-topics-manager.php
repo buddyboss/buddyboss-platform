@@ -167,6 +167,7 @@ class BB_Topics_Manager {
 				'edit_topic_text'              => __( 'Edit Topic', 'buddyboss' ),
 				/* translators: %s: Topic name */
 				'delete_topic_text'            => esc_html__( 'Deleting "%s"?', 'buddyboss' ),
+				'topics_limit'                 => $this->bb_topics_limit(),
 			)
 		);
 		wp_localize_script(

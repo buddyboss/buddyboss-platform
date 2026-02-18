@@ -118,7 +118,12 @@
 		flex-direction: column;
 		justify-content: space-between;
 		min-height: 208px;
-		transition: box-shadow 0.2s ease;
+		transition: box-shadow 0.2s ease, opacity 0.2s ease;
+
+		// Greyed-out state when a required dependency is not active.
+		&--unavailable {
+			opacity: 0.5;
+		}
 	}
 
 	&__feature-body {

@@ -23,6 +23,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss [BBVERSION]
  */
+#[\AllowDynamicProperties]
 class BB_Feature_Registry {
 
 	/**
@@ -1073,7 +1074,10 @@ class BB_Feature_Registry {
 	}
 
 	/**
-	 * Check if a feature is available (license checks).
+	 * Check if a feature is available (license + dependency checks).
+	 *
+	 * A feature is unavailable if its license callback returns false
+	 * OR if any of its `depends_on` features are inactive.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -1087,9 +1091,20 @@ class BB_Feature_Registry {
 
 		$feature = $this->features[ $feature_id ];
 
-		// Use callback if provided.
+		// Use callback if provided (license check).
 		if ( ! is_null( $feature['is_available_callback'] ) ) {
-			return (bool) call_user_func( $feature['is_available_callback'] );
+			if ( ! (bool) call_user_func( $feature['is_available_callback'] ) ) {
+				return false;
+			}
+		}
+
+		// Check if all dependencies are active.
+		if ( ! empty( $feature['depends_on'] ) ) {
+			foreach ( $feature['depends_on'] as $dep_feature_id ) {
+				if ( ! $this->bb_is_feature_active( $dep_feature_id ) ) {
+					return false;
+				}
+			}
 		}
 
 		// Default: available.
@@ -1193,21 +1208,20 @@ class BB_Feature_Registry {
 
 		$feature = $this->features[ $feature_id ];
 
-		// Check if other features depend on this one.
+		// Auto-deactivate any features that depend on this one.
+		$deactivated_dependents = array();
 		foreach ( $this->features as $fid => $f ) {
 			if ( ! empty( $f['depends_on'] ) && in_array( $feature_id, $f['depends_on'], true ) ) {
 				if ( $this->bb_is_feature_active( $fid ) ) {
-					return new WP_Error(
-						'dependent_features',
-						sprintf(
-							/* translators: 1: feature ID, 2: dependent feature ID */
-							__( 'Cannot deactivate feature "%1$s". Feature "%2$s" depends on it.', 'buddyboss' ),
-							$feature_id,
-							$fid
-						)
-					);
+					$this->bb_deactivate_feature( $fid );
+					$deactivated_dependents[] = $fid;
 				}
 			}
+		}
+
+		// Store deactivated dependents so the AJAX handler can include them in the response.
+		if ( ! empty( $deactivated_dependents ) ) {
+			$this->last_deactivated_dependents = $deactivated_dependents;
 		}
 
 		// Primary storage: bb-active-features option (single source of truth).
