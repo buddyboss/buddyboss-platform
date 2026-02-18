@@ -136,6 +136,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 				}
 				setIsLoading(false);
 				setInitialLoad(false);
+				setToast({ status: 'error', message: __('Failed to load settings. Please refresh.', 'buddyboss') });
 			});
 
 		return () => controller.abort();
@@ -173,6 +174,9 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 							setOriginalSettings(JSON.parse(JSON.stringify(refreshedSettings)));
 						}
 					}
+				})
+				.catch(() => {
+					setToast({ status: 'error', message: __('Failed to refresh settings. Please try again.', 'buddyboss') });
 				});
 		};
 

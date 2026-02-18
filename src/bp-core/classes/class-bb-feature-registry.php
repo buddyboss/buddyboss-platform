@@ -875,7 +875,7 @@ class BB_Feature_Registry {
 		// Get pre-sorted features (cached).
 		if ( $this->sorted_cache_dirty || ! isset( $this->sorted_cache['features'] ) ) {
 			$sorted = $this->features;
-			uasort( $sorted, array( $this, 'bb_compare_order' ) );
+			uasort( $sorted, 'bb_sort_by_order' );
 			$this->sorted_cache['features'] = $sorted;
 			$this->sorted_cache_dirty       = false;
 		}
@@ -936,7 +936,7 @@ class BB_Feature_Registry {
 		$cache_key = 'side_panels_' . $feature_id;
 		if ( $this->sorted_cache_dirty || ! isset( $this->sorted_cache[ $cache_key ] ) ) {
 			$sorted = $this->side_panels[ $feature_id ];
-			uasort( $sorted, array( $this, 'bb_compare_order' ) );
+			uasort( $sorted, 'bb_sort_by_order' );
 			$this->sorted_cache[ $cache_key ] = $sorted;
 		}
 
@@ -961,7 +961,7 @@ class BB_Feature_Registry {
 		$cache_key = 'sections_' . $feature_id . '_' . $side_panel_id;
 		if ( $this->sorted_cache_dirty || ! isset( $this->sorted_cache[ $cache_key ] ) ) {
 			$sorted = $this->sections[ $feature_id ][ $side_panel_id ];
-			uasort( $sorted, array( $this, 'bb_compare_order' ) );
+			uasort( $sorted, 'bb_sort_by_order' );
 			$this->sorted_cache[ $cache_key ] = $sorted;
 		}
 
@@ -1017,7 +1017,7 @@ class BB_Feature_Registry {
 		$cache_key = 'fields_' . $feature_id . '_' . $side_panel_id . '_' . $section_id;
 		if ( $this->sorted_cache_dirty || ! isset( $this->sorted_cache[ $cache_key ] ) ) {
 			$sorted = $this->fields[ $feature_id ][ $side_panel_id ][ $section_id ];
-			uasort( $sorted, array( $this, 'bb_compare_order' ) );
+			uasort( $sorted, 'bb_sort_by_order' );
 			$this->sorted_cache[ $cache_key ] = $sorted;
 		}
 
@@ -1341,21 +1341,6 @@ class BB_Feature_Registry {
 	// =========================================================================
 	// UTILITY METHODS
 	// =========================================================================
-
-	/**
-	 * Compare two registry items by their 'order' key (ascending).
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param array $a First item.
-	 * @param array $b Second item.
-	 * @return int Comparison result.
-	 */
-	private function bb_compare_order( $a, $b ) {
-		$a_order = isset( $a['order'] ) ? $a['order'] : 100;
-		$b_order = isset( $b['order'] ) ? $b['order'] : 100;
-		return $a_order - $b_order;
-	}
 
 	/**
 	 * Check for circular dependencies using DFS.

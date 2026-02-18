@@ -10095,6 +10095,25 @@ function bb_get_settings_url() {
 }
 
 /**
+ * Compare two registry items by their 'order' key (ascending).
+ *
+ * Shared sort callback used by BB_Feature_Registry and BB_Admin_Settings_Ajax
+ * to avoid duplicating the same anonymous function.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $a First item.
+ * @param array $b Second item.
+ * @return int Comparison result.
+ */
+function bb_sort_by_order( $a, $b ) {
+	$a_order = isset( $a['order'] ) ? (int) $a['order'] : 100;
+	$b_order = isset( $b['order'] ) ? (int) $b['order'] : 100;
+
+	return $a_order - $b_order;
+}
+
+/**
  * Register a side panel for a feature.
  *
  * Side panels appear in the left sidebar navigation when viewing feature settings.

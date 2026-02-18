@@ -350,12 +350,7 @@ class BB_Admin_Settings_Ajax {
 			}
 
 			// Sort sections by order.
-			usort(
-				$formatted_sections,
-				function ( $a, $b ) {
-					return ( $a['order'] ?? 100 ) - ( $b['order'] ?? 100 );
-				}
-			);
+			usort( $formatted_sections, 'bb_sort_by_order' );
 
 			$formatted_side_panels[] = array(
 				'id'         => $side_panel_id,
@@ -369,12 +364,7 @@ class BB_Admin_Settings_Ajax {
 		}
 
 		// Sort side panels by order.
-		usort(
-			$formatted_side_panels,
-			function ( $a, $b ) {
-				return ( $a['order'] ?? 100 ) - ( $b['order'] ?? 100 );
-			}
-		);
+		usort( $formatted_side_panels, 'bb_sort_by_order' );
 
 		// Update settings with processed values from formatted fields.
 		foreach ( $formatted_side_panels as $panel ) {
@@ -687,12 +677,7 @@ class BB_Admin_Settings_Ajax {
 		}
 
 		// Sort by order.
-		usort(
-			$formatted,
-			function ( $a, $b ) {
-				return ( $a['order'] ?? 100 ) - ( $b['order'] ?? 100 );
-			}
-		);
+		usort( $formatted, 'bb_sort_by_order' );
 
 		return $formatted;
 	}
