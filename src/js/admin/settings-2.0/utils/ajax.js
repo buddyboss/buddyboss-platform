@@ -2,7 +2,7 @@
  * BuddyBoss Admin AJAX Utilities
  *
  * @package BuddyBoss
- * @since BuddyBoss 3.0.0
+ * @since BuddyBoss [BBVERSION]
  */
 
 /**

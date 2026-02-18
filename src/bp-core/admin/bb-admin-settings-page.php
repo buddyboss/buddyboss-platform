@@ -111,30 +111,30 @@ function bb_admin_settings_page() {
 		}
 	}
 
-	$registry      = bb_feature_registry();
-	$all_features  = $registry->bb_get_features( array( 'status' => 'all' ) );
-	$feature_count = count( $all_features );
-
 	// Localize script with admin data.
-	wp_localize_script(
-		'bb-admin-settings-2-0',
-		'bbAdminData',
-		array(
-			'apiUrl'      => rest_url( bp_rest_namespace() . '/' . bp_rest_version() . '/' ),
-			'nonce'       => wp_create_nonce( 'wp_rest' ),
-			'ajaxUrl'     => admin_url( 'admin-ajax.php' ),
-			'ajaxNonce'   => wp_create_nonce( 'bb_admin_settings' ),
-			'logoUrl'     => buddypress()->plugin_url . 'bp-core/images/admin/BBLogo.png',
-			'currentUser' => array(
-				'id'   => get_current_user_id(),
-				'name' => wp_get_current_user()->display_name,
-			),
-			'debug'       => array(
-				'featureCount' => $feature_count,
-				'featureIds'   => array_keys( $all_features ),
-			),
-		)
+	$localize_data = array(
+		'apiUrl'      => rest_url( bp_rest_namespace() . '/' . bp_rest_version() . '/' ),
+		'nonce'       => wp_create_nonce( 'wp_rest' ),
+		'ajaxUrl'     => admin_url( 'admin-ajax.php' ),
+		'ajaxNonce'   => wp_create_nonce( 'bb_admin_settings' ),
+		'logoUrl'     => buddypress()->plugin_url . 'bp-core/images/admin/BBLogo.png',
+		'currentUser' => array(
+			'id'   => get_current_user_id(),
+			'name' => wp_get_current_user()->display_name,
+		),
 	);
+
+	// Only expose debug data when WP_DEBUG is enabled.
+	if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+		$registry      = bb_feature_registry();
+		$all_features  = $registry->bb_get_features( array( 'status' => 'all' ) );
+		$localize_data['debug'] = array(
+			'featureCount' => count( $all_features ),
+			'featureIds'   => array_keys( $all_features ),
+		);
+	}
+
+	wp_localize_script( 'bb-admin-settings-2-0', 'bbAdminData', $localize_data );
 
 	// Render mount point.
 	?>

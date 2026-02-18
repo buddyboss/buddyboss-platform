@@ -37,7 +37,7 @@ class BB_Feature_Autoloader {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public static function bb_register() {
-		spl_autoload_register( array( __CLASS__, 'bb_autoload' ), true, true );
+		spl_autoload_register( array( __CLASS__, 'bb_autoload' ), true, false );
 	}
 
 	/**
@@ -49,13 +49,20 @@ class BB_Feature_Autoloader {
 	 * @return bool|void True if class loaded, false if not found, void if gated.
 	 */
 	public static function bb_autoload( $class ) {
+		// Fast prefix check: only process classes that look like BuddyBoss classes.
+		// This avoids running regex + filter logic for every non-BB class autoload.
+		$upper_class = strtoupper( substr( $class, 0, 3 ) );
+		if ( 'BB_' !== $upper_class && 'BB\\' !== $upper_class && 'BP_' !== $upper_class && 'BP\\' !== $upper_class ) {
+			return false;
+		}
+
 		// SECURITY: Use strict regex patterns to prevent class name injection.
 		// Only allow alphanumeric, underscore, and backslash in class names.
 		if ( ! preg_match( '/^[a-zA-Z0-9_\\\\]+$/', $class ) ) {
 			return false; // Reject invalid class names.
 		}
 
-		// Get feature class mappings (allows filtering).
+		// Get feature class mappings (cached after first call).
 		$feature_class_map = self::bb_get_feature_class_map();
 
 		// Check if class belongs to a feature.
@@ -109,7 +116,29 @@ class BB_Feature_Autoloader {
 		}
 
 		self::$feature_class_map[ $pattern ] = $feature_id;
+
+		// Invalidate cached map so bb_get_feature_class_map() picks up the new mapping.
+		self::bb_invalidate_class_map_cache();
 	}
+
+	/**
+	 * Invalidate the cached feature class map.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	private static function bb_invalidate_class_map_cache() {
+		// Reset the static cache in bb_get_feature_class_map().
+		// We use a flag that the method checks.
+		self::$class_map_cache_dirty = true;
+	}
+
+	/**
+	 * Flag indicating the class map cache needs refresh.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 * @var bool
+	 */
+	private static $class_map_cache_dirty = false;
 
 	/**
 	 * Get feature class mappings.
@@ -119,14 +148,22 @@ class BB_Feature_Autoloader {
 	 * @return array Feature class mappings.
 	 */
 	public static function bb_get_feature_class_map() {
-		/**
-		 * Filter feature class mappings.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param array $feature_class_map Feature class mappings.
-		 */
-		return apply_filters( 'bb_feature_class_map', self::$feature_class_map );
+		// Cache the filtered result to avoid re-running apply_filters on every autoload call.
+		static $cached_map = null;
+
+		if ( null === $cached_map || self::$class_map_cache_dirty ) {
+			self::$class_map_cache_dirty = false;
+			/**
+			 * Filter feature class mappings.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param array $feature_class_map Feature class mappings.
+			 */
+			$cached_map = apply_filters( 'bb_feature_class_map', self::$feature_class_map );
+		}
+
+		return $cached_map;
 	}
 
 	/**
@@ -142,44 +179,62 @@ class BB_Feature_Autoloader {
 	public static function bb_discover_features() {
 		$base_dir = buddypress()->plugin_dir . 'bb-features/';
 
-		// Feature categories to scan.
-		$categories = array(
-			'integrations',
-			'community',
-		);
+		// Try to use cached config file paths to avoid glob() on every page load.
+		$config_files = get_transient( 'bb_feature_config_paths' );
 
-		foreach ( $categories as $category ) {
-			$category_dir = $base_dir . $category . '/';
+		if ( false === $config_files ) {
+			$config_files = array();
 
-			// Check if category directory exists.
-			if ( ! is_dir( $category_dir ) ) {
-				continue;
-			}
+			// Feature categories to scan.
+			$categories = array(
+				'integrations',
+				'community',
+			);
 
-			// Get all subdirectories (each is a feature).
-			$features = glob( $category_dir . '*', GLOB_ONLYDIR );
+			foreach ( $categories as $category ) {
+				$category_dir = $base_dir . $category . '/';
 
-			if ( empty( $features ) ) {
-				continue;
-			}
-
-			foreach ( $features as $feature_dir ) {
-				$config_file = $feature_dir . '/bb-feature-config.php';
-
-				// Load feature config if it exists.
-				if ( file_exists( $config_file ) ) {
-					require_once $config_file;
-
-					/**
-					 * Fires after a feature config is loaded.
-					 *
-					 * @since BuddyBoss [BBVERSION]
-					 *
-					 * @param string $feature_dir Feature directory path.
-					 * @param string $config_file Feature config file path.
-					 */
-					do_action( 'bb_feature_config_loaded', $feature_dir, $config_file );
+				// Check if category directory exists.
+				if ( ! is_dir( $category_dir ) ) {
+					continue;
 				}
+
+				// Get all subdirectories (each is a feature).
+				$features = glob( $category_dir . '*', GLOB_ONLYDIR );
+
+				if ( empty( $features ) ) {
+					continue;
+				}
+
+				foreach ( $features as $feature_dir ) {
+					$config_file = $feature_dir . '/bb-feature-config.php';
+
+					if ( file_exists( $config_file ) ) {
+						$config_files[] = $config_file;
+					}
+				}
+			}
+
+			// Cache for 1 week; busted by plugin activation/upgrade via bb_clear_feature_discovery_cache().
+			set_transient( 'bb_feature_config_paths', $config_files, WEEK_IN_SECONDS );
+		}
+
+		// Load each discovered config file.
+		foreach ( $config_files as $config_file ) {
+			if ( file_exists( $config_file ) ) {
+				require_once $config_file;
+
+				$feature_dir = dirname( $config_file );
+
+				/**
+				 * Fires after a feature config is loaded.
+				 *
+				 * @since BuddyBoss [BBVERSION]
+				 *
+				 * @param string $feature_dir Feature directory path.
+				 * @param string $config_file Feature config file path.
+				 */
+				do_action( 'bb_feature_config_loaded', $feature_dir, $config_file );
 			}
 		}
 
@@ -189,5 +244,17 @@ class BB_Feature_Autoloader {
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		do_action( 'bb_features_discovered' );
+	}
+
+	/**
+	 * Clear the cached feature discovery paths.
+	 *
+	 * Should be called when plugins are activated/deactivated/upgraded
+	 * or when the feature directory structure changes.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public static function bb_clear_feature_discovery_cache() {
+		delete_transient( 'bb_feature_config_paths' );
 	}
 }

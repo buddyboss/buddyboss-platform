@@ -58,3 +58,93 @@ function bb_admin_settings_init() {
 }
 
 add_action( 'bp_loaded', 'bb_admin_settings_init', 4 );
+
+// Clear feature discovery cache when plugins are activated, deactivated, or upgraded.
+add_action( 'activated_plugin', array( 'BB_Feature_Autoloader', 'bb_clear_feature_discovery_cache' ) );
+add_action( 'deactivated_plugin', array( 'BB_Feature_Autoloader', 'bb_clear_feature_discovery_cache' ) );
+add_action( 'upgrader_process_complete', array( 'BB_Feature_Autoloader', 'bb_clear_feature_discovery_cache' ) );
+
+/**
+ * Reverse-sync legacy Components page saves to bb-active-features.
+ *
+ * When an admin uses the legacy BuddyBoss > Components page, it updates
+ * bp-active-components directly. This hook keeps bb-active-features in sync
+ * so both options reflect the same activation state.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed $old_value Previous option value.
+ * @param mixed $new_value Updated option value.
+ */
+function bb_reverse_sync_components_to_features( $old_value, $new_value ) {
+	// Prevent infinite recursion: skip if we're inside a feature toggle from Settings 2.0.
+	static $syncing = false;
+	if ( $syncing ) {
+		return;
+	}
+
+	// Only run if Feature Registry is loaded.
+	if ( ! function_exists( 'bb_feature_registry' ) ) {
+		return;
+	}
+
+	$syncing  = true;
+	$registry = bb_feature_registry();
+
+	$active_features  = bp_get_option( 'bb-active-features', array() );
+	$features_changed = false;
+	$new_components   = is_array( $new_value ) ? $new_value : array();
+
+	// Check each registered feature and sync its state from bp-active-components.
+	// bb_get_features() already returns full feature data keyed by ID, so use it directly.
+	foreach ( $registry->bb_get_features( array( 'status' => 'all' ) ) as $feature_id => $feature ) {
+		// Skip features with custom active callbacks — they manage their own state.
+		if ( ! empty( $feature['is_active_callback'] ) ) {
+			continue;
+		}
+
+		// Determine component IDs that correspond to this feature.
+		$component_ids = array( $feature_id );
+		if ( ! empty( $feature['components'] ) && is_array( $feature['components'] ) ) {
+			$component_ids = $feature['components'];
+		}
+
+		// Feature is active if any of its components are active.
+		$is_component_active = false;
+		foreach ( $component_ids as $component_id ) {
+			if ( ! empty( $new_components[ $component_id ] ) ) {
+				$is_component_active = true;
+				break;
+			}
+		}
+
+		$was_active = ! empty( $active_features[ $feature_id ] );
+
+		if ( $is_component_active && ! $was_active ) {
+			$active_features[ $feature_id ] = 1;
+			$features_changed               = true;
+		} elseif ( ! $is_component_active && $was_active ) {
+			$active_features[ $feature_id ] = 0;
+			$features_changed               = true;
+		}
+	}
+
+	if ( $features_changed ) {
+		bp_update_option( 'bb-active-features', $active_features );
+		$registry->bb_clear_feature_caches();
+	}
+
+	$syncing = false;
+}
+add_action( 'update_option_bp-active-components', 'bb_reverse_sync_components_to_features', 10, 2 );
+
+// Also hook into add_option for first-time creation of bp-active-components (fresh install).
+// add_option_{$option} passes ( $option_name, $value ) not ( $old_value, $new_value ).
+add_action(
+	'add_option_bp-active-components',
+	function ( $option_name, $value ) {
+		bb_reverse_sync_components_to_features( array(), $value );
+	},
+	10,
+	2
+);

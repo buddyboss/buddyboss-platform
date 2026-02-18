@@ -4,7 +4,7 @@
  * Handles jQuery emotion picker integration and delete confirmation for React.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss 3.0.0
+ * @since BuddyBoss [BBVERSION]
  */
 
 import { useEffect, useRef } from '@wordpress/element';

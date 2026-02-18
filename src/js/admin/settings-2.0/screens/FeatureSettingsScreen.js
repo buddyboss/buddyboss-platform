@@ -4,12 +4,13 @@
  * Handles the new hierarchy: Feature → Side Panels → Sections → Fields
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss 3.0.0
+ * @since BuddyBoss [BBVERSION]
  */
 
 import { useState, useEffect, useRef, useCallback, RawHTML } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { Spinner } from '@wordpress/components';
+import { ajaxFetch } from '../utils/ajax';
 import { getCachedFeatureData, setCachedFeatureData, invalidateFeatureCache } from '../utils/featureCache';
 import { applyReactionPostSave } from '../components/reaction/applyReactionPostSave';
 import { SettingsForm } from '../components/SettingsForm';
@@ -18,29 +19,7 @@ import { Toast } from '../components/Toast';
 import { debounce, fetchHelpContent, clearHelpContentCache } from '../../utils/api';
 import { HelpIcon } from '../components/HelpIcon';
 import { HelpSliderModal } from '../components/HelpSliderModal';
-
-/**
- * AJAX request helper for fetching feature data.
- *
- * @param {string} action AJAX action name.
- * @param {Object} data   Additional data.
- * @returns {Promise} Promise resolving to response data.
- */
-const ajaxFetch = (action, data = {}) => {
-	const formData = new FormData();
-	formData.append('action', action);
-	formData.append('nonce', window.bbAdminData?.ajaxNonce || '');
-
-	Object.keys(data).forEach((key) => {
-		formData.append(key, data[key]);
-	});
-
-	return fetch(window.bbAdminData?.ajaxUrl || '/wp-admin/admin-ajax.php', {
-		method: 'POST',
-		credentials: 'same-origin',
-		body: formData,
-	}).then((response) => response.json());
-};
+import { sanitizeHtml } from '../utils/sanitize';
 
 /**
  * Feature Settings Screen Component
@@ -82,10 +61,11 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 
 	// Load feature settings via AJAX - only when featureId changes
 	// Uses caching to prevent re-fetching on navigation within the same feature
+	// AbortController cancels stale requests when featureId changes rapidly
 	useEffect(() => {
 		// Check if we have cached data for this feature
 		const cachedData = getCachedFeatureData(featureId);
-		
+
 		if (cachedData) {
 			// Use cached data
 			setFeature(cachedData);
@@ -95,7 +75,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 			const loadedSettings = cachedData.settings || {};
 			setSettings(loadedSettings);
 			setOriginalSettings(JSON.parse(JSON.stringify(loadedSettings)));
-			
+
 			// Set active panel from URL sidepanel param or default
 			if (sidePanelId && loadedPanels.some(p => p.id === sidePanelId)) {
 				setActivePanelId(sidePanelId);
@@ -107,15 +87,16 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 			setInitialLoad(false);
 			return;
 		}
-		
+
 		// No cache, fetch from server
+		const controller = new AbortController();
 		setIsLoading(true);
-		ajaxFetch('bb_admin_get_feature_settings', { feature_id: featureId })
+		ajaxFetch('bb_admin_get_feature_settings', { feature_id: featureId }, { signal: controller.signal })
 			.then((response) => {
 				if (response.success && response.data) {
 					// Cache the response data
 					setCachedFeatureData(featureId, response.data);
-					
+
 					setFeature(response.data);
 					const loadedPanels = response.data.side_panels || [];
 					setSidePanels(loadedPanels);
@@ -123,7 +104,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 					const loadedSettings = response.data.settings || {};
 					setSettings(loadedSettings);
 					setOriginalSettings(JSON.parse(JSON.stringify(loadedSettings))); // Deep copy
-					
+
 					// Set active panel: use sidePanelId from props, or first panel with is_default, or first panel
 					if (sidePanelId && loadedPanels.some(p => p.id === sidePanelId)) {
 						setActivePanelId(sidePanelId);
@@ -135,10 +116,16 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 				setIsLoading(false);
 				setInitialLoad(false);
 			})
-			.catch(() => {
+			.catch((err) => {
+				// Ignore aborted requests
+				if (err?.name === 'AbortError') {
+					return;
+				}
 				setIsLoading(false);
 				setInitialLoad(false);
 			});
+
+		return () => controller.abort();
 	}, [featureId]); // Only reload data when featureId changes, not on tab change
 
 	// Sync active panel when sidePanelId prop changes (from URL) - no AJAX call needed
@@ -459,7 +446,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 						)}
 						<div
 							className="help-content"
-							dangerouslySetInnerHTML={{ __html: helpContent.content }}
+							dangerouslySetInnerHTML={{ __html: sanitizeHtml( helpContent.content ) }}
 						/>
 						{helpContent.imageUrl && (
 							<img

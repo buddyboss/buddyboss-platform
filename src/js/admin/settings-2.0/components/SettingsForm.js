@@ -2,7 +2,7 @@
  * BuddyBoss Admin Settings 2.0 - Settings Form Component
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss 3.0.0
+ * @since BuddyBoss [BBVERSION]
  */
 
 import { useState } from '@wordpress/element';
@@ -26,6 +26,7 @@ import {
 	ReactionInfo,
 	MigrationModal,
 } from './reaction';
+import { sanitizeHtml } from '../utils/sanitize';
 
 /**
  * Settings Form Component (matching Figma settingsSection)
@@ -545,7 +546,7 @@ export function SettingsForm({ fields, values, onChange }) {
 					<div
 						key={field.name}
 						className={`bb-admin-notice bb-admin-notice--${field.notice_type || 'info'}`}
-						dangerouslySetInnerHTML={{ __html: field.description }}
+						dangerouslySetInnerHTML={{ __html: sanitizeHtml( field.description ) }}
 					/>
 				);
 
@@ -741,7 +742,7 @@ export function SettingsForm({ fields, values, onChange }) {
 					{ field.description && 'notice' !== field.type && (
 						<p
 							className="bb-admin-settings-form__field-description"
-							dangerouslySetInnerHTML={{ __html: field.description }}
+							dangerouslySetInnerHTML={{ __html: sanitizeHtml( field.description ) }}
 						/>
 					)}
 

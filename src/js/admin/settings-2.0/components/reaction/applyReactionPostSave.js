@@ -6,7 +6,7 @@
  * migration data when only mode/migration changed.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss 3.0.0
+ * @since BuddyBoss [BBVERSION]
  */
 
 /**

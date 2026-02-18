@@ -4,7 +4,7 @@
  * Displays migration warning notice with "Start Conversion" button.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss 3.0.0
+ * @since BuddyBoss [BBVERSION]
  */
 
 import { useState } from '@wordpress/element';

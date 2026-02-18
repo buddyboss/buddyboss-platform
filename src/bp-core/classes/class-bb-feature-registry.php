@@ -28,7 +28,7 @@ class BB_Feature_Registry {
 	/**
 	 * Singleton instance.
 	 *
-	 * @since BuddyBoss 3.0.0
+	 * @since BuddyBoss [BBVERSION]
 	 * @var BB_Feature_Registry
 	 */
 	private static $instance = null;
@@ -36,7 +36,7 @@ class BB_Feature_Registry {
 	/**
 	 * Registered features.
 	 *
-	 * @since BuddyBoss 3.0.0
+	 * @since BuddyBoss [BBVERSION]
 	 * @var array
 	 */
 	private $features = array();
@@ -45,7 +45,7 @@ class BB_Feature_Registry {
 	 * Registered side panels by feature.
 	 * Structure: $side_panels[ $feature_id ][ $side_panel_id ] = array( ... )
 	 *
-	 * @since BuddyBoss 3.0.0
+	 * @since BuddyBoss [BBVERSION]
 	 * @var array
 	 */
 	private $side_panels = array();
@@ -54,7 +54,7 @@ class BB_Feature_Registry {
 	 * Registered sections by feature and side panel.
 	 * Structure: $sections[ $feature_id ][ $side_panel_id ][ $section_id ] = array( ... )
 	 *
-	 * @since BuddyBoss 3.0.0
+	 * @since BuddyBoss [BBVERSION]
 	 * @var array
 	 */
 	private $sections = array();
@@ -63,7 +63,7 @@ class BB_Feature_Registry {
 	 * Registered fields by feature, side panel, and section.
 	 * Structure: $fields[ $feature_id ][ $side_panel_id ][ $section_id ][ $field_name ] = array( ... )
 	 *
-	 * @since BuddyBoss 3.0.0
+	 * @since BuddyBoss [BBVERSION]
 	 * @var array
 	 */
 	private $fields = array();
@@ -71,7 +71,7 @@ class BB_Feature_Registry {
 	/**
 	 * Registered navigation items by feature.
 	 *
-	 * @since BuddyBoss 3.0.0
+	 * @since BuddyBoss [BBVERSION]
 	 * @var array
 	 */
 	private $nav_items = array();
@@ -88,15 +88,23 @@ class BB_Feature_Registry {
 	/**
 	 * Feature dependency graph (for circular dependency detection).
 	 *
-	 * @since BuddyBoss 3.0.0
+	 * @since BuddyBoss [BBVERSION]
 	 * @var array
 	 */
 	private $dependency_graph = array();
 
 	/**
+	 * Flag to invalidate the static option cache in bb_is_feature_active().
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 * @var bool
+	 */
+	private $active_cache_dirty = false;
+
+	/**
 	 * Get singleton instance.
 	 *
-	 * @since BuddyBoss 3.0.0
+	 * @since BuddyBoss [BBVERSION]
 	 * @return BB_Feature_Registry
 	 */
 	public static function instance() {
@@ -109,7 +117,7 @@ class BB_Feature_Registry {
 	/**
 	 * Constructor.
 	 *
-	 * @since BuddyBoss 3.0.0
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	private function __construct() {
 		// Fire hook for core features to register.
@@ -147,7 +155,7 @@ class BB_Feature_Registry {
 	/**
 	 * Register a feature.
 	 *
-	 * @since BuddyBoss 3.0.0
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $feature_id Unique feature identifier (alphanumeric, underscore, hyphen).
 	 * @param array  $args {
@@ -679,7 +687,7 @@ class BB_Feature_Registry {
 		/**
 		 * Fired after a field is registered.
 		 *
-		 * @since BuddyBoss 3.0.0
+		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param string $feature_id    Feature ID.
 		 * @param string $side_panel_id Side panel ID.
@@ -697,7 +705,7 @@ class BB_Feature_Registry {
 	 *
 	 * Navigation items appear in the sidebar but link to non-settings screens (like "All Activity" list).
 	 *
-	 * @since BuddyBoss 3.0.0
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string $feature_id Feature ID.
 	 * @param array  $args {
@@ -823,12 +831,14 @@ class BB_Feature_Registry {
 
 		// Filter by status.
 		if ( 'all' !== $args['status'] ) {
+			$registry = $this;
 			$features = array_filter(
 				$features,
-				function ( $feature ) use ( $args ) {
-					$is_active = $this->bb_is_feature_active( array_search( $feature, $this->features, true ) );
+				function ( $feature, $feature_id ) use ( $args, $registry ) {
+					$is_active = $registry->bb_is_feature_active( $feature_id );
 					return ( 'active' === $args['status'] && $is_active ) || ( 'inactive' === $args['status'] && ! $is_active );
-				}
+				},
+				ARRAY_FILTER_USE_BOTH
 			);
 		}
 
@@ -958,7 +968,9 @@ class BB_Feature_Registry {
 			// Return all fields for the side panel.
 			$all_fields = array();
 			foreach ( $this->fields[ $feature_id ][ $side_panel_id ] as $section_fields ) {
-				$all_fields = array_merge( $all_fields, $section_fields );
+				foreach ( $section_fields as $key => $field ) {
+					$all_fields[ $key ] = $field;
+				}
 			}
 			return $all_fields;
 		}
@@ -998,7 +1010,9 @@ class BB_Feature_Registry {
 		$all_fields = array();
 		foreach ( $this->fields[ $feature_id ] as $side_panel_fields ) {
 			foreach ( $side_panel_fields as $section_fields ) {
-				$all_fields = array_merge( $all_fields, $section_fields );
+				foreach ( $section_fields as $key => $field ) {
+					$all_fields[ $key ] = $field;
+				}
 			}
 		}
 
@@ -1042,6 +1056,17 @@ class BB_Feature_Registry {
 	 * @return bool True if active, false otherwise.
 	 */
 	public function bb_is_feature_active( $feature_id ) {
+		// Cache option lookups to avoid repeated db/filter calls during a single request.
+		static $cached_active_features   = null;
+		static $cached_active_components = null;
+
+		// Reset cache if flagged dirty (after activate/deactivate).
+		if ( $this->active_cache_dirty ) {
+			$cached_active_features   = null;
+			$cached_active_components = null;
+			$this->active_cache_dirty = false;
+		}
+
 		if ( ! isset( $this->features[ $feature_id ] ) ) {
 			return false;
 		}
@@ -1053,19 +1078,22 @@ class BB_Feature_Registry {
 			return (bool) call_user_func( $feature['is_active_callback'] );
 		}
 
-		// Primary storage: bb-active-features option (single source of truth).
-		$active_features = bp_get_option( 'bb-active-features', array() );
+		if ( null === $cached_active_features ) {
+			$cached_active_features = bp_get_option( 'bb-active-features', array() );
+		}
 
 		// If feature state exists in bb-active-features, use it.
-		if ( isset( $active_features[ $feature_id ] ) ) {
-			return ! empty( $active_features[ $feature_id ] );
+		if ( isset( $cached_active_features[ $feature_id ] ) ) {
+			return ! empty( $cached_active_features[ $feature_id ] );
 		}
 
 		// Migration fallback: If not in bb-active-features, check legacy bp-active-components.
 		// This provides backward compatibility during migration.
-		$active_components = bp_get_option( 'bp-active-components', array() );
-		if ( isset( $active_components[ $feature_id ] ) ) {
-			return ! empty( $active_components[ $feature_id ] );
+		if ( null === $cached_active_components ) {
+			$cached_active_components = bp_get_option( 'bp-active-components', array() );
+		}
+		if ( isset( $cached_active_components[ $feature_id ] ) ) {
+			return ! empty( $cached_active_components[ $feature_id ] );
 		}
 
 		// Default: feature is inactive.
@@ -1139,8 +1167,10 @@ class BB_Feature_Registry {
 		$active_features[ $feature_id ] = 1;
 		bp_update_option( 'bb-active-features', $active_features );
 
-		// Sync to bp-active-components for backward compatibility.
+		// Best-effort sync to bp-active-components for backward compatibility.
 		// This ensures legacy code using bp_is_active() continues to work.
+		// Note: bp_update_option() returns false both on failure and when value is unchanged,
+		// so we cannot reliably detect actual write failures for rollback.
 		$active_components = bp_get_option( 'bp-active-components', array() );
 
 		// Check if this feature controls multiple components.
@@ -1162,7 +1192,7 @@ class BB_Feature_Registry {
 		/**
 		 * Fired after a feature is activated.
 		 *
-		 * @since BuddyBoss 3.0.0
+		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param string $feature_id Feature ID.
 		 */
@@ -1215,8 +1245,10 @@ class BB_Feature_Registry {
 		$active_features[ $feature_id ] = 0;
 		bp_update_option( 'bb-active-features', $active_features );
 
-		// Sync to bp-active-components for backward compatibility.
+		// Best-effort sync to bp-active-components for backward compatibility.
 		// This ensures legacy code using bp_is_active() continues to work.
+		// Note: bp_update_option() returns false both on failure and when value is unchanged,
+		// so we cannot reliably detect actual write failures for rollback.
 		$active_components = bp_get_option( 'bp-active-components', array() );
 
 		// Check if this feature controls multiple components.
@@ -1306,22 +1338,29 @@ class BB_Feature_Registry {
 	 */
 	private function bb_get_default_sanitize_callback( $type ) {
 		$callbacks = array(
-			'toggle'        => 'intval',
-			'checkbox'      => 'intval',
-			'checkbox_list' => array( $this, 'bb_sanitize_checkbox_list' ),
-			'text'          => 'sanitize_text_field',
-			'email'         => 'sanitize_email',
-			'url'           => 'esc_url_raw',
-			'textarea'      => 'sanitize_textarea_field',
-			'number'        => 'intval',
-			'select'        => 'sanitize_text_field',
-			'radio'         => 'sanitize_text_field',
-			'color'         => 'sanitize_hex_color',
-			'date'          => 'sanitize_text_field',
-			'time'          => 'sanitize_text_field',
-			'media'         => 'absint',
-			'rich_text'     => 'wp_kses_post',
-			'code'          => 'sanitize_textarea_field',
+			'toggle'            => 'intval',
+			'checkbox'          => 'intval',
+			'checkbox_list'     => array( $this, 'bb_sanitize_checkbox_list' ),
+			'text'              => 'sanitize_text_field',
+			'email'             => 'sanitize_email',
+			'url'               => 'esc_url_raw',
+			'textarea'          => 'sanitize_textarea_field',
+			'number'            => 'intval',
+			'select'            => 'sanitize_text_field',
+			'radio'             => 'sanitize_text_field',
+			'color'             => 'sanitize_hex_color',
+			'date'              => 'sanitize_text_field',
+			'time'              => 'sanitize_text_field',
+			'media'             => 'absint',
+			'rich_text'         => 'wp_kses_post',
+			'code'              => 'sanitize_textarea_field',
+			'toggle_list'       => array( $this, 'bb_sanitize_toggle_list' ),
+			'toggle_list_array' => array( $this, 'bb_sanitize_toggle_list' ),
+			'dimensions'        => 'sanitize_text_field',
+			'child_render'      => 'sanitize_text_field',
+			'image_radio'       => 'sanitize_text_field',
+			'reaction_mode'     => 'sanitize_text_field',
+			'reaction_button'   => array( $this, 'bb_sanitize_reaction_button' ),
 		);
 
 		return isset( $callbacks[ $type ] ) ? $callbacks[ $type ] : 'sanitize_text_field';
@@ -1340,6 +1379,56 @@ class BB_Feature_Registry {
 			return array();
 		}
 		return array_map( 'sanitize_text_field', $value );
+	}
+
+	/**
+	 * Sanitize toggle list field.
+	 *
+	 * Handles associative arrays like: { key1: 1, key2: 0 }
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param mixed $value The value to sanitize.
+	 * @return array Sanitized array of integer values.
+	 */
+	public function bb_sanitize_toggle_list( $value ) {
+		if ( ! is_array( $value ) ) {
+			return array();
+		}
+
+		$sanitized = array();
+		foreach ( $value as $key => $val ) {
+			$sanitized[ sanitize_key( $key ) ] = intval( $val );
+		}
+
+		return $sanitized;
+	}
+
+	/**
+	 * Sanitize reaction button field.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param mixed $value The value to sanitize.
+	 * @return array Sanitized button settings.
+	 */
+	public function bb_sanitize_reaction_button( $value ) {
+		if ( ! is_array( $value ) ) {
+			return array();
+		}
+
+		$sanitized = array();
+
+		if ( isset( $value['icon'] ) ) {
+			$sanitized['icon'] = sanitize_text_field( $value['icon'] );
+		}
+
+		if ( isset( $value['text'] ) ) {
+			$text              = trim( sanitize_text_field( $value['text'] ) );
+			$sanitized['text'] = mb_substr( $text, 0, 12 );
+		}
+
+		return $sanitized;
 	}
 
 	/**
@@ -1363,5 +1452,9 @@ class BB_Feature_Registry {
 
 		// Clear search index cache.
 		delete_transient( 'bb_settings_search_index' );
+
+		// Flag the static option cache in bb_is_feature_active() as dirty
+		// so the next call re-reads from the DB.
+		$this->active_cache_dirty = true;
 	}
 }

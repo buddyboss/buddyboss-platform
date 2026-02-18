@@ -5,7 +5,7 @@
  * re-fetching on navigation between screens within the same feature.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss 3.0.0
+ * @since BuddyBoss [BBVERSION]
  */
 
 // In-memory cache storage
