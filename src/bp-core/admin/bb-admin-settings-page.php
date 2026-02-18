@@ -87,7 +87,7 @@ function bb_admin_settings_page() {
 		foreach ( $all_features as $fid => $f ) {
 			$all_fields = bb_feature_registry()->bb_get_all_fields( $fid );
 			foreach ( $all_fields as $field ) {
-				if ( ! empty( $field['type'] ) && 'rich_text' === $field['type'] ) {
+				if ( ! empty( $field['type'] ) && in_array( $field['type'], array( 'richtext' ), true ) ) {
 					$has_rich_text = true;
 					break 2;
 				}

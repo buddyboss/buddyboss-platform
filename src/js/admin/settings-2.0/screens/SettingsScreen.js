@@ -9,6 +9,7 @@ import { useState, useEffect, useRef } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { Button, Spinner, ToggleControl } from '@wordpress/components';
 import { getCachedFeatures, toggleFeature, updateFeatureInCache } from '../utils/ajax';
+import { invalidateFeatureCache } from '../utils/featureCache';
 import { urlToRoute } from '../utils/url';
 import { Toast } from '../components/Toast';
 
@@ -177,6 +178,10 @@ export function SettingsScreen({ onNavigate }) {
 					reactivatableDependents.forEach(function (depId) {
 						updateFeatureInCache(depId, { available: true });
 					});
+
+					// Invalidate all feature settings caches so dependent features
+					// (e.g. Reactions depends on Activity) fetch fresh data.
+					invalidateFeatureCache();
 
 					// Show success toast.
 					const successMessage = checked

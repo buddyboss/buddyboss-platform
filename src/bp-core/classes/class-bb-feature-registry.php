@@ -608,7 +608,7 @@ class BB_Feature_Registry {
 	 *
 	 *     @type string   $name              Option name (required, used as option key).
 	 *     @type string   $label             Field label (required).
-	 *     @type string   $type              Field type: 'toggle', 'text', 'textarea', 'select', 'radio', 'number', 'email', 'url', 'color', 'date', 'time', 'media', 'repeater', 'field_group', 'rich_text', 'code', 'checkbox_list', 'custom' (default: 'text').
+	 *     @type string   $type              Field type: 'toggle', 'text', 'textarea', 'select', 'radio', 'number', 'email', 'url', 'color', 'date', 'time', 'media', 'repeater', 'field_group', 'richtext', 'code', 'checkbox_list', 'custom' (default: 'text').
 	 *     @type string   $description       Field description/help text.
 	 *     @type mixed    $default           Default value.
 	 *     @type array    $options           Options for select/radio/checkbox_list fields.
@@ -1411,7 +1411,7 @@ class BB_Feature_Registry {
 			'date'              => 'sanitize_text_field',
 			'time'              => 'sanitize_text_field',
 			'media'             => 'absint',
-			'rich_text'         => 'wp_kses_post',
+			'richtext'          => 'wp_kses_post',
 			'code'              => 'sanitize_textarea_field',
 			'toggle_list'       => array( $this, 'bb_sanitize_toggle_list' ),
 			'toggle_list_array' => array( $this, 'bb_sanitize_toggle_list' ),
