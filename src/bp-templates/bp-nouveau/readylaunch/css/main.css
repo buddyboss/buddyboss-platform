@@ -4255,6 +4255,16 @@ body.bb-readylaunch-template .select2-container--rl.select2-container--open:has(
   width: 100% !important;
 }
 
+@media (min-width: 1000px) {
+  body:not(.logged-in) .bb-rl-network-search-filter .bb-rl-dropdown-align-adaptive,
+  body:not(.logged-in) .bb-rl-network-search-filter .select2-container .bb-rl-select2-dropdown.bb-rl-dropdown-align-adaptive,
+  body.bb-readylaunch-template .bb-rl-network-search-filter .bb-rl-dropdown-align-adaptive,
+  body.bb-readylaunch-template .bb-rl-network-search-filter .select2-container .bb-rl-select2-dropdown.bb-rl-dropdown-align-adaptive {
+    left: 0;
+    right: unset;
+  }
+}
+
 body:not(.logged-in) .bb-model-footer .select2-container .bb-rl-select2-dropdown,
 body:not(.logged-in) .bb-rl-footer-alt .select2-container .bb-rl-select2-dropdown,
 body.bb-readylaunch-template .bb-model-footer .select2-container .bb-rl-select2-dropdown,
@@ -8535,6 +8545,11 @@ body.admin-bar .bb-rl-left-panel {
   justify-content: flex-end;
 }
 
+.bb-rl-groups .bb-rl-skeleton-footer,
+.bb-rl-members .bb-rl-skeleton-footer {
+  flex: auto;
+}
+
 .bb-rl-skeleton-footer .bb-rl-skeleton-data-bit {
   height: var(--bb-rl-space-300);
 }
@@ -9670,6 +9685,7 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 .bb-rl-media-stream .media-list .load-more,
 .bb-rl-media-stream .video-list .load-more,
 .bb-rl-media-stream .document-list .load-more {
+  grid-column: 1 / -1;
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -9723,6 +9739,12 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 .bb-rl-media-stream .document-list .load-more .button [class*="bb-icons-rl-"] {
   margin-left: 6px;
   font-size: 16px;
+}
+
+.bb-rl-media-stream .media-list .pager,
+.bb-rl-media-stream .video-list .pager,
+.bb-rl-media-stream .document-list .pager {
+  grid-column: 1 / -1;
 }
 
 .bb-rl-media-stream .bb-item-thumb {
@@ -14857,7 +14879,6 @@ body.bb-rl-activity-modal-open .bb-rl-activity-update-form.modal-popup {
   padding: 6px 8px;
   border-radius: var(--bb-rl-radius-full);
   cursor: pointer;
-  text-transform: capitalize;
 }
 
 .bb-subnav-filters-container-main .subnav-filters-opener:before {
@@ -15758,6 +15779,18 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   /* Media */
 }
 
+.bb-rl-activity-media-elem .bb-rl-more_dropdown-wrap ul li.bb_rl_move_file.bb-rl-move-disabled a {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.bb-rl-activity-media-elem .bb-rl-more_dropdown-wrap ul li.bb_rl_move_file.bb-rl-move-disabled[data-balloon]:after {
+  content: attr(data-balloon);
+  white-space: normal;
+  max-width: 200px;
+  width: 100%;
+}
+
 .bb-rl-activity-media-elem:hover .bb-rl-more_dropdown-wrap {
   visibility: visible;
   opacity: 1;
@@ -15797,6 +15830,18 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
 /* Video */
 .bb-rl-activity-video-elem {
   position: relative;
+}
+
+.bb-rl-activity-video-elem .bb-rl-more_dropdown-wrap ul li.bb_rl_move_video.bb-rl-move-disabled a {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.bb-rl-activity-video-elem .bb-rl-more_dropdown-wrap ul li.bb_rl_move_video.bb-rl-move-disabled[data-balloon]:after {
+  content: attr(data-balloon);
+  white-space: normal;
+  max-width: 200px;
+  width: 100%;
 }
 
 .bb-rl-activity-video-elem:hover .bb-rl-more_dropdown-wrap {
@@ -20293,6 +20338,35 @@ table.profile-settings tbody td select {
   padding: var(--bb-rl-space-200);
 }
 
+.bb-rl-account-settings-section .is_loading .bb-loading-bg {
+  background-color: var(--bb-rl-background-secondary-color);
+  animation: fade-in-out infinite 2s ease;
+}
+
+.bb-rl-account-settings-section .is_loading .subscription-items_loading {
+  display: flex;
+  align-items: center;
+  padding: 12px 10px;
+}
+
+.bb-rl-account-settings-section .is_loading .subscription-items_loading .subscription-items-image_loading {
+  height: 40px;
+  width: 40px;
+  margin-right: 12px;
+  border-radius: 4px;
+}
+
+.bb-rl-account-settings-section .is_loading .subscription-items_loading .subscription-items-text_loading {
+  height: 14px;
+  flex: 1;
+  max-width: 160px;
+  border-radius: 100px;
+}
+
+.bb-rl-account-settings-section .bbp-pagination-links {
+  gap: var(--bb-rl-space-100);
+}
+
 .bb-rl-account-settings-section .subscription-items {
   list-style: none;
   padding: 0;
@@ -20330,8 +20404,8 @@ table.profile-settings tbody td select {
 }
 
 .bb-rl-account-settings-section .subscription-items .subscription-item_image img {
-  max-width: 32px;
-  height: auto;
+  width: 32px;
+  height: 32px;
   border-radius: var(--bb-rl-radius-md);
 }
 
