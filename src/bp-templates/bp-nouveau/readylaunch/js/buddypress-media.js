@@ -523,6 +523,11 @@ window.bp = window.bp || {};
 
 			$editAlbumModal.find( '#bb-album-title' ).val( current_name ).focus().select();
 			$editAlbumModal.attr( 'data-id', album_item.attr('data-id') );
+
+			//Trigger select2 initialization
+			if( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+				bp.Readylaunch.initSelect2Scoped( $(document) );
+			}
 		},
 
 		closeEditAlbumModal: function ( event ) {
