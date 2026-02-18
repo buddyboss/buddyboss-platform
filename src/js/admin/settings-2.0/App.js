@@ -2,7 +2,7 @@
  * BuddyBoss Admin Settings 2.0 - Main App Component
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss 3.0.0
+ * @since BuddyBoss [BBVERSION]
  */
 
 import { useState, useEffect } from '@wordpress/element';

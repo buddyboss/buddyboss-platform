@@ -2,7 +2,7 @@
  * BuddyBoss Admin Settings 2.0 - Settings Grid Screen
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss 3.0.0
+ * @since BuddyBoss [BBVERSION]
  */
 
 import { useState, useEffect, useRef } from '@wordpress/element';

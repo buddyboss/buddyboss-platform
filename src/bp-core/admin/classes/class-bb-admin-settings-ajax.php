@@ -277,7 +277,24 @@ class BB_Admin_Settings_Ajax {
 		// Get all fields for current values.
 		$all_fields = $registry->bb_get_all_fields( $feature_id );
 
-		// Get current values. BuddyBoss stores options via bp_get_option/bp_update_option (root blog on multisite).
+		// Batch-prime the WP object cache for all option names to avoid N+1 get_option() queries.
+		$option_names = array();
+		foreach ( $all_fields as $field ) {
+			$option_names[] = $field['name'];
+
+			// Also collect toggle_list option_prefix options.
+			if ( 'toggle_list' === ( $field['type'] ?? '' ) && ! empty( $field['option_prefix'] ) ) {
+				foreach ( $field['options'] ?? array() as $option ) {
+					$option_names[] = $field['option_prefix'] . $option['value'];
+				}
+			}
+		}
+
+		if ( ! empty( $option_names ) ) {
+			$this->bb_prime_option_caches( $option_names );
+		}
+
+		// Get current values (now served from object cache, not individual DB queries). BuddyBoss stores options via bp_get_option/bp_update_option (root blog on multisite).
 		$settings = array();
 		foreach ( $all_fields as $field_name => $field ) {
 			// toggle_list with option_prefix: each option is stored as a separate key (e.g. bp-feed-platform-{key}).
@@ -1037,6 +1054,74 @@ class BB_Admin_Settings_Ajax {
 	 */
 	public function bb_invalidate_search_index_after_save( $feature_id, $settings, $saved ) {
 		delete_transient( 'bb_settings_search_index' );
+	}
+
+	/**
+	 * Prime the WordPress object cache for multiple option names in a single query.
+	 *
+	 * This avoids N+1 get_option() queries by fetching all needed options at once
+	 * and populating the object cache so subsequent get_option() calls are served from memory.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $option_names Array of option names to prime.
+	 */
+	private function bb_prime_option_caches( $option_names ) {
+		// Use WP 6.4+ built-in batch priming if available.
+		if ( function_exists( 'wp_prime_option_caches' ) ) {
+			wp_prime_option_caches( $option_names );
+			return;
+		}
+
+		// Fallback for WP < 6.4: manually prime the cache.
+		// Check alloptions (autoloaded) and notoptions (known missing) before querying.
+		$alloptions = wp_load_alloptions();
+		$notoptions = wp_cache_get( 'notoptions', 'options' );
+		if ( ! is_array( $notoptions ) ) {
+			$notoptions = array();
+		}
+
+		$uncached = array();
+		foreach ( $option_names as $name ) {
+			if ( ! isset( $alloptions[ $name ] ) && ! isset( $notoptions[ $name ] ) && false === wp_cache_get( $name, 'options' ) ) {
+				$uncached[] = $name;
+			}
+		}
+
+		if ( empty( $uncached ) ) {
+			return;
+		}
+
+		global $wpdb;
+
+		$placeholders = implode( ',', array_fill( 0, count( $uncached ), '%s' ) );
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Placeholders are dynamically generated.
+		$results = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT option_name, option_value FROM {$wpdb->options} WHERE option_name IN ({$placeholders})",
+				$uncached
+			),
+			OBJECT_K
+		);
+
+		// Prime cache for found options with raw (serialized) values.
+		// WP core expects raw values in the options cache; get_option() handles unserializing.
+		foreach ( $results as $option_name => $row ) {
+			wp_cache_set( $option_name, $row->option_value, 'options' );
+		}
+
+		// Prime notoptions cache for missing options (matches WP 6.4+ behavior).
+		// WP uses the 'notoptions' cache key to track options that don't exist in the DB.
+		$update_notoptions = false;
+		foreach ( $uncached as $option_name ) {
+			if ( ! isset( $results[ $option_name ] ) && ! isset( $notoptions[ $option_name ] ) ) {
+				$notoptions[ $option_name ] = true;
+				$update_notoptions          = true;
+			}
+		}
+		if ( $update_notoptions ) {
+			wp_cache_set( 'notoptions', $notoptions, 'options' );
+		}
 	}
 }
 

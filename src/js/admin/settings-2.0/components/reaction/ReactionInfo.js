@@ -4,7 +4,7 @@
  * Displays an informational text notice with inline link for reaction migration.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss 3.0.0
+ * @since BuddyBoss [BBVERSION]
  */
 
 import { __ } from '@wordpress/i18n';

@@ -4,12 +4,13 @@
  * Modal for starting and displaying migration wizard.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss 3.0.0
+ * @since BuddyBoss [BBVERSION]
  */
 
 import { useEffect, useState } from '@wordpress/element';
 import { Modal } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
+import { sanitizeHtml } from '../../utils/sanitize';
 
 export function MigrationModal({ isOpen, onClose, migrationData }) {
 	const [loading, setLoading] = useState(true);
@@ -315,7 +316,7 @@ export function MigrationModal({ isOpen, onClose, migrationData }) {
 				{!loading && !error && wizardContent && (
 					<div
 						className="bb-admin-migration-modal__wizard"
-						dangerouslySetInnerHTML={{ __html: wizardContent }}
+						dangerouslySetInnerHTML={{ __html: sanitizeHtml( wizardContent ) }}
 					/>
 				)}
 			</div>

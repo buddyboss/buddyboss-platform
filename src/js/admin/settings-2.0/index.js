@@ -7,9 +7,15 @@
 
 import { render } from '@wordpress/element';
 import { App } from './App';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 // Initialize the React app.
 const container = document.getElementById( 'bb-admin-settings-2-0' );
 if (container) {
-	render( <App />, container );
+	render(
+		<ErrorBoundary>
+			<App />
+		</ErrorBoundary>,
+		container
+	);
 }

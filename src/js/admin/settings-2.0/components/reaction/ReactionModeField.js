@@ -4,7 +4,7 @@
  * Renders the reaction mode radios and emotion cards.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss 3.0.0
+ * @since BuddyBoss [BBVERSION]
  */
 
 import { DropdownMenu, MenuGroup, MenuItem } from '@wordpress/components';

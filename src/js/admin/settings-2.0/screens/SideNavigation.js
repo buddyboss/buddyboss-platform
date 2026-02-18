@@ -4,7 +4,7 @@
  * Displays side panels and navigation items in the left sidebar navigation.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss 3.0.0
+ * @since BuddyBoss [BBVERSION]
  */
 
 import { __ } from '@wordpress/i18n';

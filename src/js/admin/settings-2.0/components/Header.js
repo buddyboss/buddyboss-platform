@@ -2,39 +2,13 @@
  * BuddyBoss Admin Settings 2.0 - Header Component
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss 3.0.0
+ * @since BuddyBoss [BBVERSION]
  */
 
 import { useState, useEffect, useRef } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+import { ajaxFetch } from '../utils/ajax';
 
-/**
- * AJAX request helper.
- *
- * @param {string} action AJAX action name.
- * @param {Object} data   Additional data.
- * @returns {Promise} Promise resolving to response data.
- */
-const ajaxFetch = (action, data = {}) => {
-	const formData = new FormData();
-	formData.append('action', action);
-	formData.append('nonce', window.bbAdminData?.ajaxNonce || '');
-	
-	Object.keys(data).forEach((key) => {
-		formData.append(key, data[key]);
-	});
-	
-	return fetch(window.bbAdminData?.ajaxUrl || '/wp-admin/admin-ajax.php', {
-		method: 'POST',
-		credentials: 'same-origin',
-		body: formData,
-	}).then((response) => {
-		if (!response.ok) {
-			throw new Error('HTTP ' + response.status + ': ' + response.statusText);
-		}
-		return response.json();
-	});
-};
 
 /**
  * Header Component

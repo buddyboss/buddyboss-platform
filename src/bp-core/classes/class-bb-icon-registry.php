@@ -168,11 +168,19 @@ class BB_Icon_Registry {
 
 		// Process path to URL if needed.
 		if ( ! empty( $args['path'] ) && empty( $args['url'] ) ) {
-			// Try to resolve as plugin-relative path.
-			if ( file_exists( buddypress()->plugin_dir . $args['path'] ) ) {
-				$args['url'] = buddypress()->plugin_url . $args['path'];
-			} elseif ( file_exists( plugin_dir_path( __FILE__ ) . '../' . $args['path'] ) ) {
-				$args['url'] = plugin_dir_url( __FILE__ ) . '../' . $args['path'];
+			// Sanitize path: reject directory traversal sequences.
+			$safe_path = str_replace( '\\', '/', $args['path'] );
+			if ( false === strpos( $safe_path, '..' ) ) {
+				// Try to resolve as plugin-relative path with realpath validation.
+				$plugin_dir  = realpath( buddypress()->plugin_dir );
+				$candidate_1 = realpath( buddypress()->plugin_dir . $safe_path );
+				$candidate_2 = realpath( plugin_dir_path( __FILE__ ) . '../' . $safe_path );
+
+				if ( $candidate_1 && 0 === strpos( $candidate_1, $plugin_dir ) ) {
+					$args['url'] = buddypress()->plugin_url . $safe_path;
+				} elseif ( $candidate_2 && 0 === strpos( $candidate_2, $plugin_dir ) ) {
+					$args['url'] = plugin_dir_url( __FILE__ ) . '../' . $safe_path;
+				}
 			}
 		}
 

@@ -2,7 +2,7 @@
  * BuddyBoss Admin Settings 2.0 - Reaction Components
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss 3.0.0
+ * @since BuddyBoss [BBVERSION]
  */
 
 export { applyReactionPostSave } from './applyReactionPostSave';

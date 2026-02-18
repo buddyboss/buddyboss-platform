@@ -2,7 +2,7 @@
  * BuddyBoss Admin Settings 2.0 - Router Component
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss 3.0.0
+ * @since BuddyBoss [BBVERSION]
  */
 
 import { lazy, Suspense, useState, useEffect } from '@wordpress/element';

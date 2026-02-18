@@ -4,7 +4,7 @@
  * Displays status for in-progress or completed migrations.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss 3.0.0
+ * @since BuddyBoss [BBVERSION]
  */
 
 import { useState, useEffect, useRef, useCallback } from '@wordpress/element';
