@@ -28,7 +28,7 @@ import { __ } from '@wordpress/i18n';
  * @returns {JSX.Element|null} Modal component or null.
  */
 export function TopicDeleteModal( { isOpen, onClose, onConfirm, topic, availableTopics, migrateNonce, isSaving } ) {
-	var migrateTypeState = useState( 'delete' );
+	var migrateTypeState = useState( 'migrate' );
 	var migrateType = migrateTypeState[ 0 ];
 	var setMigrateType = migrateTypeState[ 1 ];
 
