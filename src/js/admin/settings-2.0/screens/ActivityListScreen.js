@@ -752,7 +752,7 @@ export function ActivityListScreen( { onNavigate } ) {
 										{ activity.custom_columns && Object.keys( activity.custom_columns ).map( function ( key ) {
 											return (
 												<td key={ key } className={ 'bb-activity-list__td--custom bb-activity-list__td--' + key }>
-													<span dangerouslySetInnerHTML={ { __html: activity.custom_columns[ key ] } } />
+													<span dangerouslySetInnerHTML={ { __html: sanitizeHtml( activity.custom_columns[ key ] ) } } />
 												</td>
 											);
 										} ) }
