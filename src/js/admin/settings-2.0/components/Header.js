@@ -25,7 +25,7 @@ export function Header({ onNavigate }) {
 	const searchTimeoutRef = useRef(null);
 	const searchRef = useRef(null);
 
-	// Debounced search (300ms)
+	// Debounced search (300ms) with AbortController to cancel stale requests.
 	useEffect(() => {
 		if (searchTimeoutRef.current) {
 			clearTimeout(searchTimeoutRef.current);
@@ -37,9 +37,11 @@ export function Header({ onNavigate }) {
 			return;
 		}
 
+		const abortController = new AbortController();
+
 		setIsSearching(true);
 		searchTimeoutRef.current = setTimeout(() => {
-			ajaxFetch('bb_admin_search_settings', { query: searchQuery })
+			ajaxFetch('bb_admin_search_settings', { query: searchQuery }, { signal: abortController.signal })
 				.then((response) => {
 					if (response.success) {
 						setSearchResults(response.data?.results || []);
@@ -50,7 +52,10 @@ export function Header({ onNavigate }) {
 					}
 					setIsSearching(false);
 				})
-				.catch(() => {
+				.catch((error) => {
+					if (error && 'AbortError' === error.name) {
+						return;
+					}
 					setSearchResults([]);
 					setShowSearchResults(false);
 					setIsSearching(false);
@@ -61,6 +66,7 @@ export function Header({ onNavigate }) {
 			if (searchTimeoutRef.current) {
 				clearTimeout(searchTimeoutRef.current);
 			}
+			abortController.abort();
 		};
 	}, [searchQuery]);
 
@@ -157,7 +163,6 @@ export function Header({ onNavigate }) {
 						aria-label={__('Notifications', 'buddyboss')}
 					>
 						<i className="bb-icons-rl-bell"></i>
-						<span className="bb-admin-header__notification-badge">2</span>
 					</button>
 
 					{/* Documentation/Help Icon */}

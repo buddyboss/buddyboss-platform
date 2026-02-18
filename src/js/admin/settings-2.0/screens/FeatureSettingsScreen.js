@@ -427,7 +427,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 											<div className="bb-admin-feature-settings__section-body">
 												{section.description && (
 													<RawHTML className="bb-admin-feature-settings__section-description">
-														{section.description}
+														{sanitizeHtml( section.description )}
 													</RawHTML>
 												)}
 												<SettingsForm

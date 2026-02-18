@@ -10,6 +10,7 @@
 
 import { CheckboxControl } from '@wordpress/components';
 import { RawHTML } from '@wordpress/element';
+import { sanitizeHtml } from '../../../utils/sanitize';
 
 /**
  * Share Platforms Field Component
@@ -70,7 +71,7 @@ export function SharePlatformsField({ field, value, onChange }) {
 			</div>
 			{field.description && (
 				<RawHTML className="bb-admin-settings-form__field-description">
-					{field.description}
+					{sanitizeHtml( field.description )}
 				</RawHTML>
 			)}
 		</div>

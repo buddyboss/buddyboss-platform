@@ -55,6 +55,13 @@ export function SettingsForm({ fields, values, onChange }) {
 		fields.forEach( ( field ) => {
 			if ( field.description ) {
 				cache[ field.name + '__desc' ] = sanitizeHtml( field.description );
+
+				// Pre-split and sanitize parts for fields with inline description controls.
+				if ( field.description.indexOf( '%s' ) !== -1 && field.description_controls && field.description_controls.length > 0 ) {
+					cache[ field.name + '__parts' ] = field.description.split( '%s' ).map( function ( part ) {
+						return sanitizeHtml( part );
+					} );
+				}
 			}
 			if ( field.help_text ) {
 				cache[ field.name + '__help' ] = sanitizeHtml( field.help_text );
@@ -231,7 +238,7 @@ export function SettingsForm({ fields, values, onChange }) {
 						{field.description && (
 							<p
 								className="bb-admin-settings-form__field-description"
-								dangerouslySetInnerHTML={{ __html: field.description }}
+								dangerouslySetInnerHTML={{ __html: sanitizedHtml[ field.name + '__desc' ] || '' }}
 							/>
 						)}
 						<Droppable droppableId={field.name}>
@@ -913,7 +920,8 @@ export function SettingsForm({ fields, values, onChange }) {
 						const hasControls = desc.indexOf( '%s' ) !== -1 && controls && controls.length > 0;
 
 						if ( hasControls ) {
-							const parts = desc.split( '%s' );
+							const cachedParts = sanitizedHtml[ field.name + '__parts' ];
+							const parts = cachedParts || desc.split( '%s' );
 							const isToggleOff = ( 'toggle' === field.type || 'checkbox' === field.type ) && ! values[ field.name ];
 
 							return (
@@ -932,7 +940,7 @@ export function SettingsForm({ fields, values, onChange }) {
 
 										return (
 											<span key={ index }>
-												<span dangerouslySetInnerHTML={{ __html: part }} />
+												<span dangerouslySetInnerHTML={{ __html: cachedParts ? part : sanitizeHtml( part ) }} />
 												{ control && ( control.type === 'select' || control.type === 'self' ) && (
 													<select
 														name={ controlName }

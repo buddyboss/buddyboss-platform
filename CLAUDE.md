@@ -72,7 +72,7 @@ npm run lint-css
 composer lint
 ```
 
-**PHP standards:** WordPress Coding Standards + PHPCompatibilityWP (minimum PHP 5.6)
+**PHP standards:** WordPress Coding Standards + PHPCompatibilityWP (minimum PHP 7.0)
 **JavaScript standards:** WordPress JavaScript Coding Standards
 
 ### Grunt Tasks
@@ -290,7 +290,7 @@ src/js/admin/settings-2.0/
 - Sort-by-order callback duplicated 7x across PHP (extract to reusable method)
 - `SettingsForm.js` is a 777-line component handling 17+ field types (extract complex types)
 - `BBIcon` component defined twice (extract to shared component)
-- 34 unresolved `[BBVERSION]` placeholders in `class-bb-feature-registry.php`
+- ~~34 `[BBVERSION]` placeholders in `class-bb-feature-registry.php`~~ (replaced during release build -- not an issue)
 - Hardcoded notification badge "2" in `Header.js:181`
 - Reactions `bb-feature-config.php` mixes configuration with runtime loading (move hooks to `loader.php`)
 - Debug data (feature IDs) exposed in `wp_localize_script` -- gate behind `WP_DEBUG`
@@ -486,7 +486,7 @@ if ( bp_core_do_network_admin() ) {
 - Run `composer lint-php-fix` to auto-fix common issues
 - See `phpcs.xml` for specific rules and exclusions
 - Excluded paths: `deprecated/`, `bp-integrations/`, `vendor/`, `node_modules/`
-- Minimum PHP compatibility: 5.6 (checked via PHPCompatibilityWP)
+- Minimum PHP compatibility: 7.0 (checked via PHPCompatibilityWP)
 
 **Key WordPress PHP Conventions:**
 - Use tabs (not spaces) for indentation
@@ -532,6 +532,45 @@ BuddyBoss Platform uses specific prefixes for functions, classes, and files:
 **Hooks (Actions & Filters):**
 - Use `bp_` prefix (e.g., `bp_loaded`, `bp_init`, `bp_activity_after_save`)
 - Lowercase with underscores
+
+**Version Placeholder `[BBVERSION]`:**
+
+The placeholder `[BBVERSION]` is used in `@since` docblock tags throughout the codebase. It is **automatically replaced** with the actual version number during the release build process (via Grunt). Do NOT manually replace `[BBVERSION]` with a version number — leave it as-is.
+
+**`@since` Tag Requirements:**
+
+Every new or modified PHP function, JavaScript function, hook (action/filter), or class **must** include an `@since BuddyBoss [BBVERSION]` tag in its docblock. Specifically:
+
+- **New PHP function** — Add `@since BuddyBoss [BBVERSION]` to the function docblock
+- **New JavaScript function** — Add `@since BuddyBoss [BBVERSION]` to the JSDoc comment
+- **New action/filter hook** — Add `@since BuddyBoss [BBVERSION]` to the `do_action()` or `apply_filters()` docblock
+- **Moved hook/filter** — If a hook/filter is moved to a different location, add a new `@since BuddyBoss [BBVERSION]` noting the move
+- **New parameter on existing hook/filter** — Add `@since BuddyBoss [BBVERSION]` documenting the new parameter
+- **New class** — Add `@since BuddyBoss [BBVERSION]` to the class docblock
+
+**Example:**
+```php
+/**
+ * Check whether reactions feature is enabled.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool True if reactions feature is enabled.
+ */
+function bb_is_reactions_feature_enabled() {
+	// ...
+}
+
+/**
+ * Fires after a feature is registered.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id The feature ID.
+ * @param array  $args       The feature arguments.
+ */
+do_action( 'bb_feature_registered', $feature_id, $args );
+```
 
 **Example:**
 ```php
@@ -726,7 +765,7 @@ $(document).on('click', '.my-button', (e) => {
 This plugin is typically developed within a WordPress installation:
 - **WordPress location:** `wp-content/plugins/buddyboss-platform/`
 - **Node version:** >= 14.15.0 (see `package.json`)
-- **PHP version:** >= 5.6 (compatibility target), recommend 7.4+
+- **PHP version:** >= 7.0 (compatibility target), recommend 7.4+
 
 ## Security Rules
 
@@ -1503,7 +1542,7 @@ define( 'SCRIPT_DEBUG', true );
 - **Test with Query Monitor** plugin for performance analysis
 
 ### Compatibility Requirements
-- **PHP version:** 5.6+ (compatibility target), 7.4+ (recommended)
+- **PHP version:** 7.0+ (compatibility target), 7.4+ (recommended)
 - **WordPress version:** 6.0+ (minimum)
 - Test on multiple PHP versions: 7.4, 8.0, 8.1, 8.2
 - Test on multiple WordPress versions

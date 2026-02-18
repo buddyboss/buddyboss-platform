@@ -17,6 +17,7 @@ import {
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { ajaxFetch } from '../utils/ajax';
+import { sanitizeHtml } from '../utils/sanitize';
 import { ActivityEditModal } from '../components/activity/ActivityEditModal';
 import { ActivityCommentModal } from '../components/activity/ActivityCommentModal';
 
@@ -148,7 +149,19 @@ export function ActivityListScreen( { onNavigate } ) {
 			include_meta: hasMetaRef.current ? 0 : 1,
 		} ).then( function ( response ) {
 			if ( response.success && response.data ) {
-				setActivities( response.data.activities || [] );
+				var rawActivities = response.data.activities || [];
+				// Sanitize custom column HTML once at fetch time to avoid DOMParser overhead per render.
+				var sanitizedActivities = rawActivities.map( function ( activity ) {
+					if ( ! activity.custom_columns ) {
+						return activity;
+					}
+					var sanitizedColumns = {};
+					Object.keys( activity.custom_columns ).forEach( function ( key ) {
+						sanitizedColumns[ key ] = sanitizeHtml( activity.custom_columns[ key ] );
+					} );
+					return Object.assign( {}, activity, { custom_columns: sanitizedColumns } );
+				} );
+				setActivities( sanitizedActivities );
 				setTotal( response.data.total || 0 );
 				setSpamCount( response.data.spam_count || 0 );
 
@@ -195,6 +208,15 @@ export function ActivityListScreen( { onNavigate } ) {
 			};
 		}
 	}, [ notice ] );
+
+	// Cleanup search debounce timer on unmount.
+	useEffect( function () {
+		return function () {
+			if ( searchTimerRef.current ) {
+				clearTimeout( searchTimerRef.current );
+			}
+		};
+	}, [] );
 
 	/**
 	 * Handle search input with debounce.
@@ -716,10 +738,9 @@ export function ActivityListScreen( { onNavigate } ) {
 										</td>
 										<td className="bb-activity-list__td--activity">
 											<div className="bb-activity-list__content">
-												<span
-													className="bb-activity-list__action-text"
-													dangerouslySetInnerHTML={ { __html: truncate( stripHtml( activity.action ), 120 ) } }
-												/>
+												<span className="bb-activity-list__action-text">
+													{ truncate( stripHtml( activity.action ), 120 ) }
+												</span>
 												{ activity.content && (
 													<span className="bb-activity-list__content-preview">
 														{ truncate( stripHtml( activity.content ), 100 ) }
@@ -752,7 +773,15 @@ export function ActivityListScreen( { onNavigate } ) {
 															{ ( activity.permalink || activity.primary_link ) && (
 																<MenuItem
 																	onClick={ function () {
-																		window.open( activity.permalink || activity.primary_link, '_blank' );
+																		var activityUrl = activity.permalink || activity.primary_link;
+																		try {
+																			var parsed = new URL( activityUrl, window.location.origin );
+																			if ( 'http:' === parsed.protocol || 'https:' === parsed.protocol ) {
+																				window.open( parsed.href, '_blank', 'noopener,noreferrer' );
+																			}
+																		} catch ( e ) {
+																			// Invalid URL — do nothing.
+																		}
 																		onClose();
 																	} }
 																>

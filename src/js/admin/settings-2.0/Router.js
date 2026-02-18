@@ -122,39 +122,41 @@ export function Router({ currentRoute, onNavigate }) {
 		}
 	}, [currentRoute, needsFeatureCheck]);
 
-	// Update URL with query parameters instead of hash
+	// Update URL with query parameters instead of hash.
 	// Format: admin.php?page=bb-settings&tab=feature&panel=panel_id
 	// Hierarchy: Feature (tab) → Side Panel (panel) → Sections → Fields
-	const urlParams = new URLSearchParams(window.location.search);
-	const currentTab = urlParams.get('tab');
-	const currentPanel = urlParams.get('panel');
-	
-	if ( '/settings' === currentRoute ) {
-		// Remove tab and panel params when on main settings page
-		if (currentTab || currentPanel || window.location.hash) {
-			urlParams.delete('tab');
-			urlParams.delete('panel');
-			const paramString = urlParams.toString();
-			const cleanUrl = window.location.pathname + (paramString ? '?' + paramString : '');
-			window.history.replaceState({}, '', cleanUrl);
-		}
-	} else if ( 'settings' === mainRoute && routeParts[1] ) {
-		// Update URL with tab parameter for feature settings
-		const newTab = routeParts[1];
-		const newPanel = routeParts[2] || null;
-		
-		if (currentTab !== newTab || currentPanel !== newPanel || window.location.hash) {
-			urlParams.set('tab', newTab);
-			if (newPanel) {
-				urlParams.set('panel', newPanel);
-			} else {
+	useEffect(() => {
+		const urlParams = new URLSearchParams(window.location.search);
+		const currentTab = urlParams.get('tab');
+		const currentPanel = urlParams.get('panel');
+
+		if ( '/settings' === currentRoute ) {
+			// Remove tab and panel params when on main settings page.
+			if (currentTab || currentPanel || window.location.hash) {
+				urlParams.delete('tab');
 				urlParams.delete('panel');
+				const paramString = urlParams.toString();
+				const cleanUrl = window.location.pathname + (paramString ? '?' + paramString : '');
+				window.history.replaceState({}, '', cleanUrl);
 			}
-			// Use query params (no hash)
-			const newUrl = window.location.pathname + '?' + urlParams.toString();
-			window.history.replaceState({}, '', newUrl);
+		} else if ( 'settings' === mainRoute && routeParts[1] ) {
+			// Update URL with tab parameter for feature settings.
+			const newTab = routeParts[1];
+			const newPanel = routeParts[2] || null;
+
+			if (currentTab !== newTab || currentPanel !== newPanel || window.location.hash) {
+				urlParams.set('tab', newTab);
+				if (newPanel) {
+					urlParams.set('panel', newPanel);
+				} else {
+					urlParams.delete('panel');
+				}
+				// Use query params (no hash).
+				const newUrl = window.location.pathname + '?' + urlParams.toString();
+				window.history.replaceState({}, '', newUrl);
+			}
 		}
-	}
+	}, [currentRoute, mainRoute, routeParts]);
 
 	// Helper to get feature label
 	const getFeatureLabel = (featureId) => {
