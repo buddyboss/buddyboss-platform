@@ -24,11 +24,13 @@ npm run build:admin
 # Build specific admin targets
 npm run build:admin:readylaunch
 npm run build:admin:rl-onboarding
+npm run build:admin:settings-2.0
 
 # Build blocks
 npm run build:blocks
 
 # Watch mode for development (rebuilds on file changes)
+npm run watch:admin:settings-2.0
 npm run watch:admin:readylaunch
 npm run watch:admin:rl-onboarding
 npm run watch:readylaunch-header
@@ -126,6 +128,181 @@ Each component typically contains:
 - `screens/` - Frontend screen handlers
 - `admin/` - Admin interfaces
 
+### Feature-Based Architecture (Settings 2.0)
+
+The plugin is transitioning from the legacy WordPress Settings API to a **feature-based architecture** with a React admin UI. This is the primary enhancement on the `bb-backend-setting` branch.
+
+#### Hierarchy
+
+```
+Feature -> Side Panel -> Section -> Field
+```
+
+#### Core PHP Classes
+
+| Class | File | Purpose |
+|-------|------|---------|
+| `BB_Feature_Registry` | `src/bp-core/classes/class-bb-feature-registry.php` | Central registry for features, side panels, sections, fields. Singleton. |
+| `BB_Feature_Loader` | `src/bp-core/classes/class-bb-feature-loader.php` | Conditionally loads PHP code based on feature activation. Three loader types: `php_loaders`, `admin_loaders`, `rest_loaders`. |
+| `BB_Feature_Autoloader` | `src/bp-core/classes/class-bb-feature-autoloader.php` | Regex-based class autoloading gated by feature activation. Auto-discovers features from `src/bb-features/` directories. |
+| `BB_Icon_Registry` | `src/bp-core/classes/class-bb-icon-registry.php` | SVG/dashicon/image icon management for feature UI. |
+| `BB_Admin_Settings_Ajax` | `src/bp-core/admin/classes/class-bb-admin-settings-ajax.php` | AJAX handler for all Settings 2.0 operations (get features, toggle, get/save settings, search). |
+
+#### Admin Settings Files
+
+| File | Purpose |
+|------|---------|
+| `src/bp-core/admin/bb-admin-settings-init.php` | Bootstrap: loads classes, triggers `bb_register_features` hooks. Runs at `bp_loaded` priority 4. |
+| `src/bp-core/admin/bb-admin-settings-page.php` | Registers admin menu page (`bb-settings`), enqueues React app and CSS. |
+| `src/bp-core/admin/bb-admin-settings-features.php` | Core feature registrations (hook into `bb_register_features`). |
+
+#### Facade Functions (in `bp-core-functions.php`)
+
+```php
+bb_feature_registry()                                           // Get registry singleton
+bb_register_feature( $feature_id, $args )                       // Register a feature
+bb_register_side_panel( $feature_id, $side_panel_id, $args )    // Register a side panel
+bb_register_feature_section( $feature_id, $panel_id, $section_id, $args )
+bb_register_feature_field( $feature_id, $panel_id, $section_id, $args )
+bb_register_feature_nav_item( $feature_id, $args )
+bb_get_feature_settings_url( $feature_id, $panel_id )
+bb_get_settings_url()
+bb_add_action_if_active( $feature_id, $tag, $function, $priority, $accepted_args )
+```
+
+#### Feature Registration Lifecycle (Hooks)
+
+1. `bb_before_register_features` -- before any features registered
+2. `bb_register_features` -- core features register here
+3. `bb_after_register_features` -- Pro plugin extends features here
+
+Per-registration hooks: `bb_feature_registered`, `bb_side_panel_registered`, `bb_feature_section_registered`, `bb_feature_field_registered`, `bb_feature_activated`, `bb_feature_deactivated`.
+
+#### Feature Config Directory Structure
+
+New features live in `src/bb-features/{category}/{feature-name}/`:
+
+```
+src/bb-features/community/reactions/
+    bb-feature-config.php       -- Feature registration (auto-discovered)
+    loader.php                  -- PHP code loading
+    admin/
+        settings.php            -- Side panels, sections, fields registration
+        callbacks.php           -- Sanitize/validate callbacks
+    classes/
+        class-bb-reaction.php
+        class-bb-rest-reactions-endpoint.php
+    bb-activity-reactions.php   -- Core reactions logic
+```
+
+The `BB_Feature_Autoloader::bb_discover_features()` scans `bb-features/{category}/*/bb-feature-config.php` via `glob()`.
+
+#### Feature Activation State (Dual-Write for Backward Compatibility)
+
+Feature activation is stored in two options:
+- **`bb-active-features`** -- primary (new system)
+- **`bp-active-components`** -- legacy sync (so `bp_is_active()` continues to work)
+
+Status check priority: custom `is_active_callback` then `bb-active-features` option then `bp-active-components` fallback.
+
+#### AJAX Endpoints
+
+| Action | Purpose |
+|--------|---------|
+| `bb_admin_get_features` | List all features with icons and status |
+| `bb_admin_toggle_feature` | Activate/deactivate a feature |
+| `bb_admin_get_feature_settings` | Get settings with field definitions for a feature |
+| `bb_admin_save_feature_settings` | Save settings (JSON payload) |
+| `bb_admin_search_settings` | Search across all features, panels, sections, fields |
+
+All endpoints require: nonce (`bb_admin_settings`), `manage_options` capability, `wp_ajax_` only (no `nopriv`).
+
+#### React Admin Interface (Settings 2.0)
+
+**Source:** `src/js/admin/settings-2.0/`
+**Build output:** `src/bp-core/admin/bb-settings/settings-2.0/build/`
+**Build command:** `npm run build:admin:settings-2.0`
+**Watch command:** `npm run watch:admin:settings-2.0`
+
+```
+src/js/admin/settings-2.0/
+    index.js                    -- Entry point
+    App.js                      -- Route initialization, layout
+    Router.js                   -- Route matching, lazy loading
+    components/
+        Header.js               -- Admin header with search
+        SettingsForm.js         -- Generic field renderer (17+ field types)
+        Toast.js                -- Notification toast
+        HelpIcon.js             -- Contextual help trigger
+        HelpSliderModal.js      -- Slide-in help panel
+        reaction/               -- Reaction-specific components
+            index.js
+            ReactionModeField.js
+            ReactionMigration.js
+            ReactionNotice.js
+            MigrationModal.js
+            ReactionInfo.js
+            applyReactionPostSave.js
+            useReactionCallbacks.js
+    screens/
+        SettingsScreen.js       -- Features grid with filtering/toggling
+        FeatureSettingsScreen.js -- Feature settings with auto-save
+        SideNavigation.js       -- Left sidebar navigation
+        featureLists.js         -- Feature list definitions
+        ActivityListScreen.js   -- Activity sub-features (lazy loaded)
+        GroupsListScreen.js     -- Groups sub-features (lazy loaded)
+    utils/
+        ajax.js                 -- AJAX helpers (ajaxFetch, getCachedFeatures, toggleFeature, etc.)
+        featureCache.js         -- In-memory feature data cache
+        url.js                  -- URL to route conversion helpers
+    styles/scss/
+        admin.scss              -- Main entry SCSS
+        screens/                -- Per-screen styles
+        utils/                  -- Variables, mixins, elements
+```
+
+**Key React patterns:**
+- Auto-save with 1s debounce (`FeatureSettingsScreen.js`)
+- Optimistic updates with rollback on feature toggle (`SettingsScreen.js`)
+- AbortController for cancelling stale requests
+- Module-level caching in `ajax.js` and `featureCache.js`
+- jQuery-React bridge for Pro emotion picker via `window.bbReactEmotionCallbacks` (`useReactionCallbacks.js`)
+- All event listeners and timers properly cleaned up in `useEffect` returns
+
+**Global JS data:** `window.bbAdminData` (set via `wp_localize_script` in `bb-admin-settings-page.php`):
+- `ajaxUrl`, `ajaxNonce`, `apiUrl`, `nonce`, `logoUrl`, `currentUser`, `debug`
+
+#### Known Issues and Technical Debt (from code review)
+
+**Security (fix before release):**
+- Unsanitized external help content rendered as raw HTML needs DOMPurify sanitization (`FeatureSettingsScreen.js:462`)
+- Unsanitized migration wizard HTML rendered as raw HTML needs DOMPurify sanitization (`MigrationModal.js:313`)
+- Missing default `sanitize_callback` for field types: `toggle_list`, `toggle_list_array`, `dimensions`, `child_render`, `reaction_mode`, `reaction_button`
+- Reaction mode sanitize_callback defaults to empty string `''` which bypasses sanitization (`reactions/admin/settings.php:214`)
+
+**Performance:**
+- N+1 `get_option()` calls when loading feature settings (`class-bb-admin-settings-ajax.php:242-244`)
+- Search index transient has race condition (no locking, `class-bb-admin-settings-ajax.php:686-687`)
+- Path traversal risk in Icon Registry path resolution (`class-bb-icon-registry.php:172-176`)
+
+**Code quality:**
+- `ajaxFetch` function duplicated 3x (should import from `utils/ajax.js`)
+- Sort-by-order callback duplicated 7x across PHP (extract to reusable method)
+- `SettingsForm.js` is a 777-line component handling 17+ field types (extract complex types)
+- `BBIcon` component defined twice (extract to shared component)
+- 34 unresolved `[BBVERSION]` placeholders in `class-bb-feature-registry.php`
+- Hardcoded notification badge "2" in `Header.js:181`
+- Reactions `bb-feature-config.php` mixes configuration with runtime loading (move hooks to `loader.php`)
+- Debug data (feature IDs) exposed in `wp_localize_script` -- gate behind `WP_DEBUG`
+
+#### How Pro Extends Settings 2.0
+
+Pro hooks into `bb_after_register_features` to:
+- Upgrade feature tiers (`license_tier`)
+- Add pro-only side panels and fields
+- Register entirely new features
+- Add migration wizards for reaction mode switching
+
 ### Boot Sequence
 
 1. **`bp-loader.php`** (root) - Defines constants, loads Composer autoload
@@ -133,6 +310,7 @@ Each component typically contains:
 3. **`src/class-buddypress.php`** - Main singleton (`buddypress()`)
 4. Components load via `bp-{component}-loader.php` files
 5. Admin loads via `bp-core-admin.php` → `class-bp-admin.php`
+6. Settings 2.0 initializes via `bb-admin-settings-init.php` (at `bp_loaded` priority 4)
 
 ### ReadyLaunch Frontend
 
@@ -212,6 +390,7 @@ BuddyBoss Platform uses the **bp-nouveau** template pack (bp-legacy has been rem
 - Embla Carousel for UI interactions
 
 **Build targets:**
+- `settings-2.0` - Main admin settings interface (React SPA)
 - `readylaunch` - Quick setup wizard
 - `rl-onboarding` - Onboarding experience
 
@@ -514,6 +693,17 @@ $(document).on('click', '.my-button', (e) => {
 ### Admin Framework
 - `src/bp-core/bp-core-admin.php` - Admin initialization
 - `src/bp-core/classes/class-bp-admin.php` - Menu structure
+
+### Settings 2.0 Architecture
+- `src/bp-core/admin/bb-admin-settings-init.php` - Settings 2.0 bootstrap
+- `src/bp-core/admin/bb-admin-settings-page.php` - Admin page and asset enqueuing
+- `src/bp-core/admin/bb-admin-settings-features.php` - Core feature registrations
+- `src/bp-core/classes/class-bb-feature-registry.php` - Feature registry (1367 lines)
+- `src/bp-core/classes/class-bb-feature-loader.php` - Conditional feature loader
+- `src/bp-core/classes/class-bb-feature-autoloader.php` - Feature class autoloader
+- `src/bp-core/classes/class-bb-icon-registry.php` - Icon registry
+- `src/bp-core/admin/classes/class-bb-admin-settings-ajax.php` - AJAX handler (849 lines)
+- `src/bb-features/community/reactions/bb-feature-config.php` - Reactions feature config (reference implementation)
 
 ### ReadyLaunch JavaScript
 - `src/bp-templates/bp-nouveau/readylaunch/js/buddypress-activity.js` - Activity stream
@@ -948,22 +1138,32 @@ $process->save()->dispatch();
 ## Major BuddyBoss Features
 
 ### Reactions System
-**Location:** `src/bp-activity/bb-activity-reactions.php`, `class-bb-reaction.php`
+**Legacy location:** `src/bp-activity/bb-activity-reactions.php`, `class-bb-reaction.php`
+**Settings 2.0 location:** `src/bb-features/community/reactions/`
 
-Emoji reactions on activities (Like, Love, Laugh, etc.)
+Emoji reactions on activities (Like, Love, Laugh, etc.). This is the first feature fully migrated to the Settings 2.0 feature-based architecture.
 
+**Reactions modes:** `likes` (free) and `emotions` (Pro only, multiple reaction types).
+
+**Settings 2.0 helper functions:**
 ```php
-// Check if reactions enabled
+// Check if reactions feature is enabled (Settings 2.0 toggle)
+bb_is_reactions_feature_enabled()
+
+// Check specific reaction settings
+bb_is_reaction_activity_posts_enabled()
+bb_is_reaction_activity_comments_enabled()
+bb_is_reaction_emotions_enabled()
+```
+
+**Legacy check (still works via backward compatibility):**
+```php
 if ( function_exists( 'bb_load_reaction' ) ) {
     // Reactions available
 }
-
-// Get activity reactions
-$reactions = bb_get_activity_reactions( $activity_id );
-
-// Add reaction
-bb_add_activity_reaction( $activity_id, $user_id, $reaction_type );
 ```
+
+**Migration:** When switching between Likes and Emotions modes, a migration wizard handles converting existing reaction data. Migration uses Pro plugin AJAX handlers with separate action-specific nonces.
 
 ### Follow System
 **Location:** `src/bp-activity/classes/class-bp-activity-follow.php`
