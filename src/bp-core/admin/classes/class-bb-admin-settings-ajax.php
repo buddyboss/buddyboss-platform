@@ -85,10 +85,12 @@ class BB_Admin_Settings_Ajax {
 					$is_active = false;
 				}
 
+				// Compute availability once (used below for integration check and response).
+				$is_available = $registry->bb_is_feature_available( $feature_id );
+
 				// For integrations, also check if the required plugin is available.
 				$is_integration = ! empty( $feature['integration_id'] ) || 'integrations' === ( $feature['category'] ?? '' );
 				if ( $is_integration ) {
-					$is_available = $registry->bb_is_feature_available( $feature_id );
 					if ( ! $is_available ) {
 						$is_active = false;
 					}
@@ -102,7 +104,7 @@ class BB_Admin_Settings_Ajax {
 					'category'       => $feature['category'] ?? 'community',
 					'license_tier'   => $feature['license_tier'] ?? 'free',
 					'status'         => $is_active ? 'active' : 'inactive',
-					'available'      => $registry->bb_is_feature_available( $feature_id ),
+					'available'      => $is_available,
 					'settings_route' => function_exists( 'bb_get_feature_settings_url' ) ? bb_get_feature_settings_url( $feature_id ) : '',
 				);
 
@@ -895,8 +897,19 @@ class BB_Admin_Settings_Ajax {
 		$index     = get_transient( $cache_key );
 
 		if ( false === $index ) {
+			// Acquire a simple lock to prevent thundering herd on concurrent rebuilds.
+			$lock_key = $cache_key . '_lock';
+			if ( get_transient( $lock_key ) ) {
+				// Another request is building the index — return empty results.
+				// The index will be available on the next search request.
+				return array();
+			}
+			set_transient( $lock_key, 1, 30 ); // 30-second lock.
+
 			$index = $this->bb_build_search_index();
 			set_transient( $cache_key, $index, HOUR_IN_SECONDS );
+
+			delete_transient( $lock_key );
 		}
 
 		// Search index.
