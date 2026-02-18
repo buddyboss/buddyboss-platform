@@ -58,73 +58,8 @@ class BP_Akismet {
 		add_action( 'bp_activity_mark_as_spam', array( $this, 'mark_as_spam' ), 10, 2 );
 		add_action( 'bp_activity_mark_as_ham', array( $this, 'mark_as_ham' ), 10, 2 );
 
-		// Hook into the Activity wp-admin screen.
-		add_action( 'bp_activity_admin_comment_row_actions', array( $this, 'comment_row_action' ), 10, 2 );
-
 		// Register history field in the Settings 2.0 Activity Edit Modal.
 		add_action( 'bb_register_activity_meta_fields', array( $this, 'bb_register_activity_edit_field_history' ) );
-	}
-
-	/**
-	 * Add a history item to the hover links in an activity's row.
-	 *
-	 * This function lifted with love from the Akismet WordPress plugin's
-	 * akismet_comment_row_action() function. Thanks!
-	 *
-	 * @since BuddyPress 1.6.0
-	 *
-	 * @param array $actions  The hover links.
-	 * @param array $activity The activity for the current row being processed.
-	 * @return array The hover links.
-	 */
-	function comment_row_action( $actions, $activity ) {
-		$akismet_result = bp_activity_get_meta( $activity['id'], '_bp_akismet_result' );
-		$user_result    = bp_activity_get_meta( $activity['id'], '_bp_akismet_user_result' );
-		$desc           = '';
-
-		if ( ! $user_result || $user_result == $akismet_result ) {
-			// Show the original Akismet result if the user hasn't overridden it, or if their decision was the same.
-			if ( 'true' == $akismet_result && $activity['is_spam'] ) {
-				$desc = __( 'Flagged as spam by Akismet', 'buddyboss' );
-
-			} elseif ( 'false' == $akismet_result && ! $activity['is_spam'] ) {
-				$desc = __( 'Cleared by Akismet', 'buddyboss' );
-			}
-		} else {
-			$who = bp_activity_get_meta( $activity['id'], '_bp_akismet_user' );
-
-			if ( 'true' == $user_result ) {
-				$desc = sprintf( __( 'Flagged as spam by %s', 'buddyboss' ), $who );
-			} else {
-				$desc = sprintf( __( 'Un-spammed by %s', 'buddyboss' ), $who );
-			}
-		}
-
-		// Add a History item to the hover links, just after Edit.
-		if ( $akismet_result ) {
-			$b = array();
-			foreach ( $actions as $k => $item ) {
-				$b[ $k ] = $item;
-				if ( $k == 'edit' ) {
-					$b['history'] = '<a href="' . esc_url( bp_get_admin_url( 'admin.php?page=bp-activity&amp;action=edit&aid=' . $activity['id'] ) ) . '#bp_activity_history"> ' . __( 'History', 'buddyboss' ) . '</a>';
-				}
-			}
-
-			$actions = $b;
-		}
-
-		if ( $desc ) {
-			echo '<span class="akismet-status"><a href="' . esc_url( bp_get_admin_url( 'admin.php?page=bp-activity&amp;action=edit&aid=' . $activity['id'] ) ) . '#bp_activity_history">' . htmlspecialchars( $desc, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) . '</a></span>';
-		}
-
-		/**
-		 * Filters the list of actions for the current activity's row.
-		 *
-		 * @since BuddyPress 1.6.0
-		 *
-		 * @param array $actions Array of available actions for the current activity item's row.
-		 */
-		return apply_filters( 'bp_akismet_comment_row_action', $actions );
 	}
 
 	/**

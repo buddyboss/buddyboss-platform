@@ -663,6 +663,16 @@ class BB_Activity_Admin_Ajax {
 		// Prevent title validation from blocking save in admin context.
 		$activity->title_required = false;
 
+		// Set link embed data so bp_activity_after_save can update link preview metadata.
+		// Same as legacy bp_activity_admin_load() save handler.
+		if ( ! empty( $activity->content ) ) {
+			$urls = wp_extract_urls( $activity->content );
+			if ( ! empty( $urls[0] ) ) {
+				$_POST['link_url']   = filter_var( $urls[0], FILTER_VALIDATE_URL );
+				$_POST['link_embed'] = true;
+			}
+		}
+
 		// Save.
 		$result = $activity->save();
 

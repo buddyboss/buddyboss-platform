@@ -21,10 +21,10 @@ require_once __DIR__ . '/settings/activity/settings-comments.php';
 require_once __DIR__ . '/settings/activity/settings-topics.php';
 require_once __DIR__ . '/settings/activity/settings-visibility.php';
 require_once __DIR__ . '/settings/activity/settings-sharing.php';
+require_once __DIR__ . '/settings/activity/settings-access-control.php';
 
-// Load access control registration + AJAX handlers.
-require_once __DIR__ . '/settings-activity/bb-activity-access-control.php';
-
+// Load activity edit meta fields (registry-based).
+require_once __DIR__ . '/settings/activity/meta-fields.php';
 /**
  * Register Activity feature and settings in Feature Registry.
  *
