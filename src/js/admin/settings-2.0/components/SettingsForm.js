@@ -5,7 +5,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState } from '@wordpress/element';
+import { useState, useMemo } from '@wordpress/element';
 import {
 	ToggleControl,
 	TextControl,
@@ -48,6 +48,20 @@ export function SettingsForm({ fields, values, onChange }) {
 	// Track migration modal state
 	const [isMigrationModalOpen, setIsMigrationModalOpen] = useState(false);
 	const [currentMigrationData, setCurrentMigrationData] = useState(null);
+
+	// Memoize sanitized HTML to avoid DOMParser overhead on every re-render.
+	const sanitizedHtml = useMemo( () => {
+		const cache = {};
+		fields.forEach( ( field ) => {
+			if ( field.description ) {
+				cache[ field.name + '__desc' ] = sanitizeHtml( field.description );
+			}
+			if ( field.help_text ) {
+				cache[ field.name + '__help' ] = sanitizeHtml( field.help_text );
+			}
+		} );
+		return cache;
+	}, [ fields ] );
 
 	/**
 	 * Check if a field should be visible based on its conditional logic
@@ -662,7 +676,7 @@ export function SettingsForm({ fields, values, onChange }) {
 					<div
 						key={field.name}
 						className={`bb-admin-notice bb-admin-notice--${field.notice_type || 'info'}`}
-						dangerouslySetInnerHTML={{ __html: sanitizeHtml( field.description ) }}
+						dangerouslySetInnerHTML={{ __html: sanitizedHtml[ field.name + '__desc' ] || '' }}
 					/>
 				);
 
@@ -964,7 +978,7 @@ export function SettingsForm({ fields, values, onChange }) {
 						return (
 							<p
 								className="bb-admin-settings-form__field-description"
-								dangerouslySetInnerHTML={{ __html: sanitizeHtml( desc ) }}
+								dangerouslySetInnerHTML={{ __html: sanitizedHtml[ field.name + '__desc' ] || '' }}
 							/>
 						);
 					} )() }
@@ -973,7 +987,7 @@ export function SettingsForm({ fields, values, onChange }) {
 					{ field.help_text && (
 						<p
 							className="bb-admin-settings-form__field-help-text"
-							dangerouslySetInnerHTML={{ __html: sanitizeHtml( field.help_text ) }}
+							dangerouslySetInnerHTML={{ __html: sanitizedHtml[ field.name + '__help' ] || '' }}
 						/>
 					) }
 

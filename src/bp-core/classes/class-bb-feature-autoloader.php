@@ -220,8 +220,12 @@ class BB_Feature_Autoloader {
 		}
 
 		// Load each discovered config file.
+		// Validate that cached paths still reside within the expected plugin directory
+		// to prevent inclusion of arbitrary files if the transient is tampered with.
+		$real_base_dir = realpath( $base_dir );
+
 		foreach ( $config_files as $config_file ) {
-			if ( file_exists( $config_file ) ) {
+			if ( file_exists( $config_file ) && $real_base_dir && 0 === strpos( realpath( $config_file ), $real_base_dir ) ) {
 				require_once $config_file;
 
 				$feature_dir = dirname( $config_file );

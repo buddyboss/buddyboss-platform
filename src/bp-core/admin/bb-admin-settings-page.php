@@ -115,7 +115,7 @@ function bb_admin_settings_page() {
 	$localize_data = array(
 		'apiUrl'      => rest_url( bp_rest_namespace() . '/' . bp_rest_version() . '/' ),
 		'nonce'       => wp_create_nonce( 'wp_rest' ),
-		'ajaxUrl'     => admin_url( 'admin-ajax.php' ),
+		'ajaxUrl'     => esc_url( admin_url( 'admin-ajax.php' ) ),
 		'ajaxNonce'   => wp_create_nonce( 'bb_admin_settings' ),
 		'logoUrl'     => buddypress()->plugin_url . 'bp-core/images/admin/BBLogo.png',
 		'currentUser' => array(
