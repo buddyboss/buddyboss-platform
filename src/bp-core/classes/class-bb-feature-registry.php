@@ -102,6 +102,30 @@ class BB_Feature_Registry {
 	private $active_cache_dirty = false;
 
 	/**
+	 * Cache for sorted getter results to avoid re-sorting on repeated calls.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 * @var array
+	 */
+	private $sorted_cache = array();
+
+	/**
+	 * Flag indicating sorted cache needs rebuild after new registrations.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 * @var bool
+	 */
+	private $sorted_cache_dirty = true;
+
+	/**
+	 * Reverse dependency index: maps feature_id => array of features that depend on it.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 * @var array
+	 */
+	private $reverse_deps = array();
+
+	/**
 	 * Get singleton instance.
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -268,6 +292,16 @@ class BB_Feature_Registry {
 		// Register feature.
 		$this->features[ $feature_id ] = $args;
 
+		// Build reverse dependency index for O(1) dependent lookups.
+		if ( ! empty( $args['depends_on'] ) ) {
+			foreach ( $args['depends_on'] as $dep_id ) {
+				$this->reverse_deps[ $dep_id ][] = $feature_id;
+			}
+		}
+
+		// Invalidate sorted cache.
+		$this->sorted_cache_dirty = true;
+
 		// Register loaders with Feature Loader if available.
 		$this->bb_register_feature_loaders( $feature_id, $args );
 
@@ -408,6 +442,9 @@ class BB_Feature_Registry {
 		// Register side panel.
 		$this->side_panels[ $feature_id ][ $side_panel_id ] = $args;
 
+		// Invalidate sorted cache.
+		$this->sorted_cache_dirty = true;
+
 		// Initialize sections array for this side panel.
 		if ( ! isset( $this->sections[ $feature_id ][ $side_panel_id ] ) ) {
 			$this->sections[ $feature_id ][ $side_panel_id ] = array();
@@ -533,6 +570,9 @@ class BB_Feature_Registry {
 
 		// Register section.
 		$this->sections[ $feature_id ][ $side_panel_id ][ $section_id ] = $args;
+
+		// Invalidate sorted cache.
+		$this->sorted_cache_dirty = true;
 
 		// Initialize fields array for this section.
 		if ( ! isset( $this->fields[ $feature_id ][ $side_panel_id ][ $section_id ] ) ) {
@@ -684,6 +724,9 @@ class BB_Feature_Registry {
 		$this->fields[ $feature_id ][ $side_panel_id ][ $section_id ][ $field_name ] = $args;
 		$this->field_name_index[ $field_name ] = array( $feature_id, $side_panel_id, $section_id );
 
+		// Invalidate sorted cache.
+		$this->sorted_cache_dirty = true;
+
 		/**
 		 * Fired after a field is registered.
 		 *
@@ -826,8 +869,16 @@ class BB_Feature_Registry {
 			'search'   => '',
 		);
 
-		$args     = wp_parse_args( $args, $defaults );
-		$features = $this->features;
+		$args = wp_parse_args( $args, $defaults );
+
+		// Get pre-sorted features (cached).
+		if ( $this->sorted_cache_dirty || ! isset( $this->sorted_cache['features'] ) ) {
+			$sorted = $this->features;
+			uasort( $sorted, array( $this, 'bb_compare_order' ) );
+			$this->sorted_cache['features'] = $sorted;
+			$this->sorted_cache_dirty       = false;
+		}
+		$features = $this->sorted_cache['features'];
 
 		// Filter by status.
 		if ( 'all' !== $args['status'] ) {
@@ -864,16 +915,6 @@ class BB_Feature_Registry {
 			);
 		}
 
-		// Sort by order.
-		uasort(
-			$features,
-			function ( $a, $b ) {
-				$a_order = isset( $a['order'] ) ? $a['order'] : 100;
-				$b_order = isset( $b['order'] ) ? $b['order'] : 100;
-				return $a_order - $b_order;
-			}
-		);
-
 		return $features;
 	}
 
@@ -890,19 +931,15 @@ class BB_Feature_Registry {
 			return array();
 		}
 
-		$side_panels = $this->side_panels[ $feature_id ];
+		// Sort by order (cached).
+		$cache_key = 'side_panels_' . $feature_id;
+		if ( $this->sorted_cache_dirty || ! isset( $this->sorted_cache[ $cache_key ] ) ) {
+			$sorted = $this->side_panels[ $feature_id ];
+			uasort( $sorted, array( $this, 'bb_compare_order' ) );
+			$this->sorted_cache[ $cache_key ] = $sorted;
+		}
 
-		// Sort by order.
-		uasort(
-			$side_panels,
-			function ( $a, $b ) {
-				$a_order = isset( $a['order'] ) ? $a['order'] : 100;
-				$b_order = isset( $b['order'] ) ? $b['order'] : 100;
-				return $a_order - $b_order;
-			}
-		);
-
-		return $side_panels;
+		return $this->sorted_cache[ $cache_key ];
 	}
 
 	/**
@@ -919,19 +956,15 @@ class BB_Feature_Registry {
 			return array();
 		}
 
-		$sections = $this->sections[ $feature_id ][ $side_panel_id ];
+		// Sort by order (cached).
+		$cache_key = 'sections_' . $feature_id . '_' . $side_panel_id;
+		if ( $this->sorted_cache_dirty || ! isset( $this->sorted_cache[ $cache_key ] ) ) {
+			$sorted = $this->sections[ $feature_id ][ $side_panel_id ];
+			uasort( $sorted, array( $this, 'bb_compare_order' ) );
+			$this->sorted_cache[ $cache_key ] = $sorted;
+		}
 
-		// Sort by order.
-		uasort(
-			$sections,
-			function ( $a, $b ) {
-				$a_order = isset( $a['order'] ) ? $a['order'] : 100;
-				$b_order = isset( $b['order'] ) ? $b['order'] : 100;
-				return $a_order - $b_order;
-			}
-		);
-
-		return $sections;
+		return $this->sorted_cache[ $cache_key ];
 	}
 
 	/**
@@ -979,19 +1012,15 @@ class BB_Feature_Registry {
 			return array();
 		}
 
-		$fields = $this->fields[ $feature_id ][ $side_panel_id ][ $section_id ];
+		// Sort by order (cached).
+		$cache_key = 'fields_' . $feature_id . '_' . $side_panel_id . '_' . $section_id;
+		if ( $this->sorted_cache_dirty || ! isset( $this->sorted_cache[ $cache_key ] ) ) {
+			$sorted = $this->fields[ $feature_id ][ $side_panel_id ][ $section_id ];
+			uasort( $sorted, array( $this, 'bb_compare_order' ) );
+			$this->sorted_cache[ $cache_key ] = $sorted;
+		}
 
-		// Sort by order.
-		uasort(
-			$fields,
-			function ( $a, $b ) {
-				$a_order = isset( $a['order'] ) ? $a['order'] : 100;
-				$b_order = isset( $b['order'] ) ? $b['order'] : 100;
-				return $a_order - $b_order;
-			}
-		);
-
-		return $fields;
+		return $this->sorted_cache[ $cache_key ];
 	}
 
 	/**
@@ -1109,7 +1138,14 @@ class BB_Feature_Registry {
 	 * @return bool True if available, false otherwise.
 	 */
 	public function bb_is_feature_available( $feature_id ) {
+		static $cache = array();
+
+		if ( isset( $cache[ $feature_id ] ) ) {
+			return $cache[ $feature_id ];
+		}
+
 		if ( ! isset( $this->features[ $feature_id ] ) ) {
+			$cache[ $feature_id ] = false;
 			return false;
 		}
 
@@ -1117,10 +1153,12 @@ class BB_Feature_Registry {
 
 		// Use callback if provided.
 		if ( ! is_null( $feature['is_available_callback'] ) ) {
-			return (bool) call_user_func( $feature['is_available_callback'] );
+			$cache[ $feature_id ] = (bool) call_user_func( $feature['is_available_callback'] );
+			return $cache[ $feature_id ];
 		}
 
 		// Default: available.
+		$cache[ $feature_id ] = true;
 		return true;
 	}
 
@@ -1223,17 +1261,17 @@ class BB_Feature_Registry {
 
 		$feature = $this->features[ $feature_id ];
 
-		// Check if other features depend on this one.
-		foreach ( $this->features as $fid => $f ) {
-			if ( ! empty( $f['depends_on'] ) && in_array( $feature_id, $f['depends_on'], true ) ) {
-				if ( $this->bb_is_feature_active( $fid ) ) {
+		// Check if other features depend on this one (O(1) lookup via reverse index).
+		if ( ! empty( $this->reverse_deps[ $feature_id ] ) ) {
+			foreach ( $this->reverse_deps[ $feature_id ] as $dependent_id ) {
+				if ( $this->bb_is_feature_active( $dependent_id ) ) {
 					return new WP_Error(
 						'dependent_features',
 						sprintf(
 							/* translators: 1: feature ID, 2: dependent feature ID */
 							__( 'Cannot deactivate feature "%1$s". Feature "%2$s" depends on it.', 'buddyboss' ),
 							$feature_id,
-							$fid
+							$dependent_id
 						)
 					);
 				}
@@ -1282,6 +1320,21 @@ class BB_Feature_Registry {
 	// =========================================================================
 	// UTILITY METHODS
 	// =========================================================================
+
+	/**
+	 * Compare two registry items by their 'order' key (ascending).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $a First item.
+	 * @param array $b Second item.
+	 * @return int Comparison result.
+	 */
+	private function bb_compare_order( $a, $b ) {
+		$a_order = isset( $a['order'] ) ? $a['order'] : 100;
+		$b_order = isset( $b['order'] ) ? $b['order'] : 100;
+		return $a_order - $b_order;
+	}
 
 	/**
 	 * Check for circular dependencies using DFS.
@@ -1456,5 +1509,9 @@ class BB_Feature_Registry {
 		// Flag the static option cache in bb_is_feature_active() as dirty
 		// so the next call re-reads from the DB.
 		$this->active_cache_dirty = true;
+
+		// Clear sorted cache.
+		$this->sorted_cache       = array();
+		$this->sorted_cache_dirty = true;
 	}
 }

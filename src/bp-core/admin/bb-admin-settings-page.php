@@ -80,8 +80,23 @@ function bb_admin_settings_page() {
 		$bb_icon_version
 	);
 
-	// Enqueue WordPress editor for TinyMCE support in Activity Edit modal.
-	wp_enqueue_editor();
+	// Conditionally enqueue WordPress editor (~250KB TinyMCE) only when rich_text fields exist.
+	if ( function_exists( 'bb_feature_registry' ) ) {
+		$has_rich_text = false;
+		$all_features  = bb_feature_registry()->bb_get_features();
+		foreach ( $all_features as $fid => $f ) {
+			$all_fields = bb_feature_registry()->bb_get_all_fields( $fid );
+			foreach ( $all_fields as $field ) {
+				if ( ! empty( $field['type'] ) && 'rich_text' === $field['type'] ) {
+					$has_rich_text = true;
+					break 2;
+				}
+			}
+		}
+		if ( $has_rich_text ) {
+			wp_enqueue_editor();
+		}
+	}
 
 	// Enqueue scripts and styles.
 	wp_enqueue_script(
