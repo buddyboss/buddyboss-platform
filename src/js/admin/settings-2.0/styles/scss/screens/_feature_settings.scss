@@ -272,6 +272,28 @@
             text-decoration: none;
         }
     }
+
+    .components-base-control {
+		
+		.components-input-control__label {
+			color: $bb-text-secondary-color;
+			text-transform: none;
+			font-size: 13px;
+			font-weight: 500;
+		}
+
+		.components-select-control__input {
+			@include bb-admin-settings-select;
+		}
+
+		.components-input-control-suffix-wrapper {
+			display: none;
+		}
+
+		.components-input-control__backdrop {
+			border-color: transparent;
+		}
+	}
 }
 
 .bb-admin-settings-field__toggle-list {
