@@ -3272,6 +3272,11 @@ window.bp = window.bp || {};
 
 			$document.find( '.open-popup #bb-rl-media-create-album-popup #bb-album-title' ).show();
 			$document.find( '.open-popup #bb-rl-media-create-album-popup #bb-album-title' ).removeClass( 'error' );
+
+			//Trigger select2 initialization
+			if( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+				bp.Readylaunch.initSelect2Scoped( $(document) );
+			}
 		},
 
 		/**
