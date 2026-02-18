@@ -158,9 +158,10 @@ export function SettingsScreen({ onNavigate }) {
 							if (item.id === featureId) {
 								return { ...item, ...updatedFeature };
 							}
-							// Cascade deactivation: mark dependent features as inactive + unavailable.
+							// Cascade: mark all dependent features as unavailable (greyed out).
+							// Only force 'inactive' if they were active; already-inactive ones just get greyed out.
 							if (deactivatedDependents.indexOf(item.id) !== -1) {
-								return { ...item, status: 'inactive', available: false };
+								return { ...item, status: 'active' === item.status ? 'inactive' : item.status, available: false };
 							}
 							// Re-activation: dependents become available again (but stay inactive).
 							if (reactivatableDependents.indexOf(item.id) !== -1) {
@@ -171,7 +172,7 @@ export function SettingsScreen({ onNavigate }) {
 					);
 					updateFeatureInCache(featureId, updatedFeature);
 					deactivatedDependents.forEach(function (depId) {
-						updateFeatureInCache(depId, { status: 'inactive', available: false });
+						updateFeatureInCache(depId, { available: false });
 					});
 					reactivatableDependents.forEach(function (depId) {
 						updateFeatureInCache(depId, { available: true });

@@ -279,9 +279,11 @@ class BB_Admin_Meta_Field_Registry {
 			$raw_value = wp_unslash( $_POST[ $post_key ] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			// phpcs:enable WordPress.Security.NonceVerification.Missing
 
-			// Sanitize.
+			// Sanitize (fallback to sanitize_text_field if no valid callback registered).
 			if ( is_callable( $args['sanitize_callback'] ) ) {
 				$raw_value = call_user_func( $args['sanitize_callback'], $raw_value );
+			} else {
+				$raw_value = sanitize_text_field( $raw_value );
 			}
 
 			// Save.

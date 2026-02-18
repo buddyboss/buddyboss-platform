@@ -34,13 +34,15 @@ function bb_activity_register_settings_panel_fields() {
 
 	// FIELD: Edit Activity (toggle with inline select in description).
 	// Build edit time options from bp_activity_edit_times() — values are in seconds.
-	$edit_time_options = array(
+	// Cache the result since it's used by both edit activity and comment edit fields.
+	$activity_edit_times = function_exists( 'bp_activity_edit_times' ) ? bp_activity_edit_times() : array();
+	$edit_time_options   = array(
 		array(
 			'label' => __( 'Forever', 'buddyboss' ),
 			'value' => -1,
 		),
 	);
-	foreach ( bp_activity_edit_times() as $time ) {
+	foreach ( $activity_edit_times as $time ) {
 		$edit_time_options[] = array(
 			'label' => $time['label'],
 			'value' => $time['value'],

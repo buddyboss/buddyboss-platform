@@ -178,9 +178,18 @@ class BB_Admin_Settings_Ajax {
 			),
 		);
 
-		// Include cascade-deactivated dependents so React can update their cards.
-		if ( ! $activate && ! empty( $registry->last_deactivated_dependents ) ) {
-			$response['deactivated_dependents'] = $registry->last_deactivated_dependents;
+		// Include ALL dependents that are now unavailable so React can grey out their cards.
+		// This covers both dependents that were just cascade-deactivated AND those already inactive.
+		if ( ! $activate ) {
+			$unavailable_dependents = array();
+			foreach ( $registry->bb_get_features() as $fid => $f ) {
+				if ( ! empty( $f['depends_on'] ) && in_array( $feature_id, $f['depends_on'], true ) ) {
+					$unavailable_dependents[] = $fid;
+				}
+			}
+			if ( ! empty( $unavailable_dependents ) ) {
+				$response['deactivated_dependents'] = $unavailable_dependents;
+			}
 		}
 
 		// When activating a feature, notify React about dependents that become available again.
@@ -214,7 +223,7 @@ class BB_Admin_Settings_Ajax {
 			);
 		}
 
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! bp_current_user_can( 'bp_moderate' ) ) {
 			wp_send_json_error(
 				array( 'message' => __( 'Permission denied.', 'buddyboss' ) ),
 				403
@@ -652,7 +661,7 @@ class BB_Admin_Settings_Ajax {
 					'delete' => wp_create_nonce( 'bb_delete_topic' ),
 					'order'  => wp_create_nonce( 'bb_update_topics_order' ),
 				);
-				$field_data['topics_limit'] = 20;
+				$field_data['topics_limit'] = $topics_manager ? $topics_manager->bb_topics_limit() : 20;
 			}
 
 			$formatted[] = $field_data;
@@ -728,9 +737,13 @@ class BB_Admin_Settings_Ajax {
 			if ( array_key_exists( $name, $settings ) ) {
 				$value = $settings[ $name ];
 
-				// Apply registered sanitize callback if present.
+				// Apply registered sanitize callback if present (fallback to type-based sanitization).
 				if ( ! empty( $field['sanitize_callback'] ) && is_callable( $field['sanitize_callback'] ) ) {
 					$value = call_user_func( $field['sanitize_callback'], $value );
+				} elseif ( is_string( $value ) ) {
+					$value = sanitize_text_field( $value );
+				} elseif ( is_array( $value ) ) {
+					$value = array_map( 'sanitize_text_field', $value );
 				}
 
 				// toggle_list with option_prefix: persist each key to option_prefix + key (e.g. bp-feed-platform-{key}).

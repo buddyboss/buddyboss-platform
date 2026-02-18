@@ -104,6 +104,10 @@ export function TopicListField( { field, value, values, onChange } ) {
 	var isSaving = savingState[ 0 ];
 	var setIsSaving = savingState[ 1 ];
 
+	var errorState = useState( '' );
+	var error = errorState[ 0 ];
+	var setError = errorState[ 1 ];
+
 	// Drag-and-drop state.
 	var dragIndexState = useState( null );
 	var dragIndex = dragIndexState[ 0 ];
@@ -132,9 +136,13 @@ export function TopicListField( { field, value, values, onChange } ) {
 				setTopics( updatedTopics );
 				onChange( field.name, updatedTopics );
 				setIsAddModalOpen( false );
+				setError( '' );
+			} else {
+				setError( response.data && response.data.message ? response.data.message : __( 'Failed to add topic.', 'buddyboss' ) );
 			}
 		} ).catch( function () {
 			setIsSaving( false );
+			setError( __( 'An error occurred while adding the topic.', 'buddyboss' ) );
 		} );
 	}, [ topics, nonces, field.name, onChange ] );
 
@@ -167,9 +175,13 @@ export function TopicListField( { field, value, values, onChange } ) {
 				onChange( field.name, updatedTopics );
 				setIsEditModalOpen( false );
 				setEditingTopic( null );
+				setError( '' );
+			} else {
+				setError( response.data && response.data.message ? response.data.message : __( 'Failed to update topic.', 'buddyboss' ) );
 			}
 		} ).catch( function () {
 			setIsSaving( false );
+			setError( __( 'An error occurred while updating the topic.', 'buddyboss' ) );
 		} );
 	}, [ topics, nonces, field.name, onChange ] );
 
@@ -190,9 +202,13 @@ export function TopicListField( { field, value, values, onChange } ) {
 				setAvailableTopics( response.data.topic_lists || [] );
 				setMigrateNonce( response.data.nonce || '' );
 				setIsDeleteModalOpen( true );
+				setError( '' );
+			} else {
+				setError( response.data && response.data.message ? response.data.message : __( 'Failed to initiate topic deletion.', 'buddyboss' ) );
 			}
 		} ).catch( function () {
 			setIsSaving( false );
+			setError( __( 'An error occurred while initiating topic deletion.', 'buddyboss' ) );
 		} );
 	}, [ nonces ] );
 
@@ -218,9 +234,13 @@ export function TopicListField( { field, value, values, onChange } ) {
 				onChange( field.name, updatedTopics );
 				setIsDeleteModalOpen( false );
 				setDeletingTopic( null );
+				setError( '' );
+			} else {
+				setError( response.data && response.data.message ? response.data.message : __( 'Failed to delete topic.', 'buddyboss' ) );
 			}
 		} ).catch( function () {
 			setIsSaving( false );
+			setError( __( 'An error occurred while deleting the topic.', 'buddyboss' ) );
 		} );
 	}, [ topics, field.name, onChange ] );
 
@@ -272,6 +292,19 @@ export function TopicListField( { field, value, values, onChange } ) {
 
 	return (
 		<div className="bb-topic-list">
+			{ error && (
+				<div className="bb-admin-notice bb-admin-notice--error">
+					<span>{ error }</span>
+					<button
+						className="bb-admin-notice--dismiss"
+						onClick={ function () {
+							setError( '' );
+						} }
+					>
+						<i className="bb-icons-rl bb-icons-rl-x"></i>
+					</button>
+				</div>
+			) }
 			<div className="bb-topic-list__items">
 				{ topics.map( function ( topic, index ) {
 					return (

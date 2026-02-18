@@ -12,6 +12,39 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Get allowed edit time values (cached per request).
+ *
+ * Returns an array of allowed integer values for activity/comment edit time,
+ * including -1 (Forever). Falls back to hardcoded defaults when
+ * bp_activity_edit_times() is unavailable.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array Allowed integer values.
+ */
+function bb_activity_get_allowed_edit_times() {
+	static $allowed = null;
+
+	if ( null !== $allowed ) {
+		return $allowed;
+	}
+
+	$allowed = array( -1 );
+	if ( function_exists( 'bp_activity_edit_times' ) ) {
+		foreach ( bp_activity_edit_times() as $time ) {
+			$allowed[] = intval( $time['value'] );
+		}
+	}
+
+	// Fallback: ensure common defaults are always valid when BP function is unavailable.
+	if ( 1 === count( $allowed ) ) {
+		$allowed = array_merge( $allowed, array( 120, 300, 600, 1800, 3600, 43200, 86400 ) );
+	}
+
+	return $allowed;
+}
+
+/**
  * Sanitize activity edit time setting.
  *
  * Handles the toggle + select combo for activity edit and comment edit fields.
@@ -25,15 +58,7 @@ defined( 'ABSPATH' ) || exit;
 function bb_activity_sanitize_edit_time( $value ) {
 	$value = intval( $value );
 
-	// Build allowed values from bp_activity_edit_times() (seconds) plus -1 (Forever).
-	$allowed = array( -1 );
-	if ( function_exists( 'bp_activity_edit_times' ) ) {
-		foreach ( bp_activity_edit_times() as $time ) {
-			$allowed[] = intval( $time['value'] );
-		}
-	}
-
-	if ( ! in_array( $value, $allowed, true ) ) {
+	if ( ! in_array( $value, bb_activity_get_allowed_edit_times(), true ) ) {
 		return 600; // Default: 10 minutes in seconds.
 	}
 
@@ -52,15 +77,7 @@ function bb_activity_sanitize_edit_time( $value ) {
 function bb_activity_sanitize_comment_edit_time( $value ) {
 	$value = intval( $value );
 
-	// Build allowed values from bp_activity_edit_times() (seconds) plus -1 (Forever).
-	$allowed = array( -1 );
-	if ( function_exists( 'bp_activity_edit_times' ) ) {
-		foreach ( bp_activity_edit_times() as $time ) {
-			$allowed[] = intval( $time['value'] );
-		}
-	}
-
-	if ( ! in_array( $value, $allowed, true ) ) {
+	if ( ! in_array( $value, bb_activity_get_allowed_edit_times(), true ) ) {
 		return 600; // Default: 10 minutes in seconds.
 	}
 

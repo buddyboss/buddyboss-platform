@@ -22,6 +22,8 @@ class BB_Activity_Admin_Ajax {
 	/**
 	 * Nonce action (shared with BB_Admin_Settings_Ajax).
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @var string
 	 */
 	const NONCE_ACTION = 'bb_admin_settings';
@@ -61,7 +63,7 @@ class BB_Activity_Admin_Ajax {
 			);
 		}
 
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! bp_current_user_can( 'bp_moderate' ) ) {
 			wp_send_json_error(
 				array( 'message' => __( 'Permission denied.', 'buddyboss' ) ),
 				403
@@ -96,6 +98,7 @@ class BB_Activity_Admin_Ajax {
 		$search_terms  = isset( $_POST['search'] ) ? sanitize_text_field( wp_unslash( $_POST['search'] ) ) : '';
 		$activity_type = isset( $_POST['activity_type'] ) ? sanitize_text_field( wp_unslash( $_POST['activity_type'] ) ) : '';
 		$spam          = isset( $_POST['spam'] ) ? sanitize_text_field( wp_unslash( $_POST['spam'] ) ) : 'ham_only';
+		$include_meta  = isset( $_POST['include_meta'] ) ? (bool) $_POST['include_meta'] : true;
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		// Validate spam parameter.
@@ -200,6 +203,42 @@ class BB_Activity_Admin_Ajax {
 		remove_filter( 'bp_get_activity_content_body', 'bp_activity_truncate_entry', 5 );
 
 		if ( ! empty( $activities['activities'] ) ) {
+			// Prime user cache in bulk to avoid N+1 queries in the loop.
+			$user_ids = array_unique( wp_list_pluck( $activities['activities'], 'user_id' ) );
+			if ( ! empty( $user_ids ) ) {
+				cache_users( $user_ids );
+			}
+
+			// Batch-fetch parent activities for comments to avoid N+1 queries.
+			$parent_activity_cache = array();
+			if ( ! $disable_blogforum_comments && bp_is_active( 'blogs' ) ) {
+				$parent_ids = array();
+				foreach ( $activities['activities'] as $act ) {
+					if ( 'activity_comment' === $act->type && ! empty( $act->item_id ) ) {
+						$parent_ids[] = (int) $act->item_id;
+					}
+				}
+				if ( ! empty( $parent_ids ) ) {
+					$parent_ids     = array_unique( $parent_ids );
+					$parent_results = bp_activity_get(
+						array(
+							'in'               => $parent_ids,
+							'display_comments' => false,
+							'show_hidden'      => true,
+							'per_page'         => count( $parent_ids ),
+						)
+					);
+					if ( ! empty( $parent_results['activities'] ) ) {
+						foreach ( $parent_results['activities'] as $parent ) {
+							$parent_activity_cache[ (int) $parent->id ] = $parent;
+						}
+					}
+				}
+			}
+
+			// Buffer all stray HTML output from legacy filters inside the loop.
+			ob_start();
+
 			foreach ( $activities['activities'] as $activity_obj ) {
 				$user_id   = (int) $activity_obj->user_id;
 				$item_data = (array) $activity_obj;
@@ -236,7 +275,9 @@ class BB_Activity_Admin_Ajax {
 					if ( bp_activity_type_supports( $activity_obj->type, 'post-type-comment-tracking' ) ) {
 						$parent_activity = $activity_obj;
 					} elseif ( 'activity_comment' === $activity_obj->type ) {
-						$parent_activity = new BP_Activity_Activity( $activity_obj->item_id );
+						$parent_activity = isset( $parent_activity_cache[ (int) $activity_obj->item_id ] )
+							? $parent_activity_cache[ (int) $activity_obj->item_id ]
+							: new BP_Activity_Activity( $activity_obj->item_id );
 						$can_comment     = bp_activity_can_comment_reply( $activity_obj );
 					}
 
@@ -280,11 +321,19 @@ class BB_Activity_Admin_Ajax {
 				 * @param array $actions Array of action key => label.
 				 * @param array $item_data Current item (array version of activity object).
 				 */
-				ob_start();
 				$row_actions = apply_filters( 'bp_activity_admin_comment_row_actions', $row_actions, $item_data );
-				ob_end_clean();
 
-				// Is root activity for "In Response To" column (same as legacy column_response()).
+				/**
+				 * Filters the activity types considered "root" (not comment responses).
+				 *
+				 * Used in the "In Response To" column to determine which activities
+				 * are top-level vs. replies (same logic as legacy column_response()).
+				 *
+				 * @since BuddyBoss [BBVERSION]
+				 *
+				 * @param array $root_activity_types Activity type slugs treated as root activities.
+				 * @param array $item_data           The current activity item data array.
+				 */
 				$root_activity_types = apply_filters( 'bp_activity_admin_root_activity_types', array( 'activity_comment' ), $item_data );
 				$is_root_activity    = empty( $item_data['item_id'] ) || ! in_array( $activity_obj->type, $root_activity_types, true );
 
@@ -345,81 +394,90 @@ class BB_Activity_Admin_Ajax {
 
 				$items[] = $item;
 			}
+
+			// End output buffer started before the loop.
+			ob_end_clean();
 		}
 
-		// Get activity action types for filter dropdown (flat list for backward compat).
-		$activity_actions = array();
-		if ( function_exists( 'bp_activity_admin_get_activity_actions' ) ) {
-			$activity_actions = bp_activity_admin_get_activity_actions();
-		}
-
-		// Build grouped activity actions for optgroup-style dropdown.
+		// Static meta (actions, bulk_actions, columns) only computed on first request.
+		// Subsequent paginated/filtered requests pass include_meta=false to skip this.
+		$activity_actions         = array();
 		$activity_actions_grouped = array();
-		if ( function_exists( 'bp_activity_get_actions' ) ) {
-			foreach ( bp_activity_get_actions() as $component => $actions ) {
-				// Resolve component display name (same as legacy list table).
-				if ( 'profile' === $component ) {
-					$component = 'xprofile';
-				}
+		$bulk_actions             = array();
+		$columns_response         = array();
 
-				if ( bp_is_active( $component ) ) {
-					if ( 'xprofile' === $component ) {
-						$component_name = buddypress()->profile->name;
+		if ( $include_meta ) {
+			// Get activity action types for filter dropdown (flat list for backward compat).
+			if ( function_exists( 'bp_activity_admin_get_activity_actions' ) ) {
+				$activity_actions = bp_activity_admin_get_activity_actions();
+			}
+
+			// Build grouped activity actions for optgroup-style dropdown.
+			if ( function_exists( 'bp_activity_get_actions' ) ) {
+				foreach ( bp_activity_get_actions() as $component => $actions ) {
+					// Resolve component display name (same as legacy list table).
+					if ( 'profile' === $component ) {
+						$component = 'xprofile';
+					}
+
+					if ( bp_is_active( $component ) ) {
+						if ( 'xprofile' === $component ) {
+							$component_name = buddypress()->profile->name;
+						} else {
+							$component_name = buddypress()->$component->name;
+						}
 					} else {
-						$component_name = buddypress()->$component->name;
+						$component_name = ucfirst( $component );
 					}
-				} else {
-					$component_name = ucfirst( $component );
-				}
 
-				$component_name = ( 'Bbpress' === $component_name ) ? __( 'Forums', 'buddyboss' ) : $component_name;
+					$component_name = ( 'Bbpress' === $component_name ) ? __( 'Forums', 'buddyboss' ) : $component_name;
 
-				$group_options = array();
-				$actions_arr   = (array) $actions;
-				foreach ( $actions_arr as $action_key => $action_values ) {
-					if ( 'friends_register_activity_action' === $action_key ) {
-						continue;
+					$group_options = array();
+					$actions_arr   = (array) $actions;
+					foreach ( $actions_arr as $action_key => $action_values ) {
+						if ( 'friends_register_activity_action' === $action_key ) {
+							continue;
+						}
+						$group_options[] = array(
+							'label' => $action_values['value'],
+							'value' => $action_key,
+						);
 					}
-					$group_options[] = array(
-						'label' => $action_values['value'],
-						'value' => $action_key,
-					);
-				}
 
-				if ( ! empty( $group_options ) ) {
-					$activity_actions_grouped[] = array(
-						'label'   => $component_name,
-						'options' => $group_options,
-					);
+					if ( ! empty( $group_options ) ) {
+						$activity_actions_grouped[] = array(
+							'label'   => $component_name,
+							'options' => $group_options,
+						);
+					}
 				}
 			}
-		}
 
-		// Get bulk actions (same as legacy BP_Activity_List_Table::get_bulk_actions()).
-		$bulk_actions = array(
-			'bulk_spam'   => __( 'Mark as Spam', 'buddyboss' ),
-			'bulk_ham'    => __( 'Not Spam', 'buddyboss' ),
-			'bulk_delete' => __( 'Delete Permanently', 'buddyboss' ),
-		);
+			// Get bulk actions (same as legacy BP_Activity_List_Table::get_bulk_actions()).
+			$bulk_actions = array(
+				'bulk_spam'   => __( 'Mark as Spam', 'buddyboss' ),
+				'bulk_ham'    => __( 'Not Spam', 'buddyboss' ),
+				'bulk_delete' => __( 'Delete Permanently', 'buddyboss' ),
+			);
 
-		/**
-		 * Filters the default bulk actions so plugins can add custom actions.
-		 * Same hook as legacy BP_Activity_List_Table::get_bulk_actions().
-		 *
-		 * @since BuddyPress 1.6.0
-		 * @since BuddyBoss [BBVERSION] Added to Settings 2.0 AJAX activity listing.
-		 *
-		 * @param array $bulk_actions Default available actions for bulk operations.
-		 */
-		$bulk_actions = apply_filters( 'bp_activity_list_table_get_bulk_actions', $bulk_actions );
+			/**
+			 * Filters the default bulk actions so plugins can add custom actions.
+			 * Same hook as legacy BP_Activity_List_Table::get_bulk_actions().
+			 *
+			 * @since BuddyPress 1.6.0
+			 * @since BuddyBoss [BBVERSION] Added to Settings 2.0 AJAX activity listing.
+			 *
+			 * @param array $bulk_actions Default available actions for bulk operations.
+			 */
+			$bulk_actions = apply_filters( 'bp_activity_list_table_get_bulk_actions', $bulk_actions );
 
-		// Build columns response (exclude 'cb' checkbox - handled by React).
-		$columns_response = array();
-		foreach ( $columns as $col_key => $col_label ) {
-			if ( 'cb' === $col_key ) {
-				continue;
+			// Build columns response (exclude 'cb' checkbox - handled by React).
+			foreach ( $columns as $col_key => $col_label ) {
+				if ( 'cb' === $col_key ) {
+					continue;
+				}
+				$columns_response[ $col_key ] = $col_label;
 			}
-			$columns_response[ $col_key ] = $col_label;
 		}
 
 		// Build views (All / Spam tabs) with new structured filter.
@@ -668,7 +726,7 @@ class BB_Activity_Admin_Ajax {
 		if ( ! empty( $activity->content ) ) {
 			$urls = wp_extract_urls( $activity->content );
 			if ( ! empty( $urls[0] ) ) {
-				$_POST['link_url']   = filter_var( $urls[0], FILTER_VALIDATE_URL );
+				$_POST['link_url']   = esc_url_raw( $urls[0] );
 				$_POST['link_embed'] = true;
 			}
 		}

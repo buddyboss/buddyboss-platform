@@ -124,6 +124,7 @@ export function ActivityListScreen( { onNavigate } ) {
 	var setNotice = noticeState[ 1 ];
 
 	var searchTimerRef = useRef( null );
+	var hasMetaRef = useRef( false );
 
 	var totalPages = Math.ceil( total / perPage );
 
@@ -144,6 +145,7 @@ export function ActivityListScreen( { onNavigate } ) {
 			search: searchQuery,
 			activity_type: actionFilter,
 			spam: spam,
+			include_meta: hasMetaRef.current ? 0 : 1,
 		} ).then( function ( response ) {
 			if ( response.success && response.data ) {
 				setActivities( response.data.activities || [] );
@@ -169,6 +171,7 @@ export function ActivityListScreen( { onNavigate } ) {
 				if ( response.data.views ) {
 					setViews( response.data.views );
 				}
+				hasMetaRef.current = true;
 			}
 			setIsLoading( false );
 		} ).catch( function () {
@@ -429,9 +432,7 @@ export function ActivityListScreen( { onNavigate } ) {
 		if ( ! html ) {
 			return '';
 		}
-		var tmp = document.createElement( 'div' );
-		tmp.innerHTML = html;
-		return tmp.textContent || tmp.innerText || '';
+		return html.replace( /<[^>]*>/g, '' );
 	};
 
 	/**
