@@ -82,7 +82,7 @@ export function RegisteredMetaField( { field, value, onChange, activityId } ) {
 		}
 
 		return (
-			<div>
+			<div className="bb-admin-meta-field__select-field">
 				<SelectControl
 					label={ field.label }
 					value={ String( null != value ? value : '' ) }

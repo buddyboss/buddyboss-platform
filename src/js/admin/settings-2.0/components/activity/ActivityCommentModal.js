@@ -180,7 +180,7 @@ export function ActivityCommentModal( { isOpen, activity, onClose, onSave, isSav
 							className="bb-activity-comment-modal__view-link"
 						>
 							{ __( 'View Activity', 'buddyboss' ) }
-							<i className="bb-icons-rl bb-icons-rl-external-link" style={ { marginLeft: '4px', fontSize: '14px' } }></i>
+							<i className="bb-icons-rl bb-icons-rl-arrow-up-right"></i>
 						</a>
 					) }
 				</div>

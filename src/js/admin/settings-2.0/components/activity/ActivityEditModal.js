@@ -233,7 +233,7 @@ export function ActivityEditModal( { isOpen, activity, activityActions, onClose,
 						className="bb-activity-edit-modal__view-link"
 					>
 						{ __( 'View Activity', 'buddyboss' ) }
-						<i className="bb-icons-rl bb-icons-rl-external-link" style={ { marginLeft: '4px', fontSize: '14px' } }></i>
+						<i className="bb-icons-rl bb-icons-rl-arrow-up-right"></i>
 					</a>
 				</div>
 				<div className="bb-activity-edit-modal__footer-right">

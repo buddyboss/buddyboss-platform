@@ -791,6 +791,28 @@
 		display: block;
 		font-size: 13px;
 	}
+
+	&__select-field .components-base-control {
+		
+		.components-input-control__label {
+			color: $bb-text-secondary-color;
+			text-transform: none;
+			font-size: 13px;
+			font-weight: 500;
+		}
+
+		.components-select-control__input {
+			@include bb-admin-settings-select;
+		}
+
+		.components-input-control-suffix-wrapper {
+			display: none;
+		}
+
+		.components-input-control__backdrop {
+			border-color: transparent;
+		}
+	}
 }
 
 .bb-activity-edit-modal {
@@ -843,14 +865,28 @@
 	}
 
 	&__view-link {
-		display: flex;
+		display: inline-flex;
 		align-items: center;
-		font-size: 13px;
-		color: $bb-link-color;
+		gap: 4px;
+		padding: 6px 14px;
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 1.8;
+		color: $bb-text-color;
 		text-decoration: none;
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-lg;
+		cursor: pointer;
 
 		&:hover {
-			text-decoration: underline;
+			color: $bb-text-color;
+			background-color: $bb-background-secondary-color;
+			border-color: $bb-border-secondary-color;
+			text-decoration: none;
+		}
+
+		i {
+			font-size: 16px;
 		}
 	}
 
@@ -862,4 +898,34 @@
 		text-transform: none;
 	}
 
+}
+
+.bb-activity-comment-modal {
+
+	&__view-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		padding: 6px 14px;
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 1.8;
+		color: $bb-text-color;
+		text-decoration: none;
+		background-color: $bb-background-secondary-color;
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-lg;
+		cursor: pointer;
+
+		&:hover {
+			color: $bb-text-color;
+			background-color: $bb-background-secondary-color;
+			border-color: $bb-border-secondary-color;
+			text-decoration: none;
+		}
+
+		i {
+			font-size: 16px;
+		}
+	}
 }
