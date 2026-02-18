@@ -289,7 +289,14 @@ export function ActivityListScreen( { onNavigate } ) {
 				setNotice( { type: 'success', message: response.data.message } );
 				setSelectedIds( [] );
 				setBulkAction( '' );
-				fetchActivities();
+
+				// If we're beyond page 1, go back to page 1 to avoid landing on an empty page.
+				// Otherwise re-fetch the current page (page 1).
+				if ( currentPage > 1 ) {
+					setCurrentPage( 1 );
+				} else {
+					fetchActivities();
+				}
 			} else {
 				setNotice( { type: 'error', message: response.data?.message || __( 'Action failed.', 'buddyboss' ) } );
 			}

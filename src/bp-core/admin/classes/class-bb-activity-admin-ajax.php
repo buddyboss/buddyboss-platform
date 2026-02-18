@@ -537,17 +537,22 @@ class BB_Activity_Admin_Ajax {
 		do_action( 'bp_activity_admin_index', array() );
 
 		$response_data = array(
-			'activities'       => $items,
-			'total'            => $total,
-			'per_page'         => $per_page,
-			'page'             => $page,
-			'spam_count'       => $spam_count,
-			'views'            => $views,
-			'activity_actions'         => $activity_actions,
-			'activity_actions_grouped' => $activity_actions_grouped,
-			'bulk_actions'             => $bulk_actions,
-			'columns'                  => $columns_response,
+			'activities' => $items,
+			'total'      => $total,
+			'per_page'   => $per_page,
+			'page'       => $page,
+			'spam_count' => $spam_count,
+			'views'      => $views,
 		);
+
+		// Only include static meta on first request (include_meta=true).
+		// Omitting keys entirely so JS truthy checks don't overwrite cached values with empty arrays.
+		if ( $include_meta ) {
+			$response_data['activity_actions']         = $activity_actions;
+			$response_data['activity_actions_grouped'] = $activity_actions_grouped;
+			$response_data['bulk_actions']             = $bulk_actions;
+			$response_data['columns']                  = $columns_response;
+		}
 
 		/**
 		 * Filters the full response data for the admin activities list AJAX endpoint.
