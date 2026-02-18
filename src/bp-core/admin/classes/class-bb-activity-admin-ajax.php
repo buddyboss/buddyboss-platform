@@ -305,7 +305,7 @@ class BB_Activity_Admin_Ajax {
 					'edit'   => __( 'Edit', 'buddyboss' ),
 					'spam'   => __( 'Spam', 'buddyboss' ),
 					'unspam' => __( 'Not Spam', 'buddyboss' ),
-					'delete' => __( 'Delete Permanently', 'buddyboss' ),
+					'delete' => __( 'Delete', 'buddyboss' ),
 				);
 				if ( (int) $activity_obj->is_spam ) {
 					unset( $row_actions['spam'] );
@@ -457,7 +457,7 @@ class BB_Activity_Admin_Ajax {
 			$bulk_actions = array(
 				'bulk_spam'   => __( 'Mark as Spam', 'buddyboss' ),
 				'bulk_ham'    => __( 'Not Spam', 'buddyboss' ),
-				'bulk_delete' => __( 'Delete Permanently', 'buddyboss' ),
+				'bulk_delete' => __( 'Delete', 'buddyboss' ),
 			);
 
 			/**
