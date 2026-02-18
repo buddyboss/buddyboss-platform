@@ -586,8 +586,117 @@
 		overflow: hidden;
 
 		.wp-editor-container {
+			display: flex;
+			flex-direction: column;
 			border: none;
 			background-color: transparent;
+
+			.quicktags-toolbar {
+				order: 3;
+				border: none;
+				background-color: transparent;
+
+				.ed_button {
+					background-color: $bb-background-secondary-color;
+					border-color: $bb-border-secondary-color;
+					color: $bb-text-color;
+					border-radius: $bb-border-radius-md;
+
+					&:focus,
+					&:hover {
+						background-color: $bb-background-secondary-color;
+						border-color: $bb-border-secondary-color;
+						color: $bb-text-color;
+					}
+				}
+			}
+		}
+
+		.mce-toolbar-grp .mce-btn-group {
+
+			.mce-btn {
+				margin: 0 4px;
+				background-color: transparent;
+				border: none;
+
+				button {
+					padding: 4px;
+				}
+
+				&.mce-active .mce-ico:before {
+					font-weight: 700;
+				}
+
+				&:focus,
+				&:hover {
+					background-color: transparent;
+					box-shadow: none;
+					outline: none;
+					border-color: transparent;
+					color: $bb-text-color;
+				}
+			}
+
+			.mce-ico:before {
+				content: "\e5be";
+				font-family: "bb-icons-rl";
+				color: $bb-icon-secondary-color;
+				font-size: 24px;
+				font-weight: 400;
+			}
+			
+			.mce-i-bold:before {
+				content: "\e5be";
+			}
+
+			.mce-i-italic:before {
+				content: "\e5c0";
+			}
+
+			.mce-i-bullist:before {
+				content: "\e2f2";
+			}
+
+			.mce-i-numlist:before {
+				content: "\e2f6";
+			}
+
+			.mce-i-blockquote:before {
+				content: "\e660";
+			}
+
+			.mce-i-link:before {
+				content: "\e2e2";
+			}
+
+			.mce-i-unlink:before {
+				content: "\e1bc";
+			}
+		}
+
+		.wp-editor-tabs  {
+			padding-right: 10px;
+			margin-bottom: 0;
+			position: relative;
+			z-index: 1;
+
+			.wp-switch-editor {
+				background-color: $bb-background-color;
+				border-radius: $bb-border-radius-md $bb-border-radius-md 0 0;
+				border: 1px solid $bb-border-tertiary-color;
+				border-bottom: none;
+			}
+		}
+
+		.tmce-active .switch-tmce,
+		.html-active .switch-html {
+			background-color: $bb-background-base-color;
+			border-bottom: none;
+		}
+
+		.mce-container-body {
+			display: flex;
+			flex-direction: column;
 		}
 
 		.mce-edit-area.mce-panel {
@@ -595,7 +704,7 @@
 			border-radius: $bb-border-radius-md;
 			background-color: $bb-background-color;
 			overflow: hidden;
-			margin: 4px 0;
+			margin: 0 0 4px 0;
 			padding-bottom: 10px;
 		}
 
@@ -605,6 +714,7 @@
 		}
 
 		.mce-top-part {
+			order: 3;
 
 			&:before {
 				box-shadow: none;
