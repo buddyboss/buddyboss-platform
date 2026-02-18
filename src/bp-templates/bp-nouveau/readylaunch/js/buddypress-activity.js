@@ -250,12 +250,22 @@ window.bp = window.bp || {};
 			$( '.bb-rl-activity-model-wrapper .bb-rl-model-close-button' ).on( 'click', this.activitySyncOnModalClose.bind( this ) );
 
 			// Validate media access for comment forms.
-			var initializeForms = function () {
+			var isSingleActivity = $body.hasClass( 'activity-permalink' );
+			var initializeForms  = function () {
 				$( '.ac-form.not-initialized' ).each(
 					function () {
 						var form   = $( this );
 						var target = form.find( '.ac-textarea' );
 						bp.Nouveau.Activity.toggleMultiMediaOptions( form, target );
+
+						// On single activity page, fully initialize the comment form
+						// since it is rendered visible on page load.
+						if ( isSingleActivity ) {
+							form.removeClass( 'not-initialized' );
+
+							var ce = form.find( '.ac-input[contenteditable]' );
+							bp.Nouveau.Activity.listenCommentInput( ce );
+						}
 					}
 				);
 			};
