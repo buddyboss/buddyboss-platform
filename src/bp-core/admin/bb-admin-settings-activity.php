@@ -59,6 +59,12 @@ function bb_admin_settings_register_activity_feature() {
 		)
 	);
 
+	// When activity is disabled, only the feature card is needed (so admin can re-enable).
+	// Side panels, sections, and fields depend on activity functions that aren't loaded.
+	if ( ! bp_is_active( 'activity' ) ) {
+		return;
+	}
+
 	// =========================================================================
 	// SIDE PANELS
 	// =========================================================================
