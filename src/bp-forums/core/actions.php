@@ -616,7 +616,7 @@ function bb_forum_add_content_popup() {
  *
  * This renders the standalone GIF picker popup outside of modals.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.20.0
  */
 function bb_forums_gifpicker_add_popup_template() {
 	// Only load on forum pages when media component is active and GIF support is enabled.
