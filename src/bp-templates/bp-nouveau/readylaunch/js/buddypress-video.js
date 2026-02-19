@@ -46,10 +46,11 @@ window.bp = window.bp || {};
 		 * @return {[type]} [description]
 		 */
 		setupGlobals: function () {
-			var bodySelector              = $( 'body' );
-			this.thumbnail_xhr            = null;
-			this.thumbnail_interval       = null;
-			this.thumbnail_max_interval   = 6;
+			var bodySelector                = $( 'body' );
+			this.thumbnail_xhr              = null;
+			this.thumbnail_interval         = null;
+			this.thumbnail_max_interval     = 6;
+			this.thumbnail_cleanup_complete = false;
 			this.current_page             = 1;
 			this.video_dropzone_obj       = null;
 			this.video_thumb_dropzone_obj = [];
@@ -166,6 +167,30 @@ window.bp = window.bp || {};
 					$videoCountSpan.text( formatNumber( videoCount ) + ' ' + videoLabel );
 				}
 			}
+		},
+
+		/**
+		 * Check if ffmpeg thumbnail generation is still in progress.
+		 * Returns true only if ffmpeg_generated has a value that is not 'no', 'yes', or empty.
+		 *
+		 * @param {Object} videoAttachments The video attachments object.
+		 * @return {boolean} True if generation is pending, false otherwise.
+		 */
+		isFFmpegGenerationPending: function ( videoAttachments ) {
+			return videoAttachments.ffmpeg_generated &&
+				'no' !== videoAttachments.ffmpeg_generated &&
+				'yes' !== videoAttachments.ffmpeg_generated;
+		},
+
+		/**
+		 * Check if the video has fewer than 2 auto-generated thumbnails.
+		 *
+		 * @param {Object} videoAttachments The video attachments object.
+		 * @return {boolean} True if thumbnails are insufficient, false otherwise.
+		 */
+		hasInsufficientThumbnails: function ( videoAttachments ) {
+			return typeof videoAttachments.default_images === 'undefined' ||
+				videoAttachments.default_images.length < 2;
 		},
 
 		/**
@@ -858,7 +883,7 @@ window.bp = window.bp || {};
 							}
 						} else {
 							if ( ! jQuery( '.media-error-popup' ).length ) {
-								$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup media-error-popup"><transition name="modal"><div class="bb-rl-modal-mask bb-white bbm-model-wrap"><div class="bb-rl-modal-wrapper"><div id="bb-rl-media-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlVideo.invalid_video_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-rl-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
+								$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup media-error-popup"><transition name="modal"><div class="bb-rl-modal-mask bb-white bbm-model-wrap"><div class="bb-rl-modal-wrapper"><div id="bb-rl-media-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlVideo.invalid_video_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="bb-icon-l bb-icon-times"></span></a></header><div class="bb-rl-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 							}
 							this.removeFile( file );
 						}
@@ -925,7 +950,7 @@ window.bp = window.bp || {};
 							self.dropzone_video.push( response.data );
 						} else {
 							if ( ! jQuery( '.media-error-popup' ).length ) {
-								$( 'body' ).append( '<div id="bp-video-create-folder" style="display: block;" class="open-popup media-error-popup"><transition name="modal"><div class="bb-rl-modal-mask bb-white bbm-model-wrap"><div class="bb-rl-modal-wrapper"><div id="bb-rl-media-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlMedia.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-rl-field-wrap"><p>' + response.data.feedback + '</p></div></div></div></div></transition></div>' );
+								$( 'body' ).append( '<div id="bp-video-create-folder" style="display: block;" class="open-popup media-error-popup"><transition name="modal"><div class="bb-rl-modal-mask bb-white bbm-model-wrap"><div class="bb-rl-modal-wrapper"><div id="bb-rl-media-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlMedia.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="bb-icon-l bb-icon-times"></span></a></header><div class="bb-rl-field-wrap"><p>' + response.data.feedback + '</p></div></div></div></div></transition></div>' );
 							}
 							this.removeFile( file );
 						}
@@ -1000,6 +1025,9 @@ window.bp = window.bp || {};
 
 			var uploader = popupSelector.find( '.bb-rl-video-thumbnail-uploader' );
 			uploader.addClass( 'opened-edit-thumbnail' ).show().removeClass( 'no_generated_thumb' );
+
+			// Reset cleanup flag for new modal session.
+			this.thumbnail_cleanup_complete = false;
 
 			$document.on(
 				'click',
@@ -1128,7 +1156,7 @@ window.bp = window.bp || {};
 							}
 						} else {
 							if ( ! jQuery( '.media-error-popup' ).length ) {
-								$( 'body' ).append( '<div id="bb-rl-video-move-popup" style="display: block;" class="open-popup video-error-popup"><transition name="modal"><div class="bb-rl-modal-mask bb-white bbm-model-wrap"><div class="bb-rl-modal-wrapper"><div id="bb-rl-media-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlMedia.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-rl-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
+								$( 'body' ).append( '<div id="bb-rl-video-move-popup" style="display: block;" class="open-popup video-error-popup"><transition name="modal"><div class="bb-rl-modal-mask bb-white bbm-model-wrap"><div class="bb-rl-modal-wrapper"><div id="bb-rl-media-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlMedia.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="bb-icon-l bb-icon-times"></span></a></header><div class="bb-rl-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 							}
 							this.removeFile( file );
 							$( uploaderSelector + ' .bb-rl-video-thumbnail-dropzone-content .bb-action-check-wrap' ).hide();
@@ -1157,7 +1185,7 @@ window.bp = window.bp || {};
 							self.dropzone_video_thumb.push( response.data );
 						} else {
 							if ( ! jQuery( '.media-error-popup' ).length ) {
-								$( 'body' ).append( '<div id="bb-rl-video-move-popup" style="display: block;" class="open-popup media-error-popup"><transition name="modal"><div class="bb-rl-modal-mask bb-white bbm-model-wrap"><div class="bb-rl-modal-wrapper"><div id="bb-rl-media-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlMedia.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-rl-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
+								$( 'body' ).append( '<div id="bb-rl-video-move-popup" style="display: block;" class="open-popup media-error-popup"><transition name="modal"><div class="bb-rl-modal-mask bb-white bbm-model-wrap"><div class="bb-rl-modal-wrapper"><div id="bb-rl-media-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlMedia.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="bb-icon-l bb-icon-times"></span></a></header><div class="bb-rl-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 							}
 							this.removeFile( file );
 						}
@@ -1228,11 +1256,14 @@ window.bp = window.bp || {};
 						if ( default_images_html !== '' ) {
 							$( uploaderSelector + ' .bb-rl-video-thumbnail-auto-generated ul.bb-rl-video-thumb-list' ).removeClass( 'loading' );
 							$( uploaderSelector + ' .bb-rl-video-thumbnail-auto-generated ul.bb-rl-video-thumb-list' ).html( default_images_html );
-							$videoThumbnailUploadeEle.removeClass( 'generating_thumb' );
-							if ( videoAttachments.default_images.length < 2 && bbRlVideo.is_ffpmeg_installed ) {
+							$videoThumbnailUploadeEle.removeClass( 'generating_thumb ffmpeg_failed' );
+							// Only show spinners if ffmpeg is actively generating.
+							if ( bp.Nouveau.Video.hasInsufficientThumbnails( videoAttachments ) && bbRlVideo.is_ffmpeg_installed && bp.Nouveau.Video.isFFmpegGenerationPending( videoAttachments ) ) {
 								$videoThumbnailUploadeEle.addClass( 'generating_thumb' );
 								$( uploaderSelector + ' .bb-rl-video-thumbnail-auto-generated ul.bb-rl-video-thumb-list' ).append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 bb_rl_thumb_loader"><div class="bb-rl-video-thumb-block"><i class="bb-icon-spinner bb-icon-l animate-spin"></i><span>' + bbRlVideo.generating_thumb + '</span></div></li>' );
 								$( uploaderSelector + ' .bb-rl-video-thumbnail-auto-generated ul.bb-rl-video-thumb-list' ).append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 bb_rl_thumb_loader"><div class="bb-rl-video-thumb-block"><i class="bb-icon-spinner bb-icon-l animate-spin"></i><span>' + bbRlVideo.generating_thumb + '</span></div></li>' );
+							} else if ( 'no' === videoAttachments.ffmpeg_generated || '' === videoAttachments.ffmpeg_generated ) {
+								$videoThumbnailUploadeEle.addClass( 'ffmpeg_failed' );
 							}
 						}
 					} else {
@@ -1268,11 +1299,13 @@ window.bp = window.bp || {};
 					'video_id'      : videoId,
 				};
 
-				if ( bbRlVideo.is_ffpmeg_installed && (
-					(
-						typeof videoAttachments.default_images === 'undefined'
-					) || videoAttachments.default_images.length < 2
-				) ) {
+				// Only trigger AJAX polling if ffmpeg is installed, we have fewer than 2 thumbnails,
+				// AND ffmpeg is actively generating (not empty, not 'no', not 'yes').
+				var shouldPollForThumbnails = bbRlVideo.is_ffmpeg_installed &&
+					bp.Nouveau.Video.hasInsufficientThumbnails( videoAttachments ) &&
+					bp.Nouveau.Video.isFFmpegGenerationPending( videoAttachments );
+
+				if ( shouldPollForThumbnails ) {
 					if ( this.thumbnail_xhr ) {
 						this.thumbnail_xhr.abort();
 					}
@@ -1315,20 +1348,35 @@ window.bp = window.bp || {};
 								ulSelector.html( response.data.default_images );
 							}
 
-							if ( response.data.ffmpeg_generated && 'no' === response.data.ffmpeg_generated ) {
-								ulSelector.html( '' );
-							}
+							// When ffmpeg_generated is 'no', 'yes', or empty, stop polling and clean up UI.
+							// Do NOT clear the list - we want to keep any existing thumbnails from default_images.
+							// Use flag to prevent multiple cleanup executions from overlapping AJAX requests.
+							var ffmpegDone = 'no' === response.data.ffmpeg_generated || 'yes' === response.data.ffmpeg_generated || '' === response.data.ffmpeg_generated;
 
-							var $thumbItems  = ulSelector.find( 'li' );
-							var $loaderItems = ulSelector.find( 'li.bb_rl_thumb_loader' );
-							if ( $thumbItems.find( 'li' ).length < 2 ) {
-								$thumbnailUploader.addClass( 'generating_thumb' ).removeClass( 'no_generated_thumb' );
-								if ( $loaderItems.length === 0 ) {
-									ulSelector.append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 bb_rl_thumb_loader"><div class="bb-rl-video-thumb-block"><i class="bb-icon-l bb-icon-spinner animate-spin"></i><span>' + bbRlVideo.generating_thumb + '</span></div></li>' );
-									ulSelector.append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 bb_rl_thumb_loader"><div class="bb-rl-video-thumb-block"><i class="bb-icon-l bb-icon-spinner animate-spin"></i><span>' + bbRlVideo.generating_thumb + '</span></div></li>' );
+							if ( ffmpegDone && ! bp.Nouveau.Video.thumbnail_cleanup_complete ) {
+								bp.Nouveau.Video.thumbnail_cleanup_complete = true;
+								// Stop the polling interval - no more thumbnails will be generated.
+								clearTimeout( bp.Nouveau.Video.thumbnail_interval );
+								// Remove any loading spinners since generation is complete/failed.
+								ulSelector.find( 'li.bb_rl_thumb_loader' ).remove();
+								// Update UI state - remove generating class.
+								$thumbnailUploader.removeClass( 'generating_thumb' );
+								// If we have no thumbnails at all, mark as no_generated_thumb.
+								if ( ulSelector.find( 'li' ).length === 0 ) {
+									$thumbnailUploader.addClass( 'no_generated_thumb' );
 								}
-							} else if ( $loaderItems.length === 0 ) {
-								$thumbnailUploader.removeClass( 'generating_thumb no_generated_thumb' );
+							} else if ( ! ffmpegDone ) {
+								var $thumbItems  = ulSelector.find( 'li' );
+								var $loaderItems = ulSelector.find( 'li.bb_rl_thumb_loader' );
+								if ( $thumbItems.length < 2 ) {
+									$thumbnailUploader.addClass( 'generating_thumb' ).removeClass( 'no_generated_thumb' );
+									if ( $loaderItems.length === 0 ) {
+										ulSelector.append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 bb_rl_thumb_loader"><div class="bb-rl-video-thumb-block"><i class="bb-icon-l bb-icon-spinner animate-spin"></i><span>' + bbRlVideo.generating_thumb + '</span></div></li>' );
+										ulSelector.append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 bb_rl_thumb_loader"><div class="bb-rl-video-thumb-block"><i class="bb-icon-l bb-icon-spinner animate-spin"></i><span>' + bbRlVideo.generating_thumb + '</span></div></li>' );
+									}
+								} else if ( $loaderItems.length === 0 ) {
+									$thumbnailUploader.removeClass( 'generating_thumb no_generated_thumb' );
+								}
 							}
 						} else {
 							// If found any error from the response then stop ajax request.
@@ -1426,7 +1474,7 @@ window.bp = window.bp || {};
 							}
 						} else {
 							if ( ! jQuery( '.media-error-popup' ).length ) {
-								$( 'body' ).append( '<div id="bb-rl-video-move-popup" style="display: block;" class="open-popup media-error-popup"><transition name="modal"><div class="bb-rl-modal-mask bb-white bbm-model-wrap"><div class="bb-rl-modal-wrapper"><div id="bb-rl-media-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlMedia.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-rl-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
+								$( 'body' ).append( '<div id="bb-rl-video-move-popup" style="display: block;" class="open-popup media-error-popup"><transition name="modal"><div class="bb-rl-modal-mask bb-white bbm-model-wrap"><div class="bb-rl-modal-wrapper"><div id="bb-rl-media-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlMedia.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="bb-icon-l bb-icon-times"></span></a></header><div class="bb-rl-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 							}
 							this.removeFile( file );
 						}
@@ -1461,7 +1509,7 @@ window.bp = window.bp || {};
 							self.dropzone_video.push( response.data );
 						} else {
 							if ( ! jQuery( '.media-error-popup' ).length ) {
-								$( 'body' ).append( '<div id="bb-rl-video-move-popup" style="display: block;" class="open-popup media-error-popup"><transition name="modal"><div class="bb-rl-modal-mask bb-white bbm-model-wrap"><div class="bb-rl-modal-wrapper"><div id="bb-rl-media-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlMedia.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-rl-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
+								$( 'body' ).append( '<div id="bb-rl-video-move-popup" style="display: block;" class="open-popup media-error-popup"><transition name="modal"><div class="bb-rl-modal-mask bb-white bbm-model-wrap"><div class="bb-rl-modal-wrapper"><div id="bb-rl-media-create-album-popup" class="modal-container bb-rl-has-folderlocationUI"><header class="bb-model-header"><h4>' + bbRlMedia.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="bb-icon-l bb-icon-times"></span></a></header><div class="bb-rl-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 							}
 							this.removeFile( file );
 						}
@@ -2965,27 +3013,27 @@ window.bp = window.bp || {};
 		/**
 		 * Pause all YouTube/Vimeo iframe embeds in activity posts
 		 * This prevents YouTube videos from playing when Video.js videos are active
-		 * 
+		 *
 		 * @param {boolean} quiet - If true, suppresses debug logs
 		 * @param {string} additionalSelector - Optional additional CSS selector for iframes (e.g., '.bb-rl-activity-video-elem iframe')
 		 */
 		pauseEmbeddedVideos: function( quiet, additionalSelector ) {
 			quiet = quiet || false;
 			additionalSelector = additionalSelector || '.bb-rl-activity-video-elem iframe';
-			
+
 			// Base selector for activity iframes
 			var baseSelector = '.activity-list iframe, .activity-item iframe, .bb-activity-video-elem iframe';
 			// Append additional selector if provided
 			var selector = additionalSelector ? baseSelector + ', ' + additionalSelector : baseSelector;
-			
+
 			// Find all YouTube and Vimeo iframes in activity posts
 			var iframes = $( selector );
-			
+
 			iframes.each(
 				function() {
 					var $iframe = $( this );
 					var src = $iframe.attr( 'src' ) || '';
-					
+
 					// Check if it's a YouTube or Vimeo iframe
 					if ( src.indexOf( 'youtube.com' ) !== -1 || src.indexOf( 'youtu.be' ) !== -1 || src.indexOf( 'vimeo.com' ) !== -1 ) {
 						try {
@@ -2993,40 +3041,40 @@ window.bp = window.bp || {};
 							var isYouTube = src.indexOf( 'youtube.com' ) !== -1 || src.indexOf( 'youtu.be' ) !== -1;
 							var hasEnableJsApi = src.indexOf( 'enablejsapi=1' ) !== -1;
 							var hasAutoplay = src.indexOf( 'autoplay=1' ) !== -1;
-							
+
 							// For YouTube: Try postMessage first
 							if ( isYouTube && iframe.contentWindow ) {
 								// Always try postMessage first
 								iframe.contentWindow.postMessage( '{"event":"command","func":"pauseVideo","args":""}', '*' );
-								
+
 								setTimeout( function() {
 									if ( iframe.contentWindow ) {
 										iframe.contentWindow.postMessage( '{"event":"command","func":"stopVideo","args":""}', '*' );
 									}
 								}, 100 );
 							}
-							
+
 							// Only reload iframe if we need to add enablejsapi=1 (required for postMessage to work reliably)
 							// If enablejsapi is already present, we can use postMessage without reloading
 							if ( isYouTube && ! hasEnableJsApi ) {
 								var newSrc = src;
 								var separator = src.indexOf( '?' ) !== -1 ? '&' : '?';
 								newSrc = src + separator + 'enablejsapi=1';
-								
+
 								// While we're reloading, also remove autoplay if present
 								if ( hasAutoplay ) {
 									newSrc = newSrc.replace( /[?&]autoplay=1(&|$)/g, '$1' );
 									newSrc = newSrc.replace( /^([^?]*)\?&/, '$1?' );
 								}
-								
+
 								// Reload iframe with enablejsapi=1
 								$iframe.attr( 'src', newSrc );
-								
+
 								// Wait for iframe to reload, then send pause commands
 								setTimeout( function() {
 									if ( iframe.contentWindow ) {
 										iframe.contentWindow.postMessage( '{"event":"command","func":"pauseVideo","args":""}', '*' );
-										
+
 										setTimeout( function() {
 											if ( iframe.contentWindow ) {
 												iframe.contentWindow.postMessage( '{"event":"command","func":"stopVideo","args":""}', '*' );
@@ -3060,7 +3108,7 @@ window.bp = window.bp || {};
 		 * Setup picture-in-picture event handlers for a video element
 		 * NOTE: This function is identical to the one in buddypress-video.js
 		 * Keep both in sync - any changes must be made in both files
-		 * 
+		 *
 		 * @param {HTMLElement} videoElement - The video element to setup PiP handlers for
 		 */
 		setupPictureInPictureHandlers: function( videoElement ) {
@@ -3178,7 +3226,7 @@ window.bp = window.bp || {};
 		addListeners: function () {
 
 			$( document ).on( 'click', '.video-js', this.openPlayer.bind( this ) );
-			
+
 			// Global listener for any clicks that might trigger YouTube videos
 			// This catches clicks even in picture-in-picture windows
 			// Namespaced for potential cleanup: .video-player
@@ -3191,7 +3239,7 @@ window.bp = window.bp || {};
 					}, 50 );
 				}
 			} );
-			
+
 			// Listen for any iframe load events (YouTube might reload when we change src)
 			// Namespaced for potential cleanup: .video-player
 			$( document ).on( 'load.video-player', 'iframe[src*="youtube"], iframe[src*="youtu.be"]', function() {
@@ -3243,12 +3291,12 @@ window.bp = window.bp || {};
 											}
 										}
 									);
-									
+
 									// Pause YouTube/Vimeo iframes
 									bp.Nouveau.Video.Player.pauseEmbeddedVideos();
 								}
 							);
-							
+
 							// Handle picture-in-picture events (only if PiP is supported)
 							var videoElement = this.el().querySelector( 'video' );
 							if ( videoElement ) {
