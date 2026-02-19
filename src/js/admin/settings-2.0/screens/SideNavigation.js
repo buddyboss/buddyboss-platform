@@ -52,6 +52,9 @@ export function SideNavigation({ featureId, sidePanels, navItems, currentPanel, 
 			<ul className="bb-admin-side-nav__list">
 				{(sidePanels || []).map((panel) => (
 					<li key={panel.id} className="bb-admin-side-nav__item">
+						{ panel.divider && (
+							<div className="bb-admin-side-nav__divider"></div>
+						) }
 						<button
 							className={`bb-admin-side-nav__link ${
 								currentPanel === panel.id ? 'bb-admin-side-nav__link--active' : ''

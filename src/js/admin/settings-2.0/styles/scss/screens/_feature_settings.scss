@@ -92,6 +92,12 @@
             display: flex;
         }
 
+        &__divider {
+            height: 1px;
+            background-color: $bb-border-secondary-color;
+            margin: 8px;
+        }
+
     }
 
     &__main {

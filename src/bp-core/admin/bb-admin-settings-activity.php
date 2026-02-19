@@ -198,6 +198,7 @@ function bb_admin_settings_register_activity_feature() {
 				'class' => 'bb-icons-rl bb-icons-rl-arrow-square-out',
 			),
 			'link'       => admin_url( 'edit.php?post_type=&page=bp-activity' ),
+			'divider'    => true,
 			'order'      => 100,
 			'is_default' => false,
 		)
