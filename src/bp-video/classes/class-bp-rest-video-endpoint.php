@@ -738,18 +738,35 @@ class BP_REST_Video_Endpoint extends WP_REST_Controller {
 					);
 				}
 
-				if ( function_exists( 'bb_media_user_can_access' ) ) {
-					$album_privacy = bb_media_user_can_access( $parent_album->id, 'album' );
-				} else {
-					$album_privacy = bp_media_user_can_manage_album( $parent_album->id, bp_loggedin_user_id() );
-				}
+				// If the album is not a group album, check if the user has permission to add video to the album.
+				if ( 'grouponly' !== $parent_album->privacy ) {
+					if ( function_exists( 'bb_media_user_can_access' ) ) {
+						$album_privacy = bb_media_user_can_access( $parent_album->id, 'album' );
+					} else {
+						$album_privacy = bp_media_user_can_manage_album( $parent_album->id, bp_loggedin_user_id() );
+					}
 
-				if ( true === $retval && true !== (bool) $album_privacy['can_add'] ) {
+					if ( true === $retval && true !== (bool) $album_privacy['can_add'] ) {
+						$retval = new WP_Error(
+							'bp_rest_invalid_permission',
+							__( 'You don\'t have a permission to create a video inside this album.', 'buddyboss' ),
+							array(
+								'status' => rest_authorization_required_code(),
+							)
+						);
+					}
+				} elseif (
+					'grouponly' === $parent_album->privacy &&
+					(
+						empty( $request['group_id'] ) ||
+						(int) $request['group_id'] !== (int) $parent_album->group_id
+					)
+				) {
 					$retval = new WP_Error(
 						'bp_rest_invalid_permission',
-						__( 'You don\'t have a permission to create a video inside this album.', 'buddyboss' ),
+						__( 'Invalid request. Group not associated with the respective album.', 'buddyboss' ),
 						array(
-							'status' => rest_authorization_required_code(),
+							'status' => 404,
 						)
 					);
 				}

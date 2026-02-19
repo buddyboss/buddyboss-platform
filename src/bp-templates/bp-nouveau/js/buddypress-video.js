@@ -110,7 +110,43 @@ window.bp = window.bp || {};
 			if ( typeof BP_Nouveau.video.dropzone_options !== 'undefined' ) {
 				Object.assign( this.options, BP_Nouveau.video.dropzone_options );
 			}
+		},
 
+		/**
+		 * Update album photo and video counts in single album view.
+		 * Works for both Standard and ReadyLaunch modes.
+		 *
+		 * @param {Object} albumCounts - Album count data from server response
+		 * @param {number} albumCounts.album_media_count - Number of photos
+		 * @param {number} albumCounts.album_video_count - Number of videos
+		 */
+		updateAlbumCounts: function ( albumCounts ) {
+			// Check if we're in a single album view.
+			if ( ! $( '#buddypress #bp-media-single-album' ).length ) {
+				return;
+			}
+
+			var photoCount = parseInt( albumCounts.album_media_count ) || 0;
+			var videoCount = parseInt( albumCounts.album_video_count ) || 0;
+
+			// Format number with thousands separator.
+			var formatNumber = function( num ) {
+				return num.toString().replace( /\B(?=(\d{3})+(?!\d))/g, ',' );
+			};
+
+			// Update the photo count display.
+			var $photoCountSpan = $( '#buddypress .bb-album-photo-count' );
+			if ( $photoCountSpan.length > 0 ) {
+				var photoLabel = 1 === photoCount ? BP_Nouveau.media.i18n_strings.photo : BP_Nouveau.media.i18n_strings.photos;
+				$photoCountSpan.text( formatNumber( photoCount ) + ' ' + photoLabel );
+			}
+
+			// Update the video count display.
+			var $videoCountSpan = $( '#buddypress .bb-album-video-count' );
+			if ( $videoCountSpan.length > 0 ) {
+				var videoLabel = 1 === videoCount ? BP_Nouveau.media.i18n_strings.video : BP_Nouveau.media.i18n_strings.videos;
+				$videoCountSpan.text( formatNumber( videoCount ) + ' ' + videoLabel );
+			}
 		},
 
 		/**
@@ -503,6 +539,11 @@ window.bp = window.bp || {};
 									}
 								}
 
+								// Update album counts if uploading to an album.
+								if ( response.data.album_total_count !== undefined ) {
+									self.updateAlbumCounts( response.data );
+								}
+
 								for ( var i = 0; i < self.dropzone_video.length; i++ ) {
 									self.dropzone_video[ i ].saved = true;
 								}
@@ -574,6 +615,28 @@ window.bp = window.bp || {};
 										}
 									}
 								);
+
+								// Update album counts for both source and destination albums if present.
+								if ( response.data.source_album_id !== undefined || response.data.dest_album_id !== undefined ) {
+									var $albumContainer = $( '#buddypress #bp-media-single-album' );
+									if ( $albumContainer.length ) {
+										// Determine which album we're currently viewing from the DOM.
+										var currentAlbumId = parseInt( $albumContainer.attr( 'data-album-id' ) ) || 0;
+										var albumCounts = {};
+
+										// If we're viewing the source album, use source counts (item was removed).
+										// If we're viewing the destination album, use dest counts (item was added).
+										if ( currentAlbumId === response.data.source_album_id ) {
+											albumCounts.album_media_count = response.data.source_album_media_count;
+											albumCounts.album_video_count = response.data.source_album_video_count;
+										} else if ( currentAlbumId === response.data.dest_album_id ) {
+											albumCounts.album_media_count = response.data.dest_album_media_count;
+											albumCounts.album_video_count = response.data.dest_album_video_count;
+										}
+
+										self.updateAlbumCounts( albumCounts );
+									}
+								}
 
 								jQuery( window ).scroll();
 
@@ -1719,6 +1782,11 @@ window.bp = window.bp || {};
 										);
 									}
 								}
+
+								// Update album counts if deleting from an album.
+								if ( response.data.album_total_count !== undefined ) {
+									self.updateAlbumCounts( response.data );
+								}
 							}
 						} else {
 							setTimeout(
@@ -1786,6 +1854,11 @@ window.bp = window.bp || {};
 											$( this ).closest( 'li' ).remove();
 										}
 									);
+								}
+
+								// Update album counts if deleting from an album.
+								if ( response.data.album_total_count !== undefined ) {
+									self.updateAlbumCounts( response.data );
 								}
 							} else {
 								$( '#buddypress #video-stream.video' ).prepend( response.data.feedback );
@@ -2299,6 +2372,28 @@ window.bp = window.bp || {};
 							target.closest( '.bp-video-move-file' ).find( '.ac-video-close-button' ).trigger( 'click' );
 							$( document ).find( 'a.bb-open-video-theatre[data-id="' + video_id + '"]' ).data( 'album-id', album_id );
 
+							// Update album counts for both source and destination albums if present.
+							if ( response.data.source_album_id !== undefined || response.data.dest_album_id !== undefined ) {
+								var $albumContainer = $( '#buddypress #bp-media-single-album' );
+								if ( $albumContainer.length ) {
+									// Determine which album we're currently viewing from the DOM.
+									var currentAlbumId = parseInt( $albumContainer.attr( 'data-album-id' ) ) || 0;
+									var albumCounts = {};
+
+									// If we're viewing the source album, use source counts (item was removed).
+									// If we're viewing the destination album, use dest counts (item was added).
+									if ( currentAlbumId === response.data.source_album_id ) {
+										albumCounts.album_media_count = response.data.source_album_media_count;
+										albumCounts.album_video_count = response.data.source_album_video_count;
+									} else if ( currentAlbumId === response.data.dest_album_id ) {
+										albumCounts.album_media_count = response.data.dest_album_media_count;
+										albumCounts.album_video_count = response.data.dest_album_video_count;
+									}
+
+									self.updateAlbumCounts( albumCounts );
+								}
+							}
+
 						} else {
 							/* jshint ignore:start */
 							alert( response.data.feedback.replace( '&#039;', '\'' ) );
@@ -2541,7 +2636,10 @@ window.bp = window.bp || {};
 			}
 
 			if ( $( '.bb-media-model-wrapper.video .bb-media-section' ).find( 'video' ).length ) {
-				videojs( $('.bb-media-model-wrapper.video .bb-media-section').find('video').attr('id') ).reset();
+				// Check if videojs is available before using it
+				if ( typeof videojs !== 'undefined' ) {
+					videojs( $('.bb-media-model-wrapper.video .bb-media-section').find('video').attr('id') ).reset();
+				}
 			}
 			$('.bb-media-model-wrapper').hide();
 			self.is_open_video = false;
@@ -3340,6 +3438,16 @@ window.bp = window.bp || {};
 					var player_id 	= $( this ).attr( 'id' );
 
 					var videoIndex                   = $( this ).attr( 'id' );
+					
+					// Check if videojs is available before using it
+					if ( typeof videojs === 'undefined' ) {
+						console.warn( 'VideoJS is not loaded yet. Retrying in 100ms...' );
+						setTimeout( function() {
+							bp.Nouveau.Video.openPlayer();
+						}, 100 );
+						return;
+					}
+					
 					player[ $( this ).attr( 'id' ) ] = videojs(
 						self,
 						options,
