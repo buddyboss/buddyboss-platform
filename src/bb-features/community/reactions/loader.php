@@ -30,7 +30,7 @@ defined( 'ABSPATH' ) || exit;
  */
 if ( bp_is_active( 'activity' ) && bp_is_activity_like_active() ) {
 
-	$bb_reactions_feature_dir = dirname( __FILE__ );
+	$bb_reactions_feature_dir = __DIR__;
 
 	// Load class definitions.
 	if ( file_exists( $bb_reactions_feature_dir . '/classes/class-bb-reaction.php' ) ) {

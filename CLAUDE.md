@@ -72,7 +72,7 @@ npm run lint-css
 composer lint
 ```
 
-**PHP standards:** WordPress Coding Standards + PHPCompatibilityWP (minimum PHP 5.6)
+**PHP standards:** WordPress Coding Standards + PHPCompatibilityWP (minimum PHP 7.4)
 **JavaScript standards:** WordPress JavaScript Coding Standards
 
 ### Grunt Tasks
@@ -486,7 +486,7 @@ if ( bp_core_do_network_admin() ) {
 - Run `composer lint-php-fix` to auto-fix common issues
 - See `phpcs.xml` for specific rules and exclusions
 - Excluded paths: `deprecated/`, `bp-integrations/`, `vendor/`, `node_modules/`
-- Minimum PHP compatibility: 5.6 (checked via PHPCompatibilityWP)
+- Minimum PHP compatibility: 7.4 (checked via PHPCompatibilityWP)
 
 **Key WordPress PHP Conventions:**
 - Use tabs (not spaces) for indentation
@@ -726,7 +726,7 @@ $(document).on('click', '.my-button', (e) => {
 This plugin is typically developed within a WordPress installation:
 - **WordPress location:** `wp-content/plugins/buddyboss-platform/`
 - **Node version:** >= 14.15.0 (see `package.json`)
-- **PHP version:** >= 5.6 (compatibility target), recommend 7.4+
+- **PHP version:** >= 7.4 (minimum supported)
 
 ## Security Rules
 
@@ -1503,7 +1503,7 @@ define( 'SCRIPT_DEBUG', true );
 - **Test with Query Monitor** plugin for performance analysis
 
 ### Compatibility Requirements
-- **PHP version:** 5.6+ (compatibility target), 7.4+ (recommended)
+- **PHP version:** 7.4+ (minimum supported)
 - **WordPress version:** 6.0+ (minimum)
 - Test on multiple PHP versions: 7.4, 8.0, 8.1, 8.2
 - Test on multiple WordPress versions

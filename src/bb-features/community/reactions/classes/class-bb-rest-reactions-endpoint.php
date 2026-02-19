@@ -722,6 +722,14 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 					'status' => 400,
 				)
 			);
+		} elseif ( ! empty( $user_id ) && $user_id !== bp_loggedin_user_id() ) {
+			$retval = new WP_Error(
+				'bp_rest_user_reaction_invalid_user_id',
+				__( 'You cannot create reactions on behalf of another user.', 'buddyboss' ),
+				array(
+					'status' => 403,
+				)
+			);
 		} else {
 			$retval = true;
 		}
@@ -753,7 +761,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
-			'enum'              => array_column( bb_load_reaction()->bb_get_reactions( bb_get_reaction_mode() ), 'id' )
+			'enum'              => array_column( bb_load_reaction()->bb_get_reactions( bb_get_reaction_mode() ), 'id' ),
 		);
 
 		$params['item_type'] = array(
@@ -761,7 +769,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 			'type'              => 'string',
 			'sanitize_callback' => 'sanitize_key',
 			'validate_callback' => 'rest_validate_request_arg',
-			'enum'              => array_keys( bb_load_reaction()->bb_get_registered_reaction_item_types() )
+			'enum'              => array_keys( bb_load_reaction()->bb_get_registered_reaction_item_types() ),
 		);
 
 		$params['item_id'] = array(
@@ -909,5 +917,4 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 		 */
 		return apply_filters( 'bb_rest_user_reactions_schema', $this->add_additional_fields_schema( $schema ) );
 	}
-
 }

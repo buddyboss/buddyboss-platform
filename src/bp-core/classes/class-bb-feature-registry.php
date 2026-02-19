@@ -876,7 +876,6 @@ class BB_Feature_Registry {
 			$sorted = $this->features;
 			uasort( $sorted, array( $this, 'bb_compare_order' ) );
 			$this->sorted_cache['features'] = $sorted;
-			$this->sorted_cache_dirty       = false;
 		}
 		$features = $this->sorted_cache['features'];
 
