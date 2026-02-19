@@ -113,6 +113,63 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * Update album photo and video counts in single album view.
+		 * Works for both Standard and ReadyLaunch modes.
+		 *
+		 * @param {Object} albumCounts - Album count data from server response
+		 * @param {number} albumCounts.album_media_count - Number of photos
+		 * @param {number} albumCounts.album_video_count - Number of videos
+		 */
+		updateAlbumCounts: function ( albumCounts ) {
+			// Check if we're in a single album view.
+			if ( ! $( '#buddypress #bp-media-single-album' ).length ) {
+				return;
+			}
+
+			var photoCount = parseInt( albumCounts.album_media_count ) || 0;
+			var videoCount = parseInt( albumCounts.album_video_count ) || 0;
+
+			// Format number with thousands separator.
+			var formatNumber = function( num ) {
+				return num.toString().replace( /\B(?=(\d{3})+(?!\d))/g, ',' );
+			};
+
+			// Update the photo count display.
+			var $photoCountSpan = $( '#buddypress .bb-album-photo-count' );
+			if ( $photoCountSpan.length > 0 ) {
+				// Check if this is ReadyLaunch mode (has icon element).
+				if ( $photoCountSpan.find( 'i' ).length > 0 ) {
+					// ReadyLaunch mode: preserve icon, update number only.
+					$photoCountSpan.contents().filter( function() {
+						return 3 === this.nodeType;
+					} ).remove();
+					$photoCountSpan.append( formatNumber( photoCount ) );
+				} else {
+					// Standard mode: update with label.
+					var photoLabel = 1 === photoCount ? BP_Nouveau.media.i18n_strings.photo : BP_Nouveau.media.i18n_strings.photos;
+					$photoCountSpan.text( formatNumber( photoCount ) + ' ' + photoLabel );
+				}
+			}
+
+			// Update the video count display.
+			var $videoCountSpan = $( '#buddypress .bb-album-video-count' );
+			if ( $videoCountSpan.length > 0 ) {
+				// Check if this is ReadyLaunch mode (has icon element).
+				if ( $videoCountSpan.find( 'i' ).length > 0 ) {
+					// ReadyLaunch mode: preserve icon, update number only.
+					$videoCountSpan.contents().filter( function() {
+						return 3 === this.nodeType;
+					} ).remove();
+					$videoCountSpan.append( formatNumber( videoCount ) );
+				} else {
+					// Standard mode: update with label.
+					var videoLabel = 1 === videoCount ? BP_Nouveau.media.i18n_strings.video : BP_Nouveau.media.i18n_strings.videos;
+					$videoCountSpan.text( formatNumber( videoCount ) + ' ' + videoLabel );
+				}
+			}
+		},
+
+		/**
 		 * Check if ffmpeg thumbnail generation is still in progress.
 		 * Returns true only if ffmpeg_generated has a value that is not 'no', 'yes', or empty.
 		 *
@@ -501,6 +558,12 @@ window.bp = window.bp || {};
 									$buddypress.find( '.video-type-navs ul.video-nav li#video-personal a span.count' ).text( response.data.video_personal_count );
 									$buddypress.find( '.video-type-navs ul.video-nav li#video-groups a span.count' ).text( response.data.video_group_count );
 								}
+
+								// Update album counts if uploading to an album.
+								if ( response.data.album_total_count !== undefined ) {
+									self.updateAlbumCounts( response.data );
+									}
+
 								var videoLength = self.dropzone_video.length;
 								for ( var i = 0; i < videoLength; i++ ) {
 									self.dropzone_video[ i ].saved = true;
@@ -575,6 +638,28 @@ window.bp = window.bp || {};
 									}
 								);
 
+								// Update album counts for both source and destination albums if present.
+								if ( response.data.source_album_id !== undefined || response.data.dest_album_id !== undefined ) {
+									var $albumContainer = $( '#buddypress #bp-media-single-album' );
+									if ( $albumContainer.length ) {
+										// Determine which album we're currently viewing from the DOM (ReadyLaunch uses data-id).
+										var currentAlbumId = parseInt( $albumContainer.attr( 'data-id' ) || $albumContainer.attr( 'data-album-id' ) ) || 0;
+										var albumCounts = {};
+
+										// If we're viewing the source album, use source counts (item was removed).
+										// If we're viewing the destination album, use dest counts (item was added).
+										if ( currentAlbumId === response.data.source_album_id ) {
+											albumCounts.album_media_count = response.data.source_album_media_count;
+											albumCounts.album_video_count = response.data.source_album_video_count;
+										} else if ( currentAlbumId === response.data.dest_album_id ) {
+											albumCounts.album_media_count = response.data.dest_album_media_count;
+											albumCounts.album_video_count = response.data.dest_album_video_count;
+										}
+
+										self.updateAlbumCounts( albumCounts );
+									}
+								}
+
 								jQuery( window ).scroll();
 
 								self.closeUploader( event );
@@ -625,6 +710,12 @@ window.bp = window.bp || {};
 
 				var videoUploader = $( '#bp-video-uploader' );
 				videoUploader.show();
+
+				// Reinitialize select2 for privacy select if not already initialized.
+				if ( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+					bp.Readylaunch.initSelect2Scoped( videoUploader );
+				}
+
 				if ( videoUploader.find( '.bb-field-steps.bb-field-steps-2' ).length ) {
 					currentTarget       = '#bp-video-uploader.bp-video-uploader';
 					var albumSelectedId = $( currentTarget ).find( '.bb-rl-album-selected-id' ).val();
@@ -700,11 +791,11 @@ window.bp = window.bp || {};
 						var mediaPrivacy = eventCurrentTarget.closest( '#bp-video-uploader' ).find( '#bb-video-privacy' );
 						if ( Number( eventCurrentTarget.data( 'id' ) ) !== 0 ) {
 							mediaPrivacy.find( 'option' ).removeAttr( 'selected' );
-							mediaPrivacy.val( eventCurrentTarget.parent().data( 'privacy' ) );
+							mediaPrivacy.val( eventCurrentTarget.parent().data( 'privacy' ) ).trigger( 'change' );
 							mediaPrivacy.prop( 'disabled', true );
 						} else {
 							mediaPrivacy.find( 'option' ).removeAttr( 'selected' );
-							mediaPrivacy.val( 'public' );
+							mediaPrivacy.val( 'public' ).trigger( 'change' );
 							mediaPrivacy.prop( 'disabled', false );
 						}
 					}
@@ -736,11 +827,11 @@ window.bp = window.bp || {};
 						var selectedAlbumPrivacy = eventCurrentTarget.closest( '#bp-video-uploader' ).find( '.location-album-list li.is_active' ).data( 'privacy' );
 						if ( Number( fieldWrapElem.find( '.bb-rl-album-selected-id' ).val() ) !== 0 ) {
 							mediaPrivacy.find( 'option' ).removeAttr( 'selected' );
-							mediaPrivacy.val( selectedAlbumPrivacy === undefined ? 'public' : selectedAlbumPrivacy );
+							mediaPrivacy.val( selectedAlbumPrivacy === undefined ? 'public' : selectedAlbumPrivacy ).trigger( 'change' );
 							mediaPrivacy.prop( 'disabled', true );
 						} else {
 							mediaPrivacy.find( 'option' ).removeAttr( 'selected' );
-							mediaPrivacy.val( 'public' );
+							mediaPrivacy.val( 'public' ).trigger( 'change' );
 							mediaPrivacy.prop( 'disabled', false );
 						}
 					}
@@ -1261,7 +1352,7 @@ window.bp = window.bp || {};
 							// Do NOT clear the list - we want to keep any existing thumbnails from default_images.
 							// Use flag to prevent multiple cleanup executions from overlapping AJAX requests.
 							var ffmpegDone = 'no' === response.data.ffmpeg_generated || 'yes' === response.data.ffmpeg_generated || '' === response.data.ffmpeg_generated;
-							
+
 							if ( ffmpegDone && ! bp.Nouveau.Video.thumbnail_cleanup_complete ) {
 								bp.Nouveau.Video.thumbnail_cleanup_complete = true;
 								// Stop the polling interval - no more thumbnails will be generated.
@@ -1342,6 +1433,11 @@ window.bp = window.bp || {};
 
 			if ( typeof window.Dropzone !== 'undefined' && $( 'div#video-album-uploader' ).length ) {
 				$( '#bp-video-uploader' ).show();
+
+				// Reinitialize select2 for privacy select if not already initialized.
+				if ( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+					bp.Readylaunch.initSelect2Scoped( $( '#bp-video-uploader' ) );
+				}
 
 				self.video_dropzone_obj = new Dropzone( 'div#video-album-uploader', self.videoOptions );
 
@@ -1693,6 +1789,11 @@ window.bp = window.bp || {};
 											}
 										);
 									}
+
+									// Update album counts if deleting from an album.
+									if ( response.data.album_total_count !== undefined ) {
+										self.updateAlbumCounts( response.data );
+										}
 								}
 							}
 						} else {
@@ -1850,7 +1951,20 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			this.openAlbumUploader( event );
-			$( '#bp-video-create-album' ).show();
+			var $createAlbum = $( '#bp-video-create-album' );
+			$createAlbum.show();
+
+			// Reinitialize select2 for album privacy select after delay to ensure DOM is ready.
+			// Using 250ms to run after any ajaxComplete handlers (which have 100ms delay).
+			if ( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+				setTimeout( function () {
+					// Only initialize if not already initialized.
+					var $select = $createAlbum.find( '.bb-rl-filter select' );
+					if ( $select.length && ! $select.hasClass( 'select2-hidden-accessible' ) ) {
+						bp.Readylaunch.initSelect2Scoped( $createAlbum );
+					}
+				}, 250 );
+			}
 		},
 
 		closeCreateVideoAlbumModal: function ( event ) {
@@ -2899,27 +3013,27 @@ window.bp = window.bp || {};
 		/**
 		 * Pause all YouTube/Vimeo iframe embeds in activity posts
 		 * This prevents YouTube videos from playing when Video.js videos are active
-		 * 
+		 *
 		 * @param {boolean} quiet - If true, suppresses debug logs
 		 * @param {string} additionalSelector - Optional additional CSS selector for iframes (e.g., '.bb-rl-activity-video-elem iframe')
 		 */
 		pauseEmbeddedVideos: function( quiet, additionalSelector ) {
 			quiet = quiet || false;
 			additionalSelector = additionalSelector || '.bb-rl-activity-video-elem iframe';
-			
+
 			// Base selector for activity iframes
 			var baseSelector = '.activity-list iframe, .activity-item iframe, .bb-activity-video-elem iframe';
 			// Append additional selector if provided
 			var selector = additionalSelector ? baseSelector + ', ' + additionalSelector : baseSelector;
-			
+
 			// Find all YouTube and Vimeo iframes in activity posts
 			var iframes = $( selector );
-			
+
 			iframes.each(
 				function() {
 					var $iframe = $( this );
 					var src = $iframe.attr( 'src' ) || '';
-					
+
 					// Check if it's a YouTube or Vimeo iframe
 					if ( src.indexOf( 'youtube.com' ) !== -1 || src.indexOf( 'youtu.be' ) !== -1 || src.indexOf( 'vimeo.com' ) !== -1 ) {
 						try {
@@ -2927,40 +3041,40 @@ window.bp = window.bp || {};
 							var isYouTube = src.indexOf( 'youtube.com' ) !== -1 || src.indexOf( 'youtu.be' ) !== -1;
 							var hasEnableJsApi = src.indexOf( 'enablejsapi=1' ) !== -1;
 							var hasAutoplay = src.indexOf( 'autoplay=1' ) !== -1;
-							
+
 							// For YouTube: Try postMessage first
 							if ( isYouTube && iframe.contentWindow ) {
 								// Always try postMessage first
 								iframe.contentWindow.postMessage( '{"event":"command","func":"pauseVideo","args":""}', '*' );
-								
+
 								setTimeout( function() {
 									if ( iframe.contentWindow ) {
 										iframe.contentWindow.postMessage( '{"event":"command","func":"stopVideo","args":""}', '*' );
 									}
 								}, 100 );
 							}
-							
+
 							// Only reload iframe if we need to add enablejsapi=1 (required for postMessage to work reliably)
 							// If enablejsapi is already present, we can use postMessage without reloading
 							if ( isYouTube && ! hasEnableJsApi ) {
 								var newSrc = src;
 								var separator = src.indexOf( '?' ) !== -1 ? '&' : '?';
 								newSrc = src + separator + 'enablejsapi=1';
-								
+
 								// While we're reloading, also remove autoplay if present
 								if ( hasAutoplay ) {
 									newSrc = newSrc.replace( /[?&]autoplay=1(&|$)/g, '$1' );
 									newSrc = newSrc.replace( /^([^?]*)\?&/, '$1?' );
 								}
-								
+
 								// Reload iframe with enablejsapi=1
 								$iframe.attr( 'src', newSrc );
-								
+
 								// Wait for iframe to reload, then send pause commands
 								setTimeout( function() {
 									if ( iframe.contentWindow ) {
 										iframe.contentWindow.postMessage( '{"event":"command","func":"pauseVideo","args":""}', '*' );
-										
+
 										setTimeout( function() {
 											if ( iframe.contentWindow ) {
 												iframe.contentWindow.postMessage( '{"event":"command","func":"stopVideo","args":""}', '*' );
@@ -2994,7 +3108,7 @@ window.bp = window.bp || {};
 		 * Setup picture-in-picture event handlers for a video element
 		 * NOTE: This function is identical to the one in buddypress-video.js
 		 * Keep both in sync - any changes must be made in both files
-		 * 
+		 *
 		 * @param {HTMLElement} videoElement - The video element to setup PiP handlers for
 		 */
 		setupPictureInPictureHandlers: function( videoElement ) {
@@ -3112,7 +3226,7 @@ window.bp = window.bp || {};
 		addListeners: function () {
 
 			$( document ).on( 'click', '.video-js', this.openPlayer.bind( this ) );
-			
+
 			// Global listener for any clicks that might trigger YouTube videos
 			// This catches clicks even in picture-in-picture windows
 			// Namespaced for potential cleanup: .video-player
@@ -3125,7 +3239,7 @@ window.bp = window.bp || {};
 					}, 50 );
 				}
 			} );
-			
+
 			// Listen for any iframe load events (YouTube might reload when we change src)
 			// Namespaced for potential cleanup: .video-player
 			$( document ).on( 'load.video-player', 'iframe[src*="youtube"], iframe[src*="youtu.be"]', function() {
@@ -3177,12 +3291,12 @@ window.bp = window.bp || {};
 											}
 										}
 									);
-									
+
 									// Pause YouTube/Vimeo iframes
 									bp.Nouveau.Video.Player.pauseEmbeddedVideos();
 								}
 							);
-							
+
 							// Handle picture-in-picture events (only if PiP is supported)
 							var videoElement = this.el().querySelector( 'video' );
 							if ( videoElement ) {

@@ -3682,6 +3682,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				! (
 					bp_is_active( 'forums' ) &&
 					bbp_is_single_user()
+				) &&
+				! (
+					bp_is_active( 'forums' ) &&
+					bp_is_active( 'activity' ) &&
+					bp_is_activity_component()
 				)
 			) {
 				return;
