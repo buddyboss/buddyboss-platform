@@ -32,7 +32,9 @@ function bb_groups_register_images_panel_fields() {
 		)
 	);
 
-	// FIELD: Group Avatars (inverted — legacy stores "disable" but we display "enable").
+	// FIELD: Group Avatars.
+	// `invert_value`: Legacy DB stores 1 = disabled. Toggle shows "Enable", so invert for display.
+	// Raw DB value preserved for backward compatibility with `bp_disable_group_avatar_uploads()`.
 	bb_register_feature_field(
 		'groups',
 		'group_images',
@@ -108,7 +110,9 @@ function bb_groups_register_images_panel_fields() {
 		)
 	);
 
-	// FIELD: Group Cover Image (inverted — legacy stores "disable").
+	// FIELD: Group Cover Image.
+	// `invert_value`: Legacy DB stores 1 = disabled. Toggle shows "Enable", so invert for display.
+	// Raw DB value preserved for backward compatibility with `bp_disable_group_cover_image_uploads()`.
 	bb_register_feature_field(
 		'groups',
 		'group_images',

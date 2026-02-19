@@ -32,7 +32,9 @@ function bb_groups_register_settings_panel_fields() {
 		)
 	);
 
-	// FIELD: Group Creation (inverted — legacy stores "restrict" but we display "allow all").
+	// FIELD: Group Creation.
+	// `invert_value`: Legacy DB stores 1 = restricted. Toggle shows "Enable", so invert for display.
+	// Raw DB value preserved for backward compatibility with `bp_restrict_group_creation()`.
 	bb_register_feature_field(
 		'groups',
 		'group_settings',
@@ -73,7 +75,9 @@ function bb_groups_register_settings_panel_fields() {
 		);
 	}
 
-	// FIELD: Group Messages (conditional on messages active, inverted logic).
+	// FIELD: Group Messages (conditional on messages active).
+	// Note: Despite the option name "bp-disable-group-messages", the legacy UI treats
+	// value 1 as "Allow group messages" (checked). No inversion is needed.
 	if ( bp_is_active( 'messages' ) ) {
 		bb_register_feature_field(
 			'groups',
@@ -86,7 +90,6 @@ function bb_groups_register_settings_panel_fields() {
 				'description'       => __( 'Allow for sending group messages to group members', 'buddyboss' ),
 				'default'           => bp_disable_group_messages(),
 				'sanitize_callback' => 'intval',
-				'invert_value'      => true,
 				'order'             => 30,
 			)
 		);
