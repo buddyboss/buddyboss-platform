@@ -138,7 +138,7 @@ function bb_admin_settings_register_reactions_settings() {
 	// -------------------------------------------------------------------------
 
 	/**
-	 * Fires to allow Pro plugin to register conversion notice.
+	 * Fires to allow the Pro plugin to register conversion notice.
 	 * Pro plugin checks for unconverted likes and registers the notice if needed.
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -220,9 +220,9 @@ function bb_admin_settings_register_reactions_settings() {
 	// -------------------------------------------------------------------------
 	// FIELD: Reaction Button (icon + text customization, Pro-only)
 	// -------------------------------------------------------------------------
-	$button_settings       = function_exists( 'bb_reaction_button_options' ) ? bb_reaction_button_options() : array();
-	$button_icon           = isset( $button_settings['icon'] ) ? $button_settings['icon'] : 'thumbs-up';
-	$button_text           = isset( $button_settings['text'] ) ? trim( $button_settings['text'] ) : __( 'Like', 'buddyboss' );
+	$button_settings        = function_exists( 'bb_reaction_button_options' ) ? bb_reaction_button_options() : array();
+	$button_icon            = isset( $button_settings['icon'] ) ? $button_settings['icon'] : 'thumbs-up';
+	$button_text            = isset( $button_settings['text'] ) ? trim( $button_settings['text'] ) : __( 'Like', 'buddyboss' );
 	$field_reactions_button = isset( $reaction_titles['bb_reactions_button'] ) ? $reaction_titles['bb_reactions_button'] : array();
 
 	$reactions_button_field_args = array(
@@ -259,7 +259,7 @@ function bb_admin_settings_register_reactions_settings() {
 	);
 
 	/**
-	 * Fires after reactions settings fields are registered.
+	 * Fires after reaction settings fields are registered.
 	 * Allows third-party extensions to add more fields.
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -268,4 +268,3 @@ function bb_admin_settings_register_reactions_settings() {
 }
 
 add_action( 'bb_register_features', 'bb_admin_settings_register_reactions_settings', 20 );
-

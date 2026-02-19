@@ -329,7 +329,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			}
 
 			$existing_reaction = get_posts( $args );
-			if( ! empty( $existing_reaction ) ) {
+			if ( ! empty( $existing_reaction ) ) {
 				$existing_reaction = current( $existing_reaction );
 				if ( is_a( $existing_reaction, 'WP_Post' ) ) {
 					return $existing_reaction->ID;
@@ -365,13 +365,13 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			if ( ! is_wp_error( $reaction_id ) && ! empty( $reaction_id ) ) {
 
 				if ( ! empty( $r['mode'] ) ) {
-					if ( $r['mode'] === 'emotions' ) {
+					if ( 'emotions' === $r['mode'] ) {
 						update_post_meta( $reaction_id, 'is_emotion', true );
 
 						if ( isset( $r['is_emotion_active'] ) ) {
 							update_post_meta( $reaction_id, 'is_emotion_active', (bool) $r['is_emotion_active'] );
 						}
-					} elseif ( $r['mode'] === 'likes' ) {
+					} elseif ( 'likes' === $r['mode'] ) {
 						update_post_meta( $reaction_id, 'is_like', true );
 					}
 				}
@@ -452,13 +452,13 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			if ( ! is_wp_error( $reaction_id ) && ! empty( $reaction_id ) ) {
 
 				if ( ! empty( $r['mode'] ) ) {
-					if ( $r['mode'] === 'emotions' ) {
+					if ( 'emotions' === $r['mode'] ) {
 						update_post_meta( $reaction_id, 'is_emotion', true );
 
 						if ( isset( $r['is_emotion_active'] ) ) {
 							update_post_meta( $reaction_id, 'is_emotion_active', (bool) $r['is_emotion_active'] );
 						}
-					} elseif ( $r['mode'] === 'likes' ) {
+					} elseif ( 'likes' === $r['mode'] ) {
 						update_post_meta( $reaction_id, 'is_like', true );
 					}
 				}
@@ -524,9 +524,9 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 						$all_reactions,
 						function ( $reaction ) use ( $mode, $is_active ) {
 							if (
-								( $mode === 'likes' && $reaction['is_like'] ) ||
+								( 'likes' === $mode && $reaction['is_like'] ) ||
 								(
-									$mode === 'emotions' &&
+									'emotions' === $mode &&
 									$reaction['is_emotion'] &&
 									(
 										! $is_active ||
@@ -723,7 +723,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 					'validate_action' => 'reaction',
 				)
 			);
-		
+
 			// Bail if activity privacy restrict.
 			if ( is_wp_error( $privacy_check ) ) {
 				return ( 'wp_error' === $r['error_type'] ) ? $privacy_check : false;
@@ -1095,23 +1095,21 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				} else {
 					$where_conditions['reaction_id'] = '1=0';
 				}
-			} else {
 				// If no reaction_id is specified, get all reactions having active emotions.
-				if ( bb_is_reaction_emotions_enabled() ) {
-					$reactions      = $this->bb_get_reactions( 'emotions' );
-					$reaction_id_in = implode( ',', wp_list_pluck( $reactions, 'id' ) );
-					if ( ! empty( $reaction_id_in ) ) {
-						$where_conditions['reaction_id'] = "ur.reaction_id IN ({$reaction_id_in})";
-					} else {
-						$where_conditions['reaction_id'] = '1=0';
-					}
+			} elseif ( bb_is_reaction_emotions_enabled() ) {
+				$reactions      = $this->bb_get_reactions( 'emotions' );
+				$reaction_id_in = implode( ',', wp_list_pluck( $reactions, 'id' ) );
+				if ( ! empty( $reaction_id_in ) ) {
+					$where_conditions['reaction_id'] = "ur.reaction_id IN ({$reaction_id_in})";
 				} else {
-					$reaction_id_in = $this->bb_reactions_get_like_reaction_id();
-					if ( ! empty( $reaction_id_in ) ) {
-						$where_conditions['reaction_id'] = "ur.reaction_id = {$reaction_id_in}";
-					} else {
-						$where_conditions['reaction_id'] = '1=0';
-					}
+					$where_conditions['reaction_id'] = '1=0';
+				}
+			} else {
+				$reaction_id_in = $this->bb_reactions_get_like_reaction_id();
+				if ( ! empty( $reaction_id_in ) ) {
+					$where_conditions['reaction_id'] = "ur.reaction_id = {$reaction_id_in}";
+				} else {
+					$where_conditions['reaction_id'] = '1=0';
 				}
 			}
 
@@ -1122,7 +1120,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			}
 
 			if ( ! empty( $r['item_type'] ) ) {
-				$where_conditions['item_type'] = "ur.item_type = '" . $r['item_type'] . "'";
+				$where_conditions['item_type'] = $wpdb->prepare( 'ur.item_type = %s', $r['item_type'] );
 			}
 
 			/**
@@ -1614,9 +1612,9 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 
 			$reactions_data = $this->bb_get_reactions_data( $r );
 			if ( ! empty( $reactions_data['reaction_data'] ) ) {
-				$reaction_data = current( $reactions_data['reaction_data'] );
+				$reaction_data    = current( $reactions_data['reaction_data'] );
 				$reaction_data_id = $reaction_data->id;
-				$sql = $wpdb->prepare(
+				$sql              = $wpdb->prepare(
 					// phpcs:ignore
 					'UPDATE ' . self::$reaction_data_table . ' SET
                         value = %s,
@@ -2035,7 +2033,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				'text_color'        => '',
 				'notification_text' => 'Likes',
 				'icon_path'         => '',
-				'mode'              => 'likes'
+				'mode'              => 'likes',
 			);
 
 			if ( empty( $reaction_id ) ) {
@@ -2104,8 +2102,8 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			}
 
 			if ( bb_is_reaction_emotions_enabled() ) {
-				$reactions   = $this->bb_get_reactions( 'emotions' );
-				$reaction    = current( $reactions );
+				$reactions                     = $this->bb_get_reactions( 'emotions' );
+				$reaction                      = current( $reactions );
 				$reaction_id[ $reaction_mode ] = $reaction['id'];
 			} else {
 				$reaction_id[ $reaction_mode ] = $this->bb_reactions_get_like_reaction_id();

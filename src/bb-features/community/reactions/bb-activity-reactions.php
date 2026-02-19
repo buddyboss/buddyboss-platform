@@ -153,8 +153,8 @@ function bb_activity_prepare_web_emotions() {
 				%s
 				</a>
 			</div>',
-			$emotion['id'],
-			$emotion['icon_text'],
+			esc_attr( $emotion['id'] ),
+			esc_attr( $emotion['icon_text'] ),
 			$icon,
 		);
 	}
@@ -231,7 +231,7 @@ function bb_get_activity_most_reactions( $item_id = 0, $item_type = 'activity', 
 			'count' => $reaction_count,
 		);
 
-		$no_of_reactions --;
+		--$no_of_reactions;
 	}
 
 	return apply_filters( 'bb_get_activity_most_reactions', $reactions );
@@ -275,7 +275,7 @@ function bb_get_activity_post_reaction_button_html( $item_id, $item_type = 'acti
 	$button_args = array(
 		'reaction_link'         => $reaction_link,
 		'icon_text'             => ! empty( $prepared_icon['icon_text'] ) ? $prepared_icon['icon_text'] : esc_html__( 'Like', 'buddyboss' ),
-		'icon_html'             => $item_type === 'activity' ? $prepared_icon['icon_html'] : '',
+		'icon_html'             => 'activity' === $item_type ? $prepared_icon['icon_html'] : '',
 		'text_color'            => ! empty( $reaction_data['text_color'] ) ? esc_attr( 'color:' . $reaction_data['text_color'] ) : '',
 		'reaction_button_class' => $reaction_button_class,
 		'reaction_id'           => $reaction_id,
@@ -284,19 +284,20 @@ function bb_get_activity_post_reaction_button_html( $item_id, $item_type = 'acti
 		'has_reacted'           => $has_reacted,
 	);
 
-	return apply_filters( 'bb_get_activity_reaction_button_html',
+	return apply_filters(
+		'bb_get_activity_reaction_button_html',
 		sprintf(
 			'<a href="%1$s" class="button bp-like-button bp-secondary-action %5$s" data-pressed="false" data-reacted-id="%6$s">
 			<span class="bp-screen-reader-text">%2$s</span>
 			%3$s
 			<span class="like-count reactions_item" style="%4$s">%2$s</span>
 		</a>',
-			$button_args['reaction_link'],
-			$button_args['icon_text'],
+			esc_url( $button_args['reaction_link'] ),
+			esc_html( $button_args['icon_text'] ),
 			$button_args['icon_html'],
-			$button_args['text_color'],
-			$button_args['reaction_button_class'],
-			$button_args['reaction_id']
+			esc_attr( $button_args['text_color'] ),
+			esc_attr( $button_args['reaction_button_class'] ),
+			esc_attr( $button_args['reaction_id'] )
 		),
 		$button_args
 	);
@@ -355,7 +356,7 @@ function bb_get_activity_post_user_reactions_html( $activity_id, $item_type = 'a
 	if ( $is_popup ) {
 		$output .= '<div class="activity-state-popup">
 				<div class="activity-state-popup_overlay"></div>
-				<div class="activity-state-popup_inner" id="reaction-content-' . $activity_id . '">
+				<div class="activity-state-popup_inner" id="reaction-content-' . esc_attr( $activity_id ) . '">
 				</div>
 			</div>';
 	}
@@ -469,11 +470,11 @@ function bb_get_activity_reaction_ajax_callback() {
 	}
 
 	// Nonce check!
-	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'bp_nouveau_activity' ) ) {
+	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'bp_nouveau_activity' ) ) {
 		wp_send_json_error(
 			array(
 				'message' => __( 'Nonce verification failed.', 'buddyboss' ),
-				'type'    => 'error'
+				'type'    => 'error',
 			)
 		);
 	}
@@ -482,16 +483,16 @@ function bb_get_activity_reaction_ajax_callback() {
 		wp_send_json_error(
 			array(
 				'message' => __( 'Item ID is required.', 'buddyboss' ),
-				'type'    => 'error'
+				'type'    => 'error',
 			)
 		);
 	}
 
-	$item_id     = sanitize_text_field( $_POST['item_id'] );
-	$item_type   = sanitize_text_field( $_POST['item_type'] );
-	$paged       = ! empty( $_POST['page'] ) ? (int) sanitize_text_field( $_POST['page'] ) : 1;
-	$reaction_id = ! empty( $_POST['reaction_id'] ) ? (int) sanitize_text_field( $_POST['reaction_id'] ) : 0;
-	$before      = ! empty( $_POST['before'] ) ? (int) sanitize_text_field( $_POST['before'] ) : 0;
+	$item_id     = sanitize_text_field( wp_unslash( $_POST['item_id'] ) );
+	$item_type   = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : '';
+	$paged       = ! empty( $_POST['page'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['page'] ) ) : 1;
+	$reaction_id = ! empty( $_POST['reaction_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['reaction_id'] ) ) : 0;
+	$before      = ! empty( $_POST['before'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['before'] ) ) : 0;
 	$per_page    = 20; // Fixed per page.
 
 	if ( 1 === $paged && empty( $reaction_id ) ) {
@@ -500,7 +501,7 @@ function bb_get_activity_reaction_ajax_callback() {
 			wp_send_json_error(
 				array(
 					'message' => __( 'No reactions found!', 'buddyboss' ),
-					'type'    => 'info'
+					'type'    => 'info',
 				)
 			);
 		}
@@ -513,7 +514,7 @@ function bb_get_activity_reaction_ajax_callback() {
 			$popup_heading = __( 'Likes', 'buddyboss' );
 		}
 
-		$all_emotions  = bb_active_reactions();
+		$all_emotions = bb_active_reactions();
 
 		foreach ( $most_reacted as $reaction ) {
 			$tab                     = ! empty( $all_emotions[ $reaction['id'] ] ) ? $all_emotions[ $reaction['id'] ] : array();
@@ -544,7 +545,7 @@ function bb_get_activity_reaction_ajax_callback() {
 			);
 
 			$tab_content         = $current_reacted['reactions'];
-			$popup_heading       = 'likes' === strtolower( $current_tabs['name'] ) && ! bb_is_reaction_emotions_enabled() ? $popup_heading : $current_tabs['icon_text'];
+			$popup_heading       = 'likes' === strtolower( $current_tabs['name'] ) && ! bb_is_reaction_emotions_enabled() ? $popup_heading : esc_html( $current_tabs['icon_text'] );
 			$popup_heading_count = $current_tabs['total_count'];
 			$total_pages         = $current_tabs['total_pages'];
 
@@ -557,7 +558,7 @@ function bb_get_activity_reaction_ajax_callback() {
 					'item_type' => $item_type,
 					'paged'     => $paged,
 					'per_page'  => $per_page,
-					'before'      => $before,
+					'before'    => $before,
 				)
 			);
 			$tab_content = $all_reacted['reactions'];
@@ -657,7 +658,7 @@ function bb_activity_reaction_names_and_count( $activity_id, $activity_type = 'a
 
 	$is_current_user_reacted = false;
 	$current_logged_user_id  = get_current_user_id();
-	$current_key             = array_search( $current_logged_user_id, $reacted_users );
+	$current_key             = array_search( $current_logged_user_id, $reacted_users, true );
 
 	if ( ! empty( $current_logged_user_id ) && false !== $current_key ) {
 		$is_current_user_reacted = true;
@@ -725,36 +726,37 @@ function bb_activity_reaction_names_and_count( $activity_id, $activity_type = 'a
 	$display_names = array();
 	if ( true === $is_current_user_reacted ) {
 		$display_names[] = esc_html__( 'You', 'buddyboss' );
-		$name_count--;
+		--$name_count;
 	}
 
 	if ( ! empty( $reacted_users ) ) {
-		$user_keys = [];
+		$user_keys = array();
 		foreach ( $reacted_users as $k => $user_id ) {
 			if ( 0 === $name_count ) {
 				break;
 			}
 
-			$user_keys[] = $k;
+			$user_keys[]     = $k;
 			$display_names[] = bp_core_get_user_displayname( $user_id );
-			$name_count --;
+			--$name_count;
 		}
 
 		$reacted_users = array_diff_key( $reacted_users, array_flip( $user_keys ) );
 	}
 
 	if ( ! empty( $reacted_users ) && count( $reacted_users ) > 0 ) {
-		if ( count( $reacted_users ) === 1 ) {
+		if ( 1 === count( $reacted_users ) ) {
 			$display_names[] = bp_core_get_user_displayname( current( $reacted_users ) );
 		} else {
 			$display_names[] = sprintf(
+				/* translators: %s: Number of other users who reacted. */
 				__( '%s others', 'buddyboss' ),
 				bb_format_reaction_count( count( $reacted_users ) )
 			);
 		}
 	}
 
-	// Get all names except the last one
+	// Get all names except the last one.
 	$names_except_last = array_slice( $display_names, 0, - 1 );
 
 	// Concatenate names with commas.
@@ -954,7 +956,8 @@ function bb_activity_prepare_emotion_icon( $reaction_id ) {
 	} else {
 		$settings  = bb_get_reaction_button_settings();
 		$icon_html = ! empty( $settings['icon'] ) ?
-			sprintf( '<i class="bb-icon-%s"></i>',
+			sprintf(
+				'<i class="bb-icon-%s"></i>',
 				esc_attr( $settings['icon'] )
 			) :
 			'<i class="bb-icon-thumbs-up"></i>';
