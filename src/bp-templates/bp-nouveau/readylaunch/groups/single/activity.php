@@ -28,6 +28,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 
 <?php bp_nouveau_group_hook( 'before', 'activity_content' ); ?>
 
+<div class="bb-rl-screen-content">
 <div id="bb-rl-activity-stream" class="activity single-group" data-bp-list="activity" data-ajax="<?php echo esc_attr( $is_send_ajax_request ? 'true' : 'false' ); ?>">
 	<?php
 	if ( $is_send_ajax_request ) {
@@ -60,6 +61,7 @@ $is_send_ajax_request = bb_is_send_ajax_request();
 	}
 	?>
 </div><!-- .activity -->
+</div><!-- .bb-rl-screen-content -->
 
 <?php
 bp_nouveau_group_hook( 'after', 'activity_content' );
