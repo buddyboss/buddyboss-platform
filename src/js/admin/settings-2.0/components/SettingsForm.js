@@ -87,6 +87,11 @@ export function SettingsForm({ fields, values, onChange }) {
 				return isTruthy === expectedValue;
 			}
 
+			// When expected value is an array, check if current value is in the array.
+			if (Array.isArray(expectedValue)) {
+				return expectedValue.indexOf(condValue) !== -1;
+			}
+
 			// For non-boolean values, use strict comparison.
 			return condValue === expectedValue;
 		}

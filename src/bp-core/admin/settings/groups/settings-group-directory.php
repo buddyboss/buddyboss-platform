@@ -50,11 +50,11 @@ function bb_groups_register_directory_panel_fields() {
 					'value' => 'list_grid',
 				),
 				array(
-					'label' => __( 'Grid only', 'buddyboss' ),
+					'label' => __( 'Grid', 'buddyboss' ),
 					'value' => 'grid',
 				),
 				array(
-					'label' => __( 'List only', 'buddyboss' ),
+					'label' => __( 'List', 'buddyboss' ),
 					'value' => 'list',
 				),
 			),
@@ -93,6 +93,7 @@ function bb_groups_register_directory_panel_fields() {
 	);
 
 	// FIELD: Grid Style (Pro only, image_radio).
+	// Visible when layout includes grid view (list_grid or grid), hidden for list-only.
 	bb_register_feature_field(
 		'groups',
 		'group_directory',
@@ -117,6 +118,10 @@ function bb_groups_register_directory_panel_fields() {
 				),
 			),
 			'pro_only'          => true,
+			'conditional'       => array(
+				'field' => 'bp-group-layout-format',
+				'value' => array( 'list_grid', 'grid' ),
+			),
 			'order'             => 30,
 		)
 	);
