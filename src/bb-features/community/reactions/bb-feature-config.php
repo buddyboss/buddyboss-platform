@@ -30,8 +30,6 @@ bb_register_feature(
 		'category'           => 'community',
 		'standalone'         => true,
 		'php_loader'         => function () {
-			// Note: Core functions are loaded separately to ensure availability.
-			// This loader only loads UI/admin components when feature is active.
 			require_once __DIR__ . '/loader.php';
 		},
 		'settings_route'     => '/settings/reactions',
@@ -50,54 +48,6 @@ bb_register_feature(
 			return ! empty( $active_features['reactions'] );
 		},
 	)
-);
-
-// Load reactions core when activity and like/reactions feature are active.
-add_action(
-	'bp_loaded',
-	function () {
-		if ( ! bp_is_active( 'activity' ) || ! bp_is_activity_like_active() ) {
-			return;
-		}
-
-		// Load class definitions.
-		if ( file_exists( __DIR__ . '/classes/class-bb-reaction.php' ) ) {
-			require_once __DIR__ . '/classes/class-bb-reaction.php';
-		}
-
-		// Only load REST endpoint class when the API plugin is not active (it provides its own copy).
-		if ( function_exists( 'bp_rest_in_buddypress' ) && bp_rest_in_buddypress() && file_exists( __DIR__ . '/classes/class-bb-rest-reactions-endpoint.php' ) ) {
-			require_once __DIR__ . '/classes/class-bb-rest-reactions-endpoint.php';
-		}
-
-		// Load reaction functions (AJAX handlers, template helpers, etc.).
-		if ( file_exists( __DIR__ . '/bb-activity-reactions.php' ) ) {
-			require_once __DIR__ . '/bb-activity-reactions.php';
-		}
-
-		// Initialize the reaction system on 'init' to ensure WordPress is fully loaded.
-		add_action(
-			'init',
-			function () {
-				if ( function_exists( 'bb_load_reaction' ) ) {
-					bb_load_reaction();
-				}
-			},
-			5
-		);
-	},
-	5
-);
-
-// Register Reactions REST API endpoint (only when API plugin is not active).
-add_action(
-	'bp_rest_api_init',
-	function () {
-		if ( bp_rest_in_buddypress() && class_exists( 'BB_REST_Reactions_Endpoint' ) ) {
-			$controller = new BB_REST_Reactions_Endpoint();
-			$controller->register_routes();
-		}
-	}
 );
 
 // Load Settings 2.0 configuration (side panels, sections, fields).
