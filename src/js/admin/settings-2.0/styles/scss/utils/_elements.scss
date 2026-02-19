@@ -376,6 +376,14 @@ select.bb-admin-settings__select {
 		width: 100%;
 	}
 
+	&.bb-topic-delete-modal {
+		max-width: 550px;
+	}
+
+	&.bb-topic-modal {
+		max-width: 680px;
+	}
+
 	.components-modal__header {
 		padding: 10px 24px;
 		height: auto;

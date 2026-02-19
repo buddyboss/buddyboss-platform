@@ -359,6 +359,7 @@ class BB_Admin_Settings_Ajax {
 				'help_url'   => $side_panel['help_url'] ?? '',
 				'order'      => $side_panel['order'] ?? 100,
 				'is_default' => $side_panel['is_default'] ?? false,
+				'divider'    => ! empty( $side_panel['divider'] ),
 				'sections'   => $formatted_sections,
 			);
 		}

@@ -73,6 +73,7 @@
 
     &__actions {
         flex-shrink: 0;
+        display: flex;
 
         .components-dropdown-menu__toggle {
             display: flex;
@@ -136,6 +137,19 @@
         font-weight: 400;
         line-height: 1.5;
         margin: 12px 0 0 0;
+    }
+
+    &__delete-loading {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.1);
+        z-index: 100000;
     }
 }
 
@@ -238,7 +252,6 @@
 
     &__migrate-select {
         margin-top: 12px;
-        padding-left: 28px;
     }
 
     &__footer {

@@ -92,6 +92,12 @@
             display: flex;
         }
 
+        &__divider {
+            height: 1px;
+            background-color: $bb-border-secondary-color;
+            margin: 8px;
+        }
+
     }
 
     &__main {
@@ -208,7 +214,7 @@
             .bb-admin-settings-form__field-description {
                 margin: 0;
 
-                &--has-controls  .bb-admin-settings-form__inline-select {
+                &--has-controls .bb-admin-settings-form__inline-select {
                     margin-left: 8px;
                 }
             }
@@ -221,6 +227,10 @@
         font-weight: 400;
         line-height: 1.5;
         margin: 20px 0 0 0;
+
+        &--has-controls {
+            margin-top: 0;
+        }
     }
 
     &-head-description {
