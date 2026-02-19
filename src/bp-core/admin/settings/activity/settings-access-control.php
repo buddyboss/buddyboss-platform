@@ -81,12 +81,13 @@ function bb_activity_register_access_control_fields() {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param array $field_data Formatted field data.
- * @param array $field      Original field registration data.
+ * @param array  $field_data  Formatted field data.
+ * @param array  $field       Original field registration data.
+ * @param string $feature_id  Feature ID (e.g. 'activity', 'groups').
  *
  * @return array
  */
-function bb_access_control_enrich_field_data( $field_data, $field ) {
+function bb_access_control_enrich_field_data( $field_data, $field, $feature_id = '' ) {
 
 	if ( 'access_control' !== ( $field_data['type'] ?? '' ) ) {
 		return $field_data;
@@ -102,7 +103,7 @@ function bb_access_control_enrich_field_data( $field_data, $field ) {
 	 *
 	 * @param array  $data       Default (empty) access control data.
 	 * @param string $field_name The field option name.
-	 * @param string $feature_id Feature ID (e.g. 'activity').
+	 * @param string $feature_id Feature ID (e.g. 'activity', 'groups').
 	 */
 	$field_data['access_control_data'] = apply_filters(
 		'bb_access_control_field_data',
@@ -114,7 +115,7 @@ function bb_access_control_enrich_field_data( $field_data, $field ) {
 			'select_placeholder' => __( 'Select Role', 'buddyboss' ),
 		),
 		$field_data['name'],
-		'activity'
+		$feature_id
 	);
 
 	// Load saved value from db.
@@ -126,7 +127,7 @@ function bb_access_control_enrich_field_data( $field_data, $field ) {
 	return $field_data;
 }
 
-add_filter( 'bb_admin_settings_format_field_data', 'bb_access_control_enrich_field_data', 10, 2 );
+add_filter( 'bb_admin_settings_format_field_data', 'bb_access_control_enrich_field_data', 10, 3 );
 
 // =========================================================================
 // SANITIZE CALLBACK

@@ -615,12 +615,13 @@ class BB_Admin_Settings_Ajax {
 			 *
 			 * @since BuddyBoss [BBVERSION]
 			 *
-			 * @param array $field_data Formatted field data.
-			 * @param array $field      Original field data.
+			 * @param array  $field_data  Formatted field data.
+			 * @param array  $field       Original field data.
+			 * @param string $feature_id  Feature ID (e.g. 'activity', 'groups').
 			 *
 			 * @return array|void Formatted field data or void if no changes are needed.
 			 */
-			$field_data = apply_filters( 'bb_admin_settings_format_field_data', $field_data, $field );
+			$field_data = apply_filters( 'bb_admin_settings_format_field_data', $field_data, $field, $feature_id );
 
 			// Sanitize description and help_text for safe use with dangerouslySetInnerHTML (XSS prevention).
 			if ( isset( $field_data['description'] ) && is_string( $field_data['description'] ) ) {
