@@ -9,7 +9,7 @@
  */
 
 import { useState, useCallback, useRef } from '@wordpress/element';
-import { Button } from '@wordpress/components';
+import { Button, Spinner } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { TopicItem } from './TopicItem';
 import { TopicModal } from './TopicModal';
@@ -104,6 +104,10 @@ export function TopicListField( { field, value, values, onChange } ) {
 	var isSaving = savingState[ 0 ];
 	var setIsSaving = savingState[ 1 ];
 
+	var deleteLoadingState = useState( false );
+	var isDeleteLoading = deleteLoadingState[ 0 ];
+	var setIsDeleteLoading = deleteLoadingState[ 1 ];
+
 	var errorState = useState( '' );
 	var error = errorState[ 0 ];
 	var setError = errorState[ 1 ];
@@ -190,14 +194,14 @@ export function TopicListField( { field, value, values, onChange } ) {
 	 */
 	var handleInitiateDelete = useCallback( function ( topic ) {
 		setDeletingTopic( topic );
-		setIsSaving( true );
+		setIsDeleteLoading( true );
 		ajaxRequest( 'bb_delete_topic', {
 			topic_id: topic.topic_id,
 			item_type: 'activity',
 			item_id: 0,
 			nonce: nonces.delete || '',
 		} ).then( function ( response ) {
-			setIsSaving( false );
+			setIsDeleteLoading( false );
 			if ( response.success && response.data ) {
 				setAvailableTopics( response.data.topic_lists || [] );
 				setMigrateNonce( response.data.nonce || '' );
@@ -207,7 +211,7 @@ export function TopicListField( { field, value, values, onChange } ) {
 				setError( response.data && response.data.message ? response.data.message : __( 'Failed to initiate topic deletion.', 'buddyboss' ) );
 			}
 		} ).catch( function () {
-			setIsSaving( false );
+			setIsDeleteLoading( false );
 			setError( __( 'An error occurred while initiating topic deletion.', 'buddyboss' ) );
 		} );
 	}, [ nonces ] );
@@ -376,6 +380,12 @@ export function TopicListField( { field, value, values, onChange } ) {
 				topic={ editingTopic }
 				isSaving={ isSaving }
 			/>
+
+			{ isDeleteLoading && (
+				<div className="bb-topic-list__delete-loading">
+					<Spinner />
+				</div>
+			) }
 
 			<TopicDeleteModal
 				isOpen={ isDeleteModalOpen }
