@@ -5,6 +5,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
+import { BBIcon } from '../../../common/BBIcon';
 import {
 	DropdownMenu,
 	MenuGroup,
@@ -29,10 +30,6 @@ export function TopicItem( { topic, onEdit, onDelete, dragHandleProps, isDraggin
 	var permissionLabel = 'mods_admins' === pType || 'Admins' === pType
 		? __( 'Admins', 'buddyboss' )
 		: __( 'Anyone', 'buddyboss' );
-
-	var BBIcon = function ( { name } ) {
-		return <span className={ 'bb-icons-rl-' + name } />;
-	};
 
 	var classNames = 'bb-topic-list__item';
 	if ( isDragging ) {

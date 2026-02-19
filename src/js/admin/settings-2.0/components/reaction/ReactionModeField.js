@@ -9,13 +9,7 @@
 
 import { DropdownMenu, MenuGroup, MenuItem } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-
-/**
- * Icon component for BuddyBoss icons
- */
-const BBIcon = ({ name }) => (
-	<span className={`bb-icons-rl-${name}`} />
-);
+import { BBIcon } from '../common/BBIcon';
 
 /**
  * Reaction Mode Field Component
