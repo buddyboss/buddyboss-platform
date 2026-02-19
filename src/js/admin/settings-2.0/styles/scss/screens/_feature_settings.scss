@@ -216,11 +216,19 @@
     }
 
     &-description {
-        color: $bb-text-tertiary-color;
+        color: $bb-text-color;
         font-size: 13px;
         font-weight: 400;
         line-height: 1.5;
         margin: 20px 0 0 0;
+    }
+
+    &-head-description {
+        color: $bb-text-secondary-color;
+        font-size: 13px;
+        font-weight: 500;
+        line-height: 1.5;
+        margin: 0 0 10px;
     }
 
     &-help-text {
@@ -229,7 +237,7 @@
         font-weight: 400;
         font-style: italic;
         line-height: 1.5;
-        margin: 10x 0 0 0;
+        margin: 10px 0 0 0;
         opacity: 0.8;
         width: 100%;
     }

@@ -84,7 +84,7 @@ export function CheckboxListField( { field, value, onChange, disabled, sanitized
 		<DragDropContext onDragEnd={ handleCheckboxListDragEnd }>
 			{ field.description && (
 				<p
-					className="bb-admin-settings-form__field-description"
+					className="bb-admin-settings-form__field-head-description"
 					dangerouslySetInnerHTML={ { __html: sanitizedDescription || '' } }
 				/>
 			) }
