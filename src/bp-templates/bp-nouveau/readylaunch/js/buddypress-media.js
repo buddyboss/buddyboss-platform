@@ -212,6 +212,63 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * Update album photo and video counts in single album view.
+		 * Works for both Standard and ReadyLaunch modes.
+		 *
+		 * @param {Object} albumCounts - Album count data from server response
+		 * @param {number} albumCounts.album_media_count - Number of photos
+		 * @param {number} albumCounts.album_video_count - Number of videos
+		 */
+		updateAlbumCounts: function ( albumCounts ) {
+			// Check if we're in a single album view.
+			if ( ! $( '#buddypress #bp-media-single-album' ).length ) {
+				return;
+			}
+
+			var photoCount = parseInt( albumCounts.album_media_count ) || 0;
+			var videoCount = parseInt( albumCounts.album_video_count ) || 0;
+
+			// Format number with thousands separator.
+			var formatNumber = function( num ) {
+				return num.toString().replace( /\B(?=(\d{3})+(?!\d))/g, ',' );
+			};
+
+			// Update the photo count display.
+			var $photoCountSpan = $( '#buddypress .bb-album-photo-count' );
+			if ( $photoCountSpan.length > 0 ) {
+				// Check if this is ReadyLaunch mode (has icon element).
+				if ( $photoCountSpan.find( 'i' ).length > 0 ) {
+					// ReadyLaunch mode: preserve icon, update number only.
+					$photoCountSpan.contents().filter( function() {
+						return 3 === this.nodeType;
+					} ).remove();
+					$photoCountSpan.append( formatNumber( photoCount ) );
+				} else {
+					// Standard mode: update with label.
+					var photoLabel = 1 === photoCount ? BP_Nouveau.media.i18n_strings.photo : BP_Nouveau.media.i18n_strings.photos;
+					$photoCountSpan.text( formatNumber( photoCount ) + ' ' + photoLabel );
+				}
+			}
+
+			// Update the video count display.
+			var $videoCountSpan = $( '#buddypress .bb-album-video-count' );
+			if ( $videoCountSpan.length > 0 ) {
+				// Check if this is ReadyLaunch mode (has icon element).
+				if ( $videoCountSpan.find( 'i' ).length > 0 ) {
+					// ReadyLaunch mode: preserve icon, update number only.
+					$videoCountSpan.contents().filter( function() {
+						return 3 === this.nodeType;
+					} ).remove();
+					$videoCountSpan.append( formatNumber( videoCount ) );
+				} else {
+					// Standard mode: update with label.
+					var videoLabel = 1 === videoCount ? BP_Nouveau.media.i18n_strings.video : BP_Nouveau.media.i18n_strings.videos;
+					$videoCountSpan.text( formatNumber( videoCount ) + ' ' + videoLabel );
+				}
+			}
+		},
+
+		/**
 		 * [addListeners description]
 		 */
 		addListeners: function () {
@@ -245,7 +302,7 @@ window.bp = window.bp || {};
 			$document.on( 'click', '#bp-media-create-child-folder-submit', this.saveChildFolder.bind( this ) );
 
 			bpNouveau.on( 'click', '#bp-media-create-album-close', this.closeCreateAlbumModal.bind( this ) );
-			$document.on( 'click', '.bb-rl-media-create-folder-close', this.closeCreateFolderModal.bind( this ) );
+			$document.on( 'click', '.bb-rl-media-create-folder-close, .bb-model-close-button', this.closeCreateFolderModal.bind( this ) );
 			$document.on( 'click', '#bp-media-edit-folder-close', this.closeEditFolderModal.bind( this ) );
 			$document.on( 'click', '.open-popup .errorPopup', this.closeErrorPopup.bind( this ) );
 
@@ -285,6 +342,14 @@ window.bp = window.bp || {};
 			$document.on( 'click', '.bbpress-forums-activity #whats-new-toolbar .found-media-item', this.selectGif.bind( this ) );
 			$document.find( 'form #whats-new-toolbar, .forum form #whats-new-toolbar' ).on( 'click', '.found-media-item', this.selectGif.bind( this ) );
 			$document.find( 'form #whats-new-toolbar .gif-search-results, .forum form #whats-new-toolbar .gif-search-results' ).scroll( this.loadMoreGif.bind( this ) );
+			// Standalone GIF picker for forum modals.
+			var $standaloneGifPicker = $( '.bb-rl-gif-media-search-dropdown-standalone' );
+			if ( $standaloneGifPicker.length ) {
+				$standaloneGifPicker.on( 'click', '.found-media-item', this.selectGif.bind( this ) );
+				$standaloneGifPicker.on( 'keydown', '.search-query-input', this.searchGif.bind( this ) );
+				// Note: scroll event is bound directly in toggleGifSelector after popup content is created,
+				// because scroll events don't bubble and can't use event delegation.
+			}
 			if ( ! groupMessagesButtonSelector.length ) {
 				$document.find( 'form #whats-new-toolbar, .forum form #whats-new-toolbar' ).on( 'click', '.found-media-item', this.selectGif.bind( this ) );
 			}
@@ -523,6 +588,11 @@ window.bp = window.bp || {};
 
 			$editAlbumModal.find( '#bb-album-title' ).val( current_name ).focus().select();
 			$editAlbumModal.attr( 'data-id', album_item.attr('data-id') );
+
+			//Trigger select2 initialization
+			if( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+				bp.Readylaunch.initSelect2Scoped( $(document) );
+			}
 		},
 
 		closeEditAlbumModal: function ( event ) {
@@ -931,6 +1001,11 @@ window.bp = window.bp || {};
 											}
 										);
 									}
+
+									// Update album counts if deleting from an album.
+									if ( response.data.album_total_count !== undefined ) {
+										self.updateAlbumCounts( response.data );
+										}
 								}
 							}
 						} else {
@@ -1127,11 +1202,16 @@ window.bp = window.bp || {};
 		loadMoreGif: function ( e ) {
 			var el = e.target, self = this;
 
-			var $forums_gif_container = $( e.target ).closest( 'form' ).find( '.forums-attached-gif-container' );
+			var $standalonePopup      = $( e.target ).closest( '.bb-rl-gif-media-search-dropdown-standalone' ),
+				isStandalone          = $standalonePopup.length > 0,
+				$targetForm           = isStandalone ? $standalonePopup.data( 'target-form' ) : $( e.target ).closest( 'form' ),
+				$forums_gif_container = $targetForm ? $targetForm.find( '.forums-attached-gif-container' ) : $( e.target ).closest( 'form' ).find( '.forums-attached-gif-container' );
 			var gif_container_key     = $forums_gif_container.data( 'key' );
 			self.gif_container_key    = gif_container_key;
 
-			if ( el.scrollTop + el.offsetHeight >= el.scrollHeight && ! $forums_gif_container.hasClass( 'loading' ) ) {
+			// Use a small threshold (5px) to handle subpixel rendering and browser rounding issues.
+			var scrollThreshold = 5;
+			if ( el.scrollTop + el.offsetHeight + scrollThreshold >= el.scrollHeight && ! $forums_gif_container.hasClass( 'loading' ) ) {
 				if ( self.gif_data[ gif_container_key ].total_count > 0 && self.gif_data[ gif_container_key ].offset <= self.gif_data[ gif_container_key ].total_count ) {
 					var params = {
 						offset: self.gif_data[ gif_container_key ].offset,
@@ -1214,8 +1294,13 @@ window.bp = window.bp || {};
 		},
 
 		loadMoreGifResponse: function ( response ) {
-			var self          = this, i = 0,
-				$gifContainer = $( 'div.forums-attached-gif-container[data-key="' + self.gif_container_key + '"]' );
+			var self             = this, i = 0,
+				$gifContainer    = $( 'div.forums-attached-gif-container[data-key="' + self.gif_container_key + '"]' ),
+				$standalonePopup = $( '.bb-rl-gif-media-search-dropdown-standalone.open' ),
+				$resultsList     = $standalonePopup.length > 0 ?
+					$standalonePopup.find( '.gif-search-results-list' ) :
+					$gifContainer.closest( 'form' ).find( '.gif-search-results-list' );
+
 			$gifContainer.removeClass( 'loading' );
 			if ( typeof response.data !== 'undefined' && response.data.length ) {
 				var li_html = '', responseDataLength = response.data.length;
@@ -1234,7 +1319,7 @@ window.bp = window.bp || {};
 					self.gif_data[ self.gif_container_key ].data.push( response.data[ i ] );
 				}
 
-				$gifContainer.closest( 'form' ).find( '.gif-search-results-list' ).append( li_html );
+				$resultsList.append( li_html );
 			}
 
 			if ( typeof response.pagination !== 'undefined' && typeof response.pagination.total_count !== 'undefined' ) {
@@ -1271,32 +1356,52 @@ window.bp = window.bp || {};
 		},
 
 		selectGif: function ( e ) {
-			var self          = this, i = 0, target = $( e.currentTarget ),
-				gif_container = target.closest( 'form' ).find( '.forums-attached-gif-container' );
+			var self   = this, i = 0, target = $( e.currentTarget ),
+				$standalonePopup = target.closest( '.bb-rl-gif-media-search-dropdown-standalone' ),
+				isStandalone     = $standalonePopup.length > 0,
+				$targetForm, gif_container;
+
+			if ( isStandalone ) {
+				$targetForm = $standalonePopup.data( 'target-form' );
+				if ( ! $targetForm || ! $targetForm.length || ! $.contains( document, $targetForm[ 0 ] ) ) {
+					e.preventDefault();
+					return;
+				}
+			} else {
+				$targetForm = target.closest( 'form' );
+			}
+
+			gif_container = $targetForm.find( '.forums-attached-gif-container' );
 			e.preventDefault();
 
-			gif_container.closest( 'form' ).find( '.bb-rl-gif-media-search-dropdown' ).removeClass( 'open' );
+			// Close the appropriate dropdown.
+			if ( isStandalone ) {
+				$standalonePopup.removeClass( 'open' );
+			} else {
+				gif_container.closest( 'form' ).find( '.bb-rl-gif-media-search-dropdown' ).removeClass( 'open' );
+			}
+
 			var gif_container_key = gif_container.data( 'key' );
 			if ( typeof self.gif_data[ gif_container_key ] !== 'undefined' && typeof self.gif_data[ gif_container_key ].data !== 'undefined' && self.gif_data[ gif_container_key ].data.length ) {
 				var gifDataLength = self.gif_data[ gif_container_key ].data.length;
 				for ( i = 0; i < gifDataLength; i++ ) {
 					if ( self.gif_data[ gif_container_key ].data[ i ].id === e.currentTarget.dataset.id ) {
 
-						target.closest( 'form' ).find( '#whats-new-attachments .forums-attached-gif-container' )[ 0 ].style.backgroundImage = 'url(' + self.gif_data[ gif_container_key ].data[ i ].images.fixed_width.url + ')';
-						target.closest( 'form' ).find( '#whats-new-attachments .forums-attached-gif-container' )[ 0 ].style.backgroundSize  = 'contain';
-						target.closest( 'form' ).find( '#whats-new-attachments .forums-attached-gif-container' )[ 0 ].style.height          = self.gif_data[ gif_container_key ].data[ i ].images.original.height + 'px';
-						target.closest( 'form' ).find( '#whats-new-attachments .forums-attached-gif-container' )[ 0 ].style.width           = self.gif_data[ gif_container_key ].data[ i ].images.original.width + 'px';
+						$targetForm.find( '#whats-new-attachments .forums-attached-gif-container' )[ 0 ].style.backgroundImage = 'url(' + self.gif_data[ gif_container_key ].data[ i ].images.fixed_width.url + ')';
+						$targetForm.find( '#whats-new-attachments .forums-attached-gif-container' )[ 0 ].style.backgroundSize  = 'contain';
+						$targetForm.find( '#whats-new-attachments .forums-attached-gif-container' )[ 0 ].style.height          = self.gif_data[ gif_container_key ].data[ i ].images.original.height + 'px';
+						$targetForm.find( '#whats-new-attachments .forums-attached-gif-container' )[ 0 ].style.width           = self.gif_data[ gif_container_key ].data[ i ].images.original.width + 'px';
 
-						target.closest( 'form' ).find( '#whats-new-attachments .forums-attached-gif-container' ).find( '.gif-image-container img' ).attr( 'src', self.gif_data[ gif_container_key ].data[ i ].images.original.url );
-						target.closest( 'form' ).find( '#whats-new-attachments .forums-attached-gif-container' ).removeClass( 'closed' );
-						if ( target.closest( 'form' ).find( '#bbp_media_gif' ).length ) {
-							target.closest( 'form' ).find( '#bbp_media_gif' ).val( JSON.stringify( self.gif_data[ gif_container_key ].data[ i ] ) );
+						$targetForm.find( '#whats-new-attachments .forums-attached-gif-container' ).find( '.gif-image-container img' ).attr( 'src', self.gif_data[ gif_container_key ].data[ i ].images.original.url );
+						$targetForm.find( '#whats-new-attachments .forums-attached-gif-container' ).removeClass( 'closed' );
+						if ( $targetForm.find( '#bbp_media_gif' ).length ) {
+							$targetForm.find( '#bbp_media_gif' ).val( JSON.stringify( self.gif_data[ gif_container_key ].data[ i ] ) );
 						}
 						break;
 					}
 				}
 
-				var tool_box = target.closest( 'form' );
+				var tool_box = $targetForm;
 				tool_box.addClass( 'has-gif' );
 				bp.Nouveau.Media.disableButtonsInToolBox(
 					tool_box,
@@ -1512,11 +1617,15 @@ window.bp = window.bp || {};
 		searchGifRequest: function ( e ) {
 			var self = this, i = 0;
 
-			var $forums_gif_container = $( e.target ).closest( 'form' ).find( '.forums-attached-gif-container' );
+			var $standalonePopup      = $( e.target ).closest( '.bb-rl-gif-media-search-dropdown-standalone' ),
+				isStandalone          = $standalonePopup.length > 0,
+				$targetForm           = isStandalone ? $standalonePopup.data( 'target-form' ) : $( e.target ).closest( 'form' ),
+				$forums_gif_container = $targetForm ? $targetForm.find( '.forums-attached-gif-container' ) : $( e.target ).closest( 'form' ).find( '.forums-attached-gif-container' ),
+				$pickerContainer      = isStandalone ? $standalonePopup : $( e.target ).closest( 'form' );
 			$forums_gif_container.addClass( 'loading' );
 			var gif_container_key = $forums_gif_container.data( 'key' );
-			$( e.target ).closest( 'form' ).find( '.gif-no-results' ).removeClass( 'show' );
-			$( e.target ).closest( 'form' ).find( '.gif-no-connection' ).removeClass( 'show' );
+			$pickerContainer.find( '.gif-no-results' ).removeClass( 'show' );
+			$pickerContainer.find( '.gif-no-connection' ).removeClass( 'show' );
 
 			self.clearGifRequests( gif_container_key );
 
@@ -1531,11 +1640,11 @@ window.bp = window.bp || {};
 					limit: self.gif_data[ gif_container_key ].limit
 				},
 				function ( response ) {
-					if ( undefined !== response.data.length && 0 === response.data.length ) {
-						$( e.target ).closest( 'form' ).find( '.gif-no-results' ).addClass( 'show' );
+					if ( typeof response.data !== 'undefined' && 0 === response.data.length ) {
+						$pickerContainer.find( '.gif-no-results' ).addClass( 'show' );
 					}
-					if ( undefined !== response.meta.status && 200 !== response.meta.status ) {
-						$( e.target ).closest( 'form' ).find( '.gif-no-connection' ).addClass( 'show' );
+					if ( typeof response.meta !== 'undefined' && 200 !== response.meta.status ) {
+						$pickerContainer.find( '.gif-no-connection' ).addClass( 'show' );
 					}
 					if ( typeof response.data !== 'undefined' && response.data.length ) {
 						var li_html            = '',
@@ -1564,7 +1673,7 @@ window.bp = window.bp || {};
 					$forums_gif_container.removeClass( 'loading' );
 				},
 				function () {
-					$( e.target ).closest( 'form' ).find( '.gif-no-connection' ).addClass( 'show' );
+					$pickerContainer.find( '.gif-no-connection' ).addClass( 'show' );
 				}
 			);
 
@@ -1581,7 +1690,9 @@ window.bp = window.bp || {};
 					self.gif_data[ gif_container_key ].requests[ i ].abort();
 				}
 
+				// Clear results from both inline and standalone popups.
 				$( '[data-key="' + gif_container_key + '"]' ).closest( 'form' ).find( '.gif-search-results-list li' ).remove();
+				$( '.bb-rl-gif-media-search-dropdown-standalone .gif-search-results-list li' ).remove();
 
 				self.gif_data[ gif_container_key ].requests = [];
 				self.gif_data[ gif_container_key ].data     = [];
@@ -1591,8 +1702,37 @@ window.bp = window.bp || {};
 
 		toggleGifSelector: function ( event ) {
 			var self                = this, target = $( event.currentTarget ),
-				gif_search_dropdown = target.closest( 'form' ).find( '.bb-rl-gif-media-search-dropdown' ), i = 0;
+				$forumModal         = target.closest( '.bb-rl-forum-modal' ),
+				isInsideForumModal  = $forumModal.length > 0 && ! $forumModal.hasClass( 'bb-rl-forum-modal--static' ),
+				gif_search_dropdown = isInsideForumModal ? $( '.bb-rl-gif-media-search-dropdown-standalone' ) : target.closest( 'form' ).find( '.bb-rl-gif-media-search-dropdown' ), i = 0;
 			event.preventDefault();
+
+			// Populate the standalone popup with HTML structure if it's empty.
+			if ( isInsideForumModal && gif_search_dropdown.is( ':empty' ) ) {
+				var gifPickerHtml = '<div class="bb-rl-forums-attached-gif-container">' +
+					'<div class="gif-search-content">' +
+					'<div class="gif-search-query">' +
+					'<input type="search" placeholder="' + ( bbRlMedia.gif_search_placeholder || 'Search GIPHY...' ) + '" class="search-query-input" />' +
+					'<span class="search-icon"></span>' +
+					'</div>' +
+					'<div class="gif-search-results" id="gif-search-results">' +
+					'<ul class="gif-search-results-list"></ul>' +
+					'<div class="gif-alert gif-no-results">' +
+					'<i class="bb-icons-rl-image-broken"></i>' +
+					'<p>' + ( bbRlMedia.gif_no_results || 'No results found' ) + '</p>' +
+					'</div>' +
+					'<div class="gif-alert gif-no-connection">' +
+					'<i class="bb-icons-rl-cloud-slash"></i>' +
+					'<p>' + ( bbRlMedia.gif_no_connection || 'Could not connect to GIPHY' ) + '</p>' +
+					'</div>' +
+					'</div>' +
+					'</div>' +
+					'</div>';
+				gif_search_dropdown.html( gifPickerHtml );
+
+				// Bind scroll event directly to the results element for lazy loading.
+				gif_search_dropdown.find( '.gif-search-results' ).on( 'scroll', self.loadMoreGif.bind( self ) );
+			}
 
 			if ( typeof window.Giphy !== 'undefined' && typeof bbRlMedia.gif_api_key !== 'undefined' ) {
 				self.giphy = new window.Giphy( bbRlMedia.gif_api_key );
@@ -1638,7 +1778,8 @@ window.bp = window.bp || {};
 								self.gif_data[ gif_container_key ].data.push( response.data[ i ] );
 							}
 
-							target.closest( 'form' ).find( '.gif-search-results-list' ).append( li_html );
+							// Append to the correct dropdown (standalone or inline).
+							gif_search_dropdown.find( '.gif-search-results-list' ).append( li_html );
 						}
 
 						if ( typeof response.pagination !== 'undefined' && typeof response.pagination.total_count !== 'undefined' ) {
@@ -1654,6 +1795,31 @@ window.bp = window.bp || {};
 			}
 
 			gif_search_dropdown.toggleClass( 'open' );
+
+			// Position the standalone popup near the button when inside forum modal.
+			if ( isInsideForumModal && gif_search_dropdown.hasClass( 'open' ) ) {
+				var scrollTop      = $( window ).scrollTop(),
+					btnOffset      = target.offset(),
+					topPosition    = Math.round( btnOffset.top ),
+					leftPosition   = Math.round( btnOffset.left ),
+					isRtl          = $( 'body' ).hasClass( 'rtl' ),
+					pickerWidth    = gif_search_dropdown.outerWidth(),
+					pickerXPos, transformValue;
+
+				if ( isRtl ) {
+					// In RTL, position the popup to the right of the button.
+					pickerXPos     = $( window ).width() - leftPosition - target.outerWidth() + pickerWidth - 70;
+					transformValue = 'translate(-' + pickerXPos + 'px, ' + ( topPosition - scrollTop - 5 ) + 'px) translate(0, -100%)';
+				} else {
+					pickerXPos     = leftPosition + pickerWidth - 70;
+					transformValue = 'translate(' + pickerXPos + 'px, ' + ( topPosition - scrollTop - 5 ) + 'px) translate(-100%, -100%)';
+				}
+
+				gif_search_dropdown.css( 'transform', transformValue );
+
+				// Store reference to the form for GIF selection.
+				gif_search_dropdown.data( 'target-form', target.closest( 'form' ) );
+			}
 
 			var gif_box = target.parents( 'form' ).find( '#whats-new-attachments .forums-attached-gif-container img' );
 			if ( gif_box.length > 0 && gif_box.attr( 'src' ) !== '' ) {
@@ -1689,7 +1855,7 @@ window.bp = window.bp || {};
 				if ( ! _.isUndefined( bbRlMedia ) && ! _.isUndefined( bbRlMedia.gif_api_key ) ) {
 					target.find( 'form' ).find( '.bb-rl-gif-media-search-dropdown' ).removeClass( 'open' );
 					if ( $( '.bb-rl-gif-media-search-dropdown-standalone.open' ).length > 0 ) {
-						target.find( '.bb-rl-gif-media-search-dropdown-standalone' ).removeClass( 'open' );
+						$( '.bb-rl-gif-media-search-dropdown-standalone' ).removeClass( 'open' );
 					}
 					target.find( '#bbpress-forums form' ).each(
 						function () {
@@ -1736,12 +1902,12 @@ window.bp = window.bp || {};
 
 			if ( ! _.isUndefined( bbRlMedia ) && ! _.isUndefined( bbRlMedia.gif_api_key ) &&
 				! $targetEl.closest( '.bb-rl-post-gif' ).length ) {
-				if ( $targetEl.closest( '.bb-rl-gif-media-search-dropdown' ).length ) {
+				if ( $targetEl.closest( '.bb-rl-gif-media-search-dropdown' ).length || $targetEl.closest( '.bb-rl-gif-media-search-dropdown-standalone' ).length ) {
 					return;
 				}
 				target.find( 'form' ).find( '.bb-rl-gif-media-search-dropdown' ).removeClass( 'open' );
 				if ( $( '.bb-rl-gif-media-search-dropdown-standalone.open' ).length > 0 ) {
-					target.find( '.bb-rl-gif-media-search-dropdown-standalone' ).removeClass( 'open' );
+					$( '.bb-rl-gif-media-search-dropdown-standalone' ).removeClass( 'open' );
 				}
 				target.find( '#bbpress-forums form' ).each(
 					function () {
@@ -2366,6 +2532,11 @@ window.bp = window.bp || {};
 
 				mediaUploader.addClass( 'open-popup' ).show();
 
+				// Reinitialize select2 for privacy select if not already initialized.
+				if ( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+					bp.Readylaunch.initSelect2Scoped( mediaUploader );
+				}
+
 				if ( $( event.currentTarget ).closest( '#bp-media-single-album' ).length ) {
 					$( '#bb-media-privacy' ).hide();
 				}
@@ -2446,11 +2617,11 @@ window.bp = window.bp || {};
 
 						if ( Number( $( e.currentTarget ).data( 'id' ) ) !== 0 ) {
 							mediaPrivacy.find( 'option' ).removeAttr( 'selected' );
-							mediaPrivacy.val( $( e.currentTarget ).parent().data( 'privacy' ) );
+							mediaPrivacy.val( $( e.currentTarget ).parent().data( 'privacy' ) ).trigger( 'change' );
 							mediaPrivacy.prop( 'disabled', true );
 						} else {
 							mediaPrivacy.find( 'option' ).removeAttr( 'selected' );
-							mediaPrivacy.val( 'public' );
+							mediaPrivacy.val( 'public' ).trigger( 'change' );
 							mediaPrivacy.prop( 'disabled', false );
 						}
 					}
@@ -2481,11 +2652,11 @@ window.bp = window.bp || {};
 						var selectedAlbumPrivacy = $( e.currentTarget ).closest( '#bp-media-uploader' ).find( '.location-album-list li.is_active' ).data( 'privacy' );
 						if ( Number( $( e.currentTarget ).closest( '.bb-rl-field-wrap' ).find( '.bb-rl-album-selected-id' ).val() ) !== 0 ) {
 							mediaPrivacy.find( 'option' ).removeAttr( 'selected' );
-							mediaPrivacy.val( selectedAlbumPrivacy === undefined ? 'public' : selectedAlbumPrivacy );
+							mediaPrivacy.val( selectedAlbumPrivacy === undefined ? 'public' : selectedAlbumPrivacy ).trigger( 'change' );
 							mediaPrivacy.prop( 'disabled', true );
 						} else {
 							mediaPrivacy.find( 'option' ).removeAttr( 'selected' );
-							mediaPrivacy.val( 'public' );
+							mediaPrivacy.val( 'public' ).trigger( 'change' );
 							mediaPrivacy.prop( 'disabled', false );
 						}
 
@@ -2642,6 +2813,11 @@ window.bp = window.bp || {};
 				$document.removeClass( 'open-popup' );
 				mediaUploader.show();
 				mediaUploader.addClass( 'open-popup' );
+
+				// Reinitialize select2 for privacy select if not already initialized.
+				if ( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+					bp.Readylaunch.initSelect2Scoped( mediaUploader );
+				}
 
 				if ( $( '#bp-media-uploader.bp-media-document-uploader' ).find( '.bb-field-steps.bb-field-steps-2' ).length ) {
 					currentTarget = '#bp-media-uploader.bp-media-document-uploader';
@@ -3322,6 +3498,11 @@ window.bp = window.bp || {};
 
 			$document.find( '.open-popup #bb-rl-media-create-album-popup #bb-album-title' ).show();
 			$document.find( '.open-popup #bb-rl-media-create-album-popup #bb-album-title' ).removeClass( 'error' );
+
+			//Trigger select2 initialization
+			if( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+				bp.Readylaunch.initSelect2Scoped( $(document) );
+			}
 		},
 
 		/**
@@ -3674,7 +3855,21 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			this.openUploader( event );
-			$( '#bp-media-create-album' ).show();
+			var $createAlbum = $( '#bp-media-create-album' );
+			$createAlbum.show();
+
+			// Reinitialize select2 for album privacy select after delay to ensure DOM is ready.
+			// Using 250ms to run after any ajaxComplete handlers (which have 100ms delay).
+			if ( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+				setTimeout( function () {
+					// Only initialize if not already initialized.
+					var $select = $createAlbum.find( '.bb-rl-filter select' );
+					if ( $select.length && ! $select.hasClass( 'select2-hidden-accessible' ) ) {
+						bp.Readylaunch.initSelect2Scoped( $createAlbum );
+					}
+				}, 250 );
+			}
+
 			if ( $( 'body' ).hasClass( 'directory' ) ) {
 				$( '#bp-media-uploader' ).hide();
 			}
@@ -3687,6 +3882,11 @@ window.bp = window.bp || {};
 			$createFolder.addClass( 'open-popup' );
 			$document.find( '.open-popup #bb-rl-media-create-album-popup #bb-album-title' ).show();
 			$document.find( '.open-popup #bb-rl-media-create-album-popup #bb-album-title' ).removeClass( 'error' );
+
+			// Reinitialize select2 for folder privacy select if not already initialized.
+			if ( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+				bp.Readylaunch.initSelect2Scoped( $createFolder );
+			}
 		},
 
 		openCreateFolderChildModal: function ( event ) {
@@ -4199,6 +4399,11 @@ window.bp = window.bp || {};
 									$buddypressElem.find( '.media-type-navs ul.media-nav li#media-groups a span.count' ).text( response.data.media_group_count );
 								}
 
+								// Update album counts if uploading to an album.
+								if ( response.data.album_total_count !== undefined ) {
+									self.updateAlbumCounts( response.data );
+								}
+
 								var $dropZoneMediaLength = self.dropzone_media.length;
 								for ( var i = 0; i < $dropZoneMediaLength; i++ ) {
 									self.dropzone_media[ i ].saved = true;
@@ -4274,6 +4479,28 @@ window.bp = window.bp || {};
 										}
 									}
 								);
+
+								// Update album counts for both source and destination albums if present.
+								if ( response.data.source_album_id !== undefined || response.data.dest_album_id !== undefined ) {
+									var $albumContainer = $( '#buddypress #bp-media-single-album' );
+									if ( $albumContainer.length ) {
+										// Determine which album we're currently viewing from the DOM (ReadyLaunch uses data-id).
+										var currentAlbumId = parseInt( $albumContainer.attr( 'data-id' ) || $albumContainer.attr( 'data-album-id' ) ) || 0;
+										var albumCounts = {};
+
+										// If we're viewing the source album, use source counts (item was removed).
+										// If we're viewing the destination album, use dest counts (item was added).
+										if ( currentAlbumId === response.data.source_album_id ) {
+											albumCounts.album_media_count = response.data.source_album_media_count;
+											albumCounts.album_video_count = response.data.source_album_video_count;
+										} else if ( currentAlbumId === response.data.dest_album_id ) {
+											albumCounts.album_media_count = response.data.dest_album_media_count;
+											albumCounts.album_video_count = response.data.dest_album_video_count;
+										}
+
+										self.updateAlbumCounts( albumCounts );
+									}
+								}
 
 								jQuery( window ).scroll();
 
@@ -5795,9 +6022,31 @@ window.bp = window.bp || {};
 								target.closest( '.bb-rl-' + nameDocumentAsMedia + '-move-file' ).find( '.bb-rl-ac-' + updateActionType + '-close-button' ).trigger( 'click' );
 								if ( 'media' === actionType || 'video' === actionType ) {
 									$( document ).find( 'a[class*="open-' + nameDocumentAsMedia + '-theatre"][data-id="' + itemId + '"]' ).data( 'album-id', destinationId );
+
+									// Update album counts for both source and destination albums if present.
+									if ( response.data.source_album_id !== undefined || response.data.dest_album_id !== undefined ) {
+										var $albumContainer = $( '#buddypress #bp-media-single-album' );
+										if ( $albumContainer.length ) {
+											// Determine which album we're currently viewing from the DOM (ReadyLaunch uses data-id).
+											var currentAlbumId = parseInt( $albumContainer.attr( 'data-id' ) || $albumContainer.attr( 'data-album-id' ) ) || 0;
+											var albumCounts = {};
+
+											// If we're viewing the source album, use source counts (item was removed).
+											// If we're viewing the destination album, use dest counts (item was added).
+											if ( currentAlbumId === response.data.source_album_id ) {
+												albumCounts.album_media_count = response.data.source_album_media_count;
+												albumCounts.album_video_count = response.data.source_album_video_count;
+											} else if ( currentAlbumId === response.data.dest_album_id ) {
+												albumCounts.album_media_count = response.data.dest_album_media_count;
+												albumCounts.album_video_count = response.data.dest_album_video_count;
+											}
+
+											self.updateAlbumCounts( albumCounts );
+										}
+									}
 								}
 							}
-							
+
 							if ( 'document' === actionType || 'document_folder' === actionType ) {
 								target.closest( '.bb-activity-media-wrap' ).find( '.bb-rl-activity-media-elem.bb-rl-document-activity' ).attr( 'data-parent-id', destinationId );
 								var $mediaFolderItem = target.closest( '#media-folder-document-data-table' ).find( '.media-folder_items[data-id="' + itemId + '"]' );
@@ -5873,6 +6122,17 @@ window.bp = window.bp || {};
 			$folderLocation.find( '.bb-rl-modal-header' ).append( '<p>' + popupTitle + '</p>' );
 			$( '.bb-rl-modal-container #bb-rl-folder-privacy' ).addClass( 'new-folder-create-privacy' );
 			$document.find( '.open-popup .error' ).hide();
+
+			// Reinitialize select2 for privacy select after a small delay to ensure element is visible.
+			if ( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+				setTimeout( function () {
+					// Target the visible on-fly create popup wrapper within the open popup.
+					var $targetContainer = $openPopup.find( '.bb-rl-create-popup-' + folderORAlbum + '-wrap' );
+					if ( $targetContainer.length && $targetContainer.is( ':visible' ) ) {
+						bp.Readylaunch.initSelect2Scoped( $targetContainer );
+					}
+				}, 150 );
+			}
 		},
 
 		closeCreateFolderAlbumInPopup : function ( event, actionType ) {
