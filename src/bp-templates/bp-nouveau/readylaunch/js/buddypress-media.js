@@ -212,6 +212,63 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * Update album photo and video counts in single album view.
+		 * Works for both Standard and ReadyLaunch modes.
+		 *
+		 * @param {Object} albumCounts - Album count data from server response
+		 * @param {number} albumCounts.album_media_count - Number of photos
+		 * @param {number} albumCounts.album_video_count - Number of videos
+		 */
+		updateAlbumCounts: function ( albumCounts ) {
+			// Check if we're in a single album view.
+			if ( ! $( '#buddypress #bp-media-single-album' ).length ) {
+				return;
+			}
+
+			var photoCount = parseInt( albumCounts.album_media_count ) || 0;
+			var videoCount = parseInt( albumCounts.album_video_count ) || 0;
+
+			// Format number with thousands separator.
+			var formatNumber = function( num ) {
+				return num.toString().replace( /\B(?=(\d{3})+(?!\d))/g, ',' );
+			};
+
+			// Update the photo count display.
+			var $photoCountSpan = $( '#buddypress .bb-album-photo-count' );
+			if ( $photoCountSpan.length > 0 ) {
+				// Check if this is ReadyLaunch mode (has icon element).
+				if ( $photoCountSpan.find( 'i' ).length > 0 ) {
+					// ReadyLaunch mode: preserve icon, update number only.
+					$photoCountSpan.contents().filter( function() {
+						return 3 === this.nodeType;
+					} ).remove();
+					$photoCountSpan.append( formatNumber( photoCount ) );
+				} else {
+					// Standard mode: update with label.
+					var photoLabel = 1 === photoCount ? BP_Nouveau.media.i18n_strings.photo : BP_Nouveau.media.i18n_strings.photos;
+					$photoCountSpan.text( formatNumber( photoCount ) + ' ' + photoLabel );
+				}
+			}
+
+			// Update the video count display.
+			var $videoCountSpan = $( '#buddypress .bb-album-video-count' );
+			if ( $videoCountSpan.length > 0 ) {
+				// Check if this is ReadyLaunch mode (has icon element).
+				if ( $videoCountSpan.find( 'i' ).length > 0 ) {
+					// ReadyLaunch mode: preserve icon, update number only.
+					$videoCountSpan.contents().filter( function() {
+						return 3 === this.nodeType;
+					} ).remove();
+					$videoCountSpan.append( formatNumber( videoCount ) );
+				} else {
+					// Standard mode: update with label.
+					var videoLabel = 1 === videoCount ? BP_Nouveau.media.i18n_strings.video : BP_Nouveau.media.i18n_strings.videos;
+					$videoCountSpan.text( formatNumber( videoCount ) + ' ' + videoLabel );
+				}
+			}
+		},
+
+		/**
 		 * [addListeners description]
 		 */
 		addListeners: function () {
@@ -245,7 +302,7 @@ window.bp = window.bp || {};
 			$document.on( 'click', '#bp-media-create-child-folder-submit', this.saveChildFolder.bind( this ) );
 
 			bpNouveau.on( 'click', '#bp-media-create-album-close', this.closeCreateAlbumModal.bind( this ) );
-			$document.on( 'click', '.bb-rl-media-create-folder-close', this.closeCreateFolderModal.bind( this ) );
+			$document.on( 'click', '.bb-rl-media-create-folder-close, .bb-model-close-button', this.closeCreateFolderModal.bind( this ) );
 			$document.on( 'click', '#bp-media-edit-folder-close', this.closeEditFolderModal.bind( this ) );
 			$document.on( 'click', '.open-popup .errorPopup', this.closeErrorPopup.bind( this ) );
 
@@ -531,6 +588,11 @@ window.bp = window.bp || {};
 
 			$editAlbumModal.find( '#bb-album-title' ).val( current_name ).focus().select();
 			$editAlbumModal.attr( 'data-id', album_item.attr('data-id') );
+
+			//Trigger select2 initialization
+			if( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+				bp.Readylaunch.initSelect2Scoped( $(document) );
+			}
 		},
 
 		closeEditAlbumModal: function ( event ) {
@@ -939,6 +1001,11 @@ window.bp = window.bp || {};
 											}
 										);
 									}
+
+									// Update album counts if deleting from an album.
+									if ( response.data.album_total_count !== undefined ) {
+										self.updateAlbumCounts( response.data );
+										}
 								}
 							}
 						} else {
@@ -2465,6 +2532,11 @@ window.bp = window.bp || {};
 
 				mediaUploader.addClass( 'open-popup' ).show();
 
+				// Reinitialize select2 for privacy select if not already initialized.
+				if ( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+					bp.Readylaunch.initSelect2Scoped( mediaUploader );
+				}
+
 				if ( $( event.currentTarget ).closest( '#bp-media-single-album' ).length ) {
 					$( '#bb-media-privacy' ).hide();
 				}
@@ -2545,11 +2617,11 @@ window.bp = window.bp || {};
 
 						if ( Number( $( e.currentTarget ).data( 'id' ) ) !== 0 ) {
 							mediaPrivacy.find( 'option' ).removeAttr( 'selected' );
-							mediaPrivacy.val( $( e.currentTarget ).parent().data( 'privacy' ) );
+							mediaPrivacy.val( $( e.currentTarget ).parent().data( 'privacy' ) ).trigger( 'change' );
 							mediaPrivacy.prop( 'disabled', true );
 						} else {
 							mediaPrivacy.find( 'option' ).removeAttr( 'selected' );
-							mediaPrivacy.val( 'public' );
+							mediaPrivacy.val( 'public' ).trigger( 'change' );
 							mediaPrivacy.prop( 'disabled', false );
 						}
 					}
@@ -2580,11 +2652,11 @@ window.bp = window.bp || {};
 						var selectedAlbumPrivacy = $( e.currentTarget ).closest( '#bp-media-uploader' ).find( '.location-album-list li.is_active' ).data( 'privacy' );
 						if ( Number( $( e.currentTarget ).closest( '.bb-rl-field-wrap' ).find( '.bb-rl-album-selected-id' ).val() ) !== 0 ) {
 							mediaPrivacy.find( 'option' ).removeAttr( 'selected' );
-							mediaPrivacy.val( selectedAlbumPrivacy === undefined ? 'public' : selectedAlbumPrivacy );
+							mediaPrivacy.val( selectedAlbumPrivacy === undefined ? 'public' : selectedAlbumPrivacy ).trigger( 'change' );
 							mediaPrivacy.prop( 'disabled', true );
 						} else {
 							mediaPrivacy.find( 'option' ).removeAttr( 'selected' );
-							mediaPrivacy.val( 'public' );
+							mediaPrivacy.val( 'public' ).trigger( 'change' );
 							mediaPrivacy.prop( 'disabled', false );
 						}
 
@@ -2741,6 +2813,11 @@ window.bp = window.bp || {};
 				$document.removeClass( 'open-popup' );
 				mediaUploader.show();
 				mediaUploader.addClass( 'open-popup' );
+
+				// Reinitialize select2 for privacy select if not already initialized.
+				if ( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+					bp.Readylaunch.initSelect2Scoped( mediaUploader );
+				}
 
 				if ( $( '#bp-media-uploader.bp-media-document-uploader' ).find( '.bb-field-steps.bb-field-steps-2' ).length ) {
 					currentTarget = '#bp-media-uploader.bp-media-document-uploader';
@@ -3361,6 +3438,11 @@ window.bp = window.bp || {};
 
 			$document.find( '.open-popup #bb-rl-media-create-album-popup #bb-album-title' ).show();
 			$document.find( '.open-popup #bb-rl-media-create-album-popup #bb-album-title' ).removeClass( 'error' );
+
+			//Trigger select2 initialization
+			if( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+				bp.Readylaunch.initSelect2Scoped( $(document) );
+			}
 		},
 
 		/**
@@ -3713,7 +3795,21 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			this.openUploader( event );
-			$( '#bp-media-create-album' ).show();
+			var $createAlbum = $( '#bp-media-create-album' );
+			$createAlbum.show();
+
+			// Reinitialize select2 for album privacy select after delay to ensure DOM is ready.
+			// Using 250ms to run after any ajaxComplete handlers (which have 100ms delay).
+			if ( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+				setTimeout( function () {
+					// Only initialize if not already initialized.
+					var $select = $createAlbum.find( '.bb-rl-filter select' );
+					if ( $select.length && ! $select.hasClass( 'select2-hidden-accessible' ) ) {
+						bp.Readylaunch.initSelect2Scoped( $createAlbum );
+					}
+				}, 250 );
+			}
+
 			if ( $( 'body' ).hasClass( 'directory' ) ) {
 				$( '#bp-media-uploader' ).hide();
 			}
@@ -3726,6 +3822,11 @@ window.bp = window.bp || {};
 			$createFolder.addClass( 'open-popup' );
 			$document.find( '.open-popup #bb-rl-media-create-album-popup #bb-album-title' ).show();
 			$document.find( '.open-popup #bb-rl-media-create-album-popup #bb-album-title' ).removeClass( 'error' );
+
+			// Reinitialize select2 for folder privacy select if not already initialized.
+			if ( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+				bp.Readylaunch.initSelect2Scoped( $createFolder );
+			}
 		},
 
 		openCreateFolderChildModal: function ( event ) {
@@ -4238,6 +4339,11 @@ window.bp = window.bp || {};
 									$buddypressElem.find( '.media-type-navs ul.media-nav li#media-groups a span.count' ).text( response.data.media_group_count );
 								}
 
+								// Update album counts if uploading to an album.
+								if ( response.data.album_total_count !== undefined ) {
+									self.updateAlbumCounts( response.data );
+								}
+
 								var $dropZoneMediaLength = self.dropzone_media.length;
 								for ( var i = 0; i < $dropZoneMediaLength; i++ ) {
 									self.dropzone_media[ i ].saved = true;
@@ -4313,6 +4419,28 @@ window.bp = window.bp || {};
 										}
 									}
 								);
+
+								// Update album counts for both source and destination albums if present.
+								if ( response.data.source_album_id !== undefined || response.data.dest_album_id !== undefined ) {
+									var $albumContainer = $( '#buddypress #bp-media-single-album' );
+									if ( $albumContainer.length ) {
+										// Determine which album we're currently viewing from the DOM (ReadyLaunch uses data-id).
+										var currentAlbumId = parseInt( $albumContainer.attr( 'data-id' ) || $albumContainer.attr( 'data-album-id' ) ) || 0;
+										var albumCounts = {};
+
+										// If we're viewing the source album, use source counts (item was removed).
+										// If we're viewing the destination album, use dest counts (item was added).
+										if ( currentAlbumId === response.data.source_album_id ) {
+											albumCounts.album_media_count = response.data.source_album_media_count;
+											albumCounts.album_video_count = response.data.source_album_video_count;
+										} else if ( currentAlbumId === response.data.dest_album_id ) {
+											albumCounts.album_media_count = response.data.dest_album_media_count;
+											albumCounts.album_video_count = response.data.dest_album_video_count;
+										}
+
+										self.updateAlbumCounts( albumCounts );
+									}
+								}
 
 								jQuery( window ).scroll();
 
@@ -5834,9 +5962,31 @@ window.bp = window.bp || {};
 								target.closest( '.bb-rl-' + nameDocumentAsMedia + '-move-file' ).find( '.bb-rl-ac-' + updateActionType + '-close-button' ).trigger( 'click' );
 								if ( 'media' === actionType || 'video' === actionType ) {
 									$( document ).find( 'a[class*="open-' + nameDocumentAsMedia + '-theatre"][data-id="' + itemId + '"]' ).data( 'album-id', destinationId );
+
+									// Update album counts for both source and destination albums if present.
+									if ( response.data.source_album_id !== undefined || response.data.dest_album_id !== undefined ) {
+										var $albumContainer = $( '#buddypress #bp-media-single-album' );
+										if ( $albumContainer.length ) {
+											// Determine which album we're currently viewing from the DOM (ReadyLaunch uses data-id).
+											var currentAlbumId = parseInt( $albumContainer.attr( 'data-id' ) || $albumContainer.attr( 'data-album-id' ) ) || 0;
+											var albumCounts = {};
+
+											// If we're viewing the source album, use source counts (item was removed).
+											// If we're viewing the destination album, use dest counts (item was added).
+											if ( currentAlbumId === response.data.source_album_id ) {
+												albumCounts.album_media_count = response.data.source_album_media_count;
+												albumCounts.album_video_count = response.data.source_album_video_count;
+											} else if ( currentAlbumId === response.data.dest_album_id ) {
+												albumCounts.album_media_count = response.data.dest_album_media_count;
+												albumCounts.album_video_count = response.data.dest_album_video_count;
+											}
+
+											self.updateAlbumCounts( albumCounts );
+										}
+									}
 								}
 							}
-							
+
 							if ( 'document' === actionType || 'document_folder' === actionType ) {
 								target.closest( '.bb-activity-media-wrap' ).find( '.bb-rl-activity-media-elem.bb-rl-document-activity' ).attr( 'data-parent-id', destinationId );
 								var $mediaFolderItem = target.closest( '#media-folder-document-data-table' ).find( '.media-folder_items[data-id="' + itemId + '"]' );
@@ -5912,6 +6062,17 @@ window.bp = window.bp || {};
 			$folderLocation.find( '.bb-rl-modal-header' ).append( '<p>' + popupTitle + '</p>' );
 			$( '.bb-rl-modal-container #bb-rl-folder-privacy' ).addClass( 'new-folder-create-privacy' );
 			$document.find( '.open-popup .error' ).hide();
+
+			// Reinitialize select2 for privacy select after a small delay to ensure element is visible.
+			if ( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+				setTimeout( function () {
+					// Target the visible on-fly create popup wrapper within the open popup.
+					var $targetContainer = $openPopup.find( '.bb-rl-create-popup-' + folderORAlbum + '-wrap' );
+					if ( $targetContainer.length && $targetContainer.is( ':visible' ) ) {
+						bp.Readylaunch.initSelect2Scoped( $targetContainer );
+					}
+				}, 150 );
+			}
 		},
 
 		closeCreateFolderAlbumInPopup : function ( event, actionType ) {
