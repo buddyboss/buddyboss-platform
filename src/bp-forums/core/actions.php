@@ -304,6 +304,7 @@ add_action( 'bbp_login_form_login', 'bbp_user_maybe_convert_pass' );
 add_action( 'wp_ajax_post_topic_reply_draft', 'bb_post_topic_reply_draft' );
 
 add_action( 'wp_footer', 'bb_forum_add_content_popup' );
+add_action( 'wp_footer', 'bb_forums_gifpicker_add_popup_template' );
 
 add_action( 'bbp_new_topic', 'bb_forums_save_link_preview_data' );
 add_action( 'bbp_new_reply', 'bb_forums_save_link_preview_data' );
@@ -608,6 +609,27 @@ function bb_forum_add_content_popup() {
 	}
 
 	unset( $template_forum_ids );
+}
+
+/**
+ * Add template for gifpicker popup on forums pages.
+ *
+ * This renders the standalone GIF picker popup outside of modals.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_forums_gifpicker_add_popup_template() {
+	// Only load on forum pages when media component is active and GIF support is enabled.
+	if (
+		! bp_is_active( 'media' ) ||
+		! function_exists( 'is_bbpress' ) ||
+		! is_bbpress() ||
+		! bp_is_forums_gif_support_enabled()
+	) {
+		return;
+	}
+
+	bp_get_template_part( 'activity/gifpicker-popup' );
 }
 
 /**
