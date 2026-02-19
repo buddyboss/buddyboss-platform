@@ -1,0 +1,110 @@
+<?php
+/**
+ * BuddyBoss Admin Settings - Group Headers Panel.
+ *
+ * Registers sections and fields for the Group Headers side panel.
+ *
+ * @package BuddyBoss\Core\Administration
+ * @since BuddyBoss [BBVERSION]
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Register Group Headers panel sections and fields.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_groups_register_headers_panel_fields() {
+
+	// -------------------------------------------------------------------------
+	// SECTION: Group Headers
+	// -------------------------------------------------------------------------
+	bb_register_feature_section(
+		'groups',
+		'group_headers',
+		'group_headers',
+		array(
+			'title'       => __( 'Group Headers', 'buddyboss' ),
+			'description' => '',
+			'order'       => 10,
+		)
+	);
+
+	// FIELD: Header Style (Pro only, image_radio).
+	bb_register_feature_field(
+		'groups',
+		'group_headers',
+		'group_headers',
+		array(
+			'name'              => 'bb-group-header-style',
+			'label'             => __( 'Header Style', 'buddyboss' ),
+			'type'              => 'image_radio',
+			'description'       => '',
+			'default'           => function_exists( 'bb_get_group_header_style' ) ? bb_get_group_header_style() : 'left',
+			'sanitize_callback' => 'bb_groups_sanitize_header_style',
+			'options'           => array(
+				array(
+					'label' => __( 'Left Aligned', 'buddyboss' ),
+					'value' => 'left',
+					'image' => 'header-left-group',
+				),
+				array(
+					'label' => __( 'Centered', 'buddyboss' ),
+					'value' => 'centered',
+					'image' => 'header-centered-group',
+				),
+			),
+			'pro_only'          => true,
+			'order'             => 10,
+		)
+	);
+
+	// FIELD: Elements (Pro only, toggle_list).
+	bb_register_feature_field(
+		'groups',
+		'group_headers',
+		'group_headers',
+		array(
+			'name'              => 'bb-group-headers-elements',
+			'label'             => __( 'Elements', 'buddyboss' ),
+			'type'              => 'toggle_list',
+			'description'       => '',
+			'default'           => array(),
+			'sanitize_callback' => 'bb_groups_sanitize_toggle_list',
+			'options'           => array(
+				array(
+					'label' => __( 'Group Type', 'buddyboss' ),
+					'value' => 'group-type',
+				),
+				array(
+					'label' => __( 'Last Activity', 'buddyboss' ),
+					'value' => 'group-activity',
+				),
+				array(
+					'label' => __( 'Group Description', 'buddyboss' ),
+					'value' => 'group-description',
+				),
+				array(
+					'label' => __( 'Group Organizers', 'buddyboss' ),
+					'value' => 'group-organizers',
+				),
+				array(
+					'label' => __( 'Group Privacy', 'buddyboss' ),
+					'value' => 'group-privacy',
+				),
+			),
+			'pro_only'          => true,
+			'order'             => 20,
+		)
+	);
+
+	/**
+	 * Fires after Group Headers section fields are registered.
+	 * Allows third-party extensions to add more fields.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	do_action( 'bb_groups_settings_after_headers_fields' );
+}
