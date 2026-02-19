@@ -41,9 +41,15 @@ function bb_groups_register_settings_panel_fields() {
 			'name'              => 'bp_restrict_group_creation',
 			'label'             => __( 'Group Creation', 'buddyboss' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Allow only site admins to create groups', 'buddyboss' ),
+			'description'       => __( 'Enable social group creation by all members', 'buddyboss' ),
+			'help_text'         => sprintf(
+				/* translators: %s: Access Controls link. */
+				__( 'Administrators can always create groups, regardless of this setting. You can configure who can create groups in %s.', 'buddyboss' ),
+				'<a href="' . esc_url( bb_get_feature_settings_url( 'groups', 'access_controls' ) ) . '">' . __( 'Access Controls', 'buddyboss' ) . '</a>'
+			),
 			'default'           => bp_restrict_group_creation(),
 			'sanitize_callback' => 'intval',
+			'invert_value'      => true,
 			'order'             => 10,
 		)
 	);
@@ -58,7 +64,8 @@ function bb_groups_register_settings_panel_fields() {
 				'name'              => 'bb_enable_group_subscriptions',
 				'label'             => __( 'Subscriptions', 'buddyboss' ),
 				'type'              => 'toggle',
-				'description'       => __( 'Allow members to subscribe to group updates', 'buddyboss' ),
+				'description'       => __( 'Allow members to subscribe to groups', 'buddyboss' ),
+				'help_text'         => __( 'When a member is subscribed to a group, they can receive notifications of new activity posts and discussions created in the group.', 'buddyboss' ),
 				'default'           => function_exists( 'bb_enable_group_subscriptions' ) ? bb_enable_group_subscriptions() : true,
 				'sanitize_callback' => 'intval',
 				'order'             => 20,
@@ -76,7 +83,7 @@ function bb_groups_register_settings_panel_fields() {
 				'name'              => 'bp-disable-group-messages',
 				'label'             => __( 'Group Messages', 'buddyboss' ),
 				'type'              => 'toggle',
-				'description'       => __( 'Allow group members to send messages to the group', 'buddyboss' ),
+				'description'       => __( 'Allow for sending group messages to group members', 'buddyboss' ),
 				'default'           => bp_disable_group_messages(),
 				'sanitize_callback' => 'intval',
 				'invert_value'      => true,
@@ -116,7 +123,7 @@ function bb_groups_register_settings_panel_fields() {
 			'name'              => 'bp-enable-group-hierarchies',
 			'label'             => __( 'Hierarchies', 'buddyboss' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Allow groups to have parent-child relationships', 'buddyboss' ),
+			'description'       => __( 'Allow groups to have subgroups', 'buddyboss' ),
 			'default'           => bp_enable_group_hierarchies(),
 			'sanitize_callback' => 'intval',
 			'order'             => 10,
@@ -132,10 +139,13 @@ function bb_groups_register_settings_panel_fields() {
 			'name'              => 'bp-enable-group-hide-subgroups',
 			'label'             => __( 'Hide Subgroups', 'buddyboss' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Hide subgroups from the main Groups Directory', 'buddyboss' ),
+			'description'       => __( 'Hide subgroups from Groups Directory & Group Type Shortcode', 'buddyboss' ),
 			'default'           => bp_enable_group_hide_subgroups(),
 			'sanitize_callback' => 'intval',
-			'parent_field'      => 'bp-enable-group-hierarchies',
+			'conditional'       => array(
+				'field' => 'bp-enable-group-hierarchies',
+				'value' => true,
+			),
 			'order'             => 20,
 		)
 	);
@@ -149,10 +159,14 @@ function bb_groups_register_settings_panel_fields() {
 			'name'              => 'bp-enable-group-restrict-invites',
 			'label'             => __( 'Restrict Invitations', 'buddyboss' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Only allow invitations to users who are members of the parent group', 'buddyboss' ),
+			'description'       => __( 'Restrict subgroup invites to members of the parent group', 'buddyboss' ),
+			'help_text'         => __( 'Members must first be a member of the parent group prior to being invited to a subgroup', 'buddyboss' ),
 			'default'           => bp_enable_group_restrict_invites(),
 			'sanitize_callback' => 'intval',
-			'parent_field'      => 'bp-enable-group-hierarchies',
+			'conditional'       => array(
+				'field' => 'bp-enable-group-hierarchies',
+				'value' => true,
+			),
 			'order'             => 30,
 		)
 	);

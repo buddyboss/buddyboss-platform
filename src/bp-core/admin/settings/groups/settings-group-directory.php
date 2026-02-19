@@ -41,7 +41,7 @@ function bb_groups_register_directory_panel_fields() {
 			'name'              => 'bp-group-layout-format',
 			'label'             => __( 'Enabled View(s)', 'buddyboss' ),
 			'type'              => 'select',
-			'description'       => '',
+			'description'       => __( 'Display group directories in Grid View, List View, or allow toggling between both views.', 'buddyboss' ),
 			'default'           => bp_get_option( 'bp-group-layout-format', 'grid' ),
 			'sanitize_callback' => 'bb_groups_sanitize_layout_format',
 			'options'           => array(
@@ -101,12 +101,12 @@ function bb_groups_register_directory_panel_fields() {
 			'name'              => 'bb-group-directory-layout-grid-style',
 			'label'             => __( 'Grid Style', 'buddyboss' ),
 			'type'              => 'image_radio',
-			'description'       => '',
+			'description'       => __( 'Select the grid layout style. Group avatars and cover images appear only if enabled.', 'buddyboss' ),
 			'default'           => function_exists( 'bb_get_group_directory_grid_style' ) ? bb_get_group_directory_grid_style() : 'left',
 			'sanitize_callback' => 'bb_groups_sanitize_grid_style',
 			'options'           => array(
 				array(
-					'label' => __( 'Left Aligned', 'buddyboss' ),
+					'label' => __( 'Left', 'buddyboss' ),
 					'value' => 'left',
 					'image' => 'card-left-group',
 				),
@@ -130,7 +130,7 @@ function bb_groups_register_directory_panel_fields() {
 			'name'              => 'bb-group-directory-layout-elements',
 			'label'             => __( 'Elements', 'buddyboss' ),
 			'type'              => 'toggle_list',
-			'description'       => '',
+			'description'       => __( 'Select which elements show in your group directories. Cover images will only display in grid view and group descriptions will only display in list view.', 'buddyboss' ),
 			'default'           => array(),
 			'sanitize_callback' => 'bb_groups_sanitize_toggle_list',
 			'options'           => array(

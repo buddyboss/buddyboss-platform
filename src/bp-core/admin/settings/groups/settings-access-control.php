@@ -66,11 +66,26 @@ function bb_groups_register_access_control_fields() {
 			'name'              => 'bb-access-control-join-groups',
 			'label'             => __( 'Join Groups', 'buddyboss' ),
 			'type'              => 'access_control',
-			'description'       => __( 'Select which members can join groups based on:', 'buddyboss' ),
+			'description'       => __( 'Select which members can join public groups or request to join private groups based on:', 'buddyboss' ),
 			'default'           => '',
 			'pro_only'          => true,
 			'order'             => 20,
 			'sanitize_callback' => 'bb_sanitize_access_control_field',
+		)
+	);
+
+	// FIELD: Admin notice (displayed once at the end of the section).
+	bb_register_feature_field(
+		'groups',
+		'access_controls',
+		'member_access_controls',
+		array(
+			'name'        => 'bb-groups-access-control-notice',
+			'label'       => '',
+			'type'        => 'notice',
+			'description' => __( 'These settings do not apply to administrators.', 'buddyboss' ),
+			'notice_type' => 'info',
+			'order'       => 100,
 		)
 	);
 
@@ -84,3 +99,4 @@ function bb_groups_register_access_control_fields() {
 	 */
 	do_action( 'bb_groups_access_control_after_register_fields' );
 }
+

@@ -57,6 +57,21 @@ function bb_activity_register_access_control_fields() {
 		)
 	);
 
+	// FIELD: Admin notice (displayed once at the end of the section).
+	bb_register_feature_field(
+		'activity',
+		'access_controls',
+		'member_access_controls',
+		array(
+			'name'        => 'bb-activity-access-control-notice',
+			'label'       => '',
+			'type'        => 'notice',
+			'description' => __( 'These settings do not apply to administrators.', 'buddyboss' ),
+			'notice_type' => 'info',
+			'order'       => 100,
+		)
+	);
+
 	/**
 	 * Fires after the core Activity access-control fields are registered.
 	 *
@@ -111,7 +126,6 @@ function bb_access_control_enrich_field_data( $field_data, $field, $feature_id =
 			'types'              => array(),
 			'current_type'       => '',
 			'options'            => array(),
-			'notice'             => __( 'These settings do not apply to administrators.', 'buddyboss' ),
 			'select_placeholder' => __( 'Select Role', 'buddyboss' ),
 		),
 		$field_data['name'],

@@ -41,7 +41,8 @@ function bb_groups_register_images_panel_fields() {
 			'name'              => 'bp-disable-group-avatar-uploads',
 			'label'             => __( 'Group Avatars', 'buddyboss' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Allow group organizers to upload an avatar', 'buddyboss' ),
+			'description'       => __( 'Enable avatars for groups', 'buddyboss' ),
+			'help_text'         => __( 'When enabled, group organizers will be able to upload avatars in the group\'s settings.', 'buddyboss' ),
 			'default'           => bp_disable_group_avatar_uploads(),
 			'sanitize_callback' => 'intval',
 			'invert_value'      => true,
@@ -78,8 +79,10 @@ function bb_groups_register_images_panel_fields() {
 					'image' => 'avatar-custom',
 				),
 			),
-			'parent_field'      => 'bp-disable-group-avatar-uploads',
-			'parent_value'      => false,
+			'conditional'       => array(
+				'field' => 'bp-disable-group-avatar-uploads',
+				'value' => false,
+			),
 			'order'             => 20,
 		)
 	);
@@ -105,16 +108,17 @@ function bb_groups_register_images_panel_fields() {
 		)
 	);
 
-	// FIELD: Group Cover Images (inverted — legacy stores "disable").
+	// FIELD: Group Cover Image (inverted — legacy stores "disable").
 	bb_register_feature_field(
 		'groups',
 		'group_images',
 		'group_cover',
 		array(
 			'name'              => 'bp-disable-group-cover-image-uploads',
-			'label'             => __( 'Group Cover Images', 'buddyboss' ),
+			'label'             => __( 'Group Cover Image', 'buddyboss' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Allow group organizers to upload a cover image', 'buddyboss' ),
+			'description'       => __( 'Enable cover images for groups', 'buddyboss' ),
+			'help_text'         => __( 'When enabled, group organizers will be able to upload cover images in the group\'s settings.', 'buddyboss' ),
 			'default'           => bp_disable_group_cover_image_uploads(),
 			'sanitize_callback' => 'intval',
 			'invert_value'      => true,
@@ -151,8 +155,10 @@ function bb_groups_register_images_panel_fields() {
 					'image' => 'cover-custom',
 				),
 			),
-			'parent_field'      => 'bp-disable-group-cover-image-uploads',
-			'parent_value'      => false,
+			'conditional'       => array(
+				'field' => 'bp-disable-group-cover-image-uploads',
+				'value' => false,
+			),
 			'order'             => 20,
 		)
 	);
@@ -166,12 +172,14 @@ function bb_groups_register_images_panel_fields() {
 			'name'         => 'bb-default-group-cover-size',
 			'label'        => __( 'Cover Image Sizes', 'buddyboss' ),
 			'type'         => 'child_render',
-			'description'  => '',
+			'description'  => __( 'Changing the size of your cover images will reposition those already uploaded by members.', 'buddyboss' ),
 			'pro_only'     => true,
-			'parent_field' => 'bp-disable-group-cover-image-uploads',
-			'parent_value' => false,
+			'conditional'  => array(
+				'field' => 'bp-disable-group-cover-image-uploads',
+				'value' => false,
+			),
 			'order'        => 30,
-			'children'     => array(
+			'fields'       => array(
 				array(
 					'name'              => 'bb-pro-cover-group-width',
 					'label'             => __( 'Width', 'buddyboss' ),

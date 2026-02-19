@@ -41,12 +41,12 @@ function bb_groups_register_headers_panel_fields() {
 			'name'              => 'bb-group-header-style',
 			'label'             => __( 'Header Style', 'buddyboss' ),
 			'type'              => 'image_radio',
-			'description'       => '',
+			'description'       => __( 'Select the style of your group header. Group avatars and cover images will only be displayed if they are enabled. This setting does not apply to the App style.', 'buddyboss' ),
 			'default'           => function_exists( 'bb_get_group_header_style' ) ? bb_get_group_header_style() : 'left',
 			'sanitize_callback' => 'bb_groups_sanitize_header_style',
 			'options'           => array(
 				array(
-					'label' => __( 'Left Aligned', 'buddyboss' ),
+					'label' => __( 'Left', 'buddyboss' ),
 					'value' => 'left',
 					'image' => 'header-left-group',
 				),
@@ -70,7 +70,7 @@ function bb_groups_register_headers_panel_fields() {
 			'name'              => 'bb-group-headers-elements',
 			'label'             => __( 'Elements', 'buddyboss' ),
 			'type'              => 'toggle_list',
-			'description'       => '',
+			'description'       => __( 'Select which elements to show in your group headers.', 'buddyboss' ),
 			'default'           => array(),
 			'sanitize_callback' => 'bb_groups_sanitize_toggle_list',
 			'options'           => array(
