@@ -906,25 +906,74 @@
 
 .bb-activity-comment-modal {
 
+	&.components-modal__frame {
+		width: 680px;
+		max-width: 90vw;
+	}
+
+	.components-modal__header {
+		padding: 16px 16px 16px 24px;
+	}
+
+	.components-modal__content {
+		padding: 0;
+		margin-top: 64px;
+	}
+
+	&__body {
+		padding: 16px 24px 8px;
+	}
+
+	&__error {
+		color: $bb-error-color;
+		font-size: 13px;
+		margin: 0 0 12px 0;
+	}
+
+	&__footer {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 8px;
+		padding: 8px 24px;
+		border-top: 1px solid $bb-border-secondary-color;
+	}
+
+	&__footer-left {
+		display: flex;
+		align-items: center;
+		flex: 1;
+		padding: 8px 0;
+	}
+
+	&__footer-right {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		flex: 1;
+		gap: 8px;
+		padding: 8px 0;
+	}
+
 	&__view-link {
 		display: inline-flex;
 		align-items: center;
 		gap: 4px;
-		padding: 6px 14px;
+		padding: 6px 16px;
 		font-size: 14px;
 		font-weight: 400;
-		line-height: 1.8;
+		line-height: 20px;
 		color: $bb-text-color;
 		text-decoration: none;
-		background-color: $bb-background-secondary-color;
-		border: 1px solid $bb-border-secondary-color;
+		background-color: transparent;
+		border: 1px solid $bb-border-tertiary-color;
 		border-radius: $bb-border-radius-lg;
 		cursor: pointer;
 
 		&:hover {
 			color: $bb-text-color;
-			background-color: $bb-background-secondary-color;
-			border-color: $bb-border-secondary-color;
+			background-color: $bb-background-primary-hover-color;
+			border-color: $bb-border-tertiary-color;
 			text-decoration: none;
 		}
 
