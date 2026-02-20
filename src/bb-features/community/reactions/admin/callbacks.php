@@ -65,3 +65,34 @@ function bb_reactions_sanitize_button_settings( $value ) {
 
 	return $sanitized;
 }
+
+/**
+ * Get all of the reactions settings fields.
+ *
+ * @since BuddyBoss 2.5.20
+ *
+ * @return array
+ */
+function bb_reactions_get_settings_fields() {
+
+	$fields = array();
+
+	$fields['bp_reaction_settings_section'] = array(
+		'bb_all_reactions'     => array(
+			'title' => esc_html__( 'Enable Reactions', 'buddyboss' ),
+		),
+
+		'bb_reaction_mode'     => array(
+			'title'             => esc_html__( 'Reactions Mode', 'buddyboss' ),
+			'sanitize_callback' => 'sanitize_text_field',
+		),
+
+		'bb_reaction_emotions' => array(),
+
+		'bb_reactions_button'  => array(
+			'title' => esc_html__( 'Reactions Button', 'buddyboss' ),
+		),
+	);
+
+	return (array) apply_filters( 'bb_reactions_get_settings_fields', $fields );
+}
