@@ -2987,7 +2987,7 @@ function bp_activity_new_comment( $args = '' ) {
 	 * or database operations occur. It can be used to redirect replies to different
 	 * parent comments (e.g., for threading depth limits).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.20.0
 	 *
 	 * @param array $r Parsed arguments for the new comment.
 	 */
@@ -7098,7 +7098,7 @@ function bb_get_activity_comment_loading( $default = 10 ) {
  *
  * Uses optimized single-column queries instead of loading full activity objects.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.20.0
  *
  * @param int $comment_id  The ID of the comment to check.
  * @param int $activity_id The ID of the root activity.
@@ -7163,7 +7163,7 @@ function bb_get_activity_comment_chain_info( $comment_id, $activity_id ) {
  *
  * Wrapper around bb_get_activity_comment_chain_info() for backward compatibility.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.20.0
  *
  * @param int $comment_id  The ID of the comment to check.
  * @param int $activity_id The ID of the root activity.
@@ -7181,7 +7181,7 @@ function bb_get_activity_comment_depth_by_id( $comment_id, $activity_id ) {
  *
  * Wrapper around bb_get_activity_comment_chain_info() for backward compatibility.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.20.0
  *
  * @param int $comment_id   The ID of the starting comment.
  * @param int $activity_id  The ID of the root activity.
@@ -7210,7 +7210,7 @@ function bb_get_activity_comment_ancestor_at_depth( $comment_id, $activity_id, $
  * this function redirects the reply to an ancestor comment so that the new comment
  * is stored at the maximum depth level instead of exceeding it.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.20.0
  *
  * @param array $args Arguments for the new activity comment.
  *
