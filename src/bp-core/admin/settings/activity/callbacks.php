@@ -45,6 +45,24 @@ function bb_activity_get_allowed_edit_times() {
 }
 
 /**
+ * No-op sanitize callback for topic_list fields.
+ *
+ * Topics are managed via dedicated AJAX endpoints (bb_add_topic,
+ * bb_delete_topic, bb_migrate_topic, bb_update_topics_order) and
+ * should not be overwritten by the auto-save pipeline. This callback
+ * returns the existing stored value so it is never clobbered.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed $value The submitted value (ignored).
+ *
+ * @return mixed The existing stored value.
+ */
+function bb_sanitize_topic_list_noop( $value ) {
+	return bp_get_option( 'bb_activity_topics', array() );
+}
+
+/**
  * Sanitize activity edit time setting.
  *
  * Handles the toggle + select combo for activity edit and comment edit fields.

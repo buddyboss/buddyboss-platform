@@ -10,6 +10,7 @@
 import { DropdownMenu, MenuGroup, MenuItem } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { BBIcon } from '../common/BBIcon';
+import { safeUrl } from '../../utils/sanitize';
 
 /**
  * Reaction Mode Field Component
@@ -173,7 +174,7 @@ export function ReactionModeField({ field, value, values, onChange, defaultEmoti
 								</span>
 								{field.pro_notice.link_url && (
 									<a
-										href={field.pro_notice.link_url}
+										href={safeUrl(field.pro_notice.link_url)}
 										target="_blank"
 										rel="noopener noreferrer"
 										className="bb-pro-badge__play-link"

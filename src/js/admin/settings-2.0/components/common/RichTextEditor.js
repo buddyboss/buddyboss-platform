@@ -10,6 +10,40 @@
 import { useEffect, useRef } from '@wordpress/element';
 
 /**
+ * Forcefully remove any existing TinyMCE editor for the given ID.
+ *
+ * Cleans up TinyMCE, WordPress editor API, and QTags instances.
+ * Shared between RichTextEditor and ActivityCommentModal.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {string} editorId Editor ID to remove.
+ */
+export function forceRemoveEditor( editorId ) {
+	// Remove via TinyMCE directly.
+	if ( window.tinymce ) {
+		var existingEditor = window.tinymce.get( editorId );
+		if ( existingEditor ) {
+			existingEditor.remove();
+		}
+	}
+
+	// Also remove via WordPress editor API.
+	if ( window.wp && window.wp.editor ) {
+		window.wp.editor.remove( editorId );
+	}
+
+	// Clean up quicktags instance.
+	if ( window.QTags && window.QTags.instances ) {
+		Object.keys( window.QTags.instances ).forEach( function ( key ) {
+			if ( window.QTags.instances[ key ] && window.QTags.instances[ key ].id === editorId ) {
+				delete window.QTags.instances[ key ];
+			}
+		} );
+	}
+}
+
+/**
  * Rich Text Editor wrapper for TinyMCE.
  *
  * @param {Object}   props          Component props.
@@ -23,38 +57,13 @@ export function RichTextEditor( { id, label, value, onChange } ) {
 	var containerRef = useRef( null );
 	var editorInitialized = useRef( false );
 
-	/**
-	 * Forcefully remove any existing TinyMCE editor for the given ID.
-	 *
-	 * @param {string} editorId Editor ID to remove.
-	 */
-	var forceRemoveEditor = function ( editorId ) {
-		// Remove via TinyMCE directly.
-		if ( window.tinymce ) {
-			var existingEditor = window.tinymce.get( editorId );
-			if ( existingEditor ) {
-				existingEditor.remove();
-			}
-		}
-
-		// Also remove via WordPress editor API.
-		if ( window.wp && window.wp.editor ) {
-			window.wp.editor.remove( editorId );
-		}
-
-		// Clean up quicktags instance.
-		if ( window.QTags && window.QTags.instances ) {
-			Object.keys( window.QTags.instances ).forEach( function ( key ) {
-				if ( window.QTags.instances[ key ] && window.QTags.instances[ key ].id === editorId ) {
-					delete window.QTags.instances[ key ];
-				}
-			} );
-		}
-	};
-
 	// Store the initial value in a ref so TinyMCE init callback can access it.
 	var initialValueRef = useRef( value );
 	initialValueRef.current = value;
+
+	// Keep onChange in a ref so the TinyMCE event handler always calls the latest callback.
+	var onChangeRef = useRef( onChange );
+	onChangeRef.current = onChange;
 
 	// Initialize TinyMCE on mount.
 	useEffect( function () {
@@ -85,7 +94,7 @@ export function RichTextEditor( { id, label, value, onChange } ) {
 								} );
 
 								editor.on( 'change keyup', function () {
-									onChange( editor.getContent() );
+									onChangeRef.current( editor.getContent() );
 								} );
 							},
 						},

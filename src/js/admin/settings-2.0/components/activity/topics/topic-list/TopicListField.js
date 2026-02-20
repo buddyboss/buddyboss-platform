@@ -24,9 +24,13 @@ import { TopicDeleteModal } from './TopicDeleteModal';
  */
 function ajaxRequest( action, data ) {
 	var ajaxUrl = window.ajaxurl || ( window.bbAdminData && window.bbAdminData.ajaxUrl ) || '/wp-admin/admin-ajax.php';
+	var globalNonce = ( window.bbAdminData && window.bbAdminData.ajaxNonce ) || '';
 	var formData = new FormData();
 
 	formData.append( 'action', action );
+	if ( globalNonce ) {
+		formData.append( 'nonce', globalNonce );
+	}
 	Object.keys( data ).forEach( function ( key ) {
 		var val = data[ key ];
 		if ( Array.isArray( val ) ) {
@@ -268,6 +272,7 @@ export function TopicListField( { field, value, values, onChange } ) {
 
 	var handleDragEnd = function () {
 		if ( null !== dragIndex && null !== dragOverIndex && dragIndex !== dragOverIndex ) {
+			var previousTopics = topics.slice();
 			var reordered = topics.slice();
 			var draggedItem = reordered.splice( dragIndex, 1 )[ 0 ];
 			reordered.splice( dragOverIndex, 0, draggedItem );
@@ -282,6 +287,16 @@ export function TopicListField( { field, value, values, onChange } ) {
 			ajaxRequest( 'bb_update_topics_order', {
 				topic_ids: topicIds,
 				nonce: nonces.order || '',
+			} ).then( function ( response ) {
+				if ( ! response.success ) {
+					setTopics( previousTopics );
+					onChange( field.name, previousTopics );
+					setError( __( 'Failed to save topic order.', 'buddyboss' ) );
+				}
+			} ).catch( function () {
+				setTopics( previousTopics );
+				onChange( field.name, previousTopics );
+				setError( __( 'Failed to save topic order.', 'buddyboss' ) );
 			} );
 		}
 		setDragIndex( null );

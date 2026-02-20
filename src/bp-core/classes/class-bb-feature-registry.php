@@ -127,6 +127,14 @@ class BB_Feature_Registry {
 	private $reverse_deps = array();
 
 	/**
+	 * IDs of features that were cascade-deactivated in the last deactivation call.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 * @var array
+	 */
+	public $last_deactivated_dependents = array();
+
+	/**
 	 * Get singleton instance.
 	 *
 	 * @since BuddyBoss [BBVERSION]

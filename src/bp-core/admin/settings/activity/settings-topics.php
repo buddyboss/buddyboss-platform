@@ -71,18 +71,21 @@ function bb_activity_register_topics_panel_fields() {
 	);
 
 	// FIELD: Topics List (custom topic_list type).
+	// Topics are managed via dedicated AJAX (bb_add_topic, bb_delete_topic, etc.)
+	// so the sanitize_callback prevents auto-save from overwriting topic data.
 	bb_register_feature_field(
 		'activity',
 		'activity_topics',
 		'activity_topics',
 		array(
-			'name'        => 'bb_activity_topics',
-			'label'       => __( 'Topics', 'buddyboss' ),
-			'type'        => 'topic_list',
-			'description' => __( 'You can add up to a maximum of 20 topics', 'buddyboss' ),
-			'default'     => array(),
-			'order'       => 30,
-			'conditional' => array(
+			'name'              => 'bb_activity_topics',
+			'label'             => __( 'Topics', 'buddyboss' ),
+			'type'              => 'topic_list',
+			'description'       => __( 'You can add up to a maximum of 20 topics', 'buddyboss' ),
+			'default'           => array(),
+			'sanitize_callback' => 'bb_sanitize_topic_list_noop',
+			'order'             => 30,
+			'conditional'       => array(
 				'field' => 'bb_enable_activity_topics',
 				'value' => true,
 			),

@@ -17,7 +17,7 @@ import {
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { ajaxFetch } from '../utils/ajax';
-import { sanitizeHtml } from '../utils/sanitize';
+import { sanitizeHtml, safeUrl } from '../utils/sanitize';
 import { ActivityEditModal } from '../components/activity/ActivityEditModal';
 import { ActivityCommentModal } from '../components/activity/ActivityCommentModal';
 
@@ -131,13 +131,21 @@ export function ActivityListScreen( { onNavigate } ) {
 
 	/**
 	 * Fetch activities from the server.
+	 *
+	 * @param {Object} options         Optional fetch options.
+	 * @param {AbortSignal} options.signal AbortController signal to cancel in-flight requests.
 	 */
-	var fetchActivities = useCallback( function () {
+	var fetchActivities = useCallback( function ( options ) {
 		setIsLoading( true );
 
 		var spam = 'ham_only';
 		if ( 'spam' === filter ) {
 			spam = 'spam_only';
+		}
+
+		var fetchOptions = {};
+		if ( options && options.signal ) {
+			fetchOptions.signal = options.signal;
 		}
 
 		ajaxFetch( 'bb_admin_get_activities', {
@@ -147,7 +155,7 @@ export function ActivityListScreen( { onNavigate } ) {
 			activity_type: actionFilter,
 			spam: spam,
 			include_meta: hasMetaRef.current ? 0 : 1,
-		} ).then( function ( response ) {
+		}, fetchOptions ).then( function ( response ) {
 			if ( response.success && response.data ) {
 				var rawActivities = response.data.activities || [];
 				// Sanitize custom column HTML once at fetch time to avoid DOMParser overhead per render.
@@ -187,14 +195,26 @@ export function ActivityListScreen( { onNavigate } ) {
 				hasMetaRef.current = true;
 			}
 			setIsLoading( false );
-		} ).catch( function () {
+		} ).catch( function ( error ) {
+			// Ignore aborted requests — they are expected during cleanup.
+			if ( error && 'AbortError' === error.name ) {
+				return;
+			}
 			setIsLoading( false );
+			setNotice( {
+				type: 'error',
+				message: __( 'Failed to load activities. Please try again.', 'buddyboss' ),
+			} );
 		} );
 	}, [ currentPage, perPage, searchQuery, actionFilter, filter ] );
 
-	// Fetch on mount and when filters change.
+	// Fetch on mount and when filters change. Abort stale requests on cleanup.
 	useEffect( function () {
-		fetchActivities();
+		var controller = new AbortController();
+		fetchActivities( { signal: controller.signal } );
+		return function () {
+			controller.abort();
+		};
 	}, [ fetchActivities ] );
 
 	// Clear notice after 5 seconds.
@@ -715,14 +735,14 @@ export function ActivityListScreen( { onNavigate } ) {
 											<div className="bb-activity-list__author">
 												{ activity.author?.avatar_url && (
 													<img
-														src={ activity.author.avatar_url }
+														src={ safeUrl( activity.author.avatar_url ) }
 														alt={ activity.author.name || '' }
 														className="bb-activity-list__avatar"
 													/>
 												) }
 												<span className="bb-activity-list__author-info">
 													<a
-														href={ activity.author?.profile_url || '#' }
+														href={ safeUrl( activity.author?.profile_url || '#' ) }
 														className="bb-activity-list__author-name"
 													>
 														{ activity.author?.name || __( 'Unknown', 'buddyboss' ) }
@@ -752,7 +772,8 @@ export function ActivityListScreen( { onNavigate } ) {
 										{ activity.custom_columns && Object.keys( activity.custom_columns ).map( function ( key ) {
 											return (
 												<td key={ key } className={ 'bb-activity-list__td--custom bb-activity-list__td--' + key }>
-													<span dangerouslySetInnerHTML={ { __html: sanitizeHtml( activity.custom_columns[ key ] ) } } />
+													{/* Safe: custom_columns are already sanitized via sanitizeHtml at fetch time (line 168). */}
+												<span dangerouslySetInnerHTML={ { __html: activity.custom_columns[ key ] } } />
 												</td>
 											);
 										} ) }

@@ -13,6 +13,8 @@ import {
 	Button,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
+import { safeUrl } from '../../utils/sanitize';
+import { forceRemoveEditor } from '../common/RichTextEditor';
 
 /**
  * Activity Comment Modal Component
@@ -36,32 +38,6 @@ export function ActivityCommentModal( { isOpen, activity, onClose, onSave, isSav
 
 	var editorInitialized = useRef( false );
 	var editorId = activity ? 'bb-admin-comment-' + activity.id : 'bb-admin-comment-0';
-
-	/**
-	 * Forcefully remove any existing TinyMCE editor for the given ID.
-	 *
-	 * @param {string} id Editor ID to remove.
-	 */
-	var forceRemoveEditor = function ( id ) {
-		if ( window.tinymce ) {
-			var existingEditor = window.tinymce.get( id );
-			if ( existingEditor ) {
-				existingEditor.remove();
-			}
-		}
-
-		if ( window.wp && window.wp.editor ) {
-			window.wp.editor.remove( id );
-		}
-
-		if ( window.QTags && window.QTags.instances ) {
-			Object.keys( window.QTags.instances ).forEach( function ( key ) {
-				if ( window.QTags.instances[ key ] && window.QTags.instances[ key ].id === id ) {
-					delete window.QTags.instances[ key ];
-				}
-			} );
-		}
-	};
 
 	// Reset form when activity changes.
 	useEffect( function () {
@@ -174,7 +150,7 @@ export function ActivityCommentModal( { isOpen, activity, onClose, onSave, isSav
 				<div className="bb-activity-comment-modal__footer-left">
 					{ ( activity.permalink || activity.primary_link ) && (
 						<a
-							href={ activity.permalink || activity.primary_link }
+							href={ safeUrl( activity.permalink || activity.primary_link ) }
 							target="_blank"
 							rel="noopener noreferrer"
 							className="bb-activity-comment-modal__view-link"

@@ -15,6 +15,7 @@ import {
 import { __ } from '@wordpress/i18n';
 
 import { RegisteredMetaField } from '../common/RegisteredMetaField';
+import { safeUrl } from '../../utils/sanitize';
 
 /**
  * Group consecutive fields with layout='half' into row wrappers.
@@ -227,7 +228,7 @@ export function ActivityEditModal( { isOpen, activity, activityActions, onClose,
 			<div className="bb-activity-edit-modal__footer bb-admin-settings-modal__footer">
 				<div className="bb-activity-edit-modal__footer-left">
 					<a
-						href={ activity.permalink || '#' }
+						href={ safeUrl( activity.permalink ) }
 						target="_blank"
 						rel="noopener noreferrer"
 						className="bb-activity-edit-modal__view-link"
