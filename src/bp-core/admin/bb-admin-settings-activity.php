@@ -46,7 +46,7 @@ function bb_admin_settings_register_activity_feature() {
 			'description'        => __( 'Provide global, personal, and group activity feeds that support threaded commenting, direct posting, @mentions, and email notifications.', 'buddyboss' ),
 			'icon'               => array(
 				'type'  => 'font',
-				'class' => 'bb-icons-rl bb-icons-rl-lightning',
+				'class' => 'bb-icons-rl bb-icons-rl-pulse',
 			),
 			'license_tier'       => 'free',
 			'category'           => 'community',
