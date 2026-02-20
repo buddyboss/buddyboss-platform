@@ -8,6 +8,7 @@
  */
 
 import { useState, useEffect } from '@wordpress/element';
+import { ImageUploadField } from './ImageUploadField';
 
 /**
  * ImageRadioField component.
@@ -23,6 +24,7 @@ import { useState, useEffect } from '@wordpress/element';
  */
 export function ImageRadioField( { field, value, onChange, disabled } ) {
 	var [ selected, setSelected ] = useState( value );
+	var [ uploadUrl, setUploadUrl ] = useState( field.upload_url || '' );
 
 	// Sync local state when parent value changes (e.g., after save or initial load).
 	useEffect( function () {
@@ -34,7 +36,11 @@ export function ImageRadioField( { field, value, onChange, disabled } ) {
 		onChange( field.name, optionValue );
 	};
 
+	var uploadConditional = field.upload_config && field.upload_config.conditional;
+	var showUpload = uploadConditional && selected === uploadConditional.value;
+
 	return (
+		<div className="bb-admin-settings-field__image-radio-wrapper">
 		<div className="bb-admin-settings-field__image-radio">
 			{ ( field.options || [] ).map( ( option ) => (
 				<button
@@ -110,6 +116,20 @@ export function ImageRadioField( { field, value, onChange, disabled } ) {
 					<span className="bb-admin-settings-field__image-radio-label">{ option.label }</span>
 				</button>
 			) ) }
+		</div>
+		{ showUpload && (
+			<ImageUploadField
+				uploadConfig={ field.upload_config }
+				uploadUrl={ uploadUrl }
+				onUpload={ function ( newUrl ) {
+					setUploadUrl( newUrl );
+				} }
+				onRemove={ function () {
+					setUploadUrl( '' );
+				} }
+				disabled={ disabled }
+			/>
+		) }
 		</div>
 	);
 }

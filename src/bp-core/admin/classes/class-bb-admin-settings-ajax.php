@@ -611,6 +611,31 @@ class BB_Admin_Settings_Ajax {
 				$field_data['pro_notice'] = ! empty( $pro_notice['show'] ) ? $pro_notice : null;
 			}
 
+			// Inject upload_config and resolved upload_url for image_radio fields with upload support.
+			// Only whitelisted keys are sent to the frontend — url_getter stays server-side.
+			if ( 'image_radio' === ( $field_data['type'] ?? '' ) && ! empty( $field['upload_config'] ) ) {
+				$upload_config = $field['upload_config'];
+
+				// Resolve the current upload URL using the registered getter function.
+				// Only call functions with the 'bb_' or 'bp_' prefix to prevent arbitrary function execution.
+				$url_getter = $upload_config['url_getter'] ?? '';
+				$upload_url = '';
+				if (
+					! empty( $url_getter ) &&
+					is_string( $url_getter ) &&
+					preg_match( '/^(bb|bp)_/', $url_getter ) &&
+					function_exists( $url_getter )
+				) {
+					$upload_url = call_user_func( $url_getter );
+				}
+
+				$field_data['upload_url'] = esc_url( $upload_url );
+
+				// Strip server-only keys before passing to frontend.
+				unset( $upload_config['url_getter'] );
+				$field_data['upload_config'] = $upload_config;
+			}
+
 			/**
 			 * Filters the field data before it is returned.
 			 *

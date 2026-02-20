@@ -81,6 +81,17 @@ function bb_groups_register_images_panel_fields() {
 					'image' => 'avatar-custom',
 				),
 			),
+			'upload_config'     => array(
+				'type'          => 'avatar',
+				'object'        => 'group',
+				'item_id'       => 0,
+				'item_type'     => 'default',
+				'url_getter'    => 'bb_get_default_custom_upload_group_avatar',
+				'help_text'     => __( 'Upload a custom avatar image (JPG or PNG, recommended size: 300×300 px).', 'buddyboss' ),
+				'conditional'   => array(
+					'value' => 'custom',
+				),
+			),
 			'conditional'       => array(
 				'field' => 'bp-disable-group-avatar-uploads',
 				'value' => false,
@@ -157,6 +168,17 @@ function bb_groups_register_images_panel_fields() {
 					'label' => __( 'Custom', 'buddyboss' ),
 					'value' => 'custom',
 					'image' => 'cover-custom',
+				),
+			),
+			'upload_config'     => array(
+				'type'          => 'cover',
+				'object'        => 'group',
+				'item_id'       => 0,
+				'item_type'     => 'default',
+				'url_getter'    => 'bb_get_default_custom_upload_group_cover',
+				'help_text'     => __( 'Upload a custom cover image (JPG or PNG, recommended size: 1950×450 px).', 'buddyboss' ),
+				'conditional'   => array(
+					'value' => 'custom',
 				),
 			),
 			'conditional'       => array(
