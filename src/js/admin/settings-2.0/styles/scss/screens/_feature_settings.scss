@@ -213,10 +213,6 @@
 
             .bb-admin-settings-form__field-description {
                 margin: 0;
-
-                &--has-controls .bb-admin-settings-form__inline-select {
-                    margin-left: 8px;
-                }
             }
         }
     }
@@ -230,6 +226,10 @@
 
         &--has-controls {
             margin-top: 0;
+
+            .bb-admin-settings-form__inline-select {
+                margin: 0 6px 0 2px;
+            }
         }
     }
 
