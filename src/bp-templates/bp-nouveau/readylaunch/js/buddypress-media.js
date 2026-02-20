@@ -611,6 +611,11 @@ window.bp = window.bp || {};
 
 			$editAlbumModal.find( '#bb-album-title' ).val( current_name ).focus().select();
 			$editAlbumModal.attr( 'data-id', album_item.attr('data-id') );
+
+			//Trigger select2 initialization
+			if( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+				bp.Readylaunch.initSelect2Scoped( $(document) );
+			}
 		},
 
 		closeEditAlbumModal: function ( event ) {
@@ -2546,6 +2551,11 @@ window.bp = window.bp || {};
 
 				mediaUploader.addClass( 'open-popup' ).show();
 
+				// Reinitialize select2 for privacy select if not already initialized.
+				if ( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+					bp.Readylaunch.initSelect2Scoped( mediaUploader );
+				}
+
 				if ( $( event.currentTarget ).closest( '#bp-media-single-album' ).length ) {
 					$( '#bb-media-privacy' ).hide();
 				}
@@ -2626,11 +2636,11 @@ window.bp = window.bp || {};
 
 						if ( Number( $( e.currentTarget ).data( 'id' ) ) !== 0 ) {
 							mediaPrivacy.find( 'option' ).removeAttr( 'selected' );
-							mediaPrivacy.val( $( e.currentTarget ).parent().data( 'privacy' ) );
+							mediaPrivacy.val( $( e.currentTarget ).parent().data( 'privacy' ) ).trigger( 'change' );
 							mediaPrivacy.prop( 'disabled', true );
 						} else {
 							mediaPrivacy.find( 'option' ).removeAttr( 'selected' );
-							mediaPrivacy.val( 'public' );
+							mediaPrivacy.val( 'public' ).trigger( 'change' );
 							mediaPrivacy.prop( 'disabled', false );
 						}
 					}
@@ -2661,11 +2671,11 @@ window.bp = window.bp || {};
 						var selectedAlbumPrivacy = $( e.currentTarget ).closest( '#bp-media-uploader' ).find( '.location-album-list li.is_active' ).data( 'privacy' );
 						if ( Number( $( e.currentTarget ).closest( '.bb-rl-field-wrap' ).find( '.bb-rl-album-selected-id' ).val() ) !== 0 ) {
 							mediaPrivacy.find( 'option' ).removeAttr( 'selected' );
-							mediaPrivacy.val( selectedAlbumPrivacy === undefined ? 'public' : selectedAlbumPrivacy );
+							mediaPrivacy.val( selectedAlbumPrivacy === undefined ? 'public' : selectedAlbumPrivacy ).trigger( 'change' );
 							mediaPrivacy.prop( 'disabled', true );
 						} else {
 							mediaPrivacy.find( 'option' ).removeAttr( 'selected' );
-							mediaPrivacy.val( 'public' );
+							mediaPrivacy.val( 'public' ).trigger( 'change' );
 							mediaPrivacy.prop( 'disabled', false );
 						}
 
@@ -2822,6 +2832,11 @@ window.bp = window.bp || {};
 				$document.removeClass( 'open-popup' );
 				mediaUploader.show();
 				mediaUploader.addClass( 'open-popup' );
+
+				// Reinitialize select2 for privacy select if not already initialized.
+				if ( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+					bp.Readylaunch.initSelect2Scoped( mediaUploader );
+				}
 
 				if ( $( '#bp-media-uploader.bp-media-document-uploader' ).find( '.bb-field-steps.bb-field-steps-2' ).length ) {
 					currentTarget = '#bp-media-uploader.bp-media-document-uploader';
@@ -3502,6 +3517,11 @@ window.bp = window.bp || {};
 
 			$document.find( '.open-popup #bb-rl-media-create-album-popup #bb-album-title' ).show();
 			$document.find( '.open-popup #bb-rl-media-create-album-popup #bb-album-title' ).removeClass( 'error' );
+
+			//Trigger select2 initialization
+			if( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+				bp.Readylaunch.initSelect2Scoped( $(document) );
+			}
 		},
 
 		/**
@@ -3865,7 +3885,21 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			this.openUploader( event );
-			$( '#bp-media-create-album' ).show();
+			var $createAlbum = $( '#bp-media-create-album' );
+			$createAlbum.show();
+
+			// Reinitialize select2 for album privacy select after delay to ensure DOM is ready.
+			// Using 250ms to run after any ajaxComplete handlers (which have 100ms delay).
+			if ( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+				setTimeout( function () {
+					// Only initialize if not already initialized.
+					var $select = $createAlbum.find( '.bb-rl-filter select' );
+					if ( $select.length && ! $select.hasClass( 'select2-hidden-accessible' ) ) {
+						bp.Readylaunch.initSelect2Scoped( $createAlbum );
+					}
+				}, 250 );
+			}
+
 			if ( $( 'body' ).hasClass( 'directory' ) ) {
 				$( '#bp-media-uploader' ).hide();
 			}
@@ -3878,6 +3912,11 @@ window.bp = window.bp || {};
 			$createFolder.addClass( 'open-popup' );
 			$document.find( '.open-popup #bb-rl-media-create-album-popup #bb-album-title' ).show();
 			$document.find( '.open-popup #bb-rl-media-create-album-popup #bb-album-title' ).removeClass( 'error' );
+
+			// Reinitialize select2 for folder privacy select if not already initialized.
+			if ( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+				bp.Readylaunch.initSelect2Scoped( $createFolder );
+			}
 		},
 
 		openCreateFolderChildModal: function ( event ) {
@@ -6113,6 +6152,17 @@ window.bp = window.bp || {};
 			$folderLocation.find( '.bb-rl-modal-header' ).append( '<p>' + popupTitle + '</p>' );
 			$( '.bb-rl-modal-container #bb-rl-folder-privacy' ).addClass( 'new-folder-create-privacy' );
 			$document.find( '.open-popup .error' ).hide();
+
+			// Reinitialize select2 for privacy select after a small delay to ensure element is visible.
+			if ( bp.Readylaunch && bp.Readylaunch.initSelect2Scoped ) {
+				setTimeout( function () {
+					// Target the visible on-fly create popup wrapper within the open popup.
+					var $targetContainer = $openPopup.find( '.bb-rl-create-popup-' + folderORAlbum + '-wrap' );
+					if ( $targetContainer.length && $targetContainer.is( ':visible' ) ) {
+						bp.Readylaunch.initSelect2Scoped( $targetContainer );
+					}
+				}, 150 );
+			}
 		},
 
 		closeCreateFolderAlbumInPopup : function ( event, actionType ) {

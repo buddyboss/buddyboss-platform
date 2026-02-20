@@ -4139,6 +4139,12 @@ button[data-balloon] {
   align-items: center;
 }
 
+.select2-container--rl .bb-rl-select2-container[aria-disabled="true"],
+.select2-container--rl .select2-selection.bb-rl-select2-container[aria-disabled="true"] {
+  opacity: 0.7;
+  cursor: default;
+}
+
 .select2-container--rl .bb-rl-select2-container.select2-selection--single,
 .select2-container--rl .select2-selection.bb-rl-select2-container.select2-selection--single {
   display: inline-flex;
@@ -4257,6 +4263,14 @@ body.bb-readylaunch-template .select2-container--rl.select2-container--open:has(
     right: 0;
     left: unset;
   }
+}
+
+body:not(.logged-in) .bb-model-footer .select2-container .bb-rl-select2-dropdown,
+body:not(.logged-in) .bb-rl-footer-alt .select2-container .bb-rl-select2-dropdown,
+body.bb-readylaunch-template .bb-model-footer .select2-container .bb-rl-select2-dropdown,
+body.bb-readylaunch-template .bb-rl-footer-alt .select2-container .bb-rl-select2-dropdown {
+  top: unset;
+  right: -8px;
 }
 
 .select2-container--bb-rl-select2 .bb-rl-select2-container {
@@ -5894,6 +5908,27 @@ body.bb-readylaunch-template .select2-container--rl.select2-container--open:has(
   width: 16px;
   border-width: 2px;
   margin-right: var(--bb-rl-space-50);
+}
+
+.bb-rl-modal-wrapper .bb-rl-footer-alt {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--bb-rl-space-100);
+}
+
+.bb-rl-modal-wrapper .bb-rl-footer-alt .bb-rl-privacy-field-wrap-hide-show {
+  display: inline-flex;
+  margin: 0;
+}
+
+.bb-rl-modal-wrapper .bb-rl-footer-alt .bb-rl-privacy-field-wrap-hide-show .bb-label {
+  display: none;
+}
+
+.bb-rl-modal-wrapper .bb-rl-footer-alt .db-modal-buttons {
+  display: inline-flex;
+  gap: var(--bb-rl-space-100);
 }
 
 .bb-rl-container-inner .bp-pagination,
@@ -10217,11 +10252,6 @@ input.bb-rl-zoom-slider::-moz-range-progress {
 .bb-rl-popup-on-fly-create-folder .db-modal-buttons,
 .bb-rl-popup-on-fly-create-album .db-modal-buttons {
   text-align: left;
-}
-
-.bb-rl-popup-on-fly-create-folder .db-modal-buttons a + a,
-.bb-rl-popup-on-fly-create-album .db-modal-buttons a + a {
-  margin-right: var(--bb-rl-space-100);
 }
 
 .bb-rl-media-stream .bb-albums-list {
@@ -17253,6 +17283,16 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   margin-bottom: var(--bb-rl-space-200);
 }
 
+.bb-rl-modal-move-file .bbm-model-wrap .bb-rl-create-popup-folder-wrap .bb-rl-footer-alt .bb-rl-field-wrap,
+.bb-rl-modal-move-file .bbm-model-wrap .bb-rl-create-popup-album-wrap .bb-rl-footer-alt .bb-rl-field-wrap {
+  margin-bottom: 0;
+}
+
+.bb-rl-modal-move-file .bbm-model-wrap .bb-rl-create-popup-folder-wrap .bb-rl-footer-alt .db-modal-buttons,
+.bb-rl-modal-move-file .bbm-model-wrap .bb-rl-create-popup-album-wrap .bb-rl-footer-alt .db-modal-buttons {
+  margin-top: 0;
+}
+
 .bb-rl-modal-move-file .bbm-model-wrap .bb-rl-create-popup-folder-wrap .bb-rl-dropdown-wrap,
 .bb-rl-modal-move-file .bbm-model-wrap .bb-rl-create-popup-album-wrap .bb-rl-dropdown-wrap {
   position: relative;
@@ -21602,6 +21642,7 @@ table.profile-settings tbody td select {
   align-items: center;
   gap: var(--bb-rl-space-100);
   color: var(--bb-rl-text-color);
+  word-break: break-word;
 }
 
 .bb-rl-ac-results .bp-search-ac > li .item-title a {
