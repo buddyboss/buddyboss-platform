@@ -163,22 +163,17 @@ add_filter( 'bb_admin_settings_format_field_data', 'bb_access_control_enrich_fie
 function bb_sanitize_access_control_field( $value ) {
 
 	// Handle JSON-encoded string from frontend.
+	// Note: wp_unslash() is already applied by the AJAX handler before this callback.
 	if ( is_string( $value ) ) {
-		$value = json_decode( wp_unslash( $value ), true );
+		$value = json_decode( $value, true );
 	}
 
 	if ( ! is_array( $value ) ) {
 		return array();
 	}
 
-	// Sanitize each key/value in the array.
-	foreach ( $value as $key => $val ) {
-		if ( is_array( $val ) ) {
-			$value[ $key ] = array_map( 'sanitize_text_field', $val );
-		} else {
-			$value[ $key ] = sanitize_text_field( $val );
-		}
-	}
+	// Recursively sanitize each value in the array.
+	$value = map_deep( $value, 'sanitize_text_field' );
 
 	/**
 	 * Filters the access-control settings before saving.
@@ -190,7 +185,7 @@ function bb_sanitize_access_control_field( $value ) {
 	 * @param array  $value      The sanitized value.
 	 * @param string $field_name The field option name.
 	 */
-	$value = apply_filters( 'bb_access_control_sanitize_settings', $value, '' );
+	$value = apply_filters( 'bb_access_control_sanitize_settings', $value, 'bb-access-control-create-activity' );
 
 	return $value;
 }

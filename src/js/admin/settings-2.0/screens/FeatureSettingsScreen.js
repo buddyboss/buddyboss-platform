@@ -19,7 +19,7 @@ import { Toast } from '../components/Toast';
 import { debounce, fetchHelpContent, clearHelpContentCache } from '../../utils/api';
 import { HelpIcon } from '../components/HelpIcon';
 import { HelpSliderModal } from '../components/HelpSliderModal';
-import { sanitizeHtml } from '../utils/sanitize';
+import { sanitizeHtml, safeUrl } from '../utils/sanitize';
 
 // Lazy load custom panel screens.
 const ActivityListScreen = lazy(() => import('./ActivityListScreen'));
@@ -249,13 +249,14 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 	}, [featureId]);
 
 	// Auto-trigger save when changedFields updates.
-	// When a value is a sentinel (true), use current settings for that key (for functional updates from reaction picker).
+	// When a value is a sentinel (true), use current settings via settingsRef for that key (for functional updates from reaction picker).
 	useEffect(() => {
 		if ( ! initialLoad && Object.keys(changedFields).length > 0 ) {
+			var currentSettings = settingsRef.current;
 			const payload = Object.fromEntries(
 				Object.keys(changedFields).map((k) => [
 					k,
-					changedFields[k] === true ? settings[k] : changedFields[k],
+					changedFields[k] === true ? currentSettings[k] : changedFields[k],
 				])
 			);
 			debouncedSaveRef.current(payload);
@@ -485,7 +486,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 					</div>
 				) : helpContent ? (
 					<>
-						{helpContent.videoId && (
+						{helpContent.videoId && /^[a-zA-Z0-9_-]+$/.test(helpContent.videoId) && (
 							<div style={{ marginBottom: 16 }}>
 								<iframe
 									width="100%"
@@ -501,9 +502,9 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 							className="help-content"
 							dangerouslySetInnerHTML={{ __html: sanitizeHtml( helpContent.content ) }}
 						/>
-						{helpContent.imageUrl && (
+						{helpContent.imageUrl && '#' !== safeUrl( helpContent.imageUrl ) && (
 							<img
-								src={helpContent.imageUrl}
+								src={ safeUrl( helpContent.imageUrl ) }
 								alt={__('Help content illustration', 'buddyboss')}
 								style={{ width: '100%', borderRadius: 8, marginBottom: 16 }}
 							/>

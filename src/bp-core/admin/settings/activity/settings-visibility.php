@@ -157,6 +157,9 @@ function bb_activity_register_visibility_post_type_fields( $feature_id ) {
 	if ( ! empty( $custom_post_types ) ) {
 		$cpt_index = 0;
 
+		// Compute once outside the loop — the result is the same for every iteration.
+		$no_comment_post_types = function_exists( 'bb_feed_not_allowed_comment_post_types' ) ? bb_feed_not_allowed_comment_post_types() : array();
+
 		foreach ( $custom_post_types as $post_type ) {
 			$post_type_obj       = get_post_type_object( $post_type );
 			$post_type_label     = $post_type_obj ? $post_type_obj->labels->name : $post_type;
@@ -165,7 +168,6 @@ function bb_activity_register_visibility_post_type_fields( $feature_id ) {
 			$group_id            = 'cpt_feed_' . sanitize_key( $post_type );
 
 			// Check if the post type supports comments (same logic as legacy).
-			$no_comment_post_types  = function_exists( 'bb_feed_not_allowed_comment_post_types' ) ? bb_feed_not_allowed_comment_post_types() : array();
 			$comments_not_supported = in_array( $post_type, $no_comment_post_types, true );
 
 			// Toggle: Post type name.

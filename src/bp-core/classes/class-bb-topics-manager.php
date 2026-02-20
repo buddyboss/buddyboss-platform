@@ -295,6 +295,17 @@ class BB_Topics_Manager {
 	 * @since BuddyBoss 2.8.80
 	 */
 	public function bb_add_topic_ajax() {
+		if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+			wp_send_json_error(
+				array(
+					'error' => __( 'You do not have permission to perform this action.', 'buddyboss' ),
+					'topic' => array(),
+				)
+			);
+		}
+
+		check_ajax_referer( 'bb_add_topic', 'nonce' );
+
 		if ( ! isset( $_POST['name'] ) ) {
 			wp_send_json_error(
 				array(
@@ -303,8 +314,6 @@ class BB_Topics_Manager {
 				)
 			);
 		}
-
-		check_ajax_referer( 'bb_add_topic', 'nonce' );
 
 		$name              = sanitize_text_field( wp_unslash( $_POST['name'] ) );
 		$slug              = isset( $_POST['slug'] ) ? sanitize_title( wp_unslash( $_POST['slug'] ) ) : '';
@@ -497,7 +506,7 @@ class BB_Topics_Manager {
 			// Use the updated table name property.
 			$inserted = $this->wpdb->insert( $this->topics_table, $data, $format );
 
-			if ( is_wp_error( $inserted ) ) {
+			if ( false === $inserted ) {
 				if ( 'wp_error' === $r['error_type'] ) {
 					unset( $r );
 
@@ -600,12 +609,13 @@ class BB_Topics_Manager {
 		$r = bp_parse_args(
 			$args,
 			array(
-				'id'         => 0,
-				'name'       => '',
-				'slug'       => '',
-				'item_type'  => 'activity',
-				'item_id'    => 0,
-				'error_type' => 'bool',
+				'id'              => 0,
+				'name'            => '',
+				'slug'            => '',
+				'item_type'       => 'activity',
+				'item_id'         => 0,
+				'permission_type' => 'anyone',
+				'error_type'      => 'bool',
 			),
 			'bb_update_topic'
 		);
@@ -969,6 +979,8 @@ class BB_Topics_Manager {
 		}
 
 		// Build where clause and format specifiers.
+		$where        = array();
+		$where_format = array();
 		if ( ! empty( $r['where'] ) && is_array( $r['where'] ) ) {
 			foreach ( $r['where'] as $key => $value ) {
 				$where[ $key ] = $value;
@@ -1255,14 +1267,16 @@ class BB_Topics_Manager {
 
 		// include.
 		if ( ! empty( $r['include'] ) ) {
-			$include_ids        = implode( ',', wp_parse_id_list( $r['include'] ) );
-			$where_conditions[] = $this->wpdb->prepare( 'tr.topic_id IN ( %s )', $include_ids );
+			$include_ids        = wp_parse_id_list( $r['include'] );
+			$include_ph         = implode( ',', array_fill( 0, count( $include_ids ), '%d' ) );
+			$where_conditions[] = $this->wpdb->prepare( "tr.topic_id IN ( {$include_ph} )", $include_ids ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		}
 
 		// exclude.
 		if ( ! empty( $r['exclude'] ) ) {
-			$exclude_ids        = implode( ',', wp_parse_id_list( $r['exclude'] ) );
-			$where_conditions[] = $this->wpdb->prepare( 'tr.topic_id NOT IN ( %s )', $exclude_ids );
+			$exclude_ids        = wp_parse_id_list( $r['exclude'] );
+			$exclude_ph         = implode( ',', array_fill( 0, count( $exclude_ids ), '%d' ) );
+			$where_conditions[] = $this->wpdb->prepare( "tr.topic_id NOT IN ( {$exclude_ph} )", $exclude_ids ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		}
 
 		/**
@@ -1459,6 +1473,17 @@ class BB_Topics_Manager {
 	 * @since BuddyBoss 2.8.80
 	 */
 	public function bb_edit_topic_ajax() {
+		if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+			wp_send_json_error(
+				array(
+					'error' => __( 'You do not have permission to perform this action.', 'buddyboss' ),
+					'topic' => array(),
+				)
+			);
+		}
+
+		check_ajax_referer( 'bb_edit_topic', 'nonce' );
+
 		if ( ! isset( $_POST['topic_id'] ) ) {
 			wp_send_json_error(
 				array(
@@ -1467,8 +1492,6 @@ class BB_Topics_Manager {
 				)
 			);
 		}
-
-		check_ajax_referer( 'bb_edit_topic', 'nonce' );
 
 		$topic_id  = absint( sanitize_text_field( wp_unslash( $_POST['topic_id'] ) ) );
 		$item_id   = isset( $_POST['item_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['item_id'] ) ) ) : 0;
@@ -1529,6 +1552,17 @@ class BB_Topics_Manager {
 	 * @since BuddyBoss 2.8.80
 	 */
 	public function bb_delete_topic_ajax() {
+		if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+			wp_send_json_error(
+				array(
+					'error' => __( 'You do not have permission to perform this action.', 'buddyboss' ),
+					'topic' => array(),
+				)
+			);
+		}
+
+		check_ajax_referer( 'bb_delete_topic', 'nonce' );
+
 		if ( ! isset( $_POST['topic_id'] ) ) {
 			wp_send_json_error(
 				array(
@@ -1537,8 +1571,6 @@ class BB_Topics_Manager {
 				)
 			);
 		}
-
-		check_ajax_referer( 'bb_delete_topic', 'nonce' );
 
 		$topic_id  = absint( sanitize_text_field( wp_unslash( $_POST['topic_id'] ) ) );
 		$item_id   = isset( $_POST['item_id'] ) ? absint( sanitize_text_field( wp_unslash( $_POST['item_id'] ) ) ) : 0;
@@ -1676,10 +1708,10 @@ class BB_Topics_Manager {
 	 * @since BuddyBoss 2.8.80
 	 */
 	public function bb_migrate_topic_ajax() {
-		if ( ! isset( $_POST['nonce'] ) ) {
+		if ( ! bp_current_user_can( 'bp_moderate' ) ) {
 			wp_send_json_error(
 				array(
-					'error' => __( 'Nonce is required.', 'buddyboss' ),
+					'error' => __( 'You do not have permission to perform this action.', 'buddyboss' ),
 					'topic' => array(),
 				)
 			);
@@ -1903,7 +1935,11 @@ class BB_Topics_Manager {
 		);
 
 		if ( false === $result ) {
-			wp_send_json_error( array( 'error' => __( 'Failed to migrate topic.', 'buddyboss' ) ) );
+			return new WP_Error(
+				'bb_migrate_topic_error',
+				__( 'Failed to migrate topic.', 'buddyboss' ),
+				array( 'status' => 500 )
+			);
 		}
 
 		$get_topic = $this->bb_get_topic(
@@ -1920,14 +1956,18 @@ class BB_Topics_Manager {
 			);
 		}
 
-		$migrated_activity_ids = bb_activity_topics_manager_instance()->bb_get_activity_topic_relationship(
-			array(
-				'topic_id'  => $new_topic_id,
-				'item_id'   => $item_id,
-				'component' => $item_type,
-				'fields'    => 'activity_id',
-			)
-		);
+		$migrated_activity_ids = array();
+		$topics_instance       = bb_activity_topics_manager_instance();
+		if ( $topics_instance ) {
+			$migrated_activity_ids = $topics_instance->bb_get_activity_topic_relationship(
+				array(
+					'topic_id'  => $new_topic_id,
+					'item_id'   => $item_id,
+					'component' => $item_type,
+					'fields'    => 'activity_id',
+				)
+			);
+		}
 
 		/**
 		 * Fires after a topic is migrated.
@@ -1988,6 +2028,17 @@ class BB_Topics_Manager {
 	 * @since BuddyBoss 2.8.80
 	 */
 	public function bb_update_topics_order_ajax() {
+		if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+			wp_send_json_error(
+				array(
+					'error' => __( 'You do not have permission to perform this action.', 'buddyboss' ),
+					'topic' => array(),
+				)
+			);
+		}
+
+		check_ajax_referer( 'bb_update_topics_order', 'nonce' );
+
 		if ( ! isset( $_POST['topic_ids'] ) || ! is_array( $_POST['topic_ids'] ) ) {
 			wp_send_json_error(
 				array(
@@ -1996,8 +2047,6 @@ class BB_Topics_Manager {
 				)
 			);
 		}
-
-		check_ajax_referer( 'bb_update_topics_order', 'nonce' );
 
 		$topic_ids = wp_parse_id_list( wp_unslash( $_POST['topic_ids'] ) );
 
@@ -2020,6 +2069,8 @@ class BB_Topics_Manager {
 		}
 
 		if ( $success ) {
+			// Invalidate topics cache so ordering changes are reflected immediately.
+			bp_core_reset_incrementor( self::$topic_cache_group );
 			wp_send_json_success( array( 'message' => __( 'Topic order updated successfully.', 'buddyboss' ) ) );
 		} else {
 			wp_send_json_error( array( 'error' => __( 'Failed to update topic order.', 'buddyboss' ) ) );

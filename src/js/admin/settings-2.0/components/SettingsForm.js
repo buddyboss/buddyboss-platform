@@ -24,7 +24,7 @@ import {
 	MigrationModal,
 	ReactionButtonField,
 } from './reaction';
-import { sanitizeHtml } from '../utils/sanitize';
+import { sanitizeHtml, safeUrl } from '../utils/sanitize';
 import { TopicListField } from './activity/topics/topic-list';
 import { SharePlatformsField } from './activity/sharing';
 import { AccessControlField } from './access-control/AccessControlField';
@@ -552,7 +552,7 @@ export function SettingsForm({ fields, values, onChange }) {
 									</span>
 									{field.pro_notice.link_url && (
 										<a
-											href={field.pro_notice.link_url}
+											href={safeUrl(field.pro_notice.link_url)}
 											target="_blank"
 											rel="noopener noreferrer"
 											className="bb-pro-badge__play-link"

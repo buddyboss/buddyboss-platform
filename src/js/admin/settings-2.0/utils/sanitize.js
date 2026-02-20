@@ -156,3 +156,21 @@ function isAllowedUrl(url) {
 		return false;
 	}
 }
+
+/**
+ * Sanitize a URL for use in an href attribute.
+ *
+ * Returns the URL unchanged if its scheme is allowed (http, https, mailto,
+ * or relative). Returns '#' for any disallowed or malformed URL.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {string} url URL to sanitize.
+ * @return {string} Safe URL string.
+ */
+export function safeUrl(url) {
+	if (!url || typeof url !== 'string') {
+		return '#';
+	}
+	return isAllowedUrl(url) ? url : '#';
+}

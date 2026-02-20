@@ -197,7 +197,7 @@ function bb_admin_settings_register_activity_feature() {
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-list-dashes',
 			),
-			'link'       => admin_url( 'edit.php?post_type=&page=bp-activity' ),
+			'link'       => admin_url( 'admin.php?page=bb-settings' ),
 			'divider'    => true,
 			'order'      => 100,
 			'is_default' => false,

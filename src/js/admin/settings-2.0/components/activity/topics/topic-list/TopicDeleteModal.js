@@ -5,7 +5,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState } from '@wordpress/element';
+import { useState, useEffect } from '@wordpress/element';
 import {
 	Modal,
 	RadioControl,
@@ -35,6 +35,14 @@ export function TopicDeleteModal( { isOpen, onClose, onConfirm, topic, available
 	var newTopicIdState = useState( '' );
 	var newTopicId = newTopicIdState[ 0 ];
 	var setNewTopicId = newTopicIdState[ 1 ];
+
+	// Reset selections when the modal opens for a (different) topic.
+	useEffect( function () {
+		if ( isOpen && topic ) {
+			setMigrateType( 'migrate' );
+			setNewTopicId( '' );
+		}
+	}, [ isOpen, topic ] );
 
 	if ( ! isOpen || ! topic ) {
 		return null;

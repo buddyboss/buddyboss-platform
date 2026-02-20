@@ -12,7 +12,7 @@
  * @since   BuddyBoss [BBVERSION]
  */
 
-import { useState } from '@wordpress/element';
+import { useState, useRef } from '@wordpress/element';
 import { SelectControl, ToggleControl, Spinner } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
@@ -43,6 +43,8 @@ export function AccessControlField( { field, value, onChange } ) {
 	var [ options, setOptions ]                   = useState( data.options || [] );
 	var [ selectedOptions, setSelectedOptions ]   = useState( value?.[ 'access-control-options' ] || [] );
 	var [ loading, setLoading ]                   = useState( false );
+	var [ fetchError, setFetchError ]             = useState( '' );
+	var abortRef                                  = useRef( null );
 
 	/**
 	 * Get the type config for the currently selected type.
@@ -128,18 +130,30 @@ export function AccessControlField( { field, value, onChange } ) {
 
 		// Direct type — fetch options via AJAX.
 		setLoading( true );
+		setFetchError( '' );
+
+		// Cancel any in-flight request before starting a new one.
+		if ( abortRef.current ) {
+			abortRef.current.abort();
+		}
+		var controller = new AbortController();
+		abortRef.current = controller;
 
 		ajaxFetch( 'get_access_control_level_options', {
 			value: newType,
 			key: field.name,
 			format: 'json',
-		} ).then( function( response ) {
+		}, { signal: controller.signal } ).then( function( response ) {
 			var newOptions = response?.data?.options || [];
 			newOptions = wp.hooks.applyFilters( 'bb.accessControl.options', newOptions, field, newType );
 			setOptions( newOptions );
 			setLoading( false );
-		} ).catch( function() {
+		} ).catch( function( error ) {
+			if ( error && 'AbortError' === error.name ) {
+				return;
+			}
 			setLoading( false );
+			setFetchError( __( 'Failed to load options. Please try again.', 'buddyboss' ) );
 		} );
 	};
 
@@ -160,18 +174,30 @@ export function AccessControlField( { field, value, onChange } ) {
 		}
 
 		setLoading( true );
+		setFetchError( '' );
+
+		// Cancel any in-flight request before starting a new one.
+		if ( abortRef.current ) {
+			abortRef.current.abort();
+		}
+		var controller = new AbortController();
+		abortRef.current = controller;
 
 		ajaxFetch( typeConfig.sub_types.action, {
 			value: newSubType,
 			key: field.name,
 			format: 'json',
-		} ).then( function( response ) {
+		}, { signal: controller.signal } ).then( function( response ) {
 			var newOptions = response?.data?.options || [];
 			newOptions = wp.hooks.applyFilters( 'bb.accessControl.options', newOptions, field, selectedType, newSubType );
 			setOptions( newOptions );
 			setLoading( false );
-		} ).catch( function() {
+		} ).catch( function( error ) {
+			if ( error && 'AbortError' === error.name ) {
+				return;
+			}
 			setLoading( false );
+			setFetchError( __( 'Failed to load options. Please try again.', 'buddyboss' ) );
 		} );
 	};
 
@@ -237,7 +263,12 @@ export function AccessControlField( { field, value, onChange } ) {
 
 			{ /* Toggle list */ }
 			{ loading && <Spinner /> }
-			{ showNoOptions && (
+			{ fetchError && (
+				<p className="bb-access-control-field__error">
+					{ fetchError }
+				</p>
+			) }
+			{ showNoOptions && ! fetchError && (
 				<p className="bb-access-control-field__no-options">
 					{ __( 'No options found.', 'buddyboss' ) }
 				</p>

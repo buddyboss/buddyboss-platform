@@ -297,7 +297,7 @@ function bb_activity_register_settings_panel_fields() {
 			'description'       => __( 'Allow members to filter activity posts by:', 'buddyboss' ),
 			'default'           => bb_get_enabled_activity_filter_options(),
 			'options'           => $activity_feed_filter_options,
-			'sanitize_callback' => 'bb_sanitize_checkbox_list',
+			// Uses registry default sanitize_callback for checkbox_list type.
 			'order'             => 20,
 		)
 	);
@@ -339,7 +339,7 @@ function bb_activity_register_settings_panel_fields() {
 				'following' => 1,
 			),
 			'options'           => $activity_timeline_filter_options,
-			'sanitize_callback' => 'bb_sanitize_checkbox_list',
+			// Uses registry default sanitize_callback for checkbox_list type.
 			'order'             => 30,
 		)
 	);
@@ -374,7 +374,7 @@ function bb_activity_register_settings_panel_fields() {
 			'description'       => __( 'Allow members to sort activity posts by:', 'buddyboss' ),
 			'default'           => bb_get_enabled_activity_sorting_options(),
 			'options'           => $activity_sorting_options,
-			'sanitize_callback' => 'bb_sanitize_checkbox_list',
+			// Uses registry default sanitize_callback for checkbox_list type.
 			'order'             => 40,
 		)
 	);
