@@ -7,6 +7,8 @@
  * @since BuddyBoss [BBVERSION]
  */
 
+import { useState, useEffect } from '@wordpress/element';
+
 /**
  * ImageRadioField component.
  *
@@ -20,14 +22,26 @@
  * @returns {JSX.Element} ImageRadioField component.
  */
 export function ImageRadioField( { field, value, onChange, disabled } ) {
+	var [ selected, setSelected ] = useState( value );
+
+	// Sync local state when parent value changes (e.g., after save or initial load).
+	useEffect( function () {
+		setSelected( value );
+	}, [ value ] );
+
+	var handleClick = function ( optionValue ) {
+		setSelected( optionValue );
+		onChange( field.name, optionValue );
+	};
+
 	return (
 		<div className="bb-admin-settings-field__image-radio">
 			{ ( field.options || [] ).map( ( option ) => (
 				<button
 					key={ option.value }
 					type="button"
-					className={ `bb-admin-settings-field__image-radio-option ${ value === option.value ? 'bb-admin-settings-field__image-radio-option--selected' : '' }` }
-					onClick={ () => onChange( field.name, option.value ) }
+					className={ `bb-admin-settings-field__image-radio-option ${ selected === option.value ? 'bb-admin-settings-field__image-radio-option--selected' : '' }` }
+					onClick={ () => handleClick( option.value ) }
 					disabled={ disabled }
 				>
 					<div className="bb-admin-settings-field__image-radio-preview">
