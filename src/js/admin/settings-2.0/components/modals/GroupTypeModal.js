@@ -16,6 +16,7 @@ import {
 	Spinner,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
+import { decodeEntities } from '@wordpress/html-entities';
 import { createGroupType, updateGroupType } from '../../utils/ajax';
 
 /**
@@ -504,7 +505,7 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 										return (
 											<CheckboxControl
 												key={ mt.id }
-												label={ mt.name }
+												label={ decodeEntities( mt.name ) }
 												checked={ isChecked }
 												onChange={ function () {
 													toggleMemberType( 'member_type_invites', mt.id );
@@ -541,7 +542,7 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 										return (
 											<CheckboxControl
 												key={ mt.id }
-												label={ mt.name }
+												label={ decodeEntities( mt.name ) }
 												checked={ isChecked }
 												onChange={ function () {
 													toggleMemberType( 'member_type_join', mt.id );

@@ -10,6 +10,7 @@
 import { useState, useEffect, useCallback, useRef } from '@wordpress/element';
 import { ToggleControl, Spinner } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
+import { decodeEntities } from '@wordpress/html-entities';
 import { ajaxFetch, getGroupTypes, deleteGroupType, getPlatformSettings, savePlatformSetting } from '../utils/ajax';
 import { getCachedFeatureData, setCachedFeatureData } from '../utils/featureCache';
 import { SideNavigation } from './SideNavigation';
@@ -312,23 +313,37 @@ export function GroupTypeScreen( { onNavigate } ) {
 					) : groupTypes.length > 0 ? (
 						<ul className="bb-admin-group-types__list">
 							{ groupTypes.map( function ( type ) {
+								var isPublic = 'private' !== type.visibility;
+								var countText = type.groups_count + ' ' + ( 1 === type.groups_count ? __( 'group', 'buddyboss' ) : __( 'groups', 'buddyboss' ) );
+
 								return (
 									<li key={ type.id } className="bb-admin-group-types__list-item">
-										<div className="bb-admin-group-types__list-item-info">
+										<div className="bb-admin-group-types__list-item-name-col">
 											<span className="bb-admin-group-types__list-item-icon bb-icons-rl bb-icons-rl-tag"></span>
 											<span className="bb-admin-group-types__list-item-name">
-												{ type.post_title }
+												{ decodeEntities( type.post_title ) }
 											</span>
+										</div>
+										<div className="bb-admin-group-types__list-item-label-col">
 											{ type.singular_label && (
 												<span className="bb-admin-group-types__list-item-badge">
-													{ type.singular_label }
+													{ decodeEntities( type.singular_label ) }
 												</span>
 											) }
 										</div>
-										<div className="bb-admin-group-types__list-item-meta">
+										<div className="bb-admin-group-types__list-item-count-col">
+											<span className="bb-admin-group-types__list-item-count-icon bb-icons-rl bb-icons-rl-users"></span>
 											<span className="bb-admin-group-types__list-item-count">
-												{ type.groups_count + ' ' + ( 1 === type.groups_count ? __( 'Group', 'buddyboss' ) : __( 'Groups', 'buddyboss' ) ) }
+												{ countText }
 											</span>
+										</div>
+										<div className="bb-admin-group-types__list-item-visibility-col">
+											<span className={ 'bb-admin-group-types__list-item-visibility-badge' + ( isPublic ? '' : ' bb-admin-group-types__list-item-visibility-badge--private' ) }>
+												<span className={ 'bb-icons-rl ' + ( isPublic ? 'bb-icons-rl-globe-simple' : 'bb-icons-rl-lock' ) }></span>
+												{ isPublic ? __( 'Public', 'buddyboss' ) : __( 'Private', 'buddyboss' ) }
+											</span>
+										</div>
+										<div className="bb-admin-group-types__list-item-actions-col">
 											<div className="bb-admin-group-types__menu-wrapper">
 												<button
 													className="bb-admin-group-types__menu-trigger"
@@ -337,7 +352,7 @@ export function GroupTypeScreen( { onNavigate } ) {
 													} }
 													aria-label={ __( 'Actions', 'buddyboss' ) }
 												>
-													<span className="bb-icons-rl bb-icons-rl-dots-three-vertical"></span>
+													<span className="bb-icons-rl bb-icons-rl-dots-three"></span>
 												</button>
 												{ openMenuId === type.id && (
 													<div className="bb-admin-group-types__menu-dropdown">
