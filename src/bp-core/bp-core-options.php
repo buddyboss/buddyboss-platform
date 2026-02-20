@@ -2695,10 +2695,9 @@ function bb_is_reaction_activity_comments_enabled( $default = true ) {
 function bb_get_reaction_mode( $default = 'likes' ) {
 
 	$mode = bp_get_option( 'bb_reaction_mode', $default );
-	if (
-		! class_exists( 'BB_Reactions' )
-	) {
+	if ( ! class_exists( 'BB_Reactions' ) && 'emotions' === $mode ) {
 		$mode = 'likes';
+		bp_update_option( 'bb_reaction_mode', $mode );
 	}
 
 	return apply_filters( 'bb_get_reaction_mode', $mode );
