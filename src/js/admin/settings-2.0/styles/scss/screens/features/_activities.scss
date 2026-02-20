@@ -672,6 +672,42 @@
 			.mce-i-unlink:before {
 				content: "\e1bc";
 			}
+
+			.mce-i-underline:before {
+				content: "\e5C4";
+			}
+
+			.mce-i-strikethrough:before {
+				content: "\e5C2";
+			}
+			
+			.mce-i-alignleft:before {
+				content: "\e484";
+			}
+
+			.mce-i-aligncenter:before {
+				content: "\E486";
+			}
+
+			.mce-i-alignright:before {
+				content: "\e486";
+			}
+
+			.mce-i-undo:before {
+				content: "\e038";
+			}
+
+			.mce-i-redo:before {
+				content: "\e036";
+			}
+
+			.mce-i-fullscreen {
+				display: none; // Todo: Remove after making fullscreen working.
+			}
+
+			.mce-i-fullscreen:before {
+				content: "\e0a2";
+			}
 		}
 
 		.wp-editor-tabs  {
