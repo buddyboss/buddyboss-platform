@@ -83,6 +83,35 @@ export function ImageRadioField( { field, value, onChange, disabled } ) {
 								<span className="dashicons dashicons-admin-generic"></span>
 							</div>
 						) }
+						{/* Grid Style Card Previews */}
+						{ 'card-left-group' === option.image && (
+							<div className="bb-admin-settings-field__card-preview bb-admin-settings-field__card-preview--left">
+								<div className="bb-admin-settings-field__card-preview-cover"></div>
+								<div className="bb-admin-settings-field__card-preview-content">
+									<div className="bb-admin-settings-field__card-preview-avatar">
+										<span className="dashicons dashicons-groups"></span>
+									</div>
+									<div className="bb-admin-settings-field__card-preview-lines">
+										<div className="bb-admin-settings-field__card-preview-line bb-admin-settings-field__card-preview-line--short"></div>
+										<div className="bb-admin-settings-field__card-preview-line bb-admin-settings-field__card-preview-line--long"></div>
+									</div>
+								</div>
+							</div>
+						) }
+						{ 'card-centered-group' === option.image && (
+							<div className="bb-admin-settings-field__card-preview bb-admin-settings-field__card-preview--centered">
+								<div className="bb-admin-settings-field__card-preview-cover"></div>
+								<div className="bb-admin-settings-field__card-preview-content">
+									<div className="bb-admin-settings-field__card-preview-avatar">
+										<span className="dashicons dashicons-groups"></span>
+									</div>
+									<div className="bb-admin-settings-field__card-preview-lines">
+										<div className="bb-admin-settings-field__card-preview-line bb-admin-settings-field__card-preview-line--short"></div>
+										<div className="bb-admin-settings-field__card-preview-line bb-admin-settings-field__card-preview-line--long"></div>
+									</div>
+								</div>
+							</div>
+						) }
 						{/* Header Style Previews */}
 						{ 'header-left-group' === option.image && (
 							<div className="bb-admin-settings-field__header-preview bb-admin-settings-field__header-preview--left">
