@@ -77,7 +77,7 @@ function bb_admin_settings_register_activity_feature() {
 			'title'      => __( 'Activity Settings', 'buddyboss' ),
 			'icon'       => array(
 				'type'  => 'font',
-				'class' => 'bb-icons-rl bb-icons-rl-gear-six',
+				'class' => 'bb-icons-rl bb-icons-rl-pulse',
 			),
 			'help_url'   => bp_get_admin_url(
 				add_query_arg(
@@ -101,7 +101,7 @@ function bb_admin_settings_register_activity_feature() {
 			'title'      => __( 'Activity Comments', 'buddyboss' ),
 			'icon'       => array(
 				'type'  => 'font',
-				'class' => 'bb-icons-rl bb-icons-rl-chat-circle',
+				'class' => 'bb-icons-rl bb-icons-rl-chat-text',
 			),
 			'help_url'   => bp_get_admin_url(
 				add_query_arg(
@@ -165,7 +165,7 @@ function bb_admin_settings_register_activity_feature() {
 			'title'      => __( 'Activity Sharing', 'buddyboss' ),
 			'icon'       => array(
 				'type'  => 'font',
-				'class' => 'bb-icons-rl bb-icons-rl-share-network',
+				'class' => 'bb-icons-rl bb-icons-rl-share-fat',
 			),
 			'help_url'   => '',
 			'order'      => 50,
@@ -195,7 +195,7 @@ function bb_admin_settings_register_activity_feature() {
 			'title'      => __( 'All Activities', 'buddyboss' ),
 			'icon'       => array(
 				'type'  => 'font',
-				'class' => 'bb-icons-rl bb-icons-rl-arrow-square-out',
+				'class' => 'bb-icons-rl bb-icons-rl-list-dashes',
 			),
 			'link'       => admin_url( 'edit.php?post_type=&page=bp-activity' ),
 			'divider'    => true,
