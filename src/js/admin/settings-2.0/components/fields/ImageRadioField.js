@@ -11,6 +11,98 @@ import { useState, useEffect } from '@wordpress/element';
 import { ImageUploadField } from './ImageUploadField';
 
 /**
+ * Shared layout preview for card and header style pickers.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} props           Component props.
+ * @param {string} props.type      Preview type: 'card' or 'header'.
+ * @param {string} props.alignment Layout alignment: 'left' or 'centered'.
+ * @returns {JSX.Element} Layout preview component.
+ */
+function LayoutPreview( { type, alignment } ) {
+	var base = 'bb-admin-settings-field__' + type + '-preview';
+	return (
+		<div className={ base + ' ' + base + '--' + alignment }>
+			<div className={ base + '-cover' }></div>
+			<div className={ base + '-content' }>
+				<div className={ base + '-avatar' }>
+					<span className="dashicons dashicons-groups"></span>
+				</div>
+				<div className={ base + '-lines' }>
+					<div className={ base + '-line ' + base + '-line--short' }></div>
+					<div className={ base + '-line ' + base + '-line--long' }></div>
+				</div>
+			</div>
+		</div>
+	);
+}
+
+/**
+ * Image preview renderers keyed by image identifier.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @type {Object<string, Function>}
+ */
+var IMAGE_PREVIEWS = {
+	'cover-buddyboss': function () {
+		return (
+			<div className="bb-admin-settings-field__image-radio-icon bb-admin-settings-field__image-radio-icon--buddyboss">
+				<span className="dashicons dashicons-format-image"></span>
+			</div>
+		);
+	},
+	'cover-none': function () {
+		return (
+			<div className="bb-admin-settings-field__image-radio-icon bb-admin-settings-field__image-radio-icon--none">
+				<span className="dashicons dashicons-no-alt"></span>
+			</div>
+		);
+	},
+	'cover-custom': function () {
+		return (
+			<div className="bb-admin-settings-field__image-radio-icon bb-admin-settings-field__image-radio-icon--custom">
+				<span className="dashicons dashicons-admin-generic"></span>
+			</div>
+		);
+	},
+	'avatar-buddyboss': function () {
+		return (
+			<div className="bb-admin-settings-field__image-radio-icon bb-admin-settings-field__image-radio-icon--avatar-group">
+				<span className="dashicons dashicons-groups"></span>
+			</div>
+		);
+	},
+	'avatar-name': function () {
+		return (
+			<div className="bb-admin-settings-field__image-radio-icon bb-admin-settings-field__image-radio-icon--avatar-name">
+				<span className="bb-admin-settings-field__avatar-initials">BB</span>
+			</div>
+		);
+	},
+	'avatar-custom': function () {
+		return (
+			<div className="bb-admin-settings-field__image-radio-icon bb-admin-settings-field__image-radio-icon--custom">
+				<span className="dashicons dashicons-admin-generic"></span>
+			</div>
+		);
+	},
+	'card-left-group': function () {
+		return <LayoutPreview type="card" alignment="left" />;
+	},
+	'card-centered-group': function () {
+		return <LayoutPreview type="card" alignment="centered" />;
+	},
+	'header-left-group': function () {
+		return <LayoutPreview type="header" alignment="left" />;
+	},
+	'header-centered-group': function () {
+		return <LayoutPreview type="header" alignment="centered" />;
+	},
+};
+
+/**
  * ImageRadioField component.
  *
  * @since BuddyBoss [BBVERSION]
@@ -42,109 +134,22 @@ export function ImageRadioField( { field, value, onChange, disabled } ) {
 	return (
 		<div className="bb-admin-settings-field__image-radio-wrapper">
 		<div className="bb-admin-settings-field__image-radio">
-			{ ( field.options || [] ).map( ( option ) => (
-				<button
-					key={ option.value }
-					type="button"
-					className={ `bb-admin-settings-field__image-radio-option ${ selected === option.value ? 'bb-admin-settings-field__image-radio-option--selected' : '' }` }
-					onClick={ () => handleClick( option.value ) }
-					disabled={ disabled }
-				>
-					<div className="bb-admin-settings-field__image-radio-preview">
-						{/* Cover Image Icons */}
-						{ 'cover-buddyboss' === option.image && (
-							<div className="bb-admin-settings-field__image-radio-icon bb-admin-settings-field__image-radio-icon--buddyboss">
-								<span className="dashicons dashicons-format-image"></span>
-							</div>
-						) }
-						{ 'cover-none' === option.image && (
-							<div className="bb-admin-settings-field__image-radio-icon bb-admin-settings-field__image-radio-icon--none">
-								<span className="dashicons dashicons-no-alt"></span>
-							</div>
-						) }
-						{ 'cover-custom' === option.image && (
-							<div className="bb-admin-settings-field__image-radio-icon bb-admin-settings-field__image-radio-icon--custom">
-								<span className="dashicons dashicons-admin-generic"></span>
-							</div>
-						) }
-						{/* Avatar Icons */}
-						{ 'avatar-buddyboss' === option.image && (
-							<div className="bb-admin-settings-field__image-radio-icon bb-admin-settings-field__image-radio-icon--avatar-group">
-								<span className="dashicons dashicons-groups"></span>
-							</div>
-						) }
-						{ 'avatar-name' === option.image && (
-							<div className="bb-admin-settings-field__image-radio-icon bb-admin-settings-field__image-radio-icon--avatar-name">
-								<span className="bb-admin-settings-field__avatar-initials">BB</span>
-							</div>
-						) }
-						{ 'avatar-custom' === option.image && (
-							<div className="bb-admin-settings-field__image-radio-icon bb-admin-settings-field__image-radio-icon--custom">
-								<span className="dashicons dashicons-admin-generic"></span>
-							</div>
-						) }
-						{/* Grid Style Card Previews */}
-						{ 'card-left-group' === option.image && (
-							<div className="bb-admin-settings-field__card-preview bb-admin-settings-field__card-preview--left">
-								<div className="bb-admin-settings-field__card-preview-cover"></div>
-								<div className="bb-admin-settings-field__card-preview-content">
-									<div className="bb-admin-settings-field__card-preview-avatar">
-										<span className="dashicons dashicons-groups"></span>
-									</div>
-									<div className="bb-admin-settings-field__card-preview-lines">
-										<div className="bb-admin-settings-field__card-preview-line bb-admin-settings-field__card-preview-line--short"></div>
-										<div className="bb-admin-settings-field__card-preview-line bb-admin-settings-field__card-preview-line--long"></div>
-									</div>
-								</div>
-							</div>
-						) }
-						{ 'card-centered-group' === option.image && (
-							<div className="bb-admin-settings-field__card-preview bb-admin-settings-field__card-preview--centered">
-								<div className="bb-admin-settings-field__card-preview-cover"></div>
-								<div className="bb-admin-settings-field__card-preview-content">
-									<div className="bb-admin-settings-field__card-preview-avatar">
-										<span className="dashicons dashicons-groups"></span>
-									</div>
-									<div className="bb-admin-settings-field__card-preview-lines">
-										<div className="bb-admin-settings-field__card-preview-line bb-admin-settings-field__card-preview-line--short"></div>
-										<div className="bb-admin-settings-field__card-preview-line bb-admin-settings-field__card-preview-line--long"></div>
-									</div>
-								</div>
-							</div>
-						) }
-						{/* Header Style Previews */}
-						{ 'header-left-group' === option.image && (
-							<div className="bb-admin-settings-field__header-preview bb-admin-settings-field__header-preview--left">
-								<div className="bb-admin-settings-field__header-preview-cover"></div>
-								<div className="bb-admin-settings-field__header-preview-content">
-									<div className="bb-admin-settings-field__header-preview-avatar">
-										<span className="dashicons dashicons-groups"></span>
-									</div>
-									<div className="bb-admin-settings-field__header-preview-lines">
-										<div className="bb-admin-settings-field__header-preview-line bb-admin-settings-field__header-preview-line--short"></div>
-										<div className="bb-admin-settings-field__header-preview-line bb-admin-settings-field__header-preview-line--long"></div>
-									</div>
-								</div>
-							</div>
-						) }
-						{ 'header-centered-group' === option.image && (
-							<div className="bb-admin-settings-field__header-preview bb-admin-settings-field__header-preview--centered">
-								<div className="bb-admin-settings-field__header-preview-cover"></div>
-								<div className="bb-admin-settings-field__header-preview-content">
-									<div className="bb-admin-settings-field__header-preview-avatar">
-										<span className="dashicons dashicons-groups"></span>
-									</div>
-									<div className="bb-admin-settings-field__header-preview-lines">
-										<div className="bb-admin-settings-field__header-preview-line bb-admin-settings-field__header-preview-line--short"></div>
-										<div className="bb-admin-settings-field__header-preview-line bb-admin-settings-field__header-preview-line--long"></div>
-									</div>
-								</div>
-							</div>
-						) }
-					</div>
-					<span className="bb-admin-settings-field__image-radio-label">{ option.label }</span>
-				</button>
-			) ) }
+			{ ( field.options || [] ).map( function ( option ) {
+				return (
+					<button
+						key={ option.value }
+						type="button"
+						className={ 'bb-admin-settings-field__image-radio-option' + ( selected === option.value ? ' bb-admin-settings-field__image-radio-option--selected' : '' ) }
+						onClick={ function () { handleClick( option.value ); } }
+						disabled={ disabled }
+					>
+						<div className="bb-admin-settings-field__image-radio-preview">
+							{ IMAGE_PREVIEWS[ option.image ] && IMAGE_PREVIEWS[ option.image ]() }
+						</div>
+						<span className="bb-admin-settings-field__image-radio-label">{ option.label }</span>
+					</button>
+				);
+			} ) }
 		</div>
 		{ showUpload && (
 			<ImageUploadField

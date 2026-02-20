@@ -95,17 +95,15 @@
 	gap: 16px;
 }
 
-/* Grid style card previews (Group Directory) */
-.bb-admin-settings-field__card-preview {
+/* Layout preview mixin — shared by card and header style pickers */
+@mixin layout-preview($cover-h, $avatar-size, $icon-size, $content-pad, $centered-pad, $centered-mt, $line-short, $line-long) {
 	width: 100%;
 	height: 100%;
 	display: flex;
 	flex-direction: column;
-	border-radius: $bb-border-radius-md;
-	overflow: hidden;
 
 	&-cover {
-		height: 36px;
+		height: $cover-h;
 		background: $bb-background-secondary-color;
 	}
 
@@ -113,23 +111,23 @@
 		flex: 1;
 		display: flex;
 		align-items: center;
-		padding: 6px 8px;
+		padding: $content-pad;
 		gap: 6px;
 	}
 
 	&--centered &-content {
 		flex-direction: column;
 		align-items: center;
-		padding: 0 8px 6px;
+		padding: $centered-pad;
 	}
 
 	&--centered &-avatar {
-		margin-top: -8px;
+		margin-top: $centered-mt;
 	}
 
 	&-avatar {
-		width: 18px;
-		height: 18px;
+		width: $avatar-size;
+		height: $avatar-size;
 		background: $bb-background-secondary-color;
 		border-radius: $bb-border-radius-full;
 		display: flex;
@@ -138,9 +136,9 @@
 		flex-shrink: 0;
 
 		.dashicons {
-			font-size: 10px;
-			width: 10px;
-			height: 10px;
+			font-size: $icon-size;
+			width: $icon-size;
+			height: $icon-size;
 			color: $bb-icon-tertiary-color;
 		}
 	}
@@ -161,86 +159,25 @@
 		border-radius: 2px;
 
 		&--short {
-			width: 28px;
+			width: $line-short;
 		}
 
 		&--long {
-			width: 46px;
+			width: $line-long;
 		}
 	}
 }
 
+/* Grid style card previews (Group Directory) */
+.bb-admin-settings-field__card-preview {
+	@include layout-preview(36px, 18px, 10px, 6px 8px, 0 8px 6px, -8px, 28px, 46px);
+	border-radius: $bb-border-radius-md;
+	overflow: hidden;
+}
+
 /* Header style preview cards */
 .bb-admin-settings-field__header-preview {
-	width: 100%;
-	height: 100%;
-	display: flex;
-	flex-direction: column;
-
-	&-cover {
-		height: 40px;
-		background: $bb-background-secondary-color;
-	}
-
-	&-content {
-		flex: 1;
-		display: flex;
-		align-items: center;
-		padding: 4px 8px;
-		gap: 6px;
-	}
-
-	&--centered &-content {
-		flex-direction: column;
-		align-items: center;
-		padding: 0 8px 4px;
-	}
-
-	&--centered &-avatar {
-		margin-top: -10px;
-	}
-
-	&-avatar {
-		width: 20px;
-		height: 20px;
-		background: $bb-background-secondary-color;
-		border-radius: $bb-border-radius-full;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		flex-shrink: 0;
-
-		.dashicons {
-			font-size: 12px;
-			width: 12px;
-			height: 12px;
-			color: $bb-icon-tertiary-color;
-		}
-	}
-
-	&-lines {
-		display: flex;
-		flex-direction: column;
-		gap: 3px;
-	}
-
-	&--centered &-lines {
-		align-items: center;
-	}
-
-	&-line {
-		height: 3px;
-		background: $bb-background-secondary-color;
-		border-radius: 2px;
-
-		&--short {
-			width: 30px;
-		}
-
-		&--long {
-			width: 50px;
-		}
-	}
+	@include layout-preview(40px, 20px, 12px, 4px 8px, 0 8px 4px, -10px, 30px, 50px);
 }
 
 /* ----------------------------------------------------------------
@@ -259,15 +196,23 @@
 		gap: 16px;
 	}
 
+	&__label {
+		font-size: 13px;
+		font-weight: 500;
+		color: $bb-text-color;
+		margin: 0;
+		line-height: 1.4;
+	}
+
 	&__placeholder {
-		width: 120px;
-		height: 120px;
+		width: 160px;
+		height: 160px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		background: $bb-background-primary-color;
-		border: 2px dashed $bb-border-secondary-color;
-		border-radius: $bb-border-radius-lg;
+		border: 1px dashed $bb-border-secondary-color;
+		border-radius: $bb-border-radius-xl;
 		flex-shrink: 0;
 
 		.dashicons {
@@ -276,16 +221,12 @@
 			height: 32px;
 			color: $bb-icon-tertiary-color;
 		}
-
-		&--avatar {
-			border-radius: $bb-border-radius-full;
-		}
 	}
 
 	&__preview {
-		width: 120px;
-		height: 120px;
-		border-radius: $bb-border-radius-lg;
+		width: 160px;
+		height: 160px;
+		border-radius: $bb-border-radius-xl;
 		overflow: hidden;
 		flex-shrink: 0;
 		border: 1px solid $bb-border-secondary-color;
@@ -296,17 +237,13 @@
 			object-fit: cover;
 			display: block;
 		}
-
-		&--avatar {
-			border-radius: $bb-border-radius-full;
-		}
 	}
 
 	// Cover images are wider.
 	&--cover &__placeholder,
 	&--cover &__preview {
-		width: 240px;
-		height: 80px;
+		width: 432px;
+		height: 160px;
 	}
 
 	&__actions {

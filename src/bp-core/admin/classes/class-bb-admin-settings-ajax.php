@@ -617,13 +617,27 @@ class BB_Admin_Settings_Ajax {
 				$upload_config = $field['upload_config'];
 
 				// Resolve the current upload URL using the registered getter function.
-				// Only call functions with the 'bb_' or 'bp_' prefix to prevent arbitrary function execution.
+				// Strict allowlist — only functions explicitly known to return image URLs.
+				$allowed_url_getters = array(
+					'bb_get_default_custom_upload_group_avatar',
+					'bb_get_default_custom_upload_group_cover',
+				);
+
+				/**
+				 * Filters the allowed url_getter functions for image upload fields.
+				 *
+				 * @since BuddyBoss [BBVERSION]
+				 *
+				 * @param array $allowed_url_getters List of allowed function names.
+				 */
+				$allowed_url_getters = apply_filters( 'bb_admin_settings_allowed_url_getters', $allowed_url_getters );
+
 				$url_getter = $upload_config['url_getter'] ?? '';
 				$upload_url = '';
 				if (
 					! empty( $url_getter ) &&
 					is_string( $url_getter ) &&
-					preg_match( '/^(bb|bp)_/', $url_getter ) &&
+					in_array( $url_getter, $allowed_url_getters, true ) &&
 					function_exists( $url_getter )
 				) {
 					$upload_url = call_user_func( $url_getter );

@@ -10123,7 +10123,34 @@ function bb_register_feature_section( $feature_id, $side_panel_id, $section_id, 
  * @param string $feature_id    Feature ID.
  * @param string $side_panel_id Side panel ID.
  * @param string $section_id    Section ID.
- * @param array  $args          Field arguments.
+ * @param array  $args {
+ *     Field arguments.
+ *
+ *     @type string $name              Field name (option key).
+ *     @type string $label             Field label.
+ *     @type string $type              Field type (toggle, select, image_radio, child_render, etc.).
+ *     @type string $description       Field description.
+ *     @type mixed  $default           Default value.
+ *     @type callable $sanitize_callback Sanitize callback.
+ *     @type array  $options           Options for select/radio fields.
+ *     @type array  $conditional       Conditional display config.
+ *     @type int    $order             Display order.
+ *     @type bool   $invert_value      Whether to invert toggle value for display.
+ *     @type array  $upload_config {
+ *         Optional. Upload configuration for image_radio fields with custom upload support.
+ *
+ *         @since BuddyBoss [BBVERSION]
+ *
+ *         @type string $type        Upload type: 'avatar' or 'cover'.
+ *         @type string $object      Object type for BP handlers (e.g., 'group').
+ *         @type int    $item_id     Item ID (0 for defaults).
+ *         @type string $item_type   Item type identifier.
+ *         @type string $url_getter  PHP function name to resolve current uploaded URL.
+ *         @type string $label       Label shown above the upload area (e.g., 'Upload Custom Avatar').
+ *         @type string $help_text   Help text shown below the upload area.
+ *         @type array  $conditional Conditional display config with 'value' key.
+ *     }
+ * }
  * @return bool|WP_Error True on success, WP_Error on failure.
  */
 function bb_register_feature_field( $feature_id, $side_panel_id, $section_id, $args = array() ) {
