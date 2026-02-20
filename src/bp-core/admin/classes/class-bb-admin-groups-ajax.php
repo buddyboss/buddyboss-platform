@@ -52,21 +52,24 @@ class BB_Admin_Groups_Ajax {
 	}
 
 	/**
-	 * Verify AJAX request (nonce + capability).
+	 * Verify AJAX request (capability + nonce).
+	 *
+	 * Capability is checked first because it is cheaper and avoids
+	 * consuming a nonce check for unauthorized users.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	private function bb_verify_request() {
-		if ( ! check_ajax_referer( self::NONCE_ACTION, 'nonce', false ) ) {
+		if ( ! bp_current_user_can( 'bp_moderate' ) ) {
 			wp_send_json_error(
-				array( 'message' => __( 'Security check failed.', 'buddyboss' ) ),
+				array( 'message' => __( 'Permission denied.', 'buddyboss' ) ),
 				403
 			);
 		}
 
-		if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+		if ( ! check_ajax_referer( self::NONCE_ACTION, 'nonce', false ) ) {
 			wp_send_json_error(
-				array( 'message' => __( 'Permission denied.', 'buddyboss' ) ),
+				array( 'message' => __( 'Security check failed.', 'buddyboss' ) ),
 				403
 			);
 		}
