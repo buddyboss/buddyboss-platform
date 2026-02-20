@@ -152,8 +152,56 @@ export function getPlatformSettings(options) {
  * @return {Promise} Promise resolving to response
  */
 export function savePlatformSetting(optionName, optionValue) {
-	return ajaxFetch('bb_admin_save_platform_setting', { 
-		option_name: optionName, 
-		option_value: optionValue 
+	return ajaxFetch('bb_admin_save_platform_setting', {
+		option_name: optionName,
+		option_value: optionValue
 	});
+}
+
+/**
+ * Get all group types
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return {Promise} Promise resolving to group types array
+ */
+export function getGroupTypes() {
+	return ajaxFetch('bb_admin_get_group_types');
+}
+
+/**
+ * Create a new group type
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data - Group type data
+ * @return {Promise} Promise resolving to response
+ */
+export function createGroupType(data) {
+	return ajaxFetch('bb_admin_create_group_type', data);
+}
+
+/**
+ * Update an existing group type
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {number} typeId - Group type post ID
+ * @param {Object} data   - Group type data
+ * @return {Promise} Promise resolving to response
+ */
+export function updateGroupType(typeId, data) {
+	return ajaxFetch('bb_admin_update_group_type', { type_id: typeId, ...data });
+}
+
+/**
+ * Delete a group type
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {number} typeId - Group type post ID
+ * @return {Promise} Promise resolving to response
+ */
+export function deleteGroupType(typeId) {
+	return ajaxFetch('bb_admin_delete_group_type', { type_id: typeId });
 }

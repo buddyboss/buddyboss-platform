@@ -176,19 +176,17 @@ function bb_admin_settings_register_groups_feature() {
 		)
 	);
 
-	// Side Panel: Group Types (navigation link).
+	// Side Panel: Group Types (custom panel screen).
 	bb_register_side_panel(
 		'groups',
 		'group_types',
 		array(
-			'title'      => __( 'Group Types', 'buddyboss' ),
-			'icon'       => array(
+			'title' => __( 'Group Types', 'buddyboss' ),
+			'icon'  => array(
 				'type'  => 'font',
-				'class' => 'bb-icons-rl bb-icons-rl-arrow-square-out',
+				'class' => 'bb-icons-rl bb-icons-rl-tag',
 			),
-			'link'       => get_admin_url( bp_get_root_blog_id(), 'edit.php?post_type=bp-group-type' ),
-			'order'      => 110,
-			'is_default' => false,
+			'order' => 110,
 		)
 	);
 

@@ -24,6 +24,7 @@ import { sanitizeHtml } from '../utils/sanitize';
 // Lazy load custom panel screens.
 const ActivityListScreen = lazy(() => import('./ActivityListScreen'));
 const GroupsListScreen = lazy(() => import('./GroupsListScreen'));
+const GroupTypeScreen = lazy(() => import('./GroupTypeScreen'));
 
 /**
  * Map of feature + panel combinations that render custom screens instead of settings forms.
@@ -31,6 +32,7 @@ const GroupsListScreen = lazy(() => import('./GroupsListScreen'));
 const CUSTOM_PANEL_SCREENS = {
 	'activity:all_activities': ActivityListScreen,
 	'groups:all_groups': GroupsListScreen,
+	'groups:group_types': GroupTypeScreen,
 };
 
 

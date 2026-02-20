@@ -56,6 +56,10 @@ function bb_admin_settings_init() {
 		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-activity-admin-ajax.php' ) ) {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-activity-admin-ajax.php';
 		}
+
+		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-groups-ajax.php' ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-groups-ajax.php';
+		}
 	}
 
 	if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-page.php' ) ) {
