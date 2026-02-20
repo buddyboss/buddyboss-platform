@@ -1,0 +1,151 @@
+/* ----------------------------------------------------------------
+   Groups Settings - Image Radio Field
+   (avatar/cover/header/grid style pickers)
+   ---------------------------------------------------------------- */
+
+.bb-admin-settings-field__image-radio {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+
+	&-option {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		width: 112px;
+		background: none;
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-xl;
+		padding: 0;
+		cursor: pointer;
+		transition: border-color 0.2s ease;
+		overflow: hidden;
+
+		&:hover {
+			border-color: $bb-border-tertiary-color;
+		}
+
+		&--selected {
+			border-color: $bb-border-brand-primary-color;
+		}
+
+		&:disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+		}
+	}
+
+	&-preview {
+		width: 100%;
+		height: 80px;
+		background: $bb-background-primary-color;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	&-icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		.dashicons {
+			font-size: 32px;
+			width: 32px;
+			height: 32px;
+			color: $bb-icon-tertiary-color;
+		}
+	}
+
+	&-label {
+		display: block;
+		width: 100%;
+		padding: 8px 0;
+		font-size: 13px;
+		font-weight: 400;
+		line-height: 1;
+		color: $bb-text-color;
+		text-align: center;
+	}
+}
+
+.bb-admin-settings-field__avatar-initials {
+	font-size: 24px;
+	font-weight: 600;
+	color: $bb-icon-tertiary-color;
+	line-height: 1;
+}
+
+/* Header style preview cards */
+.bb-admin-settings-field__header-preview {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+
+	&-cover {
+		height: 40px;
+		background: $bb-background-secondary-color;
+	}
+
+	&-content {
+		flex: 1;
+		display: flex;
+		align-items: center;
+		padding: 4px 8px;
+		gap: 6px;
+	}
+
+	&--centered &-content {
+		flex-direction: column;
+		align-items: center;
+		padding: 0 8px 4px;
+	}
+
+	&--centered &-avatar {
+		margin-top: -10px;
+	}
+
+	&-avatar {
+		width: 20px;
+		height: 20px;
+		background: $bb-background-secondary-color;
+		border-radius: $bb-border-radius-full;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+
+		.dashicons {
+			font-size: 12px;
+			width: 12px;
+			height: 12px;
+			color: $bb-icon-tertiary-color;
+		}
+	}
+
+	&-lines {
+		display: flex;
+		flex-direction: column;
+		gap: 3px;
+	}
+
+	&--centered &-lines {
+		align-items: center;
+	}
+
+	&-line {
+		height: 3px;
+		background: $bb-background-secondary-color;
+		border-radius: 2px;
+
+		&--short {
+			width: 30px;
+		}
+
+		&--long {
+			width: 50px;
+		}
+	}
+}
