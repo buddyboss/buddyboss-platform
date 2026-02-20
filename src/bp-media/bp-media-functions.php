@@ -992,7 +992,7 @@ function bp_media_get_total_group_album_count( $group_id = 0 ) {
 /**
  * Get album counts including total, media, and video counts.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.20.0
  *
  * @param int $album_id Album ID.
  * @param int $group_id Optional. Group ID if this is a group album.
@@ -1033,7 +1033,7 @@ function bb_media_get_album_counts( $album_id = 0, $group_id = 0 ) {
 	/**
 	 * Filters the album counts.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.20.0
 	 *
 	 * @param array $counts   Array of counts (album_total_count, album_media_count, album_video_count).
 	 * @param int   $album_id Album ID.

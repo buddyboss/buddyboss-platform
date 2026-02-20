@@ -401,7 +401,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		/*
 		 * Only include bp-nouveau (buddypress.css) on frontend pages.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.20.0
 		 */
 		if ( ! is_admin() ) {
 			$styles_array['bp-nouveau'] = array(

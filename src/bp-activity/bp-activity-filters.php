@@ -2876,7 +2876,7 @@ function bb_activity_has_comment_access( $retval ) {
  * to maintain the depth limit. See bb_adjust_activity_comment_threading_parent().
  *
  * @since BuddyBoss 1.7.2
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.20.0
  *
  * @param boolean $can_comment Comment permission status.
  * @param object  $comment     Activity data.
@@ -2936,7 +2936,7 @@ function bb_activity_has_comment_reply_access( $can_comment, $comment ) {
  * that contains comments at the maximum threading depth. This allows
  * for CSS styling specific to the deepest comment level.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.20.0
  *
  * @param string $ul_html The opening UL tag HTML.
  *
