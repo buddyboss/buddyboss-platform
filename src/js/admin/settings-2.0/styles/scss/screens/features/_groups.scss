@@ -14,18 +14,15 @@
 		align-items: center;
 		width: 112px;
 		background: none;
-		border: 1px solid $bb-border-secondary-color;
-		border-radius: $bb-border-radius-xl;
+		border: none;
 		padding: 0;
 		cursor: pointer;
-		transition: border-color 0.2s ease;
-		overflow: hidden;
 
-		&:hover {
+		&:hover .bb-admin-settings-field__image-radio-preview {
 			border-color: $bb-border-tertiary-color;
 		}
 
-		&--selected {
+		&--selected .bb-admin-settings-field__image-radio-preview {
 			border-color: $bb-border-brand-primary-color;
 		}
 
@@ -37,11 +34,15 @@
 
 	&-preview {
 		width: 100%;
-		height: 80px;
+		height: 112px;
 		background: $bb-background-primary-color;
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-xl;
+		overflow: hidden;
+		transition: border-color 0.2s ease;
 	}
 
 	&-icon {
@@ -69,6 +70,17 @@
 	}
 }
 
+/* Child render field (Cover Image Sizes) */
+.bb-admin-settings-field__child-render {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.bb-admin-settings-field__child-control {
+	max-width: 272px;
+}
+
 .bb-admin-settings-field__avatar-initials {
 	font-size: 24px;
 	font-weight: 600;
@@ -82,7 +94,6 @@
 	height: 100%;
 	display: flex;
 	flex-direction: column;
-	overflow: hidden;
 
 	&-cover {
 		height: 40px;
