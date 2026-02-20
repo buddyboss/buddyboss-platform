@@ -45,6 +45,10 @@ function LayoutPreview( { type, alignment } ) {
  *
  * @type {Object<string, Function>}
  */
+// Module-level cache for upload URLs — survives component unmount/remount cycles
+// caused by conditional toggling (e.g., disable then re-enable Group Avatars).
+var uploadUrlCache = {};
+
 var IMAGE_PREVIEWS = {
 	'cover-buddyboss': function () {
 		return (
@@ -116,7 +120,12 @@ var IMAGE_PREVIEWS = {
  */
 export function ImageRadioField( { field, value, onChange, disabled } ) {
 	var [ selected, setSelected ] = useState( value );
-	var [ uploadUrl, setUploadUrl ] = useState( field.upload_url || '' );
+
+	// Use cached URL if available (survives unmount/remount), otherwise fall back to server value.
+	var initialUrl = uploadUrlCache[ field.name ] !== undefined
+		? uploadUrlCache[ field.name ]
+		: ( field.upload_url || '' );
+	var [ uploadUrl, setUploadUrl ] = useState( initialUrl );
 
 	// Sync local state when parent value changes (e.g., after save or initial load).
 	useEffect( function () {
@@ -156,9 +165,11 @@ export function ImageRadioField( { field, value, onChange, disabled } ) {
 				uploadConfig={ field.upload_config }
 				uploadUrl={ uploadUrl }
 				onUpload={ function ( newUrl ) {
+					uploadUrlCache[ field.name ] = newUrl;
 					setUploadUrl( newUrl );
 				} }
 				onRemove={ function () {
+					uploadUrlCache[ field.name ] = '';
 					setUploadUrl( '' );
 				} }
 				disabled={ disabled }
