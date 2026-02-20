@@ -826,7 +826,6 @@
 
 	&__body {
 		padding: 16px 24px;
-		overflow-y: auto;
 
 		.components-base-control {
 			margin-bottom: 16px;
@@ -855,6 +854,10 @@
 		gap: 8px;
 		padding: 16px 24px;
 		border-top: 1px solid $bb-border-secondary-color;
+		position: sticky;
+		bottom: 0;
+		background: $bb-background-base-color;
+		z-index: 1;
 	}
 
 	&__footer-left {
@@ -937,6 +940,10 @@
 		gap: 8px;
 		padding: 8px 24px;
 		border-top: 1px solid $bb-border-secondary-color;
+		position: sticky;
+		bottom: 0;
+		background: $bb-background-base-color;
+		z-index: 1;
 	}
 
 	&__footer-left {
