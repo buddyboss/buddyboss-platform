@@ -175,6 +175,10 @@
     &:last-child {
         padding-bottom: 0;
         border-bottom: none;
+
+        .bb-admin-notice {
+            margin-bottom: 0;
+        }
     }
 
     + .bb-admin-settings-form__field {
