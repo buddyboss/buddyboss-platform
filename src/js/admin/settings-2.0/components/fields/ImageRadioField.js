@@ -67,7 +67,7 @@ var IMAGE_PREVIEWS = {
 	'cover-custom': function () {
 		return (
 			<div className="bb-admin-settings-field__image-radio-icon bb-admin-settings-field__image-radio-icon--custom">
-				<span className="dashicons dashicons-admin-generic"></span>
+				<span className="bb-icons-rl-gear-six"></span>
 			</div>
 		);
 	},
@@ -90,7 +90,7 @@ var IMAGE_PREVIEWS = {
 	'avatar-custom': function () {
 		return (
 			<div className="bb-admin-settings-field__image-radio-icon bb-admin-settings-field__image-radio-icon--custom">
-				<span className="dashicons dashicons-admin-generic"></span>
+				<span className="bb-icons-rl-gear-six"></span>
 			</div>
 		);
 	},
@@ -144,7 +144,7 @@ export function ImageRadioField( { field, value, onChange, disabled } ) {
 
 	return (
 		<div className="bb-admin-settings-field__image-radio-wrapper">
-		<div className="bb-admin-settings-field__image-radio">
+		<div className={ 'bb-admin-settings-field__image-radio' + ( showUpload ? ' bb-admin-settings-field__image-radio--with-divider' : '' ) }>
 			{ ( field.options || [] ).map( function ( option ) {
 				return (
 					<button

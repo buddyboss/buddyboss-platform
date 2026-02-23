@@ -6,12 +6,12 @@
 .bb-admin-settings-field__image-radio {
 	display: flex;
 	flex-wrap: wrap;
-	gap: 8px;
+	gap: 16px;
 
 	&-option {
 		display: flex;
 		flex-direction: column;
-		align-items: center;
+		align-items: flex-start;
 		width: 112px;
 		background: none;
 		border: none;
@@ -24,6 +24,7 @@
 
 		&--selected .bb-admin-settings-field__image-radio-preview {
 			border-color: $bb-border-brand-primary-color;
+			border-width: 1px;
 		}
 
 		&:disabled {
@@ -39,7 +40,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		border: 1px solid $bb-border-secondary-color;
+		border: 0.5px solid $bb-border-secondary-color;
 		border-radius: $bb-border-radius-xl;
 		overflow: hidden;
 		transition: border-color 0.2s ease;
@@ -56,17 +57,29 @@
 			height: 32px;
 			color: $bb-icon-tertiary-color;
 		}
+
+		[class^="bb-icon"] {
+			color: $bb-icon-disabled-color;
+			font-size: 48px;
+			font-weight: 600;
+		}
 	}
 
 	&-label {
 		display: block;
 		width: 100%;
-		padding: 8px 0;
-		font-size: 13px;
+		padding: 2px 0 2px 4px;
+		font-size: 14px;
 		font-weight: 400;
-		line-height: 1;
+		line-height: 20px;
 		color: $bb-text-color;
-		text-align: center;
+		text-align: left;
+		margin-top: 8px;
+	}
+
+	&--with-divider {
+		padding-bottom: 16px;
+		border-bottom: 0.5px solid $bb-border-secondary-color;
 	}
 }
 
@@ -82,10 +95,11 @@
 }
 
 .bb-admin-settings-field__avatar-initials {
-	font-size: 24px;
+	font-size: 36px;
 	font-weight: 600;
-	color: $bb-icon-tertiary-color;
+	color: $bb-text-disabled-color;
 	line-height: 1;
+	letter-spacing: 1.44px;
 }
 
 /* Image Radio Wrapper (contains cards + upload area) */
@@ -192,26 +206,25 @@
 	&__placeholder-area,
 	&__preview-area {
 		display: flex;
-		align-items: flex-start;
+		align-items: center;
 		gap: 16px;
 	}
 
 	&__label {
 		font-size: 13px;
 		font-weight: 500;
-		color: $bb-text-color;
+		color: $bb-text-secondary-color;
 		margin: 0;
-		line-height: 1.4;
+		line-height: 18px;
 	}
 
 	&__placeholder {
-		width: 160px;
-		height: 160px;
+		padding: 60px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		background: $bb-background-primary-color;
-		border: 1px dashed $bb-border-secondary-color;
+		border: 0.5px solid $bb-border-primary-color;
 		border-radius: $bb-border-radius-xl;
 		flex-shrink: 0;
 
@@ -229,7 +242,7 @@
 		border-radius: $bb-border-radius-xl;
 		overflow: hidden;
 		flex-shrink: 0;
-		border: 1px solid $bb-border-secondary-color;
+		border: 0.5px solid $bb-border-primary-color;
 
 		img {
 			width: 100%;
@@ -250,18 +263,17 @@
 		display: flex;
 		flex-direction: column;
 		gap: 8px;
-		padding-top: 4px;
 	}
 
 	&__btn {
 		display: inline-flex;
 		align-items: center;
-		justify-content: center;
+		gap: 4px;
 		padding: 6px 16px;
-		font-size: 13px;
-		font-weight: 500;
-		line-height: 1.5;
-		border-radius: $bb-border-radius-md;
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 20px;
+		border-radius: $bb-border-radius-lg;
 		cursor: pointer;
 		transition: all 0.2s ease;
 		white-space: nowrap;
@@ -305,17 +317,17 @@
 	}
 
 	&__help {
-		font-size: 12px;
+		font-size: 13px;
 		color: $bb-text-tertiary-color;
 		margin: 0;
-		line-height: 1.4;
+		line-height: 18px;
 	}
 
 	&__error {
-		font-size: 12px;
+		font-size: 13px;
 		color: $bb-error-color;
 		margin: 0;
-		line-height: 1.4;
+		line-height: 18px;
 	}
 
 	&__spinner {

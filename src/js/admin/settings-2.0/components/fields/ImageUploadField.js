@@ -328,7 +328,7 @@ export function ImageUploadField( { uploadConfig, uploadUrl, onUpload, onRemove,
 					<div className="bb-admin-image-upload__placeholder">
 						{ isLoading
 							? <span className="bb-admin-image-upload__spinner"></span>
-							: <span className="dashicons dashicons-format-image"></span>
+							: <svg xmlns="http://www.w3.org/2000/svg" width="33" height="28" viewBox="0 0 33 28" fill="none"><path d="M30 0H2.5C1.83696 0 1.20107 0.263392 0.732233 0.732233C0.263392 1.20107 0 1.83696 0 2.5V25C0 25.663 0.263392 26.2989 0.732233 26.7678C1.20107 27.2366 1.83696 27.5 2.5 27.5H30C30.663 27.5 31.2989 27.2366 31.7678 26.7678C32.2366 26.2989 32.5 25.663 32.5 25V2.5C32.5 1.83696 32.2366 1.20107 31.7678 0.732233C31.2989 0.263392 30.663 0 30 0ZM30 2.5V18.5547L25.9266 14.4828C25.6944 14.2506 25.4188 14.0664 25.1154 13.9407C24.8121 13.8151 24.4869 13.7504 24.1586 13.7504C23.8302 13.7504 23.5051 13.8151 23.2018 13.9407C22.8984 14.0664 22.6228 14.2506 22.3906 14.4828L19.2656 17.6078L12.3906 10.7328C11.9218 10.2643 11.2862 10.0012 10.6234 10.0012C9.96068 10.0012 9.32504 10.2643 8.85625 10.7328L2.5 17.0891V2.5H30ZM2.5 20.625L10.625 12.5L23.125 25H2.5V20.625ZM30 25H26.6609L21.0359 19.375L24.1609 16.25L30 22.0906V25ZM18.75 9.375C18.75 9.00416 18.86 8.64165 19.066 8.33331C19.272 8.02496 19.5649 7.78464 19.9075 7.64273C20.2501 7.50081 20.6271 7.46368 20.9908 7.53603C21.3545 7.60837 21.6886 7.78695 21.9508 8.04917C22.213 8.3114 22.3916 8.64549 22.464 9.0092C22.5363 9.37292 22.4992 9.74992 22.3573 10.0925C22.2154 10.4351 21.975 10.728 21.6667 10.934C21.3584 11.14 20.9958 11.25 20.625 11.25C20.1277 11.25 19.6508 11.0525 19.2992 10.7008C18.9475 10.3492 18.75 9.87228 18.75 9.375Z" fill="#666666"/></svg>
 						}
 					</div>
 					<div className="bb-admin-image-upload__actions">
@@ -338,6 +338,7 @@ export function ImageUploadField( { uploadConfig, uploadUrl, onUpload, onRemove,
 							onClick={ triggerFileInput }
 							disabled={ disabled || isLoading }
 						>
+							{ ! isLoading && <i className="bb-icons-rl bb-icons-rl-upload-simple"></i> }
 							{ isLoading ? __( 'Uploading...', 'buddyboss' ) : __( 'Upload', 'buddyboss' ) }
 						</button>
 					</div>
@@ -357,6 +358,7 @@ export function ImageUploadField( { uploadConfig, uploadUrl, onUpload, onRemove,
 							onClick={ triggerFileInput }
 							disabled={ disabled }
 						>
+							<i className="bb-icons-rl bb-icons-rl-upload-simple"></i>
 							{ __( 'Upload', 'buddyboss' ) }
 						</button>
 						<button
