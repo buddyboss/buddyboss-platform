@@ -9,6 +9,7 @@
 
 import { useState, useEffect } from '@wordpress/element';
 import { ImageUploadField } from './ImageUploadField';
+import coverBuddybossImage from '../../images/cover-image.png';
 
 /**
  * Shared layout preview for card and header style pickers.
@@ -53,14 +54,14 @@ var IMAGE_PREVIEWS = {
 	'cover-buddyboss': function () {
 		return (
 			<div className="bb-admin-settings-field__image-radio-icon bb-admin-settings-field__image-radio-icon--buddyboss">
-				<span className="dashicons dashicons-format-image"></span>
+				<img src={ coverBuddybossImage } alt="" />
 			</div>
 		);
 	},
 	'cover-none': function () {
 		return (
 			<div className="bb-admin-settings-field__image-radio-icon bb-admin-settings-field__image-radio-icon--none">
-				<span className="dashicons dashicons-no-alt"></span>
+				<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none"><path d="M39.0918 35.908C39.5145 36.3307 39.7519 36.9039 39.7519 37.5017C39.7519 38.0995 39.5145 38.6728 39.0918 39.0955C38.6691 39.5182 38.0958 39.7556 37.498 39.7556C36.9003 39.7556 36.327 39.5182 35.9043 39.0955L23.9999 27.1873L12.0918 39.0917C11.6691 39.5144 11.0958 39.7519 10.498 39.7519C9.90027 39.7519 9.32698 39.5144 8.90429 39.0917C8.4816 38.669 8.24414 38.0957 8.24414 37.498C8.24414 36.9002 8.48161 36.3269 8.90429 35.9042L20.8124 23.9998L8.90804 12.0917C8.48535 11.669 8.24789 11.0957 8.24789 10.498C8.24789 9.90019 8.48535 9.3269 8.90804 8.90422C9.33073 8.48153 9.90402 8.24406 10.5018 8.24406C11.0996 8.24406 11.6729 8.48153 12.0955 8.90422L23.9999 20.8123L35.908 8.90234C36.3307 8.47965 36.904 8.24219 37.5018 8.24219C38.0996 8.24219 38.6729 8.47965 39.0955 8.90234C39.5182 9.32503 39.7557 9.89832 39.7557 10.4961C39.7557 11.0939 39.5182 11.6672 39.0955 12.0898L27.1874 23.9998L39.0918 35.908Z" fill="#999999"/></svg>
 			</div>
 		);
 	},

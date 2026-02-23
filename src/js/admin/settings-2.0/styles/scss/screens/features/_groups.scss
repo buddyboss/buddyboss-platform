@@ -63,6 +63,18 @@
 			font-size: 48px;
 			font-weight: 600;
 		}
+
+		&--buddyboss {
+			width: 100%;
+			height: 100%;
+
+			img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+				display: block;
+			}
+		}
 	}
 
 	&-label {
@@ -257,6 +269,14 @@
 	&--cover &__preview {
 		width: 432px;
 		height: 160px;
+	}
+
+	&--cover &__preview {
+		background: $bb-background-primary-color;
+		border: 0.5px solid $bb-border-primary-color;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 
 	&__actions {
