@@ -42,18 +42,18 @@ function bb_admin_settings_init() {
 	bb_feature_registry();
 	bb_feature_loader();
 
-	// Admin Meta Field Registry (global, component-based).
-	if ( ! class_exists( 'BB_Admin_Meta_Field_Registry' ) ) {
-		require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-meta-field-registry.php';
-	}
-
-	// AJAX handlers (only load in admin or AJAX context to avoid frontend overhead).
+	// AJAX handlers and meta field registry (only load in admin or AJAX context to avoid frontend overhead).
 	if ( is_admin() || wp_doing_ajax() ) {
+		// Admin Meta Field Registry (component-based).
+		if ( ! class_exists( 'BB_Admin_Meta_Field_Registry' ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-meta-field-registry.php';
+		}
+
 		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-settings-ajax.php' ) ) {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-settings-ajax.php';
 		}
 
-		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-activity-admin-ajax.php' ) ) {
+		if ( bp_is_active( 'activity' ) && file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-activity-admin-ajax.php' ) ) {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-activity-admin-ajax.php';
 		}
 	}

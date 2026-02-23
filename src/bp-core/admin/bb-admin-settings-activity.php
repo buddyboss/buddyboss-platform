@@ -12,19 +12,6 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-// Load sanitize callbacks.
-require_once __DIR__ . '/settings/activity/callbacks.php';
-
-// Load panel field registrations.
-require_once __DIR__ . '/settings/activity/settings-activity.php';
-require_once __DIR__ . '/settings/activity/settings-comments.php';
-require_once __DIR__ . '/settings/activity/settings-topics.php';
-require_once __DIR__ . '/settings/activity/settings-visibility.php';
-require_once __DIR__ . '/settings/activity/settings-sharing.php';
-require_once __DIR__ . '/settings/activity/settings-access-control.php';
-
-// Load activity edit meta fields (registry-based).
-require_once __DIR__ . '/settings/activity/meta-fields.php';
 /**
  * Register Activity feature and settings in Feature Registry.
  *
@@ -64,6 +51,17 @@ function bb_admin_settings_register_activity_feature() {
 	if ( ! bp_is_active( 'activity' ) ) {
 		return;
 	}
+
+	// Load settings sub-files only when activity is active to avoid parsing ~1,000 lines of
+	// callbacks, field registrations, and meta-field definitions when the feature is off.
+	require_once __DIR__ . '/settings/activity/callbacks.php';
+	require_once __DIR__ . '/settings/activity/settings-activity.php';
+	require_once __DIR__ . '/settings/activity/settings-comments.php';
+	require_once __DIR__ . '/settings/activity/settings-topics.php';
+	require_once __DIR__ . '/settings/activity/settings-visibility.php';
+	require_once __DIR__ . '/settings/activity/settings-sharing.php';
+	require_once __DIR__ . '/settings/activity/settings-access-control.php';
+	require_once __DIR__ . '/settings/activity/meta-fields.php';
 
 	// =========================================================================
 	// SIDE PANELS
