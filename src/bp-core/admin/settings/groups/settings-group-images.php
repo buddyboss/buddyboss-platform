@@ -82,14 +82,14 @@ function bb_groups_register_images_panel_fields() {
 				),
 			),
 			'upload_config'     => array(
-				'type'          => 'avatar',
-				'object'        => 'group',
-				'item_id'       => 0,
-				'item_type'     => 'default',
-				'url_getter'    => 'bb_get_default_custom_upload_group_avatar',
-				'label'         => __( 'Upload Custom Avatar', 'buddyboss' ),
-				'help_text'     => __( 'Upload a default avatar image (JPG or PNG, recommended size: 300×300 px).', 'buddyboss' ),
-				'conditional'   => array(
+				'type'        => 'avatar',
+				'object'      => 'group',
+				'item_id'     => 0,
+				'item_type'   => 'default',
+				'url_getter'  => 'bb_get_default_custom_upload_group_avatar',
+				'label'       => __( 'Upload Custom Avatar', 'buddyboss' ),
+				'help_text'   => __( 'Upload a default avatar image (JPG or PNG, recommended size: 300×300 px).', 'buddyboss' ),
+				'conditional' => array(
 					'value' => 'custom',
 				),
 			),
@@ -172,14 +172,14 @@ function bb_groups_register_images_panel_fields() {
 				),
 			),
 			'upload_config'     => array(
-				'type'          => 'cover',
-				'object'        => 'group',
-				'item_id'       => 0,
-				'item_type'     => 'default',
-				'url_getter'    => 'bb_get_default_custom_upload_group_cover',
-				'label'         => __( 'Upload Custom Cover', 'buddyboss' ),
-				'help_text'     => __( 'Upload a default cover image (JPG or PNG, recommended size: 1950×450 px).', 'buddyboss' ),
-				'conditional'   => array(
+				'type'        => 'cover',
+				'object'      => 'group',
+				'item_id'     => 0,
+				'item_type'   => 'default',
+				'url_getter'  => 'bb_get_default_custom_upload_group_cover',
+				'label'       => __( 'Upload Custom Cover', 'buddyboss' ),
+				'help_text'   => __( 'Upload a default cover image (JPG or PNG, recommended size: 1950×450 px).', 'buddyboss' ),
+				'conditional' => array(
 					'value' => 'custom',
 				),
 			),
@@ -197,17 +197,17 @@ function bb_groups_register_images_panel_fields() {
 		'group_images',
 		'group_cover',
 		array(
-			'name'         => 'bb-default-group-cover-size',
-			'label'        => __( 'Cover Image Sizes', 'buddyboss' ),
-			'type'         => 'child_render',
-			'description'  => __( 'Changing the size of your cover images will reposition those already uploaded by members.', 'buddyboss' ),
-			'pro_only'     => true,
-			'conditional'  => array(
+			'name'        => 'bb-default-group-cover-size',
+			'label'       => __( 'Cover Image Sizes', 'buddyboss' ),
+			'type'        => 'child_render',
+			'description' => __( 'Changing the size of your cover images will reposition those already uploaded by members.', 'buddyboss' ),
+			'pro_only'    => true,
+			'conditional' => array(
 				'field' => 'bp-disable-group-cover-image-uploads',
 				'value' => false,
 			),
-			'order'        => 30,
-			'fields'       => array(
+			'order'       => 30,
+			'fields'      => array(
 				array(
 					'name'              => 'bb-pro-cover-group-width',
 					'label'             => __( 'Width', 'buddyboss' ),

@@ -52,6 +52,13 @@ class BB_Admin_Groups_Ajax {
 		add_action( 'wp_ajax_bb_admin_get_groups', array( $this, 'get_groups' ) );
 		add_action( 'wp_ajax_bb_admin_delete_group', array( $this, 'delete_group' ) );
 		add_action( 'wp_ajax_bb_admin_group_bulk_action', array( $this, 'group_bulk_action' ) );
+		add_action( 'wp_ajax_bb_admin_create_group', array( $this, 'create_group' ) );
+		add_action( 'wp_ajax_bb_admin_get_group', array( $this, 'get_group' ) );
+		add_action( 'wp_ajax_bb_admin_save_group', array( $this, 'save_group' ) );
+		add_action( 'wp_ajax_bb_admin_get_group_members', array( $this, 'get_group_members' ) );
+		add_action( 'wp_ajax_bb_admin_update_group_member', array( $this, 'update_group_member' ) );
+		add_action( 'wp_ajax_bb_admin_member_autocomplete', array( $this, 'member_autocomplete' ) );
+		add_action( 'wp_ajax_bb_admin_get_group_topics', array( $this, 'get_group_topics' ) );
 	}
 
 	/**
@@ -76,7 +83,6 @@ class BB_Admin_Groups_Ajax {
 				403
 			);
 		}
-
 	}
 
 	/**
@@ -154,18 +160,18 @@ class BB_Admin_Groups_Ajax {
 
 			$group_types[] = array(
 				'id'                  => $post_id,
-				'name'                => esc_html( $type_key ),
-				'post_title'          => esc_html( $post->post_title ),
-				'singular_label'      => esc_html( get_post_meta( $post_id, '_bp_group_type_label_singular_name', true ) ),
-				'plural_label'        => esc_html( get_post_meta( $post_id, '_bp_group_type_label_name', true ) ),
+				'name'                => $type_key,
+				'post_title'          => $post->post_title,
+				'singular_label'      => get_post_meta( $post_id, '_bp_group_type_label_singular_name', true ),
+				'plural_label'        => get_post_meta( $post_id, '_bp_group_type_label_name', true ),
 				'groups_count'        => isset( $group_counts[ $type_key ] ) ? (int) $group_counts[ $type_key ] : 0,
 				'enable_filter'       => absint( get_post_meta( $post_id, '_bp_group_type_enable_filter', true ) ),
 				'enable_remove'       => absint( get_post_meta( $post_id, '_bp_group_type_enable_remove', true ) ),
-				'role_labels'         => get_post_meta( $post_id, '_bp_group_type_role_labels', true ),
-				'label_color'         => get_post_meta( $post_id, '_bp_group_type_label_color', true ),
+				'role_labels'         => map_deep( get_post_meta( $post_id, '_bp_group_type_role_labels', true ), 'sanitize_text_field' ),
+				'label_color'         => map_deep( get_post_meta( $post_id, '_bp_group_type_label_color', true ), 'sanitize_text_field' ),
 				'restrict_invites'    => absint( get_post_meta( $post_id, '_bp_group_type_restrict_invites_user_same_group_type', true ) ),
-				'member_type_join'    => get_post_meta( $post_id, '_bp_group_type_enabled_member_type_join', true ),
-				'member_type_invites' => get_post_meta( $post_id, '_bp_group_type_enabled_member_type_group_invites', true ),
+				'member_type_join'    => map_deep( get_post_meta( $post_id, '_bp_group_type_enabled_member_type_join', true ), 'sanitize_key' ),
+				'member_type_invites' => map_deep( get_post_meta( $post_id, '_bp_group_type_enabled_member_type_group_invites', true ), 'sanitize_key' ),
 				'visibility'          => 'private' === $post->post_status ? 'private' : 'public',
 			);
 		}
@@ -218,7 +224,7 @@ class BB_Admin_Groups_Ajax {
 		);
 
 		if ( is_wp_error( $post_id ) ) {
-			wp_send_json_error( array( 'message' => $post_id->get_error_message() ) );
+			wp_send_json_error( array( 'message' => esc_html( $post_id->get_error_message() ) ) );
 		}
 
 		// Generate type key from post_name (slug), same as legacy bp_save_group_type_post_meta_box_data().
@@ -291,7 +297,10 @@ class BB_Admin_Groups_Ajax {
 		}
 
 		if ( $needs_update ) {
-			wp_update_post( $update_args );
+			$result = wp_update_post( $update_args, true );
+			if ( is_wp_error( $result ) ) {
+				wp_send_json_error( array( 'message' => esc_html( $result->get_error_message() ) ) );
+			}
 		}
 
 		// Save all meta fields (with post_title as default for labels, matching legacy).
@@ -662,9 +671,9 @@ class BB_Admin_Groups_Ajax {
 
 			$item = array(
 				'id'            => (int) $group->id,
-				'name'          => esc_html( $group_name ),
+				'name'          => $group_name,
 				'slug'          => $group->slug,
-				'description'   => wp_trim_words( wp_strip_all_tags( $group->description ), 20 ),
+				'description'   => wp_trim_words( wp_strip_all_tags( apply_filters( 'bp_get_group_description', $group->description ) ), 20 ),
 				'status'        => $group->status,
 				'status_label'  => $status_desc,
 				'date_created'  => $group->date_created,
@@ -717,7 +726,7 @@ class BB_Admin_Groups_Ajax {
 		if ( $include_meta ) {
 			// Get counts per status with a single query instead of 4 separate groups_get_groups() calls.
 			global $wpdb;
-			$bp            = buddypress();
+			$bp = buddypress();
 			// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name from BuddyPress internals, not user input.
 			$status_counts = $wpdb->get_results(
 				"SELECT status, COUNT(id) AS cnt FROM {$bp->groups->table_name} GROUP BY status"
@@ -1000,6 +1009,550 @@ class BB_Admin_Groups_Ajax {
 	}
 
 	/**
+	 * Create a new group.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function create_group() {
+		$this->bb_verify_request();
+
+		if ( ! bp_is_active( 'groups' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss' ) ) );
+		}
+
+		// phpcs:disable WordPress.Security.NonceVerification.Missing
+		$name        = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
+		$description = isset( $_POST['description'] ) ? wp_kses_post( wp_unslash( $_POST['description'] ) ) : '';
+		$status      = isset( $_POST['status'] ) ? sanitize_key( $_POST['status'] ) : 'public';
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
+
+		if ( empty( $name ) ) {
+			wp_send_json_error( array( 'message' => __( 'Group name is required.', 'buddyboss' ) ) );
+		}
+
+		/**
+		 * Filters the allowed group statuses.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $allowed_statuses Array of allowed group statuses.
+		 */
+		$allowed_statuses = apply_filters( 'groups_allowed_status', array( 'public', 'private', 'hidden' ) );
+		if ( ! in_array( $status, $allowed_statuses, true ) ) {
+			$status = 'public';
+		}
+
+		$group_id = groups_create_group(
+			array(
+				'name'        => $name,
+				'description' => $description,
+				'slug'        => groups_check_slug( sanitize_title( $name ) ),
+				'status'      => $status,
+				'creator_id'  => bp_loggedin_user_id(),
+			)
+		);
+
+		if ( ! $group_id ) {
+			wp_send_json_error( array( 'message' => __( 'Failed to create group.', 'buddyboss' ) ) );
+		}
+
+		wp_send_json_success(
+			array(
+				'message'  => __( 'Group created successfully.', 'buddyboss' ),
+				'group_id' => $group_id,
+			)
+		);
+	}
+
+	/**
+	 * Get a single group with registered meta fields for editing.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function get_group() {
+		$this->bb_verify_request();
+
+		if ( ! bp_is_active( 'groups' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss' ) ) );
+		}
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$group_id = isset( $_POST['group_id'] ) ? absint( $_POST['group_id'] ) : 0;
+
+		if ( empty( $group_id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Group ID is required.', 'buddyboss' ) ) );
+		}
+
+		$group = groups_get_group( $group_id );
+		if ( empty( $group->id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Group not found.', 'buddyboss' ) ) );
+		}
+
+		$data = array(
+			'id'                => (int) $group->id,
+			'name'              => $group->name,
+			'slug'              => $group->slug,
+			'description'       => $group->description,
+			'status'            => $group->status,
+			'parent_id'         => (int) $group->parent_id,
+			'enable_forum'      => (int) $group->enable_forum,
+			'creator_id'        => (int) $group->creator_id,
+			'date_created'      => $group->date_created,
+			'permalink'         => bp_get_group_permalink( $group ),
+			'avatar_url'        => bp_core_fetch_avatar(
+				array(
+					'item_id'    => $group->id,
+					'avatar_dir' => 'group-avatars',
+					'object'     => 'group',
+					'type'       => 'thumb',
+					'html'       => false,
+				)
+			),
+			'registered_fields' => bb_admin_meta_field_registry()->get_fields_data( 'groups', $group ),
+		);
+
+		wp_send_json_success( $data );
+	}
+
+	/**
+	 * Save group data from the edit modal.
+	 *
+	 * Flow:
+	 * 1. save_fields_data('groups', $group, 'before') — sets object properties.
+	 * 2. groups_edit_base_group_details() — fires groups_details_updated + cache.
+	 * 3. groups_edit_group_settings() — handles privacy + permissions + cache.
+	 * 4. save_fields_data('groups', $group, 'after') — saves group_type + Pro fields.
+	 * 5. do_action('bp_group_admin_edit_after', $group_id) — backward compat.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function save_group() {
+		$this->bb_verify_request();
+
+		if ( ! bp_is_active( 'groups' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss' ) ) );
+		}
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$group_id = isset( $_POST['group_id'] ) ? absint( $_POST['group_id'] ) : 0;
+
+		if ( empty( $group_id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Group ID is required.', 'buddyboss' ) ) );
+		}
+
+		$group = groups_get_group( $group_id );
+		if ( empty( $group->id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Group not found.', 'buddyboss' ) ) );
+		}
+
+		$registry = bb_admin_meta_field_registry();
+
+		// Capture original slug before Phase 1 modifies the group object.
+		$old_slug = $group->slug;
+
+		// Phase 1: "before" fields set properties on the group object.
+		$registry->save_fields_data( 'groups', $group, 'before' );
+
+		$new_slug = $group->slug;
+
+		// Phase 2: Save base group details (name, slug, description, parent).
+		$details_saved = groups_edit_base_group_details(
+			array(
+				'group_id'    => $group_id,
+				'name'        => $group->name,
+				'slug'        => $group->slug,
+				'description' => $group->description,
+				'parent_id'   => isset( $group->parent_id ) ? (int) $group->parent_id : 0,
+			)
+		);
+
+		// Write previous_slug if slug changed.
+		if ( $old_slug !== $new_slug ) {
+			groups_update_groupmeta( $group_id, 'previous_slug', $old_slug );
+		}
+
+		// Phase 3: Save group settings (status, permissions, forum).
+		// phpcs:disable WordPress.Security.NonceVerification.Missing
+		$status          = isset( $_POST['registered_field_status'] ) ? sanitize_key( wp_unslash( $_POST['registered_field_status'] ) ) : $group->status;
+		$enable_forum    = isset( $_POST['registered_field_enable_forum'] ) ? absint( $_POST['registered_field_enable_forum'] ) : (int) $group->enable_forum;
+		$invite_status   = isset( $_POST['registered_field_perm_invite'] ) ? sanitize_key( wp_unslash( $_POST['registered_field_perm_invite'] ) ) : false;
+		$activity_status = isset( $_POST['registered_field_perm_activity_feed'] ) ? sanitize_key( wp_unslash( $_POST['registered_field_perm_activity_feed'] ) ) : false;
+		$media_status    = isset( $_POST['registered_field_perm_media'] ) ? sanitize_key( wp_unslash( $_POST['registered_field_perm_media'] ) ) : false;
+		$album_status    = isset( $_POST['registered_field_perm_album'] ) ? sanitize_key( wp_unslash( $_POST['registered_field_perm_album'] ) ) : false;
+		$document_status = isset( $_POST['registered_field_perm_document'] ) ? sanitize_key( wp_unslash( $_POST['registered_field_perm_document'] ) ) : false;
+		$message_status  = isset( $_POST['registered_field_perm_message'] ) ? sanitize_key( wp_unslash( $_POST['registered_field_perm_message'] ) ) : false;
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
+
+		groups_edit_group_settings(
+			$group_id,
+			$enable_forum,
+			$status,
+			$invite_status,
+			$activity_status,
+			isset( $group->parent_id ) ? (int) $group->parent_id : false,
+			$media_status,
+			$document_status,
+			false, // video_status - not in modal.
+			$album_status,
+			$message_status
+		);
+
+		// Phase 4: "after" fields save group type, Pro fields, etc.
+		$registry->save_fields_data( 'groups', $group, 'after' );
+
+		/**
+		 * Fires after a group is saved from the admin edit modal.
+		 *
+		 * This is the same hook fired by the legacy admin edit screen,
+		 * ensuring third-party plugins (LearnDash, bbPress, etc.) continue to work.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $group_id ID of the group being edited.
+		 */
+		do_action( 'bp_group_admin_edit_after', $group_id );
+
+		wp_send_json_success(
+			array( 'message' => __( 'Group updated successfully.', 'buddyboss' ) )
+		);
+	}
+
+	/**
+	 * Get group members with pagination.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function get_group_members() {
+		$this->bb_verify_request();
+
+		if ( ! bp_is_active( 'groups' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss' ) ) );
+		}
+
+		// phpcs:disable WordPress.Security.NonceVerification.Missing
+		$group_id = isset( $_POST['group_id'] ) ? absint( $_POST['group_id'] ) : 0;
+		$page     = isset( $_POST['page'] ) ? absint( $_POST['page'] ) : 1;
+		$per_page = isset( $_POST['per_page'] ) ? absint( $_POST['per_page'] ) : 20;
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
+
+		if ( empty( $group_id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Group ID is required.', 'buddyboss' ) ) );
+		}
+
+		$group = groups_get_group( $group_id );
+		if ( empty( $group->id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Group not found.', 'buddyboss' ) ) );
+		}
+
+		$per_page = max( 1, min( 100, $per_page ) );
+		$page     = max( 1, $page );
+
+		$members_data = groups_get_group_members(
+			array(
+				'group_id'            => $group_id,
+				'per_page'            => $per_page,
+				'page'                => $page,
+				'exclude_admins_mods' => false,
+				'exclude_banned'      => false,
+			)
+		);
+
+		// Prime user cache.
+		if ( ! empty( $members_data['members'] ) ) {
+			$user_ids = wp_list_pluck( $members_data['members'], 'user_id' );
+			cache_users( $user_ids );
+		}
+
+		$members = array();
+		foreach ( $members_data['members'] as $member ) {
+			// Determine role.
+			$role = 'member';
+			if ( $member->is_admin ) {
+				$role = 'admin';
+			} elseif ( $member->is_mod ) {
+				$role = 'mod';
+			} elseif ( $member->is_banned ) {
+				$role = 'banned';
+			}
+
+			$members[] = array(
+				'user_id'    => (int) $member->user_id,
+				'name'       => bp_core_get_user_displayname( $member->user_id ),
+				'avatar_url' => bp_core_fetch_avatar(
+					array(
+						'item_id' => $member->user_id,
+						'object'  => 'user',
+						'type'    => 'thumb',
+						'html'    => false,
+					)
+				),
+				'role'       => $role,
+				'is_creator' => ( (int) $member->user_id === (int) $group->creator_id ),
+			);
+		}
+
+		wp_send_json_success(
+			array(
+				'members' => $members,
+				'total'   => (int) $members_data['count'],
+			)
+		);
+	}
+
+	/**
+	 * Add, remove, or change role of a group member.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function update_group_member() {
+		$this->bb_verify_request();
+
+		if ( ! bp_is_active( 'groups' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss' ) ) );
+		}
+
+		// phpcs:disable WordPress.Security.NonceVerification.Missing
+		$group_id    = isset( $_POST['group_id'] ) ? absint( $_POST['group_id'] ) : 0;
+		$user_id     = isset( $_POST['user_id'] ) ? absint( $_POST['user_id'] ) : 0;
+		$role        = isset( $_POST['role'] ) ? sanitize_key( $_POST['role'] ) : '';
+		$action_type = isset( $_POST['action_type'] ) ? sanitize_key( $_POST['action_type'] ) : '';
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
+
+		if ( empty( $group_id ) || empty( $user_id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Group ID and User ID are required.', 'buddyboss' ) ) );
+		}
+
+		$group = groups_get_group( $group_id );
+		if ( empty( $group->id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Group not found.', 'buddyboss' ) ) );
+		}
+
+		$user = get_userdata( $user_id );
+		if ( ! $user ) {
+			wp_send_json_error( array( 'message' => __( 'User not found.', 'buddyboss' ) ) );
+		}
+
+		$result = false;
+
+		// Add a new member.
+		if ( 'add' === $action_type ) {
+			$result = groups_join_group( $group_id, $user_id );
+			if ( $result ) {
+				wp_send_json_success( array( 'message' => __( 'Member added successfully.', 'buddyboss' ) ) );
+			} else {
+				wp_send_json_error( array( 'message' => __( 'Failed to add member.', 'buddyboss' ) ) );
+			}
+			return;
+		}
+
+		// Remove member.
+		if ( 'remove' === $role ) {
+			$result = groups_remove_member( $user_id, $group_id );
+			if ( $result ) {
+				wp_send_json_success( array( 'message' => __( 'Member removed successfully.', 'buddyboss' ) ) );
+			} else {
+				wp_send_json_error( array( 'message' => __( 'Failed to remove member.', 'buddyboss' ) ) );
+			}
+			return;
+		}
+
+		// Role changes.
+		$allowed_roles = array( 'admin', 'mod', 'member', 'banned' );
+		if ( ! in_array( $role, $allowed_roles, true ) ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid role.', 'buddyboss' ) ) );
+		}
+
+		// Unban first if currently banned and changing to a non-banned role.
+		$member_obj = new BP_Groups_Member( $user_id, $group_id );
+		if ( $member_obj->is_banned && 'banned' !== $role ) {
+			groups_unban_member( $user_id, $group_id );
+		}
+
+		switch ( $role ) {
+			case 'admin':
+			case 'mod':
+				$result = groups_promote_member( $user_id, $group_id, $role );
+				break;
+			case 'member':
+				$result = groups_demote_member( $user_id, $group_id );
+				break;
+			case 'banned':
+				$result = groups_ban_member( $user_id, $group_id );
+				break;
+		}
+
+		if ( $result ) {
+			wp_send_json_success( array( 'message' => __( 'Member role updated successfully.', 'buddyboss' ) ) );
+		} else {
+			wp_send_json_error( array( 'message' => __( 'Failed to update member role.', 'buddyboss' ) ) );
+		}
+	}
+
+	/**
+	 * Autocomplete members for adding to a group.
+	 *
+	 * This is a Settings 2.0 replacement for the legacy
+	 * bp_groups_admin_autocomplete_handler() which reads from $_GET.
+	 * Our AJAX requests send data via POST FormData.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function member_autocomplete() {
+		$this->bb_verify_request();
+
+		// phpcs:disable WordPress.Security.NonceVerification.Missing
+		$term     = isset( $_POST['term'] ) ? sanitize_text_field( wp_unslash( $_POST['term'] ) ) : '';
+		$group_id = isset( $_POST['group_id'] ) ? absint( $_POST['group_id'] ) : 0;
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
+
+		if ( empty( $term ) || strlen( $term ) < 2 ) {
+			wp_send_json_success( array( 'results' => array() ) );
+		}
+
+		$suggestions = bp_core_get_suggestions(
+			array(
+				'group_id' => $group_id ? -$group_id : 0, // Negative = exclude current members.
+				'limit'    => 10,
+				'term'     => $term,
+				'type'     => 'members',
+			)
+		);
+
+		$results = array();
+
+		if ( $suggestions && ! is_wp_error( $suggestions ) ) {
+			foreach ( $suggestions as $user ) {
+				$results[] = array(
+					'id'    => (int) $user->ID,
+					'name'  => $user->name,
+					'label' => sprintf(
+						/* translators: 1: user display name, 2: user ID. */
+						__( '%1$s (%2$s)', 'buddyboss' ),
+						$user->name,
+						$user->ID
+					),
+					'image' => bp_core_fetch_avatar(
+						array(
+							'item_id' => $user->ID,
+							'object'  => 'user',
+							'type'    => 'thumb',
+							'html'    => false,
+						)
+					),
+				);
+			}
+		}
+
+		wp_send_json_success( array( 'results' => $results ) );
+	}
+
+	/**
+	 * Get topics for a group.
+	 *
+	 * Returns the group's activity topics along with configuration data
+	 * (topic mode, permission types, max limit) and per-action nonces
+	 * for the existing topic CRUD AJAX handlers.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function get_group_topics() {
+		$this->bb_verify_request();
+
+		if ( ! bp_is_active( 'groups' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss' ) ) );
+		}
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$group_id = isset( $_POST['group_id'] ) ? absint( $_POST['group_id'] ) : 0;
+
+		if ( empty( $group_id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Group ID is required.', 'buddyboss' ) ) );
+		}
+
+		$group = groups_get_group( $group_id );
+		if ( empty( $group->id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Group not found.', 'buddyboss' ) ) );
+		}
+
+		// Check if group activity topics feature is enabled (Pro function).
+		if ( ! function_exists( 'bb_is_enabled_group_activity_topics' ) || ! bb_is_enabled_group_activity_topics() ) {
+			wp_send_json_error( array( 'message' => __( 'Group activity topics feature is not enabled.', 'buddyboss' ) ) );
+		}
+
+		// Fetch topics for this group.
+		$topics_data = array();
+		if ( function_exists( 'bb_get_group_activity_topics' ) ) {
+			$raw_topics = bb_get_group_activity_topics(
+				array(
+					'item_id'   => $group_id,
+					'item_type' => 'groups',
+				)
+			);
+
+			if ( ! empty( $raw_topics ) && is_array( $raw_topics ) ) {
+				// Get permission type labels for badge display.
+				$all_permission_types = function_exists( 'bb_group_activity_topic_permission_type' )
+					? bb_group_activity_topic_permission_type()
+					: array();
+
+				foreach ( $raw_topics as $topic ) {
+					$topic_obj       = is_object( $topic ) ? $topic : (object) $topic;
+					$permission_type = isset( $topic_obj->permission_type ) ? $topic_obj->permission_type : 'members';
+					$permission_label = isset( $all_permission_types[ $permission_type ] )
+						? $all_permission_types[ $permission_type ]
+						: $permission_type;
+
+					$topics_data[] = array(
+						'topic_id'         => isset( $topic_obj->topic_id ) ? (int) $topic_obj->topic_id : 0,
+						'name'             => isset( $topic_obj->name ) ? $topic_obj->name : '',
+						'slug'             => isset( $topic_obj->slug ) ? $topic_obj->slug : '',
+						'permission_type'  => $permission_type,
+						'permission_label' => $permission_label,
+						'menu_order'       => isset( $topic_obj->menu_order ) ? (int) $topic_obj->menu_order : 0,
+					);
+				}
+			}
+		}
+
+		// Get topic mode.
+		$topic_mode = function_exists( 'bb_get_group_activity_topic_options' )
+			? bb_get_group_activity_topic_options()
+			: 'only_from_activity_topics';
+
+		// Get permission types for the form.
+		$permission_types = array();
+		if ( function_exists( 'bb_group_activity_topic_permission_type' ) ) {
+			$raw_perm_types = bb_group_activity_topic_permission_type();
+			foreach ( $raw_perm_types as $value => $label ) {
+				$permission_types[] = array(
+					'value' => $value,
+					'label' => $label,
+				);
+			}
+		}
+
+		// Get max topics limit.
+		$max_topics = function_exists( 'bb_topics_manager_instance' )
+			? bb_topics_manager_instance()->bb_topics_limit()
+			: 20;
+
+		wp_send_json_success(
+			array(
+				'topics'           => $topics_data,
+				'topic_mode'       => $topic_mode,
+				'permission_types' => $permission_types,
+				'max_topics'       => (int) $max_topics,
+				'nonces'           => array(
+					'add'     => wp_create_nonce( 'bb_add_topic' ),
+					'delete'  => wp_create_nonce( 'bb_delete_topic' ),
+					'reorder' => wp_create_nonce( 'bb_update_topics_order' ),
+					'migrate' => wp_create_nonce( 'bb_migrate_topic' ),
+				),
+			)
+		);
+	}
+
+	/**
 	 * Save group type meta fields from POST data.
 	 *
 	 * Mirrors legacy bp_save_group_type_post_meta_box_data():
@@ -1114,10 +1667,13 @@ class BB_Admin_Groups_Ajax {
 			return $member_types;
 		}
 
+		// Prime post cache in a single query to avoid N+1 lookups.
+		_prime_post_caches( $member_type_ids );
+
 		foreach ( $member_type_ids as $mt_id ) {
 			$member_types[] = array(
 				'id'   => (string) $mt_id,
-				'name' => esc_html( get_the_title( $mt_id ) ),
+				'name' => get_the_title( $mt_id ),
 			);
 		}
 

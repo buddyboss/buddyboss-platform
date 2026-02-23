@@ -15,6 +15,9 @@ defined( 'ABSPATH' ) || exit;
 // Load sanitize callbacks.
 require_once __DIR__ . '/settings/groups/callbacks.php';
 
+// Load group edit modal meta fields.
+require_once __DIR__ . '/settings/groups/meta-fields.php';
+
 // Load panel field registrations.
 require_once __DIR__ . '/settings/groups/settings-group-settings.php';
 require_once __DIR__ . '/settings/groups/settings-group-images.php';

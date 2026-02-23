@@ -99,4 +99,3 @@ function bb_groups_register_access_control_fields() {
 	 */
 	do_action( 'bb_groups_access_control_after_register_fields' );
 }
-

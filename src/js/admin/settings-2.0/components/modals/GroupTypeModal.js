@@ -158,7 +158,7 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 				},
 			} );
 		} else {
-			setFormData( DEFAULT_FORM_DATA );
+			setFormData( JSON.parse( JSON.stringify( DEFAULT_FORM_DATA ) ) );
 		}
 
 		setError( '' );
@@ -167,12 +167,7 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 	// Update a field in form data.
 	var updateField = useCallback( function ( field, value ) {
 		setFormData( function ( prev ) {
-			var updated = {};
-			for ( var key in prev ) {
-				if ( prev.hasOwnProperty( key ) ) {
-					updated[ key ] = prev[ key ];
-				}
-			}
+			var updated = Object.assign( {}, prev );
 			updated[ field ] = value;
 			return updated;
 		} );
@@ -181,24 +176,11 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 	// Update a role label.
 	var updateRoleLabel = useCallback( function ( role, labelType, value ) {
 		setFormData( function ( prev ) {
-			var updated = {};
-			for ( var key in prev ) {
-				if ( prev.hasOwnProperty( key ) ) {
-					updated[ key ] = prev[ key ];
-				}
-			}
-
+			var updated = Object.assign( {}, prev );
 			var newRoles = {};
-			for ( var rk in prev.role_labels ) {
-				if ( prev.role_labels.hasOwnProperty( rk ) ) {
-					newRoles[ rk ] = {};
-					for ( var lk in prev.role_labels[ rk ] ) {
-						if ( prev.role_labels[ rk ].hasOwnProperty( lk ) ) {
-							newRoles[ rk ][ lk ] = prev.role_labels[ rk ][ lk ];
-						}
-					}
-				}
-			}
+			Object.keys( prev.role_labels ).forEach( function ( rk ) {
+				newRoles[ rk ] = Object.assign( {}, prev.role_labels[ rk ] );
+			} );
 			newRoles[ role ][ labelType ] = value;
 			updated.role_labels = newRoles;
 			return updated;
@@ -208,19 +190,8 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 	// Update label color.
 	var updateLabelColor = useCallback( function ( field, value ) {
 		setFormData( function ( prev ) {
-			var updated = {};
-			for ( var key in prev ) {
-				if ( prev.hasOwnProperty( key ) ) {
-					updated[ key ] = prev[ key ];
-				}
-			}
-
-			var newColor = {};
-			for ( var ck in prev.label_color ) {
-				if ( prev.label_color.hasOwnProperty( ck ) ) {
-					newColor[ ck ] = prev.label_color[ ck ];
-				}
-			}
+			var updated = Object.assign( {}, prev );
+			var newColor = Object.assign( {}, prev.label_color );
 			newColor[ field ] = value;
 			updated.label_color = newColor;
 			return updated;
@@ -230,13 +201,7 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 	// Toggle a member type in the selected list.
 	var toggleMemberType = useCallback( function ( field, typeId ) {
 		setFormData( function ( prev ) {
-			var updated = {};
-			for ( var key in prev ) {
-				if ( prev.hasOwnProperty( key ) ) {
-					updated[ key ] = prev[ key ];
-				}
-			}
-
+			var updated = Object.assign( {}, prev );
 			var currentList = prev[ field ] || [];
 			var typeIdStr = String( typeId );
 			var index = currentList.indexOf( typeIdStr );

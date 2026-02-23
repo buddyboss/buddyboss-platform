@@ -120,6 +120,9 @@ class BB_Admin_Meta_Field_Registry {
 	 *     @type callable $save_value        Optional. function( $item, $value ). Null = read-only.
 	 *     @type callable $sanitize_callback Optional. Sanitize before save. Default 'sanitize_text_field'.
 	 *     @type callable $is_visible        Optional. function( $item ) returning bool. Default true.
+	 *     @type string   $tab               Optional tab identifier for tabbed modals. Default ''.
+	 *     @type callable $get_extra_data    Optional. function( $item ) returning array of extra data for JS.
+	 *     @type array    $conditional      Optional. Client-side dependency: array( 'field' => 'field_id', 'value' => 'expected_value' ).
 	 * }
 	 * @return bool True on success.
 	 */
@@ -136,12 +139,15 @@ class BB_Admin_Meta_Field_Registry {
 			'order'             => 100,
 			'context'           => 'normal',
 			'layout'            => 'default',
+			'tab'               => '',
 			'save_phase'        => 'after',
 			'get_value'         => null,
 			'get_options'       => null,
+			'get_extra_data'    => null,
 			'save_value'        => null,
 			'sanitize_callback' => 'sanitize_text_field',
 			'is_visible'        => null,
+			'conditional'       => null,
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -216,10 +222,12 @@ class BB_Admin_Meta_Field_Registry {
 				'type'        => $args['type'],
 				'context'     => $args['context'],
 				'layout'      => $args['layout'],
+				'tab'         => $args['tab'],
 				'visible'     => $visible,
 				'value'       => null,
 				'options'     => array(),
 				'readonly'    => ( null === $args['save_value'] ),
+				'conditional' => $args['conditional'],
 			);
 
 			// Get current value.
@@ -227,9 +235,14 @@ class BB_Admin_Meta_Field_Registry {
 				$field_data['value'] = call_user_func( $args['get_value'], $item );
 			}
 
-			// Get options for select type.
-			if ( 'select' === $args['type'] && is_callable( $args['get_options'] ) ) {
+			// Get options for select, radio, and checkbox types.
+			if ( in_array( $args['type'], array( 'select', 'radio', 'checkbox' ), true ) && is_callable( $args['get_options'] ) ) {
 				$field_data['options'] = call_user_func( $args['get_options'], $item );
+			}
+
+			// Get extra data (e.g. base_url for permalink fields).
+			if ( is_callable( $args['get_extra_data'] ) ) {
+				$field_data['extra_data'] = call_user_func( $args['get_extra_data'], $item );
 			}
 
 			$data[] = $field_data;

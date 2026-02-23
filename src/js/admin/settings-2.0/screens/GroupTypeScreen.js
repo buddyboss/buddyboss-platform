@@ -13,7 +13,6 @@ import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { ajaxFetch, getGroupTypes, deleteGroupType, getPlatformSettings, savePlatformSetting } from '../utils/ajax';
 import { getCachedFeatureData, setCachedFeatureData } from '../utils/featureCache';
-import { SideNavigation } from './SideNavigation';
 import { Toast } from '../components/Toast';
 import { GroupTypeModal } from '../components/modals/GroupTypeModal';
 
@@ -74,6 +73,7 @@ export function GroupTypeScreen( { onNavigate } ) {
 
 	// Load sidebar data.
 	useEffect( function () {
+		var controller = new AbortController();
 		var cachedData = getCachedFeatureData( 'groups' );
 
 		if ( cachedData ) {
@@ -81,10 +81,10 @@ export function GroupTypeScreen( { onNavigate } ) {
 				sidePanels: cachedData.side_panels || [],
 				navItems: cachedData.navigation || [],
 			} );
-			return;
+			return function () { controller.abort(); };
 		}
 
-		ajaxFetch( 'bb_admin_get_feature_settings', { feature_id: 'groups' } )
+		ajaxFetch( 'bb_admin_get_feature_settings', { feature_id: 'groups' }, { signal: controller.signal } )
 			.then( function ( response ) {
 				if ( response.success && response.data ) {
 					setCachedFeatureData( 'groups', response.data );
@@ -94,13 +94,22 @@ export function GroupTypeScreen( { onNavigate } ) {
 					} );
 				}
 			} )
-			.catch( function () {} );
+			.catch( function ( err ) {
+				if ( 'AbortError' !== err.name ) {
+					// Sidebar is non-critical; fail silently but log for debugging.
+					// eslint-disable-next-line no-console
+					console.warn( 'Failed to load sidebar data.', err );
+				}
+			} );
+
+		return function () { controller.abort(); };
 	}, [] );
 
 	// Load platform settings.
 	useEffect( function () {
+		var controller = new AbortController();
 		setSettingsLoading( true );
-		getPlatformSettings( 'bp-disable-group-type-creation,bp-enable-group-auto-join' )
+		getPlatformSettings( 'bp-disable-group-type-creation,bp-enable-group-auto-join', { signal: controller.signal } )
 			.then( function ( response ) {
 				if ( response.success && response.data ) {
 					// bp-disable-group-type-creation: 1 = enabled (inverted naming).
@@ -109,9 +118,13 @@ export function GroupTypeScreen( { onNavigate } ) {
 				}
 				setSettingsLoading( false );
 			} )
-			.catch( function () {
-				setSettingsLoading( false );
+			.catch( function ( err ) {
+				if ( 'AbortError' !== err.name ) {
+					setSettingsLoading( false );
+				}
 			} );
+
+		return function () { controller.abort(); };
 	}, [] );
 
 	// Load group types.

@@ -137,11 +137,14 @@ export function getFeatureSettings(featureId) {
 /**
  * Get platform settings (WordPress options)
  *
- * @param {Array} options - Array of option names to retrieve
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Array}  options    - Array of option names to retrieve
+ * @param {Object} fetchOptions - Optional fetch options (e.g. { signal }).
  * @return {Promise} Promise resolving to settings object
  */
-export function getPlatformSettings(options) {
-	return ajaxFetch('bb_admin_get_platform_settings', { options });
+export function getPlatformSettings(options, fetchOptions) {
+	return ajaxFetch('bb_admin_get_platform_settings', { options }, fetchOptions || {});
 }
 
 /**
@@ -241,6 +244,83 @@ export function deleteGroup(groupId) {
  * @param {Object} extraData - Optional extra data to send with the request.
  * @return {Promise} Promise resolving to response.
  */
+/**
+ * Create a new group.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data - Group data (name, description, status).
+ * @return {Promise} Promise resolving to response.
+ */
+export function createGroup(data) {
+	return ajaxFetch('bb_admin_create_group', data);
+}
+
+/**
+ * Get a single group with registered meta fields.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {number} groupId - Group ID.
+ * @param {Object} options - Optional fetch options.
+ * @return {Promise} Promise resolving to response.
+ */
+export function getGroup(groupId, options) {
+	return ajaxFetch('bb_admin_get_group', { group_id: groupId }, options);
+}
+
+/**
+ * Save group data from the edit modal.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data    - Group data payload.
+ * @param {Object} options - Optional fetch options.
+ * @return {Promise} Promise resolving to response.
+ */
+export function saveGroup(data, options) {
+	return ajaxFetch('bb_admin_save_group', data, options);
+}
+
+/**
+ * Get group members with pagination.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {number} groupId - Group ID.
+ * @param {Object} params  - Optional params (page, per_page).
+ * @param {Object} options - Optional fetch options.
+ * @return {Promise} Promise resolving to response.
+ */
+export function getGroupMembers(groupId, params, options) {
+	return ajaxFetch('bb_admin_get_group_members', Object.assign({ group_id: groupId }, params), options);
+}
+
+/**
+ * Add, remove, or change role of a group member.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data - Member data (group_id, user_id, role, action_type).
+ * @return {Promise} Promise resolving to response.
+ */
+export function updateGroupMember(data) {
+	return ajaxFetch('bb_admin_update_group_member', data);
+}
+
+/**
+ * Get topics for a group.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {number} groupId - Group ID.
+ * @param {Object} options - Optional fetch options (e.g. { signal } for AbortController).
+ * @return {Promise} Promise resolving to response.
+ */
+export function getGroupTopics(groupId, options) {
+	return ajaxFetch('bb_admin_get_group_topics', { group_id: groupId }, options || {});
+}
+
 export function groupBulkAction(groupIds, action, extraData) {
 	var data = {
 		group_ids: groupIds.join(','),

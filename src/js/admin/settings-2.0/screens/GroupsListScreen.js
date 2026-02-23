@@ -18,8 +18,10 @@ import {
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
-import { getGroups, groupBulkAction } from '../utils/ajax';
+import { getGroups, groupBulkAction, getGroup, saveGroup } from '../utils/ajax';
 import { sanitizeHtml, safeUrl } from '../utils/sanitize';
+import { GroupCreateModal } from '../components/groups/GroupCreateModal';
+import { GroupEditModal } from '../components/groups/GroupEditModal';
 
 /**
  * Sort options for the groups list dropdown (static, never changes).
@@ -130,6 +132,22 @@ export function GroupsListScreen( { onNavigate } ) {
 	var selectedGroupTypeState = useState( '' );
 	var selectedGroupType = selectedGroupTypeState[ 0 ];
 	var setSelectedGroupType = selectedGroupTypeState[ 1 ];
+
+	var createModalState = useState( false );
+	var createModalOpen = createModalState[ 0 ];
+	var setCreateModalOpen = createModalState[ 1 ];
+
+	var editGroupState = useState( null );
+	var editGroup = editGroupState[ 0 ];
+	var setEditGroup = editGroupState[ 1 ];
+
+	var isEditLoadingState = useState( false );
+	var isEditLoading = isEditLoadingState[ 0 ];
+	var setIsEditLoading = isEditLoadingState[ 1 ];
+
+	var isEditSavingState = useState( false );
+	var isEditSaving = isEditSavingState[ 0 ];
+	var setIsEditSaving = isEditSavingState[ 1 ];
 
 	var searchTimerRef = useRef( null );
 	var hasMetaRef = useRef( false );
@@ -347,7 +365,8 @@ export function GroupsListScreen( { onNavigate } ) {
 				if ( currentPage > 1 ) {
 					setCurrentPage( 1 );
 				} else {
-					fetchGroups();
+					var controller = new AbortController();
+					fetchGroups( { signal: controller.signal } );
 				}
 			} else {
 				setNotice( { type: 'error', message: response.data?.message || __( 'Action failed.', 'buddyboss' ) } );
@@ -425,6 +444,77 @@ export function GroupsListScreen( { onNavigate } ) {
 		}
 		setChangeTypeModalOpen( false );
 		performAction( 'change_group_type', selectedIds, { group_type: selectedGroupType } );
+	};
+
+	/**
+	 * Handle opening the edit modal for a group.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {Object} group The group object.
+	 */
+	var handleEditGroup = function ( group ) {
+		setIsEditLoading( true );
+		getGroup( group.id ).then( function ( response ) {
+			setIsEditLoading( false );
+			if ( response.success && response.data ) {
+				setEditGroup( response.data );
+			} else {
+				setNotice( { type: 'error', message: response.data?.message || __( 'Failed to load group data.', 'buddyboss' ) } );
+			}
+		} ).catch( function () {
+			setIsEditLoading( false );
+			setNotice( { type: 'error', message: __( 'An error occurred loading group data.', 'buddyboss' ) } );
+		} );
+	};
+
+	/**
+	 * Handle saving the edit modal data.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {Object} payload Save payload.
+	 */
+	var handleSaveGroup = function ( payload ) {
+		setIsEditSaving( true );
+		saveGroup( payload ).then( function ( response ) {
+			setIsEditSaving( false );
+			if ( response.success ) {
+				setEditGroup( null );
+				setNotice( { type: 'success', message: response.data.message } );
+				// Reset metadata so counts refresh.
+				hasMetaRef.current = false;
+				if ( 1 === currentPage ) {
+					var refetchController = new AbortController();
+					fetchGroups( { signal: refetchController.signal } );
+				} else {
+					setCurrentPage( 1 );
+				}
+			} else {
+				setNotice( { type: 'error', message: response.data?.message || __( 'Failed to save group.', 'buddyboss' ) } );
+			}
+		} ).catch( function () {
+			setIsEditSaving( false );
+			setNotice( { type: 'error', message: __( 'An error occurred saving the group.', 'buddyboss' ) } );
+		} );
+	};
+
+	/**
+	 * Handle group created successfully.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	var handleGroupCreated = function () {
+		setCreateModalOpen( false );
+		setNotice( { type: 'success', message: __( 'Group created successfully.', 'buddyboss' ) } );
+		// Reset metadata so counts refresh.
+		hasMetaRef.current = false;
+		if ( 1 === currentPage ) {
+			var controller = new AbortController();
+			fetchGroups( { signal: controller.signal } );
+		} else {
+			setCurrentPage( 1 );
+		}
 	};
 
 	/**
@@ -580,6 +670,15 @@ export function GroupsListScreen( { onNavigate } ) {
 			{ /* Header */ }
 			<div className="bb-groups-list__header">
 				<h2 className="bb-groups-list__title">{ __( 'All Groups', 'buddyboss' ) }</h2>
+				<Button
+					variant="primary"
+					className="bb-groups-list__create-btn"
+					onClick={ function () {
+						setCreateModalOpen( true );
+					} }
+				>
+					{ __( 'Create Group', 'buddyboss' ) }
+				</Button>
 			</div>
 
 			{ /* Toolbar */ }
@@ -730,12 +829,15 @@ export function GroupsListScreen( { onNavigate } ) {
 														className="bb-groups-list__avatar"
 													/>
 												) }
-												<a
-													href={ safeUrl( group.edit_url ) }
+												<button
+													type="button"
 													className="bb-groups-list__group-name"
+													onClick={ function () {
+														handleEditGroup( group );
+													} }
 												>
 													{ decodeEntities( group.name ) }
-												</a>
+												</button>
 											</div>
 										</td>
 										<td className="bb-groups-list__td--privacy">
@@ -784,10 +886,7 @@ export function GroupsListScreen( { onNavigate } ) {
 														<MenuGroup className="bb_dropdown_menu_group">
 															<MenuItem
 																onClick={ function () {
-																	var editUrl = safeUrl( group.edit_url );
-																	if ( '#' !== editUrl ) {
-																		window.location.href = editUrl;
-																	}
+																	handleEditGroup( group );
 																	onClose();
 																} }
 															>
@@ -943,6 +1042,33 @@ export function GroupsListScreen( { onNavigate } ) {
 					</div>
 				</Modal>
 			) }
+
+			{ /* Edit Loading Overlay */ }
+			{ isEditLoading && (
+				<div className="bb-groups-list__edit-loading">
+					<Spinner />
+				</div>
+			) }
+
+			{ /* Group Create Modal */ }
+			<GroupCreateModal
+				isOpen={ createModalOpen }
+				onClose={ function () {
+					setCreateModalOpen( false );
+				} }
+				onCreated={ handleGroupCreated }
+			/>
+
+			{ /* Group Edit Modal */ }
+			<GroupEditModal
+				isOpen={ null !== editGroup }
+				group={ editGroup }
+				onClose={ function () {
+					setEditGroup( null );
+				} }
+				onSave={ handleSaveGroup }
+				isSaving={ isEditSaving }
+			/>
 
 			{ /* Change Group Type Modal */ }
 			{ changeTypeModalOpen && (

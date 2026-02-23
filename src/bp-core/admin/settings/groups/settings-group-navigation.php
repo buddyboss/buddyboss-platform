@@ -307,7 +307,7 @@ function bb_group_navigation_enrich_field_data( $field_data, $field, $feature_id
 		return $field_data;
 	}
 
-	$field_name = $field_data['name'] ?? '';
+	$field_name = isset( $field_data['name'] ) ? $field_data['name'] : '';
 
 	// Only handle group navigation fields.
 	if ( ! in_array( $field_name, array( 'bb_group_nav_display', 'bb_group_default_tab', 'bb_group_nav_order' ), true ) ) {
@@ -319,11 +319,11 @@ function bb_group_navigation_enrich_field_data( $field_data, $field, $feature_id
 
 	switch ( $field_name ) {
 		case 'bb_group_nav_display':
-			$field_data['value'] = absint( $appearance['group_nav_display'] ?? 0 );
+			$field_data['value'] = absint( isset( $appearance['group_nav_display'] ) ? $appearance['group_nav_display'] : 0 );
 			break;
 
 		case 'bb_group_default_tab':
-			$field_data['value'] = sanitize_key( $appearance['group_default_tab'] ?? 'members' );
+			$field_data['value'] = sanitize_key( isset( $appearance['group_default_tab'] ) ? $appearance['group_default_tab'] : 'members' );
 			break;
 
 		case 'bb_group_nav_order':
@@ -366,8 +366,8 @@ function bb_build_group_nav_order_value( $options = array(), $appearance = array
 	}
 
 	// Get saved order (array of slugs) and hidden items.
-	$saved_order = $appearance['group_nav_order'] ?? array();
-	$saved_hide  = $appearance['group_nav_hide'] ?? array();
+	$saved_order = isset( $appearance['group_nav_order'] ) ? $appearance['group_nav_order'] : array();
+	$saved_hide  = isset( $appearance['group_nav_hide'] ) ? $appearance['group_nav_hide'] : array();
 
 	if ( ! is_array( $saved_order ) ) {
 		$saved_order = array();
