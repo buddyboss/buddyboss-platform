@@ -168,7 +168,12 @@ export function MigrationModal({ isOpen, onClose, migrationData }) {
 				credentials: 'same-origin',
 				body: formData,
 			})
-				.then((response) => response.json())
+				.then((response) => {
+				if (!response.ok) {
+					throw new Error('HTTP ' + response.status + ': ' + response.statusText);
+				}
+				return response.json();
+			})
 				.then((response) => {
 					if (response.success) {
 						e.target.textContent = __('Conversion started!', 'buddyboss');
@@ -294,7 +299,7 @@ export function MigrationModal({ isOpen, onClose, migrationData }) {
 		<Modal
 			title={wizardLabel}
 			onRequestClose={onClose}
-			className="bb-admin-migration-modal"
+			className="bb-admin-migration-modal bb-admin-settings-modal"
 			__experimentalHideHeader={false}
 		>
 			<div className="bb-admin-migration-modal__content">

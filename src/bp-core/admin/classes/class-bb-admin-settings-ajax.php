@@ -170,17 +170,44 @@ class BB_Admin_Settings_Ajax {
 		// Override status since bp_is_active() cache isn't updated yet.
 		$formatted['status'] = $status;
 
-		wp_send_json_success(
-			array(
-				'data'    => $formatted,
-				'message' => sprintf(
-					/* translators: 1: feature label, 2: activated/deactivated */
-					__( 'Feature "%1$s" %2$s successfully.', 'buddyboss' ),
-					$feature['label'],
-					$activate ? __( 'activated', 'buddyboss' ) : __( 'deactivated', 'buddyboss' )
-				),
-			)
+		$response = array(
+			'data'    => $formatted,
+			'message' => sprintf(
+				/* translators: 1: feature label, 2: activated/deactivated */
+				__( 'Feature "%1$s" %2$s successfully.', 'buddyboss' ),
+				$feature['label'],
+				$activate ? __( 'activated', 'buddyboss' ) : __( 'deactivated', 'buddyboss' )
+			),
 		);
+
+		// Include ALL dependents that are now unavailable so React can grey out their cards.
+		// This covers both dependents that were just cascade-deactivated AND those already inactive.
+		if ( ! $activate ) {
+			$unavailable_dependents = array();
+			foreach ( $registry->bb_get_features() as $fid => $f ) {
+				if ( ! empty( $f['depends_on'] ) && in_array( $feature_id, $f['depends_on'], true ) ) {
+					$unavailable_dependents[] = $fid;
+				}
+			}
+			if ( ! empty( $unavailable_dependents ) ) {
+				$response['deactivated_dependents'] = $unavailable_dependents;
+			}
+		}
+
+		// When activating a feature, notify React about dependents that become available again.
+		if ( $activate ) {
+			$reactivatable = array();
+			foreach ( $registry->bb_get_features() as $fid => $f ) {
+				if ( ! empty( $f['depends_on'] ) && in_array( $feature_id, $f['depends_on'], true ) ) {
+					$reactivatable[] = $fid;
+				}
+			}
+			if ( ! empty( $reactivatable ) ) {
+				$response['reactivatable_dependents'] = $reactivatable;
+			}
+		}
+
+		wp_send_json_success( $response );
 	}
 
 	/**
@@ -191,16 +218,16 @@ class BB_Admin_Settings_Ajax {
 	 * @return bool|void
 	 */
 	private function bb_verify_request() {
-		if ( ! check_ajax_referer( self::NONCE_ACTION, 'nonce', false ) ) {
+		if ( ! bp_current_user_can( 'bp_moderate' ) ) {
 			wp_send_json_error(
-				array( 'message' => __( 'Security check failed.', 'buddyboss' ) ),
+				array( 'message' => __( 'Permission denied.', 'buddyboss' ) ),
 				403
 			);
 		}
 
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! check_ajax_referer( self::NONCE_ACTION, 'nonce', false ) ) {
 			wp_send_json_error(
-				array( 'message' => __( 'Permission denied.', 'buddyboss' ) ),
+				array( 'message' => __( 'Security check failed.', 'buddyboss' ) ),
 				403
 			);
 		}
@@ -236,6 +263,19 @@ class BB_Admin_Settings_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Feature not found.', 'buddyboss' ) ) );
 		}
 
+		/**
+		 * Fires before feature settings are retrieved for the AJAX response.
+		 *
+		 * Allows late registration of fields that depend on data not available
+		 * at the early `bb_register_features` hook (e.g., custom post types
+		 * from third-party plugins that register on `init`).
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $feature_id The feature being loaded.
+		 */
+		do_action( 'bb_admin_settings_before_get_feature', $feature_id );
+
 		// Get all fields for current values.
 		$all_fields = $registry->bb_get_all_fields( $feature_id );
 
@@ -256,10 +296,27 @@ class BB_Admin_Settings_Ajax {
 			$this->bb_prime_option_caches( $option_names );
 		}
 
-		// Get current values (now served from object cache, not individual DB queries).
+		// Get current values (now served from object cache, not individual DB queries). BuddyBoss stores options via bp_get_option/bp_update_option (root blog on multisite).
 		$settings = array();
 		foreach ( $all_fields as $field_name => $field ) {
-			$settings[ $field['name'] ] = get_option( $field['name'], $field['default'] ?? '' );
+			// toggle_list with option_prefix: each option is stored as a separate key (e.g. bp-feed-platform-{key}).
+			if ( 'toggle_list' === ( $field['type'] ?? '' ) && ! empty( $field['option_prefix'] ) && ! empty( $field['options'] ) ) {
+				$prefix = $field['option_prefix'];
+				$truthy = isset( $field['option_value_truthy'] ) ? (array) $field['option_value_truthy'] : array( 1, '1', true );
+				$mapped = array();
+				foreach ( $field['options'] as $option ) {
+					$key = $option['value'] ?? '';
+					if ( '' === $key ) {
+						continue;
+					}
+					$opt_name = $prefix . $key;
+					$stored   = bp_get_option( $opt_name, 1 );
+					$mapped[ $key ] = in_array( $stored, $truthy, true ) ? 1 : 0;
+				}
+				$settings[ $field['name'] ] = $mapped;
+			} else {
+				$settings[ $field['name'] ] = bp_get_option( $field['name'], $field['default'] ?? '' );
+			}
 		}
 
 		// Get side panels.
@@ -276,22 +333,24 @@ class BB_Admin_Settings_Ajax {
 				// Get fields for this section.
 				$section_fields = $registry->bb_get_fields( $feature_id, $side_panel_id, $section_id );
 
-				$formatted_sections[] = array(
+				$formatted_section = array(
 					'id'          => $section_id,
 					'title'       => $section['title'],
 					'description' => wp_kses_post( $section['description'] ?? '' ),
 					'order'       => $section['order'] ?? 100,
 					'fields'      => $this->bb_format_fields_for_response( $section_fields, $settings, $feature_id ),
 				);
+
+				// Include conditional if set.
+				if ( ! empty( $section['conditional'] ) ) {
+					$formatted_section['conditional'] = $section['conditional'];
+				}
+
+				$formatted_sections[] = $formatted_section;
 			}
 
 			// Sort sections by order.
-			usort(
-				$formatted_sections,
-				function ( $a, $b ) {
-					return ( $a['order'] ?? 100 ) - ( $b['order'] ?? 100 );
-				}
-			);
+			usort( $formatted_sections, 'bb_sort_by_order' );
 
 			$formatted_side_panels[] = array(
 				'id'         => $side_panel_id,
@@ -300,17 +359,13 @@ class BB_Admin_Settings_Ajax {
 				'help_url'   => $side_panel['help_url'] ?? '',
 				'order'      => $side_panel['order'] ?? 100,
 				'is_default' => $side_panel['is_default'] ?? false,
+				'divider'    => ! empty( $side_panel['divider'] ),
 				'sections'   => $formatted_sections,
 			);
 		}
 
 		// Sort side panels by order.
-		usort(
-			$formatted_side_panels,
-			function ( $a, $b ) {
-				return ( $a['order'] ?? 100 ) - ( $b['order'] ?? 100 );
-			}
-		);
+		usort( $formatted_side_panels, 'bb_sort_by_order' );
 
 		// Update settings with processed values from formatted fields.
 		foreach ( $formatted_side_panels as $panel ) {
@@ -403,32 +458,76 @@ class BB_Admin_Settings_Ajax {
 				}
 
 				// Convert to toggle format for React (key => 0/1).
+				// Iterate stored_value keys first to preserve user-saved order (drag-and-drop).
 				$toggle_values = array();
+				foreach ( $stored_value as $option_key => $val ) {
+					$is_enabled                   = ( 1 === $val || '1' === $val || true === $val );
+					$toggle_values[ $option_key ] = $is_enabled ? 1 : 0;
+				}
+
+				// Append any options not yet in stored_value (e.g., newly added options).
 				foreach ( $field['options'] ?? array() as $option ) {
 					$option_key = $option['value'];
-					// Check if key exists and has truthy value (handle "1", 1, true, "0", 0, false).
-					$is_enabled = false;
-					if ( isset( $stored_value[ $option_key ] ) ) {
-						$val        = $stored_value[ $option_key ];
-						$is_enabled = ( 1 === $val || '1' === $val || true === $val );
+					if ( ! isset( $toggle_values[ $option_key ] ) ) {
+						$toggle_values[ $option_key ] = 0;
 					}
-					$toggle_values[ $option_key ] = $is_enabled ? 1 : 0;
 				}
 				$field_value = $toggle_values;
 			}
 
-			if ( 'toggle_list' === ( $field['type'] ?? '' ) && ! empty( $field['option_prefix'] ) ) {
-				// Read each option as a separate WordPress option.
-				$option_prefix = $field['option_prefix'];
+			/*
+			 * Handle share_platforms (stored as indexed array of enabled platform slugs).
+			 * Legacy format: ['messenger', 'facebook', 'twitter'] — only checked platforms.
+			 * Converts to { messenger: 1, facebook: 1, twitter: 1, linkedin: 0 } for React.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 */
+			if ( 'share_platforms' === ( $field['type'] ?? '' ) ) {
+				$blog_id      = function_exists( 'bp_get_root_blog_id' ) ? bp_get_root_blog_id() : get_current_blog_id();
+				$stored_value = get_blog_option( $blog_id, $field['name'], null );
+
+				// Only use field defaults when option doesn't exist at all.
+				if ( null === $stored_value ) {
+					$stored_value = $field['default'] ?? array();
+				}
+
+				if ( ! is_array( $stored_value ) ) {
+					$stored_value = array();
+				}
+
+				// Convert an indexed array of enabled slugs to key => 0/1 for React.
 				$toggle_values = array();
 				foreach ( $field['options'] ?? array() as $option ) {
-					$option_key   = $option['value'];
-					$option_name  = $option_prefix . $option_key;
-					$stored_value = get_option( $option_name, '' );
-					// Check if the stored value matches the option key (means enabled).
-					$toggle_values[ $option_key ] = ( $stored_value === $option_key ) ? 1 : 0;
+					$option_key                   = $option['value'];
+					$toggle_values[ $option_key ] = in_array( $option_key, $stored_value, true ) ? 1 : 0;
 				}
 				$field_value = $toggle_values;
+			}
+
+			// Single toggle/checkbox: normalize to 0|1 so React's !!value shows off when stored is 0 (not string "0").
+			if ( in_array( $field['type'] ?? '', array( 'toggle', 'checkbox' ), true ) ) {
+				$field_value = absint( $field_value );
+			}
+
+			// toggle_list: value from $values (or filter); normalize to int 0|1 for JS.
+			if ( 'toggle_list' === ( $field['type'] ?? '' ) && is_array( $field_value ) ) {
+				$field_value = array_map( 'absint', $field_value );
+			}
+
+			// Handle description_controls: read each control's value from DB (same storage as main options).
+			// Each control maps to one %s placeholder in the description string (in order).
+			// Use sequential %s placeholders — %1$s/%2$s are NOT supported by the frontend split logic.
+			if ( ! empty( $field['description_controls'] ) && is_array( $field['description_controls'] ) ) {
+				foreach ( $field['description_controls'] as $idx => $control ) {
+					// 'self' type means the control uses the field's own name/options/value.
+					if ( 'self' === ( $control['type'] ?? '' ) ) {
+						continue;
+					}
+					if ( ! empty( $control['name'] ) ) {
+						$control_default = $control['default'] ?? '';
+						$field['description_controls'][ $idx ]['value'] = bp_get_option( $control['name'], $control_default );
+					}
+				}
 			}
 
 			// Handle toggle_list_array (stored as array of enabled values).
@@ -439,8 +538,8 @@ class BB_Admin_Settings_Ajax {
 					$default_array[] = $option['value'];
 				}
 
-				// Get stored value with proper default.
-				$stored_array = get_option( $field['name'], $default_array );
+				// Get stored value with proper default (same storage as legacy).
+				$stored_array = bp_get_option( $field['name'], $default_array );
 
 				// Handle edge cases: empty string, false, or non-array values.
 				if ( empty( $stored_array ) || ! is_array( $stored_array ) ) {
@@ -460,38 +559,44 @@ class BB_Admin_Settings_Ajax {
 			}
 
 			$field_data = array(
-				'name'          => $field['name'],
-				'label'         => $field['label'],
-				'type'          => $field['type'] ?? 'text',
-				'description'   => $field['description'] ?? '',
-				'default'       => $field['default'] ?? '',
-				'options'       => $field['options'] ?? array(),
-				'conditional'   => $field['conditional'] ?? null,
-				'pro_only'      => $field['pro_only'] ?? false,
-				'license_tier'  => $field['license_tier'] ?? 'free',
-				'order'         => $field['order'] ?? 100,
-				'value'         => $field_value,
-				// Option prefix for toggle_list fields.
-				'option_prefix' => $field['option_prefix'] ?? null,
+				'name'                 => $field['name'],
+				'label'                => $field['label'],
+				'type'                 => $field['type'] ?? 'text',
+				'description'          => $field['description'] ?? '',
+				'default'              => $field['default'] ?? '',
+				'options'              => $field['options'] ?? array(),
+				'conditional'          => $field['conditional'] ?? null,
+				'pro_only'             => $field['pro_only'] ?? false,
+				'license_tier'         => $field['license_tier'] ?? 'free',
+				'order'                => $field['order'] ?? 100,
+				'value'                => $field_value,
 				// Nested field support.
-				'parent_field'  => $field['parent_field'] ?? null,
-				'parent_value'  => $field['parent_value'] ?? null,
+				'parent_field'         => $field['parent_field'] ?? null,
+				'parent_value'         => $field['parent_value'] ?? null,
 				// Prefix/suffix text support.
-				'prefix'        => $field['prefix'] ?? null,
-				'suffix'        => $field['suffix'] ?? null,
+				'prefix'               => $field['prefix'] ?? null,
+				'suffix'               => $field['suffix'] ?? null,
 				// Toggle label (displayed next to toggle switch).
-				'toggle_label'  => $field['toggle_label'] ?? null,
+				'toggle_label'         => $field['toggle_label'] ?? null,
 				// Inline label for toggles (alias for toggle_label).
-				'inline_label'  => $field['inline_label'] ?? $field['toggle_label'] ?? null,
+				'inline_label'         => $field['inline_label'] ?? $field['toggle_label'] ?? null,
 				// Min/max for number fields.
-				'min'           => $field['min'] ?? null,
-				'max'           => $field['max'] ?? null,
+				'min'                  => $field['min'] ?? null,
+				'max'                  => $field['max'] ?? null,
 				// Invert value for "disable" toggles shown as "enable".
-				'invert_value'  => $field['invert_value'] ?? false,
+				'invert_value'         => $field['invert_value'] ?? false,
 				// PRO notice badge data (for pro_only fields).
-				'pro_notice'    => $field['pro_notice'] ?? null,
+				'pro_notice'           => $field['pro_notice'] ?? null,
 				// Notice type for notice fields (info, warning, error, success).
-				'notice_type'   => $field['notice_type'] ?? null,
+				'notice_type'          => $field['notice_type'] ?? null,
+				// Inline controls embedded in description (replaces %s placeholders).
+				'description_controls' => $field['description_controls'] ?? null,
+				// Help text displayed below description in lighter style.
+				'help_text'            => $field['help_text'] ?? null,
+				// Disabled flag to prevent user interaction.
+				'disabled'             => ! empty( $field['disabled'] ),
+				// Group ID for visual grouping of related fields (removes borders between them).
+				'group'                => $field['group'] ?? null,
 			);
 
 			// Auto-compute pro_notice for pro_only fields when not set at registration time.
@@ -511,16 +616,20 @@ class BB_Admin_Settings_Ajax {
 			 *
 			 * @since BuddyBoss [BBVERSION]
 			 *
-			 * @param array $field_data Formatted field data.
-			 * @param array $field      Original field data.
+			 * @param array  $field_data  Formatted field data.
+			 * @param array  $field       Original field data.
+			 * @param string $feature_id  Feature ID (e.g. 'activity', 'groups').
 			 *
 			 * @return array|void Formatted field data or void if no changes are needed.
 			 */
-			$field_data = apply_filters( 'bb_admin_settings_format_field_data', $field_data, $field );
+			$field_data = apply_filters( 'bb_admin_settings_format_field_data', $field_data, $field, $feature_id );
 
-			// Sanitize description for safe use with dangerouslySetInnerHTML (XSS prevention).
+			// Sanitize description and help_text for safe use with dangerouslySetInnerHTML (XSS prevention).
 			if ( isset( $field_data['description'] ) && is_string( $field_data['description'] ) ) {
 				$field_data['description'] = wp_kses_post( $field_data['description'] );
+			}
+			if ( isset( $field_data['help_text'] ) && is_string( $field_data['help_text'] ) ) {
+				$field_data['help_text'] = wp_kses_post( $field_data['help_text'] );
 			}
 
 			// Add sub-fields for dimensions/child_render type.
@@ -543,16 +652,34 @@ class BB_Admin_Settings_Ajax {
 				$field_data['fields'] = $sub_fields;
 			}
 
+			// Attach topic data and nonces for topic_list fields.
+			if ( 'topic_list' === ( $field['type'] ?? '' ) && function_exists( 'bb_topics_manager_instance' ) ) {
+				$topics_manager = bb_topics_manager_instance();
+				$topics_data    = array();
+				if ( $topics_manager ) {
+					$result      = $topics_manager->bb_get_topics(
+						array(
+							'item_id'   => 0,
+							'item_type' => 'activity',
+							'per_page'  => -1,
+						)
+					);
+					$topics_data = ! empty( $result['topics'] ) ? $result['topics'] : array();
+				}
+				$field_data['topics_data']  = $topics_data;
+				$field_data['nonces']       = array(
+					'add'    => wp_create_nonce( 'bb_add_topic' ),
+					'delete' => wp_create_nonce( 'bb_delete_topic' ),
+					'order'  => wp_create_nonce( 'bb_update_topics_order' ),
+				);
+				$field_data['topics_limit'] = $topics_manager ? $topics_manager->bb_topics_limit() : 20;
+			}
+
 			$formatted[] = $field_data;
 		}
 
 		// Sort by order.
-		usort(
-			$formatted,
-			function ( $a, $b ) {
-				return ( $a['order'] ?? 100 ) - ( $b['order'] ?? 100 );
-			}
-		);
+		usort( $formatted, 'bb_sort_by_order' );
 
 		return $formatted;
 	}
@@ -586,7 +713,21 @@ class BB_Admin_Settings_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Invalid settings data.', 'buddyboss' ) ) );
 		}
 
-		$registry   = bb_feature_registry();
+		$registry = bb_feature_registry();
+
+		/**
+		 * Fires before feature settings are retrieved for the AJAX response.
+		 *
+		 * Allows late registration of fields that depend on data not available
+		 * at the early `bb_register_features` hook (e.g., custom post types
+		 * from third-party plugins that register on `init`).
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $feature_id The feature being loaded.
+		 */
+		do_action( 'bb_admin_settings_before_get_feature', $feature_id );
+
 		$all_fields = $registry->bb_get_all_fields( $feature_id );
 
 		if ( empty( $all_fields ) ) {
@@ -598,20 +739,61 @@ class BB_Admin_Settings_Ajax {
 		foreach ( $all_fields as $field_key => $field ) {
 			$name = $field['name'];
 
-			// Only save settings that were submitted.
-			if ( ! array_key_exists( $name, $settings ) ) {
-				continue;
+			// Save the main field if it was submitted.
+			if ( array_key_exists( $name, $settings ) ) {
+				$value = $settings[ $name ];
+
+				// Apply registered sanitize callback if present (fallback to type-based sanitization).
+				if ( ! empty( $field['sanitize_callback'] ) && is_callable( $field['sanitize_callback'] ) ) {
+					$value = call_user_func( $field['sanitize_callback'], $value );
+				} elseif ( is_string( $value ) ) {
+					$value = sanitize_text_field( $value );
+				} elseif ( is_array( $value ) ) {
+					$value = map_deep( $value, 'sanitize_text_field' );
+				}
+
+				// toggle_list with option_prefix: persist each key to option_prefix + key (e.g. bp-feed-platform-{key}).
+				if ( 'toggle_list' === ( $field['type'] ?? '' ) && ! empty( $field['option_prefix'] ) && is_array( $value ) ) {
+					$prefix = $field['option_prefix'];
+					foreach ( $value as $opt_key => $opt_val ) {
+						$opt_name = $prefix . $opt_key;
+						bp_update_option( $opt_name, absint( $opt_val ) );
+					}
+					$saved[ $name ] = $value;
+				} else {
+					// BuddyBoss stores options via bp_update_option (same storage as legacy).
+					bp_update_option( $name, $value );
+					$saved[ $name ] = $value;
+				}
 			}
 
-			$value = $settings[ $name ];
+			// Handle description_controls: save each control's value alongside the main field.
+			// Runs even when the parent field is not submitted (e.g. only the inline select changed).
+			if ( ! empty( $field['description_controls'] ) && is_array( $field['description_controls'] ) ) {
+				foreach ( $field['description_controls'] as $control ) {
+					// 'self' type uses the field's own name — already saved above.
+					if ( 'self' === ( $control['type'] ?? '' ) || empty( $control['name'] ) ) {
+						continue;
+					}
+					$control_name = $control['name'];
+					if ( array_key_exists( $control_name, $settings ) ) {
+						$control_value = $settings[ $control_name ];
+						$control_type  = $control['type'] ?? 'text';
 
-			// Apply registered sanitize callback if present.
-			if ( ! empty( $field['sanitize_callback'] ) && is_callable( $field['sanitize_callback'] ) ) {
-				$value = call_user_func( $field['sanitize_callback'], $value );
+						// Apply control-specific sanitize callback if registered.
+						if ( ! empty( $control['sanitize_callback'] ) && is_callable( $control['sanitize_callback'] ) ) {
+							$control_value = call_user_func( $control['sanitize_callback'], $control_value );
+						} elseif ( 'number' === $control_type || 'select' === $control_type ) {
+							// Numeric types: use intval as default sanitizer.
+							$control_value = intval( $control_value );
+						} else {
+							$control_value = sanitize_text_field( $control_value );
+						}
+						bp_update_option( $control_name, $control_value );
+						$saved[ $control_name ] = $control_value;
+					}
+				}
 			}
-
-			update_option( $name, $value );
-			$saved[ $name ] = $value;
 		}
 
 		/**

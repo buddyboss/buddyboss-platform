@@ -5,7 +5,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState } from '@wordpress/element';
+import { useState, useMemo } from '@wordpress/element';
 import {
 	ToggleControl,
 	TextControl,
@@ -13,9 +13,6 @@ import {
 	SelectControl,
 	RadioControl,
 	CheckboxControl,
-	DropdownMenu,
-	MenuGroup,
-	MenuItem,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import {
@@ -25,8 +22,16 @@ import {
 	ReactionNotice,
 	ReactionInfo,
 	MigrationModal,
+	ReactionButtonField,
 } from './reaction';
-import { sanitizeHtml } from '../utils/sanitize';
+import { sanitizeHtml, safeUrl } from '../utils/sanitize';
+import { TopicListField } from './activity/topics/topic-list';
+import { SharePlatformsField } from './activity/sharing';
+import { AccessControlField } from './access-control/AccessControlField';
+import { CheckboxListField } from './fields/CheckboxListField';
+import { ImageRadioField } from './fields/ImageRadioField';
+import { ChildRenderField } from './fields/ChildRenderField';
+import { DimensionsField } from './fields/DimensionsField';
 
 /**
  * Settings Form Component (matching Figma settingsSection)
@@ -45,6 +50,27 @@ export function SettingsForm({ fields, values, onChange }) {
 	const [isMigrationModalOpen, setIsMigrationModalOpen] = useState(false);
 	const [currentMigrationData, setCurrentMigrationData] = useState(null);
 
+	// Memoize sanitized HTML to avoid DOMParser overhead on every re-render.
+	const sanitizedHtml = useMemo( () => {
+		const cache = {};
+		fields.forEach( ( field ) => {
+			if ( field.description ) {
+				cache[ field.name + '__desc' ] = sanitizeHtml( field.description );
+
+				// Pre-split and sanitize parts for fields with inline description controls.
+				if ( field.description.indexOf( '%s' ) !== -1 && field.description_controls && field.description_controls.length > 0 ) {
+					cache[ field.name + '__parts' ] = field.description.split( '%s' ).map( function ( part ) {
+						return sanitizeHtml( part );
+					} );
+				}
+			}
+			if ( field.help_text ) {
+				cache[ field.name + '__help' ] = sanitizeHtml( field.help_text );
+			}
+		} );
+		return cache;
+	}, [ fields ] );
+
 	/**
 	 * Check if a field should be visible based on its conditional logic
 	 */
@@ -52,8 +78,17 @@ export function SettingsForm({ fields, values, onChange }) {
 		// If field has a "conditional" property, check it
 		if (field.conditional) {
 			const condValue = values[field.conditional.field];
-			// Only show if conditional field matches the expected value
-			return condValue === field.conditional.value;
+			const expectedValue = field.conditional.value;
+
+			// When expected value is boolean, use truthy/falsy comparison
+			// because DB values can be 1, 0, "1", "0" while conditional uses true/false.
+			if (expectedValue === true || expectedValue === false) {
+				const isTruthy = !!condValue && condValue !== '0' && condValue !== 0;
+				return isTruthy === expectedValue;
+			}
+
+			// For non-boolean values, use strict comparison.
+			return condValue === expectedValue;
 		}
 
 		// For parent_field (nesting), always show the field but it may be disabled
@@ -91,10 +126,6 @@ export function SettingsForm({ fields, values, onChange }) {
 		return !parentValue;
 	};
 
-    const BBIcon = ( { name } ) => (
-        <span className={ `bb-icons-rl-${ name }` } />
-    );
-
 	/**
 	 * Render the field input control
 	 */
@@ -103,7 +134,6 @@ export function SettingsForm({ fields, values, onChange }) {
 
 		switch (field.type) {
 			case 'toggle':
-			case 'checkbox':
 				// Figma: Toggle with toggle_label displayed next to the switch
 				const toggleLabel = field.toggle_label || field.inline_label || '';
 				// Handle inverted values (e.g., "disable" options shown as "enable" toggles)
@@ -126,40 +156,43 @@ export function SettingsForm({ fields, values, onChange }) {
 					</div>
 				);
 
-			case 'checkbox_list':
-				// Checkbox list for multiple selections (e.g., Activity Feed Filters)
-				// Value can be either:
-				// - An object like {"just-me": 1, "favorites": 0, ...} (from AJAX)
-				// - An array like ["just-me", "favorites", ...] (legacy)
-				const isObjectValue = value && typeof value === 'object' && !Array.isArray(value);
-				const checkboxValue = isObjectValue ? value : {};
-
-				// Helper to check if option is selected
-				const isOptionChecked = (optionKey) => {
-					if (isObjectValue) {
-						// Object format: check if value is truthy (1, "1", true)
-						return !!checkboxValue[optionKey] && checkboxValue[optionKey] !== '0' && checkboxValue[optionKey] !== 0;
-					}
-					// Array format
-					return Array.isArray(value) && value.includes(optionKey);
-				};
-
+			case 'checkbox':
+				// Render as actual checkbox (square) control.
+				const cbIsInverted = true === field.invert_value;
+				const cbDisplayValue = cbIsInverted ? !value : !!value;
 				return (
-					<div key={field.name} className="bb-admin-settings-field__checkbox-list">
-						{(field.options || []).map((option) => (
-							<CheckboxControl
-								key={option.value}
-								label={option.label}
-								checked={isOptionChecked(option.value)}
-								onChange={(checked) => {
-									// Always save as object format for consistency
-									const newValue = { ...checkboxValue, [option.value]: checked ? 1 : 0 };
-									onChange(field.name, newValue);
-								}}
-								__nextHasNoMarginBottom
-							/>
-						))}
-					</div>
+					<CheckboxControl
+						key={field.name}
+						label=""
+						checked={cbDisplayValue}
+						onChange={(checked) => {
+							const saveValue = cbIsInverted ? !checked : checked;
+							onChange(field.name, saveValue ? 1 : 0);
+						}}
+						disabled={disabled}
+						__nextHasNoMarginBottom
+					/>
+				);
+
+			case 'checkbox_list':
+				return (
+					<CheckboxListField
+						field={field}
+						value={value}
+						onChange={onChange}
+						disabled={disabled}
+						sanitizedDescription={sanitizedHtml[ field.name + '__desc' ]}
+					/>
+				);
+
+			case 'share_platforms':
+				// Delegate to SharePlatformsField component (same pattern as reaction_mode).
+				return (
+					<SharePlatformsField
+						field={field}
+						value={value}
+						onChange={onChange}
+					/>
 				);
 
 			case 'text':
@@ -237,84 +270,13 @@ export function SettingsForm({ fields, values, onChange }) {
 				);
 
 			case 'image_radio':
-				// Visual radio cards (like Default Group Cover Image or Avatar)
 				return (
-					<div className="bb-admin-settings-field__image-radio">
-						{(field.options || []).map((option) => (
-							<button
-								key={option.value}
-								type="button"
-								className={`bb-admin-settings-field__image-radio-option ${value === option.value ? 'bb-admin-settings-field__image-radio-option--selected' : ''}`}
-								onClick={() => onChange(field.name, option.value)}
-								disabled={disabled}
-							>
-								<div className="bb-admin-settings-field__image-radio-preview">
-									{/* Cover Image Icons */}
-									{ 'cover-buddyboss' === option.image && (
-										<div className="bb-admin-settings-field__image-radio-icon bb-admin-settings-field__image-radio-icon--buddyboss">
-											<span className="dashicons dashicons-format-image"></span>
-										</div>
-									)}
-									{ 'cover-none' === option.image && (
-										<div className="bb-admin-settings-field__image-radio-icon bb-admin-settings-field__image-radio-icon--none">
-											<span className="dashicons dashicons-no-alt"></span>
-										</div>
-									)}
-									{ 'cover-custom' === option.image && (
-										<div className="bb-admin-settings-field__image-radio-icon bb-admin-settings-field__image-radio-icon--custom">
-											<span className="dashicons dashicons-admin-generic"></span>
-										</div>
-									)}
-									{/* Avatar Icons */}
-									{ 'avatar-buddyboss' === option.image && (
-										<div className="bb-admin-settings-field__image-radio-icon bb-admin-settings-field__image-radio-icon--avatar-group">
-											<span className="dashicons dashicons-groups"></span>
-										</div>
-									)}
-									{ 'avatar-name' === option.image && (
-										<div className="bb-admin-settings-field__image-radio-icon bb-admin-settings-field__image-radio-icon--avatar-name">
-											<span className="bb-admin-settings-field__avatar-initials">BB</span>
-										</div>
-									)}
-									{ 'avatar-custom' === option.image && (
-										<div className="bb-admin-settings-field__image-radio-icon bb-admin-settings-field__image-radio-icon--custom">
-											<span className="dashicons dashicons-admin-generic"></span>
-										</div>
-									)}
-									{/* Header Style Previews */}
-									{ 'header-left-group' === option.image && (
-										<div className="bb-admin-settings-field__header-preview bb-admin-settings-field__header-preview--left">
-											<div className="bb-admin-settings-field__header-preview-cover"></div>
-											<div className="bb-admin-settings-field__header-preview-content">
-												<div className="bb-admin-settings-field__header-preview-avatar">
-													<span className="dashicons dashicons-groups"></span>
-												</div>
-												<div className="bb-admin-settings-field__header-preview-lines">
-													<div className="bb-admin-settings-field__header-preview-line bb-admin-settings-field__header-preview-line--short"></div>
-													<div className="bb-admin-settings-field__header-preview-line bb-admin-settings-field__header-preview-line--long"></div>
-												</div>
-											</div>
-										</div>
-									)}
-									{ 'header-centered-group' === option.image && (
-										<div className="bb-admin-settings-field__header-preview bb-admin-settings-field__header-preview--centered">
-											<div className="bb-admin-settings-field__header-preview-cover"></div>
-											<div className="bb-admin-settings-field__header-preview-content">
-												<div className="bb-admin-settings-field__header-preview-avatar">
-													<span className="dashicons dashicons-groups"></span>
-												</div>
-												<div className="bb-admin-settings-field__header-preview-lines">
-													<div className="bb-admin-settings-field__header-preview-line bb-admin-settings-field__header-preview-line--short"></div>
-													<div className="bb-admin-settings-field__header-preview-line bb-admin-settings-field__header-preview-line--long"></div>
-												</div>
-											</div>
-										</div>
-									)}
-								</div>
-								<span className="bb-admin-settings-field__image-radio-label">{option.label}</span>
-							</button>
-						))}
-					</div>
+					<ImageRadioField
+						field={field}
+						value={value}
+						onChange={onChange}
+						disabled={disabled}
+					/>
 				);
 
 			case 'toggle_list':
@@ -343,95 +305,21 @@ export function SettingsForm({ fields, values, onChange }) {
 				);
 
 			case 'dimensions':
-				// Dimensions field (Width x Height in one row)
-				const subFields = field.fields || [];
 				return (
-					<div className="bb-admin-settings-field__dimensions">
-						{subFields.map((subField, index) => {
-							const subValue = values[subField.name] !== undefined ? values[subField.name] : subField.default;
-							return (
-								<div key={subField.name} className="bb-admin-settings-field__dimension-item">
-									<label className="bb-admin-settings-field__dimension-label">{subField.label}</label>
-									<div className="bb-admin-settings-field__dimension-input-wrap">
-										<input
-											type="number"
-											value={subValue || ''}
-											onChange={(e) => onChange(subField.name, e.target.value)}
-											min={subField.min}
-											max={subField.max}
-											className="bb-admin-settings-field__dimension-input"
-										/>
-										{subField.suffix && (
-											<span className="bb-admin-settings-field__dimension-suffix">{subField.suffix}</span>
-										)}
-									</div>
-									{index < subFields.length - 1 && (
-										<span className="bb-admin-settings-field__dimension-separator">×</span>
-									)}
-								</div>
-							);
-						})}
-					</div>
+					<DimensionsField
+						field={field}
+						values={values}
+						onChange={onChange}
+					/>
 				);
 
 			case 'child_render':
-				// Child render field - renders child fields inline (e.g., Width select + Height select)
-				const childFields = field.fields || [];
 				return (
-					<div className="bb-admin-settings-field__child-render">
-						{childFields.map((childField) => {
-							const childValue = values[childField.name] !== undefined ? values[childField.name] : childField.default;
-
-							// Render based on child field type
-							const renderChildControl = () => {
-								switch (childField.type) {
-									case 'select':
-										return (
-											<SelectControl
-												value={childValue || ''}
-												options={childField.options || []}
-												onChange={(newValue) => onChange(childField.name, newValue)}
-												__nextHasNoMarginBottom
-											/>
-										);
-									case 'number':
-										return (
-											<div className="bb-admin-settings-field__child-number-wrap">
-												<input
-													type="number"
-													value={childValue || ''}
-													onChange={(e) => onChange(childField.name, e.target.value)}
-													min={childField.min}
-													max={childField.max}
-													className="bb-admin-settings-field__child-number-input"
-												/>
-												{childField.suffix && (
-													<span className="bb-admin-settings-field__child-suffix">{childField.suffix}</span>
-												)}
-											</div>
-										);
-									case 'text':
-									default:
-										return (
-											<TextControl
-												value={childValue || ''}
-												onChange={(newValue) => onChange(childField.name, newValue)}
-												__nextHasNoMarginBottom
-											/>
-										);
-								}
-							};
-
-							return (
-								<div key={childField.name} className="bb-admin-settings-field__child-item">
-									<label className="bb-admin-settings-field__child-label">{childField.label}</label>
-									<div className="bb-admin-settings-field__child-control">
-										{renderChildControl()}
-									</div>
-								</div>
-							);
-						})}
-					</div>
+					<ChildRenderField
+						field={field}
+						values={values}
+						onChange={onChange}
+					/>
 				);
 
 			case 'reaction_mode':
@@ -447,96 +335,12 @@ export function SettingsForm({ fields, values, onChange }) {
 				);
 
 			case 'reaction_button':
-				// Reaction button: Pro-only field.
-				const isProLocked = !!field.pro_notice?.show;
-
-				// Get button settings (icon and text)
-				const buttonValue = value || {};
-				const buttonIcon = buttonValue.icon || field.icon || 'thumbs-up';
-				const buttonText = buttonValue.text || field.text || __('Like', 'buddyboss');
-
-				/**
-				 * Handle edit reaction button click - opens the icon picker modal
-				 */
-				const handleEditReactionButton = () => {
-					const iconChooser = document.getElementById('bb-reaction-button-chooser');
-					if (iconChooser && window.jQuery) {
-						window.jQuery(iconChooser).trigger('click');
-					}
-				};
-
-				/**
-				 * Handle reaction button text change
-				 */
-				const handleButtonTextChange = (newText) => {
-					const currentButtonValue = (typeof value === 'object' && value !== null)
-						? { ...value }
-						: {};
-					currentButtonValue.text = newText;
-					// Preserve the icon if it exists
-					if (!currentButtonValue.icon) {
-						currentButtonValue.icon = buttonIcon;
-					}
-					onChange(field.name, currentButtonValue);
-				};
-
 				return (
-					<div key={field.name} className={`bb-reaction-button-field${isProLocked ? ' bb-reaction-button-field--disabled' : ''}`}>
-						<div className="bb-reaction-button-card">
-							<div className="bb-reaction-button-card__preview">
-								<div className="bb-reaction-button-card__icon-wrapper">
-									<button
-										type="button"
-										className="bb-reaction-button-card__icon-btn"
-										id="bb-reaction-button-chooser"
-										disabled={isProLocked}
-									>
-										<i className={`bb-icon-rf bb-icon-${buttonIcon}`}></i>
-									</button>
-								</div>
-								<div className="bb-reaction-button-card__footer">
-									<input
-										name="bb_reactions_button[text]"
-										id="bb-reaction-button-text"
-										type="text"
-										maxLength="12"
-										value={buttonText}
-										placeholder={__('Like', 'buddyboss')}
-										className="bb-reaction-button-card__text-input"
-										disabled={isProLocked}
-										readOnly={isProLocked}
-										onChange={(e) => handleButtonTextChange(e.target.value)}
-									/>
-									<DropdownMenu
-										icon={ <i className="bb-icons-rl-dots-three"></i> }
-										label={ __( 'More options', 'buddyboss' ) }
-										className="bb-reaction-button-card__menu-btn"
-									>
-										{ ( { onClose } ) => (
-											<MenuGroup className="bb_dropdown_menu_group">
-												<MenuItem
-													icon={ <BBIcon name="note-pencil" /> }
-													iconPosition="left"
-													onClick={ () => {
-														onClose();
-														handleEditReactionButton();
-													} }
-												>
-													{ __( 'Edit', 'buddyboss' ) }
-												</MenuItem>
-											</MenuGroup>
-										) }
-									</DropdownMenu>
-								</div>
-							</div>
-							<input
-								type="hidden"
-								name="bb_reactions_button[icon]"
-								id="bb-reaction-button-hidden-field"
-								value={buttonIcon}
-							/>
-						</div>
-					</div>
+					<ReactionButtonField
+						field={field}
+						value={value}
+						onChange={onChange}
+					/>
 				);
 
 			case 'notice':
@@ -546,7 +350,7 @@ export function SettingsForm({ fields, values, onChange }) {
 					<div
 						key={field.name}
 						className={`bb-admin-notice bb-admin-notice--${field.notice_type || 'info'}`}
-						dangerouslySetInnerHTML={{ __html: sanitizeHtml( field.description ) }}
+						dangerouslySetInnerHTML={{ __html: sanitizedHtml[ field.name + '__desc' ] || '' }}
 					/>
 				);
 
@@ -615,6 +419,34 @@ export function SettingsForm({ fields, values, onChange }) {
 					/>
 				);
 
+			case 'topic_list':
+				return (
+					<TopicListField
+						field={field}
+						value={value}
+						values={values}
+						onChange={onChange}
+					/>
+				);
+
+			case 'access_control':
+				return (
+					<AccessControlField
+						field={field}
+						value={value}
+						onChange={(newValue) => onChange(field.name, newValue)}
+					/>
+				);
+
+			case 'hidden':
+				// With description_controls: render hidden span so the field row shows
+				// and description_controls handles the inline select/input.
+				// Without description_controls: return null to skip the entire field (true hidden).
+				if ( field.description_controls && field.description_controls.length > 0 ) {
+					return <span className="bb-admin-settings-field__control--hidden" aria-hidden="true" />;
+				}
+				return null;
+
 			default:
 				return (
 					<p className="bb-admin-settings-field__unsupported">
@@ -659,8 +491,8 @@ export function SettingsForm({ fields, values, onChange }) {
 			return null;
 		}
 
-		// Check if field should be disabled (parent toggle is OFF)
-		const disabled = isFieldDisabled(field);
+		// Check if field should be disabled (parent toggle is OFF or field-level disabled flag).
+		const disabled = isFieldDisabled(field) || !!field.disabled;
 
 		// Render the control first — if it returns null, skip the entire field row.
 		const controlOutput = renderFieldControl(field, disabled);
@@ -673,11 +505,14 @@ export function SettingsForm({ fields, values, onChange }) {
 		// Note: reaction_migration and reaction_notice handle their own wrapper internally
 		// so they can return null without leaving an empty wrapper div.
 		if ( 'notice' === field.type || 'reaction_info' === field.type ) {
-			return (
-				<div key={field.name} className="bb-admin-settings-form__field bb-admin-settings-form__field--full-width">
-					{controlOutput}
-				</div>
-			);
+			// Grouped notices render inline within their group (no full-width).
+			if ( ! field.group ) {
+				return (
+					<div key={field.name} className="bb-admin-settings-form__field bb-admin-settings-form__field--full-width">
+						{controlOutput}
+					</div>
+				);
+			}
 		}
 
 		// reaction_migration and reaction_notice return their own wrapper or null
@@ -698,35 +533,40 @@ export function SettingsForm({ fields, values, onChange }) {
 			field.parent_field ? 'bb-admin-settings-form__field--nested' : '',
 			disabled ? 'bb-admin-settings-form__field--disabled' : '',
 			isToggleWithChildren ? 'bb-admin-settings-form__field--has-children' : '',
+			field.group ? 'bb-admin-settings-form__field--grouped' : '',
 		].filter(Boolean).join(' ');
 
+		const hasLabel = field.label && field.label.trim() !== '';
+
 		return (
-			<div key={field.name} className={fieldClasses + ( 'reaction_mode' !== field.type && field.pro_notice?.show ? ' bb-admin-settings-form__field--pro-locked' : '' )}>
-				<div className="bb-admin-settings-form__field-label">
-					<label>
-						<span className="bb-admin-settings-form__field-label-text">{field.label}</span>
-						{ 'reaction_mode' !== field.type && field.pro_notice?.show && (
-							<>
-								<span className="bb-pro-badge">
-									<i className={field.pro_notice.badge_icon || ''} />
-									<span>{field.pro_notice.badge_text || 'PRO'}</span>
-								</span>
-								{field.pro_notice.link_url && (
-									<a
-										href={field.pro_notice.link_url}
-										target="_blank"
-										rel="noopener noreferrer"
-										className="bb-pro-badge__play-link"
-										aria-label={__('Learn more about PRO', 'buddyboss')}
-									>
-										<i className={field.pro_notice.link_icon || ''} />
-									</a>
-								)}
-							</>
-						)}
-					</label>
-				</div>
-				<div className="bb-admin-settings-form__field-content">
+			<div key={field.name} className={fieldClasses + ( ! hasLabel ? ' bb-admin-settings-form__field--no-label' : '' ) + ( 'reaction_mode' !== field.type && field.pro_notice?.show ? ' bb-admin-settings-form__field--pro-locked' : '' )} data-group={field.group || undefined}>
+				{ hasLabel && (
+					<div className="bb-admin-settings-form__field-label">
+						<label>
+							<span className="bb-admin-settings-form__field-label-text">{field.label}</span>
+							{ 'reaction_mode' !== field.type && field.pro_notice?.show && (
+								<>
+									<span className="bb-pro-badge">
+										<i className={field.pro_notice.badge_icon || ''} />
+										<span>{field.pro_notice.badge_text || 'PRO'}</span>
+									</span>
+									{field.pro_notice.link_url && (
+										<a
+											href={safeUrl(field.pro_notice.link_url)}
+											target="_blank"
+											rel="noopener noreferrer"
+											className="bb-pro-badge__play-link"
+											aria-label={__('Learn more about PRO', 'buddyboss')}
+										>
+											<i className={field.pro_notice.link_icon || ''} />
+										</a>
+									)}
+								</>
+							)}
+						</label>
+					</div>
+				)}
+				<div className={ 'bb-admin-settings-form__field-content' + ( ( 'toggle' === field.type || 'checkbox' === field.type ) && field.description && ! isToggleWithChildren ? ' bb-admin-settings-form__field-content--inline' : '' ) }>
 					{/* Field with optional prefix/suffix */}
 					<div className="bb-admin-settings-form__field-input-wrapper">
 						{field.prefix && (
@@ -738,13 +578,93 @@ export function SettingsForm({ fields, values, onChange }) {
 						)}
 					</div>
 
-					{/* Description (skip for notice type — already rendered inside the field) */}
-					{ field.description && 'notice' !== field.type && (
+					{/* Description: skip for notice type (rendered by notice component itself).
+				    When description contains %s and field has description_controls,
+				    render inline controls (select, text, number) in place of each %s placeholder. */}
+					{ field.description && -1 === [ 'notice', 'checkbox_list', 'share_platforms', 'topic_list' ].indexOf( field.type ) && ( () => {
+						const desc = field.description;
+						const controls = field.description_controls;
+						const hasControls = desc.indexOf( '%s' ) !== -1 && controls && controls.length > 0;
+
+						if ( hasControls ) {
+							const cachedParts = sanitizedHtml[ field.name + '__parts' ];
+							const parts = cachedParts || desc.split( '%s' );
+							const isToggleOff = ( 'toggle' === field.type || 'checkbox' === field.type ) && ! values[ field.name ];
+
+							return (
+								<p className="bb-admin-settings-form__field-description bb-admin-settings-form__field-description--has-controls">
+									{ parts.map( ( part, index ) => {
+										const control = index < controls.length ? controls[ index ] : null;
+										// 'self' type: use the field's own name, options, and value.
+										const isSelf = control && 'self' === control.type;
+										const controlName = isSelf ? field.name : ( control ? control.name : null );
+										const controlOptions = isSelf ? field.options : ( control ? control.options : [] );
+										const controlDefault = isSelf ? field.default : ( control ? ( control.value ?? control.default ?? '' ) : '' );
+										const controlVal = controlName && values[ controlName ] !== undefined
+											? values[ controlName ]
+											: controlDefault;
+										const controlDisabled = disabled || isToggleOff;
+
+										return (
+											<span key={ index }>
+												<span dangerouslySetInnerHTML={{ __html: cachedParts ? part : sanitizeHtml( part ) }} />
+												{ control && ( control.type === 'select' || control.type === 'self' ) && (
+													<select
+														name={ controlName }
+														className="bb-admin-settings-form__inline-select"
+														value={ controlVal }
+														onChange={ ( e ) => onChange( controlName, e.target.value ) }
+														disabled={ controlDisabled }
+													>
+														{ ( controlOptions || [] ).map( ( opt ) => (
+															<option key={ opt.value } value={ opt.value }>{ opt.label }</option>
+														) ) }
+													</select>
+												) }
+												{ control && 'text' === control.type && (
+													<input
+														type="text"
+														name={ controlName }
+														className="bb-admin-settings-form__inline-text"
+														value={ controlVal }
+														onChange={ ( e ) => onChange( controlName, e.target.value ) }
+														disabled={ controlDisabled }
+													/>
+												) }
+												{ control && 'number' === control.type && (
+													<input
+														type="number"
+														name={ controlName }
+														className="bb-admin-settings-form__inline-number"
+														value={ controlVal }
+														min={ control.min }
+														max={ control.max }
+														onChange={ ( e ) => onChange( controlName, e.target.value ) }
+														disabled={ controlDisabled }
+													/>
+												) }
+											</span>
+										);
+									} ) }
+								</p>
+							);
+						}
+
+						return (
+							<p
+								className="bb-admin-settings-form__field-description"
+								dangerouslySetInnerHTML={{ __html: sanitizedHtml[ field.name + '__desc' ] || '' }}
+							/>
+						);
+					} )() }
+
+					{/* Help text: lighter sub-description below the main description. */}
+					{ field.help_text && (
 						<p
-							className="bb-admin-settings-form__field-description"
-							dangerouslySetInnerHTML={{ __html: sanitizeHtml( field.description ) }}
+							className="bb-admin-settings-form__field-help-text"
+							dangerouslySetInnerHTML={{ __html: sanitizedHtml[ field.name + '__help' ] || '' }}
 						/>
-					)}
+					) }
 
 					{/* Render child fields inline/nested */}
 					{childFields.length > 0 && (

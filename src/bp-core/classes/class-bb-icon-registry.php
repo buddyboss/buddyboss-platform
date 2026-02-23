@@ -172,7 +172,11 @@ class BB_Icon_Registry {
 			$safe_path = str_replace( '\\', '/', $args['path'] );
 			if ( false === strpos( $safe_path, '..' ) ) {
 				// Try to resolve as plugin-relative path with realpath validation.
-				$plugin_dir  = realpath( buddypress()->plugin_dir );
+				// Cache realpath() results to avoid repeated filesystem stat calls.
+				static $plugin_dir = null;
+				if ( null === $plugin_dir ) {
+					$plugin_dir = realpath( buddypress()->plugin_dir );
+				}
 				$candidate_1 = realpath( buddypress()->plugin_dir . $safe_path );
 				$candidate_2 = realpath( plugin_dir_path( __FILE__ ) . '../' . $safe_path );
 

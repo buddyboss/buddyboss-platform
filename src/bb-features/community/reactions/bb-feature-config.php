@@ -29,6 +29,7 @@ bb_register_feature(
 		'license_tier'       => 'free',
 		'category'           => 'community',
 		'standalone'         => true,
+		'depends_on'         => array( 'activity' ),
 		'php_loader'         => function () {
 			require_once __DIR__ . '/loader.php';
 		},

@@ -80,22 +80,40 @@ function bb_admin_settings_page() {
 		$bb_icon_version
 	);
 
-	// Conditionally enqueue WordPress editor (~250KB TinyMCE) only when rich_text fields exist.
+	// Conditionally enqueue WordPress editor (~250KB TinyMCE) only when richtext fields exist.
+	// Check both Feature Registry (settings fields) and Meta Field Registry (edit modal fields).
+	$has_rich_text = false;
+
+	// Check Feature Registry for richtext settings fields.
 	if ( function_exists( 'bb_feature_registry' ) ) {
-		$has_rich_text = false;
-		$all_features  = bb_feature_registry()->bb_get_features();
+		$all_features = bb_feature_registry()->bb_get_features();
 		foreach ( $all_features as $fid => $f ) {
 			$all_fields = bb_feature_registry()->bb_get_all_fields( $fid );
 			foreach ( $all_fields as $field ) {
-				if ( ! empty( $field['type'] ) && 'rich_text' === $field['type'] ) {
+				if ( ! empty( $field['type'] ) && 'richtext' === $field['type'] ) {
 					$has_rich_text = true;
 					break 2;
 				}
 			}
 		}
-		if ( $has_rich_text ) {
-			wp_enqueue_editor();
+	}
+
+	// Check Meta Field Registry (Activity/Groups edit modals use richtext fields).
+	if ( ! $has_rich_text && function_exists( 'bb_admin_meta_field_registry' ) ) {
+		$meta_components = array( 'activity', 'groups' );
+		foreach ( $meta_components as $component ) {
+			$meta_fields = bb_admin_meta_field_registry()->get_fields( $component );
+			foreach ( $meta_fields as $field ) {
+				if ( ! empty( $field['type'] ) && 'richtext' === $field['type'] ) {
+					$has_rich_text = true;
+					break 2;
+				}
+			}
 		}
+	}
+
+	if ( $has_rich_text ) {
+		wp_enqueue_editor();
 	}
 
 	// Enqueue scripts and styles.
@@ -130,7 +148,7 @@ function bb_admin_settings_page() {
 	$localize_data = array(
 		'apiUrl'      => rest_url( bp_rest_namespace() . '/' . bp_rest_version() . '/' ),
 		'nonce'       => wp_create_nonce( 'wp_rest' ),
-		'ajaxUrl'     => admin_url( 'admin-ajax.php' ),
+		'ajaxUrl'     => esc_url( admin_url( 'admin-ajax.php' ) ),
 		'ajaxNonce'   => wp_create_nonce( 'bb_admin_settings' ),
 		'logoUrl'     => buddypress()->plugin_url . 'bp-core/images/admin/BBLogo.png',
 		'currentUser' => array(

@@ -3170,10 +3170,17 @@ function bb_is_activity_search_enabled( $default = true ) {
  * @return bool True if reactions feature is enabled, false otherwise.
  */
 function bb_is_reactions_feature_enabled() {
+	static $is_enabled = null;
+
+	if ( null !== $is_enabled ) {
+		return $is_enabled;
+	}
+
 	// Check if the feature registry exists (Settings 2.0).
 	if ( ! function_exists( 'bb_feature_registry' ) ) {
 		// Fallback: if no feature registry, assume enabled for backward compatibility.
-		return true;
+		$is_enabled = true;
+		return $is_enabled;
 	}
 
 	// Check the bb-active-features option directly for reactions.
@@ -3183,8 +3190,10 @@ function bb_is_reactions_feature_enabled() {
 	// treat as enabled so existing sites keep reactions. Must match is_active_callback in
 	// bb-features/community/reactions/bb-feature-config.php so feature card and functionality stay in sync.
 	if ( ! array_key_exists( 'reactions', $active_features ) ) {
-		return true;
+		$is_enabled = true;
+		return $is_enabled;
 	}
 
-	return ! empty( $active_features['reactions'] );
+	$is_enabled = ! empty( $active_features['reactions'] );
+	return $is_enabled;
 }

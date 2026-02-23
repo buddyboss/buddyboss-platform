@@ -1,1 +1,0 @@
-"use strict";(globalThis.webpackChunk=globalThis.webpackChunk||[]).push([[328],{328:(e,t,i)=>{i.r(t),i.d(t,{ActivityListScreen:()=>n});var c=i(609);function n(){return(0,c.createElement)("div",null,"ActivityListScreen")}}}]);

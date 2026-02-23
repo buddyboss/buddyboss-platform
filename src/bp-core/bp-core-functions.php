@@ -10064,6 +10064,25 @@ function bb_get_settings_url() {
 }
 
 /**
+ * Compare two registry items by their 'order' key (ascending).
+ *
+ * Shared sort callback used by BB_Feature_Registry and BB_Admin_Settings_Ajax
+ * to avoid duplicating the same anonymous function.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $a First item.
+ * @param array $b Second item.
+ * @return int Comparison result.
+ */
+function bb_sort_by_order( $a, $b ) {
+	$a_order = isset( $a['order'] ) ? (int) $a['order'] : 100;
+	$b_order = isset( $b['order'] ) ? (int) $b['order'] : 100;
+
+	return $a_order - $b_order;
+}
+
+/**
  * Register a side panel for a feature.
  *
  * Side panels appear in the left sidebar navigation when viewing feature settings.
@@ -10109,6 +10128,37 @@ function bb_register_feature_section( $feature_id, $side_panel_id, $section_id, 
  */
 function bb_register_feature_field( $feature_id, $side_panel_id, $section_id, $args = array() ) {
 	return bb_feature_registry()->bb_register_field( $feature_id, $side_panel_id, $section_id, $args );
+}
+
+/**
+ * Register a meta field for admin edit modals (Activity, Groups, Forums, etc.).
+ *
+ * Fields registered via this API are fetched, rendered, and saved by the modal automatically.
+ * Same pattern as register_post_meta + show_in_rest.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $component Component identifier (e.g. 'activity', 'groups', 'forums').
+ * @param string $field_id  Unique field ID within the component.
+ * @param array  $args      Field arguments: label, type (text|number|url|select|richtext|readonly),
+ *                          order, context (normal|after), layout (default|half),
+ *                          save_phase (before|after), get_value, get_options (for select),
+ *                          save_value, sanitize_callback, is_visible.
+ * @return bool True on success.
+ */
+function bb_register_admin_meta_field( $component, $field_id, $args = array() ) {
+	return BB_Admin_Meta_Field_Registry::instance()->register( $component, $field_id, $args );
+}
+
+/**
+ * Get the Admin Meta Field Registry instance.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return BB_Admin_Meta_Field_Registry
+ */
+function bb_admin_meta_field_registry() {
+	return BB_Admin_Meta_Field_Registry::instance();
 }
 
 /**

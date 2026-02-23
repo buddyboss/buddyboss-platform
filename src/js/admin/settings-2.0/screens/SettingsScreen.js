@@ -9,6 +9,7 @@ import { useState, useEffect, useRef } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { Button, Spinner, ToggleControl } from '@wordpress/components';
 import { getCachedFeatures, toggleFeature, updateFeatureInCache } from '../utils/ajax';
+import { invalidateFeatureCache } from '../utils/featureCache';
 import { urlToRoute } from '../utils/url';
 import { Toast } from '../components/Toast';
 
@@ -150,12 +151,37 @@ export function SettingsScreen({ onNavigate }) {
 				if (response.success) {
 					// Confirm with server data.
 					const updatedFeature = response.data?.data;
+					const deactivatedDependents = response.data?.deactivated_dependents || [];
+					const reactivatableDependents = response.data?.reactivatable_dependents || [];
+
 					setFeatures((prev) =>
-						prev.map((item) =>
-							item.id === featureId ? { ...item, ...updatedFeature } : item
-						)
+						prev.map((item) => {
+							if (item.id === featureId) {
+								return { ...item, ...updatedFeature };
+							}
+							// Cascade: mark all dependent features as unavailable (greyed out).
+							// Only force 'inactive' if they were active; already-inactive ones just get greyed out.
+							if (deactivatedDependents.indexOf(item.id) !== -1) {
+								return { ...item, status: 'active' === item.status ? 'inactive' : item.status, available: false };
+							}
+							// Re-activation: dependents become available again (but stay inactive).
+							if (reactivatableDependents.indexOf(item.id) !== -1) {
+								return { ...item, available: true };
+							}
+							return item;
+						})
 					);
 					updateFeatureInCache(featureId, updatedFeature);
+					deactivatedDependents.forEach(function (depId) {
+						updateFeatureInCache(depId, { available: false });
+					});
+					reactivatableDependents.forEach(function (depId) {
+						updateFeatureInCache(depId, { available: true });
+					});
+
+					// Invalidate all feature settings caches so dependent features
+					// (e.g. Reactions depends on Activity) fetch fresh data.
+					invalidateFeatureCache();
 
 					// Show success toast.
 					const successMessage = checked
@@ -279,7 +305,7 @@ export function SettingsScreen({ onNavigate }) {
 								{categoryFeatures.map((feature) => (
 									<div
 										key={feature.id}
-										className={`bb-admin-settings__feature-card bb-admin-settings__feature-card--${feature.status}`}
+										className={`bb-admin-settings__feature-card bb-admin-settings__feature-card--${feature.status}${!feature.available ? ' bb-admin-settings__feature-card--unavailable' : ''}`}
 									>
 										{/* Card Body */}
 										<div className="bb-admin-settings__feature-body">

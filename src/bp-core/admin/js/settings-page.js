@@ -632,40 +632,6 @@ window.bp = window.bp || {};
 				);
 			}
 
-			// Activity settings.
-			if ( $( '.buddyboss_page_bp-settings .section-bp_custom_post_type' ).length ) {
-				$( '.bp-feed-post-type-checkbox' ).each(
-					function() {
-						var post_type = $( this ).data( 'post_type' );
-
-						if ( true === this.checked ) {
-							$( '.bp-feed-post-type-comment-' + post_type )
-							.closest( 'tr' )
-							.show();
-						}
-					}
-				);
-
-				$( '.buddyboss_page_bp-settings .section-bp_custom_post_type' ).on(
-					'click',
-					'.bp-feed-post-type-checkbox',
-					function () {
-						var post_type    = $( this ).data( 'post_type' ),
-							commentField = $( '.bp-feed-post-type-comment-' + post_type );
-
-						if ( true === this.checked ) {
-							commentField
-								.closest( 'tr' )
-								.show();
-						} else {
-							commentField
-								.prop( 'checked', false )
-								.closest( 'tr' )
-								.hide();
-						}
-					}
-				);
-			}
 
 			$( '#bp_media_profile_media_support' ).change(
 				function () {
@@ -3023,47 +2989,5 @@ window.bp = window.bp || {};
 			}
 		});
 	}
-
-	function activityTopicHandle() {
-		// Initialize the BBTopicsManager with admin-specific configuration for activity topics.
-		if ( 'undefined' !== typeof BBTopicsManager ) {
-			BBTopicsManager.config.modalSelector          = '#bb-hello-container';
-			BBTopicsManager.config.modalContentSelector   = '.bb-hello-content';
-			BBTopicsManager.config.backdropSelector       = '#bb-hello-backdrop';
-			BBTopicsManager.config.modalOpenClass         = 'bp-disable-scroll';
-			BBTopicsManager.config.closeModalSelector     = '.close-modal, #bb_topic_cancel';
-			BBTopicsManager.config.errorContainer         = '<div class="bb-hello-error"><i class="bb-icon-rf bb-icon-exclamation"></i></div>';
-			BBTopicsManager.config.errorContainerSelector = '.bb-hello-error';
-			BBTopicsManager.config.ajaxUrl                = BP_ADMIN.ajax_url;
-			BBTopicsManager.config.nonce                  = BP_ADMIN.nonce;
-			BBTopicsManager.config.topicsLimit            = BP_ADMIN.topics_limit;
-
-			// Migrate topic elements.
-			BBTopicsManager.config.migrateTopicBackdropModal  = '#bb-hello-topic-migrate-backdrop';
-			BBTopicsManager.config.migrateTopicContainerModal = '#bb-hello-topic-migrate-container';
-			BBTopicsManager.config.migrateAjaxAction          = 'bb_migrate_topic';
-		}
-
-		$( document ).on(
-			'change',
-			'#bb_enable_group_activity_topics',
-			function ( e ) {
-				// Prevent default action and stop event propagation.
-				e.preventDefault();
-				e.stopPropagation();
-
-				var enableGroupTopicsChecked = $( '#bb_enable_group_activity_topics' ).is( ':checked' );
-
-				// Show/hide only group topics dependent fields.
-				if ( enableGroupTopicsChecked ) {
-					$( '.bb_enable_group_activity_topics_required' ).removeClass( 'bp-hide' );
-				} else {
-					$( '.bb_enable_group_activity_topics_required' ).addClass( 'bp-hide' );
-				}
-			}
-		);
-	}
-
-	activityTopicHandle();
 
 }());

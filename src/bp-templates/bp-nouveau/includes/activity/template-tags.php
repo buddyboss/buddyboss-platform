@@ -998,16 +998,16 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 		);
 
 		if ( ! bb_get_activity_comment_is_favorite() ) {
-			$button_settings       = bb_get_reaction_button_settings();
+			$button_settings       = function_exists( 'bb_get_reaction_button_settings' ) ? bb_get_reaction_button_settings() : array();
 			$fav_args['link_text'] = sprintf(
 				'<span class="bp-screen-reader-text">%1$s</span>
 				<span class="like-count">%1$s</span>',
 				! empty( $button_settings['text'] ) ? esc_html( $button_settings['text'] ) : __( 'Like', 'buddyboss' ),
 			);
-		} else {
+		} elseif ( function_exists( 'bb_activity_get_user_reaction_by_item' ) ) {
 			// Get user reacted reaction data and prepare the link.
 			$reaction_data = bb_activity_get_user_reaction_by_item( $activity_comment_id, 'activity_comment' );
-			if ( ! empty( $reaction_data ) ) {
+			if ( ! empty( $reaction_data ) && function_exists( 'bb_activity_get_reaction_button' ) ) {
 				$link_classes  = empty( $reaction_data['type'] ) ? 'has-like has-reaction' : 'has-emotion has-reaction';
 				$prepared_icon = bb_activity_get_reaction_button( $reaction_data['id'], true );
 

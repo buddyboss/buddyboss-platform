@@ -7,7 +7,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useEffect, useRef, useCallback, RawHTML } from '@wordpress/element';
+import { useState, useEffect, useRef, useCallback, lazy, Suspense, RawHTML } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { Spinner } from '@wordpress/components';
 import { ajaxFetch } from '../utils/ajax';
@@ -19,7 +19,20 @@ import { Toast } from '../components/Toast';
 import { debounce, fetchHelpContent, clearHelpContentCache } from '../../utils/api';
 import { HelpIcon } from '../components/HelpIcon';
 import { HelpSliderModal } from '../components/HelpSliderModal';
-import { sanitizeHtml } from '../utils/sanitize';
+import { sanitizeHtml, safeUrl } from '../utils/sanitize';
+
+// Lazy load custom panel screens.
+const ActivityListScreen = lazy(() => import('./ActivityListScreen'));
+const GroupsListScreen = lazy(() => import('./GroupsListScreen'));
+
+/**
+ * Map of feature + panel combinations that render custom screens instead of settings forms.
+ */
+const CUSTOM_PANEL_SCREENS = {
+	'activity:all_activities': ActivityListScreen,
+	'groups:all_groups': GroupsListScreen,
+};
+
 
 /**
  * Feature Settings Screen Component
@@ -123,6 +136,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 				}
 				setIsLoading(false);
 				setInitialLoad(false);
+				setToast({ status: 'error', message: __('Failed to load settings. Please refresh.', 'buddyboss') });
 			});
 
 		return () => controller.abort();
@@ -160,6 +174,9 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 							setOriginalSettings(JSON.parse(JSON.stringify(refreshedSettings)));
 						}
 					}
+				})
+				.catch(() => {
+					setToast({ status: 'error', message: __('Failed to refresh settings. Please try again.', 'buddyboss') });
 				});
 		};
 
@@ -232,13 +249,14 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 	}, [featureId]);
 
 	// Auto-trigger save when changedFields updates.
-	// When a value is a sentinel (true), use current settings for that key (for functional updates from reaction picker).
+	// When a value is a sentinel (true), use current settings via settingsRef for that key (for functional updates from reaction picker).
 	useEffect(() => {
 		if ( ! initialLoad && Object.keys(changedFields).length > 0 ) {
+			var currentSettings = settingsRef.current;
 			const payload = Object.fromEntries(
 				Object.keys(changedFields).map((k) => [
 					k,
-					changedFields[k] === true ? settings[k] : changedFields[k],
+					changedFields[k] === true ? currentSettings[k] : changedFields[k],
 				])
 			);
 			debouncedSaveRef.current(payload);
@@ -335,6 +353,10 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 	// Get the active side panel
 	const activePanel = sidePanels.find(p => p.id === activePanelId);
 
+	// Check if this panel has a custom screen (e.g., ActivityListScreen).
+	const customScreenKey = featureId + ':' + activePanelId;
+	const CustomScreen = CUSTOM_PANEL_SCREENS[customScreenKey] || null;
+
 	return (
 		<div className="bb-admin-feature-settings">
 			<div className="bb-admin-feature-settings__container">
@@ -351,7 +373,14 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 				</aside>
 
 				{/* Main Content */}
-				<main className="bb-admin-feature-settings__main">
+				<main className={ 'bb-admin-feature-settings__main' + ( CustomScreen ? ' bb-admin-feature-settings__main--custom-panel' : '' ) }>
+					{/* Custom Panel Screen (e.g., All Activities, All Groups) */}
+					{CustomScreen ? (
+						<Suspense fallback={<div className="bb-admin-loading"><Spinner /></div>}>
+							<CustomScreen onNavigate={onNavigate} />
+						</Suspense>
+					) : (
+					<>
 					{/* Content wrapper */}
 					<div className="bb-admin-feature-settings__content-wrap">
 
@@ -360,11 +389,33 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 							{activePanel ? (
 								<>
 									{/* Render all sections within the active side panel */}
-									{(activePanel.sections || []).map((section) => (
+									{(activePanel.sections || []).map((section) => {
+										// Check section-level conditional (hide or disable).
+										var isSectionDisabled = false;
+										var isSectionHidden = false;
+										if ( section.conditional ) {
+											var condVal = settings[section.conditional.field];
+											var expected = section.conditional.value;
+											var isTruthy = !!condVal && condVal !== '0' && condVal !== 0;
+											var condMet = ( expected === true || expected === false ) ? isTruthy === expected : condVal === expected;
+											if ( ! condMet ) {
+												if ( 'disable' === section.conditional.action ) {
+													isSectionDisabled = true;
+												} else {
+													isSectionHidden = true;
+												}
+											}
+										}
+
+										if ( isSectionHidden ) {
+											return null;
+										}
+
+										return (
 										<div
 											key={section.id}
 											id={`section-${section.id}`}
-											className="bb-admin-feature-settings__section"
+											className={ 'bb-admin-feature-settings__section' + ( isSectionDisabled ? ' bb-admin-feature-settings__section--disabled' : '' ) }
 										>
 											{/* Section Header */}
 											<div className="bb-admin-feature-settings__section-header">
@@ -381,7 +432,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 											<div className="bb-admin-feature-settings__section-body">
 												{section.description && (
 													<RawHTML className="bb-admin-feature-settings__section-description">
-														{section.description}
+														{sanitizeHtml( section.description )}
 													</RawHTML>
 												)}
 												<SettingsForm
@@ -391,7 +442,8 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 												/>
 											</div>
 										</div>
-									))}
+									);
+									})}
 								</>
 							) : (
 								<div className="bb-admin-feature-settings__no-section">
@@ -401,6 +453,8 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 
 						</div>
 					</div>
+					</>
+					)}
 				</main>
 			</div>
 
@@ -432,7 +486,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 					</div>
 				) : helpContent ? (
 					<>
-						{helpContent.videoId && (
+						{helpContent.videoId && /^[a-zA-Z0-9_-]+$/.test(helpContent.videoId) && (
 							<div style={{ marginBottom: 16 }}>
 								<iframe
 									width="100%"
@@ -448,9 +502,9 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 							className="help-content"
 							dangerouslySetInnerHTML={{ __html: sanitizeHtml( helpContent.content ) }}
 						/>
-						{helpContent.imageUrl && (
+						{helpContent.imageUrl && '#' !== safeUrl( helpContent.imageUrl ) && (
 							<img
-								src={helpContent.imageUrl}
+								src={ safeUrl( helpContent.imageUrl ) }
 								alt={__('Help content illustration', 'buddyboss')}
 								style={{ width: '100%', borderRadius: 8, marginBottom: 16 }}
 							/>

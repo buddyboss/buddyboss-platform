@@ -12,3 +12,4 @@ export { ReactionMigration } from './ReactionMigration';
 export { ReactionNotice } from './ReactionNotice';
 export { ReactionInfo } from './ReactionInfo';
 export { MigrationModal } from './MigrationModal';
+export { ReactionButtonField } from './ReactionButtonField';

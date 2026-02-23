@@ -10,12 +10,11 @@
 	&__filters {
 		display: flex;
 		gap: 24px;
-		margin: 16px 0 24px;
+		margin: 24px 0;
 		align-items: center;
 		justify-content: space-between;
 		padding: 0 0 24px 0;
 		border-bottom: 1px solid $bb-border-primary-color;
-		min-height: 56px;
 	}
 
 	&__filter-tabs {
@@ -76,7 +75,7 @@
 			display: flex;
 			align-items: center;
 			gap: 8px;
-			margin-bottom: 16px;
+			margin-bottom: 18px;
 		}
 
 		&-title {
@@ -118,7 +117,12 @@
 		flex-direction: column;
 		justify-content: space-between;
 		min-height: 208px;
-		transition: box-shadow 0.2s ease;
+		transition: box-shadow 0.2s ease, opacity 0.2s ease;
+
+		// Greyed-out state when a required dependency is not active.
+		&--unavailable {
+			opacity: 0.5;
+		}
 	}
 
 	&__feature-body {
@@ -189,11 +193,6 @@
 		color: $bb-text-tertiary-color;
 		font-size: 13px;
 		line-height: 18px;
-		display: -webkit-box;
-		-webkit-line-clamp: 2;
-		-webkit-box-orient: vertical;
-		overflow: hidden;
-		text-overflow: ellipsis;
 	}
 
 	&__feature-bottom {

@@ -92,6 +92,12 @@
             display: flex;
         }
 
+        &__divider {
+            height: 1px;
+            background-color: $bb-border-secondary-color;
+            margin: 8px;
+        }
+
     }
 
     &__main {
@@ -144,6 +150,11 @@
         &-body {
             padding: 32px 24px;
         }
+
+        &--disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
     }
 }
 
@@ -164,6 +175,10 @@
     &:last-child {
         padding-bottom: 0;
         border-bottom: none;
+
+        .bb-admin-notice {
+            margin-bottom: 0;
+        }
     }
 
     + .bb-admin-settings-form__field {
@@ -188,16 +203,85 @@
         }
     }
 
+    select {
+        @include bb-admin-settings-select;
+    }
+
     &-content {
         flex: 1;
+
+        &--inline {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+
+            .bb-admin-settings-form__field-description {
+                margin: 0;
+            }
+        }
     }
 
     &-description {
-        color: $bb-text-tertiary-color;
+        color: $bb-text-color;
         font-size: 13px;
         font-weight: 400;
         line-height: 1.5;
         margin: 20px 0 0 0;
+
+        &--has-controls {
+            margin-top: 0;
+
+            .bb-admin-settings-form__inline-select {
+                margin: 0 6px 0 2px;
+            }
+        }
+    }
+
+    &-head-description {
+        color: $bb-text-secondary-color;
+        font-size: 13px;
+        font-weight: 500;
+        line-height: 1.5;
+        margin: 0 0 10px;
+    }
+
+    &-help-text {
+        color: $bb-text-tertiary-color;
+        font-size: 13px;
+        font-weight: 400;
+        font-style: italic;
+        line-height: 1.5;
+        margin: 10px 0 0 0;
+        opacity: 0.8;
+        width: 100%;
+    }
+
+    // Grouped fields: remove border/spacing between consecutive fields in same group.
+    &--grouped + &--grouped[data-group] {
+        margin-top: 0;
+        padding-top: 0;
+    }
+
+    &--grouped:not(.bb-admin-settings-form__field--full-width) {
+        border-bottom: none;
+        padding-bottom: 12px;
+
+        // Last field in a group restores the bottom border.
+        &:has(+ :not([data-group])),
+        &:has(+ .bb-admin-settings-form__field:not(.bb-admin-settings-form__field--grouped)),
+        &:last-child {
+            border-bottom: 1px solid $bb-border-secondary-color;
+            padding-bottom: 24px;
+        }
+    }
+
+    // No-label fields: indent content to align with parent's content area.
+    &--no-label {
+        .bb-admin-settings-form__field-content {
+            flex: 1;
+            // 245px (label width) + 32px (gap) = 277px offset to align with sibling field content.
+            margin-left: 277px;
+        }
     }
 
     .bb-admin-reaction-info {
@@ -210,6 +294,28 @@
             text-decoration: none;
         }
     }
+
+    .components-base-control {
+		
+		.components-input-control__label {
+			color: $bb-text-secondary-color;
+			text-transform: none;
+			font-size: 13px;
+			font-weight: 500;
+		}
+
+		.components-select-control__input {
+			@include bb-admin-settings-select;
+		}
+
+		.components-input-control-suffix-wrapper {
+			display: none;
+		}
+
+		.components-input-control__backdrop {
+			border-color: transparent;
+		}
+	}
 }
 
 .bb-admin-settings-field__toggle-list {
@@ -218,57 +324,48 @@
     gap: 12px;
 }
 
-/* ----------------------------------------------------------------
-   Reactions Settings
-   ---------------------------------------------------------------- */
+.bb-admin-settings-field__checkbox-list {
+    display: flex;
+    flex-direction: column;
 
-.bb-reaction-mode {
+    .bb-admin-settings-form__field-description {
+        margin: 0 0 8px 0;
+    }
+}
 
-    &__cards {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin-top: 24px;
-        max-width: 656px;
+.bb-admin-settings-field__checkbox-list-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    max-width: 656px;
+    margin-top: 15px;
+}
+
+.bb-admin-settings-field__checkbox-list-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+
+    &:last-child {
+        border-bottom: none;
     }
 
-    &__radios {
-        display: flex;
-        align-items: center;
-        gap: 24px;
-        margin-bottom: 8px;
+    > i {
+        font-size: 20px;
+        color: $bb-icon-tertiary-color;
+        cursor: grab;
+        flex-shrink: 0;
     }
 
-    &__radio-label {
-        display: flex;
-        align-items: center;
-        color: $bb-text-color;
-        font-size: 14px;
-        font-weight: 400;
-        line-height: 20px;
-
-        input {
-            margin: 0 8px 0 0;
-        }
-
-        &.disabled {
-
-            input[type=radio] {
-                border-color: $bb-icon-brand-disabled-color;
-            }
-
-            .bb-reaction-mode__radio-label-text {
-                color: $bb-text-disabled-color;
-            }
-        }
+    .components-toggle-control {
+        margin-bottom: 0;
     }
 
-    .bb-reaction-mode-description {
-        color: $bb-text-tertiary-color;
-        font-size: 13px;
-        line-height: 18px;
-        margin: 0;
-        padding: 3px 0;
+    &.is-dragging {
+        border-radius: 4px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+        border-bottom: 1px solid $bb-border-secondary-color;
     }
 }
 
@@ -1019,5 +1116,84 @@
                 box-shadow: 0 0 0 1px $bb-background-brand-primary-color;
             }
         }
+    }
+}
+
+/* Share Platforms Field */
+
+.bb_share_item {
+    height: 96px;
+    width: 96px;
+    background: $bb-background-base-color;
+    border: 0.5px solid $bb-border-secondary-color;
+    border-radius: $bb-border-radius-lg;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    &_Messenger {
+        color: #447cff;
+    }
+
+    &_Facebook {
+        color: #1877f2;
+    }
+
+    &_X {
+        color: #0C0C0d;
+    }
+
+    &_Linkedin {
+        color: #0076b2;
+    }
+
+    &_Whatsapp {
+        color: #1faf38;
+    }
+
+    .bb_share_icon {
+        height: 64px;
+        background: $bb-background-primary-color;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+
+        [class*="bb-icon"] {
+            font-size: 32px;
+            line-height: 1;
+            font-weight: 500;
+        }
+    }
+
+    .bb_share_footer {
+        min-height: 32px;
+        background: $bb-background-base-color;
+        border-top: 0.5px solid $bb-border-secondary-color;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 4px 8px;
+        gap: 4px;
+        box-sizing: border-box;
+
+        span {
+            font-size: 12px;
+            font-weight: 400;
+            line-height: 18px;
+            color: $bb-text-color;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            flex: 1;
+            margin: 0;
+        }
+    }
+
+    .bb_share_checkbox {
+        position: absolute;
+        top: 5px;
+        right: 5px;
     }
 }

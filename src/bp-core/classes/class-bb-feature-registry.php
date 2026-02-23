@@ -23,6 +23,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss [BBVERSION]
  */
+#[\AllowDynamicProperties]
 class BB_Feature_Registry {
 
 	/**
@@ -124,6 +125,14 @@ class BB_Feature_Registry {
 	 * @var array
 	 */
 	private $reverse_deps = array();
+
+	/**
+	 * IDs of features that were cascade-deactivated in the last deactivation call.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 * @var array
+	 */
+	public $last_deactivated_dependents = array();
 
 	/**
 	 * Get singleton instance.
@@ -607,7 +616,7 @@ class BB_Feature_Registry {
 	 *
 	 *     @type string   $name              Option name (required, used as option key).
 	 *     @type string   $label             Field label (required).
-	 *     @type string   $type              Field type: 'toggle', 'text', 'textarea', 'select', 'radio', 'number', 'email', 'url', 'color', 'date', 'time', 'media', 'repeater', 'field_group', 'rich_text', 'code', 'checkbox_list', 'custom' (default: 'text').
+	 *     @type string   $type              Field type: 'toggle', 'text', 'textarea', 'select', 'radio', 'number', 'email', 'url', 'color', 'date', 'time', 'media', 'repeater', 'field_group', 'richtext', 'code', 'checkbox_list', 'custom' (default: 'text').
 	 *     @type string   $description       Field description/help text.
 	 *     @type mixed    $default           Default value.
 	 *     @type array    $options           Options for select/radio/checkbox_list fields.
@@ -667,7 +676,7 @@ class BB_Feature_Registry {
 			);
 		}
 
-		if ( empty( $args['label'] ) ) {
+		if ( ! isset( $args['label'] ) ) {
 			return new WP_Error(
 				'missing_field_label',
 				sprintf(
@@ -874,7 +883,7 @@ class BB_Feature_Registry {
 		// Get pre-sorted features (cached).
 		if ( $this->sorted_cache_dirty || ! isset( $this->sorted_cache['features'] ) ) {
 			$sorted = $this->features;
-			uasort( $sorted, array( $this, 'bb_compare_order' ) );
+			uasort( $sorted, 'bb_sort_by_order' );
 			$this->sorted_cache['features'] = $sorted;
 		}
 		$features = $this->sorted_cache['features'];
@@ -934,7 +943,7 @@ class BB_Feature_Registry {
 		$cache_key = 'side_panels_' . $feature_id;
 		if ( $this->sorted_cache_dirty || ! isset( $this->sorted_cache[ $cache_key ] ) ) {
 			$sorted = $this->side_panels[ $feature_id ];
-			uasort( $sorted, array( $this, 'bb_compare_order' ) );
+			uasort( $sorted, 'bb_sort_by_order' );
 			$this->sorted_cache[ $cache_key ] = $sorted;
 		}
 
@@ -959,7 +968,7 @@ class BB_Feature_Registry {
 		$cache_key = 'sections_' . $feature_id . '_' . $side_panel_id;
 		if ( $this->sorted_cache_dirty || ! isset( $this->sorted_cache[ $cache_key ] ) ) {
 			$sorted = $this->sections[ $feature_id ][ $side_panel_id ];
-			uasort( $sorted, array( $this, 'bb_compare_order' ) );
+			uasort( $sorted, 'bb_sort_by_order' );
 			$this->sorted_cache[ $cache_key ] = $sorted;
 		}
 
@@ -1015,7 +1024,7 @@ class BB_Feature_Registry {
 		$cache_key = 'fields_' . $feature_id . '_' . $side_panel_id . '_' . $section_id;
 		if ( $this->sorted_cache_dirty || ! isset( $this->sorted_cache[ $cache_key ] ) ) {
 			$sorted = $this->fields[ $feature_id ][ $side_panel_id ][ $section_id ];
-			uasort( $sorted, array( $this, 'bb_compare_order' ) );
+			uasort( $sorted, 'bb_sort_by_order' );
 			$this->sorted_cache[ $cache_key ] = $sorted;
 		}
 
@@ -1129,7 +1138,10 @@ class BB_Feature_Registry {
 	}
 
 	/**
-	 * Check if a feature is available (license checks).
+	 * Check if a feature is available (license + dependency checks).
+	 *
+	 * A feature is unavailable if its license callback returns false
+	 * OR if any of its `depends_on` features are inactive.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -1150,10 +1162,22 @@ class BB_Feature_Registry {
 
 		$feature = $this->features[ $feature_id ];
 
-		// Use callback if provided.
+		// Use callback if provided (e.g. license check).
 		if ( ! is_null( $feature['is_available_callback'] ) ) {
-			$cache[ $feature_id ] = (bool) call_user_func( $feature['is_available_callback'] );
-			return $cache[ $feature_id ];
+			if ( ! (bool) call_user_func( $feature['is_available_callback'] ) ) {
+				$cache[ $feature_id ] = false;
+				return false;
+			}
+		}
+
+		// Check if all dependencies are active.
+		if ( ! empty( $feature['depends_on'] ) ) {
+			foreach ( $feature['depends_on'] as $dep_feature_id ) {
+				if ( ! $this->bb_is_feature_active( $dep_feature_id ) ) {
+					$cache[ $feature_id ] = false;
+					return false;
+				}
+			}
 		}
 
 		// Default: available.
@@ -1260,21 +1284,26 @@ class BB_Feature_Registry {
 
 		$feature = $this->features[ $feature_id ];
 
-		// Check if other features depend on this one (O(1) lookup via reverse index).
-		if ( ! empty( $this->reverse_deps[ $feature_id ] ) ) {
-			foreach ( $this->reverse_deps[ $feature_id ] as $dependent_id ) {
-				if ( $this->bb_is_feature_active( $dependent_id ) ) {
-					return new WP_Error(
-						'dependent_features',
-						sprintf(
-							/* translators: 1: feature ID, 2: dependent feature ID */
-							__( 'Cannot deactivate feature "%1$s". Feature "%2$s" depends on it.', 'buddyboss' ),
-							$feature_id,
-							$dependent_id
-						)
-					);
+		// Auto-deactivate any features that depend on this one (O(1) lookup via reverse index when available).
+		$deactivated_dependents = array();
+		$dependent_ids         = ! empty( $this->reverse_deps[ $feature_id ] ) ? $this->reverse_deps[ $feature_id ] : array();
+		if ( empty( $dependent_ids ) ) {
+			foreach ( $this->features as $fid => $f ) {
+				if ( ! empty( $f['depends_on'] ) && in_array( $feature_id, $f['depends_on'], true ) ) {
+					$dependent_ids[] = $fid;
 				}
 			}
+		}
+		foreach ( $dependent_ids as $dependent_id ) {
+			if ( $this->bb_is_feature_active( $dependent_id ) ) {
+				$this->bb_deactivate_feature( $dependent_id );
+				$deactivated_dependents[] = $dependent_id;
+			}
+		}
+
+		// Store deactivated dependents so the AJAX handler can include them in the response.
+		if ( ! empty( $deactivated_dependents ) ) {
+			$this->last_deactivated_dependents = $deactivated_dependents;
 		}
 
 		// Primary storage: bb-active-features option (single source of truth).
@@ -1319,21 +1348,6 @@ class BB_Feature_Registry {
 	// =========================================================================
 	// UTILITY METHODS
 	// =========================================================================
-
-	/**
-	 * Compare two registry items by their 'order' key (ascending).
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param array $a First item.
-	 * @param array $b Second item.
-	 * @return int Comparison result.
-	 */
-	private function bb_compare_order( $a, $b ) {
-		$a_order = isset( $a['order'] ) ? $a['order'] : 100;
-		$b_order = isset( $b['order'] ) ? $b['order'] : 100;
-		return $a_order - $b_order;
-	}
 
 	/**
 	 * Check for circular dependencies using DFS.
@@ -1404,7 +1418,7 @@ class BB_Feature_Registry {
 			'date'              => 'sanitize_text_field',
 			'time'              => 'sanitize_text_field',
 			'media'             => 'absint',
-			'rich_text'         => 'wp_kses_post',
+			'richtext'          => 'wp_kses_post',
 			'code'              => 'sanitize_textarea_field',
 			'toggle_list'       => array( $this, 'bb_sanitize_toggle_list' ),
 			'toggle_list_array' => array( $this, 'bb_sanitize_toggle_list' ),
