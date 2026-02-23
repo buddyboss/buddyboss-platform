@@ -21,6 +21,7 @@ require_once __DIR__ . '/settings/groups/settings-group-images.php';
 require_once __DIR__ . '/settings/groups/settings-group-headers.php';
 require_once __DIR__ . '/settings/groups/settings-group-directory.php';
 require_once __DIR__ . '/settings/groups/settings-access-control.php';
+require_once __DIR__ . '/settings/groups/settings-group-navigation.php';
 
 /**
  * Register Groups feature and settings in Feature Registry.
@@ -190,27 +191,17 @@ function bb_admin_settings_register_groups_feature() {
 		)
 	);
 
-	// Side Panel: Group Navigation (navigation link).
+	// Side Panel: Group Navigation.
 	bb_register_side_panel(
 		'groups',
 		'group_navigation',
 		array(
-			'title'      => __( 'Group Navigation', 'buddyboss' ),
-			'icon'       => array(
+			'title' => __( 'Group Navigation', 'buddyboss' ),
+			'icon'  => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-tabs',
 			),
-			'link'       => bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page' => 'bp-pages',
-						'tab'  => 'bp-group-navigation',
-					),
-					'admin.php'
-				)
-			),
-			'order'      => 120,
-			'is_default' => false,
+			'order' => 120,
 		)
 	);
 
@@ -232,6 +223,9 @@ function bb_admin_settings_register_groups_feature() {
 
 	// Panel 5: Access Controls.
 	bb_groups_register_access_control_fields();
+
+	// Panel 6: Group Navigation.
+	bb_groups_register_navigation_panel_fields();
 
 	/**
 	 * Fires after all Groups settings panels are registered.

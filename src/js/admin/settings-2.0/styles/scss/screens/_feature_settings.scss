@@ -346,6 +346,7 @@
     align-items: center;
     gap: 12px;
     padding: 12px 0;
+    border-bottom: 1px solid $bb-border-secondary-color;
 
     &:last-child {
         border-bottom: none;
@@ -360,13 +361,38 @@
 
     .components-toggle-control {
         margin-bottom: 0;
+        flex: 1;
+
+        .components-base-control__field {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: space-between;
+            align-items: center;
+        }
     }
 
     &.is-dragging {
+        background: #fff;
         border-radius: 4px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
         border-bottom: 1px solid $bb-border-secondary-color;
     }
+}
+
+.bb-admin-settings-field__checkbox-list-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.bb-admin-settings-field__checkbox-list-badge {
+    font-size: 11px;
+    line-height: 1;
+    padding: 4px 8px;
+    border-radius: 4px;
+    background-color: $bb-text-color;
+    color: $bb-text-inverse-color;
+    white-space: nowrap;
 }
 
 .bb-pro-badge {
