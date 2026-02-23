@@ -128,18 +128,6 @@
 			@include bb-input-text;
 			padding-right: 30px;
 		}
-
-		&:after {
-			content: "\e30c";
-			font-family: "bb-icons-rl";
-			font-size: 20px;
-			color: $bb-icon-tertiary-color;
-			position: absolute;
-			right: 8px;
-			top: 50%;
-			transform: translateY(-50%);
-			pointer-events: none;
-		}
 	}
 
 	&__search-input {
@@ -564,5 +552,172 @@
 .bb-admin-feature-settings__main--custom-panel {
 	.bb-groups-list {
 		max-width: 100%;
+	}
+}
+
+/* ----------------------------------------------------------------
+   Delete Group Modal
+   ---------------------------------------------------------------- */
+.bb-group-delete-modal {
+	.components-modal__content {
+		padding: 0;
+	}
+
+	.components-modal__header {
+		padding: 16px 24px;
+		border-bottom: 1px solid $bb-border-secondary-color;
+		margin: 0;
+
+		.components-modal__header-heading {
+			font-size: 16px;
+			font-weight: 600;
+		}
+	}
+
+	&__body {
+		padding: 24px;
+	}
+
+	&__warning {
+		display: flex;
+		align-items: flex-start;
+		gap: 10px;
+		padding: 12px 16px;
+		background-color: #fef3cd;
+		border: 1px solid #ffc107;
+		border-radius: $bb-border-radius-md;
+		margin-bottom: 16px;
+		font-size: 13px;
+		line-height: 1.5;
+		color: #856404;
+
+		i {
+			font-size: 20px;
+			color: #d39e00;
+			flex-shrink: 0;
+			line-height: 1;
+			margin-top: 1px;
+		}
+
+		strong {
+			font-weight: 600;
+		}
+	}
+
+	&__description {
+		font-size: 13px;
+		line-height: 1.6;
+		color: $bb-text-secondary-color;
+		margin: 0 0 16px;
+	}
+
+	.components-checkbox-control {
+		margin-bottom: 0;
+	}
+
+	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 8px;
+		padding: 16px 24px;
+		border-top: 1px solid $bb-border-secondary-color;
+
+		.is-secondary {
+			@include bb-button-secondary;
+		}
+
+		.is-destructive.is-primary {
+			background-color: #d63638;
+			border-color: #d63638;
+			color: #fff;
+			border-radius: $bb-border-radius-md;
+			font-size: 13px;
+			font-weight: 500;
+			padding: 6px 16px;
+			height: 32px;
+			box-shadow: none;
+
+			&:hover {
+				background-color: #b32d2e;
+				border-color: #b32d2e;
+			}
+
+			&:disabled {
+				opacity: 0.5;
+				cursor: not-allowed;
+			}
+		}
+	}
+}
+
+/* ----------------------------------------------------------------
+   Change Group Type Modal
+   ---------------------------------------------------------------- */
+.bb-group-change-type-modal {
+	.components-modal__content {
+		padding: 0;
+	}
+
+	.components-modal__header {
+		padding: 16px 24px;
+		border-bottom: 1px solid $bb-border-secondary-color;
+		margin: 0;
+
+		.components-modal__header-heading {
+			font-size: 16px;
+			font-weight: 600;
+		}
+	}
+
+	&__body {
+		padding: 24px;
+
+		.components-select-control {
+			margin-bottom: 0;
+
+			.components-select-control__input {
+				@include bb-admin-settings-select;
+				width: 100%;
+			}
+
+			.components-input-control-suffix-wrapper {
+				display: none;
+			}
+
+			.components-input-control__backdrop {
+				border-color: transparent;
+			}
+		}
+	}
+
+	&__label {
+		display: block;
+		font-size: 13px;
+		font-weight: 500;
+		color: $bb-text-color;
+		margin-bottom: 8px;
+	}
+
+	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 8px;
+		padding: 16px 24px;
+		border-top: 1px solid $bb-border-secondary-color;
+
+		.is-secondary {
+			@include bb-button-secondary;
+		}
+
+		.is-primary {
+			@include bb-button-primary;
+
+			&:disabled {
+				opacity: 0.5;
+				cursor: not-allowed;
+			}
+		}
 	}
 }

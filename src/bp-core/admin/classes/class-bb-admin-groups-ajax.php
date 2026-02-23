@@ -77,7 +77,6 @@ class BB_Admin_Groups_Ajax {
 			);
 		}
 
-		return true;
 	}
 
 	/**
@@ -134,8 +133,18 @@ class BB_Admin_Groups_Ajax {
 			update_postmeta_cache( $post_ids );
 		}
 
-		// Get group counts per type in a single query.
-		$group_counts = $this->bb_get_group_counts_by_type();
+		// Get all group type counts in a single query instead of N identical queries.
+		global $wpdb;
+		$count_rows   = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT t.slug, tt.count FROM {$wpdb->term_taxonomy} tt LEFT JOIN {$wpdb->terms} t ON tt.term_id = t.term_id WHERE tt.taxonomy = %s",
+				'bp_group_type'
+			)
+		);
+		$group_counts = array();
+		foreach ( $count_rows as $row ) {
+			$group_counts[ $row->slug ] = (int) $row->count;
+		}
 
 		$group_types = array();
 
@@ -170,40 +179,6 @@ class BB_Admin_Groups_Ajax {
 				'member_types' => $member_types,
 			)
 		);
-	}
-
-	/**
-	 * Get group counts per type using WordPress-maintained term_taxonomy.count column.
-	 *
-	 * Uses the same approach as bp_group_get_count_by_group_type() but fetches
-	 * all types in a single query instead of one per type.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @return array Type slug => count.
-	 */
-	private function bb_get_group_counts_by_type() {
-		global $wpdb;
-
-		$results = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT t.slug, tt.count
-				FROM {$wpdb->term_taxonomy} tt
-				LEFT JOIN {$wpdb->terms} t ON tt.term_id = t.term_id
-				WHERE tt.taxonomy = %s",
-				'bp_group_type'
-			),
-			OBJECT
-		);
-
-		$counts = array();
-		if ( ! empty( $results ) ) {
-			foreach ( $results as $row ) {
-				$counts[ $row->slug ] = (int) $row->count;
-			}
-		}
-
-		return $counts;
 	}
 
 	/**
@@ -301,18 +276,18 @@ class BB_Admin_Groups_Ajax {
 		}
 
 		// Update title and/or visibility if provided.
-		$post_title  = ! empty( $name ) ? $name : $post->post_title;
-		$update_args = array( 'ID' => $type_id );
+		$post_title   = ! empty( $name ) ? $name : $post->post_title;
+		$update_args  = array( 'ID' => $type_id );
 		$needs_update = false;
 
 		if ( ! empty( $name ) ) {
 			$update_args['post_title'] = $name;
-			$needs_update = true;
+			$needs_update              = true;
 		}
 
 		if ( ! empty( $visibility ) ) {
 			$update_args['post_status'] = 'private' === $visibility ? 'private' : 'publish';
-			$needs_update = true;
+			$needs_update               = true;
 		}
 
 		if ( $needs_update ) {
@@ -472,7 +447,7 @@ class BB_Admin_Groups_Ajax {
 		}
 
 		// Validate sort.
-		$allowed_sorts = array( 'newest', 'oldest', 'alphabetical', 'popular' );
+		$allowed_sorts = array( 'newest', 'oldest', 'highest_users', 'lowest_users', 'group_types', 'last_active' );
 		if ( ! in_array( $sort, $allowed_sorts, true ) ) {
 			$sort = 'newest';
 		}
@@ -482,26 +457,36 @@ class BB_Admin_Groups_Ajax {
 		$page     = max( 1, $page );
 
 		// Map sort to query args.
-		$sort_map = array(
-			'newest'       => array(
+		$sort_map  = array(
+			'newest'        => array(
 				'type'    => 'newest',
 				'orderby' => '',
 				'order'   => '',
 			),
-			'oldest'       => array(
+			'oldest'        => array(
 				'type'    => '',
 				'orderby' => 'date_created',
 				'order'   => 'ASC',
 			),
-			'alphabetical' => array(
-				'type'    => 'alphabetical',
-				'orderby' => '',
-				'order'   => '',
+			'highest_users' => array(
+				'type'    => '',
+				'orderby' => 'total_member_count',
+				'order'   => 'DESC',
 			),
-			'popular'      => array(
-				'type'    => 'popular',
-				'orderby' => '',
-				'order'   => '',
+			'lowest_users'  => array(
+				'type'    => '',
+				'orderby' => 'total_member_count',
+				'order'   => 'ASC',
+			),
+			'group_types'   => array(
+				'type'    => '',
+				'orderby' => 'name',
+				'order'   => 'ASC',
+			),
+			'last_active'   => array(
+				'type'    => '',
+				'orderby' => 'last_activity',
+				'order'   => 'DESC',
 			),
 		);
 		$sort_args = $sort_map[ $sort ];
@@ -538,6 +523,58 @@ class BB_Admin_Groups_Ajax {
 		$groups_result = groups_get_groups( $query_args );
 		$groups        = $groups_result['groups'];
 		$total         = (int) $groups_result['total'];
+
+		// Build a lookup map of group type slug => human-readable label.
+		$type_objects = bp_groups_get_group_types( array(), 'objects' );
+		$type_labels  = array();
+		foreach ( $type_objects as $type_obj ) {
+			$type_labels[ $type_obj->name ] = $type_obj->labels['singular_name'];
+		}
+
+		// Prime term cache for all groups in a single query to avoid N+1 lookups.
+		if ( ! empty( $groups ) ) {
+			update_object_term_cache( wp_list_pluck( $groups, 'id' ), 'bp_group_type' );
+		}
+
+		// Pre-fetch group type slugs for all groups (now hits cache, not DB).
+		$group_type_map = array();
+		foreach ( $groups as $group ) {
+			$type_slug                    = bp_groups_get_group_type( $group->id, true );
+			$group_type_map[ $group->id ] = ! empty( $type_slug ) ? $type_slug : '';
+		}
+
+		// For "Group Types" sort, re-sort groups in PHP after fetch.
+		// NOTE: This sort applies to the current page only. Cross-page ordering
+		// is not guaranteed because the DB query fetches by name; a full
+		// taxonomy-join sort would require modifying BP_Groups_Group::get().
+		if ( 'group_types' === $sort ) {
+			usort(
+				$groups,
+				function ( $a, $b ) use ( $type_labels, $group_type_map ) {
+					$type_a = $group_type_map[ $a->id ];
+					$type_b = $group_type_map[ $b->id ];
+
+					$label_a = ! empty( $type_a ) && isset( $type_labels[ $type_a ] ) ? $type_labels[ $type_a ] : '';
+					$label_b = ! empty( $type_b ) && isset( $type_labels[ $type_b ] ) ? $type_labels[ $type_b ] : '';
+
+					// Groups without a type go last.
+					if ( empty( $label_a ) && ! empty( $label_b ) ) {
+						return 1;
+					}
+					if ( ! empty( $label_a ) && empty( $label_b ) ) {
+						return -1;
+					}
+
+					$cmp = strcasecmp( $label_a, $label_b );
+					if ( 0 !== $cmp ) {
+						return $cmp;
+					}
+
+					// Within same type, sort by name.
+					return strcasecmp( $a->name, $b->name );
+				}
+			);
+		}
 
 		// Prime user cache for creators.
 		if ( ! empty( $groups ) ) {
@@ -634,7 +671,9 @@ class BB_Admin_Groups_Ajax {
 				'last_activity' => $last_activity,
 				'total_members' => $member_count,
 				'creator_id'    => (int) $group->creator_id,
-				'group_type'    => bp_groups_get_group_type( $group->id, true ),
+				'group_type'    => ! empty( $group_type_map[ $group->id ] ) && isset( $type_labels[ $group_type_map[ $group->id ] ] )
+				? $type_labels[ $group_type_map[ $group->id ] ]
+				: '',
 				'avatar_url'    => bp_core_fetch_avatar(
 					array(
 						'item_id'    => $group->id,
@@ -679,9 +718,11 @@ class BB_Admin_Groups_Ajax {
 			// Get counts per status with a single query instead of 4 separate groups_get_groups() calls.
 			global $wpdb;
 			$bp            = buddypress();
+			// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name from BuddyPress internals, not user input.
 			$status_counts = $wpdb->get_results(
 				"SELECT status, COUNT(id) AS cnt FROM {$bp->groups->table_name} GROUP BY status"
 			);
+			// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 			$counts_map = array();
 			$count_all  = 0;
@@ -723,6 +764,13 @@ class BB_Admin_Groups_Ajax {
 			foreach ( $legacy_bulk_actions as $action_key => $action_label ) {
 				$bulk_actions[ 'bulk_' . $action_key ] = $action_label;
 			}
+
+			// Add group type bulk actions when types exist.
+			if ( ! empty( $type_objects ) ) {
+				$bulk_actions['bulk_change_group_type'] = __( 'Change Group Type to', 'buddyboss' );
+				$bulk_actions['bulk_remove_group_type'] = __( 'Remove Group Type', 'buddyboss' );
+			}
+
 			$response['bulk_actions'] = $bulk_actions;
 
 			// Return column definitions from the filtered list (excluding cb).
@@ -735,29 +783,20 @@ class BB_Admin_Groups_Ajax {
 			}
 			$response['columns'] = $columns_response;
 
-			// Get available group types for filter dropdown.
+			// Build group type lists from the already-fetched $type_objects
+			// to avoid a redundant get_posts() query.
+			// Labels are NOT esc_html()'d here because this is a JSON response,
+			// not HTML output. The React SelectControl handles DOM escaping.
+			// Double-encoding (esc_html + browser) causes "&amp;" to render literally.
 			$available_types = array();
-			if ( function_exists( 'bp_groups_get_group_type_post_type' ) ) {
-				$type_posts = get_posts(
-					array(
-						'post_type'      => bp_groups_get_group_type_post_type(),
-						'posts_per_page' => -1,
-						'post_status'    => 'publish',
-						'orderby'        => 'title',
-						'order'          => 'ASC',
-					)
+			foreach ( $type_objects as $type_obj ) {
+				$available_types[] = array(
+					'value' => sanitize_key( $type_obj->name ),
+					'label' => $type_obj->labels['singular_name'],
 				);
-
-				foreach ( $type_posts as $type_post ) {
-					$type_key = get_post_meta( $type_post->ID, '_bp_group_type_key', true );
-					if ( ! empty( $type_key ) ) {
-						$available_types[] = array(
-							'value' => $type_key,
-							'label' => esc_html( $type_post->post_title ),
-						);
-					}
-				}
 			}
+
+			// Used for both filter dropdown and change-type modal.
 			$response['group_types'] = $available_types;
 		}
 
@@ -839,14 +878,19 @@ class BB_Admin_Groups_Ajax {
 		$do_action = isset( $_POST['do_action'] ) ? sanitize_key( $_POST['do_action'] ) : '';
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
-		// Validate action against the same filter as BP_Groups_List_Table::get_bulk_actions().
+		// Validate action against the same filter as BP_Groups_List_Table::get_bulk_actions()
+		// plus Settings 2.0 group type actions.
 		$allowed_bulk_actions = apply_filters(
 			'bp_groups_list_table_get_bulk_actions',
 			array(
 				'delete' => __( 'Delete', 'buddyboss' ),
 			)
 		);
-		if ( ! array_key_exists( $do_action, $allowed_bulk_actions ) ) {
+
+		// Group type bulk actions are not part of the legacy filter.
+		$type_actions = array( 'change_group_type', 'remove_group_type' );
+
+		if ( ! array_key_exists( $do_action, $allowed_bulk_actions ) && ! in_array( $do_action, $type_actions, true ) ) {
 			wp_send_json_error( array( 'message' => __( 'Invalid action.', 'buddyboss' ) ) );
 		}
 
@@ -866,32 +910,90 @@ class BB_Admin_Groups_Ajax {
 		$processed = 0;
 		$errors    = 0;
 
+		// Validate group_type for change action upfront.
+		$new_group_type = '';
+		if ( 'change_group_type' === $do_action ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing
+			$new_group_type = isset( $_POST['group_type'] ) ? sanitize_key( $_POST['group_type'] ) : '';
+			if ( empty( $new_group_type ) || ! bp_groups_get_group_type_object( $new_group_type ) ) {
+				wp_send_json_error( array( 'message' => __( 'Invalid group type.', 'buddyboss' ) ) );
+			}
+		}
+
+		// Prime term cache for remove_group_type to avoid N+1 lookups in loop.
+		if ( 'remove_group_type' === $do_action ) {
+			update_object_term_cache( $group_ids, 'bp_group_type' );
+		}
+
 		foreach ( $group_ids as $group_id ) {
 			if ( 'delete' === $do_action ) {
 				$result = groups_delete_group( $group_id );
 				if ( $result ) {
-					$processed++;
+					++$processed;
 				} else {
-					$errors++;
+					++$errors;
+				}
+			} elseif ( 'change_group_type' === $do_action ) {
+				$result = bp_groups_set_group_type( $group_id, $new_group_type );
+				if ( ! is_wp_error( $result ) && false !== $result ) {
+					++$processed;
+				} else {
+					++$errors;
+				}
+			} elseif ( 'remove_group_type' === $do_action ) {
+				$current_type = bp_groups_get_group_type( $group_id, true );
+				if ( ! empty( $current_type ) ) {
+					$result = bp_groups_remove_group_type( $group_id, $current_type );
+					if ( ! is_wp_error( $result ) && false !== $result ) {
+						++$processed;
+					} else {
+						++$errors;
+					}
+				} else {
+					// No type to remove; count as processed.
+					++$processed;
 				}
 			}
 		}
 
 		if ( $processed > 0 ) {
-			wp_send_json_success(
-				array(
-					'message' => sprintf(
-						/* translators: %d: Number of groups processed. */
-						_n(
-							'%d group deleted successfully.',
-							'%d groups deleted successfully.',
-							$processed,
-							'buddyboss'
-						),
-						$processed
+			$message = '';
+			if ( 'delete' === $do_action ) {
+				$message = sprintf(
+					/* translators: %d: Number of groups processed. */
+					_n(
+						'%d group deleted successfully.',
+						'%d groups deleted successfully.',
+						$processed,
+						'buddyboss'
 					),
-				)
-			);
+					$processed
+				);
+			} elseif ( 'change_group_type' === $do_action ) {
+				$message = sprintf(
+					/* translators: %d: Number of groups processed. */
+					_n(
+						'Group type changed for %d group.',
+						'Group type changed for %d groups.',
+						$processed,
+						'buddyboss'
+					),
+					$processed
+				);
+			} elseif ( 'remove_group_type' === $do_action ) {
+				$message = sprintf(
+					/* translators: %d: Number of groups processed. */
+					_n(
+						'Group type removed from %d group.',
+						'Group type removed from %d groups.',
+						$processed,
+						'buddyboss'
+					),
+					$processed
+				);
+			}
+
+			wp_send_json_success( array( 'message' => $message ) );
 		} else {
 			wp_send_json_error( array( 'message' => __( 'No groups were processed.', 'buddyboss' ) ) );
 		}
@@ -925,7 +1027,7 @@ class BB_Admin_Groups_Ajax {
 
 		// Member type fields: empty string = "all", array of IDs = "selected".
 		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-		$raw_member_type_join = isset( $_POST['member_type_join'] ) ? $_POST['member_type_join'] : '';
+		$raw_member_type_join = isset( $_POST['member_type_join'] ) ? wp_unslash( $_POST['member_type_join'] ) : '';
 		if ( is_array( $raw_member_type_join ) ) {
 			$member_type_join = array_map( 'sanitize_key', $raw_member_type_join );
 		} else {
@@ -933,7 +1035,7 @@ class BB_Admin_Groups_Ajax {
 		}
 
 		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-		$raw_member_type_invites = isset( $_POST['member_type_invites'] ) ? $_POST['member_type_invites'] : '';
+		$raw_member_type_invites = isset( $_POST['member_type_invites'] ) ? wp_unslash( $_POST['member_type_invites'] ) : '';
 		if ( is_array( $raw_member_type_invites ) ) {
 			$member_type_invites = array_map( 'sanitize_key', $raw_member_type_invites );
 		} else {
@@ -941,22 +1043,24 @@ class BB_Admin_Groups_Ajax {
 		}
 
 		// Role labels.
-		$role_labels = array();
-		if ( isset( $_POST['role_labels'] ) && is_array( $_POST['role_labels'] ) ) {
-			foreach ( $_POST['role_labels'] as $role_key => $labels ) {
-				$sanitized_key = sanitize_key( $role_key );
-				if ( is_array( $labels ) ) {
-					$role_labels[ $sanitized_key ] = array_map( 'sanitize_text_field', array_map( 'wp_unslash', $labels ) );
-				}
+		$role_labels     = array();
+		$raw_role_labels = isset( $_POST['role_labels'] ) && is_array( $_POST['role_labels'] )
+			? wp_unslash( $_POST['role_labels'] ) // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized below per key/value.
+			: array();
+		foreach ( $raw_role_labels as $role_key => $labels ) {
+			$sanitized_key = sanitize_key( $role_key );
+			if ( is_array( $labels ) ) {
+				$role_labels[ $sanitized_key ] = map_deep( $labels, 'sanitize_text_field' );
 			}
 		}
 
 		// Label color.
 		$label_color = array();
-		if ( isset( $_POST['label_color'] ) && is_array( $_POST['label_color'] ) ) {
-			$raw_color      = $_POST['label_color'];
-			$allowed_types  = array( 'default', 'custom' );
-			$color_type     = isset( $raw_color['type'] ) && in_array( $raw_color['type'], $allowed_types, true )
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized below per field.
+		$raw_color = isset( $_POST['label_color'] ) && is_array( $_POST['label_color'] ) ? wp_unslash( $_POST['label_color'] ) : array();
+		if ( ! empty( $raw_color ) ) {
+			$allowed_types = array( 'default', 'custom' );
+			$color_type    = isset( $raw_color['type'] ) && in_array( $raw_color['type'], $allowed_types, true )
 				? $raw_color['type']
 				: 'default';
 

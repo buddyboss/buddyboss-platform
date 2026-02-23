@@ -14,11 +14,28 @@ import {
 	DropdownMenu,
 	MenuGroup,
 	MenuItem,
+	Modal,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
-import { getGroups, deleteGroup, groupBulkAction } from '../utils/ajax';
+import { getGroups, groupBulkAction } from '../utils/ajax';
 import { sanitizeHtml, safeUrl } from '../utils/sanitize';
+
+/**
+ * Sort options for the groups list dropdown (static, never changes).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @type {Array}
+ */
+var sortOptions = [
+	{ label: __( 'Newest', 'buddyboss' ), value: 'newest' },
+	{ label: __( 'Oldest', 'buddyboss' ), value: 'oldest' },
+	{ label: __( 'Highest Users', 'buddyboss' ), value: 'highest_users' },
+	{ label: __( 'Lowest Users', 'buddyboss' ), value: 'lowest_users' },
+	{ label: __( 'Group Types', 'buddyboss' ), value: 'group_types' },
+	{ label: __( 'Last Active', 'buddyboss' ), value: 'last_active' },
+];
 
 /**
  * Groups List Screen Component
@@ -40,8 +57,7 @@ export function GroupsListScreen( { onNavigate } ) {
 	var currentPage = currentPageState[ 0 ];
 	var setCurrentPage = currentPageState[ 1 ];
 
-	var perPageState = useState( 20 );
-	var perPage = perPageState[ 0 ];
+	var perPage = 20;
 
 	var filterState = useState( 'all' );
 	var filter = filterState[ 0 ];
@@ -94,6 +110,26 @@ export function GroupsListScreen( { onNavigate } ) {
 	var noticeState = useState( null );
 	var notice = noticeState[ 0 ];
 	var setNotice = noticeState[ 1 ];
+
+	var deleteModalState = useState( false );
+	var deleteModalOpen = deleteModalState[ 0 ];
+	var setDeleteModalOpen = deleteModalState[ 1 ];
+
+	var deleteTargetIdsState = useState( [] );
+	var deleteTargetIds = deleteTargetIdsState[ 0 ];
+	var setDeleteTargetIds = deleteTargetIdsState[ 1 ];
+
+	var deleteConfirmState = useState( false );
+	var deleteConfirmChecked = deleteConfirmState[ 0 ];
+	var setDeleteConfirmChecked = deleteConfirmState[ 1 ];
+
+	var changeTypeModalState = useState( false );
+	var changeTypeModalOpen = changeTypeModalState[ 0 ];
+	var setChangeTypeModalOpen = changeTypeModalState[ 1 ];
+
+	var selectedGroupTypeState = useState( '' );
+	var selectedGroupType = selectedGroupTypeState[ 0 ];
+	var setSelectedGroupType = selectedGroupTypeState[ 1 ];
 
 	var searchTimerRef = useRef( null );
 	var hasMetaRef = useRef( false );
@@ -234,6 +270,7 @@ export function GroupsListScreen( { onNavigate } ) {
 	var handleSortChange = function ( value ) {
 		setSortBy( value );
 		setCurrentPage( 1 );
+		setSelectedIds( [] );
 	};
 
 	/**
@@ -244,6 +281,7 @@ export function GroupsListScreen( { onNavigate } ) {
 	var handleGroupTypeFilterChange = function ( value ) {
 		setGroupTypeFilter( value );
 		setCurrentPage( 1 );
+		setSelectedIds( [] );
 	};
 
 	/**
@@ -284,17 +322,20 @@ export function GroupsListScreen( { onNavigate } ) {
 	/**
 	 * Perform bulk action on groups.
 	 *
-	 * @param {string} action   The action (delete).
-	 * @param {Array}  ids      Group ID(s).
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {string} action    The action key (delete, change_group_type, remove_group_type).
+	 * @param {Array}  ids       Group ID(s).
+	 * @param {Object} extraData Optional extra data to send (e.g. { group_type: 'slug' }).
 	 */
-	var performAction = function ( action, ids ) {
+	var performAction = function ( action, ids, extraData ) {
 		if ( ! ids || ( Array.isArray( ids ) && 0 === ids.length ) ) {
 			return;
 		}
 
 		var idArray = Array.isArray( ids ) ? ids : [ ids ];
 
-		groupBulkAction( idArray, action ).then( function ( response ) {
+		groupBulkAction( idArray, action, extraData ).then( function ( response ) {
 			if ( response.success ) {
 				setNotice( { type: 'success', message: response.data.message } );
 				setSelectedIds( [] );
@@ -327,42 +368,63 @@ export function GroupsListScreen( { onNavigate } ) {
 		var action = bulkAction.replace( /^bulk_/, '' );
 
 		if ( 'delete' === action ) {
-			if ( ! window.confirm( __( 'Are you sure you want to delete the selected groups?', 'buddyboss' ) ) ) {
+			setDeleteTargetIds( selectedIds.slice() );
+			setDeleteConfirmChecked( false );
+			setDeleteModalOpen( true );
+			return;
+		}
+
+		if ( 'change_group_type' === action ) {
+			setSelectedGroupType( '' );
+			setChangeTypeModalOpen( true );
+			return;
+		}
+
+		if ( 'remove_group_type' === action ) {
+			if ( ! window.confirm( __( 'Are you sure you want to remove the group type from the selected groups?', 'buddyboss' ) ) ) {
 				return;
 			}
+			performAction( action, selectedIds );
+			return;
 		}
 
 		performAction( action, selectedIds );
 	};
 
 	/**
-	 * Handle single group delete.
+	 * Handle single group delete — opens the delete confirmation modal.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param {Object} group The group object.
 	 */
 	var handleDeleteGroup = function ( group ) {
-		if ( ! window.confirm( __( 'Are you sure you want to delete this group?', 'buddyboss' ) ) ) {
+		setDeleteTargetIds( [ group.id ] );
+		setDeleteConfirmChecked( false );
+		setDeleteModalOpen( true );
+	};
+
+	/**
+	 * Confirm delete from the delete modal.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	var handleConfirmDelete = function () {
+		setDeleteModalOpen( false );
+		performAction( 'delete', deleteTargetIds );
+	};
+
+	/**
+	 * Confirm change group type from the modal.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	var handleConfirmChangeType = function () {
+		if ( ! selectedGroupType ) {
 			return;
 		}
-
-		deleteGroup( group.id ).then( function ( response ) {
-			if ( response.success ) {
-				setNotice( { type: 'success', message: response.data.message } );
-
-				// Reset metadata so counts refresh.
-				hasMetaRef.current = false;
-
-				if ( currentPage > 1 ) {
-					setCurrentPage( 1 );
-				} else {
-					fetchGroups();
-				}
-			} else {
-				setNotice( { type: 'error', message: response.data?.message || __( 'Failed to delete group.', 'buddyboss' ) } );
-			}
-		} ).catch( function () {
-			setNotice( { type: 'error', message: __( 'An error occurred.', 'buddyboss' ) } );
-		} );
+		setChangeTypeModalOpen( false );
+		performAction( 'change_group_type', selectedIds, { group_type: selectedGroupType } );
 	};
 
 	/**
@@ -383,28 +445,37 @@ export function GroupsListScreen( { onNavigate } ) {
 		return month + ' ' + day + ', ' + year;
 	};
 
+	// Privacy icon class lookup.
+	var privacyIcons = {
+		'public': 'bb-icons-rl bb-icons-rl-globe-simple',
+		'private': 'bb-icons-rl bb-icons-rl-lock-simple',
+		'hidden': 'bb-icons-rl bb-icons-rl-eye-slash',
+	};
+
 	/**
 	 * Get privacy badge icon class.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param {string} status Group status.
 	 * @returns {string} Icon class.
 	 */
 	var getPrivacyIcon = function ( status ) {
-		if ( 'public' === status ) {
-			return 'bb-icons-rl bb-icons-rl-globe-simple';
-		}
-		if ( 'private' === status ) {
-			return 'bb-icons-rl bb-icons-rl-lock-simple';
-		}
-		if ( 'hidden' === status ) {
-			return 'bb-icons-rl bb-icons-rl-eye-slash';
-		}
-		return 'bb-icons-rl bb-icons-rl-globe-simple';
+		return privacyIcons[ status ] || privacyIcons[ 'public' ];
+	};
+
+	// Privacy label lookup (fallback when server-provided label is absent).
+	var privacyLabels = {
+		'public': __( 'Public', 'buddyboss' ),
+		'private': __( 'Private', 'buddyboss' ),
+		'hidden': __( 'Hidden', 'buddyboss' ),
 	};
 
 	/**
 	 * Get privacy label. Uses server-provided status_label (filtered via
 	 * bp_groups_admin_get_group_status) when available, falls back to local.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param {Object} group Group object.
 	 * @returns {string} Privacy label.
@@ -413,30 +484,14 @@ export function GroupsListScreen( { onNavigate } ) {
 		if ( group.status_label ) {
 			return decodeEntities( group.status_label );
 		}
-		if ( 'public' === group.status ) {
-			return __( 'Public', 'buddyboss' );
-		}
-		if ( 'private' === group.status ) {
-			return __( 'Private', 'buddyboss' );
-		}
-		if ( 'hidden' === group.status ) {
-			return __( 'Hidden', 'buddyboss' );
-		}
-		return group.status;
+		return privacyLabels[ group.status ] || group.status;
 	};
 
-	/**
-	 * Get custom column keys (columns added by third-party plugins).
-	 * Excludes core columns that we render explicitly.
-	 *
-	 * @returns {Array} Array of custom column keys.
-	 */
-	var getCustomColumnKeys = function () {
-		var coreColumns = [ 'cb', 'comment', 'description', 'status', 'members', 'last_active' ];
-		return Object.keys( columns ).filter( function ( key ) {
-			return coreColumns.indexOf( key ) === -1;
-		} );
-	};
+	// Compute custom column keys once per render instead of calling a function 3 times.
+	var coreColumns = [ 'cb', 'comment', 'description', 'status', 'members', 'last_active' ];
+	var customColumnKeys = Object.keys( columns ).filter( function ( key ) {
+		return coreColumns.indexOf( key ) === -1;
+	} );
 
 	// Build filter options from views.
 	var filterOptions = [];
@@ -452,14 +507,6 @@ export function GroupsListScreen( { onNavigate } ) {
 	} else {
 		filterOptions.push( { label: __( 'All', 'buddyboss' ), value: 'all' } );
 	}
-
-	// Sort options.
-	var sortOptions = [
-		{ label: __( 'Newest', 'buddyboss' ), value: 'newest' },
-		{ label: __( 'Oldest', 'buddyboss' ), value: 'oldest' },
-		{ label: __( 'Alphabetical', 'buddyboss' ), value: 'alphabetical' },
-		{ label: __( 'Most Members', 'buddyboss' ), value: 'popular' },
-	];
 
 	// Group type filter options.
 	var groupTypeOptions = [ { label: __( 'All Types', 'buddyboss' ), value: '' } ];
@@ -646,7 +693,7 @@ export function GroupsListScreen( { onNavigate } ) {
 									{ __( 'Last Active', 'buddyboss' ) }
 								</th>
 								{ /* Custom columns from bp_groups_list_table_get_columns filter */ }
-								{ getCustomColumnKeys().map( function ( key ) {
+								{ customColumnKeys.map( function ( key ) {
 									return (
 										<th key={ key } className={ 'bb-groups-list__th--custom bb-groups-list__th--' + key }>
 											{ columns[ key ] }
@@ -719,7 +766,7 @@ export function GroupsListScreen( { onNavigate } ) {
 											</span>
 										</td>
 										{ /* Custom columns from bp_groups_admin_get_group_custom_column filter */ }
-										{ group.custom_columns && getCustomColumnKeys().map( function ( key ) {
+										{ group.custom_columns && customColumnKeys.map( function ( key ) {
 											return (
 												<td key={ key } className={ 'bb-groups-list__td--custom bb-groups-list__td--' + key }>
 													{/* Safe: custom_columns are already sanitized via sanitizeHtml at fetch time. */}
@@ -844,6 +891,102 @@ export function GroupsListScreen( { onNavigate } ) {
 						</div>
 					) }
 				</div>
+			) }
+
+			{ /* Delete Group Modal */ }
+			{ deleteModalOpen && (
+				<Modal
+					title={ __( 'Delete Group?', 'buddyboss' ) }
+					onRequestClose={ function () {
+						setDeleteModalOpen( false );
+					} }
+					className="bb-group-delete-modal bb-admin-settings-modal"
+					shouldCloseOnClickOutside={ false }
+				>
+					<div className="bb-group-delete-modal__body">
+						<div className="bb-group-delete-modal__warning">
+							<i className="bb-icons-rl bb-icons-rl-warning"></i>
+							<div>
+								<strong>{ __( 'Warning', 'buddyboss' ) }</strong>
+								<span>
+									{ ' — ' + __( 'This permanently deletes selected groups from the community and cannot be undone.', 'buddyboss' ) }
+								</span>
+							</div>
+						</div>
+						<p className="bb-group-delete-modal__description">
+							{ __( 'Deleting groups will remove them from the community and the WordPress backend listings. They will no longer appear in the group directory, and all associated data and posts will be permanently deleted.', 'buddyboss' ) }
+						</p>
+						<CheckboxControl
+							label={ __( 'I understand this will permanently delete the group.', 'buddyboss' ) }
+							checked={ deleteConfirmChecked }
+							onChange={ setDeleteConfirmChecked }
+							__nextHasNoMarginBottom
+						/>
+					</div>
+					<div className="bb-group-delete-modal__footer">
+						<Button
+							variant="secondary"
+							onClick={ function () {
+								setDeleteModalOpen( false );
+							} }
+						>
+							{ __( 'Cancel', 'buddyboss' ) }
+						</Button>
+						<Button
+							variant="primary"
+							isDestructive
+							onClick={ handleConfirmDelete }
+							disabled={ ! deleteConfirmChecked }
+						>
+							{ __( 'Delete', 'buddyboss' ) }
+						</Button>
+					</div>
+				</Modal>
+			) }
+
+			{ /* Change Group Type Modal */ }
+			{ changeTypeModalOpen && (
+				<Modal
+					title={ __( 'Bulk Action', 'buddyboss' ) }
+					onRequestClose={ function () {
+						setChangeTypeModalOpen( false );
+					} }
+					className="bb-group-change-type-modal bb-admin-settings-modal"
+					shouldCloseOnClickOutside={ false }
+				>
+					<div className="bb-group-change-type-modal__body">
+						<label className="bb-group-change-type-modal__label">
+							{ __( 'Change Group Type to', 'buddyboss' ) }
+						</label>
+						<SelectControl
+							value={ selectedGroupType }
+							options={ [ { label: __( 'Select group type', 'buddyboss' ), value: '' } ].concat(
+								groupTypes.map( function ( type ) {
+									return { label: decodeEntities( type.label ), value: type.value };
+								} )
+							) }
+							onChange={ setSelectedGroupType }
+							__nextHasNoMarginBottom
+						/>
+					</div>
+					<div className="bb-group-change-type-modal__footer">
+						<Button
+							variant="secondary"
+							onClick={ function () {
+								setChangeTypeModalOpen( false );
+							} }
+						>
+							{ __( 'Cancel', 'buddyboss' ) }
+						</Button>
+						<Button
+							variant="primary"
+							onClick={ handleConfirmChangeType }
+							disabled={ ! selectedGroupType }
+						>
+							{ __( 'Save', 'buddyboss' ) }
+						</Button>
+					</div>
+				</Modal>
 			) }
 		</div>
 	);

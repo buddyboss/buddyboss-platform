@@ -236,13 +236,20 @@ export function deleteGroup(groupId) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param {Array}  groupIds - Array of group IDs.
- * @param {string} action   - Bulk action to perform.
+ * @param {Array}  groupIds  - Array of group IDs.
+ * @param {string} action    - Bulk action to perform.
+ * @param {Object} extraData - Optional extra data to send with the request.
  * @return {Promise} Promise resolving to response.
  */
-export function groupBulkAction(groupIds, action) {
-	return ajaxFetch('bb_admin_group_bulk_action', {
+export function groupBulkAction(groupIds, action, extraData) {
+	var data = {
 		group_ids: groupIds.join(','),
 		do_action: action,
-	});
+	};
+	if (extraData) {
+		Object.keys(extraData).forEach(function (key) {
+			data[key] = extraData[key];
+		});
+	}
+	return ajaxFetch('bb_admin_group_bulk_action', data);
 }
