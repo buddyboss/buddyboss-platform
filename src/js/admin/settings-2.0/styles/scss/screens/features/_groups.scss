@@ -139,40 +139,47 @@
 		align-items: center;
 		padding: $content-pad;
 		gap: 6px;
+		position: relative;
+		background: $bb-background-base-color;
 	}
 
 	&--centered &-content {
-		flex-direction: column;
-		align-items: center;
+		justify-content: center;
 		padding: $centered-pad;
 	}
 
 	&--centered &-avatar {
-		margin-top: $centered-mt;
+		left: 50%;
+		top: -20px;
+		transform: translateX(-50%);
 	}
 
 	&-avatar {
 		width: $avatar-size;
 		height: $avatar-size;
-		background: $bb-background-secondary-color;
+		background: $bb-background-primary-color;
+		border: 1px solid $bb-border-secondary-color;
 		border-radius: $bb-border-radius-full;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		flex-shrink: 0;
+		position: absolute;
+		top: -20px;
+		left: 8px;
 
-		.dashicons {
+		[class^="bb-icon"] {
 			font-size: $icon-size;
-			width: $icon-size;
-			height: $icon-size;
-			color: $bb-icon-tertiary-color;
+			color: $bb-icon-disabled-color;
+			font-weight: 600;
 		}
 	}
 
 	&-lines {
 		display: flex;
 		flex-direction: column;
-		gap: 3px;
+		gap: 8px;
+		margin-top: 15px;
 	}
 
 	&--centered &-lines {
@@ -180,8 +187,8 @@
 	}
 
 	&-line {
-		height: 3px;
-		background: $bb-background-secondary-color;
+		height: 4px;
+		background: $bb-background-tertiary-color;
 		border-radius: 2px;
 
 		&--short {
@@ -194,16 +201,9 @@
 	}
 }
 
-/* Grid style card previews (Group Directory) */
-.bb-admin-settings-field__card-preview {
-	@include layout-preview(36px, 18px, 10px, 6px 8px, 0 8px 6px, -8px, 28px, 46px);
-	border-radius: $bb-border-radius-md;
-	overflow: hidden;
-}
-
 /* Header style preview cards */
 .bb-admin-settings-field__header-preview {
-	@include layout-preview(40px, 20px, 12px, 4px 8px, 0 8px 4px, -10px, 30px, 50px);
+	@include layout-preview(32px, 40px, 24px, 4px 8px, 0 8px 4px, -10px, 45px, 70px);
 }
 
 /* ----------------------------------------------------------------
@@ -269,6 +269,7 @@
 	&--cover &__preview {
 		width: 432px;
 		height: 160px;
+		padding: 0;
 	}
 
 	&--cover &__preview {

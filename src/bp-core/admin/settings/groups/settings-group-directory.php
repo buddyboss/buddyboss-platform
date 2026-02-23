@@ -109,12 +109,12 @@ function bb_groups_register_directory_panel_fields() {
 				array(
 					'label' => __( 'Left', 'buddyboss' ),
 					'value' => 'left',
-					'image' => 'card-left-group',
+					'image' => 'header-left-group',
 				),
 				array(
 					'label' => __( 'Centered', 'buddyboss' ),
 					'value' => 'centered',
-					'image' => 'card-centered-group',
+					'image' => 'header-centered-group',
 				),
 			),
 			'pro_only'          => true,

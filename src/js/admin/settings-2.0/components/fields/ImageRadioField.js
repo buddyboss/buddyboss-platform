@@ -17,18 +17,17 @@ import coverBuddybossImage from '../../images/cover-image.png';
  * @since BuddyBoss [BBVERSION]
  *
  * @param {Object} props           Component props.
- * @param {string} props.type      Preview type: 'card' or 'header'.
  * @param {string} props.alignment Layout alignment: 'left' or 'centered'.
  * @returns {JSX.Element} Layout preview component.
  */
-function LayoutPreview( { type, alignment } ) {
-	var base = 'bb-admin-settings-field__' + type + '-preview';
+function LayoutPreview( { alignment } ) {
+	var base = 'bb-admin-settings-field__header-preview';
 	return (
 		<div className={ base + ' ' + base + '--' + alignment }>
 			<div className={ base + '-cover' }></div>
 			<div className={ base + '-content' }>
 				<div className={ base + '-avatar' }>
-					<span className="dashicons dashicons-groups"></span>
+					<svg xmlns="http://www.w3.org/2000/svg" width="22" height="17" viewBox="0 0 22 17" fill="none"><path d="M11 9C12.873 9 14.57 9.62 15.815 10.487C16.998 11.312 18 12.538 18 13.857C18 14.581 17.691 15.181 17.204 15.627C16.746 16.048 16.148 16.321 15.532 16.507C14.301 16.88 12.68 17 11 17C9.32 17 7.699 16.88 6.468 16.507C5.852 16.321 5.254 16.048 4.795 15.627C4.31 15.182 4 14.582 4 13.858C4 12.539 5.002 11.313 6.185 10.488C7.43 9.62 9.127 9 11 9ZM18 10C19.044 10 19.992 10.345 20.693 10.833C21.333 11.28 22 12.023 22 12.929C22 13.446 21.775 13.875 21.44 14.182C21.134 14.463 20.756 14.628 20.411 14.732C19.941 14.874 19.386 14.947 18.81 14.979C18.932 14.634 19 14.259 19 13.857C19 12.322 18.041 11.018 16.968 10.113C17.3069 10.0381 17.6529 10.0002 18 10ZM4 10C4.358 10.0013 4.702 10.039 5.032 10.113C3.96 11.018 3 12.322 3 13.857C3 14.259 3.068 14.634 3.19 14.979C2.614 14.947 2.06 14.874 1.589 14.732C1.244 14.628 0.866 14.463 0.559 14.182C0.383027 14.0244 0.242284 13.8314 0.145961 13.6156C0.0496383 13.3999 -9.78689e-05 13.1663 1.44582e-07 12.93C1.44582e-07 12.025 0.666 11.281 1.307 10.834C2.09986 10.2905 3.03871 9.9997 4 10ZM17.5 4C18.163 4 18.7989 4.26339 19.2678 4.73223C19.7366 5.20107 20 5.83696 20 6.5C20 7.16304 19.7366 7.79893 19.2678 8.26777C18.7989 8.73661 18.163 9 17.5 9C16.837 9 16.2011 8.73661 15.7322 8.26777C15.2634 7.79893 15 7.16304 15 6.5C15 5.83696 15.2634 5.20107 15.7322 4.73223C16.2011 4.26339 16.837 4 17.5 4ZM4.5 4C5.16304 4 5.79893 4.26339 6.26777 4.73223C6.73661 5.20107 7 5.83696 7 6.5C7 7.16304 6.73661 7.79893 6.26777 8.26777C5.79893 8.73661 5.16304 9 4.5 9C3.83696 9 3.20107 8.73661 2.73223 8.26777C2.26339 7.79893 2 7.16304 2 6.5C2 5.83696 2.26339 5.20107 2.73223 4.73223C3.20107 4.26339 3.83696 4 4.5 4ZM11 0C12.0609 0 13.0783 0.421427 13.8284 1.17157C14.5786 1.92172 15 2.93913 15 4C15 5.06087 14.5786 6.07828 13.8284 6.82843C13.0783 7.57857 12.0609 8 11 8C9.93913 8 8.92172 7.57857 8.17157 6.82843C7.42143 6.07828 7 5.06087 7 4C7 2.93913 7.42143 1.92172 8.17157 1.17157C8.92172 0.421427 9.93913 0 11 0Z" fill="#999999"/></svg>
 				</div>
 				<div className={ base + '-lines' }>
 					<div className={ base + '-line ' + base + '-line--short' }></div>
@@ -95,17 +94,11 @@ var IMAGE_PREVIEWS = {
 			</div>
 		);
 	},
-	'card-left-group': function () {
-		return <LayoutPreview type="card" alignment="left" />;
-	},
-	'card-centered-group': function () {
-		return <LayoutPreview type="card" alignment="centered" />;
-	},
 	'header-left-group': function () {
-		return <LayoutPreview type="header" alignment="left" />;
+		return <LayoutPreview alignment="left" />;
 	},
 	'header-centered-group': function () {
-		return <LayoutPreview type="header" alignment="centered" />;
+		return <LayoutPreview alignment="centered" />;
 	},
 };
 
