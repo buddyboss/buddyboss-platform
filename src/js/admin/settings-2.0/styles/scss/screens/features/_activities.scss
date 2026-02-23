@@ -672,6 +672,42 @@
 			.mce-i-unlink:before {
 				content: "\e1bc";
 			}
+
+			.mce-i-underline:before {
+				content: "\e5C4";
+			}
+
+			.mce-i-strikethrough:before {
+				content: "\e5C2";
+			}
+			
+			.mce-i-alignleft:before {
+				content: "\e484";
+			}
+
+			.mce-i-aligncenter:before {
+				content: "\E486";
+			}
+
+			.mce-i-alignright:before {
+				content: "\e486";
+			}
+
+			.mce-i-undo:before {
+				content: "\e038";
+			}
+
+			.mce-i-redo:before {
+				content: "\e036";
+			}
+
+			.mce-i-fullscreen {
+				display: none; // Todo: Remove after making fullscreen working.
+			}
+
+			.mce-i-fullscreen:before {
+				content: "\e0a2";
+			}
 		}
 
 		.wp-editor-tabs  {
@@ -826,7 +862,6 @@
 
 	&__body {
 		padding: 16px 24px;
-		overflow-y: auto;
 
 		.components-base-control {
 			margin-bottom: 16px;
@@ -855,6 +890,10 @@
 		gap: 8px;
 		padding: 16px 24px;
 		border-top: 1px solid $bb-border-secondary-color;
+		position: sticky;
+		bottom: 0;
+		background: $bb-background-base-color;
+		z-index: 1;
 	}
 
 	&__footer-left {
@@ -937,6 +976,10 @@
 		gap: 8px;
 		padding: 8px 24px;
 		border-top: 1px solid $bb-border-secondary-color;
+		position: sticky;
+		bottom: 0;
+		background: $bb-background-base-color;
+		z-index: 1;
 	}
 
 	&__footer-left {
