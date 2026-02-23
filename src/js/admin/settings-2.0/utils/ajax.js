@@ -235,16 +235,6 @@ export function deleteGroup(groupId) {
 }
 
 /**
- * Perform bulk action on groups.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param {Array}  groupIds  - Array of group IDs.
- * @param {string} action    - Bulk action to perform.
- * @param {Object} extraData - Optional extra data to send with the request.
- * @return {Promise} Promise resolving to response.
- */
-/**
  * Create a new group.
  *
  * @since BuddyBoss [BBVERSION]
@@ -321,6 +311,16 @@ export function getGroupTopics(groupId, options) {
 	return ajaxFetch('bb_admin_get_group_topics', { group_id: groupId }, options || {});
 }
 
+/**
+ * Perform bulk action on groups.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Array}  groupIds  Array of group IDs.
+ * @param {string} action    Bulk action to perform.
+ * @param {Object} extraData Optional extra data to send with the request.
+ * @return {Promise} Promise resolving to response.
+ */
 export function groupBulkAction(groupIds, action, extraData) {
 	var data = {
 		group_ids: groupIds.join(','),

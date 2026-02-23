@@ -170,13 +170,17 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 	var setDragOverIndex = dragOverIndexState[ 1 ];
 
 	var abortRef = useRef( null );
+	var noncesRef = useRef( {} );
+
+	// Keep noncesRef in sync with nonces state.
+	noncesRef.current = nonces;
 
 	/**
 	 * Fetch topics from the server.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	var fetchTopics = function () {
+	var fetchTopics = useCallback( function () {
 		setIsLoading( true );
 
 		// Cancel any in-flight request.
@@ -200,7 +204,7 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 				setIsLoading( false );
 			}
 		} );
-	};
+	}, [ groupId ] );
 
 	// Fetch on mount.
 	useEffect( function () {
@@ -211,7 +215,7 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 				abortRef.current.abort();
 			}
 		};
-	}, [ groupId ] ); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [ fetchTopics ] );
 
 	/**
 	 * Handle adding a new topic.
@@ -229,7 +233,7 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 			item_id: groupId,
 			action_from: 'admin',
 			is_global_activity: data.is_global_activity || '',
-		}, nonces.add || '' ).then( function ( response ) {
+		}, noncesRef.current.add || '' ).then( function ( response ) {
 			setIsSaving( false );
 			if ( response.success && response.data && response.data.content && response.data.content.topic ) {
 				var newTopic = response.data.content.topic;
@@ -253,7 +257,7 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 			setIsSaving( false );
 			setError( __( 'An error occurred while adding the topic.', 'buddyboss' ) );
 		} );
-	}, [ groupId, nonces ] );
+	}, [ groupId ] );
 
 	/**
 	 * Handle editing a topic.
@@ -271,7 +275,7 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 			item_type: 'groups',
 			item_id: groupId,
 			action_from: 'admin',
-		}, nonces.add || '' ).then( function ( response ) {
+		}, noncesRef.current.add || '' ).then( function ( response ) {
 			setIsSaving( false );
 			if ( response.success && response.data && response.data.content && response.data.content.topic ) {
 				var updatedTopic = response.data.content.topic;
@@ -297,7 +301,7 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 			setIsSaving( false );
 			setError( __( 'An error occurred while updating the topic.', 'buddyboss' ) );
 		} );
-	}, [ groupId, nonces ] );
+	}, [ groupId ] );
 
 	/**
 	 * Handle initiating delete (step 1: fetch available topics for migration).
@@ -313,7 +317,7 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 			topic_id: topic.topic_id,
 			item_type: 'groups',
 			item_id: groupId,
-		}, nonces.delete || '' ).then( function ( response ) {
+		}, noncesRef.current.delete || '' ).then( function ( response ) {
 			setIsDeleteLoading( false );
 			if ( response.success && response.data ) {
 				setAvailableTopics( response.data.topic_lists || [] );
@@ -327,7 +331,7 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 			setIsDeleteLoading( false );
 			setError( __( 'An error occurred while initiating topic deletion.', 'buddyboss' ) );
 		} );
-	}, [ groupId, nonces ] );
+	}, [ groupId ] );
 
 	/**
 	 * Handle confirming delete (step 2: migrate or delete).
@@ -396,13 +400,13 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 
 			setTopics( reordered );
 
-			// Persist order via AJAX.
+			// Persist order via AJAX. Use noncesRef to avoid stale closure.
 			var topicIds = reordered.map( function ( t ) {
 				return t.topic_id;
 			} );
 			topicAjaxFetch( 'bb_update_topics_order', {
 				topic_ids: topicIds,
-			}, nonces.reorder || '' ).then( function ( response ) {
+			}, noncesRef.current.reorder || '' ).then( function ( response ) {
 				if ( ! response.success ) {
 					setTopics( previousTopics );
 					setError( __( 'Failed to save topic order.', 'buddyboss' ) );
@@ -414,10 +418,6 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 		}
 		setDragIndex( null );
 		setDragOverIndex( null );
-	};
-
-	var handleDrop = function () {
-		handleDragEnd();
 	};
 
 	var canAddMore = topics.length < maxTopics;
@@ -464,7 +464,7 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 							draggable="true"
 							onDragStart={ handleDragStart( index ) }
 							onDragOver={ handleDragOver( index ) }
-							onDrop={ handleDrop }
+							onDrop={ handleDragEnd }
 							onDragEnd={ handleDragEnd }
 						>
 							<div className={ itemClasses } data-topic-id={ topic.topic_id }>

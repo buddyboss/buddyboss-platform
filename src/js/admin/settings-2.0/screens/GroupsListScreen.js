@@ -42,6 +42,8 @@ var sortOptions = [
 /**
  * Groups List Screen Component
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @param {Object}   props            Component props.
  * @param {Function} props.onNavigate Navigation handler.
  * @returns {JSX.Element} Groups list screen.
@@ -157,6 +159,8 @@ export function GroupsListScreen( { onNavigate } ) {
 	/**
 	 * Fetch groups from the server.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param {Object}      options        Optional fetch options.
 	 * @param {AbortSignal} options.signal AbortController signal to cancel in-flight requests.
 	 */
@@ -256,6 +260,8 @@ export function GroupsListScreen( { onNavigate } ) {
 	/**
 	 * Handle search input with debounce.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param {string} value Search value.
 	 */
 	var handleSearchChange = function ( value ) {
@@ -272,6 +278,8 @@ export function GroupsListScreen( { onNavigate } ) {
 	/**
 	 * Handle filter change from dropdown.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param {string} newFilter Filter value.
 	 */
 	var handleFilterChange = function ( newFilter ) {
@@ -282,6 +290,8 @@ export function GroupsListScreen( { onNavigate } ) {
 
 	/**
 	 * Handle sort change.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param {string} value Sort value.
 	 */
@@ -294,6 +304,8 @@ export function GroupsListScreen( { onNavigate } ) {
 	/**
 	 * Handle group type filter change.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param {string} value Group type value.
 	 */
 	var handleGroupTypeFilterChange = function ( value ) {
@@ -304,6 +316,8 @@ export function GroupsListScreen( { onNavigate } ) {
 
 	/**
 	 * Handle select all checkbox.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param {boolean} checked Checked state.
 	 */
@@ -320,6 +334,8 @@ export function GroupsListScreen( { onNavigate } ) {
 	/**
 	 * Handle individual row checkbox.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param {number}  id      Group ID.
 	 * @param {boolean} checked Checked state.
 	 */
@@ -334,6 +350,20 @@ export function GroupsListScreen( { onNavigate } ) {
 					return i !== id;
 				} );
 			} );
+		}
+	};
+
+	/**
+	 * Reset metadata and refetch the groups list from page 1.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	var resetAndRefetch = function () {
+		hasMetaRef.current = false;
+		if ( 1 === currentPage ) {
+			fetchGroups( {} );
+		} else {
+			setCurrentPage( 1 );
 		}
 	};
 
@@ -358,16 +388,7 @@ export function GroupsListScreen( { onNavigate } ) {
 				setNotice( { type: 'success', message: response.data.message } );
 				setSelectedIds( [] );
 				setBulkAction( '' );
-
-				// Reset metadata so counts refresh.
-				hasMetaRef.current = false;
-
-				if ( currentPage > 1 ) {
-					setCurrentPage( 1 );
-				} else {
-					var controller = new AbortController();
-					fetchGroups( { signal: controller.signal } );
-				}
+				resetAndRefetch();
 			} else {
 				setNotice( { type: 'error', message: response.data?.message || __( 'Action failed.', 'buddyboss' ) } );
 			}
@@ -378,6 +399,8 @@ export function GroupsListScreen( { onNavigate } ) {
 
 	/**
 	 * Handle bulk action apply.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	var handleBulkApply = function () {
 		if ( ! bulkAction || 0 === selectedIds.length ) {
@@ -482,14 +505,7 @@ export function GroupsListScreen( { onNavigate } ) {
 			if ( response.success ) {
 				setEditGroup( null );
 				setNotice( { type: 'success', message: response.data.message } );
-				// Reset metadata so counts refresh.
-				hasMetaRef.current = false;
-				if ( 1 === currentPage ) {
-					var refetchController = new AbortController();
-					fetchGroups( { signal: refetchController.signal } );
-				} else {
-					setCurrentPage( 1 );
-				}
+				resetAndRefetch();
 			} else {
 				setNotice( { type: 'error', message: response.data?.message || __( 'Failed to save group.', 'buddyboss' ) } );
 			}
@@ -507,18 +523,13 @@ export function GroupsListScreen( { onNavigate } ) {
 	var handleGroupCreated = function () {
 		setCreateModalOpen( false );
 		setNotice( { type: 'success', message: __( 'Group created successfully.', 'buddyboss' ) } );
-		// Reset metadata so counts refresh.
-		hasMetaRef.current = false;
-		if ( 1 === currentPage ) {
-			var controller = new AbortController();
-			fetchGroups( { signal: controller.signal } );
-		} else {
-			setCurrentPage( 1 );
-		}
+		resetAndRefetch();
 	};
 
 	/**
 	 * Format date for display.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param {string} dateStr Date string.
 	 * @returns {string} Formatted date.
@@ -608,6 +619,8 @@ export function GroupsListScreen( { onNavigate } ) {
 
 	/**
 	 * Build pagination page numbers.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @returns {Array} Array of page number items.
 	 */

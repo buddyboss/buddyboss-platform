@@ -35,20 +35,6 @@ var roleOptions = [
 ];
 
 /**
- * Role display labels.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @type {Object}
- */
-var roleLabels = {
-	admin: __( 'Organizer', 'buddyboss' ),
-	mod: __( 'Moderator', 'buddyboss' ),
-	member: __( 'Member', 'buddyboss' ),
-	banned: __( 'Banned', 'buddyboss' ),
-};
-
-/**
  * Group Members Tab Component
  *
  * @param {Object}   props            Component props.
@@ -93,6 +79,8 @@ export function GroupMembersTab( { groupId, setNotice } ) {
 	var setShowSuggestions = showSuggestionsState[ 1 ];
 
 	var searchTimerRef = useRef( null );
+	var searchAbortRef = useRef( null );
+	var membersAbortRef = useRef( null );
 
 	/**
 	 * Fetch members from the server.
@@ -100,14 +88,23 @@ export function GroupMembersTab( { groupId, setNotice } ) {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	var fetchMembers = useCallback( function () {
+		// Cancel any in-flight members request.
+		if ( membersAbortRef.current ) {
+			membersAbortRef.current.abort();
+		}
+		membersAbortRef.current = new AbortController();
+
 		setIsLoading( true );
-		getGroupMembers( groupId, { page: page, per_page: perPage } ).then( function ( response ) {
+		getGroupMembers( groupId, { page: page, per_page: perPage }, { signal: membersAbortRef.current.signal } ).then( function ( response ) {
 			if ( response.success && response.data ) {
 				setMembers( response.data.members || [] );
 				setTotal( response.data.total || 0 );
 			}
 			setIsLoading( false );
-		} ).catch( function () {
+		} ).catch( function ( err ) {
+			if ( err && 'AbortError' === err.name ) {
+				return;
+			}
 			setIsLoading( false );
 		} );
 	}, [ groupId, page ] );
@@ -116,11 +113,17 @@ export function GroupMembersTab( { groupId, setNotice } ) {
 		fetchMembers();
 	}, [ fetchMembers ] );
 
-	// Cleanup search timer on unmount.
+	// Cleanup on unmount.
 	useEffect( function () {
 		return function () {
 			if ( searchTimerRef.current ) {
 				clearTimeout( searchTimerRef.current );
+			}
+			if ( searchAbortRef.current ) {
+				searchAbortRef.current.abort();
+			}
+			if ( membersAbortRef.current ) {
+				membersAbortRef.current.abort();
 			}
 		};
 	}, [] );
@@ -145,6 +148,12 @@ export function GroupMembersTab( { groupId, setNotice } ) {
 		}
 
 		searchTimerRef.current = setTimeout( function () {
+			// Cancel any in-flight autocomplete request.
+			if ( searchAbortRef.current ) {
+				searchAbortRef.current.abort();
+			}
+			searchAbortRef.current = new AbortController();
+
 			setIsSearching( true );
 			setShowSuggestions( true );
 
@@ -152,14 +161,17 @@ export function GroupMembersTab( { groupId, setNotice } ) {
 			ajaxFetch( 'bb_admin_member_autocomplete', {
 				term: val,
 				group_id: groupId,
-			} ).then( function ( response ) {
+			}, { signal: searchAbortRef.current.signal } ).then( function ( response ) {
 				setIsSearching( false );
 				if ( response.success && response.data && Array.isArray( response.data.results ) ) {
 					setSuggestions( response.data.results );
 				} else {
 					setSuggestions( [] );
 				}
-			} ).catch( function () {
+			} ).catch( function ( err ) {
+				if ( err && 'AbortError' === err.name ) {
+					return;
+				}
 				setIsSearching( false );
 				setSuggestions( [] );
 			} );

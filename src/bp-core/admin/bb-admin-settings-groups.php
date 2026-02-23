@@ -12,20 +12,6 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-// Load sanitize callbacks.
-require_once __DIR__ . '/settings/groups/callbacks.php';
-
-// Load group edit modal meta fields.
-require_once __DIR__ . '/settings/groups/meta-fields.php';
-
-// Load panel field registrations.
-require_once __DIR__ . '/settings/groups/settings-group-settings.php';
-require_once __DIR__ . '/settings/groups/settings-group-images.php';
-require_once __DIR__ . '/settings/groups/settings-group-headers.php';
-require_once __DIR__ . '/settings/groups/settings-group-directory.php';
-require_once __DIR__ . '/settings/groups/settings-access-control.php';
-require_once __DIR__ . '/settings/groups/settings-group-navigation.php';
-
 /**
  * Register Groups feature and settings in Feature Registry.
  *
@@ -65,6 +51,16 @@ function bb_admin_settings_register_groups_feature() {
 	if ( ! bp_is_active( 'groups' ) ) {
 		return;
 	}
+
+	// Load sanitize callbacks and panel field registrations only when groups is active.
+	require_once __DIR__ . '/settings/groups/callbacks.php';
+	require_once __DIR__ . '/settings/groups/meta-fields.php';
+	require_once __DIR__ . '/settings/groups/settings-group-settings.php';
+	require_once __DIR__ . '/settings/groups/settings-group-images.php';
+	require_once __DIR__ . '/settings/groups/settings-group-headers.php';
+	require_once __DIR__ . '/settings/groups/settings-group-directory.php';
+	require_once __DIR__ . '/settings/groups/settings-access-control.php';
+	require_once __DIR__ . '/settings/groups/settings-group-navigation.php';
 
 	// =========================================================================
 	// SIDE PANELS

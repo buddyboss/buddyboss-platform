@@ -185,6 +185,11 @@ function bb_get_group_default_tab_options() {
  * @return array Array of checkbox_list option items.
  */
 function bb_get_group_nav_items_for_settings() {
+	static $cached_options = null;
+	if ( null !== $cached_options ) {
+		return $cached_options;
+	}
+
 	if ( ! class_exists( 'BP_Nouveau_Customizer_Group_Nav' ) ) {
 		return array();
 	}
@@ -232,7 +237,9 @@ function bb_get_group_nav_items_for_settings() {
 		);
 	}
 
-	return $options;
+	$cached_options = $options;
+
+	return $cached_options;
 }
 
 /**

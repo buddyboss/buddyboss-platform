@@ -11,8 +11,7 @@ import { useState, useEffect, useCallback, useRef } from '@wordpress/element';
 import { ToggleControl, Spinner } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
-import { ajaxFetch, getGroupTypes, deleteGroupType, getPlatformSettings, savePlatformSetting } from '../utils/ajax';
-import { getCachedFeatureData, setCachedFeatureData } from '../utils/featureCache';
+import { getGroupTypes, deleteGroupType, getPlatformSettings, savePlatformSetting } from '../utils/ajax';
 import { Toast } from '../components/Toast';
 import { GroupTypeModal } from '../components/modals/GroupTypeModal';
 
@@ -65,45 +64,6 @@ export function GroupTypeScreen( { onNavigate } ) {
 	var toastState = useState( null );
 	var toast = toastState[ 0 ];
 	var setToast = toastState[ 1 ];
-
-	// Sidebar state.
-	var sidebarState = useState( { sidePanels: [], navItems: [] } );
-	var sidebar = sidebarState[ 0 ];
-	var setSidebar = sidebarState[ 1 ];
-
-	// Load sidebar data.
-	useEffect( function () {
-		var controller = new AbortController();
-		var cachedData = getCachedFeatureData( 'groups' );
-
-		if ( cachedData ) {
-			setSidebar( {
-				sidePanels: cachedData.side_panels || [],
-				navItems: cachedData.navigation || [],
-			} );
-			return function () { controller.abort(); };
-		}
-
-		ajaxFetch( 'bb_admin_get_feature_settings', { feature_id: 'groups' }, { signal: controller.signal } )
-			.then( function ( response ) {
-				if ( response.success && response.data ) {
-					setCachedFeatureData( 'groups', response.data );
-					setSidebar( {
-						sidePanels: response.data.side_panels || [],
-						navItems: response.data.navigation || [],
-					} );
-				}
-			} )
-			.catch( function ( err ) {
-				if ( 'AbortError' !== err.name ) {
-					// Sidebar is non-critical; fail silently but log for debugging.
-					// eslint-disable-next-line no-console
-					console.warn( 'Failed to load sidebar data.', err );
-				}
-			} );
-
-		return function () { controller.abort(); };
-	}, [] );
 
 	// Load platform settings.
 	useEffect( function () {

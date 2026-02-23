@@ -108,6 +108,11 @@ function bb_groups_register_images_panel_fields() {
 	 */
 	do_action( 'bb_groups_settings_after_avatar_fields' );
 
+	// Cover image section is only available when the cover_image sub-feature is active.
+	if ( ! bp_is_active( 'groups', 'cover_image' ) ) {
+		return;
+	}
+
 	// -------------------------------------------------------------------------
 	// SECTION: Group Cover Image
 	// -------------------------------------------------------------------------
@@ -213,7 +218,7 @@ function bb_groups_register_images_panel_fields() {
 					'label'             => __( 'Width', 'buddyboss' ),
 					'type'              => 'select',
 					'default'           => function_exists( 'bb_get_pro_cover_group_width' ) ? bb_get_pro_cover_group_width() : 'default',
-					'sanitize_callback' => 'sanitize_text_field',
+					'sanitize_callback' => 'bb_groups_sanitize_cover_width',
 					'options'           => array(
 						array(
 							'label' => __( 'Default', 'buddyboss' ),
@@ -230,7 +235,7 @@ function bb_groups_register_images_panel_fields() {
 					'label'             => __( 'Height', 'buddyboss' ),
 					'type'              => 'select',
 					'default'           => function_exists( 'bb_get_pro_cover_group_height' ) ? bb_get_pro_cover_group_height() : 'small',
-					'sanitize_callback' => 'sanitize_text_field',
+					'sanitize_callback' => 'bb_groups_sanitize_cover_height',
 					'options'           => array(
 						array(
 							'label' => __( 'Small', 'buddyboss' ),

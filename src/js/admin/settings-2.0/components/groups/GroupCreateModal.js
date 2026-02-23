@@ -100,6 +100,11 @@ export function GroupCreateModal( { isOpen, onClose, onCreated } ) {
 		setPermalinkEdited( true );
 	};
 
+	/**
+	 * Handle group creation form submission.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
 	var handleCreate = function () {
 		if ( ! name.trim() ) {
 			setError( __( 'Group name is required.', 'buddyboss' ) );
@@ -111,6 +116,7 @@ export function GroupCreateModal( { isOpen, onClose, onCreated } ) {
 
 		createGroup( {
 			name: name.trim(),
+			slug: permalink,
 			description: description,
 			status: status,
 		} ).then( function ( response ) {
@@ -134,6 +140,11 @@ export function GroupCreateModal( { isOpen, onClose, onCreated } ) {
 		} );
 	};
 
+	/**
+	 * Handle modal close and reset form state.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
 	var handleClose = function () {
 		setName( '' );
 		setPermalink( '' );

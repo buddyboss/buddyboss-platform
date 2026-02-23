@@ -9,7 +9,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useEffect, useMemo } from '@wordpress/element';
+import { useState, useEffect, useMemo, useCallback } from '@wordpress/element';
 import {
 	Modal,
 	Button,
@@ -125,6 +125,25 @@ export function GroupEditModal( { isOpen, group, onClose, onSave, isSaving } ) {
 		}
 	}, [ isOpen, group ] );
 
+	/**
+	 * Handle change for a registered field.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {string} fieldId Field ID.
+	 * @param {*}      val     New value.
+	 */
+	var handleRegisteredFieldChange = useCallback( function ( fieldId, val ) {
+		setRegisteredValues( function ( prev ) {
+			var next = {};
+			Object.keys( prev ).forEach( function ( k ) {
+				next[ k ] = prev[ k ];
+			} );
+			next[ fieldId ] = val;
+			return next;
+		} );
+	}, [] );
+
 	// Build tabs from registered fields.
 	var tabs = useMemo( function () {
 		if ( ! group || ! group.registered_fields ) {
@@ -163,29 +182,6 @@ export function GroupEditModal( { isOpen, group, onClose, onSave, isSaving } ) {
 	}
 
 	/**
-	 * Handle change for a registered field.
-	 *
-	 * @param {string} fieldId Field ID.
-	 * @param {*}      val     New value.
-	 */
-	var handleRegisteredFieldChange = function ( fieldId, val ) {
-		setRegisteredValues( function ( prev ) {
-			var next = {};
-			Object.keys( prev ).forEach( function ( k ) {
-				next[ k ] = prev[ k ];
-			} );
-			next[ fieldId ] = val;
-			return next;
-		} );
-	};
-
-	/**
-	 * Render fields for a specific tab.
-	 *
-	 * @param {string} tabName Tab name.
-	 * @returns {Array} Rendered field elements.
-	 */
-	/**
 	 * Check if a field's conditional dependency is met.
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -209,6 +205,14 @@ export function GroupEditModal( { isOpen, group, onClose, onSave, isSaving } ) {
 		return String( currentVal ) === String( expectedVal );
 	};
 
+	/**
+	 * Render registered meta fields for a specific tab.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {string} tabName Tab name to render fields for.
+	 * @returns {Array|null} Rendered field elements or null.
+	 */
 	var renderTabFields = function ( tabName ) {
 		if ( ! group.registered_fields ) {
 			return null;
@@ -262,6 +266,11 @@ export function GroupEditModal( { isOpen, group, onClose, onSave, isSaving } ) {
 		} );
 	};
 
+	/**
+	 * Handle group save — collects all registered field values and sends to server.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
 	var handleSave = function () {
 		setError( '' );
 

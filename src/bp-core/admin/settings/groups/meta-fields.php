@@ -274,12 +274,8 @@ function bb_groups_register_core_meta_fields( $registry, $component ) {
 					}
 					return $options;
 				},
-				'save_value'        => function ( $group, $value ) use ( $perm ) {
-					$allowed = bb_groups_get_settings_status( $perm['type_slug'] );
-					if ( in_array( $value, $allowed, true ) ) {
-						groups_update_groupmeta( $group->id, $perm['meta_key'], $value );
-					}
-				},
+				// Note: Permission values are saved via groups_edit_group_settings()
+				// in save_group() handler. No save_value needed here to avoid double-write.
 				'sanitize_callback' => 'sanitize_key',
 			)
 		);
@@ -398,7 +394,7 @@ function bb_groups_register_core_meta_fields( $registry, $component ) {
 				$forums = get_posts(
 					array(
 						'post_type'      => bbp_get_forum_post_type(),
-						'posts_per_page' => -1,
+						'posts_per_page' => 200,
 						'orderby'        => 'menu_order title',
 						'order'          => 'ASC',
 						'post_status'    => array( 'publish', 'private', 'hidden' ),
@@ -417,7 +413,7 @@ function bb_groups_register_core_meta_fields( $registry, $component ) {
 				return $options;
 			},
 			'save_value'        => function ( $group, $value ) {
-				if ( ! function_exists( 'bbp_update_group_forum_ids' ) || ! function_exists( 'bbp_update_forum_group_ids' ) ) {
+				if ( ! function_exists( 'bbp_get_group_forum_ids' ) || ! function_exists( 'bbp_update_group_forum_ids' ) || ! function_exists( 'bbp_update_forum_group_ids' ) ) {
 					return;
 				}
 

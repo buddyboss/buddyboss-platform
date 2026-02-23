@@ -14,6 +14,7 @@ import {
 	SelectControl,
 	Button,
 	Spinner,
+	Modal,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
@@ -292,24 +293,6 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 			} );
 	}, [ formData, groupType, onSave ] );
 
-	// Handle Escape key.
-	useEffect( function () {
-		if ( ! isOpen ) {
-			return;
-		}
-
-		function handleKeyDown( e ) {
-			if ( 'Escape' === e.key ) {
-				onClose();
-			}
-		}
-
-		document.addEventListener( 'keydown', handleKeyDown );
-		return function () {
-			document.removeEventListener( 'keydown', handleKeyDown );
-		};
-	}, [ isOpen, onClose ] );
-
 	if ( ! isOpen ) {
 		return null;
 	}
@@ -320,26 +303,13 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 		: __( 'Add New Group Type', 'buddyboss' );
 
 	return (
-		<div className="bb-admin-group-type-modal__overlay" onClick={ function ( e ) {
-			if ( e.target === e.currentTarget ) {
-				onClose();
-			}
-		} }>
-			<div className="bb-admin-group-type-modal">
-				{/* Header */}
-				<div className="bb-admin-group-type-modal__header">
-					<h2 className="bb-admin-group-type-modal__title">{ modalTitle }</h2>
-					<button
-						className="bb-admin-group-type-modal__close"
-						onClick={ onClose }
-						aria-label={ __( 'Close', 'buddyboss' ) }
-					>
-						<span className="bb-icons-rl bb-icons-rl-x"></span>
-					</button>
-				</div>
-
-				{/* Body */}
-				<div className="bb-admin-group-type-modal__body">
+		<Modal
+			title={ modalTitle }
+			onRequestClose={ onClose }
+			className="bb-admin-group-type-modal bb-admin-settings-modal"
+			shouldCloseOnClickOutside={ false }
+		>
+			<div className="bb-admin-group-type-modal__body">
 					{ error && (
 						<div className="bb-admin-group-type-modal__error">
 							{ error }
@@ -574,26 +544,24 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 					</div>
 				</div>
 
-				{/* Footer */}
 				<div className="bb-admin-group-type-modal__footer">
-					<Button
-						variant="secondary"
-						onClick={ onClose }
-						disabled={ isSaving }
-					>
-						{ __( 'Cancel', 'buddyboss' ) }
-					</Button>
-					<Button
-						variant="primary"
-						onClick={ handleSave }
-						isBusy={ isSaving }
-						disabled={ isSaving || ! formData.name.trim() }
-					>
-						{ isSaving ? __( 'Saving...', 'buddyboss' ) : ( isEditing ? __( 'Update', 'buddyboss' ) : __( 'Save', 'buddyboss' ) ) }
-					</Button>
-				</div>
+				<Button
+					variant="secondary"
+					onClick={ onClose }
+					disabled={ isSaving }
+				>
+					{ __( 'Cancel', 'buddyboss' ) }
+				</Button>
+				<Button
+					variant="primary"
+					onClick={ handleSave }
+					isBusy={ isSaving }
+					disabled={ isSaving || ! formData.name.trim() }
+				>
+					{ isSaving ? __( 'Saving...', 'buddyboss' ) : ( isEditing ? __( 'Update', 'buddyboss' ) : __( 'Save', 'buddyboss' ) ) }
+				</Button>
 			</div>
-		</div>
+		</Modal>
 	);
 }
 

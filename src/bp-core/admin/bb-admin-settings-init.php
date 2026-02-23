@@ -57,7 +57,7 @@ function bb_admin_settings_init() {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-activity-admin-ajax.php';
 		}
 
-		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-groups-ajax.php' ) ) {
+		if ( bp_is_active( 'groups' ) && file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-groups-ajax.php' ) ) {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-groups-ajax.php';
 		}
 	}

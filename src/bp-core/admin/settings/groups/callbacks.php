@@ -166,3 +166,189 @@ function bb_groups_sanitize_toggle_list( $value ) {
 
 	return $sanitized;
 }
+
+/**
+ * Sanitize group cover image width setting.
+ *
+ * Accepts only 'default' or 'full'.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed $value The value to sanitize.
+ *
+ * @return string Sanitized cover width value.
+ */
+function bb_groups_sanitize_cover_width( $value ) {
+	$value   = sanitize_text_field( $value );
+	$allowed = array( 'default', 'full' );
+
+	if ( ! in_array( $value, $allowed, true ) ) {
+		return 'default';
+	}
+
+	return $value;
+}
+
+/**
+ * Sanitize group cover image height setting.
+ *
+ * Accepts only 'small' or 'large'.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed $value The value to sanitize.
+ *
+ * @return string Sanitized cover height value.
+ */
+function bb_groups_sanitize_cover_height( $value ) {
+	$value   = sanitize_text_field( $value );
+	$allowed = array( 'small', 'large' );
+
+	if ( ! in_array( $value, $allowed, true ) ) {
+		return 'small';
+	}
+
+	return $value;
+}
+
+// =========================================================================
+// POST-SAVE VALIDATION HOOKS
+// =========================================================================
+
+/**
+ * Validate group avatar and cover image type selections after save.
+ *
+ * Replicates the legacy BP_Admin_Setting_Groups::settings_save() validation:
+ * - If avatar type is 'custom' but no custom avatar URL exists, revert to previous type.
+ * - If avatar type is 'group-name' but no image editor is available, revert to previous type.
+ * - If cover type is 'custom' but no custom cover URL exists, revert to previous type.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id Feature ID.
+ * @param array  $settings   Full submitted settings.
+ * @param array  $saved      Keys and values saved by core.
+ */
+function bb_groups_validate_image_settings_after_save( $feature_id, $settings, $saved ) {
+	if ( 'groups' !== $feature_id ) {
+		return;
+	}
+
+	// Only validate if avatar type or cover type was submitted.
+	$has_avatar = array_key_exists( 'bp-default-group-avatar-type', $settings );
+	$has_cover  = array_key_exists( 'bp-default-group-cover-type', $settings );
+
+	if ( ! $has_avatar && ! $has_cover ) {
+		return;
+	}
+
+	// --- Avatar type validation ---
+	if ( $has_avatar ) {
+		$avatar_type = bb_get_default_group_avatar_type();
+
+		// If 'custom' but no custom avatar uploaded, revert.
+		if ( 'custom' === $avatar_type ) {
+			$custom_avatar = function_exists( 'bb_get_default_custom_upload_group_avatar' )
+				? bb_get_default_custom_upload_group_avatar()
+				: '';
+
+			if ( empty( $custom_avatar ) ) {
+				bp_update_option( 'bp-default-group-avatar-type', 'buddyboss' );
+			}
+		}
+
+		// If 'group-name' but no image editor available, revert.
+		if ( 'group-name' === $avatar_type && empty( _wp_image_editor_choose() ) ) {
+			bp_update_option( 'bp-default-group-avatar-type', 'buddyboss' );
+		}
+	}
+
+	// --- Cover type validation ---
+	if ( $has_cover ) {
+		$cover_type = bb_get_default_group_cover_type();
+
+		// If 'custom' but no custom cover uploaded, revert.
+		if ( 'custom' === $cover_type ) {
+			$custom_cover = function_exists( 'bb_get_default_custom_upload_group_cover' )
+				? bb_get_default_custom_upload_group_cover()
+				: '';
+
+			if ( empty( $custom_cover ) ) {
+				bp_update_option( 'bp-default-group-cover-type', 'buddyboss' );
+			}
+		}
+	}
+}
+
+add_action( 'bb_admin_save_feature_settings_after', 'bb_groups_validate_image_settings_after_save', 5, 3 );
+
+/**
+ * Capture group settings state before save for post-save comparison.
+ *
+ * Captures the current value of settings that need before/after comparison
+ * (e.g., restrict invites) before the save loop updates them.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id Feature ID being saved.
+ */
+function bb_groups_capture_pre_save_state( $feature_id ) {
+	if ( 'groups' !== $feature_id ) {
+		return;
+	}
+
+	// Only capture during save, not during get (read).
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_verify_request() in the calling AJAX handler.
+	if ( ! isset( $_POST['action'] ) || 'bb_admin_save_feature_settings' !== sanitize_key( wp_unslash( $_POST['action'] ) ) ) {
+		return;
+	}
+
+	// Store the pre-save state for restrict invites.
+	global $bb_groups_pre_save_state;
+	$bb_groups_pre_save_state = array(
+		'restrict_invites' => bp_enable_group_restrict_invites(),
+	);
+}
+
+add_action( 'bb_admin_settings_before_get_feature', 'bb_groups_capture_pre_save_state', 10, 1 );
+
+/**
+ * Trigger subgroup member migration when restrict invites is enabled.
+ *
+ * Replicates legacy BP_Admin_Setting_Groups::settings_save() logic:
+ * When group hierarchies are enabled AND restrict invites changes from
+ * disabled to enabled, migrate subgroup members who are not in the parent group.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id Feature ID.
+ * @param array  $settings   Full submitted settings.
+ * @param array  $saved      Keys and values saved by core.
+ */
+function bb_groups_maybe_migrate_subgroup_members( $feature_id, $settings, $saved ) {
+	if ( 'groups' !== $feature_id ) {
+		return;
+	}
+
+	// Only act if restrict invites was submitted.
+	if ( ! array_key_exists( 'bp-enable-group-restrict-invites', $settings ) ) {
+		return;
+	}
+
+	// Get pre-save state captured by bb_groups_capture_pre_save_state().
+	global $bb_groups_pre_save_state;
+	$restrict_invites_before = ! empty( $bb_groups_pre_save_state['restrict_invites'] ) ? $bb_groups_pre_save_state['restrict_invites'] : false;
+
+	// Check: hierarchies ON, restrict invites was OFF, now ON.
+	if (
+		true === bp_enable_group_hierarchies() &&
+		empty( $restrict_invites_before ) &&
+		true === (bool) bp_enable_group_restrict_invites()
+	) {
+		if ( function_exists( 'bb_groups_migrate_subgroup_member' ) ) {
+			bb_groups_migrate_subgroup_member();
+		}
+	}
+}
+
+add_action( 'bb_admin_save_feature_settings_after', 'bb_groups_maybe_migrate_subgroup_members', 10, 3 );
