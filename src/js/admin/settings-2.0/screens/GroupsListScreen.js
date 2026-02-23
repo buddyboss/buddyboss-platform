@@ -1,3 +1,852 @@
-export function GroupsListScreen() {
-	return <div>GroupsListScreen</div>;
+/**
+ * BuddyBoss Admin Settings 2.0 - Groups List Screen
+ *
+ * @package BuddyBoss\Core\Administration
+ * @since BuddyBoss [BBVERSION]
+ */
+
+import { useState, useEffect, useCallback, useRef } from '@wordpress/element';
+import {
+	Button,
+	CheckboxControl,
+	SelectControl,
+	Spinner,
+	DropdownMenu,
+	MenuGroup,
+	MenuItem,
+} from '@wordpress/components';
+import { __ } from '@wordpress/i18n';
+import { decodeEntities } from '@wordpress/html-entities';
+import { getGroups, deleteGroup, groupBulkAction } from '../utils/ajax';
+import { sanitizeHtml, safeUrl } from '../utils/sanitize';
+
+/**
+ * Groups List Screen Component
+ *
+ * @param {Object}   props            Component props.
+ * @param {Function} props.onNavigate Navigation handler.
+ * @returns {JSX.Element} Groups list screen.
+ */
+export function GroupsListScreen( { onNavigate } ) {
+	var groupsState = useState( [] );
+	var groups = groupsState[ 0 ];
+	var setGroups = groupsState[ 1 ];
+
+	var totalState = useState( 0 );
+	var total = totalState[ 0 ];
+	var setTotal = totalState[ 1 ];
+
+	var currentPageState = useState( 1 );
+	var currentPage = currentPageState[ 0 ];
+	var setCurrentPage = currentPageState[ 1 ];
+
+	var perPageState = useState( 20 );
+	var perPage = perPageState[ 0 ];
+
+	var filterState = useState( 'all' );
+	var filter = filterState[ 0 ];
+	var setFilter = filterState[ 1 ];
+
+	var sortByState = useState( 'newest' );
+	var sortBy = sortByState[ 0 ];
+	var setSortBy = sortByState[ 1 ];
+
+	var groupTypeFilterState = useState( '' );
+	var groupTypeFilter = groupTypeFilterState[ 0 ];
+	var setGroupTypeFilter = groupTypeFilterState[ 1 ];
+
+	var searchQueryState = useState( '' );
+	var searchQuery = searchQueryState[ 0 ];
+	var setSearchQuery = searchQueryState[ 1 ];
+
+	var searchInputState = useState( '' );
+	var searchInput = searchInputState[ 0 ];
+	var setSearchInput = searchInputState[ 1 ];
+
+	var selectedIdsState = useState( [] );
+	var selectedIds = selectedIdsState[ 0 ];
+	var setSelectedIds = selectedIdsState[ 1 ];
+
+	var isLoadingState = useState( true );
+	var isLoading = isLoadingState[ 0 ];
+	var setIsLoading = isLoadingState[ 1 ];
+
+	var bulkActionsState = useState( {} );
+	var bulkActions = bulkActionsState[ 0 ];
+	var setBulkActions = bulkActionsState[ 1 ];
+
+	var viewsState = useState( {} );
+	var views = viewsState[ 0 ];
+	var setViews = viewsState[ 1 ];
+
+	var columnsState = useState( {} );
+	var columns = columnsState[ 0 ];
+	var setColumns = columnsState[ 1 ];
+
+	var groupTypesState = useState( [] );
+	var groupTypes = groupTypesState[ 0 ];
+	var setGroupTypes = groupTypesState[ 1 ];
+
+	var bulkActionState = useState( '' );
+	var bulkAction = bulkActionState[ 0 ];
+	var setBulkAction = bulkActionState[ 1 ];
+
+	var noticeState = useState( null );
+	var notice = noticeState[ 0 ];
+	var setNotice = noticeState[ 1 ];
+
+	var searchTimerRef = useRef( null );
+	var hasMetaRef = useRef( false );
+
+	var totalPages = Math.ceil( total / perPage );
+
+	/**
+	 * Fetch groups from the server.
+	 *
+	 * @param {Object}      options        Optional fetch options.
+	 * @param {AbortSignal} options.signal AbortController signal to cancel in-flight requests.
+	 */
+	var fetchGroups = useCallback( function ( options ) {
+		setIsLoading( true );
+
+		var fetchOptions = {};
+		if ( options && options.signal ) {
+			fetchOptions.signal = options.signal;
+		}
+
+		getGroups( {
+			page: currentPage,
+			per_page: perPage,
+			search: searchQuery,
+			status: filter,
+			sort: sortBy,
+			group_type: groupTypeFilter,
+			include_meta: hasMetaRef.current ? 0 : 1,
+		}, fetchOptions ).then( function ( response ) {
+			if ( response.success && response.data ) {
+				var rawGroups = response.data.groups || [];
+
+				// Sanitize custom column HTML once at fetch time to avoid DOMParser overhead per render.
+				var sanitizedGroups = rawGroups.map( function ( group ) {
+					if ( ! group.custom_columns ) {
+						return group;
+					}
+					var sanitizedCols = {};
+					Object.keys( group.custom_columns ).forEach( function ( key ) {
+						sanitizedCols[ key ] = sanitizeHtml( group.custom_columns[ key ] );
+					} );
+					return Object.assign( {}, group, { custom_columns: sanitizedCols } );
+				} );
+
+				setGroups( sanitizedGroups );
+				setTotal( response.data.total || 0 );
+
+				if ( response.data.views ) {
+					setViews( response.data.views );
+				}
+				if ( response.data.bulk_actions ) {
+					setBulkActions( response.data.bulk_actions );
+				}
+				if ( response.data.columns ) {
+					setColumns( response.data.columns );
+				}
+				if ( response.data.group_types ) {
+					setGroupTypes( response.data.group_types );
+				}
+				hasMetaRef.current = true;
+			}
+			setIsLoading( false );
+		} ).catch( function ( error ) {
+			// Ignore aborted requests — they are expected during cleanup.
+			if ( error && 'AbortError' === error.name ) {
+				return;
+			}
+			setIsLoading( false );
+			setNotice( {
+				type: 'error',
+				message: __( 'Failed to load groups. Please try again.', 'buddyboss' ),
+			} );
+		} );
+	}, [ currentPage, perPage, searchQuery, filter, sortBy, groupTypeFilter ] );
+
+	// Fetch on mount and when filters change. Abort stale requests on cleanup.
+	useEffect( function () {
+		var controller = new AbortController();
+		fetchGroups( { signal: controller.signal } );
+		return function () {
+			controller.abort();
+		};
+	}, [ fetchGroups ] );
+
+	// Clear notice after 5 seconds.
+	useEffect( function () {
+		if ( notice ) {
+			var timer = setTimeout( function () {
+				setNotice( null );
+			}, 5000 );
+			return function () {
+				clearTimeout( timer );
+			};
+		}
+	}, [ notice ] );
+
+	// Cleanup search debounce timer on unmount.
+	useEffect( function () {
+		return function () {
+			if ( searchTimerRef.current ) {
+				clearTimeout( searchTimerRef.current );
+			}
+		};
+	}, [] );
+
+	/**
+	 * Handle search input with debounce.
+	 *
+	 * @param {string} value Search value.
+	 */
+	var handleSearchChange = function ( value ) {
+		setSearchInput( value );
+		if ( searchTimerRef.current ) {
+			clearTimeout( searchTimerRef.current );
+		}
+		searchTimerRef.current = setTimeout( function () {
+			setSearchQuery( value );
+			setCurrentPage( 1 );
+		}, 500 );
+	};
+
+	/**
+	 * Handle filter change from dropdown.
+	 *
+	 * @param {string} newFilter Filter value.
+	 */
+	var handleFilterChange = function ( newFilter ) {
+		setFilter( newFilter );
+		setCurrentPage( 1 );
+		setSelectedIds( [] );
+	};
+
+	/**
+	 * Handle sort change.
+	 *
+	 * @param {string} value Sort value.
+	 */
+	var handleSortChange = function ( value ) {
+		setSortBy( value );
+		setCurrentPage( 1 );
+	};
+
+	/**
+	 * Handle group type filter change.
+	 *
+	 * @param {string} value Group type value.
+	 */
+	var handleGroupTypeFilterChange = function ( value ) {
+		setGroupTypeFilter( value );
+		setCurrentPage( 1 );
+	};
+
+	/**
+	 * Handle select all checkbox.
+	 *
+	 * @param {boolean} checked Checked state.
+	 */
+	var handleSelectAll = function ( checked ) {
+		if ( checked ) {
+			setSelectedIds( groups.map( function ( g ) {
+				return g.id;
+			} ) );
+		} else {
+			setSelectedIds( [] );
+		}
+	};
+
+	/**
+	 * Handle individual row checkbox.
+	 *
+	 * @param {number}  id      Group ID.
+	 * @param {boolean} checked Checked state.
+	 */
+	var handleSelectRow = function ( id, checked ) {
+		if ( checked ) {
+			setSelectedIds( function ( prev ) {
+				return prev.concat( [ id ] );
+			} );
+		} else {
+			setSelectedIds( function ( prev ) {
+				return prev.filter( function ( i ) {
+					return i !== id;
+				} );
+			} );
+		}
+	};
+
+	/**
+	 * Perform bulk action on groups.
+	 *
+	 * @param {string} action   The action (delete).
+	 * @param {Array}  ids      Group ID(s).
+	 */
+	var performAction = function ( action, ids ) {
+		if ( ! ids || ( Array.isArray( ids ) && 0 === ids.length ) ) {
+			return;
+		}
+
+		var idArray = Array.isArray( ids ) ? ids : [ ids ];
+
+		groupBulkAction( idArray, action ).then( function ( response ) {
+			if ( response.success ) {
+				setNotice( { type: 'success', message: response.data.message } );
+				setSelectedIds( [] );
+				setBulkAction( '' );
+
+				// Reset metadata so counts refresh.
+				hasMetaRef.current = false;
+
+				if ( currentPage > 1 ) {
+					setCurrentPage( 1 );
+				} else {
+					fetchGroups();
+				}
+			} else {
+				setNotice( { type: 'error', message: response.data?.message || __( 'Action failed.', 'buddyboss' ) } );
+			}
+		} ).catch( function () {
+			setNotice( { type: 'error', message: __( 'An error occurred.', 'buddyboss' ) } );
+		} );
+	};
+
+	/**
+	 * Handle bulk action apply.
+	 */
+	var handleBulkApply = function () {
+		if ( ! bulkAction || 0 === selectedIds.length ) {
+			return;
+		}
+
+		var action = bulkAction.replace( /^bulk_/, '' );
+
+		if ( 'delete' === action ) {
+			if ( ! window.confirm( __( 'Are you sure you want to delete the selected groups?', 'buddyboss' ) ) ) {
+				return;
+			}
+		}
+
+		performAction( action, selectedIds );
+	};
+
+	/**
+	 * Handle single group delete.
+	 *
+	 * @param {Object} group The group object.
+	 */
+	var handleDeleteGroup = function ( group ) {
+		if ( ! window.confirm( __( 'Are you sure you want to delete this group?', 'buddyboss' ) ) ) {
+			return;
+		}
+
+		deleteGroup( group.id ).then( function ( response ) {
+			if ( response.success ) {
+				setNotice( { type: 'success', message: response.data.message } );
+
+				// Reset metadata so counts refresh.
+				hasMetaRef.current = false;
+
+				if ( currentPage > 1 ) {
+					setCurrentPage( 1 );
+				} else {
+					fetchGroups();
+				}
+			} else {
+				setNotice( { type: 'error', message: response.data?.message || __( 'Failed to delete group.', 'buddyboss' ) } );
+			}
+		} ).catch( function () {
+			setNotice( { type: 'error', message: __( 'An error occurred.', 'buddyboss' ) } );
+		} );
+	};
+
+	/**
+	 * Format date for display.
+	 *
+	 * @param {string} dateStr Date string.
+	 * @returns {string} Formatted date.
+	 */
+	var formatDate = function ( dateStr ) {
+		if ( ! dateStr ) {
+			return '';
+		}
+		var d = new Date( dateStr.replace( ' ', 'T' ) + 'Z' );
+		var day = d.getUTCDate();
+		var months = [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ];
+		var month = months[ d.getUTCMonth() ];
+		var year = d.getUTCFullYear();
+		return month + ' ' + day + ', ' + year;
+	};
+
+	/**
+	 * Get privacy badge icon class.
+	 *
+	 * @param {string} status Group status.
+	 * @returns {string} Icon class.
+	 */
+	var getPrivacyIcon = function ( status ) {
+		if ( 'public' === status ) {
+			return 'bb-icons-rl bb-icons-rl-globe-simple';
+		}
+		if ( 'private' === status ) {
+			return 'bb-icons-rl bb-icons-rl-lock-simple';
+		}
+		if ( 'hidden' === status ) {
+			return 'bb-icons-rl bb-icons-rl-eye-slash';
+		}
+		return 'bb-icons-rl bb-icons-rl-globe-simple';
+	};
+
+	/**
+	 * Get privacy label. Uses server-provided status_label (filtered via
+	 * bp_groups_admin_get_group_status) when available, falls back to local.
+	 *
+	 * @param {Object} group Group object.
+	 * @returns {string} Privacy label.
+	 */
+	var getPrivacyLabel = function ( group ) {
+		if ( group.status_label ) {
+			return decodeEntities( group.status_label );
+		}
+		if ( 'public' === group.status ) {
+			return __( 'Public', 'buddyboss' );
+		}
+		if ( 'private' === group.status ) {
+			return __( 'Private', 'buddyboss' );
+		}
+		if ( 'hidden' === group.status ) {
+			return __( 'Hidden', 'buddyboss' );
+		}
+		return group.status;
+	};
+
+	/**
+	 * Get custom column keys (columns added by third-party plugins).
+	 * Excludes core columns that we render explicitly.
+	 *
+	 * @returns {Array} Array of custom column keys.
+	 */
+	var getCustomColumnKeys = function () {
+		var coreColumns = [ 'cb', 'comment', 'description', 'status', 'members', 'last_active' ];
+		return Object.keys( columns ).filter( function ( key ) {
+			return coreColumns.indexOf( key ) === -1;
+		} );
+	};
+
+	// Build filter options from views.
+	var filterOptions = [];
+	if ( Object.keys( views ).length > 0 ) {
+		Object.keys( views ).forEach( function ( key ) {
+			var view = views[ key ];
+			var label = view.label || key;
+			if ( view.count > 0 || 'all' === key ) {
+				label = label + ' (' + view.count + ')';
+			}
+			filterOptions.push( { label: label, value: key } );
+		} );
+	} else {
+		filterOptions.push( { label: __( 'All', 'buddyboss' ), value: 'all' } );
+	}
+
+	// Sort options.
+	var sortOptions = [
+		{ label: __( 'Newest', 'buddyboss' ), value: 'newest' },
+		{ label: __( 'Oldest', 'buddyboss' ), value: 'oldest' },
+		{ label: __( 'Alphabetical', 'buddyboss' ), value: 'alphabetical' },
+		{ label: __( 'Most Members', 'buddyboss' ), value: 'popular' },
+	];
+
+	// Group type filter options.
+	var groupTypeOptions = [ { label: __( 'All Types', 'buddyboss' ), value: '' } ];
+	groupTypes.forEach( function ( type ) {
+		groupTypeOptions.push( { label: decodeEntities( type.label ), value: type.value } );
+	} );
+
+	var allSelected = groups.length > 0 && selectedIds.length === groups.length;
+
+	/**
+	 * Build pagination page numbers.
+	 *
+	 * @returns {Array} Array of page number items.
+	 */
+	var getPageNumbers = function () {
+		var pages = [];
+		var maxVisible = 5;
+
+		if ( totalPages <= 7 ) {
+			for ( var i = 1; i <= totalPages; i++ ) {
+				pages.push( i );
+			}
+		} else {
+			pages.push( 1 );
+
+			if ( currentPage > maxVisible - 1 ) {
+				pages.push( '...' );
+			}
+
+			var start = Math.max( 2, currentPage - 1 );
+			var end = Math.min( totalPages - 1, currentPage + 1 );
+
+			if ( currentPage <= 3 ) {
+				end = Math.min( totalPages - 1, maxVisible );
+			}
+			if ( currentPage >= totalPages - 2 ) {
+				start = Math.max( 2, totalPages - maxVisible + 1 );
+			}
+
+			for ( var j = start; j <= end; j++ ) {
+				pages.push( j );
+			}
+
+			if ( currentPage < totalPages - ( maxVisible - 2 ) ) {
+				pages.push( '...' );
+			}
+
+			pages.push( totalPages );
+		}
+
+		return pages;
+	};
+
+	return (
+		<div className="bb-groups-list">
+			{ /* Notice */ }
+			{ notice && (
+				<div className={ 'bb-admin-notice bb-admin-notice--' + notice.type }>
+					<span>{ notice.message }</span>
+					<button
+						className="bb-admin-notice--dismiss"
+						onClick={ function () {
+							setNotice( null );
+						} }
+					>
+						<i className='bb-icons-rl bb-icons-rl-x'></i>
+					</button>
+				</div>
+			) }
+
+			{ /* Header */ }
+			<div className="bb-groups-list__header">
+				<h2 className="bb-groups-list__title">{ __( 'All Groups', 'buddyboss' ) }</h2>
+			</div>
+
+			{ /* Toolbar */ }
+			<div className="bb-groups-list__toolbar">
+				<div className="bb-groups-list__toolbar-left">
+					{ /* Bulk Actions */ }
+					<div className="bb-groups-list__bulk-actions">
+						<SelectControl
+							value={ bulkAction }
+							options={ [ { label: __( 'Bulk actions', 'buddyboss' ), value: '' } ].concat(
+								Object.keys( bulkActions ).map( function ( key ) {
+									return { label: bulkActions[ key ], value: key };
+								} )
+							) }
+							onChange={ setBulkAction }
+							__nextHasNoMarginBottom
+						/>
+						<Button
+							variant="secondary"
+							onClick={ handleBulkApply }
+							disabled={ ! bulkAction || 0 === selectedIds.length }
+							className="bb-groups-list__bulk-apply"
+						>
+							{ __( 'Apply', 'buddyboss' ) }
+						</Button>
+					</div>
+				</div>
+
+				<div className="bb-groups-list__toolbar-right">
+					{ /* Status Filter */ }
+					<SelectControl
+						value={ filter }
+						options={ filterOptions }
+						onChange={ handleFilterChange }
+						className="bb-groups-list__filter-select"
+						__nextHasNoMarginBottom
+					/>
+
+					{ /* Group Type Filter */ }
+					{ groupTypes.length > 0 && (
+						<SelectControl
+							value={ groupTypeFilter }
+							options={ groupTypeOptions }
+							onChange={ handleGroupTypeFilterChange }
+							className="bb-groups-list__type-filter"
+							__nextHasNoMarginBottom
+						/>
+					) }
+
+					{ /* Sort Dropdown */ }
+					<SelectControl
+						value={ sortBy }
+						options={ sortOptions }
+						onChange={ handleSortChange }
+						className="bb-groups-list__sort-select"
+						__nextHasNoMarginBottom
+					/>
+
+					{ /* Search */ }
+					<div className="bb-groups-list__search">
+						<input
+							type="text"
+							value={ searchInput }
+							onChange={ function ( e ) {
+								handleSearchChange( e.target.value );
+							} }
+							placeholder={ __( 'Search groups', 'buddyboss' ) }
+							className="bb-groups-list__search-input"
+						/>
+						<span className="bb-groups-list__search-icon">
+							<i className="bb-icons-rl bb-icons-rl-search"></i>
+						</span>
+					</div>
+				</div>
+			</div>
+
+			{ /* Table */ }
+			<div className="bb-groups-list__table-wrapper">
+				{ isLoading ? (
+					<div className="bb-groups-list__loading">
+						<Spinner />
+					</div>
+				) : 0 === groups.length ? (
+					<div className="bb-groups-list__empty">
+						<p>{ __( 'No groups found.', 'buddyboss' ) }</p>
+					</div>
+				) : (
+					<table className="bb-groups-list__table">
+						<thead>
+							<tr>
+								<th className="bb-groups-list__th--checkbox">
+									<CheckboxControl
+										checked={ allSelected }
+										onChange={ handleSelectAll }
+										__nextHasNoMarginBottom
+									/>
+								</th>
+								<th className="bb-groups-list__th--name">
+									{ __( 'Name', 'buddyboss' ) }
+								</th>
+								<th className="bb-groups-list__th--privacy">
+									{ __( 'Privacy', 'buddyboss' ) }
+								</th>
+								<th className="bb-groups-list__th--members">
+									{ __( 'Members', 'buddyboss' ) }
+								</th>
+								<th className="bb-groups-list__th--group-type">
+									{ __( 'Group Type', 'buddyboss' ) }
+								</th>
+								<th className="bb-groups-list__th--last-active">
+									{ __( 'Last Active', 'buddyboss' ) }
+								</th>
+								{ /* Custom columns from bp_groups_list_table_get_columns filter */ }
+								{ getCustomColumnKeys().map( function ( key ) {
+									return (
+										<th key={ key } className={ 'bb-groups-list__th--custom bb-groups-list__th--' + key }>
+											{ columns[ key ] }
+										</th>
+									);
+								} ) }
+								<th className="bb-groups-list__th--actions">&nbsp;</th>
+							</tr>
+						</thead>
+						<tbody>
+							{ groups.map( function ( group ) {
+								var isSelected = selectedIds.indexOf( group.id ) !== -1;
+
+								return (
+									<tr
+										key={ group.id }
+										className={ 'bb-groups-list__row' + ( isSelected ? ' bb-groups-list__row--selected' : '' ) }
+									>
+										<td className="bb-groups-list__td--checkbox">
+											<CheckboxControl
+												checked={ isSelected }
+												onChange={ function ( checked ) {
+													handleSelectRow( group.id, checked );
+												} }
+												__nextHasNoMarginBottom
+											/>
+										</td>
+										<td className="bb-groups-list__td--name">
+											<div className="bb-groups-list__name-cell">
+												{ group.avatar_url && (
+													<img
+														src={ safeUrl( group.avatar_url ) }
+														alt={ decodeEntities( group.name ) }
+														className="bb-groups-list__avatar"
+													/>
+												) }
+												<a
+													href={ safeUrl( group.edit_url ) }
+													className="bb-groups-list__group-name"
+												>
+													{ decodeEntities( group.name ) }
+												</a>
+											</div>
+										</td>
+										<td className="bb-groups-list__td--privacy">
+											<span className={ 'bb-groups-list__privacy-badge bb-groups-list__privacy-badge--' + group.status }>
+												<i className={ getPrivacyIcon( group.status ) }></i>
+												{ getPrivacyLabel( group ) }
+											</span>
+										</td>
+										<td className="bb-groups-list__td--members">
+											<span className="bb-groups-list__members-count">
+												<i className="bb-icons-rl bb-icons-rl-users"></i>
+												{ group.total_members }
+											</span>
+										</td>
+										<td className="bb-groups-list__td--group-type">
+											{ group.group_type ? (
+												<span className="bb-groups-list__type-badge">
+													{ decodeEntities( group.group_type ) }
+												</span>
+											) : (
+												<span className="bb-groups-list__type-empty">&mdash;</span>
+											) }
+										</td>
+										<td className="bb-groups-list__td--last-active">
+											<span className="bb-groups-list__date">
+												<i className="bb-icons-rl bb-icons-rl-clock"></i>
+												{ formatDate( group.last_activity ) }
+											</span>
+										</td>
+										{ /* Custom columns from bp_groups_admin_get_group_custom_column filter */ }
+										{ group.custom_columns && getCustomColumnKeys().map( function ( key ) {
+											return (
+												<td key={ key } className={ 'bb-groups-list__td--custom bb-groups-list__td--' + key }>
+													{/* Safe: custom_columns are already sanitized via sanitizeHtml at fetch time. */}
+													<span dangerouslySetInnerHTML={ { __html: group.custom_columns[ key ] } } />
+												</td>
+											);
+										} ) }
+										<td className="bb-groups-list__td--actions">
+											<DropdownMenu
+												icon={ <i className="bb-icons-rl-dots-three"></i> }
+												label={ __( 'More options', 'buddyboss' ) }
+											>
+												{ function ( { onClose } ) {
+													return (
+														<MenuGroup className="bb_dropdown_menu_group">
+															<MenuItem
+																onClick={ function () {
+																	var editUrl = safeUrl( group.edit_url );
+																	if ( '#' !== editUrl ) {
+																		window.location.href = editUrl;
+																	}
+																	onClose();
+																} }
+															>
+																<i className="bb-icons-rl bb-icons-rl-pencil-simple"></i>
+																{ __( 'Edit', 'buddyboss' ) }
+															</MenuItem>
+															{ group.permalink && (
+																<MenuItem
+																	onClick={ function () {
+																		var permalink = safeUrl( group.permalink );
+																		if ( '#' !== permalink ) {
+																			window.open( permalink, '_blank', 'noopener,noreferrer' );
+																		}
+																		onClose();
+																	} }
+																>
+																	<i className="bb-icons-rl bb-icons-rl-eye"></i>
+																	{ __( 'View', 'buddyboss' ) }
+																	<i className="bb-icons-rl bb-icons-rl-arrow-up-right bb-icons-external"></i>
+																</MenuItem>
+															) }
+															<MenuItem
+																isDestructive
+																onClick={ function () {
+																	handleDeleteGroup( group );
+																	onClose();
+																} }
+															>
+																<i className="bb-icons-rl bb-icons-rl-trash"></i>
+																{ __( 'Delete', 'buddyboss' ) }
+															</MenuItem>
+														</MenuGroup>
+													);
+												} }
+											</DropdownMenu>
+										</td>
+									</tr>
+								);
+							} ) }
+						</tbody>
+					</table>
+				) }
+			</div>
+
+			{ /* Footer */ }
+			{ ! isLoading && total > 0 && (
+				<div className="bb-groups-list__footer">
+					<span className="bb-groups-list__item-count">
+						{ total } { __( 'items', 'buddyboss' ) }
+					</span>
+
+					{ totalPages > 1 && (
+						<div className="bb-groups-list__pagination">
+							<Button
+								variant="secondary"
+								disabled={ 1 === currentPage }
+								onClick={ function () {
+									setCurrentPage( function ( p ) {
+										return Math.max( 1, p - 1 );
+									} );
+								} }
+								className="bb-groups-list__pagination-btn bb-groups-list__pagination-btn--previous"
+							>
+								&lsaquo;
+							</Button>
+
+							{ getPageNumbers().map( function ( page, index ) {
+								if ( '...' === page ) {
+									return (
+										<span key={ 'ellipsis-' + index } className="bb-groups-list__pagination-ellipsis">
+											&hellip;
+										</span>
+									);
+								}
+								return (
+									<Button
+										key={ page }
+										variant={ page === currentPage ? 'primary' : 'secondary' }
+										onClick={ function () {
+											setCurrentPage( page );
+										} }
+										className={ 'bb-groups-list__pagination-btn' + ( page === currentPage ? ' bb-groups-list__pagination-btn--current' : '' ) }
+									>
+										{ page }
+									</Button>
+								);
+							} ) }
+
+							<Button
+								variant="secondary"
+								disabled={ currentPage >= totalPages }
+								onClick={ function () {
+									setCurrentPage( function ( p ) {
+										return Math.min( totalPages, p + 1 );
+									} );
+								} }
+								className="bb-groups-list__pagination-btn bb-groups-list__pagination-btn--next"
+							>
+								&rsaquo;
+							</Button>
+						</div>
+					) }
+				</div>
+			) }
+		</div>
+	);
 }
+
+export default GroupsListScreen;

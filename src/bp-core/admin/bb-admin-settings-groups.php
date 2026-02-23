@@ -160,7 +160,7 @@ function bb_admin_settings_register_groups_feature() {
 		)
 	);
 
-	// Side Panel: All Groups (navigation link).
+	// Side Panel: All Groups (custom panel screen).
 	bb_register_side_panel(
 		'groups',
 		'all_groups',
@@ -168,9 +168,8 @@ function bb_admin_settings_register_groups_feature() {
 			'title'      => __( 'All Groups', 'buddyboss' ),
 			'icon'       => array(
 				'type'  => 'font',
-				'class' => 'bb-icons-rl bb-icons-rl-arrow-square-out',
+				'class' => 'bb-icons-rl bb-icons-rl-list-bullets',
 			),
-			'link'       => bp_get_admin_url( 'admin.php?page=bp-groups' ),
 			'order'      => 100,
 			'is_default' => false,
 		)

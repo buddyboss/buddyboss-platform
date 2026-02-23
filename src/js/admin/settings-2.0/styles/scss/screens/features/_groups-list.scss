@@ -1,0 +1,568 @@
+/* ----------------------------------------------------------------
+   Groups List Screen
+   ---------------------------------------------------------------- */
+
+.bb-groups-list {
+	max-width: calc(100% - 64px);
+	padding: 0 24px 16px;
+	background-color: $bb-background-base-color;
+	border: 1px solid $bb-border-primary-color;
+	border-radius: $bb-border-radius-2xl;
+	box-shadow: 0px 1.5px 1px 0px rgba(0, 0, 0, 0.16);
+	margin: 32px 32px 0;
+
+	// Notice
+	.bb-admin-notice {
+		margin-top: 24px;
+	}
+
+	.bb-admin-notice--dismiss {
+		background: none;
+		border: none;
+		cursor: pointer;
+	}
+
+	// Header
+	&__header {
+		border-bottom: 1px solid $bb-border-secondary-color;
+		padding: 18px 0;
+		margin-bottom: 24px;
+	}
+
+	&__title {
+		font-size: 18px;
+		font-weight: 500;
+		color: $bb-text-color;
+		margin: 0;
+	}
+
+	// Toolbar
+	&__toolbar {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+		padding-bottom: 16px;
+		border-bottom: 1px solid $bb-border-secondary-color;
+		flex-wrap: wrap;
+
+		.components-select-control {
+			margin-bottom: 0;
+
+			.components-input-control__label {
+				color: $bb-text-secondary-color;
+				text-transform: none;
+				font-size: 13px;
+				font-weight: 500;
+			}
+
+			.components-select-control__input {
+				@include bb-admin-settings-select;
+			}
+
+			.components-input-control-suffix-wrapper {
+				display: none;
+			}
+
+			.components-input-control__backdrop {
+				border-color: transparent;
+			}
+		}
+
+		select {
+			@include bb-admin-settings-select;
+		}
+	}
+
+	&__toolbar-left {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		flex-wrap: wrap;
+	}
+
+	&__toolbar-right {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+	}
+
+	// Bulk Actions
+	&__bulk-actions {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+
+		select {
+			min-width: 140px;
+			height: 32px;
+			font-size: 13px;
+		}
+	}
+
+	&__bulk-apply.is-secondary {
+		@include bb-button-primary;
+	}
+
+	// Filter Dropdowns
+	&__filter-select,
+	&__sort-select,
+	&__type-filter {
+		.components-select-control {
+			margin-bottom: 0;
+		}
+
+		select {
+			min-width: 100px;
+			height: 32px;
+			font-size: 13px;
+		}
+	}
+
+	// Search
+	&__search {
+		position: relative;
+		min-width: 225px;
+
+		input {
+			@include bb-input-text;
+			padding-right: 30px;
+		}
+
+		&:after {
+			content: "\e30c";
+			font-family: "bb-icons-rl";
+			font-size: 20px;
+			color: $bb-icon-tertiary-color;
+			position: absolute;
+			right: 8px;
+			top: 50%;
+			transform: translateY(-50%);
+			pointer-events: none;
+		}
+	}
+
+	&__search-input {
+		width: 200px;
+		height: 32px;
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-md;
+		padding: 0 32px 0 8px;
+		font-size: 13px;
+		color: $bb-text-color;
+		background-color: $bb-background-base-color;
+		outline: none;
+
+		&::placeholder {
+			color: $bb-text-disabled-color;
+		}
+
+		&:focus {
+			border-color: $bb-border-brand-primary-color;
+		}
+	}
+
+	&__search-icon {
+		position: absolute;
+		right: 8px;
+		top: 50%;
+		transform: translateY(-50%);
+		color: $bb-icon-tertiary-color;
+		font-size: 16px;
+		pointer-events: none;
+	}
+
+	// Table
+	&__table-wrapper {
+		overflow: hidden;
+		background: $bb-background-base-color;
+	}
+
+	&__loading {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 60px 0;
+	}
+
+	&__empty {
+		padding: 40px;
+		text-align: center;
+		color: $bb-text-tertiary-color;
+		font-size: 14px;
+	}
+
+	&__table {
+		width: 100%;
+		border-collapse: collapse;
+		table-layout: fixed;
+	}
+
+	// Table Header
+	&__table thead {
+		border-bottom: 0.5px solid $bb-border-secondary-color;
+	}
+
+	&__table th {
+		padding: 10px 16px 10px 0;
+		font-size: 13px;
+		font-weight: 400;
+		color: $bb-text-tertiary-color;
+		text-align: left;
+		white-space: nowrap;
+
+		&:first-child {
+			padding: 10px 0 10px 4px;
+		}
+
+		&:last-child {
+			padding: 10px 4px 10px 0;
+		}
+
+		&.bb-groups-list__th--name {
+			font-size: 14px;
+			color: $bb-text-color;
+		}
+	}
+
+	&__th--checkbox {
+		width: 30px;
+	}
+
+	&__th--actions {
+		width: 30px;
+	}
+
+	&__th--privacy {
+		width: 100px;
+	}
+
+	&__th--members {
+		width: 100px;
+	}
+
+	&__th--group-type {
+		width: 130px;
+	}
+
+	&__th--last-active {
+		width: 140px;
+	}
+
+	// Table Rows
+	&__table tbody tr {
+		border-bottom: 0.5px solid $bb-border-primary-color;
+	}
+
+	&__row {
+		transition: background-color 0.15s ease;
+
+		&--selected {
+			background-color: $bb-background-positive-primary-color;
+		}
+	}
+
+	&__table td {
+		padding: 16px 10px 16px 0;
+		font-size: 13px;
+		color: $bb-text-secondary-color;
+		vertical-align: middle;
+
+		&:first-child {
+			padding-left: 4px;
+		}
+
+		&:last-child {
+			padding-right: 4px;
+		}
+	}
+
+	// Checkbox cells
+	&__th--checkbox,
+	&__td--checkbox {
+		.components-checkbox-control {
+			margin-bottom: 0;
+		}
+
+		.components-base-control__field {
+			margin-bottom: 0;
+		}
+	}
+
+	// Name Column
+	&__name-cell {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	&__avatar {
+		width: 40px;
+		height: 40px;
+		border-radius: $bb-border-radius-full;
+		flex-shrink: 0;
+		object-fit: cover;
+		border: 0.5px solid $bb-border-secondary-color;
+	}
+
+	&__group-name {
+		font-size: 14px;
+		font-weight: 400;
+		color: $bb-link-color;
+		line-height: 20px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		text-decoration: none;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+
+	// Privacy Column
+	&__privacy-badge {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		padding: 2px 8px;
+		font-size: 12px;
+		line-height: 1.4;
+		border-radius: $bb-border-radius-full;
+		white-space: nowrap;
+
+		i {
+			font-size: 14px;
+			line-height: 1;
+		}
+
+		&--public {
+			color: $bb-text-positive-primary-color;
+			background-color: $bb-background-positive-primary-color;
+			border: 1px solid $bb-border-positive-secondary-color;
+
+			i {
+				color: $bb-icon-positive-primary-color;
+			}
+		}
+
+		&--private {
+			color: $bb-text-warning-primary-color;
+			background-color: $bb-background-warning-primary-color;
+			border: 1px solid $bb-border-warning-secondary-color;
+
+			i {
+				color: $bb-icon-warning-primary-color;
+			}
+		}
+
+		&--hidden {
+			color: $bb-text-tertiary-color;
+			background-color: $bb-background-secondary-color;
+			border: 1px solid $bb-border-secondary-color;
+
+			i {
+				color: $bb-icon-tertiary-color;
+			}
+		}
+	}
+
+	// Members Column
+	&__members-count {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		color: $bb-text-brand-primary-color;
+		font-size: 13px;
+		font-weight: 500;
+
+		i {
+			font-size: 18px;
+			color: $bb-icon-primary-color;
+			line-height: 1;
+		}
+	}
+
+	// Group Type Column
+	&__type-badge {
+		display: inline-flex;
+		align-items: center;
+		padding: 2px 8px;
+		font-size: 12px;
+		line-height: 1.4;
+		color: $bb-text-secondary-color;
+		background-color: $bb-background-secondary-color;
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-full;
+		white-space: nowrap;
+	}
+
+	&__type-empty {
+		color: $bb-text-disabled-color;
+	}
+
+	// Last Active Column
+	&__td--last-active {
+		white-space: nowrap;
+		font-size: 13px;
+		color: $bb-text-tertiary-color;
+	}
+
+	&__date {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		color: $bb-text-tertiary-color;
+		font-size: 13px;
+		line-height: 18px;
+
+		i {
+			font-size: 20px;
+			color: $bb-icon-tertiary-color;
+			line-height: 1;
+		}
+	}
+
+	// Actions Column
+	&__td--actions {
+		text-align: center;
+
+		.components-dropdown-menu__toggle {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background: none;
+			border: none;
+			cursor: pointer;
+			padding: 4px;
+			min-width: 32px;
+			width: 32px;
+			height: 32px;
+			color: $bb-icon-tertiary-color;
+			border-radius: $bb-border-radius-sm;
+
+			i {
+				color: $bb-icon-secondary-color;
+				font-size: 24px;
+				line-height: 1;
+				font-weight: 700;
+			}
+
+			&:hover,
+			&:focus,
+			&.is-pressed,
+			&.is-opened {
+				color: $bb-text-color;
+				background: $bb-background-primary-hover-color;
+				box-shadow: none;
+			}
+
+			.dashicon,
+			svg:not(:first-child) {
+				display: none;
+			}
+		}
+	}
+
+	// Footer
+	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 16px;
+		padding: 16px 0;
+		margin-top: 8px;
+	}
+
+	// Item Count
+	&__item-count {
+		font-size: 13px;
+		color: $bb-text-secondary-color;
+	}
+
+	// Pagination
+	&__pagination {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+	}
+
+	&__pagination-btn.is-secondary,
+	&__pagination-btn.is-primary {
+		min-width: 32px;
+		height: 32px;
+		padding: 0 6px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: $bb-text-tertiary-color;
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 1;
+		border: 1px solid transparent;
+		box-shadow: none;
+		border-radius: $bb-border-radius-md;
+
+		&:hover {
+			background-color: $bb-background-base-color !important;
+			border-color: $bb-border-secondary-color;
+			box-shadow: none !important;
+			color: $bb-text-tertiary-color !important;
+		}
+	}
+
+	&__pagination-btn--current.is-primary {
+		background-color: $bb-background-base-color;
+		border-color: $bb-border-quinery;
+		color: $bb-text-color;
+		border-radius: $bb-border-radius-md;
+
+		&:hover {
+			background-color: $bb-background-base-color !important;
+			color: $bb-text-color !important;
+			border-color: $bb-border-quinery;
+			box-shadow: none;
+		}
+	}
+
+	&__pagination-ellipsis {
+		font-size: 13px;
+		font-weight: 500;
+		color: $bb-text-tertiary-color;
+		min-width: 24px;
+		text-align: center;
+		line-height: 32px;
+	}
+
+	&__pagination-btn--previous,
+	&__pagination-btn--next {
+		border: none !important;
+		box-shadow: none !important;
+		color: transparent !important;
+		font-size: 0 !important;
+
+		&:before {
+			content: "\e138";
+			font-family: "bb-icons-rl";
+			font-size: 16px;
+			color: $bb-icon-secondary-color;
+			font-weight: 400;
+		}
+
+		&[disabled] {
+			opacity: 0.5;
+			pointer-events: none;
+		}
+	}
+
+	&__pagination-btn--next:before {
+		content: "\e13a";
+	}
+}
+
+// Full-width for custom panel screen.
+.bb-admin-feature-settings__main--custom-panel {
+	.bb-groups-list {
+		max-width: 100%;
+	}
+}

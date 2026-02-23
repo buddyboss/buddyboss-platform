@@ -49,6 +49,9 @@ class BB_Admin_Groups_Ajax {
 		add_action( 'wp_ajax_bb_admin_delete_group_type', array( $this, 'delete_group_type' ) );
 		add_action( 'wp_ajax_bb_admin_get_platform_settings', array( $this, 'get_platform_settings' ) );
 		add_action( 'wp_ajax_bb_admin_save_platform_setting', array( $this, 'save_platform_setting' ) );
+		add_action( 'wp_ajax_bb_admin_get_groups', array( $this, 'get_groups' ) );
+		add_action( 'wp_ajax_bb_admin_delete_group', array( $this, 'delete_group' ) );
+		add_action( 'wp_ajax_bb_admin_group_bulk_action', array( $this, 'group_bulk_action' ) );
 	}
 
 	/**
@@ -425,6 +428,473 @@ class BB_Admin_Groups_Ajax {
 		wp_send_json_success(
 			array( 'message' => __( 'Setting saved successfully.', 'buddyboss' ) )
 		);
+	}
+
+	/**
+	 * Get groups listing with pagination, filters, and sorting.
+	 *
+	 * Uses existing legacy hooks/filters from BP_Groups_List_Table so
+	 * third-party plugins that add custom columns, bulk actions, or modify
+	 * column output continue to work in Settings 2.0.
+	 *
+	 * Hooks used:
+	 * - `bp_groups_list_table_get_columns`           (column definitions)
+	 * - `bp_groups_list_table_get_bulk_actions`       (bulk action definitions)
+	 * - `bp_groups_admin_get_group_status`            (status column filter)
+	 * - `bp_groups_admin_get_group_member_count`      (members column filter)
+	 * - `bp_groups_admin_get_group_last_active`       (last active column filter)
+	 * - `bp_groups_admin_get_group_custom_column`     (custom column content)
+	 * - `bp_get_group_name`                           (group name filter)
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function get_groups() {
+		$this->bb_verify_request();
+
+		if ( ! bp_is_active( 'groups' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss' ) ) );
+		}
+
+		// phpcs:disable WordPress.Security.NonceVerification.Missing
+		$page         = isset( $_POST['page'] ) ? absint( $_POST['page'] ) : 1;
+		$per_page     = isset( $_POST['per_page'] ) ? absint( $_POST['per_page'] ) : 20;
+		$search       = isset( $_POST['search'] ) ? sanitize_text_field( wp_unslash( $_POST['search'] ) ) : '';
+		$status       = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : 'all';
+		$sort         = isset( $_POST['sort'] ) ? sanitize_text_field( wp_unslash( $_POST['sort'] ) ) : 'newest';
+		$group_type   = isset( $_POST['group_type'] ) ? sanitize_text_field( wp_unslash( $_POST['group_type'] ) ) : '';
+		$include_meta = isset( $_POST['include_meta'] ) ? absint( $_POST['include_meta'] ) : 0;
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
+
+		// Validate status.
+		$allowed_statuses = array( 'all', 'public', 'private', 'hidden' );
+		if ( ! in_array( $status, $allowed_statuses, true ) ) {
+			$status = 'all';
+		}
+
+		// Validate sort.
+		$allowed_sorts = array( 'newest', 'oldest', 'alphabetical', 'popular' );
+		if ( ! in_array( $sort, $allowed_sorts, true ) ) {
+			$sort = 'newest';
+		}
+
+		// Clamp per_page.
+		$per_page = max( 1, min( 100, $per_page ) );
+		$page     = max( 1, $page );
+
+		// Map sort to query args.
+		$sort_map = array(
+			'newest'       => array(
+				'type'    => 'newest',
+				'orderby' => '',
+				'order'   => '',
+			),
+			'oldest'       => array(
+				'type'    => '',
+				'orderby' => 'date_created',
+				'order'   => 'ASC',
+			),
+			'alphabetical' => array(
+				'type'    => 'alphabetical',
+				'orderby' => '',
+				'order'   => '',
+			),
+			'popular'      => array(
+				'type'    => 'popular',
+				'orderby' => '',
+				'order'   => '',
+			),
+		);
+		$sort_args = $sort_map[ $sort ];
+
+		// Build query args.
+		$query_args = array(
+			'per_page'          => $per_page,
+			'page'              => $page,
+			'show_hidden'       => true,
+			'update_meta_cache' => true,
+		);
+
+		if ( ! empty( $sort_args['type'] ) ) {
+			$query_args['type'] = $sort_args['type'];
+		}
+
+		if ( ! empty( $sort_args['orderby'] ) ) {
+			$query_args['orderby'] = $sort_args['orderby'];
+			$query_args['order']   = $sort_args['order'];
+		}
+
+		if ( ! empty( $search ) ) {
+			$query_args['search_terms'] = $search;
+		}
+
+		if ( 'all' !== $status ) {
+			$query_args['status'] = array( $status );
+		}
+
+		if ( ! empty( $group_type ) ) {
+			$query_args['group_type'] = $group_type;
+		}
+
+		$groups_result = groups_get_groups( $query_args );
+		$groups        = $groups_result['groups'];
+		$total         = (int) $groups_result['total'];
+
+		// Prime user cache for creators.
+		if ( ! empty( $groups ) ) {
+			$creator_ids = array_unique( wp_list_pluck( $groups, 'creator_id' ) );
+			if ( ! empty( $creator_ids ) ) {
+				cache_users( $creator_ids );
+			}
+		}
+
+		// Get columns via the same filter as BP_Groups_List_Table::get_columns().
+		// This ensures third-party plugins that add columns (via bp_groups_list_table_get_columns)
+		// will also have their columns rendered in Settings 2.0.
+		$all_columns = apply_filters(
+			'bp_groups_list_table_get_columns',
+			array(
+				'cb'          => '<input name type="checkbox" />',
+				'comment'     => __( 'Name', 'buddyboss' ),
+				'description' => __( 'Description', 'buddyboss' ),
+				'status'      => __( 'Status', 'buddyboss' ),
+				'members'     => __( 'Members', 'buddyboss' ),
+				'last_active' => __( 'Last Active', 'buddyboss' ),
+			)
+		);
+
+		// Identify custom columns (added by third-party plugins via the filter above).
+		$core_columns   = array( 'cb', 'comment', 'description', 'status', 'members', 'last_active' );
+		$custom_columns = array();
+		foreach ( $all_columns as $col_key => $col_label ) {
+			if ( ! in_array( $col_key, $core_columns, true ) ) {
+				$custom_columns[ $col_key ] = $col_label;
+			}
+		}
+
+		// Build response items.
+		// Buffer output to capture stray HTML from legacy filters.
+		ob_start();
+
+		$items = array();
+		foreach ( $groups as $group ) {
+			// Build item array matching the legacy BP_Groups_List_Table format
+			// so filters receive the same data structure they expect.
+			$item_array = array(
+				'id'                 => (int) $group->id,
+				'name'               => $group->name,
+				'slug'               => $group->slug,
+				'description'        => $group->description,
+				'status'             => $group->status,
+				'date_created'       => $group->date_created,
+				'last_activity'      => ! empty( $group->last_activity ) ? $group->last_activity : $group->date_created,
+				'total_member_count' => (int) $group->total_member_count,
+				'creator_id'         => (int) $group->creator_id,
+				'enable_forum'       => $group->enable_forum,
+			);
+
+			// Apply the same filter as BP_Groups_List_Table::column_comment().
+			$group_name = apply_filters_ref_array( 'bp_get_group_name', array( $group->name, $item_array ) );
+
+			// Apply the same filter as BP_Groups_List_Table::column_status().
+			$status_desc = '';
+			switch ( $group->status ) {
+				case 'public':
+					$status_desc = __( 'Public', 'buddyboss' );
+					break;
+				case 'private':
+					$status_desc = __( 'Private', 'buddyboss' );
+					break;
+				case 'hidden':
+					$status_desc = __( 'Hidden', 'buddyboss' );
+					break;
+			}
+			$status_desc = apply_filters_ref_array( 'bp_groups_admin_get_group_status', array( $status_desc, $item_array ) );
+
+			// Apply the same filter as BP_Groups_List_Table::column_members().
+			$member_count = apply_filters_ref_array(
+				'bp_groups_admin_get_group_member_count',
+				array( (int) $group->total_member_count, $item_array )
+			);
+
+			// Apply the same filter as BP_Groups_List_Table::column_last_active().
+			$last_activity = ! empty( $group->last_activity ) ? $group->last_activity : $group->date_created;
+			$last_activity = apply_filters_ref_array(
+				'bp_groups_admin_get_group_last_active',
+				array( $last_activity, $item_array )
+			);
+
+			$item = array(
+				'id'            => (int) $group->id,
+				'name'          => esc_html( $group_name ),
+				'slug'          => $group->slug,
+				'description'   => wp_trim_words( wp_strip_all_tags( $group->description ), 20 ),
+				'status'        => $group->status,
+				'status_label'  => $status_desc,
+				'date_created'  => $group->date_created,
+				'last_activity' => $last_activity,
+				'total_members' => $member_count,
+				'creator_id'    => (int) $group->creator_id,
+				'group_type'    => bp_groups_get_group_type( $group->id, true ),
+				'avatar_url'    => bp_core_fetch_avatar(
+					array(
+						'item_id'    => $group->id,
+						'avatar_dir' => 'group-avatars',
+						'object'     => 'group',
+						'type'       => 'thumb',
+						'html'       => false,
+					)
+				),
+				'edit_url'      => bp_get_admin_url( 'admin.php?page=bp-groups&action=edit&gid=' . $group->id ),
+				'permalink'     => bp_get_group_permalink( $group ),
+			);
+
+			// Render custom columns via the same filter as BP_Groups_List_Table::column_default().
+			if ( ! empty( $custom_columns ) ) {
+				$item['custom_columns'] = array();
+				foreach ( $custom_columns as $col_key => $col_label ) {
+					$item['custom_columns'][ $col_key ] = wp_kses_post(
+						apply_filters(
+							'bp_groups_admin_get_group_custom_column',
+							'',
+							$col_key,
+							$item_array
+						)
+					);
+				}
+			}
+
+			$items[] = $item;
+		}
+
+		// End output buffer started before the loop.
+		ob_end_clean();
+
+		$response = array(
+			'groups' => $items,
+			'total'  => $total,
+		);
+
+		// Include metadata on first request.
+		if ( $include_meta ) {
+			// Get counts per status with a single query instead of 4 separate groups_get_groups() calls.
+			global $wpdb;
+			$bp            = buddypress();
+			$status_counts = $wpdb->get_results(
+				"SELECT status, COUNT(id) AS cnt FROM {$bp->groups->table_name} GROUP BY status"
+			);
+
+			$counts_map = array();
+			$count_all  = 0;
+			foreach ( $status_counts as $row ) {
+				$counts_map[ $row->status ] = (int) $row->cnt;
+				$count_all                 += (int) $row->cnt;
+			}
+
+			$response['views'] = array(
+				'all'     => array(
+					'label' => __( 'All', 'buddyboss' ),
+					'count' => $count_all,
+				),
+				'public'  => array(
+					'label' => __( 'Public', 'buddyboss' ),
+					'count' => isset( $counts_map['public'] ) ? $counts_map['public'] : 0,
+				),
+				'private' => array(
+					'label' => __( 'Private', 'buddyboss' ),
+					'count' => isset( $counts_map['private'] ) ? $counts_map['private'] : 0,
+				),
+				'hidden'  => array(
+					'label' => __( 'Hidden', 'buddyboss' ),
+					'count' => isset( $counts_map['hidden'] ) ? $counts_map['hidden'] : 0,
+				),
+			);
+
+			// Use the same filter as BP_Groups_List_Table::get_bulk_actions()
+			// so third-party plugins can add their own bulk actions.
+			$legacy_bulk_actions = apply_filters(
+				'bp_groups_list_table_get_bulk_actions',
+				array(
+					'delete' => __( 'Delete', 'buddyboss' ),
+				)
+			);
+
+			// Prefix with 'bulk_' to match Settings 2.0 convention.
+			$bulk_actions = array();
+			foreach ( $legacy_bulk_actions as $action_key => $action_label ) {
+				$bulk_actions[ 'bulk_' . $action_key ] = $action_label;
+			}
+			$response['bulk_actions'] = $bulk_actions;
+
+			// Return column definitions from the filtered list (excluding cb).
+			$columns_response = array();
+			foreach ( $all_columns as $col_key => $col_label ) {
+				if ( 'cb' === $col_key ) {
+					continue;
+				}
+				$columns_response[ $col_key ] = $col_label;
+			}
+			$response['columns'] = $columns_response;
+
+			// Get available group types for filter dropdown.
+			$available_types = array();
+			if ( function_exists( 'bp_groups_get_group_type_post_type' ) ) {
+				$type_posts = get_posts(
+					array(
+						'post_type'      => bp_groups_get_group_type_post_type(),
+						'posts_per_page' => -1,
+						'post_status'    => 'publish',
+						'orderby'        => 'title',
+						'order'          => 'ASC',
+					)
+				);
+
+				foreach ( $type_posts as $type_post ) {
+					$type_key = get_post_meta( $type_post->ID, '_bp_group_type_key', true );
+					if ( ! empty( $type_key ) ) {
+						$available_types[] = array(
+							'value' => $type_key,
+							'label' => esc_html( $type_post->post_title ),
+						);
+					}
+				}
+			}
+			$response['group_types'] = $available_types;
+		}
+
+		/**
+		 * Filters the groups list views (tab filters like All, Public, Private, Hidden).
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array  $views  Array of view_key => array( 'label' => string, 'count' => int ).
+		 * @param string $status Current active status filter.
+		 */
+		if ( ! empty( $response['views'] ) ) {
+			$response['views'] = apply_filters( 'bb_admin_groups_list_views', $response['views'], $status );
+		}
+
+		/**
+		 * Filters the full response data for the admin groups list AJAX endpoint.
+		 *
+		 * Allows third-party plugins to add extra data to the groups listing response.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $response Response data array.
+		 */
+		$response = apply_filters( 'bb_admin_get_groups_response', $response );
+
+		wp_send_json_success( $response );
+	}
+
+	/**
+	 * Delete a single group.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function delete_group() {
+		$this->bb_verify_request();
+
+		if ( ! bp_is_active( 'groups' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss' ) ) );
+		}
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$group_id = isset( $_POST['group_id'] ) ? absint( $_POST['group_id'] ) : 0;
+
+		if ( empty( $group_id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Group ID is required.', 'buddyboss' ) ) );
+		}
+
+		$group = groups_get_group( $group_id );
+		if ( empty( $group->id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Group not found.', 'buddyboss' ) ) );
+		}
+
+		$result = groups_delete_group( $group_id );
+
+		if ( ! $result ) {
+			wp_send_json_error( array( 'message' => __( 'Failed to delete group.', 'buddyboss' ) ) );
+		}
+
+		wp_send_json_success(
+			array( 'message' => __( 'Group deleted successfully.', 'buddyboss' ) )
+		);
+	}
+
+	/**
+	 * Perform bulk action on groups.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function group_bulk_action() {
+		$this->bb_verify_request();
+
+		if ( ! bp_is_active( 'groups' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss' ) ) );
+		}
+
+		// phpcs:disable WordPress.Security.NonceVerification.Missing
+		$raw_ids   = isset( $_POST['group_ids'] ) ? sanitize_text_field( wp_unslash( $_POST['group_ids'] ) ) : '';
+		$do_action = isset( $_POST['do_action'] ) ? sanitize_key( $_POST['do_action'] ) : '';
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
+
+		// Validate action against the same filter as BP_Groups_List_Table::get_bulk_actions().
+		$allowed_bulk_actions = apply_filters(
+			'bp_groups_list_table_get_bulk_actions',
+			array(
+				'delete' => __( 'Delete', 'buddyboss' ),
+			)
+		);
+		if ( ! array_key_exists( $do_action, $allowed_bulk_actions ) ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid action.', 'buddyboss' ) ) );
+		}
+
+		if ( empty( $raw_ids ) ) {
+			wp_send_json_error( array( 'message' => __( 'No groups selected.', 'buddyboss' ) ) );
+		}
+
+		$group_ids = array_filter( array_map( 'absint', explode( ',', $raw_ids ) ) );
+
+		if ( empty( $group_ids ) ) {
+			wp_send_json_error( array( 'message' => __( 'No valid group IDs provided.', 'buddyboss' ) ) );
+		}
+
+		// Cap bulk operations to prevent timeout on large selections.
+		$group_ids = array_slice( $group_ids, 0, 100 );
+
+		$processed = 0;
+		$errors    = 0;
+
+		foreach ( $group_ids as $group_id ) {
+			if ( 'delete' === $do_action ) {
+				$result = groups_delete_group( $group_id );
+				if ( $result ) {
+					$processed++;
+				} else {
+					$errors++;
+				}
+			}
+		}
+
+		if ( $processed > 0 ) {
+			wp_send_json_success(
+				array(
+					'message' => sprintf(
+						/* translators: %d: Number of groups processed. */
+						_n(
+							'%d group deleted successfully.',
+							'%d groups deleted successfully.',
+							$processed,
+							'buddyboss'
+						),
+						$processed
+					),
+				)
+			);
+		} else {
+			wp_send_json_error( array( 'message' => __( 'No groups were processed.', 'buddyboss' ) ) );
+		}
 	}
 
 	/**

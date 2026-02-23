@@ -205,3 +205,44 @@ export function updateGroupType(typeId, data) {
 export function deleteGroupType(typeId) {
 	return ajaxFetch('bb_admin_delete_group_type', { type_id: typeId });
 }
+
+/**
+ * Get groups listing with pagination, filters, and sorting.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data    - Query parameters (page, per_page, search, status, sort, group_type, include_meta).
+ * @param {Object} options - Optional fetch options (e.g. { signal } for AbortController).
+ * @return {Promise} Promise resolving to response.
+ */
+export function getGroups(data, options) {
+	return ajaxFetch('bb_admin_get_groups', data, options);
+}
+
+/**
+ * Delete a single group.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {number} groupId - Group ID.
+ * @return {Promise} Promise resolving to response.
+ */
+export function deleteGroup(groupId) {
+	return ajaxFetch('bb_admin_delete_group', { group_id: groupId });
+}
+
+/**
+ * Perform bulk action on groups.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Array}  groupIds - Array of group IDs.
+ * @param {string} action   - Bulk action to perform.
+ * @return {Promise} Promise resolving to response.
+ */
+export function groupBulkAction(groupIds, action) {
+	return ajaxFetch('bb_admin_group_bulk_action', {
+		group_ids: groupIds.join(','),
+		do_action: action,
+	});
+}
