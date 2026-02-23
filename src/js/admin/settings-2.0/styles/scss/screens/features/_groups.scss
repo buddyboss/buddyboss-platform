@@ -384,6 +384,49 @@
 		border: 1px solid $bb-border-secondary-color;
 	}
 
+	&__crop-resize {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		margin-bottom: 16px;
+
+		i {
+			font-size: 16px;
+			color: $bb-icon-tertiary-color;
+			flex-shrink: 0;
+		}
+	}
+
+	&__crop-slider {
+		flex: 1;
+		-webkit-appearance: none;
+		appearance: none;
+		height: 4px;
+		background: $bb-border-secondary-color;
+		border-radius: 2px;
+		outline: none;
+		cursor: pointer;
+
+		&::-webkit-slider-thumb {
+			-webkit-appearance: none;
+			appearance: none;
+			width: 16px;
+			height: 16px;
+			background: $bb-background-brand-primary-color;
+			border-radius: $bb-border-radius-full;
+			cursor: pointer;
+		}
+
+		&::-moz-range-thumb {
+			width: 16px;
+			height: 16px;
+			background: $bb-background-brand-primary-color;
+			border: none;
+			border-radius: $bb-border-radius-full;
+			cursor: pointer;
+		}
+	}
+
 	&__crop-actions {
 		display: flex;
 		justify-content: flex-end;

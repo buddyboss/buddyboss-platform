@@ -63,6 +63,7 @@ export function AvatarCropModal( { imageUrl, originalFile, nonces, uploadConfig,
 	var [ error, setError ] = useState( '' );
 	var [ imgLoaded, setImgLoaded ] = useState( false );
 	var [ cropBox, setCropBox ] = useState( { x: 0, y: 0, size: 150 } );
+	var [ sizeRange, setSizeRange ] = useState( { min: 50, max: 400 } );
 
 	// Use refs for drag state to avoid stale closures in event listeners.
 	var draggingRef = useRef( false );
@@ -155,6 +156,11 @@ export function AvatarCropModal( { imageUrl, originalFile, nonces, uploadConfig,
 		var offsetX = ( canvasSize - drawW ) / 2;
 		var offsetY = ( canvasSize - drawH ) / 2;
 
+		// Set min/max for the resize slider based on image dimensions.
+		var minSize = Math.max( 50, Math.round( minDim * 0.15 ) );
+		var maxSize = Math.round( minDim );
+		setSizeRange( { min: minSize, max: maxSize } );
+
 		setCropBox( {
 			x: Math.round( offsetX + ( drawW - size ) / 2 ),
 			y: Math.round( offsetY + ( drawH - size ) / 2 ),
@@ -233,6 +239,38 @@ export function AvatarCropModal( { imageUrl, originalFile, nonces, uploadConfig,
 			document.removeEventListener( 'mouseup', onMouseUp );
 		};
 	}, [] ); // Empty deps — uses refs for all mutable state.
+
+	/**
+	 * Handle resize slider change.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {Event} e Input range change event.
+	 */
+	var handleResize = function ( e ) {
+		var newSize = parseInt( e.target.value, 10 );
+		var box = cropBoxRef.current;
+		var img = imageRef.current;
+		if ( ! img ) {
+			return;
+		}
+
+		// Calculate visible image bounds on canvas.
+		var scale = Math.min( canvasSize / img.naturalWidth, canvasSize / img.naturalHeight );
+		var drawW = img.naturalWidth * scale;
+		var drawH = img.naturalHeight * scale;
+		var imgLeft = ( canvasSize - drawW ) / 2;
+		var imgTop = ( canvasSize - drawH ) / 2;
+
+		// Keep crop box centered on its current center, clamped within image bounds.
+		var centerX = box.x + box.size / 2;
+		var centerY = box.y + box.size / 2;
+		var half = newSize / 2;
+		var newX = Math.max( imgLeft, Math.min( imgLeft + drawW - newSize, centerX - half ) );
+		var newY = Math.max( imgTop, Math.min( imgTop + drawH - newSize, centerY - half ) );
+
+		setCropBox( { x: Math.round( newX ), y: Math.round( newY ), size: newSize } );
+	};
 
 	/**
 	 * Crop and save the avatar.
@@ -343,6 +381,21 @@ export function AvatarCropModal( { imageUrl, originalFile, nonces, uploadConfig,
 						onMouseDown={ handleMouseDown }
 					/>
 				</div>
+
+				{ imgLoaded && (
+					<div className="bb-admin-image-upload__crop-resize">
+						<i className="bb-icons-rl bb-icons-rl-minus"></i>
+						<input
+							type="range"
+							className="bb-admin-image-upload__crop-slider"
+							min={ sizeRange.min }
+							max={ sizeRange.max }
+							value={ cropBox.size }
+							onChange={ handleResize }
+						/>
+						<i className="bb-icons-rl bb-icons-rl-plus"></i>
+					</div>
+				) }
 
 				{ error && (
 					<p className="bb-admin-image-upload__error" role="alert">{ error }</p>
