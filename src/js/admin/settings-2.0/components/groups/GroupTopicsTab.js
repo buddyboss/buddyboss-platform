@@ -106,6 +106,14 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 	var permissionTypes = permissionTypesState[ 0 ];
 	var setPermissionTypes = permissionTypesState[ 1 ];
 
+	var topicModeState = useState( 'create_own_topics' );
+	var topicMode = topicModeState[ 0 ];
+	var setTopicMode = topicModeState[ 1 ];
+
+	var globalTopicsState = useState( [] );
+	var globalTopics = globalTopicsState[ 0 ];
+	var setGlobalTopics = globalTopicsState[ 1 ];
+
 	var noncesState = useState( {} );
 	var nonces = noncesState[ 0 ];
 	var setNonces = noncesState[ 1 ];
@@ -182,6 +190,8 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 				setTopics( response.data.topics || [] );
 				setMaxTopics( response.data.max_topics || 20 );
 				setPermissionTypes( response.data.permission_types || [] );
+				setTopicMode( response.data.topic_mode || 'create_own_topics' );
+				setGlobalTopics( response.data.global_topics || [] );
 				setNonces( response.data.nonces || {} );
 			}
 			setIsLoading( false );
@@ -217,10 +227,17 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 			permission_type: data.permission_type,
 			item_type: 'groups',
 			item_id: groupId,
+			action_from: 'admin',
+			is_global_activity: data.is_global_activity || '',
 		}, nonces.add || '' ).then( function ( response ) {
 			setIsSaving( false );
 			if ( response.success && response.data && response.data.content && response.data.content.topic ) {
 				var newTopic = response.data.content.topic;
+				// The response includes is_global_activity from bb_get_topic().
+				// Normalize to is_global for consistent rendering.
+				if ( newTopic.is_global_activity ) {
+					newTopic.is_global = true;
+				}
 				setTopics( function ( prev ) {
 					return prev.concat( [ newTopic ] );
 				} );
@@ -253,6 +270,7 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 			permission_type: data.permission_type,
 			item_type: 'groups',
 			item_id: groupId,
+			action_from: 'admin',
 		}, nonces.add || '' ).then( function ( response ) {
 			setIsSaving( false );
 			if ( response.success && response.data && response.data.content && response.data.content.topic ) {
@@ -458,7 +476,17 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 								>
 									<BBIcon name="list" />
 								</span>
-								<span className="bb-topic-list__name">{ topic.name }</span>
+								<span className="bb-topic-list__name">
+									{ topic.name }
+									{ ( topic.is_global || topic.is_global_activity ) && (
+										<span
+											className="bb-topic-list__global-icon"
+											title={ __( 'Global', 'buddyboss' ) }
+										>
+											<i className="bb-icons-rl-globe-simple"></i>
+										</span>
+									) }
+								</span>
 								<span className="bb-topic-list__permission">{ permissionLabel }</span>
 								<div className="bb-topic-list__actions">
 									<DropdownMenu
@@ -534,6 +562,8 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 				topic={ null }
 				isSaving={ isSaving }
 				permissionTypes={ permissionTypes }
+				topicMode={ topicMode }
+				globalTopics={ globalTopics }
 			/>
 
 			{ /* Edit Topic Modal */ }
@@ -547,6 +577,8 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 				topic={ editingTopic }
 				isSaving={ isSaving }
 				permissionTypes={ permissionTypes }
+				topicMode={ topicMode }
+				globalTopics={ globalTopics }
 			/>
 
 			{ /* Delete loading overlay */ }
@@ -577,19 +609,25 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
  * Group Topic Add/Edit Modal Component.
  *
  * Follows the same pattern as Activity TopicModal.
+ * Supports three topic modes:
+ * - 'create_own_topics': Text input only.
+ * - 'only_from_activity_topics': Select dropdown of global activity topics only.
+ * - 'allow_both': Combobox with global topics + ability to type custom name.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param {Object}   props                 Component props.
- * @param {boolean}  props.isOpen          Whether the modal is open.
- * @param {Function} props.onClose         Close handler.
- * @param {Function} props.onSave          Save handler.
- * @param {Object}   props.topic           Topic object for editing (null for add).
- * @param {boolean}  props.isSaving        Whether save is in progress.
+ * @param {Object}   props                  Component props.
+ * @param {boolean}  props.isOpen           Whether the modal is open.
+ * @param {Function} props.onClose          Close handler.
+ * @param {Function} props.onSave           Save handler.
+ * @param {Object}   props.topic            Topic object for editing (null for add).
+ * @param {boolean}  props.isSaving         Whether save is in progress.
  * @param {Array}    props.permissionTypes  Permission type options from API.
+ * @param {string}   props.topicMode        Topic mode setting.
+ * @param {Array}    props.globalTopics     Global activity topics for select/combobox.
  * @returns {JSX.Element|null} Modal component or null.
  */
-function GroupTopicModal( { isOpen, onClose, onSave, topic, isSaving, permissionTypes } ) {
+function GroupTopicModal( { isOpen, onClose, onSave, topic, isSaving, permissionTypes, topicMode, globalTopics } ) {
 	var isEditing = !! topic;
 	var initialName = isEditing ? ( topic.name || '' ) : '';
 	// Default to first permission type value (usually 'members') for groups.
@@ -610,31 +648,248 @@ function GroupTopicModal( { isOpen, onClose, onSave, topic, isSaving, permission
 	var modalError = errorState[ 0 ];
 	var setModalError = errorState[ 1 ];
 
+	// For 'only_from_activity_topics' mode: selected global topic slug.
+	var selectedSlugState = useState( '' );
+	var selectedSlug = selectedSlugState[ 0 ];
+	var setSelectedSlug = selectedSlugState[ 1 ];
+
+	// For 'allow_both' mode: custom searchable dropdown state.
+	var searchTextState = useState( '' );
+	var searchText = searchTextState[ 0 ];
+	var setSearchText = searchTextState[ 1 ];
+
+	var isDropdownOpenState = useState( false );
+	var isDropdownOpen = isDropdownOpenState[ 0 ];
+	var setIsDropdownOpen = isDropdownOpenState[ 1 ];
+
+	var dropdownRef = useRef( null );
+
+	// Build options for SelectControl (only_from_activity_topics mode).
+	var selectOptions = [ { label: __( 'Select a topic', 'buddyboss' ), value: '' } ];
+	if ( globalTopics && globalTopics.length > 0 ) {
+		globalTopics.forEach( function ( gt ) {
+			selectOptions.push( { label: gt.name, value: gt.slug } );
+		} );
+	}
+
 	// Reset form when topic changes.
 	useEffect( function () {
 		if ( isOpen ) {
 			setName( isEditing ? ( topic.name || '' ) : '' );
 			setPermission( isEditing ? ( topic.permission_type || defaultPermission ) : defaultPermission );
+			setSelectedSlug( '' );
+			setSearchText( '' );
+			setIsDropdownOpen( false );
 			setModalError( '' );
 		}
 	}, [ isOpen, topic ] );
+
+	// Close dropdown on outside click.
+	useEffect( function () {
+		if ( ! isDropdownOpen ) {
+			return;
+		}
+
+		var handleClickOutside = function ( e ) {
+			if ( dropdownRef.current && ! dropdownRef.current.contains( e.target ) ) {
+				setIsDropdownOpen( false );
+			}
+		};
+
+		document.addEventListener( 'mousedown', handleClickOutside );
+		return function () {
+			document.removeEventListener( 'mousedown', handleClickOutside );
+		};
+	}, [ isDropdownOpen ] );
 
 	if ( ! isOpen ) {
 		return null;
 	}
 
 	var handleSave = function () {
-		var trimmedName = name.trim();
-		if ( ! trimmedName ) {
-			setModalError( __( 'Topic name is required.', 'buddyboss' ) );
-			return;
+		var topicName = '';
+		var isGlobalActivity = '';
+
+		if ( 'only_from_activity_topics' === topicMode ) {
+			// Must select from dropdown — always a global topic.
+			if ( ! selectedSlug ) {
+				setModalError( __( 'Please select a topic.', 'buddyboss' ) );
+				return;
+			}
+			// Find the name from the selected slug.
+			var found = ( globalTopics || [] ).filter( function ( gt ) {
+				return gt.slug === selectedSlug;
+			} );
+			topicName = found.length > 0 ? found[ 0 ].name : selectedSlug;
+			isGlobalActivity = '1';
+		} else {
+			// 'create_own_topics' or 'allow_both' - use the name field.
+			topicName = name.trim();
+			if ( ! topicName ) {
+				setModalError( __( 'Topic name is required.', 'buddyboss' ) );
+				return;
+			}
+
+			// For 'allow_both', check if the name matches a global activity topic.
+			if ( 'allow_both' === topicMode && globalTopics && globalTopics.length > 0 ) {
+				var matchingGlobal = globalTopics.some( function ( gt ) {
+					return gt.name.toLowerCase() === topicName.toLowerCase();
+				} );
+				if ( matchingGlobal ) {
+					isGlobalActivity = '1';
+				}
+			}
 		}
+
 		setModalError( '' );
 		onSave( {
-			name: trimmedName,
+			name: topicName,
 			permission_type: permission,
 			topic_id: isEditing ? topic.topic_id : 0,
+			is_global_activity: isGlobalActivity,
 		} );
+	};
+
+	/**
+	 * Handle selecting a topic from the custom dropdown.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {string} topicName Topic name to set.
+	 */
+	var handleSelectTopic = function ( topicName ) {
+		setName( topicName );
+		setSearchText( topicName );
+		setIsDropdownOpen( false );
+		if ( modalError ) {
+			setModalError( '' );
+		}
+	};
+
+	/**
+	 * Render the topic name input based on mode.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @returns {JSX.Element} Input element.
+	 */
+	var renderTopicNameField = function () {
+		if ( 'only_from_activity_topics' === topicMode ) {
+			// Select-only mode: pick from global activity topics.
+			return (
+				<SelectControl
+					label={ __( 'Topic Name', 'buddyboss' ) }
+					value={ selectedSlug }
+					options={ selectOptions }
+					onChange={ function ( val ) {
+						setSelectedSlug( val );
+						if ( modalError ) {
+							setModalError( '' );
+						}
+					} }
+					__nextHasNoMarginBottom
+				/>
+			);
+		}
+
+		if ( 'allow_both' === topicMode ) {
+			// Custom searchable dropdown: select from global topics OR type custom name.
+			// Mimics Select2 tagging: shows matching topics + "Create new" option.
+			var filteredTopics = ( globalTopics || [] ).filter( function ( gt ) {
+				if ( ! searchText ) {
+					return true;
+				}
+				return gt.name.toLowerCase().indexOf( searchText.toLowerCase() ) !== -1;
+			} );
+
+			var trimmedSearch = searchText ? searchText.trim() : '';
+			var hasExactMatch = filteredTopics.some( function ( gt ) {
+				return gt.name.toLowerCase() === trimmedSearch.toLowerCase();
+			} );
+
+			return (
+				<div className="bb-topic-modal__searchable-select" ref={ dropdownRef }>
+					<label className="components-base-control__label">
+						{ __( 'Topic Name', 'buddyboss' ) }
+					</label>
+					<div className="bb-topic-modal__search-input-wrap">
+						<input
+							type="text"
+							className="bb-topic-modal__search-input components-text-control__input"
+							value={ searchText }
+							placeholder={ __( 'Select a topic', 'buddyboss' ) }
+							onChange={ function ( e ) {
+								var val = e.target.value;
+								setSearchText( val );
+								setName( val );
+								setIsDropdownOpen( true );
+								if ( modalError ) {
+									setModalError( '' );
+								}
+							} }
+							onFocus={ function () {
+								setIsDropdownOpen( true );
+							} }
+						/>
+					</div>
+					{ isDropdownOpen && (
+						<ul className="bb-topic-modal__dropdown-list">
+							{ filteredTopics.map( function ( gt ) {
+								return (
+									<li
+										key={ gt.topic_id }
+										className="bb-topic-modal__dropdown-item"
+										onMouseDown={ function ( e ) {
+											e.preventDefault();
+											handleSelectTopic( gt.name );
+										} }
+									>
+										{ gt.name }
+									</li>
+								);
+							} ) }
+							{ trimmedSearch && ! hasExactMatch && (
+								<li
+									className="bb-topic-modal__dropdown-item bb-topic-modal__dropdown-item--create"
+									onMouseDown={ function ( e ) {
+										e.preventDefault();
+										handleSelectTopic( trimmedSearch );
+									} }
+								>
+									<span className="bb-topic-modal__create-icon">+</span>
+									{ /* translators: %s: Topic name entered by user. */ }
+									{ wp.i18n.sprintf(
+										__( 'Create "%s" New Topic', 'buddyboss' ),
+										trimmedSearch
+									) }
+								</li>
+							) }
+							{ 0 === filteredTopics.length && ( ! trimmedSearch || hasExactMatch ) && (
+								<li className="bb-topic-modal__dropdown-item bb-topic-modal__dropdown-item--empty">
+									{ __( 'No topics found', 'buddyboss' ) }
+								</li>
+							) }
+						</ul>
+					) }
+				</div>
+			);
+		}
+
+		// Default: 'create_own_topics' - text input only.
+		return (
+			<TextControl
+				label={ __( 'Topic Name', 'buddyboss' ) }
+				value={ name }
+				onChange={ function ( val ) {
+					setName( val );
+					if ( modalError ) {
+						setModalError( '' );
+					}
+				} }
+				placeholder={ __( 'Enter topic name', 'buddyboss' ) }
+				__nextHasNoMarginBottom
+			/>
+		);
 	};
 
 	return (
@@ -645,18 +900,7 @@ function GroupTopicModal( { isOpen, onClose, onSave, topic, isSaving, permission
 			shouldCloseOnClickOutside={ false }
 		>
 			<div className="bb-topic-modal__body">
-				<TextControl
-					label={ __( 'Topic Name', 'buddyboss' ) }
-					value={ name }
-					onChange={ function ( val ) {
-						setName( val );
-						if ( modalError ) {
-							setModalError( '' );
-						}
-					} }
-					placeholder={ __( 'Enter topic name', 'buddyboss' ) }
-					__nextHasNoMarginBottom
-				/>
+				{ renderTopicNameField() }
 				{ modalError && (
 					<p className="bb-topic-modal__error">{ modalError }</p>
 				) }

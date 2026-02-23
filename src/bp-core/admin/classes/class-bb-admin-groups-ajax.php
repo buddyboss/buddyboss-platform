@@ -1486,6 +1486,7 @@ class BB_Admin_Groups_Ajax {
 				array(
 					'item_id'   => $group_id,
 					'item_type' => 'groups',
+					'fields'    => 'all',
 				)
 			);
 
@@ -1496,19 +1497,27 @@ class BB_Admin_Groups_Ajax {
 					: array();
 
 				foreach ( $raw_topics as $topic ) {
-					$topic_obj       = is_object( $topic ) ? $topic : (object) $topic;
-					$permission_type = isset( $topic_obj->permission_type ) ? $topic_obj->permission_type : 'members';
+					$topic_obj        = is_object( $topic ) ? $topic : (object) $topic;
+					$permission_type  = isset( $topic_obj->permission_type ) ? $topic_obj->permission_type : 'members';
 					$permission_label = isset( $all_permission_types[ $permission_type ] )
 						? $all_permission_types[ $permission_type ]
 						: $permission_type;
 
+					// Check if topic is a global activity topic (has activity-level relationships).
+					$topic_id  = isset( $topic_obj->topic_id ) ? (int) $topic_obj->topic_id : 0;
+					$is_global = false;
+					if ( $topic_id && function_exists( 'bb_topics_manager_instance' ) ) {
+						$is_global = (bool) bb_topics_manager_instance()->bb_is_topic_global( $topic_id );
+					}
+
 					$topics_data[] = array(
-						'topic_id'         => isset( $topic_obj->topic_id ) ? (int) $topic_obj->topic_id : 0,
+						'topic_id'         => $topic_id,
 						'name'             => isset( $topic_obj->name ) ? $topic_obj->name : '',
 						'slug'             => isset( $topic_obj->slug ) ? $topic_obj->slug : '',
 						'permission_type'  => $permission_type,
 						'permission_label' => $permission_label,
 						'menu_order'       => isset( $topic_obj->menu_order ) ? (int) $topic_obj->menu_order : 0,
+						'is_global'        => $is_global,
 					);
 				}
 			}
@@ -1536,11 +1545,36 @@ class BB_Admin_Groups_Ajax {
 			? bb_topics_manager_instance()->bb_topics_limit()
 			: 20;
 
+		// Get global activity topics when mode allows selection from activity topics.
+		$global_topics = array();
+		if (
+			in_array( $topic_mode, array( 'only_from_activity_topics', 'allow_both' ), true ) &&
+			function_exists( 'bb_topics_manager_instance' )
+		) {
+			$raw_global = bb_topics_manager_instance()->bb_get_topics(
+				array(
+					'item_type' => 'activity',
+					'per_page'  => -1,
+				)
+			);
+
+			if ( ! empty( $raw_global['topics'] ) && is_array( $raw_global['topics'] ) ) {
+				foreach ( $raw_global['topics'] as $gt ) {
+					$global_topics[] = array(
+						'topic_id' => isset( $gt->topic_id ) ? (int) $gt->topic_id : 0,
+						'name'     => isset( $gt->name ) ? $gt->name : '',
+						'slug'     => isset( $gt->slug ) ? $gt->slug : '',
+					);
+				}
+			}
+		}
+
 		wp_send_json_success(
 			array(
 				'topics'           => $topics_data,
 				'topic_mode'       => $topic_mode,
 				'permission_types' => $permission_types,
+				'global_topics'    => $global_topics,
 				'max_topics'       => (int) $max_topics,
 				'nonces'           => array(
 					'add'     => wp_create_nonce( 'bb_add_topic' ),
