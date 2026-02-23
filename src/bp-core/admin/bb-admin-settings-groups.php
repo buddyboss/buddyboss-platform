@@ -122,7 +122,7 @@ function bb_admin_settings_register_groups_feature() {
 			'title'      => __( 'Group Headers', 'buddyboss' ),
 			'icon'       => array(
 				'type'  => 'font',
-				'class' => 'bb-icons-rl bb-icons-rl-layout',
+				'class' => 'bb-icons-rl bb-icons-rl-arrows-out-simple',
 			),
 			'help_url'   => '',
 			'order'      => 30,
@@ -138,7 +138,7 @@ function bb_admin_settings_register_groups_feature() {
 			'title'      => __( 'Group Directory', 'buddyboss' ),
 			'icon'       => array(
 				'type'  => 'font',
-				'class' => 'bb-icons-rl bb-icons-rl-list-bullets',
+				'class' => 'bb-icons-rl bb-icons-rl-grid-nine',
 			),
 			'help_url'   => '',
 			'order'      => 40,
@@ -172,6 +172,7 @@ function bb_admin_settings_register_groups_feature() {
 			),
 			'order'      => 100,
 			'is_default' => false,
+			'divider'    => true,
 		)
 	);
 
@@ -197,7 +198,7 @@ function bb_admin_settings_register_groups_feature() {
 			'title'      => __( 'Group Navigation', 'buddyboss' ),
 			'icon'       => array(
 				'type'  => 'font',
-				'class' => 'bb-icons-rl bb-icons-rl-arrow-square-out',
+				'class' => 'bb-icons-rl bb-icons-rl-tabs',
 			),
 			'link'       => bp_get_admin_url(
 				add_query_arg(
