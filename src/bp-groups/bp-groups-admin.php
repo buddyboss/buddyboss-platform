@@ -28,30 +28,33 @@ if ( is_admin() && ! empty( $_REQUEST['page'] ) && 'bp-groups' == $_REQUEST['pag
  * @since BuddyPress 1.7.0
  */
 function bp_groups_add_admin_menu() {
+	global $submenu;
 
-	if ( true === bp_disable_group_type_creation() ) {
+	// When Settings 2.0 is active, register the menu item pointing directly to the React page.
+	if ( function_exists( 'bb_get_feature_settings_url' ) ) {
+		$settings_url = bb_get_feature_settings_url( 'groups' );
 
-		// Add our screen.
-		$hooks[] = add_submenu_page(
-			'buddyboss-platform',
-			__( 'Groups', 'buddyboss' ),
+		$submenu['buddyboss-platform'][] = array(
 			__( 'Groups', 'buddyboss' ),
 			'bp_moderate',
-			'bp-groups',
-			'bp_groups_admin'
+			$settings_url,
 		);
 
-	} else {
-		// Add our screen.
-		$hooks[] = add_submenu_page(
-			'buddyboss-platform',
-			__( 'Groups', 'buddyboss' ),
-			__( 'Groups', 'buddyboss' ),
-			'bp_moderate',
-			'bp-groups',
-			'bp_groups_admin'
-		);
+		return;
 	}
+
+	// Legacy: register the old Groups admin page.
+	$hooks = array();
+
+	// Add our screen.
+	$hooks[] = add_submenu_page(
+		'buddyboss-platform',
+		__( 'Groups', 'buddyboss' ),
+		__( 'Groups', 'buddyboss' ),
+		'bp_moderate',
+		'bp-groups',
+		'bp_groups_admin'
+	);
 
 	foreach ( $hooks as $hook ) {
 		// Hook into early actions to load custom CSS and our init handler.

@@ -620,6 +620,7 @@ function bb_redirect_legacy_settings_to_settings_2() {
 	$legacy_tabs_mapping = array(
 		'bp-reactions' => 'reactions',
 		'bp-activity'  => 'activity',
+		'bp-groups'    => 'groups',
 		// Add more mappings here as more tabs are migrated to Settings 2.0.
 	);
 
