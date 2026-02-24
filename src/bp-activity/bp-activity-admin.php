@@ -13,6 +13,27 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Register the Activity component admin screen.
+ *
+ * @since BuddyPress 1.6.0
+ */
+function bp_activity_add_admin_menu() {
+	global $submenu;
+
+	// Register the menu item pointing directly to the React Settings 2.0 page.
+	$settings_url = function_exists( 'bb_get_feature_settings_url' )
+		? bb_get_feature_settings_url( 'activity' )
+		: admin_url( 'admin.php?page=bb-settings&tab=activity' );
+
+	$submenu['buddyboss-platform'][] = array(
+		__( 'Activity', 'buddyboss' ),
+		'bp_moderate',
+		$settings_url,
+	);
+}
+add_action( bp_core_admin_hook(), 'bp_activity_add_admin_menu', 65 );
+
+/**
  * Get flattened array of all registered activity actions.
  *
  * Format is [activity_type] => Pretty name for activity type.
