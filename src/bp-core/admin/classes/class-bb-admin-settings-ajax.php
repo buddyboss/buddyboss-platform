@@ -736,8 +736,12 @@ class BB_Admin_Settings_Ajax {
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing
 		$feature_id = isset( $_POST['feature_id'] ) ? sanitize_text_field( wp_unslash( $_POST['feature_id'] ) ) : '';
-		$raw_json   = isset( $_POST['settings'] ) ? wp_unslash( $_POST['settings'] ) : '';
+		$raw_json   = isset( $_POST['settings'] ) ? wp_unslash( $_POST['settings'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- JSON decoded and per-field sanitized below.
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
+
+		if ( ! is_string( $raw_json ) ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid settings format.', 'buddyboss' ) ) );
+		}
 
 		if ( empty( $feature_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Feature ID is required.', 'buddyboss' ) ) );

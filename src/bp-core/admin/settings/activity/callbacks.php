@@ -84,25 +84,6 @@ function bb_activity_sanitize_edit_time( $value ) {
 }
 
 /**
- * Sanitize activity comment edit time setting.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param mixed $value The value to sanitize.
- *
- * @return int Sanitized integer value.
- */
-function bb_activity_sanitize_comment_edit_time( $value ) {
-	$value = intval( $value );
-
-	if ( ! in_array( $value, bb_activity_get_allowed_edit_times(), true ) ) {
-		return 600; // Default: 10 minutes in seconds.
-	}
-
-	return $value;
-}
-
-/**
  * Sanitize sharing platforms checkbox_list.
  *
  * Expects an associative array where keys are platform slugs and values are 0/1.

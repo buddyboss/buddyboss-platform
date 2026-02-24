@@ -10039,7 +10039,7 @@ function bb_register_feature( $feature_id, $args = array() ) {
  * @return string Admin URL for the feature settings.
  */
 function bb_get_feature_settings_url( $feature_id, $panel_id = '' ) {
-	$url = admin_url( 'admin.php?page=bb-settings' );
+	$url = bp_get_admin_url( 'admin.php?page=bb-settings' );
 
 	if ( ! empty( $feature_id ) ) {
 		$url = add_query_arg( 'tab', sanitize_key( $feature_id ), $url );
@@ -10060,7 +10060,7 @@ function bb_get_feature_settings_url( $feature_id, $panel_id = '' ) {
  * @return string Admin URL for the main settings page.
  */
 function bb_get_settings_url() {
-	return admin_url( 'admin.php?page=bb-settings' );
+	return bp_get_admin_url( 'admin.php?page=bb-settings' );
 }
 
 /**

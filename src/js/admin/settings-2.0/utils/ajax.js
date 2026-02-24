@@ -84,6 +84,9 @@ export async function getCachedFeatures() {
 			return featuresCache;
 		}
 		return [];
+	}).catch((error) => {
+		featuresCachePromise = null;
+		throw error;
 	});
 
 	return featuresCachePromise;
