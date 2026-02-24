@@ -1396,6 +1396,7 @@ class BB_Admin_Groups_Ajax {
 			groups_unban_member( $user_id, $group_id );
 		}
 
+		$result = false;
 		switch ( $role ) {
 			case 'admin':
 			case 'mod':
