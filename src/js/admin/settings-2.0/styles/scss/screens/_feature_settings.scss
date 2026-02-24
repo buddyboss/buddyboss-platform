@@ -132,6 +132,7 @@
             font-size: 18px;
             font-weight: 500;
             margin: 0;
+            flex: 1;
         }
 
         .help-icon {
@@ -147,8 +148,27 @@
             text-decoration: none;
         }
 
+        &-toggle {
+            display: flex;
+            align-items: center;
+            margin-left: 8px;
+
+            .components-toggle-control {
+                margin-bottom: 0;
+            }
+
+            .components-base-control__field {
+                margin-bottom: 0;
+            }
+        }
+
         &-body {
             padding: 32px 24px;
+
+            &--disabled {
+                opacity: 0.5;
+                pointer-events: none;
+            }
         }
 
         &--disabled {
@@ -215,10 +235,59 @@
             align-items: center;
             flex-wrap: wrap;
 
+            .bb-admin-settings-form__field-input-wrapper {
+                flex-shrink: 0;
+            }
+
             .bb-admin-settings-form__field-description {
+                flex: 1;
+                min-width: 0;
                 margin: 0;
             }
+
+            .bb-admin-settings-form__child-fields {
+                flex-basis: 100%;
+                margin-top: 4px;
+            }
+
+            .bb-admin-settings-form__child-field {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+
+                &-description {
+                    color: $bb-text-color;
+                    font-size: 13px;
+                    font-weight: 400;
+                    line-height: 1.5;
+                    margin: 0;
+                }
+
+                &--disabled {
+                    opacity: 0.5;
+                    pointer-events: none;
+                }
+            }
         }
+    }
+
+    &-input-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        &:has(.bb-admin-settings-form__field-head-description) {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+
+    &-suffix {
+        color: $bb-text-secondary-color;
+        font-size: 13px;
+        font-weight: 400;
+        line-height: 1;
+        white-space: nowrap;
     }
 
     &-description {

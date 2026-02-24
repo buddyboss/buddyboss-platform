@@ -111,7 +111,7 @@ export function SettingsForm({ fields, values, onChange }) {
 		const isParentInverted = true === parentField?.invert_value;
 
 		// If parent_value is specified, check for exact match
-		if (field.parent_value !== undefined) {
+		if (field.parent_value !== undefined && field.parent_value !== null) {
 			return parentValue !== field.parent_value;
 		}
 
@@ -566,7 +566,7 @@ export function SettingsForm({ fields, values, onChange }) {
 						</label>
 					</div>
 				)}
-				<div className={ 'bb-admin-settings-form__field-content' + ( ( 'toggle' === field.type || 'checkbox' === field.type ) && field.description && ! isToggleWithChildren ? ' bb-admin-settings-form__field-content--inline' : '' ) }>
+				<div className={ 'bb-admin-settings-form__field-content' + ( ( 'toggle' === field.type || 'checkbox' === field.type ) && field.description ? ' bb-admin-settings-form__field-content--inline' : '' ) }>
 					{/* Field with optional prefix/suffix */}
 					<div className="bb-admin-settings-form__field-input-wrapper">
 						{field.prefix && (

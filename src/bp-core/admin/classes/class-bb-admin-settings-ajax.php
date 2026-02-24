@@ -346,6 +346,16 @@ class BB_Admin_Settings_Ajax {
 					$formatted_section['conditional'] = $section['conditional'];
 				}
 
+				// Include section_toggle if set.
+				if ( ! empty( $section['section_toggle'] ) ) {
+					$formatted_section['section_toggle'] = $section['section_toggle'];
+					// Ensure the toggle option is loaded into settings.
+					$toggle_name = $section['section_toggle'];
+					if ( ! isset( $settings[ $toggle_name ] ) ) {
+						$settings[ $toggle_name ] = bp_get_option( $toggle_name, 1 );
+					}
+				}
+
 				$formatted_sections[] = $formatted_section;
 			}
 
@@ -792,6 +802,20 @@ class BB_Admin_Settings_Ajax {
 						bp_update_option( $control_name, $control_value );
 						$saved[ $control_name ] = $control_value;
 					}
+				}
+			}
+		}
+
+		// Save section_toggle options (not registered as fields, but submitted from the section header toggle).
+		$side_panels = $registry->bb_get_side_panels( $feature_id );
+		foreach ( $side_panels as $sp_id => $sp ) {
+			$sections = $registry->bb_get_sections( $feature_id, $sp_id );
+			foreach ( $sections as $sec_id => $sec ) {
+				if ( ! empty( $sec['section_toggle'] ) && array_key_exists( $sec['section_toggle'], $settings ) ) {
+					$toggle_name  = $sec['section_toggle'];
+					$toggle_value = absint( $settings[ $toggle_name ] );
+					bp_update_option( $toggle_name, $toggle_value );
+					$saved[ $toggle_name ] = $toggle_value;
 				}
 			}
 		}

@@ -9,7 +9,7 @@
 
 import { useState, useEffect, useRef, useCallback, lazy, Suspense, RawHTML } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { Spinner } from '@wordpress/components';
+import { Spinner, ToggleControl } from '@wordpress/components';
 import { ajaxFetch } from '../utils/ajax';
 import { getCachedFeatureData, setCachedFeatureData, invalidateFeatureCache } from '../utils/featureCache';
 import { applyReactionPostSave } from '../components/reaction/applyReactionPostSave';
@@ -411,7 +411,15 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 											return null;
 										}
 
-										return (
+										// Section toggle: when present, controls whether all fields in this section are enabled.
+									var sectionToggleKey = section.section_toggle || null;
+									var isSectionToggleOff = false;
+									if ( sectionToggleKey ) {
+										var toggleVal = settings[ sectionToggleKey ];
+										isSectionToggleOff = ! toggleVal || toggleVal === '0' || toggleVal === 0;
+									}
+
+									return (
 										<div
 											key={section.id}
 											id={`section-${section.id}`}
@@ -427,9 +435,20 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 														contentId={activePanel.help_url}
 													/>
 												)}
+												{/* Section toggle - enables/disables all fields in this section */}
+												{sectionToggleKey && (
+													<div className="bb-admin-feature-settings__section-toggle">
+														<ToggleControl
+															checked={ ! isSectionToggleOff }
+															onChange={ function( newVal ) {
+																handleSettingChange( sectionToggleKey, newVal ? 1 : 0 );
+															} }
+														/>
+													</div>
+												)}
 											</div>
 											{/* Section Body */}
-											<div className="bb-admin-feature-settings__section-body">
+											<div className={ 'bb-admin-feature-settings__section-body' + ( isSectionToggleOff ? ' bb-admin-feature-settings__section-body--disabled' : '' ) }>
 												{section.description && (
 													<RawHTML className="bb-admin-feature-settings__section-description">
 														{sanitizeHtml( section.description )}
