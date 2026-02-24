@@ -761,24 +761,6 @@
    Group Edit Modal
    ---------------------------------------------------------------- */
 .bb-group-edit-modal {
-	width: 720px;
-	max-width: 90vw;
-	max-height: 90%;
-
-	.components-modal__content {
-		padding: 0;
-	}
-
-	.components-modal__header {
-		padding: 16px 24px;
-		border-bottom: 1px solid $bb-border-secondary-color;
-		margin: 0;
-
-		.components-modal__header-heading {
-			font-size: 16px;
-			font-weight: 600;
-		}
-	}
 
 	&__body {
 		padding: 0 24px 24px;
@@ -808,8 +790,8 @@
 	&__tabs {
 		.components-tab-panel__tabs {
 			border-bottom: none;
-			margin: 0 -24px 24px;
-			padding: 16px 24px 0;
+			margin: 0;
+			padding: 16px 0;
 			gap: 8px;
 		}
 
@@ -817,11 +799,13 @@
 			padding: 6px 16px;
 			font-size: 13px;
 			font-weight: 500;
+			line-height: 1.5;
 			color: $bb-text-tertiary-color;
-			border: 1px solid $bb-border-secondary-color;
+			border: 1px solid $bb-border-tertiary-color;
 			border-radius: 20px;
 			background: none;
 			cursor: pointer;
+			height: auto !important;
 
 			// Remove default underline indicator.
 			&::after {
@@ -835,10 +819,10 @@
 
 			&.is-active {
 				color: $bb-text-color;
-				background-color: $bb-background-secondary-color;
-				border-color: $bb-border-secondary-color;
+				background-color: $bb-background-primary-color;
+				border-color: $bb-border-tertiary-color;
 				box-shadow: none;
-				font-weight: 600;
+				font-weight: 500;
 			}
 
 			&:focus:not(:disabled) {
@@ -1045,7 +1029,7 @@
 		position: relative;
 	}
 
-	&__search-input {
+	&__search-input[type="text"] {
 		@include bb-input-text;
 		width: 100%;
 	}

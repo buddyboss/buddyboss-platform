@@ -359,6 +359,9 @@ select.bb-admin-settings__select {
 
     &--dismiss {
         margin-left: auto;
+        border: 0;
+        background: transparent;
+        padding: 0;
 
         i {
             font-size: 18px;
