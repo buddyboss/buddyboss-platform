@@ -885,6 +885,9 @@ class BB_Feature_Registry {
 			$sorted = $this->features;
 			uasort( $sorted, 'bb_sort_by_order' );
 			$this->sorted_cache['features'] = $sorted;
+
+			// Reset flag so subsequent calls use cached data without re-sorting.
+			$this->sorted_cache_dirty = false;
 		}
 		$features = $this->sorted_cache['features'];
 
