@@ -169,7 +169,7 @@ class BB_Admin_Groups_Ajax {
 				'groups_count'        => isset( $group_counts[ $type_key ] ) ? (int) $group_counts[ $type_key ] : 0,
 				'enable_filter'       => absint( get_post_meta( $post_id, '_bp_group_type_enable_filter', true ) ),
 				'enable_remove'       => absint( get_post_meta( $post_id, '_bp_group_type_enable_remove', true ) ),
-				'role_labels'         => map_deep( get_post_meta( $post_id, '_bp_group_type_role_labels', true ), 'sanitize_text_field' ),
+				'role_labels'         => $this->bb_normalize_role_labels( get_post_meta( $post_id, '_bp_group_type_role_labels', true ) ),
 				'label_color'         => map_deep( get_post_meta( $post_id, '_bp_group_type_label_color', true ), 'sanitize_text_field' ),
 				'restrict_invites'    => absint( get_post_meta( $post_id, '_bp_group_type_restrict_invites_user_same_group_type', true ) ),
 				'member_type_join'    => map_deep( get_post_meta( $post_id, '_bp_group_type_enabled_member_type_join', true ), 'sanitize_key' ),
@@ -1665,15 +1665,17 @@ class BB_Admin_Groups_Ajax {
 			$member_type_invites = '';
 		}
 
-		// Role labels.
+		// Role labels — stored in legacy flat format: organizer_plural_label_name, etc.
 		$role_labels     = array();
 		$raw_role_labels = isset( $_POST['role_labels'] ) && is_array( $_POST['role_labels'] )
 			? wp_unslash( $_POST['role_labels'] ) // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized below per key/value.
 			: array();
+		$allowed_roles = array( 'organizer', 'moderator', 'member' );
 		foreach ( $raw_role_labels as $role_key => $labels ) {
 			$sanitized_key = sanitize_key( $role_key );
-			if ( is_array( $labels ) ) {
-				$role_labels[ $sanitized_key ] = map_deep( $labels, 'sanitize_text_field' );
+			if ( in_array( $sanitized_key, $allowed_roles, true ) && is_array( $labels ) ) {
+				$role_labels[ $sanitized_key . '_plural_label_name' ]   = isset( $labels['plural'] ) ? sanitize_text_field( $labels['plural'] ) : '';
+				$role_labels[ $sanitized_key . '_singular_label_name' ] = isset( $labels['singular'] ) ? sanitize_text_field( $labels['singular'] ) : '';
 			}
 		}
 
@@ -1715,6 +1717,61 @@ class BB_Admin_Groups_Ajax {
 		if ( ! empty( $label_color ) ) {
 			update_post_meta( $post_id, '_bp_group_type_label_color', $label_color );
 		}
+	}
+
+	/**
+	 * Normalize legacy flat role labels to nested format for the JS modal.
+	 *
+	 * Legacy stores: { organizer_plural_label_name: '', organizer_singular_label_name: '', ... }
+	 * JS expects:    { organizer: { plural: '', singular: '' }, ... }
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param mixed $raw Role labels meta value.
+	 *
+	 * @return array Nested role labels array.
+	 */
+	private function bb_normalize_role_labels( $raw ) {
+		$default = array(
+			'organizer' => array(
+				'plural'   => '',
+				'singular' => '',
+			),
+			'moderator' => array(
+				'plural'   => '',
+				'singular' => '',
+			),
+			'member'    => array(
+				'plural'   => '',
+				'singular' => '',
+			),
+		);
+
+		if ( ! is_array( $raw ) || empty( $raw ) ) {
+			return $default;
+		}
+
+		$roles  = array( 'organizer', 'moderator', 'member' );
+		$result = array();
+		foreach ( $roles as $role ) {
+			// Legacy flat format: organizer_plural_label_name, organizer_singular_label_name.
+			if ( isset( $raw[ $role . '_plural_label_name' ] ) || isset( $raw[ $role . '_singular_label_name' ] ) ) {
+				$result[ $role ] = array(
+					'plural'   => isset( $raw[ $role . '_plural_label_name' ] ) ? sanitize_text_field( $raw[ $role . '_plural_label_name' ] ) : '',
+					'singular' => isset( $raw[ $role . '_singular_label_name' ] ) ? sanitize_text_field( $raw[ $role . '_singular_label_name' ] ) : '',
+				);
+			} elseif ( isset( $raw[ $role ] ) && is_array( $raw[ $role ] ) ) {
+				// Nested format (pre-fix Settings 2.0 saves).
+				$result[ $role ] = array(
+					'plural'   => isset( $raw[ $role ]['plural'] ) ? sanitize_text_field( $raw[ $role ]['plural'] ) : '',
+					'singular' => isset( $raw[ $role ]['singular'] ) ? sanitize_text_field( $raw[ $role ]['singular'] ) : '',
+				);
+			} else {
+				$result[ $role ] = $default[ $role ];
+			}
+		}
+
+		return $result;
 	}
 
 	/**

@@ -508,16 +508,24 @@ export function GroupsListScreen( { onNavigate } ) {
 	 * @param {Object} payload Save payload.
 	 */
 	var handleSaveGroup = function ( payload ) {
+		// Extract and remove the members save callback before sending payload.
+		var membersSaveFn = payload._membersSave;
+		delete payload._membersSave;
+
 		setIsEditSaving( true );
 		saveGroup( payload ).then( function ( response ) {
-			setIsEditSaving( false );
 			if ( response.success ) {
-				setEditGroup( null );
-				setNotice( { type: 'success', message: response.data.message } );
-				resetAndRefetch();
-			} else {
-				setNotice( { type: 'error', message: response.data?.message || __( 'Failed to save group.', 'buddyboss' ) } );
+				// Process pending member changes after main save succeeds.
+				var membersPromise = 'function' === typeof membersSaveFn ? membersSaveFn() : Promise.resolve();
+				return ( membersPromise || Promise.resolve() ).then( function () {
+					setIsEditSaving( false );
+					setEditGroup( null );
+					setNotice( { type: 'success', message: response.data.message } );
+					resetAndRefetch();
+				} );
 			}
+			setIsEditSaving( false );
+			setNotice( { type: 'error', message: response.data?.message || __( 'Failed to save group.', 'buddyboss' ) } );
 		} ).catch( function ( err ) {
 			setIsEditSaving( false );
 			setNotice( { type: 'error', message: err.message || __( 'An error occurred saving the group.', 'buddyboss' ) } );

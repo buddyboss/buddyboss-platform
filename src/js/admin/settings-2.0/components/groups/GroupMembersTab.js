@@ -5,6 +5,9 @@
  * Supports member list with role management, add member autocomplete,
  * and remove member functionality.
  *
+ * All changes are collected locally and only committed when the parent
+ * modal's Save button is clicked (via saveRef).
+ *
  * @package BuddyBoss\Core\Administration
  * @since BuddyBoss [BBVERSION]
  */
@@ -40,12 +43,14 @@ var roleOptions = [
  * @param {Object}   props            Component props.
  * @param {number}   props.groupId    Group ID.
  * @param {Function} props.setNotice  Function to show notices.
+ * @param {Object}   props.saveRef    Ref object — parent sets saveRef.current to call our save.
  * @returns {JSX.Element} Members tab.
  */
-export function GroupMembersTab( { groupId, setNotice } ) {
-	var membersState = useState( [] );
-	var members = membersState[ 0 ];
-	var setMembers = membersState[ 1 ];
+export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
+	// Server-fetched members (source of truth from DB).
+	var fetchedMembersState = useState( [] );
+	var fetchedMembers = fetchedMembersState[ 0 ];
+	var setFetchedMembers = fetchedMembersState[ 1 ];
 
 	var totalState = useState( 0 );
 	var total = totalState[ 0 ];
@@ -60,6 +65,20 @@ export function GroupMembersTab( { groupId, setNotice } ) {
 	var setPage = pageState[ 1 ];
 
 	var perPage = 20;
+
+	// Pending local changes (not yet saved to server).
+	var pendingAddsState = useState( [] );
+	var pendingAdds = pendingAddsState[ 0 ];
+	var setPendingAdds = pendingAddsState[ 1 ];
+
+	var pendingRemovesState = useState( [] );
+	var pendingRemoves = pendingRemovesState[ 0 ];
+	var setPendingRemoves = pendingRemovesState[ 1 ];
+
+	// Map of userId → newRole for pending role changes.
+	var pendingRoleChangesState = useState( {} );
+	var pendingRoleChanges = pendingRoleChangesState[ 0 ];
+	var setPendingRoleChanges = pendingRoleChangesState[ 1 ];
 
 	// Autocomplete state.
 	var searchInputState = useState( '' );
@@ -78,9 +97,22 @@ export function GroupMembersTab( { groupId, setNotice } ) {
 	var showSuggestions = showSuggestionsState[ 0 ];
 	var setShowSuggestions = showSuggestionsState[ 1 ];
 
+	// Staged user selected from autocomplete, pending "+ Add" click.
+	var selectedUserState = useState( null );
+	var selectedUser = selectedUserState[ 0 ];
+	var setSelectedUser = selectedUserState[ 1 ];
+
 	var searchTimerRef = useRef( null );
 	var searchAbortRef = useRef( null );
 	var membersAbortRef = useRef( null );
+
+	// Keep refs to latest pending state for the save callback.
+	var pendingAddsRef = useRef( pendingAdds );
+	var pendingRemovesRef = useRef( pendingRemoves );
+	var pendingRoleChangesRef = useRef( pendingRoleChanges );
+	pendingAddsRef.current = pendingAdds;
+	pendingRemovesRef.current = pendingRemoves;
+	pendingRoleChangesRef.current = pendingRoleChanges;
 
 	/**
 	 * Fetch members from the server.
@@ -97,7 +129,7 @@ export function GroupMembersTab( { groupId, setNotice } ) {
 		setIsLoading( true );
 		getGroupMembers( groupId, { page: page, per_page: perPage }, { signal: membersAbortRef.current.signal } ).then( function ( response ) {
 			if ( response.success && response.data ) {
-				setMembers( response.data.members || [] );
+				setFetchedMembers( response.data.members || [] );
 				setTotal( response.data.total || 0 );
 			}
 			setIsLoading( false );
@@ -129,6 +161,87 @@ export function GroupMembersTab( { groupId, setNotice } ) {
 	}, [] );
 
 	/**
+	 * Expose save function to parent via saveRef.
+	 * Processes all pending changes sequentially using existing AJAX endpoints.
+	 * Returns a Promise that resolves when all changes are committed.
+	 */
+	useEffect( function () {
+		if ( ! saveRef ) {
+			return;
+		}
+
+		saveRef.current = function () {
+			var adds = pendingAddsRef.current;
+			var removes = pendingRemovesRef.current;
+			var roleChanges = pendingRoleChangesRef.current;
+
+			// Collect all operations as promises executed sequentially.
+			var operations = [];
+
+			// Process adds — first add as member, then promote if different role.
+			adds.forEach( function ( user ) {
+				operations.push( function () {
+					return updateGroupMember( {
+						group_id: groupId,
+						user_id: user.id,
+						role: 'member',
+						action_type: 'add',
+					} ).then( function ( response ) {
+						// If a non-member role was chosen, promote after adding.
+						if ( response.success && user.role && 'member' !== user.role ) {
+							return updateGroupMember( {
+								group_id: groupId,
+								user_id: user.id,
+								role: user.role,
+							} );
+						}
+						return response;
+					} );
+				} );
+			} );
+
+			// Process removes.
+			removes.forEach( function ( userId ) {
+				operations.push( function () {
+					return updateGroupMember( {
+						group_id: groupId,
+						user_id: userId,
+						role: 'remove',
+					} );
+				} );
+			} );
+
+			// Process role changes.
+			Object.keys( roleChanges ).forEach( function ( userId ) {
+				operations.push( function () {
+					return updateGroupMember( {
+						group_id: groupId,
+						user_id: parseInt( userId, 10 ),
+						role: roleChanges[ userId ],
+					} );
+				} );
+			} );
+
+			if ( 0 === operations.length ) {
+				return Promise.resolve();
+			}
+
+			// Execute sequentially.
+			var chain = Promise.resolve();
+			operations.forEach( function ( op ) {
+				chain = chain.then( op );
+			} );
+
+			return chain.then( function () {
+				// Clear pending state after successful save.
+				setPendingAdds( [] );
+				setPendingRemoves( [] );
+				setPendingRoleChanges( {} );
+			} );
+		};
+	}, [ saveRef, groupId ] );
+
+	/**
 	 * Handle autocomplete search input change.
 	 *
 	 * @param {Object} e Input change event.
@@ -136,6 +249,11 @@ export function GroupMembersTab( { groupId, setNotice } ) {
 	var handleSearchInputChange = function ( e ) {
 		var val = e.target.value;
 		setSearchInput( val );
+
+		// Clear staged user when the input text changes.
+		if ( selectedUser ) {
+			setSelectedUser( null );
+		}
 
 		if ( searchTimerRef.current ) {
 			clearTimeout( searchTimerRef.current );
@@ -179,91 +297,135 @@ export function GroupMembersTab( { groupId, setNotice } ) {
 	};
 
 	/**
-	 * Handle adding a member from the autocomplete suggestions.
+	 * Handle selecting a user from the autocomplete suggestions.
+	 * Stages the user for adding — actual add happens on "+ Add" click.
 	 *
 	 * @param {Object} user User object from suggestions.
 	 */
-	var handleAddMember = function ( user ) {
-		setSearchInput( '' );
+	var handleSelectUser = function ( user ) {
+		setSelectedUser( user );
+		setSearchInput( user.label || user.name );
 		setSuggestions( [] );
 		setShowSuggestions( false );
+	};
 
-		updateGroupMember( {
-			group_id: groupId,
-			user_id: user.id,
-			role: 'member',
-			action_type: 'add',
-		} ).then( function ( response ) {
-			if ( response.success ) {
-				fetchMembers();
-				if ( setNotice ) {
-					setNotice( { type: 'success', message: response.data.message } );
+	/**
+	 * Handle adding the staged member to the pending adds list.
+	 */
+	var handleAddMember = function () {
+		if ( ! selectedUser ) {
+			return;
+		}
+
+		// Check if already in pending adds.
+		var alreadyPending = pendingAdds.some( function ( u ) {
+			return u.id === selectedUser.id;
+		} );
+		if ( alreadyPending ) {
+			setSelectedUser( null );
+			setSearchInput( '' );
+			return;
+		}
+
+		// Store with default role 'member'.
+		var userWithRole = Object.assign( {}, selectedUser, { role: 'member' } );
+		setPendingAdds( function ( prev ) {
+			return prev.concat( [ userWithRole ] );
+		} );
+		setSelectedUser( null );
+		setSearchInput( '' );
+	};
+
+	/**
+	 * Handle role change for a pending-add member.
+	 *
+	 * @param {number} userId  User ID.
+	 * @param {string} newRole New role.
+	 */
+	var handlePendingAddRoleChange = function ( userId, newRole ) {
+		setPendingAdds( function ( prev ) {
+			return prev.map( function ( u ) {
+				if ( u.id === userId ) {
+					return Object.assign( {}, u, { role: newRole } );
 				}
-			} else {
-				if ( setNotice ) {
-					setNotice( { type: 'error', message: response.data?.message || __( 'Failed to add member.', 'buddyboss' ) } );
-				}
-			}
-		} ).catch( function () {
-			if ( setNotice ) {
-				setNotice( { type: 'error', message: __( 'An error occurred.', 'buddyboss' ) } );
-			}
+				return u;
+			} );
 		} );
 	};
 
 	/**
-	 * Handle role change for a member.
+	 * Handle role change for a member (local only).
 	 *
 	 * @param {number} userId  User ID.
 	 * @param {string} newRole New role.
 	 */
 	var handleRoleChange = function ( userId, newRole ) {
-		updateGroupMember( {
-			group_id: groupId,
-			user_id: userId,
-			role: newRole,
-		} ).then( function ( response ) {
-			if ( response.success ) {
-				fetchMembers();
-			} else {
-				if ( setNotice ) {
-					setNotice( { type: 'error', message: response.data?.message || __( 'Failed to update role.', 'buddyboss' ) } );
-				}
-			}
-		} ).catch( function () {
-			if ( setNotice ) {
-				setNotice( { type: 'error', message: __( 'An error occurred.', 'buddyboss' ) } );
-			}
+		setPendingRoleChanges( function ( prev ) {
+			var next = {};
+			Object.keys( prev ).forEach( function ( k ) {
+				next[ k ] = prev[ k ];
+			} );
+			next[ userId ] = newRole;
+			return next;
 		} );
 	};
 
 	/**
-	 * Handle removing a member.
+	 * Handle removing a fetched member (local only).
 	 *
 	 * @param {number} userId User ID.
 	 */
 	var handleRemoveMember = function ( userId ) {
-		updateGroupMember( {
-			group_id: groupId,
-			user_id: userId,
-			role: 'remove',
-		} ).then( function ( response ) {
-			if ( response.success ) {
-				fetchMembers();
-				if ( setNotice ) {
-					setNotice( { type: 'success', message: response.data.message } );
-				}
-			} else {
-				if ( setNotice ) {
-					setNotice( { type: 'error', message: response.data?.message || __( 'Failed to remove member.', 'buddyboss' ) } );
-				}
-			}
-		} ).catch( function () {
-			if ( setNotice ) {
-				setNotice( { type: 'error', message: __( 'An error occurred.', 'buddyboss' ) } );
-			}
+		setPendingRemoves( function ( prev ) {
+			return prev.concat( [ userId ] );
 		} );
 	};
+
+	/**
+	 * Handle removing a pending-add member from the local list.
+	 *
+	 * @param {number} userId User ID.
+	 */
+	var handleRemovePendingAdd = function ( userId ) {
+		setPendingAdds( function ( prev ) {
+			return prev.filter( function ( u ) {
+				return u.id !== userId;
+			} );
+		} );
+	};
+
+	// Build the display list: fetched members (minus pending removes, with role overrides) + pending adds.
+	var displayMembers = [];
+
+	// Existing members minus removed ones.
+	fetchedMembers.forEach( function ( member ) {
+		if ( -1 !== pendingRemoves.indexOf( member.user_id ) ) {
+			return; // Removed locally.
+		}
+		var role = pendingRoleChanges[ member.user_id ] || member.role;
+		displayMembers.push( {
+			user_id: member.user_id,
+			name: member.name,
+			avatar_url: member.avatar_url,
+			profile_url: member.profile_url,
+			role: role,
+			is_creator: member.is_creator,
+			is_pending: false,
+		} );
+	} );
+
+	// Pending adds with their chosen role.
+	pendingAdds.forEach( function ( user ) {
+		displayMembers.push( {
+			user_id: user.id,
+			name: user.label || user.name,
+			avatar_url: user.image || '',
+			profile_url: '',
+			role: user.role || 'member',
+			is_creator: false,
+			is_pending: true,
+		} );
+	} );
 
 	var totalPages = Math.ceil( total / perPage );
 
@@ -274,26 +436,27 @@ export function GroupMembersTab( { groupId, setNotice } ) {
 				<label className="bb-admin-meta-field__label">
 					{ __( 'Add New Members', 'buddyboss' ) }
 				</label>
-				<div className="bb-group-members-tab__autocomplete-wrapper">
-					<input
-						type="text"
-						value={ searchInput }
-						onChange={ handleSearchInputChange }
-						onFocus={ function () {
-							if ( suggestions.length > 0 ) {
-								setShowSuggestions( true );
-							}
-						} }
-						onBlur={ function () {
-							// Delay to allow click on suggestion.
-							setTimeout( function () {
-								setShowSuggestions( false );
-							}, 200 );
-						} }
-						placeholder={ __( 'Type username to add', 'buddyboss' ) }
-						className="bb-group-members-tab__search-input"
-					/>
-					{ showSuggestions && (
+				<div className="bb-group-members-tab__add-row">
+					<div className="bb-group-members-tab__autocomplete-wrapper">
+						<input
+							type="text"
+							value={ searchInput }
+							onChange={ handleSearchInputChange }
+							onFocus={ function () {
+								if ( suggestions.length > 0 ) {
+									setShowSuggestions( true );
+								}
+							} }
+							onBlur={ function () {
+								// Delay to allow click on suggestion.
+								setTimeout( function () {
+									setShowSuggestions( false );
+								}, 200 );
+							} }
+							placeholder={ __( 'Type username to add', 'buddyboss' ) }
+							className="bb-group-members-tab__search-input"
+						/>
+						{ showSuggestions && (
 						<div className="bb-group-members-tab__suggestions">
 							{ isSearching ? (
 								<div className="bb-group-members-tab__suggestions-loading">
@@ -312,7 +475,7 @@ export function GroupMembersTab( { groupId, setNotice } ) {
 											className="bb-group-members-tab__suggestion-item"
 											onMouseDown={ function ( e ) {
 												e.preventDefault();
-												handleAddMember( user );
+												handleSelectUser( user );
 											} }
 										>
 											{ user.image && (
@@ -330,7 +493,16 @@ export function GroupMembersTab( { groupId, setNotice } ) {
 								} )
 							) }
 						</div>
-					) }
+						) }
+					</div>
+					<Button
+						variant="secondary"
+						className="bb-group-members-tab__add-btn"
+						disabled={ ! selectedUser }
+						onClick={ handleAddMember }
+					>
+						{ __( '+ Add', 'buddyboss' ) }
+					</Button>
 				</div>
 			</div>
 
@@ -339,7 +511,7 @@ export function GroupMembersTab( { groupId, setNotice } ) {
 				<div className="bb-group-members-tab__loading">
 					<Spinner />
 				</div>
-			) : 0 === members.length ? (
+			) : 0 === displayMembers.length ? (
 				<div className="bb-group-members-tab__empty">
 					<p>{ __( 'No members found.', 'buddyboss' ) }</p>
 				</div>
@@ -352,7 +524,7 @@ export function GroupMembersTab( { groupId, setNotice } ) {
 						roleOrder.forEach( function ( r ) {
 							grouped[ r ] = [];
 						} );
-						members.forEach( function ( member ) {
+						displayMembers.forEach( function ( member ) {
 							var key = grouped[ member.role ] ? member.role : 'member';
 							grouped[ key ].push( member );
 						} );
@@ -364,7 +536,7 @@ export function GroupMembersTab( { groupId, setNotice } ) {
 								<div key={ role } className="bb-group-members-tab__role-group">
 									{ grouped[ role ].map( function ( member ) {
 										return (
-											<div key={ member.user_id } className="bb-group-members-tab__member-row">
+											<div key={ member.user_id } className={ 'bb-group-members-tab__member-row' + ( member.is_pending ? ' bb-group-members-tab__member-row--pending' : '' ) }>
 												<div className="bb-group-members-tab__member-pill">
 													{ member.avatar_url && (
 														<img
@@ -373,15 +545,25 @@ export function GroupMembersTab( { groupId, setNotice } ) {
 															className="bb-group-members-tab__member-avatar"
 														/>
 													) }
-													<a href={ safeUrl( member.profile_url ) } target="_blank" rel="noopener,noreferrer" className="bb-group-members-tab__member-name">
-														{ member.name }
-													</a>
+													{ member.profile_url ? (
+														<a href={ safeUrl( member.profile_url ) } target="_blank" rel="noopener,noreferrer" className="bb-group-members-tab__member-name">
+															{ member.name }
+														</a>
+													) : (
+														<span className="bb-group-members-tab__member-name">
+															{ member.name }
+														</span>
+													) }
 													{ ! member.is_creator && (
 														<button
 															type="button"
 															className="bb-group-members-tab__remove-btn"
 															onClick={ function () {
-																handleRemoveMember( member.user_id );
+																if ( member.is_pending ) {
+																	handleRemovePendingAdd( member.user_id );
+																} else {
+																	handleRemoveMember( member.user_id );
+																}
 															} }
 															title={ __( 'Remove member', 'buddyboss' ) }
 														>
@@ -394,7 +576,11 @@ export function GroupMembersTab( { groupId, setNotice } ) {
 														value={ member.role }
 														options={ roleOptions }
 														onChange={ function ( newRole ) {
-															handleRoleChange( member.user_id, newRole );
+															if ( member.is_pending ) {
+																handlePendingAddRoleChange( member.user_id, newRole );
+															} else {
+																handleRoleChange( member.user_id, newRole );
+															}
 														} }
 														__nextHasNoMarginBottom
 													/>

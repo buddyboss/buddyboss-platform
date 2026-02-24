@@ -1033,8 +1033,34 @@
 		margin-bottom: 24px;
 	}
 
+	&__add-row {
+		display: flex;
+		align-items: flex-start;
+		gap: 12px;
+	}
+
 	&__autocomplete-wrapper {
 		position: relative;
+		flex: 1;
+		min-width: 0;
+	}
+
+	&__add-btn {
+		flex-shrink: 0;
+		white-space: nowrap;
+		height: 40px;
+		color: $bb-background-brand-primary-color;
+		border-color: $bb-background-brand-primary-color;
+
+		&:hover:not(:disabled) {
+			color: $bb-background-brand-primary-color;
+			border-color: $bb-background-brand-primary-color;
+			opacity: 0.85;
+		}
+
+		&:disabled {
+			opacity: 0.5;
+		}
 	}
 
 	&__search-input[type="text"] {
@@ -1120,6 +1146,10 @@
 		display: flex;
 		align-items: flex-start;
 		justify-content: space-between;
+
+		&--pending {
+			opacity: 0.7;
+		}
 	}
 
 	&__member-pill {

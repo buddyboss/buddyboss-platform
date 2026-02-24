@@ -9,7 +9,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useEffect, useMemo, useCallback } from '@wordpress/element';
+import { useState, useEffect, useMemo, useCallback, useRef } from '@wordpress/element';
 import {
 	Modal,
 	Button,
@@ -109,6 +109,9 @@ export function GroupEditModal( { isOpen, group, onClose, onSave, isSaving } ) {
 	var noticeState = useState( null );
 	var notice = noticeState[ 0 ];
 	var setNotice = noticeState[ 1 ];
+
+	// Ref for the members tab save function (called on modal Save).
+	var membersSaveRef = useRef( null );
 
 	// Reset form when group changes.
 	useEffect( function () {
@@ -299,6 +302,9 @@ export function GroupEditModal( { isOpen, group, onClose, onSave, isSaving } ) {
 			} );
 		}
 
+		// Attach member save ref so parent can process member changes after main save.
+		payload._membersSave = membersSaveRef.current;
+
 		onSave( payload );
 	};
 
@@ -314,6 +320,7 @@ export function GroupEditModal( { isOpen, group, onClose, onSave, isSaving } ) {
 				<GroupMembersTab
 					groupId={ group.id }
 					setNotice={ setNotice }
+					saveRef={ membersSaveRef }
 				/>
 			);
 		}
