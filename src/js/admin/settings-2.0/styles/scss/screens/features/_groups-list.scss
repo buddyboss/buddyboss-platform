@@ -234,6 +234,7 @@
 		&.bb-groups-list__th--name {
 			font-size: 14px;
 			color: $bb-text-color;
+			width: 30%;
 		}
 	}
 
@@ -326,10 +327,6 @@
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		text-decoration: none;
-
-		&:hover {
-			text-decoration: underline;
-		}
 	}
 
 	// Privacy Column
@@ -338,44 +335,17 @@
 		align-items: center;
 		gap: 4px;
 		padding: 2px 8px;
-		font-size: 12px;
+		font-size: 11px;
 		line-height: 1.4;
+		color: $bb-text-color;
+		background-color: $bb-background-secondary-color;
+		border: 1px solid $bb-border-tertiary-color;
 		border-radius: $bb-border-radius-full;
 		white-space: nowrap;
 
 		i {
-			font-size: 14px;
+			font-size: 12px;
 			line-height: 1;
-		}
-
-		&--public {
-			color: $bb-text-positive-primary-color;
-			background-color: $bb-background-positive-primary-color;
-			border: 1px solid $bb-border-positive-secondary-color;
-
-			i {
-				color: $bb-icon-positive-primary-color;
-			}
-		}
-
-		&--private {
-			color: $bb-text-warning-primary-color;
-			background-color: $bb-background-warning-primary-color;
-			border: 1px solid $bb-border-warning-secondary-color;
-
-			i {
-				color: $bb-icon-warning-primary-color;
-			}
-		}
-
-		&--hidden {
-			color: $bb-text-tertiary-color;
-			background-color: $bb-background-secondary-color;
-			border: 1px solid $bb-border-secondary-color;
-
-			i {
-				color: $bb-icon-tertiary-color;
-			}
 		}
 	}
 
@@ -384,13 +354,13 @@
 		display: flex;
 		align-items: center;
 		gap: 6px;
-		color: $bb-text-brand-primary-color;
+		color: $bb-link-color;
 		font-size: 13px;
-		font-weight: 500;
+		font-weight: 400;
 
 		i {
-			font-size: 18px;
-			color: $bb-icon-primary-color;
+			font-size: 16px;
+			color: $bb-icon-tertiary-color;
 			line-height: 1;
 		}
 	}
@@ -399,12 +369,13 @@
 	&__type-badge {
 		display: inline-flex;
 		align-items: center;
-		padding: 2px 8px;
-		font-size: 12px;
+		padding: 3px 8px;
+		font-size: 11px;
+		font-weight: 500;
 		line-height: 1.4;
-		color: $bb-text-secondary-color;
+		color: $bb-text-color;
 		background-color: $bb-background-secondary-color;
-		border: 1px solid $bb-border-secondary-color;
+		border: 1px solid $bb-border-tertiary-color;
 		border-radius: $bb-border-radius-full;
 		white-space: nowrap;
 	}
@@ -429,7 +400,7 @@
 		line-height: 18px;
 
 		i {
-			font-size: 20px;
+			font-size: 16px;
 			color: $bb-icon-tertiary-color;
 			line-height: 1;
 		}

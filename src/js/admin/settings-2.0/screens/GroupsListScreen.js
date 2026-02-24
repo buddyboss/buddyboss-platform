@@ -852,15 +852,14 @@ export function GroupsListScreen( { onNavigate } ) {
 														className="bb-groups-list__avatar"
 													/>
 												) }
-												<button
-													type="button"
-													className="bb-groups-list__group-name"
-													onClick={ function () {
-														handleEditGroup( group );
-													} }
+												<a
+												href={ safeUrl( group.permalink ) }
+												target="_blank"
+												rel="noopener,noreferrer"
+												className="bb-groups-list__group-name"
 												>
 													{ decodeEntities( group.name ) }
-												</button>
+												</a>
 											</div>
 										</td>
 										<td className="bb-groups-list__td--privacy">
@@ -871,17 +870,15 @@ export function GroupsListScreen( { onNavigate } ) {
 										</td>
 										<td className="bb-groups-list__td--members">
 											<span className="bb-groups-list__members-count">
-												<i className="bb-icons-rl bb-icons-rl-users"></i>
+												<i className="bb-icons-rl bb-icons-rl-user"></i>
 												{ group.total_members }
 											</span>
 										</td>
 										<td className="bb-groups-list__td--group-type">
-											{ group.group_type ? (
+											{ group.group_type && (
 												<span className="bb-groups-list__type-badge">
 													{ decodeEntities( group.group_type ) }
 												</span>
-											) : (
-												<span className="bb-groups-list__type-empty">&mdash;</span>
 											) }
 										</td>
 										<td className="bb-groups-list__td--last-active">
@@ -907,15 +904,6 @@ export function GroupsListScreen( { onNavigate } ) {
 												{ function ( { onClose } ) {
 													return (
 														<MenuGroup className="bb_dropdown_menu_group">
-															<MenuItem
-																onClick={ function () {
-																	handleEditGroup( group );
-																	onClose();
-																} }
-															>
-																<i className="bb-icons-rl bb-icons-rl-pencil-simple"></i>
-																{ __( 'Edit', 'buddyboss' ) }
-															</MenuItem>
 															{ group.permalink && (
 																<MenuItem
 																	onClick={ function () {
@@ -931,6 +919,15 @@ export function GroupsListScreen( { onNavigate } ) {
 																	<i className="bb-icons-rl bb-icons-rl-arrow-up-right bb-icons-external"></i>
 																</MenuItem>
 															) }
+															<MenuItem
+																onClick={ function () {
+																	handleEditGroup( group );
+																	onClose();
+																} }
+															>
+																<i className="bb-icons-rl bb-icons-rl-note-pencil"></i>
+																{ __( 'Edit', 'buddyboss' ) }
+															</MenuItem>
 															<MenuItem
 																isDestructive
 																onClick={ function () {
