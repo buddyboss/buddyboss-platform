@@ -216,19 +216,23 @@
             flex-wrap: wrap;
 
             .bb-admin-settings-form__field-description {
+                color: $bb-text-color;
+                font-size: 14px;
                 margin: 0;
             }
         }
     }
 
     &-description {
-        color: $bb-text-color;
+        color: $bb-text-tertiary-color;
         font-size: 13px;
         font-weight: 400;
         line-height: 1.5;
         margin: 20px 0 0 0;
 
         &--has-controls {
+            color: $bb-text-color;
+            font-size: 14px;
             margin-top: 0;
 
             .bb-admin-settings-form__inline-select {
@@ -315,6 +319,10 @@
 		.components-input-control__backdrop {
 			border-color: transparent;
 		}
+
+        .components-select-control {
+            max-width: 275px;
+        }
 	}
 }
 
