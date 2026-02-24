@@ -2879,14 +2879,6 @@ function bp_core_get_groups_admin_tabs( $active_tab = '' ) {
 		'class' => 'bp-all-groups',
 	);
 
-	$query['autofocus[section]'] = 'bp_nouveau_group_primary_nav';
-	$section_link                = add_query_arg( $query, admin_url( 'customize.php' ) );
-	$tabs[]                      = array(
-		'href'  => esc_url( $section_link ),
-		'name'  => __( 'Group Navigation', 'buddyboss' ),
-		'class' => 'bp-group-customizer',
-	);
-
 	/**
 	 * Filters the tab data used in our wp-admin screens.
 	 *
