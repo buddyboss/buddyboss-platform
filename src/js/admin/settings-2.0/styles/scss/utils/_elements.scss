@@ -359,6 +359,9 @@ select.bb-admin-settings__select {
 
     &--dismiss {
         margin-left: auto;
+        border: 0;
+        background: transparent;
+        padding: 0;
 
         i {
             font-size: 18px;
@@ -438,7 +441,7 @@ select.bb-admin-settings__select {
 				font-weight: 400;
 				padding: 6px 14px;
 				border-radius: $bb-border-radius-lg;
-				line-height: 1.8;
+				line-height: 18px;
 				min-height: auto;
 				box-shadow: none;
 
@@ -453,7 +456,7 @@ select.bb-admin-settings__select {
 			&.is-primary {
 				font-size: 14px;
 				font-weight: 400;
-				line-height: 18px;
+				line-height: 20px;
 				color: $bb-text-inverse-color !important;
 				background-color: $bb-background-brand-primary-color !important;
 				padding: 6px 14px;
