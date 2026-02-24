@@ -13,6 +13,7 @@ import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { getGroupTypes, deleteGroupType, getPlatformSettings, savePlatformSetting } from '../utils/ajax';
 import { Toast } from '../components/Toast';
+import { HelpIcon } from '../components/HelpIcon';
 import { GroupTypeModal } from '../components/modals/GroupTypeModal';
 
 /**
@@ -20,11 +21,13 @@ import { GroupTypeModal } from '../components/modals/GroupTypeModal';
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param {Object}   props            Component props.
- * @param {Function} props.onNavigate Navigation handler.
+ * @param {Object}   props             Component props.
+ * @param {Function} props.onNavigate  Navigation handler.
+ * @param {string}   props.helpUrl     Help URL for this panel.
+ * @param {Function} props.onHelpClick Help icon click handler.
  * @returns {JSX.Element} Group types screen.
  */
-export function GroupTypeScreen( { onNavigate } ) {
+export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick } ) {
 	var groupTypesState = useState( [] );
 	var groupTypes = groupTypesState[ 0 ];
 	var setGroupTypes = groupTypesState[ 1 ];
@@ -224,6 +227,12 @@ export function GroupTypeScreen( { onNavigate } ) {
 					<h3 className="bb-admin-group-types__card-title">
 						{ __( 'Group Type Settings', 'buddyboss' ) }
 					</h3>
+					{ helpUrl && (
+						<HelpIcon
+							onClick={ onHelpClick }
+							contentId={ helpUrl }
+						/>
+					) }
 				</div>
 				<div className="bb-admin-group-types__card-body">
 					{ settingsLoading ? (
@@ -267,8 +276,8 @@ export function GroupTypeScreen( { onNavigate } ) {
 				</div>
 			</div>
 
-			{/* Card 2: Group Types List */}
-			<div className="bb-admin-group-types__card">
+			{/* Card 2: Group Types List (visible only when group types enabled) */}
+			{ enableGroupTypes && <div className="bb-admin-group-types__card">
 				<div className="bb-admin-group-types__card-header">
 					<h3 className="bb-admin-group-types__card-title">
 						{ __( 'Group Types', 'buddyboss' ) }
@@ -359,7 +368,7 @@ export function GroupTypeScreen( { onNavigate } ) {
 						</div>
 					) }
 				</div>
-			</div>
+			</div> }
 
 			{/* Group Type Modal */}
 			<GroupTypeModal

@@ -32,6 +32,7 @@ import { CheckboxListField } from './fields/CheckboxListField';
 import { ImageRadioField } from './fields/ImageRadioField';
 import { ChildRenderField } from './fields/ChildRenderField';
 import { DimensionsField } from './fields/DimensionsField';
+import { ConfirmToggleModal } from './modals/ConfirmToggleModal';
 
 /**
  * Settings Form Component (matching Figma settingsSection)
@@ -49,6 +50,18 @@ export function SettingsForm({ fields, values, onChange }) {
 	// Track migration modal state
 	const [isMigrationModalOpen, setIsMigrationModalOpen] = useState(false);
 	const [currentMigrationData, setCurrentMigrationData] = useState(null);
+
+	// Track confirm toggle modal state (for fields with confirm_message).
+	const [confirmModalState, setConfirmModalState] = useState({
+		isOpen: false,
+		message: '',
+		fieldName: '',
+		saveValue: 0,
+		title: '',
+		confirmLabel: '',
+		cancelLabel: '',
+		isDestructive: false,
+	});
 
 	// Memoize sanitized HTML to avoid DOMParser overhead on every re-render.
 	const sanitizedHtml = useMemo( () => {
@@ -153,6 +166,22 @@ export function SettingsForm({ fields, values, onChange }) {
 							onChange={(checked) => {
 								// If inverted, save the opposite of what's displayed
 								const saveValue = isInverted ? !checked : checked;
+
+								// Show confirm modal when turning ON and field has confirm_message.
+								if ( checked && field.confirm_message ) {
+									setConfirmModalState({
+										isOpen: true,
+										message: field.confirm_message,
+										fieldName: field.name,
+										saveValue: saveValue ? 1 : 0,
+										title: field.confirm_title || '',
+										confirmLabel: field.confirm_ok || '',
+										cancelLabel: field.confirm_cancel || '',
+										isDestructive: !!field.confirm_destructive,
+									});
+									return;
+								}
+
 								onChange(field.name, saveValue ? 1 : 0);
 							}}
 							disabled={disabled}
@@ -697,6 +726,21 @@ export function SettingsForm({ fields, values, onChange }) {
 					migrationData={currentMigrationData}
 				/>
 			)}
+			<ConfirmToggleModal
+				isOpen={confirmModalState.isOpen}
+				message={confirmModalState.message}
+				title={confirmModalState.title}
+				confirmLabel={confirmModalState.confirmLabel}
+				cancelLabel={confirmModalState.cancelLabel}
+				isDestructive={confirmModalState.isDestructive}
+				onConfirm={() => {
+					onChange(confirmModalState.fieldName, confirmModalState.saveValue);
+					setConfirmModalState({ isOpen: false, message: '', fieldName: '', saveValue: 0, title: '', confirmLabel: '', cancelLabel: '', isDestructive: false });
+				}}
+				onCancel={() => {
+					setConfirmModalState({ isOpen: false, message: '', fieldName: '', saveValue: 0, title: '', confirmLabel: '', cancelLabel: '', isDestructive: false });
+				}}
+			/>
 		</>
 	);
 }

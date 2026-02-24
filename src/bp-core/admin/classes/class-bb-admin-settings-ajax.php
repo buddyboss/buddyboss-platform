@@ -597,6 +597,13 @@ class BB_Admin_Settings_Ajax {
 				'disabled'             => ! empty( $field['disabled'] ),
 				// Group ID for visual grouping of related fields (removes borders between them).
 				'group'                => $field['group'] ?? null,
+				// Confirmation message shown in a modal before toggling ON.
+				'confirm_message'      => $field['confirm_message'] ?? null,
+				// Optional overrides for confirm modal customization.
+				'confirm_title'        => $field['confirm_title'] ?? null,
+				'confirm_ok'           => $field['confirm_ok'] ?? null,
+				'confirm_cancel'       => $field['confirm_cancel'] ?? null,
+				'confirm_destructive'  => ! empty( $field['confirm_destructive'] ),
 			);
 
 			// Auto-compute pro_notice for pro_only fields when not set at registration time.

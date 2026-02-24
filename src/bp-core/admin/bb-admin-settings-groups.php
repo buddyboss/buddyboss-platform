@@ -80,7 +80,7 @@ function bb_admin_settings_register_groups_feature() {
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
-						'article' => 62819,
+						'article' => 62811,
 					),
 					'admin.php'
 				)
@@ -104,7 +104,7 @@ function bb_admin_settings_register_groups_feature() {
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
-						'article' => 62819,
+						'article' => 125202,
 					),
 					'admin.php'
 				)
@@ -124,7 +124,15 @@ function bb_admin_settings_register_groups_feature() {
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-arrows-out-simple',
 			),
-			'help_url'   => '',
+			'help_url'   => bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 125305,
+					),
+					'admin.php'
+				)
+			),
 			'order'      => 30,
 			'is_default' => false,
 		)
@@ -140,7 +148,15 @@ function bb_admin_settings_register_groups_feature() {
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-grid-nine',
 			),
-			'help_url'   => '',
+			'help_url'   => bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 125311,
+					),
+					'admin.php'
+				)
+			),
 			'order'      => 40,
 			'is_default' => false,
 		)
@@ -181,12 +197,21 @@ function bb_admin_settings_register_groups_feature() {
 		'groups',
 		'group_types',
 		array(
-			'title' => __( 'Group Types', 'buddyboss' ),
-			'icon'  => array(
+			'title'    => __( 'Group Types', 'buddyboss' ),
+			'icon'     => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-tag',
 			),
-			'order' => 110,
+			'help_url' => bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 62816,
+					),
+					'admin.php'
+				)
+			),
+			'order'    => 110,
 		)
 	);
 

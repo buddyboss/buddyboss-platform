@@ -379,7 +379,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 					{/* Custom Panel Screen (e.g., All Activities, All Groups) */}
 					{CustomScreen ? (
 						<Suspense fallback={<div className="bb-admin-loading"><Spinner /></div>}>
-							<CustomScreen onNavigate={onNavigate} />
+							<CustomScreen onNavigate={onNavigate} helpUrl={activePanel ? activePanel.help_url : ''} onHelpClick={handleHelpClick} />
 						</Suspense>
 					) : (
 					<>

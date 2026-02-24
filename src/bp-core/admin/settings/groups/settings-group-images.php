@@ -61,7 +61,13 @@ function bb_groups_register_images_panel_fields() {
 			'name'              => 'bp-default-group-avatar-type',
 			'label'             => __( 'Default Group Avatar', 'buddyboss' ),
 			'type'              => 'image_radio',
-			'description'       => '',
+			'description'       => empty( _wp_image_editor_choose() )
+				? sprintf(
+					/* translators: %s: Imagick link. */
+					__( 'Note: Your server needs %s installed to use the "Group Name" option.', 'buddyboss' ),
+					'<a href="https://github.com/ImageMagick/ImageMagick" target="_blank">Imagick</a>'
+				)
+				: '',
 			'default'           => bb_get_default_group_avatar_type(),
 			'sanitize_callback' => 'bb_groups_sanitize_avatar_type',
 			'options'           => array(
@@ -88,7 +94,7 @@ function bb_groups_register_images_panel_fields() {
 				'item_type'   => 'default',
 				'url_getter'  => 'bb_get_default_custom_upload_group_avatar',
 				'label'       => __( 'Upload Custom Avatar', 'buddyboss' ),
-				'help_text'   => __( 'Upload a default avatar image (JPG or PNG, recommended size: 300×300 px).', 'buddyboss' ),
+				'help_text'   => sprintf( __( 'Upload a default avatar image (JPG or PNG, recommended size: %1$spx × %2$spx).', 'buddyboss' ), absint( bp_core_avatar_full_width() ), absint( bp_core_avatar_full_height() ) ),
 				'conditional' => array(
 					'value' => 'custom',
 				),
@@ -112,6 +118,8 @@ function bb_groups_register_images_panel_fields() {
 	if ( ! bp_is_active( 'groups', 'cover_image' ) ) {
 		return;
 	}
+
+	$cover_dimensions = bb_attachments_get_default_custom_cover_image_dimensions( 'groups' );
 
 	// -------------------------------------------------------------------------
 	// SECTION: Group Cover Image
@@ -183,7 +191,7 @@ function bb_groups_register_images_panel_fields() {
 				'item_type'   => 'default',
 				'url_getter'  => 'bb_get_default_custom_upload_group_cover',
 				'label'       => __( 'Upload Custom Cover', 'buddyboss' ),
-				'help_text'   => __( 'Upload a default cover image (JPG or PNG, recommended size: 1950×450 px).', 'buddyboss' ),
+				'help_text'   => sprintf( __( 'Upload a default cover image (JPG or PNG, recommended size: %1$spx × %2$spx).', 'buddyboss' ), (int) $cover_dimensions['width'], (int) $cover_dimensions['height'] ),
 				'conditional' => array(
 					'value' => 'custom',
 				),

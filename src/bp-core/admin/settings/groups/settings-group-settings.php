@@ -166,6 +166,7 @@ function bb_groups_register_settings_panel_fields() {
 			'help_text'         => __( 'Members must first be a member of the parent group prior to being invited to a subgroup', 'buddyboss' ),
 			'default'           => bp_enable_group_restrict_invites(),
 			'sanitize_callback' => 'intval',
+			'confirm_message'   => __( 'By enabling this option members that are already part of sub-groups and not the parent groups will automatically be removed from all sub-groups.', 'buddyboss' ),
 			'conditional'       => array(
 				'field' => 'bp-enable-group-hierarchies',
 				'value' => true,

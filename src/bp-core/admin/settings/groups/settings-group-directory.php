@@ -107,7 +107,7 @@ function bb_groups_register_directory_panel_fields() {
 			'sanitize_callback' => 'bb_groups_sanitize_grid_style',
 			'options'           => array(
 				array(
-					'label' => __( 'Left', 'buddyboss' ),
+					'label' => is_rtl() ? __( 'Right', 'buddyboss' ) : __( 'Left', 'buddyboss' ),
 					'value' => 'left',
 					'image' => 'header-left-group',
 				),

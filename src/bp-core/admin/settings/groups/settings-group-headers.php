@@ -46,7 +46,7 @@ function bb_groups_register_headers_panel_fields() {
 			'sanitize_callback' => 'bb_groups_sanitize_header_style',
 			'options'           => array(
 				array(
-					'label' => __( 'Left', 'buddyboss' ),
+					'label' => is_rtl() ? __( 'Right', 'buddyboss' ) : __( 'Left', 'buddyboss' ),
 					'value' => 'left',
 					'image' => 'header-left-group',
 				),

@@ -99,3 +99,68 @@ function bb_groups_register_access_control_fields() {
 	 */
 	do_action( 'bb_groups_access_control_after_register_fields' );
 }
+
+// =========================================================================
+// AJAX DATA ENRICHMENT
+// =========================================================================
+
+// The access_control enrichment filter may already be registered by Activity.
+// Register it here too so Groups access controls work even when Activity is disabled.
+if ( ! function_exists( 'bb_access_control_enrich_field_data' ) ) {
+
+	/**
+	 * Enrich access_control field data at AJAX time.
+	 *
+	 * Adds the `access_control_data` key so the React component receives
+	 * types, options, and the currently-selected type. Pro populates these
+	 * via the `bb_access_control_field_data` filter.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array  $field_data Formatted field data.
+	 * @param array  $field      Original field registration data.
+	 * @param string $feature_id Feature ID (e.g. 'activity', 'groups').
+	 *
+	 * @return array
+	 */
+	function bb_access_control_enrich_field_data( $field_data, $field, $feature_id = '' ) {
+
+		if ( 'access_control' !== ( $field_data['type'] ?? '' ) ) {
+			return $field_data;
+		}
+
+		/**
+		 * Filters the access-control data attached to the field.
+		 *
+		 * Pro hooks here to populate `types` (dropdown options),
+		 * `current_type`, and `options` (toggle list for the selected type).
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array  $data       Default (empty) access control data.
+		 * @param string $field_name The field option name.
+		 * @param string $feature_id Feature ID (e.g. 'activity', 'groups').
+		 */
+		$field_data['access_control_data'] = apply_filters(
+			'bb_access_control_field_data',
+			array(
+				'types'              => array(),
+				'current_type'       => '',
+				'options'            => array(),
+				'select_placeholder' => __( 'Select Role', 'buddyboss' ),
+			),
+			$field_data['name'],
+			$feature_id
+		);
+
+		// Load saved value from db.
+		$saved = bp_get_option( $field_data['name'], '' );
+		if ( ! empty( $saved ) && is_array( $saved ) ) {
+			$field_data['value'] = $saved;
+		}
+
+		return $field_data;
+	}
+
+	add_filter( 'bb_admin_settings_format_field_data', 'bb_access_control_enrich_field_data', 10, 3 );
+}

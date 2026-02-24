@@ -7772,20 +7772,16 @@ function bb_admin_icons( $id ) {
 			$meta_icon = $bb_icon_bf . ' bb-icon-link';
 			break;
 		case 'bp_member_avatar_settings':
-		case 'bp_groups_avatar_settings':
 			$meta_icon = $bb_icon_bf . ' bb-icon-image';
 			break;
 		case 'bp_profile_headers_settings':
-		case 'bp_groups_headers_settings':
 			$meta_icon = $bb_icon_bf . ' bb-icon-maximize';
 			break;
 		case 'bp_profile_list_settings':
-		case 'bp_group_list_settings':
 		case 'bbp_settings_root_slugs':
 			$meta_icon = $bb_icon_bf . ' bb-icon-grid-small';
 			break;
 		case 'bp_member_type_settings':
-		case 'bp_groups_types':
 			$meta_icon = $bb_icon_bf . ' bb-icon-tags';
 			break;
 		case 'bp_profile_search_settings':
@@ -7795,12 +7791,8 @@ function bb_admin_icons( $id ) {
 		case 'bp_search_settings_post_types':
 			$meta_icon = $bb_icon_bf . ' bb-icon-search';
 			break;
-		case 'bp_groups':
 		case 'bbp_settings_buddypress':
 			$meta_icon = $bb_icon_bf . ' bb-icon-users';
-			break;
-		case 'bp_groups_hierarchies':
-			$meta_icon = $bb_icon_bf . ' bb-icon-layers';
 			break;
 		case 'bbp_settings_users':
 		case 'bbp_settings_features':
@@ -7893,7 +7885,6 @@ function bb_admin_icons( $id ) {
 		case 'bbpress_converter_main':
 			$meta_icon = $bb_icon_bf . ' bb-icon-upload';
 			break;
-		case 'group_access_control_block':
 		case 'activity_access_control_block':
 		case 'messages_access_control_block':
 		case 'media_access_control_block';
