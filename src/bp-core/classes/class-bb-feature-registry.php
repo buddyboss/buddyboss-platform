@@ -1428,6 +1428,7 @@ class BB_Feature_Registry {
 			'dimensions'        => 'sanitize_text_field',
 			'child_render'      => 'sanitize_text_field',
 			'image_radio'       => 'sanitize_text_field',
+			'ajax_multiselect'  => array( $this, 'bb_sanitize_ajax_multiselect' ),
 			'reaction_mode'     => 'sanitize_text_field',
 			'reaction_button'   => array( $this, 'bb_sanitize_reaction_button' ),
 		);
@@ -1448,6 +1449,23 @@ class BB_Feature_Registry {
 			return array();
 		}
 		return array_map( 'sanitize_text_field', $value );
+	}
+
+	/**
+	 * Sanitize AJAX multi-select field.
+	 *
+	 * Handles arrays of integer IDs from multi-select course pickers.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param mixed $value The value to sanitize.
+	 * @return array Sanitized array of positive integer values.
+	 */
+	public function bb_sanitize_ajax_multiselect( $value ) {
+		if ( ! is_array( $value ) ) {
+			return array();
+		}
+		return array_map( 'absint', $value );
 	}
 
 	/**

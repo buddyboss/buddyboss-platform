@@ -21,9 +21,20 @@ export function ajaxFetch(action, data = {}, options = {}) {
 	formData.append('action', action);
 	formData.append('nonce', nonce);
 
-	// Append additional data
+	// Append additional data, handling arrays and objects with bracket notation.
 	Object.keys(data).forEach((key) => {
-		formData.append(key, data[key]);
+		var val = data[key];
+		if ( Array.isArray( val ) ) {
+			val.forEach(function ( item ) {
+				formData.append( key + '[]', item );
+			});
+		} else if ( val && 'object' === typeof val && ! ( val instanceof Blob ) ) {
+			Object.keys( val ).forEach(function ( subKey ) {
+				formData.append( key + '[' + subKey + ']', val[subKey] );
+			});
+		} else {
+			formData.append( key, val );
+		}
 	});
 
 	return fetch(ajaxUrl, {

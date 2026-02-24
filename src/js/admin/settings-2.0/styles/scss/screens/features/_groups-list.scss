@@ -959,6 +959,116 @@
 	padding-left: 26px;
 }
 
+/* Toggle list (checkbox group) inside group edit modal */
+.bb-admin-meta-field__toggle-list-field {
+	margin-bottom: 16px;
+
+	.bb-admin-meta-field__label {
+		margin-bottom: 8px;
+		font-weight: 600;
+	}
+}
+
+.bb-admin-meta-field__toggle-list-options {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+/* AJAX multi-select field */
+.bb-admin-meta-field__ajax-multiselect {
+	margin-bottom: 16px;
+
+	.bb-admin-meta-field__label {
+		margin-bottom: 8px;
+		font-weight: 600;
+	}
+}
+
+.bb-admin-meta-field__selected-items {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin-bottom: 8px;
+}
+
+.bb-admin-meta-field__selected-tag {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	padding: 4px 8px;
+	background-color: #f0f0f1;
+	border: 1px solid $bb-border-secondary-color;
+	border-radius: 4px;
+	font-size: 13px;
+	line-height: 1.4;
+}
+
+.bb-admin-meta-field__remove-tag {
+	background: none;
+	border: none;
+	cursor: pointer;
+	font-size: 16px;
+	line-height: 1;
+	padding: 0 2px;
+	color: #787c82;
+
+	&:hover {
+		color: #d63638;
+	}
+}
+
+.bb-admin-meta-field__search-wrapper {
+	position: relative;
+
+	.spinner {
+		position: absolute;
+		right: 8px;
+		top: 50%;
+		transform: translateY(-50%);
+	}
+}
+
+.bb-admin-meta-field__search-input {
+	width: 100%;
+	padding: 8px 12px;
+	border: 1px solid $bb-border-secondary-color;
+	border-radius: 4px;
+	font-size: 14px;
+
+	&:focus {
+		border-color: $bb-primary-color;
+		box-shadow: 0 0 0 1px $bb-primary-color;
+		outline: none;
+	}
+}
+
+.bb-admin-meta-field__suggestions {
+	position: absolute;
+	z-index: 100;
+	width: 100%;
+	max-height: 200px;
+	overflow-y: auto;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	background: #fff;
+	border: 1px solid $bb-border-secondary-color;
+	border-top: none;
+	border-radius: 0 0 4px 4px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.bb-admin-meta-field__suggestion-item {
+	padding: 8px 12px;
+	cursor: pointer;
+	font-size: 13px;
+
+	&:hover {
+		background-color: #f0f0f1;
+	}
+}
+
 /* ----------------------------------------------------------------
    Meta Field Shared Styles (labels, permalink, etc.)
    ---------------------------------------------------------------- */

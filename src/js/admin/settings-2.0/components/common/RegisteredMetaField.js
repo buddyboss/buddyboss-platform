@@ -8,6 +8,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
+import { useState, useEffect, useRef } from '@wordpress/element';
 import {
 	TextControl,
 	TextareaControl,
@@ -18,6 +19,210 @@ import { decodeEntities } from '@wordpress/html-entities';
 
 import { RichTextEditor } from './RichTextEditor';
 import { safeUrl } from '../../utils/sanitize';
+
+/**
+ * AJAX-powered searchable multi-select field.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object}   props           Component props.
+ * @param {Object}   props.field     Field data from the registry.
+ * @param {Array}    props.value     Array of selected IDs.
+ * @param {Function} props.onChange  Change handler.
+ * @returns {JSX.Element} Multi-select component.
+ */
+function AjaxMultiSelectField( { field, value, onChange } ) {
+	var extraData = field.extra_data || {};
+	var initialItems = extraData.selected_items || [];
+	var ajaxAction = extraData.ajax_action || '';
+	var ajaxNonce = extraData.ajax_nonce || '';
+	var nonceParam = extraData.nonce_param || 'security';
+	var placeholder = extraData.search_placeholder || '';
+
+	var selectedIds = Array.isArray( value ) ? value.map( Number ) : [];
+
+	// Track labels for selected items.
+	var [ itemLabels, setItemLabels ] = useState( function () {
+		var labels = {};
+		initialItems.forEach( function ( item ) {
+			labels[ Number( item.value ) ] = item.label;
+		} );
+		return labels;
+	} );
+
+	var [ searchQuery, setSearchQuery ] = useState( '' );
+	var [ suggestions, setSuggestions ] = useState( [] );
+	var [ isLoading, setIsLoading ] = useState( false );
+	var [ showDropdown, setShowDropdown ] = useState( false );
+	var abortRef = useRef( null );
+	var timerRef = useRef( null );
+	var wrapperRef = useRef( null );
+	var selectedIdsRef = useRef( selectedIds );
+	selectedIdsRef.current = selectedIds;
+
+	// Close dropdown on outside click.
+	useEffect( function () {
+		function handleClickOutside( e ) {
+			if ( wrapperRef.current && ! wrapperRef.current.contains( e.target ) ) {
+				setShowDropdown( false );
+			}
+		}
+		document.addEventListener( 'mousedown', handleClickOutside );
+		return function () {
+			document.removeEventListener( 'mousedown', handleClickOutside );
+		};
+	}, [] );
+
+	// Debounced AJAX search when query changes.
+	useEffect( function () {
+		if ( timerRef.current ) {
+			clearTimeout( timerRef.current );
+		}
+
+		if ( ! searchQuery || searchQuery.length < 2 || ! ajaxAction ) {
+			setSuggestions( [] );
+			setShowDropdown( false );
+			return;
+		}
+
+		timerRef.current = setTimeout( function () {
+			// Cancel previous request.
+			if ( abortRef.current ) {
+				abortRef.current.abort();
+			}
+
+			var controller = new AbortController();
+			abortRef.current = controller;
+
+			setIsLoading( true );
+
+			var ajaxUrl = window.bbAdminData?.ajaxUrl || '/wp-admin/admin-ajax.php';
+			var params = new URLSearchParams();
+			params.append( 'action', ajaxAction );
+			params.append( nonceParam, ajaxNonce );
+			params.append( 'q', searchQuery );
+			params.append( 'page', '1' );
+
+			fetch( ajaxUrl + '?' + params.toString(), {
+				method: 'GET',
+				credentials: 'same-origin',
+				signal: controller.signal,
+			} )
+				.then( function ( response ) {
+					return response.json();
+				} )
+				.then( function ( data ) {
+					var matches = data.matches || [];
+					var currentIds = selectedIdsRef.current;
+					// Filter out already selected items.
+					var filtered = matches.filter( function ( item ) {
+						return -1 === currentIds.indexOf( Number( item.value ) );
+					} );
+					setSuggestions( filtered );
+					setShowDropdown( true );
+					setIsLoading( false );
+				} )
+				.catch( function ( err ) {
+					if ( 'AbortError' !== err.name ) {
+						setIsLoading( false );
+						setSuggestions( [] );
+					}
+				} );
+		}, 300 );
+
+		return function () {
+			if ( timerRef.current ) {
+				clearTimeout( timerRef.current );
+			}
+		};
+	}, [ searchQuery ] ); // eslint-disable-line react-hooks/exhaustive-deps
+
+	function handleSelect( item ) {
+		var newIds = selectedIds.concat( [ Number( item.value ) ] );
+		setItemLabels( function ( prev ) {
+			var updated = Object.assign( {}, prev );
+			updated[ Number( item.value ) ] = item.label;
+			return updated;
+		} );
+		onChange( newIds );
+		setSearchQuery( '' );
+		setSuggestions( [] );
+		setShowDropdown( false );
+	}
+
+	function handleRemove( id ) {
+		var newIds = selectedIds.filter( function ( existingId ) {
+			return existingId !== id;
+		} );
+		onChange( newIds );
+	}
+
+	return (
+		<div className="bb-admin-meta-field__ajax-multiselect" ref={ wrapperRef }>
+			<label className="bb-admin-meta-field__label">{ field.label }</label>
+
+			{ selectedIds.length > 0 && (
+				<div className="bb-admin-meta-field__selected-items">
+					{ selectedIds.map( function ( id ) {
+						return (
+							<span key={ id } className="bb-admin-meta-field__selected-tag">
+								{ itemLabels[ id ] || ( '#' + id ) }
+								<button
+									type="button"
+									className="bb-admin-meta-field__remove-tag"
+									onClick={ function () {
+										handleRemove( id );
+									} }
+									aria-label={ 'Remove' }
+								>
+									{ '\u00D7' }
+								</button>
+							</span>
+						);
+					} ) }
+				</div>
+			) }
+
+			<div className="bb-admin-meta-field__search-wrapper" style={ { position: 'relative' } }>
+				<input
+					type="text"
+					className="bb-admin-meta-field__search-input"
+					value={ searchQuery }
+					onChange={ function ( e ) {
+						setSearchQuery( e.target.value );
+					} }
+					placeholder={ placeholder }
+				/>
+				{ isLoading && (
+					<span className="bb-admin-meta-field__search-spinner spinner is-active"></span>
+				) }
+
+				{ showDropdown && suggestions.length > 0 && (
+					<ul className="bb-admin-meta-field__suggestions">
+						{ suggestions.map( function ( item ) {
+							return (
+								<li
+									key={ item.value }
+									className="bb-admin-meta-field__suggestion-item"
+									onMouseDown={ function ( e ) {
+										e.preventDefault();
+										handleSelect( item );
+									} }
+								>
+									{ item.label }
+								</li>
+							);
+						} ) }
+					</ul>
+				) }
+			</div>
+
+			{ field.description && (
+				<p className="bb-admin-meta-field__description">{ field.description }</p>
+			) }
+		</div>
+	);
+}
 
 /**
  * Render a single registered field based on its type.
@@ -151,6 +356,57 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 					<p className="bb-admin-meta-field__description">{ field.description }</p>
 				) }
 			</div>
+		);
+	}
+
+	// Toggle list field (group of checkboxes with object value).
+	if ( 'toggle_list' === field.type ) {
+		var toggleOptions = field.options && Array.isArray( field.options ) ? field.options : [];
+		if ( 0 === toggleOptions.length ) {
+			return null;
+		}
+		var toggleValues = value && 'object' === typeof value ? value : {};
+
+		return (
+			<div className="bb-admin-meta-field__toggle-list-field">
+				<label className="bb-admin-meta-field__label">{ field.label }</label>
+				<div className="bb-admin-meta-field__toggle-list-options">
+					{ toggleOptions.map( function ( option ) {
+						var optId = field.id + '-' + option.value + '-' + editorItemId;
+						var isOptionChecked = !! toggleValues[ option.value ] && '0' !== String( toggleValues[ option.value ] );
+
+						return (
+							<label key={ option.value } className="bb-admin-meta-field__checkbox-option" htmlFor={ optId }>
+								<input
+									type="checkbox"
+									id={ optId }
+									checked={ isOptionChecked }
+									onChange={ function ( e ) {
+										var updated = Object.assign( {}, toggleValues );
+										updated[ option.value ] = e.target.checked ? 1 : 0;
+										onChange( updated );
+									} }
+								/>
+								<span className="bb-admin-meta-field__checkbox-label">{ decodeEntities( option.label ) }</span>
+							</label>
+						);
+					} ) }
+				</div>
+				{ field.description && (
+					<p className="bb-admin-meta-field__description">{ field.description }</p>
+				) }
+			</div>
+		);
+	}
+
+	// AJAX-powered searchable multi-select field.
+	if ( 'ajax_multiselect' === field.type ) {
+		return (
+			<AjaxMultiSelectField
+				field={ field }
+				value={ value }
+				onChange={ onChange }
+			/>
 		);
 	}
 

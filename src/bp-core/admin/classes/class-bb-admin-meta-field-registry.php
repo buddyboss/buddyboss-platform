@@ -238,8 +238,8 @@ class BB_Admin_Meta_Field_Registry {
 					$field_data['value'] = call_user_func( $args['get_value'], $item );
 				}
 
-				// Get options for select, radio, and checkbox types.
-				if ( in_array( $args['type'], array( 'select', 'radio', 'checkbox' ), true ) && is_callable( $args['get_options'] ) ) {
+				// Get options for select, radio, checkbox, and toggle_list types.
+				if ( in_array( $args['type'], array( 'select', 'radio', 'checkbox', 'toggle_list' ), true ) && is_callable( $args['get_options'] ) ) {
 					$field_data['options'] = call_user_func( $args['get_options'], $item );
 				}
 
