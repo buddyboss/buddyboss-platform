@@ -598,7 +598,9 @@ add_action( 'in_admin_header', 'bb_render_admin_header', 999 );
  * Redirect legacy Settings 1.0 tabs to Settings 2.0.
  *
  * When Settings 2.0 is active, redirect users accessing old
- * ?page=bp-settings&tab={old-tab} URLs to the new Settings 2.0 feature pages.
+ * ?page=bp-settings&tab={old-tab} URLs and legacy CPT pages
+ * (e.g., edit.php?post_type=bp-group-type) to the corresponding
+ * Settings 2.0 feature pages.
  *
  * @since BuddyBoss [BBVERSION]
  */
@@ -608,10 +610,17 @@ function bb_redirect_legacy_settings_to_settings_2() {
 		return;
 	}
 
-	// Check if we're on the old settings page.
-	$page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
-	$tab  = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : '';
+	$page      = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
+	$tab       = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : '';
+	$post_type = isset( $_GET['post_type'] ) ? sanitize_key( $_GET['post_type'] ) : '';
 
+	// Redirect legacy Group Types CPT page (edit.php?post_type=bp-group-type).
+	if ( 'bp-group-type' === $post_type ) {
+		wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=groups&panel=group_types' ) );
+		exit;
+	}
+
+	// Check if we're on the old settings page.
 	if ( 'bp-settings' !== $page || empty( $tab ) ) {
 		return;
 	}
@@ -620,6 +629,7 @@ function bb_redirect_legacy_settings_to_settings_2() {
 	$legacy_tabs_mapping = array(
 		'bp-reactions' => 'reactions',
 		'bp-activity'  => 'activity',
+		'bp-groups'    => 'groups',
 		// Add more mappings here as more tabs are migrated to Settings 2.0.
 	);
 
@@ -633,8 +643,7 @@ function bb_redirect_legacy_settings_to_settings_2() {
 	$legacy_tabs_mapping = apply_filters( 'bb_legacy_settings_tabs_mapping', $legacy_tabs_mapping );
 
 	if ( isset( $legacy_tabs_mapping[ $tab ] ) ) {
-		$redirect_url = admin_url( 'admin.php?page=bb-settings&tab=' . $legacy_tabs_mapping[ $tab ] );
-		wp_safe_redirect( $redirect_url );
+		wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=' . $legacy_tabs_mapping[ $tab ] ) );
 		exit;
 	}
 }

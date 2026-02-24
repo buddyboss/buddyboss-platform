@@ -1710,13 +1710,8 @@ class BB_Admin_Groups_Ajax {
 		update_post_meta( $post_id, '_bp_group_type_enabled_member_type_join', $member_type_join );
 		update_post_meta( $post_id, '_bp_group_type_enabled_member_type_group_invites', $member_type_invites );
 
-		if ( ! empty( $role_labels ) ) {
-			update_post_meta( $post_id, '_bp_group_type_role_labels', $role_labels );
-		}
-
-		if ( ! empty( $label_color ) ) {
-			update_post_meta( $post_id, '_bp_group_type_label_color', $label_color );
-		}
+		update_post_meta( $post_id, '_bp_group_type_role_labels', $role_labels );
+		update_post_meta( $post_id, '_bp_group_type_label_color', $label_color );
 	}
 
 	/**
