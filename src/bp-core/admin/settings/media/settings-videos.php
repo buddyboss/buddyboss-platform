@@ -180,6 +180,9 @@ function bb_media_register_videos_panel_fields() {
 			'options'           => bb_media_get_video_extension_options(),
 			'default'           => array(),
 			'sanitize_callback' => 'bb_media_sanitize_extensions',
+			'allow_add'         => true,
+			'add_button_label'  => __( 'Add Extension', 'buddyboss' ),
+			'extension_data'    => bb_media_get_video_extension_data(),
 			'order'             => 70,
 		)
 	);
@@ -204,10 +207,41 @@ function bb_media_get_video_extension_options() {
 			continue;
 		}
 		$options[] = array(
-			'label' => ! empty( $ext['description'] ) ? $ext['extension'] . ' (' . $ext['description'] . ')' : $ext['extension'],
-			'value' => $key,
+			'label'      => ! empty( $ext['description'] ) ? $ext['extension'] . ' (' . $ext['description'] . ')' : $ext['extension'],
+			'value'      => $key,
+			'is_default' => ! empty( $ext['is_default'] ) ? 1 : 0,
 		);
 	}
 
 	return $options;
+}
+
+/**
+ * Get full video extension data for the extension list field.
+ *
+ * Returns the raw extension array so the React UI can display extension
+ * details and support adding new custom extensions.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array Full extension data keyed by extension ID (e.g., bb_vid_0).
+ */
+function bb_media_get_video_extension_data() {
+	$extensions = bp_get_option( 'bp_video_extensions_support', array() );
+
+	$data = array();
+	foreach ( $extensions as $key => $ext ) {
+		if ( ! is_array( $ext ) || empty( $ext['extension'] ) ) {
+			continue;
+		}
+		$data[ $key ] = array(
+			'extension'   => $ext['extension'] ?? '',
+			'mime_type'   => $ext['mime_type'] ?? '',
+			'description' => $ext['description'] ?? '',
+			'is_default'  => ! empty( $ext['is_default'] ) ? 1 : 0,
+			'is_active'   => ! empty( $ext['is_active'] ) ? 1 : 0,
+		);
+	}
+
+	return $data;
 }

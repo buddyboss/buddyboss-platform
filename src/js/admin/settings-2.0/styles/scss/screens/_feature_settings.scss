@@ -393,6 +393,433 @@
     gap: 12px;
 }
 
+/* Extension List Field */
+.bb-extension-list {
+
+    &__items {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    &__item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    &__item-toggle {
+        flex: 1;
+    }
+
+    &__item-remove {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+        color: $bb-text-tertiary-color;
+        border-radius: $bb-border-radius-sm;
+        transition: color 0.2s ease;
+
+        i {
+            font-size: 16px;
+            line-height: 1;
+        }
+
+        &:hover {
+            color: $bb-error-color;
+        }
+
+        &:disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+    }
+
+    &__add-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 16px;
+        padding: 8px 16px;
+        font-size: 13px;
+        font-weight: 500;
+        line-height: 18px;
+        color: $bb-text-inverse-color;
+        background-color: $bb-background-brand-primary-color;
+        border: none;
+        border-radius: $bb-border-radius-lg;
+        cursor: pointer;
+        transition: opacity 0.2s ease;
+
+        i {
+            font-size: 16px;
+            line-height: 1;
+        }
+
+        &:hover {
+            opacity: 0.9;
+        }
+
+        &:disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+    }
+}
+
+/* Add Extension Modal */
+.bb-extension-modal-overlay {
+    z-index: 100100;
+    background-color: $bb-overlay-color;
+    backdrop-filter: blur(1px);
+}
+
+.bb-extension-modal {
+
+    &.components-modal__frame {
+        max-width: 680px;
+        width: 100%;
+        border-radius: $bb-border-radius-2xl;
+        border: 1px solid $bb-border-secondary-color;
+        box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.12);
+        overflow: hidden;
+    }
+
+    .components-modal__header {
+        height: auto;
+        border-bottom: 1px solid $bb-border-secondary-color;
+        padding: 16px 16px 16px 24px;
+        margin: 0;
+
+        .components-modal__header-heading {
+            color: #000000;
+            font-size: 18px;
+            font-weight: 500;
+            line-height: 1;
+        }
+
+        button.components-button {
+            color: $bb-icon-secondary-color;
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            min-width: 20px;
+            min-height: 20px;
+            width: 20px;
+            height: 20px;
+            padding: 0;
+
+            &:hover {
+                color: $bb-text-color;
+            }
+
+            svg {
+                width: 20px;
+                height: 20px;
+            }
+        }
+    }
+
+    .components-modal__content {
+        padding: 0;
+        margin: 0;
+        padding-top: 51px;
+    }
+
+    &__body {
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    &__field {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    &__label {
+        color: $bb-text-secondary-color;
+        font-size: 13px;
+        font-weight: 500;
+        line-height: 1;
+        padding: 3px 0;
+    }
+
+    .components-base-control {
+        margin-bottom: 0;
+    }
+
+    .components-text-control__input {
+        background-color: $bb-background-primary-color;
+        border: 0.5px solid $bb-border-secondary-color;
+        border-radius: $bb-border-radius-md;
+        padding: 7px 8px;
+        font-size: 13px;
+        color: $bb-text-color;
+        line-height: 1.5;
+        box-shadow: none;
+        min-height: auto;
+
+        &:focus {
+            border-color: $bb-border-brand-primary-color;
+            box-shadow: none;
+            outline: none;
+        }
+
+        &::placeholder {
+            color: $bb-text-disabled-color;
+        }
+    }
+
+    .components-textarea-control__input {
+        background-color: $bb-background-primary-color;
+        border: 0.5px solid $bb-border-secondary-color;
+        border-radius: $bb-border-radius-md;
+        padding: 8px;
+        font-size: 13px;
+        color: $bb-text-color;
+        line-height: 1.5;
+        box-shadow: none;
+        resize: vertical;
+        min-height: 72px;
+
+        &:focus {
+            border-color: $bb-border-brand-primary-color;
+            box-shadow: none;
+            outline: none;
+        }
+
+        &::placeholder {
+            color: $bb-text-disabled-color;
+        }
+    }
+
+    &__mime-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        .components-base-control {
+            flex: 1;
+        }
+    }
+
+    &__mime-checker-link {
+        white-space: nowrap;
+        background: none;
+        border: none;
+        color: $bb-text-brand-primary-color;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        padding: 0;
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    &__mime-checker {
+        background-color: $bb-background-secondary-color;
+        border: 1px solid $bb-border-secondary-color;
+        border-radius: $bb-border-radius-lg;
+        padding: 16px;
+
+        h4 {
+            margin: 0 0 4px;
+            font-size: 13px;
+            font-weight: 600;
+            color: $bb-text-color;
+        }
+    }
+
+    &__mime-checker-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+    }
+
+    &__mime-checker-close {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: $bb-icon-secondary-color;
+        padding: 0;
+        font-size: 14px;
+        line-height: 1;
+
+        &:hover {
+            color: $bb-text-color;
+        }
+    }
+
+    &__mime-checker-desc {
+        font-size: 12px;
+        color: $bb-text-secondary-color;
+        margin: 0 0 12px;
+        line-height: 1.5;
+    }
+
+    &__mime-checker-upload {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 0;
+    }
+
+    &__mime-checker-file {
+        font-size: 12px;
+        flex: 1;
+        min-width: 0;
+    }
+
+    &__mime-checker-btn.components-button {
+        font-size: 13px;
+        font-weight: 400;
+        line-height: 20px;
+        padding: 6px 16px;
+        white-space: nowrap;
+        border: 1px solid $bb-border-tertiary-color !important;
+        border-radius: $bb-border-radius-lg;
+        background-color: $bb-background-base-color !important;
+        color: $bb-text-color !important;
+        box-shadow: none !important;
+
+        &:hover {
+            background-color: $bb-background-secondary-color !important;
+            border-color: $bb-border-tertiary-color !important;
+            color: $bb-text-color !important;
+            box-shadow: none !important;
+        }
+
+        &:focus {
+            box-shadow: none !important;
+            border-color: $bb-border-tertiary-color !important;
+            outline: none;
+        }
+
+        &:active {
+            background-color: $bb-background-secondary-color !important;
+            box-shadow: none !important;
+        }
+    }
+
+    &__mime-checker-result {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid $bb-border-secondary-color;
+        flex-wrap: wrap;
+    }
+
+    &__mime-checker-result-label {
+        font-size: 13px;
+        font-weight: 400;
+        color: $bb-text-secondary-color;
+    }
+
+    &__mime-checker-result-value {
+        font-size: 13px;
+        font-weight: 500;
+        color: $bb-text-color;
+        background-color: $bb-background-primary-color;
+        padding: 4px 8px;
+        border-radius: $bb-border-radius-md;
+        border: 0.5px solid $bb-border-secondary-color;
+        font-family: inherit;
+        line-height: 18px;
+    }
+
+    &__mime-checker-use-btn.components-button {
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 20px;
+        padding: 6px 16px;
+        border: none !important;
+        border-radius: $bb-border-radius-lg;
+        color: $bb-text-inverse-color !important;
+        background-color: $bb-background-brand-primary-color !important;
+        box-shadow: none !important;
+
+        &:hover {
+            background-color: darken($bb-background-brand-primary-color, 5%) !important;
+            color: $bb-text-inverse-color !important;
+            box-shadow: none !important;
+        }
+
+        &:focus {
+            box-shadow: none !important;
+            outline: none;
+            color: $bb-text-inverse-color !important;
+            background-color: $bb-background-brand-primary-color !important;
+        }
+
+        &:active {
+            background-color: darken($bb-background-brand-primary-color, 8%) !important;
+            box-shadow: none !important;
+            color: $bb-text-inverse-color !important;
+        }
+    }
+
+    &__footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        padding: 8px 24px;
+        border-top: 1px solid $bb-border-secondary-color;
+    }
+
+    &__cancel-btn.components-button {
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 20px;
+        padding: 6px 16px;
+        border: 1px solid $bb-border-tertiary-color;
+        border-radius: $bb-border-radius-lg;
+        color: $bb-text-color;
+        background-color: $bb-background-base-color;
+        box-shadow: none;
+
+        &:hover {
+            background-color: $bb-background-secondary-color;
+            border-color: $bb-border-tertiary-color;
+            color: $bb-text-color;
+        }
+    }
+
+    &__save-btn.components-button {
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 20px;
+        padding: 6px 16px;
+        border: none;
+        border-radius: $bb-border-radius-lg;
+        color: $bb-text-inverse-color;
+        background-color: $bb-background-brand-primary-color;
+        box-shadow: none;
+
+        &:hover {
+            background-color: $bb-background-brand-primary-color;
+            opacity: 0.9;
+        }
+
+        &:disabled {
+            background-color: $bb-icon-brand-disabled-color;
+            color: $bb-text-inverse-color;
+            opacity: 1;
+        }
+    }
+}
+
 .bb-admin-settings-field__checkbox-list {
     display: flex;
     flex-direction: column;

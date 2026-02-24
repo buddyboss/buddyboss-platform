@@ -32,6 +32,7 @@ import { CheckboxListField } from './fields/CheckboxListField';
 import { ImageRadioField } from './fields/ImageRadioField';
 import { ChildRenderField } from './fields/ChildRenderField';
 import { DimensionsField } from './fields/DimensionsField';
+import { ExtensionListField } from './fields/ExtensionListField';
 
 /**
  * Settings Form Component (matching Figma settingsSection)
@@ -284,6 +285,20 @@ export function SettingsForm({ fields, values, onChange }) {
 				// Multiple stacked toggle switches (like Group Header Elements)
 				// toggle_list: each option stored as separate WP option
 				// toggle_list_array: stored as single array of enabled values
+
+				// Extension list fields with "Add Extension" button use dedicated component.
+				if ( field.allow_add && field.extension_data ) {
+					return (
+						<ExtensionListField
+							field={field}
+							value={value}
+							onChange={onChange}
+							disabled={disabled}
+							sanitizedDescription={sanitizedHtml[ field.name + '__desc' ]}
+						/>
+					);
+				}
+
 				const listValue = typeof value === 'object' ? value : {};
 				return (
 					<div className="bb-admin-settings-field__toggle-list">
@@ -581,7 +596,7 @@ export function SettingsForm({ fields, values, onChange }) {
 					{/* Description: skip for notice type (rendered by notice component itself).
 				    When description contains %s and field has description_controls,
 				    render inline controls (select, text, number) in place of each %s placeholder. */}
-					{ field.description && -1 === [ 'notice', 'checkbox_list', 'share_platforms', 'topic_list' ].indexOf( field.type ) && ( () => {
+					{ field.description && -1 === [ 'notice', 'checkbox_list', 'share_platforms', 'topic_list' ].indexOf( field.type ) && ! ( field.allow_add && field.extension_data ) && ( () => {
 						const desc = field.description;
 						const controls = field.description_controls;
 						const hasControls = desc.indexOf( '%s' ) !== -1 && controls && controls.length > 0;

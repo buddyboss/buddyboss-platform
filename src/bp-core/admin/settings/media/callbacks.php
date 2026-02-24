@@ -89,8 +89,13 @@ function bb_media_sanitize_upload_limit( $value ) {
 /**
  * Sanitize file extensions array (video/document).
  *
- * Accepts an associative array of extension data with keys like bb_vid_1, bb_doc_1, etc.
- * Each entry has: extension, mime_type, description, is_default, is_active, icon.
+ * Handles two input formats from the React admin UI:
+ *
+ * 1. Toggle-only update: { bb_vid_0: 1, bb_vid_1: 0, ... }
+ *    Merges is_active values into the existing stored extension data.
+ *
+ * 2. Full extension data: { bb_vid_0: { extension: '.mp4', ... }, ... }
+ *    Full sanitization of each entry (used when adding new extensions).
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -103,6 +108,26 @@ function bb_media_sanitize_extensions( $value ) {
 		return array();
 	}
 
+	// Determine format: if the first value is scalar (int), it's a toggle-only update.
+	$first_value = reset( $value );
+	$is_toggle_only = ! is_array( $first_value );
+
+	if ( $is_toggle_only ) {
+		// Merge toggle states into existing stored data.
+		$existing = bp_get_option( 'bp_video_extensions_support', array() );
+
+		foreach ( $value as $key => $is_active ) {
+			$sanitized_key = sanitize_key( $key );
+
+			if ( isset( $existing[ $sanitized_key ] ) ) {
+				$existing[ $sanitized_key ]['is_active'] = absint( $is_active );
+			}
+		}
+
+		return $existing;
+	}
+
+	// Full extension data format.
 	$sanitized = array();
 
 	foreach ( $value as $key => $ext ) {

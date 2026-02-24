@@ -519,9 +519,23 @@ class BB_Admin_Settings_Ajax {
 				$field_value = absint( $field_value );
 			}
 
-			// toggle_list: value from $values (or filter); normalize to int 0|1 for JS.
+			// toggle_list: normalize to int 0|1 for JS.
+			// For extension_data fields (e.g., video extensions), extract is_active from nested arrays.
 			if ( 'toggle_list' === ( $field['type'] ?? '' ) && is_array( $field_value ) ) {
-				$field_value = array_map( 'absint', $field_value );
+				if ( ! empty( $field['extension_data'] ) ) {
+					// Extension data fields store nested arrays with is_active key.
+					$toggle_values = array();
+					foreach ( $field_value as $key => $ext ) {
+						if ( is_array( $ext ) && isset( $ext['is_active'] ) ) {
+							$toggle_values[ $key ] = absint( $ext['is_active'] );
+						} else {
+							$toggle_values[ $key ] = absint( $ext );
+						}
+					}
+					$field_value = $toggle_values;
+				} else {
+					$field_value = array_map( 'absint', $field_value );
+				}
 			}
 
 			// Handle description_controls: read each control's value from DB (same storage as main options).
@@ -607,6 +621,11 @@ class BB_Admin_Settings_Ajax {
 				'disabled'             => ! empty( $field['disabled'] ),
 				// Group ID for visual grouping of related fields (removes borders between them).
 				'group'                => $field['group'] ?? null,
+				// Allow adding new items (e.g., custom extensions).
+				'allow_add'            => ! empty( $field['allow_add'] ),
+				'add_button_label'     => $field['add_button_label'] ?? null,
+				// Full extension data for extension list fields.
+				'extension_data'       => $field['extension_data'] ?? null,
 			);
 
 			// Auto-compute pro_notice for pro_only fields when not set at registration time.
