@@ -688,23 +688,6 @@
    Group Create Modal
    ---------------------------------------------------------------- */
 .bb-group-create-modal {
-	width: 560px;
-	max-width: 90vw;
-
-	.components-modal__content {
-		padding: 0;
-	}
-
-	.components-modal__header {
-		padding: 16px 24px;
-		border-bottom: 1px solid $bb-border-secondary-color;
-		margin: 0;
-
-		.components-modal__header-heading {
-			font-size: 16px;
-			font-weight: 600;
-		}
-	}
 
 	&__body {
 		padding: 24px;
@@ -716,15 +699,32 @@
 		// Override WordPress components uppercase labels to sentence case.
 		.components-input-control__label,
 		.components-base-control__label {
-			text-transform: none;
-			font-size: 13px;
-			font-weight: 500;
+			text-transform: none !important;
+			font-size: 13px !important;
+			font-weight: 500 !important;
 			color: $bb-text-color;
 		}
 
 		.components-text-control__input,
 		.components-textarea-control__input {
 			@include bb-input-text;
+		}
+
+		textarea {
+			min-height: 72px;
+		}
+
+		.components-input-control__container {
+			@include bb-admin-settings-select;
+
+			&:has(> .components-select-control__input) {
+				padding: 0 !important;
+
+				.components-input-control__suffix,
+				.components-input-control__backdrop {
+					display: none !important;
+				}
+			}
 		}
 	}
 
