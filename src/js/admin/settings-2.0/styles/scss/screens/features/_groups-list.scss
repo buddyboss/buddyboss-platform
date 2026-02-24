@@ -554,19 +554,9 @@
    Delete Group Modal
    ---------------------------------------------------------------- */
 .bb-group-delete-modal {
-	.components-modal__content {
-		padding: 0;
-	}
 
-	.components-modal__header {
-		padding: 16px 24px;
-		border-bottom: 1px solid $bb-border-secondary-color;
-		margin: 0;
-
-		.components-modal__header-heading {
-			font-size: 16px;
-			font-weight: 600;
-		}
+	&.components-modal__frame {
+		max-width: 500px;
 	}
 
 	&__body {
@@ -575,34 +565,52 @@
 
 	&__warning {
 		display: flex;
-		align-items: flex-start;
-		gap: 10px;
-		padding: 12px 16px;
-		background-color: #fef3cd;
-		border: 1px solid #ffc107;
-		border-radius: $bb-border-radius-md;
+		align-items: center;
+		gap: 8px;
+		padding: 8px;
+		background-color: $bb-background-warning-primary-color;
+		border: 1px solid $bb-border-warning-secondary-color;
+		border-radius: $bb-border-radius-xl;
 		margin-bottom: 16px;
-		font-size: 13px;
-		line-height: 1.5;
-		color: #856404;
 
 		i {
-			font-size: 20px;
-			color: #d39e00;
+			font-size: 32px;
+			color: $bb-icon-warning-primary-color;
 			flex-shrink: 0;
 			line-height: 1;
-			margin-top: 1px;
-		}
 
-		strong {
-			font-weight: 600;
+			&:before {
+				opacity: 1;
+			}
 		}
+	}
+
+	&__warning-text {
+		display: flex;
+		flex-direction: column;
+		flex: 1;
+		min-width: 0;
+	}
+
+	&__warning-title {
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 18px;
+		color: $bb-text-color;
+		padding: 3px 0;
+	}
+
+	&__warning-desc {
+		font-size: 11px;
+		font-weight: 400;
+		line-height: 16px;
+		color: $bb-text-secondary-color;
 	}
 
 	&__description {
 		font-size: 13px;
 		line-height: 1.6;
-		color: $bb-text-secondary-color;
+		color: $bb-text-color;
 		margin: 0 0 16px;
 	}
 
