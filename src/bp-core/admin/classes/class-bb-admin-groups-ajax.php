@@ -1644,11 +1644,13 @@ class BB_Admin_Groups_Ajax {
 
 		$restrict_invites = isset( $_POST['restrict_invites'] ) ? absint( wp_unslash( $_POST['restrict_invites'] ) ) : 0;
 
-		// Member type fields: empty string = "all", array of IDs = "selected".
+		// Member type fields: empty string = "all", "none" = no types, array of IDs = "selected".
 		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		$raw_member_type_join = isset( $_POST['member_type_join'] ) ? wp_unslash( $_POST['member_type_join'] ) : '';
 		if ( is_array( $raw_member_type_join ) ) {
 			$member_type_join = array_map( 'sanitize_key', $raw_member_type_join );
+		} elseif ( 'none' === $raw_member_type_join ) {
+			$member_type_join = 'none';
 		} else {
 			$member_type_join = '';
 		}
@@ -1657,6 +1659,8 @@ class BB_Admin_Groups_Ajax {
 		$raw_member_type_invites = isset( $_POST['member_type_invites'] ) ? wp_unslash( $_POST['member_type_invites'] ) : '';
 		if ( is_array( $raw_member_type_invites ) ) {
 			$member_type_invites = array_map( 'sanitize_key', $raw_member_type_invites );
+		} elseif ( 'none' === $raw_member_type_invites ) {
+			$member_type_invites = 'none';
 		} else {
 			$member_type_invites = '';
 		}

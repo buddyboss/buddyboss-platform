@@ -7,7 +7,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useEffect, useCallback } from '@wordpress/element';
+import { useState, useEffect, useCallback, useRef } from '@wordpress/element';
 import {
 	TextControl,
 	CheckboxControl,
@@ -19,6 +19,33 @@ import {
 import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { createGroupType, updateGroupType } from '../../utils/ajax';
+
+/**
+ * Strip leading '#' from a hex color value.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {string} hex Hex color with or without '#'.
+ * @returns {string} Hex value without '#'.
+ */
+function stripHash( hex ) {
+	return ( hex || '' ).replace( /^#/, '' );
+}
+
+/**
+ * Ensure a hex color string has the '#' prefix.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {string} hex Hex value with or without '#'.
+ * @returns {string} Hex value with '#' prefix.
+ */
+function ensureHash( hex ) {
+	if ( ! hex ) {
+		return '';
+	}
+	return '#' === hex.charAt( 0 ) ? hex : '#' + hex;
+}
 
 /**
  * Default form data.
@@ -58,6 +85,9 @@ var DEFAULT_FORM_DATA = {
  * @returns {string} 'all' or 'selected'.
  */
 function getMemberTypeMode( value ) {
+	if ( 'none' === value ) {
+		return 'none';
+	}
 	if ( Array.isArray( value ) && value.length > 0 ) {
 		return 'selected';
 	}
@@ -127,9 +157,9 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 			}
 
 			setFormData( {
-				name: groupType.post_title || '',
-				singular_label: groupType.singular_label || '',
-				plural_label: groupType.plural_label || '',
+				name: decodeEntities( groupType.post_title || '' ),
+				singular_label: decodeEntities( groupType.singular_label || '' ),
+				plural_label: decodeEntities( groupType.plural_label || '' ),
 				role_labels: {
 					organizer: {
 						plural: ( roleLabels.organizer && roleLabels.organizer.plural ) || '',
@@ -251,20 +281,24 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 			data[ 'label_color[text_color]' ] = formData.label_color.text_color;
 		}
 
-		// Profile Type Invites: send array only when "selected" mode.
+		// Profile Type Invites: send array only when "selected" mode, "none" sends special value.
 		if ( 'selected' === formData.member_type_invites_mode && formData.member_type_invites.length > 0 ) {
 			formData.member_type_invites.forEach( function ( id, idx ) {
 				data[ 'member_type_invites[' + idx + ']' ] = id;
 			} );
+		} else if ( 'none' === formData.member_type_invites_mode ) {
+			data.member_type_invites = 'none';
 		} else {
 			data.member_type_invites = '';
 		}
 
-		// Profile Type Joining: send array only when "selected" mode.
+		// Profile Type Joining: send array only when "selected" mode, "none" sends special value.
 		if ( 'selected' === formData.member_type_join_mode && formData.member_type_join.length > 0 ) {
 			formData.member_type_join.forEach( function ( id, idx ) {
 				data[ 'member_type_join[' + idx + ']' ] = id;
 			} );
+		} else if ( 'none' === formData.member_type_join_mode ) {
+			data.member_type_join = 'none';
 		} else {
 			data.member_type_join = '';
 		}
@@ -427,6 +461,7 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 								options={ [
 									{ label: __( 'All Profile Types', 'buddyboss' ), value: 'all' },
 									{ label: __( 'Selected Profile Types', 'buddyboss' ), value: 'selected' },
+									{ label: __( 'None', 'buddyboss' ), value: 'none' },
 								] }
 								onChange={ function ( val ) { updateField( 'member_type_invites_mode', val ); } }
 							/>
@@ -464,6 +499,7 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 								options={ [
 									{ label: __( 'All Profile Types', 'buddyboss' ), value: 'all' },
 									{ label: __( 'Selected Profile Types', 'buddyboss' ), value: 'selected' },
+									{ label: __( 'None', 'buddyboss' ), value: 'none' },
 								] }
 								onChange={ function ( val ) { updateField( 'member_type_join_mode', val ); } }
 							/>
@@ -521,27 +557,84 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 									<label className="bb-admin-group-type-modal__color-label">
 										{ __( 'Background Color', 'buddyboss' ) }
 									</label>
-									<input
-										type="color"
-										value={ formData.label_color.background_color || '#000000' }
-										onChange={ function ( e ) { updateLabelColor( 'background_color', e.target.value ); } }
-										className="bb-admin-group-type-modal__color-input"
-									/>
+									<div className="bb-admin-group-type-modal__color-input-row">
+										<input
+											type="color"
+											value={ formData.label_color.background_color || '#000000' }
+											onChange={ function ( e ) { updateLabelColor( 'background_color', e.target.value ); } }
+											className="bb-admin-group-type-modal__color-swatch"
+										/>
+										<input
+											type="text"
+											value={ stripHash( formData.label_color.background_color || '000000' ) }
+											onChange={ function ( e ) {
+												var val = e.target.value.replace( /[^0-9a-fA-F]/g, '' ).substring( 0, 6 );
+												updateLabelColor( 'background_color', ensureHash( val ) );
+											} }
+											className="bb-admin-group-type-modal__color-hex"
+											maxLength="6"
+										/>
+									</div>
 								</div>
 								<div className="bb-admin-group-type-modal__color-field">
 									<label className="bb-admin-group-type-modal__color-label">
 										{ __( 'Text Color', 'buddyboss' ) }
 									</label>
-									<input
-										type="color"
-										value={ formData.label_color.text_color || '#ffffff' }
-										onChange={ function ( e ) { updateLabelColor( 'text_color', e.target.value ); } }
-										className="bb-admin-group-type-modal__color-input"
-									/>
+									<div className="bb-admin-group-type-modal__color-input-row">
+										<input
+											type="color"
+											value={ formData.label_color.text_color || '#ffffff' }
+											onChange={ function ( e ) { updateLabelColor( 'text_color', e.target.value ); } }
+											className="bb-admin-group-type-modal__color-swatch"
+										/>
+										<input
+											type="text"
+											value={ stripHash( formData.label_color.text_color || 'FFFFFF' ) }
+											onChange={ function ( e ) {
+												var val = e.target.value.replace( /[^0-9a-fA-F]/g, '' ).substring( 0, 6 );
+												updateLabelColor( 'text_color', ensureHash( val ) );
+											} }
+											className="bb-admin-group-type-modal__color-hex"
+											maxLength="6"
+										/>
+									</div>
 								</div>
 							</div>
 						) }
 					</div>
+
+					{/* Shortcode (edit mode only) */}
+					{ isEditing && groupType && groupType.id && (
+						<div className="bb-admin-group-type-modal__section">
+							<h4 className="bb-admin-group-type-modal__section-title">
+								{ __( 'Shortcode', 'buddyboss' ) }
+							</h4>
+							<div className="bb-admin-group-type-modal__shortcode-row">
+								<input
+									type="text"
+									readOnly
+									value={ '[group type="' + groupType.id + '"]' }
+									className="bb-admin-group-type-modal__shortcode-input"
+									onClick={ function ( e ) { e.target.select(); } }
+								/>
+								<button
+									type="button"
+									className="bb-admin-group-type-modal__shortcode-copy"
+									onClick={ function () {
+										if ( navigator.clipboard ) {
+											navigator.clipboard.writeText( '[group type="' + groupType.id + '"]' );
+										}
+									} }
+									aria-label={ __( 'Copy shortcode', 'buddyboss' ) }
+								>
+									<i className="bb-icons-rl bb-icons-rl-copy"></i>
+								</button>
+							</div>
+							<p className="bb-admin-group-type-modal__section-description">
+								{ __( 'Add this shortcode to any WordPress page to display all groups of this type on a dedicated page.', 'buddyboss' ) }
+							</p>
+						</div>
+					) }
 				</div>
 
 				<div className="bb-admin-group-type-modal__footer">

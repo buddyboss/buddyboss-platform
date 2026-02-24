@@ -426,6 +426,11 @@
 		margin-bottom: 6px;
 	}
 
+	// Override WP component uppercase labels to match Figma title case.
+	.components-base-control__label {
+		text-transform: none;
+	}
+
 	&__color-pickers {
 		display: flex;
 		gap: 16px;
@@ -436,6 +441,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: 6px;
+		flex: 1;
 	}
 
 	&__color-label {
@@ -444,13 +450,77 @@
 		color: $bb-text-color;
 	}
 
-	&__color-input {
-		width: 48px;
+	&__color-input-row {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	&__color-swatch {
+		width: 32px;
 		height: 32px;
 		border: 1px solid $bb-border-secondary-color;
 		border-radius: $bb-border-radius-md;
 		cursor: pointer;
 		padding: 2px;
+		flex-shrink: 0;
+	}
+
+	&__color-hex {
+		flex: 1;
+		height: 32px;
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-md;
+		padding: 0 8px;
+		font-size: 13px;
+		font-family: monospace;
+		color: $bb-text-color;
+		background: $bb-background-base-color;
+		text-transform: uppercase;
+	}
+
+	&__shortcode-row {
+		display: flex;
+		align-items: center;
+		gap: 0;
+		margin-bottom: 8px;
+	}
+
+	&__shortcode-input {
+		flex: 1;
+		height: 36px;
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-md 0 0 $bb-border-radius-md;
+		padding: 0 12px;
+		font-size: 13px;
+		color: $bb-text-color;
+		background: $bb-background-primary-color;
+		cursor: text;
+
+		&:focus {
+			outline: none;
+			border-color: $bb-background-brand-primary-color;
+		}
+	}
+
+	&__shortcode-copy {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 36px;
+		height: 36px;
+		border: 1px solid $bb-border-secondary-color;
+		border-left: none;
+		border-radius: 0 $bb-border-radius-md $bb-border-radius-md 0;
+		background: $bb-background-base-color;
+		cursor: pointer;
+		color: $bb-icon-tertiary-color;
+		font-size: 16px;
+
+		&:hover {
+			background: $bb-background-primary-color;
+			color: $bb-text-color;
+		}
 	}
 
 	&__member-types-grid {
