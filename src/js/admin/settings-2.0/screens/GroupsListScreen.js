@@ -690,7 +690,8 @@ export function GroupsListScreen( { onNavigate } ) {
 						setCreateModalOpen( true );
 					} }
 				>
-					{ __( 'Create Group', 'buddyboss' ) }
+					<i className="bb-icons-rl bb-icons-rl-plus"></i>
+					{ __( 'Create New Group', 'buddyboss' ) }
 				</Button>
 			</div>
 

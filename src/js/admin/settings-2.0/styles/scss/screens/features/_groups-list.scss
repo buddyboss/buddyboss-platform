@@ -58,6 +58,7 @@
 
 			.components-select-control__input {
 				@include bb-admin-settings-select;
+				min-width: 135px;
 			}
 
 			.components-input-control-suffix-wrapper {
@@ -85,6 +86,29 @@
 		display: flex;
 		align-items: center;
 		gap: 12px;
+	}
+
+	// Search
+	&__search {
+		position: relative;
+		min-width: 225px;
+
+		input {
+			@include bb-input-text;
+			padding-right: 30px;
+		}
+
+		&:after {
+			content: "\e30c";
+			font-family: "bb-icons-rl";
+			font-size: 20px;
+			color: $bb-icon-tertiary-color;
+			position: absolute;
+			right: 8px;
+			top: 50%;
+			transform: translateY(-50%);
+			pointer-events: none;
+		}
 	}
 
 	// Bulk Actions
@@ -665,6 +689,12 @@
 
 .bb-groups-list__create-btn.is-primary {
 	@include bb-button-primary;
+
+	i {
+		font-size: 16px;
+		font-weight: 700;
+		margin-right: 6px;
+	}
 }
 
 /* ----------------------------------------------------------------
