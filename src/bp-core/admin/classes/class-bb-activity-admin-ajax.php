@@ -94,7 +94,7 @@ class BB_Activity_Admin_Ajax {
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing
 		$page          = isset( $_POST['page'] ) ? absint( $_POST['page'] ) : 1;
-		$per_page      = isset( $_POST['per_page'] ) ? absint( $_POST['per_page'] ) : 20;
+		$per_page      = isset( $_POST['per_page'] ) ? min( absint( $_POST['per_page'] ), 100 ) : 20;
 		$search_terms  = isset( $_POST['search'] ) ? sanitize_text_field( wp_unslash( $_POST['search'] ) ) : '';
 		$activity_type = isset( $_POST['activity_type'] ) ? sanitize_text_field( wp_unslash( $_POST['activity_type'] ) ) : '';
 		$spam          = isset( $_POST['spam'] ) ? sanitize_text_field( wp_unslash( $_POST['spam'] ) ) : 'ham_only';
@@ -128,31 +128,39 @@ class BB_Activity_Admin_Ajax {
 			}
 		}
 
-		// Get spam count (ignoring search/filter).
-		$spams      = bp_activity_get(
-			array(
-				'display_comments' => 'stream',
-				'show_hidden'      => true,
-				'spam'             => 'spam_only',
-				'count_total'      => 'count_query',
-				'per_page'         => 1,
-				'page'             => 1,
-			)
-		);
-		$spam_count = isset( $spams['total'] ) ? (int) $spams['total'] : 0;
+		// Spam/ham counts are only needed when include_meta is true (first page load).
+		// Subsequent paginated/filtered requests pass include_meta=false; the React client
+		// already has the counts cached from the initial request.
+		$spam_count = 0;
+		$ham_count  = 0;
 
-		// Get ham (non-spam) count for "All" tab (ignoring search/filter).
-		$hams      = bp_activity_get(
-			array(
-				'display_comments' => 'stream',
-				'show_hidden'      => true,
-				'spam'             => 'ham_only',
-				'count_total'      => 'count_query',
-				'per_page'         => 1,
-				'page'             => 1,
-			)
-		);
-		$ham_count = isset( $hams['total'] ) ? (int) $hams['total'] : 0;
+		if ( $include_meta ) {
+			// Get spam count (ignoring search/filter).
+			$spams      = bp_activity_get(
+				array(
+					'display_comments' => 'stream',
+					'show_hidden'      => true,
+					'spam'             => 'spam_only',
+					'count_total'      => 'count_query',
+					'per_page'         => 1,
+					'page'             => 1,
+				)
+			);
+			$spam_count = isset( $spams['total'] ) ? (int) $spams['total'] : 0;
+
+			// Get ham (non-spam) count for "All" tab (ignoring search/filter).
+			$hams      = bp_activity_get(
+				array(
+					'display_comments' => 'stream',
+					'show_hidden'      => true,
+					'spam'             => 'ham_only',
+					'count_total'      => 'count_query',
+					'per_page'         => 1,
+					'page'             => 1,
+				)
+			);
+			$ham_count = isset( $hams['total'] ) ? (int) $hams['total'] : 0;
+		}
 
 		// Get activities (same args as legacy BP_Activity_List_Table::prepare_items()).
 		$get_args = array(
@@ -342,7 +350,7 @@ class BB_Activity_Admin_Ajax {
 					'user_id'           => $user_id,
 					'action'            => $activity_obj->action,
 					'content'           => $activity_obj->content,
-					'display_content'   => $display_content,
+					'display_content'   => wp_kses_post( $display_content ),
 					'type'              => $activity_obj->type,
 					'date_recorded'     => $activity_obj->date_recorded,
 					'is_spam'           => (int) $activity_obj->is_spam,

@@ -274,21 +274,20 @@ src/js/admin/settings-2.0/
 
 #### Known Issues and Technical Debt (from code review)
 
-**Security (fix before release):**
-- Unsanitized external help content rendered as raw HTML needs DOMPurify sanitization (`FeatureSettingsScreen.js:462`)
-- Unsanitized migration wizard HTML rendered as raw HTML needs DOMPurify sanitization (`MigrationModal.js:313`)
-- Missing default `sanitize_callback` for field types: `toggle_list`, `toggle_list_array`, `dimensions`, `child_render`, `reaction_mode`, `reaction_button`
-- Reaction mode sanitize_callback defaults to empty string `''` which bypasses sanitization (`reactions/admin/settings.php:214`)
+**Security — all resolved:**
+- Help content and all raw HTML rendering uses `sanitizeHtml()` whitelist-based sanitizer (`utils/sanitize.js`). Verified at: `FeatureSettingsScreen.js:503`, `MigrationModal.js:319`, `SettingsForm.js:353/610/656/665`, `ActivityListScreen.js:776`, `CheckboxListField.js:88`.
+- All field types have default sanitizers in `bb_get_default_sanitize_callback()` (`class-bb-feature-registry.php:1405-1433`). AJAX save handler also has type-based fallback sanitization (`class-bb-admin-settings-ajax.php:746-753`).
+- Reaction mode sanitize_callback correctly defaults to `'sanitize_text_field'` (not empty string).
 
-**Performance:**
-- N+1 `get_option()` calls when loading feature settings (`class-bb-admin-settings-ajax.php:242-244`)
-- Search index transient has race condition (no locking, `class-bb-admin-settings-ajax.php:686-687`)
-- Path traversal risk in Icon Registry path resolution (`class-bb-icon-registry.php:172-176`)
+**Performance — mostly resolved:**
+- Search index transient locking mechanism implemented (`class-bb-admin-settings-ajax.php:883-900`).
+- N+1 `get_option()` resolved via `bb_prime_option_caches()` batch loader (`class-bb-admin-settings-ajax.php:282-296`).
+- Path traversal risk in Icon Registry path resolution (`class-bb-icon-registry.php:172-176`) — still open.
 
 **Code quality:**
 - `ajaxFetch` function duplicated 3x (should import from `utils/ajax.js`)
 - Sort-by-order callback duplicated 7x across PHP (extract to reusable method)
-- `SettingsForm.js` is a 777-line component handling 17+ field types (extract complex types)
+- `SettingsForm.js` is large but complex field types (`ReactionModeField`, `TopicListField`) are already extracted to dedicated components
 - `BBIcon` component defined twice (extract to shared component)
 - 34 unresolved `[BBVERSION]` placeholders in `class-bb-feature-registry.php`
 - Hardcoded notification badge "2" in `Header.js:181`
