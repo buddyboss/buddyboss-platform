@@ -1,0 +1,881 @@
+/**
+ * BuddyBoss Admin Settings 2.0 - Document Extensions Field
+ *
+ * Renders a "Manage" button that opens a modal listing all document extensions
+ * with checkboxes, file-type icons, descriptions, and three-dot menus.
+ * From within that modal, an "Add Extension" button opens a nested modal
+ * for adding custom extensions (with MIME Checker support).
+ *
+ * @package BuddyBoss\Core\Administration
+ * @since BuddyBoss [BBVERSION]
+ */
+
+import { useState, useRef } from '@wordpress/element';
+import { Modal, Button, TextControl, TextareaControl, DropdownMenu } from '@wordpress/components';
+import { __ } from '@wordpress/i18n';
+
+/**
+ * Map a file extension to an icon class name.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {string} extension File extension (e.g., '.pdf', '.doc').
+ * @return {string} Icon CSS class.
+ */
+function getExtensionIconClass( extension ) {
+	var ext = ( extension || '' ).replace( '.', '' ).toLowerCase();
+
+	var iconMap = {
+		pdf: 'bb-icons-rl-file-pdf',
+		doc: 'bb-icons-rl-file-doc',
+		docx: 'bb-icons-rl-file-doc',
+		xls: 'bb-icons-rl-file-xls',
+		xlsx: 'bb-icons-rl-file-xls',
+		ppt: 'bb-icons-rl-file-ppt',
+		pptx: 'bb-icons-rl-file-ppt',
+		csv: 'bb-icons-rl-file-csv',
+		css: 'bb-icons-rl-file-css',
+		html: 'bb-icons-rl-file-html',
+		htm: 'bb-icons-rl-file-html',
+		jpg: 'bb-icons-rl-file-jpg',
+		jpeg: 'bb-icons-rl-file-jpg',
+		png: 'bb-icons-rl-file-png',
+		gif: 'bb-icons-rl-file-image',
+		svg: 'bb-icons-rl-file-svg',
+		zip: 'bb-icons-rl-file-archive',
+		rar: 'bb-icons-rl-file-archive',
+		gz: 'bb-icons-rl-file-archive',
+		tar: 'bb-icons-rl-file-archive',
+		'7z': 'bb-icons-rl-file-archive',
+		mp3: 'bb-icons-rl-file-audio',
+		wav: 'bb-icons-rl-file-audio',
+		mp4: 'bb-icons-rl-file-video',
+		avi: 'bb-icons-rl-file-video',
+		txt: 'bb-icons-rl-file-text',
+		js: 'bb-icons-rl-file-code',
+		json: 'bb-icons-rl-file-code',
+		xml: 'bb-icons-rl-file-code',
+		php: 'bb-icons-rl-file-code',
+		py: 'bb-icons-rl-file-code',
+		cpp: 'bb-icons-rl-file-cpp',
+		c: 'bb-icons-rl-file-c',
+	};
+
+	return 'bb-icons-rl ' + ( iconMap[ ext ] || 'bb-icons-rl-file' );
+}
+
+/**
+ * Document Extensions Field Component
+ *
+ * Shows a "Manage" button on the settings page. When clicked, opens a modal
+ * listing all document extensions with checkboxes. An "Add Extension" button
+ * inside the modal opens a nested "Add New Extension" modal with MIME checker.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object}   props          Component props.
+ * @param {Object}   props.field    Field definition with extension_data, manage_label, manage_icon.
+ * @param {Object}   props.value    Current toggle values { bb_doc_0: 1, bb_doc_1: 0, ... }.
+ * @param {Function} props.onChange Change handler (fieldName, newValue).
+ * @param {boolean}  props.disabled Whether the field is disabled.
+ *
+ * @returns {JSX.Element} Document extensions manage button with modals.
+ */
+export function DocumentExtensionsField( { field, value, onChange, disabled } ) {
+	// Normalize value to toggle format { key: 0|1 }.
+	// After add/edit/remove, value may contain full extension objects.
+	var managedValue = {};
+	if ( typeof value === 'object' && value !== null ) {
+		Object.keys( value ).forEach( function( key ) {
+			var v = value[ key ];
+			if ( typeof v === 'object' && v !== null && v.is_active !== undefined ) {
+				managedValue[ key ] = v.is_active ? 1 : 0;
+			} else {
+				managedValue[ key ] = v ? 1 : 0;
+			}
+		} );
+	}
+
+	var [ isManageOpen, setIsManageOpen ] = useState( false );
+	var [ localExtensionData, setLocalExtensionData ] = useState( function() {
+		return field.extension_data || {};
+	} );
+
+	// Local working copy of toggle values inside manage modal.
+	var [ workingValues, setWorkingValues ] = useState( function() {
+		return Object.assign( {}, managedValue );
+	} );
+
+	// Add extension modal state.
+	var [ isAddOpen, setIsAddOpen ] = useState( false );
+	var [ newExtension, setNewExtension ] = useState( '' );
+	var [ newDescription, setNewDescription ] = useState( '' );
+	var [ newMimeType, setNewMimeType ] = useState( '' );
+	var [ newIcon, setNewIcon ] = useState( 'bb-icon-file' );
+
+	// Edit extension popup state.
+	var [ isEditOpen, setIsEditOpen ] = useState( false );
+	var [ editingKey, setEditingKey ] = useState( null );
+	var [ editExtension, setEditExtension ] = useState( '' );
+	var [ editDescription, setEditDescription ] = useState( '' );
+	var [ editMimeType, setEditMimeType ] = useState( '' );
+	var [ editIcon, setEditIcon ] = useState( 'bb-icon-file' );
+
+	// Icon options from PHP (via field registration).
+	var iconOptions = field.icon_options || [];
+
+	// MIME Checker state.
+	var [ isMimeCheckerOpen, setIsMimeCheckerOpen ] = useState( false );
+	var [ mimeCheckerResult, setMimeCheckerResult ] = useState( '' );
+	var [ isMimeChecking, setIsMimeChecking ] = useState( false );
+	var fileInputRef = useRef( null );
+
+	// Track if there are unsaved changes.
+	var [ hasChanges, setHasChanges ] = useState( false );
+
+	/**
+	 * Sync working values when manage modal opens.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	var handleOpenManage = function() {
+		setWorkingValues( Object.assign( {}, managedValue ) );
+		setHasChanges( false );
+		setIsManageOpen( true );
+	};
+
+	/**
+	 * Toggle a single extension checkbox in the working copy.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {string}  key     Extension key (e.g., bb_doc_1).
+	 * @param {boolean} checked New checked state.
+	 */
+	var handleCheckboxChange = function( key, checked ) {
+		setWorkingValues( function( prev ) {
+			var updated = Object.assign( {}, prev );
+			updated[ key ] = checked ? 1 : 0;
+			return updated;
+		} );
+		setHasChanges( true );
+	};
+
+	/**
+	 * Save changes from manage modal and close.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	var handleSaveManage = function() {
+		onChange( field.name, workingValues );
+		setIsManageOpen( false );
+		setHasChanges( false );
+	};
+
+	/**
+	 * Cancel manage modal without saving.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	var handleCancelManage = function() {
+		setIsManageOpen( false );
+		setHasChanges( false );
+	};
+
+	/**
+	 * Reset add extension modal state.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	var resetAddState = function() {
+		setNewExtension( '' );
+		setNewDescription( '' );
+		setNewMimeType( '' );
+		setNewIcon( 'bb-icon-file' );
+		setMimeCheckerResult( '' );
+		setIsMimeCheckerOpen( false );
+		setIsMimeChecking( false );
+		setIsAddOpen( false );
+		if ( fileInputRef.current ) {
+			fileInputRef.current.value = '';
+		}
+	};
+
+	/**
+	 * Upload a file to detect its MIME type via the server.
+	 *
+	 * Uses the existing wp_ajax_bp_document_check_file_mime_type AJAX handler
+	 * which uses PHP's finfo_file() for accurate MIME type detection.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	var handleGetMimeType = function() {
+		if ( ! fileInputRef.current || ! fileInputRef.current.files || ! fileInputRef.current.files[0] ) {
+			return;
+		}
+
+		var ajaxUrl = window.bbAdminData?.ajaxUrl || '/wp-admin/admin-ajax.php';
+		var formData = new FormData();
+		formData.append( 'file', fileInputRef.current.files[0] );
+		formData.append( 'action', 'bp_document_check_file_mime_type' );
+
+		setIsMimeChecking( true );
+		setMimeCheckerResult( '' );
+
+		fetch( ajaxUrl, {
+			method: 'POST',
+			credentials: 'same-origin',
+			body: formData,
+		} )
+			.then( function( response ) {
+				return response.json();
+			} )
+			.then( function( result ) {
+				if ( result.success && result.data && result.data.type ) {
+					setMimeCheckerResult( result.data.type );
+				}
+				setIsMimeChecking( false );
+			} )
+			.catch( function() {
+				setIsMimeChecking( false );
+			} );
+	};
+
+	/**
+	 * Copy the detected MIME type into the MIME Type field and close checker.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	var handleUseMimeType = function() {
+		setNewMimeType( mimeCheckerResult );
+		setMimeCheckerResult( '' );
+		setIsMimeCheckerOpen( false );
+		if ( fileInputRef.current ) {
+			fileInputRef.current.value = '';
+		}
+	};
+
+	/**
+	 * Close the MIME checker panel and reset its state.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	var handleCloseMimeChecker = function() {
+		setMimeCheckerResult( '' );
+		setIsMimeCheckerOpen( false );
+		setIsMimeChecking( false );
+		if ( fileInputRef.current ) {
+			fileInputRef.current.value = '';
+		}
+	};
+
+	/**
+	 * Save a new custom extension.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	var handleSaveExtension = function() {
+		var extension = newExtension.trim();
+
+		if ( ! extension ) {
+			return;
+		}
+
+		// Ensure extension starts with a dot.
+		if ( '.' !== extension.charAt( 0 ) ) {
+			extension = '.' + extension;
+		}
+
+		// Generate next key based on existing keys.
+		var maxIndex = 0;
+		Object.keys( localExtensionData ).forEach( function( key ) {
+			var match = key.match( /bb_doc_(\d+)/ );
+			if ( match ) {
+				var idx = parseInt( match[1], 10 );
+				if ( idx >= maxIndex ) {
+					maxIndex = idx + 1;
+				}
+			}
+		} );
+
+		var newKey = 'bb_doc_' + maxIndex;
+		var description = newDescription.trim();
+		var mimeType = newMimeType.trim();
+
+		// Fallback MIME type if not provided.
+		if ( ! mimeType ) {
+			mimeType = 'application/' + extension.replace( '.', '' );
+		}
+
+		// Build full extension data with the new entry.
+		var fullData = {};
+		Object.keys( localExtensionData ).forEach( function( key ) {
+			var ext = localExtensionData[ key ];
+			fullData[ key ] = {
+				extension: ext.extension,
+				mime_type: ext.mime_type,
+				description: ext.description,
+				is_default: ext.is_default,
+				is_active: workingValues[ key ] !== undefined ? workingValues[ key ] : ext.is_active,
+				icon: ext.icon || '',
+			};
+		} );
+
+		// Add the new extension.
+		fullData[ newKey ] = {
+			extension: extension,
+			mime_type: mimeType,
+			description: description,
+			is_default: 0,
+			is_active: 1,
+			icon: newIcon || 'bb-icon-file',
+		};
+
+		// Update local extension data.
+		setLocalExtensionData( fullData );
+
+		// Update working values with new extension enabled.
+		setWorkingValues( function( prev ) {
+			var updated = Object.assign( {}, prev );
+			updated[ newKey ] = 1;
+			return updated;
+		} );
+
+		// Send full data to save immediately (adding extensions saves right away).
+		onChange( field.name, fullData );
+
+		setHasChanges( true );
+		resetAddState();
+	};
+
+	/**
+	 * Remove a custom (non-default) extension.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {string} key Extension key to remove.
+	 */
+	var handleRemoveExtension = function( key ) {
+		var fullData = {};
+		Object.keys( localExtensionData ).forEach( function( k ) {
+			if ( k === key ) {
+				return;
+			}
+			var ext = localExtensionData[ k ];
+			fullData[ k ] = {
+				extension: ext.extension,
+				mime_type: ext.mime_type,
+				description: ext.description,
+				is_default: ext.is_default,
+				is_active: workingValues[ k ] !== undefined ? workingValues[ k ] : ext.is_active,
+				icon: ext.icon || '',
+			};
+		} );
+
+		setLocalExtensionData( fullData );
+
+		// Remove from working values.
+		setWorkingValues( function( prev ) {
+			var updated = Object.assign( {}, prev );
+			delete updated[ key ];
+			return updated;
+		} );
+
+		// Send full data to save immediately.
+		onChange( field.name, fullData );
+		setHasChanges( true );
+	};
+
+	/**
+	 * Open edit mode for a custom extension.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {string} key Extension key to edit.
+	 */
+	var handleStartEdit = function( key ) {
+		var ext = localExtensionData[ key ];
+		if ( ! ext ) {
+			return;
+		}
+
+		// Determine the icon value: use stored icon, or infer from extension name.
+		var iconValue = ext.icon || '';
+		if ( ! iconValue && ext.extension && iconOptions.length > 0 ) {
+			var rlIconClass = getExtensionIconClass( ext.extension );
+			var matchedOption = iconOptions.find( function( opt ) {
+				return opt.icon_class === rlIconClass;
+			} );
+			if ( matchedOption ) {
+				iconValue = matchedOption.value;
+			}
+		}
+
+		setEditingKey( key );
+		setEditExtension( ext.extension || '' );
+		setEditDescription( ext.description || '' );
+		setEditMimeType( ext.mime_type || '' );
+		setEditIcon( iconValue || 'bb-icon-file' );
+		setIsEditOpen( true );
+	};
+
+	/**
+	 * Save edited extension.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	var handleSaveEdit = function() {
+		if ( ! editingKey ) {
+			return;
+		}
+
+		var extension = editExtension.trim();
+		if ( ! extension ) {
+			return;
+		}
+
+		if ( '.' !== extension.charAt( 0 ) ) {
+			extension = '.' + extension;
+		}
+
+		var fullData = {};
+		Object.keys( localExtensionData ).forEach( function( key ) {
+			var ext = localExtensionData[ key ];
+			if ( key === editingKey ) {
+				fullData[ key ] = {
+					extension: extension,
+					mime_type: editMimeType.trim() || ext.mime_type,
+					description: editDescription.trim(),
+					is_default: ext.is_default,
+					is_active: workingValues[ key ] !== undefined ? workingValues[ key ] : ext.is_active,
+					icon: editIcon || 'bb-icon-file',
+				};
+			} else {
+				fullData[ key ] = {
+					extension: ext.extension,
+					mime_type: ext.mime_type,
+					description: ext.description,
+					is_default: ext.is_default,
+					is_active: workingValues[ key ] !== undefined ? workingValues[ key ] : ext.is_active,
+					icon: ext.icon || '',
+				};
+			}
+		} );
+
+		setLocalExtensionData( fullData );
+		onChange( field.name, fullData );
+		setHasChanges( true );
+		setIsEditOpen( false );
+		setEditingKey( null );
+		setEditExtension( '' );
+		setEditDescription( '' );
+		setEditMimeType( '' );
+		setEditIcon( 'bb-icon-file' );
+	};
+
+	/**
+	 * Cancel editing.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	var handleCancelEdit = function() {
+		setIsEditOpen( false );
+		setEditingKey( null );
+		setEditExtension( '' );
+		setEditDescription( '' );
+		setEditMimeType( '' );
+		setEditIcon( 'bb-icon-file' );
+	};
+
+	// Build extension list for display: default extensions first, custom at bottom.
+	var extensionKeys = Object.keys( localExtensionData );
+	var defaultEntries = [];
+	var customEntries = [];
+	extensionKeys.forEach( function( key ) {
+		var ext = localExtensionData[ key ];
+		var entry = {
+			key: key,
+			extension: ext.extension,
+			description: ext.description,
+			mime_type: ext.mime_type || '',
+			is_default: ext.is_default,
+			icon: ext.icon,
+		};
+		if ( ext.is_default ) {
+			defaultEntries.push( entry );
+		} else {
+			customEntries.push( entry );
+		}
+	} );
+	var sortedEntries = defaultEntries.concat( customEntries );
+
+	return (
+		<div className="bb-doc-extensions">
+			{ /* Manage Button */ }
+			<button
+				type="button"
+				className="bb-admin-settings-field__manage-btn"
+				onClick={ handleOpenManage }
+				disabled={ disabled }
+			>
+				{ field.manage_icon && (
+					<i className={ field.manage_icon } />
+				) }
+				<span>{ field.manage_label || __( 'Manage', 'buddyboss' ) }</span>
+			</button>
+
+			{ /* Manage File Extensions Modal */ }
+			{ isManageOpen && (
+				<Modal
+					title={ __( 'Manage File Extensions', 'buddyboss' ) }
+					onRequestClose={ handleCancelManage }
+					className={ 'bb-doc-extensions-modal' + ( ( isAddOpen || isEditOpen ) ? ' bb-doc-extensions-modal--nested-open' : '' ) }
+					overlayClassName={ 'bb-extension-modal-overlay' + ( ( isAddOpen || isEditOpen ) ? ' bb-extension-modal-overlay--dimmed' : '' ) }
+					shouldCloseOnClickOutside={ false }
+				>
+					<div className="bb-doc-extensions-modal__body">
+						<div className="bb-doc-extensions-modal__list">
+							{ sortedEntries.map( function( entry ) {
+								var key = entry.key;
+								var isChecked = workingValues[ key ] === 1 || ( workingValues[ key ] === undefined && localExtensionData[ key ] && localExtensionData[ key ].is_active );
+								var isDefault = entry.is_default === 1;
+
+								return (
+									<div
+										key={ key }
+										className={ 'bb-doc-extensions-modal__item' + ( isChecked ? '' : ' bb-doc-extensions-modal__item--disabled' ) }
+									>
+										<label className="bb-doc-extensions-modal__checkbox">
+											<input
+												type="checkbox"
+												checked={ isChecked }
+												onChange={ function( e ) {
+													handleCheckboxChange( key, e.target.checked );
+												} }
+											/>
+											<span className="bb-doc-extensions-modal__checkmark" />
+										</label>
+										<span className="bb-doc-extensions-modal__ext-name">
+											{ entry.extension }
+										</span>
+										<i className={ 'bb-doc-extensions-modal__ext-icon ' + getExtensionIconClass( entry.extension ) } />
+										<span className="bb-doc-extensions-modal__ext-desc">
+											{ entry.description }
+										</span>
+										{ ! isDefault && (
+											<div className="bb-doc-extensions-modal__ext-actions">
+												<DropdownMenu
+													icon={ <i className="bb-icons-rl-dots-three" /> }
+													label={ __( 'More options', 'buddyboss' ) }
+													controls={ [
+														{
+															title: __( 'Edit', 'buddyboss' ),
+															onClick: function() {
+																handleStartEdit( key );
+															},
+														},
+														{
+															title: __( 'Delete', 'buddyboss' ),
+															onClick: function() {
+																handleRemoveExtension( key );
+															},
+														},
+													] }
+												/>
+											</div>
+										) }
+									</div>
+								);
+							} ) }
+						</div>
+
+						{ /* Add Extension Button */ }
+						<button
+							type="button"
+							className="bb-doc-extensions-modal__add-btn"
+							onClick={ function() {
+								setIsAddOpen( true );
+							} }
+							disabled={ disabled }
+						>
+							<i className="bb-icons-rl bb-icons-rl-plus" />
+							<span>{ __( 'Add Extension', 'buddyboss' ) }</span>
+						</button>
+					</div>
+
+					<div className="bb-doc-extensions-modal__footer">
+						<Button
+							variant="secondary"
+							onClick={ handleCancelManage }
+							className="bb-extension-modal__cancel-btn"
+						>
+							{ __( 'Cancel', 'buddyboss' ) }
+						</Button>
+						<Button
+							variant="primary"
+							onClick={ handleSaveManage }
+							className="bb-extension-modal__save-btn"
+						>
+							{ __( 'Save', 'buddyboss' ) }
+						</Button>
+					</div>
+					{ /* Add New Extension overlay (custom div, not WP Modal, to keep parent visible) */ }
+					{ isAddOpen && (
+						<div className="bb-extension-modal-overlay bb-extension-modal-overlay--nested">
+							<div className="bb-extension-modal--nested" role="dialog" aria-modal="true" aria-label={ __( 'Add New Extension', 'buddyboss' ) }>
+								<div className="bb-extension-modal--nested__header">
+									<h1>{ __( 'Add New Extension', 'buddyboss' ) }</h1>
+									<button
+										type="button"
+										className="bb-extension-modal--nested__close"
+										onClick={ resetAddState }
+										aria-label={ __( 'Close', 'buddyboss' ) }
+									>
+										<i className="bb-icons-rl bb-icons-rl-x" />
+									</button>
+								</div>
+								<div className="bb-extension-modal__body">
+									<div className="bb-extension-modal__field">
+										<label className="bb-extension-modal__label">
+											{ __( 'Extension', 'buddyboss' ) }
+										</label>
+										<TextControl
+											value={ newExtension }
+											onChange={ setNewExtension }
+											placeholder={ __( 'e.g., .extension', 'buddyboss' ) }
+											__nextHasNoMarginBottom
+										/>
+									</div>
+									<div className="bb-extension-modal__field">
+										<label className="bb-extension-modal__label">
+											{ __( 'Description', 'buddyboss' ) }
+										</label>
+										<TextareaControl
+											value={ newDescription }
+											onChange={ setNewDescription }
+											placeholder={ __( 'Enter a short description', 'buddyboss' ) }
+											__nextHasNoMarginBottom
+										/>
+									</div>
+									<div className="bb-extension-modal__field">
+										<label className="bb-extension-modal__label">
+											{ __( 'Icon', 'buddyboss' ) }
+										</label>
+										<div className="bb-extension-modal__icon-select">
+											<select
+												value={ newIcon }
+												onChange={ function( e ) {
+													setNewIcon( e.target.value );
+												} }
+												className="bb-extension-modal__icon-dropdown"
+											>
+												{ iconOptions.map( function( opt ) {
+													return (
+														<option key={ opt.value } value={ opt.value }>
+															{ opt.label }
+														</option>
+													);
+												} ) }
+											</select>
+											{ iconOptions.length > 0 && (
+												<i className={
+													( iconOptions.find( function( o ) { return o.value === newIcon; } ) || {} ).icon_class || 'bb-icons-rl bb-icons-rl-file'
+												} />
+											) }
+										</div>
+									</div>
+									<div className="bb-extension-modal__field">
+										<label className="bb-extension-modal__label">
+											{ __( 'MIME Type', 'buddyboss' ) }
+										</label>
+										<div className="bb-extension-modal__mime-row">
+											<TextControl
+												value={ newMimeType }
+												onChange={ setNewMimeType }
+												placeholder={ __( 'e.g., application/pdf', 'buddyboss' ) }
+												__nextHasNoMarginBottom
+											/>
+											<button
+												type="button"
+												className="bb-extension-modal__mime-checker-link"
+												onClick={ function() {
+													setIsMimeCheckerOpen( ! isMimeCheckerOpen );
+													setMimeCheckerResult( '' );
+												} }
+											>
+												{ __( 'MIME Checker', 'buddyboss' ) }
+											</button>
+										</div>
+									</div>
+
+									{ isMimeCheckerOpen && (
+										<div className="bb-extension-modal__mime-checker">
+											<div className="bb-extension-modal__mime-checker-header">
+												<h4>{ __( 'Upload a file to check its MIME type', 'buddyboss' ) }</h4>
+												<button
+													type="button"
+													className="bb-extension-modal__mime-checker-close"
+													onClick={ handleCloseMimeChecker }
+													aria-label={ __( 'Close MIME checker', 'buddyboss' ) }
+												>
+													<i className="bb-icons-rl bb-icons-rl-x" />
+												</button>
+											</div>
+											<p className="bb-extension-modal__mime-checker-desc">
+												{ __( 'Upload a sample file and click "Get MIME Type" to detect the correct MIME type for your extension.', 'buddyboss' ) }
+											</p>
+											<div className="bb-extension-modal__mime-checker-upload">
+												<input
+													type="file"
+													ref={ fileInputRef }
+													className="bb-extension-modal__mime-checker-file"
+												/>
+												<Button
+													variant="secondary"
+													onClick={ handleGetMimeType }
+													disabled={ isMimeChecking }
+													className="bb-extension-modal__mime-checker-btn"
+												>
+													{ isMimeChecking ? __( 'Checking...', 'buddyboss' ) : __( 'Get MIME Type', 'buddyboss' ) }
+												</Button>
+											</div>
+											{ mimeCheckerResult && (
+												<div className="bb-extension-modal__mime-checker-result">
+													<span className="bb-extension-modal__mime-checker-result-label">
+														{ __( 'Detected MIME type:', 'buddyboss' ) }
+													</span>
+													<code className="bb-extension-modal__mime-checker-result-value">
+														{ mimeCheckerResult }
+													</code>
+													<Button
+														variant="primary"
+														onClick={ handleUseMimeType }
+														className="bb-extension-modal__mime-checker-use-btn"
+													>
+														{ __( 'Use this MIME type', 'buddyboss' ) }
+													</Button>
+												</div>
+											) }
+										</div>
+									) }
+								</div>
+								<div className="bb-extension-modal__footer">
+									<Button
+										variant="secondary"
+										onClick={ resetAddState }
+										className="bb-extension-modal__cancel-btn"
+									>
+										{ __( 'Cancel', 'buddyboss' ) }
+									</Button>
+									<Button
+										variant="primary"
+										onClick={ handleSaveExtension }
+										disabled={ ! newExtension.trim() }
+										className="bb-extension-modal__save-btn"
+									>
+										{ __( 'Save', 'buddyboss' ) }
+									</Button>
+								</div>
+							</div>
+						</div>
+					) }
+					{ /* Edit Extension overlay (same popup pattern as Add) */ }
+					{ isEditOpen && editingKey && (
+						<div className="bb-extension-modal-overlay bb-extension-modal-overlay--nested">
+							<div className="bb-extension-modal--nested" role="dialog" aria-modal="true" aria-label={ __( 'Edit Extension', 'buddyboss' ) }>
+								<div className="bb-extension-modal--nested__header">
+									<h1>{ __( 'Edit Extension', 'buddyboss' ) }</h1>
+									<button
+										type="button"
+										className="bb-extension-modal--nested__close"
+										onClick={ handleCancelEdit }
+										aria-label={ __( 'Close', 'buddyboss' ) }
+									>
+										<i className="bb-icons-rl bb-icons-rl-x" />
+									</button>
+								</div>
+								<div className="bb-extension-modal__body">
+									<div className="bb-extension-modal__field">
+										<label className="bb-extension-modal__label">
+											{ __( 'Extension', 'buddyboss' ) }
+										</label>
+										<TextControl
+											value={ editExtension }
+											onChange={ setEditExtension }
+											__nextHasNoMarginBottom
+										/>
+									</div>
+									<div className="bb-extension-modal__field">
+										<label className="bb-extension-modal__label">
+											{ __( 'Description', 'buddyboss' ) }
+										</label>
+										<TextControl
+											value={ editDescription }
+											onChange={ setEditDescription }
+											__nextHasNoMarginBottom
+										/>
+									</div>
+									<div className="bb-extension-modal__field">
+										<label className="bb-extension-modal__label">
+											{ __( 'Icon', 'buddyboss' ) }
+										</label>
+										<div className="bb-extension-modal__icon-select">
+											<select
+												value={ editIcon }
+												onChange={ function( e ) {
+													setEditIcon( e.target.value );
+												} }
+												className="bb-extension-modal__icon-dropdown"
+											>
+												{ iconOptions.map( function( opt ) {
+													return (
+														<option key={ opt.value } value={ opt.value }>
+															{ opt.label }
+														</option>
+													);
+												} ) }
+											</select>
+											{ iconOptions.length > 0 && (
+												<i className={
+													( iconOptions.find( function( o ) { return o.value === editIcon; } ) || {} ).icon_class || 'bb-icons-rl bb-icons-rl-file'
+												} />
+											) }
+										</div>
+									</div>
+									<div className="bb-extension-modal__field">
+										<label className="bb-extension-modal__label">
+											{ __( 'MIME Type', 'buddyboss' ) }
+										</label>
+										<TextControl
+											value={ editMimeType }
+											onChange={ setEditMimeType }
+											placeholder={ __( 'e.g., application/pdf', 'buddyboss' ) }
+											__nextHasNoMarginBottom
+										/>
+									</div>
+								</div>
+								<div className="bb-extension-modal__footer">
+									<Button
+										variant="secondary"
+										onClick={ handleCancelEdit }
+										className="bb-extension-modal__cancel-btn"
+									>
+										{ __( 'Cancel', 'buddyboss' ) }
+									</Button>
+									<Button
+										variant="primary"
+										onClick={ handleSaveEdit }
+										disabled={ ! editExtension.trim() }
+										className="bb-extension-modal__save-btn"
+									>
+										{ __( 'Save', 'buddyboss' ) }
+									</Button>
+								</div>
+							</div>
+						</div>
+					) }
+				</Modal>
+			) }
+		</div>
+	);
+}

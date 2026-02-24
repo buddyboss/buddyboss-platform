@@ -393,6 +393,36 @@
     gap: 12px;
 }
 
+.bb-admin-settings-field__manage-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 16px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    color: $bb-text-brand-primary-color;
+    background-color: transparent;
+    border: 1px solid $bb-border-brand-primary-color;
+    border-radius: $bb-border-radius-lg;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    i {
+        font-size: 16px;
+        line-height: 1;
+    }
+
+    &:hover {
+        background-color: rgba($bb-background-brand-primary-color, 0.05);
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+}
+
 /* Extension List Field */
 .bb-extension-list {
 
@@ -476,6 +506,11 @@
     z-index: 100100;
     background-color: $bb-overlay-color;
     backdrop-filter: blur(1px);
+
+    /* Darken the WP Modal overlay when nested Add Extension popup is open */
+    &.bb-extension-modal-overlay--dimmed {
+        background-color: rgba(0, 0, 0, 0.5);
+    }
 }
 
 .bb-extension-modal {
@@ -597,6 +632,37 @@
 
         &::placeholder {
             color: $bb-text-disabled-color;
+        }
+    }
+
+    &__icon-select {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        i {
+            font-size: 20px;
+            color: $bb-icon-secondary-color;
+            width: 24px;
+            text-align: center;
+        }
+    }
+
+    &__icon-dropdown {
+        background-color: $bb-background-primary-color;
+        border: 0.5px solid $bb-border-secondary-color;
+        border-radius: $bb-border-radius-md;
+        padding: 7px 8px;
+        font-size: 13px;
+        color: $bb-text-color;
+        line-height: 1.5;
+        min-width: 160px;
+        cursor: pointer;
+
+        &:focus {
+            border-color: $bb-border-brand-primary-color;
+            box-shadow: none;
+            outline: none;
         }
     }
 
@@ -816,6 +882,383 @@
             background-color: $bb-icon-brand-disabled-color;
             color: $bb-text-inverse-color;
             opacity: 1;
+        }
+    }
+}
+
+/* Document Extensions Manage Modal */
+.bb-doc-extensions-modal {
+
+    &.components-modal__frame {
+        max-width: 720px;
+        width: 100%;
+        border-radius: $bb-border-radius-2xl;
+        border: 1px solid $bb-border-secondary-color;
+        box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.12);
+        overflow: hidden;
+        max-height: 80vh;
+    }
+
+    /* Hide parent modal visually when nested Add/Edit Extension popup is open */
+    &.bb-doc-extensions-modal--nested-open.components-modal__frame {
+        background: transparent;
+        border-color: transparent;
+        box-shadow: none;
+
+        .components-modal__header,
+        .components-modal__content {
+            visibility: hidden;
+        }
+
+        .components-modal__content {
+            position: relative;
+
+            /* Keep the nested overlay visible inside the hidden content */
+            .bb-extension-modal-overlay--nested {
+                visibility: visible;
+            }
+        }
+    }
+
+    .components-modal__header {
+        height: auto;
+        border-bottom: 1px solid $bb-border-secondary-color;
+        padding: 16px 16px 16px 24px;
+        margin: 0;
+
+        .components-modal__header-heading {
+            color: #000000;
+            font-size: 18px;
+            font-weight: 500;
+            line-height: 1;
+        }
+
+        button.components-button {
+            color: $bb-icon-secondary-color;
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            min-width: 20px;
+            min-height: 20px;
+            width: 20px;
+            height: 20px;
+            padding: 0;
+
+            &:hover {
+                color: $bb-text-color;
+            }
+
+            svg {
+                width: 20px;
+                height: 20px;
+            }
+        }
+    }
+
+    .components-modal__content {
+        padding: 0;
+        margin: 0;
+        padding-top: 51px;
+        overflow-y: auto;
+    }
+
+    &__body {
+        padding: 0 0 16px;
+    }
+
+    &__list {
+        display: flex;
+        flex-direction: column;
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    &__item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 24px;
+        border-bottom: 1px solid $bb-border-primary-color;
+        transition: background-color 0.15s ease;
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+        &:hover {
+            background-color: $bb-background-primary-color;
+        }
+
+        &--disabled {
+            opacity: 0.6;
+        }
+
+        &--editing {
+            padding: 16px 24px;
+            background-color: $bb-background-primary-color;
+
+            &:hover {
+                background-color: $bb-background-primary-color;
+            }
+        }
+    }
+
+    &__checkbox {
+        display: flex;
+        align-items: center;
+        flex-shrink: 0;
+        cursor: pointer;
+        position: relative;
+        width: 18px;
+        height: 18px;
+
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin: 0;
+            border: 1.5px solid $bb-border-tertiary-color;
+            border-radius: $bb-border-radius-sm;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            background-color: $bb-background-base-color;
+            transition: all 0.15s ease;
+
+            &:checked {
+                background-color: $bb-background-brand-primary-color;
+                border-color: $bb-background-brand-primary-color;
+            }
+
+            &:checked::after {
+                content: '';
+                display: block;
+                width: 5px;
+                height: 9px;
+                border: solid $bb-text-inverse-color;
+                border-width: 0 2px 2px 0;
+                transform: rotate(45deg);
+                position: absolute;
+                top: 2px;
+                left: 6px;
+            }
+
+            &:focus {
+                box-shadow: none;
+                outline: none;
+            }
+        }
+    }
+
+    &__ext-name {
+        font-size: 13px;
+        font-weight: 500;
+        color: $bb-text-color;
+        min-width: 60px;
+        flex-shrink: 0;
+    }
+
+    &__ext-icon {
+        font-size: 20px;
+        color: $bb-icon-tertiary-color;
+        flex-shrink: 0;
+        width: 24px;
+        text-align: center;
+    }
+
+    &__ext-desc {
+        flex: 1;
+        font-size: 13px;
+        font-weight: 400;
+        color: $bb-text-tertiary-color;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    &__ext-actions {
+        flex-shrink: 0;
+
+        .components-dropdown-menu__toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            min-width: auto;
+            height: auto;
+            color: $bb-icon-tertiary-color;
+
+            i {
+                font-size: 18px;
+                line-height: 1;
+                font-weight: 700;
+            }
+
+            &:hover,
+            &:focus,
+            &.is-pressed {
+                color: $bb-text-color;
+                background: none;
+                box-shadow: none;
+            }
+
+            .dashicon,
+            svg:not(:first-child) {
+                display: none;
+            }
+        }
+    }
+
+    &__ext-ellipsis {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: $bb-icon-tertiary-color;
+        padding: 0;
+        min-width: 24px;
+
+        i {
+            font-size: 18px;
+            line-height: 1;
+            font-weight: 700;
+        }
+    }
+
+    &__edit-form {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+    }
+
+    &__edit-field {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+
+        .components-text-control__input {
+            background-color: $bb-background-base-color;
+            border: 0.5px solid $bb-border-secondary-color;
+            border-radius: $bb-border-radius-md;
+            padding: 7px 8px;
+            font-size: 13px;
+            color: $bb-text-color;
+            line-height: 1.5;
+            box-shadow: none;
+            min-height: auto;
+
+            &:focus {
+                border-color: $bb-border-brand-primary-color;
+                box-shadow: none;
+                outline: none;
+            }
+        }
+    }
+
+    &__edit-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+    }
+
+    &__add-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin: 16px 24px 0;
+        padding: 8px 16px;
+        font-size: 13px;
+        font-weight: 500;
+        line-height: 18px;
+        color: $bb-text-inverse-color;
+        background-color: $bb-background-brand-primary-color;
+        border: none;
+        border-radius: $bb-border-radius-lg;
+        cursor: pointer;
+        transition: opacity 0.2s ease;
+
+        i {
+            font-size: 16px;
+            line-height: 1;
+        }
+
+        &:hover {
+            opacity: 0.9;
+        }
+
+        &:disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+    }
+
+    &__footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        padding: 8px 24px;
+        border-top: 1px solid $bb-border-secondary-color;
+    }
+}
+
+/* Nested Add Extension modal (custom div overlay, not WP Modal) */
+.bb-extension-modal-overlay--nested {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100200;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bb-extension-modal--nested {
+    position: relative;
+    z-index: 100201;
+    max-width: 500px;
+    width: 100%;
+    background: $bb-background-base-color;
+    border-radius: $bb-border-radius-2xl;
+    border: none;
+    box-shadow: 0px 4px 24px 0px rgba(0, 0, 0, 0.16);
+    overflow: hidden;
+
+    &__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid $bb-border-secondary-color;
+        padding: 16px 16px 16px 24px;
+
+        h1 {
+            color: #000;
+            font-size: 18px;
+            font-weight: 500;
+            line-height: 1;
+            margin: 0;
+            padding: 0;
+        }
+    }
+
+    &__close {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+        color: $bb-text-secondary-color;
+        font-size: 20px;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:hover {
+            color: $bb-text-color;
         }
     }
 }

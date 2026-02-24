@@ -33,6 +33,7 @@ import { ImageRadioField } from './fields/ImageRadioField';
 import { ChildRenderField } from './fields/ChildRenderField';
 import { DimensionsField } from './fields/DimensionsField';
 import { ExtensionListField } from './fields/ExtensionListField';
+import { DocumentExtensionsField } from './fields/DocumentExtensionsField';
 
 /**
  * Settings Form Component (matching Figma settingsSection)
@@ -461,6 +462,35 @@ export function SettingsForm({ fields, values, onChange }) {
 					return <span className="bb-admin-settings-field__control--hidden" aria-hidden="true" />;
 				}
 				return null;
+
+			case 'document_extensions':
+				return (
+					<DocumentExtensionsField
+						field={field}
+						value={value}
+						onChange={onChange}
+						disabled={disabled}
+					/>
+				);
+
+			case 'manage_link':
+				return (
+					<button
+						type="button"
+						className="bb-admin-settings-field__manage-btn"
+						onClick={ function() {
+							if ( field.manage_url ) {
+								window.location.href = field.manage_url;
+							}
+						} }
+						disabled={ disabled }
+					>
+						{ field.manage_icon && (
+							<i className={ field.manage_icon } />
+						) }
+						<span>{ field.manage_label || __( 'Manage', 'buddyboss' ) }</span>
+					</button>
+				);
 
 			default:
 				return (

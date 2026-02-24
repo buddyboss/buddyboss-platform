@@ -538,6 +538,19 @@ class BB_Admin_Settings_Ajax {
 				}
 			}
 
+			// document_extensions: extract is_active from nested arrays (same pattern as toggle_list with extension_data).
+			if ( 'document_extensions' === ( $field['type'] ?? '' ) && is_array( $field_value ) ) {
+				$toggle_values = array();
+				foreach ( $field_value as $key => $ext ) {
+					if ( is_array( $ext ) && isset( $ext['is_active'] ) ) {
+						$toggle_values[ $key ] = absint( $ext['is_active'] );
+					} else {
+						$toggle_values[ $key ] = absint( $ext );
+					}
+				}
+				$field_value = $toggle_values;
+			}
+
 			// Handle description_controls: read each control's value from DB (same storage as main options).
 			// Each control maps to one %s placeholder in the description string (in order).
 			// Use sequential %s placeholders — %1$s/%2$s are NOT supported by the frontend split logic.
@@ -626,6 +639,12 @@ class BB_Admin_Settings_Ajax {
 				'add_button_label'     => $field['add_button_label'] ?? null,
 				// Full extension data for extension list fields.
 				'extension_data'       => $field['extension_data'] ?? null,
+				// Icon options for extension icon dropdown.
+				'icon_options'         => $field['icon_options'] ?? null,
+				// Manage link fields.
+				'manage_url'           => $field['manage_url'] ?? null,
+				'manage_label'         => $field['manage_label'] ?? null,
+				'manage_icon'          => $field['manage_icon'] ?? null,
 			);
 
 			// Auto-compute pro_notice for pro_only fields when not set at registration time.

@@ -113,8 +113,14 @@ function bb_media_sanitize_extensions( $value ) {
 	$is_toggle_only = ! is_array( $first_value );
 
 	if ( $is_toggle_only ) {
+		// Determine the correct option name from key prefix.
+		$first_key   = key( $value );
+		$option_name = ( 0 === strpos( $first_key, 'bb_vid' ) )
+			? 'bp_video_extensions_support'
+			: 'bp_document_extensions_support';
+
 		// Merge toggle states into existing stored data.
-		$existing = bp_get_option( 'bp_video_extensions_support', array() );
+		$existing = bp_get_option( $option_name, array() );
 
 		foreach ( $value as $key => $is_active ) {
 			$sanitized_key = sanitize_key( $key );
