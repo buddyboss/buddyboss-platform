@@ -675,7 +675,7 @@ class BB_Admin_Groups_Ajax {
 				'id'            => (int) $group->id,
 				'name'          => $group_name,
 				'slug'          => $group->slug,
-				'description'   => wp_trim_words( wp_strip_all_tags( apply_filters( 'bp_get_group_description', $group->description ) ), 20 ),
+				'description'   => wp_trim_words( wp_strip_all_tags( apply_filters( 'bp_get_group_description', $group->description, $group ) ), 20 ),
 				'status'        => $group->status,
 				'status_label'  => $status_desc,
 				'date_created'  => $group->date_created,
@@ -1132,7 +1132,7 @@ class BB_Admin_Groups_Ajax {
 	 * 2. groups_edit_base_group_details() — fires groups_details_updated + cache.
 	 * 3. groups_edit_group_settings() — handles privacy + permissions + cache.
 	 * 4. save_fields_data('groups', $group, 'after') — saves group_type + Pro fields.
-	 * 5. do_action('bp_group_admin_edit_after', $group_id) — backward compat.
+	 * 5. do_action('bp_group_admin_edit_after', $group_id) — third-party compat.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -1201,10 +1201,15 @@ class BB_Admin_Groups_Ajax {
 			$status = $group->status; // Fallback to current status.
 		}
 
-		// Preserve existing video_status since it is not editable in the modal.
-		$video_status = groups_get_groupmeta( $group_id, 'video_status' );
-		if ( empty( $video_status ) ) {
-			$video_status = false;
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
+		$video_status = isset( $_POST['registered_field_perm_video'] ) ? sanitize_key( wp_unslash( $_POST['registered_field_perm_video'] ) ) : false;
+
+		// Fallback to existing value when video field is not visible (feature disabled).
+		if ( false === $video_status ) {
+			$video_status = groups_get_groupmeta( $group_id, 'video_status' );
+			if ( empty( $video_status ) ) {
+				$video_status = false;
+			}
 		}
 
 		groups_edit_group_settings(
@@ -1226,9 +1231,6 @@ class BB_Admin_Groups_Ajax {
 
 		/**
 		 * Fires after a group is saved from the admin edit modal.
-		 *
-		 * This is the same hook fired by the legacy admin edit screen,
-		 * ensuring third-party plugins (LearnDash, bbPress, etc.) continue to work.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *

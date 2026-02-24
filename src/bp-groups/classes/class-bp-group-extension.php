@@ -1195,7 +1195,8 @@ class BP_Group_Extension {
 		add_action( 'bp_groups_admin_meta_boxes', array( $this, '_meta_box_display_callback' ) );
 
 		// Catch the metabox save.
-		add_action( 'bp_group_admin_edit_after', array( $this, 'call_admin_screen_save' ), 10 );
+		// @todo: Remove after testing — Settings 2.0 handles group extension save via registry meta fields.
+		// add_action( 'bp_group_admin_edit_after', array( $this, 'call_admin_screen_save' ), 10 );
 	}
 
 	/**

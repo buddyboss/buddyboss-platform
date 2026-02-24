@@ -68,7 +68,13 @@ function bb_groups_register_core_meta_fields( $registry, $component ) {
 				);
 			},
 			'save_value'        => function ( $group, $value ) {
-				$group->slug = groups_check_slug( sanitize_title( $value ) );
+				$new_slug = sanitize_title( $value );
+
+				// Only check for slug conflicts when it actually changed,
+				// matching legacy groups_edit_base_group_details() behavior.
+				if ( $new_slug && strtolower( $new_slug ) !== strtolower( $group->slug ) ) {
+					$group->slug = groups_check_slug( $new_slug );
+				}
 			},
 			'sanitize_callback' => 'sanitize_title',
 		)
@@ -200,85 +206,115 @@ function bb_groups_register_core_meta_fields( $registry, $component ) {
 			'get_fn'    => 'bp_group_get_invite_status',
 		),
 		array(
-			'id'        => 'perm_activity_feed',
-			'label'     => __( 'Who can post into this group?', 'buddyboss' ),
-			'meta_key'  => 'activity_feed_status',
-			'type_slug' => 'activity_feed',
-			'order'     => 320,
-			'get_fn'    => 'bp_group_get_activity_feed_status',
+			'id'         => 'perm_activity_feed',
+			'label'      => __( 'Who can post into this group?', 'buddyboss' ),
+			'meta_key'   => 'activity_feed_status',
+			'type_slug'  => 'activity_feed',
+			'order'      => 320,
+			'get_fn'     => 'bp_group_get_activity_feed_status',
+			'is_visible' => function ( $group ) {
+				return bp_is_active( 'activity' );
+			},
 		),
 		array(
-			'id'        => 'perm_media',
-			'label'     => __( 'Who can upload photos in this group?', 'buddyboss' ),
-			'meta_key'  => 'media_status',
-			'type_slug' => 'media',
-			'order'     => 330,
-			'get_fn'    => 'bp_group_get_media_status',
+			'id'         => 'perm_media',
+			'label'      => __( 'Who can upload photos in this group?', 'buddyboss' ),
+			'meta_key'   => 'media_status',
+			'type_slug'  => 'media',
+			'order'      => 330,
+			'get_fn'     => 'bp_group_get_media_status',
+			'is_visible' => function ( $group ) {
+				return bp_is_active( 'media' ) && bp_is_group_media_support_enabled();
+			},
 		),
 		array(
-			'id'        => 'perm_album',
-			'label'     => __( 'Who can create albums in this group?', 'buddyboss' ),
-			'meta_key'  => 'album_status',
-			'type_slug' => 'album',
-			'order'     => 340,
-			'get_fn'    => 'bp_group_get_album_status',
+			'id'         => 'perm_album',
+			'label'      => __( 'Who can create albums in this group?', 'buddyboss' ),
+			'meta_key'   => 'album_status',
+			'type_slug'  => 'album',
+			'order'      => 340,
+			'get_fn'     => 'bp_group_get_album_status',
+			'is_visible' => function ( $group ) {
+				return bp_is_active( 'media' ) && bp_is_group_albums_support_enabled();
+			},
 		),
 		array(
-			'id'        => 'perm_document',
-			'label'     => __( 'Who can upload documents in this group?', 'buddyboss' ),
-			'meta_key'  => 'document_status',
-			'type_slug' => 'document',
-			'order'     => 350,
-			'get_fn'    => 'bp_group_get_document_status',
+			'id'         => 'perm_document',
+			'label'      => __( 'Who can upload documents in this group?', 'buddyboss' ),
+			'meta_key'   => 'document_status',
+			'type_slug'  => 'document',
+			'order'      => 350,
+			'get_fn'     => 'bp_group_get_document_status',
+			'is_visible' => function ( $group ) {
+				return bp_is_active( 'media' ) && bp_is_group_document_support_enabled();
+			},
 		),
 		array(
-			'id'        => 'perm_message',
-			'label'     => __( 'Who can manage group messages in this group?', 'buddyboss' ),
-			'meta_key'  => 'message_status',
-			'type_slug' => 'message',
-			'order'     => 360,
-			'get_fn'    => 'bp_group_get_message_status',
+			'id'         => 'perm_video',
+			'label'      => __( 'Who can upload videos in this group?', 'buddyboss' ),
+			'meta_key'   => 'video_status',
+			'type_slug'  => 'video',
+			'order'      => 355,
+			'get_fn'     => 'bp_group_get_video_status',
+			'is_visible' => function ( $group ) {
+				return bp_is_active( 'media' ) && bp_is_group_video_support_enabled();
+			},
+		),
+		array(
+			'id'         => 'perm_message',
+			'label'      => __( 'Who can manage group messages in this group?', 'buddyboss' ),
+			'meta_key'   => 'message_status',
+			'type_slug'  => 'message',
+			'order'      => 360,
+			'get_fn'     => 'bp_group_get_message_status',
+			'is_visible' => function ( $group ) {
+				return bp_is_active( 'messages' ) && bp_disable_group_messages();
+			},
 		),
 	);
 
 	foreach ( $permission_fields as $perm ) {
-		$registry->register(
-			$component,
-			$perm['id'],
-			array(
-				'label'             => $perm['label'],
-				'type'              => 'radio',
-				'tab'               => 'permissions',
-				'order'             => $perm['order'],
-				'save_phase'        => 'after',
-				'get_value'         => function ( $group ) use ( $perm ) {
-					if ( function_exists( $perm['get_fn'] ) ) {
-						return call_user_func( $perm['get_fn'], $group->id );
-					}
-					return groups_get_groupmeta( $group->id, $perm['meta_key'] );
-				},
-				'get_options'       => function ( $group ) use ( $perm ) {
-					$statuses = bb_groups_get_settings_status( $perm['type_slug'] );
-					$labels   = array(
-						'members' => __( 'All Members', 'buddyboss' ),
-						'mods'    => __( 'Organizers and Moderators', 'buddyboss' ),
-						'admins'  => __( 'Organizers', 'buddyboss' ),
-					);
+		$field_args = array(
+			'label'             => $perm['label'],
+			'type'              => 'radio',
+			'tab'               => 'permissions',
+			'order'             => $perm['order'],
+			'save_phase'        => 'after',
+			'get_value'         => function ( $group ) use ( $perm ) {
+				if ( function_exists( $perm['get_fn'] ) ) {
+					return call_user_func( $perm['get_fn'], $group->id );
+				}
+				return groups_get_groupmeta( $group->id, $perm['meta_key'] );
+			},
+			'get_options'       => function ( $group ) use ( $perm ) {
+				$statuses = bb_groups_get_settings_status( $perm['type_slug'] );
+				$labels   = array(
+					'members' => __( 'All Members', 'buddyboss' ),
+					'mods'    => __( 'Organizers and Moderators', 'buddyboss' ),
+					'admins'  => __( 'Organizers', 'buddyboss' ),
+				);
 
-					$options = array();
-					foreach ( $statuses as $status ) {
-						$options[] = array(
-							'value' => $status,
-							'label' => isset( $labels[ $status ] ) ? $labels[ $status ] : $status,
-						);
-					}
-					return $options;
-				},
-				// Note: Permission values are saved via groups_edit_group_settings()
-				// in save_group() handler. No save_value needed here to avoid double-write.
-				'sanitize_callback' => 'sanitize_key',
-			)
+				$options = array();
+				foreach ( $statuses as $status ) {
+					$options[] = array(
+						'value' => $status,
+						'label' => isset( $labels[ $status ] ) ? $labels[ $status ] : $status,
+					);
+				}
+				return $options;
+			},
+			// No-op: actual save happens via groups_edit_group_settings() in save_group().
+			// Defined so the field is not marked readonly and JS includes it in POST payload.
+			'save_value'        => function ( $group, $value ) {},
+			'sanitize_callback' => 'sanitize_key',
 		);
+
+		// Add is_visible callback if the permission field defines one.
+		if ( isset( $perm['is_visible'] ) && is_callable( $perm['is_visible'] ) ) {
+			$field_args['is_visible'] = $perm['is_visible'];
+		}
+
+		$registry->register( $component, $perm['id'], $field_args );
 	}
 
 	// =========================================================================

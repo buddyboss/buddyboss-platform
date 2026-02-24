@@ -230,19 +230,23 @@ class BB_Admin_Meta_Field_Registry {
 				'conditional' => $args['conditional'],
 			);
 
-			// Get current value.
-			if ( is_callable( $args['get_value'] ) ) {
-				$field_data['value'] = call_user_func( $args['get_value'], $item );
-			}
+			// Skip fetching value, options, and extra data for invisible fields
+			// to avoid unnecessary DB queries for disabled components.
+			if ( $visible ) {
+				// Get current value.
+				if ( is_callable( $args['get_value'] ) ) {
+					$field_data['value'] = call_user_func( $args['get_value'], $item );
+				}
 
-			// Get options for select, radio, and checkbox types.
-			if ( in_array( $args['type'], array( 'select', 'radio', 'checkbox' ), true ) && is_callable( $args['get_options'] ) ) {
-				$field_data['options'] = call_user_func( $args['get_options'], $item );
-			}
+				// Get options for select, radio, and checkbox types.
+				if ( in_array( $args['type'], array( 'select', 'radio', 'checkbox' ), true ) && is_callable( $args['get_options'] ) ) {
+					$field_data['options'] = call_user_func( $args['get_options'], $item );
+				}
 
-			// Get extra data (e.g. base_url for permalink fields).
-			if ( is_callable( $args['get_extra_data'] ) ) {
-				$field_data['extra_data'] = call_user_func( $args['get_extra_data'], $item );
+				// Get extra data (e.g. base_url for permalink fields).
+				if ( is_callable( $args['get_extra_data'] ) ) {
+					$field_data['extra_data'] = call_user_func( $args['get_extra_data'], $item );
+				}
 			}
 
 			$data[] = $field_data;
@@ -283,7 +287,7 @@ class BB_Admin_Meta_Field_Registry {
 				continue;
 			}
 
-			// phpcs:disable WordPress.Security.NonceVerification.Missing
+			// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by the calling AJAX handler before invoking save_fields_data().
 			$post_key = 'registered_field_' . $field_id;
 			if ( ! isset( $_POST[ $post_key ] ) ) {
 				continue;

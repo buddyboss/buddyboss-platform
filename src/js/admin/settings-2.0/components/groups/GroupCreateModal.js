@@ -12,12 +12,12 @@ import {
 	Modal,
 	Button,
 	TextControl,
-	TextareaControl,
 	SelectControl,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
 import { createGroup } from '../../utils/ajax';
+import { RichTextEditor } from '../common/RichTextEditor';
 
 /**
  * Sanitize a string into a URL-friendly slug.
@@ -114,10 +114,19 @@ export function GroupCreateModal( { isOpen, onClose, onCreated } ) {
 		setIsSaving( true );
 		setError( '' );
 
+		// Pull latest content from TinyMCE editor.
+		var descriptionVal = description;
+		if ( window.tinymce ) {
+			var editorInstance = window.tinymce.get( 'bb-admin-create-group-description' );
+			if ( editorInstance ) {
+				descriptionVal = editorInstance.getContent();
+			}
+		}
+
 		createGroup( {
 			name: name.trim(),
 			slug: permalink,
-			description: description,
+			description: descriptionVal,
 			status: status,
 		} ).then( function ( response ) {
 			setIsSaving( false );
@@ -189,12 +198,11 @@ export function GroupCreateModal( { isOpen, onClose, onCreated } ) {
 					__nextHasNoMarginBottom
 				/>
 
-				<TextareaControl
+				<RichTextEditor
+					id="bb-admin-create-group-description"
 					label={ __( 'Description (Optional)', 'buddyboss' ) }
 					value={ description }
 					onChange={ setDescription }
-					rows={ 4 }
-					__nextHasNoMarginBottom
 				/>
 
 				<SelectControl

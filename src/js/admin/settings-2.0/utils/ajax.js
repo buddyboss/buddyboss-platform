@@ -33,7 +33,19 @@ export function ajaxFetch(action, data = {}, options = {}) {
 		signal: options.signal,
 	}).then((response) => {
 		if (!response.ok) {
-			throw new Error('HTTP ' + response.status + ': ' + response.statusText);
+			// Parse JSON body for server error messages (e.g., 403 from wp_send_json_error).
+			return response.json().then((body) => {
+				if (body && body.data && body.data.message) {
+					throw new Error(body.data.message);
+				}
+				throw new Error('HTTP ' + response.status + ': ' + response.statusText);
+			}).catch((parseError) => {
+				// If JSON parsing itself failed, re-throw with HTTP status.
+				if (parseError.message && !parseError.message.startsWith('HTTP ')) {
+					throw parseError;
+				}
+				throw new Error('HTTP ' + response.status + ': ' + response.statusText);
+			});
 		}
 		return response.json();
 	});

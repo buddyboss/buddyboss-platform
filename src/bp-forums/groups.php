@@ -93,8 +93,9 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			// Adds a Forums metabox to the new BuddyBoss Group Admin UI
 			add_action( 'bp_groups_admin_meta_boxes', array( $this, 'group_admin_ui_edit_screen' ) );
 
-			// Saves the Forums options if they come from the BuddyBoss Group Admin UI
-			add_action( 'bp_group_admin_edit_after', array( $this, 'edit_screen_save' ) );
+			// Saves the Forums options if they come from the BuddyBoss Group Admin UI.
+			// @todo: Remove after testing — Settings 2.0 handles forum save via registry meta fields.
+			// add_action( 'bp_group_admin_edit_after', array( $this, 'edit_screen_save' ) );
 
 			// Adds a hidden input value to the "Group Settings" page
 			add_action( 'bp_before_group_settings_admin', array( $this, 'group_settings_hidden_field' ) );

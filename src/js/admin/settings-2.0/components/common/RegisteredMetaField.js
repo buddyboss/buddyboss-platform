@@ -14,6 +14,8 @@ import {
 	SelectControl,
 } from '@wordpress/components';
 
+import { decodeEntities } from '@wordpress/html-entities';
+
 import { RichTextEditor } from './RichTextEditor';
 import { safeUrl } from '../../utils/sanitize';
 
@@ -177,9 +179,9 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 										onChange( option.value );
 									} }
 								/>
-								<span className="bb-admin-meta-field__radio-label">{ option.label }</span>
+								<span className="bb-admin-meta-field__radio-label">{ decodeEntities( option.label ) }</span>
 								{ option.description && (
-									<span className="bb-admin-meta-field__radio-description">{ option.description }</span>
+									<span className="bb-admin-meta-field__radio-description">{ decodeEntities( option.description ) }</span>
 								) }
 							</label>
 						);
@@ -199,12 +201,17 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 			return null;
 		}
 
+		// Decode HTML entities in option labels to prevent double-encoding in <option> elements.
+		var decodedOptions = options.map( function ( opt ) {
+			return { label: decodeEntities( opt.label ), value: opt.value };
+		} );
+
 		return (
 			<div className="bb-admin-meta-field__select-field">
 				<SelectControl
 					label={ field.label }
 					value={ String( null != value ? value : '' ) }
-					options={ options }
+					options={ decodedOptions }
 					onChange={ onChange }
 					__nextHasNoMarginBottom
 				/>

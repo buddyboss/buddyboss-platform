@@ -153,6 +153,7 @@ export function GroupsListScreen( { onNavigate } ) {
 
 	var searchTimerRef = useRef( null );
 	var hasMetaRef = useRef( false );
+	var editAbortRef = useRef( null );
 
 	var totalPages = Math.ceil( total / perPage );
 
@@ -477,15 +478,23 @@ export function GroupsListScreen( { onNavigate } ) {
 	 * @param {Object} group The group object.
 	 */
 	var handleEditGroup = function ( group ) {
+		if ( editAbortRef.current ) {
+			editAbortRef.current.abort();
+		}
+		editAbortRef.current = new AbortController();
+
 		setIsEditLoading( true );
-		getGroup( group.id ).then( function ( response ) {
+		getGroup( group.id, { signal: editAbortRef.current.signal } ).then( function ( response ) {
 			setIsEditLoading( false );
 			if ( response.success && response.data ) {
 				setEditGroup( response.data );
 			} else {
 				setNotice( { type: 'error', message: response.data?.message || __( 'Failed to load group data.', 'buddyboss' ) } );
 			}
-		} ).catch( function () {
+		} ).catch( function ( err ) {
+			if ( 'AbortError' === err.name ) {
+				return;
+			}
 			setIsEditLoading( false );
 			setNotice( { type: 'error', message: __( 'An error occurred loading group data.', 'buddyboss' ) } );
 		} );
@@ -509,9 +518,9 @@ export function GroupsListScreen( { onNavigate } ) {
 			} else {
 				setNotice( { type: 'error', message: response.data?.message || __( 'Failed to save group.', 'buddyboss' ) } );
 			}
-		} ).catch( function () {
+		} ).catch( function ( err ) {
 			setIsEditSaving( false );
-			setNotice( { type: 'error', message: __( 'An error occurred saving the group.', 'buddyboss' ) } );
+			setNotice( { type: 'error', message: err.message || __( 'An error occurred saving the group.', 'buddyboss' ) } );
 		} );
 	};
 

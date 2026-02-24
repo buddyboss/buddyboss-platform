@@ -37,7 +37,8 @@ class Admin {
 			return;
 		}
 
-		add_action( 'bp_group_admin_edit_after', array( $this, 'saveGroupSyncMetaBox' ) );
+		// @todo: Remove after testing — Settings 2.0 handles LearnDash group sync via registry meta fields.
+		// add_action( 'bp_group_admin_edit_after', array( $this, 'saveGroupSyncMetaBox' ) );
 		add_action( 'bp_groups_admin_meta_boxes', array( $this, 'addGroupSyncMetaBox' ) );
 
 		// Settings 2.0: register group meta fields for the edit modal.
