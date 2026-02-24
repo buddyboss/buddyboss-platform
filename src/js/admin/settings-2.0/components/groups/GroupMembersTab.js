@@ -345,46 +345,67 @@ export function GroupMembersTab( { groupId, setNotice } ) {
 				</div>
 			) : (
 				<div className="bb-group-members-tab__list">
-					{ members.map( function ( member ) {
-						return (
-							<div key={ member.user_id } className="bb-group-members-tab__member-row">
-								<div className="bb-group-members-tab__member-info">
-									{ member.avatar_url && (
-										<img
-											src={ safeUrl( member.avatar_url ) }
-											alt={ member.name }
-											className="bb-group-members-tab__member-avatar"
-										/>
-									) }
-									<span className="bb-group-members-tab__member-name">
-										{ member.name }
-									</span>
+					{ ( function () {
+						// Group members by role in display order.
+						var roleOrder = [ 'admin', 'mod', 'member', 'banned' ];
+						var grouped = {};
+						roleOrder.forEach( function ( r ) {
+							grouped[ r ] = [];
+						} );
+						members.forEach( function ( member ) {
+							var key = grouped[ member.role ] ? member.role : 'member';
+							grouped[ key ].push( member );
+						} );
+						return roleOrder.map( function ( role ) {
+							if ( 0 === grouped[ role ].length ) {
+								return null;
+							}
+							return (
+								<div key={ role } className="bb-group-members-tab__role-group">
+									{ grouped[ role ].map( function ( member ) {
+										return (
+											<div key={ member.user_id } className="bb-group-members-tab__member-row">
+												<div className="bb-group-members-tab__member-pill">
+													{ member.avatar_url && (
+														<img
+															src={ safeUrl( member.avatar_url ) }
+															alt={ member.name }
+															className="bb-group-members-tab__member-avatar"
+														/>
+													) }
+													<a href={ safeUrl( member.profile_url ) } target="_blank" rel="noopener,noreferrer" className="bb-group-members-tab__member-name">
+														{ member.name }
+													</a>
+													{ ! member.is_creator && (
+														<button
+															type="button"
+															className="bb-group-members-tab__remove-btn"
+															onClick={ function () {
+																handleRemoveMember( member.user_id );
+															} }
+															title={ __( 'Remove member', 'buddyboss' ) }
+														>
+															<i className="bb-icons-rl bb-icons-rl-x"></i>
+														</button>
+													) }
+												</div>
+												<div className="bb-group-members-tab__member-actions">
+													<SelectControl
+														value={ member.role }
+														options={ roleOptions }
+														onChange={ function ( newRole ) {
+															handleRoleChange( member.user_id, newRole );
+														} }
+														__nextHasNoMarginBottom
+													/>
+												</div>
+											</div>
+										);
+									} ) }
 								</div>
-								<div className="bb-group-members-tab__member-actions">
-									<SelectControl
-										value={ member.role }
-										options={ roleOptions }
-										onChange={ function ( newRole ) {
-											handleRoleChange( member.user_id, newRole );
-										} }
-										__nextHasNoMarginBottom
-									/>
-									{ ! member.is_creator && (
-										<button
-											type="button"
-											className="bb-group-members-tab__remove-btn"
-											onClick={ function () {
-												handleRemoveMember( member.user_id );
-											} }
-											title={ __( 'Remove member', 'buddyboss' ) }
-										>
-											<i className="bb-icons-rl bb-icons-rl-x"></i>
-										</button>
-									) }
-								</div>
-							</div>
-						);
-					} ) }
+							);
+						} );
+					} )() }
 				</div>
 			) }
 

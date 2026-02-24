@@ -1097,63 +1097,69 @@
 	}
 
 	&__list {
-		border: 1px solid $bb-border-secondary-color;
-		border-radius: $bb-border-radius-md;
-		overflow: hidden;
+		display: flex;
+		flex-direction: column;
+		gap: 32px;
+	}
+
+	&__role-group {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
 	}
 
 	&__member-row {
 		display: flex;
-		align-items: center;
+		align-items: flex-start;
 		justify-content: space-between;
-		padding: 10px 16px;
-		border-bottom: 1px solid $bb-border-primary-color;
-
-		&:last-child {
-			border-bottom: none;
-		}
 	}
 
-	&__member-info {
+	&__member-pill {
 		display: flex;
 		align-items: center;
-		gap: 10px;
-		flex: 1;
-		min-width: 0;
+		gap: 8px;
+		padding: 4px 8px;
+		border: 0.5px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-full;
 	}
 
 	&__member-avatar {
-		width: 32px;
-		height: 32px;
+		width: 24px;
+		height: 24px;
 		border-radius: $bb-border-radius-full;
 		flex-shrink: 0;
 		object-fit: cover;
-		border: 0.5px solid $bb-border-secondary-color;
 	}
 
 	&__member-name {
 		font-size: 13px;
-		font-weight: 500;
-		color: $bb-text-color;
+		font-weight: 400;
+		color: $bb-link-color;
 		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
+		line-height: 18px;
+		padding: 3px 0;
+		text-decoration: none;
+
+		&:hover {
+			color: $bb-link-color;
+		}
 	}
 
 	&__member-actions {
-		display: flex;
-		align-items: center;
-		gap: 8px;
 		flex-shrink: 0;
+		width: 245px;
+
+		> .components-base-control {
+			margin-bottom: 0;
+		}
 
 		.components-select-control {
 			margin-bottom: 0;
 
 			.components-select-control__input {
 				@include bb-admin-settings-select;
-				min-width: 120px;
-				height: 30px;
-				font-size: 12px;
+				width: 100%;
+				font-size: 13px;
 			}
 
 			.components-input-control-suffix-wrapper {
@@ -1170,22 +1176,18 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		width: 28px;
-		height: 28px;
 		border: none;
 		background: none;
 		cursor: pointer;
 		color: $bb-text-tertiary-color;
-		border-radius: $bb-border-radius-sm;
-		padding: 0;
+		padding: 4px;
 
 		i {
 			font-size: 16px;
 		}
 
 		&:hover {
-			color: #d63638;
-			background-color: $bb-background-secondary-color;
+			color: $bb-text-color;
 		}
 	}
 
