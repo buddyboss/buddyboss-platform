@@ -530,37 +530,3 @@ function bb_media_create_test_upload() {
 
 	return $result;
 }
-
-/**
- * Sanitize access control fields.
- *
- * Access control values are stored as an array with a 'default' key (select value)
- * and additional role/profile type keys (toggle values).
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param mixed $value The value to sanitize.
- *
- * @return array Sanitized access control data.
- */
-function bb_media_sanitize_access_controls( $value ) {
-	if ( ! is_array( $value ) ) {
-		return array();
-	}
-
-	$sanitized = array();
-
-	foreach ( $value as $key => $val ) {
-		$sanitized_key = sanitize_key( $key );
-
-		if ( 'default' === $sanitized_key ) {
-			// The select dropdown value (e.g., 'members', 'specific').
-			$sanitized[ $sanitized_key ] = sanitize_text_field( $val );
-		} else {
-			// Role/profile type toggle values.
-			$sanitized[ $sanitized_key ] = absint( $val );
-		}
-	}
-
-	return $sanitized;
-}
