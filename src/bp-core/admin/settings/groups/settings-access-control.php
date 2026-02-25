@@ -143,7 +143,8 @@ if ( ! function_exists( 'bb_sanitize_access_control_field' ) ) {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param array $value The sanitized value.
+		 * @param array  $value      The sanitized value.
+		 * @param string $field_name The field option name (empty when called from sanitize_callback).
 		 */
 		$value = apply_filters( 'bb_access_control_sanitize_settings', $value );
 

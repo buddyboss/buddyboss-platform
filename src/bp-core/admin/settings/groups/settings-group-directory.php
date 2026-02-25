@@ -72,7 +72,7 @@ function bb_groups_register_directory_panel_fields() {
 			'label'             => __( 'Default View', 'buddyboss' ),
 			'type'              => 'radio',
 			'description'       => '',
-			'default'           => bp_get_option( 'bp-group-layout-default-format', 'grid' ),
+			'default'           => bp_group_layout_default_format( 'grid' ),
 			'sanitize_callback' => 'bb_groups_sanitize_default_format',
 			'options'           => array(
 				array(
