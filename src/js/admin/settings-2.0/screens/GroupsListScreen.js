@@ -22,6 +22,7 @@ import { getGroups, groupBulkAction, getGroup, saveGroup } from '../utils/ajax';
 import { sanitizeHtml, safeUrl } from '../utils/sanitize';
 import { GroupCreateModal } from '../components/groups/GroupCreateModal';
 import { GroupEditModal } from '../components/groups/GroupEditModal';
+import { ConfirmToggleModal } from '../components/modals/ConfirmToggleModal';
 
 /**
  * Sort options for the groups list dropdown (static, never changes).
@@ -134,6 +135,10 @@ export function GroupsListScreen( { onNavigate } ) {
 	var selectedGroupTypeState = useState( '' );
 	var selectedGroupType = selectedGroupTypeState[ 0 ];
 	var setSelectedGroupType = selectedGroupTypeState[ 1 ];
+
+	var removeTypeModalState = useState( false );
+	var removeTypeModalOpen = removeTypeModalState[ 0 ];
+	var setRemoveTypeModalOpen = removeTypeModalState[ 1 ];
 
 	var createModalState = useState( false );
 	var createModalOpen = createModalState[ 0 ];
@@ -424,10 +429,7 @@ export function GroupsListScreen( { onNavigate } ) {
 		}
 
 		if ( 'remove_group_type' === action ) {
-			if ( ! window.confirm( __( 'Are you sure you want to remove the group type from the selected groups?', 'buddyboss' ) ) ) {
-				return;
-			}
-			performAction( action, selectedIds );
+			setRemoveTypeModalOpen( true );
 			return;
 		}
 
@@ -1098,6 +1100,24 @@ export function GroupsListScreen( { onNavigate } ) {
 				} }
 				onSave={ handleSaveGroup }
 				isSaving={ isEditSaving }
+			/>
+
+			{ /* Change Group Type Modal */ }
+			{ /* Remove Group Type Confirm Modal */ }
+			<ConfirmToggleModal
+				isOpen={ removeTypeModalOpen }
+				title={ __( 'Remove Group Type', 'buddyboss' ) }
+				message={ __( 'Are you sure you want to remove the group type from the selected groups?', 'buddyboss' ) }
+				confirmLabel={ __( 'Remove', 'buddyboss' ) }
+				cancelLabel={ __( 'Cancel', 'buddyboss' ) }
+				isDestructive={ true }
+				onConfirm={ function () {
+					setRemoveTypeModalOpen( false );
+					performAction( 'remove_group_type', selectedIds );
+				} }
+				onCancel={ function () {
+					setRemoveTypeModalOpen( false );
+				} }
 			/>
 
 			{ /* Change Group Type Modal */ }
