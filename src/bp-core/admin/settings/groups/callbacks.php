@@ -257,10 +257,17 @@ add_filter( 'bb_admin_settings_format_field_data', 'bb_groups_enrich_cover_uploa
 /**
  * Validate group avatar and cover image type selections after save.
  *
- * Replicates the legacy BP_Admin_Setting_Groups::settings_save() validation:
- * - If avatar type is 'custom' but no custom avatar URL exists, revert to previous type.
- * - If avatar type is 'group-name' but no image editor is available, revert to previous type.
- * - If cover type is 'custom' but no custom cover URL exists, revert to previous type.
+ * In the legacy admin, the Upload Custom Avatar block is always in the DOM; when the user
+ * selects Custom they see it immediately and upload, then Save (hidden field has the URL).
+ * In Settings 2.0 the upload is a separate step: user selects Custom → must Save first →
+ * then the Upload section stays visible and they can upload. So we only revert when they
+ * *had* Custom with an image and then removed the image. We do not revert when they just
+ * selected Custom (no image yet), so the selection persists and they can upload after Save.
+ *
+ * - If avatar type is 'custom' and no custom avatar URL: revert only when previous type was
+ *   also 'custom' (they removed the image). Otherwise keep 'custom' so Upload section stays open.
+ * - If avatar type is 'group-name' but no image editor available, revert to 'buddyboss'.
+ * - Same for cover: revert only when prev was 'custom' and image is now empty.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -281,17 +288,21 @@ function bb_groups_validate_image_settings_after_save( $feature_id, $settings, $
 		return;
 	}
 
+	global $bb_groups_pre_save_state;
+
 	// --- Avatar type validation ---
 	if ( $has_avatar ) {
 		$avatar_type = bb_get_default_group_avatar_type();
 
-		// If 'custom' but no custom avatar uploaded, revert.
+		// Revert only when they had Custom and then removed the image. Do not revert when they
+		// just selected Custom (so Save keeps Custom and Upload Custom Avatar section stays visible).
 		if ( 'custom' === $avatar_type ) {
 			$custom_avatar = function_exists( 'bb_get_default_custom_upload_group_avatar' )
 				? bb_get_default_custom_upload_group_avatar()
 				: '';
+			$prev_type     = ! empty( $bb_groups_pre_save_state['default_group_avatar_type'] ) ? $bb_groups_pre_save_state['default_group_avatar_type'] : 'buddyboss';
 
-			if ( empty( $custom_avatar ) ) {
+			if ( empty( $custom_avatar ) && 'custom' === $prev_type ) {
 				bp_update_option( 'bp-default-group-avatar-type', 'buddyboss' );
 			}
 		}
@@ -306,13 +317,14 @@ function bb_groups_validate_image_settings_after_save( $feature_id, $settings, $
 	if ( $has_cover ) {
 		$cover_type = bb_get_default_group_cover_type();
 
-		// If 'custom' but no custom cover uploaded, revert.
+		// Revert only when they had Custom and then removed the image.
 		if ( 'custom' === $cover_type ) {
 			$custom_cover = function_exists( 'bb_get_default_custom_upload_group_cover' )
 				? bb_get_default_custom_upload_group_cover()
 				: '';
+			$prev_type    = ! empty( $bb_groups_pre_save_state['default_group_cover_type'] ) ? $bb_groups_pre_save_state['default_group_cover_type'] : 'buddyboss';
 
-			if ( empty( $custom_cover ) ) {
+			if ( empty( $custom_cover ) && 'custom' === $prev_type ) {
 				bp_update_option( 'bp-default-group-cover-type', 'buddyboss' );
 			}
 		}
@@ -380,10 +392,12 @@ function bb_groups_capture_pre_save_state( $feature_id ) {
 		return;
 	}
 
-	// Store the pre-save state for restrict invites.
+	// Store the pre-save state for restrict invites and image types.
 	global $bb_groups_pre_save_state;
 	$bb_groups_pre_save_state = array(
-		'restrict_invites' => bp_enable_group_restrict_invites(),
+		'restrict_invites'          => bp_enable_group_restrict_invites(),
+		'default_group_avatar_type' => bb_get_default_group_avatar_type(),
+		'default_group_cover_type'  => bb_get_default_group_cover_type(),
 	);
 }
 
