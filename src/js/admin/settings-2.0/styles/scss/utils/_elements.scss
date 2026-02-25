@@ -135,6 +135,23 @@ select.bb-admin-settings__select {
 			}
 		}
     }
+
+	.components-radio-control {
+		margin: 0;
+		padding: 0;
+		border: none;
+		min-inline-size: auto;
+
+		> legend {
+			display: none;
+		}
+	}
+
+	.components-radio-control__group-wrapper {
+		flex-direction: row;
+		justify-content: flex-start;
+		gap: 16px;
+	}
 }
 
 /* Checkbox */

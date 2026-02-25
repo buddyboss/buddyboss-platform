@@ -312,3 +312,68 @@ function bp_groups_admin_autocomplete_handler() {
 // Register deprecated hooks so third-party code that triggers them gets a deprecation notice.
 add_action( 'wp_ajax_bp_group_admin_member_autocomplete', 'bp_groups_admin_autocomplete_handler' );
 add_action( 'admin_post_bp_create_group_admin', 'bp_process_create_group_admin' );
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Members / Connections settings hooks (moved to Settings 2.0).
+// ──────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Fire deprecated xprofile register_fields hook for backward compatibility.
+ *
+ * Legacy Settings 1.0 passed a BP_Admin_Setting_tab instance that third-party
+ * plugins called ->add_section() / ->add_field() on. Settings 2.0 uses
+ * bb_register_feature_field() instead. Third-party/Pro plugins should hook into
+ * 'bb_members_after_register_settings_fields'.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_deprecated_xprofile_register_fields_hook() {
+	if ( ! function_exists( 'bb_register_feature' ) || ! bp_is_active( 'xprofile' ) ) {
+		return;
+	}
+
+	/**
+	 * Fires to register xProfile tab settings fields and section.
+	 *
+	 * @since BuddyBoss 1.2.6
+	 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_members_after_register_settings_fields'} hook with bb_register_feature_field().
+	 *
+	 * @param null $deprecated No longer passes BP_Admin_Setting_tab instance.
+	 */
+	do_action_deprecated(
+		'bp_admin_setting_xprofile_register_fields',
+		array( null ),
+		'BuddyBoss [BBVERSION]',
+		'bb_members_after_register_settings_fields'
+	);
+}
+
+add_action( 'bb_members_after_register_settings_fields', 'bb_deprecated_xprofile_register_fields_hook', 0 );
+
+/**
+ * Fire deprecated friends register_fields hook for backward compatibility.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_deprecated_friends_register_fields_hook() {
+	if ( ! function_exists( 'bb_register_feature' ) || ! bp_is_active( 'friends' ) ) {
+		return;
+	}
+
+	/**
+	 * Fires to register Friends tab settings fields and section.
+	 *
+	 * @since BuddyBoss 1.2.6
+	 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_members_after_register_settings_fields'} hook with bb_register_feature_field().
+	 *
+	 * @param null $deprecated No longer passes BP_Admin_Setting_tab instance.
+	 */
+	do_action_deprecated(
+		'bp_admin_setting_friends_register_fields',
+		array( null ),
+		'BuddyBoss [BBVERSION]',
+		'bb_members_after_register_settings_fields'
+	);
+}
+
+add_action( 'bb_members_after_register_settings_fields', 'bb_deprecated_friends_register_fields_hook', 0 );

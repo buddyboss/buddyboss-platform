@@ -290,6 +290,15 @@ class BB_Admin_Settings_Ajax {
 					$option_names[] = $field['option_prefix'] . $option['value'];
 				}
 			}
+
+			// Also collect sub-field names for child_render/dimensions fields.
+			if ( ! empty( $field['fields'] ) && is_array( $field['fields'] ) ) {
+				foreach ( $field['fields'] as $sub_field ) {
+					if ( ! empty( $sub_field['name'] ) ) {
+						$option_names[] = $sub_field['name'];
+					}
+				}
+			}
 		}
 
 		if ( ! empty( $option_names ) ) {
@@ -316,6 +325,15 @@ class BB_Admin_Settings_Ajax {
 				$settings[ $field['name'] ] = $mapped;
 			} else {
 				$settings[ $field['name'] ] = bp_get_option( $field['name'], $field['default'] ?? '' );
+			}
+
+			// Fetch sub-field values for child_render/dimensions fields.
+			if ( ! empty( $field['fields'] ) && is_array( $field['fields'] ) ) {
+				foreach ( $field['fields'] as $sub_field ) {
+					if ( ! empty( $sub_field['name'] ) && ! isset( $settings[ $sub_field['name'] ] ) ) {
+						$settings[ $sub_field['name'] ] = bp_get_option( $sub_field['name'], $sub_field['default'] ?? '' );
+					}
+				}
 			}
 		}
 
@@ -692,7 +710,8 @@ class BB_Admin_Settings_Ajax {
 						'options' => $sub_field['options'] ?? array(),
 						'suffix'  => $sub_field['suffix'] ?? null,
 						'min'     => $sub_field['min'] ?? null,
-						'max'     => $sub_field['max'] ?? null,
+						'max'      => $sub_field['max'] ?? null,
+						'disabled' => ! empty( $sub_field['disabled'] ),
 					);
 				}
 				$field_data['fields'] = $sub_fields;
@@ -814,6 +833,31 @@ class BB_Admin_Settings_Ajax {
 					// BuddyBoss stores options via bp_update_option (same storage as legacy).
 					bp_update_option( $name, $value );
 					$saved[ $name ] = $value;
+				}
+			}
+
+			// Handle child_render / dimensions sub-fields: save each non-disabled sub-field individually.
+			if ( ! empty( $field['fields'] ) && is_array( $field['fields'] ) ) {
+				foreach ( $field['fields'] as $sub_field ) {
+					$sub_name = $sub_field['name'] ?? '';
+
+					// Skip disabled (read-only) sub-fields — they are display-only.
+					if ( ! empty( $sub_field['disabled'] ) || empty( $sub_name ) ) {
+						continue;
+					}
+
+					if ( array_key_exists( $sub_name, $settings ) ) {
+						$sub_value = $settings[ $sub_name ];
+
+						if ( ! empty( $sub_field['sanitize_callback'] ) && is_callable( $sub_field['sanitize_callback'] ) ) {
+							$sub_value = call_user_func( $sub_field['sanitize_callback'], $sub_value );
+						} elseif ( is_string( $sub_value ) ) {
+							$sub_value = sanitize_text_field( $sub_value );
+						}
+
+						bp_update_option( $sub_name, $sub_value );
+						$saved[ $sub_name ] = $sub_value;
+					}
 				}
 			}
 

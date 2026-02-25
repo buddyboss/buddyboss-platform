@@ -7,7 +7,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { SelectControl, TextControl } from '@wordpress/components';
+import { SelectControl, TextControl, ToggleControl } from '@wordpress/components';
 
 /**
  * ChildRenderField component.
@@ -55,6 +55,10 @@ export function ChildRenderField( { field, values, onChange } ) {
 									) }
 								</div>
 							);
+						case 'toggle':
+							// ToggleControl renders its own label inline — return full markup
+							// to avoid the external label/control wrapper used by other types.
+							return null;
 						case 'text':
 						default:
 							return (
@@ -66,6 +70,25 @@ export function ChildRenderField( { field, values, onChange } ) {
 							);
 					}
 				};
+
+				// Toggle sub-fields use ToggleControl with its built-in label for same-line layout.
+				if ( 'toggle' === childField.type ) {
+					return (
+						<div key={ childField.name } className="bb-admin-settings-field__child-item bb-admin-settings-field__child-item--toggle">
+							<ToggleControl
+								label={ childField.label }
+								checked={ !! childValue }
+								onChange={ ( newValue ) => {
+									if ( ! childField.disabled ) {
+										onChange( childField.name, newValue );
+									}
+								} }
+								disabled={ !! childField.disabled }
+								__nextHasNoMarginBottom
+							/>
+						</div>
+					);
+				}
 
 				return (
 					<div key={ childField.name } className="bb-admin-settings-field__child-item">
