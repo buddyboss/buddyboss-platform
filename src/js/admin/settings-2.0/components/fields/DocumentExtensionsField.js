@@ -15,7 +15,30 @@ import { Modal, Button, TextControl, TextareaControl, DropdownMenu } from '@word
 import { __ } from '@wordpress/i18n';
 
 /**
+ * Whether ReadyLaunch mode is enabled.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @type {boolean}
+ */
+var isReadyLaunch = !! ( window.bbAdminData && window.bbAdminData.isReadyLaunch );
+
+/**
+ * Get the default icon class for an unknown file extension.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return {string} Default icon CSS class.
+ */
+function getDefaultIconClass() {
+	return isReadyLaunch ? 'bb-icons-rl bb-icons-rl-file' : 'bb-icon-l bb-icon-file';
+}
+
+/**
  * Map a file extension to an icon class name.
+ *
+ * Returns ReadyLaunch (`bb-icons-rl-*`) or legacy (`bb-icon-*`) icon classes
+ * depending on whether ReadyLaunch mode is active.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -25,43 +48,83 @@ import { __ } from '@wordpress/i18n';
 function getExtensionIconClass( extension ) {
 	var ext = ( extension || '' ).replace( '.', '' ).toLowerCase();
 
-	var iconMap = {
-		pdf: 'bb-icons-rl-file-pdf',
-		doc: 'bb-icons-rl-file-doc',
-		docx: 'bb-icons-rl-file-doc',
-		xls: 'bb-icons-rl-file-xls',
-		xlsx: 'bb-icons-rl-file-xls',
-		ppt: 'bb-icons-rl-file-ppt',
-		pptx: 'bb-icons-rl-file-ppt',
-		csv: 'bb-icons-rl-file-csv',
-		css: 'bb-icons-rl-file-css',
-		html: 'bb-icons-rl-file-html',
-		htm: 'bb-icons-rl-file-html',
-		jpg: 'bb-icons-rl-file-jpg',
-		jpeg: 'bb-icons-rl-file-jpg',
-		png: 'bb-icons-rl-file-png',
-		gif: 'bb-icons-rl-file-image',
-		svg: 'bb-icons-rl-file-svg',
-		zip: 'bb-icons-rl-file-archive',
-		rar: 'bb-icons-rl-file-archive',
-		gz: 'bb-icons-rl-file-archive',
-		tar: 'bb-icons-rl-file-archive',
-		'7z': 'bb-icons-rl-file-archive',
-		mp3: 'bb-icons-rl-file-audio',
-		wav: 'bb-icons-rl-file-audio',
-		mp4: 'bb-icons-rl-file-video',
-		avi: 'bb-icons-rl-file-video',
-		txt: 'bb-icons-rl-file-text',
-		js: 'bb-icons-rl-file-code',
-		json: 'bb-icons-rl-file-code',
-		xml: 'bb-icons-rl-file-code',
-		php: 'bb-icons-rl-file-code',
-		py: 'bb-icons-rl-file-code',
-		cpp: 'bb-icons-rl-file-cpp',
-		c: 'bb-icons-rl-file-c',
+	if ( isReadyLaunch ) {
+		var rlMap = {
+			pdf: 'bb-icons-rl-file-pdf',
+			doc: 'bb-icons-rl-file-doc',
+			docx: 'bb-icons-rl-file-doc',
+			xls: 'bb-icons-rl-file-xls',
+			xlsx: 'bb-icons-rl-file-xls',
+			ppt: 'bb-icons-rl-file-ppt',
+			pptx: 'bb-icons-rl-file-ppt',
+			csv: 'bb-icons-rl-file-csv',
+			css: 'bb-icons-rl-file-css',
+			html: 'bb-icons-rl-file-html',
+			htm: 'bb-icons-rl-file-html',
+			jpg: 'bb-icons-rl-file-jpg',
+			jpeg: 'bb-icons-rl-file-jpg',
+			png: 'bb-icons-rl-file-png',
+			gif: 'bb-icons-rl-file-image',
+			svg: 'bb-icons-rl-file-svg',
+			zip: 'bb-icons-rl-file-archive',
+			rar: 'bb-icons-rl-file-archive',
+			gz: 'bb-icons-rl-file-archive',
+			tar: 'bb-icons-rl-file-archive',
+			'7z': 'bb-icons-rl-file-archive',
+			mp3: 'bb-icons-rl-file-audio',
+			wav: 'bb-icons-rl-file-audio',
+			mp4: 'bb-icons-rl-file-video',
+			avi: 'bb-icons-rl-file-video',
+			txt: 'bb-icons-rl-file-text',
+			js: 'bb-icons-rl-file-code',
+			json: 'bb-icons-rl-file-code',
+			xml: 'bb-icons-rl-file-code',
+			php: 'bb-icons-rl-file-code',
+			py: 'bb-icons-rl-file-code',
+			cpp: 'bb-icons-rl-file-cpp',
+			c: 'bb-icons-rl-file-c',
+		};
+
+		return 'bb-icons-rl ' + ( rlMap[ ext ] || 'bb-icons-rl-file' );
+	}
+
+	var legacyMap = {
+		pdf: 'bb-icon-file-pdf',
+		doc: 'bb-icon-file-doc',
+		docx: 'bb-icon-file-docx',
+		xls: 'bb-icon-file-xlsx',
+		xlsx: 'bb-icon-file-xlsx',
+		ppt: 'bb-icon-file-pptx',
+		pptx: 'bb-icon-file-pptx',
+		csv: 'bb-icon-file-csv',
+		css: 'bb-icon-file-css',
+		html: 'bb-icon-file-html',
+		htm: 'bb-icon-file-html',
+		jpg: 'bb-icon-file-png',
+		jpeg: 'bb-icon-file-png',
+		png: 'bb-icon-file-png',
+		gif: 'bb-icon-file-image',
+		svg: 'bb-icon-file-svg',
+		zip: 'bb-icon-file-zip',
+		rar: 'bb-icon-file-zip',
+		gz: 'bb-icon-file-zip',
+		tar: 'bb-icon-file-tar',
+		'7z': 'bb-icon-file-zip',
+		mp3: 'bb-icon-file-mp3',
+		wav: 'bb-icon-file-audio',
+		mp4: 'bb-icon-file-video',
+		avi: 'bb-icon-file-video',
+		txt: 'bb-icon-file-txt',
+		js: 'bb-icon-file-code',
+		json: 'bb-icon-file-code',
+		xml: 'bb-icon-file-code',
+		php: 'bb-icon-file-code',
+		py: 'bb-icon-file-code',
+		cpp: 'bb-icon-file-code',
+		c: 'bb-icon-file-code',
 	};
 
-	return 'bb-icons-rl ' + ( iconMap[ ext ] || 'bb-icons-rl-file' );
+	return 'bb-icon-l ' + ( legacyMap[ ext ] || 'bb-icon-file' );
 }
 
 /**
@@ -679,7 +742,7 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 											</select>
 											{ iconOptions.length > 0 && (
 												<i className={
-													( iconOptions.find( function( o ) { return o.value === newIcon; } ) || {} ).icon_class || 'bb-icons-rl bb-icons-rl-file'
+													( iconOptions.find( function( o ) { return o.value === newIcon; } ) || {} ).icon_class || getDefaultIconClass()
 												} />
 											) }
 										</div>
@@ -837,7 +900,7 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 											</select>
 											{ iconOptions.length > 0 && (
 												<i className={
-													( iconOptions.find( function( o ) { return o.value === editIcon; } ) || {} ).icon_class || 'bb-icons-rl bb-icons-rl-file'
+													( iconOptions.find( function( o ) { return o.value === editIcon; } ) || {} ).icon_class || getDefaultIconClass()
 												} />
 											) }
 										</div>

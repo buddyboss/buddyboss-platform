@@ -249,37 +249,59 @@ function bb_media_get_document_extension_data() {
 /**
  * Get icon options for the document extension icon dropdown.
  *
- * Maps the legacy `bp_document_svg_icon_list()` values to ReadyLaunch
- * icon classes so the React UI can render icon previews in the select.
+ * Uses the existing `bb_document_icon_class` filter to map icons. When ReadyLaunch
+ * is enabled, `BB_Readylaunch` hooks this filter to convert `bb-icon-*` to `bb-icons-rl-*`.
+ * The filter is only hooked on the old document settings page by default, so this
+ * function ensures it is also applied for Settings 2.0 by temporarily adding the hook.
  *
  * @since BuddyBoss [BBVERSION]
  *
  * @return array Array of icon option objects { value, label, icon_class }.
  */
 function bb_media_get_extension_icon_options() {
-	$icon_map = array(
-		'bb-icon-file'       => 'bb-icons-rl-file',
-		'bb-icon-file-zip'   => 'bb-icons-rl-file-archive',
-		'bb-icon-file-mp3'   => 'bb-icons-rl-file-audio',
-		'bb-icon-file-html'  => 'bb-icons-rl-file-html',
-		'bb-icon-file-psd'   => 'bb-icons-rl-file-dashed',
-		'bb-icon-file-png'   => 'bb-icons-rl-file-image',
-		'bb-icon-file-pptx'  => 'bb-icons-rl-file-ppt',
-		'bb-icon-file-xlsx'  => 'bb-icons-rl-file-xls',
-		'bb-icon-file-txt'   => 'bb-icons-rl-file-text',
-		'bb-icon-file-video' => 'bb-icons-rl-file-video',
-	);
+	$is_rl = function_exists( 'bb_is_readylaunch_enabled' ) && bb_is_readylaunch_enabled();
+
+	// Ensure the bb_document_icon_class filter is hooked for Settings 2.0 page.
+	// By default BB_Readylaunch only hooks it on the old bp-document settings tab.
+	$added_filter = false;
+	if ( $is_rl && class_exists( 'BB_Readylaunch' ) && ! has_filter( 'bb_document_icon_class' ) ) {
+		add_filter( 'bb_document_icon_class', array( BB_Readylaunch::instance(), 'bb_readylaunch_document_icon_class' ) );
+		$added_filter = true;
+	}
 
 	if ( ! function_exists( 'bp_document_svg_icon_list' ) ) {
-		// Fallback if the document component isn't loaded yet.
+		// Fallback icon set when the document component isn't loaded yet.
+		$fallback_icons = array(
+			'bb-icon-file'       => __( 'File', 'buddyboss' ),
+			'bb-icon-file-zip'   => __( 'Zip', 'buddyboss' ),
+			'bb-icon-file-mp3'   => __( 'Mp3', 'buddyboss' ),
+			'bb-icon-file-html'  => __( 'Html', 'buddyboss' ),
+			'bb-icon-file-psd'   => __( 'Psd', 'buddyboss' ),
+			'bb-icon-file-png'   => __( 'Png', 'buddyboss' ),
+			'bb-icon-file-pptx'  => __( 'Pptx', 'buddyboss' ),
+			'bb-icon-file-xlsx'  => __( 'Xlsx', 'buddyboss' ),
+			'bb-icon-file-txt'   => __( 'Txt', 'buddyboss' ),
+			'bb-icon-file-video' => __( 'Video', 'buddyboss' ),
+		);
+
 		$options = array();
-		foreach ( $icon_map as $value => $icon_class ) {
+		foreach ( $fallback_icons as $value => $label ) {
+			$render_icon = apply_filters( 'bb_document_icon_class', $value );
+			$icon_class  = ( strpos( $render_icon, 'bb-icons-rl' ) !== false )
+				? 'bb-icons-rl ' . $render_icon
+				: 'bb-icon-l ' . $render_icon;
+
 			$options[] = array(
 				'value'      => $value,
-				'label'      => ucfirst( str_replace( array( 'bb-icon-file-', 'bb-icon-' ), '', $value ) ),
-				'icon_class' => 'bb-icons-rl ' . $icon_class,
+				'label'      => $label,
+				'icon_class' => $icon_class,
 			);
 		}
+
+		if ( $added_filter ) {
+			remove_filter( 'bb_document_icon_class', array( BB_Readylaunch::instance(), 'bb_readylaunch_document_icon_class' ) );
+		}
+
 		return $options;
 	}
 
@@ -287,14 +309,21 @@ function bb_media_get_extension_icon_options() {
 	$options = array();
 
 	foreach ( $icons as $icon ) {
-		$value      = $icon['icon'];
-		$icon_class = isset( $icon_map[ $value ] ) ? $icon_map[ $value ] : 'bb-icons-rl-file';
+		$value       = $icon['icon'];
+		$render_icon = apply_filters( 'bb_document_icon_class', $value );
+		$icon_class  = ( strpos( $render_icon, 'bb-icons-rl' ) !== false )
+			? 'bb-icons-rl ' . $render_icon
+			: 'bb-icon-l ' . $render_icon;
 
 		$options[] = array(
 			'value'      => $value,
 			'label'      => $icon['title'],
-			'icon_class' => 'bb-icons-rl ' . $icon_class,
+			'icon_class' => $icon_class,
 		);
+	}
+
+	if ( $added_filter ) {
+		remove_filter( 'bb_document_icon_class', array( BB_Readylaunch::instance(), 'bb_readylaunch_document_icon_class' ) );
 	}
 
 	return $options;
