@@ -884,12 +884,7 @@
 	}
 
 	&__footer {
-		display: flex;
 		justify-content: space-between;
-		align-items: center;
-		gap: 8px;
-		padding: 16px 24px;
-		border-top: 1px solid $bb-border-secondary-color;
 		position: sticky;
 		bottom: 0;
 		background: $bb-background-base-color;

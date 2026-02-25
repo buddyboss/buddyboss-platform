@@ -743,12 +743,6 @@
 	}
 
 	&__footer {
-		display: flex;
-		align-items: center;
-		justify-content: flex-end;
-		gap: 8px;
-		padding: 16px 24px;
-		border-top: 1px solid $bb-border-secondary-color;
 
 		.is-secondary {
 			@include bb-button-secondary;
@@ -857,12 +851,6 @@
 	}
 
 	&__footer {
-		display: flex;
-		align-items: center;
-		justify-content: flex-end;
-		gap: 8px;
-		padding: 16px 24px;
-		border-top: 1px solid $bb-border-secondary-color;
 
 		.is-secondary {
 			@include bb-button-secondary;

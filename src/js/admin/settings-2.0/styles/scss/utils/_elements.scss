@@ -408,6 +408,10 @@ select.bb-admin-settings__select {
 		margin-top: 52px;
 	}
 
+    &__body {
+        padding: 24px;
+    }
+
 	&__content {
 		padding: 24px 24px 0;
 
@@ -430,6 +434,12 @@ select.bb-admin-settings__select {
 	}
 
 	&__footer {
+        display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 8px;
+		padding: 16px 24px;
+		border-top: 1px solid $bb-border-secondary-color;
 
 		.components-button {
 
@@ -471,4 +481,18 @@ select.bb-admin-settings__select {
 			}
 		}
 	}
+}
+
+.bb-confirm-toggle-modal {
+
+    &.components-modal__frame {
+        max-width: 650px;
+    }
+
+    &__body {
+
+        > p {
+            margin: 0;
+        }
+    }
 }

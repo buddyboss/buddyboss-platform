@@ -73,11 +73,11 @@ export function ConfirmToggleModal( {
 			className="bb-confirm-toggle-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
 		>
-			<div className="bb-confirm-toggle-modal__body">
+			<div className="bb-admin-settings-modal__body bb-confirm-toggle-modal__body">
 				<p>{ message }</p>
 			</div>
 
-			<div className="bb-confirm-toggle-modal__footer">
+			<div className="bb-admin-settings-modal__footer bb-confirm-toggle-modal__footer">
 				<Button
 					variant="secondary"
 					onClick={ onCancel }
