@@ -123,14 +123,6 @@ function bb_groups_register_images_panel_fields() {
 		return;
 	}
 
-	// Use fallback dimensions for help text — the full
-	// bb_attachments_get_default_custom_cover_image_dimensions() call depends on
-	// bp_get_theme_compat_feature() which isn't registered yet at this priority.
-	$cover_dimensions = array(
-		'width'  => 1950,
-		'height' => 450,
-	);
-
 	// -------------------------------------------------------------------------
 	// SECTION: Group Cover Image
 	// -------------------------------------------------------------------------
@@ -201,7 +193,7 @@ function bb_groups_register_images_panel_fields() {
 				'item_type'   => 'default',
 				'url_getter'  => 'bb_get_default_custom_upload_group_cover',
 				'label'       => __( 'Upload Custom Cover', 'buddyboss' ),
-				'help_text'   => sprintf( __( 'Upload a default cover image (JPG or PNG, recommended size: %1$spx × %2$spx).', 'buddyboss' ), (int) $cover_dimensions['width'], (int) $cover_dimensions['height'] ),
+				'help_text'   => '', // Injected at AJAX time via bb_groups_enrich_cover_upload_help_text() — theme compat not available at registration.
 				'conditional' => array(
 					'value' => 'custom',
 				),
