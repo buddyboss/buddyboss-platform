@@ -918,33 +918,19 @@
 .bb-admin-meta-field__checkbox-field {
 	margin-bottom: 16px;
 	padding-bottom: 16px;
-	border-bottom: 1px solid $bb-border-secondary-color;
-}
+	border-bottom: 0.5px solid $bb-border-secondary-color;
 
-.bb-admin-meta-field__checkbox-option {
-	display: flex;
-	align-items: center;
-	gap: 8px;
-	cursor: pointer;
-
-	input[type="checkbox"] {
-		width: 18px;
-		height: 18px;
-		margin: 0;
-		flex-shrink: 0;
-		accent-color: $bb-primary-color;
-	}
-
-	.bb-admin-meta-field__checkbox-label {
-		font-size: 14px;
-		font-weight: 500;
-		color: $bb-text-color;
+	.components-checkbox-control__input[type="checkbox"]:checked {
+		background-color: $bb-background-brand-primary-color;
+		border-color: $bb-background-brand-primary-color;
 	}
 }
 
-.bb-admin-meta-field__checkbox-field .bb-admin-meta-field__description {
-	margin-top: 6px;
-	padding-left: 26px;
+.bb-admin-meta-field__checkbox-field .bb-admin-meta-field__description,
+.bb-admin-meta-field__checkbox-field .components-checkbox-control__help {
+	margin-top: 2px;
+	font-size: 12px;
+	color: $bb-text-tertiary-color;
 }
 
 /* Toggle list (checkbox group) inside group edit modal */
@@ -953,7 +939,12 @@
 
 	.bb-admin-meta-field__label {
 		margin-bottom: 8px;
-		font-weight: 600;
+		font-weight: 500;
+	}
+
+	.components-checkbox-control__input[type="checkbox"]:checked {
+		background-color: $bb-background-brand-primary-color;
+		border-color: $bb-background-brand-primary-color;
 	}
 }
 
@@ -969,7 +960,7 @@
 
 	.bb-admin-meta-field__label {
 		margin-bottom: 8px;
-		font-weight: 600;
+		font-weight: 500;
 	}
 }
 
@@ -985,11 +976,17 @@
 	align-items: center;
 	gap: 4px;
 	padding: 4px 8px;
-	background-color: #f0f0f1;
-	border: 1px solid $bb-border-secondary-color;
-	border-radius: 4px;
+	color: $bb-text-color;
+	background-color: $bb-background-primary-color;
+	border: 1px solid $bb-border-tertiary-color;
+	border-radius: $bb-border-radius-full;
 	font-size: 13px;
 	line-height: 1.4;
+
+	i {
+		color: $bb-icon-secondary-color;
+		font-size: 14px;
+	}
 }
 
 .bb-admin-meta-field__remove-tag {
@@ -999,10 +996,10 @@
 	font-size: 16px;
 	line-height: 1;
 	padding: 0 2px;
-	color: #787c82;
+	color: $bb-text-tertiary-color;
 
 	&:hover {
-		color: #d63638;
+		color: $bb-text-brand-primary-color;
 	}
 }
 
@@ -1017,18 +1014,8 @@
 	}
 }
 
-.bb-admin-meta-field__search-input {
-	width: 100%;
-	padding: 8px 12px;
-	border: 1px solid $bb-border-secondary-color;
-	border-radius: 4px;
-	font-size: 14px;
-
-	&:focus {
-		border-color: $bb-primary-color;
-		box-shadow: 0 0 0 1px $bb-primary-color;
-		outline: none;
-	}
+input.bb-admin-meta-field__search-input {
+	@include bb-input-text;
 }
 
 .bb-admin-meta-field__suggestions {
@@ -1040,10 +1027,10 @@
 	margin: 0;
 	padding: 0;
 	list-style: none;
-	background: #fff;
+	background: $bb-background-base-color;
 	border: 1px solid $bb-border-secondary-color;
 	border-top: none;
-	border-radius: 0 0 4px 4px;
+	border-radius: 0 0 $bb-border-radius-sm $bb-border-radius-sm;
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -1053,7 +1040,7 @@
 	font-size: 13px;
 
 	&:hover {
-		background-color: #f0f0f1;
+		background-color: $bb-background-secondary-color;
 	}
 }
 

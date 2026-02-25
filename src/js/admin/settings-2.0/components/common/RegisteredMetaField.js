@@ -16,6 +16,7 @@ import {
 	CheckboxControl,
 } from '@wordpress/components';
 
+import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 
 import { RichTextEditor } from './RichTextEditor';
@@ -174,9 +175,9 @@ function AjaxMultiSelectField( { field, value, onChange } ) {
 									onClick={ function () {
 										handleRemove( id );
 									} }
-									aria-label={ 'Remove' }
+									aria-label={ __( 'Remove', 'buddyboss' ) }
 								>
-									{ '\u00D7' }
+									<i className="bb-icons-rl-x"></i>
 								</button>
 							</span>
 						);
@@ -369,23 +370,20 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 				<label className="bb-admin-meta-field__label">{ field.label }</label>
 				<div className="bb-admin-meta-field__toggle-list-options">
 					{ toggleOptions.map( function ( option ) {
-						var optId = field.id + '-' + option.value + '-' + editorItemId;
 						var isOptionChecked = !! toggleValues[ option.value ] && '0' !== String( toggleValues[ option.value ] );
 
 						return (
-							<label key={ option.value } className="bb-admin-meta-field__checkbox-option" htmlFor={ optId }>
-								<input
-									type="checkbox"
-									id={ optId }
-									checked={ isOptionChecked }
-									onChange={ function ( e ) {
-										var updated = Object.assign( {}, toggleValues );
-										updated[ option.value ] = e.target.checked ? 1 : 0;
-										onChange( updated );
-									} }
-								/>
-								<span className="bb-admin-meta-field__checkbox-label">{ decodeEntities( option.label ) }</span>
-							</label>
+							<CheckboxControl
+								key={ option.value }
+								label={ decodeEntities( option.label ) }
+								checked={ isOptionChecked }
+								onChange={ function ( checked ) {
+									var updated = Object.assign( {}, toggleValues );
+									updated[ option.value ] = checked ? 1 : 0;
+									onChange( updated );
+								} }
+								__nextHasNoMarginBottom
+							/>
 						);
 					} ) }
 				</div>
