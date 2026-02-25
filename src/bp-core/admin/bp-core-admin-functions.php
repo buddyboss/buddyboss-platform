@@ -736,7 +736,19 @@ function bp_core_get_admin_active_tab() {
 function bp_core_get_admin_active_tab_object() {
 	global $bp_admin_setting_tabs;
 
-	return $bp_admin_setting_tabs[ bp_core_get_admin_active_tab() ];
+	$active_tab = bp_core_get_admin_active_tab();
+
+	if ( ! isset( $bp_admin_setting_tabs[ $active_tab ] ) ) {
+		$default_tab = apply_filters( 'bp_core_admin_default_active_tab', 'bp-general' );
+
+		if ( isset( $bp_admin_setting_tabs[ $default_tab ] ) ) {
+			return $bp_admin_setting_tabs[ $default_tab ];
+		}
+
+		return null;
+	}
+
+	return $bp_admin_setting_tabs[ $active_tab ];
 }
 
 /**

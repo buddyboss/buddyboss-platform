@@ -283,6 +283,44 @@ function bb_groups_validate_image_settings_after_save( $feature_id, $settings, $
 add_action( 'bb_admin_save_feature_settings_after', 'bb_groups_validate_image_settings_after_save', 5, 3 );
 
 /**
+ * Sync reverted image setting values into the save response.
+ *
+ * After bb_groups_validate_image_settings_after_save() may revert avatar/cover
+ * type values (e.g., 'custom' -> 'buddyboss' when no image exists), this filter
+ * updates only the affected keys in the response so React stays in sync.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array  $response_data Response data being sent.
+ * @param string $feature_id    Feature ID.
+ * @param array  $settings      Full submitted settings.
+ * @param array  $saved         Keys and values saved by core.
+ *
+ * @return array Modified response data.
+ */
+function bb_groups_sync_reverted_image_values( $response_data, $feature_id, $settings, $saved ) {
+	if ( 'groups' !== $feature_id ) {
+		return $response_data;
+	}
+
+	// Only re-read the specific keys that the validation callback may have reverted.
+	$revertable_keys = array( 'bp-default-group-avatar-type', 'bp-default-group-cover-type' );
+
+	foreach ( $revertable_keys as $key ) {
+		if ( isset( $saved[ $key ] ) ) {
+			$actual = bp_get_option( $key, $saved[ $key ] );
+			if ( $actual !== $saved[ $key ] ) {
+				$response_data['saved'][ $key ] = $actual;
+			}
+		}
+	}
+
+	return $response_data;
+}
+
+add_filter( 'bb_admin_save_feature_settings_response', 'bb_groups_sync_reverted_image_values', 10, 4 );
+
+/**
  * Capture group settings state before save for post-save comparison.
  *
  * Captures the current value of settings that need before/after comparison
