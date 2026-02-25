@@ -42,7 +42,9 @@ function bb_admin_settings_init() {
 	bb_feature_registry();
 	bb_feature_loader();
 
-	// AJAX handlers and meta field registry (only load in admin or AJAX context to avoid frontend overhead).
+	// Admin/AJAX-only: AJAX handlers, meta field registry, settings page, feature settings
+	// (panels, sections, fields), and icon registry. Skip on frontend for performance —
+	// frontend only needs the Feature Registry + Loader for conditional component loading.
 	if ( is_admin() || wp_doing_ajax() ) {
 		// Admin Meta Field Registry (component-based).
 		if ( ! class_exists( 'BB_Admin_Meta_Field_Registry' ) ) {
@@ -60,26 +62,28 @@ function bb_admin_settings_init() {
 		if ( bp_is_active( 'groups' ) && file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-groups-ajax.php' ) ) {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-groups-ajax.php';
 		}
-	}
 
-	if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-page.php' ) ) {
-		require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-page.php';
-	}
+		// Admin settings page (menu registration, render function).
+		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-page.php' ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-page.php';
+		}
 
-	// Feature settings registration.
-	if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-activity.php' ) ) {
-		require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-activity.php';
-	}
+		// Feature settings registration (panels, sections, fields).
+		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-activity.php' ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-activity.php';
+		}
 
-	if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-groups.php' ) ) {
-		require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-groups.php';
-	}
+		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-groups.php' ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-groups.php';
+		}
 
-	if ( file_exists( buddypress()->plugin_dir . 'bp-core/classes/class-bb-icon-registry.php' ) ) {
-		require_once buddypress()->plugin_dir . 'bp-core/classes/class-bb-icon-registry.php';
-	}
+		// Icon registry.
+		if ( file_exists( buddypress()->plugin_dir . 'bp-core/classes/class-bb-icon-registry.php' ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/classes/class-bb-icon-registry.php';
+		}
 
-	bb_icon_registry();
+		bb_icon_registry();
+	}
 }
 
 add_action( 'bp_loaded', 'bb_admin_settings_init', 4 );

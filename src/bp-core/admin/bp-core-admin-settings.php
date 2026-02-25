@@ -948,7 +948,12 @@ function bp_core_admin_settings() {
 			</ul>
 		</div>
 		<form action="<?php echo esc_url( $form_action ); ?>" method="post" enctype="multipart/form-data">
-			<?php bp_core_get_admin_active_tab_object()->form_html(); ?>
+			<?php
+			$tab_object = bp_core_get_admin_active_tab_object();
+			if ( $tab_object ) {
+				$tab_object->form_html();
+			}
+			?>
 		</form>
 	</div>
 

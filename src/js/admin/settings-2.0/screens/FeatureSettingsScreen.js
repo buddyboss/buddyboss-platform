@@ -219,12 +219,16 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 								setOriginalSettings,
 							} );
 						} else {
-							setOriginalSettings((prev) => ({ ...prev, ...fieldsToSave }));
+							// Use actual saved values from server response (may differ from
+							// submitted values due to server-side validation/revert).
+							var actualSaved = response.data?.saved || fieldsToSave;
+							setSettings((prev) => ({ ...prev, ...actualSaved }));
+							setOriginalSettings((prev) => ({ ...prev, ...actualSaved }));
 							const cachedData = getCachedFeatureData(featureId);
 							if (cachedData) {
 								setCachedFeatureData(featureId, {
 									...cachedData,
-									settings: { ...cachedData.settings, ...fieldsToSave },
+									settings: { ...cachedData.settings, ...actualSaved },
 								});
 							}
 						}

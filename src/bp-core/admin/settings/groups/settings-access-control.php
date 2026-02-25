@@ -101,6 +101,57 @@ function bb_groups_register_access_control_fields() {
 }
 
 // =========================================================================
+// SANITIZE CALLBACK (fallback when Activity is disabled)
+// =========================================================================
+
+// The sanitize callback may already be registered by Activity settings.
+// Define it here too so Groups access controls work even when Activity is disabled.
+if ( ! function_exists( 'bb_sanitize_access_control_field' ) ) {
+
+	/**
+	 * Sanitize callback for access_control fields.
+	 *
+	 * The core save loop applies this before persisting the value via
+	 * bp_update_option. Without this, the default `sanitize_text_field`
+	 * would flatten the array to an empty string.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param mixed $value The submitted value (array or string).
+	 *
+	 * @return array Sanitized access-control value.
+	 */
+	function bb_sanitize_access_control_field( $value ) {
+
+		// Handle JSON-encoded string from frontend.
+		// Note: wp_unslash() is already applied by the AJAX handler before this callback.
+		if ( is_string( $value ) ) {
+			$value = json_decode( $value, true );
+		}
+
+		if ( ! is_array( $value ) ) {
+			return array();
+		}
+
+		// Recursively sanitize each value in the array.
+		$value = map_deep( $value, 'sanitize_text_field' );
+
+		/**
+		 * Filters the access-control settings before saving.
+		 *
+		 * Pro hooks here to validate / sanitize the value.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $value The sanitized value.
+		 */
+		$value = apply_filters( 'bb_access_control_sanitize_settings', $value );
+
+		return $value;
+	}
+}
+
+// =========================================================================
 // AJAX DATA ENRICHMENT
 // =========================================================================
 
