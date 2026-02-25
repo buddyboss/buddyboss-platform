@@ -1380,9 +1380,6 @@
 	.components-base-control__label {
 		display: block;
 		margin-bottom: 8px;
-		font-weight: 500;
-		text-transform: uppercase;
-		font-size: 11px;
 	}
 }
 
@@ -1414,10 +1411,10 @@
 	overflow-y: auto;
 	margin: 0;
 	padding: 4px 0;
-	background: #fff;
+	background: $bb-background-base-color;
 	border: 1px solid $bb-border-primary-color;
 	border-top: none;
-	border-radius: 0 0 $bb-border-radius-md $bb-border-radius-md;
+	border-radius: 0 0 $bb-border-radius-lg $bb-border-radius-lg;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 	list-style: none;
 }

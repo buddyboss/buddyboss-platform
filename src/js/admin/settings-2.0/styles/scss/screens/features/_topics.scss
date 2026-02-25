@@ -11,6 +11,7 @@
         border-radius: $bb-border-radius-xl;
         overflow: hidden;
         padding: 16px;
+        margin-top: 8px;
 
         &:empty {
             display: none;
@@ -62,6 +63,8 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        display: flex;
+        align-items: center;
     }
 
     &__permission {
@@ -115,11 +118,14 @@
         box-shadow: none;
         font-size: 14px;
         font-weight: 400;
+        line-height: 1.4;
         align-self: flex-start;
+        height: auto;
 
         &:hover {
-            color: $bb-text-brand-primary-color !important;
+            color: $bb-text-inverse-color !important;
             border-color: $bb-border-brand-primary-color !important;
+            background-color: $bb-background-brand-primary-color !important;
             box-shadow: none !important;
         }
 
@@ -163,6 +169,7 @@
 
     &__body {
         padding: 16px 24px;
+        min-height: 225px;
     }
 
     &__error {
