@@ -13,6 +13,7 @@ import {
 	TextControl,
 	TextareaControl,
 	SelectControl,
+	CheckboxControl,
 } from '@wordpress/components';
 
 import { decodeEntities } from '@wordpress/html-entities';
@@ -341,20 +342,16 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 
 		return (
 			<div className="bb-admin-meta-field__checkbox-field">
-				<label className="bb-admin-meta-field__checkbox-option" htmlFor={ field.id + '-' + editorItemId }>
-					<input
-						type="checkbox"
-						id={ field.id + '-' + editorItemId }
-						checked={ isChecked }
-						onChange={ function ( e ) {
-							onChange( e.target.checked ? '1' : '0' );
-						} }
-					/>
-					<span className="bb-admin-meta-field__checkbox-label">{ field.label }</span>
-				</label>
-				{ field.description && (
-					<p className="bb-admin-meta-field__description">{ field.description }</p>
-				) }
+				<CheckboxControl
+					id={ field.id + '-' + editorItemId }
+					label={ field.label }
+					checked={ isChecked }
+					onChange={ function ( checked ) {
+						onChange( checked ? '1' : '0' );
+					} }
+					help={ field.description || undefined }
+					__nextHasNoMarginBottom
+				/>
 			</div>
 		);
 	}
