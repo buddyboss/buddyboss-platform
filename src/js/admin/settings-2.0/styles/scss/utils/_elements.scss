@@ -357,6 +357,16 @@ select.bb-admin-settings__select {
         }
     }
 
+    &.bb-admin-notice--warning {
+        color: $bb-text-warning-primary-color;
+        background-color: $bb-background-warning-primary-color;
+        border-color: $bb-border-warning-secondary-color;
+
+        &:before {
+            color: $bb-icon-warning-primary-color;
+        }
+    }
+
     &--dismiss {
         margin-left: auto;
 
@@ -364,6 +374,41 @@ select.bb-admin-settings__select {
             font-size: 18px;
             color: $bb-icon-color;
         }
+    }
+}
+
+/* Status Check Field */
+.bb-admin-status-check {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    &__loading {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: $bb-text-tertiary-color;
+    }
+
+    &__spinner {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        border: 2px solid $bb-border-secondary-color;
+        border-top-color: $bb-text-color;
+        border-radius: 50%;
+        animation: bb-spin .6s linear infinite;
+    }
+
+    .bb-admin-notice {
+        margin-bottom: 0;
+    }
+}
+
+@keyframes bb-spin {
+    to {
+        transform: rotate(360deg);
     }
 }
 

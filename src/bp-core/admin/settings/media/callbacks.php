@@ -109,7 +109,7 @@ function bb_media_sanitize_extensions( $value ) {
 	}
 
 	// Determine format: if the first value is scalar (int), it's a toggle-only update.
-	$first_value = reset( $value );
+	$first_value    = reset( $value );
 	$is_toggle_only = ! is_array( $first_value );
 
 	if ( $is_toggle_only ) {
@@ -198,13 +198,13 @@ function bb_media_ajax_giphy_connect() {
 
 		wp_send_json_success(
 			array(
-				'is_connected'  => false,
-				'button_label'  => __( 'Connect', 'buddyboss' ),
-				'status'        => array(
+				'is_connected' => false,
+				'button_label' => __( 'Connect', 'buddyboss' ),
+				'status'       => array(
 					'type' => 'warning',
 					'text' => __( 'Not Connected', 'buddyboss' ),
 				),
-				'message'       => __( 'GIPHY API key disconnected.', 'buddyboss' ),
+				'message'      => __( 'GIPHY API key disconnected.', 'buddyboss' ),
 			)
 		);
 	}
@@ -229,13 +229,13 @@ function bb_media_ajax_giphy_connect() {
 	if ( $is_valid ) {
 		wp_send_json_success(
 			array(
-				'is_connected'  => true,
-				'button_label'  => __( 'Disconnect', 'buddyboss' ),
-				'status'        => array(
+				'is_connected' => true,
+				'button_label' => __( 'Disconnect', 'buddyboss' ),
+				'status'       => array(
 					'type' => 'success',
 					'text' => __( 'Connected', 'buddyboss' ),
 				),
-				'message'       => __( 'GIPHY API key connected successfully.', 'buddyboss' ),
+				'message'      => __( 'GIPHY API key connected successfully.', 'buddyboss' ),
 			)
 		);
 	}
@@ -255,6 +255,281 @@ function bb_media_ajax_giphy_connect() {
 	);
 }
 add_action( 'wp_ajax_bb_media_giphy_connect', 'bb_media_ajax_giphy_connect' );
+
+/**
+ * Sanitize symbolic links support toggle.
+ *
+ * Forces the value to 0 if symlinks are disabled on the server or media is offloaded.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed $value The value to sanitize.
+ *
+ * @return int 0 or 1.
+ */
+function bb_media_sanitize_symlink_support( $value ) {
+	$value = absint( $value );
+
+	// Force off if server has symlink function disabled.
+	if ( function_exists( 'bb_check_server_disabled_symlink' ) && bb_check_server_disabled_symlink() ) {
+		return 0;
+	}
+
+	// Force off if media is offloaded.
+	if ( (bool) apply_filters( 'bb_media_offload_delivered', false ) ) {
+		return 0;
+	}
+
+	return $value ? 1 : 0;
+}
+
+/**
+ * AJAX handler for Symbolic Links status check.
+ *
+ * Returns the current symlink status as a notice (success/warning)
+ * by re-evaluating server state and the current option value.
+ * Called on mount and whenever the Symbolic Links toggle changes.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_media_ajax_check_symlink_status() {
+	// Verify nonce.
+	check_ajax_referer( 'bb_admin_settings', 'nonce' );
+
+	// Capability check.
+	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+		wp_send_json_error( array( 'message' => __( 'Unauthorized.', 'buddyboss' ) ) );
+	}
+
+	$is_offloaded        = (bool) apply_filters( 'bb_media_offload_delivered', false );
+	$is_symlink_disabled = function_exists( 'bb_check_server_disabled_symlink' ) && bb_check_server_disabled_symlink();
+
+	// Use the watch_value from the client if provided (reflects the current toggle
+	// state which may not be saved to the DB yet due to auto-save debounce).
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce already verified above.
+	if ( isset( $_POST['watch_field'] ) && 'bp_media_symlink_support' === sanitize_text_field( wp_unslash( $_POST['watch_field'] ) ) ) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce already verified above.
+		$is_symlinks_enabled = ! empty( $_POST['watch_value'] );
+	} else {
+		$is_symlinks_enabled = function_exists( 'bb_enable_symlinks' ) && bb_enable_symlinks();
+	}
+
+	$symlink_type        = bp_get_option( 'bb_media_symlink_type' );
+	$display_support_err = (bool) bp_get_option( 'bb_display_support_error' );
+
+	if ( $is_offloaded ) {
+		$delivery_provider = apply_filters( 'bb_media_offload_delivery_provider', __( 'Other', 'buddyboss' ) );
+		wp_send_json_success(
+			array(
+				'status'  => 'warning',
+				'message' => sprintf(
+					/* translators: %s: Offload delivery provider name. */
+					__( 'Symbolic links are disabled due to media being offloaded to %s', 'buddyboss' ),
+					$delivery_provider
+				),
+			)
+		);
+	} elseif ( $is_symlink_disabled ) {
+		wp_send_json_success(
+			array(
+				'status'  => 'warning',
+				'message' => __( 'Symbolic function disabled on your server. Please contact your hosting provider.', 'buddyboss' ),
+			)
+		);
+	} elseif ( $is_symlinks_enabled && empty( $symlink_type ) ) {
+		wp_send_json_success(
+			array(
+				'status'  => 'warning',
+				'message' => __( 'Symbolic links don\'t seem to work on your server. Please contact BuddyBoss for support.', 'buddyboss' ),
+			)
+		);
+	} elseif ( $display_support_err ) {
+		wp_send_json_success(
+			array(
+				'status'  => 'warning',
+				'message' => __( 'Symbolic links don\'t seem to work on your server. Please contact BuddyBoss for support.', 'buddyboss' ),
+			)
+		);
+	} elseif ( ! $is_symlinks_enabled ) {
+		wp_send_json_success(
+			array(
+				'status'  => 'warning',
+				'message' => __( 'Symbolic links are disabled', 'buddyboss' ),
+			)
+		);
+	} else {
+		wp_send_json_success(
+			array(
+				'status'  => 'success',
+				'message' => __( 'Symbolic links are activated', 'buddyboss' ),
+			)
+		);
+	}
+}
+add_action( 'wp_ajax_bb_media_check_symlink_status', 'bb_media_ajax_check_symlink_status' );
+
+/**
+ * AJAX handler for Direct Access status check.
+ *
+ * Creates test file uploads in video, media, and document directories,
+ * then checks via HTTP if those files are directly accessible.
+ * Reports whether direct access is blocked or not.
+ *
+ * Replicates the legacy `bb_media_settings_callback_symlink_direct_access()` behavior
+ * as an on-demand AJAX call instead of running on every settings page load.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_media_ajax_check_direct_access() {
+	// Verify nonce.
+	check_ajax_referer( 'bb_admin_settings', 'nonce' );
+
+	// Capability check.
+	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+		wp_send_json_error( array( 'message' => __( 'Unauthorized.', 'buddyboss' ) ) );
+	}
+
+	$bypass_check = (bool) apply_filters( 'bb_media_check_default_access', false );
+
+	if ( $bypass_check ) {
+		$delivery_provider = apply_filters( 'bb_media_offload_delivery_provider', __( 'Other', 'buddyboss' ) );
+
+		wp_send_json_success(
+			array(
+				'status'  => 'warning',
+				'message' => sprintf(
+					/* translators: %s: Offload delivery provider name. */
+					__( 'Direct access to your media files and folders is disabled due to media being offloaded to %s', 'buddyboss' ),
+					$delivery_provider
+				),
+			)
+		);
+	}
+
+	$get_sample_local_urls  = array();
+	$video_attachment_id    = 0;
+	$media_attachment_id    = 0;
+	$document_attachment_id = 0;
+
+	// Upload test files to video directory.
+	if ( function_exists( 'bp_video_upload_dir_script' ) ) {
+		add_filter( 'upload_dir', 'bp_video_upload_dir_script' );
+		$upload_result       = bb_media_create_test_upload();
+		$video_attachment_id = $upload_result['attachment_id'];
+		if ( ! empty( $upload_result['url'] ) ) {
+			$get_sample_local_urls['bb_videos'] = $upload_result['url'];
+		}
+		remove_filter( 'upload_dir', 'bp_video_upload_dir_script' );
+	}
+
+	// Upload test files to media directory.
+	if ( function_exists( 'bp_media_upload_dir_script' ) ) {
+		add_filter( 'upload_dir', 'bp_media_upload_dir_script' );
+		$upload_result       = bb_media_create_test_upload();
+		$media_attachment_id = $upload_result['attachment_id'];
+		if ( ! empty( $upload_result['url'] ) ) {
+			$get_sample_local_urls['bb_medias'] = $upload_result['url'];
+		}
+		remove_filter( 'upload_dir', 'bp_media_upload_dir_script' );
+	}
+
+	// Upload test files to document directory.
+	if ( function_exists( 'bp_document_upload_dir_script' ) ) {
+		add_filter( 'upload_dir', 'bp_document_upload_dir_script' );
+		$upload_result          = bb_media_create_test_upload();
+		$document_attachment_id = $upload_result['attachment_id'];
+		if ( ! empty( $upload_result['url'] ) ) {
+			$get_sample_local_urls['bb_documents'] = $upload_result['url'];
+		}
+		remove_filter( 'upload_dir', 'bp_document_upload_dir_script' );
+	}
+
+	// Check each uploaded file for direct HTTP access.
+	$accessible_directories = array();
+	foreach ( $get_sample_local_urls as $dir_id => $url ) {
+		$fetch = wp_remote_get( $url, array( 'sslverify' => false ) );
+		if ( ! is_wp_error( $fetch ) && isset( $fetch['response']['code'] ) && 200 === $fetch['response']['code'] ) {
+			$accessible_directories[] = $dir_id;
+		}
+	}
+
+	// Clean up test attachments.
+	if ( 0 !== $video_attachment_id && ! is_wp_error( $video_attachment_id ) ) {
+		wp_delete_attachment( $video_attachment_id, true );
+	}
+	if ( 0 !== $media_attachment_id && ! is_wp_error( $media_attachment_id ) ) {
+		wp_delete_attachment( $media_attachment_id, true );
+	}
+	if ( 0 !== $document_attachment_id && ! is_wp_error( $document_attachment_id ) ) {
+		wp_delete_attachment( $document_attachment_id, true );
+	}
+
+	if ( ! empty( $accessible_directories ) ) {
+		wp_send_json_success(
+			array(
+				'status'  => 'warning',
+				'message' => __( 'Direct access to your media files and folders is not blocked', 'buddyboss' ),
+			)
+		);
+	}
+
+	wp_send_json_success(
+		array(
+			'status'  => 'success',
+			'message' => __( 'Direct access to your media files and folders is blocked', 'buddyboss' ),
+		)
+	);
+}
+add_action( 'wp_ajax_bb_media_check_direct_access', 'bb_media_ajax_check_direct_access' );
+
+/**
+ * Create a test upload attachment for direct access checks.
+ *
+ * Uses the BuddyBoss core fallback image as a test file.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array { attachment_id: int, url: string }
+ */
+function bb_media_create_test_upload() {
+	$result = array(
+		'attachment_id' => 0,
+		'url'           => '',
+	);
+
+	$file     = buddypress()->plugin_dir . 'bp-core/images/suspended-mystery-man.jpg';
+	$filename = basename( $file );
+
+	if ( ! file_exists( $file ) ) {
+		return $result;
+	}
+
+	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Reading local file.
+	$upload_file = wp_upload_bits( $filename, null, file_get_contents( $file ) );
+
+	if ( ! empty( $upload_file['error'] ) ) {
+		return $result;
+	}
+
+	$wp_filetype   = wp_check_filetype( $filename, null );
+	$attachment    = array(
+		'post_mime_type' => $wp_filetype['type'],
+		'post_title'     => preg_replace( '/\.[^.]+$/', '', $filename ),
+		'post_content'   => '',
+		'post_status'    => 'inherit',
+	);
+	$attachment_id = wp_insert_attachment( $attachment, $upload_file['file'] );
+
+	if ( ! is_wp_error( $attachment_id ) ) {
+		require_once ABSPATH . 'wp-admin/includes/image.php';
+		$attachment_data = wp_generate_attachment_metadata( $attachment_id, $upload_file['file'] );
+		wp_update_attachment_metadata( $attachment_id, $attachment_data );
+		$result['attachment_id'] = $attachment_id;
+		$result['url']           = $upload_file['url'];
+	}
+
+	return $result;
+}
 
 /**
  * Sanitize access control fields.

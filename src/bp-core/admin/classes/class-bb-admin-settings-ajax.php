@@ -657,6 +657,9 @@ class BB_Admin_Settings_Ajax {
 				'placeholder'          => $field['placeholder'] ?? null,
 				'button_label'         => $field['button_label'] ?? null,
 				'is_connected'         => ! empty( $field['is_connected'] ),
+				// Status check fields (AJAX-triggered server-side checks, e.g. Direct Access).
+				'ajax_action'          => $field['ajax_action'] ?? null,
+				'watch_field'          => $field['watch_field'] ?? null,
 			);
 
 			// Auto-compute pro_notice for pro_only fields when not set at registration time.
