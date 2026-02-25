@@ -60,6 +60,9 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 	const [isHelpLoading, setHelpLoading] = useState(false);
 	const [helpError, setHelpError] = useState(null);
 
+	// Section status overrides (updated via custom events from input_button fields).
+	const [sectionStatusOverrides, setSectionStatusOverrides] = useState({});
+
 	// Auto-save state.
 	const [toast, setToast] = useState(null);
 	const [changedFields, setChangedFields] = useState({});
@@ -71,6 +74,24 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 	useEffect(() => {
 		settingsRef.current = settings;
 	}, [settings]);
+
+	// Listen for section status updates from input_button fields (e.g. GIPHY connect/disconnect).
+	useEffect( function() {
+		function handleStatusUpdate( event ) {
+			var detail = event.detail;
+			if ( detail && detail.fieldName && detail.status ) {
+				setSectionStatusOverrides( function( prev ) {
+					var next = Object.assign( {}, prev );
+					next[ detail.fieldName ] = detail.status;
+					return next;
+				} );
+			}
+		}
+		window.addEventListener( 'bb-section-status-update', handleStatusUpdate );
+		return function() {
+			window.removeEventListener( 'bb-section-status-update', handleStatusUpdate );
+		};
+	}, [] );
 
 	// Load feature settings via AJAX - only when featureId changes
 	// Uses caching to prevent re-fetching on navigation within the same feature
@@ -427,25 +448,54 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 										>
 											{/* Section Header */}
 											<div className="bb-admin-feature-settings__section-header">
-												<h3 className="bb-admin-feature-settings__section-title">{section.title}</h3>
-												{/* Help icon - opens help slider modal */}
-												{activePanel.help_url && (
-													<HelpIcon
-														onClick={handleHelpClick}
-														contentId={activePanel.help_url}
-													/>
-												)}
-												{/* Section toggle - enables/disables all fields in this section */}
-												{sectionToggleKey && (
-													<div className="bb-admin-feature-settings__section-toggle">
-														<ToggleControl
-															checked={ ! isSectionToggleOff }
-															onChange={ function( newVal ) {
-																handleSettingChange( sectionToggleKey, newVal ? 1 : 0 );
-															} }
+												<div className="bb-admin-feature-settings__section-header-left">
+													<h3 className="bb-admin-feature-settings__section-title">{section.title}</h3>
+													{/* Section status badge (e.g. Connected/Not Connected) */}
+													{( function() {
+														// Check for overridden status from input_button events, falling back to section data.
+														var sectionFields = section.fields || [];
+														var statusOverride = null;
+														for ( var fi = 0; fi < sectionFields.length; fi++ ) {
+															if ( sectionStatusOverrides[ sectionFields[ fi ].name ] ) {
+																statusOverride = sectionStatusOverrides[ sectionFields[ fi ].name ];
+																break;
+															}
+														}
+														var sectionStatus = statusOverride || section.status;
+														if ( ! sectionStatus || ! sectionStatus.text ) {
+															return null;
+														}
+														var statusIconClass = 'success' === sectionStatus.type
+															? 'bb-icons-rl bb-icons-rl-check-circle'
+															: 'bb-icons-rl bb-icons-rl-warning-circle';
+														return (
+															<span className={ 'bb-admin-feature-settings__section-status bb-admin-feature-settings__section-status--' + sectionStatus.type }>
+																<i className={ 'bb-admin-feature-settings__section-status-icon ' + statusIconClass } />
+																{ sectionStatus.text }
+															</span>
+														);
+													} )()}
+												</div>
+												<div className="bb-admin-feature-settings__section-header-right">
+													{/* Help icon - opens help slider modal */}
+													{activePanel.help_url && (
+														<HelpIcon
+															onClick={handleHelpClick}
+															contentId={activePanel.help_url}
 														/>
-													</div>
-												)}
+													)}
+													{/* Section toggle - enables/disables all fields in this section */}
+													{sectionToggleKey && (
+														<div className="bb-admin-feature-settings__section-toggle">
+															<ToggleControl
+																checked={ ! isSectionToggleOff }
+																onChange={ function( newVal ) {
+																	handleSettingChange( sectionToggleKey, newVal ? 1 : 0 );
+																} }
+															/>
+														</div>
+													)}
+												</div>
 											</div>
 											{/* Section Body */}
 											<div className={ 'bb-admin-feature-settings__section-body' + ( isSectionToggleOff ? ' bb-admin-feature-settings__section-body--disabled' : '' ) }>

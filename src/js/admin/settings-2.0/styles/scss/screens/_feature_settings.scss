@@ -125,6 +125,21 @@
             border-bottom: 1px solid $bb-border-secondary-color;
             padding: 20px 4px;
             margin: 0 24px;
+
+            &-left {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                min-height: 24px;
+                flex: 1;
+            }
+
+            &-right {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                flex-shrink: 0;
+            }
         }
 
         &-title {
@@ -132,7 +147,55 @@
             font-size: 18px;
             font-weight: 500;
             margin: 0;
-            flex: 1;
+        }
+
+        &-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            border-radius: $bb-border-radius-full;
+            font-size: 11px;
+            font-weight: 500;
+            line-height: 16px;
+            margin-left: 8px;
+            flex-shrink: 0;
+
+            &-icon {
+                font-size: 14px;
+                line-height: 1;
+                flex-shrink: 0;
+            }
+
+            &--warning {
+                background-color: #fff3e0;
+                border: 0.5px solid #f9a825;
+                color: $bb-text-warning-primary-color;
+
+                .bb-admin-feature-settings__section-status-icon {
+                    color: $bb-icon-warning-primary-color;
+                }
+            }
+
+            &--success {
+                background-color: $bb-background-positive-primary-color;
+                border: 0.5px solid $bb-border-positive-secondary-color;
+                color: $bb-text-positive-primary-color;
+
+                .bb-admin-feature-settings__section-status-icon {
+                    color: $bb-icon-positive-primary-color;
+                }
+            }
+
+            &--info {
+                background-color: $bb-background-secondary-color;
+                border: 0.5px solid $bb-border-tertiary-color;
+                color: $bb-text-color;
+
+                .bb-admin-feature-settings__section-status-icon {
+                    color: $bb-text-tertiary-color;
+                }
+            }
         }
 
         .help-icon {
@@ -420,6 +483,103 @@
     &:disabled {
         opacity: 0.5;
         pointer-events: none;
+    }
+}
+
+/* Input Button Field (e.g. API key connect/disconnect) */
+.bb-admin-settings-field__input-button {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    &-row {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+    &-input {
+        width: 245px;
+        flex-shrink: 0;
+    }
+
+    &-text {
+        width: 100%;
+        height: 32px;
+        padding: 7px 8px;
+        font-size: 13px;
+        line-height: 18px;
+        color: $bb-text-color;
+        background-color: $bb-background-primary-color;
+        border: 0.5px solid $bb-border-secondary-color;
+        border-radius: $bb-border-radius-md;
+        outline: none;
+        box-sizing: border-box;
+
+        &::placeholder {
+            color: $bb-text-tertiary-color;
+        }
+
+        &:focus {
+            border-color: $bb-border-brand-primary-color;
+            box-shadow: 0 0 0 1px $bb-border-brand-primary-color;
+        }
+
+        &:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+    }
+
+    &-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        padding: 6px 16px;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 20px;
+        color: $bb-text-inverse-color;
+        background-color: $bb-background-brand-primary-color;
+        border: none;
+        border-radius: $bb-border-radius-lg;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: background-color 0.2s ease;
+
+        &:hover {
+            background-color: darken($bb-background-brand-primary-color, 8%);
+        }
+
+        &:disabled {
+            background-color: $bb-icon-brand-disabled-color;
+            cursor: not-allowed;
+        }
+
+        &--disconnect {
+            background-color: transparent;
+            color: $bb-text-tertiary-color;
+            border: 1px solid $bb-border-secondary-color;
+
+            &:hover {
+                background-color: $bb-background-primary-color;
+            }
+        }
+    }
+
+    &-error {
+        color: $bb-error-color;
+        font-size: 13px;
+        line-height: 18px;
+        margin: 0;
+    }
+
+    &-warning {
+        color: $bb-text-warning-primary-color;
+        font-size: 13px;
+        line-height: 18px;
+        margin: 0;
     }
 }
 

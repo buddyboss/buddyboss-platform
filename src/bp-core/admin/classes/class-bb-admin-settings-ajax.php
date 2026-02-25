@@ -356,6 +356,14 @@ class BB_Admin_Settings_Ajax {
 					}
 				}
 
+				// Include status if set (e.g. Connected/Not Connected badges).
+				if ( ! empty( $section['status'] ) ) {
+					$formatted_section['status'] = array(
+						'type' => sanitize_key( $section['status']['type'] ?? 'info' ),
+						'text' => sanitize_text_field( $section['status']['text'] ?? '' ),
+					);
+				}
+
 				$formatted_sections[] = $formatted_section;
 			}
 
@@ -645,6 +653,10 @@ class BB_Admin_Settings_Ajax {
 				'manage_url'           => $field['manage_url'] ?? null,
 				'manage_label'         => $field['manage_label'] ?? null,
 				'manage_icon'          => $field['manage_icon'] ?? null,
+				// Input button fields (text input + action button, e.g. API key connect/disconnect).
+				'placeholder'          => $field['placeholder'] ?? null,
+				'button_label'         => $field['button_label'] ?? null,
+				'is_connected'         => ! empty( $field['is_connected'] ),
 			);
 
 			// Auto-compute pro_notice for pro_only fields when not set at registration time.

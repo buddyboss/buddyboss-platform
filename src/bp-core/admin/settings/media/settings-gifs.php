@@ -18,6 +18,9 @@ defined( 'ABSPATH' ) || exit;
  */
 function bb_media_register_gifs_panel_fields() {
 
+	// Determine GIPHY connection status for section heading badge.
+	$is_giphy_connected = function_exists( 'bb_check_valid_giphy_api_key' ) && bb_check_valid_giphy_api_key();
+
 	// -------------------------------------------------------------------------
 	// SECTION: GIF Settings
 	// -------------------------------------------------------------------------
@@ -26,8 +29,15 @@ function bb_media_register_gifs_panel_fields() {
 		'animated_gifs',
 		'gifs_settings',
 		array(
-			'title' => __( 'Animated GIFs', 'buddyboss' ),
-			'order' => 10,
+			'title'          => __( 'Animated GIFs', 'buddyboss' ),
+			'order'          => 10,
+			'section_toggle' => 'bp_media_gif_support',
+			'status'         => array(
+				'type' => $is_giphy_connected ? 'success' : 'warning',
+				'text' => $is_giphy_connected
+					? __( 'Connected', 'buddyboss' )
+					: __( 'Not Connected', 'buddyboss' ),
+			),
 		)
 	);
 
@@ -39,10 +49,20 @@ function bb_media_register_gifs_panel_fields() {
 		array(
 			'name'              => 'bp_media_gif_api_key',
 			'label'             => __( 'GIPHY API Key', 'buddyboss' ),
-			'description'       => __( 'Enter your GIPHY API key to enable animated GIF support. You can get a free API key at developers.giphy.com.', 'buddyboss' ),
-			'type'              => 'text',
+			'description'       => sprintf(
+				/* translators: 1: Opening anchor tag for GIPHY account link, 2: Closing anchor tag. */
+				__( 'To use this feature, sign in to your %1$sGIPHY account%2$s, create an app, and paste your API key in the field above.', 'buddyboss' ),
+				'<a href="https://developers.giphy.com/" target="_blank" rel="noopener noreferrer">',
+				'</a>'
+			),
+			'type'              => 'input_button',
 			'default'           => '',
 			'sanitize_callback' => 'bb_media_sanitize_gif_api_key',
+			'placeholder'       => __( 'Enter API key to connect', 'buddyboss' ),
+			'button_label'      => $is_giphy_connected
+				? __( 'Disconnect', 'buddyboss' )
+				: __( 'Connect', 'buddyboss' ),
+			'is_connected'      => $is_giphy_connected,
 			'order'             => 10,
 		)
 	);
@@ -58,7 +78,7 @@ function bb_media_register_gifs_panel_fields() {
 			array(
 				'name'              => 'bp_media_profiles_gif_support',
 				'label'             => __( 'Profiles', 'buddyboss' ),
-				'description'       => __( 'Enable animated GIF support in profiles and activity posts', 'buddyboss' ),
+				'description'       => __( 'Allow members to use animated GIFs in profile activity posts', 'buddyboss' ),
 				'type'              => 'toggle',
 				'default'           => 0,
 				'sanitize_callback' => 'absint',
@@ -75,7 +95,7 @@ function bb_media_register_gifs_panel_fields() {
 				array(
 					'name'              => 'bp_media_groups_gif_support',
 					'label'             => __( 'Groups', 'buddyboss' ),
-					'description'       => __( 'Enable animated GIF support in groups', 'buddyboss' ),
+					'description'       => __( 'Allow members to use animated GIFs in groups, activity posts, messages and forums', 'buddyboss' ),
 					'type'              => 'toggle',
 					'default'           => 0,
 					'sanitize_callback' => 'absint',
@@ -93,7 +113,7 @@ function bb_media_register_gifs_panel_fields() {
 				array(
 					'name'              => 'bp_media_messages_gif_support',
 					'label'             => __( 'Messages', 'buddyboss' ),
-					'description'       => __( 'Enable animated GIF support in private messages', 'buddyboss' ),
+					'description'       => __( 'Allow members to use animated GIFs in private messages', 'buddyboss' ),
 					'type'              => 'toggle',
 					'default'           => 0,
 					'sanitize_callback' => 'absint',
@@ -111,7 +131,7 @@ function bb_media_register_gifs_panel_fields() {
 				array(
 					'name'              => 'bp_media_forums_gif_support',
 					'label'             => __( 'Forums', 'buddyboss' ),
-					'description'       => __( 'Enable animated GIF support in forum discussions and replies', 'buddyboss' ),
+					'description'       => __( 'Allow members to use animated GIFs in forum discussions and replies', 'buddyboss' ),
 					'type'              => 'toggle',
 					'default'           => 0,
 					'sanitize_callback' => 'absint',

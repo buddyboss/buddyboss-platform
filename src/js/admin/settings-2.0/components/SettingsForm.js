@@ -34,6 +34,7 @@ import { ChildRenderField } from './fields/ChildRenderField';
 import { DimensionsField } from './fields/DimensionsField';
 import { ExtensionListField } from './fields/ExtensionListField';
 import { DocumentExtensionsField } from './fields/DocumentExtensionsField';
+import { InputButtonField } from './fields/InputButtonField';
 
 /**
  * Settings Form Component (matching Figma settingsSection)
@@ -194,6 +195,16 @@ export function SettingsForm({ fields, values, onChange }) {
 						field={field}
 						value={value}
 						onChange={onChange}
+					/>
+				);
+
+			case 'input_button':
+				return (
+					<InputButtonField
+						field={field}
+						value={value}
+						onChange={onChange}
+						disabled={disabled}
 					/>
 				);
 

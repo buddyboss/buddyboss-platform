@@ -170,6 +170,93 @@ function bb_media_sanitize_gif_api_key( $value ) {
 }
 
 /**
+ * AJAX handler for GIPHY API key connect/disconnect.
+ *
+ * Validates the API key against the GIPHY API and saves or clears it.
+ * Returns updated connection status for the React UI to update section badges.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_media_ajax_giphy_connect() {
+	// Verify nonce.
+	check_ajax_referer( 'bb_admin_settings', 'nonce' );
+
+	// Capability check.
+	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+		wp_send_json_error( array( 'message' => __( 'Unauthorized.', 'buddyboss' ) ) );
+	}
+
+	$action  = isset( $_POST['connect_action'] ) ? sanitize_text_field( wp_unslash( $_POST['connect_action'] ) ) : '';
+	$api_key = isset( $_POST['api_key'] ) ? sanitize_text_field( wp_unslash( $_POST['api_key'] ) ) : '';
+
+	if ( 'disconnect' === $action ) {
+		// Clear the API key.
+		bp_update_option( 'bp_media_gif_api_key', '' );
+
+		// Clear the validation cache.
+		delete_transient( 'bb_check_valid_giphy_api_key' );
+
+		wp_send_json_success(
+			array(
+				'is_connected'  => false,
+				'button_label'  => __( 'Connect', 'buddyboss' ),
+				'status'        => array(
+					'type' => 'warning',
+					'text' => __( 'Not Connected', 'buddyboss' ),
+				),
+				'message'       => __( 'GIPHY API key disconnected.', 'buddyboss' ),
+			)
+		);
+	}
+
+	// Connect: save and validate the API key.
+	if ( empty( $api_key ) ) {
+		wp_send_json_error( array( 'message' => __( 'Please enter an API key.', 'buddyboss' ) ) );
+	}
+
+	// Save the key first (matches legacy behavior where Settings API saves regardless of validation).
+	bp_update_option( 'bp_media_gif_api_key', $api_key );
+
+	// Clear old validation cache so it picks up the new key.
+	delete_transient( 'bb_check_valid_giphy_api_key' );
+
+	// Validate via GIPHY API.
+	$is_valid = false;
+	if ( function_exists( 'bb_check_valid_giphy_api_key' ) ) {
+		$is_valid = bb_check_valid_giphy_api_key( $api_key );
+	}
+
+	if ( $is_valid ) {
+		wp_send_json_success(
+			array(
+				'is_connected'  => true,
+				'button_label'  => __( 'Disconnect', 'buddyboss' ),
+				'status'        => array(
+					'type' => 'success',
+					'text' => __( 'Connected', 'buddyboss' ),
+				),
+				'message'       => __( 'GIPHY API key connected successfully.', 'buddyboss' ),
+			)
+		);
+	}
+
+	// Key saved but validation failed — keep as not connected so user can re-enter.
+	wp_send_json_success(
+		array(
+			'is_connected' => false,
+			'button_label' => __( 'Connect', 'buddyboss' ),
+			'status'       => array(
+				'type' => 'warning',
+				'text' => __( 'Not Connected', 'buddyboss' ),
+			),
+			'message'      => __( 'API key saved, but GIPHY could not verify the key. Please check that your key is correct.', 'buddyboss' ),
+			'has_warning'  => true,
+		)
+	);
+}
+add_action( 'wp_ajax_bb_media_giphy_connect', 'bb_media_ajax_giphy_connect' );
+
+/**
  * Sanitize access control fields.
  *
  * Access control values are stored as an array with a 'default' key (select value)
