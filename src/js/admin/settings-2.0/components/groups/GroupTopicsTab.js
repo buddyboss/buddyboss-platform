@@ -775,20 +775,68 @@ function GroupTopicModal( { isOpen, onClose, onSave, topic, isSaving, permission
 	 */
 	var renderTopicNameField = function () {
 		if ( 'only_from_activity_topics' === topicMode ) {
-			// Select-only mode: pick from global activity topics.
+			// Searchable select-only mode: pick from global activity topics.
+			var filteredSelectTopics = ( globalTopics || [] ).filter( function ( gt ) {
+				if ( ! searchText ) {
+					return true;
+				}
+				return gt.name.toLowerCase().indexOf( searchText.toLowerCase() ) !== -1;
+			} );
+
 			return (
-				<SelectControl
-					label={ __( 'Topic Name', 'buddyboss' ) }
-					value={ selectedSlug }
-					options={ selectOptions }
-					onChange={ function ( val ) {
-						setSelectedSlug( val );
-						if ( modalError ) {
-							setModalError( '' );
-						}
-					} }
-					__nextHasNoMarginBottom
-				/>
+				<div className="bb-topic-modal__searchable-select" ref={ dropdownRef }>
+					<label className="components-base-control__label">
+						{ __( 'Topic Name', 'buddyboss' ) }
+					</label>
+					<div className="bb-topic-modal__search-input-wrap">
+						<input
+							type="text"
+							className="bb-topic-modal__search-input components-text-control__input"
+							value={ searchText }
+							placeholder={ __( 'Select a topic', 'buddyboss' ) }
+							onChange={ function ( e ) {
+								var val = e.target.value;
+								setSearchText( val );
+								setSelectedSlug( '' );
+								setIsDropdownOpen( true );
+								if ( modalError ) {
+									setModalError( '' );
+								}
+							} }
+							onFocus={ function () {
+								setIsDropdownOpen( true );
+							} }
+						/>
+					</div>
+					{ isDropdownOpen && (
+						<ul className="bb-topic-modal__dropdown-list">
+							{ filteredSelectTopics.map( function ( gt ) {
+								return (
+									<li
+										key={ gt.topic_id }
+										className="bb-topic-modal__dropdown-item"
+										onMouseDown={ function ( e ) {
+											e.preventDefault();
+											setSearchText( gt.name );
+											setSelectedSlug( gt.slug );
+											setIsDropdownOpen( false );
+											if ( modalError ) {
+												setModalError( '' );
+											}
+										} }
+									>
+										{ gt.name }
+									</li>
+								);
+							} ) }
+							{ 0 === filteredSelectTopics.length && (
+								<li className="bb-topic-modal__dropdown-item bb-topic-modal__dropdown-item--empty">
+									{ __( 'No topics found', 'buddyboss' ) }
+								</li>
+							) }
+						</ul>
+					) }
+				</div>
 			);
 		}
 

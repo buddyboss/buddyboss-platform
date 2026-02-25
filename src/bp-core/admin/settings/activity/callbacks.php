@@ -254,9 +254,8 @@ function bb_activity_sanitize_post_type_feed( $value ) {
 /**
  * Sync blogs component activation after activity CPT feed settings are saved.
  *
- * The legacy save flow calls bb_cpt_feed_enabled_disabled() which reads $_POST
- * directly. Settings 2.0 saves options via bp_update_option() before this hook,
- * so we read saved option values instead.
+ * Uses the shared bb_sync_blogs_component_state() helper, reading saved option
+ * values instead of $_POST (Settings 2.0 saves options before this hook fires).
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -269,58 +268,12 @@ function bb_activity_sync_blogs_component_after_save( $feature_id, $settings, $s
 		return;
 	}
 
-	$bp                = buddypress();
-	$active_components = $bp->active_components;
-
-	// Flag for activate the blogs component only if any CPT OR blog posts have enabled the activity feed.
-	$is_blog_component_active = false;
-
-	// Temporarily remove LMS filters to get all feed post types.
-	if ( function_exists( 'bb_feed_not_allowed_tutorlms_post_types' ) ) {
-		remove_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_tutorlms_post_types' );
-	}
-
-	if ( function_exists( 'bb_feed_not_allowed_meprlms_post_types' ) ) {
-		remove_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_meprlms_post_types' );
-	}
-
-	$post_types = bb_feed_post_types();
-
-	if ( function_exists( 'bb_feed_not_allowed_tutorlms_post_types' ) ) {
-		add_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_tutorlms_post_types' );
-	}
-
-	if ( function_exists( 'bb_feed_not_allowed_meprlms_post_types' ) ) {
-		add_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_meprlms_post_types' );
-	}
-
-	foreach ( $post_types as $cpt ) {
-		$option_name      = bb_post_type_feed_option_name( $cpt );
-		$enable_blog_feed = apply_filters( 'bb_enable_blog_feed', (bool) bp_get_option( $option_name, false ), $cpt );
-
-		if ( $enable_blog_feed ) {
-			$is_blog_component_active = true;
-			break;
+	bb_sync_blogs_component_state(
+		function ( $cpt ) {
+			$option_name = bb_post_type_feed_option_name( $cpt );
+			return (bool) bp_get_option( $option_name, false );
 		}
-	}
-
-	// Add or remove blogs component from active components list.
-	if ( $is_blog_component_active ) {
-		$active_components['blogs'] = '1';
-	} else {
-		unset( $active_components['blogs'] );
-	}
-
-	// Save settings and upgrade schema.
-	require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-	require_once $bp->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php';
-
-	$bp->active_components = $active_components;
-	bp_core_install( $bp->active_components );
-
-	// Mapping the component pages in page settings except registration pages.
-	bp_core_add_page_mappings( $bp->active_components, 'keep', false );
-	bp_update_option( 'bp-active-components', $bp->active_components );
+	);
 }
 
 add_action( 'bb_admin_save_feature_settings_after', 'bb_activity_sync_blogs_component_after_save', 10, 3 );

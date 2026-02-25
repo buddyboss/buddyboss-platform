@@ -620,6 +620,12 @@ function bb_redirect_legacy_settings_to_settings_2() {
 		exit;
 	}
 
+	// Redirect legacy Groups admin page (admin.php?page=bp-groups).
+	if ( 'bp-groups' === $page ) {
+		wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=groups&panel=all_groups' ) );
+		exit;
+	}
+
 	// Check if we're on the old settings page.
 	if ( 'bp-settings' !== $page || empty( $tab ) ) {
 		return;

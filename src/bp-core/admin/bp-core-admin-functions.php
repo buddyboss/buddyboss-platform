@@ -2833,73 +2833,8 @@ function bp_set_emails_platform_tab_submenu_active( $parent_file ) {
 	return $parent_file;
 }
 
-/**
- * Output the tabs in the admin area.
- *
- * @since BuddyBoss 1.0.0
- *
- * @param string $active_tab Name of the tab that is active. Optional.
- */
-function bp_core_admin_groups_tabs( $active_tab = '' ) {
-
-	$tabs_html    = '';
-	$idle_class   = 'nav-tab';
-	$active_class = 'nav-tab nav-tab-active';
-
-	/**
-	 * Filters the admin tabs to be displayed.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 *
-	 * @param array $value Array of tabs to output to the admin area.
-	 */
-	$tabs = apply_filters( 'bp_core_admin_groups_tabs', bp_core_get_groups_admin_tabs( $active_tab ) );
-
-	// Loop through tabs and build navigation.
-	foreach ( array_values( $tabs ) as $tab_data ) {
-		$is_current = (bool) ( $tab_data['name'] == $active_tab );
-		$tab_class  = $is_current ? $tab_data['class'] . ' ' . $active_class : $tab_data['class'] . ' ' . $idle_class;
-		$tabs_html .= '<a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a>';
-	}
-
-	echo wp_kses_post( $tabs_html );
-
-	/**
-	 * Fires after the output of tabs for the admin area.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 */
-	do_action( 'bp_admin_groups_tabs' );
-}
-
-/**
- * Register tabs for the BuddyBoss > Groups screens.
- *
- * @since BuddyBoss 1.0.0
- *
- * @param string $active_tab
- *
- * @return array
- */
-function bp_core_get_groups_admin_tabs( $active_tab = '' ) {
-
-	$tabs = array();
-
-	$tabs[] = array(
-		'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-groups' ), 'admin.php' ) ),
-		'name'  => __( 'All Groups', 'buddyboss' ),
-		'class' => 'bp-all-groups',
-	);
-
-	/**
-	 * Filters the tab data used in our wp-admin screens.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 *
-	 * @param array $tabs Tab data.
-	 */
-	return apply_filters( 'bp_core_get_groups_admin_tabs', $tabs );
-}
+// Functions bp_core_admin_groups_tabs() and bp_core_get_groups_admin_tabs()
+// moved to bp-core/deprecated/buddyboss/3.0.0.php
 
 /**
  * Output the tabs in the admin area.
@@ -3712,58 +3647,13 @@ function bb_member_type_redirection_metabox( $post ) {
  * @return void
  */
 function bb_cpt_feed_enabled_disabled() {
-	$bp                = buddypress();
-	$active_components = $bp->active_components;
-
-	// Flag for activate the blogs component only if any CPT OR blog posts have enabled the activity feed.
-	$is_blog_component_active = false;
-
-	// Get all active custom post type.
-	if ( function_exists( 'bb_feed_not_allowed_tutorlms_post_types' ) ) {
-		remove_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_tutorlms_post_types' );
-	}
-
-	if ( function_exists( 'bb_feed_not_allowed_meprlms_post_types' ) ) {
-		remove_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_meprlms_post_types' );
-	}
-
-	$post_types = bb_feed_post_types();
-
-	if ( function_exists( 'bb_feed_not_allowed_tutorlms_post_types' ) ) {
-		add_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_tutorlms_post_types' );
-	}
-
-	if ( function_exists( 'bb_feed_not_allowed_meprlms_post_types' ) ) {
-		add_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_meprlms_post_types' );
-	}
-
-	foreach ( $post_types as $cpt ) {
-		$enable_blog_feeds = apply_filters( 'bb_enable_blog_feed', isset( $_POST["bp-feed-custom-post-type-$cpt"] ), $cpt );
-
-		if ( $enable_blog_feeds ) {
-			$is_blog_component_active = true;
+	bb_sync_blogs_component_state(
+		function ( $cpt ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified in the settings save handler.
+			return isset( $_POST[ "bp-feed-custom-post-type-$cpt" ] );
 		}
-	}
-
-	// Add blogs component to $active_components list.
-	if ( $is_blog_component_active ) {
-		$active_components['blogs'] = '1';
-	} else {
-		unset( $active_components['blogs'] );
-	}
-
-	// Save settings and upgrade schema.
-	require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-	require_once $bp->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php';
-
-	$bp->active_components = $active_components;
-	bp_core_install( $bp->active_components );
-
-	// Mapping the component pages in page settings except registration pages.
-	bp_core_add_page_mappings( $bp->active_components, 'keep', false );
-	bp_update_option( 'bp-active-components', $bp->active_components );
+	);
 }
-
 
 /**
  * Register the BuddyBoss Upgrade submenu page.
@@ -4011,4 +3901,78 @@ function bb_admin_settings_get_pro_notice( $type = 'default' ) {
 	$retval[ $type ] = $data;
 
 	return $data;
+}
+
+/**
+ * Sync blogs component activation based on CPT feed status.
+ *
+ * Checks all feed post types via the provided callback, then activates or
+ * deactivates the blogs component accordingly. Installs the blog tracking
+ * table when activating, and updates active components option when state changes.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param callable $is_feed_enabled_cb Callback that receives a post type slug and
+ *                                     returns bool whether its feed is enabled.
+ */
+function bb_sync_blogs_component_state( $is_feed_enabled_cb ) {
+	$bp                = buddypress();
+	$active_components = $bp->active_components;
+
+	// Flag for activate the blogs component only if any CPT OR blog posts have enabled the activity feed.
+	$is_blog_component_active = false;
+
+	// Temporarily remove LMS filters to get all feed post types.
+	if ( function_exists( 'bb_feed_not_allowed_tutorlms_post_types' ) ) {
+		remove_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_tutorlms_post_types' );
+	}
+
+	if ( function_exists( 'bb_feed_not_allowed_meprlms_post_types' ) ) {
+		remove_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_meprlms_post_types' );
+	}
+
+	$post_types = bb_feed_post_types();
+
+	if ( function_exists( 'bb_feed_not_allowed_tutorlms_post_types' ) ) {
+		add_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_tutorlms_post_types' );
+	}
+
+	if ( function_exists( 'bb_feed_not_allowed_meprlms_post_types' ) ) {
+		add_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_meprlms_post_types' );
+	}
+
+	foreach ( $post_types as $cpt ) {
+		$enable_blog_feed = apply_filters( 'bb_enable_blog_feed', (bool) call_user_func( $is_feed_enabled_cb, $cpt ), $cpt );
+
+		if ( $enable_blog_feed ) {
+			$is_blog_component_active = true;
+			break;
+		}
+	}
+
+	// Add or remove blogs component from active components list.
+	$was_blogs_active = isset( $active_components['blogs'] );
+
+	if ( $is_blog_component_active ) {
+		$active_components['blogs'] = '1';
+	} else {
+		unset( $active_components['blogs'] );
+	}
+
+	$is_blogs_active = isset( $active_components['blogs'] );
+
+	// Only update if the blogs component state actually changed.
+	if ( $was_blogs_active !== $is_blogs_active ) {
+		$bp->active_components = $active_components;
+
+		// Install only the blog tracking table — not the entire BP schema.
+		if ( $is_blogs_active ) {
+			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+			require_once $bp->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php';
+			bp_core_install_blog_tracking();
+		}
+
+		bp_core_add_page_mappings( $bp->active_components, 'keep', false );
+		bp_update_option( 'bp-active-components', $bp->active_components );
+	}
 }
