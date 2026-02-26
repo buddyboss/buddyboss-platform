@@ -11,6 +11,7 @@
 import { useState, useRef, useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { BB_EVENTS } from '../../utils/constants';
+import { invalidateFeatureCache } from '../../utils/featureCache';
 
 /**
  * Input Button Field Component
@@ -90,6 +91,9 @@ export function InputButtonField( { field, value, onChange, disabled } ) {
 					var data = result.data;
 					setConnected( data.is_connected );
 					setButtonLabel( data.button_label );
+
+					// Invalidate feature cache so navigating away and back fetches fresh data.
+					invalidateFeatureCache();
 
 					if ( ! data.is_connected ) {
 						// Disconnected: clear the input value.
