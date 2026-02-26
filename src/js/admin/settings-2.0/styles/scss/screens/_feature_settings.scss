@@ -253,11 +253,15 @@
         color: $bb-text-tertiary-color;
         font-size: 13px;
         font-weight: 400;
-        font-style: italic;
         line-height: 1.5;
         margin: 10px 0 0 0;
         opacity: 0.8;
         width: 100%;
+
+        a {
+            color: $bb-link-color;
+            text-decoration: none;
+        }
     }
 
     // Grouped fields: remove border/spacing between consecutive fields in same group.
