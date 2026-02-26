@@ -5,6 +5,10 @@
  * optional sub-type dropdown (for grouped types like Membership/GamiPress),
  * toggle switches per role/type, and an info notice.
  *
+ * Supports threaded mode (field.threaded = true) where each toggled option
+ * has nested sub-controls: All/Specific radio + specific-type checkboxes.
+ * Used by Connection Access (Members) and Message Access (Messages).
+ *
  * Pro populates the data via PHP filters; Platform renders the UI.
  * JS `wp.hooks` filters are provided for extensibility.
  *
@@ -19,6 +23,49 @@ import { decodeEntities } from '@wordpress/html-entities';
 import { ajaxFetch } from '../../utils/ajax';
 
 /**
+ * Initialize per-option settings from saved value and server data.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Array}  selectedOpts       Currently selected option keys.
+ * @param {Object} serverPerOption    Per-option settings from PHP (access_control_data.per_option_settings).
+ * @param {Object} savedValue         Full saved value object.
+ * @return {Object} Per-option settings keyed by option ID.
+ */
+function initPerOptionSettings( selectedOpts, serverPerOption, savedValue ) {
+	var settings = {};
+
+	if ( ! selectedOpts || ! selectedOpts.length ) {
+		return settings;
+	}
+
+	for ( var i = 0; i < selectedOpts.length; i++ ) {
+		var optKey  = String( selectedOpts[ i ] );
+		var subKey  = 'access-control-' + optKey + '-options';
+		var subData = null;
+
+		// Try server-provided per_option_settings first.
+		if ( serverPerOption && serverPerOption[ optKey ] ) {
+			subData = serverPerOption[ optKey ];
+		}
+		// Fallback to saved value sub-keys.
+		else if ( savedValue && savedValue[ subKey ] ) {
+			subData = savedValue[ subKey ];
+		}
+
+		if ( subData && Array.isArray( subData ) && subData.indexOf( 'all' ) !== -1 ) {
+			settings[ optKey ] = { mode: 'all', specific: [] };
+		} else if ( subData && Array.isArray( subData ) ) {
+			settings[ optKey ] = { mode: 'specific', specific: subData.map( String ) };
+		} else {
+			settings[ optKey ] = { mode: 'all', specific: [] };
+		}
+	}
+
+	return settings;
+}
+
+/**
  * AccessControlField component.
  *
  * @param {Object}   props          Component props.
@@ -28,8 +75,9 @@ import { ajaxFetch } from '../../utils/ajax';
  * @return {JSX.Element} Access control field.
  */
 export function AccessControlField( { field, value, onChange } ) {
-	var data  = field.access_control_data || {};
-	var types = wp.hooks.applyFilters( 'bb.accessControl.types', data.types || [], field );
+	var data       = field.access_control_data || {};
+	var types      = wp.hooks.applyFilters( 'bb.accessControl.types', data.types || [], field );
+	var isThreaded = !! field.threaded;
 
 	// State.
 	var [ selectedType, setSelectedType ]         = useState( value?.[ 'access-control-type' ] || data.current_type || '' );
@@ -46,6 +94,15 @@ export function AccessControlField( { field, value, onChange } ) {
 	var [ fetchError, setFetchError ]             = useState( '' );
 	var abortRef                                  = useRef( null );
 
+	// Threaded mode: per-option sub-settings (mode: 'all'|'specific', specific: []).
+	var [ perOptionSettings, setPerOptionSettings ] = useState( function() {
+		if ( ! isThreaded ) {
+			return {};
+		}
+		var savedOpts = value?.[ 'access-control-options' ] || [];
+		return initPerOptionSettings( savedOpts, data.per_option_settings, value );
+	} );
+
 	/**
 	 * Get the type config for the currently selected type.
 	 *
@@ -61,14 +118,15 @@ export function AccessControlField( { field, value, onChange } ) {
 	};
 
 	/**
-	 * Build the saved value object including sub-type key if applicable.
+	 * Build the saved value object including sub-type key and per-option sub-keys.
 	 *
 	 * @param {string} type       Main type key.
 	 * @param {string} subType    Sub-type key (empty for direct types).
 	 * @param {Array}  opts       Selected toggle options.
+	 * @param {Object} perOpts    Per-option settings (threaded mode only).
 	 * @return {Object} Value to save.
 	 */
-	var buildValue = function( type, subType, opts ) {
+	var buildValue = function( type, subType, opts, perOpts ) {
 		var val = {
 			'access-control-type': type,
 			'access-control-options': opts,
@@ -87,6 +145,19 @@ export function AccessControlField( { field, value, onChange } ) {
 			val[ typeConfig.sub_types.key ] = subType || '';
 		}
 
+		// Threaded mode: include per-option sub-keys.
+		if ( isThreaded && perOpts ) {
+			for ( var j = 0; j < opts.length; j++ ) {
+				var optKey = opts[ j ];
+				var subSettings = perOpts[ optKey ];
+				if ( subSettings ) {
+					val[ 'access-control-' + optKey + '-options' ] = 'all' === subSettings.mode
+						? [ 'all' ]
+						: subSettings.specific;
+				}
+			}
+		}
+
 		return val;
 	};
 
@@ -102,6 +173,7 @@ export function AccessControlField( { field, value, onChange } ) {
 		setSelectedType( newType );
 		setSelectedSubType( '' );
 		setSelectedOptions( [] );
+		setPerOptionSettings( {} );
 
 		// Reset to placeholder — save to clear the setting.
 		if ( ! newType ) {
@@ -165,6 +237,7 @@ export function AccessControlField( { field, value, onChange } ) {
 	var handleSubTypeChange = function( newSubType ) {
 		setSelectedSubType( newSubType );
 		setSelectedOptions( [] );
+		setPerOptionSettings( {} );
 
 		var typeConfig = getSelectedTypeConfig();
 
@@ -214,7 +287,60 @@ export function AccessControlField( { field, value, onChange } ) {
 
 		setSelectedOptions( updated );
 
-		onChange( buildValue( selectedType, selectedSubType, updated ) );
+		// Threaded mode: initialize or remove per-option settings.
+		var updatedPerOpts = Object.assign( {}, perOptionSettings );
+		if ( isThreaded ) {
+			if ( checked ) {
+				updatedPerOpts[ optionKey ] = { mode: 'all', specific: [] };
+			} else {
+				delete updatedPerOpts[ optionKey ];
+			}
+			setPerOptionSettings( updatedPerOpts );
+		}
+
+		onChange( buildValue( selectedType, selectedSubType, updated, updatedPerOpts ) );
+	};
+
+	/**
+	 * Handle mode change (All/Specific) for a threaded option.
+	 *
+	 * @param {string} optionKey The option key.
+	 * @param {string} newMode   'all' or 'specific'.
+	 */
+	var handleModeChange = function( optionKey, newMode ) {
+		var updatedPerOpts = Object.assign( {}, perOptionSettings );
+		updatedPerOpts[ optionKey ] = {
+			mode: newMode,
+			specific: 'all' === newMode ? [] : ( updatedPerOpts[ optionKey ]?.specific || [] ),
+		};
+		setPerOptionSettings( updatedPerOpts );
+		onChange( buildValue( selectedType, selectedSubType, selectedOptions, updatedPerOpts ) );
+	};
+
+	/**
+	 * Handle specific checkbox change for a threaded option.
+	 *
+	 * @param {string}  optionKey      The parent option key.
+	 * @param {string}  specificKey    The specific option being toggled.
+	 * @param {boolean} checked        Whether checked.
+	 */
+	var handleSpecificChange = function( optionKey, specificKey, checked ) {
+		var updatedPerOpts = Object.assign( {}, perOptionSettings );
+		var current        = updatedPerOpts[ optionKey ]?.specific || [];
+		var updatedSpecific;
+
+		if ( checked ) {
+			updatedSpecific = current.concat( [ specificKey ] );
+		} else {
+			updatedSpecific = current.filter( function( k ) { return k !== specificKey; } );
+		}
+
+		updatedPerOpts[ optionKey ] = {
+			mode: 'specific',
+			specific: updatedSpecific,
+		};
+		setPerOptionSettings( updatedPerOpts );
+		onChange( buildValue( selectedType, selectedSubType, selectedOptions, updatedPerOpts ) );
 	};
 
 	// Get current type config for rendering sub-type dropdown.
@@ -226,6 +352,75 @@ export function AccessControlField( { field, value, onChange } ) {
 	if ( hasSubTypes ) {
 		showNoOptions = ! loading && selectedSubType && options.length === 0;
 	}
+
+	/**
+	 * Render threaded sub-controls for a toggled option.
+	 *
+	 * @param {Object} opt       The option object (label, value).
+	 * @param {string} optKey    The option key (stringified value).
+	 * @return {JSX.Element|null} Sub-controls or null if not enabled.
+	 */
+	var renderThreadedSubControls = function( opt, optKey ) {
+		if ( ! isThreaded || selectedOptions.indexOf( optKey ) === -1 ) {
+			return null;
+		}
+
+		var subSettings = perOptionSettings[ optKey ] || { mode: 'all', specific: [] };
+		var subLabel    = field.threaded_sub_label || '';
+
+		return (
+			<div className="bb-access-control-field__threaded-sub">
+				{ subLabel && (
+					<span className="bb-access-control-field__threaded-sub-label">
+						{ decodeEntities( subLabel ) }
+					</span>
+				) }
+				<div className="bb-access-control-field__threaded-radio">
+					<label className="bb-access-control-field__threaded-radio-option">
+						<input
+							type="radio"
+							name={ 'ac-mode-' + field.name + '-' + optKey }
+							value="all"
+							checked={ 'all' === subSettings.mode }
+							onChange={ function() { handleModeChange( optKey, 'all' ); } }
+						/>
+						{ __( 'All', 'buddyboss' ) }
+					</label>
+					<label className="bb-access-control-field__threaded-radio-option">
+						<input
+							type="radio"
+							name={ 'ac-mode-' + field.name + '-' + optKey }
+							value="specific"
+							checked={ 'specific' === subSettings.mode }
+							onChange={ function() { handleModeChange( optKey, 'specific' ); } }
+						/>
+						{ __( 'Specific', 'buddyboss' ) }
+					</label>
+				</div>
+				{ 'specific' === subSettings.mode && (
+					<div className="bb-access-control-field__threaded-checkboxes">
+						{ options.filter( function( o ) {
+							return String( o.value ) !== optKey;
+						} ).map( function( o ) {
+							var specKey = String( o.value );
+							return (
+								<label key={ specKey } className="bb-access-control-field__threaded-checkbox">
+									<input
+										type="checkbox"
+										checked={ subSettings.specific.indexOf( specKey ) !== -1 }
+										onChange={ function( e ) {
+											handleSpecificChange( optKey, specKey, e.target.checked );
+										} }
+									/>
+									{ decodeEntities( o.label ) }
+								</label>
+							);
+						} ) }
+					</div>
+				) }
+			</div>
+		);
+	};
 
 	return (
 		<div className="bb-access-control-field">
@@ -274,18 +469,20 @@ export function AccessControlField( { field, value, onChange } ) {
 				</p>
 			) }
 			{ ! loading && options.length > 0 && (
-				<div className="bb-access-control-field__toggle-list">
+				<div className={ 'bb-access-control-field__toggle-list' + ( isThreaded ? ' bb-access-control-field__toggle-list--threaded' : '' ) }>
 					{ options.map( function( opt ) {
+						var optKey = String( opt.value );
 						return (
-							<div key={ opt.value } className="bb-access-control-field__toggle-item">
+							<div key={ optKey } className={ 'bb-access-control-field__toggle-item' + ( isThreaded && selectedOptions.indexOf( optKey ) !== -1 ? ' bb-access-control-field__toggle-item--active' : '' ) }>
 								<ToggleControl
 									label={ decodeEntities( opt.label ) }
-									checked={ selectedOptions.indexOf( String( opt.value ) ) !== -1 }
+									checked={ selectedOptions.indexOf( optKey ) !== -1 }
 									onChange={ function( checked ) {
-										handleToggle( String( opt.value ), checked );
+										handleToggle( optKey, checked );
 									} }
 									__nextHasNoMarginBottom
 								/>
+								{ renderThreadedSubControls( opt, optKey ) }
 							</div>
 						);
 					} ) }

@@ -82,6 +82,11 @@ function bb_members_register_profile_types_panel_fields() {
 		),
 	);
 
+	// Prime post caches to avoid N+1 get_post_meta() calls in the loop.
+	if ( ! empty( $member_types ) ) {
+		_prime_post_caches( $member_types, false, true );
+	}
+
 	foreach ( $member_types as $member_type_id ) {
 		$type_name        = bp_get_member_type_key( $member_type_id );
 		$member_type_name = get_post_meta( $member_type_id, '_bp_member_type_label_name', true );

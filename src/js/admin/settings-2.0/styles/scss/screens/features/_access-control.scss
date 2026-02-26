@@ -39,6 +39,79 @@
 		}
 	}
 
+	// Threaded mode: toggle list modifier.
+	&__toggle-list--threaded {
+
+		.bb-access-control-field__toggle-item {
+			padding: 12px 0;
+		}
+	}
+
+	// Active toggle item in threaded mode (expanded with sub-controls).
+	&__toggle-item--active {
+		padding-bottom: 16px;
+	}
+
+	// Threaded sub-controls wrapper (below each toggled option).
+	&__threaded-sub {
+		margin-top: 8px;
+		margin-left: 48px;
+		padding: 12px 16px;
+		background-color: $bb-background-primary-color;
+		border: 1px solid $bb-border-primary-color;
+		border-radius: $bb-border-radius-lg;
+	}
+
+	// Sub-label text (e.g., "can send connection request to").
+	&__threaded-sub-label {
+		display: block;
+		font-size: 13px;
+		color: $bb-text-tertiary-color;
+		margin-bottom: 8px;
+	}
+
+	// All/Specific radio group.
+	&__threaded-radio {
+		display: flex;
+		gap: 16px;
+		margin-bottom: 8px;
+	}
+
+	&__threaded-radio-option {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		font-size: 13px;
+		color: $bb-text-color;
+		cursor: pointer;
+
+		input[type="radio"] {
+			margin: 0;
+		}
+	}
+
+	// Specific checkboxes list.
+	&__threaded-checkboxes {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		padding-top: 8px;
+		padding-left: 4px;
+	}
+
+	&__threaded-checkbox {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		font-size: 13px;
+		color: $bb-text-color;
+		cursor: pointer;
+
+		input[type="checkbox"] {
+			margin: 0;
+		}
+	}
+
 	// Info notice bar.
 	&__notice {
 		display: flex;

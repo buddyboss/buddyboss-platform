@@ -60,6 +60,7 @@ function bb_admin_settings_register_members_feature() {
 	require_once __DIR__ . '/settings/members/settings-profile-headers.php';
 	require_once __DIR__ . '/settings/members/settings-member-directory.php';
 	require_once __DIR__ . '/settings/members/settings-member-connection.php';
+	require_once __DIR__ . '/settings/members/settings-access-control.php';
 	require_once __DIR__ . '/settings/members/settings-profile-types.php';
 	require_once __DIR__ . '/settings/members/settings-profile-search.php';
 
@@ -280,6 +281,9 @@ function bb_admin_settings_register_members_feature() {
 	// Panel 5: Member Connection.
 	if ( bp_is_active( 'friends' ) ) {
 		bb_members_register_member_connection_panel_fields();
+
+		// Access Controls (Connection Access) — follows same pattern as Groups/Activity.
+		bb_members_register_access_control_fields();
 	}
 
 	// Panel 7: Profile Types.
