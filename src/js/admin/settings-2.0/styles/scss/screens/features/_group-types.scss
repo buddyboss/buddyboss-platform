@@ -633,3 +633,21 @@
 		z-index: 1;
 	}
 }
+
+#section-group_navigation_order {
+
+	.bb-admin-settings-form__field--no-label .bb-admin-settings-form__field-content {
+		margin-left: 0;
+	}
+
+	.bb-admin-settings-field__checkbox-list-item:first-child {
+		padding-top: 0;
+	}
+
+	.bb-admin-settings-field__checkbox-list {
+
+		.components-form-toggle {
+			order: 2;
+		}
+	}
+}
