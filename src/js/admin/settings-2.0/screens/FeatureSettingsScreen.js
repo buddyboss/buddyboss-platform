@@ -25,6 +25,7 @@ import { sanitizeHtml, safeUrl } from '../utils/sanitize';
 const ActivityListScreen = lazy(() => import('./ActivityListScreen'));
 const GroupsListScreen = lazy(() => import('./GroupsListScreen'));
 const GroupTypeScreen = lazy(() => import('./GroupTypeScreen'));
+const ProfileTypeScreen = lazy(() => import('./ProfileTypeScreen'));
 
 /**
  * Map of feature + panel combinations that render custom screens instead of settings forms.
@@ -33,6 +34,7 @@ const CUSTOM_PANEL_SCREENS = {
 	'activity:all_activities': ActivityListScreen,
 	'groups:all_groups': GroupsListScreen,
 	'groups:group_types': GroupTypeScreen,
+	'members:profile_types': ProfileTypeScreen,
 };
 
 
@@ -383,7 +385,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 					{/* Custom Panel Screen (e.g., All Activities, All Groups) */}
 					{CustomScreen ? (
 						<Suspense fallback={<div className="bb-admin-loading"><Spinner /></div>}>
-							<CustomScreen onNavigate={onNavigate} helpUrl={activePanel ? activePanel.help_url : ''} onHelpClick={handleHelpClick} />
+							<CustomScreen onNavigate={onNavigate} helpUrl={activePanel ? activePanel.help_url : ''} onHelpClick={handleHelpClick} feature={feature} settings={settings} activePanelId={activePanelId} />
 						</Suspense>
 					) : (
 					<>

@@ -325,6 +325,54 @@ export function updateGroupMember(data) {
 }
 
 /**
+ * Get all member/profile types.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return {Promise} Promise resolving to member types array.
+ */
+export function getMemberTypes() {
+	return ajaxFetch('bb_admin_get_member_types');
+}
+
+/**
+ * Create a new member/profile type.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data - Member type data.
+ * @return {Promise} Promise resolving to response.
+ */
+export function createMemberType(data) {
+	return ajaxFetch('bb_admin_create_member_type', data);
+}
+
+/**
+ * Update an existing member/profile type.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {number} typeId - Member type post ID.
+ * @param {Object} data   - Member type data.
+ * @return {Promise} Promise resolving to response.
+ */
+export function updateMemberType(typeId, data) {
+	return ajaxFetch('bb_admin_update_member_type', Object.assign({}, data, { type_id: typeId }));
+}
+
+/**
+ * Delete a member/profile type.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {number} typeId - Member type post ID.
+ * @return {Promise} Promise resolving to response.
+ */
+export function deleteMemberType(typeId) {
+	return ajaxFetch('bb_admin_delete_member_type', { type_id: typeId });
+}
+
+/**
  * Get topics for a group.
  *
  * @since BuddyBoss [BBVERSION]

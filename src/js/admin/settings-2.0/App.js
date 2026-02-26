@@ -42,6 +42,7 @@ function fixAdminMenuHighlight( route ) {
 	var listingPanels = {
 		groups: [ 'all_groups', 'group_types', 'group_navigation' ],
 		activity: [ 'all_activities' ],
+		members: [ 'profile_types' ],
 	};
 
 	var isListing = false;

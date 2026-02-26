@@ -908,6 +908,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			);
 
 			// Enqueue only post_type is member type and group type.
+			// @todo: Remove bp-member-type check after testing done in platform. Replaced by Settings 2.0 ProfileTypeModal.
 			if (
 				0 === strpos( get_current_screen()->id, 'bp-group-type' ) ||
 				0 === strpos( get_current_screen()->id, 'bp-member-type' )

@@ -1735,6 +1735,8 @@ add_filter( 'admin_body_class', 'bp_core_admin_body_classes' );
  * Custom metaboxes used by our 'bp-member-type' post type.
  *
  * @since BuddyBoss 1.0.0
+ *
+ * @todo Remove after testing done in platform. Replaced by Settings 2.0 ProfileTypeModal.
  */
 function bp_member_type_custom_metaboxes() {
 	$screen = get_current_screen();
@@ -1756,6 +1758,8 @@ add_action( 'add_meta_boxes_' . bp_get_member_type_post_type(), 'bp_member_type_
  * Generate profile type Label Meta box.
  *
  * @since BuddyBoss 1.0.0
+ *
+ * @todo Remove after testing done in platform. Replaced by Settings 2.0 ProfileTypeModal.
  *
  * @param WP_Post $post
  */
@@ -1808,6 +1812,8 @@ function bp_member_type_labels_metabox( $post ) {
  * Generate Profile Type Permissions Meta box.
  *
  * @since BuddyBoss 1.0.0
+ *
+ * @todo Remove after testing done in platform. Replaced by Settings 2.0 ProfileTypeModal.
  *
  * @param WP_Post $post
  */
@@ -2146,6 +2152,8 @@ function bp_member_type_permissions_metabox( $post ) {
  *
  * @since BuddyBoss 1.0.0
  *
+ * @todo Remove after testing done in platform. Replaced by Settings 2.0 ProfileTypeModal.
+ *
  * @param WP_Post $post
  */
 function bp_profile_shortcode_metabox( $post ) {
@@ -2166,6 +2174,8 @@ function bp_profile_shortcode_metabox( $post ) {
  * Generate profile type WP Role Meta box
  *
  * @since BuddyBoss 1.0.0
+ *
+ * @todo Remove after testing done in platform. Replaced by Settings 2.0 ProfileTypeModal.
  *
  * @param WP_Post $post
  */
@@ -2224,6 +2234,8 @@ function bp_member_type_wprole_metabox( $post ) {
  * Save profile type post data.
  *
  * @since BuddyBoss 1.0.0
+ *
+ * @todo Remove after testing done in platform. Replaced by BB_Admin_Member_Types_Ajax::bb_save_member_type_meta().
  *
  * @param $post_id
  */
@@ -3475,6 +3487,8 @@ function bb_disable_multiple_select_situation() {
  *
  * @since BuddyBoss 2.0.0
  *
+ * @todo Remove after testing done in platform. Replaced by Settings 2.0 ProfileTypeModal.
+ *
  * @param $post Post data object.
  */
 function bb_member_type_labelcolor_metabox( $post ) {
@@ -3519,6 +3533,8 @@ function bb_member_type_labelcolor_metabox( $post ) {
  * Added new meta box for member types redirection settings.
  *
  * @since BuddyBoss 2.4.70
+ *
+ * @todo Remove after testing done in platform. Replaced by Settings 2.0 ProfileTypeModal.
  *
  * @param Object $post Post data object.
  */

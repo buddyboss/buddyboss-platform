@@ -3923,6 +3923,8 @@ function bp_member_type_shortcode_callback( $atts ) {
 /**
  * Adds the JS on profile type post type.
  *
+ * @todo Remove after testing done in platform. Replaced by Settings 2.0 ProfileTypeScreen.
+ *
  * @since BuddyBoss 1.0.0
  */
 function bp_member_type_changing_listing_label() {
