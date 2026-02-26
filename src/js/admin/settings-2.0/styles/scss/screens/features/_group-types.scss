@@ -15,7 +15,6 @@
 		background: $bb-background-base-color;
 		border: 1px solid $bb-border-primary-color;
 		border-radius: $bb-border-radius-xl;
-		overflow: hidden;
 	}
 
 	&__card-header {
@@ -35,7 +34,7 @@
 	}
 
 	&__card-body {
-		padding: 16px 24px;
+		padding: 32px 24px 8px;
 	}
 
 	&__add-btn {
@@ -52,6 +51,12 @@
 		cursor: pointer;
 		white-space: nowrap;
 		transition: opacity 0.2s ease;
+
+		i {
+			font-size: 16px;
+			font-weight: 700;
+			margin-right: 6px;
+		}
 
 		&:hover {
 			opacity: 0.9;
@@ -105,15 +110,21 @@
 		list-style: none;
 		margin: 0;
 		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
 	}
 
 	&__list-item {
 		display: flex;
 		align-items: center;
-		padding: 16px 0;
+		gap: 32px;
+		min-height: 48px;
+		padding: 0 0 16px;
+		border-bottom: 0.5px solid $bb-border-secondary-color;
 
-		&:not(:last-child) {
-			border-bottom: 1px solid $bb-border-primary-color;
+		&:last-child {
+			border-bottom: 0;
 		}
 	}
 
@@ -121,8 +132,8 @@
 	&__list-item-name-col {
 		display: flex;
 		align-items: center;
-		gap: 10px;
-		width: 30%;
+		gap: 8px;
+		width: 264px;
 		flex-shrink: 0;
 		min-width: 0;
 	}
@@ -135,34 +146,40 @@
 	&__list-item-count-col {
 		display: flex;
 		align-items: center;
-		gap: 6px;
-		width: 140px;
+		gap: 8px;
+		width: 152px;
 		flex-shrink: 0;
 	}
 
 	&__list-item-visibility-col {
-		width: 120px;
+		width: 152px;
 		flex-shrink: 0;
 	}
 
 	&__list-item-actions-col {
-		width: 40px;
 		flex-shrink: 0;
 		display: flex;
 		justify-content: flex-end;
 	}
 
 	&__list-item-icon {
-		font-size: 18px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 32px;
+		height: 32px;
+		font-size: 20px;
 		color: $bb-icon-tertiary-color;
+		background: $bb-background-primary-color;
+		border-radius: $bb-border-radius-full;
 		flex-shrink: 0;
 	}
 
 	&__list-item-name {
-		font-size: 13px;
+		font-size: 14px;
 		font-weight: 500;
 		color: $bb-text-color;
-		line-height: 1.4;
+		line-height: 20px;
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
@@ -171,14 +188,14 @@
 	&__list-item-badge {
 		display: inline-flex;
 		align-items: center;
-		padding: 2px 8px;
+		padding: 4px 8px;
 		font-size: 11px;
 		font-weight: 500;
-		color: $bb-text-tertiary-color;
-		background: $bb-background-primary-color;
-		border: 1px solid $bb-border-primary-color;
+		color: $bb-text-color;
+		background: $bb-background-secondary-color;
+		border: 0.5px solid $bb-border-tertiary-color;
 		border-radius: $bb-border-radius-full;
-		line-height: 1.4;
+		line-height: 16px;
 		white-space: nowrap;
 		max-width: 100%;
 		overflow: hidden;
@@ -193,7 +210,7 @@
 
 	&__list-item-count {
 		font-size: 13px;
-		color: $bb-background-brand-primary-color;
+		color: $bb-link-color;
 		white-space: nowrap;
 	}
 
@@ -202,22 +219,22 @@
 		display: inline-flex;
 		align-items: center;
 		gap: 4px;
-		padding: 2px 10px;
-		font-size: 12px;
-		font-weight: 500;
-		color: $bb-text-tertiary-color;
-		background: $bb-background-primary-color;
-		border: 1px solid $bb-border-primary-color;
+		padding: 2px 4px;
+		font-size: 11px;
+		font-weight: 400;
+		color: $bb-text-color;
+		background: $bb-background-secondary-color;
+		border: 0.5px solid $bb-border-tertiary-color;
 		border-radius: $bb-border-radius-full;
-		line-height: 1.4;
+		line-height: 16px;
 		white-space: nowrap;
 
 		.bb-icons-rl {
-			font-size: 13px;
+			font-size: 12px;
 		}
 
 		&--private {
-			color: $bb-text-tertiary-color;
+			color: $bb-text-color;
 		}
 	}
 
@@ -230,14 +247,14 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		width: 28px;
-		height: 28px;
+		width: 32px;
+		height: 32px;
 		background: none;
 		border: none;
 		border-radius: $bb-border-radius-md;
 		cursor: pointer;
-		color: $bb-icon-tertiary-color;
-		font-size: 18px;
+		color: $bb-icon-secondary-color;
+		font-size: 24px;
 
 		&:hover {
 			background: $bb-background-primary-color;
@@ -255,6 +272,7 @@
 		box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.12);
 		z-index: 100;
 		padding: 4px 0;
+		width: 180px;
 	}
 
 	&__menu-item {
@@ -262,8 +280,9 @@
 		width: 100%;
 		padding: 8px 16px;
 		font-size: 13px;
-		font-weight: 400;
-		color: $bb-text-color;
+		font-weight: 500;
+		line-height: 18px;
+		color: $bb-text-tertiary-color;
 		background: none;
 		border: none;
 		cursor: pointer;
@@ -274,12 +293,13 @@
 			background: $bb-background-primary-hover-color;
 		}
 
-		&--danger {
-			color: $bb-error-color;
-
-			&:hover {
-				background: rgba($bb-error-color, 0.05);
-			}
+		[class*="bb-icons-"] {
+			color: $bb-icon-tertiary-color;
+			font-size: 20px !important;
+			line-height: 1;
+			font-weight: 400;
+			margin-right: 8px;
+			vertical-align: middle;
 		}
 	}
 
@@ -560,7 +580,7 @@
 		margin-bottom: 8px;
 	}
 
-	&__shortcode-input {
+	&__shortcode-input[type="text"] {
 		flex: 1;
 		border: none;
 		background: transparent;

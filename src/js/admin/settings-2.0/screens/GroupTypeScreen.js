@@ -286,7 +286,8 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick } ) {
 						className="bb-admin-group-types__add-btn"
 						onClick={ handleAddNewType }
 					>
-						{ __( '+ Add New Group Type', 'buddyboss' ) }
+						<i className="bb-icons-rl bb-icons-rl-plus"></i>
+						{ __( 'Add New Group Type', 'buddyboss' ) }
 					</button>
 				</div>
 				<div className="bb-admin-group-types__card-body">
@@ -344,6 +345,7 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick } ) {
 																handleEdit( type );
 															} }
 														>
+															<i className="bb-icons-rl bb-icons-rl-pencil-simple"></i>
 															{ __( 'Edit', 'buddyboss' ) }
 														</button>
 														<button
@@ -352,6 +354,7 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick } ) {
 																handleDelete( type.id );
 															} }
 														>
+															<i className="bb-icons-rl bb-icons-rl-trash"></i>
 															{ __( 'Delete', 'buddyboss' ) }
 														</button>
 													</div>
