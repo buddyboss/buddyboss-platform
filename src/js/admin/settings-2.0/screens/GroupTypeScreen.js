@@ -226,9 +226,9 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 	return (
 		<div className="bb-admin-group-types">
 			{/* Card 1: Group Type Settings */}
-			<div className="bb-admin-group-types__card">
-				<div className="bb-admin-group-types__card-header">
-					<h3 className="bb-admin-group-types__card-title">
+			<div className="bb-admin-feature-settings__section bb-admin-group-types__card">
+				<div className="bb-admin-feature-settings__section-header">
+					<h3 className="bb-admin-feature-settings__section-title">
 						{ getSectionTitle( feature, activePanelId, 'group_type_settings' ) || __( 'Group Type Settings', 'buddyboss' ) }
 					</h3>
 					{ helpUrl && (
@@ -238,7 +238,7 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 						/>
 					) }
 				</div>
-				<div className="bb-admin-group-types__card-body">
+				<div className="bb-admin-feature-settings__section-body">
 					{ settingsLoading ? (
 						<div className="bb-admin-loading"><Spinner /></div>
 					) : (
@@ -289,9 +289,9 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 			</div>
 
 			{/* Card 2: Group Types List (visible only when group types enabled) */}
-			{ enableGroupTypes && <div className="bb-admin-group-types__card">
-				<div className="bb-admin-group-types__card-header">
-					<h3 className="bb-admin-group-types__card-title">
+			{ enableGroupTypes && <div className="bb-admin-feature-settings__section">
+				<div className="bb-admin-feature-settings__section-header">
+					<h3 className="bb-admin-feature-settings__section-title">
 						{ __( 'Group Types', 'buddyboss' ) }
 					</h3>
 					<button
@@ -302,7 +302,7 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 						{ __( 'Add New Group Type', 'buddyboss' ) }
 					</button>
 				</div>
-				<div className="bb-admin-group-types__card-body">
+				<div className="bb-admin-feature-settings__section-body bb-admin-group-types__list-body">
 					{ isLoading ? (
 						<div className="bb-admin-loading"><Spinner /></div>
 					) : groupTypes.length > 0 ? (

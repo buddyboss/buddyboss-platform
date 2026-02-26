@@ -11,29 +11,9 @@
 	width: 100%;
 	padding: 32px;
 
-	&__card {
-		background: $bb-background-base-color;
-		border: 1px solid $bb-border-primary-color;
-		border-radius: $bb-border-radius-xl;
-	}
-
-	&__card-header {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		padding: 16px 24px;
-		border-bottom: 1px solid $bb-border-primary-color;
-	}
-
-	&__card-title {
-		font-size: 14px;
-		font-weight: 600;
-		color: $bb-text-color;
-		margin: 0;
-		line-height: 1.4;
-	}
-
-	&__card-body {
+	/* List section body override — standard section-body is 32px 24px,
+	   but the group types list needs reduced bottom padding per Figma. */
+	&__list-body {
 		padding: 32px 24px 8px;
 	}
 
@@ -119,16 +99,19 @@
 		padding: 0;
 		display: flex;
 		flex-direction: column;
-		gap: 16px;
 	}
 
 	&__list-item {
 		display: flex;
 		align-items: center;
 		gap: 32px;
-		min-height: 48px;
-		padding: 0 0 16px;
+		padding: 16px 0;
 		border-bottom: 0.5px solid $bb-border-secondary-color;
+		margin-bottom: 0;
+
+		&:first-child {
+			padding-top: 0;
+		}
 
 		&:last-child {
 			border-bottom: 0;
