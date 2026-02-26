@@ -114,15 +114,6 @@ function bb_groups_register_images_panel_fields() {
 	 */
 	do_action( 'bb_groups_settings_after_avatar_fields' );
 
-	// Cover image section is only available when cover image uploads are not globally disabled.
-	// Note: Cannot use bp_is_active( 'groups', 'cover_image' ) here because the theme compat
-	// sub-feature registration (bp_set_theme_compat_feature) fires at bp_loaded priority 12,
-	// but feature settings registration fires at priority 5 — so bp_is_active() would always
-	// return false. Instead, check the underlying option directly.
-	if ( (bool) bp_get_option( 'bp-disable-group-cover-image-uploads', false ) ) {
-		return;
-	}
-
 	// -------------------------------------------------------------------------
 	// SECTION: Group Cover Image
 	// -------------------------------------------------------------------------
