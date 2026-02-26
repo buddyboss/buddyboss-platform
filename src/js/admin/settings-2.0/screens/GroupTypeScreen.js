@@ -222,9 +222,9 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick } ) {
 	return (
 		<div className="bb-admin-group-types">
 			{/* Card 1: Group Type Settings */}
-			<div className="bb-admin-group-types__card">
-				<div className="bb-admin-group-types__card-header">
-					<h3 className="bb-admin-group-types__card-title">
+			<div className="bb-admin-feature-settings__section bb-admin-group-types__card">
+				<div className="bb-admin-feature-settings__section-header">
+					<h3 className="bb-admin-feature-settings__section-title">
 						{ __( 'Group Type Settings', 'buddyboss' ) }
 					</h3>
 					{ helpUrl && (
@@ -234,42 +234,48 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick } ) {
 						/>
 					) }
 				</div>
-				<div className="bb-admin-group-types__card-body">
+				<div className="bb-admin-feature-settings__section-body">
 					{ settingsLoading ? (
 						<div className="bb-admin-loading"><Spinner /></div>
 					) : (
 						<>
-							<div className="bb-admin-group-types__setting-row">
-								<div className="bb-admin-group-types__setting-info">
-									<span className="bb-admin-group-types__setting-label">
-										{ __( 'Group Types', 'buddyboss' ) }
-									</span>
-									<span className="bb-admin-group-types__setting-description">
-										{ __( 'Enable custom group types to categorize groups.', 'buddyboss' ) }
-									</span>
+							<div className="bb-admin-settings-form__field">
+								<div class="bb-admin-settings-form__field-label">
+									<label><span class="bb-admin-settings-form__field-label-text">{ __( 'Group Types', 'buddyboss' ) }</span></label>
 								</div>
-								<ToggleControl
-									checked={ enableGroupTypes }
-									onChange={ function ( val ) {
-										handleSettingChange( 'bp-disable-group-type-creation', val );
-									} }
-								/>
+								<div className="bb-admin-settings-form__field-content bb-admin-settings-form__field-content--inline">
+									<div className="bb-admin-settings-form__field-input-wrapper">
+										<div className="bb-admin-settings-form__toggle-wrapper">
+											<ToggleControl
+												checked={ enableGroupTypes }
+												onChange={ function ( val ) {
+													handleSettingChange( 'bp-disable-group-type-creation', val );
+												} }
+											/>
+										</div>
+									</div>
+									<p className="bb-admin-settings-form__field-description">{ __( 'Enable group types', 'buddyboss' ) }</p>
+									<p class="bb-admin-settings-form__field-help-text">{ __( 'When enabled, group types allow you to better organize groups.', 'buddyboss' ) }</p>
+								</div>
 							</div>
-							<div className="bb-admin-group-types__setting-row">
-								<div className="bb-admin-group-types__setting-info">
-									<span className="bb-admin-group-types__setting-label">
-										{ __( 'Auto Membership Approval', 'buddyboss' ) }
-									</span>
-									<span className="bb-admin-group-types__setting-description">
-										{ __( 'Allow users to join groups without requiring approval.', 'buddyboss' ) }
-									</span>
+							<div className="bb-admin-settings-form__field">
+								<div class="bb-admin-settings-form__field-label">
+									<label><span class="bb-admin-settings-form__field-label-text">{ __( 'Auto Membership Approval', 'buddyboss' ) }</span></label>
 								</div>
-								<ToggleControl
-									checked={ autoMembershipApproval }
-									onChange={ function ( val ) {
-										handleSettingChange( 'bp-enable-group-auto-join', val );
-									} }
-								/>
+								<div className="bb-admin-settings-form__field-content bb-admin-settings-form__field-content--inline">
+									<div className="bb-admin-settings-form__field-input-wrapper">
+										<div className="bb-admin-settings-form__toggle-wrapper">
+											<ToggleControl
+												checked={ autoMembershipApproval }
+												onChange={ function ( val ) {
+													handleSettingChange( 'bp-enable-group-auto-join', val );
+												} }
+											/>
+										</div>
+									</div>
+									<p className="bb-admin-settings-form__field-description">{ __( 'Allow selected profile types to automatically join groups', 'buddyboss' ) }</p>
+									<p class="bb-admin-settings-form__field-help-text">{ __( 'Allow users to join groups without requiring approval.', 'buddyboss' ) }</p>
+								</div>
 							</div>
 						</>
 					) }
@@ -277,9 +283,9 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick } ) {
 			</div>
 
 			{/* Card 2: Group Types List (visible only when group types enabled) */}
-			{ enableGroupTypes && <div className="bb-admin-group-types__card">
-				<div className="bb-admin-group-types__card-header">
-					<h3 className="bb-admin-group-types__card-title">
+			{ enableGroupTypes && <div className="bb-admin-feature-settings__section">
+				<div className="bb-admin-feature-settings__section-header">
+					<h3 className="bb-admin-feature-settings__section-title">
 						{ __( 'Group Types', 'buddyboss' ) }
 					</h3>
 					<button
@@ -290,7 +296,7 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick } ) {
 						{ __( 'Add New Group Type', 'buddyboss' ) }
 					</button>
 				</div>
-				<div className="bb-admin-group-types__card-body">
+				<div className="bb-admin-feature-settings__section-body bb-admin-group-types__list-body">
 					{ isLoading ? (
 						<div className="bb-admin-loading"><Spinner /></div>
 					) : groupTypes.length > 0 ? (
