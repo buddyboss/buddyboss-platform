@@ -200,10 +200,7 @@
 
     .bb-topic-modal__permission-label,
     .components-base-control__label {
-        color: $bb-text-secondary-color;
-        font-size: 13px;
-        font-weight: 400;
-        text-transform: none;
+        @include bb-input-label;
     }
 
     .components-radio-control__group-wrapper {

@@ -32,7 +32,7 @@ function bb_reactions_sanitize_content_types( $value ) {
 	$sanitized    = array();
 
 	foreach ( $allowed_keys as $key ) {
-		$sanitized[ $key ] = isset( $value[ $key ] ) ? (bool) $value[ $key ] : false;
+		$sanitized[ $key ] = isset( $value[ $key ] ) ? absint( $value[ $key ] ) : 0;
 	}
 
 	return $sanitized;
@@ -67,6 +67,28 @@ function bb_reactions_sanitize_button_settings( $value ) {
 }
 
 /**
+ * Sanitize reaction mode setting.
+ *
+ * Ensures value is one of the allowed modes ('likes' or 'emotions').
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed $value The value to sanitize.
+ *
+ * @return string Sanitized mode value.
+ */
+function bb_reactions_sanitize_mode( $value ) {
+	$value   = sanitize_text_field( $value );
+	$allowed = array( 'likes', 'emotions' );
+
+	if ( ! in_array( $value, $allowed, true ) ) {
+		return 'likes';
+	}
+
+	return $value;
+}
+
+/**
  * Get all of the reactions settings fields.
  *
  * @since BuddyBoss 2.5.20
@@ -84,7 +106,7 @@ function bb_reactions_get_settings_fields() {
 
 		'bb_reaction_mode'     => array(
 			'title'             => esc_html__( 'Reactions Mode', 'buddyboss' ),
-			'sanitize_callback' => 'sanitize_text_field',
+			'sanitize_callback' => 'bb_reactions_sanitize_mode',
 		),
 
 		'bb_reaction_emotions' => array(),

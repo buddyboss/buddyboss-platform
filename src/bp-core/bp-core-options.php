@@ -3167,10 +3167,16 @@ function bb_is_activity_search_enabled( $default = true ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
+ * @param bool $reset Optional. Pass true to clear the static cache. Default false.
+ *
  * @return bool True if reactions feature is enabled, false otherwise.
  */
-function bb_is_reactions_feature_enabled() {
+function bb_is_reactions_feature_enabled( $reset = false ) {
 	static $is_enabled = null;
+
+	if ( $reset ) {
+		$is_enabled = null;
+	}
 
 	if ( null !== $is_enabled ) {
 		return $is_enabled;
@@ -3197,3 +3203,18 @@ function bb_is_reactions_feature_enabled() {
 	$is_enabled = ! empty( $active_features['reactions'] );
 	return $is_enabled;
 }
+
+/**
+ * Reset static cache when a feature is toggled on/off.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id The feature ID that was toggled.
+ */
+function bb_reset_reactions_feature_cache( $feature_id ) {
+	if ( 'reactions' === $feature_id ) {
+		bb_is_reactions_feature_enabled( true );
+	}
+}
+add_action( 'bb_feature_activated', 'bb_reset_reactions_feature_cache' );
+add_action( 'bb_feature_deactivated', 'bb_reset_reactions_feature_cache' );
