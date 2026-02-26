@@ -637,7 +637,7 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 					) }
 				</div>
 
-				<div className="bb-admin-group-type-modal__footer">
+				<div className="bb-admin-settings-modal__footer bb-admin-group-type-modal__footer">
 				<Button
 					variant="secondary"
 					onClick={ onClose }
