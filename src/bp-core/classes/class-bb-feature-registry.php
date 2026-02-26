@@ -1426,7 +1426,6 @@ class BB_Feature_Registry {
 			'toggle_list'       => array( $this, 'bb_sanitize_toggle_list' ),
 			'toggle_list_array' => array( $this, 'bb_sanitize_toggle_list' ),
 			'dimensions'        => 'sanitize_text_field',
-			'child_render'      => 'sanitize_text_field',
 			'image_radio'       => 'sanitize_text_field',
 			'ajax_multiselect'  => array( $this, 'bb_sanitize_ajax_multiselect' ),
 			'reaction_mode'     => 'sanitize_text_field',

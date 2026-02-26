@@ -30,7 +30,6 @@ import { SharePlatformsField } from './activity/sharing';
 import { AccessControlField } from './access-control/AccessControlField';
 import { CheckboxListField } from './fields/CheckboxListField';
 import { ImageRadioField } from './fields/ImageRadioField';
-import { ChildRenderField } from './fields/ChildRenderField';
 import { DimensionsField } from './fields/DimensionsField';
 import { ConfirmToggleModal } from './modals/ConfirmToggleModal';
 
@@ -347,15 +346,6 @@ export function SettingsForm({ fields, values, onChange }) {
 					/>
 				);
 
-			case 'child_render':
-				return (
-					<ChildRenderField
-						field={field}
-						values={values}
-						onChange={onChange}
-					/>
-				);
-
 			case 'reaction_mode':
 				// Delegate to ReactionModeField component
 				return (
@@ -540,7 +530,7 @@ export function SettingsForm({ fields, values, onChange }) {
 		// so they can return null without leaving an empty wrapper div.
 		if ( 'notice' === field.type || 'reaction_info' === field.type ) {
 			// Grouped notices render inline within their group (no full-width).
-			if ( ! field.group ) {
+			if ( ! field.group?.key ) {
 				return (
 					<div key={field.name} className="bb-admin-settings-form__field bb-admin-settings-form__field--full-width">
 						{controlOutput}
@@ -567,13 +557,13 @@ export function SettingsForm({ fields, values, onChange }) {
 			field.parent_field ? 'bb-admin-settings-form__field--nested' : '',
 			disabled ? 'bb-admin-settings-form__field--disabled' : '',
 			isToggleWithChildren ? 'bb-admin-settings-form__field--has-children' : '',
-			field.group ? 'bb-admin-settings-form__field--grouped' : '',
+			field.group?.key ? 'bb-admin-settings-form__field--grouped' : '',
 		].filter(Boolean).join(' ');
 
 		const hasLabel = field.label && field.label.trim() !== '';
 
 		return (
-			<div key={field.name} className={fieldClasses + ( ! hasLabel ? ' bb-admin-settings-form__field--no-label' : '' ) + ( 'reaction_mode' !== field.type && field.pro_notice?.show ? ' bb-admin-settings-form__field--pro-locked' : '' )} data-group={field.group || undefined}>
+			<div key={field.name} className={fieldClasses + ( ! hasLabel ? ' bb-admin-settings-form__field--no-label' : '' ) + ( 'reaction_mode' !== field.type && field.pro_notice?.show ? ' bb-admin-settings-form__field--pro-locked' : '' )} data-group={field.group?.key || undefined}>
 				{ hasLabel && (
 					<div className="bb-admin-settings-form__field-label">
 						<label>
@@ -601,6 +591,10 @@ export function SettingsForm({ fields, values, onChange }) {
 					</div>
 				)}
 				<div className={ 'bb-admin-settings-form__field-content' + ( ( 'toggle' === field.type || 'checkbox' === field.type ) && field.description && ! isToggleWithChildren ? ' bb-admin-settings-form__field-content--inline' : '' ) }>
+					{/* Group sub-label (e.g. "Width", "Height" within a grouped field) */}
+					{ field.group?.label && (
+						<label className="bb-admin-settings-form__field-group-label">{field.group.label}</label>
+					) }
 					{/* Field with optional prefix/suffix */}
 					<div className="bb-admin-settings-form__field-input-wrapper">
 						{field.prefix && (

@@ -10119,7 +10119,7 @@ function bb_register_feature_section( $feature_id, $side_panel_id, $section_id, 
  *
  *     @type string $name              Field name (option key).
  *     @type string $label             Field label.
- *     @type string $type              Field type (toggle, select, image_radio, child_render, etc.).
+ *     @type string $type              Field type (toggle, select, image_radio, etc.).
  *     @type string $description       Field description.
  *     @type mixed  $default           Default value.
  *     @type callable $sanitize_callback Sanitize callback.

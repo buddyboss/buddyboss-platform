@@ -595,8 +595,10 @@ class BB_Admin_Settings_Ajax {
 				'help_text'            => $field['help_text'] ?? null,
 				// Disabled flag to prevent user interaction.
 				'disabled'             => ! empty( $field['disabled'] ),
-				// Group ID for visual grouping of related fields (removes borders between them).
-				'group'                => $field['group'] ?? null,
+				// Group for visual grouping of related fields.
+				// Supports string (key only) or array with 'key' and optional 'label'.
+				// Normalized to array format: { key: string, label: string|null }.
+				'group'                => $this->bb_normalize_field_group( $field['group'] ?? null ),
 				// Confirmation message shown in a modal before toggling ON.
 				'confirm_message'      => $field['confirm_message'] ?? null,
 				// Optional overrides for confirm modal customization.
@@ -676,26 +678,6 @@ class BB_Admin_Settings_Ajax {
 			}
 			if ( isset( $field_data['help_text'] ) && is_string( $field_data['help_text'] ) ) {
 				$field_data['help_text'] = wp_kses_post( $field_data['help_text'] );
-			}
-
-			// Add sub-fields for dimensions/child_render type.
-			if ( isset( $field['fields'] ) && is_array( $field['fields'] ) ) {
-				$sub_fields = array();
-				foreach ( $field['fields'] as $sub_field ) {
-					$sub_field_value = isset( $values[ $sub_field['name'] ] ) ? $values[ $sub_field['name'] ] : ( $sub_field['default'] ?? '' );
-					$sub_fields[]    = array(
-						'name'    => $sub_field['name'],
-						'label'   => $sub_field['label'] ?? '',
-						'type'    => $sub_field['type'] ?? 'text',
-						'default' => $sub_field['default'] ?? '',
-						'value'   => $sub_field_value,
-						'options' => $sub_field['options'] ?? array(),
-						'suffix'  => $sub_field['suffix'] ?? null,
-						'min'     => $sub_field['min'] ?? null,
-						'max'     => $sub_field['max'] ?? null,
-					);
-				}
-				$field_data['fields'] = $sub_fields;
 			}
 
 			// Attach topic data and nonces for topic_list fields.
@@ -1172,6 +1154,43 @@ class BB_Admin_Settings_Ajax {
 		if ( $update_notoptions ) {
 			wp_cache_set( 'notoptions', $notoptions, 'options' );
 		}
+	}
+
+	/**
+	 * Normalize the field group parameter to a consistent array format.
+	 *
+	 * Accepts either a string (group key only, backward compatible) or an
+	 * array with 'key' and optional 'label'. Always returns null or an
+	 * array with 'key' and 'label' keys.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string|array|null $group Raw group value from field registration.
+	 *
+	 * @return array|null Normalized group array or null.
+	 */
+	private function bb_normalize_field_group( $group ) {
+		if ( empty( $group ) ) {
+			return null;
+		}
+
+		// String format (backward compatible): treat as key only.
+		if ( is_string( $group ) ) {
+			return array(
+				'key'   => $group,
+				'label' => null,
+			);
+		}
+
+		// Array format: ensure both keys exist.
+		if ( is_array( $group ) && ! empty( $group['key'] ) ) {
+			return array(
+				'key'   => $group['key'],
+				'label' => $group['label'] ?? null,
+			);
+		}
+
+		return null;
 	}
 }
 
