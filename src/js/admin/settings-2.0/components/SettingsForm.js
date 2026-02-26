@@ -566,11 +566,12 @@ export function SettingsForm({ fields, values, onChange }) {
 			return null;
 		}
 
-		// Notice fields render full-width without the label column.
-		// This includes standard notices and custom migration/info notice components.
+		// Notice fields and fields with explicit full_width render without the label column.
+		// This includes standard notices, custom migration/info notice components,
+		// and status checks marked as full_width (e.g., FFmpeg check).
 		// Note: reaction_migration and reaction_notice handle their own wrapper internally
 		// so they can return null without leaving an empty wrapper div.
-		if ( 'notice' === field.type || 'reaction_info' === field.type ) {
+		if ( 'notice' === field.type || 'reaction_info' === field.type || field.full_width ) {
 			// Grouped notices render inline within their group (no full-width).
 			if ( ! field.group ) {
 				return (

@@ -255,6 +255,32 @@
         border-bottom: 1px solid $bb-border-secondary-color;
     }
 
+    // Full-width status check notices (e.g., FFmpeg): block layout for HTML content.
+    &--full-width .bb-admin-status-check .bb-admin-notice {
+        display: block;
+        padding: 12px 16px;
+        line-height: 1.6;
+
+        &:before {
+            float: left;
+            margin-right: 8px;
+            line-height: 1;
+            margin-top: 1px;
+        }
+
+        code {
+            background-color: $bb-background-secondary-color;
+            padding: 1px 6px;
+            border-radius: $bb-border-radius-sm;
+            font-size: 12px;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: underline;
+        }
+    }
+
     &:last-child {
         padding-bottom: 0;
         border-bottom: none;

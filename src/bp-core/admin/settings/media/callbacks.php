@@ -381,6 +381,78 @@ function bb_media_ajax_check_symlink_status() {
 add_action( 'wp_ajax_bb_media_check_symlink_status', 'bb_media_ajax_check_symlink_status' );
 
 /**
+ * AJAX handler for FFmpeg status check.
+ *
+ * Checks whether the FFmpeg PHP library is installed and whether
+ * the FFmpeg binary is accessible on the server. Returns a warning
+ * notice if FFmpeg is missing or misconfigured.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_media_ajax_check_ffmpeg_status() {
+	// Verify nonce.
+	check_ajax_referer( 'bb_admin_settings', 'nonce' );
+
+	// Capability check.
+	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+		wp_send_json_error( array( 'message' => __( 'Unauthorized.', 'buddyboss' ) ) );
+	}
+
+	$has_ffmpeg_class = class_exists( 'BuddyBossPlatform\FFMpeg\FFMpeg' ) || class_exists( 'FFMpeg\FFMpeg' );
+
+	if ( ! $has_ffmpeg_class ) {
+		// FFmpeg library not installed at all.
+		wp_send_json_success(
+			array(
+				'status'  => 'warning',
+				'message' => sprintf(
+					/* translators: %s: FFmpeg link */
+					_x(
+						'Your server needs %s installed to automatically generate multiple thumbnails from video files (optional). Ask your web host.',
+						'extension notification',
+						'buddyboss'
+					),
+					'<code><a href="https://ffmpeg.org/" target="_blank" rel="noopener noreferrer">FFmpeg</a></code>'
+				),
+			)
+		);
+	}
+
+	// FFmpeg class exists — check if the binary is accessible.
+	if ( function_exists( 'bb_video_check_is_ffmpeg_binary' ) ) {
+		$ffmpeg = bb_video_check_is_ffmpeg_binary();
+		if ( ! empty( $ffmpeg->error ) && ! empty( trim( $ffmpeg->error ) ) ) {
+			wp_send_json_success(
+				array(
+					'status'  => 'warning',
+					'message' => sprintf(
+						/* translators: 1: FFmpeg link, 2: wp-config.php, 3: FFMPEG constant, 4: FFPROBE constant */
+						_x(
+							'Your server needs %1$s installed to automatically create thumbnails after uploading videos (optional). Ask your web host.<br /><br />If FFmpeg is already installed on your server and you still see the above warning, this means BuddyBoss Platform is unable to auto-detect the binary file path for FFmpeg. You will need to add the below FFmpeg absolute path constants into your %2$s file, replacing PATH_OF_BINARY_FILE with the actual file path to the FFmpeg binary file. Ask your web host to provide the absolute path for the FFmpeg binary file.<br /><br />%3$s<br />%4$s',
+							'extension notification',
+							'buddyboss'
+						),
+						'<code><a href="https://ffmpeg.org/" target="_blank" rel="noopener noreferrer">FFmpeg</a></code>',
+						'<code>wp-config.php</code>',
+						'<code>define( "BB_FFMPEG_BINARY_PATH", "PATH_OF_BINARY_FILE" );</code>',
+						'<code>define( "BB_FFPROBE_BINARY_PATH", "PATH_OF_BINARY_FILE" );</code>'
+					),
+				)
+			);
+		}
+	}
+
+	// FFmpeg is installed and binary is accessible — no notice needed.
+	wp_send_json_success(
+		array(
+			'status'  => 'success',
+			'message' => '',
+		)
+	);
+}
+add_action( 'wp_ajax_bb_media_check_ffmpeg_status', 'bb_media_ajax_check_ffmpeg_status' );
+
+/**
  * AJAX handler for Direct Access status check.
  *
  * Creates test file uploads in video, media, and document directories,

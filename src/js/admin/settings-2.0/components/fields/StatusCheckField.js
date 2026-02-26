@@ -11,6 +11,7 @@
 
 import { useState, useEffect, useRef } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+import { sanitizeHtml } from '../../utils/sanitize';
 
 /**
  * Status Check Field Component
@@ -143,10 +144,12 @@ export function StatusCheckField( { field, values, disabled } ) {
 				</div>
 			) }
 
-			{ ! isChecking && result && (
-				<div className={ 'bb-admin-notice bb-admin-notice--' + result.status }>
-					{ result.message }
-				</div>
+			{/* Safe: message is sanitized via sanitizeHtml whitelist sanitizer before rendering. */}
+			{ ! isChecking && result && result.message && (
+				<div
+					className={ 'bb-admin-notice bb-admin-notice--' + result.status }
+					dangerouslySetInnerHTML={ { __html: sanitizeHtml( result.message ) } }
+				/>
 			) }
 		</div>
 	);

@@ -32,6 +32,22 @@ function bb_media_register_videos_panel_fields() {
 		)
 	);
 
+	// FIELD: FFmpeg status notice — auto-checks server FFmpeg availability on mount.
+	bb_register_feature_field(
+		'media',
+		'videos',
+		'videos_settings',
+		array(
+			'name'        => 'bp_video_ffmpeg_notice',
+			'label'       => '',
+			'type'        => 'status_check',
+			'default'     => '',
+			'ajax_action' => 'bb_media_check_ffmpeg_status',
+			'full_width'  => true,
+			'order'       => 1,
+		)
+	);
+
 	// FIELD: Profiles — video support.
 	bb_register_feature_field(
 		'media',
@@ -213,3 +229,4 @@ function bb_media_get_video_extension_options() {
 function bb_media_get_video_extension_data() {
 	return bb_media_get_extension_data( 'bp_video_extensions_support' );
 }
+

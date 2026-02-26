@@ -660,6 +660,8 @@ class BB_Admin_Settings_Ajax {
 				// Status check fields (AJAX-triggered server-side checks, e.g. Direct Access).
 				'ajax_action'          => $field['ajax_action'] ?? null,
 				'watch_field'          => $field['watch_field'] ?? null,
+				// Layout: full-width fields render without the label column.
+				'full_width'           => ! empty( $field['full_width'] ),
 			);
 
 			// Auto-compute pro_notice for pro_only fields when not set at registration time.

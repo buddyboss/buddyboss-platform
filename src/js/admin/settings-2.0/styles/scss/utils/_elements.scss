@@ -403,6 +403,18 @@ select.bb-admin-settings__select {
 
     .bb-admin-notice {
         margin-bottom: 0;
+
+        code {
+            background-color: $bb-background-secondary-color;
+            padding: 1px 6px;
+            border-radius: $bb-border-radius-sm;
+            font-size: 12px;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: underline;
+        }
     }
 }
 
