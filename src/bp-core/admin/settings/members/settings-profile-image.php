@@ -64,6 +64,8 @@ function bb_members_register_profile_image_panel_fields() {
 
 	// FIELD: Upload Avatars (toggle, inverted — DB stores 1=disabled).
 	// Grouped with Gravatars under a shared "Avatars" label.
+	// Note: No conditional on avatar type — in legacy this field is always visible
+	// regardless of WordPress/BuddyBoss selection.
 	bb_register_feature_field(
 		'members',
 		'profile_image',
@@ -76,10 +78,6 @@ function bb_members_register_profile_image_panel_fields() {
 			'default'           => bp_disable_avatar_uploads(),
 			'sanitize_callback' => 'intval',
 			'invert_value'      => true,
-			'conditional'       => array(
-				'field' => 'bp-profile-avatar-type',
-				'value' => 'BuddyBoss',
-			),
 			'group'             => 'avatar_settings_group',
 			'order'             => 20,
 		)
