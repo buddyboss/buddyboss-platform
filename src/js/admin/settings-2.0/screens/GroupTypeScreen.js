@@ -17,6 +17,7 @@ import { HelpIcon } from '../components/HelpIcon';
 import { GroupTypeModal } from '../components/modals/GroupTypeModal';
 import { getSectionTitle, getFieldLabel, getFieldDescription, getFieldHelpText } from '../utils/feature';
 import { sanitizeHtml } from '../utils/sanitize';
+import { ConfirmToggleModal } from '../components/modals/ConfirmToggleModal';
 
 /**
  * Group Types Screen Component
@@ -71,6 +72,10 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 	var toastState = useState( null );
 	var toast = toastState[ 0 ];
 	var setToast = toastState[ 1 ];
+
+	var deleteConfirmState = useState( null );
+	var deleteConfirmId = deleteConfirmState[ 0 ];
+	var setDeleteConfirmId = deleteConfirmState[ 1 ];
 
 	// Load platform settings.
 	useEffect( function () {
@@ -164,13 +169,16 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 			} );
 	}, [ enableGroupTypes, autoMembershipApproval ] );
 
-	// Handle delete.
+	// Handle delete — open confirmation modal.
 	var handleDelete = useCallback( function ( typeId ) {
-		if ( ! window.confirm( __( 'Are you sure you want to delete this group type?', 'buddyboss' ) ) ) {
-			return;
-		}
-
 		setOpenMenuId( null );
+		setDeleteConfirmId( typeId );
+	}, [] );
+
+	// Perform delete after confirmation.
+	var performDelete = useCallback( function () {
+		var typeId = deleteConfirmId;
+		setDeleteConfirmId( null );
 
 		deleteGroupType( typeId )
 			.then( function ( response ) {
@@ -188,7 +196,7 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 			.catch( function () {
 				setToast( { status: 'error', message: __( 'Failed to delete group type.', 'buddyboss' ) } );
 			} );
-	}, [] );
+	}, [ deleteConfirmId ] );
 
 	// Handle edit.
 	var handleEdit = useCallback( function ( groupType ) {
@@ -392,6 +400,20 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 				onSave={ handleModalSave }
 				groupType={ editingGroupType }
 				memberTypes={ memberTypes }
+			/>
+
+			{/* Delete Confirmation Modal */}
+			<ConfirmToggleModal
+				isOpen={ null !== deleteConfirmId }
+				title={ __( 'Delete Group Type', 'buddyboss' ) }
+				message={ __( 'Are you sure you want to delete this group type?', 'buddyboss' ) }
+				confirmLabel={ __( 'Delete', 'buddyboss' ) }
+				cancelLabel={ __( 'Cancel', 'buddyboss' ) }
+				isDestructive={ true }
+				onConfirm={ performDelete }
+				onCancel={ function () {
+					setDeleteConfirmId( null );
+				} }
 			/>
 
 			{/* Toast */}
