@@ -112,30 +112,6 @@ function bb_sanitize_sharing_platforms( $value ) {
 }
 
 /**
- * Sanitize sortable toggle list options (activity filters, timeline filters, sorting).
- *
- * Expects an associative array where keys are option slugs and values are 0/1.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param mixed $value The value to sanitize.
- *
- * @return array Sanitized array of option_slug => 0|1.
- */
-function bb_activity_sanitize_filter_options( $value ) {
-	if ( ! is_array( $value ) ) {
-		return array();
-	}
-
-	$sanitized = array();
-	foreach ( $value as $key => $val ) {
-		$sanitized[ sanitize_key( $key ) ] = absint( $val ) ? 1 : 0;
-	}
-
-	return $sanitized;
-}
-
-/**
  * Sanitize comment visibility setting.
  *
  * Accepts values 0-5 for maximum comments per post.
@@ -224,34 +200,6 @@ function bb_activity_sanitize_platform_activity_types( $value ) {
 }
 
 /**
- * Sanitize post type feed settings.
- *
- * Handles the toggle + checkbox combo for WordPress and custom post types.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param mixed $value The value to sanitize.
- *
- * @return array Sanitized array with 'enabled' and 'comments' keys.
- */
-function bb_activity_sanitize_post_type_feed( $value ) {
-	if ( ! is_array( $value ) ) {
-		return array();
-	}
-
-	$sanitized = array();
-	foreach ( $value as $post_type => $settings ) {
-		$clean_key = sanitize_key( $post_type );
-		$sanitized[ $clean_key ] = array(
-			'enabled'  => ! empty( $settings['enabled'] ) ? 1 : 0,
-			'comments' => ! empty( $settings['comments'] ) ? 1 : 0,
-		);
-	}
-
-	return $sanitized;
-}
-
-/**
  * Sync blogs component activation after activity CPT feed settings are saved.
  *
  * Uses the shared bb_sync_blogs_component_state() helper, reading saved option
@@ -274,6 +222,17 @@ function bb_activity_sync_blogs_component_after_save( $feature_id, $settings, $s
 			return (bool) bp_get_option( $option_name, false );
 		}
 	);
+
+	// If a post type feed is disabled, also disable its comments option.
+	// Mirrors legacy behavior from bb_after_update_activity_settings().
+	foreach ( bb_feed_post_types() as $post_type ) {
+		$pt_opt_name  = bb_post_type_feed_option_name( $post_type );
+		$ptc_opt_name = bb_post_type_feed_comment_option_name( $post_type );
+
+		if ( empty( bp_get_option( $pt_opt_name, '' ) ) ) {
+			bp_update_option( $ptc_opt_name, 0 );
+		}
+	}
 }
 
 add_action( 'bb_admin_save_feature_settings_after', 'bb_activity_sync_blogs_component_after_save', 10, 3 );
