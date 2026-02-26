@@ -63,16 +63,29 @@
 		}
 	}
 
-	/* Settings toggles */
+	/* Settings toggles — two-column layout matching Figma */
 	&__setting-row {
 		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		padding: 12px 0;
+		align-items: flex-start;
+		gap: 24px;
+		padding: 16px 0;
 
 		&:not(:last-child) {
 			border-bottom: 1px solid $bb-border-primary-color;
 		}
+	}
+
+	&__setting-label {
+		flex: 0 0 200px;
+		font-size: 13px;
+		font-weight: 600;
+		color: $bb-text-color;
+		line-height: 20px;
+		padding-top: 2px;
+	}
+
+	&__setting-control {
+		flex: 1;
 
 		.components-toggle-control {
 			margin-bottom: 0;
@@ -80,29 +93,23 @@
 			.components-base-control__field {
 				margin-bottom: 0;
 			}
+
+			.components-toggle-control__label {
+				font-size: 13px;
+				font-weight: 400;
+				color: $bb-text-color;
+			}
 		}
 	}
 
-	&__setting-info {
-		display: flex;
-		flex-direction: column;
-		gap: 4px;
-		flex: 1;
-		margin-right: 16px;
-	}
-
-	&__setting-label {
-		font-size: 13px;
-		font-weight: 500;
-		color: $bb-text-color;
-		line-height: 1.4;
-	}
-
-	&__setting-description {
+	&__setting-help-text {
+		display: block;
 		font-size: 12px;
 		font-weight: 400;
 		color: $bb-text-tertiary-color;
-		line-height: 1.4;
+		line-height: 1.5;
+		margin-top: 4px;
+		padding-left: 36px;
 	}
 
 	/* Group types list */

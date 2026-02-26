@@ -61,6 +61,7 @@ function bb_admin_settings_register_groups_feature() {
 	require_once __DIR__ . '/settings/groups/settings-group-directory.php';
 	require_once __DIR__ . '/settings/groups/settings-access-control.php';
 	require_once __DIR__ . '/settings/groups/settings-group-navigation.php';
+	require_once __DIR__ . '/settings/groups/settings-group-types.php';
 
 	// =========================================================================
 	// SIDE PANELS
@@ -250,6 +251,9 @@ function bb_admin_settings_register_groups_feature() {
 
 	// Panel 6: Group Navigation.
 	bb_groups_register_navigation_panel_fields();
+
+	// Panel 7: Group Types (custom panel screen).
+	bb_groups_register_group_types_panel_fields();
 
 	/**
 	 * Fires after all Groups settings panels are registered.
