@@ -6,6 +6,19 @@ export const HelpSliderModal = ({ isOpen, onClose, children, title }) => {
 	const contentRef = useRef(null);
 	const [toc, setToc] = useState([]);
 
+	// Close on Escape key — only when no WordPress Modal is open above us.
+	useEffect(() => {
+		if (!isOpen) return;
+		function handleKeyDown(e) {
+			if ('Escape' !== e.key) return;
+			// If a WordPress Modal is open, let it handle Escape first.
+			if (document.querySelector('.components-modal__frame')) return;
+			onClose();
+		}
+		document.addEventListener('keydown', handleKeyDown);
+		return () => document.removeEventListener('keydown', handleKeyDown);
+	}, [isOpen, onClose]);
+
 	// Extract headings and inject IDs after content renders
 	useEffect(() => {
 		if (isOpen && contentRef.current) {

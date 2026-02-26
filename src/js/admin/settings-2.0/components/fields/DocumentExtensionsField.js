@@ -10,7 +10,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, createPortal } from '@wordpress/element';
+import { useState, useEffect, createPortal } from '@wordpress/element';
 import { Modal, Button, TextControl, TextareaControl, DropdownMenu, CheckboxControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { useMimeChecker } from '../../utils/mimeChecker';
@@ -193,6 +193,37 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 
 	// Track if there are unsaved changes.
 	var [ hasChanges, setHasChanges ] = useState( false );
+
+	// Close nested modals (Add/Edit) on Escape before the parent Manage modal.
+	// The nested modals are custom portals (not WP Modal), so they don't have
+	// built-in Escape handling. We intercept the keydown in the capture phase
+	// to stop propagation before the parent WP Modal's handler fires.
+	useEffect( function() {
+		if ( ! isAddOpen && ! isEditOpen ) {
+			return;
+		}
+
+		function handleEscapeCapture( e ) {
+			if ( 'Escape' !== e.key ) {
+				return;
+			}
+
+			e.stopPropagation();
+			e.preventDefault();
+
+			if ( isAddOpen ) {
+				setIsAddOpen( false );
+			} else if ( isEditOpen ) {
+				setIsEditOpen( false );
+				setEditingKey( null );
+			}
+		}
+
+		document.addEventListener( 'keydown', handleEscapeCapture, true );
+		return function() {
+			document.removeEventListener( 'keydown', handleEscapeCapture, true );
+		};
+	}, [ isAddOpen, isEditOpen ] );
 
 	/**
 	 * Sync working values when manage modal opens.
