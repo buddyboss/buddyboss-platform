@@ -43,7 +43,8 @@ function bb_members_register_profile_types_panel_fields() {
 			'name'              => 'bp-member-type-enable-disable',
 			'label'             => __( 'Profile Types', 'buddyboss' ),
 			'type'              => 'toggle',
-			'description'       => __( 'When enabled, profile types allow you to assign unique profile fields and permissions to different member types.', 'buddyboss' ),
+			'description'       => __( 'Enable profile types', 'buddyboss' ),
+			'help_text'         => __( 'When enabled, profile types allow you to assign unique profile fields and permissions to different member types.', 'buddyboss' ),
 			'default'           => bp_member_type_enable_disable(),
 			'sanitize_callback' => 'intval',
 			'order'             => 10,
@@ -101,7 +102,7 @@ function bb_members_register_profile_types_panel_fields() {
 			'name'              => 'bp-member-type-default-on-registration',
 			'label'             => __( 'Default Profile Type', 'buddyboss' ),
 			'type'              => 'select',
-			'description'       => sprintf(
+			'help_text'         => sprintf(
 				/* translators: %s: Repair Community link. */
 				__( 'Set a default profile type for new users. Use <a href="%s">Repair Community</a> tools to assign it to existing users.', 'buddyboss' ),
 				esc_url(

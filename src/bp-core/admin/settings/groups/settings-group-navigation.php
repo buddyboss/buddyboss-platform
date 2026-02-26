@@ -36,15 +36,16 @@ function bb_groups_register_navigation_panel_fields() {
 		)
 	);
 
-	// FIELD: Display group navigation vertically.
+	// FIELD: Layout — Display group navigation vertically.
 	bb_register_feature_field(
 		'groups',
 		'group_navigation',
 		'group_navigation_settings',
 		array(
 			'name'              => 'bb_group_nav_display',
-			'label'             => __( 'Display group navigation vertically', 'buddyboss' ),
+			'label'             => __( 'Layout', 'buddyboss' ),
 			'type'              => 'toggle',
+			'description'       => __( 'Display the group navigation vertically', 'buddyboss' ),
 			'default'           => 0,
 			'order'             => 10,
 			'sanitize_callback' => 'absint',
@@ -59,7 +60,7 @@ function bb_groups_register_navigation_panel_fields() {
 		array(
 			'name'              => 'bb_group_default_tab',
 			'label'             => __( 'Default Tab', 'buddyboss' ),
-			'description'       => __( 'Set the default navigation tab when viewing a group. The dropdown only shows tabs that are available to all groups.', 'buddyboss' ),
+			'description'       => __( 'The dropdown only shows tabs that are available to all groups.', 'buddyboss' ),
 			'type'              => 'select',
 			'default'           => 'members',
 			'options'           => bb_get_group_default_tab_options(),

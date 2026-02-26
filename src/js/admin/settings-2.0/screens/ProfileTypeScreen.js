@@ -16,6 +16,7 @@ import { sanitizeHtml } from '../utils/sanitize';
 import { Toast } from '../components/Toast';
 import { HelpIcon } from '../components/HelpIcon';
 import { ProfileTypeModal } from '../components/modals/ProfileTypeModal';
+import { getSectionTitle, getFieldLabel, getFieldDescription, getFieldHelpText } from '../utils/feature';
 
 /**
  * Profile Types Screen Component
@@ -31,35 +32,6 @@ import { ProfileTypeModal } from '../components/modals/ProfileTypeModal';
  * @returns {JSX.Element} Profile types screen.
  */
 export function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activePanelId } ) {
-
-	/**
-	 * Get a field's description from the PHP-registered feature data.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {string} fieldName The field option name.
-	 * @returns {string} The field description HTML or empty string.
-	 */
-	function getFieldDescription( fieldName ) {
-		if ( ! feature || ! feature.side_panels ) {
-			return '';
-		}
-		var panel = feature.side_panels.find( function ( p ) {
-			return p.id === activePanelId;
-		} );
-		if ( ! panel || ! panel.sections ) {
-			return '';
-		}
-		for ( var i = 0; i < panel.sections.length; i++ ) {
-			var fields = panel.sections[ i ].fields || [];
-			for ( var j = 0; j < fields.length; j++ ) {
-				if ( fields[ j ].name === fieldName ) {
-					return fields[ j ].description || '';
-				}
-			}
-		}
-		return '';
-	}
 
 	var memberTypesState = useState( [] );
 	var memberTypes = memberTypesState[ 0 ];
@@ -313,7 +285,7 @@ export function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, 
 			<div className="bb-admin-profile-types__card">
 				<div className="bb-admin-profile-types__card-header">
 					<h3 className="bb-admin-profile-types__card-title">
-						{ __( 'Profile Type Settings', 'buddyboss' ) }
+						{ getSectionTitle( feature, activePanelId, 'profile_types_settings' ) || __( 'Profile Type Settings', 'buddyboss' ) }
 					</h3>
 					{ helpUrl && (
 						<HelpIcon
@@ -329,20 +301,20 @@ export function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, 
 						<>
 							<div className="bb-admin-profile-types__setting-row">
 								<span className="bb-admin-profile-types__setting-label">
-									{ __( 'Profile Types', 'buddyboss' ) }
+									{ getFieldLabel( feature, activePanelId, 'bp-member-type-enable-disable' ) || __( 'Profile Types', 'buddyboss' ) }
 								</span>
 								<div className="bb-admin-profile-types__setting-control">
 									<ToggleControl
-										label={ __( 'Enable profile types', 'buddyboss' ) }
+										label={ getFieldDescription( feature, activePanelId, 'bp-member-type-enable-disable' ) || __( 'Enable profile types', 'buddyboss' ) }
 										checked={ enableProfileTypes }
 										onChange={ function ( val ) {
 											handleSettingChange( 'bp-member-type-enable-disable', val );
 										} }
 									/>
-									{ getFieldDescription( 'bp-member-type-enable-disable' ) && (
+									{ getFieldHelpText( feature, activePanelId, 'bp-member-type-enable-disable' ) && (
 										<span
-											className="bb-admin-profile-types__setting-description"
-											dangerouslySetInnerHTML={ { __html: sanitizeHtml( getFieldDescription( 'bp-member-type-enable-disable' ) ) } }
+											className="bb-admin-profile-types__setting-help-text"
+											dangerouslySetInnerHTML={ { __html: sanitizeHtml( getFieldHelpText( feature, activePanelId, 'bp-member-type-enable-disable' ) ) } }
 										/>
 									) }
 								</div>
@@ -351,21 +323,27 @@ export function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, 
 								<>
 									<div className="bb-admin-profile-types__setting-row">
 										<span className="bb-admin-profile-types__setting-label">
-											{ __( 'Display Profile Types', 'buddyboss' ) }
+											{ getFieldLabel( feature, activePanelId, 'bp-member-type-display-on-profile' ) || __( 'Display Profile Types', 'buddyboss' ) }
 										</span>
 										<div className="bb-admin-profile-types__setting-control">
 											<ToggleControl
-												label={ __( 'Display profile type on member profiles', 'buddyboss' ) }
+												label={ getFieldDescription( feature, activePanelId, 'bp-member-type-display-on-profile' ) || __( 'Display profile type on member profiles', 'buddyboss' ) }
 												checked={ displayOnProfile }
 												onChange={ function ( val ) {
 													handleSettingChange( 'bp-member-type-display-on-profile', val );
 												} }
 											/>
+											{ getFieldHelpText( feature, activePanelId, 'bp-member-type-display-on-profile' ) && (
+												<span
+													className="bb-admin-profile-types__setting-help-text"
+													dangerouslySetInnerHTML={ { __html: sanitizeHtml( getFieldHelpText( feature, activePanelId, 'bp-member-type-display-on-profile' ) ) } }
+												/>
+											) }
 										</div>
 									</div>
 									<div className="bb-admin-profile-types__setting-row">
 										<span className="bb-admin-profile-types__setting-label">
-											{ __( 'Default Profile Type', 'buddyboss' ) }
+											{ getFieldLabel( feature, activePanelId, 'bp-member-type-default-on-registration' ) || __( 'Default Profile Type', 'buddyboss' ) }
 										</span>
 										<div className="bb-admin-profile-types__setting-control">
 											<SelectControl
@@ -373,10 +351,10 @@ export function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, 
 												options={ defaultTypeOptions }
 												onChange={ handleDefaultTypeChange }
 											/>
-											{ getFieldDescription( 'bp-member-type-default-on-registration' ) && (
+											{ getFieldHelpText( feature, activePanelId, 'bp-member-type-default-on-registration' ) && (
 												<span
-													className="bb-admin-profile-types__setting-description"
-													dangerouslySetInnerHTML={ { __html: sanitizeHtml( getFieldDescription( 'bp-member-type-default-on-registration' ) ) } }
+													className="bb-admin-profile-types__setting-help-text"
+													dangerouslySetInnerHTML={ { __html: sanitizeHtml( getFieldHelpText( feature, activePanelId, 'bp-member-type-default-on-registration' ) ) } }
 												/>
 											) }
 										</div>

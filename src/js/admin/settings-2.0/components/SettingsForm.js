@@ -151,8 +151,6 @@ export function SettingsForm({ fields, values, onChange }) {
 
 		switch (field.type) {
 			case 'toggle':
-				// Figma: Toggle with toggle_label displayed next to the switch
-				const toggleLabel = field.toggle_label || field.inline_label || '';
 				// Handle inverted values (e.g., "disable" options shown as "enable" toggles)
 				const isInverted = true === field.invert_value;
 				const displayValue = isInverted ? !value : !!value;
@@ -160,7 +158,7 @@ export function SettingsForm({ fields, values, onChange }) {
 					<div className="bb-admin-settings-form__toggle-wrapper">
 						<ToggleControl
 							key={field.name}
-							label={toggleLabel}
+							label={field.description || ''}
 							checked={displayValue}
 							onChange={(checked) => {
 								// If inverted, save the opposite of what's displayed
@@ -610,7 +608,7 @@ export function SettingsForm({ fields, values, onChange }) {
 					{/* Description: skip for notice type (rendered by notice component itself).
 				    When description contains %s and field has description_controls,
 				    render inline controls (select, text, number) in place of each %s placeholder. */}
-					{ field.description && -1 === [ 'notice', 'checkbox_list', 'share_platforms', 'topic_list', 'image_radio' ].indexOf( field.type ) && ( () => {
+					{ field.description && -1 === [ 'notice', 'checkbox_list', 'share_platforms', 'topic_list', 'image_radio', 'toggle' ].indexOf( field.type ) && ( () => {
 						const desc = field.description;
 						const controls = field.description_controls;
 						const hasControls = desc.indexOf( '%s' ) !== -1 && controls && controls.length > 0;

@@ -114,11 +114,14 @@
 		}
 	}
 
-	&__setting-description {
-		font-size: 13px;
+	&__setting-help-text {
+		display: block;
+		font-size: 12px;
 		font-weight: 400;
 		color: $bb-text-tertiary-color;
 		line-height: 1.5;
+		margin-top: 4px;
+
 	}
 
 	/* Profile types list */

@@ -15,6 +15,8 @@ import { getGroupTypes, deleteGroupType, getPlatformSettings, savePlatformSettin
 import { Toast } from '../components/Toast';
 import { HelpIcon } from '../components/HelpIcon';
 import { GroupTypeModal } from '../components/modals/GroupTypeModal';
+import { getSectionTitle, getFieldLabel, getFieldDescription, getFieldHelpText } from '../utils/feature';
+import { sanitizeHtml } from '../utils/sanitize';
 
 /**
  * Group Types Screen Component
@@ -25,9 +27,11 @@ import { GroupTypeModal } from '../components/modals/GroupTypeModal';
  * @param {Function} props.onNavigate  Navigation handler.
  * @param {string}   props.helpUrl     Help URL for this panel.
  * @param {Function} props.onHelpClick Help icon click handler.
+ * @param {Object}   props.feature     Feature data from FeatureSettingsScreen (includes field definitions).
+ * @param {string}   props.activePanelId Active panel ID.
  * @returns {JSX.Element} Group types screen.
  */
-export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick } ) {
+export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activePanelId } ) {
 	var groupTypesState = useState( [] );
 	var groupTypes = groupTypesState[ 0 ];
 	var setGroupTypes = groupTypesState[ 1 ];
@@ -222,10 +226,10 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick } ) {
 	return (
 		<div className="bb-admin-group-types">
 			{/* Card 1: Group Type Settings */}
-			<div className="bb-admin-group-types__card">
-				<div className="bb-admin-group-types__card-header">
-					<h3 className="bb-admin-group-types__card-title">
-						{ __( 'Group Type Settings', 'buddyboss' ) }
+			<div className="bb-admin-feature-settings__section bb-admin-group-types__card">
+				<div className="bb-admin-feature-settings__section-header">
+					<h3 className="bb-admin-feature-settings__section-title">
+						{ getSectionTitle( feature, activePanelId, 'group_type_settings' ) || __( 'Group Type Settings', 'buddyboss' ) }
 					</h3>
 					{ helpUrl && (
 						<HelpIcon
@@ -234,42 +238,50 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick } ) {
 						/>
 					) }
 				</div>
-				<div className="bb-admin-group-types__card-body">
+				<div className="bb-admin-feature-settings__section-body">
 					{ settingsLoading ? (
 						<div className="bb-admin-loading"><Spinner /></div>
 					) : (
 						<>
 							<div className="bb-admin-group-types__setting-row">
-								<div className="bb-admin-group-types__setting-info">
-									<span className="bb-admin-group-types__setting-label">
-										{ __( 'Group Types', 'buddyboss' ) }
-									</span>
-									<span className="bb-admin-group-types__setting-description">
-										{ __( 'Enable custom group types to categorize groups.', 'buddyboss' ) }
-									</span>
+								<span className="bb-admin-group-types__setting-label">
+									{ getFieldLabel( feature, activePanelId, 'bp-disable-group-type-creation' ) || __( 'Group Types', 'buddyboss' ) }
+								</span>
+								<div className="bb-admin-group-types__setting-control">
+									<ToggleControl
+										label={ getFieldDescription( feature, activePanelId, 'bp-disable-group-type-creation' ) || __( 'Enable group types', 'buddyboss' ) }
+										checked={ enableGroupTypes }
+										onChange={ function ( val ) {
+											handleSettingChange( 'bp-disable-group-type-creation', val );
+										} }
+									/>
+									{ getFieldHelpText( feature, activePanelId, 'bp-disable-group-type-creation' ) && (
+										<span
+											className="bb-admin-group-types__setting-help-text"
+											dangerouslySetInnerHTML={ { __html: sanitizeHtml( getFieldHelpText( feature, activePanelId, 'bp-disable-group-type-creation' ) ) } }
+										/>
+									) }
 								</div>
-								<ToggleControl
-									checked={ enableGroupTypes }
-									onChange={ function ( val ) {
-										handleSettingChange( 'bp-disable-group-type-creation', val );
-									} }
-								/>
 							</div>
 							<div className="bb-admin-group-types__setting-row">
-								<div className="bb-admin-group-types__setting-info">
-									<span className="bb-admin-group-types__setting-label">
-										{ __( 'Auto Membership Approval', 'buddyboss' ) }
-									</span>
-									<span className="bb-admin-group-types__setting-description">
-										{ __( 'Allow users to join groups without requiring approval.', 'buddyboss' ) }
-									</span>
+								<span className="bb-admin-group-types__setting-label">
+									{ getFieldLabel( feature, activePanelId, 'bp-enable-group-auto-join' ) || __( 'Auto Membership Approval', 'buddyboss' ) }
+								</span>
+								<div className="bb-admin-group-types__setting-control">
+									<ToggleControl
+										label={ getFieldDescription( feature, activePanelId, 'bp-enable-group-auto-join' ) || __( 'Allow selected profile types to automatically join groups', 'buddyboss' ) }
+										checked={ autoMembershipApproval }
+										onChange={ function ( val ) {
+											handleSettingChange( 'bp-enable-group-auto-join', val );
+										} }
+									/>
+									{ getFieldHelpText( feature, activePanelId, 'bp-enable-group-auto-join' ) && (
+										<span
+											className="bb-admin-group-types__setting-help-text"
+											dangerouslySetInnerHTML={ { __html: sanitizeHtml( getFieldHelpText( feature, activePanelId, 'bp-enable-group-auto-join' ) ) } }
+										/>
+									) }
 								</div>
-								<ToggleControl
-									checked={ autoMembershipApproval }
-									onChange={ function ( val ) {
-										handleSettingChange( 'bp-enable-group-auto-join', val );
-									} }
-								/>
 							</div>
 						</>
 					) }
@@ -277,9 +289,9 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick } ) {
 			</div>
 
 			{/* Card 2: Group Types List (visible only when group types enabled) */}
-			{ enableGroupTypes && <div className="bb-admin-group-types__card">
-				<div className="bb-admin-group-types__card-header">
-					<h3 className="bb-admin-group-types__card-title">
+			{ enableGroupTypes && <div className="bb-admin-feature-settings__section">
+				<div className="bb-admin-feature-settings__section-header">
+					<h3 className="bb-admin-feature-settings__section-title">
 						{ __( 'Group Types', 'buddyboss' ) }
 					</h3>
 					<button
@@ -290,7 +302,7 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick } ) {
 						{ __( 'Add New Group Type', 'buddyboss' ) }
 					</button>
 				</div>
-				<div className="bb-admin-group-types__card-body">
+				<div className="bb-admin-feature-settings__section-body bb-admin-group-types__list-body">
 					{ isLoading ? (
 						<div className="bb-admin-loading"><Spinner /></div>
 					) : groupTypes.length > 0 ? (

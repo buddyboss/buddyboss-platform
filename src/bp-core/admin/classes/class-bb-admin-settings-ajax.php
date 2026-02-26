@@ -576,10 +576,6 @@ class BB_Admin_Settings_Ajax {
 				// Prefix/suffix text support.
 				'prefix'               => $field['prefix'] ?? null,
 				'suffix'               => $field['suffix'] ?? null,
-				// Toggle label (displayed next to toggle switch).
-				'toggle_label'         => $field['toggle_label'] ?? null,
-				// Inline label for toggles (alias for toggle_label).
-				'inline_label'         => $field['inline_label'] ?? $field['toggle_label'] ?? null,
 				// Min/max for number fields.
 				'min'                  => $field['min'] ?? null,
 				'max'                  => $field['max'] ?? null,
