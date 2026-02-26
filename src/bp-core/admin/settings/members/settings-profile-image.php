@@ -173,159 +173,166 @@ function bb_members_register_profile_image_panel_fields() {
 
 	// -------------------------------------------------------------------------
 	// SECTION: Profile Covers
+	// Only register when cover_image sub-feature is active (matches legacy
+	// BP_Admin_Setting_Xprofile::register_fields() guard).
 	// -------------------------------------------------------------------------
-	bb_register_feature_section(
-		'members',
-		'profile_image',
-		'profile_cover',
-		array(
-			'title'       => __( 'Profile Covers', 'buddyboss' ),
-			'description' => '',
-			'order'       => 20,
-		)
-	);
+	if ( bp_is_active( 'xprofile', 'cover_image' ) ) {
 
-	// FIELD: Profile Cover Images (toggle, inverted — DB stores 1=disabled).
-	bb_register_feature_field(
-		'members',
-		'profile_image',
-		'profile_cover',
-		array(
-			'name'              => 'bp-disable-cover-image-uploads',
-			'label'             => __( 'Profile Cover Images', 'buddyboss' ),
-			'type'              => 'toggle',
-			'description'       => __( 'Enable cover images for member profiles', 'buddyboss' ),
-			'help_text'         => __( 'When enabled, members will be able to upload cover images in their profile settings.', 'buddyboss' ),
-			'default'           => bp_disable_cover_image_uploads(),
-			'sanitize_callback' => 'intval',
-			'invert_value'      => true,
-			'order'             => 10,
-		)
-	);
+		bb_register_feature_section(
+			'members',
+			'profile_image',
+			'profile_cover',
+			array(
+				'title'       => __( 'Profile Covers', 'buddyboss' ),
+				'description' => '',
+				'order'       => 20,
+			)
+		);
 
-	// FIELD: Cover Image Width (Pro only, select, grouped with height).
-	bb_register_feature_field(
-		'members',
-		'profile_image',
-		'profile_cover',
-		array(
-			'name'              => 'bb-cover-profile-width',
-			'label'             => __( 'Cover Image Sizes', 'buddyboss' ),
-			'type'              => 'select',
-			'description'       => '',
-			'default'           => bb_get_profile_cover_image_width(),
-			'sanitize_callback' => 'bb_members_sanitize_cover_width',
-			'pro_only'          => true,
-			'options'           => array(
-				array(
-					'label' => __( 'Default', 'buddyboss' ),
-					'value' => 'default',
-				),
-				array(
-					'label' => __( 'Full Width', 'buddyboss' ),
-					'value' => 'full',
-				),
-			),
-			'conditional'       => array(
-				'field' => 'bp-disable-cover-image-uploads',
-				'value' => false,
-			),
-			'group'             => array(
-				'key'   => 'cover_image_sizes',
-				'label' => __( 'Width', 'buddyboss' ),
-			),
-			'order'             => 20,
-		)
-	);
+		// FIELD: Profile Cover Images (toggle, inverted — DB stores 1=disabled).
+		bb_register_feature_field(
+			'members',
+			'profile_image',
+			'profile_cover',
+			array(
+				'name'              => 'bp-disable-cover-image-uploads',
+				'label'             => __( 'Profile Cover Images', 'buddyboss' ),
+				'type'              => 'toggle',
+				'description'       => __( 'Enable cover images for member profiles', 'buddyboss' ),
+				'help_text'         => __( 'When enabled, members will be able to upload cover images in their profile settings.', 'buddyboss' ),
+				'default'           => bp_disable_cover_image_uploads(),
+				'sanitize_callback' => 'intval',
+				'invert_value'      => true,
+				'order'             => 10,
+			)
+		);
 
-	// FIELD: Cover Image Height (Pro only, select, grouped with width).
-	bb_register_feature_field(
-		'members',
-		'profile_image',
-		'profile_cover',
-		array(
-			'name'              => 'bb-cover-profile-height',
-			'label'             => '',
-			'type'              => 'select',
-			'description'       => __( 'Changing the cover image size will reposition existing member images.', 'buddyboss' ),
-			'default'           => bb_get_profile_cover_image_height(),
-			'sanitize_callback' => 'bb_members_sanitize_cover_height',
-			'pro_only'          => true,
-			'options'           => array(
-				array(
-					'label' => __( 'Small', 'buddyboss' ),
-					'value' => 'small',
+		// FIELD: Cover Image Width (Pro only, select, grouped with height).
+		bb_register_feature_field(
+			'members',
+			'profile_image',
+			'profile_cover',
+			array(
+				'name'              => 'bb-cover-profile-width',
+				'label'             => __( 'Cover Image Sizes', 'buddyboss' ),
+				'type'              => 'select',
+				'description'       => '',
+				'default'           => bb_get_profile_cover_image_width(),
+				'sanitize_callback' => 'bb_members_sanitize_cover_width',
+				'pro_only'          => true,
+				'options'           => array(
+					array(
+						'label' => __( 'Default', 'buddyboss' ),
+						'value' => 'default',
+					),
+					array(
+						'label' => __( 'Full Width', 'buddyboss' ),
+						'value' => 'full',
+					),
 				),
-				array(
-					'label' => __( 'Large', 'buddyboss' ),
-					'value' => 'large',
+				'conditional'       => array(
+					'field' => 'bp-disable-cover-image-uploads',
+					'value' => false,
 				),
-			),
-			'conditional'       => array(
-				'field' => 'bp-disable-cover-image-uploads',
-				'value' => false,
-			),
-			'group'             => array(
-				'key'   => 'cover_image_sizes',
-				'label' => __( 'Height', 'buddyboss' ),
-			),
-			'order'             => 30,
-		)
-	);
+				'group'             => array(
+					'key'   => 'cover_image_sizes',
+					'label' => __( 'Width', 'buddyboss' ),
+				),
+				'order'             => 20,
+			)
+		);
 
-	// FIELD: Default Profile Cover Image (image_radio, depends on cover enabled).
-	bb_register_feature_field(
-		'members',
-		'profile_image',
-		'profile_cover',
-		array(
-			'name'              => 'bp-default-profile-cover-type',
-			'label'             => __( 'Default Profile Cover Image', 'buddyboss' ),
-			'type'              => 'image_radio',
-			'description'       => __( 'Select which image should be used for members who haven\'t uploaded a profile cover image.', 'buddyboss' ),
-			'default'           => bb_get_default_profile_cover_type(),
-			'sanitize_callback' => 'bb_members_sanitize_default_cover_type',
-			'options'           => array(
-				array(
-					'label' => __( 'BuddyBoss', 'buddyboss' ),
-					'value' => 'buddyboss',
-					'image' => 'cover-buddyboss',
+		// FIELD: Cover Image Height (Pro only, select, grouped with width).
+		bb_register_feature_field(
+			'members',
+			'profile_image',
+			'profile_cover',
+			array(
+				'name'              => 'bb-cover-profile-height',
+				'label'             => '',
+				'type'              => 'select',
+				'description'       => __( 'Changing the cover image size will reposition existing member images.', 'buddyboss' ),
+				'default'           => bb_get_profile_cover_image_height(),
+				'sanitize_callback' => 'bb_members_sanitize_cover_height',
+				'pro_only'          => true,
+				'options'           => array(
+					array(
+						'label' => __( 'Small', 'buddyboss' ),
+						'value' => 'small',
+					),
+					array(
+						'label' => __( 'Large', 'buddyboss' ),
+						'value' => 'large',
+					),
 				),
-				array(
-					'label' => __( 'None', 'buddyboss' ),
-					'value' => 'none',
-					'image' => 'cover-none',
+				'conditional'       => array(
+					'field' => 'bp-disable-cover-image-uploads',
+					'value' => false,
 				),
-				array(
-					'label' => __( 'Custom', 'buddyboss' ),
-					'value' => 'custom',
-					'image' => 'cover-custom',
+				'group'             => array(
+					'key'   => 'cover_image_sizes',
+					'label' => __( 'Height', 'buddyboss' ),
 				),
-			),
-			'upload_config'     => array(
-				'type'        => 'cover',
-				'object'      => 'user',
-				'item_id'     => 0,
-				'item_type'   => 'default',
-				'url_getter'  => 'bb_get_default_custom_upload_profile_cover',
-				'label'       => __( 'Upload Custom Cover', 'buddyboss' ),
-				'help_text'   => '', // Injected at AJAX time via bb_members_enrich_cover_upload_help_text() — theme compat not available at registration.
-				'conditional' => array(
-					'value' => 'custom',
-				),
-			),
-			'conditional'       => array(
-				'field' => 'bp-disable-cover-image-uploads',
-				'value' => false,
-			),
-			'order'             => 30,
-		)
-	);
+				'order'             => 30,
+			)
+		);
 
-	/**
-	 * Fires after Profile Cover Image section fields are registered.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	do_action( 'bb_members_settings_after_image_fields' );
+		// FIELD: Default Profile Cover Image (image_radio, depends on cover enabled).
+		bb_register_feature_field(
+			'members',
+			'profile_image',
+			'profile_cover',
+			array(
+				'name'              => 'bp-default-profile-cover-type',
+				'label'             => __( 'Default Profile Cover Image', 'buddyboss' ),
+				'type'              => 'image_radio',
+				'description'       => __( 'Select which image should be used for members who haven\'t uploaded a profile cover image.', 'buddyboss' ),
+				'default'           => bb_get_default_profile_cover_type(),
+				'sanitize_callback' => 'bb_members_sanitize_default_cover_type',
+				'options'           => array(
+					array(
+						'label' => __( 'BuddyBoss', 'buddyboss' ),
+						'value' => 'buddyboss',
+						'image' => 'cover-buddyboss',
+					),
+					array(
+						'label' => __( 'None', 'buddyboss' ),
+						'value' => 'none',
+						'image' => 'cover-none',
+					),
+					array(
+						'label' => __( 'Custom', 'buddyboss' ),
+						'value' => 'custom',
+						'image' => 'cover-custom',
+					),
+				),
+				'upload_config'     => array(
+					'type'        => 'cover',
+					'object'      => 'user',
+					'item_id'     => 0,
+					'item_type'   => 'default',
+					'url_getter'  => 'bb_get_default_custom_upload_profile_cover',
+					'label'       => __( 'Upload Custom Cover', 'buddyboss' ),
+					'help_text'   => '',
+					// Injected at AJAX time via bb_members_enrich_cover_upload_help_text() — theme compat not available at registration.
+					'conditional' => array(
+						'value' => 'custom',
+					),
+				),
+				'conditional'       => array(
+					'field' => 'bp-disable-cover-image-uploads',
+					'value' => false,
+				),
+				'order'             => 30,
+			)
+		);
+
+		/**
+		 * Fires after Profile Cover Image section fields are registered.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		do_action( 'bb_members_settings_after_image_fields' );
+
+	} // End cover_image sub-feature guard.
 }

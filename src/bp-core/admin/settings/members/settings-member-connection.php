@@ -16,7 +16,8 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register Member Connection panel sections and fields.
  *
- * Only called when bp_is_active( 'friends' ) — guarded in the main feature file.
+ * Always registered regardless of friends component state.
+ * The panel contains a toggle that controls friends component activation.
  *
  * @since BuddyBoss [BBVERSION]
  */
@@ -36,7 +37,7 @@ function bb_members_register_member_connection_panel_fields() {
 		)
 	);
 
-	// FIELD: Member Connections (enable/disable member connections globally).
+	// FIELD: Enable Member Connections (syncs friends component).
 	bb_register_feature_field(
 		'members',
 		'member_connection',
@@ -45,8 +46,8 @@ function bb_members_register_member_connection_panel_fields() {
 			'name'              => 'bb_enable_member_connections',
 			'label'             => __( 'Member Connections', 'buddyboss' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Allow your members connect with each other', 'buddyboss' ),
-			'default'           => (bool) bp_get_option( 'bb_enable_member_connections', true ),
+			'description'       => __( 'Allow your members to connect with each other', 'buddyboss' ),
+			'default'           => (bool) bp_is_active( 'friends' ),
 			'sanitize_callback' => 'intval',
 			'order'             => 5,
 		)
@@ -66,8 +67,12 @@ function bb_members_register_member_connection_panel_fields() {
 				'description'       => __( 'Require members to be connected before they can message each other', 'buddyboss' ),
 				'help_text'         => __( 'This setting does not apply to administrators.', 'buddyboss' ),
 				'default'           => bp_force_friendship_to_message(),
-				'sanitize_callback' => 'bb_members_sanitize_force_friendship_to_message',
+				'sanitize_callback' => 'intval',
 				'order'             => 10,
+				'conditional'       => array(
+					'field' => 'bb_enable_member_connections',
+					'value' => true,
+				),
 			)
 		);
 	}
@@ -88,6 +93,10 @@ function bb_members_register_member_connection_panel_fields() {
 				'default'           => (bool) bp_get_option( 'bb_enable_friends_auto_follow', false ),
 				'sanitize_callback' => 'intval',
 				'order'             => 20,
+				'conditional'       => array(
+					'field' => 'bb_enable_member_connections',
+					'value' => true,
+				),
 			)
 		);
 	}

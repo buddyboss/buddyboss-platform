@@ -165,22 +165,20 @@ function bb_admin_settings_register_members_feature() {
 	);
 
 	// Side Panel 5: Member Connection.
-	// Only register when Friends component is active.
-	if ( bp_is_active( 'friends' ) ) {
-		bb_register_side_panel(
-			'members',
-			'member_connection',
-			array(
-				'title'      => __( 'Member Connection', 'buddyboss' ),
-				'icon'       => array(
-					'type'  => 'font',
-					'class' => 'bb-icons-rl bb-icons-rl-handshake',
-				),
-				'order'      => 50,
-				'is_default' => false,
-			)
-		);
-	}
+	// Always registered — the panel contains a toggle to enable/disable the friends component.
+	bb_register_side_panel(
+		'members',
+		'member_connection',
+		array(
+			'title'      => __( 'Member Connection', 'buddyboss' ),
+			'icon'       => array(
+				'type'  => 'font',
+				'class' => 'bb-icons-rl bb-icons-rl-handshake',
+			),
+			'order'      => 50,
+			'is_default' => false,
+		)
+	);
 
 	// Divider before custom screen panels.
 
@@ -279,12 +277,11 @@ function bb_admin_settings_register_members_feature() {
 	bb_members_register_member_directory_panel_fields();
 
 	// Panel 5: Member Connection.
-	if ( bp_is_active( 'friends' ) ) {
-		bb_members_register_member_connection_panel_fields();
+	// Always registered — toggle field inside controls friends component activation.
+	bb_members_register_member_connection_panel_fields();
 
-		// Access Controls (Connection Access) — follows same pattern as Groups/Activity.
-		bb_members_register_access_control_fields();
-	}
+	// Access Controls (Connection Access) — follows same pattern as Groups/Activity.
+	bb_members_register_access_control_fields();
 
 	// Panel 7: Profile Types.
 	bb_members_register_profile_types_panel_fields();
@@ -299,7 +296,6 @@ function bb_admin_settings_register_members_feature() {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	do_action( 'bb_members_after_register_settings_fields' );
-
 }
 
 add_action( 'bb_register_features', 'bb_admin_settings_register_members_feature', 15 );

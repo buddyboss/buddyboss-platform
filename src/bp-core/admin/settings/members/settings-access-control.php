@@ -38,6 +38,10 @@ function bb_members_register_access_control_fields() {
 			'title'       => __( 'Connection Access', 'buddyboss' ),
 			'description' => '',
 			'order'       => 20,
+			'conditional' => array(
+				'field' => 'bb_enable_member_connections',
+				'value' => true,
+			),
 		)
 	);
 
@@ -57,6 +61,10 @@ function bb_members_register_access_control_fields() {
 			'pro_only'           => true,
 			'order'              => 10,
 			'sanitize_callback'  => 'bb_sanitize_access_control_field',
+			'conditional'        => array(
+				'field' => 'bb_enable_member_connections',
+				'value' => true,
+			),
 		)
 	);
 
@@ -72,6 +80,10 @@ function bb_members_register_access_control_fields() {
 			'description' => __( 'These settings do not apply to administrators or group messages.', 'buddyboss' ),
 			'notice_type' => 'info',
 			'order'       => 100,
+			'conditional' => array(
+				'field' => 'bb_enable_member_connections',
+				'value' => true,
+			),
 		)
 	);
 
@@ -85,4 +97,3 @@ function bb_members_register_access_control_fields() {
 	 */
 	do_action( 'bb_members_access_control_after_register_fields' );
 }
-

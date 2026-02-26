@@ -377,3 +377,63 @@ function bb_deprecated_friends_register_fields_hook() {
 }
 
 add_action( 'bb_members_after_register_settings_fields', 'bb_deprecated_friends_register_fields_hook', 0 );
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Members settings save hooks (backward-compatible with Settings 1.0 tabs).
+// ──────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Fire deprecated legacy setting save hooks for backward compatibility.
+ *
+ * Legacy Settings 1.0 fires do_action('bp_admin_tab_setting_save', $tab_name)
+ * when any settings tab is saved. Third-party plugins may hook into this for
+ * 'bp-xprofile' or 'bp-friends' tab names. This bridge ensures those hooks
+ * still fire when members settings are saved via Settings 2.0.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id Feature ID.
+ * @param array  $settings   Full submitted settings.
+ * @param array  $saved      Keys and values saved by core.
+ */
+function bb_members_fire_deprecated_save_hooks( $feature_id, $settings, $saved ) {
+	if ( 'members' !== $feature_id ) {
+		return;
+	}
+
+	/**
+	 * Fires when xprofile settings are saved.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_admin_save_feature_settings_after'} with feature_id='members'.
+	 *
+	 * @param string $tab_name The tab name.
+	 */
+	do_action_deprecated(
+		'bp_admin_tab_setting_save',
+		array( 'bp-xprofile' ),
+		'BuddyBoss [BBVERSION]',
+		'bb_admin_save_feature_settings_after'
+	);
+
+	// Fire for friends tab if connection settings were included.
+	if ( bp_is_active( 'friends' ) ) {
+
+		/**
+		 * Fires when friends settings are saved.
+		 *
+		 * @since BuddyBoss 1.0.0
+		 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_admin_save_feature_settings_after'} with feature_id='members'.
+		 *
+		 * @param string $tab_name The tab name.
+		 */
+		do_action_deprecated(
+			'bp_admin_tab_setting_save',
+			array( 'bp-friends' ),
+			'BuddyBoss [BBVERSION]',
+			'bb_admin_save_feature_settings_after'
+		);
+	}
+}
+
+add_action( 'bb_admin_save_feature_settings_after', 'bb_members_fire_deprecated_save_hooks', 99, 3 );

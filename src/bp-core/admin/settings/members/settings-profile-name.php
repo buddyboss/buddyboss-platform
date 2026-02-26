@@ -112,6 +112,7 @@ function bb_members_register_profile_name_panel_fields() {
 			'description'      => __( 'Last Name', 'buddyboss' ),
 			'default'           => bp_hide_last_name(),
 			'sanitize_callback' => 'intval',
+			'invert_value'      => true,
 			'conditional'       => array(
 				'field' => 'bp-display-name-format',
 				'value' => 'first_name',
@@ -227,6 +228,7 @@ function bb_members_register_profile_name_panel_fields() {
 			'description'      => __( 'First Name', 'buddyboss' ),
 			'default'           => bp_hide_nickname_first_name(),
 			'sanitize_callback' => 'intval',
+			'invert_value'      => true,
 			'conditional'       => array(
 				'field' => 'bp-display-name-format',
 				'value' => 'nickname',
@@ -248,6 +250,7 @@ function bb_members_register_profile_name_panel_fields() {
 			'description'      => __( 'Last Name', 'buddyboss' ),
 			'default'           => bp_hide_nickname_last_name(),
 			'sanitize_callback' => 'intval',
+			'invert_value'      => true,
 			'conditional'       => array(
 				'field' => 'bp-display-name-format',
 				'value' => 'nickname',

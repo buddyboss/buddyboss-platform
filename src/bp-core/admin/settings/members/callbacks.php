@@ -190,35 +190,6 @@ function bb_members_sanitize_toggle_list( $value ) {
 }
 
 /**
- * Sanitize default profile type on registration setting.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param mixed $value The value to sanitize.
- *
- * @return int Sanitized profile type ID.
- */
-function bb_members_sanitize_default_on_registration( $value ) {
-	return absint( $value );
-}
-
-/**
- * Sanitize connection messaging setting.
- *
- * Simple boolean to int conversion matching legacy
- * bp_admin_sanitize_callback_force_friendship_to_message().
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param mixed $value The value to sanitize.
- *
- * @return int 1 or 0.
- */
-function bb_members_sanitize_force_friendship_to_message( $value ) {
-	return $value ? 1 : 0;
-}
-
-/**
  * Sanitize profile header style setting.
  *
  * Accepts only 'left' or 'centered'.
@@ -285,15 +256,108 @@ function bb_members_sanitize_cover_height( $value ) {
 }
 
 // =========================================================================
-// POST-SAVE VALIDATION HOOKS
+// POST-SAVE HOOKS (bb_admin_save_feature_settings_after)
 //
-// Priority ordering (must run in this order):
-//   3  - bb_members_handle_avatar_type_wordpress     (force-disable gravatar when WordPress avatar)
-//   5  - bb_members_validate_image_settings_after_save (revert invalid avatar/cover selections)
-//   10 - bb_members_handle_display_name_format_change  (update xprofile field meta)
-//   10 - bb_members_handle_slug_format_change          (flush caches on slug change)
-//   10 - bb_members_sync_reverted_image_values (filter, syncs reverted values to response)
+// Priority ordering — must run in this order:
+// 2  - bb_members_sync_connection_component          (sync friends to bp-active-components + bb-active-features)
+// 3  - bb_members_handle_avatar_type_wordpress       (force-disable gravatar when avatar type is WordPress)
+// 5  - bb_members_validate_image_settings_after_save (revert invalid avatar/cover selections)
+// 10 - bb_members_handle_display_name_format_change  (update xprofile field meta on name format change)
+// 10 - bb_members_handle_slug_format_change          (flush caches when profile slug format changes)
+//
+// PRE-SAVE HOOK (bb_admin_settings_before_get_feature):
+// 10 - bb_members_capture_pre_save_state             (capture avatar/cover/slug values before save loop)
+//
+// RESPONSE FILTER (bb_admin_save_feature_settings_response):
+// 10 - bb_members_sync_reverted_image_values         (sync reverted avatar/cover/gravatar values to AJAX response)
+//
+// PRO HOOKS (registered in buddyboss-platform-pro):
+// 5  - bb_reset_primary_action_on_connection_toggle   (reset directory primary action when connections disabled)
 // =========================================================================
+
+/**
+ * Sync friends component activation state when connection toggle is saved.
+ *
+ * Adds or removes 'friends' from bp-active-components based on the
+ * bb_enable_member_connections toggle value. Runs at priority 2 so
+ * component state is updated before other connection-related save hooks.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id Feature ID being saved.
+ * @param array  $settings   Full submitted settings.
+ * @param array  $saved      Keys and values saved by core.
+ */
+function bb_members_sync_connection_component( $feature_id, $settings, $saved ) {
+	if ( 'members' !== $feature_id || ! array_key_exists( 'bb_enable_member_connections', $settings ) ) {
+		return;
+	}
+
+	$enable = ! empty( $settings['bb_enable_member_connections'] );
+
+	// Sync to bp-active-components (legacy, so bp_is_active('friends') works).
+	$active_components = bp_get_option( 'bp-active-components', array() );
+	if ( ! is_array( $active_components ) ) {
+		$active_components = array();
+	}
+
+	$was_active = ! empty( $active_components['friends'] );
+
+	// Only run install/uninstall when the state actually changes.
+	// bp_core_install() is expensive (creates DB tables, flushes cache, flushes rewrite rules).
+	if ( $enable !== $was_active ) {
+		$previously_active = $active_components;
+
+		if ( $enable ) {
+			$active_components['friends'] = 1;
+		} else {
+			unset( $active_components['friends'] );
+		}
+
+		// Replicate legacy component toggle: install pages, update option, uninstall removed.
+		bp_core_install( $active_components );
+		bp_core_add_page_mappings( $active_components );
+		bp_update_option( 'bp-active-components', $active_components );
+
+		$uninstalled = array_diff_key( $previously_active, $active_components );
+		if ( ! empty( $uninstalled ) ) {
+			bp_core_uninstall( $uninstalled );
+		}
+	}
+
+	// Sync to bb-active-features (primary storage for Settings 2.0).
+	$active_features = bp_get_option( 'bb-active-features', array() );
+	if ( ! is_array( $active_features ) ) {
+		$active_features = array();
+	}
+
+	$active_features['friends'] = $enable ? 1 : 0;
+	bp_update_option( 'bb-active-features', $active_features );
+}
+
+add_action( 'bb_admin_save_feature_settings_after', 'bb_members_sync_connection_component', 2, 3 );
+
+/**
+ * Get or set members pre-save state for post-save comparison.
+ *
+ * Uses a static variable instead of a PHP global for cross-hook state.
+ * Call with no arguments to read, or pass an array to set.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array|null $state Optional. Pass an array to set state. Omit or null to read.
+ *
+ * @return array The pre-save state array.
+ */
+function bb_members_get_pre_save_state( $state = null ) {
+	static $saved_state = array();
+
+	if ( null !== $state && is_array( $state ) ) {
+		$saved_state = $state;
+	}
+
+	return $saved_state;
+}
 
 /**
  * Capture members settings state before save for post-save comparison.
@@ -316,15 +380,15 @@ function bb_members_capture_pre_save_state( $feature_id ) {
 		return;
 	}
 
-	global $bb_members_pre_save_state;
-	$bb_members_pre_save_state = array(
-		'profile_avatar_type'         => bb_get_profile_avatar_type(),
-		'disable_avatar_uploads'      => bp_disable_avatar_uploads(),
-		'default_profile_avatar_type' => bb_get_default_profile_avatar_type(),
-		'enable_profile_gravatar'     => bp_enable_profile_gravatar(),
-		'default_profile_cover_type'  => bb_get_default_profile_cover_type(),
-		'profile_slug_format'         => bb_get_profile_slug_format(),
-		'profile_search_disabled'     => bp_disable_advanced_profile_search(),
+	bb_members_get_pre_save_state(
+		array(
+			'profile_avatar_type'         => bb_get_profile_avatar_type(),
+			'disable_avatar_uploads'      => bp_disable_avatar_uploads(),
+			'default_profile_avatar_type' => bb_get_default_profile_avatar_type(),
+			'enable_profile_gravatar'     => bp_enable_profile_gravatar(),
+			'default_profile_cover_type'  => bb_get_default_profile_cover_type(),
+			'profile_slug_format'         => bb_get_profile_slug_format(),
+		)
 	);
 }
 
@@ -440,7 +504,7 @@ function bb_members_validate_image_settings_after_save( $feature_id, $settings, 
 		return;
 	}
 
-	global $bb_members_pre_save_state;
+	$pre_save_state = bb_members_get_pre_save_state();
 
 	// --- Avatar type validation ---
 	if ( $has_avatar ) {
@@ -450,7 +514,7 @@ function bb_members_validate_image_settings_after_save( $feature_id, $settings, 
 		// just selected Custom (so Save keeps Custom and Upload Custom Avatar section stays visible).
 		if ( 'custom' === $avatar_type ) {
 			$custom_avatar = bb_get_default_custom_upload_profile_avatar();
-			$prev_type     = ! empty( $bb_members_pre_save_state['default_profile_avatar_type'] ) ? $bb_members_pre_save_state['default_profile_avatar_type'] : 'buddyboss';
+			$prev_type     = ! empty( $pre_save_state['default_profile_avatar_type'] ) ? $pre_save_state['default_profile_avatar_type'] : 'buddyboss';
 
 			if ( empty( $custom_avatar ) && 'custom' === $prev_type ) {
 				bp_update_option( 'bp-default-profile-avatar-type', 'buddyboss' );
@@ -470,7 +534,7 @@ function bb_members_validate_image_settings_after_save( $feature_id, $settings, 
 		// Revert only when they had Custom and then removed the image.
 		if ( 'custom' === $cover_type ) {
 			$custom_cover = bb_get_default_custom_upload_profile_cover();
-			$prev_type    = ! empty( $bb_members_pre_save_state['default_profile_cover_type'] ) ? $bb_members_pre_save_state['default_profile_cover_type'] : 'buddyboss';
+			$prev_type    = ! empty( $pre_save_state['default_profile_cover_type'] ) ? $pre_save_state['default_profile_cover_type'] : 'buddyboss';
 
 			if ( empty( $custom_cover ) && 'custom' === $prev_type ) {
 				bp_update_option( 'bp-default-profile-cover-type', 'buddyboss' );
@@ -502,12 +566,12 @@ function bb_members_sync_reverted_image_values( $response_data, $feature_id, $se
 		return $response_data;
 	}
 
-	// Only re-read the specific keys that the validation callback may have reverted.
+	// Only re-read the specific keys that post-save hooks may have modified:
+	// - bp-default-profile-avatar-type / bp-default-profile-cover-type: reverted by bb_members_validate_image_settings_after_save() at priority 5.
+	// - bp-enable-profile-gravatar: force-disabled by bb_members_handle_avatar_type_wordpress() at priority 3 when avatar type is WordPress.
 	$revertable_keys = array(
 		'bp-default-profile-avatar-type',
 		'bp-default-profile-cover-type',
-		'bp-profile-avatar-type',
-		'bp-disable-avatar-uploads',
 		'bp-enable-profile-gravatar',
 	);
 
@@ -546,14 +610,16 @@ function bb_members_handle_slug_format_change( $feature_id, $settings, $saved ) 
 		return;
 	}
 
-	global $bb_members_pre_save_state;
-	$slug_before = ! empty( $bb_members_pre_save_state['profile_slug_format'] ) ? $bb_members_pre_save_state['profile_slug_format'] : '';
+	$pre_save_state = bb_members_get_pre_save_state();
+	$slug_before    = ! empty( $pre_save_state['profile_slug_format'] ) ? $pre_save_state['profile_slug_format'] : '';
 	$slug_after  = bb_get_profile_slug_format();
 
 	if ( $slug_before !== $slug_after ) {
+		// Flush all caches — slug format affects every member URL site-wide.
+		// Legacy BP_Admin_Setting_Xprofile::settings_save() uses the same approach.
 		wp_cache_flush();
 
-		// Purge all the cache for API.
+		// Purge all the cache for API (member URLs changed).
 		if ( class_exists( 'BuddyBoss\Performance\Cache' ) ) {
 			BuddyBoss\Performance\Cache::instance()->purge_all();
 		}
@@ -564,7 +630,42 @@ add_action( 'bb_admin_save_feature_settings_after', 'bb_members_handle_slug_form
 
 // =========================================================================
 // AJAX-TIME FIELD ENRICHMENT
+//
+// Helper functions and enrichment filters that run during
+// bb_admin_get_feature_settings AJAX requests to populate dynamic
+// field options not available at registration time (bp_loaded priority 4).
 // =========================================================================
+
+/**
+ * Convert an element array to a Settings 2.0 option format.
+ *
+ * Shared by header elements, directory elements, and profile action
+ * enrichment callbacks to avoid duplicating the conversion logic.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $elements Array of elements with 'element_label', 'element_name', 'element_class' keys.
+ *
+ * @return array Options array with 'label', 'value', and optional 'disabled' keys.
+ */
+function bb_members_elements_to_options( $elements ) {
+	$options = array();
+
+	foreach ( $elements as $element ) {
+		$option = array(
+			'label' => $element['element_label'],
+			'value' => $element['element_name'],
+		);
+
+		if ( ! empty( $element['element_class'] ) && false !== strpos( $element['element_class'], 'bp-hide' ) ) {
+			$option['disabled'] = true;
+		}
+
+		$options[] = $option;
+	}
+
+	return $options;
+}
 
 /**
  * Inject dynamic cover image dimensions into the upload help text at AJAX time.
@@ -660,7 +761,7 @@ add_filter( 'bb_admin_settings_format_field_data', 'bb_members_enrich_avatar_upl
 /**
  * Inject profile header element options at AJAX time.
  *
- * bb_get_profile_header_elements() queries bp_xprofile_fields which is not
+ * The bb_get_profile_header_elements() queries bp_xprofile_fields which is not
  * available at registration time (bp_loaded priority 4). This filter runs
  * during the AJAX request when xprofile is fully initialised.
  *
@@ -681,24 +782,174 @@ function bb_members_enrich_header_elements_options( $field_data, $field, $featur
 		return $field_data;
 	}
 
-	$element_options = array();
-	foreach ( bb_get_profile_header_elements() as $element ) {
-		$option = array(
-			'label' => $element['element_label'],
-			'value' => $element['element_name'],
-		);
-
-		// Disable elements that depend on inactive features.
-		if ( ! empty( $element['element_class'] ) && false !== strpos( $element['element_class'], 'bp-hide' ) ) {
-			$option['disabled'] = true;
-		}
-
-		$element_options[] = $option;
-	}
-
-	$field_data['options'] = $element_options;
+	$field_data['options'] = bb_members_elements_to_options( bb_get_profile_header_elements() );
 
 	return $field_data;
 }
 
 add_filter( 'bb_admin_settings_format_field_data', 'bb_members_enrich_header_elements_options', 10, 3 );
+
+/**
+ * Inject profile type options at AJAX time.
+ *
+ * The bp_get_active_member_types() runs a WP_Query for bp-member-type CPT which
+ * should not execute on every admin page load. This filter populates the
+ * Default Profile Type select options only when the admin fetches settings.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array  $field_data Formatted field data.
+ * @param array  $field      Original field registration data.
+ * @param string $feature_id Feature ID.
+ *
+ * @return array Modified field data.
+ */
+function bb_members_enrich_profile_type_options( $field_data, $field, $feature_id ) {
+	if ( 'members' !== $feature_id || 'bp-member-type-default-on-registration' !== ( isset( $field_data['name'] ) ? $field_data['name'] : '' ) ) {
+		return $field_data;
+	}
+
+	if ( ! empty( $field_data['options'] ) ) {
+		return $field_data;
+	}
+
+	$type_options = array(
+		array(
+			'label' => __( '----', 'buddyboss' ),
+			'value' => '',
+		),
+	);
+
+	$member_types = bp_get_active_member_types();
+
+	// Prime post caches to avoid N+1 get_post_meta() calls in the loop.
+	if ( ! empty( $member_types ) ) {
+		_prime_post_caches( $member_types, false, true );
+	}
+
+	foreach ( $member_types as $member_type_id ) {
+		$type_name        = bp_get_member_type_key( $member_type_id );
+		$member_type_name = get_post_meta( $member_type_id, '_bp_member_type_label_name', true );
+
+		if ( ! empty( $type_name ) ) {
+			$type_options[] = array(
+				'label' => $member_type_name,
+				'value' => $type_name,
+			);
+		}
+	}
+
+	$field_data['options'] = $type_options;
+
+	return $field_data;
+}
+
+add_filter( 'bb_admin_settings_format_field_data', 'bb_members_enrich_profile_type_options', 10, 3 );
+
+/**
+ * Inject member directory element options at AJAX time.
+ *
+ * The bb_get_member_directory_elements() depends on component state that may not be
+ * fully initialized at registration time (bp_loaded priority 4). This filter
+ * populates options only when the admin fetches settings via AJAX.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array  $field_data Formatted field data.
+ * @param array  $field      Original field registration data.
+ * @param string $feature_id Feature ID.
+ *
+ * @return array Modified field data.
+ */
+function bb_members_enrich_directory_elements_options( $field_data, $field, $feature_id ) {
+	if ( 'members' !== $feature_id || 'bb-member-directory-elements' !== ( isset( $field_data['name'] ) ? $field_data['name'] : '' ) ) {
+		return $field_data;
+	}
+
+	if ( ! empty( $field_data['options'] ) || ! function_exists( 'bb_get_member_directory_elements' ) ) {
+		return $field_data;
+	}
+
+	$field_data['options'] = bb_members_elements_to_options( bb_get_member_directory_elements() );
+
+	return $field_data;
+}
+
+add_filter( 'bb_admin_settings_format_field_data', 'bb_members_enrich_directory_elements_options', 10, 3 );
+
+/**
+ * Inject member directory profile action options at AJAX time.
+ *
+ * The bb_get_member_directory_profile_actions() depends on component state that may
+ * not be fully initialized at registration time. This filter populates options
+ * only when the admin fetches settings via AJAX.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array  $field_data Formatted field data.
+ * @param array  $field      Original field registration data.
+ * @param string $feature_id Feature ID.
+ *
+ * @return array Modified field data.
+ */
+function bb_members_enrich_directory_actions_options( $field_data, $field, $feature_id ) {
+	if ( 'members' !== $feature_id || 'bb-member-profile-actions' !== ( isset( $field_data['name'] ) ? $field_data['name'] : '' ) ) {
+		return $field_data;
+	}
+
+	if ( ! empty( $field_data['options'] ) || ! function_exists( 'bb_get_member_directory_profile_actions' ) ) {
+		return $field_data;
+	}
+
+	$field_data['options'] = bb_members_elements_to_options( bb_get_member_directory_profile_actions() );
+
+	return $field_data;
+}
+
+add_filter( 'bb_admin_settings_format_field_data', 'bb_members_enrich_directory_actions_options', 10, 3 );
+
+/**
+ * Inject member directory primary action options at AJAX time.
+ *
+ * Builds the primary action select options from visible (non-hidden) profile
+ * actions. Deferred to AJAX time to avoid calling bb_get_member_directory_profile_actions()
+ * on every admin page load.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array  $field_data Formatted field data.
+ * @param array  $field      Original field registration data.
+ * @param string $feature_id Feature ID.
+ *
+ * @return array Modified field data.
+ */
+function bb_members_enrich_directory_primary_action_options( $field_data, $field, $feature_id ) {
+	if ( 'members' !== $feature_id || 'bb-member-profile-primary-action' !== ( isset( $field_data['name'] ) ? $field_data['name'] : '' ) ) {
+		return $field_data;
+	}
+
+	if ( ! empty( $field_data['options'] ) || ! function_exists( 'bb_get_member_directory_profile_actions' ) ) {
+		return $field_data;
+	}
+
+	// Build primary options from non-disabled actions only.
+	$all_options            = bb_members_elements_to_options( bb_get_member_directory_profile_actions() );
+	$primary_action_options = array(
+		array(
+			'label' => __( 'None', 'buddyboss' ),
+			'value' => '',
+		),
+	);
+
+	foreach ( $all_options as $option ) {
+		if ( empty( $option['disabled'] ) ) {
+			$primary_action_options[] = $option;
+		}
+	}
+
+	$field_data['options'] = $primary_action_options;
+
+	return $field_data;
+}
+
+add_filter( 'bb_admin_settings_format_field_data', 'bb_members_enrich_directory_primary_action_options', 10, 3 );
