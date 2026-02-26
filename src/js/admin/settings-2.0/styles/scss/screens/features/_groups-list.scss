@@ -1131,21 +1131,13 @@ input.bb-admin-meta-field__search-input {
 		min-width: 0;
 	}
 
-	&__add-btn {
-		flex-shrink: 0;
-		white-space: nowrap;
-		height: 40px;
-		color: $bb-background-brand-primary-color;
-		border-color: $bb-background-brand-primary-color;
+	&__add-btn.is-secondary {
+		@include bb-button-primary;
 
-		&:hover:not(:disabled) {
-			color: $bb-background-brand-primary-color;
-			border-color: $bb-background-brand-primary-color;
-			opacity: 0.85;
-		}
-
-		&:disabled {
-			opacity: 0.5;
+		i {
+			font-size: 16px;
+			font-weight: 700;
+			margin-right: 6px;
 		}
 	}
 

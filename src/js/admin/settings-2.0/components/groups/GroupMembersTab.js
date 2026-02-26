@@ -501,7 +501,8 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 						disabled={ ! selectedUser }
 						onClick={ handleAddMember }
 					>
-						{ __( '+ Add', 'buddyboss' ) }
+						<i className="bb-icons-rl-plus"></i>
+						{ __( 'Add', 'buddyboss' ) }
 					</Button>
 				</div>
 			</div>
