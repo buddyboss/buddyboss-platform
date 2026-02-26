@@ -12,6 +12,7 @@ import { __ } from '@wordpress/i18n';
 import { Spinner, ToggleControl } from '@wordpress/components';
 import { ajaxFetch } from '../utils/ajax';
 import { getCachedFeatureData, setCachedFeatureData, invalidateFeatureCache } from '../utils/featureCache';
+import { BB_EVENTS } from '../utils/constants';
 import { applyReactionPostSave } from '../components/reaction/applyReactionPostSave';
 import { SettingsForm } from '../components/SettingsForm';
 import { SideNavigation } from './SideNavigation';
@@ -87,9 +88,9 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 				} );
 			}
 		}
-		window.addEventListener( 'bb-section-status-update', handleStatusUpdate );
+		window.addEventListener( BB_EVENTS.SECTION_STATUS_UPDATE, handleStatusUpdate );
 		return function() {
-			window.removeEventListener( 'bb-section-status-update', handleStatusUpdate );
+			window.removeEventListener( BB_EVENTS.SECTION_STATUS_UPDATE, handleStatusUpdate );
 		};
 	}, [] );
 

@@ -12,6 +12,24 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Get the server maximum upload size in megabytes.
+ *
+ * Uses bp_media_format_size_units() when available, otherwise falls back
+ * to wp_max_upload_size(). Result is always >= 1.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return int Server max upload size in MB.
+ */
+function bb_media_get_server_max_upload_size() {
+	if ( function_exists( 'bp_media_format_size_units' ) ) {
+		return max( 1, (int) bp_media_format_size_units( bp_core_upload_max_size(), false, 'MB' ) );
+	}
+
+	return max( 1, (int) ( wp_max_upload_size() / ( 1024 * 1024 ) ) );
+}
+
+/**
  * Build a human-readable description from a prefix and a list of context words.
  *
  * Joins the list with commas and "and" before the last item to produce strings
@@ -53,14 +71,8 @@ function bb_media_build_context_description( $prefix, $contexts ) {
  * @return int Sanitized upload size in MB.
  */
 function bb_media_sanitize_upload_size( $value ) {
-	$value = absint( $value );
-
-	// Get server max upload size in MB.
-	if ( function_exists( 'bp_media_format_size_units' ) ) {
-		$server_max = (int) bp_media_format_size_units( bp_core_upload_max_size(), false, 'MB' );
-	} else {
-		$server_max = (int) ( wp_max_upload_size() / ( 1024 * 1024 ) );
-	}
+	$value      = absint( $value );
+	$server_max = bb_media_get_server_max_upload_size();
 
 	if ( $value > $server_max ) {
 		$value = $server_max;
@@ -529,4 +541,92 @@ function bb_media_create_test_upload() {
 	}
 
 	return $result;
+}
+
+/**
+ * Get extension toggle options from a stored option.
+ *
+ * Reads extension data from the database and formats each entry as a
+ * toggle list option with label, value, and is_default flag.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $option_name The option name storing extension data.
+ * @param bool   $include_default Whether to include the is_default flag.
+ *
+ * @return array Toggle list options.
+ */
+function bb_media_get_extension_options( $option_name, $include_default = false ) {
+	$extensions = bp_get_option( $option_name, array() );
+	$options    = array();
+
+	foreach ( $extensions as $key => $ext ) {
+		if ( ! is_array( $ext ) || empty( $ext['extension'] ) ) {
+			continue;
+		}
+		$option = array(
+			'label' => ! empty( $ext['description'] ) ? $ext['extension'] . ' (' . $ext['description'] . ')' : $ext['extension'],
+			'value' => $key,
+		);
+
+		if ( $include_default ) {
+			$option['is_default'] = ! empty( $ext['is_default'] ) ? 1 : 0;
+		}
+
+		$options[] = $option;
+	}
+
+	return $options;
+}
+
+/**
+ * Get full extension data from a stored option.
+ *
+ * Returns the raw extension array so the React UI can display extension
+ * details and support adding/removing custom extensions.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $option_name The option name storing extension data.
+ *
+ * @return array Full extension data keyed by extension ID.
+ */
+function bb_media_get_extension_data( $option_name ) {
+	$extensions = bp_get_option( $option_name, array() );
+	$data       = array();
+
+	foreach ( $extensions as $key => $ext ) {
+		if ( ! is_array( $ext ) || empty( $ext['extension'] ) ) {
+			continue;
+		}
+		$data[ $key ] = array(
+			'extension'   => $ext['extension'] ?? '',
+			'mime_type'   => $ext['mime_type'] ?? '',
+			'description' => $ext['description'] ?? '',
+			'is_default'  => ! empty( $ext['is_default'] ) ? 1 : 0,
+			'is_active'   => ! empty( $ext['is_active'] ) ? 1 : 0,
+		);
+	}
+
+	return $data;
+}
+
+/**
+ * Format a document icon class for display.
+ *
+ * Applies the bb_document_icon_class filter and adds the appropriate
+ * icon font prefix (ReadyLaunch or legacy).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $icon_value The raw icon identifier (e.g., 'bb-icon-file-pdf').
+ *
+ * @return string Formatted icon class string.
+ */
+function bb_media_format_icon_class( $icon_value ) {
+	$render_icon = apply_filters( 'bb_document_icon_class', $icon_value );
+
+	return ( strpos( $render_icon, 'bb-icons-rl' ) !== false )
+		? 'bb-icons-rl ' . $render_icon
+		: 'bb-icon-l ' . $render_icon;
 }

@@ -8,8 +8,9 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useRef } from '@wordpress/element';
+import { useState, useRef, useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+import { BB_EVENTS } from '../../utils/constants';
 
 /**
  * Input Button Field Component
@@ -28,12 +29,22 @@ export function InputButtonField( { field, value, onChange, disabled } ) {
 	var initialButtonLabel = field.button_label || __( 'Connect', 'buddyboss' );
 
 	var inputRef = useRef( null );
+	var abortRef = useRef( null );
 	var [ inputValue, setInputValue ] = useState( value || '' );
 	var [ buttonLabel, setButtonLabel ] = useState( initialButtonLabel );
 	var [ connected, setConnected ] = useState( isConnected );
 	var [ isLoading, setIsLoading ] = useState( false );
 	var [ errorMessage, setErrorMessage ] = useState( '' );
 	var [ warningMessage, setWarningMessage ] = useState( '' );
+
+	// Abort in-flight request on unmount.
+	useEffect( function() {
+		return function() {
+			if ( abortRef.current ) {
+				abortRef.current.abort();
+			}
+		};
+	}, [] );
 
 	/**
 	 * Handle connect/disconnect button click.
@@ -44,6 +55,14 @@ export function InputButtonField( { field, value, onChange, disabled } ) {
 		if ( isLoading ) {
 			return;
 		}
+
+		// Abort any previous in-flight request.
+		if ( abortRef.current ) {
+			abortRef.current.abort();
+		}
+
+		var controller = new AbortController();
+		abortRef.current = controller;
 
 		setIsLoading( true );
 		setErrorMessage( '' );
@@ -59,6 +78,7 @@ export function InputButtonField( { field, value, onChange, disabled } ) {
 			method: 'POST',
 			credentials: 'same-origin',
 			body: formData,
+			signal: controller.signal,
 		} )
 			.then( function( response ) {
 				return response.json();
@@ -79,7 +99,7 @@ export function InputButtonField( { field, value, onChange, disabled } ) {
 
 					// Dispatch custom event to update section status badge.
 					if ( data.status ) {
-						var event = new CustomEvent( 'bb-section-status-update', {
+						var event = new CustomEvent( BB_EVENTS.SECTION_STATUS_UPDATE, {
 							detail: {
 								fieldName: field.name,
 								status: data.status,
@@ -96,7 +116,11 @@ export function InputButtonField( { field, value, onChange, disabled } ) {
 					setErrorMessage( result.data?.message || __( 'Connection failed.', 'buddyboss' ) );
 				}
 			} )
-			.catch( function() {
+			.catch( function( err ) {
+				// Ignore abort errors.
+				if ( err && 'AbortError' === err.name ) {
+					return;
+				}
 				setIsLoading( false );
 				setErrorMessage( __( 'Connection failed. Please try again.', 'buddyboss' ) );
 			} );

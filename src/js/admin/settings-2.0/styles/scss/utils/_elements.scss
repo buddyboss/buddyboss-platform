@@ -472,6 +472,12 @@ select.bb-admin-settings__select {
 	}
 
 	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		padding: 16px 24px;
+		border-top: 1px solid $bb-border-secondary-color;
+		gap: 8px;
 
 		.components-button {
 
@@ -504,7 +510,6 @@ select.bb-admin-settings__select {
 				padding: 6px 14px;
 				border: none;
 				border-radius: $bb-border-radius-lg;
-				margin-left: 8px;
 
 				&.disabled {
 					opacity: 0.5;

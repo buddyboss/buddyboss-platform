@@ -168,8 +168,8 @@
             }
 
             &--warning {
-                background-color: #fff3e0;
-                border: 0.5px solid #f9a825;
+                background-color: $bb-background-warning-primary-color;
+                border: 0.5px solid $bb-border-warning-secondary-color;
                 color: $bb-text-warning-primary-color;
 
                 .bb-admin-feature-settings__section-status-icon {
@@ -480,6 +480,11 @@
         background-color: rgba($bb-background-brand-primary-color, 0.05);
     }
 
+    &:focus {
+        outline: 2px solid $bb-border-brand-primary-color;
+        outline-offset: 1px;
+    }
+
     &:disabled {
         opacity: 0.5;
         pointer-events: none;
@@ -550,6 +555,11 @@
 
         &:hover {
             background-color: darken($bb-background-brand-primary-color, 8%);
+        }
+
+        &:focus {
+            outline: 2px solid $bb-background-brand-primary-color;
+            outline-offset: 1px;
         }
 
         &:disabled {
@@ -623,6 +633,11 @@
             color: $bb-error-color;
         }
 
+        &:focus {
+            outline: 2px solid $bb-border-brand-primary-color;
+            outline-offset: 1px;
+        }
+
         &:disabled {
             opacity: 0.5;
             pointer-events: none;
@@ -654,6 +669,11 @@
             opacity: 0.9;
         }
 
+        &:focus {
+            outline: 2px solid $bb-background-brand-primary-color;
+            outline-offset: 1px;
+        }
+
         &:disabled {
             opacity: 0.5;
             pointer-events: none;
@@ -661,69 +681,15 @@
     }
 }
 
-/* Add Extension Modal */
+/* Document Extensions Modal Overlay */
 .bb-extension-modal-overlay {
     z-index: 100100;
     background-color: $bb-overlay-color;
     backdrop-filter: blur(1px);
-
-    /* Darken the WP Modal overlay when nested Add Extension popup is open */
-    &.bb-extension-modal-overlay--dimmed {
-        background-color: rgba(0, 0, 0, 0.5);
-    }
 }
 
+/* Add/Edit Extension form styles (used inside portaled modals) */
 .bb-extension-modal {
-
-    &.components-modal__frame {
-        max-width: 680px;
-        width: 100%;
-        border-radius: $bb-border-radius-2xl;
-        border: 1px solid $bb-border-secondary-color;
-        box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.12);
-        overflow: hidden;
-    }
-
-    .components-modal__header {
-        height: auto;
-        border-bottom: 1px solid $bb-border-secondary-color;
-        padding: 16px 16px 16px 24px;
-        margin: 0;
-
-        .components-modal__header-heading {
-            color: #000000;
-            font-size: 18px;
-            font-weight: 500;
-            line-height: 1;
-        }
-
-        button.components-button {
-            color: $bb-icon-secondary-color;
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            min-width: 20px;
-            min-height: 20px;
-            width: 20px;
-            height: 20px;
-            padding: 0;
-
-            &:hover {
-                color: $bb-text-color;
-            }
-
-            svg {
-                width: 20px;
-                height: 20px;
-            }
-        }
-    }
-
-    .components-modal__content {
-        padding: 0;
-        margin: 0;
-        padding-top: 51px;
-    }
 
     &__body {
         padding: 24px;
@@ -996,108 +962,17 @@
         }
     }
 
-    &__footer {
-        display: flex;
-        justify-content: flex-end;
-        gap: 8px;
-        padding: 8px 24px;
-        border-top: 1px solid $bb-border-secondary-color;
-    }
-
-    &__cancel-btn.components-button {
-        font-size: 14px;
-        font-weight: 400;
-        line-height: 20px;
-        padding: 6px 16px;
-        border: 1px solid $bb-border-tertiary-color;
-        border-radius: $bb-border-radius-lg;
-        color: $bb-text-color;
-        background-color: $bb-background-base-color;
-        box-shadow: none;
-
-        &:hover {
-            background-color: $bb-background-secondary-color;
-            border-color: $bb-border-tertiary-color;
-            color: $bb-text-color;
-        }
-    }
-
-    &__save-btn.components-button {
-        font-size: 14px;
-        font-weight: 400;
-        line-height: 20px;
-        padding: 6px 16px;
-        border: none;
-        border-radius: $bb-border-radius-lg;
-        color: $bb-text-inverse-color;
-        background-color: $bb-background-brand-primary-color;
-        box-shadow: none;
-
-        &:hover {
-            background-color: $bb-background-brand-primary-color;
-            opacity: 0.9;
-        }
-
-        &:disabled {
-            background-color: $bb-icon-brand-disabled-color;
-            color: $bb-text-inverse-color;
-            opacity: 1;
-        }
-    }
 }
 
-/* Document Extensions Manage Modal */
+/* Document Extensions Manage Modal — extends .bb-admin-settings-modal */
 .bb-doc-extensions-modal {
 
     &.components-modal__frame {
         max-width: 720px;
-        width: 100%;
-        border-radius: $bb-border-radius-2xl;
-        border: 1px solid $bb-border-secondary-color;
-        box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.12);
-        overflow: hidden;
         max-height: 80vh;
     }
 
-    .components-modal__header {
-        height: auto;
-        border-bottom: 1px solid $bb-border-secondary-color;
-        padding: 16px 16px 16px 24px;
-        margin: 0;
-
-        .components-modal__header-heading {
-            color: #000000;
-            font-size: 18px;
-            font-weight: 500;
-            line-height: 1;
-        }
-
-        button.components-button {
-            color: $bb-icon-secondary-color;
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            min-width: 20px;
-            min-height: 20px;
-            width: 20px;
-            height: 20px;
-            padding: 0;
-
-            &:hover {
-                color: $bb-text-color;
-            }
-
-            svg {
-                width: 20px;
-                height: 20px;
-            }
-        }
-    }
-
     .components-modal__content {
-        padding: 0;
-        margin: 0;
-        padding-top: 51px;
         overflow-y: auto;
     }
 
@@ -1146,45 +1021,17 @@
         display: flex;
         align-items: center;
         flex-shrink: 0;
-        cursor: pointer;
-        position: relative;
-        width: 18px;
-        height: 18px;
 
-        input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            margin: 0;
-            border: 1.5px solid $bb-border-tertiary-color;
-            border-radius: $bb-border-radius-sm;
-            cursor: pointer;
-            appearance: none;
-            -webkit-appearance: none;
-            background-color: $bb-background-base-color;
-            transition: all 0.15s ease;
+        .components-base-control {
+            margin-bottom: 0;
+        }
 
-            &:checked {
-                background-color: $bb-background-brand-primary-color;
-                border-color: $bb-background-brand-primary-color;
-            }
+        .components-base-control__field {
+            margin-bottom: 0;
+        }
 
-            &:checked::after {
-                content: '';
-                display: block;
-                width: 5px;
-                height: 9px;
-                border: solid $bb-text-inverse-color;
-                border-width: 0 2px 2px 0;
-                transform: rotate(45deg);
-                position: absolute;
-                top: 2px;
-                left: 6px;
-            }
-
-            &:focus {
-                box-shadow: none;
-                outline: none;
-            }
+        .components-checkbox-control__input-container {
+            margin-right: 0;
         }
     }
 
@@ -1302,11 +1149,15 @@
         gap: 8px;
     }
 
+    &__add-btn-wrap {
+        padding: 16px 24px 0;
+        border-top: 1px solid $bb-border-secondary-color;
+    }
+
     &__add-btn {
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        margin: 16px 24px 0;
         padding: 8px 16px;
         font-size: 13px;
         font-weight: 500;
@@ -1333,13 +1184,6 @@
         }
     }
 
-    &__footer {
-        display: flex;
-        justify-content: flex-end;
-        gap: 8px;
-        padding: 8px 24px;
-        border-top: 1px solid $bb-border-secondary-color;
-    }
 }
 
 /* Add/Edit Extension modal (portaled to body, rendered over the Manage modal) */
@@ -1375,7 +1219,7 @@
         padding: 16px 16px 16px 24px;
 
         h1 {
-            color: #000;
+            color: $bb-text-color;
             font-size: 18px;
             font-weight: 500;
             line-height: 1;

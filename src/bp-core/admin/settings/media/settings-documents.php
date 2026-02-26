@@ -125,9 +125,7 @@ function bb_media_register_documents_panel_fields() {
 	}
 
 	// Get server max upload size for description text.
-	$server_max_mb = function_exists( 'bp_media_format_size_units' )
-		? (int) bp_media_format_size_units( bp_core_upload_max_size(), false, 'MB' )
-		: (int) ( wp_max_upload_size() / ( 1024 * 1024 ) );
+	$server_max_mb = bb_media_get_server_max_upload_size();
 
 	// FIELD: Upload Size (document).
 	bb_register_feature_field(
@@ -200,20 +198,7 @@ function bb_media_register_documents_panel_fields() {
  * @return array Toggle list options from stored or default document extensions.
  */
 function bb_media_get_document_extension_options() {
-	$extensions = bp_get_option( 'bp_document_extensions_support', array() );
-
-	$options = array();
-	foreach ( $extensions as $key => $ext ) {
-		if ( ! is_array( $ext ) || empty( $ext['extension'] ) ) {
-			continue;
-		}
-		$options[] = array(
-			'label' => ! empty( $ext['description'] ) ? $ext['extension'] . ' (' . $ext['description'] . ')' : $ext['extension'],
-			'value' => $key,
-		);
-	}
-
-	return $options;
+	return bb_media_get_extension_options( 'bp_document_extensions_support' );
 }
 
 /**
@@ -227,23 +212,7 @@ function bb_media_get_document_extension_options() {
  * @return array Full extension data keyed by extension ID (e.g., bb_doc_1).
  */
 function bb_media_get_document_extension_data() {
-	$extensions = bp_get_option( 'bp_document_extensions_support', array() );
-
-	$data = array();
-	foreach ( $extensions as $key => $ext ) {
-		if ( ! is_array( $ext ) || empty( $ext['extension'] ) ) {
-			continue;
-		}
-		$data[ $key ] = array(
-			'extension'   => $ext['extension'] ?? '',
-			'mime_type'   => $ext['mime_type'] ?? '',
-			'description' => $ext['description'] ?? '',
-			'is_default'  => ! empty( $ext['is_default'] ) ? 1 : 0,
-			'is_active'   => ! empty( $ext['is_active'] ) ? 1 : 0,
-		);
-	}
-
-	return $data;
+	return bb_media_get_extension_data( 'bp_document_extensions_support' );
 }
 
 /**
@@ -286,15 +255,10 @@ function bb_media_get_extension_icon_options() {
 
 		$options = array();
 		foreach ( $fallback_icons as $value => $label ) {
-			$render_icon = apply_filters( 'bb_document_icon_class', $value );
-			$icon_class  = ( strpos( $render_icon, 'bb-icons-rl' ) !== false )
-				? 'bb-icons-rl ' . $render_icon
-				: 'bb-icon-l ' . $render_icon;
-
 			$options[] = array(
 				'value'      => $value,
 				'label'      => $label,
-				'icon_class' => $icon_class,
+				'icon_class' => bb_media_format_icon_class( $value ),
 			);
 		}
 
@@ -309,16 +273,10 @@ function bb_media_get_extension_icon_options() {
 	$options = array();
 
 	foreach ( $icons as $icon ) {
-		$value       = $icon['icon'];
-		$render_icon = apply_filters( 'bb_document_icon_class', $value );
-		$icon_class  = ( strpos( $render_icon, 'bb-icons-rl' ) !== false )
-			? 'bb-icons-rl ' . $render_icon
-			: 'bb-icon-l ' . $render_icon;
-
 		$options[] = array(
-			'value'      => $value,
+			'value'      => $icon['icon'],
 			'label'      => $icon['title'],
-			'icon_class' => $icon_class,
+			'icon_class' => bb_media_format_icon_class( $icon['icon'] ),
 		);
 	}
 

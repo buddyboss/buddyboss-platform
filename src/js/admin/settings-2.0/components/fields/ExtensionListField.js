@@ -8,9 +8,10 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useRef } from '@wordpress/element';
+import { useState } from '@wordpress/element';
 import { ToggleControl, Modal, Button, TextControl, TextareaControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
+import { useMimeChecker } from '../../utils/mimeChecker';
 
 /**
  * Extension List Field Component
@@ -38,11 +39,8 @@ export function ExtensionListField( { field, value, onChange, disabled, sanitize
 	const [ newDescription, setNewDescription ] = useState( '' );
 	const [ newMimeType, setNewMimeType ] = useState( '' );
 
-	// MIME Checker state.
-	const [ isMimeCheckerOpen, setIsMimeCheckerOpen ] = useState( false );
-	const [ mimeCheckerResult, setMimeCheckerResult ] = useState( '' );
-	const [ isMimeChecking, setIsMimeChecking ] = useState( false );
-	const fileInputRef = useRef( null );
+	// MIME Checker (shared hook).
+	var mimeChecker = useMimeChecker();
 
 	// Track local extension data so additions/removals render immediately.
 	const [ localExtensionData, setLocalExtensionData ] = useState( function() {
@@ -201,13 +199,8 @@ export function ExtensionListField( { field, value, onChange, disabled, sanitize
 		setNewExtension( '' );
 		setNewDescription( '' );
 		setNewMimeType( '' );
-		setMimeCheckerResult( '' );
-		setIsMimeCheckerOpen( false );
-		setIsMimeChecking( false );
+		mimeChecker.resetMimeState();
 		setIsModalOpen( false );
-		if ( fileInputRef.current ) {
-			fileInputRef.current.value = '';
-		}
 	};
 
 	/**
@@ -220,71 +213,13 @@ export function ExtensionListField( { field, value, onChange, disabled, sanitize
 	};
 
 	/**
-	 * Upload a file to detect its MIME type via the server.
-	 *
-	 * Uses the existing wp_ajax_bp_document_check_file_mime_type AJAX handler
-	 * which uses PHP's finfo_file() for accurate MIME type detection.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	var handleGetMimeType = function() {
-		if ( ! fileInputRef.current || ! fileInputRef.current.files || ! fileInputRef.current.files[0] ) {
-			return;
-		}
-
-		var ajaxUrl = window.bbAdminData?.ajaxUrl || '/wp-admin/admin-ajax.php';
-		var formData = new FormData();
-		formData.append( 'file', fileInputRef.current.files[0] );
-		formData.append( 'action', 'bp_document_check_file_mime_type' );
-
-		setIsMimeChecking( true );
-		setMimeCheckerResult( '' );
-
-		fetch( ajaxUrl, {
-			method: 'POST',
-			credentials: 'same-origin',
-			body: formData,
-		} )
-			.then( function( response ) {
-				return response.json();
-			} )
-			.then( function( result ) {
-				if ( result.success && result.data && result.data.type ) {
-					setMimeCheckerResult( result.data.type );
-				}
-				setIsMimeChecking( false );
-			} )
-			.catch( function() {
-				setIsMimeChecking( false );
-			} );
-	};
-
-	/**
 	 * Copy the detected MIME type into the MIME Type field and close checker.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	var handleUseMimeType = function() {
-		setNewMimeType( mimeCheckerResult );
-		setMimeCheckerResult( '' );
-		setIsMimeCheckerOpen( false );
-		if ( fileInputRef.current ) {
-			fileInputRef.current.value = '';
-		}
-	};
-
-	/**
-	 * Close the MIME checker panel and reset its state.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	var handleCloseMimeChecker = function() {
-		setMimeCheckerResult( '' );
-		setIsMimeCheckerOpen( false );
-		setIsMimeChecking( false );
-		if ( fileInputRef.current ) {
-			fileInputRef.current.value = '';
-		}
+		setNewMimeType( mimeChecker.mimeCheckerResult );
+		mimeChecker.handleCloseMimeChecker();
 	};
 
 	return (
@@ -349,7 +284,7 @@ export function ExtensionListField( { field, value, onChange, disabled, sanitize
 				<Modal
 					title={ __( 'Add New Extension', 'buddyboss' ) }
 					onRequestClose={ handleCloseModal }
-					className="bb-extension-modal"
+					className="bb-extension-modal bb-admin-settings-modal"
 					overlayClassName="bb-extension-modal-overlay"
 					shouldCloseOnClickOutside={ false }
 				>
@@ -391,8 +326,8 @@ export function ExtensionListField( { field, value, onChange, disabled, sanitize
 									type="button"
 									className="bb-extension-modal__mime-checker-link"
 									onClick={ function() {
-										setIsMimeCheckerOpen( ! isMimeCheckerOpen );
-										setMimeCheckerResult( '' );
+										mimeChecker.setIsMimeCheckerOpen( ! mimeChecker.isMimeCheckerOpen );
+										mimeChecker.setMimeCheckerResult( '' );
 									} }
 								>
 									{ __( 'MIME Checker', 'buddyboss' ) }
@@ -400,14 +335,14 @@ export function ExtensionListField( { field, value, onChange, disabled, sanitize
 							</div>
 						</div>
 
-						{ isMimeCheckerOpen && (
+						{ mimeChecker.isMimeCheckerOpen && (
 							<div className="bb-extension-modal__mime-checker">
 								<div className="bb-extension-modal__mime-checker-header">
 									<h4>{ __( 'Upload a file to check its MIME type', 'buddyboss' ) }</h4>
 									<button
 										type="button"
 										className="bb-extension-modal__mime-checker-close"
-										onClick={ handleCloseMimeChecker }
+										onClick={ mimeChecker.handleCloseMimeChecker }
 										aria-label={ __( 'Close MIME checker', 'buddyboss' ) }
 									>
 										<i className="bb-icons-rl bb-icons-rl-times" />
@@ -419,25 +354,25 @@ export function ExtensionListField( { field, value, onChange, disabled, sanitize
 								<div className="bb-extension-modal__mime-checker-upload">
 									<input
 										type="file"
-										ref={ fileInputRef }
+										ref={ mimeChecker.fileInputRef }
 										className="bb-extension-modal__mime-checker-file"
 									/>
 									<Button
 										variant="secondary"
-										onClick={ handleGetMimeType }
-										disabled={ isMimeChecking }
+										onClick={ mimeChecker.handleGetMimeType }
+										disabled={ mimeChecker.isMimeChecking }
 										className="bb-extension-modal__mime-checker-btn"
 									>
-										{ isMimeChecking ? __( 'Checking...', 'buddyboss' ) : __( 'Get MIME Type', 'buddyboss' ) }
+										{ mimeChecker.isMimeChecking ? __( 'Checking...', 'buddyboss' ) : __( 'Get MIME Type', 'buddyboss' ) }
 									</Button>
 								</div>
-								{ mimeCheckerResult && (
+								{ mimeChecker.mimeCheckerResult && (
 									<div className="bb-extension-modal__mime-checker-result">
 										<span className="bb-extension-modal__mime-checker-result-label">
 											{ __( 'Detected MIME type:', 'buddyboss' ) }
 										</span>
 										<code className="bb-extension-modal__mime-checker-result-value">
-											{ mimeCheckerResult }
+											{ mimeChecker.mimeCheckerResult }
 										</code>
 										<Button
 											variant="primary"
@@ -451,11 +386,10 @@ export function ExtensionListField( { field, value, onChange, disabled, sanitize
 							</div>
 						) }
 					</div>
-					<div className="bb-extension-modal__footer">
+					<div className="bb-admin-settings-modal__footer">
 						<Button
 							variant="secondary"
 							onClick={ handleCloseModal }
-							className="bb-extension-modal__cancel-btn"
 						>
 							{ __( 'Cancel', 'buddyboss' ) }
 						</Button>
@@ -463,7 +397,6 @@ export function ExtensionListField( { field, value, onChange, disabled, sanitize
 							variant="primary"
 							onClick={ handleSaveExtension }
 							disabled={ ! newExtension.trim() }
-							className="bb-extension-modal__save-btn"
 						>
 							{ __( 'Save', 'buddyboss' ) }
 						</Button>

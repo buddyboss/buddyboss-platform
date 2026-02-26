@@ -167,9 +167,7 @@ function bb_media_register_photos_panel_fields() {
 	}
 
 	// Get server max upload size for description text.
-	$server_max_mb = function_exists( 'bp_media_format_size_units' )
-		? (int) bp_media_format_size_units( bp_core_upload_max_size(), false, 'MB' )
-		: (int) ( wp_max_upload_size() / ( 1024 * 1024 ) );
+	$server_max_mb = bb_media_get_server_max_upload_size();
 
 	// FIELD: Upload Size.
 	bb_register_feature_field(
