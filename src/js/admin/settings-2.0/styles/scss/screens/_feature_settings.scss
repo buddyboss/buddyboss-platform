@@ -272,8 +272,7 @@
 
         // Last field in a group restores the bottom border.
         &:has(+ :not([data-group])),
-        &:has(+ .bb-admin-settings-form__field:not(.bb-admin-settings-form__field--grouped)),
-        &:last-child {
+        &:has(+ .bb-admin-settings-form__field:not(.bb-admin-settings-form__field--grouped)) {
             border-bottom: 1px solid $bb-border-secondary-color;
             padding-bottom: 24px;
         }
