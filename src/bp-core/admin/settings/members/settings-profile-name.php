@@ -75,132 +75,207 @@ function bb_members_register_profile_name_panel_fields() {
 		)
 	);
 
-	// FIELD: Display Name Fields — "First Name" mode.
+	// ---- Display Name Fields — "First Name" mode ----
 	// Shows 3 toggles: First Name (disabled), Last Name (can be disabled), Nickname (disabled).
 	// Legacy: bp_admin_setting_display_name_first_name() — checkbox with css class 'first-name-options'.
+
+	// FIELD: First Name (disabled, always on).
 	bb_register_feature_field(
 		'members',
 		'profile_name',
 		'profile_name',
 		array(
-			'name'        => 'bp-display-name-fields-first-name',
-			'label'       => __( 'Display Name Fields', 'buddyboss' ),
-			'type'        => 'child_render',
-			'help_text'   => __( 'If you disable "Last Name" field, it will not appear anywhere in the network.', 'buddyboss' ),
-			'conditional' => array(
+			'name'         => 'bp-display-name-fn-first-name',
+			'label'        => __( 'Display Name Fields', 'buddyboss' ),
+			'type'         => 'toggle',
+			'toggle_label' => __( 'First Name', 'buddyboss' ),
+			'default'      => true,
+			'disabled'     => true,
+			'conditional'  => array(
 				'field' => 'bp-display-name-format',
 				'value' => 'first_name',
 			),
-			'order'       => 20,
-			'fields'      => array(
-				array(
-					'name'     => 'bp-display-name-fn-first-name',
-					'label'    => __( 'First Name', 'buddyboss' ),
-					'type'     => 'toggle',
-					'default'  => true,
-					'disabled' => true,
-				),
-				array(
-					'name'              => 'bp-hide-last-name',
-					'label'             => __( 'Last Name', 'buddyboss' ),
-					'type'              => 'toggle',
-					'default'           => bp_hide_last_name(),
-					'sanitize_callback' => 'intval',
-				),
-				array(
-					'name'     => 'bp-display-name-fn-nickname',
-					'label'    => __( 'Nickname', 'buddyboss' ),
-					'type'     => 'toggle',
-					'default'  => true,
-					'disabled' => true,
-				),
-			),
+			'group'        => 'display_name_fields_first_name',
+			'order'        => 20,
 		)
 	);
 
-	// FIELD: Display Name Fields — "First Name & Last Name" mode.
-	// Shows 3 toggles: all disabled (all fields required).
-	// Legacy: bp_admin_setting_display_name_first_last_name() — all checkboxes disabled.
+	// FIELD: Last Name (editable toggle).
 	bb_register_feature_field(
 		'members',
 		'profile_name',
 		'profile_name',
 		array(
-			'name'        => 'bp-display-name-fields-first-last-name',
-			'label'       => __( 'Display Name Fields', 'buddyboss' ),
-			'type'        => 'child_render',
-			'help_text'   => __( 'All name fields are required with this format. Best used for professional networks.', 'buddyboss' ),
-			'conditional' => array(
+			'name'              => 'bp-hide-last-name',
+			'label'             => '',
+			'type'              => 'toggle',
+			'toggle_label'      => __( 'Last Name', 'buddyboss' ),
+			'default'           => bp_hide_last_name(),
+			'sanitize_callback' => 'intval',
+			'conditional'       => array(
+				'field' => 'bp-display-name-format',
+				'value' => 'first_name',
+			),
+			'group'             => 'display_name_fields_first_name',
+			'order'             => 21,
+		)
+	);
+
+	// FIELD: Nickname (disabled, always on).
+	bb_register_feature_field(
+		'members',
+		'profile_name',
+		'profile_name',
+		array(
+			'name'         => 'bp-display-name-fn-nickname',
+			'label'        => '',
+			'type'         => 'toggle',
+			'toggle_label' => __( 'Nickname', 'buddyboss' ),
+			'default'      => true,
+			'disabled'     => true,
+			'help_text'    => __( 'If you disable "Last Name" field, it will not appear anywhere in the network.', 'buddyboss' ),
+			'conditional'  => array(
+				'field' => 'bp-display-name-format',
+				'value' => 'first_name',
+			),
+			'group'        => 'display_name_fields_first_name',
+			'order'        => 22,
+		)
+	);
+
+	// ---- Display Name Fields — "First Name & Last Name" mode ----
+	// Shows 3 toggles: all disabled (all fields required).
+	// Legacy: bp_admin_setting_display_name_first_last_name() — all checkboxes disabled.
+
+	// FIELD: First Name (disabled, always on).
+	bb_register_feature_field(
+		'members',
+		'profile_name',
+		'profile_name',
+		array(
+			'name'         => 'bp-display-name-fln-first-name',
+			'label'        => __( 'Display Name Fields', 'buddyboss' ),
+			'type'         => 'toggle',
+			'toggle_label' => __( 'First Name', 'buddyboss' ),
+			'default'      => true,
+			'disabled'     => true,
+			'conditional'  => array(
 				'field' => 'bp-display-name-format',
 				'value' => 'first_last_name',
 			),
-			'order'       => 30,
-			'fields'      => array(
-				array(
-					'name'     => 'bp-display-name-fln-first-name',
-					'label'    => __( 'First Name', 'buddyboss' ),
-					'type'     => 'toggle',
-					'default'  => true,
-					'disabled' => true,
-				),
-				array(
-					'name'     => 'bp-display-name-fln-last-name',
-					'label'    => __( 'Last Name', 'buddyboss' ),
-					'type'     => 'toggle',
-					'default'  => true,
-					'disabled' => true,
-				),
-				array(
-					'name'     => 'bp-display-name-fln-nickname',
-					'label'    => __( 'Nickname', 'buddyboss' ),
-					'type'     => 'toggle',
-					'default'  => true,
-					'disabled' => true,
-				),
-			),
+			'group'        => 'display_name_fields_first_last_name',
+			'order'        => 30,
 		)
 	);
 
-	// FIELD: Display Name Fields — "Nickname" mode.
-	// Shows 3 toggles: First Name (can be disabled), Last Name (can be disabled), Nickname (disabled).
-	// Legacy: bp_admin_setting_callback_nickname_hide_first_name() + bp_admin_setting_callback_nickname_hide_last_name().
+	// FIELD: Last Name (disabled, always on).
 	bb_register_feature_field(
 		'members',
 		'profile_name',
 		'profile_name',
 		array(
-			'name'        => 'bp-display-name-fields-nickname',
-			'label'       => __( 'Display Name Fields', 'buddyboss' ),
-			'type'        => 'child_render',
-			'help_text'   => __( 'If you disable "First Name" and "Last Name" fields, they will not appear anywhere in the network. This allows your members to be fully anonymous (if they use a pseudonym for their nickname).', 'buddyboss' ),
-			'conditional' => array(
+			'name'         => 'bp-display-name-fln-last-name',
+			'label'        => '',
+			'type'         => 'toggle',
+			'toggle_label' => __( 'Last Name', 'buddyboss' ),
+			'default'      => true,
+			'disabled'     => true,
+			'conditional'  => array(
+				'field' => 'bp-display-name-format',
+				'value' => 'first_last_name',
+			),
+			'group'        => 'display_name_fields_first_last_name',
+			'order'        => 31,
+		)
+	);
+
+	// FIELD: Nickname (disabled, always on).
+	bb_register_feature_field(
+		'members',
+		'profile_name',
+		'profile_name',
+		array(
+			'name'         => 'bp-display-name-fln-nickname',
+			'label'        => '',
+			'type'         => 'toggle',
+			'toggle_label' => __( 'Nickname', 'buddyboss' ),
+			'default'      => true,
+			'disabled'     => true,
+			'help_text'    => __( 'All name fields are required with this format. Best used for professional networks.', 'buddyboss' ),
+			'conditional'  => array(
+				'field' => 'bp-display-name-format',
+				'value' => 'first_last_name',
+			),
+			'group'        => 'display_name_fields_first_last_name',
+			'order'        => 32,
+		)
+	);
+
+	// ---- Display Name Fields — "Nickname" mode ----
+	// Shows 3 toggles: First Name (can be disabled), Last Name (can be disabled), Nickname (disabled).
+	// Legacy: bp_admin_setting_callback_nickname_hide_first_name() + bp_admin_setting_callback_nickname_hide_last_name().
+
+	// FIELD: First Name (editable toggle).
+	bb_register_feature_field(
+		'members',
+		'profile_name',
+		'profile_name',
+		array(
+			'name'              => 'bp-hide-nickname-first-name',
+			'label'             => __( 'Display Name Fields', 'buddyboss' ),
+			'type'              => 'toggle',
+			'toggle_label'      => __( 'First Name', 'buddyboss' ),
+			'default'           => bp_hide_nickname_first_name(),
+			'sanitize_callback' => 'intval',
+			'conditional'       => array(
 				'field' => 'bp-display-name-format',
 				'value' => 'nickname',
 			),
-			'order'       => 40,
-			'fields'      => array(
-				array(
-					'name'              => 'bp-hide-nickname-first-name',
-					'label'             => __( 'First Name', 'buddyboss' ),
-					'type'              => 'toggle',
-					'default'           => bp_hide_nickname_first_name(),
-					'sanitize_callback' => 'intval',
-				),
-				array(
-					'name'              => 'bp-hide-nickname-last-name',
-					'label'             => __( 'Last Name', 'buddyboss' ),
-					'type'              => 'toggle',
-					'default'           => bp_hide_nickname_last_name(),
-					'sanitize_callback' => 'intval',
-				),
-				array(
-					'name'     => 'bp-display-name-nn-nickname',
-					'label'    => __( 'Nickname', 'buddyboss' ),
-					'type'     => 'toggle',
-					'default'  => true,
-					'disabled' => true,
-				),
+			'group'             => 'display_name_fields_nickname',
+			'order'             => 40,
+		)
+	);
+
+	// FIELD: Last Name (editable toggle).
+	bb_register_feature_field(
+		'members',
+		'profile_name',
+		'profile_name',
+		array(
+			'name'              => 'bp-hide-nickname-last-name',
+			'label'             => '',
+			'type'              => 'toggle',
+			'toggle_label'      => __( 'Last Name', 'buddyboss' ),
+			'default'           => bp_hide_nickname_last_name(),
+			'sanitize_callback' => 'intval',
+			'conditional'       => array(
+				'field' => 'bp-display-name-format',
+				'value' => 'nickname',
 			),
+			'group'             => 'display_name_fields_nickname',
+			'order'             => 41,
+		)
+	);
+
+	// FIELD: Nickname (disabled, always on).
+	bb_register_feature_field(
+		'members',
+		'profile_name',
+		'profile_name',
+		array(
+			'name'         => 'bp-display-name-nn-nickname',
+			'label'        => '',
+			'type'         => 'toggle',
+			'toggle_label' => __( 'Nickname', 'buddyboss' ),
+			'default'      => true,
+			'disabled'     => true,
+			'help_text'    => __( 'If you disable "First Name" and "Last Name" fields, they will not appear anywhere in the network. This allows your members to be fully anonymous (if they use a pseudonym for their nickname).', 'buddyboss' ),
+			'conditional'  => array(
+				'field' => 'bp-display-name-format',
+				'value' => 'nickname',
+			),
+			'group'        => 'display_name_fields_nickname',
+			'order'        => 42,
 		)
 	);
 

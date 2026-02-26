@@ -171,15 +171,6 @@ function bb_members_register_profile_image_panel_fields() {
 	 */
 	do_action( 'bb_members_settings_after_avatar_fields' );
 
-	// Cover image section is only available when cover image uploads are not globally disabled.
-	// Note: Cannot use bp_is_active( 'xprofile', 'cover_image' ) here because the theme compat
-	// sub-feature registration (bp_set_theme_compat_feature) fires at bp_loaded priority 12,
-	// but feature settings registration fires at priority 5 — so bp_is_active() would always
-	// return false. Instead, check the underlying option directly.
-	if ( (bool) bp_get_option( 'bp-disable-cover-image-uploads', false ) ) {
-		return;
-	}
-
 	// -------------------------------------------------------------------------
 	// SECTION: Profile Covers
 	// -------------------------------------------------------------------------
@@ -212,58 +203,73 @@ function bb_members_register_profile_image_panel_fields() {
 		)
 	);
 
-	// FIELD: Cover Image Sizes (Pro only, child_render with width/height selects).
+	// FIELD: Cover Image Width (Pro only, select, grouped with height).
 	bb_register_feature_field(
 		'members',
 		'profile_image',
 		'profile_cover',
 		array(
-			'name'        => 'bb-default-profile-cover-size',
-			'label'       => __( 'Cover Image Sizes', 'buddyboss' ),
-			'type'        => 'child_render',
-			'description' => __( 'Changing the cover image size will reposition existing member images.', 'buddyboss' ),
-			'pro_only'    => true,
-			'conditional' => array(
+			'name'              => 'bb-cover-profile-width',
+			'label'             => __( 'Cover Image Sizes', 'buddyboss' ),
+			'type'              => 'select',
+			'description'       => '',
+			'default'           => bb_get_profile_cover_image_width(),
+			'sanitize_callback' => 'bb_members_sanitize_cover_width',
+			'pro_only'          => true,
+			'options'           => array(
+				array(
+					'label' => __( 'Default', 'buddyboss' ),
+					'value' => 'default',
+				),
+				array(
+					'label' => __( 'Full Width', 'buddyboss' ),
+					'value' => 'full',
+				),
+			),
+			'conditional'       => array(
 				'field' => 'bp-disable-cover-image-uploads',
 				'value' => false,
 			),
-			'order'       => 20,
-			'fields'      => array(
+			'group'             => array(
+				'key'   => 'cover_image_sizes',
+				'label' => __( 'Width', 'buddyboss' ),
+			),
+			'order'             => 20,
+		)
+	);
+
+	// FIELD: Cover Image Height (Pro only, select, grouped with width).
+	bb_register_feature_field(
+		'members',
+		'profile_image',
+		'profile_cover',
+		array(
+			'name'              => 'bb-cover-profile-height',
+			'label'             => '',
+			'type'              => 'select',
+			'description'       => __( 'Changing the cover image size will reposition existing member images.', 'buddyboss' ),
+			'default'           => bb_get_profile_cover_image_height(),
+			'sanitize_callback' => 'bb_members_sanitize_cover_height',
+			'pro_only'          => true,
+			'options'           => array(
 				array(
-					'name'              => 'bb-pro-cover-profile-width',
-					'label'             => __( 'Width', 'buddyboss' ),
-					'type'              => 'select',
-					'default'           => function_exists( 'bb_get_pro_cover_profile_width' ) ? bb_get_pro_cover_profile_width() : 'default',
-					'sanitize_callback' => 'bb_members_sanitize_cover_width',
-					'options'           => array(
-						array(
-							'label' => __( 'Default', 'buddyboss' ),
-							'value' => 'default',
-						),
-						array(
-							'label' => __( 'Full Width', 'buddyboss' ),
-							'value' => 'full',
-						),
-					),
+					'label' => __( 'Small', 'buddyboss' ),
+					'value' => 'small',
 				),
 				array(
-					'name'              => 'bb-pro-cover-profile-height',
-					'label'             => __( 'Height', 'buddyboss' ),
-					'type'              => 'select',
-					'default'           => function_exists( 'bb_get_pro_cover_profile_height' ) ? bb_get_pro_cover_profile_height() : 'small',
-					'sanitize_callback' => 'bb_members_sanitize_cover_height',
-					'options'           => array(
-						array(
-							'label' => __( 'Small', 'buddyboss' ),
-							'value' => 'small',
-						),
-						array(
-							'label' => __( 'Large', 'buddyboss' ),
-							'value' => 'large',
-						),
-					),
+					'label' => __( 'Large', 'buddyboss' ),
+					'value' => 'large',
 				),
 			),
+			'conditional'       => array(
+				'field' => 'bp-disable-cover-image-uploads',
+				'value' => false,
+			),
+			'group'             => array(
+				'key'   => 'cover_image_sizes',
+				'label' => __( 'Height', 'buddyboss' ),
+			),
+			'order'             => 30,
 		)
 	);
 
