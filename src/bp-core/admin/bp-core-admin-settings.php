@@ -2426,26 +2426,36 @@ function bb_admin_redirection_setting_tutorial() {
  *
  * @since BuddyBoss 2.4.70
  *
- * @return array Associative array of page id and page title of pages.
+ * @param bool $for_json Optional. When true, returns array of {value, label} objects
+ *                       for Settings 2.0 JSON responses. Default false.
+ *
+ * @return array Associative array of page id and page title of pages,
+ *               or indexed array of {value, label} when $for_json is true.
  */
-function bb_get_published_pages() {
-	static $published_pages = array();
+function bb_get_published_pages( $for_json = false ) {
+	static $published_pages      = array();
+	static $published_pages_json = array();
 
-	if ( ! empty( $published_pages ) ) {
-		return $published_pages;
+	if ( empty( $published_pages ) ) {
+		$pages = get_pages(
+			array(
+				'post_status' => 'publish',
+			)
+		);
+
+		foreach ( $pages as $page ) {
+			$published_pages[ $page->ID ] = $page->post_title;
+
+			if ( function_exists( 'bb_register_feature' ) ) {
+				$published_pages_json[] = array(
+					'value' => (string) $page->ID,
+					'label' => $page->post_title,
+				);
+			}
+		}
 	}
 
-	$pages = get_pages(
-		array(
-			'post_status' => 'publish',
-		)
-	);
-
-	foreach ( $pages as $page ) {
-		$published_pages[ $page->ID ] = $page->post_title;
-	}
-
-	return $published_pages;
+	return $for_json ? $published_pages_json : $published_pages;
 }
 
 /**

@@ -77,6 +77,9 @@ export function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, 
 	var wpRoles = wpRolesState[ 0 ];
 	var setWpRoles = wpRolesState[ 1 ];
 
+	var publishedPagesState = useState( [] );
+	var publishedPages = publishedPagesState[ 0 ];
+	var setPublishedPages = publishedPagesState[ 1 ];
 
 	var toastState = useState( null );
 	var toast = toastState[ 0 ];
@@ -113,6 +116,7 @@ export function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, 
 					setMemberTypes( response.data.member_types || [] );
 					setGroupTypes( response.data.group_types || [] );
 					setWpRoles( response.data.wp_roles || [] );
+					setPublishedPages( response.data.published_pages || [] );
 				}
 				setIsLoading( false );
 			} )
@@ -472,6 +476,7 @@ export function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, 
 				groupTypes={ groupTypes }
 				wpRoles={ wpRoles }
 				allMemberTypes={ memberTypes }
+				publishedPages={ publishedPages }
 			/>
 
 			{/* Toast */}

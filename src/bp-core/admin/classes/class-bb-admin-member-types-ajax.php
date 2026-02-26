@@ -229,6 +229,9 @@ class BB_Admin_Member_Types_Ajax {
 
 		$response['wp_roles'] = $this->bb_get_wp_roles();
 
+		// Include published pages for redirection dropdowns.
+		$response['published_pages'] = bb_get_published_pages( true );
+
 		wp_send_json_success( $response );
 	}
 
