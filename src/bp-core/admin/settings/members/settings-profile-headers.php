@@ -61,27 +61,10 @@ function bb_members_register_profile_headers_panel_fields() {
 		)
 	);
 
-	// Build profile header element options from the existing function.
-	$header_elements = function_exists( 'bb_get_profile_header_elements' ) ? bb_get_profile_header_elements() : array();
-	$element_options = array();
-
-	foreach ( $header_elements as $element ) {
-		$option = array(
-			'label' => $element['element_label'],
-			'value' => $element['element_name'],
-		);
-
-		// Disable elements that depend on inactive features.
-		if ( ! empty( $element['element_class'] ) && false !== strpos( $element['element_class'], 'bp-hide' ) ) {
-			$option['disabled'] = true;
-		}
-
-		$element_options[] = $option;
-	}
-
 	// FIELD: Elements (Pro only, toggle_list).
-	// Default is empty array; Pro's bb_enrich_members_field_data() filter loads
-	// real values from 'bb-pro-profile-headers-layout-elements' at AJAX time.
+	// Options and default are empty at registration time — bb_get_profile_header_elements()
+	// queries bp_xprofile_fields which is not available at bp_loaded priority 4.
+	// Real options are injected at AJAX time via bb_members_enrich_header_elements_options().
 	bb_register_feature_field(
 		'members',
 		'profile_headers',
@@ -93,7 +76,7 @@ function bb_members_register_profile_headers_panel_fields() {
 			'description'       => __( 'Select which elements to show in your profile headers.', 'buddyboss' ),
 			'default'           => array(),
 			'sanitize_callback' => 'bb_members_sanitize_toggle_list',
-			'options'           => $element_options,
+			'options'           => array(),
 			'pro_only'          => true,
 			'order'             => 20,
 		)

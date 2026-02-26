@@ -656,3 +656,49 @@ function bb_members_enrich_avatar_upload_help_text( $field_data, $field, $featur
 }
 
 add_filter( 'bb_admin_settings_format_field_data', 'bb_members_enrich_avatar_upload_help_text', 10, 3 );
+
+/**
+ * Inject profile header element options at AJAX time.
+ *
+ * bb_get_profile_header_elements() queries bp_xprofile_fields which is not
+ * available at registration time (bp_loaded priority 4). This filter runs
+ * during the AJAX request when xprofile is fully initialised.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array  $field_data Formatted field data.
+ * @param array  $field      Original field registration data.
+ * @param string $feature_id Feature ID.
+ *
+ * @return array Modified field data.
+ */
+function bb_members_enrich_header_elements_options( $field_data, $field, $feature_id ) {
+	if ( 'members' !== $feature_id || 'bb-profile-headers-layout-elements' !== ( isset( $field_data['name'] ) ? $field_data['name'] : '' ) ) {
+		return $field_data;
+	}
+
+	if ( ! empty( $field_data['options'] ) || ! function_exists( 'bb_get_profile_header_elements' ) ) {
+		return $field_data;
+	}
+
+	$element_options = array();
+	foreach ( bb_get_profile_header_elements() as $element ) {
+		$option = array(
+			'label' => $element['element_label'],
+			'value' => $element['element_name'],
+		);
+
+		// Disable elements that depend on inactive features.
+		if ( ! empty( $element['element_class'] ) && false !== strpos( $element['element_class'], 'bp-hide' ) ) {
+			$option['disabled'] = true;
+		}
+
+		$element_options[] = $option;
+	}
+
+	$field_data['options'] = $element_options;
+
+	return $field_data;
+}
+
+add_filter( 'bb_admin_settings_format_field_data', 'bb_members_enrich_header_elements_options', 10, 3 );
