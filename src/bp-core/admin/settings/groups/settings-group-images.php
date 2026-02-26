@@ -206,58 +206,73 @@ function bb_groups_register_images_panel_fields() {
 		)
 	);
 
-	// FIELD: Cover Image Sizes (Pro only, child_render with width/height selects).
+	// FIELD: Cover Image Width (Pro only, select, grouped with height).
 	bb_register_feature_field(
 		'groups',
 		'group_images',
 		'group_cover',
 		array(
-			'name'        => 'bb-default-group-cover-size',
-			'label'       => __( 'Cover Image Sizes', 'buddyboss' ),
-			'type'        => 'child_render',
-			'description' => __( 'Changing the size of your cover images will reposition those already uploaded by members.', 'buddyboss' ),
-			'pro_only'    => true,
-			'conditional' => array(
+			'name'              => 'bb-cover-group-width',
+			'label'             => __( 'Cover Image Sizes', 'buddyboss' ),
+			'type'              => 'select',
+			'description'       => '',
+			'default'           => bb_get_group_cover_image_width(),
+			'sanitize_callback' => 'bb_groups_sanitize_cover_width',
+			'pro_only'          => true,
+			'options'           => array(
+				array(
+					'label' => __( 'Default', 'buddyboss' ),
+					'value' => 'default',
+				),
+				array(
+					'label' => __( 'Full Width', 'buddyboss' ),
+					'value' => 'full',
+				),
+			),
+			'conditional'       => array(
 				'field' => 'bp-disable-group-cover-image-uploads',
 				'value' => false,
 			),
-			'order'       => 30,
-			'fields'      => array(
+			'group'             => array(
+				'key'   => 'cover_image_sizes',
+				'label' => __( 'Width', 'buddyboss' ),
+			),
+			'order'             => 30,
+		)
+	);
+
+	// FIELD: Cover Image Height (Pro only, select, grouped with width).
+	bb_register_feature_field(
+		'groups',
+		'group_images',
+		'group_cover',
+		array(
+			'name'              => 'bb-cover-group-height',
+			'label'             => '',
+			'type'              => 'select',
+			'description'       => __( 'Changing the size of your cover images will reposition those already uploaded by members.', 'buddyboss' ),
+			'default'           => bb_get_group_cover_image_height(),
+			'sanitize_callback' => 'bb_groups_sanitize_cover_height',
+			'pro_only'          => true,
+			'options'           => array(
 				array(
-					'name'              => 'bb-pro-cover-group-width',
-					'label'             => __( 'Width', 'buddyboss' ),
-					'type'              => 'select',
-					'default'           => function_exists( 'bb_get_pro_cover_group_width' ) ? bb_get_pro_cover_group_width() : 'default',
-					'sanitize_callback' => 'bb_groups_sanitize_cover_width',
-					'options'           => array(
-						array(
-							'label' => __( 'Default', 'buddyboss' ),
-							'value' => 'default',
-						),
-						array(
-							'label' => __( 'Full Width', 'buddyboss' ),
-							'value' => 'full',
-						),
-					),
+					'label' => __( 'Small', 'buddyboss' ),
+					'value' => 'small',
 				),
 				array(
-					'name'              => 'bb-pro-cover-group-height',
-					'label'             => __( 'Height', 'buddyboss' ),
-					'type'              => 'select',
-					'default'           => function_exists( 'bb_get_pro_cover_group_height' ) ? bb_get_pro_cover_group_height() : 'small',
-					'sanitize_callback' => 'bb_groups_sanitize_cover_height',
-					'options'           => array(
-						array(
-							'label' => __( 'Small', 'buddyboss' ),
-							'value' => 'small',
-						),
-						array(
-							'label' => __( 'Large', 'buddyboss' ),
-							'value' => 'large',
-						),
-					),
+					'label' => __( 'Large', 'buddyboss' ),
+					'value' => 'large',
 				),
 			),
+			'conditional'       => array(
+				'field' => 'bp-disable-group-cover-image-uploads',
+				'value' => false,
+			),
+			'group'             => array(
+				'key'   => 'cover_image_sizes',
+				'label' => __( 'Height', 'buddyboss' ),
+			),
+			'order'             => 40,
 		)
 	);
 

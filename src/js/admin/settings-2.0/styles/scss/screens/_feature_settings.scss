@@ -279,6 +279,15 @@
         }
     }
 
+    // Group sub-label (e.g. "Width", "Height") shown above control within a group.
+    &-group-label {
+        display: block;
+        font-size: 14px;
+        font-weight: 500;
+        color: $bb-text-color;
+        margin-bottom: 6px;
+    }
+
     // No-label fields: indent content to align with parent's content area.
     &--no-label {
         .bb-admin-settings-form__field-content {
