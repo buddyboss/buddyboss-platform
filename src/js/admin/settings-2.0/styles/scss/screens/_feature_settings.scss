@@ -1059,27 +1059,6 @@
         max-height: 80vh;
     }
 
-    /* Hide parent modal visually when nested Add/Edit Extension popup is open */
-    &.bb-doc-extensions-modal--nested-open.components-modal__frame {
-        background: transparent;
-        border-color: transparent;
-        box-shadow: none;
-
-        .components-modal__header,
-        .components-modal__content {
-            visibility: hidden;
-        }
-
-        .components-modal__content {
-            position: relative;
-
-            /* Keep the nested overlay visible inside the hidden content */
-            .bb-extension-modal-overlay--nested {
-                visibility: visible;
-            }
-        }
-    }
-
     .components-modal__header {
         height: auto;
         border-bottom: 1px solid $bb-border-secondary-color;
@@ -1363,7 +1342,7 @@
     }
 }
 
-/* Nested Add Extension modal (custom div overlay, not WP Modal) */
+/* Add/Edit Extension modal (portaled to body, rendered over the Manage modal) */
 .bb-extension-modal-overlay--nested {
     position: fixed;
     top: 0;
