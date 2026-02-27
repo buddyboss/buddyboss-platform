@@ -28,7 +28,7 @@ function bb_media_register_videos_panel_fields() {
 		array(
 			'title'          => __( 'Videos', 'buddyboss' ),
 			'order'          => 10,
-			'section_toggle' => 'bp_media_videos_support',
+			'section_toggle' => 'bb_media_videos_support',
 		)
 	);
 

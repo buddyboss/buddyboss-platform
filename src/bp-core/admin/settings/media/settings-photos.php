@@ -28,7 +28,7 @@ function bb_media_register_photos_panel_fields() {
 		array(
 			'title'          => __( 'Photos', 'buddyboss' ),
 			'order'          => 10,
-			'section_toggle' => 'bp_media_photos_support',
+			'section_toggle' => 'bb_media_photos_support',
 		)
 	);
 
