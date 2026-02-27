@@ -15,6 +15,7 @@
 import { useState, useEffect, useRef, useCallback } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { ajaxFetch } from '../../utils/ajax';
+import { Spinner } from '@wordpress/components';
 
 /**
  * Debounce delay in ms for the search input.
@@ -312,7 +313,7 @@ export function AsyncSelectField( { value, onChange, asyncAction, placeholder, d
 				<div className="bb-async-select__dropdown">
 					{ isLoading && (
 						<div className="bb-async-select__status">
-							{ __( 'Loading…', 'buddyboss' ) }
+							<Spinner />
 						</div>
 					) }
 

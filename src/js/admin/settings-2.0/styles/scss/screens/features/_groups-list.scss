@@ -925,6 +925,20 @@
 		background-color: $bb-background-brand-primary-color;
 		border-color: $bb-background-brand-primary-color;
 	}
+
+	&:last-child {
+		padding-bottom: 0;
+		border-bottom: 0;
+	}
+}
+
+.bb-admin-meta-field__async-select-field {
+	margin-bottom: 16px;
+
+	.components-base-control__label {
+		display: block;
+		margin-bottom: 8px;
+	}
 }
 
 .bb-admin-meta-field__checkbox-field .bb-admin-meta-field__description,
@@ -1092,10 +1106,11 @@ input.bb-admin-meta-field__search-input {
 .bb-group-edit-modal__tab-content {
 
 	// Divider between integration sections (select after checkbox or select after select).
-	.bb-admin-meta-field__select-field + .bb-admin-meta-field__checkbox-field {
+	> [class*="bb-admin-meta-field"] + [class*="bb-admin-meta-field__checkbox"] {
 		padding-top: 16px;
 	}
 
+	.bb-admin-meta-field__async-select-field,
 	.bb-admin-meta-field__select-field {
 		padding-bottom: 16px;
 		border-bottom: 1px solid $bb-border-secondary-color;
