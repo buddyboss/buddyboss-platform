@@ -367,7 +367,7 @@ export function ImageUploadField( { uploadConfig, uploadUrl, onUpload, onRemove,
 							onClick={ handleRemove }
 							disabled={ disabled }
 						>
-							<i className="bb-icons-rl bb-icons-rl-trash"></i>
+							<i className="bb-icons-rl bb-icons-rl-x"></i>
 							{ __( 'Remove', 'buddyboss' ) }
 						</button>
 					</div>

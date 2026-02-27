@@ -209,22 +209,10 @@
 	}
 
 	&__feature-settings-btn.components-button.is-secondary {
+		@include bb-button-secondary;
 		display: inline-flex;
 		align-items: center;
 		gap: 4px;
-		background: $bb-background-secondary-color;
-		border: 0.5px solid $bb-border-secondary-color;
-		border-radius: $bb-border-radius-lg;
-		padding: 6px 16px;
-		min-height: 32px;
-		font-size: 14px;
-		line-height: 20px;
-		color: $bb-text-color;
-		font-weight: 400;
-		cursor: pointer;
-		transition: background 0.2s ease, opacity 0.2s ease;
-		text-decoration: none;
-		box-shadow: none;
 
 		i[class*="bb-icon-"] {
 			font-size: 16px;
@@ -238,29 +226,13 @@
 			justify-content: center;
 		}
 
-		&:hover {
-			color: inherit;
-			background: #e0e0e0;
-			border: 0.5px solid $bb-border-color;
-			box-shadow: none;
-		}
-
-		&:focus {
-			background: $bb-background-secondary-color;
-			border: 0.5px solid $bb-border-color;
-			box-shadow: 0 0 0 1px #2271b1;
-		}
-
 		&--disabled,
 		&:disabled {
 			opacity: 0.5;
 			cursor: not-allowed;
 			pointer-events: none;
 			background: $bb-background-secondary-color;
-
-			&:hover {
-				background: $bb-background-secondary-color;
-			}
+			box-shadow: none;
 		}
 	}
 
