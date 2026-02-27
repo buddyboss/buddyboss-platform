@@ -18,28 +18,12 @@
 	}
 
 	&__add-btn {
-		display: inline-flex;
-		align-items: center;
-		padding: 6px 16px;
-		font-size: 13px;
-		font-weight: 500;
-		line-height: 1.5;
-		background: $bb-background-brand-primary-color;
-		color: $bb-text-inverse-color;
-		border: none;
-		border-radius: $bb-border-radius-md;
-		cursor: pointer;
-		white-space: nowrap;
-		transition: opacity 0.2s ease;
+		@include bb-button-primary;
 
 		i {
 			font-size: 16px;
 			font-weight: 700;
 			margin-right: 6px;
-		}
-
-		&:hover {
-			opacity: 0.9;
 		}
 	}
 
@@ -549,12 +533,9 @@
 			@include bb-admin-settings-select;
 		}
 
-		.components-input-control-suffix-wrapper {
-			display: none;
-		}
-
+		.components-input-control-suffix-wrapper,
 		.components-input-control__backdrop {
-			border-color: transparent;
+			display: none;
 		}
 	}
 

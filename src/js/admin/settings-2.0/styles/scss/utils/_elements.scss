@@ -61,6 +61,11 @@ select.bb-admin-settings__select {
 			transition: left 0.15s ease, right 0.15s ease;
 		}
 
+		.components-form-toggle__input:focus + .components-form-toggle__track {
+			box-shadow: none;
+			outline: 2px solid $bb-border-brand-primary-color;
+		}
+
 		&.is-checked {
 			.components-form-toggle__track {
 				background-color: $bb-background-brand-primary-color;
@@ -119,6 +124,11 @@ select.bb-admin-settings__select {
         width: 18px;
 		max-width: initial;
 
+		&:focus {
+			box-shadow: none;
+			outline: 2px solid $bb-border-brand-primary-color;
+		}
+
         &:checked {
 			background-color: transparent;
 			border: 1px solid $bb-background-brand-primary-color !important;
@@ -139,26 +149,23 @@ select.bb-admin-settings__select {
 
 /* Checkbox */
 .buddyboss_page_bb-settings .components-checkbox-control__input {
-    border-color: $bb-border-quaternary-color;
-    border-radius: $bb-border-radius-sm;
+	border-color: $bb-border-quaternary-color;
+	border-radius: $bb-border-radius-sm;
 
-    &:checked {
-        background-color: $bb-background-brand-primary-color;
-        border-color: $bb-background-brand-primary-color;
-    }
+	&:checked {
+		background-color: $bb-background-brand-primary-color;
+		border-color: $bb-background-brand-primary-color;
+	}
+
+	&:focus {
+		box-shadow: none;
+		outline: 2px solid $bb-border-brand-primary-color;
+	}
 }
 
 /* Inputs */
 .buddyboss_page_bb-settings  .components-text-control__input {
-	background-color: $bb-background-primary-color;
-	border-color: $bb-border-tertiary-color;
-	border-radius: $bb-border-radius-md;
-	color: $bb-text-color;
-	font-size: 14px;
-	font-weight: 400;
-	line-height: 1.4;
-	padding: 6px 12px;
-	box-shadow: none;
+	@include bb-input-text;
 }
 
 /* WordPress DropdownMenu */
@@ -392,10 +399,18 @@ select.bb-admin-settings__select {
 		height: auto;
 		border-bottom: 1px solid $bb-border-secondary-color;
 
-		.components-button svg {
-			fill: $bb-icon-secondary-color;
-		}
-	}
+        .components-button {
+
+            svg {
+                fill: $bb-icon-secondary-color;
+            }
+
+            &:focus {
+                outline: 2px solid $bb-border-brand-primary-color;
+                box-shadow: none;
+            }
+        }
+    }
 
 	.components-modal__header-heading {
 		color: $bb-text-color;
@@ -444,40 +459,11 @@ select.bb-admin-settings__select {
 		.components-button {
 
 			&.is-secondary {
-				background-color: $bb-background-secondary-color;
-				border-color: $bb-border-secondary-color;
-				color: $bb-text-color;
-				font-size: 14px;
-				font-weight: 400;
-				padding: 6px 14px;
-				border-radius: $bb-border-radius-lg;
-				line-height: 18px;
-				min-height: auto;
-				box-shadow: none;
-
-				&:hover {
-					color: $bb-text-color;
-					background-color: $bb-background-secondary-color;
-					border-color: $bb-border-secondary-color;
-					box-shadow: none;
-				}
+				@include bb-button-secondary;
 			}
 
 			&.is-primary {
-				font-size: 14px;
-				font-weight: 400;
-				line-height: 20px;
-				color: $bb-text-inverse-color !important;
-				background-color: $bb-background-brand-primary-color !important;
-				padding: 6px 14px;
-				border: none;
-				border-radius: $bb-border-radius-lg;
-				margin-left: 8px;
-
-				&.disabled {
-					opacity: 0.5;
-					pointer-events: none;
-				}
+				@include bb-button-primary;
 			}
 		}
 	}

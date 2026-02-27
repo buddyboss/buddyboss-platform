@@ -261,6 +261,10 @@
         a {
             color: $bb-link-color;
             text-decoration: none;
+
+            &:focus {
+                text-decoration: underline;
+            }
         }
     }
 
@@ -324,12 +328,9 @@
 			@include bb-admin-settings-select;
 		}
 
-		.components-input-control-suffix-wrapper {
-			display: none;
-		}
-
+		.components-input-control-suffix-wrapper,
 		.components-input-control__backdrop {
-			border-color: transparent;
+			display: none;
 		}
 
         .components-select-control {

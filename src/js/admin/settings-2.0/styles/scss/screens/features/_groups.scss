@@ -331,6 +331,11 @@
 			}
 		}
 
+		&:focus {
+			border-color: transparent;
+			outline: 2px solid $bb-border-quaternary-color;
+		}
+
 		&:disabled {
 			opacity: 0.5;
 			cursor: not-allowed;

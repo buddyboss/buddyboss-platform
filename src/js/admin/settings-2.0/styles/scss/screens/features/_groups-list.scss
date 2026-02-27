@@ -61,12 +61,9 @@
 				min-width: 135px;
 			}
 
-			.components-input-control-suffix-wrapper {
-				display: none;
-			}
-
+			.components-input-control-suffix-wrapper,
 			.components-input-control__backdrop {
-				border-color: transparent;
+				display: none;
 			}
 		}
 
@@ -125,7 +122,7 @@
 	}
 
 	&__bulk-apply.is-secondary {
-		@include bb-button-primary;
+		@include bb-button-primary-outline;
 	}
 
 	// Filter Dropdowns
@@ -723,7 +720,10 @@
 		}
 
 		.components-input-control__container {
-			@include bb-admin-settings-select;
+
+			.components-select-control__input {
+				@include bb-admin-settings-select;
+			}
 
 			&:has(> .components-select-control__input) {
 				padding: 0 !important;
@@ -810,7 +810,8 @@
 			height: auto !important;
 
 			// Remove default underline indicator.
-			&::after {
+			&:after,
+			&:before {
 				display: none !important;
 			}
 
@@ -1132,7 +1133,7 @@ input.bb-admin-meta-field__search-input {
 	}
 
 	&__add-btn.is-secondary {
-		@include bb-button-primary;
+		@include bb-button-primary-outline;
 
 		i {
 			font-size: 16px;
@@ -1278,12 +1279,9 @@ input.bb-admin-meta-field__search-input {
 				font-size: 13px;
 			}
 
-			.components-input-control-suffix-wrapper {
-				display: none;
-			}
-
+			.components-input-control-suffix-wrapper,
 			.components-input-control__backdrop {
-				border-color: transparent;
+				display: none;
 			}
 		}
 	}
@@ -1456,12 +1454,9 @@ input.bb-admin-meta-field__search-input {
 				width: 100%;
 			}
 
-			.components-input-control-suffix-wrapper {
-				display: none;
-			}
-
+			.components-input-control-suffix-wrapper,
 			.components-input-control__backdrop {
-				border-color: transparent;
+				display: none;
 			}
 		}
 	}
