@@ -265,7 +265,6 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 
 			$localize_arg = array(
 				'ajax_url'                     => admin_url( 'admin-ajax.php' ),
-				'select_document'              => esc_js( __( 'Please upload a file to check the MIME Type.', 'buddyboss' ) ),
 				'tools'                        => array(
 					'default_data'  => array(
 						'submit_button_message' => esc_js( __( 'Are you sure you want to import data? This action is going to alter your database. If this is a live website you may want to create a backup of your database first.', 'buddyboss' ) ),
@@ -553,35 +552,12 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 			 */
 			do_action( 'bp_admin_tab_form_html', $this->tab_name, $this );
 
-			if ( isset( $_GET ) && isset( $_GET['tab'] ) && 'bp-document' === $_GET['tab'] && 'bp-settings' === $_GET['page'] ) {
-				?>
-			<p class="submit">
-				<input type="submit" name="submit" class="button-primary" value="<?php esc_attr_e( 'Save Settings', 'buddyboss' ); ?>" />
-				<a class="button" target="_blank" href="
-				<?php
-				echo esc_url(
-					bp_get_admin_url(
-						add_query_arg(
-							array(
-								'page'    => 'bp-help',
-								'article' => 87474,
-							),
-							'admin.php'
-						)
-					)
-				);
-				?>
-				"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
-			</p>
-				<?php
-			} else {
-				printf(
-					'<p class="submit">
+			printf(
+				'<p class="submit">
 				<input type="submit" name="submit" class="button-primary" value="%s" />
 			</p>',
-					esc_attr__( 'Save Settings', 'buddyboss' )
-				);
-			}
+				esc_attr__( 'Save Settings', 'buddyboss' )
+			);
 		}
 
 		/**
