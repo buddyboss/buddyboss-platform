@@ -207,7 +207,7 @@ class BB_Admin_Groups_Ajax {
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
-		$name       = isset( $_POST['name'] ) ? wp_kses( wp_unslash( $_POST['name'] ), wp_kses_allowed_html( 'strip' ) ) : '';
+		$name       = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
 		$visibility = isset( $_POST['visibility'] ) ? sanitize_key( $_POST['visibility'] ) : 'public';
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
@@ -273,7 +273,7 @@ class BB_Admin_Groups_Ajax {
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
 		$type_id    = isset( $_POST['type_id'] ) ? absint( $_POST['type_id'] ) : 0;
-		$name       = isset( $_POST['name'] ) ? wp_kses( wp_unslash( $_POST['name'] ), wp_kses_allowed_html( 'strip' ) ) : '';
+		$name       = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
 		$visibility = isset( $_POST['visibility'] ) ? sanitize_key( $_POST['visibility'] ) : '';
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 

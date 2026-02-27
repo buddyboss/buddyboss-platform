@@ -24,6 +24,7 @@ import {
 	MigrationModal,
 	ReactionButtonField,
 } from './reaction';
+import { decodeEntities } from '@wordpress/html-entities';
 import { sanitizeHtml, safeUrl } from '../utils/sanitize';
 import { TopicListField } from './activity/topics/topic-list';
 import { SharePlatformsField } from './activity/sharing';
@@ -158,7 +159,7 @@ export function SettingsForm({ fields, values, onChange }) {
 					<div className="bb-admin-settings-form__toggle-wrapper">
 						<ToggleControl
 							key={field.name}
-							label={field.description || ''}
+							label={decodeEntities( field.description || '' )}
 							checked={displayValue}
 							onChange={(checked) => {
 								// If inverted, save the opposite of what's displayed
