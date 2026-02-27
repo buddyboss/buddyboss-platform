@@ -255,17 +255,18 @@
         border-bottom: 1px solid $bb-border-secondary-color;
     }
 
+    &--full-width {
+        border-bottom: 1px solid $bb-border-secondary-color;
+    }
+
     // Full-width status check notices (e.g., FFmpeg): block layout for HTML content.
     &--full-width .bb-admin-status-check .bb-admin-notice {
         display: block;
-        padding: 12px 16px;
+        padding: 4px 8px;
         line-height: 1.6;
 
         &:before {
-            float: left;
-            margin-right: 8px;
-            line-height: 1;
-            margin-top: 1px;
+            display: none;
         }
 
         code {

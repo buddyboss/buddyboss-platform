@@ -404,7 +404,7 @@ function bb_media_ajax_check_ffmpeg_status() {
 		// FFmpeg library not installed at all.
 		wp_send_json_success(
 			array(
-				'status'  => 'warning',
+				'status'  => 'info',
 				'message' => sprintf(
 					/* translators: %s: FFmpeg link */
 					_x(
@@ -424,7 +424,7 @@ function bb_media_ajax_check_ffmpeg_status() {
 		if ( ! empty( $ffmpeg->error ) && ! empty( trim( $ffmpeg->error ) ) ) {
 			wp_send_json_success(
 				array(
-					'status'  => 'warning',
+					'status'  => 'info',
 					'message' => sprintf(
 						/* translators: 1: FFmpeg link, 2: wp-config.php, 3: FFMPEG constant, 4: FFPROBE constant */
 						_x(
