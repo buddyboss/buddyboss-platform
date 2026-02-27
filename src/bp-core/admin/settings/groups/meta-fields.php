@@ -390,66 +390,36 @@ function bb_groups_register_core_meta_fields( $registry, $component ) {
 		)
 	);
 
-	// Connected Forum (select which forum is linked).
+	// Connected Forum — async searchable select with load more pagination.
+	// Uses bb_admin_forum_autocomplete AJAX endpoint instead of loading all forums upfront.
 	$registry->register(
 		$component,
 		'forum_id',
 		array(
-			'label'             => __( 'Forum', 'buddyboss' ),
-			'type'              => 'select',
-			'tab'               => 'integrations',
-			'order'             => 470,
-			'save_phase'        => 'after',
-			'conditional'       => array(
+			'label'        => __( 'Forum', 'buddyboss' ),
+			'type'         => 'async_select',
+			'async_action' => 'bb_admin_forum_autocomplete',
+			'placeholder'  => __( 'Search forums…', 'buddyboss' ),
+			'tab'          => 'integrations',
+			'order'        => 470,
+			'save_phase'   => 'after',
+			'conditional'  => array(
 				'field' => 'enable_forum',
 				'value' => '1',
 			),
-			'is_visible'        => function ( $group ) {
+			'is_visible'   => function ( $group ) {
 				return bp_is_active( 'forums' )
 					&& function_exists( 'bbp_is_group_forums_active' )
 					&& bbp_is_group_forums_active()
 					&& function_exists( 'bbp_is_user_keymaster' )
 					&& bbp_is_user_keymaster();
 			},
-			'get_value'         => function ( $group ) {
+			'get_value'    => function ( $group ) {
 				if ( ! function_exists( 'bbp_get_group_forum_ids' ) ) {
 					return 0;
 				}
 				$forum_ids = bbp_get_group_forum_ids( $group->id );
 				return ! empty( $forum_ids ) ? (int) current( $forum_ids ) : 0;
-			},
-			'get_options'       => function ( $group ) {
-				$options = array(
-					array(
-						'value' => '0',
-						'label' => __( 'Select Forum', 'buddyboss' ),
-					),
-				);
-
-				if ( ! function_exists( 'bbp_get_forum_post_type' ) ) {
-					return $options;
-				}
-
-				$forums = get_posts(
-					array(
-						'post_type'      => bbp_get_forum_post_type(),
-						'posts_per_page' => 200,
-						'orderby'        => 'menu_order title',
-						'order'          => 'ASC',
-						'post_status'    => array( 'publish', 'private', 'hidden' ),
-					)
-				);
-
-				if ( ! empty( $forums ) ) {
-					foreach ( $forums as $forum ) {
-						$options[] = array(
-							'value' => (string) $forum->ID,
-							'label' => $forum->post_title,
-						);
-					}
-				}
-
-				return $options;
 			},
 			'save_value'        => function ( $group, $value ) {
 				if ( ! function_exists( 'bbp_get_group_forum_ids' ) || ! function_exists( 'bbp_update_group_forum_ids' ) || ! function_exists( 'bbp_update_forum_group_ids' ) ) {

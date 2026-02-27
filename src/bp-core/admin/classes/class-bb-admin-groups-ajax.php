@@ -58,6 +58,7 @@ class BB_Admin_Groups_Ajax {
 		add_action( 'wp_ajax_bb_admin_get_group_members', array( $this, 'get_group_members' ) );
 		add_action( 'wp_ajax_bb_admin_update_group_member', array( $this, 'update_group_member' ) );
 		add_action( 'wp_ajax_bb_admin_member_autocomplete', array( $this, 'member_autocomplete' ) );
+		add_action( 'wp_ajax_bb_admin_forum_autocomplete', array( $this, 'forum_autocomplete' ) );
 		add_action( 'wp_ajax_bb_admin_get_group_topics', array( $this, 'get_group_topics' ) );
 	}
 
@@ -1533,6 +1534,110 @@ class BB_Admin_Groups_Ajax {
 		}
 
 		wp_send_json_success( array( 'results' => $results ) );
+	}
+
+	/**
+	 * Forum search autocomplete with pagination for the group edit modal.
+	 *
+	 * Accepts an optional search term and page number. When no term is given,
+	 * returns the first page of forums ordered by title (browse mode). When a
+	 * term is provided, filters by post title. Both modes support pagination
+	 * via the `page` parameter; the response includes `has_more` so React
+	 * knows whether to show a "Load more" button.
+	 *
+	 * Mirrors the visibility guards on the `forum_id` meta-field:
+	 * forums must be active, group forums enabled, and the current user must
+	 * be a keymaster.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return void
+	 */
+	public function forum_autocomplete() {
+		$this->bb_verify_request();
+
+		// Mirror is_visible guards from the forum_id meta-field.
+		if (
+			! bp_is_active( 'forums' )
+			|| ! function_exists( 'bbp_is_group_forums_active' )
+			|| ! bbp_is_group_forums_active()
+			|| ! function_exists( 'bbp_is_user_keymaster' )
+			|| ! bbp_is_user_keymaster()
+		) {
+			wp_send_json_error( array( 'message' => __( 'Forums are not available.', 'buddyboss' ) ) );
+		}
+
+		if ( ! function_exists( 'bbp_get_forum_post_type' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss' ) ) );
+		}
+
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
+		$term        = isset( $_POST['term'] ) ? sanitize_text_field( wp_unslash( $_POST['term'] ) ) : '';
+		$page        = isset( $_POST['page'] ) ? absint( $_POST['page'] ) : 1;
+		$selected_id = isset( $_POST['selected_id'] ) ? absint( $_POST['selected_id'] ) : 0;
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
+
+		$page     = max( 1, $page );
+		$per_page = 20;
+
+		// When only selected_id is passed (initial load to resolve label), return just that forum.
+		if ( $selected_id && empty( $term ) && 1 === $page ) {
+			$forum = get_post( $selected_id );
+			if ( $forum && bbp_get_forum_post_type() === $forum->post_type ) {
+				wp_send_json_success(
+					array(
+						'results'  => array(
+							array(
+								'value' => (string) $forum->ID,
+								'label' => $forum->post_title,
+							),
+						),
+						'has_more' => false,
+					)
+				);
+			}
+			wp_send_json_success(
+				array(
+					'results'  => array(),
+					'has_more' => false,
+				)
+			);
+		}
+
+		$query_args = array(
+			'post_type'      => bbp_get_forum_post_type(),
+			'posts_per_page' => $per_page + 1, // Fetch one extra to determine has_more.
+			'paged'          => $page,
+			'orderby'        => 'title',
+			'order'          => 'ASC',
+			'post_status'    => array( 'publish', 'private', 'hidden' ),
+		);
+
+		if ( ! empty( $term ) ) {
+			$query_args['s'] = $term;
+		}
+
+		$forums = get_posts( $query_args );
+
+		$has_more = count( $forums ) > $per_page;
+		if ( $has_more ) {
+			array_pop( $forums ); // Remove the extra item used for has_more detection.
+		}
+
+		$results = array();
+		foreach ( $forums as $forum ) {
+			$results[] = array(
+				'value' => (string) $forum->ID,
+				'label' => $forum->post_title,
+			);
+		}
+
+		wp_send_json_success(
+			array(
+				'results'  => $results,
+				'has_more' => $has_more,
+			)
+		);
 	}
 
 	/**

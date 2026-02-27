@@ -33,6 +33,7 @@ import { CheckboxListField } from './fields/CheckboxListField';
 import { ImageRadioField } from './fields/ImageRadioField';
 import { DimensionsField } from './fields/DimensionsField';
 import { ConfirmToggleModal } from './modals/ConfirmToggleModal';
+import { AsyncSelectField } from './fields/AsyncSelectField';
 
 /**
  * Settings Form Component (matching Figma settingsSection)
@@ -263,6 +264,18 @@ export function SettingsForm({ fields, values, onChange }) {
 						onChange={(newValue) => onChange(field.name, newValue)}
 						disabled={disabled}
 						__nextHasNoMarginBottom
+					/>
+				);
+
+			case 'async_select':
+				return (
+					<AsyncSelectField
+						key={field.name}
+						value={value || '0'}
+						onChange={(newValue) => onChange(field.name, newValue)}
+						asyncAction={field.async_action || ''}
+						placeholder={field.placeholder || ''}
+						disabled={disabled}
 					/>
 				);
 

@@ -482,3 +482,117 @@ select.bb-admin-settings__select {
         }
     }
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Async Select Field (.bb-async-select)
+// Searchable select with server-side search and load-more pagination.
+// Used by AsyncSelectField.js for fields with type: 'async_select'.
+// ─────────────────────────────────────────────────────────────────────────────
+.bb-async-select {
+    position: relative;
+    width: 100%;
+
+    &__input-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    &__input[type="text"] {
+        @include bb-input-text;
+        width: 100%;
+        padding-right: 28px; // Room for clear button.
+    }
+
+    &__clear {
+        position: absolute;
+        right: 8px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: $bb-text-tertiary-color;
+        font-size: 12px;
+        line-height: 1;
+        padding: 0;
+
+        &:hover {
+            color: $bb-text-color;
+        }
+    }
+
+    &__dropdown {
+        position: absolute;
+        top: calc(100% + 2px);
+        left: 0;
+        right: 0;
+        background: $bb-background-base-color;
+        border: 1px solid $bb-border-secondary-color;
+        border-radius: $bb-border-radius-md;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        max-height: 240px;
+        overflow-y: auto;
+        z-index: 100;
+    }
+
+    &__status {
+        padding: 12px 16px;
+        text-align: center;
+        font-size: 13px;
+        color: $bb-text-tertiary-color;
+    }
+
+    &__list {
+        list-style: none;
+        margin: 0;
+        padding: 4px 0;
+    }
+
+    &__option {
+        margin: 0;
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 8px 16px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            text-align: left;
+            font-size: 13px;
+            color: $bb-text-color;
+
+            &:hover {
+                background-color: $bb-background-secondary-color;
+            }
+        }
+
+        &.is-selected button {
+            font-weight: 600;
+            color: $bb-primary-color;
+        }
+    }
+
+    &__load-more {
+        padding: 8px 16px;
+        text-align: center;
+        border-top: 1px solid $bb-border-secondary-color;
+    }
+
+    &__load-more-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 13px;
+        color: $bb-primary-color;
+        padding: 4px 8px;
+
+        &:hover {
+            text-decoration: underline;
+        }
+
+        &:disabled {
+            color: $bb-text-tertiary-color;
+            cursor: default;
+        }
+    }
+}
