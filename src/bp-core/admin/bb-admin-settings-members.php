@@ -63,6 +63,7 @@ function bb_admin_settings_register_members_feature() {
 	require_once __DIR__ . '/settings/members/settings-access-control.php';
 	require_once __DIR__ . '/settings/members/settings-profile-types.php';
 	require_once __DIR__ . '/settings/members/settings-profile-search.php';
+	require_once __DIR__ . '/settings/members/settings-profile-navigation.php';
 
 	// =========================================================================
 	// SIDE PANELS
@@ -288,6 +289,9 @@ function bb_admin_settings_register_members_feature() {
 
 	// Panel 8: Profile Search.
 	bb_members_register_profile_search_panel_fields();
+
+	// Panel 9: Profile Navigation.
+	bb_members_register_profile_navigation_panel_fields();
 
 	/**
 	 * Fires after all Members settings panels are registered.

@@ -631,16 +631,32 @@ add_action( 'bb_admin_save_feature_settings_after', 'bb_members_handle_slug_form
 // =========================================================================
 // AJAX-TIME FIELD ENRICHMENT
 //
-// Helper functions and enrichment filters that run during
-// bb_admin_get_feature_settings AJAX requests to populate dynamic
-// field options not available at registration time (bp_loaded priority 4).
+// These filters hook into bb_admin_settings_format_field_data and run
+// during bb_admin_get_feature_settings AJAX requests — NOT at page load.
+//
+// Two reasons a field may need enrichment:
+//
+// 1. TIMING — The data source (e.g., xprofile fields, component state) is
+//    not available at registration time (bp_loaded priority 4). Options are
+//    registered as empty [] and populated here when everything is loaded.
+//
+// 2. PRO KEY MISMATCH — Several fields (header elements, directory elements,
+//    directory actions) are Pro-only features. Pro stores its enabled/disabled
+//    state under its own DB keys. Settings 2.0 registers new distinct DB keys.
+//    On first open, get_option() on the new key returns empty, so React would
+//    show all toggles as OFF even on a live site with a saved Pro config.
+//    The back-fill reads from Pro's getter functions (which read the Pro keys)
+//    and injects the correct { slug: 0|1 } map. Once the admin saves through
+//    Settings 2.0, the new key is written and the back-fill is skipped.
 // =========================================================================
 
 /**
  * Convert an element array to a Settings 2.0 option format.
  *
- * Shared by header elements, directory elements, and profile action
- * enrichment callbacks to avoid duplicating the conversion logic.
+ * Public utility used by Pro and extensions to transform element arrays
+ * (from bb_get_profile_header_elements(), bb_get_member_directory_elements(),
+ * bb_get_member_directory_profile_actions()) into the Settings 2.0 options format.
+ * Platform itself no longer calls this directly — it is kept as a public API.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -759,37 +775,6 @@ function bb_members_enrich_avatar_upload_help_text( $field_data, $field, $featur
 add_filter( 'bb_admin_settings_format_field_data', 'bb_members_enrich_avatar_upload_help_text', 10, 3 );
 
 /**
- * Inject profile header element options at AJAX time.
- *
- * The bb_get_profile_header_elements() queries bp_xprofile_fields which is not
- * available at registration time (bp_loaded priority 4). This filter runs
- * during the AJAX request when xprofile is fully initialised.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param array  $field_data Formatted field data.
- * @param array  $field      Original field registration data.
- * @param string $feature_id Feature ID.
- *
- * @return array Modified field data.
- */
-function bb_members_enrich_header_elements_options( $field_data, $field, $feature_id ) {
-	if ( 'members' !== $feature_id || 'bb-profile-headers-layout-elements' !== ( isset( $field_data['name'] ) ? $field_data['name'] : '' ) ) {
-		return $field_data;
-	}
-
-	if ( ! empty( $field_data['options'] ) || ! function_exists( 'bb_get_profile_header_elements' ) ) {
-		return $field_data;
-	}
-
-	$field_data['options'] = bb_members_elements_to_options( bb_get_profile_header_elements() );
-
-	return $field_data;
-}
-
-add_filter( 'bb_admin_settings_format_field_data', 'bb_members_enrich_header_elements_options', 10, 3 );
-
-/**
  * Inject profile type options at AJAX time.
  *
  * The bp_get_active_member_types() runs a WP_Query for bp-member-type CPT which
@@ -846,110 +831,3 @@ function bb_members_enrich_profile_type_options( $field_data, $field, $feature_i
 
 add_filter( 'bb_admin_settings_format_field_data', 'bb_members_enrich_profile_type_options', 10, 3 );
 
-/**
- * Inject member directory element options at AJAX time.
- *
- * The bb_get_member_directory_elements() depends on component state that may not be
- * fully initialized at registration time (bp_loaded priority 4). This filter
- * populates options only when the admin fetches settings via AJAX.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param array  $field_data Formatted field data.
- * @param array  $field      Original field registration data.
- * @param string $feature_id Feature ID.
- *
- * @return array Modified field data.
- */
-function bb_members_enrich_directory_elements_options( $field_data, $field, $feature_id ) {
-	if ( 'members' !== $feature_id || 'bb-member-directory-elements' !== ( isset( $field_data['name'] ) ? $field_data['name'] : '' ) ) {
-		return $field_data;
-	}
-
-	if ( ! empty( $field_data['options'] ) || ! function_exists( 'bb_get_member_directory_elements' ) ) {
-		return $field_data;
-	}
-
-	$field_data['options'] = bb_members_elements_to_options( bb_get_member_directory_elements() );
-
-	return $field_data;
-}
-
-add_filter( 'bb_admin_settings_format_field_data', 'bb_members_enrich_directory_elements_options', 10, 3 );
-
-/**
- * Inject member directory profile action options at AJAX time.
- *
- * The bb_get_member_directory_profile_actions() depends on component state that may
- * not be fully initialized at registration time. This filter populates options
- * only when the admin fetches settings via AJAX.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param array  $field_data Formatted field data.
- * @param array  $field      Original field registration data.
- * @param string $feature_id Feature ID.
- *
- * @return array Modified field data.
- */
-function bb_members_enrich_directory_actions_options( $field_data, $field, $feature_id ) {
-	if ( 'members' !== $feature_id || 'bb-member-profile-actions' !== ( isset( $field_data['name'] ) ? $field_data['name'] : '' ) ) {
-		return $field_data;
-	}
-
-	if ( ! empty( $field_data['options'] ) || ! function_exists( 'bb_get_member_directory_profile_actions' ) ) {
-		return $field_data;
-	}
-
-	$field_data['options'] = bb_members_elements_to_options( bb_get_member_directory_profile_actions() );
-
-	return $field_data;
-}
-
-add_filter( 'bb_admin_settings_format_field_data', 'bb_members_enrich_directory_actions_options', 10, 3 );
-
-/**
- * Inject member directory primary action options at AJAX time.
- *
- * Builds the primary action select options from visible (non-hidden) profile
- * actions. Deferred to AJAX time to avoid calling bb_get_member_directory_profile_actions()
- * on every admin page load.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param array  $field_data Formatted field data.
- * @param array  $field      Original field registration data.
- * @param string $feature_id Feature ID.
- *
- * @return array Modified field data.
- */
-function bb_members_enrich_directory_primary_action_options( $field_data, $field, $feature_id ) {
-	if ( 'members' !== $feature_id || 'bb-member-profile-primary-action' !== ( isset( $field_data['name'] ) ? $field_data['name'] : '' ) ) {
-		return $field_data;
-	}
-
-	if ( ! empty( $field_data['options'] ) || ! function_exists( 'bb_get_member_directory_profile_actions' ) ) {
-		return $field_data;
-	}
-
-	// Build primary options from non-disabled actions only.
-	$all_options            = bb_members_elements_to_options( bb_get_member_directory_profile_actions() );
-	$primary_action_options = array(
-		array(
-			'label' => __( 'None', 'buddyboss' ),
-			'value' => '',
-		),
-	);
-
-	foreach ( $all_options as $option ) {
-		if ( empty( $option['disabled'] ) ) {
-			$primary_action_options[] = $option;
-		}
-	}
-
-	$field_data['options'] = $primary_action_options;
-
-	return $field_data;
-}
-
-add_filter( 'bb_admin_settings_format_field_data', 'bb_members_enrich_directory_primary_action_options', 10, 3 );
