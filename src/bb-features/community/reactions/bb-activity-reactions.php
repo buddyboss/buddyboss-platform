@@ -5,7 +5,7 @@
  * Functions for the Reaction functionality.
  *
  * @package BuddyBoss\Activity
- * @since BuddyPress 2.5.20
+ * @since BuddyBoss 2.5.20
  */
 
 // Exit if accessed directly.
@@ -479,7 +479,8 @@ function bb_get_activity_reaction_ajax_callback() {
 		);
 	}
 
-	if ( empty( $_POST['item_id'] ) ) {
+	$item_id = isset( $_POST['item_id'] ) ? absint( wp_unslash( $_POST['item_id'] ) ) : 0;
+	if ( empty( $item_id ) ) {
 		wp_send_json_error(
 			array(
 				'message' => __( 'Item ID is required.', 'buddyboss' ),
@@ -488,11 +489,21 @@ function bb_get_activity_reaction_ajax_callback() {
 		);
 	}
 
-	$item_id     = sanitize_text_field( wp_unslash( $_POST['item_id'] ) );
 	$item_type   = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : '';
-	$paged       = ! empty( $_POST['page'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['page'] ) ) : 1;
-	$reaction_id = ! empty( $_POST['reaction_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['reaction_id'] ) ) : 0;
-	$before      = ! empty( $_POST['before'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['before'] ) ) : 0;
+	$paged       = ! empty( $_POST['page'] ) ? absint( wp_unslash( $_POST['page'] ) ) : 1;
+	$reaction_id = ! empty( $_POST['reaction_id'] ) ? absint( wp_unslash( $_POST['reaction_id'] ) ) : 0;
+	$before      = ! empty( $_POST['before'] ) ? absint( wp_unslash( $_POST['before'] ) ) : 0;
+
+	// Verify the activity exists and is visible to the current user.
+	$activity_result = bp_activity_get_specific( array( 'activity_ids' => array( $item_id ) ) );
+	if ( empty( $activity_result['activities'] ) ) {
+		wp_send_json_error(
+			array(
+				'message' => __( 'Activity not found.', 'buddyboss' ),
+				'type'    => 'error',
+			)
+		);
+	}
 	$per_page    = 20; // Fixed per page.
 
 	if ( 1 === $paged && empty( $reaction_id ) ) {
@@ -723,6 +734,12 @@ function bb_activity_reaction_names_and_count( $activity_id, $activity_type = 'a
 		}
 	}
 
+	// Pre-warm user cache to avoid N+1 queries when fetching display names below.
+	$all_user_ids = array_values( $reacted_users );
+	if ( ! empty( $all_user_ids ) ) {
+		cache_users( $all_user_ids );
+	}
+
 	$display_names = array();
 	if ( true === $is_current_user_reacted ) {
 		$display_names[] = esc_html__( 'You', 'buddyboss' );
@@ -737,7 +754,7 @@ function bb_activity_reaction_names_and_count( $activity_id, $activity_type = 'a
 			}
 
 			$user_keys[]     = $k;
-			$display_names[] = bp_core_get_user_displayname( $user_id );
+			$display_names[] = esc_html( bp_core_get_user_displayname( $user_id ) );
 			--$name_count;
 		}
 
@@ -746,7 +763,7 @@ function bb_activity_reaction_names_and_count( $activity_id, $activity_type = 'a
 
 	if ( ! empty( $reacted_users ) && count( $reacted_users ) > 0 ) {
 		if ( 1 === count( $reacted_users ) ) {
-			$display_names[] = bp_core_get_user_displayname( current( $reacted_users ) );
+			$display_names[] = esc_html( bp_core_get_user_displayname( current( $reacted_users ) ) );
 		} else {
 			$display_names[] = sprintf(
 				/* translators: %s: Number of other users who reacted. */

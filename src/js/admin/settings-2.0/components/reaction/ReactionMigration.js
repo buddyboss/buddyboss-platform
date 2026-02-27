@@ -9,6 +9,7 @@
 
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+import { formatNumber } from '../../utils/format';
 
 export function ReactionMigration({ field, onStartConversion }) {
 	const [isDismissed, setIsDismissed] = useState(false);
@@ -31,17 +32,13 @@ export function ReactionMigration({ field, onStartConversion }) {
 	const totalReactions = migrationData.total_reactions || 0;
 	const fromMode = 'like_to_emotions_action' === migrationData.action ? 'Likes' : 'Reactions';
 
-	const formatNumber = (num) => {
-		return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-	};
-
 	const handleDismiss = (e) => {
 		e.preventDefault();
 		setIsDismissed(true);
 
 		// Call "Do Later" endpoint.
 		if (window.bbReactionAdminVars && window.bbReactionAdminVars.ajax_url) {
-			jQuery.ajax({
+			window.jQuery.ajax({
 				url: window.bbReactionAdminVars.ajax_url,
 				method: 'POST',
 				data: {

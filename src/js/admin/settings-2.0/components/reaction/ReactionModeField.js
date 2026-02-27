@@ -53,8 +53,17 @@ export function ReactionModeField({ field, value, values, onChange, defaultEmoti
 		const editTrigger = document.querySelector(`.bb_emotions_item[data-reaction-id="${reaction.id}"] .bb_emotions_edit`);
 		if (editTrigger && window.jQuery) {
 			window.jQuery(editTrigger).trigger('click');
-			// After modal opens, select the correct category based on icon's data-group
-			setTimeout(() => {
+
+			// Wait for Pro's modal to populate its content before selecting the
+			// category filter and scrolling to the icon. MutationObserver fires as
+			// soon as the DOM is ready — no hardcoded delay that could race on
+			// slow machines.
+			const modalEl = document.getElementById('bbpro_emotion_modal');
+			if ( ! modalEl ) {
+				return;
+			}
+
+			const observer = new MutationObserver(() => {
 				const $ = window.jQuery;
 				let iconElement;
 				if ( 'emotions' === reaction.type ) {
@@ -62,20 +71,29 @@ export function ReactionModeField({ field, value, values, onChange, defaultEmoti
 				} else if ( 'bb-icons' === reaction.type ) {
 					iconElement = $(`#bbpro_emotion_modal .bbpro-icon-tag-render[data-css="${reaction.icon}"]`);
 				}
-				if (iconElement && iconElement.length) {
+
+				if ( iconElement && iconElement.length ) {
+					// Icon found — stop observing and apply category filter + scroll.
+					observer.disconnect();
 					const category = iconElement.attr('data-group');
-					if (category) {
+					if ( category ) {
 						$('.bbpro-icon-category-filter-select').val(category).trigger('change');
-						// Scroll to the selected icon after category filter is applied
-						setTimeout(() => {
+						// requestAnimationFrame waits for the browser to re-render the
+						// filtered list before scrolling, replacing the inner setTimeout(50).
+						requestAnimationFrame(() => {
 							const selectedIcon = iconElement.get(0);
-							if (selectedIcon) {
+							if ( selectedIcon ) {
 								selectedIcon.scrollIntoView({ behavior: 'auto', block: 'center' });
 							}
-						}, 50);
+						});
 					}
 				}
-			}, 100);
+			});
+
+			observer.observe(modalEl, { childList: true, subtree: true });
+
+			// Safety: disconnect if Pro modal never populates (e.g. network error or unsupported type).
+			setTimeout(() => observer.disconnect(), 5000);
 		}
 	};
 
@@ -85,11 +103,9 @@ export function ReactionModeField({ field, value, values, onChange, defaultEmoti
 	const handleDeleteClick = (reaction) => {
 		if (window.jQuery && window.bp?.Reaction_Admin) {
 			const $ = window.jQuery;
-			const emotionItem = $(`.bb_emotions_item[data-reaction-id="${reaction.id}"]`);
 			const emotionId = reaction.id;
 			// Store so confirm handler can read id after Pro's handler removes the DOM node
 			window.bbReactPendingDeleteEmotionId = emotionId;
-			window.bp.Reaction_Admin.delete_emotion = emotionItem;
 
 			if (emotionId) {
 				// Reset modal to loading state so stale content from a previous delete is not visible.
