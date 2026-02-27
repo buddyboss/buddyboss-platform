@@ -159,8 +159,8 @@ function bb_admin_settings_page() {
 
 	// Only expose debug data when WP_DEBUG is enabled.
 	if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-		$registry      = bb_feature_registry();
-		$all_features  = $registry->bb_get_features( array( 'status' => 'all' ) );
+		$registry               = bb_feature_registry();
+		$all_features           = $registry->bb_get_features( array( 'status' => 'all' ) );
 		$localize_data['debug'] = array(
 			'featureCount' => count( $all_features ),
 			'featureIds'   => array_keys( $all_features ),
@@ -168,6 +168,26 @@ function bb_admin_settings_page() {
 	}
 
 	wp_localize_script( 'bb-admin-settings-2-0', 'bbAdminData', $localize_data );
+
+	/**
+	 * Deprecated: bp_activity_admin_enqueue_scripts.
+	 *
+	 * Legacy hook used by third-party plugins to enqueue CSS/JS on the
+	 * activity admin screen. Fired here when the Settings 2.0 page loads,
+	 * so existing plugins that hook here can still enqueue their assets.
+	 *
+	 * @since BuddyPress 1.6.0
+	 * @deprecated BuddyBoss [BBVERSION] Use standard WordPress enqueue hooks instead.
+	 */
+	if ( bp_is_active( 'activity' ) ) {
+		do_action_deprecated(
+			'bp_activity_admin_enqueue_scripts',
+			array(),
+			'[BBVERSION]',
+			'',
+			'Enqueue scripts using standard WordPress admin_enqueue_scripts hooks instead.'
+		);
+	}
 
 	// Render mount point.
 	?>

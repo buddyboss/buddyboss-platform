@@ -82,4 +82,3 @@ function bb_activity_register_access_control_fields() {
 	 */
 	do_action( 'bb_activity_access_control_after_register_fields' );
 }
-

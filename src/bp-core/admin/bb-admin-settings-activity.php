@@ -206,10 +206,7 @@ function bb_admin_settings_register_activity_feature() {
 	// PANEL FIELDS
 	// =========================================================================
 
-	// Panel 1: Activity Settings.
-	bb_activity_register_settings_panel_fields();
-
-	// Panel 2: Activity Comments (shares edit_time_options with Panel 1).
+	// Build edit time options once; shared by Panel 1 (Edit Activity) and Panel 2 (Edit Comment).
 	$edit_time_options = array(
 		array(
 			'label' => __( 'Forever', 'buddyboss' ),
@@ -222,6 +219,11 @@ function bb_admin_settings_register_activity_feature() {
 			'value' => $time['value'],
 		);
 	}
+
+	// Panel 1: Activity Settings.
+	bb_activity_register_settings_panel_fields( $edit_time_options );
+
+	// Panel 2: Activity Comments.
 	bb_activity_register_comments_panel_fields( $edit_time_options );
 
 	// Panel 3: Activity Topics.
@@ -243,6 +245,22 @@ function bb_admin_settings_register_activity_feature() {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	do_action( 'bb_activity_after_register_settings_fields' );
+
+	/**
+	 * Deprecated: bp_admin_setting_activity_register_fields.
+	 *
+	 * Legacy hook used by third-party plugins to register additional fields
+	 * in the Activity settings tab. Replaced by bb_activity_after_register_settings_fields.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @deprecated BuddyBoss [BBVERSION] Use bb_activity_after_register_settings_fields instead.
+	 */
+	do_action_deprecated(
+		'bp_admin_setting_activity_register_fields',
+		array(),
+		'[BBVERSION]',
+		'bb_activity_after_register_settings_fields'
+	);
 }
 
 add_action( 'bb_register_features', 'bb_admin_settings_register_activity_feature', 20 );

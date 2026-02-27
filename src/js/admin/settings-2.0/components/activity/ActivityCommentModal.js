@@ -52,6 +52,7 @@ export function ActivityCommentModal( { isOpen, activity, onClose, onSave, isSav
 		if ( isOpen && activity && window.wp && window.wp.editor && ! editorInitialized.current ) {
 			forceRemoveEditor( editorId );
 
+			// Wait for the WordPress Modal to finish rendering before TinyMCE targets the textarea.
 			var timer = setTimeout( function () {
 				var textarea = document.getElementById( editorId );
 				if ( textarea ) {
@@ -84,7 +85,7 @@ export function ActivityCommentModal( { isOpen, activity, onClose, onSave, isSav
 		}
 	}, [ isOpen, activity, editorId ] );
 
-	// Cleanup on unmount or close.
+	// Cleanup on unmount or editorId change.
 	useEffect( function () {
 		var currentEditorId = editorId;
 		return function () {
@@ -92,6 +93,15 @@ export function ActivityCommentModal( { isOpen, activity, onClose, onSave, isSav
 			editorInitialized.current = false;
 		};
 	}, [ editorId ] );
+
+	// Reset editorInitialized when the modal closes so TinyMCE re-initialises
+	// if the same activity is re-opened (editorId unchanged, so the effect above
+	// would not fire again without this reset).
+	useEffect( function () {
+		if ( ! isOpen ) {
+			editorInitialized.current = false;
+		}
+	}, [ isOpen ] );
 
 	if ( ! isOpen || ! activity ) {
 		return null;
