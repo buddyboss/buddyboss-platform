@@ -47,7 +47,7 @@ select.bb-admin-settings__select {
 			width: 40px;
 			height: 24px;
 			border-radius: 99px;
-			background-color: $bb-background-tertiary-color;
+			background-color: $bb-background-tertiary-hover-color;
 			border: none;
 		}
 
@@ -90,7 +90,7 @@ select.bb-admin-settings__select {
             width: 28px;
             height: 18px;
             border: 1px solid transparent;
-            background-color: $bb-background-tertiary-color;
+            background-color: $bb-background-tertiary-hover-color;
         }
 
         .components-form-toggle__thumb {
