@@ -64,10 +64,6 @@ function bb_media_register_photos_panel_fields() {
 			'sanitize_callback' => 'absint',
 			'order'             => 20,
 			'parent_field'      => 'bp_media_profile_media_support',
-			'conditional'       => array(
-				'field' => 'bp_media_profile_media_support',
-				'value' => 1,
-			),
 		)
 	);
 
@@ -122,10 +118,6 @@ function bb_media_register_photos_panel_fields() {
 				'sanitize_callback' => 'absint',
 				'order'             => 40,
 				'parent_field'      => 'bp_media_group_media_support',
-				'conditional'       => array(
-					'field' => 'bp_media_group_media_support',
-					'value' => 1,
-				),
 			)
 		);
 	}

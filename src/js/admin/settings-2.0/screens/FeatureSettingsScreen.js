@@ -299,13 +299,36 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 
 	// Handle setting change (all fields) - triggers auto-save.
 	// Value may be a function (prevValue) => newValue for functional updates (avoids stale state when merging).
-	// Stable reference so children that depend on this handler do not re-run effects on every render.
+	// When a parent toggle is turned OFF, cascade to child fields (parent_field) and turn them OFF too.
 	const handleSettingChange = useCallback((fieldName, value) => {
 		setToast({ status: 'saving', message: __('Saving changes...', 'buddyboss') });
-		setSettings((prev) => ({
-			...prev,
-			[fieldName]: typeof value === 'function' ? value(prev[fieldName]) : value,
-		}));
+
+		// Collect child fields that depend on this field via parent_field.
+		var childNames = [];
+		var resolvedValue = value;
+		if ( typeof resolvedValue !== 'function' && ! resolvedValue ) {
+			sidePanels.forEach( function( panel ) {
+				( panel.sections || [] ).forEach( function( section ) {
+					( section.fields || [] ).forEach( function( field ) {
+						if ( field.parent_field === fieldName ) {
+							childNames.push( field.name );
+						}
+					} );
+				} );
+			} );
+		}
+
+		setSettings((prev) => {
+			var next = {
+				...prev,
+				[fieldName]: typeof value === 'function' ? value(prev[fieldName]) : value,
+			};
+			// Turn off child fields when parent is turned off.
+			childNames.forEach( function( childName ) {
+				next[childName] = 0;
+			} );
+			return next;
+		});
 		setChangedFields((prev) => {
 			const next = { ...prev };
 			// For functional updates we cannot know the new value here; set a sentinel so save uses latest settings
@@ -314,9 +337,13 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 			} else {
 				next[fieldName] = value;
 			}
+			// Mark child fields as changed so they get saved too.
+			childNames.forEach( function( childName ) {
+				next[childName] = 0;
+			} );
 			return next;
 		});
-	}, []);
+	}, [sidePanels]);
 
 	const handlePanelChange = (route) => {
 		// Route from SideNavigation is already in full format: /settings/featureId/panelId
