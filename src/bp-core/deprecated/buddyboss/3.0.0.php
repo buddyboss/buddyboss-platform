@@ -313,6 +313,54 @@ function bp_groups_admin_autocomplete_handler() {
 add_action( 'wp_ajax_bp_group_admin_member_autocomplete', 'bp_groups_admin_autocomplete_handler' );
 add_action( 'admin_post_bp_create_group_admin', 'bp_process_create_group_admin' );
 
+// Note: bp_groups_list_table_get_views is fired via do_action_deprecated() inside
+// BB_Admin_Groups_Ajax::get_groups() each time the admin groups list is loaded.
+// It is deprecated in favour of the 'bb_admin_groups_list_views' filter.
+// See: src/bp-core/admin/classes/class-bb-admin-groups-ajax.php
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Activity Settings 2.0 deprecated hook compatibility.
+// ──────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Fire the legacy `bp_admin_setting_activity_register_fields` hook after
+ * Settings 2.0 finishes registering activity fields.
+ *
+ * The original hook passed a `BP_Admin_Setting_Activity` instance. Settings 2.0
+ * no longer uses that class, so a no-op stub is passed to satisfy callbacks
+ * (e.g. Pro access-control) that call add_section()/add_field() on the argument.
+ *
+ * @since BuddyBoss 1.0.0
+ * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_activity_after_register_settings_fields'} instead.
+ */
+add_action(
+	'bb_activity_after_register_settings_fields',
+	static function () {
+		do_action_deprecated(
+			'bp_admin_setting_activity_register_fields',
+			array(
+				new class() {
+					/**
+					 * No-op stub for BP_Admin_Setting_tab::add_section().
+					 *
+					 * @param mixed ...$args Ignored.
+					 */
+					public function add_section( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+
+					/**
+					 * No-op stub for BP_Admin_Setting_tab::add_field().
+					 *
+					 * @param mixed ...$args Ignored.
+					 */
+					public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+				},
+			),
+			'BuddyBoss [BBVERSION]',
+			'bb_activity_after_register_settings_fields'
+		);
+	}
+);
+
 // ──────────────────────────────────────────────────────────────────────────────
 // Members / Connections settings hooks (moved to Settings 2.0).
 // ──────────────────────────────────────────────────────────────────────────────

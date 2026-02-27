@@ -179,31 +179,22 @@ function bb_activity_register_comments_panel_fields( $edit_time_options ) {
 			'description'          => __( 'Load %s Additional comments on each request', 'buddyboss' ),
 			'help_text'            => __( 'Increasing the number of comments retrieved in each request may negatively impact site performance.', 'buddyboss' ),
 			'default'              => bb_get_activity_comment_loading(),
-			'options'              => array(
-				array(
-					'label' => '5',
-					'value' => 5,
-				),
-				array(
-					'label' => '10',
-					'value' => 10,
-				),
-				array(
-					'label' => '15',
-					'value' => 15,
-				),
-				array(
-					'label' => '20',
-					'value' => 20,
-				),
-				array(
-					'label' => '25',
-					'value' => 25,
-				),
-				array(
-					'label' => '30',
-					'value' => 30,
-				),
+			'options'              => array_map(
+				function ( $n ) {
+					return array(
+						'label' => (string) $n,
+						'value' => $n,
+					);
+				},
+				/**
+				 * Filters the allowed values for the comment loading setting.
+				 * Same filter as legacy bp-admin-setting-activity.php.
+				 *
+				 * @since BuddyBoss 2.5.80
+				 *
+				 * @param array $allowed Allowed integer values.
+				 */
+				apply_filters( 'bb_activity_comment_loading_options', array( 5, 10, 15, 20, 25, 30 ) )
 			),
 			'sanitize_callback'    => 'bb_activity_sanitize_comment_loading',
 			'description_controls' => array(
@@ -222,7 +213,7 @@ function bb_activity_register_comments_panel_fields( $edit_time_options ) {
 		'activity_comments',
 		array(
 			'name'        => 'bb_activity_comments_info',
-			'label'       => 'Notice',
+			'label'       => __( 'Notice', 'buddyboss' ),
 			'type'        => 'notice',
 			'notice_type' => 'info',
 			'description' => __( 'Comments on WordPress Posts and Custom Post Types will inherit from your WordPress Discussion settings.', 'buddyboss' ),

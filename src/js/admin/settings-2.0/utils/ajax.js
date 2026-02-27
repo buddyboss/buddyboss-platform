@@ -407,3 +407,22 @@ export function groupBulkAction(groupIds, action, extraData) {
 	}
 	return ajaxFetch('bb_admin_group_bulk_action', data);
 }
+
+/**
+ * Search forums for the async select field in the group edit modal.
+ *
+ * Passes an optional search term and page number to the server.
+ * Returns { results: [{ value, label }], has_more: bool }.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} params          Request parameters.
+ * @param {string} params.term         Search term (empty = browse all).
+ * @param {number} params.page         Page number (default 1).
+ * @param {number} params.selected_id  Forum ID to resolve on initial load.
+ * @param {Object} options             Fetch options (e.g. { signal }).
+ * @return {Promise} Promise resolving to { results, has_more }.
+ */
+export function forumAutocomplete( params, options ) {
+	return ajaxFetch( 'bb_admin_forum_autocomplete', params || {}, options || {} );
+}

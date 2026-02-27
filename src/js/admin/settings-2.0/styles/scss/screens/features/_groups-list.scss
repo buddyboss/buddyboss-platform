@@ -61,12 +61,9 @@
 				min-width: 135px;
 			}
 
-			.components-input-control-suffix-wrapper {
-				display: none;
-			}
-
+			.components-input-control-suffix-wrapper,
 			.components-input-control__backdrop {
-				border-color: transparent;
+				display: none;
 			}
 		}
 
@@ -125,7 +122,7 @@
 	}
 
 	&__bulk-apply.is-secondary {
-		@include bb-button-primary;
+		@include bb-button-primary-outline;
 	}
 
 	// Filter Dropdowns
@@ -723,7 +720,10 @@
 		}
 
 		.components-input-control__container {
-			@include bb-admin-settings-select;
+
+			.components-select-control__input {
+				@include bb-admin-settings-select;
+			}
 
 			&:has(> .components-select-control__input) {
 				padding: 0 !important;
@@ -810,7 +810,8 @@
 			height: auto !important;
 
 			// Remove default underline indicator.
-			&::after {
+			&:after,
+			&:before {
 				display: none !important;
 			}
 
@@ -923,6 +924,20 @@
 	.components-checkbox-control__input[type="checkbox"]:checked {
 		background-color: $bb-background-brand-primary-color;
 		border-color: $bb-background-brand-primary-color;
+	}
+
+	&:last-child {
+		padding-bottom: 0;
+		border-bottom: 0;
+	}
+}
+
+.bb-admin-meta-field__async-select-field {
+	margin-bottom: 16px;
+
+	.components-base-control__label {
+		display: block;
+		margin-bottom: 8px;
 	}
 }
 
@@ -1091,10 +1106,11 @@ input.bb-admin-meta-field__search-input {
 .bb-group-edit-modal__tab-content {
 
 	// Divider between integration sections (select after checkbox or select after select).
-	.bb-admin-meta-field__select-field + .bb-admin-meta-field__checkbox-field {
+	> [class*="bb-admin-meta-field"] + [class*="bb-admin-meta-field__checkbox"] {
 		padding-top: 16px;
 	}
 
+	.bb-admin-meta-field__async-select-field,
 	.bb-admin-meta-field__select-field {
 		padding-bottom: 16px;
 		border-bottom: 1px solid $bb-border-secondary-color;
@@ -1131,21 +1147,13 @@ input.bb-admin-meta-field__search-input {
 		min-width: 0;
 	}
 
-	&__add-btn {
-		flex-shrink: 0;
-		white-space: nowrap;
-		height: 40px;
-		color: $bb-background-brand-primary-color;
-		border-color: $bb-background-brand-primary-color;
+	&__add-btn.is-secondary {
+		@include bb-button-primary-outline;
 
-		&:hover:not(:disabled) {
-			color: $bb-background-brand-primary-color;
-			border-color: $bb-background-brand-primary-color;
-			opacity: 0.85;
-		}
-
-		&:disabled {
-			opacity: 0.5;
+		i {
+			font-size: 16px;
+			font-weight: 700;
+			margin-right: 6px;
 		}
 	}
 
@@ -1286,12 +1294,9 @@ input.bb-admin-meta-field__search-input {
 				font-size: 13px;
 			}
 
-			.components-input-control-suffix-wrapper {
-				display: none;
-			}
-
+			.components-input-control-suffix-wrapper,
 			.components-input-control__backdrop {
-				border-color: transparent;
+				display: none;
 			}
 		}
 	}
@@ -1464,12 +1469,9 @@ input.bb-admin-meta-field__search-input {
 				width: 100%;
 			}
 
-			.components-input-control-suffix-wrapper {
-				display: none;
-			}
-
+			.components-input-control-suffix-wrapper,
 			.components-input-control__backdrop {
-				border-color: transparent;
+				display: none;
 			}
 		}
 	}

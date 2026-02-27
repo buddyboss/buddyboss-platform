@@ -21,6 +21,7 @@ import { decodeEntities } from '@wordpress/html-entities';
 
 import { RichTextEditor } from './RichTextEditor';
 import { safeUrl } from '../../utils/sanitize';
+import { AsyncSelectField } from '../fields/AsyncSelectField';
 
 /**
  * AJAX-powered searchable multi-select field.
@@ -438,6 +439,26 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 						);
 					} ) }
 				</div>
+				{ field.description && (
+					<p className="bb-admin-meta-field__description">{ field.description }</p>
+				) }
+			</div>
+		);
+	}
+
+	// Async select field (searchable, server-side, load-more).
+	if ( 'async_select' === field.type ) {
+		return (
+			<div className="bb-admin-meta-field__async-select-field">
+				{ field.label && (
+					<label className="components-base-control__label">{ field.label }</label>
+				) }
+				<AsyncSelectField
+					value={ null != value ? String( value ) : '0' }
+					onChange={ onChange }
+					asyncAction={ field.async_action || '' }
+					placeholder={ field.placeholder || '' }
+				/>
 				{ field.description && (
 					<p className="bb-admin-meta-field__description">{ field.description }</p>
 				) }

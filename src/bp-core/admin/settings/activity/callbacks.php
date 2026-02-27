@@ -77,7 +77,26 @@ function bb_activity_sanitize_edit_time( $value ) {
 	$value = intval( $value );
 
 	if ( ! in_array( $value, bb_activity_get_allowed_edit_times(), true ) ) {
-		return 600; // Default: 10 minutes in seconds.
+		return 600; // Fallback: invalid value, return 10 minutes.
+	}
+
+	return $value;
+}
+
+/**
+ * Sanitize activity comment edit time setting.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed $value The value to sanitize.
+ *
+ * @return int Sanitized integer value.
+ */
+function bb_activity_sanitize_comment_edit_time( $value ) {
+	$value = intval( $value );
+
+	if ( ! in_array( $value, bb_activity_get_allowed_edit_times(), true ) ) {
+		return 600; // Fallback: invalid value, return 10 minutes.
 	}
 
 	return $value;
@@ -165,8 +184,17 @@ function bb_activity_sanitize_comment_threading_depth( $value ) {
  * @return int Sanitized integer value.
  */
 function bb_activity_sanitize_comment_loading( $value ) {
-	$value   = absint( $value );
-	$allowed = array( 5, 10, 15, 20, 25, 30 );
+	$value = absint( $value );
+
+	/**
+	 * Filters the allowed values for the comment loading setting.
+	 * Same filter as legacy bp-admin-setting-activity.php.
+	 *
+	 * @since BuddyBoss 2.5.80
+	 *
+	 * @param array $allowed Allowed integer values.
+	 */
+	$allowed = apply_filters( 'bb_activity_comment_loading_options', array( 5, 10, 15, 20, 25, 30 ) );
 
 	if ( ! in_array( $value, $allowed, true ) ) {
 		return 10;

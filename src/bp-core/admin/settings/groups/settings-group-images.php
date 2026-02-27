@@ -198,6 +198,7 @@ function bb_groups_register_images_panel_fields() {
 	);
 
 	// FIELD: Cover Image Width (Pro only, select, grouped with height).
+	// Pro saves this value to an additional option for backward compatibility with older Pro versions.
 	bb_register_feature_field(
 		'groups',
 		'group_images',

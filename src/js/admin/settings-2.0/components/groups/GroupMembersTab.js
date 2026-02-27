@@ -501,7 +501,8 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 						disabled={ ! selectedUser }
 						onClick={ handleAddMember }
 					>
-						{ __( '+ Add', 'buddyboss' ) }
+						<i className="bb-icons-rl-plus"></i>
+						{ __( 'Add', 'buddyboss' ) }
 					</Button>
 				</div>
 			</div>
@@ -546,7 +547,7 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 														/>
 													) }
 													{ member.profile_url ? (
-														<a href={ safeUrl( member.profile_url ) } target="_blank" rel="noopener,noreferrer" className="bb-group-members-tab__member-name">
+														<a href={ safeUrl( member.profile_url ) } target="_blank" rel="noopener noreferrer" className="bb-group-members-tab__member-name">
 															{ member.name }
 														</a>
 													) : (

@@ -130,4 +130,14 @@
 			color: $bb-icon-tertiary-color;
 		}
 	}
+
+	&:has(> .components-spinner) {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	.components-spinner {
+		margin: 0;
+	}
 }

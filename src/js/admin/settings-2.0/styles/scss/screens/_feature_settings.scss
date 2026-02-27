@@ -40,10 +40,13 @@
         transition: background-color .2s ease;
         text-decoration: none;
 
-        &:hover {
-            background-color: $bb-background-base-color;
-        }
-    }
+		&:hover,
+		&:focus {
+			background-color: $bb-background-base-color;
+			box-shadow: none;
+			outline: none;
+		}
+	}
 
     .bb-admin-side-nav {
 
@@ -76,17 +79,20 @@
                 line-height: 1;
             }
 
-            &:hover,
-            &--active {
-                color: $bb-text-color;
-                background-color: $bb-background-base-color;
-                border-color: $bb-border-primary-color;
+			&:hover,
+			&:focus,
+			&--active {
+				color: $bb-text-color;
+				background-color: $bb-background-base-color;
+				border-color: $bb-border-primary-color;
+				outline: none;
+				box-shadow: none;
 
-                [class*="bb-icons-"] {
-                    color: $bb-icon-color;
-                }
-            }
-        }
+				[class*="bb-icons-"] {
+					color: $bb-icon-color;
+				}
+			}
+		}
 
         &__icon {
             display: flex;
@@ -253,11 +259,19 @@
         color: $bb-text-tertiary-color;
         font-size: 13px;
         font-weight: 400;
-        font-style: italic;
         line-height: 1.5;
         margin: 10px 0 0 0;
         opacity: 0.8;
         width: 100%;
+
+        a {
+            color: $bb-link-color;
+            text-decoration: none;
+
+            &:focus {
+                text-decoration: underline;
+            }
+        }
     }
 
     // Grouped fields: remove border/spacing between consecutive fields in same group.
@@ -272,8 +286,7 @@
 
         // Last field in a group restores the bottom border.
         &:has(+ :not([data-group])),
-        &:has(+ .bb-admin-settings-form__field:not(.bb-admin-settings-form__field--grouped)),
-        &:last-child {
+        &:has(+ .bb-admin-settings-form__field:not(.bb-admin-settings-form__field--grouped)) {
             border-bottom: 1px solid $bb-border-secondary-color;
             padding-bottom: 24px;
         }
@@ -321,12 +334,9 @@
 			@include bb-admin-settings-select;
 		}
 
-		.components-input-control-suffix-wrapper {
-			display: none;
-		}
-
+		.components-input-control-suffix-wrapper,
 		.components-input-control__backdrop {
-			border-color: transparent;
+			display: none;
 		}
 
         .components-select-control {

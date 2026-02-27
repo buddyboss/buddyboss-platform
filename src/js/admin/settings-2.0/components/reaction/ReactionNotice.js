@@ -9,9 +9,12 @@
 
 import { useState, useEffect, useRef, useCallback } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+import { formatNumber } from '../../utils/format';
 
 // Module-level store so dismissed migrations stay hidden after remount (e.g. navigate away/back).
 // Resets on full page reload; per admin session only.
+// NOTE: These module-level variables are intentionally shared. Only one ReactionNotice instance
+// renders at a time (one active side panel), so there is no cross-instance contamination.
 const dismissedMigrationSignatures = {};
 
 // Module-level store for live migration progress so it survives unmount/remount
@@ -242,10 +245,6 @@ export function ReactionNotice({ field }) {
 				}
 			},
 		} );
-	};
-
-	const formatNumber = (num) => {
-		return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 	};
 
 	// Render completed notice

@@ -42,6 +42,16 @@ function injectMigrationDataIntoPanels(panels, migrationData, migrationStatus) {
  * @param {Object} context Helpers: ajaxFetch, getCachedFeatureData, setCachedFeatureData, setFeature, setSidePanels, setSettings, setOriginalSettings
  */
 export function applyReactionPostSave(response, fieldsToSave, featureId, context) {
+	if ( process.env.NODE_ENV !== 'production' ) {
+		const requiredContextKeys = [ 'ajaxFetch', 'getCachedFeatureData', 'setCachedFeatureData', 'setFeature', 'setSidePanels', 'setSettings', 'setOriginalSettings' ];
+		requiredContextKeys.forEach( ( key ) => {
+			if ( typeof context[ key ] !== 'function' ) {
+				// eslint-disable-next-line no-console
+				console.error( `applyReactionPostSave: context.${ key } is missing or not a function` );
+			}
+		} );
+	}
+
 	const savedReactionItems = fieldsToSave.reaction_items !== undefined;
 	let saveMigrationData = response.data?.migration_data;
 	let saveMigrationStatus = response.data?.migration_status || '';

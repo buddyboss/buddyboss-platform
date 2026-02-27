@@ -309,8 +309,8 @@ class BB_Admin_Settings_Ajax {
 					if ( '' === $key ) {
 						continue;
 					}
-					$opt_name = $prefix . $key;
-					$stored   = bp_get_option( $opt_name, 1 );
+					$opt_name       = $prefix . $key;
+					$stored         = bp_get_option( $opt_name, 1 );
 					$mapped[ $key ] = in_array( $stored, $truthy, true ) ? 1 : 0;
 				}
 				$settings[ $field['name'] ] = $mapped;
@@ -524,7 +524,7 @@ class BB_Admin_Settings_Ajax {
 						continue;
 					}
 					if ( ! empty( $control['name'] ) ) {
-						$control_default = $control['default'] ?? '';
+						$control_default                                = $control['default'] ?? '';
 						$field['description_controls'][ $idx ]['value'] = bp_get_option( $control['name'], $control_default );
 					}
 				}
@@ -750,11 +750,27 @@ class BB_Admin_Settings_Ajax {
 		 * at the early `bb_register_features` hook (e.g., custom post types
 		 * from third-party plugins that register on `init`).
 		 *
+		 * Note: This hook fires in both GET (read) and SAVE contexts. Use
+		 * `bb_admin_settings_before_save_feature` for save-only logic.
+		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param string $feature_id The feature being loaded.
 		 */
 		do_action( 'bb_admin_settings_before_get_feature', $feature_id );
+
+		/**
+		 * Fires before feature settings are saved, in the save AJAX handler only.
+		 *
+		 * Use this hook to capture pre-save state or perform any logic that
+		 * must run exactly once during a save request, before option writes occur.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $feature_id The feature being saved.
+		 * @param array  $settings   Full submitted settings (JSON decoded).
+		 */
+		do_action( 'bb_admin_settings_before_save_feature', $feature_id, $settings );
 
 		$all_fields = $registry->bb_get_all_fields( $feature_id );
 

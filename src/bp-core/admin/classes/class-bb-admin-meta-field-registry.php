@@ -215,19 +215,20 @@ class BB_Admin_Meta_Field_Registry {
 			}
 
 			$field_data = array(
-				'id'          => $field_id,
-				'label'       => $args['label'],
-				'description' => $args['description'],
-				'placeholder' => $args['placeholder'],
-				'type'        => $args['type'],
-				'context'     => $args['context'],
-				'layout'      => $args['layout'],
-				'tab'         => $args['tab'],
-				'visible'     => $visible,
-				'value'       => null,
-				'options'     => array(),
-				'readonly'    => ( null === $args['save_value'] ),
-				'conditional' => $args['conditional'],
+				'id'           => $field_id,
+				'label'        => $args['label'],
+				'description'  => $args['description'],
+				'placeholder'  => $args['placeholder'],
+				'type'         => $args['type'],
+				'context'      => $args['context'],
+				'layout'       => $args['layout'],
+				'tab'          => $args['tab'],
+				'visible'      => $visible,
+				'value'        => null,
+				'options'      => array(),
+				'readonly'     => ( null === $args['save_value'] ),
+				'conditional'  => $args['conditional'],
+				'async_action' => isset( $args['async_action'] ) ? $args['async_action'] : '',
 			);
 
 			// Skip fetching value, options, and extra data for invisible fields

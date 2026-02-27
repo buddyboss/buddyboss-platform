@@ -35,6 +35,7 @@ function bb_groups_register_settings_panel_fields() {
 	// FIELD: Group Creation.
 	// `invert_value`: Legacy DB stores 1 = restricted. Toggle shows "Enable", so invert for display.
 	// Raw DB value preserved for backward compatibility with `bp_restrict_group_creation()`.
+	// Round-trip: toggle ON (Enable) → DB stores 0; toggle OFF (Disable) → DB stores 1.
 	bb_register_feature_field(
 		'groups',
 		'group_settings',

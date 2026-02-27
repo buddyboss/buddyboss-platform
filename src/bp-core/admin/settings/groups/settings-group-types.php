@@ -36,7 +36,7 @@ function bb_groups_register_group_types_panel_fields() {
 	);
 
 	// FIELD: Group Types toggle.
-	// Note: Option name is `bp-disable-group-type-creation` but value 1 = enabled (inverted naming).
+	// Legacy option name implies "disable" but value 1 means enabled — do not invert.
 	bb_register_feature_field(
 		'groups',
 		'group_types',

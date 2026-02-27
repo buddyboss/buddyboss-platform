@@ -14,8 +14,10 @@ import {
 	DropdownMenu,
 	MenuGroup,
 	MenuItem,
+	Modal,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
+import { dateI18n } from '@wordpress/date';
 import { ajaxFetch } from '../utils/ajax';
 import { sanitizeHtml, safeUrl } from '../utils/sanitize';
 import { ActivityEditModal } from '../components/activity/ActivityEditModal';
@@ -123,6 +125,10 @@ export function ActivityListScreen( { onNavigate } ) {
 	var noticeState = useState( null );
 	var notice = noticeState[ 0 ];
 	var setNotice = noticeState[ 1 ];
+
+	var deleteConfirmState = useState( null ); // { action, ids, message }
+	var deleteConfirm = deleteConfirmState[ 0 ];
+	var setDeleteConfirm = deleteConfirmState[ 1 ];
 
 	var searchTimerRef = useRef( null );
 	var hasMetaRef = useRef( false );
@@ -359,9 +365,14 @@ export function ActivityListScreen( { onNavigate } ) {
 		var action = bulkAction.replace( /^bulk_/, '' );
 
 		if ( 'delete' === action ) {
-			if ( ! window.confirm( __( 'Are you sure you want to delete the selected activities?', 'buddyboss' ) ) ) {
-				return;
-			}
+			setDeleteConfirm( {
+				message: __( 'Are you sure you want to delete the selected activities?', 'buddyboss' ),
+				onConfirm: function () {
+					setDeleteConfirm( null );
+					performAction( action, selectedIds );
+				},
+			} );
+			return;
 		}
 
 		performAction( action, selectedIds );
@@ -375,9 +386,14 @@ export function ActivityListScreen( { onNavigate } ) {
 	 */
 	var handleSingleAction = function ( action, activity ) {
 		if ( 'delete' === action ) {
-			if ( ! window.confirm( __( 'Are you sure you want to delete this activity?', 'buddyboss' ) ) ) {
-				return;
-			}
+			setDeleteConfirm( {
+				message: __( 'Are you sure you want to delete this activity?', 'buddyboss' ),
+				onConfirm: function () {
+					setDeleteConfirm( null );
+					performAction( action, activity.id );
+				},
+			} );
+			return;
 		}
 		performAction( action, activity.id );
 	};
@@ -452,27 +468,28 @@ export function ActivityListScreen( { onNavigate } ) {
 	};
 
 	/**
-	 * Format date for display.
+	 * Format date for display using the site's timezone and locale.
 	 *
-	 * @param {string} dateStr Date string.
-	 * @returns {string} Formatted date.
+	 * Uses dateI18n() from @wordpress/date so the output respects the
+	 * WordPress timezone setting and translates month names.
+	 * date_recorded is stored as UTC in the database; passing the raw
+	 * string lets dateI18n convert it to the site's local time.
+	 *
+	 * @param {string} dateStr UTC date string (e.g. "2026-02-27 14:23:45").
+	 * @returns {string} Formatted date in site timezone.
 	 */
 	var formatDate = function ( dateStr ) {
 		if ( ! dateStr ) {
 			return '';
 		}
-		var d = new Date( dateStr.replace( ' ', 'T' ) + 'Z' );
-		var day = d.getUTCDate();
-		var months = [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ];
-		var month = months[ d.getUTCMonth() ];
-		var hours = String( d.getUTCHours() ).padStart( 2, '0' );
-		var minutes = String( d.getUTCMinutes() ).padStart( 2, '0' );
-		var seconds = String( d.getUTCSeconds() ).padStart( 2, '0' );
-		return day + ' ' + month + ', ' + hours + ':' + minutes + ':' + seconds;
+		return dateI18n( 'j M, H:i:s', dateStr );
 	};
 
 	/**
 	 * Strip HTML tags for display.
+	 *
+	 * Uses sanitizeHtml with no allowed tags instead of a hand-rolled regex
+	 * to correctly handle edge cases (attributes with >, comments, etc.).
 	 *
 	 * @param {string} html HTML string.
 	 * @returns {string} Plain text.
@@ -481,7 +498,7 @@ export function ActivityListScreen( { onNavigate } ) {
 		if ( ! html ) {
 			return '';
 		}
-		return html.replace( /<[^>]*>/g, '' );
+		return sanitizeHtml( html, { allowedTags: [] } );
 	};
 
 	/**
@@ -638,7 +655,7 @@ export function ActivityListScreen( { onNavigate } ) {
 							<option value="">{ __( 'All Actions', 'buddyboss' ) }</option>
 							{ activityActionsGrouped.map( function ( group, idx ) {
 								return (
-									<optgroup key={ idx } label=" ">
+									<optgroup key={ idx } label={ group.label }>
 										{ group.options.map( function ( opt ) {
 											return (
 												<option key={ opt.value } value={ opt.value }>
@@ -965,6 +982,36 @@ export function ActivityListScreen( { onNavigate } ) {
 				onSave={ handleCommentSave }
 				isSaving={ isCommentSaving }
 			/>
+
+			{ /* Delete Confirmation Modal */ }
+			{ deleteConfirm && (
+				<Modal
+					title={ __( 'Confirm Delete', 'buddyboss' ) }
+					onRequestClose={ function () {
+						setDeleteConfirm( null );
+					} }
+					className="bb-activity-list__delete-confirm-modal"
+				>
+					<p>{ deleteConfirm.message }</p>
+					<div className="bb-activity-list__delete-confirm-actions">
+						<Button
+							variant="primary"
+							isDestructive
+							onClick={ deleteConfirm.onConfirm }
+						>
+							{ __( 'Delete', 'buddyboss' ) }
+						</Button>
+						<Button
+							variant="secondary"
+							onClick={ function () {
+								setDeleteConfirm( null );
+							} }
+						>
+							{ __( 'Cancel', 'buddyboss' ) }
+						</Button>
+					</div>
+				</Modal>
+			) }
 		</div>
 	);
 }

@@ -63,7 +63,7 @@ function bb_groups_register_navigation_panel_fields() {
 			'description'       => __( 'The dropdown only shows tabs that are available to all groups.', 'buddyboss' ),
 			'type'              => 'select',
 			'default'           => 'members',
-			'options'           => bb_get_group_default_tab_options(),
+			'options'           => array(), // Populated at AJAX time via bb_group_navigation_enrich_field_data() so options reflect current component state.
 			'order'             => 20,
 			'sanitize_callback' => 'sanitize_key',
 		)
@@ -191,11 +191,24 @@ function bb_get_group_nav_items_for_settings() {
 		return $cached_options;
 	}
 
+	// Try persistent transient cache. Cleared by bb_clear_group_nav_items_cache()
+	// on feature activation/deactivation and when the first group is created.
+	$transient_key = 'bb_group_nav_items_for_settings';
+	$transient     = get_transient( $transient_key );
+	if ( false !== $transient ) {
+		$cached_options = $transient;
+		return $cached_options;
+	}
+
 	if ( ! class_exists( 'BP_Nouveau_Customizer_Group_Nav' ) ) {
 		return array();
 	}
 
-	// We need a real group to build nav items. Use the most recent group.
+	// We need a real group to build nav items. Use the most recently created group.
+	// BP_Nouveau_Customizer_Group_Nav only needs any valid group_id to instantiate its
+	// nav items — the actual nav tabs are determined by registered extensions, not
+	// per-group content. The most recent group is used as a proxy; this may miss
+	// group-specific extensions but covers the standard use-case.
 	$groups = groups_get_groups(
 		array(
 			'per_page'    => 1,
@@ -206,6 +219,9 @@ function bb_get_group_nav_items_for_settings() {
 	);
 
 	if ( empty( $groups['groups'] ) ) {
+		// @todo: On fresh installs with no groups, this returns an empty list, leaving the
+		// Navigation Order field blank until a group is created. Consider falling back to
+		// the default BP_Nouveau_Customizer_Group_Nav slug list so the field is useful immediately.
 		return array();
 	}
 
@@ -240,8 +256,30 @@ function bb_get_group_nav_items_for_settings() {
 
 	$cached_options = $options;
 
+	// Persist to transient so the groups_get_groups() + BP_Nouveau_Customizer_Group_Nav
+	// instantiation is not repeated on every AJAX settings request.
+	// Empty results are not cached so a fresh install picks up the first group immediately.
+	if ( ! empty( $cached_options ) ) {
+		set_transient( $transient_key, $cached_options, DAY_IN_SECONDS );
+	}
+
 	return $cached_options;
 }
+
+/**
+ * Clear the group nav items settings transient cache.
+ *
+ * Called when a feature is activated/deactivated (which changes the list of
+ * available nav items) and when the first group is created on a fresh install.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_clear_group_nav_items_cache() {
+	delete_transient( 'bb_group_nav_items_for_settings' );
+}
+add_action( 'bb_feature_activated', 'bb_clear_group_nav_items_cache' );
+add_action( 'bb_feature_deactivated', 'bb_clear_group_nav_items_cache' );
+add_action( 'groups_group_create_complete', 'bb_clear_group_nav_items_cache' );
 
 /**
  * Get nav item slugs whose parent feature is inactive.
@@ -331,7 +369,9 @@ function bb_group_navigation_enrich_field_data( $field_data, $field, $feature_id
 			break;
 
 		case 'bb_group_default_tab':
-			$field_data['value'] = sanitize_key( isset( $appearance['group_default_tab'] ) ? $appearance['group_default_tab'] : 'members' );
+			// Populate options at AJAX time so they reflect current component activation state.
+			$field_data['options'] = bb_get_group_default_tab_options();
+			$field_data['value']   = sanitize_key( isset( $appearance['group_default_tab'] ) ? $appearance['group_default_tab'] : 'members' );
 			break;
 
 		case 'bb_group_nav_order':
@@ -444,8 +484,10 @@ function bb_group_navigation_save_settings( $feature_id, $settings, $saved ) {
 		return;
 	}
 
-	// Read current appearance option.
-	$appearance = bp_get_option( 'bp_nouveau_appearance', array() );
+	// Read current appearance option — use bp_nouveau_get_appearance_settings() so
+	// defaults are merged in. Using bp_get_option() directly would lose defaults on
+	// the first save if the option does not yet exist in the database.
+	$appearance = bp_nouveau_get_appearance_settings();
 	if ( ! is_array( $appearance ) ) {
 		$appearance = array();
 	}
@@ -503,37 +545,5 @@ function bb_group_navigation_save_settings( $feature_id, $settings, $saved ) {
 	}
 }
 
+// bb_sanitize_group_nav_order() is defined in callbacks.php alongside other sanitize callbacks.
 add_action( 'bb_admin_save_feature_settings_after', 'bb_group_navigation_save_settings', 10, 3 );
-
-// =========================================================================
-// SANITIZE CALLBACK
-// =========================================================================
-
-/**
- * Sanitize the group nav order checkbox_list value.
- *
- * Expects an associative array { slug: 0|1, ... }.
- * Sanitizes keys and normalizes values to 0 or 1.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param mixed $value The submitted value.
- *
- * @return array Sanitized array of slug => 0|1.
- */
-function bb_sanitize_group_nav_order( $value ) {
-	if ( is_string( $value ) ) {
-		$value = json_decode( $value, true );
-	}
-
-	if ( ! is_array( $value ) ) {
-		return array();
-	}
-
-	$sanitized = array();
-	foreach ( $value as $key => $val ) {
-		$sanitized[ sanitize_key( $key ) ] = absint( $val ) ? 1 : 0;
-	}
-
-	return $sanitized;
-}

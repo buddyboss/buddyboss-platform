@@ -22,6 +22,11 @@ import { RichTextEditor } from '../common/RichTextEditor';
 /**
  * Sanitize a string into a URL-friendly slug.
  *
+ * Note: Non-Latin characters (e.g. Arabic, Chinese) are stripped by the
+ * `/[^a-z0-9\s-]/g` regex, resulting in an empty slug for fully non-Latin
+ * names. The server (`sanitize_title()`) will also adjust the slug and may
+ * produce a different result, so this preview slug is indicative only.
+ *
  * @since BuddyBoss [BBVERSION]
  *
  * @param {string} str Input string.

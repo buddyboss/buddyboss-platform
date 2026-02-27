@@ -305,19 +305,30 @@
 			color: $bb-text-brand-primary-color;
 
 			&:hover:not(:disabled) {
-				background: $bb-background-brand-primary-color;
-				color: $bb-text-inverse-color;
+				border-color: $bb-border-brand-tertiary-color;
+				color: $bb-text-brand-primary-color;
+			}
+
+			&:focus {
+				outline: 2px solid $bb-border-quaternary-color;
+				box-shadow: none;
 			}
 		}
 
 		&--remove {
-			background: $bb-background-base-color;
-			border: 1px solid $bb-error-color;
-			color: $bb-error-color;
+			background: $bb-background-danger-secondary-color;
+			border: 1px solid transparent;
+			color: $bb-text-inverse-color;
 
 			&:hover:not(:disabled) {
-				background: $bb-error-color;
+				background: $bb-background-danger-secondary-hover-color;
 				color: $bb-text-inverse-color;
+				border-color: transparent;
+			}
+
+			&:focus {
+				outline: 2px solid $bb-border-quaternary-color;
+				box-shadow: none;
 			}
 		}
 
@@ -329,6 +340,11 @@
 			&:hover:not(:disabled) {
 				background: $bb-background-primary-color;
 			}
+		}
+
+		&:focus {
+			border-color: transparent;
+			outline: 2px solid $bb-border-quaternary-color;
 		}
 
 		&:disabled {

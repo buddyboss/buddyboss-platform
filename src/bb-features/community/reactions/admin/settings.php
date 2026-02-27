@@ -21,6 +21,19 @@ require_once __DIR__ . '/callbacks.php';
  */
 function bb_admin_settings_register_reactions_settings() {
 
+	// Static caches: these call bp_get_option() which is cheap with object cache, but avoids
+	// redundant DB hits on the rare case this function is invoked more than once per request.
+	static $cached_reaction_mode   = null;
+	static $cached_button_settings = null;
+
+	if ( null === $cached_reaction_mode ) {
+		$cached_reaction_mode = function_exists( 'bb_get_reaction_mode' ) ? bb_get_reaction_mode() : 'likes';
+	}
+
+	if ( null === $cached_button_settings ) {
+		$cached_button_settings = function_exists( 'bb_reaction_button_options' ) ? bb_reaction_button_options() : array();
+	}
+
 	// =========================================================================
 	// SIDE PANEL: DISPLAY SETTINGS
 	// =========================================================================
@@ -206,11 +219,11 @@ function bb_admin_settings_register_reactions_settings() {
 		'reactions_settings',
 		array(
 			'name'              => 'bb_reaction_mode',
-			'label'             => isset( $field_reaction_mode['title'] ) ? $field_reaction_mode['title'] : __( 'Reaction Mode', 'buddyboss' ),
+			'label'             => isset( $field_reaction_mode['title'] ) ? $field_reaction_mode['title'] : __( 'Reactions Mode', 'buddyboss' ),
 			'type'              => 'reaction_mode',
 			'description'       => '',
 			'options'           => $reaction_mode_options,
-			'default'           => function_exists( 'bb_get_reaction_mode' ) ? bb_get_reaction_mode() : 'likes',
+			'default'           => $cached_reaction_mode,
 			'sanitize_callback' => ! empty( $field_reaction_mode['sanitize_callback'] ) && is_callable( $field_reaction_mode['sanitize_callback'] ) ? $field_reaction_mode['sanitize_callback'] : 'bb_reactions_sanitize_mode',
 			'order'             => 10,
 			'pro_only'          => true,
@@ -220,7 +233,7 @@ function bb_admin_settings_register_reactions_settings() {
 	// -------------------------------------------------------------------------
 	// FIELD: Reaction Button (icon + text customization, Pro-only)
 	// -------------------------------------------------------------------------
-	$button_settings        = function_exists( 'bb_reaction_button_options' ) ? bb_reaction_button_options() : array();
+	$button_settings        = $cached_button_settings;
 	$button_icon            = isset( $button_settings['icon'] ) ? $button_settings['icon'] : 'thumbs-up';
 	$button_text            = isset( $button_settings['text'] ) ? trim( $button_settings['text'] ) : __( 'Like', 'buddyboss' );
 	$field_reactions_button = isset( $reaction_titles['bb_reactions_button'] ) ? $reaction_titles['bb_reactions_button'] : array();

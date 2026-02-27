@@ -24,6 +24,7 @@ import {
 	MigrationModal,
 	ReactionButtonField,
 } from './reaction';
+import { decodeEntities } from '@wordpress/html-entities';
 import { sanitizeHtml, safeUrl } from '../utils/sanitize';
 import { TopicListField } from './activity/topics/topic-list';
 import { SharePlatformsField } from './activity/sharing';
@@ -32,6 +33,7 @@ import { CheckboxListField } from './fields/CheckboxListField';
 import { ImageRadioField } from './fields/ImageRadioField';
 import { DimensionsField } from './fields/DimensionsField';
 import { ConfirmToggleModal } from './modals/ConfirmToggleModal';
+import { AsyncSelectField } from './fields/AsyncSelectField';
 
 /**
  * Settings Form Component (matching Figma settingsSection)
@@ -158,7 +160,7 @@ export function SettingsForm({ fields, values, onChange }) {
 					<div className="bb-admin-settings-form__toggle-wrapper">
 						<ToggleControl
 							key={field.name}
-							label={field.description || ''}
+							label={decodeEntities( field.description || '' )}
 							checked={displayValue}
 							onChange={(checked) => {
 								// If inverted, save the opposite of what's displayed
@@ -262,6 +264,18 @@ export function SettingsForm({ fields, values, onChange }) {
 						onChange={(newValue) => onChange(field.name, newValue)}
 						disabled={disabled}
 						__nextHasNoMarginBottom
+					/>
+				);
+
+			case 'async_select':
+				return (
+					<AsyncSelectField
+						key={field.name}
+						value={value || '0'}
+						onChange={(newValue) => onChange(field.name, newValue)}
+						asyncAction={field.async_action || ''}
+						placeholder={field.placeholder || ''}
+						disabled={disabled}
 					/>
 				);
 
