@@ -821,6 +821,17 @@ class BB_Admin_Groups_Ajax {
 		 */
 		if ( ! empty( $response['views'] ) ) {
 			$response['views'] = apply_filters( 'bb_admin_groups_list_views', $response['views'], $status );
+
+			/**
+			 * Fires after the groups list views are filtered. Deprecated in Settings 2.0.
+			 *
+			 * @since BuddyBoss 1.0.0
+			 * @deprecated BuddyBoss [BBVERSION] Use the {@see 'bb_admin_groups_list_views'} filter instead.
+			 *
+			 * @param string $url_base Empty string (legacy: URL base for view links; N/A in Settings 2.0).
+			 * @param string $status   Current active status filter.
+			 */
+			do_action_deprecated( 'bp_groups_list_table_get_views', array( '', $status ), 'BuddyBoss [BBVERSION]', 'bb_admin_groups_list_views' );
 		}
 
 		/**
@@ -1098,6 +1109,37 @@ class BB_Admin_Groups_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Group not found.', 'buddyboss' ) ) );
 		}
 
+		/**
+		 * Fires after the registration of all of the default group meta boxes.
+		 *
+		 * Mirrors the legacy `bp_groups_admin_meta_boxes` action from bp_groups_admin_load().
+		 * Third-party plugins (e.g. LearnDash, BP_Group_Extension) hook here to register
+		 * meta boxes. Output is suppressed — meta boxes registered here should expose their
+		 * data through the `registered_fields` array via BB_Admin_Meta_Field_Registry instead.
+		 *
+		 * @since BuddyPress 1.7.0
+		 * @since BuddyBoss [BBVERSION] Added to Settings 2.0 AJAX get group.
+		 */
+		ob_start();
+		do_action( 'bp_groups_admin_meta_boxes' );
+		ob_end_clean();
+
+		/**
+		 * Fires before the group edit form is displayed so plugins can modify the group.
+		 *
+		 * Same hook as legacy bp_groups_admin_edit() before edit form display.
+		 * Group object is passed by reference so plugins can modify it before
+		 * the data is returned to the React edit modal.
+		 *
+		 * @since BuddyPress 1.7.0
+		 * @since BuddyBoss [BBVERSION] Added to Settings 2.0 AJAX get group.
+		 *
+		 * @param BP_Groups_Group $group The group object being edited, passed by reference.
+		 */
+		ob_start();
+		do_action_ref_array( 'bp_groups_admin_edit', array( &$group ) );
+		ob_end_clean();
+
 		$data = array(
 			'id'                => (int) $group->id,
 			'name'              => $group->name,
@@ -1260,7 +1302,7 @@ class BB_Admin_Groups_Ajax {
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
 		$group_id = isset( $_POST['group_id'] ) ? absint( $_POST['group_id'] ) : 0;
 		$page     = isset( $_POST['page'] ) ? absint( $_POST['page'] ) : 1;
-		$per_page = isset( $_POST['per_page'] ) ? absint( $_POST['per_page'] ) : 20;
+		$per_page = isset( $_POST['per_page'] ) ? absint( $_POST['per_page'] ) : 10;
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $group_id ) ) {
@@ -1274,6 +1316,21 @@ class BB_Admin_Groups_Ajax {
 
 		$per_page = max( 1, min( 100, $per_page ) );
 		$page     = max( 1, $page );
+
+		/**
+		 * Filters the number of group members displayed per page in the admin edit modal.
+		 *
+		 * Mirrors the legacy `bp_groups_admin_members_type_per_page` filter used by
+		 * bp_groups_admin_edit_metabox_members(). The second parameter is an empty string
+		 * because the Settings 2.0 interface does not filter by member type.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int    $per_page    Number of members per page.
+		 * @param string $member_type Member type slug, or empty string if not filtering by type.
+		 */
+		$per_page = (int) apply_filters( 'bp_groups_admin_members_type_per_page', $per_page, '' );
+		$per_page = max( 1, min( 100, $per_page ) ); // Re-clamp after filter.
 
 		$members_data = groups_get_group_members(
 			array(
@@ -1670,7 +1727,7 @@ class BB_Admin_Groups_Ajax {
 		$raw_role_labels = isset( $_POST['role_labels'] ) && is_array( $_POST['role_labels'] )
 			? wp_unslash( $_POST['role_labels'] ) // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized below per key/value.
 			: array();
-		$allowed_roles = array( 'organizer', 'moderator', 'member' );
+		$allowed_roles   = array( 'organizer', 'moderator', 'member' );
 		foreach ( $raw_role_labels as $role_key => $labels ) {
 			$sanitized_key = sanitize_key( $role_key );
 			if ( in_array( $sanitized_key, $allowed_roles, true ) && is_array( $labels ) ) {
@@ -1792,9 +1849,19 @@ class BB_Admin_Groups_Ajax {
 		// Prime post cache in a single query to avoid N+1 lookups.
 		_prime_post_caches( $member_type_ids );
 
+		// Prime post meta cache to avoid N+1 for _bp_member_type_key lookups.
+		update_postmeta_cache( $member_type_ids );
+
 		foreach ( $member_type_ids as $mt_id ) {
+			$member_type_key = get_post_meta( $mt_id, '_bp_member_type_key', true );
+
+			// Skip if no key found — shouldn't happen but be safe.
+			if ( empty( $member_type_key ) ) {
+				continue;
+			}
+
 			$member_types[] = array(
-				'id'   => (string) $mt_id,
+				'id'   => sanitize_key( $member_type_key ),
 				'name' => get_the_title( $mt_id ),
 			);
 		}

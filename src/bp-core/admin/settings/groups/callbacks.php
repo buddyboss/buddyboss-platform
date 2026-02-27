@@ -159,6 +159,8 @@ function bb_groups_sanitize_toggle_list( $value ) {
 		return array();
 	}
 
+	// No entry cap — third-party plugins or future panels may add more keys.
+	// Per-entry sanitization (sanitize_key + absint) is sufficient protection.
 	$sanitized = array();
 	foreach ( $value as $key => $val ) {
 		$sanitized[ sanitize_key( $key ) ] = absint( $val ) ? 1 : 0;
@@ -288,7 +290,7 @@ function bb_groups_validate_image_settings_after_save( $feature_id, $settings, $
 		return;
 	}
 
-	global $bb_groups_pre_save_state;
+	$pre_save_state = bb_groups_get_pre_save_state();
 
 	// --- Avatar type validation ---
 	if ( $has_avatar ) {
@@ -300,7 +302,7 @@ function bb_groups_validate_image_settings_after_save( $feature_id, $settings, $
 			$custom_avatar = function_exists( 'bb_get_default_custom_upload_group_avatar' )
 				? bb_get_default_custom_upload_group_avatar()
 				: '';
-			$prev_type     = ! empty( $bb_groups_pre_save_state['default_group_avatar_type'] ) ? $bb_groups_pre_save_state['default_group_avatar_type'] : 'buddyboss';
+			$prev_type     = ! empty( $pre_save_state['default_group_avatar_type'] ) ? $pre_save_state['default_group_avatar_type'] : 'buddyboss';
 
 			if ( empty( $custom_avatar ) && 'custom' === $prev_type ) {
 				bp_update_option( 'bp-default-group-avatar-type', 'buddyboss' );
@@ -322,7 +324,7 @@ function bb_groups_validate_image_settings_after_save( $feature_id, $settings, $
 			$custom_cover = function_exists( 'bb_get_default_custom_upload_group_cover' )
 				? bb_get_default_custom_upload_group_cover()
 				: '';
-			$prev_type    = ! empty( $bb_groups_pre_save_state['default_group_cover_type'] ) ? $bb_groups_pre_save_state['default_group_cover_type'] : 'buddyboss';
+			$prev_type    = ! empty( $pre_save_state['default_group_cover_type'] ) ? $pre_save_state['default_group_cover_type'] : 'buddyboss';
 
 			if ( empty( $custom_cover ) && 'custom' === $prev_type ) {
 				bp_update_option( 'bp-default-group-cover-type', 'buddyboss' );
@@ -372,36 +374,57 @@ function bb_groups_sync_reverted_image_values( $response_data, $feature_id, $set
 add_filter( 'bb_admin_save_feature_settings_response', 'bb_groups_sync_reverted_image_values', 10, 4 );
 
 /**
+ * Get or set the pre-save state for groups settings.
+ *
+ * Uses a static variable to avoid pollutable global state.
+ * Call with no arguments to read; call with an array to set.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array|null $state Optional. State array to store. Pass null (default) to read.
+ *
+ * @return array The stored pre-save state, or empty array if not yet captured.
+ */
+function bb_groups_get_pre_save_state( $state = null ) {
+	static $stored = null;
+
+	if ( null !== $state ) {
+		$stored = $state;
+	}
+
+	return is_array( $stored ) ? $stored : array();
+}
+
+/**
  * Capture group settings state before save for post-save comparison.
  *
  * Captures the current value of settings that need before/after comparison
  * (e.g., restrict invites) before the save loop updates them.
  *
+ * Hooked to `bb_admin_settings_before_save_feature` which fires only during
+ * save requests, so no $_POST side-channel check is needed.
+ *
  * @since BuddyBoss [BBVERSION]
  *
  * @param string $feature_id Feature ID being saved.
+ * @param array  $settings   Full submitted settings.
  */
-function bb_groups_capture_pre_save_state( $feature_id ) {
+function bb_groups_capture_pre_save_state( $feature_id, $settings ) {
 	if ( 'groups' !== $feature_id ) {
 		return;
 	}
 
-	// Only capture during save, not during get (read).
-	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_verify_request() in the calling AJAX handler.
-	if ( ! isset( $_POST['action'] ) || 'bb_admin_save_feature_settings' !== sanitize_key( wp_unslash( $_POST['action'] ) ) ) {
-		return;
-	}
-
 	// Store the pre-save state for restrict invites and image types.
-	global $bb_groups_pre_save_state;
-	$bb_groups_pre_save_state = array(
-		'restrict_invites'          => bp_enable_group_restrict_invites(),
-		'default_group_avatar_type' => bb_get_default_group_avatar_type(),
-		'default_group_cover_type'  => bb_get_default_group_cover_type(),
+	bb_groups_get_pre_save_state(
+		array(
+			'restrict_invites'          => bp_enable_group_restrict_invites(),
+			'default_group_avatar_type' => bb_get_default_group_avatar_type(),
+			'default_group_cover_type'  => bb_get_default_group_cover_type(),
+		)
 	);
 }
 
-add_action( 'bb_admin_settings_before_get_feature', 'bb_groups_capture_pre_save_state', 10, 1 );
+add_action( 'bb_admin_settings_before_save_feature', 'bb_groups_capture_pre_save_state', 10, 2 );
 
 /**
  * Trigger subgroup member migration when restrict invites is enabled.
@@ -427,8 +450,8 @@ function bb_groups_maybe_migrate_subgroup_members( $feature_id, $settings, $save
 	}
 
 	// Get pre-save state captured by bb_groups_capture_pre_save_state().
-	global $bb_groups_pre_save_state;
-	$restrict_invites_before = ! empty( $bb_groups_pre_save_state['restrict_invites'] ) ? $bb_groups_pre_save_state['restrict_invites'] : false;
+	$pre_save_state          = bb_groups_get_pre_save_state();
+	$restrict_invites_before = ! empty( $pre_save_state['restrict_invites'] ) ? $pre_save_state['restrict_invites'] : false;
 
 	// Check: hierarchies ON, restrict invites was OFF, now ON.
 	if (
@@ -443,3 +466,32 @@ function bb_groups_maybe_migrate_subgroup_members( $feature_id, $settings, $save
 }
 
 add_action( 'bb_admin_save_feature_settings_after', 'bb_groups_maybe_migrate_subgroup_members', 10, 3 );
+
+/**
+ * Sanitize the group nav order checkbox_list value.
+ *
+ * Expects an associative array { slug: 0|1, ... }.
+ * Sanitizes keys and normalizes values to 0 or 1.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed $value The submitted value.
+ *
+ * @return array Sanitized array of slug => 0|1.
+ */
+function bb_sanitize_group_nav_order( $value ) {
+	if ( is_string( $value ) ) {
+		$value = json_decode( $value, true );
+	}
+
+	if ( ! is_array( $value ) ) {
+		return array();
+	}
+
+	$sanitized = array();
+	foreach ( $value as $key => $val ) {
+		$sanitized[ sanitize_key( $key ) ] = absint( $val ) ? 1 : 0;
+	}
+
+	return $sanitized;
+}

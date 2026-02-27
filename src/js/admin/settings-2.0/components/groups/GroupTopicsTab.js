@@ -25,7 +25,7 @@ import {
 	MenuGroup,
 	MenuItem,
 } from '@wordpress/components';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 
 import { BBIcon } from '../common/BBIcon';
 import { getGroupTopics } from '../../utils/ajax';
@@ -545,7 +545,7 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 
 			<p className="bb-topic-list__description">
 				{ /* translators: %d: maximum number of topics allowed. */
-					wp.i18n.sprintf(
+					sprintf(
 						__( 'Maximum of %d topics can be added.', 'buddyboss' ),
 						maxTopics
 					)
@@ -906,7 +906,7 @@ function GroupTopicModal( { isOpen, onClose, onSave, topic, isSaving, permission
 								>
 									<span className="bb-topic-modal__create-icon">+</span>
 									{ /* translators: %s: Topic name entered by user. */ }
-									{ wp.i18n.sprintf(
+									{ sprintf(
 										__( 'Create "%s" New Topic', 'buddyboss' ),
 										trimmedSearch
 									) }
@@ -1056,7 +1056,7 @@ function GroupTopicDeleteModal( { isOpen, onClose, onConfirm, topic, availableTo
 		<Modal
 			title={
 				/* translators: %s: Topic name. */
-				wp.i18n.sprintf(
+				sprintf(
 					__( 'Deleting "%s"?', 'buddyboss' ),
 					topic.name
 				)

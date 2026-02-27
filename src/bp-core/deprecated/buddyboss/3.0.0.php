@@ -312,3 +312,8 @@ function bp_groups_admin_autocomplete_handler() {
 // Register deprecated hooks so third-party code that triggers them gets a deprecation notice.
 add_action( 'wp_ajax_bp_group_admin_member_autocomplete', 'bp_groups_admin_autocomplete_handler' );
 add_action( 'admin_post_bp_create_group_admin', 'bp_process_create_group_admin' );
+
+// Note: bp_groups_list_table_get_views is fired via do_action_deprecated() inside
+// BB_Admin_Groups_Ajax::get_groups() each time the admin groups list is loaded.
+// It is deprecated in favour of the 'bb_admin_groups_list_views' filter.
+// See: src/bp-core/admin/classes/class-bb-admin-groups-ajax.php

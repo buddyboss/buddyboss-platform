@@ -17,6 +17,7 @@ import {
 	Modal,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
+import { dateI18n } from '@wordpress/date';
 import { decodeEntities } from '@wordpress/html-entities';
 import { getGroups, groupBulkAction, getGroup, saveGroup } from '../utils/ajax';
 import { sanitizeHtml, safeUrl } from '../utils/sanitize';
@@ -41,6 +42,15 @@ var sortOptions = [
 ];
 
 /**
+ * Number of groups to fetch per page in the groups list.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @type {number}
+ */
+var GROUPS_PER_PAGE = 20;
+
+/**
  * Groups List Screen Component
  *
  * @since BuddyBoss [BBVERSION]
@@ -62,7 +72,7 @@ export function GroupsListScreen( { onNavigate } ) {
 	var currentPage = currentPageState[ 0 ];
 	var setCurrentPage = currentPageState[ 1 ];
 
-	var perPage = 20;
+
 
 	var filterState = useState( 'all' );
 	var filter = filterState[ 0 ];
@@ -160,7 +170,7 @@ export function GroupsListScreen( { onNavigate } ) {
 	var hasMetaRef = useRef( false );
 	var editAbortRef = useRef( null );
 
-	var totalPages = Math.ceil( total / perPage );
+	var totalPages = Math.ceil( total / GROUPS_PER_PAGE );
 
 	/**
 	 * Fetch groups from the server.
@@ -180,7 +190,7 @@ export function GroupsListScreen( { onNavigate } ) {
 
 		getGroups( {
 			page: currentPage,
-			per_page: perPage,
+			per_page: GROUPS_PER_PAGE,
 			search: searchQuery,
 			status: filter,
 			sort: sortBy,
@@ -231,7 +241,7 @@ export function GroupsListScreen( { onNavigate } ) {
 				message: __( 'Failed to load groups. Please try again.', 'buddyboss' ),
 			} );
 		} );
-	}, [ currentPage, perPage, searchQuery, filter, sortBy, groupTypeFilter ] );
+	}, [ currentPage, searchQuery, filter, sortBy, groupTypeFilter ] );
 
 	// Fetch on mount and when filters change. Abort stale requests on cleanup.
 	useEffect( function () {
@@ -557,12 +567,8 @@ export function GroupsListScreen( { onNavigate } ) {
 		if ( ! dateStr ) {
 			return '';
 		}
-		var d = new Date( dateStr.replace( ' ', 'T' ) + 'Z' );
-		var day = d.getUTCDate();
-		var months = [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ];
-		var month = months[ d.getUTCMonth() ];
-		var year = d.getUTCFullYear();
-		return month + ' ' + day + ', ' + year;
+		// Use dateI18n for locale-aware formatting instead of hardcoded English month names.
+		return dateI18n( 'M j, Y', dateStr.replace( ' ', 'T' ) + 'Z' );
 	};
 
 	// Privacy icon class lookup.
@@ -865,7 +871,7 @@ export function GroupsListScreen( { onNavigate } ) {
 												<a
 												href={ safeUrl( group.permalink ) }
 												target="_blank"
-												rel="noopener,noreferrer"
+												rel="noopener noreferrer"
 												className="bb-groups-list__group-name"
 												>
 													{ decodeEntities( group.name ) }
@@ -919,7 +925,7 @@ export function GroupsListScreen( { onNavigate } ) {
 																	onClick={ function () {
 																		var permalink = safeUrl( group.permalink );
 																		if ( '#' !== permalink ) {
-																			window.open( permalink, '_blank', 'noopener,noreferrer' );
+																			window.open( permalink, '_blank', 'noopener noreferrer' );
 																		}
 																		onClose();
 																	} }

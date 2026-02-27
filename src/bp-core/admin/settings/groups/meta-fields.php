@@ -345,6 +345,9 @@ function bb_groups_register_core_meta_fields( $registry, $component ) {
 					),
 				);
 
+				// bp_get_possible_parent_groups() requires a user_id to check membership.
+				// Using the logged-in admin is intentional: admins can see all groups,
+				// so this returns the full set of possible parents for the dropdown.
 				$possible_parents = bp_get_possible_parent_groups( $group->id, bp_loggedin_user_id() );
 				if ( ! empty( $possible_parents ) ) {
 					foreach ( $possible_parents as $possible_parent ) {
