@@ -25,6 +25,22 @@ export function useMimeChecker() {
 	var [ isMimeCheckerOpen, setIsMimeCheckerOpen ] = useState( false );
 	var [ mimeCheckerResult, setMimeCheckerResult ] = useState( '' );
 	var [ isMimeChecking, setIsMimeChecking ] = useState( false );
+	var [ selectedFileName, setSelectedFileName ] = useState( '' );
+
+	/**
+	 * Handle file selection and store the selected file name.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {Event} event The file input change event.
+	 */
+	var handleFileSelect = function( event ) {
+		if ( event.target.files && event.target.files[0] ) {
+			setSelectedFileName( event.target.files[0].name );
+		} else {
+			setSelectedFileName( '' );
+		}
+	};
 
 	/**
 	 * Upload a file to detect its MIME type via the server.
@@ -72,6 +88,7 @@ export function useMimeChecker() {
 		setMimeCheckerResult( '' );
 		setIsMimeCheckerOpen( false );
 		setIsMimeChecking( false );
+		setSelectedFileName( '' );
 		if ( fileInputRef.current ) {
 			fileInputRef.current.value = '';
 		}
@@ -86,6 +103,7 @@ export function useMimeChecker() {
 		setMimeCheckerResult( '' );
 		setIsMimeCheckerOpen( false );
 		setIsMimeChecking( false );
+		setSelectedFileName( '' );
 		if ( fileInputRef.current ) {
 			fileInputRef.current.value = '';
 		}
@@ -98,6 +116,8 @@ export function useMimeChecker() {
 		mimeCheckerResult: mimeCheckerResult,
 		setMimeCheckerResult: setMimeCheckerResult,
 		isMimeChecking: isMimeChecking,
+		selectedFileName: selectedFileName,
+		handleFileSelect: handleFileSelect,
 		handleGetMimeType: handleGetMimeType,
 		handleCloseMimeChecker: handleCloseMimeChecker,
 		resetMimeState: resetMimeState,

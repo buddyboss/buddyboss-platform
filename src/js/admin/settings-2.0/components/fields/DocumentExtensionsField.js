@@ -10,7 +10,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useEffect, createPortal } from '@wordpress/element';
+import { useState, useEffect, useRef, createPortal } from '@wordpress/element';
 import { Modal, Button, TextControl, TextareaControl, DropdownMenu, CheckboxControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { useMimeChecker } from '../../utils/mimeChecker';
@@ -188,6 +188,12 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 	// Icon options from PHP (via field registration).
 	var iconOptions = field.icon_options || [];
 
+	// Custom icon dropdown state (Add and Edit modals).
+	var [ isIconDropdownOpen, setIsIconDropdownOpen ] = useState( false );
+	var [ isEditIconDropdownOpen, setIsEditIconDropdownOpen ] = useState( false );
+	var iconDropdownRef = useRef( null );
+	var editIconDropdownRef = useRef( null );
+
 	// MIME Checker (shared hook).
 	var mimeChecker = useMimeChecker();
 
@@ -224,6 +230,23 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 			document.removeEventListener( 'keydown', handleEscapeCapture, true );
 		};
 	}, [ isAddOpen, isEditOpen ] );
+
+	// Close icon dropdown on outside click.
+	useEffect( function() {
+		function handleClickOutside( e ) {
+			if ( iconDropdownRef.current && ! iconDropdownRef.current.contains( e.target ) ) {
+				setIsIconDropdownOpen( false );
+			}
+			if ( editIconDropdownRef.current && ! editIconDropdownRef.current.contains( e.target ) ) {
+				setIsEditIconDropdownOpen( false );
+			}
+		}
+
+		document.addEventListener( 'mousedown', handleClickOutside );
+		return function() {
+			document.removeEventListener( 'mousedown', handleClickOutside );
+		};
+	}, [] );
 
 	/**
 	 * Sync working values when manage modal opens.
@@ -284,6 +307,7 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 		setNewDescription( '' );
 		setNewMimeType( '' );
 		setNewIcon( 'bb-icon-file' );
+		setIsIconDropdownOpen( false );
 		mimeChecker.resetMimeState();
 		setIsAddOpen( false );
 	};
@@ -504,6 +528,7 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 		setEditDescription( '' );
 		setEditMimeType( '' );
 		setEditIcon( 'bb-icon-file' );
+		setIsEditIconDropdownOpen( false );
 	};
 
 	/**
@@ -518,6 +543,7 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 		setEditDescription( '' );
 		setEditMimeType( '' );
 		setEditIcon( 'bb-icon-file' );
+		setIsEditIconDropdownOpen( false );
 	};
 
 	// Build extension list for display: default extensions first, custom at bottom.
@@ -676,7 +702,7 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 							<TextControl
 								value={ newExtension }
 								onChange={ setNewExtension }
-								placeholder={ __( 'e.g., .extension', 'buddyboss' ) }
+								placeholder={ __( 'Enter an extension (e.g., .extension)', 'buddyboss' ) }
 								__nextHasNoMarginBottom
 							/>
 						</div>
@@ -695,26 +721,47 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 							<label className="bb-extension-modal__label">
 								{ __( 'Icon', 'buddyboss' ) }
 							</label>
-							<div className="bb-extension-modal__icon-select">
-								<select
-									value={ newIcon }
-									onChange={ function( e ) {
-										setNewIcon( e.target.value );
+							<div className="bb-extension-modal__icon-select" ref={ iconDropdownRef }>
+								<div
+									className={ "bb-extension-modal__icon-dropdown" + ( isIconDropdownOpen ? " is-open" : "" ) }
+									onClick={ function() {
+										setIsIconDropdownOpen( ! isIconDropdownOpen );
 									} }
-									className="bb-extension-modal__icon-dropdown"
+									role="button"
+									tabIndex={ 0 }
+									onKeyDown={ function( e ) {
+										if ( 'Enter' === e.key || ' ' === e.key ) {
+											e.preventDefault();
+											setIsIconDropdownOpen( ! isIconDropdownOpen );
+										}
+									} }
 								>
-									{ iconOptions.map( function( opt ) {
-										return (
-											<option key={ opt.value } value={ opt.value }>
-												{ opt.label }
-											</option>
-										);
-									} ) }
-								</select>
-								{ iconOptions.length > 0 && (
 									<i className={
 										( iconOptions.find( function( o ) { return o.value === newIcon; } ) || {} ).icon_class || getDefaultIconClass()
 									} />
+									<span className="bb-extension-modal__icon-dropdown-label">
+										{ ( iconOptions.find( function( o ) { return o.value === newIcon; } ) || {} ).label || __( 'Default', 'buddyboss' ) }
+									</span>
+									<i className="bb-icons-rl bb-icons-rl-caret-down bb-extension-modal__icon-dropdown-chevron" />
+								</div>
+								{ isIconDropdownOpen && (
+									<div className="bb-extension-modal__icon-dropdown-list">
+										{ iconOptions.map( function( opt ) {
+											return (
+												<div
+													key={ opt.value }
+													className={ "bb-extension-modal__icon-dropdown-item" + ( opt.value === newIcon ? " is-selected" : "" ) }
+													onClick={ function() {
+														setNewIcon( opt.value );
+														setIsIconDropdownOpen( false );
+													} }
+												>
+													<i className={ opt.icon_class } />
+													<span>{ opt.label }</span>
+												</div>
+											);
+										} ) }
+									</div>
 								) }
 							</div>
 						</div>
@@ -726,53 +773,61 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 								<TextControl
 									value={ newMimeType }
 									onChange={ setNewMimeType }
-									placeholder={ __( 'e.g., application/pdf', 'buddyboss' ) }
+									placeholder={ __( 'Enter MIME type', 'buddyboss' ) }
 									__nextHasNoMarginBottom
 								/>
-								<button
-									type="button"
-									className="bb-extension-modal__mime-checker-link"
+								<Button
+									variant="tertiary"
+									className="bb-extension-modal__mime-checker-toggle"
 									onClick={ function() {
 										mimeChecker.setIsMimeCheckerOpen( ! mimeChecker.isMimeCheckerOpen );
 										mimeChecker.setMimeCheckerResult( '' );
 									} }
 								>
 									{ __( 'MIME Checker', 'buddyboss' ) }
-								</button>
+								</Button>
 							</div>
 						</div>
 
 						{ mimeChecker.isMimeCheckerOpen && (
 							<div className="bb-extension-modal__mime-checker">
-								<div className="bb-extension-modal__mime-checker-header">
-									<h4>{ __( 'Upload a file to check its MIME type', 'buddyboss' ) }</h4>
-									<button
-										type="button"
-										className="bb-extension-modal__mime-checker-close"
-										onClick={ mimeChecker.handleCloseMimeChecker }
-										aria-label={ __( 'Close MIME checker', 'buddyboss' ) }
-									>
-										<i className="bb-icons-rl bb-icons-rl-x" />
-									</button>
-								</div>
+								<h4 className="bb-extension-modal__mime-checker-title">
+									{ __( 'Check MIME type', 'buddyboss' ) }
+								</h4>
 								<p className="bb-extension-modal__mime-checker-desc">
-									{ __( 'Upload a sample file and click "Get MIME Type" to detect the correct MIME type for your extension.', 'buddyboss' ) }
+									{ __( 'Upload a sample file and click \'Get MIME Type\' to view its MIME type.', 'buddyboss' ) }
 								</p>
-								<div className="bb-extension-modal__mime-checker-upload">
+								<div className="bb-extension-modal__mime-checker-upload-row">
 									<input
 										type="file"
 										ref={ mimeChecker.fileInputRef }
-										className="bb-extension-modal__mime-checker-file"
+										className="bb-extension-modal__mime-checker-file-hidden"
+										onChange={ mimeChecker.handleFileSelect }
 									/>
-									<Button
-										variant="secondary"
-										onClick={ mimeChecker.handleGetMimeType }
-										disabled={ mimeChecker.isMimeChecking }
-										className="bb-extension-modal__mime-checker-btn"
+									<button
+										type="button"
+										className="bb-extension-modal__mime-checker-upload-btn"
+										onClick={ function() {
+											if ( mimeChecker.fileInputRef.current ) {
+												mimeChecker.fileInputRef.current.click();
+											}
+										} }
 									>
-										{ mimeChecker.isMimeChecking ? __( 'Checking...', 'buddyboss' ) : __( 'Get MIME Type', 'buddyboss' ) }
-									</Button>
+										<i className="bb-icons-rl bb-icons-rl-upload" />
+										{ __( 'Upload File', 'buddyboss' ) }
+									</button>
+									<span className="bb-extension-modal__mime-checker-upload-name">
+										{ mimeChecker.selectedFileName || __( 'No file uploaded', 'buddyboss' ) }
+									</span>
 								</div>
+								<Button
+									variant="primary"
+									onClick={ mimeChecker.handleGetMimeType }
+									disabled={ mimeChecker.isMimeChecking }
+									className="bb-extension-modal__mime-checker-btn"
+								>
+									{ mimeChecker.isMimeChecking ? __( 'Checking...', 'buddyboss' ) : __( 'Get MIME Type', 'buddyboss' ) }
+								</Button>
 								{ mimeChecker.mimeCheckerResult && (
 									<div className="bb-extension-modal__mime-checker-result">
 										<span className="bb-extension-modal__mime-checker-result-label">
@@ -853,26 +908,47 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 							<label className="bb-extension-modal__label">
 								{ __( 'Icon', 'buddyboss' ) }
 							</label>
-							<div className="bb-extension-modal__icon-select">
-								<select
-									value={ editIcon }
-									onChange={ function( e ) {
-										setEditIcon( e.target.value );
+							<div className="bb-extension-modal__icon-select" ref={ editIconDropdownRef }>
+								<div
+									className={ "bb-extension-modal__icon-dropdown" + ( isEditIconDropdownOpen ? " is-open" : "" ) }
+									onClick={ function() {
+										setIsEditIconDropdownOpen( ! isEditIconDropdownOpen );
 									} }
-									className="bb-extension-modal__icon-dropdown"
+									role="button"
+									tabIndex={ 0 }
+									onKeyDown={ function( e ) {
+										if ( 'Enter' === e.key || ' ' === e.key ) {
+											e.preventDefault();
+											setIsEditIconDropdownOpen( ! isEditIconDropdownOpen );
+										}
+									} }
 								>
-									{ iconOptions.map( function( opt ) {
-										return (
-											<option key={ opt.value } value={ opt.value }>
-												{ opt.label }
-											</option>
-										);
-									} ) }
-								</select>
-								{ iconOptions.length > 0 && (
 									<i className={
 										( iconOptions.find( function( o ) { return o.value === editIcon; } ) || {} ).icon_class || getDefaultIconClass()
 									} />
+									<span className="bb-extension-modal__icon-dropdown-label">
+										{ ( iconOptions.find( function( o ) { return o.value === editIcon; } ) || {} ).label || __( 'Default', 'buddyboss' ) }
+									</span>
+									<i className="bb-icons-rl bb-icons-rl-caret-down bb-extension-modal__icon-dropdown-chevron" />
+								</div>
+								{ isEditIconDropdownOpen && (
+									<div className="bb-extension-modal__icon-dropdown-list">
+										{ iconOptions.map( function( opt ) {
+											return (
+												<div
+													key={ opt.value }
+													className={ "bb-extension-modal__icon-dropdown-item" + ( opt.value === editIcon ? " is-selected" : "" ) }
+													onClick={ function() {
+														setEditIcon( opt.value );
+														setIsEditIconDropdownOpen( false );
+													} }
+												>
+													<i className={ opt.icon_class } />
+													<span>{ opt.label }</span>
+												</div>
+											);
+										} ) }
+									</div>
 								) }
 							</div>
 						</div>
@@ -880,13 +956,87 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 							<label className="bb-extension-modal__label">
 								{ __( 'MIME Type', 'buddyboss' ) }
 							</label>
-							<TextControl
-								value={ editMimeType }
-								onChange={ setEditMimeType }
-								placeholder={ __( 'e.g., application/pdf', 'buddyboss' ) }
-								__nextHasNoMarginBottom
-							/>
+							<div className="bb-extension-modal__mime-row">
+								<TextControl
+									value={ editMimeType }
+									onChange={ setEditMimeType }
+									placeholder={ __( 'Enter MIME type', 'buddyboss' ) }
+									__nextHasNoMarginBottom
+								/>
+								<Button
+									variant="tertiary"
+									className="bb-extension-modal__mime-checker-toggle"
+									onClick={ function() {
+										mimeChecker.setIsMimeCheckerOpen( ! mimeChecker.isMimeCheckerOpen );
+										mimeChecker.setMimeCheckerResult( '' );
+									} }
+								>
+									{ __( 'MIME Checker', 'buddyboss' ) }
+								</Button>
+							</div>
 						</div>
+
+						{ mimeChecker.isMimeCheckerOpen && (
+							<div className="bb-extension-modal__mime-checker">
+								<h4 className="bb-extension-modal__mime-checker-title">
+									{ __( 'Check MIME type', 'buddyboss' ) }
+								</h4>
+								<p className="bb-extension-modal__mime-checker-desc">
+									{ __( 'Upload a sample file and click \'Get MIME Type\' to view its MIME type.', 'buddyboss' ) }
+								</p>
+								<div className="bb-extension-modal__mime-checker-upload-row">
+									<input
+										type="file"
+										ref={ mimeChecker.fileInputRef }
+										className="bb-extension-modal__mime-checker-file-hidden"
+										onChange={ mimeChecker.handleFileSelect }
+									/>
+									<button
+										type="button"
+										className="bb-extension-modal__mime-checker-upload-btn"
+										onClick={ function() {
+											if ( mimeChecker.fileInputRef.current ) {
+												mimeChecker.fileInputRef.current.click();
+											}
+										} }
+									>
+										<i className="bb-icons-rl bb-icons-rl-upload" />
+										{ __( 'Upload File', 'buddyboss' ) }
+									</button>
+									<span className="bb-extension-modal__mime-checker-upload-name">
+										{ mimeChecker.selectedFileName || __( 'No file uploaded', 'buddyboss' ) }
+									</span>
+								</div>
+								<Button
+									variant="primary"
+									onClick={ mimeChecker.handleGetMimeType }
+									disabled={ mimeChecker.isMimeChecking }
+									className="bb-extension-modal__mime-checker-btn"
+								>
+									{ mimeChecker.isMimeChecking ? __( 'Checking...', 'buddyboss' ) : __( 'Get MIME Type', 'buddyboss' ) }
+								</Button>
+								{ mimeChecker.mimeCheckerResult && (
+									<div className="bb-extension-modal__mime-checker-result">
+										<span className="bb-extension-modal__mime-checker-result-label">
+											{ __( 'Detected MIME type:', 'buddyboss' ) }
+										</span>
+										<code className="bb-extension-modal__mime-checker-result-value">
+											{ mimeChecker.mimeCheckerResult }
+										</code>
+										<Button
+											variant="primary"
+											onClick={ function() {
+												setEditMimeType( mimeChecker.mimeCheckerResult );
+												mimeChecker.handleCloseMimeChecker();
+											} }
+											className="bb-extension-modal__mime-checker-use-btn"
+										>
+											{ __( 'Use this MIME type', 'buddyboss' ) }
+										</Button>
+									</div>
+								) }
+							</div>
+						) }
 					</div>
 					<div className="bb-admin-settings-modal__footer bb-extension-modal__footer">
 						<Button
