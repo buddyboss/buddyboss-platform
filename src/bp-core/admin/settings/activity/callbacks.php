@@ -77,7 +77,26 @@ function bb_activity_sanitize_edit_time( $value ) {
 	$value = intval( $value );
 
 	if ( ! in_array( $value, bb_activity_get_allowed_edit_times(), true ) ) {
-		return 600; // Default: 10 minutes in seconds.
+		return 600; // Fallback: invalid value, return 10 minutes.
+	}
+
+	return $value;
+}
+
+/**
+ * Sanitize activity comment edit time setting.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed $value The value to sanitize.
+ *
+ * @return int Sanitized integer value.
+ */
+function bb_activity_sanitize_comment_edit_time( $value ) {
+	$value = intval( $value );
+
+	if ( ! in_array( $value, bb_activity_get_allowed_edit_times(), true ) ) {
+		return 600; // Fallback: invalid value, return 10 minutes.
 	}
 
 	return $value;
@@ -165,8 +184,17 @@ function bb_activity_sanitize_comment_threading_depth( $value ) {
  * @return int Sanitized integer value.
  */
 function bb_activity_sanitize_comment_loading( $value ) {
-	$value   = absint( $value );
-	$allowed = array( 5, 10, 15, 20, 25, 30 );
+	$value = absint( $value );
+
+	/**
+	 * Filters the allowed values for the comment loading setting.
+	 * Same filter as legacy bp-admin-setting-activity.php.
+	 *
+	 * @since BuddyBoss 2.5.80
+	 *
+	 * @param array $allowed Allowed integer values.
+	 */
+	$allowed = apply_filters( 'bb_activity_comment_loading_options', array( 5, 10, 15, 20, 25, 30 ) );
 
 	if ( ! in_array( $value, $allowed, true ) ) {
 		return 10;
@@ -198,6 +226,96 @@ function bb_activity_sanitize_platform_activity_types( $value ) {
 
 	return $sanitized;
 }
+
+/**
+ * Sync blogs component activation after activity CPT feed settings are saved.
+ *
+ * The legacy save flow calls bb_cpt_feed_enabled_disabled() which reads $_POST
+ * directly. Settings 2.0 saves options via bp_update_option() before this hook,
+ * so we read saved option values instead.
+ *
+ * Also mirrors legacy bb_after_update_activity_settings(): when a CPT feed is
+ * disabled, its comments option is force-disabled too.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id Feature ID being saved.
+ * @param array  $settings   Full submitted settings.
+ * @param array  $saved      Keys and values saved by core.
+ */
+function bb_activity_sync_blogs_component_after_save( $feature_id, $settings, $saved ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- $settings and $saved are required by the hook signature but this handler only needs $feature_id.
+	if ( 'activity' !== $feature_id ) {
+		return;
+	}
+
+	$bp                = buddypress();
+	$active_components = $bp->active_components;
+
+	$is_blog_component_active = false;
+	$was_blogs_active         = isset( $active_components['blogs'] );
+
+	// Temporarily remove LMS filters to get all feed post types.
+	if ( function_exists( 'bb_feed_not_allowed_tutorlms_post_types' ) ) {
+		remove_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_tutorlms_post_types' );
+	}
+	if ( function_exists( 'bb_feed_not_allowed_meprlms_post_types' ) ) {
+		remove_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_meprlms_post_types' );
+	}
+
+	$post_types = bb_feed_post_types();
+
+	if ( function_exists( 'bb_feed_not_allowed_tutorlms_post_types' ) ) {
+		add_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_tutorlms_post_types' );
+	}
+	if ( function_exists( 'bb_feed_not_allowed_meprlms_post_types' ) ) {
+		add_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_meprlms_post_types' );
+	}
+
+	foreach ( $post_types as $cpt ) {
+		$option_name      = bb_post_type_feed_option_name( $cpt );
+		$enable_blog_feed = apply_filters( 'bb_enable_blog_feed', (bool) bp_get_option( $option_name, false ), $cpt );
+
+		if ( $enable_blog_feed ) {
+			$is_blog_component_active = true;
+			break;
+		}
+	}
+
+	if ( $is_blog_component_active ) {
+		$active_components['blogs'] = '1';
+	} else {
+		unset( $active_components['blogs'] );
+	}
+
+	$is_blogs_active = isset( $active_components['blogs'] );
+
+	// Only update if blogs component state actually changed.
+	if ( $was_blogs_active !== $is_blogs_active ) {
+		$bp->active_components = $active_components;
+
+		// Install only the blog tracking table when activating blogs.
+		if ( $is_blogs_active ) {
+			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+			require_once $bp->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php';
+			bp_core_install_blog_tracking();
+		}
+
+		bp_core_add_page_mappings( $bp->active_components, 'keep', false );
+		bp_update_option( 'bp-active-components', $bp->active_components );
+	}
+
+	// Mirrors legacy bb_after_update_activity_settings(): if a CPT feed is
+	// disabled, also disable its comments option.
+	foreach ( $post_types as $post_type ) {
+		$pt_opt_name  = bb_post_type_feed_option_name( $post_type );
+		$ptc_opt_name = bb_post_type_feed_comment_option_name( $post_type );
+
+		if ( empty( bp_get_option( $pt_opt_name, '' ) ) ) {
+			bp_update_option( $ptc_opt_name, 0 );
+		}
+	}
+}
+add_action( 'bb_admin_save_feature_settings_after', 'bb_activity_sync_blogs_component_after_save', 10, 3 );
 
 /**
  * Sync blogs component activation after activity CPT feed settings are saved.

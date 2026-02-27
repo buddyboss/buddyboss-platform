@@ -23,12 +23,12 @@ import { BBIcon } from '../common/BBIcon';
  * @returns {JSX.Element} ReactionButtonField component.
  */
 export function ReactionButtonField( { field, value, onChange } ) {
-	var isProLocked = !!field.pro_notice?.show;
+	const isProLocked = !!field.pro_notice?.show;
 
 	// Get button settings (icon and text).
-	var buttonValue = value || {};
-	var buttonIcon = buttonValue.icon || field.icon || 'thumbs-up';
-	var buttonText = buttonValue.text || field.text || __( 'Like', 'buddyboss' );
+	const buttonValue = value || {};
+	const buttonIcon = buttonValue.icon || field.icon || 'thumbs-up';
+	const buttonText = buttonValue.text || field.text || __( 'Like', 'buddyboss' );
 
 	/**
 	 * Handle edit reaction button click - opens the icon picker modal.

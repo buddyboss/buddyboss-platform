@@ -36,17 +36,27 @@ bb_register_feature(
 		'settings_route'     => '/settings/reactions',
 		'order'              => 120,
 		'is_active_callback' => function () {
+			static $result = null;
+			if ( null !== $result ) {
+				return $result;
+			}
+
 			// Reactions depend on activity component being active.
 			if ( ! bp_is_active( 'activity' ) ) {
-				return false;
+				$result = false;
+				return $result;
 			}
+
 			// Respect Settings 2.0 feature toggle (bb-active-features).
 			// Backward compat: if 'reactions' key not set, treat as enabled (same as before this toggle existed).
 			$active_features = bp_get_option( 'bb-active-features', array() );
 			if ( ! array_key_exists( 'reactions', $active_features ) ) {
-				return true;
+				$result = true;
+				return $result;
 			}
-			return ! empty( $active_features['reactions'] );
+
+			$result = ! empty( $active_features['reactions'] );
+			return $result;
 		},
 	)
 );
