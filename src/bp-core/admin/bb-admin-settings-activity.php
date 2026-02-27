@@ -257,7 +257,7 @@ function bb_admin_settings_register_activity_feature() {
 	 */
 	do_action_deprecated(
 		'bp_admin_setting_activity_register_fields',
-		array(),
+		array( null ),
 		'[BBVERSION]',
 		'bb_activity_after_register_settings_fields'
 	);
