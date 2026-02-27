@@ -191,6 +191,15 @@ function bb_get_group_nav_items_for_settings() {
 		return $cached_options;
 	}
 
+	// Try persistent transient cache. Cleared by bb_clear_group_nav_items_cache()
+	// on feature activation/deactivation and when the first group is created.
+	$transient_key = 'bb_group_nav_items_for_settings';
+	$transient     = get_transient( $transient_key );
+	if ( false !== $transient ) {
+		$cached_options = $transient;
+		return $cached_options;
+	}
+
 	if ( ! class_exists( 'BP_Nouveau_Customizer_Group_Nav' ) ) {
 		return array();
 	}
@@ -210,6 +219,9 @@ function bb_get_group_nav_items_for_settings() {
 	);
 
 	if ( empty( $groups['groups'] ) ) {
+		// @todo: On fresh installs with no groups, this returns an empty list, leaving the
+		// Navigation Order field blank until a group is created. Consider falling back to
+		// the default BP_Nouveau_Customizer_Group_Nav slug list so the field is useful immediately.
 		return array();
 	}
 
@@ -244,8 +256,30 @@ function bb_get_group_nav_items_for_settings() {
 
 	$cached_options = $options;
 
+	// Persist to transient so the groups_get_groups() + BP_Nouveau_Customizer_Group_Nav
+	// instantiation is not repeated on every AJAX settings request.
+	// Empty results are not cached so a fresh install picks up the first group immediately.
+	if ( ! empty( $cached_options ) ) {
+		set_transient( $transient_key, $cached_options, DAY_IN_SECONDS );
+	}
+
 	return $cached_options;
 }
+
+/**
+ * Clear the group nav items settings transient cache.
+ *
+ * Called when a feature is activated/deactivated (which changes the list of
+ * available nav items) and when the first group is created on a fresh install.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_clear_group_nav_items_cache() {
+	delete_transient( 'bb_group_nav_items_for_settings' );
+}
+add_action( 'bb_feature_activated', 'bb_clear_group_nav_items_cache' );
+add_action( 'bb_feature_deactivated', 'bb_clear_group_nav_items_cache' );
+add_action( 'groups_group_create_complete', 'bb_clear_group_nav_items_cache' );
 
 /**
  * Get nav item slugs whose parent feature is inactive.

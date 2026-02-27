@@ -35,6 +35,18 @@ class BB_Admin_Groups_Ajax {
 	 */
 	public function __construct() {
 		$this->bb_register_ajax_handlers();
+
+		// Fire the deprecated hook once per request (non-AJAX page loads only)
+		// to preserve backward compatibility with plugins hooking bp_groups_admin_load.
+		if ( ! wp_doing_ajax() ) {
+			/**
+			 * Fires when the Groups admin page is loaded. Deprecated in Settings 2.0.
+			 *
+			 * @since BuddyPress 1.7.0
+			 * @deprecated BuddyBoss [BBVERSION] Use the {@see 'bb_admin_groups_init'} action instead.
+			 */
+			do_action_deprecated( 'bp_groups_admin_load', array( '' ), 'BuddyBoss [BBVERSION]', 'bb_admin_groups_init' );
+		}
 	}
 
 	/**
@@ -128,19 +140,16 @@ class BB_Admin_Groups_Ajax {
 
 		$posts = get_posts(
 			array(
-				'post_type'      => $post_type,
-				'posts_per_page' => 500, // Sanity cap — UI cannot usefully display more.
-				'post_status'    => array( 'publish', 'private' ),
-				'orderby'        => 'title',
-				'order'          => 'ASC',
+				'post_type'              => $post_type,
+				'posts_per_page'         => 500, // Sanity cap — UI cannot usefully display more.
+				'post_status'            => array( 'publish', 'private' ),
+				'orderby'                => 'title',
+				'order'                  => 'ASC',
+				'no_found_rows'          => true,  // Skip COUNT(*) — we don't paginate here.
+				'update_post_meta_cache' => true,  // Batch-load post meta in one query.
+				'update_post_term_cache' => false, // Term cache not needed for group types list.
 			)
 		);
-
-		// Batch-load post meta to avoid N+1 queries.
-		if ( ! empty( $posts ) ) {
-			$post_ids = wp_list_pluck( $posts, 'ID' );
-			update_postmeta_cache( $post_ids );
-		}
 
 		// Get all group type counts in a single query instead of N identical queries.
 		global $wpdb;
@@ -453,6 +462,16 @@ class BB_Admin_Groups_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss' ) ) );
 		}
 
+		/**
+		 * Fires when the groups admin list is displayed. Deprecated in Settings 2.0.
+		 *
+		 * @since BuddyPress 1.7.0
+		 * @deprecated BuddyBoss [BBVERSION] Use the {@see 'bb_admin_get_groups_response'} filter instead.
+		 *
+		 * @param array $args Empty array (legacy: request args; N/A in Settings 2.0).
+		 */
+		do_action_deprecated( 'bp_groups_admin_index', array( array() ), 'BuddyBoss [BBVERSION]', 'bb_admin_get_groups_response' );
+
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
 		$page         = isset( $_POST['page'] ) ? absint( $_POST['page'] ) : 1;
 		$per_page     = isset( $_POST['per_page'] ) ? absint( $_POST['per_page'] ) : 20;
@@ -695,7 +714,6 @@ class BB_Admin_Groups_Ajax {
 						'html'       => false,
 					)
 				),
-				'edit_url'      => bp_get_admin_url( 'admin.php?page=bp-groups&action=edit&gid=' . $group->id ),
 				'permalink'     => bp_get_group_permalink( $group ),
 			);
 
@@ -1227,6 +1245,11 @@ class BB_Admin_Groups_Ajax {
 		}
 
 		// Phase 3: Save group settings (status, permissions, forum).
+		// These fields are read directly from $_POST rather than relying solely on
+		// BB_Admin_Meta_Field_Registry because groups_edit_group_settings() requires them
+		// as individual arguments (not as group meta). The registry save_fields_data()
+		// would need a reference to the live $group object, and the permission fields
+		// have nullable-vs-fallback semantics that cannot be expressed via a generic save_value callback.
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
 		$status          = isset( $_POST['registered_field_status'] ) ? sanitize_key( wp_unslash( $_POST['registered_field_status'] ) ) : $group->status;
 		$enable_forum    = isset( $_POST['registered_field_enable_forum'] ) ? absint( wp_unslash( $_POST['registered_field_enable_forum'] ) ) : (int) $group->enable_forum;
@@ -1280,6 +1303,16 @@ class BB_Admin_Groups_Ajax {
 		 * @param int $group_id ID of the group being edited.
 		 */
 		do_action( 'bp_group_admin_edit_after', $group_id );
+
+		/**
+		 * Fires after editing a group from the admin, providing a redirect URL. Deprecated in Settings 2.0.
+		 *
+		 * @since BuddyPress 1.7.0
+		 * @deprecated BuddyBoss [BBVERSION] Use the {@see 'bp_group_admin_edit_after'} action instead.
+		 *
+		 * @param string $redirect_to Empty string (legacy: URL to redirect to; N/A in Settings 2.0).
+		 */
+		do_action_deprecated( 'bp_group_admin_edit_redirect', array( '' ), 'BuddyBoss [BBVERSION]', 'bp_group_admin_edit_after' );
 
 		wp_send_json_success(
 			array( 'message' => __( 'Group updated successfully.', 'buddyboss' ) )
@@ -1361,6 +1394,16 @@ class BB_Admin_Groups_Ajax {
 				$role = 'banned';
 			}
 
+			/**
+			 * Fires for each row in the group members management table. Deprecated in Settings 2.0.
+			 *
+			 * @since BuddyPress 1.7.0
+			 * @deprecated BuddyBoss [BBVERSION] Use the {@see 'bb_admin_get_group_members_response'} filter instead.
+			 *
+			 * @param BP_Groups_Member $member The group member object for the current row.
+			 */
+			do_action_deprecated( 'bp_groups_admin_manage_member_row', array( $member ), 'BuddyBoss [BBVERSION]', 'bb_admin_get_group_members_response' );
+
 			$members[] = array(
 				'user_id'    => (int) $member->user_id,
 				'name'       => bp_core_get_user_displayname( $member->user_id ),
@@ -1422,7 +1465,15 @@ class BB_Admin_Groups_Ajax {
 
 		// Add a new member.
 		if ( 'add' === $action_type ) {
+			// Set the POST key that groups_join_group() checks to identify admin-initiated joins.
+			// This ensures joined_from='admin' meta is set and joined_date is recorded for
+			// private/hidden groups — matching the legacy bp-groups-admin.php form submit behavior.
+			$_POST['bp-groups-new-members'] = $user_id; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified above.
+
 			$result = groups_join_group( $group_id, $user_id );
+
+			unset( $_POST['bp-groups-new-members'] );
+
 			if ( $result ) {
 				wp_send_json_success( array( 'message' => __( 'Member added successfully.', 'buddyboss' ) ) );
 			} else {
@@ -1605,12 +1656,15 @@ class BB_Admin_Groups_Ajax {
 		}
 
 		$query_args = array(
-			'post_type'      => bbp_get_forum_post_type(),
-			'posts_per_page' => $per_page + 1, // Fetch one extra to determine has_more.
-			'paged'          => $page,
-			'orderby'        => 'title',
-			'order'          => 'ASC',
-			'post_status'    => array( 'publish', 'private', 'hidden' ),
+			'post_type'              => bbp_get_forum_post_type(),
+			'posts_per_page'         => $per_page + 1, // Fetch one extra to determine has_more.
+			'paged'                  => $page,
+			'orderby'                => 'title',
+			'order'                  => 'ASC',
+			'post_status'            => array( 'publish', 'private', 'hidden' ),
+			'no_found_rows'          => true,  // Skip COUNT(*) — has_more uses the extra-item trick.
+			'update_post_meta_cache' => false, // Post meta not needed for forum title autocomplete.
+			'update_post_term_cache' => false, // Term cache not needed for forum title autocomplete.
 		);
 
 		if ( ! empty( $term ) ) {
@@ -1748,7 +1802,7 @@ class BB_Admin_Groups_Ajax {
 			$raw_global = bb_topics_manager_instance()->bb_get_topics(
 				array(
 					'item_type' => 'activity',
-					'per_page'  => 500, // Sanity cap to prevent memory exhaustion.
+					'per_page'  => 500, // Sanity cap — all items are rendered in a dropdown at once; 500 is well beyond any real-world use.
 				)
 			);
 
@@ -1990,6 +2044,7 @@ class BB_Admin_Groups_Ajax {
 	 */
 	private function bb_clear_group_type_cache( $post_id ) {
 		wp_cache_delete( 'bb-group-type-label-css', 'bp_groups_group_type' );
+		wp_cache_delete( 'bp_group_types', 'bp_groups' ); // Clear group type registry cache populated by bp_groups_get_group_types().
 
 		$type_key = get_post_meta( $post_id, '_bp_group_type_key', true );
 		if ( ! empty( $type_key ) ) {

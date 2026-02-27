@@ -213,6 +213,35 @@ function bb_groups_sanitize_cover_height( $value ) {
 	return $value;
 }
 
+/**
+ * Sanitize the group nav order checkbox_list value.
+ *
+ * Expects an associative array { slug: 0|1, ... }.
+ * Sanitizes keys and normalizes values to 0 or 1.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed $value The submitted value.
+ *
+ * @return array Sanitized array of slug => 0|1.
+ */
+function bb_sanitize_group_nav_order( $value ) {
+	if ( is_string( $value ) ) {
+		$value = json_decode( $value, true );
+	}
+
+	if ( ! is_array( $value ) ) {
+		return array();
+	}
+
+	$sanitized = array();
+	foreach ( $value as $key => $val ) {
+		$sanitized[ sanitize_key( $key ) ] = absint( $val ) ? 1 : 0;
+	}
+
+	return $sanitized;
+}
+
 // =========================================================================
 // AJAX-TIME FIELD ENRICHMENT
 // =========================================================================
@@ -466,32 +495,3 @@ function bb_groups_maybe_migrate_subgroup_members( $feature_id, $settings, $save
 }
 
 add_action( 'bb_admin_save_feature_settings_after', 'bb_groups_maybe_migrate_subgroup_members', 10, 3 );
-
-/**
- * Sanitize the group nav order checkbox_list value.
- *
- * Expects an associative array { slug: 0|1, ... }.
- * Sanitizes keys and normalizes values to 0 or 1.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param mixed $value The submitted value.
- *
- * @return array Sanitized array of slug => 0|1.
- */
-function bb_sanitize_group_nav_order( $value ) {
-	if ( is_string( $value ) ) {
-		$value = json_decode( $value, true );
-	}
-
-	if ( ! is_array( $value ) ) {
-		return array();
-	}
-
-	$sanitized = array();
-	foreach ( $value as $key => $val ) {
-		$sanitized[ sanitize_key( $key ) ] = absint( $val ) ? 1 : 0;
-	}
-
-	return $sanitized;
-}
