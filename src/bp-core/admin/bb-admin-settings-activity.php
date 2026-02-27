@@ -246,21 +246,6 @@ function bb_admin_settings_register_activity_feature() {
 	 */
 	do_action( 'bb_activity_after_register_settings_fields' );
 
-	/**
-	 * Deprecated: bp_admin_setting_activity_register_fields.
-	 *
-	 * Legacy hook used by third-party plugins to register additional fields
-	 * in the Activity settings tab. Replaced by bb_activity_after_register_settings_fields.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 * @deprecated BuddyBoss [BBVERSION] Use bb_activity_after_register_settings_fields instead.
-	 */
-	do_action_deprecated(
-		'bp_admin_setting_activity_register_fields',
-		array( null ),
-		'[BBVERSION]',
-		'bb_activity_after_register_settings_fields'
-	);
 }
 
 add_action( 'bb_register_features', 'bb_admin_settings_register_activity_feature', 20 );
