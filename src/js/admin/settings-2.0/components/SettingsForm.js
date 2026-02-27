@@ -633,7 +633,7 @@ export function SettingsForm({ fields, values, onChange }) {
 						</label>
 					</div>
 				)}
-				<div className={ 'bb-admin-settings-form__field-content' + ( ( 'toggle' === field.type || 'checkbox' === field.type ) && field.description ? ' bb-admin-settings-form__field-content--inline' : '' ) }>
+				<div className={ 'bb-admin-settings-form__field-content' + ( ( 'toggle' === field.type || 'checkbox' === field.type ) && field.description && ! field.toggle_label ? ' bb-admin-settings-form__field-content--inline' : '' ) }>
 					{/* Field with optional prefix/suffix */}
 					<div className="bb-admin-settings-form__field-input-wrapper">
 						{field.prefix && (

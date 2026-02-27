@@ -33,7 +33,7 @@ function bb_media_register_security_panel_fields() {
 		'security_performance',
 		'security_settings',
 		array(
-			'title' => __( 'Security & Performance', 'buddyboss' ),
+			'title' => __( 'Media Security & Performance', 'buddyboss' ),
 			'order' => 10,
 		)
 	);
@@ -46,12 +46,13 @@ function bb_media_register_security_panel_fields() {
 		array(
 			'name'              => 'bp_media_symlink_support',
 			'label'             => __( 'Symbolic Links', 'buddyboss' ),
-			'description'       => __( 'Enable symbolic links. If you are having issues with media display, try disabling this option.', 'buddyboss' ),
-			'help_text'         => __( 'Symbolic links are used to create "shortcuts" to media files uploaded by members, providing optimal security and performance. If symbolic links are disabled, a fallback method will be used to protect your media files.', 'buddyboss' ),
+			'toggle_label'      => __( 'Enable symbolic links', 'buddyboss' ),
+			'description'       => __( 'Symbolic links create secure "shortcuts" to media files uploaded by members, optimizing performance. If disabled, a fallback method will protect your files. If you experience media display issues, try turning off this option.', 'buddyboss' ),
 			'type'              => 'toggle',
 			'default'           => 0,
 			'sanitize_callback' => 'bb_media_sanitize_symlink_support',
 			'disabled'          => $is_offloaded || $is_symlink_disabled,
+			'group'             => 'symlink_settings',
 			'order'             => 10,
 		)
 	);
@@ -68,6 +69,7 @@ function bb_media_register_security_panel_fields() {
 			'default'     => '',
 			'ajax_action' => 'bb_media_check_symlink_status',
 			'watch_field' => 'bp_media_symlink_support',
+			'group'       => 'symlink_settings',
 			'order'       => 15,
 		)
 	);
@@ -80,7 +82,7 @@ function bb_media_register_security_panel_fields() {
 		'security_settings',
 		array(
 			'name'        => 'bp_media_symlink_direct_access',
-			'label'       => __( 'Direct Access', 'buddyboss' ),
+			'label'       => __( 'Direct Links', 'buddyboss' ),
 			'description' => sprintf(
 				/* translators: 1: Opening anchor tag for Media Permissions link, 2: Closing anchor tag. */
 				__( 'If our plugin is unable to automatically block direct access to your media files and folders, please follow the steps in our %1$sMedia Permissions%2$s tutorial to configure your server.', 'buddyboss' ),
