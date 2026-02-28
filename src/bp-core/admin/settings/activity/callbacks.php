@@ -86,6 +86,9 @@ function bb_activity_sanitize_edit_time( $value ) {
 /**
  * Sanitize activity comment edit time setting.
  *
+ * Delegates to bb_activity_sanitize_edit_time() since the validation
+ * rules are identical for activity posts and comments.
+ *
  * @since BuddyBoss [BBVERSION]
  *
  * @param mixed $value The value to sanitize.
@@ -93,13 +96,7 @@ function bb_activity_sanitize_edit_time( $value ) {
  * @return int Sanitized integer value.
  */
 function bb_activity_sanitize_comment_edit_time( $value ) {
-	$value = intval( $value );
-
-	if ( ! in_array( $value, bb_activity_get_allowed_edit_times(), true ) ) {
-		return 600; // Fallback: invalid value, return 10 minutes.
-	}
-
-	return $value;
+	return bb_activity_sanitize_edit_time( $value );
 }
 
 /**

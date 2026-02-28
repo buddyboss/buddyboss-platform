@@ -11,6 +11,9 @@ import { useState, useEffect, useRef, useCallback } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { formatNumber } from '../../utils/format';
 
+/** Poll interval for migration progress refresh (30 seconds). */
+const MIGRATION_POLL_INTERVAL_MS = 30000;
+
 // Module-level store so dismissed migrations stay hidden after remount (e.g. navigate away/back).
 // Resets on full page reload; per admin session only.
 // NOTE: These module-level variables are intentionally shared. Only one ReactionNotice instance
@@ -24,6 +27,7 @@ let liveMigrationProgress = null;
 
 export function ReactionNotice({ field }) {
 	const [isDismissed, setIsDismissed] = useState(false);
+	const [confirmStopVisible, setConfirmStopVisible] = useState(false);
 	// Use module-level progress cache if available (survives panel navigation),
 	// otherwise fall back to the field data from the feature cache.
 	const [migrationData, setMigrationData] = useState(
@@ -162,7 +166,7 @@ export function ReactionNotice({ field }) {
 					}
 				},
 			} );
-		}, 30000 );
+		}, MIGRATION_POLL_INTERVAL_MS );
 
 		return () => {
 			if ( autoRefreshRef.current ) {
@@ -228,9 +232,11 @@ export function ReactionNotice({ field }) {
 		if ( ! window.bbReactionAdminVars?.ajax_url ) {
 			return;
 		}
-		if ( ! confirm( __( 'Are you sure you want to stop the migration?', 'buddyboss' ) ) ) {
-			return;
-		}
+		setConfirmStopVisible( true );
+	};
+
+	const handleConfirmStop = () => {
+		setConfirmStopVisible( false );
 		jQuery.ajax( {
 			url: window.bbReactionAdminVars.ajax_url,
 			method: 'POST',
@@ -356,6 +362,25 @@ export function ReactionNotice({ field }) {
 							{__('Stop', 'buddyboss')}
 						</button>
 					</div>
+					{ confirmStopVisible && (
+						<div className="bb-admin-notice__confirm">
+							<span>{ __( 'Are you sure you want to stop the migration?', 'buddyboss' ) }</span>
+							<button
+								type="button"
+								className="bb-admin-notice__button bb-admin-notice__button--danger"
+								onClick={ handleConfirmStop }
+							>
+								{ __( 'Yes, stop', 'buddyboss' ) }
+							</button>
+							<button
+								type="button"
+								className="bb-admin-notice__button bb-admin-notice__button--text"
+								onClick={ () => setConfirmStopVisible( false ) }
+							>
+								{ __( 'Cancel', 'buddyboss' ) }
+							</button>
+						</div>
+					) }
 				</div>
 			</div>
 		);

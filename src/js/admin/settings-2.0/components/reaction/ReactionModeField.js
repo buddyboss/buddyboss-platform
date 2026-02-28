@@ -10,7 +10,7 @@
 import { DropdownMenu, MenuGroup, MenuItem } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { BBIcon } from '../common/BBIcon';
-import { safeUrl } from '../../utils/sanitize';
+import { safeUrl, sanitizeHtml } from '../../utils/sanitize';
 
 /**
  * Reaction Mode Field Component
@@ -123,9 +123,9 @@ export function ReactionModeField({ field, value, values, onChange, defaultEmoti
 					method: 'POST'
 				}).done(function(response) {
 					if ( true === response.success && 'undefined' !== typeof response.data?.content ) {
-						$('.bb-reaction-delete-modal__content').html(response.data.content);
+						$('.bb-reaction-delete-modal__content').html(sanitizeHtml(response.data.content));
 					} else if (response.data?.message) {
-						$('.bb-reaction-delete-modal__content').html(response.data.message);
+						$('.bb-reaction-delete-modal__content').html(sanitizeHtml(response.data.message));
 					}
 				});
 			}

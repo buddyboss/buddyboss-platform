@@ -30,7 +30,7 @@ export function ReactionMigration({ field, onStartConversion }) {
 	}
 
 	const totalReactions = migrationData.total_reactions || 0;
-	const fromMode = 'like_to_emotions_action' === migrationData.action ? 'Likes' : 'Reactions';
+	const fromMode = 'like_to_emotions_action' === migrationData.action ? __( 'Likes', 'buddyboss' ) : __( 'Reactions', 'buddyboss' );
 
 	const handleDismiss = (e) => {
 		e.preventDefault();
