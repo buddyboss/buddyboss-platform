@@ -226,14 +226,23 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 				return Promise.resolve();
 			}
 
-			// Execute sequentially.
+			// Execute sequentially. If any operation fails the error is propagated
+			// to the caller (GroupEditModal) which surfaces it as a notice. Operations
+			// that already ran are NOT rolled back — the same limitation exists in the
+			// legacy WP admin form which processes all changes in a single non-atomic pass.
+			var errors = [];
 			var chain = Promise.resolve();
 			operations.forEach( function ( op ) {
-				chain = chain.then( op );
+				chain = chain.then( op ).catch( function ( err ) {
+					errors.push( err && err.message ? err.message : String( err ) );
+				} );
 			} );
 
 			return chain.then( function () {
-				// Clear pending state after successful save.
+				if ( errors.length ) {
+					return Promise.reject( new Error( errors.join( ' ' ) ) );
+				}
+				// Clear pending state only when all operations succeeded.
 				setPendingAdds( [] );
 				setPendingRemoves( [] );
 				setPendingRoleChanges( {} );

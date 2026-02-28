@@ -99,25 +99,53 @@ class BB_Admin_Groups_Ajax {
 	}
 
 	/**
-	 * Get the allowlisted platform settings options.
+	 * Check whether a group has at least one admin other than the given user.
+	 *
+	 * Used to prevent removal or demotion of the last group administrator,
+	 * mirroring the legacy bp-groups-admin.php no_admins guard.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @return array Allowed option names.
+	 * @param int $group_id Group ID.
+	 * @param int $exclude_user_id User ID to exclude from the admin count.
+	 *
+	 * @return bool True if at least one other admin exists, false if not.
+	 */
+	private function bb_group_has_other_admins( $group_id, $exclude_user_id ) {
+		$admins = groups_get_group_admins( $group_id );
+		foreach ( $admins as $admin ) {
+			if ( (int) $admin->user_id !== (int) $exclude_user_id ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Get allowed platform settings options map.
+	 *
+	 * Returns an associative array of option_name => sanitize_callback.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return array
 	 */
 	private function bb_get_allowed_platform_options() {
 		/**
 		 * Filters the allowed platform settings options for AJAX read/write.
 		 *
+		 * Keys are option names; values are the sanitize callback to use when saving.
+		 * Use 'absint' for toggle/integer options, 'sanitize_text_field' for strings, etc.
+		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param array $allowed_options Array of allowed option names.
+		 * @param array $allowed_options Associative array of option_name => sanitize_callback.
 		 */
 		return apply_filters(
 			'bb_admin_allowed_platform_settings',
 			array(
-				'bp-disable-group-type-creation',
-				'bp-enable-group-auto-join',
+				'bp-disable-group-type-creation' => 'absint',
+				'bp-enable-group-auto-join'      => 'absint',
 			)
 		);
 	}
@@ -395,7 +423,7 @@ class BB_Admin_Groups_Ajax {
 		$settings  = array();
 
 		foreach ( $requested as $option_name ) {
-			if ( in_array( $option_name, $allowed, true ) ) {
+			if ( array_key_exists( $option_name, $allowed ) ) {
 				$settings[ $option_name ] = bp_get_option( $option_name, '' );
 			}
 		}
@@ -415,7 +443,7 @@ class BB_Admin_Groups_Ajax {
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
 		$option_name  = isset( $_POST['option_name'] ) ? sanitize_text_field( wp_unslash( $_POST['option_name'] ) ) : '';
-		$option_value = isset( $_POST['option_value'] ) ? absint( wp_unslash( $_POST['option_value'] ) ) : 0;
+		$raw_value    = isset( $_POST['option_value'] ) ? wp_unslash( $_POST['option_value'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitized below per-option.
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $option_name ) ) {
@@ -424,9 +452,13 @@ class BB_Admin_Groups_Ajax {
 
 		$allowed = $this->bb_get_allowed_platform_options();
 
-		if ( ! in_array( $option_name, $allowed, true ) ) {
+		if ( ! array_key_exists( $option_name, $allowed ) ) {
 			wp_send_json_error( array( 'message' => __( 'Option not allowed.', 'buddyboss' ) ) );
 		}
+
+		// Apply per-option sanitize callback (defined in bb_get_allowed_platform_options).
+		$sanitize_fn  = $allowed[ $option_name ];
+		$option_value = is_callable( $sanitize_fn ) ? call_user_func( $sanitize_fn, $raw_value ) : sanitize_text_field( $raw_value );
 
 		bp_update_option( $option_name, $option_value );
 
@@ -1484,6 +1516,12 @@ class BB_Admin_Groups_Ajax {
 
 		// Remove member.
 		if ( 'remove' === $role ) {
+			// Guard: do not allow removal of the last group admin (mirrors legacy bp-groups-admin.php behaviour).
+			$member_check = new BP_Groups_Member( $user_id, $group_id );
+			if ( $member_check->is_admin && ! $this->bb_group_has_other_admins( $group_id, $user_id ) ) {
+				wp_send_json_error( array( 'message' => __( 'You cannot remove the only group administrator.', 'buddyboss' ) ) );
+			}
+
 			$result = groups_remove_member( $user_id, $group_id );
 			if ( $result ) {
 				wp_send_json_success( array( 'message' => __( 'Member removed successfully.', 'buddyboss' ) ) );
@@ -1512,6 +1550,11 @@ class BB_Admin_Groups_Ajax {
 				$result = groups_promote_member( $user_id, $group_id, $role );
 				break;
 			case 'member':
+				// Guard: do not allow demotion of the last group admin.
+				$member_check = new BP_Groups_Member( $user_id, $group_id );
+				if ( $member_check->is_admin && ! $this->bb_group_has_other_admins( $group_id, $user_id ) ) {
+					wp_send_json_error( array( 'message' => __( 'You cannot demote the only group administrator.', 'buddyboss' ) ) );
+				}
 				$result = groups_demote_member( $user_id, $group_id );
 				break;
 			case 'banned':
