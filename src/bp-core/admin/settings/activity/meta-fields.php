@@ -66,6 +66,9 @@ function bb_register_activity_edit_core_fields( $registry, $component = 'activit
 				// Extract embed URL if content has one (same as legacy).
 				$urls = wp_extract_urls( $value );
 				if ( is_array( $urls ) && count( $urls ) > 0 ) {
+					// Intentional $_POST writes: bp_activity_update() reads link_url/link_embed from
+					// $_POST downstream to generate link-preview activity data (same as legacy flow).
+					// There is no API to pass these values through the activity object directly.
 					$_POST['link_url']   = ! empty( $urls[0] ) ? esc_url_raw( $urls[0] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 					$_POST['link_embed'] = true; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 				}

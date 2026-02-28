@@ -127,5 +127,14 @@ function bb_reactions_get_settings_fields() {
 		),
 	);
 
+	/**
+	 * Filters the reactions settings fields array.
+	 *
+	 * Allows third-party plugins to add, modify, or remove reactions settings fields.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $fields Reactions settings fields array.
+	 */
 	return (array) apply_filters( 'bb_reactions_get_settings_fields', $fields );
 }

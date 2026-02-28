@@ -145,7 +145,7 @@ class BB_Admin_Meta_Field_Registry {
 			'get_options'       => null,
 			'get_extra_data'    => null,
 			'save_value'        => null,
-			'sanitize_callback' => 'sanitize_text_field',
+			'sanitize_callback' => null, // Must be explicitly set for non-scalar (array) fields.
 			'is_visible'        => null,
 			'conditional'       => null,
 		);
@@ -297,9 +297,14 @@ class BB_Admin_Meta_Field_Registry {
 			$raw_value = wp_unslash( $_POST[ $post_key ] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			// phpcs:enable WordPress.Security.NonceVerification.Missing
 
-			// Sanitize (fallback to sanitize_text_field if no valid callback registered).
+			// Sanitize using the field's registered callback.
+			// No default: array-type fields must register their own sanitize_callback to avoid
+			// sanitize_text_field() corrupting array values. Scalar fields without a callback
+			// fall back to sanitize_text_field(); array fields fall back to map_deep().
 			if ( is_callable( $args['sanitize_callback'] ) ) {
 				$raw_value = call_user_func( $args['sanitize_callback'], $raw_value );
+			} elseif ( is_array( $raw_value ) ) {
+				$raw_value = map_deep( $raw_value, 'sanitize_text_field' );
 			} else {
 				$raw_value = sanitize_text_field( $raw_value );
 			}

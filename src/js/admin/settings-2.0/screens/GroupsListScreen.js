@@ -48,7 +48,7 @@ var sortOptions = [
  *
  * @type {number}
  */
-var GROUPS_PER_PAGE = 20;
+var GROUPS_PER_PAGE = ( window.bbAdminData && window.bbAdminData.groupsPerPage ) ? parseInt( window.bbAdminData.groupsPerPage, 10 ) : 20;
 
 /**
  * Groups List Screen Component
