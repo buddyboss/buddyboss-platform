@@ -200,9 +200,10 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 			}
 			setIsLoading( false );
 		} ).catch( function ( err ) {
-			if ( 'AbortError' !== err.name ) {
-				setIsLoading( false );
+			if ( err && 'AbortError' === err.name ) {
+				return;
 			}
+			setIsLoading( false );
 		} );
 	}, [ groupId ] );
 
@@ -416,8 +417,7 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 				setError( __( 'Failed to save topic order.', 'buddyboss' ) );
 			} );
 		}
-		setDragIndex( null );
-		setDragOverIndex( null );
+		// Note: drag state (dragIndex/dragOverIndex) is reset by the onDragEnd handler on the element.
 	};
 
 	var canAddMore = topics.length < maxTopics;
@@ -465,7 +465,10 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 							onDragStart={ handleDragStart( index ) }
 							onDragOver={ handleDragOver( index ) }
 							onDrop={ handleDragEnd }
-							onDragEnd={ handleDragEnd }
+							onDragEnd={ function () {
+								setDragIndex( null );
+								setDragOverIndex( null );
+							} }
 						>
 							<div className={ itemClasses } data-topic-id={ topic.topic_id }>
 								<span
@@ -494,7 +497,8 @@ export function GroupTopicsTab( { groupId, setNotice } ) {
 										label={ __( 'More options', 'buddyboss' ) }
 										className="bb-topic-list__menu-btn"
 									>
-										{ function ( { onClose } ) {
+										{ function ( dropdownProps ) {
+											var onClose = dropdownProps.onClose;
 											return (
 												<MenuGroup className="bb_dropdown_menu_group">
 													<MenuItem
@@ -682,7 +686,7 @@ function GroupTopicModal( { isOpen, onClose, onSave, topic, isSaving, permission
 			setIsDropdownOpen( false );
 			setModalError( '' );
 		}
-	}, [ isOpen, topic ] );
+	}, [ isOpen, topic, permissionTypes ] ); // eslint-disable-line react-hooks/exhaustive-deps
 
 	// Close dropdown on outside click.
 	useEffect( function () {

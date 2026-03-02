@@ -9,7 +9,7 @@
 
 import { useState, useEffect, useCallback, useRef } from '@wordpress/element';
 import { ToggleControl, Spinner } from '@wordpress/components';
-import { __ } from '@wordpress/i18n';
+import { __, _n, sprintf } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { getGroupTypes, deleteGroupType, getPlatformSettings, savePlatformSetting } from '../utils/ajax';
 import { Toast } from '../components/Toast';
@@ -91,18 +91,26 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 				setSettingsLoading( false );
 			} )
 			.catch( function ( err ) {
-				if ( 'AbortError' !== err.name ) {
-					setSettingsLoading( false );
+				if ( err && 'AbortError' === err.name ) {
+					return;
 				}
+				setSettingsLoading( false );
 			} );
 
 		return function () { controller.abort(); };
 	}, [] );
 
 	// Load group types.
+	var groupTypesAbortRef = useRef( null );
+
 	var loadGroupTypes = useCallback( function () {
+		if ( groupTypesAbortRef.current ) {
+			groupTypesAbortRef.current.abort();
+		}
+		groupTypesAbortRef.current = new AbortController();
+
 		setIsLoading( true );
-		getGroupTypes()
+		getGroupTypes( { signal: groupTypesAbortRef.current.signal } )
 			.then( function ( response ) {
 				if ( response.success && response.data ) {
 					setGroupTypes( response.data.group_types || [] );
@@ -110,17 +118,25 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 				}
 				setIsLoading( false );
 			} )
-			.catch( function () {
-				setIsLoading( false );
-				setToast( { status: 'error', message: __( 'Failed to load group types.', 'buddyboss' ) } );
+			.catch( function ( err ) {
+				if ( ! err || 'AbortError' !== err.name ) {
+					setIsLoading( false );
+					setToast( { status: 'error', message: __( 'Failed to load group types.', 'buddyboss' ) } );
+				}
 			} );
 	}, [] );
 
 	useEffect( function () {
 		loadGroupTypes();
+
+		return function () {
+			if ( groupTypesAbortRef.current ) {
+				groupTypesAbortRef.current.abort();
+			}
+		};
 	}, [ loadGroupTypes ] );
 
-	// Close menu on outside click.
+	// Close menu on outside click or Escape key.
 	useEffect( function () {
 		if ( null === openMenuId ) {
 			return;
@@ -132,19 +148,27 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 			}
 		}
 
+		function handleKeyDown( e ) {
+			if ( 'Escape' === e.key ) {
+				setOpenMenuId( null );
+			}
+		}
+
 		document.addEventListener( 'mousedown', handleMouseDown );
+		document.addEventListener( 'keydown', handleKeyDown );
 		return function () {
 			document.removeEventListener( 'mousedown', handleMouseDown );
+			document.removeEventListener( 'keydown', handleKeyDown );
 		};
 	}, [ openMenuId ] );
 
-	// Handle settings toggle.
+	// Handle settings toggle — rollback only the specific setting that failed.
 	var handleSettingChange = useCallback( function ( optionName, newValue ) {
-		var prevGroupTypes = enableGroupTypes;
-		var prevAutoMembership = autoMembershipApproval;
+		var isGroupTypeSetting = 'bp-disable-group-type-creation' === optionName;
+		var prevValue = isGroupTypeSetting ? enableGroupTypes : autoMembershipApproval;
 
 		// Optimistic update.
-		if ( 'bp-disable-group-type-creation' === optionName ) {
+		if ( isGroupTypeSetting ) {
 			setEnableGroupTypes( newValue );
 		} else if ( 'bp-enable-group-auto-join' === optionName ) {
 			setAutoMembershipApproval( newValue );
@@ -155,16 +179,22 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 				if ( response.success ) {
 					setToast( { status: 'success', message: __( 'Setting saved.', 'buddyboss' ) } );
 				} else {
-					// Rollback.
-					setEnableGroupTypes( prevGroupTypes );
-					setAutoMembershipApproval( prevAutoMembership );
+					// Rollback only the setting that failed.
+					if ( isGroupTypeSetting ) {
+						setEnableGroupTypes( prevValue );
+					} else {
+						setAutoMembershipApproval( prevValue );
+					}
 					setToast( { status: 'error', message: __( 'Failed to save setting.', 'buddyboss' ) } );
 				}
 			} )
 			.catch( function () {
-				// Rollback.
-				setEnableGroupTypes( prevGroupTypes );
-				setAutoMembershipApproval( prevAutoMembership );
+				// Rollback only the setting that failed.
+				if ( isGroupTypeSetting ) {
+					setEnableGroupTypes( prevValue );
+				} else {
+					setAutoMembershipApproval( prevValue );
+				}
 				setToast( { status: 'error', message: __( 'Failed to save setting.', 'buddyboss' ) } );
 			} );
 	}, [ enableGroupTypes, autoMembershipApproval ] );
@@ -190,7 +220,7 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 					} );
 					setToast( { status: 'success', message: __( 'Group type deleted.', 'buddyboss' ) } );
 				} else {
-					setToast( { status: 'error', message: response.data?.message || __( 'Failed to delete group type.', 'buddyboss' ) } );
+					setToast( { status: 'error', message: ( response.data && response.data.message ) || __( 'Failed to delete group type.', 'buddyboss' ) } );
 				}
 			} )
 			.catch( function () {
@@ -317,7 +347,7 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 						<ul className="bb-admin-group-types__list">
 							{ groupTypes.map( function ( type ) {
 								var isPublic = 'private' !== type.visibility;
-								var countText = type.groups_count + ' ' + ( 1 === type.groups_count ? __( 'group', 'buddyboss' ) : __( 'groups', 'buddyboss' ) );
+								var countText = sprintf( _n( '%s group', '%s groups', type.groups_count, 'buddyboss' ), type.groups_count );
 
 								return (
 									<li key={ type.id } className="bb-admin-group-types__list-item">
@@ -351,16 +381,19 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 												<button
 													className="bb-admin-group-types__menu-trigger"
 													onClick={ function () {
-														setOpenMenuId( openMenuId === type.id ? null : type.id );
+														setOpenMenuId( type.id === openMenuId ? null : type.id );
 													} }
 													aria-label={ __( 'Actions', 'buddyboss' ) }
+													aria-haspopup="true"
+													aria-expanded={ type.id === openMenuId ? 'true' : 'false' }
 												>
 													<span className="bb-icons-rl bb-icons-rl-dots-three"></span>
 												</button>
-												{ openMenuId === type.id && (
-													<div className="bb-admin-group-types__menu-dropdown">
+												{ type.id === openMenuId && (
+													<div className="bb-admin-group-types__menu-dropdown" role="menu">
 														<button
 															className="bb-admin-group-types__menu-item"
+															role="menuitem"
 															onClick={ function () {
 																handleEdit( type );
 															} }
@@ -370,6 +403,7 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 														</button>
 														<button
 															className="bb-admin-group-types__menu-item bb-admin-group-types__menu-item--danger"
+															role="menuitem"
 															onClick={ function () {
 																handleDelete( type.id );
 															} }

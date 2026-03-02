@@ -37,10 +37,6 @@ class Admin {
 			return;
 		}
 
-		// @todo: Remove after testing — Settings 2.0 handles LearnDash group sync via registry meta fields.
-		// add_action( 'bp_group_admin_edit_after', array( $this, 'saveGroupSyncMetaBox' ) );
-		add_action( 'bp_groups_admin_meta_boxes', array( $this, 'addGroupSyncMetaBox' ) );
-
 		// Settings 2.0: register group meta fields for the edit modal.
 		if ( function_exists( 'bb_admin_meta_field_registry' ) ) {
 			add_action( 'bb_register_groups_meta_fields', array( $this, 'registerGroupMetaFields' ), 10, 2 );
@@ -164,11 +160,13 @@ class Admin {
 	}
 
 	/**
-	 * Save group sync metabox value when bp group is saved from admin
+	 * Save group sync metabox value when bp group is saved from admin.
 	 *
-	 * @since BuddyBoss 1.0.0
+	 * @since      BuddyBoss 1.0.0
+	 * @deprecated BuddyBoss [BBVERSION] Use BB_Admin_Meta_Field_Registry via registerGroupMetaFields() instead.
 	 */
 	public function saveGroupSyncMetaBox( $groupId ) {
+		_deprecated_function( __METHOD__, 'BuddyBoss [BBVERSION]', 'BB_Admin_Meta_Field_Registry::save_fields_data()' );
 		// created from backend
 		if ( bp_ld_sync()->isRequestExists( 'bp-ld-sync-enable' ) && ! bp_ld_sync()->getRequest( 'bp-ld-sync-enable' ) ) {
 			bp_ld_sync( 'buddypress' )->sync->generator( $groupId )->desyncFromLearndash();
@@ -189,33 +187,22 @@ class Admin {
 	}
 
 	/**
-	 * Add group sync metabox
+	 * Add group sync metabox.
 	 *
-	 * @since BuddyBoss 1.0.0
+	 * @since      BuddyBoss 1.0.0
+	 * @deprecated BuddyBoss [BBVERSION] No longer used. Settings 2.0 uses registerGroupMetaFields() instead.
 	 */
 	public function addGroupSyncMetaBox() {
-		add_meta_box(
-			'bp_ld_sync-buddypress-sync',
-			__( 'Associated LearnDash Group', 'buddyboss' ),
-			array( $this, 'asyncMetaboxHtml' ),
-			get_current_screen()->id,
-			'side'
-		);
+		_deprecated_function( __METHOD__, 'BuddyBoss [BBVERSION]', __CLASS__ . '::registerGroupMetaFields()' );
 	}
 
 	/**
-	 * Output group sync metabox html
+	 * Output group sync metabox html.
 	 *
-	 * @since BuddyBoss 1.0.0
+	 * @since      BuddyBoss 1.0.0
+	 * @deprecated BuddyBoss [BBVERSION] No longer used. Settings 2.0 uses registerGroupMetaFields() instead.
 	 */
 	public function asyncMetaboxHtml() {
-		$groupId           = bp_ld_sync()->getRequest( 'gid' );
-		$generator         = bp_ld_sync( 'buddypress' )->sync->generator( $groupId );
-		$hasLdGroup        = $generator->hasLdGroup();
-		$ldGroupId         = $hasLdGroup ? $generator->getLdGroupId() : 0;
-		$ldGroup           = get_post( $ldGroupId );
-		$availableLdGroups = bp_ld_sync( 'learndash' )->group->getUnassociatedGroups( $groupId );
-
-		require bp_ld_sync()->template( '/admin/buddypress/sync-meta-box.php' );
+		_deprecated_function( __METHOD__, 'BuddyBoss [BBVERSION]', __CLASS__ . '::registerGroupMetaFields()' );
 	}
 }

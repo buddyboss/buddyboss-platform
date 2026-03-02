@@ -8,103 +8,114 @@
 /**
  * Make an AJAX request to WordPress admin-ajax.php
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @param {string} action  - The AJAX action name
  * @param {Object} data    - Additional data to send
  * @param {Object} options - Optional fetch options (e.g. { signal } for AbortController)
  * @return {Promise} Promise resolving to response data
  */
-export function ajaxFetch(action, data = {}, options = {}) {
-	const ajaxUrl = window.bbAdminData?.ajaxUrl || '/wp-admin/admin-ajax.php';
-	const nonce = window.bbAdminData?.ajaxNonce || '';
+export function ajaxFetch( action, data, options ) {
+	data = data || {};
+	options = options || {};
 
-	const formData = new FormData();
-	formData.append('action', action);
-	formData.append('nonce', nonce);
+	var ajaxUrl = ( window.bbAdminData && window.bbAdminData.ajaxUrl ) || '/wp-admin/admin-ajax.php';
+	var nonce = ( window.bbAdminData && window.bbAdminData.ajaxNonce ) || '';
+
+	var formData = new FormData();
+	formData.append( 'action', action );
+	formData.append( 'nonce', nonce );
 
 	// Append additional data, handling arrays and objects with bracket notation.
-	Object.keys(data).forEach((key) => {
-		var val = data[key];
+	Object.keys( data ).forEach( function ( key ) {
+		var val = data[ key ];
 		if ( Array.isArray( val ) ) {
-			val.forEach(function ( item ) {
+			val.forEach( function ( item ) {
 				formData.append( key + '[]', item );
-			});
+			} );
 		} else if ( val && 'object' === typeof val && ! ( val instanceof Blob ) ) {
-			Object.keys( val ).forEach(function ( subKey ) {
-				formData.append( key + '[' + subKey + ']', val[subKey] );
-			});
+			Object.keys( val ).forEach( function ( subKey ) {
+				formData.append( key + '[' + subKey + ']', val[ subKey ] );
+			} );
 		} else {
 			formData.append( key, val );
 		}
-	});
+	} );
 
-	return fetch(ajaxUrl, {
+	return fetch( ajaxUrl, {
 		method: 'POST',
 		credentials: 'same-origin',
 		body: formData,
 		signal: options.signal,
-	}).then((response) => {
-		if (!response.ok) {
+	} ).then( function ( response ) {
+		if ( ! response.ok ) {
 			// Parse JSON body for server error messages (e.g., 403 from wp_send_json_error).
-			return response.json().then((body) => {
-				if (body && body.data && body.data.message) {
-					throw new Error(body.data.message);
+			return response.json().then( function ( body ) {
+				if ( body && body.data && body.data.message ) {
+					throw new Error( body.data.message );
 				}
-				throw new Error('HTTP ' + response.status + ': ' + response.statusText);
-			}).catch((parseError) => {
+				throw new Error( 'HTTP ' + response.status + ': ' + response.statusText );
+			} ).catch( function ( parseError ) {
 				// If JSON parsing itself failed, re-throw with HTTP status.
-				if (parseError.message && !parseError.message.startsWith('HTTP ')) {
+				if ( parseError.message && 0 !== parseError.message.indexOf( 'HTTP ' ) ) {
 					throw parseError;
 				}
-				throw new Error('HTTP ' + response.status + ': ' + response.statusText);
-			});
+				throw new Error( 'HTTP ' + response.status + ': ' + response.statusText );
+			} );
 		}
 		return response.json();
-	});
+	} );
 }
 
 /**
  * Get all features
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @return {Promise} Promise resolving to features array
  */
 export function getFeatures() {
-	return ajaxFetch('bb_admin_get_features');
+	return ajaxFetch( 'bb_admin_get_features' );
 }
 
-// Module-level cache for features list
-let featuresCache = null;
-let featuresCachePromise = null;
+// Module-level cache for features list.
+var featuresCache = null;
+var featuresCachePromise = null;
 
 /**
  * Get features with caching (prevents duplicate AJAX calls)
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @return {Promise} Promise resolving to features array
  */
-export async function getCachedFeatures() {
-	if (featuresCache) {
-		return featuresCache;
+export function getCachedFeatures() {
+	if ( featuresCache ) {
+		return Promise.resolve( featuresCache );
 	}
 
-	if (featuresCachePromise) {
+	if ( featuresCachePromise ) {
 		return featuresCachePromise;
 	}
 
-	featuresCachePromise = getFeatures().then((response) => {
-		if (response.success && response.data) {
+	featuresCachePromise = getFeatures().then( function ( response ) {
+		if ( response.success && response.data ) {
 			featuresCache = response.data;
 			return featuresCache;
 		}
 		return [];
-	}).catch((error) => {
+	} ).catch( function ( error ) {
 		featuresCachePromise = null;
 		throw error;
-	});
+	} );
 
 	return featuresCachePromise;
 }
 
 /**
  * Invalidate features cache - call when features are activated/deactivated
+ *
+ * @since BuddyBoss [BBVERSION]
  */
 export function invalidateFeaturesCache() {
 	featuresCache = null;
@@ -114,50 +125,61 @@ export function invalidateFeaturesCache() {
 /**
  * Update a feature in the cache
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @param {string} featureId   Feature ID
  * @param {Object} updatedData Updated feature data
  */
-export function updateFeatureInCache(featureId, updatedData) {
-	if (featuresCache && Array.isArray(featuresCache)) {
-		featuresCache = featuresCache.map((feature) =>
-			feature.id === featureId ? { ...feature, ...updatedData } : feature
-		);
+export function updateFeatureInCache( featureId, updatedData ) {
+	if ( featuresCache && Array.isArray( featuresCache ) ) {
+		featuresCache = featuresCache.map( function ( feature ) {
+			if ( feature.id === featureId ) {
+				return Object.assign( {}, feature, updatedData );
+			}
+			return feature;
+		} );
 	}
 }
 
 /**
  * Toggle a feature (activate or deactivate)
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @param {string}  featureId - Feature ID
  * @param {boolean} active    - True to activate, false to deactivate
  * @param {Object}  options   - Optional fetch options (e.g. { signal } for AbortController)
  * @return {Promise} Promise resolving to response
  */
-export function toggleFeature(featureId, active, options = {}) {
-	return ajaxFetch('bb_admin_toggle_feature', {
+export function toggleFeature( featureId, active, options ) {
+	return ajaxFetch( 'bb_admin_toggle_feature', {
 		feature_id: featureId,
 		status: active ? 'active' : 'inactive',
-	}, options);
+	}, options || {} );
 }
 
 /**
  * Search settings
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @param {string} query - Search query
  * @return {Promise} Promise resolving to search results
  */
-export function searchSettings(query) {
-	return ajaxFetch('bb_admin_search_settings', { query });
+export function searchSettings( query ) {
+	return ajaxFetch( 'bb_admin_search_settings', { query: query } );
 }
 
 /**
  * Get feature settings
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @param {string} featureId - Feature ID
  * @return {Promise} Promise resolving to feature settings
  */
-export function getFeatureSettings(featureId) {
-	return ajaxFetch('bb_admin_get_feature_settings', { feature_id: featureId });
+export function getFeatureSettings( featureId ) {
+	return ajaxFetch( 'bb_admin_get_feature_settings', { feature_id: featureId } );
 }
 
 /**
@@ -165,26 +187,28 @@ export function getFeatureSettings(featureId) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param {Array}  options    - Array of option names to retrieve
+ * @param {Array}  options      - Array of option names to retrieve
  * @param {Object} fetchOptions - Optional fetch options (e.g. { signal }).
  * @return {Promise} Promise resolving to settings object
  */
-export function getPlatformSettings(options, fetchOptions) {
-	return ajaxFetch('bb_admin_get_platform_settings', { options }, fetchOptions || {});
+export function getPlatformSettings( options, fetchOptions ) {
+	return ajaxFetch( 'bb_admin_get_platform_settings', { options: options }, fetchOptions || {} );
 }
 
 /**
  * Save a platform setting (WordPress option)
  *
+ * @since BuddyBoss [BBVERSION]
+ *
  * @param {string} optionName  - Option name
  * @param {*}      optionValue - Option value
  * @return {Promise} Promise resolving to response
  */
-export function savePlatformSetting(optionName, optionValue) {
-	return ajaxFetch('bb_admin_save_platform_setting', {
+export function savePlatformSetting( optionName, optionValue ) {
+	return ajaxFetch( 'bb_admin_save_platform_setting', {
 		option_name: optionName,
-		option_value: optionValue
-	});
+		option_value: optionValue,
+	} );
 }
 
 /**
@@ -192,10 +216,11 @@ export function savePlatformSetting(optionName, optionValue) {
  *
  * @since BuddyBoss [BBVERSION]
  *
+ * @param {Object} options Optional fetch options (e.g. { signal }).
  * @return {Promise} Promise resolving to group types array
  */
-export function getGroupTypes() {
-	return ajaxFetch('bb_admin_get_group_types');
+export function getGroupTypes( options ) {
+	return ajaxFetch( 'bb_admin_get_group_types', {}, options );
 }
 
 /**
@@ -206,8 +231,8 @@ export function getGroupTypes() {
  * @param {Object} data - Group type data
  * @return {Promise} Promise resolving to response
  */
-export function createGroupType(data) {
-	return ajaxFetch('bb_admin_create_group_type', data);
+export function createGroupType( data ) {
+	return ajaxFetch( 'bb_admin_create_group_type', data );
 }
 
 /**
@@ -219,8 +244,8 @@ export function createGroupType(data) {
  * @param {Object} data   - Group type data
  * @return {Promise} Promise resolving to response
  */
-export function updateGroupType(typeId, data) {
-	return ajaxFetch('bb_admin_update_group_type', { type_id: typeId, ...data });
+export function updateGroupType( typeId, data ) {
+	return ajaxFetch( 'bb_admin_update_group_type', Object.assign( { type_id: typeId }, data ) );
 }
 
 /**
@@ -231,8 +256,8 @@ export function updateGroupType(typeId, data) {
  * @param {number} typeId - Group type post ID
  * @return {Promise} Promise resolving to response
  */
-export function deleteGroupType(typeId) {
-	return ajaxFetch('bb_admin_delete_group_type', { type_id: typeId });
+export function deleteGroupType( typeId ) {
+	return ajaxFetch( 'bb_admin_delete_group_type', { type_id: typeId } );
 }
 
 /**
@@ -244,8 +269,8 @@ export function deleteGroupType(typeId) {
  * @param {Object} options - Optional fetch options (e.g. { signal } for AbortController).
  * @return {Promise} Promise resolving to response.
  */
-export function getGroups(data, options) {
-	return ajaxFetch('bb_admin_get_groups', data, options);
+export function getGroups( data, options ) {
+	return ajaxFetch( 'bb_admin_get_groups', data, options );
 }
 
 /**
@@ -256,8 +281,8 @@ export function getGroups(data, options) {
  * @param {number} groupId - Group ID.
  * @return {Promise} Promise resolving to response.
  */
-export function deleteGroup(groupId) {
-	return ajaxFetch('bb_admin_delete_group', { group_id: groupId });
+export function deleteGroup( groupId ) {
+	return ajaxFetch( 'bb_admin_delete_group', { group_id: groupId } );
 }
 
 /**
@@ -268,8 +293,8 @@ export function deleteGroup(groupId) {
  * @param {Object} data - Group data (name, description, status).
  * @return {Promise} Promise resolving to response.
  */
-export function createGroup(data) {
-	return ajaxFetch('bb_admin_create_group', data);
+export function createGroup( data ) {
+	return ajaxFetch( 'bb_admin_create_group', data );
 }
 
 /**
@@ -281,8 +306,8 @@ export function createGroup(data) {
  * @param {Object} options - Optional fetch options.
  * @return {Promise} Promise resolving to response.
  */
-export function getGroup(groupId, options) {
-	return ajaxFetch('bb_admin_get_group', { group_id: groupId }, options);
+export function getGroup( groupId, options ) {
+	return ajaxFetch( 'bb_admin_get_group', { group_id: groupId }, options );
 }
 
 /**
@@ -294,8 +319,8 @@ export function getGroup(groupId, options) {
  * @param {Object} options - Optional fetch options.
  * @return {Promise} Promise resolving to response.
  */
-export function saveGroup(data, options) {
-	return ajaxFetch('bb_admin_save_group', data, options);
+export function saveGroup( data, options ) {
+	return ajaxFetch( 'bb_admin_save_group', data, options );
 }
 
 /**
@@ -308,8 +333,8 @@ export function saveGroup(data, options) {
  * @param {Object} options - Optional fetch options.
  * @return {Promise} Promise resolving to response.
  */
-export function getGroupMembers(groupId, params, options) {
-	return ajaxFetch('bb_admin_get_group_members', Object.assign({ group_id: groupId }, params), options);
+export function getGroupMembers( groupId, params, options ) {
+	return ajaxFetch( 'bb_admin_get_group_members', Object.assign( { group_id: groupId }, params ), options );
 }
 
 /**
@@ -320,8 +345,8 @@ export function getGroupMembers(groupId, params, options) {
  * @param {Object} data - Member data (group_id, user_id, role, action_type).
  * @return {Promise} Promise resolving to response.
  */
-export function updateGroupMember(data) {
-	return ajaxFetch('bb_admin_update_group_member', data);
+export function updateGroupMember( data ) {
+	return ajaxFetch( 'bb_admin_update_group_member', data );
 }
 
 /**
@@ -381,8 +406,8 @@ export function deleteMemberType(typeId) {
  * @param {Object} options - Optional fetch options (e.g. { signal } for AbortController).
  * @return {Promise} Promise resolving to response.
  */
-export function getGroupTopics(groupId, options) {
-	return ajaxFetch('bb_admin_get_group_topics', { group_id: groupId }, options || {});
+export function getGroupTopics( groupId, options ) {
+	return ajaxFetch( 'bb_admin_get_group_topics', { group_id: groupId }, options || {} );
 }
 
 /**
@@ -395,17 +420,17 @@ export function getGroupTopics(groupId, options) {
  * @param {Object} extraData Optional extra data to send with the request.
  * @return {Promise} Promise resolving to response.
  */
-export function groupBulkAction(groupIds, action, extraData) {
+export function groupBulkAction( groupIds, action, extraData ) {
 	var data = {
-		group_ids: groupIds.join(','),
+		group_ids: groupIds.join( ',' ),
 		do_action: action,
 	};
-	if (extraData) {
-		Object.keys(extraData).forEach(function (key) {
-			data[key] = extraData[key];
-		});
+	if ( extraData ) {
+		Object.keys( extraData ).forEach( function ( key ) {
+			data[ key ] = extraData[ key ];
+		} );
 	}
-	return ajaxFetch('bb_admin_group_bulk_action', data);
+	return ajaxFetch( 'bb_admin_group_bulk_action', data );
 }
 
 /**

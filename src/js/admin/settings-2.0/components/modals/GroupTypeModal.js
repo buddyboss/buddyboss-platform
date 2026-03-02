@@ -7,7 +7,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useEffect, useCallback, useRef } from '@wordpress/element';
+import { useState, useEffect, useCallback } from '@wordpress/element';
 import {
 	TextControl,
 	CheckboxControl,
@@ -124,6 +124,29 @@ function normalizeMemberTypes( value ) {
  * @param {Array}    props.memberTypes Available member/profile types.
  * @returns {JSX.Element|null} Modal element or null.
  */
+/**
+ * Module-level constants for role label rendering.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+var ROLE_LABELS_MAP = {
+	organizer: __( 'Organizers', 'buddyboss' ),
+	moderator: __( 'Moderators', 'buddyboss' ),
+	member: __( 'Members', 'buddyboss' ),
+};
+
+var SINGULAR_PLACEHOLDERS = {
+	organizer: __( 'e.g. Organizer', 'buddyboss' ),
+	moderator: __( 'e.g. Moderator', 'buddyboss' ),
+	member: __( 'e.g. Member', 'buddyboss' ),
+};
+
+var PLURAL_PLACEHOLDERS = {
+	organizer: __( 'e.g. Organizers', 'buddyboss' ),
+	moderator: __( 'e.g. Moderators', 'buddyboss' ),
+	member: __( 'e.g. Members', 'buddyboss' ),
+};
+
 export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberTypes } ) {
 	var formDataState = useState( DEFAULT_FORM_DATA );
 	var formData = formDataState[ 0 ];
@@ -251,6 +274,10 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 
 	// Handle save.
 	var handleSave = useCallback( function () {
+		if ( isSaving ) {
+			return;
+		}
+
 		if ( ! formData.name.trim() ) {
 			setError( __( 'Group type name is required.', 'buddyboss' ) );
 			return;
@@ -318,14 +345,14 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 						onSave();
 					}
 				} else {
-					setError( response.data?.message || __( 'Failed to save group type.', 'buddyboss' ) );
+					setError( ( response.data && response.data.message ) || __( 'Failed to save group type.', 'buddyboss' ) );
 				}
 			} )
 			.catch( function () {
 				setIsSaving( false );
 				setError( __( 'Failed to save group type.', 'buddyboss' ) );
 			} );
-	}, [ formData, groupType, onSave ] );
+	}, [ formData, groupType, onSave, isSaving ] );
 
 	if ( ! isOpen ) {
 		return null;
@@ -339,7 +366,11 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 	return (
 		<Modal
 			title={ modalTitle }
-			onRequestClose={ onClose }
+			onRequestClose={ function () {
+				if ( ! isSaving ) {
+					onClose();
+				}
+			} }
 			className="bb-admin-group-type-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
 		>
@@ -383,37 +414,21 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 						</h4>
 
 						{ [ 'organizer', 'moderator', 'member' ].map( function ( role ) {
-							var roleLabelsMap = {
-								organizer: __( 'Organizers', 'buddyboss' ),
-								moderator: __( 'Moderators', 'buddyboss' ),
-								member: __( 'Members', 'buddyboss' ),
-							};
-							var singularPlaceholders = {
-								organizer: __( 'e.g. Organizer', 'buddyboss' ),
-								moderator: __( 'e.g. Moderator', 'buddyboss' ),
-								member: __( 'e.g. Member', 'buddyboss' ),
-							};
-							var pluralPlaceholders = {
-								organizer: __( 'e.g. Organizers', 'buddyboss' ),
-								moderator: __( 'e.g. Moderators', 'buddyboss' ),
-								member: __( 'e.g. Members', 'buddyboss' ),
-							};
-
 							return (
 								<div key={ role } className="bb-admin-group-type-modal__role-row">
-									<span className="bb-admin-group-type-modal__role-label">{ roleLabelsMap[ role ] }</span>
+									<span className="bb-admin-group-type-modal__role-label">{ ROLE_LABELS_MAP[ role ] }</span>
 									<div className="bb-admin-group-type-modal__row">
 										<TextControl
 											label={ __( 'Singular Label', 'buddyboss' ) }
 											value={ formData.role_labels[ role ].singular }
 											onChange={ function ( val ) { updateRoleLabel( role, 'singular', val ); } }
-											placeholder={ singularPlaceholders[ role ] }
+											placeholder={ SINGULAR_PLACEHOLDERS[ role ] }
 										/>
 										<TextControl
 											label={ __( 'Plural Label', 'buddyboss' ) }
 											value={ formData.role_labels[ role ].plural }
 											onChange={ function ( val ) { updateRoleLabel( role, 'plural', val ); } }
-											placeholder={ pluralPlaceholders[ role ] }
+											placeholder={ PLURAL_PLACEHOLDERS[ role ] }
 										/>
 									</div>
 								</div>
@@ -563,6 +578,7 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 											value={ formData.label_color.background_color || '#000000' }
 											onChange={ function ( e ) { updateLabelColor( 'background_color', e.target.value ); } }
 											className="bb-admin-group-type-modal__color-swatch"
+											aria-label={ __( 'Background Color', 'buddyboss' ) }
 										/>
 										<input
 											type="text"
@@ -573,6 +589,7 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 											} }
 											className="bb-admin-group-type-modal__color-hex"
 											maxLength="6"
+											aria-label={ __( 'Background Color hex value', 'buddyboss' ) }
 										/>
 									</div>
 								</div>
@@ -586,6 +603,7 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 											value={ formData.label_color.text_color || '#ffffff' }
 											onChange={ function ( e ) { updateLabelColor( 'text_color', e.target.value ); } }
 											className="bb-admin-group-type-modal__color-swatch"
+											aria-label={ __( 'Text Color', 'buddyboss' ) }
 										/>
 										<input
 											type="text"
@@ -596,6 +614,7 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 											} }
 											className="bb-admin-group-type-modal__color-hex"
 											maxLength="6"
+											aria-label={ __( 'Text Color hex value', 'buddyboss' ) }
 										/>
 									</div>
 								</div>
@@ -621,8 +640,9 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 									type="button"
 									className="bb-admin-group-type-modal__shortcode-copy"
 									onClick={ function () {
+										var shortcode = '[group type="' + groupType.id + '"]';
 										if ( navigator.clipboard ) {
-											navigator.clipboard.writeText( '[group type="' + groupType.id + '"]' );
+											navigator.clipboard.writeText( shortcode ).catch( function () {} );
 										}
 									} }
 									aria-label={ __( 'Copy shortcode', 'buddyboss' ) }

@@ -298,7 +298,7 @@ export function GroupEditModal( { isOpen, group, onClose, onSave, isSaving } ) {
 					}
 				}
 
-				payload[ 'registered_field_' + field.id ] = null != val ? val : '';
+				payload[ 'registered_field_' + field.id ] = null !== val && undefined !== val ? val : '';
 			} );
 		}
 
@@ -344,7 +344,11 @@ export function GroupEditModal( { isOpen, group, onClose, onSave, isSaving } ) {
 	return (
 		<Modal
 			title={ __( 'Edit Group', 'buddyboss' ) }
-			onRequestClose={ onClose }
+			onRequestClose={ function () {
+				if ( ! isSaving ) {
+					onClose();
+				}
+			} }
 			className="bb-group-edit-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
 		>

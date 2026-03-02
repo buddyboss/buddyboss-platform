@@ -46,7 +46,7 @@ function bb_groups_register_images_panel_fields() {
 			'description'       => __( 'Enable avatars for groups', 'buddyboss' ),
 			'help_text'         => __( 'When enabled, group organizers will be able to upload avatars in the group\'s settings.', 'buddyboss' ),
 			'default'           => bp_disable_group_avatar_uploads(),
-			'sanitize_callback' => 'intval',
+			'sanitize_callback' => 'absint',
 			'invert_value'      => true,
 			'order'             => 10,
 		)
@@ -94,6 +94,7 @@ function bb_groups_register_images_panel_fields() {
 				'item_type'   => 'default',
 				'url_getter'  => 'bb_get_default_custom_upload_group_avatar',
 				'label'       => __( 'Upload Custom Avatar', 'buddyboss' ),
+				/* translators: 1: avatar width in pixels, 2: avatar height in pixels. */
 				'help_text'   => '', // Injected at AJAX time via bb_groups_enrich_avatar_upload_help_text() — avatar dimensions not available at registration.
 				'conditional' => array(
 					'value' => 'custom',
@@ -142,7 +143,7 @@ function bb_groups_register_images_panel_fields() {
 			'description'       => __( 'Enable cover images for groups', 'buddyboss' ),
 			'help_text'         => __( 'When enabled, group organizers will be able to upload cover images in the group\'s settings.', 'buddyboss' ),
 			'default'           => bp_disable_group_cover_image_uploads(),
-			'sanitize_callback' => 'intval',
+			'sanitize_callback' => 'absint',
 			'invert_value'      => true,
 			'order'             => 10,
 		)
