@@ -1104,7 +1104,7 @@ function bb_notification_avatar() {
 		if ( 'notification' === $object ) {
 			bb_get_default_notification_avatar( 'thumb', $notification );
 			// Get the small icon for the notification which will print beside the avatar.
-			echo wp_kses_post( bb_notification_small_icon( $component_action, true, $notification ) );
+			echo wp_kses_post( bb_notification_small_icon( $component_action, true, $notification ) ?? '' );
 		} else {
 			if ( 'group' === $object ) {
 				$group = new BP_Groups_Group( $item_id );

@@ -1726,6 +1726,7 @@ class BB_Topics_Manager {
 		$item_type    = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : '';
 		$new_topic_id = 'migrate' === $migrate_type ? absint( sanitize_text_field( wp_unslash( $_POST['new_topic_id'] ) ) ) : 0;
 
+		$result = array();
 		if ( 'migrate' === $migrate_type && $new_topic_id ) {
 			$result = $this->bb_migrate_topic(
 				array(
