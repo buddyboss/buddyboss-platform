@@ -1315,7 +1315,7 @@
     border-radius: $bb-border-radius-2xl;
     border: none;
     box-shadow: 0px 4px 24px 0px rgba(0, 0, 0, 0.16);
-    overflow: hidden;
+    overflow: visible;
 
     &__header {
         display: flex;
@@ -1323,6 +1323,8 @@
         justify-content: space-between;
         border-bottom: 1px solid $bb-border-secondary-color;
         padding: 16px 16px 16px 24px;
+        background: $bb-background-base-color;
+        border-radius: $bb-border-radius-2xl $bb-border-radius-2xl 0 0;
 
         h1 {
             color: $bb-text-color;
@@ -1332,6 +1334,15 @@
             margin: 0;
             padding: 0;
         }
+    }
+
+    .bb-extension-modal__body {
+        background: $bb-background-base-color;
+    }
+
+    .bb-admin-settings-modal__footer,
+    .bb-extension-modal__footer {
+        border-radius: 0 0 $bb-border-radius-2xl $bb-border-radius-2xl;
     }
 
     &__close {
