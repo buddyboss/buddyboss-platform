@@ -414,26 +414,15 @@
 			align-items: center;
 			gap: 8px;
 			margin-left: auto;
-		}
 
-		.components-button.is-secondary {
-			@include bb-button-secondary;
-			padding: 8px 16px;
-		}
-
-		.components-button.is-primary {
-			@include bb-button-primary;
-			padding: 8px 16px;
-		}
-
-		.components-button.is-destructive.is-link {
-			color: $bb-error-color;
-			text-decoration: none;
-			font-size: 13px;
-
-			&:hover {
-				color: $bb-background-danger-secondary-hover-color;
-				text-decoration: underline;
+			.components-button.is-secondary {
+				@include bb-button-secondary;
+				padding: 8px 16px;
+			}
+	
+			.components-button.is-primary {
+				@include bb-button-primary;
+				padding: 8px 16px;
 			}
 		}
 	}

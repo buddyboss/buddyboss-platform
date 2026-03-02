@@ -45,6 +45,34 @@
     }
 }
 
+@mixin bb-button-danger {
+    color: $bb-text-inverse-color;
+    background: $bb-background-danger-secondary-color;
+    height: auto;
+    padding: 8px 16px;
+    border: none;
+    box-shadow: none;
+    border-radius: $bb-border-radius-lg;
+
+    &:hover {
+        color: $bb-text-inverse-color !important;
+        background: $bb-background-danger-secondary-hover-color !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+
+    &:focus,
+    &:active {
+        box-shadow: none !important;
+        outline: 2px solid $bb-border-quinery !important;
+    }
+
+    &[disabled] {
+        background-color: $bb-background-danger-primary-hover-color !important;
+        pointer-events: none;
+    }
+}
+
 @mixin bb-button-primary-outline {
     color: $bb-text-brand-primary-color;
     border: 1px solid $bb-border-brand-primary-color;

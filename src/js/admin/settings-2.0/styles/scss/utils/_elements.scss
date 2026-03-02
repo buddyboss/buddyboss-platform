@@ -194,6 +194,11 @@ select.bb-admin-settings__select {
     }
 }
 
+/* Buttons */
+.bb-admin-button-danger {
+    @include bb-button-danger;
+}
+
 /* WordPress DropdownMenu */
 .components-popover__content:has(.bb_dropdown_menu_group) {
     box-shadow: none;

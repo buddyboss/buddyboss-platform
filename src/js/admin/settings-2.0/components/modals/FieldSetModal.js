@@ -149,9 +149,9 @@ export function FieldSetModal( { fieldSet, onClose, onSave, onDelete, setToast }
 			isEditing && fieldSet.can_delete && wp.element.createElement(
 				Button,
 				{
-					variant: 'link',
+					variant: 'primary',
 					isDestructive: true,
-					className: 'bb-pf-modal-delete-btn',
+					className: 'bb-pf-modal-delete-btn bb-admin-button-danger',
 					onClick: function () {
 						onDelete();
 					},
