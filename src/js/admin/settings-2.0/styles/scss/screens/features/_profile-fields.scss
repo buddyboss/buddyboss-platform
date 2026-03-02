@@ -360,12 +360,15 @@
 }
 
 /* Add New Field Set button */
-.bb-pf-add-fieldset-btn.components-button.is-secondary {
-	@include bb-button-secondary;
-	padding: 8px 16px;
-	font-size: 13px;
-	font-weight: 500;
+.bb-pf-add-fieldset-btn.components-button {
+	@include bb-button-primary;
+	font-size: 14px;
 	align-self: flex-start;
+
+	i {
+		font-size: 16px;
+		margin-right: 4px;
+	}
 }
 
 /* ----------------------------------------------------------------

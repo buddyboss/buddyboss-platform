@@ -681,13 +681,14 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 		wp.element.createElement(
 			Button,
 			{
-				variant: 'secondary',
+				variant: 'primary',
 				className: 'bb-pf-add-fieldset-btn',
 				onClick: function () {
 					setEditFieldSet( {} );
 				},
 			},
-			'+ ' + __( 'Add New Field Set', 'buddyboss' )
+			wp.element.createElement( 'i', { className: 'bb-icons-rl bb-icons-rl-plus' } ),
+			' ' + __( 'Add New Field Set', 'buddyboss' )
 		),
 
 		// Field Set Modal (Add/Edit).
