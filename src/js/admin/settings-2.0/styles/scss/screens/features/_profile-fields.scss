@@ -207,10 +207,6 @@
 	border-bottom: 0.5px solid $bb-border-primary-color;
 	transition: background-color 0.15s ease;
 
-	&:last-of-type {
-		border-bottom: none;
-	}
-
 	&:hover {
 		background: $bb-background-primary-color;
 		border-radius: $bb-border-radius-md;
@@ -353,16 +349,15 @@
 }
 
 /* Add New Field button */
-.bb-pf-add-field-btn.components-button.is-link {
-	margin-top: 8px;
-	padding: 8px;
-	font-size: 13px;
-	font-weight: 500;
-	color: $bb-link-color;
-	text-decoration: none;
+.bb-pf-add-field-btn.components-button {
+	@include bb-button-primary-outline;
+	font-size: 14px;
+	margin-top: 16px;
+	margin-bottom: 8px;
 
-	&:hover {
-		text-decoration: underline;
+	i {
+		font-size: 16px;
+		margin-right: 4px;
 	}
 }
 

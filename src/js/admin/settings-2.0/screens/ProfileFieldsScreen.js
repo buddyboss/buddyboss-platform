@@ -657,13 +657,14 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 					wp.element.createElement(
 						Button,
 						{
-							variant: 'link',
+							variant: 'secondary',
 							className: 'bb-pf-add-field-btn',
 							onClick: function () {
 								setEditField( { field: null, groupId: group.id } );
 							},
 						},
-						'+ ' + __( 'Add New Field', 'buddyboss' )
+						wp.element.createElement( 'i', { className: 'bb-icons-rl bb-icons-rl-plus' } ),
+					' ' + __( 'Add New Field', 'buddyboss' )
 					)
 				)
 			);
