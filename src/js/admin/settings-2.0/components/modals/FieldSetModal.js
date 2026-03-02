@@ -101,89 +101,72 @@ export function FieldSetModal( { fieldSet, onClose, onSave, onDelete, setToast }
 			} );
 	}
 
-	return wp.element.createElement(
-		Modal,
-		{
-			title: isEditing ? __( 'Edit Field Set', 'buddyboss' ) : __( 'Add New Field Set', 'buddyboss' ),
-			onRequestClose: onClose,
-			className: 'bb-pf-fieldset-modal bb-admin-settings-modal',
-			shouldCloseOnClickOutside: false,
-		},
+	return (
+		<Modal
+			title={ isEditing ? __( 'Edit Field Set', 'buddyboss' ) : __( 'Add New Field Set', 'buddyboss' ) }
+			onRequestClose={ onClose }
+			className="bb-pf-fieldset-modal bb-admin-settings-modal"
+			shouldCloseOnClickOutside={ false }
+		>
+			<div className="bb-pf-modal-body">
+				<TextControl
+					label={ __( 'Name', 'buddyboss' ) }
+					value={ name }
+					onChange={ setName }
+					placeholder={ __( 'Enter field set name', 'buddyboss' ) }
+					required
+				/>
+				<TextareaControl
+					label={ __( 'Description', 'buddyboss' ) }
+					value={ description }
+					onChange={ setDescription }
+					placeholder={ __( 'Optional description', 'buddyboss' ) }
+				/>
+				<RadioControl
+					label={ __( 'Repeater Set', 'buddyboss' ) }
+					help={ __( 'When enabled, users can add multiple sets of these fields to their profile.', 'buddyboss' ) }
+					selected={ isRepeater }
+					options={ [
+						{ label: __( 'Disabled', 'buddyboss' ), value: 'off' },
+						{ label: __( 'Enabled', 'buddyboss' ), value: 'on' },
+					] }
+					onChange={ setIsRepeater }
+				/>
+			</div>
 
-		wp.element.createElement(
-			'div',
-			{ className: 'bb-pf-modal-body' },
+			<div className="bb-pf-modal-footer">
+				{ /* Delete button (edit mode only, and only if can_delete). */ }
+				{ isEditing && fieldSet.can_delete && (
+					<Button
+						variant="primary"
+						isDestructive
+						className="bb-pf-modal-delete-btn bb-admin-button-danger"
+						onClick={ function () {
+							onDelete();
+						} }
+					>
+						{ __( 'Delete Field Set', 'buddyboss' ) }
+					</Button>
+				) }
 
-			wp.element.createElement( TextControl, {
-				label: __( 'Name', 'buddyboss' ),
-				value: name,
-				onChange: setName,
-				placeholder: __( 'Enter field set name', 'buddyboss' ),
-				required: true,
-			} ),
-
-			wp.element.createElement( TextareaControl, {
-				label: __( 'Description', 'buddyboss' ),
-				value: description,
-				onChange: setDescription,
-				placeholder: __( 'Optional description', 'buddyboss' ),
-			} ),
-
-			wp.element.createElement( RadioControl, {
-				label: __( 'Repeater Set', 'buddyboss' ),
-				help: __( 'When enabled, users can add multiple sets of these fields to their profile.', 'buddyboss' ),
-				selected: isRepeater,
-				options: [
-					{ label: __( 'Disabled', 'buddyboss' ), value: 'off' },
-					{ label: __( 'Enabled', 'buddyboss' ), value: 'on' },
-				],
-				onChange: setIsRepeater,
-			} )
-		),
-
-		wp.element.createElement(
-			'div',
-			{ className: 'bb-pf-modal-footer' },
-
-			// Delete button (edit mode only, and only if can_delete).
-			isEditing && fieldSet.can_delete && wp.element.createElement(
-				Button,
-				{
-					variant: 'primary',
-					isDestructive: true,
-					className: 'bb-pf-modal-delete-btn bb-admin-button-danger',
-					onClick: function () {
-						onDelete();
-					},
-				},
-				__( 'Delete Field Set', 'buddyboss' )
-			),
-
-			wp.element.createElement(
-				'div',
-				{ className: 'bb-pf-modal-footer-right' },
-				wp.element.createElement(
-					Button,
-					{
-						variant: 'secondary',
-						onClick: onClose,
-						disabled: isSaving,
-					},
-					__( 'Cancel', 'buddyboss' )
-				),
-				wp.element.createElement(
-					Button,
-					{
-						variant: 'primary',
-						onClick: handleSave,
-						isBusy: isSaving,
-						disabled: isSaving || ! name.trim(),
-					},
-					isSaving
-						? wp.element.createElement( Spinner, null )
-						: ( isEditing ? __( 'Save Changes', 'buddyboss' ) : __( 'Create Field Set', 'buddyboss' ) )
-				)
-			)
-		)
+				<div className="bb-pf-modal-footer-right">
+					<Button
+						variant="secondary"
+						onClick={ onClose }
+						disabled={ isSaving }
+					>
+						{ __( 'Cancel', 'buddyboss' ) }
+					</Button>
+					<Button
+						variant="primary"
+						onClick={ handleSave }
+						isBusy={ isSaving }
+						disabled={ isSaving || ! name.trim() }
+					>
+						{ isEditing ? __( 'Save Changes', 'buddyboss' ) : __( 'Create Field Set', 'buddyboss' ) }
+					</Button>
+				</div>
+			</div>
+		</Modal>
 	);
 }

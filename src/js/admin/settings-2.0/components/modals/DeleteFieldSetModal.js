@@ -15,7 +15,7 @@ import {
 	Spinner,
 	Modal,
 } from '@wordpress/components';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { deleteFieldGroup } from '../../utils/ajax';
 
@@ -75,68 +75,57 @@ export function DeleteFieldSetModal( { fieldSet, onClose, onDeleted, setToast } 
 			} );
 	}
 
-	return wp.element.createElement(
-		Modal,
-		{
-			title: __( 'Delete Field Set', 'buddyboss' ),
-			onRequestClose: onClose,
-			className: 'bb-pf-delete-fieldset-modal bb-admin-settings-modal',
-			shouldCloseOnClickOutside: false,
-		},
+	return (
+		<Modal
+			title={ __( 'Delete Field Set', 'buddyboss' ) }
+			onRequestClose={ onClose }
+			className="bb-pf-delete-fieldset-modal bb-admin-settings-modal"
+			shouldCloseOnClickOutside={ false }
+		>
+			<div className="bb-pf-delete-fieldset-modal__body bb-admin-settings-modal__body">
+				<div className="bb-admin-delete__warning">
+					<i className="bb-icons-rl bb-icons-rl-warning-circle"></i>
+					<div className="bb-admin-delete__warning-text">
+						<span className="bb-admin-delete__warning-title">
+							{ __( 'Warning', 'buddyboss' ) }
+						</span>
+						<span className="bb-admin-delete__warning-desc">
+							{ /* translators: %s: field set name */ }
+							{ sprintf(
+								__( 'Deleting "%s" will permanently remove the field set and all the fields within it.', 'buddyboss' ),
+								decodeEntities( fieldSet.name || '' )
+							) }
+						</span>
+					</div>
+				</div>
+				<p className="bb-pf-delete-fieldset-modal__description">
+					{ __( 'Any user data stored in these fields will also be permanently deleted. This action cannot be undone.', 'buddyboss' ) }
+				</p>
+				<CheckboxControl
+					label={ __( 'I understand this deletes the field set and all its fields.', 'buddyboss' ) }
+					checked={ isConfirmed }
+					onChange={ setIsConfirmed }
+					__nextHasNoMarginBottom
+				/>
+			</div>
 
-		wp.element.createElement(
-			'div',
-			{ className: 'bb-pf-delete-fieldset-modal__body bb-admin-settings-modal__body' },
-			wp.element.createElement(
-				'div',
-				{ className: 'bb-admin-delete__warning' },
-				wp.element.createElement( 'i', { className: 'bb-icons-rl bb-icons-rl-warning-circle' } ),
-				wp.element.createElement(
-					'div',
-					{ className: 'bb-admin-delete__warning-text' },
-					wp.element.createElement( 'span', { className: 'bb-admin-delete__warning-title' }, __( 'Warning', 'buddyboss' ) ),
-					wp.element.createElement( 'span', { className: 'bb-admin-delete__warning-desc' },
-						/* translators: %s: field set name */
-						wp.i18n.sprintf(
-							__( 'Deleting "%s" will permanently remove the field set and all the fields within it.', 'buddyboss' ),
-							decodeEntities( fieldSet.name || '' )
-						)
-					)
-				)
-			),
-			wp.element.createElement( 'p', { className: 'bb-pf-delete-fieldset-modal__description' },
-				__( 'Any user data stored in these fields will also be permanently deleted. This action cannot be undone.', 'buddyboss' )
-			),
-			wp.element.createElement( CheckboxControl, {
-				label: __( 'I understand this deletes the field set and all its fields.', 'buddyboss' ),
-				checked: isConfirmed,
-				onChange: setIsConfirmed,
-				__nextHasNoMarginBottom: true,
-			} )
-		),
-
-		wp.element.createElement(
-			'div',
-			{ className: 'bb-pf-delete-fieldset-modal__footer bb-admin-settings-modal__footer' },
-			wp.element.createElement(
-				Button,
-				{
-					variant: 'secondary',
-					onClick: onClose,
-					disabled: isDeleting,
-				},
-				__( 'Cancel', 'buddyboss' )
-			),
-			wp.element.createElement(
-				Button,
-				{
-					onClick: handleDelete,
-					isBusy: isDeleting,
-					disabled: ! isConfirmed || isDeleting,
-					className: 'bb-admin-button-danger'
-				},
-				__( 'Delete Field Set', 'buddyboss' )
-			)
-		)
+			<div className="bb-pf-delete-fieldset-modal__footer bb-admin-settings-modal__footer">
+				<Button
+					variant="secondary"
+					onClick={ onClose }
+					disabled={ isDeleting }
+				>
+					{ __( 'Cancel', 'buddyboss' ) }
+				</Button>
+				<Button
+					onClick={ handleDelete }
+					isBusy={ isDeleting }
+					disabled={ ! isConfirmed || isDeleting }
+					className="bb-admin-button-danger"
+				>
+					{ __( 'Delete Field Set', 'buddyboss' ) }
+				</Button>
+			</div>
+		</Modal>
 	);
 }
