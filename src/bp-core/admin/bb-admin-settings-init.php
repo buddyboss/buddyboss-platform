@@ -127,15 +127,24 @@ function bb_reverse_sync_components_to_features( $old_value, $new_value ) {
 	// Check each registered feature and sync its state from bp-active-components.
 	// bb_get_features() already returns full feature data keyed by ID, so use it directly.
 	foreach ( $registry->bb_get_features( array( 'status' => 'all' ) ) as $feature_id => $feature ) {
-		// Skip features with custom active callbacks — they manage their own state.
-		if ( ! empty( $feature['is_active_callback'] ) ) {
-			continue;
-		}
-
 		// Determine component IDs that correspond to this feature.
 		$component_ids = array( $feature_id );
 		if ( ! empty( $feature['components'] ) && is_array( $feature['components'] ) ) {
 			$component_ids = $feature['components'];
+		}
+
+		// Skip features that have no matching key in bp-active-components.
+		// This covers pure Settings 2.0 features (e.g. reactions) that don't
+		// map to a legacy component — there is nothing to derive state from.
+		$has_component_key = false;
+		foreach ( $component_ids as $component_id ) {
+			if ( array_key_exists( $component_id, $new_components ) || array_key_exists( $component_id, is_array( $old_value ) ? $old_value : array() ) ) {
+				$has_component_key = true;
+				break;
+			}
+		}
+		if ( ! $has_component_key ) {
+			continue;
 		}
 
 		// Feature is active if any of its components are active.
