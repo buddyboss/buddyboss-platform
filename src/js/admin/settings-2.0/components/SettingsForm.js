@@ -501,7 +501,7 @@ export function SettingsForm({ fields, values, onChange }) {
 						className="bb-admin-settings-field__manage-btn"
 						onClick={ function() {
 							if ( field.manage_url ) {
-								window.location.href = field.manage_url;
+								window.location.href = safeUrl( field.manage_url );
 							}
 						} }
 						disabled={ disabled }

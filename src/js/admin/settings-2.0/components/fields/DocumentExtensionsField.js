@@ -14,6 +14,7 @@ import { useState, useEffect, useRef, createPortal } from '@wordpress/element';
 import { Modal, Button, TextControl, TextareaControl, DropdownMenu, CheckboxControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { useMimeChecker } from '../../utils/mimeChecker';
+import { MimeCheckerPanel } from './MimeCheckerPanel';
 
 /**
  * Whether ReadyLaunch mode is enabled.
@@ -164,6 +165,13 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 	var [ localExtensionData, setLocalExtensionData ] = useState( function() {
 		return field.extension_data || {};
 	} );
+
+	// Sync local extension data when prop changes (e.g., after settings reload).
+	useEffect( function() {
+		if ( field.extension_data ) {
+			setLocalExtensionData( field.extension_data );
+		}
+	}, [ field.extension_data ] );
 
 	// Local working copy of toggle values inside manage modal.
 	var [ workingValues, setWorkingValues ] = useState( function() {
@@ -341,6 +349,16 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 		// Ensure extension starts with a dot.
 		if ( '.' !== extension.charAt( 0 ) ) {
 			extension = '.' + extension;
+		}
+
+		// Check for duplicate extension.
+		var isDuplicate = Object.keys( localExtensionData ).some( function( key ) {
+			return localExtensionData[ key ].extension &&
+				localExtensionData[ key ].extension.toLowerCase() === extension.toLowerCase();
+		} );
+
+		if ( isDuplicate ) {
+			return;
 		}
 
 		// Generate next key based on existing keys.
@@ -790,62 +808,10 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 						</div>
 
 						{ mimeChecker.isMimeCheckerOpen && (
-							<div className="bb-extension-modal__mime-checker">
-								<h4 className="bb-extension-modal__mime-checker-title">
-									{ __( 'Check MIME type', 'buddyboss' ) }
-								</h4>
-								<p className="bb-extension-modal__mime-checker-desc">
-									{ __( 'Upload a sample file and click \'Get MIME Type\' to view its MIME type.', 'buddyboss' ) }
-								</p>
-								<div className="bb-extension-modal__mime-checker-upload-row">
-									<input
-										type="file"
-										ref={ mimeChecker.fileInputRef }
-										className="bb-extension-modal__mime-checker-file-hidden"
-										onChange={ mimeChecker.handleFileSelect }
-									/>
-									<button
-										type="button"
-										className="bb-extension-modal__mime-checker-upload-btn"
-										onClick={ function() {
-											if ( mimeChecker.fileInputRef.current ) {
-												mimeChecker.fileInputRef.current.click();
-											}
-										} }
-									>
-										<i className="bb-icons-rl bb-icons-rl-upload" />
-										{ __( 'Upload File', 'buddyboss' ) }
-									</button>
-									<span className="bb-extension-modal__mime-checker-upload-name">
-										{ mimeChecker.selectedFileName || __( 'No file uploaded', 'buddyboss' ) }
-									</span>
-								</div>
-								<Button
-									variant="primary"
-									onClick={ mimeChecker.handleGetMimeType }
-									disabled={ mimeChecker.isMimeChecking }
-									className="bb-extension-modal__mime-checker-btn"
-								>
-									{ mimeChecker.isMimeChecking ? __( 'Checking...', 'buddyboss' ) : __( 'Get MIME Type', 'buddyboss' ) }
-								</Button>
-								{ mimeChecker.mimeCheckerResult && (
-									<div className="bb-extension-modal__mime-checker-result">
-										<span className="bb-extension-modal__mime-checker-result-label">
-											{ __( 'Detected MIME type:', 'buddyboss' ) }
-										</span>
-										<code className="bb-extension-modal__mime-checker-result-value">
-											{ mimeChecker.mimeCheckerResult }
-										</code>
-										<Button
-											variant="primary"
-											onClick={ handleUseMimeType }
-											className="bb-extension-modal__mime-checker-use-btn"
-										>
-											{ __( 'Use this MIME type', 'buddyboss' ) }
-										</Button>
-									</div>
-								) }
-							</div>
+							<MimeCheckerPanel
+								mimeChecker={ mimeChecker }
+								onUseMimeType={ handleUseMimeType }
+							/>
 						) }
 					</div>
 					<div className="bb-admin-settings-modal__footer bb-extension-modal__footer">
@@ -977,65 +943,13 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 						</div>
 
 						{ mimeChecker.isMimeCheckerOpen && (
-							<div className="bb-extension-modal__mime-checker">
-								<h4 className="bb-extension-modal__mime-checker-title">
-									{ __( 'Check MIME type', 'buddyboss' ) }
-								</h4>
-								<p className="bb-extension-modal__mime-checker-desc">
-									{ __( 'Upload a sample file and click \'Get MIME Type\' to view its MIME type.', 'buddyboss' ) }
-								</p>
-								<div className="bb-extension-modal__mime-checker-upload-row">
-									<input
-										type="file"
-										ref={ mimeChecker.fileInputRef }
-										className="bb-extension-modal__mime-checker-file-hidden"
-										onChange={ mimeChecker.handleFileSelect }
-									/>
-									<button
-										type="button"
-										className="bb-extension-modal__mime-checker-upload-btn"
-										onClick={ function() {
-											if ( mimeChecker.fileInputRef.current ) {
-												mimeChecker.fileInputRef.current.click();
-											}
-										} }
-									>
-										<i className="bb-icons-rl bb-icons-rl-upload" />
-										{ __( 'Upload File', 'buddyboss' ) }
-									</button>
-									<span className="bb-extension-modal__mime-checker-upload-name">
-										{ mimeChecker.selectedFileName || __( 'No file uploaded', 'buddyboss' ) }
-									</span>
-								</div>
-								<Button
-									variant="primary"
-									onClick={ mimeChecker.handleGetMimeType }
-									disabled={ mimeChecker.isMimeChecking }
-									className="bb-extension-modal__mime-checker-btn"
-								>
-									{ mimeChecker.isMimeChecking ? __( 'Checking...', 'buddyboss' ) : __( 'Get MIME Type', 'buddyboss' ) }
-								</Button>
-								{ mimeChecker.mimeCheckerResult && (
-									<div className="bb-extension-modal__mime-checker-result">
-										<span className="bb-extension-modal__mime-checker-result-label">
-											{ __( 'Detected MIME type:', 'buddyboss' ) }
-										</span>
-										<code className="bb-extension-modal__mime-checker-result-value">
-											{ mimeChecker.mimeCheckerResult }
-										</code>
-										<Button
-											variant="primary"
-											onClick={ function() {
-												setEditMimeType( mimeChecker.mimeCheckerResult );
-												mimeChecker.handleCloseMimeChecker();
-											} }
-											className="bb-extension-modal__mime-checker-use-btn"
-										>
-											{ __( 'Use this MIME type', 'buddyboss' ) }
-										</Button>
-									</div>
-								) }
-							</div>
+							<MimeCheckerPanel
+								mimeChecker={ mimeChecker }
+								onUseMimeType={ function() {
+									setEditMimeType( mimeChecker.mimeCheckerResult );
+									mimeChecker.handleCloseMimeChecker();
+								} }
+							/>
 						) }
 					</div>
 					<div className="bb-admin-settings-modal__footer bb-extension-modal__footer">

@@ -38,6 +38,11 @@ export function InputButtonField( { field, value, onChange, disabled } ) {
 	var [ errorMessage, setErrorMessage ] = useState( '' );
 	var [ warningMessage, setWarningMessage ] = useState( '' );
 
+	// Sync local state when value prop changes (e.g. settings reload).
+	useEffect( function() {
+		setInputValue( value || '' );
+	}, [ value ] );
+
 	// Abort in-flight request on unmount.
 	useEffect( function() {
 		return function() {
@@ -69,8 +74,9 @@ export function InputButtonField( { field, value, onChange, disabled } ) {
 		setErrorMessage( '' );
 		setWarningMessage( '' );
 
+		var ajaxAction = field.ajax_action || 'bb_media_giphy_connect';
 		var formData = new FormData();
-		formData.append( 'action', 'bb_media_giphy_connect' );
+		formData.append( 'action', ajaxAction );
 		formData.append( 'nonce', window.bbAdminData.ajaxNonce );
 		formData.append( 'connect_action', connected ? 'disconnect' : 'connect' );
 		formData.append( 'api_key', inputValue );

@@ -75,7 +75,7 @@ function bb_media_register_videos_panel_fields() {
 			$group_contexts[] = __( 'activity posts', 'buddyboss' );
 		}
 
-		if ( bp_is_active( 'messages' ) && true === bp_disable_group_messages() ) {
+		if ( bp_is_active( 'messages' ) && bp_disable_group_messages() ) {
 			$group_contexts[] = __( 'messages', 'buddyboss' );
 		}
 

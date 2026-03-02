@@ -357,7 +357,7 @@ class BB_Admin_Settings_Ajax {
 				}
 
 				// Include status if set (e.g. Connected/Not Connected badges).
-				if ( ! empty( $section['status'] ) ) {
+				if ( ! empty( $section['status'] ) && is_array( $section['status'] ) ) {
 					$formatted_section['status'] = array(
 						'type' => sanitize_key( $section['status']['type'] ?? 'info' ),
 						'text' => sanitize_text_field( $section['status']['text'] ?? '' ),
@@ -531,16 +531,7 @@ class BB_Admin_Settings_Ajax {
 			// For extension_data fields (e.g., video extensions), extract is_active from nested arrays.
 			if ( 'toggle_list' === ( $field['type'] ?? '' ) && is_array( $field_value ) ) {
 				if ( ! empty( $field['extension_data'] ) ) {
-					// Extension data fields store nested arrays with is_active key.
-					$toggle_values = array();
-					foreach ( $field_value as $key => $ext ) {
-						if ( is_array( $ext ) && isset( $ext['is_active'] ) ) {
-							$toggle_values[ $key ] = absint( $ext['is_active'] );
-						} else {
-							$toggle_values[ $key ] = absint( $ext );
-						}
-					}
-					$field_value = $toggle_values;
+					$field_value = $this->bb_extract_extension_toggle_values( $field_value );
 				} else {
 					$field_value = array_map( 'absint', $field_value );
 				}
@@ -548,15 +539,7 @@ class BB_Admin_Settings_Ajax {
 
 			// document_extensions: extract is_active from nested arrays (same pattern as toggle_list with extension_data).
 			if ( 'document_extensions' === ( $field['type'] ?? '' ) && is_array( $field_value ) ) {
-				$toggle_values = array();
-				foreach ( $field_value as $key => $ext ) {
-					if ( is_array( $ext ) && isset( $ext['is_active'] ) ) {
-						$toggle_values[ $key ] = absint( $ext['is_active'] );
-					} else {
-						$toggle_values[ $key ] = absint( $ext );
-					}
-				}
-				$field_value = $toggle_values;
+				$field_value = $this->bb_extract_extension_toggle_values( $field_value );
 			}
 
 			// Handle description_controls: read each control's value from DB (same storage as main options).
@@ -650,7 +633,7 @@ class BB_Admin_Settings_Ajax {
 				// Icon options for extension icon dropdown.
 				'icon_options'         => $field['icon_options'] ?? null,
 				// Manage link fields.
-				'manage_url'           => $field['manage_url'] ?? null,
+				'manage_url'           => ! empty( $field['manage_url'] ) ? esc_url( $field['manage_url'] ) : null,
 				'manage_label'         => $field['manage_label'] ?? null,
 				'manage_icon'          => $field['manage_icon'] ?? null,
 				// Input button fields (text input + action button, e.g. API key connect/disconnect).
@@ -658,7 +641,7 @@ class BB_Admin_Settings_Ajax {
 				'button_label'         => $field['button_label'] ?? null,
 				'is_connected'         => ! empty( $field['is_connected'] ),
 				// Status check fields (AJAX-triggered server-side checks, e.g. Direct Access).
-				'ajax_action'          => $field['ajax_action'] ?? null,
+				'ajax_action'          => ! empty( $field['ajax_action'] ) ? sanitize_key( $field['ajax_action'] ) : null,
 				'watch_field'          => $field['watch_field'] ?? null,
 				// Layout: full-width fields render without the label column.
 				'full_width'           => ! empty( $field['full_width'] ),
@@ -1201,6 +1184,30 @@ class BB_Admin_Settings_Ajax {
 		if ( $update_notoptions ) {
 			wp_cache_set( 'notoptions', $notoptions, 'options' );
 		}
+	}
+
+	/**
+	 * Extract is_active toggle values from extension data arrays.
+	 *
+	 * Normalizes nested extension arrays (which contain is_active, extension,
+	 * mime_type, etc.) into a flat key => 0|1 mapping for the React toggle list.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $field_value The extension data array.
+	 *
+	 * @return array Flattened toggle values keyed by extension ID.
+	 */
+	private function bb_extract_extension_toggle_values( $field_value ) {
+		$toggle_values = array();
+		foreach ( $field_value as $key => $ext ) {
+			if ( is_array( $ext ) && isset( $ext['is_active'] ) ) {
+				$toggle_values[ $key ] = absint( $ext['is_active'] );
+			} else {
+				$toggle_values[ $key ] = absint( $ext );
+			}
+		}
+		return $toggle_values;
 	}
 }
 

@@ -26,6 +26,7 @@ export function StatusCheckField( { field, values, disabled } ) {
 	var [ isChecking, setIsChecking ] = useState( false );
 	var [ result, setResult ] = useState( null );
 	var abortRef = useRef( null );
+	var timeoutRef = useRef( null );
 	var initialCheckDone = useRef( false );
 
 	/**
@@ -99,11 +100,17 @@ export function StatusCheckField( { field, values, disabled } ) {
 				} );
 		};
 
+		// Clear any pending timeout from a previous re-check.
+		if ( timeoutRef.current ) {
+			clearTimeout( timeoutRef.current );
+			timeoutRef.current = null;
+		}
+
 		// On re-checks, add a small delay to let auto-save complete first.
 		// The auto-save debounce is 1s, so 1.5s ensures the DB is updated
 		// before server-side checks that read from the DB (e.g., Direct Access).
 		if ( isRecheck ) {
-			setTimeout( doFetch, 1500 );
+			timeoutRef.current = setTimeout( doFetch, 1500 );
 		} else {
 			doFetch();
 		}
@@ -117,6 +124,9 @@ export function StatusCheckField( { field, values, disabled } ) {
 		}
 
 		return function() {
+			if ( timeoutRef.current ) {
+				clearTimeout( timeoutRef.current );
+			}
 			if ( abortRef.current ) {
 				abortRef.current.abort();
 			}

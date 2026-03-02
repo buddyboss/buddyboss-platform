@@ -57,7 +57,7 @@ function bb_media_register_access_controls_panel_fields() {
 			'default'           => '',
 			'pro_only'          => true,
 			'order'             => 10,
-			'sanitize_callback' => 'bb_sanitize_access_control_field',
+			'sanitize_callback' => 'bb_media_sanitize_access_control',
 		)
 	);
 
@@ -74,7 +74,7 @@ function bb_media_register_access_controls_panel_fields() {
 			'default'           => '',
 			'pro_only'          => true,
 			'order'             => 20,
-			'sanitize_callback' => 'bb_sanitize_access_control_field',
+			'sanitize_callback' => 'bb_media_sanitize_access_control',
 		)
 	);
 
@@ -91,7 +91,7 @@ function bb_media_register_access_controls_panel_fields() {
 			'default'           => '',
 			'pro_only'          => true,
 			'order'             => 30,
-			'sanitize_callback' => 'bb_sanitize_access_control_field',
+			'sanitize_callback' => 'bb_media_sanitize_access_control',
 		)
 	);
 

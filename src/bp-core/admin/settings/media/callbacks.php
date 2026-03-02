@@ -238,10 +238,14 @@ function bb_media_sanitize_extensions( $value ) {
 
 	if ( $is_toggle_only ) {
 		// Determine the correct option name from key prefix.
-		$first_key   = key( $value );
-		$option_name = ( 0 === strpos( $first_key, 'bb_vid' ) )
-			? 'bp_video_extensions_support'
-			: 'bp_document_extensions_support';
+		$first_key = key( $value );
+		if ( 0 === strpos( $first_key, 'bb_vid' ) ) {
+			$option_name = 'bp_video_extensions_support';
+		} elseif ( 0 === strpos( $first_key, 'bb_doc' ) ) {
+			$option_name = 'bp_document_extensions_support';
+		} else {
+			return array();
+		}
 
 		// Merge toggle states into existing stored data.
 		$existing = bp_get_option( $option_name, array() );
@@ -433,7 +437,7 @@ function bb_media_ajax_check_symlink_status() {
 	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce already verified above.
 	if ( isset( $_POST['watch_field'] ) && 'bp_media_symlink_support' === sanitize_text_field( wp_unslash( $_POST['watch_field'] ) ) ) {
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce already verified above.
-		$is_symlinks_enabled = ! empty( $_POST['watch_value'] );
+		$is_symlinks_enabled = ! empty( sanitize_text_field( wp_unslash( $_POST['watch_value'] ) ) );
 	} else {
 		$is_symlinks_enabled = function_exists( 'bb_enable_symlinks' ) && bb_enable_symlinks();
 	}
@@ -528,6 +532,7 @@ function bb_media_ajax_check_ffmpeg_status() {
 				),
 			)
 		);
+		return;
 	}
 
 	// FFmpeg class exists — check if the binary is accessible.
@@ -551,6 +556,7 @@ function bb_media_ajax_check_ffmpeg_status() {
 					),
 				)
 			);
+			return;
 		}
 	}
 
@@ -600,6 +606,7 @@ function bb_media_ajax_check_direct_access() {
 				),
 			)
 		);
+		return;
 	}
 
 	$get_sample_local_urls  = array();
@@ -716,6 +723,12 @@ function bb_media_create_test_upload() {
 	);
 	$attachment_id = wp_insert_attachment( $attachment, $upload_file['file'] );
 
+	if ( is_wp_error( $attachment_id ) ) {
+		// Clean up the uploaded file if attachment insert failed.
+		wp_delete_file( $upload_file['file'] );
+		return $result;
+	}
+
 	if ( ! is_wp_error( $attachment_id ) ) {
 		require_once ABSPATH . 'wp-admin/includes/image.php';
 		$attachment_data = wp_generate_attachment_metadata( $attachment_id, $upload_file['file'] );
@@ -810,7 +823,27 @@ function bb_media_get_extension_data( $option_name ) {
 function bb_media_format_icon_class( $icon_value ) {
 	$render_icon = apply_filters( 'bb_document_icon_class', $icon_value );
 
-	return ( strpos( $render_icon, 'bb-icons-rl' ) !== false )
+	return ( false !== strpos( $render_icon, 'bb-icons-rl' ) )
 		? 'bb-icons-rl ' . $render_icon
 		: 'bb-icon-l ' . $render_icon;
+}
+
+/**
+ * Sanitize access control field data.
+ *
+ * Access control values are nested arrays of role/type/value mappings.
+ * Each entry is sanitized to ensure only safe strings and integers are stored.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed $value The access control data to sanitize.
+ *
+ * @return array Sanitized access control array.
+ */
+function bb_media_sanitize_access_control( $value ) {
+	if ( ! is_array( $value ) ) {
+		return array();
+	}
+
+	return map_deep( $value, 'sanitize_text_field' );
 }
