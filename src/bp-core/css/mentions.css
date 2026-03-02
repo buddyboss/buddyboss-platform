@@ -1,0 +1,137 @@
+.atwho-view {
+	background: #fff;
+	border: 1px solid rgb(204, 204, 204);
+	box-shadow: 0 0 5px rgba(204, 204, 204, 0.25), 0 0 1px #fff;
+	color: #d84800;
+	display: none;
+	font-family: inherit;
+	margin-top: 18px;
+	position: absolute;
+	top: 0;
+	z-index: 1000; /* >999 for wp-admin */
+	border-radius: 4px;
+	overflow: auto;
+}
+
+/* stylelint-disable */
+/* rtl:ignore */
+.atwho-view {
+	left: 0;
+}
+/* stylelint-enable */
+
+.atwho-view ul {
+	list-style: none;
+	margin: 5px 5px 5px 0;
+	padding: 0;
+	max-height: 250px;
+	overflow: auto;
+}
+
+.atwho-view ul::-webkit-scrollbar {
+	width: 6px;
+}
+
+.atwho-view ul::-webkit-scrollbar-thumb {
+	background-color: #a4acb4;
+	border-radius: 10px;
+}
+
+.atwho-view ul li {
+	box-sizing: content-box;
+	cursor: pointer;
+	display: block;
+	font-size: 14px;
+	min-height: 20px;
+	line-height: 20px;
+	margin: 0;
+	overflow: hidden;
+	padding: 8px 10px;
+}
+
+.atwho-view ul li.list-loader {
+	color: #92949d;
+}
+
+.atwho-view ul li.list-loader:before {
+	content: "\ef30";
+	display: inline-block;
+	font-family: "bb-icons";/* stylelint-disable-line */
+	font-size: 22px;
+	margin-right: 8px;
+	font-weight: 400;
+	animation: spin 2s infinite linear;
+}
+
+.atwho-view ul li .username {
+	display: inline-block;
+	color: #92949d;
+	max-width: 100px;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
+.atwho-view img {
+	border-radius: 100%;
+	float: left;
+	height: 20px;
+	margin: 0 8px 0 0;
+	width: 20px;
+}
+
+.atwho-view strong {
+	background: #efefef;
+	font-weight: 700;
+}
+
+.atwho-view .username strong {
+	color: #d54e21;
+}
+
+.atwho-view small {
+	color: #aaa;
+	float: left;
+	font-size: 13px;
+	font-weight: 500;
+	margin: 0 10px 0 0;
+	max-width: 130px;
+}
+
+.atwho-view .cur {
+	background: rgba(239, 239, 239, 0.5);
+}
+
+@media (max-width: 900px) {
+
+	.atwho-view img {
+		float: left;
+		margin: 0 10px 0 0;
+	}
+}
+
+@media (max-width: 400px) {
+
+	.atwho-view ul li {
+		font-size: 16px;
+		line-height: 23px;
+		padding: 13px;
+	}
+
+	.atwho-view ul li img {
+		height: 30px;
+		margin-top: -5px;
+		width: 30px;
+	}
+
+	.atwho-view ul li .username {
+		display: inline-block;
+		margin: -10px 0 0;
+		padding: 10px 0;
+	}
+
+	.atwho-view ul li small {
+		display: inline-block;
+		margin-left: 20px;
+	}
+}

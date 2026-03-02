@@ -1,0 +1,51 @@
+@import "../../base/variables";
+@import "../../base/mixins";
+@import "./code_mirror";
+
+/* General Styling */
+.bb-rl-activity-page {
+	width: 100%;
+	max-width: 680px;
+	margin: 0 auto;
+	padding: var(--bb-rl-space-400) 0;
+}
+
+.bb-rl-activity-wrap {
+
+	&:has(.bb-rl-secondary-container) {
+		display: flex;
+		justify-content: center;
+		gap: var(--bb-rl-space-400);
+		margin: 0 var(--bb-rl-space-300);
+
+		> .bb-rl-content-wrapper {
+			width: 680px;
+			max-width: 100%;
+			padding-left: 0;
+			padding-right: 0;
+		}
+
+		.bb-rl-secondary-container {
+			padding: var(--bb-rl-space-700) 0 0;
+		}
+
+		@media screen and (max-width: 1200px) {
+			flex-direction: column;
+
+			> .bb-rl-content-wrapper {
+				margin: auto;
+			}
+		}
+
+		@media screen and (max-width: $sm) {
+			margin: 0;
+		}
+	}
+}
+
+@import "./post_form.scss";
+@import "./activity_loader.scss";
+@import "./activity_feed.scss";
+@import "./media_theater.scss";
+@import "./media_modals.scss";
+@import "./activity_comment.scss";

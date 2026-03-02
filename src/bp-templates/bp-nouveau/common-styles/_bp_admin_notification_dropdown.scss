@@ -1,0 +1,61 @@
+#wpadminbar #wp-admin-bar-bp-notifications-default {
+	width: 300px;
+	max-height: calc(90vh - 50px);
+	overflow: auto;
+
+	> li {
+		display: inline-block;
+		width: 100%;
+		padding: 5px 0;
+
+		&#wp-admin-bar-notification-view-all {
+			text-align: center;
+		}
+
+	}
+
+	.notification-avatar {
+		float: left;
+		width: 40px;
+		margin-top: 4px;
+
+		.member-status {
+			display: none;
+		}
+
+		> a {
+			height: auto;
+			padding: 0;
+
+			img {
+				max-width: 36px;
+			}
+
+			> i {
+				display: none;
+			}
+
+		}
+
+	}
+
+	.notification-content {
+		float: right;
+		width: calc(100% - 60px);
+
+		.bb-full-link > a {
+			opacity: 1;
+			padding: 0;
+			height: auto;
+			position: static;
+			white-space: normal;
+			line-height: 1.5;
+		}
+
+		.posted {
+			line-height: 1.4;
+		}
+
+	}
+
+}

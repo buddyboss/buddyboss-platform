@@ -1,0 +1,652 @@
+.bb-recaptcha-settings {
+
+	.bp-admin-card {
+
+		.bb-inactive-field {
+			pointer-events: none;
+			user-select: none;
+			opacity: 0.3;
+		}
+	}
+
+	#bb_recaptcha_versions {
+
+		.bb-recaptcha-status {
+			margin-left: 15px;
+		}
+
+		.notes-hidden-header {
+
+			> th {
+				display: none;
+
+				+ td {
+					padding-left: 0;
+					padding-right: 0;
+				}
+			}
+		}
+
+		.hidden-header {
+
+			> th {
+				opacity: 0;
+				visibility: hidden;
+				padding: 0;
+				margin: 0;
+			}
+
+			&:not(.field-button) > td {
+				padding: 0;
+				margin: 0;
+			}
+
+			.show-full-width {
+				margin-left: -210px;
+				word-break: break-word;
+
+				@media (max-width: 782px) {
+					margin-left: 0;
+				}
+			}
+
+			.bb-success-section {
+				margin-left: 0;
+				margin-bottom: 15px;
+			}
+
+			.bb-error-section {
+				margin-left: 0;
+				margin-bottom: 25px;
+			}
+
+			.bb-recaptcha-prompt {
+				display: inline-block;
+				margin-bottom: 10px;
+				line-height: 1.5;
+			}
+		}
+
+		input[type="text"],
+		input[type="email"],
+		select,
+		input[type="password"] {
+			min-width: 50%;
+		}
+
+		select {
+			max-width: none;
+		}
+
+		.password-toggle {
+			position: relative;
+			display: inline-block;
+			width: 50%;
+
+			@media (max-width: 782px) {
+				width: 100%;
+			}
+
+			.bb-hide-pw {
+				position: absolute;
+				right: 0;
+				top: 0;
+				height: 100%;
+				width: 30px;
+				border: 0;
+				padding: 0;
+				background: none;
+				box-shadow: none;
+
+				.bb-icon {
+					font-size: 16px;
+					line-height: 1;
+				}
+			}
+
+			input[type="text"],
+			input[type="password"] {
+				padding-right: 30px;
+				width: 100%;
+			}
+
+			input[type="text"] + .bb-hide-pw .bb-icon {
+
+				&::before {
+					content: "\ee6a";
+				}
+			}
+
+		}
+
+		.checkbox-wrap {
+
+			input[type="checkbox"] {
+				margin-top: 0;
+			}
+
+			+ .checkbox-wrap {
+				margin-top: 15px;
+			}
+		}
+
+		.bb-bottom-notice {
+			text-align: center;
+		}
+
+		.bp-hello-recaptcha {
+
+			.bp-hello-title h2 {
+				color: #1d2327;
+				font-size: 1.5em;
+				margin: 0.5em 0;
+				padding-bottom: 0;
+				border-bottom: none;
+				font-weight: 600;
+			}
+
+			.bp-hello-content {
+				height: auto;
+				padding: 0 23px;
+				min-height: 180px;
+				max-height: calc(100vh - 320px);
+				margin-bottom: 62px;
+				display: flex;
+				align-items: center;
+			}
+
+			.bb-popup-buttons {
+				position: absolute;
+				bottom: 0;
+				padding: 15px;
+				text-align: right;
+				width: calc(100% - 30px);
+				margin: 0 -23px;
+				border-top: 1px solid var(--bp-hello-color-secondary);
+				background-color: #f0f0f1;
+			}
+
+			@media screen and (orientation: landscape) and (max-height: 480px) {
+
+				.bp-hello-content {
+					min-height: 110px;
+				}
+
+			}
+
+			.bp-hello-recaptcha-content-container {
+				padding: 15px 0;
+				margin: 0 auto;
+				text-align: center;
+
+				.verifying_token {
+					display: inline-block;
+				}
+
+				.grecaptcha-badge {
+					position: static !important;
+					margin: 0 auto;
+				}
+			}
+
+		}
+
+		#bp-hello-container.bp-hello-recaptcha {
+			top: 50%;
+			bottom: initial;
+			transform: translateY(-50%);
+			margin-top: 32px;
+
+			.button-primary {
+				color: #fff;
+				margin-right: 10px;
+
+				@media screen and (max-width: 480px) {
+					margin-right: 0;
+				}
+
+			}
+
+		}
+	}
+
+	.bb-success-section {
+		padding: 10px;
+		margin-left: -210px;
+		background: #edfaef;
+		color: #008a20;
+		line-height: 1.5;
+		border: 1px solid #68de7c;
+		border-radius: 4px;
+	}
+
+	.bp-hello-recaptcha {
+
+		.bp-hello-recaptcha-content-container {
+
+			.recaptcha-status-icon {
+				max-width: 56px;
+				margin-bottom: 16px;
+			}
+
+			> p {
+				font-weight: 600;
+				color: #50575e;
+				line-height: 1;
+			}
+
+			.verified_token,
+			.verifying_token {
+				font-weight: 600;
+
+				p {
+					margin-top: 0;
+					color: #50575e;
+					line-height: 1;
+				}
+			}
+
+			.verifying_token {
+
+				p {
+					display: flex;
+					align-items: center;
+				}
+
+				&.loading {
+
+					p::after {
+						content: "";
+						display: inline-block;
+						box-sizing: border-box;
+						width: 20px;
+						height: 20px;
+						border-radius: 50%;
+						border: 2px solid #dcdcde;
+						border-top-color: #787c82;
+						font-size: 20px;
+						line-height: 1;
+						margin-left: 10px;
+						text-align: center;
+						vertical-align: middle;
+						animation: spin 2s infinite linear;
+					}
+				}
+			}
+		}
+
+		&#bp-hello-container {
+
+			.verified_token,
+			.verifying_token {
+
+				p {
+					font-size: 16px;
+				}
+			}
+
+			.bp-hello-recaptcha-content-container {
+
+				> p {
+					font-size: 16px;
+				}
+			}
+		}
+	}
+
+	#bb_recaptcha_design {
+
+		.bb-grid-style-outer {
+			display: flex;
+
+			.bb-badge-position,
+			.bb-size,
+			.bb-theme {
+				display: flex;
+				flex-direction: column;
+				margin-right: 15px;
+				text-align: center;
+				width: 184px;
+
+				input[type="radio"] {
+					height: 0;
+					opacity: 0;
+					visibility: hidden;
+				}
+
+				.option {
+					display: flex;
+					color: #999;
+					flex-direction: column;
+					position: relative;
+
+					&:before {
+						background: #f9f9f9;
+						border: 2px solid #ccd0d4;
+						border-radius: 4px;
+						box-sizing: border-box;
+						content: "";
+						display: flex;
+						height: 64px;
+						margin-bottom: 5px;
+						transition: all 0.3s ease;
+						width: 100%;
+					}
+
+					&:after {
+						background-size: contain !important;
+						content: "";
+						border-radius: 3px;
+						bottom: 30px;
+						left: 6px;
+						position: absolute;
+						right: 6px;
+						top: 6px;
+						image-rendering: -webkit-optimize-contrast;
+					}
+
+					&.opt-light:after {
+						background: url(../images/reCAPTCHA-light.png) no-repeat center;
+					}
+
+					&.opt-dark:after {
+						background: url(../images/reCAPTCHA-dark.png) no-repeat center;
+					}
+
+					&.opt-normal {
+
+						&.opt-size-light:after {
+							background: url(../images/reCAPTCHA-light.png) no-repeat center;
+						}
+
+						&.opt-size-dark:after {
+							background: url(../images/reCAPTCHA-dark.png) no-repeat center;
+						}
+					}
+
+					&.opt-compact {
+
+						&.opt-size-light:after {
+							background: url(../images/reCAPTCHA-light-compact.png) no-repeat center;
+						}
+
+						&.opt-size-dark:after {
+							background: url(../images/reCAPTCHA-dark-compact.png) no-repeat center;
+						}
+					}
+
+					&.opt-bottom-right:after {
+						background: url(../images/reCAPTCHA-bottom-right.png) no-repeat center;
+					}
+
+					&.opt-bottom-left:after {
+						background: url(../images/reCAPTCHA-bottom-left.png) no-repeat center;
+					}
+
+					&.opt-inline:after {
+						background: url(../images/reCAPTCHA-inline.png) no-repeat center;
+					}
+
+					span {
+						color: #999;
+						font-size: 14px;
+						line-height: 2;
+					}
+				}
+
+				input[type="radio"]:checked:not(:disabled) + .option {
+
+					&:before {
+						border-color: #2370b1;
+					}
+
+				}
+
+				input[type="radio"] {
+
+					&:disabled + .option {
+
+						&:before {
+							border-color: #dcdcde;
+						}
+					}
+				}
+
+			}
+
+			.bb-size {
+
+				.option {
+
+					&:before {
+						height: 96px;
+					}
+				}
+			}
+
+			.bb-badge-position {
+				width: 120px;
+
+				.option {
+
+					&:before {
+						height: 120px;
+						background-color: #f0f0f1;
+					}
+				}
+			}
+
+		}
+	}
+
+	#bb_recaptcha_settings {
+
+		.bb_login_require {
+
+			.copy-toggle {
+				width: 60%;
+				margin-top: 10px;
+				display: flex;
+				align-items: center;
+
+				.copy-toggle-text {
+					margin-right: 5px;
+					text-wrap: nowrap;
+					white-space: nowrap;
+					overflow: hidden;
+					text-overflow: ellipsis;
+				}
+
+				&.bb-url-not-allowed {
+
+					color: #f00;
+
+					.copy-toggle-text {
+						color: #f00;
+					}
+				}
+
+				.bb-recaptcha-copy-button {
+					font-size: 12px;
+					color: #999;
+					position: relative;
+					cursor: pointer;
+
+					&[data-balloon][data-balloon-pos="up"]:after {
+						pointer-events: none;
+						opacity: 0;
+						transition: all 0.18s ease-out 0.18s;
+						font-weight: 500;
+						font-size: 13px;
+						letter-spacing: -0.24px;
+						background: rgba(18, 43, 70, 0.95);
+						border-radius: 4px;
+						box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.22);
+						color: #fff;
+						content: attr(data-balloon);
+						line-height: 1.3;
+						padding: 7px 15px;
+						white-space: nowrap;
+						z-index: 10;
+						display: block;
+						bottom: 100%;
+						left: 50%;
+						margin-bottom: 5px;
+						transform: translate(-50%, 10px);
+						transform-origin: top;
+						position: absolute;
+					}
+
+					&[data-balloon][data-balloon-pos="up"]:before {
+						background: no-repeat url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http://www.w3.org/2000/svg%22%20width%3D%2236px%22%20height%3D%2212px%22%3E%3Cpath%20fill%3D%22var(--bb-tooltip-background)%22%20transform%3D%22rotate(0)%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E");/* stylelint-disable-line */
+						background-size: 100% auto;
+						width: 18px;
+						height: 6px;
+						opacity: 0;
+						pointer-events: none;
+						-webkit-transition: all 0.18s ease-out 0.18s;
+						transition: all 0.18s ease-out 0.18s;
+						content: "";
+						display: block;
+						bottom: 100%;
+						left: 50%;
+						transform: translate(-50%, 10px);
+						transform-origin: top;
+						position: absolute;
+					}
+
+					&:hover:after,
+					&[data-balloon][data-balloon-pos="up"]:hover:after {
+						pointer-events: auto;
+						opacity: 1;
+						transform: translate(-50%, 0);
+					}
+
+					&:hover:before,
+					&[data-balloon][data-balloon-pos="up"]:hover:before {
+						pointer-events: auto;
+						opacity: 1;
+						transform: translate(-50%, 0);
+					}
+				}
+
+				.bb-recaptcha-copy-button i {
+					font-size: 20px;
+				}
+
+				&.bp-hide {
+					display: none !important;
+				}
+			}
+		}
+	}
+}
+
+.bb-success-section,
+.bb-error-section {
+
+	&.bb-recaptcha-errors,
+	&.bb-recaptcha-success {
+
+		span {
+			display: inline-flex;
+			align-items: center;
+
+			&::before {
+				font-family: bb-icons;
+				font-style: normal;
+				font-weight: 200;
+				speak: none;
+				display: inline-block;
+				text-decoration: inherit;
+				width: 16px;
+				height: 16px;
+				margin-right: 8px;
+				text-align: center;
+				font-variant: normal;
+				text-transform: none;
+				line-height: 16px;
+				-webkit-font-smoothing: antialiased;
+				-moz-osx-font-smoothing: grayscale;
+				font-size: 16px;
+			}
+		}
+	}
+}
+
+.bb-success-section {
+
+	&.bb-recaptcha-success {
+
+		span {
+
+			&::before {
+				content: "\e876";
+			}
+		}
+	}
+}
+
+.bb-error-section {
+
+	&.bb-recaptcha-errors {
+		background-color: #fcf0f1;
+		color: #d63638;
+		border-color: #ffabaf;
+
+		span {
+
+			&::before {
+				content: "\ee65";
+			}
+		}
+	}
+}
+
+#bp-hello-container {
+
+	&.bp-hello-recaptcha {
+
+		.bp-hello-header {
+			background-color: #f6f7f7;
+			border-color: #dcdcde;
+		}
+	}
+}
+
+.section-bb_recaptcha_versions {
+
+	.recaptcha-version-fields {
+
+		input[type="radio"] {
+			margin-left: 16px;
+
+			&:first-of-type {
+				margin-left: 0;
+			}
+		}
+	}
+}
+
+.bp-hello-recaptcha {
+
+	.bp-hello-close {
+
+		.button {
+			background-color: transparent;
+			border: 0;
+			color: #a7aaad;
+			height: auto;
+			min-height: auto;
+			line-height: 1;
+			font-size: 28px;
+			padding: 0;
+			margin: 0;
+		}
+	}
+
+	.recaptcha-verify-icon {
+		max-width: 80px;
+		margin-bottom: 1rem;
+	}
+}

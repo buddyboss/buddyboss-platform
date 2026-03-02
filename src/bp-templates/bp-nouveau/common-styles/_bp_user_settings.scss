@@ -1,0 +1,697 @@
+// BP User settings screens
+// @version 3.0.0
+
+// 1. Settings Global
+// 1. General (email/password change)
+// 2. notifications
+// 3. Notification Subscription
+// 4. Settings
+
+// Settings Global
+
+/*__ Settings Global __*/
+
+// required extra specificity to override later table settings
+.buddypress.settings {
+
+	.profile-settings.bp-tables-user {
+
+		select {
+			width: 100%;
+		}
+	}
+
+}
+
+#activate-page .bp-messages {
+	margin-bottom: 20px;
+}
+
+
+// General
+
+/*__ General __*/
+
+
+// notifications
+.notification_info {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	margin-bottom: 30px;
+
+	.notification_learn_more {
+		display: none;
+	}
+
+	.notification_type {
+		display: -webkit-box;
+		display: -ms-flexbox;
+		display: flex;
+		width: 33.33%;
+
+		&:not(:last-child) {
+			margin-right: 20px;
+		}
+
+		.bb-notification-column-2 & {
+			width: calc(50% - 10px);
+		}
+
+	}
+
+	.notification_type_icon {
+		display: -webkit-box;
+		display: -ms-flexbox;
+		display: flex;
+		-webkit-box-align: center;
+		-ms-flex-align: center;
+		align-items: center;
+		padding-right: 20px;
+
+		.bb-icon {
+			font-size: 40px;
+		}
+
+	}
+
+	.notification_type .notification_type_info {
+
+		h3,
+		p {
+			margin-bottom: 0;
+		}
+
+	}
+
+	@media screen and (max-width: 900px) {
+
+		flex-direction: column;
+		margin-bottom: 15px;
+
+		.notification_learn_more {
+			display: block;
+			margin-bottom: 0;
+			font-size: 15px;
+			font-weight: 500;
+
+			a > span {
+				font-weight: 400;
+			}
+
+			&.show {
+				margin-bottom: 15px;
+			}
+
+		}
+
+		.notification_type {
+			display: none;
+			width: 100%;
+			margin-bottom: 20px;
+			padding-bottom: 22px;
+			border-bottom: 1px solid #ccc;
+
+			&:last-of-type {
+				border-bottom: 0;
+				padding-bottom: 0;
+			}
+
+			.bb-notification-column-2 & {
+				width: 100%;
+				margin-right: 0;
+			}
+
+			&.show {
+				display: flex;
+			}
+
+		}
+
+	}
+
+}
+
+.main-notification-settings {
+	font-size: 16px;
+	margin-bottom: 0;
+
+	&:first-of-type {
+		margin-bottom: 15px;
+	}
+
+	thead {
+		background-color: $buttons-background;
+
+		.title {
+			padding-left: 20px;
+			border-left: 1px solid $primary-grey;
+			font-weight: 400;
+			width: 100%;
+		}
+
+		.app {
+			border-right: 1px solid $primary-grey;
+			padding-right: 20px;
+		}
+
+	}
+
+	.title {
+		vertical-align: middle;
+	}
+
+	th {
+		min-width: 95px;
+		padding: 10px;
+		vertical-align: middle;
+		border-top: 1px solid $primary-grey;
+		border-bottom: 1px solid $primary-grey;
+	}
+
+	.disabled * {
+		opacity: 0.6;
+		pointer-events: none;
+
+		input[type="checkbox"] {
+			opacity: 0;
+		}
+
+	}
+
+	input[type="checkbox"]:disabled {
+		opacity: 0;
+	}
+
+	tbody {
+
+		.title {
+			font-size: 14px;
+			color: #a3a5a9;
+			letter-spacing: 0.5px;
+			text-transform: uppercase;
+			font-weight: 500;
+		}
+
+		td {
+			border-bottom: 1px solid $primary-grey;
+			vertical-align: middle;
+			padding: 10px;
+
+			&:first-child {
+				padding-left: 0;
+				width: 100%;
+			}
+
+			&.notification_no_option {
+				text-align: center;
+			}
+
+		}
+
+		.notification_heading td {
+			border-bottom: 0;
+			padding: 15px 0 0 0;
+		}
+
+	}
+
+	.email,
+	.web,
+	.app {
+		min-width: 95px;
+	}
+
+	.email:last-child {
+		min-width: 48px;
+	}
+
+	#buddypress .bb-bp-settings-content & {
+
+		.email:last-child {
+
+			label {
+
+				@media screen and (min-width: 900px) {
+					font-size: 0;
+					line-height: 20px;
+				}
+			}
+		}
+	}
+
+	@media screen and (min-width: 901px) {
+
+		.bb-mobile-setting {
+			display: none;
+		}
+
+	}
+
+	@media screen and (max-width: 900px) {
+		display: block;
+
+		.bb-mobile-setting {
+			position: relative;
+			-webkit-box-flex: 0;
+			-ms-flex: 0 0 auto;
+			flex: 0 0 auto;
+			margin-left: 10px;
+
+			.bb-mobile-setting-anchor {
+				float: right;
+				cursor: pointer;
+				background: #fff;
+				border: 1px solid #d7dce5;
+				border-radius: 3px;
+				padding: 3px 10px;
+
+				&:after {
+					content: "\e826";
+					color: #d7dce5;
+					font-size: 22px;
+					font-family: "bb-icons";/* stylelint-disable-line */
+					display: inline-block;
+					vertical-align: middle;
+				}
+			}
+
+			ul {
+				position: absolute;
+				top: 35px;
+				right: 0;
+				display: none;
+				margin: 0;
+				padding: 15px 5px 0;
+				width: 150px;
+				list-style: none;
+				background: #fff;
+				box-sizing: border-box;
+				box-shadow: 0 0 6px rgba(0, 0, 0, 0.05), 0 6px 10px rgba(0, 0, 0, 0.1);
+				border-radius: 4px;
+
+				li {
+					width: 100%;
+					padding: 0 10px 10px;
+
+					&:last-child {
+						padding-bottom: 15px;
+					}
+				}
+			}
+
+			&.active ul {
+				display: block;
+				z-index: 1;
+			}
+
+		}
+
+		tbody,
+		thead,
+		tr {
+			display: block;
+		}
+
+		tbody td {
+			display: none;
+
+			&:first-child {
+				display: -webkit-box;
+				display: -ms-flexbox;
+				display: flex;
+				-webkit-box-pack: justify;
+				-ms-flex-pack: justify;
+				justify-content: space-between;
+				-webkit-box-align: center;
+				-ms-flex-align: center;
+				align-items: center;
+			}
+
+		}
+
+		thead th {
+			display: none;
+
+			&.title {
+				display: -webkit-box;
+				display: -ms-flexbox;
+				display: flex;
+				-webkit-box-pack: justify;
+				-ms-flex-pack: justify;
+				justify-content: space-between;
+				-webkit-box-align: center;
+				-ms-flex-align: center;
+				align-items: center;
+			}
+
+		}
+
+	}
+
+}
+
+.subnav_tab {
+
+	.subnav {
+		display: flex;
+		list-style: none;
+		margin: 25px 0 30px 0;
+
+		li {
+			margin: 0 25px 0 0;
+			padding: 0;
+
+			a {
+				font-size: 14px;
+				font-weight: 500;
+				text-decoration: none;
+				border-bottom: 1px solid transparent;
+				padding: 0 0 5px 0;
+
+				&:focus-visible {
+					outline: 1px solid $blue;
+				}
+
+			}
+
+			&:not(:last-child) {
+				margin: 0 25px 0 0;
+			}
+
+			&.selected a {
+				border-bottom-color: $blue;
+			}
+
+		}
+	}
+}
+
+/*__ notifications __*/
+
+/*__ Notification Subscription __*/
+
+.bb-accordion {
+	border: 1px solid $bp-border-color;
+	border-radius: 4px;
+	margin-bottom: 25px;
+
+	.bb-accordion_head {
+		display: flex;
+		position: relative;
+		padding: 16px 22px;
+	}
+
+	.bb-accordion_panel {
+		border-top: 1px solid $bp-border-color;
+	}
+
+	.bb-accordion_title {
+
+		@include font-size(18);
+		font-weight: 600;
+		padding-right: 42px;
+		margin: 0;
+	}
+
+	.bb-accordion_panel {
+
+		.bbp-pagination {
+			display: flex;
+			justify-content: flex-end;
+			margin: 15px 22px 22px 0;
+			float: none;
+			width: auto;
+		}
+
+	}
+
+	.bb-accordion_trigger {
+
+		.buddypress .buddypress-wrap & {
+
+			@include center-horizontal-vert();
+			color: $light-text;
+			position: absolute;
+			top: 10px;
+			right: 25px;
+			background-color: transparent;
+			border: 0;
+			border-radius: 4px;
+			padding: 0;
+			height: 32px;
+			width: 32px;
+
+			i {
+				font-size: 24px;
+			}
+
+			&:focus-visible {
+				outline: 1px solid $blue;
+			}
+
+		}
+	}
+
+	@media screen and (max-width: 767px) {
+		border: 0;
+		margin-bottom: 15px;
+		border-radius: 0;
+
+		&.is_closed {
+			border-bottom: 1px solid $bp-border-color;
+
+			.bb-accordion_head {
+				border-bottom: 0;
+			}
+		}
+
+		.bb-accordion_head {
+			padding: 14px 0;
+		}
+
+		.bb-accordion_trigger {
+
+			.buddypress .buddypress-wrap & {
+				right: 12px;
+			}
+		}
+
+		.subscription-items {
+			padding: 15px 0 0 0;
+		}
+	}
+
+}
+
+.subscription-items {
+	list-style: none;
+	margin: 0;
+	padding: 10px 12px;
+
+	li {
+		position: relative;
+		border-radius: 4px;
+
+		&:focus-within,
+		&:hover {
+			background-color: $light-grey;
+		}
+	}
+
+	.subscription-item_anchor {
+		display: flex;
+		align-items: center;
+		padding: 12px 10px;
+		width: 100%;
+		text-decoration: none;
+		box-sizing: border-box;
+	}
+
+	.subscription-item_image {
+		height: 40px;
+		margin-right: 12px;
+		position: relative;
+
+		&:before {
+			content: "";
+			position: absolute;
+			inset: 0;
+			box-shadow: inset 0 0 1.6875px rgba(0, 0, 0, 0.08);
+			border-radius: 4px;
+		}
+
+		img {
+			border-radius: 4px;
+			height: 40px;
+			width: 40px;
+			object-fit: cover;
+		}
+	}
+
+	[data-type="topic"] & .subscription-item_image img {
+		border-radius: 50%;
+	}
+
+	.subscription-item_detail {
+		width: calc(100% - 98px);
+		margin-right: 12px;
+
+		.subscription-item_title {
+
+			@include font-size(14);
+			display: block;
+			font-weight: 500;
+			line-height: 1.5;
+			white-space: nowrap;
+			max-width: 100%;
+			overflow: hidden;
+			text-overflow: ellipsis;
+
+			a {
+				color: currentColor;
+			}
+		}
+
+		.subscription-item_meta {
+
+			@include font-size(13);
+			line-height: 1.5;
+			color: $light-text;
+			display: block;
+			white-space: nowrap;
+			max-width: 100%;
+			overflow: hidden;
+			text-overflow: ellipsis;
+
+			strong {
+				font-weight: 500;
+			}
+		}
+	}
+
+	.subscription-item_remove {
+
+		.buddypress .buddypress-wrap & {
+
+			@include center-horizontal-vert();
+			color: $light-text;
+			background-color: transparent;
+			padding: 0;
+			border: 0;
+			height: 28px;
+			width: 28px;
+			border-radius: 4px;
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
+			right: 15px;
+
+			i {
+				font-size: 20px;
+				display: flex;
+				align-items: center;
+			}
+
+			&:focus,
+			&:hover {
+				background-color: $white;
+
+				i {
+					color: $black;
+				}
+			}
+
+			&.is_loading {
+				pointer-events: none;
+
+				i:before {
+					content: "\ef30";
+					animation: spin 2s infinite linear;
+					display: inline-block;
+				}
+
+			}
+		}
+	}
+
+	> p {
+
+		@include font-size(14);
+		margin: 0;
+		padding: 5px 10px;
+	}
+}
+
+.subscription-items-loader {
+
+	&.is_loading {
+
+		.subscription-items_loading {
+			display: flex;
+			align-items: center;
+			padding: 12px 10px;
+
+			.subscription-items-image_loading {
+				height: 40px;
+				width: 40px;
+				margin-right: 12px;
+				border-radius: 4px;
+			}
+
+			.subscription-items-text_loading {
+				height: 14px;
+				flex: 1;
+				max-width: 160px;
+				border-radius: 100px;
+			}
+		}
+
+	}
+
+}
+
+/*__ Notification Subscription __*/
+
+/*__ Settings __*/
+
+.password-toggle {
+
+	#buddypress &,
+	body & {
+		position: relative;
+		display: inline-block;
+		width: 100%;
+
+		> input {
+			padding-right: 35px !important;
+			width: 100% !important;
+		}
+
+		.bb-hide-pw {
+			position: absolute;
+			right: 5px;
+			top: 0;
+			height: 100%;
+			width: 30px;
+			border: 0;
+			padding: 0;
+			background: none !important;
+			box-shadow: none;
+			cursor: pointer;
+
+			.bb-icon {
+				font-size: 16px;
+				line-height: 1;
+				color: $dark-grey;
+				font-weight: 400;
+			}
+		}
+
+		.bb-hide-pw.bb-show-pass .bb-icon::before {
+			content: "\ee6a";
+		}
+	}
+}
+
+/*__ Settings __*/

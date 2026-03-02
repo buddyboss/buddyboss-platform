@@ -1,0 +1,85 @@
+{
+	"name": "buddypress/buddypress",
+	"description": "BuddyPress adds community features to WordPress. Member Profiles, Activity Streams, Direct Messaging, Notifications, and more!",
+	"type": "wordpress-plugin",
+	"keywords": [
+		"activity",
+		"community",
+		"friends",
+		"groups",
+		"messaging",
+		"notifications",
+		"profiles",
+		"social network"
+	],
+	"homepage": "https://buddypress.org",
+	"license": "GPL-2.0+",
+	"authors": [ {
+		"name": "BuddyPress Community",
+		"homepage": "https://buddypress.org/about/"
+	} ],
+	"support": {
+		"forum": "https://buddypress.org/support/",
+		"docs": "https://codex.buddypress.org/",
+		"issues": "https://buddypress.trac.wordpress.org/",
+		"rss": "https://buddypress.org/feed/",
+		"source": "https://buddypress.trac.wordpress.org/browser/",
+		"wiki": "https://codex.buddypress.org/"
+	},
+	"require": {
+		"composer/installers": "~1.0",
+		"php": ">=5.3.0",
+		"php-ffmpeg/php-ffmpeg": "^0.16.0",
+		"maennchen/zipstream-php": "^2.1",
+		"caseproof/ground-level-mothership": "2.2.1",
+		"caseproof/ground-level-in-product-notifications": "*"
+	},
+	"require-dev": {
+	  "symfony/var-dumper": "^4.2",
+	  "phpunit/phpunit": "6.1.0",
+	  "dealerdirect/phpcodesniffer-composer-installer": "*",
+	  "phpcompatibility/phpcompatibility-wp": "^2.1",
+	  "squizlabs/php_codesniffer": "^3.4.0",
+	  "wp-coding-standards/wpcs": "*",
+	  "humbug/php-scoper": "^0.17.5"
+	},
+	"scripts": {
+		"test": "vendor/bin/phpunit",
+		"test-ld": "TEST_LEARNDASH=yes vendor/bin/phpunit --testsuite=learndash",
+		"lint-php": "vendor/bin/phpcs -s",
+		"lint-php-fix": "vendor/bin/phpcbf",
+		"lint-js": "grunt jsvalidate jshint",
+		"lint-css": "grunt stylelint",
+		"lint": ["@lint-php", "@lint-js", "@lint-css"],
+		"scoper": [
+			"rm -rf vendor",
+			"rm -rf scoped_vendor",
+			"composer install --no-dev",
+			"php-scoper add-prefix vendor includes/Library/Composer/Src --output-dir=scoped_vendor --prefix BuddyBossPlatform",
+			"rm -rf vendor",
+			"mv scoped_vendor/vendor vendor/",
+			"cp -r scoped_vendor/includes/Library/Composer/Src/* includes/Library/Composer",
+			"rm -rf scoped_vendor",
+			"composer dumpautoload --optimize",
+			"php bin/bb-scoper-prefixer.php"
+		]
+	},
+	"config": {
+		"platform-check": false,
+		"allow-plugins": {
+			"composer/installers": true,
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		}
+	},
+	"autoload": {
+		"classmap": [
+			"includes/"
+		]
+	},
+	"repositories": {
+		"caseproof": {
+		"type": "composer",
+		"url": "https://pkgs.cspf.co"
+		}
+	}
+}

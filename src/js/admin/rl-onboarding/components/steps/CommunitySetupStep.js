@@ -1,0 +1,92 @@
+import { useState, useEffect } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
+import { BaseStepLayout } from '../BaseStepLayout';
+import { DynamicStepRenderer } from '../DynamicStepRenderer';
+import { getInitialFormData } from '../../../utils/formDefaults';
+
+export const CommunitySetupStep = ({
+    stepData,
+    onNext,
+    onPrevious,
+    onSkip,
+    currentStep,
+    totalSteps,
+    skipProgressCount = 0,
+    onAutoSave,
+    savedData = {},
+    allStepData = {}
+}) => {
+    const [errors, setErrors] = useState({});
+
+    // Get step options from window.bbRlOnboarding
+    const stepOptions = window.bbRlOnboarding?.stepOptions?.community_setup || {};
+    
+    const [formData, setFormData] = useState(() => getInitialFormData(stepOptions, savedData));
+
+    const handleFormChange = (newFormData) => {
+        setFormData(newFormData);
+
+        // Clear any validation errors
+        setErrors({});
+    };
+
+    const validateForm = () => {
+        const newErrors = {};
+
+        // Check required fields
+        Object.entries(stepOptions).forEach(([key, config]) => {
+            if (config.required && (!formData[key] || formData[key].trim() === '')) {
+                newErrors[key] = config.label
+                    ? __(`${config.label} is required`, 'buddyboss')
+                    : __('This field is required', 'buddyboss');
+            }
+        });
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
+    const handleNext = async () => {
+        if (!validateForm()) {
+            return;
+        }
+
+        if (onNext) {
+            return await onNext(formData);
+        }
+    };
+
+    return (
+        <BaseStepLayout
+            stepData={stepData}
+            onNext={handleNext}
+            onPrevious={onPrevious}
+            onSkip={onSkip}
+            isFirstStep={currentStep === 1} // Skip splash screen
+            isLastStep={currentStep === totalSteps - skipProgressCount - 1}
+            currentStep={currentStep}
+            totalSteps={totalSteps}
+            formData={formData}
+            allStepData={allStepData}
+        >
+            <DynamicStepRenderer
+                stepKey="community_setup"
+                stepOptions={stepOptions}
+                initialData={formData}
+                onChange={handleFormChange}
+                onAutoSave={onAutoSave}
+                allStepData={allStepData}
+            />
+
+            {Object.keys(errors).length > 0 && (
+                <div className="bb-rl-form-errors">
+                    {Object.entries(errors).map(([field, message]) => (
+                        <p key={field} className="bb-rl-error-message">
+                            {message}
+                        </p>
+                    ))}
+                </div>
+            )}
+        </BaseStepLayout>
+    );
+};

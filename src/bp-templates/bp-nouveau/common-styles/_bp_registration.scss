@@ -1,0 +1,253 @@
+// Registration Screen
+// Styles the registration index.php form and elements.
+// @version 3.0.0
+
+.register-page {
+
+	.register-section {
+
+		@include box-model();
+	}
+
+	.signup-form {
+		margin-top: $marg-lrg;
+
+		.default-profile {
+
+			input {
+				margin-bottom: $marg-lrg;
+			}
+		}
+
+		label,
+		legend {
+			margin: $marg-sml 0 0;
+		}
+
+		// profile extra element wrapper
+		.editfield {
+			margin: $marg-med 0;
+
+			fieldset {
+				border: 0;
+				padding: 0;
+
+				legend {
+					margin: 0 0 5px;
+					text-indent: 0;
+				}
+			}
+
+			.field-visibility-settings {
+				padding: $pad-sml 0;
+
+				fieldset {
+					margin: $marg-sml 0;
+				}
+			}
+		} // editfield
+
+		p.field-visibility-settings-header {
+			margin: 10px 0;
+		}
+
+		#signup-avatar img {
+			margin: 0 $marg-med $marg-sml 0;
+		}
+
+		.password-entry,
+		.password-entry-confirm {
+			border: 1px solid $bp-border-color;
+		}
+
+		.blog-details {
+			margin-top: 25px;
+
+			h2 {
+				margin-bottom: 10px;
+			}
+		}
+	} // close .signup-form
+
+	.register-privacy-info {
+		margin: 15px 0 0;
+	}
+
+} // close .register-page
+
+// Flex layout containers for registration sections
+
+@include medium-up() {
+
+	.buddypress-wrap {
+
+		.register-page {
+
+			.layout-wrap {
+				display: flex;
+				flex-flow: row wrap;
+				justify-content: space-around;
+
+				.default-profile {
+					flex: 1 100%;
+					min-width: 0;
+					//padding-right: $pad-lrg;
+				}
+
+				.blog-details {
+					flex: 1 100%;
+					min-width: 0;
+					//padding-left: $pad-lrg;
+				}
+			}
+
+			.submit {
+				clear: both;
+			}
+
+		}
+	}
+}
+
+// have we got profiles fields to factor in,
+// if so we'll adjust the child item elements.
+
+@include medium-up() {
+
+	.buddypress-wrap.extended-default-reg {
+
+		.register-page {
+
+			.default-profile {
+				flex: 1 100%;
+				min-width: 0;
+				//padding-right: $pad-med;
+			}
+
+			.extended-profile {
+				flex: 1 100%;
+				min-width: 0;
+				//padding-left: $pad-med;
+			}
+
+			.blog-details {
+				flex: 1 100%;
+				min-width: 0;
+			}
+		}
+	}
+}
+
+
+body.register {
+
+	#page #primary .entry-header {
+		text-align: center;
+	}
+
+	#page #primary .entry-header,
+	.buddypress-wrap {
+
+		@include medium-lrg-up() {
+			max-width: 460px;
+			margin-left: auto;
+			margin-right: auto;
+		}
+	}
+
+	.registration-popup {
+		background: #fff;
+		padding: 30px;
+		text-align: left;
+		min-height: 400px;
+		max-width: 650px;
+		margin: 40px auto;
+		position: relative;
+	}
+
+	.registration-popup .mfp-close {
+		color: #000;
+	}
+
+	.registration-popup .mfp-close:focus,
+	.registration-popup .mfp-close:hover {
+		background: transparent;
+	}
+
+}
+
+#buddypress #signup-form {
+
+	input.error {
+		border-color: $warn;
+		border-width: 2px;
+	}
+
+	label.error {
+		display: none !important;
+	}
+}
+
+.bs-bp-container-reg .buddypress-wrap #email-strength-result {
+	border-style: solid;
+	border-width: 1px;
+	display: none;
+	font-weight: 700;
+	margin: 10px 0;
+	margin-bottom: 10px;
+	padding: 0.7em;
+	text-align: center;
+	width: auto;
+}
+
+.bs-bp-container-reg .buddypress-wrap #email-strength-result.mismatch {
+	font-weight: 400;
+	background-color: #e0e1e1;
+	border-color: #e0e1e1;
+	border-radius: 3px;
+	font-size: 14px;
+}
+
+.bs-bp-container-reg .buddypress-wrap #email-strength-result.show {
+	font-weight: 400;
+	color: #fff;
+	border-radius: 3px;
+	font-size: 14px;
+	display: block;
+}
+
+.bs-bp-container-reg .buddypress-wrap #email-strength-result.error,
+#email-strength-result.bad {
+	background-color: #ef3e46;
+	border-color: #ef3e46;
+	color: #fff;
+}
+
+.bs-bp-container-reg .bp-feedback + .register-page {
+	margin-top: 15px;
+}
+
+.bb-password-wrap {
+	position: relative;
+
+	a.bb-toggle-password {
+		color: rgba(18, 43, 70, 0.5);
+		position: absolute;
+		right: 0;
+		top: 0;
+		height: 100%;
+		width: 50px;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		text-decoration: none !important;
+	}
+
+	.bb-show-pass {
+
+		.bb-icon-eye:before {
+			content: "\ee6a";
+			font-family: 'bb-icons';/* stylelint-disable-line */
+		}
+	}
+}

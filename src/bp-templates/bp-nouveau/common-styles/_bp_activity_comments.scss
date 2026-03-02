@@ -1,0 +1,608 @@
+// BP activity comment entries in response to activity loop entries
+// @version 3.0.0
+.buddypress-wrap,
+.bb-media-model-wrapper {
+
+	.activity-comments {
+		clear: both;
+		margin: 0 5%;
+		position: relative;
+		width: auto;
+
+		ul {
+			clear: both;
+			list-style: none;
+			margin: 0;
+			padding: 0;
+
+			li {
+				border-bottom: 0;
+				padding: $pad-med 0 0;
+
+				&:not(.detached-comment-item) {
+					margin-left: 0;
+
+					@media screen and (max-width: 560px) {
+						margin-left: 0;
+					}
+
+				}
+
+				.bb-media-length-1 .bb-activity-media-elem .entry-img img {
+					max-width: 200px;
+					height: auto;
+					max-height: 200px;
+					object-fit: cover;
+				}
+
+				.bb-media-length-3,
+				.bb-media-length-2 {
+					display: flex;
+					flex-wrap: nowrap;
+					gap: 2px;
+
+					.act-grid-1-2,
+					.act-grid-1-1 {
+						flex: auto;
+						max-width: 156px;
+					}
+
+					.bb-activity-media-elem .entry-img {
+						padding-top: 0;
+						display: inline-block;
+
+						img {
+							position: static;
+							width: 150px;
+							height: 150px;
+							object-fit: cover;
+							min-width: auto;
+						}
+					}
+
+					@media screen and (max-width: 544px) {
+						flex-flow: wrap;
+					}
+				}
+
+				@media screen and (max-width: 560px) {
+
+					.bb-media-length-1 .bb-activity-media-elem.media-activity {
+						min-width: auto;
+					}
+
+				}
+
+			}
+
+			li:first-child {
+				border-top: 0;
+			}
+
+			li:last-child {
+				margin-bottom: 0;
+			}
+		} // close ul
+
+		> ul > li > ul {
+			margin-left: 5%;
+		}
+
+		div.acomment-avatar {
+			width: auto;
+			margin-top: 7px;
+			flex-shrink: 0;
+
+			img {
+				border-width: 1px;
+				float: left;
+				max-width: none;
+				max-width: 32px;
+				object-fit: cover;
+				image-rendering: -webkit-optimize-contrast; // To solve blurry image issue in chrome
+			}
+		}
+
+		.acomment_inner {
+			display: flex;
+
+			.acomment-content_block {
+				background-color: $light-grey;
+				padding: $marg-sml $marg-med;
+				border-radius: $block-radius-inner;
+				margin-bottom: $marg-xsml;
+				min-width: 170px;
+				position: relative;
+			}
+		}
+
+		.acomment-display {
+			display: inline-flex;
+			position: relative;
+			padding-right: 34px;
+
+			&.bp-hide {
+				display: none;
+			}
+		}
+
+		.acomment-meta,
+		.acomment-content p {
+
+			@include font-size(14);
+		}
+
+		.acomment-meta {
+			color: $dark-grey;
+			padding-left: 2%;
+		}
+
+		.acomment-content {
+
+			p {
+				margin-bottom: 0.5em;
+				word-break: break-word;
+
+				&:last-child {
+					margin-bottom: 0;
+				}
+
+				&:empty {
+					min-height: 1em;
+				}
+
+				a {
+					word-break: break-all;
+				}
+			}
+
+			.bb-activity-video-wrap,
+			.bb-activity-media-wrap {
+				margin: 15px 0;
+			}
+
+		}
+
+		.acomment-options {
+			float: left;
+			margin: $marg-sml 0 $marg-sml $marg-lrg;
+
+			a {
+				color: $light-text;
+
+				@include font-size(14);
+
+				&:focus,
+				&:hover {
+					color: inherit;
+				}
+			}
+
+		} // close .acomment-options
+
+		.activity-attached-gif-container {
+
+			.gif-player {
+				display: flex;
+				max-width: 200px;
+
+				video {
+					max-width: 200px;
+					height: 150px;
+				}
+
+				.gif-icon {
+					padding: 0;
+				}
+			}
+		}
+
+		.bb-activity-video-wrap .bb-activity-video-elem {
+			min-width: 245px;
+		}
+
+		.bb-activity-video-wrap:not(.bb-video-length-1) {
+			flex-wrap: nowrap;
+
+			.act-grid-1-1,
+			.act-grid-1-2 {
+
+				&.bb-activity-video-elem {
+					flex: auto;
+					min-width: 200px;
+					max-width: 200px;
+
+					.bb-item-cover-wrap {
+						padding-top: 82.56%;
+					}
+				}
+			}
+
+			@media screen and (max-width: 1260px) and (min-width: 1080px) {
+
+				.has-sidebar.activity-sidebar-left & {
+					flex-wrap: wrap;
+				}
+			}
+
+			@media screen and (max-width: 960px) and (min-width: 768px) {
+
+				.has-sidebar & {
+					flex-wrap: wrap;
+				}
+			}
+
+			@media screen and (max-width: 544px) {
+				flex-wrap: wrap;
+			}
+		}
+
+		.bb-activity-media-wrap.ac-document {
+			flex-flow: column;
+		}
+
+		.bb-activity-media-elem.document-activity {
+			width: 380px;
+
+			.document-preview-wrap {
+				height: 170px;
+			}
+
+			@media screen and (max-width: 670px) {
+				width: 250px;
+
+				.document-audio-wrap ~ .document-action-wrap,
+				.document-preview-wrap ~ .document-action-wrap {
+					bottom: unset;
+					top: 21px;
+				}
+
+				.document-description-wrap .document-detail-wrap {
+					padding: 0 !important;
+				}
+
+				.document-description-wrap .document-detail-wrap .document-title {
+					width: calc(100% - 5px);
+				}
+
+				.document-preview-wrap {
+					height: 120px;
+				}
+
+				.document-description-wrap {
+
+					.document-helper-text > span:first-of-type {
+						display: none;
+					}
+
+					.document-detail-wrap .document-description {
+						width: 100%;
+					}
+
+					.document-detail-wrap .document-helper-text-click {
+						margin-left: 0;
+					}
+				}
+			}
+
+			@media screen and (max-width: 550px) {
+				width: 200px;
+
+				.document-description-wrap {
+					padding-left: 0;
+					padding-right: 0;
+				}
+			}
+
+			@media screen and (max-width: 460px) {
+				width: 160px;
+			}
+		}
+
+		.bp-generic-meta.action {
+			background: none;
+
+			// if button element in use
+			button {
+
+				@include font-size(14);
+				font-weight: 400;
+				text-transform: none;
+			}
+
+			.generic-button > a:hover {
+				text-decoration: underline !important;
+			}
+
+			a.bp-like-button:before {
+				display: none;
+			}
+
+			a.bp-like-button.bb-reaction-migration-inprogress {
+
+				&:before {
+					content: "";
+					display: block;
+					position: absolute;
+					bottom: 100%;
+					left: 50%;
+					top: inherit;
+					min-width: auto;
+					transition: none;
+				}
+
+				&:after {
+					width: 180px;
+					white-space: normal;
+					left: 0;
+					transform: none;
+					transition: none;
+				}
+			}
+
+			a.has-emotion {
+
+				> i,
+				> img {
+					display: none;
+				}
+			}
+		}
+
+		.show-all {
+
+			button {
+
+				@include font-size(14);
+				text-decoration: underline;
+				padding-left: $pad-sml;
+
+				span {
+					text-decoration: none;
+				}
+
+				&:hover,
+				&:focus {
+
+					span {
+						color: $blue;
+					}
+				}
+			}
+		}
+
+		.comment-item.suspended-comment-item {
+
+			> .item-avatar > a[href=""] {
+				position: relative;
+				pointer-events: none;
+				opacity: 0.7;
+			}
+
+			.acomment-content {
+				pointer-events: none;
+				opacity: 0.7;
+			}
+
+			.acomment-meta {
+
+				> .author-name[href=""] {
+					pointer-events: none;
+					opacity: 0.7;
+				}
+
+				.activity-time-since {
+					display: none;
+				}
+
+			}
+		}
+
+		li.comment-item {
+			position: relative;
+		}
+
+		li > .acomment-display {
+			position: relative;
+		}
+
+		.comment-reactions {
+
+			.activity-state-reactions {
+				background-color: $white;
+				position: absolute;
+				bottom: -10px;
+				right: 0;
+				margin-right: 10px;
+				display: flex;
+				align-items: center;
+				padding: 2px;
+				border-radius: 24px;
+				cursor: pointer;
+				box-shadow: 0 0 6px -2px rgba(0, 0, 0, 0.3);
+				transform: translateX(39px);
+			}
+
+			.comment-reactions_count {
+				font-size: 13px;
+				margin: 0 4px 0 2px;
+			}
+
+			.reactions_item > i:before {
+				margin-left: 0;
+				margin-right: 0;
+			}
+		}
+
+	} // close .activity-comments
+
+	.bb-media-info-section {
+
+		.activity-comments {
+
+			.bb-activity-media-elem.document-activity {
+				width: 240px;
+
+				.document-preview-wrap {
+					height: 115px;
+				}
+
+				.document-description-wrap .document-detail-wrap {
+
+					.document-helper-text-click {
+						margin-left: -2px;
+					}
+
+					.document-helper-text,
+					.document-description,
+					.document-extension-description {
+						font-size: 11px;
+					}
+				}
+
+				.document-description-wrap .document-detail-wrap .document-description {
+					margin-right: 3px;
+				}
+			}
+
+			.bb-activity-video-wrap:not(.bb-video-length-1) {
+				flex-wrap: wrap;
+			}
+
+			@media screen and (min-width: 1024px), screen and (max-width: 550px) {
+
+				.bb-activity-media-elem.document-activity {
+					width: 220px;
+				}
+
+				&.threaded-level-3,
+				&.threaded-level-4 {
+
+					ul > li > ul > li > ul > li {
+
+						.bb-activity-media-elem.document-activity {
+							width: 145px;
+
+							.document-preview-wrap {
+								height: 100px;
+							}
+
+							.document-audio-wrap ~ .document-action-wrap,
+							.document-preview-wrap ~ .document-action-wrap {
+								bottom: unset;
+								top: 21px;
+							}
+
+							.document-description-wrap {
+								padding-left: 0;
+								padding-right: 0;
+
+								.document-helper-text > span:first-of-type {
+									display: none;
+								}
+
+								.document-detail-wrap .document-description {
+									width: 100%;
+								}
+
+								.document-detail-wrap .document-helper-text-click {
+									margin-left: 0;
+								}
+							}
+
+							.document-description-wrap .document-detail-wrap .document-title {
+								width: calc(100% - 5px);
+							}
+
+							.document-detail-wrap {
+								padding: 0 !important;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	.activity-comments,
+	.bb-modal-activity-footer {
+
+		.ac-form {
+
+			&.has-gif,
+			&.has-content,
+			&.has-media {
+
+				.ac-reply-content .ac-submit-wrap {
+					opacity: 1;
+					pointer-events: initial;
+				}
+
+			}
+
+			&.media-uploading .ac-reply-content .ac-submit-wrap,
+			.ac-reply-content .ac-submit-wrap {
+				opacity: 0.4;
+				pointer-events: none;
+			}
+
+		}
+	}
+
+	.activity-comments .acomment-foot-actions {
+		display: flex;
+		align-items: center;
+
+		.generic-button {
+			margin: 10px 0;
+		}
+
+		.activity-time-since {
+			color: $light-text;
+			margin-left: 5px;
+		}
+	}
+
+	.activity-comments > .ac-form {
+		display: none;
+	}
+
+	.activity-item.has-comments .activity-comments > .ac-form {
+		display: block;
+	}
+
+	.activity-list .activity-item .activity-comments .bp-generic-meta.action a.bp-like-button .like-count {
+		margin-left: 0;
+	}
+
+	// Activity li.mini Comments
+
+	.mini {
+
+		.activity-comments {
+			clear: both;
+			margin-top: 0;
+		}
+
+	}
+
+} // close .buddypress-wrap
+
+#buddypress.buddypress-wrap .bb-activity-media-elem .bb_more_dropdown.open {
+	overflow: initial;
+}
+
+// Single Activity Comment Entry View
+body.activity-permalink {
+
+	.activity-comments {
+		background: none;
+		width: auto;
+
+		> ul {
+			padding: 0 $pad-sml 0 $pad-med;
+		}
+
+	}
+
+} //close .activity-permalink

@@ -1,0 +1,10 @@
+.bb-rl-assignment {
+
+	a {
+
+		@include bb-rl-button;
+		@include bb-rl-button--tertiary-link;
+		@include bb-rl-button--small;
+		margin-bottom: var(--bb-rl-space-300);
+	}
+}
