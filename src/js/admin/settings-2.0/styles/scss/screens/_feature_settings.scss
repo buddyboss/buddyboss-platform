@@ -1340,6 +1340,13 @@
         background: $bb-background-base-color;
     }
 
+    .bb-extension-modal__error {
+        color: $bb-error-color;
+        font-size: 13px;
+        line-height: 18px;
+        padding: 0 16px;
+    }
+
     .bb-admin-settings-modal__footer,
     .bb-extension-modal__footer {
         border-radius: 0 0 $bb-border-radius-2xl $bb-border-radius-2xl;

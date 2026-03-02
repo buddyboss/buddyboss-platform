@@ -181,7 +181,7 @@ function bb_media_register_documents_panel_fields() {
 			'extension_data'    => bb_media_get_document_extension_data(),
 			'icon_options'      => bb_media_get_extension_icon_options(),
 			'default'           => array(),
-			'sanitize_callback' => 'bb_media_sanitize_extensions',
+			'sanitize_callback' => 'bb_media_sanitize_document_extensions',
 			'order'             => 70,
 		)
 	);

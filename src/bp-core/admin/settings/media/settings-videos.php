@@ -193,7 +193,7 @@ function bb_media_register_videos_panel_fields() {
 			'type'              => 'toggle_list',
 			'options'           => bb_media_get_video_extension_options(),
 			'default'           => array(),
-			'sanitize_callback' => 'bb_media_sanitize_extensions',
+			'sanitize_callback' => 'bb_media_sanitize_video_extensions',
 			'allow_add'         => true,
 			'add_button_label'  => __( 'Add Extension', 'buddyboss' ),
 			'extension_data'    => bb_media_get_video_extension_data(),

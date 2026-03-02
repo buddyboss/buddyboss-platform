@@ -39,6 +39,7 @@ export function ExtensionListField( { field, value, onChange, disabled, sanitize
 	const [ newExtension, setNewExtension ] = useState( '' );
 	const [ newDescription, setNewDescription ] = useState( '' );
 	const [ newMimeType, setNewMimeType ] = useState( '' );
+	const [ modalError, setModalError ] = useState( '' );
 
 	// MIME Checker (shared hook).
 	var mimeChecker = useMimeChecker();
@@ -109,6 +110,7 @@ export function ExtensionListField( { field, value, onChange, disabled, sanitize
 		} );
 
 		if ( isDuplicate ) {
+			setModalError( __( 'This extension already exists.', 'buddyboss' ) );
 			return;
 		}
 
@@ -223,6 +225,7 @@ export function ExtensionListField( { field, value, onChange, disabled, sanitize
 		setNewExtension( '' );
 		setNewDescription( '' );
 		setNewMimeType( '' );
+		setModalError( '' );
 		mimeChecker.resetMimeState();
 		setIsModalOpen( false );
 	};
@@ -313,13 +316,21 @@ export function ExtensionListField( { field, value, onChange, disabled, sanitize
 					shouldCloseOnClickOutside={ false }
 				>
 					<div className="bb-extension-modal__body">
+						{ modalError && (
+							<div className="bb-extension-modal__error">
+								{ modalError }
+							</div>
+						) }
 						<div className="bb-extension-modal__field">
 							<label className="bb-extension-modal__label">
 								{ __( 'Extension', 'buddyboss' ) }
 							</label>
 							<TextControl
 								value={ newExtension }
-								onChange={ setNewExtension }
+								onChange={ function( val ) {
+									setNewExtension( val );
+									setModalError( '' );
+								} }
 								placeholder={ __( 'Enter an extension (e.g., .extension)', 'buddyboss' ) }
 								__nextHasNoMarginBottom
 							/>

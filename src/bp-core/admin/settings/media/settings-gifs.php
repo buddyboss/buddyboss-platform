@@ -18,8 +18,8 @@ defined( 'ABSPATH' ) || exit;
  */
 function bb_media_register_gifs_panel_fields() {
 
-	// Determine GIPHY connection status for section heading badge.
-	$is_giphy_connected = function_exists( 'bb_check_valid_giphy_api_key' ) && bb_check_valid_giphy_api_key();
+	// Determine GIPHY connection status for section heading badge (admin only to avoid frontend HTTP calls).
+	$is_giphy_connected = is_admin() && function_exists( 'bb_check_valid_giphy_api_key' ) && bb_check_valid_giphy_api_key();
 
 	// -------------------------------------------------------------------------
 	// SECTION: GIF Settings

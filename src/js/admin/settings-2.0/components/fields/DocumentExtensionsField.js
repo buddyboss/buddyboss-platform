@@ -184,6 +184,7 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 	var [ newDescription, setNewDescription ] = useState( '' );
 	var [ newMimeType, setNewMimeType ] = useState( '' );
 	var [ newIcon, setNewIcon ] = useState( 'bb-icon-file' );
+	var [ modalError, setModalError ] = useState( '' );
 
 	// Edit extension popup state.
 	var [ isEditOpen, setIsEditOpen ] = useState( false );
@@ -315,6 +316,7 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 		setNewDescription( '' );
 		setNewMimeType( '' );
 		setNewIcon( 'bb-icon-file' );
+		setModalError( '' );
 		setIsIconDropdownOpen( false );
 		mimeChecker.resetMimeState();
 		setIsAddOpen( false );
@@ -358,6 +360,7 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 		} );
 
 		if ( isDuplicate ) {
+			setModalError( __( 'This extension already exists.', 'buddyboss' ) );
 			return;
 		}
 
@@ -713,13 +716,21 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 						</button>
 					</div>
 					<div className="bb-extension-modal__body">
+						{ modalError && (
+							<div className="bb-extension-modal__error">
+								{ modalError }
+							</div>
+						) }
 						<div className="bb-extension-modal__field">
 							<label className="bb-extension-modal__label">
 								{ __( 'Extension', 'buddyboss' ) }
 							</label>
 							<TextControl
 								value={ newExtension }
-								onChange={ setNewExtension }
+								onChange={ function( val ) {
+									setNewExtension( val );
+									setModalError( '' );
+								} }
 								placeholder={ __( 'Enter an extension (e.g., .extension)', 'buddyboss' ) }
 								__nextHasNoMarginBottom
 							/>

@@ -53,7 +53,8 @@ function bb_media_build_context_description( $prefix, $contexts ) {
 	$last = array_pop( $contexts );
 
 	if ( count( $contexts ) > 0 ) {
-		return $prefix . ' ' . implode( ', ', $contexts ) . ' and ' . $last;
+		/* translators: Conjunction used between the last two items in a list (e.g., "groups, activity posts and forums"). */
+		return $prefix . ' ' . implode( ', ', $contexts ) . ' ' . __( 'and', 'buddyboss' ) . ' ' . $last;
 	}
 
 	return $prefix . ' ' . $last;
@@ -223,11 +224,13 @@ function bb_media_sanitize_upload_limit( $value ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param mixed $value The value to sanitize.
+ * @param mixed  $value       The value to sanitize.
+ * @param string $option_name Optional. The DB option name for toggle-only updates.
+ *                            When provided, avoids key-prefix detection.
  *
  * @return array Sanitized extensions array.
  */
-function bb_media_sanitize_extensions( $value ) {
+function bb_media_sanitize_extensions( $value, $option_name = '' ) {
 	if ( ! is_array( $value ) ) {
 		return array();
 	}
@@ -237,14 +240,16 @@ function bb_media_sanitize_extensions( $value ) {
 	$is_toggle_only = ! is_array( $first_value );
 
 	if ( $is_toggle_only ) {
-		// Determine the correct option name from key prefix.
-		$first_key = key( $value );
-		if ( 0 === strpos( $first_key, 'bb_vid' ) ) {
-			$option_name = 'bp_video_extensions_support';
-		} elseif ( 0 === strpos( $first_key, 'bb_doc' ) ) {
-			$option_name = 'bp_document_extensions_support';
-		} else {
-			return array();
+		// Use the explicit option name if provided, otherwise infer from key prefix.
+		if ( empty( $option_name ) ) {
+			$first_key = key( $value );
+			if ( 0 === strpos( $first_key, 'bb_vid' ) ) {
+				$option_name = 'bp_video_extensions_support';
+			} elseif ( 0 === strpos( $first_key, 'bb_doc' ) ) {
+				$option_name = 'bp_document_extensions_support';
+			} else {
+				return array();
+			}
 		}
 
 		// Merge toggle states into existing stored data.
@@ -282,6 +287,38 @@ function bb_media_sanitize_extensions( $value ) {
 	}
 
 	return $sanitized;
+}
+
+/**
+ * Sanitize video extension data.
+ *
+ * Wrapper around bb_media_sanitize_extensions that passes the video option name
+ * explicitly, avoiding fragile key-prefix detection.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed $value The value to sanitize.
+ *
+ * @return array Sanitized extensions array.
+ */
+function bb_media_sanitize_video_extensions( $value ) {
+	return bb_media_sanitize_extensions( $value, 'bp_video_extensions_support' );
+}
+
+/**
+ * Sanitize document extension data.
+ *
+ * Wrapper around bb_media_sanitize_extensions that passes the document option name
+ * explicitly, avoiding fragile key-prefix detection.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed $value The value to sanitize.
+ *
+ * @return array Sanitized extensions array.
+ */
+function bb_media_sanitize_document_extensions( $value ) {
+	return bb_media_sanitize_extensions( $value, 'bp_document_extensions_support' );
 }
 
 /**
@@ -335,6 +372,7 @@ function bb_media_ajax_giphy_connect() {
 				'message'      => __( 'GIPHY API key disconnected.', 'buddyboss' ),
 			)
 		);
+		return;
 	}
 
 	// Connect: save and validate the API key.
@@ -674,6 +712,7 @@ function bb_media_ajax_check_direct_access() {
 				'message' => __( 'Direct access to your media files and folders is not blocked', 'buddyboss' ),
 			)
 		);
+		return;
 	}
 
 	wp_send_json_success(
@@ -729,13 +768,11 @@ function bb_media_create_test_upload() {
 		return $result;
 	}
 
-	if ( ! is_wp_error( $attachment_id ) ) {
-		require_once ABSPATH . 'wp-admin/includes/image.php';
-		$attachment_data = wp_generate_attachment_metadata( $attachment_id, $upload_file['file'] );
-		wp_update_attachment_metadata( $attachment_id, $attachment_data );
-		$result['attachment_id'] = $attachment_id;
-		$result['url']           = $upload_file['url'];
-	}
+	require_once ABSPATH . 'wp-admin/includes/image.php';
+	$attachment_data = wp_generate_attachment_metadata( $attachment_id, $upload_file['file'] );
+	wp_update_attachment_metadata( $attachment_id, $attachment_data );
+	$result['attachment_id'] = $attachment_id;
+	$result['url']           = $upload_file['url'];
 
 	return $result;
 }
@@ -802,6 +839,7 @@ function bb_media_get_extension_data( $option_name ) {
 			'description' => $ext['description'] ?? '',
 			'is_default'  => ! empty( $ext['is_default'] ) ? 1 : 0,
 			'is_active'   => ! empty( $ext['is_active'] ) ? 1 : 0,
+			'icon'        => $ext['icon'] ?? '',
 		);
 	}
 

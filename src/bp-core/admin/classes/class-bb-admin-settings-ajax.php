@@ -647,6 +647,23 @@ class BB_Admin_Settings_Ajax {
 				'full_width'           => ! empty( $field['full_width'] ),
 			);
 
+			// access_control: populate access-control data via filter so Pro can inject types/options.
+			if ( 'access_control' === ( $field['type'] ?? '' ) ) {
+				/**
+				 * Filters access-control field data for the Settings 2.0 React UI.
+				 *
+				 * Pro populates this with type dropdowns, saved selections, and
+				 * initial toggle options so the component renders immediately.
+				 *
+				 * @since BuddyBoss [BBVERSION]
+				 *
+				 * @param array  $ac_data    Default empty access-control data.
+				 * @param string $field_name The field option name (e.g. 'bb-access-control-upload-media').
+				 * @param string $feature_id Feature ID (e.g. 'media').
+				 */
+				$field_data['access_control_data'] = apply_filters( 'bb_access_control_field_data', array(), $field['name'], $feature_id );
+			}
+
 			// Auto-compute pro_notice for pro_only fields when not set at registration time.
 			// Registration runs early (bb_register_features) before admin functions are loaded,
 			// so pro_notice is computed here at AJAX time when all functions are available.
