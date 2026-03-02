@@ -19,6 +19,7 @@ import {
 import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { createMemberType, updateMemberType } from '../../utils/ajax';
+import { safeUrl } from '../../utils/sanitize';
 
 /**
  * Strip leading '#' from a hex color value.
@@ -305,9 +306,9 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 			enable_profile_field: formData.enable_profile_field,
 			visibility: formData.visibility,
 			login_redirection: formData.login_redirection,
-			custom_login_redirection: formData.custom_login_redirection,
+			custom_login_redirection: safeUrl( formData.custom_login_redirection ),
 			logout_redirection: formData.logout_redirection,
-			custom_logout_redirection: formData.custom_logout_redirection,
+			custom_logout_redirection: safeUrl( formData.custom_logout_redirection ),
 			enable_invite: formData.enable_invite,
 			'label_color[type]': formData.label_color.type,
 		};

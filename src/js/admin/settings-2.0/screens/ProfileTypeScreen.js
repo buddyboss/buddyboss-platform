@@ -108,9 +108,9 @@ export function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, 
 	}, [] );
 
 	// Load member types.
-	var loadMemberTypes = useCallback( function () {
+	var loadMemberTypes = useCallback( function ( options ) {
 		setIsLoading( true );
-		getMemberTypes()
+		getMemberTypes( options )
 			.then( function ( response ) {
 				if ( response.success && response.data ) {
 					setMemberTypes( response.data.member_types || [] );
@@ -120,14 +120,18 @@ export function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, 
 				}
 				setIsLoading( false );
 			} )
-			.catch( function () {
-				setIsLoading( false );
-				setToast( { status: 'error', message: __( 'Failed to load profile types.', 'buddyboss' ) } );
+			.catch( function ( err ) {
+				if ( 'AbortError' !== err.name ) {
+					setIsLoading( false );
+					setToast( { status: 'error', message: __( 'Failed to load profile types.', 'buddyboss' ) } );
+				}
 			} );
 	}, [] );
 
 	useEffect( function () {
-		loadMemberTypes();
+		var controller = new AbortController();
+		loadMemberTypes( { signal: controller.signal } );
+		return function () { controller.abort(); };
 	}, [ loadMemberTypes ] );
 
 	// Close menu on outside click.

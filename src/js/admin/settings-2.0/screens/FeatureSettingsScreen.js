@@ -26,6 +26,7 @@ const ActivityListScreen = lazy(() => import('./ActivityListScreen'));
 const GroupsListScreen = lazy(() => import('./GroupsListScreen'));
 const GroupTypeScreen = lazy(() => import('./GroupTypeScreen'));
 const ProfileTypeScreen = lazy(() => import('./ProfileTypeScreen'));
+const ProfileFieldsScreen = lazy(() => import('./ProfileFieldsScreen'));
 
 /**
  * Map of feature + panel combinations that render custom screens instead of settings forms.
@@ -35,6 +36,7 @@ const CUSTOM_PANEL_SCREENS = {
 	'groups:all_groups': GroupsListScreen,
 	'groups:group_types': GroupTypeScreen,
 	'members:profile_types': ProfileTypeScreen,
+	'members:profile_fields': ProfileFieldsScreen,
 };
 
 

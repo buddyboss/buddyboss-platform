@@ -485,3 +485,56 @@ function bb_members_fire_deprecated_save_hooks( $feature_id, $settings, $saved )
 }
 
 add_action( 'bb_admin_save_feature_settings_after', 'bb_members_fire_deprecated_save_hooks', 99, 3 );
+
+// ──────────────────────────────────────────────────────────────────────────────
+// XProfile admin rendering hooks (replaced by Settings 2.0 React UI).
+// These hooks only fired in the legacy wp-admin XProfile field editor.
+// The data hooks (xprofile_group_before_save, xprofile_field_before_save, etc.)
+// are preserved because they fire from within BP_XProfile_Group::save() and
+// BP_XProfile_Field::save() which are still used by the AJAX handler.
+// ──────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Register deprecation notices for legacy XProfile admin rendering hooks.
+ *
+ * These hooks were used to add custom UI in the legacy XProfile field editor
+ * admin page. Since Settings 2.0 uses a React interface, these rendering hooks
+ * no longer fire. Third-party plugins should extend the React UI instead.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_deprecated_xprofile_admin_rendering_hooks() {
+	$deprecated_hooks = array(
+		'xprofile_group_admin_after_description' => __( 'XProfile group admin after description', 'buddyboss' ),
+		'xprofile_group_before_submitbox'        => __( 'XProfile group before submitbox', 'buddyboss' ),
+		'xprofile_group_submitbox_start'         => __( 'XProfile group submitbox start', 'buddyboss' ),
+		'xprofile_group_after_submitbox'         => __( 'XProfile group after submitbox', 'buddyboss' ),
+		'xprofile_field_before_contentbox'       => __( 'XProfile field before contentbox', 'buddyboss' ),
+		'xprofile_field_after_contentbox'        => __( 'XProfile field after contentbox', 'buddyboss' ),
+		'xprofile_field_before_submitbox'        => __( 'XProfile field before submitbox', 'buddyboss' ),
+		'xprofile_field_submitbox_start'         => __( 'XProfile field submitbox start', 'buddyboss' ),
+		'xprofile_field_after_submitbox'         => __( 'XProfile field after submitbox', 'buddyboss' ),
+		'xprofile_field_after_sidebarbox'        => __( 'XProfile field after sidebarbox', 'buddyboss' ),
+		'xprofile_field_additional_options'       => __( 'XProfile field additional options', 'buddyboss' ),
+		'xprofile_admin_field_name_legend'       => __( 'XProfile admin field name legend', 'buddyboss' ),
+		'xprofile_admin_field_action'            => __( 'XProfile admin field action', 'buddyboss' ),
+		'xprofile_admin_group_action'            => __( 'XProfile admin group action', 'buddyboss' ),
+	);
+
+	foreach ( $deprecated_hooks as $hook => $description ) {
+		if ( has_action( $hook ) ) {
+			_deprecated_hook(
+				$hook,
+				'BuddyBoss [BBVERSION]',
+				'',
+				sprintf(
+					/* translators: %s: hook name */
+					__( 'The %s hook is no longer fired in the Settings 2.0 React admin interface. Extend the React UI via custom JavaScript instead.', 'buddyboss' ),
+					$hook
+				)
+			);
+		}
+	}
+}
+
+add_action( 'admin_init', 'bb_deprecated_xprofile_admin_rendering_hooks' );

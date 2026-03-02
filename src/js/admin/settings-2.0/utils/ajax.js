@@ -331,8 +331,8 @@ export function updateGroupMember(data) {
  *
  * @return {Promise} Promise resolving to member types array.
  */
-export function getMemberTypes() {
-	return ajaxFetch('bb_admin_get_member_types');
+export function getMemberTypes( options ) {
+	return ajaxFetch('bb_admin_get_member_types', {}, options);
 }
 
 /**
@@ -425,4 +425,88 @@ export function groupBulkAction(groupIds, action, extraData) {
  */
 export function forumAutocomplete( params, options ) {
 	return ajaxFetch( 'bb_admin_forum_autocomplete', params || {}, options || {} );
+}
+
+/**
+ * Get all profile field groups with their fields.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} options - Optional fetch options (e.g. { signal }).
+ * @return {Promise} Promise resolving to response.
+ */
+export function getProfileFieldGroups( options ) {
+	return ajaxFetch( 'bb_admin_get_profile_field_groups', {}, options || {} );
+}
+
+/**
+ * Create a new profile field group (field set).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data - Field group data (name, description, is_repeater).
+ * @return {Promise} Promise resolving to response.
+ */
+export function createFieldGroup( data ) {
+	return ajaxFetch( 'bb_admin_create_field_group', data );
+}
+
+/**
+ * Update an existing profile field group (field set).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data - Field group data (group_id, name, description, is_repeater).
+ * @return {Promise} Promise resolving to response.
+ */
+export function updateFieldGroup( data ) {
+	return ajaxFetch( 'bb_admin_update_field_group', data );
+}
+
+/**
+ * Delete a profile field group (field set).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {number} groupId - Field group ID.
+ * @return {Promise} Promise resolving to response.
+ */
+export function deleteFieldGroup( groupId ) {
+	return ajaxFetch( 'bb_admin_delete_field_group', { group_id: groupId } );
+}
+
+/**
+ * Create or update a profile field.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data - Field data.
+ * @return {Promise} Promise resolving to response.
+ */
+export function saveProfileField( data ) {
+	return ajaxFetch( 'bb_admin_save_profile_field', data );
+}
+
+/**
+ * Delete a profile field.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {number} fieldId - Field ID.
+ * @return {Promise} Promise resolving to response.
+ */
+export function deleteProfileField( fieldId ) {
+	return ajaxFetch( 'bb_admin_delete_profile_field', { field_id: fieldId } );
+}
+
+/**
+ * Reorder profile field groups and fields.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data - Order data (group_order, field_order).
+ * @return {Promise} Promise resolving to response.
+ */
+export function reorderProfileFields( data ) {
+	return ajaxFetch( 'bb_admin_reorder_profile_fields', data );
 }

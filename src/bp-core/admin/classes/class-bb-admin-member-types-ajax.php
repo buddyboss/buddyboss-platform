@@ -61,9 +61,9 @@ class BB_Admin_Member_Types_Ajax {
 	 * @return array Extended allowed option names.
 	 */
 	public function bb_extend_allowed_platform_settings( $allowed ) {
-		$allowed[] = 'bp-member-type-enable-disable';
-		$allowed[] = 'bp-member-type-display-on-profile';
-		$allowed[] = 'bp-member-type-default-on-registration';
+		$allowed['bp-member-type-enable-disable']          = 'absint';
+		$allowed['bp-member-type-display-on-profile']      = 'absint';
+		$allowed['bp-member-type-default-on-registration'] = 'sanitize_text_field';
 
 		return $allowed;
 	}
@@ -215,6 +215,7 @@ class BB_Admin_Member_Types_Ajax {
 				'post_password'          => ! empty( $post->post_password ) ? $post->post_password : '',
 				'enable_invite'          => absint( get_post_meta( $post_id, '_bp_member_type_enable_invite', true ) ),
 				'allowed_member_type_invite' => array_map( 'absint', $allowed_invite ),
+				'allow_messaging_without_connection' => absint( get_post_meta( $post_id, '_bp_member_type_allow_messaging_without_connection', true ) ),
 			);
 		}
 
@@ -519,6 +520,9 @@ class BB_Admin_Member_Types_Ajax {
 		$logout_redirection        = isset( $_POST['logout_redirection'] ) ? sanitize_key( wp_unslash( $_POST['logout_redirection'] ) ) : '';
 		$custom_logout_redirection = isset( $_POST['custom_logout_redirection'] ) ? esc_url_raw( wp_unslash( $_POST['custom_logout_redirection'] ) ) : '';
 
+		// Messaging without connection.
+		$allow_messaging_without_connection = isset( $_POST['allow_messaging_without_connection'] ) ? absint( wp_unslash( $_POST['allow_messaging_without_connection'] ) ) : 0;
+
 		// Email invite fields.
 		$enable_invite = isset( $_POST['enable_invite'] ) ? absint( wp_unslash( $_POST['enable_invite'] ) ) : 0;
 
@@ -547,6 +551,21 @@ class BB_Admin_Member_Types_Ajax {
 		update_post_meta( $post_id, '_bp_member_type_custom_logout_redirection', $custom_logout_redirection );
 		update_post_meta( $post_id, '_bp_member_type_enable_invite', $enable_invite );
 		update_post_meta( $post_id, '_bp_member_type_allowed_member_type_invite', $allowed_invite );
+		update_post_meta( $post_id, '_bp_member_type_allow_messaging_without_connection', $allow_messaging_without_connection );
+
+		// Update messaging-without-connection option (matching legacy lines 2340-2351).
+		$type_key_for_option                = get_post_meta( $post_id, '_bp_member_type_key', true );
+		$profile_types_allowed_messaging    = get_option( 'bp_member_types_allowed_messaging_without_connection', array() );
+		if ( ! is_array( $profile_types_allowed_messaging ) ) {
+			$profile_types_allowed_messaging = array();
+		}
+
+		if ( $allow_messaging_without_connection ) {
+			$profile_types_allowed_messaging[ $type_key_for_option ] = true;
+		} elseif ( array_key_exists( $type_key_for_option, $profile_types_allowed_messaging ) ) {
+			unset( $profile_types_allowed_messaging[ $type_key_for_option ] );
+		}
+		update_option( 'bp_member_types_allowed_messaging_without_connection', $profile_types_allowed_messaging );
 
 		// WP Role assignment logic (from legacy lines 2341-2412).
 		$old_wp_roles              = get_post_meta( $post_id, '_bp_member_type_wp_roles', true );

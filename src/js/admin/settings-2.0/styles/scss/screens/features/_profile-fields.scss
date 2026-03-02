@@ -1,0 +1,716 @@
+/* ----------------------------------------------------------------
+   Profile Fields Screen
+   ---------------------------------------------------------------- */
+
+.bb-profile-fields-screen {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	max-width: 985px;
+	margin: 0 auto;
+	width: 100%;
+	padding: 32px;
+}
+
+/* Banner */
+.bb-pf-banner {
+	margin-bottom: 8px;
+
+	p {
+		font-size: 13px;
+		color: $bb-text-tertiary-color;
+		margin: 0;
+		line-height: 1.5;
+	}
+}
+
+/* Loading */
+.bb-pf-loading {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	min-height: 200px;
+	gap: 16px;
+
+	p {
+		font-size: 13px;
+		color: $bb-text-tertiary-color;
+		margin: 0;
+	}
+}
+
+/* ----------------------------------------------------------------
+   Field Set Card
+   ---------------------------------------------------------------- */
+
+.bb-pf-fieldset-card {
+	background: $bb-background-base-color;
+	border: 1px solid $bb-border-primary-color;
+	border-radius: $bb-border-radius-xl;
+	transition: border-color 0.15s ease;
+
+	&.bb-pf-drag-over {
+		border-color: $bb-border-brand-primary-color;
+		border-style: dashed;
+	}
+}
+
+.bb-pf-fieldset-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 12px 16px;
+	border-bottom: 1px solid transparent;
+
+	.bb-pf-fieldset-card:not(.collapsed) & {
+		border-bottom-color: $bb-border-primary-color;
+	}
+}
+
+.bb-pf-fieldset-header-left {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	min-width: 0;
+	flex: 1;
+}
+
+.bb-pf-fieldset-header-right {
+	flex-shrink: 0;
+	margin-left: 16px;
+
+	.components-button.is-secondary {
+		@include bb-button-secondary;
+		padding: 4px 12px;
+		font-size: 12px;
+		font-weight: 500;
+	}
+}
+
+/* Drag handle */
+.bb-pf-drag-handle {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 24px;
+	height: 24px;
+	color: $bb-icon-tertiary-color;
+	cursor: grab;
+	flex-shrink: 0;
+	opacity: 0.5;
+	transition: opacity 0.15s ease;
+
+	i {
+		font-size: 16px;
+	}
+
+	&:hover {
+		opacity: 1;
+	}
+}
+
+/* Toggle button */
+.bb-pf-fieldset-toggle {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	background: none;
+	border: none;
+	cursor: pointer;
+	padding: 4px 0;
+	min-width: 0;
+
+	i {
+		font-size: 16px;
+		color: $bb-icon-tertiary-color;
+		flex-shrink: 0;
+	}
+
+	h3 {
+		font-size: 14px;
+		font-weight: 600;
+		color: $bb-text-color;
+		margin: 0;
+		line-height: 1.4;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+}
+
+/* ----------------------------------------------------------------
+   Badges
+   ---------------------------------------------------------------- */
+
+.bb-pf-badge {
+	display: inline-flex;
+	align-items: center;
+	padding: 2px 8px;
+	font-size: 11px;
+	font-weight: 500;
+	line-height: 16px;
+	border-radius: $bb-border-radius-full;
+	white-space: nowrap;
+
+	&--repeater {
+		color: $bb-text-warning-primary-color;
+		background: $bb-background-warning-primary-color;
+		border: 0.5px solid $bb-border-warning-secondary-color;
+	}
+
+	&--required {
+		color: $bb-text-positive-primary-color;
+		background: $bb-background-positive-primary-color;
+		border: 0.5px solid $bb-border-positive-secondary-color;
+	}
+
+	&--signup {
+		color: $bb-text-brand-primary-color;
+		background: rgba($bb-primary-color, 0.08);
+		border: 0.5px solid $bb-border-brand-tertiary-color;
+	}
+
+	&--member-type {
+		color: $bb-text-color;
+		background: $bb-background-secondary-color;
+		border: 0.5px solid $bb-border-tertiary-color;
+		max-width: 200px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+}
+
+/* ----------------------------------------------------------------
+   Field Set Body (Fields List)
+   ---------------------------------------------------------------- */
+
+.bb-pf-fieldset-body {
+	padding: 0 16px 16px;
+}
+
+.bb-pf-field-row {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 10px 8px;
+	border-bottom: 0.5px solid $bb-border-primary-color;
+	transition: background-color 0.15s ease;
+
+	&:last-of-type {
+		border-bottom: none;
+	}
+
+	&:hover {
+		background: $bb-background-primary-color;
+		border-radius: $bb-border-radius-md;
+	}
+
+	&.bb-pf-drag-over {
+		border-bottom-color: $bb-border-brand-primary-color;
+		border-bottom-width: 2px;
+	}
+}
+
+/* Field type icon */
+.bb-pf-field-type-icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 28px;
+	height: 28px;
+	background: $bb-background-primary-color;
+	border-radius: $bb-border-radius-md;
+	flex-shrink: 0;
+
+	i {
+		font-size: 16px;
+		color: $bb-icon-tertiary-color;
+	}
+}
+
+/* Field name */
+.bb-pf-field-name {
+	font-size: 13px;
+	font-weight: 500;
+	color: $bb-text-color;
+	line-height: 1.4;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	min-width: 0;
+}
+
+/* Field badges */
+.bb-pf-field-badges {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	flex-shrink: 0;
+	margin-left: auto;
+}
+
+/* Field actions (ellipsis menu) */
+.bb-pf-field-actions {
+	position: relative;
+	flex-shrink: 0;
+	margin-left: 8px;
+}
+
+.bb-pf-ellipsis-btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 28px;
+	height: 28px;
+	background: none;
+	border: none;
+	border-radius: $bb-border-radius-md;
+	cursor: pointer;
+	color: $bb-icon-tertiary-color;
+
+	i {
+		font-size: 20px;
+	}
+
+	&:hover {
+		background: $bb-background-secondary-color;
+	}
+}
+
+/* Dropdown menu */
+.bb-pf-dropdown-menu {
+	position: absolute;
+	top: 100%;
+	right: 0;
+	min-width: 120px;
+	background: $bb-background-base-color;
+	border: 1px solid $bb-border-secondary-color;
+	border-radius: $bb-border-radius-lg;
+	box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.12);
+	z-index: 100;
+	padding: 4px 0;
+
+	button {
+		display: block;
+		width: 100%;
+		padding: 8px 16px;
+		font-size: 13px;
+		font-weight: 500;
+		color: $bb-text-tertiary-color;
+		background: none;
+		border: none;
+		cursor: pointer;
+		text-align: left;
+		line-height: 1.4;
+
+		&:hover {
+			background: $bb-background-primary-hover-color;
+		}
+	}
+
+	.bb-pf-dropdown-delete {
+		color: $bb-error-color;
+
+		&:hover {
+			background: rgba($bb-error-color, 0.06);
+		}
+	}
+}
+
+/* No fields message */
+.bb-pf-no-fields {
+	font-size: 13px;
+	color: $bb-text-tertiary-color;
+	padding: 16px 8px;
+	margin: 0;
+}
+
+/* Add New Field button */
+.bb-pf-add-field-btn.components-button.is-link {
+	margin-top: 8px;
+	padding: 8px;
+	font-size: 13px;
+	font-weight: 500;
+	color: $bb-link-color;
+	text-decoration: none;
+
+	&:hover {
+		text-decoration: underline;
+	}
+}
+
+/* Add New Field Set button */
+.bb-pf-add-fieldset-btn.components-button.is-secondary {
+	@include bb-button-secondary;
+	padding: 8px 16px;
+	font-size: 13px;
+	font-weight: 500;
+	align-self: flex-start;
+}
+
+/* ----------------------------------------------------------------
+   Field Set Modal (WordPress Modal overrides)
+   ---------------------------------------------------------------- */
+
+.bb-pf-fieldset-modal {
+
+	.components-modal__content {
+		padding: 0;
+	}
+
+	.bb-pf-modal-body {
+		padding: 24px;
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+
+		.components-base-control {
+			margin-bottom: 0;
+		}
+
+		.components-base-control__label,
+		label.components-input-control__label.components-text {
+			@include bb-input-label;
+		}
+
+		.components-radio-control__option {
+			margin-bottom: 4px;
+		}
+	}
+
+	.bb-pf-modal-footer {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 8px;
+		padding: 16px 24px;
+		border-top: 1px solid $bb-border-primary-color;
+
+		.bb-pf-modal-footer-right {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			margin-left: auto;
+		}
+
+		.components-button.is-secondary {
+			@include bb-button-secondary;
+			padding: 8px 16px;
+		}
+
+		.components-button.is-primary {
+			@include bb-button-primary;
+			padding: 8px 16px;
+		}
+
+		.components-button.is-destructive.is-link {
+			color: $bb-error-color;
+			text-decoration: none;
+			font-size: 13px;
+
+			&:hover {
+				color: $bb-background-danger-secondary-hover-color;
+				text-decoration: underline;
+			}
+		}
+	}
+}
+
+/* ----------------------------------------------------------------
+   Delete Field Set Modal
+   ---------------------------------------------------------------- */
+
+.bb-pf-delete-fieldset-modal {
+
+	.components-modal__content {
+		padding: 0;
+	}
+
+	.bb-pf-delete-warning {
+		display: flex;
+		gap: 12px;
+		padding: 16px 24px;
+		background: $bb-background-warning-primary-color;
+		border: 1px solid $bb-border-warning-secondary-color;
+		border-radius: $bb-border-radius-lg;
+		margin: 24px 24px 0;
+	}
+
+	.bb-pf-warning-icon {
+		font-size: 20px;
+		color: $bb-icon-warning-primary-color;
+		flex-shrink: 0;
+		line-height: 1;
+	}
+
+	.bb-pf-delete-warning-text {
+
+		p {
+			font-size: 13px;
+			color: $bb-text-color;
+			margin: 0 0 8px;
+			line-height: 1.5;
+
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+	}
+
+	.bb-pf-delete-confirm-checkbox {
+		padding: 16px 24px;
+		margin: 0;
+
+		.components-checkbox-control__label {
+			font-size: 13px;
+			font-weight: 500;
+		}
+	}
+
+	.bb-pf-modal-footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 8px;
+		padding: 16px 24px;
+		border-top: 1px solid $bb-border-primary-color;
+
+		.components-button.is-secondary {
+			@include bb-button-secondary;
+			padding: 8px 16px;
+		}
+
+		.components-button.is-primary.is-destructive {
+			color: $bb-text-inverse-color;
+			background: $bb-background-danger-secondary-color;
+			border: none;
+			box-shadow: none;
+			border-radius: $bb-border-radius-lg;
+			padding: 8px 16px;
+			height: auto;
+
+			&:hover {
+				background: $bb-background-danger-secondary-hover-color !important;
+				color: $bb-text-inverse-color !important;
+			}
+
+			&[disabled] {
+				opacity: 0.5;
+				pointer-events: none;
+			}
+		}
+	}
+}
+
+/* ----------------------------------------------------------------
+   Profile Field Modal (Add/Edit Field)
+   ---------------------------------------------------------------- */
+
+.bb-pf-field-modal {
+
+	.components-modal__content {
+		padding: 0;
+	}
+
+	.bb-pf-modal-body {
+		padding: 24px;
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+		max-height: 60vh;
+		overflow-y: auto;
+
+		.components-base-control {
+			margin-bottom: 0;
+		}
+
+		.components-base-control__label,
+		label.components-input-control__label.components-text {
+			@include bb-input-label;
+		}
+
+		.components-base-control__help {
+			font-size: 12px;
+			color: $bb-text-tertiary-color;
+			margin-top: 4px;
+		}
+	}
+
+	/* Options list for multi-option field types */
+	.bb-pf-options-section {
+		border: 1px solid $bb-border-primary-color;
+		border-radius: $bb-border-radius-lg;
+		padding: 16px;
+	}
+
+	.bb-pf-options-header {
+		font-size: 13px;
+		font-weight: 600;
+		color: $bb-text-secondary-color;
+		margin: 0 0 12px;
+	}
+
+	.bb-pf-option-row {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		margin-bottom: 8px;
+	}
+
+	.bb-pf-option-input[type="text"] {
+		@include bb-input-text;
+		flex: 1;
+	}
+
+	.bb-pf-option-default {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: none;
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-sm;
+		cursor: pointer;
+		width: 28px;
+		height: 28px;
+		flex-shrink: 0;
+
+		&.is-default {
+			background: $bb-background-brand-primary-color;
+			border-color: $bb-border-brand-primary-color;
+			color: $bb-text-inverse-color;
+		}
+
+		i {
+			font-size: 14px;
+		}
+	}
+
+	.bb-pf-option-remove {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: none;
+		border: none;
+		cursor: pointer;
+		width: 28px;
+		height: 28px;
+		flex-shrink: 0;
+		color: $bb-icon-tertiary-color;
+
+		&:hover {
+			color: $bb-error-color;
+		}
+
+		i {
+			font-size: 16px;
+		}
+	}
+
+	.bb-pf-add-option-btn.components-button.is-link {
+		margin-top: 4px;
+		font-size: 13px;
+		font-weight: 500;
+		color: $bb-link-color;
+		text-decoration: none;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+
+	/* Member types section */
+	.bb-pf-member-types-grid {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 8px;
+		margin-top: 8px;
+
+		.components-checkbox-control {
+			margin-bottom: 0;
+		}
+
+		.components-checkbox-control__label {
+			font-size: 13px;
+		}
+	}
+
+	/* Footer */
+	.bb-pf-modal-footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 8px;
+		padding: 16px 24px;
+		border-top: 1px solid $bb-border-primary-color;
+
+		.components-button.is-secondary {
+			@include bb-button-secondary;
+			padding: 8px 16px;
+		}
+
+		.components-button.is-primary {
+			@include bb-button-primary;
+			padding: 8px 16px;
+		}
+	}
+}
+
+/* ----------------------------------------------------------------
+   Delete Field Confirmation Overlay
+   ---------------------------------------------------------------- */
+
+.bb-pf-confirm-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: $bb-overlay-color;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 100050;
+}
+
+.bb-pf-confirm-dialog {
+	background: $bb-background-base-color;
+	border-radius: $bb-border-radius-2xl;
+	padding: 24px;
+	max-width: 420px;
+	width: 90%;
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+
+	p {
+		font-size: 13px;
+		color: $bb-text-color;
+		line-height: 1.5;
+		margin: 0 0 16px;
+	}
+}
+
+.bb-pf-confirm-actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 8px;
+
+	.components-button.is-secondary {
+		@include bb-button-secondary;
+		padding: 8px 16px;
+	}
+
+	.components-button.is-primary.is-destructive {
+		color: $bb-text-inverse-color;
+		background: $bb-background-danger-secondary-color;
+		border: none;
+		box-shadow: none;
+		border-radius: $bb-border-radius-lg;
+		padding: 8px 16px;
+		height: auto;
+
+		&:hover {
+			background: $bb-background-danger-secondary-hover-color !important;
+			color: $bb-text-inverse-color !important;
+		}
+	}
+}
