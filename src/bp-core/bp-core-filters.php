@@ -1827,6 +1827,10 @@ add_filter( 'bp_core_fetch_avatar_url', 'bb_rest_decode_default_avatar_url' );
  */
 function bb_admin_setting_profile_group_add_script_data( $script_data, $object = '' ) {
 
+	if ( ! is_admin() || ! function_exists( 'bp_core_get_admin_active_tab' ) ) {
+		return $script_data;
+	}
+
 	if ( 'bp-xprofile' === bp_core_get_admin_active_tab() ) {
 		$script_data['bp_params'] = array(
 			'object'     => 'user',

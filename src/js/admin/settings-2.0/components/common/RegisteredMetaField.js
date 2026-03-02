@@ -99,7 +99,7 @@ function AjaxMultiSelectField( { field, value, onChange } ) {
 
 			setIsLoading( true );
 
-			var ajaxUrl = window.bbAdminData?.ajaxUrl || '/wp-admin/admin-ajax.php';
+			var ajaxUrl = ( window.bbAdminData && window.bbAdminData.ajaxUrl ) || '/wp-admin/admin-ajax.php';
 			var params = new URLSearchParams();
 			params.append( 'action', ajaxAction );
 			params.append( nonceParam, ajaxNonce );

@@ -7,7 +7,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState } from '@wordpress/element';
+import { useState, useRef, useEffect } from '@wordpress/element';
 import {
 	Modal,
 	Button,
@@ -79,6 +79,15 @@ export function GroupCreateModal( { isOpen, onClose, onCreated } ) {
 	var error = errorState[ 0 ];
 	var setError = errorState[ 1 ];
 
+	// Track mounted state so AJAX callbacks don't update state after unmount/close.
+	var isMountedRef = useRef( true );
+	useEffect( function () {
+		isMountedRef.current = true;
+		return function () {
+			isMountedRef.current = false;
+		};
+	}, [] );
+
 	if ( ! isOpen ) {
 		return null;
 	}
@@ -134,6 +143,9 @@ export function GroupCreateModal( { isOpen, onClose, onCreated } ) {
 			description: descriptionVal,
 			status: status,
 		} ).then( function ( response ) {
+			if ( ! isMountedRef.current ) {
+				return;
+			}
 			setIsSaving( false );
 			if ( response.success ) {
 				// Reset form.
@@ -146,9 +158,12 @@ export function GroupCreateModal( { isOpen, onClose, onCreated } ) {
 					onCreated( response.data.group_id );
 				}
 			} else {
-				setError( response.data?.message || __( 'Failed to create group.', 'buddyboss' ) );
+				setError( ( response.data && response.data.message ) || __( 'Failed to create group.', 'buddyboss' ) );
 			}
 		} ).catch( function () {
+			if ( ! isMountedRef.current ) {
+				return;
+			}
 			setIsSaving( false );
 			setError( __( 'An error occurred. Please try again.', 'buddyboss' ) );
 		} );

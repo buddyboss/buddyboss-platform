@@ -5,7 +5,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useEffect, useCallback, useRef } from '@wordpress/element';
+import { useState, useEffect, useCallback, useRef, useMemo } from '@wordpress/element';
 import {
 	Button,
 	CheckboxControl,
@@ -16,7 +16,7 @@ import {
 	MenuItem,
 	Modal,
 } from '@wordpress/components';
-import { __ } from '@wordpress/i18n';
+import { __, _n, sprintf } from '@wordpress/i18n';
 import { dateI18n } from '@wordpress/date';
 import { decodeEntities } from '@wordpress/html-entities';
 import { getGroups, groupBulkAction, getGroup, saveGroup } from '../utils/ajax';
@@ -51,6 +51,43 @@ var sortOptions = [
 var GROUPS_PER_PAGE = ( window.bbAdminData && window.bbAdminData.groupsPerPage ) ? parseInt( window.bbAdminData.groupsPerPage, 10 ) : 20;
 
 /**
+ * Privacy icon class lookup (static, never changes).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @type {Object}
+ */
+var PRIVACY_ICONS = {
+	'public': 'bb-icons-rl bb-icons-rl-globe-simple',
+	'private': 'bb-icons-rl bb-icons-rl-lock-simple',
+	'hidden': 'bb-icons-rl bb-icons-rl-eye-slash',
+};
+
+/**
+ * Privacy labels (static, never changes).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @type {Object}
+ */
+var PRIVACY_LABELS = {
+	'public': __( 'Public', 'buddyboss' ),
+	'private': __( 'Private', 'buddyboss' ),
+	'hidden': __( 'Hidden', 'buddyboss' ),
+};
+
+/**
+ * Core column keys that are rendered natively by the React UI.
+ * Any columns returned by bp_groups_list_table_get_columns that are NOT
+ * in this list will be rendered as custom columns.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @type {Array}
+ */
+var CORE_COLUMNS = [ 'cb', 'comment', 'description', 'status', 'members', 'last_active' ];
+
+/**
  * Groups List Screen Component
  *
  * @since BuddyBoss [BBVERSION]
@@ -71,8 +108,6 @@ export function GroupsListScreen( { onNavigate } ) {
 	var currentPageState = useState( 1 );
 	var currentPage = currentPageState[ 0 ];
 	var setCurrentPage = currentPageState[ 1 ];
-
-
 
 	var filterState = useState( 'all' );
 	var filter = filterState[ 0 ];
@@ -166,6 +201,14 @@ export function GroupsListScreen( { onNavigate } ) {
 	var isEditSaving = isEditSavingState[ 0 ];
 	var setIsEditSaving = isEditSavingState[ 1 ];
 
+	var isBulkProcessingState = useState( false );
+	var isBulkProcessing = isBulkProcessingState[ 0 ];
+	var setIsBulkProcessing = isBulkProcessingState[ 1 ];
+
+	var refetchCounterState = useState( 0 );
+	var refetchCounter = refetchCounterState[ 0 ];
+	var setRefetchCounter = refetchCounterState[ 1 ];
+
 	var searchTimerRef = useRef( null );
 	var hasMetaRef = useRef( false );
 	var editAbortRef = useRef( null );
@@ -241,7 +284,7 @@ export function GroupsListScreen( { onNavigate } ) {
 				message: __( 'Failed to load groups. Please try again.', 'buddyboss' ),
 			} );
 		} );
-	}, [ currentPage, searchQuery, filter, sortBy, groupTypeFilter ] );
+	}, [ currentPage, searchQuery, filter, sortBy, groupTypeFilter, refetchCounter ] );
 
 	// Fetch on mount and when filters change. Abort stale requests on cleanup.
 	useEffect( function () {
@@ -377,7 +420,8 @@ export function GroupsListScreen( { onNavigate } ) {
 	var resetAndRefetch = function () {
 		hasMetaRef.current = false;
 		if ( 1 === currentPage ) {
-			fetchGroups( {} );
+			// Increment counter to trigger fetchGroups useEffect with proper AbortController.
+			setRefetchCounter( function ( prev ) { return prev + 1; } );
 		} else {
 			setCurrentPage( 1 );
 		}
@@ -397,18 +441,25 @@ export function GroupsListScreen( { onNavigate } ) {
 			return;
 		}
 
+		if ( isBulkProcessing ) {
+			return;
+		}
+
 		var idArray = Array.isArray( ids ) ? ids : [ ids ];
 
+		setIsBulkProcessing( true );
 		groupBulkAction( idArray, action, extraData ).then( function ( response ) {
+			setIsBulkProcessing( false );
 			if ( response.success ) {
 				setNotice( { type: 'success', message: response.data.message } );
 				setSelectedIds( [] );
 				setBulkAction( '' );
 				resetAndRefetch();
 			} else {
-				setNotice( { type: 'error', message: response.data?.message || __( 'Action failed.', 'buddyboss' ) } );
+				setNotice( { type: 'error', message: ( response.data && response.data.message ) || __( 'Action failed.', 'buddyboss' ) } );
 			}
 		} ).catch( function () {
+			setIsBulkProcessing( false );
 			setNotice( { type: 'error', message: __( 'An error occurred.', 'buddyboss' ) } );
 		} );
 	};
@@ -501,10 +552,10 @@ export function GroupsListScreen( { onNavigate } ) {
 			if ( response.success && response.data ) {
 				setEditGroup( response.data );
 			} else {
-				setNotice( { type: 'error', message: response.data?.message || __( 'Failed to load group data.', 'buddyboss' ) } );
+				setNotice( { type: 'error', message: ( response.data && response.data.message ) || __( 'Failed to load group data.', 'buddyboss' ) } );
 			}
 		} ).catch( function ( err ) {
-			if ( 'AbortError' === err.name ) {
+			if ( err && 'AbortError' === err.name ) {
 				return;
 			}
 			setIsEditLoading( false );
@@ -537,7 +588,7 @@ export function GroupsListScreen( { onNavigate } ) {
 				} );
 			}
 			setIsEditSaving( false );
-			setNotice( { type: 'error', message: response.data?.message || __( 'Failed to save group.', 'buddyboss' ) } );
+			setNotice( { type: 'error', message: ( response.data && response.data.message ) || __( 'Failed to save group.', 'buddyboss' ) } );
 		} ).catch( function ( err ) {
 			setIsEditSaving( false );
 			setNotice( { type: 'error', message: err.message || __( 'An error occurred saving the group.', 'buddyboss' ) } );
@@ -571,13 +622,6 @@ export function GroupsListScreen( { onNavigate } ) {
 		return dateI18n( 'M j, Y', dateStr.replace( ' ', 'T' ) + 'Z' );
 	};
 
-	// Privacy icon class lookup.
-	var privacyIcons = {
-		'public': 'bb-icons-rl bb-icons-rl-globe-simple',
-		'private': 'bb-icons-rl bb-icons-rl-lock-simple',
-		'hidden': 'bb-icons-rl bb-icons-rl-eye-slash',
-	};
-
 	/**
 	 * Get privacy badge icon class.
 	 *
@@ -587,14 +631,7 @@ export function GroupsListScreen( { onNavigate } ) {
 	 * @returns {string} Icon class.
 	 */
 	var getPrivacyIcon = function ( status ) {
-		return privacyIcons[ status ] || privacyIcons[ 'public' ];
-	};
-
-	// Privacy label lookup (fallback when server-provided label is absent).
-	var privacyLabels = {
-		'public': __( 'Public', 'buddyboss' ),
-		'private': __( 'Private', 'buddyboss' ),
-		'hidden': __( 'Hidden', 'buddyboss' ),
+		return PRIVACY_ICONS[ status ] || PRIVACY_ICONS[ 'public' ];
 	};
 
 	/**
@@ -610,35 +647,43 @@ export function GroupsListScreen( { onNavigate } ) {
 		if ( group.status_label ) {
 			return decodeEntities( group.status_label );
 		}
-		return privacyLabels[ group.status ] || group.status;
+		return PRIVACY_LABELS[ group.status ] || group.status;
 	};
 
-	// Compute custom column keys once per render instead of calling a function 3 times.
-	var coreColumns = [ 'cb', 'comment', 'description', 'status', 'members', 'last_active' ];
-	var customColumnKeys = Object.keys( columns ).filter( function ( key ) {
-		return coreColumns.indexOf( key ) === -1;
-	} );
-
-	// Build filter options from views.
-	var filterOptions = [];
-	if ( Object.keys( views ).length > 0 ) {
-		Object.keys( views ).forEach( function ( key ) {
-			var view = views[ key ];
-			var label = view.label || key;
-			if ( view.count > 0 || 'all' === key ) {
-				label = label + ' (' + view.count + ')';
-			}
-			filterOptions.push( { label: label, value: key } );
+	// Compute custom column keys (memoized since columns only change on initial fetch).
+	// CORE_COLUMNS is defined at module level as a static constant.
+	var customColumnKeys = useMemo( function () {
+		return Object.keys( columns ).filter( function ( key ) {
+			return CORE_COLUMNS.indexOf( key ) === -1;
 		} );
-	} else {
-		filterOptions.push( { label: __( 'All', 'buddyboss' ), value: 'all' } );
-	}
+	}, [ columns ] );
 
-	// Group type filter options.
-	var groupTypeOptions = [ { label: __( 'All Types', 'buddyboss' ), value: '' } ];
-	groupTypes.forEach( function ( type ) {
-		groupTypeOptions.push( { label: decodeEntities( type.label ), value: type.value } );
-	} );
+	// Build filter options from views (memoized to avoid rebuilding on unrelated state changes).
+	var filterOptions = useMemo( function () {
+		var options = [];
+		if ( Object.keys( views ).length > 0 ) {
+			Object.keys( views ).forEach( function ( key ) {
+				var view = views[ key ];
+				var label = view.label || key;
+				if ( view.count > 0 || 'all' === key ) {
+					label = label + ' (' + view.count + ')';
+				}
+				options.push( { label: label, value: key } );
+			} );
+		} else {
+			options.push( { label: __( 'All', 'buddyboss' ), value: 'all' } );
+		}
+		return options;
+	}, [ views ] );
+
+	// Group type filter options (memoized).
+	var groupTypeOptions = useMemo( function () {
+		var options = [ { label: __( 'All Types', 'buddyboss' ), value: '' } ];
+		groupTypes.forEach( function ( type ) {
+			options.push( { label: decodeEntities( type.label ), value: type.value } );
+		} );
+		return options;
+	}, [ groupTypes ] );
 
 	var allSelected = groups.length > 0 && selectedIds.length === groups.length;
 
@@ -738,7 +783,7 @@ export function GroupsListScreen( { onNavigate } ) {
 						<Button
 							variant="secondary"
 							onClick={ handleBulkApply }
-							disabled={ ! bulkAction || 0 === selectedIds.length }
+							disabled={ ! bulkAction || 0 === selectedIds.length || isBulkProcessing }
 							className="bb-groups-list__bulk-apply"
 						>
 							{ __( 'Apply', 'buddyboss' ) }
@@ -785,6 +830,7 @@ export function GroupsListScreen( { onNavigate } ) {
 								handleSearchChange( e.target.value );
 							} }
 							placeholder={ __( 'Search groups', 'buddyboss' ) }
+							aria-label={ __( 'Search groups', 'buddyboss' ) }
 							className="bb-groups-list__search-input"
 						/>
 						<span className="bb-groups-list__search-icon">
@@ -917,7 +963,8 @@ export function GroupsListScreen( { onNavigate } ) {
 												icon={ <i className="bb-icons-rl-dots-three"></i> }
 												label={ __( 'More options', 'buddyboss' ) }
 											>
-												{ function ( { onClose } ) {
+												{ function ( dropdownProps ) {
+													var onClose = dropdownProps.onClose;
 													return (
 														<MenuGroup className="bb_dropdown_menu_group">
 															{ group.permalink && (
@@ -971,7 +1018,11 @@ export function GroupsListScreen( { onNavigate } ) {
 			{ ! isLoading && total > 0 && (
 				<div className="bb-groups-list__footer">
 					<span className="bb-groups-list__item-count">
-						{ total } { __( 'items', 'buddyboss' ) }
+						{ sprintf(
+						/* translators: %s: total number of items. */
+						_n( '%s item', '%s items', total, 'buddyboss' ),
+						total
+					) }
 					</span>
 
 					{ totalPages > 1 && (
@@ -1000,11 +1051,11 @@ export function GroupsListScreen( { onNavigate } ) {
 								return (
 									<Button
 										key={ page }
-										variant={ page === currentPage ? 'primary' : 'secondary' }
+										variant={ currentPage === page ? 'primary' : 'secondary' }
 										onClick={ function () {
 											setCurrentPage( page );
 										} }
-										className={ 'bb-groups-list__pagination-btn' + ( page === currentPage ? ' bb-groups-list__pagination-btn--current' : '' ) }
+										className={ 'bb-groups-list__pagination-btn' + ( currentPage === page ? ' bb-groups-list__pagination-btn--current' : '' ) }
 									>
 										{ page }
 									</Button>

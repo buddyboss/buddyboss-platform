@@ -305,7 +305,9 @@ function bb_groups_register_core_meta_fields( $registry, $component ) {
 			},
 			// No-op: actual save happens via groups_edit_group_settings() in save_group().
 			// Defined so the field is not marked readonly and JS includes it in POST payload.
-			'save_value'        => function ( $group, $value ) {},
+			'save_value'        => function ( $group, $value ) {
+				// No-op: actual save via groups_edit_group_settings() in save_group().
+			},
 			'sanitize_callback' => 'sanitize_key',
 		);
 
@@ -396,25 +398,25 @@ function bb_groups_register_core_meta_fields( $registry, $component ) {
 		$component,
 		'forum_id',
 		array(
-			'label'        => __( 'Forum', 'buddyboss' ),
-			'type'         => 'async_select',
-			'async_action' => 'bb_admin_forum_autocomplete',
-			'placeholder'  => __( 'Search forums…', 'buddyboss' ),
-			'tab'          => 'integrations',
-			'order'        => 470,
-			'save_phase'   => 'after',
-			'conditional'  => array(
+			'label'             => __( 'Forum', 'buddyboss' ),
+			'type'              => 'async_select',
+			'async_action'      => 'bb_admin_forum_autocomplete',
+			'placeholder'       => __( 'Search forums…', 'buddyboss' ),
+			'tab'               => 'integrations',
+			'order'             => 470,
+			'save_phase'        => 'after',
+			'conditional'       => array(
 				'field' => 'enable_forum',
 				'value' => '1',
 			),
-			'is_visible'   => function ( $group ) {
+			'is_visible'        => function ( $group ) {
 				return bp_is_active( 'forums' )
 					&& function_exists( 'bbp_is_group_forums_active' )
 					&& bbp_is_group_forums_active()
 					&& function_exists( 'bbp_is_user_keymaster' )
 					&& bbp_is_user_keymaster();
 			},
-			'get_value'    => function ( $group ) {
+			'get_value'         => function ( $group ) {
 				if ( ! function_exists( 'bbp_get_group_forum_ids' ) ) {
 					return 0;
 				}
@@ -427,6 +429,15 @@ function bb_groups_register_core_meta_fields( $registry, $component ) {
 				}
 
 				$new_forum_id = absint( $value );
+
+				// Verify the new forum ID is actually a forum post type (prevent arbitrary post association).
+				if ( ! empty( $new_forum_id ) ) {
+					$forum_post = get_post( $new_forum_id );
+					if ( ! $forum_post || bbp_get_forum_post_type() !== $forum_post->post_type ) {
+						return;
+					}
+				}
+
 				$old_forum_ids = bbp_get_group_forum_ids( $group->id );
 				$old_forum_id  = ! empty( $old_forum_ids ) ? (int) current( $old_forum_ids ) : 0;
 

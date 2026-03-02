@@ -105,6 +105,7 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 	var searchTimerRef = useRef( null );
 	var searchAbortRef = useRef( null );
 	var membersAbortRef = useRef( null );
+	var blurTimerRef = useRef( null );
 
 	// Keep refs to latest pending state for the save callback.
 	var pendingAddsRef = useRef( pendingAdds );
@@ -143,6 +144,11 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 
 	useEffect( function () {
 		fetchMembers();
+		return function () {
+			if ( membersAbortRef.current ) {
+				membersAbortRef.current.abort();
+			}
+		};
 	}, [ fetchMembers ] );
 
 	// Cleanup on unmount.
@@ -150,6 +156,9 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 		return function () {
 			if ( searchTimerRef.current ) {
 				clearTimeout( searchTimerRef.current );
+			}
+			if ( blurTimerRef.current ) {
+				clearTimeout( blurTimerRef.current );
 			}
 			if ( searchAbortRef.current ) {
 				searchAbortRef.current.abort();
@@ -458,15 +467,19 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 							} }
 							onBlur={ function () {
 								// Delay to allow click on suggestion.
-								setTimeout( function () {
+								blurTimerRef.current = setTimeout( function () {
 									setShowSuggestions( false );
 								}, 200 );
 							} }
 							placeholder={ __( 'Type username to add', 'buddyboss' ) }
 							className="bb-group-members-tab__search-input"
+							role="combobox"
+							aria-autocomplete="list"
+							aria-expanded={ showSuggestions }
+							aria-label={ __( 'Search members', 'buddyboss' ) }
 						/>
 						{ showSuggestions && (
-						<div className="bb-group-members-tab__suggestions">
+						<div className="bb-group-members-tab__suggestions" role="listbox" aria-label={ __( 'User suggestions', 'buddyboss' ) }>
 							{ isSearching ? (
 								<div className="bb-group-members-tab__suggestions-loading">
 									<Spinner />
@@ -481,6 +494,7 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 										<button
 											key={ user.id }
 											type="button"
+											role="option"
 											className="bb-group-members-tab__suggestion-item"
 											onMouseDown={ function ( e ) {
 												e.preventDefault();
