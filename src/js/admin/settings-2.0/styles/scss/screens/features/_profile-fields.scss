@@ -203,14 +203,9 @@
 	display: flex;
 	align-items: center;
 	gap: 8px;
-	padding: 10px 8px;
+	padding: 16px 0;
 	border-bottom: 0.5px solid $bb-border-primary-color;
 	transition: background-color 0.15s ease;
-
-	&:hover {
-		background: $bb-background-primary-color;
-		border-radius: $bb-border-radius-md;
-	}
 
 	&.bb-pf-drag-over {
 		border-bottom-color: $bb-border-brand-primary-color;
@@ -283,20 +278,23 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: 28px;
-	height: 28px;
+	width: 32px;
+	height: 32px;
 	background: none;
 	border: none;
 	border-radius: $bb-border-radius-md;
 	cursor: pointer;
 	color: $bb-icon-tertiary-color;
+	border: 1px solid transparent;
 
 	i {
-		font-size: 20px;
+		font-size: 24px;
+		font-weight: 700;
 	}
 
 	&:hover {
 		background: $bb-background-secondary-color;
+		border-color: $bb-border-secondary-color;
 	}
 }
 

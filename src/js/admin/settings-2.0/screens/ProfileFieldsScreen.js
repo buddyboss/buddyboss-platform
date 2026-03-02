@@ -617,31 +617,38 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 												setOpenMenuId( openMenuId === field.id ? null : field.id );
 											},
 										},
-										wp.element.createElement( 'i', { className: 'bb-icons-rl-dots-three-outline-vertical' } )
+										wp.element.createElement( 'i', { className: 'bb-icons-rl-dots-three' } )
 									),
 									openMenuId === field.id && wp.element.createElement(
 										'div',
-										{ className: 'bb-pf-dropdown-menu' },
+										{ className: 'bb-pf-dropdown-menu bb_dropdown_menu_group components-menu-group' },
 										wp.element.createElement(
 											'button',
 											{
+												className: 'bb-pf-dropdown-edit components-menu-item__button',
 												onClick: function () {
 													setOpenMenuId( null );
 													setEditField( { field: field, groupId: group.id } );
 												},
 											},
-											__( 'Edit', 'buddyboss' )
+											wp.element.createElement( 'span', { className: 'components-menu-item__item' },
+												wp.element.createElement( 'i', { className: 'bb-icons-rl bb-icons-rl-note-pencil' } ),
+												' ' + __( 'Edit', 'buddyboss' )
+											),
 										),
 										field.can_delete && wp.element.createElement(
 											'button',
 											{
-												className: 'bb-pf-dropdown-delete',
+												className: 'bb-pf-dropdown-delete components-menu-item__button',
 												onClick: function () {
 													setOpenMenuId( null );
 													setDeleteFieldData( field );
 												},
 											},
-											__( 'Delete', 'buddyboss' )
+											wp.element.createElement( 'span', { className: 'components-menu-item__item' },
+												wp.element.createElement( 'i', { className: 'bb-icons-rl bb-icons-rl-trash' } ),
+												' ' + __( 'Delete', 'buddyboss' )
+											),
 										)
 									)
 								)
