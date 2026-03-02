@@ -60,6 +60,118 @@ function bb_media_build_context_description( $prefix, $contexts ) {
 }
 
 /**
+ * Force photo-related support functions to return false when the Photos
+ * section toggle (bb_media_photos_support) is disabled.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $enabled Current value.
+ *
+ * @return bool False if photos section is off, otherwise the original value.
+ */
+function bb_media_photos_force_disable( $enabled ) {
+	if ( ! (bool) bp_get_option( 'bb_media_photos_support', 1 ) ) {
+		return false;
+	}
+
+	return $enabled;
+}
+add_filter( 'bp_is_profile_media_support_enabled', 'bb_media_photos_force_disable' );
+add_filter( 'bp_is_profile_albums_support_enabled', 'bb_media_photos_force_disable' );
+add_filter( 'bp_is_group_media_support_enabled', 'bb_media_photos_force_disable' );
+add_filter( 'bp_is_group_albums_support_enabled', 'bb_media_photos_force_disable' );
+add_filter( 'bp_is_messages_media_support_enabled', 'bb_media_photos_force_disable' );
+add_filter( 'bp_is_forums_media_support_enabled', 'bb_media_photos_force_disable' );
+
+/**
+ * Force video-related support functions to return false when the Videos
+ * section toggle (bb_media_videos_support) is disabled.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $enabled Current value.
+ *
+ * @return bool False if videos section is off, otherwise the original value.
+ */
+function bb_media_videos_force_disable( $enabled ) {
+	if ( ! (bool) bp_get_option( 'bb_media_videos_support', 1 ) ) {
+		return false;
+	}
+
+	return $enabled;
+}
+add_filter( 'bp_is_profile_video_support_enabled', 'bb_media_videos_force_disable' );
+add_filter( 'bp_is_group_video_support_enabled', 'bb_media_videos_force_disable' );
+add_filter( 'bp_is_messages_video_support_enabled', 'bb_media_videos_force_disable' );
+add_filter( 'bp_is_forums_video_support_enabled', 'bb_media_videos_force_disable' );
+
+/**
+ * Force document-related support functions to return false when the Documents
+ * section toggle (bb_media_documents_support) is disabled.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $enabled Current value.
+ *
+ * @return bool False if documents section is off, otherwise the original value.
+ */
+function bb_media_documents_force_disable( $enabled ) {
+	if ( ! (bool) bp_get_option( 'bb_media_documents_support', 1 ) ) {
+		return false;
+	}
+
+	return $enabled;
+}
+add_filter( 'bp_is_profile_document_support_enabled', 'bb_media_documents_force_disable' );
+add_filter( 'bp_is_group_document_support_enabled', 'bb_media_documents_force_disable' );
+add_filter( 'bp_is_messages_document_support_enabled', 'bb_media_documents_force_disable' );
+add_filter( 'bp_is_forums_document_support_enabled', 'bb_media_documents_force_disable' );
+
+/**
+ * Force emoji-related support functions to return false when the Emoji
+ * section toggle (bb_media_emoji_support) is disabled.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $enabled Current value.
+ *
+ * @return bool False if emoji section is off, otherwise the original value.
+ */
+function bb_media_emoji_force_disable( $enabled ) {
+	if ( ! (bool) bp_get_option( 'bb_media_emoji_support', 1 ) ) {
+		return false;
+	}
+
+	return $enabled;
+}
+add_filter( 'bp_is_profiles_emoji_support_enabled', 'bb_media_emoji_force_disable' );
+add_filter( 'bp_is_groups_emoji_support_enabled', 'bb_media_emoji_force_disable' );
+add_filter( 'bp_is_messages_emoji_support_enabled', 'bb_media_emoji_force_disable' );
+add_filter( 'bp_is_forums_emoji_support_enabled', 'bb_media_emoji_force_disable' );
+
+/**
+ * Force GIF-related support functions to return false when the Animated GIFs
+ * section toggle (bb_media_gif_support) is disabled.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param bool $enabled Current value.
+ *
+ * @return bool False if GIFs section is off, otherwise the original value.
+ */
+function bb_media_gifs_force_disable( $enabled ) {
+	if ( ! (bool) bp_get_option( 'bb_media_gif_support', 1 ) ) {
+		return false;
+	}
+
+	return $enabled;
+}
+add_filter( 'bp_is_profiles_gif_support_enabled', 'bb_media_gifs_force_disable' );
+add_filter( 'bp_is_groups_gif_support_enabled', 'bb_media_gifs_force_disable' );
+add_filter( 'bp_is_messages_gif_support_enabled', 'bb_media_gifs_force_disable' );
+add_filter( 'bp_is_forums_gif_support_enabled', 'bb_media_gifs_force_disable' );
+
+/**
  * Sanitize upload size fields.
  *
  * Ensures the value is a positive integer that does not exceed the server's max upload size.
