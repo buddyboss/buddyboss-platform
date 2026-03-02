@@ -68,6 +68,7 @@
     }
 
     &[disabled] {
+        color: $bb-text-inverse-color !important;
         background-color: $bb-background-danger-primary-hover-color !important;
         pointer-events: none;
     }

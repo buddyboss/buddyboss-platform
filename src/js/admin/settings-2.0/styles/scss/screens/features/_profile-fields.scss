@@ -434,83 +434,19 @@
 
 .bb-pf-delete-fieldset-modal {
 
-	.components-modal__content {
-		padding: 0;
+	&.components-modal__frame {
+		max-width: 500px;
 	}
 
-	.bb-pf-delete-warning {
-		display: flex;
-		gap: 12px;
-		padding: 16px 24px;
-		background: $bb-background-warning-primary-color;
-		border: 1px solid $bb-border-warning-secondary-color;
-		border-radius: $bb-border-radius-lg;
-		margin: 24px 24px 0;
+	&__description {
+		font-size: 13px;
+		line-height: 1.6;
+		color: $bb-text-color;
+		margin: 0 0 16px;
 	}
 
-	.bb-pf-warning-icon {
-		font-size: 20px;
-		color: $bb-icon-warning-primary-color;
-		flex-shrink: 0;
-		line-height: 1;
-	}
-
-	.bb-pf-delete-warning-text {
-
-		p {
-			font-size: 13px;
-			color: $bb-text-color;
-			margin: 0 0 8px;
-			line-height: 1.5;
-
-			&:last-child {
-				margin-bottom: 0;
-			}
-		}
-	}
-
-	.bb-pf-delete-confirm-checkbox {
-		padding: 16px 24px;
-		margin: 0;
-
-		.components-checkbox-control__label {
-			font-size: 13px;
-			font-weight: 500;
-		}
-	}
-
-	.bb-pf-modal-footer {
-		display: flex;
-		align-items: center;
-		justify-content: flex-end;
-		gap: 8px;
-		padding: 16px 24px;
-		border-top: 1px solid $bb-border-primary-color;
-
-		.components-button.is-secondary {
-			@include bb-button-secondary;
-			padding: 8px 16px;
-		}
-
-		.components-button.is-primary.is-destructive {
-			color: $bb-text-inverse-color;
-			background: $bb-background-danger-secondary-color;
-			border: none;
-			box-shadow: none;
-			border-radius: $bb-border-radius-lg;
-			padding: 8px 16px;
-			height: auto;
-
-			&:hover {
-				background: $bb-background-danger-secondary-hover-color !important;
-				color: $bb-text-inverse-color !important;
-			}
-
-			&[disabled] {
-				opacity: 0.5;
-				pointer-events: none;
-			}
-		}
+	.components-checkbox-control {
+		margin-bottom: 0;
 	}
 }
 

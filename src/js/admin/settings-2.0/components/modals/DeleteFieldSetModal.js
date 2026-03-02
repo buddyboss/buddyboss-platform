@@ -80,42 +80,44 @@ export function DeleteFieldSetModal( { fieldSet, onClose, onDeleted, setToast } 
 		{
 			title: __( 'Delete Field Set', 'buddyboss' ),
 			onRequestClose: onClose,
-			className: 'bb-pf-delete-fieldset-modal',
+			className: 'bb-pf-delete-fieldset-modal bb-admin-settings-modal',
 			shouldCloseOnClickOutside: false,
 		},
 
 		wp.element.createElement(
 			'div',
-			{ className: 'bb-pf-delete-warning' },
-			wp.element.createElement( 'i', { className: 'bb-icons-rl-warning bb-pf-warning-icon' } ),
+			{ className: 'bb-pf-delete-fieldset-modal__body bb-admin-settings-modal__body' },
 			wp.element.createElement(
 				'div',
-				{ className: 'bb-pf-delete-warning-text' },
-				wp.element.createElement( 'p', null,
-					wp.element.createElement( 'strong', null, __( 'Warning:', 'buddyboss' ) ),
-					' ',
-					/* translators: %s: field set name */
-					wp.element.sprintf(
-						__( 'Deleting "%s" will permanently remove the field set and all the fields within it.', 'buddyboss' ),
-						decodeEntities( fieldSet.name || '' )
+				{ className: 'bb-admin-delete__warning' },
+				wp.element.createElement( 'i', { className: 'bb-icons-rl bb-icons-rl-warning-circle' } ),
+				wp.element.createElement(
+					'div',
+					{ className: 'bb-admin-delete__warning-text' },
+					wp.element.createElement( 'span', { className: 'bb-admin-delete__warning-title' }, __( 'Warning', 'buddyboss' ) ),
+					wp.element.createElement( 'span', { className: 'bb-admin-delete__warning-desc' },
+						/* translators: %s: field set name */
+						wp.i18n.sprintf(
+							__( 'Deleting "%s" will permanently remove the field set and all the fields within it.', 'buddyboss' ),
+							decodeEntities( fieldSet.name || '' )
+						)
 					)
-				),
-				wp.element.createElement( 'p', null,
-					__( 'Any user data stored in these fields will also be permanently deleted. This action cannot be undone.', 'buddyboss' )
 				)
-			)
+			),
+			wp.element.createElement( 'p', { className: 'bb-pf-delete-fieldset-modal__description' },
+				__( 'Any user data stored in these fields will also be permanently deleted. This action cannot be undone.', 'buddyboss' )
+			),
+			wp.element.createElement( CheckboxControl, {
+				label: __( 'I understand this deletes the field set and all its fields.', 'buddyboss' ),
+				checked: isConfirmed,
+				onChange: setIsConfirmed,
+				__nextHasNoMarginBottom: true,
+			} )
 		),
-
-		wp.element.createElement( CheckboxControl, {
-			label: __( 'I understand this deletes the field set and all its fields.', 'buddyboss' ),
-			checked: isConfirmed,
-			onChange: setIsConfirmed,
-			className: 'bb-pf-delete-confirm-checkbox',
-		} ),
 
 		wp.element.createElement(
 			'div',
-			{ className: 'bb-pf-modal-footer' },
+			{ className: 'bb-pf-delete-fieldset-modal__footer bb-admin-settings-modal__footer' },
 			wp.element.createElement(
 				Button,
 				{
@@ -128,15 +130,12 @@ export function DeleteFieldSetModal( { fieldSet, onClose, onDeleted, setToast } 
 			wp.element.createElement(
 				Button,
 				{
-					variant: 'primary',
-					isDestructive: true,
 					onClick: handleDelete,
 					isBusy: isDeleting,
 					disabled: ! isConfirmed || isDeleting,
+					className: 'bb-admin-button-danger'
 				},
-				isDeleting
-					? wp.element.createElement( Spinner, null )
-					: __( 'Delete Field Set', 'buddyboss' )
+				__( 'Delete Field Set', 'buddyboss' )
 			)
 		)
 	);
