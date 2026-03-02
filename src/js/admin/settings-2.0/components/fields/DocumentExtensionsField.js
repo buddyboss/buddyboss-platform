@@ -380,9 +380,10 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 		var description = newDescription.trim();
 		var mimeType = newMimeType.trim();
 
-		// Fallback MIME type if not provided.
+		// MIME type is required.
 		if ( ! mimeType ) {
-			mimeType = 'application/' + extension.replace( '.', '' );
+			setModalError( __( 'MIME type is required.', 'buddyboss' ) );
+			return;
 		}
 
 		// Build full extension data with the new entry.
@@ -797,11 +798,15 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 						<div className="bb-extension-modal__field">
 							<label className="bb-extension-modal__label">
 								{ __( 'MIME Type', 'buddyboss' ) }
+								<span className="bb-extension-modal__required">*</span>
 							</label>
 							<div className="bb-extension-modal__mime-row">
 								<TextControl
 									value={ newMimeType }
-									onChange={ setNewMimeType }
+									onChange={ function( val ) {
+										setNewMimeType( val );
+										setModalError( '' );
+									} }
 									placeholder={ __( 'Enter MIME type', 'buddyboss' ) }
 									__nextHasNoMarginBottom
 								/>
@@ -816,6 +821,11 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 									{ __( 'MIME Checker', 'buddyboss' ) }
 								</Button>
 							</div>
+							{ ! mimeChecker.isMimeCheckerOpen && ! newMimeType.trim() && (
+								<p className="bb-extension-modal__field-hint">
+									{ __( 'Not sure? Click "MIME Checker" to detect the correct type from a sample file.', 'buddyboss' ) }
+								</p>
+							) }
 						</div>
 
 						{ mimeChecker.isMimeCheckerOpen && (
@@ -835,7 +845,7 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 						<Button
 							variant="primary"
 							onClick={ handleSaveExtension }
-							disabled={ ! newExtension.trim() }
+							disabled={ ! newExtension.trim() || ! newMimeType.trim() }
 						>
 							{ __( 'Save', 'buddyboss' ) }
 						</Button>
@@ -932,6 +942,7 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 						<div className="bb-extension-modal__field">
 							<label className="bb-extension-modal__label">
 								{ __( 'MIME Type', 'buddyboss' ) }
+								<span className="bb-extension-modal__required">*</span>
 							</label>
 							<div className="bb-extension-modal__mime-row">
 								<TextControl
@@ -951,6 +962,11 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 									{ __( 'MIME Checker', 'buddyboss' ) }
 								</Button>
 							</div>
+							{ ! mimeChecker.isMimeCheckerOpen && ! editMimeType.trim() && (
+								<p className="bb-extension-modal__field-hint">
+									{ __( 'Not sure? Click "MIME Checker" to detect the correct type from a sample file.', 'buddyboss' ) }
+								</p>
+							) }
 						</div>
 
 						{ mimeChecker.isMimeCheckerOpen && (
@@ -973,7 +989,7 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 						<Button
 							variant="primary"
 							onClick={ handleSaveEdit }
-							disabled={ ! editExtension.trim() }
+							disabled={ ! editExtension.trim() || ! editMimeType.trim() }
 						>
 							{ __( 'Save', 'buddyboss' ) }
 						</Button>

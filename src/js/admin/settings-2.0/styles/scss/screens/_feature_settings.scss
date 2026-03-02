@@ -627,11 +627,7 @@
     &__item {
         display: flex;
         align-items: center;
-        justify-content: space-between;
-    }
-
-    &__item-toggle {
-        flex: 1;
+        gap: 8px;
     }
 
     &__item-remove {
@@ -641,13 +637,12 @@
         background: none;
         border: none;
         cursor: pointer;
-        padding: 4px;
+        padding: 0;
         color: $bb-text-tertiary-color;
-        border-radius: $bb-border-radius-sm;
         transition: color 0.2s ease;
 
         i {
-            font-size: 16px;
+            font-size: 20px;
             line-height: 1;
         }
 
@@ -656,8 +651,7 @@
         }
 
         &:focus {
-            outline: 2px solid $bb-border-brand-primary-color;
-            outline-offset: 1px;
+            outline: none;
         }
 
         &:disabled {
@@ -736,6 +730,18 @@
         font-weight: 500;
         line-height: 1;
         padding: 3px 0;
+    }
+
+    &__required {
+        color: $bb-error-color;
+        margin-left: 2px;
+    }
+
+    &__field-hint {
+        color: $bb-text-tertiary-color;
+        font-size: 12px;
+        line-height: 16px;
+        margin: 0;
     }
 
     .components-base-control {

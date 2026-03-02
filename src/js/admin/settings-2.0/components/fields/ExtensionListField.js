@@ -130,9 +130,10 @@ export function ExtensionListField( { field, value, onChange, disabled, sanitize
 		var description = newDescription.trim();
 		var mimeType = newMimeType.trim();
 
-		// Fallback MIME type if not provided.
+		// MIME type is required.
 		if ( ! mimeType ) {
-			mimeType = 'video/' + extension.replace( '.', '' );
+			setModalError( __( 'MIME type is required.', 'buddyboss' ) );
+			return;
 		}
 
 		// Build full extension data with the new entry.
@@ -278,7 +279,7 @@ export function ExtensionListField( { field, value, onChange, disabled, sanitize
 									disabled={ disabled }
 									aria-label={ __( 'Remove extension', 'buddyboss' ) }
 								>
-									<i className="bb-icons-rl bb-icons-rl-times" />
+									<i className="bb-icons-rl bb-icons-rl-x-circle" />
 								</button>
 							) }
 						</div>
@@ -349,11 +350,15 @@ export function ExtensionListField( { field, value, onChange, disabled, sanitize
 						<div className="bb-extension-modal__field">
 							<label className="bb-extension-modal__label">
 								{ __( 'MIME Type', 'buddyboss' ) }
+								<span className="bb-extension-modal__required">*</span>
 							</label>
 							<div className="bb-extension-modal__mime-row">
 								<TextControl
 									value={ newMimeType }
-									onChange={ setNewMimeType }
+									onChange={ function( val ) {
+										setNewMimeType( val );
+										setModalError( '' );
+									} }
 									placeholder={ __( 'Enter MIME type', 'buddyboss' ) }
 									__nextHasNoMarginBottom
 								/>
@@ -368,6 +373,11 @@ export function ExtensionListField( { field, value, onChange, disabled, sanitize
 									{ __( 'MIME Checker', 'buddyboss' ) }
 								</Button>
 							</div>
+							{ ! mimeChecker.isMimeCheckerOpen && ! newMimeType.trim() && (
+								<p className="bb-extension-modal__field-hint">
+									{ __( 'Not sure? Click "MIME Checker" to detect the correct type from a sample file.', 'buddyboss' ) }
+								</p>
+							) }
 						</div>
 
 						{ mimeChecker.isMimeCheckerOpen && (
@@ -387,7 +397,7 @@ export function ExtensionListField( { field, value, onChange, disabled, sanitize
 						<Button
 							variant="primary"
 							onClick={ handleSaveExtension }
-							disabled={ ! newExtension.trim() }
+							disabled={ ! newExtension.trim() || ! newMimeType.trim() }
 						>
 							{ __( 'Save', 'buddyboss' ) }
 						</Button>
