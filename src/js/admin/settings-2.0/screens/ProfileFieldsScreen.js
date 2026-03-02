@@ -428,7 +428,7 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 		var badges = [];
 		if ( field.is_required ) {
 			badges.push(
-				wp.element.createElement( 'span', { key: 'required', className: 'bb-pf-badge bb-pf-badge--required' }, __( 'Required', 'buddyboss' ) )
+				wp.element.createElement( 'span', { key: 'required', className: 'bb-pf-badge-text' }, __( 'Required', 'buddyboss' ) )
 			);
 		}
 		if ( field.is_signup ) {
@@ -513,7 +513,7 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 						wp.element.createElement(
 							'span',
 							{ className: 'bb-pf-drag-handle' },
-							wp.element.createElement( 'i', { className: 'bb-icons-rl-dots-six-vertical' } )
+							wp.element.createElement( 'i', { className: 'bb-icons-rl-list' } )
 						),
 						wp.element.createElement(
 							'button',
@@ -539,12 +539,14 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 						wp.element.createElement(
 							Button,
 							{
-								variant: 'secondary',
+								variant: 'primary',
 								isSmall: true,
 								onClick: function () {
 									setEditFieldSet( group );
 								},
 							},
+							wp.element.createElement( 'i', { className: 'bb-icons-rl bb-icons-rl-note-pencil' } ),
+							' ',
 							__( 'Edit Field Set', 'buddyboss' )
 						)
 					)
@@ -579,7 +581,7 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 								wp.element.createElement(
 									'span',
 									{ className: 'bb-pf-drag-handle' },
-									wp.element.createElement( 'i', { className: 'bb-icons-rl-dots-six-vertical' } )
+									wp.element.createElement( 'i', { className: 'bb-icons-rl-list' } )
 								),
 								wp.element.createElement(
 									'span',

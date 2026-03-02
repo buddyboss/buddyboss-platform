@@ -80,11 +80,15 @@
 	flex-shrink: 0;
 	margin-left: 16px;
 
-	.components-button.is-secondary {
-		@include bb-button-secondary;
-		padding: 4px 12px;
-		font-size: 12px;
-		font-weight: 500;
+	.components-button.is-primary {
+		@include bb-button-primary;
+		padding: 6px 16px;
+		font-size: 14px;
+
+		i {
+			font-size: 16px;
+			margin-right: 4px;
+		}
 	}
 }
 
@@ -102,7 +106,8 @@
 	transition: opacity 0.15s ease;
 
 	i {
-		font-size: 16px;
+		color: $bb-icon-tertiary-color;
+		font-size: 24px;
 	}
 
 	&:hover {
@@ -142,6 +147,11 @@
 /* ----------------------------------------------------------------
    Badges
    ---------------------------------------------------------------- */
+
+.bb-pf-badge-text {
+	color: $bb-text-tertiary-color;
+	font-size: 13px;
+}
 
 .bb-pf-badge {
 	display: inline-flex;
@@ -217,21 +227,21 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: 28px;
-	height: 28px;
+	width: 32px;
+	height: 32px;
 	background: $bb-background-primary-color;
-	border-radius: $bb-border-radius-md;
+	border-radius: $bb-border-radius-full;
 	flex-shrink: 0;
 
 	i {
-		font-size: 16px;
+		font-size: 20px;
 		color: $bb-icon-tertiary-color;
 	}
 }
 
 /* Field name */
 .bb-pf-field-name {
-	font-size: 13px;
+	font-size: 14px;
 	font-weight: 500;
 	color: $bb-text-color;
 	line-height: 1.4;
@@ -248,6 +258,12 @@
 	gap: 6px;
 	flex-shrink: 0;
 	margin-left: auto;
+
+	&:has(.bb-pf-badge-text) {
+		margin-left: 0;
+		justify-content: space-between;
+		flex: 1;
+	}
 }
 
 /* Field actions (ellipsis menu) */
