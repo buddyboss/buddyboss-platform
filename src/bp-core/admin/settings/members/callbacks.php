@@ -388,6 +388,7 @@ function bb_members_capture_pre_save_state( $feature_id ) {
 			'enable_profile_gravatar'     => bp_enable_profile_gravatar(),
 			'default_profile_cover_type'  => bb_get_default_profile_cover_type(),
 			'profile_slug_format'         => bb_get_profile_slug_format(),
+			'display_name_format'         => bp_get_option( 'bp-display-name-format', 'first_name' ),
 		)
 	);
 }
@@ -417,6 +418,13 @@ function bb_members_handle_display_name_format_change( $feature_id, $settings, $
 	}
 
 	$display_name_format = bp_get_option( 'bp-display-name-format', 'first_name' );
+
+	// Skip field meta updates if the format hasn't actually changed.
+	$pre_save_state = bb_members_get_pre_save_state();
+	$format_before  = ! empty( $pre_save_state['display_name_format'] ) ? $pre_save_state['display_name_format'] : '';
+	if ( $format_before === $display_name_format ) {
+		return;
+	}
 
 	if ( 'first_last_name' === $display_name_format || 'first_name' === $display_name_format ) {
 		$firstname_field_id = bp_xprofile_firstname_field_id();

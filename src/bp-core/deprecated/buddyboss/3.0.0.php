@@ -817,6 +817,39 @@ function bb_members_fire_deprecated_save_hooks( $feature_id, $settings, $saved )
 			'bb_admin_save_feature_settings_after'
 		);
 	}
+
+	/**
+	 * Fires after xprofile settings have been saved.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_admin_save_feature_settings_after'} with feature_id='members'.
+	 *
+	 * @param string $tab_name The tab name.
+	 */
+	do_action_deprecated(
+		'bp_admin_tab_setting_saved',
+		array( 'bp-xprofile' ),
+		'BuddyBoss [BBVERSION]',
+		'bb_admin_save_feature_settings_after'
+	);
+
+	if ( bp_is_active( 'friends' ) ) {
+
+		/**
+		 * Fires after friends settings have been saved.
+		 *
+		 * @since BuddyBoss 1.0.0
+		 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_admin_save_feature_settings_after'} with feature_id='members'.
+		 *
+		 * @param string $tab_name The tab name.
+		 */
+		do_action_deprecated(
+			'bp_admin_tab_setting_saved',
+			array( 'bp-friends' ),
+			'BuddyBoss [BBVERSION]',
+			'bb_admin_save_feature_settings_after'
+		);
+	}
 }
 
 add_action( 'bb_admin_save_feature_settings_after', 'bb_members_fire_deprecated_save_hooks', 99, 3 );

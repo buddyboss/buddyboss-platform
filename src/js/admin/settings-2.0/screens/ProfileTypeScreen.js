@@ -134,7 +134,7 @@ export function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, 
 		return function () { controller.abort(); };
 	}, [ loadMemberTypes ] );
 
-	// Close menu on outside click.
+	// Close menu on outside click or Escape key.
 	useEffect( function () {
 		if ( null === openMenuId ) {
 			return;
@@ -146,9 +146,17 @@ export function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, 
 			}
 		}
 
+		function handleKeyDown( e ) {
+			if ( 'Escape' === e.key ) {
+				setOpenMenuId( null );
+			}
+		}
+
 		document.addEventListener( 'mousedown', handleMouseDown );
+		document.addEventListener( 'keydown', handleKeyDown );
 		return function () {
 			document.removeEventListener( 'mousedown', handleMouseDown );
+			document.removeEventListener( 'keydown', handleKeyDown );
 		};
 	}, [ openMenuId ] );
 
@@ -432,13 +440,16 @@ export function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, 
 														setOpenMenuId( openMenuId === type.id ? null : type.id );
 													} }
 													aria-label={ __( 'Actions', 'buddyboss' ) }
+													aria-haspopup="true"
+													aria-expanded={ type.id === openMenuId ? 'true' : 'false' }
 												>
 													<span className="bb-icons-rl bb-icons-rl-dots-three"></span>
 												</button>
 												{ openMenuId === type.id && (
-													<div className="bb-admin-profile-types__menu-dropdown">
+													<div className="bb-admin-profile-types__menu-dropdown" role="menu">
 														<button
 															className="bb-admin-profile-types__menu-item"
+															role="menuitem"
 															onClick={ function () {
 																handleEdit( type );
 															} }
@@ -448,6 +459,7 @@ export function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, 
 														</button>
 														<button
 															className="bb-admin-profile-types__menu-item bb-admin-profile-types__menu-item--danger"
+															role="menuitem"
 															onClick={ function () {
 																handleDelete( type.id );
 															} }

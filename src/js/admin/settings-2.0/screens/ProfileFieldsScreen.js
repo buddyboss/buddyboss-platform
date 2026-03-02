@@ -178,7 +178,7 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 		};
 	}, [ loadFieldGroups ] );
 
-	// Close ellipsis menu on outside click.
+	// Close ellipsis menu on outside click or Escape key.
 	useEffect( function () {
 		if ( null === openMenuId ) {
 			return;
@@ -186,9 +186,16 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 		function handleClick() {
 			setOpenMenuId( null );
 		}
+		function handleKeyDown( e ) {
+			if ( 'Escape' === e.key ) {
+				setOpenMenuId( null );
+			}
+		}
 		document.addEventListener( 'click', handleClick );
+		document.addEventListener( 'keydown', handleKeyDown );
 		return function () {
 			document.removeEventListener( 'click', handleClick );
+			document.removeEventListener( 'keydown', handleKeyDown );
 		};
 	}, [ openMenuId ] );
 
@@ -514,7 +521,10 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 						{ className: 'bb-pf-fieldset-header-left' },
 						wp.element.createElement(
 							'span',
-							{ className: 'bb-pf-drag-handle' },
+							{
+								className: 'bb-pf-drag-handle',
+								'aria-label': __( 'Drag to reorder field set', 'buddyboss' ),
+							},
 							wp.element.createElement( 'i', { className: 'bb-icons-rl-list' } )
 						),
 						wp.element.createElement(
@@ -585,7 +595,10 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 									{ className: 'bb-pf-field-left' },
 									wp.element.createElement(
 										'span',
-										{ className: 'bb-pf-drag-handle' },
+										{
+											className: 'bb-pf-drag-handle',
+											'aria-label': __( 'Drag to reorder field', 'buddyboss' ),
+										},
 										wp.element.createElement( 'i', { className: 'bb-icons-rl-list' } )
 									),
 									wp.element.createElement(
@@ -616,16 +629,20 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 												e.stopPropagation();
 												setOpenMenuId( openMenuId === field.id ? null : field.id );
 											},
+											'aria-label': __( 'Actions', 'buddyboss' ),
+											'aria-haspopup': 'true',
+											'aria-expanded': field.id === openMenuId ? 'true' : 'false',
 										},
 										wp.element.createElement( 'i', { className: 'bb-icons-rl-dots-three' } )
 									),
 									openMenuId === field.id && wp.element.createElement(
 										'div',
-										{ className: 'bb-pf-dropdown-menu bb_dropdown_menu_group components-menu-group' },
+										{ className: 'bb-pf-dropdown-menu bb_dropdown_menu_group components-menu-group', role: 'menu' },
 										wp.element.createElement(
 											'button',
 											{
 												className: 'bb-pf-dropdown-edit components-menu-item__button',
+												role: 'menuitem',
 												onClick: function () {
 													setOpenMenuId( null );
 													setEditField( { field: field, groupId: group.id } );
@@ -640,6 +657,7 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 											'button',
 											{
 												className: 'bb-pf-dropdown-delete components-menu-item__button',
+												role: 'menuitem',
 												onClick: function () {
 													setOpenMenuId( null );
 													setDeleteFieldData( field );
