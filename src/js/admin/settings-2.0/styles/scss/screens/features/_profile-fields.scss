@@ -223,7 +223,7 @@
 	display: flex;
 	align-items: center;
 	gap: 8px;
-	min-width: 280px;
+	width: 320px;
 	flex-shrink: 0;
 }
 
@@ -269,7 +269,7 @@
 	gap: 6px;
 	flex: 1;
 	min-width: 0;
-	justify-content: center;
+	justify-content: flex-start;
 }
 
 /* Field actions (ellipsis menu) */
