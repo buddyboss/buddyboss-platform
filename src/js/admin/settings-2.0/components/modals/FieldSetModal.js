@@ -106,7 +106,7 @@ export function FieldSetModal( { fieldSet, onClose, onSave, onDelete, setToast }
 		{
 			title: isEditing ? __( 'Edit Field Set', 'buddyboss' ) : __( 'Add New Field Set', 'buddyboss' ),
 			onRequestClose: onClose,
-			className: 'bb-pf-fieldset-modal',
+			className: 'bb-pf-fieldset-modal bb-admin-settings-modal',
 			shouldCloseOnClickOutside: false,
 		},
 

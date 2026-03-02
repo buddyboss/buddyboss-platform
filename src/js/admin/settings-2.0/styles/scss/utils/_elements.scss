@@ -181,8 +181,17 @@ select.bb-admin-settings__select {
 }
 
 /* Inputs */
-.buddyboss_page_bb-settings  .components-text-control__input {
-	@include bb-input-text;
+.buddyboss_page_bb-settings {
+   
+    .components-textarea-control__input,
+    .components-text-control__input {
+	    @include bb-input-text;
+    }
+
+    .components-textarea-control__input {
+        min-height: 100px;
+        padding: 8px;
+    }
 }
 
 /* WordPress DropdownMenu */
