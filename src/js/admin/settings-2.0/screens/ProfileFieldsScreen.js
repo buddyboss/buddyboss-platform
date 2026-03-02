@@ -424,13 +424,15 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 	 * @param {Object} field Field data.
 	 * @returns {Array} Badge elements.
 	 */
-	function renderFieldBadges( field ) {
-		var badges = [];
+	function renderFieldBadgeText( field ) {
 		if ( field.is_required ) {
-			badges.push(
-				wp.element.createElement( 'span', { key: 'required', className: 'bb-pf-badge-text' }, __( 'Required', 'buddyboss' ) )
-			);
+			return wp.element.createElement( 'span', { className: 'bb-pf-badge-text' }, __( 'required', 'buddyboss' ) );
 		}
+		return null;
+	}
+
+	function renderFieldBadgePills( field ) {
+		var badges = [];
 		if ( field.is_signup ) {
 			badges.push(
 				wp.element.createElement( 'span', { key: 'signup', className: 'bb-pf-badge bb-pf-badge--signup' }, __( 'Signup', 'buddyboss' ) )
@@ -447,7 +449,7 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 				wp.element.createElement( 'span', { key: 'member-types', className: 'bb-pf-badge bb-pf-badge--member-type' }, typeLabels.join( ', ' ) )
 			);
 		}
-		return badges;
+		return badges.length > 0 ? badges : null;
 	}
 
 	// Loading state.
@@ -579,24 +581,29 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 									},
 								},
 								wp.element.createElement(
-									'span',
-									{ className: 'bb-pf-drag-handle' },
-									wp.element.createElement( 'i', { className: 'bb-icons-rl-list' } )
-								),
-								wp.element.createElement(
-									'span',
-									{ className: 'bb-pf-field-type-icon' },
-									wp.element.createElement( 'i', { className: getFieldTypeIcon( field.type ) } )
-								),
-								wp.element.createElement(
-									'span',
-									{ className: 'bb-pf-field-name' },
-									decodeEntities( field.name )
+									'div',
+									{ className: 'bb-pf-field-left' },
+									wp.element.createElement(
+										'span',
+										{ className: 'bb-pf-drag-handle' },
+										wp.element.createElement( 'i', { className: 'bb-icons-rl-list' } )
+									),
+									wp.element.createElement(
+										'span',
+										{ className: 'bb-pf-field-type-icon' },
+										wp.element.createElement( 'i', { className: getFieldTypeIcon( field.type ) } )
+									),
+									wp.element.createElement(
+										'span',
+										{ className: 'bb-pf-field-name' },
+										decodeEntities( field.name )
+									),
+									renderFieldBadgeText( field )
 								),
 								wp.element.createElement(
 									'span',
 									{ className: 'bb-pf-field-badges' },
-									renderFieldBadges( field )
+									renderFieldBadgePills( field )
 								),
 								wp.element.createElement(
 									'div',

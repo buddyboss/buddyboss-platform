@@ -222,6 +222,15 @@
 	}
 }
 
+/* Field left section (drag handle + icon + name + required text) */
+.bb-pf-field-left {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	min-width: 280px;
+	flex-shrink: 0;
+}
+
 /* Field type icon */
 .bb-pf-field-type-icon {
 	display: flex;
@@ -251,26 +260,27 @@
 	min-width: 0;
 }
 
-/* Field badges */
+/* Field badge text (e.g. "required") */
+.bb-pf-field-row > .bb-pf-badge-text {
+	flex-shrink: 0;
+	margin-left: 4px;
+}
+
+/* Field badges (pill badges) */
 .bb-pf-field-badges {
 	display: flex;
 	align-items: center;
 	gap: 6px;
-	flex-shrink: 0;
-	margin-left: auto;
-
-	&:has(.bb-pf-badge-text) {
-		margin-left: 0;
-		justify-content: space-between;
-		flex: 1;
-	}
+	flex: 1;
+	min-width: 0;
+	justify-content: center;
 }
 
 /* Field actions (ellipsis menu) */
 .bb-pf-field-actions {
 	position: relative;
 	flex-shrink: 0;
-	margin-left: 8px;
+	margin-left: auto;
 }
 
 .bb-pf-ellipsis-btn {
