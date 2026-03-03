@@ -17,7 +17,6 @@ import {
 	deleteProfileField,
 	reorderProfileFields,
 } from '../utils/ajax';
-import { sanitizeHtml } from '../utils/sanitize';
 import { Toast } from '../components/Toast';
 import { FieldSetModal } from '../components/modals/FieldSetModal';
 import { DeleteFieldSetModal } from '../components/modals/DeleteFieldSetModal';
@@ -177,6 +176,9 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 		return function () {
 			if ( abortRef.current ) {
 				abortRef.current.abort();
+			}
+			if ( reorderAbortRef.current ) {
+				reorderAbortRef.current.abort();
 			}
 		};
 	}, [ loadFieldGroups ] );
@@ -791,7 +793,7 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 				{ className: 'bb-pf-confirm-dialog' },
 				wp.element.createElement( 'p', null,
 					/* translators: %s: field name */
-					wp.element.sprintf( __( 'Are you sure you want to delete the field "%s"? This action cannot be undone.', 'buddyboss' ), decodeEntities( deleteFieldData.name ) )
+					wp.i18n.sprintf( __( 'Are you sure you want to delete the field "%s"? This action cannot be undone.', 'buddyboss' ), decodeEntities( deleteFieldData.name ) )
 				),
 				wp.element.createElement(
 					'div',

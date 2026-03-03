@@ -235,13 +235,21 @@ class BB_Admin_Profile_Search_Ajax {
 		$modes  = isset( $meta['field_mode'] ) ? $meta['field_mode'] : array();
 
 		if ( null !== $field_index && isset( $codes[ $field_index ] ) ) {
-			// Updating existing field.
+			// Updating existing field — allow same code at same index, reject duplicate at other index.
+			if ( 'heading' !== $field_code && in_array( $field_code, $codes, true ) && $codes[ $field_index ] !== $field_code ) {
+				wp_send_json_error( array( 'message' => __( 'This field has already been added.', 'buddyboss' ) ) );
+			}
+
 			$codes[ $field_index ]  = $field_code;
 			$labels[ $field_index ] = $field_label;
 			$descs[ $field_index ]  = $field_desc;
 			$modes[ $field_index ]  = $field_mode;
 		} else {
-			// Adding new field.
+			// Adding new field — reject duplicates (except heading, which can appear multiple times).
+			if ( 'heading' !== $field_code && in_array( $field_code, $codes, true ) ) {
+				wp_send_json_error( array( 'message' => __( 'This field has already been added.', 'buddyboss' ) ) );
+			}
+
 			$codes[]  = $field_code;
 			$labels[] = $field_label;
 			$descs[]  = $field_desc;

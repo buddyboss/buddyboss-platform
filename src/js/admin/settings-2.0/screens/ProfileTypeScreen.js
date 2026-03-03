@@ -268,6 +268,7 @@ export function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, 
 	var handleModalSave = useCallback( function () {
 		setIsModalOpen( false );
 		setEditingType( null );
+		setToast( { status: 'success', message: __( 'Profile type saved.', 'buddyboss' ) } );
 		loadMemberTypes();
 	}, [ loadMemberTypes ] );
 

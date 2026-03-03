@@ -359,16 +359,37 @@ class BB_Admin_Profile_Fields_Ajax {
 			$args['field_id'] = $field_id;
 		}
 
-		// Auto-assign field order for new fields.
+		// Auto-assign field order for new fields (exclude repeater clones, matching legacy behavior).
 		if ( empty( $field_id ) ) {
 			global $wpdb;
-			$bp          = buddypress();
-			$field_order = (int) $wpdb->get_var(
+			$bp = buddypress();
+
+			// Cloned fields should not be considered when determining the max order of fields in given group.
+			$cloned_field_ids = $wpdb->get_col(
 				$wpdb->prepare(
-					"SELECT MAX(field_order) FROM {$bp->profile->table_name_fields} WHERE group_id = %d",
+					"SELECT f.id FROM {$bp->profile->table_name_fields} AS f JOIN {$bp->profile->table_name_meta} AS fm ON f.id = fm.object_id WHERE f.group_id = %d AND fm.meta_key = '_is_repeater_clone' AND fm.meta_value = 1",
 					$group_id
 				)
 			);
+
+			if ( ! empty( $cloned_field_ids ) ) {
+				$placeholders = implode( ',', array_fill( 0, count( $cloned_field_ids ), '%d' ) );
+				$query_args   = array_merge( array( $group_id ), array_map( 'absint', $cloned_field_ids ) );
+				$field_order  = (int) $wpdb->get_var(
+					$wpdb->prepare(
+						"SELECT MAX(field_order) FROM {$bp->profile->table_name_fields} WHERE group_id = %d AND id NOT IN ( {$placeholders} )", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Placeholders are generated dynamically.
+						$query_args
+					)
+				);
+			} else {
+				$field_order = (int) $wpdb->get_var(
+					$wpdb->prepare(
+						"SELECT MAX(field_order) FROM {$bp->profile->table_name_fields} WHERE group_id = %d",
+						$group_id
+					)
+				);
+			}
+
 			++$field_order;
 			$args['field_order'] = $field_order;
 		}

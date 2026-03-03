@@ -180,6 +180,9 @@ export default function ProfileSearchScreen( { onNavigate, helpUrl, onHelpClick,
 			if ( abortRef.current ) {
 				abortRef.current.abort();
 			}
+			if ( reorderAbortRef.current ) {
+				reorderAbortRef.current.abort();
+			}
 		};
 	}, [ loadSearchFields ] );
 
