@@ -428,6 +428,7 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 			profile_url: member.profile_url,
 			role: role,
 			is_creator: member.is_creator,
+			is_sole_admin: !! member.is_sole_admin,
 			is_pending: false,
 		} );
 	} );
@@ -578,7 +579,7 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 															{ member.name }
 														</span>
 													) }
-													{ ! member.is_creator && (
+													{ ! member.is_creator && ! member.is_sole_admin && (
 														<button
 															type="button"
 															className="bb-group-members-tab__remove-btn"
@@ -599,6 +600,7 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 													<SelectControl
 														value={ member.role }
 														options={ roleOptions }
+														disabled={ member.is_sole_admin }
 														onChange={ function ( newRole ) {
 															if ( member.is_pending ) {
 																handlePendingAddRoleChange( member.user_id, newRole );

@@ -1603,6 +1603,11 @@ class BB_Admin_Groups_Ajax {
 			cache_users( $user_ids );
 		}
 
+		// Count group admins once to flag sole-admin members (prevents role change in React UI).
+		$group_admins    = groups_get_group_admins( $group_id );
+		$admin_count     = count( $group_admins );
+		$admin_user_ids  = wp_list_pluck( $group_admins, 'user_id' );
+
 		$members = array();
 		foreach ( $members_data['members'] as $member ) {
 			// Determine role.
@@ -1629,9 +1634,9 @@ class BB_Admin_Groups_Ajax {
 			do_action_deprecated( 'bp_groups_admin_manage_member_row', array( (int) $member->user_id, $group ), 'BuddyBoss [BBVERSION]', 'bb_admin_get_group_members_response' );
 
 			$members[] = array(
-				'user_id'    => (int) $member->user_id,
-				'name'       => bp_core_get_user_displayname( $member->user_id ),
-				'avatar_url' => bp_core_fetch_avatar(
+				'user_id'       => (int) $member->user_id,
+				'name'          => bp_core_get_user_displayname( $member->user_id ),
+				'avatar_url'    => bp_core_fetch_avatar(
 					array(
 						'item_id' => $member->user_id,
 						'object'  => 'user',
@@ -1639,8 +1644,9 @@ class BB_Admin_Groups_Ajax {
 						'html'    => false,
 					)
 				),
-				'role'       => $role,
-				'is_creator' => ( (int) $member->user_id === (int) $group->creator_id ),
+				'role'          => $role,
+				'is_creator'    => ( (int) $member->user_id === (int) $group->creator_id ),
+				'is_sole_admin' => ( 'admin' === $role && 1 === $admin_count ),
 			);
 		}
 
@@ -1758,6 +1764,10 @@ class BB_Admin_Groups_Ajax {
 				$result = groups_demote_member( $user_id, $group_id );
 				break;
 			case 'banned':
+				// Guard: do not allow banning the last group admin.
+				if ( $member_obj->is_admin && ! $this->bb_group_has_other_admins( $group_id, $user_id ) ) {
+					wp_send_json_error( array( 'message' => __( 'You cannot ban the only group administrator.', 'buddyboss' ) ) );
+				}
 				$result = groups_ban_member( $user_id, $group_id );
 				break;
 		}
