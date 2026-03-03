@@ -11,6 +11,29 @@
 	width: 100%;
 	padding: 32px;
 
+	.components-base-control {
+		
+		.components-input-control__label {
+			color: $bb-text-secondary-color;
+			text-transform: none;
+			font-size: 13px;
+			font-weight: 500;
+		}
+
+		.components-select-control__input {
+			@include bb-admin-settings-select;
+		}
+
+		.components-input-control-suffix-wrapper,
+		.components-input-control__backdrop {
+			display: none;
+		}
+
+		.components-select-control {
+			max-width: 275px;
+		}
+	}
+
 	&__card {
 		background: $bb-background-base-color;
 		border: 1px solid $bb-border-primary-color;

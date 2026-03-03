@@ -316,35 +316,43 @@ export function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, 
 	return (
 		<div className="bb-admin-profile-types">
 			{/* Card 1: Profile Type Settings */}
-			<div className="bb-admin-profile-types__card">
-				<div className="bb-admin-profile-types__card-header">
-					<h3 className="bb-admin-profile-types__card-title">
-						{ getSectionTitle( feature, activePanelId, 'profile_types_settings' ) || __( 'Profile Type Settings', 'buddyboss' ) }
-					</h3>
-					{ helpUrl && (
-						<HelpIcon
-							onClick={ onHelpClick }
-							contentId={ helpUrl }
-						/>
-					) }
+			<div className="bb-admin-feature-settings__section">
+				<div className="bb-admin-feature-settings__section-header">
+					<div className="bb-admin-feature-settings__section-header-left">
+						<h3 className="bb-admin-feature-settings__section-title">
+							{ getSectionTitle( feature, activePanelId, 'profile_types_settings' ) || __( 'Profile Type Settings', 'buddyboss' ) }
+						</h3>
+					</div>
+					<div className="bb-admin-feature-settings__section-header-right">
+						{ helpUrl && (
+							<HelpIcon
+								onClick={ onHelpClick }
+								contentId={ helpUrl }
+							/>
+						) }
+					</div>
 				</div>
-				<div className="bb-admin-profile-types__card-body">
+				<div className="bb-admin-feature-settings__section-body">
 					{ settingsLoading ? (
 						<div className="bb-admin-loading"><Spinner /></div>
 					) : (
-						<>
-							<div className="bb-admin-profile-types__setting-row">
-								<span className="bb-admin-profile-types__setting-label">
+						<div className="bb-admin-settings-form">
+							<div className="bb-admin-settings-form__field">
+								<div className="bb-admin-settings-form__field-label">
 									{ getFieldLabel( feature, activePanelId, 'bp-member-type-enable-disable' ) || __( 'Profile Types', 'buddyboss' ) }
-								</span>
-								<div className="bb-admin-profile-types__setting-control">
-									<ToggleControl
-										label={ getFieldDescription( feature, activePanelId, 'bp-member-type-enable-disable' ) || __( 'Enable profile types', 'buddyboss' ) }
-										checked={ enableProfileTypes }
-										onChange={ function ( val ) {
-											handleSettingChange( 'bp-member-type-enable-disable', val );
-										} }
-									/>
+								</div>
+								<div className="bb-admin-settings-form__field-content bb-admin-settings-form__field-content--inline">
+									<div className="bb-admin-settings-form__field-input-wrapper">
+										<div className="bb-admin-settings-form__toggle-wrapper">
+											<ToggleControl
+													label={ getFieldDescription( feature, activePanelId, 'bp-member-type-enable-disable' ) || __( 'Enable profile types', 'buddyboss' ) }
+													checked={ enableProfileTypes }
+													onChange={ function ( val ) {
+														handleSettingChange( 'bp-member-type-enable-disable', val );
+													} }
+												/>
+										</div>
+									</div>
 									{ getFieldHelpText( feature, activePanelId, 'bp-member-type-enable-disable' ) && (
 										<span
 											className="bb-admin-profile-types__setting-help-text"
@@ -355,18 +363,22 @@ export function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, 
 							</div>
 							{ enableProfileTypes && (
 								<>
-									<div className="bb-admin-profile-types__setting-row">
-										<span className="bb-admin-profile-types__setting-label">
+									<div className="bb-admin-settings-form__field">
+										<div className="bb-admin-settings-form__field-label">
 											{ getFieldLabel( feature, activePanelId, 'bp-member-type-display-on-profile' ) || __( 'Display Profile Types', 'buddyboss' ) }
-										</span>
-										<div className="bb-admin-profile-types__setting-control">
-											<ToggleControl
-												label={ getFieldDescription( feature, activePanelId, 'bp-member-type-display-on-profile' ) || __( 'Display profile type on member profiles', 'buddyboss' ) }
-												checked={ displayOnProfile }
-												onChange={ function ( val ) {
-													handleSettingChange( 'bp-member-type-display-on-profile', val );
-												} }
-											/>
+										</div>
+										<div className="bb-admin-settings-form__field-content bb-admin-settings-form__field-content--inline">
+											<div className="bb-admin-settings-form__field-input-wrapper">
+												<div className="bb-admin-settings-form__toggle-wrapper">
+													<ToggleControl
+														label={ getFieldDescription( feature, activePanelId, 'bp-member-type-display-on-profile' ) || __( 'Display profile type on member profiles', 'buddyboss' ) }
+														checked={ displayOnProfile }
+														onChange={ function ( val ) {
+															handleSettingChange( 'bp-member-type-display-on-profile', val );
+														} }
+													/>
+												</div>
+											</div>
 											{ getFieldHelpText( feature, activePanelId, 'bp-member-type-display-on-profile' ) && (
 												<span
 													className="bb-admin-profile-types__setting-help-text"
@@ -375,16 +387,21 @@ export function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, 
 											) }
 										</div>
 									</div>
-									<div className="bb-admin-profile-types__setting-row">
-										<span className="bb-admin-profile-types__setting-label">
+
+									<div className="bb-admin-settings-form__field">
+										<div className="bb-admin-settings-form__field-label">
 											{ getFieldLabel( feature, activePanelId, 'bp-member-type-default-on-registration' ) || __( 'Default Profile Type', 'buddyboss' ) }
-										</span>
-										<div className="bb-admin-profile-types__setting-control">
-											<SelectControl
-												value={ defaultProfileType }
-												options={ defaultTypeOptions }
-												onChange={ handleDefaultTypeChange }
-											/>
+										</div>
+										<div className="bb-admin-settings-form__field-content">
+											<div className="bb-admin-settings-form__field-input-wrapper">
+												<div className="bb-admin-settings-form__toggle-wrapper">
+													<SelectControl
+														value={ defaultProfileType }
+														options={ defaultTypeOptions }
+														onChange={ handleDefaultTypeChange }
+													/>
+												</div>
+											</div>
 											{ getFieldHelpText( feature, activePanelId, 'bp-member-type-default-on-registration' ) && (
 												<span
 													className="bb-admin-profile-types__setting-help-text"
@@ -395,7 +412,7 @@ export function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, 
 									</div>
 								</>
 							) }
-						</>
+						</div>
 					) }
 				</div>
 			</div>
