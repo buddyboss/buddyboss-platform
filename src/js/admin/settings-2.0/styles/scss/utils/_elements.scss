@@ -73,6 +73,35 @@ select.bb-admin-settings__select {
 			}
 		}
 	}
+
+    .components-form-toggle--is-big .components-form-toggle {
+        width: 40px;
+        height: 24px;
+
+        .components-form-toggle__track {
+            width: 40px;
+            height: 24px;
+        }
+
+        .components-form-toggle__thumb {
+            height: 16px;
+            width: 16px;
+            top: 4px;
+            left: 4px;
+        }
+
+        &.is-checked {
+
+            .components-form-toggle__track {
+                background-color: $bb-background-brand-primary-color;
+            }
+
+            .components-form-toggle__thumb {
+                transform: translateX(15px);
+                background-color: $bb-background-base-color;
+            }
+        }
+    }
 }
 
 .buddyboss_page_bb-settings {

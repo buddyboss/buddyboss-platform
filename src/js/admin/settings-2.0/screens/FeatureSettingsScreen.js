@@ -516,6 +516,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 													{sectionToggleKey && (
 														<div className="bb-admin-feature-settings__section-toggle">
 															<ToggleControl
+																className="components-form-toggle--is-big"
 																checked={ ! isSectionToggleOff }
 																onChange={ function( newVal ) {
 																	handleSettingChange( sectionToggleKey, newVal ? 1 : 0 );
