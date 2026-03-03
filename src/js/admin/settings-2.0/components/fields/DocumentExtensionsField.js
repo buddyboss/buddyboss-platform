@@ -644,16 +644,19 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 										{ ! isDefault && (
 											<div className="bb-doc-extensions-modal__ext-actions">
 												<DropdownMenu
+													className="bb-doc-extensions__dropdown"
 													icon={ <i className="bb-icons-rl-dots-three" /> }
 													label={ __( 'More options', 'buddyboss' ) }
 													controls={ [
 														{
+															icon: <i className="bb-icons-rl-note-pencil"></i>,
 															title: __( 'Edit', 'buddyboss' ),
 															onClick: function() {
 																handleStartEdit( key );
 															},
 														},
 														{
+															icon: <i className="bb-icons-rl-trash"></i>,
 															title: __( 'Delete', 'buddyboss' ),
 															onClick: function() {
 																handleRemoveExtension( key );

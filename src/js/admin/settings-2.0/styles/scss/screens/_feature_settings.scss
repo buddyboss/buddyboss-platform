@@ -332,7 +332,7 @@
 
             .bb-admin-settings-form__child-fields {
                 flex-basis: 100%;
-                margin-top: 4px;
+                margin-top: 16px;
             }
 
             .bb-admin-settings-form__child-field {
@@ -621,7 +621,7 @@
     &__items {
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: 16px;
     }
 
     &__item {
@@ -661,38 +661,15 @@
     }
 
     &__add-btn {
+        @include bb-button-primary;
         display: inline-flex;
         align-items: center;
         gap: 6px;
         margin-top: 16px;
-        padding: 8px 16px;
-        font-size: 13px;
-        font-weight: 500;
-        line-height: 18px;
-        color: $bb-text-inverse-color;
-        background-color: $bb-background-brand-primary-color;
-        border: none;
-        border-radius: $bb-border-radius-lg;
-        cursor: pointer;
-        transition: opacity 0.2s ease;
 
         i {
             font-size: 16px;
             line-height: 1;
-        }
-
-        &:hover {
-            opacity: 0.9;
-        }
-
-        &:focus {
-            outline: 2px solid $bb-background-brand-primary-color;
-            outline-offset: 1px;
-        }
-
-        &:disabled {
-            opacity: 0.5;
-            pointer-events: none;
         }
     }
 }
@@ -1186,19 +1163,23 @@
             padding: 0;
             min-width: auto;
             height: auto;
-            color: $bb-icon-tertiary-color;
+            color: $bb-icon-color;
+            padding: 4px;
+            border: 1px solid transparent;
+            border-radius: $bb-border-radius-md;
 
             i {
-                font-size: 18px;
+                font-size: 24px;
                 line-height: 1;
                 font-weight: 700;
             }
 
             &:hover,
             &:focus,
-            &.is-pressed {
+            &.is-opened {
                 color: $bb-text-color;
-                background: none;
+                background: $bb-background-primary-hover-color;
+                border-color: $bb-border-secondary-color;
                 box-shadow: none;
             }
 

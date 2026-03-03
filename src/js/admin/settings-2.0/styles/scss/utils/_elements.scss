@@ -232,6 +232,54 @@ select.bb-admin-settings__select {
     }
 }
 
+.buddyboss_page_bb-settings {
+
+    .components-dropdown__content .components-popover__content {
+        background-color: $bb-background-base-color;
+        border-radius: $bb-border-radius-lg;
+        box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
+        padding: 8px 0;
+        min-width: 190px;
+
+        // Menu item button
+        .components-dropdown-menu__menu-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            padding: 10px 8px 10px 16px;
+            background: none;
+            border: none;
+            border-radius: 0;
+            cursor: pointer;
+            transition: background-color 0.15s ease;
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 18px;
+            color: $bb-text-tertiary-color;
+
+            &:hover,
+            &:focus {
+                color: $bb-text-tertiary-color;
+                background-color: $bb-background-primary-color;
+                box-shadow: none;
+                outline: none;
+            }
+
+            &:active {
+                background-color: $bb-background-secondary-color;
+            }
+
+            [class*="bb-icons-"] {
+                color: $bb-icon-tertiary-color;
+                font-size: 20px !important;
+                line-height: 1;
+                font-weight: 400;
+            }
+        }
+    }
+}
+
 /* Toast */
 
 .bb-toast-container {
