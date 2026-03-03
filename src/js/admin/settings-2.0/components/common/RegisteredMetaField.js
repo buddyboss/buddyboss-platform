@@ -45,18 +45,31 @@ function AjaxMultiSelectField( { field, value, onChange } ) {
 	var selectedIds = Array.isArray( value ) ? value.map( Number ) : [];
 
 	// Track labels for selected items.
-	var [ itemLabels, setItemLabels ] = useState( function () {
+	var itemLabelsState = useState( function () {
 		var labels = {};
 		initialItems.forEach( function ( item ) {
 			labels[ Number( item.value ) ] = item.label;
 		} );
 		return labels;
 	} );
+	var itemLabels = itemLabelsState[ 0 ];
+	var setItemLabels = itemLabelsState[ 1 ];
 
-	var [ searchQuery, setSearchQuery ] = useState( '' );
-	var [ suggestions, setSuggestions ] = useState( [] );
-	var [ isLoading, setIsLoading ] = useState( false );
-	var [ showDropdown, setShowDropdown ] = useState( false );
+	var searchQueryState = useState( '' );
+	var searchQuery = searchQueryState[ 0 ];
+	var setSearchQuery = searchQueryState[ 1 ];
+
+	var suggestionsState = useState( [] );
+	var suggestions = suggestionsState[ 0 ];
+	var setSuggestions = suggestionsState[ 1 ];
+
+	var isLoadingState = useState( false );
+	var isLoading = isLoadingState[ 0 ];
+	var setIsLoading = isLoadingState[ 1 ];
+
+	var showDropdownState = useState( false );
+	var showDropdown = showDropdownState[ 0 ];
+	var setShowDropdown = showDropdownState[ 1 ];
 	var abortRef = useRef( null );
 	var timerRef = useRef( null );
 	var wrapperRef = useRef( null );

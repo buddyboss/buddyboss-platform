@@ -56,8 +56,9 @@ export function ajaxFetch( action, data, options ) {
 				}
 				throw new Error( 'HTTP ' + response.status + ': ' + response.statusText );
 			} ).catch( function ( parseError ) {
-				// If JSON parsing itself failed, re-throw with HTTP status.
-				if ( parseError.message && 0 !== parseError.message.indexOf( 'HTTP ' ) ) {
+				// If we already built a meaningful Error, re-throw it.
+				// SyntaxError means JSON.parse() failed; fall through to HTTP status message.
+				if ( ! ( parseError instanceof SyntaxError ) ) {
 					throw parseError;
 				}
 				throw new Error( 'HTTP ' + response.status + ': ' + response.statusText );

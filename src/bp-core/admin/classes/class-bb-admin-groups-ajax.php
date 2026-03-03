@@ -69,20 +69,25 @@ class BB_Admin_Groups_Ajax {
 		add_action( 'groups_create_group', $clear_counts );
 		add_action( 'groups_settings_updated', $clear_counts );
 
-		// Fire the deprecated hook once per request (non-AJAX page loads only)
-		// to preserve backward compatibility with plugins hooking bp_groups_admin_load.
+		// Fire the deprecated hook only on relevant admin pages (non-AJAX) to
+		// preserve backward compatibility with plugins hooking bp_groups_admin_load.
+		// The legacy hook only fired on the groups admin screen, so we guard it
+		// to avoid unexpected side effects on unrelated admin pages.
 		if ( ! wp_doing_ajax() ) {
-			/**
-			 * Fires when the Groups admin page is loaded. Deprecated in Settings 2.0.
-			 *
-			 * Settings 2.0 uses AJAX-driven React UI — there is no direct replacement
-			 * for this page-load hook. Plugins that registered metaboxes via this hook
-			 * should use {@see 'bp_groups_admin_meta_boxes'} instead.
-			 *
-			 * @since BuddyPress 1.7.0
-			 * @deprecated BuddyBoss [BBVERSION] No direct replacement. Use AJAX-based hooks instead.
-			 */
-			do_action_deprecated( 'bp_groups_admin_load', array( '' ), 'BuddyBoss [BBVERSION]' );
+			$page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			if ( 'bp-groups' === $page || 'bb-settings' === $page ) {
+				/**
+				 * Fires when the Groups admin page is loaded. Deprecated in Settings 2.0.
+				 *
+				 * Settings 2.0 uses AJAX-driven React UI — there is no direct replacement
+				 * for this page-load hook. Plugins that registered metaboxes via this hook
+				 * should use {@see 'bp_groups_admin_meta_boxes'} instead.
+				 *
+				 * @since BuddyPress 1.7.0
+				 * @deprecated BuddyBoss [BBVERSION] No direct replacement. Use AJAX-based hooks instead.
+				 */
+				do_action_deprecated( 'bp_groups_admin_load', array( '' ), 'BuddyBoss [BBVERSION]' );
+			}
 		}
 	}
 
@@ -1287,14 +1292,16 @@ class BB_Admin_Groups_Ajax {
 		$original_gid = isset( $_GET['gid'] ) ? $_GET['gid'] : null; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- Backing up raw value for restore; not used as input.
 		$_GET['gid']  = $group_id;
 
-		ob_start();
-		do_action( 'bp_groups_admin_meta_boxes' );
-		ob_end_clean();
-
-		if ( null === $original_gid ) {
-			unset( $_GET['gid'] );
-		} else {
-			$_GET['gid'] = $original_gid;
+		try {
+			ob_start();
+			do_action( 'bp_groups_admin_meta_boxes' );
+			ob_end_clean();
+		} finally {
+			if ( null === $original_gid ) {
+				unset( $_GET['gid'] );
+			} else {
+				$_GET['gid'] = $original_gid;
+			}
 		}
 
 		/**
@@ -1596,6 +1603,11 @@ class BB_Admin_Groups_Ajax {
 			cache_users( $user_ids );
 		}
 
+		// Count group admins once to flag sole-admin members (prevents role change in React UI).
+		$group_admins    = groups_get_group_admins( $group_id );
+		$admin_count     = count( $group_admins );
+		$admin_user_ids  = wp_list_pluck( $group_admins, 'user_id' );
+
 		$members = array();
 		foreach ( $members_data['members'] as $member ) {
 			// Determine role.
@@ -1622,9 +1634,9 @@ class BB_Admin_Groups_Ajax {
 			do_action_deprecated( 'bp_groups_admin_manage_member_row', array( (int) $member->user_id, $group ), 'BuddyBoss [BBVERSION]', 'bb_admin_get_group_members_response' );
 
 			$members[] = array(
-				'user_id'    => (int) $member->user_id,
-				'name'       => bp_core_get_user_displayname( $member->user_id ),
-				'avatar_url' => bp_core_fetch_avatar(
+				'user_id'       => (int) $member->user_id,
+				'name'          => bp_core_get_user_displayname( $member->user_id ),
+				'avatar_url'    => bp_core_fetch_avatar(
 					array(
 						'item_id' => $member->user_id,
 						'object'  => 'user',
@@ -1632,8 +1644,9 @@ class BB_Admin_Groups_Ajax {
 						'html'    => false,
 					)
 				),
-				'role'       => $role,
-				'is_creator' => ( (int) $member->user_id === (int) $group->creator_id ),
+				'role'          => $role,
+				'is_creator'    => ( (int) $member->user_id === (int) $group->creator_id ),
+				'is_sole_admin' => ( 'admin' === $role && 1 === $admin_count ),
 			);
 		}
 
@@ -1751,6 +1764,10 @@ class BB_Admin_Groups_Ajax {
 				$result = groups_demote_member( $user_id, $group_id );
 				break;
 			case 'banned':
+				// Guard: do not allow banning the last group admin.
+				if ( $member_obj->is_admin && ! $this->bb_group_has_other_admins( $group_id, $user_id ) ) {
+					wp_send_json_error( array( 'message' => __( 'You cannot ban the only group administrator.', 'buddyboss' ) ) );
+				}
 				$result = groups_ban_member( $user_id, $group_id );
 				break;
 		}

@@ -612,7 +612,7 @@ function bb_redirect_legacy_settings_to_settings_2() {
 
 	$page      = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
 	$tab       = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : '';
-	$post_type = isset( $_GET['post_type'] ) ? sanitize_key( $_GET['post_type'] ) : '';
+	$post_type = isset( $_GET['post_type'] ) ? sanitize_key( wp_unslash( $_GET['post_type'] ) ) : '';
 
 	// Redirect legacy Group Types CPT page (edit.php?post_type=bp-group-type).
 	if ( 'bp-group-type' === $post_type ) {

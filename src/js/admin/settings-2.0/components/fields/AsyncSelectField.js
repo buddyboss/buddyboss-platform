@@ -175,8 +175,9 @@ export function AsyncSelectField( { value, onChange, asyncAction, placeholder, d
 				controller.abort();
 			};
 		},
+		// Re-run when value changes externally so the display label stays in sync.
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[] // Run once on mount only.
+		[ value ]
 	);
 
 	// Close dropdown on click outside.
@@ -320,8 +321,8 @@ export function AsyncSelectField( { value, onChange, asyncAction, placeholder, d
 					{ ! isLoading && results.length === 0 && (
 						<div className="bb-async-select__status">
 							{ search
-								? __( 'No forums found.', 'buddyboss' )
-								: __( 'No forums available.', 'buddyboss' )
+								? __( 'No results found.', 'buddyboss' )
+								: __( 'No options available.', 'buddyboss' )
 							}
 						</div>
 					) }
