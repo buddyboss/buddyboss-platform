@@ -37,7 +37,7 @@ if ( bp_is_active( 'activity' ) && bp_is_activity_like_active() ) {
 		require_once $bb_reactions_feature_dir . '/classes/class-bb-reaction.php';
 	}
 
-	// Only load REST endpoint class when the API plugin is not active (it provides its own copy).
+	// Only load REST endpoint class when REST is bundled in Platform (separate API plugin provides its own copy).
 	if ( function_exists( 'bp_rest_in_buddypress' ) && bp_rest_in_buddypress() && file_exists( $bb_reactions_feature_dir . '/classes/class-bb-rest-reactions-endpoint.php' ) ) {
 		require_once $bb_reactions_feature_dir . '/classes/class-bb-rest-reactions-endpoint.php';
 	}
@@ -48,24 +48,38 @@ if ( bp_is_active( 'activity' ) && bp_is_activity_like_active() ) {
 	}
 
 	// Initialize the reaction system on 'init' to ensure WordPress is fully loaded.
-	add_action(
-		'init',
-		function () {
-			if ( function_exists( 'bb_load_reaction' ) ) {
-				bb_load_reaction();
-			}
-		},
-		5
-	);
+	add_action( 'init', 'bb_reactions_init_load', 5 );
 
-	// Register Reactions REST API endpoint (only when API plugin is not active).
-	add_action(
-		'bp_rest_api_init',
-		function () {
-			if ( function_exists( 'bp_rest_in_buddypress' ) && bp_rest_in_buddypress() && class_exists( 'BB_REST_Reactions_Endpoint' ) ) {
-				$controller = new BB_REST_Reactions_Endpoint();
-				$controller->register_routes();
-			}
-		}
-	);
+	// Register Reactions REST API endpoint (only when REST is bundled in Platform).
+	add_action( 'bp_rest_api_init', 'bb_reactions_register_rest_routes' );
+}
+
+/**
+ * Initialize the reactions system.
+ *
+ * Named function (not anonymous closure) so it can be removed via remove_action()
+ * by Pro or third-party plugins when needed.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_reactions_init_load() {
+	if ( function_exists( 'bb_load_reaction' ) ) {
+		bb_load_reaction();
+	}
+}
+
+/**
+ * Register the Reactions REST API endpoint.
+ *
+ * Only registers when REST is bundled in Platform (separate API plugin provides its own copy).
+ * Named function (not anonymous closure) so it can be removed via remove_action()
+ * by Pro or third-party plugins when needed.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_reactions_register_rest_routes() {
+	if ( function_exists( 'bp_rest_in_buddypress' ) && bp_rest_in_buddypress() && class_exists( 'BB_REST_Reactions_Endpoint' ) ) {
+		$controller = new BB_REST_Reactions_Endpoint();
+		$controller->register_routes();
+	}
 }

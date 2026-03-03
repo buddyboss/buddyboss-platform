@@ -98,7 +98,7 @@ export function useReactionCallbacks(onChange, values) {
 			// Update the icon while preserving other button settings (like text)
 			currentButtonValue.icon = newIcon;
 
-			onChange('bb_reactions_button', currentButtonValue);
+			onChangeRef.current('bb_reactions_button', currentButtonValue);
 		};
 
 		return () => {

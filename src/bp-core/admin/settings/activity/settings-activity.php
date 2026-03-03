@@ -15,8 +15,10 @@ defined( 'ABSPATH' ) || exit;
  * Register Activity Settings panel sections and fields.
  *
  * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $edit_time_options Edit time options array built in bb-admin-settings-activity.php.
  */
-function bb_activity_register_settings_panel_fields() {
+function bb_activity_register_settings_panel_fields( $edit_time_options = array() ) {
 
 	// -------------------------------------------------------------------------
 	// SECTION: Activity Settings
@@ -32,23 +34,6 @@ function bb_activity_register_settings_panel_fields() {
 		)
 	);
 
-	// FIELD: Edit Activity (toggle with inline select in description).
-	// Build edit time options from bp_activity_edit_times() — values are in seconds.
-	// Cache the result since it's used by both edit activity and comment edit fields.
-	$activity_edit_times = function_exists( 'bp_activity_edit_times' ) ? bp_activity_edit_times() : array();
-	$edit_time_options   = array(
-		array(
-			'label' => __( 'Forever', 'buddyboss' ),
-			'value' => -1,
-		),
-	);
-	foreach ( $activity_edit_times as $time ) {
-		$edit_time_options[] = array(
-			'label' => $time['label'],
-			'value' => $time['value'],
-		);
-	}
-
 	bb_register_feature_field(
 		'activity',
 		'activity_settings',
@@ -57,6 +42,7 @@ function bb_activity_register_settings_panel_fields() {
 			'name'                 => '_bp_enable_activity_edit',
 			'label'                => __( 'Edit Activity', 'buddyboss' ),
 			'type'                 => 'toggle',
+			// translators: %s: Edit time duration select control (e.g. "10 minutes").
 			'description'          => __( 'Allow members to edit their activity posts for a duration of %s', 'buddyboss' ),
 			'default'              => bp_is_activity_edit_enabled(),
 			'sanitize_callback'    => 'intval',
@@ -225,7 +211,7 @@ function bb_activity_register_settings_panel_fields() {
 			'help_text'         => __( 'When checked, logged-in members will see activity from their timeline, connections, followed members, joined groups, subscribed forums, and mentions.', 'buddyboss' ),
 			'default'           => bp_is_relevant_feed_enabled(),
 			'sanitize_callback' => 'intval',
-			'order'             => 110,
+			'order'             => 90,
 		)
 	);
 
@@ -291,14 +277,14 @@ function bb_activity_register_settings_panel_fields() {
 		'activity_settings',
 		'activity_feed',
 		array(
-			'name'              => 'bb_activity_filter_options',
-			'label'             => __( 'Activity Feed Filters', 'buddyboss' ),
-			'type'              => 'checkbox_list',
-			'description'       => __( 'Allow members to filter activity posts by:', 'buddyboss' ),
-			'default'           => bb_get_enabled_activity_filter_options(),
-			'options'           => $activity_feed_filter_options,
+			'name'        => 'bb_activity_filter_options',
+			'label'       => __( 'Activity Feed Filters', 'buddyboss' ),
+			'type'        => 'checkbox_list',
+			'description' => __( 'Allow members to filter activity posts by:', 'buddyboss' ),
+			'default'     => bb_get_enabled_activity_filter_options(),
+			'options'     => $activity_feed_filter_options,
 			// Uses registry default sanitize_callback for checkbox_list type.
-			'order'             => 20,
+			'order'       => 20,
 		)
 	);
 
@@ -326,11 +312,11 @@ function bb_activity_register_settings_panel_fields() {
 		'activity_settings',
 		'activity_feed',
 		array(
-			'name'              => 'bb_activity_timeline_filter_options',
-			'label'             => __( 'Profile Timeline Filters', 'buddyboss' ),
-			'type'              => 'checkbox_list',
-			'description'       => __( 'Allow members to filter activity posts by:', 'buddyboss' ),
-			'default'           => array(
+			'name'        => 'bb_activity_timeline_filter_options',
+			'label'       => __( 'Profile Timeline Filters', 'buddyboss' ),
+			'type'        => 'checkbox_list',
+			'description' => __( 'Allow members to filter activity posts by:', 'buddyboss' ),
+			'default'     => array(
 				'just-me'   => 1,
 				'favorites' => 1,
 				'groups'    => 1,
@@ -338,9 +324,9 @@ function bb_activity_register_settings_panel_fields() {
 				'mentions'  => 1,
 				'following' => 1,
 			),
-			'options'           => $activity_timeline_filter_options,
+			'options'     => $activity_timeline_filter_options,
 			// Uses registry default sanitize_callback for checkbox_list type.
-			'order'             => 30,
+			'order'       => 30,
 		)
 	);
 
@@ -368,14 +354,14 @@ function bb_activity_register_settings_panel_fields() {
 		'activity_settings',
 		'activity_feed',
 		array(
-			'name'              => 'bb_activity_sorting_options',
-			'label'             => __( 'Activity Sorting', 'buddyboss' ),
-			'type'              => 'checkbox_list',
-			'description'       => __( 'Allow members to sort activity posts by:', 'buddyboss' ),
-			'default'           => bb_get_enabled_activity_sorting_options(),
-			'options'           => $activity_sorting_options,
+			'name'        => 'bb_activity_sorting_options',
+			'label'       => __( 'Activity Sorting', 'buddyboss' ),
+			'type'        => 'checkbox_list',
+			'description' => __( 'Allow members to sort activity posts by:', 'buddyboss' ),
+			'default'     => bb_get_enabled_activity_sorting_options(),
+			'options'     => $activity_sorting_options,
 			// Uses registry default sanitize_callback for checkbox_list type.
-			'order'             => 40,
+			'order'       => 40,
 		)
 	);
 }

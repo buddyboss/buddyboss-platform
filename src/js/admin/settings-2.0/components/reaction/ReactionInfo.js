@@ -27,9 +27,13 @@ export function ReactionInfo({ field, onOpenMigrationWizard }) {
 		return null;
 	}
 
-	// Split description by placeholder to insert link
+	// Split description by placeholder to insert link.
 	// Expected format: "Text before {link} text after"
-	const parts = description.split('{link}');
+	// Guard: if placeholder is absent, render link after the full description text.
+	const linkPlaceholder = '{link}';
+	const linkIndex = description.indexOf(linkPlaceholder);
+	const before = linkIndex !== -1 ? description.slice(0, linkIndex) : description;
+	const after = linkIndex !== -1 ? description.slice(linkIndex + linkPlaceholder.length) : '';
 
 	const handleLinkClick = (e) => {
 		e.preventDefault();
@@ -42,7 +46,7 @@ export function ReactionInfo({ field, onOpenMigrationWizard }) {
 		<div className="bb-admin-reaction-info-wrapper">
 			<div className="bb-admin-reaction-info">
 				<p className="bb-admin-reaction-info__text">
-					{parts[0]}
+					{before}
 					<a
 						href="#"
 						className="bb-admin-reaction-info__link"
@@ -50,7 +54,7 @@ export function ReactionInfo({ field, onOpenMigrationWizard }) {
 					>
 						{linkText}
 					</a>
-					{parts[1] || ''}
+					{after}
 				</p>
 			</div>
 		</div>

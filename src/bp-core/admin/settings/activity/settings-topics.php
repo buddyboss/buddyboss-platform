@@ -156,4 +156,20 @@ function bb_activity_register_topics_panel_fields() {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	do_action( 'bb_activity_settings_after_topics_fields' );
+
+	/**
+	 * Deprecated: bb_admin_setting_activity_topic_register_fields.
+	 *
+	 * Legacy hook used by third-party plugins to register additional topic
+	 * settings fields. Replaced by bb_activity_settings_after_topics_fields.
+	 *
+	 * @since BuddyBoss 1.7.0
+	 * @deprecated BuddyBoss [BBVERSION] Use bb_activity_settings_after_topics_fields instead.
+	 */
+	do_action_deprecated(
+		'bb_admin_setting_activity_topic_register_fields',
+		array(),
+		'[BBVERSION]',
+		'bb_activity_settings_after_topics_fields'
+	);
 }

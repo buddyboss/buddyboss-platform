@@ -28,7 +28,17 @@ function bb_reactions_sanitize_content_types( $value ) {
 		return array();
 	}
 
-	$allowed_keys = array( 'activity', 'activity_comment' );
+	/**
+	 * Filters the allowed reaction content type keys.
+	 *
+	 * Allows Pro or third-party plugins to add support for additional
+	 * content types (e.g. 'blogs', 'private_message').
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $allowed_keys Allowed content type slugs.
+	 */
+	$allowed_keys = apply_filters( 'bb_reactions_allowed_content_types', array( 'activity', 'activity_comment' ) );
 	$sanitized    = array();
 
 	foreach ( $allowed_keys as $key ) {
@@ -60,7 +70,7 @@ function bb_reactions_sanitize_button_settings( $value ) {
 
 	if ( isset( $value['text'] ) ) {
 		$text              = trim( stripslashes( sanitize_text_field( $value['text'] ) ) );
-		$sanitized['text'] = strlen( $text ) > 12 ? substr( $text, 0, 12 ) : $text;
+		$sanitized['text'] = mb_strlen( $text ) > 12 ? mb_substr( $text, 0, 12 ) : $text;
 	}
 
 	return $sanitized;
@@ -70,6 +80,7 @@ function bb_reactions_sanitize_button_settings( $value ) {
  * Get all of the reactions settings fields.
  *
  * @since BuddyBoss 2.5.20
+ * @since BuddyBoss [BBVERSION] Moved to Settings 2.0 location.
  *
  * @return array
  */

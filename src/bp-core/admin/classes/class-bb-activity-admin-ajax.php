@@ -61,6 +61,7 @@ class BB_Activity_Admin_Ajax {
 				array( 'message' => __( 'Permission denied.', 'buddyboss' ) ),
 				403
 			);
+			exit;
 		}
 
 		if ( ! check_ajax_referer( self::NONCE_ACTION, 'nonce', false ) ) {
@@ -68,6 +69,7 @@ class BB_Activity_Admin_Ajax {
 				array( 'message' => __( 'Security check failed.', 'buddyboss' ) ),
 				403
 			);
+			exit;
 		}
 
 		return true;
@@ -92,13 +94,30 @@ class BB_Activity_Admin_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Activity component is not active.', 'buddyboss' ) ) );
 		}
 
+		/**
+		 * Deprecated: bp_activity_admin_load.
+		 *
+		 * Legacy hook fired on activity admin page load with the current bulk action.
+		 * Not applicable in the AJAX context — deprecated in Settings 2.0.
+		 *
+		 * @since BuddyPress 1.6.0
+		 * @deprecated BuddyBoss [BBVERSION] No longer fired in Settings 2.0 AJAX context.
+		 */
+		do_action_deprecated(
+			'bp_activity_admin_load',
+			array( 'ajax' ),
+			'[BBVERSION]',
+			'',
+			'This hook is not applicable in the Settings 2.0 AJAX context.'
+		);
+
 		// phpcs:disable WordPress.Security.NonceVerification.Missing
 		$page          = isset( $_POST['page'] ) ? absint( $_POST['page'] ) : 1;
 		$per_page      = isset( $_POST['per_page'] ) ? min( absint( $_POST['per_page'] ), 100 ) : 20;
 		$search_terms  = isset( $_POST['search'] ) ? sanitize_text_field( wp_unslash( $_POST['search'] ) ) : '';
 		$activity_type = isset( $_POST['activity_type'] ) ? sanitize_text_field( wp_unslash( $_POST['activity_type'] ) ) : '';
 		$spam          = isset( $_POST['spam'] ) ? sanitize_text_field( wp_unslash( $_POST['spam'] ) ) : 'ham_only';
-		$include_meta  = isset( $_POST['include_meta'] ) ? (bool) $_POST['include_meta'] : true;
+		$include_meta  = ! ( isset( $_POST['include_meta'] ) && '0' === sanitize_text_field( wp_unslash( $_POST['include_meta'] ) ) );
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		// Validate spam parameter.
@@ -763,6 +782,23 @@ class BB_Activity_Admin_Ajax {
 		 */
 		do_action_ref_array( 'bp_activity_admin_edit_after', array( &$activity, $error ) );
 
+		/**
+		 * Deprecated: bp_activity_admin_edit_redirect.
+		 *
+		 * Legacy filter on the redirect URL after editing an activity. Not applicable
+		 * in the AJAX context — deprecated in Settings 2.0.
+		 *
+		 * @since BuddyPress 1.6.0
+		 * @deprecated BuddyBoss [BBVERSION] No longer applicable in Settings 2.0 AJAX context.
+		 */
+		apply_filters_deprecated(
+			'bp_activity_admin_edit_redirect',
+			array( '' ),
+			'[BBVERSION]',
+			'',
+			'This filter is not applicable in the Settings 2.0 AJAX context.'
+		);
+
 		if ( 0 !== $error ) {
 			wp_send_json_error( array( 'message' => __( 'Failed to save activity.', 'buddyboss' ) ) );
 		}
@@ -895,6 +931,23 @@ class BB_Activity_Admin_Ajax {
 		 */
 		do_action( 'bp_activity_admin_action_after', array( $spammed, $unspammed, $deleted, $errors ), '', $activity_ids );
 
+		/**
+		 * Deprecated: bp_activity_admin_action_redirect.
+		 *
+		 * Legacy filter on the redirect URL after bulk actions. Not applicable
+		 * in the AJAX context — deprecated in Settings 2.0.
+		 *
+		 * @since BuddyPress 1.6.0
+		 * @deprecated BuddyBoss [BBVERSION] No longer applicable in Settings 2.0 AJAX context.
+		 */
+		apply_filters_deprecated(
+			'bp_activity_admin_action_redirect',
+			array( '' ),
+			'[BBVERSION]',
+			'',
+			'This filter is not applicable in the Settings 2.0 AJAX context.'
+		);
+
 		if ( ! empty( $errors ) && 0 === $processed ) {
 			wp_send_json_error( array( 'message' => __( 'Failed to process activities.', 'buddyboss' ) ) );
 		}
@@ -925,6 +978,7 @@ class BB_Activity_Admin_Ajax {
 			)
 		);
 	}
+
 	/**
 	 * Add a comment to an activity.
 	 *
