@@ -190,16 +190,16 @@ export function ProfileFieldModal( {
 
 	// Build the type select options with optgroups (memoized since fieldTypes rarely change).
 	var typeOptions = useMemo( function () {
-		var options = [];
+		var opts = [];
 
 		if ( fieldTypes.multi_fields && fieldTypes.multi_fields.length > 0 ) {
-			options.push( {
+			opts.push( {
 				label: __( '--- Multi Fields ---', 'buddyboss' ),
 				value: '',
 				disabled: true,
 			} );
 			fieldTypes.multi_fields.forEach( function ( ft ) {
-				options.push( {
+				opts.push( {
 					label: decodeEntities( ft.label ),
 					value: ft.value,
 				} );
@@ -207,20 +207,20 @@ export function ProfileFieldModal( {
 		}
 
 		if ( fieldTypes.single_fields && fieldTypes.single_fields.length > 0 ) {
-			options.push( {
+			opts.push( {
 				label: __( '--- Single Fields ---', 'buddyboss' ),
 				value: '',
 				disabled: true,
 			} );
 			fieldTypes.single_fields.forEach( function ( ft ) {
-				options.push( {
+				opts.push( {
 					label: decodeEntities( ft.label ),
 					value: ft.value,
 				} );
 			} );
 		}
 
-		return options;
+		return opts;
 	}, [ fieldTypes ] );
 
 	/**
@@ -384,208 +384,198 @@ export function ProfileFieldModal( {
 	var showPlaceholder = 'textbox' === type || 'textarea' === type || 'number' === type || 'telephone' === type || 'url' === type;
 	var allowMultiDefault = 'checkbox' === type || 'multiselectbox' === type;
 
-	return wp.element.createElement(
-		Modal,
-		{
-			title: isEditing ? __( 'Edit Field', 'buddyboss' ) : __( 'Add New Field', 'buddyboss' ),
-			onRequestClose: onClose,
-			className: 'bb-pf-field-modal',
-			shouldCloseOnClickOutside: false,
-		},
+	return (
+		<Modal
+			title={ isEditing ? __( 'Edit Field', 'buddyboss' ) : __( 'Add New Field', 'buddyboss' ) }
+			onRequestClose={ onClose }
+			className="bb-pf-field-modal bb-admin-settings-modal"
+			shouldCloseOnClickOutside={ false }
+		>
+			<div className="bb-admin-settings-modal__body">
+				<div className="bb-admin-settings--divided-section">
+					{ /* Name */ }
+					<TextControl
+						label={ __( 'Name', 'buddyboss' ) }
+						value={ name }
+						onChange={ setName }
+						placeholder={ __( 'Enter field name', 'buddyboss' ) }
+						required
+					/>
+				</div>
 
-		wp.element.createElement(
-			'div',
-			{ className: 'bb-pf-modal-body bb-pf-field-modal-body' },
+				<div className="bb-admin-settings--divided-section">
+					{ /* Type */ }
+					<SelectControl
+						label={ __( 'Type', 'buddyboss' ) }
+						value={ type }
+						options={ typeOptions }
+						onChange={ function ( val ) {
+							if ( val ) {
+								setType( val );
+							}
+						} }
+						disabled={ isEditing }
+						help={ __( 'Select the input field type members will use to enter information.', 'buddyboss' ) }
+					/>
+				</div>
 
-			// Name.
-			wp.element.createElement( TextControl, {
-				label: __( 'Name', 'buddyboss' ),
-				value: name,
-				onChange: setName,
-				placeholder: __( 'Enter field name', 'buddyboss' ),
-				required: true,
-			} ),
+				{ /* Alternate Title */ }
+				<TextControl
+					label={ __( 'Alternate Title', 'buddyboss' ) }
+					value={ alternateName }
+					onChange={ setAlternateName }
+					help={ __( 'An alternate title for this field that can be used in specific contexts.', 'buddyboss' ) }
+				/>
 
-			// Type.
-			wp.element.createElement( SelectControl, {
-				label: __( 'Type', 'buddyboss' ),
-				value: type,
-				options: typeOptions,
-				onChange: function ( val ) {
-					if ( val ) {
-						setType( val );
-					}
-				},
-				disabled: isEditing,
-			} ),
+				{ /* Placeholder (for text-like types) */ }
+				{ showPlaceholder && (
+					<TextControl
+						label={ __( 'Placeholder Text', 'buddyboss' ) }
+						value={ placeholder }
+						onChange={ setPlaceholder }
+						help={ __( 'Placeholder text displayed inside the field when empty.', 'buddyboss' ) }
+					/>
+				) }
 
-			// Alternate Title.
-			wp.element.createElement( TextControl, {
-				label: __( 'Alternate Title', 'buddyboss' ),
-				value: alternateName,
-				onChange: setAlternateName,
-				help: __( 'An alternate title for this field that can be used in specific contexts.', 'buddyboss' ),
-			} ),
+				{ /* Instructions (description) */ }
+				<TextareaControl
+					label={ __( 'Instructions', 'buddyboss' ) }
+					placeholder={ __('Enter instructions text', 'buddyboss') }
+					value={ description }
+					onChange={ setDescription }
+					help={ __( 'Help text shown below the field to guide users.', 'buddyboss' ) }
+				/>
 
-			// Placeholder (for text-like types).
-			showPlaceholder && wp.element.createElement( TextControl, {
-				label: __( 'Placeholder Text', 'buddyboss' ),
-				value: placeholder,
-				onChange: setPlaceholder,
-				help: __( 'Placeholder text displayed inside the field when empty.', 'buddyboss' ),
-			} ),
+				{ /* Options (for multi-option types) */ }
+				{ showOptions && (
+					<div className="bb-pf-field-options">
+						<label className="bb-pf-field-options-label">{ __( 'Options', 'buddyboss' ) }</label>
+						{ options.map( function ( option, index ) {
+							return (
+								<div key={ index } className="bb-pf-field-option-row">
+									<input
+										type="text"
+										value={ option.name }
+										onChange={ function ( e ) { updateOptionName( index, e.target.value ); } }
+										placeholder={ __( 'Option label', 'buddyboss' ) }
+										className="bb-pf-option-input"
+									/>
+									<label className="bb-pf-option-default">
+										<input
+											type={ allowMultiDefault ? 'checkbox' : 'radio' }
+											name="default_option"
+											checked={ option.is_default }
+											onChange={ function () { toggleDefaultOption( index, allowMultiDefault ); } }
+										/>
+										{ __( 'Default', 'buddyboss' ) }
+									</label>
+									{ options.length > 1 && (
+										<button
+											className="bb-pf-option-remove"
+											onClick={ function () { removeOption( index ); } }
+											type="button"
+										>
+											<i className="bb-icons-rl-x"></i>
+										</button>
+									) }
+								</div>
+							);
+						} ) }
+						<Button
+							variant="link"
+							className="bb-pf-add-option-btn"
+							onClick={ addOption }
+						>
+							{ '+ ' + __( 'Add Another Option', 'buddyboss' ) }
+						</Button>
+					</div>
+				) }
 
-			// Instructions (description).
-			wp.element.createElement( TextareaControl, {
-				label: __( 'Instructions', 'buddyboss' ),
-				value: description,
-				onChange: setDescription,
-				help: __( 'Help text shown below the field to guide users.', 'buddyboss' ),
-			} ),
+				{ /* Member Types */ }
+				{ memberTypes.length > 0 && (
+					<div className="bb-pf-field-member-types">
+						<RadioControl
+							label={ __( 'Profile Types', 'buddyboss' ) }
+							selected={ memberTypeMode }
+							options={ [
+								{ label: __( 'All profile types', 'buddyboss' ), value: 'all' },
+								{ label: __( 'Selected profile types', 'buddyboss' ), value: 'selected' },
+							] }
+							onChange={ setMemberTypeMode }
+						/>
+						{ 'selected' === memberTypeMode && (
+							<div className="bb-pf-member-type-checkboxes">
+								{ memberTypes.map( function ( mt ) {
+									return (
+										<CheckboxControl
+											key={ mt.id }
+											label={ decodeEntities( mt.name ) }
+											checked={ selectedMemberTypes.indexOf( mt.id ) >= 0 }
+											onChange={ function () { toggleMemberType( mt.id ); } }
+										/>
+									);
+								} ) }
+							</div>
+						) }
+					</div>
+				) }
 
-			// Options (for multi-option types).
-			showOptions && wp.element.createElement(
-				'div',
-				{ className: 'bb-pf-field-options' },
-				wp.element.createElement( 'label', { className: 'bb-pf-field-options-label' }, __( 'Options', 'buddyboss' ) ),
-				options.map( function ( option, index ) {
-					return wp.element.createElement(
-						'div',
-						{ key: index, className: 'bb-pf-field-option-row' },
-						wp.element.createElement( 'input', {
-							type: 'text',
-							value: option.name,
-							onChange: function ( e ) { updateOptionName( index, e.target.value ); },
-							placeholder: __( 'Option label', 'buddyboss' ),
-							className: 'bb-pf-option-input',
-						} ),
-						wp.element.createElement(
-							'label',
-							{ className: 'bb-pf-option-default' },
-							wp.element.createElement( 'input', {
-								type: allowMultiDefault ? 'checkbox' : 'radio',
-								name: 'default_option',
-								checked: option.is_default,
-								onChange: function () { toggleDefaultOption( index, allowMultiDefault ); },
-							} ),
-							__( 'Default', 'buddyboss' )
-						),
-						options.length > 1 && wp.element.createElement(
-							'button',
-							{
-								className: 'bb-pf-option-remove',
-								onClick: function () { removeOption( index ); },
-								type: 'button',
-							},
-							wp.element.createElement( 'i', { className: 'bb-icons-rl-x' } )
-						)
-					);
-				} ),
-				wp.element.createElement(
-					Button,
-					{
-						variant: 'link',
-						className: 'bb-pf-add-option-btn',
-						onClick: addOption,
-					},
-					'+ ' + __( 'Add Another Option', 'buddyboss' )
-				)
-			),
+				{ /* Visibility */ }
+				{ visibilityLevels.length > 0 && (
+					<div className="bb-pf-field-visibility bb-admin-settings--divided-section">
+						<SelectControl
+							label={ __( 'Default Visibility', 'buddyboss' ) }
+							value={ visibility }
+							options={ visibilityLevels.map( function ( level ) {
+								return { label: decodeEntities( level.label ), value: level.id };
+							} ) }
+							onChange={ setVisibility }
+						/>
+						<RadioControl
+							label={ __( 'Visibility Override', 'buddyboss' ) }
+							selected={ allowCustomVisibility }
+							options={ [
+								{ label: __( 'Allow members to override', 'buddyboss' ), value: 'allowed' },
+								{ label: __( 'Enforce default visibility', 'buddyboss' ), value: 'disabled' },
+							] }
+							onChange={ setAllowCustomVisibility }
+						/>
+					</div>
+				) }
 
-			// Member Types.
-			memberTypes.length > 0 && wp.element.createElement(
-				'div',
-				{ className: 'bb-pf-field-member-types' },
-				wp.element.createElement( RadioControl, {
-					label: __( 'Profile Types', 'buddyboss' ),
-					selected: memberTypeMode,
-					options: [
-						{ label: __( 'All profile types', 'buddyboss' ), value: 'all' },
-						{ label: __( 'Selected profile types', 'buddyboss' ), value: 'selected' },
-					],
-					onChange: setMemberTypeMode,
-				} ),
-				'selected' === memberTypeMode && wp.element.createElement(
-					'div',
-					{ className: 'bb-pf-member-type-checkboxes' },
-					memberTypes.map( function ( mt ) {
-						return wp.element.createElement( CheckboxControl, {
-							key: mt.id,
-							label: decodeEntities( mt.name ),
-							checked: selectedMemberTypes.indexOf( mt.id ) >= 0,
-							onChange: function () { toggleMemberType( mt.id ); },
-						} );
-					} )
-				)
-			),
+				{ /* Required */ }
+				<CheckboxControl
+					label={ __( 'Make this field required', 'buddyboss' ) }
+					checked={ isRequired }
+					onChange={ setIsRequired }
+				/>
 
-			// Visibility.
-			visibilityLevels.length > 0 && wp.element.createElement(
-				'div',
-				{ className: 'bb-pf-field-visibility' },
-				wp.element.createElement( SelectControl, {
-					label: __( 'Default Visibility', 'buddyboss' ),
-					value: visibility,
-					options: visibilityLevels.map( function ( level ) {
-						return { label: decodeEntities( level.label ), value: level.id };
-					} ),
-					onChange: setVisibility,
-				} ),
-				wp.element.createElement( RadioControl, {
-					label: __( 'Visibility Override', 'buddyboss' ),
-					selected: allowCustomVisibility,
-					options: [
-						{ label: __( 'Allow members to override', 'buddyboss' ), value: 'allowed' },
-						{ label: __( 'Enforce default visibility', 'buddyboss' ), value: 'disabled' },
-					],
-					onChange: setAllowCustomVisibility,
-				} )
-			),
+				{ /* Show on Signup Form */ }
+				<CheckboxControl
+					label={ __( 'Show this field on the registration form', 'buddyboss' ) }
+					checked={ isSignup }
+					onChange={ setIsSignup }
+				/>
+			</div>
 
-			// Required.
-			wp.element.createElement( CheckboxControl, {
-				label: __( 'Make this field required', 'buddyboss' ),
-				checked: isRequired,
-				onChange: setIsRequired,
-			} ),
-
-			// Show on Signup Form.
-			wp.element.createElement( CheckboxControl, {
-				label: __( 'Show this field on the registration form', 'buddyboss' ),
-				checked: isSignup,
-				onChange: setIsSignup,
-			} )
-		),
-
-		// Footer.
-		wp.element.createElement(
-			'div',
-			{ className: 'bb-pf-modal-footer' },
-			wp.element.createElement(
-				'div',
-				{ className: 'bb-pf-modal-footer-right' },
-				wp.element.createElement(
-					Button,
-					{
-						variant: 'secondary',
-						onClick: onClose,
-						disabled: isSaving,
-					},
-					__( 'Cancel', 'buddyboss' )
-				),
-				wp.element.createElement(
-					Button,
-					{
-						variant: 'primary',
-						onClick: handleSave,
-						isBusy: isSaving,
-						disabled: isSaving || ! name.trim(),
-					},
-					isSaving
-						? wp.element.createElement( Spinner, null )
-						: ( isEditing ? __( 'Save Changes', 'buddyboss' ) : __( 'Add Field', 'buddyboss' ) )
-				)
-			)
-		)
+			{ /* Footer */ }
+			<div className="bb-admin-settings-modal__footer">
+				<Button
+					variant="secondary"
+					onClick={ onClose }
+					disabled={ isSaving }
+				>
+					{ __( 'Cancel', 'buddyboss' ) }
+				</Button>
+				<Button
+					variant="primary"
+					onClick={ handleSave }
+					isBusy={ isSaving }
+					disabled={ isSaving || ! name.trim() }
+				>
+					{ isEditing ? __( 'Save Changes', 'buddyboss' ) : __( 'Add Field', 'buddyboss') }
+				</Button>
+			</div>
+		</Modal>
 	);
 }

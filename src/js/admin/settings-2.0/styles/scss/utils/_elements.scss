@@ -114,6 +114,17 @@ select.bb-admin-settings__select {
     }
 }
 
+/* Divider */
+.bb-admin-settings--divided-section {
+    padding-bottom: 18px;
+    border-bottom: 1px solid $bb-border-secondary-color;
+    margin-bottom: 24px;
+
+    &:has(.components-base-control__help) {
+        padding-bottom: 8px;
+    }
+}
+
 /* Radio Buttons */
 .buddyboss_page_bb-settings {
     

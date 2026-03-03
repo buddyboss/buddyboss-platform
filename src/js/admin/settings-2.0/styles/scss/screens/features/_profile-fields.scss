@@ -460,27 +460,60 @@
 		padding: 0;
 	}
 
-	.bb-pf-modal-body {
-		padding: 24px;
-		display: flex;
-		flex-direction: column;
-		gap: 16px;
-		max-height: 60vh;
-		overflow-y: auto;
-
-		.components-base-control {
-			margin-bottom: 0;
-		}
+	.bb-admin-settings-modal__body {
 
 		.components-base-control__label,
 		label.components-input-control__label.components-text {
 			@include bb-input-label;
 		}
 
-		.components-base-control__help {
-			font-size: 12px;
-			color: $bb-text-tertiary-color;
-			margin-top: 4px;
+		.components-base-control {
+		
+			.components-input-control__label {
+				color: $bb-text-secondary-color;
+				text-transform: none;
+				font-size: 13px;
+				font-weight: 500;
+			}
+	
+			.components-select-control__input {
+				@include bb-admin-settings-select;
+			}
+	
+			.components-input-control-suffix-wrapper,
+			.components-input-control__backdrop {
+				display: none;
+			}
+		}
+
+		> .components-base-control {
+			margin-bottom: 16px;
+		}
+
+		.bb-pf-field-member-types {
+			margin-bottom: 20px;
+
+			.bb-pf-member-type-checkboxes {
+				margin: 20px 0;
+			}
+		}
+
+		.bb-pf-field-visibility {
+			display: flex;
+			align-items: flex-end;
+			gap: 24px;
+
+			> .components-base-control {
+				flex: 1;
+
+				.components-base-control__field {
+					margin-bottom: 0;
+				}
+			}
+
+			> .components-radio-control {
+				margin: 0 0 8px auto;
+			}
 		}
 	}
 
@@ -584,12 +617,6 @@
 
 	/* Footer */
 	.bb-pf-modal-footer {
-		display: flex;
-		align-items: center;
-		justify-content: flex-end;
-		gap: 8px;
-		padding: 16px 24px;
-		border-top: 1px solid $bb-border-primary-color;
 
 		.components-button.is-secondary {
 			@include bb-button-secondary;
