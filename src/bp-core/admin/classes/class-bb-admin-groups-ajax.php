@@ -69,20 +69,25 @@ class BB_Admin_Groups_Ajax {
 		add_action( 'groups_create_group', $clear_counts );
 		add_action( 'groups_settings_updated', $clear_counts );
 
-		// Fire the deprecated hook once per request (non-AJAX page loads only)
-		// to preserve backward compatibility with plugins hooking bp_groups_admin_load.
+		// Fire the deprecated hook only on relevant admin pages (non-AJAX) to
+		// preserve backward compatibility with plugins hooking bp_groups_admin_load.
+		// The legacy hook only fired on the groups admin screen, so we guard it
+		// to avoid unexpected side effects on unrelated admin pages.
 		if ( ! wp_doing_ajax() ) {
-			/**
-			 * Fires when the Groups admin page is loaded. Deprecated in Settings 2.0.
-			 *
-			 * Settings 2.0 uses AJAX-driven React UI — there is no direct replacement
-			 * for this page-load hook. Plugins that registered metaboxes via this hook
-			 * should use {@see 'bp_groups_admin_meta_boxes'} instead.
-			 *
-			 * @since BuddyPress 1.7.0
-			 * @deprecated BuddyBoss [BBVERSION] No direct replacement. Use AJAX-based hooks instead.
-			 */
-			do_action_deprecated( 'bp_groups_admin_load', array( '' ), 'BuddyBoss [BBVERSION]' );
+			$page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			if ( 'bp-groups' === $page || 'bb-settings' === $page ) {
+				/**
+				 * Fires when the Groups admin page is loaded. Deprecated in Settings 2.0.
+				 *
+				 * Settings 2.0 uses AJAX-driven React UI — there is no direct replacement
+				 * for this page-load hook. Plugins that registered metaboxes via this hook
+				 * should use {@see 'bp_groups_admin_meta_boxes'} instead.
+				 *
+				 * @since BuddyPress 1.7.0
+				 * @deprecated BuddyBoss [BBVERSION] No direct replacement. Use AJAX-based hooks instead.
+				 */
+				do_action_deprecated( 'bp_groups_admin_load', array( '' ), 'BuddyBoss [BBVERSION]' );
+			}
 		}
 	}
 
@@ -1287,14 +1292,16 @@ class BB_Admin_Groups_Ajax {
 		$original_gid = isset( $_GET['gid'] ) ? $_GET['gid'] : null; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- Backing up raw value for restore; not used as input.
 		$_GET['gid']  = $group_id;
 
-		ob_start();
-		do_action( 'bp_groups_admin_meta_boxes' );
-		ob_end_clean();
-
-		if ( null === $original_gid ) {
-			unset( $_GET['gid'] );
-		} else {
-			$_GET['gid'] = $original_gid;
+		try {
+			ob_start();
+			do_action( 'bp_groups_admin_meta_boxes' );
+			ob_end_clean();
+		} finally {
+			if ( null === $original_gid ) {
+				unset( $_GET['gid'] );
+			} else {
+				$_GET['gid'] = $original_gid;
+			}
 		}
 
 		/**

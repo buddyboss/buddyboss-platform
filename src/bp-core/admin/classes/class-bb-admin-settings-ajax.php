@@ -685,7 +685,7 @@ class BB_Admin_Settings_Ajax {
 						array(
 							'item_id'   => 0,
 							'item_type' => 'activity',
-							'per_page'  => -1,
+							'per_page'  => 200,
 						)
 					);
 					$topics_data = ! empty( $result['topics'] ) ? $result['topics'] : array();

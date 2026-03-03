@@ -50,6 +50,14 @@ class BB_Admin_Meta_Field_Registry {
 	private $did_register = array();
 
 	/**
+	 * Cached sorted fields per component.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 * @var array
+	 */
+	private $sorted_cache = array();
+
+	/**
 	 * Get singleton instance.
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -163,6 +171,9 @@ class BB_Admin_Meta_Field_Registry {
 
 		$this->fields[ $component ][ $field_id ] = $args;
 
+		// Invalidate sorted cache for this component.
+		unset( $this->sorted_cache[ $component ] );
+
 		return true;
 	}
 
@@ -181,6 +192,10 @@ class BB_Admin_Meta_Field_Registry {
 			return array();
 		}
 
+		if ( isset( $this->sorted_cache[ $component ] ) ) {
+			return $this->sorted_cache[ $component ];
+		}
+
 		$fields = $this->fields[ $component ];
 
 		// Sort by order.
@@ -190,6 +205,8 @@ class BB_Admin_Meta_Field_Registry {
 				return (int) $a['order'] - (int) $b['order'];
 			}
 		);
+
+		$this->sorted_cache[ $component ] = $fields;
 
 		return $fields;
 	}
