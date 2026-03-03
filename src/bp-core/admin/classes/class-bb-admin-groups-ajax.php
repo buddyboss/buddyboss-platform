@@ -1753,7 +1753,13 @@ class BB_Admin_Groups_Ajax {
 		$result = false;
 		switch ( $role ) {
 			case 'admin':
+				$result = groups_promote_member( $user_id, $group_id, $role );
+				break;
 			case 'mod':
+				// Guard: do not allow demoting the last group admin to moderator.
+				if ( $member_obj->is_admin && ! $this->bb_group_has_other_admins( $group_id, $user_id ) ) {
+					wp_send_json_error( array( 'message' => __( 'You cannot demote the only group administrator.', 'buddyboss' ) ) );
+				}
 				$result = groups_promote_member( $user_id, $group_id, $role );
 				break;
 			case 'member':
