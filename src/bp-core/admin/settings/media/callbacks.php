@@ -343,12 +343,20 @@ function bb_media_sanitize_gif_api_key( $value ) {
  * @since BuddyBoss [BBVERSION]
  */
 function bb_media_ajax_giphy_connect() {
-	// Verify nonce.
-	check_ajax_referer( 'bb_admin_settings', 'nonce' );
-
-	// Capability check.
+	// Capability check first (cheaper than nonce verification).
 	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
-		wp_send_json_error( array( 'message' => __( 'Unauthorized.', 'buddyboss' ) ) );
+		wp_send_json_error(
+			array( 'message' => __( 'Permission denied.', 'buddyboss' ) ),
+			403
+		);
+	}
+
+	// Verify nonce.
+	if ( ! check_ajax_referer( 'bb_admin_settings', 'nonce', false ) ) {
+		wp_send_json_error(
+			array( 'message' => __( 'Security check failed.', 'buddyboss' ) ),
+			403
+		);
 	}
 
 	$action  = isset( $_POST['connect_action'] ) ? sanitize_text_field( wp_unslash( $_POST['connect_action'] ) ) : '';
@@ -459,12 +467,20 @@ function bb_media_sanitize_symlink_support( $value ) {
  * @since BuddyBoss [BBVERSION]
  */
 function bb_media_ajax_check_symlink_status() {
-	// Verify nonce.
-	check_ajax_referer( 'bb_admin_settings', 'nonce' );
-
-	// Capability check.
+	// Capability check first (cheaper than nonce verification).
 	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
-		wp_send_json_error( array( 'message' => __( 'Unauthorized.', 'buddyboss' ) ) );
+		wp_send_json_error(
+			array( 'message' => __( 'Permission denied.', 'buddyboss' ) ),
+			403
+		);
+	}
+
+	// Verify nonce.
+	if ( ! check_ajax_referer( 'bb_admin_settings', 'nonce', false ) ) {
+		wp_send_json_error(
+			array( 'message' => __( 'Security check failed.', 'buddyboss' ) ),
+			403
+		);
 	}
 
 	$is_offloaded        = (bool) apply_filters( 'bb_media_offload_delivered', false );
@@ -544,12 +560,20 @@ add_action( 'wp_ajax_bb_media_check_symlink_status', 'bb_media_ajax_check_symlin
  * @since BuddyBoss [BBVERSION]
  */
 function bb_media_ajax_check_ffmpeg_status() {
-	// Verify nonce.
-	check_ajax_referer( 'bb_admin_settings', 'nonce' );
-
-	// Capability check.
+	// Capability check first (cheaper than nonce verification).
 	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
-		wp_send_json_error( array( 'message' => __( 'Unauthorized.', 'buddyboss' ) ) );
+		wp_send_json_error(
+			array( 'message' => __( 'Permission denied.', 'buddyboss' ) ),
+			403
+		);
+	}
+
+	// Verify nonce.
+	if ( ! check_ajax_referer( 'bb_admin_settings', 'nonce', false ) ) {
+		wp_send_json_error(
+			array( 'message' => __( 'Security check failed.', 'buddyboss' ) ),
+			403
+		);
 	}
 
 	$has_ffmpeg_class = class_exists( 'BuddyBossPlatform\FFMpeg\FFMpeg' ) || class_exists( 'FFMpeg\FFMpeg' );
@@ -621,12 +645,20 @@ add_action( 'wp_ajax_bb_media_check_ffmpeg_status', 'bb_media_ajax_check_ffmpeg_
  * @since BuddyBoss [BBVERSION]
  */
 function bb_media_ajax_check_direct_access() {
-	// Verify nonce.
-	check_ajax_referer( 'bb_admin_settings', 'nonce' );
-
-	// Capability check.
+	// Capability check first (cheaper than nonce verification).
 	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
-		wp_send_json_error( array( 'message' => __( 'Unauthorized.', 'buddyboss' ) ) );
+		wp_send_json_error(
+			array( 'message' => __( 'Permission denied.', 'buddyboss' ) ),
+			403
+		);
+	}
+
+	// Verify nonce.
+	if ( ! check_ajax_referer( 'bb_admin_settings', 'nonce', false ) ) {
+		wp_send_json_error(
+			array( 'message' => __( 'Security check failed.', 'buddyboss' ) ),
+			403
+		);
 	}
 
 	$bypass_check = (bool) apply_filters( 'bb_media_check_default_access', false );
