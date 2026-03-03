@@ -1080,15 +1080,13 @@
         display: flex;
         align-items: center;
         gap: 12px;
-        padding: 10px 24px;
-        border-bottom: 1px solid $bb-border-primary-color;
-        transition: background-color 0.15s ease;
-
-        &:last-child {
-            border-bottom: none;
-        }
+        padding: 4px 8px;
+        margin: 8px 24px;
+        border: 1px solid transparent;
+        border-radius: $bb-border-radius-lg;
 
         &:hover {
+            border-color: $bb-border-secondary-color;
             background-color: $bb-background-primary-color;
         }
 
@@ -1125,7 +1123,7 @@
     }
 
     &__ext-name {
-        font-size: 13px;
+        font-size: 14px;
         font-weight: 500;
         color: $bb-text-color;
         min-width: 60px;
@@ -1133,7 +1131,7 @@
     }
 
     &__ext-icon {
-        font-size: 20px;
+        font-size: 22px;
         color: $bb-icon-tertiary-color;
         flex-shrink: 0;
         width: 24px;
