@@ -500,11 +500,15 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 		{ className: 'bb-settings-panel-content bb-profile-fields-screen' },
 
 		// Toast notification.
-		toast && wp.element.createElement( Toast, {
-			status: toast.status,
-			message: toast.message,
-			onDismiss: function () { setToast( null ); },
-		} ),
+		toast && wp.element.createElement(
+			'div',
+			{ className: 'bb-toast-container' },
+			wp.element.createElement( Toast, {
+				status: toast.status,
+				message: toast.message,
+				onDismiss: function () { setToast( null ); },
+			} )
+		),
 
 		// Top banner.
 		wp.element.createElement(

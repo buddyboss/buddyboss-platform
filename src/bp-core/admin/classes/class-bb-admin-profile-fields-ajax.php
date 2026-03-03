@@ -552,12 +552,17 @@ class BB_Admin_Profile_Fields_Ajax {
 			}
 		}
 
-		// Get member types.
-		$member_types = array();
-		if ( method_exists( $field, 'get_member_types' ) ) {
-			$raw_types = $field->get_member_types();
-			if ( null !== $raw_types ) {
-				$member_types = $raw_types;
+		// Get member types — only return explicitly assigned types.
+		// When no types are saved in meta, the field is available to ALL types,
+		// so we return an empty array (Figma: badge only shown for restricted fields).
+		$member_types    = array();
+		$raw_type_meta   = bp_xprofile_get_meta( $field->id, 'field', 'member_type', false );
+		$has_saved_types = is_array( $raw_type_meta ) && ! empty( $raw_type_meta ) && ! in_array( '_none', $raw_type_meta, true );
+
+		if ( $has_saved_types && method_exists( $field, 'get_member_types' ) ) {
+			$resolved_types = $field->get_member_types();
+			if ( null !== $resolved_types ) {
+				$member_types = $resolved_types;
 			}
 		}
 

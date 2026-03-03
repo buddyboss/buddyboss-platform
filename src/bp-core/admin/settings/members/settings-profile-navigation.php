@@ -151,11 +151,11 @@ function bb_get_member_default_tab_options() {
 		$options['media'] = __( 'Photos', 'buddyboss' );
 	}
 
-	if ( bp_is_active( 'media' ) && bp_is_profile_document_support_enabled() ) {
+	if ( bp_is_active( 'media' ) && function_exists( 'bp_is_profile_document_support_enabled' ) && bp_is_profile_document_support_enabled() ) {
 		$options['document'] = __( 'Documents', 'buddyboss' );
 	}
 
-	if ( bp_is_active( 'media' ) && bp_is_profile_video_support_enabled() ) {
+	if ( bp_is_active( 'media' ) && function_exists( 'bp_is_profile_video_support_enabled' ) && bp_is_profile_video_support_enabled() ) {
 		$options['video'] = __( 'Videos', 'buddyboss' );
 	}
 
@@ -286,15 +286,15 @@ function bb_get_inactive_member_nav_slugs() {
 		$inactive[] = 'forums';
 	}
 
-	if ( ! bp_is_active( 'media' ) || ! bp_is_profile_media_support_enabled() ) {
+	if ( ! bp_is_active( 'media' ) || ! function_exists( 'bp_is_profile_media_support_enabled' ) || ! bp_is_profile_media_support_enabled() ) {
 		$inactive[] = 'photos';
 	}
 
-	if ( ! bp_is_active( 'media' ) || ! bp_is_profile_document_support_enabled() ) {
+	if ( ! bp_is_active( 'media' ) || ! function_exists( 'bp_is_profile_document_support_enabled' ) || ! bp_is_profile_document_support_enabled() ) {
 		$inactive[] = 'documents';
 	}
 
-	if ( ! bp_is_active( 'video' ) || ! bp_is_profile_video_support_enabled() ) {
+	if ( ! bp_is_active( 'video' ) || ! function_exists( 'bp_is_profile_video_support_enabled' ) || ! bp_is_profile_video_support_enabled() ) {
 		$inactive[] = 'videos';
 	}
 
