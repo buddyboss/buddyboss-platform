@@ -417,6 +417,59 @@ export function ProfileFieldModal( {
 						disabled={ isEditing }
 						help={ __( 'Select the input field type members will use to enter information.', 'buddyboss' ) }
 					/>
+
+					{ /* Options (for multi-option types) */ }
+					{ showOptions && (
+						<div className="bb-pf-field-options">
+							{ options.map( function ( option, index ) {
+								return (
+									<div key={ index } className="bb-pf-option-item">
+										<div className="bb-pf-option-item__left">
+											<i className="bb-icons-rl bb-icons-rl-list" aria-hidden="true"></i>
+											<input
+												type="text"
+												value={ option.name }
+												onChange={ function ( e ) { updateOptionName( index, e.target.value ); } }
+												placeholder={ __( 'Option label', 'buddyboss' ) }
+												className="bb-pf-option-item__input"
+											/>
+										</div>
+										<div className="bb-pf-option-item__right">
+											<button
+												type="button"
+												className={ 'bb-pf-option-item__default' + ( option.is_default ? ' bb-pf-option-item__default--selected' : '' ) }
+												onClick={ function () { toggleDefaultOption( index, allowMultiDefault ); } }
+												aria-label={ __( 'Set as default value', 'buddyboss' ) }
+											>
+												<span className="bb-pf-option-item__radio"></span>
+												<span className="bb-pf-option-item__default-label">
+													{ __( 'Default Value', 'buddyboss' ) }
+												</span>
+											</button>
+											{ options.length > 1 && (
+												<button
+													type="button"
+													className="bb-pf-option-item__remove"
+													onClick={ function () { removeOption( index ); } }
+													aria-label={ __( 'Remove option', 'buddyboss' ) }
+												>
+													<i className="bb-icons-rl bb-icons-rl-trash" aria-hidden="true"></i>
+												</button>
+											) }
+										</div>
+									</div>
+								);
+							} ) }
+							<Button
+								variant="secondary"
+								className="bb-pf-add-option-btn"
+								onClick={ addOption }
+							>
+								<i className="bb-icons-rl bb-icons-rl-plus" aria-hidden="true"></i>
+								{ __( 'Add Another Option', 'buddyboss' ) }
+							</Button>
+						</div>
+					) }
 				</div>
 
 				{ /* Alternate Title */ }
@@ -445,51 +498,6 @@ export function ProfileFieldModal( {
 					onChange={ setDescription }
 					help={ __( 'Help text shown below the field to guide users.', 'buddyboss' ) }
 				/>
-
-				{ /* Options (for multi-option types) */ }
-				{ showOptions && (
-					<div className="bb-pf-field-options">
-						<label className="bb-pf-field-options-label">{ __( 'Options', 'buddyboss' ) }</label>
-						{ options.map( function ( option, index ) {
-							return (
-								<div key={ index } className="bb-pf-field-option-row">
-									<input
-										type="text"
-										value={ option.name }
-										onChange={ function ( e ) { updateOptionName( index, e.target.value ); } }
-										placeholder={ __( 'Option label', 'buddyboss' ) }
-										className="bb-pf-option-input"
-									/>
-									<label className="bb-pf-option-default">
-										<input
-											type={ allowMultiDefault ? 'checkbox' : 'radio' }
-											name="default_option"
-											checked={ option.is_default }
-											onChange={ function () { toggleDefaultOption( index, allowMultiDefault ); } }
-										/>
-										{ __( 'Default', 'buddyboss' ) }
-									</label>
-									{ options.length > 1 && (
-										<button
-											className="bb-pf-option-remove"
-											onClick={ function () { removeOption( index ); } }
-											type="button"
-										>
-											<i className="bb-icons-rl-x"></i>
-										</button>
-									) }
-								</div>
-							);
-						} ) }
-						<Button
-							variant="link"
-							className="bb-pf-add-option-btn"
-							onClick={ addOption }
-						>
-							{ '+ ' + __( 'Add Another Option', 'buddyboss' ) }
-						</Button>
-					</div>
-				) }
 
 				{ /* Member Types */ }
 				{ memberTypes.length > 0 && (

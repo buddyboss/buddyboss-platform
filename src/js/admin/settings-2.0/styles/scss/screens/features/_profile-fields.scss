@@ -518,84 +518,116 @@
 	}
 
 	/* Options list for multi-option field types */
-	.bb-pf-options-section {
-		border: 1px solid $bb-border-primary-color;
+	.bb-pf-field-options {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+		margin: 24px 0;
+	}
+
+	.bb-pf-option-item {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 8px;
+		border: 0.5px solid $bb-border-secondary-color;
 		border-radius: $bb-border-radius-lg;
-		padding: 16px;
-	}
 
-	.bb-pf-options-header {
-		font-size: 13px;
-		font-weight: 600;
-		color: $bb-text-secondary-color;
-		margin: 0 0 12px;
-	}
+		&__left {
+			display: flex;
+			align-items: center;
+			gap: 16px;
 
-	.bb-pf-option-row {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		margin-bottom: 8px;
-	}
-
-	.bb-pf-option-input[type="text"] {
-		@include bb-input-text;
-		flex: 1;
-	}
-
-	.bb-pf-option-default {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		background: none;
-		border: 1px solid $bb-border-secondary-color;
-		border-radius: $bb-border-radius-sm;
-		cursor: pointer;
-		width: 28px;
-		height: 28px;
-		flex-shrink: 0;
-
-		&.is-default {
-			background: $bb-background-brand-primary-color;
-			border-color: $bb-border-brand-primary-color;
-			color: $bb-text-inverse-color;
+			> i {
+				font-size: 24px;
+				color: $bb-icon-tertiary-color;
+				cursor: grab;
+				flex-shrink: 0;
+			}
 		}
 
-		i {
+		&__input[type="text"] {
+			@include bb-input-text;
+			width: 320px;
+		}
+
+		&__right {
+			display: flex;
+			align-items: center;
+			gap: 24px;
+		}
+
+		&__default {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			background: none;
+			border: none;
+			cursor: pointer;
+			padding: 0;
+		}
+
+		&__radio {
+			display: inline-block;
+			width: 18px;
+			height: 18px;
+			border: 1px solid $bb-border-brand-primary-color;
+			border-radius: $bb-border-radius-full;
+			flex-shrink: 0;
+			position: relative;
+			box-sizing: border-box;
+		}
+
+		&__default--selected .bb-pf-option-item__radio {
+			&:after {
+				content: '';
+				position: absolute;
+				top: 3px;
+				left: 3px;
+				width: 10px;
+				height: 10px;
+				border-radius: $bb-border-radius-full;
+				background: $bb-background-brand-primary-color;
+			}
+		}
+
+		&__default-label {
 			font-size: 14px;
+			font-weight: 400;
+			line-height: 20px;
+			color: $bb-text-color;
+			white-space: nowrap;
+		}
+
+		&__remove {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background: none;
+			border: none;
+			cursor: pointer;
+			padding: 0;
+			flex-shrink: 0;
+
+			i {
+				font-size: 24px;
+				color: $bb-icon-tertiary-color;
+			}
+
+			&:hover i {
+				color: $bb-error-color;
+			}
 		}
 	}
 
-	.bb-pf-option-remove {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		background: none;
-		border: none;
-		cursor: pointer;
-		width: 28px;
-		height: 28px;
-		flex-shrink: 0;
-		color: $bb-icon-tertiary-color;
-
-		&:hover {
-			color: $bb-error-color;
-		}
+	.bb-pf-add-option-btn.components-button.is-secondary {
+		@include bb-button-primary-outline;
+		font-size: 14px;
+		align-self: flex-start;
 
 		i {
 			font-size: 16px;
-		}
-	}
-
-	.bb-pf-add-option-btn.components-button.is-link {
-		margin-top: 4px;
-		font-size: 13px;
-		font-weight: 500;
-		color: $bb-link-color;
-		text-decoration: none;
-
-		&:hover {
-			text-decoration: underline;
+			margin-right: 4px;
 		}
 	}
 
