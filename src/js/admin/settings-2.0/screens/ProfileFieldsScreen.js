@@ -138,6 +138,9 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 	// AbortController ref.
 	var abortRef = useRef( null );
 
+	// AbortController ref for reorder requests.
+	var reorderAbortRef = useRef( null );
+
 	/**
 	 * Load field groups data.
 	 *
@@ -183,18 +186,23 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 		if ( null === openMenuId ) {
 			return;
 		}
-		function handleClick() {
-			setOpenMenuId( null );
+
+		function handleMouseDown( e ) {
+			if ( ! e.target.closest( '.bb-pf-field-actions' ) ) {
+				setOpenMenuId( null );
+			}
 		}
+
 		function handleKeyDown( e ) {
 			if ( 'Escape' === e.key ) {
 				setOpenMenuId( null );
 			}
 		}
-		document.addEventListener( 'click', handleClick );
+
+		document.addEventListener( 'mousedown', handleMouseDown );
 		document.addEventListener( 'keydown', handleKeyDown );
 		return function () {
-			document.removeEventListener( 'click', handleClick );
+			document.removeEventListener( 'mousedown', handleMouseDown );
 			document.removeEventListener( 'keydown', handleKeyDown );
 		};
 	}, [ openMenuId ] );
@@ -222,19 +230,20 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 	 * @param {number} fieldId Field ID.
 	 */
 	function handleDeleteField( fieldId ) {
+		setDeleteFieldData( null );
+
 		deleteProfileField( fieldId )
 			.then( function ( response ) {
 				if ( response.success ) {
 					setToast( { status: 'success', message: response.data.message || __( 'Field deleted.', 'buddyboss' ) } );
 					loadFieldGroups();
 				} else {
-					setToast( { status: 'error', message: response.data?.message || __( 'Failed to delete field.', 'buddyboss' ) } );
+					setToast( { status: 'error', message: ( response.data && response.data.message ) || __( 'Failed to delete field.', 'buddyboss' ) } );
 				}
 			} )
 			.catch( function ( error ) {
 				setToast( { status: 'error', message: error.message || __( 'Failed to delete field.', 'buddyboss' ) } );
 			} );
-		setDeleteFieldData( null );
 	}
 
 	/**
@@ -284,19 +293,27 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 		newGroups.splice( dragOverItem, 0, draggedGroup );
 		setFieldGroups( newGroups );
 
-		// Save order.
+		// Save order — cancel any stale reorder request first.
+		if ( reorderAbortRef.current ) {
+			reorderAbortRef.current.abort();
+		}
+		reorderAbortRef.current = new AbortController();
+
 		var groupOrder = {};
 		newGroups.forEach( function ( group, index ) {
 			groupOrder[ index ] = group.id;
 		} );
 
-		reorderProfileFields( { group_order: groupOrder } )
+		reorderProfileFields( { group_order: groupOrder }, { signal: reorderAbortRef.current.signal } )
 			.then( function ( response ) {
 				if ( response.success ) {
 					setToast( { status: 'success', message: __( 'Order updated.', 'buddyboss' ) } );
 				}
 			} )
-			.catch( function () {
+			.catch( function ( error ) {
+				if ( error && 'AbortError' === error.name ) {
+					return;
+				}
 				setToast( { status: 'error', message: __( 'Failed to save order.', 'buddyboss' ) } );
 				loadFieldGroups();
 			} );
@@ -391,13 +408,22 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 			} );
 		}
 
-		reorderProfileFields( { field_order: fieldOrder } )
+		// Cancel any stale reorder request first.
+		if ( reorderAbortRef.current ) {
+			reorderAbortRef.current.abort();
+		}
+		reorderAbortRef.current = new AbortController();
+
+		reorderProfileFields( { field_order: fieldOrder }, { signal: reorderAbortRef.current.signal } )
 			.then( function ( response ) {
 				if ( response.success ) {
 					setToast( { status: 'success', message: __( 'Order updated.', 'buddyboss' ) } );
 				}
 			} )
-			.catch( function () {
+			.catch( function ( error ) {
+				if ( error && 'AbortError' === error.name ) {
+					return;
+				}
 				setToast( { status: 'error', message: __( 'Failed to save order.', 'buddyboss' ) } );
 				loadFieldGroups();
 			} );

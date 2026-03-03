@@ -432,9 +432,11 @@ function bb_members_handle_display_name_format_change( $feature_id, $settings, $
 		bp_xprofile_update_field_meta( $firstname_field_id, 'allow_custom_visibility', 'disabled' );
 
 		// Make the first name field required if not already.
-		$field              = xprofile_get_field( $firstname_field_id );
-		$field->is_required = true;
-		$field->save();
+		$field = xprofile_get_field( $firstname_field_id );
+		if ( $field ) {
+			$field->is_required = true;
+			$field->save();
+		}
 
 		if ( 'first_last_name' === $display_name_format ) {
 			$lastname_field_id = bp_xprofile_lastname_field_id();

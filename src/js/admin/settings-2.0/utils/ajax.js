@@ -529,9 +529,10 @@ export function deleteProfileField( fieldId ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param {Object} data - Order data (group_order, field_order).
+ * @param {Object} data    - Order data (group_order, field_order).
+ * @param {Object} options - Optional fetch options (e.g. { signal }).
  * @return {Promise} Promise resolving to response.
  */
-export function reorderProfileFields( data ) {
-	return ajaxFetch( 'bb_admin_reorder_profile_fields', data );
+export function reorderProfileFields( data, options ) {
+	return ajaxFetch( 'bb_admin_reorder_profile_fields', data, options );
 }

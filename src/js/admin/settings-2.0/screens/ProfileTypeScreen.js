@@ -7,7 +7,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useEffect, useCallback, useRef } from '@wordpress/element';
+import { useState, useEffect, useCallback, useRef, useMemo } from '@wordpress/element';
 import { ToggleControl, SelectControl, Spinner } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
@@ -16,6 +16,7 @@ import { sanitizeHtml } from '../utils/sanitize';
 import { Toast } from '../components/Toast';
 import { HelpIcon } from '../components/HelpIcon';
 import { ProfileTypeModal } from '../components/modals/ProfileTypeModal';
+import { ConfirmToggleModal } from '../components/modals/ConfirmToggleModal';
 import { getSectionTitle, getFieldLabel, getFieldDescription, getFieldHelpText } from '../utils/feature';
 
 /**
@@ -84,6 +85,10 @@ export function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, 
 	var toastState = useState( null );
 	var toast = toastState[ 0 ];
 	var setToast = toastState[ 1 ];
+
+	var deleteConfirmState = useState( null );
+	var deleteConfirmId = deleteConfirmState[ 0 ];
+	var setDeleteConfirmId = deleteConfirmState[ 1 ];
 
 	// Load platform settings.
 	useEffect( function () {
@@ -160,13 +165,13 @@ export function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, 
 		};
 	}, [ openMenuId ] );
 
-	// Handle settings toggle.
+	// Handle settings toggle — rollback only the specific setting that failed.
 	var handleSettingChange = useCallback( function ( optionName, newValue ) {
-		var prevProfileTypes = enableProfileTypes;
-		var prevDisplayOnProfile = displayOnProfile;
+		var isProfileTypeSetting = 'bp-member-type-enable-disable' === optionName;
+		var prevValue = isProfileTypeSetting ? enableProfileTypes : displayOnProfile;
 
 		// Optimistic update.
-		if ( 'bp-member-type-enable-disable' === optionName ) {
+		if ( isProfileTypeSetting ) {
 			setEnableProfileTypes( newValue );
 		} else if ( 'bp-member-type-display-on-profile' === optionName ) {
 			setDisplayOnProfile( newValue );
@@ -177,16 +182,22 @@ export function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, 
 				if ( response.success ) {
 					setToast( { status: 'success', message: __( 'Setting saved.', 'buddyboss' ) } );
 				} else {
-					// Rollback.
-					setEnableProfileTypes( prevProfileTypes );
-					setDisplayOnProfile( prevDisplayOnProfile );
+					// Rollback only the setting that failed.
+					if ( isProfileTypeSetting ) {
+						setEnableProfileTypes( prevValue );
+					} else {
+						setDisplayOnProfile( prevValue );
+					}
 					setToast( { status: 'error', message: __( 'Failed to save setting.', 'buddyboss' ) } );
 				}
 			} )
 			.catch( function () {
-				// Rollback.
-				setEnableProfileTypes( prevProfileTypes );
-				setDisplayOnProfile( prevDisplayOnProfile );
+				// Rollback only the setting that failed.
+				if ( isProfileTypeSetting ) {
+					setEnableProfileTypes( prevValue );
+				} else {
+					setDisplayOnProfile( prevValue );
+				}
 				setToast( { status: 'error', message: __( 'Failed to save setting.', 'buddyboss' ) } );
 			} );
 	}, [ enableProfileTypes, displayOnProfile ] );
@@ -211,13 +222,16 @@ export function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, 
 			} );
 	}, [ defaultProfileType ] );
 
-	// Handle delete.
+	// Handle delete — open confirmation modal.
 	var handleDelete = useCallback( function ( typeId ) {
-		if ( ! window.confirm( __( 'Are you sure you want to delete this profile type?', 'buddyboss' ) ) ) {
-			return;
-		}
-
 		setOpenMenuId( null );
+		setDeleteConfirmId( typeId );
+	}, [] );
+
+	// Perform delete after confirmation.
+	var performDelete = useCallback( function () {
+		var typeId = deleteConfirmId;
+		setDeleteConfirmId( null );
 
 		deleteMemberType( typeId )
 			.then( function ( response ) {
@@ -229,13 +243,13 @@ export function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, 
 					} );
 					setToast( { status: 'success', message: __( 'Profile type deleted.', 'buddyboss' ) } );
 				} else {
-					setToast( { status: 'error', message: response.data?.message || __( 'Failed to delete profile type.', 'buddyboss' ) } );
+					setToast( { status: 'error', message: ( response.data && response.data.message ) || __( 'Failed to delete profile type.', 'buddyboss' ) } );
 				}
 			} )
 			.catch( function () {
 				setToast( { status: 'error', message: __( 'Failed to delete profile type.', 'buddyboss' ) } );
 			} );
-	}, [] );
+	}, [ deleteConfirmId ] );
 
 	// Handle edit.
 	var handleEdit = useCallback( function ( memberType ) {
@@ -263,16 +277,19 @@ export function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, 
 		setEditingType( null );
 	}, [] );
 
-	// Build default type options for the select.
-	var defaultTypeOptions = [ { label: __( '----', 'buddyboss' ), value: '' } ];
-	memberTypes.forEach( function ( type ) {
-		if ( type.key ) {
-			defaultTypeOptions.push( {
-				label: decodeEntities( type.plural_label || type.post_title ),
-				value: type.key,
-			} );
-		}
-	} );
+	// Build default type options for the select (memoized to avoid rebuilding on unrelated state changes).
+	var defaultTypeOptions = useMemo( function () {
+		var options = [ { label: __( '----', 'buddyboss' ), value: '' } ];
+		memberTypes.forEach( function ( type ) {
+			if ( type.key ) {
+				options.push( {
+					label: decodeEntities( type.plural_label || type.post_title ),
+					value: type.key,
+				} );
+			}
+		} );
+		return options;
+	}, [ memberTypes ] );
 
 	/**
 	 * Get visibility badge info for a member type.
@@ -493,6 +510,20 @@ export function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, 
 				wpRoles={ wpRoles }
 				allMemberTypes={ memberTypes }
 				publishedPages={ publishedPages }
+			/>
+
+			{/* Delete Confirmation Modal */}
+			<ConfirmToggleModal
+				isOpen={ null !== deleteConfirmId }
+				title={ __( 'Delete Profile Type', 'buddyboss' ) }
+				message={ __( 'Are you sure you want to delete this profile type?', 'buddyboss' ) }
+				confirmLabel={ __( 'Delete', 'buddyboss' ) }
+				cancelLabel={ __( 'Cancel', 'buddyboss' ) }
+				isDestructive={ true }
+				onConfirm={ performDelete }
+				onCancel={ function () {
+					setDeleteConfirmId( null );
+				} }
 			/>
 
 			{/* Toast */}

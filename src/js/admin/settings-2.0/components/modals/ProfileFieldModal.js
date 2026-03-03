@@ -8,7 +8,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useEffect, useCallback } from '@wordpress/element';
+import { useState, useEffect, useCallback, useMemo } from '@wordpress/element';
 import {
 	TextControl,
 	TextareaControl,
@@ -188,24 +188,18 @@ export function ProfileFieldModal( {
 		return exists;
 	}
 
-	/**
-	 * Build the type select options with optgroups.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @returns {Array} Select options array.
-	 */
-	function buildTypeOptions() {
-		var typeOptions = [];
+	// Build the type select options with optgroups (memoized since fieldTypes rarely change).
+	var typeOptions = useMemo( function () {
+		var options = [];
 
 		if ( fieldTypes.multi_fields && fieldTypes.multi_fields.length > 0 ) {
-			typeOptions.push( {
+			options.push( {
 				label: __( '--- Multi Fields ---', 'buddyboss' ),
 				value: '',
 				disabled: true,
 			} );
 			fieldTypes.multi_fields.forEach( function ( ft ) {
-				typeOptions.push( {
+				options.push( {
 					label: decodeEntities( ft.label ),
 					value: ft.value,
 				} );
@@ -213,21 +207,21 @@ export function ProfileFieldModal( {
 		}
 
 		if ( fieldTypes.single_fields && fieldTypes.single_fields.length > 0 ) {
-			typeOptions.push( {
+			options.push( {
 				label: __( '--- Single Fields ---', 'buddyboss' ),
 				value: '',
 				disabled: true,
 			} );
 			fieldTypes.single_fields.forEach( function ( ft ) {
-				typeOptions.push( {
+				options.push( {
 					label: decodeEntities( ft.label ),
 					value: ft.value,
 				} );
 			} );
 		}
 
-		return typeOptions;
-	}
+		return options;
+	}, [ fieldTypes ] );
 
 	/**
 	 * Add an option to the options list.
@@ -416,7 +410,7 @@ export function ProfileFieldModal( {
 			wp.element.createElement( SelectControl, {
 				label: __( 'Type', 'buddyboss' ),
 				value: type,
-				options: buildTypeOptions(),
+				options: typeOptions,
 				onChange: function ( val ) {
 					if ( val ) {
 						setType( val );

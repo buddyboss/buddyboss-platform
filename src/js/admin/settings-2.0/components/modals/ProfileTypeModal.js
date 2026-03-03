@@ -230,13 +230,17 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 		setLogoutSearchText( logoutOption ? logoutOption.label : '' );
 	}, [ isOpen, redirectionOptions, formData.login_redirection, formData.logout_redirection ] );
 
-	// Close dropdown on click outside.
+	// Close dropdown on click outside — only register when modal is open and a dropdown is active.
 	useEffect( function () {
+		if ( ! isOpen || ( ! isLoginDropdownOpen && ! isLogoutDropdownOpen ) ) {
+			return;
+		}
+
 		function handleClickOutside( e ) {
-			if ( loginDropdownRef.current && ! loginDropdownRef.current.contains( e.target ) ) {
+			if ( isLoginDropdownOpen && loginDropdownRef.current && ! loginDropdownRef.current.contains( e.target ) ) {
 				setIsLoginDropdownOpen( false );
 			}
-			if ( logoutDropdownRef.current && ! logoutDropdownRef.current.contains( e.target ) ) {
+			if ( isLogoutDropdownOpen && logoutDropdownRef.current && ! logoutDropdownRef.current.contains( e.target ) ) {
 				setIsLogoutDropdownOpen( false );
 			}
 		}
@@ -244,7 +248,7 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 		return function () {
 			document.removeEventListener( 'mousedown', handleClickOutside );
 		};
-	}, [] );
+	}, [ isOpen, isLoginDropdownOpen, isLogoutDropdownOpen ] );
 
 	// Update a field in form data.
 	var updateField = useCallback( function ( field, value ) {
