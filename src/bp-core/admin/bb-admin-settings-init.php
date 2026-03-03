@@ -73,6 +73,20 @@ function bb_admin_settings_init() {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php';
 		}
 
+		// Profile Search AJAX handler (only when xprofile component is active).
+		// Also ensure profile search module is loaded — it may not be when the
+		// toggle is OFF because bp_core_load_profile_search() returns early.
+		if ( bp_is_active( 'xprofile' ) && file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-profile-search-ajax.php' ) ) {
+			$bps_start = buddypress()->plugin_dir . 'bp-core/profile-search/bps-start.php';
+			if ( ! function_exists( 'bp_profile_search_main_form' ) && file_exists( $bps_start ) ) {
+				if ( ! defined( 'BPS_VERSION' ) ) {
+					define( 'BPS_VERSION', BP_PLATFORM_VERSION );
+				}
+				require_once $bps_start;
+			}
+			require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-profile-search-ajax.php';
+		}
+
 		// Admin settings page (menu registration, render function).
 		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-page.php' ) ) {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-page.php';

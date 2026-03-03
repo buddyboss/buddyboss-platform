@@ -536,3 +536,52 @@ export function deleteProfileField( fieldId ) {
 export function reorderProfileFields( data, options ) {
 	return ajaxFetch( 'bb_admin_reorder_profile_fields', data, options );
 }
+
+/**
+ * Get profile search form fields (saved + available).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} options - Optional fetch options (e.g. { signal }).
+ * @return {Promise} Promise resolving to response.
+ */
+export function getProfileSearchFields( options ) {
+	return ajaxFetch( 'bb_admin_get_profile_search_fields', {}, options || {} );
+}
+
+/**
+ * Save (add or update) a profile search field.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data - Field data (field_code, field_label, field_desc, field_mode, field_index).
+ * @return {Promise} Promise resolving to response.
+ */
+export function saveProfileSearchField( data ) {
+	return ajaxFetch( 'bb_admin_save_profile_search_field', data );
+}
+
+/**
+ * Delete a profile search field by index.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data - Delete data (field_index).
+ * @return {Promise} Promise resolving to response.
+ */
+export function deleteProfileSearchField( data ) {
+	return ajaxFetch( 'bb_admin_delete_profile_search_field', data );
+}
+
+/**
+ * Reorder profile search fields.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data    - Order data (field_order array of old indices in new order).
+ * @param {Object} options - Optional fetch options (e.g. { signal }).
+ * @return {Promise} Promise resolving to response.
+ */
+export function reorderProfileSearchFields( data, options ) {
+	return ajaxFetch( 'bb_admin_reorder_profile_search_fields', data, options || {} );
+}
