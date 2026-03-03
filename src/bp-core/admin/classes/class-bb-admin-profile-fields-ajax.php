@@ -156,7 +156,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
 		$name        = isset( $_POST['name'] ) ? wp_kses( wp_unslash( $_POST['name'] ), wp_kses_allowed_html( 'strip' ) ) : '';
 		$description = isset( $_POST['description'] ) ? sanitize_textarea_field( wp_unslash( $_POST['description'] ) ) : '';
-		$is_repeater = isset( $_POST['is_repeater'] ) ? sanitize_key( $_POST['is_repeater'] ) : '';
+		$group_is_repeater = isset( $_POST['group_is_repeater'] ) ? sanitize_key( $_POST['group_is_repeater'] ) : '';
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $name ) ) {
@@ -175,7 +175,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		}
 
 		// Save repeater meta.
-		if ( 'on' === $is_repeater ) {
+		if ( 'on' === $group_is_repeater ) {
 			bp_xprofile_update_meta( $group_id, 'group', 'is_repeater_enabled', 'on' );
 		}
 
@@ -213,7 +213,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		$group_id    = isset( $_POST['group_id'] ) ? absint( $_POST['group_id'] ) : 0;
 		$name        = isset( $_POST['name'] ) ? wp_kses( wp_unslash( $_POST['name'] ), wp_kses_allowed_html( 'strip' ) ) : '';
 		$description = isset( $_POST['description'] ) ? sanitize_textarea_field( wp_unslash( $_POST['description'] ) ) : '';
-		$is_repeater = isset( $_POST['is_repeater'] ) ? sanitize_key( $_POST['is_repeater'] ) : '';
+		$group_is_repeater = isset( $_POST['group_is_repeater'] ) ? sanitize_key( $_POST['group_is_repeater'] ) : '';
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $group_id ) ) {
@@ -243,7 +243,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		}
 
 		// Update repeater meta.
-		bp_xprofile_update_meta( $group_id, 'group', 'is_repeater_enabled', 'on' === $is_repeater ? 'on' : '' );
+		bp_xprofile_update_meta( $group_id, 'group', 'is_repeater_enabled', 'on' === $group_is_repeater ? 'on' : '' );
 
 		/**
 		 * Fires after a field group is saved via Settings 2.0.

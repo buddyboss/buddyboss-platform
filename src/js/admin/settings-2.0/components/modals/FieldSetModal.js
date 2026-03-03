@@ -68,7 +68,7 @@ export function FieldSetModal( { fieldSet, onClose, onSave, onDelete, setToast }
 		var data = {
 			name: name.trim(),
 			description: description.trim(),
-			is_repeater: isRepeater,
+			group_is_repeater: isRepeater,
 		};
 
 		var savePromise;

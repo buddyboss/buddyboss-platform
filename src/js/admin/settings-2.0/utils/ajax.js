@@ -469,7 +469,7 @@ export function getProfileFieldGroups( options ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param {Object} data - Field group data (name, description, is_repeater).
+ * @param {Object} data - Field group data (name, description, group_is_repeater).
  * @return {Promise} Promise resolving to response.
  */
 export function createFieldGroup( data ) {
@@ -481,7 +481,7 @@ export function createFieldGroup( data ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param {Object} data - Field group data (group_id, name, description, is_repeater).
+ * @param {Object} data - Field group data (group_id, name, description, group_is_repeater).
  * @return {Promise} Promise resolving to response.
  */
 export function updateFieldGroup( data ) {
