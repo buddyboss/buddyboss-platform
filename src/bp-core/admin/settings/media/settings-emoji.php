@@ -59,7 +59,7 @@ function bb_media_register_emoji_panel_fields() {
 			array(
 				'name'              => 'bp_media_groups_emoji_support',
 				'label'             => __( 'Groups', 'buddyboss' ),
-				'description'       => __( 'Enable emoji support in groups', 'buddyboss' ),
+				'description'       => __( 'Allow members to use emoji in groups, activity posts, messages and forums', 'buddyboss' ),
 				'type'              => 'toggle',
 				'default'           => 0,
 				'sanitize_callback' => 'absint',
@@ -77,7 +77,7 @@ function bb_media_register_emoji_panel_fields() {
 			array(
 				'name'              => 'bp_media_messages_emoji_support',
 				'label'             => __( 'Messages', 'buddyboss' ),
-				'description'       => __( 'Enable emoji support in private messages', 'buddyboss' ),
+				'description'       => __( 'Allow members to use emoji in private messages', 'buddyboss' ),
 				'type'              => 'toggle',
 				'default'           => 0,
 				'sanitize_callback' => 'absint',
@@ -95,7 +95,7 @@ function bb_media_register_emoji_panel_fields() {
 			array(
 				'name'              => 'bp_media_forums_emoji_support',
 				'label'             => __( 'Forums', 'buddyboss' ),
-				'description'       => __( 'Enable emoji support in forum discussions and replies', 'buddyboss' ),
+				'description'       => __( 'Allow members to use emoji in forum discussions and replies', 'buddyboss' ),
 				'type'              => 'toggle',
 				'default'           => 0,
 				'sanitize_callback' => 'absint',
