@@ -508,7 +508,6 @@ export function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, 
 				memberType={ editingType }
 				groupTypes={ groupTypes }
 				wpRoles={ wpRoles }
-				allMemberTypes={ memberTypes }
 				publishedPages={ publishedPages }
 			/>
 

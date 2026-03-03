@@ -186,13 +186,7 @@ class BB_Admin_Member_Types_Ajax {
 				$wp_roles_meta = ! empty( $wp_roles_meta ) ? array( $wp_roles_meta ) : array();
 			}
 
-			// Get invite permissions.
-			$allowed_invite = get_post_meta( $post_id, '_bp_member_type_allowed_member_type_invite', true );
-			if ( ! is_array( $allowed_invite ) ) {
-				$allowed_invite = ! empty( $allowed_invite ) ? array( $allowed_invite ) : array();
-			}
-
-			$member_types[] = array(
+				$member_types[] = array(
 				'id'                     => $post_id,
 				'post_title'             => $post->post_title,
 				'key'                    => $type_key,
@@ -213,8 +207,6 @@ class BB_Admin_Member_Types_Ajax {
 				'custom_logout_redirection' => esc_url_raw( get_post_meta( $post_id, '_bp_member_type_custom_logout_redirection', true ) ),
 				'visibility'             => $visibility,
 				'post_password'          => ! empty( $post->post_password ) ? $post->post_password : '',
-				'enable_invite'          => absint( get_post_meta( $post_id, '_bp_member_type_enable_invite', true ) ),
-				'allowed_member_type_invite' => array_map( 'absint', $allowed_invite ),
 				'allow_messaging_without_connection' => absint( get_post_meta( $post_id, '_bp_member_type_allow_messaging_without_connection', true ) ),
 			);
 		}
@@ -523,16 +515,6 @@ class BB_Admin_Member_Types_Ajax {
 		// Messaging without connection.
 		$allow_messaging_without_connection = isset( $_POST['allow_messaging_without_connection'] ) ? absint( wp_unslash( $_POST['allow_messaging_without_connection'] ) ) : 0;
 
-		// Email invite fields.
-		$enable_invite = isset( $_POST['enable_invite'] ) ? absint( wp_unslash( $_POST['enable_invite'] ) ) : 0;
-
-		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized below.
-		$raw_allowed_invite = isset( $_POST['allowed_member_type_invite'] ) ? wp_unslash( $_POST['allowed_member_type_invite'] ) : '';
-		if ( is_array( $raw_allowed_invite ) ) {
-			$allowed_invite = array_map( 'absint', $raw_allowed_invite );
-		} else {
-			$allowed_invite = '';
-		}
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		// Save all meta.
@@ -549,8 +531,6 @@ class BB_Admin_Member_Types_Ajax {
 		update_post_meta( $post_id, '_bp_member_type_custom_login_redirection', $custom_login_redirection );
 		update_post_meta( $post_id, '_bp_member_type_logout_redirection', $logout_redirection );
 		update_post_meta( $post_id, '_bp_member_type_custom_logout_redirection', $custom_logout_redirection );
-		update_post_meta( $post_id, '_bp_member_type_enable_invite', $enable_invite );
-		update_post_meta( $post_id, '_bp_member_type_allowed_member_type_invite', $allowed_invite );
 		update_post_meta( $post_id, '_bp_member_type_allow_messaging_without_connection', $allow_messaging_without_connection );
 
 		// Update messaging-without-connection option (matching legacy lines 2340-2351).

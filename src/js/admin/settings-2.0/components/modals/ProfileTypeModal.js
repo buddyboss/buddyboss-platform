@@ -76,8 +76,6 @@ var DEFAULT_FORM_DATA = {
 		background_color: '',
 		text_color: '',
 	},
-	enable_invite: 0,
-	allowed_member_type_invite: [],
 };
 
 /**
@@ -111,10 +109,9 @@ function getGroupTypeCreateMode( value ) {
  * @param {Object}   props.memberType     Member type to edit (null for create).
  * @param {Array}    props.groupTypes     Available group types.
  * @param {Array}    props.wpRoles        Available WordPress roles.
- * @param {Array}    props.allMemberTypes All member types (for invite field).
  * @returns {JSX.Element|null} Modal element or null.
  */
-export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTypes, wpRoles, allMemberTypes, publishedPages } ) {
+export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTypes, wpRoles, publishedPages } ) {
 	var formDataState = useState( DEFAULT_FORM_DATA );
 	var formData = formDataState[ 0 ];
 	var setFormData = formDataState[ 1 ];
@@ -129,8 +126,6 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 
 	var availableGroupTypes = groupTypes || [];
 	var availableWpRoles = wpRoles || [];
-	var availableMemberTypes = allMemberTypes || [];
-
 	// Login redirection searchable dropdown state.
 	var loginSearchState = useState( '' );
 	var loginSearchText = loginSearchState[ 0 ];
@@ -178,7 +173,6 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 			var gtCreate = memberType.group_type_create || [];
 			var gtAutoJoin = memberType.group_type_auto_join || [];
 			var existingWpRoles = memberType.wp_roles || [];
-			var allowedInvite = memberType.allowed_member_type_invite || [];
 
 			setFormData( {
 				name: decodeEntities( memberType.post_title || '' ),
@@ -203,8 +197,6 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 					background_color: ( labelColor.background_color ) || '',
 					text_color: ( labelColor.text_color ) || '',
 				},
-				enable_invite: memberType.enable_invite || 0,
-				allowed_member_type_invite: Array.isArray( allowedInvite ) ? allowedInvite.map( String ) : [],
 			} );
 		} else {
 			setFormData( JSON.parse( JSON.stringify( DEFAULT_FORM_DATA ) ) );
@@ -313,7 +305,6 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 			custom_login_redirection: safeUrl( formData.custom_login_redirection ),
 			logout_redirection: formData.logout_redirection,
 			custom_logout_redirection: safeUrl( formData.custom_logout_redirection ),
-			enable_invite: formData.enable_invite,
 			'label_color[type]': formData.label_color.type,
 		};
 
@@ -346,13 +337,6 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 		if ( formData.wp_roles.length > 0 ) {
 			formData.wp_roles.forEach( function ( role, idx ) {
 				data[ 'wp_roles[' + idx + ']' ] = role;
-			} );
-		}
-
-		// Allowed member type invite.
-		if ( formData.allowed_member_type_invite.length > 0 ) {
-			formData.allowed_member_type_invite.forEach( function ( id, idx ) {
-				data[ 'allowed_member_type_invite[' + idx + ']' ] = id;
 			} );
 		}
 
@@ -752,38 +736,6 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 									/>
 								</div>
 							</div>
-						</div>
-					) }
-				</div>
-
-				{/* Email Invites */}
-				<div className="bb-admin-profile-type-modal__section">
-					<h4 className="bb-admin-profile-type-modal__section-title">
-						{ __( 'Email Invites', 'buddyboss' ) }
-					</h4>
-					<CheckboxControl
-						label={ __( 'Allow members to select the profile type that the invited recipient will be automatically assigned to on registration', 'buddyboss' ) }
-						checked={ !! formData.enable_invite }
-						onChange={ function ( val ) { updateField( 'enable_invite', val ? 1 : 0 ); } }
-					/>
-					{ !! formData.enable_invite && availableMemberTypes.length > 0 && (
-						<div className="bb-admin-profile-type-modal__checkbox-grid">
-							{ availableMemberTypes.filter( function ( mt ) {
-								// Exclude current type from invite list.
-								return ! memberType || mt.id !== memberType.id;
-							} ).map( function ( mt ) {
-								var isChecked = -1 !== formData.allowed_member_type_invite.indexOf( String( mt.id ) );
-								return (
-									<CheckboxControl
-										key={ mt.id }
-										label={ decodeEntities( mt.post_title ) }
-										checked={ isChecked }
-										onChange={ function () {
-											toggleListItem( 'allowed_member_type_invite', mt.id );
-										} }
-									/>
-								);
-							} ) }
 						</div>
 					) }
 				</div>
