@@ -41,7 +41,7 @@ function bb_media_register_emoji_panel_fields() {
 			array(
 				'name'              => 'bp_media_profiles_emoji_support',
 				'label'             => __( 'Profiles', 'buddyboss' ),
-				'description'       => __( 'Enable emoji support in profiles and activity posts', 'buddyboss' ),
+				'description'       => __( 'Allow members to use emoji in profiles and activity posts', 'buddyboss' ),
 				'type'              => 'toggle',
 				'default'           => 0,
 				'sanitize_callback' => 'absint',
