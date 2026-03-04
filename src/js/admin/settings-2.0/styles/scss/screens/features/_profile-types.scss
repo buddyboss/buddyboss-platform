@@ -445,6 +445,13 @@
 		}
 	}
 
+	&__checkbox-group {
+
+		> .components-base-control > .components-base-control__field {
+			margin-bottom: 16px;
+		}
+	}
+
 	// Override WP component uppercase labels to match Figma title case.
 	.components-base-control__label,
 	label.components-input-control__label.components-text {
@@ -602,19 +609,32 @@
 		}
 	}
 
+	&__checkbox-desc {
+		color: $bb-text-tertiary-color;
+		font-size: 13px;
+		margin: 0px 0 6px;
+	}
+
 	&__checkbox-grid {
-		display: grid;
-		grid-template-columns: 150px 150px;
-		gap: 16px 25px;
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
 		margin-top: 16px;
 
-		.components-checkbox-control__label {
+		.components-toggle-control__label {
+			color: $bb-text-color;
 			font-size: 14px;
 		}
 
 		.components-base-control {
 			margin-bottom: 0;
 		}
+	}
+
+	&__radio-grid .components-radio-control .components-radio-control__group-wrapper {
+		display: grid;
+		grid-template-columns: 160px 160px 160px;
+		gap: 16px 25px;
 	}
 
 	&__roles-grid {

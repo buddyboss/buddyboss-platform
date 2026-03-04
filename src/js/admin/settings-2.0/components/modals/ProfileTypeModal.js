@@ -15,6 +15,7 @@ import {
 	RadioControl,
 	Button,
 	Modal,
+	ToggleControl,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
@@ -399,18 +400,16 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 
 				{/* Labels — Singular first, Plural second (matching Figma) */}
 				<div className="bb-admin-profile-type-modal__section">
-					<div className="bb-admin-profile-type-modal__row">
-						<TextControl
-							label={ __( 'Singular Label', 'buddyboss' ) }
-							value={ formData.singular_label }
-							onChange={ function ( val ) { updateField( 'singular_label', val ); } }
-						/>
-						<TextControl
-							label={ __( 'Plural Label', 'buddyboss' ) }
-							value={ formData.plural_label }
-							onChange={ function ( val ) { updateField( 'plural_label', val ); } }
-						/>
-					</div>
+					<TextControl
+						label={ __( 'Singular Label', 'buddyboss' ) }
+						value={ formData.singular_label }
+						onChange={ function ( val ) { updateField( 'singular_label', val ); } }
+					/>
+					<TextControl
+						label={ __( 'Plural Label', 'buddyboss' ) }
+						value={ formData.plural_label }
+						onChange={ function ( val ) { updateField( 'plural_label', val ); } }
+					/>
 				</div>
 
 				{/* Members Directory Permissions */}
@@ -418,21 +417,23 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 					<h4 className="bb-admin-profile-type-modal__section-title">
 						{ __( 'Members Directory Permissions', 'buddyboss' ) }
 					</h4>
-					<CheckboxControl
-						label={ __( 'Display this profile type in "Types" filter in Members Directory', 'buddyboss' ) }
-						checked={ !! formData.enable_filter }
-						onChange={ function ( val ) { updateField( 'enable_filter', val ? 1 : 0 ); } }
-					/>
-					<CheckboxControl
-						label={ __( 'Hide all members of this type from Members Directory', 'buddyboss' ) }
-						checked={ !! formData.enable_remove }
-						onChange={ function ( val ) { updateField( 'enable_remove', val ? 1 : 0 ); } }
-					/>
-					<CheckboxControl
-						label={ __( 'Hide all members of this type from Network Search results', 'buddyboss' ) }
-						checked={ !! formData.enable_search_remove }
-						onChange={ function ( val ) { updateField( 'enable_search_remove', val ? 1 : 0 ); } }
-					/>
+					<div className="bb-admin-profile-type-modal__checkbox-group">
+						<CheckboxControl
+							label={ __( 'Display this profile type in "Types" filter in Members Directory', 'buddyboss' ) }
+							checked={ !! formData.enable_filter }
+							onChange={ function ( val ) { updateField( 'enable_filter', val ? 1 : 0 ); } }
+						/>
+						<CheckboxControl
+							label={ __( 'Hide all members of this type from Members Directory', 'buddyboss' ) }
+							checked={ !! formData.enable_remove }
+							onChange={ function ( val ) { updateField( 'enable_remove', val ? 1 : 0 ); } }
+						/>
+						<CheckboxControl
+							label={ __( 'Hide all members of this type from Network Search results', 'buddyboss' ) }
+							checked={ !! formData.enable_search_remove }
+							onChange={ function ( val ) { updateField( 'enable_search_remove', val ? 1 : 0 ); } }
+						/>
+					</div>
 				</div>
 
 				{/* Profile Field */}
@@ -464,10 +465,11 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 						/>
 						{ 'specific' === formData.group_type_create_mode && (
 							<div className="bb-admin-profile-type-modal__checkbox-grid">
+								<p className="bb-admin-profile-type-modal__checkbox-desc">{ __('Select the group types this profile type can create.', 'buddyboss') }</p>
 								{ availableGroupTypes.map( function ( gt ) {
 									var isChecked = -1 !== formData.group_type_create.indexOf( String( gt.id ) );
 									return (
-										<CheckboxControl
+										<ToggleControl
 											key={ gt.id }
 											label={ decodeEntities( gt.name ) }
 											checked={ isChecked }
@@ -517,25 +519,23 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 					<p className="bb-admin-profile-type-modal__section-description" style={ { marginTop: 0, marginBottom: 16 } }>
 						{ __( 'Select the WordPress role to assign to members of this profile type. Changing this will update the role for all existing members of this type.', 'buddyboss' ) }
 					</p>
-					<div className="bb-admin-profile-type-modal__checkbox-grid">
-						{ [ { value: 'none', label: __( 'None', 'buddyboss' ) } ].concat( availableWpRoles ).map( function ( role ) {
-							var isChecked = -1 !== formData.wp_roles.indexOf( role.value );
-							return (
-								<CheckboxControl
-									key={ role.value }
-									label={ decodeEntities( role.label ) }
-									checked={ isChecked }
-									onChange={ function () {
-										// Single select behavior — replace array.
-										if ( isChecked ) {
-											updateField( 'wp_roles', [] );
-										} else {
-											updateField( 'wp_roles', [ role.value ] );
-										}
-									} }
-								/>
-							);
-						} ) }
+					<div className="bb-admin-profile-type-modal__radio-grid">
+						<RadioControl
+							selected={ formData.wp_roles.length ? formData.wp_roles[ 0 ] : 'none' }
+							options={ [ { value: 'none', label: __( 'None', 'buddyboss' ) } ].concat( availableWpRoles ).map( function ( role ) {
+								return {
+									value: role.value,
+									label: decodeEntities( role.label ),
+								};
+							} ) }
+							onChange={ function ( value ) {
+								if ( 'none' === value ) {
+									updateField( 'wp_roles', [] );
+								} else {
+									updateField( 'wp_roles', [ value ] );
+								}
+							} }
+						/>
 					</div>
 				</div>
 
