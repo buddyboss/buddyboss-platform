@@ -1075,9 +1075,6 @@ function bp_core_get_users_admin_tabs( $active_tab = '' ) {
 
 	$tabs = array();
 
-	// Check profile type enabled.
-	$is_member_type_enabled = bp_member_type_enable_disable();
-
 	// Check profile search enabled.
 	$is_profile_search_enabled = bp_disable_advanced_profile_search();
 
@@ -1087,20 +1084,7 @@ function bp_core_get_users_admin_tabs( $active_tab = '' ) {
 		'class' => 'bp-profile-fields',
 	);
 
-	if ( true === $is_member_type_enabled ) {
-
-		if ( is_multisite() && bp_is_network_activated() ) {
-			$profile_url = get_admin_url( bp_get_root_blog_id(), 'edit.php?post_type=bp-member-type' );
-		} else {
-			$profile_url = bp_get_admin_url( add_query_arg( array( 'post_type' => 'bp-member-type' ), 'edit.php' ) );
-		}
-
-		$tabs[] = array(
-			'href'  => $profile_url,
-			'name'  => __( 'Profile Types', 'buddyboss' ),
-			'class' => 'bp-profile-types',
-		);
-	}
+	// Profile Types tab removed — now managed via Settings 2.0.
 
 	if ( false === $is_profile_search_enabled ) {
 
@@ -1117,13 +1101,7 @@ function bp_core_get_users_admin_tabs( $active_tab = '' ) {
 		);
 	}
 
-	$query['autofocus[section]'] = 'bp_nouveau_user_primary_nav';
-	$section_link                = add_query_arg( $query, admin_url( 'customize.php' ) );
-	$tabs[]                      = array(
-		'href'  => esc_url( $section_link ),
-		'name'  => __( 'Profile Navigation', 'buddyboss' ),
-		'class' => 'bp-user-customizer',
-	);
+	// Profile Navigation tab removed — now managed via Settings 2.0.
 
 	/**
 	 * Filters the tab data used in our wp-admin screens.
@@ -1135,55 +1113,7 @@ function bp_core_get_users_admin_tabs( $active_tab = '' ) {
 	return apply_filters( 'bp_core_get_users_admin_tabs', $tabs );
 }
 
-/**
- * Added Navigation tab on top of the page BuddyBoss > Group Types
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_users_admin_profile_types_listing_add_users_tab() {
-	global $pagenow ,$post;
-
-	// Check profile type enabled.
-	$is_member_type_enabled = bp_member_type_enable_disable();
-
-	if ( true === $is_member_type_enabled ) {
-
-		if ( ( isset( $GLOBALS['wp_list_table']->screen->post_type ) && $GLOBALS['wp_list_table']->screen->post_type == 'bp-member-type' && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-member-type' && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-member-type' && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-member-type' && $pagenow == 'post.php' ) ) {
-			?>
-			<div class="wrap">
-				<?php
-				$users_tab = count( bp_core_get_users_admin_tabs() );
-				if ( $users_tab > 1 ) {
-					?>
-					<h2 class="nav-tab-wrapper"><?php bp_core_admin_users_tabs( __( 'Profile Types', 'buddyboss' ) ); ?></h2>
-																				<?php
-				}
-				?>
-			</div>
-			<?php
-		}
-	}
-}
-add_action( 'admin_notices', 'bp_users_admin_profile_types_listing_add_users_tab' );
-
-add_filter( 'parent_file', 'bp_profile_type_set_platform_tab_submenu_active' );
-/**
- * Highlights the submenu item using WordPress native styles.
- *
- * @param string $parent_file The filename of the parent menu.
- *
- * @return string $parent_file The filename of the parent menu.
- */
-function bp_profile_type_set_platform_tab_submenu_active( $parent_file ) {
-	global $pagenow, $current_screen, $post;
-
-	if ( true === bp_member_type_enable_disable() ) {
-		if ( ( isset( $GLOBALS['wp_list_table']->screen->post_type ) && $GLOBALS['wp_list_table']->screen->post_type == 'bp-member-type' && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-member-type' && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-member-type' && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-member-type' && $pagenow == 'post.php' ) ) {
-			$parent_file = 'buddyboss-platform';
-		}
-	}
-	return $parent_file;
-}
+// Profile Types CPT admin tabs and submenu highlight removed — now managed via Settings 2.0.
 
 /**
  * Check if the social networks field has been added.
