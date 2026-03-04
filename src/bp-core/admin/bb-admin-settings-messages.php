@@ -117,21 +117,25 @@ function bb_admin_settings_register_messages_feature() {
 	);
 
 	// FIELD: Hide From Notifications (Toggle).
-	bb_register_feature_field(
-		'messages',
-		'messaging_notifications',
-		'messaging_notifications',
-		array(
-			'name'              => 'hide_message_notification',
-			'label'             => __( 'Hide From Notifications', 'buddyboss' ),
-			'type'              => 'toggle',
-			'toggle_label'      => __( 'Hide messages from notifications', 'buddyboss' ),
-			'description'       => __( 'When enabled, notifications for group and private messages will not appear in a member\'s notification list or count toward unread notifications. However, they will still be sent externally (email, web, or app) and shown in the member\'s message list, including the unread message count.', 'buddyboss' ),
-			'default'           => (bool) bp_get_option( 'hide_message_notification', 1 ),
-			'sanitize_callback' => 'absint',
-			'order'             => 10,
-		)
-	);
+	// Only register when notifications component is active — the toggle hides
+	// messages from the notification list, which doesn't exist without it.
+	if ( bp_is_active( 'notifications' ) ) {
+		bb_register_feature_field(
+			'messages',
+			'messaging_notifications',
+			'messaging_notifications',
+			array(
+				'name'              => 'hide_message_notification',
+				'label'             => __( 'Hide From Notifications', 'buddyboss' ),
+				'type'              => 'toggle',
+				'toggle_label'      => __( 'Hide messages from notifications', 'buddyboss' ),
+				'description'       => __( 'When enabled, notifications for group and private messages will not appear in a member\'s notification list or count toward unread notifications. However, they will still be sent externally (email, web, or app) and shown in the member\'s message list, including the unread message count.', 'buddyboss' ),
+				'default'           => (bool) bp_get_option( 'hide_message_notification', 1 ),
+				'sanitize_callback' => 'absint',
+				'order'             => 10,
+			)
+		);
+	}
 
 	// FIELD: Delay Email Notifications (Toggle).
 	bb_register_feature_field(
