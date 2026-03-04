@@ -1075,33 +1075,13 @@ function bp_core_get_users_admin_tabs( $active_tab = '' ) {
 
 	$tabs = array();
 
-	// Check profile search enabled.
-	$is_profile_search_enabled = bp_disable_advanced_profile_search();
-
 	$tabs[] = array(
 		'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-profile-setup' ), 'admin.php' ) ),
 		'name'  => __( 'Profile Fields', 'buddyboss' ),
 		'class' => 'bp-profile-fields',
 	);
 
-	// Profile Types tab removed — now managed via Settings 2.0.
-
-	if ( false === $is_profile_search_enabled ) {
-
-		if ( is_multisite() && bp_is_network_activated() ) {
-			$profile_search_url = get_admin_url( bp_get_root_blog_id(), 'edit.php?post_type=bp_ps_form' );
-		} else {
-			$profile_search_url = bp_get_admin_url( add_query_arg( array( 'post_type' => 'bp_ps_form' ), 'edit.php' ) );
-		}
-
-		$tabs[] = array(
-			'href'  => $profile_search_url,
-			'name'  => __( 'Profile Search', 'buddyboss' ),
-			'class' => 'bp-profile-search',
-		);
-	}
-
-	// Profile Navigation tab removed — now managed via Settings 2.0.
+	// Profile Types, Profile Search, and Profile Navigation tabs removed — now managed via Settings 2.0.
 
 	/**
 	 * Filters the tab data used in our wp-admin screens.
