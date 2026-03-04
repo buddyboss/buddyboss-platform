@@ -165,6 +165,12 @@ function bb_admin_settings_page() {
 		'groupsPerPage' => $groups_per_page,
 	);
 
+	// Component active status for conditional UI in React.
+	$localize_data['isSearchActive']                     = bp_is_active( 'search' );
+	$localize_data['showMessagingWithoutConnectionFlag'] = bp_is_active( 'messages' ) && bp_is_active( 'friends' ) && (bool) bp_get_option( 'bp-force-friendship-to-message', false );
+	$localize_data['isGroupCreationAllowed']             = bp_is_active( 'groups' ) && ! bp_restrict_group_creation();
+	$localize_data['isGroupTypeCreationEnabled']         = bp_is_active( 'groups' ) && bp_disable_group_type_creation();
+	$localize_data['isGroupAutoJoinEnabled']             = bp_is_active( 'groups' ) && bp_disable_group_type_creation() && bp_enable_group_auto_join();
 	// Upload nonces for image upload fields (avatar/cover).
 	// Only expose when the user has capability to manage group settings.
 	if ( bp_current_user_can( 'bp_moderate' ) ) {

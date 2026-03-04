@@ -61,6 +61,7 @@ var DEFAULT_FORM_DATA = {
 	enable_filter: 0,
 	enable_remove: 0,
 	enable_search_remove: 0,
+	allow_messaging_without_connection: 0,
 	enable_profile_field: 0,
 	group_type_create_mode: 'none',
 	group_type_create: [],
@@ -108,8 +109,8 @@ function getGroupTypeCreateMode( value ) {
  * @param {Function} props.onClose        Close handler.
  * @param {Function} props.onSave         Save handler.
  * @param {Object}   props.memberType     Member type to edit (null for create).
- * @param {Array}    props.groupTypes     Available group types.
- * @param {Array}    props.wpRoles        Available WordPress roles.
+ * @param {Array}    props.groupTypes      Available group types.
+ * @param {Array}    props.wpRoles         Available WordPress roles.
  * @returns {JSX.Element|null} Modal element or null.
  */
 export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTypes, wpRoles, publishedPages } ) {
@@ -182,6 +183,7 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 				enable_filter: memberType.enable_filter || 0,
 				enable_remove: memberType.enable_remove || 0,
 				enable_search_remove: memberType.enable_search_remove || 0,
+				allow_messaging_without_connection: memberType.allow_messaging_without_connection || 0,
 				enable_profile_field: memberType.enable_profile_field || 0,
 				group_type_create_mode: getGroupTypeCreateMode( gtCreate ),
 				group_type_create: Array.isArray( gtCreate ) ? gtCreate.map( String ) : [],
@@ -300,6 +302,7 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 			enable_filter: formData.enable_filter,
 			enable_remove: formData.enable_remove,
 			enable_search_remove: formData.enable_search_remove,
+			allow_messaging_without_connection: formData.allow_messaging_without_connection,
 			enable_profile_field: formData.enable_profile_field,
 			visibility: formData.visibility,
 			login_redirection: formData.login_redirection,
@@ -428,13 +431,29 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 							checked={ !! formData.enable_remove }
 							onChange={ function ( val ) { updateField( 'enable_remove', val ? 1 : 0 ); } }
 						/>
-						<CheckboxControl
-							label={ __( 'Hide all members of this type from Network Search results', 'buddyboss' ) }
-							checked={ !! formData.enable_search_remove }
-							onChange={ function ( val ) { updateField( 'enable_search_remove', val ? 1 : 0 ); } }
-						/>
+						{ !! window.bbAdminData?.isSearchActive && (
+							<CheckboxControl
+								label={ __( 'Hide all members of this type from Network Search results', 'buddyboss' ) }
+								checked={ !! formData.enable_search_remove }
+								onChange={ function ( val ) { updateField( 'enable_search_remove', val ? 1 : 0 ); } }
+							/>
+						) }
 					</div>
 				</div>
+
+				{/* Messaging — only when messages + friends active and force-friendship-to-message enabled */}
+				{ !! window.bbAdminData?.showMessagingWithoutConnectionFlag && (
+					<div className="bb-admin-profile-type-modal__section">
+						<h4 className="bb-admin-profile-type-modal__section-title">
+							{ __( 'Messaging', 'buddyboss' ) }
+						</h4>
+						<CheckboxControl
+							label={ __( 'Allow this profile type to send and receive messages without being connected', 'buddyboss' ) }
+							checked={ !! formData.allow_messaging_without_connection }
+							onChange={ function ( val ) { updateField( 'allow_messaging_without_connection', val ? 1 : 0 ); } }
+						/>
+					</div>
+				) }
 
 				{/* Profile Field */}
 				<div className="bb-admin-profile-type-modal__section">
@@ -448,8 +467,8 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 					/>
 				</div>
 
-				{/* Group Creation Permissions — only when Groups component is active */}
-				{ availableGroupTypes.length > 0 && (
+				{/* Group Creation Permissions — only when Groups active, creation allowed, group types enabled */}
+				{ availableGroupTypes.length > 0 && !! window.bbAdminData?.isGroupCreationAllowed && !! window.bbAdminData?.isGroupTypeCreationEnabled && (
 					<div className="bb-admin-profile-type-modal__section">
 						<h4 className="bb-admin-profile-type-modal__section-title">
 							{ __( 'Group Creation Permissions', 'buddyboss' ) }
@@ -484,8 +503,8 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 					</div>
 				) }
 
-				{/* Group Type Membership Approval — only when Groups component is active */}
-				{ availableGroupTypes.length > 0 && (
+				{/* Group Type Membership Approval — only when Groups active, group types enabled, auto-join enabled */}
+				{ availableGroupTypes.length > 0 && !! window.bbAdminData?.isGroupAutoJoinEnabled && (
 					<div className="bb-admin-profile-type-modal__section">
 						<h4 className="bb-admin-profile-type-modal__section-title">
 							{ __( 'Group Type Membership Approval', 'buddyboss' ) }
