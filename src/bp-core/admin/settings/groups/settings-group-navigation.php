@@ -113,16 +113,15 @@ function bb_groups_register_navigation_panel_fields() {
 /**
  * Build the select options for the Default Tab dropdown.
  *
- * Reuses the same logic as the legacy Customizer
- * (bp_nouveau_groups_customizer_controls) and preserves the
- * `group_default_tab_options_list` filter for Pro extensibility.
+ * Reuses the same logic as the removed legacy Customizer and
+ * preserves the `group_default_tab_options_list` filter for Pro extensibility.
  *
  * @since BuddyBoss [BBVERSION]
  *
  * @return array Array of [ 'value' => slug, 'label' => name ] items.
  */
 function bb_get_group_default_tab_options() {
-	// Base options — same logic as bp_nouveau_groups_customizer_controls().
+	// Base options — same logic as the removed legacy Customizer controls.
 	if ( bp_is_active( 'activity' ) ) {
 		$options = apply_filters(
 			'group_default_tab_options_list',
@@ -157,6 +156,9 @@ function bb_get_group_default_tab_options() {
 	}
 
 	// Convert to Settings 2.0 select format.
+	// Note: Hidden nav items are NOT filtered here — the React UI handles
+	// live filtering based on Navigation Order toggles so options can be
+	// restored immediately when an item is toggled back on.
 	$formatted = array();
 	foreach ( $options as $slug => $label ) {
 		$formatted[] = array(
@@ -497,17 +499,8 @@ function bb_group_navigation_save_settings( $feature_id, $settings, $saved ) {
 		$appearance['group_nav_display'] = absint( $settings['bb_group_nav_display'] );
 	}
 
-	// Update group_default_tab — validate against allowed options.
-	if ( array_key_exists( 'bb_group_default_tab', $settings ) ) {
-		$valid_tabs = wp_list_pluck( bb_get_group_default_tab_options(), 'value' );
-		$tab        = sanitize_key( $settings['bb_group_default_tab'] );
-
-		if ( in_array( $tab, $valid_tabs, true ) ) {
-			$appearance['group_default_tab'] = $tab;
-		}
-	}
-
-	// Update group_nav_order and group_nav_hide.
+	// Update group_nav_order and group_nav_hide (must be processed before default tab validation).
+	$hide = isset( $appearance['group_nav_hide'] ) ? $appearance['group_nav_hide'] : array();
 	if ( array_key_exists( 'bb_group_nav_order', $settings ) ) {
 		$nav_order_data = $settings['bb_group_nav_order'];
 
@@ -533,6 +526,30 @@ function bb_group_navigation_save_settings( $feature_id, $settings, $saved ) {
 			$appearance['group_nav_hide']  = $hide;
 		}
 	}
+
+	// Update group_default_tab — validate against allowed options and hidden items.
+	$default_tab = isset( $appearance['group_default_tab'] ) ? $appearance['group_default_tab'] : 'members';
+	if ( array_key_exists( 'bb_group_default_tab', $settings ) ) {
+		$valid_tabs = wp_list_pluck( bb_get_group_default_tab_options(), 'value' );
+		$tab        = sanitize_key( $settings['bb_group_default_tab'] );
+
+		if ( in_array( $tab, $valid_tabs, true ) ) {
+			$default_tab = $tab;
+		}
+	}
+
+	// If the default tab is now hidden, reset to the first visible tab.
+	if ( is_array( $hide ) && in_array( $default_tab, $hide, true ) ) {
+		$nav_order   = isset( $appearance['group_nav_order'] ) ? $appearance['group_nav_order'] : array();
+		$default_tab = 'members'; // Last resort fallback.
+		foreach ( $nav_order as $slug ) {
+			if ( ! in_array( $slug, $hide, true ) ) {
+				$default_tab = $slug;
+				break;
+			}
+		}
+	}
+	$appearance['group_default_tab'] = $default_tab;
 
 	// Save the merged appearance option.
 	bp_update_option( 'bp_nouveau_appearance', $appearance );
