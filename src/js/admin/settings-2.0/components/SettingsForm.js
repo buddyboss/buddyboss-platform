@@ -111,7 +111,7 @@ export function SettingsForm({ fields, values, onChange }) {
 		const isParentInverted = true === parentField?.invert_value;
 
 		// If parent_value is specified, check for exact match
-		if (field.parent_value !== undefined) {
+		if (field.parent_value !== undefined && field.parent_value !== null) {
 			return parentValue !== field.parent_value;
 		}
 

@@ -178,10 +178,7 @@ function bb_admin_settings_register_messages_feature() {
 			'default'           => (string) bp_get_option( 'time_delay_email_notification', 15 ),
 			'sanitize_callback' => 'bb_messages_sanitize_delay_time',
 			'order'             => 30,
-			'conditional'       => array(
-				'field' => 'delay_email_notification',
-				'value' => true,
-			),
+			'parent_field'      => 'delay_email_notification',
 		)
 	);
 
