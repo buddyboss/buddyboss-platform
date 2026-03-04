@@ -205,74 +205,74 @@ export function ProfileSearchFieldModal( { field, availableFields, existingField
 		};
 	} );
 
-	return wp.element.createElement(
-		Modal,
-		{
-			title: isEditing ? __( 'Edit Search Field', 'buddyboss' ) : __( 'Add Search Field', 'buddyboss' ),
-			onRequestClose: onClose,
-			shouldCloseOnClickOutside: false,
-			className: 'bb-ps-field-modal',
-		},
+	return (
+		<Modal
+			title={ isEditing ? __( 'Edit Search Field', 'buddyboss' ) : __( 'Add Search Field', 'buddyboss' ) }
+			onRequestClose={ onClose }
+			shouldCloseOnClickOutside={ false }
+			className="bb-ps-field-modal bb-admin-settings-modal"
+		>
 
-		// Field Select.
-		wp.element.createElement( SelectControl, {
-			label: __( 'Select Field', 'buddyboss' ),
-			value: fieldCode,
-			options: fieldOptions,
-			onChange: function ( val ) {
-				// Don't allow selecting disabled group headers.
-				if ( val && 0 === val.indexOf( '__group_' ) ) {
-					return;
-				}
-				setFieldCode( val );
-			},
-		} ),
+			<div className="bb-admin-settings-modal__body">
 
-		// Label.
-		wp.element.createElement( TextControl, {
-			label: __( 'Label', 'buddyboss' ),
-			value: fieldLabel,
-			placeholder: labelPlaceholder,
-			onChange: setFieldLabel,
-		} ),
+				{/* Field Select. */}
+					<SelectControl
+						label={ __( 'Select Field', 'buddyboss' ) }
+						value={ fieldCode }
+						options={ fieldOptions }
+						onChange={ function ( val ) {
+							// Don't allow selecting disabled group headers.
+							if ( val && 0 === val.indexOf( '__group_' ) ) {
+								return;
+							}
+							setFieldCode( val );
+						} }
+					/>
 
-		// Description.
-		wp.element.createElement( TextControl, {
-			label: __( 'Description', 'buddyboss' ),
-			value: fieldDesc,
-			onChange: setFieldDesc,
-		} ),
+					{/* Label. */}
+					<TextControl
+						label={ __( 'Label', 'buddyboss' ) }
+						value={ fieldLabel }
+						placeholder={ labelPlaceholder }
+						onChange={ setFieldLabel }
+					/>
 
-		// Search Mode (only if modes are available and not heading).
-		'heading' !== fieldCode && modeOptions.length > 0 && wp.element.createElement( SelectControl, {
-			label: __( 'Search Mode', 'buddyboss' ),
-			value: fieldMode,
-			options: modeOptions,
-			onChange: setFieldMode,
-		} ),
+					{/* Description. */}
+					<TextControl
+						label={ __( 'Description', 'buddyboss' ) }
+						value={ fieldDesc }
+						onChange={ setFieldDesc }
+					/>
 
-		// Footer buttons.
-		wp.element.createElement(
-			'div',
-			{ className: 'bb-ps-field-modal__footer' },
-			wp.element.createElement(
-				Button,
-				{
-					variant: 'secondary',
-					onClick: onClose,
-				},
-				__( 'Cancel', 'buddyboss' )
-			),
-			wp.element.createElement(
-				Button,
-				{
-					variant: 'primary',
-					isBusy: isSaving,
-					disabled: ! fieldCode || isSaving,
-					onClick: handleSave,
-				},
-				isEditing ? __( 'Save', 'buddyboss' ) : __( 'Add Field', 'buddyboss' )
-			)
-		)
+					{/* Search Mode (only if modes are available and not heading). */}
+					{ 'heading' !== fieldCode && modeOptions.length > 0 && (
+						<SelectControl
+							label={ __( 'Search Mode', 'buddyboss' ) }
+							value={ fieldMode }
+							options={ modeOptions }
+							onChange={ setFieldMode }
+						/>
+					) }
+				</div>
+
+			{/* Footer buttons. */}
+			<div className="bb-admin-settings-modal__footer">
+				<Button
+					variant="secondary"
+					onClick={ onClose }
+				>
+					{ __( 'Cancel', 'buddyboss' ) }
+				</Button>
+				<Button
+					variant="primary"
+					isBusy={ isSaving }
+					disabled={ ! fieldCode || isSaving }
+					onClick={ handleSave }
+				>
+					{ isEditing ? __( 'Save', 'buddyboss' ) : __( 'Add Field', 'buddyboss' ) }
+				</Button>
+			</div>
+
+		</Modal>
 	);
 }
