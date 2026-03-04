@@ -38,17 +38,17 @@ var roleOptions = [
 ];
 
 /**
- * Role section configuration for display order and labels.
+ * Role section keys in display order.
  *
  * @since BuddyBoss [BBVERSION]
  *
  * @type {Array}
  */
 var roleSections = [
-	{ key: 'admin', label: __( 'Organizers', 'buddyboss' ) },
-	{ key: 'mod', label: __( 'Moderators', 'buddyboss' ) },
-	{ key: 'member', label: __( 'Members', 'buddyboss' ) },
-	{ key: 'banned', label: __( 'Banned Members', 'buddyboss' ) },
+	{ key: 'admin' },
+	{ key: 'mod' },
+	{ key: 'member' },
+	{ key: 'banned' },
 ];
 
 /**
@@ -635,7 +635,64 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 	var isInitialLoading = roleLoading.admin && roleLoading.mod && roleLoading.member && roleLoading.banned;
 
 	/**
-	 * Render pagination controls for a role section.
+	 * Build an array of page numbers to display with ellipsis.
+	 *
+	 * Shows at most 5 page buttons around the current page plus
+	 * first/last pages, using null as an ellipsis placeholder.
+	 * Example: [1, 2, 3, 4, 5, null, 15] or [1, null, 5, 6, 7, null, 15].
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {number} currentPage Current active page.
+	 * @param {number} totalPages  Total number of pages.
+	 * @return {Array} Array of page numbers and null (ellipsis) values.
+	 */
+	var getPageNumbers = function ( currentPage, totalPages ) {
+		// Show all pages when few enough.
+		if ( totalPages <= 7 ) {
+			var all = [];
+			for ( var i = 1; i <= totalPages; i++ ) {
+				all.push( i );
+			}
+			return all;
+		}
+
+		var pages = [];
+		var rangeStart = Math.max( 2, currentPage - 1 );
+		var rangeEnd = Math.min( totalPages - 1, currentPage + 1 );
+
+		// Ensure at least 3 pages in the middle range.
+		if ( rangeEnd - rangeStart < 2 ) {
+			if ( rangeStart <= 2 ) {
+				rangeEnd = Math.min( totalPages - 1, rangeStart + 2 );
+			} else {
+				rangeStart = Math.max( 2, rangeEnd - 2 );
+			}
+		}
+
+		pages.push( 1 );
+
+		if ( rangeStart > 2 ) {
+			pages.push( null ); // Left ellipsis.
+		}
+
+		for ( var p = rangeStart; p <= rangeEnd; p++ ) {
+			pages.push( p );
+		}
+
+		if ( rangeEnd < totalPages - 1 ) {
+			pages.push( null ); // Right ellipsis.
+		}
+
+		pages.push( totalPages );
+
+		return pages;
+	};
+
+	/**
+	 * Render numbered pagination controls for a role section.
+	 *
+	 * Renders: < 1 2 3 4 5 ... N > with the current page highlighted.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -651,29 +708,59 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 			return null;
 		}
 
+		var pageNumbers = getPageNumbers( currentPage, totalPages );
+
 		return (
-			<div className="bb-group-members-tab__pagination">
-				<Button
-					variant="secondary"
+			<div className="bb-group-members-tab__pagination" role="navigation" aria-label={ __( 'Pagination', 'buddyboss' ) }>
+				<button
+					type="button"
+					className="bb-group-members-tab__page-arrow"
 					disabled={ 1 === currentPage }
 					onClick={ function () {
-						handlePageChange( role, Math.max( 1, currentPage - 1 ) );
+						handlePageChange( role, currentPage - 1 );
 					} }
+					aria-label={ __( 'Previous page', 'buddyboss' ) }
 				>
-					{ __( 'Previous', 'buddyboss' ) }
-				</Button>
-				<span className="bb-group-members-tab__page-info">
-					{ currentPage + ' / ' + totalPages }
-				</span>
-				<Button
-					variant="secondary"
+					<span aria-hidden="true">&lsaquo;</span>
+				</button>
+
+				{ pageNumbers.map( function ( pageNum, idx ) {
+					if ( null === pageNum ) {
+						return (
+							<span key={ 'ellipsis-' + idx } className="bb-group-members-tab__page-ellipsis" aria-hidden="true">
+								&hellip;
+							</span>
+						);
+					}
+					return (
+						<button
+							key={ pageNum }
+							type="button"
+							className={ 'bb-group-members-tab__page-number' + ( pageNum === currentPage ? ' bb-group-members-tab__page-number--active' : '' ) }
+							onClick={ function () {
+								if ( pageNum !== currentPage ) {
+									handlePageChange( role, pageNum );
+								}
+							} }
+							aria-label={ pageNum.toString() }
+							aria-current={ pageNum === currentPage ? 'page' : undefined }
+						>
+							{ pageNum }
+						</button>
+					);
+				} ) }
+
+				<button
+					type="button"
+					className="bb-group-members-tab__page-arrow"
 					disabled={ currentPage >= totalPages }
 					onClick={ function () {
-						handlePageChange( role, Math.min( totalPages, currentPage + 1 ) );
+						handlePageChange( role, currentPage + 1 );
 					} }
+					aria-label={ __( 'Next page', 'buddyboss' ) }
 				>
-					{ __( 'Next', 'buddyboss' ) }
-				</Button>
+					<span aria-hidden="true">&rsaquo;</span>
+				</button>
 			</div>
 		);
 	};
@@ -837,31 +924,20 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 						var sectionTotal = roleTotals[ section.key ] || 0;
 						var sectionIsLoading = roleLoading[ section.key ];
 
-						// Hide empty sections (no fetched and no pending members).
+						// Hide empty sections entirely.
 						if ( 0 === displayMembers.length && 0 === sectionTotal && ! sectionIsLoading ) {
 							return null;
 						}
 
 						return (
 							<div key={ section.key } className="bb-group-members-tab__role-group">
-								<div className="bb-group-members-tab__role-header">
-									<strong>{ section.label }</strong>
-									<span className="bb-group-members-tab__role-count">
-										{ '(' + sectionTotal + ')' }
-									</span>
-								</div>
-
 								{ sectionIsLoading ? (
 									<div className="bb-group-members-tab__section-loading">
 										<Spinner />
 									</div>
-								) : 0 === displayMembers.length ? (
-									<div className="bb-group-members-tab__section-empty">
-										<p>{ __( 'No members.', 'buddyboss' ) }</p>
-									</div>
-								) : (
+								) : displayMembers.length > 0 ? (
 									displayMembers.map( renderMemberRow )
-								) }
+								) : null }
 
 								{ ! sectionIsLoading && renderPagination( section.key, sectionTotal ) }
 							</div>
