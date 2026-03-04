@@ -1,0 +1,86 @@
+<?php
+/**
+ * BuddyBoss Admin Settings - Messages Access Controls.
+ *
+ * Registers the Access Controls side panel, section, and field for the
+ * Messages feature in the Settings 2.0 registry.
+ *
+ * All access-control logic lives in this file so it can be easily
+ * extracted to Pro in the future. Pro populates the actual data
+ * (types, options) via PHP filters.
+ *
+ * @package BuddyBoss\Core\Administration
+ * @since   BuddyBoss [BBVERSION]
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Register Access Controls side panel, section, and field for Messages.
+ *
+ * Called from bb-admin-settings-messages.php after all other panels are
+ * registered. Fires a hook so Pro (or third-party) can register
+ * additional fields in the same panel.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_messages_register_access_control_fields() {
+
+	// -------------------------------------------------------------------------
+	// SECTION: Message Access.
+	// -------------------------------------------------------------------------
+	bb_register_feature_section(
+		'messages',
+		'access_controls',
+		'message_access',
+		array(
+			'title' => __( 'Message Access', 'buddyboss' ),
+			'order' => 10,
+		)
+	);
+
+	// FIELD: Send Messages access control.
+	bb_register_feature_field(
+		'messages',
+		'access_controls',
+		'message_access',
+		array(
+			'name'               => 'bb-access-control-send-message',
+			'label'              => __( 'Send Messages', 'buddyboss' ),
+			'type'               => 'access_control',
+			'description'        => __( 'Select which members should have access to send messages to other members, based on:', 'buddyboss' ),
+			'default'            => '',
+			'pro_only'           => true,
+			'threaded'           => true,
+			'threaded_sub_label' => __( 'Members with the {{option_value}} {{select_value}} can send messages to members with - Any Member / With Specific {{select_value}}(s)', 'buddyboss' ),
+			'order'              => 10,
+			'sanitize_callback'  => 'bb_sanitize_access_control_field',
+		)
+	);
+
+	// FIELD: Admin notice (displayed once at the end of the section).
+	bb_register_feature_field(
+		'messages',
+		'access_controls',
+		'message_access',
+		array(
+			'name'        => 'bb-messages-access-control-notice',
+			'label'       => '',
+			'type'        => 'notice',
+			'description' => __( 'Note: These settings do not apply to administrators or group messages.', 'buddyboss' ),
+			'notice_type' => 'info',
+			'order'       => 100,
+		)
+	);
+
+	/**
+	 * Fires after the core Messages access-control fields are registered.
+	 *
+	 * Pro or third-party plugins can hook here to register additional
+	 * access-control fields in the same side panel.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	do_action( 'bb_messages_access_control_after_register_fields' );
+}
