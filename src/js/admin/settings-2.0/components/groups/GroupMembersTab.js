@@ -2,8 +2,8 @@
  * BuddyBoss Admin Settings 2.0 - Group Members Tab
  *
  * Custom component for the Members tab in the Group Edit Modal.
- * Supports member list with role management, add member autocomplete,
- * and remove member functionality.
+ * Displays members in per-role sections (Organizers, Moderators, Members,
+ * Banned) with independent pagination for each section.
  *
  * All changes are collected locally and only committed when the parent
  * modal's Save button is clicked (via saveRef).
@@ -12,7 +12,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useEffect, useRef, useCallback } from '@wordpress/element';
+import { useState, useEffect, useRef, useCallback, useMemo } from '@wordpress/element';
 import {
 	Button,
 	SelectControl,
@@ -38,7 +38,32 @@ var roleOptions = [
 ];
 
 /**
+ * Role section keys in display order.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @type {Array}
+ */
+var roleSections = [
+	{ key: 'admin' },
+	{ key: 'mod' },
+	{ key: 'member' },
+	{ key: 'banned' },
+];
+
+/**
+ * Default per-page count matching legacy admin.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @type {number}
+ */
+var PER_PAGE = 10;
+
+/**
  * Group Members Tab Component
+ *
+ * @since BuddyBoss [BBVERSION]
  *
  * @param {Object}   props            Component props.
  * @param {number}   props.groupId    Group ID.
@@ -47,24 +72,25 @@ var roleOptions = [
  * @returns {JSX.Element} Members tab.
  */
 export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
-	// Server-fetched members (source of truth from DB).
-	var fetchedMembersState = useState( [] );
-	var fetchedMembers = fetchedMembersState[ 0 ];
-	var setFetchedMembers = fetchedMembersState[ 1 ];
+	// Per-role fetched members.
+	var roleMembersState = useState( { admin: [], mod: [], member: [], banned: [] } );
+	var roleMembers = roleMembersState[ 0 ];
+	var setRoleMembers = roleMembersState[ 1 ];
 
-	var totalState = useState( 0 );
-	var total = totalState[ 0 ];
-	var setTotal = totalState[ 1 ];
+	// Per-role total counts (from server).
+	var roleTotalsState = useState( { admin: 0, mod: 0, member: 0, banned: 0 } );
+	var roleTotals = roleTotalsState[ 0 ];
+	var setRoleTotals = roleTotalsState[ 1 ];
 
-	var isLoadingState = useState( true );
-	var isLoading = isLoadingState[ 0 ];
-	var setIsLoading = isLoadingState[ 1 ];
+	// Per-role loading state.
+	var roleLoadingState = useState( { admin: true, mod: true, member: true, banned: true } );
+	var roleLoading = roleLoadingState[ 0 ];
+	var setRoleLoading = roleLoadingState[ 1 ];
 
-	var pageState = useState( 1 );
-	var page = pageState[ 0 ];
-	var setPage = pageState[ 1 ];
-
-	var perPage = 20;
+	// Per-role current page.
+	var rolePagesState = useState( { admin: 1, mod: 1, member: 1, banned: 1 } );
+	var rolePages = rolePagesState[ 0 ];
+	var setRolePages = rolePagesState[ 1 ];
 
 	// Pending local changes (not yet saved to server).
 	var pendingAddsState = useState( [] );
@@ -104,8 +130,10 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 
 	var searchTimerRef = useRef( null );
 	var searchAbortRef = useRef( null );
-	var membersAbortRef = useRef( null );
 	var blurTimerRef = useRef( null );
+
+	// One AbortController per role.
+	var abortRefs = useRef( { admin: null, mod: null, member: null, banned: null } );
 
 	// Keep refs to latest pending state for the save callback.
 	var pendingAddsRef = useRef( pendingAdds );
@@ -116,42 +144,80 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 	pendingRoleChangesRef.current = pendingRoleChanges;
 
 	/**
-	 * Fetch members from the server.
+	 * Fetch members for a specific role from the server.
 	 *
 	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {string} role Role key ('admin', 'mod', 'member', 'banned').
+	 * @param {number} page Page number.
 	 */
-	var fetchMembers = useCallback( function () {
-		// Cancel any in-flight members request.
-		if ( membersAbortRef.current ) {
-			membersAbortRef.current.abort();
+	var fetchRoleMembers = useCallback( function ( role, page ) {
+		// Cancel any in-flight request for this role.
+		if ( abortRefs.current[ role ] ) {
+			abortRefs.current[ role ].abort();
 		}
-		membersAbortRef.current = new AbortController();
+		abortRefs.current[ role ] = new AbortController();
 
-		setIsLoading( true );
-		getGroupMembers( groupId, { page: page, per_page: perPage }, { signal: membersAbortRef.current.signal } ).then( function ( response ) {
+		setRoleLoading( function ( prev ) {
+			var next = Object.assign( {}, prev );
+			next[ role ] = true;
+			return next;
+		} );
+
+		getGroupMembers(
+			groupId,
+			{ role: role, page: page, per_page: PER_PAGE },
+			{ signal: abortRefs.current[ role ].signal }
+		).then( function ( response ) {
 			if ( response.success && response.data ) {
-				setFetchedMembers( response.data.members || [] );
-				setTotal( response.data.total || 0 );
+				setRoleMembers( function ( prev ) {
+					var next = Object.assign( {}, prev );
+					next[ role ] = response.data.members || [];
+					return next;
+				} );
+
+				// Each per-role response includes its own total count.
+				setRoleTotals( function ( prev ) {
+					var next = Object.assign( {}, prev );
+					next[ role ] = response.data.total || 0;
+					return next;
+				} );
 			}
-			setIsLoading( false );
+
+			setRoleLoading( function ( prev ) {
+				var next = Object.assign( {}, prev );
+				next[ role ] = false;
+				return next;
+			} );
 		} ).catch( function ( err ) {
 			if ( err && 'AbortError' === err.name ) {
 				return;
 			}
-			setIsLoading( false );
+			setRoleLoading( function ( prev ) {
+				var next = Object.assign( {}, prev );
+				next[ role ] = false;
+				return next;
+			} );
 		} );
-	}, [ groupId, page ] );
+	}, [ groupId ] );
 
+	// Fetch all roles on mount.
 	useEffect( function () {
-		fetchMembers();
-		return function () {
-			if ( membersAbortRef.current ) {
-				membersAbortRef.current.abort();
-			}
-		};
-	}, [ fetchMembers ] );
+		roleSections.forEach( function ( section ) {
+			fetchRoleMembers( section.key, 1 );
+		} );
 
-	// Cleanup on unmount.
+		return function () {
+			// Abort all in-flight requests on unmount.
+			Object.keys( abortRefs.current ).forEach( function ( key ) {
+				if ( abortRefs.current[ key ] ) {
+					abortRefs.current[ key ].abort();
+				}
+			} );
+		};
+	}, [ fetchRoleMembers ] );
+
+	// Cleanup timers on unmount.
 	useEffect( function () {
 		return function () {
 			if ( searchTimerRef.current ) {
@@ -163,11 +229,25 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 			if ( searchAbortRef.current ) {
 				searchAbortRef.current.abort();
 			}
-			if ( membersAbortRef.current ) {
-				membersAbortRef.current.abort();
-			}
 		};
 	}, [] );
+
+	/**
+	 * Handle page change for a specific role section.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {string} role    Role key.
+	 * @param {number} newPage New page number.
+	 */
+	var handlePageChange = function ( role, newPage ) {
+		setRolePages( function ( prev ) {
+			var next = Object.assign( {}, prev );
+			next[ role ] = newPage;
+			return next;
+		} );
+		fetchRoleMembers( role, newPage );
+	};
 
 	/**
 	 * Expose save function to parent via saveRef.
@@ -262,6 +342,8 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 	/**
 	 * Handle autocomplete search input change.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param {Object} e Input change event.
 	 */
 	var handleSearchInputChange = function ( e ) {
@@ -318,6 +400,8 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 	 * Handle selecting a user from the autocomplete suggestions.
 	 * Stages the user for adding — actual add happens on "+ Add" click.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param {Object} user User object from suggestions.
 	 */
 	var handleSelectUser = function ( user ) {
@@ -329,6 +413,8 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 
 	/**
 	 * Handle adding the staged member to the pending adds list.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	var handleAddMember = function () {
 		if ( ! selectedUser ) {
@@ -357,6 +443,8 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 	/**
 	 * Handle role change for a pending-add member.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param {number} userId  User ID.
 	 * @param {string} newRole New role.
 	 */
@@ -373,6 +461,8 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 
 	/**
 	 * Handle role change for a member (local only).
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param {number} userId  User ID.
 	 * @param {string} newRole New role.
@@ -391,6 +481,8 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 	/**
 	 * Handle removing a fetched member (local only).
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param {number} userId User ID.
 	 */
 	var handleRemoveMember = function ( userId ) {
@@ -402,6 +494,8 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 	/**
 	 * Handle removing a pending-add member from the local list.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param {number} userId User ID.
 	 */
 	var handleRemovePendingAdd = function ( userId ) {
@@ -412,41 +506,328 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 		} );
 	};
 
-	// Build the display list: fetched members (minus pending removes, with role overrides) + pending adds.
-	var displayMembers = [];
+	/**
+	 * Pre-compute display members for all role sections.
+	 * Memoized to avoid redundant computation on every render.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @type {Object} Map of role key to array of display member objects.
+	 */
+	var displayMembersByRole = useMemo( function () {
+		var result = {};
 
-	// Existing members minus removed ones.
-	fetchedMembers.forEach( function ( member ) {
-		if ( -1 !== pendingRemoves.indexOf( member.user_id ) ) {
-			return; // Removed locally.
+		// Build a lookup of userId → member across all fetched role sections
+		// for efficient cross-section role-change resolution.
+		var allFetchedById = {};
+		var allRoleKeys = Object.keys( roleMembers );
+		for ( var r = 0; r < allRoleKeys.length; r++ ) {
+			var rk = allRoleKeys[ r ];
+			var rMembers = roleMembers[ rk ] || [];
+			for ( var m = 0; m < rMembers.length; m++ ) {
+				allFetchedById[ rMembers[ m ].user_id ] = rMembers[ m ];
+			}
 		}
-		var role = pendingRoleChanges[ member.user_id ] || member.role;
-		displayMembers.push( {
-			user_id: member.user_id,
-			name: member.name,
-			avatar_url: member.avatar_url,
-			profile_url: member.profile_url,
-			role: role,
-			is_creator: member.is_creator,
-			is_sole_admin: !! member.is_sole_admin,
-			is_pending: false,
-		} );
-	} );
 
-	// Pending adds with their chosen role.
-	pendingAdds.forEach( function ( user ) {
-		displayMembers.push( {
-			user_id: user.id,
-			name: user.label || user.name,
-			avatar_url: user.image || '',
-			profile_url: '',
-			role: user.role || 'member',
-			is_creator: false,
-			is_pending: true,
-		} );
-	} );
+		roleSections.forEach( function ( section ) {
+			var role = section.key;
+			var members = [];
 
-	var totalPages = Math.ceil( total / perPage );
+			// Fetched members for this role (minus pending removes, with role overrides).
+			( roleMembers[ role ] || [] ).forEach( function ( member ) {
+				if ( -1 !== pendingRemoves.indexOf( member.user_id ) ) {
+					return;
+				}
+
+				var effectiveRole = pendingRoleChanges[ member.user_id ] || member.role;
+
+				// Skip if role changed to a different section.
+				if ( effectiveRole !== role ) {
+					return;
+				}
+
+				members.push( {
+					user_id: member.user_id,
+					name: member.name,
+					avatar_url: member.avatar_url,
+					profile_url: member.profile_url,
+					role: effectiveRole,
+					is_creator: member.is_creator,
+					is_sole_admin: !! member.is_sole_admin,
+					is_pending: false,
+				} );
+			} );
+
+			// Members role-changed INTO this section from other sections.
+			var addedIds = {};
+			members.forEach( function ( m ) {
+				addedIds[ m.user_id ] = true;
+			} );
+
+			Object.keys( pendingRoleChanges ).forEach( function ( userId ) {
+				var newRole = pendingRoleChanges[ userId ];
+				if ( newRole !== role ) {
+					return;
+				}
+
+				var numUserId = parseInt( userId, 10 );
+
+				// Skip if already in this section's fetched list.
+				if ( addedIds[ numUserId ] ) {
+					return;
+				}
+
+				// Look up from the pre-built index.
+				var foundMember = allFetchedById[ numUserId ];
+				if ( ! foundMember ) {
+					return;
+				}
+
+				// Skip if removed.
+				if ( -1 !== pendingRemoves.indexOf( foundMember.user_id ) ) {
+					return;
+				}
+
+				addedIds[ numUserId ] = true;
+				members.push( {
+					user_id: foundMember.user_id,
+					name: foundMember.name,
+					avatar_url: foundMember.avatar_url,
+					profile_url: foundMember.profile_url,
+					role: newRole,
+					is_creator: foundMember.is_creator,
+					is_sole_admin: false,
+					is_pending: false,
+				} );
+			} );
+
+			// Pending adds for this role.
+			pendingAdds.forEach( function ( user ) {
+				var addRole = user.role || 'member';
+				if ( addRole !== role ) {
+					return;
+				}
+				members.push( {
+					user_id: user.id,
+					name: user.label || user.name,
+					avatar_url: user.image || '',
+					profile_url: '',
+					role: addRole,
+					is_creator: false,
+					is_sole_admin: false,
+					is_pending: true,
+				} );
+			} );
+
+			result[ role ] = members;
+		} );
+
+		return result;
+	}, [ roleMembers, pendingRemoves, pendingRoleChanges, pendingAdds ] );
+
+	/**
+	 * Check if all role sections are done loading (initial load).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @type {boolean}
+	 */
+	var isInitialLoading = roleLoading.admin && roleLoading.mod && roleLoading.member && roleLoading.banned;
+
+	/**
+	 * Build an array of page numbers to display with ellipsis.
+	 *
+	 * Shows at most 5 page buttons around the current page plus
+	 * first/last pages, using null as an ellipsis placeholder.
+	 * Example: [1, 2, 3, 4, 5, null, 15] or [1, null, 5, 6, 7, null, 15].
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {number} currentPage Current active page.
+	 * @param {number} totalPages  Total number of pages.
+	 * @return {Array} Array of page numbers and null (ellipsis) values.
+	 */
+	var getPageNumbers = function ( currentPage, totalPages ) {
+		// Show all pages when few enough.
+		if ( totalPages <= 7 ) {
+			var all = [];
+			for ( var i = 1; i <= totalPages; i++ ) {
+				all.push( i );
+			}
+			return all;
+		}
+
+		var pages = [];
+		var rangeStart = Math.max( 2, currentPage - 1 );
+		var rangeEnd = Math.min( totalPages - 1, currentPage + 1 );
+
+		// Ensure at least 3 pages in the middle range.
+		if ( rangeEnd - rangeStart < 2 ) {
+			if ( rangeStart <= 2 ) {
+				rangeEnd = Math.min( totalPages - 1, rangeStart + 2 );
+			} else {
+				rangeStart = Math.max( 2, rangeEnd - 2 );
+			}
+		}
+
+		pages.push( 1 );
+
+		if ( rangeStart > 2 ) {
+			pages.push( null ); // Left ellipsis.
+		}
+
+		for ( var p = rangeStart; p <= rangeEnd; p++ ) {
+			pages.push( p );
+		}
+
+		if ( rangeEnd < totalPages - 1 ) {
+			pages.push( null ); // Right ellipsis.
+		}
+
+		pages.push( totalPages );
+
+		return pages;
+	};
+
+	/**
+	 * Render numbered pagination controls for a role section.
+	 *
+	 * Renders: < 1 2 3 4 5 ... N > with the current page highlighted.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {string} role       Role key.
+	 * @param {number} totalCount Total members for this role.
+	 * @return {JSX.Element|null} Pagination controls or null.
+	 */
+	var renderPagination = function ( role, totalCount ) {
+		var totalPages = Math.ceil( totalCount / PER_PAGE );
+		var currentPage = rolePages[ role ] || 1;
+
+		if ( totalPages <= 1 ) {
+			return null;
+		}
+
+		var pageNumbers = getPageNumbers( currentPage, totalPages );
+
+		return (
+			<div className="bb-group-members-tab__pagination" role="navigation" aria-label={ __( 'Pagination', 'buddyboss' ) }>
+				<button
+					type="button"
+					className="bb-group-members-tab__page-arrow"
+					disabled={ 1 === currentPage }
+					onClick={ function () {
+						handlePageChange( role, currentPage - 1 );
+					} }
+					aria-label={ __( 'Previous page', 'buddyboss' ) }
+				>
+					<span aria-hidden="true">&lsaquo;</span>
+				</button>
+
+				{ pageNumbers.map( function ( pageNum, idx ) {
+					if ( null === pageNum ) {
+						return (
+							<span key={ 'ellipsis-' + idx } className="bb-group-members-tab__page-ellipsis" aria-hidden="true">
+								&hellip;
+							</span>
+						);
+					}
+					return (
+						<button
+							key={ pageNum }
+							type="button"
+							className={ 'bb-group-members-tab__page-number' + ( pageNum === currentPage ? ' bb-group-members-tab__page-number--active' : '' ) }
+							onClick={ function () {
+								if ( pageNum !== currentPage ) {
+									handlePageChange( role, pageNum );
+								}
+							} }
+							aria-label={ pageNum.toString() }
+							aria-current={ pageNum === currentPage ? 'page' : undefined }
+						>
+							{ pageNum }
+						</button>
+					);
+				} ) }
+
+				<button
+					type="button"
+					className="bb-group-members-tab__page-arrow"
+					disabled={ currentPage >= totalPages }
+					onClick={ function () {
+						handlePageChange( role, currentPage + 1 );
+					} }
+					aria-label={ __( 'Next page', 'buddyboss' ) }
+				>
+					<span aria-hidden="true">&rsaquo;</span>
+				</button>
+			</div>
+		);
+	};
+
+	/**
+	 * Render a single member row.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {Object} member Member display object.
+	 * @return {JSX.Element} Member row.
+	 */
+	var renderMemberRow = function ( member ) {
+		return (
+			<div key={ member.user_id } className={ 'bb-group-members-tab__member-row' + ( member.is_pending ? ' bb-group-members-tab__member-row--pending' : '' ) }>
+				<div className="bb-group-members-tab__member-pill">
+					{ member.avatar_url && (
+						<img
+							src={ safeUrl( member.avatar_url ) }
+							alt={ member.name }
+							className="bb-group-members-tab__member-avatar"
+						/>
+					) }
+					{ member.profile_url ? (
+						<a href={ safeUrl( member.profile_url ) } target="_blank" rel="noopener noreferrer" className="bb-group-members-tab__member-name">
+							{ member.name }
+						</a>
+					) : (
+						<span className="bb-group-members-tab__member-name">
+							{ member.name }
+						</span>
+					) }
+					{ ! member.is_creator && ! member.is_sole_admin && (
+						<button
+							type="button"
+							className="bb-group-members-tab__remove-btn"
+							onClick={ function () {
+								if ( member.is_pending ) {
+									handleRemovePendingAdd( member.user_id );
+								} else {
+									handleRemoveMember( member.user_id );
+								}
+							} }
+							title={ __( 'Remove member', 'buddyboss' ) }
+						>
+							<i className="bb-icons-rl bb-icons-rl-x"></i>
+						</button>
+					) }
+				</div>
+				<div className="bb-group-members-tab__member-actions">
+					<SelectControl
+						value={ member.role }
+						options={ roleOptions }
+						disabled={ member.is_sole_admin }
+						onChange={ function ( newRole ) {
+							if ( member.is_pending ) {
+								handlePendingAddRoleChange( member.user_id, newRole );
+							} else {
+								handleRoleChange( member.user_id, newRole );
+							}
+						} }
+						__nextHasNoMarginBottom
+					/>
+				</div>
+			</div>
+		);
+	};
 
 	return (
 		<div className="bb-group-members-tab">
@@ -531,124 +912,37 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 				</div>
 			</div>
 
-			{ /* Members List */ }
-			{ isLoading ? (
+			{ /* Members List — Per-Role Sections */ }
+			{ isInitialLoading ? (
 				<div className="bb-group-members-tab__loading">
 					<Spinner />
 				</div>
-			) : 0 === displayMembers.length ? (
-				<div className="bb-group-members-tab__empty">
-					<p>{ __( 'No members found.', 'buddyboss' ) }</p>
-				</div>
 			) : (
 				<div className="bb-group-members-tab__list">
-					{ ( function () {
-						// Group members by role in display order.
-						var roleOrder = [ 'admin', 'mod', 'member', 'banned' ];
-						var grouped = {};
-						roleOrder.forEach( function ( r ) {
-							grouped[ r ] = [];
-						} );
-						displayMembers.forEach( function ( member ) {
-							var key = grouped[ member.role ] ? member.role : 'member';
-							grouped[ key ].push( member );
-						} );
-						return roleOrder.map( function ( role ) {
-							if ( 0 === grouped[ role ].length ) {
-								return null;
-							}
-							return (
-								<div key={ role } className="bb-group-members-tab__role-group">
-									{ grouped[ role ].map( function ( member ) {
-										return (
-											<div key={ member.user_id } className={ 'bb-group-members-tab__member-row' + ( member.is_pending ? ' bb-group-members-tab__member-row--pending' : '' ) }>
-												<div className="bb-group-members-tab__member-pill">
-													{ member.avatar_url && (
-														<img
-															src={ safeUrl( member.avatar_url ) }
-															alt={ member.name }
-															className="bb-group-members-tab__member-avatar"
-														/>
-													) }
-													{ member.profile_url ? (
-														<a href={ safeUrl( member.profile_url ) } target="_blank" rel="noopener noreferrer" className="bb-group-members-tab__member-name">
-															{ member.name }
-														</a>
-													) : (
-														<span className="bb-group-members-tab__member-name">
-															{ member.name }
-														</span>
-													) }
-													{ ! member.is_creator && ! member.is_sole_admin && (
-														<button
-															type="button"
-															className="bb-group-members-tab__remove-btn"
-															onClick={ function () {
-																if ( member.is_pending ) {
-																	handleRemovePendingAdd( member.user_id );
-																} else {
-																	handleRemoveMember( member.user_id );
-																}
-															} }
-															title={ __( 'Remove member', 'buddyboss' ) }
-														>
-															<i className="bb-icons-rl bb-icons-rl-x"></i>
-														</button>
-													) }
-												</div>
-												<div className="bb-group-members-tab__member-actions">
-													<SelectControl
-														value={ member.role }
-														options={ roleOptions }
-														disabled={ member.is_sole_admin }
-														onChange={ function ( newRole ) {
-															if ( member.is_pending ) {
-																handlePendingAddRoleChange( member.user_id, newRole );
-															} else {
-																handleRoleChange( member.user_id, newRole );
-															}
-														} }
-														__nextHasNoMarginBottom
-													/>
-												</div>
-											</div>
-										);
-									} ) }
-								</div>
-							);
-						} );
-					} )() }
-				</div>
-			) }
+					{ roleSections.map( function ( section ) {
+						var displayMembers = displayMembersByRole[ section.key ] || [];
+						var sectionTotal = roleTotals[ section.key ] || 0;
+						var sectionIsLoading = roleLoading[ section.key ];
 
-			{ /* Pagination */ }
-			{ totalPages > 1 && (
-				<div className="bb-group-members-tab__pagination">
-					<Button
-						variant="secondary"
-						disabled={ 1 === page }
-						onClick={ function () {
-							setPage( function ( p ) {
-								return Math.max( 1, p - 1 );
-							} );
-						} }
-					>
-						{ __( 'Previous', 'buddyboss' ) }
-					</Button>
-					<span className="bb-group-members-tab__page-info">
-						{ page + ' / ' + totalPages }
-					</span>
-					<Button
-						variant="secondary"
-						disabled={ page >= totalPages }
-						onClick={ function () {
-							setPage( function ( p ) {
-								return Math.min( totalPages, p + 1 );
-							} );
-						} }
-					>
-						{ __( 'Next', 'buddyboss' ) }
-					</Button>
+						// Hide empty sections entirely.
+						if ( 0 === displayMembers.length && 0 === sectionTotal && ! sectionIsLoading ) {
+							return null;
+						}
+
+						return (
+							<div key={ section.key } className="bb-group-members-tab__role-group">
+								{ sectionIsLoading ? (
+									<div className="bb-group-members-tab__section-loading">
+										<Spinner />
+									</div>
+								) : displayMembers.length > 0 ? (
+									displayMembers.map( renderMemberRow )
+								) : null }
+
+								{ ! sectionIsLoading && renderPagination( section.key, sectionTotal ) }
+							</div>
+						);
+					} ) }
 				</div>
 			) }
 		</div>

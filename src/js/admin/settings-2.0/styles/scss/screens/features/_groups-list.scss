@@ -1106,10 +1106,18 @@ input.bb-admin-meta-field__search-input {
 	&__add-btn.is-secondary {
 		@include bb-button-primary-outline;
 
+		&[disabled],
+		&[aria-disabled="true"] {
+			color: $bb-text-brand-primary-color;
+			border-color: $bb-border-brand-primary-color;
+			opacity: 0.6;
+		}
+
 		i {
 			font-size: 16px;
 			font-weight: 700;
 			margin-right: 6px;
+			color: inherit;
 		}
 	}
 
@@ -1183,13 +1191,23 @@ input.bb-admin-meta-field__search-input {
 	&__list {
 		display: flex;
 		flex-direction: column;
-		gap: 32px;
+		gap: 16px;
 	}
 
 	&__role-group {
 		display: flex;
 		flex-direction: column;
 		gap: 8px;
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-lg;
+		padding: 16px;
+	}
+
+	&__section-loading {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 16px 0;
 	}
 
 	&__member-row {
@@ -1279,19 +1297,69 @@ input.bb-admin-meta-field__search-input {
 	&__pagination {
 		display: flex;
 		align-items: center;
-		justify-content: center;
-		gap: 12px;
-		padding: 16px 0 0;
+		justify-content: flex-start;
+		gap: 4px;
+		padding: 8px 0 0;
+	}
 
-		.is-secondary {
-			@include bb-button-secondary;
-			font-size: 12px;
-			padding: 4px 12px;
-			height: 28px;
+	&__page-arrow {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 32px;
+		height: 32px;
+		border: none;
+		border-radius: $bb-border-radius-md;
+		background: transparent;
+		color: $bb-text-tertiary-color;
+		font-size: 18px;
+		line-height: 1;
+		cursor: pointer;
+		padding: 0;
+
+		&:hover:not(:disabled) {
+			color: $bb-text-color;
+		}
+
+		&:disabled {
+			opacity: 0.3;
+			cursor: not-allowed;
 		}
 	}
 
-	&__page-info {
+	&__page-number {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 32px;
+		height: 32px;
+		padding: 0 6px;
+		border: 1px solid transparent;
+		border-radius: $bb-border-radius-md;
+		background: transparent;
+		color: $bb-text-color;
+		font-size: 13px;
+		cursor: pointer;
+
+		&:hover:not(&--active),
+		&:focus:not(&--active) {
+			border-color: $bb-border-secondary-color;
+		}
+
+		&--active {
+			border-color: $bb-text-color;
+			color: $bb-text-color;
+			font-weight: 600;
+			cursor: default;
+		}
+	}
+
+	&__page-ellipsis {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 32px;
+		height: 32px;
 		font-size: 13px;
 		color: $bb-text-tertiary-color;
 	}

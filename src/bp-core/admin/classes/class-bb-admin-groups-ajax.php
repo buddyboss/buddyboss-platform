@@ -1554,10 +1554,13 @@ class BB_Admin_Groups_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Groups component is not active.', 'buddyboss' ) ) );
 		}
 
+		$allowed_roles = array( 'admin', 'mod', 'member', 'banned' );
+
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
 		$group_id = isset( $_POST['group_id'] ) ? absint( wp_unslash( $_POST['group_id'] ) ) : 0;
 		$page     = isset( $_POST['page'] ) ? absint( wp_unslash( $_POST['page'] ) ) : 1;
 		$per_page = isset( $_POST['per_page'] ) ? absint( wp_unslash( $_POST['per_page'] ) ) : 10;
+		$role     = isset( $_POST['role'] ) ? sanitize_key( wp_unslash( $_POST['role'] ) ) : '';
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $group_id ) ) {
@@ -1569,33 +1572,61 @@ class BB_Admin_Groups_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Group not found.', 'buddyboss' ) ) );
 		}
 
+		// Validate role param if provided.
+		if ( ! empty( $role ) && ! in_array( $role, $allowed_roles, true ) ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid role.', 'buddyboss' ) ) );
+		}
+
 		$per_page = max( 1, min( self::PER_PAGE_CAP, $per_page ) );
 		$page     = max( 1, $page );
+
+		// Use the specific role (or fallback to 'member') for the per-page filter.
+		$filter_role = ! empty( $role ) ? $role : 'member';
 
 		/**
 		 * Filters the number of group members displayed per page in the admin edit modal.
 		 *
 		 * Mirrors the legacy `bp_groups_admin_members_type_per_page` filter used by
-		 * bp_groups_admin_edit_metabox_members(). The second parameter is `'member'`
-		 * (the most common role type) because Settings 2.0 fetches all roles in a single query.
+		 * bp_groups_admin_edit_metabox_members().
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param int    $per_page    Number of members per page.
 		 * @param string $member_type Member type slug ('admin', 'mod', 'member', 'banned').
 		 */
-		$per_page = (int) apply_filters( 'bp_groups_admin_members_type_per_page', $per_page, 'member' );
+		$per_page = (int) apply_filters( 'bp_groups_admin_members_type_per_page', $per_page, $filter_role );
 		$per_page = max( 1, min( self::PER_PAGE_CAP, $per_page ) ); // Re-clamp after filter.
 
-		$members_data = groups_get_group_members(
-			array(
-				'group_id'            => $group_id,
-				'per_page'            => $per_page,
-				'page'                => $page,
-				'exclude_admins_mods' => false,
-				'exclude_banned'      => false,
-			)
+		// Build query args based on whether a specific role is requested.
+		$query_args = array(
+			'group_id' => $group_id,
+			'per_page' => $per_page,
+			'page'     => $page,
 		);
+
+		if ( ! empty( $role ) ) {
+			if ( 'member' === $role ) {
+				// For regular members, exclude admins/mods and banned.
+				$query_args['exclude_admins_mods'] = true;
+				$query_args['exclude_banned']      = true;
+			} elseif ( 'banned' === $role ) {
+				// For banned, use the group_role filter.
+				$query_args['group_role']          = array( 'banned' );
+				$query_args['exclude_admins_mods'] = false;
+				$query_args['exclude_banned']      = false;
+			} else {
+				// For admin/mod roles, filter by group_role.
+				$query_args['group_role']          = array( $role );
+				$query_args['exclude_admins_mods'] = false;
+				$query_args['exclude_banned']      = false;
+			}
+		} else {
+			// No role filter — fetch all roles (backward compat).
+			$query_args['exclude_admins_mods'] = false;
+			$query_args['exclude_banned']      = false;
+		}
+
+		$members_data = groups_get_group_members( $query_args );
 
 		// Prime user cache.
 		if ( ! empty( $members_data['members'] ) ) {
@@ -1604,20 +1635,19 @@ class BB_Admin_Groups_Ajax {
 		}
 
 		// Count group admins once to flag sole-admin members (prevents role change in React UI).
-		$group_admins    = groups_get_group_admins( $group_id );
-		$admin_count     = count( $group_admins );
-		$admin_user_ids  = wp_list_pluck( $group_admins, 'user_id' );
+		$group_admins   = groups_get_group_admins( $group_id );
+		$admin_count    = count( $group_admins );
 
 		$members = array();
 		foreach ( $members_data['members'] as $member ) {
 			// Determine role.
-			$role = 'member';
+			$member_role = 'member';
 			if ( $member->is_admin ) {
-				$role = 'admin';
+				$member_role = 'admin';
 			} elseif ( $member->is_mod ) {
-				$role = 'mod';
+				$member_role = 'mod';
 			} elseif ( $member->is_banned ) {
-				$role = 'banned';
+				$member_role = 'banned';
 			}
 
 			/**
@@ -1644,9 +1674,10 @@ class BB_Admin_Groups_Ajax {
 						'html'    => false,
 					)
 				),
-				'role'          => $role,
+				'profile_url'   => bp_core_get_user_domain( $member->user_id ),
+				'role'          => $member_role,
 				'is_creator'    => ( (int) $member->user_id === (int) $group->creator_id ),
-				'is_sole_admin' => ( 'admin' === $role && 1 === $admin_count ),
+				'is_sole_admin' => ( 'admin' === $member_role && 1 === $admin_count ),
 			);
 		}
 
@@ -1753,7 +1784,13 @@ class BB_Admin_Groups_Ajax {
 		$result = false;
 		switch ( $role ) {
 			case 'admin':
+				$result = groups_promote_member( $user_id, $group_id, $role );
+				break;
 			case 'mod':
+				// Guard: do not allow demoting the last group admin to moderator.
+				if ( $member_obj->is_admin && ! $this->bb_group_has_other_admins( $group_id, $user_id ) ) {
+					wp_send_json_error( array( 'message' => __( 'You cannot demote the only group administrator.', 'buddyboss' ) ) );
+				}
 				$result = groups_promote_member( $user_id, $group_id, $role );
 				break;
 			case 'member':

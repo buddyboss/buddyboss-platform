@@ -358,35 +358,34 @@
 	&__action-text {
 		font-size: 13px;
 		color: $bb-text-tertiary-color;
-		display: flex;
-		flex-wrap: wrap;
-		gap: 4px;
-		align-items: center;
+		display: block;
 		padding: 3px 0;
+		line-height: 1.5;
 
 		a {
-			font-weight: 500;
-			color: $bb-text-secondary-color;
+			font-weight: 600;
+			color: $bb-text-color;
 			text-decoration: none;
-
-			&:hover {
-				text-decoration: underline;
-			}
 		}
 	}
 
 	&__content-preview {
 		font-size: 13px;
-		color: $bb-text-color;
+		color: $bb-link-color;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
 		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-		display: block;
 		padding: 3px 0;
+		line-height: 1.5;
 
 		a {
 			color: $bb-link-color;
 			text-decoration: none;
+		}
+
+		p {
+			margin: 0;
 		}
 	}
 
