@@ -336,252 +336,236 @@ export default function ProfileSearchScreen( { onNavigate, helpUrl, onHelpClick,
 	}
 
 
-	return wp.element.createElement(
-		'div',
-		{ className: 'bb-admin-profile-types bb-profile-search-screen' },
+	return (
+		<div className="bb-admin-profile-types bb-profile-search-screen">
 
-		// Toast notification.
-		toast && wp.element.createElement(
-			'div',
-			{ className: 'bb-toast-container' },
-			wp.element.createElement( Toast, {
-				status: toast.status,
-				message: toast.message,
-				onDismiss: function () { setToast( null ); },
-			} )
-		),
+			{/* Toast notification. */}
+			{ toast && (
+				<div className="bb-toast-container">
+					<Toast
+						status={ toast.status }
+						message={ toast.message }
+						onDismiss={ function () { setToast( null ); } }
+					/>
+				</div>
+			) }
 
-		// Card 1: Profile Search Settings.
-		wp.element.createElement(
-			'div',
-			{ className: 'bb-admin-profile-types__card' },
-			wp.element.createElement(
-				'div',
-				{ className: 'bb-admin-profile-types__card-header' },
-				wp.element.createElement(
-					'h3',
-					{ className: 'bb-admin-profile-types__card-title' },
-					getSectionTitle( feature, activePanelId, 'profile_search' ) || __( 'Profile Search', 'buddyboss' )
-				),
-				helpUrl && wp.element.createElement( HelpIcon, {
-					onClick: onHelpClick,
-					contentId: helpUrl,
-				} )
-			),
-			wp.element.createElement(
-				'div',
-				{ className: 'bb-admin-profile-types__card-body' },
-				settingsLoading
-					? wp.element.createElement( 'div', { className: 'bb-admin-loading' }, wp.element.createElement( Spinner, null ) )
-					: wp.element.createElement(
-						'div',
-						{ className: 'bb-admin-profile-types__setting-row' },
-						wp.element.createElement(
-							'span',
-							{ className: 'bb-admin-profile-types__setting-label' },
-							getFieldLabel( feature, activePanelId, 'bp-enable-profile-search' ) || __( 'Profile Search', 'buddyboss' )
-						),
-						wp.element.createElement(
-							'div',
-							{ className: 'bb-admin-profile-types__setting-control' },
-							wp.element.createElement( ToggleControl, {
-								label: getFieldDescription( feature, activePanelId, 'bp-enable-profile-search' ) || __( 'Enable advanced profile search on the Members page', 'buddyboss' ),
-								checked: enableProfileSearch,
-								onChange: handleToggleChange,
-							} ),
-							getFieldHelpText( feature, activePanelId, 'bp-enable-profile-search' ) && wp.element.createElement(
-								'span',
-								{
-									className: 'bb-admin-profile-types__setting-help-text',
-									dangerouslySetInnerHTML: { __html: sanitizeHtml( getFieldHelpText( feature, activePanelId, 'bp-enable-profile-search' ) ) },
-								}
+			{/* Card 1: Profile Search Settings. */}
+			<div className="bb-admin-feature-settings__section">
+				<div className="bb-admin-feature-settings__section-header">
+					<div className="bb-admin-feature-settings__section-header-left">
+						<h3 className="bb-admin-feature-settings__section-title">
+							{ getSectionTitle( feature, activePanelId, 'profile_search' ) || __( 'Profile Search', 'buddyboss' ) }
+						</h3>
+					</div>
+					<div className="bb-admin-feature-settings__section-header-right">
+						{ helpUrl && (
+							<HelpIcon
+								onClick={ onHelpClick }
+								contentId={ helpUrl }
+							/>
+						) }
+					</div>
+				</div>
+				<div className="bb-admin-feature-settings__section-body">
+					{ settingsLoading
+						? (
+							<div className="bb-admin-loading">
+								<Spinner />
+							</div>
+						)
+						: (
+							<div className="bb-admin-settings-form">
+								<div className="bb-admin-settings-form__field">
+									<div className="bb-admin-settings-form__field-label">
+										{ getFieldLabel( feature, activePanelId, 'bp-enable-profile-search' ) || __( 'Profile Search', 'buddyboss' ) }
+									</div>
+									<div className="bb-admin-settings-form__field-content bb-admin-settings-form__field-content--inline">
+										<div className="bb-admin-settings-form__field-input-wrapper">
+											<div className="bb-admin-settings-form__toggle-wrapper">
+												<ToggleControl
+													label={ getFieldDescription( feature, activePanelId, 'bp-enable-profile-search' ) || __( 'Enable advanced profile search on the Members page', 'buddyboss' ) }
+													checked={ enableProfileSearch }
+													onChange={ handleToggleChange }
+												/>
+												{ getFieldHelpText( feature, activePanelId, 'bp-enable-profile-search' ) && (
+													<span
+														className="bb-admin-profile-types__setting-help-text"
+														dangerouslySetInnerHTML={ { __html: sanitizeHtml( getFieldHelpText( feature, activePanelId, 'bp-enable-profile-search' ) ) } }
+													/>
+												) }
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						)
+					}
+				</div>
+			</div>
+
+			{/* Card 2: Form Fields (only when toggle is ON). */}
+			{ enableProfileSearch && (
+				<div className="bb-admin-feature-settings__section">
+					<div className="bb-admin-feature-settings__section-header">
+						<div className="bb-admin-feature-settings__section-header-left">
+							<h3 className="bb-admin-feature-settings__section-title">
+								{ __( 'Form Fields', 'buddyboss' ) }
+							</h3>
+						</div>
+					</div>
+					<div className="bb-admin-feature-settings__section-body">
+						{ isLoading
+							? (
+								<div className="bb-admin-loading">
+									<Spinner />
+								</div>
 							)
-						)
-					)
-			)
-		),
+							: searchFields.length > 0
+								? (
+									<div className="bb-ps-field-list">
+										{ searchFields.map( function ( field, index ) {
+											var isDragOver = dragOverItem === index;
 
-		// Card 2: Form Fields (only when toggle is ON).
-		enableProfileSearch && wp.element.createElement(
-			'div',
-			{ className: 'bb-admin-profile-types__card' },
-			wp.element.createElement(
-				'div',
-				{ className: 'bb-admin-profile-types__card-header' },
-				wp.element.createElement(
-					'h3',
-					{ className: 'bb-admin-profile-types__card-title' },
-					__( 'Form Fields', 'buddyboss' )
-				),
-				wp.element.createElement(
-					'button',
-					{
-						className: 'bb-admin-profile-types__add-btn',
-						onClick: function () {
-							setEditField( { field: null } );
-						},
-					},
-					wp.element.createElement( 'i', { className: 'bb-icons-rl bb-icons-rl-plus' } ),
-					__( 'Add Field', 'buddyboss' )
-				)
-			),
-			wp.element.createElement(
-				'div',
-				{ className: 'bb-admin-profile-types__card-body' },
-				isLoading
-					? wp.element.createElement( 'div', { className: 'bb-admin-loading' }, wp.element.createElement( Spinner, null ) )
-					: searchFields.length > 0
-						? wp.element.createElement(
-							'div',
-							{ className: 'bb-ps-field-list' },
-							searchFields.map( function ( field, index ) {
-								var isDragOver = dragOverItem === index;
+											return (
+												<div
+													key={ field.code + '-' + index }
+													className={ 'bb-pf-field-row' + ( isDragOver ? ' bb-pf-drag-over' : '' ) }
+													draggable={ true }
+													onDragStart={ function ( e ) { handleDragStart( e, index ); } }
+													onDragOver={ function ( e ) { handleDragOver( e, index ); } }
+													onDrop={ handleDrop }
+													onDragEnd={ function () {
+														setDragItem( null );
+														setDragOverItem( null );
+													} }
+												>
+													<div className="bb-pf-field-left">
+														<span
+															className="bb-pf-drag-handle"
+															aria-label={ __( 'Drag to reorder field', 'buddyboss' ) }
+														>
+															<i className="bb-icons-rl-list" />
+														</span>
+														<span className="bb-pf-field-type-icon">
+															<i className={ getFieldTypeIcon( field.type ) } />
+														</span>
+														<span className="bb-pf-field-name">
+															{ decodeEntities( field.name ) }
+														</span>
+													</div>
+													<div className="bb-ps-field-actions bb-pf-field-actions">
+														<button
+															className="bb-pf-ellipsis-btn"
+															onClick={ function ( e ) {
+																e.stopPropagation();
+																setOpenMenuId( openMenuId === index ? null : index );
+															} }
+															aria-label={ __( 'Actions', 'buddyboss' ) }
+															aria-haspopup="true"
+															aria-expanded={ index === openMenuId ? 'true' : 'false' }
+														>
+															<i className="bb-icons-rl-dots-three" />
+														</button>
+														{ openMenuId === index && (
+															<div className="bb-pf-dropdown-menu bb_dropdown_menu_group components-menu-group" role="menu">
+																<button
+																	className="bb-pf-dropdown-edit components-menu-item__button"
+																	role="menuitem"
+																	onClick={ function () {
+																		setOpenMenuId( null );
+																		setEditField( { field: field } );
+																	} }
+																>
+																	<span className="components-menu-item__item">
+																		<i className="bb-icons-rl bb-icons-rl-note-pencil" />
+																		{ ' ' + __( 'Edit', 'buddyboss' ) }
+																	</span>
+																</button>
+																<button
+																	className="bb-pf-dropdown-delete components-menu-item__button"
+																	role="menuitem"
+																	onClick={ function () {
+																		setOpenMenuId( null );
+																		setDeleteFieldData( field );
+																	} }
+																>
+																	<span className="components-menu-item__item">
+																		<i className="bb-icons-rl bb-icons-rl-trash" />
+																		{ ' ' + __( 'Delete', 'buddyboss' ) }
+																	</span>
+																</button>
+															</div>
+														) }
+													</div>
+												</div>
+											);
+										} ) }
+									</div>
+								)
+								: (
+									<div className="bb-admin-profile-types__empty">
+										<p>{ __( 'No form fields configured. Click "Add Field" to add a search field.', 'buddyboss' ) }</p>
+									</div>
+								)
+						}
+						<button
+							className="bb-admin-profile-fields__add-btn"
+							onClick={ function () {
+								setEditField( { field: null } );
+							} }
+						>
+							<i className="bb-icons-rl bb-icons-rl-plus" />
+							{ __( 'Add Field', 'buddyboss' ) }
+						</button>
+					</div>
+				</div>
+			) }
 
-								return wp.element.createElement(
-									'div',
-									{
-										key: field.code + '-' + index,
-										className: 'bb-pf-field-row' + ( isDragOver ? ' bb-pf-drag-over' : '' ),
-										draggable: true,
-										onDragStart: function ( e ) { handleDragStart( e, index ); },
-										onDragOver: function ( e ) { handleDragOver( e, index ); },
-										onDrop: handleDrop,
-										onDragEnd: function () {
-											setDragItem( null );
-											setDragOverItem( null );
-										},
-									},
-									wp.element.createElement(
-										'div',
-										{ className: 'bb-pf-field-left' },
-										wp.element.createElement(
-											'span',
-											{
-												className: 'bb-pf-drag-handle',
-												'aria-label': __( 'Drag to reorder field', 'buddyboss' ),
-											},
-											wp.element.createElement( 'i', { className: 'bb-icons-rl-list' } )
-										),
-										wp.element.createElement(
-											'span',
-											{ className: 'bb-pf-field-type-icon' },
-											wp.element.createElement( 'i', { className: getFieldTypeIcon( field.type ) } )
-										),
-										wp.element.createElement(
-											'span',
-											{ className: 'bb-pf-field-name' },
-											decodeEntities( field.name )
-										)
-									),
-									wp.element.createElement(
-										'div',
-										{ className: 'bb-ps-field-actions bb-pf-field-actions' },
-										wp.element.createElement(
-											'button',
-											{
-												className: 'bb-pf-ellipsis-btn',
-												onClick: function ( e ) {
-													e.stopPropagation();
-													setOpenMenuId( openMenuId === index ? null : index );
-												},
-												'aria-label': __( 'Actions', 'buddyboss' ),
-												'aria-haspopup': 'true',
-												'aria-expanded': index === openMenuId ? 'true' : 'false',
-											},
-											wp.element.createElement( 'i', { className: 'bb-icons-rl-dots-three' } )
-										),
-										openMenuId === index && wp.element.createElement(
-											'div',
-											{ className: 'bb-pf-dropdown-menu bb_dropdown_menu_group components-menu-group', role: 'menu' },
-											wp.element.createElement(
-												'button',
-												{
-													className: 'bb-pf-dropdown-edit components-menu-item__button',
-													role: 'menuitem',
-													onClick: function () {
-														setOpenMenuId( null );
-														setEditField( { field: field } );
-													},
-												},
-												wp.element.createElement( 'span', { className: 'components-menu-item__item' },
-													wp.element.createElement( 'i', { className: 'bb-icons-rl bb-icons-rl-note-pencil' } ),
-													' ' + __( 'Edit', 'buddyboss' )
-												)
-											),
-											wp.element.createElement(
-												'button',
-												{
-													className: 'bb-pf-dropdown-delete components-menu-item__button',
-													role: 'menuitem',
-													onClick: function () {
-														setOpenMenuId( null );
-														setDeleteFieldData( field );
-													},
-												},
-												wp.element.createElement( 'span', { className: 'components-menu-item__item' },
-													wp.element.createElement( 'i', { className: 'bb-icons-rl bb-icons-rl-trash' } ),
-													' ' + __( 'Delete', 'buddyboss' )
-												)
-											)
-										)
-									)
-								);
-							} )
-						)
-						: wp.element.createElement(
-							'div',
-							{ className: 'bb-admin-profile-types__empty' },
-							wp.element.createElement( 'p', null, __( 'No form fields configured. Click "Add Field" to add a search field.', 'buddyboss' ) )
-						)
-			)
-		),
+			{/* Profile Search Field Modal (Add/Edit). */}
+			{ null !== editField && (
+				<ProfileSearchFieldModal
+					field={ editField.field }
+					availableFields={ availableFields }
+					existingFields={ searchFields }
+					onClose={ function () { setEditField( null ); } }
+					onSave={ function () {
+						setEditField( null );
+						loadSearchFields();
+					} }
+					setToast={ setToast }
+				/>
+			) }
 
-		// Profile Search Field Modal (Add/Edit).
-		null !== editField && wp.element.createElement( ProfileSearchFieldModal, {
-			field: editField.field,
-			availableFields: availableFields,
-			existingFields: searchFields,
-			onClose: function () { setEditField( null ); },
-			onSave: function () {
-				setEditField( null );
-				loadSearchFields();
-			},
-			setToast: setToast,
-		} ),
+			{/* Delete field confirmation. */}
+			{ null !== deleteFieldData && (
+				<div className="bb-pf-confirm-overlay">
+					<div className="bb-pf-confirm-dialog">
+						<p>
+							{
+								/* translators: %s: field name */
+								wp.i18n.sprintf( __( 'Are you sure you want to remove the field "%s"? This action cannot be undone.', 'buddyboss' ), decodeEntities( deleteFieldData.label || deleteFieldData.name ) )
+							}
+						</p>
+						<div className="bb-pf-confirm-actions">
+							<Button
+								variant="secondary"
+								onClick={ function () { setDeleteFieldData( null ); } }
+							>
+								{ __( 'Cancel', 'buddyboss' ) }
+							</Button>
+							<Button
+								variant="primary"
+								isDestructive={ true }
+								onClick={ function () { handleDeleteField( deleteFieldData.id ); } }
+							>
+								{ __( 'Remove', 'buddyboss' ) }
+							</Button>
+						</div>
+					</div>
+				</div>
+			) }
 
-		// Delete field confirmation.
-		null !== deleteFieldData && wp.element.createElement(
-			'div',
-			{ className: 'bb-pf-confirm-overlay' },
-			wp.element.createElement(
-				'div',
-				{ className: 'bb-pf-confirm-dialog' },
-				wp.element.createElement( 'p', null,
-					/* translators: %s: field name */
-					wp.i18n.sprintf( __( 'Are you sure you want to remove the field "%s"? This action cannot be undone.', 'buddyboss' ), decodeEntities( deleteFieldData.label || deleteFieldData.name ) )
-				),
-				wp.element.createElement(
-					'div',
-					{ className: 'bb-pf-confirm-actions' },
-					wp.element.createElement(
-						Button,
-						{
-							variant: 'secondary',
-							onClick: function () { setDeleteFieldData( null ); },
-						},
-						__( 'Cancel', 'buddyboss' )
-					),
-					wp.element.createElement(
-						Button,
-						{
-							variant: 'primary',
-							isDestructive: true,
-							onClick: function () { handleDeleteField( deleteFieldData.id ); },
-						},
-						__( 'Remove', 'buddyboss' )
-					)
-				)
-			)
-		)
+		</div>
 	);
 }
