@@ -112,9 +112,8 @@ function bb_members_register_profile_navigation_panel_fields() {
 /**
  * Build the select options for the Default Tab dropdown.
  *
- * Uses the same logic as the legacy Customizer
- * (bp_nouveau_members_customizer_controls) and preserves the
- * `user_default_tab_options_list` filter for Pro extensibility.
+ * Reuses the same logic as the removed legacy Customizer and
+ * preserves the `user_default_tab_options_list` filter for Pro extensibility.
  *
  * Note: Media-related keys ('media', 'document', 'video') are kept as-is
  * to maintain backward compatibility with the stored bp_nouveau_appearance
@@ -454,8 +453,10 @@ function bb_member_navigation_save_settings( $feature_id, $settings, $saved ) {
 		return;
 	}
 
-	// Read current appearance option.
-	$appearance = bp_get_option( 'bp_nouveau_appearance', array() );
+	// Read current appearance option — use bp_nouveau_get_appearance_settings() so
+	// defaults are merged in. Using bp_get_option() directly would lose defaults on
+	// the first save if the option does not yet exist in the database.
+	$appearance = bp_nouveau_get_appearance_settings();
 	if ( ! is_array( $appearance ) ) {
 		$appearance = array();
 	}
@@ -465,17 +466,8 @@ function bb_member_navigation_save_settings( $feature_id, $settings, $saved ) {
 		$appearance['user_nav_display'] = absint( $settings['bb_user_nav_display'] );
 	}
 
-	// Update user_default_tab — validate against allowed options.
-	if ( array_key_exists( 'bb_user_default_tab', $settings ) ) {
-		$valid_tabs = wp_list_pluck( bb_get_member_default_tab_options(), 'value' );
-		$tab        = sanitize_key( $settings['bb_user_default_tab'] );
-
-		if ( in_array( $tab, $valid_tabs, true ) ) {
-			$appearance['user_default_tab'] = $tab;
-		}
-	}
-
-	// Update user_nav_order and user_nav_hide.
+	// Update user_nav_order and user_nav_hide (must be processed before default tab validation).
+	$hide = isset( $appearance['user_nav_hide'] ) ? $appearance['user_nav_hide'] : array();
 	if ( array_key_exists( 'bb_user_nav_order', $settings ) ) {
 		$nav_order_data = $settings['bb_user_nav_order'];
 
@@ -501,6 +493,30 @@ function bb_member_navigation_save_settings( $feature_id, $settings, $saved ) {
 			$appearance['user_nav_hide']  = $hide;
 		}
 	}
+
+	// Update user_default_tab — validate against allowed options and hidden items.
+	$default_tab = isset( $appearance['user_default_tab'] ) ? $appearance['user_default_tab'] : 'profile';
+	if ( array_key_exists( 'bb_user_default_tab', $settings ) ) {
+		$valid_tabs = wp_list_pluck( bb_get_member_default_tab_options(), 'value' );
+		$tab        = sanitize_key( $settings['bb_user_default_tab'] );
+
+		if ( in_array( $tab, $valid_tabs, true ) ) {
+			$default_tab = $tab;
+		}
+	}
+
+	// If the default tab is now hidden, reset to the first visible tab.
+	if ( is_array( $hide ) && in_array( $default_tab, $hide, true ) ) {
+		$nav_order   = isset( $appearance['user_nav_order'] ) ? $appearance['user_nav_order'] : array();
+		$default_tab = 'profile'; // Last resort fallback.
+		foreach ( $nav_order as $slug ) {
+			if ( ! in_array( $slug, $hide, true ) ) {
+				$default_tab = $slug;
+				break;
+			}
+		}
+	}
+	$appearance['user_default_tab'] = $default_tab;
 
 	// Save the merged appearance option.
 	bp_update_option( 'bp_nouveau_appearance', $appearance );

@@ -5580,3 +5580,36 @@ function bb_remove_orphaned_profile_slug( $user_id ) {
 		bb_remove_orphaned_profile_slug( $user_id );
 	}
 }
+
+/**
+ * Block direct URL access to hidden profile navigation items.
+ *
+ * When an admin hides a profile nav tab via Settings 2.0 Navigation Order,
+ * this redirects any direct URL access to the member's profile home.
+ * Only applies when viewing another user's profile (or your own).
+ *
+ * Mirrors the group equivalent in bp-groups/actions/access.php.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_members_block_hidden_nav_access() {
+	if ( ! bp_is_user() ) {
+		return;
+	}
+
+	if ( ! function_exists( 'bp_nouveau_get_appearance_settings' ) ) {
+		return;
+	}
+
+	$current_component = bp_current_component();
+	if ( empty( $current_component ) ) {
+		return;
+	}
+
+	$hidden_tabs = bp_nouveau_get_appearance_settings( 'user_nav_hide' );
+
+	if ( is_array( $hidden_tabs ) && in_array( $current_component, $hidden_tabs, true ) ) {
+		bp_core_redirect( bp_displayed_user_domain() );
+	}
+}
+add_action( 'bp_actions', 'bb_members_block_hidden_nav_access' );
