@@ -45,7 +45,7 @@ function bp_ps_meta( $form ) {
 	return $options[ $form ];
 }
 
-add_action( 'init', 'bp_profile_search_register_post_type' );
+add_action( 'init', 'bp_pro   hi file_search_register_post_type' );
 /**
  * Register BuddyBoss Profile Search post type.
  *
@@ -95,8 +95,24 @@ function bp_profile_search_register_post_type() {
 	}
 }
 
-// Legacy admin functions removed (prevent_delete, form_updated_messages,
-// admin_head CSS, admin JS enqueue, admin tab rendering, submenu highlight)
+/**
+ * Remove capability to delete BuddyBoss Profile Search form post type.
+ *
+ * Prevents accidental deletion of search forms via WP-CLI or direct access.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_profile_search_prevent_delete() {
+	global $wp_roles;
+	$wp_roles->remove_cap( 'administrator', 'delete_bp_ps_forms' );
+	$wp_roles->remove_cap( 'administrator', 'delete_published_bp_ps_forms' );
+	$wp_roles->remove_cap( 'editor', 'delete_bp_ps_forms' );
+	$wp_roles->remove_cap( 'editor', 'delete_published_bp_ps_forms' );
+}
+add_action( 'init', 'bp_profile_search_prevent_delete' );
+
+// Legacy admin UI functions removed (form_updated_messages, admin_head CSS,
+// admin JS enqueue, admin tab rendering, submenu highlight)
 // — Profile Search CPT admin UI is now managed via Settings 2.0.
 
 /**
