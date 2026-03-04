@@ -1037,3 +1037,23 @@
 		}
 	}
 }
+
+.bb-activity-list__delete-confirm-modal.bb-admin-settings-modal {
+	max-width: 550px;
+
+	.bb-admin-settings-modal__body {
+		padding: 24px;
+
+		> p {
+			margin: 0;
+		}
+	}
+
+	.bb-admin-settings-modal__footer {
+		display: flex;
+		justify-content: flex-end;
+		gap: 8px;
+		padding: 16px 24px;
+		border-top: 1px solid $bb-border-secondary-color;
+	}
+}
