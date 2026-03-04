@@ -20,6 +20,7 @@ import { debounce, fetchHelpContent, clearHelpContentCache } from '../../utils/a
 import { HelpIcon } from '../components/HelpIcon';
 import { HelpSliderModal } from '../components/HelpSliderModal';
 import { sanitizeHtml, safeUrl } from '../utils/sanitize';
+import { useGroupNavSync } from '../components/groups/GroupNavSync';
 
 // Lazy load custom panel screens.
 const ActivityListScreen = lazy(() => import('./ActivityListScreen'));
@@ -301,6 +302,17 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 			return next;
 		});
 	}, []);
+
+	// Sync Default Tab dropdown with Navigation Order toggles (groups feature only).
+	useGroupNavSync( {
+		featureId: featureId,
+		settings: settings,
+		settingsRef: settingsRef,
+		initialLoad: initialLoad,
+		setSidePanels: setSidePanels,
+		setSettings: setSettings,
+		handleSettingChange: handleSettingChange,
+	} );
 
 	const handlePanelChange = (route) => {
 		// Route from SideNavigation is already in full format: /settings/featureId/panelId
