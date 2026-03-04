@@ -418,20 +418,24 @@ export function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, 
 			</div>
 
 			{/* Card 2: Profile Types List (visible only when enabled) */}
-			{ enableProfileTypes && <div className="bb-admin-profile-types__card">
-				<div className="bb-admin-profile-types__card-header">
-					<h3 className="bb-admin-profile-types__card-title">
-						{ __( 'Profile Types', 'buddyboss' ) }
-					</h3>
-					<button
-						className="bb-admin-profile-types__add-btn"
-						onClick={ handleAddNewType }
-					>
-						<i className="bb-icons-rl bb-icons-rl-plus"></i>
-						{ __( 'Add New Profile Type', 'buddyboss' ) }
-					</button>
+			{ enableProfileTypes && <div className="bb-admin-feature-settings__section">
+				<div className="bb-admin-feature-settings__section-header">
+					<div className="bb-admin-feature-settings__section-header-left">
+						<h3 className="bb-admin-feature-settings__section-title">
+							{ __( 'Profile Types', 'buddyboss' ) }
+						</h3>
+					</div>
+					<div className="bb-admin-feature-settings__section-header-right">
+						<button
+							className="bb-admin-profile-types__add-btn"
+							onClick={ handleAddNewType }
+						>
+							<i className="bb-icons-rl bb-icons-rl-plus"></i>
+							{ __( 'Add New Profile Type', 'buddyboss' ) }
+						</button>
+					</div>
 				</div>
-				<div className="bb-admin-profile-types__card-body">
+				<div className="bb-admin-feature-settings__section-body">
 					{ isLoading ? (
 						<div className="bb-admin-loading"><Spinner /></div>
 					) : memberTypes.length > 0 ? (
