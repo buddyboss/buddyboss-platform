@@ -38,6 +38,7 @@ function bb_admin_settings_register_members_feature() {
 			'license_tier'       => 'free',
 			'category'           => 'community',
 			'standalone'         => true,
+			'components'         => array( 'members', 'xprofile', 'friends' ),
 			'is_active_callback' => function () {
 				return bp_is_active( 'xprofile' );
 			},
