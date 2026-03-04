@@ -721,34 +721,36 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 					} }
 					aria-label={ __( 'Previous page', 'buddyboss' ) }
 				>
-					<span aria-hidden="true">&lsaquo;</span>
+					<i className="bb-icons-rl bb-icons-rl-caret-left" aria-hidden="true"></i>
 				</button>
 
-				{ pageNumbers.map( function ( pageNum, idx ) {
-					if ( null === pageNum ) {
+				<div className="bb-group-members-tab__page-numbers">
+					{ pageNumbers.map( function ( pageNum, idx ) {
+						if ( null === pageNum ) {
+							return (
+								<span key={ 'ellipsis-' + idx } className="bb-group-members-tab__page-ellipsis" aria-hidden="true">
+									&hellip;
+								</span>
+							);
+						}
 						return (
-							<span key={ 'ellipsis-' + idx } className="bb-group-members-tab__page-ellipsis" aria-hidden="true">
-								&hellip;
-							</span>
+							<button
+								key={ pageNum }
+								type="button"
+								className={ 'bb-group-members-tab__page-number' + ( pageNum === currentPage ? ' bb-group-members-tab__page-number--active' : '' ) }
+								onClick={ function () {
+									if ( pageNum !== currentPage ) {
+										handlePageChange( role, pageNum );
+									}
+								} }
+								aria-label={ pageNum.toString() }
+								aria-current={ pageNum === currentPage ? 'page' : undefined }
+							>
+								{ pageNum }
+							</button>
 						);
-					}
-					return (
-						<button
-							key={ pageNum }
-							type="button"
-							className={ 'bb-group-members-tab__page-number' + ( pageNum === currentPage ? ' bb-group-members-tab__page-number--active' : '' ) }
-							onClick={ function () {
-								if ( pageNum !== currentPage ) {
-									handlePageChange( role, pageNum );
-								}
-							} }
-							aria-label={ pageNum.toString() }
-							aria-current={ pageNum === currentPage ? 'page' : undefined }
-						>
-							{ pageNum }
-						</button>
-					);
-				} ) }
+					} ) }
+				</div>
 
 				<button
 					type="button"
@@ -759,7 +761,7 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 					} }
 					aria-label={ __( 'Next page', 'buddyboss' ) }
 				>
-					<span aria-hidden="true">&rsaquo;</span>
+					<i className="bb-icons-rl bb-icons-rl-caret-right" aria-hidden="true"></i>
 				</button>
 			</div>
 		);
