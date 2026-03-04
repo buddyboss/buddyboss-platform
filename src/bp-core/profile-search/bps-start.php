@@ -45,7 +45,7 @@ function bp_ps_meta( $form ) {
 	return $options[ $form ];
 }
 
-add_action( 'init', 'bp_pro   hi file_search_register_post_type' );
+add_action( 'init', 'bp_profile_search_register_post_type' );
 /**
  * Register BuddyBoss Profile Search post type.
  *
@@ -114,27 +114,6 @@ add_action( 'init', 'bp_profile_search_prevent_delete' );
 // Legacy admin UI functions removed (form_updated_messages, admin_head CSS,
 // admin JS enqueue, admin tab rendering, submenu highlight)
 // — Profile Search CPT admin UI is now managed via Settings 2.0.
-
-/**
- * Set a Profile Search option.
- *
- * Stored in the serialized `bp_ps_settings` option.
- * Moved from bps-admin.php — still needed by frontend search code.
- *
- * @since BuddyBoss 1.0.0
- *
- * @param string $name  Option name.
- * @param mixed  $value Option value.
- */
-function bp_ps_set_option( $name, $value ) {
-	$settings = get_option( 'bp_ps_settings' );
-	if ( false === $settings ) {
-		$settings = new stdClass();
-	}
-
-	$settings->{$name} = $value;
-	update_option( 'bp_ps_settings', $settings );
-}
 
 /**
  * Get a Profile Search option.

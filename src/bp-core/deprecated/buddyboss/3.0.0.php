@@ -906,3 +906,84 @@ function bb_deprecated_xprofile_admin_rendering_hooks() {
 }
 
 add_action( 'admin_init', 'bb_deprecated_xprofile_admin_rendering_hooks' );
+
+/**
+ * Register deprecation notices for legacy Profile admin tab hooks.
+ *
+ * The `bp_core_admin_users_tabs` and `bp_core_get_users_admin_tabs` filters
+ * were used to add tabs to the legacy bp-profile-setup admin page. Since
+ * Settings 2.0, Profile Fields, Profile Types, Profile Search, and Profile
+ * Navigation are managed via the React admin interface.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_deprecated_profile_admin_tab_hooks() {
+	$deprecated_filters = array(
+		'bp_core_admin_users_tabs',
+		'bp_core_get_users_admin_tabs',
+	);
+
+	foreach ( $deprecated_filters as $hook ) {
+		if ( has_filter( $hook ) ) {
+			_deprecated_hook(
+				$hook,
+				'BuddyBoss [BBVERSION]',
+				'bb_register_side_panel()',
+				sprintf(
+					/* translators: %s: hook name */
+					__( 'The %s filter is no longer used. Profile admin tabs are now managed via Settings 2.0 side panels.', 'buddyboss' ),
+					$hook
+				)
+			);
+		}
+	}
+}
+
+add_action( 'admin_init', 'bb_deprecated_profile_admin_tab_hooks' );
+
+/**
+ * Backward-compatible stub for legacy Profile admin tab renderer.
+ *
+ * The admin tab bar for bp-profile-setup has been removed in Settings 2.0.
+ * This stub prevents fatal errors if third-party code or legacy model class
+ * `render_admin_form()` methods call the function.
+ *
+ * @since BuddyBoss [BBVERSION]
+ * @deprecated BuddyBoss [BBVERSION] Use Settings 2.0 side panels via bb_register_side_panel().
+ *
+ * @param string $active_tab Active tab slug (ignored).
+ */
+function bp_core_admin_users_tabs( $active_tab = '' ) {
+	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_register_side_panel()' );
+}
+
+/**
+ * Backward-compatible stub for legacy Profile admin tabs data.
+ *
+ * @since BuddyBoss [BBVERSION]
+ * @deprecated BuddyBoss [BBVERSION] Use Settings 2.0 side panels via bb_register_side_panel().
+ *
+ * @param string $active_tab Active tab slug (ignored).
+ *
+ * @return array Empty array.
+ */
+function bp_core_get_users_admin_tabs( $active_tab = '' ) {
+	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_register_side_panel()' );
+
+	return array();
+}
+
+/**
+ * Backward-compatible stub for legacy field type dropdown renderer.
+ *
+ * Called from BP_XProfile_Field::render_admin_form(). No longer needed since
+ * field type selection is handled by the Settings 2.0 React modal.
+ *
+ * @since BuddyBoss [BBVERSION]
+ * @deprecated BuddyBoss [BBVERSION]
+ *
+ * @param string $select_field_type Currently selected field type.
+ */
+function bp_xprofile_admin_form_field_types( $select_field_type = '' ) {
+	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]' );
+}

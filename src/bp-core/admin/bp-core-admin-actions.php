@@ -626,6 +626,18 @@ function bb_redirect_legacy_settings_to_settings_2() {
 		exit;
 	}
 
+	// Redirect legacy Profile Fields admin page (admin.php?page=bp-profile-setup).
+	if ( 'bp-profile-setup' === $page ) {
+		wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=members&panel=profile_fields' ) );
+		exit;
+	}
+
+	// Redirect legacy Member Types CPT page (edit.php?post_type=bp-member-type).
+	if ( bp_get_member_type_post_type() === $post_type ) {
+		wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=members&panel=profile_types' ) );
+		exit;
+	}
+
 	// Check if we're on the old settings page.
 	if ( 'bp-settings' !== $page || empty( $tab ) ) {
 		return;
@@ -636,6 +648,7 @@ function bb_redirect_legacy_settings_to_settings_2() {
 		'bp-reactions' => 'reactions',
 		'bp-activity'  => 'activity',
 		'bp-groups'    => 'groups',
+		'bp-xprofile'  => 'members',
 		// Add more mappings here as more tabs are migrated to Settings 2.0.
 	);
 

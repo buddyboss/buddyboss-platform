@@ -230,21 +230,6 @@ function bp_ps_update_meta( $form, $post ) {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_ps_set_option( $name, $value ) {
-	$settings = get_option( 'bp_ps_settings' );
-	if ( $settings === false ) {
-		$settings = new stdClass();
-	}
-
-	$settings->{$name} = $value;
-	update_option( 'bp_ps_settings', $settings );
-}
-
-/**
- * BuddyBoss Profile Search Admin
- *
- * @since BuddyBoss 1.0.0
- */
 function bp_ps_get_option( $name, $default ) {
 	$settings = get_option( 'bp_ps_settings' );
 	return isset( $settings->{$name} ) ? $settings->{$name} : $default;
