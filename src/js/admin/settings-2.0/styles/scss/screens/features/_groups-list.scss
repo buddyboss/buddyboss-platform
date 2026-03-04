@@ -1297,59 +1297,67 @@ input.bb-admin-meta-field__search-input {
 	&__pagination {
 		display: flex;
 		align-items: center;
-		justify-content: flex-start;
-		gap: 4px;
-		padding: 8px 0 0;
+		gap: 16px;
+		margin-top: 16px;
 	}
 
 	&__page-arrow {
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		width: 32px;
-		height: 32px;
+		padding: 4px;
 		border: none;
-		border-radius: $bb-border-radius-md;
 		background: transparent;
-		color: $bb-text-tertiary-color;
-		font-size: 18px;
-		line-height: 1;
 		cursor: pointer;
-		padding: 0;
 
-		&:hover:not(:disabled) {
+		i {
+			font-size: 16px;
+			color: $bb-icon-secondary-color;
+		}
+
+		&:hover:not(:disabled) i {
 			color: $bb-text-color;
 		}
 
 		&:disabled {
-			opacity: 0.3;
-			cursor: not-allowed;
+			opacity: 0.5;
+			pointer-events: none;
 		}
+	}
+
+	&__page-numbers {
+		display: flex;
+		align-items: center;
+		gap: 4px;
 	}
 
 	&__page-number {
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		min-width: 32px;
+		width: 32px;
 		height: 32px;
-		padding: 0 6px;
+		padding: 2px;
 		border: 1px solid transparent;
 		border-radius: $bb-border-radius-md;
 		background: transparent;
-		color: $bb-text-color;
+		color: $bb-text-tertiary-color;
 		font-size: 13px;
+		font-weight: 500;
+		line-height: 18px;
 		cursor: pointer;
 
 		&:hover:not(&--active),
 		&:focus:not(&--active) {
+			background-color: $bb-background-primary-color;
 			border-color: $bb-border-secondary-color;
 		}
 
 		&--active {
-			border-color: $bb-text-color;
+			background-color: $bb-background-primary-color;
+			border-color: $bb-border-quinery;
 			color: $bb-text-color;
-			font-weight: 600;
+			font-weight: 500;
 			cursor: default;
 		}
 	}
@@ -1358,9 +1366,11 @@ input.bb-admin-meta-field__search-input {
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		min-width: 32px;
+		width: 32px;
 		height: 32px;
 		font-size: 13px;
+		font-weight: 500;
+		line-height: 18px;
 		color: $bb-text-tertiary-color;
 	}
 }
