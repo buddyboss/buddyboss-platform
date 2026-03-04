@@ -101,6 +101,7 @@ function bb_members_register_profile_name_panel_fields() {
 	);
 
 	// FIELD: Last Name (editable toggle).
+	// Legacy DB: bp-hide-last-name = 1 means field is visible (confusing name, but 1 = show).
 	bb_register_feature_field(
 		'members',
 		'profile_name',
@@ -112,7 +113,6 @@ function bb_members_register_profile_name_panel_fields() {
 			'description'      => __( 'Last Name', 'buddyboss' ),
 			'default'           => bp_hide_last_name(),
 			'sanitize_callback' => 'intval',
-			'invert_value'      => true,
 			'conditional'       => array(
 				'field' => 'bp-display-name-format',
 				'value' => 'first_name',
@@ -217,6 +217,7 @@ function bb_members_register_profile_name_panel_fields() {
 	// Legacy: bp_admin_setting_callback_nickname_hide_first_name() + bp_admin_setting_callback_nickname_hide_last_name().
 
 	// FIELD: First Name (editable toggle).
+	// Legacy DB: bp-hide-nickname-first-name = 1 means field is visible (confusing name, but 1 = show).
 	bb_register_feature_field(
 		'members',
 		'profile_name',
@@ -228,7 +229,6 @@ function bb_members_register_profile_name_panel_fields() {
 			'description'      => __( 'First Name', 'buddyboss' ),
 			'default'           => bp_hide_nickname_first_name(),
 			'sanitize_callback' => 'intval',
-			'invert_value'      => true,
 			'conditional'       => array(
 				'field' => 'bp-display-name-format',
 				'value' => 'nickname',
@@ -239,6 +239,7 @@ function bb_members_register_profile_name_panel_fields() {
 	);
 
 	// FIELD: Last Name (editable toggle).
+	// Legacy DB: bp-hide-nickname-last-name = 1 means field is visible (confusing name, but 1 = show).
 	bb_register_feature_field(
 		'members',
 		'profile_name',
@@ -250,7 +251,6 @@ function bb_members_register_profile_name_panel_fields() {
 			'description'      => __( 'Last Name', 'buddyboss' ),
 			'default'           => bp_hide_nickname_last_name(),
 			'sanitize_callback' => 'intval',
-			'invert_value'      => true,
 			'conditional'       => array(
 				'field' => 'bp-display-name-format',
 				'value' => 'nickname',
