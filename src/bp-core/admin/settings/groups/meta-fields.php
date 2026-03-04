@@ -257,7 +257,7 @@ function bb_groups_register_core_meta_fields( $registry, $component ) {
 			'order'      => 355,
 			'get_fn'     => 'bp_group_get_video_status',
 			'is_visible' => function ( $group ) {
-				return bp_is_active( 'media' ) && bp_is_group_video_support_enabled();
+				return bp_is_active( 'video' ) && function_exists( 'bp_is_group_video_support_enabled' ) && bp_is_group_video_support_enabled();
 			},
 		),
 		array(

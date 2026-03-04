@@ -151,7 +151,7 @@ function bb_get_group_default_tab_options() {
 		$options['documents'] = __( 'Documents', 'buddyboss' );
 	}
 
-	if ( bp_is_active( 'media' ) && bp_is_group_video_support_enabled() ) {
+	if ( bp_is_active( 'video' ) && function_exists( 'bp_is_group_video_support_enabled' ) && bp_is_group_video_support_enabled() ) {
 		$options['videos'] = __( 'Videos', 'buddyboss' );
 	}
 
@@ -303,7 +303,7 @@ function bb_get_inactive_group_nav_slugs() {
 		$inactive[] = 'photos';
 	}
 
-	if ( ! bp_is_active( 'media' ) || ! bp_is_group_video_support_enabled() ) {
+	if ( ! bp_is_active( 'video' ) || ! function_exists( 'bp_is_group_video_support_enabled' ) || ! bp_is_group_video_support_enabled() ) {
 		$inactive[] = 'videos';
 	}
 
