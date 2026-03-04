@@ -640,6 +640,11 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 										<i className={ 'bb-doc-extensions-modal__ext-icon ' + getExtensionIconClass( entry.extension ) } />
 										<span className="bb-doc-extensions-modal__ext-desc">
 											{ entry.description }
+											{ entry.mime_type && (
+												<span className="bb-doc-extensions-modal__ext-mime">
+													{ ' (' + entry.mime_type + ')' }
+												</span>
+											) }
 										</span>
 										{ ! isDefault && (
 											<div className="bb-doc-extensions-modal__ext-actions">
