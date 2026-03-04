@@ -67,77 +67,95 @@ function bb_media_register_gifs_panel_fields() {
 		)
 	);
 
-	// GIF toggles — conditional on activity being active.
-	if ( bp_is_active( 'activity' ) ) {
+	// FIELD: Profiles — gif support.
+	bb_register_feature_field(
+		'media',
+		'animated_gifs',
+		'gifs_settings',
+		array(
+			'name'              => 'bp_media_profiles_gif_support',
+			'label'             => __( 'Profiles', 'buddyboss' ),
+			'description'       => bp_is_active( 'activity' )
+				? __( 'Allow members to use animated GIFs in profiles and activity posts', 'buddyboss' )
+				: __( 'Allow members to use animated GIFs in profiles', 'buddyboss' ),
+			'type'              => 'toggle',
+			'default'           => 0,
+			'sanitize_callback' => 'absint',
+			'order'             => 20,
+		)
+	);
 
-		// FIELD: Profiles — gif support.
+	// FIELD: Groups — gif support.
+	if ( bp_is_active( 'groups' ) ) {
+		// Build description dynamically based on active components (mirrors Photos/Videos/Documents pattern).
+		$group_contexts = array( __( 'groups', 'buddyboss' ) );
+
+		if ( bp_is_active( 'activity' ) ) {
+			$group_contexts[] = __( 'activity posts', 'buddyboss' );
+		}
+
+		if ( bp_is_active( 'messages' ) && bp_disable_group_messages() ) {
+			$group_contexts[] = __( 'messages', 'buddyboss' );
+		}
+
+		if ( bp_is_active( 'forums' ) ) {
+			$group_contexts[] = __( 'forums', 'buddyboss' );
+		}
+
+		$group_description = bb_media_build_context_description(
+			__( 'Allow members to use animated GIFs in', 'buddyboss' ),
+			$group_contexts
+		);
+
 		bb_register_feature_field(
 			'media',
 			'animated_gifs',
 			'gifs_settings',
 			array(
-				'name'              => 'bp_media_profiles_gif_support',
-				'label'             => __( 'Profiles', 'buddyboss' ),
-				'description'       => __( 'Allow members to use animated GIFs in profile activity posts', 'buddyboss' ),
+				'name'              => 'bp_media_groups_gif_support',
+				'label'             => __( 'Groups', 'buddyboss' ),
+				'description'       => $group_description,
 				'type'              => 'toggle',
 				'default'           => 0,
 				'sanitize_callback' => 'absint',
-				'order'             => 20,
+				'order'             => 30,
 			)
 		);
+	}
 
-		// FIELD: Groups — gif support.
-		if ( bp_is_active( 'groups' ) ) {
-			bb_register_feature_field(
-				'media',
-				'animated_gifs',
-				'gifs_settings',
-				array(
-					'name'              => 'bp_media_groups_gif_support',
-					'label'             => __( 'Groups', 'buddyboss' ),
-					'description'       => __( 'Allow members to use animated GIFs in groups, activity posts, messages and forums', 'buddyboss' ),
-					'type'              => 'toggle',
-					'default'           => 0,
-					'sanitize_callback' => 'absint',
-					'order'             => 30,
-				)
-			);
-		}
+	// FIELD: Messages — gif support.
+	if ( bp_is_active( 'messages' ) ) {
+		bb_register_feature_field(
+			'media',
+			'animated_gifs',
+			'gifs_settings',
+			array(
+				'name'              => 'bp_media_messages_gif_support',
+				'label'             => __( 'Messages', 'buddyboss' ),
+				'description'       => __( 'Allow members to use animated GIFs in private messages', 'buddyboss' ),
+				'type'              => 'toggle',
+				'default'           => 0,
+				'sanitize_callback' => 'absint',
+				'order'             => 40,
+			)
+		);
+	}
 
-		// FIELD: Messages — gif support.
-		if ( bp_is_active( 'messages' ) ) {
-			bb_register_feature_field(
-				'media',
-				'animated_gifs',
-				'gifs_settings',
-				array(
-					'name'              => 'bp_media_messages_gif_support',
-					'label'             => __( 'Messages', 'buddyboss' ),
-					'description'       => __( 'Allow members to use animated GIFs in private messages', 'buddyboss' ),
-					'type'              => 'toggle',
-					'default'           => 0,
-					'sanitize_callback' => 'absint',
-					'order'             => 40,
-				)
-			);
-		}
-
-		// FIELD: Forums — gif support.
-		if ( bp_is_active( 'forums' ) ) {
-			bb_register_feature_field(
-				'media',
-				'animated_gifs',
-				'gifs_settings',
-				array(
-					'name'              => 'bp_media_forums_gif_support',
-					'label'             => __( 'Forums', 'buddyboss' ),
-					'description'       => __( 'Allow members to use animated GIFs in forum discussions and replies', 'buddyboss' ),
-					'type'              => 'toggle',
-					'default'           => 0,
-					'sanitize_callback' => 'absint',
-					'order'             => 50,
-				)
-			);
-		}
+	// FIELD: Forums — gif support.
+	if ( bp_is_active( 'forums' ) ) {
+		bb_register_feature_field(
+			'media',
+			'animated_gifs',
+			'gifs_settings',
+			array(
+				'name'              => 'bp_media_forums_gif_support',
+				'label'             => __( 'Forums', 'buddyboss' ),
+				'description'       => __( 'Allow members to use animated GIFs in forum discussions and replies', 'buddyboss' ),
+				'type'              => 'toggle',
+				'default'           => 0,
+				'sanitize_callback' => 'absint',
+				'order'             => 50,
+			)
+		);
 	}
 }

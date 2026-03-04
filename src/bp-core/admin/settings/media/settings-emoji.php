@@ -33,25 +33,45 @@ function bb_media_register_emoji_panel_fields() {
 	);
 
 	// FIELD: Profiles — emoji support.
-	if ( bp_is_active( 'activity' ) ) {
-		bb_register_feature_field(
-			'media',
-			'emoji',
-			'emoji_settings',
-			array(
-				'name'              => 'bp_media_profiles_emoji_support',
-				'label'             => __( 'Profiles', 'buddyboss' ),
-				'description'       => __( 'Allow members to use emoji in profiles and activity posts', 'buddyboss' ),
-				'type'              => 'toggle',
-				'default'           => 0,
-				'sanitize_callback' => 'absint',
-				'order'             => 10,
-			)
-		);
-	}
+	bb_register_feature_field(
+		'media',
+		'emoji',
+		'emoji_settings',
+		array(
+			'name'              => 'bp_media_profiles_emoji_support',
+			'label'             => __( 'Profiles', 'buddyboss' ),
+			'description'       => bp_is_active( 'activity' )
+				? __( 'Allow members to use emoji in profiles and activity posts', 'buddyboss' )
+				: __( 'Allow members to use emoji in profiles', 'buddyboss' ),
+			'type'              => 'toggle',
+			'default'           => 0,
+			'sanitize_callback' => 'absint',
+			'order'             => 10,
+		)
+	);
 
 	// FIELD: Groups — emoji support.
-	if ( bp_is_active( 'groups' ) && bp_is_active( 'activity' ) ) {
+	if ( bp_is_active( 'groups' ) ) {
+		// Build description dynamically based on active components (mirrors Photos/Videos/Documents pattern).
+		$group_contexts = array( __( 'groups', 'buddyboss' ) );
+
+		if ( bp_is_active( 'activity' ) ) {
+			$group_contexts[] = __( 'activity posts', 'buddyboss' );
+		}
+
+		if ( bp_is_active( 'messages' ) && bp_disable_group_messages() ) {
+			$group_contexts[] = __( 'messages', 'buddyboss' );
+		}
+
+		if ( bp_is_active( 'forums' ) ) {
+			$group_contexts[] = __( 'forums', 'buddyboss' );
+		}
+
+		$group_description = bb_media_build_context_description(
+			__( 'Allow members to use emoji in', 'buddyboss' ),
+			$group_contexts
+		);
+
 		bb_register_feature_field(
 			'media',
 			'emoji',
@@ -59,7 +79,7 @@ function bb_media_register_emoji_panel_fields() {
 			array(
 				'name'              => 'bp_media_groups_emoji_support',
 				'label'             => __( 'Groups', 'buddyboss' ),
-				'description'       => __( 'Allow members to use emoji in groups, activity posts, messages and forums', 'buddyboss' ),
+				'description'       => $group_description,
 				'type'              => 'toggle',
 				'default'           => 0,
 				'sanitize_callback' => 'absint',
@@ -87,7 +107,7 @@ function bb_media_register_emoji_panel_fields() {
 	}
 
 	// FIELD: Forums — emoji support.
-	if ( bp_is_active( 'forums' ) && bp_is_active( 'activity' ) ) {
+	if ( bp_is_active( 'forums' ) ) {
 		bb_register_feature_field(
 			'media',
 			'emoji',
