@@ -247,7 +247,12 @@
 		&.bb-activity-list__th--author {
 			font-size: 14px;
 			color: $bb-text-color;
+			width: 18%;
 		}
+	}
+
+	&__th--activity {
+		width: 28%;
 	}
 
 	&__th--checkbox {
@@ -374,7 +379,7 @@
 
 	&__content-preview {
 		font-size: 13px;
-		color: $bb-link-color;
+		color: $bb-text-color;
 		display: -webkit-box;
 		-webkit-line-clamp: 2;
 		-webkit-box-orient: vertical;
@@ -389,6 +394,14 @@
 
 		p {
 			margin: 0;
+		}
+	}
+
+	&__td--activity_topic {
+		
+		.bb-topic-url {
+			color: $bb-link-color;
+			text-decoration: none;
 		}
 	}
 
