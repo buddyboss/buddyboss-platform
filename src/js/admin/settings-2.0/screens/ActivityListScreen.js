@@ -164,16 +164,20 @@ export function ActivityListScreen( { onNavigate } ) {
 		}, fetchOptions ).then( function ( response ) {
 			if ( response.success && response.data ) {
 				var rawActivities = response.data.activities || [];
-				// Sanitize custom column HTML once at fetch time to avoid DOMParser overhead per render.
+				// Sanitize HTML once at fetch time to avoid DOMParser overhead per render.
 				var sanitizedActivities = rawActivities.map( function ( activity ) {
-					if ( ! activity.custom_columns ) {
-						return activity;
+					var updates = {
+						action: activity.action ? sanitizeHtml( activity.action ) : '',
+						content: activity.content ? sanitizeHtml( activity.content ) : '',
+					};
+					if ( activity.custom_columns ) {
+						var sanitizedColumns = {};
+						Object.keys( activity.custom_columns ).forEach( function ( key ) {
+							sanitizedColumns[ key ] = sanitizeHtml( activity.custom_columns[ key ] );
+						} );
+						updates.custom_columns = sanitizedColumns;
 					}
-					var sanitizedColumns = {};
-					Object.keys( activity.custom_columns ).forEach( function ( key ) {
-						sanitizedColumns[ key ] = sanitizeHtml( activity.custom_columns[ key ] );
-					} );
-					return Object.assign( {}, activity, { custom_columns: sanitizedColumns } );
+					return Object.assign( {}, activity, updates );
 				} );
 				setActivities( sanitizedActivities );
 				setTotal( response.data.total || 0 );
@@ -485,39 +489,6 @@ export function ActivityListScreen( { onNavigate } ) {
 		return dateI18n( 'j M, H:i:s', dateStr );
 	};
 
-	/**
-	 * Strip HTML tags for display.
-	 *
-	 * Uses sanitizeHtml with no allowed tags instead of a hand-rolled regex
-	 * to correctly handle edge cases (attributes with >, comments, etc.).
-	 *
-	 * @param {string} html HTML string.
-	 * @returns {string} Plain text.
-	 */
-	var stripHtml = function ( html ) {
-		if ( ! html ) {
-			return '';
-		}
-		return sanitizeHtml( html, { allowedTags: [] } );
-	};
-
-	/**
-	 * Truncate text to a max length.
-	 *
-	 * @param {string} text   Text to truncate.
-	 * @param {number} maxLen Maximum length.
-	 * @returns {string} Truncated text.
-	 */
-	var truncate = function ( text, maxLen ) {
-		if ( ! text ) {
-			return '';
-		}
-		if ( text.length <= maxLen ) {
-			return text;
-		}
-		return text.substring( 0, maxLen ) + '...';
-	};
-
 	// Build action type options for select.
 	var actionOptions = [ { label: __( 'All Actions', 'buddyboss' ), value: '' } ];
 	Object.keys( activityActions ).forEach( function ( key ) {
@@ -775,13 +746,16 @@ export function ActivityListScreen( { onNavigate } ) {
 										</td>
 										<td className="bb-activity-list__td--activity">
 											<div className="bb-activity-list__content">
-												<span className="bb-activity-list__action-text">
-													{ truncate( stripHtml( activity.action ), 120 ) }
-												</span>
+												{/* Safe: action and content are sanitized via sanitizeHtml at fetch time. */}
+												<span
+													className="bb-activity-list__action-text"
+													dangerouslySetInnerHTML={ { __html: activity.action } }
+												/>
 												{ activity.content && (
-													<span className="bb-activity-list__content-preview">
-														{ truncate( stripHtml( activity.content ), 100 ) }
-													</span>
+													<span
+														className="bb-activity-list__content-preview"
+														dangerouslySetInnerHTML={ { __html: activity.content } }
+													/>
 												) }
 											</div>
 										</td>
