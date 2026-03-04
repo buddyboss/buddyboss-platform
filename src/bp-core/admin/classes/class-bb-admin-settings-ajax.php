@@ -597,6 +597,8 @@ class BB_Admin_Settings_Ajax {
 				'disabled'             => ! empty( $field['disabled'] ),
 				// Group ID for visual grouping of related fields (removes borders between them).
 				'group'                => $field['group'] ?? null,
+				// When true, renders toggle description as a block element below the switch instead of inline.
+				'block_description'    => ! empty( $field['block_description'] ),
 			);
 
 			// Auto-compute pro_notice for pro_only fields when not set at registration time.
