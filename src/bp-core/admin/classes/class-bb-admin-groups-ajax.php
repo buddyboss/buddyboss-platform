@@ -183,13 +183,16 @@ class BB_Admin_Groups_Ajax {
 		 *
 		 * @param array $allowed_options Associative array of option_name => sanitize_callback.
 		 */
-		return apply_filters(
+		$options = apply_filters(
 			'bb_admin_allowed_platform_settings',
 			array(
 				'bp-disable-group-type-creation' => 'absint',
 				'bp-enable-group-auto-join'      => 'absint',
 			)
 		);
+
+		// Strip any dangerous WordPress core options that a careless extension might add.
+		return bb_filter_allowed_options( $options );
 	}
 
 	/**
@@ -1292,10 +1295,25 @@ class BB_Admin_Groups_Ajax {
 		$original_gid = isset( $_GET['gid'] ) ? $_GET['gid'] : null; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- Backing up raw value for restore; not used as input.
 		$_GET['gid']  = $group_id;
 
+		// Set a synthetic screen so legacy extensions calling get_current_screen()->id
+		// inside their metabox callbacks don't fatal in the AJAX context (where
+		// get_current_screen() returns null). This ensures backward compatibility
+		// when old Pro (without Settings 2.0 gates) runs with new Platform.
+		$had_screen = ( function_exists( 'get_current_screen' ) && null !== get_current_screen() );
+		if ( ! $had_screen && function_exists( 'set_current_screen' ) ) {
+			set_current_screen( 'toplevel_page_bp-groups' );
+		}
+
 		try {
 			ob_start();
 			do_action( 'bp_groups_admin_meta_boxes' );
 			ob_end_clean();
+		} catch ( \Error $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch -- Intentionally suppress fatal errors from old extensions (e.g. get_current_screen()->id on null).
+			// Suppress fatal errors from old extensions that assume a WP admin screen context.
+			// The ob_start() buffer may still be open if the error occurred mid-output.
+			if ( ob_get_level() > 0 ) {
+				ob_end_clean();
+			}
 		} finally {
 			if ( null === $original_gid ) {
 				unset( $_GET['gid'] );
@@ -1507,12 +1525,24 @@ class BB_Admin_Groups_Ajax {
 		 * Fires after a group is saved from the admin edit modal.
 		 *
 		 * Kept for backward compatibility with third-party plugins.
+		 * Wrapped in try/catch because old extensions may call check_admin_referer()
+		 * with legacy nonce names that don't exist in the Settings 2.0 AJAX context,
+		 * causing wp_die() → exit. We use ob_start() to capture any wp_die() output
+		 * and catch \Error for any other fatals (e.g. null->method calls).
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param int $group_id ID of the group being edited.
 		 */
-		do_action( 'bp_group_admin_edit_after', $group_id );
+		try {
+			ob_start();
+			do_action( 'bp_group_admin_edit_after', $group_id );
+			ob_end_clean();
+		} catch ( \Error $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch -- Intentionally suppress errors from old extensions with mismatched nonces.
+			if ( ob_get_level() > 0 ) {
+				ob_end_clean();
+			}
+		}
 
 		/**
 		 * Filters the redirect URL after editing a group from the admin. Deprecated in Settings 2.0.

@@ -226,6 +226,18 @@ function bp_groups_admin_screen_options( $value, $option, $new_value ) {
  */
 function bp_groups_admin() {
 	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Groups admin' );
+
+	// Fallback: if the load- redirect didn't fire, show a link to Settings 2.0 instead of a blank page.
+	$settings_url = function_exists( 'bb_get_settings_url' ) ? add_query_arg( 'tab', 'groups', bb_get_settings_url() ) : '';
+	if ( ! empty( $settings_url ) ) {
+		printf(
+			'<div class="wrap"><h1>%s</h1><p>%s <a href="%s">%s</a></p></div>',
+			esc_html__( 'Groups', 'buddyboss' ),
+			esc_html__( 'Groups admin has moved.', 'buddyboss' ),
+			esc_url( $settings_url ),
+			esc_html__( 'Go to Groups Settings', 'buddyboss' )
+		);
+	}
 }
 
 /**

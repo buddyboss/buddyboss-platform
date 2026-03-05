@@ -36,6 +36,21 @@ function bp_groups_add_admin_menu() {
 		'bp-groups',
 		'bp_groups_admin'
 	);
+
+	// Redirect legacy page to Settings 2.0 on load, in case the redirect
+	// in bb_redirect_legacy_settings_to_settings_2() fires after headers.
+	if ( $hook ) {
+		add_action(
+			'load-' . $hook,
+			function () {
+				$settings_url = function_exists( 'bb_get_settings_url' ) ? bb_get_settings_url() : '';
+				if ( ! empty( $settings_url ) ) {
+					wp_safe_redirect( add_query_arg( 'tab', 'groups', $settings_url ) );
+					exit;
+				}
+			}
+		);
+	}
 }
 add_action( bp_core_admin_hook(), 'bp_groups_add_admin_menu', 60 );
 

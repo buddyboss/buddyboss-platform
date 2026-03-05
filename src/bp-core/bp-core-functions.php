@@ -10039,6 +10039,78 @@ function bb_get_settings_url() {
 }
 
 /**
+ * Get the denylist of WordPress core options that must never be written
+ * through BuddyBoss admin AJAX handlers.
+ *
+ * Use this to strip dangerous option names from any filterable allowlist
+ * before reading or saving. Prevents a compromised or careless extension
+ * from adding options like `siteurl`, `admin_email`, or `active_plugins`
+ * to an AJAX-writable allowlist.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array Flat array of option names that must be denied.
+ */
+function bb_get_options_denylist() {
+	$denylist = array(
+		// Site identity.
+		'siteurl',
+		'home',
+		'blogname',
+		'blogdescription',
+		'admin_email',
+
+		// User registration / roles.
+		'users_can_register',
+		'default_role',
+
+		// Active plugins and theme.
+		'active_plugins',
+		'template',
+		'stylesheet',
+
+		// Database / core internals.
+		'db_version',
+		'initial_db_version',
+		'wp_user_roles',
+
+		// Filesystem / uploads.
+		'upload_path',
+		'upload_url_path',
+
+		// Cron.
+		'cron',
+	);
+
+	/**
+	 * Filters the list of WordPress core options that BuddyBoss admin AJAX
+	 * handlers must never write.
+	 *
+	 * Extensions can add entries but must never remove existing ones.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $denylist Option names to deny.
+	 */
+	return apply_filters( 'bb_admin_options_denylist', $denylist );
+}
+
+/**
+ * Remove denylisted options from an allowlist array.
+ *
+ * Pass an associative array of `option_name => sanitize_callback` and this
+ * function returns it with any denylisted keys stripped out.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $options Associative array of option_name => sanitize_callback.
+ * @return array Filtered array with denylisted keys removed.
+ */
+function bb_filter_allowed_options( $options ) {
+	return array_diff_key( $options, array_flip( bb_get_options_denylist() ) );
+}
+
+/**
  * Compare two registry items by their 'order' key (ascending).
  *
  * Shared sort callback used by BB_Feature_Registry and BB_Admin_Settings_Ajax
