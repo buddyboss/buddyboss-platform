@@ -61,6 +61,40 @@ function bb_media_build_context_description( $prefix, $contexts ) {
 }
 
 /**
+ * Build a group context description for media upload fields.
+ *
+ * Checks which components are active (activity, messages, forums) and builds
+ * a human-readable description like "Allow members to upload photos in groups,
+ * activity posts, messages and forums".
+ *
+ * This is the single source of truth for the repeated group-context-building
+ * logic used across Photos, Videos, Documents, Emoji, and GIFs panels.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $prefix The opening text (e.g., "Allow members to upload photos in").
+ *
+ * @return string The formatted group context description.
+ */
+function bb_media_get_group_context_description( $prefix ) {
+	$group_contexts = array( __( 'groups', 'buddyboss' ) );
+
+	if ( bp_is_active( 'activity' ) ) {
+		$group_contexts[] = __( 'activity posts', 'buddyboss' );
+	}
+
+	if ( bp_is_active( 'messages' ) && bp_disable_group_messages() ) {
+		$group_contexts[] = __( 'messages', 'buddyboss' );
+	}
+
+	if ( bp_is_active( 'forums' ) ) {
+		$group_contexts[] = __( 'forums', 'buddyboss' );
+	}
+
+	return bb_media_build_context_description( $prefix, $group_contexts );
+}
+
+/**
  * Force photo-related support functions to return false when the Photos
  * section toggle (bb_media_photos_support) is disabled.
  *

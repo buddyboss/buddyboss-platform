@@ -52,24 +52,8 @@ function bb_media_register_emoji_panel_fields() {
 
 	// FIELD: Groups — emoji support.
 	if ( bp_is_active( 'groups' ) ) {
-		// Build description dynamically based on active components (mirrors Photos/Videos/Documents pattern).
-		$group_contexts = array( __( 'groups', 'buddyboss' ) );
-
-		if ( bp_is_active( 'activity' ) ) {
-			$group_contexts[] = __( 'activity posts', 'buddyboss' );
-		}
-
-		if ( bp_is_active( 'messages' ) && bp_disable_group_messages() ) {
-			$group_contexts[] = __( 'messages', 'buddyboss' );
-		}
-
-		if ( bp_is_active( 'forums' ) ) {
-			$group_contexts[] = __( 'forums', 'buddyboss' );
-		}
-
-		$group_description = bb_media_build_context_description(
-			__( 'Allow members to use emoji in', 'buddyboss' ),
-			$group_contexts
+		$group_description = bb_media_get_group_context_description(
+			__( 'Allow members to use emoji in', 'buddyboss' )
 		);
 
 		bb_register_feature_field(

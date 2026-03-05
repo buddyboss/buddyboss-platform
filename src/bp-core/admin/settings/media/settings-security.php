@@ -63,14 +63,15 @@ function bb_media_register_security_panel_fields() {
 		'security_performance',
 		'security_settings',
 		array(
-			'name'        => 'bp_media_symlink_notice',
-			'label'       => '',
-			'type'        => 'status_check',
-			'default'     => '',
-			'ajax_action' => 'bb_media_check_symlink_status',
-			'watch_field' => 'bp_media_symlink_support',
-			'group'       => 'symlink_settings',
-			'order'       => 15,
+			'name'              => 'bp_media_symlink_notice',
+			'label'             => '',
+			'type'              => 'status_check',
+			'default'           => '',
+			'ajax_action'       => 'bb_media_check_symlink_status',
+			'watch_field'       => 'bp_media_symlink_support',
+			'group'             => 'symlink_settings',
+			'sanitize_callback' => '__return_empty_string',
+			'order'             => 15,
 		)
 	);
 
@@ -81,19 +82,20 @@ function bb_media_register_security_panel_fields() {
 		'security_performance',
 		'security_settings',
 		array(
-			'name'        => 'bp_media_symlink_direct_access',
-			'label'       => __( 'Direct Links', 'buddyboss' ),
-			'description' => sprintf(
+			'name'              => 'bp_media_symlink_direct_access',
+			'label'             => __( 'Direct Links', 'buddyboss' ),
+			'description'       => sprintf(
 				/* translators: 1: Opening anchor tag for Media Permissions link, 2: Closing anchor tag. */
 				__( 'If our plugin is unable to automatically block direct access to your media files and folders, please follow the steps in our %1$sMedia Permissions%2$s tutorial to configure your server.', 'buddyboss' ),
 				'<a href="https://www.buddyboss.com/resources/docs/components/media/media-permissions/" target="_blank" rel="noopener noreferrer">',
 				'</a>'
 			),
-			'type'        => 'status_check',
-			'default'     => '',
-			'ajax_action' => 'bb_media_check_direct_access',
-			'watch_field' => 'bp_media_symlink_support',
-			'order'       => 20,
+			'type'              => 'status_check',
+			'default'           => '',
+			'ajax_action'       => 'bb_media_check_direct_access',
+			'watch_field'       => 'bp_media_symlink_support',
+			'sanitize_callback' => '__return_empty_string',
+			'order'             => 20,
 		)
 	);
 }

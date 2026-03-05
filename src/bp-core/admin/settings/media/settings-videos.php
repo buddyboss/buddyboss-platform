@@ -38,13 +38,14 @@ function bb_media_register_videos_panel_fields() {
 		'videos',
 		'videos_settings',
 		array(
-			'name'        => 'bp_video_ffmpeg_notice',
-			'label'       => '',
-			'type'        => 'status_check',
-			'default'     => '',
-			'ajax_action' => 'bb_media_check_ffmpeg_status',
-			'full_width'  => true,
-			'order'       => 1,
+			'name'              => 'bp_video_ffmpeg_notice',
+			'label'             => '',
+			'type'              => 'status_check',
+			'default'           => '',
+			'ajax_action'       => 'bb_media_check_ffmpeg_status',
+			'full_width'        => true,
+			'sanitize_callback' => '__return_empty_string',
+			'order'             => 1,
 		)
 	);
 
@@ -60,7 +61,7 @@ function bb_media_register_videos_panel_fields() {
 				? __( 'Allow members to upload videos in profiles and activity posts', 'buddyboss' )
 				: __( 'Allow members to upload videos in profiles', 'buddyboss' ),
 			'type'              => 'toggle',
-			'default'           => 1,
+			'default'           => 0,
 			'sanitize_callback' => 'absint',
 			'order'             => 10,
 		)
@@ -68,24 +69,8 @@ function bb_media_register_videos_panel_fields() {
 
 	// FIELD: Groups — video support.
 	if ( bp_is_active( 'groups' ) ) {
-		// Build description dynamically based on active components (mirrors legacy settings).
-		$group_contexts = array( __( 'groups', 'buddyboss' ) );
-
-		if ( bp_is_active( 'activity' ) ) {
-			$group_contexts[] = __( 'activity posts', 'buddyboss' );
-		}
-
-		if ( bp_is_active( 'messages' ) && bp_disable_group_messages() ) {
-			$group_contexts[] = __( 'messages', 'buddyboss' );
-		}
-
-		if ( bp_is_active( 'forums' ) ) {
-			$group_contexts[] = __( 'forums', 'buddyboss' );
-		}
-
-		$group_description = bb_media_build_context_description(
-			__( 'Allow members to upload videos in', 'buddyboss' ),
-			$group_contexts
+		$group_description = bb_media_get_group_context_description(
+			__( 'Allow members to upload videos in', 'buddyboss' )
 		);
 
 		bb_register_feature_field(
@@ -97,7 +82,7 @@ function bb_media_register_videos_panel_fields() {
 				'label'             => __( 'Groups', 'buddyboss' ),
 				'description'       => $group_description,
 				'type'              => 'toggle',
-				'default'           => 1,
+				'default'           => 0,
 				'sanitize_callback' => 'absint',
 				'order'             => 20,
 			)
@@ -157,7 +142,7 @@ function bb_media_register_videos_panel_fields() {
 				$server_max_mb
 			),
 			'type'              => 'number',
-			'default'           => 100,
+			'default'           => $server_max_mb,
 			'suffix'            => __( 'MB', 'buddyboss' ),
 			'sanitize_callback' => 'bb_media_sanitize_upload_size',
 			'order'             => 50,

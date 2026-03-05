@@ -101,12 +101,13 @@ function bb_media_register_access_controls_panel_fields() {
 		'access_controls',
 		'media_access_controls',
 		array(
-			'name'        => 'bb-media-access-control-notice',
-			'label'       => '',
-			'type'        => 'notice',
-			'description' => __( 'These settings do not apply to administrators.', 'buddyboss' ),
-			'notice_type' => 'info',
-			'order'       => 100,
+			'name'              => 'bb-media-access-control-notice',
+			'label'             => '',
+			'type'              => 'notice',
+			'description'       => __( 'These settings do not apply to administrators.', 'buddyboss' ),
+			'notice_type'       => 'info',
+			'sanitize_callback' => '__return_empty_string',
+			'order'             => 100,
 		)
 	);
 

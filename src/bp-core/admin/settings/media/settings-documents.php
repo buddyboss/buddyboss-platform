@@ -44,7 +44,7 @@ function bb_media_register_documents_panel_fields() {
 				? __( 'Allow members to upload documents in profiles and activity posts', 'buddyboss' )
 				: __( 'Allow members to upload documents in profiles', 'buddyboss' ),
 			'type'              => 'toggle',
-			'default'           => 1,
+			'default'           => 0,
 			'sanitize_callback' => 'absint',
 			'order'             => 10,
 		)
@@ -52,24 +52,8 @@ function bb_media_register_documents_panel_fields() {
 
 	// FIELD: Groups — document support.
 	if ( bp_is_active( 'groups' ) ) {
-		// Build description dynamically based on active components (mirrors legacy settings).
-		$group_contexts = array( __( 'groups', 'buddyboss' ) );
-
-		if ( bp_is_active( 'activity' ) ) {
-			$group_contexts[] = __( 'activity posts', 'buddyboss' );
-		}
-
-		if ( bp_is_active( 'messages' ) && bp_disable_group_messages() ) {
-			$group_contexts[] = __( 'messages', 'buddyboss' );
-		}
-
-		if ( bp_is_active( 'forums' ) ) {
-			$group_contexts[] = __( 'forums', 'buddyboss' );
-		}
-
-		$group_description = bb_media_build_context_description(
-			__( 'Allow members to upload documents in', 'buddyboss' ),
-			$group_contexts
+		$group_description = bb_media_get_group_context_description(
+			__( 'Allow members to upload documents in', 'buddyboss' )
 		);
 
 		bb_register_feature_field(
@@ -141,7 +125,7 @@ function bb_media_register_documents_panel_fields() {
 				$server_max_mb
 			),
 			'type'              => 'number',
-			'default'           => 100,
+			'default'           => $server_max_mb,
 			'suffix'            => __( 'MB', 'buddyboss' ),
 			'sanitize_callback' => 'bb_media_sanitize_upload_size',
 			'order'             => 50,
