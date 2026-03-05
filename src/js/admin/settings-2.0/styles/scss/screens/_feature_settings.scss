@@ -21,34 +21,31 @@
         display: flex;
         flex-direction: column;
         gap: 24px;
-    }
 
-    .bb-admin-side-nav__back-btn {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        width: 100%;
-        padding: 6px 16px;
-        font-size: 14px;
-        font-weight: 400;
-        line-height: 20px;
-        color: $bb-text-color;
-        background-color: $bb-background-secondary-color;
-        border: 1px solid $bb-border-secondary-color;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: background-color .2s ease;
-        text-decoration: none;
+        &__back-btn {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            width: 100%;
+            padding: 6px 16px;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 20px;
+            color: $bb-text-color;
+            background-color: $bb-background-secondary-color;
+            border: 1px solid $bb-border-secondary-color;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color .2s ease;
+            text-decoration: none;
 
-		&:hover,
-		&:focus {
+            &:hover ,
+                &:focus {
 			background-color: $bb-background-base-color;
 			box-shadow: none;
 			outline: none;
-		}
-	}
-
-    .bb-admin-side-nav {
+            }
+        }
 
         &__list {
             margin: 0;
@@ -66,7 +63,6 @@
             font-size: 13px;
             font-weight: 500;
             padding: 8px 16px;
-            border: 0;
             cursor: pointer;
             border-radius: $bb-border-radius-lg;
             border: 1px solid transparent;
@@ -103,7 +99,6 @@
             background-color: $bb-border-secondary-color;
             margin: 8px;
         }
-
     }
 
     &__main {
@@ -131,6 +126,21 @@
             border-bottom: 1px solid $bb-border-secondary-color;
             padding: 20px 4px;
             margin: 0 24px;
+
+            &-left {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                min-height: 24px;
+                flex: 1;
+            }
+
+            &-right {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                flex-shrink: 0;
+            }
         }
 
         &-title {
@@ -138,6 +148,55 @@
             font-size: 18px;
             font-weight: 500;
             margin: 0;
+        }
+
+        &-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            border-radius: $bb-border-radius-full;
+            font-size: 11px;
+            font-weight: 500;
+            line-height: 16px;
+            margin-left: 8px;
+            flex-shrink: 0;
+
+            &-icon {
+                font-size: 14px;
+                line-height: 1;
+                flex-shrink: 0;
+            }
+
+            &--warning {
+                background-color: $bb-background-warning-primary-color;
+                border: 0.5px solid $bb-border-warning-secondary-color;
+                color: $bb-text-warning-primary-color;
+
+                .bb-admin-feature-settings__section-status-icon {
+                    color: $bb-icon-warning-primary-color;
+                }
+            }
+
+            &--success {
+                background-color: $bb-background-positive-primary-color;
+                border: 0.5px solid $bb-border-positive-secondary-color;
+                color: $bb-text-positive-primary-color;
+
+                .bb-admin-feature-settings__section-status-icon {
+                    color: $bb-icon-positive-primary-color;
+                }
+            }
+
+            &--info {
+                background-color: $bb-background-secondary-color;
+                border: 0.5px solid $bb-border-tertiary-color;
+                color: $bb-text-color;
+
+                .bb-admin-feature-settings__section-status-icon {
+                    color: $bb-text-tertiary-color;
+                }
+            }
         }
 
         .help-icon {
@@ -153,8 +212,27 @@
             text-decoration: none;
         }
 
+        &-toggle {
+            display: flex;
+            align-items: center;
+            margin-left: 8px;
+
+            .components-toggle-control {
+                margin-bottom: 0;
+            }
+
+            .components-base-control__field {
+                margin-bottom: 0;
+            }
+        }
+
         &-body {
             padding: 32px 24px;
+
+            &--disabled {
+                opacity: 0.5;
+                pointer-events: none;
+            }
         }
 
         &--disabled {
@@ -176,6 +254,33 @@
 
     &:not(.bb-admin-settings-form__field--full-width) {
         border-bottom: 1px solid $bb-border-secondary-color;
+    }
+
+    &--full-width {
+        border-bottom: 1px solid $bb-border-secondary-color;
+    }
+
+    // Full-width status check notices (e.g., FFmpeg): block layout for HTML content.
+    &--full-width .bb-admin-status-check .bb-admin-notice {
+        display: block;
+        padding: 4px 8px;
+        line-height: 1.6;
+
+        &:before {
+            display: none;
+        }
+
+        code {
+            background-color: $bb-background-secondary-color;
+            padding: 1px 6px;
+            border-radius: $bb-border-radius-sm;
+            font-size: 12px;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: underline;
+        }
     }
 
     &:last-child {
@@ -224,9 +329,53 @@
             .bb-admin-settings-form__field-description {
                 color: $bb-text-color;
                 font-size: 14px;
+                flex: 1;
+                min-width: 0;
                 margin: 0;
             }
+
+            .bb-admin-settings-form__child-fields {
+                flex-basis: 100%;
+                margin-top: 16px;
+            }
+
+            .bb-admin-settings-form__child-field {
+                display: flex;
+                align-items: center;
+
+                &-description {
+                    color: $bb-text-color;
+                    font-size: 13px;
+                    font-weight: 400;
+                    line-height: 1.5;
+                    margin: 0;
+                }
+
+                &--disabled {
+                    opacity: 0.5;
+                    pointer-events: none;
+                }
+            }
         }
+    }
+
+    &-input-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        &:has(.bb-admin-settings-form__field-head-description) {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+
+    &-suffix {
+        color: $bb-text-secondary-color;
+        font-size: 13px;
+        font-weight: 400;
+        line-height: 1;
+        white-space: nowrap;
     }
 
     &-description {
@@ -322,7 +471,7 @@
     }
 
     .components-base-control {
-		
+
 		.components-input-control__label {
 			color: $bb-text-secondary-color;
 			text-transform: none;
@@ -349,6 +498,883 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
+}
+
+.bb-admin-settings-field__manage-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 16px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    color: $bb-text-brand-primary-color;
+    background-color: transparent;
+    border: 1px solid $bb-border-brand-primary-color;
+    border-radius: $bb-border-radius-lg;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    i {
+        font-size: 16px;
+        line-height: 1;
+    }
+
+    &:hover {
+        background-color: rgba($bb-background-brand-primary-color, 0.05);
+    }
+
+    &:focus {
+        outline: 2px solid $bb-border-brand-primary-color;
+        outline-offset: 1px;
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+}
+
+/* Input Button Field (e.g. API key connect/disconnect) */
+.bb-admin-settings-field__input-button {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    &-row {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+    &-input {
+        width: 245px;
+        flex-shrink: 0;
+    }
+
+    &-text {
+        width: 100%;
+        height: 32px;
+        padding: 7px 8px;
+        font-size: 13px;
+        line-height: 18px;
+        color: $bb-text-color;
+        background-color: $bb-background-primary-color;
+        border: 0.5px solid $bb-border-secondary-color;
+        border-radius: $bb-border-radius-md;
+        outline: none;
+        box-sizing: border-box;
+
+        &::placeholder {
+            color: $bb-text-tertiary-color;
+        }
+
+        &:focus {
+            border-color: $bb-border-brand-primary-color;
+            box-shadow: 0 0 0 1px $bb-border-brand-primary-color;
+        }
+
+        &:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+    }
+
+    &-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        padding: 6px 16px;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 20px;
+        color: $bb-text-inverse-color;
+        background-color: $bb-background-brand-primary-color;
+        border: none;
+        border-radius: $bb-border-radius-lg;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: background-color 0.2s ease;
+
+        &:hover {
+            background-color: darken($bb-background-brand-primary-color, 8%);
+        }
+
+        &:focus {
+            outline: 2px solid $bb-background-brand-primary-color;
+            outline-offset: 1px;
+        }
+
+        &:disabled {
+            background-color: $bb-icon-brand-disabled-color;
+            cursor: not-allowed;
+        }
+
+        &--disconnect {
+            background-color: transparent;
+            color: $bb-text-tertiary-color;
+            border: 1px solid $bb-border-secondary-color;
+
+            &:hover {
+                background-color: $bb-background-primary-color;
+            }
+        }
+    }
+
+    &-error {
+        color: $bb-error-color;
+        font-size: 13px;
+        line-height: 18px;
+        margin: 0;
+    }
+
+    &-warning {
+        color: $bb-text-warning-primary-color;
+        font-size: 13px;
+        line-height: 18px;
+        margin: 0;
+    }
+}
+
+/* Extension List Field */
+.bb-extension-list {
+
+    &__items {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    &__item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    &__item-remove {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        color: $bb-text-tertiary-color;
+        transition: color 0.2s ease;
+
+        i {
+            font-size: 20px;
+            line-height: 1;
+        }
+
+        &:hover {
+            color: $bb-error-color;
+        }
+
+        &:focus {
+            outline: none;
+        }
+
+        &:disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+    }
+
+    &__add-btn {
+        @include bb-button-primary;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 16px;
+
+        i {
+            font-size: 16px;
+            line-height: 1;
+        }
+    }
+}
+
+/* Document Extensions Modal Overlay */
+.bb-extension-modal-overlay {
+    z-index: 100100;
+    background-color: $bb-overlay-color;
+    backdrop-filter: blur(1px);
+}
+
+/* Add/Edit Extension form styles (used inside portaled modals) */
+.bb-extension-modal {
+
+    &.components-modal__frame {
+        max-width: 640px;
+    }
+
+    &__body {
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    &__field {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    &__label {
+        color: $bb-text-secondary-color;
+        font-size: 13px;
+        font-weight: 500;
+        line-height: 1;
+        padding: 3px 0;
+    }
+
+    &__required {
+        color: $bb-error-color;
+        margin-left: 2px;
+    }
+
+    &__field-hint {
+        color: $bb-text-tertiary-color;
+        font-size: 12px;
+        line-height: 16px;
+        margin: 0;
+    }
+
+    .components-base-control {
+        margin-bottom: 0;
+    }
+
+    .components-text-control__input {
+        background-color: $bb-background-primary-color;
+        border: 0.5px solid $bb-border-secondary-color;
+        border-radius: $bb-border-radius-md;
+        padding: 7px 8px;
+        font-size: 13px;
+        color: $bb-text-color;
+        line-height: 1.5;
+        box-shadow: none;
+        min-height: auto;
+
+        &:focus {
+            border-color: $bb-border-brand-primary-color;
+            box-shadow: none;
+            outline: none;
+        }
+
+        &::placeholder {
+            color: $bb-text-disabled-color;
+        }
+    }
+
+    .components-textarea-control__input {
+        background-color: $bb-background-primary-color;
+        border: 0.5px solid $bb-border-secondary-color;
+        border-radius: $bb-border-radius-md;
+        padding: 8px;
+        font-size: 13px;
+        color: $bb-text-color;
+        line-height: 1.5;
+        box-shadow: none;
+        resize: vertical;
+        min-height: 72px;
+
+        &:focus {
+            border-color: $bb-border-brand-primary-color;
+            box-shadow: none;
+            outline: none;
+        }
+
+        &::placeholder {
+            color: $bb-text-disabled-color;
+        }
+    }
+
+    &__icon-select {
+        position: relative;
+    }
+
+    &__icon-dropdown {
+        background-color: $bb-background-primary-color;
+        border: 0.5px solid $bb-border-tertiary-color;
+        border-radius: $bb-border-radius-md;
+        padding: 7px 8px;
+        font-size: 13px;
+        color: $bb-text-color;
+        line-height: 18px;
+        width: 100%;
+        box-sizing: border-box;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        min-width: 120px;
+
+        i {
+            font-size: 20px;
+            color: $bb-icon-secondary-color;
+            flex-shrink: 0;
+        }
+
+        &:focus {
+            border-color: $bb-border-brand-primary-color;
+            box-shadow: none;
+            outline: none;
+        }
+
+        &.is-open {
+            border-color: $bb-border-brand-primary-color;
+        }
+    }
+
+    &__icon-dropdown-label {
+        flex: 1 0 0;
+        font-size: 13px;
+        line-height: 18px;
+        color: $bb-text-color;
+    }
+
+    &__icon-dropdown-chevron {
+        font-size: 16px !important;
+        color: $bb-icon-secondary-color !important;
+    }
+
+    &__icon-dropdown-list {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        z-index: 10;
+        background-color: $bb-background-base-color;
+        border: 0.5px solid $bb-border-secondary-color;
+        border-radius: $bb-border-radius-md;
+        box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.12);
+        margin-top: 4px;
+        max-height: 200px;
+        overflow-y: auto;
+        padding: 4px;
+    }
+
+    &__icon-dropdown-item {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 6px 8px;
+        cursor: pointer;
+        border-radius: $bb-border-radius-sm;
+        font-size: 13px;
+        line-height: 18px;
+        color: $bb-text-color;
+
+        i {
+            font-size: 20px;
+            color: $bb-icon-secondary-color;
+            flex-shrink: 0;
+        }
+
+        &:hover {
+            background-color: $bb-background-primary-color;
+        }
+
+        &.is-selected {
+            background-color: $bb-background-primary-color;
+            font-weight: 500;
+        }
+    }
+
+    &__mime-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        .components-base-control {
+            flex: 1;
+        }
+    }
+
+    &__mime-checker-toggle.components-button {
+        white-space: nowrap;
+        border: 1px solid $bb-border-brand-primary-color !important;
+        border-radius: $bb-border-radius-lg;
+        background: transparent !important;
+        color: $bb-text-brand-primary-color !important;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 20px;
+        padding: 6px 16px;
+        box-shadow: none !important;
+
+        &:hover {
+            background-color: rgba($bb-background-brand-primary-color, 0.05) !important;
+            box-shadow: none !important;
+        }
+
+        &:focus {
+            box-shadow: none !important;
+            outline: none;
+        }
+    }
+
+    &__mime-checker {
+        border: 0.5px solid $bb-border-tertiary-color;
+        border-radius: $bb-border-radius-xl;
+        padding: 8px 16px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    &__mime-checker-title {
+        font-size: 14px;
+        font-weight: 500;
+        color: $bb-text-color;
+        line-height: 20px;
+        padding: 6px 0;
+        margin: 0;
+    }
+
+    &__mime-checker-desc {
+        font-size: 13px;
+        color: $bb-text-secondary-color;
+        margin: 0;
+        line-height: 18px;
+    }
+
+    &__mime-checker-upload-row {
+        display: inline-flex;
+        align-items: center;
+        align-self: flex-start;
+        gap: 8px;
+        background-color: $bb-background-primary-color;
+        border: 0.5px solid $bb-border-primary-color;
+        border-radius: $bb-border-radius-lg;
+        padding: 8px 24px 8px 8px;
+    }
+
+    &__mime-checker-upload-btn {
+        white-space: nowrap;
+        border: 0.5px solid $bb-border-tertiary-color;
+        border-radius: $bb-border-radius-md;
+        background: transparent;
+        color: $bb-text-color;
+        font-size: 13px;
+        font-weight: 400;
+        line-height: 18px;
+        padding: 3px 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+
+        i {
+            font-size: 14px;
+        }
+    }
+
+    &__mime-checker-upload-name {
+        font-size: 11px;
+        color: $bb-text-color;
+        line-height: 16px;
+    }
+
+    &__mime-checker-file-hidden {
+        display: none;
+    }
+
+    &__mime-checker-btn.components-button {
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 20px;
+        padding: 6px 16px;
+        border: none !important;
+        border-radius: $bb-border-radius-lg;
+        color: $bb-text-inverse-color !important;
+        background-color: $bb-background-brand-primary-color !important;
+        box-shadow: none !important;
+        align-self: flex-start;
+
+        &:hover {
+            background-color: darken($bb-background-brand-primary-color, 5%) !important;
+            color: $bb-text-inverse-color !important;
+            box-shadow: none !important;
+        }
+
+        &:focus {
+            box-shadow: none !important;
+            outline: none;
+            color: $bb-text-inverse-color !important;
+            background-color: $bb-background-brand-primary-color !important;
+        }
+
+        &:active {
+            background-color: darken($bb-background-brand-primary-color, 8%) !important;
+            box-shadow: none !important;
+            color: $bb-text-inverse-color !important;
+        }
+    }
+
+    &__mime-checker-result {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding-top: 12px;
+        border-top: 1px solid $bb-border-secondary-color;
+        flex-wrap: wrap;
+    }
+
+    &__mime-checker-result-label {
+        font-size: 13px;
+        font-weight: 400;
+        color: $bb-text-secondary-color;
+    }
+
+    &__mime-checker-result-value {
+        font-size: 13px;
+        font-weight: 500;
+        color: $bb-text-color;
+        background-color: $bb-background-primary-color;
+        padding: 4px 8px;
+        border-radius: $bb-border-radius-md;
+        border: 0.5px solid $bb-border-secondary-color;
+        font-family: inherit;
+        line-height: 18px;
+    }
+
+    &__mime-checker-use-btn.components-button {
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 20px;
+        padding: 6px 16px;
+        border: none !important;
+        border-radius: $bb-border-radius-lg;
+        color: $bb-text-inverse-color !important;
+        background-color: $bb-background-brand-primary-color !important;
+        box-shadow: none !important;
+
+        &:hover {
+            background-color: darken($bb-background-brand-primary-color, 5%) !important;
+            color: $bb-text-inverse-color !important;
+            box-shadow: none !important;
+        }
+
+        &:focus {
+            box-shadow: none !important;
+            outline: none;
+            color: $bb-text-inverse-color !important;
+            background-color: $bb-background-brand-primary-color !important;
+        }
+
+        &:active {
+            background-color: darken($bb-background-brand-primary-color, 8%) !important;
+            box-shadow: none !important;
+            color: $bb-text-inverse-color !important;
+        }
+    }
+
+}
+
+/* Document Extensions Manage Modal — extends .bb-admin-settings-modal */
+.bb-doc-extensions-modal {
+
+    &.components-modal__frame {
+        max-width: 720px;
+        max-height: 80vh;
+    }
+
+    .components-modal__content {
+        overflow-y: auto;
+    }
+
+    &__body {
+        padding: 0 0 16px;
+    }
+
+    &__list {
+        display: flex;
+        flex-direction: column;
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    &__item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 4px 8px;
+        margin: 8px 24px;
+        border: 1px solid transparent;
+        border-radius: $bb-border-radius-lg;
+
+        &:hover {
+            border-color: $bb-border-secondary-color;
+            background-color: $bb-background-primary-color;
+        }
+
+        &--disabled {
+            opacity: 0.6;
+        }
+
+        &--editing {
+            padding: 16px 24px;
+            background-color: $bb-background-primary-color;
+
+            &:hover {
+                background-color: $bb-background-primary-color;
+            }
+        }
+    }
+
+    &__checkbox {
+        display: flex;
+        align-items: center;
+        flex-shrink: 0;
+
+        .components-base-control {
+            margin-bottom: 0;
+        }
+
+        .components-base-control__field {
+            margin-bottom: 0;
+        }
+
+        .components-checkbox-control__input-container {
+            margin-right: 0;
+        }
+    }
+
+    &__ext-name {
+        font-size: 14px;
+        font-weight: 500;
+        color: $bb-text-color;
+        min-width: 60px;
+        flex-shrink: 0;
+    }
+
+    &__ext-icon {
+        font-size: 22px;
+        color: $bb-icon-tertiary-color;
+        flex-shrink: 0;
+        width: 24px;
+        text-align: center;
+    }
+
+    &__ext-desc {
+        flex: 1;
+        font-size: 13px;
+        font-weight: 400;
+        color: $bb-text-tertiary-color;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    &__ext-actions {
+        flex-shrink: 0;
+
+        .components-dropdown-menu__toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            min-width: auto;
+            height: auto;
+            color: $bb-icon-color;
+            padding: 4px;
+            border: 1px solid transparent;
+            border-radius: $bb-border-radius-md;
+
+            i {
+                font-size: 24px;
+                line-height: 1;
+                font-weight: 700;
+            }
+
+            &:hover,
+            &:focus,
+            &.is-opened {
+                color: $bb-text-color;
+                background: $bb-background-primary-hover-color;
+                border-color: $bb-border-secondary-color;
+                box-shadow: none;
+            }
+
+            .dashicon,
+            svg:not(:first-child) {
+                display: none;
+            }
+        }
+    }
+
+    &__ext-ellipsis {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: $bb-icon-tertiary-color;
+        padding: 0;
+        min-width: 24px;
+
+        i {
+            font-size: 18px;
+            line-height: 1;
+            font-weight: 700;
+        }
+    }
+
+    &__edit-form {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+    }
+
+    &__edit-field {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+
+        .components-text-control__input {
+            background-color: $bb-background-base-color;
+            border: 0.5px solid $bb-border-secondary-color;
+            border-radius: $bb-border-radius-md;
+            padding: 7px 8px;
+            font-size: 13px;
+            color: $bb-text-color;
+            line-height: 1.5;
+            box-shadow: none;
+            min-height: auto;
+
+            &:focus {
+                border-color: $bb-border-brand-primary-color;
+                box-shadow: none;
+                outline: none;
+            }
+        }
+    }
+
+    &__edit-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+    }
+
+    &__add-btn-wrap {
+        padding: 16px 24px 0;
+        border-top: 1px solid $bb-border-secondary-color;
+    }
+
+    &__add-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 16px;
+        font-size: 13px;
+        font-weight: 500;
+        line-height: 18px;
+        color: $bb-text-inverse-color;
+        background-color: $bb-background-brand-primary-color;
+        border: none;
+        border-radius: $bb-border-radius-lg;
+        cursor: pointer;
+        transition: opacity 0.2s ease;
+
+        i {
+            font-size: 16px;
+            line-height: 1;
+        }
+
+        &:hover {
+            opacity: 0.9;
+        }
+
+        &:disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+    }
+
+}
+
+/* Add/Edit Extension modal (portaled to body, rendered over the Manage modal) */
+.bb-extension-modal-overlay--nested {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100200;
+    background-color: $bb-overlay-color;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bb-extension-modal--nested {
+    position: relative;
+    z-index: 100201;
+    max-width: 640px;
+    width: 100%;
+    background: $bb-background-base-color;
+    border-radius: $bb-border-radius-2xl;
+    border: none;
+    box-shadow: 0px 4px 24px 0px rgba(0, 0, 0, 0.16);
+    overflow: visible;
+
+    &__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid $bb-border-secondary-color;
+        padding: 16px 16px 16px 24px;
+        background: $bb-background-base-color;
+        border-radius: $bb-border-radius-2xl $bb-border-radius-2xl 0 0;
+
+        h1 {
+            color: $bb-text-color;
+            font-size: 18px;
+            font-weight: 500;
+            line-height: 1;
+            margin: 0;
+            padding: 0;
+        }
+    }
+
+    .bb-extension-modal__body {
+        background: $bb-background-base-color;
+    }
+
+    .bb-extension-modal__error {
+        color: $bb-error-color;
+        font-size: 13px;
+        line-height: 18px;
+        padding: 0 16px;
+    }
+
+    .bb-admin-settings-modal__footer,
+    .bb-extension-modal__footer {
+        border-radius: 0 0 $bb-border-radius-2xl $bb-border-radius-2xl;
+    }
+
+    &__close {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+        color: $bb-text-secondary-color;
+        font-size: 20px;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:hover {
+            color: $bb-text-color;
+        }
+    }
 }
 
 .bb-admin-settings-field__checkbox-list {

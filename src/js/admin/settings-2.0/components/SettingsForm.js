@@ -34,6 +34,10 @@ import { ImageRadioField } from './fields/ImageRadioField';
 import { DimensionsField } from './fields/DimensionsField';
 import { ConfirmToggleModal } from './modals/ConfirmToggleModal';
 import { AsyncSelectField } from './fields/AsyncSelectField';
+import { ExtensionListField } from './fields/ExtensionListField';
+import { DocumentExtensionsField } from './fields/DocumentExtensionsField';
+import { InputButtonField } from './fields/InputButtonField';
+import { StatusCheckField } from './fields/StatusCheckField';
 
 /**
  * Settings Form Component (matching Figma settingsSection)
@@ -130,7 +134,7 @@ export function SettingsForm({ fields, values, onChange }) {
 		const isParentInverted = true === parentField?.invert_value;
 
 		// If parent_value is specified, check for exact match
-		if (field.parent_value !== undefined) {
+		if (field.parent_value !== undefined && field.parent_value !== null) {
 			return parentValue !== field.parent_value;
 		}
 
@@ -225,6 +229,25 @@ export function SettingsForm({ fields, values, onChange }) {
 						field={field}
 						value={value}
 						onChange={onChange}
+					/>
+				);
+
+			case 'input_button':
+				return (
+					<InputButtonField
+						field={field}
+						value={value}
+						onChange={onChange}
+						disabled={disabled}
+					/>
+				);
+
+			case 'status_check':
+				return (
+					<StatusCheckField
+						field={field}
+						values={values}
+						disabled={disabled}
 					/>
 				);
 
@@ -329,6 +352,20 @@ export function SettingsForm({ fields, values, onChange }) {
 				// Multiple stacked toggle switches (like Group Header Elements)
 				// toggle_list: each option stored as separate WP option
 				// toggle_list_array: stored as single array of enabled values
+
+				// Extension list fields with "Add Extension" button use dedicated component.
+				if ( field.allow_add && field.extension_data ) {
+					return (
+						<ExtensionListField
+							field={field}
+							value={value}
+							onChange={onChange}
+							disabled={disabled}
+							sanitizedDescription={sanitizedHtml[ field.name + '__desc' ]}
+						/>
+					);
+				}
+
 				const listValue = typeof value === 'object' ? value : {};
 				return (
 					<div className="bb-admin-settings-field__toggle-list">
@@ -483,6 +520,35 @@ export function SettingsForm({ fields, values, onChange }) {
 				}
 				return null;
 
+			case 'document_extensions':
+				return (
+					<DocumentExtensionsField
+						field={field}
+						value={value}
+						onChange={onChange}
+						disabled={disabled}
+					/>
+				);
+
+			case 'manage_link':
+				return (
+					<button
+						type="button"
+						className="bb-admin-settings-field__manage-btn"
+						onClick={ function() {
+							if ( field.manage_url ) {
+								window.location.href = safeUrl( field.manage_url );
+							}
+						} }
+						disabled={ disabled }
+					>
+						{ field.manage_icon && (
+							<i className={ field.manage_icon } />
+						) }
+						<span>{ field.manage_label || __( 'Manage', 'buddyboss' ) }</span>
+					</button>
+				);
+
 			default:
 				return (
 					<p className="bb-admin-settings-field__unsupported">
@@ -536,11 +602,12 @@ export function SettingsForm({ fields, values, onChange }) {
 			return null;
 		}
 
-		// Notice fields render full-width without the label column.
-		// This includes standard notices and custom migration/info notice components.
+		// Notice fields and fields with explicit full_width render without the label column.
+		// This includes standard notices, custom migration/info notice components,
+		// and status checks marked as full_width (e.g., FFmpeg check).
 		// Note: reaction_migration and reaction_notice handle their own wrapper internally
 		// so they can return null without leaving an empty wrapper div.
-		if ( 'notice' === field.type || 'reaction_info' === field.type ) {
+		if ( 'notice' === field.type || 'reaction_info' === field.type || field.full_width ) {
 			// Grouped notices render inline within their group (no full-width).
 			if ( ! field.group?.key ) {
 				return (
@@ -602,7 +669,7 @@ export function SettingsForm({ fields, values, onChange }) {
 						</label>
 					</div>
 				)}
-				<div className={ 'bb-admin-settings-form__field-content' + ( ( 'toggle' === field.type || 'checkbox' === field.type ) && field.description && ! isToggleWithChildren ? ' bb-admin-settings-form__field-content--inline' : '' ) }>
+				<div className={ 'bb-admin-settings-form__field-content' + ( ( 'toggle' === field.type || 'checkbox' === field.type ) && field.description && ! field.toggle_label ? ' bb-admin-settings-form__field-content--inline' : '' ) }>
 					{/* Group sub-label (e.g. "Width", "Height" within a grouped field) */}
 					{ field.group?.label && (
 						<label className="bb-admin-settings-form__field-group-label">{field.group.label}</label>
@@ -621,7 +688,7 @@ export function SettingsForm({ fields, values, onChange }) {
 					{/* Description: skip for notice type (rendered by notice component itself).
 				    When description contains %s and field has description_controls,
 				    render inline controls (select, text, number) in place of each %s placeholder. */}
-					{ field.description && -1 === [ 'notice', 'checkbox_list', 'share_platforms', 'topic_list' ].indexOf( field.type ) && ( 'toggle' !== field.type || ( field.description_controls && field.description_controls.length > 0 ) ) && ( () => {
+					{ field.description && -1 === [ 'notice', 'checkbox_list', 'share_platforms', 'topic_list' ].indexOf( field.type ) && ! ( field.allow_add && field.extension_data ) && ( 'toggle' !== field.type || ( field.description_controls && field.description_controls.length > 0 ) ) && ( () => {
 						const desc = field.description;
 						const controls = field.description_controls;
 						const hasControls = desc.indexOf( '%s' ) !== -1 && controls && controls.length > 0;
