@@ -604,6 +604,8 @@ class BB_Admin_Settings_Ajax {
 				'confirm_destructive'  => ! empty( $field['confirm_destructive'] ),
 				// When true, renders toggle description as a block element below the switch instead of inline.
 				'block_description'    => ! empty( $field['block_description'] ),
+				// Short label displayed inline next to the toggle switch (e.g. "Hide messages from notifications").
+				'toggle_label'         => $field['toggle_label'] ?? null,
 			);
 
 			// Auto-compute pro_notice for pro_only fields when not set at registration time.

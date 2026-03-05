@@ -149,6 +149,7 @@ function bb_admin_settings_register_messages_feature() {
 			'type'              => 'toggle',
 			'toggle_label'      => __( 'Delay email notifications for new messages', 'buddyboss' ),
 			'description'       => __( 'When enabled, email notifications for new group and private messages will be delayed, giving members time to read them on your site. After the delay, emails are sent only if the messages remain unread. Multiple unread messages in the same conversation will be combined into a single email notification.', 'buddyboss' ),
+			'block_description' => true,
 			'default'           => (bool) bp_get_option( 'delay_email_notification', 1 ),
 			'sanitize_callback' => 'absint',
 			'order'             => 20,
