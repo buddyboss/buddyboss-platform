@@ -885,6 +885,9 @@ class BB_Feature_Registry {
 			$sorted = $this->features;
 			uasort( $sorted, 'bb_sort_by_order' );
 			$this->sorted_cache['features'] = $sorted;
+
+			// Reset flag so subsequent calls use cached data without re-sorting.
+			$this->sorted_cache_dirty = false;
 		}
 		$features = $this->sorted_cache['features'];
 
@@ -1423,8 +1426,8 @@ class BB_Feature_Registry {
 			'toggle_list'       => array( $this, 'bb_sanitize_toggle_list' ),
 			'toggle_list_array' => array( $this, 'bb_sanitize_toggle_list' ),
 			'dimensions'        => 'sanitize_text_field',
-			'child_render'      => 'sanitize_text_field',
 			'image_radio'       => 'sanitize_text_field',
+			'ajax_multiselect'  => array( $this, 'bb_sanitize_ajax_multiselect' ),
 			'reaction_mode'     => 'sanitize_text_field',
 			'reaction_button'   => array( $this, 'bb_sanitize_reaction_button' ),
 		);
@@ -1445,6 +1448,23 @@ class BB_Feature_Registry {
 			return array();
 		}
 		return array_map( 'sanitize_text_field', $value );
+	}
+
+	/**
+	 * Sanitize AJAX multi-select field.
+	 *
+	 * Handles arrays of integer IDs from multi-select course pickers.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param mixed $value The value to sanitize.
+	 * @return array Sanitized array of positive integer values.
+	 */
+	public function bb_sanitize_ajax_multiselect( $value ) {
+		if ( ! is_array( $value ) ) {
+			return array();
+		}
+		return array_map( 'absint', $value );
 	}
 
 	/**

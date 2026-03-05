@@ -964,10 +964,12 @@ export function ActivityListScreen( { onNavigate } ) {
 					onRequestClose={ function () {
 						setDeleteConfirm( null );
 					} }
-					className="bb-activity-list__delete-confirm-modal"
+					className="bb-activity-list__delete-confirm-modal bb-admin-settings-modal"
 				>
-					<p>{ deleteConfirm.message }</p>
-					<div className="bb-activity-list__delete-confirm-actions">
+					<div className="bb-admin-settings-modal__body">
+						<p>{ deleteConfirm.message }</p>
+					</div>
+					<div className="bb-admin-settings-modal__footer">
 						<Button
 							variant="primary"
 							isDestructive

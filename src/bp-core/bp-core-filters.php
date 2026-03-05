@@ -1827,6 +1827,10 @@ add_filter( 'bp_core_fetch_avatar_url', 'bb_rest_decode_default_avatar_url' );
  */
 function bb_admin_setting_profile_group_add_script_data( $script_data, $object = '' ) {
 
+	if ( ! is_admin() || ! function_exists( 'bp_core_get_admin_active_tab' ) ) {
+		return $script_data;
+	}
+
 	if ( 'bp-xprofile' === bp_core_get_admin_active_tab() ) {
 		$script_data['bp_params'] = array(
 			'object'     => 'user',
@@ -2012,6 +2016,14 @@ function bb_attachments_get_profile_group_attachment_sub_dir( $cover_sub_dir, $o
 
 	return $object_dir . '/0/' . $type;
 }
+
+// Hook default custom avatar/cover upload filters globally.
+// These self-guard via bb_validate_custom_profile_group_avatar_ajax_reuqest()
+// and are needed for both legacy settings and Settings 2.0 admin uploads.
+add_filter( 'bp_attachment_avatar_script_data', 'bb_admin_setting_profile_group_add_script_data', 10, 2 );
+add_filter( 'bp_attachments_cover_image_upload_dir', 'bb_default_custom_profile_group_cover_image_upload_dir', 10, 1 );
+add_filter( 'bb_attachments_get_attachment_dir', 'bb_attachments_get_profile_group_attachment_dir', 10, 4 );
+add_filter( 'bb_attachments_get_attachment_sub_dir', 'bb_attachments_get_profile_group_attachment_sub_dir', 10, 4 );
 
 /**
  * Save default profile and group avatar option on upload custom avatar.

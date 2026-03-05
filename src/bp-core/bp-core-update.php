@@ -540,7 +540,7 @@ function bp_version_updater() {
 		}
 
 		// Version 3.0.0 - Settings 2.0 feature migration.
-		if ( $raw_db_version < 23561 ) {
+		if ( $raw_db_version < 23571 ) {
 			bb_update_to_3_0_0();
 		}
 
@@ -4126,4 +4126,10 @@ function bb_update_to_3_0_0() {
 
 	$active_features['reactions'] = $any_enabled ? 1 : 0;
 	bp_update_option( 'bb-active-features', $active_features );
+
+	// Migrate legacy group avatar type: 'legacy' option removed from Settings 2.0.
+	$avatar_type = bp_get_option( 'bp-default-group-avatar-type', 'buddyboss' );
+	if ( 'legacy' === $avatar_type ) {
+		bp_update_option( 'bp-default-group-avatar-type', 'buddyboss' );
+	}
 }

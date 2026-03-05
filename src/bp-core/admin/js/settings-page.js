@@ -485,49 +485,6 @@ window.bp = window.bp || {};
 					);
 			}
 
-			// As soon as an admin selects the option "Hierarchies - Allow groups to have subgroups" they
-			// should instantly see the option to "Restrict Invitations".
-			// We should also make it so deselect "hierarchies" will automatically deselect "restrict invitations" to
-			// prevent any unwanted errors.
-			if ( $( '.buddyboss_page_bp-settings .section-bp_groups_hierarchies' ).length ) {
-
-					var checkbox = document.getElementById( 'bp-enable-group-hierarchies' );
-
-				if (checkbox.checked) {
-					$( '.bp-enable-group-restrict-invites, .bp-enable-group-hide-subgroups' ).show();
-				} else {
-					$( '.bp-enable-group-restrict-invites, .bp-enable-group-hide-subgroups' ).hide();
-				}
-
-					$( document ).on(
-						'click',
-						'#bp-enable-group-hierarchies',
-						function () {
-							if ( true === this.checked ) {
-								$( '.bp-enable-group-restrict-invites, .bp-enable-group-hide-subgroups' ).show();
-							} else {
-								$( '.bp-enable-group-restrict-invites, .bp-enable-group-hide-subgroups' ).hide();
-								$( '#bp-enable-group-restrict-invites, #bp-enable-group-hide-subgroups' ).prop( 'checked', false );
-							}
-						}
-					);
-
-				// Show confirmation dialog when user enable restrict invite option.
-				$( document ).on(
-					'click',
-					'#bp-enable-group-restrict-invites',
-					function () {
-						if ( true === this.checked ) {
-							if ( confirm( BP_ADMIN.group.restrict_invites_confirm_message ) ) {
-								return true;
-							} else {
-								return false;
-							}
-						}
-					}
-				);
-			}
-
 			// Hide/show group header element group type.
 			if ( $( '.buddyboss_page_bp-settings .section-bp_groups' ).length ) {
 
@@ -1814,45 +1771,14 @@ window.bp = window.bp || {};
 				);
 			}
 
-			if ( $( '#bp_groups_avatar_settings .image-width-height' ).length ) {
-				var bpCoverGroupWidth  = $( 'select#bb-cover-group-width' ).find( 'option:selected' ).val();
-				var bpCoverGroupHeight = $( 'select#bb-cover-group-height' ).find( 'option:selected' ).val();
-				$( '#bp_groups_avatar_settings' ).on(
-					'change',
-					'select#bb-cover-group-width, select#bb-cover-group-height',
-					function(e) {
-						e.preventDefault();
-
-						is_confirmed_show = true;
-						if ( 'bb-cover-group-width' === $( this ).attr( 'id' ) && bpCoverGroupWidth === $( this ).val() ) {
-							is_confirmed_show = false;
-						} else if ( 'bb-cover-group-height' === $( this ).attr( 'id' ) && bpCoverGroupHeight === $( this ).val() ) {
-							is_confirmed_show = false;
-						}
-
-						// Add class to preview section for browser only.
-						if ( 'bb-cover-group-height' === $( this ).attr( 'id' ) ) {
-							if ( 'small' === $( this ).val() ) {
-								$( '.preview_avatar_cover .web-preview-wrap .preview-item-cover' ).removeClass( 'large-image' );
-							} else {
-								$( '.preview_avatar_cover .web-preview-wrap .preview-item-cover' ).addClass( 'large-image' );
-							}
-						}
-					}
-				);
-			}
-
 			$( 'body.buddyboss_page_bp-settings' ).on(
 				'click',
 				'input[name="submit"]',
 				function(e) {
 
-					if ( is_confirmed_show && ( $( '#bp_member_avatar_settings' ).length || $( '#bp_groups_avatar_settings' ).length ) ) {
+					if ( is_confirmed_show && ( $( '#bp_member_avatar_settings' ).length ) ) {
 
 						var coverWarningMessage = BP_ADMIN.cover_size_alert.profile;
-						if ( $( '#bp_groups_avatar_settings' ).length ) {
-							coverWarningMessage = BP_ADMIN.cover_size_alert.group;
-						}
 
 						if (  confirm( coverWarningMessage ) ) {
 							return true;
