@@ -7748,20 +7748,16 @@ function bb_admin_icons( $id ) {
 			$meta_icon = $bb_icon_bf . ' bb-icon-link';
 			break;
 		case 'bp_member_avatar_settings':
-		case 'bp_groups_avatar_settings':
 			$meta_icon = $bb_icon_bf . ' bb-icon-image';
 			break;
 		case 'bp_profile_headers_settings':
-		case 'bp_groups_headers_settings':
 			$meta_icon = $bb_icon_bf . ' bb-icon-maximize';
 			break;
 		case 'bp_profile_list_settings':
-		case 'bp_group_list_settings':
 		case 'bbp_settings_root_slugs':
 			$meta_icon = $bb_icon_bf . ' bb-icon-grid-small';
 			break;
 		case 'bp_member_type_settings':
-		case 'bp_groups_types':
 			$meta_icon = $bb_icon_bf . ' bb-icon-tags';
 			break;
 		case 'bp_profile_search_settings':
@@ -7771,12 +7767,8 @@ function bb_admin_icons( $id ) {
 		case 'bp_search_settings_post_types':
 			$meta_icon = $bb_icon_bf . ' bb-icon-search';
 			break;
-		case 'bp_groups':
 		case 'bbp_settings_buddypress':
 			$meta_icon = $bb_icon_bf . ' bb-icon-users';
-			break;
-		case 'bp_groups_hierarchies':
-			$meta_icon = $bb_icon_bf . ' bb-icon-layers';
 			break;
 		case 'bbp_settings_users':
 		case 'bbp_settings_features':
@@ -7869,7 +7861,6 @@ function bb_admin_icons( $id ) {
 		case 'bbpress_converter_main':
 			$meta_icon = $bb_icon_bf . ' bb-icon-upload';
 			break;
-		case 'group_access_control_block':
 		case 'activity_access_control_block':
 		case 'messages_access_control_block':
 		case 'media_access_control_block';
@@ -10015,7 +10006,7 @@ function bb_register_feature( $feature_id, $args = array() ) {
  * @return string Admin URL for the feature settings.
  */
 function bb_get_feature_settings_url( $feature_id, $panel_id = '' ) {
-	$url = admin_url( 'admin.php?page=bb-settings' );
+	$url = bp_get_admin_url( 'admin.php?page=bb-settings' );
 
 	if ( ! empty( $feature_id ) ) {
 		$url = add_query_arg( 'tab', sanitize_key( $feature_id ), $url );
@@ -10036,7 +10027,79 @@ function bb_get_feature_settings_url( $feature_id, $panel_id = '' ) {
  * @return string Admin URL for the main settings page.
  */
 function bb_get_settings_url() {
-	return admin_url( 'admin.php?page=bb-settings' );
+	return bp_get_admin_url( 'admin.php?page=bb-settings' );
+}
+
+/**
+ * Get the denylist of WordPress core options that must never be written
+ * through BuddyBoss admin AJAX handlers.
+ *
+ * Use this to strip dangerous option names from any filterable allowlist
+ * before reading or saving. Prevents a compromised or careless extension
+ * from adding options like `siteurl`, `admin_email`, or `active_plugins`
+ * to an AJAX-writable allowlist.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array Flat array of option names that must be denied.
+ */
+function bb_get_options_denylist() {
+	$denylist = array(
+		// Site identity.
+		'siteurl',
+		'home',
+		'blogname',
+		'blogdescription',
+		'admin_email',
+
+		// User registration / roles.
+		'users_can_register',
+		'default_role',
+
+		// Active plugins and theme.
+		'active_plugins',
+		'template',
+		'stylesheet',
+
+		// Database / core internals.
+		'db_version',
+		'initial_db_version',
+		'wp_user_roles',
+
+		// Filesystem / uploads.
+		'upload_path',
+		'upload_url_path',
+
+		// Cron.
+		'cron',
+	);
+
+	/**
+	 * Filters the list of WordPress core options that BuddyBoss admin AJAX
+	 * handlers must never write.
+	 *
+	 * Extensions can add entries but must never remove existing ones.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $denylist Option names to deny.
+	 */
+	return apply_filters( 'bb_admin_options_denylist', $denylist );
+}
+
+/**
+ * Remove denylisted options from an allowlist array.
+ *
+ * Pass an associative array of `option_name => sanitize_callback` and this
+ * function returns it with any denylisted keys stripped out.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $options Associative array of option_name => sanitize_callback.
+ * @return array Filtered array with denylisted keys removed.
+ */
+function bb_filter_allowed_options( $options ) {
+	return array_diff_key( $options, array_flip( bb_get_options_denylist() ) );
 }
 
 /**
@@ -10099,7 +10162,34 @@ function bb_register_feature_section( $feature_id, $side_panel_id, $section_id, 
  * @param string $feature_id    Feature ID.
  * @param string $side_panel_id Side panel ID.
  * @param string $section_id    Section ID.
- * @param array  $args          Field arguments.
+ * @param array  $args {
+ *     Field arguments.
+ *
+ *     @type string $name              Field name (option key).
+ *     @type string $label             Field label.
+ *     @type string $type              Field type (toggle, select, image_radio, etc.).
+ *     @type string $description       Field description.
+ *     @type mixed  $default           Default value.
+ *     @type callable $sanitize_callback Sanitize callback.
+ *     @type array  $options           Options for select/radio fields.
+ *     @type array  $conditional       Conditional display config.
+ *     @type int    $order             Display order.
+ *     @type bool   $invert_value      Whether to invert toggle value for display.
+ *     @type array  $upload_config {
+ *         Optional. Upload configuration for image_radio fields with custom upload support.
+ *
+ *         @since BuddyBoss [BBVERSION]
+ *
+ *         @type string $type        Upload type: 'avatar' or 'cover'.
+ *         @type string $object      Object type for BP handlers (e.g., 'group').
+ *         @type int    $item_id     Item ID (0 for defaults).
+ *         @type string $item_type   Item type identifier.
+ *         @type string $url_getter  PHP function name to resolve current uploaded URL.
+ *         @type string $label       Label shown above the upload area (e.g., 'Upload Custom Avatar').
+ *         @type string $help_text   Help text shown below the upload area.
+ *         @type array  $conditional Conditional display config with 'value' key.
+ *     }
+ * }
  * @return bool|WP_Error True on success, WP_Error on failure.
  */
 function bb_register_feature_field( $feature_id, $side_panel_id, $section_id, $args = array() ) {

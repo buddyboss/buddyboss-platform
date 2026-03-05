@@ -156,6 +156,7 @@ function bb_activity_register_visibility_post_type_fields( $feature_id ) {
 
 	if ( ! empty( $custom_post_types ) ) {
 		$cpt_index = 0;
+		$group_id  = '';
 
 		// Compute once outside the loop — the result is the same for every iteration.
 		$no_comment_post_types = function_exists( 'bb_feed_not_allowed_comment_post_types' ) ? bb_feed_not_allowed_comment_post_types() : array();
@@ -168,7 +169,10 @@ function bb_activity_register_visibility_post_type_fields( $feature_id ) {
 			$group_id            = 'cpt_feed_' . sanitize_key( $post_type );
 
 			// Check if the post type supports comments (same logic as legacy).
-			$comments_not_supported = in_array( $post_type, $no_comment_post_types, true );
+			// Also checks bb_activity_is_enabled_cpt_global_comment() so that LearnDash/TutorLMS
+			// CPTs with comments disabled in their own settings are treated as unsupported.
+			$comments_not_supported = in_array( $post_type, $no_comment_post_types, true )
+				|| ( function_exists( 'bb_activity_is_enabled_cpt_global_comment' ) && ! bb_activity_is_enabled_cpt_global_comment( $post_type ) );
 
 			// Toggle: Post type name.
 			// Only first CPT gets the "Custom Post Types" label.
@@ -236,7 +240,7 @@ function bb_activity_register_visibility_post_type_fields( $feature_id ) {
 			}
 
 			$field_order += 10;
-			$cpt_index++;
+			++$cpt_index;
 		}
 
 		// Help text for Custom Post Types section.

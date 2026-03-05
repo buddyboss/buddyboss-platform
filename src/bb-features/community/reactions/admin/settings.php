@@ -224,7 +224,7 @@ function bb_admin_settings_register_reactions_settings() {
 			'description'       => '',
 			'options'           => $reaction_mode_options,
 			'default'           => $cached_reaction_mode,
-			'sanitize_callback' => ! empty( $field_reaction_mode['sanitize_callback'] ) && is_callable( $field_reaction_mode['sanitize_callback'] ) ? $field_reaction_mode['sanitize_callback'] : 'sanitize_text_field',
+			'sanitize_callback' => ! empty( $field_reaction_mode['sanitize_callback'] ) && is_callable( $field_reaction_mode['sanitize_callback'] ) ? $field_reaction_mode['sanitize_callback'] : 'bb_reactions_sanitize_mode',
 			'order'             => 10,
 			'pro_only'          => true,
 		)

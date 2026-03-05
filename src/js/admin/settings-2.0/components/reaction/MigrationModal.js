@@ -30,7 +30,7 @@ export function MigrationModal({ isOpen, onClose, migrationData }) {
 		if (isOpen) {
 			loadWizardData();
 		}
-	}, [isOpen]);
+	}, [isOpen, loadWizardData]);
 
 	// ---------------------------------------------------------------------------
 	// Wizard event handlers — defined with useCallback so their identity is stable
@@ -171,7 +171,7 @@ export function MigrationModal({ isOpen, onClose, migrationData }) {
 		formData.append('feature_id', 'reactions');
 		formData.append('settings', JSON.stringify(settings));
 
-		fetch(window.bbAdminData?.ajaxUrl || '/wp-admin/admin-ajax.php', {
+		fetch(window.bbAdminData?.ajaxUrl || window.ajaxurl || '/wp-admin/admin-ajax.php', {
 			method: 'POST',
 			credentials: 'same-origin',
 			body: formData,
@@ -252,7 +252,7 @@ export function MigrationModal({ isOpen, onClose, migrationData }) {
 		};
 	}, [wizardContent, handleFromAllEmotionsChange, handleIndividualEmotionChange, handleDropdownChange, handleFooterNextWizardScreenClick, handleCloseMigrationWizard, handleFromLimitChange, handleStartMigration, updateContinueButtonState]);
 
-	const loadWizardData = () => {
+	const loadWizardData = useCallback(() => {
 		setLoading(true);
 		setError('');
 
@@ -265,7 +265,7 @@ export function MigrationModal({ isOpen, onClose, migrationData }) {
 		// Determine which AJAX action to use based on wizardType
 		// 'footer' = footer migration wizard link (always available)
 		// 'switch' = pending migration notice "Start Conversion" button
-		const isFooterWizard = migrationData?.wizardType === 'footer';
+		const isFooterWizard = migrationDataRef.current?.wizardType === 'footer';
 		const ajaxAction = isFooterWizard
 			? 'bb_pro_reaction_footer_migration'
 			: 'bb_pro_reaction_migration_start_conversion';
@@ -308,7 +308,8 @@ export function MigrationModal({ isOpen, onClose, migrationData }) {
 				setLoading(false);
 			},
 		});
-	};
+	// eslint-disable-next-line react-hooks/exhaustive-deps -- migrationDataRef is a stable ref object; its .current is always up-to-date without needing to be a dep.
+	}, []);
 
 	if (!isOpen) {
 		return null;

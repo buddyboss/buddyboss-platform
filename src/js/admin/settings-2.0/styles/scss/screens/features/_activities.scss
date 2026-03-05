@@ -50,23 +50,20 @@
 			margin-bottom: 0;
 
 			.components-input-control__label {
-                color: $bb-text-secondary-color;
-                text-transform: none;
-                font-size: 13px;
-                font-weight: 500;
-            }
+				color: $bb-text-secondary-color;
+				text-transform: none;
+				font-size: 13px;
+				font-weight: 500;
+			}
 
-            .components-select-control__input {
-                @include bb-admin-settings-select;
-            }
+			.components-select-control__input {
+				@include bb-admin-settings-select;
+			}
 
-            .components-input-control-suffix-wrapper {
-                display: none;
-            }
-
-            .components-input-control__backdrop {
-                border-color: transparent;
-            }
+			.components-input-control-suffix-wrapper,
+			.components-input-control__backdrop {
+				display: none;
+			}
 
 		}
 
@@ -102,7 +99,7 @@
 	}
 
 	&__bulk-apply.is-secondary {
-		@include bb-button-primary;
+		@include bb-button-primary-outline;
 	}
 
 	// Filter Dropdown
@@ -853,12 +850,9 @@
 			@include bb-admin-settings-select;
 		}
 
-		.components-input-control-suffix-wrapper {
-			display: none;
-		}
-
+		.components-input-control-suffix-wrapper,
 		.components-input-control__backdrop {
-			border-color: transparent;
+			display: none;
 		}
 	}
 }
@@ -896,12 +890,7 @@
 	}
 
 	&__footer {
-		display: flex;
 		justify-content: space-between;
-		align-items: center;
-		gap: 8px;
-		padding: 16px 24px;
-		border-top: 1px solid $bb-border-secondary-color;
 		position: sticky;
 		bottom: 0;
 		background: $bb-background-base-color;
@@ -947,10 +936,7 @@
 
 	// Override label styles within modal.
 	.components-base-control__label {
-		color: $bb-text-secondary-color;
-		font-size: 13px;
-		font-weight: 400;
-		text-transform: none;
+		@include bb-input-label;
 	}
 
 }

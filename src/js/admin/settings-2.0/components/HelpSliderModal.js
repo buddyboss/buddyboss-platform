@@ -47,7 +47,7 @@ export const HelpSliderModal = ({ isOpen, onClose, children, title }) => {
 			<div className="bb-rl-help-modal" onClick={(e) => e.stopPropagation()}>
 				<div className="bb-rl-help-modal-header">
 					<h2>{title}</h2>
-					<button className="bb-rl-help-modal-close" onClick={onClose} aria-label="Close">
+					<button className="bb-rl-help-modal-close" onClick={onClose} aria-label={__('Close', 'buddyboss')}>
 						<span>&times;</span>
 					</button>
 				</div>

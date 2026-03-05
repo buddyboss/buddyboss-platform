@@ -14,9 +14,123 @@ import { Router } from './Router';
  *
  * @returns {JSX.Element} App component
  */
+/**
+ * Fix WordPress admin sidebar menu highlighting for Settings 2.0.
+ *
+ * Listing panels (All Groups, Group Types, Group Navigation, All Activities)
+ * highlight the corresponding component menu (Groups, Activity).
+ * Settings panels highlight the legacy "Settings" menu item.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {string} route Current React route (e.g. '/settings/groups/all_groups').
+ */
+function fixAdminMenuHighlight( route ) {
+	var bbMenu = document.getElementById( 'toplevel_page_buddyboss-platform' );
+	if ( ! bbMenu ) {
+		return;
+	}
+
+	// Parse route: /settings/groups/all_groups → ['settings','groups','all_groups'].
+	var parts = route.replace( /^\//, '' ).split( '/' );
+	var mainRoute = parts[0] || '';
+	var feature = ( 'settings' === mainRoute ) ? ( parts[1] || '' ) : mainRoute;
+	var panel = ( 'settings' === mainRoute ) ? ( parts[2] || '' ) : ( parts[1] || '' );
+
+	// Panels that represent listings → highlight the component menu item.
+	// Settings panels → highlight "Settings" menu item.
+	var listingPanels = {
+		groups: [ 'all_groups', 'group_types', 'group_navigation' ],
+		activity: [ 'all_activities' ],
+	};
+
+	var isListing = false;
+	if ( listingPanels[ feature ] ) {
+		isListing = -1 !== listingPanels[ feature ].indexOf( panel );
+	}
+	// Direct component routes like /activity/all or /groups/all.
+	if ( 'settings' !== mainRoute && ( 'activity' === mainRoute || 'groups' === mainRoute ) ) {
+		isListing = true;
+	}
+
+	// Determine which slug to target: component menu or Settings.
+	var targetSlug = isListing ? feature : 'settings';
+
+	var submenuItems = bbMenu.querySelectorAll( 'ul.wp-submenu li' );
+	var targetItem = null;
+	var settingsItem = null;
+	var settings20Item = null;
+
+	submenuItems.forEach( function( li ) {
+		var a = li.querySelector( 'a' );
+		if ( ! a ) {
+			return;
+		}
+		var href = a.getAttribute( 'href' ) || '';
+
+		// Track legacy Settings (bp-settings) and Settings 2.0 (bb-settings).
+		if ( -1 !== href.indexOf( 'page=bp-settings' ) ) {
+			settingsItem = li;
+		}
+		if ( 'admin.php?page=bb-settings' === href ) {
+			settings20Item = li;
+		}
+
+		if ( 'settings' === targetSlug ) {
+			return;
+		}
+
+		// Match submenu items by page slug (e.g. page=bp-groups).
+		if ( -1 !== href.indexOf( 'page=bp-' + targetSlug ) ) {
+			targetItem = li;
+		}
+
+		// Match submenu items using Settings 2.0 URL with tab param (e.g. tab=activity).
+		if ( ! targetItem && -1 !== href.indexOf( 'tab=' + targetSlug ) ) {
+			targetItem = li;
+		}
+	} );
+
+	// For settings panels, prefer legacy "Settings" menu item (visible near top).
+	if ( 'settings' === targetSlug ) {
+		targetItem = settingsItem || settings20Item;
+	}
+
+	// Fallback to Settings 2.0 if nothing matched.
+	if ( ! targetItem ) {
+		targetItem = settings20Item || settingsItem;
+	}
+
+	if ( ! targetItem ) {
+		return;
+	}
+
+	// Clear current from all, set on target.
+	submenuItems.forEach( function( li ) {
+		li.classList.remove( 'current' );
+		var a = li.querySelector( 'a' );
+		if ( a ) {
+			a.classList.remove( 'current' );
+			a.removeAttribute( 'aria-current' );
+		}
+	} );
+
+	targetItem.classList.add( 'current' );
+	var targetLink = targetItem.querySelector( 'a' );
+	if ( targetLink ) {
+		targetLink.classList.add( 'current' );
+		targetLink.setAttribute( 'aria-current', 'page' );
+	}
+}
+
 export function App() {
 	const [currentRoute, setCurrentRoute] = useState('/settings');
 	const [isLoading, setIsLoading] = useState(true);
+
+	// Fix admin sidebar menu highlighting on mount and route changes.
+	useEffect(() => {
+		fixAdminMenuHighlight( currentRoute );
+	}, [currentRoute]);
 
 	useEffect(() => {
 		// Handle legacy URL mapping on mount

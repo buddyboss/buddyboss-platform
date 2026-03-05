@@ -50,6 +50,14 @@ class BB_Admin_Meta_Field_Registry {
 	private $did_register = array();
 
 	/**
+	 * Cached sorted fields per component.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 * @var array
+	 */
+	private $sorted_cache = array();
+
+	/**
 	 * Get singleton instance.
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -120,6 +128,9 @@ class BB_Admin_Meta_Field_Registry {
 	 *     @type callable $save_value        Optional. function( $item, $value ). Null = read-only.
 	 *     @type callable $sanitize_callback Optional. Sanitize before save. Default 'sanitize_text_field'.
 	 *     @type callable $is_visible        Optional. function( $item ) returning bool. Default true.
+	 *     @type string   $tab               Optional tab identifier for tabbed modals. Default ''.
+	 *     @type callable $get_extra_data    Optional. function( $item ) returning array of extra data for JS.
+	 *     @type array    $conditional      Optional. Client-side dependency: array( 'field' => 'field_id', 'value' => 'expected_value' ).
 	 * }
 	 * @return bool True on success.
 	 */
@@ -136,12 +147,15 @@ class BB_Admin_Meta_Field_Registry {
 			'order'             => 100,
 			'context'           => 'normal',
 			'layout'            => 'default',
+			'tab'               => '',
 			'save_phase'        => 'after',
 			'get_value'         => null,
 			'get_options'       => null,
+			'get_extra_data'    => null,
 			'save_value'        => null,
-			'sanitize_callback' => 'sanitize_text_field',
+			'sanitize_callback' => null, // Must be explicitly set for non-scalar (array) fields.
 			'is_visible'        => null,
+			'conditional'       => null,
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -156,6 +170,9 @@ class BB_Admin_Meta_Field_Registry {
 		}
 
 		$this->fields[ $component ][ $field_id ] = $args;
+
+		// Invalidate sorted cache for this component.
+		unset( $this->sorted_cache[ $component ] );
 
 		return true;
 	}
@@ -175,6 +192,10 @@ class BB_Admin_Meta_Field_Registry {
 			return array();
 		}
 
+		if ( isset( $this->sorted_cache[ $component ] ) ) {
+			return $this->sorted_cache[ $component ];
+		}
+
 		$fields = $this->fields[ $component ];
 
 		// Sort by order.
@@ -184,6 +205,8 @@ class BB_Admin_Meta_Field_Registry {
 				return (int) $a['order'] - (int) $b['order'];
 			}
 		);
+
+		$this->sorted_cache[ $component ] = $fields;
 
 		return $fields;
 	}
@@ -209,27 +232,39 @@ class BB_Admin_Meta_Field_Registry {
 			}
 
 			$field_data = array(
-				'id'          => $field_id,
-				'label'       => $args['label'],
-				'description' => $args['description'],
-				'placeholder' => $args['placeholder'],
-				'type'        => $args['type'],
-				'context'     => $args['context'],
-				'layout'      => $args['layout'],
-				'visible'     => $visible,
-				'value'       => null,
-				'options'     => array(),
-				'readonly'    => ( null === $args['save_value'] ),
+				'id'           => $field_id,
+				'label'        => $args['label'],
+				'description'  => $args['description'],
+				'placeholder'  => $args['placeholder'],
+				'type'         => $args['type'],
+				'context'      => $args['context'],
+				'layout'       => $args['layout'],
+				'tab'          => $args['tab'],
+				'visible'      => $visible,
+				'value'        => null,
+				'options'      => array(),
+				'readonly'     => ( null === $args['save_value'] ),
+				'conditional'  => $args['conditional'],
+				'async_action' => isset( $args['async_action'] ) ? $args['async_action'] : '',
 			);
 
-			// Get current value.
-			if ( is_callable( $args['get_value'] ) ) {
-				$field_data['value'] = call_user_func( $args['get_value'], $item );
-			}
+			// Skip fetching value, options, and extra data for invisible fields
+			// to avoid unnecessary DB queries for disabled components.
+			if ( $visible ) {
+				// Get current value.
+				if ( is_callable( $args['get_value'] ) ) {
+					$field_data['value'] = call_user_func( $args['get_value'], $item );
+				}
 
-			// Get options for select type.
-			if ( 'select' === $args['type'] && is_callable( $args['get_options'] ) ) {
-				$field_data['options'] = call_user_func( $args['get_options'], $item );
+				// Get options for select, radio, checkbox, and toggle_list types.
+				if ( in_array( $args['type'], array( 'select', 'radio', 'checkbox', 'toggle_list' ), true ) && is_callable( $args['get_options'] ) ) {
+					$field_data['options'] = call_user_func( $args['get_options'], $item );
+				}
+
+				// Get extra data (e.g. base_url for permalink fields).
+				if ( is_callable( $args['get_extra_data'] ) ) {
+					$field_data['extra_data'] = call_user_func( $args['get_extra_data'], $item );
+				}
 			}
 
 			$data[] = $field_data;
@@ -270,7 +305,7 @@ class BB_Admin_Meta_Field_Registry {
 				continue;
 			}
 
-			// phpcs:disable WordPress.Security.NonceVerification.Missing
+			// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by the calling AJAX handler before invoking save_fields_data().
 			$post_key = 'registered_field_' . $field_id;
 			if ( ! isset( $_POST[ $post_key ] ) ) {
 				continue;
@@ -279,9 +314,14 @@ class BB_Admin_Meta_Field_Registry {
 			$raw_value = wp_unslash( $_POST[ $post_key ] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			// phpcs:enable WordPress.Security.NonceVerification.Missing
 
-			// Sanitize (fallback to sanitize_text_field if no valid callback registered).
+			// Sanitize using the field's registered callback.
+			// No default: array-type fields must register their own sanitize_callback to avoid
+			// sanitize_text_field() corrupting array values. Scalar fields without a callback
+			// fall back to sanitize_text_field(); array fields fall back to map_deep().
 			if ( is_callable( $args['sanitize_callback'] ) ) {
 				$raw_value = call_user_func( $args['sanitize_callback'], $raw_value );
+			} elseif ( is_array( $raw_value ) ) {
+				$raw_value = map_deep( $raw_value, 'sanitize_text_field' );
 			} else {
 				$raw_value = sanitize_text_field( $raw_value );
 			}

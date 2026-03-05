@@ -86,6 +86,9 @@ function bb_activity_sanitize_edit_time( $value ) {
 /**
  * Sanitize activity comment edit time setting.
  *
+ * Delegates to bb_activity_sanitize_edit_time() since the validation
+ * rules are identical for activity posts and comments.
+ *
  * @since BuddyBoss [BBVERSION]
  *
  * @param mixed $value The value to sanitize.
@@ -93,13 +96,7 @@ function bb_activity_sanitize_edit_time( $value ) {
  * @return int Sanitized integer value.
  */
 function bb_activity_sanitize_comment_edit_time( $value ) {
-	$value = intval( $value );
-
-	if ( ! in_array( $value, bb_activity_get_allowed_edit_times(), true ) ) {
-		return 600; // Fallback: invalid value, return 10 minutes.
-	}
-
-	return $value;
+	return bb_activity_sanitize_edit_time( $value );
 }
 
 /**
@@ -128,30 +125,6 @@ function bb_sanitize_sharing_platforms( $value ) {
 
 	// Save as indexed array (legacy format) so both legacy and Settings 2.0 can read it.
 	return $enabled;
-}
-
-/**
- * Sanitize sortable toggle list options (activity filters, timeline filters, sorting).
- *
- * Expects an associative array where keys are option slugs and values are 0/1.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param mixed $value The value to sanitize.
- *
- * @return array Sanitized array of option_slug => 0|1.
- */
-function bb_activity_sanitize_filter_options( $value ) {
-	if ( ! is_array( $value ) ) {
-		return array();
-	}
-
-	$sanitized = array();
-	foreach ( $value as $key => $val ) {
-		$sanitized[ sanitize_key( $key ) ] = absint( $val ) ? 1 : 0;
-	}
-
-	return $sanitized;
 }
 
 /**
@@ -254,12 +227,8 @@ function bb_activity_sanitize_platform_activity_types( $value ) {
 /**
  * Sync blogs component activation after activity CPT feed settings are saved.
  *
- * The legacy save flow calls bb_cpt_feed_enabled_disabled() which reads $_POST
- * directly. Settings 2.0 saves options via bp_update_option() before this hook,
- * so we read saved option values instead.
- *
- * Also mirrors legacy bb_after_update_activity_settings(): when a CPT feed is
- * disabled, its comments option is force-disabled too.
+ * Uses the shared bb_sync_blogs_component_state() helper, reading saved option
+ * values instead of $_POST (Settings 2.0 saves options before this hook fires).
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -267,70 +236,21 @@ function bb_activity_sanitize_platform_activity_types( $value ) {
  * @param array  $settings   Full submitted settings.
  * @param array  $saved      Keys and values saved by core.
  */
-function bb_activity_sync_blogs_component_after_save( $feature_id, $settings, $saved ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- $settings and $saved are required by the hook signature but this handler only needs $feature_id.
+function bb_activity_sync_blogs_component_after_save( $feature_id, $settings, $saved ) {
 	if ( 'activity' !== $feature_id ) {
 		return;
 	}
 
-	$bp                = buddypress();
-	$active_components = $bp->active_components;
-
-	$is_blog_component_active = false;
-	$was_blogs_active         = isset( $active_components['blogs'] );
-
-	// Temporarily remove LMS filters to get all feed post types.
-	if ( function_exists( 'bb_feed_not_allowed_tutorlms_post_types' ) ) {
-		remove_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_tutorlms_post_types' );
-	}
-	if ( function_exists( 'bb_feed_not_allowed_meprlms_post_types' ) ) {
-		remove_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_meprlms_post_types' );
-	}
-
-	$post_types = bb_feed_post_types();
-
-	if ( function_exists( 'bb_feed_not_allowed_tutorlms_post_types' ) ) {
-		add_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_tutorlms_post_types' );
-	}
-	if ( function_exists( 'bb_feed_not_allowed_meprlms_post_types' ) ) {
-		add_filter( 'bb_feed_excluded_post_types', 'bb_feed_not_allowed_meprlms_post_types' );
-	}
-
-	foreach ( $post_types as $cpt ) {
-		$option_name      = bb_post_type_feed_option_name( $cpt );
-		$enable_blog_feed = apply_filters( 'bb_enable_blog_feed', (bool) bp_get_option( $option_name, false ), $cpt );
-
-		if ( $enable_blog_feed ) {
-			$is_blog_component_active = true;
-			break;
+	bb_sync_blogs_component_state(
+		function ( $cpt ) {
+			$option_name = bb_post_type_feed_option_name( $cpt );
+			return (bool) bp_get_option( $option_name, false );
 		}
-	}
+	);
 
-	if ( $is_blog_component_active ) {
-		$active_components['blogs'] = '1';
-	} else {
-		unset( $active_components['blogs'] );
-	}
-
-	$is_blogs_active = isset( $active_components['blogs'] );
-
-	// Only update if blogs component state actually changed.
-	if ( $was_blogs_active !== $is_blogs_active ) {
-		$bp->active_components = $active_components;
-
-		// Install only the blog tracking table when activating blogs.
-		if ( $is_blogs_active ) {
-			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-			require_once $bp->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php';
-			bp_core_install_blog_tracking();
-		}
-
-		bp_core_add_page_mappings( $bp->active_components, 'keep', false );
-		bp_update_option( 'bp-active-components', $bp->active_components );
-	}
-
-	// Mirrors legacy bb_after_update_activity_settings(): if a CPT feed is
-	// disabled, also disable its comments option.
-	foreach ( $post_types as $post_type ) {
+	// If a post type feed is disabled, also disable its comments option.
+	// Mirrors legacy behavior from bb_after_update_activity_settings().
+	foreach ( bb_feed_post_types() as $post_type ) {
 		$pt_opt_name  = bb_post_type_feed_option_name( $post_type );
 		$ptc_opt_name = bb_post_type_feed_comment_option_name( $post_type );
 
@@ -339,32 +259,5 @@ function bb_activity_sync_blogs_component_after_save( $feature_id, $settings, $s
 		}
 	}
 }
+
 add_action( 'bb_admin_save_feature_settings_after', 'bb_activity_sync_blogs_component_after_save', 10, 3 );
-
-/**
- * Sanitize post type feed settings.
- *
- * Handles the toggle + checkbox combo for WordPress and custom post types.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param mixed $value The value to sanitize.
- *
- * @return array Sanitized array with 'enabled' and 'comments' keys.
- */
-function bb_activity_sanitize_post_type_feed( $value ) {
-	if ( ! is_array( $value ) ) {
-		return array();
-	}
-
-	$sanitized = array();
-	foreach ( $value as $post_type => $settings ) {
-		$clean_key               = sanitize_key( $post_type );
-		$sanitized[ $clean_key ] = array(
-			'enabled'  => ! empty( $settings['enabled'] ) ? 1 : 0,
-			'comments' => ! empty( $settings['comments'] ) ? 1 : 0,
-		);
-	}
-
-	return $sanitized;
-}

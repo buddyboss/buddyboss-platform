@@ -56,6 +56,23 @@ const ALLOWED_TAGS = {
 const ALLOWED_SCHEMES = ['http:', 'https:', 'mailto:'];
 
 /**
+ * Allowed CSS properties for style attributes.
+ * Prevents CSS injection (e.g. background:url(javascript:...)) by only
+ * permitting known-safe layout and visual properties.
+ */
+const ALLOWED_CSS_PROPERTIES = [
+	'color', 'background-color', 'background',
+	'font-size', 'font-weight', 'font-style', 'font-family',
+	'line-height', 'letter-spacing', 'text-align', 'text-decoration', 'text-transform',
+	'margin', 'margin-top', 'margin-right', 'margin-bottom', 'margin-left',
+	'padding', 'padding-top', 'padding-right', 'padding-bottom', 'padding-left',
+	'border', 'border-radius', 'border-color', 'border-width', 'border-style',
+	'width', 'max-width', 'min-width', 'height', 'max-height', 'min-height',
+	'display', 'flex', 'flex-direction', 'flex-wrap', 'align-items', 'justify-content', 'gap',
+	'opacity', 'overflow', 'visibility', 'white-space', 'word-break',
+];
+
+/**
  * Sanitize an HTML string by removing dangerous elements and attributes.
  *
  * @param {string} html Raw HTML string.
@@ -117,6 +134,16 @@ function sanitizeNode(node) {
 				}
 			}
 
+			// Sanitize style attribute to prevent CSS injection.
+			if ('style' === attr.name) {
+				var safe = sanitizeStyle(attr.value);
+				if (safe) {
+					child.setAttribute('style', safe);
+				} else {
+					child.removeAttribute('style');
+				}
+			}
+
 			// Strip event handler attributes (extra safety)
 			if (attr.name.startsWith('on')) {
 				child.removeAttribute(attr.name);
@@ -131,6 +158,55 @@ function sanitizeNode(node) {
 		// Recurse into children
 		sanitizeNode(child);
 	}
+}
+
+/**
+ * Sanitize a CSS style string by removing disallowed properties.
+ *
+ * Splits the style value by semicolon, keeps only properties whose name
+ * appears in ALLOWED_CSS_PROPERTIES, and rejects values containing
+ * url(), expression(), or javascript: to block injection vectors.
+ *
+ * @param {string} style Raw style attribute value.
+ * @return {string} Sanitized style string (empty if nothing is safe).
+ */
+function sanitizeStyle(style) {
+	if (!style || typeof style !== 'string') {
+		return '';
+	}
+
+	var safe = [];
+	var declarations = style.split(';');
+
+	for (var i = 0; i < declarations.length; i++) {
+		var decl = declarations[i].trim();
+		if (!decl) {
+			continue;
+		}
+
+		var colonIdx = decl.indexOf(':');
+		if (-1 === colonIdx) {
+			continue;
+		}
+
+		var prop = decl.substring(0, colonIdx).trim().toLowerCase();
+		var val = decl.substring(colonIdx + 1).trim();
+
+		// Only allow known-safe CSS properties.
+		if (-1 === ALLOWED_CSS_PROPERTIES.indexOf(prop)) {
+			continue;
+		}
+
+		// Block dangerous CSS values (url(), expression(), javascript:).
+		var valLower = val.toLowerCase();
+		if (/url\s*\(/.test(valLower) || /expression\s*\(/.test(valLower) || valLower.indexOf('javascript:') !== -1) {
+			continue;
+		}
+
+		safe.push(prop + ': ' + val);
+	}
+
+	return safe.join('; ');
 }
 
 /**

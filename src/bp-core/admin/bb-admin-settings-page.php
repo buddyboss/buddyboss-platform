@@ -145,6 +145,11 @@ function bb_admin_settings_page() {
 	}
 
 	// Localize script with admin data.
+	$groups_per_page_option = bp_core_do_network_admin() ? 'buddyboss_page_bp_groups_network_per_page' : 'buddyboss_page_bp_groups_per_page';
+	$groups_per_page        = absint( get_user_option( $groups_per_page_option, get_current_user_id() ) );
+	if ( 0 === $groups_per_page ) {
+		$groups_per_page = 20;
+	}
 	$localize_data = array(
 		'apiUrl'         => rest_url( bp_rest_namespace() . '/' . bp_rest_version() . '/' ),
 		'nonce'          => wp_create_nonce( 'wp_rest' ),
@@ -156,7 +161,21 @@ function bb_admin_settings_page() {
 			'id'   => get_current_user_id(),
 			'name' => wp_get_current_user()->display_name,
 		),
+		// Pass the user's legacy groups-per-page screen option so GroupsListScreen
+		// can honour the preference set in the old WP admin list table.
+		'groupsPerPage' => $groups_per_page,
 	);
+
+	// Upload nonces for image upload fields (avatar/cover).
+	// Only expose when the user has capability to manage group settings.
+	if ( bp_current_user_can( 'bp_moderate' ) ) {
+		$localize_data['uploadNonces'] = array(
+			'uploader'        => wp_create_nonce( 'bp-uploader' ),
+			'avatarCropstore' => wp_create_nonce( 'bp_avatar_cropstore' ),
+			'avatarDelete'    => wp_create_nonce( 'bp_group_avatar_delete' ),
+			'coverDelete'     => wp_create_nonce( 'bp_delete_cover_image' ),
+		);
+	}
 
 	// Only expose debug data when WP_DEBUG is enabled.
 	if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {

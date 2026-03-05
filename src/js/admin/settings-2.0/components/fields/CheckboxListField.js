@@ -80,6 +80,28 @@ export function CheckboxListField( { field, value, onChange, disabled, sanitized
 		onChange( field.name, newValue );
 	};
 
+	/**
+	 * Build label with optional badge for toggle items.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {Object} option The option item.
+	 * @returns {JSX.Element|string} Label element or string.
+	 */
+	var buildOptionLabel = function ( option ) {
+		if ( option.badge_label ) {
+			return (
+				<span className="bb-admin-settings-field__checkbox-list-label">
+					{ option.label }
+					<span className="bb-admin-settings-field__checkbox-list-badge">
+						{ option.badge_label }
+					</span>
+				</span>
+			);
+		}
+		return option.label;
+	};
+
 	return (
 		<DragDropContext onDragEnd={ handleCheckboxListDragEnd }>
 			{ field.description && (
@@ -106,7 +128,7 @@ export function CheckboxListField( { field, value, onChange, disabled, sanitized
 									>
 										<i className="bb-icons-rl bb-icons-rl-list" />
 										<ToggleControl
-											label={ option.label }
+											label={ buildOptionLabel( option ) }
 											checked={ isOptionChecked( option.value ) }
 											onChange={ ( checked ) => {
 												// Preserve key order by rebuilding the object.

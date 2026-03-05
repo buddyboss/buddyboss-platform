@@ -21,10 +21,12 @@ import { debounce, fetchHelpContent, clearHelpContentCache } from '../../utils/a
 import { HelpIcon } from '../components/HelpIcon';
 import { HelpSliderModal } from '../components/HelpSliderModal';
 import { sanitizeHtml, safeUrl } from '../utils/sanitize';
+import { useGroupNavSync } from '../components/groups/GroupNavSync';
 
 // Lazy load custom panel screens.
 const ActivityListScreen = lazy(() => import('./ActivityListScreen'));
 const GroupsListScreen = lazy(() => import('./GroupsListScreen'));
+const GroupTypeScreen = lazy(() => import('./GroupTypeScreen'));
 
 /**
  * Map of feature + panel combinations that render custom screens instead of settings forms.
@@ -32,6 +34,7 @@ const GroupsListScreen = lazy(() => import('./GroupsListScreen'));
 const CUSTOM_PANEL_SCREENS = {
 	'activity:all_activities': ActivityListScreen,
 	'groups:all_groups': GroupsListScreen,
+	'groups:group_types': GroupTypeScreen,
 };
 
 
@@ -239,12 +242,16 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 								setOriginalSettings,
 							} );
 						} else {
-							setOriginalSettings((prev) => ({ ...prev, ...fieldsToSave }));
+							// Use actual saved values from server response (may differ from
+							// submitted values due to server-side validation/revert).
+							var actualSaved = response.data?.saved || fieldsToSave;
+							setSettings((prev) => ({ ...prev, ...actualSaved }));
+							setOriginalSettings((prev) => ({ ...prev, ...actualSaved }));
 							const cachedData = getCachedFeatureData(featureId);
 							if (cachedData) {
 								setCachedFeatureData(featureId, {
 									...cachedData,
-									settings: { ...cachedData.settings, ...fieldsToSave },
+									settings: { ...cachedData.settings, ...actualSaved },
 								});
 							}
 						}
@@ -345,6 +352,17 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 		});
 	}, [sidePanels]);
 
+	// Sync Default Tab dropdown with Navigation Order toggles (groups feature only).
+	useGroupNavSync( {
+		featureId: featureId,
+		settings: settings,
+		settingsRef: settingsRef,
+		initialLoad: initialLoad,
+		setSidePanels: setSidePanels,
+		setSettings: setSettings,
+		handleSettingChange: handleSettingChange,
+	} );
+
 	const handlePanelChange = (route) => {
 		// Route from SideNavigation is already in full format: /settings/featureId/panelId
 		// Extract the panel ID from the route
@@ -426,7 +444,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 					{/* Custom Panel Screen (e.g., All Activities, All Groups) */}
 					{CustomScreen ? (
 						<Suspense fallback={<div className="bb-admin-loading"><Spinner /></div>}>
-							<CustomScreen onNavigate={onNavigate} />
+							<CustomScreen onNavigate={onNavigate} helpUrl={activePanel ? activePanel.help_url : ''} onHelpClick={handleHelpClick} feature={feature} settings={settings} activePanelId={activePanelId} />
 						</Suspense>
 					) : (
 					<>
