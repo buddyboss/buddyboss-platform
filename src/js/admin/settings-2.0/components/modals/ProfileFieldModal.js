@@ -12,16 +12,17 @@ import { useState, useEffect, useCallback, useMemo } from '@wordpress/element';
 import {
 	TextControl,
 	TextareaControl,
-	SelectControl,
 	CheckboxControl,
 	RadioControl,
 	Button,
 	Spinner,
 	Modal,
+	SelectControl,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { saveProfileField } from '../../utils/ajax';
+import { CustomSelectControl } from '../common/CustomSelectControl';
 
 /**
  * Field types that support options (dropdown, checkboxes, radio, etc.).
@@ -205,39 +206,58 @@ export function ProfileFieldModal( {
 		return exists;
 	}
 
-	// Build the type select options with optgroups (memoized since fieldTypes rarely change).
-	var typeOptions = useMemo( function () {
-		var opts = [];
+	/**
+	 * Icon mapping for profile field types.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	var FIELD_TYPE_ICONS = {
+		checkbox: 'check-circle',
+		selectbox: 'caret-circle-down',
+		radio: 'radio-button',
+		multiselectbox: 'checks',
+		gender: 'gender-intersex',
+		membertypes: 'users',
+		socialnetworks: 'fediverse-logo',
+		datebox: 'calendar-heart',
+		number: 'number-circle-one',
+		textarea: 'paragraph',
+		telephone: 'phone',
+		textbox: 'text-t',
+		url: 'globe',
+	};
+
+	// Build grouped options for CustomSelectControl (memoized since fieldTypes rarely change).
+	var typeGroups = useMemo( function () {
+		var result = [];
 
 		if ( fieldTypes.multi_fields && fieldTypes.multi_fields.length > 0 ) {
-			opts.push( {
-				label: __( '--- Multi Fields ---', 'buddyboss' ),
-				value: '',
-				disabled: true,
-			} );
-			fieldTypes.multi_fields.forEach( function ( ft ) {
-				opts.push( {
-					label: decodeEntities( ft.label ),
-					value: ft.value,
-				} );
+			result.push( {
+				label: __( 'Multi Fields', 'buddyboss' ),
+				options: fieldTypes.multi_fields.map( function ( ft ) {
+					return {
+						label: decodeEntities( ft.label ),
+						value: ft.value,
+						icon: FIELD_TYPE_ICONS[ ft.value ] || '',
+					};
+				} ),
 			} );
 		}
 
 		if ( fieldTypes.single_fields && fieldTypes.single_fields.length > 0 ) {
-			opts.push( {
-				label: __( '--- Single Fields ---', 'buddyboss' ),
-				value: '',
-				disabled: true,
-			} );
-			fieldTypes.single_fields.forEach( function ( ft ) {
-				opts.push( {
-					label: decodeEntities( ft.label ),
-					value: ft.value,
-				} );
+			result.push( {
+				label: __( 'Single Fields', 'buddyboss' ),
+				options: fieldTypes.single_fields.map( function ( ft ) {
+					return {
+						label: decodeEntities( ft.label ),
+						value: ft.value,
+						icon: FIELD_TYPE_ICONS[ ft.value ] || '',
+					};
+				} ),
 			} );
 		}
 
-		return opts;
+		return result;
 	}, [ fieldTypes ] );
 
 	/**
@@ -454,10 +474,10 @@ export function ProfileFieldModal( {
 
 				<div className="bb-admin-settings--divided-section">
 					{ /* Type */ }
-					<SelectControl
+					<CustomSelectControl
 						label={ __( 'Type', 'buddyboss' ) }
 						value={ type }
-						options={ typeOptions }
+						groups={ typeGroups }
 						onChange={ function ( val ) {
 							if ( val ) {
 								setType( val );
