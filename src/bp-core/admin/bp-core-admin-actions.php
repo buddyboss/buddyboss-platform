@@ -638,17 +638,28 @@ function bb_redirect_legacy_settings_to_settings_2() {
 		exit;
 	}
 
+	// Redirect legacy Profile Search CPT page (edit.php?post_type=bp_ps_form).
+	if ( 'bp_ps_form' === $post_type ) {
+		wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=members&panel=profile_search' ) );
+		exit;
+	}
+
 	// Check if we're on the old settings page.
 	if ( 'bp-settings' !== $page || empty( $tab ) ) {
 		return;
 	}
 
-	// Mapping of old Settings 1.0 tab names to new Settings 2.0 feature IDs.
+	// Mapping of old Settings 1.0 tab names to new Settings 2.0 URLs.
+	// Values can be a string (feature ID only) or array with 'tab' and 'panel'.
 	$legacy_tabs_mapping = array(
 		'bp-reactions' => 'reactions',
 		'bp-activity'  => 'activity',
 		'bp-groups'    => 'groups',
 		'bp-xprofile'  => 'members',
+		'bp-friends'   => array(
+			'tab'   => 'members',
+			'panel' => 'member_connection',
+		),
 		// Add more mappings here as more tabs are migrated to Settings 2.0.
 	);
 
@@ -657,12 +668,24 @@ function bb_redirect_legacy_settings_to_settings_2() {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param array $legacy_tabs_mapping Array of old tab name => new feature ID.
+	 * @param array $legacy_tabs_mapping Array of old tab name => new feature ID or array with tab/panel.
 	 */
 	$legacy_tabs_mapping = apply_filters( 'bb_legacy_settings_tabs_mapping', $legacy_tabs_mapping );
 
 	if ( isset( $legacy_tabs_mapping[ $tab ] ) ) {
-		wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=' . $legacy_tabs_mapping[ $tab ] ) );
+		$mapping  = $legacy_tabs_mapping[ $tab ];
+		$redirect = bp_get_admin_url( 'admin.php?page=bb-settings' );
+
+		if ( is_array( $mapping ) ) {
+			$redirect = add_query_arg( 'tab', $mapping['tab'], $redirect );
+			if ( ! empty( $mapping['panel'] ) ) {
+				$redirect = add_query_arg( 'panel', $mapping['panel'], $redirect );
+			}
+		} else {
+			$redirect = add_query_arg( 'tab', $mapping, $redirect );
+		}
+
+		wp_safe_redirect( $redirect );
 		exit;
 	}
 }

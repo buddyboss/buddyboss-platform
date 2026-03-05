@@ -33,6 +33,8 @@ function bb_members_register_profile_search_panel_fields() {
 	);
 
 	// FIELD: Profile Search (enable/disable).
+	// Note: No `invert_value` needed. The DB key `bp-enable-profile-search` stores 1 = enabled (positive).
+	// Legacy getter `bp_disable_advanced_profile_search()` inverts on read, but the DB value is positive.
 	bb_register_feature_field(
 		'members',
 		'profile_search',
@@ -41,9 +43,10 @@ function bb_members_register_profile_search_panel_fields() {
 			'name'              => 'bp-enable-profile-search',
 			'label'             => __( 'Profile Search', 'buddyboss' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Enable advanced profile search on the Members page', 'buddyboss' ),
+			'description'       => __( 'Enable profile search', 'buddyboss' ),
+			'help_text'         => __( 'When enabled, advanced profile search will be available in the members directory.', 'buddyboss' ),
 			'default'           => ! bp_disable_advanced_profile_search(),
-			'sanitize_callback' => 'intval',
+			'sanitize_callback' => 'absint',
 			'order'             => 10,
 		)
 	);

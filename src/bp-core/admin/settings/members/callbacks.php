@@ -374,12 +374,6 @@ function bb_members_capture_pre_save_state( $feature_id ) {
 		return;
 	}
 
-	// Only capture during save, not during get (read).
-	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_verify_request() in the calling AJAX handler.
-	if ( ! isset( $_POST['action'] ) || 'bb_admin_save_feature_settings' !== sanitize_key( wp_unslash( $_POST['action'] ) ) ) {
-		return;
-	}
-
 	bb_members_get_pre_save_state(
 		array(
 			'profile_avatar_type'         => bb_get_profile_avatar_type(),
@@ -393,7 +387,7 @@ function bb_members_capture_pre_save_state( $feature_id ) {
 	);
 }
 
-add_action( 'bb_admin_settings_before_get_feature', 'bb_members_capture_pre_save_state', 10, 1 );
+add_action( 'bb_admin_settings_before_save_feature', 'bb_members_capture_pre_save_state', 10, 1 );
 
 /**
  * Handle display name format change after save.
@@ -517,7 +511,11 @@ function bb_members_validate_image_settings_after_save( $feature_id, $settings, 
 	$pre_save_state = bb_members_get_pre_save_state();
 
 	// --- Avatar type validation ---
-	if ( $has_avatar ) {
+	// Only validate avatar sub-options when avatar type is BuddyBoss.
+	// When WordPress is selected, these sub-options are irrelevant.
+	$current_avatar_type = isset( $settings['bp-profile-avatar-type'] ) ? $settings['bp-profile-avatar-type'] : bb_get_profile_avatar_type();
+
+	if ( $has_avatar && 'BuddyBoss' === $current_avatar_type ) {
 		$avatar_type = bb_get_default_profile_avatar_type();
 
 		// Revert only when they had Custom and then removed the image. Do not revert when they
@@ -535,6 +533,9 @@ function bb_members_validate_image_settings_after_save( $feature_id, $settings, 
 		if ( 'display-name' === $avatar_type && empty( _wp_image_editor_choose() ) ) {
 			bp_update_option( 'bp-default-profile-avatar-type', 'buddyboss' );
 		}
+	} elseif ( $has_avatar ) {
+		// Avatar type is WordPress — no avatar sub-option validation needed.
+		// The UI hides these fields when WordPress is selected.
 	}
 
 	// --- Cover type validation ---
@@ -622,7 +623,7 @@ function bb_members_handle_slug_format_change( $feature_id, $settings, $saved ) 
 
 	$pre_save_state = bb_members_get_pre_save_state();
 	$slug_before    = ! empty( $pre_save_state['profile_slug_format'] ) ? $pre_save_state['profile_slug_format'] : '';
-	$slug_after  = bb_get_profile_slug_format();
+	$slug_after     = bb_get_profile_slug_format();
 
 	if ( $slug_before !== $slug_after ) {
 		// Flush all caches — slug format affects every member URL site-wide.
@@ -647,17 +648,17 @@ add_action( 'bb_admin_save_feature_settings_after', 'bb_members_handle_slug_form
 // Two reasons a field may need enrichment:
 //
 // 1. TIMING — The data source (e.g., xprofile fields, component state) is
-//    not available at registration time (bp_loaded priority 4). Options are
-//    registered as empty [] and populated here when everything is loaded.
+// not available at registration time (bp_loaded priority 4). Options are
+// registered as empty [] and populated here when everything is loaded.
 //
 // 2. PRO KEY MISMATCH — Several fields (header elements, directory elements,
-//    directory actions) are Pro-only features. Pro stores its enabled/disabled
-//    state under its own DB keys. Settings 2.0 registers new distinct DB keys.
-//    On first open, get_option() on the new key returns empty, so React would
-//    show all toggles as OFF even on a live site with a saved Pro config.
-//    The back-fill reads from Pro's getter functions (which read the Pro keys)
-//    and injects the correct { slug: 0|1 } map. Once the admin saves through
-//    Settings 2.0, the new key is written and the back-fill is skipped.
+// directory actions) are Pro-only features. Pro stores its enabled/disabled
+// state under its own DB keys. Settings 2.0 registers new distinct DB keys.
+// On first open, get_option() on the new key returns empty, so React would
+// show all toggles as OFF even on a live site with a saved Pro config.
+// The back-fill reads from Pro's getter functions (which read the Pro keys)
+// and injects the correct { slug: 0|1 } map. Once the admin saves through
+// Settings 2.0, the new key is written and the back-fill is skipped.
 // =========================================================================
 
 /**
@@ -666,7 +667,11 @@ add_action( 'bb_admin_save_feature_settings_after', 'bb_members_handle_slug_form
  * Public utility used by Pro and extensions to transform element arrays
  * (from bb_get_profile_header_elements(), bb_get_member_directory_elements(),
  * bb_get_member_directory_profile_actions()) into the Settings 2.0 options format.
- * Platform itself no longer calls this directly — it is kept as a public API.
+ * Platform itself no longer calls this directly — it is kept as a public
+ * API for Pro and third-party plugins that need to transform element arrays
+ * into Settings 2.0 option format.
+ *
+ * @api
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -840,4 +845,3 @@ function bb_members_enrich_profile_type_options( $field_data, $field, $feature_i
 }
 
 add_filter( 'bb_admin_settings_format_field_data', 'bb_members_enrich_profile_type_options', 10, 3 );
-

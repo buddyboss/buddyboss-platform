@@ -21,39 +21,7 @@ import { Toast } from '../components/Toast';
 import { FieldSetModal } from '../components/modals/FieldSetModal';
 import { DeleteFieldSetModal } from '../components/modals/DeleteFieldSetModal';
 import { ProfileFieldModal } from '../components/modals/ProfileFieldModal';
-
-/**
- * Field type icon class mapping.
- *
- * @since BuddyBoss [BBVERSION]
- */
-var FIELD_TYPE_ICONS = {
-	textbox: 'bb-icons-rl-text-t',
-	textarea: 'bb-icons-rl-text-align-left',
-	selectbox: 'bb-icons-rl-list',
-	multiselectbox: 'bb-icons-rl-list-checks',
-	checkbox: 'bb-icons-rl-check-square',
-	radio: 'bb-icons-rl-radio-button',
-	datebox: 'bb-icons-rl-calendar',
-	number: 'bb-icons-rl-hash',
-	telephone: 'bb-icons-rl-phone',
-	url: 'bb-icons-rl-link',
-	gender: 'bb-icons-rl-gender-intersex',
-	socialnetworks: 'bb-icons-rl-share-network',
-	membertypes: 'bb-icons-rl-tag',
-};
-
-/**
- * Get the icon class for a field type.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param {string} type Field type key.
- * @returns {string} Icon class name.
- */
-function getFieldTypeIcon( type ) {
-	return FIELD_TYPE_ICONS[ type ] || 'bb-icons-rl-text-t';
-}
+import { getFieldTypeIcon } from '../utils/fieldTypeIcons';
 
 /**
  * Profile Fields Screen Component

@@ -186,27 +186,27 @@ class BB_Admin_Member_Types_Ajax {
 				$wp_roles_meta = ! empty( $wp_roles_meta ) ? array( $wp_roles_meta ) : array();
 			}
 
-				$member_types[] = array(
-				'id'                     => $post_id,
-				'post_title'             => $post->post_title,
-				'key'                    => $type_key,
-				'singular_label'         => get_post_meta( $post_id, '_bp_member_type_label_singular_name', true ),
-				'plural_label'           => get_post_meta( $post_id, '_bp_member_type_label_name', true ),
-				'members_count'          => isset( $member_counts[ $type_key ] ) ? (int) $member_counts[ $type_key ] : 0,
-				'enable_filter'          => absint( get_post_meta( $post_id, '_bp_member_type_enable_filter', true ) ),
-				'enable_remove'          => absint( get_post_meta( $post_id, '_bp_member_type_enable_remove', true ) ),
-				'enable_search_remove'   => absint( get_post_meta( $post_id, '_bp_member_type_enable_search_remove', true ) ),
-				'enable_profile_field'   => absint( get_post_meta( $post_id, '_bp_member_type_enable_profile_field', true ) ),
-				'group_type_create'      => array_map( 'sanitize_text_field', $group_type_create ),
-				'group_type_auto_join'   => array_map( 'sanitize_text_field', $group_type_auto_join ),
-				'wp_roles'               => array_map( 'sanitize_text_field', $wp_roles_meta ),
-				'label_color'            => map_deep( $label_color, 'sanitize_text_field' ),
-				'login_redirection'      => sanitize_key( get_post_meta( $post_id, '_bp_member_type_login_redirection', true ) ),
-				'custom_login_redirection'  => esc_url_raw( get_post_meta( $post_id, '_bp_member_type_custom_login_redirection', true ) ),
-				'logout_redirection'     => sanitize_key( get_post_meta( $post_id, '_bp_member_type_logout_redirection', true ) ),
-				'custom_logout_redirection' => esc_url_raw( get_post_meta( $post_id, '_bp_member_type_custom_logout_redirection', true ) ),
-				'visibility'             => $visibility,
-				'post_password'          => ! empty( $post->post_password ) ? $post->post_password : '',
+			$member_types[] = array(
+				'id'                                 => $post_id,
+				'post_title'                         => $post->post_title,
+				'key'                                => $type_key,
+				'singular_label'                     => get_post_meta( $post_id, '_bp_member_type_label_singular_name', true ),
+				'plural_label'                       => get_post_meta( $post_id, '_bp_member_type_label_name', true ),
+				'members_count'                      => isset( $member_counts[ $type_key ] ) ? (int) $member_counts[ $type_key ] : 0,
+				'enable_filter'                      => absint( get_post_meta( $post_id, '_bp_member_type_enable_filter', true ) ),
+				'enable_remove'                      => absint( get_post_meta( $post_id, '_bp_member_type_enable_remove', true ) ),
+				'enable_search_remove'               => absint( get_post_meta( $post_id, '_bp_member_type_enable_search_remove', true ) ),
+				'enable_profile_field'               => absint( get_post_meta( $post_id, '_bp_member_type_enable_profile_field', true ) ),
+				'group_type_create'                  => array_map( 'sanitize_text_field', $group_type_create ),
+				'group_type_auto_join'               => array_map( 'sanitize_text_field', $group_type_auto_join ),
+				'wp_roles'                           => array_map( 'sanitize_text_field', $wp_roles_meta ),
+				'label_color'                        => map_deep( $label_color, 'sanitize_text_field' ),
+				'login_redirection'                  => sanitize_key( get_post_meta( $post_id, '_bp_member_type_login_redirection', true ) ),
+				'custom_login_redirection'           => esc_url_raw( get_post_meta( $post_id, '_bp_member_type_custom_login_redirection', true ) ),
+				'logout_redirection'                 => sanitize_key( get_post_meta( $post_id, '_bp_member_type_logout_redirection', true ) ),
+				'custom_logout_redirection'          => esc_url_raw( get_post_meta( $post_id, '_bp_member_type_custom_logout_redirection', true ) ),
+				'visibility'                         => $visibility,
+				'has_password'                       => ! empty( $post->post_password ),
 				'allow_messaging_without_connection' => absint( get_post_meta( $post_id, '_bp_member_type_allow_messaging_without_connection', true ) ),
 			);
 		}
@@ -534,8 +534,8 @@ class BB_Admin_Member_Types_Ajax {
 		update_post_meta( $post_id, '_bp_member_type_allow_messaging_without_connection', $allow_messaging_without_connection );
 
 		// Update messaging-without-connection option (matching legacy lines 2340-2351).
-		$type_key_for_option                = get_post_meta( $post_id, '_bp_member_type_key', true );
-		$profile_types_allowed_messaging    = get_option( 'bp_member_types_allowed_messaging_without_connection', array() );
+		$type_key_for_option             = get_post_meta( $post_id, '_bp_member_type_key', true );
+		$profile_types_allowed_messaging = get_option( 'bp_member_types_allowed_messaging_without_connection', array() );
 		if ( ! is_array( $profile_types_allowed_messaging ) ) {
 			$profile_types_allowed_messaging = array();
 		}
@@ -548,8 +548,8 @@ class BB_Admin_Member_Types_Ajax {
 		update_option( 'bp_member_types_allowed_messaging_without_connection', $profile_types_allowed_messaging );
 
 		// WP Role assignment logic (from legacy lines 2341-2412).
-		$old_wp_roles              = get_post_meta( $post_id, '_bp_member_type_wp_roles', true );
-		$check_both_old_new_same   = ( $wp_roles === $old_wp_roles );
+		$old_wp_roles            = get_post_meta( $post_id, '_bp_member_type_wp_roles', true );
+		$check_both_old_new_same = ( $wp_roles === $old_wp_roles );
 
 		if ( false === $check_both_old_new_same ) {
 			$member_type_name = bp_get_member_type_key( $post_id );
@@ -573,7 +573,7 @@ class BB_Admin_Member_Types_Ajax {
 					)
 				);
 
-				if ( ! empty( $get_user_ids ) && in_array( get_current_user_id(), $get_user_ids ) ) {
+				if ( ! empty( $get_user_ids ) && in_array( (string) get_current_user_id(), $get_user_ids, true ) ) {
 					$bp_prevent_data_update = true;
 				}
 			}
@@ -600,7 +600,7 @@ class BB_Admin_Member_Types_Ajax {
 
 			update_post_meta( $post_id, '_bp_member_type_wp_roles', $wp_roles );
 
-			// Update user roles if term exists.
+			// Update user roles if term exists (same as legacy CPT save).
 			if ( $type_term ) {
 				$selected_roles = get_post_meta( $post_id, '_bp_member_type_wp_roles', true );
 

@@ -148,15 +148,16 @@ class BB_Admin_Profile_Search_Ajax {
 			}
 
 			$saved_fields[] = array(
-				'id'              => $index,
-				'code'            => $code,
-				'name'            => $field_obj->name,
-				'label'           => isset( $field_labels[ $index ] ) ? $field_labels[ $index ] : '',
-				'description'     => isset( $field_descs[ $index ] ) ? $field_descs[ $index ] : '',
-				'search_mode'     => isset( $field_modes[ $index ] ) ? $field_modes[ $index ] : '',
-				'type'            => isset( $field_obj->type ) ? $field_obj->type : '',
-				'format'          => isset( $field_obj->format ) ? $field_obj->format : '',
-				'available_modes' => $available_modes,
+				'id'                => $index,
+				'code'              => $code,
+				'name'              => $field_obj->name,
+				'label'             => isset( $field_labels[ $index ] ) ? $field_labels[ $index ] : '',
+				'description'       => isset( $field_descs[ $index ] ) ? $field_descs[ $index ] : '',
+				'search_mode'       => isset( $field_modes[ $index ] ) ? $field_modes[ $index ] : '',
+				'type'              => isset( $field_obj->type ) ? $field_obj->type : '',
+				'format'            => isset( $field_obj->format ) ? $field_obj->format : '',
+				'available_modes'   => $available_modes,
+				'is_repeater_group' => $this->bb_is_repeater_group_field( $field_obj ),
 			);
 		}
 
@@ -165,9 +166,9 @@ class BB_Admin_Profile_Search_Ajax {
 		foreach ( $groups as $group_name => $group_fields ) {
 			$group_items = array();
 			foreach ( $group_fields as $gf ) {
-				$field_obj       = isset( $fields[ $gf['id'] ] ) ? $fields[ $gf['id'] ] : null;
-				$filter_labels   = $field_obj ? bp_ps_Fields::get_filters( $field_obj ) : array();
-				$modes           = array();
+				$field_obj     = isset( $fields[ $gf['id'] ] ) ? $fields[ $gf['id'] ] : null;
+				$filter_labels = $field_obj ? bp_ps_Fields::get_filters( $field_obj ) : array();
+				$modes         = array();
 				foreach ( $filter_labels as $fv => $fl ) {
 					$modes[] = array(
 						'value' => $fv,
@@ -175,11 +176,12 @@ class BB_Admin_Profile_Search_Ajax {
 					);
 				}
 				$group_items[] = array(
-					'code'            => $gf['id'],
-					'name'            => $gf['name'],
-					'type'            => $field_obj && isset( $field_obj->type ) ? $field_obj->type : '',
-					'format'          => $field_obj && isset( $field_obj->format ) ? $field_obj->format : '',
-					'available_modes' => $modes,
+					'code'              => $gf['id'],
+					'name'              => $gf['name'],
+					'type'              => $field_obj && isset( $field_obj->type ) ? $field_obj->type : '',
+					'format'            => $field_obj && isset( $field_obj->format ) ? $field_obj->format : '',
+					'available_modes'   => $modes,
+					'is_repeater_group' => $this->bb_is_repeater_group_field( $field_obj ),
 				);
 			}
 			$available_groups[] = array(
@@ -354,6 +356,23 @@ class BB_Admin_Profile_Search_Ajax {
 		update_post_meta( $form_id, 'bp_ps_options', $meta );
 
 		wp_send_json_success( array( 'message' => __( 'Order updated.', 'buddyboss' ) ) );
+	}
+
+	/**
+	 * Check if a profile search field belongs to a repeater group.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param object|null $field_obj Profile search field object.
+	 *
+	 * @return bool True if the field belongs to a repeater-enabled group.
+	 */
+	private function bb_is_repeater_group_field( $field_obj ) {
+		if ( empty( $field_obj ) || empty( $field_obj->group_id ) ) {
+			return false;
+		}
+
+		return 'on' === bp_xprofile_get_meta( $field_obj->group_id, 'group', 'is_repeater_enabled', true );
 	}
 }
 

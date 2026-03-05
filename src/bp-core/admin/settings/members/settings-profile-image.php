@@ -26,7 +26,7 @@ function bb_members_register_profile_image_panel_fields() {
 		'profile_image',
 		'profile_avatar',
 		array(
-			'title'       => __( 'Profile Avatars', 'buddyboss' ),
+			'title'       => __( 'Profile Avatar', 'buddyboss' ),
 			'description' => '',
 			'order'       => 10,
 		)
@@ -279,6 +279,7 @@ function bb_members_register_profile_image_panel_fields() {
 	);
 
 	// FIELD: Default Profile Cover Image (image_radio, depends on cover enabled).
+	// Order 40 to sort after Cover Image Height (order 30).
 	bb_register_feature_field(
 		'members',
 		'profile_image',
@@ -324,7 +325,7 @@ function bb_members_register_profile_image_panel_fields() {
 				'field' => 'bp-disable-cover-image-uploads',
 				'value' => false,
 			),
-			'order'             => 30,
+			'order'             => 40,
 		)
 	);
 
@@ -335,4 +336,3 @@ function bb_members_register_profile_image_panel_fields() {
 	 */
 	do_action( 'bb_members_settings_after_image_fields' );
 }
-

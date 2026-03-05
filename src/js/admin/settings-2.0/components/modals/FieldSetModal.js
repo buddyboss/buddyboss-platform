@@ -91,7 +91,7 @@ export function FieldSetModal( { fieldSet, onClose, onSave, onDelete, setToast }
 				} else {
 					setToast( {
 						status: 'error',
-						message: response.data?.message || __( 'Failed to save field set.', 'buddyboss' ),
+						message: ( response.data && response.data.message ) || __( 'Failed to save field set.', 'buddyboss' ),
 					} );
 				}
 			} )

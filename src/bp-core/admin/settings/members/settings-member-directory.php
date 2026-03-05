@@ -144,7 +144,7 @@ function bb_members_register_member_directory_panel_fields() {
 			'type'              => 'select',
 			'description'       => __( 'Select which profile action to show as a primary button. The remaining enabled profile actions will be shown as secondary buttons underneath.', 'buddyboss' ),
 			'default'           => function_exists( 'bb_get_member_directory_primary_action' ) ? bb_get_member_directory_primary_action() : '',
-			'sanitize_callback' => 'sanitize_text_field',
+			'sanitize_callback' => 'sanitize_key',
 			'options'           => array(), // Populated at AJAX time.
 			'pro_only'          => true,
 			'order'             => 50,

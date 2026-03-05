@@ -105,7 +105,7 @@ function bp_core_admin_backpat_page() {
 		<h2><?php esc_html_e( 'Why have all my BuddyPress menus disappeared?', 'buddyboss' ); ?></h2>
 
 		<p><?php esc_html_e( 'Don\'t worry! We\'ve moved the BuddyPress options into more convenient and easier to find locations. You\'re seeing this page because you are running a legacy BuddyPress plugin which has not been updated.', 'buddyboss' ); ?></p>
-		<p><?php printf( __( 'Components, Pages, Settings, and Forums, have been moved to <a href="%1$s">Settings &gt; BuddyPress</a>. Profile Fields has been moved into the <a href="%2$s">Users</a> menu.', 'buddyboss' ), esc_url( $settings_url ), bp_get_admin_url( 'admin.php?page=bp-profile-setup' ) ); ?></p>
+		<p><?php printf( __( 'Components, Pages, Settings, and Forums, have been moved to <a href="%1$s">Settings &gt; BuddyPress</a>. Profile Fields has been moved to <a href="%2$s">Settings 2.0</a>.', 'buddyboss' ), esc_url( $settings_url ), esc_url( bb_get_feature_settings_url( 'members', 'profile_fields' ) ) ); ?></p>
 	</div>
 
 	<?php
@@ -1003,31 +1003,12 @@ function bp_core_add_contextual_help( $screen = '' ) {
 
 			break;
 
-		// Profile fields page.
-		case 'users_page_bp-profile-setup':
-			// Help tabs.
-			$screen->add_help_tab(
-				array(
-					'id'      => 'bp-profile-overview',
-					'title'   => __( 'Overview', 'buddyboss' ),
-					'content' => bp_core_add_contextual_help_content( 'bp-profile-overview' ),
-				)
-			);
-
-			// Help panel - sidebar links.
-			$screen->set_help_sidebar(
-				'<p><strong>' . __( 'For more information:', 'buddyboss' ) . '</strong></p>' .
-				'<p>' . __( '<a href="https://www.buddyboss.com/resources/">Documentation</a>', 'buddyboss' ) . '</p>'
-			);
-
-			break;
 	}
 }
 
 add_action( 'load-settings_page_bp-components', 'bp_core_add_contextual_help' );
 add_action( 'load-settings_page_bp-page-settings', 'bp_core_add_contextual_help' );
 add_action( 'load-settings_page_bp-settings', 'bp_core_add_contextual_help' );
-add_action( 'load-users_page_bp-profile-setup', 'bp_core_add_contextual_help' );
 
 /**
  * Renders contextual help content to contextual help tabs.

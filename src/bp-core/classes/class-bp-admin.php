@@ -202,9 +202,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			// Add the separator above the plugins in admin.
 			add_filter( 'menu_order', array( $this, 'buddyboss_plugins_menu_order' ) );
 
-			// DeRegisters jquery-ui-style from the WP Job Manager plugin in WP admin /wp-admin/admin.php?page=bp-profile-setup page.
-			add_action( 'admin_enqueue_scripts', array( $this, 'deregister_wp_job_manager_shared_assets' ), 21 );
-
 			add_action( 'admin_menu', array( $this, 'bp_emails_add_sub_menu_page_admin_menu' ) );
 			add_action( bp_core_admin_hook(), array( $this, 'bp_emails_add_sub_menu_page_admin_menu' ) );
 
@@ -212,24 +209,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			add_action( 'admin_menu', array( $this, 'adjust_buddyboss_menus' ), 100 );
 
 			add_action( 'admin_footer', array( $this, 'bb_display_update_plugin_information' ) );
-		}
-
-		/**
-		 * DeRegisters jquery-ui-style from the WP Job Manager plugin in WP admin /wp-admin/admin.php?page=bp-profile-setup page.
-		 *
-		 * @since BuddyBoss 1.0.0
-		 */
-		public function deregister_wp_job_manager_shared_assets() {
-
-			global $pagenow, $current_screen;
-
-			if ( is_plugin_active( 'wp-job-manager/wp-job-manager.php' ) && isset( $_GET['page'] ) && 'bp-profile-setup' === $_GET['page'] && 'admin.php' === $pagenow && isset( $current_screen->id ) && 'buddyboss_page_bp-profile-setup' === $current_screen->id ) {
-
-				wp_dequeue_style( 'jquery-ui-style' );
-				wp_deregister_style( 'jquery-ui-style' );
-
-			}
-
 		}
 
 		/**
@@ -907,15 +886,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				)
 			);
 
-			// Enqueue only post_type is member type and group type.
-			// @todo: Remove bp-member-type check after testing done in platform. Replaced by Settings 2.0 ProfileTypeModal.
-			if (
-				0 === strpos( get_current_screen()->id, 'bp-group-type' ) ||
-				0 === strpos( get_current_screen()->id, 'bp-member-type' )
-			) {
-				wp_enqueue_style( 'wp-color-picker' );
-				wp_enqueue_script( 'wp-color-picker' );
-			}
 		}
 
 		/** About BuddyBoss and BuddyBoss App ********************************************/

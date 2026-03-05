@@ -380,7 +380,7 @@ export function SettingsScreen({ onNavigate }) {
 												<ToggleControl
 													checked={ 'active' === feature.status }
 													onChange={(checked) => handleFeatureToggle(feature.id, checked)}
-													disabled={!feature.available}
+													disabled={!feature.available || feature.required}
 													__nextHasNoMarginBottom
 												/>
 											</div>

@@ -32,7 +32,7 @@ import { getSectionTitle, getFieldLabel, getFieldDescription, getFieldHelpText }
  * @param {string}   props.activePanelId Active panel ID.
  * @returns {JSX.Element} Profile types screen.
  */
-export function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activePanelId } ) {
+function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activePanelId } ) {
 
 	var memberTypesState = useState( [] );
 	var memberTypes = memberTypesState[ 0 ];

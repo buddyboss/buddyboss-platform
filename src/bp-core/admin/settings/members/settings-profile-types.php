@@ -100,7 +100,7 @@ function bb_members_register_profile_types_panel_fields() {
 				)
 			),
 			'default'           => bp_member_type_default_on_registration(),
-			'sanitize_callback' => 'sanitize_text_field',
+			'sanitize_callback' => 'sanitize_key',
 			'options'           => array(), // Populated at AJAX time by bb_members_enrich_profile_type_options().
 			'conditional'       => array(
 				'field' => 'bp-member-type-enable-disable',

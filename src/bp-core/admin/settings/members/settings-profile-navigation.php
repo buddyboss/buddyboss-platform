@@ -62,7 +62,7 @@ function bb_members_register_profile_navigation_panel_fields() {
 			'description'       => __( 'Set the default navigation tab when viewing a member profile. The dropdown only shows tabs that are available to all members.', 'buddyboss' ),
 			'type'              => 'select',
 			'default'           => 'profile',
-			'options'           => bb_get_member_default_tab_options(),
+			'options'           => array(), // Populated at AJAX time via bb_member_navigation_enrich_field_data().
 			'order'             => 20,
 			'sanitize_callback' => 'sanitize_key',
 		)
@@ -198,45 +198,73 @@ function bb_get_member_default_tab_options() {
  */
 function bb_get_member_profile_nav_items_for_settings() {
 	static $cached_options = null;
-	if ( null !== $cached_options ) {
+	if ( null !== $cached_options && ! doing_action( 'bb_admin_save_feature_settings_after' ) ) {
 		return $cached_options;
 	}
 
-	// All potential primary nav items for user profiles, in display order.
+	// Core primary nav items for user profiles, in display order.
+	// Mirrors the legacy Customizer's bp_nouveau_member_customizer_nav() output.
+	// Other components (invites, etc.) add their items via the filter below.
 	$all_items = array(
-		'profile'   => array(
+		'profile'       => array(
 			'label'     => __( 'Profile', 'buddyboss' ),
 			'component' => 'xprofile',
 		),
-		'activity'  => array(
+		'activity'      => array(
 			'label'     => __( 'Timeline', 'buddyboss' ),
 			'component' => 'activity',
 		),
-		'friends'   => array(
+		'friends'       => array(
 			'label'     => __( 'Connections', 'buddyboss' ),
 			'component' => 'friends',
 		),
-		'groups'    => array(
+		'groups'        => array(
 			'label'     => __( 'Groups', 'buddyboss' ),
 			'component' => 'groups',
 		),
-		'forums'    => array(
+		'messages'      => array(
+			'label'     => __( 'Messages', 'buddyboss' ),
+			'component' => 'messages',
+		),
+		'notifications' => array(
+			'label'     => __( 'Notifications', 'buddyboss' ),
+			'component' => 'notifications',
+		),
+		'forums'        => array(
 			'label'     => __( 'Forums', 'buddyboss' ),
 			'component' => 'forums',
 		),
-		'photos'    => array(
+		'photos'        => array(
 			'label'     => __( 'Photos', 'buddyboss' ),
 			'component' => 'media',
 		),
-		'documents' => array(
+		'documents'     => array(
 			'label'     => __( 'Documents', 'buddyboss' ),
-			'component' => 'document',
+			'component' => 'media',
 		),
-		'videos'    => array(
+		'videos'        => array(
 			'label'     => __( 'Videos', 'buddyboss' ),
 			'component' => 'video',
 		),
+		'settings'      => array(
+			'label'     => __( 'Settings', 'buddyboss' ),
+			'component' => 'settings',
+		),
 	);
+
+	/**
+	 * Filters the member profile nav items for Settings 2.0 Navigation Order.
+	 *
+	 * Components that own a profile nav tab should use this filter to register
+	 * their item. Each item is keyed by its nav slug and contains:
+	 *   - 'label'     (string) Display label.
+	 *   - 'component' (string) Component ID used for active/inactive checks.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $all_items Associative array of slug => item data.
+	 */
+	$all_items = apply_filters( 'bb_member_profile_nav_items', $all_items );
 
 	$inactive_slugs = bb_get_inactive_member_nav_slugs();
 
@@ -297,7 +325,30 @@ function bb_get_inactive_member_nav_slugs() {
 		$inactive[] = 'videos';
 	}
 
-	return $inactive;
+	if ( ! bp_is_active( 'messages' ) ) {
+		$inactive[] = 'messages';
+	}
+
+	if ( ! bp_is_active( 'notifications' ) ) {
+		$inactive[] = 'notifications';
+	}
+
+	if ( ! bp_is_active( 'settings' ) ) {
+		$inactive[] = 'settings';
+	}
+
+	/**
+	 * Filters the list of inactive member profile nav slugs.
+	 *
+	 * Components that register nav items via `bb_member_profile_nav_items`
+	 * should also hook here to mark their slug inactive when their component
+	 * is disabled.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $inactive Array of nav item slugs whose component is inactive.
+	 */
+	return apply_filters( 'bb_member_inactive_nav_slugs', $inactive );
 }
 
 // =========================================================================
@@ -340,7 +391,8 @@ function bb_member_navigation_enrich_field_data( $field_data, $field, $feature_i
 			break;
 
 		case 'bb_user_default_tab':
-			$field_data['value'] = sanitize_key( isset( $appearance['user_default_tab'] ) ? $appearance['user_default_tab'] : 'profile' );
+			$field_data['options'] = bb_get_member_default_tab_options();
+			$field_data['value']   = sanitize_key( isset( $appearance['user_default_tab'] ) ? $appearance['user_default_tab'] : 'profile' );
 			break;
 
 		case 'bb_user_nav_order':
@@ -478,11 +530,18 @@ function bb_member_navigation_save_settings( $feature_id, $settings, $saved ) {
 
 		if ( is_array( $nav_order_data ) ) {
 			// Extract ordered slugs and hidden slugs.
-			$order = array();
-			$hide  = array();
+			$order       = array();
+			$hide        = array();
+			$valid_slugs = wp_list_pluck( bb_get_member_profile_nav_items_for_settings(), 'value' );
 
 			foreach ( $nav_order_data as $slug => $enabled ) {
-				$slug    = sanitize_key( $slug );
+				$slug = sanitize_key( $slug );
+
+				// Only accept known nav item slugs.
+				if ( ! in_array( $slug, $valid_slugs, true ) ) {
+					continue;
+				}
+
 				$order[] = $slug;
 				if ( ! absint( $enabled ) ) {
 					$hide[] = $slug;
@@ -505,8 +564,19 @@ function bb_member_navigation_save_settings( $feature_id, $settings, $saved ) {
 		}
 	}
 
+	// Map default tab keys to nav order slugs for hidden-tab validation.
+	// Default tab uses legacy keys ('media', 'document', 'video') while
+	// nav order uses display slugs ('photos', 'documents', 'videos').
+	$default_tab_to_nav_slug = array(
+		'media'    => 'photos',
+		'document' => 'documents',
+		'video'    => 'videos',
+	);
+
+	$nav_slug_for_check = isset( $default_tab_to_nav_slug[ $default_tab ] ) ? $default_tab_to_nav_slug[ $default_tab ] : $default_tab;
+
 	// If the default tab is now hidden, reset to the first visible tab.
-	if ( is_array( $hide ) && in_array( $default_tab, $hide, true ) ) {
+	if ( is_array( $hide ) && in_array( $nav_slug_for_check, $hide, true ) ) {
 		$nav_order   = isset( $appearance['user_nav_order'] ) ? $appearance['user_nav_order'] : array();
 		$default_tab = 'profile'; // Last resort fallback.
 		foreach ( $nav_order as $slug ) {
@@ -552,14 +622,5 @@ function bb_sanitize_member_nav_order( $value ) {
 		$value = json_decode( $value, true );
 	}
 
-	if ( ! is_array( $value ) ) {
-		return array();
-	}
-
-	$sanitized = array();
-	foreach ( $value as $key => $val ) {
-		$sanitized[ sanitize_key( $key ) ] = absint( $val ) ? 1 : 0;
-	}
-
-	return $sanitized;
+	return bb_members_sanitize_toggle_list( $value );
 }

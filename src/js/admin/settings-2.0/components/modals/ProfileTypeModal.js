@@ -194,7 +194,8 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 				logout_redirection: memberType.logout_redirection || '',
 				custom_logout_redirection: memberType.custom_logout_redirection || '',
 				visibility: memberType.visibility || 'publish',
-				post_password: memberType.post_password || '',
+				has_password: !! memberType.has_password,
+				post_password: '',
 				label_color: {
 					type: ( labelColor.type ) || 'default',
 					background_color: ( labelColor.background_color ) || '',
@@ -312,7 +313,7 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 			'label_color[type]': formData.label_color.type,
 		};
 
-		if ( 'password_protected' === formData.visibility ) {
+		if ( 'password_protected' === formData.visibility && formData.post_password ) {
 			data.post_password = formData.post_password;
 		}
 
@@ -359,7 +360,7 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 						onSave();
 					}
 				} else {
-					setError( response.data?.message || __( 'Failed to save profile type.', 'buddyboss' ) );
+					setError( ( response.data && response.data.message ) || __( 'Failed to save profile type.', 'buddyboss' ) );
 				}
 			} )
 			.catch( function () {
@@ -431,7 +432,7 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 							checked={ !! formData.enable_remove }
 							onChange={ function ( val ) { updateField( 'enable_remove', val ? 1 : 0 ); } }
 						/>
-						{ !! window.bbAdminData?.isSearchActive && (
+						{ !! ( window.bbAdminData && window.bbAdminData.isSearchActive ) && (
 							<CheckboxControl
 								label={ __( 'Hide all members of this type from Network Search results', 'buddyboss' ) }
 								checked={ !! formData.enable_search_remove }
@@ -442,7 +443,7 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 				</div>
 
 				{/* Messaging — only when messages + friends active and force-friendship-to-message enabled */}
-				{ !! window.bbAdminData?.showMessagingWithoutConnectionFlag && (
+				{ !! ( window.bbAdminData && window.bbAdminData.showMessagingWithoutConnectionFlag ) && (
 					<div className="bb-admin-profile-type-modal__section">
 						<h4 className="bb-admin-profile-type-modal__section-title">
 							{ __( 'Messaging', 'buddyboss' ) }
@@ -468,7 +469,7 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 				</div>
 
 				{/* Group Creation Permissions — only when Groups active, creation allowed, group types enabled */}
-				{ availableGroupTypes.length > 0 && !! window.bbAdminData?.isGroupCreationAllowed && !! window.bbAdminData?.isGroupTypeCreationEnabled && (
+				{ availableGroupTypes.length > 0 && !! ( window.bbAdminData && window.bbAdminData.isGroupCreationAllowed ) && !! ( window.bbAdminData && window.bbAdminData.isGroupTypeCreationEnabled ) && (
 					<div className="bb-admin-profile-type-modal__section">
 						<h4 className="bb-admin-profile-type-modal__section-title">
 							{ __( 'Group Creation Permissions', 'buddyboss' ) }
@@ -504,7 +505,7 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 				) }
 
 				{/* Group Type Membership Approval — only when Groups active, group types enabled, auto-join enabled */}
-				{ availableGroupTypes.length > 0 && !! window.bbAdminData?.isGroupAutoJoinEnabled && (
+				{ availableGroupTypes.length > 0 && !! ( window.bbAdminData && window.bbAdminData.isGroupAutoJoinEnabled ) && (
 					<div className="bb-admin-profile-type-modal__section">
 						<h4 className="bb-admin-profile-type-modal__section-title">
 							{ __( 'Group Type Membership Approval', 'buddyboss' ) }
@@ -691,6 +692,7 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 							value={ formData.post_password }
 							onChange={ function ( val ) { updateField( 'post_password', val ); } }
 							type="text"
+							placeholder={ formData.has_password ? __( 'Leave blank to keep current password', 'buddyboss' ) : '' }
 						/>
 					) }
 				</div>

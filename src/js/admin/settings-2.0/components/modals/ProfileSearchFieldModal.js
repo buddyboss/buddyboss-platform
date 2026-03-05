@@ -15,6 +15,7 @@ import {
 	SelectControl,
 	Button,
 	Modal,
+	Notice,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
@@ -252,6 +253,16 @@ export function ProfileSearchFieldModal( { field, availableFields, existingField
 							options={ modeOptions }
 							onChange={ setFieldMode }
 						/>
+					) }
+
+					{/* Repeater date warning. */}
+					{ 'date_range' === fieldMode && (
+						( isEditing && field && field.is_repeater_group ) ||
+						( selectedField && selectedField.is_repeater_group )
+					) && (
+						<Notice status="warning" isDismissible={ false }>
+							{ __( 'You are adding a date field which is inside a repeater set. This will not work correctly in search.', 'buddyboss' ) }
+						</Notice>
 					) }
 				</div>
 

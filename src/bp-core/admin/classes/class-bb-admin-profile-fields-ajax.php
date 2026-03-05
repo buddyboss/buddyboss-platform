@@ -90,9 +90,9 @@ class BB_Admin_Profile_Fields_Ajax {
 
 		$groups = bp_xprofile_get_groups(
 			array(
-				'fetch_fields'                 => true,
-				'fetch_field_data'             => false,
-				'fetch_visibility_level'       => true,
+				'fetch_fields'                   => true,
+				'fetch_field_data'               => false,
+				'fetch_visibility_level'         => true,
 				'repeater_show_main_fields_only' => true,
 			)
 		);
@@ -154,8 +154,8 @@ class BB_Admin_Profile_Fields_Ajax {
 		$this->bb_verify_request();
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
-		$name        = isset( $_POST['name'] ) ? wp_kses( wp_unslash( $_POST['name'] ), wp_kses_allowed_html( 'strip' ) ) : '';
-		$description = isset( $_POST['description'] ) ? sanitize_textarea_field( wp_unslash( $_POST['description'] ) ) : '';
+		$name              = isset( $_POST['name'] ) ? wp_kses( wp_unslash( $_POST['name'] ), wp_kses_allowed_html( 'strip' ) ) : '';
+		$description       = isset( $_POST['description'] ) ? sanitize_textarea_field( wp_unslash( $_POST['description'] ) ) : '';
 		$group_is_repeater = isset( $_POST['group_is_repeater'] ) ? sanitize_key( $_POST['group_is_repeater'] ) : '';
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
@@ -210,9 +210,9 @@ class BB_Admin_Profile_Fields_Ajax {
 		$this->bb_verify_request();
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
-		$group_id    = isset( $_POST['group_id'] ) ? absint( $_POST['group_id'] ) : 0;
-		$name        = isset( $_POST['name'] ) ? wp_kses( wp_unslash( $_POST['name'] ), wp_kses_allowed_html( 'strip' ) ) : '';
-		$description = isset( $_POST['description'] ) ? sanitize_textarea_field( wp_unslash( $_POST['description'] ) ) : '';
+		$group_id          = isset( $_POST['group_id'] ) ? absint( $_POST['group_id'] ) : 0;
+		$name              = isset( $_POST['name'] ) ? wp_kses( wp_unslash( $_POST['name'] ), wp_kses_allowed_html( 'strip' ) ) : '';
+		$description       = isset( $_POST['description'] ) ? sanitize_textarea_field( wp_unslash( $_POST['description'] ) ) : '';
 		$group_is_repeater = isset( $_POST['group_is_repeater'] ) ? sanitize_key( $_POST['group_is_repeater'] ) : '';
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
@@ -365,12 +365,14 @@ class BB_Admin_Profile_Fields_Ajax {
 			$bp = buddypress();
 
 			// Cloned fields should not be considered when determining the max order of fields in given group.
+			// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- BuddyPress table name properties.
 			$cloned_field_ids = $wpdb->get_col(
 				$wpdb->prepare(
 					"SELECT f.id FROM {$bp->profile->table_name_fields} AS f JOIN {$bp->profile->table_name_meta} AS fm ON f.id = fm.object_id WHERE f.group_id = %d AND fm.meta_key = '_is_repeater_clone' AND fm.meta_value = 1",
 					$group_id
 				)
 			);
+			// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 			if ( ! empty( $cloned_field_ids ) ) {
 				$placeholders = implode( ',', array_fill( 0, count( $cloned_field_ids ), '%d' ) );
@@ -384,7 +386,7 @@ class BB_Admin_Profile_Fields_Ajax {
 			} else {
 				$field_order = (int) $wpdb->get_var(
 					$wpdb->prepare(
-						"SELECT MAX(field_order) FROM {$bp->profile->table_name_fields} WHERE group_id = %d",
+						"SELECT MAX(field_order) FROM {$bp->profile->table_name_fields} WHERE group_id = %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- BuddyPress table name property.
 						$group_id
 					)
 				);
@@ -418,7 +420,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		// Save field type specific settings.
 		$field = xprofile_get_field( $saved_id, null, false );
 		if ( $field && $field->type_obj->do_settings_section() ) {
-			// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified above.
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce verified above, sanitized via map_deep below.
 			$settings = isset( $_POST['field_settings'] ) ? wp_unslash( $_POST['field_settings'] ) : array();
 			if ( is_array( $settings ) ) {
 				$field->admin_save_settings( map_deep( $settings, 'sanitize_text_field' ) );
@@ -550,11 +552,11 @@ class BB_Admin_Profile_Fields_Ajax {
 	 * @return array Formatted field data.
 	 */
 	private function bb_format_field( $field ) {
-		$default_visibility     = bp_xprofile_get_meta( $field->id, 'field', 'default_visibility' );
+		$default_visibility      = bp_xprofile_get_meta( $field->id, 'field', 'default_visibility' );
 		$allow_custom_visibility = bp_xprofile_get_meta( $field->id, 'field', 'allow_custom_visibility' );
-		$alternate_name         = bp_xprofile_get_meta( $field->id, 'field', 'alternate_name' );
-		$signup_position        = bp_xprofile_get_meta( $field->id, 'field', 'signup_position' );
-		$placeholder_text       = bp_xprofile_get_meta( $field->id, 'field', '_placeholder_text' );
+		$alternate_name          = bp_xprofile_get_meta( $field->id, 'field', 'alternate_name' );
+		$signup_position         = bp_xprofile_get_meta( $field->id, 'field', 'signup_position' );
+		$placeholder_text        = bp_xprofile_get_meta( $field->id, 'field', '_placeholder_text' );
 
 		// Get field options for multi-option types.
 		$options      = array();
@@ -588,21 +590,21 @@ class BB_Admin_Profile_Fields_Ajax {
 		}
 
 		return array(
-			'id'                     => (int) $field->id,
-			'name'                   => $field->name,
-			'type'                   => $field->type,
-			'is_required'            => (bool) $field->is_required,
-			'can_delete'             => (bool) $field->can_delete,
-			'field_order'            => (int) $field->field_order,
-			'alternate_name'         => $alternate_name ? $alternate_name : '',
-			'description'            => $field->description,
-			'member_types'           => $member_types,
-			'visibility'             => ! empty( $default_visibility ) ? $default_visibility : 'public',
+			'id'                      => (int) $field->id,
+			'name'                    => $field->name,
+			'type'                    => $field->type,
+			'is_required'             => (bool) $field->is_required,
+			'can_delete'              => (bool) $field->can_delete,
+			'field_order'             => (int) $field->field_order,
+			'alternate_name'          => $alternate_name ? $alternate_name : '',
+			'description'             => $field->description,
+			'member_types'            => $member_types,
+			'visibility'              => ! empty( $default_visibility ) ? $default_visibility : 'public',
 			'allow_custom_visibility' => ! empty( $allow_custom_visibility ) ? $allow_custom_visibility : 'allowed',
-			'is_signup'              => ! empty( $signup_position ),
-			'signup_position'        => $signup_position ? (int) $signup_position : 0,
-			'placeholder'            => $placeholder_text ? $placeholder_text : '',
-			'options'                => $options,
+			'is_signup'               => ! empty( $signup_position ),
+			'signup_position'         => $signup_position ? (int) $signup_position : 0,
+			'placeholder'             => $placeholder_text ? $placeholder_text : '',
+			'options'                 => $options,
 		);
 	}
 
@@ -687,8 +689,8 @@ class BB_Admin_Profile_Fields_Ajax {
 	 * @return array Visibility levels with id and label.
 	 */
 	private function bb_get_visibility_levels() {
-		$levels     = bp_xprofile_get_visibility_levels();
-		$formatted  = array();
+		$levels    = bp_xprofile_get_visibility_levels();
+		$formatted = array();
 
 		foreach ( $levels as $level ) {
 			$formatted[] = array(
@@ -764,9 +766,12 @@ class BB_Admin_Profile_Fields_Ajax {
 		}
 
 		// Build the format that BP_XProfile_Field::save() expects.
-		// It expects $_POST data directly with specific keys.
-		$_POST['fieldtype']           = $type;
-		$_POST['sort_order_' . $type] = 'custom';
+		// BP_XProfile_Field::save() reads $_POST directly for field options,
+		// sort order, and default values. This mutation MUST be called
+		// immediately before xprofile_insert_field(). Keys are cleaned up
+		// by PHP's request lifecycle — no manual cleanup needed.
+		$_POST['fieldtype']             = $type;
+		$_POST[ 'sort_order_' . $type ] = 'custom';
 
 		foreach ( $raw_options as $index => $option ) {
 			$option_name = is_array( $option ) ? sanitize_text_field( $option['name'] ) : sanitize_text_field( $option );
@@ -783,9 +788,9 @@ class BB_Admin_Profile_Fields_Ajax {
 
 			if ( $is_default ) {
 				if ( in_array( $type, array( 'checkbox', 'multiselectbox' ), true ) ) {
-					$_POST['isDefault_' . $type . '_option'][ $index + 1 ] = 1;
+					$_POST[ 'isDefault_' . $type . '_option' ][ $index + 1 ] = 1;
 				} else {
-					$_POST['isDefault_' . $type . '_option'] = $index + 1;
+					$_POST[ 'isDefault_' . $type . '_option' ] = $index + 1;
 				}
 			}
 		}

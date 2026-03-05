@@ -24,39 +24,7 @@ import { Toast } from '../components/Toast';
 import { HelpIcon } from '../components/HelpIcon';
 import { ProfileSearchFieldModal } from '../components/modals/ProfileSearchFieldModal';
 import { getSectionTitle, getFieldLabel, getFieldDescription, getFieldHelpText } from '../utils/feature';
-
-/**
- * Field type icon class mapping.
- *
- * @since BuddyBoss [BBVERSION]
- */
-var FIELD_TYPE_ICONS = {
-	textbox: 'bb-icons-rl-text-t',
-	textarea: 'bb-icons-rl-text-align-left',
-	selectbox: 'bb-icons-rl-list',
-	multiselectbox: 'bb-icons-rl-list-checks',
-	checkbox: 'bb-icons-rl-check-square',
-	radio: 'bb-icons-rl-radio-button',
-	datebox: 'bb-icons-rl-calendar',
-	number: 'bb-icons-rl-hash',
-	telephone: 'bb-icons-rl-phone',
-	url: 'bb-icons-rl-link',
-	gender: 'bb-icons-rl-gender-intersex',
-	socialnetworks: 'bb-icons-rl-share-network',
-	membertypes: 'bb-icons-rl-tag',
-};
-
-/**
- * Get the icon class for a field type.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param {string} type Field type key.
- * @returns {string} Icon class name.
- */
-function getFieldTypeIcon( type ) {
-	return FIELD_TYPE_ICONS[ type ] || 'bb-icons-rl-magnifying-glass';
-}
+import { getFieldTypeIcon } from '../utils/fieldTypeIcons';
 
 /**
  * Profile Search Screen Component
@@ -415,6 +383,9 @@ export default function ProfileSearchScreen( { onNavigate, helpUrl, onHelpClick,
 						</div>
 					</div>
 					<div className="bb-admin-feature-settings__section-body">
+						<p className="bb-admin-feature-settings__section-description">
+							{ __( 'Profile search fields match your profile fields. Ensure options are named and assigned correctly, then select them here for search.', 'buddyboss' ) }
+						</p>
 						{ isLoading
 							? (
 								<div className="bb-admin-loading">

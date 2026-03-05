@@ -370,7 +370,7 @@ export function ProfileFieldModal( {
 				} else {
 					setToast( {
 						status: 'error',
-						message: response.data?.message || __( 'Failed to save field.', 'buddyboss' ),
+						message: ( response.data && response.data.message ) || __( 'Failed to save field.', 'buddyboss' ),
 					} );
 				}
 			} )

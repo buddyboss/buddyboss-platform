@@ -38,6 +38,7 @@ function bb_admin_settings_register_members_feature() {
 			'license_tier'       => 'free',
 			'category'           => 'community',
 			'standalone'         => true,
+			'required'           => true,
 			'components'         => array( 'members', 'xprofile', 'friends' ),
 			'is_active_callback' => function () {
 				return bp_is_active( 'xprofile' );
@@ -177,6 +178,15 @@ function bb_admin_settings_register_members_feature() {
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-handshake',
 			),
+			'help_url'   => bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 62835,
+					),
+					'admin.php'
+				)
+			),
 			'order'      => 50,
 			'is_default' => false,
 		)
@@ -242,6 +252,15 @@ function bb_admin_settings_register_members_feature() {
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-magnifying-glass',
 			),
+			'help_url'   => bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 62803,
+					),
+					'admin.php'
+				)
+			),
 			'order'      => 80,
 			'is_default' => false,
 		)
@@ -256,6 +275,15 @@ function bb_admin_settings_register_members_feature() {
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-tabs',
+			),
+			'help_url'   => bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 62851,
+					),
+					'admin.php'
+				)
 			),
 			'order'      => 90,
 			'is_default' => false,

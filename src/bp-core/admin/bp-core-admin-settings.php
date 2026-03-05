@@ -443,7 +443,7 @@ function bp_admin_setting_callback_member_invite_member_type() {
 			'<p class="description">%s</p>',
 			sprintf(
 				__( 'Customize this setting while editing any of your <a href="%s">Profile Types</a>.', 'buddyboss' ),
-				admin_url( 'edit.php?post_type=bp-member-type' )
+				bb_get_feature_settings_url( 'members', 'profile_types' )
 			)
 		);
 }

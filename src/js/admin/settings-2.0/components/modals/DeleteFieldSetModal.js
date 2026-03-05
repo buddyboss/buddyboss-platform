@@ -65,7 +65,7 @@ export function DeleteFieldSetModal( { fieldSet, onClose, onDeleted, setToast } 
 				} else {
 					setToast( {
 						status: 'error',
-						message: response.data?.message || __( 'Failed to delete field set.', 'buddyboss' ),
+						message: ( response.data && response.data.message ) || __( 'Failed to delete field set.', 'buddyboss' ),
 					} );
 				}
 			} )

@@ -74,13 +74,14 @@ function bb_members_register_access_control_fields() {
 		'member_connection',
 		'connection_access',
 		array(
-			'name'        => 'bb-connection-access-control-notice',
-			'label'       => '',
-			'type'        => 'notice',
-			'description' => __( 'These settings do not apply to administrators or group messages.', 'buddyboss' ),
-			'notice_type' => 'info',
-			'order'       => 100,
-			'conditional' => array(
+			'name'              => 'bb-connection-access-control-notice',
+			'label'             => '',
+			'type'              => 'notice',
+			'description'       => __( 'These settings do not apply to administrators or group messages.', 'buddyboss' ),
+			'notice_type'       => 'info',
+			'sanitize_callback' => '__return_empty_string',
+			'order'             => 100,
+			'conditional'       => array(
 				'field' => 'bb_enable_member_connections',
 				'value' => true,
 			),
