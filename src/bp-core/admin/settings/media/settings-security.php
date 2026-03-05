@@ -46,8 +46,8 @@ function bb_media_register_security_panel_fields() {
 		array(
 			'name'              => 'bp_media_symlink_support',
 			'label'             => __( 'Symbolic Links', 'buddyboss' ),
-			'toggle_label'      => __( 'Enable symbolic links', 'buddyboss' ),
-			'description'       => __( 'Symbolic links create secure "shortcuts" to media files uploaded by members, optimizing performance. If disabled, a fallback method will protect your files. If you experience media display issues, try turning off this option.', 'buddyboss' ),
+			'description'       => __( 'Enable symbolic links', 'buddyboss' ),
+			'help_text'         => __( 'Symbolic links create secure "shortcuts" to media files uploaded by members, optimizing performance. If disabled, a fallback method will protect your files. If you experience media display issues, try turning off this option.', 'buddyboss' ),
 			'type'              => 'toggle',
 			'default'           => 0,
 			'sanitize_callback' => 'bb_media_sanitize_symlink_support',
