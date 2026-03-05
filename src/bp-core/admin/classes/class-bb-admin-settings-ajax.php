@@ -346,6 +346,24 @@ class BB_Admin_Settings_Ajax {
 					$formatted_section['conditional'] = $section['conditional'];
 				}
 
+				// Include section_toggle if set.
+				if ( ! empty( $section['section_toggle'] ) ) {
+					$formatted_section['section_toggle'] = $section['section_toggle'];
+					// Ensure the toggle option is loaded into settings.
+					$toggle_name = $section['section_toggle'];
+					if ( ! isset( $settings[ $toggle_name ] ) ) {
+						$settings[ $toggle_name ] = bp_get_option( $toggle_name, 1 );
+					}
+				}
+
+				// Include status if set (e.g. Connected/Not Connected badges).
+				if ( ! empty( $section['status'] ) && is_array( $section['status'] ) ) {
+					$formatted_section['status'] = array(
+						'type' => sanitize_key( $section['status']['type'] ?? 'info' ),
+						'text' => sanitize_text_field( $section['status']['text'] ?? '' ),
+					);
+				}
+
 				$formatted_sections[] = $formatted_section;
 			}
 
@@ -509,9 +527,19 @@ class BB_Admin_Settings_Ajax {
 				$field_value = absint( $field_value );
 			}
 
-			// toggle_list: value from $values (or filter); normalize to int 0|1 for JS.
+			// toggle_list: normalize to int 0|1 for JS.
+			// For extension_data fields (e.g., video extensions), extract is_active from nested arrays.
 			if ( 'toggle_list' === ( $field['type'] ?? '' ) && is_array( $field_value ) ) {
-				$field_value = array_map( 'absint', $field_value );
+				if ( ! empty( $field['extension_data'] ) ) {
+					$field_value = $this->bb_extract_extension_toggle_values( $field_value );
+				} else {
+					$field_value = array_map( 'absint', $field_value );
+				}
+			}
+
+			// document_extensions: extract is_active from nested arrays (same pattern as toggle_list with extension_data).
+			if ( 'document_extensions' === ( $field['type'] ?? '' ) && is_array( $field_value ) ) {
+				$field_value = $this->bb_extract_extension_toggle_values( $field_value );
 			}
 
 			// Handle description_controls: read each control's value from DB (same storage as main options).
@@ -602,11 +630,46 @@ class BB_Admin_Settings_Ajax {
 				'confirm_ok'           => $field['confirm_ok'] ?? null,
 				'confirm_cancel'       => $field['confirm_cancel'] ?? null,
 				'confirm_destructive'  => ! empty( $field['confirm_destructive'] ),
+				// Allow adding new items (e.g., custom extensions).
+				'allow_add'            => ! empty( $field['allow_add'] ),
+				'add_button_label'     => $field['add_button_label'] ?? null,
+				// Full extension data for extension list fields.
+				'extension_data'       => $field['extension_data'] ?? null,
+				// Icon options for extension icon dropdown.
+				'icon_options'         => $field['icon_options'] ?? null,
+				// Manage link fields.
+				'manage_url'           => ! empty( $field['manage_url'] ) ? esc_url( $field['manage_url'] ) : null,
+				'manage_label'         => $field['manage_label'] ?? null,
+				'manage_icon'          => $field['manage_icon'] ?? null,
+				// Input button fields (text input + action button, e.g. API key connect/disconnect).
+				'placeholder'          => $field['placeholder'] ?? null,
+				'button_label'         => $field['button_label'] ?? null,
+				'is_connected'         => ! empty( $field['is_connected'] ),
+				// Status check fields (AJAX-triggered server-side checks, e.g. Direct Access).
+				'ajax_action'          => ! empty( $field['ajax_action'] ) ? sanitize_key( $field['ajax_action'] ) : null,
+				'watch_field'          => $field['watch_field'] ?? null,
+				// Layout: full-width fields render without the label column.
+				'full_width'           => ! empty( $field['full_width'] ),
 				// When true, renders toggle description as a block element below the switch instead of inline.
 				'block_description'    => ! empty( $field['block_description'] ),
-				// Short label displayed inline next to the toggle switch (e.g. "Hide messages from notifications").
-				'toggle_label'         => $field['toggle_label'] ?? null,
 			);
+
+			// access_control: populate access-control data via filter so Pro can inject types/options.
+			if ( 'access_control' === ( $field['type'] ?? '' ) ) {
+				/**
+				 * Filters access-control field data for the Settings 2.0 React UI.
+				 *
+				 * Pro populates this with type dropdowns, saved selections, and
+				 * initial toggle options so the component renders immediately.
+				 *
+				 * @since BuddyBoss [BBVERSION]
+				 *
+				 * @param array  $ac_data    Default empty access-control data.
+				 * @param string $field_name The field option name (e.g. 'bb-access-control-upload-media').
+				 * @param string $feature_id Feature ID (e.g. 'media').
+				 */
+				$field_data['access_control_data'] = apply_filters( 'bb_access_control_field_data', array(), $field['name'], $feature_id );
+			}
 
 			// Auto-compute pro_notice for pro_only fields when not set at registration time.
 			// Registration runs early (bb_register_features) before admin functions are loaded,
@@ -840,6 +903,20 @@ class BB_Admin_Settings_Ajax {
 						bp_update_option( $control_name, $control_value );
 						$saved[ $control_name ] = $control_value;
 					}
+				}
+			}
+		}
+
+		// Save section_toggle options (not registered as fields, but submitted from the section header toggle).
+		$side_panels = $registry->bb_get_side_panels( $feature_id );
+		foreach ( $side_panels as $sp_id => $sp ) {
+			$sections = $registry->bb_get_sections( $feature_id, $sp_id );
+			foreach ( $sections as $sec_id => $sec ) {
+				if ( ! empty( $sec['section_toggle'] ) && array_key_exists( $sec['section_toggle'], $settings ) ) {
+					$toggle_name  = $sec['section_toggle'];
+					$toggle_value = absint( $settings[ $toggle_name ] );
+					bp_update_option( $toggle_name, $toggle_value );
+					$saved[ $toggle_name ] = $toggle_value;
 				}
 			}
 		}
@@ -1207,6 +1284,30 @@ class BB_Admin_Settings_Ajax {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Extract is_active toggle values from extension data arrays.
+	 *
+	 * Normalizes nested extension arrays (which contain is_active, extension,
+	 * mime_type, etc.) into a flat key => 0|1 mapping for the React toggle list.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $field_value The extension data array.
+	 *
+	 * @return array Flattened toggle values keyed by extension ID.
+	 */
+	private function bb_extract_extension_toggle_values( $field_value ) {
+		$toggle_values = array();
+		foreach ( $field_value as $key => $ext ) {
+			if ( is_array( $ext ) && isset( $ext['is_active'] ) ) {
+				$toggle_values[ $key ] = absint( $ext['is_active'] );
+			} else {
+				$toggle_values[ $key ] = absint( $ext );
+			}
+		}
+		return $toggle_values;
 	}
 }
 
