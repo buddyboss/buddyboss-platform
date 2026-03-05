@@ -69,7 +69,7 @@ function bb_activity_register_comments_panel_fields( $edit_time_options ) {
 					'name'              => '_bb_activity_comment_edit_time',
 					'default'           => bb_get_activity_comment_edit_time() ? bb_get_activity_comment_edit_time() : 600,
 					'options'           => $edit_time_options,
-					'sanitize_callback' => 'bb_activity_sanitize_comment_edit_time',
+					'sanitize_callback' => 'bb_activity_sanitize_edit_time',
 				),
 			),
 			'order'                => 20,

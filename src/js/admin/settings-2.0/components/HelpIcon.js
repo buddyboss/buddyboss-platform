@@ -1,4 +1,5 @@
 import React from 'react';
+import { __ } from '@wordpress/i18n';
 
 export const HelpIcon = ({ onClick, contentId }) => {
 	const handleClick = () => {
@@ -11,7 +12,7 @@ export const HelpIcon = ({ onClick, contentId }) => {
 		<button
 			className="help-icon"
 			onClick={handleClick}
-			aria-label="Help"
+			aria-label={__('Help', 'buddyboss')}
 		>
 			<i className="bb-icons-rl-question"></i>
 		</button>

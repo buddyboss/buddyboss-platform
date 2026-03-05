@@ -24,14 +24,16 @@ import {
 	MigrationModal,
 	ReactionButtonField,
 } from './reaction';
+import { decodeEntities } from '@wordpress/html-entities';
 import { sanitizeHtml, safeUrl } from '../utils/sanitize';
 import { TopicListField } from './activity/topics/topic-list';
 import { SharePlatformsField } from './activity/sharing';
 import { AccessControlField } from './access-control/AccessControlField';
 import { CheckboxListField } from './fields/CheckboxListField';
 import { ImageRadioField } from './fields/ImageRadioField';
-import { ChildRenderField } from './fields/ChildRenderField';
 import { DimensionsField } from './fields/DimensionsField';
+import { ConfirmToggleModal } from './modals/ConfirmToggleModal';
+import { AsyncSelectField } from './fields/AsyncSelectField';
 
 /**
  * Settings Form Component (matching Figma settingsSection)
@@ -49,6 +51,18 @@ export function SettingsForm({ fields, values, onChange }) {
 	// Track migration modal state
 	const [isMigrationModalOpen, setIsMigrationModalOpen] = useState(false);
 	const [currentMigrationData, setCurrentMigrationData] = useState(null);
+
+	// Track confirm toggle modal state (for fields with confirm_message).
+	const [confirmModalState, setConfirmModalState] = useState({
+		isOpen: false,
+		message: '',
+		fieldName: '',
+		saveValue: 0,
+		title: '',
+		confirmLabel: '',
+		cancelLabel: '',
+		isDestructive: false,
+	});
 
 	// Memoize sanitized HTML to avoid DOMParser overhead on every re-render.
 	const sanitizedHtml = useMemo( () => {
@@ -85,6 +99,11 @@ export function SettingsForm({ fields, values, onChange }) {
 			if (expectedValue === true || expectedValue === false) {
 				const isTruthy = !!condValue && condValue !== '0' && condValue !== 0;
 				return isTruthy === expectedValue;
+			}
+
+			// When expected value is an array, check if current value is in the array.
+			if (Array.isArray(expectedValue)) {
+				return expectedValue.indexOf(condValue) !== -1;
 			}
 
 			// For non-boolean values, use strict comparison.
@@ -134,8 +153,6 @@ export function SettingsForm({ fields, values, onChange }) {
 
 		switch (field.type) {
 			case 'toggle':
-				// Figma: Toggle with toggle_label displayed next to the switch
-				const toggleLabel = field.toggle_label || field.inline_label || '';
 				// Handle inverted values (e.g., "disable" options shown as "enable" toggles)
 				const isInverted = true === field.invert_value;
 				const displayValue = isInverted ? !value : !!value;
@@ -143,11 +160,27 @@ export function SettingsForm({ fields, values, onChange }) {
 					<div className="bb-admin-settings-form__toggle-wrapper">
 						<ToggleControl
 							key={field.name}
-							label={toggleLabel}
+							label={ field.description_controls && field.description_controls.length > 0 ? '' : decodeEntities( field.description || '' ) }
 							checked={displayValue}
 							onChange={(checked) => {
 								// If inverted, save the opposite of what's displayed
 								const saveValue = isInverted ? !checked : checked;
+
+								// Show confirm modal when turning ON and field has confirm_message.
+								if ( checked && field.confirm_message ) {
+									setConfirmModalState({
+										isOpen: true,
+										message: field.confirm_message,
+										fieldName: field.name,
+										saveValue: saveValue ? 1 : 0,
+										title: field.confirm_title || '',
+										confirmLabel: field.confirm_ok || '',
+										cancelLabel: field.confirm_cancel || '',
+										isDestructive: !!field.confirm_destructive,
+									});
+									return;
+								}
+
 								onChange(field.name, saveValue ? 1 : 0);
 							}}
 							disabled={disabled}
@@ -234,6 +267,18 @@ export function SettingsForm({ fields, values, onChange }) {
 					/>
 				);
 
+			case 'async_select':
+				return (
+					<AsyncSelectField
+						key={field.name}
+						value={value || '0'}
+						onChange={(newValue) => onChange(field.name, newValue)}
+						asyncAction={field.async_action || ''}
+						placeholder={field.placeholder || ''}
+						disabled={disabled}
+					/>
+				);
+
 			case 'radio':
 				return (
 					<RadioControl
@@ -307,15 +352,6 @@ export function SettingsForm({ fields, values, onChange }) {
 			case 'dimensions':
 				return (
 					<DimensionsField
-						field={field}
-						values={values}
-						onChange={onChange}
-					/>
-				);
-
-			case 'child_render':
-				return (
-					<ChildRenderField
 						field={field}
 						values={values}
 						onChange={onChange}
@@ -506,7 +542,7 @@ export function SettingsForm({ fields, values, onChange }) {
 		// so they can return null without leaving an empty wrapper div.
 		if ( 'notice' === field.type || 'reaction_info' === field.type ) {
 			// Grouped notices render inline within their group (no full-width).
-			if ( ! field.group ) {
+			if ( ! field.group?.key ) {
 				return (
 					<div key={field.name} className="bb-admin-settings-form__field bb-admin-settings-form__field--full-width">
 						{controlOutput}
@@ -533,13 +569,13 @@ export function SettingsForm({ fields, values, onChange }) {
 			field.parent_field ? 'bb-admin-settings-form__field--nested' : '',
 			disabled ? 'bb-admin-settings-form__field--disabled' : '',
 			isToggleWithChildren ? 'bb-admin-settings-form__field--has-children' : '',
-			field.group ? 'bb-admin-settings-form__field--grouped' : '',
+			field.group?.key ? 'bb-admin-settings-form__field--grouped' : '',
 		].filter(Boolean).join(' ');
 
 		const hasLabel = field.label && field.label.trim() !== '';
 
 		return (
-			<div key={field.name} className={fieldClasses + ( ! hasLabel ? ' bb-admin-settings-form__field--no-label' : '' ) + ( 'reaction_mode' !== field.type && field.pro_notice?.show ? ' bb-admin-settings-form__field--pro-locked' : '' )} data-group={field.group || undefined}>
+			<div key={field.name} className={fieldClasses + ( ! hasLabel ? ' bb-admin-settings-form__field--no-label' : '' ) + ( 'reaction_mode' !== field.type && field.pro_notice?.show ? ' bb-admin-settings-form__field--pro-locked' : '' )} data-group={field.group?.key || undefined}>
 				{ hasLabel && (
 					<div className="bb-admin-settings-form__field-label">
 						<label>
@@ -567,6 +603,10 @@ export function SettingsForm({ fields, values, onChange }) {
 					</div>
 				)}
 				<div className={ 'bb-admin-settings-form__field-content' + ( ( 'toggle' === field.type || 'checkbox' === field.type ) && field.description && ! isToggleWithChildren ? ' bb-admin-settings-form__field-content--inline' : '' ) }>
+					{/* Group sub-label (e.g. "Width", "Height" within a grouped field) */}
+					{ field.group?.label && (
+						<label className="bb-admin-settings-form__field-group-label">{field.group.label}</label>
+					) }
 					{/* Field with optional prefix/suffix */}
 					<div className="bb-admin-settings-form__field-input-wrapper">
 						{field.prefix && (
@@ -581,7 +621,7 @@ export function SettingsForm({ fields, values, onChange }) {
 					{/* Description: skip for notice type (rendered by notice component itself).
 				    When description contains %s and field has description_controls,
 				    render inline controls (select, text, number) in place of each %s placeholder. */}
-					{ field.description && -1 === [ 'notice', 'checkbox_list', 'share_platforms', 'topic_list' ].indexOf( field.type ) && ( () => {
+					{ field.description && -1 === [ 'notice', 'checkbox_list', 'share_platforms', 'topic_list' ].indexOf( field.type ) && ( 'toggle' !== field.type || ( field.description_controls && field.description_controls.length > 0 ) ) && ( () => {
 						const desc = field.description;
 						const controls = field.description_controls;
 						const hasControls = desc.indexOf( '%s' ) !== -1 && controls && controls.length > 0;
@@ -692,6 +732,21 @@ export function SettingsForm({ fields, values, onChange }) {
 					migrationData={currentMigrationData}
 				/>
 			)}
+			<ConfirmToggleModal
+				isOpen={confirmModalState.isOpen}
+				message={confirmModalState.message}
+				title={confirmModalState.title}
+				confirmLabel={confirmModalState.confirmLabel}
+				cancelLabel={confirmModalState.cancelLabel}
+				isDestructive={confirmModalState.isDestructive}
+				onConfirm={() => {
+					onChange(confirmModalState.fieldName, confirmModalState.saveValue);
+					setConfirmModalState({ isOpen: false, message: '', fieldName: '', saveValue: 0, title: '', confirmLabel: '', cancelLabel: '', isDestructive: false });
+				}}
+				onCancel={() => {
+					setConfirmModalState({ isOpen: false, message: '', fieldName: '', saveValue: 0, title: '', confirmLabel: '', cancelLabel: '', isDestructive: false });
+				}}
+			/>
 		</>
 	);
 }

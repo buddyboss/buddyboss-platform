@@ -414,7 +414,7 @@ class BB_Activity_Admin_Ajax {
 						 * @param string $column_name Name of the column being rendered.
 						 * @param array  $item_data   The current activity item in the loop.
 						 */
-						$custom_columns[ $col_key ] = apply_filters( 'bp_activity_admin_get_custom_column', '', $col_key, $item_data );
+						$custom_columns[ $col_key ] = wp_kses_post( apply_filters( 'bp_activity_admin_get_custom_column', '', $col_key, $item_data ) );
 					}
 					$item['custom_columns'] = $custom_columns;
 				}

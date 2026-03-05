@@ -211,7 +211,7 @@ function bb_activity_register_settings_panel_fields( $edit_time_options = array(
 			'help_text'         => __( 'When checked, logged-in members will see activity from their timeline, connections, followed members, joined groups, subscribed forums, and mentions.', 'buddyboss' ),
 			'default'           => bp_is_relevant_feed_enabled(),
 			'sanitize_callback' => 'intval',
-			'order'             => 90,
+			'order'             => 100,
 		)
 	);
 

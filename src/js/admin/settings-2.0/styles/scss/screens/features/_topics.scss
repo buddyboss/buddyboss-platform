@@ -11,6 +11,7 @@
         border-radius: $bb-border-radius-xl;
         overflow: hidden;
         padding: 16px;
+        margin-top: 8px;
 
         &:empty {
             display: none;
@@ -62,6 +63,8 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        display: flex;
+        align-items: center;
     }
 
     &__permission {
@@ -109,19 +112,8 @@
     }
 
     &__add-btn.is-secondary {
-        color: $bb-text-brand-primary-color;
-        border: 1px solid $bb-border-brand-primary-color;
-        border-radius: $bb-border-radius-lg;
-        box-shadow: none;
-        font-size: 14px;
-        font-weight: 400;
+        @include bb-button-primary-outline;
         align-self: flex-start;
-
-        &:hover {
-            color: $bb-text-brand-primary-color !important;
-            border-color: $bb-border-brand-primary-color !important;
-            box-shadow: none !important;
-        }
 
         [class*="bb-icon"] {
             font-size: 16px;
@@ -163,6 +155,7 @@
 
     &__body {
         padding: 16px 24px;
+        min-height: 225px;
     }
 
     &__error {
@@ -193,10 +186,7 @@
 
     .bb-topic-modal__permission-label,
     .components-base-control__label {
-        color: $bb-text-secondary-color;
-        font-size: 13px;
-        font-weight: 400;
-        text-transform: none;
+        @include bb-input-label;
     }
 
     .components-radio-control__group-wrapper {
@@ -234,12 +224,9 @@
                 @include bb-admin-settings-select;
             }
 
-            .components-input-control-suffix-wrapper {
-                display: none;
-            }
-
+            .components-input-control-suffix-wrapper,
             .components-input-control__backdrop {
-                border-color: transparent;
+                display: none;
             }
         }
     }
@@ -270,33 +257,11 @@
             box-shadow: none;
 
             &.is-secondary {
-                color: $bb-text-color;
-                border: 1px solid $bb-border-secondary-color;
-                background: $bb-background-secondary-color;
-
-                &:hover {
-                    color: $bb-text-color;
-                    border: 1px solid $bb-border-secondary-color;
-                    background: $bb-background-secondary-color;
-                    box-shadow: none;
-                }
+                @include bb-button-secondary;
             }
 
             &.is-primary {
-                color: $bb-text-inverse-color;
-                background: $bb-background-brand-primary-color;
-                border: none;
-
-                &:hover {
-                    color: $bb-text-inverse-color;
-                    background: $bb-background-brand-primary-color;
-                    border: none;
-                }
-
-                &[disabled] {
-                    opacity: 0.5;
-                    pointer-events: none;
-                }
+                @include bb-button-primary;
             }
         }
     }

@@ -1,0 +1,478 @@
+/* ----------------------------------------------------------------
+   Groups Settings - Image Radio Field
+   (avatar/cover/header/grid style pickers)
+   ---------------------------------------------------------------- */
+
+.bb-admin-settings-field__image-radio {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 16px;
+
+	&-option {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		width: 112px;
+		background: none;
+		border: none;
+		padding: 0;
+		cursor: pointer;
+
+		&:hover .bb-admin-settings-field__image-radio-preview {
+			border-color: $bb-border-tertiary-color;
+		}
+
+		&--selected .bb-admin-settings-field__image-radio-preview {
+			border-color: $bb-border-brand-primary-color;
+			border-width: 1px;
+		}
+
+		&:disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+		}
+	}
+
+	&-preview {
+		width: 100%;
+		height: 112px;
+		background: $bb-background-primary-color;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border: 0.5px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-xl;
+		overflow: hidden;
+		transition: border-color 0.2s ease;
+	}
+
+	&-icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		.dashicons {
+			font-size: 32px;
+			width: 32px;
+			height: 32px;
+			color: $bb-icon-tertiary-color;
+		}
+
+		[class^="bb-icon"] {
+			color: $bb-icon-disabled-color;
+			font-size: 48px;
+			font-weight: 600;
+		}
+
+		&--buddyboss {
+			width: 100%;
+			height: 100%;
+
+			img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+				display: block;
+			}
+		}
+	}
+
+	&-label {
+		display: block;
+		width: 100%;
+		padding: 2px 0 2px 4px;
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 20px;
+		color: $bb-text-color;
+		text-align: left;
+		margin-top: 8px;
+	}
+
+	&--with-divider {
+		padding-bottom: 16px;
+		border-bottom: 0.5px solid $bb-border-secondary-color;
+	}
+}
+
+/* Child render field (Cover Image Sizes) */
+.bb-admin-settings-field__child-render {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.bb-admin-settings-field__child-control {
+	max-width: 272px;
+}
+
+.bb-admin-settings-field__avatar-initials {
+	font-size: 36px;
+	font-weight: 600;
+	color: $bb-text-disabled-color;
+	line-height: 1;
+	letter-spacing: 1.44px;
+}
+
+/* Image Radio Wrapper (contains cards + upload area) */
+.bb-admin-settings-field__image-radio-wrapper {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+/* Layout preview mixin — shared by card and header style pickers */
+@mixin layout-preview($cover-h, $avatar-size, $icon-size, $content-pad, $centered-pad, $centered-mt, $line-short, $line-long) {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+
+	&-cover {
+		height: $cover-h;
+		background: $bb-background-secondary-color;
+	}
+
+	&-content {
+		flex: 1;
+		display: flex;
+		align-items: center;
+		padding: $content-pad;
+		gap: 6px;
+		position: relative;
+		background: $bb-background-base-color;
+	}
+
+	&--centered &-content {
+		justify-content: center;
+		padding: $centered-pad;
+	}
+
+	&--centered &-avatar {
+		left: 50%;
+		top: -20px;
+		transform: translateX(-50%);
+	}
+
+	&-avatar {
+		width: $avatar-size;
+		height: $avatar-size;
+		background: $bb-background-primary-color;
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-full;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+		position: absolute;
+		top: -20px;
+		left: 8px;
+
+		[class^="bb-icon"] {
+			font-size: $icon-size;
+			color: $bb-icon-disabled-color;
+			font-weight: 600;
+		}
+	}
+
+	&-lines {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		margin-top: 15px;
+	}
+
+	&--centered &-lines {
+		align-items: center;
+	}
+
+	&-line {
+		height: 4px;
+		background: $bb-background-tertiary-color;
+		border-radius: 2px;
+
+		&--short {
+			width: $line-short;
+		}
+
+		&--long {
+			width: $line-long;
+		}
+	}
+}
+
+/* Header style preview cards */
+.bb-admin-settings-field__header-preview {
+	@include layout-preview(32px, 40px, 24px, 4px 8px, 0 8px 4px, -10px, 45px, 70px);
+}
+
+/* ----------------------------------------------------------------
+   Image Upload Field (avatar/cover upload, crop, preview)
+   ---------------------------------------------------------------- */
+
+.bb-admin-image-upload {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+
+	&__placeholder-area,
+	&__preview-area {
+		display: flex;
+		align-items: center;
+		gap: 16px;
+	}
+
+	&__label {
+		font-size: 13px;
+		font-weight: 500;
+		color: $bb-text-secondary-color;
+		margin: 0;
+		line-height: 18px;
+	}
+
+	&__placeholder {
+		padding: 60px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: $bb-background-primary-color;
+		border: 0.5px solid $bb-border-primary-color;
+		border-radius: $bb-border-radius-xl;
+		flex-shrink: 0;
+
+		.dashicons {
+			font-size: 32px;
+			width: 32px;
+			height: 32px;
+			color: $bb-icon-tertiary-color;
+		}
+	}
+
+	&__preview {
+		width: 160px;
+		height: 160px;
+		border-radius: $bb-border-radius-xl;
+		overflow: hidden;
+		flex-shrink: 0;
+		border: 0.5px solid $bb-border-primary-color;
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			display: block;
+		}
+	}
+
+	// Cover images are wider.
+	&--cover &__placeholder,
+	&--cover &__preview {
+		width: 432px;
+		height: 160px;
+		padding: 0;
+	}
+
+	&--cover &__preview {
+		background: $bb-background-primary-color;
+		border: 0.5px solid $bb-border-primary-color;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	&__actions {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+
+	&__btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		padding: 6px 16px;
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 20px;
+		border-radius: $bb-border-radius-lg;
+		cursor: pointer;
+		transition: all 0.2s ease;
+		white-space: nowrap;
+
+		&--upload {
+			background: $bb-background-base-color;
+			border: 1px solid $bb-border-brand-primary-color;
+			color: $bb-text-brand-primary-color;
+
+			&:hover:not(:disabled) {
+				border-color: $bb-border-brand-tertiary-color;
+				color: $bb-text-brand-primary-color;
+			}
+
+			&:focus {
+				outline: 2px solid $bb-border-quaternary-color;
+				box-shadow: none;
+			}
+		}
+
+		&--remove {
+			background: $bb-background-danger-secondary-color;
+			border: 1px solid transparent;
+			color: $bb-text-inverse-color;
+
+			&:hover:not(:disabled) {
+				background: $bb-background-danger-secondary-hover-color;
+				color: $bb-text-inverse-color;
+				border-color: transparent;
+			}
+
+			&:focus {
+				outline: 2px solid $bb-border-quaternary-color;
+				box-shadow: none;
+			}
+		}
+
+		&--cancel {
+			background: $bb-background-base-color;
+			border: 1px solid $bb-border-secondary-color;
+			color: $bb-text-secondary-color;
+
+			&:hover:not(:disabled) {
+				background: $bb-background-primary-color;
+			}
+		}
+
+		&:focus {
+			border-color: transparent;
+			outline: 2px solid $bb-border-quaternary-color;
+		}
+
+		&:disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+		}
+	}
+
+	&__help {
+		font-size: 13px;
+		color: $bb-text-tertiary-color;
+		margin: 0;
+		line-height: 18px;
+	}
+
+	&__error {
+		font-size: 13px;
+		color: $bb-error-color;
+		margin: 0;
+		line-height: 18px;
+	}
+
+	&__spinner {
+		display: inline-block;
+		width: 24px;
+		height: 24px;
+		border: 3px solid $bb-border-secondary-color;
+		border-top-color: $bb-border-brand-primary-color;
+		border-radius: $bb-border-radius-full;
+		animation: bb-upload-spin 0.6s linear infinite;
+	}
+
+	// Crop modal overlay.
+	&__crop-overlay {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: $bb-overlay-color;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		z-index: 100050;
+	}
+
+	&__crop-modal {
+		background: $bb-background-base-color;
+		border-radius: $bb-border-radius-2xl;
+		padding: 24px;
+		max-width: 480px;
+		width: 90%;
+		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+	}
+
+	&__crop-title {
+		font-size: 16px;
+		font-weight: 600;
+		color: $bb-text-color;
+		margin: 0 0 16px;
+	}
+
+	&__crop-canvas-wrap {
+		display: flex;
+		justify-content: center;
+		margin-bottom: 16px;
+	}
+
+	&__crop-canvas {
+		max-width: 100%;
+		height: auto;
+		cursor: move;
+		border-radius: $bb-border-radius-lg;
+		border: 1px solid $bb-border-secondary-color;
+	}
+
+	&__crop-resize {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		margin-bottom: 16px;
+
+		i {
+			font-size: 16px;
+			color: $bb-icon-tertiary-color;
+			flex-shrink: 0;
+		}
+	}
+
+	&__crop-slider {
+		flex: 1;
+		-webkit-appearance: none;
+		appearance: none;
+		height: 4px;
+		background: $bb-border-secondary-color;
+		border-radius: 2px;
+		outline: none;
+		cursor: pointer;
+
+		&::-webkit-slider-thumb {
+			-webkit-appearance: none;
+			appearance: none;
+			width: 16px;
+			height: 16px;
+			background: $bb-background-brand-primary-color;
+			border-radius: $bb-border-radius-full;
+			cursor: pointer;
+		}
+
+		&::-moz-range-thumb {
+			width: 16px;
+			height: 16px;
+			background: $bb-background-brand-primary-color;
+			border: none;
+			border-radius: $bb-border-radius-full;
+			cursor: pointer;
+		}
+	}
+
+	&__crop-actions {
+		display: flex;
+		justify-content: flex-end;
+		gap: 8px;
+	}
+}
+
+@keyframes bb-upload-spin {
+	to {
+		transform: rotate(360deg);
+	}
+}

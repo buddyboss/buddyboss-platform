@@ -42,7 +42,9 @@ function bb_admin_settings_init() {
 	bb_feature_registry();
 	bb_feature_loader();
 
-	// AJAX handlers and meta field registry (only load in admin or AJAX context to avoid frontend overhead).
+	// Admin/AJAX-only: AJAX handlers, meta field registry, settings page, feature settings
+	// (panels, sections, fields), and icon registry. Skip on frontend for performance —
+	// frontend only needs the Feature Registry + Loader for conditional component loading.
 	if ( is_admin() || wp_doing_ajax() ) {
 		// Admin Meta Field Registry (component-based).
 		if ( ! class_exists( 'BB_Admin_Meta_Field_Registry' ) ) {
@@ -56,22 +58,32 @@ function bb_admin_settings_init() {
 		if ( bp_is_active( 'activity' ) && file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-activity-admin-ajax.php' ) ) {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-activity-admin-ajax.php';
 		}
-	}
 
-	if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-page.php' ) ) {
-		require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-page.php';
-	}
+		if ( bp_is_active( 'groups' ) && file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-groups-ajax.php' ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-groups-ajax.php';
+		}
 
-	// Feature settings registration.
-	if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-activity.php' ) ) {
-		require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-activity.php';
-	}
+		// Admin settings page (menu registration, render function).
+		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-page.php' ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-page.php';
+		}
 
-	if ( file_exists( buddypress()->plugin_dir . 'bp-core/classes/class-bb-icon-registry.php' ) ) {
-		require_once buddypress()->plugin_dir . 'bp-core/classes/class-bb-icon-registry.php';
-	}
+		// Feature settings registration (panels, sections, fields).
+		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-activity.php' ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-activity.php';
+		}
 
-	bb_icon_registry();
+		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-groups.php' ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-groups.php';
+		}
+
+		// Icon registry.
+		if ( file_exists( buddypress()->plugin_dir . 'bp-core/classes/class-bb-icon-registry.php' ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/classes/class-bb-icon-registry.php';
+		}
+
+		bb_icon_registry();
+	}
 }
 
 add_action( 'bp_loaded', 'bb_admin_settings_init', 4 );
@@ -115,15 +127,24 @@ function bb_reverse_sync_components_to_features( $old_value, $new_value ) {
 	// Check each registered feature and sync its state from bp-active-components.
 	// bb_get_features() already returns full feature data keyed by ID, so use it directly.
 	foreach ( $registry->bb_get_features( array( 'status' => 'all' ) ) as $feature_id => $feature ) {
-		// Skip features with custom active callbacks — they manage their own state.
-		if ( ! empty( $feature['is_active_callback'] ) ) {
-			continue;
-		}
-
 		// Determine component IDs that correspond to this feature.
 		$component_ids = array( $feature_id );
 		if ( ! empty( $feature['components'] ) && is_array( $feature['components'] ) ) {
 			$component_ids = $feature['components'];
+		}
+
+		// Skip features that have no matching key in bp-active-components.
+		// This covers pure Settings 2.0 features (e.g. reactions) that don't
+		// map to a legacy component — there is nothing to derive state from.
+		$has_component_key = false;
+		foreach ( $component_ids as $component_id ) {
+			if ( array_key_exists( $component_id, $new_components ) || array_key_exists( $component_id, is_array( $old_value ) ? $old_value : array() ) ) {
+				$has_component_key = true;
+				break;
+			}
+		}
+		if ( ! $has_component_key ) {
+			continue;
 		}
 
 		// Feature is active if any of its components are active.

@@ -309,8 +309,8 @@ class BB_Admin_Settings_Ajax {
 					if ( '' === $key ) {
 						continue;
 					}
-					$opt_name = $prefix . $key;
-					$stored   = bp_get_option( $opt_name, 1 );
+					$opt_name       = $prefix . $key;
+					$stored         = bp_get_option( $opt_name, 1 );
 					$mapped[ $key ] = in_array( $stored, $truthy, true ) ? 1 : 0;
 				}
 				$settings[ $field['name'] ] = $mapped;
@@ -524,7 +524,7 @@ class BB_Admin_Settings_Ajax {
 						continue;
 					}
 					if ( ! empty( $control['name'] ) ) {
-						$control_default = $control['default'] ?? '';
+						$control_default                                = $control['default'] ?? '';
 						$field['description_controls'][ $idx ]['value'] = bp_get_option( $control['name'], $control_default );
 					}
 				}
@@ -576,10 +576,6 @@ class BB_Admin_Settings_Ajax {
 				// Prefix/suffix text support.
 				'prefix'               => $field['prefix'] ?? null,
 				'suffix'               => $field['suffix'] ?? null,
-				// Toggle label (displayed next to toggle switch).
-				'toggle_label'         => $field['toggle_label'] ?? null,
-				// Inline label for toggles (alias for toggle_label).
-				'inline_label'         => $field['inline_label'] ?? $field['toggle_label'] ?? null,
 				// Min/max for number fields.
 				'min'                  => $field['min'] ?? null,
 				'max'                  => $field['max'] ?? null,
@@ -595,8 +591,17 @@ class BB_Admin_Settings_Ajax {
 				'help_text'            => $field['help_text'] ?? null,
 				// Disabled flag to prevent user interaction.
 				'disabled'             => ! empty( $field['disabled'] ),
-				// Group ID for visual grouping of related fields (removes borders between them).
-				'group'                => $field['group'] ?? null,
+				// Group for visual grouping of related fields.
+				// Supports string (key only) or array with 'key' and optional 'label'.
+				// Normalized to array format: { key: string, label: string|null }.
+				'group'                => $this->bb_normalize_field_group( $field['group'] ?? null ),
+				// Confirmation message shown in a modal before toggling ON.
+				'confirm_message'      => $field['confirm_message'] ?? null,
+				// Optional overrides for confirm modal customization.
+				'confirm_title'        => $field['confirm_title'] ?? null,
+				'confirm_ok'           => $field['confirm_ok'] ?? null,
+				'confirm_cancel'       => $field['confirm_cancel'] ?? null,
+				'confirm_destructive'  => ! empty( $field['confirm_destructive'] ),
 			);
 
 			// Auto-compute pro_notice for pro_only fields when not set at registration time.
@@ -609,6 +614,45 @@ class BB_Admin_Settings_Ajax {
 			) {
 				$pro_notice               = bb_admin_settings_get_pro_notice( $feature_id );
 				$field_data['pro_notice'] = ! empty( $pro_notice['show'] ) ? $pro_notice : null;
+			}
+
+			// Inject upload_config and resolved upload_url for image_radio fields with upload support.
+			// Only whitelisted keys are sent to the frontend — url_getter stays server-side.
+			if ( 'image_radio' === ( $field_data['type'] ?? '' ) && ! empty( $field['upload_config'] ) ) {
+				$upload_config = $field['upload_config'];
+
+				// Resolve the current upload URL using the registered getter function.
+				// Strict allowlist — only functions explicitly known to return image URLs.
+				$allowed_url_getters = array(
+					'bb_get_default_custom_upload_group_avatar',
+					'bb_get_default_custom_upload_group_cover',
+				);
+
+				/**
+				 * Filters the allowed url_getter functions for image upload fields.
+				 *
+				 * @since BuddyBoss [BBVERSION]
+				 *
+				 * @param array $allowed_url_getters List of allowed function names.
+				 */
+				$allowed_url_getters = apply_filters( 'bb_admin_settings_allowed_url_getters', $allowed_url_getters );
+
+				$url_getter = $upload_config['url_getter'] ?? '';
+				$upload_url = '';
+				if (
+					! empty( $url_getter ) &&
+					is_string( $url_getter ) &&
+					in_array( $url_getter, $allowed_url_getters, true ) &&
+					function_exists( $url_getter )
+				) {
+					$upload_url = call_user_func( $url_getter );
+				}
+
+				$field_data['upload_url'] = esc_url( $upload_url );
+
+				// Strip server-only keys before passing to frontend.
+				unset( $upload_config['url_getter'] );
+				$field_data['upload_config'] = $upload_config;
 			}
 
 			/**
@@ -632,26 +676,6 @@ class BB_Admin_Settings_Ajax {
 				$field_data['help_text'] = wp_kses_post( $field_data['help_text'] );
 			}
 
-			// Add sub-fields for dimensions/child_render type.
-			if ( isset( $field['fields'] ) && is_array( $field['fields'] ) ) {
-				$sub_fields = array();
-				foreach ( $field['fields'] as $sub_field ) {
-					$sub_field_value = isset( $values[ $sub_field['name'] ] ) ? $values[ $sub_field['name'] ] : ( $sub_field['default'] ?? '' );
-					$sub_fields[]    = array(
-						'name'    => $sub_field['name'],
-						'label'   => $sub_field['label'] ?? '',
-						'type'    => $sub_field['type'] ?? 'text',
-						'default' => $sub_field['default'] ?? '',
-						'value'   => $sub_field_value,
-						'options' => $sub_field['options'] ?? array(),
-						'suffix'  => $sub_field['suffix'] ?? null,
-						'min'     => $sub_field['min'] ?? null,
-						'max'     => $sub_field['max'] ?? null,
-					);
-				}
-				$field_data['fields'] = $sub_fields;
-			}
-
 			// Attach topic data and nonces for topic_list fields.
 			if ( 'topic_list' === ( $field['type'] ?? '' ) && function_exists( 'bb_topics_manager_instance' ) ) {
 				$topics_manager = bb_topics_manager_instance();
@@ -661,7 +685,7 @@ class BB_Admin_Settings_Ajax {
 						array(
 							'item_id'   => 0,
 							'item_type' => 'activity',
-							'per_page'  => -1,
+							'per_page'  => 200,
 						)
 					);
 					$topics_data = ! empty( $result['topics'] ) ? $result['topics'] : array();
@@ -697,8 +721,12 @@ class BB_Admin_Settings_Ajax {
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing
 		$feature_id = isset( $_POST['feature_id'] ) ? sanitize_text_field( wp_unslash( $_POST['feature_id'] ) ) : '';
-		$raw_json   = isset( $_POST['settings'] ) ? wp_unslash( $_POST['settings'] ) : '';
+		$raw_json   = isset( $_POST['settings'] ) ? wp_unslash( $_POST['settings'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- JSON decoded and per-field sanitized below.
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
+
+		if ( ! is_string( $raw_json ) ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid settings format.', 'buddyboss' ) ) );
+		}
 
 		if ( empty( $feature_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Feature ID is required.', 'buddyboss' ) ) );
@@ -722,11 +750,27 @@ class BB_Admin_Settings_Ajax {
 		 * at the early `bb_register_features` hook (e.g., custom post types
 		 * from third-party plugins that register on `init`).
 		 *
+		 * Note: This hook fires in both GET (read) and SAVE contexts. Use
+		 * `bb_admin_settings_before_save_feature` for save-only logic.
+		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param string $feature_id The feature being loaded.
 		 */
 		do_action( 'bb_admin_settings_before_get_feature', $feature_id );
+
+		/**
+		 * Fires before feature settings are saved, in the save AJAX handler only.
+		 *
+		 * Use this hook to capture pre-save state or perform any logic that
+		 * must run exactly once during a save request, before option writes occur.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $feature_id The feature being saved.
+		 * @param array  $settings   Full submitted settings (JSON decoded).
+		 */
+		do_action( 'bb_admin_settings_before_save_feature', $feature_id, $settings );
 
 		$all_fields = $registry->bb_get_all_fields( $feature_id );
 
@@ -1122,6 +1166,43 @@ class BB_Admin_Settings_Ajax {
 		if ( $update_notoptions ) {
 			wp_cache_set( 'notoptions', $notoptions, 'options' );
 		}
+	}
+
+	/**
+	 * Normalize the field group parameter to a consistent array format.
+	 *
+	 * Accepts either a string (group key only, backward compatible) or an
+	 * array with 'key' and optional 'label'. Always returns null or an
+	 * array with 'key' and 'label' keys.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string|array|null $group Raw group value from field registration.
+	 *
+	 * @return array|null Normalized group array or null.
+	 */
+	private function bb_normalize_field_group( $group ) {
+		if ( empty( $group ) ) {
+			return null;
+		}
+
+		// String format (backward compatible): treat as key only.
+		if ( is_string( $group ) ) {
+			return array(
+				'key'   => $group,
+				'label' => null,
+			);
+		}
+
+		// Array format: ensure both keys exist.
+		if ( is_array( $group ) && ! empty( $group['key'] ) ) {
+			return array(
+				'key'   => $group['key'],
+				'label' => $group['label'] ?? null,
+			);
+		}
+
+		return null;
 	}
 }
 
