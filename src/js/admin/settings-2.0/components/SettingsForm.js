@@ -577,7 +577,7 @@ export function SettingsForm({ fields, values, onChange }) {
 				<div className="bb-admin-settings-form__child-field-control">
 					{renderFieldControl(field, disabled)}
 				</div>
-				{field.description && (
+				{field.description && 'toggle' !== field.type && 'checkbox' !== field.type && (
 					<p className="bb-admin-settings-form__child-field-description">{field.description}</p>
 				)}
 			</div>

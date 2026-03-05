@@ -650,8 +650,6 @@ class BB_Admin_Settings_Ajax {
 				'watch_field'          => $field['watch_field'] ?? null,
 				// Layout: full-width fields render without the label column.
 				'full_width'           => ! empty( $field['full_width'] ),
-				// When true, renders toggle description as a block element below the switch instead of inline.
-				'block_description'    => ! empty( $field['block_description'] ),
 			);
 
 			// access_control: populate access-control data via filter so Pro can inject types/options.
