@@ -326,10 +326,6 @@
             align-items: center;
             flex-wrap: wrap;
 
-            .bb-admin-settings-form__field-input-wrapper {
-                flex-shrink: 0;
-            }
-
             .bb-admin-settings-form__field-description {
                 color: $bb-text-color;
                 font-size: 14px;
