@@ -307,11 +307,14 @@ export function GroupsListScreen( { onNavigate } ) {
 		}
 	}, [ notice ] );
 
-	// Cleanup search debounce timer on unmount.
+	// Cleanup search debounce timer and edit abort controller on unmount.
 	useEffect( function () {
 		return function () {
 			if ( searchTimerRef.current ) {
 				clearTimeout( searchTimerRef.current );
+			}
+			if ( editAbortRef.current ) {
+				editAbortRef.current.abort();
 			}
 		};
 	}, [] );
