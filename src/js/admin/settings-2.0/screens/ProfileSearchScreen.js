@@ -289,6 +289,8 @@ export default function ProfileSearchScreen( { onNavigate, helpUrl, onHelpClick,
 			.then( function ( response ) {
 				if ( response.success ) {
 					setToast( { status: 'success', message: __( 'Order updated.', 'buddyboss' ) } );
+					// Reload from server so field indices (id) stay in sync with the new order.
+					loadSearchFields();
 				}
 			} )
 			.catch( function ( error ) {

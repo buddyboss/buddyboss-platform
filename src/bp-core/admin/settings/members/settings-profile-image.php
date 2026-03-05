@@ -76,7 +76,7 @@ function bb_members_register_profile_image_panel_fields() {
 			'type'              => 'toggle',
 			'description'       => __( 'Allow members to upload a profile avatar', 'buddyboss' ),
 			'default'           => bp_disable_avatar_uploads(),
-			'sanitize_callback' => 'intval',
+			'sanitize_callback' => 'absint',
 			'invert_value'      => true,
 			'group'             => 'avatar_settings_group',
 			'order'             => 20,
@@ -202,7 +202,7 @@ function bb_members_register_profile_image_panel_fields() {
 			'description'       => __( 'Enable cover images for member profiles', 'buddyboss' ),
 			'help_text'         => __( 'When enabled, members will be able to upload cover images in their profile settings.', 'buddyboss' ),
 			'default'           => bp_disable_cover_image_uploads(),
-			'sanitize_callback' => 'intval',
+			'sanitize_callback' => 'absint',
 			'invert_value'      => true,
 			'order'             => 10,
 		)

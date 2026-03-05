@@ -287,6 +287,8 @@ function bb_members_sanitize_cover_height( $value ) {
  * @param string $feature_id Feature ID being saved.
  * @param array  $settings   Full submitted settings.
  * @param array  $saved      Keys and values saved by core.
+ *
+ * @return void
  */
 function bb_members_sync_connection_component( $feature_id, $settings, $saved ) {
 	if ( 'members' !== $feature_id || ! array_key_exists( 'bb_enable_member_connections', $settings ) ) {
@@ -368,6 +370,8 @@ function bb_members_get_pre_save_state( $state = null ) {
  * @since BuddyBoss [BBVERSION]
  *
  * @param string $feature_id Feature ID being saved.
+ *
+ * @return void
  */
 function bb_members_capture_pre_save_state( $feature_id ) {
 	if ( 'members' !== $feature_id ) {
@@ -401,6 +405,8 @@ add_action( 'bb_admin_settings_before_save_feature', 'bb_members_capture_pre_sav
  * @param string $feature_id Feature ID.
  * @param array  $settings   Full submitted settings.
  * @param array  $saved      Keys and values saved by core.
+ *
+ * @return void
  */
 function bb_members_handle_display_name_format_change( $feature_id, $settings, $saved ) {
 	if ( 'members' !== $feature_id ) {
@@ -456,6 +462,8 @@ add_action( 'bb_admin_save_feature_settings_after', 'bb_members_handle_display_n
  * @param string $feature_id Feature ID.
  * @param array  $settings   Full submitted settings.
  * @param array  $saved      Keys and values saved by core.
+ *
+ * @return void
  */
 function bb_members_handle_avatar_type_wordpress( $feature_id, $settings, $saved ) {
 	if ( 'members' !== $feature_id ) {
@@ -495,6 +503,8 @@ add_action( 'bb_admin_save_feature_settings_after', 'bb_members_handle_avatar_ty
  * @param string $feature_id Feature ID.
  * @param array  $settings   Full submitted settings.
  * @param array  $saved      Keys and values saved by core.
+ *
+ * @return void
  */
 function bb_members_validate_image_settings_after_save( $feature_id, $settings, $saved ) {
 	if ( 'members' !== $feature_id ) {
@@ -611,6 +621,8 @@ add_filter( 'bb_admin_save_feature_settings_response', 'bb_members_sync_reverted
  * @param string $feature_id Feature ID.
  * @param array  $settings   Full submitted settings.
  * @param array  $saved      Keys and values saved by core.
+ *
+ * @return void
  */
 function bb_members_handle_slug_format_change( $feature_id, $settings, $saved ) {
 	if ( 'members' !== $feature_id ) {

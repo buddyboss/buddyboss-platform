@@ -147,6 +147,9 @@ class BB_Admin_Profile_Search_Ajax {
 				);
 			}
 
+			// Note: 'id' is the array index in bp_ps_options meta, NOT a DB primary key.
+			// JS uses this value for delete (field_index) and reorder (field_order).
+			// After reorder, JS must reload fields to get updated indices.
 			$saved_fields[] = array(
 				'id'                => $index,
 				'code'              => $code,
@@ -265,6 +268,17 @@ class BB_Admin_Profile_Search_Ajax {
 
 		update_post_meta( $form_id, 'bp_ps_options', $meta );
 
+		/**
+		 * Fires after a profile search field is saved (created or updated).
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int    $form_id    Form post ID.
+		 * @param string $field_code Field code identifier.
+		 * @param array  $meta       Updated form meta after save.
+		 */
+		do_action( 'bb_profile_search_field_saved', $form_id, $field_code, $meta );
+
 		wp_send_json_success( array( 'message' => __( 'Field saved.', 'buddyboss' ) ) );
 	}
 
@@ -306,6 +320,17 @@ class BB_Admin_Profile_Search_Ajax {
 		$meta['field_mode']  = array_values( $meta['field_mode'] );
 
 		update_post_meta( $form_id, 'bp_ps_options', $meta );
+
+		/**
+		 * Fires after a profile search field is deleted.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int   $form_id     Form post ID.
+		 * @param int   $field_index Deleted field index.
+		 * @param array $meta        Updated form meta after deletion.
+		 */
+		do_action( 'bb_profile_search_field_deleted', $form_id, $field_index, $meta );
 
 		wp_send_json_success( array( 'message' => __( 'Field removed.', 'buddyboss' ) ) );
 	}

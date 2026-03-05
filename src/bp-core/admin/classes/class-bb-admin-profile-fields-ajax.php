@@ -59,6 +59,8 @@ class BB_Admin_Profile_Fields_Ajax {
 	 * consuming a nonce check for unauthorized users.
 	 *
 	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return void
 	 */
 	private function bb_verify_request() {
 		if ( ! bp_current_user_can( 'bp_moderate' ) ) {
@@ -98,6 +100,19 @@ class BB_Admin_Profile_Fields_Ajax {
 		);
 
 		$field_groups = array();
+
+		// H1 fix: Prime xprofile meta cache for all fields in one query to avoid N+1.
+		$all_field_ids = array();
+		foreach ( $groups as $group ) {
+			if ( ! empty( $group->fields ) ) {
+				foreach ( $group->fields as $field ) {
+					$all_field_ids[] = (int) $field->id;
+				}
+			}
+		}
+		if ( ! empty( $all_field_ids ) ) {
+			bp_xprofile_update_meta_cache( $all_field_ids );
+		}
 
 		foreach ( $groups as $group ) {
 			$is_repeater = 'on' === bp_xprofile_get_meta( $group->id, 'group', 'is_repeater_enabled' );
@@ -519,6 +534,32 @@ class BB_Admin_Profile_Fields_Ajax {
 
 		// Reorder fields within groups.
 		if ( ! empty( $field_order ) && is_array( $field_order ) ) {
+			// Batch-fetch field→group_id mapping to avoid N+1 xprofile_get_field() calls.
+			$all_submitted_ids = array();
+			foreach ( $field_order as $fields ) {
+				if ( is_array( $fields ) ) {
+					foreach ( $fields as $fid ) {
+						$all_submitted_ids[] = absint( $fid );
+					}
+				}
+			}
+
+			$field_group_map = array();
+			if ( ! empty( $all_submitted_ids ) ) {
+				$bp           = buddypress();
+				$placeholders = implode( ',', array_fill( 0, count( $all_submitted_ids ), '%d' ) );
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Placeholders are safe integers.
+				$rows = $wpdb->get_results(
+					$wpdb->prepare(
+						"SELECT id, group_id FROM {$bp->profile->table_name_fields} WHERE id IN ( {$placeholders} )",
+						...$all_submitted_ids
+					)
+				);
+				foreach ( $rows as $row ) {
+					$field_group_map[ (int) $row->id ] = (int) $row->group_id;
+				}
+			}
+
 			foreach ( $field_order as $group_id => $fields ) {
 				if ( ! is_array( $fields ) ) {
 					continue;
@@ -526,10 +567,9 @@ class BB_Admin_Profile_Fields_Ajax {
 				$sanitized_group_id = absint( $group_id );
 				foreach ( $fields as $position => $field_id ) {
 					$sanitized_field_id = absint( $field_id );
-					$field              = xprofile_get_field( $sanitized_field_id, null, false );
 
 					// Validate field exists and belongs to this group before repositioning.
-					if ( ! $field || (int) $field->group_id !== $sanitized_group_id ) {
+					if ( ! isset( $field_group_map[ $sanitized_field_id ] ) || $field_group_map[ $sanitized_field_id ] !== $sanitized_group_id ) {
 						continue;
 					}
 

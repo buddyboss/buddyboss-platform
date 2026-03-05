@@ -175,10 +175,11 @@ function bb_admin_settings_page() {
 	// Only expose when the user has capability to manage group settings.
 	if ( bp_current_user_can( 'bp_moderate' ) ) {
 		$localize_data['uploadNonces'] = array(
-			'uploader'        => wp_create_nonce( 'bp-uploader' ),
-			'avatarCropstore' => wp_create_nonce( 'bp_avatar_cropstore' ),
-			'avatarDelete'    => wp_create_nonce( 'bp_group_avatar_delete' ),
-			'coverDelete'     => wp_create_nonce( 'bp_delete_cover_image' ),
+			'uploader'          => wp_create_nonce( 'bp-uploader' ),
+			'avatarCropstore'   => wp_create_nonce( 'bp_avatar_cropstore' ),
+			'avatarDelete'      => wp_create_nonce( 'bp_delete_avatar_link' ),
+			'avatarDeleteGroup' => wp_create_nonce( 'bp_group_avatar_delete' ),
+			'coverDelete'       => wp_create_nonce( 'bp_delete_cover_image' ),
 		);
 	}
 
