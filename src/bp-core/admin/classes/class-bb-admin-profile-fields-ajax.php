@@ -155,6 +155,20 @@ class BB_Admin_Profile_Fields_Ajax {
 			$response['member_types'] = $this->bb_get_member_types();
 		}
 
+		// Include social network providers for the Social Networks field type.
+		if ( function_exists( 'bp_xprofile_social_network_provider' ) ) {
+			$providers = bp_xprofile_social_network_provider();
+			$response['social_providers'] = array_map(
+				function ( $provider ) {
+					return array(
+						'value' => $provider->value,
+						'name'  => $provider->name,
+					);
+				},
+				$providers
+			);
+		}
+
 		wp_send_json_success( $response );
 	}
 
@@ -516,6 +530,8 @@ class BB_Admin_Profile_Fields_Ajax {
 	 * @return void
 	 */
 	public function reorder_fields() {
+		global $wpdb;
+
 		$this->bb_verify_request();
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.

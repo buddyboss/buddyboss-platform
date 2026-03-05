@@ -56,9 +56,11 @@ var DEFAULT_GENDER_OPTIONS = [
  * @param {Object}   props                  Component props.
  * @param {Object}   props.field            Field data (null for new).
  * @param {number}   props.groupId          Field group ID.
+ * @param {string}   props.groupName        Field group name (for modal title).
  * @param {Object}   props.fieldTypes       Available field types.
  * @param {Array}    props.memberTypes       Available member types.
  * @param {Array}    props.visibilityLevels  Available visibility levels.
+ * @param {Array}    props.socialProviders   Available social network providers.
  * @param {Array}    props.allFieldGroups    All field groups (for singleton check).
  * @param {Function} props.onClose          Close callback.
  * @param {Function} props.onSave           Save success callback.
@@ -68,9 +70,11 @@ var DEFAULT_GENDER_OPTIONS = [
 export function ProfileFieldModal( {
 	field,
 	groupId,
+	groupName,
 	fieldTypes,
 	memberTypes,
 	visibilityLevels,
+	socialProviders,
 	allFieldGroups,
 	onClose,
 	onSave,
@@ -141,6 +145,19 @@ export function ProfileFieldModal( {
 	} );
 	var options = optionsState[ 0 ];
 	var setOptions = optionsState[ 1 ];
+
+	// Social networks (selected provider values).
+	var socialNetworksState = useState( function () {
+		if ( isEditing && 'socialnetworks' === field.type && field.options && field.options.length > 0 ) {
+			return field.options.map( function ( opt ) {
+				return opt.name;
+			} );
+		}
+		// Default: facebook, twitter, linkedIn.
+		return [ 'facebook', 'twitter', 'linkedIn' ];
+	} );
+	var selectedSocialNetworks = socialNetworksState[ 0 ];
+	var setSelectedSocialNetworks = socialNetworksState[ 1 ];
 
 	var isSavingState = useState( false );
 	var isSaving = isSavingState[ 0 ];
@@ -284,6 +301,25 @@ export function ProfileFieldModal( {
 	}
 
 	/**
+	 * Toggle a social network selection.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {string} providerValue Social network provider value.
+	 */
+	function toggleSocialNetwork( providerValue ) {
+		var newNetworks;
+		if ( selectedSocialNetworks.indexOf( providerValue ) >= 0 ) {
+			newNetworks = selectedSocialNetworks.filter( function ( v ) {
+				return v !== providerValue;
+			} );
+		} else {
+			newNetworks = selectedSocialNetworks.concat( [ providerValue ] );
+		}
+		setSelectedSocialNetworks( newNetworks );
+	}
+
+	/**
 	 * Toggle a member type selection.
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -358,6 +394,13 @@ export function ProfileFieldModal( {
 			}
 		}
 
+		// Social networks: send selected providers as options.
+		if ( 'socialnetworks' === type && selectedSocialNetworks.length > 0 ) {
+			data.options = selectedSocialNetworks.map( function ( providerValue ) {
+				return { name: providerValue, is_default: false };
+			} );
+		}
+
 		saveProfileField( data )
 			.then( function ( response ) {
 				setIsSaving( false );
@@ -381,12 +424,18 @@ export function ProfileFieldModal( {
 	}
 
 	var showOptions = OPTION_TYPES.indexOf( type ) >= 0;
+	var showSocialTrack = 'socialnetworks' === type && socialProviders && socialProviders.length > 0;
 	var showPlaceholder = 'textbox' === type || 'textarea' === type || 'number' === type || 'telephone' === type || 'url' === type;
 	var allowMultiDefault = 'checkbox' === type || 'multiselectbox' === type;
 
 	return (
 		<Modal
-			title={ isEditing ? __( 'Edit Field', 'buddyboss' ) : __( 'Add New Field', 'buddyboss' ) }
+			title={ isEditing
+				? __( 'Edit Field', 'buddyboss' )
+				: ( groupName
+					? wp.i18n.sprintf( __( 'Add New Field - %s', 'buddyboss' ), decodeEntities( groupName ) )
+					: __( 'Add New Field', 'buddyboss' ) )
+			}
 			onRequestClose={ onClose }
 			className="bb-pf-field-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
@@ -471,6 +520,27 @@ export function ProfileFieldModal( {
 						</div>
 					) }
 				</div>
+
+				{ /* Social Track (for socialnetworks type) */ }
+				{ showSocialTrack && (
+					<div className="bb-pf-field-social-track bb-admin-settings--divided-section">
+						<p className="bb-pf-field-social-track__description">
+							{ __( 'Please select the social networks to allow. If entered, they will display as icons in the user\'s profile.', 'buddyboss' ) }
+						</p>
+						<div className="bb-pf-field-social-track__list">
+							{ socialProviders.map( function ( provider ) {
+								return (
+									<CheckboxControl
+										key={ provider.value }
+										label={ provider.name }
+										checked={ selectedSocialNetworks.indexOf( provider.value ) >= 0 }
+										onChange={ function () { toggleSocialNetwork( provider.value ); } }
+									/>
+								);
+							} ) }
+						</div>
+					</div>
+				) }
 
 				{ /* Alternate Title */ }
 				<TextControl

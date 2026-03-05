@@ -730,14 +730,34 @@ function bb_deprecated_xprofile_register_fields_hook() {
 	/**
 	 * Fires to register xProfile tab settings fields and section.
 	 *
+	 * The original hook passed a BP_Admin_Setting_Xprofile instance. Settings 2.0
+	 * no longer uses that class, so a no-op stub is passed to satisfy callbacks
+	 * that call add_section()/add_field() on the argument.
+	 *
 	 * @since BuddyBoss 1.2.6
 	 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_members_after_register_settings_fields'} hook with bb_register_feature_field().
 	 *
-	 * @param null $deprecated No longer passes BP_Admin_Setting_tab instance.
+	 * @param object $deprecated No-op stub (was BP_Admin_Setting_tab instance).
 	 */
 	do_action_deprecated(
 		'bp_admin_setting_xprofile_register_fields',
-		array( null ),
+		array(
+			new class() {
+				/**
+				 * No-op stub for BP_Admin_Setting_tab::add_section().
+				 *
+				 * @param mixed ...$args Ignored.
+				 */
+				public function add_section( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+
+				/**
+				 * No-op stub for BP_Admin_Setting_tab::add_field().
+				 *
+				 * @param mixed ...$args Ignored.
+				 */
+				public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+			},
+		),
 		'BuddyBoss [BBVERSION]',
 		'bb_members_after_register_settings_fields'
 	);
@@ -758,14 +778,34 @@ function bb_deprecated_friends_register_fields_hook() {
 	/**
 	 * Fires to register Friends tab settings fields and section.
 	 *
+	 * The original hook passed a BP_Admin_Setting_Friends instance. Settings 2.0
+	 * no longer uses that class, so a no-op stub is passed to satisfy callbacks
+	 * that call add_section()/add_field() on the argument.
+	 *
 	 * @since BuddyBoss 1.2.6
 	 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_members_after_register_settings_fields'} hook with bb_register_feature_field().
 	 *
-	 * @param null $deprecated No longer passes BP_Admin_Setting_tab instance.
+	 * @param object $deprecated No-op stub (was BP_Admin_Setting_tab instance).
 	 */
 	do_action_deprecated(
 		'bp_admin_setting_friends_register_fields',
-		array( null ),
+		array(
+			new class() {
+				/**
+				 * No-op stub for BP_Admin_Setting_tab::add_section().
+				 *
+				 * @param mixed ...$args Ignored.
+				 */
+				public function add_section( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+
+				/**
+				 * No-op stub for BP_Admin_Setting_tab::add_field().
+				 *
+				 * @param mixed ...$args Ignored.
+				 */
+				public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+			},
+		),
 		'BuddyBoss [BBVERSION]',
 		'bb_members_after_register_settings_fields'
 	);

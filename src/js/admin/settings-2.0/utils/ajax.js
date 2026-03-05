@@ -391,11 +391,12 @@ export function updateMemberType(typeId, data) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param {number} typeId - Member type post ID.
+ * @param {number} typeId  - Member type post ID.
+ * @param {Object} options - Optional fetch options (e.g. { signal } for AbortController).
  * @return {Promise} Promise resolving to response.
  */
-export function deleteMemberType(typeId) {
-	return ajaxFetch('bb_admin_delete_member_type', { type_id: typeId });
+export function deleteMemberType(typeId, options) {
+	return ajaxFetch('bb_admin_delete_member_type', { type_id: typeId }, options);
 }
 
 /**

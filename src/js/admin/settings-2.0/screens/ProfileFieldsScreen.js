@@ -21,6 +21,7 @@ import { Toast } from '../components/Toast';
 import { FieldSetModal } from '../components/modals/FieldSetModal';
 import { DeleteFieldSetModal } from '../components/modals/DeleteFieldSetModal';
 import { ProfileFieldModal } from '../components/modals/ProfileFieldModal';
+import { ConfirmToggleModal } from '../components/modals/ConfirmToggleModal';
 import { getFieldTypeIcon } from '../utils/fieldTypeIcons';
 
 /**
@@ -57,6 +58,10 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 	var visibilityLevelsState = useState( [] );
 	var visibilityLevels = visibilityLevelsState[ 0 ];
 	var setVisibilityLevels = visibilityLevelsState[ 1 ];
+
+	var socialProvidersState = useState( [] );
+	var socialProviders = socialProvidersState[ 0 ];
+	var setSocialProviders = socialProvidersState[ 1 ];
 
 	var toastState = useState( null );
 	var toast = toastState[ 0 ];
@@ -127,6 +132,7 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 					setFieldTypes( response.data.field_types || { multi_fields: [], single_fields: [] } );
 					setMemberTypes( response.data.member_types || [] );
 					setVisibilityLevels( response.data.visibility_levels || [] );
+					setSocialProviders( response.data.social_providers || [] );
 				}
 				setIsLoading( false );
 			} )
@@ -487,7 +493,7 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 			wp.element.createElement(
 				'p',
 				null,
-				__( 'Manage the profile field sets and fields that appear on user profiles and registration.', 'buddyboss' )
+				__( 'Select the fields you want to display on your registration page.', 'buddyboss' )
 			)
 		),
 
@@ -645,7 +651,7 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 												role: 'menuitem',
 												onClick: function () {
 													setOpenMenuId( null );
-													setEditField( { field: field, groupId: group.id } );
+													setEditField( { field: field, groupId: group.id, groupName: group.name } );
 												},
 											},
 											wp.element.createElement( 'span', { className: 'components-menu-item__item' },
@@ -685,7 +691,7 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 							variant: 'secondary',
 							className: 'bb-pf-add-field-btn',
 							onClick: function () {
-								setEditField( { field: null, groupId: group.id } );
+								setEditField( { field: null, groupId: group.id, groupName: group.name } );
 							},
 						},
 						wp.element.createElement( 'i', { className: 'bb-icons-rl bb-icons-rl-plus' } ),
@@ -740,9 +746,11 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 		null !== editField && wp.element.createElement( ProfileFieldModal, {
 			field: editField.field,
 			groupId: editField.groupId,
+			groupName: editField.groupName,
 			fieldTypes: fieldTypes,
 			memberTypes: memberTypes,
 			visibilityLevels: visibilityLevels,
+			socialProviders: socialProviders,
 			allFieldGroups: fieldGroups,
 			onClose: function () { setEditField( null ); },
 			onSave: function () {
@@ -753,38 +761,17 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 		} ),
 
 		// Delete field confirmation.
-		null !== deleteFieldData && wp.element.createElement(
-			'div',
-			{ className: 'bb-pf-confirm-overlay' },
-			wp.element.createElement(
-				'div',
-				{ className: 'bb-pf-confirm-dialog' },
-				wp.element.createElement( 'p', null,
-					/* translators: %s: field name */
-					wp.i18n.sprintf( __( 'Are you sure you want to delete the field "%s"? This action cannot be undone.', 'buddyboss' ), decodeEntities( deleteFieldData.name ) )
-				),
-				wp.element.createElement(
-					'div',
-					{ className: 'bb-pf-confirm-actions' },
-					wp.element.createElement(
-						Button,
-						{
-							variant: 'secondary',
-							onClick: function () { setDeleteFieldData( null ); },
-						},
-						__( 'Cancel', 'buddyboss' )
-					),
-					wp.element.createElement(
-						Button,
-						{
-							variant: 'primary',
-							isDestructive: true,
-							onClick: function () { handleDeleteField( deleteFieldData.id ); },
-						},
-						__( 'Delete', 'buddyboss' )
-					)
-				)
-			)
-		)
+		wp.element.createElement( ConfirmToggleModal, {
+			isOpen: null !== deleteFieldData,
+			title: __( 'Delete Field', 'buddyboss' ),
+			message: deleteFieldData
+				? wp.i18n.sprintf( __( 'Are you sure you want to delete the field "%s"? This action cannot be undone.', 'buddyboss' ), decodeEntities( deleteFieldData.name ) )
+				: '',
+			confirmLabel: __( 'Delete', 'buddyboss' ),
+			cancelLabel: __( 'Cancel', 'buddyboss' ),
+			isDestructive: true,
+			onConfirm: function () { handleDeleteField( deleteFieldData.id ); },
+			onCancel: function () { setDeleteFieldData( null ); },
+		} )
 	);
 }

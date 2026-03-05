@@ -344,7 +344,8 @@ class BB_Admin_Profile_Search_Ajax {
 		$this->bb_verify_request();
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
-		$field_order = isset( $_POST['field_order'] ) ? array_map( 'absint', (array) $_POST['field_order'] ) : array();
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized via array_map( 'absint' ).
+		$field_order = isset( $_POST['field_order'] ) ? array_map( 'absint', (array) wp_unslash( $_POST['field_order'] ) ) : array();
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $field_order ) ) {

@@ -90,6 +90,9 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 	var deleteConfirmId = deleteConfirmState[ 0 ];
 	var setDeleteConfirmId = deleteConfirmState[ 1 ];
 
+	// AbortController ref for save/delete operations.
+	var actionAbortRef = useRef( null );
+
 	// Load platform settings.
 	useEffect( function () {
 		var controller = new AbortController();
@@ -136,7 +139,12 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 	useEffect( function () {
 		var controller = new AbortController();
 		loadMemberTypes( { signal: controller.signal } );
-		return function () { controller.abort(); };
+		return function () {
+			controller.abort();
+			if ( actionAbortRef.current ) {
+				actionAbortRef.current.abort();
+			}
+		};
 	}, [ loadMemberTypes ] );
 
 	// Close menu on outside click or Escape key.
@@ -233,7 +241,12 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 		var typeId = deleteConfirmId;
 		setDeleteConfirmId( null );
 
-		deleteMemberType( typeId )
+		if ( actionAbortRef.current ) {
+			actionAbortRef.current.abort();
+		}
+		actionAbortRef.current = new AbortController();
+
+		deleteMemberType( typeId, { signal: actionAbortRef.current.signal } )
 			.then( function ( response ) {
 				if ( response.success ) {
 					setMemberTypes( function ( prev ) {
@@ -246,7 +259,10 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 					setToast( { status: 'error', message: ( response.data && response.data.message ) || __( 'Failed to delete profile type.', 'buddyboss' ) } );
 				}
 			} )
-			.catch( function () {
+			.catch( function ( err ) {
+				if ( 'AbortError' === err.name ) {
+					return;
+				}
 				setToast( { status: 'error', message: __( 'Failed to delete profile type.', 'buddyboss' ) } );
 			} );
 	}, [ deleteConfirmId ] );

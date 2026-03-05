@@ -23,6 +23,7 @@ import { sanitizeHtml } from '../utils/sanitize';
 import { Toast } from '../components/Toast';
 import { HelpIcon } from '../components/HelpIcon';
 import { ProfileSearchFieldModal } from '../components/modals/ProfileSearchFieldModal';
+import { ConfirmToggleModal } from '../components/modals/ConfirmToggleModal';
 import { getSectionTitle, getFieldLabel, getFieldDescription, getFieldHelpText } from '../utils/feature';
 import { getFieldTypeIcon } from '../utils/fieldTypeIcons';
 
@@ -511,33 +512,19 @@ export default function ProfileSearchScreen( { onNavigate, helpUrl, onHelpClick,
 			) }
 
 			{/* Delete field confirmation. */}
-			{ null !== deleteFieldData && (
-				<div className="bb-pf-confirm-overlay">
-					<div className="bb-pf-confirm-dialog">
-						<p>
-							{
-								/* translators: %s: field name */
-								wp.i18n.sprintf( __( 'Are you sure you want to remove the field "%s"? This action cannot be undone.', 'buddyboss' ), decodeEntities( deleteFieldData.label || deleteFieldData.name ) )
-							}
-						</p>
-						<div className="bb-pf-confirm-actions">
-							<Button
-								variant="secondary"
-								onClick={ function () { setDeleteFieldData( null ); } }
-							>
-								{ __( 'Cancel', 'buddyboss' ) }
-							</Button>
-							<Button
-								variant="primary"
-								isDestructive={ true }
-								onClick={ function () { handleDeleteField( deleteFieldData.id ); } }
-							>
-								{ __( 'Remove', 'buddyboss' ) }
-							</Button>
-						</div>
-					</div>
-				</div>
-			) }
+			<ConfirmToggleModal
+				isOpen={ null !== deleteFieldData }
+				title={ __( 'Remove Field', 'buddyboss' ) }
+				message={ deleteFieldData
+					? wp.i18n.sprintf( __( 'Are you sure you want to remove the field "%s"? This action cannot be undone.', 'buddyboss' ), decodeEntities( deleteFieldData.label || deleteFieldData.name ) )
+					: ''
+				}
+				confirmLabel={ __( 'Remove', 'buddyboss' ) }
+				cancelLabel={ __( 'Cancel', 'buddyboss' ) }
+				isDestructive={ true }
+				onConfirm={ function () { handleDeleteField( deleteFieldData.id ); } }
+				onCancel={ function () { setDeleteFieldData( null ); } }
+			/>
 
 		</div>
 	);
