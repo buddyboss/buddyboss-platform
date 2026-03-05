@@ -213,7 +213,10 @@
 	}
 
 	&:first-child {
-		padding-top: 0;
+
+		.bb-ps-field-list  & {
+			padding-top: 0;
+		}
 	}
 }
 
