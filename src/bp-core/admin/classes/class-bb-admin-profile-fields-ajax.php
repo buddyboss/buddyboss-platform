@@ -386,6 +386,12 @@ class BB_Admin_Profile_Fields_Ajax {
 
 		if ( ! empty( $field_id ) ) {
 			$args['field_id'] = $field_id;
+
+			// Preserve existing field_order on edit so the field doesn't jump to position 0.
+			$existing_field = xprofile_get_field( $field_id );
+			if ( $existing_field ) {
+				$args['field_order'] = (int) $existing_field->field_order;
+			}
 		}
 
 		// Auto-assign field order for new fields (exclude repeater clones, matching legacy behavior).
@@ -645,7 +651,17 @@ class BB_Admin_Profile_Fields_Ajax {
 			}
 		}
 
-		return array(
+		// Get type-specific settings for fields that have a settings section (datebox, telephone).
+		$field_settings = array();
+		if ( $field->type_obj && $field->type_obj->do_settings_section() ) {
+			if ( 'datebox' === $field->type ) {
+				$field_settings = BP_XProfile_Field_Type_Datebox::get_field_settings( $field->id );
+			} elseif ( 'telephone' === $field->type ) {
+				$field_settings = $field->type_obj->get_field_settings( $field );
+			}
+		}
+
+		$data = array(
 			'id'                      => (int) $field->id,
 			'name'                    => $field->name,
 			'type'                    => $field->type,
@@ -662,6 +678,12 @@ class BB_Admin_Profile_Fields_Ajax {
 			'placeholder'             => $placeholder_text ? $placeholder_text : '',
 			'options'                 => $options,
 		);
+
+		if ( ! empty( $field_settings ) ) {
+			$data['field_settings'] = $field_settings;
+		}
+
+		return $data;
 	}
 
 	/**

@@ -270,13 +270,16 @@ function bb_get_member_profile_nav_items_for_settings() {
 
 	$options = array();
 	foreach ( $all_items as $slug => $item ) {
-		$is_hidden = in_array( $slug, $inactive_slugs, true );
+		// Skip nav items whose parent component is inactive.
+		// Legacy Customizer only shows nav from active components
+		// (inactive components never register their nav items).
+		if ( in_array( $slug, $inactive_slugs, true ) ) {
+			continue;
+		}
 
 		$options[] = array(
-			'value'       => $slug,
-			'label'       => $item['label'],
-			'disabled'    => $is_hidden,
-			'badge_label' => $is_hidden ? __( 'Hidden', 'buddyboss' ) : '',
+			'value' => $slug,
+			'label' => $item['label'],
 		);
 	}
 
