@@ -1174,6 +1174,40 @@
 
 /* Share Platforms Field */
 
+/* Navigation Order (no-label) sections — full-width nav items */
+#section-group_navigation_order,
+#section-profile_navigation_order {
+
+	.bb-admin-settings-form__field--no-label .bb-admin-settings-form__field-content {
+		margin-left: 0;
+	}
+
+	.bb-admin-settings-field__checkbox-list-item:first-child {
+		padding-top: 0;
+	}
+
+	.bb-admin-settings-field__checkbox-list {
+
+		.components-form-toggle {
+			order: 2;
+		}
+
+		&-label {
+			width: 100%;
+		}
+
+		&-badge {
+			color: $bb-text-color;
+			font-size: 11px;
+			margin: 0 auto;
+			padding: 4px 8px;
+			background-color: $bb-background-secondary-color;
+			border: 1px solid $bb-border-tertiary-color;
+			border-radius: $bb-border-radius-full;
+		}
+	}
+}
+
 .bb_share_item {
     height: 96px;
     width: 96px;
