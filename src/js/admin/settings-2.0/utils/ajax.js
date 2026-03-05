@@ -30,8 +30,21 @@ export function ajaxFetch( action, data, options ) {
 	Object.keys( data ).forEach( function ( key ) {
 		var val = data[ key ];
 		if ( Array.isArray( val ) ) {
-			val.forEach( function ( item ) {
-				formData.append( key + '[]', item );
+			val.forEach( function ( item, idx ) {
+				if ( item && 'object' === typeof item && ! ( item instanceof Blob ) ) {
+					// Array of objects: options[0][name]=X, options[0][is_default]=1.
+					Object.keys( item ).forEach( function ( subKey ) {
+						var subVal = item[ subKey ];
+						// Convert booleans to 1/0 so PHP empty() works correctly
+						// ("false" string is truthy in PHP, "0" is falsy).
+						if ( 'boolean' === typeof subVal ) {
+							subVal = subVal ? '1' : '0';
+						}
+						formData.append( key + '[' + idx + '][' + subKey + ']', subVal );
+					} );
+				} else {
+					formData.append( key + '[]', item );
+				}
 			} );
 		} else if ( val && 'object' === typeof val && ! ( val instanceof Blob ) ) {
 			Object.keys( val ).forEach( function ( subKey ) {

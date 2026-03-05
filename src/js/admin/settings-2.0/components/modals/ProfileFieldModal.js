@@ -349,8 +349,8 @@ export function ProfileFieldModal( {
 			return;
 		}
 
-		// Singleton check.
-		if ( ! isEditing && isSingletonExists( type ) ) {
+		// Singleton check (applies to both new and type-changed fields).
+		if ( isSingletonExists( type ) ) {
 			var singletonMessages = {
 				gender: __( 'You can only have one instance of the "Gender" profile field.', 'buddyboss' ),
 				socialnetworks: __( 'You can only have one instance of the "Social Network" profile field.', 'buddyboss' ),
@@ -463,7 +463,7 @@ export function ProfileFieldModal( {
 								setType( val );
 							}
 						} }
-						disabled={ isEditing }
+						disabled={ isEditing && field && ! field.can_delete }
 						help={ __( 'Select the input field type members will use to enter information.', 'buddyboss' ) }
 					/>
 
