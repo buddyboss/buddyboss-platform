@@ -466,6 +466,7 @@
     .bb-admin-settings-form__child-field {
 
         &-label {
+            display: block;
             color: $bb-text-secondary-color;
             font-size: 13px;
             font-weight: 500;
