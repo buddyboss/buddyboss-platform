@@ -68,7 +68,7 @@ function bb_admin_settings_register_messages_feature() {
 			'title'      => __( 'Messaging Notifications', 'buddyboss' ),
 			'icon'       => array(
 				'type'  => 'font',
-				'class' => 'bb-icons-rl bb-icons-rl-bell-ringing',
+				'class' => 'bb-icons-rl bb-icons-rl-bell-simple',
 			),
 			'help_url'   => bp_get_admin_url(
 				add_query_arg(
@@ -192,7 +192,6 @@ function bb_admin_settings_register_messages_feature() {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	do_action( 'bb_messages_after_register_settings_fields' );
-
 }
 
 add_action( 'bb_register_features', 'bb_admin_settings_register_messages_feature', 20 );
