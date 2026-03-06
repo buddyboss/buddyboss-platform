@@ -55,7 +55,7 @@ function bb_messages_register_access_control_fields() {
 			'threaded'           => true,
 			'threaded_sub_label' => __( 'Members with the {{option_value}} {{select_value}} can send messages to members with - Any Member / With Specific {{select_value}}(s)', 'buddyboss' ),
 			'order'              => 10,
-			'sanitize_callback'  => 'bb_sanitize_access_control_field',
+			'sanitize_callback'  => function_exists( 'bb_sanitize_access_control_field' ) ? 'bb_sanitize_access_control_field' : 'sanitize_text_field',
 		)
 	);
 
