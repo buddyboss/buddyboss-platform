@@ -710,8 +710,13 @@
 				color: $bb-icon-tertiary-color;
 			}
 
-			&:hover i {
+			&:hover:not(:disabled) i {
 				color: $bb-error-color;
+			}
+
+			&:disabled {
+				cursor: not-allowed;
+				opacity: 0.3;
 			}
 		}
 	}
