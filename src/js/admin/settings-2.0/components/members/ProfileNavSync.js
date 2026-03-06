@@ -128,5 +128,10 @@ export function useProfileNavSync( {
 				}
 			}
 		}
-	}, [ featureId, navOrderKey, initialLoad, setSidePanels, setSettings, settingsRef ] );
+	// Note: setSidePanels and setSettings are React state setters — their identity
+	// is stable across renders, so they must NOT appear in the dependency array.
+	// Including them causes an infinite re-render loop because the effect calls
+	// setSidePanels(), which triggers a parent render, which recreates the
+	// handleSettingChange callback, which propagates back here.
+	}, [ featureId, navOrderKey, initialLoad, settingsRef ] ); // eslint-disable-line react-hooks/exhaustive-deps
 }
