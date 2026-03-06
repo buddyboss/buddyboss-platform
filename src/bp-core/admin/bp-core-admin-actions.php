@@ -656,6 +656,7 @@ function bb_redirect_legacy_settings_to_settings_2() {
 		'bp-activity'  => 'activity',
 		'bp-groups'    => 'groups',
 		'bp-xprofile'  => 'members',
+		'bp-forums'    => 'forums',
 		'bp-friends'   => array(
 			'tab'   => 'members',
 			'panel' => 'member_connection',
