@@ -9,9 +9,10 @@
 
 import { useState, useEffect, useRef, useCallback, lazy, Suspense, RawHTML } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { Spinner } from '@wordpress/components';
+import { Spinner, ToggleControl } from '@wordpress/components';
 import { ajaxFetch } from '../utils/ajax';
 import { getCachedFeatureData, setCachedFeatureData, invalidateFeatureCache } from '../utils/featureCache';
+import { BB_EVENTS } from '../utils/constants';
 import { applyReactionPostSave } from '../components/reaction/applyReactionPostSave';
 import { SettingsForm } from '../components/SettingsForm';
 import { SideNavigation } from './SideNavigation';
@@ -70,6 +71,9 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 	const [isHelpLoading, setHelpLoading] = useState(false);
 	const [helpError, setHelpError] = useState(null);
 
+	// Section status overrides (updated via custom events from input_button fields).
+	const [sectionStatusOverrides, setSectionStatusOverrides] = useState({});
+
 	// Auto-save state.
 	const [toast, setToast] = useState(null);
 	const [changedFields, setChangedFields] = useState({});
@@ -81,6 +85,24 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 	useEffect(() => {
 		settingsRef.current = settings;
 	}, [settings]);
+
+	// Listen for section status updates from input_button fields (e.g. GIPHY connect/disconnect).
+	useEffect( function() {
+		function handleStatusUpdate( event ) {
+			var detail = event.detail;
+			if ( detail && detail.fieldName && detail.status ) {
+				setSectionStatusOverrides( function( prev ) {
+					var next = Object.assign( {}, prev );
+					next[ detail.fieldName ] = detail.status;
+					return next;
+				} );
+			}
+		}
+		window.addEventListener( BB_EVENTS.SECTION_STATUS_UPDATE, handleStatusUpdate );
+		return function() {
+			window.removeEventListener( BB_EVENTS.SECTION_STATUS_UPDATE, handleStatusUpdate );
+		};
+	}, [] );
 
 	// Load feature settings via AJAX - only when featureId changes
 	// Uses caching to prevent re-fetching on navigation within the same feature
@@ -291,13 +313,36 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 
 	// Handle setting change (all fields) - triggers auto-save.
 	// Value may be a function (prevValue) => newValue for functional updates (avoids stale state when merging).
-	// Stable reference so children that depend on this handler do not re-run effects on every render.
+	// When a parent toggle is turned OFF, cascade to child fields (parent_field) and turn them OFF too.
 	const handleSettingChange = useCallback((fieldName, value) => {
 		setToast({ status: 'saving', message: __('Saving changes...', 'buddyboss') });
-		setSettings((prev) => ({
-			...prev,
-			[fieldName]: typeof value === 'function' ? value(prev[fieldName]) : value,
-		}));
+
+		// Collect child fields that depend on this field via parent_field.
+		var childNames = [];
+		var resolvedValue = value;
+		if ( typeof resolvedValue !== 'function' && ! resolvedValue ) {
+			sidePanels.forEach( function( panel ) {
+				( panel.sections || [] ).forEach( function( section ) {
+					( section.fields || [] ).forEach( function( field ) {
+						if ( field.parent_field === fieldName ) {
+							childNames.push( field.name );
+						}
+					} );
+				} );
+			} );
+		}
+
+		setSettings((prev) => {
+			var next = {
+				...prev,
+				[fieldName]: typeof value === 'function' ? value(prev[fieldName]) : value,
+			};
+			// Turn off child fields when parent is turned off.
+			childNames.forEach( function( childName ) {
+				next[childName] = 0;
+			} );
+			return next;
+		});
 		setChangedFields((prev) => {
 			const next = { ...prev };
 			// For functional updates we cannot know the new value here; set a sentinel so save uses latest settings
@@ -306,9 +351,13 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 			} else {
 				next[fieldName] = value;
 			}
+			// Mark child fields as changed so they get saved too.
+			childNames.forEach( function( childName ) {
+				next[childName] = 0;
+			} );
 			return next;
 		});
-	}, []);
+	}, [sidePanels]);
 
 	// Sync Default Tab dropdown with Navigation Order toggles (groups feature only).
 	useGroupNavSync( {
@@ -447,7 +496,15 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 											return null;
 										}
 
-										return (
+										// Section toggle: when present, controls whether all fields in this section are enabled.
+									var sectionToggleKey = section.section_toggle || null;
+									var isSectionToggleOff = false;
+									if ( sectionToggleKey ) {
+										var toggleVal = settings[ sectionToggleKey ];
+										isSectionToggleOff = ! toggleVal || toggleVal === '0' || toggleVal === 0;
+									}
+
+									return (
 										<div
 											key={section.id}
 											id={`section-${section.id}`}
@@ -455,17 +512,58 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 										>
 											{/* Section Header */}
 											<div className="bb-admin-feature-settings__section-header">
-												<h3 className="bb-admin-feature-settings__section-title">{section.title}</h3>
-												{/* Help icon - opens help slider modal */}
-												{activePanel.help_url && (
-													<HelpIcon
-														onClick={handleHelpClick}
-														contentId={activePanel.help_url}
-													/>
-												)}
+												<div className="bb-admin-feature-settings__section-header-left">
+													<h3 className="bb-admin-feature-settings__section-title">{section.title}</h3>
+													{/* Section status badge (e.g. Connected/Not Connected) */}
+													{( function() {
+														// Check for overridden status from input_button events, falling back to section data.
+														var sectionFields = section.fields || [];
+														var statusOverride = null;
+														for ( var fi = 0; fi < sectionFields.length; fi++ ) {
+															if ( sectionStatusOverrides[ sectionFields[ fi ].name ] ) {
+																statusOverride = sectionStatusOverrides[ sectionFields[ fi ].name ];
+																break;
+															}
+														}
+														var sectionStatus = statusOverride || section.status;
+														if ( ! sectionStatus || ! sectionStatus.text ) {
+															return null;
+														}
+														var statusIconClass = 'success' === sectionStatus.type
+															? 'bb-icons-rl bb-icons-rl-check-circle'
+															: 'bb-icons-rl bb-icons-rl-warning-circle';
+														return (
+															<span className={ 'bb-admin-feature-settings__section-status bb-admin-feature-settings__section-status--' + sectionStatus.type }>
+																<i className={ 'bb-admin-feature-settings__section-status-icon ' + statusIconClass } />
+																{ sectionStatus.text }
+															</span>
+														);
+													} )()}
+												</div>
+												<div className="bb-admin-feature-settings__section-header-right">
+													{/* Help icon - opens help slider modal */}
+													{activePanel.help_url && (
+														<HelpIcon
+															onClick={handleHelpClick}
+															contentId={activePanel.help_url}
+														/>
+													)}
+													{/* Section toggle - enables/disables all fields in this section */}
+													{sectionToggleKey && (
+														<div className="bb-admin-feature-settings__section-toggle">
+															<ToggleControl
+																className="components-form-toggle--is-big"
+																checked={ ! isSectionToggleOff }
+																onChange={ function( newVal ) {
+																	handleSettingChange( sectionToggleKey, newVal ? 1 : 0 );
+																} }
+															/>
+														</div>
+													)}
+												</div>
 											</div>
 											{/* Section Body */}
-											<div className="bb-admin-feature-settings__section-body">
+											<div className={ 'bb-admin-feature-settings__section-body' + ( isSectionToggleOff ? ' bb-admin-feature-settings__section-body--disabled' : '' ) }>
 												{section.description && (
 													<RawHTML className="bb-admin-feature-settings__section-description">
 														{sanitizeHtml( section.description )}

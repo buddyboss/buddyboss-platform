@@ -2417,6 +2417,13 @@ function bb_block_init_category_filter() {
 add_action( 'bp_init', 'bb_block_init_category_filter' );
 
 function bp_document_ajax_check_file_mime_type() {
+	// Verify nonce and capability.
+	check_ajax_referer( 'bb_admin_settings', 'nonce' );
+
+	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+		wp_send_json_error( array( 'message' => __( 'Unauthorized.', 'buddyboss' ) ) );
+	}
+
 	$response = array();
 
 	if ( isset( $_POST ) && isset( $_POST['action'] ) && 'bp_document_check_file_mime_type' === $_POST['action'] && ! empty( $_FILES ) ) {

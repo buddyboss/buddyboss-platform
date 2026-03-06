@@ -179,8 +179,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			add_action( 'manage_' . bp_get_email_post_type() . '_posts_custom_column', array( $this, 'emails_display_situation_column_data' ), 10, 2 );
 
 			// Hello BuddyBoss/App.
-			add_action( 'admin_footer', array( $this, 'document_extension_mime_type_check_screen' ) );
-			add_action( 'admin_footer', array( $this, 'video_extension_mime_type_check_screen' ) );
 			add_action( 'admin_footer', array( $this, 'about_buddyboss_app_screen' ) );
 
 			/* Filters ***********************************************************/
@@ -765,12 +763,9 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			require_once $this->admin_dir . '/settings/bp-admin-setting-registration.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-forums.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-search.php';
-			require_once $this->admin_dir . '/settings/bp-admin-setting-media.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-credit.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-invites.php';
-			require_once $this->admin_dir . '/settings/bp-admin-setting-document.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-moderation.php';
-			require_once $this->admin_dir . '/settings/bp-admin-setting-video.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-labs.php';
 
 			require_once $this->admin_dir . '/settings/bb-admin-setting-performance.php';
@@ -889,30 +884,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		}
 
 		/** About BuddyBoss and BuddyBoss App ********************************************/
-
-		/**
-		 * Output the document mime type checker screen.
-		 */
-		public function document_extension_mime_type_check_screen() {
-			if ( isset( $_GET ) && isset( $_GET['tab'] ) && 'bp-document' !== $_GET['tab'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-				return;
-			}
-
-			include $this->admin_dir . 'templates/check-document-mime-type.php';
-		}
-
-		/**
-		 * Output the video mime type checker screen.
-		 *
-		 * @since BuddyBoss 1.7.0
-		 */
-		public function video_extension_mime_type_check_screen() {
-			if ( isset( $_GET ) && isset( $_GET['tab'] ) && 'bp-video' !== $_GET['tab'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-				return;
-			}
-
-			include $this->admin_dir . 'templates/check-video-mime-type.php';
-		}
 
 		/**
 		 * Output the Hello BuddyBoss App template.

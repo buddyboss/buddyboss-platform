@@ -22,8 +22,8 @@ function bp_activity_add_admin_menu() {
 
 	// Register the menu item pointing directly to the React Settings 2.0 page.
 	$settings_url = function_exists( 'bb_get_feature_settings_url' )
-		? bb_get_feature_settings_url( 'activity' )
-		: admin_url( 'admin.php?page=bb-settings&tab=activity' );
+		? bb_get_feature_settings_url( 'activity', 'all_activities' )
+		: admin_url( 'admin.php?page=bb-settings&tab=activity&panel=all_activities' );
 
 	$submenu['buddyboss-platform'][] = array(
 		__( 'Activity', 'buddyboss' ),

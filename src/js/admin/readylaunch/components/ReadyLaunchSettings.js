@@ -735,7 +735,7 @@ export const ReadyLaunchSettings = () => {
 											icon: 'bb-icons-rl-image',
 											title: __('Media', 'buddyboss'),
 											description: __('Enable or restrict user-uploaded media across the platform.', 'buddyboss'),
-											actionLink: 'admin.php?page=bp-settings&tab=bp-media'
+											actionLink: 'admin.php?page=bb-settings&tab=media'
 										},
 										{
 											id: 'moderation',

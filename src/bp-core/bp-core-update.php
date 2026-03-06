@@ -241,6 +241,11 @@ function bp_version_updater() {
 		bp_core_install_emails();
 		bp_core_install_invitations();
 
+		// Seed media section toggle defaults when media component is active.
+		if ( isset( $default_components['media'] ) ) {
+			bb_seed_media_section_toggle_defaults();
+		}
+
 		do_action( 'bb_core_after_install', $default_components );
 
 		// Upgrades.
@@ -4105,7 +4110,15 @@ function bb_update_to_2_16_1() {
  * @since BuddyBoss [BBVERSION]
  */
 function bb_update_to_3_0_0() {
-	// Only run if bb-active-features hasn't been set yet (first upgrade to 3.0).
+
+	// Seed media section toggle defaults when media component is active.
+	// This runs regardless of reactions migration state.
+	$active_components = bp_get_option( 'bp-active-components', array() );
+	if ( isset( $active_components['media'] ) ) {
+		bb_seed_media_section_toggle_defaults();
+	}
+
+	// Only run reactions migration if bb-active-features hasn't been set yet (first upgrade to 3.0).
 	$active_features = bp_get_option( 'bb-active-features', array() );
 	if ( isset( $active_features['reactions'] ) ) {
 		return; // Already migrated — don't overwrite user's Settings 2.0 choice.
@@ -4139,3 +4152,42 @@ function bb_update_to_3_0_0() {
 		bp_update_option( 'bp-default-profile-avatar-type', 'buddyboss' );
 	}
 }
+
+/**
+ * Seed media section toggle defaults into the database.
+ *
+ * Ensures that bb_media_*_support options exist in the DB with a default
+ * value of 1 (enabled) so that frontend/backend code reading them via
+ * get_option() or bp_get_option() gets `1` instead of `false`.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_seed_media_section_toggle_defaults() {
+	$media_section_toggles = array(
+		'bb_media_photos_support',
+		'bb_media_videos_support',
+		'bb_media_documents_support',
+		'bb_media_emoji_support',
+		'bb_media_gif_support',
+	);
+
+	foreach ( $media_section_toggles as $toggle ) {
+		if ( false === bp_get_option( $toggle, false ) ) {
+			bp_update_option( $toggle, 1 );
+		}
+	}
+}
+
+/**
+ * Seed media section toggle defaults when media feature is activated.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id The feature ID that was activated.
+ */
+function bb_on_media_feature_activated( $feature_id ) {
+	if ( 'media' === $feature_id ) {
+		bb_seed_media_section_toggle_defaults();
+	}
+}
+add_action( 'bb_feature_activated', 'bb_on_media_feature_activated' );

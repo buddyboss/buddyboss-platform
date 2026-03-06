@@ -2590,43 +2590,19 @@ function bp_core_get_components( $type = 'all' ) {
 		),
 		'media'         => array(
 			'title'       => __( 'Media Uploading', 'buddyboss' ),
-			'settings'    => bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page' => 'bp-settings',
-						'tab'  => 'bp-media',
-					),
-					'admin.php'
-				)
-			),
+			'settings'    => bb_get_feature_settings_url( 'media' ),
 			'description' => __( 'Allow members to upload photos, documents, videos, emojis and animated GIFs, and to organize photos and videos into albums and documents into folders.', 'buddyboss' ),
 			'default'     => false,
 		),
 		'document'      => array(
 			'title'       => __( 'Document Uploading', 'buddyboss' ),
-			'settings'    => bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page' => 'bp-settings',
-						'tab'  => 'bp-media',
-					),
-					'admin.php'
-				)
-			),
+			'settings'    => bb_get_feature_settings_url( 'media', 'documents' ),
 			'description' => __( 'Allow members to upload documents, and to organize documents into folders.', 'buddyboss' ),
 			'default'     => false,
 		),
 		'video'         => array(
 			'title'       => __( 'Video Uploading', 'buddyboss' ),
-			'settings'    => bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page' => 'bp-settings',
-						'tab'  => 'bp-media',
-					),
-					'admin.php'
-				)
-			),
+			'settings'    => bb_get_feature_settings_url( 'media', 'videos' ),
 			'description' => __( 'Allow members to upload videos, and to organize videos into albums.', 'buddyboss' ),
 			'default'     => false,
 		),

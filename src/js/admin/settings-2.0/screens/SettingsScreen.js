@@ -378,6 +378,7 @@ export function SettingsScreen({ onNavigate }) {
 											</div>
 											<div className="bb-admin-settings__feature-right">
 												<ToggleControl
+													className="components-form-toggle--is-big"
 													checked={ 'active' === feature.status }
 													onChange={(checked) => handleFeatureToggle(feature.id, checked)}
 													disabled={!feature.available || feature.required}

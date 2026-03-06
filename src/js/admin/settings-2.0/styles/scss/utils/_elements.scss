@@ -78,10 +78,39 @@ select.bb-admin-settings__select {
 			}
 		}
 	}
+
+    .components-form-toggle--is-big .components-form-toggle {
+        width: 40px;
+        height: 24px;
+
+        .components-form-toggle__track {
+            width: 40px;
+            height: 24px;
+        }
+
+        .components-form-toggle__thumb {
+            height: 16px;
+            width: 16px;
+            top: 4px;
+            left: 4px;
+        }
+
+        &.is-checked {
+
+            .components-form-toggle__track {
+                background-color: $bb-background-brand-primary-color;
+            }
+
+            .components-form-toggle__thumb {
+                transform: translateX(15px);
+                background-color: $bb-background-base-color;
+            }
+        }
+    }
 }
 
 .buddyboss_page_bb-settings {
-    
+
     .components-form-toggle {
         width: 30px;
         height: 18px;
@@ -129,7 +158,7 @@ select.bb-admin-settings__select {
 
 /* Radio Buttons */
 .buddyboss_page_bb-settings {
-    
+
     input[type="radio"],
 	.components-radio-control__input {
         border: 1px solid $bb-background-brand-primary-color !important;
@@ -283,6 +312,54 @@ select.bb-admin-settings__select {
     }
 }
 
+.buddyboss_page_bb-settings {
+
+    .components-dropdown__content .components-popover__content {
+        background-color: $bb-background-base-color;
+        border-radius: $bb-border-radius-lg;
+        box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
+        padding: 8px 0;
+        min-width: 190px;
+
+        // Menu item button
+        .components-dropdown-menu__menu-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            padding: 10px 8px 10px 16px;
+            background: none;
+            border: none;
+            border-radius: 0;
+            cursor: pointer;
+            transition: background-color 0.15s ease;
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 18px;
+            color: $bb-text-tertiary-color;
+
+            &:hover,
+            &:focus {
+                color: $bb-text-tertiary-color;
+                background-color: $bb-background-primary-color;
+                box-shadow: none;
+                outline: none;
+            }
+
+            &:active {
+                background-color: $bb-background-secondary-color;
+            }
+
+            [class*="bb-icons-"] {
+                color: $bb-icon-tertiary-color;
+                font-size: 20px !important;
+                line-height: 1;
+                font-weight: 400;
+            }
+        }
+    }
+}
+
 /* Toast */
 
 .bb-toast-container {
@@ -408,6 +485,16 @@ select.bb-admin-settings__select {
         }
     }
 
+    &.bb-admin-notice--warning {
+        color: $bb-text-warning-primary-color;
+        background-color: $bb-background-warning-primary-color;
+        border-color: $bb-border-warning-secondary-color;
+
+        &:before {
+            color: $bb-icon-warning-primary-color;
+        }
+    }
+
     &--dismiss {
         margin-left: auto;
         border: 0;
@@ -418,6 +505,54 @@ select.bb-admin-settings__select {
             font-size: 18px;
             color: $bb-icon-color;
         }
+    }
+}
+
+/* Status Check Field */
+.bb-admin-status-check {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+
+    &__loading {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: $bb-text-tertiary-color;
+    }
+
+    &__spinner {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        border: 2px solid $bb-border-secondary-color;
+        border-top-color: $bb-text-color;
+        border-radius: 50%;
+        animation: bb-spin .6s linear infinite;
+    }
+
+    .bb-admin-notice {
+        margin-bottom: 0;
+
+        code {
+            background-color: $bb-background-secondary-color;
+            padding: 1px 6px;
+            border-radius: $bb-border-radius-sm;
+            font-size: 12px;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: underline;
+        }
+    }
+}
+
+@keyframes bb-spin {
+    to {
+        transform: rotate(360deg);
     }
 }
 
