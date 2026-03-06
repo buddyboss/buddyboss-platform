@@ -14,6 +14,9 @@
 
 /* Banner */
 .bb-pf-banner {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 	margin-bottom: 8px;
 
 	p {
@@ -21,6 +24,25 @@
 		color: $bb-text-tertiary-color;
 		margin: 0;
 		line-height: 1.5;
+	}
+
+	&__select-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 2px;
+		font-size: 13px;
+		font-weight: 500;
+		color: $bb-primary-color;
+		text-decoration: none;
+		white-space: nowrap;
+
+		i {
+			font-size: 16px;
+		}
+
+		&:hover {
+			text-decoration: underline;
+		}
 	}
 }
 
@@ -626,6 +648,34 @@
 				height: 10px;
 				border-radius: $bb-border-radius-full;
 				background: $bb-background-brand-primary-color;
+			}
+		}
+
+		&__checkbox {
+			display: inline-block;
+			width: 18px;
+			height: 18px;
+			border: 1px solid $bb-border-brand-primary-color;
+			border-radius: 3px;
+			flex-shrink: 0;
+			position: relative;
+			box-sizing: border-box;
+		}
+
+		&__default--selected .bb-pf-option-item__checkbox {
+			background: $bb-background-brand-primary-color;
+			border-color: $bb-background-brand-primary-color;
+
+			&:after {
+				content: '';
+				position: absolute;
+				top: 2px;
+				left: 5px;
+				width: 5px;
+				height: 9px;
+				border: solid #fff;
+				border-width: 0 2px 2px 0;
+				transform: rotate(45deg);
 			}
 		}
 

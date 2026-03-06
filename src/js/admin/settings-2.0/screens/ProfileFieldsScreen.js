@@ -426,28 +426,40 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 	}
 
 	/**
-	 * Render badges for a field.
+	 * Render required badge text for a field.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param {Object} field Field data.
-	 * @returns {Array} Badge elements.
+	 * @returns {JSX.Element|null} Badge element or null.
 	 */
 	function renderFieldBadgeText( field ) {
 		if ( field.is_required ) {
-			return wp.element.createElement( 'span', { className: 'bb-pf-badge-text' }, __( 'required', 'buddyboss' ) );
+			return <span className="bb-pf-badge-text">{ __( 'required', 'buddyboss' ) }</span>;
 		}
 		return null;
 	}
 
+	/**
+	 * Render badge pills for a field.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {Object} field Field data.
+	 * @returns {Array|null} Badge elements or null.
+	 */
 	function renderFieldBadgePills( field ) {
 		var badges = [];
 		if ( field.is_signup ) {
 			badges.push(
-				wp.element.createElement( 'span', { key: 'signup', className: 'bb-pf-badge bb-pf-badge--signup' }, __( 'Signup', 'buddyboss' ) )
+				<span key="signup" className="bb-pf-badge bb-pf-badge--signup">{ __( 'Signup', 'buddyboss' ) }</span>
 			);
 		}
-		if ( field.member_types && field.member_types.length > 0 ) {
+		if ( 'none' === field.member_type_mode ) {
+			badges.push(
+				<span key="member-types" className="bb-pf-badge bb-pf-badge--member-type">{ __( 'No Profile Type', 'buddyboss' ) }</span>
+			);
+		} else if ( field.member_types && field.member_types.length > 0 ) {
 			var typeLabels = field.member_types.map( function ( typeKey ) {
 				var found = memberTypes.find( function ( mt ) {
 					return mt.id === typeKey;
@@ -455,7 +467,7 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 				return found ? found.name : typeKey;
 			} );
 			badges.push(
-				wp.element.createElement( 'span', { key: 'member-types', className: 'bb-pf-badge bb-pf-badge--member-type' }, typeLabels.join( ', ' ) )
+				<span key="member-types" className="bb-pf-badge bb-pf-badge--member-type">{ typeLabels.join( ', ' ) }</span>
 			);
 		}
 		return badges.length > 0 ? badges : null;
@@ -463,315 +475,293 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 
 	// Loading state.
 	if ( isLoading ) {
-		return wp.element.createElement(
-			'div',
-			{ className: 'bb-settings-panel-content bb-pf-loading' },
-			wp.element.createElement( Spinner, null ),
-			wp.element.createElement( 'p', null, __( 'Loading profile fields...', 'buddyboss' ) )
+		return (
+			<div className="bb-settings-panel-content bb-pf-loading">
+				<Spinner />
+				<p>{ __( 'Loading profile fields...', 'buddyboss' ) }</p>
+			</div>
 		);
 	}
 
-	return wp.element.createElement(
-		'div',
-		{ className: 'bb-settings-panel-content bb-profile-fields-screen' },
+	return (
+		<div className="bb-settings-panel-content bb-profile-fields-screen">
 
-		// Toast notification.
-		toast && wp.element.createElement(
-			'div',
-			{ className: 'bb-toast-container' },
-			wp.element.createElement( Toast, {
-				status: toast.status,
-				message: toast.message,
-				onDismiss: function () { setToast( null ); },
-			} )
-		),
+			{/* Toast notification. */}
+			{ toast && (
+				<div className="bb-toast-container">
+					<Toast
+						status={ toast.status }
+						message={ toast.message }
+						onDismiss={ function () { setToast( null ); } }
+					/>
+				</div>
+			) }
 
-		// Top banner.
-		wp.element.createElement(
-			'div',
-			{ className: 'bb-pf-banner' },
-			wp.element.createElement(
-				'p',
-				null,
-				__( 'Select the fields you want to display on your registration page.', 'buddyboss' )
-			)
-		),
+			{/* Top banner. */}
+			<div className="bb-pf-banner">
+				<p>{ __( 'Select the fields you wish to display on your registration page.', 'buddyboss' ) }</p>
+				<a
+					href="#signup-fields"
+					className="bb-pf-banner__select-link"
+					onClick={ function ( e ) {
+						e.preventDefault();
+						// @todo: Implement signup field selection mode.
+					} }
+				>
+					{ __( 'Select', 'buddyboss' ) }
+					<i className="bb-icons-rl bb-icons-rl-caret-right" aria-hidden="true"></i>
+				</a>
+			</div>
 
-		// Field set cards.
-		fieldGroups.map( function ( group, groupIndex ) {
-			var isCollapsed = collapsed[ group.id ];
-			var isDragOver = 'group' === dragType && dragOverItem === groupIndex;
+			{/* Field set cards. */}
+			{ fieldGroups.map( function ( group, groupIndex ) {
+				var isCollapsed = collapsed[ group.id ];
+				var isDragOver = 'group' === dragType && dragOverItem === groupIndex;
 
-			return wp.element.createElement(
-				'div',
-				{
-					key: group.id,
-					className: 'bb-pf-fieldset-card' + ( isDragOver ? ' bb-pf-drag-over' : '' ),
-					draggable: true,
-					onDragStart: function ( e ) { handleGroupDragStart( e, groupIndex ); },
-					onDragOver: function ( e ) { handleGroupDragOver( e, groupIndex ); },
-					onDrop: handleGroupDrop,
-					onDragEnd: function () {
-						setDragItem( null );
-						setDragOverItem( null );
-						setDragType( null );
-					},
-				},
+				return (
+					<div
+						key={ group.id }
+						className={ 'bb-pf-fieldset-card' + ( isDragOver ? ' bb-pf-drag-over' : '' ) }
+						draggable={ true }
+						onDragStart={ function ( e ) { handleGroupDragStart( e, groupIndex ); } }
+						onDragOver={ function ( e ) { handleGroupDragOver( e, groupIndex ); } }
+						onDrop={ handleGroupDrop }
+						onDragEnd={ function () {
+							setDragItem( null );
+							setDragOverItem( null );
+							setDragType( null );
+						} }
+					>
 
-				// Card header.
-				wp.element.createElement(
-					'div',
-					{ className: 'bb-pf-fieldset-header' },
-					wp.element.createElement(
-						'div',
-						{ className: 'bb-pf-fieldset-header-left' },
-						wp.element.createElement(
-							'span',
-							{
-								className: 'bb-pf-drag-handle',
-								'aria-label': __( 'Drag to reorder field set', 'buddyboss' ),
-							},
-							wp.element.createElement( 'i', { className: 'bb-icons-rl-list' } )
-						),
-						wp.element.createElement(
-							'button',
-							{
-								className: 'bb-pf-fieldset-toggle',
-								onClick: function () { toggleCollapse( group.id ); },
-								'aria-expanded': ! isCollapsed,
-							},
-							wp.element.createElement( 'i', {
-								className: isCollapsed ? 'bb-icons-rl-caret-right' : 'bb-icons-rl-caret-down',
-							} ),
-							wp.element.createElement( 'h3', null, decodeEntities( group.name ) ),
-							group.is_repeater && wp.element.createElement(
-								'span',
-								{ className: 'bb-pf-badge bb-pf-badge--repeater' },
-								__( 'Repeater', 'buddyboss' )
-							)
-						)
-					),
-					wp.element.createElement(
-						'div',
-						{ className: 'bb-pf-fieldset-header-right' },
-						wp.element.createElement(
-							Button,
-							{
-								variant: 'primary',
-								isSmall: true,
-								onClick: function () {
-									setEditFieldSet( group );
-								},
-							},
-							wp.element.createElement( 'i', { className: 'bb-icons-rl bb-icons-rl-note-pencil' } ),
-							' ',
-							__( 'Edit Field Set', 'buddyboss' )
-						)
-					)
-				),
+						{/* Card header. */}
+						<div className="bb-pf-fieldset-header">
+							<div className="bb-pf-fieldset-header-left">
+								<span
+									className="bb-pf-drag-handle"
+									aria-label={ __( 'Drag to reorder field set', 'buddyboss' ) }
+								>
+									<i className="bb-icons-rl-list" />
+								</span>
+								<button
+									className="bb-pf-fieldset-toggle"
+									onClick={ function () { toggleCollapse( group.id ); } }
+									aria-expanded={ ! isCollapsed }
+								>
+									<i className={ isCollapsed ? 'bb-icons-rl-caret-right' : 'bb-icons-rl-caret-down' } />
+									<h3>{ decodeEntities( group.name ) }</h3>
+									{ group.is_repeater && (
+										<span className="bb-pf-badge bb-pf-badge--repeater">
+											{ __( 'Repeater', 'buddyboss' ) }
+										</span>
+									) }
+								</button>
+							</div>
+							<div className="bb-pf-fieldset-header-right">
+								<Button
+									variant="primary"
+									isSmall={ true }
+									onClick={ function () {
+										setEditFieldSet( group );
+									} }
+								>
+									<i className="bb-icons-rl bb-icons-rl-note-pencil" />
+									{ ' ' }
+									{ __( 'Edit Field Set', 'buddyboss' ) }
+								</Button>
+							</div>
+						</div>
 
-				// Card body (fields list).
-				! isCollapsed && wp.element.createElement(
-					'div',
-					{ className: 'bb-pf-fieldset-body' },
-					( group.fields && group.fields.length > 0 )
-						? group.fields.map( function ( field, fieldIndex ) {
-							var isFieldDragOver = 'field' === dragType && dragOverItem && dragOverItem.groupId === group.id && dragOverItem.fieldIdx === fieldIndex;
+						{/* Card body (fields list). */}
+						{ ! isCollapsed && (
+							<div className="bb-pf-fieldset-body">
+								{ ( group.fields && group.fields.length > 0 )
+									? group.fields.map( function ( field, fieldIndex ) {
+										var isFieldDragOver = 'field' === dragType && dragOverItem && dragOverItem.groupId === group.id && dragOverItem.fieldIdx === fieldIndex;
 
-							return wp.element.createElement(
-								'div',
-								{
-									key: field.id,
-									className: 'bb-pf-field-row' + ( isFieldDragOver ? ' bb-pf-drag-over' : '' ),
-									draggable: true,
-									onDragStart: function ( e ) { handleFieldDragStart( e, group.id, fieldIndex ); },
-									onDragOver: function ( e ) { handleFieldDragOver( e, group.id, fieldIndex ); },
-									onDrop: function ( e ) {
-										e.stopPropagation();
-										handleFieldDrop();
-									},
-									onDragEnd: function () {
-										setDragItem( null );
-										setDragOverItem( null );
-										setDragType( null );
-									},
-								},
-								wp.element.createElement(
-									'div',
-									{ className: 'bb-pf-field-left' },
-									wp.element.createElement(
-										'span',
-										{
-											className: 'bb-pf-drag-handle',
-											'aria-label': __( 'Drag to reorder field', 'buddyboss' ),
-										},
-										wp.element.createElement( 'i', { className: 'bb-icons-rl-list' } )
-									),
-									wp.element.createElement(
-										'span',
-										{ className: 'bb-pf-field-type-icon' },
-										wp.element.createElement( 'i', { className: getFieldTypeIcon( field.type ) } )
-									),
-									wp.element.createElement(
-										'span',
-										{ className: 'bb-pf-field-name' },
-										decodeEntities( field.name )
-									),
-									renderFieldBadgeText( field )
-								),
-								wp.element.createElement(
-									'span',
-									{ className: 'bb-pf-field-badges' },
-									renderFieldBadgePills( field )
-								),
-								wp.element.createElement(
-									'div',
-									{ className: 'bb-pf-field-actions' },
-									wp.element.createElement(
-										'button',
-										{
-											className: 'bb-pf-ellipsis-btn',
-											onClick: function ( e ) {
-												e.stopPropagation();
-												setOpenMenuId( openMenuId === field.id ? null : field.id );
-											},
-											'aria-label': __( 'Actions', 'buddyboss' ),
-											'aria-haspopup': 'true',
-											'aria-expanded': field.id === openMenuId ? 'true' : 'false',
-										},
-										wp.element.createElement( 'i', { className: 'bb-icons-rl-dots-three' } )
-									),
-									openMenuId === field.id && wp.element.createElement(
-										'div',
-										{ className: 'bb-pf-dropdown-menu bb_dropdown_menu_group components-menu-group', role: 'menu' },
-										wp.element.createElement(
-											'button',
-											{
-												className: 'bb-pf-dropdown-edit components-menu-item__button',
-												role: 'menuitem',
-												onClick: function () {
-													setOpenMenuId( null );
-													setEditField( { field: field, groupId: group.id, groupName: group.name } );
-												},
-											},
-											wp.element.createElement( 'span', { className: 'components-menu-item__item' },
-												wp.element.createElement( 'i', { className: 'bb-icons-rl bb-icons-rl-note-pencil' } ),
-												' ' + __( 'Edit', 'buddyboss' )
-											),
-										),
-										field.can_delete && wp.element.createElement(
-											'button',
-											{
-												className: 'bb-pf-dropdown-delete components-menu-item__button',
-												role: 'menuitem',
-												onClick: function () {
-													setOpenMenuId( null );
-													setDeleteFieldData( field );
-												},
-											},
-											wp.element.createElement( 'span', { className: 'components-menu-item__item' },
-												wp.element.createElement( 'i', { className: 'bb-icons-rl bb-icons-rl-trash' } ),
-												' ' + __( 'Delete', 'buddyboss' )
-											),
-										)
+										return (
+											<div
+												key={ field.id }
+												className={ 'bb-pf-field-row' + ( isFieldDragOver ? ' bb-pf-drag-over' : '' ) }
+												draggable={ true }
+												onDragStart={ function ( e ) { handleFieldDragStart( e, group.id, fieldIndex ); } }
+												onDragOver={ function ( e ) { handleFieldDragOver( e, group.id, fieldIndex ); } }
+												onDrop={ function ( e ) {
+													e.stopPropagation();
+													handleFieldDrop();
+												} }
+												onDragEnd={ function () {
+													setDragItem( null );
+													setDragOverItem( null );
+													setDragType( null );
+												} }
+											>
+												<div className="bb-pf-field-left">
+													<span
+														className="bb-pf-drag-handle"
+														aria-label={ __( 'Drag to reorder field', 'buddyboss' ) }
+													>
+														<i className="bb-icons-rl-list" />
+													</span>
+													<span className="bb-pf-field-type-icon">
+														<i className={ getFieldTypeIcon( field.type ) } />
+													</span>
+													<span className="bb-pf-field-name">
+														{ decodeEntities( field.name ) }
+													</span>
+													{ renderFieldBadgeText( field ) }
+												</div>
+												<span className="bb-pf-field-badges">
+													{ renderFieldBadgePills( field ) }
+												</span>
+												<div className="bb-pf-field-actions">
+													<button
+														className="bb-pf-ellipsis-btn"
+														onClick={ function ( e ) {
+															e.stopPropagation();
+															setOpenMenuId( openMenuId === field.id ? null : field.id );
+														} }
+														aria-label={ __( 'Actions', 'buddyboss' ) }
+														aria-haspopup="true"
+														aria-expanded={ field.id === openMenuId ? 'true' : 'false' }
+													>
+														<i className="bb-icons-rl-dots-three" />
+													</button>
+													{ openMenuId === field.id && (
+														<div className="bb-pf-dropdown-menu bb_dropdown_menu_group components-menu-group" role="menu">
+															<button
+																className="bb-pf-dropdown-edit components-menu-item__button"
+																role="menuitem"
+																onClick={ function () {
+																	setOpenMenuId( null );
+																	setEditField( { field: field, groupId: group.id, groupName: group.name } );
+																} }
+															>
+																<span className="components-menu-item__item">
+																	<i className="bb-icons-rl bb-icons-rl-note-pencil" />
+																	{ ' ' + __( 'Edit', 'buddyboss' ) }
+																</span>
+															</button>
+															{ field.can_delete && (
+																<button
+																	className="bb-pf-dropdown-delete components-menu-item__button"
+																	role="menuitem"
+																	onClick={ function () {
+																		setOpenMenuId( null );
+																		setDeleteFieldData( field );
+																	} }
+																>
+																	<span className="components-menu-item__item">
+																		<i className="bb-icons-rl bb-icons-rl-trash" />
+																		{ ' ' + __( 'Delete', 'buddyboss' ) }
+																	</span>
+																</button>
+															) }
+														</div>
+													) }
+												</div>
+											</div>
+										);
+									} )
+									: (
+										<p className="bb-pf-no-fields">
+											{ __( 'No fields in this field set.', 'buddyboss' ) }
+										</p>
 									)
-								)
-							);
-						} )
-						: wp.element.createElement(
-							'p',
-							{ className: 'bb-pf-no-fields' },
-							__( 'No fields in this field set.', 'buddyboss' )
-						),
+								}
 
-					// Add New Field button.
-					wp.element.createElement(
-						Button,
-						{
-							variant: 'secondary',
-							className: 'bb-pf-add-field-btn',
-							onClick: function () {
-								setEditField( { field: null, groupId: group.id, groupName: group.name } );
-							},
-						},
-						wp.element.createElement( 'i', { className: 'bb-icons-rl bb-icons-rl-plus' } ),
-					' ' + __( 'Add New Field', 'buddyboss' )
-					)
-				)
-			);
-		} ),
+								{/* Add New Field button. */}
+								<Button
+									variant="secondary"
+									className="bb-pf-add-field-btn"
+									onClick={ function () {
+										setEditField( { field: null, groupId: group.id, groupName: group.name } );
+									} }
+								>
+									<i className="bb-icons-rl bb-icons-rl-plus" />
+									{ ' ' + __( 'Add New Field', 'buddyboss' ) }
+								</Button>
+							</div>
+						) }
+					</div>
+				);
+			} ) }
 
-		// Add New Field Set button.
-		wp.element.createElement(
-			Button,
-			{
-				variant: 'primary',
-				className: 'bb-pf-add-fieldset-btn',
-				onClick: function () {
+			{/* Add New Field Set button. */}
+			<Button
+				variant="primary"
+				className="bb-pf-add-fieldset-btn"
+				onClick={ function () {
 					setEditFieldSet( {} );
-				},
-			},
-			wp.element.createElement( 'i', { className: 'bb-icons-rl bb-icons-rl-plus' } ),
-			' ' + __( 'Add New Field Set', 'buddyboss' )
-		),
+				} }
+			>
+				<i className="bb-icons-rl bb-icons-rl-plus" />
+				{ ' ' + __( 'Add New Field Set', 'buddyboss' ) }
+			</Button>
 
-		// Field Set Modal (Add/Edit).
-		null !== editFieldSet && wp.element.createElement( FieldSetModal, {
-			fieldSet: editFieldSet,
-			onClose: function () { setEditFieldSet( null ); },
-			onSave: function () {
-				setEditFieldSet( null );
-				loadFieldGroups();
-			},
-			onDelete: function () {
-				setEditFieldSet( null );
-				// Open delete confirmation.
-				setDeleteFieldSetData( editFieldSet );
-			},
-			setToast: setToast,
-		} ),
+			{/* Field Set Modal (Add/Edit). */}
+			{ null !== editFieldSet && (
+				<FieldSetModal
+					fieldSet={ editFieldSet }
+					onClose={ function () { setEditFieldSet( null ); } }
+					onSave={ function () {
+						setEditFieldSet( null );
+						loadFieldGroups();
+					} }
+					onDelete={ function () {
+						setEditFieldSet( null );
+						setDeleteFieldSetData( editFieldSet );
+					} }
+					setToast={ setToast }
+				/>
+			) }
 
-		// Delete Field Set Modal.
-		null !== deleteFieldSetData && wp.element.createElement( DeleteFieldSetModal, {
-			fieldSet: deleteFieldSetData,
-			onClose: function () { setDeleteFieldSetData( null ); },
-			onDeleted: function () {
-				setDeleteFieldSetData( null );
-				loadFieldGroups();
-			},
-			setToast: setToast,
-		} ),
+			{/* Delete Field Set Modal. */}
+			{ null !== deleteFieldSetData && (
+				<DeleteFieldSetModal
+					fieldSet={ deleteFieldSetData }
+					onClose={ function () { setDeleteFieldSetData( null ); } }
+					onDeleted={ function () {
+						setDeleteFieldSetData( null );
+						loadFieldGroups();
+					} }
+					setToast={ setToast }
+				/>
+			) }
 
-		// Profile Field Modal (Add/Edit).
-		null !== editField && wp.element.createElement( ProfileFieldModal, {
-			field: editField.field,
-			groupId: editField.groupId,
-			groupName: editField.groupName,
-			fieldTypes: fieldTypes,
-			memberTypes: memberTypes,
-			visibilityLevels: visibilityLevels,
-			socialProviders: socialProviders,
-			allFieldGroups: fieldGroups,
-			onClose: function () { setEditField( null ); },
-			onSave: function () {
-				setEditField( null );
-				loadFieldGroups();
-			},
-			setToast: setToast,
-		} ),
+			{/* Profile Field Modal (Add/Edit). */}
+			{ null !== editField && (
+				<ProfileFieldModal
+					field={ editField.field }
+					groupId={ editField.groupId }
+					groupName={ editField.groupName }
+					fieldTypes={ fieldTypes }
+					memberTypes={ memberTypes }
+					visibilityLevels={ visibilityLevels }
+					socialProviders={ socialProviders }
+					allFieldGroups={ fieldGroups }
+					onClose={ function () { setEditField( null ); } }
+					onSave={ function () {
+						setEditField( null );
+						loadFieldGroups();
+					} }
+					setToast={ setToast }
+				/>
+			) }
 
-		// Delete field confirmation.
-		wp.element.createElement( ConfirmToggleModal, {
-			isOpen: null !== deleteFieldData,
-			title: __( 'Delete Field', 'buddyboss' ),
-			message: deleteFieldData
-				? wp.i18n.sprintf( __( 'Are you sure you want to delete the field "%s"? This action cannot be undone.', 'buddyboss' ), decodeEntities( deleteFieldData.name ) )
-				: '',
-			confirmLabel: __( 'Delete', 'buddyboss' ),
-			cancelLabel: __( 'Cancel', 'buddyboss' ),
-			isDestructive: true,
-			onConfirm: function () { handleDeleteField( deleteFieldData.id ); },
-			onCancel: function () { setDeleteFieldData( null ); },
-		} )
+			{/* Delete field confirmation. */}
+			<ConfirmToggleModal
+				isOpen={ null !== deleteFieldData }
+				title={ __( 'Delete Field', 'buddyboss' ) }
+				message={ deleteFieldData
+					? wp.i18n.sprintf( __( 'Are you sure you want to delete the field "%s"? This action cannot be undone.', 'buddyboss' ), decodeEntities( deleteFieldData.name ) )
+					: ''
+				}
+				confirmLabel={ __( 'Delete', 'buddyboss' ) }
+				cancelLabel={ __( 'Cancel', 'buddyboss' ) }
+				isDestructive={ true }
+				onConfirm={ function () { handleDeleteField( deleteFieldData.id ); } }
+				onCancel={ function () { setDeleteFieldData( null ); } }
+			/>
+		</div>
 	);
 }

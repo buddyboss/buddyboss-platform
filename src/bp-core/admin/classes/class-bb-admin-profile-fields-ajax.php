@@ -372,6 +372,12 @@ class BB_Admin_Profile_Fields_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Field type is required.', 'buddyboss' ) ) );
 		}
 
+		// Validate field type against registered types.
+		$allowed_types = array_keys( bp_xprofile_get_field_types() );
+		if ( ! in_array( $type, $allowed_types, true ) ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid field type.', 'buddyboss' ) ) );
+		}
+
 		// Handle options for multi-option field types before insert.
 		$this->bb_handle_field_options( $field_id, $type );
 
@@ -640,14 +646,27 @@ class BB_Admin_Profile_Fields_Ajax {
 		// Get member types — only return explicitly assigned types.
 		// When no types are saved in meta, the field is available to ALL types,
 		// so we return an empty array (Figma: badge only shown for restricted fields).
-		$member_types    = array();
-		$raw_type_meta   = bp_xprofile_get_meta( $field->id, 'field', 'member_type', false );
-		$has_saved_types = is_array( $raw_type_meta ) && ! empty( $raw_type_meta ) && ! in_array( '_none', $raw_type_meta, true );
+		$member_types     = array();
+		$member_type_mode = 'all';
+		$raw_type_meta    = bp_xprofile_get_meta( $field->id, 'field', 'member_type', false );
+		$has_saved_types  = is_array( $raw_type_meta ) && ! empty( $raw_type_meta ) && ! in_array( '_none', $raw_type_meta, true );
 
-		if ( $has_saved_types && method_exists( $field, 'get_member_types' ) ) {
+		if ( is_array( $raw_type_meta ) && in_array( '_none', $raw_type_meta, true ) ) {
+			// Field is disassociated from all types (empty set_member_types call).
+			$member_type_mode = 'none';
+		} elseif ( $has_saved_types && method_exists( $field, 'get_member_types' ) ) {
 			$resolved_types = $field->get_member_types();
-			if ( null !== $resolved_types ) {
-				$member_types = $resolved_types;
+			if ( null !== $resolved_types && ! empty( $resolved_types ) ) {
+				// Check if only the 'null' pseudo-type is saved (users with no profile type).
+				if ( 1 === count( $resolved_types ) && in_array( 'null', $resolved_types, true ) ) {
+					$member_type_mode = 'none';
+				} else {
+					// Filter out 'null' from the types list for the React UI.
+					$member_types     = array_values( array_filter( $resolved_types, function ( $t ) {
+						return 'null' !== $t;
+					} ) );
+					$member_type_mode = ! empty( $member_types ) ? 'selected' : 'all';
+				}
 			}
 		}
 
@@ -671,6 +690,7 @@ class BB_Admin_Profile_Fields_Ajax {
 			'alternate_name'          => $alternate_name ? $alternate_name : '',
 			'description'             => $field->description,
 			'member_types'            => $member_types,
+			'member_type_mode'        => $member_type_mode,
 			'visibility'              => ! empty( $default_visibility ) ? $default_visibility : 'public',
 			'allow_custom_visibility' => ! empty( $allow_custom_visibility ) ? $allow_custom_visibility : 'allowed',
 			'is_signup'               => ! empty( $signup_position ),
@@ -731,16 +751,16 @@ class BB_Admin_Profile_Fields_Ajax {
 	 */
 	private function bb_get_field_type_label( $type_key ) {
 		$labels = array(
-			'textbox'        => __( 'Text', 'buddyboss' ),
-			'textarea'       => __( 'Multi-line Text', 'buddyboss' ),
-			'selectbox'      => __( 'Dropdown Select', 'buddyboss' ),
+			'textbox'        => __( 'Single Line Input', 'buddyboss' ),
+			'textarea'       => __( 'Paragraph Input', 'buddyboss' ),
+			'selectbox'      => __( 'Dropdown', 'buddyboss' ),
 			'multiselectbox' => __( 'Multi Select', 'buddyboss' ),
 			'checkbox'       => __( 'Checkboxes', 'buddyboss' ),
 			'radio'          => __( 'Radio Buttons', 'buddyboss' ),
-			'datebox'        => __( 'Date Selector', 'buddyboss' ),
+			'datebox'        => __( 'Date', 'buddyboss' ),
 			'number'         => __( 'Number', 'buddyboss' ),
 			'telephone'      => __( 'Phone', 'buddyboss' ),
-			'url'            => __( 'URL', 'buddyboss' ),
+			'url'            => __( 'Website', 'buddyboss' ),
 			'gender'         => __( 'Gender', 'buddyboss' ),
 			'socialnetworks' => __( 'Social Networks', 'buddyboss' ),
 			'membertypes'    => __( 'Profile Type', 'buddyboss' ),
@@ -936,24 +956,38 @@ class BB_Admin_Profile_Fields_Ajax {
 		$has_member_types = isset( $_POST['has_member_types'] ) ? absint( $_POST['has_member_types'] ) : 0;
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
-		if ( ! $has_member_types ) {
-			return;
+		if ( $has_member_types ) {
+			$field = xprofile_get_field( $field_id, null, false );
+			if ( ! $field || ! method_exists( $field, 'set_member_types' ) ) {
+				return;
+			}
+
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce verified above, sanitized below.
+			$raw_types = isset( $_POST['member_types'] ) ? wp_unslash( $_POST['member_types'] ) : array();
+
+			$member_types = array();
+			if ( is_array( $raw_types ) ) {
+				foreach ( $raw_types as $raw_type ) {
+					// Allow 'null' pseudo-type (users with no profile type).
+					if ( 'null' === $raw_type ) {
+						$member_types[] = 'null';
+					} else {
+						$member_types[] = sanitize_key( $raw_type );
+					}
+				}
+			}
+
+			$field->set_member_types( $member_types );
+		} else {
+			// Mode is 'all' — remove all member type restrictions.
+			$field = xprofile_get_field( $field_id, null, false );
+			if ( $field && method_exists( $field, 'set_member_types' ) ) {
+				// Pass all registered types + null to mark as unrestricted.
+				$all_types   = array_values( bp_get_member_types() );
+				$all_types[] = 'null';
+				$field->set_member_types( $all_types );
+			}
 		}
-
-		$field = xprofile_get_field( $field_id, null, false );
-		if ( ! $field || ! method_exists( $field, 'set_member_types' ) ) {
-			return;
-		}
-
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce verified above, sanitized below.
-		$raw_types = isset( $_POST['member_types'] ) ? wp_unslash( $_POST['member_types'] ) : array();
-
-		$member_types = array();
-		if ( is_array( $raw_types ) ) {
-			$member_types = array_map( 'sanitize_key', $raw_types );
-		}
-
-		$field->set_member_types( $member_types );
 	}
 }
 

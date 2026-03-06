@@ -12,11 +12,9 @@ import { useState } from '@wordpress/element';
 import {
 	CheckboxControl,
 	Button,
-	Spinner,
 	Modal,
 } from '@wordpress/components';
-import { __, sprintf } from '@wordpress/i18n';
-import { decodeEntities } from '@wordpress/html-entities';
+import { __ } from '@wordpress/i18n';
 import { deleteFieldGroup } from '../../utils/ajax';
 
 /**
@@ -77,7 +75,7 @@ export function DeleteFieldSetModal( { fieldSet, onClose, onDeleted, setToast } 
 
 	return (
 		<Modal
-			title={ __( 'Delete Field Set', 'buddyboss' ) }
+			title={ __( 'Delete field set?', 'buddyboss' ) }
 			onRequestClose={ onClose }
 			className="bb-pf-delete-fieldset-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
@@ -90,17 +88,10 @@ export function DeleteFieldSetModal( { fieldSet, onClose, onDeleted, setToast } 
 							{ __( 'Warning', 'buddyboss' ) }
 						</span>
 						<span className="bb-admin-delete__warning-desc">
-							{ /* translators: %s: field set name */ }
-							{ sprintf(
-								__( 'Deleting "%s" will permanently remove the field set and all the fields within it.', 'buddyboss' ),
-								decodeEntities( fieldSet.name || '' )
-							) }
+							{ __( 'This permanently deletes the field set and all the fields within it. This action cannot be undone.', 'buddyboss' ) }
 						</span>
 					</div>
 				</div>
-				<p className="bb-pf-delete-fieldset-modal__description">
-					{ __( 'Any user data stored in these fields will also be permanently deleted. This action cannot be undone.', 'buddyboss' ) }
-				</p>
 				<CheckboxControl
 					label={ __( 'I understand this deletes the field set and all its fields.', 'buddyboss' ) }
 					checked={ isConfirmed }

@@ -10,7 +10,6 @@
 import { useState } from '@wordpress/element';
 import {
 	TextControl,
-	TextareaControl,
 	RadioControl,
 	Button,
 	Spinner,
@@ -40,10 +39,6 @@ export function FieldSetModal( { fieldSet, onClose, onSave, onDelete, setToast }
 	var name = nameState[ 0 ];
 	var setName = nameState[ 1 ];
 
-	var descriptionState = useState( isEditing ? ( fieldSet.description || '' ) : '' );
-	var description = descriptionState[ 0 ];
-	var setDescription = descriptionState[ 1 ];
-
 	var isRepeaterState = useState( isEditing ? ( fieldSet.is_repeater ? 'on' : 'off' ) : 'off' );
 	var isRepeater = isRepeaterState[ 0 ];
 	var setIsRepeater = isRepeaterState[ 1 ];
@@ -67,7 +62,6 @@ export function FieldSetModal( { fieldSet, onClose, onSave, onDelete, setToast }
 
 		var data = {
 			name: name.trim(),
-			description: description.trim(),
 			group_is_repeater: isRepeater,
 		};
 
@@ -116,22 +110,19 @@ export function FieldSetModal( { fieldSet, onClose, onSave, onDelete, setToast }
 					placeholder={ __( 'Enter field set name', 'buddyboss' ) }
 					required
 				/>
-				<TextareaControl
-					label={ __( 'Description', 'buddyboss' ) }
-					value={ description }
-					onChange={ setDescription }
-					placeholder={ __( 'Optional description', 'buddyboss' ) }
-				/>
-				<RadioControl
-					label={ __( 'Repeater Set', 'buddyboss' ) }
-					help={ __( 'When enabled, users can add multiple sets of these fields to their profile.', 'buddyboss' ) }
-					selected={ isRepeater }
-					options={ [
-						{ label: __( 'Disabled', 'buddyboss' ), value: 'off' },
-						{ label: __( 'Enabled', 'buddyboss' ), value: 'on' },
-					] }
-					onChange={ setIsRepeater }
-				/>
+				{ /* Repeater toggle: not available for base group (can_delete=false). */ }
+				{ ( ! isEditing || fieldSet.can_delete ) && (
+					<RadioControl
+						label={ __( 'Repeater Set', 'buddyboss' ) }
+						help={ __( 'Allow the profile fields within this set to be repeated again and again, so the user can add multiple instances of their data.', 'buddyboss' ) }
+						selected={ isRepeater }
+						options={ [
+							{ label: __( 'Enabled', 'buddyboss' ), value: 'on' },
+							{ label: __( 'Disabled', 'buddyboss' ), value: 'off' },
+						] }
+						onChange={ setIsRepeater }
+					/>
+				) }
 			</div>
 
 			<div className="bb-pf-modal-footer">
@@ -163,7 +154,7 @@ export function FieldSetModal( { fieldSet, onClose, onSave, onDelete, setToast }
 						isBusy={ isSaving }
 						disabled={ isSaving || ! name.trim() }
 					>
-						{ isEditing ? __( 'Save Changes', 'buddyboss' ) : __( 'Create Field Set', 'buddyboss' ) }
+						{ __( 'Save', 'buddyboss' ) }
 					</Button>
 				</div>
 			</div>

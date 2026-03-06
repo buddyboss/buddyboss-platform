@@ -162,10 +162,6 @@ export function ProfileFieldModal( {
 	var isRequired = isRequiredState[ 0 ];
 	var setIsRequired = isRequiredState[ 1 ];
 
-	var isSignupState = useState( isEditing ? !! field.is_signup : false );
-	var isSignup = isSignupState[ 0 ];
-	var setIsSignup = isSignupState[ 1 ];
-
 	var visibilityState = useState( isEditing ? ( field.visibility || 'public' ) : 'public' );
 	var visibility = visibilityState[ 0 ];
 	var setVisibility = visibilityState[ 1 ];
@@ -176,6 +172,9 @@ export function ProfileFieldModal( {
 
 	// Member types.
 	var memberTypeModeState = useState( function () {
+		if ( isEditing && 'none' === field.member_type_mode ) {
+			return 'none';
+		}
 		if ( isEditing && field.member_types && field.member_types.length > 0 ) {
 			return 'selected';
 		}
@@ -587,14 +586,18 @@ export function ProfileFieldModal( {
 			placeholder: placeholder.trim(),
 			visibility: visibility,
 			allow_custom_visibility: allowCustomVisibility,
-			signup_position: isSignup ? 1 : 0,
 		};
 
 		// Member types.
 		if ( memberTypes.length > 0 ) {
-			data.has_member_types = 'selected' === memberTypeMode ? 1 : 0;
 			if ( 'selected' === memberTypeMode ) {
+				data.has_member_types = 1;
 				data.member_types = selectedMemberTypes;
+			} else if ( 'none' === memberTypeMode ) {
+				data.has_member_types = 1;
+				data.member_types = [ 'null' ];
+			} else {
+				data.has_member_types = 0;
 			}
 		}
 
@@ -607,6 +610,13 @@ export function ProfileFieldModal( {
 				data.options = validOptions.map( function ( opt ) {
 					return { name: opt.name, is_default: opt.is_default };
 				} );
+			}
+
+			// Gender option order (legacy compatibility).
+			if ( 'gender' === type && validOptions.length > 0 ) {
+				data.gender_option_order = validOptions.map( function ( opt ) {
+					return opt.name;
+				} ).join( ',' );
 			}
 		}
 
@@ -686,7 +696,9 @@ export function ProfileFieldModal( {
 	return (
 		<Modal
 			title={ isEditing
-				? __( 'Edit Field', 'buddyboss' )
+				? ( groupName
+					? wp.i18n.sprintf( __( 'Edit Field - %s', 'buddyboss' ), decodeEntities( groupName ) )
+					: __( 'Edit Field', 'buddyboss' ) )
 				: ( groupName
 					? wp.i18n.sprintf( __( 'Add New Field - %s', 'buddyboss' ), decodeEntities( groupName ) )
 					: __( 'Add New Field', 'buddyboss' ) )
@@ -765,7 +777,7 @@ export function ProfileFieldModal( {
 																				onClick={ function () { toggleDefaultOption( index, allowMultiDefault ); } }
 																				aria-label={ __( 'Set as default value', 'buddyboss' ) }
 																			>
-																				<span className="bb-pf-option-item__radio"></span>
+																				<span className={ allowMultiDefault ? "bb-pf-option-item__checkbox" : "bb-pf-option-item__radio" }></span>
 																				<span className="bb-pf-option-item__default-label">
 																					{ __( 'Default Value', 'buddyboss' ) }
 																				</span>
@@ -808,6 +820,9 @@ export function ProfileFieldModal( {
 				{ /* Social Track (for socialnetworks type) */ }
 				{ showSocialTrack && (
 					<div className="bb-pf-field-social-track bb-admin-settings--divided-section">
+						<h4 className="bb-pf-field-social-track__label">
+							{ __( 'Social Type', 'buddyboss' ) }
+						</h4>
 						<p className="bb-pf-field-social-track__description">
 							{ __( 'Please select the social networks to allow. If entered, they will display as icons in the user\'s profile.', 'buddyboss' ) }
 						</p>
@@ -1065,45 +1080,49 @@ export function ProfileFieldModal( {
 
 				{ /* Alternate Title */ }
 				<TextControl
-					label={ __( 'Alternate Title', 'buddyboss' ) }
+					label={ __( 'Alternate Title (Optional)', 'buddyboss' ) }
 					value={ alternateName }
 					onChange={ setAlternateName }
-					help={ __( 'An alternate title for this field that can be used in specific contexts.', 'buddyboss' ) }
+					placeholder={ __( 'Enter alternate text', 'buddyboss' ) }
+					help={ __( 'Appears as the input title. If left blank, the field name will be used instead.', 'buddyboss' ) }
 				/>
 
 				{ /* Placeholder (for text-like types) */ }
 				{ showPlaceholder && (
 					<TextControl
-						label={ __( 'Placeholder Text', 'buddyboss' ) }
+						label={ __( 'Placeholder Text (Optional)', 'buddyboss' ) }
 						value={ placeholder }
 						onChange={ setPlaceholder }
-						help={ __( 'Placeholder text displayed inside the field when empty.', 'buddyboss' ) }
+						placeholder={ __( 'Enter placeholder text', 'buddyboss' ) }
+						help={ __( 'Appears inside the input field when no input is entered.', 'buddyboss' ) }
 					/>
 				) }
 
 				{ /* Instructions (description) */ }
 				<TextareaControl
-					label={ __( 'Instructions', 'buddyboss' ) }
-					placeholder={ __('Enter instructions text', 'buddyboss') }
+					label={ __( 'Instructions (Optional)', 'buddyboss' ) }
+					placeholder={ __( 'Enter instructions text', 'buddyboss' ) }
 					value={ description }
 					onChange={ setDescription }
-					help={ __( 'Help text shown below the field to guide users.', 'buddyboss' ) }
+					help={ __( 'Appears below the input. Provide instructions or examples for how users should respond.', 'buddyboss' ) }
 				/>
 
 				{ /* Member Types */ }
 				{ memberTypes.length > 0 && (
 					<div className="bb-pf-field-member-types">
-						<RadioControl
+						<SelectControl
 							label={ __( 'Profile Types', 'buddyboss' ) }
-							selected={ memberTypeMode }
+							help={ __( 'Select which profile types this field should be available to.', 'buddyboss' ) }
+							value={ memberTypeMode }
 							options={ [
-								{ label: __( 'All profile types', 'buddyboss' ), value: 'all' },
-								{ label: __( 'Selected profile types', 'buddyboss' ), value: 'selected' },
+								{ label: __( 'All Profile Types', 'buddyboss' ), value: 'all' },
+								{ label: __( 'Selected Profile Types', 'buddyboss' ), value: 'selected' },
+								{ label: __( 'No Profile Type Users', 'buddyboss' ), value: 'none' },
 							] }
 							onChange={ setMemberTypeMode }
 						/>
 						{ 'selected' === memberTypeMode && (
-							<div className="bb-pf-member-type-checkboxes">
+							<div className="bb-pf-member-type-checkboxes bb-pf-member-types-grid">
 								{ memberTypes.map( function ( mt ) {
 									return (
 										<CheckboxControl
@@ -1123,7 +1142,7 @@ export function ProfileFieldModal( {
 				{ visibilityLevels.length > 0 && (
 					<div className="bb-pf-field-visibility bb-admin-settings--divided-section">
 						<SelectControl
-							label={ __( 'Default Visibility', 'buddyboss' ) }
+							label={ __( 'Visibility', 'buddyboss' ) }
 							value={ visibility }
 							options={ visibilityLevels.map( function ( level ) {
 								return { label: decodeEntities( level.label ), value: level.id };
@@ -1131,11 +1150,10 @@ export function ProfileFieldModal( {
 							onChange={ setVisibility }
 						/>
 						<RadioControl
-							label={ __( 'Visibility Override', 'buddyboss' ) }
 							selected={ allowCustomVisibility }
 							options={ [
 								{ label: __( 'Allow members to override', 'buddyboss' ), value: 'allowed' },
-								{ label: __( 'Enforce default visibility', 'buddyboss' ), value: 'disabled' },
+								{ label: __( 'Enforce Visibility', 'buddyboss' ), value: 'disabled' },
 							] }
 							onChange={ setAllowCustomVisibility }
 						/>
@@ -1147,13 +1165,6 @@ export function ProfileFieldModal( {
 					label={ __( 'Make this field required', 'buddyboss' ) }
 					checked={ isRequired }
 					onChange={ setIsRequired }
-				/>
-
-				{ /* Show on Signup Form */ }
-				<CheckboxControl
-					label={ __( 'Show this field on the registration form', 'buddyboss' ) }
-					checked={ isSignup }
-					onChange={ setIsSignup }
 				/>
 			</div>
 
@@ -1172,7 +1183,7 @@ export function ProfileFieldModal( {
 					isBusy={ isSaving }
 					disabled={ isSaving || ! name.trim() }
 				>
-					{ isEditing ? __( 'Save Changes', 'buddyboss' ) : __( 'Add Field', 'buddyboss') }
+					{ __( 'Save', 'buddyboss' ) }
 				</Button>
 			</div>
 		</Modal>
