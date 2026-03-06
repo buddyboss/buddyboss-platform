@@ -38,25 +38,42 @@ export function useProfileNavSync( {
 	handleSettingChange,
 } ) {
 	var fullDefaultTabOptionsRef = useRef( null );
+	var prevHiddenKeyRef = useRef( '' );
+
+	// Keep a stable ref to handleSettingChange so the effect does not
+	// re-fire when the callback identity changes (it depends on sidePanels
+	// via useCallback, which causes an infinite loop).
+	var handleSettingChangeRef = useRef( handleSettingChange );
+	handleSettingChangeRef.current = handleSettingChange;
+
+	// Serialize nav order to a string so the effect only re-runs when
+	// the actual values change, not when the object reference changes.
+	var navOrderValue = settings.bb_user_nav_order;
+	var navOrderKey = navOrderValue && typeof navOrderValue === 'object'
+		? JSON.stringify( navOrderValue )
+		: '';
 
 	useEffect( function () {
-		if ( 'members' !== featureId ) {
-			return;
-		}
-
-		var navOrderValue = settings.bb_user_nav_order;
-		if ( ! navOrderValue || typeof navOrderValue !== 'object' ) {
+		if ( 'members' !== featureId || ! navOrderKey ) {
 			return;
 		}
 
 		// Compute hidden slugs (toggled off = value 0).
+		var parsed = JSON.parse( navOrderKey );
 		var hiddenSlugs = [];
-		var keys = Object.keys( navOrderValue );
+		var keys = Object.keys( parsed );
 		for ( var i = 0; i < keys.length; i++ ) {
-			if ( ! parseInt( navOrderValue[ keys[ i ] ], 10 ) ) {
+			if ( ! parseInt( parsed[ keys[ i ] ], 10 ) ) {
 				hiddenSlugs.push( keys[ i ] );
 			}
 		}
+
+		// Skip update if hidden slugs haven't changed.
+		var hiddenKey = hiddenSlugs.join( ',' );
+		if ( hiddenKey === prevHiddenKeyRef.current ) {
+			return;
+		}
+		prevHiddenKeyRef.current = hiddenKey;
 
 		// Update the Default Tab field options to exclude hidden items.
 		setSidePanels( function ( prevPanels ) {
@@ -104,12 +121,12 @@ export function useProfileNavSync( {
 							return Object.assign( {}, prev, { bb_user_default_tab: allOpts[ j ].value } );
 						} );
 					} else {
-						// User interaction — trigger save.
-						handleSettingChange( 'bb_user_default_tab', allOpts[ j ].value );
+						// User interaction — trigger save via stable ref.
+						handleSettingChangeRef.current( 'bb_user_default_tab', allOpts[ j ].value );
 					}
 					break;
 				}
 			}
 		}
-	}, [ featureId, settings.bb_user_nav_order, initialLoad, handleSettingChange, setSidePanels, setSettings, settingsRef ] );
+	}, [ featureId, navOrderKey, initialLoad, setSidePanels, setSettings, settingsRef ] );
 }
