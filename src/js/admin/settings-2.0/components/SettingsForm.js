@@ -131,6 +131,12 @@ export function SettingsForm({ fields, values, onChange }) {
 
 		// Find parent field to check if it's inverted
 		const parentField = fields.find(f => f.name === field.parent_field);
+
+		// Hidden parents are label-only groupings — never disable their children.
+		if ( 'hidden' === parentField?.type ) {
+			return false;
+		}
+
 		const isParentInverted = true === parentField?.invert_value;
 
 		// If parent_value is specified, check for exact match
@@ -569,6 +575,48 @@ export function SettingsForm({ fields, values, onChange }) {
 
 		const disabled = parentDisabled || isFieldDisabled(field);
 
+		// Checkbox children: render CheckboxControl with inline label (no separate label element).
+		if ( 'checkbox' === field.type ) {
+			const cbInverted = true === field.invert_value;
+			const cbVal = values[ field.name ] !== undefined ? values[ field.name ] : field.default;
+			const cbDisplay = cbInverted ? ! cbVal : !! cbVal;
+			return (
+				<div key={field.name} className={`bb-admin-settings-form__child-field bb-admin-settings-form__child-field--checkbox ${disabled ? 'bb-admin-settings-form__child-field--disabled' : ''}`}>
+					<CheckboxControl
+						label={ field.label || '' }
+						checked={ cbDisplay }
+						onChange={ function( checked ) {
+							var saveVal = cbInverted ? ! checked : checked;
+							onChange( field.name, saveVal ? 1 : 0 );
+						} }
+						disabled={ disabled }
+						__nextHasNoMarginBottom
+					/>
+				</div>
+			);
+		}
+
+		// Toggle children: render ToggleControl with inline label (toggle + label on same row).
+		if ( 'toggle' === field.type ) {
+			const tgInverted = true === field.invert_value;
+			const tgVal = values[ field.name ] !== undefined ? values[ field.name ] : field.default;
+			const tgDisplay = tgInverted ? ! tgVal : !! tgVal;
+			return (
+				<div key={field.name} className={`bb-admin-settings-form__child-field bb-admin-settings-form__child-field--toggle ${disabled ? 'bb-admin-settings-form__child-field--disabled' : ''}`}>
+					<ToggleControl
+						label={ field.label || '' }
+						checked={ tgDisplay }
+						onChange={ function( checked ) {
+							var saveVal = tgInverted ? ! checked : checked;
+							onChange( field.name, saveVal ? 1 : 0 );
+						} }
+						disabled={ disabled }
+						__nextHasNoMarginBottom
+					/>
+				</div>
+			);
+		}
+
 		return (
 			<div key={field.name} className={`bb-admin-settings-form__child-field ${disabled ? 'bb-admin-settings-form__child-field--disabled' : ''}`}>
 				{field.label && (
@@ -596,9 +644,11 @@ export function SettingsForm({ fields, values, onChange }) {
 		// Check if field should be disabled (parent toggle is OFF or field-level disabled flag).
 		const disabled = isFieldDisabled(field) || !!field.disabled;
 
-		// Render the control first — if it returns null, skip the entire field row.
+		// Render the control first — if it returns null, skip the entire field row
+		// unless the field has child fields (e.g., hidden parent used as a label-only grouping).
 		const controlOutput = renderFieldControl(field, disabled);
-		if ( null === controlOutput ) {
+		const childFields = fields.filter(f => f.parent_field === field.name);
+		if ( null === controlOutput && 0 === childFields.length ) {
 			return null;
 		}
 
@@ -622,9 +672,6 @@ export function SettingsForm({ fields, values, onChange }) {
 		if ( 'reaction_migration' === field.type || 'reaction_notice' === field.type ) {
 			return controlOutput;
 		}
-
-		// Get child fields that depend on this field
-		const childFields = fields.filter(f => f.parent_field === field.name);
 
 		// Check if this is a toggle with children (special layout)
 		const isToggleWithChildren = ( 'toggle' === field.type || 'checkbox' === field.type ) && childFields.length > 0;
@@ -776,7 +823,22 @@ export function SettingsForm({ fields, values, onChange }) {
 					{/* Render child fields inline/nested */}
 					{childFields.length > 0 && (
 						<div className="bb-admin-settings-form__child-fields">
-							{childFields.map(childField => renderChildField(childField, disabled))}
+							{childFields.reduce(function (acc, childField, idx) {
+								var groupLabel = childField.child_group_label || null;
+								var prevLabel  = idx > 0 ? ( childFields[ idx - 1 ].child_group_label || null ) : null;
+
+								// Insert a group heading when the label changes.
+								if ( groupLabel && groupLabel !== prevLabel ) {
+									acc.push(
+										<div key={ 'group-label-' + groupLabel + '-' + idx } className="bb-admin-settings-form__child-group-label">
+											{ groupLabel }
+										</div>
+									);
+								}
+
+								acc.push( renderChildField( childField, disabled ) );
+								return acc;
+							}, [])}
 						</div>
 					)}
 				</div>

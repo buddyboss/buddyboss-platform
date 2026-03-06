@@ -85,6 +85,10 @@ function bb_admin_settings_init() {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-messages.php';
 		}
 
+		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-search.php' ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-search.php';
+		}
+
 		// Icon registry.
 		if ( file_exists( buddypress()->plugin_dir . 'bp-core/classes/class-bb-icon-registry.php' ) ) {
 			require_once buddypress()->plugin_dir . 'bp-core/classes/class-bb-icon-registry.php';

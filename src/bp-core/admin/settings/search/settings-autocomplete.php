@@ -1,0 +1,69 @@
+<?php
+/**
+ * BuddyBoss Admin Settings - Search Autocomplete Panel.
+ *
+ * Registers the Autocomplete Settings side panel sections and fields for the
+ * Search feature in the Settings 2.0 registry.
+ *
+ * @package BuddyBoss\Core\Administration
+ * @since   BuddyBoss [BBVERSION]
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Register Autocomplete Settings panel sections and fields.
+ *
+ * Called from bb-admin-settings-search.php after side panels are registered.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_search_register_autocomplete_fields() {
+
+	// =========================================================================
+	// SECTION: Autocomplete Settings.
+	// =========================================================================
+	bb_register_feature_section(
+		'search',
+		'autocomplete',
+		'autocomplete_settings',
+		array(
+			'title' => __( 'Autocomplete Settings', 'buddyboss' ),
+			'order' => 10,
+		)
+	);
+
+	// FIELD: Enable Autocomplete (Toggle).
+	bb_register_feature_field(
+		'search',
+		'autocomplete',
+		'autocomplete_settings',
+		array(
+			'name'              => 'bp_search_autocomplete',
+			'label'             => __( 'Enable Autocomplete', 'buddyboss' ),
+			'type'              => 'toggle',
+			'description'       => __( 'Enable autocomplete dropdown when typing into search inputs.', 'buddyboss' ),
+			'default'           => (bool) bp_get_option( 'bp_search_autocomplete', 1 ),
+			'sanitize_callback' => 'absint',
+			'order'             => 10,
+		)
+	);
+
+	// FIELD: Number of Results (Number - child of autocomplete toggle).
+	bb_register_feature_field(
+		'search',
+		'autocomplete',
+		'autocomplete_settings',
+		array(
+			'name'              => 'bp_search_number_of_results',
+			'label'             => __( 'Number of Results', 'buddyboss' ),
+			'type'              => 'number',
+			'default'           => (int) bp_get_option( 'bp_search_number_of_results', 5 ),
+			'sanitize_callback' => 'bb_search_sanitize_number_of_results',
+			'suffix'            => __( 'results', 'buddyboss' ),
+			'parent_field'      => 'bp_search_autocomplete',
+			'order'             => 20,
+		)
+	);
+}
