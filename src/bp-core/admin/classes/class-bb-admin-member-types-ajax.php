@@ -29,6 +29,17 @@ class BB_Admin_Member_Types_Ajax {
 	const NONCE_ACTION = 'bb_admin_settings';
 
 	/**
+	 * Verify AJAX request (capability + nonce).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return void
+	 */
+	private function bb_verify_request() {
+		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+	}
+
+	/**
 	 * Constructor.
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -66,30 +77,6 @@ class BB_Admin_Member_Types_Ajax {
 		$allowed['bp-member-type-default-on-registration'] = 'sanitize_text_field';
 
 		return $allowed;
-	}
-
-	/**
-	 * Verify AJAX request (capability + nonce).
-	 *
-	 * Capability is checked first because it is cheaper and avoids
-	 * consuming a nonce check for unauthorized users.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	private function bb_verify_request() {
-		if ( ! bp_current_user_can( 'bp_moderate' ) ) {
-			wp_send_json_error(
-				array( 'message' => __( 'Permission denied.', 'buddyboss' ) ),
-				403
-			);
-		}
-
-		if ( ! check_ajax_referer( self::NONCE_ACTION, 'nonce', false ) ) {
-			wp_send_json_error(
-				array( 'message' => __( 'Security check failed.', 'buddyboss' ) ),
-				403
-			);
-		}
 	}
 
 	/**

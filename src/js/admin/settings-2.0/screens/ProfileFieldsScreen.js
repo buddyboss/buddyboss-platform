@@ -505,7 +505,6 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 					className="bb-pf-banner__select-link"
 					onClick={ function ( e ) {
 						e.preventDefault();
-						// @todo: Implement signup field selection mode.
 					} }
 				>
 					{ __( 'Select', 'buddyboss' ) }

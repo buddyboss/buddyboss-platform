@@ -29,6 +29,17 @@ class BB_Admin_Profile_Fields_Ajax {
 	const NONCE_ACTION = 'bb_admin_settings';
 
 	/**
+	 * Verify AJAX request (capability + nonce).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return void
+	 */
+	private function bb_verify_request() {
+		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+	}
+
+	/**
 	 * Constructor.
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -50,32 +61,6 @@ class BB_Admin_Profile_Fields_Ajax {
 		add_action( 'wp_ajax_bb_admin_save_profile_field', array( $this, 'save_profile_field' ) );
 		add_action( 'wp_ajax_bb_admin_delete_profile_field', array( $this, 'delete_profile_field' ) );
 		add_action( 'wp_ajax_bb_admin_reorder_profile_fields', array( $this, 'reorder_fields' ) );
-	}
-
-	/**
-	 * Verify AJAX request (capability + nonce).
-	 *
-	 * Capability is checked first because it is cheaper and avoids
-	 * consuming a nonce check for unauthorized users.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @return void
-	 */
-	private function bb_verify_request() {
-		if ( ! bp_current_user_can( 'bp_moderate' ) ) {
-			wp_send_json_error(
-				array( 'message' => __( 'Permission denied.', 'buddyboss' ) ),
-				403
-			);
-		}
-
-		if ( ! check_ajax_referer( self::NONCE_ACTION, 'nonce', false ) ) {
-			wp_send_json_error(
-				array( 'message' => __( 'Security check failed.', 'buddyboss' ) ),
-				403
-			);
-		}
 	}
 
 	/**
@@ -630,6 +615,9 @@ class BB_Admin_Profile_Fields_Ajax {
 		$options      = array();
 		$option_types = array( 'selectbox', 'multiselectbox', 'checkbox', 'radio', 'gender' );
 		if ( in_array( $field->type, $option_types, true ) ) {
+			// Note: get_children() is called per multi-option field. Object cache prevents
+			// duplicate DB hits after first call, and typical groups have few such fields,
+			// so a custom batch loader would be over-engineering for the typical use case.
 			$children = $field->get_children();
 			if ( ! empty( $children ) ) {
 				foreach ( $children as $child ) {

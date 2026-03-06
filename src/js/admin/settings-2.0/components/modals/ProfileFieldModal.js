@@ -857,13 +857,13 @@ export function ProfileFieldModal( {
 																				onChange={ function ( e ) { changeSocialNetwork( index, e.target.value ); } }
 																				aria-label={ __( 'Social network provider', 'buddyboss' ) }
 																			>
-																				{ socialProviders.filter( function ( provider ) {
-																					return provider.value === networkValue || selectedSocialNetworks.indexOf( provider.value ) < 0;
-																				} ).map( function ( provider ) {
+																				{ socialProviders.map( function ( provider ) {
+																					var isUsedElsewhere = provider.value !== networkValue && selectedSocialNetworks.indexOf( provider.value ) >= 0;
 																					return (
 																						<option
 																							key={ provider.value }
 																							value={ provider.value }
+																							disabled={ isUsedElsewhere }
 																						>
 																							{ decodeEntities( provider.name ) }
 																						</option>
