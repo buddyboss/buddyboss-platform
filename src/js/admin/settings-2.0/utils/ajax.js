@@ -6,6 +6,39 @@
  */
 
 /**
+ * Recursively append a value to FormData using PHP bracket notation.
+ *
+ * Handles scalars, arrays, nested objects, and Blobs at any depth.
+ * Example: appendToFormData( fd, 'order', { 5: { 0: 381 } } )
+ *   → order[5][0] = 381
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {FormData} formData The FormData instance to append to.
+ * @param {string}   key      The current bracket-notation key.
+ * @param {*}        value    The value to append.
+ */
+function appendToFormData( formData, key, value ) {
+	if ( value instanceof Blob ) {
+		formData.append( key, value );
+	} else if ( Array.isArray( value ) ) {
+		value.forEach( function ( item, idx ) {
+			appendToFormData( formData, key + '[' + idx + ']', item );
+		} );
+	} else if ( value && 'object' === typeof value ) {
+		Object.keys( value ).forEach( function ( subKey ) {
+			appendToFormData( formData, key + '[' + subKey + ']', value[ subKey ] );
+		} );
+	} else if ( 'boolean' === typeof value ) {
+		// Convert booleans to 1/0 so PHP empty() works correctly
+		// ("false" string is truthy in PHP, "0" is falsy).
+		formData.append( key, value ? '1' : '0' );
+	} else {
+		formData.append( key, value );
+	}
+}
+
+/**
  * Make an AJAX request to WordPress admin-ajax.php
  *
  * @since BuddyBoss [BBVERSION]
@@ -26,33 +59,9 @@ export function ajaxFetch( action, data, options ) {
 	formData.append( 'action', action );
 	formData.append( 'nonce', nonce );
 
-	// Append additional data, handling arrays and objects with bracket notation.
+	// Append additional data using recursive bracket notation serialization.
 	Object.keys( data ).forEach( function ( key ) {
-		var val = data[ key ];
-		if ( Array.isArray( val ) ) {
-			val.forEach( function ( item, idx ) {
-				if ( item && 'object' === typeof item && ! ( item instanceof Blob ) ) {
-					// Array of objects: options[0][name]=X, options[0][is_default]=1.
-					Object.keys( item ).forEach( function ( subKey ) {
-						var subVal = item[ subKey ];
-						// Convert booleans to 1/0 so PHP empty() works correctly
-						// ("false" string is truthy in PHP, "0" is falsy).
-						if ( 'boolean' === typeof subVal ) {
-							subVal = subVal ? '1' : '0';
-						}
-						formData.append( key + '[' + idx + '][' + subKey + ']', subVal );
-					} );
-				} else {
-					formData.append( key + '[]', item );
-				}
-			} );
-		} else if ( val && 'object' === typeof val && ! ( val instanceof Blob ) ) {
-			Object.keys( val ).forEach( function ( subKey ) {
-				formData.append( key + '[' + subKey + ']', val[ subKey ] );
-			} );
-		} else {
-			formData.append( key, val );
-		}
+		appendToFormData( formData, key, data[ key ] );
 	} );
 
 	return fetch( ajaxUrl, {

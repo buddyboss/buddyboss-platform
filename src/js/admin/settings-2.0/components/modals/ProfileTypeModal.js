@@ -209,7 +209,7 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 		setError( '' );
 	}, [ isOpen, memberType ] );
 
-	// Sync search text with current redirection value label.
+	// Sync search text with current redirection value label when modal opens or data loads.
 	useEffect( function () {
 		if ( ! isOpen || ! redirectionOptions.length ) {
 			return;
@@ -224,7 +224,7 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 			return o.value === formData.logout_redirection;
 		} );
 		setLogoutSearchText( logoutOption ? logoutOption.label : '' );
-	}, [ isOpen, redirectionOptions, formData.login_redirection, formData.logout_redirection ] );
+	}, [ isOpen, memberType, redirectionOptions ] ); // eslint-disable-line react-hooks/exhaustive-deps
 
 	// Close dropdown on click outside — only register when modal is open and a dropdown is active.
 	useEffect( function () {
