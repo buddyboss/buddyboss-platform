@@ -614,7 +614,9 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 							type="url"
 						/>
 					) }
+				</div>
 
+				<div className="bb-admin-profile-type-modal__section">
 					{/* After Logout Redirection */}
 					<div className="bb-admin-profile-type-modal__searchable-select" ref={ logoutDropdownRef }>
 						<label className="components-base-control__label">
