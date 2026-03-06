@@ -62,9 +62,8 @@ function bb_members_register_profile_headers_panel_fields() {
 	);
 
 	// FIELD: Elements (Pro only, toggle_list).
-	// Options and default are empty at registration time — bb_get_profile_header_elements()
-	// queries bp_xprofile_fields which is not available at bp_loaded priority 4.
-	// Real options are injected at AJAX time via bb_members_enrich_header_elements_options().
+	// Static options hardcoded here so the field renders with PRO badges when Pro is disabled.
+	// When Pro is active, Pro's enrichment filter overrides options with dynamic bp-hide states.
 	bb_register_feature_field(
 		'members',
 		'profile_headers',
@@ -76,7 +75,40 @@ function bb_members_register_profile_headers_panel_fields() {
 			'description'       => __( 'Select which elements to show in your profile headers.', 'buddyboss' ),
 			'default'           => array(),
 			'sanitize_callback' => 'bb_members_sanitize_toggle_list',
-			'options'           => array(),
+			'options'           => array(
+				array(
+					'label' => __( 'Online Status', 'buddyboss' ),
+					'value' => 'online-status',
+				),
+				array(
+					'label' => __( 'Profile Type', 'buddyboss' ),
+					'value' => 'profile-type',
+				),
+				array(
+					'label' => __( 'Member Handle', 'buddyboss' ),
+					'value' => 'member-handle',
+				),
+				array(
+					'label' => __( 'Joined Date', 'buddyboss' ),
+					'value' => 'joined-date',
+				),
+				array(
+					'label' => __( 'Last Active', 'buddyboss' ),
+					'value' => 'last-active',
+				),
+				array(
+					'label' => __( 'Followers', 'buddyboss' ),
+					'value' => 'followers',
+				),
+				array(
+					'label' => __( 'Following', 'buddyboss' ),
+					'value' => 'following',
+				),
+				array(
+					'label' => __( 'Social Networks', 'buddyboss' ),
+					'value' => 'social-networks',
+				),
+			),
 			'pro_only'          => true,
 			'order'             => 20,
 		)
