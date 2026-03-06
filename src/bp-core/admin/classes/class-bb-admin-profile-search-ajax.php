@@ -210,10 +210,10 @@ class BB_Admin_Profile_Search_Ajax {
 		$this->bb_verify_request();
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
-		$field_code  = isset( $_POST['field_code'] ) ? sanitize_key( $_POST['field_code'] ) : '';
+		$field_code  = isset( $_POST['field_code'] ) ? sanitize_key( wp_unslash( $_POST['field_code'] ) ) : '';
 		$field_label = isset( $_POST['field_label'] ) ? sanitize_text_field( wp_unslash( $_POST['field_label'] ) ) : '';
 		$field_desc  = isset( $_POST['field_desc'] ) ? sanitize_textarea_field( wp_unslash( $_POST['field_desc'] ) ) : '';
-		$field_mode  = isset( $_POST['field_mode'] ) ? sanitize_key( $_POST['field_mode'] ) : '';
+		$field_mode  = isset( $_POST['field_mode'] ) ? sanitize_key( wp_unslash( $_POST['field_mode'] ) ) : '';
 		$field_index = isset( $_POST['field_index'] ) && '' !== $_POST['field_index'] ? absint( $_POST['field_index'] ) : null;
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 

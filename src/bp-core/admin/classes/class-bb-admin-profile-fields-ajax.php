@@ -185,7 +185,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
 		$name              = isset( $_POST['name'] ) ? wp_kses( wp_unslash( $_POST['name'] ), wp_kses_allowed_html( 'strip' ) ) : '';
 		$description       = isset( $_POST['description'] ) ? sanitize_textarea_field( wp_unslash( $_POST['description'] ) ) : '';
-		$group_is_repeater = isset( $_POST['group_is_repeater'] ) ? sanitize_key( $_POST['group_is_repeater'] ) : '';
+		$group_is_repeater = isset( $_POST['group_is_repeater'] ) ? sanitize_key( wp_unslash( $_POST['group_is_repeater'] ) ) : '';
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $name ) ) {
@@ -242,7 +242,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		$group_id          = isset( $_POST['group_id'] ) ? absint( $_POST['group_id'] ) : 0;
 		$name              = isset( $_POST['name'] ) ? wp_kses( wp_unslash( $_POST['name'] ), wp_kses_allowed_html( 'strip' ) ) : '';
 		$description       = isset( $_POST['description'] ) ? sanitize_textarea_field( wp_unslash( $_POST['description'] ) ) : '';
-		$group_is_repeater = isset( $_POST['group_is_repeater'] ) ? sanitize_key( $_POST['group_is_repeater'] ) : '';
+		$group_is_repeater = isset( $_POST['group_is_repeater'] ) ? sanitize_key( wp_unslash( $_POST['group_is_repeater'] ) ) : '';
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $group_id ) ) {
@@ -355,7 +355,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		$field_id    = isset( $_POST['field_id'] ) ? absint( $_POST['field_id'] ) : 0;
 		$group_id    = isset( $_POST['group_id'] ) ? absint( $_POST['group_id'] ) : 0;
 		$name        = isset( $_POST['name'] ) ? wp_kses( wp_unslash( $_POST['name'] ), wp_kses_allowed_html( 'strip' ) ) : '';
-		$type        = isset( $_POST['type'] ) ? sanitize_key( $_POST['type'] ) : '';
+		$type        = isset( $_POST['type'] ) ? sanitize_key( wp_unslash( $_POST['type'] ) ) : '';
 		$description = isset( $_POST['description'] ) ? sanitize_textarea_field( wp_unslash( $_POST['description'] ) ) : '';
 		$is_required = isset( $_POST['is_required'] ) ? absint( $_POST['is_required'] ) : 0;
 		// phpcs:enable WordPress.Security.NonceVerification.Missing

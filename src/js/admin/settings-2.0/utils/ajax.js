@@ -17,17 +17,32 @@
  * @param {FormData} formData The FormData instance to append to.
  * @param {string}   key      The current bracket-notation key.
  * @param {*}        value    The value to append.
+ * @param {Array}    seen     Visited objects tracker to prevent circular reference loops.
  */
-function appendToFormData( formData, key, value ) {
+function appendToFormData( formData, key, value, seen ) {
+	if ( ! Array.isArray( seen ) ) {
+		seen = [];
+	}
+	if ( null === value || 'undefined' === typeof value ) {
+		return;
+	}
 	if ( value instanceof Blob ) {
 		formData.append( key, value );
 	} else if ( Array.isArray( value ) ) {
+		if ( -1 !== seen.indexOf( value ) ) {
+			return;
+		}
+		seen.push( value );
 		value.forEach( function ( item, idx ) {
-			appendToFormData( formData, key + '[' + idx + ']', item );
+			appendToFormData( formData, key + '[' + idx + ']', item, seen );
 		} );
-	} else if ( value && 'object' === typeof value ) {
+	} else if ( 'object' === typeof value ) {
+		if ( -1 !== seen.indexOf( value ) ) {
+			return;
+		}
+		seen.push( value );
 		Object.keys( value ).forEach( function ( subKey ) {
-			appendToFormData( formData, key + '[' + subKey + ']', value[ subKey ] );
+			appendToFormData( formData, key + '[' + subKey + ']', value[ subKey ], seen );
 		} );
 	} else if ( 'boolean' === typeof value ) {
 		// Convert booleans to 1/0 so PHP empty() works correctly
@@ -380,7 +395,7 @@ export function updateGroupMember( data ) {
  * @return {Promise} Promise resolving to member types array.
  */
 export function getMemberTypes( options ) {
-	return ajaxFetch('bb_admin_get_member_types', {}, options);
+	return ajaxFetch( 'bb_admin_get_member_types', {}, options );
 }
 
 /**
@@ -391,8 +406,8 @@ export function getMemberTypes( options ) {
  * @param {Object} data - Member type data.
  * @return {Promise} Promise resolving to response.
  */
-export function createMemberType(data) {
-	return ajaxFetch('bb_admin_create_member_type', data);
+export function createMemberType( data ) {
+	return ajaxFetch( 'bb_admin_create_member_type', data );
 }
 
 /**
@@ -404,8 +419,8 @@ export function createMemberType(data) {
  * @param {Object} data   - Member type data.
  * @return {Promise} Promise resolving to response.
  */
-export function updateMemberType(typeId, data) {
-	return ajaxFetch('bb_admin_update_member_type', Object.assign({}, data, { type_id: typeId }));
+export function updateMemberType( typeId, data ) {
+	return ajaxFetch( 'bb_admin_update_member_type', Object.assign( {}, data, { type_id: typeId } ) );
 }
 
 /**
@@ -417,8 +432,8 @@ export function updateMemberType(typeId, data) {
  * @param {Object} options - Optional fetch options (e.g. { signal } for AbortController).
  * @return {Promise} Promise resolving to response.
  */
-export function deleteMemberType(typeId, options) {
-	return ajaxFetch('bb_admin_delete_member_type', { type_id: typeId }, options);
+export function deleteMemberType( typeId, options ) {
+	return ajaxFetch( 'bb_admin_delete_member_type', { type_id: typeId }, options );
 }
 
 /**

@@ -672,7 +672,7 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 					<p className="bb-admin-profile-type-modal__section-description">
 						{ __( 'Redirect this profile type. When you change the redirection settings in a profile type this will then take priority and override redirection global settings in', 'buddyboss' ) }
 						{ ' ' }
-						<a href={ window.bbAdminData && window.bbAdminData.adminUrl ? window.bbAdminData.adminUrl + '?page=bp-settings#bb_redirection' : 'admin.php?page=bp-settings#bb_redirection' } target="_blank" rel="noopener noreferrer">
+						<a href={ safeUrl( ( window.bbAdminData && window.bbAdminData.adminUrl ? window.bbAdminData.adminUrl : 'admin.php' ) + '?page=bp-settings#bb_redirection' ) } target="_blank" rel="noopener noreferrer">
 							{ __( 'Settings - Login & Registration - Login Redirects', 'buddyboss' ) }
 						</a>
 						{ '.' }

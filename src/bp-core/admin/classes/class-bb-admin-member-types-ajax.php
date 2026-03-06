@@ -247,7 +247,7 @@ class BB_Admin_Member_Types_Ajax {
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
 		$name       = isset( $_POST['name'] ) ? wp_kses( wp_unslash( $_POST['name'] ), wp_kses_allowed_html( 'strip' ) ) : '';
-		$visibility = isset( $_POST['visibility'] ) ? sanitize_key( $_POST['visibility'] ) : 'publish';
+		$visibility = isset( $_POST['visibility'] ) ? sanitize_key( wp_unslash( $_POST['visibility'] ) ) : 'publish';
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $name ) ) {
@@ -280,7 +280,7 @@ class BB_Admin_Member_Types_Ajax {
 		);
 
 		if ( is_wp_error( $post_id ) ) {
-			wp_send_json_error( array( 'message' => esc_html( $post_id->get_error_message() ) ) );
+			wp_send_json_error( array( 'message' => $post_id->get_error_message() ) );
 		}
 
 		// Generate type key from post_name (slug), same as legacy bp_save_member_type_post_metabox_data().
@@ -323,7 +323,7 @@ class BB_Admin_Member_Types_Ajax {
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
 		$type_id    = isset( $_POST['type_id'] ) ? absint( $_POST['type_id'] ) : 0;
 		$name       = isset( $_POST['name'] ) ? wp_kses( wp_unslash( $_POST['name'] ), wp_kses_allowed_html( 'strip' ) ) : '';
-		$visibility = isset( $_POST['visibility'] ) ? sanitize_key( $_POST['visibility'] ) : '';
+		$visibility = isset( $_POST['visibility'] ) ? sanitize_key( wp_unslash( $_POST['visibility'] ) ) : '';
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $type_id ) ) {
@@ -367,7 +367,7 @@ class BB_Admin_Member_Types_Ajax {
 		if ( $needs_update ) {
 			$result = wp_update_post( $update_args, true );
 			if ( is_wp_error( $result ) ) {
-				wp_send_json_error( array( 'message' => esc_html( $result->get_error_message() ) ) );
+				wp_send_json_error( array( 'message' => $result->get_error_message() ) );
 			}
 		}
 
@@ -593,7 +593,7 @@ class BB_Admin_Member_Types_Ajax {
 						 */
 						$error_message = apply_filters( 'bp_member_type_admin_error_message', $bp_error_message_string );
 
-						wp_send_json_error( array( 'message' => esc_html( $error_message ) ) );
+						wp_send_json_error( array( 'message' => $error_message ) );
 					}
 				}
 			}
