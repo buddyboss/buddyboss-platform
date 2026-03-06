@@ -499,6 +499,14 @@
 
 .bb-pf-field-modal {
 
+	/* WordPress modal animation ends with transform:scale(1) + fill-mode:forwards,
+	   which creates a containing block that breaks fixed positioning for
+	   draggable items. Override to remove the transform. */
+	&.components-modal__frame {
+		animation: none;
+		position: relative;
+	}
+
 	.components-modal__content {
 		padding: 0;
 	}
