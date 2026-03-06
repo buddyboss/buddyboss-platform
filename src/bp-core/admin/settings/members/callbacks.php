@@ -831,7 +831,7 @@ function bb_members_enrich_profile_type_options( $field_data, $field, $feature_i
 
 	$type_options = array(
 		array(
-			'label' => __( '----', 'buddyboss' ),
+			'label' => __( 'Select', 'buddyboss' ),
 			'value' => '',
 		),
 	);

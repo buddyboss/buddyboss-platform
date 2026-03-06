@@ -296,7 +296,7 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 
 	// Build default type options for the select (memoized to avoid rebuilding on unrelated state changes).
 	var defaultTypeOptions = useMemo( function () {
-		var options = [ { label: __( '----', 'buddyboss' ), value: '' } ];
+		var options = [ { label: __( 'Select', 'buddyboss' ), value: '' } ];
 		memberTypes.forEach( function ( type ) {
 			if ( type.key ) {
 				options.push( {

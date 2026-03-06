@@ -510,9 +510,6 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 						<h4 className="bb-admin-profile-type-modal__section-title">
 							{ __( 'Group Type Membership Approval', 'buddyboss' ) }
 						</h4>
-						<p className="bb-admin-profile-type-modal__section-description" style={ { marginTop: 0, marginBottom: 16 } }>
-							{ __( 'Allow members of this profile type to auto-join groups of the selected group types without approval.', 'buddyboss' ) }
-						</p>
 						<div className="bb-admin-profile-type-modal__checkbox-grid">
 							{ availableGroupTypes.map( function ( gt ) {
 								var isChecked = -1 !== formData.group_type_auto_join.indexOf( String( gt.id ) );
@@ -528,6 +525,9 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 								);
 							} ) }
 						</div>
+						<p className="bb-admin-profile-type-modal__section-description" style={ { marginTop: 16, marginBottom: 0 } }>
+							{ __( 'Automatically add members of this profile type to these group types after account activation. Hidden groups are excluded.', 'buddyboss' ) }
+						</p>
 					</div>
 				) }
 
@@ -536,9 +536,6 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 					<h4 className="bb-admin-profile-type-modal__section-title">
 						{ __( 'WordPress Role', 'buddyboss' ) }
 					</h4>
-					<p className="bb-admin-profile-type-modal__section-description" style={ { marginTop: 0, marginBottom: 16 } }>
-						{ __( 'Select the WordPress role to assign to members of this profile type. Changing this will update the role for all existing members of this type.', 'buddyboss' ) }
-					</p>
 					<div className="bb-admin-profile-type-modal__radio-grid">
 						<RadioControl
 							selected={ formData.wp_roles.length ? formData.wp_roles[ 0 ] : 'none' }
@@ -557,6 +554,9 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 							} }
 						/>
 					</div>
+					<p className="bb-admin-profile-type-modal__section-description" style={ { marginTop: 16, marginBottom: 0 } }>
+						{ __( 'Auto-assign these WordPress roles to this profile type (includes existing users).', 'buddyboss' ) }
+					</p>
 				</div>
 
 				{/* After Login Redirection */}
@@ -614,10 +614,8 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 							type="url"
 						/>
 					) }
-				</div>
 
-				{/* After Logout Redirection */}
-				<div className="bb-admin-profile-type-modal__section">
+					{/* After Logout Redirection */}
 					<div className="bb-admin-profile-type-modal__searchable-select" ref={ logoutDropdownRef }>
 						<label className="components-base-control__label">
 							{ __( 'After Logout Redirection', 'buddyboss' ) }
@@ -671,6 +669,14 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 							type="url"
 						/>
 					) }
+					<p className="bb-admin-profile-type-modal__section-description">
+						{ __( 'Redirect this profile type. When you change the redirection settings in a profile type this will then take priority and override redirection global settings in', 'buddyboss' ) }
+						{ ' ' }
+						<a href={ window.bbAdminData && window.bbAdminData.adminUrl ? window.bbAdminData.adminUrl + '?page=bp-settings#bb_redirection' : 'admin.php?page=bp-settings#bb_redirection' } target="_blank" rel="noopener noreferrer">
+							{ __( 'Settings - Login & Registration - Login Redirects', 'buddyboss' ) }
+						</a>
+						{ '.' }
+					</p>
 				</div>
 
 				{/* Visibility */}
@@ -789,7 +795,7 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 							</button>
 						</div>
 						<p className="bb-admin-profile-type-modal__section-description">
-							{ __( 'Add this shortcode to any WordPress page to display all members of this type on a dedicated page.', 'buddyboss' ) }
+							{ __( 'To list all users of this profile type, add the shortcode below to any WordPress page.', 'buddyboss' ) }
 						</p>
 					</div>
 				) }
