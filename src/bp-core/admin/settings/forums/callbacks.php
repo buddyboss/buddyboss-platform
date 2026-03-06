@@ -12,7 +12,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Flush rewrite rules and fire deprecated hook after forum settings are saved.
+ * Flush rewrite rules after forum settings are saved.
  *
  * Legacy settings_save() always calls flush_rewrite_rules() because
  * permalink slugs may have changed. This preserves that behavior.
@@ -30,22 +30,6 @@ function bb_forums_after_save_settings( $feature_id, $settings, $saved ) { // ph
 
 	// Flush rewrite rules — critical for permalink slug changes.
 	flush_rewrite_rules();
-
-	/**
-	 * Fires after forum settings are saved (legacy backward compatibility).
-	 *
-	 * Previously fired as `bp_admin_setting_forums_register_fields` on the
-	 * legacy BP_Admin_Setting_Forums class. Third-party plugins may hook here.
-	 *
-	 * @since BuddyBoss 1.2.6
-	 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_admin_save_feature_settings_after'} instead.
-	 */
-	do_action_deprecated(
-		'bp_admin_setting_forums_register_fields',
-		array( null ),
-		'BuddyBoss [BBVERSION]',
-		'bb_admin_save_feature_settings_after'
-	);
 }
 
 add_action( 'bb_admin_save_feature_settings_after', 'bb_forums_after_save_settings', 10, 3 );

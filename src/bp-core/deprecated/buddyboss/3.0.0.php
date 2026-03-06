@@ -1411,3 +1411,46 @@ function bp_core_get_users_admin_tabs( $active_tab = '' ) {
 function bp_xprofile_admin_form_field_types( $select_field_type = '' ) {
 	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]' );
 }
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Forums Settings 2.0 deprecated hook compatibility.
+// ──────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Fire the legacy `bp_admin_setting_forums_register_fields` hook after
+ * Settings 2.0 finishes registering forum fields.
+ *
+ * The original hook passed a `BP_Admin_Setting_Forums` instance. Settings 2.0
+ * no longer uses that class, so a no-op stub is passed to satisfy callbacks
+ * that call add_section()/add_field() on the argument.
+ *
+ * @since BuddyBoss 1.2.6
+ * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_forums_after_register_settings_fields'} instead.
+ */
+add_action(
+	'bb_forums_after_register_settings_fields',
+	static function () {
+		do_action_deprecated(
+			'bp_admin_setting_forums_register_fields',
+			array(
+				new class() {
+					/**
+					 * No-op stub for BP_Admin_Setting_tab::add_section().
+					 *
+					 * @param mixed ...$args Ignored.
+					 */
+					public function add_section( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+
+					/**
+					 * No-op stub for BP_Admin_Setting_tab::add_field().
+					 *
+					 * @param mixed ...$args Ignored.
+					 */
+					public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+				},
+			),
+			'BuddyBoss [BBVERSION]',
+			'bb_forums_after_register_settings_fields'
+		);
+	}
+);
