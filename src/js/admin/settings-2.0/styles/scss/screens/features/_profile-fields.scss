@@ -18,10 +18,14 @@
 	align-items: center;
 	justify-content: space-between;
 	margin-bottom: 8px;
+	background-color: $bb-background-primary-hover-color;
+	padding: 8px;
+	border: 1px solid $bb-border-tertiary-color;
+	border-radius: $bb-border-radius-lg;
 
 	p {
 		font-size: 13px;
-		color: $bb-text-tertiary-color;
+		color: $bb-text-color;
 		margin: 0;
 		line-height: 1.5;
 	}
@@ -32,7 +36,7 @@
 		gap: 2px;
 		font-size: 13px;
 		font-weight: 500;
-		color: $bb-primary-color;
+		color: $bb-background-inverse-color;
 		text-decoration: none;
 		white-space: nowrap;
 
@@ -41,7 +45,7 @@
 		}
 
 		&:hover {
-			text-decoration: underline;
+			color: $bb-background-inverse-color;
 		}
 	}
 }

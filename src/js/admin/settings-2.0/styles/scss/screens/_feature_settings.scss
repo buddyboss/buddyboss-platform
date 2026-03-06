@@ -150,6 +150,14 @@
             margin: 0;
         }
 
+        &-description {
+            color: $bb-text-tertiary-color;
+            font-size: 13px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid $bb-border-secondary-color;
+            margin: 0 0 18px;
+        }
+
         &-status {
             display: inline-flex;
             align-items: center;

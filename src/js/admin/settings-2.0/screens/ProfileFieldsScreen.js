@@ -509,7 +509,7 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 					} }
 				>
 					{ __( 'Select', 'buddyboss' ) }
-					<i className="bb-icons-rl bb-icons-rl-caret-right" aria-hidden="true"></i>
+					<i className="bb-icons-rl bb-icons-rl-arrow-right" aria-hidden="true"></i>
 				</a>
 			</div>
 
