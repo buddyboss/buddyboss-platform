@@ -101,6 +101,10 @@ function bb_admin_settings_init() {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-groups.php';
 		}
 
+		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-forums.php' ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-forums.php';
+		}
+
 		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-media.php' ) ) {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-media.php';
 		}
