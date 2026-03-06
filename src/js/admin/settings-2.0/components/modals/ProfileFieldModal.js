@@ -782,16 +782,15 @@ export function ProfileFieldModal( {
 																					{ __( 'Default Value', 'buddyboss' ) }
 																				</span>
 																			</button>
-																			{ ( 'gender' === type ? index >= 2 : options.length > 1 ) && (
-																				<button
-																					type="button"
-																					className="bb-pf-option-item__remove"
-																					onClick={ function () { removeOption( index ); } }
-																					aria-label={ __( 'Remove option', 'buddyboss' ) }
-																				>
-																					<i className="bb-icons-rl bb-icons-rl-trash" aria-hidden="true"></i>
-																				</button>
-																			) }
+																			<button
+																				type="button"
+																				className="bb-pf-option-item__remove"
+																				onClick={ function () { removeOption( index ); } }
+																				aria-label={ __( 'Remove option', 'buddyboss' ) }
+																				disabled={ 'gender' === type ? index < 2 : 0 === index }
+																			>
+																				<i className="bb-icons-rl bb-icons-rl-trash" aria-hidden="true"></i>
+																			</button>
 																		</div>
 																	</div>
 																);
@@ -873,16 +872,15 @@ export function ProfileFieldModal( {
 																			</select>
 																		</div>
 																		<div className="bb-pf-option-item__right">
-																			{ index > 0 && (
-																				<button
-																					type="button"
-																					className="bb-pf-option-item__remove"
-																					onClick={ function () { removeSocialNetwork( index ); } }
-																					aria-label={ __( 'Remove option', 'buddyboss' ) }
-																				>
-																					<i className="bb-icons-rl bb-icons-rl-trash" aria-hidden="true"></i>
-																				</button>
-																			) }
+																			<button
+																				type="button"
+																				className="bb-pf-option-item__remove"
+																				onClick={ function () { removeSocialNetwork( index ); } }
+																				aria-label={ __( 'Remove option', 'buddyboss' ) }
+																				disabled={ 0 === index }
+																			>
+																				<i className="bb-icons-rl bb-icons-rl-trash" aria-hidden="true"></i>
+																			</button>
 																		</div>
 																	</div>
 																);
