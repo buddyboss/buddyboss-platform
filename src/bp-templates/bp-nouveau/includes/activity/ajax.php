@@ -784,7 +784,11 @@ function bp_nouveau_ajax_post_update() {
 		}
 	}
 
-	$post_title = ! empty( $_POST['post_title'] ) ? sanitize_text_field( wp_unslash( $_POST['post_title'] ) ) : '';
+	$post_title = isset( $_POST['post_title'] ) ? sanitize_text_field( wp_unslash( $_POST['post_title'] ) ) : ( isset( $_POST['whats-new-title'] ) ? sanitize_text_field( wp_unslash( $_POST['whats-new-title'] ) ) : '' );
+	// When editing, client sends post_title_cleared=1 when user explicitly cleared the title.
+	if ( ! empty( $_POST['id'] ) && ! empty( $_POST['post_title_cleared'] ) ) {
+		$post_title = '';
+	}
 	$validation = bb_validate_activity_post_title( $post_title );
 	if ( ! $validation['valid'] ) {
 		wp_send_json_error(
@@ -1059,6 +1063,10 @@ function bp_nouveau_ajax_post_update() {
 				'content'    => $_POST['content'],
 				'group_id'   => $item_id,
 			);
+
+			if ( ! empty( $_POST['post_title_cleared'] ) ) {
+				$post_array['post_title_cleared'] = 1;
+			}
 
 			if ( $is_scheduled ) {
 				$post_array['recorded_time'] = $schedule_date_time;

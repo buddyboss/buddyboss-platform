@@ -1767,16 +1767,17 @@ function groups_post_update( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'id'             => false,
-			'post_title'     => false,
-			'title_required' => function_exists( 'bb_is_activity_post_title_enabled' ) ? bb_is_activity_post_title_enabled() : false,
-			'content'        => false,
-			'user_id'        => bp_loggedin_user_id(),
-			'group_id'       => 0,
-			'privacy'        => 'public',
-			'error_type'     => 'bool',
-			'status'         => bb_get_activity_published_status(),
-			'recorded_time'  => bp_core_current_time(),
+			'id'                  => false,
+			'post_title'          => false,
+			'post_title_cleared'  => false,
+			'title_required'      => function_exists( 'bb_is_activity_post_title_enabled' ) ? bb_is_activity_post_title_enabled() : false,
+			'content'             => false,
+			'user_id'             => bp_loggedin_user_id(),
+			'group_id'            => 0,
+			'privacy'             => 'public',
+			'error_type'          => 'bool',
+			'status'              => bb_get_activity_published_status(),
+			'recorded_time'       => bp_core_current_time(),
 		),
 		'groups_post_update'
 	);
@@ -1830,22 +1831,24 @@ function groups_post_update( $args = '' ) {
 	 */
 	$post_title_filtered = apply_filters( 'bb_groups_activity_new_update_post_title', $post_title );
 
-	$activity_id = groups_record_activity(
-		array(
-			'id'             => $id,
-			'user_id'        => $user_id,
-			'action'         => $action,
-			'post_title'     => $post_title_filtered,
-			'title_required' => $r['title_required'],
-			'content'        => $content_filtered,
-			'type'           => 'activity_update',
-			'item_id'        => $group_id,
-			'privacy'        => $privacy,
-			'error_type'     => $error_type,
-			'status'         => $status,
-			'recorded_time'  => $recorded_time,
-		)
+	$record_args = array(
+		'id'             => $id,
+		'user_id'        => $user_id,
+		'action'         => $action,
+		'post_title'     => $post_title_filtered,
+		'title_required' => $r['title_required'],
+		'content'        => $content_filtered,
+		'type'           => 'activity_update',
+		'item_id'        => $group_id,
+		'privacy'        => $privacy,
+		'error_type'     => $error_type,
+		'status'         => $status,
+		'recorded_time'  => $recorded_time,
 	);
+	if ( ! empty( $r['post_title_cleared'] ) ) {
+		$record_args['post_title_cleared'] = 1;
+	}
+	$activity_id = groups_record_activity( $record_args );
 
 	groups_update_groupmeta( $group_id, 'last_activity', bp_core_current_time() );
 
