@@ -560,7 +560,7 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 				</div>
 
 				{/* After Login Redirection */}
-				<div className="bb-admin-profile-type-modal__section">
+				<div className="bb-admin-profile-type-modal__section bb-admin-profile-type-modal__section--no-border">
 					<div className="bb-admin-profile-type-modal__searchable-select" ref={ loginDropdownRef }>
 						<label className="components-base-control__label">
 							{ __( 'After Login Redirection', 'buddyboss' ) }
