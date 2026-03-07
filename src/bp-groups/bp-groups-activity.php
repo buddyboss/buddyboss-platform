@@ -482,12 +482,11 @@ function groups_record_activity( $args = '' ) {
 				}
 			}
 
-			// When post_title_cleared is set, user explicitly cleared the title - use '' even if empty.
-
+			
 			$args = array(
 				'id'                => $activity->id,
 				'action'            => ! empty( $args['action'] ) ? $args['action'] : $activity->action,
-				'post_title'        => ! empty( $args['post_title_cleared'] ) ? '' : ( ! empty( $args['post_title'] ) ? $args['post_title'] : $activity->post_title ), // When post_title_cleared is set, user explicitly cleared the title - use '' even if empty.
+				'post_title'		=> ! empty( $args['post_title'] ) ? $args['post_title'] : ( ! empty( $args['post_title_cleared'] ) ? '' : $activity->post_title ),
 				'title_required'    => ! empty( $args['title_required'] ) ? $args['title_required'] : $activity->title_required,
 				'content'           => ! empty( $args['content'] ) ? $args['content'] : '',
 				'component'         => $activity->component,
