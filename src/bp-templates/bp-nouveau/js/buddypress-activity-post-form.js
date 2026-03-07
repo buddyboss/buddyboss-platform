@@ -6218,9 +6218,7 @@ window.bp = window.bp || {};
 
 				self.model.set( 'content', content, { silent: true } );
 
-				var activityPostTitle = $form.find( '#bb-rl-whats-new-title' ).length
-					? $form.find( '#bb-rl-whats-new-title' ).val() || ''
-					: $form.find( '#whats-new-title' ).val() || '';
+				var activityPostTitle = $form.find( '#bb-rl-whats-new-title' ).length ? $form.find( '#bb-rl-whats-new-title' ).val() || '' : $form.find( '#whats-new-title' ).val() || '';
 				if ( activityPostTitle.length > 0 ) {
 					var maxPostTitleLength = BP_Nouveau.activity.params.activity_post_title_maxlength;
 					// Maximum 80 characters allowed.
