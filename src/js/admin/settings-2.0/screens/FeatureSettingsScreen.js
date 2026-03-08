@@ -32,6 +32,7 @@ const ProfileTypeScreen = lazy(() => import('./ProfileTypeScreen'));
 const ProfileFieldsScreen = lazy(() => import('./ProfileFieldsScreen'));
 const ProfileSearchScreen = lazy(() => import('./ProfileSearchScreen'));
 const ForumsListScreen = lazy(() => import('./ForumsListScreen'));
+const DiscussionsListScreen = lazy(() => import('./DiscussionsListScreen'));
 
 /**
  * Map of feature + panel combinations that render custom screens instead of settings forms.
@@ -44,6 +45,7 @@ const CUSTOM_PANEL_SCREENS = {
 	'members:profile_fields': ProfileFieldsScreen,
 	'members:profile_search': ProfileSearchScreen,
 	'forums:all_forums': ForumsListScreen,
+	'forums:discussions': DiscussionsListScreen,
 };
 
 

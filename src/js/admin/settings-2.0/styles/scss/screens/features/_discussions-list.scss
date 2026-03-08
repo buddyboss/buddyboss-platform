@@ -1,0 +1,1003 @@
+/* ----------------------------------------------------------------
+   Discussions List Screen
+   ---------------------------------------------------------------- */
+
+.bb-discussions-list {
+	max-width: calc(100% - 64px);
+	padding: 0 24px 16px;
+	background-color: $bb-background-base-color;
+	border: 1px solid $bb-border-primary-color;
+	border-radius: $bb-border-radius-2xl;
+	box-shadow: 0px 1.5px 1px 0px rgba(0, 0, 0, 0.16);
+	margin: 32px 32px 0;
+
+	// Notice
+	.bb-admin-notice {
+		margin-top: 24px;
+	}
+
+	.bb-admin-notice--dismiss {
+		background: none;
+		border: none;
+		cursor: pointer;
+	}
+
+	// Header
+	&__header {
+		border-bottom: 1px solid $bb-border-secondary-color;
+		padding: 18px 0;
+		margin-bottom: 24px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	&__title {
+		font-size: 18px;
+		font-weight: 500;
+		color: $bb-text-color;
+		margin: 0;
+	}
+
+	&__create-btn.is-primary {
+		@include bb-button-primary;
+
+		i {
+			font-size: 16px;
+			font-weight: 700;
+			margin-right: 6px;
+		}
+	}
+
+	// Toolbar
+	&__toolbar {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+		padding-bottom: 16px;
+		border-bottom: 1px solid $bb-border-secondary-color;
+		flex-wrap: wrap;
+
+		.components-select-control {
+			margin-bottom: 0;
+
+			.components-input-control__label {
+				color: $bb-text-secondary-color;
+				text-transform: none;
+				font-size: 13px;
+				font-weight: 500;
+			}
+
+			.components-select-control__input {
+				@include bb-admin-settings-select;
+				min-width: 135px;
+			}
+
+			.components-input-control-suffix-wrapper,
+			.components-input-control__backdrop {
+				display: none;
+			}
+		}
+
+		select {
+			@include bb-admin-settings-select;
+		}
+	}
+
+	&__toolbar-left {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		flex-wrap: wrap;
+	}
+
+	&__toolbar-right {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+	}
+
+	// Bulk Actions
+	&__bulk-actions {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+
+		select {
+			min-width: 140px;
+			height: 32px;
+			font-size: 13px;
+		}
+	}
+
+	&__bulk-apply.is-secondary {
+		@include bb-button-primary-outline;
+	}
+
+	// Forum Filter (Searchable Dropdown)
+	&__forum-filter {
+		position: relative;
+
+		&-toggle {
+			display: flex;
+			align-items: center;
+			gap: 4px;
+			height: 32px;
+			padding: 0 8px;
+			background: $bb-background-base-color;
+			border: 1px solid $bb-border-secondary-color;
+			border-radius: $bb-border-radius-md;
+			font-size: 13px;
+			color: $bb-text-color;
+			cursor: pointer;
+			white-space: nowrap;
+			min-width: 120px;
+
+			&:hover {
+				border-color: $bb-border-brand-primary-color;
+			}
+
+			i {
+				font-size: 14px;
+				color: $bb-icon-tertiary-color;
+				margin-left: auto;
+			}
+		}
+
+		&-label {
+			overflow: hidden;
+			text-overflow: ellipsis;
+			max-width: 200px;
+		}
+
+		&-dropdown {
+			position: absolute;
+			top: 100%;
+			left: 0;
+			z-index: 1000;
+			min-width: 220px;
+			max-width: 320px;
+			background: $bb-background-base-color;
+			border: 1px solid $bb-border-secondary-color;
+			border-radius: $bb-border-radius-lg;
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+			margin-top: 4px;
+			display: flex;
+			flex-direction: column;
+		}
+
+		&-search {
+			padding: 8px;
+			border-bottom: 1px solid $bb-border-secondary-color;
+		}
+
+		&-search-input {
+			width: 100%;
+			height: 32px;
+			border: 1px solid $bb-border-secondary-color;
+			border-radius: $bb-border-radius-md;
+			padding: 0 8px;
+			font-size: 13px;
+			color: $bb-text-color;
+			outline: none;
+
+			&::placeholder {
+				color: $bb-text-disabled-color;
+			}
+
+			&:focus {
+				border-color: $bb-border-brand-primary-color;
+			}
+		}
+
+		&-options {
+			max-height: 240px;
+			overflow-y: auto;
+			padding: 4px 0;
+		}
+
+		&-option {
+			display: block;
+			width: 100%;
+			padding: 6px 12px;
+			border: none;
+			background: none;
+			text-align: left;
+			font-size: 13px;
+			color: $bb-text-color;
+			cursor: pointer;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+
+			&:hover {
+				background: $bb-background-primary-hover-color;
+			}
+
+			&--active {
+				font-weight: 600;
+				color: $bb-text-brand-primary-color;
+			}
+		}
+
+		&-no-results {
+			display: block;
+			padding: 8px 12px;
+			font-size: 13px;
+			color: $bb-text-disabled-color;
+		}
+	}
+
+	// Sort Dropdown
+	&__sort-select {
+		.components-select-control {
+			margin-bottom: 0;
+		}
+
+		select {
+			min-width: 100px;
+			height: 32px;
+			font-size: 13px;
+		}
+	}
+
+	// Search
+	&__search {
+		position: relative;
+		min-width: 225px;
+
+		input {
+			@include bb-input-text;
+			padding-right: 30px;
+		}
+	}
+
+	&__search-input {
+		width: 200px;
+		height: 32px;
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-md;
+		padding: 0 32px 0 8px;
+		font-size: 13px;
+		color: $bb-text-color;
+		background-color: $bb-background-base-color;
+		outline: none;
+
+		&::placeholder {
+			color: $bb-text-disabled-color;
+		}
+
+		&:focus {
+			border-color: $bb-border-brand-primary-color;
+		}
+	}
+
+	&__search-icon {
+		position: absolute;
+		right: 8px;
+		top: 50%;
+		transform: translateY(-50%);
+		color: $bb-icon-tertiary-color;
+		font-size: 16px;
+		pointer-events: none;
+	}
+
+	// Table
+	&__table-wrapper {
+		overflow: hidden;
+		background: $bb-background-base-color;
+	}
+
+	&__loading {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 60px 0;
+	}
+
+	&__empty {
+		padding: 40px;
+		text-align: center;
+		color: $bb-text-tertiary-color;
+		font-size: 14px;
+	}
+
+	&__table {
+		width: 100%;
+		border-collapse: collapse;
+	}
+
+	// Table Header
+	&__table thead {
+		border-bottom: 0.5px solid $bb-border-secondary-color;
+	}
+
+	&__table th {
+		padding: 10px 16px 10px 0;
+		font-size: 13px;
+		font-weight: 400;
+		color: $bb-text-tertiary-color;
+		text-align: left;
+		white-space: nowrap;
+
+		&:first-child {
+			padding: 10px 0 10px 4px;
+		}
+
+		&:last-child {
+			padding: 10px 4px 10px 0;
+		}
+	}
+
+	&__th--name {
+		font-size: 14px;
+		color: $bb-text-color;
+	}
+
+	&__th--checkbox {
+		width: 30px;
+	}
+
+	&__th--actions {
+		width: 40px;
+	}
+
+	&__th--forum,
+	&__th--replies,
+	&__th--members,
+	&__th--last-post {
+		white-space: nowrap;
+	}
+
+	// Table Rows
+	&__table tbody tr {
+		border-bottom: 0.5px solid $bb-border-primary-color;
+	}
+
+	&__row {
+		transition: background-color 0.15s ease;
+
+		&--selected {
+			background-color: $bb-background-positive-primary-color;
+		}
+	}
+
+	&__table td {
+		padding: 16px 10px 16px 0;
+		font-size: 13px;
+		color: $bb-text-secondary-color;
+		vertical-align: middle;
+		overflow: hidden;
+
+		&:first-child {
+			padding-left: 4px;
+		}
+
+		&:last-child {
+			padding-right: 4px;
+		}
+	}
+
+	// Checkbox cells
+	&__th--checkbox,
+	&__td--checkbox {
+		width: 30px;
+
+		.components-checkbox-control {
+			margin-bottom: 0;
+		}
+
+		.components-base-control__field {
+			margin-bottom: 0;
+		}
+	}
+
+	&__td--name {
+		max-width: 200px;
+		overflow: hidden;
+	}
+
+	&__td--forum {
+		white-space: nowrap;
+	}
+
+	&__td--actions {
+		width: 40px;
+	}
+
+	// Discussion Name Column
+	&__discussion-name {
+		display: block;
+		font-size: 14px;
+		font-weight: 400;
+		color: $bb-link-color;
+		line-height: 20px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		text-decoration: none;
+	}
+
+	// Count Column (Replies, Members)
+	&__count-cell {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+
+		i {
+			font-size: 14px;
+			color: $bb-icon-tertiary-color;
+		}
+	}
+
+	// Last Post Column
+	&__date {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+		color: $bb-text-tertiary-color;
+		font-size: 13px;
+		line-height: 18px;
+
+		i {
+			font-size: 14px;
+		}
+	}
+
+	&__no-activity {
+		color: $bb-text-disabled-color;
+		font-size: 13px;
+	}
+
+	// Actions Column
+	&__td--actions {
+		text-align: center;
+
+		.components-dropdown-menu__toggle {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background: none;
+			border: none;
+			cursor: pointer;
+			padding: 4px;
+			min-width: 32px;
+			width: 32px;
+			height: 32px;
+			color: $bb-icon-tertiary-color;
+			border-radius: $bb-border-radius-sm;
+
+			i {
+				color: $bb-icon-secondary-color;
+				font-size: 24px;
+				line-height: 1;
+				font-weight: 700;
+			}
+
+			&:hover,
+			&:focus,
+			&.is-pressed,
+			&.is-opened {
+				color: $bb-text-color;
+				background: $bb-background-primary-hover-color;
+				box-shadow: none;
+			}
+
+			.dashicon,
+			svg:not(:first-child) {
+				display: none;
+			}
+		}
+	}
+
+	// Footer
+	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 16px;
+		padding: 16px 0;
+		margin-top: 8px;
+	}
+
+	// Item Count
+	&__item-count {
+		font-size: 13px;
+		color: $bb-text-secondary-color;
+	}
+
+	// Pagination
+	&__pagination {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+	}
+
+	&__pagination-btn.is-secondary,
+	&__pagination-btn.is-primary {
+		min-width: 32px;
+		height: 32px;
+		padding: 0 6px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: $bb-text-tertiary-color;
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 1;
+		border: 1px solid transparent;
+		box-shadow: none;
+		border-radius: $bb-border-radius-md;
+
+		&:hover {
+			background-color: $bb-background-base-color !important;
+			border-color: $bb-border-secondary-color;
+			box-shadow: none !important;
+			color: $bb-text-tertiary-color !important;
+		}
+	}
+
+	&__pagination-btn--current.is-primary {
+		background-color: $bb-background-base-color;
+		border-color: $bb-border-quinery;
+		color: $bb-text-color;
+		border-radius: $bb-border-radius-md;
+
+		&:hover {
+			background-color: $bb-background-base-color !important;
+			color: $bb-text-color !important;
+			border-color: $bb-border-quinery;
+			box-shadow: none;
+		}
+	}
+
+	&__pagination-ellipsis {
+		font-size: 13px;
+		font-weight: 500;
+		color: $bb-text-tertiary-color;
+		min-width: 24px;
+		text-align: center;
+		line-height: 32px;
+	}
+
+	&__pagination-btn--previous,
+	&__pagination-btn--next {
+		border: none !important;
+		box-shadow: none !important;
+		color: transparent !important;
+		font-size: 0 !important;
+
+		&:before {
+			content: "\e138";
+			font-family: "bb-icons-rl";
+			font-size: 16px;
+			color: $bb-icon-secondary-color;
+			font-weight: 400;
+		}
+
+		&[disabled] {
+			opacity: 0.5;
+			pointer-events: none;
+		}
+	}
+
+	&__pagination-btn--next:before {
+		content: "\e13a";
+	}
+
+	// Edit Loading Overlay
+	&__edit-loading {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: rgba(255, 255, 255, 0.6);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		z-index: 100000;
+	}
+}
+
+// Full-width for custom panel screen.
+.bb-admin-feature-settings__main--custom-panel {
+	.bb-discussions-list {
+		max-width: 100%;
+	}
+}
+
+/* ----------------------------------------------------------------
+   Delete Discussion Modal
+   ---------------------------------------------------------------- */
+.bb-discussion-delete-modal {
+
+	&.components-modal__frame {
+		max-width: 500px;
+	}
+
+	&__body {
+		padding: 24px;
+	}
+
+	&__description {
+		font-size: 13px;
+		line-height: 1.6;
+		color: $bb-text-color;
+		margin: 0 0 16px;
+	}
+
+	.components-checkbox-control {
+		margin-bottom: 0;
+	}
+
+	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 8px;
+		padding: 16px 24px;
+		border-top: 1px solid $bb-border-secondary-color;
+
+		.is-secondary {
+			@include bb-button-secondary;
+		}
+
+		.is-destructive.is-primary {
+			background-color: #d63638;
+			border-color: #d63638;
+			color: #fff;
+			border-radius: $bb-border-radius-md;
+			font-size: 13px;
+			font-weight: 500;
+			padding: 6px 16px;
+			height: 32px;
+			box-shadow: none;
+
+			&:hover {
+				background-color: #b32d2e;
+				border-color: #b32d2e;
+			}
+
+			&:disabled {
+				opacity: 0.5;
+				cursor: not-allowed;
+			}
+		}
+	}
+}
+
+/* ----------------------------------------------------------------
+   Bulk Edit Discussion Modal
+   ---------------------------------------------------------------- */
+.bb-discussion-bulk-edit-modal {
+
+	&.components-modal__frame {
+		max-width: 500px;
+	}
+
+	&__body {
+		padding: 24px;
+
+		.components-base-control {
+			margin-bottom: 16px;
+		}
+
+		.components-input-control__label,
+		.components-base-control__label {
+			text-transform: none !important;
+			font-size: 13px !important;
+			font-weight: 500 !important;
+			color: $bb-text-color;
+		}
+
+		.components-input-control__container {
+
+			.components-select-control__input {
+				@include bb-admin-settings-select;
+			}
+
+			&:has(> .components-select-control__input) {
+				padding: 0 !important;
+
+				.components-input-control__suffix,
+				.components-input-control__backdrop {
+					display: none !important;
+				}
+			}
+		}
+	}
+
+	&__selected-pills {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		margin-bottom: 16px;
+	}
+
+	&__pill {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		padding: 4px 8px;
+		font-size: 12px;
+		background-color: $bb-background-secondary-color;
+		border: 1px solid $bb-border-tertiary-color;
+		border-radius: $bb-border-radius-full;
+		color: $bb-text-color;
+		max-width: 200px;
+	}
+
+	&__pill-name {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	&__pill-remove {
+		background: none;
+		border: none;
+		cursor: pointer;
+		padding: 0;
+		color: $bb-icon-tertiary-color;
+		font-size: 14px;
+		line-height: 1;
+		display: flex;
+		align-items: center;
+
+		&:hover {
+			color: $bb-text-color;
+		}
+	}
+
+	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 8px;
+		padding: 16px 24px;
+		border-top: 1px solid $bb-border-secondary-color;
+
+		.is-secondary {
+			@include bb-button-secondary;
+		}
+
+		.is-primary {
+			@include bb-button-primary;
+
+			&:disabled {
+				opacity: 0.5;
+				cursor: not-allowed;
+			}
+		}
+	}
+}
+
+/* ----------------------------------------------------------------
+   Discussion Create Modal
+   ---------------------------------------------------------------- */
+.bb-discussion-create-modal {
+
+	&__body {
+		padding: 24px;
+
+		.components-base-control {
+			margin-bottom: 16px;
+		}
+
+		// Override WordPress components uppercase labels to sentence case.
+		.components-input-control__label,
+		.components-base-control__label {
+			text-transform: none !important;
+			font-size: 13px !important;
+			font-weight: 500 !important;
+			color: $bb-text-color;
+		}
+
+		.components-text-control__input,
+		.components-textarea-control__input {
+			@include bb-input-text;
+		}
+
+		textarea {
+			min-height: 72px;
+		}
+
+		.components-input-control__container {
+
+			.components-select-control__input {
+				@include bb-admin-settings-select;
+			}
+
+			&:has(> .components-select-control__input) {
+				padding: 0 !important;
+
+				.components-input-control__suffix,
+				.components-input-control__backdrop {
+					display: none !important;
+				}
+			}
+		}
+	}
+
+	&__row {
+		display: flex;
+		gap: 16px;
+		margin-bottom: 16px;
+
+		.components-base-control {
+			flex: 1;
+			margin-bottom: 0;
+		}
+	}
+
+	&__error {
+		color: #d63638;
+		font-size: 13px;
+		margin: 0 0 16px;
+	}
+
+	&__footer {
+
+		.is-secondary {
+			@include bb-button-secondary;
+		}
+
+		.is-primary {
+			@include bb-button-primary;
+
+			&:disabled {
+				opacity: 0.5;
+				cursor: not-allowed;
+			}
+		}
+	}
+}
+
+/* ----------------------------------------------------------------
+   Discussion Edit Modal
+   ---------------------------------------------------------------- */
+.bb-discussion-edit-modal {
+
+	&__body {
+		padding: 0 24px 24px;
+
+		.components-base-control {
+			margin-bottom: 16px;
+
+			+ .bb-admin-meta-field__description {
+				margin-top: -6px;
+			}
+		}
+
+		// Override WordPress components uppercase labels to sentence case.
+		.components-input-control__label,
+		.components-base-control__label {
+			text-transform: none;
+			font-size: 13px;
+			font-weight: 500;
+			color: $bb-text-color;
+		}
+
+		.bb-admin-notice {
+			margin-top: 16px;
+		}
+
+		.components-text-control__input,
+		.components-textarea-control__input {
+			@include bb-input-text;
+		}
+
+		.components-input-control__container {
+
+			.components-select-control__input {
+				@include bb-admin-settings-select;
+			}
+
+			&:has(> .components-select-control__input) {
+				padding: 0 !important;
+
+				.components-input-control__suffix,
+				.components-input-control__backdrop {
+					display: none !important;
+				}
+			}
+		}
+	}
+
+	&__row {
+		display: flex;
+		gap: 16px;
+		margin-bottom: 16px;
+
+		.components-base-control {
+			flex: 1;
+			margin-bottom: 0;
+		}
+	}
+
+	&__error {
+		color: #d63638;
+		font-size: 13px;
+		margin: 0 0 16px;
+	}
+
+	&__footer {
+
+		.is-secondary {
+			@include bb-button-secondary;
+		}
+
+		.is-primary {
+			@include bb-button-primary;
+
+			&:disabled {
+				opacity: 0.5;
+				cursor: not-allowed;
+			}
+		}
+	}
+}
+
+/* ----------------------------------------------------------------
+   Tags Autocomplete
+   ---------------------------------------------------------------- */
+.bb-tags-autocomplete {
+	margin-bottom: 0;
+
+	&__wrapper {
+		position: relative;
+	}
+
+	&__input {
+		width: 100%;
+		height: 36px;
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-md;
+		padding: 0 8px;
+		font-size: 13px;
+		color: $bb-text-color;
+		outline: none;
+
+		&::placeholder {
+			color: $bb-text-disabled-color;
+		}
+
+		&:focus {
+			border-color: $bb-border-brand-primary-color;
+		}
+	}
+
+	&__dropdown {
+		position: absolute;
+		top: 100%;
+		left: 0;
+		right: 0;
+		z-index: 1000;
+		background: $bb-background-base-color;
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-lg;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+		margin-top: 4px;
+		max-height: 200px;
+		overflow-y: auto;
+		padding: 4px 0;
+	}
+
+	&__option {
+		display: block;
+		width: 100%;
+		padding: 6px 12px;
+		border: none;
+		background: none;
+		text-align: left;
+		font-size: 13px;
+		color: $bb-text-color;
+		cursor: pointer;
+
+		&:hover {
+			background: $bb-background-primary-hover-color;
+		}
+	}
+}

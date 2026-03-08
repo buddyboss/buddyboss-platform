@@ -140,6 +140,51 @@ function bb_admin_settings_register_forums_feature() {
 		)
 	);
 
+	// Side Panel 6: Discussions (custom list screen).
+	bb_register_side_panel(
+		'forums',
+		'discussions',
+		array(
+			'title'      => __( 'Discussions', 'buddyboss' ),
+			'icon'       => array(
+				'type'  => 'font',
+				'class' => 'bb-icons-rl bb-icons-rl-chats-circle',
+			),
+			'order'      => 110,
+			'is_default' => false,
+		)
+	);
+
+	// Side Panel 7: Discussion Tags.
+	bb_register_side_panel(
+		'forums',
+		'discussion_tags',
+		array(
+			'title'      => __( 'Discussion Tags', 'buddyboss' ),
+			'icon'       => array(
+				'type'  => 'font',
+				'class' => 'bb-icons-rl bb-icons-rl-tag',
+			),
+			'order'      => 120,
+			'is_default' => false,
+		)
+	);
+
+	// Side Panel 8: Replies.
+	bb_register_side_panel(
+		'forums',
+		'replies',
+		array(
+			'title'      => __( 'Replies', 'buddyboss' ),
+			'icon'       => array(
+				'type'  => 'font',
+				'class' => 'bb-icons-rl bb-icons-rl-chat-text',
+			),
+			'order'      => 130,
+			'is_default' => false,
+		)
+	);
+
 	// =========================================================================
 	// PANEL FIELDS
 	// =========================================================================

@@ -1,0 +1,193 @@
+/**
+ * BuddyBoss Admin Settings 2.0 - Tags Autocomplete
+ *
+ * Text input with autocomplete suggestions for topic tags.
+ * Supports comma-separated values and free-form tag entry.
+ *
+ * @package BuddyBoss\Core\Administration
+ * @since BuddyBoss [BBVERSION]
+ */
+
+import { useState, useRef, useEffect } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
+
+import { searchTopicTags } from '../../utils/ajax';
+
+/**
+ * Tags Autocomplete Component
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object}   props             Component props.
+ * @param {string}   props.value       Comma-separated tag names.
+ * @param {Function} props.onChange     Change handler (receives comma-separated string).
+ * @param {string}   props.label       Field label.
+ * @param {string}   props.placeholder Placeholder text.
+ * @returns {JSX.Element} Tags autocomplete field.
+ */
+export function TagsAutocomplete( { value, onChange, label, placeholder } ) {
+	var suggestionsState = useState( [] );
+	var suggestions = suggestionsState[ 0 ];
+	var setSuggestions = suggestionsState[ 1 ];
+
+	var showDropdownState = useState( false );
+	var showDropdown = showDropdownState[ 0 ];
+	var setShowDropdown = showDropdownState[ 1 ];
+
+	var searchAbortRef = useRef( null );
+	var searchTimerRef = useRef( null );
+	var wrapperRef = useRef( null );
+
+	// Close dropdown on outside click.
+	useEffect( function () {
+		var handleClickOutside = function ( e ) {
+			if ( wrapperRef.current && ! wrapperRef.current.contains( e.target ) ) {
+				setShowDropdown( false );
+			}
+		};
+		document.addEventListener( 'mousedown', handleClickOutside );
+		return function () {
+			document.removeEventListener( 'mousedown', handleClickOutside );
+			if ( searchAbortRef.current ) {
+				searchAbortRef.current.abort();
+			}
+			if ( searchTimerRef.current ) {
+				clearTimeout( searchTimerRef.current );
+			}
+		};
+	}, [] );
+
+	/**
+	 * Get the current partial tag being typed (text after last comma).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {string} val Full input value.
+	 * @returns {string} The partial tag text.
+	 */
+	var getCurrentPartial = function ( val ) {
+		var parts = val.split( ',' );
+		return ( parts[ parts.length - 1 ] || '' ).trim();
+	};
+
+	/**
+	 * Handle input change with debounced tag search.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {string} newValue New input value.
+	 */
+	var handleInputChange = function ( newValue ) {
+		onChange( newValue );
+
+		var partial = getCurrentPartial( newValue );
+
+		if ( searchTimerRef.current ) {
+			clearTimeout( searchTimerRef.current );
+		}
+
+		if ( partial.length < 2 ) {
+			setSuggestions( [] );
+			setShowDropdown( false );
+			return;
+		}
+
+		searchTimerRef.current = setTimeout( function () {
+			if ( searchAbortRef.current ) {
+				searchAbortRef.current.abort();
+			}
+			searchAbortRef.current = new AbortController();
+
+			searchTopicTags( partial, { signal: searchAbortRef.current.signal } ).then( function ( response ) {
+				if ( response.success && response.data && response.data.tags ) {
+					// Filter out tags already in the value.
+					var existingTags = value.split( ',' ).map( function ( t ) {
+						return t.trim().toLowerCase();
+					} );
+					var filtered = response.data.tags.filter( function ( tag ) {
+						return existingTags.indexOf( tag.name.toLowerCase() ) === -1;
+					} );
+					setSuggestions( filtered );
+					setShowDropdown( filtered.length > 0 );
+				} else {
+					setSuggestions( [] );
+					setShowDropdown( false );
+				}
+			} ).catch( function ( err ) {
+				if ( err && 'AbortError' === err.name ) {
+					return;
+				}
+				setSuggestions( [] );
+				setShowDropdown( false );
+			} );
+		}, 300 );
+	};
+
+	/**
+	 * Handle selecting a suggestion.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {Object} tag Selected tag object.
+	 */
+	var handleSelectTag = function ( tag ) {
+		var parts = value.split( ',' ).map( function ( t ) {
+			return t.trim();
+		} );
+
+		// Replace the last partial with the selected tag.
+		parts[ parts.length - 1 ] = tag.name;
+
+		// Build new value with trailing comma+space for next entry.
+		var newValue = parts.filter( Boolean ).join( ', ' ) + ', ';
+		onChange( newValue );
+		setSuggestions( [] );
+		setShowDropdown( false );
+	};
+
+	return (
+		<div className="components-base-control bb-tags-autocomplete" ref={ wrapperRef }>
+			{ label && (
+				<label className="components-base-control__label">
+					{ label }
+				</label>
+			) }
+			<div className="bb-tags-autocomplete__wrapper">
+				<input
+					type="text"
+					value={ value }
+					onChange={ function ( e ) {
+						handleInputChange( e.target.value );
+					} }
+					onFocus={ function () {
+						var partial = getCurrentPartial( value );
+						if ( partial.length >= 2 && suggestions.length > 0 ) {
+							setShowDropdown( true );
+						}
+					} }
+					placeholder={ placeholder || __( 'Enter tags, separated by commas', 'buddyboss' ) }
+					className="components-text-control__input bb-tags-autocomplete__input"
+				/>
+				{ showDropdown && suggestions.length > 0 && (
+					<div className="bb-tags-autocomplete__dropdown">
+						{ suggestions.map( function ( tag ) {
+							return (
+								<button
+									key={ tag.id }
+									type="button"
+									className="bb-tags-autocomplete__option"
+									onMouseDown={ function ( e ) {
+										e.preventDefault();
+										handleSelectTag( tag );
+									} }
+								>
+									{ tag.name }
+								</button>
+							);
+						} ) }
+					</div>
+				) }
+			</div>
+		</div>
+	);
+}

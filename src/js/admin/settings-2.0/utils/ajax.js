@@ -578,6 +578,105 @@ export function forumBulkAction( forumIds, action, extraData ) {
 }
 
 /**
+ * Get discussions listing with pagination, filters, and sorting.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data    - Query parameters (page, per_page, search, forum_id, sort, include_meta).
+ * @param {Object} options - Optional fetch options (e.g. { signal } for AbortController).
+ * @return {Promise} Promise resolving to response.
+ */
+export function getDiscussions( data, options ) {
+	return ajaxFetch( 'bb_admin_get_discussions', data, options );
+}
+
+/**
+ * Get a single discussion for the edit modal.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {number} topicId - Topic ID.
+ * @param {Object} options - Optional fetch options.
+ * @return {Promise} Promise resolving to response.
+ */
+export function getDiscussion( topicId, options ) {
+	return ajaxFetch( 'bb_admin_get_discussion', { topic_id: topicId }, options );
+}
+
+/**
+ * Create a new discussion.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data - Discussion data (title, description, forum_id, type, topic_status, visibility, tags).
+ * @return {Promise} Promise resolving to response.
+ */
+export function createDiscussion( data ) {
+	return ajaxFetch( 'bb_admin_create_discussion', data );
+}
+
+/**
+ * Update an existing discussion.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data    - Discussion data payload.
+ * @param {Object} options - Optional fetch options.
+ * @return {Promise} Promise resolving to response.
+ */
+export function saveDiscussion( data, options ) {
+	return ajaxFetch( 'bb_admin_save_discussion', data, options );
+}
+
+/**
+ * Delete a single discussion.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {number} topicId - Topic ID.
+ * @return {Promise} Promise resolving to response.
+ */
+export function deleteDiscussion( topicId ) {
+	return ajaxFetch( 'bb_admin_delete_discussion', { topic_id: topicId } );
+}
+
+/**
+ * Perform bulk action on discussions.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Array}  topicIds  Array of topic IDs.
+ * @param {string} action    Bulk action to perform.
+ * @param {Object} extraData Optional extra data to send with the request.
+ * @return {Promise} Promise resolving to response.
+ */
+export function discussionBulkAction( topicIds, action, extraData ) {
+	var data = {
+		topic_ids: topicIds.join( ',' ),
+		do_action: action,
+	};
+	if ( extraData ) {
+		Object.keys( extraData ).forEach( function ( key ) {
+			data[ key ] = extraData[ key ];
+		} );
+	}
+	return ajaxFetch( 'bb_admin_discussion_bulk_action', data );
+}
+
+/**
+ * Search topic tags for autocomplete suggestions.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {string} search  Search term.
+ * @param {Object} options Fetch options (e.g. signal for AbortController).
+ * @returns {Promise} AJAX promise.
+ */
+export function searchTopicTags( search, options ) {
+	return ajaxFetch( 'bb_admin_topic_tag_autocomplete', { search: search }, options );
+}
+
+/**
  * Get all profile field groups with their fields.
  *
  * @since BuddyBoss [BBVERSION]
