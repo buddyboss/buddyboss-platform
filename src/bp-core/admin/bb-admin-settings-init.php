@@ -63,6 +63,10 @@ function bb_admin_settings_init() {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-groups-ajax.php';
 		}
 
+		if ( bp_is_active( 'forums' ) && file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-forums-ajax.php' ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-forums-ajax.php';
+		}
+
 		// Profile/Member Types AJAX handler (only when xprofile component is active).
 		if ( bp_is_active( 'xprofile' ) && file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-member-types-ajax.php' ) ) {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-member-types-ajax.php';

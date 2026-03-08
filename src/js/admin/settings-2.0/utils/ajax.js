@@ -492,6 +492,92 @@ export function forumAutocomplete( params, options ) {
 }
 
 /**
+ * Get forums listing with pagination, filters, and sorting.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data    - Query parameters (page, per_page, search, status, sort, include_meta).
+ * @param {Object} options - Optional fetch options (e.g. { signal } for AbortController).
+ * @return {Promise} Promise resolving to response.
+ */
+export function getForums( data, options ) {
+	return ajaxFetch( 'bb_admin_get_forums', data, options );
+}
+
+/**
+ * Get a single forum for the edit modal.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {number} forumId - Forum ID.
+ * @param {Object} options - Optional fetch options.
+ * @return {Promise} Promise resolving to response.
+ */
+export function getForum( forumId, options ) {
+	return ajaxFetch( 'bb_admin_get_forum', { forum_id: forumId }, options );
+}
+
+/**
+ * Create a new forum.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data - Forum data (name, slug, description, visibility, forum_status, parent_id, image_id).
+ * @return {Promise} Promise resolving to response.
+ */
+export function createForum( data ) {
+	return ajaxFetch( 'bb_admin_create_forum', data );
+}
+
+/**
+ * Update an existing forum.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data    - Forum data payload.
+ * @param {Object} options - Optional fetch options.
+ * @return {Promise} Promise resolving to response.
+ */
+export function saveForum( data, options ) {
+	return ajaxFetch( 'bb_admin_save_forum', data, options );
+}
+
+/**
+ * Delete a single forum.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {number} forumId - Forum ID.
+ * @return {Promise} Promise resolving to response.
+ */
+export function deleteForum( forumId ) {
+	return ajaxFetch( 'bb_admin_delete_forum', { forum_id: forumId } );
+}
+
+/**
+ * Perform bulk action on forums.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Array}  forumIds  Array of forum IDs.
+ * @param {string} action    Bulk action to perform.
+ * @param {Object} extraData Optional extra data to send with the request.
+ * @return {Promise} Promise resolving to response.
+ */
+export function forumBulkAction( forumIds, action, extraData ) {
+	var data = {
+		forum_ids: forumIds.join( ',' ),
+		do_action: action,
+	};
+	if ( extraData ) {
+		Object.keys( extraData ).forEach( function ( key ) {
+			data[ key ] = extraData[ key ];
+		} );
+	}
+	return ajaxFetch( 'bb_admin_forum_bulk_action', data );
+}
+
+/**
  * Get all profile field groups with their fields.
  *
  * @since BuddyBoss [BBVERSION]

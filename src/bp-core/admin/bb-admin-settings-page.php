@@ -161,6 +161,7 @@ function bb_admin_settings_page() {
 			'id'   => get_current_user_id(),
 			'name' => wp_get_current_user()->display_name,
 		),
+		'siteUrl'        => untrailingslashit( home_url() ),
 		// Pass the user's legacy groups-per-page screen option so GroupsListScreen
 		// can honour the preference set in the old WP admin list table.
 		'groupsPerPage' => $groups_per_page,

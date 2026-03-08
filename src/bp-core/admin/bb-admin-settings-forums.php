@@ -124,6 +124,22 @@ function bb_admin_settings_register_forums_feature() {
 		)
 	);
 
+	// Side Panel 5: All Forums (custom list screen).
+	bb_register_side_panel(
+		'forums',
+		'all_forums',
+		array(
+			'title'      => __( 'All Forums', 'buddyboss' ),
+			'icon'       => array(
+				'type'  => 'font',
+				'class' => 'bb-icons-rl bb-icons-rl-list-bullets',
+			),
+			'order'      => 100,
+			'is_default' => false,
+			'divider'    => true,
+		)
+	);
+
 	// =========================================================================
 	// PANEL FIELDS
 	// =========================================================================
