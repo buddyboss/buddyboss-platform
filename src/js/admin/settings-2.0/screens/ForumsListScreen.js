@@ -1213,12 +1213,12 @@ function ForumEditModal( { forum, onClose, onSave, isSaving } ) {
 		<Modal
 			title={ __( 'Edit Forum', 'buddyboss' ) }
 			onRequestClose={ onClose }
-			className="bb-forum-edit-modal bb-forum-create-modal bb-admin-settings-modal"
+			className="bb-forum-modal bb-forum-edit-modal bb-forum-create-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
 		>
-			<div className="bb-forum-edit-modal__body">
+			<div className="bb-forum-modal__body bb-forum-edit-modal__body">
 				{ error && (
-					<p className="bb-forum-edit-modal__error">{ error }</p>
+					<p className="bb-forum-modal__error">{ error }</p>
 				) }
 
 				<TextControl
@@ -1228,7 +1228,7 @@ function ForumEditModal( { forum, onClose, onSave, isSaving } ) {
 					__nextHasNoMarginBottom
 				/>
 
-				<div className="bb-forum-create-modal__permalink-field">
+				<div className="bb-forum-modal__permalink-field">
 					<TextControl
 						label={ __( 'Permalink', 'buddyboss' ) }
 						value={ slug }
@@ -1284,26 +1284,26 @@ function ForumEditModal( { forum, onClose, onSave, isSaving } ) {
 					/>
 				</div>
 
-				<div className="bb-forum-create-modal__image-field">
+				<div className="bb-forum-modal__image-field bb-forum-create-modal__image-field">
 					<label className="components-base-control__label">
 						{ __( 'Feature Image (Optional)', 'buddyboss' ) }
 					</label>
 					{ imageUrl ? (
-						<div className="bb-forum-create-modal__image-preview">
+						<div className="bb-forum-modal__image-preview">
 							<img src={ imageUrl } alt="" />
-							<div className="bb-forum-create-modal__image-actions">
+							<div className="bb-forum-modal__image-actions">
 								<Button
 									variant="secondary"
 									onClick={ handleSelectImage }
-									className="bb-forum-create-modal__replace-image"
+									className="bb-forum-modal__replace-image"
 								>
 									{ __( 'Replace', 'buddyboss' ) }
 								</Button>
 								<Button
-									variant="link"
+									variant="secondary"
 									isDestructive
 									onClick={ handleRemoveImage }
-									className="bb-forum-create-modal__remove-image"
+									className="bb-forum-modal__remove-image"
 								>
 									{ __( 'Reset', 'buddyboss' ) }
 								</Button>
@@ -1324,7 +1324,7 @@ function ForumEditModal( { forum, onClose, onSave, isSaving } ) {
 				</div>
 			</div>
 
-			<div className="bb-forum-edit-modal__footer bb-admin-settings-modal__footer">
+			<div className="bb-forum-modal__footer bb-admin-settings-modal__footer">
 				<Button
 					variant="secondary"
 					onClick={ onClose }
