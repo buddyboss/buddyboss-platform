@@ -1244,14 +1244,16 @@ function ForumEditModal( { forum, onClose, onSave, isSaving } ) {
 					) }
 				</div>
 
-				<RichTextEditor
-					id="bb-forum-edit-description"
-					label={ __( 'Forum Description (Optional)', 'buddyboss' ) }
-					value={ description }
-					onChange={ setDescription }
-				/>
+				<div className="bb-forum-modal__row--separator">
+					<RichTextEditor
+						id="bb-forum-edit-description"
+						label={ __( 'Forum Description (Optional)', 'buddyboss' ) }
+						value={ description }
+						onChange={ setDescription }
+					/>
+				</div>
 
-				<div className="bb-forum-create-modal__row">
+				<div className="bb-forum-create-modal__row bb-forum-modal__row--separator">
 					<SelectControl
 						label={ __( 'Status', 'buddyboss' ) }
 						value={ forumStatus }
@@ -1268,7 +1270,7 @@ function ForumEditModal( { forum, onClose, onSave, isSaving } ) {
 					/>
 				</div>
 
-				<div className="components-base-control">
+				<div className="components-base-control bb-forum-modal__row--separator">
 					<label className="components-base-control__label">
 						{ __( 'Parent Forum', 'buddyboss' ) }
 					</label>

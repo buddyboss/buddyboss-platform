@@ -294,7 +294,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated } ) {
 					) }
 				</div>
 
-				<div className="bb-forum-create-modal__row--separator">
+				<div className="bb-forum-modal__row--separator">
 					<RichTextEditor
 						id="bb-forum-create-description"
 						label={ __( 'Forum Description (Optional)', 'buddyboss' ) }
@@ -303,7 +303,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated } ) {
 					/>
 				</div>
 
-				<div className="bb-forum-create-modal__row bb-forum-create-modal__row--separator">
+				<div className="bb-forum-create-modal__row bb-forum-modal__row--separator">
 					<SelectControl
 						label={ __( 'Status', 'buddyboss' ) }
 						value={ forumStatus }
@@ -320,7 +320,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated } ) {
 					/>
 				</div>
 
-				<div className="components-base-control bb-forum-create-modal__row--separator">
+				<div className="components-base-control bb-forum-modal__row--separator">
 					<label className="components-base-control__label">
 						{ __( 'Parent Forum', 'buddyboss' ) }
 					</label>
