@@ -72,7 +72,7 @@ export function SettingsForm({ fields, values, onChange }) {
 	const sanitizedHtml = useMemo( () => {
 		const cache = {};
 		fields.forEach( ( field ) => {
-			if ( field.description ) {
+			if ( field.description && 'string' === typeof field.description ) {
 				cache[ field.name + '__desc' ] = sanitizeHtml( field.description );
 
 				// Pre-split and sanitize parts for fields with inline description controls.

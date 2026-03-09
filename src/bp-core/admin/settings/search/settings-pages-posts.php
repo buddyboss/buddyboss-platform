@@ -27,19 +27,19 @@ defined( 'ABSPATH' ) || exit;
  * These are always available at bb_register_features time.
  *
  * @since BuddyBoss [BBVERSION]
- *
- * @var array
  */
-define( 'BB_SEARCH_STANDARD_POST_TYPES', array( 'post', 'page', 'attachment' ) );
+if ( ! defined( 'BB_SEARCH_STANDARD_POST_TYPES' ) ) {
+	define( 'BB_SEARCH_STANDARD_POST_TYPES', array( 'post', 'page', 'attachment' ) );
+}
 
 /**
  * Post types to skip entirely (handled by Network Search panel).
  *
  * @since BuddyBoss [BBVERSION]
- *
- * @var array
  */
-define( 'BB_SEARCH_EXCLUDED_POST_TYPES', array( 'forum', 'topic', 'reply' ) );
+if ( ! defined( 'BB_SEARCH_EXCLUDED_POST_TYPES' ) ) {
+	define( 'BB_SEARCH_EXCLUDED_POST_TYPES', array( 'forum', 'topic', 'reply' ) );
+}
 
 /**
  * Register Pages & Posts Search panel sections and fields.

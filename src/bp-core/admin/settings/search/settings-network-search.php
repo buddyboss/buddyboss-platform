@@ -59,14 +59,17 @@ function bb_search_register_network_search_fields() {
 		)
 	);
 
-	// User account fields — inline the values since bp_get_search_user_fields()
-	// is defined in bp-search-functions.php which loads at 'init' (after bb_register_features).
-	$user_fields = array(
-		'user_meta'    => __( 'User Meta', 'buddyboss' ),
-		'display_name' => __( 'Display Name', 'buddyboss' ),
-		'user_email'   => __( 'User Email', 'buddyboss' ),
-		'user_login'   => __( 'Username', 'buddyboss' ),
-	);
+	// User account fields — use bp_get_search_user_fields() when available,
+	// otherwise inline fallback values since the function is defined in
+	// bp-search-functions.php which loads at 'init' (after bb_register_features).
+	$user_fields = function_exists( 'bp_get_search_user_fields' )
+		? bp_get_search_user_fields()
+		: array(
+			'user_meta'    => __( 'User Meta', 'buddyboss' ),
+			'display_name' => __( 'Display Name', 'buddyboss' ),
+			'user_email'   => __( 'User Email', 'buddyboss' ),
+			'user_login'   => __( 'Username', 'buddyboss' ),
+		);
 
 	$child_order = 20;
 	foreach ( $user_fields as $field_key => $field_label ) {
@@ -309,11 +312,10 @@ function bb_search_register_network_search_fields() {
 /**
  * Lazy-register xProfile fields for the Search Network Search panel.
  *
- * bp_xprofile_get_groups() returns empty at bb_register_features time
- * (bp_loaded priority 5) because the xProfile DB layer isn't fully
- * initialized yet. This hook fires during the AJAX request when the
- * admin loads the Search settings page — at which point xProfile data
- * is available.
+ * Deferred to the AJAX request because bp_xprofile_get_groups() returns
+ * empty at bb_register_features time (bp_loaded priority 5) — the xProfile
+ * DB layer isn't fully initialized yet. This hook fires when the admin
+ * loads the Search settings page, at which point xProfile data is available.
  *
  * Uses a static flag to prevent duplicate registration across multiple
  * AJAX calls in the same request.
@@ -353,13 +355,17 @@ function bb_search_lazy_register_xprofile_fields( $feature_id ) {
 	$child_order = 60;
 
 	foreach ( $groups as $group ) {
-		if ( empty( $group->fields ) ) {
+		if ( ! is_object( $group ) || empty( $group->fields ) ) {
 			continue;
 		}
 
-		$group_label = $group->name;
+		$group_label = ! empty( $group->name ) ? $group->name : '';
 
 		foreach ( $group->fields as $field ) {
+			if ( ! is_object( $field ) || empty( $field->id ) ) {
+				continue;
+			}
+
 			if ( true === bp_core_hide_display_name_field( $field->id ) ) {
 				continue;
 			}

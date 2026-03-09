@@ -198,3 +198,31 @@ add_action(
 	10,
 	2
 );
+
+/**
+ * Fallback sanitize callback for access control fields when Pro is not active.
+ *
+ * Pro provides bb_sanitize_access_control_field() with full validation logic.
+ * This fallback handles the case where Pro is not installed/active, ensuring
+ * the value is safely sanitized as an array structure rather than being
+ * passed through sanitize_text_field() which is inappropriate for arrays.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed $value The raw input value (JSON string or array).
+ *
+ * @return array Sanitized array, or empty array if input is invalid.
+ */
+function bb_sanitize_access_control_fallback( $value ) {
+
+	// Handle JSON-encoded string from frontend.
+	if ( is_string( $value ) ) {
+		$value = json_decode( $value, true );
+	}
+
+	if ( ! is_array( $value ) ) {
+		return array();
+	}
+
+	return map_deep( $value, 'sanitize_text_field' );
+}
