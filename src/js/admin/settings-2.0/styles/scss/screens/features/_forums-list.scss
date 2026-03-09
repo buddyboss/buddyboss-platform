@@ -730,6 +730,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: 8px;
+		position: relative;
 
 		img {
 			width: 100%;
@@ -743,6 +744,10 @@
 		display: flex;
 		align-items: center;
 		gap: 12px;
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
 	}
 
 	&__replace-image.is-secondary {
@@ -752,8 +757,10 @@
 		height: 28px;
 	}
 
-	&__remove-image {
+	&__remove-image.is-secondary {
+		@include bb-button-danger;
 		font-size: 12px;
+		text-decoration: none;
 	}
 
 	&__image-help {

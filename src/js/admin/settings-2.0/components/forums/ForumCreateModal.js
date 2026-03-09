@@ -303,7 +303,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated } ) {
 					/>
 				</div>
 
-				<div className="bb-forum-create-modal__row">
+				<div className="bb-forum-create-modal__row bb-forum-create-modal__row--separator">
 					<SelectControl
 						label={ __( 'Status', 'buddyboss' ) }
 						value={ forumStatus }
@@ -350,7 +350,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated } ) {
 									{ __( 'Replace', 'buddyboss' ) }
 								</Button>
 								<Button
-									variant="link"
+									variant="secondary"
 									isDestructive
 									onClick={ handleRemoveImage }
 									className="bb-forum-create-modal__remove-image"
