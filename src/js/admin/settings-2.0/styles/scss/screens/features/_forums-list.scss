@@ -660,10 +660,19 @@
 		}
 	}
 
+	&__row--separator {
+		margin-bottom: 24px;
+		padding-bottom: 24px;
+		border-bottom: 1px solid $bb-border-tertiary-color;
+
+		> .bb-admin-meta-field__editor-field {
+			margin-bottom: 0;
+		}
+	}
+
 	&__row {
 		display: flex;
 		gap: 16px;
-		margin-bottom: 16px;
 
 		.components-base-control {
 			flex: 1;
@@ -704,16 +713,11 @@
 		align-items: center;
 		justify-content: center;
 		width: 100%;
-		height: 120px;
+		height: 150px;
 		border: 1.5px dashed $bb-border-secondary-color;
 		border-radius: $bb-border-radius-lg;
 		background: $bb-background-color;
 		cursor: pointer;
-		transition: border-color 0.2s;
-
-		&:hover {
-			border-color: $bb-border-brand-primary-color;
-		}
 	}
 
 	&__upload-icon {
@@ -753,9 +757,9 @@
 	}
 
 	&__image-help {
-		font-size: 12px;
+		font-size: 13px;
 		color: $bb-text-tertiary-color;
-		margin: 4px 0 0;
+		margin: 10px 0 0;
 	}
 
 	&__error {

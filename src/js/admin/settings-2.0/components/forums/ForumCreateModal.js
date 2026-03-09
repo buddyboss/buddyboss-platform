@@ -294,12 +294,14 @@ export function ForumCreateModal( { isOpen, onClose, onCreated } ) {
 					) }
 				</div>
 
-				<RichTextEditor
-					id="bb-forum-create-description"
-					label={ __( 'Forum Description (Optional)', 'buddyboss' ) }
-					value={ description }
-					onChange={ setDescription }
-				/>
+				<div className="bb-forum-create-modal__row--separator">
+					<RichTextEditor
+						id="bb-forum-create-description"
+						label={ __( 'Forum Description (Optional)', 'buddyboss' ) }
+						value={ description }
+						onChange={ setDescription }
+					/>
+				</div>
 
 				<div className="bb-forum-create-modal__row">
 					<SelectControl
@@ -318,7 +320,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated } ) {
 					/>
 				</div>
 
-				<div className="components-base-control">
+				<div className="components-base-control bb-forum-create-modal__row--separator">
 					<label className="components-base-control__label">
 						{ __( 'Parent Forum', 'buddyboss' ) }
 					</label>
@@ -363,7 +365,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated } ) {
 							onClick={ handleSelectImage }
 							className="bb-forum-create-modal__upload-zone"
 						>
-							<span className="bb-forum-create-modal__upload-icon">+</span>
+							<span className="bb-forum-create-modal__upload-icon"><i className="bb-icons-rl-plus"></i></span>
 						</button>
 					) }
 					<p className="bb-forum-create-modal__image-help">
