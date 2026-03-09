@@ -41,7 +41,7 @@ function bb_search_register_autocomplete_fields() {
 		'autocomplete_settings',
 		array(
 			'name'              => 'bp_search_autocomplete',
-			'label'             => __( 'Enable Autocomplete', 'buddyboss' ),
+			'label'             => __( 'Autocomplete', 'buddyboss' ),
 			'type'              => 'toggle',
 			'description'       => __( 'Enable autocomplete dropdown when typing into search inputs.', 'buddyboss' ),
 			'default'           => (bool) bp_get_option( 'bp_search_autocomplete', 1 ),
@@ -50,7 +50,7 @@ function bb_search_register_autocomplete_fields() {
 		)
 	);
 
-	// FIELD: Number of Results (Number - child of autocomplete toggle).
+	// FIELD: Number of Results (Number).
 	bb_register_feature_field(
 		'search',
 		'autocomplete',
@@ -62,7 +62,6 @@ function bb_search_register_autocomplete_fields() {
 			'default'           => (int) bp_get_option( 'bp_search_number_of_results', 5 ),
 			'sanitize_callback' => 'bb_search_sanitize_number_of_results',
 			'suffix'            => __( 'results', 'buddyboss' ),
-			'parent_field'      => 'bp_search_autocomplete',
 			'order'             => 20,
 		)
 	);

@@ -583,7 +583,7 @@ export function SettingsForm({ fields, values, onChange }) {
 			return (
 				<div key={field.name} className={`bb-admin-settings-form__child-field bb-admin-settings-form__child-field--checkbox ${disabled ? 'bb-admin-settings-form__child-field--disabled' : ''}`}>
 					<CheckboxControl
-						label={ field.label || '' }
+						label={ field.label || field.description || '' }
 						checked={ cbDisplay }
 						onChange={ function( checked ) {
 							var saveVal = cbInverted ? ! checked : checked;
@@ -604,7 +604,7 @@ export function SettingsForm({ fields, values, onChange }) {
 			return (
 				<div key={field.name} className={`bb-admin-settings-form__child-field bb-admin-settings-form__child-field--toggle ${disabled ? 'bb-admin-settings-form__child-field--disabled' : ''}`}>
 					<ToggleControl
-						label={ field.label || '' }
+						label={ field.label || field.description || '' }
 						checked={ tgDisplay }
 						onChange={ function( checked ) {
 							var saveVal = tgInverted ? ! checked : checked;
@@ -721,16 +721,18 @@ export function SettingsForm({ fields, values, onChange }) {
 					{ field.group?.label && (
 						<label className="bb-admin-settings-form__field-group-label">{field.group.label}</label>
 					) }
-					{/* Field with optional prefix/suffix */}
-					<div className="bb-admin-settings-form__field-input-wrapper">
-						{field.prefix && (
-							<span className="bb-admin-settings-form__field-prefix">{field.prefix}</span>
-						)}
-						{controlOutput}
-						{field.suffix && (
-							<span className="bb-admin-settings-form__field-suffix">{field.suffix}</span>
-						)}
-					</div>
+					{/* Field with optional prefix/suffix — skip wrapper when control is null (e.g., hidden parent fields). */}
+					{ null !== controlOutput && (
+						<div className="bb-admin-settings-form__field-input-wrapper">
+							{field.prefix && (
+								<span className="bb-admin-settings-form__field-prefix">{field.prefix}</span>
+							)}
+							{controlOutput}
+							{field.suffix && (
+								<span className="bb-admin-settings-form__field-suffix">{field.suffix}</span>
+							)}
+						</div>
+					) }
 
 					{/* Description: skip for notice type (rendered by notice component itself).
 				    When description contains %s and field has description_controls,
