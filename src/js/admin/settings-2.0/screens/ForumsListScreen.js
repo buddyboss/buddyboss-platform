@@ -817,9 +817,11 @@ export function ForumsListScreen( { onNavigate } ) {
 											</span>
 										</td>
 										<td className="bb-forums-list__td--discussions">
+											<i className="bb-icons-rl-chats"></i>
 											{ forum.discussions_count }
 										</td>
 										<td className="bb-forums-list__td--replies">
+											<i className="bb-icons-rl-arrow-bend-up-left"></i>
 											{ forum.replies_count }
 										</td>
 										<td className="bb-forums-list__td--author">
@@ -837,6 +839,7 @@ export function ForumsListScreen( { onNavigate } ) {
 											</div>
 										</td>
 										<td className="bb-forums-list__td--last-post">
+											<i className="bb-icons-rl-clock"></i>
 											{ forum.last_active ? (
 												<span className="bb-forums-list__date">
 													{ decodeEntities( forum.last_active ) }
