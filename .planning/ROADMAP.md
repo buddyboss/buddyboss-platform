@@ -1,0 +1,65 @@
+# Roadmap: BuddyBoss Events Plugin
+
+## Overview
+
+Three phases that build from foundation outward: first a working plugin with full event management and admin control, then a complete payment and ticketing system, then the BuddyBoss community integrations that make this product genuinely different from any general-purpose events plugin. Each phase produces something independently verifiable. The BuddyBoss integration phase is intentionally last — it hooks into events and orders that must already exist and work.
+
+## Phases
+
+**Phase Numbering:**
+- Integer phases (1, 2, 3): Planned milestone work
+- Decimal phases (2.1, 2.2): Urgent insertions (marked with INSERTED)
+
+Decimal phases appear between their surrounding integers in numeric order.
+
+- [ ] **Phase 1: Foundation + Event Management** - Installable plugin scaffold with full event CRUD (in-person, virtual, recurring), admin control panel, and site-wide calendar view
+- [ ] **Phase 2: Payments + Ticketing** - Stripe Connect organizer onboarding, tiered commission capture, multi-tier ticket management, checkout, refunds, and attendee tools
+- [ ] **Phase 3: BuddyBoss Integration** - Group events tab, activity feed posting, member profile sections, and group member invite flow — the product's core differentiator
+
+## Phase Details
+
+### Phase 1: Foundation + Event Management
+**Goal**: A fully installable WordPress plugin where admins can configure event permissions and commission settings, and organizers can create, edit, and publish in-person, virtual, and recurring events visible on a site-wide calendar
+**Depends on**: Nothing (first phase)
+**Requirements**: EVNT-01, EVNT-02, EVNT-03, EVNT-04, EVNT-05, EVNT-06, ADMN-01, ADMN-02, ADMN-03, ADMN-04
+**Success Criteria** (what must be TRUE):
+  1. Admin can activate the plugin on a BuddyBoss site and immediately see the settings panel for commission rates, creation permissions, and event moderation toggle — plugin fails activation gracefully if BuddyBoss Platform is not active
+  2. Organizer can create an in-person event (with venue and capacity), a virtual event (with Zoom integration or Meet link), and a recurring event series (daily/weekly/monthly) — all appear on the site-wide calendar after publish
+  3. Organizer can edit only one occurrence of a recurring series, or all future occurrences, without corrupting other events in the series
+  4. Admin can restrict event creation to admins only, group organizers, all members, or tiered by plan — and those restrictions are enforced at the creation UI
+  5. Events from private and hidden BuddyBoss groups never appear on the main site calendar regardless of admin settings
+**Plans**: TBD
+
+### Phase 2: Payments + Ticketing
+**Goal**: Organizers can sell tickets with multiple pricing tiers through their own Stripe account, BuddyBoss automatically captures its commission on every sale, refunds reverse the commission proportionally, and attendees can join waitlists and export events to their calendars
+**Depends on**: Phase 1
+**Requirements**: PAY-01, PAY-02, PAY-03, PAY-04, PAY-05, TKET-01, TKET-02, TKET-03, TKET-04, ATTN-01, ATTN-02
+**Success Criteria** (what must be TRUE):
+  1. Organizer can connect their Stripe account via OAuth in under 5 clicks and see their account status on the event dashboard
+  2. Attendee can purchase a ticket through Stripe Payment Element — money lands in the organizer's Stripe account, BuddyBoss application fee is deducted automatically at the rate configured for the site's plan tier
+  3. When an organizer issues a refund, the platform commission is reversed proportionally — no manual intervention required
+  4. Organizer can view a dashboard showing lifetime earnings, pending payouts, and a full transaction history with per-ticket detail
+  5. Attendee can join a waitlist on a sold-out event and receives a notification when a spot opens; attendee can export any event to iCal or Google Calendar
+**Plans**: TBD
+
+### Phase 3: BuddyBoss Integration
+**Goal**: Events are fully woven into the BuddyBoss community fabric — each group has its own events tab with calendar, activity feeds reflect event actions, member profiles show event history, and organizers can invite group members directly from the group roster
+**Depends on**: Phase 2
+**Requirements**: BB-01, BB-02, BB-03, BB-04
+**Success Criteria** (what must be TRUE):
+  1. Every BuddyBoss group has an Events tab showing a calendar view scoped to that group's events — events from private groups are not visible to non-members
+  2. When an organizer creates an event, when a member RSVPs, and when a ticket is purchased, an activity item appears in the relevant BuddyBoss activity feed (site-wide feed for public events, group feed for group events) — private group events never surface in the site-wide feed
+  3. Organizer can browse the group member roster while creating or editing an event and send invites directly to selected members
+  4. Any member's profile displays a section listing events they have hosted and events they have attended
+**Plans**: TBD
+
+## Progress
+
+**Execution Order:**
+Phases execute in numeric order: 1 → 2 → 3
+
+| Phase | Plans Complete | Status | Completed |
+|-------|----------------|--------|-----------|
+| 1. Foundation + Event Management | 0/TBD | Not started | - |
+| 2. Payments + Ticketing | 0/TBD | Not started | - |
+| 3. BuddyBoss Integration | 0/TBD | Not started | - |

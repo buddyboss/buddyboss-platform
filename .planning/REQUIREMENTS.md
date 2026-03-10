@@ -83,37 +83,37 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| EVNT-01 | — | Pending |
-| EVNT-02 | — | Pending |
-| EVNT-03 | — | Pending |
-| EVNT-04 | — | Pending |
-| EVNT-05 | — | Pending |
-| EVNT-06 | — | Pending |
-| TKET-01 | — | Pending |
-| TKET-02 | — | Pending |
-| TKET-03 | — | Pending |
-| TKET-04 | — | Pending |
-| PAY-01 | — | Pending |
-| PAY-02 | — | Pending |
-| PAY-03 | — | Pending |
-| PAY-04 | — | Pending |
-| PAY-05 | — | Pending |
-| ATTN-01 | — | Pending |
-| ATTN-02 | — | Pending |
-| BB-01 | — | Pending |
-| BB-02 | — | Pending |
-| BB-03 | — | Pending |
-| BB-04 | — | Pending |
-| ADMN-01 | — | Pending |
-| ADMN-02 | — | Pending |
-| ADMN-03 | — | Pending |
-| ADMN-04 | — | Pending |
+| EVNT-01 | Phase 1 | Pending |
+| EVNT-02 | Phase 1 | Pending |
+| EVNT-03 | Phase 1 | Pending |
+| EVNT-04 | Phase 1 | Pending |
+| EVNT-05 | Phase 1 | Pending |
+| EVNT-06 | Phase 1 | Pending |
+| TKET-01 | Phase 2 | Pending |
+| TKET-02 | Phase 2 | Pending |
+| TKET-03 | Phase 2 | Pending |
+| TKET-04 | Phase 2 | Pending |
+| PAY-01 | Phase 2 | Pending |
+| PAY-02 | Phase 2 | Pending |
+| PAY-03 | Phase 2 | Pending |
+| PAY-04 | Phase 2 | Pending |
+| PAY-05 | Phase 2 | Pending |
+| ATTN-01 | Phase 2 | Pending |
+| ATTN-02 | Phase 2 | Pending |
+| BB-01 | Phase 3 | Pending |
+| BB-02 | Phase 3 | Pending |
+| BB-03 | Phase 3 | Pending |
+| BB-04 | Phase 3 | Pending |
+| ADMN-01 | Phase 1 | Pending |
+| ADMN-02 | Phase 1 | Pending |
+| ADMN-03 | Phase 1 | Pending |
+| ADMN-04 | Phase 1 | Pending |
 
 **Coverage:**
 - v1 requirements: 25 total
-- Mapped to phases: 0
-- Unmapped: 25 ⚠️ (roadmap pending)
+- Mapped to phases: 25
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-03-10*
-*Last updated: 2026-03-10 after initial definition*
+*Last updated: 2026-03-10 after roadmap creation*
