@@ -923,9 +923,9 @@
 		.components-input-control__label,
 		.components-base-control__label {
 			display: block;
-			text-transform: none;
-			font-size: 13px;
-			font-weight: 500;
+			text-transform: none !important;
+			font-size: 13px !important;
+			font-weight: 500 !important;
 			color: $bb-text-color;
 			margin-bottom: 8px;
 		}
@@ -992,6 +992,10 @@
 			}
 		}
 	}
+}
+
+.bb-discussion-create-modal__row--separator > .components-base-control {
+	margin-bottom: 0;
 }
 
 /* ----------------------------------------------------------------
