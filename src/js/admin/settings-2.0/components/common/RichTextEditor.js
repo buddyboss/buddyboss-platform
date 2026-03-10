@@ -81,7 +81,7 @@ export function RichTextEditor( { id, label, value, onChange } ) {
 					window.wp.editor.initialize( id, {
 						tinymce: {
 							wpautop: true,
-							toolbar1: 'bold,italic,underline,blockquote,strikethrough,bullist,numlist,alignleft,aligncenter,alignright,undo,redo,link,fullscreen',
+							toolbar1: 'formatselect,bold,italic,underline,blockquote,strikethrough,bullist,numlist,alignleft,aligncenter,alignright,undo,redo,link,fullscreen',
 							toolbar2: '',
 							height: 150,
 							setup: function ( editor ) {
