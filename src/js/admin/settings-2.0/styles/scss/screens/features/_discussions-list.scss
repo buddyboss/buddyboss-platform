@@ -711,10 +711,16 @@
 
 		.components-input-control__label,
 		.components-base-control__label {
+			display: block;
 			text-transform: none !important;
 			font-size: 13px !important;
 			font-weight: 500 !important;
 			color: $bb-text-color;
+			margin-bottom: 8px;
+		}
+
+		.components-select-control .components-input-control__label {
+			margin-bottom: 0;
 		}
 
 		.components-input-control__container {
@@ -814,10 +820,16 @@
 		// Override WordPress components uppercase labels to sentence case.
 		.components-input-control__label,
 		.components-base-control__label {
+			display: block;
 			text-transform: none !important;
 			font-size: 13px !important;
 			font-weight: 500 !important;
 			color: $bb-text-color;
+			margin-bottom: 8px
+		}
+
+		.components-select-control .components-input-control__label {
+			margin-bottom: 0;
 		}
 
 		.components-text-control__input,
@@ -857,6 +869,17 @@
 		}
 	}
 
+	&__row--separator {
+		margin-bottom: 24px;
+		padding-bottom: 24px;
+		border-bottom: 1px solid $bb-border-tertiary-color;
+
+		> .components-base-control,
+		> .bb-admin-meta-field__editor-field {
+			margin-bottom: 0;
+		}
+	}
+
 	&__error {
 		color: #d63638;
 		font-size: 13px;
@@ -886,7 +909,7 @@
 .bb-discussion-edit-modal {
 
 	&__body {
-		padding: 0 24px 24px;
+		padding: 24px;
 
 		.components-base-control {
 			margin-bottom: 16px;
@@ -899,10 +922,16 @@
 		// Override WordPress components uppercase labels to sentence case.
 		.components-input-control__label,
 		.components-base-control__label {
+			display: block;
 			text-transform: none;
 			font-size: 13px;
 			font-weight: 500;
 			color: $bb-text-color;
+			margin-bottom: 8px;
+		}
+
+		.components-select-control .components-input-control__label {
+			margin-bottom: 0;
 		}
 
 		.bb-admin-notice {

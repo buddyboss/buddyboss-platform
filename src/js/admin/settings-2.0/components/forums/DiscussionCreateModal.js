@@ -203,12 +203,14 @@ export function DiscussionCreateModal( { isOpen, onClose, onCreated } ) {
 					__nextHasNoMarginBottom
 				/>
 
-				<RichTextEditor
-					id="bb-discussion-create-description"
-					label={ __( 'Description', 'buddyboss' ) }
-					value={ description }
-					onChange={ setDescription }
-				/>
+				<div className="bb-discussion-create-modal__row--separator">
+					<RichTextEditor
+						id="bb-discussion-create-description"
+						label={ __( 'Description', 'buddyboss' ) }
+						value={ description }
+						onChange={ setDescription }
+					/>
+				</div>
 
 				<div className="components-base-control">
 					<label className="components-base-control__label">
@@ -224,15 +226,17 @@ export function DiscussionCreateModal( { isOpen, onClose, onCreated } ) {
 					/>
 				</div>
 
-				<SelectControl
-					label={ __( 'Type', 'buddyboss' ) }
-					value={ type }
-					options={ typeOptions }
-					onChange={ setType }
-					__nextHasNoMarginBottom
-				/>
+				<div className="bb-discussion-create-modal__row--separator">
+					<SelectControl
+						label={ __( 'Type', 'buddyboss' ) }
+						value={ type }
+						options={ typeOptions }
+						onChange={ setType }
+						__nextHasNoMarginBottom
+					/>
+				</div>
 
-				<div className="bb-discussion-create-modal__row">
+				<div className="bb-discussion-create-modal__row bb-discussion-create-modal__row--separator">
 					<SelectControl
 						label={ __( 'Status', 'buddyboss' ) }
 						value={ topicStatus }
