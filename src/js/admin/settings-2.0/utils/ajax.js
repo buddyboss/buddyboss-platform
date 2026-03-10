@@ -404,3 +404,52 @@ export function groupBulkAction( groupIds, action, extraData ) {
 export function forumAutocomplete( params, options ) {
 	return ajaxFetch( 'bb_admin_forum_autocomplete', params || {}, options || {} );
 }
+
+/**
+ * Get all reporting categories (bpm_category taxonomy terms).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} options Optional fetch options (e.g. { signal }).
+ * @return {Promise} Promise resolving to { categories, show_when_options }.
+ */
+export function getReportingCategories( options ) {
+	return ajaxFetch( 'bb_admin_get_reporting_categories', {}, options );
+}
+
+/**
+ * Create a new reporting category.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data Category data (name, description, show_when_reporting).
+ * @return {Promise} Promise resolving to response.
+ */
+export function createReportingCategory( data ) {
+	return ajaxFetch( 'bb_admin_create_reporting_category', data );
+}
+
+/**
+ * Update an existing reporting category.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {number} termId Term ID.
+ * @param {Object} data   Category data (name, description, show_when_reporting).
+ * @return {Promise} Promise resolving to response.
+ */
+export function updateReportingCategory( termId, data ) {
+	return ajaxFetch( 'bb_admin_update_reporting_category', Object.assign( { term_id: termId }, data ) );
+}
+
+/**
+ * Delete a reporting category.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {number} termId Term ID.
+ * @return {Promise} Promise resolving to response.
+ */
+export function deleteReportingCategory( termId ) {
+	return ajaxFetch( 'bb_admin_delete_reporting_category', { term_id: termId } );
+}

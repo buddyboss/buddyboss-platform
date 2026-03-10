@@ -570,6 +570,19 @@
             line-height: 18px;
             margin: 8px 0 0 0;
         }
+
+        // Checkbox child with inline description_controls (e.g., "Auto hide after [5] reports").
+        &--has-controls {
+            display: flex;
+            align-items: center;
+            gap: 0;
+        }
+
+        &-inline-desc {
+            font-size: 13px;
+            line-height: 18px;
+            color: $bb-text-color;
+        }
     }
 
     .bb-admin-reaction-info {

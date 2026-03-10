@@ -1,0 +1,179 @@
+<?php
+/**
+ * BuddyBoss Admin Settings - Moderation: Member Moderation Panel.
+ *
+ * Registers sections and fields for the Member Moderation side panel.
+ *
+ * @package BuddyBoss\Core\Administration
+ * @since BuddyBoss [BBVERSION]
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Register Member Moderation panel fields.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_moderation_register_member_moderation_fields() {
+
+	// -------------------------------------------------------------------------
+	// SECTION: Member Blocking
+	// -------------------------------------------------------------------------
+	bb_register_feature_section(
+		'moderation',
+		'member_moderation',
+		'member_blocking',
+		array(
+			'title' => __( 'Member Blocking', 'buddyboss' ),
+			'order' => 10,
+		)
+	);
+
+	// FIELD: Member Blocking (Toggle).
+	bb_register_feature_field(
+		'moderation',
+		'member_moderation',
+		'member_blocking',
+		array(
+			'name'              => 'bpm_blocking_member_blocking',
+			'label'             => __( 'Member Blocking', 'buddyboss' ),
+			'type'              => 'toggle',
+			'description'       => __( 'Allow members to block other members', 'buddyboss' ),
+			'help_text'         => __( 'When a member is blocked, their profile and all of their content are hidden from the member who blocked them.', 'buddyboss' ),
+			'default'           => bp_is_moderation_member_blocking_enable( false ),
+			'sanitize_callback' => 'absint',
+			'order'             => 10,
+		)
+	);
+
+	// -------------------------------------------------------------------------
+	// SECTION: Member Reporting
+	// -------------------------------------------------------------------------
+	bb_register_feature_section(
+		'moderation',
+		'member_moderation',
+		'member_reporting',
+		array(
+			'title' => __( 'Member Reporting', 'buddyboss' ),
+			'order' => 20,
+		)
+	);
+
+	// FIELD: Member Reporting (Toggle).
+	bb_register_feature_field(
+		'moderation',
+		'member_moderation',
+		'member_reporting',
+		array(
+			'name'              => 'bb_blocking_member_reporting',
+			'label'             => __( 'Member Reporting', 'buddyboss' ),
+			'type'              => 'toggle',
+			'description'       => __( 'Allow members to report other members', 'buddyboss' ),
+			'help_text'         => sprintf(
+				/* translators: %s: reporting categories link. */
+				__( 'If a member believes another member has violated one of your %s, they can report it to the site administrators.', 'buddyboss' ),
+				sprintf(
+					'<a href="%s">%s</a>',
+					esc_url(
+						bp_get_admin_url(
+							add_query_arg(
+								array(
+									'taxonomy' => 'bpm_category',
+									'tab'      => 'report-categories',
+								),
+								'edit-tags.php'
+							)
+						)
+					),
+					__( 'reporting categories', 'buddyboss' )
+				)
+			),
+			'default'           => bb_is_moderation_member_reporting_enable( false ),
+			'sanitize_callback' => 'absint',
+			'order'             => 10,
+		)
+	);
+
+	// -------------------------------------------------------------------------
+	// SECTION: Auto Suspend
+	// -------------------------------------------------------------------------
+	bb_register_feature_section(
+		'moderation',
+		'member_moderation',
+		'auto_suspend',
+		array(
+			'title' => __( 'Auto Suspend', 'buddyboss' ),
+			'order' => 30,
+		)
+	);
+
+	// FIELD: Auto Suspend after X blocks (Toggle with inline number).
+	bb_register_feature_field(
+		'moderation',
+		'member_moderation',
+		'auto_suspend',
+		array(
+			'name'                 => 'bpm_blocking_auto_suspend',
+			'label'                => __( 'Auto Suspend', 'buddyboss' ),
+			'type'                 => 'toggle',
+			'description'          => __( 'Auto suspend members after %s blocks', 'buddyboss' ),
+			'default'              => bp_is_moderation_auto_suspend_enable( false ),
+			'sanitize_callback'    => 'absint',
+			'description_controls' => array(
+				array(
+					'type'              => 'number',
+					'name'              => 'bpm_blocking_auto_suspend_threshold',
+					'default'           => bp_moderation_auto_suspend_threshold( 5 ),
+					'sanitize_callback' => 'bb_moderation_sanitize_auto_suspend_threshold',
+					'min'               => 1,
+					'step'              => 1,
+				),
+			),
+			'order'                => 10,
+		)
+	);
+
+	// FIELD: Auto Suspend after X reports (Toggle with inline number).
+	bb_register_feature_field(
+		'moderation',
+		'member_moderation',
+		'auto_suspend',
+		array(
+			'name'                 => 'bb_reporting_auto_suspend',
+			'label'                => '',
+			'type'                 => 'toggle',
+			'description'          => __( 'Auto suspend members after %s reports', 'buddyboss' ),
+			'default'              => bb_is_moderation_auto_suspend_report_enable( false ),
+			'sanitize_callback'    => 'absint',
+			'description_controls' => array(
+				array(
+					'type'              => 'number',
+					'name'              => 'bb_reporting_auto_suspend_threshold',
+					'default'           => bb_moderation_auto_suspend_report_threshold( 5 ),
+					'sanitize_callback' => 'bb_moderation_sanitize_auto_suspend_threshold',
+					'min'               => 1,
+					'step'              => 1,
+				),
+			),
+			'order'                => 20,
+		)
+	);
+
+	// FIELD: Email Notification (Toggle).
+	bb_register_feature_field(
+		'moderation',
+		'member_moderation',
+		'auto_suspend',
+		array(
+			'name'              => 'bpm_blocking_email_notification',
+			'label'             => __( 'Email Notification', 'buddyboss' ),
+			'type'              => 'toggle',
+			'description'       => __( 'Notify administrators when members have been automatically suspended', 'buddyboss' ),
+			'default'           => bp_is_moderation_blocking_email_notification_enable( false ),
+			'sanitize_callback' => 'absint',
+			'order'             => 30,
+		)
+	);
+}
