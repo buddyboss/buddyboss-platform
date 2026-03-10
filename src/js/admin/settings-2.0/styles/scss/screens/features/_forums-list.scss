@@ -125,6 +125,18 @@
 			@include bb-input-text;
 			padding-right: 30px;
 		}
+
+		&:after {
+			content: "\e30c";
+			font-family: "bb-icons-rl";
+			font-size: 20px;
+			color: $bb-icon-tertiary-color;
+			position: absolute;
+			right: 8px;
+			top: 50%;
+			transform: translateY(-50%);
+			pointer-events: none;
+		}
 	}
 
 	&__search-input {
