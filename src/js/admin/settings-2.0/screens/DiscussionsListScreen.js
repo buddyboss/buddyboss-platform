@@ -715,9 +715,6 @@ export function DiscussionsListScreen( { onNavigate } ) {
 							aria-label={ __( 'Search discussions', 'buddyboss' ) }
 							className="bb-discussions-list__search-input"
 						/>
-						<span className="bb-discussions-list__search-icon">
-							<i className="bb-icons-rl bb-icons-rl-search"></i>
-						</span>
 					</div>
 				</div>
 			</div>
@@ -802,13 +799,13 @@ export function DiscussionsListScreen( { onNavigate } ) {
 										</td>
 										<td className="bb-discussions-list__td--replies">
 											<span className="bb-discussions-list__count-cell">
-												<i className="bb-icons-rl bb-icons-rl-chats-circle"></i>
+												<i className="bb-icons-rl bb-icons-rl-chats"></i>
 												{ disc.reply_count }
 											</span>
 										</td>
 										<td className="bb-discussions-list__td--members">
 											<span className="bb-discussions-list__count-cell">
-												<i className="bb-icons-rl bb-icons-rl-users"></i>
+												<i className="bb-icons-rl bb-icons-rl-user"></i>
 												{ disc.voice_count }
 											</span>
 										</td>
