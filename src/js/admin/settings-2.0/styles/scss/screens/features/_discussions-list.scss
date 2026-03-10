@@ -127,8 +127,8 @@
 			gap: 4px;
 			height: 32px;
 			padding: 0 8px;
-			background: $bb-background-base-color;
-			border: 1px solid $bb-border-secondary-color;
+			background: $bb-background-color;
+			border: 1px solid $bb-border-tertiary-color;
 			border-radius: $bb-border-radius-md;
 			font-size: 13px;
 			color: $bb-text-color;
@@ -136,8 +136,9 @@
 			white-space: nowrap;
 			min-width: 168px;
 
-			&:hover {
-				border-color: $bb-border-brand-primary-color;
+			&:focus {
+				border-color: $bb-border-quaternary-color;
+				outline: none;
 			}
 
 			i {
@@ -175,22 +176,7 @@
 		}
 
 		&-search-input {
-			width: 100%;
-			height: 32px;
-			border: 1px solid $bb-border-secondary-color;
-			border-radius: $bb-border-radius-md;
-			padding: 0 8px;
-			font-size: 13px;
-			color: $bb-text-color;
-			outline: none;
-
-			&::placeholder {
-				color: $bb-text-disabled-color;
-			}
-
-			&:focus {
-				border-color: $bb-border-brand-primary-color;
-			}
+			@include bb-input-text;
 		}
 
 		&-options {
@@ -202,7 +188,7 @@
 		&-option {
 			display: block;
 			width: 100%;
-			padding: 6px 12px;
+			padding: 8px 12px;
 			border: none;
 			background: none;
 			text-align: left;
@@ -218,8 +204,7 @@
 			}
 
 			&--active {
-				font-weight: 600;
-				color: $bb-text-brand-primary-color;
+				background: $bb-background-primary-hover-color;
 			}
 		}
 
