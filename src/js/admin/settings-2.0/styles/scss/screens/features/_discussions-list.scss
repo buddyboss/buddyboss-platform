@@ -806,9 +806,9 @@
 }
 
 /* ----------------------------------------------------------------
-   Discussion Create Modal
+   Discussion Modal
    ---------------------------------------------------------------- */
-.bb-discussion-create-modal {
+.bb-discussion-modal {
 
 	&__body {
 		padding: 24px;
@@ -825,7 +825,7 @@
 			font-size: 13px !important;
 			font-weight: 500 !important;
 			color: $bb-text-color;
-			margin-bottom: 8px
+			margin-bottom: 8px;
 		}
 
 		.components-select-control .components-input-control__label {
@@ -835,10 +835,6 @@
 		.components-text-control__input,
 		.components-textarea-control__input {
 			@include bb-input-text;
-		}
-
-		textarea {
-			min-height: 72px;
 		}
 
 		.components-input-control__container {
@@ -904,98 +900,36 @@
 }
 
 /* ----------------------------------------------------------------
+   Discussion Create Modal
+   ---------------------------------------------------------------- */
+.bb-discussion-create-modal {
+
+	.bb-discussion-modal__body {
+
+		textarea {
+			min-height: 72px;
+		}
+	}
+}
+
+/* ----------------------------------------------------------------
    Discussion Edit Modal
    ---------------------------------------------------------------- */
 .bb-discussion-edit-modal {
 
-	&__body {
-		padding: 24px;
+	.bb-discussion-modal__body {
 
 		.components-base-control {
-			margin-bottom: 16px;
 
 			+ .bb-admin-meta-field__description {
 				margin-top: -6px;
 			}
 		}
 
-		// Override WordPress components uppercase labels to sentence case.
-		.components-input-control__label,
-		.components-base-control__label {
-			display: block;
-			text-transform: none !important;
-			font-size: 13px !important;
-			font-weight: 500 !important;
-			color: $bb-text-color;
-			margin-bottom: 8px;
-		}
-
-		.components-select-control .components-input-control__label {
-			margin-bottom: 0;
-		}
-
 		.bb-admin-notice {
 			margin-top: 16px;
 		}
-
-		.components-text-control__input,
-		.components-textarea-control__input {
-			@include bb-input-text;
-		}
-
-		.components-input-control__container {
-
-			.components-select-control__input {
-				@include bb-admin-settings-select;
-			}
-
-			&:has(> .components-select-control__input) {
-				padding: 0 !important;
-
-				.components-input-control__suffix,
-				.components-input-control__backdrop {
-					display: none !important;
-				}
-			}
-		}
 	}
-
-	&__row {
-		display: flex;
-		gap: 16px;
-		margin-bottom: 16px;
-
-		.components-base-control {
-			flex: 1;
-			margin-bottom: 0;
-		}
-	}
-
-	&__error {
-		color: #d63638;
-		font-size: 13px;
-		margin: 0 0 16px;
-	}
-
-	&__footer {
-
-		.is-secondary {
-			@include bb-button-secondary;
-		}
-
-		.is-primary {
-			@include bb-button-primary;
-
-			&:disabled {
-				opacity: 0.5;
-				cursor: not-allowed;
-			}
-		}
-	}
-}
-
-.bb-discussion-create-modal__row--separator > .components-base-control {
-	margin-bottom: 0;
 }
 
 /* ----------------------------------------------------------------

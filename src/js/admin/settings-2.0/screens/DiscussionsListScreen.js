@@ -1206,12 +1206,12 @@ function DiscussionEditModal( { discussion, onClose, onSave, isSaving } ) {
 		<Modal
 			title={ __( 'Edit Discussion', 'buddyboss' ) }
 			onRequestClose={ onClose }
-			className="bb-discussion-edit-modal bb-discussion-create-modal bb-admin-settings-modal"
+			className="bb-discussion-modal bb-discussion-edit-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
 		>
-			<div className="bb-discussion-edit-modal__body">
+			<div className="bb-discussion-modal__body">
 				{ error && (
-					<p className="bb-discussion-edit-modal__error">{ error }</p>
+					<p className="bb-discussion-modal__error">{ error }</p>
 				) }
 
 				<TextControl
@@ -1221,7 +1221,7 @@ function DiscussionEditModal( { discussion, onClose, onSave, isSaving } ) {
 					__nextHasNoMarginBottom
 				/>
 
-				<div className="bb-discussion-create-modal__row--separator">
+				<div className="bb-discussion-modal__row--separator">
 					<RichTextEditor
 						id="bb-discussion-edit-description"
 						label={ __( 'Description', 'buddyboss' ) }
@@ -1244,7 +1244,7 @@ function DiscussionEditModal( { discussion, onClose, onSave, isSaving } ) {
 					/>
 				</div>
 
-				<div className="bb-discussion-create-modal__row--separator">
+				<div className="bb-discussion-modal__row--separator">
 					<SelectControl
 						label={ __( 'Type', 'buddyboss' ) }
 						value={ type }
@@ -1254,7 +1254,7 @@ function DiscussionEditModal( { discussion, onClose, onSave, isSaving } ) {
 					/>
 				</div>
 
-				<div className="bb-discussion-edit-modal__row bb-discussion-create-modal__row--separator">
+				<div className="bb-discussion-modal__row bb-discussion-modal__row--separator">
 					<SelectControl
 						label={ __( 'Status', 'buddyboss' ) }
 						value={ topicStatus }
@@ -1279,7 +1279,7 @@ function DiscussionEditModal( { discussion, onClose, onSave, isSaving } ) {
 				/>
 			</div>
 
-			<div className="bb-discussion-edit-modal__footer bb-admin-settings-modal__footer">
+			<div className="bb-discussion-modal__footer bb-admin-settings-modal__footer">
 				<Button
 					variant="secondary"
 					onClick={ onClose }
