@@ -105,82 +105,147 @@ function bb_admin_settings_register_messages_feature() {
 	// -------------------------------------------------------------------------
 	// SECTION: MESSAGING NOTIFICATIONS
 	// -------------------------------------------------------------------------
-	bb_register_feature_section(
-		'messages',
-		'messaging_notifications',
-		'messaging_notifications',
-		array(
-			'title'       => __( 'Messaging Notifications', 'buddyboss' ),
-			'description' => '',
-			'order'       => 10,
-		)
-	);
 
-	// FIELD: Hide From Notifications (Toggle).
-	// Only register when notifications component is active — the toggle hides
-	// messages from the notification list, which doesn't exist without it.
-	if ( bp_is_active( 'notifications' ) ) {
+	// Messaging notification fields only apply when using the modern notification
+	// preference system. When legacy email preferences are enabled, members manage
+	// email preferences individually, so these admin toggles do not apply.
+	if ( ! bb_enabled_legacy_email_preference() ) {
+
+		bb_register_feature_section(
+			'messages',
+			'messaging_notifications',
+			'messaging_notifications',
+			array(
+				'title'       => __( 'Messaging Notifications', 'buddyboss' ),
+				'description' => '',
+				'order'       => 10,
+			)
+		);
+
+		// FIELD: Pusher Live Messages warning notice.
+		// Show when Pusher live-messaging is enabled but both hide/delay notifications
+		// are disabled — the legacy system displayed this via bb_admin_setting_callback_messaging_notification_warning().
+		// Pusher status is checked at registration time (server-side); toggle states are
+		// evaluated dynamically via `conditional` so the notice updates in real-time.
+		if (
+			function_exists( 'bb_pusher_is_enabled' ) &&
+			bb_pusher_is_enabled() &&
+			function_exists( 'bb_pusher_is_feature_enabled' ) &&
+			true === bb_pusher_is_feature_enabled( 'live-messaging' )
+		) {
+			// Build conditions: notice visible when BOTH toggles are OFF.
+			$notice_conditions = array(
+				array(
+					'field' => 'delay_email_notification',
+					'value' => false,
+				),
+			);
+
+			if ( bp_is_active( 'notifications' ) ) {
+				$notice_conditions[] = array(
+					'field' => 'hide_message_notification',
+					'value' => false,
+				);
+			}
+
+			bb_register_feature_field(
+				'messages',
+				'messaging_notifications',
+				'messaging_notifications',
+				array(
+					'name'        => 'bb-messages-live-messaging-notice',
+					'label'       => '',
+					'type'        => 'notice',
+					'description' => sprintf(
+						/* translators: %s: Live Messages link. */
+						__( 'When using %s, we recommend enabling these settings to ensure the optimal experience for your members.', 'buddyboss' ),
+						'<a href="' . esc_url(
+							add_query_arg(
+								array(
+									'page' => 'bp-integrations',
+									'tab'  => 'bb-pusher',
+								),
+								admin_url( 'admin.php' )
+							)
+						) . '">' . __( 'Live Messages', 'buddyboss' ) . '</a>'
+					),
+					'notice_type' => 'warning',
+					'conditional' => array(
+						'conditions' => $notice_conditions,
+						'operator'   => 'AND',
+					),
+					'order'       => 5,
+				)
+			);
+		}
+
+		// FIELD: Hide From Notifications (Toggle).
+		// Only register when notifications component is active — the toggle hides
+		// messages from the notification list, which doesn't exist without it.
+		if ( bp_is_active( 'notifications' ) ) {
+			bb_register_feature_field(
+				'messages',
+				'messaging_notifications',
+				'messaging_notifications',
+				array(
+					'name'              => 'hide_message_notification',
+					'label'             => __( 'Hide From Notifications', 'buddyboss' ),
+					'type'              => 'toggle',
+					'description'       => __( 'Hide messages from notifications', 'buddyboss' ),
+					'help_text'         => __( 'When enabled, notifications for group and private messages will not appear in a member\'s notification list or count toward unread notifications. However, they will still be sent externally (email, web, or app) and shown in the member\'s message list, including the unread message count.', 'buddyboss' ),
+					'default'           => absint( bp_get_option( 'hide_message_notification', 1 ) ),
+					'sanitize_callback' => 'absint',
+					'order'             => 10,
+				)
+			);
+		}
+
+		// FIELD: Delay Email Notifications (Toggle).
 		bb_register_feature_field(
 			'messages',
 			'messaging_notifications',
 			'messaging_notifications',
 			array(
-				'name'              => 'hide_message_notification',
-				'label'             => __( 'Hide From Notifications', 'buddyboss' ),
+				'name'              => 'delay_email_notification',
+				'label'             => __( 'Delay Email Notifications', 'buddyboss' ),
 				'type'              => 'toggle',
-				'description'       => __( 'Hide messages from notifications', 'buddyboss' ),
-				'help_text'         => __( 'When enabled, notifications for group and private messages will not appear in a member\'s notification list or count toward unread notifications. However, they will still be sent externally (email, web, or app) and shown in the member\'s message list, including the unread message count.', 'buddyboss' ),
-				'default'           => (bool) bp_get_option( 'hide_message_notification', 1 ),
+				'description'       => __( 'Delay email notifications for new messages', 'buddyboss' ),
+				'help_text'         => __( 'When enabled, email notifications for new group and private messages will be delayed, giving members time to read them on your site. After the delay, emails are sent only if the messages remain unread. Multiple unread messages in the same conversation will be combined into a single email notification.', 'buddyboss' ),
+				'default'           => absint( bp_get_option( 'delay_email_notification', 1 ) ),
 				'sanitize_callback' => 'absint',
-				'order'             => 10,
+				'order'             => 20,
 			)
 		);
-	}
 
-	// FIELD: Delay Email Notifications (Toggle).
-	bb_register_feature_field(
-		'messages',
-		'messaging_notifications',
-		'messaging_notifications',
-		array(
-			'name'              => 'delay_email_notification',
-			'label'             => __( 'Delay Email Notifications', 'buddyboss' ),
-			'type'              => 'toggle',
-			'description'       => __( 'Delay email notifications for new messages', 'buddyboss' ),
-			'help_text'         => __( 'When enabled, email notifications for new group and private messages will be delayed, giving members time to read them on your site. After the delay, emails are sent only if the messages remain unread. Multiple unread messages in the same conversation will be combined into a single email notification.', 'buddyboss' ),
-			'default'           => (bool) bp_get_option( 'delay_email_notification', 1 ),
-			'sanitize_callback' => 'absint',
-			'order'             => 20,
-		)
-	);
+		// FIELD: Delay Message Notifications (Select - child of delay toggle).
+		$delay_times   = bb_notification_get_digest_cron_times();
+		$delay_options = array();
 
-	// FIELD: Delay Message Notifications (Select - child of delay toggle).
-	$delay_times   = bb_notification_get_digest_cron_times();
-	$delay_options = array();
+		foreach ( $delay_times as $time ) {
+			$delay_options[] = array(
+				'label' => $time['label'],
+				'value' => (string) $time['value'],
+			);
+		}
 
-	foreach ( $delay_times as $time ) {
-		$delay_options[] = array(
-			'label' => $time['label'],
-			'value' => (string) $time['value'],
+		bb_register_feature_field(
+			'messages',
+			'messaging_notifications',
+			'messaging_notifications',
+			array(
+				'name'              => 'time_delay_email_notification',
+				'label'             => __( 'Delay Message Notifications', 'buddyboss' ),
+				'type'              => 'select',
+				'description'       => '',
+				'options'           => $delay_options,
+				'default'           => (string) bp_get_option( 'time_delay_email_notification', 15 ),
+				'sanitize_callback' => 'bb_messages_sanitize_delay_time',
+				'order'             => 30,
+				'parent_field'      => 'delay_email_notification',
+			)
 		);
-	}
 
-	bb_register_feature_field(
-		'messages',
-		'messaging_notifications',
-		'messaging_notifications',
-		array(
-			'name'              => 'time_delay_email_notification',
-			'label'             => __( 'Delay Message Notifications', 'buddyboss' ),
-			'type'              => 'select',
-			'description'       => '',
-			'options'           => $delay_options,
-			'default'           => (string) bp_get_option( 'time_delay_email_notification', 15 ),
-			'sanitize_callback' => 'bb_messages_sanitize_delay_time',
-			'order'             => 30,
-			'parent_field'      => 'delay_email_notification',
-		)
-	);
+	} // End legacy email preference guard.
 
 	// Panel 2: Access Controls.
 	bb_messages_register_access_control_fields();

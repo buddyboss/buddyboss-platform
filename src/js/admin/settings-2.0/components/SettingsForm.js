@@ -90,28 +90,61 @@ export function SettingsForm({ fields, values, onChange }) {
 	}, [ fields ] );
 
 	/**
-	 * Check if a field should be visible based on its conditional logic
+	 * Evaluate a single condition object against current values.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {Object} cond          Single condition: { field, value }.
+	 * @return {boolean} Whether the condition is met.
+	 */
+	const evaluateCondition = (cond) => {
+		const condValue = values[cond.field];
+		const expectedValue = cond.value;
+
+		// When expected value is boolean, use truthy/falsy comparison
+		// because DB values can be 1, 0, "1", "0" while conditional uses true/false.
+		if (expectedValue === true || expectedValue === false) {
+			const isTruthy = !!condValue && condValue !== '0' && condValue !== 0;
+			return isTruthy === expectedValue;
+		}
+
+		// When expected value is an array, check if current value is in the array.
+		if (Array.isArray(expectedValue)) {
+			return expectedValue.indexOf(condValue) !== -1;
+		}
+
+		// For non-boolean values, use strict comparison.
+		return condValue === expectedValue;
+	};
+
+	/**
+	 * Check if a field should be visible based on its conditional logic.
+	 *
+	 * Supports two formats:
+	 *   1. Single condition:   { field: 'name', value: expected }
+	 *   2. Multiple conditions: { conditions: [ {field, value}, ... ], operator: 'AND'|'OR' }
+	 *      operator defaults to 'AND'.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	const isFieldVisible = (field) => {
 		// If field has a "conditional" property, check it
 		if (field.conditional) {
-			const condValue = values[field.conditional.field];
-			const expectedValue = field.conditional.value;
 
-			// When expected value is boolean, use truthy/falsy comparison
-			// because DB values can be 1, 0, "1", "0" while conditional uses true/false.
-			if (expectedValue === true || expectedValue === false) {
-				const isTruthy = !!condValue && condValue !== '0' && condValue !== 0;
-				return isTruthy === expectedValue;
+			// Multiple conditions with operator.
+			if (Array.isArray(field.conditional.conditions)) {
+				var operator = (field.conditional.operator || 'AND').toUpperCase();
+				var conditions = field.conditional.conditions;
+
+				if ('OR' === operator) {
+					return conditions.some(evaluateCondition);
+				}
+				// Default: AND — all conditions must match.
+				return conditions.every(evaluateCondition);
 			}
 
-			// When expected value is an array, check if current value is in the array.
-			if (Array.isArray(expectedValue)) {
-				return expectedValue.indexOf(condValue) !== -1;
-			}
-
-			// For non-boolean values, use strict comparison.
-			return condValue === expectedValue;
+			// Single condition (backward-compatible).
+			return evaluateCondition(field.conditional);
 		}
 
 		// For parent_field (nesting), always show the field but it may be disabled
@@ -419,12 +452,15 @@ export function SettingsForm({ fields, values, onChange }) {
 			case 'notice':
 				// Notice field: displays an informational/warning/error notice banner.
 				// Uses notice_type (info, warning, error, success) for styling.
+				// Content is wrapped in a <span> so the icon (:before pseudo) and text
+				// are two flex items — preventing <a> tags from creating extra columns.
 				return (
 					<div
 						key={field.name}
 						className={`bb-admin-notice bb-admin-notice--${field.notice_type || 'info'}`}
-						dangerouslySetInnerHTML={{ __html: sanitizedHtml[ field.name + '__desc' ] || '' }}
-					/>
+					>
+						<span dangerouslySetInnerHTML={{ __html: sanitizedHtml[ field.name + '__desc' ] || '' }} />
+					</div>
 				);
 
 			case 'reaction_migration': {
