@@ -14,19 +14,20 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register Member Moderation panel fields.
  *
+ * All fields are registered in a single section so the React UI renders
+ * them inside one card — matching the Figma design.
+ *
  * @since BuddyBoss [BBVERSION]
  */
 function bb_moderation_register_member_moderation_fields() {
 
-	// -------------------------------------------------------------------------
-	// SECTION: Member Blocking
-	// -------------------------------------------------------------------------
+	// Single section for the entire Member Moderation panel (one card in React UI).
 	bb_register_feature_section(
 		'moderation',
 		'member_moderation',
-		'member_blocking',
+		'member_moderation_settings',
 		array(
-			'title' => __( 'Member Blocking', 'buddyboss' ),
+			'title' => __( 'Member Moderation', 'buddyboss' ),
 			'order' => 10,
 		)
 	);
@@ -35,7 +36,7 @@ function bb_moderation_register_member_moderation_fields() {
 	bb_register_feature_field(
 		'moderation',
 		'member_moderation',
-		'member_blocking',
+		'member_moderation_settings',
 		array(
 			'name'              => 'bpm_blocking_member_blocking',
 			'label'             => __( 'Member Blocking', 'buddyboss' ),
@@ -48,24 +49,11 @@ function bb_moderation_register_member_moderation_fields() {
 		)
 	);
 
-	// -------------------------------------------------------------------------
-	// SECTION: Member Reporting
-	// -------------------------------------------------------------------------
-	bb_register_feature_section(
-		'moderation',
-		'member_moderation',
-		'member_reporting',
-		array(
-			'title' => __( 'Member Reporting', 'buddyboss' ),
-			'order' => 20,
-		)
-	);
-
 	// FIELD: Member Reporting (Toggle).
 	bb_register_feature_field(
 		'moderation',
 		'member_moderation',
-		'member_reporting',
+		'member_moderation_settings',
 		array(
 			'name'              => 'bb_blocking_member_reporting',
 			'label'             => __( 'Member Reporting', 'buddyboss' ),
@@ -92,20 +80,7 @@ function bb_moderation_register_member_moderation_fields() {
 			),
 			'default'           => bb_is_moderation_member_reporting_enable( false ),
 			'sanitize_callback' => 'absint',
-			'order'             => 10,
-		)
-	);
-
-	// -------------------------------------------------------------------------
-	// SECTION: Auto Suspend
-	// -------------------------------------------------------------------------
-	bb_register_feature_section(
-		'moderation',
-		'member_moderation',
-		'auto_suspend',
-		array(
-			'title' => __( 'Auto Suspend', 'buddyboss' ),
-			'order' => 30,
+			'order'             => 20,
 		)
 	);
 
@@ -113,7 +88,7 @@ function bb_moderation_register_member_moderation_fields() {
 	bb_register_feature_field(
 		'moderation',
 		'member_moderation',
-		'auto_suspend',
+		'member_moderation_settings',
 		array(
 			'name'                 => 'bpm_blocking_auto_suspend',
 			'label'                => __( 'Auto Suspend', 'buddyboss' ),
@@ -131,7 +106,7 @@ function bb_moderation_register_member_moderation_fields() {
 					'step'              => 1,
 				),
 			),
-			'order'                => 10,
+			'order'                => 30,
 		)
 	);
 
@@ -139,7 +114,7 @@ function bb_moderation_register_member_moderation_fields() {
 	bb_register_feature_field(
 		'moderation',
 		'member_moderation',
-		'auto_suspend',
+		'member_moderation_settings',
 		array(
 			'name'                 => 'bb_reporting_auto_suspend',
 			'label'                => '',
@@ -157,7 +132,7 @@ function bb_moderation_register_member_moderation_fields() {
 					'step'              => 1,
 				),
 			),
-			'order'                => 20,
+			'order'                => 40,
 		)
 	);
 
@@ -165,7 +140,7 @@ function bb_moderation_register_member_moderation_fields() {
 	bb_register_feature_field(
 		'moderation',
 		'member_moderation',
-		'auto_suspend',
+		'member_moderation_settings',
 		array(
 			'name'              => 'bpm_blocking_email_notification',
 			'label'             => __( 'Email Notification', 'buddyboss' ),
@@ -173,7 +148,7 @@ function bb_moderation_register_member_moderation_fields() {
 			'description'       => __( 'Notify administrators when members have been automatically suspended', 'buddyboss' ),
 			'default'           => bp_is_moderation_blocking_email_notification_enable( false ),
 			'sanitize_callback' => 'absint',
-			'order'             => 30,
+			'order'             => 50,
 		)
 	);
 }
