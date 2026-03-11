@@ -558,6 +558,9 @@ class BB_Admin_Forums_Ajax {
 			}
 		}
 
+		// Capture old parent before update for count recalculation.
+		$old_parent_id = (int) $forum->post_parent;
+
 		$update_args['post_parent'] = $parent_id;
 
 		$result = wp_update_post( $update_args, true );
@@ -578,6 +581,17 @@ class BB_Admin_Forums_Ajax {
 			delete_post_thumbnail( $forum_id );
 		} elseif ( ! empty( $image_id ) ) {
 			set_post_thumbnail( $forum_id, $image_id );
+		}
+
+		// Recalculate counts when parent changes.
+		if ( $parent_id !== $old_parent_id ) {
+			bbp_update_forum( array( 'forum_id' => $forum_id ) );
+			if ( ! empty( $old_parent_id ) ) {
+				bbp_update_forum( array( 'forum_id' => $old_parent_id ) );
+			}
+			if ( ! empty( $parent_id ) ) {
+				bbp_update_forum( array( 'forum_id' => $parent_id ) );
+			}
 		}
 
 		// Clear status counts cache.

@@ -530,6 +530,10 @@ class BB_Admin_Replies_Ajax {
 			$visibility = 'publish';
 		}
 
+		// Capture old parent IDs before update for count recalculation.
+		$old_topic_id = (int) bbp_get_reply_topic_id( $reply_id );
+		$old_forum_id = (int) bbp_get_reply_forum_id( $reply_id );
+
 		// Update post data.
 		$update_args = array(
 			'ID' => $reply_id,
@@ -566,6 +570,20 @@ class BB_Admin_Replies_Ajax {
 			update_post_meta( $reply_id, '_bbp_reply_to', $reply_to );
 		} else {
 			delete_post_meta( $reply_id, '_bbp_reply_to' );
+		}
+
+		// Recalculate topic/forum counts when parent changes.
+		if ( ! empty( $topic_id ) && $topic_id !== $old_topic_id ) {
+			if ( ! empty( $old_topic_id ) ) {
+				bbp_update_topic( array( 'topic_id' => $old_topic_id ) );
+			}
+			bbp_update_topic( array( 'topic_id' => $topic_id ) );
+		}
+		if ( ! empty( $forum_id ) && $forum_id !== $old_forum_id ) {
+			if ( ! empty( $old_forum_id ) ) {
+				bbp_update_forum( array( 'forum_id' => $old_forum_id ) );
+			}
+			bbp_update_forum( array( 'forum_id' => $forum_id ) );
 		}
 
 		$this->bb_clear_forum_counts_cache();

@@ -609,6 +609,9 @@ class BB_Admin_Topics_Ajax {
 			}
 		}
 
+		// Capture old forum ID before update for count recalculation.
+		$old_forum_id = (int) bbp_get_topic_forum_id( $topic_id );
+
 		// Update forum if changed.
 		if ( ! empty( $forum_id ) ) {
 			$update_args['post_parent'] = $forum_id;
@@ -618,6 +621,26 @@ class BB_Admin_Topics_Ajax {
 		$result = wp_update_post( $update_args, true );
 		if ( is_wp_error( $result ) ) {
 			wp_send_json_error( array( 'message' => $result->get_error_message() ) );
+		}
+
+		// Recalculate forum counts when forum changes.
+		if ( ! empty( $forum_id ) && $forum_id !== $old_forum_id ) {
+			// Remove sticky from old forum if topic was sticky there.
+			if ( ! empty( $old_forum_id ) ) {
+				$old_stickies = bbp_get_stickies( $old_forum_id );
+				if ( ! empty( $old_stickies ) ) {
+					$updated_stickies = array_diff( $old_stickies, array( $topic_id ) );
+					if ( $updated_stickies !== $old_stickies ) {
+						if ( empty( $updated_stickies ) ) {
+							delete_post_meta( $old_forum_id, '_bbp_sticky_topics' );
+						} else {
+							update_post_meta( $old_forum_id, '_bbp_sticky_topics', array_values( $updated_stickies ) );
+						}
+					}
+				}
+				bbp_update_forum( array( 'forum_id' => $old_forum_id ) );
+			}
+			bbp_update_forum( array( 'forum_id' => $forum_id ) );
 		}
 
 		// Handle sticky type.
