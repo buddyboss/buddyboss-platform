@@ -461,12 +461,8 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 		 * @since bbPress (r4260)
 		 */
 		public function enqueue_scripts() {
-			wp_enqueue_script( 'suggest' );
-
-			// Get the version to use for JS
-			$version = bp_get_version();
-
-			wp_register_script( 'bbp-converter', $this->js_url . 'converter.js', array( 'jquery' ), $version );
+			// Scripts are registered in register_admin_scripts() and
+			// enqueued on the specific admin pages that need them.
 		}
 
 		/**
