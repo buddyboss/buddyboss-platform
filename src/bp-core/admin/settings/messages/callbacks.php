@@ -66,26 +66,19 @@ function bb_messages_reschedule_cron_after_save( $feature_id, $settings, $saved 
 		return;
 	}
 
-	$is_enabled = (bool) bp_get_option( 'delay_email_notification', 1 );
-	$new_time   = absint( bp_get_option( 'time_delay_email_notification', 15 ) );
-	$old_time   = bb_get_delay_email_notifications_time();
-
-	// Un-schedule the current event if delay was disabled or the time changed.
-	if (
-		! empty( $old_time ) &&
-		( ! $is_enabled || $old_time !== $new_time )
-	) {
-		$old_schedule = bb_get_delay_notification_time_by_minutes( $old_time );
-		if ( ! empty( $old_schedule ) ) {
-			$timestamp = wp_next_scheduled( 'bb_digest_email_notifications_hook' );
-			if ( $timestamp ) {
-				wp_unschedule_event( $timestamp, 'bb_digest_email_notifications_hook' );
-			}
-		}
+	// Always unschedule the existing cron event first.
+	// After the AJAX save, the old option value is already overwritten in the DB,
+	// so we cannot reliably compare old vs new. Clearing and re-scheduling is safe
+	// because bp_core_schedule_cron() is idempotent.
+	$timestamp = wp_next_scheduled( 'bb_digest_email_notifications_hook' );
+	if ( $timestamp ) {
+		wp_unschedule_event( $timestamp, 'bb_digest_email_notifications_hook' );
 	}
 
-	// Schedule the new event if delay is enabled.
+	// Re-schedule the cron event if delay is enabled.
+	$is_enabled = (bool) bp_get_option( 'delay_email_notification', 1 );
 	if ( $is_enabled ) {
+		$new_time     = absint( bp_get_option( 'time_delay_email_notification', 15 ) );
 		$new_schedule = bb_get_delay_notification_time_by_minutes( $new_time );
 		if ( ! empty( $new_schedule ) ) {
 			bp_core_schedule_cron( 'digest_email_notifications', 'bb_digest_message_email_notifications', $new_schedule['schedule_key'] );
