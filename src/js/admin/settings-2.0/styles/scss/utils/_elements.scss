@@ -449,6 +449,16 @@ select.bb-admin-settings__select {
         &:before {
             color: $bb-icon-warning-primary-color;
         }
+
+        a {
+            color: $bb-text-warning-primary-color;
+            text-decoration: underline;
+        }
+    }
+
+    // Ensure links stay inline so they don't become separate flex items.
+    a {
+        display: inline;
     }
 
     &--dismiss {
