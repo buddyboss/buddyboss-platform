@@ -13,6 +13,26 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Standard post types to register eagerly in the Pages & Posts panel.
+ *
+ * These are always available at bb_register_features time.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+if ( ! defined( 'BB_SEARCH_STANDARD_POST_TYPES' ) ) {
+	define( 'BB_SEARCH_STANDARD_POST_TYPES', array( 'post', 'page', 'attachment' ) );
+}
+
+/**
+ * Post types to skip entirely (handled by Network Search panel).
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+if ( ! defined( 'BB_SEARCH_EXCLUDED_POST_TYPES' ) ) {
+	define( 'BB_SEARCH_EXCLUDED_POST_TYPES', array( 'forum', 'topic', 'reply' ) );
+}
+
+/**
  * Register Search feature and settings in Feature Registry.
  *
  * Registers the feature, side panels, and delegates field registration

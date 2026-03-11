@@ -44,7 +44,7 @@ function bb_search_register_autocomplete_fields() {
 			'label'             => __( 'Autocomplete', 'buddyboss' ),
 			'type'              => 'toggle',
 			'description'       => __( 'Enable autocomplete dropdown when typing into search inputs.', 'buddyboss' ),
-			'default'           => (bool) bp_get_option( 'bp_search_autocomplete', 1 ),
+			'default'           => absint( bp_get_option( 'bp_search_autocomplete', 1 ) ),
 			'sanitize_callback' => 'absint',
 			'order'             => 10,
 		)
