@@ -208,7 +208,14 @@ class BB_Admin_Forums_Ajax {
 				break;
 		}
 
+		// Remove bbPress visibility filter that overrides post_status on forum queries.
+		remove_action( 'pre_get_posts', 'bbp_pre_get_posts_normalize_forum_visibility', 4 );
+
 		$query = new WP_Query( $query_args );
+
+		// Restore bbPress visibility filter.
+		add_action( 'pre_get_posts', 'bbp_pre_get_posts_normalize_forum_visibility', 4 );
+
 		$posts = $query->posts;
 		$total = (int) $query->found_posts;
 
