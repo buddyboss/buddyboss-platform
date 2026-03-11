@@ -213,20 +213,22 @@ export function ReportingCategoriesScreen( { onNavigate, helpUrl, onHelpClick, f
 							{ categories.map( function ( cat ) {
 								return (
 									<li key={ cat.id } className="bb-admin-reporting-categories__list-item">
-										<div className="bb-admin-reporting-categories__list-item-name-col">
-											<span className="bb-admin-reporting-categories__list-item-name">
-												{ decodeEntities( cat.name ) }
-											</span>
-										</div>
-										<div className="bb-admin-reporting-categories__list-item-desc-col">
-											<span className="bb-admin-reporting-categories__list-item-desc">
-												{ decodeEntities( cat.description || '' ) }
-											</span>
-										</div>
-										<div className="bb-admin-reporting-categories__list-item-show-when-col">
-											<span className="bb-admin-reporting-categories__list-item-badge">
-												{ decodeEntities( cat.show_when_reporting_label || '' ) }
-											</span>
+										<div className="bb-admin-reporting-categories__list-item-content">
+											<div className="bb-admin-reporting-categories__list-item-name-col">
+												<span className="bb-admin-reporting-categories__list-item-name">
+													{ decodeEntities( cat.name ) }
+												</span>
+											</div>
+											<div className="bb-admin-reporting-categories__list-item-desc-col">
+												<span className="bb-admin-reporting-categories__list-item-desc">
+													{ decodeEntities( cat.description || '' ) }
+												</span>
+											</div>
+											<div className="bb-admin-reporting-categories__list-item-show-when-col">
+												<span className="bb-admin-reporting-categories__list-item-badge">
+													{ decodeEntities( cat.show_when_reporting_label || '' ) }
+												</span>
+											</div>
 										</div>
 										<div className="bb-admin-reporting-categories__list-item-actions-col">
 											<div className="bb-admin-reporting-categories__menu-wrapper">

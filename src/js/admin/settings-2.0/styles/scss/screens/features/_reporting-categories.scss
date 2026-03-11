@@ -11,6 +11,18 @@
 	width: 100%;
 	padding: 32px;
 
+	/* Section header override — match Figma 64px total height (border-box). */
+	.bb-admin-feature-settings__section-header {
+		box-sizing: border-box;
+		padding: 16px 0;
+		min-height: 64px;
+	}
+
+	/* Title line-height override — Figma uses 26px for xl heading. */
+	.bb-admin-feature-settings__section-title {
+		line-height: 26px;
+	}
+
 	/* Section body override — reduced bottom padding for list. */
 	&__list-body {
 		padding: 32px 24px 8px;
@@ -24,11 +36,17 @@
 
 	&__add-btn {
 		@include bb-button-primary;
+		display: inline-flex;
+		align-items: center;
+		font-size: 14px;
+		line-height: 20px;
+		padding: 6px 16px;
+		gap: 4px;
 
 		i {
 			font-size: 16px;
 			font-weight: 700;
-			margin-right: 6px;
+			margin-right: 0;
 		}
 	}
 
@@ -39,47 +57,53 @@
 		padding: 0;
 		display: flex;
 		flex-direction: column;
+		gap: 16px;
 	}
 
 	&__list-item {
 		display: flex;
-		align-items: flex-start;
-		gap: 16px;
-		padding: 16px 0;
+		align-items: center;
+		gap: 32px;
+		padding-bottom: 16px;
 		border-bottom: 0.5px solid $bb-border-secondary-color;
 		margin-bottom: 0;
 		min-height: 48px;
-
-		&:first-child {
-			padding-top: 0;
-		}
 
 		&:last-child {
 			border-bottom: 0;
 		}
 	}
 
+	/* Inner wrapper for 3 content columns — matches Figma "items" (flex:1). */
+	&__list-item-content {
+		display: flex;
+		align-items: center;
+		gap: 32px;
+		flex: 1 0 0;
+		min-width: 0;
+	}
+
 	/* Column layout */
 	&__list-item-name-col {
-		width: 220px;
+		width: 264px;
 		flex-shrink: 0;
 		min-width: 0;
 	}
 
 	&__list-item-desc-col {
-		flex: 1;
+		width: 200px;
+		flex-shrink: 0;
 		min-width: 0;
 	}
 
 	&__list-item-show-when-col {
-		flex: 1;
+		width: 152px;
+		flex-shrink: 0;
 		min-width: 0;
 	}
 
 	&__list-item-actions-col {
 		flex-shrink: 0;
-		display: flex;
-		justify-content: flex-end;
 	}
 
 	&__list-item-name {
@@ -96,16 +120,16 @@
 	&__list-item-desc {
 		font-size: 13px;
 		font-weight: 400;
-		color: $bb-text-tertiary-color;
+		color: $bb-text-secondary-color;
 		line-height: 18px;
 	}
 
 	&__list-item-badge {
 		display: inline-flex;
 		align-items: center;
-		padding: 4px 8px;
+		padding: 0 4px;
 		font-size: 11px;
-		font-weight: 500;
+		font-weight: 400;
 		color: $bb-text-color;
 		background: $bb-background-secondary-color;
 		border: 0.5px solid $bb-border-tertiary-color;
