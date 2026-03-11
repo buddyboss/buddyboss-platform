@@ -50,6 +50,74 @@ class BB_Admin_Flagged_Members_Ajax {
 	}
 
 	/**
+	 * Temporarily bypass suspension filters so admin can see real user data.
+	 *
+	 * The suspension system replaces display names with "Unknown Member" and
+	 * avatars with a generic placeholder for suspended users. In the admin
+	 * Flagged Members panel, administrators need to see the actual user data.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	private function bb_bypass_suspend_filters() {
+		global $moderation_suspend;
+
+		if ( empty( $moderation_suspend['user'] ) || ! $moderation_suspend['user'] instanceof BP_Suspend_Member ) {
+			return;
+		}
+
+		$suspend = $moderation_suspend['user'];
+
+		// Remove display name filters.
+		remove_filter( 'bp_core_get_user_displayname', array( $suspend, 'get_the_author_name' ), 9999 );
+		remove_filter( 'get_the_author_display_name', array( $suspend, 'get_the_author_name' ), 9999 );
+
+		// Remove user nicename/login/email filters (nicename affects profile URL slug).
+		remove_filter( 'get_the_author_user_nicename', array( $suspend, 'get_the_author_name' ), 9999 );
+		remove_filter( 'get_the_author_user_login', array( $suspend, 'get_the_author_name' ), 9999 );
+		remove_filter( 'get_the_author_user_email', array( $suspend, 'get_the_author_name' ), 9999 );
+
+		// Remove avatar filters.
+		remove_filter( 'get_avatar_url', array( $suspend, 'get_avatar_url' ), 9999 );
+		remove_filter( 'bp_core_fetch_avatar_url_check', array( $suspend, 'bp_fetch_avatar_url' ), 1005 );
+		remove_filter( 'bp_core_fetch_gravatar_url_check', array( $suspend, 'bp_fetch_avatar_url' ), 1005 );
+
+		// Remove user domain filter.
+		remove_filter( 'bp_core_get_user_domain', array( $suspend, 'bp_core_get_user_domain' ), 9999 );
+	}
+
+	/**
+	 * Restore suspension filters after admin data fetch.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	private function bb_restore_suspend_filters() {
+		global $moderation_suspend;
+
+		if ( empty( $moderation_suspend['user'] ) || ! $moderation_suspend['user'] instanceof BP_Suspend_Member ) {
+			return;
+		}
+
+		$suspend = $moderation_suspend['user'];
+
+		// Restore display name filters.
+		add_filter( 'bp_core_get_user_displayname', array( $suspend, 'get_the_author_name' ), 9999, 2 );
+		add_filter( 'get_the_author_display_name', array( $suspend, 'get_the_author_name' ), 9999, 2 );
+
+		// Restore user nicename/login/email filters.
+		add_filter( 'get_the_author_user_nicename', array( $suspend, 'get_the_author_name' ), 9999, 2 );
+		add_filter( 'get_the_author_user_login', array( $suspend, 'get_the_author_name' ), 9999, 2 );
+		add_filter( 'get_the_author_user_email', array( $suspend, 'get_the_author_name' ), 9999, 2 );
+
+		// Restore avatar filters.
+		add_filter( 'get_avatar_url', array( $suspend, 'get_avatar_url' ), 9999, 3 );
+		add_filter( 'bp_core_fetch_avatar_url_check', array( $suspend, 'bp_fetch_avatar_url' ), 1005, 2 );
+		add_filter( 'bp_core_fetch_gravatar_url_check', array( $suspend, 'bp_fetch_avatar_url' ), 1005, 2 );
+
+		// Restore user domain filter.
+		add_filter( 'bp_core_get_user_domain', array( $suspend, 'bp_core_get_user_domain' ), 9999, 2 );
+	}
+
+	/**
 	 * Verify AJAX request (nonce + capability).
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -96,6 +164,9 @@ class BB_Admin_Flagged_Members_Ajax {
 		$members = array();
 		$admins  = array_map( 'intval', get_users( array( 'role' => 'administrator', 'fields' => 'ID' ) ) );
 
+		// Bypass suspension filters so admin sees real names, avatars, and profile URLs.
+		$this->bb_bypass_suspend_filters();
+
 		if ( ! empty( $result['moderations'] ) ) {
 			foreach ( $result['moderations'] as $item ) {
 				$user_id      = (int) $item->item_id;
@@ -125,6 +196,8 @@ class BB_Admin_Flagged_Members_Ajax {
 				);
 			}
 		}
+
+		$this->bb_restore_suspend_filters();
 
 		wp_send_json_success(
 			array(
@@ -165,6 +238,9 @@ class BB_Admin_Flagged_Members_Ajax {
 		$is_suspended = (int) $row->hide_sitewide === 1;
 		$block_count  = (int) bp_moderation_get_meta( $moderation_id, '_count' );
 		$report_count = (int) bp_moderation_get_meta( $moderation_id, '_count_user_reported' );
+
+		// Bypass suspension filters so admin sees real names, avatars, and profile URLs.
+		$this->bb_bypass_suspend_filters();
 
 		// Get reporters (user_report = 1).
 		$reporters_raw = BP_Moderation::get_moderation_reporters(
@@ -232,27 +308,29 @@ class BB_Admin_Flagged_Members_Ajax {
 			}
 		}
 
-		wp_send_json_success(
-			array(
-				'user_id'       => $user_id,
-				'display_name'  => bp_core_get_user_displayname( $user_id ),
-				'avatar'        => bp_core_fetch_avatar(
-					array(
-						'item_id' => $user_id,
-						'type'    => 'thumb',
-						'width'   => 40,
-						'height'  => 40,
-						'html'    => false,
-					)
-				),
-				'profile_url'   => bp_core_get_user_domain( $user_id ),
-				'blocks'        => $block_count,
-				'reports'       => $report_count,
-				'is_suspended'  => $is_suspended,
-				'reporters'     => $reporters,
-				'blockers'      => $blockers,
-			)
+		$response = array(
+			'user_id'       => $user_id,
+			'display_name'  => bp_core_get_user_displayname( $user_id ),
+			'avatar'        => bp_core_fetch_avatar(
+				array(
+					'item_id' => $user_id,
+					'type'    => 'thumb',
+					'width'   => 40,
+					'height'  => 40,
+					'html'    => false,
+				)
+			),
+			'profile_url'   => bp_core_get_user_domain( $user_id ),
+			'blocks'        => $block_count,
+			'reports'       => $report_count,
+			'is_suspended'  => $is_suspended,
+			'reporters'     => $reporters,
+			'blockers'      => $blockers,
 		);
+
+		$this->bb_restore_suspend_filters();
+
+		wp_send_json_success( $response );
 	}
 
 	/**
