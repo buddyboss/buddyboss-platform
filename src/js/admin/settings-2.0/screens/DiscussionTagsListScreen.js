@@ -54,17 +54,15 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 	var setError = errorState[ 1 ];
 
 	// Pagination.
-	var pageState = useState( 1 );
-	var page = pageState[ 0 ];
-	var setPage = pageState[ 1 ];
+	var currentPageState = useState( 1 );
+	var currentPage = currentPageState[ 0 ];
+	var setCurrentPage = currentPageState[ 1 ];
 
-	var totalPagesState = useState( 1 );
-	var totalPages = totalPagesState[ 0 ];
-	var setTotalPages = totalPagesState[ 1 ];
+	var totalState = useState( 0 );
+	var total = totalState[ 0 ];
+	var setTotal = totalState[ 1 ];
 
-	var totalItemsState = useState( 0 );
-	var totalItems = totalItemsState[ 0 ];
-	var setTotalItems = totalItemsState[ 1 ];
+	var totalPages = Math.ceil( total / TAGS_PER_PAGE );
 
 	// Search.
 	var searchState = useState( '' );
@@ -115,10 +113,10 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 	var isDeleting = isDeletingState[ 0 ];
 	var setIsDeleting = isDeletingState[ 1 ];
 
-	// Toast state.
-	var toastState = useState( null );
-	var toast = toastState[ 0 ];
-	var setToast = toastState[ 1 ];
+	// Notice state (matches Groups/Discussions pattern).
+	var noticeState = useState( null );
+	var notice = noticeState[ 0 ];
+	var setNotice = noticeState[ 1 ];
 
 	// AbortController ref for cancelling stale requests.
 	var abortRef = useRef( null );
@@ -140,7 +138,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 		setError( '' );
 
 		var queryParams = {
-			page: params && params.page ? params.page : page,
+			page: params && params.page ? params.page : currentPage,
 			per_page: TAGS_PER_PAGE,
 			search: params && 'undefined' !== typeof params.search ? params.search : search,
 			include_meta: meta ? 0 : 1,
@@ -149,8 +147,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 		getTopicTags( queryParams, { signal: abortRef.current.signal } ).then( function ( response ) {
 			if ( response.success && response.data ) {
 				setTags( response.data.tags || [] );
-				setTotalPages( response.data.total_pages || 1 );
-				setTotalItems( response.data.total || 0 );
+				setTotal( response.data.total || 0 );
 
 				if ( response.data.meta ) {
 					setMeta( response.data.meta );
@@ -166,7 +163,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 			setIsLoading( false );
 			setError( __( 'Failed to load tags.', 'buddyboss' ) );
 		} );
-	}, [ page, search, meta ] );
+	}, [ currentPage, search, meta ] );
 
 	// Initial fetch.
 	useEffect( function () {
@@ -181,6 +178,18 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 			}
 		};
 	}, [] );
+
+	// Clear notice after 5 seconds.
+	useEffect( function () {
+		if ( notice ) {
+			var timer = setTimeout( function () {
+				setNotice( null );
+			}, 5000 );
+			return function () {
+				clearTimeout( timer );
+			};
+		}
+	}, [ notice ] );
 
 	/**
 	 * Handle search input change with debounce.
@@ -197,7 +206,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 		}
 
 		searchTimerRef.current = setTimeout( function () {
-			setPage( 1 );
+			setCurrentPage( 1 );
 			setSelected( [] );
 			fetchTags( { page: 1, search: value } );
 		}, 400 );
@@ -211,7 +220,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 	 * @param {number} newPage Page number.
 	 */
 	var handlePageChange = function ( newPage ) {
-		setPage( newPage );
+		setCurrentPage( newPage );
 		setSelected( [] );
 		fetchTags( { page: newPage } );
 	};
@@ -271,7 +280,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 				setIsBulkProcessing( false );
 				if ( response.success ) {
 					var processed = response.data.processed || 0;
-					setToast( {
+					setNotice( {
 						message: sprintf(
 							_n( '%s tag deleted.', '%s tags deleted.', processed, 'buddyboss' ),
 							processed
@@ -282,14 +291,14 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 					setBulkAction( '' );
 					fetchTags( { page: 1 } );
 				} else {
-					setToast( {
+					setNotice( {
 						message: ( response.data && response.data.message ) || __( 'Bulk action failed.', 'buddyboss' ),
 						type: 'error',
 					} );
 				}
 			} ).catch( function () {
 				setIsBulkProcessing( false );
-				setToast( {
+				setNotice( {
 					message: __( 'Bulk action failed.', 'buddyboss' ),
 					type: 'error',
 				} );
@@ -311,13 +320,13 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 				setEditTag( response.data );
 				setIsEditOpen( true );
 			} else {
-				setToast( {
+				setNotice( {
 					message: __( 'Failed to load tag data.', 'buddyboss' ),
 					type: 'error',
 				} );
 			}
 		} ).catch( function () {
-			setToast( {
+			setNotice( {
 				message: __( 'Failed to load tag data.', 'buddyboss' ),
 				type: 'error',
 			} );
@@ -351,13 +360,13 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 			setIsDeleting( false );
 			setDeleteTagItem( null );
 			if ( response.success ) {
-				setToast( {
+				setNotice( {
 					message: __( 'Tag deleted successfully.', 'buddyboss' ),
 					type: 'success',
 				} );
-				fetchTags( { page: page } );
+				fetchTags( { page: currentPage } );
 			} else {
-				setToast( {
+				setNotice( {
 					message: ( response.data && response.data.message ) || __( 'Failed to delete tag.', 'buddyboss' ),
 					type: 'error',
 				} );
@@ -365,7 +374,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 		} ).catch( function () {
 			setIsDeleting( false );
 			setDeleteTagItem( null );
-			setToast( {
+			setNotice( {
 				message: __( 'Failed to delete tag.', 'buddyboss' ),
 				type: 'error',
 			} );
@@ -381,33 +390,81 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 		setIsCreateOpen( false );
 		setIsEditOpen( false );
 		setEditTag( null );
-		setToast( {
+		setNotice( {
 			message: __( 'Tag saved successfully.', 'buddyboss' ),
 			type: 'success',
 		} );
-		fetchTags( { page: page } );
+		fetchTags( { page: currentPage } );
 	};
 
 	// Build bulk action options from meta.
-	var bulkActionOptions = [ { value: '', label: __( 'Bulk Actions', 'buddyboss' ) } ];
-	if ( meta && meta.bulk_actions ) {
-		Object.keys( meta.bulk_actions ).forEach( function ( key ) {
-			bulkActionOptions.push( { value: key, label: decodeEntities( meta.bulk_actions[ key ] ) } );
-		} );
-	}
+	var bulkActions = meta && meta.bulk_actions ? meta.bulk_actions : {};
 
-	// Determine columns from meta.
-	var columns = meta && meta.columns ? meta.columns : {};
+	var allSelected = tags.length > 0 && selected.length === tags.length;
 
-	// Build pagination range.
-	var pageNumbers = [];
-	var i;
-	for ( i = 1; i <= totalPages; i++ ) {
-		pageNumbers.push( i );
-	}
+	/**
+	 * Build pagination page numbers.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @returns {Array} Array of page number items.
+	 */
+	var getPageNumbers = function () {
+		var pages = [];
+		var maxVisible = 5;
+
+		if ( totalPages <= 7 ) {
+			for ( var i = 1; i <= totalPages; i++ ) {
+				pages.push( i );
+			}
+		} else {
+			pages.push( 1 );
+
+			if ( currentPage > maxVisible - 1 ) {
+				pages.push( '...' );
+			}
+
+			var start = Math.max( 2, currentPage - 1 );
+			var end = Math.min( totalPages - 1, currentPage + 1 );
+
+			if ( currentPage <= 3 ) {
+				end = Math.min( totalPages - 1, maxVisible );
+			}
+			if ( currentPage >= totalPages - 2 ) {
+				start = Math.max( 2, totalPages - maxVisible + 1 );
+			}
+
+			for ( var j = start; j <= end; j++ ) {
+				pages.push( j );
+			}
+
+			if ( currentPage < totalPages - ( maxVisible - 2 ) ) {
+				pages.push( '...' );
+			}
+
+			pages.push( totalPages );
+		}
+
+		return pages;
+	};
 
 	return (
 		<div className="bb-discussion-tags-list">
+			{ /* Notice */ }
+			{ notice && (
+				<div className={ 'bb-admin-notice bb-admin-notice--' + notice.type }>
+					<span>{ notice.message }</span>
+					<button
+						className="bb-admin-notice--dismiss"
+						onClick={ function () {
+							setNotice( null );
+						} }
+					>
+						<i className="bb-icons-rl bb-icons-rl-x"></i>
+					</button>
+				</div>
+			) }
+
 			{ /* Header */ }
 			<div className="bb-discussion-tags-list__header">
 				<h2 className="bb-discussion-tags-list__title">
@@ -421,48 +478,35 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 						setIsCreateOpen( true );
 					} }
 				>
-					{ __( '+ Add New Tag', 'buddyboss' ) }
+					<i className="bb-icons-rl bb-icons-rl-plus"></i>
+					{ __( 'Add New Tag', 'buddyboss' ) }
 				</Button>
 			</div>
-
-			{ /* Toast notification */ }
-			{ toast && (
-				<div className={ 'bb-discussion-tags-list__toast bb-discussion-tags-list__toast--' + toast.type }>
-					<span>{ toast.message }</span>
-					<button
-						type="button"
-						className="bb-discussion-tags-list__toast-close"
-						onClick={ function () {
-							setToast( null );
-						} }
-					>
-						&times;
-					</button>
-				</div>
-			) }
 
 			{ /* Toolbar */ }
 			<div className="bb-discussion-tags-list__toolbar">
 				<div className="bb-discussion-tags-list__toolbar-left">
-					{ selected.length > 0 && (
-						<>
-							<SelectControl
-								value={ bulkAction }
-								options={ bulkActionOptions }
-								onChange={ setBulkAction }
-								__nextHasNoMarginBottom
-							/>
-							<Button
-								variant="secondary"
-								onClick={ handleBulkApply }
-								disabled={ ! bulkAction || isBulkProcessing }
-								isBusy={ isBulkProcessing }
-								className="bb-discussion-tags-list__apply-btn"
-							>
-								{ __( 'Apply', 'buddyboss' ) }
-							</Button>
-						</>
-					) }
+					{ /* Bulk Actions */ }
+					<div className="bb-discussion-tags-list__bulk-actions">
+						<SelectControl
+							value={ bulkAction }
+							options={ [ { label: __( 'Bulk actions', 'buddyboss' ), value: '' } ].concat(
+								Object.keys( bulkActions ).map( function ( key ) {
+									return { label: bulkActions[ key ], value: key };
+								} )
+							) }
+							onChange={ setBulkAction }
+							__nextHasNoMarginBottom
+						/>
+						<Button
+							variant="secondary"
+							onClick={ handleBulkApply }
+							disabled={ ! bulkAction || 0 === selected.length || isBulkProcessing }
+							className="bb-discussion-tags-list__bulk-apply"
+						>
+							{ __( 'Apply', 'buddyboss' ) }
+						</Button>
+					</div>
 				</div>
 				<div className="bb-discussion-tags-list__toolbar-right">
 					<div className="bb-discussion-tags-list__search">
@@ -503,7 +547,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 					<Button
 						variant="secondary"
 						onClick={ function () {
-							fetchTags( { page: page } );
+							fetchTags( { page: currentPage } );
 						} }
 					>
 						{ __( 'Retry', 'buddyboss' ) }
@@ -519,153 +563,184 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 
 			{ /* Table */ }
 			{ ! isLoading && ! error && tags.length > 0 && (
-				<table className="bb-discussion-tags-list__table">
-					<thead>
-						<tr>
-							<th className="bb-discussion-tags-list__col-cb">
-								<CheckboxControl
-									checked={ tags.length > 0 && selected.length === tags.length }
-									onChange={ handleSelectAll }
-									__nextHasNoMarginBottom
-								/>
-							</th>
-							<th className="bb-discussion-tags-list__col-tag">
-								{ columns.name ? decodeEntities( columns.name ) : __( 'Tag', 'buddyboss' ) }
-							</th>
-							<th className="bb-discussion-tags-list__col-slug">
-								{ columns.slug ? decodeEntities( columns.slug ) : __( 'Slug', 'buddyboss' ) }
-							</th>
-							<th className="bb-discussion-tags-list__col-count">
-								{ columns.posts ? decodeEntities( columns.posts ) : __( 'Count', 'buddyboss' ) }
-							</th>
-							<th className="bb-discussion-tags-list__col-actions">
-								{ __( 'Actions', 'buddyboss' ) }
-							</th>
-						</tr>
-					</thead>
-					<tbody>
-						{ tags.map( function ( tag ) {
-							var isSelected = -1 !== selected.indexOf( tag.id );
+				<div className="bb-discussion-tags-list__table-wrap">
+					<table className="bb-discussion-tags-list__table">
+						<thead>
+							<tr>
+								<th className="bb-discussion-tags-list__col-cb">
+									<CheckboxControl
+										checked={ allSelected }
+										onChange={ handleSelectAll }
+										__nextHasNoMarginBottom
+									/>
+								</th>
+								<th className="bb-discussion-tags-list__col-tag">
+									{ __( 'Tag', 'buddyboss' ) }
+								</th>
+								<th className="bb-discussion-tags-list__col-slug">
+									{ __( 'Slug', 'buddyboss' ) }
+								</th>
+								<th className="bb-discussion-tags-list__col-count">
+									{ __( 'Discussions', 'buddyboss' ) }
+								</th>
+								<th className="bb-discussion-tags-list__col-actions"></th>
+							</tr>
+						</thead>
+						<tbody>
+							{ tags.map( function ( tag ) {
+								var isSelected = -1 !== selected.indexOf( tag.id );
 
-							return (
-								<tr key={ tag.id } className={ isSelected ? 'is-selected' : '' }>
-									<td className="bb-discussion-tags-list__col-cb">
-										<CheckboxControl
-											checked={ isSelected }
-											onChange={ function ( checked ) {
-												handleSelectRow( tag.id, checked );
-											} }
-											__nextHasNoMarginBottom
-										/>
-									</td>
-									<td className="bb-discussion-tags-list__col-tag">
-										<span className="bb-discussion-tags-list__tag-name">
-											{ decodeEntities( tag.name ) }
-										</span>
-									</td>
-									<td className="bb-discussion-tags-list__col-slug">
-										{ decodeEntities( tag.slug ) }
-									</td>
-									<td className="bb-discussion-tags-list__col-count">
-										{ sprintf(
-											_n( '%s discussion', '%s discussions', tag.count, 'buddyboss' ),
-											tag.count
-										) }
-									</td>
-									<td className="bb-discussion-tags-list__col-actions">
-										<DropdownMenu
-											icon="ellipsis"
-											label={ __( 'Actions', 'buddyboss' ) }
-											className="bb-discussion-tags-list__actions-menu"
-										>
-											{ function ( { onClose } ) {
-												return (
-													<MenuGroup>
-														{ tag.permalink && (
+								return (
+									<tr key={ tag.id } className={ isSelected ? 'is-selected' : '' }>
+										<td className="bb-discussion-tags-list__col-cb">
+											<CheckboxControl
+												checked={ isSelected }
+												onChange={ function ( checked ) {
+													handleSelectRow( tag.id, checked );
+												} }
+												__nextHasNoMarginBottom
+											/>
+										</td>
+										<td className="bb-discussion-tags-list__col-tag">
+											<div className="bb-discussion-tags-list__tag-cell">
+												<i className="bb-icons-rl bb-icons-rl-tag bb-discussion-tags-list__tag-icon"></i>
+												<span className="bb-discussion-tags-list__tag-name">
+													{ decodeEntities( tag.name ) }
+												</span>
+											</div>
+										</td>
+										<td className="bb-discussion-tags-list__col-slug">
+											<span className="bb-discussion-tags-list__slug-badge">
+												{ decodeEntities( tag.slug ) }
+											</span>
+										</td>
+										<td className="bb-discussion-tags-list__col-count">
+											<div className="bb-discussion-tags-list__count-cell">
+												<i className="bb-icons-rl bb-icons-rl-chats bb-discussion-tags-list__count-icon"></i>
+												{ tag.count > 0 ? (
+													<span className="bb-discussion-tags-list__count-link">
+														{ sprintf(
+															_n( '%s discussion', '%s discussions', tag.count, 'buddyboss' ),
+															tag.count
+														) }
+													</span>
+												) : (
+													<span className="bb-discussion-tags-list__count-zero">
+														{ sprintf(
+															_n( '%s discussion', '%s discussions', tag.count, 'buddyboss' ),
+															tag.count
+														) }
+													</span>
+												) }
+											</div>
+										</td>
+										<td className="bb-discussion-tags-list__col-actions">
+											<DropdownMenu
+												icon="ellipsis"
+												label={ __( 'Actions', 'buddyboss' ) }
+												className="bb-discussion-tags-list__actions-menu"
+											>
+												{ function ( { onClose } ) {
+													return (
+														<MenuGroup>
+															{ tag.permalink && (
+																<MenuItem
+																	onClick={ function () {
+																		window.open( safeUrl( tag.permalink ), '_blank' );
+																		onClose();
+																	} }
+																>
+																	{ __( 'View', 'buddyboss' ) }
+																</MenuItem>
+															) }
 															<MenuItem
 																onClick={ function () {
-																	window.open( safeUrl( tag.permalink ), '_blank' );
+																	handleEdit( tag );
 																	onClose();
 																} }
 															>
-																{ __( 'View', 'buddyboss' ) }
+																{ __( 'Edit', 'buddyboss' ) }
 															</MenuItem>
-														) }
-														<MenuItem
-															onClick={ function () {
-																handleEdit( tag );
-																onClose();
-															} }
-														>
-															{ __( 'Edit', 'buddyboss' ) }
-														</MenuItem>
-														<MenuItem
-															onClick={ function () {
-																handleDeleteClick( tag );
-																onClose();
-															} }
-															className="bb-discussion-tags-list__action-delete"
-														>
-															{ __( 'Delete', 'buddyboss' ) }
-														</MenuItem>
-													</MenuGroup>
-												);
-											} }
-										</DropdownMenu>
-									</td>
-								</tr>
-							);
-						} ) }
-					</tbody>
-				</table>
+															<MenuItem
+																onClick={ function () {
+																	handleDeleteClick( tag );
+																	onClose();
+																} }
+																className="bb-discussion-tags-list__action-delete"
+															>
+																{ __( 'Delete', 'buddyboss' ) }
+															</MenuItem>
+														</MenuGroup>
+													);
+												} }
+											</DropdownMenu>
+										</td>
+									</tr>
+								);
+							} ) }
+						</tbody>
+					</table>
+				</div>
 			) }
 
-			{ /* Pagination */ }
-			{ ! isLoading && totalPages > 1 && (
-				<div className="bb-discussion-tags-list__pagination">
-					<span className="bb-discussion-tags-list__pagination-info">
+			{ /* Footer */ }
+			{ ! isLoading && total > 0 && (
+				<div className="bb-discussion-tags-list__footer">
+					<span className="bb-discussion-tags-list__item-count">
 						{ sprintf(
-							__( 'Page %1$s of %2$s', 'buddyboss' ),
-							page,
-							totalPages
-						) }
+						/* translators: %s: total number of items. */
+						_n( '%s item', '%s items', total, 'buddyboss' ),
+						total
+					) }
 					</span>
-					<div className="bb-discussion-tags-list__pagination-buttons">
-						<Button
-							variant="secondary"
-							disabled={ 1 === page }
-							onClick={ function () {
-								handlePageChange( page - 1 );
-							} }
-							className="bb-discussion-tags-list__pagination-btn"
-						>
-							{ __( 'Previous', 'buddyboss' ) }
-						</Button>
-						{ pageNumbers.map( function ( num ) {
-							return (
-								<Button
-									key={ num }
-									variant={ num === page ? 'primary' : 'secondary' }
-									onClick={ function () {
-										handlePageChange( num );
-									} }
-									className="bb-discussion-tags-list__pagination-btn"
-								>
-									{ num }
-								</Button>
-							);
-						} ) }
-						<Button
-							variant="secondary"
-							disabled={ page === totalPages }
-							onClick={ function () {
-								handlePageChange( page + 1 );
-							} }
-							className="bb-discussion-tags-list__pagination-btn"
-						>
-							{ __( 'Next', 'buddyboss' ) }
-						</Button>
-					</div>
+
+					{ totalPages > 1 && (
+						<div className="bb-discussion-tags-list__pagination">
+							<Button
+								variant="secondary"
+								disabled={ 1 === currentPage }
+								onClick={ function () {
+									handlePageChange( Math.max( 1, currentPage - 1 ) );
+								} }
+								className="bb-discussion-tags-list__pagination-btn bb-discussion-tags-list__pagination-btn--previous"
+							>
+								&lsaquo;
+							</Button>
+
+							{ getPageNumbers().map( function ( page, index ) {
+								if ( '...' === page ) {
+									return (
+										<span key={ 'ellipsis-' + index } className="bb-discussion-tags-list__pagination-ellipsis">
+											&hellip;
+										</span>
+									);
+								}
+								return (
+									<Button
+										key={ page }
+										variant={ currentPage === page ? 'primary' : 'secondary' }
+										onClick={ function () {
+											handlePageChange( page );
+										} }
+										className={ 'bb-discussion-tags-list__pagination-btn' + ( currentPage === page ? ' bb-discussion-tags-list__pagination-btn--current' : '' ) }
+									>
+										{ page }
+									</Button>
+								);
+							} ) }
+
+							<Button
+								variant="secondary"
+								disabled={ currentPage >= totalPages }
+								onClick={ function () {
+									handlePageChange( Math.min( totalPages, currentPage + 1 ) );
+								} }
+								className="bb-discussion-tags-list__pagination-btn bb-discussion-tags-list__pagination-btn--next"
+							>
+								&rsaquo;
+							</Button>
+						</div>
+					) }
 				</div>
 			) }
 

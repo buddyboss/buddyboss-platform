@@ -631,12 +631,51 @@ export default function RepliesListScreen( { onNavigate } ) {
 		{ value: 'hidden', label: __( 'Hidden', 'buddyboss' ) },
 	];
 
-	// Pagination numbers.
-	var pageNumbers = [];
-	var i;
-	for ( i = 1; i <= totalPages; i++ ) {
-		pageNumbers.push( i );
-	}
+	/**
+	 * Build pagination page numbers with ellipsis.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @returns {Array} Array of page number items.
+	 */
+	var getPageNumbers = function () {
+		var pages = [];
+		var maxVisible = 5;
+
+		if ( totalPages <= 7 ) {
+			for ( var i = 1; i <= totalPages; i++ ) {
+				pages.push( i );
+			}
+		} else {
+			pages.push( 1 );
+
+			if ( page > maxVisible - 1 ) {
+				pages.push( '...' );
+			}
+
+			var start = Math.max( 2, page - 1 );
+			var end = Math.min( totalPages - 1, page + 1 );
+
+			if ( page <= 3 ) {
+				end = Math.min( totalPages - 1, maxVisible );
+			}
+			if ( page >= totalPages - 2 ) {
+				start = Math.max( 2, totalPages - maxVisible + 1 );
+			}
+
+			for ( var j = start; j <= end; j++ ) {
+				pages.push( j );
+			}
+
+			if ( page < totalPages - ( maxVisible - 2 ) ) {
+				pages.push( '...' );
+			}
+
+			pages.push( totalPages );
+		}
+
+		return pages;
+	};
 
 	return (
 		<div className="bb-replies-list">
@@ -675,25 +714,23 @@ export default function RepliesListScreen( { onNavigate } ) {
 			{ /* Toolbar */ }
 			<div className="bb-replies-list__toolbar">
 				<div className="bb-replies-list__toolbar-left">
-					{ selected.length > 0 && (
-						<>
-							<SelectControl
-								value={ bulkAction }
-								options={ bulkActionOptions }
-								onChange={ setBulkAction }
-								__nextHasNoMarginBottom
-							/>
-							<Button
-								variant="secondary"
-								onClick={ handleBulkApply }
-								disabled={ ! bulkAction || isBulkProcessing }
-								isBusy={ isBulkProcessing }
-								className="bb-replies-list__apply-btn"
-							>
-								{ __( 'Apply', 'buddyboss' ) }
-							</Button>
-						</>
-					) }
+					<div className="bb-replies-list__bulk-actions">
+						<SelectControl
+							value={ bulkAction }
+							options={ bulkActionOptions }
+							onChange={ setBulkAction }
+							__nextHasNoMarginBottom
+						/>
+						<Button
+							variant="secondary"
+							onClick={ handleBulkApply }
+							disabled={ ! bulkAction || 0 === selected.length || isBulkProcessing }
+							isBusy={ isBulkProcessing }
+							className="bb-replies-list__bulk-apply"
+						>
+							{ __( 'Apply', 'buddyboss' ) }
+						</Button>
+					</div>
 				</div>
 				<div className="bb-replies-list__toolbar-right">
 					{ /* Forum Filter */ }
@@ -930,52 +967,63 @@ export default function RepliesListScreen( { onNavigate } ) {
 				</table>
 			) }
 
-			{ /* Pagination */ }
-			{ ! isLoading && totalPages > 1 && (
-				<div className="bb-replies-list__pagination">
-					<span className="bb-replies-list__pagination-info">
+			{ /* Footer */ }
+			{ ! isLoading && ! error && replies.length > 0 && (
+				<div className="bb-replies-list__footer">
+					<span className="bb-replies-list__item-count">
 						{ sprintf(
-							__( 'Page %1$s of %2$s', 'buddyboss' ),
-							page,
-							totalPages
+							_n( '%s item', '%s items', totalItems, 'buddyboss' ),
+							totalItems
 						) }
 					</span>
-					<div className="bb-replies-list__pagination-buttons">
-						<Button
-							variant="secondary"
-							disabled={ 1 === page }
-							onClick={ function () {
-								handlePageChange( page - 1 );
-							} }
-							className="bb-replies-list__pagination-btn"
-						>
-							{ __( 'Previous', 'buddyboss' ) }
-						</Button>
-						{ pageNumbers.map( function ( num ) {
-							return (
-								<Button
-									key={ num }
-									variant={ num === page ? 'primary' : 'secondary' }
-									onClick={ function () {
-										handlePageChange( num );
-									} }
-									className="bb-replies-list__pagination-btn"
-								>
-									{ num }
-								</Button>
-							);
-						} ) }
-						<Button
-							variant="secondary"
-							disabled={ page === totalPages }
-							onClick={ function () {
-								handlePageChange( page + 1 );
-							} }
-							className="bb-replies-list__pagination-btn"
-						>
-							{ __( 'Next', 'buddyboss' ) }
-						</Button>
-					</div>
+
+					{ totalPages > 1 && (
+						<div className="bb-replies-list__pagination">
+							<Button
+								variant="secondary"
+								disabled={ 1 === page }
+								onClick={ function () {
+									handlePageChange( Math.max( 1, page - 1 ) );
+								} }
+								className="bb-replies-list__pagination-btn bb-replies-list__pagination-btn--previous"
+							>
+								&lsaquo;
+							</Button>
+
+							{ getPageNumbers().map( function ( num, index ) {
+								if ( '...' === num ) {
+									return (
+										<span key={ 'ellipsis-' + index } className="bb-replies-list__pagination-ellipsis">
+											&hellip;
+										</span>
+									);
+								}
+								return (
+									<Button
+										key={ num }
+										variant={ page === num ? 'primary' : 'secondary' }
+										onClick={ function () {
+											handlePageChange( num );
+										} }
+										className={ 'bb-replies-list__pagination-btn' + ( page === num ? ' bb-replies-list__pagination-btn--current' : '' ) }
+									>
+										{ num }
+									</Button>
+								);
+							} ) }
+
+							<Button
+								variant="secondary"
+								disabled={ page >= totalPages }
+								onClick={ function () {
+									handlePageChange( Math.min( totalPages, page + 1 ) );
+								} }
+								className="bb-replies-list__pagination-btn bb-replies-list__pagination-btn--next"
+							>
+								&rsaquo;
+							</Button>
+						</div>
+					) }
 				</div>
 			) }
 
