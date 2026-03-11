@@ -175,6 +175,13 @@ export function DiscussionsListScreen( { onNavigate } ) {
 	var bulkEditVisibility = bulkEditVisibilityState[ 0 ];
 	var setBulkEditVisibility = bulkEditVisibilityState[ 1 ];
 
+	// Read tag_id from URL params (e.g. linked from Discussion Tags count).
+	var urlTagIdState = useState( function () {
+		var params = new URLSearchParams( window.location.search );
+		return params.get( 'tag_id' ) ? parseInt( params.get( 'tag_id' ), 10 ) : 0;
+	} );
+	var urlTagId = urlTagIdState[ 0 ];
+
 	var searchTimerRef = useRef( null );
 	var hasMetaRef = useRef( false );
 	var editAbortRef = useRef( null );
@@ -196,14 +203,19 @@ export function DiscussionsListScreen( { onNavigate } ) {
 			fetchOptions.signal = options.signal;
 		}
 
-		getDiscussions( {
+		var fetchData = {
 			page: currentPage,
 			per_page: DISCUSSIONS_PER_PAGE,
 			search: searchQuery,
 			forum_id: forumFilter,
 			sort: sortBy,
 			include_meta: hasMetaRef.current ? 0 : 1,
-		}, fetchOptions ).then( function ( response ) {
+		};
+		if ( urlTagId ) {
+			fetchData.tag_id = urlTagId;
+		}
+
+		getDiscussions( fetchData, fetchOptions ).then( function ( response ) {
 			if ( response.success && response.data ) {
 				var rawDiscussions = response.data.discussions || [];
 
@@ -244,7 +256,7 @@ export function DiscussionsListScreen( { onNavigate } ) {
 				message: __( 'Failed to load discussions. Please try again.', 'buddyboss' ),
 			} );
 		} );
-	}, [ currentPage, searchQuery, forumFilter, sortBy, refetchCounter ] );
+	}, [ currentPage, searchQuery, forumFilter, sortBy, urlTagId, refetchCounter ] );
 
 	// Fetch on mount and when filters change.
 	useEffect( function () {

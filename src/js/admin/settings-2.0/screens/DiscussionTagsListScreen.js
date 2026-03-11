@@ -618,12 +618,15 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 											<div className="bb-discussion-tags-list__count-cell">
 												<i className="bb-icons-rl bb-icons-rl-chats bb-discussion-tags-list__count-icon"></i>
 												{ tag.count > 0 ? (
-													<span className="bb-discussion-tags-list__count-link">
+													<a
+														href={ safeUrl( window.location.pathname + '?page=bb-settings&tab=forums&panel=discussions&tag_id=' + tag.id ) }
+														className="bb-discussion-tags-list__count-link"
+													>
 														{ sprintf(
 															_n( '%s discussion', '%s discussions', tag.count, 'buddyboss' ),
 															tag.count
 														) }
-													</span>
+													</a>
 												) : (
 													<span className="bb-discussion-tags-list__count-zero">
 														{ sprintf(

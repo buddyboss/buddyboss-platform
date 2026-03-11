@@ -136,6 +136,7 @@ class BB_Admin_Topics_Ajax {
 		$per_page     = isset( $_POST['per_page'] ) ? absint( wp_unslash( $_POST['per_page'] ) ) : 20;
 		$search       = isset( $_POST['search'] ) ? sanitize_text_field( wp_unslash( $_POST['search'] ) ) : '';
 		$forum_id     = isset( $_POST['forum_id'] ) ? absint( wp_unslash( $_POST['forum_id'] ) ) : 0;
+		$tag_id       = isset( $_POST['tag_id'] ) ? absint( wp_unslash( $_POST['tag_id'] ) ) : 0;
 		$sort         = isset( $_POST['sort'] ) ? sanitize_key( wp_unslash( $_POST['sort'] ) ) : 'newest';
 		$include_meta = isset( $_POST['include_meta'] ) ? absint( wp_unslash( $_POST['include_meta'] ) ) : 0;
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
@@ -162,6 +163,17 @@ class BB_Admin_Topics_Ajax {
 		if ( ! empty( $forum_id ) ) {
 			$query_args['meta_key']   = '_bbp_forum_id'; // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- Required for forum filtering.
 			$query_args['meta_value'] = $forum_id; // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- Required for forum filtering.
+		}
+
+		// Topic tag filter.
+		if ( ! empty( $tag_id ) ) {
+			$query_args['tax_query'] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- Required for tag filtering.
+				array(
+					'taxonomy' => bbp_get_topic_tag_tax_id(),
+					'field'    => 'term_id',
+					'terms'    => $tag_id,
+				),
+			);
 		}
 
 		// Search.
