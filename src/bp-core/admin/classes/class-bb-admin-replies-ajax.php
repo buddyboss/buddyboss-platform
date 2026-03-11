@@ -549,7 +549,7 @@ class BB_Admin_Replies_Ajax {
 
 		$result = wp_update_post( $update_args, true );
 		if ( is_wp_error( $result ) ) {
-			wp_send_json_error( array( 'message' => wp_specialchars_decode( $result->get_error_message(), ENT_QUOTES ) ) );
+			wp_send_json_error( array( 'message' => html_entity_decode( $result->get_error_message(), ENT_QUOTES, 'UTF-8' ) ) );
 		}
 
 		// Update meta.
