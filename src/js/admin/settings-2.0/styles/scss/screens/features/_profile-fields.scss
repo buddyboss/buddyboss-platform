@@ -877,6 +877,20 @@
 	}
 }
 
+.bb-pf-field-telephone-settings {
+	margin-top: 16px;
+
+	.components-radio-control__option {
+		display: inline-flex;
+		margin-right: 24px;
+	}
+
+	.components-radio-control > legend {
+		display: block;
+		font-weight: 500 !important;
+	}
+}
+
 .bb-ps-field-list {
 	margin-bottom: 16px;
 }

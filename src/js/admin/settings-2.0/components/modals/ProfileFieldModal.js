@@ -814,6 +814,21 @@ export function ProfileFieldModal( {
 							</Button>
 						</div>
 					) }
+
+					{ /* Telephone Settings (telephone type) */ }
+					{ 'telephone' === type && (
+						<div className="bb-pf-field-telephone-settings">
+							<RadioControl
+								label={ __( 'Phone Format', 'buddyboss' ) }
+								selected={ phoneFormat }
+								options={ [
+									{ label: __( 'International', 'buddyboss' ), value: 'international' },
+									{ label: __( '(###) ### ####', 'buddyboss' ), value: 'standard' },
+								] }
+								onChange={ setPhoneFormat }
+							/>
+						</div>
+					) }
 				</div>
 
 				{ /* Social Track (for socialnetworks type) */ }
@@ -1057,22 +1072,6 @@ export function ProfileFieldModal( {
 								</div>
 							) }
 						</div>
-					</div>
-				) }
-
-				{ /* Telephone Settings (telephone type) */ }
-				{ 'telephone' === type && (
-					<div className="bb-pf-field-telephone-settings bb-admin-settings--divided-section">
-						<SelectControl
-							label={ __( 'Phone Format', 'buddyboss' ) }
-							value={ phoneFormat }
-							options={ [
-								{ label: __( 'International', 'buddyboss' ), value: 'international' },
-								{ label: __( 'Standard - (###) ###-####', 'buddyboss' ), value: 'standard' },
-							] }
-							onChange={ setPhoneFormat }
-							help={ __( 'Select the format for phone number input.', 'buddyboss' ) }
-						/>
 					</div>
 				) }
 
