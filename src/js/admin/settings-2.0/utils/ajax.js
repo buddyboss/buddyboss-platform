@@ -677,6 +677,190 @@ export function searchTopicTags( search, options ) {
 }
 
 /**
+ * Get paginated topic tags list.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data    Query params (page, per_page, search, include_meta).
+ * @param {Object} options Fetch options (e.g. signal for AbortController).
+ * @returns {Promise} AJAX promise.
+ */
+export function getTopicTags( data, options ) {
+	return ajaxFetch( 'bb_admin_get_topic_tags', data || {}, options || {} );
+}
+
+/**
+ * Get a single topic tag by term ID.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {number} termId  Term ID.
+ * @param {Object} options Fetch options.
+ * @returns {Promise} AJAX promise.
+ */
+export function getTopicTag( termId, options ) {
+	return ajaxFetch( 'bb_admin_get_topic_tag', { term_id: termId }, options || {} );
+}
+
+/**
+ * Create a new topic tag.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data Tag data (name, slug, description).
+ * @returns {Promise} AJAX promise.
+ */
+export function createTopicTag( data ) {
+	return ajaxFetch( 'bb_admin_create_topic_tag', data );
+}
+
+/**
+ * Save (update) an existing topic tag.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data    Tag data (term_id, name, slug, description).
+ * @param {Object} options Fetch options.
+ * @returns {Promise} AJAX promise.
+ */
+export function saveTopicTag( data, options ) {
+	return ajaxFetch( 'bb_admin_save_topic_tag', data, options || {} );
+}
+
+/**
+ * Delete a topic tag.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {number} termId Term ID to delete.
+ * @returns {Promise} AJAX promise.
+ */
+export function deleteTopicTag( termId ) {
+	return ajaxFetch( 'bb_admin_delete_topic_tag', { term_id: termId } );
+}
+
+/**
+ * Perform bulk action on topic tags.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Array}  termIds Array of term IDs.
+ * @param {string} action  Bulk action (e.g. 'delete').
+ * @returns {Promise} AJAX promise.
+ */
+export function topicTagBulkAction( termIds, action ) {
+	return ajaxFetch( 'bb_admin_topic_tag_bulk_action', {
+		term_ids: termIds.join( ',' ),
+		do_action: action,
+	} );
+}
+
+/**
+ * Get paginated replies list.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data    Query params (page, per_page, search, forum_id, sort, include_meta).
+ * @param {Object} options Fetch options (e.g. signal for AbortController).
+ * @returns {Promise} AJAX promise.
+ */
+export function getReplies( data, options ) {
+	return ajaxFetch( 'bb_admin_get_replies', data || {}, options || {} );
+}
+
+/**
+ * Get a single reply by ID.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {number} replyId Reply ID.
+ * @param {Object} options Fetch options.
+ * @returns {Promise} AJAX promise.
+ */
+export function getReply( replyId, options ) {
+	return ajaxFetch( 'bb_admin_get_reply', { reply_id: replyId }, options || {} );
+}
+
+/**
+ * Create a new reply.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data Reply data (content, forum_id, topic_id, reply_to, visibility).
+ * @returns {Promise} AJAX promise.
+ */
+export function createReply( data ) {
+	return ajaxFetch( 'bb_admin_create_reply', data );
+}
+
+/**
+ * Save (update) an existing reply.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data    Reply data (reply_id, content, forum_id, topic_id, reply_to, visibility).
+ * @param {Object} options Fetch options.
+ * @returns {Promise} AJAX promise.
+ */
+export function saveReply( data, options ) {
+	return ajaxFetch( 'bb_admin_save_reply', data, options || {} );
+}
+
+/**
+ * Delete a reply.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {number} replyId Reply ID to delete.
+ * @returns {Promise} AJAX promise.
+ */
+export function deleteReply( replyId ) {
+	return ajaxFetch( 'bb_admin_delete_reply', { reply_id: replyId } );
+}
+
+/**
+ * Perform bulk action on replies.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Array}  replyIds  Array of reply IDs.
+ * @param {string} action    Bulk action (e.g. 'delete', 'spam').
+ * @returns {Promise} AJAX promise.
+ */
+export function replyBulkAction( replyIds, action ) {
+	return ajaxFetch( 'bb_admin_reply_bulk_action', {
+		reply_ids: replyIds.join( ',' ),
+		do_action: action,
+	} );
+}
+
+/**
+ * Autocomplete endpoint for discussions (topics).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data    Query params (term, page, selected_id, forum_id).
+ * @param {Object} options Fetch options.
+ * @returns {Promise} AJAX promise.
+ */
+export function discussionAutocomplete( data, options ) {
+	return ajaxFetch( 'bb_admin_discussion_autocomplete', data || {}, options || {} );
+}
+
+/**
+ * Autocomplete endpoint for replies.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data    Query params (term, page, selected_id, topic_id).
+ * @param {Object} options Fetch options.
+ * @returns {Promise} AJAX promise.
+ */
+export function replyAutocomplete( data, options ) {
+	return ajaxFetch( 'bb_admin_reply_autocomplete', data || {}, options || {} );
+}
+
+/**
  * Get all profile field groups with their fields.
  *
  * @since BuddyBoss [BBVERSION]

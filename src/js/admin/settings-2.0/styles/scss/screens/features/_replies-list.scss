@@ -1,0 +1,510 @@
+/* ----------------------------------------------------------------
+   Replies List Screen
+   ---------------------------------------------------------------- */
+
+.bb-replies-list {
+	max-width: calc(100% - 64px);
+	padding: 0 24px 16px;
+	background-color: $bb-background-base-color;
+	border: 1px solid $bb-border-primary-color;
+	border-radius: $bb-border-radius-2xl;
+	box-shadow: 0px 1.5px 1px 0px rgba(0, 0, 0, 0.16);
+	margin: 32px 32px 0;
+
+	// Header
+	&__header {
+		border-bottom: 1px solid $bb-border-secondary-color;
+		padding: 18px 0;
+		margin-bottom: 24px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	&__title {
+		font-size: 18px;
+		font-weight: 500;
+		color: $bb-text-color;
+		margin: 0;
+	}
+
+	&__create-btn.is-primary {
+		@include bb-button-primary;
+
+		i {
+			font-size: 16px;
+			font-weight: 700;
+			margin-right: 6px;
+		}
+	}
+
+	// Toast
+	&__toast {
+		padding: 12px 16px;
+		border-radius: $bb-border-radius-md;
+		margin-bottom: 16px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		font-size: 13px;
+
+		&--success {
+			background-color: #ecfdf5;
+			color: #065f46;
+			border: 1px solid #a7f3d0;
+		}
+
+		&--error {
+			background-color: #fef2f2;
+			color: #991b1b;
+			border: 1px solid #fecaca;
+		}
+	}
+
+	&__toast-close {
+		background: none;
+		border: none;
+		cursor: pointer;
+		font-size: 18px;
+		line-height: 1;
+		padding: 0 0 0 12px;
+		color: inherit;
+		opacity: 0.6;
+
+		&:hover {
+			opacity: 1;
+		}
+	}
+
+	// Toolbar
+	&__toolbar {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: 16px;
+		gap: 12px;
+		flex-wrap: wrap;
+	}
+
+	&__toolbar-left {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+
+		.components-select-control__input {
+			min-width: 140px;
+			height: 36px;
+		}
+	}
+
+	&__toolbar-right {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+	}
+
+	&__apply-btn.is-secondary {
+		height: 36px;
+	}
+
+	// Forum Filter (searchable dropdown).
+	&__forum-filter {
+		position: relative;
+	}
+
+	&__forum-filter-btn {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		height: 36px;
+		padding: 0 12px;
+		border: 1px solid $bb-border-primary-color;
+		border-radius: $bb-border-radius-md;
+		background: $bb-background-base-color;
+		font-size: 13px;
+		color: $bb-text-color;
+		cursor: pointer;
+		white-space: nowrap;
+
+		&:hover {
+			border-color: $bb-primary-color;
+		}
+	}
+
+	&__forum-filter-arrow {
+		font-size: 10px;
+		color: $bb-text-tertiary-color;
+	}
+
+	&__forum-filter-dropdown {
+		position: absolute;
+		top: 100%;
+		right: 0;
+		z-index: 100;
+		min-width: 240px;
+		max-width: 320px;
+		background: $bb-background-base-color;
+		border: 1px solid $bb-border-primary-color;
+		border-radius: $bb-border-radius-md;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+		margin-top: 4px;
+	}
+
+	&__forum-filter-search {
+		width: 100%;
+		padding: 8px 12px;
+		border: none;
+		border-bottom: 1px solid $bb-border-secondary-color;
+		font-size: 13px;
+		outline: none;
+		box-sizing: border-box;
+
+		&:focus {
+			box-shadow: none;
+		}
+	}
+
+	&__forum-filter-options {
+		max-height: 240px;
+		overflow-y: auto;
+		padding: 4px 0;
+	}
+
+	&__forum-filter-option {
+		display: block;
+		width: 100%;
+		padding: 8px 12px;
+		border: none;
+		background: none;
+		text-align: left;
+		font-size: 13px;
+		color: $bb-text-color;
+		cursor: pointer;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+
+		&:hover {
+			background-color: $bb-background-primary-hover-color;
+		}
+
+		&.is-active {
+			background-color: $bb-background-secondary-color;
+			font-weight: 500;
+		}
+	}
+
+	// Sort select
+	&__sort-select {
+		.components-select-control__input {
+			min-width: 120px;
+			height: 36px;
+		}
+	}
+
+	// Search
+	&__search {
+		position: relative;
+	}
+
+	&__search-input {
+		height: 36px;
+		min-width: 220px;
+		padding: 0 30px 0 12px;
+		border: 1px solid $bb-border-primary-color;
+		border-radius: $bb-border-radius-md;
+		font-size: 13px;
+
+		&:focus {
+			border-color: $bb-primary-color;
+			box-shadow: 0 0 0 1px $bb-primary-color;
+			outline: none;
+		}
+	}
+
+	&__search-clear {
+		position: absolute;
+		right: 8px;
+		top: 50%;
+		transform: translateY(-50%);
+		background: none;
+		border: none;
+		cursor: pointer;
+		font-size: 16px;
+		color: $bb-text-tertiary-color;
+		padding: 0;
+		line-height: 1;
+
+		&:hover {
+			color: $bb-text-color;
+		}
+	}
+
+	// Loading / Error / Empty
+	&__loading {
+		display: flex;
+		justify-content: center;
+		padding: 48px 0;
+	}
+
+	&__error {
+		text-align: center;
+		padding: 32px 0;
+		color: $bb-text-tertiary-color;
+	}
+
+	&__empty {
+		text-align: center;
+		padding: 48px 0;
+		color: $bb-text-tertiary-color;
+	}
+
+	// Table
+	&__table {
+		width: 100%;
+		border-collapse: collapse;
+		border-spacing: 0;
+
+		thead th {
+			text-align: left;
+			font-size: 12px;
+			font-weight: 500;
+			color: $bb-text-tertiary-color;
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+			padding: 10px 12px;
+			border-bottom: 1px solid $bb-border-secondary-color;
+			white-space: nowrap;
+		}
+
+		tbody tr {
+			border-bottom: 1px solid $bb-border-secondary-color;
+
+			&:last-child {
+				border-bottom: none;
+			}
+
+			&:hover {
+				background-color: $bb-background-primary-hover-color;
+			}
+
+			&.is-selected {
+				background-color: $bb-background-secondary-color;
+			}
+
+			&.is-spam {
+				opacity: 0.6;
+			}
+		}
+
+		tbody td {
+			padding: 12px;
+			font-size: 14px;
+			color: $bb-text-color;
+			vertical-align: middle;
+		}
+	}
+
+	// Column widths
+	&__col-cb {
+		width: 40px;
+
+		.components-checkbox-control__input-container {
+			margin: 0;
+		}
+	}
+
+	&__col-reply {
+		min-width: 250px;
+		max-width: 400px;
+	}
+
+	&__col-forum,
+	&__col-discussion {
+		min-width: 140px;
+	}
+
+	&__col-created {
+		min-width: 120px;
+		white-space: nowrap;
+	}
+
+	&__col-actions {
+		width: 60px;
+		text-align: center;
+	}
+
+	// Reply content
+	&__reply-content {
+		color: $bb-text-color;
+		line-height: 1.5;
+		word-break: break-word;
+	}
+
+	&__spam-badge {
+		display: inline-block;
+		margin-left: 8px;
+		padding: 2px 8px;
+		font-size: 11px;
+		font-weight: 500;
+		color: #991b1b;
+		background-color: #fef2f2;
+		border: 1px solid #fecaca;
+		border-radius: $bb-border-radius-sm;
+		vertical-align: middle;
+	}
+
+	&__created-time {
+		color: $bb-text-tertiary-color;
+		font-size: 12px;
+	}
+
+	// Actions menu
+	&__actions-menu {
+		.components-button {
+			padding: 4px;
+			min-width: 24px;
+			height: 24px;
+		}
+	}
+
+	&__action-delete {
+		color: #dc2626 !important;
+
+		&:hover {
+			color: #b91c1c !important;
+		}
+	}
+
+	// Pagination
+	&__pagination {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 16px 0;
+		border-top: 1px solid $bb-border-secondary-color;
+		margin-top: 8px;
+	}
+
+	&__pagination-info {
+		font-size: 13px;
+		color: $bb-text-tertiary-color;
+	}
+
+	&__pagination-buttons {
+		display: flex;
+		gap: 4px;
+	}
+
+	&__pagination-btn {
+		min-width: 36px;
+		height: 36px;
+		justify-content: center;
+	}
+}
+
+// Reply Create Modal
+.bb-reply-create-modal {
+	.components-modal__content {
+		padding: 0;
+	}
+
+	&__body {
+		padding: 24px;
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+	}
+
+	&__error {
+		color: #dc2626;
+		margin: 0;
+		font-size: 13px;
+		padding: 8px 12px;
+		background: #fef2f2;
+		border-radius: $bb-border-radius-md;
+	}
+
+	&__footer {
+		padding: 16px 24px;
+		display: flex;
+		justify-content: flex-end;
+		gap: 8px;
+		border-top: 1px solid $bb-border-secondary-color;
+
+		.is-primary {
+			@include bb-button-primary;
+		}
+	}
+}
+
+// Reply Edit Modal
+.bb-reply-edit-modal {
+	.components-modal__content {
+		padding: 0;
+	}
+
+	&__body {
+		padding: 24px;
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+	}
+
+	&__error {
+		color: #dc2626;
+		margin: 0;
+		font-size: 13px;
+		padding: 8px 12px;
+		background: #fef2f2;
+		border-radius: $bb-border-radius-md;
+	}
+
+	&__footer {
+		padding: 16px 24px;
+		display: flex;
+		justify-content: flex-end;
+		gap: 8px;
+		border-top: 1px solid $bb-border-secondary-color;
+
+		.is-primary {
+			@include bb-button-primary;
+		}
+	}
+}
+
+// Reply Delete Modal
+.bb-reply-delete-modal {
+	.components-modal__content {
+		padding: 0;
+	}
+
+	&__body {
+		padding: 24px;
+
+		p {
+			margin: 0;
+			font-size: 14px;
+			color: $bb-text-color;
+		}
+	}
+
+	&__footer {
+		padding: 16px 24px;
+		display: flex;
+		justify-content: flex-end;
+		gap: 8px;
+		border-top: 1px solid $bb-border-secondary-color;
+
+		.is-destructive {
+			background-color: #dc2626;
+			border-color: #dc2626;
+			color: #fff;
+
+			&:hover:not(:disabled) {
+				background-color: #b91c1c;
+				border-color: #b91c1c;
+			}
+		}
+	}
+}
