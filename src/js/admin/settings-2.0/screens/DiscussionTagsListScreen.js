@@ -616,7 +616,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 										</td>
 										<td className="bb-discussion-tags-list__col-count">
 											<div className="bb-discussion-tags-list__count-cell">
-												<i className="bb-icons-rl bb-icons-rl-chats bb-discussion-tags-list__count-icon"></i>
+												<i className="bb-icons-rl bb-icons-rl-chat-text bb-discussion-tags-list__count-icon"></i>
 												{ tag.count > 0 ? (
 													<a
 														href={ safeUrl( window.location.pathname + '?page=bb-settings&tab=forums&panel=discussions&tag_id=' + tag.id ) }

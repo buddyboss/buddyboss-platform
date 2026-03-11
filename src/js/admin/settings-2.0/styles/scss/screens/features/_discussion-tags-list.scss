@@ -287,13 +287,20 @@
 	&__tag-cell {
 		display: flex;
 		align-items: center;
-		gap: 10px;
+		gap: 8px;
 	}
 
 	&__tag-icon {
-		font-size: 18px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		color: $bb-icon-tertiary-color;
+		font-size: 20px;
 		flex-shrink: 0;
+		height: 32px;
+		width: 32px;
+		background-color: $bb-background-color;
+		border-radius: $bb-border-radius-full;
 	}
 
 	&__tag-name {
@@ -309,11 +316,16 @@
 
 	&__slug-badge {
 		display: inline-block;
-		padding: 2px 10px;
-		font-size: 13px;
+		padding: 4px 8px;
+		font-size: 11px;
+		font-weight: 500;
+		line-height: 1.4;
 		color: $bb-text-secondary-color;
 		background-color: $bb-background-secondary-color;
-		border-radius: $bb-border-radius-sm;
+		border: 1px solid $bb-border-tertiary-color;
+		border-radius: $bb-border-radius-full;
+		min-width: 14px;
+		text-align: center;
 	}
 
 	// Count column
@@ -324,7 +336,7 @@
 	&__count-cell {
 		display: flex;
 		align-items: center;
-		gap: 6px;
+		gap: 8px;
 	}
 
 	&__count-icon {
@@ -334,8 +346,13 @@
 	}
 
 	&__count-link {
-		color: $bb-text-brand-primary-color;
+		color: $bb-link-color;
 		font-size: 13px;
+		text-decoration: none;
+
+		&:hover {
+			color: $bb-link-color;
+		}
 	}
 
 	&__count-zero {
