@@ -283,8 +283,8 @@ class BB_Admin_Replies_Ajax {
 			$forum_counts = $this->bb_get_forum_counts_for_replies();
 
 			$bulk_actions = array(
+				'edit'   => __( 'Edit', 'buddyboss' ),
 				'delete' => __( 'Delete', 'buddyboss' ),
-				'spam'   => __( 'Mark as Spam', 'buddyboss' ),
 			);
 
 			$columns = array();

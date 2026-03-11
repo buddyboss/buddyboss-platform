@@ -900,14 +900,6 @@ export default function RepliesListScreen( { onNavigate } ) {
 														) }
 														<MenuItem
 															onClick={ function () {
-																handleEdit( reply );
-																onClose();
-															} }
-														>
-															{ __( 'Edit', 'buddyboss' ) }
-														</MenuItem>
-														<MenuItem
-															onClick={ function () {
 																handleSpamToggle( reply );
 																onClose();
 															} }

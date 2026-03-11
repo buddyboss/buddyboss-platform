@@ -184,7 +184,7 @@ class BB_Admin_Topic_Tags_Ajax {
 			);
 
 			$response['bulk_actions'] = array(
-				'bulk_delete' => __( 'Delete', 'buddyboss' ),
+				'delete' => __( 'Delete', 'buddyboss' ),
 			);
 
 			$response['columns'] = array(
