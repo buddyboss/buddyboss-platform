@@ -156,6 +156,15 @@
             padding-bottom: 18px;
             border-bottom: 1px solid $bb-border-secondary-color;
             margin: 0 0 18px;
+
+            a {
+                color: $bb-link-color;
+                text-decoration: none;
+
+                &:hover {
+                    color: $bb-link-color;
+                }
+            }
         }
 
         &-status {

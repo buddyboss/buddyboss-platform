@@ -6,7 +6,7 @@
 	max-width: calc(100% - 64px);
 	padding: 0 24px 16px;
 	background-color: $bb-background-base-color;
-	border: 1px solid $bb-border-primary-color;
+	border: 0.5px solid $bb-border-primary-color;
 	border-radius: $bb-border-radius-2xl;
 	box-shadow: 0px 1.5px 1px 0px rgba(0, 0, 0, 0.16);
 	margin: 32px 32px 0;
@@ -25,11 +25,13 @@
 	// Header
 	&__header {
 		border-bottom: 1px solid $bb-border-secondary-color;
-		padding: 18px 0;
+		padding: 16px 0;
+		min-height: 64px;
 		margin-bottom: 24px;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
+		box-sizing: border-box;
 	}
 
 	&__title {
@@ -95,17 +97,17 @@
 	&__toolbar-right {
 		display: flex;
 		align-items: center;
-		gap: 12px;
+		gap: 13px;
 	}
 
 	// Bulk Actions
 	&__bulk-actions {
 		display: flex;
 		align-items: center;
-		gap: 4px;
+		gap: 8px;
 
 		select {
-			min-width: 140px;
+			min-width: 160px;
 			height: 32px;
 			font-size: 13px;
 		}
@@ -125,17 +127,18 @@
 			gap: 4px;
 			height: 32px;
 			padding: 0 8px;
-			background: $bb-background-base-color;
-			border: 1px solid $bb-border-secondary-color;
+			background: $bb-background-color;
+			border: 1px solid $bb-border-tertiary-color;
 			border-radius: $bb-border-radius-md;
 			font-size: 13px;
 			color: $bb-text-color;
 			cursor: pointer;
 			white-space: nowrap;
-			min-width: 120px;
+			min-width: 168px;
 
-			&:hover {
-				border-color: $bb-border-brand-primary-color;
+			&:focus {
+				border-color: $bb-border-quaternary-color;
+				outline: none;
 			}
 
 			i {
@@ -173,22 +176,7 @@
 		}
 
 		&-search-input {
-			width: 100%;
-			height: 32px;
-			border: 1px solid $bb-border-secondary-color;
-			border-radius: $bb-border-radius-md;
-			padding: 0 8px;
-			font-size: 13px;
-			color: $bb-text-color;
-			outline: none;
-
-			&::placeholder {
-				color: $bb-text-disabled-color;
-			}
-
-			&:focus {
-				border-color: $bb-border-brand-primary-color;
-			}
+			@include bb-input-text;
 		}
 
 		&-options {
@@ -200,7 +188,7 @@
 		&-option {
 			display: block;
 			width: 100%;
-			padding: 6px 12px;
+			padding: 8px 12px;
 			border: none;
 			background: none;
 			text-align: left;
@@ -216,8 +204,7 @@
 			}
 
 			&--active {
-				font-weight: 600;
-				color: $bb-text-brand-primary-color;
+				background: $bb-background-primary-hover-color;
 			}
 		}
 
@@ -236,7 +223,7 @@
 		}
 
 		select {
-			min-width: 100px;
+			min-width: 136px;
 			height: 32px;
 			font-size: 13px;
 		}
@@ -245,16 +232,28 @@
 	// Search
 	&__search {
 		position: relative;
-		min-width: 225px;
+		min-width: 224px;
 
 		input {
 			@include bb-input-text;
 			padding-right: 30px;
 		}
+
+		&:after {
+			content: "\e30c";
+			font-family: "bb-icons-rl";
+			font-size: 20px;
+			color: $bb-icon-tertiary-color;
+			position: absolute;
+			right: 8px;
+			top: 50%;
+			transform: translateY(-50%);
+			pointer-events: none;
+		}
 	}
 
 	&__search-input {
-		width: 200px;
+		width: 224px;
 		height: 32px;
 		border: 1px solid $bb-border-secondary-color;
 		border-radius: $bb-border-radius-md;
@@ -343,10 +342,19 @@
 		width: 40px;
 	}
 
-	&__th--forum,
+	&__th--forum {
+		min-width: 200px;
+		white-space: nowrap;
+	}
+
 	&__th--replies,
-	&__th--members,
+	&__th--members {
+		min-width: 104px;
+		white-space: nowrap;
+	}
+
 	&__th--last-post {
+		min-width: 136px;
 		white-space: nowrap;
 	}
 
@@ -394,11 +402,12 @@
 	}
 
 	&__td--name {
-		max-width: 200px;
+		max-width: 232px;
 		overflow: hidden;
 	}
 
 	&__td--forum {
+		min-width: 200px;
 		white-space: nowrap;
 	}
 
@@ -423,10 +432,11 @@
 	&__count-cell {
 		display: inline-flex;
 		align-items: center;
-		gap: 4px;
+		gap: 8px;
+		color: $bb-text-color;
 
 		i {
-			font-size: 14px;
+			font-size: 16px;
 			color: $bb-icon-tertiary-color;
 		}
 	}
@@ -435,13 +445,13 @@
 	&__date {
 		display: flex;
 		align-items: center;
-		gap: 4px;
+		gap: 8px;
 		color: $bb-text-tertiary-color;
 		font-size: 13px;
 		line-height: 18px;
 
 		i {
-			font-size: 14px;
+			font-size: 16px;
 		}
 	}
 
@@ -686,10 +696,16 @@
 
 		.components-input-control__label,
 		.components-base-control__label {
+			display: block;
 			text-transform: none !important;
 			font-size: 13px !important;
 			font-weight: 500 !important;
 			color: $bb-text-color;
+			margin-bottom: 8px;
+		}
+
+		.components-select-control .components-input-control__label {
+			margin-bottom: 0;
 		}
 
 		.components-input-control__container {
@@ -775,9 +791,9 @@
 }
 
 /* ----------------------------------------------------------------
-   Discussion Create Modal
+   Discussion Modal
    ---------------------------------------------------------------- */
-.bb-discussion-create-modal {
+.bb-discussion-modal {
 
 	&__body {
 		padding: 24px;
@@ -789,19 +805,21 @@
 		// Override WordPress components uppercase labels to sentence case.
 		.components-input-control__label,
 		.components-base-control__label {
+			display: block;
 			text-transform: none !important;
 			font-size: 13px !important;
 			font-weight: 500 !important;
 			color: $bb-text-color;
+			margin-bottom: 8px;
+		}
+
+		.components-select-control .components-input-control__label {
+			margin-bottom: 0;
 		}
 
 		.components-text-control__input,
 		.components-textarea-control__input {
 			@include bb-input-text;
-		}
-
-		textarea {
-			min-height: 72px;
 		}
 
 		.components-input-control__container {
@@ -828,6 +846,17 @@
 
 		.components-base-control {
 			flex: 1;
+			margin-bottom: 0;
+		}
+	}
+
+	&__row--separator {
+		margin-bottom: 24px;
+		padding-bottom: 24px;
+		border-bottom: 1px solid $bb-border-tertiary-color;
+
+		> .components-base-control,
+		> .bb-admin-meta-field__editor-field {
 			margin-bottom: 0;
 		}
 	}
@@ -856,86 +885,34 @@
 }
 
 /* ----------------------------------------------------------------
+   Discussion Create Modal
+   ---------------------------------------------------------------- */
+.bb-discussion-create-modal {
+
+	.bb-discussion-modal__body {
+
+		textarea {
+			min-height: 72px;
+		}
+	}
+}
+
+/* ----------------------------------------------------------------
    Discussion Edit Modal
    ---------------------------------------------------------------- */
 .bb-discussion-edit-modal {
 
-	&__body {
-		padding: 0 24px 24px;
+	.bb-discussion-modal__body {
 
 		.components-base-control {
-			margin-bottom: 16px;
 
 			+ .bb-admin-meta-field__description {
 				margin-top: -6px;
 			}
 		}
 
-		// Override WordPress components uppercase labels to sentence case.
-		.components-input-control__label,
-		.components-base-control__label {
-			text-transform: none;
-			font-size: 13px;
-			font-weight: 500;
-			color: $bb-text-color;
-		}
-
 		.bb-admin-notice {
 			margin-top: 16px;
-		}
-
-		.components-text-control__input,
-		.components-textarea-control__input {
-			@include bb-input-text;
-		}
-
-		.components-input-control__container {
-
-			.components-select-control__input {
-				@include bb-admin-settings-select;
-			}
-
-			&:has(> .components-select-control__input) {
-				padding: 0 !important;
-
-				.components-input-control__suffix,
-				.components-input-control__backdrop {
-					display: none !important;
-				}
-			}
-		}
-	}
-
-	&__row {
-		display: flex;
-		gap: 16px;
-		margin-bottom: 16px;
-
-		.components-base-control {
-			flex: 1;
-			margin-bottom: 0;
-		}
-	}
-
-	&__error {
-		color: #d63638;
-		font-size: 13px;
-		margin: 0 0 16px;
-	}
-
-	&__footer {
-
-		.is-secondary {
-			@include bb-button-secondary;
-		}
-
-		.is-primary {
-			@include bb-button-primary;
-
-			&:disabled {
-				opacity: 0.5;
-				cursor: not-allowed;
-			}
 		}
 	}
 }

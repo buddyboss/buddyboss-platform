@@ -715,9 +715,6 @@ export function DiscussionsListScreen( { onNavigate } ) {
 							aria-label={ __( 'Search discussions', 'buddyboss' ) }
 							className="bb-discussions-list__search-input"
 						/>
-						<span className="bb-discussions-list__search-icon">
-							<i className="bb-icons-rl bb-icons-rl-search"></i>
-						</span>
 					</div>
 				</div>
 			</div>
@@ -802,13 +799,13 @@ export function DiscussionsListScreen( { onNavigate } ) {
 										</td>
 										<td className="bb-discussions-list__td--replies">
 											<span className="bb-discussions-list__count-cell">
-												<i className="bb-icons-rl bb-icons-rl-chats-circle"></i>
+												<i className="bb-icons-rl bb-icons-rl-chats"></i>
 												{ disc.reply_count }
 											</span>
 										</td>
 										<td className="bb-discussions-list__td--members">
 											<span className="bb-discussions-list__count-cell">
-												<i className="bb-icons-rl bb-icons-rl-users"></i>
+												<i className="bb-icons-rl bb-icons-rl-user"></i>
 												{ disc.voice_count }
 											</span>
 										</td>
@@ -1209,12 +1206,12 @@ function DiscussionEditModal( { discussion, onClose, onSave, isSaving } ) {
 		<Modal
 			title={ __( 'Edit Discussion', 'buddyboss' ) }
 			onRequestClose={ onClose }
-			className="bb-discussion-edit-modal bb-discussion-create-modal bb-admin-settings-modal"
+			className="bb-discussion-modal bb-discussion-edit-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
 		>
-			<div className="bb-discussion-edit-modal__body">
+			<div className="bb-discussion-modal__body">
 				{ error && (
-					<p className="bb-discussion-edit-modal__error">{ error }</p>
+					<p className="bb-discussion-modal__error">{ error }</p>
 				) }
 
 				<TextControl
@@ -1224,12 +1221,14 @@ function DiscussionEditModal( { discussion, onClose, onSave, isSaving } ) {
 					__nextHasNoMarginBottom
 				/>
 
-				<RichTextEditor
-					id="bb-discussion-edit-description"
-					label={ __( 'Description', 'buddyboss' ) }
-					value={ description }
-					onChange={ setDescription }
-				/>
+				<div className="bb-discussion-modal__row--separator">
+					<RichTextEditor
+						id="bb-discussion-edit-description"
+						label={ __( 'Description', 'buddyboss' ) }
+						value={ description }
+						onChange={ setDescription }
+					/>
+				</div>
 
 				<div className="components-base-control">
 					<label className="components-base-control__label">
@@ -1245,15 +1244,17 @@ function DiscussionEditModal( { discussion, onClose, onSave, isSaving } ) {
 					/>
 				</div>
 
-				<SelectControl
-					label={ __( 'Type', 'buddyboss' ) }
-					value={ type }
-					options={ typeOptions }
-					onChange={ setType }
-					__nextHasNoMarginBottom
-				/>
+				<div className="bb-discussion-modal__row--separator">
+					<SelectControl
+						label={ __( 'Type', 'buddyboss' ) }
+						value={ type }
+						options={ typeOptions }
+						onChange={ setType }
+						__nextHasNoMarginBottom
+					/>
+				</div>
 
-				<div className="bb-discussion-edit-modal__row">
+				<div className="bb-discussion-modal__row bb-discussion-modal__row--separator">
 					<SelectControl
 						label={ __( 'Status', 'buddyboss' ) }
 						value={ topicStatus }
@@ -1278,7 +1279,7 @@ function DiscussionEditModal( { discussion, onClose, onSave, isSaving } ) {
 				/>
 			</div>
 
-			<div className="bb-discussion-edit-modal__footer bb-admin-settings-modal__footer">
+			<div className="bb-discussion-modal__footer bb-admin-settings-modal__footer">
 				<Button
 					variant="secondary"
 					onClick={ onClose }

@@ -817,9 +817,11 @@ export function ForumsListScreen( { onNavigate } ) {
 											</span>
 										</td>
 										<td className="bb-forums-list__td--discussions">
+											<i className="bb-icons-rl-chats"></i>
 											{ forum.discussions_count }
 										</td>
 										<td className="bb-forums-list__td--replies">
+											<i className="bb-icons-rl-arrow-bend-up-left"></i>
 											{ forum.replies_count }
 										</td>
 										<td className="bb-forums-list__td--author">
@@ -837,6 +839,7 @@ export function ForumsListScreen( { onNavigate } ) {
 											</div>
 										</td>
 										<td className="bb-forums-list__td--last-post">
+											<i className="bb-icons-rl-clock"></i>
 											{ forum.last_active ? (
 												<span className="bb-forums-list__date">
 													{ decodeEntities( forum.last_active ) }
@@ -1210,12 +1213,12 @@ function ForumEditModal( { forum, onClose, onSave, isSaving } ) {
 		<Modal
 			title={ __( 'Edit Forum', 'buddyboss' ) }
 			onRequestClose={ onClose }
-			className="bb-forum-edit-modal bb-forum-create-modal bb-admin-settings-modal"
+			className="bb-forum-modal bb-forum-edit-modal bb-forum-create-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
 		>
-			<div className="bb-forum-edit-modal__body">
+			<div className="bb-forum-modal__body bb-forum-edit-modal__body">
 				{ error && (
-					<p className="bb-forum-edit-modal__error">{ error }</p>
+					<p className="bb-forum-modal__error">{ error }</p>
 				) }
 
 				<TextControl
@@ -1225,7 +1228,7 @@ function ForumEditModal( { forum, onClose, onSave, isSaving } ) {
 					__nextHasNoMarginBottom
 				/>
 
-				<div className="bb-forum-create-modal__permalink-field">
+				<div className="bb-forum-modal__permalink-field">
 					<TextControl
 						label={ __( 'Permalink', 'buddyboss' ) }
 						value={ slug }
@@ -1241,14 +1244,16 @@ function ForumEditModal( { forum, onClose, onSave, isSaving } ) {
 					) }
 				</div>
 
-				<RichTextEditor
-					id="bb-forum-edit-description"
-					label={ __( 'Forum Description (Optional)', 'buddyboss' ) }
-					value={ description }
-					onChange={ setDescription }
-				/>
+				<div className="bb-forum-modal__row--separator">
+					<RichTextEditor
+						id="bb-forum-edit-description"
+						label={ __( 'Forum Description (Optional)', 'buddyboss' ) }
+						value={ description }
+						onChange={ setDescription }
+					/>
+				</div>
 
-				<div className="bb-forum-create-modal__row">
+				<div className="bb-forum-create-modal__row bb-forum-modal__row--separator">
 					<SelectControl
 						label={ __( 'Status', 'buddyboss' ) }
 						value={ forumStatus }
@@ -1265,7 +1270,7 @@ function ForumEditModal( { forum, onClose, onSave, isSaving } ) {
 					/>
 				</div>
 
-				<div className="components-base-control">
+				<div className="components-base-control bb-forum-modal__row--separator">
 					<label className="components-base-control__label">
 						{ __( 'Parent Forum', 'buddyboss' ) }
 					</label>
@@ -1279,26 +1284,26 @@ function ForumEditModal( { forum, onClose, onSave, isSaving } ) {
 					/>
 				</div>
 
-				<div className="bb-forum-create-modal__image-field">
+				<div className="bb-forum-modal__image-field bb-forum-create-modal__image-field">
 					<label className="components-base-control__label">
 						{ __( 'Feature Image (Optional)', 'buddyboss' ) }
 					</label>
 					{ imageUrl ? (
-						<div className="bb-forum-create-modal__image-preview">
+						<div className="bb-forum-modal__image-preview">
 							<img src={ imageUrl } alt="" />
-							<div className="bb-forum-create-modal__image-actions">
+							<div className="bb-forum-modal__image-actions">
 								<Button
 									variant="secondary"
 									onClick={ handleSelectImage }
-									className="bb-forum-create-modal__replace-image"
+									className="bb-forum-modal__replace-image"
 								>
 									{ __( 'Replace', 'buddyboss' ) }
 								</Button>
 								<Button
-									variant="link"
+									variant="secondary"
 									isDestructive
 									onClick={ handleRemoveImage }
-									className="bb-forum-create-modal__remove-image"
+									className="bb-forum-modal__remove-image"
 								>
 									{ __( 'Reset', 'buddyboss' ) }
 								</Button>
@@ -1319,7 +1324,7 @@ function ForumEditModal( { forum, onClose, onSave, isSaving } ) {
 				</div>
 			</div>
 
-			<div className="bb-forum-edit-modal__footer bb-admin-settings-modal__footer">
+			<div className="bb-forum-modal__footer bb-admin-settings-modal__footer">
 				<Button
 					variant="secondary"
 					onClick={ onClose }

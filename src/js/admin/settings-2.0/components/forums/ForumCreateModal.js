@@ -263,12 +263,12 @@ export function ForumCreateModal( { isOpen, onClose, onCreated } ) {
 		<Modal
 			title={ __( 'Create New Forum', 'buddyboss' ) }
 			onRequestClose={ handleClose }
-			className="bb-forum-create-modal bb-admin-settings-modal"
+			className="bb-forum-modal bb-forum-create-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
 		>
-			<div className="bb-forum-create-modal__body">
+			<div className="bb-forum-modal__body bb-forum-create-modal__body">
 				{ error && (
-					<p className="bb-forum-create-modal__error">{ error }</p>
+					<p className="bb-forum-modal__error">{ error }</p>
 				) }
 
 				<TextControl
@@ -279,7 +279,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated } ) {
 					__nextHasNoMarginBottom
 				/>
 
-				<div className="bb-forum-create-modal__permalink-field">
+				<div className="bb-forum-modal__permalink-field">
 					<TextControl
 						label={ __( 'Permalink', 'buddyboss' ) }
 						value={ permalink }
@@ -294,14 +294,16 @@ export function ForumCreateModal( { isOpen, onClose, onCreated } ) {
 					) }
 				</div>
 
-				<RichTextEditor
-					id="bb-forum-create-description"
-					label={ __( 'Forum Description (Optional)', 'buddyboss' ) }
-					value={ description }
-					onChange={ setDescription }
-				/>
+				<div className="bb-forum-modal__row--separator">
+					<RichTextEditor
+						id="bb-forum-create-description"
+						label={ __( 'Forum Description (Optional)', 'buddyboss' ) }
+						value={ description }
+						onChange={ setDescription }
+					/>
+				</div>
 
-				<div className="bb-forum-create-modal__row">
+				<div className="bb-forum-create-modal__row bb-forum-modal__row--separator">
 					<SelectControl
 						label={ __( 'Status', 'buddyboss' ) }
 						value={ forumStatus }
@@ -318,7 +320,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated } ) {
 					/>
 				</div>
 
-				<div className="components-base-control">
+				<div className="components-base-control bb-forum-modal__row--separator">
 					<label className="components-base-control__label">
 						{ __( 'Parent Forum', 'buddyboss' ) }
 					</label>
@@ -332,26 +334,26 @@ export function ForumCreateModal( { isOpen, onClose, onCreated } ) {
 					/>
 				</div>
 
-				<div className="bb-forum-create-modal__image-field">
+				<div className="bb-forum-modal__image-field bb-forum-create-modal__image-field">
 					<label className="components-base-control__label">
 						{ __( 'Feature Image (Optional)', 'buddyboss' ) }
 					</label>
 					{ imageUrl ? (
-						<div className="bb-forum-create-modal__image-preview">
+						<div className="bb-forum-modal__image-preview">
 							<img src={ imageUrl } alt="" />
-							<div className="bb-forum-create-modal__image-actions">
+							<div className="bb-forum-modal__image-actions">
 								<Button
 									variant="secondary"
 									onClick={ handleSelectImage }
-									className="bb-forum-create-modal__replace-image"
+									className="bb-forum-modal__replace-image"
 								>
 									{ __( 'Replace', 'buddyboss' ) }
 								</Button>
 								<Button
-									variant="link"
+									variant="secondary"
 									isDestructive
 									onClick={ handleRemoveImage }
-									className="bb-forum-create-modal__remove-image"
+									className="bb-forum-modal__remove-image"
 								>
 									{ __( 'Reset', 'buddyboss' ) }
 								</Button>
@@ -363,7 +365,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated } ) {
 							onClick={ handleSelectImage }
 							className="bb-forum-create-modal__upload-zone"
 						>
-							<span className="bb-forum-create-modal__upload-icon">+</span>
+							<span className="bb-forum-create-modal__upload-icon"><i className="bb-icons-rl-plus"></i></span>
 						</button>
 					) }
 					<p className="bb-forum-create-modal__image-help">
@@ -372,7 +374,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated } ) {
 				</div>
 			</div>
 
-			<div className="bb-forum-create-modal__footer bb-admin-settings-modal__footer">
+			<div className="bb-forum-modal__footer bb-admin-settings-modal__footer">
 				<Button
 					variant="secondary"
 					onClick={ handleClose }

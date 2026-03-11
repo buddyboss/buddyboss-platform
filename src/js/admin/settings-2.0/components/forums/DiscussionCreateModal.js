@@ -187,12 +187,12 @@ export function DiscussionCreateModal( { isOpen, onClose, onCreated } ) {
 		<Modal
 			title={ __( 'Start New Discussion', 'buddyboss' ) }
 			onRequestClose={ handleClose }
-			className="bb-discussion-create-modal bb-admin-settings-modal"
+			className="bb-discussion-modal bb-discussion-create-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
 		>
-			<div className="bb-discussion-create-modal__body">
+			<div className="bb-discussion-modal__body">
 				{ error && (
-					<p className="bb-discussion-create-modal__error">{ error }</p>
+					<p className="bb-discussion-modal__error">{ error }</p>
 				) }
 
 				<TextControl
@@ -203,12 +203,14 @@ export function DiscussionCreateModal( { isOpen, onClose, onCreated } ) {
 					__nextHasNoMarginBottom
 				/>
 
-				<RichTextEditor
-					id="bb-discussion-create-description"
-					label={ __( 'Description', 'buddyboss' ) }
-					value={ description }
-					onChange={ setDescription }
-				/>
+				<div className="bb-discussion-modal__row--separator">
+					<RichTextEditor
+						id="bb-discussion-create-description"
+						label={ __( 'Description', 'buddyboss' ) }
+						value={ description }
+						onChange={ setDescription }
+					/>
+				</div>
 
 				<div className="components-base-control">
 					<label className="components-base-control__label">
@@ -224,15 +226,17 @@ export function DiscussionCreateModal( { isOpen, onClose, onCreated } ) {
 					/>
 				</div>
 
-				<SelectControl
-					label={ __( 'Type', 'buddyboss' ) }
-					value={ type }
-					options={ typeOptions }
-					onChange={ setType }
-					__nextHasNoMarginBottom
-				/>
+				<div className="bb-discussion-modal__row--separator">
+					<SelectControl
+						label={ __( 'Type', 'buddyboss' ) }
+						value={ type }
+						options={ typeOptions }
+						onChange={ setType }
+						__nextHasNoMarginBottom
+					/>
+				</div>
 
-				<div className="bb-discussion-create-modal__row">
+				<div className="bb-discussion-modal__row bb-discussion-modal__row--separator">
 					<SelectControl
 						label={ __( 'Status', 'buddyboss' ) }
 						value={ topicStatus }
@@ -257,7 +261,7 @@ export function DiscussionCreateModal( { isOpen, onClose, onCreated } ) {
 				/>
 			</div>
 
-			<div className="bb-discussion-create-modal__footer bb-admin-settings-modal__footer">
+			<div className="bb-discussion-modal__footer bb-admin-settings-modal__footer">
 				<Button
 					variant="secondary"
 					onClick={ handleClose }
