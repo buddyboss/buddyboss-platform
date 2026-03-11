@@ -234,6 +234,14 @@
 	}
 
 	// Table Rows
+	&__row {
+		transition: background-color 0.15s ease;
+
+		&--selected {
+			background-color: $bb-background-positive-primary-color;
+		}
+	}
+
 	&__table tbody tr {
 		border-bottom: 0.5px solid $bb-border-primary-color;
 	}
@@ -338,21 +346,42 @@
 	// Actions column
 	&__col-actions {
 		width: 40px;
-	}
+		text-align: center;
 
-	&__actions-menu {
-		.components-button {
+		.components-dropdown-menu__toggle {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background: none;
+			border: none;
+			cursor: pointer;
 			padding: 4px;
-			min-width: 24px;
-			height: 24px;
-		}
-	}
+			min-width: 32px;
+			width: 32px;
+			height: 32px;
+			color: $bb-icon-tertiary-color;
+			border-radius: $bb-border-radius-sm;
 
-	&__action-delete {
-		color: #dc2626 !important;
+			i {
+				color: $bb-icon-secondary-color;
+				font-size: 24px;
+				line-height: 1;
+				font-weight: 700;
+			}
 
-		&:hover {
-			color: #b91c1c !important;
+			&:hover,
+			&:focus,
+			&.is-pressed,
+			&.is-opened {
+				color: $bb-text-color;
+				background: $bb-background-primary-hover-color;
+				box-shadow: none;
+			}
+
+			.dashicon,
+			svg:not(:first-child) {
+				display: none;
+			}
 		}
 	}
 
@@ -489,7 +518,7 @@
 	}
 
 	&__error {
-		color: #dc2626;
+		color: $bb-error-color;
 		margin: 0;
 		font-size: 13px;
 		padding: 8px 12px;
@@ -534,13 +563,15 @@
 		border-top: 1px solid $bb-border-secondary-color;
 
 		.is-destructive {
-			background-color: #dc2626;
-			border-color: #dc2626;
-			color: #fff;
+			color: $bb-text-inverse-color;
+			background: $bb-background-danger-secondary-color;
+			border: none;
+			box-shadow: none;
+			border-radius: $bb-border-radius-lg;
 
 			&:hover:not(:disabled) {
-				background-color: #b91c1c;
-				border-color: #b91c1c;
+				background: $bb-background-danger-secondary-hover-color;
+				color: $bb-text-inverse-color;
 			}
 		}
 	}

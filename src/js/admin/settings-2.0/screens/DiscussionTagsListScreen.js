@@ -591,7 +591,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 								var isSelected = -1 !== selected.indexOf( tag.id );
 
 								return (
-									<tr key={ tag.id } className={ isSelected ? 'is-selected' : '' }>
+									<tr key={ tag.id } className={ 'bb-discussion-tags-list__row' + ( isSelected ? ' bb-discussion-tags-list__row--selected' : '' ) }>
 										<td className="bb-discussion-tags-list__col-cb">
 											<CheckboxControl
 												checked={ isSelected }
@@ -639,21 +639,27 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 										</td>
 										<td className="bb-discussion-tags-list__col-actions">
 											<DropdownMenu
-												icon="ellipsis"
-												label={ __( 'Actions', 'buddyboss' ) }
+												icon={ <i className="bb-icons-rl-dots-three"></i> }
+												label={ __( 'More options', 'buddyboss' ) }
 												className="bb-discussion-tags-list__actions-menu"
 											>
-												{ function ( { onClose } ) {
+												{ function ( dropdownProps ) {
+													var onClose = dropdownProps.onClose;
 													return (
-														<MenuGroup>
+														<MenuGroup className="bb_dropdown_menu_group">
 															{ tag.permalink && (
 																<MenuItem
 																	onClick={ function () {
-																		window.open( safeUrl( tag.permalink ), '_blank' );
+																		var permalink = safeUrl( tag.permalink );
+																		if ( '#' !== permalink ) {
+																			window.open( permalink, '_blank', 'noopener noreferrer' );
+																		}
 																		onClose();
 																	} }
 																>
+																	<i className="bb-icons-rl bb-icons-rl-eye" aria-hidden="true"></i>
 																	{ __( 'View', 'buddyboss' ) }
+																	<i className="bb-icons-rl bb-icons-rl-arrow-up-right bb-icons-external" aria-hidden="true"></i>
 																</MenuItem>
 															) }
 															<MenuItem
@@ -662,15 +668,17 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 																	onClose();
 																} }
 															>
+																<i className="bb-icons-rl bb-icons-rl-note-pencil" aria-hidden="true"></i>
 																{ __( 'Edit', 'buddyboss' ) }
 															</MenuItem>
 															<MenuItem
+																isDestructive
 																onClick={ function () {
 																	handleDeleteClick( tag );
 																	onClose();
 																} }
-																className="bb-discussion-tags-list__action-delete"
 															>
+																<i className="bb-icons-rl bb-icons-rl-trash" aria-hidden="true"></i>
 																{ __( 'Delete', 'buddyboss' ) }
 															</MenuItem>
 														</MenuGroup>
