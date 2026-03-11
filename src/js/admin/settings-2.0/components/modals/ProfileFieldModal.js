@@ -958,7 +958,7 @@ export function ProfileFieldModal( {
 										</code>
 									</label>
 								</div>
-								<div className="bb-pf-datebox-format__option" key="custom">
+								<div className="bb-pf-datebox-format__option bb-pf-datebox-format__option-custom" key="custom">
 									<label>
 										<input
 											type="radio"
