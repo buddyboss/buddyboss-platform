@@ -66,20 +66,9 @@ if ( ! class_exists( 'BBP_Forums_Admin' ) ) :
 			add_action( 'add_meta_boxes', array( $this, 'comments_metabox'      ) );
 			add_action( 'save_post', array( $this, 'attributes_metabox_save' ) );
 
-			// Column headers.
-			add_filter( 'manage_' . $this->post_type . '_posts_columns', array( $this, 'column_headers' ) );
-
-			// Columns (in page row)
-			add_action( 'manage_' . $this->post_type . '_posts_custom_column', array( $this, 'column_data' ), 10, 2 );
-			add_filter( 'page_row_actions', array( $this, 'row_actions' ), 10, 2 );
-
 			// Contextual Help
-			add_action( 'load-edit.php', array( $this, 'edit_help' ) );
 			add_action( 'load-post.php', array( $this, 'new_help' ) );
 			add_action( 'load-post-new.php', array( $this, 'new_help' ) );
-
-			// Set forum states
-			add_filter( 'display_post_states', array( $this, 'bbp_set_hidden_forum_states' ), 10, 2 );
 
 			// Filter post parent for forum type post.
 			add_filter( 'wp_insert_post_parent', array( $this, 'forum_parent' ), 10, 3 );
@@ -110,97 +99,6 @@ if ( ! class_exists( 'BBP_Forums_Admin' ) ) :
 		}
 
 		/** Contextual Help *******************************************************/
-
-		/**
-		 * Set the forum states if forum is hidden.
-		 *
-		 * @param $states
-		 * @param $post
-		 *
-		 * @return array
-		 * @since BuddyBoss 1.0.0
-		 */
-		public function bbp_set_hidden_forum_states( $states, $post ) {
-			global $post;
-
-			if ( is_array( $post ) && bbp_get_forum_post_type() === get_post_type( $post->ID ) && bbp_get_hidden_status_id() === bbp_get_forum_visibility( $post->ID ) ) {
-
-				$states[] = __( 'Hidden', 'buddyboss' );
-
-			}
-
-			return $states;
-		}
-
-		/**
-		 * Contextual help for Forums forum edit page
-		 *
-		 * @since bbPress (r3119)
-		 * @uses get_current_screen()
-		 */
-		public function edit_help() {
-
-			if ( $this->bail() ) {
-				return;
-			}
-
-			// Overview
-			get_current_screen()->add_help_tab(
-				array(
-					'id'      => 'overview',
-					'title'   => __( 'Overview', 'buddyboss' ),
-					'content' =>
-						  '<p>' . __( 'This screen displays the individual forums on your site. You can customize the display of this screen to suit your workflow.', 'buddyboss' ) . '</p>',
-				)
-			);
-
-			// Screen Content
-			get_current_screen()->add_help_tab(
-				array(
-					'id'      => 'screen-content',
-					'title'   => __( 'Screen Content', 'buddyboss' ),
-					'content' =>
-						  '<p>' . __( 'You can customize the display of this screen\'s contents in a number of ways:', 'buddyboss' ) . '</p>' .
-						  '<ul>' .
-							  '<li>' . __( 'You can hide/display columns based on your needs and decide how many forums to list per screen using the Screen Options tab.', 'buddyboss' ) . '</li>' .
-							  '<li>' . __( 'You can filter the list of forums by forum status using the text links in the upper left to show All, Published, or Trashed forums. The default view is to show all forums.', 'buddyboss' ) . '</li>' .
-							  '<li>' . __( 'You can refine the list to show only forums from a specific month by using the dropdown menus above the forums list. Click the Filter button after making your selection. You also can refine the list by clicking on the forum creator in the forums list.', 'buddyboss' ) . '</li>' .
-						  '</ul>',
-				)
-			);
-
-			// Available Actions
-			get_current_screen()->add_help_tab(
-				array(
-					'id'      => 'action-links',
-					'title'   => __( 'Available Actions', 'buddyboss' ),
-					'content' =>
-						  '<p>' . __( 'Hovering over a row in the forums list will display action links that allow you to manage your forum. You can perform the following actions:', 'buddyboss' ) . '</p>' .
-						  '<ul>' .
-							  '<li>' . __( '<strong>Edit</strong> takes you to the editing screen for that forum. You can also reach that screen by clicking on the forum title.', 'buddyboss' ) . '</li>' .
-							  '<li>' . __( '<strong>Trash</strong> removes your forum from this list and places it in the trash, from which you can permanently delete it.', 'buddyboss' ) . '</li>' .
-							  '<li>' . __( '<strong>View</strong> will show you what your draft forum will look like if you publish it. View will take you to your live site to view the forum. Which link is available depends on your forum\'s status.', 'buddyboss' ) . '</li>' .
-						  '</ul>',
-				)
-			);
-
-			// Bulk Actions
-			get_current_screen()->add_help_tab(
-				array(
-					'id'      => 'bulk-actions',
-					'title'   => __( 'Bulk Actions', 'buddyboss' ),
-					'content' =>
-						  '<p>' . __( 'You can also edit or move multiple forums to the trash at once. Select the forums you want to act on using the checkboxes, then select the action you want to take from the Bulk Actions menu and click Apply.', 'buddyboss' ) . '</p>' .
-						  '<p>' . __( 'When using Bulk Edit, you can change the status (Published, Private, etc.) for all selected forums at once. To remove a forum from the grouping, just click the x next to its name in the Bulk Edit area that appears.', 'buddyboss' ) . '</p>',
-				)
-			);
-
-			// Help Sidebar
-			get_current_screen()->set_help_sidebar(
-				'<p><strong>' . __( 'For more information:', 'buddyboss' ) . '</strong></p>' .
-				'<p>' . __( '<a href="https://www.buddyboss.com/resources/">Documentation</a>', 'buddyboss' ) . '</p>'
-			);
-		}
 
 		/**
 		 * Contextual help for Forums forum edit page
@@ -397,7 +295,7 @@ if ( ! class_exists( 'BBP_Forums_Admin' ) ) :
 			}
 
 			global $post, $pagenow;
-			if ( ( isset( $post->post_type ) && $post->post_type === bbp_get_forum_post_type() && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == bbp_get_forum_post_type() && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == bbp_get_forum_post_type() && $pagenow == 'post.php' ) ) {
+			if ( isset( $post->post_type ) && $post->post_type === bbp_get_forum_post_type() && in_array( $pagenow, array( 'post-new.php', 'post.php' ), true ) ) {
 				?>
 			<style media="screen">
 				/*<![CDATA[*/
@@ -432,170 +330,10 @@ if ( ! class_exists( 'BBP_Forums_Admin' ) ) :
 				border-color: #ccc #fff #fff #ccc;
 			}
 
-			.column-bbp_forum_topic_count,
-			.column-bbp_forum_reply_count,
-			.column-bbp_topic_reply_count,
-			.column-bbp_topic_voice_count {
-				width: 10% !important;
-			}
-
-			.column-author,
-			.column-bbp_reply_author,
-			.column-bbp_topic_author {
-				width: 10% !important;
-			}
-
-			.column-bbp_topic_forum,
-			.column-bbp_reply_forum,
-			.column-bbp_reply_topic {
-				width: 10% !important;
-			}
-
-			.column-bbp_forum_freshness,
-			.column-bbp_topic_freshness {
-				width: 10% !important;
-			}
-
-			.column-bbp_forum_created,
-			.column-bbp_topic_created,
-			.column-bbp_reply_created {
-				width: 15% !important;
-			}
-
-			.status-closed {
-				background-color: #eaeaea;
-			}
-
-			.status-spam {
-				background-color: #faeaea;
-			}
-
 		/*]]>*/
 		</style>
 
 			<?php
-		}
-
-		/**
-		 * Manage the column headers for the forums page
-		 *
-		 * @since bbPress (r2485)
-		 *
-		 * @param array $columns The columns
-		 * @uses apply_filters() Calls 'bbp_admin_forums_column_headers' with
-		 *                        the columns
-		 * @return array $columns Forums forum columns
-		 */
-		public function column_headers( $columns ) {
-
-			if ( $this->bail() ) {
-				return $columns;
-			}
-
-			$columns = array(
-				'cb'                    => '<input type="checkbox" />',
-				'title'                 => __( 'Forum', 'buddyboss' ),
-				'bbp_forum_topic_count' => __( 'Discussions', 'buddyboss' ),
-				'bbp_forum_reply_count' => __( 'Replies', 'buddyboss' ),
-				'author'                => __( 'Creator', 'buddyboss' ),
-				'bbp_forum_created'     => __( 'Created', 'buddyboss' ),
-				'bbp_forum_freshness'   => __( 'Last Post', 'buddyboss' ),
-			);
-
-			return apply_filters( 'bbp_admin_forums_column_headers', $columns );
-		}
-
-		/**
-		 * Print extra columns for the forums page
-		 *
-		 * @since bbPress (r2485)
-		 *
-		 * @param string $column Column
-		 * @param int    $forum_id Forum id
-		 * @uses bbp_forum_topic_count() To output the forum topic count
-		 * @uses bbp_forum_reply_count() To output the forum reply count
-		 * @uses get_the_date() Get the forum creation date
-		 * @uses get_the_time() Get the forum creation time
-		 * @uses esc_attr() To sanitize the forum creation time
-		 * @uses bbp_get_forum_last_active_time() To get the time when the forum was
-		 *                                    last active
-		 * @uses do_action() Calls 'bbp_admin_forums_column_data' with the
-		 *                    column and forum id
-		 */
-		public function column_data( $column, $forum_id ) {
-
-			if ( $this->bail() ) {
-				return;
-			}
-
-			switch ( $column ) {
-				case 'bbp_forum_topic_count':
-					bbp_forum_topic_count( $forum_id );
-					break;
-
-				case 'bbp_forum_reply_count':
-					bbp_forum_reply_count( $forum_id );
-					break;
-
-				case 'bbp_forum_created':
-					printf(
-						'%1$s <br /> %2$s',
-						get_the_date(),
-						esc_attr( get_the_time() )
-					);
-
-					break;
-
-				case 'bbp_forum_freshness':
-					$last_active = bbp_get_forum_last_active_time( $forum_id, false );
-					if ( ! empty( $last_active ) ) {
-						echo esc_html( $last_active );
-					} else {
-						esc_html_e( 'No Discussions', 'buddyboss' );
-					}
-
-					break;
-
-				default:
-					do_action( 'bbp_admin_forums_column_data', $column, $forum_id );
-					break;
-			}
-		}
-
-		/**
-		 * Forum Row actions
-		 *
-		 * Remove the quick-edit action link and display the description under
-		 * the forum title
-		 *
-		 * @since bbPress (r2577)
-		 *
-		 * @param array $actions Actions
-		 * @param object $forum Forum object
-		 * @uses bbp_forum_content() To output forum description
-		 * @return array $actions Actions
-		 */
-		public function row_actions( $actions, $forum ) {
-
-			if ( $this->bail() ) {
-				return $actions;
-			}
-
-			unset( $actions['inline hide-if-no-js'] );
-
-			// Only show content if user can read it and there is no password.
-			if ( current_user_can( 'read_forum', $forum->ID ) && ! post_password_required( $forum ) ) {
-
-				// Get the forum description.
-				$content = bbp_get_forum_content( $forum->ID );
-
-				// Only proceed if there is a description.
-				if ( ! empty( $content ) ) {
-					echo '<div class="bbp-escaped-content">' . wp_strip_all_tags( wp_trim_excerpt( $content, $forum ) ) . '</div>';
-				}
-			}
-
-			return $actions;
 		}
 
 		/**
