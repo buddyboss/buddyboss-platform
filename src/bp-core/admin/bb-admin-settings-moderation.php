@@ -122,7 +122,7 @@ function bb_admin_settings_register_moderation_feature() {
 		)
 	);
 
-	// Side Panel: Flagged Members (navigation link).
+	// Side Panel: Flagged Members (custom panel screen).
 	bb_register_side_panel(
 		'moderation',
 		'flagged_members',
@@ -132,7 +132,6 @@ function bb_admin_settings_register_moderation_feature() {
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-user-circle-minus',
 			),
-			'link'    => bp_get_admin_url( 'admin.php?page=bp-moderation&tab=members' ),
 			'divider' => true,
 			'order'   => 100,
 		)

@@ -453,3 +453,54 @@ export function updateReportingCategory( termId, data ) {
 export function deleteReportingCategory( termId ) {
 	return ajaxFetch( 'bb_admin_delete_reporting_category', { term_id: termId } );
 }
+
+// ── Flagged Members ───────────────────────────────────────────────────────
+
+/**
+ * Get flagged members list.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} params       Query parameters.
+ * @param {Object} [options={}] Fetch options (signal, etc.).
+ * @return {Promise} Promise resolving to response.
+ */
+export function getFlaggedMembers( params, options ) {
+	return ajaxFetch( 'bb_admin_get_flagged_members', params || {}, options );
+}
+
+/**
+ * Get member report details (reporters + blockers).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {number} userId User ID.
+ * @return {Promise} Promise resolving to response.
+ */
+export function getMemberReport( userId, moderationId ) {
+	return ajaxFetch( 'bb_admin_get_member_report', { user_id: userId, moderation_id: moderationId } );
+}
+
+/**
+ * Suspend a member.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {number} userId User ID.
+ * @return {Promise} Promise resolving to response.
+ */
+export function suspendMember( userId ) {
+	return ajaxFetch( 'bb_admin_suspend_member', { user_id: userId } );
+}
+
+/**
+ * Unsuspend a member.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {number} userId User ID.
+ * @return {Promise} Promise resolving to response.
+ */
+export function unsuspendMember( userId ) {
+	return ajaxFetch( 'bb_admin_unsuspend_member', { user_id: userId } );
+}

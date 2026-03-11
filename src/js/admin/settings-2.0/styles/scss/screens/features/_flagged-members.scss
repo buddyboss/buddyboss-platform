@@ -1,0 +1,568 @@
+/* ----------------------------------------------------------------
+   Flagged Members Screen
+   ---------------------------------------------------------------- */
+
+.bb-admin-flagged-members {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+	max-width: 985px;
+	margin: 0 auto;
+	width: 100%;
+	padding: 32px;
+
+	/* Card container matching Figma featureCard */
+	&__card {
+		background: $bb-background-base-color;
+		border: 0.5px solid $bb-border-primary-color;
+		border-radius: $bb-border-radius-2xl;
+		box-shadow: 0px 1.5px 1px 0px rgba(0, 0, 0, 0.16);
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+	}
+
+	/* Title bar — 64px min-height, 24px horizontal padding, 1px border-bottom */
+	&__title-bar {
+		padding: 0 24px;
+		min-height: 64px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		border-bottom: 1px solid $bb-border-secondary-color;
+	}
+
+	&__title {
+		font-size: 18px;
+		font-weight: 500;
+		line-height: 26px;
+		color: $bb-text-color;
+		margin: 0;
+		padding: 16px 0;
+	}
+
+	/* Search form in title bar */
+	&__search-form {
+		display: flex;
+		align-items: center;
+		gap: 0;
+		position: relative;
+	}
+
+	&__search-input {
+		height: 36px;
+		padding: 6px 36px 6px 12px;
+		font-size: 13px;
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-md;
+		background: $bb-background-base-color;
+		min-width: 200px;
+		color: $bb-text-color;
+
+		&:focus {
+			border-color: $bb-border-brand-primary-color;
+			outline: none;
+			box-shadow: 0 0 0 1px $bb-border-brand-primary-color;
+		}
+
+		&::placeholder {
+			color: $bb-text-disabled-color;
+		}
+	}
+
+	&__search-btn {
+		position: absolute;
+		right: 4px;
+		top: 50%;
+		transform: translateY(-50%);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 28px;
+		height: 28px;
+		background: none;
+		border: none;
+		cursor: pointer;
+		color: $bb-icon-tertiary-color;
+		padding: 0;
+
+		[class*="bb-icons-"] {
+			font-size: 18px;
+		}
+
+		&:hover {
+			color: $bb-icon-secondary-color;
+		}
+	}
+
+	/* Body — 32px top, 24px sides, 8px bottom */
+	&__body {
+		padding: 32px 24px 8px;
+	}
+
+	/* Members list */
+	&__list {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+	}
+
+	&__list-item {
+		display: flex;
+		align-items: center;
+		gap: 32px;
+		min-height: 48px;
+		padding-bottom: 16px;
+		border-bottom: 0.5px solid $bb-border-secondary-color;
+
+		&:last-child {
+			border-bottom: 0;
+		}
+	}
+
+	/* Dot indicator */
+	&__dot {
+		width: 6px;
+		height: 6px;
+		border-radius: 50%;
+		background: $bb-border-tertiary-color;
+		flex-shrink: 0;
+	}
+
+	/* Items row — flex: 1, gap: 32px */
+	&__items {
+		display: flex;
+		align-items: center;
+		gap: 32px;
+		flex: 1;
+		min-width: 0;
+	}
+
+	/* Member column — 264px width, 8px gap */
+	&__member-col {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		width: 264px;
+		flex-shrink: 0;
+		min-width: 0;
+	}
+
+	&__avatar {
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		flex-shrink: 0;
+		object-fit: cover;
+	}
+
+	/* Name — 14px, regular (400), always link-blue */
+	&__name {
+		font-size: 14px;
+		font-weight: 400;
+		color: $bb-link-color;
+		line-height: 20px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		text-decoration: none;
+
+		&:hover {
+			color: $bb-link-color;
+			text-decoration: underline;
+		}
+	}
+
+	/* Reports column — 200px, blocks column — 152px */
+	&__reports-col {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		font-size: 13px;
+		font-weight: 400;
+		color: $bb-text-color;
+		line-height: 18px;
+		width: 200px;
+		flex-shrink: 0;
+
+		[class*="bb-icons-"] {
+			font-size: 16px;
+			color: $bb-icon-tertiary-color;
+		}
+	}
+
+	&__blocks-col {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		font-size: 13px;
+		font-weight: 400;
+		color: $bb-text-color;
+		line-height: 18px;
+		width: 152px;
+		flex-shrink: 0;
+
+		[class*="bb-icons-"] {
+			font-size: 16px;
+			color: $bb-icon-tertiary-color;
+		}
+	}
+
+	/* Active (non-zero) state — blue text + icon */
+	&__col--active {
+		color: $bb-link-color;
+
+		[class*="bb-icons-"] {
+			color: $bb-link-color;
+		}
+	}
+
+	/* Status column — Suspended badge */
+	&__status-col {
+		flex-shrink: 0;
+		width: 152px;
+	}
+
+	&__suspended-badge {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0 4px;
+		font-size: 11px;
+		font-weight: 400;
+		color: $bb-text-warning-primary-color;
+		background: $bb-background-warning-primary-color;
+		border: 0.5px solid $bb-border-warning-secondary-color;
+		border-radius: $bb-border-radius-full;
+		line-height: 16px;
+		white-space: nowrap;
+	}
+
+	/* Actions column */
+	&__actions-col {
+		flex-shrink: 0;
+		display: flex;
+		justify-content: flex-end;
+	}
+
+	/* 3-dot menu */
+	&__menu-wrapper {
+		position: relative;
+	}
+
+	&__menu-trigger {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 32px;
+		height: 32px;
+		padding: 4px;
+		background: none;
+		border: none;
+		border-radius: $bb-border-radius-md;
+		cursor: pointer;
+		color: $bb-icon-secondary-color;
+
+		[class*="bb-icons-"] {
+			font-size: 24px;
+			line-height: 1;
+		}
+
+		&:hover {
+			background: $bb-background-primary-color;
+		}
+	}
+
+	&__menu-dropdown {
+		position: absolute;
+		top: 100%;
+		right: 0;
+		min-width: 120px;
+		background: $bb-background-base-color;
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-lg;
+		box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.12);
+		z-index: 100;
+		padding: 4px 0;
+		width: 200px;
+	}
+
+	&__menu-item {
+		display: block;
+		width: 100%;
+		padding: 8px 16px;
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 18px;
+		color: $bb-text-tertiary-color;
+		background: none;
+		border: none;
+		cursor: pointer;
+		text-align: left;
+
+		&:hover {
+			background: $bb-background-primary-hover-color;
+		}
+
+		[class*="bb-icons-"] {
+			color: $bb-icon-tertiary-color;
+			font-size: 20px !important;
+			line-height: 1;
+			font-weight: 400;
+			margin-right: 8px;
+			vertical-align: middle;
+		}
+	}
+
+	/* Empty state */
+	&__empty {
+		padding: 24px 0;
+		text-align: center;
+
+		p {
+			font-size: 13px;
+			color: $bb-text-tertiary-color;
+			margin: 0;
+		}
+	}
+
+	/* Pagination */
+	&__pagination {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 16px;
+		padding: 16px 0;
+	}
+
+	&__page-info {
+		font-size: 13px;
+		color: $bb-text-tertiary-color;
+	}
+}
+
+/* ----------------------------------------------------------------
+   View Report Modal
+   ---------------------------------------------------------------- */
+
+.bb-admin-view-report-modal {
+	background: $bb-background-base-color;
+	border-radius: $bb-border-radius-2xl;
+	width: 90%;
+	max-width: 700px;
+	max-height: 85vh;
+	display: flex;
+	flex-direction: column;
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+
+	&__body {
+		flex: 1;
+		overflow-y: auto;
+		display: flex;
+		flex-direction: column;
+		gap: 0;
+		padding: 24px;
+	}
+
+	&__loading {
+		display: flex;
+		justify-content: center;
+		padding: 40px 0;
+	}
+
+	&__error {
+		background: rgba($bb-error-color, 0.08);
+		color: $bb-error-color;
+		padding: 10px 16px;
+		border-radius: $bb-border-radius-lg;
+		font-size: 13px;
+	}
+
+	/* Member summary bar */
+	&__summary {
+		display: flex;
+		align-items: center;
+		gap: 16px;
+		padding-bottom: 20px;
+		border-bottom: 1px solid $bb-border-primary-color;
+		margin-bottom: 20px;
+	}
+
+	&__member-info {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		flex-shrink: 0;
+	}
+
+	&__avatar {
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		object-fit: cover;
+	}
+
+	&__name {
+		font-size: 14px;
+		font-weight: 600;
+		color: $bb-link-color;
+		text-decoration: none;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+
+	&__stats {
+		display: flex;
+		align-items: center;
+		gap: 16px;
+	}
+
+	&__stat {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		font-size: 13px;
+		font-weight: 400;
+		color: $bb-text-tertiary-color;
+
+		[class*="bb-icons-"] {
+			font-size: 16px;
+			color: $bb-icon-tertiary-color;
+		}
+	}
+
+	&__suspended-badge {
+		display: inline-flex;
+		align-items: center;
+		padding: 0 4px;
+		font-size: 11px;
+		font-weight: 400;
+		color: $bb-text-warning-primary-color;
+		background: $bb-background-warning-primary-color;
+		border: 0.5px solid $bb-border-warning-secondary-color;
+		border-radius: $bb-border-radius-full;
+		line-height: 16px;
+	}
+
+	/* Reporter / Blocker sections */
+	&__section {
+		margin-bottom: 20px;
+	}
+
+	&__section-title {
+		font-size: 13px;
+		font-weight: 500;
+		color: $bb-text-tertiary-color;
+		margin: 0 0 12px 0;
+		line-height: 18px;
+	}
+
+	&__list {
+		display: flex;
+		flex-direction: column;
+		gap: 0;
+		background: $bb-background-primary-color;
+		border-radius: $bb-border-radius-lg;
+		padding: 4px 0;
+	}
+
+	&__list-item {
+		display: flex;
+		align-items: center;
+		gap: 16px;
+		padding: 12px 16px;
+
+		&--blocker {
+			.bb-admin-view-report-modal__list-item-date {
+				margin-left: auto;
+			}
+		}
+	}
+
+	&__list-item-user {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		flex-shrink: 0;
+		min-width: 140px;
+	}
+
+	&__list-avatar {
+		width: 36px;
+		height: 36px;
+		border-radius: 50%;
+		object-fit: cover;
+	}
+
+	&__list-name {
+		font-size: 13px;
+		font-weight: 500;
+		color: $bb-link-color;
+		text-decoration: none;
+		white-space: nowrap;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+
+	&__list-item-detail {
+		flex: 1;
+		min-width: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+	}
+
+	&__category-name {
+		font-size: 13px;
+		font-weight: 600;
+		color: $bb-text-color;
+		line-height: 18px;
+	}
+
+	&__category-desc {
+		font-size: 12px;
+		font-weight: 400;
+		color: $bb-text-tertiary-color;
+		line-height: 16px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	&__list-item-date {
+		font-size: 12px;
+		font-weight: 400;
+		color: $bb-text-tertiary-color;
+		line-height: 16px;
+		white-space: nowrap;
+		flex-shrink: 0;
+	}
+
+	/* Footer */
+	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 8px;
+		padding: 16px 24px;
+		border-top: 1px solid $bb-border-primary-color;
+		position: sticky;
+		bottom: 0;
+		background: #fff;
+		z-index: 1;
+	}
+
+	&__close-btn {
+		background: $bb-background-brand-primary-color !important;
+		color: $bb-text-inverse-color !important;
+		border: none !important;
+
+		&:hover {
+			background: $bb-background-brand-primary-hover-color !important;
+		}
+	}
+}
