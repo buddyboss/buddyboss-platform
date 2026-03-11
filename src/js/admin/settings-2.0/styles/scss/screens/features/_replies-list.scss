@@ -406,6 +406,15 @@
 		word-break: break-word;
 	}
 
+	&__reply-link {
+		color: $bb-link-color;
+		text-decoration: none;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+
 	&__spam-badge {
 		display: inline-block;
 		margin-left: 8px;
@@ -419,9 +428,11 @@
 		vertical-align: middle;
 	}
 
-	&__created-time {
-		color: $bb-text-tertiary-color;
-		font-size: 12px;
+	&__created-icon {
+		font-size: 16px;
+		color: $bb-icon-tertiary-color;
+		margin-right: 4px;
+		vertical-align: middle;
 	}
 
 	// Actions menu

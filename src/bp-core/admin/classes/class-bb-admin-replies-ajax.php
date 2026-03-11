@@ -244,8 +244,8 @@ class BB_Admin_Replies_Ajax {
 				'post_status'     => $reply_status,
 				'is_spam'         => $is_spam,
 				'reply_to'        => (int) get_post_meta( $reply_id, '_bbp_reply_to', true ),
-				'created_date'    => get_the_date( '', $reply_id ),
-				'created_time'    => get_the_time( '', $reply_id ),
+				'created_date'    => get_the_date( 'j M', $reply_id ),
+				'created_time'    => get_the_time( 'H:i:s', $reply_id ),
 			);
 
 			// Render custom columns via legacy filter.

@@ -617,7 +617,7 @@ export default function RepliesListScreen( { onNavigate } ) {
 	} else {
 		forumFilterLabel = sprintf(
 			__( 'All Forums (%s)', 'buddyboss' ),
-			meta && meta.views ? meta.views.all : 0
+			forumsList.length
 		);
 	}
 
@@ -765,7 +765,7 @@ export default function RepliesListScreen( { onNavigate } ) {
 											handleForumFilter( 0 );
 										} }
 									>
-										{ sprintf( __( 'All Forums (%s)', 'buddyboss' ), meta && meta.views ? meta.views.all : 0 ) }
+										{ sprintf( __( 'All Forums (%s)', 'buddyboss' ), forumsList.length ) }
 									</button>
 									{ filteredForums.map( function ( f ) {
 										return (
@@ -872,9 +872,7 @@ export default function RepliesListScreen( { onNavigate } ) {
 							<th className="bb-replies-list__col-created">
 								{ columns.bbp_reply_created ? decodeEntities( columns.bbp_reply_created ) : __( 'Created', 'buddyboss' ) }
 							</th>
-							<th className="bb-replies-list__col-actions">
-								{ __( 'Actions', 'buddyboss' ) }
-							</th>
+							<th className="bb-replies-list__col-actions"></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -894,7 +892,18 @@ export default function RepliesListScreen( { onNavigate } ) {
 									</td>
 									<td className="bb-replies-list__col-reply">
 										<div className="bb-replies-list__reply-content">
-											{ decodeEntities( reply.content ) }
+											{ reply.permalink ? (
+												<a
+													href={ safeUrl( reply.permalink ) }
+													className="bb-replies-list__reply-link"
+													target="_blank"
+													rel="noopener noreferrer"
+												>
+													{ decodeEntities( reply.content ) }
+												</a>
+											) : (
+												decodeEntities( reply.content )
+											) }
 											{ reply.is_spam && (
 												<span className="bb-replies-list__spam-badge">
 													{ __( 'Spam', 'buddyboss' ) }
@@ -909,12 +918,8 @@ export default function RepliesListScreen( { onNavigate } ) {
 										{ reply.topic_title ? decodeEntities( reply.topic_title ) : '—' }
 									</td>
 									<td className="bb-replies-list__col-created">
-										{ reply.created_date }
-										{ reply.created_time && (
-											<span className="bb-replies-list__created-time">
-												{ ' ' + reply.created_time }
-											</span>
-										) }
+										<i className="bb-icons-rl bb-icons-rl-clock bb-replies-list__created-icon"></i>
+										{ reply.created_date }{ reply.created_time ? ', ' + reply.created_time : '' }
 									</td>
 									<td className="bb-replies-list__col-actions">
 										<DropdownMenu
@@ -935,6 +940,14 @@ export default function RepliesListScreen( { onNavigate } ) {
 																{ __( 'View', 'buddyboss' ) }
 															</MenuItem>
 														) }
+														<MenuItem
+															onClick={ function () {
+																handleEdit( reply );
+																onClose();
+															} }
+														>
+															{ __( 'Edit', 'buddyboss' ) }
+														</MenuItem>
 														<MenuItem
 															onClick={ function () {
 																handleSpamToggle( reply );
