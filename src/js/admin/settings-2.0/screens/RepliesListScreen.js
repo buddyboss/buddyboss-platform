@@ -761,7 +761,8 @@ export default function RepliesListScreen( { onNavigate } ) {
 						setIsCreateOpen( true );
 					} }
 				>
-					{ __( '+ Create New Reply', 'buddyboss' ) }
+					<i className="bb-icons-rl-plus"></i>
+					{ __( 'Create New Reply', 'buddyboss' ) }
 				</Button>
 			</div>
 

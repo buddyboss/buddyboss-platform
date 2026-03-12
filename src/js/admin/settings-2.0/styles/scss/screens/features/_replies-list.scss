@@ -336,6 +336,11 @@
 			text-align: left;
 			white-space: nowrap;
 
+			&.bb-replies-list__col-reply {
+				color: $bb-text-color;
+				font-size: 14px;
+			}
+
 			&:first-child {
 				padding: 10px 0 10px 4px;
 			}
@@ -380,13 +385,17 @@
 	}
 
 	&__col-reply {
-		min-width: 250px;
-		max-width: 400px;
+		min-width: 210px;
+		max-width: 210px;
 	}
 
-	&__col-forum,
+	&__col-forum {
+		min-width: 140px;
+	}
+
 	&__col-discussion {
 		min-width: 140px;
+		max-width: 140px;
 	}
 
 	&__col-created {
@@ -409,10 +418,6 @@
 	&__reply-link {
 		color: $bb-link-color;
 		text-decoration: none;
-
-		&:hover {
-			text-decoration: underline;
-		}
 	}
 
 	&__spam-badge {
@@ -431,7 +436,7 @@
 	&__created-icon {
 		font-size: 16px;
 		color: $bb-icon-tertiary-color;
-		margin-right: 4px;
+		margin-right: 6px;
 		vertical-align: middle;
 	}
 
