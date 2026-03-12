@@ -999,21 +999,27 @@ export default function RepliesListScreen( { onNavigate } ) {
 									</td>
 									<td className="bb-replies-list__col-actions">
 										<DropdownMenu
-											icon="ellipsis"
+											icon={ <i className="bb-icons-rl-dots-three"></i> }
 											label={ __( 'Actions', 'buddyboss' ) }
 											className="bb-replies-list__actions-menu"
 										>
-											{ function ( { onClose } ) {
+											{ function ( dropdownProps ) {
+												var onClose = dropdownProps.onClose;
 												return (
-													<MenuGroup>
+													<MenuGroup className="bb_dropdown_menu_group">
 														{ reply.permalink && (
 															<MenuItem
 																onClick={ function () {
-																	window.open( safeUrl( reply.permalink ), '_blank' );
+																	var permalink = safeUrl( reply.permalink );
+																	if ( '#' !== permalink ) {
+																		window.open( permalink, '_blank', 'noopener noreferrer' );
+																	}
 																	onClose();
 																} }
 															>
+																<i className="bb-icons-rl bb-icons-rl-eye"></i>
 																{ __( 'View', 'buddyboss' ) }
+																<i className="bb-icons-rl bb-icons-rl-arrow-up-right bb-icons-external"></i>
 															</MenuItem>
 														) }
 														<MenuItem
@@ -1022,6 +1028,7 @@ export default function RepliesListScreen( { onNavigate } ) {
 																onClose();
 															} }
 														>
+															<i className="bb-icons-rl bb-icons-rl-note-pencil"></i>
 															{ __( 'Edit', 'buddyboss' ) }
 														</MenuItem>
 														<MenuItem
@@ -1030,18 +1037,21 @@ export default function RepliesListScreen( { onNavigate } ) {
 																onClose();
 															} }
 														>
+															<i className="bb-icons-rl bb-icons-rl-flag"></i>
 															{ reply.is_spam
 																? __( 'Not Spam', 'buddyboss' )
 																: __( 'Spam', 'buddyboss' )
 															}
 														</MenuItem>
 														<MenuItem
+															isDestructive
 															onClick={ function () {
 																handleDeleteClick( reply );
 																onClose();
 															} }
 															className="bb-replies-list__action-delete"
 														>
+															<i className="bb-icons-rl bb-icons-rl-trash"></i>
 															{ __( 'Delete', 'buddyboss' ) }
 														</MenuItem>
 													</MenuGroup>
