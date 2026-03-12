@@ -476,6 +476,61 @@
         }
     }
 
+    .bb-admin-settings-form__child-fields {
+        margin-top: 24px;
+    }
+
+    .bb-admin-settings-form__child-field {
+
+        &-label {
+            display: block;
+            color: $bb-text-secondary-color;
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 18px;
+            margin-bottom: 8px;
+        }
+
+        &-control {
+            max-width: 272px;
+
+            select {
+                @include bb-admin-settings-select;
+                width: 100%;
+            }
+
+            .components-base-control {
+                margin-bottom: 0;
+
+                .components-select-control__input {
+                    @include bb-admin-settings-select;
+                    width: 100%;
+                }
+
+                .components-input-control-suffix-wrapper {
+                    display: none;
+                }
+
+                .components-input-control__backdrop {
+                    border-color: transparent;
+                }
+            }
+        }
+
+        &--disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        &-description {
+            color: $bb-text-tertiary-color;
+            font-size: 13px;
+            font-weight: 400;
+            line-height: 18px;
+            margin: 8px 0 0 0;
+        }
+    }
+
     .bb-admin-reaction-info {
         color: $bb-text-tertiary-color;
         font-size: 13px;
@@ -498,6 +553,7 @@
 
 		.components-select-control__input {
 			@include bb-admin-settings-select;
+			max-width: 272px;
 		}
 
 		.components-input-control-suffix-wrapper,

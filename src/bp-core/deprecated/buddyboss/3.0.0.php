@@ -50,6 +50,93 @@ add_action(
 );
 
 // ──────────────────────────────────────────────────────────────────────────────
+// Messaging Notifications Settings 2.0 deprecated function stubs.
+// These functions were in bp-notifications-settings.php and rendered the
+// Messaging Notifications section on the legacy Notifications settings page.
+// Settings 2.0 replaces them with bb_admin_settings_register_messages_feature().
+// ──────────────────────────────────────────────────────────────────────────────
+
+if ( ! function_exists( 'bb_admin_setting_callback_messaging_notification_warning' ) ) {
+	/**
+	 * Display a warning when Pusher Live Messaging is enabled but messaging
+	 * notification settings are disabled.
+	 *
+	 * @since BuddyBoss 2.1.4
+	 * @deprecated BuddyBoss [BBVERSION] Replaced by a notice field in Settings 2.0 Messages feature.
+	 */
+	function bb_admin_setting_callback_messaging_notification_warning() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Messages feature (bb-messages-live-messaging-notice field)' );
+	}
+}
+
+if ( ! function_exists( 'bb_messaging_notifications_tutorial' ) ) {
+	/**
+	 * Link to Messaging Notification tutorial.
+	 *
+	 * @since BuddyBoss 2.1.4
+	 * @deprecated BuddyBoss [BBVERSION] Tutorial link is now in the side panel help_url in Settings 2.0.
+	 */
+	function bb_messaging_notifications_tutorial() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Messages feature (messaging_notifications side panel help_url)' );
+	}
+}
+
+if ( ! function_exists( 'bb_admin_setting_callback_messaging_notification_fields' ) ) {
+	/**
+	 * Callback for rendering the hide/delay messaging notification fields.
+	 *
+	 * @since BuddyBoss 2.1.4
+	 * @deprecated BuddyBoss [BBVERSION] Replaced by Settings 2.0 fields in bb_admin_settings_register_messages_feature().
+	 */
+	function bb_admin_setting_callback_messaging_notification_fields() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Messages feature (messaging_notifications panel fields)' );
+	}
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Messages Settings 2.0 deprecated hook compatibility.
+// ──────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Fire the legacy `bp_admin_setting_messages_register_fields` hook after
+ * Settings 2.0 finishes registering messages fields.
+ *
+ * The original hook passed a `BP_Admin_Setting_Messages` instance. Settings 2.0
+ * no longer uses that class, so a no-op stub is passed to satisfy callbacks
+ * (e.g. Pro access-control) that call add_section()/add_field() on the argument.
+ *
+ * @since BuddyBoss 1.0.0
+ * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_messages_after_register_settings_fields'} instead.
+ */
+add_action(
+	'bb_messages_after_register_settings_fields',
+	static function () {
+		do_action_deprecated(
+			'bp_admin_setting_messages_register_fields',
+			array(
+				new class() {
+					/**
+					 * No-op stub for BP_Admin_Setting_tab::add_section().
+					 *
+					 * @param mixed ...$args Ignored.
+					 */
+					public function add_section( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+
+					/**
+					 * No-op stub for BP_Admin_Setting_tab::add_field().
+					 *
+					 * @param mixed ...$args Ignored.
+					 */
+					public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+				},
+			),
+			'BuddyBoss [BBVERSION]',
+			'bb_messages_after_register_settings_fields'
+		);
+	}
+);
+
+// ──────────────────────────────────────────────────────────────────────────────
 // Media Settings 2.0 deprecated hook compatibility.
 // Media is a "super-feature" wrapping bp-media (photos), bp-video, bp-document.
 // ──────────────────────────────────────────────────────────────────────────────
