@@ -572,7 +572,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 					className="bb-tag-delete-modal bb-admin-settings-modal"
 					shouldCloseOnClickOutside={ false }
 				>
-					<div className="bb-tag-delete-modal__body">
+					<div className="bb-admin-settings-modal__body">
 						<p>
 							{ sprintf(
 								__( 'Are you sure you want to delete the tag "%s"? This action cannot be undone.', 'buddyboss' ),
@@ -580,7 +580,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 							) }
 						</p>
 					</div>
-					<div className="bb-tag-delete-modal__footer bb-admin-settings-modal__footer">
+					<div className="bb-admin-settings-modal__footer">
 						<Button
 							variant="secondary"
 							onClick={ function () {
