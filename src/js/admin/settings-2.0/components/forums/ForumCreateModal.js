@@ -18,6 +18,7 @@ import {
 import { __ } from '@wordpress/i18n';
 
 import { createForum } from '../../utils/ajax';
+import { safeUrl } from '../../utils/sanitize';
 import { AsyncSelectField } from '../fields/AsyncSelectField';
 import { RichTextEditor, forceRemoveEditor } from '../common/RichTextEditor';
 
@@ -340,7 +341,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated } ) {
 					</label>
 					{ imageUrl ? (
 						<div className="bb-forum-modal__image-preview">
-							<img src={ imageUrl } alt="" />
+							<img src={ safeUrl( imageUrl ) } alt="" />
 							<div className="bb-forum-modal__image-actions">
 								<Button
 									variant="secondary"

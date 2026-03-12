@@ -1155,6 +1155,11 @@ class BB_Feature_Registry {
 	public function bb_is_feature_available( $feature_id ) {
 		static $cache = array();
 
+		// Reset static cache when features have been toggled.
+		if ( $this->active_cache_dirty ) {
+			$cache = array();
+		}
+
 		if ( isset( $cache[ $feature_id ] ) ) {
 			return $cache[ $feature_id ];
 		}
@@ -1300,9 +1305,10 @@ class BB_Feature_Registry {
 			);
 		}
 
-		// Auto-deactivate any features that depend on this one (O(1) lookup via reverse index when available).
+		// Collect all features to deactivate (this one + active dependents) to batch DB writes.
+		$all_to_deactivate      = array( $feature_id );
 		$deactivated_dependents = array();
-		$dependent_ids         = ! empty( $this->reverse_deps[ $feature_id ] ) ? $this->reverse_deps[ $feature_id ] : array();
+		$dependent_ids          = ! empty( $this->reverse_deps[ $feature_id ] ) ? $this->reverse_deps[ $feature_id ] : array();
 		if ( empty( $dependent_ids ) ) {
 			foreach ( $this->features as $fid => $f ) {
 				if ( ! empty( $f['depends_on'] ) && in_array( $feature_id, $f['depends_on'], true ) ) {
@@ -1312,7 +1318,7 @@ class BB_Feature_Registry {
 		}
 		foreach ( $dependent_ids as $dependent_id ) {
 			if ( $this->bb_is_feature_active( $dependent_id ) ) {
-				$this->bb_deactivate_feature( $dependent_id );
+				$all_to_deactivate[]      = $dependent_id;
 				$deactivated_dependents[] = $dependent_id;
 			}
 		}
@@ -1322,41 +1328,43 @@ class BB_Feature_Registry {
 			$this->last_deactivated_dependents = $deactivated_dependents;
 		}
 
-		// Primary storage: bb-active-features option (single source of truth).
-		$active_features                = bp_get_option( 'bb-active-features', array() );
-		$active_features[ $feature_id ] = 0;
-		bp_update_option( 'bb-active-features', $active_features );
-
-		// Best-effort sync to bp-active-components for backward compatibility.
-		// This ensures legacy code using bp_is_active() continues to work.
-		// Note: bp_update_option() returns false both on failure and when value is unchanged,
-		// so we cannot reliably detect actual write failures for rollback.
+		// Batch write: update both options once for all features being deactivated.
+		$active_features   = bp_get_option( 'bb-active-features', array() );
 		$active_components = bp_get_option( 'bp-active-components', array() );
 
-		// Check if this feature controls multiple components.
-		if ( ! empty( $feature['components'] ) && is_array( $feature['components'] ) ) {
-			// Disable all controlled components.
-			foreach ( $feature['components'] as $component_id ) {
-				unset( $active_components[ $component_id ] );
+		foreach ( $all_to_deactivate as $fid_to_deactivate ) {
+			$active_features[ $fid_to_deactivate ] = 0;
+
+			// Sync to bp-active-components for backward compatibility.
+			$f = $this->features[ $fid_to_deactivate ];
+			if ( ! empty( $f['components'] ) && is_array( $f['components'] ) ) {
+				foreach ( $f['components'] as $component_id ) {
+					unset( $active_components[ $component_id ] );
+				}
+			} else {
+				unset( $active_components[ $fid_to_deactivate ] );
 			}
-		} else {
-			// Single component (feature_id = component_id).
-			unset( $active_components[ $feature_id ] );
 		}
 
+		bp_update_option( 'bb-active-features', $active_features );
 		bp_update_option( 'bp-active-components', $active_components );
 
-		// Clear caches.
-		$this->bb_clear_feature_caches( $feature_id );
+		// Clear caches for all deactivated features.
+		foreach ( $all_to_deactivate as $fid_to_deactivate ) {
+			$this->bb_clear_feature_caches( $fid_to_deactivate );
+		}
 
-		/**
-		 * Fired after a feature is deactivated.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param string $feature_id Feature ID.
-		 */
-		do_action( 'bb_feature_deactivated', $feature_id );
+		// Fire deactivation hooks for all features.
+		foreach ( $all_to_deactivate as $fid_to_deactivate ) {
+			/**
+			 * Fired after a feature is deactivated.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param string $fid_to_deactivate Feature ID.
+			 */
+			do_action( 'bb_feature_deactivated', $fid_to_deactivate );
+		}
 
 		return true;
 	}

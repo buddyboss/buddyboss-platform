@@ -591,6 +591,43 @@ class BB_Admin_Forums_Ajax {
 			set_post_thumbnail( $forum_id, $image_id );
 		}
 
+		// Propagate visibility to child forums for group forums (replicates bbp_save_forum_extras logic).
+		if ( ! empty( $visibility ) && function_exists( 'bb_get_all_nested_subforums' ) ) {
+			$forum_obj = bbp_get_forum( $forum_id );
+
+			if ( ! empty( $forum_obj->post_parent ) ) {
+				$ancestors    = get_post_ancestors( $forum_id );
+				$root         = count( $ancestors ) - 1;
+				$parent_forum = $ancestors[ $root ];
+			} else {
+				$parent_forum = $forum_id;
+			}
+
+			// Only propagate for group-attached forums.
+			if ( ! empty( $parent_forum ) && ! empty( bbp_get_forum_group_ids( $parent_forum ) ) ) {
+				$child_forums = bb_get_all_nested_subforums( $parent_forum );
+				if ( $child_forums ) {
+					$parent_status = get_post_status( $parent_forum );
+					foreach ( $child_forums as $child_forum_id ) {
+						if ( get_post_status( $child_forum_id ) !== $parent_status ) {
+							switch ( $parent_status ) {
+								case bbp_get_hidden_status_id():
+									bbp_hide_forum( $child_forum_id );
+									break;
+								case bbp_get_private_status_id():
+									bbp_privatize_forum( $child_forum_id );
+									break;
+								case bbp_get_public_status_id():
+								default:
+									bbp_publicize_forum( $child_forum_id );
+									break;
+							}
+						}
+					}
+				}
+			}
+		}
+
 		// Recalculate counts when parent changes.
 		if ( $parent_id !== $old_parent_id ) {
 			bbp_update_forum( array( 'forum_id' => $forum_id ) );
@@ -601,6 +638,18 @@ class BB_Admin_Forums_Ajax {
 				bbp_update_forum( array( 'forum_id' => $parent_id ) );
 			}
 		}
+
+		/**
+		 * Fires after forum edit is complete in Settings 2.0 admin.
+		 *
+		 * Mirrors the legacy bbp_edit_forum_post_extras hook for third-party
+		 * plugin compatibility.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $forum_id Forum ID.
+		 */
+		do_action( 'bbp_edit_forum_post_extras', $forum_id );
 
 		// Clear status counts cache.
 		$this->bb_clear_status_counts_cache();

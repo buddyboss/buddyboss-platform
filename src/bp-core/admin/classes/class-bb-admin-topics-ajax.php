@@ -159,10 +159,14 @@ class BB_Admin_Topics_Ajax {
 			'post_status'    => array( 'publish', 'closed', 'private', 'hidden' ),
 		);
 
-		// Forum filter.
+		// Forum filter — use meta_query to avoid conflict with meta-based sorting.
 		if ( ! empty( $forum_id ) ) {
-			$query_args['meta_key']   = '_bbp_forum_id'; // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- Required for forum filtering.
-			$query_args['meta_value'] = $forum_id; // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- Required for forum filtering.
+			$query_args['meta_query'] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Required for forum filtering.
+				'forum_filter' => array(
+					'key'   => '_bbp_forum_id',
+					'value' => $forum_id,
+				),
+			);
 		}
 
 		// Topic tag filter.
@@ -181,37 +185,52 @@ class BB_Admin_Topics_Ajax {
 			$query_args['s'] = $search;
 		}
 
-		// Sort mapping.
+		// Sort mapping — uses meta_query named clauses to coexist with forum filter.
+		$needs_meta_sort = false;
+		$sort_meta_key   = '';
+
 		switch ( $sort ) {
 			case 'oldest':
 				$query_args['orderby'] = 'date';
 				$query_args['order']   = 'ASC';
 				break;
 			case 'highest_replies':
-				$query_args['orderby']  = 'meta_value_num';
-				$query_args['meta_key'] = '_bbp_reply_count'; // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- Required for sorting by reply count.
-				$query_args['order']    = 'DESC';
+				$needs_meta_sort = true;
+				$sort_meta_key   = '_bbp_reply_count';
+				$query_args['order'] = 'DESC';
 				break;
 			case 'lowest_replies':
-				$query_args['orderby']  = 'meta_value_num';
-				$query_args['meta_key'] = '_bbp_reply_count'; // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- Required for sorting by reply count.
-				$query_args['order']    = 'ASC';
+				$needs_meta_sort = true;
+				$sort_meta_key   = '_bbp_reply_count';
+				$query_args['order'] = 'ASC';
 				break;
 			case 'highest_members':
-				$query_args['orderby']  = 'meta_value_num';
-				$query_args['meta_key'] = '_bbp_voice_count'; // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- Required for sorting by member count.
-				$query_args['order']    = 'DESC';
+				$needs_meta_sort = true;
+				$sort_meta_key   = '_bbp_voice_count';
+				$query_args['order'] = 'DESC';
 				break;
 			case 'lowest_members':
-				$query_args['orderby']  = 'meta_value_num';
-				$query_args['meta_key'] = '_bbp_voice_count'; // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- Required for sorting by member count.
-				$query_args['order']    = 'ASC';
+				$needs_meta_sort = true;
+				$sort_meta_key   = '_bbp_voice_count';
+				$query_args['order'] = 'ASC';
 				break;
 			case 'newest':
 			default:
 				$query_args['orderby'] = 'date';
 				$query_args['order']   = 'DESC';
 				break;
+		}
+
+		// When sorting by meta, add a named clause and order by it.
+		if ( $needs_meta_sort ) {
+			if ( ! isset( $query_args['meta_query'] ) ) {
+				$query_args['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Required for meta-based sorting.
+			}
+			$query_args['meta_query']['sort_clause'] = array(
+				'key'  => $sort_meta_key,
+				'type' => 'NUMERIC',
+			);
+			$query_args['orderby'] = 'sort_clause';
 		}
 
 		$query = new WP_Query( $query_args );
@@ -525,7 +544,12 @@ class BB_Admin_Topics_Ajax {
 		if ( 'sticky' === $type ) {
 			bbp_stick_topic( $topic_id );
 		} elseif ( 'super_sticky' === $type ) {
-			bbp_stick_topic( $topic_id, true );
+			// Super-sticky is not allowed for group forum topics.
+			if ( function_exists( 'bb_is_group_forum_topic' ) && bb_is_group_forum_topic( $topic_id ) ) {
+				bbp_stick_topic( $topic_id );
+			} else {
+				bbp_stick_topic( $topic_id, true );
+			}
 		}
 
 		// Handle topic status (open/closed).
@@ -540,6 +564,11 @@ class BB_Admin_Topics_Ajax {
 			if ( ! empty( $tag_names ) ) {
 				wp_set_object_terms( $topic_id, $tag_names, bbp_get_topic_tag_tax_id() );
 			}
+		}
+
+		// Notify forum subscribers about the new topic.
+		if ( function_exists( 'bbp_notify_forum_subscribers' ) ) {
+			bbp_notify_forum_subscribers( $topic_id );
 		}
 
 		// Clear forum counts cache.
@@ -652,7 +681,12 @@ class BB_Admin_Topics_Ajax {
 				if ( 'sticky' === $type ) {
 					bbp_stick_topic( $topic_id );
 				} elseif ( 'super_sticky' === $type ) {
-					bbp_stick_topic( $topic_id, true );
+					// Super-sticky is not allowed for group forum topics.
+					if ( function_exists( 'bb_is_group_forum_topic' ) && bb_is_group_forum_topic( $topic_id ) ) {
+						bbp_stick_topic( $topic_id );
+					} else {
+						bbp_stick_topic( $topic_id, true );
+					}
 				}
 			}
 		}
@@ -675,6 +709,18 @@ class BB_Admin_Topics_Ajax {
 			$tag_names = array_filter( $tag_names );
 			wp_set_object_terms( $topic_id, $tag_names, bbp_get_topic_tag_tax_id() );
 		}
+
+		/**
+		 * Fires after topic edit is complete in Settings 2.0 admin.
+		 *
+		 * Mirrors the legacy bbp_edit_topic_post_extras hook for third-party
+		 * plugin compatibility.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $topic_id Topic ID.
+		 */
+		do_action( 'bbp_edit_topic_post_extras', $topic_id );
 
 		// Clear forum counts cache.
 		$this->bb_clear_forum_counts_cache();
@@ -799,7 +845,12 @@ class BB_Admin_Topics_Ajax {
 						if ( 'sticky' === $edit_type ) {
 							bbp_stick_topic( $topic_id );
 						} elseif ( 'super_sticky' === $edit_type ) {
-							bbp_stick_topic( $topic_id, true );
+							// Super-sticky is not allowed for group forum topics.
+							if ( function_exists( 'bb_is_group_forum_topic' ) && bb_is_group_forum_topic( $topic_id ) ) {
+								bbp_stick_topic( $topic_id );
+							} else {
+								bbp_stick_topic( $topic_id, true );
+							}
 						}
 						$updated = true;
 					}

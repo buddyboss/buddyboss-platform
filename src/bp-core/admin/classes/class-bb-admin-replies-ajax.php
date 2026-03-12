@@ -263,7 +263,7 @@ class BB_Admin_Replies_Ajax {
 					 * @param int    $reply_id Reply ID.
 					 */
 					do_action( 'bbp_admin_replies_column_data', $col_key, $reply_id );
-					$item['custom_columns'][ $col_key ] = ob_get_clean();
+					$item['custom_columns'][ $col_key ] = wp_kses_post( ob_get_clean() );
 				}
 			}
 
@@ -482,6 +482,11 @@ class BB_Admin_Replies_Ajax {
 			update_post_meta( $reply_id, '_bbp_reply_to', $reply_to );
 		}
 
+		// Notify topic subscribers about the new reply.
+		if ( function_exists( 'bbp_notify_topic_subscribers' ) ) {
+			bbp_notify_topic_subscribers( $reply_id, $topic_id, $forum_id );
+		}
+
 		$this->bb_clear_forum_counts_cache();
 
 		wp_send_json_success(
@@ -586,6 +591,18 @@ class BB_Admin_Replies_Ajax {
 			bbp_update_forum( array( 'forum_id' => $forum_id ) );
 		}
 
+		/**
+		 * Fires after reply edit is complete in Settings 2.0 admin.
+		 *
+		 * Mirrors the legacy bbp_edit_reply_post_extras hook for third-party
+		 * plugin compatibility.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $reply_id Reply ID.
+		 */
+		do_action( 'bbp_edit_reply_post_extras', $reply_id );
+
 		$this->bb_clear_forum_counts_cache();
 
 		wp_send_json_success(
@@ -621,6 +638,9 @@ class BB_Admin_Replies_Ajax {
 		if ( ! $reply || bbp_get_reply_post_type() !== $reply->post_type ) {
 			wp_send_json_error( array( 'message' => __( 'Reply not found.', 'buddyboss' ) ) );
 		}
+
+		// Fire bbPress pre-delete hook for cleanup (meta, caches, walker position).
+		bbp_delete_reply( $reply_id );
 
 		wp_delete_post( $reply_id, true );
 
@@ -685,6 +705,8 @@ class BB_Admin_Replies_Ajax {
 			}
 
 			if ( 'delete' === $action ) {
+				// Fire bbPress pre-delete hook for cleanup (meta, caches, walker position).
+				bbp_delete_reply( $rid );
 				$result = wp_delete_post( $rid, true );
 				if ( $result ) {
 					++$processed;
