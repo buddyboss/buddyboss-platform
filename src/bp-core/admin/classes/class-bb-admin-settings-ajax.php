@@ -743,6 +743,13 @@ class BB_Admin_Settings_Ajax {
 				$field_data['help_text'] = wp_kses_post( $field_data['help_text'] );
 			}
 
+			// Attach notification_groups data for notification_types fields.
+			// Built lazily here (not during registration) because bb_register_notification_preferences()
+			// depends on component hooks that haven't fired yet at bb_register_features time.
+			if ( 'notification_types' === ( $field['type'] ?? '' ) && function_exists( 'bb_register_notification_preferences' ) ) {
+				$field_data['notification_groups'] = $this->bb_build_notification_groups();
+			}
+
 			// Attach topic data and nonces for topic_list fields.
 			if ( 'topic_list' === ( $field['type'] ?? '' ) && function_exists( 'bb_topics_manager_instance' ) ) {
 				$topics_manager = bb_topics_manager_instance();
@@ -1298,6 +1305,136 @@ class BB_Admin_Settings_Ajax {
 	 *
 	 * @return array Flattened toggle values keyed by extension ID.
 	 */
+	/**
+	 * Build notification groups data for the notification_types custom field.
+	 *
+	 * Called lazily at AJAX time because bb_register_notification_preferences()
+	 * depends on component hooks that haven't fired yet during bb_register_features.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return array Notification groups with fields, sub-types, and email template info.
+	 */
+	private function bb_build_notification_groups() {
+		$all_notifications    = bb_register_notification_preferences();
+		$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
+		$notification_groups  = array();
+
+		if ( empty( $all_notifications ) ) {
+			return $notification_groups;
+		}
+
+		foreach ( $all_notifications as $group_key => $field_group ) {
+			$group_data = array(
+				'key'         => $group_key,
+				'admin_label' => isset( $field_group['admin_label'] ) ? $field_group['admin_label'] : '',
+				'fields'      => array(),
+			);
+
+			if ( ! empty( $field_group['fields'] ) ) {
+				foreach ( $field_group['fields'] as $notification_field ) {
+					$checked = isset( $notification_field['default'] ) && 'yes' === $notification_field['default'];
+
+					if ( array_key_exists( $notification_field['key'], $enabled_notification ) ) {
+						$checked = isset( $enabled_notification[ $notification_field['key'] ]['main'] ) && 'yes' === $enabled_notification[ $notification_field['key'] ]['main'];
+					}
+
+					// Get email template info.
+					$registered_emails = bb_register_notification_email_templates( $notification_field['key'] );
+					$email_template    = array(
+						'has_templates' => ! empty( $registered_emails ),
+						'count'         => count( $registered_emails ),
+					);
+
+					if ( ! empty( $registered_emails ) ) {
+						$total_email_count = 0;
+						foreach ( $registered_emails as $email_type ) {
+							$total_email_count += get_terms(
+								array(
+									'taxonomy' => bp_get_email_tax_type(),
+									'slug'     => $email_type,
+									'fields'   => 'count',
+								)
+							);
+						}
+
+						$email_template['existing_count'] = $total_email_count;
+						$email_template['missing']        = count( $registered_emails ) > $total_email_count;
+
+						if ( ! $email_template['missing'] ) {
+							$posts = get_posts(
+								array(
+									'showposts' => 1,
+									'post_type' => bp_get_email_post_type(),
+									'tax_query' => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+										array(
+											'taxonomy' => bp_get_email_tax_type(),
+											'field'    => 'slug',
+											'terms'    => $registered_emails,
+										),
+									),
+									'fields'    => 'ids',
+								)
+							);
+
+							if ( 1 === count( $registered_emails ) && ! empty( $posts ) ) {
+								$email_template['url'] = get_edit_post_link( current( $posts ), 'raw' );
+							} else {
+								$email_template['url'] = add_query_arg(
+									array(
+										'post_type' => bp_get_email_post_type(),
+										'taxonomy'  => bp_get_email_tax_type(),
+										'terms'     => implode( ',', $registered_emails ),
+									),
+									admin_url( 'edit.php' )
+								);
+							}
+						} else {
+							$email_template['url'] = get_admin_url(
+								bp_get_root_blog_id(),
+								'edit.php?post_type=' . bp_get_email_post_type() . '&popup=yes'
+							);
+						}
+					}
+
+					// Get preference sub-types (email, web, app).
+					$sub_types = array();
+					if ( function_exists( 'bb_notification_preferences_types' ) ) {
+						$options = bb_notification_preferences_types( $notification_field );
+						if ( ! empty( $options ) ) {
+							foreach ( $options as $key => $v ) {
+								$parent_disabled = ! empty( $notification_field['notification_read_only'] ) && true === $notification_field['notification_read_only'];
+								$is_disabled     = apply_filters( 'bb_is_' . $notification_field['key'] . '_' . $key . '_preference_enabled', ! $checked );
+								$is_render       = apply_filters( 'bb_is_' . $notification_field['key'] . '_' . $key . '_preference_type_render', $v['is_render'], $notification_field['key'], $key );
+
+								$sub_types[ $key ] = array(
+									'label'      => $v['label'],
+									'is_checked' => $v['is_checked'],
+									'is_render'  => $is_render,
+									'disabled'   => $is_disabled && $parent_disabled,
+								);
+							}
+						}
+					}
+
+					$group_data['fields'][] = array(
+						'key'            => $notification_field['key'],
+						'label'          => ! empty( $notification_field['admin_label'] ) ? $notification_field['admin_label'] : $notification_field['label'],
+						'checked'        => $checked,
+						'read_only'      => ! empty( $notification_field['notification_read_only'] ),
+						'tooltip'        => ! empty( $notification_field['notification_tooltip_text'] ) ? $notification_field['notification_tooltip_text'] : '',
+						'email_template' => $email_template,
+						'sub_types'      => $sub_types,
+					);
+				}
+			}
+
+			$notification_groups[] = $group_data;
+		}
+
+		return $notification_groups;
+	}
+
 	private function bb_extract_extension_toggle_values( $field_value ) {
 		$toggle_values = array();
 		foreach ( $field_value as $key => $ext ) {

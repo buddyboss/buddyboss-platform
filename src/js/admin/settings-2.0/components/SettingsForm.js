@@ -29,6 +29,7 @@ import { sanitizeHtml, safeUrl } from '../utils/sanitize';
 import { TopicListField } from './activity/topics/topic-list';
 import { SharePlatformsField } from './activity/sharing';
 import { AccessControlField } from './access-control/AccessControlField';
+import { NotificationTypesField } from './notifications';
 import { CheckboxListField } from './fields/CheckboxListField';
 import { ImageRadioField } from './fields/ImageRadioField';
 import { DimensionsField } from './fields/DimensionsField';
@@ -548,6 +549,16 @@ export function SettingsForm({ fields, values, onChange }) {
 						) }
 						<span>{ field.manage_label || __( 'Manage', 'buddyboss' ) }</span>
 					</button>
+				);
+
+			case 'notification_types':
+				// Delegate to NotificationTypesField component.
+				return (
+					<NotificationTypesField
+						field={field}
+						value={value}
+						onChange={onChange}
+					/>
 				);
 
 			default:

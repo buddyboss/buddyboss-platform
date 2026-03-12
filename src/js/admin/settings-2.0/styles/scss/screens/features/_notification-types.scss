@@ -1,0 +1,142 @@
+/**
+ * BuddyBoss Admin Settings 2.0 - Notification Types Styles
+ *
+ * @package BuddyBoss\Core\Administration
+ * @since BuddyBoss [BBVERSION]
+ */
+
+.bb-notification-types {
+	display: flex;
+	flex-direction: column;
+
+	&__empty {
+		color: $bb-text-tertiary-color;
+		font-size: 13px;
+		padding: 16px 0;
+	}
+
+	&__group {
+		&:not(:last-child) {
+			margin-bottom: 4px;
+		}
+	}
+
+	&__group-header {
+		font-size: 13px;
+		font-weight: 600;
+		color: $bb-text-color;
+		padding: 12px 0 4px;
+	}
+
+	&__rows {
+		display: flex;
+		flex-direction: column;
+	}
+
+	&__row {
+		display: flex;
+		align-items: center;
+		padding: 8px 0;
+		gap: 12px;
+		border-bottom: 1px solid $bb-border-primary-color;
+
+		&:last-child {
+			border-bottom: none;
+		}
+
+		&--disabled {
+			.bb-notification-types__label,
+			.bb-notification-types__sub-types,
+			.bb-notification-types__email-template {
+				opacity: 0.5;
+			}
+		}
+	}
+
+	&__toggle {
+		flex-shrink: 0;
+
+		.components-toggle-control {
+			margin-bottom: 0;
+		}
+
+		.components-base-control__field {
+			margin-bottom: 0;
+		}
+	}
+
+	&__label {
+		flex: 1;
+		font-size: 13px;
+		font-weight: 400;
+		color: $bb-text-secondary-color;
+		line-height: 1.4;
+		min-width: 0;
+	}
+
+	&__tooltip {
+		margin-left: 4px;
+		color: $bb-icon-tertiary-color;
+		cursor: help;
+		display: inline-flex;
+		align-items: center;
+		vertical-align: middle;
+
+		i {
+			font-size: 14px;
+		}
+	}
+
+	&__sub-types {
+		display: flex;
+		align-items: center;
+		gap: 16px;
+		flex-shrink: 0;
+	}
+
+	&__sub-type {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+		cursor: pointer;
+		font-size: 13px;
+		color: $bb-text-secondary-color;
+
+		input[type="checkbox"] {
+			margin: 0;
+			width: 16px;
+			height: 16px;
+		}
+
+		&--disabled {
+			opacity: 0.5;
+			cursor: default;
+		}
+	}
+
+	&__sub-type-label {
+		font-size: 13px;
+		line-height: 1;
+	}
+
+	&__email-template {
+		flex-shrink: 0;
+		min-width: 120px;
+		text-align: right;
+	}
+
+	&__email-link {
+		font-size: 12px;
+		color: $bb-link-color;
+		text-decoration: none;
+		white-space: nowrap;
+
+		&:hover {
+			text-decoration: underline;
+		}
+
+		&--missing {
+			color: $bb-error-color;
+		}
+	}
+}
