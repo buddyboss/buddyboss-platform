@@ -973,6 +973,30 @@ export function DiscussionsListScreen( { onNavigate } ) {
 					shouldCloseOnClickOutside={ false }
 				>
 					<div className="bb-discussion-delete-modal__body">
+						<div className="bb-admin-bulk-modal__selected-items">
+							{ selectedDiscussionNames.map( function ( item ) {
+								return (
+									<div key={ item.id } className="bb-admin-bulk-modal__selected-item">
+										<CheckboxControl
+											checked={ true }
+											onChange={ function () {
+												setSelectedIds( function ( prev ) {
+													var next = prev.filter( function ( i ) { return i !== item.id; } );
+													if ( 0 === next.length ) {
+														setDeleteModalOpen( false );
+													}
+													return next;
+												} );
+											} }
+											__nextHasNoMarginBottom
+										/>
+										<span className="bb-admin-bulk-modal__selected-item-name">
+											{ decodeEntities( item.title ) }
+										</span>
+									</div>
+								);
+							} ) }
+						</div>
 						<div className="bb-admin-delete__warning">
 							<i className="bb-icons-rl bb-icons-rl-warning-circle"></i>
 							<div className="bb-admin-delete__warning-text">
@@ -1026,16 +1050,13 @@ export function DiscussionsListScreen( { onNavigate } ) {
 					shouldCloseOnClickOutside={ false }
 				>
 					<div className="bb-discussion-bulk-edit-modal__body">
-						<div className="bb-discussion-bulk-edit-modal__selected-pills">
+						<div className="bb-admin-bulk-modal__selected-items">
 							{ selectedDiscussionNames.map( function ( item ) {
 								return (
-									<span key={ item.id } className="bb-discussion-bulk-edit-modal__pill">
-										<span className="bb-discussion-bulk-edit-modal__pill-name">
-											{ decodeEntities( item.title ) }
-										</span>
-										<button
-											className="bb-discussion-bulk-edit-modal__pill-remove"
-											onClick={ function () {
+									<div key={ item.id } className="bb-admin-bulk-modal__selected-item">
+										<CheckboxControl
+											checked={ true }
+											onChange={ function () {
 												setSelectedIds( function ( prev ) {
 													var next = prev.filter( function ( i ) { return i !== item.id; } );
 													if ( 0 === next.length ) {
@@ -1044,10 +1065,12 @@ export function DiscussionsListScreen( { onNavigate } ) {
 													return next;
 												} );
 											} }
-										>
-											<i className="bb-icons-rl bb-icons-rl-x"></i>
-										</button>
-									</span>
+											__nextHasNoMarginBottom
+										/>
+										<span className="bb-admin-bulk-modal__selected-item-name">
+											{ decodeEntities( item.title ) }
+										</span>
+									</div>
 								);
 							} ) }
 						</div>

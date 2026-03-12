@@ -157,7 +157,7 @@ export default function RepliesListScreen( { onNavigate } ) {
 	var editError = editErrorState[ 0 ];
 	var setEditError = editErrorState[ 1 ];
 
-	// Delete modal.
+	// Single delete modal.
 	var deleteReplyItemState = useState( null );
 	var deleteReplyItem = deleteReplyItemState[ 0 ];
 	var setDeleteReplyItem = deleteReplyItemState[ 1 ];
@@ -165,6 +165,24 @@ export default function RepliesListScreen( { onNavigate } ) {
 	var isDeletingState = useState( false );
 	var isDeleting = isDeletingState[ 0 ];
 	var setIsDeleting = isDeletingState[ 1 ];
+
+	// Bulk delete modal.
+	var bulkDeleteOpenState = useState( false );
+	var bulkDeleteOpen = bulkDeleteOpenState[ 0 ];
+	var setBulkDeleteOpen = bulkDeleteOpenState[ 1 ];
+
+	var bulkDeleteConfirmState = useState( false );
+	var bulkDeleteConfirmChecked = bulkDeleteConfirmState[ 0 ];
+	var setBulkDeleteConfirmChecked = bulkDeleteConfirmState[ 1 ];
+
+	// Bulk edit modal.
+	var bulkEditOpenState = useState( false );
+	var bulkEditOpen = bulkEditOpenState[ 0 ];
+	var setBulkEditOpen = bulkEditOpenState[ 1 ];
+
+	var bulkEditVisibilityState = useState( 'no_change' );
+	var bulkEditVisibility = bulkEditVisibilityState[ 0 ];
+	var setBulkEditVisibility = bulkEditVisibilityState[ 1 ];
 
 	// Toast state.
 	var toastState = useState( null );
@@ -363,7 +381,7 @@ export default function RepliesListScreen( { onNavigate } ) {
 	};
 
 	/**
-	 * Handle bulk action apply.
+	 * Handle bulk action apply — routes to confirmation/edit modals.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
@@ -372,19 +390,38 @@ export default function RepliesListScreen( { onNavigate } ) {
 			return;
 		}
 
+		if ( 'delete' === bulkAction ) {
+			setBulkDeleteConfirmChecked( false );
+			setBulkDeleteOpen( true );
+			return;
+		}
+
+		if ( 'edit' === bulkAction ) {
+			setBulkEditVisibility( 'no_change' );
+			setBulkEditOpen( true );
+			return;
+		}
+
+		// For other actions (spam, etc.) execute directly.
+		performBulkAction( bulkAction );
+	};
+
+	/**
+	 * Execute a bulk action against the server.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {string} action    The action to perform.
+	 * @param {Object} extraData Optional extra POST data.
+	 */
+	var performBulkAction = function ( action, extraData ) {
 		setIsBulkProcessing( true );
 
-		replyBulkAction( selected, bulkAction ).then( function ( response ) {
+		replyBulkAction( selected, action, extraData ).then( function ( response ) {
 			setIsBulkProcessing( false );
 			if ( response.success ) {
-				var processed = response.data.processed || 0;
-				var actionLabel = 'delete' === bulkAction ? __( 'deleted', 'buddyboss' ) : __( 'updated', 'buddyboss' );
 				setToast( {
-					message: sprintf(
-						__( '%1$s replies %2$s.', 'buddyboss' ),
-						processed,
-						actionLabel
-					),
+					message: ( response.data && response.data.message ) || __( 'Bulk action completed.', 'buddyboss' ),
 					type: 'success',
 				} );
 				setSelected( [] );
@@ -402,6 +439,28 @@ export default function RepliesListScreen( { onNavigate } ) {
 				message: __( 'Bulk action failed.', 'buddyboss' ),
 				type: 'error',
 			} );
+		} );
+	};
+
+	/**
+	 * Confirm bulk delete from the delete modal.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	var handleConfirmBulkDelete = function () {
+		setBulkDeleteOpen( false );
+		performBulkAction( 'delete' );
+	};
+
+	/**
+	 * Confirm bulk edit from the edit modal.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	var handleConfirmBulkEdit = function () {
+		setBulkEditOpen( false );
+		performBulkAction( 'edit', {
+			edit_visibility: bulkEditVisibility,
 		} );
 	};
 
@@ -604,6 +663,17 @@ export default function RepliesListScreen( { onNavigate } ) {
 			return f.name.toLowerCase().indexOf( lowerSearch ) !== -1;
 		} );
 	}, [ forumsList, forumFilterSearch ] );
+
+	// Get selected reply names for bulk modal pills.
+	var selectedReplyNames = useMemo( function () {
+		var contentMap = {};
+		replies.forEach( function ( r ) {
+			contentMap[ r.id ] = r.content;
+		} );
+		return selected.map( function ( id ) {
+			return { id: id, title: contentMap[ id ] || '#' + id };
+		} );
+	}, [ selected, replies ] );
 
 	// Forum filter label.
 	var forumFilterLabel = __( 'All Forums', 'buddyboss' );
@@ -1142,7 +1212,7 @@ export default function RepliesListScreen( { onNavigate } ) {
 				</Modal>
 			) }
 
-			{ /* Delete Confirmation Modal */ }
+			{ /* Single Delete Confirmation Modal */ }
 			{ deleteReplyItem && (
 				<Modal
 					title={ __( 'Delete Reply', 'buddyboss' ) }
@@ -1175,6 +1245,152 @@ export default function RepliesListScreen( { onNavigate } ) {
 							className="is-destructive"
 						>
 							{ __( 'Delete', 'buddyboss' ) }
+						</Button>
+					</div>
+				</Modal>
+			) }
+
+			{ /* Bulk Delete Confirmation Modal */ }
+			{ bulkDeleteOpen && (
+				<Modal
+					title={ __( 'Delete Reply?', 'buddyboss' ) }
+					onRequestClose={ function () {
+						setBulkDeleteOpen( false );
+					} }
+					className="bb-reply-delete-modal bb-admin-settings-modal"
+					shouldCloseOnClickOutside={ false }
+				>
+					<div className="bb-reply-delete-modal__body">
+						<div className="bb-admin-bulk-modal__selected-items">
+							{ selectedReplyNames.map( function ( item ) {
+								return (
+									<div key={ item.id } className="bb-admin-bulk-modal__selected-item">
+										<CheckboxControl
+											checked={ true }
+											onChange={ function () {
+												setSelected( function ( prev ) {
+													var next = prev.filter( function ( i ) { return i !== item.id; } );
+													if ( 0 === next.length ) {
+														setBulkDeleteOpen( false );
+													}
+													return next;
+												} );
+											} }
+											__nextHasNoMarginBottom
+										/>
+										<span className="bb-admin-bulk-modal__selected-item-name">
+											{ decodeEntities( item.title ) }
+										</span>
+									</div>
+								);
+							} ) }
+						</div>
+						<div className="bb-admin-delete__warning">
+							<i className="bb-icons-rl bb-icons-rl-warning-circle"></i>
+							<div className="bb-admin-delete__warning-text">
+								<span className="bb-admin-delete__warning-title">
+									{ __( 'Warning', 'buddyboss' ) }
+								</span>
+								<span className="bb-admin-delete__warning-desc">
+									{ __( 'This permanently deletes selected replies. This cannot be undone.', 'buddyboss' ) }
+								</span>
+							</div>
+						</div>
+						<p className="bb-reply-delete-modal__description">
+							{ __( 'Deleting replies will remove them from the community permanently.', 'buddyboss' ) }
+						</p>
+						<CheckboxControl
+							label={ __( 'I understand this will permanently delete the selected replies.', 'buddyboss' ) }
+							checked={ bulkDeleteConfirmChecked }
+							onChange={ setBulkDeleteConfirmChecked }
+							__nextHasNoMarginBottom
+						/>
+					</div>
+					<div className="bb-reply-delete-modal__footer bb-admin-settings-modal__footer">
+						<Button
+							variant="secondary"
+							onClick={ function () {
+								setBulkDeleteOpen( false );
+							} }
+						>
+							{ __( 'Cancel', 'buddyboss' ) }
+						</Button>
+						<Button
+							variant="primary"
+							isDestructive
+							onClick={ handleConfirmBulkDelete }
+							disabled={ ! bulkDeleteConfirmChecked }
+						>
+							{ __( 'Delete', 'buddyboss' ) }
+						</Button>
+					</div>
+				</Modal>
+			) }
+
+			{ /* Bulk Edit Modal */ }
+			{ bulkEditOpen && (
+				<Modal
+					title={ __( 'Bulk Edit', 'buddyboss' ) }
+					onRequestClose={ function () {
+						setBulkEditOpen( false );
+					} }
+					className="bb-reply-bulk-edit-modal bb-admin-settings-modal"
+					shouldCloseOnClickOutside={ false }
+				>
+					<div className="bb-reply-bulk-edit-modal__body">
+						<div className="bb-admin-bulk-modal__selected-items">
+							{ selectedReplyNames.map( function ( item ) {
+								return (
+									<div key={ item.id } className="bb-admin-bulk-modal__selected-item">
+										<CheckboxControl
+											checked={ true }
+											onChange={ function () {
+												setSelected( function ( prev ) {
+													var next = prev.filter( function ( i ) { return i !== item.id; } );
+													if ( 0 === next.length ) {
+														setBulkEditOpen( false );
+													}
+													return next;
+												} );
+											} }
+											__nextHasNoMarginBottom
+										/>
+										<span className="bb-admin-bulk-modal__selected-item-name">
+											{ decodeEntities( item.title ) }
+										</span>
+									</div>
+								);
+							} ) }
+						</div>
+
+						<SelectControl
+							label={ __( 'Visibility', 'buddyboss' ) }
+							value={ bulkEditVisibility }
+							options={ [
+								{ value: 'no_change', label: __( '\u2014 No Change \u2014', 'buddyboss' ) },
+								{ value: 'publish', label: __( 'Public', 'buddyboss' ) },
+								{ value: 'private', label: __( 'Private', 'buddyboss' ) },
+								{ value: 'hidden', label: __( 'Hidden', 'buddyboss' ) },
+							] }
+							onChange={ setBulkEditVisibility }
+							__nextHasNoMarginBottom
+						/>
+					</div>
+					<div className="bb-reply-bulk-edit-modal__footer">
+						<Button
+							variant="secondary"
+							onClick={ function () {
+								setBulkEditOpen( false );
+							} }
+						>
+							{ __( 'Cancel', 'buddyboss' ) }
+						</Button>
+						<Button
+							variant="primary"
+							onClick={ handleConfirmBulkEdit }
+							disabled={ 'no_change' === bulkEditVisibility }
+						>
+							{ __( 'Save', 'buddyboss' ) }
 						</Button>
 					</div>
 				</Modal>

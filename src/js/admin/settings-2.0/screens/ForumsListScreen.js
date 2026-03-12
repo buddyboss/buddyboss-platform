@@ -590,6 +590,17 @@ export function ForumsListScreen( { onNavigate } ) {
 
 	var allSelected = forums.length > 0 && selectedIds.length === forums.length;
 
+	// Get names for forums targeted by the delete modal.
+	var deleteTargetForumNames = useMemo( function () {
+		var nameMap = {};
+		forums.forEach( function ( f ) {
+			nameMap[ f.id ] = f.name;
+		} );
+		return deleteTargetIds.map( function ( id ) {
+			return { id: id, title: nameMap[ id ] || '#' + id };
+		} );
+	}, [ deleteTargetIds, forums ] );
+
 	/**
 	 * Build pagination page numbers.
 	 *
@@ -990,6 +1001,33 @@ export function ForumsListScreen( { onNavigate } ) {
 					shouldCloseOnClickOutside={ false }
 				>
 					<div className="bb-forum-delete-modal__body">
+						<div className="bb-admin-bulk-modal__selected-items">
+							{ deleteTargetForumNames.map( function ( item ) {
+								return (
+									<div key={ item.id } className="bb-admin-bulk-modal__selected-item">
+										<CheckboxControl
+											checked={ true }
+											onChange={ function () {
+												setDeleteTargetIds( function ( prev ) {
+													var next = prev.filter( function ( i ) { return i !== item.id; } );
+													if ( 0 === next.length ) {
+														setDeleteModalOpen( false );
+													}
+													return next;
+												} );
+												setSelectedIds( function ( prev ) {
+													return prev.filter( function ( i ) { return i !== item.id; } );
+												} );
+											} }
+											__nextHasNoMarginBottom
+										/>
+										<span className="bb-admin-bulk-modal__selected-item-name">
+											{ decodeEntities( item.title ) }
+										</span>
+									</div>
+								);
+							} ) }
+						</div>
 						<div className="bb-admin-delete__warning">
 							<i className="bb-icons-rl bb-icons-rl-warning-circle"></i>
 							<div className="bb-admin-delete__warning-text">

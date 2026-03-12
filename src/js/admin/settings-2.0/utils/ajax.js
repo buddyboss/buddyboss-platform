@@ -824,14 +824,21 @@ export function deleteReply( replyId ) {
  * @since BuddyBoss [BBVERSION]
  *
  * @param {Array}  replyIds  Array of reply IDs.
- * @param {string} action    Bulk action (e.g. 'delete', 'spam').
+ * @param {string} action    Bulk action (e.g. 'delete', 'spam', 'edit').
+ * @param {Object} extraData Optional extra POST data (e.g. edit_visibility).
  * @returns {Promise} AJAX promise.
  */
-export function replyBulkAction( replyIds, action ) {
-	return ajaxFetch( 'bb_admin_reply_bulk_action', {
+export function replyBulkAction( replyIds, action, extraData ) {
+	var data = {
 		reply_ids: replyIds.join( ',' ),
 		do_action: action,
-	} );
+	};
+	if ( extraData ) {
+		Object.keys( extraData ).forEach( function ( key ) {
+			data[ key ] = extraData[ key ];
+		} );
+	}
+	return ajaxFetch( 'bb_admin_reply_bulk_action', data );
 }
 
 /**

@@ -636,7 +636,7 @@ class BB_Admin_Replies_Ajax {
 	/**
 	 * Perform bulk action on replies.
 	 *
-	 * Supports 'delete' and 'spam' actions.
+	 * Supports 'delete', 'spam', and 'edit' actions.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -650,8 +650,9 @@ class BB_Admin_Replies_Ajax {
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
-		$reply_ids_raw = isset( $_POST['reply_ids'] ) ? sanitize_text_field( wp_unslash( $_POST['reply_ids'] ) ) : '';
-		$action        = isset( $_POST['do_action'] ) ? sanitize_key( wp_unslash( $_POST['do_action'] ) ) : '';
+		$reply_ids_raw   = isset( $_POST['reply_ids'] ) ? sanitize_text_field( wp_unslash( $_POST['reply_ids'] ) ) : '';
+		$action          = isset( $_POST['do_action'] ) ? sanitize_key( wp_unslash( $_POST['do_action'] ) ) : '';
+		$edit_visibility = isset( $_POST['edit_visibility'] ) ? sanitize_key( wp_unslash( $_POST['edit_visibility'] ) ) : '';
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $reply_ids_raw ) || empty( $action ) ) {
@@ -659,7 +660,7 @@ class BB_Admin_Replies_Ajax {
 		}
 
 		// Validate action.
-		$allowed_actions = array( 'delete', 'spam' );
+		$allowed_actions = array( 'delete', 'spam', 'edit' );
 		if ( ! in_array( $action, $allowed_actions, true ) ) {
 			wp_send_json_error( array( 'message' => __( 'Invalid bulk action.', 'buddyboss' ) ) );
 		}
@@ -698,10 +699,45 @@ class BB_Admin_Replies_Ajax {
 					bbp_spam_reply( $rid );
 				}
 				++$processed;
+			} elseif ( 'edit' === $action ) {
+				$updated = false;
+
+				if ( ! empty( $edit_visibility ) && 'no_change' !== $edit_visibility ) {
+					$allowed_visibilities = array( 'publish', 'private', 'hidden' );
+					if ( in_array( $edit_visibility, $allowed_visibilities, true ) ) {
+						wp_update_post(
+							array(
+								'ID'          => $rid,
+								'post_status' => $edit_visibility,
+							)
+						);
+						$updated = true;
+					}
+				}
+
+				if ( $updated ) {
+					++$processed;
+				} else {
+					++$failed;
+				}
 			}
 		}
 
 		$this->bb_clear_forum_counts_cache();
+
+		if ( 'edit' === $action ) {
+			wp_send_json_success(
+				array(
+					'processed' => $processed,
+					'failed'    => $failed,
+					'message'   => sprintf(
+						/* translators: %d: number of replies updated. */
+						_n( '%d reply updated.', '%d replies updated.', $processed, 'buddyboss' ),
+						$processed
+					),
+				)
+			);
+		}
 
 		wp_send_json_success(
 			array(
@@ -709,7 +745,7 @@ class BB_Admin_Replies_Ajax {
 				'failed'    => $failed,
 				'message'   => sprintf(
 					/* translators: %d: number of replies processed. */
-					__( '%d replies processed.', 'buddyboss' ),
+					_n( '%d reply processed.', '%d replies processed.', $processed, 'buddyboss' ),
 					$processed
 				),
 			)
