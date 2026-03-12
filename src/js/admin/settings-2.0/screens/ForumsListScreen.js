@@ -165,6 +165,14 @@ export function ForumsListScreen( { onNavigate } ) {
 	var deleteConfirmChecked = deleteConfirmState[ 0 ];
 	var setDeleteConfirmChecked = deleteConfirmState[ 1 ];
 
+	var bulkEditOpenState = useState( false );
+	var bulkEditOpen = bulkEditOpenState[ 0 ];
+	var setBulkEditOpen = bulkEditOpenState[ 1 ];
+
+	var bulkEditVisibilityState = useState( 'no_change' );
+	var bulkEditVisibility = bulkEditVisibilityState[ 0 ];
+	var setBulkEditVisibility = bulkEditVisibilityState[ 1 ];
+
 	var createModalState = useState( false );
 	var createModalOpen = createModalState[ 0 ];
 	var setCreateModalOpen = createModalState[ 1 ];
@@ -395,10 +403,11 @@ export function ForumsListScreen( { onNavigate } ) {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param {string} action The action key (delete).
-	 * @param {Array}  ids    Forum ID(s).
+	 * @param {string} action    The action key (edit, delete).
+	 * @param {Array}  ids       Forum ID(s).
+	 * @param {Object} extraData Optional extra data to send.
 	 */
-	var performAction = function ( action, ids ) {
+	var performAction = function ( action, ids, extraData ) {
 		if ( ! ids || ( Array.isArray( ids ) && 0 === ids.length ) ) {
 			return;
 		}
@@ -410,7 +419,7 @@ export function ForumsListScreen( { onNavigate } ) {
 		var idArray = Array.isArray( ids ) ? ids : [ ids ];
 
 		setIsBulkProcessing( true );
-		forumBulkAction( idArray, action ).then( function ( response ) {
+		forumBulkAction( idArray, action, extraData ).then( function ( response ) {
 			setIsBulkProcessing( false );
 			if ( response.success ) {
 				setNotice( { type: 'success', message: response.data.message } );
@@ -445,6 +454,12 @@ export function ForumsListScreen( { onNavigate } ) {
 			return;
 		}
 
+		if ( 'edit' === action ) {
+			setBulkEditVisibility( 'no_change' );
+			setBulkEditOpen( true );
+			return;
+		}
+
 		performAction( action, selectedIds );
 	};
 
@@ -469,6 +484,18 @@ export function ForumsListScreen( { onNavigate } ) {
 	var handleConfirmDelete = function () {
 		setDeleteModalOpen( false );
 		performAction( 'delete', deleteTargetIds );
+	};
+
+	/**
+	 * Handle confirming bulk edit from the bulk edit modal.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	var handleConfirmBulkEdit = function () {
+		setBulkEditOpen( false );
+		performAction( 'edit', selectedIds, {
+			edit_visibility: bulkEditVisibility,
+		} );
 	};
 
 	/**
@@ -589,6 +616,17 @@ export function ForumsListScreen( { onNavigate } ) {
 	}, [ views ] );
 
 	var allSelected = forums.length > 0 && selectedIds.length === forums.length;
+
+	// Get names for currently selected forums (for bulk edit modal).
+	var selectedForumNames = useMemo( function () {
+		var nameMap = {};
+		forums.forEach( function ( f ) {
+			nameMap[ f.id ] = f.name;
+		} );
+		return selectedIds.map( function ( id ) {
+			return { id: id, title: nameMap[ id ] || '#' + id };
+		} );
+	}, [ selectedIds, forums ] );
 
 	// Get names for forums targeted by the delete modal.
 	var deleteTargetForumNames = useMemo( function () {
@@ -988,6 +1026,75 @@ export function ForumsListScreen( { onNavigate } ) {
 						</div>
 					) }
 				</div>
+			) }
+
+			{ /* Bulk Edit Forum Modal */ }
+			{ bulkEditOpen && (
+				<Modal
+					title={ __( 'Bulk Edit', 'buddyboss' ) }
+					onRequestClose={ function () {
+						setBulkEditOpen( false );
+					} }
+					className="bb-forum-bulk-edit-modal bb-admin-settings-modal"
+					shouldCloseOnClickOutside={ false }
+				>
+					<div className="bb-forum-bulk-edit-modal__body">
+						<div className="bb-admin-bulk-modal__selected-items">
+							{ selectedForumNames.map( function ( item ) {
+								return (
+									<div key={ item.id } className="bb-admin-bulk-modal__selected-item">
+										<CheckboxControl
+											checked={ true }
+											onChange={ function () {
+												setSelectedIds( function ( prev ) {
+													var next = prev.filter( function ( i ) { return i !== item.id; } );
+													if ( 0 === next.length ) {
+														setBulkEditOpen( false );
+													}
+													return next;
+												} );
+											} }
+											__nextHasNoMarginBottom
+										/>
+										<span className="bb-admin-bulk-modal__selected-item-name">
+											{ decodeEntities( item.title ) }
+										</span>
+									</div>
+								);
+							} ) }
+						</div>
+
+						<SelectControl
+							label={ __( 'Visibility', 'buddyboss' ) }
+							value={ bulkEditVisibility }
+							options={ [
+								{ value: 'no_change', label: __( '\u2014 No Change \u2014', 'buddyboss' ) },
+								{ value: 'publish', label: __( 'Public', 'buddyboss' ) },
+								{ value: 'private', label: __( 'Private', 'buddyboss' ) },
+								{ value: 'hidden', label: __( 'Hidden', 'buddyboss' ) },
+							] }
+							onChange={ setBulkEditVisibility }
+							__nextHasNoMarginBottom
+						/>
+					</div>
+					<div className="bb-forum-bulk-edit-modal__footer">
+						<Button
+							variant="secondary"
+							onClick={ function () {
+								setBulkEditOpen( false );
+							} }
+						>
+							{ __( 'Cancel', 'buddyboss' ) }
+						</Button>
+						<Button
+							variant="primary"
+							onClick={ handleConfirmBulkEdit }
+							disabled={ 'no_change' === bulkEditVisibility }
+						>
+							{ __( 'Save', 'buddyboss' ) }
+						</Button>
+					</div>
+				</Modal>
 			) }
 
 			{ /* Delete Forum Modal */ }

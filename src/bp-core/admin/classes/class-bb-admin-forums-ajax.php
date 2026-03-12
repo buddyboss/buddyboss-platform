@@ -349,6 +349,7 @@ class BB_Admin_Forums_Ajax {
 			);
 
 			$response['bulk_actions'] = array(
+				'bulk_edit'   => __( 'Edit', 'buddyboss' ),
 				'bulk_delete' => __( 'Delete', 'buddyboss' ),
 			);
 
@@ -670,11 +671,12 @@ class BB_Admin_Forums_Ajax {
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
-		$raw_ids   = isset( $_POST['forum_ids'] ) ? sanitize_text_field( wp_unslash( $_POST['forum_ids'] ) ) : '';
-		$do_action = isset( $_POST['do_action'] ) ? sanitize_key( wp_unslash( $_POST['do_action'] ) ) : '';
+		$raw_ids         = isset( $_POST['forum_ids'] ) ? sanitize_text_field( wp_unslash( $_POST['forum_ids'] ) ) : '';
+		$do_action       = isset( $_POST['do_action'] ) ? sanitize_key( wp_unslash( $_POST['do_action'] ) ) : '';
+		$edit_visibility = isset( $_POST['edit_visibility'] ) ? sanitize_key( wp_unslash( $_POST['edit_visibility'] ) ) : '';
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
-		$allowed_actions = array( 'delete' );
+		$allowed_actions = array( 'edit', 'delete' );
 		if ( ! in_array( $do_action, $allowed_actions, true ) ) {
 			wp_send_json_error( array( 'message' => __( 'Invalid action.', 'buddyboss' ) ) );
 		}
@@ -696,17 +698,41 @@ class BB_Admin_Forums_Ajax {
 		$failed    = 0;
 
 		foreach ( $forum_ids as $forum_id ) {
+			$forum = get_post( $forum_id );
+
+			if ( ! $forum || bbp_get_forum_post_type() !== $forum->post_type ) {
+				++$failed;
+				continue;
+			}
+
 			if ( 'delete' === $do_action ) {
-				$forum = get_post( $forum_id );
-				if ( $forum && bbp_get_forum_post_type() === $forum->post_type ) {
-					// Fire bbPress pre-delete hook for cleanup.
-					bbp_delete_forum( $forum_id );
-					$result = wp_delete_post( $forum_id, true );
-					if ( $result ) {
-						++$processed;
-					} else {
-						++$failed;
+				// Fire bbPress pre-delete hook for cleanup.
+				bbp_delete_forum( $forum_id );
+				$result = wp_delete_post( $forum_id, true );
+				if ( $result ) {
+					++$processed;
+				} else {
+					++$failed;
+				}
+			} elseif ( 'edit' === $do_action ) {
+				$updated = false;
+
+				// Update visibility if provided and not "no change".
+				if ( ! empty( $edit_visibility ) && 'no_change' !== $edit_visibility ) {
+					$allowed_visibilities = array( 'publish', 'private', 'hidden' );
+					if ( in_array( $edit_visibility, $allowed_visibilities, true ) ) {
+						wp_update_post(
+							array(
+								'ID'          => $forum_id,
+								'post_status' => $edit_visibility,
+							)
+						);
+						$updated = true;
 					}
+				}
+
+				if ( $updated ) {
+					++$processed;
 				} else {
 					++$failed;
 				}
@@ -717,16 +743,29 @@ class BB_Admin_Forums_Ajax {
 		$this->bb_clear_status_counts_cache();
 
 		if ( $processed > 0 ) {
-			$message = sprintf(
-				/* translators: %d: Number of forums processed. */
-				_n(
-					'%d forum deleted successfully.',
-					'%d forums deleted successfully.',
-					$processed,
-					'buddyboss'
-				),
-				$processed
-			);
+			if ( 'edit' === $do_action ) {
+				$message = sprintf(
+					/* translators: %d: Number of forums processed. */
+					_n(
+						'%d forum updated successfully.',
+						'%d forums updated successfully.',
+						$processed,
+						'buddyboss'
+					),
+					$processed
+				);
+			} else {
+				$message = sprintf(
+					/* translators: %d: Number of forums processed. */
+					_n(
+						'%d forum deleted successfully.',
+						'%d forums deleted successfully.',
+						$processed,
+						'buddyboss'
+					),
+					$processed
+				);
+			}
 
 			wp_send_json_success(
 				array(

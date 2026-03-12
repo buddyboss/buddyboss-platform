@@ -531,6 +531,76 @@
 }
 
 /* ----------------------------------------------------------------
+   Bulk Edit Forum Modal
+   ---------------------------------------------------------------- */
+.bb-forum-bulk-edit-modal {
+
+	&.components-modal__frame {
+		max-width: 500px;
+	}
+
+	&__body {
+		padding: 24px;
+
+		.components-base-control {
+			margin-bottom: 16px;
+		}
+
+		.components-input-control__label,
+		.components-base-control__label {
+			display: block;
+			text-transform: none !important;
+			font-size: 13px !important;
+			font-weight: 500 !important;
+			color: $bb-text-color;
+			margin-bottom: 8px;
+		}
+
+		.components-select-control .components-input-control__label {
+			margin-bottom: 0;
+		}
+
+		.components-input-control__container {
+
+			.components-select-control__input {
+				@include bb-admin-settings-select;
+			}
+
+			&:has(> .components-select-control__input) {
+				padding: 0 !important;
+
+				.components-input-control__suffix,
+				.components-input-control__backdrop {
+					display: none !important;
+				}
+			}
+		}
+	}
+
+	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 8px;
+		padding: 16px 24px;
+		border-top: 1px solid $bb-border-secondary-color;
+
+		.is-secondary {
+			@include bb-button-secondary;
+		}
+
+		.is-primary {
+			@include bb-button-primary;
+
+			&:disabled {
+				opacity: 0.5;
+				cursor: not-allowed;
+			}
+		}
+	}
+}
+
+/* ----------------------------------------------------------------
    Delete Forum Modal
    ---------------------------------------------------------------- */
 .bb-forum-delete-modal {
