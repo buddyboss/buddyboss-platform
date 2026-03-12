@@ -814,7 +814,7 @@ export default function RepliesListScreen( { onNavigate } ) {
 							} }
 						>
 							{ forumFilterLabel }
-							<span className="bb-replies-list__forum-filter-arrow">&#9662;</span>
+							<i class="bb-icons-rl bb-icons-rl-caret-down"></i>
 						</button>
 						{ isForumFilterOpen && (
 							<div className="bb-replies-list__forum-filter-dropdown">
