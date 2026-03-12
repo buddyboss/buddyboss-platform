@@ -654,6 +654,16 @@
 		background: #fef2f2;
 		border-radius: $bb-border-radius-md;
 	}
+
+	&__row--separator {
+		margin-bottom: 24px;
+		padding-bottom: 24px;
+		border-bottom: 1px solid $bb-border-tertiary-color;
+
+		> .bb-admin-meta-field__editor-field {
+			margin-bottom: 0;
+		}
+	}
 }
 
 // Reply Edit Modal
