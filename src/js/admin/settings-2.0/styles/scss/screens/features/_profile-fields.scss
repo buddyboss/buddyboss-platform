@@ -780,11 +780,14 @@
 .bb-pf-datebox-format {
 	border: none;
 	margin: 0;
-	padding: 0;
+	padding-bottom: 12px;
+	margin-bottom: 24px;
+	border-bottom: 1px solid $bb-border-secondary-color;
 
 	&__legend {
 		@include bb-input-label;
-		margin-bottom: 8px;
+		font-weight: 500;
+		margin-bottom: 12px;
 	}
 
 	&__options {
@@ -800,6 +803,7 @@
 
 		input[type="radio"] {
 			margin: 0;
+			min-width: 18px;
 		}
 
 		label {
@@ -809,6 +813,14 @@
 			cursor: pointer;
 			font-size: 13px;
 		}
+
+		&-custom {
+
+			label {
+				flex-wrap: wrap;
+				width: 100%;
+			}
+		}
 	}
 
 	&__example {
@@ -817,14 +829,13 @@
 	}
 
 	&__code {
-		font-family: Menlo, Consolas, Monaco, monospace;
-		font-size: 12px;
+		font-size: 13px;
 		background: $bb-background-primary-color;
-		padding: 2px 6px;
-		border-radius: 3px;
+		padding: 3px 8px;
+		border-radius: $bb-border-radius-md;
 	}
 
-	&__custom-input {
+	&__custom-input.bb-pf-datebox-format__custom-input {
 		width: 120px;
 		@include bb-input-text;
 
@@ -836,17 +847,22 @@
 
 	&__doc-link {
 		display: block;
-		margin-top: 12px;
+		margin: 12px 0;
 		font-size: 13px;
-		color: $bb-primary-color;
+		color: $bb-link-color;
+		text-decoration: none;
 
 		&:hover {
-			text-decoration: underline;
+			color: $bb-link-color;
 		}
 	}
 }
 
 .bb-pf-datebox-range {
+
+	> .components-radio-control {
+		margin-bottom: 12px;
+	}
 
 	&__values {
 		display: flex;
@@ -858,6 +874,20 @@
 		display: flex;
 		gap: 12px;
 		align-items: flex-end;
+	}
+}
+
+.bb-pf-field-telephone-settings {
+	margin-top: 16px;
+
+	.components-radio-control__option {
+		display: inline-flex;
+		margin-right: 24px;
+	}
+
+	.components-radio-control > legend {
+		display: block;
+		font-weight: 500 !important;
 	}
 }
 
