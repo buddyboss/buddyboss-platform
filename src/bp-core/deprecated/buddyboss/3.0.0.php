@@ -24,7 +24,17 @@ if ( ! function_exists( 'bp_search_get_settings_sections' ) ) {
 	function bp_search_get_settings_sections() {
 		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Search feature (bb_admin_settings_register_search_feature)' );
 
-		return array();
+		$sections = array();
+
+		/**
+		 * Filter the Search settings sections.
+		 *
+		 * @since BuddyBoss 1.0.0
+		 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_search_after_register_settings_fields'} to register additional settings.
+		 *
+		 * @param array $sections Search settings sections.
+		 */
+		return (array) apply_filters_deprecated( 'bp_search_get_settings_sections', array( $sections ), 'BuddyBoss [BBVERSION]', 'bb_search_after_register_settings_fields' );
 	}
 }
 
@@ -40,7 +50,17 @@ if ( ! function_exists( 'bp_search_get_settings_fields' ) ) {
 	function bp_search_get_settings_fields() {
 		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Search feature (bb_admin_settings_register_search_feature)' );
 
-		return array();
+		$fields = array();
+
+		/**
+		 * Filter all Search settings fields.
+		 *
+		 * @since BuddyBoss 1.0.0
+		 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_search_after_register_settings_fields'} to register additional fields.
+		 *
+		 * @param array $fields Search settings fields grouped by section.
+		 */
+		return (array) apply_filters_deprecated( 'bp_search_get_settings_fields', array( $fields ), 'BuddyBoss [BBVERSION]', 'bb_search_after_register_settings_fields' );
 	}
 }
 
@@ -58,7 +78,18 @@ if ( ! function_exists( 'bp_search_get_settings_fields_for_section' ) ) {
 	function bp_search_get_settings_fields_for_section( $section_id = '' ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Search feature (bb_admin_settings_register_search_feature)' );
 
-		return array();
+		$fields = array();
+
+		/**
+		 * Filter Search settings fields for a specific section.
+		 *
+		 * @since BuddyBoss 1.0.0
+		 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_search_after_register_settings_fields'} to register additional fields.
+		 *
+		 * @param array  $fields     Settings fields for the section.
+		 * @param string $section_id The section ID.
+		 */
+		return (array) apply_filters_deprecated( 'bp_search_get_settings_fields_for_section', array( $fields, $section_id ), 'BuddyBoss [BBVERSION]', 'bb_search_after_register_settings_fields' );
 	}
 }
 
