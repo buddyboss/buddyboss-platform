@@ -91,33 +91,59 @@ export function SettingsForm({ fields, values, onChange }) {
 	}, [ fields ] );
 
 	/**
-	 * Check if a field should be visible based on its conditional logic
+	 * Check if a field's conditional is met.
+	 *
+	 * @param {Object} field Field config with optional conditional property.
+	 * @return {boolean} True when condition is met (or no conditional exists).
+	 */
+	const isConditionalMet = ( field ) => {
+		if ( ! field.conditional ) {
+			return true;
+		}
+		var condValue     = values[ field.conditional.field ];
+		var expectedValue = field.conditional.value;
+
+		// Boolean comparison (DB stores 1/0/"1"/"0", conditional uses true/false).
+		if ( expectedValue === true || expectedValue === false ) {
+			var isTruthy = !! condValue && condValue !== '0' && condValue !== 0;
+			return isTruthy === expectedValue;
+		}
+
+		// Array comparison.
+		if ( Array.isArray( expectedValue ) ) {
+			return expectedValue.indexOf( condValue ) !== -1;
+		}
+
+		// Strict comparison.
+		return condValue === expectedValue;
+	};
+
+	/**
+	 * Check if a field should be visible based on its conditional logic.
+	 * Fields with action:'disable' stay visible but get disabled instead.
 	 */
 	const isFieldVisible = (field) => {
-		// If field has a "conditional" property, check it
-		if (field.conditional) {
-			const condValue = values[field.conditional.field];
-			const expectedValue = field.conditional.value;
-
-			// When expected value is boolean, use truthy/falsy comparison
-			// because DB values can be 1, 0, "1", "0" while conditional uses true/false.
-			if (expectedValue === true || expectedValue === false) {
-				const isTruthy = !!condValue && condValue !== '0' && condValue !== 0;
-				return isTruthy === expectedValue;
+		if ( field.conditional ) {
+			// When action is 'disable', keep visible (handled by isFieldConditionallyDisabled).
+			if ( 'disable' === field.conditional.action ) {
+				return true;
 			}
-
-			// When expected value is an array, check if current value is in the array.
-			if (Array.isArray(expectedValue)) {
-				return expectedValue.indexOf(condValue) !== -1;
-			}
-
-			// For non-boolean values, use strict comparison.
-			return condValue === expectedValue;
+			return isConditionalMet( field );
 		}
 
 		// For parent_field (nesting), always show the field but it may be disabled
 		// Fields with parent_field are rendered as children of their parent
 		return true;
+	};
+
+	/**
+	 * Check if a field should be disabled because its conditional (action:'disable') is not met.
+	 */
+	const isFieldConditionallyDisabled = ( field ) => {
+		if ( field.conditional && 'disable' === field.conditional.action ) {
+			return ! isConditionalMet( field );
+		}
+		return false;
 	};
 
 	/**
@@ -579,7 +605,7 @@ export function SettingsForm({ fields, values, onChange }) {
 			return null;
 		}
 
-		const disabled = parentDisabled || isFieldDisabled(field);
+		const disabled = parentDisabled || isFieldDisabled(field) || isFieldConditionallyDisabled(field);
 
 		return (
 			<div key={field.name} className={`bb-admin-settings-form__child-field ${disabled ? 'bb-admin-settings-form__child-field--disabled' : ''}`}>
@@ -605,8 +631,8 @@ export function SettingsForm({ fields, values, onChange }) {
 			return null;
 		}
 
-		// Check if field should be disabled (parent toggle is OFF or field-level disabled flag).
-		const disabled = isFieldDisabled(field) || !!field.disabled;
+		// Check if field should be disabled (parent toggle is OFF, field-level disabled flag, or conditional disable).
+		const disabled = isFieldDisabled(field) || !!field.disabled || isFieldConditionallyDisabled(field);
 
 		// Render the control first — if it returns null, skip the entire field row.
 		const controlOutput = renderFieldControl(field, disabled);

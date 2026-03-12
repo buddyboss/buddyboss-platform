@@ -39,7 +39,7 @@ function bb_notifications_register_on_screen_panel_fields() {
 		'on_screen_notifications',
 		array(
 			'name'              => '_bp_on_screen_notifications_enable',
-			'label'             => __( 'On-screen Notifications', 'buddyboss' ),
+			'label'             => __( 'On-screen notifications', 'buddyboss' ),
 			'type'              => 'toggle',
 			'description'       => __( 'Enable on-screen notifications', 'buddyboss' ),
 			'help_text'         => __( 'Show members new notifications received while on a page on-screen.', 'buddyboss' ),
@@ -57,20 +57,27 @@ function bb_notifications_register_on_screen_panel_fields() {
 		array(
 			'name'              => '_bp_on_screen_notifications_position',
 			'label'             => __( 'Position on Screen', 'buddyboss' ),
-			'type'              => 'radio',
+			'type'              => 'image_radio',
 			'default'           => bp_get_option( '_bp_on_screen_notifications_position', 'left' ),
 			'sanitize_callback' => 'bb_notifications_sanitize_position',
 			'options'           => array(
 				array(
 					'label' => __( 'Bottom Left', 'buddyboss' ),
 					'value' => 'left',
+					'image' => 'notification-position-left',
 				),
 				array(
 					'label' => __( 'Bottom Right', 'buddyboss' ),
 					'value' => 'right',
+					'image' => 'notification-position-right',
 				),
 			),
 			'order'             => 20,
+			'conditional'       => array(
+				'field'  => '_bp_on_screen_notifications_enable',
+				'value'  => true,
+				'action' => 'disable',
+			),
 		)
 	);
 
@@ -88,6 +95,11 @@ function bb_notifications_register_on_screen_panel_fields() {
 			'default'           => bp_get_option( '_bp_on_screen_notifications_mobile_support', 0 ),
 			'sanitize_callback' => 'intval',
 			'order'             => 30,
+			'conditional'       => array(
+				'field'  => '_bp_on_screen_notifications_enable',
+				'value'  => true,
+				'action' => 'disable',
+			),
 		)
 	);
 
@@ -143,6 +155,11 @@ function bb_notifications_register_on_screen_panel_fields() {
 			'sanitize_callback' => 'bb_notifications_sanitize_visibility',
 			'options'           => $visibility_options,
 			'order'             => 40,
+			'conditional'       => array(
+				'field'  => '_bp_on_screen_notifications_enable',
+				'value'  => true,
+				'action' => 'disable',
+			),
 		)
 	);
 
@@ -156,10 +173,15 @@ function bb_notifications_register_on_screen_panel_fields() {
 			'label'             => __( 'Show in Browser Tab', 'buddyboss' ),
 			'type'              => 'toggle',
 			'description'       => __( 'Show new notifications in the title of the browser tab', 'buddyboss' ),
-			'help_text'         => __( 'Update the page title tab when new notifications are received.', 'buddyboss' ),
+			'help_text'         => __( 'Update the page &lt;title&gt; tab when new notifications are received.', 'buddyboss' ),
 			'default'           => bp_get_option( '_bp_on_screen_notifications_browser_tab', 0 ),
 			'sanitize_callback' => 'intval',
 			'order'             => 50,
+			'conditional'       => array(
+				'field'  => '_bp_on_screen_notifications_enable',
+				'value'  => true,
+				'action' => 'disable',
+			),
 		)
 	);
 
@@ -170,11 +192,13 @@ function bb_notifications_register_on_screen_panel_fields() {
 			'on_screen_notifications',
 			'on_screen_notifications',
 			array(
-				'name'    => '_bp_on_screen_notifications_notice',
-				'label'   => '',
-				'type'    => 'notice',
-				'default' => __( 'Members can manage which on-screen notifications they receive in their notification preferences by enabling or disabling the "Web" options.', 'buddyboss' ),
-				'order'   => 60,
+				'name'              => '_bp_on_screen_notifications_notice',
+				'label'             => '',
+				'type'              => 'notice',
+				'description'       => __( 'Members can manage which on-screen notifications they receive in their notification preferences by enabling or disabling the "Web" options.', 'buddyboss' ),
+				'notice_type'       => 'info',
+				'sanitize_callback' => '__return_empty_string',
+				'order'             => 60,
 			)
 		);
 	}

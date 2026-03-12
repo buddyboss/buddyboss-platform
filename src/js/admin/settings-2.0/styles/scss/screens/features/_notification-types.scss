@@ -140,3 +140,29 @@
 		}
 	}
 }
+
+/* Notification Position Preview (On-screen Notifications) */
+.bb-admin-settings-field__notification-position {
+	position: relative;
+	width: 80px;
+	height: 80px;
+	background: #f0f0f1;
+	border-radius: 5px;
+
+	&-bar {
+		position: absolute;
+		bottom: 8px;
+		width: 36px;
+		height: 16px;
+		border-radius: 2px;
+		background: #c3c4c7;
+	}
+
+	&--left &-bar {
+		left: 8px;
+	}
+
+	&--right &-bar {
+		right: 8px;
+	}
+}
