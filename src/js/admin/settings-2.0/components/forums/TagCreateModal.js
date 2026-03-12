@@ -12,6 +12,7 @@ import { useState, useRef, useEffect } from '@wordpress/element';
 import {
 	Modal,
 	Button,
+	Spinner,
 	TextControl,
 	TextareaControl,
 } from '@wordpress/components';
@@ -29,9 +30,10 @@ import { createTopicTag, saveTopicTag } from '../../utils/ajax';
  * @param {Function} props.onClose     Close handler.
  * @param {Function} props.onSaved     Success handler (receives term data).
  * @param {Object}   props.editTag     Tag object to edit (null for create mode).
+ * @param {boolean}  props.isLoading   Whether tag data is being fetched.
  * @returns {JSX.Element|null} Modal component or null.
  */
-export function TagCreateModal( { isOpen, onClose, onSaved, editTag } ) {
+export function TagCreateModal( { isOpen, onClose, onSaved, editTag, isLoading } ) {
 	var nameState = useState( '' );
 	var name = nameState[ 0 ];
 	var setName = nameState[ 1 ];
@@ -151,7 +153,7 @@ export function TagCreateModal( { isOpen, onClose, onSaved, editTag } ) {
 		onClose();
 	};
 
-	var modalTitle = editTag
+	var modalTitle = (editTag || isLoading)
 		? __( 'Edit Tag', 'buddyboss' )
 		: __( 'Add New Tag', 'buddyboss' );
 
@@ -162,53 +164,61 @@ export function TagCreateModal( { isOpen, onClose, onSaved, editTag } ) {
 			className="bb-tag-create-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
 		>
-			<div className="bb-tag-create-modal__body">
-				{ error && (
-					<p className="bb-tag-create-modal__error">{ error }</p>
-				) }
+			{ isLoading ? (
+				<div className="bb-tag-create-modal__loading">
+					<Spinner />
+				</div>
+			) : (
+				<>
+					<div className="bb-tag-create-modal__body">
+						{ error && (
+							<p className="bb-tag-create-modal__error">{ error }</p>
+						) }
 
-				<TextControl
-					label={ __( 'Name', 'buddyboss' ) }
-					value={ name }
-					onChange={ setName }
-					help={ __( 'This name is how it appears on your site.', 'buddyboss' ) }
-					__nextHasNoMarginBottom
-				/>
+						<TextControl
+							label={ __( 'Name', 'buddyboss' ) }
+							value={ name }
+							onChange={ setName }
+							help={ __( 'This name is how it appears on your site.', 'buddyboss' ) }
+							__nextHasNoMarginBottom
+						/>
 
-				<TextControl
-					label={ __( 'Slug', 'buddyboss' ) }
-					value={ slug }
-					onChange={ setSlug }
-					help={ __( 'The "slug" is the URL-friendly version of the name. It is usually all lowercase and contains only letters, numbers, and hyphens.', 'buddyboss' ) }
-					__nextHasNoMarginBottom
-				/>
+						<TextControl
+							label={ __( 'Slug', 'buddyboss' ) }
+							value={ slug }
+							onChange={ setSlug }
+							help={ __( 'The "slug" is the URL-friendly version of the name. It is usually all lowercase and contains only letters, numbers, and hyphens.', 'buddyboss' ) }
+							__nextHasNoMarginBottom
+						/>
 
-				<TextareaControl
-					label={ __( 'Description (Optional)', 'buddyboss' ) }
-					value={ description }
-					onChange={ setDescription }
-					placeholder={ __( 'Enter description', 'buddyboss' ) }
-					__nextHasNoMarginBottom
-				/>
-			</div>
+						<TextareaControl
+							label={ __( 'Description (Optional)', 'buddyboss' ) }
+							value={ description }
+							onChange={ setDescription }
+							placeholder={ __( 'Enter description', 'buddyboss' ) }
+							__nextHasNoMarginBottom
+						/>
+					</div>
 
-			<div className="bb-tag-create-modal__footer bb-admin-settings-modal__footer">
-				<Button
-					variant="secondary"
-					onClick={ handleClose }
-					disabled={ isSaving }
-				>
-					{ __( 'Cancel', 'buddyboss' ) }
-				</Button>
-				<Button
-					variant="primary"
-					onClick={ handleSave }
-					isBusy={ isSaving }
-					disabled={ isSaving || ! name.trim() }
-				>
-					{ __( 'Save', 'buddyboss' ) }
-				</Button>
-			</div>
+					<div className="bb-tag-create-modal__footer bb-admin-settings-modal__footer">
+						<Button
+							variant="secondary"
+							onClick={ handleClose }
+							disabled={ isSaving }
+						>
+							{ __( 'Cancel', 'buddyboss' ) }
+						</Button>
+						<Button
+							variant="primary"
+							onClick={ handleSave }
+							isBusy={ isSaving }
+							disabled={ isSaving || ! name.trim() }
+						>
+							{ __( 'Save', 'buddyboss' ) }
+						</Button>
+					</div>
+				</>
+			) }
 		</Modal>
 	);
 }

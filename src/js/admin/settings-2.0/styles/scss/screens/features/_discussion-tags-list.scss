@@ -534,6 +534,13 @@
 		}
 	}
 
+	&__loading {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 48px 24px;
+	}
+
 	&__error {
 		color: $bb-error-color;
 		margin: 0;

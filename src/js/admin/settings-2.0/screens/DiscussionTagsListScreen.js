@@ -76,6 +76,10 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 	var isEditOpen = isEditOpenState[ 0 ];
 	var setIsEditOpen = isEditOpenState[ 1 ];
 
+	var isEditLoadingState = useState( false );
+	var isEditLoading = isEditLoadingState[ 0 ];
+	var setIsEditLoading = isEditLoadingState[ 1 ];
+
 	// Delete modal state.
 	var deleteTagState = useState( null );
 	var deleteTagItem = deleteTagState[ 0 ];
@@ -174,18 +178,26 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 	 * @param {Object} tag Tag object from the list.
 	 */
 	var handleEdit = function ( tag ) {
+		// Open modal immediately with loading state.
+		setEditTag( null );
+		setIsEditOpen( true );
+		setIsEditLoading( true );
+
 		// Fetch fresh data for the edit modal.
 		getTopicTag( tag.id ).then( function ( response ) {
 			if ( response.success && response.data ) {
 				setEditTag( response.data );
-				setIsEditOpen( true );
 			} else {
+				setIsEditOpen( false );
 				setNotice( {
 					message: __( 'Failed to load tag data.', 'buddyboss' ),
 					type: 'error',
 				} );
 			}
+			setIsEditLoading( false );
 		} ).catch( function () {
+			setIsEditOpen( false );
+			setIsEditLoading( false );
 			setNotice( {
 				message: __( 'Failed to load tag data.', 'buddyboss' ),
 				type: 'error',
@@ -547,6 +559,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 				} }
 				onSaved={ handleTagSaved }
 				editTag={ editTag }
+				isLoading={ isEditLoading }
 			/>
 
 			{ /* Delete Confirmation Modal */ }
