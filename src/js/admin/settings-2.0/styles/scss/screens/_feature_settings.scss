@@ -235,6 +235,15 @@
             }
         }
 
+        &-description {
+            font-size: 13px;
+            color: $bb-text-tertiary-color;
+            line-height: 18px;
+            margin: 0 0 24px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid $bb-border-secondary-color;
+        }
+
         &--disabled {
             opacity: 0.5;
             pointer-events: none;
@@ -457,10 +466,59 @@
             // 245px (label width) + 32px (gap) = 277px offset to align with sibling field content.
             margin-left: 277px;
         }
+
+        // Full-width field types (checkbox_list) should span the entire card when unlabeled.
+        &:has(.bb-admin-settings-field__checkbox-list) {
+            .bb-admin-settings-form__field-content {
+                margin-left: 0;
+            }
+
+            .bb-admin-settings-form__field-input-wrapper {
+                width: 100%;
+            }
+        }
     }
 
     .bb-admin-settings-form__child-fields {
-        margin-top: 24px;
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid $bb-border-secondary-color;
+
+        // When child-fields is the first child in the content area (hidden parent field
+        // with no input wrapper), remove the separator border and top spacing.
+        &:first-child {
+            margin-top: 0;
+            padding-top: 0;
+            border-top: none;
+        }
+
+        // Inline toggle/checkbox children don't need a separator border from their parent.
+        // Only remove when ALL children are inline controls (no labeled inputs like number/select).
+        &:not(:has(.bb-admin-settings-form__child-field:not(.bb-admin-settings-form__child-field--toggle):not(.bb-admin-settings-form__child-field--checkbox))) {
+            border-top: none;
+            padding-top: 0;
+        }
+    }
+
+    .bb-admin-settings-form__child-group-label {
+        font-size: 13px;
+        font-weight: 500;
+        line-height: 18px;
+        color: $bb-text-secondary-color;
+        margin-top: 16px;
+        padding: 16px 0;
+        border-top: 1px solid $bb-border-secondary-color;
+
+        &:first-child {
+            border-top: none;
+            margin-top: 0;
+            padding-top: 0;
+        }
+    }
+
+    .bb-admin-settings-form__child-field--checkbox + .bb-admin-settings-form__child-field--checkbox,
+    .bb-admin-settings-form__child-field--toggle + .bb-admin-settings-form__child-field--toggle {
+        margin-top: 16px;
     }
 
     .bb-admin-settings-form__child-field {
@@ -1436,6 +1494,7 @@
 .bb-admin-settings-field__checkbox-list {
     display: flex;
     flex-direction: column;
+    width: 100%;
 
     .bb-admin-settings-form__field-description {
         margin: 0 0 8px 0;
