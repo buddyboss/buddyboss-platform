@@ -216,12 +216,14 @@ export function ReplyCreateModal( { isOpen, onClose, onCreated } ) {
 					<p className="bb-reply-create-modal__error">{ error }</p>
 				) }
 
-				<RichTextEditor
-					id="bb-reply-create-description"
-					label={ __( 'Description', 'buddyboss' ) }
-					value={ content }
-					onChange={ setContent }
-				/>
+				<div className="bb-reply-create-modal__row--separator">
+					<RichTextEditor
+						id="bb-reply-create-description"
+						label={ __( 'Description', 'buddyboss' ) }
+						value={ content }
+						onChange={ setContent }
+					/>
+				</div>
 
 				<div className="components-base-control">
 					<label className="components-base-control__label">
@@ -249,7 +251,7 @@ export function ReplyCreateModal( { isOpen, onClose, onCreated } ) {
 					/>
 				</div>
 
-				<div className="components-base-control">
+				<div className="components-base-control bb-reply-create-modal__row--separator">
 					<label className="components-base-control__label">
 						{ __( 'Reply to', 'buddyboss' ) }
 					</label>

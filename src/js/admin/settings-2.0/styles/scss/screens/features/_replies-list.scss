@@ -593,15 +593,17 @@
 
 // Reply Create Modal
 .bb-reply-create-modal {
+
 	.components-modal__content {
 		padding: 0;
 	}
 
 	&__body {
 		padding: 24px;
-		display: flex;
-		flex-direction: column;
-		gap: 16px;
+
+		.components-base-control {
+			margin-bottom: 16px;
+		}
 
 		// Override WordPress components uppercase labels to sentence case.
 		.components-input-control__label,
@@ -611,12 +613,36 @@
 			font-size: 13px !important;
 			font-weight: 500 !important;
 			color: $bb-text-color;
+			margin-bottom: 8px;
 		}
 
-		.components-base-control__help {
-			margin-top: 4px;
-			font-size: 12px;
-			color: $bb-text-tertiary-color;
+		.components-text-control__input,
+		.components-textarea-control__input {
+			@include bb-input-text;
+		}
+
+		.components-select-control .components-input-control__label {
+			margin-bottom: 0;
+		}
+
+		textarea {
+			min-height: 72px;
+		}
+
+		.components-input-control__container {
+
+			.components-select-control__input {
+				@include bb-admin-settings-select;
+			}
+
+			&:has(> .components-select-control__input) {
+				padding: 0 !important;
+
+				.components-input-control__suffix,
+				.components-input-control__backdrop {
+					display: none !important;
+				}
+			}
 		}
 	}
 
@@ -629,15 +655,13 @@
 		border-radius: $bb-border-radius-md;
 	}
 
-	&__footer {
-		padding: 16px 24px;
-		display: flex;
-		justify-content: flex-end;
-		gap: 8px;
-		border-top: 1px solid $bb-border-secondary-color;
+	&__row--separator {
+		margin-bottom: 24px;
+		padding-bottom: 24px;
+		border-bottom: 1px solid $bb-border-tertiary-color;
 
-		.is-primary {
-			@include bb-button-primary;
+		> .bb-admin-meta-field__editor-field {
+			margin-bottom: 0;
 		}
 	}
 }
