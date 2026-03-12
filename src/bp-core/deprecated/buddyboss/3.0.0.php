@@ -1541,3 +1541,77 @@ add_action(
 		);
 	}
 );
+
+/**
+ * Fire the legacy `bp_admin_tab_setting_save` and `bp_admin_tab_setting_saved`
+ * hooks when forums settings are saved via Settings 2.0.
+ *
+ * @since BuddyBoss 1.0.0
+ * @deprecated BuddyBoss [BBVERSION] Use Settings 2.0 per-field sanitize/validate callbacks.
+ */
+add_action(
+	'bb_forums_after_save_settings',
+	static function () {
+		do_action_deprecated(
+			'bp_admin_tab_setting_save',
+			array( 'bp-forums' ),
+			'BuddyBoss [BBVERSION]',
+			'bb_forums_after_save_settings'
+		);
+
+		do_action_deprecated(
+			'bp_admin_tab_setting_saved',
+			array( 'bp-forums' ),
+			'BuddyBoss [BBVERSION]',
+			'bb_forums_after_save_settings'
+		);
+	}
+);
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Forums Settings 2.0 deprecated AJAX endpoint stubs.
+// These AJAX actions were in BBP_Admin and have been replaced by
+// Settings 2.0 AJAX handlers (BB_Admin_Topics_Ajax, BB_Admin_Replies_Ajax).
+// ──────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Deprecated: Topic suggest AJAX handler.
+ *
+ * @since bbPress (r4261)
+ * @deprecated BuddyBoss [BBVERSION] Use bb_admin_discussion_autocomplete instead.
+ */
+add_action(
+	'wp_ajax_bbp_suggest_topic',
+	static function () {
+		_deprecated_function( 'bbp_suggest_topic AJAX action', 'BuddyBoss [BBVERSION]', 'bb_admin_discussion_autocomplete' );
+		wp_send_json_error( array( 'message' => __( 'This endpoint has been deprecated. Use bb_admin_discussion_autocomplete instead.', 'buddyboss' ) ) );
+	}
+);
+
+/**
+ * Deprecated: Reply suggest AJAX handler.
+ *
+ * @since BuddyBoss 1.0.0
+ * @deprecated BuddyBoss [BBVERSION] Use bb_admin_reply_autocomplete instead.
+ */
+add_action(
+	'wp_ajax_bbp_suggest_reply',
+	static function () {
+		_deprecated_function( 'bbp_suggest_reply AJAX action', 'BuddyBoss [BBVERSION]', 'bb_admin_reply_autocomplete' );
+		wp_send_json_error( array( 'message' => __( 'This endpoint has been deprecated. Use bb_admin_reply_autocomplete instead.', 'buddyboss' ) ) );
+	}
+);
+
+/**
+ * Deprecated: User suggest AJAX handler.
+ *
+ * @since bbPress (r5014)
+ * @deprecated BuddyBoss [BBVERSION] Use standard WordPress user search instead.
+ */
+add_action(
+	'wp_ajax_bbp_suggest_user',
+	static function () {
+		_deprecated_function( 'bbp_suggest_user AJAX action', 'BuddyBoss [BBVERSION]', 'WordPress user search' );
+		wp_send_json_error( array( 'message' => __( 'This endpoint has been deprecated.', 'buddyboss' ) ) );
+	}
+);

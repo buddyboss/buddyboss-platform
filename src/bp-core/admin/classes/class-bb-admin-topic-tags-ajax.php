@@ -245,7 +245,15 @@ class BB_Admin_Topic_Tags_Ajax {
 			'permalink'   => ! is_wp_error( $permalink ) ? $permalink : '',
 		);
 
-		wp_send_json_success( $data );
+		/**
+		 * Filters the response data for the admin single topic tag endpoint.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array   $data Response data array.
+		 * @param WP_Term $term The term object.
+		 */
+		wp_send_json_success( apply_filters( 'bb_admin_get_topic_tag_response', $data, $term ) );
 	}
 
 	/**

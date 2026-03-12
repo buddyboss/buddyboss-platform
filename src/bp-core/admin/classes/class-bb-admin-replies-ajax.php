@@ -294,15 +294,29 @@ class BB_Admin_Replies_Ajax {
 				}
 			}
 
-			$response['meta'] = array(
-				'views'        => array(
-					'all'    => $total,
-					'forums' => $forum_counts,
-				),
-				'bulk_actions' => $bulk_actions,
-				'columns'      => $columns,
+			// Compute the true "all" count from forum counts (unfiltered total).
+			$all_count = 0;
+			foreach ( $forum_counts as $fc ) {
+				$all_count += $fc['count'];
+			}
+
+			$response['views'] = array(
+				'all'    => $all_count,
+				'forums' => $forum_counts,
 			);
+
+			$response['bulk_actions'] = $bulk_actions;
+			$response['columns']      = $columns;
 		}
+
+		/**
+		 * Filters the full response data for the admin replies list AJAX endpoint.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $response Response data array.
+		 */
+		$response = apply_filters( 'bb_admin_get_replies_response', $response );
 
 		wp_send_json_success( $response );
 	}
@@ -404,19 +418,27 @@ class BB_Admin_Replies_Ajax {
 		$topic_id = (int) get_post_meta( $reply_id, '_bbp_topic_id', true );
 		$reply_to = (int) get_post_meta( $reply_id, '_bbp_reply_to', true );
 
-		wp_send_json_success(
-			array(
-				'id'          => $reply_id,
-				'content'     => $reply->post_content,
-				'forum_id'    => $forum_id,
-				'forum_name'  => $forum_id ? get_the_title( $forum_id ) : '',
-				'topic_id'    => $topic_id,
-				'topic_title' => $topic_id ? get_the_title( $topic_id ) : '',
-				'reply_to'    => $reply_to,
-				'post_status' => get_post_status( $reply_id ),
-				'permalink'   => bbp_get_reply_url( $reply_id ),
-			)
+		$data = array(
+			'id'          => $reply_id,
+			'content'     => $reply->post_content,
+			'forum_id'    => $forum_id,
+			'forum_name'  => $forum_id ? get_the_title( $forum_id ) : '',
+			'topic_id'    => $topic_id,
+			'topic_title' => $topic_id ? get_the_title( $topic_id ) : '',
+			'reply_to'    => $reply_to,
+			'post_status' => get_post_status( $reply_id ),
+			'permalink'   => bbp_get_reply_url( $reply_id ),
 		);
+
+		/**
+		 * Filters the response data for the admin single reply endpoint.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array   $data  Response data array.
+		 * @param WP_Post $reply The reply post object.
+		 */
+		wp_send_json_success( apply_filters( 'bb_admin_get_reply_response', $data, $reply ) );
 	}
 
 	/**
@@ -486,6 +508,18 @@ class BB_Admin_Replies_Ajax {
 		if ( function_exists( 'bbp_notify_topic_subscribers' ) ) {
 			bbp_notify_topic_subscribers( $reply_id, $topic_id, $forum_id );
 		}
+
+		/**
+		 * Fires after a new reply is created in Settings 2.0 admin.
+		 *
+		 * Mirrors the legacy bbp_new_reply_post_extras hook for third-party
+		 * plugin compatibility.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $reply_id Reply ID.
+		 */
+		do_action( 'bbp_new_reply_post_extras', $reply_id );
 
 		$this->bb_clear_forum_counts_cache();
 
@@ -759,19 +793,19 @@ class BB_Admin_Replies_Ajax {
 					),
 				)
 			);
+		} else {
+			wp_send_json_success(
+				array(
+					'processed' => $processed,
+					'failed'    => $failed,
+					'message'   => sprintf(
+						/* translators: %d: number of replies processed. */
+						_n( '%d reply processed.', '%d replies processed.', $processed, 'buddyboss' ),
+						$processed
+					),
+				)
+			);
 		}
-
-		wp_send_json_success(
-			array(
-				'processed' => $processed,
-				'failed'    => $failed,
-				'message'   => sprintf(
-					/* translators: %d: number of replies processed. */
-					_n( '%d reply processed.', '%d replies processed.', $processed, 'buddyboss' ),
-					$processed
-				),
-			)
-		);
 	}
 
 	/**

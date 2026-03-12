@@ -234,8 +234,12 @@ export default function RepliesListScreen( { onNavigate } ) {
 				setTotalPages( response.data.total_pages || 1 );
 				setTotalItems( response.data.total || 0 );
 
-				if ( response.data.meta ) {
-					setMeta( response.data.meta );
+				if ( response.data.views ) {
+					setMeta( {
+						views: response.data.views,
+						bulk_actions: response.data.bulk_actions,
+						columns: response.data.columns,
+					} );
 				}
 			} else {
 				setError( ( response.data && response.data.message ) || __( 'Failed to load replies.', 'buddyboss' ) );

@@ -107,6 +107,7 @@ class BB_Admin_Forums_Ajax {
 	 */
 	public function bb_clear_status_counts_cache() {
 		wp_cache_delete( 'bb_admin_forums_status_counts', 'bbpress' );
+		wp_cache_delete( 'bb_admin_forums_mine_count_' . get_current_user_id(), 'bbpress' );
 	}
 
 	/**
@@ -494,6 +495,18 @@ class BB_Admin_Forums_Ajax {
 			set_post_thumbnail( $forum_id, $image_id );
 		}
 
+		/**
+		 * Fires after a new forum is created in Settings 2.0 admin.
+		 *
+		 * Mirrors the legacy bbp_new_forum_post_extras hook for third-party
+		 * plugin compatibility.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $forum_id Forum ID.
+		 */
+		do_action( 'bbp_new_forum_post_extras', $forum_id );
+
 		// Clear status counts cache.
 		$this->bb_clear_status_counts_cache();
 
@@ -879,51 +892,31 @@ class BB_Admin_Forums_Ajax {
 	 * @return int Count of user's forums.
 	 */
 	private function bb_get_mine_count() {
+		$user_id   = get_current_user_id();
+		$cache_key = 'bb_admin_forums_mine_count_' . $user_id;
+		$cached    = wp_cache_get( $cache_key, 'bbpress' );
+
+		if ( false !== $cached ) {
+			return (int) $cached;
+		}
+
 		global $wpdb;
 		$forum_post_type = bbp_get_forum_post_type();
-		$user_id         = get_current_user_id();
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Simple count query, not worth caching separately.
-		return (int) $wpdb->get_var(
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Custom count query for current user's forums.
+		$count = (int) $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT COUNT(ID) FROM {$wpdb->posts} WHERE post_type = %s AND post_author = %d AND post_status IN ('publish', 'private', 'hidden')",
 				$forum_post_type,
 				$user_id
 			)
 		);
+
+		wp_cache_set( $cache_key, $count, 'bbpress', HOUR_IN_SECONDS );
+
+		return $count;
 	}
 
-	/**
-	 * Get all forums formatted as options for the parent forum dropdown.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param int $exclude_id Optional. Forum ID to exclude (when editing, exclude self).
-	 *
-	 * @return array Array of { value, label } options.
-	 */
-	private function bb_get_parent_forum_options( $exclude_id = 0 ) {
-		$forums = get_posts(
-			array(
-				'post_type'      => bbp_get_forum_post_type(),
-				'post_status'    => array( 'publish', 'private', 'hidden' ),
-				'posts_per_page' => 200,
-				'orderby'        => 'title',
-				'order'          => 'ASC',
-				'exclude'        => $exclude_id ? array( $exclude_id ) : array(),
-			)
-		);
-
-		$options = array();
-		foreach ( $forums as $forum ) {
-			$options[] = array(
-				'value' => (int) $forum->ID,
-				'label' => $forum->post_title,
-			);
-		}
-
-		return $options;
-	}
 }
 
 // Initialize.

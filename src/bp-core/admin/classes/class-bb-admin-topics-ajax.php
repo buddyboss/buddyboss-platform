@@ -571,6 +571,18 @@ class BB_Admin_Topics_Ajax {
 			bbp_notify_forum_subscribers( $topic_id );
 		}
 
+		/**
+		 * Fires after a new topic is created in Settings 2.0 admin.
+		 *
+		 * Mirrors the legacy bbp_new_topic_post_extras hook for third-party
+		 * plugin compatibility.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $topic_id Topic ID.
+		 */
+		do_action( 'bbp_new_topic_post_extras', $topic_id );
+
 		// Clear forum counts cache.
 		$this->bb_clear_forum_counts_cache();
 

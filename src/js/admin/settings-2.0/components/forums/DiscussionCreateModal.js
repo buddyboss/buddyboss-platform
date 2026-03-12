@@ -170,6 +170,7 @@ export function DiscussionCreateModal( { isOpen, onClose, onCreated } ) {
 	var typeOptions = [
 		{ value: 'normal', label: __( 'Normal', 'buddyboss' ) },
 		{ value: 'sticky', label: __( 'Sticky', 'buddyboss' ) },
+		{ value: 'super_sticky', label: __( 'Super Sticky (To front)', 'buddyboss' ) },
 	];
 
 	var statusOptions = [

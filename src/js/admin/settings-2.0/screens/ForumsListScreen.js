@@ -1452,7 +1452,7 @@ function ForumEditModal( { forum, onClose, onSave, isSaving } ) {
 					</label>
 					{ imageUrl ? (
 						<div className="bb-forum-modal__image-preview">
-							<img src={ imageUrl } alt="" />
+							<img src={ safeUrl( imageUrl ) } alt="" />
 							<div className="bb-forum-modal__image-actions">
 								<Button
 									variant="secondary"
