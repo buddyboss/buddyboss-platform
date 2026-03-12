@@ -977,6 +977,7 @@ export default function RepliesListScreen( { onNavigate } ) {
 											) }
 											{ reply.is_spam && (
 												<span className="bb-replies-list__spam-badge">
+													<i className="bb-icons-rl-flag"></i>
 													{ __( 'Spam', 'buddyboss' ) }
 												</span>
 											) }

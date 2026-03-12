@@ -352,10 +352,6 @@
 
 		tbody tr {
 			border-bottom: 0.5px solid $bb-border-primary-color;
-
-			&.is-spam {
-				opacity: 0.6;
-			}
 		}
 
 		tbody td {
@@ -423,14 +419,22 @@
 	&__spam-badge {
 		display: inline-block;
 		margin-left: 8px;
-		padding: 2px 8px;
+		padding: 2px 4px;
 		font-size: 11px;
 		font-weight: 500;
-		color: #991b1b;
-		background-color: #fef2f2;
-		border: 1px solid #fecaca;
-		border-radius: $bb-border-radius-sm;
+		color: $bb-text-warning-primary-color;
+		background-color: $bb-background-warning-primary-color;
+		border: 1px solid $bb-border-warning-secondary-color;
+		border-radius: $bb-border-radius-full;
 		vertical-align: middle;
+
+		i {
+			display: inline-block;
+			font-size: 12px;
+			color: $bb-icon-warning-primary-color;
+			vertical-align: middle;
+			margin-right: 4px;
+		}
 	}
 
 	&__created-icon {
