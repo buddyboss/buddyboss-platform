@@ -154,9 +154,10 @@ class BB_Admin_Reported_Content_Ajax {
 	public function bb_get_reported_content() {
 		$this->bb_verify_request();
 
-		$page     = isset( $_POST['page'] ) ? absint( $_POST['page'] ) : 1;
-		$per_page = isset( $_POST['per_page'] ) ? absint( $_POST['per_page'] ) : 20;
-		$search   = isset( $_POST['search'] ) ? sanitize_text_field( wp_unslash( $_POST['search'] ) ) : '';
+		$page         = isset( $_POST['page'] ) ? absint( $_POST['page'] ) : 1;
+		$per_page     = isset( $_POST['per_page'] ) ? absint( $_POST['per_page'] ) : 20;
+		$search       = isset( $_POST['search'] ) ? sanitize_text_field( wp_unslash( $_POST['search'] ) ) : '';
+		$content_type = isset( $_POST['content_type'] ) ? sanitize_text_field( wp_unslash( $_POST['content_type'] ) ) : '';
 
 		$moderation_args = array(
 			'page'          => $page,
@@ -166,6 +167,11 @@ class BB_Admin_Reported_Content_Ajax {
 			'reported'      => false,
 			'search_terms'  => ! empty( $search ) ? $search : false,
 		);
+
+		// Filter by content type if provided.
+		if ( ! empty( $content_type ) ) {
+			$moderation_args['in_types'] = array( $content_type );
+		}
 
 		// Show items with reported, user_report, or hide_sitewide (same as legacy list table).
 		add_filter( 'bp_moderation_get_where_conditions', array( $this, 'bb_update_where_conditions' ), 10, 2 );

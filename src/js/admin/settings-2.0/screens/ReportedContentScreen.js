@@ -102,9 +102,9 @@ export function ReportedContentScreen( { onNavigate } ) {
 	var total = totalState[ 0 ];
 	var setTotal = totalState[ 1 ];
 
-	var searchState = useState( '' );
-	var search = searchState[ 0 ];
-	var setSearch = searchState[ 1 ];
+	var contentTypeState = useState( '' );
+	var contentType = contentTypeState[ 0 ];
+	var setContentType = contentTypeState[ 1 ];
 
 	// 3-dot menu state.
 	var openMenuState = useState( null );
@@ -126,18 +126,20 @@ export function ReportedContentScreen( { onNavigate } ) {
 	var PER_PAGE = 20;
 
 	// Fetch content items.
-	var fetchItems = useCallback( function ( pageNum, searchTerm ) {
+	var fetchItems = useCallback( function ( pageNum, filterType ) {
 		if ( abortRef.current ) {
 			abortRef.current.abort();
 		}
 		var controller = new AbortController();
 		abortRef.current = controller;
 
+		var params = { page: pageNum, per_page: PER_PAGE };
+		if ( filterType ) {
+			params.content_type = filterType;
+		}
+
 		setIsLoading( true );
-		getReportedContent(
-			{ page: pageNum, per_page: PER_PAGE, search: searchTerm || '' },
-			{ signal: controller.signal }
-		)
+		getReportedContent( params, { signal: controller.signal } )
 			.then( function ( response ) {
 				setIsLoading( false );
 				if ( response.success && response.data ) {
@@ -163,6 +165,9 @@ export function ReportedContentScreen( { onNavigate } ) {
 		};
 	}, [] );
 
+	// Get content types from localized data.
+	var reportedContentTypes = ( window.bbAdminData && window.bbAdminData.reportedContentTypes ) || {};
+
 	// Close menu on outside click.
 	useEffect( function () {
 		if ( openMenuId === null ) {
@@ -177,20 +182,19 @@ export function ReportedContentScreen( { onNavigate } ) {
 		};
 	}, [ openMenuId ] );
 
-	// Handle search.
-	var handleSearch = useCallback( function ( e ) {
-		if ( e ) {
-			e.preventDefault();
-		}
+	// Handle content type filter change.
+	var handleContentTypeChange = useCallback( function ( e ) {
+		var newType = e.target.value;
+		setContentType( newType );
 		setPage( 1 );
-		fetchItems( 1, search );
-	}, [ search, fetchItems ] );
+		fetchItems( 1, newType );
+	}, [ fetchItems ] );
 
 	// Handle page change.
 	var handlePageChange = useCallback( function ( newPage ) {
 		setPage( newPage );
-		fetchItems( newPage, search );
-	}, [ search, fetchItems ] );
+		fetchItems( newPage, contentType );
+	}, [ contentType, fetchItems ] );
 
 	// Handle hide/unhide content with confirmation dialog.
 	var handleHideAction = useCallback( function ( item, action ) {
@@ -214,13 +218,13 @@ export function ReportedContentScreen( { onNavigate } ) {
 			.then( function ( response ) {
 				setActionInProgress( null );
 				if ( response.success ) {
-					fetchItems( page, search );
+					fetchItems( page, contentType );
 				}
 			} )
 			.catch( function () {
 				setActionInProgress( null );
 			} );
-	}, [ page, search, fetchItems ] );
+	}, [ page, contentType, fetchItems ] );
 
 	// Handle suspend/unsuspend owner with confirmation dialog.
 	var handleSuspendAction = useCallback( function ( item, action ) {
@@ -251,13 +255,13 @@ export function ReportedContentScreen( { onNavigate } ) {
 			.then( function ( response ) {
 				setActionInProgress( null );
 				if ( response.success ) {
-					fetchItems( page, search );
+					fetchItems( page, contentType );
 				}
 			} )
 			.catch( function () {
 				setActionInProgress( null );
 			} );
-	}, [ page, search, fetchItems ] );
+	}, [ page, contentType, fetchItems ] );
 
 	// Handle view report.
 	var handleViewReport = useCallback( function ( item ) {
@@ -273,18 +277,24 @@ export function ReportedContentScreen( { onNavigate } ) {
 					<h2 className="bb-admin-reported-content__title">
 						{ __( 'Reported Content', 'buddyboss' ) }
 					</h2>
-					<form className="bb-admin-reported-content__search-form" onSubmit={ handleSearch }>
-						<input
-							type="text"
-							className="bb-admin-reported-content__search-input"
-							placeholder={ __( 'Search content...', 'buddyboss' ) }
-							value={ search }
-							onChange={ function ( e ) { setSearch( e.target.value ); } }
-						/>
-						<button type="submit" className="bb-admin-reported-content__search-btn">
-							<i className="bb-icons-rl bb-icons-rl-search"></i>
-						</button>
-					</form>
+					{ Object.keys( reportedContentTypes ).length > 0 && (
+						<div className="bb-admin-reported-content__filter">
+							<select
+								className="bb-admin-reported-content__filter-select"
+								value={ contentType }
+								onChange={ handleContentTypeChange }
+							>
+								<option value="">{ __( 'All Content Types', 'buddyboss' ) }</option>
+								{ Object.keys( reportedContentTypes ).map( function ( key ) {
+									return (
+										<option key={ key } value={ key }>
+											{ reportedContentTypes[ key ] }
+										</option>
+									);
+								} ) }
+							</select>
+						</div>
+					) }
 				</div>
 
 				{/* Body */}

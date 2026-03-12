@@ -152,6 +152,7 @@ function bb_admin_settings_register_moderation_feature() {
 	);
 
 	// Side Panel: Blog Posts (navigation link).
+	/*
 	bb_register_side_panel(
 		'moderation',
 		'blog_posts',
@@ -165,6 +166,7 @@ function bb_admin_settings_register_moderation_feature() {
 			'order' => 120,
 		)
 	);
+	*/
 
 	// =========================================================================
 	// PANEL FIELDS

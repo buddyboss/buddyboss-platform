@@ -44,24 +44,11 @@ function bb_moderation_register_content_reporting_fields() {
 		)
 	);
 
-	// -------------------------------------------------------------------------
-	// SECTION: Email Notification
-	// -------------------------------------------------------------------------
-	bb_register_feature_section(
-		'moderation',
-		'content_reporting',
-		'reporting_email_notification',
-		array(
-			'title' => __( 'Email Notification', 'buddyboss' ),
-			'order' => 100,
-		)
-	);
-
 	// FIELD: Email Notification (Toggle).
 	bb_register_feature_field(
 		'moderation',
 		'content_reporting',
-		'reporting_email_notification',
+		'content_reporting',
 		array(
 			'name'              => 'bpm_reporting_email_notification',
 			'label'             => __( 'Email Notification', 'buddyboss' ),
@@ -69,7 +56,7 @@ function bb_moderation_register_content_reporting_fields() {
 			'description'       => __( 'Notify administrators when content has been automatically hidden', 'buddyboss' ),
 			'default'           => bp_is_moderation_reporting_email_notification_enable( false ),
 			'sanitize_callback' => 'absint',
-			'order'             => 10,
+			'order'             => 100,
 		)
 	);
 }
