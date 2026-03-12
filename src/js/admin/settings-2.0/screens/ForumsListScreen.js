@@ -169,6 +169,10 @@ export function ForumsListScreen( { onNavigate } ) {
 	var bulkEditOpen = bulkEditOpenState[ 0 ];
 	var setBulkEditOpen = bulkEditOpenState[ 1 ];
 
+	var bulkEditStatusState = useState( 'no_change' );
+	var bulkEditStatus = bulkEditStatusState[ 0 ];
+	var setBulkEditStatus = bulkEditStatusState[ 1 ];
+
 	var bulkEditVisibilityState = useState( 'no_change' );
 	var bulkEditVisibility = bulkEditVisibilityState[ 0 ];
 	var setBulkEditVisibility = bulkEditVisibilityState[ 1 ];
@@ -494,6 +498,7 @@ export function ForumsListScreen( { onNavigate } ) {
 	var handleConfirmBulkEdit = function () {
 		setBulkEditOpen( false );
 		performAction( 'edit', selectedIds, {
+			edit_status: bulkEditStatus,
 			edit_visibility: bulkEditVisibility,
 		} );
 	};
@@ -1065,6 +1070,18 @@ export function ForumsListScreen( { onNavigate } ) {
 						</div>
 
 						<SelectControl
+							label={ __( 'Status', 'buddyboss' ) }
+							value={ bulkEditStatus }
+							options={ [
+								{ value: 'no_change', label: __( '\u2014 No Change \u2014', 'buddyboss' ) },
+								{ value: 'open', label: __( 'Open', 'buddyboss' ) },
+								{ value: 'closed', label: __( 'Closed', 'buddyboss' ) },
+							] }
+							onChange={ setBulkEditStatus }
+							__nextHasNoMarginBottom
+						/>
+
+						<SelectControl
 							label={ __( 'Visibility', 'buddyboss' ) }
 							value={ bulkEditVisibility }
 							options={ [
@@ -1089,7 +1106,7 @@ export function ForumsListScreen( { onNavigate } ) {
 						<Button
 							variant="primary"
 							onClick={ handleConfirmBulkEdit }
-							disabled={ 'no_change' === bulkEditVisibility }
+							disabled={ 'no_change' === bulkEditStatus && 'no_change' === bulkEditVisibility }
 						>
 							{ __( 'Save', 'buddyboss' ) }
 						</Button>

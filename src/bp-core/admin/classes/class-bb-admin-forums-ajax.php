@@ -673,6 +673,7 @@ class BB_Admin_Forums_Ajax {
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
 		$raw_ids         = isset( $_POST['forum_ids'] ) ? sanitize_text_field( wp_unslash( $_POST['forum_ids'] ) ) : '';
 		$do_action       = isset( $_POST['do_action'] ) ? sanitize_key( wp_unslash( $_POST['do_action'] ) ) : '';
+		$edit_status     = isset( $_POST['edit_status'] ) ? sanitize_key( wp_unslash( $_POST['edit_status'] ) ) : '';
 		$edit_visibility = isset( $_POST['edit_visibility'] ) ? sanitize_key( wp_unslash( $_POST['edit_visibility'] ) ) : '';
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
@@ -716,6 +717,15 @@ class BB_Admin_Forums_Ajax {
 				}
 			} elseif ( 'edit' === $do_action ) {
 				$updated = false;
+
+				// Update status (open/closed) if provided and not "no change".
+				if ( ! empty( $edit_status ) && 'no_change' !== $edit_status ) {
+					$allowed_statuses = array( 'open', 'closed' );
+					if ( in_array( $edit_status, $allowed_statuses, true ) ) {
+						update_post_meta( $forum_id, '_bbp_status', $edit_status );
+						$updated = true;
+					}
+				}
 
 				// Update visibility if provided and not "no change".
 				if ( ! empty( $edit_visibility ) && 'no_change' !== $edit_visibility ) {
