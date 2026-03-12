@@ -504,3 +504,80 @@ export function suspendMember( userId ) {
 export function unsuspendMember( userId ) {
 	return ajaxFetch( 'bb_admin_unsuspend_member', { user_id: userId } );
 }
+
+// ── Reported Content ─────────────────────────────────────────────────────
+
+/**
+ * Get reported content list.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} params       Query parameters.
+ * @param {Object} [options={}] Fetch options (signal, etc.).
+ * @return {Promise} Promise resolving to response.
+ */
+export function getReportedContent( params, options ) {
+	return ajaxFetch( 'bb_admin_get_reported_content', params || {}, options );
+}
+
+/**
+ * Get content report details (reporters).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {number} moderationId Moderation record ID.
+ * @return {Promise} Promise resolving to response.
+ */
+export function getContentReport( moderationId ) {
+	return ajaxFetch( 'bb_admin_get_content_report', { moderation_id: moderationId } );
+}
+
+/**
+ * Hide reported content.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {number} itemId   Content item ID.
+ * @param {string} itemType Content type slug.
+ * @return {Promise} Promise resolving to response.
+ */
+export function hideContent( itemId, itemType ) {
+	return ajaxFetch( 'bb_admin_hide_content', { item_id: itemId, item_type: itemType } );
+}
+
+/**
+ * Unhide reported content.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {number} itemId   Content item ID.
+ * @param {string} itemType Content type slug.
+ * @return {Promise} Promise resolving to response.
+ */
+export function unhideContent( itemId, itemType ) {
+	return ajaxFetch( 'bb_admin_unhide_content', { item_id: itemId, item_type: itemType } );
+}
+
+/**
+ * Suspend the owner of reported content.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {number} userId User ID.
+ * @return {Promise} Promise resolving to response.
+ */
+export function suspendContentOwner( userId ) {
+	return ajaxFetch( 'bb_admin_suspend_content_owner', { user_id: userId } );
+}
+
+/**
+ * Unsuspend the owner of reported content.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {number} userId User ID.
+ * @return {Promise} Promise resolving to response.
+ */
+export function unsuspendContentOwner( userId ) {
+	return ajaxFetch( 'bb_admin_unsuspend_content_owner', { user_id: userId } );
+}

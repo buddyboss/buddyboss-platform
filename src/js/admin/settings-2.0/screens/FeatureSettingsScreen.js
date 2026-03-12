@@ -29,6 +29,7 @@ const GroupsListScreen = lazy(() => import('./GroupsListScreen'));
 const GroupTypeScreen = lazy(() => import('./GroupTypeScreen'));
 const ReportingCategoriesScreen = lazy(() => import('./ReportingCategoriesScreen'));
 const FlaggedMembersScreen = lazy(() => import('./FlaggedMembersScreen'));
+const ReportedContentScreen = lazy(() => import('./ReportedContentScreen'));
 
 /**
  * Map of feature + panel combinations that render custom screens instead of settings forms.
@@ -39,6 +40,7 @@ const CUSTOM_PANEL_SCREENS = {
 	'groups:group_types': GroupTypeScreen,
 	'moderation:reporting_categories': ReportingCategoriesScreen,
 	'moderation:flagged_members': FlaggedMembersScreen,
+	'moderation:reported_content': ReportedContentScreen,
 };
 
 

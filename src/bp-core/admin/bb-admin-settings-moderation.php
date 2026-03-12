@@ -137,7 +137,7 @@ function bb_admin_settings_register_moderation_feature() {
 		)
 	);
 
-	// Side Panel: Reported Content (navigation link).
+	// Side Panel: Reported Content (custom panel screen).
 	bb_register_side_panel(
 		'moderation',
 		'reported_content',
@@ -147,7 +147,6 @@ function bb_admin_settings_register_moderation_feature() {
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-file-text',
 			),
-			'link'  => bp_get_admin_url( 'admin.php?page=bp-moderation&tab=content' ),
 			'order' => 110,
 		)
 	);

@@ -175,11 +175,22 @@ class BB_Admin_Flagged_Members_Ajax {
 				$block_count  = isset( $item->count ) ? (int) $item->count : 0;
 				$report_count = isset( $item->count_report ) ? (int) $item->count_report : 0;
 
+				// Check if a suspend/unsuspend background process is in progress.
+				// Check both meta keys because the suspended status changes immediately
+				// while the background job is still processing content.
+				$suspend_in_progress = false;
+				if ( ! $is_admin ) {
+					$suspend_id = BP_Core_Suspend::get_suspend_id( $user_id, BP_Moderation_Members::$moderation_type );
+					if ( $suspend_id ) {
+						$suspend_in_progress = ! empty( bb_suspend_get_meta( $suspend_id, 'suspend' ) ) || ! empty( bb_suspend_get_meta( $suspend_id, 'unsuspend' ) );
+					}
+				}
+
 				$members[] = array(
-					'id'            => (int) $item->id,
-					'user_id'       => $user_id,
-					'display_name'  => bp_core_get_user_displayname( $user_id ),
-					'avatar'        => bp_core_fetch_avatar(
+					'id'                  => (int) $item->id,
+					'user_id'             => $user_id,
+					'display_name'        => bp_core_get_user_displayname( $user_id ),
+					'avatar'              => bp_core_fetch_avatar(
 						array(
 							'item_id' => $user_id,
 							'type'    => 'thumb',
@@ -188,11 +199,12 @@ class BB_Admin_Flagged_Members_Ajax {
 							'html'    => false,
 						)
 					),
-					'profile_url'   => bp_core_get_user_domain( $user_id ),
-					'blocks'        => $block_count,
-					'reports'       => $report_count,
-					'is_suspended'  => $is_suspended,
-					'is_admin'      => $is_admin,
+					'profile_url'         => bp_core_get_user_domain( $user_id ),
+					'blocks'              => $block_count,
+					'reports'             => $report_count,
+					'is_suspended'        => $is_suspended,
+					'is_admin'            => $is_admin,
+					'suspend_in_progress' => (bool) $suspend_in_progress,
 				);
 			}
 		}

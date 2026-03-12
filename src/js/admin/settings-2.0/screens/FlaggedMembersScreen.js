@@ -133,10 +133,26 @@ export function FlaggedMembersScreen( { onNavigate } ) {
 		fetchMembers( newPage, search );
 	}, [ search, fetchMembers ] );
 
-	// Handle suspend/unsuspend.
+	// Handle suspend/unsuspend with confirmation dialog.
 	var handleSuspendAction = useCallback( function ( member, action ) {
+		var confirmMessage = ( 'suspend' === action )
+			? __( 'Please confirm you want to suspend this member. Members who are suspended will be logged out and not allowed to login again. Their content will be hidden from all members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' )
+			: __( 'Please confirm you want to unsuspend this member. Members who are unsuspended will be allowed to login again, and their content will no longer be hidden from other members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' );
+
+		if ( ! window.confirm( confirmMessage ) ) {
+			setOpenMenuId( null );
+			return;
+		}
+
 		setActionInProgress( member.user_id );
 		setOpenMenuId( null );
+
+		// Optimistically mark suspend_in_progress so button stays disabled after refetch.
+		setMembers( function ( prev ) {
+			return prev.map( function ( m ) {
+				return m.user_id === member.user_id ? Object.assign( {}, m, { suspend_in_progress: true } ) : m;
+			} );
+		} );
 
 		var promise = ( 'suspend' === action ) ? suspendMember( member.user_id ) : unsuspendMember( member.user_id );
 
@@ -267,18 +283,29 @@ export function FlaggedMembersScreen( { onNavigate } ) {
 																	{ __( 'View Report', 'buddyboss' ) }
 																</button>
 																{ ! member.is_admin && (
-																	<button
-																		className="bb-admin-flagged-members__menu-item"
-																		onClick={ function () {
-																			handleSuspendAction(
-																				member,
-																				member.is_suspended ? 'unsuspend' : 'suspend'
-																			);
-																		} }
-																	>
-																		<i className={ member.is_suspended ? 'bb-icons-rl bb-icons-rl-user-circle-check' : 'bb-icons-rl bb-icons-rl-user-circle-minus' }></i>
-																		{ member.is_suspended ? __( 'Unsuspend Member', 'buddyboss' ) : __( 'Suspend Member', 'buddyboss' ) }
-																	</button>
+																	member.suspend_in_progress ? (
+																		<span
+																			className="bb-admin-flagged-members__menu-item bb-admin-flagged-members__menu-item--disabled"
+																			data-balloon={ __( 'The background process is currently in the queue. Please refresh the page after a short while.', 'buddyboss' ) }
+																			data-balloon-pos="up"
+																		>
+																			<i className={ member.is_suspended ? 'bb-icons-rl bb-icons-rl-user-circle-check' : 'bb-icons-rl bb-icons-rl-user-circle-minus' }></i>
+																			{ member.is_suspended ? __( 'Unsuspend Member', 'buddyboss' ) : __( 'Suspend Member', 'buddyboss' ) }
+																		</span>
+																	) : (
+																		<button
+																			className="bb-admin-flagged-members__menu-item"
+																			onClick={ function () {
+																				handleSuspendAction(
+																					member,
+																					member.is_suspended ? 'unsuspend' : 'suspend'
+																				);
+																			} }
+																		>
+																			<i className={ member.is_suspended ? 'bb-icons-rl bb-icons-rl-user-circle-check' : 'bb-icons-rl bb-icons-rl-user-circle-minus' }></i>
+																			{ member.is_suspended ? __( 'Unsuspend Member', 'buddyboss' ) : __( 'Suspend Member', 'buddyboss' ) }
+																		</button>
+																	)
 																) }
 															</div>
 														) }

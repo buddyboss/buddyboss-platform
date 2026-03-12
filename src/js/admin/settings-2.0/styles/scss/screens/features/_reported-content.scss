@@ -1,8 +1,8 @@
 /* ----------------------------------------------------------------
-   Flagged Members Screen
+   Reported Content Screen
    ---------------------------------------------------------------- */
 
-.bb-admin-flagged-members {
+.bb-admin-reported-content {
 	display: flex;
 	flex-direction: column;
 	gap: 24px;
@@ -11,7 +11,7 @@
 	width: 100%;
 	padding: 32px;
 
-	/* Card container matching Figma featureCard */
+	/* Card container */
 	&__card {
 		background: $bb-background-base-color;
 		border: 0.5px solid $bb-border-primary-color;
@@ -22,7 +22,7 @@
 		flex-direction: column;
 	}
 
-	/* Title bar — 64px min-height, 24px horizontal padding, 1px border-bottom */
+	/* Title bar */
 	&__title-bar {
 		padding: 0 24px;
 		min-height: 64px;
@@ -95,12 +95,12 @@
 		}
 	}
 
-	/* Body — 32px top, 24px sides, 8px bottom */
+	/* Body */
 	&__body {
 		padding: 32px 24px 8px;
 	}
 
-	/* Members list */
+	/* Content list */
 	&__list {
 		display: flex;
 		flex-direction: column;
@@ -120,16 +120,7 @@
 		}
 	}
 
-	/* Dot indicator */
-	&__dot {
-		width: 6px;
-		height: 6px;
-		border-radius: 50%;
-		background: $bb-border-tertiary-color;
-		flex-shrink: 0;
-	}
-
-	/* Items row — flex: 1, gap: 32px */
+	/* Items row */
 	&__items {
 		display: flex;
 		align-items: center;
@@ -138,8 +129,8 @@
 		min-width: 0;
 	}
 
-	/* Member column — 264px width, 8px gap */
-	&__member-col {
+	/* Content type column — icon circle + name link */
+	&__content-col {
 		display: flex;
 		align-items: center;
 		gap: 8px;
@@ -148,16 +139,23 @@
 		min-width: 0;
 	}
 
-	&__avatar {
-		width: 40px;
-		height: 40px;
+	&__content-icon {
+		width: 32px;
+		height: 32px;
 		border-radius: 50%;
+		background: $bb-background-primary-color;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		flex-shrink: 0;
-		object-fit: cover;
+
+		[class*="bb-icons-"] {
+			font-size: 16px;
+			color: $bb-icon-tertiary-color;
+		}
 	}
 
-	/* Name — 14px, regular (400), always link-blue */
-	&__name {
+	&__content-name {
 		font-size: 14px;
 		font-weight: 400;
 		color: $bb-link-color;
@@ -173,7 +171,41 @@
 		}
 	}
 
-	/* Reports column — 200px, blocks column — 152px */
+	/* Owner column */
+	&__owner-col {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		width: 200px;
+		flex-shrink: 0;
+		min-width: 0;
+	}
+
+	&__avatar {
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		flex-shrink: 0;
+		object-fit: cover;
+	}
+
+	&__owner-name {
+		font-size: 14px;
+		font-weight: 400;
+		color: $bb-link-color;
+		line-height: 20px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		text-decoration: none;
+
+		&:hover {
+			color: $bb-link-color;
+			text-decoration: underline;
+		}
+	}
+
+	/* Reports column */
 	&__reports-col {
 		display: flex;
 		align-items: center;
@@ -182,23 +214,6 @@
 		font-weight: 400;
 		color: $bb-text-color;
 		line-height: 18px;
-		width: 200px;
-		flex-shrink: 0;
-
-		[class*="bb-icons-"] {
-			font-size: 16px;
-			color: $bb-icon-tertiary-color;
-		}
-	}
-
-	&__blocks-col {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		font-size: 13px;
-		font-weight: 400;
-		color: $bb-text-color;
-		line-height: 18px;
 		width: 152px;
 		flex-shrink: 0;
 
@@ -208,7 +223,6 @@
 		}
 	}
 
-	/* Active (non-zero) state — blue text + icon */
 	&__col--active {
 		color: $bb-link-color;
 
@@ -217,13 +231,13 @@
 		}
 	}
 
-	/* Status column — Suspended badge */
+	/* Hidden badge column */
 	&__status-col {
 		flex-shrink: 0;
-		width: 152px;
+		width: 80px;
 	}
 
-	&__suspended-badge {
+	&__hidden-badge {
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
@@ -288,7 +302,8 @@
 	}
 
 	&__menu-item {
-		display: block;
+		display: flex;
+		align-items: center;
 		width: 100%;
 		padding: 8px 16px;
 		font-size: 13px;
@@ -299,6 +314,8 @@
 		border: none;
 		cursor: pointer;
 		text-align: left;
+		text-decoration: none;
+		gap: 8px;
 
 		&:hover {
 			background: $bb-background-primary-hover-color;
@@ -309,8 +326,7 @@
 			font-size: 20px !important;
 			line-height: 1;
 			font-weight: 400;
-			margin-right: 8px;
-			vertical-align: middle;
+			flex-shrink: 0;
 		}
 
 		&--disabled {
@@ -336,6 +352,16 @@
 		}
 	}
 
+	&__menu-item-external {
+		font-size: 12px;
+		color: $bb-icon-tertiary-color;
+		margin-left: auto;
+
+		[class*="bb-icons-"] {
+			font-size: 14px !important;
+		}
+	}
+
 	/* Empty state */
 	&__empty {
 		padding: 24px 0;
@@ -353,21 +379,69 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		gap: 16px;
+		gap: 4px;
 		padding: 16px 0;
 	}
 
-	&__page-info {
+	&__page-total {
+		font-size: 13px;
+		color: $bb-text-tertiary-color;
+		margin-right: 12px;
+	}
+
+	&__page-btn {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 32px;
+		height: 32px;
+		padding: 4px 8px;
+		font-size: 13px;
+		font-weight: 400;
+		color: $bb-text-color;
+		background: none;
+		border: 1px solid transparent;
+		border-radius: $bb-border-radius-md;
+		cursor: pointer;
+
+		&:hover:not(:disabled) {
+			background: $bb-background-primary-color;
+		}
+
+		&:disabled {
+			opacity: 0.4;
+			cursor: default;
+		}
+
+		&--active {
+			border-color: $bb-border-brand-primary-color;
+			color: $bb-link-color;
+			font-weight: 500;
+		}
+
+		&--nav {
+			[class*="bb-icons-"] {
+				font-size: 18px;
+			}
+		}
+	}
+
+	&__page-ellipsis {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 32px;
+		height: 32px;
 		font-size: 13px;
 		color: $bb-text-tertiary-color;
 	}
 }
 
 /* ----------------------------------------------------------------
-   View Report Modal
+   View Content Report Modal
    ---------------------------------------------------------------- */
 
-.bb-admin-view-report-modal {
+.bb-admin-view-content-report-modal {
 	background: $bb-background-base-color;
 	border-radius: $bb-border-radius-2xl;
 	width: 90%;
@@ -400,7 +474,7 @@
 		font-size: 13px;
 	}
 
-	/* Member summary bar */
+	/* Summary bar */
 	&__summary {
 		display: flex;
 		align-items: center;
@@ -408,9 +482,10 @@
 		padding-bottom: 20px;
 		border-bottom: 1px solid $bb-border-primary-color;
 		margin-bottom: 20px;
+		flex-wrap: wrap;
 	}
 
-	&__member-info {
+	&__owner-info {
 		display: flex;
 		align-items: center;
 		gap: 12px;
@@ -424,7 +499,7 @@
 		object-fit: cover;
 	}
 
-	&__name {
+	&__owner-name {
 		font-size: 14px;
 		font-weight: 600;
 		color: $bb-link-color;
@@ -435,10 +510,10 @@
 		}
 	}
 
-	&__stats {
-		display: flex;
-		align-items: center;
-		gap: 16px;
+	&__owner-label {
+		font-size: 13px;
+		font-weight: 400;
+		color: $bb-text-tertiary-color;
 	}
 
 	&__stat {
@@ -455,7 +530,34 @@
 		}
 	}
 
-	&__suspended-badge {
+	&__content-link {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		font-size: 13px;
+		font-weight: 400;
+		color: $bb-link-color;
+		text-decoration: none;
+
+		[class*="bb-icons-"] {
+			font-size: 16px;
+		}
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+
+	&__content-link-external {
+		font-size: 12px;
+		color: $bb-icon-tertiary-color;
+
+		[class*="bb-icons-"] {
+			font-size: 12px;
+		}
+	}
+
+	&__hidden-badge {
 		display: inline-flex;
 		align-items: center;
 		padding: 0 4px;
@@ -468,7 +570,7 @@
 		line-height: 16px;
 	}
 
-	/* Reporter / Blocker sections */
+	/* Reporter section */
 	&__section {
 		margin-bottom: 20px;
 	}
@@ -495,12 +597,6 @@
 		align-items: center;
 		gap: 16px;
 		padding: 12px 16px;
-
-		&--blocker {
-			.bb-admin-view-report-modal__list-item-date {
-				margin-left: auto;
-			}
-		}
 	}
 
 	&__list-item-user {
@@ -508,7 +604,7 @@
 		align-items: center;
 		gap: 10px;
 		flex-shrink: 0;
-		min-width: 140px;
+		min-width: 120px;
 	}
 
 	&__list-avatar {
@@ -553,6 +649,7 @@
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
+		max-width: 208px;
 	}
 
 	&__list-item-date {
@@ -562,6 +659,8 @@
 		line-height: 16px;
 		white-space: nowrap;
 		flex-shrink: 0;
+		min-width: 168px;
+		text-align: right;
 	}
 
 	/* Footer */
