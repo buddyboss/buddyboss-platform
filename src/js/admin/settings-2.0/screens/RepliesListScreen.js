@@ -394,20 +394,22 @@ export default function RepliesListScreen( { onNavigate } ) {
 			return;
 		}
 
-		if ( 'delete' === bulkAction ) {
+		var action = bulkAction.replace( /^bulk_/, '' );
+
+		if ( 'delete' === action ) {
 			setBulkDeleteConfirmChecked( false );
 			setBulkDeleteOpen( true );
 			return;
 		}
 
-		if ( 'edit' === bulkAction ) {
+		if ( 'edit' === action ) {
 			setBulkEditVisibility( 'no_change' );
 			setBulkEditOpen( true );
 			return;
 		}
 
 		// For other actions (spam, etc.) execute directly.
-		performBulkAction( bulkAction );
+		performBulkAction( action );
 	};
 
 	/**
@@ -818,7 +820,7 @@ export default function RepliesListScreen( { onNavigate } ) {
 							} }
 						>
 							{ forumFilterLabel }
-							<i class="bb-icons-rl bb-icons-rl-caret-down"></i>
+							<i className="bb-icons-rl bb-icons-rl-caret-down"></i>
 						</button>
 						{ isForumFilterOpen && (
 							<div className="bb-replies-list__forum-filter-dropdown">

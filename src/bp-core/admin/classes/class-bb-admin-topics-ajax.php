@@ -108,6 +108,10 @@ class BB_Admin_Topics_Ajax {
 	 */
 	public function bb_clear_forum_counts_cache() {
 		wp_cache_delete( 'bb_admin_discussions_forum_counts', 'bbpress' );
+
+		// Also clear the forums list status counts cache since topic changes
+		// affect forum-level aggregate counts (_bbp_total_topic_count).
+		wp_cache_delete( 'bb_admin_forums_status_counts', 'bbpress' );
 	}
 
 	/**
@@ -156,7 +160,7 @@ class BB_Admin_Topics_Ajax {
 			'post_type'      => bbp_get_topic_post_type(),
 			'posts_per_page' => $per_page,
 			'paged'          => $page,
-			'post_status'    => array( 'publish', 'closed', 'private', 'hidden' ),
+			'post_status'    => array( 'publish', 'closed', 'private', 'hidden', 'spam' ),
 		);
 
 		// Forum filter — use meta_query to avoid conflict with meta-based sorting.
@@ -251,6 +255,7 @@ class BB_Admin_Topics_Ajax {
 			array(
 				'cb'                     => '<input type="checkbox" />',
 				'title'                  => __( 'Discussion', 'buddyboss' ),
+				'bbp_topic_author'       => __( 'Author', 'buddyboss' ),
 				'bbp_topic_forum'        => __( 'Forum', 'buddyboss' ),
 				'bbp_topic_reply_count'  => __( 'Replies', 'buddyboss' ),
 				'bbp_topic_voice_count'  => __( 'Members', 'buddyboss' ),
@@ -259,7 +264,7 @@ class BB_Admin_Topics_Ajax {
 		);
 
 		// Identify custom columns (added by third-party plugins).
-		$core_columns   = array( 'cb', 'title', 'bbp_topic_forum', 'bbp_topic_reply_count', 'bbp_topic_voice_count', 'bbp_topic_freshness' );
+		$core_columns   = array( 'cb', 'title', 'bbp_topic_author', 'bbp_topic_forum', 'bbp_topic_reply_count', 'bbp_topic_voice_count', 'bbp_topic_freshness' );
 		$custom_columns = array();
 		foreach ( $all_columns as $col_key => $col_label ) {
 			if ( ! in_array( $col_key, $core_columns, true ) ) {
@@ -344,11 +349,18 @@ class BB_Admin_Topics_Ajax {
 		$response = array(
 			'discussions' => $items,
 			'total'       => $total,
+			'total_pages' => ceil( $total / $per_page ),
 		);
 
 		// Include metadata on first request.
 		if ( $include_meta ) {
 			$forum_counts = $this->bb_get_forum_counts();
+
+			// Prime post cache in batch to avoid N+1 queries from get_the_title().
+			$forum_ids = array_keys( $forum_counts );
+			if ( ! empty( $forum_ids ) ) {
+				_prime_post_caches( $forum_ids, false, false );
+			}
 
 			$count_all = 0;
 			$forums    = array();
@@ -805,7 +817,8 @@ class BB_Admin_Topics_Ajax {
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
 		$raw_ids    = isset( $_POST['topic_ids'] ) ? sanitize_text_field( wp_unslash( $_POST['topic_ids'] ) ) : '';
 		$do_action  = isset( $_POST['do_action'] ) ? sanitize_key( wp_unslash( $_POST['do_action'] ) ) : '';
-		$edit_type  = isset( $_POST['edit_type'] ) ? sanitize_key( wp_unslash( $_POST['edit_type'] ) ) : '';
+		$edit_type       = isset( $_POST['edit_type'] ) ? sanitize_key( wp_unslash( $_POST['edit_type'] ) ) : '';
+		$edit_status     = isset( $_POST['edit_status'] ) ? sanitize_key( wp_unslash( $_POST['edit_status'] ) ) : '';
 		$edit_visibility = isset( $_POST['edit_visibility'] ) ? sanitize_key( wp_unslash( $_POST['edit_visibility'] ) ) : '';
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
@@ -864,6 +877,15 @@ class BB_Admin_Topics_Ajax {
 								bbp_stick_topic( $topic_id, true );
 							}
 						}
+						$updated = true;
+					}
+				}
+
+				// Update status (open/closed) if provided and not "no change".
+				if ( ! empty( $edit_status ) && 'no_change' !== $edit_status ) {
+					$allowed_statuses = array( 'open', 'closed' );
+					if ( in_array( $edit_status, $allowed_statuses, true ) ) {
+						update_post_meta( $topic_id, '_bbp_status', $edit_status );
 						$updated = true;
 					}
 				}

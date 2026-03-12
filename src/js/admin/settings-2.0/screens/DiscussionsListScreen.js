@@ -837,7 +837,7 @@ export function DiscussionsListScreen( { onNavigate } ) {
 										{ disc.custom_columns && customColumnKeys.map( function ( key ) {
 											return (
 												<td key={ key } className={ 'bb-discussions-list__td--custom bb-discussions-list__td--' + key }>
-													<span dangerouslySetInnerHTML={ { __html: disc.custom_columns[ key ] } } />
+													<span dangerouslySetInnerHTML={ { __html: sanitizeHtml( disc.custom_columns[ key ] ) } } />
 												</td>
 											);
 										} ) }

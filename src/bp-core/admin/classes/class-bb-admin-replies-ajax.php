@@ -108,6 +108,11 @@ class BB_Admin_Replies_Ajax {
 	 */
 	public function bb_clear_forum_counts_cache() {
 		wp_cache_delete( 'bb_admin_replies_forum_counts', 'bbpress' );
+
+		// Also clear forums and discussions caches since reply changes
+		// affect forum/topic aggregate counts.
+		wp_cache_delete( 'bb_admin_forums_status_counts', 'bbpress' );
+		wp_cache_delete( 'bb_admin_discussions_forum_counts', 'bbpress' );
 	}
 
 	/**
@@ -148,7 +153,7 @@ class BB_Admin_Replies_Ajax {
 			'post_type'      => bbp_get_reply_post_type(),
 			'posts_per_page' => $per_page,
 			'paged'          => $page,
-			'post_status'    => array( 'publish', 'private', 'hidden', bbp_get_spam_status_id() ),
+			'post_status'    => array( 'publish', 'private', 'hidden', 'spam' ),
 		);
 
 		// Forum filter.
@@ -283,8 +288,8 @@ class BB_Admin_Replies_Ajax {
 			$forum_counts = $this->bb_get_forum_counts_for_replies();
 
 			$bulk_actions = array(
-				'edit'   => __( 'Edit', 'buddyboss' ),
-				'delete' => __( 'Delete', 'buddyboss' ),
+				'bulk_edit'   => __( 'Edit', 'buddyboss' ),
+				'bulk_delete' => __( 'Delete', 'buddyboss' ),
 			);
 
 			$columns = array();
@@ -676,7 +681,10 @@ class BB_Admin_Replies_Ajax {
 		// Fire bbPress pre-delete hook for cleanup (meta, caches, walker position).
 		bbp_delete_reply( $reply_id );
 
-		wp_delete_post( $reply_id, true );
+		$result = wp_delete_post( $reply_id, true );
+		if ( ! $result ) {
+			wp_send_json_error( array( 'message' => __( 'Failed to delete reply.', 'buddyboss' ) ) );
+		}
 
 		$this->bb_clear_forum_counts_cache();
 
@@ -705,17 +713,17 @@ class BB_Admin_Replies_Ajax {
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
 		$reply_ids_raw   = isset( $_POST['reply_ids'] ) ? sanitize_text_field( wp_unslash( $_POST['reply_ids'] ) ) : '';
-		$action          = isset( $_POST['do_action'] ) ? sanitize_key( wp_unslash( $_POST['do_action'] ) ) : '';
+		$do_action       = isset( $_POST['do_action'] ) ? sanitize_key( wp_unslash( $_POST['do_action'] ) ) : '';
 		$edit_visibility = isset( $_POST['edit_visibility'] ) ? sanitize_key( wp_unslash( $_POST['edit_visibility'] ) ) : '';
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
-		if ( empty( $reply_ids_raw ) || empty( $action ) ) {
+		if ( empty( $reply_ids_raw ) || empty( $do_action ) ) {
 			wp_send_json_error( array( 'message' => __( 'Invalid bulk action parameters.', 'buddyboss' ) ) );
 		}
 
 		// Validate action.
 		$allowed_actions = array( 'delete', 'spam', 'edit' );
-		if ( ! in_array( $action, $allowed_actions, true ) ) {
+		if ( ! in_array( $do_action, $allowed_actions, true ) ) {
 			wp_send_json_error( array( 'message' => __( 'Invalid bulk action.', 'buddyboss' ) ) );
 		}
 
@@ -738,7 +746,7 @@ class BB_Admin_Replies_Ajax {
 				continue;
 			}
 
-			if ( 'delete' === $action ) {
+			if ( 'delete' === $do_action ) {
 				// Fire bbPress pre-delete hook for cleanup (meta, caches, walker position).
 				bbp_delete_reply( $rid );
 				$result = wp_delete_post( $rid, true );
@@ -747,7 +755,7 @@ class BB_Admin_Replies_Ajax {
 				} else {
 					++$failed;
 				}
-			} elseif ( 'spam' === $action ) {
+			} elseif ( 'spam' === $do_action ) {
 				$is_spam = bbp_get_spam_status_id() === get_post_status( $rid );
 				if ( $is_spam ) {
 					bbp_unspam_reply( $rid );
@@ -755,7 +763,7 @@ class BB_Admin_Replies_Ajax {
 					bbp_spam_reply( $rid );
 				}
 				++$processed;
-			} elseif ( 'edit' === $action ) {
+			} elseif ( 'edit' === $do_action ) {
 				$updated = false;
 
 				if ( ! empty( $edit_visibility ) && 'no_change' !== $edit_visibility ) {
@@ -781,7 +789,15 @@ class BB_Admin_Replies_Ajax {
 
 		$this->bb_clear_forum_counts_cache();
 
-		if ( 'edit' === $action ) {
+		if ( 0 === $processed ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'No replies were processed.', 'buddyboss' ),
+				)
+			);
+		}
+
+		if ( 'edit' === $do_action ) {
 			wp_send_json_success(
 				array(
 					'processed' => $processed,

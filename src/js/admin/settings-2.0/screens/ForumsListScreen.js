@@ -908,7 +908,7 @@ export function ForumsListScreen( { onNavigate } ) {
 										{ forum.custom_columns && customColumnKeys.map( function ( key ) {
 											return (
 												<td key={ key } className={ 'bb-forums-list__td--custom bb-forums-list__td--' + key }>
-													<span dangerouslySetInnerHTML={ { __html: forum.custom_columns[ key ] } } />
+													<span dangerouslySetInnerHTML={ { __html: sanitizeHtml( forum.custom_columns[ key ] ) } } />
 												</td>
 											);
 										} ) }

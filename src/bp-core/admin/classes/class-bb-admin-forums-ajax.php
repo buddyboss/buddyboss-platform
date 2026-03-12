@@ -74,6 +74,10 @@ class BB_Admin_Forums_Ajax {
 		add_action( 'wp_ajax_bb_admin_save_forum', array( $this, 'save_forum' ) );
 		add_action( 'wp_ajax_bb_admin_delete_forum', array( $this, 'delete_forum' ) );
 		add_action( 'wp_ajax_bb_admin_forum_bulk_action', array( $this, 'forum_bulk_action' ) );
+
+		// Register forum autocomplete so it works even when the Groups component
+		// is disabled. Uses priority 5 to fire before the Groups handler.
+		add_action( 'wp_ajax_bb_admin_forum_autocomplete', array( $this, 'bb_forum_autocomplete' ), 5 );
 	}
 
 	/**
@@ -316,8 +320,9 @@ class BB_Admin_Forums_Ajax {
 		ob_end_clean();
 
 		$response = array(
-			'forums' => $items,
-			'total'  => $total,
+			'forums'      => $items,
+			'total'       => $total,
+			'total_pages' => ceil( $total / $per_page ),
 		);
 
 		// Include metadata on first request.
@@ -664,6 +669,18 @@ class BB_Admin_Forums_Ajax {
 		 */
 		do_action( 'bbp_edit_forum_post_extras', $forum_id );
 
+		/**
+		 * Fires after forum attributes are saved in Settings 2.0 admin.
+		 *
+		 * Mirrors the legacy bbp_forum_attributes_metabox_save hook for
+		 * third-party plugin compatibility (forum type/status changes).
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $forum_id Forum ID.
+		 */
+		do_action( 'bbp_forum_attributes_metabox_save', $forum_id );
+
 		// Clear status counts cache.
 		$this->bb_clear_status_counts_cache();
 
@@ -915,6 +932,96 @@ class BB_Admin_Forums_Ajax {
 		wp_cache_set( $cache_key, $count, 'bbpress', HOUR_IN_SECONDS );
 
 		return $count;
+	}
+
+	/**
+	 * Forum autocomplete endpoint for async select fields.
+	 *
+	 * Returns forums matching a search term for use in Discussion/Reply
+	 * create/edit modals. Registered here so it works independently of
+	 * the Groups component being active.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return void
+	 */
+	public function bb_forum_autocomplete() {
+		$this->bb_verify_request();
+
+		if ( ! bp_is_active( 'forums' ) || ! function_exists( 'bbp_get_forum_post_type' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss' ) ) );
+		}
+
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
+		$term        = isset( $_POST['term'] ) ? sanitize_text_field( wp_unslash( $_POST['term'] ) ) : '';
+		$page        = isset( $_POST['page'] ) ? absint( wp_unslash( $_POST['page'] ) ) : 1;
+		$selected_id = isset( $_POST['selected_id'] ) ? absint( wp_unslash( $_POST['selected_id'] ) ) : 0;
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
+
+		$page     = max( 1, $page );
+		$per_page = 20;
+
+		// When only selected_id is passed (initial load to resolve label), return just that forum.
+		if ( $selected_id && empty( $term ) && 1 === $page ) {
+			$forum = get_post( $selected_id );
+			if ( $forum && bbp_get_forum_post_type() === $forum->post_type ) {
+				wp_send_json_success(
+					array(
+						'results'  => array(
+							array(
+								'value' => (string) $forum->ID,
+								'label' => $forum->post_title,
+							),
+						),
+						'has_more' => false,
+					)
+				);
+			}
+			wp_send_json_success(
+				array(
+					'results'  => array(),
+					'has_more' => false,
+				)
+			);
+		}
+
+		$query_args = array(
+			'post_type'              => bbp_get_forum_post_type(),
+			'posts_per_page'         => $per_page + 1,
+			'paged'                  => $page,
+			'orderby'                => 'title',
+			'order'                  => 'ASC',
+			'post_status'            => array( 'publish', 'private', 'hidden' ),
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
+		);
+
+		if ( ! empty( $term ) ) {
+			$query_args['s'] = $term;
+		}
+
+		$forums = get_posts( $query_args );
+
+		$has_more = count( $forums ) > $per_page;
+		if ( $has_more ) {
+			array_pop( $forums );
+		}
+
+		$results = array();
+		foreach ( $forums as $forum ) {
+			$results[] = array(
+				'value' => (string) $forum->ID,
+				'label' => $forum->post_title,
+			);
+		}
+
+		wp_send_json_success(
+			array(
+				'results'  => $results,
+				'has_more' => $has_more,
+			)
+		);
 	}
 
 }

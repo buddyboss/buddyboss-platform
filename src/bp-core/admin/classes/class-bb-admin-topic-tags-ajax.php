@@ -164,8 +164,9 @@ class BB_Admin_Topic_Tags_Ajax {
 		}
 
 		$response = array(
-			'tags'  => $items,
-			'total' => $total,
+			'tags'        => $items,
+			'total'       => $total,
+			'total_pages' => ceil( $total / $per_page ),
 		);
 
 		// Include metadata on first request.

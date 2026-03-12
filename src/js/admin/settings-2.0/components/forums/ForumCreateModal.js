@@ -18,26 +18,10 @@ import {
 import { __ } from '@wordpress/i18n';
 
 import { createForum } from '../../utils/ajax';
+import { toSlug } from '../../utils/format';
 import { safeUrl } from '../../utils/sanitize';
 import { AsyncSelectField } from '../fields/AsyncSelectField';
 import { RichTextEditor, forceRemoveEditor } from '../common/RichTextEditor';
-
-/**
- * Sanitize a string into a URL-friendly slug.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param {string} str Input string.
- * @returns {string} Slug.
- */
-function toSlug( str ) {
-	return str
-		.toLowerCase()
-		.replace( /[^a-z0-9\s-]/g, '' )
-		.replace( /[\s]+/g, '-' )
-		.replace( /-+/g, '-' )
-		.replace( /^-|-$/g, '' );
-}
 
 /**
  * Forum Create Modal Component
