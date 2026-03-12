@@ -28,7 +28,7 @@ export function formatNumber( num ) {
 export function toSlug( str ) {
 	return str
 		.toLowerCase()
-		.replace( /[^a-z0-9\s-]/g, '' )
+		.replace( /[^\w\u0080-\uFFFF\s-]/g, '' )
 		.replace( /[\s]+/g, '-' )
 		.replace( /-+/g, '-' )
 		.replace( /^-|-$/g, '' );

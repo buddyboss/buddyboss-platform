@@ -192,6 +192,27 @@ class BB_Admin_Replies_Ajax {
 			}
 		}
 
+		// Prime parent post caches (forum + topic) to prevent N+1 queries in the loop.
+		// WP_Query already primes post meta cache, so get_post_meta() calls below are cache-served.
+		if ( ! empty( $posts ) ) {
+			$parent_ids = array();
+			foreach ( $posts as $reply ) {
+				$forum_id = (int) get_post_meta( $reply->ID, '_bbp_forum_id', true );
+				$topic_id = (int) get_post_meta( $reply->ID, '_bbp_topic_id', true );
+				if ( $forum_id ) {
+					$parent_ids[] = $forum_id;
+				}
+				if ( $topic_id ) {
+					$parent_ids[] = $topic_id;
+				}
+			}
+
+			$parent_ids = array_unique( array_filter( $parent_ids ) );
+			if ( ! empty( $parent_ids ) ) {
+				_prime_post_caches( $parent_ids, false, false );
+			}
+		}
+
 		// Get columns via the same filter as the legacy replies admin.
 		$all_columns = apply_filters(
 			'bbp_admin_replies_column_headers',
@@ -200,12 +221,13 @@ class BB_Admin_Replies_Ajax {
 				'title'             => __( 'Reply', 'buddyboss' ),
 				'bbp_reply_forum'   => __( 'Forum', 'buddyboss' ),
 				'bbp_reply_topic'   => __( 'Discussion', 'buddyboss' ),
+				'bbp_reply_author'  => __( 'Author', 'buddyboss' ),
 				'bbp_reply_created' => __( 'Created', 'buddyboss' ),
 			)
 		);
 
 		// Identify custom columns (added by third-party plugins).
-		$core_columns   = array( 'cb', 'title', 'bbp_reply_forum', 'bbp_reply_topic', 'bbp_reply_created' );
+		$core_columns   = array( 'cb', 'title', 'bbp_reply_forum', 'bbp_reply_topic', 'bbp_reply_author', 'bbp_reply_created' );
 		$custom_columns = array();
 		foreach ( $all_columns as $col_key => $col_label ) {
 			if ( ! in_array( $col_key, $core_columns, true ) ) {
@@ -487,6 +509,11 @@ class BB_Admin_Replies_Ajax {
 			$forum_id = (int) get_post_meta( $topic_id, '_bbp_forum_id', true );
 		}
 
+		// Validate reply-to threading reference.
+		if ( ! empty( $reply_to ) ) {
+			$reply_to = bbp_validate_reply_to( $reply_to );
+		}
+
 		$reply_data = array(
 			'post_content' => $content,
 			'post_status'  => $visibility,
@@ -509,13 +536,27 @@ class BB_Admin_Replies_Ajax {
 			update_post_meta( $reply_id, '_bbp_reply_to', $reply_to );
 		}
 
-		// Notify topic subscribers about the new reply.
-		if ( function_exists( 'bbp_notify_topic_subscribers' ) ) {
-			bbp_notify_topic_subscribers( $reply_id, $topic_id, $forum_id );
-		}
-
 		/**
 		 * Fires after a new reply is created in Settings 2.0 admin.
+		 *
+		 * This hook triggers activity stream entries, notifications, and
+		 * subscriber emails (same as frontend reply creation).
+		 *
+		 * @since bbPress (r2574)
+		 * @since BuddyBoss [BBVERSION] Added to Settings 2.0 AJAX.
+		 *
+		 * @param int   $reply_id       Reply ID.
+		 * @param int   $topic_id       Topic ID.
+		 * @param int   $forum_id       Forum ID.
+		 * @param array $anonymous_data Anonymous user data (empty for admin).
+		 * @param int   $reply_author   Reply author user ID.
+		 * @param bool  $is_edit        Whether this is an edit (false for new).
+		 * @param int   $reply_to       Reply-to ID for threaded replies.
+		 */
+		do_action( 'bbp_new_reply', $reply_id, $topic_id, $forum_id, array(), bbp_get_current_user_id(), false, $reply_to );
+
+		/**
+		 * Fires after a new reply post extras in Settings 2.0 admin.
 		 *
 		 * Mirrors the legacy bbp_new_reply_post_extras hook for third-party
 		 * plugin compatibility.
@@ -609,8 +650,9 @@ class BB_Admin_Replies_Ajax {
 			update_post_meta( $reply_id, '_bbp_topic_id', $topic_id );
 		}
 
-		// Update reply-to threading.
+		// Update reply-to threading with validation.
 		if ( $reply_to > 0 ) {
+			$reply_to = bbp_validate_reply_to( $reply_to );
 			update_post_meta( $reply_id, '_bbp_reply_to', $reply_to );
 		} else {
 			delete_post_meta( $reply_id, '_bbp_reply_to' );
@@ -641,6 +683,32 @@ class BB_Admin_Replies_Ajax {
 		 * @param int $reply_id Reply ID.
 		 */
 		do_action( 'bbp_edit_reply_post_extras', $reply_id );
+
+		/**
+		 * Fires after reply attributes are saved in Settings 2.0 admin.
+		 *
+		 * Mirrors the legacy bbp_reply_attributes_metabox_save hook.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $reply_id Reply ID.
+		 * @param int $topic_id Topic ID.
+		 * @param int $forum_id Forum ID.
+		 * @param int $reply_to Reply-to ID for threading.
+		 */
+		do_action( 'bbp_reply_attributes_metabox_save', $reply_id, $topic_id, $forum_id, $reply_to );
+
+		/**
+		 * Fires after reply author is saved in Settings 2.0 admin.
+		 *
+		 * Mirrors the legacy bbp_author_metabox_save hook.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int   $reply_id       Reply ID.
+		 * @param array $anonymous_data Empty array (admin users are not anonymous).
+		 */
+		do_action( 'bbp_author_metabox_save', $reply_id, array() );
 
 		$this->bb_clear_forum_counts_cache();
 
@@ -769,17 +837,32 @@ class BB_Admin_Replies_Ajax {
 				if ( ! empty( $edit_visibility ) && 'no_change' !== $edit_visibility ) {
 					$allowed_visibilities = array( 'publish', 'private', 'hidden' );
 					if ( in_array( $edit_visibility, $allowed_visibilities, true ) ) {
-						wp_update_post(
+						$update_result = wp_update_post(
 							array(
 								'ID'          => $rid,
 								'post_status' => $edit_visibility,
-							)
+							),
+							true
 						);
+
+						if ( is_wp_error( $update_result ) ) {
+							++$failed;
+							continue;
+						}
+
 						$updated = true;
 					}
 				}
 
 				if ( $updated ) {
+					/**
+					 * Fires after a reply is bulk-edited in Settings 2.0 admin.
+					 *
+					 * @since BuddyBoss [BBVERSION]
+					 *
+					 * @param int $rid Reply ID.
+					 */
+					do_action( 'bbp_edit_reply_post_extras', $rid );
 					++$processed;
 				} else {
 					++$failed;

@@ -21,6 +21,7 @@ import { __, _n, sprintf } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { getForums, getForum, saveForum, forumBulkAction } from '../utils/ajax';
 import { sanitizeHtml, safeUrl } from '../utils/sanitize';
+import { toSlug } from '../utils/format';
 import { ForumCreateModal } from '../components/forums/ForumCreateModal';
 import { AsyncSelectField } from '../components/fields/AsyncSelectField';
 import { RichTextEditor, forceRemoveEditor } from '../components/common/RichTextEditor';
@@ -459,6 +460,7 @@ export function ForumsListScreen( { onNavigate } ) {
 		}
 
 		if ( 'edit' === action ) {
+			setBulkEditStatus( 'no_change' );
 			setBulkEditVisibility( 'no_change' );
 			setBulkEditOpen( true );
 			return;
@@ -1356,21 +1358,6 @@ function ForumEditModal( { forum, onClose, onSave, isSaving } ) {
 		{ value: 'hidden', label: __( 'Hidden', 'buddyboss' ) },
 	];
 
-	/**
-	 * Sanitize a string into a URL-friendly slug.
-	 *
-	 * @param {string} str Input string.
-	 * @returns {string} Slug.
-	 */
-	var toSlugEdit = function ( str ) {
-		return str
-			.toLowerCase()
-			.replace( /[^a-z0-9\s-]/g, '' )
-			.replace( /[\s]+/g, '-' )
-			.replace( /-+/g, '-' )
-			.replace( /^-|-$/g, '' );
-	};
-
 	return (
 		<Modal
 			title={ __( 'Edit Forum', 'buddyboss' ) }
@@ -1395,7 +1382,7 @@ function ForumEditModal( { forum, onClose, onSave, isSaving } ) {
 						label={ __( 'Permalink', 'buddyboss' ) }
 						value={ slug }
 						onChange={ function ( val ) {
-							setSlug( toSlugEdit( val ) );
+							setSlug( toSlug( val ) );
 						} }
 						__nextHasNoMarginBottom
 					/>

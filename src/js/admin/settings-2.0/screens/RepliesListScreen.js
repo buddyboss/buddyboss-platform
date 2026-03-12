@@ -46,6 +46,15 @@ var sortOptions = [
 var REPLIES_PER_PAGE = 20;
 
 /**
+ * Core column keys that are rendered natively by the React UI.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @type {Array}
+ */
+var CORE_COLUMNS = [ 'cb', 'title', 'bbp_reply_forum', 'bbp_reply_topic', 'bbp_reply_author', 'bbp_reply_created' ];
+
+/**
  * Replies List Screen Component
  *
  * @since BuddyBoss [BBVERSION]
@@ -189,6 +198,19 @@ export default function RepliesListScreen( { onNavigate } ) {
 	var toast = toastState[ 0 ];
 	var setToast = toastState[ 1 ];
 
+	// Auto-dismiss toast after 5 seconds.
+	useEffect( function () {
+		if ( ! toast ) {
+			return;
+		}
+		var timer = setTimeout( function () {
+			setToast( null );
+		}, 5000 );
+		return function () {
+			clearTimeout( timer );
+		};
+	}, [ toast ] );
+
 	// Forum filter UI state.
 	var isForumFilterOpenState = useState( false );
 	var isForumFilterOpen = isForumFilterOpenState[ 0 ];
@@ -225,12 +247,26 @@ export default function RepliesListScreen( { onNavigate } ) {
 			search: params && 'undefined' !== typeof params.search ? params.search : search,
 			forum_id: params && 'undefined' !== typeof params.forum_id ? params.forum_id : forumId,
 			sort: params && params.sort ? params.sort : sort,
-			include_meta: meta ? 0 : 1,
+			include_meta: ( params && params.reset_meta ) || ! meta ? 1 : 0,
 		};
 
 		getReplies( queryParams, { signal: abortRef.current.signal } ).then( function ( response ) {
 			if ( response.success && response.data ) {
-				setReplies( response.data.replies || [] );
+				var rawReplies = response.data.replies || [];
+
+				// Sanitize custom column HTML once at fetch time.
+				var sanitizedReplies = rawReplies.map( function ( reply ) {
+					if ( ! reply.custom_columns ) {
+						return reply;
+					}
+					var sanitizedCols = {};
+					Object.keys( reply.custom_columns ).forEach( function ( key ) {
+						sanitizedCols[ key ] = sanitizeHtml( reply.custom_columns[ key ] );
+					} );
+					return Object.assign( {}, reply, { custom_columns: sanitizedCols } );
+				} );
+
+				setReplies( sanitizedReplies );
 				setTotalPages( response.data.total_pages || 1 );
 				setTotalItems( response.data.total || 0 );
 
@@ -282,6 +318,17 @@ export default function RepliesListScreen( { onNavigate } ) {
 	}, [] );
 
 	/**
+	 * Reset meta and refetch from page 1 (forces include_meta=1).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	var resetAndRefetch = function () {
+		setMeta( null );
+		setSelected( [] );
+		fetchReplies( { page: 1, reset_meta: true } );
+	};
+
+	/**
 	 * Handle search input change with debounce.
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -299,7 +346,7 @@ export default function RepliesListScreen( { onNavigate } ) {
 			setPage( 1 );
 			setSelected( [] );
 			fetchReplies( { page: 1, search: value } );
-		}, 400 );
+		}, 500 );
 	};
 
 	/**
@@ -430,9 +477,8 @@ export default function RepliesListScreen( { onNavigate } ) {
 					message: ( response.data && response.data.message ) || __( 'Bulk action completed.', 'buddyboss' ),
 					type: 'success',
 				} );
-				setSelected( [] );
 				setBulkAction( '' );
-				fetchReplies( { page: 1 } );
+				resetAndRefetch();
 			} else {
 				setToast( {
 					message: ( response.data && response.data.message ) || __( 'Bulk action failed.', 'buddyboss' ),
@@ -534,7 +580,7 @@ export default function RepliesListScreen( { onNavigate } ) {
 					message: __( 'Reply updated successfully.', 'buddyboss' ),
 					type: 'success',
 				} );
-				fetchReplies( { page: page } );
+				resetAndRefetch();
 			} else {
 				setEditError( ( response.data && response.data.message ) || __( 'Failed to update reply.', 'buddyboss' ) );
 			}
@@ -571,7 +617,7 @@ export default function RepliesListScreen( { onNavigate } ) {
 						: __( 'Reply marked as spam.', 'buddyboss' ),
 					type: 'success',
 				} );
-				fetchReplies( { page: page } );
+				resetAndRefetch();
 			} else {
 				setToast( {
 					message: __( 'Failed to update reply.', 'buddyboss' ),
@@ -617,7 +663,7 @@ export default function RepliesListScreen( { onNavigate } ) {
 					message: __( 'Reply deleted successfully.', 'buddyboss' ),
 					type: 'success',
 				} );
-				fetchReplies( { page: page } );
+				resetAndRefetch();
 			} else {
 				setToast( {
 					message: ( response.data && response.data.message ) || __( 'Failed to delete reply.', 'buddyboss' ),
@@ -645,7 +691,7 @@ export default function RepliesListScreen( { onNavigate } ) {
 			message: __( 'Reply created successfully.', 'buddyboss' ),
 			type: 'success',
 		} );
-		fetchReplies( { page: 1 } );
+		resetAndRefetch();
 	};
 
 	// Build bulk action options from meta.
@@ -699,6 +745,13 @@ export default function RepliesListScreen( { onNavigate } ) {
 
 	// Determine columns from meta.
 	var columns = meta && meta.columns ? meta.columns : {};
+
+	// Compute custom column keys (columns added by third-party plugins).
+	var customColumnKeys = useMemo( function () {
+		return Object.keys( columns ).filter( function ( key ) {
+			return CORE_COLUMNS.indexOf( key ) === -1;
+		} );
+	}, [ columns ] );
 
 	// Visibility options for edit modal.
 	var visibilityOptions = [
@@ -949,6 +1002,14 @@ export default function RepliesListScreen( { onNavigate } ) {
 							<th className="bb-replies-list__col-created">
 								{ columns.bbp_reply_created ? decodeEntities( columns.bbp_reply_created ) : __( 'Created', 'buddyboss' ) }
 							</th>
+							{ /* Custom columns from bbp_admin_replies_column_headers filter */ }
+							{ customColumnKeys.map( function ( key ) {
+								return (
+									<th key={ key } className={ 'bb-replies-list__col-custom bb-replies-list__col--' + key }>
+										{ columns[ key ] }
+									</th>
+								);
+							} ) }
 							<th className="bb-replies-list__col-actions"></th>
 						</tr>
 					</thead>
@@ -999,6 +1060,14 @@ export default function RepliesListScreen( { onNavigate } ) {
 										<i className="bb-icons-rl bb-icons-rl-clock bb-replies-list__created-icon"></i>
 										{ reply.created_date }{ reply.created_time ? ', ' + reply.created_time : '' }
 									</td>
+									{ /* Custom columns */ }
+									{ reply.custom_columns && customColumnKeys.map( function ( key ) {
+										return (
+											<td key={ key } className={ 'bb-replies-list__col-custom bb-replies-list__col--' + key }>
+												<span dangerouslySetInnerHTML={ { __html: sanitizeHtml( reply.custom_columns[ key ] ) } } />
+											</td>
+										);
+									} ) }
 									<td className="bb-replies-list__col-actions">
 										<DropdownMenu
 											icon={ <i className="bb-icons-rl-dots-three"></i> }

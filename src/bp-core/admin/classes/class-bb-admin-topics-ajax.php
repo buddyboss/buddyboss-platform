@@ -249,6 +249,22 @@ class BB_Admin_Topics_Ajax {
 			}
 		}
 
+		// Prime parent forum post caches to prevent N+1 queries on get_the_title() in the loop.
+		// WP_Query already primes post meta cache, so get_post_meta() calls below are cache-served.
+		if ( ! empty( $posts ) ) {
+			$forum_ids = array();
+			foreach ( $posts as $topic ) {
+				$fid = (int) get_post_meta( $topic->ID, '_bbp_forum_id', true );
+				if ( $fid ) {
+					$forum_ids[] = $fid;
+				}
+			}
+			$forum_ids = array_unique( array_filter( $forum_ids ) );
+			if ( ! empty( $forum_ids ) ) {
+				_prime_post_caches( $forum_ids, false, false );
+			}
+		}
+
 		// Get columns via the same filter as the legacy topics admin.
 		$all_columns = apply_filters(
 			'bbp_admin_topics_column_headers',
@@ -578,13 +594,24 @@ class BB_Admin_Topics_Ajax {
 			}
 		}
 
-		// Notify forum subscribers about the new topic.
-		if ( function_exists( 'bbp_notify_forum_subscribers' ) ) {
-			bbp_notify_forum_subscribers( $topic_id );
-		}
-
 		/**
 		 * Fires after a new topic is created in Settings 2.0 admin.
+		 *
+		 * This hook triggers activity stream entries, notifications, and
+		 * other core integrations (same as frontend topic creation).
+		 *
+		 * @since bbPress (r2160)
+		 * @since BuddyBoss [BBVERSION] Added to Settings 2.0 AJAX.
+		 *
+		 * @param int   $topic_id       Topic ID.
+		 * @param int   $forum_id       Forum ID.
+		 * @param array $anonymous_data Anonymous user data (empty for admin).
+		 * @param int   $topic_author   Topic author user ID.
+		 */
+		do_action( 'bbp_new_topic', $topic_id, $forum_id, array(), bbp_get_current_user_id() );
+
+		/**
+		 * Fires after a new topic post extras in Settings 2.0 admin.
 		 *
 		 * Mirrors the legacy bbp_new_topic_post_extras hook for third-party
 		 * plugin compatibility.
@@ -673,7 +700,7 @@ class BB_Admin_Topics_Ajax {
 
 		$result = wp_update_post( $update_args, true );
 		if ( is_wp_error( $result ) ) {
-			wp_send_json_error( array( 'message' => $result->get_error_message() ) );
+			wp_send_json_error( array( 'message' => html_entity_decode( $result->get_error_message(), ENT_QUOTES, 'UTF-8' ) ) );
 		}
 
 		// Recalculate forum counts when forum changes.
@@ -693,6 +720,15 @@ class BB_Admin_Topics_Ajax {
 				}
 				bbp_update_forum( array( 'forum_id' => $old_forum_id ) );
 			}
+
+			// Update _bbp_forum_id meta on all replies belonging to this topic.
+			$reply_ids = bbp_get_all_child_ids( $topic_id, bbp_get_reply_post_type() );
+			if ( ! empty( $reply_ids ) ) {
+				foreach ( $reply_ids as $reply_id ) {
+					update_post_meta( $reply_id, '_bbp_forum_id', $forum_id );
+				}
+			}
+
 			bbp_update_forum( array( 'forum_id' => $forum_id ) );
 		}
 
@@ -745,6 +781,30 @@ class BB_Admin_Topics_Ajax {
 		 * @param int $topic_id Topic ID.
 		 */
 		do_action( 'bbp_edit_topic_post_extras', $topic_id );
+
+		/**
+		 * Fires after topic attributes are saved in Settings 2.0 admin.
+		 *
+		 * Mirrors the legacy bbp_topic_attributes_metabox_save hook.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $topic_id Topic ID.
+		 * @param int $forum_id Forum ID.
+		 */
+		do_action( 'bbp_topic_attributes_metabox_save', $topic_id, $forum_id );
+
+		/**
+		 * Fires after topic author is saved in Settings 2.0 admin.
+		 *
+		 * Mirrors the legacy bbp_author_metabox_save hook.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int   $topic_id       Topic ID.
+		 * @param array $anonymous_data Empty array (admin users are not anonymous).
+		 */
+		do_action( 'bbp_author_metabox_save', $topic_id, array() );
 
 		// Clear forum counts cache.
 		$this->bb_clear_forum_counts_cache();
@@ -883,9 +943,12 @@ class BB_Admin_Topics_Ajax {
 
 				// Update status (open/closed) if provided and not "no change".
 				if ( ! empty( $edit_status ) && 'no_change' !== $edit_status ) {
-					$allowed_statuses = array( 'open', 'closed' );
-					if ( in_array( $edit_status, $allowed_statuses, true ) ) {
-						update_post_meta( $topic_id, '_bbp_status', $edit_status );
+					$current_status = bbp_get_topic_status( $topic_id );
+					if ( 'closed' === $edit_status && 'closed' !== $current_status ) {
+						bbp_close_topic( $topic_id );
+						$updated = true;
+					} elseif ( 'open' === $edit_status && 'closed' === $current_status ) {
+						bbp_open_topic( $topic_id );
 						$updated = true;
 					}
 				}
@@ -894,17 +957,32 @@ class BB_Admin_Topics_Ajax {
 				if ( ! empty( $edit_visibility ) && 'no_change' !== $edit_visibility ) {
 					$allowed_visibilities = array( 'publish', 'private', 'hidden' );
 					if ( in_array( $edit_visibility, $allowed_visibilities, true ) ) {
-						wp_update_post(
+						$update_result = wp_update_post(
 							array(
 								'ID'          => $topic_id,
 								'post_status' => $edit_visibility,
-							)
+							),
+							true
 						);
+
+						if ( is_wp_error( $update_result ) ) {
+							++$failed;
+							continue;
+						}
+
 						$updated = true;
 					}
 				}
 
 				if ( $updated ) {
+					/**
+					 * Fires after a discussion is bulk-edited in Settings 2.0 admin.
+					 *
+					 * @since BuddyBoss [BBVERSION]
+					 *
+					 * @param int $topic_id Topic ID.
+					 */
+					do_action( 'bbp_edit_topic_post_extras', $topic_id );
 					++$processed;
 				} else {
 					++$failed;
@@ -1024,7 +1102,7 @@ class BB_Admin_Topics_Ajax {
 					"SELECT pm.meta_value AS forum_id, COUNT(p.ID) AS cnt
 					FROM {$wpdb->posts} p
 					INNER JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id AND pm.meta_key = '_bbp_forum_id'
-					WHERE p.post_type = %s AND p.post_status IN ('publish', 'closed', 'private', 'hidden')
+					WHERE p.post_type = %s AND p.post_status IN ('publish', 'closed', 'private', 'hidden', 'spam')
 					GROUP BY pm.meta_value",
 					$topic_post_type
 				)

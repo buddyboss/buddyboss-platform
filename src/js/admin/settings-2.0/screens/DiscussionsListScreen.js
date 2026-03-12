@@ -58,7 +58,7 @@ var DISCUSSIONS_PER_PAGE = 20;
  *
  * @type {Array}
  */
-var CORE_COLUMNS = [ 'cb', 'title', 'bbp_topic_forum', 'bbp_topic_reply_count', 'bbp_topic_voice_count', 'bbp_topic_freshness' ];
+var CORE_COLUMNS = [ 'cb', 'title', 'bbp_topic_author', 'bbp_topic_forum', 'bbp_topic_reply_count', 'bbp_topic_voice_count', 'bbp_topic_freshness' ];
 
 /**
  * Discussions List Screen Component
@@ -174,6 +174,10 @@ export function DiscussionsListScreen( { onNavigate } ) {
 	var bulkEditVisibilityState = useState( 'no_change' );
 	var bulkEditVisibility = bulkEditVisibilityState[ 0 ];
 	var setBulkEditVisibility = bulkEditVisibilityState[ 1 ];
+
+	var bulkEditStatusState = useState( 'no_change' );
+	var bulkEditStatus = bulkEditStatusState[ 0 ];
+	var setBulkEditStatus = bulkEditStatusState[ 1 ];
 
 	// Read tag_id from URL params (e.g. linked from Discussion Tags count).
 	var urlTagIdState = useState( function () {
@@ -447,6 +451,7 @@ export function DiscussionsListScreen( { onNavigate } ) {
 		if ( 'edit' === action ) {
 			setBulkEditType( 'no_change' );
 			setBulkEditVisibility( 'no_change' );
+			setBulkEditStatus( 'no_change' );
 			setBulkEditOpen( true );
 			return;
 		}
@@ -487,6 +492,7 @@ export function DiscussionsListScreen( { onNavigate } ) {
 		performAction( 'edit', selectedIds, {
 			edit_type: bulkEditType,
 			edit_visibility: bulkEditVisibility,
+			edit_status: bulkEditStatus,
 		} );
 	};
 
@@ -593,6 +599,17 @@ export function DiscussionsListScreen( { onNavigate } ) {
 			return { id: id, title: nameMap[ id ] || '#' + id };
 		} );
 	}, [ selectedIds, discussions ] );
+
+	// Get delete target discussion titles (may differ from selectedIds for single-row delete).
+	var deleteTargetDiscussionNames = useMemo( function () {
+		var nameMap = {};
+		discussions.forEach( function ( d ) {
+			nameMap[ d.id ] = d.title;
+		} );
+		return deleteTargetIds.map( function ( id ) {
+			return { id: id, title: nameMap[ id ] || '#' + id };
+		} );
+	}, [ deleteTargetIds, discussions ] );
 
 	/**
 	 * Build pagination page numbers.
@@ -974,13 +991,13 @@ export function DiscussionsListScreen( { onNavigate } ) {
 				>
 					<div className="bb-discussion-delete-modal__body">
 						<div className="bb-admin-bulk-modal__selected-items">
-							{ selectedDiscussionNames.map( function ( item ) {
+							{ deleteTargetDiscussionNames.map( function ( item ) {
 								return (
 									<div key={ item.id } className="bb-admin-bulk-modal__selected-item">
 										<CheckboxControl
 											checked={ true }
 											onChange={ function () {
-												setSelectedIds( function ( prev ) {
+												setDeleteTargetIds( function ( prev ) {
 													var next = prev.filter( function ( i ) { return i !== item.id; } );
 													if ( 0 === next.length ) {
 														setDeleteModalOpen( false );
@@ -1082,8 +1099,21 @@ export function DiscussionsListScreen( { onNavigate } ) {
 								{ value: 'no_change', label: __( '\u2014 No Change \u2014', 'buddyboss' ) },
 								{ value: 'normal', label: __( 'Normal', 'buddyboss' ) },
 								{ value: 'sticky', label: __( 'Sticky', 'buddyboss' ) },
+								{ value: 'super_sticky', label: __( 'Super Sticky', 'buddyboss' ) },
 							] }
 							onChange={ setBulkEditType }
+							__nextHasNoMarginBottom
+						/>
+
+						<SelectControl
+							label={ __( 'Status', 'buddyboss' ) }
+							value={ bulkEditStatus }
+							options={ [
+								{ value: 'no_change', label: __( '\u2014 No Change \u2014', 'buddyboss' ) },
+								{ value: 'open', label: __( 'Open', 'buddyboss' ) },
+								{ value: 'closed', label: __( 'Closed', 'buddyboss' ) },
+							] }
+							onChange={ setBulkEditStatus }
 							__nextHasNoMarginBottom
 						/>
 
@@ -1112,7 +1142,7 @@ export function DiscussionsListScreen( { onNavigate } ) {
 						<Button
 							variant="primary"
 							onClick={ handleConfirmBulkEdit }
-							disabled={ 'no_change' === bulkEditType && 'no_change' === bulkEditVisibility }
+							disabled={ 'no_change' === bulkEditType && 'no_change' === bulkEditStatus && 'no_change' === bulkEditVisibility }
 						>
 							{ __( 'Save', 'buddyboss' ) }
 						</Button>
@@ -1224,6 +1254,7 @@ function DiscussionEditModal( { discussion, onClose, onSave, isSaving } ) {
 	var typeOptions = [
 		{ value: 'normal', label: __( 'Normal', 'buddyboss' ) },
 		{ value: 'sticky', label: __( 'Sticky', 'buddyboss' ) },
+		{ value: 'super_sticky', label: __( 'Super Sticky', 'buddyboss' ) },
 	];
 
 	var statusOptions = [

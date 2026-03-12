@@ -591,7 +591,7 @@ class BB_Admin_Forums_Ajax {
 
 		$result = wp_update_post( $update_args, true );
 		if ( is_wp_error( $result ) ) {
-			wp_send_json_error( array( 'message' => $result->get_error_message() ) );
+			wp_send_json_error( array( 'message' => html_entity_decode( $result->get_error_message(), ENT_QUOTES, 'UTF-8' ) ) );
 		}
 
 		// Update forum status (open/closed).
@@ -810,17 +810,69 @@ class BB_Admin_Forums_Ajax {
 				if ( ! empty( $edit_visibility ) && 'no_change' !== $edit_visibility ) {
 					$allowed_visibilities = array( 'publish', 'private', 'hidden' );
 					if ( in_array( $edit_visibility, $allowed_visibilities, true ) ) {
-						wp_update_post(
+						$update_result = wp_update_post(
 							array(
 								'ID'          => $forum_id,
 								'post_status' => $edit_visibility,
-							)
+							),
+							true
 						);
+
+						if ( is_wp_error( $update_result ) ) {
+							++$failed;
+							continue;
+						}
+
+						// Propagate visibility to child forums for group forums.
+						if ( function_exists( 'bb_get_all_nested_subforums' ) ) {
+							$forum_obj = bbp_get_forum( $forum_id );
+
+							if ( ! empty( $forum_obj->post_parent ) ) {
+								$ancestors    = get_post_ancestors( $forum_id );
+								$root         = count( $ancestors ) - 1;
+								$parent_forum = $ancestors[ $root ];
+							} else {
+								$parent_forum = $forum_id;
+							}
+
+							// Only propagate for group-attached forums.
+							if ( ! empty( $parent_forum ) && ! empty( bbp_get_forum_group_ids( $parent_forum ) ) ) {
+								$child_forums = bb_get_all_nested_subforums( $parent_forum );
+								if ( $child_forums ) {
+									$parent_status = get_post_status( $parent_forum );
+									foreach ( $child_forums as $child_forum_id ) {
+										if ( get_post_status( $child_forum_id ) !== $parent_status ) {
+											switch ( $parent_status ) {
+												case bbp_get_hidden_status_id():
+													bbp_hide_forum( $child_forum_id );
+													break;
+												case bbp_get_private_status_id():
+													bbp_privatize_forum( $child_forum_id );
+													break;
+												case bbp_get_public_status_id():
+												default:
+													bbp_publicize_forum( $child_forum_id );
+													break;
+											}
+										}
+									}
+								}
+							}
+						}
+
 						$updated = true;
 					}
 				}
 
 				if ( $updated ) {
+					/**
+					 * Fires after a forum is bulk-edited in Settings 2.0 admin.
+					 *
+					 * @since BuddyBoss [BBVERSION]
+					 *
+					 * @param int $forum_id Forum ID.
+					 */
+					do_action( 'bbp_edit_forum_post_extras', $forum_id );
 					++$processed;
 				} else {
 					++$failed;
