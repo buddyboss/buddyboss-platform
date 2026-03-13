@@ -28,7 +28,18 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Organizer can edit only one occurrence of a recurring series, or all future occurrences, without corrupting other events in the series
   4. Admin can restrict event creation to admins only, group organizers, all members, or tiered by plan — and those restrictions are enforced at the creation UI
   5. Events from private and hidden BuddyBoss groups never appear on the main site calendar regardless of admin settings
-**Plans**: TBD
+**Plans**: 9 plans
+
+Plans:
+- [ ] 01-PLAN-00.md — PHPUnit test infrastructure and 6 test stub files
+- [ ] 01-PLAN-01.md — Vendor php-rrule, occurrence pre-generation, cron extension, series split
+- [ ] 01-PLAN-02.md — REST endpoint get_items() with FullCalendar feed shape
+- [ ] 01-PLAN-03.md — Privacy enforcement (EVNT-05/06) + admin event stats (ADMN-03)
+- [ ] 01-PLAN-04.md — Admin approve handler + creation permission verification (ADMN-01/02)
+- [ ] 01-PLAN-05.md — BP_Moderation_Events class (ADMN-04)
+- [ ] 01-PLAN-06.md — FullCalendar calendar UI, month/list view, REST feed wiring
+- [ ] 01-PLAN-07.md — Multi-step event creation wizard JS
+- [ ] 01-PLAN-08.md — End-to-end human verification checkpoint
 
 ### Phase 2: Payments + Ticketing
 **Goal**: Organizers can sell tickets with multiple pricing tiers through their own Stripe account, BuddyBoss automatically captures its commission on every sale, refunds reverse the commission proportionally, and attendees can join waitlists and export events to their calendars
@@ -60,6 +71,6 @@ Phases execute in numeric order: 1 → 2 → 3
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation + Event Management | 0/TBD | Not started | - |
+| 1. Foundation + Event Management | 0/9 | In progress | - |
 | 2. Payments + Ticketing | 0/TBD | Not started | - |
 | 3. BuddyBoss Integration | 0/TBD | Not started | - |
