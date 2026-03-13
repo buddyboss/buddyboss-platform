@@ -652,6 +652,8 @@ class BB_Admin_Settings_Ajax {
 				'watch_field'          => $field['watch_field'] ?? null,
 				// Layout: full-width fields render without the label column.
 				'full_width'           => ! empty( $field['full_width'] ),
+				// Group label for child fields (e.g., xProfile group names under Members).
+				'child_group_label'    => $field['child_group_label'] ?? null,
 			);
 
 			// access_control: populate access-control data via filter so Pro can inject types/options.

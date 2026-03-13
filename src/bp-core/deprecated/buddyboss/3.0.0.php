@@ -7,6 +7,132 @@
  */
 
 // ──────────────────────────────────────────────────────────────────────────────
+// Search Settings 2.0 deprecated functions and hook compatibility.
+// Legacy settings API functions were removed from bp-search-settings.php.
+// Search settings are now managed by Settings 2.0 (bb-admin-settings-search.php).
+// ──────────────────────────────────────────────────────────────────────────────
+
+if ( ! function_exists( 'bp_search_get_settings_sections' ) ) {
+	/**
+	 * Get the Search settings sections.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @deprecated BuddyBoss [BBVERSION] Search settings are now managed by Settings 2.0.
+	 *
+	 * @return array Empty array.
+	 */
+	function bp_search_get_settings_sections() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Search feature (bb_admin_settings_register_search_feature)' );
+
+		$sections = array();
+
+		/**
+		 * Filter the Search settings sections.
+		 *
+		 * @since BuddyBoss 1.0.0
+		 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_search_after_register_settings_fields'} to register additional settings.
+		 *
+		 * @param array $sections Search settings sections.
+		 */
+		return (array) apply_filters_deprecated( 'bp_search_get_settings_sections', array( $sections ), 'BuddyBoss [BBVERSION]', 'bb_search_after_register_settings_fields' );
+	}
+}
+
+if ( ! function_exists( 'bp_search_get_settings_fields' ) ) {
+	/**
+	 * Get all of the settings fields.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @deprecated BuddyBoss [BBVERSION] Search settings are now managed by Settings 2.0.
+	 *
+	 * @return array Empty array.
+	 */
+	function bp_search_get_settings_fields() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Search feature (bb_admin_settings_register_search_feature)' );
+
+		$fields = array();
+
+		/**
+		 * Filter all Search settings fields.
+		 *
+		 * @since BuddyBoss 1.0.0
+		 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_search_after_register_settings_fields'} to register additional fields.
+		 *
+		 * @param array $fields Search settings fields grouped by section.
+		 */
+		return (array) apply_filters_deprecated( 'bp_search_get_settings_fields', array( $fields ), 'BuddyBoss [BBVERSION]', 'bb_search_after_register_settings_fields' );
+	}
+}
+
+if ( ! function_exists( 'bp_search_get_settings_fields_for_section' ) ) {
+	/**
+	 * Get settings fields for a section.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @deprecated BuddyBoss [BBVERSION] Search settings are now managed by Settings 2.0.
+	 *
+	 * @param string $section_id Section ID.
+	 *
+	 * @return array Empty array.
+	 */
+	function bp_search_get_settings_fields_for_section( $section_id = '' ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Search feature (bb_admin_settings_register_search_feature)' );
+
+		$fields = array();
+
+		/**
+		 * Filter Search settings fields for a specific section.
+		 *
+		 * @since BuddyBoss 1.0.0
+		 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_search_after_register_settings_fields'} to register additional fields.
+		 *
+		 * @param array  $fields     Settings fields for the section.
+		 * @param string $section_id The section ID.
+		 */
+		return (array) apply_filters_deprecated( 'bp_search_get_settings_fields_for_section', array( $fields, $section_id ), 'BuddyBoss [BBVERSION]', 'bb_search_after_register_settings_fields' );
+	}
+}
+
+/**
+ * Fire the legacy `bp_admin_setting_search_register_fields` hook after
+ * Settings 2.0 finishes registering search fields.
+ *
+ * The original hook passed a `BP_Admin_Setting_Search` instance. Settings 2.0
+ * no longer uses that class, so a no-op stub is passed to satisfy callbacks
+ * that call add_section()/add_field() on the argument.
+ *
+ * @since BuddyBoss 1.2.6
+ * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_search_after_register_settings_fields'} instead.
+ */
+add_action(
+	'bb_search_after_register_settings_fields',
+	static function () {
+		do_action_deprecated(
+			'bp_admin_setting_search_register_fields',
+			array(
+				new class() {
+					/**
+					 * No-op stub for BP_Admin_Setting_tab::add_section().
+					 *
+					 * @param mixed ...$args Ignored.
+					 */
+					public function add_section( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+
+					/**
+					 * No-op stub for BP_Admin_Setting_tab::add_field().
+					 *
+					 * @param mixed ...$args Ignored.
+					 */
+					public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+				},
+			),
+			'BuddyBoss [BBVERSION]',
+			'bb_search_after_register_settings_fields'
+		);
+	}
+);
+
+// ──────────────────────────────────────────────────────────────────────────────
 // Activity Settings 2.0 deprecated hook compatibility.
 // ──────────────────────────────────────────────────────────────────────────────
 
