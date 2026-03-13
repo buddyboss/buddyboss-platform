@@ -20,7 +20,8 @@ import {
 import { __, _n, sprintf } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { getDiscussions, getDiscussion, saveDiscussion, discussionBulkAction } from '../utils/ajax';
-import { sanitizeHtml, safeUrl } from '../utils/sanitize';
+import { sanitizeHtml, safeUrl, sanitizeCustomColumns } from '../utils/sanitize';
+import { getPageNumbers } from '../utils/pagination';
 import { DiscussionCreateModal } from '../components/forums/DiscussionCreateModal';
 import { AsyncSelectField } from '../components/fields/AsyncSelectField';
 import { RichTextEditor, forceRemoveEditor } from '../components/common/RichTextEditor';
@@ -221,21 +222,7 @@ export function DiscussionsListScreen( { onNavigate } ) {
 
 		getDiscussions( fetchData, fetchOptions ).then( function ( response ) {
 			if ( response.success && response.data ) {
-				var rawDiscussions = response.data.discussions || [];
-
-				// Sanitize custom column HTML once at fetch time.
-				var sanitizedDiscussions = rawDiscussions.map( function ( disc ) {
-					if ( ! disc.custom_columns ) {
-						return disc;
-					}
-					var sanitizedCols = {};
-					Object.keys( disc.custom_columns ).forEach( function ( key ) {
-						sanitizedCols[ key ] = sanitizeHtml( disc.custom_columns[ key ] );
-					} );
-					return Object.assign( {}, disc, { custom_columns: sanitizedCols } );
-				} );
-
-				setDiscussions( sanitizedDiscussions );
+				setDiscussions( sanitizeCustomColumns( response.data.discussions || [] ) );
 				setTotal( response.data.total || 0 );
 
 				if ( response.data.views ) {
@@ -611,52 +598,6 @@ export function DiscussionsListScreen( { onNavigate } ) {
 		} );
 	}, [ deleteTargetIds, discussions ] );
 
-	/**
-	 * Build pagination page numbers.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @returns {Array} Array of page number items.
-	 */
-	var getPageNumbers = function () {
-		var pages = [];
-		var maxVisible = 5;
-
-		if ( totalPages <= 7 ) {
-			for ( var i = 1; i <= totalPages; i++ ) {
-				pages.push( i );
-			}
-		} else {
-			pages.push( 1 );
-
-			if ( currentPage > maxVisible - 1 ) {
-				pages.push( '...' );
-			}
-
-			var start = Math.max( 2, currentPage - 1 );
-			var end = Math.min( totalPages - 1, currentPage + 1 );
-
-			if ( currentPage <= 3 ) {
-				end = Math.min( totalPages - 1, maxVisible );
-			}
-			if ( currentPage >= totalPages - 2 ) {
-				start = Math.max( 2, totalPages - maxVisible + 1 );
-			}
-
-			for ( var j = start; j <= end; j++ ) {
-				pages.push( j );
-			}
-
-			if ( currentPage < totalPages - ( maxVisible - 2 ) ) {
-				pages.push( '...' );
-			}
-
-			pages.push( totalPages );
-		}
-
-		return pages;
-	};
-
 	return (
 		<div className="bb-discussions-list">
 			{ /* Notice */ }
@@ -940,7 +881,7 @@ export function DiscussionsListScreen( { onNavigate } ) {
 								&lsaquo;
 							</Button>
 
-							{ getPageNumbers().map( function ( page, index ) {
+							{ getPageNumbers( currentPage, totalPages ).map( function ( page, index ) {
 								if ( '...' === page ) {
 									return (
 										<span key={ 'ellipsis-' + index } className="bb-discussions-list__pagination-ellipsis">

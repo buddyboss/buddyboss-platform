@@ -20,7 +20,8 @@ import {
 import { __, _n, sprintf } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { getForums, getForum, saveForum, forumBulkAction } from '../utils/ajax';
-import { sanitizeHtml, safeUrl } from '../utils/sanitize';
+import { sanitizeHtml, safeUrl, sanitizeCustomColumns } from '../utils/sanitize';
+import { getPageNumbers } from '../utils/pagination';
 import { toSlug } from '../utils/format';
 import { ForumCreateModal } from '../components/forums/ForumCreateModal';
 import { AsyncSelectField } from '../components/fields/AsyncSelectField';
@@ -232,21 +233,7 @@ export function ForumsListScreen( { onNavigate } ) {
 			include_meta: hasMetaRef.current ? 0 : 1,
 		}, fetchOptions ).then( function ( response ) {
 			if ( response.success && response.data ) {
-				var rawForums = response.data.forums || [];
-
-				// Sanitize custom column HTML once at fetch time.
-				var sanitizedForums = rawForums.map( function ( forum ) {
-					if ( ! forum.custom_columns ) {
-						return forum;
-					}
-					var sanitizedCols = {};
-					Object.keys( forum.custom_columns ).forEach( function ( key ) {
-						sanitizedCols[ key ] = sanitizeHtml( forum.custom_columns[ key ] );
-					} );
-					return Object.assign( {}, forum, { custom_columns: sanitizedCols } );
-				} );
-
-				setForums( sanitizedForums );
+				setForums( sanitizeCustomColumns( response.data.forums || [] ) );
 				setTotal( response.data.total || 0 );
 
 				if ( response.data.views ) {
@@ -646,52 +633,6 @@ export function ForumsListScreen( { onNavigate } ) {
 		} );
 	}, [ deleteTargetIds, forums ] );
 
-	/**
-	 * Build pagination page numbers.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @returns {Array} Array of page number items.
-	 */
-	var getPageNumbers = function () {
-		var pages = [];
-		var maxVisible = 5;
-
-		if ( totalPages <= 7 ) {
-			for ( var i = 1; i <= totalPages; i++ ) {
-				pages.push( i );
-			}
-		} else {
-			pages.push( 1 );
-
-			if ( currentPage > maxVisible - 1 ) {
-				pages.push( '...' );
-			}
-
-			var start = Math.max( 2, currentPage - 1 );
-			var end = Math.min( totalPages - 1, currentPage + 1 );
-
-			if ( currentPage <= 3 ) {
-				end = Math.min( totalPages - 1, maxVisible );
-			}
-			if ( currentPage >= totalPages - 2 ) {
-				start = Math.max( 2, totalPages - maxVisible + 1 );
-			}
-
-			for ( var j = start; j <= end; j++ ) {
-				pages.push( j );
-			}
-
-			if ( currentPage < totalPages - ( maxVisible - 2 ) ) {
-				pages.push( '...' );
-			}
-
-			pages.push( totalPages );
-		}
-
-		return pages;
-	};
-
 	return (
 		<div className="bb-forums-list">
 			{ /* Notice */ }
@@ -996,7 +937,7 @@ export function ForumsListScreen( { onNavigate } ) {
 								&lsaquo;
 							</Button>
 
-							{ getPageNumbers().map( function ( page, index ) {
+							{ getPageNumbers( currentPage, totalPages ).map( function ( page, index ) {
 								if ( '...' === page ) {
 									return (
 										<span key={ 'ellipsis-' + index } className="bb-forums-list__pagination-ellipsis">

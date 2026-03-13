@@ -38,42 +38,15 @@
 		}
 	}
 
-	// Toast
-	&__toast {
-		padding: 12px 16px;
-		border-radius: $bb-border-radius-md;
-		margin-bottom: 16px;
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		font-size: 13px;
-
-		&--success {
-			background-color: #ecfdf5;
-			color: #065f46;
-			border: 1px solid #a7f3d0;
-		}
-
-		&--error {
-			background-color: #fef2f2;
-			color: #991b1b;
-			border: 1px solid #fecaca;
-		}
+	// Notice
+	.bb-admin-notice {
+		margin-top: 24px;
 	}
 
-	&__toast-close {
+	.bb-admin-notice--dismiss {
 		background: none;
 		border: none;
 		cursor: pointer;
-		font-size: 18px;
-		line-height: 1;
-		padding: 0 0 0 12px;
-		color: inherit;
-		opacity: 0.6;
-
-		&:hover {
-			opacity: 1;
-		}
 	}
 
 	// Toolbar

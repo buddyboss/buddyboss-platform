@@ -19,7 +19,8 @@ import {
 import { __, _n, sprintf } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { getReplies, getReply, saveReply, deleteReply, replyBulkAction } from '../utils/ajax';
-import { sanitizeHtml, safeUrl } from '../utils/sanitize';
+import { sanitizeHtml, safeUrl, sanitizeCustomColumns } from '../utils/sanitize';
+import { getPageNumbers } from '../utils/pagination';
 import { ReplyCreateModal } from '../components/forums/ReplyCreateModal';
 import { AsyncSelectField } from '../components/fields/AsyncSelectField';
 import { RichTextEditor, forceRemoveEditor } from '../components/common/RichTextEditor';
@@ -105,9 +106,19 @@ export default function RepliesListScreen( { onNavigate } ) {
 	var searchTimerRef = useRef( null );
 
 	// Metadata (views, bulk actions, columns).
-	var metaState = useState( null );
-	var meta = metaState[ 0 ];
-	var setMeta = metaState[ 1 ];
+	var viewsState = useState( null );
+	var views = viewsState[ 0 ];
+	var setViews = viewsState[ 1 ];
+
+	var bulkActionsDataState = useState( null );
+	var bulkActionsData = bulkActionsDataState[ 0 ];
+	var setBulkActionsData = bulkActionsDataState[ 1 ];
+
+	var columnsState = useState( null );
+	var columns = columnsState[ 0 ];
+	var setColumns = columnsState[ 1 ];
+
+	var hasMetaRef = useRef( false );
 
 	// Selection state.
 	var selectedState = useState( [] );
@@ -193,23 +204,23 @@ export default function RepliesListScreen( { onNavigate } ) {
 	var bulkEditVisibility = bulkEditVisibilityState[ 0 ];
 	var setBulkEditVisibility = bulkEditVisibilityState[ 1 ];
 
-	// Toast state.
-	var toastState = useState( null );
-	var toast = toastState[ 0 ];
-	var setToast = toastState[ 1 ];
+	// Notice state.
+	var noticeState = useState( null );
+	var notice = noticeState[ 0 ];
+	var setNotice = noticeState[ 1 ];
 
-	// Auto-dismiss toast after 5 seconds.
+	// Clear notice after 5 seconds.
 	useEffect( function () {
-		if ( ! toast ) {
+		if ( ! notice ) {
 			return;
 		}
 		var timer = setTimeout( function () {
-			setToast( null );
+			setNotice( null );
 		}, 5000 );
 		return function () {
 			clearTimeout( timer );
 		};
-	}, [ toast ] );
+	}, [ notice ] );
 
 	// Forum filter UI state.
 	var isForumFilterOpenState = useState( false );
@@ -247,36 +258,25 @@ export default function RepliesListScreen( { onNavigate } ) {
 			search: params && 'undefined' !== typeof params.search ? params.search : search,
 			forum_id: params && 'undefined' !== typeof params.forum_id ? params.forum_id : forumId,
 			sort: params && params.sort ? params.sort : sort,
-			include_meta: ( params && params.reset_meta ) || ! meta ? 1 : 0,
+			include_meta: ( params && params.reset_meta ) || ! hasMetaRef.current ? 1 : 0,
 		};
 
 		getReplies( queryParams, { signal: abortRef.current.signal } ).then( function ( response ) {
 			if ( response.success && response.data ) {
-				var rawReplies = response.data.replies || [];
-
-				// Sanitize custom column HTML once at fetch time.
-				var sanitizedReplies = rawReplies.map( function ( reply ) {
-					if ( ! reply.custom_columns ) {
-						return reply;
-					}
-					var sanitizedCols = {};
-					Object.keys( reply.custom_columns ).forEach( function ( key ) {
-						sanitizedCols[ key ] = sanitizeHtml( reply.custom_columns[ key ] );
-					} );
-					return Object.assign( {}, reply, { custom_columns: sanitizedCols } );
-				} );
-
-				setReplies( sanitizedReplies );
+				setReplies( sanitizeCustomColumns( response.data.replies || [] ) );
 				setTotalPages( response.data.total_pages || 1 );
 				setTotalItems( response.data.total || 0 );
 
 				if ( response.data.views ) {
-					setMeta( {
-						views: response.data.views,
-						bulk_actions: response.data.bulk_actions,
-						columns: response.data.columns,
-					} );
+					setViews( response.data.views );
 				}
+				if ( response.data.bulk_actions ) {
+					setBulkActionsData( response.data.bulk_actions );
+				}
+				if ( response.data.columns ) {
+					setColumns( response.data.columns );
+				}
+				hasMetaRef.current = true;
 			} else {
 				setError( ( response.data && response.data.message ) || __( 'Failed to load replies.', 'buddyboss' ) );
 			}
@@ -288,7 +288,7 @@ export default function RepliesListScreen( { onNavigate } ) {
 			setIsLoading( false );
 			setError( __( 'Failed to load replies.', 'buddyboss' ) );
 		} );
-	}, [ page, search, forumId, sort, meta ] );
+	}, [ page, search, forumId, sort ] );
 
 	// Initial fetch.
 	useEffect( function () {
@@ -323,7 +323,7 @@ export default function RepliesListScreen( { onNavigate } ) {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	var resetAndRefetch = function () {
-		setMeta( null );
+		hasMetaRef.current = false;
 		setSelected( [] );
 		fetchReplies( { page: 1, reset_meta: true } );
 	};
@@ -473,21 +473,21 @@ export default function RepliesListScreen( { onNavigate } ) {
 		replyBulkAction( selected, action, extraData ).then( function ( response ) {
 			setIsBulkProcessing( false );
 			if ( response.success ) {
-				setToast( {
+				setNotice( {
 					message: ( response.data && response.data.message ) || __( 'Bulk action completed.', 'buddyboss' ),
 					type: 'success',
 				} );
 				setBulkAction( '' );
 				resetAndRefetch();
 			} else {
-				setToast( {
+				setNotice( {
 					message: ( response.data && response.data.message ) || __( 'Bulk action failed.', 'buddyboss' ),
 					type: 'error',
 				} );
 			}
 		} ).catch( function () {
 			setIsBulkProcessing( false );
-			setToast( {
+			setNotice( {
 				message: __( 'Bulk action failed.', 'buddyboss' ),
 				type: 'error',
 			} );
@@ -536,13 +536,13 @@ export default function RepliesListScreen( { onNavigate } ) {
 				setEditError( '' );
 				setIsEditOpen( true );
 			} else {
-				setToast( {
+				setNotice( {
 					message: __( 'Failed to load reply data.', 'buddyboss' ),
 					type: 'error',
 				} );
 			}
 		} ).catch( function () {
-			setToast( {
+			setNotice( {
 				message: __( 'Failed to load reply data.', 'buddyboss' ),
 				type: 'error',
 			} );
@@ -576,7 +576,7 @@ export default function RepliesListScreen( { onNavigate } ) {
 				forceRemoveEditor( 'bb-reply-edit-description' );
 				setIsEditOpen( false );
 				setEditReply( null );
-				setToast( {
+				setNotice( {
 					message: __( 'Reply updated successfully.', 'buddyboss' ),
 					type: 'success',
 				} );
@@ -611,7 +611,7 @@ export default function RepliesListScreen( { onNavigate } ) {
 	var handleSpamToggle = function ( reply ) {
 		replyBulkAction( [ reply.id ], 'spam' ).then( function ( response ) {
 			if ( response.success ) {
-				setToast( {
+				setNotice( {
 					message: reply.is_spam
 						? __( 'Reply unmarked as spam.', 'buddyboss' )
 						: __( 'Reply marked as spam.', 'buddyboss' ),
@@ -619,13 +619,13 @@ export default function RepliesListScreen( { onNavigate } ) {
 				} );
 				resetAndRefetch();
 			} else {
-				setToast( {
+				setNotice( {
 					message: __( 'Failed to update reply.', 'buddyboss' ),
 					type: 'error',
 				} );
 			}
 		} ).catch( function () {
-			setToast( {
+			setNotice( {
 				message: __( 'Failed to update reply.', 'buddyboss' ),
 				type: 'error',
 			} );
@@ -659,13 +659,13 @@ export default function RepliesListScreen( { onNavigate } ) {
 			setIsDeleting( false );
 			setDeleteReplyItem( null );
 			if ( response.success ) {
-				setToast( {
+				setNotice( {
 					message: __( 'Reply deleted successfully.', 'buddyboss' ),
 					type: 'success',
 				} );
 				resetAndRefetch();
 			} else {
-				setToast( {
+				setNotice( {
 					message: ( response.data && response.data.message ) || __( 'Failed to delete reply.', 'buddyboss' ),
 					type: 'error',
 				} );
@@ -673,7 +673,7 @@ export default function RepliesListScreen( { onNavigate } ) {
 		} ).catch( function () {
 			setIsDeleting( false );
 			setDeleteReplyItem( null );
-			setToast( {
+			setNotice( {
 				message: __( 'Failed to delete reply.', 'buddyboss' ),
 				type: 'error',
 			} );
@@ -687,7 +687,7 @@ export default function RepliesListScreen( { onNavigate } ) {
 	 */
 	var handleReplyCreated = function () {
 		setIsCreateOpen( false );
-		setToast( {
+		setNotice( {
 			message: __( 'Reply created successfully.', 'buddyboss' ),
 			type: 'success',
 		} );
@@ -696,14 +696,14 @@ export default function RepliesListScreen( { onNavigate } ) {
 
 	// Build bulk action options from meta.
 	var bulkActionOptions = [ { value: '', label: __( 'Bulk Actions', 'buddyboss' ) } ];
-	if ( meta && meta.bulk_actions ) {
-		Object.keys( meta.bulk_actions ).forEach( function ( key ) {
-			bulkActionOptions.push( { value: key, label: decodeEntities( meta.bulk_actions[ key ] ) } );
+	if ( bulkActionsData ) {
+		Object.keys( bulkActionsData ).forEach( function ( key ) {
+			bulkActionOptions.push( { value: key, label: decodeEntities( bulkActionsData[ key ] ) } );
 		} );
 	}
 
 	// Build forum filter list from meta.
-	var forumsList = meta && meta.views && meta.views.forums ? meta.views.forums : [];
+	var forumsList = views && views.forums ? views.forums : [];
 
 	// Get filtered forums for the searchable dropdown.
 	var filteredForums = useMemo( function () {
@@ -743,11 +743,11 @@ export default function RepliesListScreen( { onNavigate } ) {
 		);
 	}
 
-	// Determine columns from meta.
-	var columns = meta && meta.columns ? meta.columns : {};
-
 	// Compute custom column keys (columns added by third-party plugins).
 	var customColumnKeys = useMemo( function () {
+		if ( ! columns ) {
+			return [];
+		}
 		return Object.keys( columns ).filter( function ( key ) {
 			return CORE_COLUMNS.indexOf( key ) === -1;
 		} );
@@ -759,52 +759,6 @@ export default function RepliesListScreen( { onNavigate } ) {
 		{ value: 'private', label: __( 'Private', 'buddyboss' ) },
 		{ value: 'hidden', label: __( 'Hidden', 'buddyboss' ) },
 	];
-
-	/**
-	 * Build pagination page numbers with ellipsis.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @returns {Array} Array of page number items.
-	 */
-	var getPageNumbers = function () {
-		var pages = [];
-		var maxVisible = 5;
-
-		if ( totalPages <= 7 ) {
-			for ( var i = 1; i <= totalPages; i++ ) {
-				pages.push( i );
-			}
-		} else {
-			pages.push( 1 );
-
-			if ( page > maxVisible - 1 ) {
-				pages.push( '...' );
-			}
-
-			var start = Math.max( 2, page - 1 );
-			var end = Math.min( totalPages - 1, page + 1 );
-
-			if ( page <= 3 ) {
-				end = Math.min( totalPages - 1, maxVisible );
-			}
-			if ( page >= totalPages - 2 ) {
-				start = Math.max( 2, totalPages - maxVisible + 1 );
-			}
-
-			for ( var j = start; j <= end; j++ ) {
-				pages.push( j );
-			}
-
-			if ( page < totalPages - ( maxVisible - 2 ) ) {
-				pages.push( '...' );
-			}
-
-			pages.push( totalPages );
-		}
-
-		return pages;
-	};
 
 	return (
 		<div className="bb-replies-list">
@@ -825,18 +779,17 @@ export default function RepliesListScreen( { onNavigate } ) {
 				</Button>
 			</div>
 
-			{ /* Toast notification */ }
-			{ toast && (
-				<div className={ 'bb-replies-list__toast bb-replies-list__toast--' + toast.type }>
-					<span>{ toast.message }</span>
+			{ /* Notice */ }
+			{ notice && (
+				<div className={ 'bb-admin-notice bb-admin-notice--' + notice.type }>
+					<span>{ notice.message }</span>
 					<button
-						type="button"
-						className="bb-replies-list__toast-close"
+						className="bb-admin-notice--dismiss"
 						onClick={ function () {
-							setToast( null );
+							setNotice( null );
 						} }
 					>
-						&times;
+						<i className='bb-icons-rl bb-icons-rl-x'></i>
 					</button>
 				</div>
 			) }
@@ -991,16 +944,16 @@ export default function RepliesListScreen( { onNavigate } ) {
 								/>
 							</th>
 							<th className="bb-replies-list__col-reply">
-								{ columns.title ? decodeEntities( columns.title ) : __( 'Reply', 'buddyboss' ) }
+								{ columns && columns.title ? decodeEntities( columns.title ) : __( 'Reply', 'buddyboss' ) }
 							</th>
 							<th className="bb-replies-list__col-forum">
-								{ columns.bbp_reply_forum ? decodeEntities( columns.bbp_reply_forum ) : __( 'Forum', 'buddyboss' ) }
+								{ columns && columns.bbp_reply_forum ? decodeEntities( columns.bbp_reply_forum ) : __( 'Forum', 'buddyboss' ) }
 							</th>
 							<th className="bb-replies-list__col-discussion">
-								{ columns.bbp_reply_topic ? decodeEntities( columns.bbp_reply_topic ) : __( 'Discussion', 'buddyboss' ) }
+								{ columns && columns.bbp_reply_topic ? decodeEntities( columns.bbp_reply_topic ) : __( 'Discussion', 'buddyboss' ) }
 							</th>
 							<th className="bb-replies-list__col-created">
-								{ columns.bbp_reply_created ? decodeEntities( columns.bbp_reply_created ) : __( 'Created', 'buddyboss' ) }
+								{ columns && columns.bbp_reply_created ? decodeEntities( columns.bbp_reply_created ) : __( 'Created', 'buddyboss' ) }
 							</th>
 							{ /* Custom columns from bbp_admin_replies_column_headers filter */ }
 							{ customColumnKeys.map( function ( key ) {
@@ -1160,7 +1113,7 @@ export default function RepliesListScreen( { onNavigate } ) {
 								&lsaquo;
 							</Button>
 
-							{ getPageNumbers().map( function ( num, index ) {
+							{ getPageNumbers( page, totalPages ).map( function ( num, index ) {
 								if ( '...' === num ) {
 									return (
 										<span key={ 'ellipsis-' + index } className="bb-replies-list__pagination-ellipsis">

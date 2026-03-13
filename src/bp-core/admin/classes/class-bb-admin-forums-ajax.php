@@ -584,6 +584,11 @@ class BB_Admin_Forums_Ajax {
 			}
 		}
 
+		// Prevent circular reference (self-parenting).
+		if ( $parent_id === $forum_id ) {
+			$parent_id = 0;
+		}
+
 		// Capture old parent before update for count recalculation.
 		$old_parent_id = (int) $forum->post_parent;
 

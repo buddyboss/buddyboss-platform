@@ -18,6 +18,7 @@ import { __, _n, sprintf } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { getTopicTags, getTopicTag, deleteTopicTag } from '../utils/ajax';
 import { safeUrl } from '../utils/sanitize';
+import { getPageNumbers } from '../utils/pagination';
 import { TagCreateModal } from '../components/forums/TagCreateModal';
 
 /**
@@ -269,52 +270,6 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 		fetchTags( { page: currentPage } );
 	};
 
-	/**
-	 * Build pagination page numbers.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @returns {Array} Array of page number items.
-	 */
-	var getPageNumbers = function () {
-		var pages = [];
-		var maxVisible = 5;
-
-		if ( totalPages <= 7 ) {
-			for ( var i = 1; i <= totalPages; i++ ) {
-				pages.push( i );
-			}
-		} else {
-			pages.push( 1 );
-
-			if ( currentPage > maxVisible - 1 ) {
-				pages.push( '...' );
-			}
-
-			var start = Math.max( 2, currentPage - 1 );
-			var end = Math.min( totalPages - 1, currentPage + 1 );
-
-			if ( currentPage <= 3 ) {
-				end = Math.min( totalPages - 1, maxVisible );
-			}
-			if ( currentPage >= totalPages - 2 ) {
-				start = Math.max( 2, totalPages - maxVisible + 1 );
-			}
-
-			for ( var j = start; j <= end; j++ ) {
-				pages.push( j );
-			}
-
-			if ( currentPage < totalPages - ( maxVisible - 2 ) ) {
-				pages.push( '...' );
-			}
-
-			pages.push( totalPages );
-		}
-
-		return pages;
-	};
-
 	return (
 		<div className="bb-discussion-tags-list">
 			{ /* Notice */ }
@@ -502,7 +457,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 								&lsaquo;
 							</Button>
 
-							{ getPageNumbers().map( function ( page, index ) {
+							{ getPageNumbers( currentPage, totalPages ).map( function ( page, index ) {
 								if ( '...' === page ) {
 									return (
 										<span key={ 'ellipsis-' + index } className="bb-discussion-tags-list__pagination-ellipsis">

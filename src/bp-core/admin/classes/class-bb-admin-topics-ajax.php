@@ -941,19 +941,8 @@ class BB_Admin_Topics_Ajax {
 					}
 				}
 
-				// Update status (open/closed) if provided and not "no change".
-				if ( ! empty( $edit_status ) && 'no_change' !== $edit_status ) {
-					$current_status = bbp_get_topic_status( $topic_id );
-					if ( 'closed' === $edit_status && 'closed' !== $current_status ) {
-						bbp_close_topic( $topic_id );
-						$updated = true;
-					} elseif ( 'open' === $edit_status && 'closed' === $current_status ) {
-						bbp_open_topic( $topic_id );
-						$updated = true;
-					}
-				}
-
-				// Update visibility if provided and not "no change".
+				// Update visibility BEFORE status so that close/open doesn't get
+				// overwritten by a subsequent post_status change.
 				if ( ! empty( $edit_visibility ) && 'no_change' !== $edit_visibility ) {
 					$allowed_visibilities = array( 'publish', 'private', 'hidden' );
 					if ( in_array( $edit_visibility, $allowed_visibilities, true ) ) {
@@ -970,6 +959,20 @@ class BB_Admin_Topics_Ajax {
 							continue;
 						}
 
+						$updated = true;
+					}
+				}
+
+				// Update status (open/closed) if provided and not "no change".
+				// Runs after visibility so that bbp_close_topic()'s post_status
+				// change is the final write and is not overridden.
+				if ( ! empty( $edit_status ) && 'no_change' !== $edit_status ) {
+					$current_status = bbp_get_topic_status( $topic_id );
+					if ( 'closed' === $edit_status && 'closed' !== $current_status ) {
+						bbp_close_topic( $topic_id );
+						$updated = true;
+					} elseif ( 'open' === $edit_status && 'closed' === $current_status ) {
+						bbp_open_topic( $topic_id );
 						$updated = true;
 					}
 				}
