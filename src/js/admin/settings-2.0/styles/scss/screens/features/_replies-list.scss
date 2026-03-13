@@ -732,6 +732,10 @@
 
 	&__body {
 		padding: 24px;
+
+		> p {
+			margin: 0;
+		}
 	}
 
 	&__description {
