@@ -520,6 +520,10 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 					className="bb-pf-banner__select-link"
 					onClick={ function ( e ) {
 						e.preventDefault();
+						var target = document.getElementById( 'signup-fields' );
+						if ( target ) {
+							target.scrollIntoView( { behavior: 'smooth', block: 'start' } );
+						}
 					} }
 				>
 					{ __( 'Select', 'buddyboss' ) }
@@ -528,6 +532,7 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 			</div>
 
 			{/* Field set cards. */}
+			<div id="signup-fields">
 			{ fieldGroups.map( function ( group, groupIndex ) {
 				var isCollapsed = collapsed[ group.id ];
 				var isDragOver = 'group' === dragType && dragOverItem === groupIndex;
@@ -699,6 +704,7 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 					</div>
 				);
 			} ) }
+			</div>
 
 			{/* Add New Field Set button. */}
 			<Button
