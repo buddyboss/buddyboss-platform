@@ -228,6 +228,11 @@
 			transform: translateY(-50%);
 			pointer-events: none;
 		}
+
+
+		&:has(.bb-replies-list__search-clear):after {
+			display: none;
+		}
 	}
 
 	&__search-input {
@@ -258,8 +263,8 @@
 		background: none;
 		border: none;
 		cursor: pointer;
-		font-size: 16px;
-		color: $bb-text-tertiary-color;
+		font-size: 18px;
+		color: $bb-icon-tertiary-color;
 		padding: 0;
 		line-height: 1;
 		z-index: 1;

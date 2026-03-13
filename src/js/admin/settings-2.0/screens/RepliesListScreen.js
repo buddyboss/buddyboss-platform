@@ -908,7 +908,7 @@ export default function RepliesListScreen( { onNavigate } ) {
 									handleSearch( '' );
 								} }
 							>
-								&times;
+								<i className="bb-icons-rl-x"></i>
 							</button>
 						) }
 					</div>
