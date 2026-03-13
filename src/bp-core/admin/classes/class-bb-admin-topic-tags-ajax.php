@@ -69,26 +69,6 @@ class BB_Admin_Topic_Tags_Ajax {
 		add_action( 'wp_ajax_bb_admin_topic_tag_bulk_action', array( $this, 'topic_tag_bulk_action' ) );
 	}
 
-	/**
-	 * Verify AJAX request (capability + nonce).
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	private function bb_verify_request() {
-		if ( ! bp_current_user_can( 'bp_moderate' ) ) {
-			wp_send_json_error(
-				array( 'message' => __( 'Permission denied.', 'buddyboss' ) ),
-				403
-			);
-		}
-
-		if ( ! check_ajax_referer( self::NONCE_ACTION, 'nonce', false ) ) {
-			wp_send_json_error(
-				array( 'message' => __( 'Security check failed.', 'buddyboss' ) ),
-				403
-			);
-		}
-	}
 
 	/**
 	 * Get discussion tags listing with pagination and search.
@@ -98,7 +78,7 @@ class BB_Admin_Topic_Tags_Ajax {
 	 * @return void
 	 */
 	public function get_topic_tags() {
-		$this->bb_verify_request();
+		bb_admin_verify_ajax_request( self::NONCE_ACTION );
 
 		if ( ! bp_is_active( 'forums' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss' ) ) );
@@ -109,7 +89,7 @@ class BB_Admin_Topic_Tags_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Topic tags are not available.', 'buddyboss' ) ) );
 		}
 
-		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
 		$page         = isset( $_POST['page'] ) ? absint( wp_unslash( $_POST['page'] ) ) : 1;
 		$per_page     = isset( $_POST['per_page'] ) ? absint( wp_unslash( $_POST['per_page'] ) ) : 20;
 		$search       = isset( $_POST['search'] ) ? sanitize_text_field( wp_unslash( $_POST['search'] ) ) : '';
@@ -215,13 +195,13 @@ class BB_Admin_Topic_Tags_Ajax {
 	 * @return void
 	 */
 	public function get_topic_tag() {
-		$this->bb_verify_request();
+		bb_admin_verify_ajax_request( self::NONCE_ACTION );
 
 		if ( ! bp_is_active( 'forums' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss' ) ) );
 		}
 
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
 		$term_id = isset( $_POST['term_id'] ) ? absint( wp_unslash( $_POST['term_id'] ) ) : 0;
 
 		if ( empty( $term_id ) ) {
@@ -265,13 +245,13 @@ class BB_Admin_Topic_Tags_Ajax {
 	 * @return void
 	 */
 	public function create_topic_tag() {
-		$this->bb_verify_request();
+		bb_admin_verify_ajax_request( self::NONCE_ACTION );
 
 		if ( ! bp_is_active( 'forums' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss' ) ) );
 		}
 
-		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
 		$name        = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
 		$slug        = isset( $_POST['slug'] ) ? sanitize_title( wp_unslash( $_POST['slug'] ) ) : '';
 		$description = isset( $_POST['description'] ) ? sanitize_textarea_field( wp_unslash( $_POST['description'] ) ) : '';
@@ -313,13 +293,13 @@ class BB_Admin_Topic_Tags_Ajax {
 	 * @return void
 	 */
 	public function save_topic_tag() {
-		$this->bb_verify_request();
+		bb_admin_verify_ajax_request( self::NONCE_ACTION );
 
 		if ( ! bp_is_active( 'forums' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss' ) ) );
 		}
 
-		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
 		$term_id     = isset( $_POST['term_id'] ) ? absint( wp_unslash( $_POST['term_id'] ) ) : 0;
 		$name        = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
 		$slug        = isset( $_POST['slug'] ) ? sanitize_title( wp_unslash( $_POST['slug'] ) ) : '';
@@ -372,13 +352,13 @@ class BB_Admin_Topic_Tags_Ajax {
 	 * @return void
 	 */
 	public function delete_topic_tag() {
-		$this->bb_verify_request();
+		bb_admin_verify_ajax_request( self::NONCE_ACTION );
 
 		if ( ! bp_is_active( 'forums' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss' ) ) );
 		}
 
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
 		$term_id = isset( $_POST['term_id'] ) ? absint( wp_unslash( $_POST['term_id'] ) ) : 0;
 
 		if ( empty( $term_id ) ) {
@@ -415,13 +395,13 @@ class BB_Admin_Topic_Tags_Ajax {
 	 * @return void
 	 */
 	public function topic_tag_bulk_action() {
-		$this->bb_verify_request();
+		bb_admin_verify_ajax_request( self::NONCE_ACTION );
 
 		if ( ! bp_is_active( 'forums' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss' ) ) );
 		}
 
-		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
 		$raw_ids   = isset( $_POST['term_ids'] ) ? sanitize_text_field( wp_unslash( $_POST['term_ids'] ) ) : '';
 		$do_action = isset( $_POST['do_action'] ) ? sanitize_key( wp_unslash( $_POST['do_action'] ) ) : '';
 		// phpcs:enable WordPress.Security.NonceVerification.Missing

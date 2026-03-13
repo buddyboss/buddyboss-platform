@@ -81,30 +81,6 @@ class BB_Admin_Forums_Ajax {
 	}
 
 	/**
-	 * Verify AJAX request (capability + nonce).
-	 *
-	 * Capability is checked first because it is cheaper and avoids
-	 * consuming a nonce check for unauthorized users.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	private function bb_verify_request() {
-		if ( ! bp_current_user_can( 'bp_moderate' ) ) {
-			wp_send_json_error(
-				array( 'message' => __( 'Permission denied.', 'buddyboss' ) ),
-				403
-			);
-		}
-
-		if ( ! check_ajax_referer( self::NONCE_ACTION, 'nonce', false ) ) {
-			wp_send_json_error(
-				array( 'message' => __( 'Security check failed.', 'buddyboss' ) ),
-				403
-			);
-		}
-	}
-
-	/**
 	 * Clear the admin forum status counts cache.
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -129,13 +105,13 @@ class BB_Admin_Forums_Ajax {
 	 * @return void
 	 */
 	public function get_forums() {
-		$this->bb_verify_request();
+		bb_admin_verify_ajax_request( self::NONCE_ACTION );
 
 		if ( ! bp_is_active( 'forums' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss' ) ) );
 		}
 
-		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
 		$page         = isset( $_POST['page'] ) ? absint( wp_unslash( $_POST['page'] ) ) : 1;
 		$per_page     = isset( $_POST['per_page'] ) ? absint( wp_unslash( $_POST['per_page'] ) ) : 20;
 		$search       = isset( $_POST['search'] ) ? sanitize_text_field( wp_unslash( $_POST['search'] ) ) : '';
@@ -272,7 +248,8 @@ class BB_Admin_Forums_Ajax {
 			$author_id  = (int) $forum->post_author;
 			$user       = get_userdata( $author_id );
 
-			$last_active = bbp_get_forum_last_active_time( $forum_id, false );
+			$last_active  = bbp_get_forum_last_active_time( $forum_id, false );
+			$thumbnail_id = get_post_thumbnail_id( $forum_id );
 
 			$item = array(
 				'id'                => $forum_id,
@@ -291,7 +268,7 @@ class BB_Admin_Forums_Ajax {
 				'date_created'      => $forum->post_date,
 				'permalink'         => bbp_get_forum_permalink( $forum_id ),
 				'parent_id'         => (int) $forum->post_parent,
-				'featured_image'    => get_post_thumbnail_id( $forum_id ) ? wp_get_attachment_url( get_post_thumbnail_id( $forum_id ) ) : '',
+				'featured_image'    => $thumbnail_id ? wp_get_attachment_url( $thumbnail_id ) : '',
 			);
 
 			// Render custom columns via legacy filter.
@@ -391,13 +368,13 @@ class BB_Admin_Forums_Ajax {
 	 * @return void
 	 */
 	public function get_forum() {
-		$this->bb_verify_request();
+		bb_admin_verify_ajax_request( self::NONCE_ACTION );
 
 		if ( ! bp_is_active( 'forums' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss' ) ) );
 		}
 
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
 		$forum_id = isset( $_POST['forum_id'] ) ? absint( wp_unslash( $_POST['forum_id'] ) ) : 0;
 
 		if ( empty( $forum_id ) ) {
@@ -409,6 +386,8 @@ class BB_Admin_Forums_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Forum not found.', 'buddyboss' ) ) );
 		}
 
+		$thumbnail_id = get_post_thumbnail_id( $forum_id );
+
 		$data = array(
 			'id'                => (int) $forum->ID,
 			'name'              => $forum->post_title,
@@ -418,8 +397,8 @@ class BB_Admin_Forums_Ajax {
 			'forum_status'      => bbp_get_forum_status( $forum_id ),
 			'parent_id'         => (int) $forum->post_parent,
 			'permalink'         => bbp_get_forum_permalink( $forum_id ),
-			'featured_image'    => get_post_thumbnail_id( $forum_id ) ? wp_get_attachment_url( get_post_thumbnail_id( $forum_id ) ) : '',
-			'featured_image_id' => get_post_thumbnail_id( $forum_id ) ? (int) get_post_thumbnail_id( $forum_id ) : 0,
+			'featured_image'    => $thumbnail_id ? wp_get_attachment_url( $thumbnail_id ) : '',
+			'featured_image_id' => $thumbnail_id ? (int) $thumbnail_id : 0,
 		);
 
 		/**
@@ -441,13 +420,13 @@ class BB_Admin_Forums_Ajax {
 	 * @return void
 	 */
 	public function create_forum() {
-		$this->bb_verify_request();
+		bb_admin_verify_ajax_request( self::NONCE_ACTION );
 
 		if ( ! bp_is_active( 'forums' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss' ) ) );
 		}
 
-		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
 		$name         = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
 		$slug         = isset( $_POST['slug'] ) ? sanitize_title( wp_unslash( $_POST['slug'] ) ) : '';
 		$description  = isset( $_POST['description'] ) ? wp_kses_post( wp_unslash( $_POST['description'] ) ) : '';
@@ -492,13 +471,24 @@ class BB_Admin_Forums_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Failed to create forum.', 'buddyboss' ) ) );
 		}
 
-		// Set forum status (open/closed).
-		update_post_meta( $forum_id, '_bbp_status', $forum_status );
+		// Set forum status (open/closed) using bbPress lifecycle functions.
+		if ( 'closed' === $forum_status ) {
+			bbp_close_forum( $forum_id );
+		} else {
+			bbp_open_forum( $forum_id );
+		}
 
 		// Handle featured image.
 		if ( ! empty( $image_id ) ) {
 			set_post_thumbnail( $forum_id, $image_id );
 		}
+
+		// Populate legacy $_POST keys expected by bbp_save_forum_extras() and third-party hooks.
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
+		$_POST['bbp_forum_status']     = $forum_status;
+		$_POST['bbp_forum_type']       = 'forum';
+		$_POST['bbp_forum_visibility'] = $visibility;
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		/**
 		 * Fires after a new forum is created in Settings 2.0 admin.
@@ -531,13 +521,13 @@ class BB_Admin_Forums_Ajax {
 	 * @return void
 	 */
 	public function save_forum() {
-		$this->bb_verify_request();
+		bb_admin_verify_ajax_request( self::NONCE_ACTION );
 
 		if ( ! bp_is_active( 'forums' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss' ) ) );
 		}
 
-		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
 		$forum_id     = isset( $_POST['forum_id'] ) ? absint( wp_unslash( $_POST['forum_id'] ) ) : 0;
 		$name         = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
 		$slug         = isset( $_POST['slug'] ) ? sanitize_title( wp_unslash( $_POST['slug'] ) ) : '';
@@ -599,11 +589,12 @@ class BB_Admin_Forums_Ajax {
 			wp_send_json_error( array( 'message' => html_entity_decode( $result->get_error_message(), ENT_QUOTES, 'UTF-8' ) ) );
 		}
 
-		// Update forum status (open/closed).
+		// Update forum status (open/closed) using bbPress lifecycle functions.
 		if ( ! empty( $forum_status ) ) {
-			$allowed_statuses = array( 'open', 'closed' );
-			if ( in_array( $forum_status, $allowed_statuses, true ) ) {
-				update_post_meta( $forum_id, '_bbp_status', $forum_status );
+			if ( 'closed' === $forum_status ) {
+				bbp_close_forum( $forum_id );
+			} elseif ( 'open' === $forum_status ) {
+				bbp_open_forum( $forum_id );
 			}
 		}
 
@@ -614,41 +605,9 @@ class BB_Admin_Forums_Ajax {
 			set_post_thumbnail( $forum_id, $image_id );
 		}
 
-		// Propagate visibility to child forums for group forums (replicates bbp_save_forum_extras logic).
-		if ( ! empty( $visibility ) && function_exists( 'bb_get_all_nested_subforums' ) ) {
-			$forum_obj = bbp_get_forum( $forum_id );
-
-			if ( ! empty( $forum_obj->post_parent ) ) {
-				$ancestors    = get_post_ancestors( $forum_id );
-				$root         = count( $ancestors ) - 1;
-				$parent_forum = $ancestors[ $root ];
-			} else {
-				$parent_forum = $forum_id;
-			}
-
-			// Only propagate for group-attached forums.
-			if ( ! empty( $parent_forum ) && ! empty( bbp_get_forum_group_ids( $parent_forum ) ) ) {
-				$child_forums = bb_get_all_nested_subforums( $parent_forum );
-				if ( $child_forums ) {
-					$parent_status = get_post_status( $parent_forum );
-					foreach ( $child_forums as $child_forum_id ) {
-						if ( get_post_status( $child_forum_id ) !== $parent_status ) {
-							switch ( $parent_status ) {
-								case bbp_get_hidden_status_id():
-									bbp_hide_forum( $child_forum_id );
-									break;
-								case bbp_get_private_status_id():
-									bbp_privatize_forum( $child_forum_id );
-									break;
-								case bbp_get_public_status_id():
-								default:
-									bbp_publicize_forum( $child_forum_id );
-									break;
-							}
-						}
-					}
-				}
-			}
+		// Propagate visibility to child forums for group forums.
+		if ( ! empty( $visibility ) ) {
+			$this->bb_propagate_group_forum_visibility( $forum_id );
 		}
 
 		// Recalculate counts when parent changes.
@@ -661,6 +620,17 @@ class BB_Admin_Forums_Ajax {
 				bbp_update_forum( array( 'forum_id' => $parent_id ) );
 			}
 		}
+
+		// Populate legacy $_POST keys expected by bbp_save_forum_extras() and third-party hooks.
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
+		if ( ! empty( $forum_status ) ) {
+			$_POST['bbp_forum_status'] = $forum_status;
+		}
+		$_POST['bbp_forum_type'] = 'forum';
+		if ( ! empty( $visibility ) ) {
+			$_POST['bbp_forum_visibility'] = $visibility;
+		}
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		/**
 		 * Fires after forum edit is complete in Settings 2.0 admin.
@@ -705,13 +675,13 @@ class BB_Admin_Forums_Ajax {
 	 * @return void
 	 */
 	public function delete_forum() {
-		$this->bb_verify_request();
+		bb_admin_verify_ajax_request( self::NONCE_ACTION );
 
 		if ( ! bp_is_active( 'forums' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss' ) ) );
 		}
 
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
 		$forum_id = isset( $_POST['forum_id'] ) ? absint( wp_unslash( $_POST['forum_id'] ) ) : 0;
 
 		if ( empty( $forum_id ) ) {
@@ -748,13 +718,13 @@ class BB_Admin_Forums_Ajax {
 	 * @return void
 	 */
 	public function forum_bulk_action() {
-		$this->bb_verify_request();
+		bb_admin_verify_ajax_request( self::NONCE_ACTION );
 
 		if ( ! bp_is_active( 'forums' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss' ) ) );
 		}
 
-		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
 		$raw_ids         = isset( $_POST['forum_ids'] ) ? sanitize_text_field( wp_unslash( $_POST['forum_ids'] ) ) : '';
 		$do_action       = isset( $_POST['do_action'] ) ? sanitize_key( wp_unslash( $_POST['do_action'] ) ) : '';
 		$edit_status     = isset( $_POST['edit_status'] ) ? sanitize_key( wp_unslash( $_POST['edit_status'] ) ) : '';
@@ -804,9 +774,11 @@ class BB_Admin_Forums_Ajax {
 
 				// Update status (open/closed) if provided and not "no change".
 				if ( ! empty( $edit_status ) && 'no_change' !== $edit_status ) {
-					$allowed_statuses = array( 'open', 'closed' );
-					if ( in_array( $edit_status, $allowed_statuses, true ) ) {
-						update_post_meta( $forum_id, '_bbp_status', $edit_status );
+					if ( 'closed' === $edit_status ) {
+						bbp_close_forum( $forum_id );
+						$updated = true;
+					} elseif ( 'open' === $edit_status ) {
+						bbp_open_forum( $forum_id );
 						$updated = true;
 					}
 				}
@@ -829,41 +801,7 @@ class BB_Admin_Forums_Ajax {
 						}
 
 						// Propagate visibility to child forums for group forums.
-						if ( function_exists( 'bb_get_all_nested_subforums' ) ) {
-							$forum_obj = bbp_get_forum( $forum_id );
-
-							if ( ! empty( $forum_obj->post_parent ) ) {
-								$ancestors    = get_post_ancestors( $forum_id );
-								$root         = count( $ancestors ) - 1;
-								$parent_forum = $ancestors[ $root ];
-							} else {
-								$parent_forum = $forum_id;
-							}
-
-							// Only propagate for group-attached forums.
-							if ( ! empty( $parent_forum ) && ! empty( bbp_get_forum_group_ids( $parent_forum ) ) ) {
-								$child_forums = bb_get_all_nested_subforums( $parent_forum );
-								if ( $child_forums ) {
-									$parent_status = get_post_status( $parent_forum );
-									foreach ( $child_forums as $child_forum_id ) {
-										if ( get_post_status( $child_forum_id ) !== $parent_status ) {
-											switch ( $parent_status ) {
-												case bbp_get_hidden_status_id():
-													bbp_hide_forum( $child_forum_id );
-													break;
-												case bbp_get_private_status_id():
-													bbp_privatize_forum( $child_forum_id );
-													break;
-												case bbp_get_public_status_id():
-												default:
-													bbp_publicize_forum( $child_forum_id );
-													break;
-											}
-										}
-									}
-								}
-							}
-						}
+						$this->bb_propagate_group_forum_visibility( $forum_id );
 
 						$updated = true;
 					}
@@ -877,6 +815,17 @@ class BB_Admin_Forums_Ajax {
 					 *
 					 * @param int $forum_id Forum ID.
 					 */
+					// Populate legacy $_POST keys expected by bbp_save_forum_extras() and third-party hooks.
+					// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
+					if ( ! empty( $edit_status ) && 'no_change' !== $edit_status ) {
+						$_POST['bbp_forum_status'] = $edit_status;
+					}
+					$_POST['bbp_forum_type'] = 'forum';
+					if ( ! empty( $edit_visibility ) && 'no_change' !== $edit_visibility ) {
+						$_POST['bbp_forum_visibility'] = $edit_visibility;
+					}
+					// phpcs:enable WordPress.Security.NonceVerification.Missing
+
 					do_action( 'bbp_edit_forum_post_extras', $forum_id );
 					++$processed;
 				} else {
@@ -1003,13 +952,13 @@ class BB_Admin_Forums_Ajax {
 	 * @return void
 	 */
 	public function bb_forum_autocomplete() {
-		$this->bb_verify_request();
+		bb_admin_verify_ajax_request( self::NONCE_ACTION );
 
 		if ( ! bp_is_active( 'forums' ) || ! function_exists( 'bbp_get_forum_post_type' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Forums component is not active.', 'buddyboss' ) ) );
 		}
 
-		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
 		$term        = isset( $_POST['term'] ) ? sanitize_text_field( wp_unslash( $_POST['term'] ) ) : '';
 		$page        = isset( $_POST['page'] ) ? absint( wp_unslash( $_POST['page'] ) ) : 1;
 		$selected_id = isset( $_POST['selected_id'] ) ? absint( wp_unslash( $_POST['selected_id'] ) ) : 0;
@@ -1081,6 +1030,61 @@ class BB_Admin_Forums_Ajax {
 		);
 	}
 
+	/**
+	 * Propagate visibility to child forums for group-attached forums.
+	 *
+	 * Ensures that when a group forum's visibility changes, all its
+	 * child/nested forums inherit the same visibility state.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $forum_id Forum ID whose children should be updated.
+	 *
+	 * @return void
+	 */
+	private function bb_propagate_group_forum_visibility( $forum_id ) {
+		if ( ! function_exists( 'bb_get_all_nested_subforums' ) ) {
+			return;
+		}
+
+		$forum_obj = bbp_get_forum( $forum_id );
+
+		if ( ! empty( $forum_obj->post_parent ) ) {
+			$ancestors    = get_post_ancestors( $forum_id );
+			$root         = count( $ancestors ) - 1;
+			$parent_forum = $ancestors[ $root ];
+		} else {
+			$parent_forum = $forum_id;
+		}
+
+		// Only propagate for group-attached forums.
+		if ( empty( $parent_forum ) || empty( bbp_get_forum_group_ids( $parent_forum ) ) ) {
+			return;
+		}
+
+		$child_forums = bb_get_all_nested_subforums( $parent_forum );
+		if ( ! $child_forums ) {
+			return;
+		}
+
+		$parent_status = get_post_status( $parent_forum );
+		foreach ( $child_forums as $child_forum_id ) {
+			if ( get_post_status( $child_forum_id ) !== $parent_status ) {
+				switch ( $parent_status ) {
+					case bbp_get_hidden_status_id():
+						bbp_hide_forum( $child_forum_id );
+						break;
+					case bbp_get_private_status_id():
+						bbp_privatize_forum( $child_forum_id );
+						break;
+					case bbp_get_public_status_id():
+					default:
+						bbp_publicize_forum( $child_forum_id );
+						break;
+				}
+			}
+		}
+	}
 }
 
 // Initialize.

@@ -1694,6 +1694,54 @@ add_action(
 	}
 );
 
+/**
+ * Fire the legacy `bbp_admin_get_settings_sections` filter after Settings 2.0
+ * finishes registering forum fields.
+ *
+ * In legacy bbPress, this filter was applied inside bbp_admin_get_settings_sections()
+ * allowing third-party plugins to add settings sections to the WordPress Settings API
+ * pages. Settings 2.0 no longer calls that function for registration; this deprecation
+ * wrapper notifies developers to use bb_register_feature_section() instead.
+ *
+ * @since bbPress (r4001)
+ * @deprecated BuddyBoss [BBVERSION] Use {@see bb_register_feature_section()} to register forum settings sections.
+ */
+add_action(
+	'bb_forums_after_register_settings_fields',
+	static function () {
+		apply_filters_deprecated(
+			'bbp_admin_get_settings_sections',
+			array( array() ),
+			'BuddyBoss [BBVERSION]',
+			'bb_register_feature_section()'
+		);
+	}
+);
+
+/**
+ * Fire the legacy `bbp_admin_get_settings_fields` filter after Settings 2.0
+ * finishes registering forum fields.
+ *
+ * In legacy bbPress, this filter was applied inside bbp_admin_get_settings_fields()
+ * allowing third-party plugins to add settings fields to the WordPress Settings API
+ * pages. Settings 2.0 no longer calls that function for registration; this deprecation
+ * wrapper notifies developers to use bb_register_feature_field() instead.
+ *
+ * @since bbPress (r4001)
+ * @deprecated BuddyBoss [BBVERSION] Use {@see bb_register_feature_field()} to register forum settings fields.
+ */
+add_action(
+	'bb_forums_after_register_settings_fields',
+	static function () {
+		apply_filters_deprecated(
+			'bbp_admin_get_settings_fields',
+			array( array() ),
+			'BuddyBoss [BBVERSION]',
+			'bb_register_feature_field()'
+		);
+	}
+);
+
 // ──────────────────────────────────────────────────────────────────────────────
 // Forums Settings 2.0 deprecated AJAX endpoint stubs.
 // These AJAX actions were in BBP_Admin and have been replaced by

@@ -160,6 +160,24 @@ function bb_forums_register_features_panel_fields() {
 		)
 	);
 
+	// FIELD: Akismet Spam Protection (conditional on Akismet plugin being active).
+	if ( class_exists( 'Akismet' ) ) {
+		bb_register_feature_field(
+			'forums',
+			'forum_features',
+			'forum_features_section',
+			array(
+				'name'              => '_bbp_enable_akismet',
+				'label'             => __( 'Akismet', 'buddyboss' ),
+				'type'              => 'toggle',
+				'description'       => __( 'Allow Akismet spam filtering to actively prevent forum spam', 'buddyboss' ),
+				'default'           => bbp_is_akismet_active(),
+				'sanitize_callback' => 'intval',
+				'order'             => 90,
+			)
+		);
+	}
+
 	/**
 	 * Fires after Forum Features section fields are registered.
 	 *
