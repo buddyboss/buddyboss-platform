@@ -1175,26 +1175,28 @@ export default function RepliesListScreen( { onNavigate } ) {
 				<Modal
 					title={ __( 'Edit Reply', 'buddyboss' ) }
 					onRequestClose={ handleEditClose }
-					className="bb-reply-edit-modal bb-admin-settings-modal"
+					className="bb-reply-edit-modal bb-reply-modal bb-admin-settings-modal"
 					shouldCloseOnClickOutside={ false }
 				>
 					{ isEditLoading ? (
-						<div className="bb-reply-edit-modal__loading">
+						<div className="bb-reply-modal__loading">
 							<Spinner />
 						</div>
 					) : (
 						<>
-							<div className="bb-reply-edit-modal__body">
+							<div className="bb-reply-modal__body">
 								{ editError && (
-									<p className="bb-reply-edit-modal__error">{ editError }</p>
+									<p className="bb-reply-modal__error">{ editError }</p>
 								) }
 
-								<RichTextEditor
-									id="bb-reply-edit-description"
-									label={ __( 'Description', 'buddyboss' ) }
-									value={ editContent }
-									onChange={ setEditContent }
-								/>
+								<div className="bb-reply-modal__row--separator">
+									<RichTextEditor
+										id="bb-reply-edit-description"
+										label={ __( 'Description', 'buddyboss' ) }
+										value={ editContent }
+										onChange={ setEditContent }
+									/>
+								</div>
 
 								<div className="components-base-control">
 									<label className="components-base-control__label">
@@ -1225,7 +1227,7 @@ export default function RepliesListScreen( { onNavigate } ) {
 									/>
 								</div>
 
-								<div className="components-base-control">
+								<div className="components-base-control bb-reply-modal__row--separator">
 									<label className="components-base-control__label">
 										{ __( 'Reply to', 'buddyboss' ) }
 									</label>
@@ -1249,7 +1251,7 @@ export default function RepliesListScreen( { onNavigate } ) {
 								/>
 							</div>
 
-							<div className="bb-reply-edit-modal__footer bb-admin-settings-modal__footer">
+							<div className="bb-reply-modal__footer bb-admin-settings-modal__footer">
 								<Button
 									variant="secondary"
 									onClick={ handleEditClose }

@@ -564,13 +564,17 @@
 	}
 }
 
-// Reply Create Modal
-.bb-reply-create-modal {
+.bb-reply-modal {
 
 	.components-modal__content {
 		padding: 0;
 	}
 
+	&__loading {
+		padding: 24px;
+		text-align: center;
+	}
+	
 	&__body {
 		padding: 24px;
 
@@ -589,17 +593,13 @@
 			margin-bottom: 8px;
 		}
 
-		.components-text-control__input,
-		.components-textarea-control__input {
-			@include bb-input-text;
-		}
-
 		.components-select-control .components-input-control__label {
 			margin-bottom: 0;
 		}
 
-		textarea {
-			min-height: 72px;
+		.components-text-control__input,
+		.components-textarea-control__input {
+			@include bb-input-text;
 		}
 
 		.components-input-control__container {
@@ -619,13 +619,15 @@
 		}
 	}
 
-	&__error {
-		color: #dc2626;
-		margin: 0;
-		font-size: 13px;
-		padding: 8px 12px;
-		background: #fef2f2;
-		border-radius: $bb-border-radius-md;
+	&__row {
+		display: flex;
+		gap: 16px;
+		margin-bottom: 16px;
+
+		.components-base-control {
+			flex: 1;
+			margin-bottom: 0;
+		}
 	}
 
 	&__row--separator {
@@ -633,60 +635,18 @@
 		padding-bottom: 24px;
 		border-bottom: 1px solid $bb-border-tertiary-color;
 
+		> .components-base-control,
 		> .bb-admin-meta-field__editor-field {
 			margin-bottom: 0;
 		}
 	}
-}
-
-// Reply Edit Modal
-.bb-reply-edit-modal {
-	.components-modal__content {
-		padding: 0;
-	}
-
-	&__body {
-		padding: 24px;
-		display: flex;
-		flex-direction: column;
-		gap: 16px;
-
-		// Override WordPress components uppercase labels to sentence case.
-		.components-input-control__label,
-		.components-base-control__label {
-			display: block;
-			text-transform: none !important;
-			font-size: 13px !important;
-			font-weight: 500 !important;
-			color: $bb-text-color;
-		}
-	}
-
-	&__loading {
-		padding: 24px;
-		text-align: center;
-	}
 
 	&__error {
-		color: #dc2626;
-		margin: 0;
+		color: #d63638;
 		font-size: 13px;
-		padding: 8px 12px;
-		background: #fef2f2;
-		border-radius: $bb-border-radius-md;
+		margin: 0 0 16px;
 	}
 
-	&__footer {
-		padding: 16px 24px;
-		display: flex;
-		justify-content: flex-end;
-		gap: 8px;
-		border-top: 1px solid $bb-border-secondary-color;
-
-		.is-primary {
-			@include bb-button-primary;
-		}
-	}
 }
 
 /* ----------------------------------------------------------------
