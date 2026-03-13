@@ -236,7 +236,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
-		$group_id          = isset( $_POST['group_id'] ) ? absint( $_POST['group_id'] ) : 0;
+		$group_id          = isset( $_POST['group_id'] ) ? absint( wp_unslash( $_POST['group_id'] ) ) : 0;
 		$name              = isset( $_POST['name'] ) ? wp_kses( wp_unslash( $_POST['name'] ), wp_kses_allowed_html( 'strip' ) ) : '';
 		$description       = isset( $_POST['description'] ) ? sanitize_textarea_field( wp_unslash( $_POST['description'] ) ) : '';
 		$group_is_repeater = isset( $_POST['group_is_repeater'] ) ? sanitize_key( wp_unslash( $_POST['group_is_repeater'] ) ) : '';
@@ -306,7 +306,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		}
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
-		$group_id = isset( $_POST['group_id'] ) ? absint( $_POST['group_id'] ) : 0;
+		$group_id = isset( $_POST['group_id'] ) ? absint( wp_unslash( $_POST['group_id'] ) ) : 0;
 
 		if ( empty( $group_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Field set ID is required.', 'buddyboss' ) ) );
@@ -357,8 +357,8 @@ class BB_Admin_Profile_Fields_Ajax {
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
-		$field_id    = isset( $_POST['field_id'] ) ? absint( $_POST['field_id'] ) : 0;
-		$group_id    = isset( $_POST['group_id'] ) ? absint( $_POST['group_id'] ) : 0;
+		$field_id    = isset( $_POST['field_id'] ) ? absint( wp_unslash( $_POST['field_id'] ) ) : 0;
+		$group_id    = isset( $_POST['group_id'] ) ? absint( wp_unslash( $_POST['group_id'] ) ) : 0;
 		$name        = isset( $_POST['name'] ) ? wp_kses( wp_unslash( $_POST['name'] ), wp_kses_allowed_html( 'strip' ) ) : '';
 		$type        = isset( $_POST['type'] ) ? sanitize_key( wp_unslash( $_POST['type'] ) ) : '';
 		$description = isset( $_POST['description'] ) ? sanitize_textarea_field( wp_unslash( $_POST['description'] ) ) : '';
@@ -505,7 +505,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		}
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
-		$field_id = isset( $_POST['field_id'] ) ? absint( $_POST['field_id'] ) : 0;
+		$field_id = isset( $_POST['field_id'] ) ? absint( wp_unslash( $_POST['field_id'] ) ) : 0;
 
 		if ( empty( $field_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Field ID is required.', 'buddyboss' ) ) );
