@@ -721,36 +721,22 @@
 
 // Reply Delete Modal
 .bb-reply-delete-modal {
+
+	&.bb-admin-settings-modal {
+		max-width: 650px;
+	}
+
 	.components-modal__content {
 		padding: 0;
 	}
 
 	&__body {
 		padding: 24px;
-
-		p {
-			margin: 0;
-			font-size: 14px;
-			color: $bb-text-color;
-		}
 	}
 
-	&__footer {
-		padding: 16px 24px;
-		display: flex;
-		justify-content: flex-end;
-		gap: 8px;
-		border-top: 1px solid $bb-border-secondary-color;
-
-		.is-destructive {
-			background-color: #dc2626;
-			border-color: #dc2626;
-			color: #fff;
-
-			&:hover:not(:disabled) {
-				background-color: #b91c1c;
-				border-color: #b91c1c;
-			}
-		}
-	}
+	&__description {
+        color: $bb-text-color;
+        font-size: 13px;
+        margin-bottom: 16px;
+    }
 }
