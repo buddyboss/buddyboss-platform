@@ -93,7 +93,13 @@ class BB_Admin_Member_Types_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss' ) ) );
 		}
 
-		$member_type_ids = bp_get_active_member_types();
+		// Include all visibility statuses so Private/Draft types appear in admin listing.
+		// The default 'publish' filter is correct for frontend but too restrictive for admin.
+		$member_type_ids = bp_get_active_member_types(
+			array(
+				'post_status' => array( 'publish', 'private', 'draft' ),
+			)
+		);
 
 		if ( empty( $member_type_ids ) ) {
 			$response = array(
