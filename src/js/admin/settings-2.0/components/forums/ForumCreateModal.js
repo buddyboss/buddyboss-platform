@@ -17,7 +17,7 @@ import {
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
-import { createForum } from '../../utils/ajax';
+import { createForum, uploadForumImage } from '../../utils/ajax';
 import { toSlug } from '../../utils/format';
 import { safeUrl } from '../../utils/sanitize';
 import { AsyncSelectField } from '../fields/AsyncSelectField';
@@ -71,6 +71,10 @@ export function ForumCreateModal( { isOpen, onClose, onCreated } ) {
 	var imageUrl = imageUrlState[ 0 ];
 	var setImageUrl = imageUrlState[ 1 ];
 
+	var isUploadingState = useState( false );
+	var isUploading = isUploadingState[ 0 ];
+	var setIsUploading = isUploadingState[ 1 ];
+
 	var isSavingState = useState( false );
 	var isSaving = isSavingState[ 0 ];
 	var setIsSaving = isSavingState[ 1 ];
@@ -79,12 +83,18 @@ export function ForumCreateModal( { isOpen, onClose, onCreated } ) {
 	var error = errorState[ 0 ];
 	var setError = errorState[ 1 ];
 
+	var fileInputRef = useRef( null );
+	var uploadAbortRef = useRef( null );
+
 	// Track mounted state.
 	var isMountedRef = useRef( true );
 	useEffect( function () {
 		isMountedRef.current = true;
 		return function () {
 			isMountedRef.current = false;
+			if ( uploadAbortRef.current ) {
+				uploadAbortRef.current.abort();
+			}
 		};
 	}, [] );
 
@@ -115,29 +125,70 @@ export function ForumCreateModal( { isOpen, onClose, onCreated } ) {
 	};
 
 	/**
-	 * Open WordPress media picker for featured image.
+	 * Trigger hidden file input for image selection.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	var handleSelectImage = function () {
-		if ( ! window.wp || ! window.wp.media ) {
+	var triggerFileInput = function () {
+		if ( fileInputRef.current ) {
+			fileInputRef.current.value = '';
+			fileInputRef.current.click();
+		}
+	};
+
+	/**
+	 * Handle file selection and upload via AJAX.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {Event} e File input change event.
+	 */
+	var handleFileSelect = function ( e ) {
+		var file = e.target.files && e.target.files[ 0 ];
+		if ( ! file ) {
 			return;
 		}
 
-		var frame = window.wp.media( {
-			title: __( 'Select Feature Image', 'buddyboss' ),
-			button: { text: __( 'Use Image', 'buddyboss' ) },
-			multiple: false,
-			library: { type: 'image' },
-		} );
+		var allowedTypes = [ 'image/jpeg', 'image/png', 'image/gif', 'image/webp' ];
+		if ( -1 === allowedTypes.indexOf( file.type ) ) {
+			setError( __( 'Invalid file type. Only JPEG, PNG, GIF, and WebP images are allowed.', 'buddyboss' ) );
+			return;
+		}
 
-		frame.on( 'select', function () {
-			var attachment = frame.state().get( 'selection' ).first().toJSON();
-			setImageId( attachment.id );
-			setImageUrl( attachment.url );
-		} );
+		// 10MB limit.
+		if ( file.size > 10 * 1024 * 1024 ) {
+			setError( __( 'File size exceeds the maximum allowed size of 10MB.', 'buddyboss' ) );
+			return;
+		}
 
-		frame.open();
+		if ( uploadAbortRef.current ) {
+			uploadAbortRef.current.abort();
+		}
+		uploadAbortRef.current = new AbortController();
+
+		setIsUploading( true );
+		setError( '' );
+
+		uploadForumImage( file, uploadAbortRef.current.signal ).then( function ( response ) {
+			if ( ! isMountedRef.current ) {
+				return;
+			}
+			setIsUploading( false );
+			if ( response.success && response.data ) {
+				setImageId( response.data.attachment_id );
+				setImageUrl( response.data.url );
+			} else {
+				setError( ( response.data && response.data.message ) || __( 'Failed to upload image.', 'buddyboss' ) );
+			}
+		} ).catch( function ( err ) {
+			if ( ! isMountedRef.current ) {
+				return;
+			}
+			setIsUploading( false );
+			if ( 'AbortError' !== err.name ) {
+				setError( __( 'An error occurred while uploading. Please try again.', 'buddyboss' ) );
+			}
+		} );
 	};
 
 	/**
@@ -209,7 +260,11 @@ export function ForumCreateModal( { isOpen, onClose, onCreated } ) {
 		setParentId( 0 );
 		setImageId( 0 );
 		setImageUrl( '' );
+		setIsUploading( false );
 		setError( '' );
+		if ( uploadAbortRef.current ) {
+			uploadAbortRef.current.abort();
+		}
 
 		// Reset TinyMCE editor content.
 		if ( window.tinymce ) {
@@ -323,14 +378,22 @@ export function ForumCreateModal( { isOpen, onClose, onCreated } ) {
 					<label className="components-base-control__label">
 						{ __( 'Feature Image (Optional)', 'buddyboss' ) }
 					</label>
+					<input
+						type="file"
+						ref={ fileInputRef }
+						accept="image/jpeg,image/png,image/gif,image/webp"
+						onChange={ handleFileSelect }
+						style={ { display: 'none' } }
+					/>
 					{ imageUrl ? (
 						<div className="bb-forum-modal__image-preview">
 							<img src={ safeUrl( imageUrl ) } alt="" />
 							<div className="bb-forum-modal__image-actions">
 								<Button
 									variant="secondary"
-									onClick={ handleSelectImage }
+									onClick={ triggerFileInput }
 									className="bb-forum-modal__replace-image"
+									disabled={ isUploading }
 								>
 									{ __( 'Replace', 'buddyboss' ) }
 								</Button>
@@ -339,6 +402,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated } ) {
 									isDestructive
 									onClick={ handleRemoveImage }
 									className="bb-forum-modal__remove-image"
+									disabled={ isUploading }
 								>
 									{ __( 'Reset', 'buddyboss' ) }
 								</Button>
@@ -347,10 +411,15 @@ export function ForumCreateModal( { isOpen, onClose, onCreated } ) {
 					) : (
 						<button
 							type="button"
-							onClick={ handleSelectImage }
-							className="bb-forum-create-modal__upload-zone"
+							onClick={ triggerFileInput }
+							className={ 'bb-forum-create-modal__upload-zone' + ( isUploading ? ' bb-forum-create-modal__upload-zone--uploading' : '' ) }
+							disabled={ isUploading }
 						>
-							<span className="bb-forum-create-modal__upload-icon"><i className="bb-icons-rl-plus"></i></span>
+							{ isUploading ? (
+								<span className="bb-forum-create-modal__upload-spinner"></span>
+							) : (
+								<span className="bb-forum-create-modal__upload-icon"><i className="bb-icons-rl-plus"></i></span>
+							) }
 						</button>
 					) }
 					<p className="bb-forum-create-modal__image-help">
@@ -371,7 +440,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated } ) {
 					variant="primary"
 					onClick={ handleCreate }
 					isBusy={ isSaving }
-					disabled={ isSaving || ! name.trim() }
+					disabled={ isSaving || isUploading || ! name.trim() }
 				>
 					{ __( 'Save', 'buddyboss' ) }
 				</Button>

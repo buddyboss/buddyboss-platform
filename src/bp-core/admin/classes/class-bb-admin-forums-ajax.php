@@ -75,6 +75,8 @@ class BB_Admin_Forums_Ajax {
 		add_action( 'wp_ajax_bb_admin_delete_forum', array( $this, 'delete_forum' ) );
 		add_action( 'wp_ajax_bb_admin_forum_bulk_action', array( $this, 'forum_bulk_action' ) );
 
+		add_action( 'wp_ajax_bb_admin_upload_forum_image', array( $this, 'upload_forum_image' ) );
+
 		// Register forum autocomplete so it works even when the Groups component
 		// is disabled. Uses priority 5 to fire before the Groups handler.
 		add_action( 'wp_ajax_bb_admin_forum_autocomplete', array( $this, 'bb_forum_autocomplete' ), 5 );
@@ -872,6 +874,50 @@ class BB_Admin_Forums_Ajax {
 		} else {
 			wp_send_json_error( array( 'message' => __( 'No forums were processed.', 'buddyboss' ) ) );
 		}
+	}
+
+	/**
+	 * Upload a forum featured image.
+	 *
+	 * Creates a WordPress attachment from the uploaded file and returns
+	 * the attachment ID and URL for use with set_post_thumbnail().
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return void
+	 */
+	public function upload_forum_image() {
+		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+
+		if ( empty( $_FILES['file'] ) ) {
+			wp_send_json_error( array( 'message' => __( 'No file uploaded.', 'buddyboss' ) ) );
+		}
+
+		// Validate MIME type.
+		$allowed_types = array( 'image/jpeg', 'image/png', 'image/gif', 'image/webp' );
+		$file_type     = ! empty( $_FILES['file']['type'] ) ? sanitize_mime_type( wp_unslash( $_FILES['file']['type'] ) ) : '';
+
+		if ( ! in_array( $file_type, $allowed_types, true ) ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid file type. Only JPEG, PNG, GIF, and WebP images are allowed.', 'buddyboss' ) ) );
+		}
+
+		// Load required WordPress upload functions.
+		require_once ABSPATH . 'wp-admin/includes/image.php';
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+		require_once ABSPATH . 'wp-admin/includes/media.php';
+
+		$attachment_id = media_handle_upload( 'file', 0 );
+
+		if ( is_wp_error( $attachment_id ) ) {
+			wp_send_json_error( array( 'message' => $attachment_id->get_error_message() ) );
+		}
+
+		wp_send_json_success(
+			array(
+				'attachment_id' => $attachment_id,
+				'url'           => wp_get_attachment_url( $attachment_id ),
+			)
+		);
 	}
 
 	/**
