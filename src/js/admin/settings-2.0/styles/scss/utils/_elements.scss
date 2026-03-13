@@ -873,12 +873,18 @@ select.bb-admin-settings__select {
         flex-direction: column;
         gap: 4px;
         margin-bottom: 16px;
+        max-height: 125px;
+        overflow: auto;
     }
 
     &__selected-item {
         display: flex;
         align-items: center;
         gap: 8px;
+
+        > .components-checkbox-control {
+            margin-bottom: 6px !important;
+        }
 
         .components-checkbox-control__input-container {
             margin: 0;
