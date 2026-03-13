@@ -241,6 +241,12 @@ class BB_Admin_Member_Types_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Profile type name is required.', 'buddyboss' ) ) );
 		}
 
+		// Validate visibility against allowlist.
+		$allowed_visibilities = array( 'publish', 'private', 'draft', 'password_protected' );
+		if ( ! in_array( $visibility, $allowed_visibilities, true ) ) {
+			$visibility = 'publish';
+		}
+
 		$post_type = bp_get_member_type_post_type();
 
 		// Determine post_status from visibility.
@@ -267,14 +273,15 @@ class BB_Admin_Member_Types_Ajax {
 		);
 
 		if ( is_wp_error( $post_id ) ) {
-			wp_send_json_error( array( 'message' => $post_id->get_error_message() ) );
+			wp_send_json_error( array( 'message' => __( 'Failed to create profile type. Please try again.', 'buddyboss' ) ) );
 		}
 
 		// Generate type key from post_name (slug), same as legacy bp_save_member_type_post_metabox_data().
 		$key  = get_post_field( 'post_name', $post_id );
 		$term = term_exists( sanitize_key( $key ), bp_get_member_type_tax_name() );
 		if ( 0 !== $term && null !== $term ) {
-			$key = $key . wp_rand( 100, 999 );
+			// Use wp_unique_post_slug() for robust collision avoidance instead of weak random suffix.
+			$key = wp_unique_post_slug( $key, $post_id, 'publish', bp_get_member_type_post_type(), 0 );
 		}
 
 		update_post_meta( $post_id, '_bp_member_type_key', sanitize_key( $key ) );
@@ -284,6 +291,15 @@ class BB_Admin_Member_Types_Ajax {
 
 		// Clear member type caches.
 		$this->bb_clear_member_type_cache( $post_id );
+
+		/**
+		 * Fires after a member type is created via Settings 2.0.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $post_id The member type post ID.
+		 */
+		do_action( 'bb_member_type_after_save', $post_id );
 
 		wp_send_json_success(
 			array(
@@ -308,7 +324,7 @@ class BB_Admin_Member_Types_Ajax {
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
-		$type_id    = isset( $_POST['type_id'] ) ? absint( $_POST['type_id'] ) : 0;
+		$type_id    = isset( $_POST['type_id'] ) ? absint( wp_unslash( $_POST['type_id'] ) ) : 0;
 		$name       = isset( $_POST['name'] ) ? wp_kses( wp_unslash( $_POST['name'] ), wp_kses_allowed_html( 'strip' ) ) : '';
 		$visibility = isset( $_POST['visibility'] ) ? sanitize_key( wp_unslash( $_POST['visibility'] ) ) : '';
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
@@ -334,6 +350,12 @@ class BB_Admin_Member_Types_Ajax {
 		}
 
 		if ( ! empty( $visibility ) ) {
+			// Validate visibility against allowlist.
+			$allowed_visibilities = array( 'publish', 'private', 'draft', 'password_protected' );
+			if ( ! in_array( $visibility, $allowed_visibilities, true ) ) {
+				$visibility = 'publish';
+			}
+
 			if ( 'private' === $visibility ) {
 				$update_args['post_status']   = 'private';
 				$update_args['post_password'] = '';
@@ -343,7 +365,14 @@ class BB_Admin_Member_Types_Ajax {
 			} elseif ( 'password_protected' === $visibility ) {
 				$update_args['post_status'] = 'publish';
 				// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified above.
-				$update_args['post_password'] = isset( $_POST['post_password'] ) ? sanitize_text_field( wp_unslash( $_POST['post_password'] ) ) : '';
+				$post_password = isset( $_POST['post_password'] ) ? sanitize_text_field( wp_unslash( $_POST['post_password'] ) ) : '';
+
+				// Preserve existing password when not provided in POST data.
+				if ( empty( $post_password ) && ! empty( $post->post_password ) ) {
+					$post_password = $post->post_password;
+				}
+
+				$update_args['post_password'] = $post_password;
 			} else {
 				$update_args['post_status']   = 'publish';
 				$update_args['post_password'] = '';
@@ -354,7 +383,7 @@ class BB_Admin_Member_Types_Ajax {
 		if ( $needs_update ) {
 			$result = wp_update_post( $update_args, true );
 			if ( is_wp_error( $result ) ) {
-				wp_send_json_error( array( 'message' => $result->get_error_message() ) );
+				wp_send_json_error( array( 'message' => __( 'Failed to update profile type. Please try again.', 'buddyboss' ) ) );
 			}
 		}
 
@@ -363,6 +392,9 @@ class BB_Admin_Member_Types_Ajax {
 
 		// Clear member type caches.
 		$this->bb_clear_member_type_cache( $type_id );
+
+		/** This action is documented in class-bb-admin-member-types-ajax.php */
+		do_action( 'bb_member_type_after_save', $type_id );
 
 		wp_send_json_success(
 			array(
@@ -387,7 +419,7 @@ class BB_Admin_Member_Types_Ajax {
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
-		$type_id = isset( $_POST['type_id'] ) ? absint( $_POST['type_id'] ) : 0;
+		$type_id = isset( $_POST['type_id'] ) ? absint( wp_unslash( $_POST['type_id'] ) ) : 0;
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $type_id ) ) {
@@ -493,10 +525,16 @@ class BB_Admin_Member_Types_Ajax {
 			}
 		}
 
-		// Redirections.
-		$login_redirection         = isset( $_POST['login_redirection'] ) ? sanitize_key( wp_unslash( $_POST['login_redirection'] ) ) : '';
+		// Redirections — values are '' (default), '0' (custom URL), or numeric page ID.
+		$login_redirection         = isset( $_POST['login_redirection'] ) ? sanitize_text_field( wp_unslash( $_POST['login_redirection'] ) ) : '';
+		if ( '' !== $login_redirection && '0' !== $login_redirection && ! is_numeric( $login_redirection ) ) {
+			$login_redirection = '';
+		}
 		$custom_login_redirection  = isset( $_POST['custom_login_redirection'] ) ? esc_url_raw( wp_unslash( $_POST['custom_login_redirection'] ) ) : '';
-		$logout_redirection        = isset( $_POST['logout_redirection'] ) ? sanitize_key( wp_unslash( $_POST['logout_redirection'] ) ) : '';
+		$logout_redirection        = isset( $_POST['logout_redirection'] ) ? sanitize_text_field( wp_unslash( $_POST['logout_redirection'] ) ) : '';
+		if ( '' !== $logout_redirection && '0' !== $logout_redirection && ! is_numeric( $logout_redirection ) ) {
+			$logout_redirection = '';
+		}
 		$custom_logout_redirection = isset( $_POST['custom_logout_redirection'] ) ? esc_url_raw( wp_unslash( $_POST['custom_logout_redirection'] ) ) : '';
 
 		// Messaging without connection.
@@ -551,14 +589,26 @@ class BB_Admin_Member_Types_Ajax {
 			$current_user_role = isset( $current_user->roles[0] ) ? $current_user->roles[0] : '';
 
 			$bp_prevent_data_update = false;
+			$get_user_ids           = array();
 
 			if ( isset( $type_term->term_id ) ) {
-				$get_user_ids = $wpdb->get_col(
-					$wpdb->prepare(
-						"SELECT u.ID FROM {$wpdb->users} u INNER JOIN {$wpdb->term_relationships} r ON u.ID = r.object_id WHERE u.user_status = 0 AND r.term_taxonomy_id = %d",
-						$type_term->term_id
-					)
-				);
+				// Batch-fetch user IDs in chunks to avoid unbounded memory usage on large sites.
+				$batch_size   = 500;
+				$offset       = 0;
+				$get_user_ids = array();
+				do {
+					$batch = $wpdb->get_col(
+						$wpdb->prepare(
+							"SELECT u.ID FROM {$wpdb->users} u INNER JOIN {$wpdb->term_relationships} r ON u.ID = r.object_id WHERE u.user_status = 0 AND r.term_taxonomy_id = %d LIMIT %d OFFSET %d",
+							$type_term->term_taxonomy_id,
+							$batch_size,
+							$offset
+						)
+					);
+
+					$get_user_ids = array_merge( $get_user_ids, $batch );
+					$offset      += $batch_size;
+				} while ( count( $batch ) === $batch_size );
 
 				if ( ! empty( $get_user_ids ) && in_array( (string) get_current_user_id(), $get_user_ids, true ) ) {
 					$bp_prevent_data_update = true;
@@ -566,7 +616,7 @@ class BB_Admin_Member_Types_Ajax {
 			}
 
 			if ( true === $bp_prevent_data_update ) {
-				if ( isset( $old_wp_roles[0] ) && 'administrator' === $old_wp_roles[0] ) {
+				if ( is_array( $old_wp_roles ) && in_array( 'administrator', $old_wp_roles, true ) ) {
 					if ( ! in_array( $current_user_role, $wp_roles, true ) ) {
 						$bp_error_message_string = __( 'As your profile is currently assigned to this profile type, you cannot change its associated WordPress role. Changing this setting would remove your Administrator role and lock you out of the WordPress admin. You first need to remove yourself from this profile type and then you can come back to update the associated WordPress role.', 'buddyboss' );
 
@@ -592,13 +642,11 @@ class BB_Admin_Member_Types_Ajax {
 				$selected_roles = get_post_meta( $post_id, '_bp_member_type_wp_roles', true );
 
 				if ( isset( $selected_roles[0] ) && 'none' !== $selected_roles[0] ) {
-					if ( isset( $get_user_ids ) && ! empty( $get_user_ids ) ) {
+					if ( ! empty( $get_user_ids ) ) {
 						foreach ( $get_user_ids as $single_user ) {
 							$bp_user = new WP_User( $single_user );
-							foreach ( $bp_user->roles as $role ) {
-								$bp_user->remove_role( $role );
-							}
-							$bp_user->add_role( $selected_roles[0] );
+							// Use set_role() for atomic role swap instead of remove+add.
+							$bp_user->set_role( $selected_roles[0] );
 						}
 					}
 				}

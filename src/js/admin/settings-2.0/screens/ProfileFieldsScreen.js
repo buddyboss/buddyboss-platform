@@ -113,6 +113,9 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 	// AbortController ref for reorder requests.
 	var reorderAbortRef = useRef( null );
 
+	// AbortController ref for delete requests.
+	var deleteAbortRef = useRef( null );
+
 	/**
 	 * Load field groups data.
 	 *
@@ -153,6 +156,9 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 			}
 			if ( reorderAbortRef.current ) {
 				reorderAbortRef.current.abort();
+			}
+			if ( deleteAbortRef.current ) {
+				deleteAbortRef.current.abort();
 			}
 		};
 	}, [ loadFieldGroups ] );
@@ -208,7 +214,13 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 	function handleDeleteField( fieldId ) {
 		setDeleteFieldData( null );
 
-		deleteProfileField( fieldId )
+		// Cancel any stale delete request.
+		if ( deleteAbortRef.current ) {
+			deleteAbortRef.current.abort();
+		}
+		deleteAbortRef.current = new AbortController();
+
+		deleteProfileField( fieldId, { signal: deleteAbortRef.current.signal } )
 			.then( function ( response ) {
 				if ( response.success ) {
 					setToast( { status: 'success', message: response.data.message || __( 'Field deleted.', 'buddyboss' ) } );
@@ -218,6 +230,9 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 				}
 			} )
 			.catch( function ( error ) {
+				if ( 'AbortError' === error.name ) {
+					return;
+				}
 				setToast( { status: 'error', message: error.message || __( 'Failed to delete field.', 'buddyboss' ) } );
 			} );
 	}

@@ -9,7 +9,7 @@
 
 import { useState, useEffect, useCallback, useRef, useMemo } from '@wordpress/element';
 import { ToggleControl, SelectControl, Spinner } from '@wordpress/components';
-import { __ } from '@wordpress/i18n';
+import { __, _n, sprintf } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { getMemberTypes, deleteMemberType, getPlatformSettings, savePlatformSetting } from '../utils/ajax';
 import { sanitizeHtml } from '../utils/sanitize';
@@ -458,7 +458,7 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 						<ul className="bb-admin-profile-types__list">
 							{ memberTypes.map( function ( type ) {
 								var badge = getVisibilityBadge( type );
-								var countText = type.members_count + ' ' + ( 1 === type.members_count ? __( 'member', 'buddyboss' ) : __( 'members', 'buddyboss' ) );
+								var countText = sprintf( _n( '%d member', '%d members', type.members_count, 'buddyboss' ), type.members_count );
 
 								return (
 									<li key={ type.id } className="bb-admin-profile-types__list-item">

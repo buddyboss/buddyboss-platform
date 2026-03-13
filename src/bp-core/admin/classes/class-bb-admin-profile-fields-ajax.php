@@ -75,6 +75,10 @@ class BB_Admin_Profile_Fields_Ajax {
 	public function get_field_groups() {
 		$this->bb_verify_request();
 
+		if ( ! bp_is_active( 'xprofile' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss' ) ) );
+		}
+
 		$groups = bp_xprofile_get_groups(
 			array(
 				'fetch_fields'                   => true,
@@ -167,6 +171,10 @@ class BB_Admin_Profile_Fields_Ajax {
 	public function create_field_group() {
 		$this->bb_verify_request();
 
+		if ( ! bp_is_active( 'xprofile' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss' ) ) );
+		}
+
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
 		$name              = isset( $_POST['name'] ) ? wp_kses( wp_unslash( $_POST['name'] ), wp_kses_allowed_html( 'strip' ) ) : '';
 		$description       = isset( $_POST['description'] ) ? sanitize_textarea_field( wp_unslash( $_POST['description'] ) ) : '';
@@ -222,6 +230,10 @@ class BB_Admin_Profile_Fields_Ajax {
 	 */
 	public function update_field_group() {
 		$this->bb_verify_request();
+
+		if ( ! bp_is_active( 'xprofile' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss' ) ) );
+		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
 		$group_id          = isset( $_POST['group_id'] ) ? absint( $_POST['group_id'] ) : 0;
@@ -289,6 +301,10 @@ class BB_Admin_Profile_Fields_Ajax {
 	public function delete_field_group() {
 		$this->bb_verify_request();
 
+		if ( ! bp_is_active( 'xprofile' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss' ) ) );
+		}
+
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
 		$group_id = isset( $_POST['group_id'] ) ? absint( $_POST['group_id'] ) : 0;
 
@@ -336,13 +352,17 @@ class BB_Admin_Profile_Fields_Ajax {
 	public function save_profile_field() {
 		$this->bb_verify_request();
 
+		if ( ! bp_is_active( 'xprofile' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss' ) ) );
+		}
+
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
 		$field_id    = isset( $_POST['field_id'] ) ? absint( $_POST['field_id'] ) : 0;
 		$group_id    = isset( $_POST['group_id'] ) ? absint( $_POST['group_id'] ) : 0;
 		$name        = isset( $_POST['name'] ) ? wp_kses( wp_unslash( $_POST['name'] ), wp_kses_allowed_html( 'strip' ) ) : '';
 		$type        = isset( $_POST['type'] ) ? sanitize_key( wp_unslash( $_POST['type'] ) ) : '';
 		$description = isset( $_POST['description'] ) ? sanitize_textarea_field( wp_unslash( $_POST['description'] ) ) : '';
-		$is_required = isset( $_POST['is_required'] ) ? absint( $_POST['is_required'] ) : 0;
+		$is_required = isset( $_POST['is_required'] ) ? min( 1, absint( wp_unslash( $_POST['is_required'] ) ) ) : 0;
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $group_id ) ) {
@@ -480,6 +500,10 @@ class BB_Admin_Profile_Fields_Ajax {
 	public function delete_profile_field() {
 		$this->bb_verify_request();
 
+		if ( ! bp_is_active( 'xprofile' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss' ) ) );
+		}
+
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
 		$field_id = isset( $_POST['field_id'] ) ? absint( $_POST['field_id'] ) : 0;
 
@@ -530,6 +554,10 @@ class BB_Admin_Profile_Fields_Ajax {
 		global $wpdb;
 
 		$this->bb_verify_request();
+
+		if ( ! bp_is_active( 'xprofile' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss' ) ) );
+		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
 		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized below per item.
@@ -891,10 +919,10 @@ class BB_Admin_Profile_Fields_Ajax {
 	 */
 	private function bb_save_field_meta( $field_id ) {
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
-		$visibility              = isset( $_POST['visibility'] ) ? sanitize_key( $_POST['visibility'] ) : '';
-		$allow_custom_visibility = isset( $_POST['allow_custom_visibility'] ) ? sanitize_key( $_POST['allow_custom_visibility'] ) : '';
+		$visibility              = isset( $_POST['visibility'] ) ? sanitize_key( wp_unslash( $_POST['visibility'] ) ) : '';
+		$allow_custom_visibility = isset( $_POST['allow_custom_visibility'] ) ? sanitize_key( wp_unslash( $_POST['allow_custom_visibility'] ) ) : '';
 		$alternate_name          = isset( $_POST['alternate_name'] ) ? sanitize_text_field( wp_unslash( $_POST['alternate_name'] ) ) : '';
-		$signup_position         = isset( $_POST['signup_position'] ) ? absint( $_POST['signup_position'] ) : 0;
+		$signup_position         = isset( $_POST['signup_position'] ) ? absint( wp_unslash( $_POST['signup_position'] ) ) : 0;
 		$placeholder_text        = isset( $_POST['placeholder'] ) ? sanitize_text_field( wp_unslash( $_POST['placeholder'] ) ) : '';
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
@@ -922,7 +950,11 @@ class BB_Admin_Profile_Fields_Ajax {
 		}
 
 		// Placeholder text (new in Settings 2.0).
-		bp_xprofile_update_field_meta( $field_id, '_placeholder_text', $placeholder_text );
+		if ( ! empty( $placeholder_text ) ) {
+			bp_xprofile_update_field_meta( $field_id, '_placeholder_text', $placeholder_text );
+		} else {
+			bp_xprofile_delete_meta( $field_id, 'field', '_placeholder_text' );
+		}
 
 		// Gender option order (matching legacy bp-xprofile-admin.php:611-612).
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
@@ -941,7 +973,7 @@ class BB_Admin_Profile_Fields_Ajax {
 	 */
 	private function bb_save_field_member_types( $field_id ) {
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
-		$has_member_types = isset( $_POST['has_member_types'] ) ? absint( $_POST['has_member_types'] ) : 0;
+		$has_member_types = isset( $_POST['has_member_types'] ) ? absint( wp_unslash( $_POST['has_member_types'] ) ) : 0;
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( $has_member_types ) {
@@ -967,13 +999,13 @@ class BB_Admin_Profile_Fields_Ajax {
 
 			$field->set_member_types( $member_types );
 		} else {
-			// Mode is 'all' — remove all member type restrictions.
+			// Mode is 'all' — remove all member type restrictions so the field is
+			// available to every type, including types registered in the future.
+			// Passing an empty array to set_member_types() deletes all meta rows,
+			// which BuddyPress interprets as "unrestricted" (same as legacy behavior).
 			$field = xprofile_get_field( $field_id, null, false );
 			if ( $field && method_exists( $field, 'set_member_types' ) ) {
-				// Pass all registered types + null to mark as unrestricted.
-				$all_types   = array_values( bp_get_member_types() );
-				$all_types[] = 'null';
-				$field->set_member_types( $all_types );
+				$field->set_member_types( array() );
 			}
 		}
 	}

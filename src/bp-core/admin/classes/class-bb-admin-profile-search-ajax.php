@@ -360,6 +360,11 @@ class BB_Admin_Profile_Search_Ajax {
 			}
 		}
 
+		// Validate that no fields were lost during reorder.
+		if ( count( $new_codes ) !== count( $codes ) ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid field order — field count mismatch.', 'buddyboss' ) ) );
+		}
+
 		$meta['field_code']  = $new_codes;
 		$meta['field_label'] = $new_labels;
 		$meta['field_desc']  = $new_descs;

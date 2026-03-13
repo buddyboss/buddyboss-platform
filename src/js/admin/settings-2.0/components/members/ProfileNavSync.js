@@ -59,7 +59,12 @@ export function useProfileNavSync( {
 		}
 
 		// Compute hidden slugs (toggled off = value 0).
-		var parsed = JSON.parse( navOrderKey );
+		var parsed;
+		try {
+			parsed = JSON.parse( navOrderKey );
+		} catch ( e ) {
+			return;
+		}
 		var hiddenSlugs = [];
 		var keys = Object.keys( parsed );
 		for ( var i = 0; i < keys.length; i++ ) {

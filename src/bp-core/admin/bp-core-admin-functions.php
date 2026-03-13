@@ -1743,6 +1743,22 @@ function bp_delete_member_type( $post_id ) {
 		// Removes a profile type term relation with users from the database.
 		$wpdb->delete( $wpdb->term_relationships, array( 'term_taxonomy_id' => $type_term->term_taxonomy_id ) );
 	}
+
+	// Clean up xprofile field member_type meta referencing this deleted type.
+	if ( ! empty( $member_type_name ) && bp_is_active( 'xprofile' ) ) {
+		$bp = buddypress();
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- One-time cleanup on delete.
+		$wpdb->delete(
+			$bp->profile->table_name_meta,
+			array(
+				'object_type' => 'field',
+				'meta_key'    => 'member_type',
+				'meta_value'  => $member_type_name,
+			),
+			array( '%s', '%s', '%s' )
+		);
+	}
 }
 
 // delete post.
