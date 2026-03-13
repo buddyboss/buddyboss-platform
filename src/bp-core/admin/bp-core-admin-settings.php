@@ -1626,6 +1626,7 @@ function bb_get_published_pages( $for_json = false ) {
 		$pages = get_pages(
 			array(
 				'post_status' => 'publish',
+				'number'      => 500,
 			)
 		);
 

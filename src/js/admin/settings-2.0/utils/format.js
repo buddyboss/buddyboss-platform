@@ -16,3 +16,20 @@
 export function formatNumber( num ) {
 	return num.toString().replace( /\B(?=(\d{3})+(?!\d))/g, ',' );
 }
+
+/**
+ * Sanitize a string into a URL-friendly slug.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {string} str Input string.
+ * @returns {string} Slug.
+ */
+export function toSlug( str ) {
+	return str
+		.toLowerCase()
+		.replace( /[^\w\u0080-\uFFFF\s-]/g, '' )
+		.replace( /[\s]+/g, '-' )
+		.replace( /-+/g, '-' )
+		.replace( /^-|-$/g, '' );
+}

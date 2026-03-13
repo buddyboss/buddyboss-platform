@@ -5,7 +5,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { lazy, Suspense, useState, useEffect } from '@wordpress/element';
+import { lazy, Suspense, useState, useEffect, useRef } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import { Button } from '@wordpress/components';
 import { getCachedFeatures, invalidateFeaturesCache, updateFeatureInCache } from './utils/ajax';
@@ -100,6 +100,10 @@ export function Router({ currentRoute, onNavigate }) {
 	const [features, setFeatures] = useState(null);
 	const [isCheckingFeatures, setIsCheckingFeatures] = useState(true);
 
+	// Track whether features have been loaded at least once so subsequent
+	// route changes do not flash a loading spinner (which unmounts children).
+	const featuresLoadedRef = useRef(false);
+
 	// Parse route
 	const routeParts = currentRoute.split('/').filter(Boolean);
 	const mainRoute = routeParts[0] || 'dashboard';
@@ -107,12 +111,18 @@ export function Router({ currentRoute, onNavigate }) {
 	// Check if current route needs feature verification
 	const needsFeatureCheck = 'settings' === mainRoute || 'activity' === mainRoute || 'groups' === mainRoute || 'forums' === mainRoute;
 
-	// Load features on mount AND when navigating to routes that need feature check
+	// Load features on mount AND when navigating to routes that need feature check.
+	// Only show the loading spinner on the initial load (before features are fetched
+	// for the first time). On subsequent route changes we still refresh the features
+	// list, but keep FeatureSettingsScreen mounted to avoid an unmount/remount cycle.
 	useEffect(() => {
 		if (needsFeatureCheck) {
-			setIsCheckingFeatures(true);
+			if (!featuresLoadedRef.current) {
+				setIsCheckingFeatures(true);
+			}
 			// Always get fresh data from cache (which is updated by SettingsScreen)
 			getCachedFeatures().then((data) => {
+				featuresLoadedRef.current = true;
 				setFeatures(data);
 				setIsCheckingFeatures(false);
 			}).catch(() => {
@@ -126,7 +136,12 @@ export function Router({ currentRoute, onNavigate }) {
 	// Update URL with query parameters instead of hash.
 	// Format: admin.php?page=bb-settings&tab=feature&panel=panel_id
 	// Hierarchy: Feature (tab) → Side Panel (panel) → Sections → Fields
+	// Note: routeParts/mainRoute are derived from currentRoute, so only
+	// currentRoute is needed in the dependency array.
 	useEffect(() => {
+		var parts = currentRoute.split('/').filter(Boolean);
+		var main = parts[0] || 'dashboard';
+
 		const urlParams = new URLSearchParams(window.location.search);
 		const currentTab = urlParams.get('tab');
 		const currentPanel = urlParams.get('panel');
@@ -140,10 +155,10 @@ export function Router({ currentRoute, onNavigate }) {
 				const cleanUrl = window.location.pathname + (paramString ? '?' + paramString : '');
 				window.history.replaceState({}, '', cleanUrl);
 			}
-		} else if ( 'settings' === mainRoute && routeParts[1] ) {
+		} else if ( 'settings' === main && parts[1] ) {
 			// Update URL with tab parameter for feature settings.
-			const newTab = routeParts[1];
-			const newPanel = routeParts[2] || null;
+			const newTab = parts[1];
+			const newPanel = parts[2] || null;
 
 			if (currentTab !== newTab || currentPanel !== newPanel || window.location.hash) {
 				urlParams.set('tab', newTab);
@@ -157,7 +172,7 @@ export function Router({ currentRoute, onNavigate }) {
 				window.history.replaceState({}, '', newUrl);
 			}
 		}
-	}, [currentRoute, mainRoute, routeParts]);
+	}, [currentRoute]);
 
 	// Helper to get feature label
 	const getFeatureLabel = (featureId) => {

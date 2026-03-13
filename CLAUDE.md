@@ -47,6 +47,11 @@ composer test-ld
 
 # Run specific test file
 vendor/bin/phpunit tests/phpunit/testcases/path/to/test.php
+
+# JavaScript tests (Jest)
+npm test
+npm run test:watch
+npm run test:coverage
 ```
 
 ### Linting & Code Quality
@@ -78,21 +83,18 @@ composer lint
 ### Grunt Tasks
 
 ```bash
-# Build production release
-grunt build
-
-# Build CSS from SASS
-grunt sass
-
-# Generate RTL CSS
-grunt rtlcss
-
-# Minify assets
-grunt uglify
-grunt cssmin
-
-# Watch for changes
-grunt watch
+grunt src                            # Full source build (SCSS, RTL, minify, lint, i18n)
+grunt build                          # Production release build (zip)
+grunt release                        # Combines src + build
+grunt webpack                        # Build blocks + admin JS
+grunt sass                           # Build CSS from SASS
+grunt rtlcss                         # Generate RTL CSS
+grunt uglify                         # Minify JavaScript
+grunt cssmin                         # Minify CSS
+grunt makepot                        # Generate POT translation file
+grunt watch                          # Watch for changes
+grunt pre-commit                     # Pre-commit checks
+grunt test                           # Run PHPUnit tests
 ```
 
 ## Architecture Overview
@@ -103,6 +105,7 @@ The plugin is organized into **components** under `src/`:
 
 - **`bp-core/`** - Core framework, admin infrastructure, hooks, template loader
 - **`bp-activity/`** - Activity streams, posts, comments
+- **`bp-blogs/`** - Blog/networking integration (multisite)
 - **`bp-groups/`** - Groups, group types, group hierarchies
 - **`bp-members/`** - Member profiles and directories
 - **`bp-messages/`** - Private messaging
@@ -117,6 +120,9 @@ The plugin is organized into **components** under `src/`:
 - **`bp-moderation/`** - Content moderation
 - **`bp-performance/`** - Performance optimizations
 - **`bp-settings/`** - User settings
+- **`bp-invites/`** - Invitation management
+- **`bp-help/`** - Help/documentation component
+- **`bp-templates/`** - Template handling (bp-nouveau)
 - **`bp-integrations/`** - Third-party integrations
 
 Each component typically contains:
@@ -130,7 +136,7 @@ Each component typically contains:
 
 ### Feature-Based Architecture (Settings 2.0)
 
-The plugin is transitioning from the legacy WordPress Settings API to a **feature-based architecture** with a React admin UI. This is the primary enhancement on the `bb-backend-setting` branch.
+The plugin is transitioning from the legacy WordPress Settings API to a **feature-based architecture** with a React admin UI.
 
 #### Hierarchy
 
@@ -155,11 +161,21 @@ Feature -> Side Panel -> Section -> Field
 | `src/bp-core/admin/bb-admin-settings-init.php` | Bootstrap: loads classes, triggers `bb_register_features` hooks. Runs at `bp_loaded` priority 4. |
 | `src/bp-core/admin/bb-admin-settings-page.php` | Registers admin menu page (`bb-settings`), enqueues React app and CSS. |
 | `src/bp-core/admin/bb-admin-settings-features.php` | Core feature registrations (hook into `bb_register_features`). |
+| `src/bp-core/admin/bb-admin-settings-activity.php` | Activity feature settings registration. |
+| `src/bp-core/admin/bb-admin-settings-groups.php` | Groups feature settings registration. |
+| `src/bp-core/admin/bb-admin-settings-media.php` | Media feature settings registration. |
+| `src/bp-core/admin/bb-admin-settings-messages.php` | Messages feature settings registration. |
+
+Per-feature settings are further decomposed into sub-files under `src/bp-core/admin/settings/{feature}/`:
+- `callbacks.php` — sanitize/validate callbacks
+- `settings-*.php` — side panel field registrations (e.g., `settings-access-control.php`, `settings-comments.php`)
+- `meta-fields-*.php` — meta field registrations
 
 #### Facade Functions (in `bp-core-functions.php`)
 
 ```php
 bb_feature_registry()                                           // Get registry singleton
+bb_feature_loader()                                             // Get loader singleton
 bb_register_feature( $feature_id, $args )                       // Register a feature
 bb_register_side_panel( $feature_id, $side_panel_id, $args )    // Register a side panel
 bb_register_feature_section( $feature_id, $panel_id, $section_id, $args )
@@ -235,15 +251,22 @@ src/js/admin/settings-2.0/
         Toast.js                -- Notification toast
         HelpIcon.js             -- Contextual help trigger
         HelpSliderModal.js      -- Slide-in help panel
+        access-control/         -- Access control field component
+        activity/sharing/       -- SharePlatformsField
+        activity/topics/topic-list/ -- TopicDeleteModal, TopicItem, TopicListField, TopicModal
+        common/                 -- BBIcon, RegisteredMetaField, RichTextEditor
+        fields/                 -- Specialized field components (13+):
+                                   AsyncSelectField, AvatarCropModal, CheckboxListField,
+                                   DimensionsField, DocumentExtensionsField, ExtensionListField,
+                                   ImageRadioField, ImageUploadField, InputButtonField,
+                                   MimeCheckerPanel, StatusCheckField
+        groups/                 -- GroupCreateModal, GroupEditModal, GroupMembersTab,
+                                   GroupNavSync, GroupTopicsTab
+        modals/                 -- ConfirmToggleModal, GroupTypeModal
         reaction/               -- Reaction-specific components
-            index.js
-            ReactionModeField.js
-            ReactionMigration.js
-            ReactionNotice.js
-            MigrationModal.js
-            ReactionInfo.js
-            applyReactionPostSave.js
-            useReactionCallbacks.js
+            index.js, ReactionModeField.js, ReactionMigration.js,
+            ReactionNotice.js, MigrationModal.js, ReactionInfo.js,
+            applyReactionPostSave.js, useReactionCallbacks.js
     screens/
         SettingsScreen.js       -- Features grid with filtering/toggling
         FeatureSettingsScreen.js -- Feature settings with auto-save
@@ -251,9 +274,15 @@ src/js/admin/settings-2.0/
         featureLists.js         -- Feature list definitions
         ActivityListScreen.js   -- Activity sub-features (lazy loaded)
         GroupsListScreen.js     -- Groups sub-features (lazy loaded)
+        GroupTypeScreen.js      -- Group type management
     utils/
         ajax.js                 -- AJAX helpers (ajaxFetch, getCachedFeatures, toggleFeature, etc.)
+        constants.js            -- Shared constants
+        feature.js              -- Feature helper utilities
         featureCache.js         -- In-memory feature data cache
+        format.js               -- Formatting utilities
+        mimeChecker.js          -- MIME type validation
+        sanitize.js             -- DOMPurify-based HTML sanitizer (sanitizeHtml)
         url.js                  -- URL to route conversion helpers
     styles/scss/
         admin.scss              -- Main entry SCSS
@@ -272,27 +301,24 @@ src/js/admin/settings-2.0/
 **Global JS data:** `window.bbAdminData` (set via `wp_localize_script` in `bb-admin-settings-page.php`):
 - `ajaxUrl`, `ajaxNonce`, `apiUrl`, `nonce`, `logoUrl`, `currentUser`, `debug`
 
-#### Known Issues and Technical Debt (from code review)
+#### Known Issues and Technical Debt
 
 **Security — all resolved:**
-- Help content and all raw HTML rendering uses `sanitizeHtml()` whitelist-based sanitizer (`utils/sanitize.js`). Verified at: `FeatureSettingsScreen.js:503`, `MigrationModal.js:319`, `SettingsForm.js:353/610/656/665`, `ActivityListScreen.js:776`, `CheckboxListField.js:88`.
-- All field types have default sanitizers in `bb_get_default_sanitize_callback()` (`class-bb-feature-registry.php:1405-1433`). AJAX save handler also has type-based fallback sanitization (`class-bb-admin-settings-ajax.php:746-753`).
-- Reaction mode sanitize_callback correctly defaults to `'sanitize_text_field'` (not empty string).
+- All raw HTML rendering uses `sanitizeHtml()` DOMPurify-based sanitizer (`utils/sanitize.js`).
+- AJAX save handler has per-field `sanitize_callback` + type-aware fallback (`sanitize_text_field` for strings, `map_deep` for arrays).
+- Debug data in `wp_localize_script` is gated behind `WP_DEBUG` check.
+- Path traversal in Icon Registry resolved via `realpath()` validation + plugin directory whitelist.
 
-**Performance — mostly resolved:**
-- Search index transient locking mechanism implemented (`class-bb-admin-settings-ajax.php:883-900`).
-- N+1 `get_option()` resolved via `bb_prime_option_caches()` batch loader (`class-bb-admin-settings-ajax.php:282-296`).
-- Path traversal risk in Icon Registry path resolution (`class-bb-icon-registry.php:172-176`) — still open.
+**Performance — all resolved:**
+- Search index transient locking prevents thundering herd on concurrent rebuilds.
+- N+1 `get_option()` resolved via `bb_prime_option_caches()` batch loader.
 
-**Code quality:**
-- `ajaxFetch` function duplicated 3x (should import from `utils/ajax.js`)
-- Sort-by-order callback duplicated 7x across PHP (extract to reusable method)
-- `SettingsForm.js` is large but complex field types (`ReactionModeField`, `TopicListField`) are already extracted to dedicated components
-- `BBIcon` component defined twice (extract to shared component)
-- 34 unresolved `[BBVERSION]` placeholders in `class-bb-feature-registry.php`
-- Hardcoded notification badge "2" in `Header.js:181`
-- Reactions `bb-feature-config.php` mixes configuration with runtime loading (move hooks to `loader.php`)
-- Debug data (feature IDs) exposed in `wp_localize_script` -- gate behind `WP_DEBUG`
+**Code quality — mostly resolved:**
+- `ajaxFetch` consolidated to single definition in `utils/ajax.js` (properly imported everywhere).
+- Sort-by-order consolidated to single `bb_sort_by_order()` function in `bp-core-functions.php`.
+- `BBIcon` consolidated to single definition in `components/common/BBIcon.js`.
+- `SettingsForm.js` is large but complex field types are extracted to dedicated components in `components/fields/`.
+- `[BBVERSION]` placeholders remain throughout new code — these are replaced automatically during the Grunt release build process (this is by design, not a bug).
 
 #### How Pro Extends Settings 2.0
 
@@ -307,9 +333,13 @@ Pro hooks into `bb_after_register_features` to:
 1. **`bp-loader.php`** (root) - Defines constants, loads Composer autoload
 2. **`src/bp-loader.php`** - Compatibility checks, textdomain setup
 3. **`src/class-buddypress.php`** - Main singleton (`buddypress()`)
-4. Components load via `bp-{component}-loader.php` files
-5. Admin loads via `bp-core-admin.php` → `class-bp-admin.php`
-6. Settings 2.0 initializes via `bb-admin-settings-init.php` (at `bp_loaded` priority 4)
+4. `bp_loaded` priority 2: `bp_setup_components` — component constructors register
+5. `bp_loaded` priority 4: `bp_include` — component `includes()` methods fire, loading functions/classes
+6. `bp_loaded` priority 4: `bb_admin_settings_init()` — loads Settings 2.0 classes and feature settings files
+7. `bp_loaded` priority 5: `BB_Feature_Registry::bb_init()` — fires `bb_register_features` hook, registering all features/panels/fields
+8. Admin menu loads via `bp-core-admin.php` → `class-bp-admin.php`
+
+**Important:** By the time `bb_register_features` fires (priority 5), all component functions are already loaded (priority 4). Feature registration code can safely call component functions like `bb_notification_get_digest_cron_times()` without `function_exists()` checks, as long as the feature guards against its component being inactive (e.g., early-return when `! bp_is_active( 'messages' )`).
 
 ### ReadyLaunch Frontend
 
@@ -737,11 +767,16 @@ $(document).on('click', '.my-button', (e) => {
 - `src/bp-core/admin/bb-admin-settings-init.php` - Settings 2.0 bootstrap
 - `src/bp-core/admin/bb-admin-settings-page.php` - Admin page and asset enqueuing
 - `src/bp-core/admin/bb-admin-settings-features.php` - Core feature registrations
-- `src/bp-core/classes/class-bb-feature-registry.php` - Feature registry (1367 lines)
+- `src/bp-core/admin/bb-admin-settings-activity.php` - Activity feature settings
+- `src/bp-core/admin/bb-admin-settings-groups.php` - Groups feature settings
+- `src/bp-core/admin/bb-admin-settings-media.php` - Media feature settings
+- `src/bp-core/admin/bb-admin-settings-messages.php` - Messages feature settings
+- `src/bp-core/classes/class-bb-feature-registry.php` - Feature registry
 - `src/bp-core/classes/class-bb-feature-loader.php` - Conditional feature loader
 - `src/bp-core/classes/class-bb-feature-autoloader.php` - Feature class autoloader
 - `src/bp-core/classes/class-bb-icon-registry.php` - Icon registry
-- `src/bp-core/admin/classes/class-bb-admin-settings-ajax.php` - AJAX handler (849 lines)
+- `src/bp-core/admin/classes/class-bb-admin-settings-ajax.php` - AJAX handler
+- `src/bp-core/admin/classes/class-bb-admin-meta-field-registry.php` - Admin meta field registry
 - `src/bb-features/community/reactions/bb-feature-config.php` - Reactions feature config (reference implementation)
 
 ### ReadyLaunch JavaScript
@@ -1554,7 +1589,6 @@ define( 'SCRIPT_DEBUG', true );
 - [ ] Run `composer test` - All PHPUnit tests pass
 - [ ] Test with `WP_DEBUG` enabled - No PHP warnings/notices
 - [ ] Test in ReadyLaunch mode if applicable
-- [ ] Test with legacy mode (bp-legacy templates)
 - [ ] Verify database queries are using `$wpdb->prepare()`
 - [ ] Verify all output is properly escaped
 - [ ] Verify all input is sanitized

@@ -534,6 +534,13 @@
 		}
 	}
 
+	&__loading {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 48px 24px;
+	}
+
 	&__error {
 		color: $bb-error-color;
 		margin: 0;
@@ -558,38 +565,13 @@
 
 // Tag Delete Modal
 .bb-tag-delete-modal {
-	.components-modal__content {
-		padding: 0;
+
+	&.bb-admin-settings-modal {
+		max-width: 650px;
 	}
-
-	&__body {
-		padding: 24px;
-
-		p {
-			margin: 0;
-			font-size: 14px;
-			color: $bb-text-color;
-		}
-	}
-
-	&__footer {
-		padding: 16px 24px;
-		display: flex;
-		justify-content: flex-end;
-		gap: 8px;
-		border-top: 1px solid $bb-border-secondary-color;
-
-		.is-destructive {
-			color: $bb-text-inverse-color;
-			background: $bb-background-danger-secondary-color;
-			border: none;
-			box-shadow: none;
-			border-radius: $bb-border-radius-lg;
-
-			&:hover:not(:disabled) {
-				background: $bb-background-danger-secondary-hover-color;
-				color: $bb-text-inverse-color;
-			}
-		}
+	
+	.bb-admin-settings-modal__body p {
+		font-size: 13px;
+		margin: 0;
 	}
 }

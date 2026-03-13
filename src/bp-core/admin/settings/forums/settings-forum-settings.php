@@ -43,10 +43,8 @@ function bb_forums_register_settings_panel_fields() {
 			'type'              => 'number',
 			'default'           => (int) get_option( '_bbp_edit_lock', 5 ),
 			'sanitize_callback' => 'intval',
-			'input_attrs'       => array(
-				'min'  => 0,
-				'step' => 1,
-			),
+			'min'               => 0,
+			'step'              => 1,
 			'suffix'            => __( 'minutes', 'buddyboss' ),
 			'order'             => 10,
 		)
@@ -63,10 +61,8 @@ function bb_forums_register_settings_panel_fields() {
 			'type'              => 'number',
 			'default'           => (int) get_option( '_bbp_throttle_time', 10 ),
 			'sanitize_callback' => 'intval',
-			'input_attrs'       => array(
-				'min'  => 0,
-				'step' => 1,
-			),
+			'min'               => 0,
+			'step'              => 1,
 			'suffix'            => __( 'seconds', 'buddyboss' ),
 			'order'             => 20,
 		)
@@ -75,7 +71,7 @@ function bb_forums_register_settings_panel_fields() {
 	// Build depth options for reply threading (2–max).
 	$thread_replies_depth_max = (int) apply_filters( 'bbp_thread_replies_depth_max', 10 );
 	$depth_options            = array();
-	for ( $i = 2; $i <= $thread_replies_depth_max; $i++ ) {
+	for ( $i = 2; $i <= $thread_replies_depth_max; ++$i ) {
 		$depth_options[] = array(
 			'label' => (string) $i,
 			'value' => $i,
@@ -132,11 +128,9 @@ function bb_forums_register_settings_panel_fields() {
 			'label'             => __( 'Forums', 'buddyboss' ),
 			'type'              => 'number',
 			'default'           => bbp_get_forums_per_page(),
-			'sanitize_callback' => 'intval',
-			'input_attrs'       => array(
-				'min'  => 1,
-				'step' => 1,
-			),
+			'sanitize_callback' => 'absint',
+			'min'               => 1,
+			'step'              => 1,
 			'suffix'            => __( 'per page', 'buddyboss' ),
 			'order'             => 10,
 		)
@@ -152,11 +146,9 @@ function bb_forums_register_settings_panel_fields() {
 			'label'             => __( 'Discussions', 'buddyboss' ),
 			'type'              => 'number',
 			'default'           => bbp_get_topics_per_page(),
-			'sanitize_callback' => 'intval',
-			'input_attrs'       => array(
-				'min'  => 1,
-				'step' => 1,
-			),
+			'sanitize_callback' => 'absint',
+			'min'               => 1,
+			'step'              => 1,
 			'suffix'            => __( 'per page', 'buddyboss' ),
 			'order'             => 20,
 		)
@@ -172,11 +164,9 @@ function bb_forums_register_settings_panel_fields() {
 			'label'             => __( 'Replies', 'buddyboss' ),
 			'type'              => 'number',
 			'default'           => bbp_get_replies_per_page(),
-			'sanitize_callback' => 'intval',
-			'input_attrs'       => array(
-				'min'  => 1,
-				'step' => 1,
-			),
+			'sanitize_callback' => 'absint',
+			'min'               => 1,
+			'step'              => 1,
 			'suffix'            => __( 'per page', 'buddyboss' ),
 			'order'             => 30,
 		)
@@ -206,11 +196,9 @@ function bb_forums_register_settings_panel_fields() {
 			'label'             => __( 'Discussions', 'buddyboss' ),
 			'type'              => 'number',
 			'default'           => bbp_get_topics_per_rss_page(),
-			'sanitize_callback' => 'intval',
-			'input_attrs'       => array(
-				'min'  => 1,
-				'step' => 1,
-			),
+			'sanitize_callback' => 'absint',
+			'min'               => 1,
+			'step'              => 1,
 			'suffix'            => __( 'per page', 'buddyboss' ),
 			'order'             => 10,
 		)
@@ -226,11 +214,9 @@ function bb_forums_register_settings_panel_fields() {
 			'label'             => __( 'Replies', 'buddyboss' ),
 			'type'              => 'number',
 			'default'           => bbp_get_replies_per_rss_page(),
-			'sanitize_callback' => 'intval',
-			'input_attrs'       => array(
-				'min'  => 1,
-				'step' => 1,
-			),
+			'sanitize_callback' => 'absint',
+			'min'               => 1,
+			'step'              => 1,
 			'suffix'            => __( 'per page', 'buddyboss' ),
 			'order'             => 20,
 		)

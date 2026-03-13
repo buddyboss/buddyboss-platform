@@ -208,20 +208,22 @@ export function ReplyCreateModal( { isOpen, onClose, onCreated } ) {
 		<Modal
 			title={ __( 'Create New Reply', 'buddyboss' ) }
 			onRequestClose={ handleClose }
-			className="bb-reply-create-modal bb-admin-settings-modal"
+			className="bb-reply-modal bb-reply-create-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
 		>
-			<div className="bb-reply-create-modal__body">
+			<div className="bb-reply-modal__body">
 				{ error && (
-					<p className="bb-reply-create-modal__error">{ error }</p>
+					<p className="bb-reply-modal__error">{ error }</p>
 				) }
 
-				<RichTextEditor
-					id="bb-reply-create-description"
-					label={ __( 'Description', 'buddyboss' ) }
-					value={ content }
-					onChange={ setContent }
-				/>
+				<div className="bb-reply-modal__row--separator">
+					<RichTextEditor
+						id="bb-reply-create-description"
+						label={ __( 'Description', 'buddyboss' ) }
+						value={ content }
+						onChange={ setContent }
+					/>
+				</div>
 
 				<div className="components-base-control">
 					<label className="components-base-control__label">
@@ -249,7 +251,7 @@ export function ReplyCreateModal( { isOpen, onClose, onCreated } ) {
 					/>
 				</div>
 
-				<div className="components-base-control">
+				<div className="components-base-control bb-reply-modal__row--separator">
 					<label className="components-base-control__label">
 						{ __( 'Reply to', 'buddyboss' ) }
 					</label>
@@ -274,7 +276,7 @@ export function ReplyCreateModal( { isOpen, onClose, onCreated } ) {
 				/>
 			</div>
 
-			<div className="bb-reply-create-modal__footer bb-admin-settings-modal__footer">
+			<div className="bb-reply-modal__footer bb-admin-settings-modal__footer">
 				<Button
 					variant="secondary"
 					onClick={ handleClose }

@@ -18,6 +18,7 @@ import { __, _n, sprintf } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { getTopicTags, getTopicTag, deleteTopicTag } from '../utils/ajax';
 import { safeUrl } from '../utils/sanitize';
+import { getPageNumbers } from '../utils/pagination';
 import { TagCreateModal } from '../components/forums/TagCreateModal';
 
 /**
@@ -75,6 +76,10 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 	var isEditOpenState = useState( false );
 	var isEditOpen = isEditOpenState[ 0 ];
 	var setIsEditOpen = isEditOpenState[ 1 ];
+
+	var isEditLoadingState = useState( false );
+	var isEditLoading = isEditLoadingState[ 0 ];
+	var setIsEditLoading = isEditLoadingState[ 1 ];
 
 	// Delete modal state.
 	var deleteTagState = useState( null );
@@ -174,18 +179,26 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 	 * @param {Object} tag Tag object from the list.
 	 */
 	var handleEdit = function ( tag ) {
+		// Open modal immediately with loading state.
+		setEditTag( null );
+		setIsEditOpen( true );
+		setIsEditLoading( true );
+
 		// Fetch fresh data for the edit modal.
 		getTopicTag( tag.id ).then( function ( response ) {
 			if ( response.success && response.data ) {
 				setEditTag( response.data );
-				setIsEditOpen( true );
 			} else {
+				setIsEditOpen( false );
 				setNotice( {
 					message: __( 'Failed to load tag data.', 'buddyboss' ),
 					type: 'error',
 				} );
 			}
+			setIsEditLoading( false );
 		} ).catch( function () {
+			setIsEditOpen( false );
+			setIsEditLoading( false );
 			setNotice( {
 				message: __( 'Failed to load tag data.', 'buddyboss' ),
 				type: 'error',
@@ -255,52 +268,6 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 			type: 'success',
 		} );
 		fetchTags( { page: currentPage } );
-	};
-
-	/**
-	 * Build pagination page numbers.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @returns {Array} Array of page number items.
-	 */
-	var getPageNumbers = function () {
-		var pages = [];
-		var maxVisible = 5;
-
-		if ( totalPages <= 7 ) {
-			for ( var i = 1; i <= totalPages; i++ ) {
-				pages.push( i );
-			}
-		} else {
-			pages.push( 1 );
-
-			if ( currentPage > maxVisible - 1 ) {
-				pages.push( '...' );
-			}
-
-			var start = Math.max( 2, currentPage - 1 );
-			var end = Math.min( totalPages - 1, currentPage + 1 );
-
-			if ( currentPage <= 3 ) {
-				end = Math.min( totalPages - 1, maxVisible );
-			}
-			if ( currentPage >= totalPages - 2 ) {
-				start = Math.max( 2, totalPages - maxVisible + 1 );
-			}
-
-			for ( var j = start; j <= end; j++ ) {
-				pages.push( j );
-			}
-
-			if ( currentPage < totalPages - ( maxVisible - 2 ) ) {
-				pages.push( '...' );
-			}
-
-			pages.push( totalPages );
-		}
-
-		return pages;
 	};
 
 	return (
@@ -490,7 +457,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 								&lsaquo;
 							</Button>
 
-							{ getPageNumbers().map( function ( page, index ) {
+							{ getPageNumbers( currentPage, totalPages ).map( function ( page, index ) {
 								if ( '...' === page ) {
 									return (
 										<span key={ 'ellipsis-' + index } className="bb-discussion-tags-list__pagination-ellipsis">
@@ -547,6 +514,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 				} }
 				onSaved={ handleTagSaved }
 				editTag={ editTag }
+				isLoading={ isEditLoading }
 			/>
 
 			{ /* Delete Confirmation Modal */ }
@@ -559,7 +527,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 					className="bb-tag-delete-modal bb-admin-settings-modal"
 					shouldCloseOnClickOutside={ false }
 				>
-					<div className="bb-tag-delete-modal__body">
+					<div className="bb-admin-settings-modal__body">
 						<p>
 							{ sprintf(
 								__( 'Are you sure you want to delete the tag "%s"? This action cannot be undone.', 'buddyboss' ),
@@ -567,7 +535,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 							) }
 						</p>
 					</div>
-					<div className="bb-tag-delete-modal__footer bb-admin-settings-modal__footer">
+					<div className="bb-admin-settings-modal__footer">
 						<Button
 							variant="secondary"
 							onClick={ function () {

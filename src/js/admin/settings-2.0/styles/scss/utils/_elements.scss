@@ -318,7 +318,7 @@ select.bb-admin-settings__select {
         background-color: $bb-background-base-color;
         border-radius: $bb-border-radius-lg;
         box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
-        padding: 8px 0;
+        padding: 0;
         min-width: 190px;
 
         // Menu item button
@@ -493,6 +493,16 @@ select.bb-admin-settings__select {
         &:before {
             color: $bb-icon-warning-primary-color;
         }
+
+        a {
+            color: $bb-text-warning-primary-color;
+            text-decoration: underline;
+        }
+    }
+
+    // Ensure links stay inline so they don't become separate flex items.
+    a {
+        display: inline;
     }
 
     &--dismiss {
@@ -778,8 +788,7 @@ select.bb-admin-settings__select {
         }
 
         &.is-selected button {
-            font-weight: 600;
-            color: $bb-primary-color;
+            background-color: $bb-background-secondary-color;
         }
     }
 
@@ -864,12 +873,18 @@ select.bb-admin-settings__select {
         flex-direction: column;
         gap: 4px;
         margin-bottom: 16px;
+        max-height: 125px;
+        overflow: auto;
     }
 
     &__selected-item {
         display: flex;
         align-items: center;
         gap: 8px;
+
+        > .components-checkbox-control {
+            margin-bottom: 6px !important;
+        }
 
         .components-checkbox-control__input-container {
             margin: 0;

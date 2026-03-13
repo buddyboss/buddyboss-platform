@@ -93,6 +93,7 @@ export default function ProfileSearchScreen( { onNavigate, helpUrl, onHelpClick,
 	// AbortController refs.
 	var abortRef = useRef( null );
 	var reorderAbortRef = useRef( null );
+	var deleteAbortRef = useRef( null );
 
 	// Load platform settings (toggle).
 	useEffect( function () {
@@ -151,6 +152,9 @@ export default function ProfileSearchScreen( { onNavigate, helpUrl, onHelpClick,
 			}
 			if ( reorderAbortRef.current ) {
 				reorderAbortRef.current.abort();
+			}
+			if ( deleteAbortRef.current ) {
+				deleteAbortRef.current.abort();
 			}
 		};
 	}, [ loadSearchFields ] );
@@ -217,7 +221,13 @@ export default function ProfileSearchScreen( { onNavigate, helpUrl, onHelpClick,
 	function handleDeleteField( fieldIndex ) {
 		setDeleteFieldData( null );
 
-		deleteProfileSearchField( { field_index: fieldIndex } )
+		// Cancel any stale delete request.
+		if ( deleteAbortRef.current ) {
+			deleteAbortRef.current.abort();
+		}
+		deleteAbortRef.current = new AbortController();
+
+		deleteProfileSearchField( { field_index: fieldIndex }, { signal: deleteAbortRef.current.signal } )
 			.then( function ( response ) {
 				if ( response.success ) {
 					setToast( { status: 'success', message: response.data.message || __( 'Field removed.', 'buddyboss' ) } );
@@ -227,6 +237,9 @@ export default function ProfileSearchScreen( { onNavigate, helpUrl, onHelpClick,
 				}
 			} )
 			.catch( function ( error ) {
+				if ( 'AbortError' === error.name ) {
+					return;
+				}
 				setToast( { status: 'error', message: error.message || __( 'Failed to remove field.', 'buddyboss' ) } );
 			} );
 	}

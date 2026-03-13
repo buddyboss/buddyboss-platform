@@ -933,10 +933,11 @@ export function saveProfileField( data ) {
  * @since BuddyBoss [BBVERSION]
  *
  * @param {number} fieldId - Field ID.
+ * @param {Object} options - Optional fetch options (e.g. { signal }).
  * @return {Promise} Promise resolving to response.
  */
-export function deleteProfileField( fieldId ) {
-	return ajaxFetch( 'bb_admin_delete_profile_field', { field_id: fieldId } );
+export function deleteProfileField( fieldId, options ) {
+	return ajaxFetch( 'bb_admin_delete_profile_field', { field_id: fieldId }, options );
 }
 
 /**
@@ -981,11 +982,12 @@ export function saveProfileSearchField( data ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param {Object} data - Delete data (field_index).
+ * @param {Object} data    - Delete data (field_index).
+ * @param {Object} options - Optional fetch options (e.g. { signal }).
  * @return {Promise} Promise resolving to response.
  */
-export function deleteProfileSearchField( data ) {
-	return ajaxFetch( 'bb_admin_delete_profile_search_field', data );
+export function deleteProfileSearchField( data, options ) {
+	return ajaxFetch( 'bb_admin_delete_profile_search_field', data, options );
 }
 
 /**
@@ -999,4 +1001,35 @@ export function deleteProfileSearchField( data ) {
  */
 export function reorderProfileSearchFields( data, options ) {
 	return ajaxFetch( 'bb_admin_reorder_profile_search_fields', data, options || {} );
+}
+
+/**
+ * Upload a forum featured image.
+ *
+ * Sends the file to a dedicated AJAX endpoint that creates a WordPress
+ * attachment and returns the attachment ID and URL.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {File}        file   The image file to upload.
+ * @param {AbortSignal} signal Optional AbortController signal.
+ * @return {Promise} Promise resolving to response JSON.
+ */
+export function uploadForumImage( file, signal ) {
+	var ajaxUrl = ( window.bbAdminData && window.bbAdminData.ajaxUrl ) || '/wp-admin/admin-ajax.php';
+	var nonce = ( window.bbAdminData && window.bbAdminData.ajaxNonce ) || '';
+
+	var formData = new FormData();
+	formData.append( 'file', file );
+	formData.append( 'action', 'bb_admin_upload_forum_image' );
+	formData.append( 'nonce', nonce );
+
+	return fetch( ajaxUrl, {
+		method: 'POST',
+		credentials: 'same-origin',
+		body: formData,
+		signal: signal,
+	} ).then( function ( response ) {
+		return response.json();
+	} );
 }

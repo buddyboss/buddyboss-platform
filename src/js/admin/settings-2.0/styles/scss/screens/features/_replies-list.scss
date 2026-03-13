@@ -38,42 +38,15 @@
 		}
 	}
 
-	// Toast
-	&__toast {
-		padding: 12px 16px;
-		border-radius: $bb-border-radius-md;
-		margin-bottom: 16px;
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		font-size: 13px;
-
-		&--success {
-			background-color: #ecfdf5;
-			color: #065f46;
-			border: 1px solid #a7f3d0;
-		}
-
-		&--error {
-			background-color: #fef2f2;
-			color: #991b1b;
-			border: 1px solid #fecaca;
-		}
+	// Notice
+	.bb-admin-notice {
+		margin-top: 24px;
 	}
 
-	&__toast-close {
+	.bb-admin-notice--dismiss {
 		background: none;
 		border: none;
 		cursor: pointer;
-		font-size: 18px;
-		line-height: 1;
-		padding: 0 0 0 12px;
-		color: inherit;
-		opacity: 0.6;
-
-		&:hover {
-			opacity: 1;
-		}
 	}
 
 	// Toolbar
@@ -151,18 +124,25 @@
 		display: flex;
 		align-items: center;
 		gap: 6px;
-		height: 36px;
+		height: 32px;
 		padding: 0 12px;
-		border: 1px solid $bb-border-primary-color;
 		border-radius: $bb-border-radius-md;
-		background: $bb-background-base-color;
+		border: 1px solid $bb-border-tertiary-color;
+		background-color: $bb-background-color;
 		font-size: 13px;
 		color: $bb-text-color;
 		cursor: pointer;
 		white-space: nowrap;
 
-		&:hover {
-			border-color: $bb-primary-color;
+		i {
+			font-size: 14px;
+		}
+
+		&:hover,
+		&:focus {
+			border-color: $bb-border-quaternary-color;
+			box-shadow: none;
+			outline: none;
 		}
 	}
 
@@ -185,18 +165,8 @@
 		margin-top: 4px;
 	}
 
-	&__forum-filter-search {
-		width: 100%;
-		padding: 8px 12px;
-		border: none;
-		border-bottom: 1px solid $bb-border-secondary-color;
-		font-size: 13px;
-		outline: none;
-		box-sizing: border-box;
-
-		&:focus {
-			box-shadow: none;
-		}
+	&__forum-filter-search[type="text"] {
+		@include bb-input-text;
 	}
 
 	&__forum-filter-options {
@@ -258,6 +228,11 @@
 			transform: translateY(-50%);
 			pointer-events: none;
 		}
+
+
+		&:has(.bb-replies-list__search-clear):after {
+			display: none;
+		}
 	}
 
 	&__search-input {
@@ -288,8 +263,8 @@
 		background: none;
 		border: none;
 		cursor: pointer;
-		font-size: 16px;
-		color: $bb-text-tertiary-color;
+		font-size: 18px;
+		color: $bb-icon-tertiary-color;
 		padding: 0;
 		line-height: 1;
 		z-index: 1;
@@ -336,6 +311,11 @@
 			text-align: left;
 			white-space: nowrap;
 
+			&.bb-replies-list__col-reply {
+				color: $bb-text-color;
+				font-size: 14px;
+			}
+
 			&:first-child {
 				padding: 10px 0 10px 4px;
 			}
@@ -347,10 +327,6 @@
 
 		tbody tr {
 			border-bottom: 0.5px solid $bb-border-primary-color;
-
-			&.is-spam {
-				opacity: 0.6;
-			}
 		}
 
 		tbody td {
@@ -380,13 +356,17 @@
 	}
 
 	&__col-reply {
-		min-width: 250px;
-		max-width: 400px;
+		min-width: 210px;
+		max-width: 210px;
 	}
 
-	&__col-forum,
+	&__col-forum {
+		min-width: 140px;
+	}
+
 	&__col-discussion {
 		min-width: 140px;
+		max-width: 140px;
 	}
 
 	&__col-created {
@@ -409,38 +389,72 @@
 	&__reply-link {
 		color: $bb-link-color;
 		text-decoration: none;
-
-		&:hover {
-			text-decoration: underline;
-		}
 	}
 
 	&__spam-badge {
 		display: inline-block;
 		margin-left: 8px;
-		padding: 2px 8px;
+		padding: 2px 4px;
 		font-size: 11px;
 		font-weight: 500;
-		color: #991b1b;
-		background-color: #fef2f2;
-		border: 1px solid #fecaca;
-		border-radius: $bb-border-radius-sm;
+		color: $bb-text-warning-primary-color;
+		background-color: $bb-background-warning-primary-color;
+		border: 1px solid $bb-border-warning-secondary-color;
+		border-radius: $bb-border-radius-full;
 		vertical-align: middle;
+
+		i {
+			display: inline-block;
+			font-size: 12px;
+			color: $bb-icon-warning-primary-color;
+			vertical-align: middle;
+			margin-right: 4px;
+		}
 	}
 
 	&__created-icon {
 		font-size: 16px;
 		color: $bb-icon-tertiary-color;
-		margin-right: 4px;
+		margin-right: 6px;
 		vertical-align: middle;
 	}
 
 	// Actions menu
 	&__actions-menu {
 		.components-button {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background: none;
+			border: none;
+			cursor: pointer;
 			padding: 4px;
-			min-width: 24px;
-			height: 24px;
+			min-width: 32px;
+			width: 32px;
+			height: 32px;
+			color: $bb-icon-tertiary-color;
+			border-radius: $bb-border-radius-sm;
+
+			i {
+				color: $bb-icon-secondary-color;
+				font-size: 24px;
+				line-height: 1;
+				font-weight: 700;
+			}
+
+			&:hover,
+			&:focus,
+			&.is-pressed,
+			&.is-opened {
+				color: $bb-text-color;
+				background: $bb-background-primary-hover-color;
+				box-shadow: none;
+			}
+
+			.dashicon,
+			svg:not(:first-child) {
+				display: none;
+			}
 		}
 	}
 
@@ -555,17 +569,23 @@
 	}
 }
 
-// Reply Create Modal
-.bb-reply-create-modal {
+.bb-reply-modal {
+
 	.components-modal__content {
 		padding: 0;
 	}
 
+	&__loading {
+		padding: 24px;
+		text-align: center;
+	}
+	
 	&__body {
 		padding: 24px;
-		display: flex;
-		flex-direction: column;
-		gap: 16px;
+
+		.components-base-control {
+			margin-bottom: 16px;
+		}
 
 		// Override WordPress components uppercase labels to sentence case.
 		.components-input-control__label,
@@ -575,80 +595,63 @@
 			font-size: 13px !important;
 			font-weight: 500 !important;
 			color: $bb-text-color;
+			margin-bottom: 8px;
 		}
 
-		.components-base-control__help {
-			margin-top: 4px;
-			font-size: 12px;
-			color: $bb-text-tertiary-color;
+		.components-select-control .components-input-control__label {
+			margin-bottom: 0;
+		}
+
+		.components-text-control__input,
+		.components-textarea-control__input {
+			@include bb-input-text;
+		}
+
+		.components-input-control__container {
+
+			.components-select-control__input {
+				@include bb-admin-settings-select;
+			}
+
+			&:has(> .components-select-control__input) {
+				padding: 0 !important;
+
+				.components-input-control__suffix,
+				.components-input-control__backdrop {
+					display: none !important;
+				}
+			}
 		}
 	}
 
-	&__error {
-		color: #dc2626;
-		margin: 0;
-		font-size: 13px;
-		padding: 8px 12px;
-		background: #fef2f2;
-		border-radius: $bb-border-radius-md;
-	}
-
-	&__footer {
-		padding: 16px 24px;
+	&__row {
 		display: flex;
-		justify-content: flex-end;
-		gap: 8px;
-		border-top: 1px solid $bb-border-secondary-color;
-
-		.is-primary {
-			@include bb-button-primary;
-		}
-	}
-}
-
-// Reply Edit Modal
-.bb-reply-edit-modal {
-	.components-modal__content {
-		padding: 0;
-	}
-
-	&__body {
-		padding: 24px;
-		display: flex;
-		flex-direction: column;
 		gap: 16px;
+		margin-bottom: 16px;
 
-		// Override WordPress components uppercase labels to sentence case.
-		.components-input-control__label,
-		.components-base-control__label {
-			display: block;
-			text-transform: none !important;
-			font-size: 13px !important;
-			font-weight: 500 !important;
-			color: $bb-text-color;
+		.components-base-control {
+			flex: 1;
+			margin-bottom: 0;
+		}
+	}
+
+	&__row--separator {
+		margin-bottom: 24px;
+		padding-bottom: 24px;
+		border-bottom: 1px solid $bb-border-tertiary-color;
+
+		> .components-base-control,
+		> .bb-admin-meta-field__editor-field {
+			margin-bottom: 0;
 		}
 	}
 
 	&__error {
-		color: #dc2626;
-		margin: 0;
+		color: #d63638;
 		font-size: 13px;
-		padding: 8px 12px;
-		background: #fef2f2;
-		border-radius: $bb-border-radius-md;
+		margin: 0 0 16px;
 	}
 
-	&__footer {
-		padding: 16px 24px;
-		display: flex;
-		justify-content: flex-end;
-		gap: 8px;
-		border-top: 1px solid $bb-border-secondary-color;
-
-		.is-primary {
-			@include bb-button-primary;
-		}
-	}
 }
 
 /* ----------------------------------------------------------------
@@ -723,6 +726,11 @@
 
 // Reply Delete Modal
 .bb-reply-delete-modal {
+
+	&.bb-admin-settings-modal {
+		max-width: 650px;
+	}
+
 	.components-modal__content {
 		padding: 0;
 	}
@@ -730,29 +738,14 @@
 	&__body {
 		padding: 24px;
 
-		p {
+		> p {
 			margin: 0;
-			font-size: 14px;
-			color: $bb-text-color;
 		}
 	}
 
-	&__footer {
-		padding: 16px 24px;
-		display: flex;
-		justify-content: flex-end;
-		gap: 8px;
-		border-top: 1px solid $bb-border-secondary-color;
-
-		.is-destructive {
-			background-color: #dc2626;
-			border-color: #dc2626;
-			color: #fff;
-
-			&:hover:not(:disabled) {
-				background-color: #b91c1c;
-				border-color: #b91c1c;
-			}
-		}
-	}
+	&__description {
+        color: $bb-text-color;
+        font-size: 13px;
+        margin-bottom: 16px;
+    }
 }

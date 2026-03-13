@@ -20,7 +20,8 @@ import {
 import { __, _n, sprintf } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { getDiscussions, getDiscussion, saveDiscussion, discussionBulkAction } from '../utils/ajax';
-import { sanitizeHtml, safeUrl } from '../utils/sanitize';
+import { sanitizeHtml, safeUrl, sanitizeCustomColumns } from '../utils/sanitize';
+import { getPageNumbers } from '../utils/pagination';
 import { DiscussionCreateModal } from '../components/forums/DiscussionCreateModal';
 import { AsyncSelectField } from '../components/fields/AsyncSelectField';
 import { RichTextEditor, forceRemoveEditor } from '../components/common/RichTextEditor';
@@ -58,7 +59,7 @@ var DISCUSSIONS_PER_PAGE = 20;
  *
  * @type {Array}
  */
-var CORE_COLUMNS = [ 'cb', 'title', 'bbp_topic_forum', 'bbp_topic_reply_count', 'bbp_topic_voice_count', 'bbp_topic_freshness' ];
+var CORE_COLUMNS = [ 'cb', 'title', 'bbp_topic_author', 'bbp_topic_forum', 'bbp_topic_reply_count', 'bbp_topic_voice_count', 'bbp_topic_freshness' ];
 
 /**
  * Discussions List Screen Component
@@ -175,6 +176,10 @@ export function DiscussionsListScreen( { onNavigate } ) {
 	var bulkEditVisibility = bulkEditVisibilityState[ 0 ];
 	var setBulkEditVisibility = bulkEditVisibilityState[ 1 ];
 
+	var bulkEditStatusState = useState( 'no_change' );
+	var bulkEditStatus = bulkEditStatusState[ 0 ];
+	var setBulkEditStatus = bulkEditStatusState[ 1 ];
+
 	// Read tag_id from URL params (e.g. linked from Discussion Tags count).
 	var urlTagIdState = useState( function () {
 		var params = new URLSearchParams( window.location.search );
@@ -217,21 +222,7 @@ export function DiscussionsListScreen( { onNavigate } ) {
 
 		getDiscussions( fetchData, fetchOptions ).then( function ( response ) {
 			if ( response.success && response.data ) {
-				var rawDiscussions = response.data.discussions || [];
-
-				// Sanitize custom column HTML once at fetch time.
-				var sanitizedDiscussions = rawDiscussions.map( function ( disc ) {
-					if ( ! disc.custom_columns ) {
-						return disc;
-					}
-					var sanitizedCols = {};
-					Object.keys( disc.custom_columns ).forEach( function ( key ) {
-						sanitizedCols[ key ] = sanitizeHtml( disc.custom_columns[ key ] );
-					} );
-					return Object.assign( {}, disc, { custom_columns: sanitizedCols } );
-				} );
-
-				setDiscussions( sanitizedDiscussions );
+				setDiscussions( sanitizeCustomColumns( response.data.discussions || [] ) );
 				setTotal( response.data.total || 0 );
 
 				if ( response.data.views ) {
@@ -447,6 +438,7 @@ export function DiscussionsListScreen( { onNavigate } ) {
 		if ( 'edit' === action ) {
 			setBulkEditType( 'no_change' );
 			setBulkEditVisibility( 'no_change' );
+			setBulkEditStatus( 'no_change' );
 			setBulkEditOpen( true );
 			return;
 		}
@@ -487,6 +479,7 @@ export function DiscussionsListScreen( { onNavigate } ) {
 		performAction( 'edit', selectedIds, {
 			edit_type: bulkEditType,
 			edit_visibility: bulkEditVisibility,
+			edit_status: bulkEditStatus,
 		} );
 	};
 
@@ -594,51 +587,16 @@ export function DiscussionsListScreen( { onNavigate } ) {
 		} );
 	}, [ selectedIds, discussions ] );
 
-	/**
-	 * Build pagination page numbers.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @returns {Array} Array of page number items.
-	 */
-	var getPageNumbers = function () {
-		var pages = [];
-		var maxVisible = 5;
-
-		if ( totalPages <= 7 ) {
-			for ( var i = 1; i <= totalPages; i++ ) {
-				pages.push( i );
-			}
-		} else {
-			pages.push( 1 );
-
-			if ( currentPage > maxVisible - 1 ) {
-				pages.push( '...' );
-			}
-
-			var start = Math.max( 2, currentPage - 1 );
-			var end = Math.min( totalPages - 1, currentPage + 1 );
-
-			if ( currentPage <= 3 ) {
-				end = Math.min( totalPages - 1, maxVisible );
-			}
-			if ( currentPage >= totalPages - 2 ) {
-				start = Math.max( 2, totalPages - maxVisible + 1 );
-			}
-
-			for ( var j = start; j <= end; j++ ) {
-				pages.push( j );
-			}
-
-			if ( currentPage < totalPages - ( maxVisible - 2 ) ) {
-				pages.push( '...' );
-			}
-
-			pages.push( totalPages );
-		}
-
-		return pages;
-	};
+	// Get delete target discussion titles (may differ from selectedIds for single-row delete).
+	var deleteTargetDiscussionNames = useMemo( function () {
+		var nameMap = {};
+		discussions.forEach( function ( d ) {
+			nameMap[ d.id ] = d.title;
+		} );
+		return deleteTargetIds.map( function ( id ) {
+			return { id: id, title: nameMap[ id ] || '#' + id };
+		} );
+	}, [ deleteTargetIds, discussions ] );
 
 	return (
 		<div className="bb-discussions-list">
@@ -837,7 +795,7 @@ export function DiscussionsListScreen( { onNavigate } ) {
 										{ disc.custom_columns && customColumnKeys.map( function ( key ) {
 											return (
 												<td key={ key } className={ 'bb-discussions-list__td--custom bb-discussions-list__td--' + key }>
-													<span dangerouslySetInnerHTML={ { __html: disc.custom_columns[ key ] } } />
+													<span dangerouslySetInnerHTML={ { __html: sanitizeHtml( disc.custom_columns[ key ] ) } } />
 												</td>
 											);
 										} ) }
@@ -923,7 +881,7 @@ export function DiscussionsListScreen( { onNavigate } ) {
 								&lsaquo;
 							</Button>
 
-							{ getPageNumbers().map( function ( page, index ) {
+							{ getPageNumbers( currentPage, totalPages ).map( function ( page, index ) {
 								if ( '...' === page ) {
 									return (
 										<span key={ 'ellipsis-' + index } className="bb-discussions-list__pagination-ellipsis">
@@ -974,13 +932,13 @@ export function DiscussionsListScreen( { onNavigate } ) {
 				>
 					<div className="bb-discussion-delete-modal__body">
 						<div className="bb-admin-bulk-modal__selected-items">
-							{ selectedDiscussionNames.map( function ( item ) {
+							{ deleteTargetDiscussionNames.map( function ( item ) {
 								return (
 									<div key={ item.id } className="bb-admin-bulk-modal__selected-item">
 										<CheckboxControl
 											checked={ true }
 											onChange={ function () {
-												setSelectedIds( function ( prev ) {
+												setDeleteTargetIds( function ( prev ) {
 													var next = prev.filter( function ( i ) { return i !== item.id; } );
 													if ( 0 === next.length ) {
 														setDeleteModalOpen( false );
@@ -1082,8 +1040,21 @@ export function DiscussionsListScreen( { onNavigate } ) {
 								{ value: 'no_change', label: __( '\u2014 No Change \u2014', 'buddyboss' ) },
 								{ value: 'normal', label: __( 'Normal', 'buddyboss' ) },
 								{ value: 'sticky', label: __( 'Sticky', 'buddyboss' ) },
+								{ value: 'super_sticky', label: __( 'Super Sticky', 'buddyboss' ) },
 							] }
 							onChange={ setBulkEditType }
+							__nextHasNoMarginBottom
+						/>
+
+						<SelectControl
+							label={ __( 'Status', 'buddyboss' ) }
+							value={ bulkEditStatus }
+							options={ [
+								{ value: 'no_change', label: __( '\u2014 No Change \u2014', 'buddyboss' ) },
+								{ value: 'open', label: __( 'Open', 'buddyboss' ) },
+								{ value: 'closed', label: __( 'Closed', 'buddyboss' ) },
+							] }
+							onChange={ setBulkEditStatus }
 							__nextHasNoMarginBottom
 						/>
 
@@ -1112,7 +1083,7 @@ export function DiscussionsListScreen( { onNavigate } ) {
 						<Button
 							variant="primary"
 							onClick={ handleConfirmBulkEdit }
-							disabled={ 'no_change' === bulkEditType && 'no_change' === bulkEditVisibility }
+							disabled={ 'no_change' === bulkEditType && 'no_change' === bulkEditStatus && 'no_change' === bulkEditVisibility }
 						>
 							{ __( 'Save', 'buddyboss' ) }
 						</Button>
@@ -1224,6 +1195,7 @@ function DiscussionEditModal( { discussion, onClose, onSave, isSaving } ) {
 	var typeOptions = [
 		{ value: 'normal', label: __( 'Normal', 'buddyboss' ) },
 		{ value: 'sticky', label: __( 'Sticky', 'buddyboss' ) },
+		{ value: 'super_sticky', label: __( 'Super Sticky', 'buddyboss' ) },
 	];
 
 	var statusOptions = [

@@ -201,7 +201,7 @@ class BB_Admin_Profile_Search_Ajax {
 		$field_label = isset( $_POST['field_label'] ) ? sanitize_text_field( wp_unslash( $_POST['field_label'] ) ) : '';
 		$field_desc  = isset( $_POST['field_desc'] ) ? sanitize_textarea_field( wp_unslash( $_POST['field_desc'] ) ) : '';
 		$field_mode  = isset( $_POST['field_mode'] ) ? sanitize_key( wp_unslash( $_POST['field_mode'] ) ) : '';
-		$field_index = isset( $_POST['field_index'] ) && '' !== $_POST['field_index'] ? absint( $_POST['field_index'] ) : null;
+		$field_index = isset( $_POST['field_index'] ) && '' !== $_POST['field_index'] ? absint( wp_unslash( $_POST['field_index'] ) ) : null;
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $field_code ) ) {
@@ -281,7 +281,7 @@ class BB_Admin_Profile_Search_Ajax {
 		if ( ! isset( $_POST['field_index'] ) ) {
 			wp_send_json_error( array( 'message' => __( 'Invalid field index.', 'buddyboss' ) ) );
 		}
-		$field_index = absint( $_POST['field_index'] );
+		$field_index = absint( wp_unslash( $_POST['field_index'] ) );
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		$form_id = $this->bb_get_form_id();
@@ -358,6 +358,11 @@ class BB_Admin_Profile_Search_Ajax {
 				$new_descs[]  = isset( $descs[ $old_index ] ) ? $descs[ $old_index ] : '';
 				$new_modes[]  = isset( $modes[ $old_index ] ) ? $modes[ $old_index ] : '';
 			}
+		}
+
+		// Validate that no fields were lost during reorder.
+		if ( count( $new_codes ) !== count( $codes ) ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid field order — field count mismatch.', 'buddyboss' ) ) );
 		}
 
 		$meta['field_code']  = $new_codes;

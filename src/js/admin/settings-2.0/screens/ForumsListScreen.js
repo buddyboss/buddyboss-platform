@@ -19,8 +19,10 @@ import {
 } from '@wordpress/components';
 import { __, _n, sprintf } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
-import { getForums, getForum, saveForum, forumBulkAction } from '../utils/ajax';
-import { sanitizeHtml, safeUrl } from '../utils/sanitize';
+import { getForums, getForum, saveForum, forumBulkAction, uploadForumImage } from '../utils/ajax';
+import { sanitizeHtml, safeUrl, sanitizeCustomColumns } from '../utils/sanitize';
+import { getPageNumbers } from '../utils/pagination';
+import { toSlug } from '../utils/format';
 import { ForumCreateModal } from '../components/forums/ForumCreateModal';
 import { AsyncSelectField } from '../components/fields/AsyncSelectField';
 import { RichTextEditor, forceRemoveEditor } from '../components/common/RichTextEditor';
@@ -231,21 +233,7 @@ export function ForumsListScreen( { onNavigate } ) {
 			include_meta: hasMetaRef.current ? 0 : 1,
 		}, fetchOptions ).then( function ( response ) {
 			if ( response.success && response.data ) {
-				var rawForums = response.data.forums || [];
-
-				// Sanitize custom column HTML once at fetch time.
-				var sanitizedForums = rawForums.map( function ( forum ) {
-					if ( ! forum.custom_columns ) {
-						return forum;
-					}
-					var sanitizedCols = {};
-					Object.keys( forum.custom_columns ).forEach( function ( key ) {
-						sanitizedCols[ key ] = sanitizeHtml( forum.custom_columns[ key ] );
-					} );
-					return Object.assign( {}, forum, { custom_columns: sanitizedCols } );
-				} );
-
-				setForums( sanitizedForums );
+				setForums( sanitizeCustomColumns( response.data.forums || [] ) );
 				setTotal( response.data.total || 0 );
 
 				if ( response.data.views ) {
@@ -459,6 +447,7 @@ export function ForumsListScreen( { onNavigate } ) {
 		}
 
 		if ( 'edit' === action ) {
+			setBulkEditStatus( 'no_change' );
 			setBulkEditVisibility( 'no_change' );
 			setBulkEditOpen( true );
 			return;
@@ -643,52 +632,6 @@ export function ForumsListScreen( { onNavigate } ) {
 			return { id: id, title: nameMap[ id ] || '#' + id };
 		} );
 	}, [ deleteTargetIds, forums ] );
-
-	/**
-	 * Build pagination page numbers.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @returns {Array} Array of page number items.
-	 */
-	var getPageNumbers = function () {
-		var pages = [];
-		var maxVisible = 5;
-
-		if ( totalPages <= 7 ) {
-			for ( var i = 1; i <= totalPages; i++ ) {
-				pages.push( i );
-			}
-		} else {
-			pages.push( 1 );
-
-			if ( currentPage > maxVisible - 1 ) {
-				pages.push( '...' );
-			}
-
-			var start = Math.max( 2, currentPage - 1 );
-			var end = Math.min( totalPages - 1, currentPage + 1 );
-
-			if ( currentPage <= 3 ) {
-				end = Math.min( totalPages - 1, maxVisible );
-			}
-			if ( currentPage >= totalPages - 2 ) {
-				start = Math.max( 2, totalPages - maxVisible + 1 );
-			}
-
-			for ( var j = start; j <= end; j++ ) {
-				pages.push( j );
-			}
-
-			if ( currentPage < totalPages - ( maxVisible - 2 ) ) {
-				pages.push( '...' );
-			}
-
-			pages.push( totalPages );
-		}
-
-		return pages;
-	};
 
 	return (
 		<div className="bb-forums-list">
@@ -908,7 +851,7 @@ export function ForumsListScreen( { onNavigate } ) {
 										{ forum.custom_columns && customColumnKeys.map( function ( key ) {
 											return (
 												<td key={ key } className={ 'bb-forums-list__td--custom bb-forums-list__td--' + key }>
-													<span dangerouslySetInnerHTML={ { __html: forum.custom_columns[ key ] } } />
+													<span dangerouslySetInnerHTML={ { __html: sanitizeHtml( forum.custom_columns[ key ] ) } } />
 												</td>
 											);
 										} ) }
@@ -994,7 +937,7 @@ export function ForumsListScreen( { onNavigate } ) {
 								&lsaquo;
 							</Button>
 
-							{ getPageNumbers().map( function ( page, index ) {
+							{ getPageNumbers( currentPage, totalPages ).map( function ( page, index ) {
 								if ( '...' === page ) {
 									return (
 										<span key={ 'ellipsis-' + index } className="bb-forums-list__pagination-ellipsis">
@@ -1276,37 +1219,97 @@ function ForumEditModal( { forum, onClose, onSave, isSaving } ) {
 	var removeImage = removeImageState[ 0 ];
 	var setRemoveImage = removeImageState[ 1 ];
 
+	var isUploadingState = useState( false );
+	var isUploading = isUploadingState[ 0 ];
+	var setIsUploading = isUploadingState[ 1 ];
+
 	var errorState = useState( '' );
 	var error = errorState[ 0 ];
 	var setError = errorState[ 1 ];
 
+	var fileInputRef = useRef( null );
+	var uploadAbortRef = useRef( null );
+
+	// Track mounted state to prevent state updates after unmount.
+	var isMountedRef = useRef( true );
+	useEffect( function () {
+		isMountedRef.current = true;
+		return function () {
+			isMountedRef.current = false;
+			if ( uploadAbortRef.current ) {
+				uploadAbortRef.current.abort();
+			}
+		};
+	}, [] );
+
 	var siteUrl = ( window.bbAdminData && window.bbAdminData.siteUrl ) || '';
 
 	/**
-	 * Open WordPress media picker for featured image.
+	 * Trigger hidden file input for image selection.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	var handleSelectImage = function () {
-		if ( ! window.wp || ! window.wp.media ) {
+	var triggerFileInput = function () {
+		if ( fileInputRef.current ) {
+			fileInputRef.current.value = '';
+			fileInputRef.current.click();
+		}
+	};
+
+	/**
+	 * Handle file selection and upload via AJAX.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {Event} e File input change event.
+	 */
+	var handleFileSelect = function ( e ) {
+		var file = e.target.files && e.target.files[ 0 ];
+		if ( ! file ) {
 			return;
 		}
 
-		var frame = window.wp.media( {
-			title: __( 'Select Feature Image', 'buddyboss' ),
-			button: { text: __( 'Use Image', 'buddyboss' ) },
-			multiple: false,
-			library: { type: 'image' },
-		} );
+		var allowedTypes = [ 'image/jpeg', 'image/png', 'image/gif', 'image/webp' ];
+		if ( -1 === allowedTypes.indexOf( file.type ) ) {
+			setError( __( 'Invalid file type. Only JPEG, PNG, GIF, and WebP images are allowed.', 'buddyboss' ) );
+			return;
+		}
 
-		frame.on( 'select', function () {
-			var attachment = frame.state().get( 'selection' ).first().toJSON();
-			setImageId( attachment.id );
-			setImageUrl( attachment.url );
-			setRemoveImage( false );
-		} );
+		// 10MB limit.
+		if ( file.size > 10 * 1024 * 1024 ) {
+			setError( __( 'File size exceeds the maximum allowed size of 10MB.', 'buddyboss' ) );
+			return;
+		}
 
-		frame.open();
+		if ( uploadAbortRef.current ) {
+			uploadAbortRef.current.abort();
+		}
+		uploadAbortRef.current = new AbortController();
+
+		setIsUploading( true );
+		setError( '' );
+
+		uploadForumImage( file, uploadAbortRef.current.signal ).then( function ( response ) {
+			if ( ! isMountedRef.current ) {
+				return;
+			}
+			setIsUploading( false );
+			if ( response.success && response.data ) {
+				setImageId( response.data.attachment_id );
+				setImageUrl( response.data.url );
+				setRemoveImage( false );
+			} else {
+				setError( ( response.data && response.data.message ) || __( 'Failed to upload image.', 'buddyboss' ) );
+			}
+		} ).catch( function ( err ) {
+			if ( ! isMountedRef.current ) {
+				return;
+			}
+			setIsUploading( false );
+			if ( 'AbortError' !== err.name ) {
+				setError( __( 'An error occurred while uploading. Please try again.', 'buddyboss' ) );
+			}
+		} );
 	};
 
 	/**
@@ -1356,21 +1359,6 @@ function ForumEditModal( { forum, onClose, onSave, isSaving } ) {
 		{ value: 'hidden', label: __( 'Hidden', 'buddyboss' ) },
 	];
 
-	/**
-	 * Sanitize a string into a URL-friendly slug.
-	 *
-	 * @param {string} str Input string.
-	 * @returns {string} Slug.
-	 */
-	var toSlugEdit = function ( str ) {
-		return str
-			.toLowerCase()
-			.replace( /[^a-z0-9\s-]/g, '' )
-			.replace( /[\s]+/g, '-' )
-			.replace( /-+/g, '-' )
-			.replace( /^-|-$/g, '' );
-	};
-
 	return (
 		<Modal
 			title={ __( 'Edit Forum', 'buddyboss' ) }
@@ -1395,7 +1383,7 @@ function ForumEditModal( { forum, onClose, onSave, isSaving } ) {
 						label={ __( 'Permalink', 'buddyboss' ) }
 						value={ slug }
 						onChange={ function ( val ) {
-							setSlug( toSlugEdit( val ) );
+							setSlug( toSlug( val ) );
 						} }
 						__nextHasNoMarginBottom
 					/>
@@ -1450,14 +1438,22 @@ function ForumEditModal( { forum, onClose, onSave, isSaving } ) {
 					<label className="components-base-control__label">
 						{ __( 'Feature Image (Optional)', 'buddyboss' ) }
 					</label>
+					<input
+						type="file"
+						ref={ fileInputRef }
+						accept="image/jpeg,image/png,image/gif,image/webp"
+						onChange={ handleFileSelect }
+						style={ { display: 'none' } }
+					/>
 					{ imageUrl ? (
 						<div className="bb-forum-modal__image-preview">
-							<img src={ imageUrl } alt="" />
+							<img src={ safeUrl( imageUrl ) } alt="" />
 							<div className="bb-forum-modal__image-actions">
 								<Button
 									variant="secondary"
-									onClick={ handleSelectImage }
+									onClick={ triggerFileInput }
 									className="bb-forum-modal__replace-image"
+									disabled={ isUploading }
 								>
 									{ __( 'Replace', 'buddyboss' ) }
 								</Button>
@@ -1466,6 +1462,7 @@ function ForumEditModal( { forum, onClose, onSave, isSaving } ) {
 									isDestructive
 									onClick={ handleRemoveImage }
 									className="bb-forum-modal__remove-image"
+									disabled={ isUploading }
 								>
 									{ __( 'Reset', 'buddyboss' ) }
 								</Button>
@@ -1474,10 +1471,15 @@ function ForumEditModal( { forum, onClose, onSave, isSaving } ) {
 					) : (
 						<button
 							type="button"
-							onClick={ handleSelectImage }
-							className="bb-forum-create-modal__upload-zone"
+							onClick={ triggerFileInput }
+							className={ 'bb-forum-create-modal__upload-zone' + ( isUploading ? ' bb-forum-create-modal__upload-zone--uploading' : '' ) }
+							disabled={ isUploading }
 						>
-							<span className="bb-forum-create-modal__upload-icon">+</span>
+							{ isUploading ? (
+								<span className="bb-forum-create-modal__upload-spinner"></span>
+							) : (
+								<span className="bb-forum-create-modal__upload-icon">+</span>
+							) }
 						</button>
 					) }
 					<p className="bb-forum-create-modal__image-help">
@@ -1498,7 +1500,7 @@ function ForumEditModal( { forum, onClose, onSave, isSaving } ) {
 					variant="primary"
 					onClick={ handleSave }
 					isBusy={ isSaving }
-					disabled={ isSaving || ! name.trim() }
+					disabled={ isSaving || isUploading || ! name.trim() }
 				>
 					{ __( 'Save', 'buddyboss' ) }
 				</Button>
