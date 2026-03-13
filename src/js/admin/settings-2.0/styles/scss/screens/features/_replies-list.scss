@@ -662,6 +662,11 @@
 		}
 	}
 
+	&__loading {
+		padding: 24px;
+		text-align: center;
+	}
+
 	&__error {
 		color: #dc2626;
 		margin: 0;

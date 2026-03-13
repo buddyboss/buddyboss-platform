@@ -148,6 +148,10 @@ export default function RepliesListScreen( { onNavigate } ) {
 	var isEditOpen = isEditOpenState[ 0 ];
 	var setIsEditOpen = isEditOpenState[ 1 ];
 
+	var isEditLoadingState = useState( false );
+	var isEditLoading = isEditLoadingState[ 0 ];
+	var setIsEditLoading = isEditLoadingState[ 1 ];
+
 	var isEditSavingState = useState( false );
 	var isEditSaving = isEditSavingState[ 0 ];
 	var setIsEditSaving = isEditSavingState[ 1 ];
@@ -524,7 +528,13 @@ export default function RepliesListScreen( { onNavigate } ) {
 	 * @param {Object} reply Reply object from the list.
 	 */
 	var handleEdit = function ( reply ) {
+		setIsEditLoading( true );
+		setIsEditOpen( true );
+		setEditReply( null );
+		setEditError( '' );
+
 		getReply( reply.id ).then( function ( response ) {
+			setIsEditLoading( false );
 			if ( response.success && response.data ) {
 				var data = response.data;
 				setEditReply( data );
@@ -533,15 +543,16 @@ export default function RepliesListScreen( { onNavigate } ) {
 				setEditTopicId( data.topic_id || 0 );
 				setEditReplyTo( data.reply_to || 0 );
 				setEditVisibility( data.post_status || 'publish' );
-				setEditError( '' );
-				setIsEditOpen( true );
 			} else {
+				setIsEditOpen( false );
 				setNotice( {
 					message: __( 'Failed to load reply data.', 'buddyboss' ),
 					type: 'error',
 				} );
 			}
 		} ).catch( function () {
+			setIsEditLoading( false );
+			setIsEditOpen( false );
 			setNotice( {
 				message: __( 'Failed to load reply data.', 'buddyboss' ),
 				type: 'error',
@@ -1160,95 +1171,103 @@ export default function RepliesListScreen( { onNavigate } ) {
 			/>
 
 			{ /* Edit Modal */ }
-			{ isEditOpen && editReply && (
+			{ isEditOpen && (
 				<Modal
 					title={ __( 'Edit Reply', 'buddyboss' ) }
 					onRequestClose={ handleEditClose }
 					className="bb-reply-edit-modal bb-admin-settings-modal"
 					shouldCloseOnClickOutside={ false }
 				>
-					<div className="bb-reply-edit-modal__body">
-						{ editError && (
-							<p className="bb-reply-edit-modal__error">{ editError }</p>
-						) }
-
-						<RichTextEditor
-							id="bb-reply-edit-description"
-							label={ __( 'Description', 'buddyboss' ) }
-							value={ editContent }
-							onChange={ setEditContent }
-						/>
-
-						<div className="components-base-control">
-							<label className="components-base-control__label">
-								{ __( 'Forum', 'buddyboss' ) }
-							</label>
-							<AsyncSelectField
-								value={ String( editForumId ) }
-								onChange={ function ( val ) {
-									setEditForumId( parseInt( val, 10 ) || 0 );
-								} }
-								asyncAction="bb_admin_forum_autocomplete"
-								placeholder={ __( 'Select Forum', 'buddyboss' ) }
-							/>
+					{ isEditLoading ? (
+						<div className="bb-reply-edit-modal__loading">
+							<Spinner />
 						</div>
+					) : (
+						<>
+							<div className="bb-reply-edit-modal__body">
+								{ editError && (
+									<p className="bb-reply-edit-modal__error">{ editError }</p>
+								) }
 
-						<div className="components-base-control">
-							<label className="components-base-control__label">
-								{ __( 'Discussion', 'buddyboss' ) }
-							</label>
-							<AsyncSelectField
-								value={ String( editTopicId ) }
-								onChange={ function ( val ) {
-									setEditTopicId( parseInt( val, 10 ) || 0 );
-								} }
-								asyncAction="bb_admin_discussion_autocomplete"
-								asyncExtraParams={ editForumId ? { forum_id: editForumId } : {} }
-								placeholder={ __( 'Select Discussion', 'buddyboss' ) }
-							/>
-						</div>
+								<RichTextEditor
+									id="bb-reply-edit-description"
+									label={ __( 'Description', 'buddyboss' ) }
+									value={ editContent }
+									onChange={ setEditContent }
+								/>
 
-						<div className="components-base-control">
-							<label className="components-base-control__label">
-								{ __( 'Reply to', 'buddyboss' ) }
-							</label>
-							<AsyncSelectField
-								value={ String( editReplyTo ) }
-								onChange={ function ( val ) {
-									setEditReplyTo( parseInt( val, 10 ) || 0 );
-								} }
-								asyncAction="bb_admin_reply_autocomplete"
-								asyncExtraParams={ editTopicId ? { topic_id: editTopicId } : {} }
-								placeholder={ __( 'Select Reply', 'buddyboss' ) }
-							/>
-						</div>
+								<div className="components-base-control">
+									<label className="components-base-control__label">
+										{ __( 'Forum', 'buddyboss' ) }
+									</label>
+									<AsyncSelectField
+										value={ String( editForumId ) }
+										onChange={ function ( val ) {
+											setEditForumId( parseInt( val, 10 ) || 0 );
+										} }
+										asyncAction="bb_admin_forum_autocomplete"
+										placeholder={ __( 'Select Forum', 'buddyboss' ) }
+									/>
+								</div>
 
-						<SelectControl
-							label={ __( 'Visibility', 'buddyboss' ) }
-							value={ editVisibility }
-							options={ visibilityOptions }
-							onChange={ setEditVisibility }
-							__nextHasNoMarginBottom
-						/>
-					</div>
+								<div className="components-base-control">
+									<label className="components-base-control__label">
+										{ __( 'Discussion', 'buddyboss' ) }
+									</label>
+									<AsyncSelectField
+										value={ String( editTopicId ) }
+										onChange={ function ( val ) {
+											setEditTopicId( parseInt( val, 10 ) || 0 );
+										} }
+										asyncAction="bb_admin_discussion_autocomplete"
+										asyncExtraParams={ editForumId ? { forum_id: editForumId } : {} }
+										placeholder={ __( 'Select Discussion', 'buddyboss' ) }
+									/>
+								</div>
 
-					<div className="bb-reply-edit-modal__footer bb-admin-settings-modal__footer">
-						<Button
-							variant="secondary"
-							onClick={ handleEditClose }
-							disabled={ isEditSaving }
-						>
-							{ __( 'Cancel', 'buddyboss' ) }
-						</Button>
-						<Button
-							variant="primary"
-							onClick={ handleEditSave }
-							isBusy={ isEditSaving }
-							disabled={ isEditSaving || ! editContent.trim() }
-						>
-							{ __( 'Save', 'buddyboss' ) }
-						</Button>
-					</div>
+								<div className="components-base-control">
+									<label className="components-base-control__label">
+										{ __( 'Reply to', 'buddyboss' ) }
+									</label>
+									<AsyncSelectField
+										value={ String( editReplyTo ) }
+										onChange={ function ( val ) {
+											setEditReplyTo( parseInt( val, 10 ) || 0 );
+										} }
+										asyncAction="bb_admin_reply_autocomplete"
+										asyncExtraParams={ editTopicId ? { topic_id: editTopicId } : {} }
+										placeholder={ __( 'Select Reply', 'buddyboss' ) }
+									/>
+								</div>
+
+								<SelectControl
+									label={ __( 'Visibility', 'buddyboss' ) }
+									value={ editVisibility }
+									options={ visibilityOptions }
+									onChange={ setEditVisibility }
+									__nextHasNoMarginBottom
+								/>
+							</div>
+
+							<div className="bb-reply-edit-modal__footer bb-admin-settings-modal__footer">
+								<Button
+									variant="secondary"
+									onClick={ handleEditClose }
+									disabled={ isEditSaving }
+								>
+									{ __( 'Cancel', 'buddyboss' ) }
+								</Button>
+								<Button
+									variant="primary"
+									onClick={ handleEditSave }
+									isBusy={ isEditSaving }
+									disabled={ isEditSaving || ! editContent.trim() }
+								>
+									{ __( 'Save', 'buddyboss' ) }
+								</Button>
+							</div>
+						</>
+					) }
 				</Modal>
 			) }
 
