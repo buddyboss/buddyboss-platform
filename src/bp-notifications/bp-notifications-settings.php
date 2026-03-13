@@ -49,14 +49,6 @@ function bb_notification_get_settings_sections() {
 		);
 	}
 
-	if ( false === bb_enabled_legacy_email_preference() && bp_is_active( 'messages' ) ) {
-		$settings['bp_messaging_notification_settings'] = array(
-			'page'              => 'notifications',
-			'title'             => esc_html__( 'Messaging Notifications', 'buddyboss' ),
-			'tutorial_callback' => 'bb_messaging_notifications_tutorial',
-		);
-	}
-
 	$settings['bp_web_push_notification_settings'] = array(
 		'page'              => 'notifications',
 		'title'             => esc_html__( 'Web Push Notifications', 'buddyboss' ),
@@ -207,22 +199,6 @@ function bb_notification_get_settings_fields() {
 			'callback'          => 'bb_admin_setting_callback_on_automatic_notification_fields',
 			'sanitize_callback' => 'string',
 			'args'              => array( 'class' => 'notes-hidden-header child-no-padding' ),
-		);
-
-		if ( bp_is_active( 'messages' ) && ! bb_hide_messages_from_notification_enabled() && ! bb_delay_email_notifications_enabled() && function_exists( 'bb_pusher_is_enabled' ) && bb_pusher_is_enabled() && function_exists( 'bb_pusher_is_feature_enabled' ) && true === bb_pusher_is_feature_enabled( 'live-messaging' ) ) {
-			$fields['bp_messaging_notification_settings']['infos'] = array(
-				'title'             => esc_html__( 'Notes', 'buddyboss' ),
-				'callback'          => 'bb_admin_setting_callback_messaging_notification_warning',
-				'sanitize_callback' => 'string',
-				'args'              => array( 'class' => 'notes-hidden-header' ),
-			);
-		}
-
-		$fields['bp_messaging_notification_settings']['fields'] = array(
-			'title'             => esc_html__( 'Messaging Notifications Fields', 'buddyboss' ),
-			'callback'          => 'bb_admin_setting_callback_messaging_notification_fields',
-			'sanitize_callback' => 'string',
-			'args'              => array( 'class' => 'notes-hidden-header' ),
 		);
 
 	} else {
@@ -537,130 +513,3 @@ function bb_admin_setting_callback_push_notification_lab_notification_preference
 	'</p>';
 }
 
-/**
- * Callback fields for the Messaging Notifications warning.
- *
- * @since BuddyBoss 2.1.4
- */
-function bb_admin_setting_callback_messaging_notification_warning() {
-	echo '<p class="description notification-information bp-new-notice-panel-notice">' .
-		sprintf(
-			wp_kses_post(
-			/* translators: %s: Live Messages. */
-				__( 'When using %s, we recommend enabling these settings to ensure the optimal experience for your members.', 'buddyboss' )
-			),
-			'<a href="' .
-				esc_url(
-					add_query_arg(
-						array(
-							'page' => 'bp-integrations',
-							'tab'  => 'bb-pusher',
-						),
-						admin_url( 'admin.php' )
-					)
-				)
-			. '">' . esc_html__( 'Live Messages', 'buddyboss' ) . '</a>'
-		) .
-		'</p>';
-}
-
-/**
- * Link to Messaging Notification tutorial.
- *
- * @since BuddyBoss 2.1.4
- */
-function bb_messaging_notifications_tutorial() {
-	?>
-
-	<p>
-		<a class="button" target="_blank" href="
-		<?php
-		echo esc_url(
-			bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page'    => 'bp-help',
-						'article' => '125952',
-					),
-					'admin.php'
-				)
-			)
-		);
-		?>
-		">
-			<?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?>
-		</a>
-	</p>
-
-	<?php
-}
-
-/**
- * Callback fields for the hide message notification fields options.
- *
- * @since BuddyBoss 2.1.4
- *
- * @return void
- */
-function bb_admin_setting_callback_messaging_notification_fields() {
-
-	// Bail if messages component is disabled.
-	if ( ! bp_is_active( 'messages' ) ) {
-		return;
-	}
-
-	// Get all defined time.
-	$get_delay_times = bb_notification_get_digest_cron_times();
-	$db_delay_time   = bb_get_delay_email_notifications_time();
-
-	// Prepare the drop-down for time.
-	$html = '<select name="time_delay_email_notification">';
-
-	foreach ( $get_delay_times as $delay_time ) {
-		$mins = (int) $delay_time['value'];
-
-		$html .= sprintf(
-			'<option value="%s" %s>%s</option>',
-			$mins,
-			( $db_delay_time === $mins ? 'selected="selected"' : '' ),
-			$delay_time['label']
-		);
-	}
-	$html .= '</select>';
-	?>
-	<table class="form-table render-hide-message-notification">
-		<tbody>
-			<tr>
-				<th><?php echo esc_html__( 'Hide From Notifications', 'buddyboss' ); ?></th>
-				<td>
-					<input id="hide_message_notification" name="hide_message_notification" type="checkbox" value="1" <?php checked( bb_hide_messages_from_notification_enabled() ); ?> />
-					<label for="hide_message_notification"><?php esc_html_e( 'Hide messages from notifications', 'buddyboss' ); ?></label>
-					<p class="description"><?php esc_html_e( 'When enabled, notifications for group and private messages will not show in a member\'s list of notifications or be included in the count of unread notifications. However, notifications will still be sent externally (via email, web and/or app) and shown in a member\'s list of messages, as well as the count of unread messages.', 'buddyboss' ); ?></p>
-				</td>
-			</tr>
-			<tr>
-				<th><?php echo esc_html__( 'Delay Email Notifications', 'buddyboss' ); ?></th>
-				<td>
-					<input id="delay_email_notification" name="delay_email_notification" type="checkbox" value="1" <?php checked( bb_delay_email_notifications_enabled() ); ?> />
-					<label for="delay_email_notification"><?php esc_html_e( 'Delay email notifications for new messages', 'buddyboss' ); ?></label>
-					<p class="description"><?php esc_html_e( 'When enabled, email notifications for new group and private messages will be delayed to allow time for members to read them on your site. After the delay, the emails will only be sent if the messages are still unread. If there are multiple unread messages in a conversation at the time of sending, they will be combined into a single email notification.', 'buddyboss' ); ?></p>
-
-					<p class="description">
-						<label for="time_delay_email_notification">
-							<?php
-							printf(
-								wp_kses_post(
-								/* translators: Permission validate select box. */
-									__( 'Delay notifications for %s', 'buddyboss' )
-								),
-								$html // phpcs:ignore
-							)
-							?>
-						</label>
-					</p>
-				</td>
-			</tr>
-		</tbody>
-	</table>
-	<?php
-}

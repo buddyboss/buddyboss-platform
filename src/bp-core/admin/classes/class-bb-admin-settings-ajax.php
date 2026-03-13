@@ -652,6 +652,8 @@ class BB_Admin_Settings_Ajax {
 				'watch_field'          => $field['watch_field'] ?? null,
 				// Layout: full-width fields render without the label column.
 				'full_width'           => ! empty( $field['full_width'] ),
+				// Group label for child fields (e.g., xProfile group names under Members).
+				'child_group_label'    => $field['child_group_label'] ?? null,
 			);
 
 			// access_control: populate access-control data via filter so Pro can inject types/options.
@@ -849,6 +851,12 @@ class BB_Admin_Settings_Ajax {
 
 		foreach ( $all_fields as $field_key => $field ) {
 			$name = $field['name'];
+
+			// Skip pro_only fields when Pro is not active — defense-in-depth
+			// against crafted AJAX requests. The UI already disables these fields.
+			if ( ! empty( $field['pro_only'] ) && ! function_exists( 'bb_platform_pro' ) ) {
+				continue;
+			}
 
 			// Save the main field if it was submitted.
 			if ( array_key_exists( $name, $settings ) ) {

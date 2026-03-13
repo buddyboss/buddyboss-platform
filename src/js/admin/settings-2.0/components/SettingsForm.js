@@ -72,7 +72,7 @@ export function SettingsForm({ fields, values, onChange }) {
 	const sanitizedHtml = useMemo( () => {
 		const cache = {};
 		fields.forEach( ( field ) => {
-			if ( field.description ) {
+			if ( field.description && 'string' === typeof field.description ) {
 				cache[ field.name + '__desc' ] = sanitizeHtml( field.description );
 
 				// Pre-split and sanitize parts for fields with inline description controls.
@@ -90,28 +90,61 @@ export function SettingsForm({ fields, values, onChange }) {
 	}, [ fields ] );
 
 	/**
-	 * Check if a field should be visible based on its conditional logic
+	 * Evaluate a single condition object against current values.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {Object} cond          Single condition: { field, value }.
+	 * @return {boolean} Whether the condition is met.
+	 */
+	const evaluateCondition = (cond) => {
+		const condValue = values[cond.field];
+		const expectedValue = cond.value;
+
+		// When expected value is boolean, use truthy/falsy comparison
+		// because DB values can be 1, 0, "1", "0" while conditional uses true/false.
+		if (expectedValue === true || expectedValue === false) {
+			const isTruthy = !!condValue && condValue !== '0' && condValue !== 0;
+			return isTruthy === expectedValue;
+		}
+
+		// When expected value is an array, check if current value is in the array.
+		if (Array.isArray(expectedValue)) {
+			return expectedValue.indexOf(condValue) !== -1;
+		}
+
+		// For non-boolean values, use strict comparison.
+		return condValue === expectedValue;
+	};
+
+	/**
+	 * Check if a field should be visible based on its conditional logic.
+	 *
+	 * Supports two formats:
+	 *   1. Single condition:   { field: 'name', value: expected }
+	 *   2. Multiple conditions: { conditions: [ {field, value}, ... ], operator: 'AND'|'OR' }
+	 *      operator defaults to 'AND'.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
 	const isFieldVisible = (field) => {
 		// If field has a "conditional" property, check it
 		if (field.conditional) {
-			const condValue = values[field.conditional.field];
-			const expectedValue = field.conditional.value;
 
-			// When expected value is boolean, use truthy/falsy comparison
-			// because DB values can be 1, 0, "1", "0" while conditional uses true/false.
-			if (expectedValue === true || expectedValue === false) {
-				const isTruthy = !!condValue && condValue !== '0' && condValue !== 0;
-				return isTruthy === expectedValue;
+			// Multiple conditions with operator.
+			if (Array.isArray(field.conditional.conditions)) {
+				var operator = (field.conditional.operator || 'AND').toUpperCase();
+				var conditions = field.conditional.conditions;
+
+				if ('OR' === operator) {
+					return conditions.some(evaluateCondition);
+				}
+				// Default: AND — all conditions must match.
+				return conditions.every(evaluateCondition);
 			}
 
-			// When expected value is an array, check if current value is in the array.
-			if (Array.isArray(expectedValue)) {
-				return expectedValue.indexOf(condValue) !== -1;
-			}
-
-			// For non-boolean values, use strict comparison.
-			return condValue === expectedValue;
+			// Single condition (backward-compatible).
+			return evaluateCondition(field.conditional);
 		}
 
 		// For parent_field (nesting), always show the field but it may be disabled
@@ -131,6 +164,12 @@ export function SettingsForm({ fields, values, onChange }) {
 
 		// Find parent field to check if it's inverted
 		const parentField = fields.find(f => f.name === field.parent_field);
+
+		// Hidden parents are label-only groupings — never disable their children.
+		if ( 'hidden' === parentField?.type ) {
+			return false;
+		}
+
 		const isParentInverted = true === parentField?.invert_value;
 
 		// If parent_value is specified, check for exact match
@@ -420,12 +459,15 @@ export function SettingsForm({ fields, values, onChange }) {
 			case 'notice':
 				// Notice field: displays an informational/warning/error notice banner.
 				// Uses notice_type (info, warning, error, success) for styling.
+				// Content is wrapped in a <span> so the icon (:before pseudo) and text
+				// are two flex items — preventing <a> tags from creating extra columns.
 				return (
 					<div
 						key={field.name}
 						className={`bb-admin-notice bb-admin-notice--${field.notice_type || 'info'}`}
-						dangerouslySetInnerHTML={{ __html: sanitizedHtml[ field.name + '__desc' ] || '' }}
-					/>
+					>
+						<span dangerouslySetInnerHTML={{ __html: sanitizedHtml[ field.name + '__desc' ] || '' }} />
+					</div>
 				);
 
 			case 'reaction_migration': {
@@ -570,6 +612,48 @@ export function SettingsForm({ fields, values, onChange }) {
 
 		const disabled = parentDisabled || isFieldDisabled(field);
 
+		// Checkbox children: render CheckboxControl with inline label (no separate label element).
+		if ( 'checkbox' === field.type ) {
+			const cbInverted = true === field.invert_value;
+			const cbVal = values[ field.name ] !== undefined ? values[ field.name ] : field.default;
+			const cbDisplay = cbInverted ? ! cbVal : !! cbVal;
+			return (
+				<div key={field.name} className={`bb-admin-settings-form__child-field bb-admin-settings-form__child-field--checkbox ${disabled ? 'bb-admin-settings-form__child-field--disabled' : ''}`}>
+					<CheckboxControl
+						label={ field.label || field.description || '' }
+						checked={ cbDisplay }
+						onChange={ function( checked ) {
+							var saveVal = cbInverted ? ! checked : checked;
+							onChange( field.name, saveVal ? 1 : 0 );
+						} }
+						disabled={ disabled }
+						__nextHasNoMarginBottom
+					/>
+				</div>
+			);
+		}
+
+		// Toggle children: render ToggleControl with inline label (toggle + label on same row).
+		if ( 'toggle' === field.type ) {
+			const tgInverted = true === field.invert_value;
+			const tgVal = values[ field.name ] !== undefined ? values[ field.name ] : field.default;
+			const tgDisplay = tgInverted ? ! tgVal : !! tgVal;
+			return (
+				<div key={field.name} className={`bb-admin-settings-form__child-field bb-admin-settings-form__child-field--toggle ${disabled ? 'bb-admin-settings-form__child-field--disabled' : ''}`}>
+					<ToggleControl
+						label={ field.label || field.description || '' }
+						checked={ tgDisplay }
+						onChange={ function( checked ) {
+							var saveVal = tgInverted ? ! checked : checked;
+							onChange( field.name, saveVal ? 1 : 0 );
+						} }
+						disabled={ disabled }
+						__nextHasNoMarginBottom
+					/>
+				</div>
+			);
+		}
+
 		return (
 			<div key={field.name} className={`bb-admin-settings-form__child-field ${disabled ? 'bb-admin-settings-form__child-field--disabled' : ''}`}>
 				{field.label && (
@@ -578,7 +662,7 @@ export function SettingsForm({ fields, values, onChange }) {
 				<div className="bb-admin-settings-form__child-field-control">
 					{renderFieldControl(field, disabled)}
 				</div>
-				{field.description && (
+				{field.description && 'toggle' !== field.type && 'checkbox' !== field.type && (
 					<p className="bb-admin-settings-form__child-field-description">{field.description}</p>
 				)}
 			</div>
@@ -597,9 +681,11 @@ export function SettingsForm({ fields, values, onChange }) {
 		// Check if field should be disabled (parent toggle is OFF or field-level disabled flag).
 		const disabled = isFieldDisabled(field) || !!field.disabled;
 
-		// Render the control first — if it returns null, skip the entire field row.
+		// Render the control first — if it returns null, skip the entire field row
+		// unless the field has child fields (e.g., hidden parent used as a label-only grouping).
 		const controlOutput = renderFieldControl(field, disabled);
-		if ( null === controlOutput ) {
+		const childFields = fields.filter(f => f.parent_field === field.name);
+		if ( null === controlOutput && 0 === childFields.length ) {
 			return null;
 		}
 
@@ -623,9 +709,6 @@ export function SettingsForm({ fields, values, onChange }) {
 		if ( 'reaction_migration' === field.type || 'reaction_notice' === field.type ) {
 			return controlOutput;
 		}
-
-		// Get child fields that depend on this field
-		const childFields = fields.filter(f => f.parent_field === field.name);
 
 		// Check if this is a toggle with children (special layout)
 		const isToggleWithChildren = ( 'toggle' === field.type || 'checkbox' === field.type ) && childFields.length > 0;
@@ -670,21 +753,23 @@ export function SettingsForm({ fields, values, onChange }) {
 						</label>
 					</div>
 				)}
-				<div className={ 'bb-admin-settings-form__field-content' + ( ( 'toggle' === field.type || 'checkbox' === field.type ) && field.description && ! field.toggle_label ? ' bb-admin-settings-form__field-content--inline' : '' ) }>
+				<div className={ 'bb-admin-settings-form__field-content' + ( ( 'toggle' === field.type || 'checkbox' === field.type ) && field.description && ! isToggleWithChildren ? ' bb-admin-settings-form__field-content--inline' : '' ) }>
 					{/* Group sub-label (e.g. "Width", "Height" within a grouped field) */}
 					{ field.group?.label && (
 						<label className="bb-admin-settings-form__field-group-label">{field.group.label}</label>
 					) }
-					{/* Field with optional prefix/suffix */}
-					<div className="bb-admin-settings-form__field-input-wrapper">
-						{field.prefix && (
-							<span className="bb-admin-settings-form__field-prefix">{field.prefix}</span>
-						)}
-						{controlOutput}
-						{field.suffix && (
-							<span className="bb-admin-settings-form__field-suffix">{field.suffix}</span>
-						)}
-					</div>
+					{/* Field with optional prefix/suffix — skip wrapper when control is null (e.g., hidden parent fields). */}
+					{ null !== controlOutput && (
+						<div className="bb-admin-settings-form__field-input-wrapper">
+							{field.prefix && (
+								<span className="bb-admin-settings-form__field-prefix">{field.prefix}</span>
+							)}
+							{controlOutput}
+							{field.suffix && (
+								<span className="bb-admin-settings-form__field-suffix">{field.suffix}</span>
+							)}
+						</div>
+					) }
 
 					{/* Description: skip for notice type (rendered by notice component itself).
 				    When description contains %s and field has description_controls,
@@ -777,7 +862,22 @@ export function SettingsForm({ fields, values, onChange }) {
 					{/* Render child fields inline/nested */}
 					{childFields.length > 0 && (
 						<div className="bb-admin-settings-form__child-fields">
-							{childFields.map(childField => renderChildField(childField, disabled))}
+							{childFields.reduce(function (acc, childField, idx) {
+								var groupLabel = childField.child_group_label || null;
+								var prevLabel  = idx > 0 ? ( childFields[ idx - 1 ].child_group_label || null ) : null;
+
+								// Insert a group heading when the label changes.
+								if ( groupLabel && groupLabel !== prevLabel ) {
+									acc.push(
+										<div key={ 'group-label-' + groupLabel + '-' + idx } className="bb-admin-settings-form__child-group-label">
+											{ groupLabel }
+										</div>
+									);
+								}
+
+								acc.push( renderChildField( childField, disabled ) );
+								return acc;
+							}, [])}
 						</div>
 					)}
 				</div>
