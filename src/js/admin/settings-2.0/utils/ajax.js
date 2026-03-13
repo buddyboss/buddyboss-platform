@@ -933,10 +933,11 @@ export function saveProfileField( data ) {
  * @since BuddyBoss [BBVERSION]
  *
  * @param {number} fieldId - Field ID.
+ * @param {Object} options - Optional fetch options (e.g. { signal }).
  * @return {Promise} Promise resolving to response.
  */
-export function deleteProfileField( fieldId ) {
-	return ajaxFetch( 'bb_admin_delete_profile_field', { field_id: fieldId } );
+export function deleteProfileField( fieldId, options ) {
+	return ajaxFetch( 'bb_admin_delete_profile_field', { field_id: fieldId }, options );
 }
 
 /**
@@ -981,11 +982,12 @@ export function saveProfileSearchField( data ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param {Object} data - Delete data (field_index).
+ * @param {Object} data    - Delete data (field_index).
+ * @param {Object} options - Optional fetch options (e.g. { signal }).
  * @return {Promise} Promise resolving to response.
  */
-export function deleteProfileSearchField( data ) {
-	return ajaxFetch( 'bb_admin_delete_profile_search_field', data );
+export function deleteProfileSearchField( data, options ) {
+	return ajaxFetch( 'bb_admin_delete_profile_search_field', data, options );
 }
 
 /**
