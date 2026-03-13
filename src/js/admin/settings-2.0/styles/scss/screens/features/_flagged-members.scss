@@ -120,15 +120,6 @@
 		}
 	}
 
-	/* Dot indicator */
-	&__dot {
-		width: 6px;
-		height: 6px;
-		border-radius: 50%;
-		background: $bb-border-tertiary-color;
-		flex-shrink: 0;
-	}
-
 	/* Items row — flex: 1, gap: 32px */
 	&__items {
 		display: flex;

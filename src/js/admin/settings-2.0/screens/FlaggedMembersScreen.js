@@ -214,9 +214,6 @@ export function FlaggedMembersScreen( { onNavigate } ) {
 									var isBusy = actionInProgress === member.user_id;
 									return (
 										<div key={ member.id } className="bb-admin-flagged-members__list-item">
-											{/* Dot indicator */}
-											<span className="bb-admin-flagged-members__dot"></span>
-
 											{/* Items row */}
 											<div className="bb-admin-flagged-members__items">
 												{/* Member info */}
