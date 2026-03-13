@@ -30,6 +30,17 @@ function bb_forums_after_save_settings( $feature_id, $settings, $saved ) { // ph
 
 	// Flush rewrite rules — critical for permalink slug changes.
 	flush_rewrite_rules();
+
+	/**
+	 * Fires after forum settings are saved via Settings 2.0.
+	 *
+	 * Used internally to trigger deprecated legacy hooks
+	 * (`bp_admin_tab_setting_save`, `bp_admin_tab_setting_saved`)
+	 * via wrappers in the deprecation file.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	do_action( 'bb_forums_after_save_settings' );
 }
 
 add_action( 'bb_admin_save_feature_settings_after', 'bb_forums_after_save_settings', 10, 3 );
