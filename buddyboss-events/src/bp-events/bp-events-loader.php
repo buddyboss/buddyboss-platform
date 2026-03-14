@@ -12,6 +12,9 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
+// Load the moderation integration class.
+require_once __DIR__ . '/classes/class-bp-moderation-events.php';
+
 /**
  * Set up the bp-events component.
  *

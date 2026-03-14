@@ -142,6 +142,24 @@ function bp_events_admin_enqueue_scripts( $hook ) {
 	);
 }
 
+/** BuddyBoss Moderation Integration ******************************************/
+
+/**
+ * Instantiate BP_Moderation_Events to register 'events' as a reportable
+ * content type in the BuddyBoss moderation system.
+ *
+ * Runs at priority 20 on 'bp_setup_components' so the events component
+ * (priority 9) and moderation component are both loaded first.
+ *
+ * @since BuddyBoss Events 1.0.0
+ */
+function bp_events_setup_moderation() {
+	if ( bp_is_active( 'moderation' ) ) {
+		new BP_Moderation_Events();
+	}
+}
+add_action( 'bp_setup_components', 'bp_events_setup_moderation', 20 );
+
 /** Admin: Approve Pending Event **********************************************/
 
 /**

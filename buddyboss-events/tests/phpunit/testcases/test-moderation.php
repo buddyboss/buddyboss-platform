@@ -20,11 +20,32 @@ class BP_Events_Test_Moderation extends WP_UnitTestCase {
 	/**
 	 * Test that the events content type is registered with the moderation system.
 	 *
-	 * Covers ADMN-04: after the bp-events component loads, the events content
-	 * type must appear in the list of content types available to the BuddyBoss
-	 * moderation filter/reporting UI.
+	 * Covers ADMN-04: after instantiating BP_Moderation_Events and applying the
+	 * 'bp_moderation_content_types' filter, the returned array contains the key
+	 * 'events' with value 'Events'.
 	 */
 	public function test_event_report_registers_content_type() {
-		$this->markTestIncomplete( 'TODO: implement after Plan 06 completes' );
+		// Ensure the class exists — instantiation in the hook may not have run yet.
+		if ( ! class_exists( 'BP_Moderation_Events' ) ) {
+			require_once BP_PLUGIN_DIR . '/src/bp-events/classes/class-bp-moderation-events.php';
+		}
+
+		// Instantiate directly to register the filter.
+		$moderation = new BP_Moderation_Events();
+
+		// Apply the filter — content types array should now contain 'events'.
+		$content_types = apply_filters( 'bp_moderation_content_types', array() );
+
+		$this->assertArrayHasKey(
+			'events',
+			$content_types,
+			'Expected "events" key in bp_moderation_content_types filter output.'
+		);
+
+		$this->assertSame(
+			'Events',
+			$content_types['events'],
+			'Expected "Events" label for the events content type.'
+		);
 	}
 }
