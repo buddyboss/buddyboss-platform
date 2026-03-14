@@ -142,6 +142,74 @@ function bp_events_admin_enqueue_scripts( $hook ) {
 	);
 }
 
+/** Admin: Approve Pending Event **********************************************/
+
+/**
+ * AJAX handler: approve a pending event (set status to published).
+ *
+ * Expects a POST request with:
+ *   - action   : 'bp_events_approve'
+ *   - event_id : int
+ *   - nonce    : wp_create_nonce( 'bp_events_admin_action' )
+ *
+ * @since BuddyBoss Events 1.0.0
+ */
+function bp_events_ajax_approve_event() {
+	check_ajax_referer( 'bp_events_admin_action', 'nonce' );
+
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_send_json_error( __( 'Permission denied.', 'buddyboss' ) );
+	}
+
+	$event_id = absint( $_POST['event_id'] );
+
+	if ( ! $event_id ) {
+		wp_send_json_error( __( 'Invalid event ID.', 'buddyboss' ) );
+	}
+
+	$result = bp_events_update_event( $event_id, array( 'status' => 'published' ) );
+
+	if ( $result ) {
+		wp_send_json_success();
+	} else {
+		wp_send_json_error( __( 'Could not approve event.', 'buddyboss' ) );
+	}
+}
+add_action( 'wp_ajax_bp_events_approve', 'bp_events_ajax_approve_event' );
+
+/** Admin: Moderation Status Enforcement **************************************/
+
+/**
+ * Force 'pending' status when moderation is enabled and a parent event is
+ * being saved as 'published'.
+ *
+ * Child occurrence rows (parent_event_id is set) bypass this check and are
+ * always published directly — their parent controls moderation.
+ *
+ * Hooked on 'bp_events_before_event_save' which fires inside BP_Event::save().
+ *
+ * @since BuddyBoss Events 1.0.0
+ *
+ * @param BP_Event $event The event object about to be saved.
+ */
+function bp_events_enforce_moderation_status( $event ) {
+	// Only override parent events being saved as 'published'.
+	if ( 'published' !== $event->status ) {
+		return;
+	}
+
+	// Child occurrences are always published without moderation.
+	if ( ! empty( $event->parent_event_id ) ) {
+		return;
+	}
+
+	// Override to 'pending' when moderation queue is enabled.
+	if ( bp_events_moderation_enabled() ) {
+		$event->status = 'pending';
+	}
+}
+add_action( 'bp_events_before_event_save', 'bp_events_enforce_moderation_status', 10, 1 );
+
 /** Recurring Occurrences *****************************************************/
 
 /**
