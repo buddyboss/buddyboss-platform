@@ -1401,6 +1401,42 @@ function bp_events_get_waitlist( $event_id ) {
 }
 
 /**
+ * Handle capacity change and trigger waitlist notification if a spot opened.
+ *
+ * This function is responsible ONLY for the notification logic. The REST
+ * update_item() handler saves the new capacity value via bp_events_update_event()
+ * before calling this function, so there is no double-save.
+ *
+ * Triggers bp_events_notify_waitlist() when:
+ *   - $new_capacity is NULL (unlimited) — all spots open immediately.
+ *   - $new_capacity > current registered count — at least one spot is free.
+ *
+ * Does nothing (returns true silently) when there are no waitlisted users.
+ *
+ * @since BuddyBoss Events 1.0.0
+ *
+ * @param int      $event_id     Event ID.
+ * @param int|null $new_capacity New capacity value, or NULL for unlimited.
+ * @return true Always returns true.
+ */
+function bp_events_update_capacity( $event_id, $new_capacity ) {
+	$registered = bp_events_get_attendees( $event_id, 'registered' );
+	$waitlisted = bp_events_get_waitlist( $event_id );
+
+	if ( empty( $waitlisted ) ) {
+		return true;
+	}
+
+	$spot_opened = is_null( $new_capacity ) || (int) $new_capacity > count( $registered );
+
+	if ( $spot_opened ) {
+		bp_events_notify_waitlist( $event_id );
+	}
+
+	return true;
+}
+
+/**
  * Notify all waitlisted users that a spot has opened for an event.
  *
  * Sends both a BuddyBoss notification and an email to each waitlisted user.

@@ -356,6 +356,13 @@ class BP_REST_Events_Endpoint extends WP_REST_Controller {
 			}
 		}
 
+		// Trigger waitlist notification if capacity changed and spots opened.
+		// Called AFTER bp_events_update_event() so the new capacity is already
+		// saved when the waitlist broadcast fires.
+		if ( $request->has_param( 'capacity' ) ) {
+			bp_events_update_capacity( $event_id, $request->get_param( 'capacity' ) );
+		}
+
 		$event = bp_events_get_event( $event_id );
 		return rest_ensure_response( $this->prepare_item_for_response( $event, $request ) );
 	}
