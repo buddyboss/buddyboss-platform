@@ -13,7 +13,7 @@ Three phases that build from foundation outward: first a working plugin with ful
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation + Event Management** - Installable plugin scaffold with full event CRUD (in-person, virtual, recurring), admin control panel, and site-wide calendar view (completed 2026-03-14)
-- [ ] **Phase 2: Payments + Ticketing** - Stripe Connect organizer onboarding, tiered commission capture, multi-tier ticket management, checkout, refunds, and attendee tools
+- [ ] **Phase 2: Payments + Ticketing** - Free RSVP system with capacity-aware waitlisting, group-restricted RSVP, waitlist broadcast notifications, and calendar export (paid ticketing deferred)
 - [ ] **Phase 3: BuddyBoss Integration** - Group events tab, activity feed posting, member profile sections, and group member invite flow — the product's core differentiator
 
 ## Phase Details
@@ -42,16 +42,23 @@ Plans:
 - [ ] 01-PLAN-08.md — End-to-end human verification checkpoint
 
 ### Phase 2: Payments + Ticketing
-**Goal**: Organizers can sell tickets with multiple pricing tiers through their own Stripe account, BuddyBoss automatically captures its commission on every sale, refunds reverse the commission proportionally, and attendees can join waitlists and export events to their calendars
+**Goal**: Organizers can create free RSVP events with capacity limits, attendees can join a waitlist on sold-out events and receive broadcast notifications when a spot opens, organizers can restrict RSVP to members of a specific BuddyBoss group, and attendees can export events to iCal or Google Calendar
 **Depends on**: Phase 1
-**Requirements**: PAY-01, PAY-02, PAY-03, PAY-04, PAY-05, TKET-01, TKET-02, TKET-03, TKET-04, ATTN-01, ATTN-02
+**Requirements**: TKET-02, TKET-04, ATTN-01, ATTN-02
 **Success Criteria** (what must be TRUE):
-  1. Organizer can connect their Stripe account via OAuth in under 5 clicks and see their account status on the event dashboard
-  2. Attendee can purchase a ticket through Stripe Payment Element — money lands in the organizer's Stripe account, BuddyBoss application fee is deducted automatically at the rate configured for the site's plan tier
-  3. When an organizer issues a refund, the platform commission is reversed proportionally — no manual intervention required
-  4. Organizer can view a dashboard showing lifetime earnings, pending payouts, and a full transaction history with per-ticket detail
-  5. Attendee can join a waitlist on a sold-out event and receives a notification when a spot opens; attendee can export any event to iCal or Google Calendar
-**Plans**: TBD
+  1. Attendee can RSVP to a free event with one click — button changes to "Attending" in-page without redirect
+  2. When event hits capacity, RSVP button automatically changes to "Join Waitlist" — all waitlisted users are notified simultaneously when a spot opens
+  3. Organizer can restrict RSVP to members of a specific BuddyBoss group — non-members see a disabled button with an explanatory message
+  4. Attendee can download an iCal file or open Google Calendar with the event pre-filled from the event page
+**Plans**: 6 plans
+
+Plans:
+- [ ] 02-00-PLAN.md — PHPUnit test stubs for RSVP, restrictions, waitlist, calendar export
+- [ ] 02-01-PLAN.md — RSVP PHP functions, REST sub-routes, waitlist notification functions
+- [ ] 02-02-PLAN.md — Capacity-increase waitlist trigger (third ATTN-01 spot-open mechanism)
+- [ ] 02-03-PLAN.md — Group restriction meta storage + RSVP Settings step in creation wizard
+- [ ] 02-04-PLAN.md — Single event template RSVP panel, attendee list, JS, calendar export wiring
+- [ ] 02-05-PLAN.md — End-to-end human verification checkpoint
 
 ### Phase 3: BuddyBoss Integration
 **Goal**: Events are fully woven into the BuddyBoss community fabric — each group has its own events tab with calendar, activity feeds reflect event actions, member profiles show event history, and organizers can invite group members directly from the group roster
@@ -72,5 +79,5 @@ Phases execute in numeric order: 1 → 2 → 3
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation + Event Management | 9/9 | Complete   | 2026-03-14 |
-| 2. Payments + Ticketing | 0/TBD | Not started | - |
+| 2. Payments + Ticketing | 0/6 | Not started | - |
 | 3. BuddyBoss Integration | 0/TBD | Not started | - |
