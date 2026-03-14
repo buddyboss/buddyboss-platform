@@ -17,9 +17,9 @@
 ### Ticketing
 
 - [ ] **TKET-01**: Organizer can create multiple named ticket tiers per event with individual price, quantity, and description
-- [ ] **TKET-02**: Organizer can create a free RSVP event with no payment required
+- [x] **TKET-02**: Organizer can create a free RSVP event with no payment required
 - [ ] **TKET-03**: Organizer can create promo/discount codes per event (percentage or fixed-amount discount)
-- [ ] **TKET-04**: Organizer can restrict ticket purchase to members of a specific BuddyBoss group
+- [x] **TKET-04**: Organizer can restrict ticket purchase to members of a specific BuddyBoss group
 
 ### Payments & Commission
 
@@ -31,8 +31,8 @@
 
 ### Attendee Experience
 
-- [ ] **ATTN-01**: Attendee can join a waitlist when an event is sold out and receives a notification when a spot becomes available
-- [ ] **ATTN-02**: Attendee can export an event to their personal calendar via iCal or Google Calendar link
+- [x] **ATTN-01**: Attendee can join a waitlist when an event is sold out and receives a notification when a spot becomes available
+- [x] **ATTN-02**: Attendee can export an event to their personal calendar via iCal or Google Calendar link
 
 ### BuddyBoss Integration
 
@@ -90,16 +90,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | EVNT-05 | Phase 1 | Complete |
 | EVNT-06 | Phase 1 | Complete |
 | TKET-01 | Phase 2 | Pending |
-| TKET-02 | Phase 2 | Pending |
+| TKET-02 | Phase 2 | Complete |
 | TKET-03 | Phase 2 | Pending |
-| TKET-04 | Phase 2 | Pending |
+| TKET-04 | Phase 2 | Complete |
 | PAY-01 | Phase 2 | Pending |
 | PAY-02 | Phase 2 | Pending |
 | PAY-03 | Phase 2 | Pending |
 | PAY-04 | Phase 2 | Pending |
 | PAY-05 | Phase 2 | Pending |
-| ATTN-01 | Phase 2 | Pending |
-| ATTN-02 | Phase 2 | Pending |
+| ATTN-01 | Phase 2 | Complete |
+| ATTN-02 | Phase 2 | Complete |
 | BB-01 | Phase 3 | Pending |
 | BB-02 | Phase 3 | Pending |
 | BB-03 | Phase 3 | Pending |
