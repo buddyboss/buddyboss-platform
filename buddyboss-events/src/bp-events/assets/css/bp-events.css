@@ -1,0 +1,40 @@
+/**
+ * BuddyBoss Events — Calendar styles.
+ *
+ * @package BuddyBoss\Events
+ * @since   BuddyBoss Events 1.0.0
+ */
+
+/* Calendar container */
+#bb-rl-events-calendar {
+	min-height: 600px;
+}
+
+/* View toggle */
+.bb-rl-calendar-view-toggle {
+	margin-bottom: 1rem;
+}
+
+.bb-rl-view-btn {
+	cursor: pointer;
+	padding: 0.5rem 1rem;
+	border: 1px solid #ccc;
+	background: #fff;
+}
+
+.bb-rl-view-btn.active {
+	background: #000;
+	color: #fff;
+	border-color: #000;
+}
+
+/* Make events look clickable */
+.fc-event {
+	cursor: pointer;
+}
+
+/* Error state */
+.bb-rl-calendar-error {
+	color: #d63638;
+	padding: 1rem 0;
+}
