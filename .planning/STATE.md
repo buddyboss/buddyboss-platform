@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 01-foundation-event-management-00-PLAN.md
-last_updated: "2026-03-14T07:21:30.617Z"
+stopped_at: Completed 01-foundation-event-management-01-PLAN.md
+last_updated: "2026-03-14T07:29:22.746Z"
 last_activity: 2026-03-10 — Roadmap created, all 25 v1 requirements mapped to 3 phases
 progress:
   total_phases: 3
   completed_phases: 0
   total_plans: 9
-  completed_plans: 1
+  completed_plans: 2
   percent: 0
 ---
 
@@ -51,6 +51,7 @@ Progress: [░░░░░░░░░░] 0%
 
 *Updated after each plan completion*
 | Phase 01-foundation-event-management P00 | 2min | 2 tasks | 9 files |
+| Phase 01-foundation-event-management P01 | 4min | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -64,6 +65,10 @@ Recent decisions affecting current work:
 - Architecture: Stripe destination charges with application fees is the commission mechanism — validate end-to-end early in Phase 2
 - [Phase 01-foundation-event-management]: phpunit.xml.dist uses stopOnError=false so markTestIncomplete stubs do not abort the run
 - [Phase 01-foundation-event-management]: Bootstrap conditionally loads bp-events-loader.php — avoids fatals before implementation plans run
+- [Phase 01-foundation-event-management]: php-rrule vendored as 3 files with manual require_once — no Composer autoloader
+- [Phase 01-foundation-event-management]: Duplicate guard: occurrences_generated_until meta key checked against now+2years-90days threshold
+- [Phase 01-foundation-event-management]: bp_events_detach_occurrence uses raw SQL NULL update — wpdb->update with %d casts null to 0
+- [Phase 01-foundation-event-management]: Event meta API implemented from scratch — WP core meta API only works with built-in object types
 
 ### Pending Todos
 
@@ -76,6 +81,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-14T07:21:30.615Z
-Stopped at: Completed 01-foundation-event-management-00-PLAN.md
+Last session: 2026-03-14T07:29:22.744Z
+Stopped at: Completed 01-foundation-event-management-01-PLAN.md
 Resume file: None
