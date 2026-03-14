@@ -256,3 +256,122 @@
 	color: #d63638;
 	margin-bottom: 1rem;
 }
+
+/* =========================================================================
+   Single event — RSVP panel
+   ========================================================================= */
+
+.bb-rl-event-tickets-panel {
+	margin-bottom: 20px;
+}
+
+.bb-rl-event-capacity-info {
+	font-size: 0.85em;
+	color: #666;
+	margin-top: 8px;
+}
+
+.bb-rl-rsvp-cancel-hint {
+	font-size: 0.85em;
+	margin-top: 6px;
+}
+
+/* RSVP button variants */
+.bb-rl-btn--primary {
+	background: #000;
+	color: #fff;
+	border: none;
+}
+
+.bb-rl-btn--primary:hover {
+	background: #333;
+}
+
+.bb-rl-btn--secondary {
+	background: #f3f3f3;
+	color: #333;
+	border: 1px solid #ccc;
+}
+
+.bb-rl-btn--secondary:hover {
+	background: #e8e8e8;
+}
+
+.bb-rl-btn--success {
+	background: #4caf50;
+	color: #fff;
+	border: none;
+}
+
+.bb-rl-btn--success:hover {
+	background: #43a047;
+}
+
+.bb-rl-btn--danger {
+	background: #d63638;
+	color: #fff;
+	border: none;
+}
+
+.bb-rl-btn--danger:hover {
+	background: #b32d2e;
+}
+
+.bb-rl-btn--sm {
+	padding: 0.3rem 0.75rem;
+	font-size: 0.85rem;
+}
+
+/* =========================================================================
+   Single event — public attendee list
+   ========================================================================= */
+
+.bb-rl-event-attendees {
+	margin-bottom: 16px;
+}
+
+.bb-rl-attendee-list {
+	list-style: none;
+	padding: 0;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.bb-rl-attendee-list__item {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.bb-rl-attendee-list__name {
+	font-size: 0.875em;
+}
+
+/* =========================================================================
+   Single event — organizer management panel
+   ========================================================================= */
+
+.bb-rl-event-organizer-panel {
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	padding: 16px;
+	margin-top: 16px;
+}
+
+.bb-rl-attendee-manage-list {
+	list-style: none;
+	padding: 0;
+}
+
+.bb-rl-attendee-manage-list__item {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 6px 0;
+	border-bottom: 1px solid #f0f0f0;
+}
+
+.bb-rl-attendee-manage-list__item:last-child {
+	border-bottom: none;
+}
