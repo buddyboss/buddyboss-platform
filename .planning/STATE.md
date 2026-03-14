@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 02-payments-ticketing 02-01-PLAN.md
-last_updated: "2026-03-14T10:31:14.216Z"
+stopped_at: Completed 02-payments-ticketing 02-02-PLAN.md
+last_updated: "2026-03-14T10:35:54.118Z"
 last_activity: 2026-03-10 — Roadmap created, all 25 v1 requirements mapped to 3 phases
 progress:
   total_phases: 3
   completed_phases: 1
   total_plans: 15
-  completed_plans: 11
+  completed_plans: 12
   percent: 0
 ---
 
@@ -61,6 +61,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 01-foundation-event-management P08 | 2min | 1 tasks | 0 files |
 | Phase 02-payments-ticketing P00 | 3 | 1 tasks | 4 files |
 | Phase 02-payments-ticketing P01 | 8min | 2 tasks | 4 files |
+| Phase 02-payments-ticketing P02 | 5min | 1 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -94,6 +95,8 @@ Recent decisions affecting current work:
 - [Phase 02-payments-ticketing]: All stubs use markTestIncomplete with consistent placeholder text; tab indentation per WordPress Coding Standards
 - [Phase 02-payments-ticketing]: Broadcast waitlist model: bp_events_notify_waitlist() notifies ALL waitlisted users simultaneously — first to re-RSVP gets the spot; simpler than queue-based promotion
 - [Phase 02-payments-ticketing]: PHPUnit tests written with real assertions but WP test suite not installed — php -l used as syntax verification; automated test execution deferred
+- [Phase 02-payments-ticketing]: bp_events_update_capacity() is notification-only — REST handler saves capacity first then calls notify function to avoid double-save
+- [Phase 02-payments-ticketing]: NULL capacity (unlimited) always triggers waitlist broadcast if waitlisted users exist
 
 ### Pending Todos
 
@@ -106,6 +109,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-14T10:31:14.213Z
-Stopped at: Completed 02-payments-ticketing 02-01-PLAN.md
+Last session: 2026-03-14T10:35:54.115Z
+Stopped at: Completed 02-payments-ticketing 02-02-PLAN.md
 Resume file: None
