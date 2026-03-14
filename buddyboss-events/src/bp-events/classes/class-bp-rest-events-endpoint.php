@@ -287,6 +287,15 @@ class BP_REST_Events_Endpoint extends WP_REST_Controller {
 			);
 		}
 
+		// Save RSVP group restriction meta.
+		$rsvp_group_id = (int) $request->get_param( 'rsvp_group_id' );
+		if ( $rsvp_group_id > 0 ) {
+			$group = groups_get_group( $rsvp_group_id );
+			if ( ! empty( $group->id ) ) {
+				bp_events_update_meta( $event_id, 'rsvp_group_id', $rsvp_group_id );
+			}
+		}
+
 		$event    = bp_events_get_event( $event_id );
 		$response = $this->prepare_item_for_response( $event, $request );
 		$response->set_status( 201 );
@@ -332,6 +341,19 @@ class BP_REST_Events_Endpoint extends WP_REST_Controller {
 				__( 'Could not update event.', 'buddyboss' ),
 				array( 'status' => 500 )
 			);
+		}
+
+		// Save or remove RSVP group restriction meta.
+		if ( $request->has_param( 'rsvp_group_id' ) ) {
+			$rsvp_group_id = (int) $request->get_param( 'rsvp_group_id' );
+			if ( $rsvp_group_id > 0 ) {
+				$group = groups_get_group( $rsvp_group_id );
+				if ( ! empty( $group->id ) ) {
+					bp_events_update_meta( $event_id, 'rsvp_group_id', $rsvp_group_id );
+				}
+			} else {
+				bp_events_delete_meta( $event_id, 'rsvp_group_id' );
+			}
 		}
 
 		$event = bp_events_get_event( $event_id );
