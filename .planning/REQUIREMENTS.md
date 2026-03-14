@@ -45,7 +45,7 @@
 
 - [x] **ADMN-01**: Admin can configure who is permitted to create events site-wide (admins only / group organizers / all members / tiered by plan level)
 - [x] **ADMN-02**: Admin has an event moderation queue — newly submitted events require admin approval before going live (toggleable)
-- [ ] **ADMN-03**: Admin can view a platform-wide dashboard showing all events, ticket sales revenue, and commission earned
+- [x] **ADMN-03**: Admin can view a platform-wide dashboard showing all events, ticket sales revenue, and commission earned
 - [x] **ADMN-04**: Users can report an event as offensive or inappropriate, routed into the existing BuddyBoss moderation system
 
 ## v2 Requirements
@@ -106,7 +106,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | BB-04 | Phase 3 | Pending |
 | ADMN-01 | Phase 1 | Complete |
 | ADMN-02 | Phase 1 | Complete |
-| ADMN-03 | Phase 1 | Pending |
+| ADMN-03 | Phase 1 | Complete |
 | ADMN-04 | Phase 1 | Complete |
 
 **Coverage:**

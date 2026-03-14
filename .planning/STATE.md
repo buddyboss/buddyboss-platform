@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 01-foundation-event-management-02-PLAN.md
-last_updated: "2026-03-14T07:33:29.621Z"
+stopped_at: Completed 01-foundation-event-management-03-PLAN.md
+last_updated: "2026-03-14T07:38:10.399Z"
 last_activity: 2026-03-10 — Roadmap created, all 25 v1 requirements mapped to 3 phases
 progress:
   total_phases: 3
   completed_phases: 0
   total_plans: 9
-  completed_plans: 3
+  completed_plans: 4
   percent: 0
 ---
 
@@ -53,6 +53,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 01-foundation-event-management P00 | 2min | 2 tasks | 9 files |
 | Phase 01-foundation-event-management P01 | 4min | 2 tasks | 7 files |
 | Phase 01-foundation-event-management P02 | 5min | 1 tasks | 2 files |
+| Phase 01-foundation-event-management P03 | 3min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -72,6 +73,9 @@ Recent decisions affecting current work:
 - [Phase 01-foundation-event-management]: Event meta API implemented from scratch — WP core meta API only works with built-in object types
 - [Phase 01-foundation-event-management]: _fc=1 param gates FullCalendar shape — same endpoint serves both FC feed and standard REST consumers without a separate route
 - [Phase 01-foundation-event-management]: start/end params take precedence over from/to so FullCalendar native param names work at the JS layer without remapping
+- [Phase 01-foundation-event-management]: LEFT JOIN replaces subquery privacy check in bp_events_get_events() — more efficient and enables unconditional EVNT-06 enforcement (removed wrong moderator bypass)
+- [Phase 01-foundation-event-management]: NULL groupmeta row means site-calendar opt-IN by default — only explicit '0' value opts a group out (EVNT-05)
+- [Phase 01-foundation-event-management]: bp_events_admin_get_event_counts() extracted as separate function — keeps revenue page focused on rendering, query independently cacheable with TTL 300s
 
 ### Pending Todos
 
@@ -84,6 +88,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-14T07:33:29.619Z
-Stopped at: Completed 01-foundation-event-management-02-PLAN.md
+Last session: 2026-03-14T07:38:10.394Z
+Stopped at: Completed 01-foundation-event-management-03-PLAN.md
 Resume file: None
