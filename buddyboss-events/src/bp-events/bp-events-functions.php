@@ -340,18 +340,47 @@ function bp_events_get_events( $args = array() ) {
 	// If filtering by attendee, join attendees table.
 	$join = '';
 	if ( ! is_null( $r['user_id'] ) ) {
-		$join            = $wpdb->prepare(
+		$join = $wpdb->prepare(
 			" INNER JOIN {$bp->events->table_name_attendees} a ON e.id = a.event_id AND a.user_id = %d AND a.status = 'registered'",
 			$r['user_id']
 		);
 	}
 
-	// Privacy: exclude private/hidden group events from general queries.
-	if ( is_null( $r['group_id'] ) && ! bp_current_user_can( 'bp_moderate' ) ) {
-		$where_clauses[] = "(e.group_id IS NULL OR e.group_id IN (
-			SELECT g.id FROM {$wpdb->prefix}bp_groups g WHERE g.status = 'public'
-		))";
+	// Site-wide query (no group_id filter): enforce group privacy rules.
+	// Group-scoped queries bypass site-wide privacy — the group controls its own view.
+	if ( is_null( $r['group_id'] ) ) {
+		$groups_table    = $wpdb->prefix . 'bp_groups';
+		$groupmeta_table = $wpdb->prefix . 'bp_groups_groupmeta';
+
+		// LEFT JOIN to groups table for status check (EVNT-06).
+		$join .= " LEFT JOIN {$groups_table} AS g ON e.group_id = g.id";
+
+		// LEFT JOIN to groupmeta for per-group site-calendar setting (EVNT-05).
+		// meta_key is a literal constant — no user input — so prepare() is not needed here.
+		$join .= " LEFT JOIN {$groupmeta_table} AS gm"
+			. " ON g.id = gm.group_id AND gm.meta_key = 'bb_events_public_group_site_calendar'";
+
+		// EVNT-06 (non-negotiable): standalone events pass; group events only if group is public.
+		$where_clauses[] = "( e.group_id IS NULL OR g.status = 'public' )";
+
+		// EVNT-05 (per-group opt-out): standalone events pass; group events pass unless
+		// the group has explicitly set meta_value = '0'. When meta row is absent (NULL),
+		// the event is included by default (NULL != '0' is true in MySQL).
+		$where_clauses[] = "( e.group_id IS NULL OR gm.meta_value != '0' )";
 	}
+
+	/**
+	 * Filter the WHERE clauses used in bp_events_get_events().
+	 *
+	 * Allows third-party code to add, modify, or remove WHERE conditions.
+	 * Each array item is a raw SQL fragment joined with AND.
+	 *
+	 * @since BuddyBoss Events 1.0.0
+	 *
+	 * @param array $where_clauses Array of SQL WHERE fragments.
+	 * @param array $r             Parsed query arguments.
+	 */
+	$where_clauses = apply_filters( 'bp_events_get_events_where_clauses', $where_clauses, $r );
 
 	$where = implode( ' AND ', $where_clauses );
 
