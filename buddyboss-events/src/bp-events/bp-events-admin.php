@@ -244,9 +244,9 @@ function bp_events_admin_setting_callback_root_slug() {
 function bp_events_admin_setting_callback_creation_permission() {
 	$current = bb_get_events_creation_permission();
 	$options = array(
-		'admins'      => __( 'Site Administrators only', 'buddyboss' ),
-		'organizers'  => __( 'Group Admins and Moderators only', 'buddyboss' ),
-		'members'     => __( 'All logged-in members', 'buddyboss' ),
+		'admins'      => __( 'Site admins', 'buddyboss' ),
+		'organizers'  => __( 'Group owners and moderators', 'buddyboss' ),
+		'members'     => __( 'Members', 'buddyboss' ),
 	);
 	?>
 	<select name="bb_events_creation_permission" id="bb_events_creation_permission">
@@ -266,12 +266,22 @@ function bp_events_admin_setting_callback_creation_permission() {
  * Render the moderation queue toggle field.
  */
 function bp_events_admin_setting_callback_moderation() {
+	$current = bp_events_moderation_enabled() ? '1' : '0';
+	$options = array(
+		'0' => __( 'Members can auto-publish', 'buddyboss' ),
+		'1' => __( 'Requires review by a site admin', 'buddyboss' ),
+	);
 	?>
-	<input name="bb_events_moderation_enabled" id="bb_events_moderation_enabled" type="checkbox" value="1"
-		<?php checked( bp_events_moderation_enabled() ); ?> />
-	<label for="bb_events_moderation_enabled">
-		<?php esc_html_e( 'Require admin approval before events go live', 'buddyboss' ); ?>
-	</label>
+	<select name="bb_events_moderation_enabled" id="bb_events_moderation_enabled">
+		<?php foreach ( $options as $value => $label ) : ?>
+			<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $current, $value ); ?>>
+				<?php echo esc_html( $label ); ?>
+			</option>
+		<?php endforeach; ?>
+	</select>
+	<p class="description">
+		<?php esc_html_e( 'Control whether member-created events go live immediately or require admin approval first.', 'buddyboss' ); ?>
+	</p>
 	<?php
 }
 
