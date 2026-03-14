@@ -79,5 +79,5 @@ Phases execute in numeric order: 1 → 2 → 3
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation + Event Management | 9/9 | Complete   | 2026-03-14 |
-| 2. Payments + Ticketing | 2/6 | In Progress|  |
+| 2. Payments + Ticketing | 5/6 | In Progress|  |
 | 3. BuddyBoss Integration | 0/TBD | Not started | - |
