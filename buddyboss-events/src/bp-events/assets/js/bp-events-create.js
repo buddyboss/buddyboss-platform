@@ -31,6 +31,8 @@
 		capacity:        null,
 		showRecurrence:  false,
 		recurrence_rule: '',           // e.g. 'FREQ=WEEKLY;INTERVAL=1;BYDAY=MO,WE;COUNT=10'
+		rsvp_restrict:   false,        // true when RSVP is restricted to a group
+		rsvp_group_id:   0,            // BuddyPress group ID for restriction
 		status:          'draft'       // 'draft' | 'published'
 	};
 
@@ -49,31 +51,50 @@
 	// -------------------------------------------------------------------------
 
 	/**
-	 * Total number of wizard steps — 6 when recurrence shown, 5 otherwise.
+	 * Total number of wizard steps.
+	 * Fixed steps: 1 Type, 2 Basic Details, 3 Date & Time, 4 Location,
+	 *              5 Recurrence (may be skipped), 6 RSVP Settings, 7 Review.
+	 * Step 5 (Recurrence) is skipped in navigation when showRecurrence is false,
+	 * but totalSteps always reflects visible steps for the indicator strip.
 	 *
 	 * @returns {number}
 	 */
 	function totalSteps() {
-		return state.showRecurrence ? 6 : 5;
+		return state.showRecurrence ? 7 : 6;
 	}
 
 	/**
 	 * Logical step number → display step label mapping.
-	 * When recurrence is hidden step 5 (review) is index 5 in the 5-step path.
+	 * When recurrence is hidden the indicator strip only shows 6 steps, with
+	 * what would be step 6 displayed as position 5, and step 7 as position 6.
 	 *
-	 * @param {number} logicalStep
+	 * @param {number} logicalStep  Display position (1-based index in indicator).
 	 * @returns {string}
 	 */
 	function stepLabel( logicalStep ) {
-		var labels = [
+		if ( state.showRecurrence ) {
+			// All 7 steps visible.
+			var labelsAll = [
+				'Event Type',
+				'Basic Details',
+				'Date & Time',
+				'Location / Virtual',
+				'Recurrence',
+				'RSVP Settings',
+				'Review & Publish'
+			];
+			return labelsAll[ logicalStep - 1 ] || '';
+		}
+		// 6 steps visible (recurrence hidden).
+		var labelsNo = [
 			'Event Type',
 			'Basic Details',
 			'Date & Time',
 			'Location / Virtual',
-			state.showRecurrence ? 'Recurrence' : 'Review & Publish',
+			'RSVP Settings',
 			'Review & Publish'
 		];
-		return labels[ logicalStep - 1 ] || '';
+		return labelsNo[ logicalStep - 1 ] || '';
 	}
 
 	// -------------------------------------------------------------------------
@@ -419,6 +440,43 @@
 	}
 
 	/**
+	 * Render the RSVP Settings step.
+	 *
+	 * @returns {string} HTML string.
+	 */
+	function renderRsvpSettingsStep() {
+		var restrictChecked = state.rsvp_restrict ? ' checked' : '';
+		var selectorDisplay = state.rsvp_restrict ? '' : ' style="display:none;"';
+
+		var html = '<div class="bb-rl-wizard-step bb-rl-step-rsvp-settings" data-step="rsvp-settings">';
+		html += '<h2 class="bb-rl-step-title">RSVP Settings</h2>';
+
+		html += '<div class="bb-rl-field">';
+		html += '<label>';
+		html += '<input type="checkbox" id="bb-rl-rsvp-restrict" name="rsvp_restrict"' + restrictChecked + '> ';
+		html += 'Restrict RSVP to group members';
+		html += '</label>';
+		html += '</div>';
+
+		html += '<div id="bb-rl-rsvp-group-selector"' + selectorDisplay + '>';
+		html += '<div class="bb-rl-field">';
+		html += '<label for="bb-rl-rsvp-group-search">Search groups</label>';
+		html += '<input type="text" id="bb-rl-rsvp-group-search" class="bb-rl-input" placeholder="Type to search groups..." autocomplete="off" value="">';
+		html += '</div>';
+		html += '<ul id="bb-rl-rsvp-group-results" class="bb-rl-wizard-group-results"></ul>';
+		html += '<input type="hidden" id="bb-rl-rsvp-group-id" name="rsvp_group_id" value="' + esc( state.rsvp_group_id > 0 ? state.rsvp_group_id : '' ) + '">';
+		if ( state.rsvp_group_id > 0 ) {
+			html += '<span id="bb-rl-rsvp-group-selected" class="bb-rl-wizard-selected-group">' + esc( state._rsvp_group_name || '' ) + '</span>';
+		} else {
+			html += '<span id="bb-rl-rsvp-group-selected" class="bb-rl-wizard-selected-group"></span>';
+		}
+		html += '</div>';
+
+		html += '</div>';
+		return html;
+	}
+
+	/**
 	 * Render the review step (step 5 without recurrence, step 6 with it).
 	 *
 	 * @returns {string} HTML string.
@@ -452,6 +510,10 @@
 			rows.push( [ 'Recurrence', state.recurrence_rule ] );
 		}
 
+		if ( state.rsvp_restrict && state.rsvp_group_id > 0 ) {
+			rows.push( [ 'RSVP Restriction', 'Group members only (Group ID: ' + state.rsvp_group_id + ')' ] );
+		}
+
 		var tableRows = rows.map( function( row ) {
 			return '<tr><th class="bb-rl-review-label">' + esc( row[0] ) + '</th>' +
 				'<td class="bb-rl-review-value">' + esc( row[1] ) + '</td></tr>';
@@ -470,6 +532,9 @@
 
 	/**
 	 * Re-render the step indicator strip.
+	 *
+	 * The indicator always shows totalSteps() positions. When recurrence is
+	 * hidden, logical steps 1–4, 6, 7 are mapped to display positions 1–6.
 	 */
 	function renderStepIndicators() {
 		var container = document.getElementById( 'bb-rl-wizard-steps' );
@@ -477,19 +542,28 @@
 			return;
 		}
 
-		var total = totalSteps();
-		var html  = '';
+		// Build the ordered list of logical step numbers that are visible.
+		var visibleSteps;
+		if ( state.showRecurrence ) {
+			visibleSteps = [ 1, 2, 3, 4, 5, 6, 7 ];
+		} else {
+			visibleSteps = [ 1, 2, 3, 4, 6, 7 ]; // Skip step 5 (Recurrence).
+		}
 
-		for ( var i = 1; i <= total; i++ ) {
+		var html = '';
+
+		for ( var idx = 0; idx < visibleSteps.length; idx++ ) {
+			var logicalStep  = visibleSteps[ idx ];
+			var displayPos   = idx + 1;
 			var cls = 'bb-rl-step-indicator';
-			if ( i === state.step ) {
+			if ( logicalStep === state.step ) {
 				cls += ' is-active';
-			} else if ( i < state.step ) {
+			} else if ( logicalStep < state.step ) {
 				cls += ' is-complete';
 			}
-			html += '<span class="' + cls + '" data-step="' + i + '">';
-			html += '<span class="bb-rl-step-num">' + i + '</span>';
-			html += '<span class="bb-rl-step-label">' + esc( stepLabel( i ) ) + '</span>';
+			html += '<span class="' + cls + '" data-step="' + logicalStep + '">';
+			html += '<span class="bb-rl-step-num">' + displayPos + '</span>';
+			html += '<span class="bb-rl-step-label">' + esc( stepLabel( displayPos ) ) + '</span>';
 			html += '</span>';
 		}
 
@@ -514,7 +588,7 @@
 		}
 
 		var isFirst  = ( state.step === 1 );
-		var isReview = ( state.step === totalSteps() );
+		var isReview = ( state.step === 7 ); // Step 7 is always Review & Publish.
 
 		prev.style.display    = isFirst  ? 'none'         : 'inline-block';
 		next.style.display    = isReview ? 'none'         : 'inline-block';
@@ -540,7 +614,6 @@
 		}
 
 		var html = '';
-		var reviewStep = totalSteps();
 
 		if ( stepNumber === 1 ) {
 			html = renderStep1();
@@ -550,9 +623,13 @@
 			html = renderStep3();
 		} else if ( stepNumber === 4 ) {
 			html = renderStep4();
-		} else if ( stepNumber === 5 && state.showRecurrence ) {
+		} else if ( stepNumber === 5 ) {
+			// Step 5 is Recurrence — only reached when showRecurrence is true.
 			html = renderStep5();
-		} else if ( stepNumber === reviewStep ) {
+		} else if ( stepNumber === 6 ) {
+			// Step 6 is always RSVP Settings.
+			html = renderRsvpSettingsStep();
+		} else if ( stepNumber === 7 ) {
 			html = renderReviewStep();
 		}
 
@@ -586,8 +663,12 @@
 			bindStep3Events();
 		} else if ( stepNumber === 4 ) {
 			bindStep4Events();
-		} else if ( stepNumber === 5 && state.showRecurrence ) {
+		} else if ( stepNumber === 5 ) {
+			// Step 5 = Recurrence (only navigated to when showRecurrence is true).
 			bindStep5Events();
+		} else if ( stepNumber === 6 ) {
+			// Step 6 = RSVP Settings.
+			bindRsvpSettingsEvents();
 		}
 	}
 
@@ -750,6 +831,98 @@
 		syncRrule();
 	}
 
+	/**
+	 * Bind events for the RSVP Settings step.
+	 *
+	 * - Checkbox shows/hides the group selector.
+	 * - Text input triggers debounced group search via BuddyBoss REST groups endpoint.
+	 * - Clicking a result selects the group and populates the hidden input.
+	 */
+	function bindRsvpSettingsEvents() {
+		var restrictCheck = document.getElementById( 'bb-rl-rsvp-restrict' );
+		var groupSelector = document.getElementById( 'bb-rl-rsvp-group-selector' );
+		var groupSearch   = document.getElementById( 'bb-rl-rsvp-group-search' );
+		var groupResults  = document.getElementById( 'bb-rl-rsvp-group-results' );
+		var groupIdInput  = document.getElementById( 'bb-rl-rsvp-group-id' );
+		var groupSelected = document.getElementById( 'bb-rl-rsvp-group-selected' );
+
+		if ( restrictCheck ) {
+			restrictCheck.addEventListener( 'change', function() {
+				state.rsvp_restrict = this.checked;
+				if ( groupSelector ) {
+					groupSelector.style.display = this.checked ? '' : 'none';
+				}
+				// Clear group selection when unchecked.
+				if ( ! this.checked ) {
+					state.rsvp_group_id = 0;
+					if ( groupIdInput )  { groupIdInput.value = ''; }
+					if ( groupSelected ) { groupSelected.textContent = ''; }
+					if ( groupResults )  { groupResults.innerHTML = ''; }
+				}
+			} );
+		}
+
+		var searchTimer = null;
+
+		if ( groupSearch ) {
+			groupSearch.addEventListener( 'input', function() {
+				var term = this.value;
+				clearTimeout( searchTimer );
+
+				if ( ! term || term.length < 2 ) {
+					if ( groupResults ) { groupResults.innerHTML = ''; }
+					return;
+				}
+
+				searchTimer = setTimeout( function() {
+					if ( ! window.bpEventsCreate || ! bpEventsCreate.restUrl ) {
+						return;
+					}
+
+					var groupsUrl = bpEventsCreate.restUrl.replace( /\/events$/, '/groups' );
+					var fetchUrl  = groupsUrl + '?search=' + encodeURIComponent( term ) + '&per_page=10';
+
+					fetch( fetchUrl, {
+						headers: { 'X-WP-Nonce': bpEventsCreate.nonce }
+					} )
+					.then( function( response ) { return response.json(); } )
+					.then( function( groups ) {
+						if ( ! groupResults ) { return; }
+						groupResults.innerHTML = '';
+
+						if ( ! groups || ! groups.length ) {
+							var noResult = document.createElement( 'li' );
+							noResult.className = 'bb-rl-group-result-none';
+							noResult.textContent = 'No groups found.';
+							groupResults.appendChild( noResult );
+							return;
+						}
+
+						groups.forEach( function( group ) {
+							var li = document.createElement( 'li' );
+							li.className = 'bb-rl-group-result-item';
+							li.textContent = group.name;
+							li.setAttribute( 'data-group-id', group.id );
+							li.addEventListener( 'click', function() {
+								state.rsvp_group_id   = parseInt( group.id, 10 );
+								state._rsvp_group_name = group.name;
+								if ( groupIdInput )  { groupIdInput.value = group.id; }
+								if ( groupSelected ) { groupSelected.textContent = group.name; }
+								if ( groupSearch )   { groupSearch.value = ''; }
+								groupResults.innerHTML = '';
+							} );
+							groupResults.appendChild( li );
+						} );
+					} )
+					.catch( function() {
+						// Silently ignore search errors.
+						if ( groupResults ) { groupResults.innerHTML = ''; }
+					} );
+				}, 300 );
+			} );
+		}
+	}
+
 	// -------------------------------------------------------------------------
 	// Validation
 	// -------------------------------------------------------------------------
@@ -780,6 +953,18 @@
 				var startInput = document.getElementById( 'bb-rl-start-date' );
 				if ( startInput ) {
 					startInput.focus();
+				}
+				return false;
+			}
+		}
+
+		// RSVP Settings step: if restriction enabled, a group must be selected.
+		if ( state.step === 6 ) {
+			if ( state.rsvp_restrict && ! ( state.rsvp_group_id > 0 ) ) {
+				showError( 'Please select a group to restrict RSVP to.' );
+				var groupSearch = document.getElementById( 'bb-rl-rsvp-group-search' );
+				if ( groupSearch ) {
+					groupSearch.focus();
 				}
 				return false;
 			}
@@ -840,13 +1025,34 @@
 		if ( draftBtn )   { draftBtn.disabled = true; }
 		if ( publishBtn ) { publishBtn.disabled = true; }
 
+		// Build clean payload — only include rsvp_group_id when restriction is enabled.
+		var payload = {
+			title:           state.title,
+			description:     state.description,
+			type:            state.type,
+			start_date:      state.start_date,
+			end_date:        state.end_date,
+			timezone:        state.timezone,
+			venue_name:      state.venue_name,
+			venue_address:   state.venue_address,
+			virtual_url:     state.virtual_url,
+			virtual_type:    state.virtual_type,
+			capacity:        state.capacity,
+			status:          state.status,
+			recurrence_rule: state.recurrence_rule
+		};
+
+		if ( state.rsvp_restrict && state.rsvp_group_id > 0 ) {
+			payload.rsvp_group_id = state.rsvp_group_id;
+		}
+
 		fetch( bpEventsCreate.restUrl, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
 				'X-WP-Nonce':   bpEventsCreate.nonce
 			},
-			body: JSON.stringify( state )
+			body: JSON.stringify( payload )
 		} )
 		.then( function( response ) {
 			return response.json().then( function( data ) {
@@ -877,7 +1083,11 @@
 	// -------------------------------------------------------------------------
 
 	/**
-	 * Advance to the next step (or submit on the review step).
+	 * Advance to the next step.
+	 *
+	 * Step sequence:
+	 *   With recurrence:    1 → 2 → 3 → 4 → 5 → 6 → 7
+	 *   Without recurrence: 1 → 2 → 3 → 4 → 6 → 7  (step 5 skipped)
 	 */
 	function goNext() {
 		if ( ! validateCurrentStep() ) {
@@ -888,10 +1098,11 @@
 
 		// Skip recurrence step (step 5) if not enabled.
 		if ( next === 5 && ! state.showRecurrence ) {
-			next = 6; // Jump straight to review.
+			next = 6; // Jump to RSVP Settings.
 		}
 
-		if ( next > totalSteps() ) {
+		// Step 7 is the last step (Review); do not advance past it.
+		if ( next > 7 ) {
 			return;
 		}
 
@@ -900,6 +1111,10 @@
 
 	/**
 	 * Go back one step.
+	 *
+	 * Step sequence (reverse):
+	 *   With recurrence:    7 → 6 → 5 → 4 → 3 → 2 → 1
+	 *   Without recurrence: 7 → 6 → 4 → 3 → 2 → 1  (step 5 skipped)
 	 */
 	function goPrev() {
 		var prev = state.step - 1;
