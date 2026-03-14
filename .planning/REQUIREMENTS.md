@@ -7,12 +7,12 @@
 
 ### Event Creation
 
-- [ ] **EVNT-01**: Organizer can create an in-person event with venue name, address, and capacity limit
-- [ ] **EVNT-02**: Organizer can create a virtual event using the existing BuddyBoss Zoom integration or by adding a Google Meet link
-- [ ] **EVNT-03**: Organizer can create a recurring event series (daily/weekly/monthly/custom) with RRULE-based recurrence and edit-this-only / edit-this-and-future options
-- [ ] **EVNT-04**: Organizer can save an event as draft or schedule a future publish date
-- [ ] **EVNT-05**: Admin can configure per-group whether group events appear only in the group calendar or also on the main site calendar
-- [ ] **EVNT-06**: Events from private and hidden BuddyBoss groups are never visible on the main site calendar (enforced by group privacy rules, not optional)
+- [x] **EVNT-01**: Organizer can create an in-person event with venue name, address, and capacity limit
+- [x] **EVNT-02**: Organizer can create a virtual event using the existing BuddyBoss Zoom integration or by adding a Google Meet link
+- [x] **EVNT-03**: Organizer can create a recurring event series (daily/weekly/monthly/custom) with RRULE-based recurrence and edit-this-only / edit-this-and-future options
+- [x] **EVNT-04**: Organizer can save an event as draft or schedule a future publish date
+- [x] **EVNT-05**: Admin can configure per-group whether group events appear only in the group calendar or also on the main site calendar
+- [x] **EVNT-06**: Events from private and hidden BuddyBoss groups are never visible on the main site calendar (enforced by group privacy rules, not optional)
 
 ### Ticketing
 
@@ -43,10 +43,10 @@
 
 ### Admin & Moderation
 
-- [ ] **ADMN-01**: Admin can configure who is permitted to create events site-wide (admins only / group organizers / all members / tiered by plan level)
-- [ ] **ADMN-02**: Admin has an event moderation queue — newly submitted events require admin approval before going live (toggleable)
+- [x] **ADMN-01**: Admin can configure who is permitted to create events site-wide (admins only / group organizers / all members / tiered by plan level)
+- [x] **ADMN-02**: Admin has an event moderation queue — newly submitted events require admin approval before going live (toggleable)
 - [ ] **ADMN-03**: Admin can view a platform-wide dashboard showing all events, ticket sales revenue, and commission earned
-- [ ] **ADMN-04**: Users can report an event as offensive or inappropriate, routed into the existing BuddyBoss moderation system
+- [x] **ADMN-04**: Users can report an event as offensive or inappropriate, routed into the existing BuddyBoss moderation system
 
 ## v2 Requirements
 
@@ -83,12 +83,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| EVNT-01 | Phase 1 | Pending |
-| EVNT-02 | Phase 1 | Pending |
-| EVNT-03 | Phase 1 | Pending |
-| EVNT-04 | Phase 1 | Pending |
-| EVNT-05 | Phase 1 | Pending |
-| EVNT-06 | Phase 1 | Pending |
+| EVNT-01 | Phase 1 | Complete |
+| EVNT-02 | Phase 1 | Complete |
+| EVNT-03 | Phase 1 | Complete |
+| EVNT-04 | Phase 1 | Complete |
+| EVNT-05 | Phase 1 | Complete |
+| EVNT-06 | Phase 1 | Complete |
 | TKET-01 | Phase 2 | Pending |
 | TKET-02 | Phase 2 | Pending |
 | TKET-03 | Phase 2 | Pending |
@@ -104,10 +104,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | BB-02 | Phase 3 | Pending |
 | BB-03 | Phase 3 | Pending |
 | BB-04 | Phase 3 | Pending |
-| ADMN-01 | Phase 1 | Pending |
-| ADMN-02 | Phase 1 | Pending |
+| ADMN-01 | Phase 1 | Complete |
+| ADMN-02 | Phase 1 | Complete |
 | ADMN-03 | Phase 1 | Pending |
-| ADMN-04 | Phase 1 | Pending |
+| ADMN-04 | Phase 1 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
