@@ -1160,6 +1160,16 @@ function bp_events_format_notifications( $action, $item_id, $secondary_item_id, 
 			$link = $event ? bp_get_event_permalink( $event ) : bp_get_events_directory_url();
 			break;
 
+		case 'waitlist_spot_open':
+			$event = bp_events_get_event( $item_id );
+			$text  = sprintf(
+				/* translators: %s: event title */
+				__( 'A spot has opened for %s — RSVP now!', 'buddyboss' ),
+				$event ? $event->title : __( 'an event', 'buddyboss' )
+			);
+			$link = $event ? bp_get_event_permalink( $event ) : bp_get_events_directory_url();
+			break;
+
 		default:
 			$text = __( 'You have a new event notification', 'buddyboss' );
 			$link = bp_get_events_directory_url();
@@ -1181,4 +1191,280 @@ function bp_events_format_notifications( $action, $item_id, $secondary_item_id, 
  */
 function bp_get_events_directory_url() {
 	return trailingslashit( bp_get_root_url() . bp_get_events_root_slug() );
+}
+
+/** RSVP & Attendees ***********************************************************/
+
+/**
+ * Check if a user can RSVP to an event.
+ *
+ * Returns true on success or a WP_Error describing why the user cannot RSVP.
+ *
+ * @since BuddyBoss Events 1.0.0
+ *
+ * @param int $event_id Event ID.
+ * @param int $user_id  User ID. Defaults to current user.
+ * @return true|WP_Error True if user can RSVP, WP_Error on failure.
+ */
+function bp_events_user_can_rsvp( $event_id, $user_id = 0 ) {
+	if ( ! $user_id ) {
+		$user_id = bp_loggedin_user_id();
+	}
+
+	if ( ! $user_id || ! is_user_logged_in() ) {
+		return new WP_Error(
+			'bp_rest_authorization_required',
+			__( 'You must be logged in to RSVP.', 'buddyboss' ),
+			array( 'status' => 401 )
+		);
+	}
+
+	$event = bp_events_get_event( $event_id );
+
+	if ( ! $event ) {
+		return new WP_Error(
+			'bp_rest_events_not_found',
+			__( 'Event not found.', 'buddyboss' ),
+			array( 'status' => 404 )
+		);
+	}
+
+	if ( 'published' !== $event->status ) {
+		return new WP_Error(
+			'bp_rest_events_rsvp_not_available',
+			__( 'RSVP is not available for this event.', 'buddyboss' ),
+			array( 'status' => 400 )
+		);
+	}
+
+	// Check group membership restriction.
+	$rsvp_group_id = (int) bp_events_get_meta( $event_id, 'rsvp_group_id', true );
+
+	if ( $rsvp_group_id > 0 ) {
+		if ( ! groups_is_user_member( $user_id, $rsvp_group_id ) ) {
+			return new WP_Error(
+				'bp_rest_events_rsvp_restricted',
+				__( 'RSVP limited to members of this group.', 'buddyboss' ),
+				array( 'status' => 403 )
+			);
+		}
+	}
+
+	return true;
+}
+
+/**
+ * RSVP a user to an event.
+ *
+ * Registers the user if capacity allows, otherwise adds them to the waitlist.
+ *
+ * @since BuddyBoss Events 1.0.0
+ *
+ * @param int $event_id Event ID.
+ * @param int $user_id  User ID. Defaults to current user.
+ * @return string|false 'registered' or 'waitlisted' on success, false on failure.
+ */
+function bp_events_rsvp_event( $event_id, $user_id = 0 ) {
+	global $wpdb;
+
+	$bp = buddypress();
+
+	if ( ! $user_id ) {
+		$user_id = bp_loggedin_user_id();
+	}
+
+	if ( ! $user_id || ! $event_id ) {
+		return false;
+	}
+
+	$event = bp_events_get_event( $event_id );
+
+	if ( ! $event ) {
+		return false;
+	}
+
+	// Count current registered attendees.
+	$registered_count = (int) $wpdb->get_var( $wpdb->prepare(
+		"SELECT COUNT(*) FROM {$bp->events->table_name_attendees} WHERE event_id = %d AND status = 'registered'",
+		$event_id
+	) );
+
+	$at_capacity = ! is_null( $event->capacity ) && $registered_count >= (int) $event->capacity;
+	$status      = $at_capacity ? 'waitlisted' : 'registered';
+
+	$result = $wpdb->replace(
+		$bp->events->table_name_attendees,
+		array(
+			'event_id'     => $event_id,
+			'user_id'      => $user_id,
+			'status'       => $status,
+			'date_created' => bp_core_current_time(),
+		),
+		array( '%d', '%d', '%s', '%s' )
+	);
+
+	if ( false === $result ) {
+		return false;
+	}
+
+	return $status;
+}
+
+/**
+ * Cancel a user's RSVP for an event.
+ *
+ * Removes the attendee row. If the removed user was registered (not waitlisted),
+ * notifies the waitlist that a spot has opened.
+ *
+ * @since BuddyBoss Events 1.0.0
+ *
+ * @param int $event_id Event ID.
+ * @param int $user_id  User ID. Defaults to current user.
+ * @return bool True on success, false on failure.
+ */
+function bp_events_cancel_rsvp( $event_id, $user_id = 0 ) {
+	global $wpdb;
+
+	$bp = buddypress();
+
+	if ( ! $user_id ) {
+		$user_id = bp_loggedin_user_id();
+	}
+
+	// Get current status before deleting.
+	$current_status = $wpdb->get_var( $wpdb->prepare(
+		"SELECT status FROM {$bp->events->table_name_attendees} WHERE event_id = %d AND user_id = %d",
+		$event_id,
+		$user_id
+	) );
+
+	$was_registered = ( 'registered' === $current_status );
+
+	$result = $wpdb->delete(
+		$bp->events->table_name_attendees,
+		array(
+			'event_id' => $event_id,
+			'user_id'  => $user_id,
+		),
+		array( '%d', '%d' )
+	);
+
+	if ( $was_registered && false !== $result ) {
+		bp_events_notify_waitlist( $event_id );
+	}
+
+	return false !== $result;
+}
+
+/**
+ * Get attendees for an event.
+ *
+ * @since BuddyBoss Events 1.0.0
+ *
+ * @param int    $event_id Event ID.
+ * @param string $status   Attendee status to filter by. Default 'registered'.
+ * @return array Array of stdObjects with user_id, status, date_created. Empty array if none.
+ */
+function bp_events_get_attendees( $event_id, $status = 'registered' ) {
+	global $wpdb;
+
+	$bp = buddypress();
+
+	$rows = $wpdb->get_results( $wpdb->prepare(
+		"SELECT user_id, status, date_created
+		 FROM {$bp->events->table_name_attendees}
+		 WHERE event_id = %d AND status = %s
+		 ORDER BY date_created ASC",
+		$event_id,
+		$status
+	) );
+
+	if ( empty( $rows ) ) {
+		return array();
+	}
+
+	return $rows;
+}
+
+/**
+ * Get the waitlist for an event.
+ *
+ * Wrapper around bp_events_get_attendees() filtered to status='waitlisted'.
+ *
+ * @since BuddyBoss Events 1.0.0
+ *
+ * @param int $event_id Event ID.
+ * @return array Array of stdObjects with user_id, status, date_created.
+ */
+function bp_events_get_waitlist( $event_id ) {
+	return bp_events_get_attendees( $event_id, 'waitlisted' );
+}
+
+/**
+ * Notify all waitlisted users that a spot has opened for an event.
+ *
+ * Sends both a BuddyBoss notification and an email to each waitlisted user.
+ * This is a broadcast model: the first person to re-RSVP gets the spot.
+ *
+ * @since BuddyBoss Events 1.0.0
+ *
+ * @param int $event_id Event ID.
+ * @return void
+ */
+function bp_events_notify_waitlist( $event_id ) {
+	global $wpdb;
+
+	$bp = buddypress();
+
+	// Get all waitlisted user IDs.
+	$user_ids = $wpdb->get_col( $wpdb->prepare(
+		"SELECT user_id FROM {$bp->events->table_name_attendees} WHERE event_id = %d AND status = 'waitlisted'",
+		$event_id
+	) );
+
+	if ( empty( $user_ids ) ) {
+		return;
+	}
+
+	$event = bp_events_get_event( $event_id );
+
+	if ( ! $event ) {
+		return;
+	}
+
+	$event_title     = $event->title;
+	$event_permalink = bp_get_event_permalink( $event );
+
+	foreach ( $user_ids as $user_id ) {
+		// BuddyBoss in-app notification.
+		bp_notifications_add_notification( array(
+			'user_id'           => (int) $user_id,
+			'item_id'           => $event_id,
+			'secondary_item_id' => 0,
+			'component_name'    => 'events',
+			'component_action'  => 'waitlist_spot_open',
+			'is_new'            => 1,
+			'allow_duplicate'   => false,
+		) );
+
+		// Email notification.
+		$user = get_userdata( (int) $user_id );
+
+		if ( $user && ! empty( $user->user_email ) ) {
+			$subject = sprintf(
+				/* translators: %s: event title */
+				__( 'A spot opened for %s', 'buddyboss' ),
+				$event_title
+			);
+
+			$message = sprintf(
+				/* translators: 1: event title, 2: event URL */
+				__( "A spot has opened for %1\$s.\n\nRSVP now — this is a broadcast notification sent to all waitlisted attendees. The first person to RSVP will secure the spot.\n\n%2\$s", 'buddyboss' ),
+				$event_title,
+				$event_permalink
+			);
+
+			wp_mail( $user->user_email, $subject, $message );
+		}
+	}
 }
