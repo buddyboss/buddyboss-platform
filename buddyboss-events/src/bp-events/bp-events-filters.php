@@ -105,10 +105,71 @@ function bp_events_enqueue_scripts() {
 					'editEvent'     => __( 'Edit Event', 'buddyboss' ),
 					'deleteEvent'   => __( 'Delete Event', 'buddyboss' ),
 					'confirmDelete' => __( 'Are you sure you want to delete this event?', 'buddyboss' ),
+					'loadError'     => __( 'Could not load events.', 'buddyboss' ),
 				),
 			)
 		);
 	}
+}
+
+// Enqueue FullCalendar assets on the events directory page.
+add_action( 'wp_enqueue_scripts', 'bp_events_enqueue_calendar_assets' );
+
+/**
+ * Enqueue FullCalendar and the calendar initialisation script on the events
+ * directory page only.
+ *
+ * Assets are loaded from src/bp-events/assets/ inside the platform plugin.
+ *
+ * @since BuddyBoss Events 1.0.0
+ */
+function bp_events_enqueue_calendar_assets() {
+	if ( ! bp_is_active( 'events' ) ) {
+		return;
+	}
+
+	if ( ! bp_is_current_component( 'events' ) ) {
+		return;
+	}
+
+	$version    = buddypress()->version;
+	$assets_url = buddypress()->plugin_url . 'src/bp-events/assets/';
+
+	wp_enqueue_script(
+		'fullcalendar',
+		$assets_url . 'js/vendor/fullcalendar.min.js',
+		array(),
+		'6.1.20',
+		true
+	);
+
+	wp_enqueue_script(
+		'bp-events-calendar',
+		$assets_url . 'js/bp-events-calendar.js',
+		array( 'fullcalendar' ),
+		$version,
+		true
+	);
+
+	wp_localize_script(
+		'bp-events-calendar',
+		'bpEventsSettings',
+		array(
+			'restUrl'      => esc_url_raw( rest_url( 'buddyboss/v1/events' ) ),
+			'calendarView' => bp_get_option( 'bb_events_default_calendar_view', 'month' ),
+			'nonce'        => wp_create_nonce( 'wp_rest' ),
+			'i18n'         => array(
+				'loadError' => __( 'Could not load events.', 'buddyboss' ),
+			),
+		)
+	);
+
+	wp_enqueue_style(
+		'bp-events-calendar',
+		$assets_url . 'css/bp-events.css',
+		array(),
+		$version
+	);
 }
 
 // Enqueue admin assets.
