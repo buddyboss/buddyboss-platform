@@ -163,6 +163,35 @@ class BP_REST_Events_Endpoint extends WP_REST_Controller {
 				'permission_callback' => '__return_true',
 			)
 		);
+
+		// RSVP: POST /events/{id}/rsvp and DELETE /events/{id}/rsvp.
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/(?P<id>[\d]+)/rsvp',
+			array(
+				array(
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => array( $this, 'rsvp_item' ),
+					'permission_callback' => array( $this, 'rsvp_item_permissions_check' ),
+				),
+				array(
+					'methods'             => WP_REST_Server::DELETABLE,
+					'callback'            => array( $this, 'cancel_rsvp_item' ),
+					'permission_callback' => array( $this, 'rsvp_item_permissions_check' ),
+				),
+			)
+		);
+
+		// Attendees: GET /events/{id}/attendees.
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/(?P<id>[\d]+)/attendees',
+			array(
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => array( $this, 'get_attendees' ),
+				'permission_callback' => '__return_true',
+			)
+		);
 	}
 
 	/**
@@ -654,6 +683,135 @@ class BP_REST_Events_Endpoint extends WP_REST_Controller {
 				'user_can_edit'   => array( 'type' => 'boolean', 'readonly' => true ),
 			),
 		);
+	}
+
+	/** RSVP methods *************************************************************/
+
+	/**
+	 * Permission check for RSVP and cancel-RSVP endpoints.
+	 *
+	 * @since BuddyBoss Events 1.0.0
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return true|WP_Error True if allowed, WP_Error on failure.
+	 */
+	public function rsvp_item_permissions_check( $request ) {
+		if ( ! is_user_logged_in() ) {
+			return new WP_Error(
+				'bp_rest_authorization_required',
+				__( 'You must be logged in to RSVP.', 'buddyboss' ),
+				array( 'status' => 401 )
+			);
+		}
+
+		return bp_events_user_can_rsvp( (int) $request->get_param( 'id' ) );
+	}
+
+	/**
+	 * POST /events/{id}/rsvp — RSVP to an event.
+	 *
+	 * @since BuddyBoss Events 1.0.0
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return WP_REST_Response|WP_Error
+	 */
+	public function rsvp_item( $request ) {
+		global $wpdb;
+
+		$bp       = buddypress();
+		$event_id = (int) $request->get_param( 'id' );
+
+		$result = bp_events_rsvp_event( $event_id );
+
+		if ( false === $result ) {
+			return new WP_Error(
+				'bp_rest_events_rsvp_failed',
+				__( 'Could not complete RSVP. Please try again.', 'buddyboss' ),
+				array( 'status' => 500 )
+			);
+		}
+
+		// Recompute at_capacity for the response.
+		$event            = bp_events_get_event( $event_id );
+		$registered_count = (int) $wpdb->get_var( $wpdb->prepare(
+			"SELECT COUNT(*) FROM {$bp->events->table_name_attendees} WHERE event_id = %d AND status = 'registered'",
+			$event_id
+		) );
+		$at_capacity = $event && ! is_null( $event->capacity ) && $registered_count >= (int) $event->capacity;
+
+		return new WP_REST_Response(
+			array(
+				'status'      => $result,
+				'at_capacity' => $at_capacity,
+			),
+			200
+		);
+	}
+
+	/**
+	 * DELETE /events/{id}/rsvp — cancel an RSVP.
+	 *
+	 * Event organizers and admins may pass user_id in the body to cancel on behalf of another user.
+	 *
+	 * @since BuddyBoss Events 1.0.0
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return WP_REST_Response|WP_Error
+	 */
+	public function cancel_rsvp_item( $request ) {
+		$event_id = (int) $request->get_param( 'id' );
+		$user_id  = (int) $request->get_param( 'user_id' ) ?: bp_loggedin_user_id();
+
+		// If cancelling on behalf of another user, verify permission.
+		if ( $user_id !== bp_loggedin_user_id() ) {
+			$event = bp_events_get_event( $event_id );
+
+			$is_organizer = $event && ( (int) $event->organizer_id === bp_loggedin_user_id() );
+			$is_admin     = current_user_can( 'administrator' );
+
+			if ( ! $is_organizer && ! $is_admin ) {
+				return new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'You do not have permission to cancel this RSVP.', 'buddyboss' ),
+					array( 'status' => 403 )
+				);
+			}
+		}
+
+		$result = bp_events_cancel_rsvp( $event_id, $user_id );
+
+		return new WP_REST_Response(
+			array( 'cancelled' => $result ),
+			200
+		);
+	}
+
+	/**
+	 * GET /events/{id}/attendees — list registered attendees.
+	 *
+	 * @since BuddyBoss Events 1.0.0
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return WP_REST_Response
+	 */
+	public function get_attendees( $request ) {
+		$event_id = (int) $request->get_param( 'id' );
+		$rows     = bp_events_get_attendees( $event_id, 'registered' );
+
+		$attendees = array_map( function( $row ) {
+			return array(
+				'user_id'      => (int) $row->user_id,
+				'display_name' => get_the_author_meta( 'display_name', $row->user_id ),
+				'avatar_url'   => bp_core_fetch_avatar( array(
+					'item_id' => $row->user_id,
+					'type'    => 'thumb',
+					'html'    => false,
+				) ),
+				'status'       => $row->status,
+			);
+		}, $rows );
+
+		return new WP_REST_Response( $attendees, 200 );
 	}
 
 	/**
