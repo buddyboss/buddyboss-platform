@@ -959,3 +959,12 @@
 		}
 	}
 }
+
+#section-forum_permalinks_section,
+#section-forum_profile_permalinks_section {
+
+	.bb-admin-settings-form__field-input-wrapper > .components-base-control {
+		width: 100%;
+		max-width: 270px;
+	}
+}
