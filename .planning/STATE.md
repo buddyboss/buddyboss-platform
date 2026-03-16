@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 03-buddyboss-integration 03-03-PLAN.md
-last_updated: "2026-03-16T10:58:46.192Z"
+stopped_at: Completed 03-buddyboss-integration 03-04-PLAN.md
+last_updated: "2026-03-16T11:02:52.142Z"
 last_activity: 2026-03-14 — Phase 2 complete; human approved all 8 RSVP/waitlist/calendar end-to-end scenarios
 progress:
   total_phases: 3
   completed_phases: 2
   total_plans: 21
-  completed_plans: 19
+  completed_plans: 20
   percent: 67
 ---
 
@@ -69,6 +69,7 @@ Progress: [██████░░░░] 67%
 | Phase 03-buddyboss-integration P01 | 10min | 2 tasks | 7 files |
 | Phase 03-buddyboss-integration P02 | 3min | 2 tasks | 3 files |
 | Phase 03-buddyboss-integration P03 | 3min | 2 tasks | 5 files |
+| Phase 03-buddyboss-integration P04 | 2min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -118,6 +119,8 @@ Recent decisions affecting current work:
 - [Phase 03-buddyboss-integration]: date_created === date_modified used to distinguish new event INSERT from UPDATE in bp_events_after_event_save hook
 - [Phase 03-buddyboss-integration]: RSVP activity only posted for registered status, not waitlisted; ticket purchase activity out of scope for Phase 3
 - [Phase 03-buddyboss-integration]: Server-side PHP conditional on group_id gates invite panel — no JS show/hide; REST route reuses update_item_permissions_check; wpdb->replace() prevents duplicate invite rows
+- [Phase 03-buddyboss-integration]: bp_template_content hook must be added inside screen function BEFORE bp_core_load_template() — without it the member profile plugin area renders blank
+- [Phase 03-buddyboss-integration]: late_includes() attending/hosting branches gate on bp_is_user() to distinguish profile sub-tabs from directory/single event routes
 
 ### Pending Todos
 
@@ -130,6 +133,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-16T10:58:46.169Z
-Stopped at: Completed 03-buddyboss-integration 03-03-PLAN.md
+Last session: 2026-03-16T11:02:52.139Z
+Stopped at: Completed 03-buddyboss-integration 03-04-PLAN.md
 Resume file: None
