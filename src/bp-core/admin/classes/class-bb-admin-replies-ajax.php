@@ -93,6 +93,10 @@ class BB_Admin_Replies_Ajax {
 		// affect forum/topic aggregate counts.
 		wp_cache_delete( 'bb_admin_forums_status_counts', 'bbpress' );
 		wp_cache_delete( 'bb_admin_discussions_forum_counts', 'bbpress' );
+
+		// Clear the per-user "Mine" count cache for the forums list screen,
+		// since reply changes affect forum reply counts.
+		wp_cache_delete( 'bb_admin_forums_mine_count_' . get_current_user_id(), 'bbpress' );
 	}
 
 	/**
@@ -546,6 +550,22 @@ class BB_Admin_Replies_Ajax {
 		 * @param int $reply_id Reply ID.
 		 */
 		do_action( 'bbp_new_reply_post_extras', $reply_id );
+
+		/**
+		 * Fires after reply attributes are set during creation in Settings 2.0 admin.
+		 *
+		 * In legacy bbPress, this hook fired on both create and edit via save_post.
+		 * Ensures third-party plugins that set custom reply attributes on creation
+		 * continue to work.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $reply_id Reply ID.
+		 * @param int $topic_id Topic ID.
+		 * @param int $forum_id Forum ID.
+		 * @param int $reply_to Reply-to ID for threading.
+		 */
+		do_action( 'bbp_reply_attributes_metabox_save', $reply_id, $topic_id, $forum_id, $reply_to );
 
 		$this->bb_clear_forum_counts_cache();
 
