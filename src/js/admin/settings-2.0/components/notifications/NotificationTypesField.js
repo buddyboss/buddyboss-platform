@@ -209,21 +209,6 @@ var NotificationTypesField = function( props ) {
 												__nextHasNoMarginBottom
 											/>
 										</div>
-										<div className="bb-notification-types__label" aria-hidden="true">
-											{ decodeEntities( fieldData.label ) }
-											{ fieldData.tooltip && (
-												<span
-													className="bb-notification-types__tooltip"
-													data-bp-tooltip-pos="up"
-													data-bp-tooltip={ fieldData.tooltip }
-													tabIndex="0"
-													role="img"
-													aria-label={ fieldData.tooltip }
-												>
-													<i className="bb-icons-rl bb-icons-rl-info-circle" aria-hidden="true" />
-												</span>
-											) }
-										</div>
 										<div className="bb-notification-types__sub-types">
 											{ subTypeKeys.map( function( subKey ) {
 												var subData = subTypes[ subKey ];
