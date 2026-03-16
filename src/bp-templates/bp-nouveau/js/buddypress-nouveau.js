@@ -819,6 +819,8 @@ window.bp = window.bp || {};
 						self.inject( data.target, response.data.contents, data.method );
 						$( data.target ).trigger( 'bp_ajax_' + data.method, $.extend( data, { response: response.data } ) );
 					} else {
+						// Reset infinite scroll page counter on full list reload.
+						$( '#buddypress [data-bp-list="' + data.object + '"]' ).data( 'bp-current-page', 1 );
 						/* animate to top if called from bottom pagination */
 						if ( data.caller === 'pag-bottom' ) {
 							var top = null, additionalOffset = 0, isMobile = $( 'body.bb-is-mobile' ).length;
@@ -1111,6 +1113,10 @@ window.bp = window.bp || {};
 
 			// Pagination.
 			$( '#buddypress [data-bp-list]' ).on( 'click', '[data-bp-pagination] a', this, this.paginateAction );
+
+			// Members/Groups load more (infinite scroll).
+			$( '#buddypress [data-bp-list="members"], #buddypress [data-bp-list="groups"]' ).on( 'click', 'li.load-more a', this, this.loadMoreItems );
+			$( window ).on( 'scroll', this.autoLoadMoreItems );
 
 			$( document ).on( 'click', this.closePickersOnClick );
 			document.addEventListener( 'keydown', this.closePickersOnEsc );
@@ -3072,6 +3078,95 @@ window.bp = window.bp || {};
 			// Request the page.
 			self.objectRequest( queryData );
 		},
+
+		/**
+		 * Handle "Load More" click for Members/Groups infinite scroll.
+		 *
+		 * @param {Object} event Click event.
+		 */
+		loadMoreItems: function ( event ) {
+			event.preventDefault();
+
+			var self        = event.data,
+				$loadMore   = $( event.currentTarget ).closest( 'li.load-more' ),
+				$list       = $loadMore.closest( '[data-bp-list]' ),
+				object      = $list.data( 'bp-list' ),
+				store       = self.getStorage( 'bp-' + object ),
+				scope       = store.scope || null,
+				filter      = store.filter || null,
+				search_terms = '',
+				currentPage = $list.data( 'bp-current-page' ) || 1,
+				nextPage    = currentPage + 1;
+
+			// Show loading state.
+			$loadMore.find( 'a' ).first().addClass( 'loading' );
+
+			// Get search terms if present.
+			if ( $( '#buddypress [data-bp-search="' + object + '"] input[type=search]' ).length ) {
+				search_terms = $( '#buddypress [data-bp-search="' + object + '"] input[type=search]' ).val();
+			} else if ( $( '#buddypress .dir-search input[type=search]' ).length ) {
+				search_terms = $( '#buddypress .dir-search input[type=search]' ).val();
+			}
+
+			var queryData = {
+				object       : object,
+				scope        : scope,
+				filter       : filter,
+				search_terms : search_terms,
+				page         : nextPage,
+				method       : 'append',
+				target       : '#buddypress [data-bp-list="' + object + '"] ul.bp-list'
+			};
+
+			// Include group type filter if present.
+			if ( $( '#buddypress [data-bp-group-type-filter]' ).length ) {
+				queryData.group_type = $( '#buddypress [data-bp-group-type-filter]' ).val();
+			}
+
+			// Include member type filter if present.
+			if ( $( '#buddypress [data-bp-member-type-filter]' ).length ) {
+				queryData.member_type_id = $( '#buddypress [data-bp-member-type-filter]' ).val();
+			}
+
+			self.objectRequest( queryData ).done(
+				function ( response ) {
+					if ( true === response.success ) {
+						$loadMore.remove();
+
+						// Track current page on the list container.
+						$list.data( 'bp-current-page', nextPage );
+
+						// Trigger lazy load for images.
+						jQuery( window ).scroll();
+					}
+				}
+			);
+		},
+
+		/**
+		 * Auto-trigger "Load More" when scrolling near the button (Members/Groups).
+		 */
+		autoLoadMoreItems: function () {
+			var $loadMoreBtns = $( '#buddypress [data-bp-list="members"] li.load-more:visible, #buddypress [data-bp-list="groups"] li.load-more:visible' );
+
+			$loadMoreBtns.each( function () {
+				var $btn = $( this );
+
+				if ( $btn.data( 'bp-autoloaded' ) ) {
+					return;
+				}
+
+				var pos    = $btn.offset(),
+					offset = pos.top - 50;
+
+				if ( $( window ).scrollTop() + $( window ).height() > offset ) {
+					$btn.data( 'bp-autoloaded', 1 );
+					$btn.find( 'a' ).text( BP_Nouveau.loadingMore );
+					$btn.find( 'a' ).trigger( 'click' );
+				}
+			} );
+		},
+
 		enableSubmitOnLegalAgreement: function () {
 			if ( $( 'body #buddypress #register-page #signup-form #legal_agreement' ).length ) {
 				$( 'body #buddypress #register-page #signup-form .submit #signup_submit' ).prop( 'disabled', true );

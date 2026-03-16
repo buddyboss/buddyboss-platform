@@ -685,6 +685,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 			'rest_nonce'                 => wp_create_nonce( 'wp_rest' ),
 			'member_label'               => __( 'member', 'buddyboss' ),
 			'members_label'              => __( 'members', 'buddyboss' ),
+			'loadingMore'                => esc_html__( 'Loading...', 'buddyboss' ),
 		);
 
 		if ( bp_is_active( 'friends' ) ) {
