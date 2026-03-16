@@ -15,6 +15,7 @@ import { useState, useRef, useEffect, useCallback } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { invalidateFeatureCache } from '../../utils/featureCache';
 import { AvatarCropModal } from './AvatarCropModal';
+import { safeUrl } from '../../utils/sanitize';
 
 // Maximum file size: 10 MB (matches WordPress default).
 var MAX_FILE_SIZE = 10 * 1024 * 1024;
@@ -362,7 +363,7 @@ export function ImageUploadField( { uploadConfig, uploadUrl, onUpload, onRemove,
 			{ 'preview' === status && previewUrl && (
 				<div className="bb-admin-image-upload__preview-area">
 					<div className="bb-admin-image-upload__preview">
-						<img src={ previewUrl } alt={ __( 'Uploaded image', 'buddyboss' ) } />
+						<img src={ safeUrl( previewUrl ) } alt={ __( 'Uploaded image', 'buddyboss' ) } />
 					</div>
 					<div className="bb-admin-image-upload__actions">
 						<button

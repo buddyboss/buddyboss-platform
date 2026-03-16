@@ -159,6 +159,9 @@ export function SettingsForm({ fields, values, onChange }) {
 	 * Fields with action:'disable' stay visible but get disabled instead.
 	 *
 	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {Object} field Field config with optional conditional property.
+	 * @return {boolean} True when the field should be rendered.
 	 */
 	const isFieldVisible = (field) => {
 		if ( field.conditional ) {
@@ -176,6 +179,11 @@ export function SettingsForm({ fields, values, onChange }) {
 
 	/**
 	 * Check if a field should be disabled because its conditional (action:'disable') is not met.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {Object} field Field config with optional conditional property.
+	 * @return {boolean} True when the field should be disabled.
 	 */
 	const isFieldConditionallyDisabled = ( field ) => {
 		if ( field.conditional && 'disable' === field.conditional.action ) {

@@ -6874,14 +6874,17 @@ function bb_register_notifications( $component = '' ) {
  * @param string $component component name.
  */
 function bb_register_notification_preferences( $component = '' ) {
+	static $cache = null;
 
-	$notifications = apply_filters( 'bb_register_notification_preferences', array() );
-
-	if ( ! empty( $component ) && isset( $notifications[ $component ] ) ) {
-		return $notifications[ $component ];
+	if ( null === $cache ) {
+		$cache = apply_filters( 'bb_register_notification_preferences', array() );
 	}
 
-	return $notifications;
+	if ( ! empty( $component ) && isset( $cache[ $component ] ) ) {
+		return $cache[ $component ];
+	}
+
+	return $cache;
 }
 
 /**

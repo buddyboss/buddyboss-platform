@@ -1336,6 +1336,73 @@ class BB_Admin_Settings_Ajax {
 			return $notification_groups;
 		}
 
+		// Batch-collect all email template slugs across every field to avoid N+1 queries.
+		$all_email_slugs = array();
+		foreach ( $all_notifications as $field_group ) {
+			if ( empty( $field_group['fields'] ) ) {
+				continue;
+			}
+			foreach ( $field_group['fields'] as $notification_field ) {
+				$slugs = bb_register_notification_email_templates( $notification_field['key'] );
+				if ( ! empty( $slugs ) ) {
+					$all_email_slugs = array_merge( $all_email_slugs, $slugs );
+				}
+			}
+		}
+		$all_email_slugs = array_unique( $all_email_slugs );
+
+		// Single batched term query: slug → count mapping.
+		$slug_term_counts = array();
+		$slug_term_ids    = array();
+		if ( ! empty( $all_email_slugs ) ) {
+			$terms = get_terms(
+				array(
+					'taxonomy'   => bp_get_email_tax_type(),
+					'slug'       => $all_email_slugs,
+					'hide_empty' => false,
+				)
+			);
+
+			if ( ! is_wp_error( $terms ) ) {
+				foreach ( $terms as $term ) {
+					$slug_term_counts[ $term->slug ] = 1;
+					$slug_term_ids[ $term->slug ]    = $term->term_id;
+				}
+			}
+		}
+
+		// Single batched post query: get all email posts for existing term slugs.
+		$slug_post_map = array();
+		if ( ! empty( $slug_term_ids ) ) {
+			$email_posts = get_posts(
+				array(
+					'posts_per_page' => -1,
+					'post_type'      => bp_get_email_post_type(),
+					'tax_query'      => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+						array(
+							'taxonomy' => bp_get_email_tax_type(),
+							'field'    => 'slug',
+							'terms'    => array_keys( $slug_term_ids ),
+						),
+					),
+					'fields'         => 'ids',
+				)
+			);
+
+			// Map each post to its email type slug(s).
+			foreach ( $email_posts as $post_id ) {
+				$post_terms = wp_get_object_terms( $post_id, bp_get_email_tax_type(), array( 'fields' => 'slugs' ) );
+				if ( ! is_wp_error( $post_terms ) ) {
+					foreach ( $post_terms as $slug ) {
+						if ( ! isset( $slug_post_map[ $slug ] ) ) {
+							$slug_post_map[ $slug ] = array();
+						}
+						$slug_post_map[ $slug ][] = $post_id;
+					}
+				}
+			}
+		}
+
 		foreach ( $all_notifications as $group_key => $field_group ) {
 			$group_data = array(
 				'key'         => $group_key,
@@ -1351,7 +1418,7 @@ class BB_Admin_Settings_Ajax {
 						$checked = isset( $enabled_notification[ $notification_field['key'] ]['main'] ) && 'yes' === $enabled_notification[ $notification_field['key'] ]['main'];
 					}
 
-					// Get email template info.
+					// Get email template info using pre-fetched batch data.
 					$registered_emails = bb_register_notification_email_templates( $notification_field['key'] );
 					$email_template    = array(
 						'has_templates' => ! empty( $registered_emails ),
@@ -1361,37 +1428,24 @@ class BB_Admin_Settings_Ajax {
 					if ( ! empty( $registered_emails ) ) {
 						$total_email_count = 0;
 						foreach ( $registered_emails as $email_type ) {
-							$total_email_count += get_terms(
-								array(
-									'taxonomy' => bp_get_email_tax_type(),
-									'slug'     => $email_type,
-									'fields'   => 'count',
-								)
-							);
+							if ( isset( $slug_term_counts[ $email_type ] ) ) {
+								++$total_email_count;
+							}
 						}
 
 						$email_template['existing_count'] = $total_email_count;
 						$email_template['missing']        = count( $registered_emails ) > $total_email_count;
 
 						if ( ! $email_template['missing'] ) {
-							$posts = get_posts(
-								array(
-									'posts_per_page' => 1,
-									'post_type' => bp_get_email_post_type(),
-									'tax_query' => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
-										array(
-											'taxonomy' => bp_get_email_tax_type(),
-											'field'    => 'slug',
-											'terms'    => $registered_emails,
-										),
-									),
-									'fields'    => 'ids',
-								)
-							);
+							// Use pre-fetched post map for single-template edit links.
+							if ( 1 === count( $registered_emails ) ) {
+								$single_slug = current( $registered_emails );
+								if ( ! empty( $slug_post_map[ $single_slug ] ) ) {
+									$email_template['url'] = get_edit_post_link( $slug_post_map[ $single_slug ][0], 'raw' );
+								}
+							}
 
-							if ( 1 === count( $registered_emails ) && ! empty( $posts ) ) {
-								$email_template['url'] = get_edit_post_link( current( $posts ), 'raw' );
-							} else {
+							if ( empty( $email_template['url'] ) ) {
 								$email_template['url'] = add_query_arg(
 									array(
 										'post_type' => bp_get_email_post_type(),

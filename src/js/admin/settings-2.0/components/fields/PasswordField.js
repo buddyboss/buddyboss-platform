@@ -23,7 +23,12 @@ import { __ } from '@wordpress/i18n';
  * @param {boolean}  props.disabled Whether the field is disabled.
  * @returns {JSX.Element} Password field component.
  */
-export function PasswordField( { field, value, onChange, disabled } ) {
+export function PasswordField( props ) {
+	var field = props.field;
+	var value = props.value;
+	var onChange = props.onChange;
+	var disabled = props.disabled;
+
 	var visibleState = useState( false );
 	var isVisible = visibleState[ 0 ];
 	var setIsVisible = visibleState[ 1 ];
@@ -47,7 +52,7 @@ export function PasswordField( { field, value, onChange, disabled } ) {
 					setIsVisible( ! isVisible );
 				} }
 				aria-label={ isVisible ? __( 'Hide value', 'buddyboss' ) : __( 'Show value', 'buddyboss' ) }
-				tabIndex={ -1 }
+				tabIndex={ 0 }
 				disabled={ disabled }
 			>
 				{ isVisible ? (
