@@ -1857,3 +1857,27 @@ add_action(
 		);
 	}
 );
+
+/**
+ * Fire the legacy `bb_notification_web_push_notification_settings` filter after
+ * Settings 2.0 finishes registering web push notification fields.
+ *
+ * The original filter received and returned an array of bbPress-style field
+ * definitions for the web push settings section. Settings 2.0 uses
+ * `bb_register_feature_field()` instead, so this fires with an empty array
+ * solely to trigger deprecation notices for third-party code still filtering it.
+ *
+ * @since BuddyBoss [BBVERSION]
+ * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_notifications_web_push_after_settings_fields'} instead.
+ */
+add_action(
+	'bb_notifications_web_push_after_settings_fields',
+	static function () {
+		apply_filters_deprecated(
+			'bb_notification_web_push_notification_settings',
+			array( array() ),
+			'BuddyBoss [BBVERSION]',
+			'bb_notifications_web_push_after_settings_fields'
+		);
+	}
+);

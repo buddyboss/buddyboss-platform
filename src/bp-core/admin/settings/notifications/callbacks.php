@@ -168,7 +168,7 @@ function bb_notifications_after_save_settings( $feature_id, $settings, $saved ) 
 		}
 
 		// Filter out read-only preferences (maintain their defaults).
-		$preferences              = array();
+		$preferences = array();
 		if ( ! empty( $notification_preferences ) ) {
 			foreach ( $notification_preferences as $group_data ) {
 				if ( ! empty( $group_data['fields'] ) ) {

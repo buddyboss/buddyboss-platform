@@ -194,9 +194,11 @@ var NotificationTypesField = function( props ) {
 											'bb-notification-types__row' +
 											( ! mainChecked ? ' bb-notification-types__row--disabled' : '' )
 										}
+										aria-disabled={ ! mainChecked ? 'true' : undefined }
 									>
 										<div className="bb-notification-types__toggle">
 											<ToggleControl
+												label={ decodeEntities( fieldData.label ) }
 												checked={ mainChecked }
 												onChange={ function( checked ) {
 													if ( ! fieldData.read_only ) {
@@ -207,15 +209,18 @@ var NotificationTypesField = function( props ) {
 												__nextHasNoMarginBottom
 											/>
 										</div>
-										<div className="bb-notification-types__label">
+										<div className="bb-notification-types__label" aria-hidden="true">
 											{ decodeEntities( fieldData.label ) }
 											{ fieldData.tooltip && (
 												<span
 													className="bb-notification-types__tooltip"
 													data-bp-tooltip-pos="up"
 													data-bp-tooltip={ fieldData.tooltip }
+													tabIndex="0"
+													role="img"
+													aria-label={ fieldData.tooltip }
 												>
-													<i className="bb-icons-rl bb-icons-rl-info-circle" />
+													<i className="bb-icons-rl bb-icons-rl-info-circle" aria-hidden="true" />
 												</span>
 											) }
 										</div>
