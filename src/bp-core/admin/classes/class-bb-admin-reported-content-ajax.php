@@ -29,6 +29,15 @@ class BB_Admin_Reported_Content_Ajax {
 	const NONCE_ACTION = 'bb_admin_settings';
 
 	/**
+	 * Current status filter for WHERE conditions.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var string
+	 */
+	private $status_filter = '';
+
+	/**
 	 * Constructor.
 	 *
 	 * @since BuddyBoss [BBVERSION]

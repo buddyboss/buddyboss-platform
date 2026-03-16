@@ -1291,3 +1291,129 @@ function bp_group_type_sort_items( $qv ) {
 
 	return $qv;
 }
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Moderation Settings 2.0 deprecated functions and hook compatibility.
+// Legacy settings API functions were removed from bp-moderation-settings.php.
+// Moderation settings are now managed by Settings 2.0 (bb-admin-settings-moderation.php).
+// ──────────────────────────────────────────────────────────────────────────────
+
+if ( ! function_exists( 'bp_moderation_get_settings_sections' ) ) {
+	/**
+	 * Get the Moderation settings sections.
+	 *
+	 * @since BuddyBoss 1.5.6
+	 * @deprecated BuddyBoss [BBVERSION] Moderation settings are now managed by Settings 2.0.
+	 *
+	 * @return array Empty array.
+	 */
+	function bp_moderation_get_settings_sections() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Moderation feature (bb_admin_settings_register_moderation_feature)' );
+
+		$sections = array();
+
+		/**
+		 * Filter the Moderation settings sections.
+		 *
+		 * @since BuddyBoss 1.5.6
+		 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_moderation_after_register_settings_fields'} to register additional settings.
+		 *
+		 * @param array $sections Moderation settings sections.
+		 */
+		return (array) apply_filters_deprecated( 'bp_moderation_get_settings_sections', array( $sections ), 'BuddyBoss [BBVERSION]', 'bb_moderation_after_register_settings_fields' );
+	}
+}
+
+if ( ! function_exists( 'bp_moderation_get_settings_fields' ) ) {
+	/**
+	 * Get all of the Moderation settings fields.
+	 *
+	 * @since BuddyBoss 1.5.6
+	 * @deprecated BuddyBoss [BBVERSION] Moderation settings are now managed by Settings 2.0.
+	 *
+	 * @return array Empty array.
+	 */
+	function bp_moderation_get_settings_fields() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Moderation feature (bb_admin_settings_register_moderation_feature)' );
+
+		$fields = array();
+
+		/**
+		 * Filter all Moderation settings fields.
+		 *
+		 * @since BuddyBoss 1.5.6
+		 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_moderation_after_register_settings_fields'} to register additional fields.
+		 *
+		 * @param array $fields Moderation settings fields grouped by section.
+		 */
+		return (array) apply_filters_deprecated( 'bp_moderation_get_settings_fields', array( $fields ), 'BuddyBoss [BBVERSION]', 'bb_moderation_after_register_settings_fields' );
+	}
+}
+
+if ( ! function_exists( 'bp_moderation_get_settings_fields_for_section' ) ) {
+	/**
+	 * Get Moderation settings fields for a section.
+	 *
+	 * @since BuddyBoss 1.5.6
+	 * @deprecated BuddyBoss [BBVERSION] Moderation settings are now managed by Settings 2.0.
+	 *
+	 * @param string $section_id Section ID.
+	 *
+	 * @return array Empty array.
+	 */
+	function bp_moderation_get_settings_fields_for_section( $section_id = '' ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Moderation feature (bb_admin_settings_register_moderation_feature)' );
+
+		$fields = array();
+
+		/**
+		 * Filter Moderation settings fields for a specific section.
+		 *
+		 * @since BuddyBoss 1.5.6
+		 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_moderation_after_register_settings_fields'} to register additional fields.
+		 *
+		 * @param array  $fields     Settings fields for the section.
+		 * @param string $section_id The section ID.
+		 */
+		return (array) apply_filters_deprecated( 'bp_moderation_get_settings_fields_for_section', array( $fields, $section_id ), 'BuddyBoss [BBVERSION]', 'bb_moderation_after_register_settings_fields' );
+	}
+}
+
+/**
+ * Fire the legacy `bp_admin_setting_moderation_register_fields` hook after
+ * Settings 2.0 finishes registering moderation fields.
+ *
+ * The original hook passed a `BP_Admin_Setting_Moderation` instance. Settings 2.0
+ * no longer uses that class, so a no-op stub is passed to satisfy callbacks
+ * that call add_section()/add_field() on the argument.
+ *
+ * @since BuddyBoss 1.5.6
+ * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_moderation_after_register_settings_fields'} instead.
+ */
+add_action(
+	'bb_moderation_after_register_settings_fields',
+	static function () {
+		do_action_deprecated(
+			'bp_admin_setting_moderation_register_fields',
+			array(
+				new class() {
+					/**
+					 * No-op stub for BP_Admin_Setting_tab::add_section().
+					 *
+					 * @param mixed ...$args Ignored.
+					 */
+					public function add_section( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+
+					/**
+					 * No-op stub for BP_Admin_Setting_tab::add_field().
+					 *
+					 * @param mixed ...$args Ignored.
+					 */
+					public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+				},
+			),
+			'BuddyBoss [BBVERSION]',
+			'bb_moderation_after_register_settings_fields'
+		);
+	}
+);

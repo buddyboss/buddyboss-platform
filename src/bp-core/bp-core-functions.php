@@ -7828,12 +7828,6 @@ function bb_admin_icons( $id ) {
 		case 'bp_invites':
 			$meta_icon = $bb_icon_bf . ' bb-icon-envelope';
 			break;
-		case 'bp_moderation_settings_blocking':
-			$meta_icon = $bb_icon_bf . ' bb-icon-user-slash';
-			break;
-		case 'bp_moderation_settings_reporting':
-			$meta_icon = $bb_icon_bf . ' bb-icon-flag';
-			break;
 		case 'bp_search_settings_general':
 			$meta_icon = $bb_icon_bf . ' bb-icon-caret-down';
 			break;
