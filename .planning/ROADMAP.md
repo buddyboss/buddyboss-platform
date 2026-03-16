@@ -69,7 +69,15 @@ Plans:
   2. When an organizer creates an event, when a member RSVPs, and when a ticket is purchased, an activity item appears in the relevant BuddyBoss activity feed (site-wide feed for public events, group feed for group events) — private group events never surface in the site-wide feed
   3. Organizer can browse the group member roster while creating or editing an event and send invites directly to selected members
   4. Any member's profile displays a section listing events they have hosted and events they have attended
-**Plans**: TBD
+**Plans**: 6 plans
+
+Plans:
+- [ ] 03-00-PLAN.md — PHPUnit test stubs for BB-01 through BB-04
+- [ ] 03-01-PLAN.md — Group Events tab (BP_Group_Extension, FullCalendar, REST group_id privacy guard)
+- [ ] 03-02-PLAN.md — Activity feed integration (event create + RSVP hooks, hide_sitewide for private groups)
+- [ ] 03-03-PLAN.md — Group member invite panel on event edit screen + REST invite sub-route
+- [ ] 03-04-PLAN.md — Member profile attending/hosting tabs (screen functions + templates)
+- [ ] 03-05-PLAN.md — End-to-end human verification checkpoint
 
 ## Progress
 
@@ -80,4 +88,4 @@ Phases execute in numeric order: 1 → 2 → 3
 |-------|----------------|--------|-----------|
 | 1. Foundation + Event Management | 9/9 | Complete   | 2026-03-14 |
 | 2. Payments + Ticketing | 6/6 | Complete   | 2026-03-14 |
-| 3. BuddyBoss Integration | 0/TBD | Not started | - |
+| 3. BuddyBoss Integration | 0/6 | Not started | - |
