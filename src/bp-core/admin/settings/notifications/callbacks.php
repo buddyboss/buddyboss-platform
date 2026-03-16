@@ -27,7 +27,7 @@ function bb_notifications_sanitize_position( $value ) {
 	$allowed = array( 'left', 'right' );
 
 	if ( ! in_array( $value, $allowed, true ) ) {
-		return 'left';
+		return 'right';
 	}
 
 	return $value;

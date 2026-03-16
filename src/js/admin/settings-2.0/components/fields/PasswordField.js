@@ -39,6 +39,7 @@ export function PasswordField( props ) {
 				type={ isVisible ? 'text' : 'password' }
 				value={ value || '' }
 				placeholder={ field.placeholder || '' }
+				aria-label={ field.label || field.name }
 				onChange={ function( e ) {
 					onChange( field.name, e.target.value );
 				} }
