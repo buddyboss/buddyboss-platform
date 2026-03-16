@@ -5,6 +5,13 @@
  *
  * @package BuddyBoss\Administration
  * @since bbPress (r2464)
+ *
+ * // @todo: Remove after 3 release. Legacy admin replaced by Settings 2.0 React UI.
+ * // @see src/bp-core/admin/bb-admin-settings-forums.php
+ * // @see src/bp-core/admin/classes/class-bb-admin-forums-ajax.php
+ * // @see src/bp-core/admin/classes/class-bb-admin-topics-ajax.php
+ * // @see src/bp-core/admin/classes/class-bb-admin-replies-ajax.php
+ * // @see src/bp-core/admin/classes/class-bb-admin-topic-tags-ajax.php
  */
 
 // Exit if accessed directly
@@ -103,7 +110,6 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 		private function includes() {
 			require $this->admin_dir . 'tools.php';
 			require $this->admin_dir . 'converter.php';
-			require $this->admin_dir . 'settings.php';
 			require $this->admin_dir . 'functions.php';
 			require $this->admin_dir . 'metaboxes.php';
 			require $this->admin_dir . 'users.php';
@@ -145,12 +151,6 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 
 			// Map settings capabilities
 			add_filter( 'bbp_map_meta_caps', array( $this, 'map_settings_meta_caps' ), 10, 4 );
-
-			// Hide the theme compat package selection
-			add_filter( 'bbp_admin_get_settings_sections', array( $this, 'hide_theme_compat_packages' ) );
-
-			// Allow keymasters to save forums settings
-			add_filter( 'option_page_capability_bbpress', array( $this, 'option_page_capability_bbpress' ) );
 
 			/** Network Admin */
 
@@ -557,34 +557,6 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 			wp_register_script( 'bbp-converter', $this->js_url . 'converter.js', array( 'jquery', 'postbox', 'dashboard' ), $version );
 		}
 
-		/**
-		 * Hide theme compat package selection if only 1 package is registered
-		 *
-		 * @since bbPress (r4315)
-		 *
-		 * @param array $sections Forums settings sections
-		 * @return array
-		 */
-		public function hide_theme_compat_packages( $sections = array() ) {
-			if ( count( bbpress()->theme_compat->packages ) <= 1 ) {
-				unset( $sections['bbp_settings_theme_compat'] );
-			}
-
-			return $sections;
-		}
-
-		/**
-		 * Allow keymaster role to save Forums settings
-		 *
-		 * @since bbPress (r4678)
-		 *
-		 * @param string $capability
-		 * @return string Return 'keep_gate' capability
-		 */
-		public function option_page_capability_bbpress( $capability = 'manage_options' ) {
-			$capability = 'keep_gate';
-			return $capability;
-		}
 
 		/** Updaters **************************************************************/
 

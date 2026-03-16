@@ -41,7 +41,7 @@ function bb_forums_register_permalinks_panel_fields() {
 			'name'              => '_bbp_forum_slug',
 			'label'             => __( 'Forum', 'buddyboss' ),
 			'type'              => 'text',
-			'default'           => bbp_get_forum_slug(),
+			'default'           => get_option( '_bbp_forum_slug', 'forum' ),
 			'sanitize_callback' => 'bbp_sanitize_slug',
 			'order'             => 10,
 		)
@@ -56,7 +56,7 @@ function bb_forums_register_permalinks_panel_fields() {
 			'name'              => '_bbp_topic_slug',
 			'label'             => __( 'Discussion', 'buddyboss' ),
 			'type'              => 'text',
-			'default'           => bbp_get_topic_slug(),
+			'default'           => get_option( '_bbp_topic_slug', 'discussion' ),
 			'sanitize_callback' => 'bbp_sanitize_slug',
 			'order'             => 20,
 		)
@@ -71,7 +71,7 @@ function bb_forums_register_permalinks_panel_fields() {
 			'name'              => '_bbp_topic_tag_slug',
 			'label'             => __( 'Discussion Tag', 'buddyboss' ),
 			'type'              => 'text',
-			'default'           => bbp_get_topic_tag_tax_slug(),
+			'default'           => get_option( '_bbp_topic_tag_slug', 'discussion-tag' ),
 			'sanitize_callback' => 'bbp_sanitize_slug',
 			'order'             => 30,
 		)
@@ -86,7 +86,7 @@ function bb_forums_register_permalinks_panel_fields() {
 			'name'              => '_bbp_view_slug',
 			'label'             => __( 'Discussion View', 'buddyboss' ),
 			'type'              => 'text',
-			'default'           => bbp_get_view_slug(),
+			'default'           => get_option( '_bbp_view_slug', 'view' ),
 			'sanitize_callback' => 'bbp_sanitize_slug',
 			'order'             => 40,
 		)
@@ -101,7 +101,7 @@ function bb_forums_register_permalinks_panel_fields() {
 			'name'              => '_bbp_reply_slug',
 			'label'             => __( 'Reply', 'buddyboss' ),
 			'type'              => 'text',
-			'default'           => bbp_get_reply_slug(),
+			'default'           => get_option( '_bbp_reply_slug', 'reply' ),
 			'sanitize_callback' => 'bbp_sanitize_slug',
 			'order'             => 50,
 		)
@@ -116,7 +116,7 @@ function bb_forums_register_permalinks_panel_fields() {
 			'name'              => '_bbp_search_slug',
 			'label'             => __( 'Search', 'buddyboss' ),
 			'type'              => 'text',
-			'default'           => bbp_get_search_slug(),
+			'default'           => get_option( '_bbp_search_slug', 'search' ),
 			'sanitize_callback' => 'bbp_sanitize_slug',
 			'order'             => 60,
 		)

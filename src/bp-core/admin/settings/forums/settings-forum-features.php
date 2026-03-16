@@ -92,6 +92,7 @@ function bb_forums_register_features_panel_fields() {
 			'description'       => __( 'Allow discussions to have tags', 'buddyboss' ),
 			'default'           => bbp_allow_topic_tags(),
 			'sanitize_callback' => 'intval',
+			'refresh_panels'    => true,
 			'order'             => 40,
 		)
 	);
