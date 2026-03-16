@@ -208,6 +208,25 @@ class BP_REST_Events_Endpoint extends WP_REST_Controller {
 	 * @return WP_REST_Response
 	 */
 	public function get_items( $request ) {
+		// Privacy guard: block non-members from seeing private/hidden group events.
+		// bp_events_get_events() does NOT enforce group privacy when group_id is
+		// passed — it returns all events for the group regardless of membership.
+		// This guard must run BEFORE bp_events_get_events() is called.
+		$group_id_param = (int) $request->get_param( 'group_id' );
+		if ( $group_id_param > 0 ) {
+			$group = groups_get_group( $group_id_param );
+			if ( $group && 'public' !== $group->status ) {
+				// Private or hidden group — must be a member.
+				if ( ! groups_is_user_member( $group_id_param, get_current_user_id() ) ) {
+					return new WP_Error(
+						'bp_events_rest_group_forbidden',
+						__( 'You must be a member of this group to view its events.', 'buddyboss' ),
+						array( 'status' => 403 )
+					);
+				}
+			}
+		}
+
 		// FullCalendar feed mode: map start/end params to from/to filter args.
 		$is_fc    = (bool) $request->get_param( '_fc' );
 		$from     = $request->get_param( 'start' ) ?: $request->get_param( 'from' );
@@ -857,7 +876,13 @@ class BP_REST_Events_Endpoint extends WP_REST_Controller {
 		return array_merge(
 			parent::get_collection_params(),
 			array(
-				'group_id'     => array( 'type' => 'integer', 'sanitize_callback' => 'absint' ),
+				'group_id'     => array(
+				'description'       => __( 'Limit results to events belonging to this group ID.', 'buddyboss' ),
+				'type'              => 'integer',
+				'default'           => 0,
+				'sanitize_callback' => 'absint',
+				'validate_callback' => 'rest_validate_request_arg',
+			),
 				'organizer_id' => array( 'type' => 'integer', 'sanitize_callback' => 'absint' ),
 				'status'       => array(
 					'type'              => 'string',
