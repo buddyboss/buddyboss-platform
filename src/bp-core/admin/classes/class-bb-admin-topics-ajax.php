@@ -89,6 +89,10 @@ class BB_Admin_Topics_Ajax {
 		// Also clear the forums list status counts cache since topic changes
 		// affect forum-level aggregate counts (_bbp_total_topic_count).
 		wp_cache_delete( 'bb_admin_forums_status_counts', 'bbpress' );
+
+		// Clear the per-user "Mine" count cache for the forums list screen,
+		// since topic changes affect forum topic counts.
+		wp_cache_delete( 'bb_admin_forums_mine_count_' . get_current_user_id(), 'bbpress' );
 	}
 
 	/**
@@ -598,6 +602,20 @@ class BB_Admin_Topics_Ajax {
 		 * @param int $topic_id Topic ID.
 		 */
 		do_action( 'bbp_new_topic_post_extras', $topic_id );
+
+		/**
+		 * Fires after topic attributes are set during creation in Settings 2.0 admin.
+		 *
+		 * In legacy bbPress, this hook fired on both create and edit via save_post.
+		 * Ensures third-party plugins that set custom topic attributes on creation
+		 * continue to work.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $topic_id Topic ID.
+		 * @param int $forum_id Forum ID.
+		 */
+		do_action( 'bbp_topic_attributes_metabox_save', $topic_id, $forum_id );
 
 		// Clear forum counts cache.
 		$this->bb_clear_forum_counts_cache();

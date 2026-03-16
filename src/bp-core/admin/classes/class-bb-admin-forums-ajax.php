@@ -504,6 +504,19 @@ class BB_Admin_Forums_Ajax {
 		 */
 		do_action( 'bbp_new_forum_post_extras', $forum_id );
 
+		/**
+		 * Fires after forum attributes are set during creation in Settings 2.0 admin.
+		 *
+		 * In legacy bbPress, this hook fired on both create and edit via save_post.
+		 * Ensures third-party plugins that set custom forum attributes on creation
+		 * continue to work.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $forum_id Forum ID.
+		 */
+		do_action( 'bbp_forum_attributes_metabox_save', $forum_id );
+
 		// Clear status counts cache.
 		$this->bb_clear_status_counts_cache();
 
