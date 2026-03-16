@@ -1881,3 +1881,56 @@ add_action(
 		);
 	}
 );
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Deprecated notification settings public API functions.
+// Removed in Settings 2.0 migration. Stubs prevent fatal errors in third-party
+// code that may call these directly.
+// ──────────────────────────────────────────────────────────────────────────────
+
+if ( ! function_exists( 'bb_notification_get_settings_sections' ) ) {
+	/**
+	 * Get the Notification settings sections.
+	 *
+	 * @since BuddyBoss 1.9.3
+	 * @deprecated BuddyBoss [BBVERSION] Notification settings migrated to Settings 2.0.
+	 *
+	 * @return array Empty array.
+	 */
+	function bb_notification_get_settings_sections() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 feature registration' );
+		return array();
+	}
+}
+
+if ( ! function_exists( 'bb_notification_get_settings_fields' ) ) {
+	/**
+	 * Get all the notification settings fields.
+	 *
+	 * @since BuddyBoss 1.9.3
+	 * @deprecated BuddyBoss [BBVERSION] Notification settings migrated to Settings 2.0.
+	 *
+	 * @return array Empty array.
+	 */
+	function bb_notification_get_settings_fields() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 feature registration' );
+		return array();
+	}
+}
+
+if ( ! function_exists( 'bb_notification_get_settings_fields_for_section' ) ) {
+	/**
+	 * Get settings fields by section.
+	 *
+	 * @since BuddyBoss 1.9.3
+	 * @deprecated BuddyBoss [BBVERSION] Notification settings migrated to Settings 2.0.
+	 *
+	 * @param string $section_id Section id.
+	 *
+	 * @return array Empty array.
+	 */
+	function bb_notification_get_settings_fields_for_section( $section_id = '' ) {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 feature registration' );
+		return array();
+	}
+}
