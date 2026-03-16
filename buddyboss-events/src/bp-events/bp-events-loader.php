@@ -107,31 +107,36 @@ function bp_events_enqueue_single_assets() {
 		true
 	);
 
-	wp_localize_script(
-		'bp-events-single',
-		'bpEventsSingle',
-		array(
-			'restUrl'       => rest_url( 'buddyboss/v1/events' ),
-			'nonce'         => wp_create_nonce( 'wp_rest' ),
-			'eventId'       => (int) $event->id,
-			'currentUserId' => $current_user_id,
-			'isAttending'   => $is_attending,
-			'isWaitlisted'  => $is_waitlisted,
-			'atCapacity'    => $at_capacity,
-			'canRsvp'       => $can_rsvp,
-			'restrictedMsg' => $restricted_msg,
-			'i18n'          => array(
-				'rsvp'          => __( 'RSVP', 'buddyboss' ),
-				'attending'     => __( 'Attending &#x2713;', 'buddyboss' ),
-				'onWaitlist'    => __( 'On Waitlist', 'buddyboss' ),
-				'joinWaitlist'  => __( 'Join Waitlist', 'buddyboss' ),
-				'errorRsvp'     => __( 'Could not complete your RSVP. Please try again.', 'buddyboss' ),
-				'errorCancel'   => __( 'Could not cancel your RSVP. Please try again.', 'buddyboss' ),
-				'errorGcal'     => __( 'Could not open Google Calendar. Please try again.', 'buddyboss' ),
-				'confirmRemove' => __( 'Remove this attendee from the event?', 'buddyboss' ),
-			),
-		)
+	$localize_data = array(
+		'restUrl'       => rest_url( 'buddyboss/v1/events' ),
+		'nonce'         => wp_create_nonce( 'wp_rest' ),
+		'eventId'       => (int) $event->id,
+		'currentUserId' => $current_user_id,
+		'isAttending'   => $is_attending,
+		'isWaitlisted'  => $is_waitlisted,
+		'atCapacity'    => $at_capacity,
+		'canRsvp'       => $can_rsvp,
+		'restrictedMsg' => $restricted_msg,
+		'i18n'          => array(
+			'rsvp'          => __( 'RSVP', 'buddyboss' ),
+			'attending'     => __( 'Attending &#x2713;', 'buddyboss' ),
+			'onWaitlist'    => __( 'On Waitlist', 'buddyboss' ),
+			'joinWaitlist'  => __( 'Join Waitlist', 'buddyboss' ),
+			'errorRsvp'     => __( 'Could not complete your RSVP. Please try again.', 'buddyboss' ),
+			'errorCancel'   => __( 'Could not cancel your RSVP. Please try again.', 'buddyboss' ),
+			'errorGcal'     => __( 'Could not open Google Calendar. Please try again.', 'buddyboss' ),
+			'confirmRemove' => __( 'Remove this attendee from the event?', 'buddyboss' ),
+		),
 	);
+
+	// On the edit screen, pass group context so the invite panel JS can fetch
+	// the group member roster and POST invite selections.
+	if ( bp_is_action_variable( 'edit', 0 ) && ! empty( $event->group_id ) ) {
+		$localize_data['groupsRestUrl'] = rest_url( 'buddyboss/v1/groups' );
+		$localize_data['groupId']       = (int) $event->group_id;
+	}
+
+	wp_localize_script( 'bp-events-single', 'bpEventsSingle', $localize_data );
 }
 add_action( 'wp_enqueue_scripts', 'bp_events_enqueue_single_assets' );
 

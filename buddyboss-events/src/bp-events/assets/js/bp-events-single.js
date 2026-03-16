@@ -166,3 +166,105 @@
 
 	document.addEventListener( 'DOMContentLoaded', init );
 }() );
+
+( function( $ ) {
+	'use strict';
+
+	var config   = window.bpEventsSingle || {};
+	var groupId  = parseInt( config.groupId, 10 ) || 0;
+	var eventId  = parseInt( config.eventId, 10 ) || 0;
+	var nonce    = config.nonce || '';
+	var selected = {};
+
+	// Only activate the invite panel when a group context exists.
+	// On the edit screen with a group event, groupId will be non-zero.
+	if ( ! groupId || ! eventId ) { return; }
+
+	var $panel  = $( '#bp-events-invite-panel' );
+	var $list   = $( '#bp-events-invite-list' );
+	var $search = $( '#bp-events-invite-search' );
+	var $send   = $( '#bp-events-invite-send' );
+	var $status = $( '#bp-events-invite-status' );
+	var $count  = $( '#bp-events-invite-count' );
+
+	// Panel is already visible — rendered server-side when group_id is set.
+	if ( ! $panel.length ) { return; }
+
+	// Fetch members from platform REST endpoint.
+	function fetchMembers( searchTerm ) {
+		var url = config.groupsRestUrl + '/' + groupId + '/members?per_page=50';
+		if ( searchTerm ) { url += '&search=' + encodeURIComponent( searchTerm ); }
+		$list.html( '<li class="bp-events-invite-loading">Loading&hellip;</li>' );
+		fetch( url, { headers: { 'X-WP-Nonce': nonce } } )
+			.then( function( r ) { return r.json(); } )
+			.then( function( members ) {
+				$list.empty();
+				if ( ! members || ! members.length ) {
+					$list.html( '<li>No members found.</li>' );
+					return;
+				}
+				members.forEach( function( member ) {
+					var id      = member.id;
+					var name    = member.name || 'Member #' + id;
+					var avatar  = ( member.avatar_urls && member.avatar_urls.thumb ) || '';
+					var checked = selected[ id ] ? ' checked' : '';
+					var $li = $( '<li class="bp-events-invite-member">' +
+						'<label>' +
+						'<input type="checkbox" value="' + id + '"' + checked + '> ' +
+						( avatar ? '<img src="' + avatar + '" width="32" height="32" alt=""> ' : '' ) +
+						$( '<span>' ).text( name ).html() +
+						'</label></li>' );
+					$list.append( $li );
+				} );
+			} )
+			.catch( function() {
+				$list.html( '<li>Could not load members.</li>' );
+			} );
+	}
+
+	// Track checkbox selections.
+	$list.on( 'change', 'input[type="checkbox"]', function() {
+		var uid = parseInt( $( this ).val(), 10 );
+		if ( $( this ).is( ':checked' ) ) {
+			selected[ uid ] = true;
+		} else {
+			delete selected[ uid ];
+		}
+		var count = Object.keys( selected ).length;
+		$count.text( count );
+		$send.prop( 'disabled', count === 0 );
+	} );
+
+	// Search debounce.
+	var searchTimer;
+	$search.on( 'input', function() {
+		clearTimeout( searchTimer );
+		var term = $( this ).val();
+		searchTimer = setTimeout( function() { fetchMembers( term ); }, 300 );
+	} );
+
+	// Send invites — eventId is known from server-side localization.
+	$send.on( 'click', function() {
+		var userIds = Object.keys( selected ).map( Number );
+		$send.prop( 'disabled', true );
+		fetch( config.restUrl + '/' + eventId + '/invite', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json', 'X-WP-Nonce': nonce },
+			body: JSON.stringify( { user_ids: userIds } ),
+		} )
+		.then( function( r ) { return r.json(); } )
+		.then( function() {
+			$status.text( 'Invites sent.' );
+			selected = {};
+			$count.text( '0' );
+		} )
+		.catch( function() {
+			$status.text( 'Could not send invites. Please try again.' );
+			$send.prop( 'disabled', false );
+		} );
+	} );
+
+	// Initial load.
+	fetchMembers( '' );
+
+} )( jQuery );
