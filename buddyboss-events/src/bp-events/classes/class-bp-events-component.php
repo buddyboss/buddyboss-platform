@@ -81,6 +81,10 @@ class BP_Events_Component extends BP_Component {
 			} elseif ( bp_is_single_item() ) {
 				require $this->path . 'bp-events/screens/single/home.php';
 				require $this->path . 'bp-events/screens/single/edit.php';
+			} elseif ( bp_is_user() && bp_is_current_action( 'attending' ) ) {
+				require $this->path . 'bp-events/screens/profile/attending.php';
+			} elseif ( bp_is_user() && bp_is_current_action( 'hosting' ) ) {
+				require $this->path . 'bp-events/screens/profile/hosting.php';
 			} else {
 				require $this->path . 'bp-events/screens/directory.php';
 			}
