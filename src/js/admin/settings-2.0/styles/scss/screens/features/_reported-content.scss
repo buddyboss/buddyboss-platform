@@ -166,7 +166,7 @@
 	&__table-header-left {
 		display: flex;
 		align-items: center;
-		gap: 0;
+		gap: 8px;
 		width: 264px;
 		flex-shrink: 0;
 	}
@@ -176,7 +176,6 @@
 		align-items: center;
 		padding: 3px;
 		flex-shrink: 0;
-		margin-right: 8px;
 	}
 
 	&__checkbox {
@@ -203,7 +202,8 @@
 			font-size: 13px;
 			color: $bb-text-tertiary-color;
 			line-height: 18px;
-			width: 200px;
+			width: 104px;
+			min-width: 136px;
 			flex-shrink: 0;
 		}
 
@@ -212,6 +212,7 @@
 			color: $bb-text-tertiary-color;
 			line-height: 18px;
 			width: 104px;
+			min-width: 104px;
 			flex-shrink: 0;
 		}
 	}
@@ -291,14 +292,14 @@
 		}
 	}
 
-	/* Owner column */
+	/* Owner column — Figma: min-w 136px, w 104px */
 	&__owner-col {
 		display: flex;
 		align-items: center;
 		gap: 8px;
-		width: 200px;
+		width: 104px;
+		min-width: 136px;
 		flex-shrink: 0;
-		min-width: 0;
 	}
 
 	&__avatar {
@@ -325,7 +326,7 @@
 		}
 	}
 
-	/* Reports column */
+	/* Reports column — Figma: min-w 104px, gap 8px */
 	&__reports-col {
 		display: flex;
 		align-items: center;
@@ -334,8 +335,10 @@
 		font-weight: 400;
 		color: $bb-text-color;
 		line-height: 18px;
-		width: 152px;
+		width: 104px;
+		min-width: 104px;
 		flex-shrink: 0;
+		padding: 3px 0;
 
 		[class*="bb-icons-"] {
 			font-size: 16px;

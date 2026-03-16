@@ -276,14 +276,54 @@ class BB_Admin_Reported_Content_Ajax {
 
 		$this->bb_restore_suspend_filters();
 
+		// Get status counts for the filter dropdown.
+		$status_counts = $this->bb_get_status_counts();
+
 		wp_send_json_success(
 			array(
-				'items'       => $items,
-				'total'       => isset( $result['total'] ) ? (int) $result['total'] : 0,
-				'page'        => $page,
-				'per_page'    => $per_page,
-				'total_pages' => $per_page > 0 ? (int) ceil( ( isset( $result['total'] ) ? $result['total'] : 0 ) / $per_page ) : 1,
+				'items'         => $items,
+				'total'         => isset( $result['total'] ) ? (int) $result['total'] : 0,
+				'page'          => $page,
+				'per_page'      => $per_page,
+				'total_pages'   => $per_page > 0 ? (int) ceil( ( isset( $result['total'] ) ? $result['total'] : 0 ) / $per_page ) : 1,
+				'status_counts' => $status_counts,
 			)
+		);
+	}
+
+	/**
+	 * Get counts for each status filter option.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return array Associative array with 'all', 'hidden', 'visible' counts.
+	 */
+	private function bb_get_status_counts() {
+		global $wpdb;
+		$bp = buddypress();
+
+		$member_type = BP_Moderation_Members::$moderation_type;
+
+		// Count all reported content (excluding members).
+		$all = (int) $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->prepare(
+				"SELECT COUNT(*) FROM {$bp->moderation->table_name} WHERE item_type != %s AND ( reported != 0 OR user_report != 0 OR hide_sitewide != 0 )",
+				$member_type
+			)
+		);
+
+		// Count hidden content.
+		$hidden = (int) $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->prepare(
+				"SELECT COUNT(*) FROM {$bp->moderation->table_name} WHERE item_type != %s AND hide_sitewide = 1",
+				$member_type
+			)
+		);
+
+		return array(
+			'all'     => $all,
+			'hidden'  => $hidden,
+			'visible' => $all - $hidden,
 		);
 	}
 

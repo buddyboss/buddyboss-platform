@@ -111,6 +111,10 @@ export function ReportedContentScreen( { onNavigate } ) {
 	var statusFilter = statusFilterState[ 0 ];
 	var setStatusFilter = statusFilterState[ 1 ];
 
+	var statusCountsState = useState( { all: 0, hidden: 0, visible: 0 } );
+	var statusCounts = statusCountsState[ 0 ];
+	var setStatusCounts = statusCountsState[ 1 ];
+
 	// Bulk action state.
 	var bulkActionState = useState( '' );
 	var bulkAction = bulkActionState[ 0 ];
@@ -163,6 +167,9 @@ export function ReportedContentScreen( { onNavigate } ) {
 					setItems( response.data.items || [] );
 					setTotal( response.data.total || 0 );
 					setTotalPages( response.data.total_pages || 1 );
+					if ( response.data.status_counts ) {
+						setStatusCounts( response.data.status_counts );
+					}
 				}
 			} )
 			.catch( function ( err ) {
@@ -387,9 +394,9 @@ export function ReportedContentScreen( { onNavigate } ) {
 								value={ statusFilter }
 								onChange={ handleStatusFilterChange }
 							>
-								<option value="">{ __( 'All', 'buddyboss' ) + ' (' + total + ')' }</option>
-								<option value="hidden">{ __( 'Hidden', 'buddyboss' ) }</option>
-								<option value="visible">{ __( 'Visible', 'buddyboss' ) }</option>
+								<option value="">{ __( 'All', 'buddyboss' ) + ' (' + statusCounts.all + ')' }</option>
+								<option value="hidden">{ __( 'Hidden', 'buddyboss' ) + ' (' + statusCounts.hidden + ')' }</option>
+								<option value="visible">{ __( 'Visible', 'buddyboss' ) + ' (' + statusCounts.visible + ')' }</option>
 							</select>
 							{ Object.keys( reportedContentTypes ).length > 0 && (
 								<select
@@ -451,18 +458,16 @@ export function ReportedContentScreen( { onNavigate } ) {
 										<div key={ item.id } className={ 'bb-admin-reported-content__list-item' + ( isSelected ? ' bb-admin-reported-content__list-item--selected' : '' ) }>
 											{/* Items row */}
 											<div className="bb-admin-reported-content__items">
-												{/* Checkbox */}
-												<div className="bb-admin-reported-content__checkbox-col">
-													<input
-														type="checkbox"
-														className="bb-admin-reported-content__checkbox"
-														checked={ isSelected }
-														onChange={ function () { handleSelectRow( item.id ); } }
-													/>
-												</div>
-
-												{/* Content type + name */}
+												{/* Content column (264px) — checkbox + icon + name */}
 												<div className="bb-admin-reported-content__content-col">
+													<div className="bb-admin-reported-content__checkbox-col">
+														<input
+															type="checkbox"
+															className="bb-admin-reported-content__checkbox"
+															checked={ isSelected }
+															onChange={ function () { handleSelectRow( item.id ); } }
+														/>
+													</div>
 													<span className="bb-admin-reported-content__content-icon">
 														<i className={ item.content_icon }></i>
 													</span>

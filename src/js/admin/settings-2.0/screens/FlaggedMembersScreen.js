@@ -51,6 +51,10 @@ export function FlaggedMembersScreen( { onNavigate } ) {
 	var statusFilter = statusFilterState[ 0 ];
 	var setStatusFilter = statusFilterState[ 1 ];
 
+	var statusCountsState = useState( { all: 0, suspended: 0, active: 0 } );
+	var statusCounts = statusCountsState[ 0 ];
+	var setStatusCounts = statusCountsState[ 1 ];
+
 	// Bulk action state.
 	var bulkActionState = useState( '' );
 	var bulkAction = bulkActionState[ 0 ];
@@ -100,6 +104,9 @@ export function FlaggedMembersScreen( { onNavigate } ) {
 					setMembers( response.data.members || [] );
 					setTotal( response.data.total || 0 );
 					setTotalPages( response.data.total_pages || 1 );
+					if ( response.data.status_counts ) {
+						setStatusCounts( response.data.status_counts );
+					}
 				}
 			} )
 			.catch( function ( err ) {
@@ -291,9 +298,9 @@ export function FlaggedMembersScreen( { onNavigate } ) {
 								value={ statusFilter }
 								onChange={ handleStatusFilterChange }
 							>
-								<option value="">{ __( 'All', 'buddyboss' ) + ' (' + total + ')' }</option>
-								<option value="suspended">{ __( 'Suspended', 'buddyboss' ) }</option>
-								<option value="active">{ __( 'Active', 'buddyboss' ) }</option>
+								<option value="">{ __( 'All', 'buddyboss' ) + ' (' + statusCounts.all + ')' }</option>
+								<option value="suspended">{ __( 'Suspended', 'buddyboss' ) + ' (' + statusCounts.suspended + ')' }</option>
+								<option value="active">{ __( 'Active', 'buddyboss' ) + ' (' + statusCounts.active + ')' }</option>
 							</select>
 							<form className="bb-admin-flagged-members__search-form" onSubmit={ handleSearch }>
 								<input
