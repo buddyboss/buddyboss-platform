@@ -716,11 +716,26 @@ class BB_Admin_Topics_Ajax {
 				bbp_update_forum( array( 'forum_id' => $old_forum_id ) );
 			}
 
-			// Update _bbp_forum_id meta on all replies belonging to this topic.
+			// Batch-update _bbp_forum_id meta on all replies belonging to this topic.
 			$reply_ids = bbp_get_all_child_ids( $topic_id, bbp_get_reply_post_type() );
 			if ( ! empty( $reply_ids ) ) {
+				global $wpdb;
+
+				$reply_ids    = array_map( 'absint', $reply_ids );
+				$placeholders = implode( ',', array_fill( 0, count( $reply_ids ), '%d' ) );
+
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Batch update required for performance; caches cleared below.
+				$wpdb->query(
+					$wpdb->prepare(
+						// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $placeholders is safe (generated from array_fill with %d).
+						"UPDATE {$wpdb->postmeta} SET meta_value = %d WHERE meta_key = '_bbp_forum_id' AND post_id IN ({$placeholders})",
+						array_merge( array( $forum_id ), $reply_ids )
+					)
+				);
+
+				// Clear post meta caches for affected replies.
 				foreach ( $reply_ids as $reply_id ) {
-					update_post_meta( $reply_id, '_bbp_forum_id', $forum_id );
+					wp_cache_delete( $reply_id, 'post_meta' );
 				}
 			}
 
@@ -765,6 +780,10 @@ class BB_Admin_Topics_Ajax {
 			wp_set_object_terms( $topic_id, $tag_names, bbp_get_topic_tag_tax_id() );
 		}
 
+		// Resolve the actual forum_id for hooks — use submitted value or fall back to current meta.
+		// This prevents passing 0 to hook listeners when forum_id was not in the request.
+		$hook_forum_id = ! empty( $forum_id ) ? $forum_id : (int) bbp_get_topic_forum_id( $topic_id );
+
 		/**
 		 * Fires after topic edit is complete in Settings 2.0 admin.
 		 *
@@ -780,7 +799,7 @@ class BB_Admin_Topics_Ajax {
 		 * @param int   $topic_author   Topic author user ID.
 		 * @param bool  $is_edit        Whether this is an edit (always true here).
 		 */
-		do_action( 'bbp_edit_topic', $topic_id, $forum_id, array(), (int) $topic->post_author, true );
+		do_action( 'bbp_edit_topic', $topic_id, $hook_forum_id, array(), (int) $topic->post_author, true );
 
 		/**
 		 * Fires after topic edit is complete in Settings 2.0 admin.
@@ -804,7 +823,7 @@ class BB_Admin_Topics_Ajax {
 		 * @param int $topic_id Topic ID.
 		 * @param int $forum_id Forum ID.
 		 */
-		do_action( 'bbp_topic_attributes_metabox_save', $topic_id, $forum_id );
+		do_action( 'bbp_topic_attributes_metabox_save', $topic_id, $hook_forum_id );
 
 		/**
 		 * Fires after topic author is saved in Settings 2.0 admin.
@@ -855,9 +874,8 @@ class BB_Admin_Topics_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Discussion not found.', 'buddyboss' ) ) );
 		}
 
-		// Fire bbPress pre-delete hook for cleanup.
-		bbp_delete_topic( $topic_id );
-
+		// wp_delete_post() triggers bbp_delete_topic() via `delete_post` hook
+		// (registered at bp-forums/core/actions.php:206). No explicit call needed.
 		$result = wp_delete_post( $topic_id, true );
 
 		if ( ! $result ) {
@@ -923,8 +941,7 @@ class BB_Admin_Topics_Ajax {
 			}
 
 			if ( 'delete' === $do_action ) {
-				// Fire bbPress pre-delete hook for cleanup.
-				bbp_delete_topic( $topic_id );
+				// wp_delete_post() triggers bbp_delete_topic() via `delete_post` hook.
 				$result = wp_delete_post( $topic_id, true );
 				if ( $result ) {
 					++$processed;

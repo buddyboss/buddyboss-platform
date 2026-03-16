@@ -540,18 +540,10 @@ class BB_Admin_Forums_Ajax {
 		 */
 		do_action( 'bbp_new_forum_post_extras', $forum_id );
 
-		/**
-		 * Fires after forum attributes are set during creation in Settings 2.0 admin.
-		 *
-		 * In legacy bbPress, this hook fired on both create and edit via save_post.
-		 * Ensures third-party plugins that set custom forum attributes on creation
-		 * continue to work.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param int $forum_id Forum ID.
-		 */
-		do_action( 'bbp_forum_attributes_metabox_save', $forum_id );
+		// Note: bbp_forum_attributes_metabox_save is NOT fired here because
+		// bbp_save_forum_extras() is already triggered by bbp_new_forum_post_extras
+		// (registered at bp-forums/core/actions.php:172). Firing both would cause
+		// bbp_save_forum_extras() to run twice.
 
 		// Clear status counts cache.
 		$this->bb_clear_status_counts_cache();
@@ -731,17 +723,10 @@ class BB_Admin_Forums_Ajax {
 		 */
 		do_action( 'bbp_edit_forum_post_extras', $forum_id );
 
-		/**
-		 * Fires after forum attributes are saved in Settings 2.0 admin.
-		 *
-		 * Mirrors the legacy bbp_forum_attributes_metabox_save hook for
-		 * third-party plugin compatibility (forum type/status changes).
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param int $forum_id Forum ID.
-		 */
-		do_action( 'bbp_forum_attributes_metabox_save', $forum_id );
+		// Note: bbp_forum_attributes_metabox_save is NOT fired here because
+		// bbp_save_forum_extras() is already triggered by bbp_edit_forum_post_extras
+		// (registered at bp-forums/core/actions.php:174). Firing both would cause
+		// bbp_save_forum_extras() to run twice.
 
 		// Clear status counts cache.
 		$this->bb_clear_status_counts_cache();
@@ -780,9 +765,8 @@ class BB_Admin_Forums_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Forum not found.', 'buddyboss' ) ) );
 		}
 
-		// Fire bbPress pre-delete hook for cleanup.
-		bbp_delete_forum( $forum_id );
-
+		// wp_delete_post() triggers the `delete_post` hook which calls bbp_delete_forum()
+		// (registered at bp-forums/core/actions.php:155) for cleanup. No explicit call needed.
 		$result = wp_delete_post( $forum_id, true );
 
 		if ( ! $result ) {
@@ -848,8 +832,7 @@ class BB_Admin_Forums_Ajax {
 			}
 
 			if ( 'delete' === $do_action ) {
-				// Fire bbPress pre-delete hook for cleanup.
-				bbp_delete_forum( $forum_id );
+				// wp_delete_post() triggers bbp_delete_forum() via `delete_post` hook.
 				$result = wp_delete_post( $forum_id, true );
 				if ( $result ) {
 					++$processed;
@@ -1181,9 +1164,12 @@ class BB_Admin_Forums_Ajax {
 		$forum_obj = bbp_get_forum( $forum_id );
 
 		if ( ! empty( $forum_obj->post_parent ) ) {
-			$ancestors    = get_post_ancestors( $forum_id );
-			$root         = count( $ancestors ) - 1;
-			$parent_forum = $ancestors[ $root ];
+			$ancestors = get_post_ancestors( $forum_id );
+			if ( ! empty( $ancestors ) ) {
+				$parent_forum = end( $ancestors );
+			} else {
+				$parent_forum = $forum_id;
+			}
 		} else {
 			$parent_forum = $forum_id;
 		}

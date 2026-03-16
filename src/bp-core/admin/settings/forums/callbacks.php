@@ -23,13 +23,29 @@ defined( 'ABSPATH' ) || exit;
  * @param array  $settings   Full submitted settings.
  * @param array  $saved      Keys and values saved by core.
  */
-function bb_forums_after_save_settings( $feature_id, $settings, $saved ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+function bb_forums_after_save_settings( $feature_id, $settings, $saved ) {
 	if ( 'forums' !== $feature_id ) {
 		return;
 	}
 
-	// Flush rewrite rules — critical for permalink slug changes.
-	flush_rewrite_rules();
+	// Only flush rewrite rules when permalink-related settings actually changed.
+	$permalink_keys = array(
+		'_bbp_forum_slug',
+		'_bbp_topic_slug',
+		'_bbp_topic_tag_slug',
+		'_bbp_view_slug',
+		'_bbp_reply_slug',
+		'_bbp_search_slug',
+		'_bbp_reply_archive_slug',
+		'_bbp_user_favs_slug',
+		'_bbp_user_subs_slug',
+		'_bbp_include_root',
+		'_bbp_show_on_root',
+	);
+
+	if ( ! empty( array_intersect( array_keys( $saved ), $permalink_keys ) ) ) {
+		flush_rewrite_rules();
+	}
 
 	/**
 	 * Fires after forum settings are saved via Settings 2.0.
