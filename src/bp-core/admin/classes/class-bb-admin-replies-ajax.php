@@ -624,7 +624,8 @@ class BB_Admin_Replies_Ajax {
 			'ID' => $reply_id,
 		);
 
-		if ( ! empty( $content ) ) {
+		// Allow empty content to clear it (matches save_discussion() pattern).
+		if ( isset( $_POST['content'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
 			$update_args['post_content'] = $content;
 		}
 
@@ -672,6 +673,11 @@ class BB_Admin_Replies_Ajax {
 			bbp_update_forum( array( 'forum_id' => $forum_id ) );
 		}
 
+		// Resolve actual IDs for hooks — use submitted values or fall back to current meta.
+		// This prevents passing 0 to hook listeners when IDs were not in the request.
+		$hook_topic_id = ! empty( $topic_id ) ? $topic_id : (int) bbp_get_reply_topic_id( $reply_id );
+		$hook_forum_id = ! empty( $forum_id ) ? $forum_id : (int) bbp_get_reply_forum_id( $reply_id );
+
 		/**
 		 * Fires after reply edit is complete in Settings 2.0 admin.
 		 *
@@ -689,7 +695,7 @@ class BB_Admin_Replies_Ajax {
 		 * @param bool  $is_edit        Whether this is an edit (always true here).
 		 * @param int   $reply_to       Reply-to ID for threading.
 		 */
-		do_action( 'bbp_edit_reply', $reply_id, $topic_id, $forum_id, array(), (int) $reply->post_author, true, $reply_to );
+		do_action( 'bbp_edit_reply', $reply_id, $hook_topic_id, $hook_forum_id, array(), (int) $reply->post_author, true, $reply_to );
 
 		/**
 		 * Fires after reply edit is complete in Settings 2.0 admin.
@@ -715,7 +721,7 @@ class BB_Admin_Replies_Ajax {
 		 * @param int $forum_id Forum ID.
 		 * @param int $reply_to Reply-to ID for threading.
 		 */
-		do_action( 'bbp_reply_attributes_metabox_save', $reply_id, $topic_id, $forum_id, $reply_to );
+		do_action( 'bbp_reply_attributes_metabox_save', $reply_id, $hook_topic_id, $hook_forum_id, $reply_to );
 
 		/**
 		 * Fires after reply author is saved in Settings 2.0 admin.
@@ -765,9 +771,8 @@ class BB_Admin_Replies_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Reply not found.', 'buddyboss' ) ) );
 		}
 
-		// Fire bbPress pre-delete hook for cleanup (meta, caches, walker position).
-		bbp_delete_reply( $reply_id );
-
+		// wp_delete_post() triggers bbp_delete_reply() via `delete_post` hook
+		// (registered at bp-forums/core/actions.php:184). No explicit call needed.
 		$result = wp_delete_post( $reply_id, true );
 		if ( ! $result ) {
 			wp_send_json_error( array( 'message' => __( 'Failed to delete reply.', 'buddyboss' ) ) );
@@ -834,8 +839,7 @@ class BB_Admin_Replies_Ajax {
 			}
 
 			if ( 'delete' === $do_action ) {
-				// Fire bbPress pre-delete hook for cleanup (meta, caches, walker position).
-				bbp_delete_reply( $rid );
+				// wp_delete_post() triggers bbp_delete_reply() via `delete_post` hook.
 				$result = wp_delete_post( $rid, true );
 				if ( $result ) {
 					++$processed;
