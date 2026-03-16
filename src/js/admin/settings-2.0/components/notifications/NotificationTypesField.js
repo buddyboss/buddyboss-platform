@@ -8,7 +8,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { ToggleControl } from '@wordpress/components';
+import { CheckboxControl, ToggleControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { safeUrl } from '../../utils/sanitize';
@@ -231,25 +231,23 @@ var NotificationTypesField = function( props ) {
 												var subDisabled = isSubTypeDisabled( fieldData, subKey, mainChecked );
 
 												return (
-													<label
+													<div
 														key={ subKey }
 														className={
 															'bb-notification-types__sub-type' +
 															( subDisabled ? ' bb-notification-types__sub-type--disabled' : '' )
 														}
 													>
-														<input
-															type="checkbox"
+														<CheckboxControl
+															label={ subData.label }
 															checked={ subChecked }
-															onChange={ function( e ) {
-																handleSubTypeChange( fieldData.key, subKey, e.target.checked );
+															onChange={ function( checked ) {
+																handleSubTypeChange( fieldData.key, subKey, checked );
 															} }
 															disabled={ subDisabled }
+															__nextHasNoMarginBottom
 														/>
-														<span className="bb-notification-types__sub-type-label">
-															{ subData.label }
-														</span>
-													</label>
+													</div>
 												);
 											} ) }
 										</div>
