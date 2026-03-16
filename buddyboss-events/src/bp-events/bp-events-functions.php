@@ -1458,6 +1458,61 @@ function bp_events_update_capacity( $event_id, $new_capacity ) {
  * @param int $event_id Event ID.
  * @return void
  */
+/**
+ * Invite a user to an event.
+ *
+ * Writes a row to wp_bp_event_invites with status='pending'. If the event
+ * belongs to a group, the invitee must be a group member.
+ *
+ * @since BuddyBoss Events 1.0.0
+ *
+ * @param int $event_id   Event ID.
+ * @param int $invitee_id User ID of the person being invited.
+ * @param int $inviter_id User ID of the person sending the invite. Defaults to current user.
+ * @return bool|WP_Error True on success. WP_Error if invitee is not a group member.
+ */
+function bp_events_invite_member( $event_id, $invitee_id, $inviter_id = 0 ) {
+	global $wpdb;
+	$bp = buddypress();
+
+	if ( ! $inviter_id ) {
+		$inviter_id = bp_loggedin_user_id();
+	}
+
+	$event = bp_events_get_event( $event_id );
+	if ( ! $event ) {
+		return new WP_Error(
+			'bp_events_invite_invalid_event',
+			__( 'Event not found.', 'buddyboss' ),
+			array( 'status' => 404 )
+		);
+	}
+
+	// If the event belongs to a group, invitee must be a member.
+	if ( ! empty( $event->group_id ) ) {
+		if ( ! groups_is_user_member( $invitee_id, (int) $event->group_id ) ) {
+			return new WP_Error(
+				'bp_events_invite_not_member',
+				__( 'Invitee is not a member of this group.', 'buddyboss' ),
+				array( 'status' => 403 )
+			);
+		}
+	}
+
+	$result = $wpdb->replace(
+		$bp->events->table_name_invites,
+		array(
+			'event_id'   => (int) $event_id,
+			'inviter_id' => (int) $inviter_id,
+			'invitee_id' => (int) $invitee_id,
+			'status'     => 'pending',
+		),
+		array( '%d', '%d', '%d', '%s' )
+	);
+
+	return false !== $result;
+}
+
 function bp_events_notify_waitlist( $event_id ) {
 	global $wpdb;
 

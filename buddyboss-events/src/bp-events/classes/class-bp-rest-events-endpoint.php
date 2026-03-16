@@ -192,6 +192,28 @@ class BP_REST_Events_Endpoint extends WP_REST_Controller {
 				'permission_callback' => '__return_true',
 			)
 		);
+
+		// Invite: POST /events/{id}/invite.
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/(?P<id>[\d]+)/invite',
+			array(
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => array( $this, 'invite_item' ),
+				'permission_callback' => array( $this, 'update_item_permissions_check' ),
+				'args'                => array(
+					'user_ids' => array(
+						'description'       => __( 'Array of user IDs to invite.', 'buddyboss' ),
+						'type'              => 'array',
+						'items'             => array( 'type' => 'integer' ),
+						'required'          => true,
+						'sanitize_callback' => function( $value ) {
+							return array_map( 'absint', (array) $value );
+						},
+					),
+				),
+			)
+		);
 	}
 
 	/**
@@ -832,6 +854,33 @@ class BP_REST_Events_Endpoint extends WP_REST_Controller {
 			array( 'cancelled' => $result ),
 			200
 		);
+	}
+
+	/**
+	 * POST /events/{id}/invite — send invites to multiple users.
+	 *
+	 * @since BuddyBoss Events 1.0.0
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return WP_REST_Response|WP_Error
+	 */
+	public function invite_item( $request ) {
+		$event_id = (int) $request->get_param( 'id' );
+		$user_ids = (array) $request->get_param( 'user_ids' );
+		$results  = array();
+
+		foreach ( $user_ids as $invitee_id ) {
+			$invitee_id = (int) $invitee_id;
+			if ( $invitee_id < 1 ) {
+				continue;
+			}
+			$result = bp_events_invite_member( $event_id, $invitee_id );
+			$results[ $invitee_id ] = is_wp_error( $result )
+				? array( 'success' => false, 'error' => $result->get_error_message() )
+				: array( 'success' => (bool) $result );
+		}
+
+		return new WP_REST_Response( array( 'invites' => $results ), 200 );
 	}
 
 	/**
