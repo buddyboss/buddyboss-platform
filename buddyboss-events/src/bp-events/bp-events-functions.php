@@ -1307,6 +1307,17 @@ function bp_events_rsvp_event( $event_id, $user_id = 0 ) {
 		return false;
 	}
 
+	/**
+	 * Fires after an RSVP is successfully saved.
+	 *
+	 * @since BuddyBoss Events 1.0.0
+	 *
+	 * @param int    $event_id The event ID.
+	 * @param int    $user_id  The user ID.
+	 * @param string $status   'registered' or 'waitlisted'.
+	 */
+	do_action( 'bp_events_rsvp_saved', $event_id, $user_id, $status );
+
 	return $status;
 }
 
