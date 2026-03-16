@@ -144,7 +144,7 @@ function bb_members_register_member_directory_panel_fields() {
 			'name'              => 'bb-member-profile-actions',
 			'label'             => __( 'Profile Actions', 'buddyboss' ),
 			'type'              => 'toggle_list',
-			'description'       => __( 'Select which profile actions to enable in your member directories', 'buddyboss' ),
+			'description'       => __( 'Select which profile actions to enable in your member directories.', 'buddyboss' ),
 			'default'           => array(),
 			'sanitize_callback' => 'bb_members_sanitize_toggle_list',
 			'options'           => array(

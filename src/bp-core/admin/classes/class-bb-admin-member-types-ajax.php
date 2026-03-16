@@ -449,6 +449,15 @@ class BB_Admin_Member_Types_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Failed to delete profile type.', 'buddyboss' ) ) );
 		}
 
+		/**
+		 * Fires after a member/profile type is deleted via Settings 2.0.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $type_id The deleted member type post ID.
+		 */
+		do_action( 'bb_member_type_after_delete', $type_id );
+
 		wp_send_json_success(
 			array( 'message' => __( 'Profile type deleted successfully.', 'buddyboss' ) )
 		);
@@ -535,12 +544,12 @@ class BB_Admin_Member_Types_Ajax {
 		}
 
 		// Redirections — values are '' (default), '0' (custom URL), or numeric page ID.
-		$login_redirection         = isset( $_POST['login_redirection'] ) ? sanitize_text_field( wp_unslash( $_POST['login_redirection'] ) ) : '';
+		$login_redirection = isset( $_POST['login_redirection'] ) ? sanitize_text_field( wp_unslash( $_POST['login_redirection'] ) ) : '';
 		if ( '' !== $login_redirection && '0' !== $login_redirection && ! is_numeric( $login_redirection ) ) {
 			$login_redirection = '';
 		}
-		$custom_login_redirection  = isset( $_POST['custom_login_redirection'] ) ? esc_url_raw( wp_unslash( $_POST['custom_login_redirection'] ) ) : '';
-		$logout_redirection        = isset( $_POST['logout_redirection'] ) ? sanitize_text_field( wp_unslash( $_POST['logout_redirection'] ) ) : '';
+		$custom_login_redirection = isset( $_POST['custom_login_redirection'] ) ? esc_url_raw( wp_unslash( $_POST['custom_login_redirection'] ) ) : '';
+		$logout_redirection       = isset( $_POST['logout_redirection'] ) ? sanitize_text_field( wp_unslash( $_POST['logout_redirection'] ) ) : '';
 		if ( '' !== $logout_redirection && '0' !== $logout_redirection && ! is_numeric( $logout_redirection ) ) {
 			$logout_redirection = '';
 		}
@@ -652,6 +661,9 @@ class BB_Admin_Member_Types_Ajax {
 
 				if ( isset( $selected_roles[0] ) && 'none' !== $selected_roles[0] ) {
 					if ( ! empty( $get_user_ids ) ) {
+						// Prime user cache to avoid N+1 queries inside the loop.
+						cache_users( array_map( 'absint', $get_user_ids ) );
+
 						foreach ( $get_user_ids as $single_user ) {
 							$bp_user = new WP_User( $single_user );
 							// Use set_role() for atomic role swap instead of remove+add.

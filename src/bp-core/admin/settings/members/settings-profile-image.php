@@ -94,7 +94,7 @@ function bb_members_register_profile_image_panel_fields() {
 			'type'              => 'toggle',
 			'description'       => __( 'Allow members to use Gravatars for profile avatars', 'buddyboss' ),
 			'default'           => bp_enable_profile_gravatar(),
-			'sanitize_callback' => 'intval',
+			'sanitize_callback' => 'absint',
 			'conditional'       => array(
 				'field' => 'bp-profile-avatar-type',
 				'value' => 'BuddyBoss',
@@ -118,7 +118,7 @@ function bb_members_register_profile_image_panel_fields() {
 					/* translators: 1: Profile settings link, 2: Imagick link. */
 					__( 'Display name shows as one or two initials based on your %1$s. Select a default image for members without a profile avatar. Note: Your server needs %2$s installed to use the "Display Name" option.', 'buddyboss' ),
 					'<a href="' . esc_url( bb_get_feature_settings_url( 'members', 'profile_name' ) ) . '">' . __( 'profile settings', 'buddyboss' ) . '</a>',
-					'<a href="https://github.com/ImageMagick/ImageMagick" target="_blank">Imagick</a>'
+					'<a href="https://github.com/ImageMagick/ImageMagick" target="_blank" rel="noopener noreferrer">Imagick</a>'
 				)
 				: sprintf(
 					/* translators: %s: Profile settings link. */
