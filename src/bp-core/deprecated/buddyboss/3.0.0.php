@@ -1789,3 +1789,46 @@ add_action(
 		wp_send_json_error( array( 'message' => __( 'This endpoint has been deprecated.', 'buddyboss' ) ) );
 	}
 );
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Notifications Settings 2.0 deprecated hook compatibility.
+// ──────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Fire the legacy `bb_admin_setting_notifications_register_fields` hook after
+ * Settings 2.0 finishes registering notification fields.
+ *
+ * The original hook passed a `BB_Admin_Setting_Notifications` instance. Settings 2.0
+ * no longer uses that class, so a no-op stub is passed to satisfy callbacks
+ * (e.g. Pro extensions) that call add_section()/add_field() on the argument.
+ *
+ * @since BuddyBoss [BBVERSION]
+ * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_notifications_after_register_settings_fields'} instead.
+ */
+add_action(
+	'bb_notifications_after_register_settings_fields',
+	static function () {
+		do_action_deprecated(
+			'bb_admin_setting_notifications_register_fields',
+			array(
+				new class() {
+					/**
+					 * No-op stub for BP_Admin_Setting_tab::add_section().
+					 *
+					 * @param mixed ...$args Ignored.
+					 */
+					public function add_section( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+
+					/**
+					 * No-op stub for BP_Admin_Setting_tab::add_field().
+					 *
+					 * @param mixed ...$args Ignored.
+					 */
+					public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+				},
+			),
+			'BuddyBoss [BBVERSION]',
+			'bb_notifications_after_register_settings_fields'
+		);
+	}
+);

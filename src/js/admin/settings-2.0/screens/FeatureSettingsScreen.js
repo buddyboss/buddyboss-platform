@@ -171,7 +171,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 			})
 			.catch((err) => {
 				// Ignore aborted requests
-				if (err?.name === 'AbortError') {
+				if (err && 'AbortError' === err.name) {
 					return;
 				}
 				setIsLoading(false);
@@ -224,6 +224,58 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 		return () => window.removeEventListener('bb-admin-refetch-feature', handleRefetchFeature);
 	}, [featureId]);
 
+	// Listen for field value updates dispatched by InputButtonField (e.g. after credential save).
+	// Updates settings and side panel field defaults so notice fields reflect new connection status.
+	useEffect( function() {
+		function handleFieldValueUpdate( e ) {
+			var updatedFields = e.detail && e.detail.fields;
+			if ( ! updatedFields || 'object' !== typeof updatedFields ) {
+				return;
+			}
+
+			// Update current settings state.
+			setSettings( function( prev ) {
+				return Object.assign( {}, prev, updatedFields );
+			} );
+
+			// Update field data in side panels so notice/other fields render updated content.
+			// Notice fields render from `description`, other fields from `default`.
+			setSidePanels( function( prevPanels ) {
+				return prevPanels.map( function( panel ) {
+					return Object.assign( {}, panel, {
+						sections: ( panel.sections || [] ).map( function( section ) {
+							return Object.assign( {}, section, {
+								fields: ( section.fields || [] ).map( function( field ) {
+									if ( undefined !== updatedFields[ field.name ] ) {
+										var updates = { default: updatedFields[ field.name ] };
+										// Notice fields render from description, so update that too.
+										if ( 'notice' === field.type ) {
+											updates.description = updatedFields[ field.name ];
+										}
+										// Update is_connected for input_button fields.
+										if ( undefined !== e.detail.is_connected && 'input_button' === field.type ) {
+											updates.is_connected = e.detail.is_connected;
+										}
+										return Object.assign( {}, field, updates );
+									}
+									return field;
+								} ),
+							} );
+						} ),
+					} );
+				} );
+			} );
+
+			// Invalidate cache so next navigation fetches fresh data.
+			invalidateFeatureCache();
+		}
+
+		window.addEventListener( BB_EVENTS.FIELD_VALUE_UPDATE, handleFieldValueUpdate );
+		return function() {
+			window.removeEventListener( BB_EVENTS.FIELD_VALUE_UPDATE, handleFieldValueUpdate );
+		};
+	}, [] );
+
 	// Setup debounced save (auto-save on change)
 	// Uses AJAX endpoint for feature settings.
 	useEffect(() => {
@@ -259,7 +311,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 						} else {
 							// Use actual saved values from server response (may differ from
 							// submitted values due to server-side validation/revert).
-							var actualSaved = response.data?.saved || fieldsToSave;
+							var actualSaved = ( response.data && response.data.saved ) || fieldsToSave;
 							setSettings((prev) => ({ ...prev, ...actualSaved }));
 							setOriginalSettings((prev) => ({ ...prev, ...actualSaved }));
 							const cachedData = getCachedFeatureData(featureId);
@@ -273,7 +325,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 					} else {
 						setToast({
 							status: 'error',
-							message: response.data?.message || __('Something went wrong. Please try again.', 'buddyboss'),
+							message: ( response.data && response.data.message ) || __('Something went wrong. Please try again.', 'buddyboss'),
 						});
 					}
 				})
@@ -286,7 +338,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 		}, 1000);
 
 		return () => {
-			if (debouncedSaveRef.current?.cancel) {
+			if (debouncedSaveRef.current && debouncedSaveRef.current.cancel) {
 				debouncedSaveRef.current.cancel();
 			}
 		};
@@ -615,7 +667,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 			<HelpSliderModal
 				isOpen={isHelpOpen}
 				onClose={handleHelpClose}
-				title={helpContent?.title || __('Help', 'buddyboss')}
+				title={( helpContent && helpContent.title ) || __('Help', 'buddyboss')}
 			>
 				{isHelpLoading ? (
 					<div className="help-content-loading">

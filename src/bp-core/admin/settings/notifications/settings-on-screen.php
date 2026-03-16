@@ -58,7 +58,7 @@ function bb_notifications_register_on_screen_panel_fields() {
 			'name'              => '_bp_on_screen_notifications_position',
 			'label'             => __( 'Position on Screen', 'buddyboss' ),
 			'type'              => 'image_radio',
-			'default'           => bp_get_option( '_bp_on_screen_notifications_position', 'left' ),
+			'default'           => bp_get_option( '_bp_on_screen_notifications_position', 'right' ),
 			'sanitize_callback' => 'bb_notifications_sanitize_position',
 			'options'           => array(
 				array(

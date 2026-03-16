@@ -127,8 +127,47 @@ function bb_notifications_after_save_settings( $feature_id, $settings, $saved ) 
 	if ( isset( $settings['bb_enabled_notification'] ) && is_array( $settings['bb_enabled_notification'] ) ) {
 		$enabled_notification = $settings['bb_enabled_notification'];
 
-		// Filter out read-only preferences (maintain their defaults).
+		// Sanitize: rebuild with sanitized keys, only 'yes' or 'no' values.
+		$allowed_values = array( 'yes', 'no' );
+		$sanitized      = array();
+		foreach ( $enabled_notification as $key => $sub_values ) {
+			if ( ! is_string( $key ) || ! is_array( $sub_values ) ) {
+				continue;
+			}
+
+			$safe_key               = sanitize_key( $key );
+			$sanitized[ $safe_key ] = array();
+
+			foreach ( $sub_values as $sub_key => $val ) {
+				$val = sanitize_text_field( $val );
+				if ( ! in_array( $val, $allowed_values, true ) ) {
+					$val = 'no';
+				}
+				$sanitized[ $safe_key ][ sanitize_key( $sub_key ) ] = $val;
+			}
+		}
+		$enabled_notification = $sanitized;
+
+		// Whitelist: discard keys not registered in notification preferences.
 		$notification_preferences = bb_register_notification_preferences();
+		$registered_keys          = array();
+		if ( ! empty( $notification_preferences ) ) {
+			foreach ( $notification_preferences as $group_data ) {
+				if ( ! empty( $group_data['fields'] ) ) {
+					foreach ( $group_data['fields'] as $field ) {
+						if ( ! empty( $field['key'] ) ) {
+							$registered_keys[] = $field['key'];
+						}
+					}
+				}
+			}
+		}
+
+		if ( ! empty( $registered_keys ) ) {
+			$enabled_notification = array_intersect_key( $enabled_notification, array_flip( $registered_keys ) );
+		}
+
+		// Filter out read-only preferences (maintain their defaults).
 		$preferences              = array();
 		if ( ! empty( $notification_preferences ) ) {
 			foreach ( $notification_preferences as $group_data ) {

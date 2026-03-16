@@ -38,7 +38,9 @@ import { AsyncSelectField } from './fields/AsyncSelectField';
 import { ExtensionListField } from './fields/ExtensionListField';
 import { DocumentExtensionsField } from './fields/DocumentExtensionsField';
 import { InputButtonField } from './fields/InputButtonField';
+import { PasswordField } from './fields/PasswordField';
 import { StatusCheckField } from './fields/StatusCheckField';
+import { ImageUploadField } from './fields/ImageUploadField';
 
 /**
  * Settings Form Component (matching Figma settingsSection)
@@ -308,6 +310,7 @@ export function SettingsForm({ fields, values, onChange }) {
 						value={value}
 						onChange={onChange}
 						disabled={disabled}
+						values={values}
 					/>
 				);
 
@@ -316,6 +319,17 @@ export function SettingsForm({ fields, values, onChange }) {
 					<StatusCheckField
 						field={field}
 						values={values}
+						disabled={disabled}
+					/>
+				);
+
+			case 'password':
+				return (
+					<PasswordField
+						key={field.name}
+						field={field}
+						value={value}
+						onChange={onChange}
 						disabled={disabled}
 					/>
 				);
@@ -331,19 +345,34 @@ export function SettingsForm({ fields, values, onChange }) {
 						onChange={(newValue) => onChange(field.name, newValue)}
 						type={ 'email' === field.type ? 'email' : 'url' === field.type ? 'url' : 'text' }
 						disabled={disabled}
+						placeholder={field.placeholder || ''}
+						maxLength={ field.maxlength > 0 ? field.maxlength : undefined }
 						__nextHasNoMarginBottom
 					/>
 				);
 
 			case 'textarea':
 				return (
-					<TextareaControl
-						key={field.name}
-						label=""
-						value={value || ''}
-						onChange={(newValue) => onChange(field.name, newValue)}
-						__nextHasNoMarginBottom
-					/>
+					<div className="bb-admin-settings-form__textarea-wrapper">
+						<TextareaControl
+							key={field.name}
+							label=""
+							value={value || ''}
+							onChange={function( newValue ) {
+								if ( field.maxlength && newValue.length > field.maxlength ) {
+									newValue = newValue.substring( 0, field.maxlength );
+								}
+								onChange( field.name, newValue );
+							}}
+							placeholder={field.placeholder || ''}
+							__nextHasNoMarginBottom
+						/>
+						{ field.maxlength > 0 && (
+							<span className="bb-admin-settings-form__textarea-counter">
+								{ ( value || '' ).length + '/' + field.maxlength }
+							</span>
+						) }
+					</div>
 				);
 
 			case 'select':
@@ -603,6 +632,21 @@ export function SettingsForm({ fields, values, onChange }) {
 					/>
 				);
 
+			case 'image_upload':
+				return (
+					<ImageUploadField
+						uploadConfig={ field.upload_config || {} }
+						uploadUrl={ value || '' }
+						onUpload={ function ( newUrl ) {
+							onChange( field.name, newUrl );
+						} }
+						onRemove={ function () {
+							onChange( field.name, '' );
+						} }
+						disabled={ disabled }
+					/>
+				);
+
 			case 'manage_link':
 				return (
 					<button
@@ -628,7 +672,7 @@ export function SettingsForm({ fields, values, onChange }) {
 					<NotificationTypesField
 						field={field}
 						value={value}
-						onChange={onChange}
+						onChange={function( newValue ) { onChange( field.name, newValue ); }}
 					/>
 				);
 
@@ -694,8 +738,13 @@ export function SettingsForm({ fields, values, onChange }) {
 			);
 		}
 
+		var childClasses = [
+			'bb-admin-settings-form__child-field',
+			disabled ? 'bb-admin-settings-form__child-field--disabled' : '',
+		].filter( Boolean ).join( ' ' );
+
 		return (
-			<div key={field.name} className={`bb-admin-settings-form__child-field ${disabled ? 'bb-admin-settings-form__child-field--disabled' : ''}`}>
+			<div key={field.name} className={childClasses}>
 				{field.label && (
 					<label className="bb-admin-settings-form__child-field-label">{field.label}</label>
 				)}
@@ -766,7 +815,7 @@ export function SettingsForm({ fields, values, onChange }) {
 		const hasLabel = field.label && field.label.trim() !== '';
 
 		return (
-			<div key={field.name} className={fieldClasses + ( ! hasLabel ? ' bb-admin-settings-form__field--no-label' : '' ) + ( 'reaction_mode' !== field.type && field.pro_notice?.show ? ' bb-admin-settings-form__field--pro-locked' : '' )} data-group={field.group?.key || undefined}>
+			<div key={field.name} className={fieldClasses + ( ! hasLabel ? ' bb-admin-settings-form__field--no-label' : '' ) + ( 'reaction_mode' !== field.type && field.pro_notice?.show ? ' bb-admin-settings-form__field--pro-locked' : '' )} data-group={field.group?.key || undefined} data-group-inline={ field.group && field.group.inline ? 'true' : undefined }>
 				{ hasLabel && (
 					<div className="bb-admin-settings-form__field-label">
 						<label>

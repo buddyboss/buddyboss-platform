@@ -467,6 +467,65 @@
         }
     }
 
+    // Inline grouped fields rendered side-by-side.
+    &--grouped[data-group-inline="true"] {
+        display: inline-flex;
+        flex-direction: column;
+        width: calc(50% - 12px);
+        vertical-align: top;
+        gap: 8px;
+
+        + .bb-admin-settings-form__field--grouped[data-group-inline="true"] {
+            margin-left: 24px;
+        }
+
+        // Stack label above input instead of side-by-side.
+        .bb-admin-settings-form__field-label {
+            width: 100%;
+        }
+
+        .bb-admin-settings-form__field-content {
+            width: 100%;
+        }
+
+        .bb-admin-settings-form__field-input-wrapper {
+            width: 100%;
+
+            .components-base-control {
+                width: 100%;
+            }
+
+            input[type="text"],
+            input[type="url"],
+            input[type="number"] {
+                width: 100%;
+            }
+        }
+
+        // Override --no-label offset so inline fields span full width.
+        &.bb-admin-settings-form__field--no-label .bb-admin-settings-form__field-content {
+            margin-left: 0;
+        }
+    }
+
+    // Textarea wrapper ensures counter renders below (not beside) the textarea.
+    .bb-admin-settings-form__textarea-wrapper {
+        width: 100%;
+
+        .components-textarea-control {
+            width: 100%;
+        }
+    }
+
+    // Textarea character counter (e.g. "12/250").
+    .bb-admin-settings-form__textarea-counter {
+        display: block;
+        text-align: right;
+        font-size: 12px;
+        color: $bb-text-secondary-color;
+        margin-top: 4px;
+    }
+
     // Group sub-label (e.g. "Width", "Height") shown above control within a group.
     &-group-label {
         display: block;
@@ -482,6 +541,13 @@
             flex: 1;
             // 245px (label width) + 32px (gap) = 277px offset to align with sibling field content.
             margin-left: 277px;
+        }
+
+        // When grouped with a labeled field, span full width (no left indent).
+        &.bb-admin-settings-form__field--grouped {
+            .bb-admin-settings-form__field-content {
+                margin-left: 0;
+            }
         }
 
         // Full-width field types (checkbox_list) should span the entire card when unlabeled.
@@ -587,6 +653,7 @@
             line-height: 18px;
             margin: 8px 0 0 0;
         }
+
     }
 
     .bb-admin-reaction-info {
@@ -742,7 +809,7 @@
             cursor: not-allowed;
         }
 
-        &--disconnect {
+        &--connected {
             background-color: transparent;
             color: $bb-text-tertiary-color;
             border: 1px solid $bb-border-secondary-color;
@@ -765,6 +832,75 @@
         font-size: 13px;
         line-height: 18px;
         margin: 0;
+    }
+}
+
+/* Password Field (e.g. API credentials with show/hide toggle) */
+.bb-admin-settings-field__password {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+
+    &-input {
+        width: 100%;
+        height: 32px;
+        padding: 7px 36px 7px 8px;
+        font-size: 13px;
+        line-height: 18px;
+        color: $bb-text-color;
+        background-color: $bb-background-primary-color;
+        border: 0.5px solid $bb-border-secondary-color;
+        border-radius: $bb-border-radius-md;
+        outline: none;
+        box-sizing: border-box;
+
+        &::placeholder {
+            color: $bb-text-tertiary-color;
+        }
+
+        &:focus {
+            border-color: $bb-border-brand-primary-color;
+            box-shadow: 0 0 0 1px $bb-border-brand-primary-color;
+        }
+
+        &:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+    }
+
+    &-toggle {
+        position: absolute;
+        right: 4px;
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        padding: 0;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: $bb-text-tertiary-color;
+        border-radius: $bb-border-radius-sm;
+        transition: color 0.2s ease;
+
+        &:hover {
+            color: $bb-text-color;
+        }
+
+        &--visible {
+            color: $bb-text-secondary-color;
+        }
+
+        svg {
+            width: 16px;
+            height: 16px;
+        }
     }
 }
 

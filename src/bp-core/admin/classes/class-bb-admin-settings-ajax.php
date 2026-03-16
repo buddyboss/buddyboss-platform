@@ -647,6 +647,8 @@ class BB_Admin_Settings_Ajax {
 				'placeholder'          => $field['placeholder'] ?? null,
 				'button_label'         => $field['button_label'] ?? null,
 				'is_connected'         => ! empty( $field['is_connected'] ),
+				// Max length for text inputs.
+				'maxlength'            => $field['maxlength'] ?? null,
 				// Status check fields (AJAX-triggered server-side checks, e.g. Direct Access).
 				'ajax_action'          => ! empty( $field['ajax_action'] ) ? sanitize_key( $field['ajax_action'] ) : null,
 				'watch_field'          => $field['watch_field'] ?? null,
@@ -685,9 +687,10 @@ class BB_Admin_Settings_Ajax {
 				$field_data['pro_notice'] = ! empty( $pro_notice['show'] ) ? $pro_notice : null;
 			}
 
-			// Inject upload_config and resolved upload_url for image_radio fields with upload support.
+			// Inject upload_config and resolved upload_url for image_radio/image_upload fields with upload support.
 			// Only whitelisted keys are sent to the frontend — url_getter stays server-side.
-			if ( 'image_radio' === ( $field_data['type'] ?? '' ) && ! empty( $field['upload_config'] ) ) {
+			$upload_types = array( 'image_radio', 'image_upload' );
+			if ( in_array( ( $field_data['type'] ?? '' ), $upload_types, true ) && ! empty( $field['upload_config'] ) ) {
 				$upload_config = $field['upload_config'];
 
 				// Resolve the current upload URL using the registered getter function.
@@ -1293,26 +1296,15 @@ class BB_Admin_Settings_Ajax {
 		// Array format: ensure both keys exist.
 		if ( is_array( $group ) && ! empty( $group['key'] ) ) {
 			return array(
-				'key'   => $group['key'],
-				'label' => $group['label'] ?? null,
+				'key'    => $group['key'],
+				'label'  => $group['label'] ?? null,
+				'inline' => ! empty( $group['inline'] ),
 			);
 		}
 
 		return null;
 	}
 
-	/**
-	 * Extract is_active toggle values from extension data arrays.
-	 *
-	 * Normalizes nested extension arrays (which contain is_active, extension,
-	 * mime_type, etc.) into a flat key => 0|1 mapping for the React toggle list.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param array $field_value The extension data array.
-	 *
-	 * @return array Flattened toggle values keyed by extension ID.
-	 */
 	/**
 	 * Build notification groups data for the notification_types custom field.
 	 *
@@ -1372,7 +1364,7 @@ class BB_Admin_Settings_Ajax {
 						if ( ! $email_template['missing'] ) {
 							$posts = get_posts(
 								array(
-									'showposts' => 1,
+									'posts_per_page' => 1,
 									'post_type' => bp_get_email_post_type(),
 									'tax_query' => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 										array(
@@ -1443,6 +1435,18 @@ class BB_Admin_Settings_Ajax {
 		return $notification_groups;
 	}
 
+	/**
+	 * Extract is_active toggle values from extension data arrays.
+	 *
+	 * Normalizes nested extension arrays (which contain is_active, extension,
+	 * mime_type, etc.) into a flat key => 0|1 mapping for the React toggle list.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $field_value The extension data array.
+	 *
+	 * @return array Flattened toggle values keyed by extension ID.
+	 */
 	private function bb_extract_extension_toggle_values( $field_value ) {
 		$toggle_values = array();
 		foreach ( $field_value as $key => $ext ) {
