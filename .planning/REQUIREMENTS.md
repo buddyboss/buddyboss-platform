@@ -36,10 +36,10 @@
 
 ### BuddyBoss Integration
 
-- [ ] **BB-01**: Each BuddyBoss group has an Events tab displaying a calendar view of that group's events
-- [ ] **BB-02**: Event creation, RSVPs, and ticket purchases automatically post to the relevant BuddyBoss activity feeds (site-wide and group feeds, respecting group privacy)
-- [ ] **BB-03**: Organizer can invite group members directly from the group member roster when creating or editing an event
-- [ ] **BB-04**: Member profiles display a section showing events the member has attended and events they have hosted
+- [x] **BB-01**: Each BuddyBoss group has an Events tab displaying a calendar view of that group's events
+- [x] **BB-02**: Event creation, RSVPs, and ticket purchases automatically post to the relevant BuddyBoss activity feeds (site-wide and group feeds, respecting group privacy)
+- [x] **BB-03**: Organizer can invite group members directly from the group member roster when creating or editing an event
+- [x] **BB-04**: Member profiles display a section showing events the member has attended and events they have hosted
 
 ### Admin & Moderation
 
@@ -100,10 +100,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAY-05 | Phase 2 | Pending |
 | ATTN-01 | Phase 2 | Complete |
 | ATTN-02 | Phase 2 | Complete |
-| BB-01 | Phase 3 | Pending |
-| BB-02 | Phase 3 | Pending |
-| BB-03 | Phase 3 | Pending |
-| BB-04 | Phase 3 | Pending |
+| BB-01 | Phase 3 | Complete |
+| BB-02 | Phase 3 | Complete |
+| BB-03 | Phase 3 | Complete |
+| BB-04 | Phase 3 | Complete |
 | ADMN-01 | Phase 1 | Complete |
 | ADMN-02 | Phase 1 | Complete |
 | ADMN-03 | Phase 1 | Complete |
