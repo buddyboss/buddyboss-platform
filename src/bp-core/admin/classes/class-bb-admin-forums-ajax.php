@@ -495,6 +495,42 @@ class BB_Admin_Forums_Ajax {
 		/**
 		 * Fires after a new forum is created in Settings 2.0 admin.
 		 *
+		 * This is the primary lifecycle hook that triggers count initialization
+		 * via bbp_update_forum() registered in bp-forums/core/actions.php.
+		 * Must fire before bbp_new_forum_post_extras for correct ordering.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $forum_args {
+		 *     Array of forum arguments matching legacy bbp_new_forum_handler() signature.
+		 *
+		 *     @type int    $forum_id           Forum ID.
+		 *     @type int    $post_parent        Parent forum ID.
+		 *     @type int    $forum_author       Forum author user ID.
+		 *     @type int    $last_topic_id      Last topic ID (0 for new forums).
+		 *     @type int    $last_reply_id      Last reply ID (0 for new forums).
+		 *     @type int    $last_active_id     Last active ID (0 for new forums).
+		 *     @type int    $last_active_time   Last active time (0 for new forums).
+		 *     @type string $last_active_status Last active status.
+		 * }
+		 */
+		do_action(
+			'bbp_new_forum',
+			array(
+				'forum_id'           => $forum_id,
+				'post_parent'        => $parent_id,
+				'forum_author'       => bbp_get_current_user_id(),
+				'last_topic_id'      => 0,
+				'last_reply_id'      => 0,
+				'last_active_id'     => 0,
+				'last_active_time'   => 0,
+				'last_active_status' => bbp_get_public_status_id(),
+			)
+		);
+
+		/**
+		 * Fires after a new forum is created in Settings 2.0 admin.
+		 *
 		 * Mirrors the legacy bbp_new_forum_post_extras hook for third-party
 		 * plugin compatibility.
 		 *
@@ -646,6 +682,42 @@ class BB_Admin_Forums_Ajax {
 			$_POST['bbp_forum_visibility'] = $visibility;
 		}
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
+
+		/**
+		 * Fires after forum edit is complete in Settings 2.0 admin.
+		 *
+		 * This is the primary lifecycle hook that triggers count recalculation
+		 * via bbp_update_forum() registered in bp-forums/core/actions.php.
+		 * Must fire before bbp_edit_forum_post_extras for correct ordering.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $forum_args {
+		 *     Array of forum arguments matching legacy bbp_edit_forum_handler() signature.
+		 *
+		 *     @type int    $forum_id           Forum ID.
+		 *     @type int    $post_parent        Parent forum ID.
+		 *     @type int    $forum_author       Forum author user ID.
+		 *     @type int    $last_topic_id      Last topic ID (0 for recalculation).
+		 *     @type int    $last_reply_id      Last reply ID (0 for recalculation).
+		 *     @type int    $last_active_id     Last active ID (0 for recalculation).
+		 *     @type int    $last_active_time   Last active time (0 for recalculation).
+		 *     @type string $last_active_status Last active status.
+		 * }
+		 */
+		do_action(
+			'bbp_edit_forum',
+			array(
+				'forum_id'           => $forum_id,
+				'post_parent'        => $parent_id,
+				'forum_author'       => $forum->post_author,
+				'last_topic_id'      => 0,
+				'last_reply_id'      => 0,
+				'last_active_id'     => 0,
+				'last_active_time'   => 0,
+				'last_active_status' => bbp_get_public_status_id(),
+			)
+		);
 
 		/**
 		 * Fires after forum edit is complete in Settings 2.0 admin.

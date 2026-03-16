@@ -675,6 +675,25 @@ class BB_Admin_Replies_Ajax {
 		/**
 		 * Fires after reply edit is complete in Settings 2.0 admin.
 		 *
+		 * This is the primary lifecycle hook that triggers reply metadata updates
+		 * via bbp_update_reply() registered in bp-forums/core/actions.php.
+		 * Must fire before bbp_edit_reply_post_extras for correct ordering.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int   $reply_id       Reply ID.
+		 * @param int   $topic_id       Topic ID.
+		 * @param int   $forum_id       Forum ID.
+		 * @param array $anonymous_data Empty array (admin users are not anonymous).
+		 * @param int   $reply_author   Reply author user ID.
+		 * @param bool  $is_edit        Whether this is an edit (always true here).
+		 * @param int   $reply_to       Reply-to ID for threading.
+		 */
+		do_action( 'bbp_edit_reply', $reply_id, $topic_id, $forum_id, array(), (int) $reply->post_author, true, $reply_to );
+
+		/**
+		 * Fires after reply edit is complete in Settings 2.0 admin.
+		 *
 		 * Mirrors the legacy bbp_edit_reply_post_extras hook for third-party
 		 * plugin compatibility.
 		 *
