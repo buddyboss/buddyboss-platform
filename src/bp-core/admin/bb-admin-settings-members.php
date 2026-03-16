@@ -313,13 +313,13 @@ function bb_admin_settings_register_members_feature() {
 	// Access Controls (Connection Access) — follows same pattern as Groups/Activity.
 	bb_members_register_access_control_fields();
 
-	// Panel 7: Profile Types.
+	// Panel 6: Profile Types.
 	bb_members_register_profile_types_panel_fields();
 
-	// Panel 8: Profile Search.
+	// Panel 7: Profile Search.
 	bb_members_register_profile_search_panel_fields();
 
-	// Panel 9: Profile Navigation.
+	// Panel 8: Profile Navigation.
 	bb_members_register_profile_navigation_panel_fields();
 
 	/**

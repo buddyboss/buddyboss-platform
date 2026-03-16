@@ -582,9 +582,15 @@ function bb_member_navigation_save_settings( $feature_id, $settings, $saved ) {
 	if ( is_array( $hide ) && in_array( $nav_slug_for_check, $hide, true ) ) {
 		$nav_order   = isset( $appearance['user_nav_order'] ) ? $appearance['user_nav_order'] : array();
 		$default_tab = 'profile'; // Last resort fallback.
+
+		// Reverse map: nav slug → legacy default-tab key.
+		// user_default_tab stores legacy keys (media, document, video)
+		// while user_nav_order stores display slugs (photos, documents, videos).
+		$nav_slug_to_tab_key = array_flip( $default_tab_to_nav_slug );
+
 		foreach ( $nav_order as $slug ) {
 			if ( ! in_array( $slug, $hide, true ) ) {
-				$default_tab = $slug;
+				$default_tab = isset( $nav_slug_to_tab_key[ $slug ] ) ? $nav_slug_to_tab_key[ $slug ] : $slug;
 				break;
 			}
 		}
