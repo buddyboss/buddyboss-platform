@@ -58,6 +58,10 @@ class BP_Events_Component extends BP_Component {
 			$includes[] = 'activity';
 		}
 
+		if ( bp_is_active( 'groups' ) ) {
+			$includes[] = 'group-extension';
+		}
+
 		if ( is_admin() ) {
 			$includes[] = 'admin';
 		}
