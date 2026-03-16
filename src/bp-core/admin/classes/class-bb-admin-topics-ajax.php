@@ -768,6 +768,23 @@ class BB_Admin_Topics_Ajax {
 		/**
 		 * Fires after topic edit is complete in Settings 2.0 admin.
 		 *
+		 * This is the primary lifecycle hook that triggers topic metadata updates
+		 * via bbp_update_topic() registered in bp-forums/core/actions.php.
+		 * Must fire before bbp_edit_topic_post_extras for correct ordering.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int   $topic_id       Topic ID.
+		 * @param int   $forum_id       Forum ID.
+		 * @param array $anonymous_data Empty array (admin users are not anonymous).
+		 * @param int   $topic_author   Topic author user ID.
+		 * @param bool  $is_edit        Whether this is an edit (always true here).
+		 */
+		do_action( 'bbp_edit_topic', $topic_id, $forum_id, array(), (int) $topic->post_author, true );
+
+		/**
+		 * Fires after topic edit is complete in Settings 2.0 admin.
+		 *
 		 * Mirrors the legacy bbp_edit_topic_post_extras hook for third-party
 		 * plugin compatibility.
 		 *
