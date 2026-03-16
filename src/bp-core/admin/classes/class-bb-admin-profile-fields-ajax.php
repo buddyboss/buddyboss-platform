@@ -146,7 +146,7 @@ class BB_Admin_Profile_Fields_Ajax {
 
 		// Include social network providers for the Social Networks field type.
 		if ( function_exists( 'bp_xprofile_social_network_provider' ) ) {
-			$providers = bp_xprofile_social_network_provider();
+			$providers                    = bp_xprofile_social_network_provider();
 			$response['social_providers'] = array_map(
 				function ( $provider ) {
 					return array(
@@ -678,9 +678,14 @@ class BB_Admin_Profile_Fields_Ajax {
 					$member_type_mode = 'none';
 				} else {
 					// Filter out 'null' from the types list for the React UI.
-					$member_types     = array_values( array_filter( $resolved_types, function ( $t ) {
-						return 'null' !== $t;
-					} ) );
+					$member_types     = array_values(
+						array_filter(
+							$resolved_types,
+							function ( $t ) {
+								return 'null' !== $t;
+							}
+						)
+					);
 					$member_type_mode = ! empty( $member_types ) ? 'selected' : 'all';
 				}
 			}

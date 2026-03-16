@@ -46,7 +46,7 @@ function bb_members_register_profile_types_panel_fields() {
 			'description'       => __( 'Enable profile types', 'buddyboss' ),
 			'help_text'         => __( 'When enabled, profile types allow you to assign unique profile fields and permissions to different member types.', 'buddyboss' ),
 			'default'           => bp_member_type_enable_disable(),
-			'sanitize_callback' => 'intval',
+			'sanitize_callback' => 'absint',
 			'order'             => 10,
 		)
 	);
@@ -63,7 +63,7 @@ function bb_members_register_profile_types_panel_fields() {
 			'type'              => 'toggle',
 			'description'       => __( 'Display profile type on member profiles', 'buddyboss' ),
 			'default'           => bp_member_type_display_on_profile(),
-			'sanitize_callback' => 'intval',
+			'sanitize_callback' => 'absint',
 			'conditional'       => array(
 				'field' => 'bp-member-type-enable-disable',
 				'value' => true,

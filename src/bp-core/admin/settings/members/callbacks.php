@@ -547,10 +547,9 @@ function bb_members_validate_image_settings_after_save( $feature_id, $settings, 
 		if ( 'display-name' === $avatar_type && empty( _wp_image_editor_choose() ) ) {
 			bp_update_option( 'bp-default-profile-avatar-type', 'buddyboss' );
 		}
-	} elseif ( $has_avatar ) {
-		// Avatar type is WordPress — no avatar sub-option validation needed.
-		// The UI hides these fields when WordPress is selected.
 	}
+	// When avatar type is WordPress, no avatar sub-option validation is needed
+	// because the UI hides these fields when WordPress is selected.
 
 	// --- Cover type validation ---
 	if ( $has_cover ) {
