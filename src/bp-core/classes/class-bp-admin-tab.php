@@ -104,10 +104,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 
 			$min = bp_core_get_minified_asset_suffix();
 
-			if (
-				'buddyboss_page_bp-settings' === $screen_id ||
-				'bp-member-type' === $screen_id
-			) {
+			if ( 'buddyboss_page_bp-settings' === $screen_id ) {
 				wp_enqueue_script( 'bp-select2' );
 				wp_enqueue_style( 'bp-select2' );
 			}
@@ -344,18 +341,6 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				'components'                   => array_map( 'intval', bp_get_option( 'bp-active-components' ) ),
 			);
 
-			// Localize only post_type is member type and group type.
-			if (
-				0 === strpos( get_current_screen()->id, 'bp-group-type' ) ||
-				0 === strpos( get_current_screen()->id, 'bp-member-type' )
-			) {
-				$localize_arg['post_type'] = get_current_screen()->id;
-				if ( function_exists( 'buddyboss_theme_get_option' ) ) {
-					$localize_arg['background_color'] = buddyboss_theme_get_option( 'label_background_color' );
-					$localize_arg['color']            = buddyboss_theme_get_option( 'label_text_color' );
-				}
-			}
-
 			if ( function_exists( 'bb_is_readylaunch_enabled' ) && bb_is_readylaunch_enabled() && class_exists( 'BB_Readylaunch' ) ) {
 				$readylaunch                          = new BB_Readylaunch();
 				$localize_arg['register_integration'] = bp_enable_site_registration() && ! bp_allow_custom_registration();
@@ -374,16 +359,6 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				$localize_arg
 			);
 
-			$active_tab = bp_core_get_admin_active_tab();
-
-			if ( 'bp-xprofile' === $active_tab || 'bp-groups' === $active_tab ) {
-
-				wp_enqueue_style( 'thickbox' );
-				wp_enqueue_script( 'media-upload' );
-
-				// Get Avatar Uploader.
-				bp_attachments_enqueue_scripts( 'BP_Attachment_Avatar' );
-			}
 		}
 
 		/**
