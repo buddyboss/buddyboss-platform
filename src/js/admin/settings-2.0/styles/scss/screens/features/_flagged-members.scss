@@ -20,6 +20,7 @@
 		width: 100%;
 		display: flex;
 		flex-direction: column;
+		overflow: hidden;
 	}
 
 	/* Title bar — 64px min-height, 24px horizontal padding, 1px border-bottom */
@@ -95,9 +96,226 @@
 		}
 	}
 
-	/* Body — 32px top, 24px sides, 8px bottom */
+	/* Body — top padding, sides, bottom */
 	&__body {
-		padding: 32px 24px 8px;
+		padding: 24px 0 8px;
+	}
+
+	/* Action Bar — Figma actionBar pattern */
+	&__action-bar {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 0 24px 16px;
+		border-bottom: 0.5px solid $bb-border-secondary-color;
+	}
+
+	&__action-bar-left {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	&__action-bar-right {
+		display: flex;
+		align-items: center;
+		gap: 13px;
+	}
+
+	&__bulk-select {
+		height: 34px;
+		padding: 7px 28px 7px 8px;
+		font-size: 13px;
+		border: 0.5px solid $bb-border-tertiary-color;
+		border-radius: $bb-border-radius-md;
+		background: $bb-background-primary-color;
+		color: $bb-text-color;
+		min-width: 160px;
+		cursor: pointer;
+		appearance: none;
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23757575' d='M6 8.825c-.2 0-.4-.075-.55-.225l-3-3a.776.776 0 0 1 0-1.1c.3-.3.8-.3 1.1 0L6 6.95l2.45-2.45c.3-.3.8-.3 1.1 0 .3.3.3.8 0 1.1l-3 3c-.15.15-.35.225-.55.225Z'/%3E%3C/svg%3E");
+		background-repeat: no-repeat;
+		background-position: right 10px center;
+
+		&--disabled {
+			border-color: $bb-border-secondary-color;
+			color: $bb-text-disabled-color;
+			cursor: default;
+		}
+	}
+
+	&__bulk-apply {
+		height: 34px;
+		padding: 6px 16px;
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 20px;
+		color: $bb-background-brand-primary-color;
+		background: none;
+		border: 1px solid $bb-background-brand-primary-color;
+		border-radius: $bb-border-radius-lg;
+		cursor: pointer;
+		white-space: nowrap;
+
+		&:hover:not(:disabled) {
+			background: rgba($bb-background-brand-primary-color, 0.04);
+		}
+
+		&--disabled {
+			color: $bb-border-brand-tertiary-color;
+			border-color: $bb-border-brand-tertiary-color;
+			cursor: default;
+
+			&:hover {
+				background: none;
+			}
+		}
+
+		.components-spinner {
+			margin: 0;
+			width: 16px;
+			height: 16px;
+		}
+	}
+
+	&__status-select {
+		height: 34px;
+		padding: 7px 28px 7px 8px;
+		font-size: 13px;
+		border: 0.5px solid $bb-border-tertiary-color;
+		border-radius: $bb-border-radius-md;
+		background: $bb-background-primary-color;
+		color: $bb-text-color;
+		min-width: 160px;
+		cursor: pointer;
+		appearance: none;
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23757575' d='M6 8.825c-.2 0-.4-.075-.55-.225l-3-3a.776.776 0 0 1 0-1.1c.3-.3.8-.3 1.1 0L6 6.95l2.45-2.45c.3-.3.8-.3 1.1 0 .3.3.3.8 0 1.1l-3 3c-.15.15-.35.225-.55.225Z'/%3E%3C/svg%3E");
+		background-repeat: no-repeat;
+		background-position: right 10px center;
+
+		&:focus {
+			border-color: $bb-border-brand-primary-color;
+			outline: none;
+			box-shadow: 0 0 0 1px $bb-border-brand-primary-color;
+		}
+	}
+
+	/* Search form — Figma inputField style (224px, bg #f6f6f6, border #d9d9d9, max-h 32px) */
+	&__search-form {
+		display: flex;
+		align-items: center;
+		gap: 0;
+		position: relative;
+		width: 224px;
+	}
+
+	&__search-input {
+		height: 32px;
+		max-height: 32px;
+		padding: 7px 32px 7px 8px;
+		font-size: 13px;
+		line-height: 18px;
+		border: 0.5px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-md;
+		background: $bb-background-primary-color;
+		width: 100%;
+		color: $bb-text-color;
+
+		&:focus {
+			border-color: $bb-border-brand-primary-color;
+			outline: none;
+			box-shadow: 0 0 0 1px $bb-border-brand-primary-color;
+		}
+
+		&::placeholder {
+			color: $bb-text-tertiary-color;
+		}
+	}
+
+	&__search-btn {
+		position: absolute;
+		right: 8px;
+		top: 50%;
+		transform: translateY(-50%);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: none;
+		border: none;
+		cursor: pointer;
+		color: $bb-icon-tertiary-color;
+		padding: 0;
+
+		[class*="bb-icons-"] {
+			font-size: 20px;
+		}
+
+		&:hover {
+			color: $bb-icon-secondary-color;
+		}
+	}
+
+	/* Table Header — Figma tableItems header */
+	&__table-header {
+		display: flex;
+		align-items: center;
+		gap: 32px;
+		padding: 8px 24px;
+		border-bottom: 0.5px solid $bb-border-secondary-color;
+	}
+
+	&__table-header-left {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		width: 264px;
+		flex-shrink: 0;
+	}
+
+	&__checkbox-col {
+		display: flex;
+		align-items: center;
+		padding: 3px;
+		flex-shrink: 0;
+	}
+
+	&__checkbox {
+		width: 18px;
+		height: 18px;
+		border: 1px solid $bb-border-quaternary-color;
+		border-radius: $bb-border-radius-sm;
+		cursor: pointer;
+		margin: 0;
+		appearance: auto;
+	}
+
+	&__col-label {
+		font-size: 14px;
+		font-weight: 400;
+		color: $bb-text-color;
+		line-height: 20px;
+
+		&--member {
+			flex: 1;
+		}
+
+		&--blocks {
+			font-size: 13px;
+			color: $bb-text-tertiary-color;
+			line-height: 18px;
+			width: 104px;
+			min-width: 104px;
+			flex-shrink: 0;
+		}
+
+		&--reports {
+			font-size: 13px;
+			color: $bb-text-tertiary-color;
+			line-height: 18px;
+			width: 104px;
+			min-width: 104px;
+			flex-shrink: 0;
+		}
 	}
 
 	/* Members list */
@@ -112,11 +330,15 @@
 		align-items: center;
 		gap: 32px;
 		min-height: 48px;
-		padding-bottom: 16px;
+		padding: 0 24px 16px;
 		border-bottom: 0.5px solid $bb-border-secondary-color;
 
 		&:last-child {
 			border-bottom: 0;
+		}
+
+		&--selected {
+			background: rgba($bb-link-color, 0.03);
 		}
 	}
 
@@ -129,7 +351,7 @@
 		min-width: 0;
 	}
 
-	/* Member column — 264px width, 8px gap */
+	/* Member column — shrink to flex after checkbox */
 	&__member-col {
 		display: flex;
 		align-items: center;
@@ -164,24 +386,7 @@
 		}
 	}
 
-	/* Reports column — 200px, blocks column — 152px */
-	&__reports-col {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		font-size: 13px;
-		font-weight: 400;
-		color: $bb-text-color;
-		line-height: 18px;
-		width: 200px;
-		flex-shrink: 0;
-
-		[class*="bb-icons-"] {
-			font-size: 16px;
-			color: $bb-icon-tertiary-color;
-		}
-	}
-
+	/* Blocks column — 104px (Figma: min-w 104px, w 104px) */
 	&__blocks-col {
 		display: flex;
 		align-items: center;
@@ -190,8 +395,30 @@
 		font-weight: 400;
 		color: $bb-text-color;
 		line-height: 18px;
-		width: 152px;
+		width: 104px;
+		min-width: 104px;
 		flex-shrink: 0;
+		padding: 3px 0;
+
+		[class*="bb-icons-"] {
+			font-size: 16px;
+			color: $bb-icon-tertiary-color;
+		}
+	}
+
+	/* Reports column — 104px (Figma: min-w 104px, w 104px) */
+	&__reports-col {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		font-size: 13px;
+		font-weight: 400;
+		color: $bb-text-color;
+		line-height: 18px;
+		width: 104px;
+		min-width: 104px;
+		flex-shrink: 0;
+		padding: 3px 0;
 
 		[class*="bb-icons-"] {
 			font-size: 16px;

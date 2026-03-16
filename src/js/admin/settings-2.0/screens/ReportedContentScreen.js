@@ -16,6 +16,7 @@ import {
 	unhideContent,
 	suspendContentOwner,
 	unsuspendContentOwner,
+	reportedContentBulkAction,
 } from '../utils/ajax';
 import { ViewContentReportModal } from '../components/modals/ViewContentReportModal';
 
@@ -106,6 +107,19 @@ export function ReportedContentScreen( { onNavigate } ) {
 	var contentType = contentTypeState[ 0 ];
 	var setContentType = contentTypeState[ 1 ];
 
+	var statusFilterState = useState( '' );
+	var statusFilter = statusFilterState[ 0 ];
+	var setStatusFilter = statusFilterState[ 1 ];
+
+	// Bulk action state.
+	var bulkActionState = useState( '' );
+	var bulkAction = bulkActionState[ 0 ];
+	var setBulkAction = bulkActionState[ 1 ];
+
+	var selectedIdsState = useState( [] );
+	var selectedIds = selectedIdsState[ 0 ];
+	var setSelectedIds = selectedIdsState[ 1 ];
+
 	// 3-dot menu state.
 	var openMenuState = useState( null );
 	var openMenuId = openMenuState[ 0 ];
@@ -126,7 +140,7 @@ export function ReportedContentScreen( { onNavigate } ) {
 	var PER_PAGE = 20;
 
 	// Fetch content items.
-	var fetchItems = useCallback( function ( pageNum, filterType ) {
+	var fetchItems = useCallback( function ( pageNum, filterType, filterStatus ) {
 		if ( abortRef.current ) {
 			abortRef.current.abort();
 		}
@@ -136,6 +150,9 @@ export function ReportedContentScreen( { onNavigate } ) {
 		var params = { page: pageNum, per_page: PER_PAGE };
 		if ( filterType ) {
 			params.content_type = filterType;
+		}
+		if ( filterStatus ) {
+			params.status = filterStatus;
 		}
 
 		setIsLoading( true );
@@ -157,7 +174,7 @@ export function ReportedContentScreen( { onNavigate } ) {
 
 	// Initial fetch.
 	useEffect( function () {
-		fetchItems( 1, '' );
+		fetchItems( 1, '', '' );
 		return function () {
 			if ( abortRef.current ) {
 				abortRef.current.abort();
@@ -187,14 +204,73 @@ export function ReportedContentScreen( { onNavigate } ) {
 		var newType = e.target.value;
 		setContentType( newType );
 		setPage( 1 );
-		fetchItems( 1, newType );
-	}, [ fetchItems ] );
+		setSelectedIds( [] );
+		fetchItems( 1, newType, statusFilter );
+	}, [ fetchItems, statusFilter ] );
+
+	// Handle status filter change.
+	var handleStatusFilterChange = useCallback( function ( e ) {
+		var newStatus = e.target.value;
+		setStatusFilter( newStatus );
+		setPage( 1 );
+		setSelectedIds( [] );
+		fetchItems( 1, contentType, newStatus );
+	}, [ fetchItems, contentType ] );
 
 	// Handle page change.
 	var handlePageChange = useCallback( function ( newPage ) {
 		setPage( newPage );
-		fetchItems( newPage, contentType );
-	}, [ contentType, fetchItems ] );
+		setSelectedIds( [] );
+		fetchItems( newPage, contentType, statusFilter );
+	}, [ contentType, statusFilter, fetchItems ] );
+
+	// Select all checkbox.
+	var handleSelectAll = useCallback( function () {
+		if ( selectedIds.length === items.length && items.length > 0 ) {
+			setSelectedIds( [] );
+		} else {
+			setSelectedIds( items.map( function ( item ) { return item.id; } ) );
+		}
+	}, [ items, selectedIds ] );
+
+	// Select single row.
+	var handleSelectRow = useCallback( function ( id ) {
+		setSelectedIds( function ( prev ) {
+			if ( prev.indexOf( id ) > -1 ) {
+				return prev.filter( function ( i ) { return i !== id; } );
+			}
+			return prev.concat( [ id ] );
+		} );
+	}, [] );
+
+	// Handle bulk action apply.
+	var handleBulkApply = useCallback( function () {
+		if ( ! bulkAction || selectedIds.length === 0 ) {
+			return;
+		}
+
+		var confirmMessage = 'hide' === bulkAction
+			? __( 'Are you sure you want to hide the selected content items?', 'buddyboss' )
+			: __( 'Are you sure you want to unhide the selected content items?', 'buddyboss' );
+
+		if ( ! window.confirm( confirmMessage ) ) {
+			return;
+		}
+
+		setActionInProgress( 'bulk' );
+		reportedContentBulkAction( bulkAction, selectedIds )
+			.then( function ( response ) {
+				setActionInProgress( null );
+				if ( response.success ) {
+					setSelectedIds( [] );
+					setBulkAction( '' );
+					fetchItems( page, contentType, statusFilter );
+				}
+			} )
+			.catch( function () {
+				setActionInProgress( null );
+			} );
+	}, [ bulkAction, selectedIds, page, contentType, statusFilter, fetchItems ] );
 
 	// Handle hide/unhide content with confirmation dialog.
 	var handleHideAction = useCallback( function ( item, action ) {
@@ -218,13 +294,13 @@ export function ReportedContentScreen( { onNavigate } ) {
 			.then( function ( response ) {
 				setActionInProgress( null );
 				if ( response.success ) {
-					fetchItems( page, contentType );
+					fetchItems( page, contentType, statusFilter );
 				}
 			} )
 			.catch( function () {
 				setActionInProgress( null );
 			} );
-	}, [ page, contentType, fetchItems ] );
+	}, [ page, contentType, statusFilter, fetchItems ] );
 
 	// Handle suspend/unsuspend owner with confirmation dialog.
 	var handleSuspendAction = useCallback( function ( item, action ) {
@@ -255,19 +331,22 @@ export function ReportedContentScreen( { onNavigate } ) {
 			.then( function ( response ) {
 				setActionInProgress( null );
 				if ( response.success ) {
-					fetchItems( page, contentType );
+					fetchItems( page, contentType, statusFilter );
 				}
 			} )
 			.catch( function () {
 				setActionInProgress( null );
 			} );
-	}, [ page, contentType, fetchItems ] );
+	}, [ page, contentType, statusFilter, fetchItems ] );
 
 	// Handle view report.
 	var handleViewReport = useCallback( function ( item ) {
 		setOpenMenuId( null );
 		setReportModalItem( item );
 	}, [] );
+
+	var allSelected = items.length > 0 && selectedIds.length === items.length;
+	var hasBulkSelection = selectedIds.length > 0;
 
 	return (
 		<div className="bb-admin-reported-content">
@@ -277,28 +356,83 @@ export function ReportedContentScreen( { onNavigate } ) {
 					<h2 className="bb-admin-reported-content__title">
 						{ __( 'Reported Content', 'buddyboss' ) }
 					</h2>
-					{ Object.keys( reportedContentTypes ).length > 0 && (
-						<div className="bb-admin-reported-content__filter">
-							<select
-								className="bb-admin-reported-content__filter-select"
-								value={ contentType }
-								onChange={ handleContentTypeChange }
-							>
-								<option value="">{ __( 'All Content Types', 'buddyboss' ) }</option>
-								{ Object.keys( reportedContentTypes ).map( function ( key ) {
-									return (
-										<option key={ key } value={ key }>
-											{ reportedContentTypes[ key ] }
-										</option>
-									);
-								} ) }
-							</select>
-						</div>
-					) }
 				</div>
 
 				{/* Body */}
 				<div className="bb-admin-reported-content__body">
+					{/* Action Bar */}
+					<div className="bb-admin-reported-content__action-bar">
+						<div className="bb-admin-reported-content__action-bar-left">
+							<select
+								className={ 'bb-admin-reported-content__bulk-select' + ( ! hasBulkSelection ? ' bb-admin-reported-content__bulk-select--disabled' : '' ) }
+								value={ bulkAction }
+								onChange={ function ( e ) { setBulkAction( e.target.value ); } }
+								disabled={ ! hasBulkSelection }
+							>
+								<option value="">{ __( 'Bulk actions', 'buddyboss' ) }</option>
+								<option value="hide">{ __( 'Hide Content', 'buddyboss' ) }</option>
+								<option value="unhide">{ __( 'Unhide Content', 'buddyboss' ) }</option>
+							</select>
+							<button
+								className={ 'bb-admin-reported-content__bulk-apply' + ( ( ! bulkAction || ! hasBulkSelection ) ? ' bb-admin-reported-content__bulk-apply--disabled' : '' ) }
+								onClick={ handleBulkApply }
+								disabled={ ! bulkAction || ! hasBulkSelection || actionInProgress === 'bulk' }
+							>
+								{ actionInProgress === 'bulk' ? <Spinner /> : __( 'Apply', 'buddyboss' ) }
+							</button>
+						</div>
+						<div className="bb-admin-reported-content__action-bar-right">
+							<select
+								className="bb-admin-reported-content__status-select"
+								value={ statusFilter }
+								onChange={ handleStatusFilterChange }
+							>
+								<option value="">{ __( 'All', 'buddyboss' ) + ' (' + total + ')' }</option>
+								<option value="hidden">{ __( 'Hidden', 'buddyboss' ) }</option>
+								<option value="visible">{ __( 'Visible', 'buddyboss' ) }</option>
+							</select>
+							{ Object.keys( reportedContentTypes ).length > 0 && (
+								<select
+									className="bb-admin-reported-content__filter-select"
+									value={ contentType }
+									onChange={ handleContentTypeChange }
+								>
+									<option value="">{ __( 'All Content Types', 'buddyboss' ) }</option>
+									{ Object.keys( reportedContentTypes ).map( function ( key ) {
+										return (
+											<option key={ key } value={ key }>
+												{ reportedContentTypes[ key ] }
+											</option>
+										);
+									} ) }
+								</select>
+							) }
+						</div>
+					</div>
+
+					{/* Table Header */}
+					<div className="bb-admin-reported-content__table-header">
+						<div className="bb-admin-reported-content__table-header-left">
+							<div className="bb-admin-reported-content__checkbox-col">
+								<input
+									type="checkbox"
+									className="bb-admin-reported-content__checkbox"
+									checked={ allSelected }
+									onChange={ handleSelectAll }
+								/>
+							</div>
+							<span className="bb-admin-reported-content__col-label bb-admin-reported-content__col-label--content">
+								{ __( 'Content', 'buddyboss' ) }
+							</span>
+						</div>
+						<span className="bb-admin-reported-content__col-label bb-admin-reported-content__col-label--owner">
+							{ __( 'Owner', 'buddyboss' ) }
+						</span>
+						<span className="bb-admin-reported-content__col-label bb-admin-reported-content__col-label--reports">
+							{ __( 'Reports', 'buddyboss' ) }
+						</span>
+					</div>
+
 					{ isLoading ? (
 						<div className="bb-admin-loading">
 							<Spinner />
@@ -312,10 +446,21 @@ export function ReportedContentScreen( { onNavigate } ) {
 							<div className="bb-admin-reported-content__list">
 								{ items.map( function ( item ) {
 									var isBusy = actionInProgress === item.id;
+									var isSelected = selectedIds.indexOf( item.id ) > -1;
 									return (
-										<div key={ item.id } className="bb-admin-reported-content__list-item">
+										<div key={ item.id } className={ 'bb-admin-reported-content__list-item' + ( isSelected ? ' bb-admin-reported-content__list-item--selected' : '' ) }>
 											{/* Items row */}
 											<div className="bb-admin-reported-content__items">
+												{/* Checkbox */}
+												<div className="bb-admin-reported-content__checkbox-col">
+													<input
+														type="checkbox"
+														className="bb-admin-reported-content__checkbox"
+														checked={ isSelected }
+														onChange={ function () { handleSelectRow( item.id ); } }
+													/>
+												</div>
+
 												{/* Content type + name */}
 												<div className="bb-admin-reported-content__content-col">
 													<span className="bb-admin-reported-content__content-icon">
@@ -365,7 +510,7 @@ export function ReportedContentScreen( { onNavigate } ) {
 												{/* Reports */}
 												<div className={ 'bb-admin-reported-content__reports-col' + ( item.reports > 0 ? ' bb-admin-reported-content__col--active' : '' ) }>
 													<i className="bb-icons-rl bb-icons-rl-flag"></i>
-													{ item.reports + ' ' + ( item.reports > 1 ? __( 'reports', 'buddyboss' ) : __( 'report', 'buddyboss' ) ) }
+													{ item.reports }
 												</div>
 
 												{/* Hidden badge */}

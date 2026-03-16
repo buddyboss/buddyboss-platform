@@ -47,6 +47,7 @@ class BB_Admin_Flagged_Members_Ajax {
 		add_action( 'wp_ajax_bb_admin_get_member_report', array( $this, 'bb_get_member_report' ) );
 		add_action( 'wp_ajax_bb_admin_suspend_member', array( $this, 'bb_suspend_member' ) );
 		add_action( 'wp_ajax_bb_admin_unsuspend_member', array( $this, 'bb_unsuspend_member' ) );
+		add_action( 'wp_ajax_bb_admin_flagged_members_bulk_action', array( $this, 'bb_bulk_action' ) );
 	}
 
 	/**
@@ -144,6 +145,7 @@ class BB_Admin_Flagged_Members_Ajax {
 		$page     = isset( $_POST['page'] ) ? absint( $_POST['page'] ) : 1;
 		$per_page = isset( $_POST['per_page'] ) ? absint( $_POST['per_page'] ) : 20;
 		$search   = isset( $_POST['search'] ) ? sanitize_text_field( wp_unslash( $_POST['search'] ) ) : '';
+		$status   = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : '';
 
 		$moderation_args = array(
 			'page'         => $page,
@@ -153,6 +155,9 @@ class BB_Admin_Flagged_Members_Ajax {
 			'reported'     => false,
 			'search_terms' => ! empty( $search ) ? $search : false,
 		);
+
+		// Store status for the WHERE condition filter.
+		$this->status_filter = $status;
 
 		// Apply the same "all" filter as the old list table: show items with reported, user_report, or hide_sitewide.
 		add_filter( 'bp_moderation_get_where_conditions', array( $this, 'bb_update_where_conditions' ), 10, 2 );
@@ -402,6 +407,61 @@ class BB_Admin_Flagged_Members_Ajax {
 	}
 
 	/**
+	 * Bulk action on flagged members.
+	 *
+	 * Supported actions: suspend, unsuspend.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_bulk_action() {
+		$this->bb_verify_request();
+
+		$action   = isset( $_POST['bulk_action'] ) ? sanitize_text_field( wp_unslash( $_POST['bulk_action'] ) ) : '';
+		$user_ids = isset( $_POST['user_ids'] ) ? array_map( 'absint', (array) $_POST['user_ids'] ) : array();
+
+		if ( empty( $action ) || empty( $user_ids ) ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid action or no members selected.', 'buddyboss' ) ) );
+		}
+
+		$allowed_actions = array( 'suspend', 'unsuspend' );
+		if ( ! in_array( $action, $allowed_actions, true ) ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid bulk action.', 'buddyboss' ) ) );
+		}
+
+		// Don't allow suspending administrators.
+		$admins  = array_map( 'intval', get_users( array( 'role' => 'administrator', 'fields' => 'ID' ) ) );
+		$success = 0;
+
+		foreach ( $user_ids as $user_id ) {
+			if ( in_array( $user_id, $admins, true ) ) {
+				continue;
+			}
+
+			if ( 'suspend' === $action ) {
+				if ( bp_moderation_is_user_suspended( $user_id ) ) {
+					continue;
+				}
+				BP_Suspend_Member::suspend_user( $user_id );
+			} else {
+				if ( ! bp_moderation_is_user_suspended( $user_id ) ) {
+					continue;
+				}
+				BP_Suspend_Member::unsuspend_user( $user_id );
+			}
+
+			$success++;
+		}
+
+		wp_send_json_success(
+			array(
+				/* translators: %d: Number of members. */
+				'message' => sprintf( __( '%d member(s) updated successfully.', 'buddyboss' ), $success ),
+				'count'   => $success,
+			)
+		);
+	}
+
+	/**
 	 * Filter WHERE conditions for "all" flagged members view.
 	 *
 	 * Shows items with reported, user_report, or hide_sitewide set — replicates
@@ -415,7 +475,15 @@ class BB_Admin_Flagged_Members_Ajax {
 	 * @return array
 	 */
 	public function bb_update_where_conditions( $where_conditions, $r ) {
-		$where_conditions['reported'] = '( ms.reported != 0 OR ms.user_report != 0 OR ms.hide_sitewide != 0 )';
+		$status = ! empty( $this->status_filter ) ? $this->status_filter : '';
+
+		if ( 'suspended' === $status ) {
+			$where_conditions['reported'] = '( ms.hide_sitewide = 1 )';
+		} elseif ( 'active' === $status ) {
+			$where_conditions['reported'] = '( ( ms.reported != 0 OR ms.user_report != 0 ) AND ms.hide_sitewide = 0 )';
+		} else {
+			$where_conditions['reported'] = '( ms.reported != 0 OR ms.user_report != 0 OR ms.hide_sitewide != 0 )';
+		}
 
 		return $where_conditions;
 	}

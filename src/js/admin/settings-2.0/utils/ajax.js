@@ -505,6 +505,22 @@ export function unsuspendMember( userId ) {
 	return ajaxFetch( 'bb_admin_unsuspend_member', { user_id: userId } );
 }
 
+/**
+ * Bulk action on flagged members.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {string} action  Bulk action (suspend, unsuspend).
+ * @param {Array}  userIds Array of user IDs.
+ * @return {Promise} Promise resolving to response.
+ */
+export function flaggedMembersBulkAction( action, userIds ) {
+	return ajaxFetch( 'bb_admin_flagged_members_bulk_action', {
+		bulk_action: action,
+		user_ids: userIds,
+	} );
+}
+
 // ── Reported Content ─────────────────────────────────────────────────────
 
 /**
@@ -580,4 +596,20 @@ export function suspendContentOwner( userId ) {
  */
 export function unsuspendContentOwner( userId ) {
 	return ajaxFetch( 'bb_admin_unsuspend_content_owner', { user_id: userId } );
+}
+
+/**
+ * Bulk action on reported content items.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {string} action Bulk action (hide, unhide).
+ * @param {Array}  ids    Array of moderation IDs.
+ * @return {Promise} Promise resolving to response.
+ */
+export function reportedContentBulkAction( action, ids ) {
+	return ajaxFetch( 'bb_admin_reported_content_bulk_action', {
+		bulk_action: action,
+		ids: ids,
+	} );
 }

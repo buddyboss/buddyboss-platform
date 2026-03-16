@@ -10,7 +10,7 @@
 import { useState, useEffect, useCallback, useRef } from '@wordpress/element';
 import { Spinner, Button } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import { getFlaggedMembers, suspendMember, unsuspendMember } from '../utils/ajax';
+import { getFlaggedMembers, suspendMember, unsuspendMember, flaggedMembersBulkAction } from '../utils/ajax';
 import { ViewReportModal } from '../components/modals/ViewReportModal';
 
 /**
@@ -47,6 +47,19 @@ export function FlaggedMembersScreen( { onNavigate } ) {
 	var search = searchState[ 0 ];
 	var setSearch = searchState[ 1 ];
 
+	var statusFilterState = useState( '' );
+	var statusFilter = statusFilterState[ 0 ];
+	var setStatusFilter = statusFilterState[ 1 ];
+
+	// Bulk action state.
+	var bulkActionState = useState( '' );
+	var bulkAction = bulkActionState[ 0 ];
+	var setBulkAction = bulkActionState[ 1 ];
+
+	var selectedIdsState = useState( [] );
+	var selectedIds = selectedIdsState[ 0 ];
+	var setSelectedIds = selectedIdsState[ 1 ];
+
 	// 3-dot menu state.
 	var openMenuState = useState( null );
 	var openMenuId = openMenuState[ 0 ];
@@ -67,18 +80,20 @@ export function FlaggedMembersScreen( { onNavigate } ) {
 	var PER_PAGE = 20;
 
 	// Fetch members.
-	var fetchMembers = useCallback( function ( pageNum, searchTerm ) {
+	var fetchMembers = useCallback( function ( pageNum, searchTerm, filterStatus ) {
 		if ( abortRef.current ) {
 			abortRef.current.abort();
 		}
 		var controller = new AbortController();
 		abortRef.current = controller;
 
+		var params = { page: pageNum, per_page: PER_PAGE, search: searchTerm || '' };
+		if ( filterStatus ) {
+			params.status = filterStatus;
+		}
+
 		setIsLoading( true );
-		getFlaggedMembers(
-			{ page: pageNum, per_page: PER_PAGE, search: searchTerm || '' },
-			{ signal: controller.signal }
-		)
+		getFlaggedMembers( params, { signal: controller.signal } )
 			.then( function ( response ) {
 				setIsLoading( false );
 				if ( response.success && response.data ) {
@@ -96,7 +111,7 @@ export function FlaggedMembersScreen( { onNavigate } ) {
 
 	// Initial fetch.
 	useEffect( function () {
-		fetchMembers( 1, '' );
+		fetchMembers( 1, '', '' );
 		return function () {
 			if ( abortRef.current ) {
 				abortRef.current.abort();
@@ -124,14 +139,73 @@ export function FlaggedMembersScreen( { onNavigate } ) {
 			e.preventDefault();
 		}
 		setPage( 1 );
-		fetchMembers( 1, search );
+		setSelectedIds( [] );
+		fetchMembers( 1, search, statusFilter );
+	}, [ search, statusFilter, fetchMembers ] );
+
+	// Handle status filter change.
+	var handleStatusFilterChange = useCallback( function ( e ) {
+		var newStatus = e.target.value;
+		setStatusFilter( newStatus );
+		setPage( 1 );
+		setSelectedIds( [] );
+		fetchMembers( 1, search, newStatus );
 	}, [ search, fetchMembers ] );
 
 	// Handle page change.
 	var handlePageChange = useCallback( function ( newPage ) {
 		setPage( newPage );
-		fetchMembers( newPage, search );
-	}, [ search, fetchMembers ] );
+		setSelectedIds( [] );
+		fetchMembers( newPage, search, statusFilter );
+	}, [ search, statusFilter, fetchMembers ] );
+
+	// Select all checkbox.
+	var handleSelectAll = useCallback( function () {
+		if ( selectedIds.length === members.length && members.length > 0 ) {
+			setSelectedIds( [] );
+		} else {
+			setSelectedIds( members.map( function ( m ) { return m.user_id; } ) );
+		}
+	}, [ members, selectedIds ] );
+
+	// Select single row.
+	var handleSelectRow = useCallback( function ( userId ) {
+		setSelectedIds( function ( prev ) {
+			if ( prev.indexOf( userId ) > -1 ) {
+				return prev.filter( function ( id ) { return id !== userId; } );
+			}
+			return prev.concat( [ userId ] );
+		} );
+	}, [] );
+
+	// Handle bulk action apply.
+	var handleBulkApply = useCallback( function () {
+		if ( ! bulkAction || selectedIds.length === 0 ) {
+			return;
+		}
+
+		var confirmMessage = 'suspend' === bulkAction
+			? __( 'Are you sure you want to suspend the selected members? They will be logged out and their content will be hidden. Please allow a few minutes for this process to complete.', 'buddyboss' )
+			: __( 'Are you sure you want to unsuspend the selected members? They will be allowed to login again and their content will be visible. Please allow a few minutes for this process to complete.', 'buddyboss' );
+
+		if ( ! window.confirm( confirmMessage ) ) {
+			return;
+		}
+
+		setActionInProgress( 'bulk' );
+		flaggedMembersBulkAction( bulkAction, selectedIds )
+			.then( function ( response ) {
+				setActionInProgress( null );
+				if ( response.success ) {
+					setSelectedIds( [] );
+					setBulkAction( '' );
+					fetchMembers( page, search, statusFilter );
+				}
+			} )
+			.catch( function () {
+				setActionInProgress( null );
+			} );
+	}, [ bulkAction, selectedIds, page, search, statusFilter, fetchMembers ] );
 
 	// Handle suspend/unsuspend with confirmation dialog.
 	var handleSuspendAction = useCallback( function ( member, action ) {
@@ -161,19 +235,22 @@ export function FlaggedMembersScreen( { onNavigate } ) {
 				setActionInProgress( null );
 				if ( response.success ) {
 					// Refresh the list.
-					fetchMembers( page, search );
+					fetchMembers( page, search, statusFilter );
 				}
 			} )
 			.catch( function () {
 				setActionInProgress( null );
 			} );
-	}, [ page, search, fetchMembers ] );
+	}, [ page, search, statusFilter, fetchMembers ] );
 
 	// Handle view report.
 	var handleViewReport = useCallback( function ( member ) {
 		setOpenMenuId( null );
 		setReportModalMember( member );
 	}, [] );
+
+	var allSelected = members.length > 0 && selectedIds.length === members.length;
+	var hasBulkSelection = selectedIds.length > 0;
 
 	return (
 		<div className="bb-admin-flagged-members">
@@ -183,22 +260,79 @@ export function FlaggedMembersScreen( { onNavigate } ) {
 					<h2 className="bb-admin-flagged-members__title">
 						{ __( 'Flagged Members', 'buddyboss' ) }
 					</h2>
-					<form className="bb-admin-flagged-members__search-form" onSubmit={ handleSearch }>
-						<input
-							type="text"
-							className="bb-admin-flagged-members__search-input"
-							placeholder={ __( 'Search members...', 'buddyboss' ) }
-							value={ search }
-							onChange={ function ( e ) { setSearch( e.target.value ); } }
-						/>
-						<button type="submit" className="bb-admin-flagged-members__search-btn">
-							<i className="bb-icons-rl bb-icons-rl-search"></i>
-						</button>
-					</form>
 				</div>
 
 				{/* Body */}
 				<div className="bb-admin-flagged-members__body">
+					{/* Action Bar */}
+					<div className="bb-admin-flagged-members__action-bar">
+						<div className="bb-admin-flagged-members__action-bar-left">
+							<select
+								className={ 'bb-admin-flagged-members__bulk-select' + ( ! hasBulkSelection ? ' bb-admin-flagged-members__bulk-select--disabled' : '' ) }
+								value={ bulkAction }
+								onChange={ function ( e ) { setBulkAction( e.target.value ); } }
+								disabled={ ! hasBulkSelection }
+							>
+								<option value="">{ __( 'Bulk actions', 'buddyboss' ) }</option>
+								<option value="suspend">{ __( 'Suspend', 'buddyboss' ) }</option>
+								<option value="unsuspend">{ __( 'Unsuspend', 'buddyboss' ) }</option>
+							</select>
+							<button
+								className={ 'bb-admin-flagged-members__bulk-apply' + ( ( ! bulkAction || ! hasBulkSelection ) ? ' bb-admin-flagged-members__bulk-apply--disabled' : '' ) }
+								onClick={ handleBulkApply }
+								disabled={ ! bulkAction || ! hasBulkSelection || actionInProgress === 'bulk' }
+							>
+								{ actionInProgress === 'bulk' ? <Spinner /> : __( 'Apply', 'buddyboss' ) }
+							</button>
+						</div>
+						<div className="bb-admin-flagged-members__action-bar-right">
+							<select
+								className="bb-admin-flagged-members__status-select"
+								value={ statusFilter }
+								onChange={ handleStatusFilterChange }
+							>
+								<option value="">{ __( 'All', 'buddyboss' ) + ' (' + total + ')' }</option>
+								<option value="suspended">{ __( 'Suspended', 'buddyboss' ) }</option>
+								<option value="active">{ __( 'Active', 'buddyboss' ) }</option>
+							</select>
+							<form className="bb-admin-flagged-members__search-form" onSubmit={ handleSearch }>
+								<input
+									type="text"
+									className="bb-admin-flagged-members__search-input"
+									placeholder={ __( 'Search members', 'buddyboss' ) }
+									value={ search }
+									onChange={ function ( e ) { setSearch( e.target.value ); } }
+								/>
+								<button type="submit" className="bb-admin-flagged-members__search-btn">
+									<i className="bb-icons-rl bb-icons-rl-search"></i>
+								</button>
+							</form>
+						</div>
+					</div>
+
+					{/* Table Header */}
+					<div className="bb-admin-flagged-members__table-header">
+						<div className="bb-admin-flagged-members__table-header-left">
+							<div className="bb-admin-flagged-members__checkbox-col">
+								<input
+									type="checkbox"
+									className="bb-admin-flagged-members__checkbox"
+									checked={ allSelected }
+									onChange={ handleSelectAll }
+								/>
+							</div>
+							<span className="bb-admin-flagged-members__col-label bb-admin-flagged-members__col-label--member">
+								{ __( 'Member', 'buddyboss' ) }
+							</span>
+						</div>
+						<span className="bb-admin-flagged-members__col-label bb-admin-flagged-members__col-label--blocks">
+							{ __( 'Blocks', 'buddyboss' ) }
+						</span>
+						<span className="bb-admin-flagged-members__col-label bb-admin-flagged-members__col-label--reports">
+							{ __( 'Reports', 'buddyboss' ) }
+						</span>
+					</div>
+
 					{ isLoading ? (
 						<div className="bb-admin-loading">
 							<Spinner />
@@ -212,12 +346,21 @@ export function FlaggedMembersScreen( { onNavigate } ) {
 							<div className="bb-admin-flagged-members__list">
 								{ members.map( function ( member ) {
 									var isBusy = actionInProgress === member.user_id;
+									var isSelected = selectedIds.indexOf( member.user_id ) > -1;
 									return (
-										<div key={ member.id } className="bb-admin-flagged-members__list-item">
+										<div key={ member.id } className={ 'bb-admin-flagged-members__list-item' + ( isSelected ? ' bb-admin-flagged-members__list-item--selected' : '' ) }>
 											{/* Items row */}
 											<div className="bb-admin-flagged-members__items">
-												{/* Member info */}
+												{/* Member column (264px) — checkbox + avatar + name */}
 												<div className="bb-admin-flagged-members__member-col">
+													<div className="bb-admin-flagged-members__checkbox-col">
+														<input
+															type="checkbox"
+															className="bb-admin-flagged-members__checkbox"
+															checked={ isSelected }
+															onChange={ function () { handleSelectRow( member.user_id ); } }
+														/>
+													</div>
 													<img
 														src={ member.avatar }
 														alt={ member.display_name }
@@ -233,16 +376,16 @@ export function FlaggedMembersScreen( { onNavigate } ) {
 													</a>
 												</div>
 
-												{/* Reports */}
-												<div className={ 'bb-admin-flagged-members__reports-col' + ( member.reports > 0 ? ' bb-admin-flagged-members__col--active' : '' ) }>
-													<i className="bb-icons-rl bb-icons-rl-flag"></i>
-													{ member.reports + ' ' + ( member.reports > 1 ? __( 'reports', 'buddyboss' ) : __( 'report', 'buddyboss' ) ) }
-												</div>
-
 												{/* Blocks */}
 												<div className={ 'bb-admin-flagged-members__blocks-col' + ( member.blocks > 0 ? ' bb-admin-flagged-members__col--active' : '' ) }>
 													<i className="bb-icons-rl bb-icons-rl-prohibit"></i>
-													{ member.blocks + ' ' + ( member.blocks > 1 ? __( 'blocks', 'buddyboss' ) : __( 'block', 'buddyboss' ) ) }
+													{ member.blocks }
+												</div>
+
+												{/* Reports */}
+												<div className={ 'bb-admin-flagged-members__reports-col' + ( member.reports > 0 ? ' bb-admin-flagged-members__col--active' : '' ) }>
+													<i className="bb-icons-rl bb-icons-rl-flag"></i>
+													{ member.reports }
 												</div>
 
 												{/* Suspended badge */}

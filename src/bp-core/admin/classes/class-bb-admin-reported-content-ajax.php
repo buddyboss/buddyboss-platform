@@ -49,6 +49,7 @@ class BB_Admin_Reported_Content_Ajax {
 		add_action( 'wp_ajax_bb_admin_unhide_content', array( $this, 'bb_unhide_content' ) );
 		add_action( 'wp_ajax_bb_admin_suspend_content_owner', array( $this, 'bb_suspend_content_owner' ) );
 		add_action( 'wp_ajax_bb_admin_unsuspend_content_owner', array( $this, 'bb_unsuspend_content_owner' ) );
+		add_action( 'wp_ajax_bb_admin_reported_content_bulk_action', array( $this, 'bb_bulk_action' ) );
 	}
 
 	/**
@@ -158,6 +159,7 @@ class BB_Admin_Reported_Content_Ajax {
 		$per_page     = isset( $_POST['per_page'] ) ? absint( $_POST['per_page'] ) : 20;
 		$search       = isset( $_POST['search'] ) ? sanitize_text_field( wp_unslash( $_POST['search'] ) ) : '';
 		$content_type = isset( $_POST['content_type'] ) ? sanitize_text_field( wp_unslash( $_POST['content_type'] ) ) : '';
+		$status       = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : '';
 
 		$moderation_args = array(
 			'page'          => $page,
@@ -172,6 +174,9 @@ class BB_Admin_Reported_Content_Ajax {
 		if ( ! empty( $content_type ) ) {
 			$moderation_args['in_types'] = array( $content_type );
 		}
+
+		// Store status for the WHERE condition filter.
+		$this->status_filter = $status;
 
 		// Show items with reported, user_report, or hide_sitewide (same as legacy list table).
 		add_filter( 'bp_moderation_get_where_conditions', array( $this, 'bb_update_where_conditions' ), 10, 2 );
@@ -522,6 +527,69 @@ class BB_Admin_Reported_Content_Ajax {
 	}
 
 	/**
+	 * Bulk action on reported content items.
+	 *
+	 * Supported actions: hide, unhide.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_bulk_action() {
+		$this->bb_verify_request();
+
+		$action = isset( $_POST['bulk_action'] ) ? sanitize_text_field( wp_unslash( $_POST['bulk_action'] ) ) : '';
+		$ids    = isset( $_POST['ids'] ) ? array_map( 'absint', (array) $_POST['ids'] ) : array();
+
+		if ( empty( $action ) || empty( $ids ) ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid action or no items selected.', 'buddyboss' ) ) );
+		}
+
+		$allowed_actions = array( 'hide', 'unhide' );
+		if ( ! in_array( $action, $allowed_actions, true ) ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid bulk action.', 'buddyboss' ) ) );
+		}
+
+		global $wpdb;
+		$bp      = buddypress();
+		$success = 0;
+
+		foreach ( $ids as $moderation_id ) {
+			$row = $wpdb->get_row( $wpdb->prepare( "SELECT item_id, item_type FROM {$bp->moderation->table_name} WHERE id = %d", $moderation_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
+			if ( empty( $row ) ) {
+				continue;
+			}
+
+			if ( 'hide' === $action ) {
+				$result = bp_moderation_hide(
+					array(
+						'content_id'   => (int) $row->item_id,
+						'content_type' => $row->item_type,
+					)
+				);
+			} else {
+				$result = bp_moderation_unhide(
+					array(
+						'content_id'   => (int) $row->item_id,
+						'content_type' => $row->item_type,
+					)
+				);
+			}
+
+			if ( $result ) {
+				$success++;
+			}
+		}
+
+		wp_send_json_success(
+			array(
+				/* translators: %d: Number of items. */
+				'message' => sprintf( __( '%d item(s) updated successfully.', 'buddyboss' ), $success ),
+				'count'   => $success,
+			)
+		);
+	}
+
+	/**
 	 * Filter WHERE conditions for reported content view.
 	 *
 	 * Shows items with reported, user_report, or hide_sitewide set — replicates
@@ -535,7 +603,15 @@ class BB_Admin_Reported_Content_Ajax {
 	 * @return array
 	 */
 	public function bb_update_where_conditions( $where_conditions, $r ) {
-		$where_conditions['reported'] = '( ms.reported != 0 OR ms.user_report != 0 OR ms.hide_sitewide != 0 )';
+		$status = ! empty( $this->status_filter ) ? $this->status_filter : '';
+
+		if ( 'hidden' === $status ) {
+			$where_conditions['reported'] = '( ms.hide_sitewide = 1 )';
+		} elseif ( 'visible' === $status ) {
+			$where_conditions['reported'] = '( ( ms.reported != 0 OR ms.user_report != 0 ) AND ms.hide_sitewide = 0 )';
+		} else {
+			$where_conditions['reported'] = '( ms.reported != 0 OR ms.user_report != 0 OR ms.hide_sitewide != 0 )';
+		}
 
 		return $where_conditions;
 	}
