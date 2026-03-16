@@ -1,0 +1,55 @@
+<?php
+
+/**
+ * Tests for BuddyBoss Activity integration.
+ *
+ * Covers requirement: BB-02 (event_created activity, RSVP activity,
+ * private group hide_sitewide).
+ *
+ * @package BuddyBoss\Events\Tests
+ */
+
+/**
+ * Class BP_Events_Test_Activity_Integration
+ *
+ * @group bp-events
+ * @group activity-integration
+ */
+class BP_Events_Test_Activity_Integration extends WP_UnitTestCase {
+
+	/**
+	 * Test that saving a new event inserts a row in wp_bp_activity with type='event_created'.
+	 *
+	 * Covers BB-02: event_created activity item.
+	 */
+	public function test_event_created_posts_activity_item() {
+		$this->markTestIncomplete( 'TODO: implement after Plan 03-02 completes' );
+	}
+
+	/**
+	 * Test that the activity row has hide_sitewide=1 when the group status is 'private'.
+	 *
+	 * Covers BB-02: privacy flag for private group events.
+	 */
+	public function test_activity_hide_sitewide_set_for_private_group_event() {
+		$this->markTestIncomplete( 'TODO: implement after Plan 03-02 completes' );
+	}
+
+	/**
+	 * Test that calling bp_events_rsvp_event inserts an activity row with type='event_rsvp'.
+	 *
+	 * Covers BB-02: RSVP activity item.
+	 */
+	public function test_rsvp_posts_activity_item() {
+		$this->markTestIncomplete( 'TODO: implement after Plan 03-02 completes' );
+	}
+
+	/**
+	 * Test that the sitewide activity feed query excludes items with hide_sitewide=1.
+	 *
+	 * Covers BB-02: private group event not visible sitewide.
+	 */
+	public function test_private_group_event_not_visible_sitewide() {
+		$this->markTestIncomplete( 'TODO: implement after Plan 03-02 completes' );
+	}
+}
