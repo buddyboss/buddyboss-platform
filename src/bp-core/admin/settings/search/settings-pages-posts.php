@@ -22,26 +22,6 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Standard post types to register eagerly.
- *
- * These are always available at bb_register_features time.
- *
- * @since BuddyBoss [BBVERSION]
- */
-if ( ! defined( 'BB_SEARCH_STANDARD_POST_TYPES' ) ) {
-	define( 'BB_SEARCH_STANDARD_POST_TYPES', array( 'post', 'page', 'attachment' ) );
-}
-
-/**
- * Post types to skip entirely (handled by Network Search panel).
- *
- * @since BuddyBoss [BBVERSION]
- */
-if ( ! defined( 'BB_SEARCH_EXCLUDED_POST_TYPES' ) ) {
-	define( 'BB_SEARCH_EXCLUDED_POST_TYPES', array( 'forum', 'topic', 'reply' ) );
-}
-
-/**
  * Register Pages & Posts Search panel sections and fields.
  *
  * Called from bb-admin-settings-search.php after side panels are registered.
@@ -103,18 +83,18 @@ function bb_search_register_pages_posts_fields() {
 				'label'             => $label,
 				'description'       => $toggle_description,
 				'type'              => 'toggle',
-				'default'           => (bool) bp_get_option( 'bp_search_post_type_' . $post_type, $default ),
+				'default'           => absint( bp_get_option( 'bp_search_post_type_' . $post_type, $default ) ),
 				'sanitize_callback' => 'absint',
 				'order'             => $order,
 			)
 		);
 
-		// Taxonomy child fields.
-		bb_search_register_taxonomy_fields( $post_type, $order );
+		// Taxonomy child fields (returns count for meta field ordering).
+		$taxonomy_count = bb_search_register_taxonomy_fields( $post_type, $order );
 
 		// Meta Data child field (post & page only).
 		if ( in_array( $post_type, array( 'post', 'page' ), true ) ) {
-			bb_search_register_meta_field( $post_type, $order );
+			bb_search_register_meta_field( $post_type, $order, $taxonomy_count );
 		}
 
 		$order += 100;
@@ -128,6 +108,8 @@ function bb_search_register_pages_posts_fields() {
  *
  * @param string $post_type  Post type slug.
  * @param int    $base_order Base order of the parent toggle field.
+ *
+ * @return int Number of taxonomy fields registered.
  */
 function bb_search_register_taxonomy_fields( $post_type, $base_order = 10 ) {
 
@@ -161,7 +143,7 @@ function bb_search_register_taxonomy_fields( $post_type, $base_order = 10 ) {
 				'name'              => $option_name,
 				'label'             => $taxonomy_obj->labels->name,
 				'type'              => 'checkbox',
-				'default'           => (bool) bp_get_option( $option_name, 0 ),
+				'default'           => absint( bp_get_option( $option_name, 0 ) ),
 				'sanitize_callback' => 'absint',
 				'parent_field'      => 'bp_search_post_type_' . $post_type,
 				'order'             => $child_order,
@@ -170,6 +152,8 @@ function bb_search_register_taxonomy_fields( $post_type, $base_order = 10 ) {
 
 		$child_order += 10;
 	}
+
+	return count( $taxonomies );
 }
 
 /**
@@ -177,14 +161,13 @@ function bb_search_register_taxonomy_fields( $post_type, $base_order = 10 ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param string $post_type  Post type slug.
- * @param int    $base_order Base order of the parent toggle field.
+ * @param string $post_type      Post type slug.
+ * @param int    $base_order     Base order of the parent toggle field.
+ * @param int    $taxonomy_count Number of taxonomy fields already registered for this post type.
  */
-function bb_search_register_meta_field( $post_type, $base_order = 10 ) {
+function bb_search_register_meta_field( $post_type, $base_order = 10, $taxonomy_count = 0 ) {
 
-	// Count existing taxonomy fields to determine the next order.
-	$taxonomies  = (array) apply_filters( 'bp_search_settings_post_type_taxonomies', get_object_taxonomies( $post_type ), $post_type );
-	$child_order = $base_order + 10 + ( count( $taxonomies ) * 10 );
+	$child_order = $base_order + 10 + ( $taxonomy_count * 10 );
 
 	bb_register_feature_field(
 		'search',
@@ -194,7 +177,7 @@ function bb_search_register_meta_field( $post_type, $base_order = 10 ) {
 			'name'              => 'bp_search_post_type_meta_' . $post_type,
 			'label'             => __( 'Meta Data', 'buddyboss' ),
 			'type'              => 'checkbox',
-			'default'           => (bool) bp_get_option( 'bp_search_post_type_meta_' . $post_type, 0 ),
+			'default'           => absint( bp_get_option( 'bp_search_post_type_meta_' . $post_type, 0 ) ),
 			'sanitize_callback' => 'absint',
 			'parent_field'      => 'bp_search_post_type_' . $post_type,
 			'order'             => $child_order,
@@ -274,7 +257,7 @@ function bb_search_lazy_register_cpt_fields( $feature_id ) {
 				'name'              => 'bp_search_post_type_' . $post_type,
 				'label'             => $label,
 				'type'              => 'toggle',
-				'default'           => (bool) bp_get_option( 'bp_search_post_type_' . $post_type, 0 ),
+				'default'           => absint( bp_get_option( 'bp_search_post_type_' . $post_type, 0 ) ),
 				'sanitize_callback' => 'absint',
 				'parent_field'      => 'bp_search_custom_post_types',
 				'order'             => $child_order,
