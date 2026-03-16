@@ -259,7 +259,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 						} else {
 							// Use actual saved values from server response (may differ from
 							// submitted values due to server-side validation/revert).
-							var actualSaved = response.data?.saved || fieldsToSave;
+							var actualSaved = ( response.data && response.data.saved ) ? response.data.saved : fieldsToSave;
 							setSettings((prev) => ({ ...prev, ...actualSaved }));
 							setOriginalSettings((prev) => ({ ...prev, ...actualSaved }));
 							const cachedData = getCachedFeatureData(featureId);
@@ -268,6 +268,13 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 									...cachedData,
 									settings: { ...cachedData.settings, ...actualSaved },
 								});
+							}
+
+							// If the server indicates panel visibility changed, refetch
+							// feature data to update the side navigation (e.g. Discussion Tags toggle).
+							if ( response.data && response.data.refresh_panels ) {
+								invalidateFeatureCache();
+								window.dispatchEvent( new Event( 'bb-admin-refetch-feature' ) );
 							}
 						}
 					} else {

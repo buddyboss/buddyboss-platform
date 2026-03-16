@@ -654,6 +654,8 @@ class BB_Admin_Settings_Ajax {
 				'full_width'           => ! empty( $field['full_width'] ),
 				// Group label for child fields (e.g., xProfile group names under Members).
 				'child_group_label'    => $field['child_group_label'] ?? null,
+				// When true, saving this field triggers a full feature refetch to update side panels.
+				'refresh_panels'       => ! empty( $field['refresh_panels'] ),
 			);
 
 			// access_control: populate access-control data via filter so Pro can inject types/options.
@@ -941,9 +943,19 @@ class BB_Admin_Settings_Ajax {
 		 */
 		do_action( 'bb_admin_save_feature_settings_after', $feature_id, $settings, $saved );
 
+		// Check if any saved field requires a panel refresh (e.g. Discussion Tags toggle).
+		$refresh_panels = false;
+		foreach ( $all_fields as $field ) {
+			if ( ! empty( $field['refresh_panels'] ) && array_key_exists( $field['name'], $saved ) ) {
+				$refresh_panels = true;
+				break;
+			}
+		}
+
 		$response_data = array(
-			'message' => __( 'Settings saved successfully.', 'buddyboss' ),
-			'saved'   => $saved,
+			'message'        => __( 'Settings saved successfully.', 'buddyboss' ),
+			'saved'          => $saved,
+			'refresh_panels' => $refresh_panels,
 		);
 
 		/**

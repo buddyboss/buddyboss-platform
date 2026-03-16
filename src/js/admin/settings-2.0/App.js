@@ -93,6 +93,11 @@ function fixAdminMenuHighlight( route ) {
 			targetItem = li;
 		}
 
+		// Match Forums submenu by CPT URL (edit.php?post_type=forum).
+		if ( ! targetItem && 'forums' === targetSlug && -1 !== href.indexOf( 'post_type=forum' ) ) {
+			targetItem = li;
+		}
+
 		// Match submenu items using Settings 2.0 URL with tab param (e.g. tab=activity).
 		if ( ! targetItem && -1 !== href.indexOf( 'tab=' + targetSlug ) ) {
 			targetItem = li;

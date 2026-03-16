@@ -155,20 +155,22 @@ function bb_admin_settings_register_forums_feature() {
 		)
 	);
 
-	// Side Panel 7: Discussion Tags.
-	bb_register_side_panel(
-		'forums',
-		'discussion_tags',
-		array(
-			'title'      => __( 'Discussion Tags', 'buddyboss' ),
-			'icon'       => array(
-				'type'  => 'font',
-				'class' => 'bb-icons-rl bb-icons-rl-tag',
-			),
-			'order'      => 120,
-			'is_default' => false,
-		)
-	);
+	// Side Panel 7: Discussion Tags (only when topic tags are enabled).
+	if ( bbp_allow_topic_tags() ) {
+		bb_register_side_panel(
+			'forums',
+			'discussion_tags',
+			array(
+				'title'      => __( 'Discussion Tags', 'buddyboss' ),
+				'icon'       => array(
+					'type'  => 'font',
+					'class' => 'bb-icons-rl bb-icons-rl-tag',
+				),
+				'order'      => 120,
+				'is_default' => false,
+			)
+		);
+	}
 
 	// Side Panel 8: Replies.
 	bb_register_side_panel(
