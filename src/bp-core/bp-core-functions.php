@@ -2650,15 +2650,7 @@ function bp_core_get_components( $type = 'all' ) {
 		'moderation'    => array(
 			'title'                => __( 'Moderation', 'buddyboss' ),
 			'description'          => __( 'Allow members to block each other, and report inappropriate content to be reviewed by the site admin.', 'buddyboss' ),
-			'settings'             => bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page' => 'bp-settings',
-						'tab'  => 'bp-moderation',
-					),
-					'admin.php'
-				)
-			),
+			'settings'             => bp_get_admin_url( 'admin.php?page=bb-settings&tab=moderation&panel=member_moderation' ),
 			'default'              => false,
 			'deactivation_confirm' => true,
 			'deactivation_message' => '<p>' . __( 'Please confirm you want to deactivate the Moderation component.', 'buddyboss' ) . '</p>' .

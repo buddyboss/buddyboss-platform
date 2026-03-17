@@ -3257,42 +3257,16 @@ function bp_core_get_moderation_admin_tabs( $active_tab = '' ) {
 
 	if ( bp_is_moderation_member_blocking_enable() ) {
 		$tabs[] = array(
-			'href'  => bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page' => 'bp-moderation',
-					),
-					'admin.php'
-				)
-			),
+			'href'  => bp_get_admin_url( 'admin.php?page=bb-settings&tab=moderation&panel=flagged_members' ),
 			'name'  => esc_html__( 'Flagged Members', 'buddyboss' ),
 			'class' => 'bp-blocked-members',
 		);
 	}
 
-	$reported_content_link = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-moderation' ), 'admin.php' ) );
-	if ( bp_is_moderation_member_blocking_enable() ) {
-		$reported_content_link = add_query_arg( array( 'tab' => 'reported-content' ), $reported_content_link );
-	}
-
 	$tabs[] = array(
-		'href'  => $reported_content_link,
+		'href'  => bp_get_admin_url( 'admin.php?page=bb-settings&tab=moderation&panel=reported_content' ),
 		'name'  => esc_html__( 'Reported Content', 'buddyboss' ),
 		'class' => 'bp-reported-content',
-	);
-
-	$tabs[] = array(
-		'href'  => bp_get_admin_url(
-			add_query_arg(
-				array(
-					'taxonomy' => 'bpm_category',
-					'tab'      => 'report-categories',
-				),
-				'edit-tags.php'
-			)
-		),
-		'name'  => esc_html__( 'Reporting Categories', 'buddyboss' ),
-		'class' => 'bp-report-categories',
 	);
 
 	/**
