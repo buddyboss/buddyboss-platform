@@ -131,6 +131,11 @@ export function SettingsForm({ fields, values, onChange }) {
 		// If field has a "conditional" property, check it
 		if (field.conditional) {
 
+			// Skip visibility check for disable-only conditionals — they stay visible.
+			if ( 'disable' === field.conditional.action ) {
+				return true;
+			}
+
 			// Multiple conditions with operator.
 			if (Array.isArray(field.conditional.conditions)) {
 				var operator = (field.conditional.operator || 'AND').toUpperCase();
@@ -150,6 +155,32 @@ export function SettingsForm({ fields, values, onChange }) {
 		// For parent_field (nesting), always show the field but it may be disabled
 		// Fields with parent_field are rendered as children of their parent
 		return true;
+	};
+
+	/**
+	 * Check if a field should be disabled based on its conditional logic
+	 * when action is 'disable' instead of 'hide'.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	const isFieldConditionallyDisabled = (field) => {
+		if ( ! field.conditional || 'disable' !== field.conditional.action ) {
+			return false;
+		}
+
+		// Multiple conditions with operator.
+		if (Array.isArray(field.conditional.conditions)) {
+			var operator = (field.conditional.operator || 'AND').toUpperCase();
+			var conditions = field.conditional.conditions;
+
+			if ('OR' === operator) {
+				return ! conditions.some(evaluateCondition);
+			}
+			return ! conditions.every(evaluateCondition);
+		}
+
+		// Single condition.
+		return ! evaluateCondition(field.conditional);
 	};
 
 	/**
@@ -747,8 +778,8 @@ export function SettingsForm({ fields, values, onChange }) {
 			return null;
 		}
 
-		// Check if field should be disabled (parent toggle is OFF or field-level disabled flag).
-		const disabled = isFieldDisabled(field) || !!field.disabled;
+		// Check if field should be disabled (parent toggle is OFF, field-level disabled flag, or conditional disable).
+		const disabled = isFieldDisabled(field) || !!field.disabled || isFieldConditionallyDisabled(field);
 
 		// Render the control first — if it returns null, skip the entire field row
 		// unless the field has child fields (e.g., hidden parent used as a label-only grouping).

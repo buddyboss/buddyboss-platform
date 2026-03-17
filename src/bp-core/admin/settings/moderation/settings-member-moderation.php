@@ -85,6 +85,7 @@ function bb_moderation_register_member_moderation_fields() {
 	);
 
 	// FIELD: Auto Suspend after X blocks (Toggle with inline number).
+	// Depends on Member Blocking being enabled.
 	bb_register_feature_field(
 		'moderation',
 		'member_moderation',
@@ -106,11 +107,17 @@ function bb_moderation_register_member_moderation_fields() {
 					'step'              => 1,
 				),
 			),
+			'conditional'          => array(
+				'field'  => 'bpm_blocking_member_blocking',
+				'value'  => true,
+				'action' => 'disable',
+			),
 			'order'                => 30,
 		)
 	);
 
 	// FIELD: Auto Suspend after X reports (Toggle with inline number).
+	// Depends on Member Reporting being enabled.
 	bb_register_feature_field(
 		'moderation',
 		'member_moderation',
@@ -132,11 +139,17 @@ function bb_moderation_register_member_moderation_fields() {
 					'step'              => 1,
 				),
 			),
+			'conditional'          => array(
+				'field'  => 'bb_blocking_member_reporting',
+				'value'  => true,
+				'action' => 'disable',
+			),
 			'order'                => 40,
 		)
 	);
 
 	// FIELD: Email Notification (Toggle).
+	// Depends on either Member Blocking OR Member Reporting being enabled.
 	bb_register_feature_field(
 		'moderation',
 		'member_moderation',
@@ -148,6 +161,20 @@ function bb_moderation_register_member_moderation_fields() {
 			'description'       => __( 'Notify administrators when members have been automatically suspended', 'buddyboss' ),
 			'default'           => bp_is_moderation_blocking_email_notification_enable( false ),
 			'sanitize_callback' => 'absint',
+			'conditional'       => array(
+				'operator'   => 'OR',
+				'action'     => 'disable',
+				'conditions' => array(
+					array(
+						'field' => 'bpm_blocking_member_blocking',
+						'value' => true,
+					),
+					array(
+						'field' => 'bb_blocking_member_reporting',
+						'value' => true,
+					),
+				),
+			),
 			'order'             => 50,
 		)
 	);

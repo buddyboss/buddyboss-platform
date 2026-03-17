@@ -56,7 +56,7 @@ function bb_moderation_register_content_reporting_fields() {
 			'description'       => __( 'Notify administrators when content has been automatically hidden', 'buddyboss' ),
 			'default'           => bp_is_moderation_reporting_email_notification_enable( false ),
 			'sanitize_callback' => 'absint',
-			'order'             => 100,
+			'order'             => 999,
 		)
 	);
 }
