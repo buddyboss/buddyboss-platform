@@ -10317,6 +10317,41 @@ form.ac-form .activity-attached-gif-container .gif-image-remove:hover .bb-icon-t
   margin-left: 0;
 }
 
+.buddypress-wrap .groups-list .load-more {
+  background: none;
+  border: none;
+  font-size: 110%;
+  margin: 15px 0;
+  padding: 0;
+  text-align: center;
+  width: 100%;
+  flex-basis: 100%;
+  max-width: 100%;
+}
+
+.buddypress-wrap .groups-list .load-more a {
+  color: #555;
+  display: block;
+  padding: 0.7em 0;
+}
+
+.buddypress-wrap .groups-list .load-more a:focus, .buddypress-wrap .groups-list .load-more a:hover {
+  color: #333;
+}
+
+.buddypress-wrap .groups-list .load-more a.loading:after {
+  content: "";
+  display: inline-block;
+  height: 16px;
+  width: 16px;
+  border: 2px solid #eaeaea;
+  border-top-color: #555;
+  border-radius: 50%;
+  animation: spin 3s infinite linear;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
 .buddypress-wrap .mygroups .groups-list.grid .wrap {
   min-height: 450px;
   padding-bottom: 0;
@@ -10574,6 +10609,46 @@ form.ac-form .activity-attached-gif-container .gif-image-remove:hover .bb-icon-t
 .buddypress-wrap .members-list:not(.grid) .member-button-wrap.footer-button-wrap,
 .buddypress-wrap .friends-mutual-list:not(.grid) .member-button-wrap.footer-button-wrap {
   display: block;
+}
+
+.buddypress-wrap .members-list .load-more,
+.buddypress-wrap .friends-mutual-list .load-more {
+  background: none;
+  border: none;
+  font-size: 110%;
+  margin: 15px 0;
+  padding: 0;
+  text-align: center;
+  width: 100%;
+  flex-basis: 100%;
+  max-width: 100%;
+}
+
+.buddypress-wrap .members-list .load-more a,
+.buddypress-wrap .friends-mutual-list .load-more a {
+  color: #555;
+  display: block;
+  padding: 0.7em 0;
+}
+
+.buddypress-wrap .members-list .load-more a:focus, .buddypress-wrap .members-list .load-more a:hover,
+.buddypress-wrap .friends-mutual-list .load-more a:focus,
+.buddypress-wrap .friends-mutual-list .load-more a:hover {
+  color: #333;
+}
+
+.buddypress-wrap .members-list .load-more a.loading:after,
+.buddypress-wrap .friends-mutual-list .load-more a.loading:after {
+  content: "";
+  display: inline-block;
+  height: 16px;
+  width: 16px;
+  border: 2px solid #eaeaea;
+  border-top-color: #555;
+  border-radius: 50%;
+  animation: spin 3s infinite linear;
+  margin-left: 8px;
+  vertical-align: middle;
 }
 
 @media screen and (min-width: 46.8em) {
@@ -23300,7 +23375,9 @@ ul.bb-albums-list .load-more {
 
 #buddypress .activity-list li.load-more,
 #buddypress .bb-photo-list li.load-more,
-#buddypress .bb-video-list li.load-more {
+#buddypress .bb-video-list li.load-more,
+#buddypress .members-list li.load-more,
+#buddypress .groups-list li.load-more {
   margin: 20px auto 10px;
   text-align: center;
   -ms-flex-preferred-size: 100%;
@@ -23311,7 +23388,9 @@ ul.bb-albums-list .load-more {
 
 #buddypress .activity-list li.load-more > a,
 #buddypress .bb-photo-list li.load-more > a,
-#buddypress .bb-video-list li.load-more > a {
+#buddypress .bb-video-list li.load-more > a,
+#buddypress .members-list li.load-more > a,
+#buddypress .groups-list li.load-more > a {
   max-width: 33%;
   pointer-events: auto;
 }

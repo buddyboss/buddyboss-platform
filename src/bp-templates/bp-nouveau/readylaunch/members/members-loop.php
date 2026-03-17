@@ -29,13 +29,6 @@ $enabled_last_active   = ! function_exists( 'bb_enabled_member_directory_element
 $enabled_joined_date   = ! function_exists( 'bb_enabled_member_directory_element' ) || bb_enabled_member_directory_element( 'joined-date' );
 ?>
 
-<?php if ( bp_get_current_member_type() ) : ?>
-	<div class="bp-feedback info">
-		<span class="bp-icon" aria-hidden="true"></span>
-		<p><?php bp_current_member_type_message(); ?></p>
-	</div>
-<?php endif; ?>
-
 <?php
 // Build query string with URL scope parameter support (for page requests = 1).
 $members_query_string = bp_ajax_querystring( 'members' );
@@ -64,7 +57,20 @@ if ( ! empty( $_GET['bb-rl-scope'] ) ) {
 
 <?php if ( bp_has_members( $members_query_string ) ) : ?>
 
+	<?php
+	$bb_current_page = isset( $_POST['page'] ) ? absint( $_POST['page'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+	if ( empty( $bb_current_page ) || 1 === $bb_current_page ) :
+	?>
+
+		<?php if ( bp_get_current_member_type() ) : ?>
+			<div class="bp-feedback info">
+				<span class="bp-icon" aria-hidden="true"></span>
+				<p><?php bp_current_member_type_message(); ?></p>
+			</div>
+		<?php endif; ?>
+
 	<ul id="members-list" class="<?php bp_nouveau_loop_classes(); ?>">
+	<?php endif; ?>
 
 		<?php
 		while ( bp_members() ) :
@@ -297,15 +303,31 @@ if ( ! empty( $_GET['bb-rl-scope'] ) ) {
 
 		<?php endwhile; ?>
 
-	</ul>
-
 	<?php
-	bp_nouveau_pagination( 'bottom' );
+	// Load more button when more pages exist.
+	global $members_template;
+	$members_pag_num     = max( 1, (int) $members_template->pag_num );
+	$members_total_pages = ceil( (int) $members_template->total_member_count / $members_pag_num );
+	if ( (int) $members_template->pag_page < $members_total_pages ) :
+		$next_page_url = add_query_arg( $members_template->pag_arg, (int) $members_template->pag_page + 1, '' );
+		?>
+		<li class="load-more bb-rl-load-more">
+			<a class="bb-rl-button bb-rl-button--brandFill" href="<?php echo esc_url( $next_page_url ); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+		</li>
+	<?php endif; ?>
+
+	<?php if ( empty( $bb_current_page ) || 1 === $bb_current_page ) : ?>
+	</ul>
+	<?php endif; ?>
+
+<?php
 else :
 	bp_nouveau_user_feedback( 'members-loop-none' );
 endif;
 
 bp_nouveau_after_loop();
+
+if ( empty( $bb_current_page ) || 1 === $bb_current_page ) :
 ?>
 
 <!-- Remove Connection confirmation popup -->
@@ -419,3 +441,4 @@ bp_nouveau_after_loop();
 		</div>
 	</transition>
 </div>
+<?php endif; ?>

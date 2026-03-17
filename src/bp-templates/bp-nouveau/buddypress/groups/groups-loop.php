@@ -14,15 +14,6 @@ add_filter( 'bp_get_group_description_excerpt', 'bb_get_group_description_excerp
 
 bp_nouveau_before_loop();
 
-if ( bp_get_current_group_directory_type() ) {
-	?>
-	<div class="bp-feedback info">
-		<span class="bp-icon" aria-hidden="true"></span>
-		<p class="current-group-type"><?php bp_current_group_directory_type_message(); ?></p>
-	</div>
-	<?php
-}
-
 $cover_class        = ! bb_platform_group_element_enable( 'cover-images' ) ? 'bb-cover-disabled' : 'bb-cover-enabled';
 $meta_privacy       = ! bb_platform_group_element_enable( 'group-privacy' ) ? 'meta-privacy-hidden' : '';
 $meta_group_type    = ! bb_platform_group_element_enable( 'group-type' ) ? 'meta-group-type-hidden' : '';
@@ -33,7 +24,18 @@ $group_cover_height = function_exists( 'bb_get_group_cover_image_height' ) ? bb_
 
 if ( bp_has_groups( bp_ajax_querystring( 'groups' ) ) ) {
 
-	bp_nouveau_pagination( 'top' );
+	$bb_current_page = isset( $_POST['page'] ) ? absint( $_POST['page'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+	if ( empty( $bb_current_page ) || 1 === $bb_current_page ) :
+
+		if ( bp_get_current_group_directory_type() ) {
+			?>
+			<div class="bp-feedback info">
+				<span class="bp-icon" aria-hidden="true"></span>
+				<p class="current-group-type"><?php bp_current_group_directory_type_message(); ?></p>
+			</div>
+			<?php
+		}
+
 	?>
 
 	<ul id="groups-list" class="
@@ -42,6 +44,8 @@ if ( bp_has_groups( bp_ajax_querystring( 'groups' ) ) ) {
 	echo esc_attr( ' ' . $cover_class . ' ' . $group_alignment );
 	?>
 	groups-dir-list">
+
+	<?php endif; ?>
 
 		<?php
 		while ( bp_groups() ) :
@@ -132,6 +136,21 @@ if ( bp_has_groups( bp_ajax_querystring( 'groups' ) ) ) {
 			</li>
 
 		<?php endwhile; ?>
+
+	<?php
+	// Load more button when more pages exist.
+	global $groups_template;
+	$groups_pag_num     = max( 1, (int) $groups_template->pag_num );
+	$groups_total_pages = ceil( (int) $groups_template->total_group_count / $groups_pag_num );
+	if ( (int) $groups_template->pag_page < $groups_total_pages ) :
+		$next_page_url = add_query_arg( $groups_template->pag_arg, (int) $groups_template->pag_page + 1, '' );
+		?>
+		<li class="load-more">
+			<a class="button outline" href="<?php echo esc_url( $next_page_url ); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+		</li>
+	<?php endif; ?>
+
+	<?php if ( empty( $bb_current_page ) || 1 === $bb_current_page ) : ?>
 	</ul>
 
 	<!-- Leave Group confirmation popup -->
@@ -160,8 +179,9 @@ if ( bp_has_groups( bp_ajax_querystring( 'groups' ) ) ) {
 		</transition>
 	</div> <!-- .bb-leave-group-popup -->
 
+	<?php endif; ?>
+
 	<?php
-	bp_nouveau_pagination( 'bottom' );
 } else {
 	bp_nouveau_user_feedback( 'groups-loop-none' );
 }
