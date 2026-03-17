@@ -46,8 +46,7 @@
 
 		&--disabled {
 			.bb-notification-types__label,
-			.bb-notification-types__sub-types,
-			.bb-notification-types__email-template {
+			.bb-notification-types__sub-types {
 				opacity: 0.5;
 			}
 		}
