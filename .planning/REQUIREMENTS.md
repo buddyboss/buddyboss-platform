@@ -1,9 +1,9 @@
 # Requirements: BuddyBoss Events Plugin
 
 **Defined:** 2026-03-10
-**Core Value:** Site admins on BuddyBoss can create, manage, and monetize events deeply embedded in their community's groups, activity feeds, and member profiles — without a third-party plugin.
+**Core Value:** Site admins on BuddyBoss can create, manage, and promote events deeply embedded in their community's groups, activity feeds, and member profiles — without a third-party plugin.
 
-## v1 Requirements
+## v1 Requirements (Complete — Milestone v1.0)
 
 ### Event Creation
 
@@ -16,18 +16,8 @@
 
 ### Ticketing
 
-- [ ] **TKET-01**: Organizer can create multiple named ticket tiers per event with individual price, quantity, and description
 - [x] **TKET-02**: Organizer can create a free RSVP event with no payment required
-- [ ] **TKET-03**: Organizer can create promo/discount codes per event (percentage or fixed-amount discount)
 - [x] **TKET-04**: Organizer can restrict ticket purchase to members of a specific BuddyBoss group
-
-### Payments & Commission
-
-- [ ] **PAY-01**: Organizer can connect their Stripe account to the platform via Stripe Connect OAuth onboarding
-- [ ] **PAY-02**: Platform applies tiered commission rates on ticket sales based on the site admin's BuddyBoss plan tier (free / pro / plus / ultimate — rates configurable by platform admin)
-- [ ] **PAY-03**: Admin can configure the commission percentage for each BuddyBoss plan tier from the admin panel
-- [ ] **PAY-04**: When an organizer issues a refund, the platform commission is automatically reversed proportionally via Stripe application fee refund
-- [ ] **PAY-05**: Organizer can view a payout dashboard showing earnings, pending payouts, and full transaction history
 
 ### Attendee Experience
 
@@ -48,12 +38,57 @@
 - [x] **ADMN-03**: Admin can view a platform-wide dashboard showing all events, ticket sales revenue, and commission earned
 - [x] **ADMN-04**: Users can report an event as offensive or inappropriate, routed into the existing BuddyBoss moderation system
 
-## v2 Requirements
+## v2 Requirements (Active — Milestone v2.0)
+
+### Taxonomy
+
+- [ ] **TAX-01**: Organizer can assign one or more hierarchical categories (with optional icon) to an event — categories are filterable on the event directory
+- [ ] **TAX-02**: Organizer can assign free-form tags to an event — tags are searchable and displayed on the event page
+- [ ] **TAX-03**: Public category archive pages (`/event-category/[slug]/`) list events in that category — private group events are never surfaced regardless of category assignment
+
+### Location & Event Type
+
+- [ ] **LOC-01**: Organizer can enter a structured venue address (name, street, city, state/region, postcode, country) — replaces the current single-string address field
+- [ ] **LOC-02**: Event page displays a Google Maps embed for in-person and hybrid events using the structured address
+- [ ] **LOC-03**: Organizer can create a Hybrid event that has both a physical venue and an online meeting link simultaneously
+- [ ] **LOC-04**: Organizer can add online meeting details (platform label, meeting URL, meeting ID, meeting password) to virtual and hybrid events
+
+### Content
+
+- [ ] **CONT-01**: Event page displays a live countdown timer to the event start date/time when enabled by the organizer
+- [ ] **CONT-02**: Organizer can set an external event URL — attendees are redirected to that URL instead of seeing the RSVP panel
+
+### Sessions & Speakers
+
+- [ ] **SESS-01**: Organizer can add a multi-session agenda to an event — each session has a title, start/end time, description, and optional speaker assignment
+- [ ] **SESS-02**: Admin and organizers can create speaker profiles (name, bio, photo, social links) reusable across events — speakers are assigned to sessions
+
+### Front-End Submission
+
+- [ ] **FEND-01**: Logged-in members can submit an event from the front end using a creation form — submission respects the site admin's event creation permission settings
+- [ ] **FEND-02**: Front-end event submissions enter a pending approval queue — admin can approve or reject with an email notification sent to the submitter
+- [ ] **FEND-03**: Member profile has a "My Events" organizer dashboard showing their submitted events with status (Pending/Published/Draft) and Edit/Delete actions
+
+### Analytics & Reports
+
+- [ ] **REPT-01**: Organizer can view a per-event report showing view count, total RSVPs, and attendance breakdown (Going/Maybe/Can't Attend/Waitlist)
+- [ ] **REPT-02**: Organizer can download a CSV of all attendees for any event they own
+
+## Future Requirements
+
+### Payments & Commission (Deferred)
+
+- **PAY-01**: Organizer can connect their Stripe account to the platform via Stripe Connect OAuth onboarding
+- **PAY-02**: Platform applies tiered commission rates on ticket sales based on the site admin's BuddyBoss plan tier
+- **PAY-03**: Admin can configure the commission percentage for each BuddyBoss plan tier
+- **PAY-04**: When an organizer issues a refund, the platform commission is automatically reversed proportionally
+- **PAY-05**: Organizer can view a payout dashboard showing earnings, pending payouts, and full transaction history
+- **TKET-01**: Organizer can create multiple named ticket tiers per event with individual price, quantity, and description
+- **TKET-03**: Organizer can create promo/discount codes per event (percentage or fixed-amount discount)
 
 ### Attendee Tools
 
 - **ATTN-03**: Attendee can transfer their ticket to another registered user
-- **ATTN-04**: QR code ticket generation with organizer check-in scanner
 
 ### Notifications
 
@@ -71,15 +106,21 @@
 |---------|--------|
 | Custom streaming infrastructure | Use external meeting links (Zoom, Meet) — streaming adds months of infra scope |
 | Mobile app | Web/WordPress plugin first |
-| Offline / cash payments | Stripe Connect only for v1 |
-| Multi-currency support | Single currency per Stripe account — defer to v2 |
-| Seating chart builder | High complexity, niche use case for v1 |
+| Offline / cash payments | Stripe Connect only — deferred to future milestone |
+| Multi-currency support | Single currency per Stripe account — defer to future milestone |
+| Seating chart builder | High complexity, niche use case |
 | Public event marketplace | Separate product surface — not a community plugin feature |
 | WooCommerce-based checkout | Stripe Connect standalone avoids WC dependency; WC conflicts common on BB sites |
+| Custom registration fields | BuddyBoss Platform has native registration — no duplication needed |
+| QR code check-in | Removed from scope |
+| FAQ section | Deferred — low priority |
+| Certificate builder | Complex Pro feature, out of scope |
 
 ## Traceability
 
 Which phases cover which requirements. Updated during roadmap creation.
+
+### v1 (Complete)
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
@@ -89,15 +130,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | EVNT-04 | Phase 1 | Complete |
 | EVNT-05 | Phase 1 | Complete |
 | EVNT-06 | Phase 1 | Complete |
-| TKET-01 | Phase 2 | Pending |
 | TKET-02 | Phase 2 | Complete |
-| TKET-03 | Phase 2 | Pending |
 | TKET-04 | Phase 2 | Complete |
-| PAY-01 | Phase 2 | Pending |
-| PAY-02 | Phase 2 | Pending |
-| PAY-03 | Phase 2 | Pending |
-| PAY-04 | Phase 2 | Pending |
-| PAY-05 | Phase 2 | Pending |
 | ATTN-01 | Phase 2 | Complete |
 | ATTN-02 | Phase 2 | Complete |
 | BB-01 | Phase 3 | Complete |
@@ -109,11 +143,32 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ADMN-03 | Phase 1 | Complete |
 | ADMN-04 | Phase 1 | Complete |
 
+### v2 (Milestone v2.0 — phases TBD by roadmap)
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| TAX-01 | TBD | Pending |
+| TAX-02 | TBD | Pending |
+| TAX-03 | TBD | Pending |
+| LOC-01 | TBD | Pending |
+| LOC-02 | TBD | Pending |
+| LOC-03 | TBD | Pending |
+| LOC-04 | TBD | Pending |
+| CONT-01 | TBD | Pending |
+| CONT-02 | TBD | Pending |
+| SESS-01 | TBD | Pending |
+| SESS-02 | TBD | Pending |
+| FEND-01 | TBD | Pending |
+| FEND-02 | TBD | Pending |
+| FEND-03 | TBD | Pending |
+| REPT-01 | TBD | Pending |
+| REPT-02 | TBD | Pending |
+
 **Coverage:**
-- v1 requirements: 25 total
-- Mapped to phases: 25
-- Unmapped: 0 ✓
+- v2 requirements: 16 total
+- Mapped to phases: 0 (TBD — filled by roadmapper)
+- Unmapped: 16 (pending roadmap)
 
 ---
 *Requirements defined: 2026-03-10*
-*Last updated: 2026-03-10 after roadmap creation*
+*Last updated: 2026-03-17 after milestone v2.0 requirements definition*
