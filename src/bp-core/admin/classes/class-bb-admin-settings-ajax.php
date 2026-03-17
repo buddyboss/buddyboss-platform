@@ -1376,7 +1376,7 @@ class BB_Admin_Settings_Ajax {
 		if ( ! empty( $slug_term_ids ) ) {
 			$email_posts = get_posts(
 				array(
-					'posts_per_page' => -1,
+					'posts_per_page' => 200,
 					'post_type'      => bp_get_email_post_type(),
 					'tax_query'      => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 						array(
@@ -1388,6 +1388,9 @@ class BB_Admin_Settings_Ajax {
 					'fields'         => 'ids',
 				)
 			);
+
+			// Prime the term cache for all email posts to avoid N+1 queries.
+			update_object_term_cache( $email_posts, bp_get_email_post_type() );
 
 			// Map each post to its email type slug(s).
 			foreach ( $email_posts as $post_id ) {

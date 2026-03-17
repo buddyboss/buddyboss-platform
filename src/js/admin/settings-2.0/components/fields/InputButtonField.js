@@ -30,7 +30,12 @@ import { invalidateFeatureCache } from '../../utils/featureCache';
  * @param {Object}   props.values   All current form values (for related_fields lookup).
  * @returns {JSX.Element} Input button field component.
  */
-export function InputButtonField( { field, value, onChange, disabled, values } ) {
+export function InputButtonField( props ) {
+	var field = props.field;
+	var value = props.value;
+	var onChange = props.onChange;
+	var disabled = props.disabled;
+	var values = props.values;
 	var isConnected = field.is_connected || false;
 	var initialButtonLabel = field.button_label || __( 'Connect', 'buddyboss' );
 	var isButtonOnly = field.button_only || false;
@@ -128,6 +133,9 @@ export function InputButtonField( { field, value, onChange, disabled, values } )
 			signal: controller.signal,
 		} )
 			.then( function( response ) {
+				if ( ! response.ok ) {
+					throw new Error( response.statusText || 'Request failed' );
+				}
 				return response.json();
 			} )
 			.then( function( result ) {

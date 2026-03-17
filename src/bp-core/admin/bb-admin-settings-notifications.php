@@ -19,6 +19,8 @@ defined( 'ABSPATH' ) || exit;
  * to panel-specific functions.
  *
  * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
  */
 function bb_admin_settings_register_notifications_feature() {
 

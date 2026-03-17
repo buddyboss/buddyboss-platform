@@ -15,6 +15,8 @@ defined( 'ABSPATH' ) || exit;
  * Register On-screen Notifications panel sections and fields.
  *
  * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
  */
 function bb_notifications_register_on_screen_panel_fields() {
 

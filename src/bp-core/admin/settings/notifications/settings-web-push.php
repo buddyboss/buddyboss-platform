@@ -17,6 +17,8 @@ defined( 'ABSPATH' ) || exit;
  * Register Web Push Notifications panel sections and fields.
  *
  * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
  */
 function bb_notifications_register_web_push_panel_fields() {
 

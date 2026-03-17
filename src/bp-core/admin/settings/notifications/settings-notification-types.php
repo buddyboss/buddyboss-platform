@@ -16,6 +16,8 @@ defined( 'ABSPATH' ) || exit;
  * Register Notification Types panel sections and fields.
  *
  * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
  */
 function bb_notifications_register_types_panel_fields() {
 

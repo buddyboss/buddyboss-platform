@@ -68,7 +68,7 @@ function bb_notifications_sanitize_visibility( $value ) {
  *
  * @return array The existing stored value.
  */
-function bb_notifications_sanitize_types_noop( $value ) {
+function bb_notifications_sanitize_types_noop( $value ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 	return bp_get_option( 'bb_enabled_notification', array() );
 }
 
@@ -83,6 +83,8 @@ function bb_notifications_sanitize_types_noop( $value ) {
  * @param string $feature_id Feature ID being saved.
  * @param array  $settings   Full submitted settings.
  * @param array  $saved      Keys and values saved by core.
+ *
+ * @return void
  */
 function bb_notifications_after_save_settings( $feature_id, $settings, $saved ) {
 	if ( 'notifications' !== $feature_id ) {

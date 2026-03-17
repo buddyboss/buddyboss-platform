@@ -63,7 +63,7 @@ var NotificationTypesField = function( props ) {
 		if ( ! newValue[ key ] ) {
 			newValue[ key ] = {};
 		}
-		newValue[ key ] = Object.assign( {}, newValue[ key ], {} );
+		newValue[ key ] = Object.assign( {}, newValue[ key ] );
 		newValue[ key ][ subType ] = checked ? 'yes' : 'no';
 		onChange( newValue );
 	};
@@ -224,7 +224,7 @@ var NotificationTypesField = function( props ) {
 														}
 													>
 														<CheckboxControl
-															label={ subData.label }
+															label={ decodeEntities( subData.label ) }
 															checked={ subChecked }
 															onChange={ function( checked ) {
 																handleSubTypeChange( fieldData.key, subKey, checked );
