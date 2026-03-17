@@ -86,17 +86,35 @@ function bb_notifications_register_web_push_panel_fields() {
 				'order'             => 10,
 			)
 		);
-	} elseif (
-		! function_exists( 'bb_platform_pro' ) ||
-		(
-			function_exists( 'bb_platform_pro' ) &&
-			function_exists( 'bb_integration_bridge' ) &&
-			! bb_integration_bridge()->is_managed_integration( 'onesignal' )
-		)
-	) {
-		// Pro not installed OR Pro OLD (doesn't register OneSignal as managed integration) —
-		// show OneSignal section with pro-gated disabled fields.
+	} elseif ( ! function_exists( 'bb_platform_pro' ) ) {
+		// Pro not installed — show OneSignal section with pro-gated disabled fields.
 		bb_notifications_register_web_push_pro_placeholder_fields();
+	} elseif (
+		function_exists( 'bb_platform_pro' ) &&
+		function_exists( 'bb_integration_bridge' ) &&
+		! bb_integration_bridge()->is_managed_integration( 'onesignal' )
+	) {
+		// Pro installed but OLD (doesn't register OneSignal as managed integration).
+		// Show update notice — don't show UPGRADE PRO placeholder since Pro IS installed.
+		bb_register_feature_field(
+			'notifications',
+			'onesignal',
+			'onesignal',
+			array(
+				'name'              => '_bb_onesignal_pro_update_notice',
+				'label'             => '',
+				'type'              => 'notice',
+				'notice_type'       => 'info',
+				'description'       => sprintf(
+					/* translators: %s: BuddyBoss Pro link. */
+					__( 'Please update %s to manage Web Push Notifications from this panel. You can still manage OneSignal settings from the legacy <a href="%s">Integrations</a> page.', 'buddyboss' ),
+					'<strong>' . __( 'BuddyBoss Platform Pro', 'buddyboss' ) . '</strong>',
+					esc_url( admin_url( 'admin.php?page=bp-integrations&tab=bb-onesignal' ) )
+				),
+				'sanitize_callback' => '__return_empty_string',
+				'order'             => 10,
+			)
+		);
 	} elseif (
 		function_exists( 'bb_platform_pro' ) &&
 		version_compare( bb_platform_pro()->version, '2.0.2', '<=' )
