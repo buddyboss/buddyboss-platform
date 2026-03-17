@@ -22,28 +22,42 @@ defined( 'ABSPATH' ) || exit;
  */
 function bb_notifications_register_web_push_panel_fields() {
 
+	// Check if OneSignal integration feature is disabled via the Integration Bridge.
+	$onesignal_feature_disabled = false;
+	if (
+		function_exists( 'bb_platform_pro' ) &&
+		function_exists( 'bb_integration_bridge' ) &&
+		bb_integration_bridge()->is_managed_integration( 'onesignal' ) &&
+		! bb_integration_bridge()->is_integration_feature_enabled( 'onesignal' )
+	) {
+		$onesignal_feature_disabled = true;
+	}
+
 	// -------------------------------------------------------------------------
 	// SECTION: Web Push Notifications
 	// When the OneSignal section is the primary header (Pro active with modern
 	// notifications, or Pro not installed with placeholder fields), hide the
-	// default section title to avoid duplication.
+	// default section title to avoid duplication. When OneSignal feature is
+	// disabled, always show the title so the panel isn't empty.
 	// -------------------------------------------------------------------------
 	$show_web_push_title = true;
-	if ( ! function_exists( 'bb_platform_pro' ) ) {
-		// Pro not installed — OneSignal placeholder section is the primary header.
-		$show_web_push_title = false;
-	} elseif (
-		version_compare( bb_platform_pro()->version, '2.0.2', '>' ) &&
-		( ! function_exists( 'bb_enabled_legacy_email_preference' ) || ! bb_enabled_legacy_email_preference() )
-	) {
-		// Pro active with modern notifications — Pro registers its own OneSignal section.
-		$show_web_push_title = false;
+	if ( ! $onesignal_feature_disabled ) {
+		if ( ! function_exists( 'bb_platform_pro' ) ) {
+			// Pro not installed — OneSignal placeholder section is the primary header.
+			$show_web_push_title = false;
+		} elseif (
+			version_compare( bb_platform_pro()->version, '2.0.2', '>' ) &&
+			( ! function_exists( 'bb_enabled_legacy_email_preference' ) || ! bb_enabled_legacy_email_preference() )
+		) {
+			// Pro active with modern notifications — Pro registers its own OneSignal section.
+			$show_web_push_title = false;
+		}
 	}
 
 	bb_register_feature_section(
 		'notifications',
-		'web_push_notifications',
-		'web_push_notifications',
+		'onesignal',
+		'onesignal',
 		array(
 			'title'       => $show_web_push_title ? __( 'Web Push Notifications', 'buddyboss' ) : '',
 			'description' => '',
@@ -51,8 +65,28 @@ function bb_notifications_register_web_push_panel_fields() {
 		)
 	);
 
-	// Determine which notice to show based on Pro availability and notification mode.
-	if ( ! function_exists( 'bb_platform_pro' ) ) {
+	if ( $onesignal_feature_disabled ) {
+		// Pro installed but OneSignal feature disabled via Settings 2.0 toggle —
+		// show a notice directing admin to enable the integration.
+		bb_register_feature_field(
+			'notifications',
+			'onesignal',
+			'onesignal',
+			array(
+				'name'              => '_bb_onesignal_disabled_notice',
+				'label'             => '',
+				'type'              => 'notice',
+				'notice_type'       => 'info',
+				'description'       => sprintf(
+					/* translators: %s: BuddyBoss Settings 2.0 URL */
+					__( 'OneSignal integration is currently disabled. Go to <a href="%s">BuddyBoss Settings</a> and enable the OneSignal integration to configure web push notifications.', 'buddyboss' ),
+					esc_url( admin_url( 'admin.php?page=bb-settings' ) )
+				),
+				'sanitize_callback' => '__return_empty_string',
+				'order'             => 10,
+			)
+		);
+	} elseif ( ! function_exists( 'bb_platform_pro' ) ) {
 		// Pro not installed — show OneSignal section with pro-gated disabled fields
 		// matching the Figma design instead of a plain notice.
 		bb_notifications_register_web_push_pro_placeholder_fields();
@@ -63,8 +97,8 @@ function bb_notifications_register_web_push_panel_fields() {
 		// Pro installed but older version.
 		bb_register_feature_field(
 			'notifications',
-			'web_push_notifications',
-			'web_push_notifications',
+			'onesignal',
+			'onesignal',
 			array(
 				'name'              => '_bb_web_push_pro_outdated_notice',
 				'label'             => '',
@@ -86,8 +120,8 @@ function bb_notifications_register_web_push_panel_fields() {
 		// Pro installed but legacy notification mode.
 		bb_register_feature_field(
 			'notifications',
-			'web_push_notifications',
-			'web_push_notifications',
+			'onesignal',
+			'onesignal',
 			array(
 				'name'              => '_bb_web_push_legacy_notice',
 				'label'             => '',
@@ -125,7 +159,7 @@ function bb_notifications_register_web_push_panel_fields() {
 function bb_notifications_register_web_push_pro_placeholder_fields() {
 
 	$feature_id = 'notifications';
-	$panel_id   = 'web_push_notifications';
+	$panel_id   = 'onesignal';
 
 	// -------------------------------------------------------------------------
 	// SECTION: OneSignal Connection (pro-gated placeholder).

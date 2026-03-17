@@ -115,7 +115,7 @@ function bb_admin_settings_register_notifications_feature() {
 	// Side Panel 3: Web Push Notifications.
 	bb_register_side_panel(
 		'notifications',
-		'web_push_notifications',
+		'onesignal',
 		array(
 			'title'    => __( 'Web Push Notifications', 'buddyboss' ),
 			'icon'     => array(

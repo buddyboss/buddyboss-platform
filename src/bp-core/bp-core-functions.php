@@ -10227,6 +10227,31 @@ function bb_register_feature_nav_item( $feature_id, $args = array() ) {
 }
 
 /**
+ * Register an integration feature.
+ *
+ * Helper function to register a feature as an integration.
+ * Automatically sets the category to 'integrations' and
+ * integration_id if not provided.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id Feature ID (integration slug).
+ * @param array  $args       Feature arguments (same as bb_register_feature).
+ * @return bool|WP_Error True on success, WP_Error on failure.
+ */
+function bb_register_integration( $feature_id, $args = array() ) {
+	// Force category to 'integrations'.
+	$args['category'] = 'integrations';
+
+	// Set integration_id if not already set.
+	if ( empty( $args['integration_id'] ) ) {
+		$args['integration_id'] = $feature_id;
+	}
+
+	return bb_feature_registry()->bb_register_feature( $feature_id, $args );
+}
+
+/**
  * Add action only if feature is active.
  *
  * @since BuddyBoss [BBVERSION]
