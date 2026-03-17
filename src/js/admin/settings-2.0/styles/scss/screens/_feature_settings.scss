@@ -543,13 +543,6 @@
             margin-left: 277px;
         }
 
-        // When grouped with a labeled field, span full width (no left indent).
-        &.bb-admin-settings-form__field--grouped {
-            .bb-admin-settings-form__field-content {
-                margin-left: 0;
-            }
-        }
-
         // Full-width field types (checkbox_list) should span the entire card when unlabeled.
         &:has(.bb-admin-settings-field__checkbox-list) {
             .bb-admin-settings-form__field-content {

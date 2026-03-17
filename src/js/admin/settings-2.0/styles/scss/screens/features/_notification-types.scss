@@ -127,14 +127,17 @@
 	}
 
 	&__email-link {
+		display: inline-block;
 		font-size: 13px;
 		color: $bb-text-color;
+		text-align: center;
 		background-color: $bb-background-secondary-color;
 		border: 1px solid $bb-border-secondary-color;
 		border-radius: $bb-border-radius-md;
 		text-decoration: none;
 		white-space: nowrap;
 		padding: 4px 8px;
+		min-width: 100px;
 
 		&--missing {
 			color: $bb-error-color;
