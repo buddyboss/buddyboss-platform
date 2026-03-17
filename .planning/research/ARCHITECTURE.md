@@ -1,488 +1,640 @@
-# Architecture Patterns
+# Architecture Research
 
-**Domain:** Commercial WordPress events plugin with BuddyBoss integration and Stripe Connect payments
-**Researched:** 2026-03-10
-**Confidence note:** Web search and WebFetch tools unavailable. All findings drawn from training knowledge of WordPress plugin architecture, Stripe Connect documentation, and BuddyBoss Platform extension patterns. Confidence levels assigned per domain.
-
----
-
-## Recommended Architecture
-
-The plugin is structured as a set of discrete modules that each own a vertical slice of functionality. A central Plugin Bootstrap wires them together via WordPress hooks. This mirrors how WooCommerce and The Events Calendar organize their codebases — it avoids god-class files and makes each module independently testable.
-
-```
-┌─────────────────────────────────────────────────────────┐
-│                    Plugin Bootstrap                      │
-│          (dependency injection, module loader)           │
-└───────────────────┬─────────────────────────────────────┘
-                    │ registers
-        ┌───────────┼──────────────────────────┐
-        ▼           ▼                          ▼
-┌──────────────┐ ┌──────────────┐    ┌──────────────────┐
-│   Event      │ │  Ticketing   │    │    Payments       │
-│   Module     │ │  Module      │    │    Module         │
-│              │ │              │    │  (Stripe Connect) │
-│ CPT: event   │ │ CPT: ticket  │    │                   │
-│ CPT: venue   │ │ Custom table │    │  Custom table:    │
-│ Taxonomies   │ │  orders      │    │  stripe_accounts  │
-└──────┬───────┘ └──────┬───────┘    └────────┬─────────┘
-       │                │                     │
-       └────────────────┼─────────────────────┘
-                        │ feeds into
-        ┌───────────────┼─────────────────────┐
-        ▼               ▼                     ▼
-┌──────────────┐ ┌──────────────┐    ┌──────────────────┐
-│  BuddyBoss   │ │   Calendar   │    │  Admin Panel     │
-│  Integration │ │   Views      │    │  Module          │
-│  Module      │ │  Module      │    │                  │
-│              │ │              │    │ Settings API     │
-│ Activity     │ │ Site-wide    │    │ Permissions      │
-│ Groups ext   │ │ Group cal    │    │ Commission rates │
-│ Profile ext  │ │ REST feeds   │    │ Stripe config    │
-└──────────────┘ └──────────────┘    └──────────────────┘
-                        │
-                ┌───────▼──────┐
-                │  Webhook     │
-                │  Handler     │
-                │  (Stripe)    │
-                └──────────────┘
-```
+**Domain:** BuddyBoss Events WordPress Plugin — v2.0 feature additions
+**Researched:** 2026-03-17
+**Confidence:** HIGH — based on direct codebase inspection, not training assumptions
 
 ---
 
-## Component Boundaries
+## Standard Architecture
 
-| Component | Responsibility | Communicates With | Owns |
-|-----------|---------------|-------------------|------|
-| **Plugin Bootstrap** | Loads modules, registers autoloader, checks BuddyBoss dependency | All modules | `buddyboss-events.php` main file |
-| **Event Module** | CPT registration, event CRUD, recurring logic, venue/location, virtual link storage | Ticketing, BuddyBoss Integration, Calendar | CPT `bbevents_event`, CPT `bbevents_venue`, taxonomies |
-| **Ticketing Module** | Ticket tier CRUD, availability tracking, order creation, attendee records | Event Module, Payments Module | CPT `bbevents_ticket_type`, custom table `bbevents_orders`, custom table `bbevents_attendees` |
-| **Payments Module** | Stripe Connect OAuth flow, PaymentIntent creation, application fee calculation, refunds | Ticketing Module, Webhook Handler, Admin Panel | Custom table `bbevents_stripe_accounts`, options for platform keys |
-| **BuddyBoss Integration** | Activity feed posts, group component extension, profile tab, member invites | Event Module, Ticketing Module | BuddyBoss component extension classes |
-| **Calendar Views Module** | Site-wide calendar page, group calendar tab rendering, REST endpoint for event feeds | Event Module | Shortcode/block, REST route `/wp-json/bbevents/v1/events` |
-| **Admin Panel Module** | Plugin settings page, permission matrix, commission rate config per plan tier, Stripe platform key entry | Payments Module, BuddyBoss Integration, Event Module | WP Settings API entries, options table |
-| **Webhook Handler** | Receives Stripe webhook POSTs, verifies signature, routes events to Payments/Ticketing | Payments Module, Ticketing Module | REST route `/wp-json/bbevents/v1/stripe/webhook` |
+### System Overview
+
+```
+┌──────────────────────────────────────────────────────────────────────┐
+│                        BP_Events_Component                            │
+│            (BP_Component subclass — registered at bp_setup_components)│
+│   setup_globals() · includes() · late_includes() · setup_nav()       │
+│   rest_api_init() · setup_adminbar_nav()                              │
+└────────────────────────┬─────────────────────────────────────────────┘
+                         │ wires together via includes()
+     ┌───────────────────┼────────────────────────────────┐
+     ▼                   ▼                                ▼
+┌──────────────┐  ┌──────────────────┐           ┌────────────────────┐
+│  bp-events-  │  │  screens/        │           │  REST API Layer    │
+│  functions   │  │  create.php      │           │                    │
+│  .php        │  │  single/home.php │           │ BP_REST_Events_    │
+│              │  │  single/edit.php │           │ Endpoint           │
+│ CRUD: create │  │  directory.php   │           │                    │
+│ update, del  │  │  profile/        │           │ BP_REST_Events_    │
+│ query, perms │  │    attending.php │           │ Settings_Endpoint  │
+└──────┬───────┘  │    hosting.php   │           └────────────────────┘
+       │          └──────────────────┘
+       ▼
+┌──────────────────────────────────────────────────────────────────────┐
+│                        BP_Event (class-bp-event.php)                  │
+│         populate() · save() · delete() · user_can_view()             │
+│         user_can_edit()                                               │
+└────────────────────────┬─────────────────────────────────────────────┘
+                         │ reads/writes
+     ┌───────────────────┼─────────────────────────────────────────────┐
+     ▼                   ▼                   ▼                         ▼
+┌──────────────┐  ┌──────────────┐  ┌───────────────┐  ┌─────────────┐
+│  bb_events   │  │ bb_eventmeta │  │bb_event_      │  │bb_event_    │
+│  (main table)│  │ (meta API,   │  │attendees      │  │invites      │
+│              │  │  placeholder)│  │               │  │             │
+│ id, title,   │  │ event_id,    │  │ event_id,     │  │ event_id,   │
+│ slug, type,  │  │ meta_key,    │  │ user_id,      │  │ inviter_id, │
+│ venue_*,     │  │ meta_value   │  │ status,       │  │ invitee_id, │
+│ virtual_*,   │  │              │  │ ticket_id,    │  │ status      │
+│ recurrence_  │  │ (no PHP API  │  │ order_id      │  │             │
+│ rule, status │  │  exists yet) │  │               │  │             │
+└──────────────┘  └──────────────┘  └───────────────┘  └─────────────┘
+```
+
+**Key architectural fact:** The plugin does NOT use WordPress CPTs. All event data lives in custom tables accessed directly via `$wpdb`. The `bb_eventmeta` table exists in the schema but has no PHP meta API functions yet — it is the designated extension point for additional per-event key/value data.
+
+---
+
+## Component Responsibilities
+
+| Component | Responsibility | File(s) |
+|-----------|----------------|---------|
+| BP_Events_Component | BP_Component subclass; boots all includes, registers nav, REST, tables | `classes/class-bp-events-component.php` |
+| bp-events-functions.php | All CRUD functions (`bp_events_create_event`, `get_events`, etc.), schema install, permission checks | `bp-events-functions.php` |
+| BP_Event | Event row model; populate from DB, save, delete, user_can_view/edit | `classes/class-bp-event.php` |
+| Screen functions | One file per URL: create, single/home, single/edit, directory, profile/attending, profile/hosting | `screens/` |
+| BP_REST_Events_Endpoint | WP_REST_Controller for /buddyboss/v1/events CRUD + RSVP sub-routes | `classes/class-bp-rest-events-endpoint.php` |
+| bp-events-activity.php | Activity feed integration (hooked to bp_events_after_event_save) | `bp-events-activity.php` |
+| bp-events-group-extension.php | BP_Group_Extension for groups tab | `bp-events-group-extension.php` |
+| bp-events-admin.php | Admin menu, WP_List_Table, settings page | `bp-events-admin.php` |
+| bp-events-cache.php | wp_cache group registration, cache invalidation on save/delete | `bp-events-cache.php` |
+| bp-events-loader.php | Asset enqueueing (create wizard JS, single event JS), cron scheduling | `bp-events-loader.php` |
+
+---
+
+## Recommended Project Structure for v2.0
+
+```
+src/
+├── bp-core/                        # (existing) Core BP infrastructure helpers
+├── bp-events/
+│   ├── assets/js/
+│   │   ├── bp-events-create.js     # MODIFIED — add taxonomy, hybrid, sessions steps
+│   │   ├── bp-events-single.js     # MODIFIED — sessions/speakers accordion, FAQ, timer
+│   │   └── bp-events-organizer.js  # NEW — organizer dashboard JS (analytics, CSV)
+│   ├── classes/
+│   │   ├── class-bp-event.php               # MODIFIED — add category_ids, tag_ids accessors
+│   │   ├── class-bp-events-component.php    # MODIFIED — new nav item: Organizer
+│   │   ├── class-bp-rest-events-endpoint.php # MODIFIED — taxonomy, sessions, reg-fields in schema
+│   │   ├── class-bp-rest-events-settings-endpoint.php # no change
+│   │   ├── class-bp-speaker.php             # NEW — Speaker row model
+│   │   └── class-bp-event-session.php       # NEW — Session row model
+│   ├── screens/
+│   │   ├── create.php              # no change (wizard scaffolding stays)
+│   │   ├── directory.php           # MODIFIED — taxonomy filter UI
+│   │   ├── single/
+│   │   │   ├── home.php            # MODIFIED — pass sessions/speakers/FAQ to template
+│   │   │   └── edit.php            # MODIFIED — pass same to edit template
+│   │   └── profile/
+│   │       ├── attending.php       # no change
+│   │       ├── hosting.php         # no change
+│   │       └── organizer.php       # NEW — organizer dashboard screen function
+│   ├── bp-events-functions.php     # MODIFIED — meta API, taxonomy helpers, reg-field helpers
+│   ├── bp-events-loader.php        # MODIFIED — enqueue organizer assets
+│   ├── bp-events-filters.php       # MODIFIED — taxonomy filter on directory query
+│   ├── bp-events-admin.php         # MODIFIED — Speakers/Categories admin sub-menus
+│   ├── bp-events-activity.php      # no change
+│   ├── bp-events-cache.php         # MODIFIED — add session and speaker cache groups
+│   ├── bp-events-template.php      # MODIFIED — template tags for sessions/speakers/FAQ
+│   └── bp-events-group-extension.php # no change
+└── bp-templates/
+    └── bp-nouveau/readylaunch/events/
+        ├── create.php              # MODIFIED — taxonomy step, hybrid fields
+        ├── index.php               # MODIFIED — category/tag filter UI
+        ├── event-card.php          # no change
+        ├── events-loop.php         # no change
+        └── single/                 # NEW folder
+            ├── home.php            # NEW (or MODIFIED single template)
+            ├── sessions.php        # NEW — sessions/agenda partial
+            ├── speakers.php        # NEW — speakers partial
+            └── organizer-dash.php  # NEW — analytics dashboard partial
+```
+
+---
+
+## Architectural Patterns
+
+### Pattern 1: The `bb_eventmeta` Meta API (Mirror bp_groupmeta pattern)
+
+**What:** Implement `bp_event_get_meta()`, `bp_event_update_meta()`, `bp_event_add_meta()`, `bp_event_delete_meta()` backed by `bb_eventmeta`. This table exists but has no API yet. The pattern is identical to BuddyPress's `bp_groupmeta_*` functions.
+
+**When to use:** For per-event extension data that is single-valued, rarely queried in bulk, and doesn't need its own table. Good candidates: Google Maps embed URL, meeting ID/password, online platform label, FAQ content (JSON array), countdown timer settings, external event link.
+
+**When NOT to use:** For anything that needs to be queried across events (e.g., "find all events in category X") or that has a many-to-one relationship with the event (sessions, speakers).
+
+**Trade-offs:** Low implementation cost, consistent with BP patterns, no schema migration risk. Downside: meta_value is longtext with no type enforcement; bulk queries across events on a meta key require a JOIN.
+
+```php
+// Pattern example — mirrors bp_groups_get_groupmeta() exactly
+function bp_event_get_meta( $event_id, $meta_key = '', $single = true ) {
+    global $wpdb;
+    $bp = buddypress();
+    return bp_get_meta( $event_id, $meta_key, $single,
+        $bp->events->table_name_meta, 'event_id', 'bp_event_meta' );
+}
+```
+
+### Pattern 2: Dedicated Custom Table for Sessions (`bb_event_sessions`)
+
+**What:** Sessions (agenda items) are stored in a new custom table, not as serialized post meta. Each row is one session, keyed to `event_id`.
+
+**When to use:** Sessions are the right candidate for a custom table because:
+- An event can have 0-N sessions (true one-to-many)
+- Sessions need individual CRUD (add, reorder, delete one session)
+- Sessions need speaker assignments (JOIN to a speakers table)
+- Sessions display in ordered list (needs `sort_order` column, not a JSON blob key)
+- Query pattern: "get all sessions for event X" — trivial with a table, awkward with serialized meta
+
+**Trade-offs:** Requires schema migration (dbDelta is safe for adding tables). Adds one more table. Fully worth it vs JSON-in-meta because individual session operations are cleaner and the data is relational.
+
+**Schema:**
+```sql
+CREATE TABLE {prefix}bb_event_sessions (
+    id           bigint(20)   NOT NULL AUTO_INCREMENT,
+    event_id     bigint(20)   NOT NULL DEFAULT 0,
+    title        varchar(255) NOT NULL DEFAULT '',
+    description  text         NOT NULL DEFAULT '',
+    start_time   time                  DEFAULT NULL,
+    end_time     time                  DEFAULT NULL,
+    sort_order   int(11)      NOT NULL DEFAULT 0,
+    date_created datetime     NOT NULL DEFAULT '0000-00-00 00:00:00',
+    PRIMARY KEY (id),
+    KEY event_id (event_id),
+    KEY sort_order (sort_order)
+)
+```
+
+**Session-speaker relationship table** (`bb_event_session_speakers`):
+```sql
+CREATE TABLE {prefix}bb_event_session_speakers (
+    session_id   bigint(20) NOT NULL,
+    speaker_id   bigint(20) NOT NULL,
+    sort_order   int(11)    NOT NULL DEFAULT 0,
+    PRIMARY KEY (session_id, speaker_id)
+)
+```
+
+### Pattern 3: Speakers as a Custom Table (`bb_event_speakers`), NOT a CPT
+
+**What:** Speakers are stored in a custom table, not a WordPress CPT.
+
+**Rationale for NOT using CPT:**
+- Speakers exist only in relation to events — they are not standalone publishable content
+- A CPT would appear in search, feeds, sitemaps by default — requires suppression
+- CPT `post_status`, `post_author`, `post_date` fields are irrelevant noise
+- CPT benefits (built-in REST, WP_Query, revisions) don't apply — speaker queries are always "speakers for event X" or "speakers for session Y", not global post loops
+- The plugin already uses custom tables for all event data — consistency argues for the same approach
+
+**Schema:**
+```sql
+CREATE TABLE {prefix}bb_event_speakers (
+    id           bigint(20)   NOT NULL AUTO_INCREMENT,
+    event_id     bigint(20)   NOT NULL DEFAULT 0,
+    user_id      bigint(20)            DEFAULT NULL,  -- optional WP user link
+    name         varchar(255) NOT NULL DEFAULT '',
+    title        varchar(255) NOT NULL DEFAULT '',
+    bio          text         NOT NULL DEFAULT '',
+    photo_id     bigint(20)            DEFAULT NULL,  -- WP attachment ID
+    sort_order   int(11)      NOT NULL DEFAULT 0,
+    date_created datetime     NOT NULL DEFAULT '0000-00-00 00:00:00',
+    PRIMARY KEY (id),
+    KEY event_id (event_id),
+    KEY user_id (user_id)
+)
+```
+
+**`user_id` is nullable.** A speaker can be an external person (not a site member). When `user_id` is set, the speaker card can link to the WP/BP user profile.
+
+### Pattern 4: Taxonomies via `register_taxonomy()` (NOT custom tables)
+
+**What:** Event categories (hierarchical) and event tags (flat) use WordPress's native taxonomy system registered to the `bb_event` object type — but the object type is a **virtual CPT slug**, not actual CPT posts.
+
+**The challenge:** The existing `bb_events` table is NOT a CPT — events don't have `wp_posts` rows. WordPress taxonomies (`wp_term_relationships`) normally link to a `object_id` that is a post ID. To use native `register_taxonomy()`, a lightweight CPT (`bp_event`) must be registered with `publicly_queryable => false`, `show_in_rest => false`, `rewrite => false` — purely to give the taxonomy system a valid object type. Actual event data stays in `bb_events`. The CPT is a shim.
+
+**Alternative:** Store taxonomy assignments in `bb_eventmeta` as a JSON array of term IDs. Simpler to implement but loses: `wp_term_relationships` queries, tag cloud widgets, taxonomy REST API endpoints, admin taxonomy management UI.
+
+**Recommendation:** Use the shim CPT approach. The CPT never holds content — it's created only when needed for taxonomy term assignments. `wp_insert_post()` creates a shell post for each event with the same ID (impossible to guarantee without coordination) — actually, the cleaner approach is:
+
+**Revised recommendation:** Store category and tag term IDs in `bb_eventmeta` as a serialized array (`_category_ids`, `_tag_ids`). Register the taxonomies with `register_taxonomy()` against a shell CPT for admin UI, but manage term assignments manually via `wp_set_object_terms()` using the event's ID as the object ID even if it isn't a real post ID. WordPress stores taxonomy relationships in `wp_term_relationships` using any integer as `object_id` — no strict FK constraint. This is how BuddyBoss itself stores group taxonomy data.
+
+**Confidence:** MEDIUM. Verify that `wp_set_object_terms()` accepts non-post object IDs (it does — `object_id` is just a BIGINT with no FK). The BuddyBoss Platform uses this pattern for group types.
+
+**Taxonomy registration:**
+```php
+// Register against 'bp_event' as a non-public CPT shim, or pass
+// any string — WP doesn't validate the object type against real CPTs
+// until display context. Use the existing event ID as object_id.
+register_taxonomy( 'bb_event_category', 'bb_event', array(
+    'hierarchical'      => true,
+    'show_in_rest'      => true,   // enables admin UI + REST
+    'show_admin_column' => true,
+    'rewrite'           => array( 'slug' => 'event-category' ),
+) );
+register_taxonomy( 'bb_event_tag', 'bb_event', array(
+    'hierarchical' => false,
+    'show_in_rest' => true,
+    'rewrite'      => array( 'slug' => 'event-tag' ),
+) );
+```
+
+### Pattern 5: Custom Registration Fields as JSON Schema in `bb_eventmeta`
+
+**What:** Per-event registration fields are stored as a JSON-encoded schema in a single `bb_eventmeta` row with key `_registration_fields`.
+
+**Schema stored:**
+```json
+[
+  { "id": "uuid", "type": "text", "label": "Company Name", "required": true },
+  { "id": "uuid", "type": "dropdown", "label": "T-Shirt Size",
+    "options": ["S","M","L","XL"], "required": false },
+  { "id": "uuid", "type": "checkbox", "label": "Dietary needs", "required": false }
+]
+```
+
+**Why meta, not a dedicated table:** Registration fields are a schema definition (read once per event, written on event save). They are not individual queryable records. The JSON blob is small (<5 KB for any realistic field set). A dedicated table would have one row per field per event and adds schema complexity for marginal benefit.
+
+**Collected registration field responses** (attendee answers) go in a separate `bb_event_reg_responses` table so they are queryable per attendee:
+```sql
+CREATE TABLE {prefix}bb_event_reg_responses (
+    id           bigint(20)   NOT NULL AUTO_INCREMENT,
+    event_id     bigint(20)   NOT NULL DEFAULT 0,
+    attendee_id  bigint(20)   NOT NULL DEFAULT 0,  -- bb_event_attendees.id
+    field_id     varchar(36)  NOT NULL DEFAULT '',  -- UUID from schema
+    field_value  text         NOT NULL DEFAULT '',
+    PRIMARY KEY (id),
+    KEY event_id (event_id),
+    KEY attendee_id (attendee_id)
+)
+```
+
+### Pattern 6: Front-End Event Submission via Organizer Screen Function
+
+**What:** The `/events/submit` URL uses the same BP_Component `late_includes()` screen function pattern as `/events/create` (which already exists). The organizer dashboard is a new profile sub-nav tab at `/members/{user}/events/organizer`.
+
+**How it integrates:**
+
+In `BP_Events_Component::late_includes()`, add:
+```php
+} elseif ( bp_is_action_variable( 'submit', 0 ) ) {
+    require $this->path . 'bp-events/screens/submit.php';
+}
+```
+
+And in `BP_Events_Component::setup_nav()`, add a new sub-nav:
+```php
+$sub_nav[] = array(
+    'name'            => __( 'Organizer', 'buddyboss' ),
+    'slug'            => 'organizer',
+    'parent_url'      => $events_link,
+    'parent_slug'     => $this->slug,
+    'screen_function' => 'bp_events_screen_organizer',
+    'position'        => 25,
+    'user_has_access' => bp_is_my_profile() && bp_events_user_is_organizer(),
+);
+```
+
+**Approval workflow** uses the existing `status` field on `bb_events`. Front-end submissions create events with `status = 'pending'` (already supported). Admin approves by updating to `'published'`. No new columns needed — only a new admin view filtered to pending events.
+
+### Pattern 7: Analytics Queries from Existing Tables
+
+**What:** Analytics data is derived from the existing `bb_events` and `bb_event_attendees` tables, not stored in a separate analytics table. An optional `bb_event_views` table tracks page views.
+
+**Aggregate queries needed for organizer dashboard:**
+
+```sql
+-- Attendance count per event
+SELECT COUNT(*) FROM bb_event_attendees
+WHERE event_id = %d AND status = 'registered';
+
+-- Waitlist count
+SELECT COUNT(*) FROM bb_event_attendees
+WHERE event_id = %d AND status = 'waitlisted';
+
+-- Events by organizer with attendance + capacity
+SELECT e.id, e.title, e.start_date, e.capacity,
+       COUNT(a.id) AS attendee_count
+FROM bb_events e
+LEFT JOIN bb_event_attendees a ON e.id = a.event_id AND a.status = 'registered'
+WHERE e.organizer_id = %d
+GROUP BY e.id
+ORDER BY e.start_date DESC;
+```
+
+**View tracking** — add a lightweight `bb_event_views` table:
+```sql
+CREATE TABLE {prefix}bb_event_views (
+    id         bigint(20) NOT NULL AUTO_INCREMENT,
+    event_id   bigint(20) NOT NULL DEFAULT 0,
+    user_id    bigint(20)          DEFAULT NULL,
+    ip_hash    varchar(64)         DEFAULT NULL,  -- hashed for privacy
+    viewed_at  datetime   NOT NULL DEFAULT '0000-00-00 00:00:00',
+    PRIMARY KEY (id),
+    KEY event_id (event_id),
+    KEY viewed_at (viewed_at)
+)
+```
+
+**Important:** Insert a view record only once per user per event per day to avoid counting reloads. Use `INSERT IGNORE` with a `UNIQUE KEY (event_id, user_id, DATE(viewed_at))`. For logged-out users, use IP hash with a 24-hour transient to deduplicate.
+
+**CSV export** is a server-side PHP function that runs `bp_events_get_events()` with organizer filter, JOINs attendees, and `fputcsv()` to a streamed response — no third-party library needed.
 
 ---
 
 ## Data Flow
 
-### Ticket Purchase Flow (Critical Path)
+### Front-End Event Submission Flow
 
 ```
-Buyer clicks "Buy Ticket"
-        │
-        ▼
-[Frontend JS] POST to REST API
-/wp-json/bbevents/v1/orders
-        │
-        ▼
-[Ticketing Module]
-- Validate ticket availability (row lock or transient lock)
-- Create pending order record in bbevents_orders
-- Calculate total + application fee amount
-        │
-        ▼
-[Payments Module]
-- Retrieve organizer's Stripe account ID from bbevents_stripe_accounts
-- Create Stripe PaymentIntent with:
-    amount: ticket_total
-    application_fee_amount: calculated_fee (based on plan tier)
-    transfer_data.destination: organizer_stripe_account_id
-- Return client_secret to frontend
-        │
-        ▼
-[Frontend Stripe.js]
-- Confirm payment with client_secret
-- Stripe collects card, charges buyer
-        │
-        ▼
-[Stripe] — payment_intent.succeeded webhook fires
-        │
-        ▼
-[Webhook Handler]
-- Verify webhook signature (Stripe-Signature header)
-- Route to Payments Module
-        │
-        ▼
-[Payments Module]
-- Confirm PaymentIntent status
-- Notify Ticketing Module: order confirmed
-        │
-        ▼
-[Ticketing Module]
-- Update order status: pending → completed
-- Generate attendee records
-- Trigger do_action('bbevents_order_completed', $order_id)
-        │
-        ▼
-[BuddyBoss Integration] (hooked to bbevents_order_completed)
-- Post activity: "John bought a ticket to Summer Gala"
-- Update member profile event attendance count
+Member visits /events/submit
+    |
+    v
+bp_events_submit_setup() [screens/submit.php]
+- auth_redirect() if not logged in
+- bp_events_user_can_create() permission check
+- add_action('bp_template_content', 'bp_events_submit_content')
+    |
+    v
+bp-events-create.js renders wizard (same JS as admin create)
+Step: Basic info -> Taxonomy -> Location/Hybrid -> Sessions -> Speakers -> Reg fields -> Preview
+    |
+    v
+POST /buddyboss/v1/events  [BP_REST_Events_Endpoint::create_item()]
+- Sets status = 'pending' (if moderation on) or 'published'
+- Saves taxonomy term assignments via wp_set_object_terms()
+- Saves sessions to bb_event_sessions via new BP_Event_Session class
+- Saves speakers to bb_event_speakers via new BP_Speaker class
+- Saves reg field schema to bb_eventmeta (_registration_fields)
+    |
+    v
+do_action('bp_events_after_event_save', $event)
+- bp_activity_add() for activity feed
+- bp_events_notify_admin_pending() if status = 'pending'
 ```
 
-### Stripe Connect OAuth Flow (Organizer Onboarding)
+### Analytics Data Flow
 
 ```
-Organizer clicks "Connect Stripe"
-        │
-        ▼
-[Payments Module]
-- Generate state token, store in transient
-- Redirect to Stripe OAuth URL with:
-    client_id: platform_client_id (from Admin Panel)
-    redirect_uri: /wp-json/bbevents/v1/stripe/oauth/callback
-        │
-        ▼
-[Stripe OAuth]
-- Organizer authorizes
-- Redirects back with code + state
-        │
-        ▼
-[Payments Module OAuth Callback]
-- Verify state token
-- Exchange code for access_token + stripe_user_id
-- Store stripe_user_id in bbevents_stripe_accounts keyed to WP user_id
+Member visits /members/{user}/events/organizer
+    |
+    v
+bp_events_screen_organizer() [screens/profile/organizer.php]
+    |
+    v
+bp_events_get_organizer_analytics( $user_id )
+- bp_events_get_events( ['organizer_id' => $user_id] )
+- For each event: COUNT attendees from bb_event_attendees
+- COUNT views from bb_event_views
+    |
+    v
+Template: organizer-dash.php renders table + CSV download button
+    |
+    v
+CSV request: GET /buddyboss/v1/events/{id}/export
+[BP_REST_Events_Endpoint::export_item()]
+- Queries attendees + reg_responses
+- Streams CSV response with Content-Disposition: attachment
 ```
 
-### Commission Calculation
+### RSVP with Registration Fields Flow
 
 ```
-[Admin Panel] stores per-plan commission rates in wp_options:
-  bbevents_commission_rates = {
-    free: 5.0,
-    pro: 3.5,
-    plus: 2.0,
-    ultimate: 1.0
-  }
-
-[Payments Module] at PaymentIntent creation:
-  1. Look up site's BuddyBoss plan via filter: apply_filters('bbevents_site_plan', $plan)
-  2. Retrieve rate for that plan
-  3. application_fee_amount = floor(ticket_total * (rate / 100))
+Member clicks RSVP on event with custom fields
+    |
+    v
+bp-events-single.js detects _registration_fields on event
+- Renders dynamic form from JSON schema
+    |
+    v
+POST /buddyboss/v1/events/{id}/rsvp  [existing endpoint]
+- Extended to accept 'registration_fields': { field_id: value, ... }
+- Validates required fields
+    |
+    v
+bb_event_attendees row created (existing)
+bb_event_reg_responses rows created (one per field answer)
 ```
 
 ---
 
-## Database Schema Approach
+## New vs Modified Components
 
-**Decision: Hybrid — Custom Post Types for content, Custom Tables for transactional records**
+### New Files
 
-**Rationale:**
+| File | Purpose |
+|------|---------|
+| `classes/class-bp-speaker.php` | Speaker row model (CRUD against bb_event_speakers) |
+| `classes/class-bp-event-session.php` | Session row model (CRUD against bb_event_sessions) |
+| `screens/profile/organizer.php` | Organizer dashboard screen function |
+| `screens/submit.php` | Front-end submission screen function (mirrors create.php) |
+| `bp-templates/.../events/single/` | Single event template partials (sessions, speakers, FAQ) |
 
-WordPress CPTs are appropriate for event and venue records: they get built-in post meta, taxonomies, WP_Query integration, REST API exposure, and revision history. The WP ecosystem (caching, search, REST) handles them well.
+### Modified Files
 
-Custom tables are appropriate for orders, attendees, and Stripe account mappings: these are relational records with high query frequency, need JOINs, need precise row locking for ticket availability, and should never appear in post query loops. WooCommerce moved orders to custom tables in v7.1 for exactly these reasons (MEDIUM confidence — based on WooCommerce HPOS feature announcement).
+| File | What Changes |
+|------|-------------|
+| `classes/class-bp-events-component.php` | Add Organizer nav item; register new REST controllers |
+| `classes/class-bp-rest-events-endpoint.php` | Add taxonomy fields, sessions, speakers, reg-fields to schema; add /export route |
+| `classes/class-bp-event.php` | Add `category_ids`, `tag_ids` accessors (reads from wp_term_relationships) |
+| `bp-events-functions.php` | Add meta API functions; taxonomy query helpers; session/speaker helpers; analytics functions |
+| `bp-events-filters.php` | Extend `bp_events_get_events_where_clauses` filter for taxonomy filtering |
+| `bp-events-admin.php` | Add Speakers and Categories admin sub-menus |
+| `bp-events-loader.php` | Enqueue organizer dashboard JS; enqueue taxonomy picker assets |
+| `bp-events-cache.php` | Add `bp_event_sessions` and `bp_event_speakers` cache groups |
+| `bp-events-template.php` | Add template tags: `bp_event_get_sessions()`, `bp_event_get_speakers()`, `bp_event_get_faq()` |
+| `assets/js/bp-events-create.js` | Add wizard steps: taxonomy, hybrid details, sessions, speakers, reg fields |
+| `assets/js/bp-events-single.js` | Sessions accordion, FAQ accordion, countdown timer, conditionally show reg-field form |
 
-### Custom Post Types
+### New Database Tables
 
-| CPT | Slug | Key Meta Fields |
-|-----|------|-----------------|
-| Event | `bbevents_event` | `_start_datetime`, `_end_datetime`, `_event_type` (in-person/virtual/recurring), `_venue_id`, `_virtual_url`, `_organizer_id`, `_group_id`, `_recurrence_rule` (iCal RRULE string), `_status` |
-| Venue | `bbevents_venue` | `_address`, `_city`, `_country`, `_lat`, `_lng`, `_capacity` |
-| Ticket Type | `bbevents_ticket_type` | `_event_id`, `_label` (Early Bird / VIP / General), `_price`, `_quantity`, `_quantity_sold`, `_sale_start`, `_sale_end` |
+| Table | Purpose |
+|-------|---------|
+| `bb_event_sessions` | Agenda/session rows per event |
+| `bb_event_session_speakers` | Many-to-many: sessions <-> speakers |
+| `bb_event_speakers` | Speaker records per event |
+| `bb_event_reg_responses` | Attendee answers to custom registration fields |
+| `bb_event_views` | Page view tracking for analytics |
 
-### Taxonomies
+### Extended Existing Tables (via `bb_eventmeta`)
 
-| Taxonomy | Slug | Applied To |
-|----------|------|-----------|
-| Event Category | `bbevents_category` | `bbevents_event` |
-| Event Tag | `bbevents_tag` | `bbevents_event` |
+| Meta Key | Data Stored |
+|----------|-------------|
+| `_registration_fields` | JSON schema array of custom reg field definitions |
+| `_google_maps_url` | Google Maps embed URL (constructed from lat/lng) |
+| `_virtual_meeting_id` | Meeting ID (Zoom/Teams/etc.) |
+| `_virtual_meeting_password` | Meeting password |
+| `_virtual_platform_label` | Human label: "Zoom", "Google Meet", etc. |
+| `_faq` | JSON array of {question, answer} objects |
+| `_external_event_url` | External event link (Eventbrite, etc.) |
+| `_venue_city` | Structured address: city |
+| `_venue_state` | Structured address: state/province |
+| `_venue_zip` | Structured address: postal code |
+| `_venue_country` | Structured address: country |
 
-### Custom Tables
-
-**`{prefix}bbevents_orders`**
-```sql
-id              BIGINT UNSIGNED NOT NULL AUTO_INCREMENT
-event_id        BIGINT UNSIGNED NOT NULL  -- post ID
-buyer_id        BIGINT UNSIGNED NOT NULL  -- WP user ID
-status          ENUM('pending','completed','refunded','failed') NOT NULL DEFAULT 'pending'
-subtotal        INT UNSIGNED NOT NULL  -- cents
-application_fee INT UNSIGNED NOT NULL  -- cents
-stripe_pi_id    VARCHAR(255) NOT NULL  -- pi_xxx
-created_at      DATETIME NOT NULL
-updated_at      DATETIME NOT NULL
-PRIMARY KEY (id)
-INDEX idx_event_id (event_id)
-INDEX idx_buyer_id (buyer_id)
-INDEX idx_stripe_pi_id (stripe_pi_id)
-```
-
-**`{prefix}bbevents_attendees`**
-```sql
-id              BIGINT UNSIGNED NOT NULL AUTO_INCREMENT
-order_id        BIGINT UNSIGNED NOT NULL
-ticket_type_id  BIGINT UNSIGNED NOT NULL  -- post ID
-user_id         BIGINT UNSIGNED  -- nullable (guest checkout future)
-first_name      VARCHAR(255)
-last_name       VARCHAR(255)
-email           VARCHAR(255) NOT NULL
-check_in_at     DATETIME
-PRIMARY KEY (id)
-INDEX idx_order_id (order_id)
-INDEX idx_ticket_type_id (ticket_type_id)
-INDEX idx_email (email)
-```
-
-**`{prefix}bbevents_stripe_accounts`**
-```sql
-id                  BIGINT UNSIGNED NOT NULL AUTO_INCREMENT
-user_id             BIGINT UNSIGNED NOT NULL  -- WP user (organizer)
-stripe_account_id   VARCHAR(255) NOT NULL     -- acct_xxx
-access_token        TEXT NOT NULL             -- encrypted
-livemode            TINYINT(1) NOT NULL DEFAULT 0
-connected_at        DATETIME NOT NULL
-PRIMARY KEY (id)
-UNIQUE KEY idx_user_id (user_id)
-```
-
-**Ticket availability locking:** Use `UPDATE bbevents_ticket_types SET quantity_sold = quantity_sold + 1 WHERE id = ? AND quantity_sold < quantity` as an atomic SQL operation rather than PHP-level check-then-update. This prevents overselling under concurrent purchase load. (HIGH confidence — standard transactional pattern.)
+**Note on address fields:** `venue_address` (the full address string) already exists in `bb_events`. The structured sub-fields (`_venue_city`, etc.) go in `bb_eventmeta` to avoid an `ALTER TABLE` on the main events table. A future migration can promote them to first-class columns if query filtering on city/country is needed.
 
 ---
 
-## Patterns to Follow
+## Build Order for v2.0
 
-### Pattern 1: BuddyBoss Component Extension
+Dependencies flow upward — each phase requires the layer above it to be complete.
 
-**What:** BuddyBoss exposes a `BP_Component` base class. Extending it registers your feature as a first-class BuddyBoss component with its own nav items, settings pages, and group extension hooks.
+```
+Phase 4a: Meta API + Taxonomy Foundation
+├── Implement bp_event_get/update/add/delete_meta() backed by bb_eventmeta
+├── register_taxonomy() for bb_event_category and bb_event_tag
+├── Taxonomy admin UI (uses WP native — minimal code)
+└── Filter extension: bp_events_get_events() supports category/tag filtering
+    (via wp_term_relationships JOIN — verifiable with simple queries)
 
-**When:** For the Groups integration (group events tab) and Member Profile tab.
+Phase 4b: Data Enrichment (parallel-safe, no cross-dependencies)
+├── Structured address sub-fields (bb_eventmeta keys, no table change)
+├── Google Maps embed (meta key _google_maps_url + template partial)
+├── Hybrid event type extension (extend existing 'type' field in bb_events)
+├── Online meeting detail meta keys (ID, password, platform label)
+├── FAQ section (meta key _faq JSON + template partial)
+├── Countdown timer (meta key or computed from start_date — client-side JS)
+└── External event link (meta key _external_event_url)
 
-**Example structure:**
-```php
-class BBEvents_Groups_Extension extends BP_Group_Extension {
-    public function __construct() {
-        parent::init( array(
-            'slug'              => 'events',
-            'name'              => __( 'Events', 'buddyboss-events' ),
-            'nav_item_position' => 31,
-            'screens'           => array(
-                'edit' => array( 'enabled' => false ),
-            ),
-        ) );
-    }
+Phase 4c: Sessions + Speakers (depends on: 4a for meta API patterns)
+├── dbDelta: create bb_event_sessions, bb_event_session_speakers, bb_event_speakers
+├── BP_Event_Session class (CRUD)
+├── BP_Speaker class (CRUD)
+├── REST API: sessions and speakers as nested resources under /events/{id}
+├── Admin UI: session/speaker management within event edit
+└── Template partials: sessions accordion + speakers grid on single event
 
-    public function display( $group_id = null ) {
-        // Render group calendar view
-    }
-}
-bp_register_group_extension( 'BBEvents_Groups_Extension' );
+Phase 4d: Front-End Submission + Organizer Dashboard
+(depends on: 4a taxonomy, 4b enrichment, 4c sessions/speakers)
+├── screens/submit.php (screen function — mirrors create.php)
+├── BP_Events_Component nav: add Organizer sub-tab
+├── screens/profile/organizer.php (organizer dashboard screen function)
+├── Template: organizer-dash.php (event list, attendance counts, pending drafts)
+├── Approval workflow: admin view filtered to pending events (extends existing admin)
+└── Enqueue submit-specific assets if needed (can reuse bp-events-create.js)
+
+Phase 4e: Custom Registration Fields
+(depends on: 4d front-end submission — reg fields are only useful with submission flow)
+├── Meta API: save/retrieve _registration_fields JSON schema
+├── REST API: extend RSVP endpoint to accept and validate field answers
+├── db: create bb_event_reg_responses table
+├── JS: dynamic form renderer from JSON schema (in bp-events-single.js)
+└── Admin: display collected responses per event
+
+Phase 4f: Analytics
+(depends on: 4d organizer dashboard, 4e reg responses for complete attendee data)
+├── db: create bb_event_views table
+├── View tracking: hook into single event screen, insert view record
+├── Analytics functions in bp-events-functions.php
+├── REST API: /events/{id}/export endpoint (CSV streaming)
+└── Template: analytics table in organizer-dash.php
 ```
 
-(MEDIUM confidence — based on BuddyBoss/BuddyPress documented `BP_Group_Extension` API. Verify exact constructor args against current BuddyBoss docs.)
-
-### Pattern 2: Activity Feed Integration
-
-**What:** Use `bp_activity_add()` to post activity items when key events occur.
-
-**When:** Event created, RSVP submitted, ticket purchased.
-
-**Example:**
-```php
-add_action( 'bbevents_order_completed', function( $order_id ) {
-    $order = bbevents_get_order( $order_id );
-    bp_activity_add( array(
-        'user_id'           => $order->buyer_id,
-        'component'         => 'bbevents',
-        'type'              => 'bbevents_ticket_purchased',
-        'action'            => sprintf(
-            /* translators: %1$s user, %2$s event */
-            __( '%1$s purchased a ticket to %2$s', 'buddyboss-events' ),
-            bp_core_get_userlink( $order->buyer_id ),
-            '<a href="' . get_permalink( $order->event_id ) . '">' . get_the_title( $order->event_id ) . '</a>'
-        ),
-        'item_id'           => $order->event_id,
-        'secondary_item_id' => $order_id,
-        'hide_sitewide'     => false,
-    ) );
-} );
-```
-
-(MEDIUM confidence — `bp_activity_add()` is documented BuddyPress/BuddyBoss API.)
-
-### Pattern 3: Stripe Webhook Idempotency
-
-**What:** Always check if a webhook event has already been processed before acting on it.
-
-**When:** Every Stripe webhook handler.
-
-**Example:**
-```php
-function handle_payment_intent_succeeded( \Stripe\Event $event ) {
-    $pi_id = $event->data->object->id;
-
-    // Check if already processed
-    $order = bbevents_get_order_by_stripe_pi( $pi_id );
-    if ( ! $order || $order->status === 'completed' ) {
-        return; // Already handled or no matching order
-    }
-
-    bbevents_complete_order( $order->id );
-}
-```
-
-(HIGH confidence — Stripe documentation explicitly requires idempotent webhook handling.)
-
-### Pattern 4: Recurring Events as Parent/Child Posts
-
-**What:** A recurring event series is stored as one parent CPT post (holds RRULE). Individual occurrences are generated as child posts (post_parent set) on-demand or via cron, up to a horizon (e.g., 6 months ahead). This is how The Events Calendar handles series.
-
-**When:** Any recurring event type.
-
-**Trade-off:** Generating child posts enables standard WP_Query, search, and REST API to work naturally on individual occurrences. The alternative (calculating occurrences dynamically from RRULE at query time) is complex and slow. (MEDIUM confidence — based on The Events Calendar's documented architecture and common WP patterns.)
-
-### Pattern 5: REST API for Frontend Interactions
-
-**What:** Use WP REST API for all frontend interactions (ticket purchase, RSVP, calendar feed, event listing). Avoid `admin-ajax.php` for new code.
-
-**When:** All AJAX-style interactions.
-
-**Rationale:** REST API provides proper HTTP semantics, authentication via nonces or Application Passwords, caching headers, and is the modern WP standard. `admin-ajax.php` is legacy and slower (loads full WP admin). (HIGH confidence — WordPress core guidance.)
+**Rationale for this order:**
+- 4a (meta API + taxonomy) is first because multiple later features depend on `bp_event_get/update_meta()` and taxonomy filtering. Build it once, use it everywhere.
+- 4b (data enrichment) has no inter-feature dependencies — it's pure meta key additions. Can be built in parallel with 4c by a second developer if needed.
+- 4c (sessions/speakers) introduces new tables — dbDelta is forward-safe but should be tested before anything builds on top of the schema.
+- 4d (front-end submission) intentionally comes after 4b and 4c so the submission wizard can include all enrichment fields and sessions/speakers in one pass. Building submission before sessions would require revisiting the wizard.
+- 4e (reg fields) depends on submission working — reg fields are meaningless without a functioning submission and RSVP flow.
+- 4f (analytics) is last because it queries the data created by all prior features. View tracking can be added early (it's a hook) but the dashboard UI requires the organizer screen from 4d.
 
 ---
 
-## Anti-Patterns to Avoid
+## Anti-Patterns
 
-### Anti-Pattern 1: PHP-Level Ticket Availability Check
+### Anti-Pattern 1: Serialized Sessions in `bb_eventmeta`
 
-**What:** Read `quantity_sold`, check in PHP, then write incremented value in a separate query.
+**What people do:** Store the entire sessions array as a single `bb_eventmeta` row: `meta_key = '_sessions', meta_value = serialize([...])`.
 
-**Why bad:** Race condition under concurrent purchases. Two buyers can read the same `quantity_sold` value before either writes, resulting in overselling.
+**Why it's wrong:** Adding, removing, or reordering a single session requires deserializing the full array, mutating it in PHP, and reserializing — no atomicity. Assigning a speaker to one session means touching the whole sessions blob. Impossible to query "which events have sessions starting after 2pm". Cache invalidation must bust the entire event cache.
 
-**Instead:** Use atomic SQL `UPDATE ... WHERE quantity_sold < quantity` with row-level locking and check affected rows === 1.
+**Do this instead:** Use `bb_event_sessions` table with individual row CRUD. Each session is a first-class row with `event_id`, `sort_order`, and `id`.
 
-### Anti-Pattern 2: Storing Stripe Secret Keys in Post Meta or User Meta
+### Anti-Pattern 2: Speakers as a WordPress CPT
 
-**What:** Saving `sk_live_xxx` or access tokens in wp_postmeta or wp_usermeta.
+**What people do:** Register `bp_event_speaker` as a CPT, store speaker bios in `post_content`, photo in featured image.
 
-**Why bad:** Post meta is exposed through REST API by default, logged in debug output, and included in export tools. Secret keys require encryption at rest and controlled access.
+**Why it's wrong:** Speakers appear in WP search results, XML sitemaps, and feed queries unless explicitly suppressed. The CPT carries irrelevant fields (`post_status`, `post_author`, revisions). Speaker querying ("speakers for event X") requires a relationship meta field on the CPT — which is just reinventing a custom table with extra steps. Speaker list ordering requires a custom sort field anyway.
 
-**Instead:** Store encrypted in a dedicated custom table (`bbevents_stripe_accounts`). Use `sodium_crypto_secretbox()` or a WP-compatible encryption library. Never log or expose access tokens.
+**Do this instead:** `bb_event_speakers` custom table. Speaker photo stored as WP attachment ID (column `photo_id`) — this is the only WP-native feature worth preserving.
 
-### Anti-Pattern 3: Registering BuddyBoss Hooks Before `bp_loaded`
+### Anti-Pattern 3: `ALTER TABLE` on `bb_events` for v2.0 Fields
 
-**What:** Calling `bp_register_group_extension()` or `bp_activity_add()` before BuddyBoss has finished loading.
+**What people do:** Add new columns (`venue_city`, `meeting_id`, `faq_content`) directly to `bb_events` via `ALTER TABLE` in an update migration.
 
-**Why bad:** BuddyBoss component system is not initialized until `bp_loaded` fires. Early calls silently fail or cause fatal errors.
+**Why it's wrong:** `ALTER TABLE` on a large events table requires a table lock in MySQL (unless using `ALGORITHM=INSTANT` on MySQL 8.0+ or pt-online-schema-change on older). Sites with thousands of events could see downtime. dbDelta doesn't add columns to existing tables — it only creates tables. Adding columns via dbDelta requires a custom `ALTER TABLE` migration with version-check guards.
 
-**Instead:** Wrap all BuddyBoss integration in `add_action('bp_loaded', ...)`.
+**Do this instead:** Put new per-event attributes in `bb_eventmeta`. Only promote to a first-class column (with a proper guarded migration) if query performance on that column becomes measurably necessary.
 
-### Anti-Pattern 4: Using WP Cron for Time-Critical Payment Confirmation
+### Anti-Pattern 4: Mixing Front-End Submission and Admin Creation Code Paths
 
-**What:** Relying solely on WP Cron to poll Stripe for payment status rather than webhook-driven confirmation.
+**What people do:** Add front-end submission as a branch inside the existing `/events/create` screen function with an `is_admin()` gate.
 
-**Why bad:** WP Cron only fires on page load — on low-traffic sites, a buyer could wait minutes for order confirmation. WP Cron is not real-time.
+**Why it's wrong:** Admin creation (`/wp-admin/admin.php?page=bp-events-new`) and front-end submission (`/events/submit`) have different permission requirements, different moderation defaults, and will eventually have different UI. Mixing them in one screen function creates a conditional tangle.
 
-**Instead:** Webhooks are the primary confirmation path. WP Cron is a fallback reconciliation job only (e.g., find orders stuck in "pending" for >1 hour and recheck via Stripe API).
+**Do this instead:** Front-end submission is a new screen function in `screens/submit.php`, registered under a new URL action variable (`submit`). It calls the same underlying REST API (`POST /buddyboss/v1/events`) as the admin form. The REST endpoint is the single source of truth — both paths converge there.
 
-### Anti-Pattern 5: Blocking wp-admin During Stripe API Calls
+### Anti-Pattern 5: Analytics via WP_Query or `get_posts()`
 
-**What:** Making synchronous Stripe API calls (e.g., creating a PaymentIntent) inside a WP admin page load.
+**What people do:** Use `get_posts()` to retrieve events for the organizer dashboard, then loop and call individual meta queries to get attendance counts.
 
-**Why bad:** Network latency or Stripe outages block the admin UI. Stripe API calls should be user-triggered and async.
+**Why it's wrong:** The plugin doesn't use CPTs — events are in `bb_events`. Even if it did, N+1 queries (one `get_post_meta()` per event to get attendance count) are orders of magnitude slower than a single aggregate SQL query.
 
-**Instead:** PaymentIntent creation happens via REST API call from the buyer's browser at purchase time, not during admin page renders.
-
----
-
-## Build Order (Suggested)
-
-Dependencies flow upward in this list — each layer requires the layer above it to be solid before building.
-
-```
-Phase 1: Foundation
-├── Plugin Bootstrap (autoloader, dependency checks, activation hooks)
-├── Database Schema (register custom tables on activation via dbDelta)
-├── Admin Panel Module (Stripe platform keys, commission rates, permissions)
-└── Event Module (CPT registration, basic CRUD, venue CPT)
-
-Phase 2: Payments Core
-├── Payments Module — Stripe Connect OAuth (organizer onboarding)
-├── Payments Module — PaymentIntent creation with application fees
-└── Webhook Handler (signature verification, routing scaffold)
-
-Phase 3: Ticketing
-├── Ticketing Module — Ticket Type CPT (tiers, pricing, availability)
-├── Ticketing Module — Order creation (REST endpoint)
-├── Ticketing Module — Order completion (hooked to webhook)
-└── Attendee record generation
-
-Phase 4: BuddyBoss Integration
-├── Activity feed posts (event created, ticket purchased, RSVP)
-├── Group Extension (group events tab, group calendar)
-└── Member Profile tab (events attended, events hosted)
-
-Phase 5: Calendar & Discovery Views
-├── Site-wide calendar (shortcode/block + REST feed endpoint)
-├── Group calendar (embedded in group extension)
-└── Event detail page templates
-
-Phase 6: Recurring Events
-├── RRULE storage and parsing
-├── Child post generation (cron + on-demand)
-└── Recurring event UI (create/edit series vs single occurrence)
-```
-
-**Rationale for order:**
-- Phase 1 must come first: database schema migrations are painful to retrofit; CPTs must be registered before any content is created.
-- Phase 2 before Phase 3: the payment flow is the riskiest component (external API, OAuth, webhooks). Build and validate it with a single ticket type before building the full ticketing UI.
-- Phase 3 before Phase 4: activity feed posts require completed orders to exist. BuddyBoss integration hooks into events/orders that must already work.
-- Phase 5 is a read layer — it queries what was built in phases 1-4 and requires no new data structures.
-- Phase 6 is deliberately last: recurring logic adds significant complexity (timezone handling, exception dates, series editing) and should not block delivery of the core product.
+**Do this instead:** `bp_events_get_events(['organizer_id' => $user_id])` returns all events in two queries (one count, one IDs + hydration). Attendance counts come from a single GROUP BY query across `bb_event_attendees`. Never loop and query.
 
 ---
 
-## WordPress API Approach
+## Integration Points
 
-| Concern | Recommendation | Rationale |
-|---------|---------------|-----------|
-| Frontend data interactions | WP REST API (`/wp-json/bbevents/v1/`) | Modern standard, proper HTTP semantics, cacheable, authentication via nonces |
-| Stripe webhook receiver | WP REST API route (`/wp-json/bbevents/v1/stripe/webhook`) | Accessible without WP cookie auth; can disable nonce check for Stripe's server-to-server POST; verify via Stripe signature instead |
-| Admin settings UI | WP Settings API + admin menu pages | Standard WP pattern; React-based settings page (wp-scripts) for complex commission matrix |
-| Event creation form | Custom block (Block Editor) or classic metabox fallback | Block editor is the current standard; metabox fallback for hosts still on classic editor |
-| Calendar frontend | Vanilla JS or lightweight library (e.g., FullCalendar) consuming REST feed | Avoid heavy frameworks as a plugin dependency; FullCalendar is the industry standard for WordPress event calendar UIs (MEDIUM confidence) |
+### External Services
+
+| Service | Integration Pattern | Notes |
+|---------|---------------------|-------|
+| Google Maps | Embed URL constructed from `venue_lat`/`venue_lng` (already in `bb_events`) stored in `bb_eventmeta._google_maps_url`. No server-side Google API call needed for embed. Geocoding (address -> lat/lng) requires Google Maps Geocoding API key stored in wp_options. | Geocoding on save only, not on every page load |
+| Zoom/Meet/Teams | No API integration — organizer pastes meeting URL, ID, password manually. Stored in `bb_eventmeta`. | Deliberate scope constraint — no OAuth to third-party meeting platforms in v2.0 |
+
+### Internal Boundaries
+
+| Boundary | Communication | Notes |
+|----------|---------------|-------|
+| Sessions <-> Speakers | `bb_event_session_speakers` JOIN table | Many-to-many; one speaker can appear in multiple sessions |
+| Events <-> Taxonomy | `wp_term_relationships` (standard WP). `object_id` = event's `bb_events.id` | WP does not enforce that object_id is a real post ID |
+| Events <-> Reg Responses | `bb_event_reg_responses.event_id` + `attendee_id` FK to `bb_event_attendees.id` | Schema defined per-event in `bb_eventmeta._registration_fields` |
+| Front-end Submission <-> REST API | Front-end submit wizard POSTs to `/buddyboss/v1/events` (same endpoint as admin create) | Moderation status controlled by `bp_events_moderation_enabled()` — same flag, same logic |
+| Organizer Dashboard <-> Existing Attendee Table | Direct SQL aggregate queries on `bb_event_attendees` | No new tables needed for count queries |
+| View Tracking <-> Single Event Screen | Hook: `add_action('bp_events_screen_single', 'bp_events_record_view')` | Insert into `bb_event_views`; deduplicate via transient |
+| Analytics Export <-> REST API | New route: `GET /buddyboss/v1/events/{id}/export` on `BP_REST_Events_Endpoint` | Streams CSV; requires `manage_options` or organizer permission check |
 
 ---
 
-## Scalability Considerations
+## Scaling Considerations
 
-| Concern | At 100 users | At 10K users | At 1M users |
-|---------|--------------|--------------|-------------|
-| Ticket availability | SQL atomic update sufficient | Same | Consider Redis locks, queue-based reservation |
-| Event queries | WP_Query with meta_query | Add custom table index, consider object cache | Dedicated events query layer, read replicas |
-| Activity feed writes | Direct `bp_activity_add()` | Same | Queue activity writes via async job |
-| Stripe webhooks | Synchronous handler fine | Add idempotency table, fast return 200 | Queue webhook processing, async confirmation |
-| Recurring event generation | On-demand + cron | Same | Pre-generate all occurrences within rolling window |
-
----
-
-## BuddyBoss-Specific Integration Points
-
-| Hook / API | Purpose | Confidence |
-|------------|---------|------------|
-| `bp_loaded` action | Initialize all BuddyBoss integrations | HIGH |
-| `BP_Group_Extension` class | Register group events tab | MEDIUM — verify constructor args against current BuddyBoss version |
-| `bp_register_group_extension()` | Register the group extension | MEDIUM |
-| `bp_activity_add()` | Post to activity feeds | MEDIUM |
-| `bp_activity_action_types` filter | Register custom activity types | MEDIUM |
-| `bp_get_displayed_user_id()` | Get user ID on profile pages | MEDIUM |
-| `bp_core_add_nav_item()` / `BP_Component` | Add profile tab | MEDIUM |
-| `apply_filters('bbevents_site_plan', $plan)` | Internal filter to retrieve site's BuddyBoss plan tier | Plugin-defined — requires BuddyBoss to expose plan data or admin-configured setting |
-
-**Note:** BuddyBoss extends BuddyPress but adds its own layer. API compatibility should be verified against the BuddyBoss Platform plugin's developer docs before implementation, not just BuddyPress core docs. The BuddyBoss Platform maintains its own hooks reference. (MEDIUM confidence overall.)
+| Scale | Architecture Adjustments |
+|-------|--------------------------|
+| 0-1k events, typical community site | All queries are fine with existing indexes. No changes needed. |
+| 1k-10k events, active platform | Add index on `bb_event_sessions.event_id` (already in schema above). Cache organizer analytics with a 5-minute transient. `bb_event_views` table grows fast — purge rows older than 90 days via WP Cron. |
+| 10k+ events | Analytics aggregate queries need `bb_event_views` indexed on `(event_id, viewed_at)` (already in schema). Consider materialized analytics: nightly cron pre-computes per-event stats into `bb_eventmeta`. Taxonomy term filtering via `wp_term_relationships` JOIN may need covering index. |
 
 ---
 
 ## Sources
 
-- WordPress Plugin Developer Handbook — CPT registration, Settings API, REST API (training knowledge, HIGH confidence for established patterns)
-- Stripe Connect documentation — application fees, PaymentIntent with `transfer_data`, OAuth flow (training knowledge, HIGH confidence for core payment flow)
-- WooCommerce HPOS migration — custom tables for orders rationale (training knowledge, MEDIUM confidence)
-- The Events Calendar plugin architecture — recurring events parent/child pattern, FullCalendar usage (training knowledge, MEDIUM confidence)
-- BuddyPress/BuddyBoss `BP_Group_Extension`, `bp_activity_add()` API (training knowledge, MEDIUM confidence — verify against current BuddyBoss Platform developer reference)
-- GiveWP / Stripe WordPress plugin patterns — webhook idempotency, secret key handling (training knowledge, HIGH confidence for pattern)
+- Direct codebase inspection of `class-bp-event.php`, `class-bp-events-component.php`, `bp-events-functions.php`, `bp-events-loader.php` (HIGH confidence — authoritative)
+- WordPress `$wpdb` documentation and dbDelta behavior (HIGH confidence — established WP API)
+- BuddyPress `bp_get_meta()` / groupmeta pattern (MEDIUM confidence — verify `bp_get_meta()` function signature against current BuddyBoss Platform version before implementation)
+- WordPress `register_taxonomy()` accepting non-CPT object types (MEDIUM confidence — documented behavior, but verify `wp_set_object_terms()` accepts arbitrary integer object_id without CPT registration on current WP version)
+- MySQL `INSERT IGNORE` with `UNIQUE KEY` for deduplication (HIGH confidence — standard MySQL)
 
-**Verification needed before implementation:**
-- Current BuddyBoss Platform hook reference: https://developer.buddyboss.com/reference/
-- Stripe Connect application fees current API: https://stripe.com/docs/connect/charges-application-fees
-- BuddyBoss Platform current version changelog for any `BP_Group_Extension` API changes
+---
+*Architecture research for: BuddyBoss Events v2.0 feature additions*
+*Researched: 2026-03-17*

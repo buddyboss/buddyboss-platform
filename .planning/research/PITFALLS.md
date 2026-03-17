@@ -1,403 +1,315 @@
-# Domain Pitfalls
+# Pitfalls Research
 
-**Domain:** Commercial WordPress events plugin with BuddyBoss integration, Stripe Connect, and multi-tier ticketing
-**Researched:** 2026-03-10
-**Confidence note:** Web research tools unavailable in this session. All findings draw on training knowledge (cutoff August 2025). Stripe Connect and BuddyBoss items marked HIGH confidence reflect stable, well-documented behavior. Items marked MEDIUM require verification against current official docs before implementation.
+**Domain:** WordPress events plugin — v2.0 feature additions to an existing BuddyBoss-integrated plugin
+**Researched:** 2026-03-17
+**Confidence:** HIGH for WordPress core behavior; MEDIUM for BuddyBoss-specific interactions (verify against current BuddyBoss docs)
 
 ---
 
 ## Critical Pitfalls
 
-Mistakes that cause rewrites, financial liability, or major compliance issues.
+### Pitfall 1: Taxonomy Archive Pages Expose Private Group Events to the Public
+
+**What goes wrong:**
+When you register `event_category` and `event_tag` taxonomies as `public => true`, WordPress automatically generates archive URLs like `/event-category/workshops/`. These archive pages run `WP_Query` against all published posts of the associated post type. However, "published" in WordPress means `post_status = 'publish'` — it has no concept of BuddyBoss group privacy. A group event that is restricted to private group members will still appear in the taxonomy archive because the event's `bp_event` post has `post_status = 'publish'`.
+
+This is confirmed by a real BuddyBoss bug pattern: private group documents showing to non-members was a documented issue in `buddyboss-platform` issue #1692. The same mechanism applies to events.
+
+**Why it happens:**
+BuddyBoss group privacy is enforced at the component level (via `bp_has_groups()` and access checks in BuddyBoss template logic), not at the WordPress post_status level. A "private group event" is a published WordPress post with a `group_id` meta value — WordPress's native archive queries know nothing about this relationship.
+
+**How to avoid:**
+- Hook into `pre_get_posts` on all taxonomy archive queries for `bp_event` post type
+- On each archive query, check whether the current user is logged in and is a member of the event's associated group
+- The cleanest implementation: filter out any event post IDs where `group_id` is set and the current user is not a member of that group — use `bp_is_item_member()` or the equivalent BuddyBoss group membership check
+- Alternatively: register the taxonomy with `public => false` and `publicly_queryable => false` (which prevents WordPress from generating archive pages) and build your own filtered archive endpoint via REST API only — this is the safer default
+- At minimum: add a `posts_where` filter that excludes group-restricted events from unauthenticated requests
+
+**Warning signs:**
+- Taxonomy registered with `public => true` and no `pre_get_posts` hook filtering by group membership
+- Events in private groups visible when browsing `/event-category/[slug]/` while logged out
+- No test case covering "private group event does not appear in public taxonomy archive"
+
+**Phase to address:** Taxonomy registration phase (the first v2.0 phase). This cannot be retrofitted cheaply — the privacy model must be embedded in the query layer from day one.
 
 ---
 
-### Pitfall 1: Application Fee Is Not Automatically Refunded on Dispute or Partial Refund
+### Pitfall 2: Google Maps API Key Exposed in Page Source Enables Billing Abuse and (Since Gemini) AI Account Compromise
 
-**What goes wrong:** When a connected account receives a dispute (chargeback) or when you issue a partial refund, Stripe does NOT automatically reverse the application fee proportionally. The platform keeps the fee while the organizer absorbs the full loss. This creates an accounting mismatch, potential organizer hostility, and contractual liability.
+**What goes wrong:**
+The Google Maps JavaScript API key is always visible in the page source — this is inherent to client-side maps. The traditional advice was that HTTP referrer restrictions on the key were sufficient. This changed with Google's Gemini introduction: researchers found that many Maps API keys also authenticate to Gemini, meaning an exposed key with insufficient restrictions gives an attacker access to AI inference and file uploads billed to your account (documented by Truffle Security in late 2024/2025).
 
-**Why it happens:** Application fees are a separate object on the Stripe API from the underlying charge. Refunding the charge does not refund the fee unless you explicitly call `refund` on the `ApplicationFee` object as well.
+The additional risk for this plugin: the admin saves the Maps API key in `wp_options` via a settings field. If the plugin renders that key into a `<script src>` tag on every event single page, the key is trivially extractable from any visitor's browser.
 
-**Consequences:**
-- Organizer is debited the full ticket amount but BuddyBoss still holds the commission — negative net payout for organizer
-- Dispute resolution logic becomes a support nightmare if not automated
-- If organizer's Stripe account goes negative, payouts halt and ticket buyers can't be refunded
+**Why it happens:**
+Developers store the key in settings and inject it server-side into the page — the standard pattern — without enforcing referrer restrictions in the Google Cloud Console and without understanding the expanded attack surface created by Gemini API access on the same key.
 
-**Prevention:**
-- Build a `charge.dispute.created` webhook handler from day one that automatically triggers a proportional application fee reversal via `stripe.applicationFees.createRefund(feeId, { amount: proportionalAmount })`
-- Build a `charge.refunded` webhook that checks `refund.amount` vs `charge.amount` and reverses the proportional fee on partial refunds
-- Store the `application_fee` ID on every order record in WP so refund logic can look it up
-- Write integration tests that cover full refund, partial refund, and dispute scenarios against Stripe test mode
+**How to avoid:**
+- Store the API key in `wp_options` with `autoload = false` and output it only server-side into the Maps API `<script>` tag on single event pages that have a venue address
+- Document in the plugin settings UI: "After entering your API key, restrict it in Google Cloud Console to your domain (HTTP referrer restriction) and enable only the Maps JavaScript API and Geocoding API — do NOT enable Gemini or Vertex AI on this key"
+- Provide a direct link from the settings page to `console.cloud.google.com/apis/credentials`
+- Never log the API key — add a `wp_debug_log` guard or redact it from any error output
+- For GDPR compliance: do not load the Maps JavaScript API until the user has consented to third-party cookies; show a static placeholder map image with an "Enable map" button as the default state
 
-**Detection (warning signs):**
-- Organizers report negative Stripe balances after chargebacks
-- Accounting shows application fee revenue that doesn't net-settle correctly
+**Warning signs:**
+- API key output in page source without HTTP referrer restriction configured
+- Maps API loaded on every page load (not conditionally on event pages with a venue)
+- No GDPR consent gate before Maps script loads
+- Same Google Cloud project key used for Maps and any AI/Gemini API
 
-**Phase:** Address in the Stripe Connect payments phase, before any real transactions.
-
-**Confidence:** HIGH — this is documented Stripe behavior, not speculation.
-
----
-
-### Pitfall 2: Stripe Connect Onboarding Abandonment Leaves Organizers in a Broken State
-
-**What goes wrong:** Stripe Connect OAuth or hosted onboarding flows can be abandoned mid-way. If the plugin doesn't detect and handle the incomplete-account state, organizers who started onboarding but didn't finish can attempt to create paid events, causing silent failures or confusing error messages at checkout.
-
-**Why it happens:** Stripe accounts go through states: `details_submitted: false`, `charges_enabled: false`, `payouts_enabled: false`. A partially onboarded account can exist in your DB with a `stripe_account_id` but be unable to accept charges.
-
-**Consequences:**
-- Ticket purchase attempts fail at the Stripe API level with no meaningful user-facing error
-- Organizer and buyer both confused; trust eroded
-- Revenue lost for events with live tickets but broken payment configuration
-
-**Prevention:**
-- On every event-creation or ticket-purchase attempt, check `stripe.accounts.retrieve(accountId)` and verify `charges_enabled: true`
-- Show a persistent organizer dashboard notice: "Payment setup incomplete — buyers cannot purchase tickets"
-- Gate ticket display on the front-end: if account not charges-enabled, hide purchase CTA and show "organizer hasn't set up payments yet"
-- Cache the account status with a short TTL (5 minutes) — don't call Stripe on every page load
-
-**Detection:** `charges_enabled: false` on the retrieved account object.
-
-**Phase:** Stripe Connect onboarding phase.
-
-**Confidence:** HIGH
+**Phase to address:** Google Maps embed phase. Settings UI, key storage, and the consent gate must all be designed together.
 
 ---
 
-### Pitfall 3: Recurring Event Data Model Treated as Simple Copies
+### Pitfall 3: Structured Venue Address Fields Require a dbDelta Migration — venue_address Is a Single Blob in v1
 
-**What goes wrong:** Recurring events are modeled as N independent post copies at creation time rather than as a parent-child relationship with a recurrence rule. This makes "edit all future occurrences" impossible without custom rebuild logic, causes calendar query performance to degrade with hundreds of copies, and makes exception handling (cancel one occurrence, reschedule one date) awkward.
+**What goes wrong:**
+The v1 schema stores venue address as a single `venue_address varchar(500)` column in the custom `bp_events` table. The v2.0 feature spec adds structured fields: city, state/province, postcode, country. Adding these as new columns requires a `dbDelta()` migration against the existing table. If the migration is not written and tested, any existing events with addresses will have their address data stranded in `venue_address` with the new structured columns empty — resulting in broken Maps embeds and malformed display on event pages.
 
-**Why it happens:** The temptation is to use `wp_insert_post()` in a loop at save time — it's quick to implement. The correct model (RFC 5545 RRULE stored on a parent, occurrences generated on read or generated lazily) requires upfront schema design.
+**Why it happens:**
+Developers add new postmeta keys for the structured fields (city, state, etc.) assuming postmeta is flexible enough to avoid a schema migration. But the event data lives in a custom table (`bp_events`), not in `wp_postmeta`. Adding columns to a custom table requires an explicit migration.
 
-**Consequences:**
-- "Edit all future occurrences" requires a rewrite — can't be patched in
-- DB row explosion: a weekly event over one year = 52 posts; daily over a year = 365 posts, each with their own postmeta
-- Calendar range queries (`WHERE post_date BETWEEN x AND y`) become slow without proper indexing
-- Deleting/cancelling one occurrence without affecting others is brittle when each is an independent post
+**How to avoid:**
+- Write a `dbDelta()` migration that adds `venue_city`, `venue_state`, `venue_postcode`, `venue_country` columns to `{prefix}_bp_events`
+- Write a one-time data migration that attempts to parse the existing `venue_address` blob into its component parts — or at minimum, copies the blob value into a `venue_address_line1` field and leaves structured fields blank, prompting organizers to update
+- Version the schema: increment `buddyboss_events_db_version` to trigger migration on plugin update
+- Test the migration against a DB with existing events before releasing v2.0
 
-**Prevention:**
-- Define the recurrence data model explicitly before writing a line of code: parent event post + recurrence rule (stored as structured postmeta: frequency, interval, count/until, exceptions array) + occurrence posts generated lazily or on a schedule
-- Support "edit this occurrence", "edit this and all future", "edit all" as first-class operations with explicit DB semantics
-- Index `event_start_date` and `event_parent_id` from day one
-- Look at how The Events Calendar (TEC) handles RRULE storage as a reference — it's the established pattern in the WP ecosystem
+**Warning signs:**
+- New venue fields added as postmeta rather than columns in the custom events table
+- No schema version bump in the update path
+- Migration not tested against a database with pre-existing events
 
-**Detection (warning signs):**
-- Schema discussion devolves to "just copy the post N times"
-- No mention of exception dates or "edit future occurrences" in the data model design
-
-**Phase:** Data model / schema design phase — this is the highest-leverage architectural decision and cannot be fixed later without a migration.
-
-**Confidence:** HIGH
+**Phase to address:** Structured location / Google Maps phase. Must run before any venue data is written in the new format.
 
 ---
 
-### Pitfall 4: BuddyBoss Hooks and Functions Assumed Stable Across Versions
+### Pitfall 4: Hybrid Event Type Already Exists in the Schema — "Migration" Risk Is in REST API Response Shape
 
-**What goes wrong:** BuddyBoss (the platform plugin) has a history of renaming or removing hooks and functions between minor versions without marking them deprecated in advance. A plugin that hooks into `buddyboss_*` or `bp_*` actions can silently break when site admins update BuddyBoss without updating the events plugin.
+**What goes wrong:**
+The v1 schema already supports `type = 'hybrid'` as a varchar value — so there is no data migration needed for the type column itself. The risk is different: the REST API currently returns `type`, `virtual_url`, and `virtual_type` as flat fields. If v2.0 adds `meeting_id`, `meeting_password`, and `platform_label` as new fields, any REST API consumer (the mobile app, third-party integrations, JavaScript front-ends) will receive additional fields without warning. If they use strict schema validation, this breaks them.
 
-**Why it happens:** BuddyBoss is a fork of BuddyPress with a faster release cadence and less strict backward-compatibility policy than core WordPress. Integration hooks that worked in 2.0 may not exist in 2.3.
+The more dangerous version of this pitfall: if the decision is made to restructure the response (e.g., nest virtual details under a `virtual_details` object for cleanliness), existing consumers that read `event.virtual_url` will break completely.
 
-**Consequences:**
-- Group calendar tab disappears silently
-- Activity feed posting fails silently — no PHP error, just no feed items
-- Member profile events section blank
-- Support burden increases significantly; difficult to diagnose remotely
+**Why it happens:**
+v1 REST API was designed for internal consumption and the `bp_rest_namespace()/bp_rest_version()` endpoint namespace is inherited from BuddyBoss Platform. The v1 API has no versioning strategy of its own. Adding fields to an existing versioned resource is additive (safe). Restructuring field names or nesting is a breaking change.
 
-**Prevention:**
-- Wrap every BuddyBoss hook registration in an `function_exists()` or `has_action()` guard with a graceful fallback
-- Maintain a minimum tested BuddyBoss version in the plugin header and test against it in CI
-- Add a dashboard admin notice if the installed BuddyBoss version falls below the tested minimum
-- Maintain a dedicated "BuddyBoss compatibility" changelog section and test against every BuddyBoss minor release
-- Subscribe to the BuddyBoss changelog and developer announcements; treat each release as a potential compatibility event
+**How to avoid:**
+- Add new fields (`meeting_id`, `meeting_password`, `platform_label`) as additional flat properties on the existing event response object — do NOT restructure existing field names
+- `virtual_url` must remain at the same path in the response even if it is now semantically redundant with `meeting_id` for Zoom events
+- If restructuring is genuinely needed, introduce it under a new version: `bp_rest_version()` currently returns `v1` — adding a `/v2/events` namespace is the correct path, with `/v1/events` maintained in read-only compatibility mode
+- Document which fields are stable (permanent) vs. provisional (may be restructured in v2) in the API endpoint schema comments
 
-**Detection (warning signs):**
-- Integration features work in dev but fail on customer sites running slightly different BuddyBoss versions
-- No BuddyBoss version check in plugin activation
+**Warning signs:**
+- Existing REST endpoint fields renamed or moved inside a nested object
+- No API changelog maintained between v1 and v2
+- Front-end templates that use `event.virtual_url` not tested after REST response shape changes
 
-**Phase:** All phases involving BuddyBoss integration. Version gate should be added in the plugin scaffolding phase (Phase 1).
-
-**Confidence:** MEDIUM — based on patterns with BuddyPress forks generally; verify against BuddyBoss's actual versioning policy.
+**Phase to address:** Hybrid event type / online meeting details phase.
 
 ---
 
-### Pitfall 5: Race Condition on Ticket Inventory Allows Overselling
+### Pitfall 5: Front-End Submission Must Not Bypass Existing Admin-Side Capability Checks
 
-**What goes wrong:** Two concurrent ticket purchases read available capacity simultaneously, both see "1 ticket remaining", both proceed, and both succeed — selling 2 tickets for 1 available slot.
+**What goes wrong:**
+v1 has an admin-controlled permission toggle: only users with the `create_events` capability (or above) can create events. Front-end submission adds a form that lets organizer-role users submit events for approval. The common mistake is implementing the front-end form's AJAX handler with only `is_user_logged_in()` as the permission check — omitting the `current_user_can('create_events')` check that admin configured. This effectively overrides the site admin's permission settings.
 
-**Why it happens:** WordPress's default `get_post_meta()` / `update_post_meta()` pattern is not atomic. Reading and updating capacity in two separate DB operations creates a classic TOCTOU (time-of-check time-of-use) race condition. The problem is invisible in development (single user) and only surfaces under real traffic or load tests.
+The reverse pitfall also exists: if the front-end submission handler adds the `pending` post status to the event but the existing admin event list query only shows `published` events, submitted events are silently invisible to the admin moderator — creating a broken workflow where events sit in limbo.
 
-**Consequences:**
-- Oversold events: more ticket holders than physical/virtual seats
-- Angry attendees, refunds, organizer credibility damage
-- PCI and booking liability issues if the event has a hard capacity
+**Why it happens:**
+Front-end form handlers are written in isolation from the admin-side permission system. Developers use `is_user_logged_in()` as the entry guard (seems obvious — only logged-in users can submit) without realising the admin has already built a capability layer that must be respected.
 
-**Prevention:**
-- Use MySQL's atomic `UPDATE ... WHERE remaining_capacity > 0` pattern and check affected rows — never read-then-write
-- Alternatively, use a WP transient-based optimistic lock: `add_transient("booking_lock_{$event_id}", true, 10)` returns false if lock exists
-- Most robust: implement a custom DB table for ticket inventory with a `SELECT ... FOR UPDATE` approach inside a transaction (requires direct `$wpdb` usage with explicit transaction control)
-- Consider using WooCommerce stock management if WC is available — it already solves this problem with MySQL-level atomic decrements
-- Load test the checkout flow before launch with concurrent requests (wrk, k6, or even ApacheBench)
+**How to avoid:**
+- The AJAX/REST handler for front-end event submission must call `current_user_can( bp_events_get_create_capability() )` — the same capability function used by the admin creation path
+- Add `pending` to the admin event list query alongside `published` and `draft` so submitted-for-approval events appear in the moderator queue
+- The approval workflow's "publish" action must verify the approving user has `publish_events` capability, not just `manage_options`
+- Nonce the front-end form with a nonce scoped to the action (`wp_nonce_field('bp_events_submit_event', 'bp_events_nonce')`) and verify server-side with `wp_verify_nonce()` — then check capability — in that order
+- Never use `'__return_true'` as the REST route `permission_callback` for any write endpoint
 
-**Detection (warning signs):**
-- Capacity stored as postmeta updated via PHP read-modify-write cycle
-- No mention of locking or atomicity in the checkout implementation
+**Warning signs:**
+- Front-end submission AJAX handler checking only `is_user_logged_in()`
+- No `pending` events visible in the admin event list
+- Admin "Create Events" permission toggle doesn't affect front-end form availability
+- REST endpoint registered without a `permission_callback`
 
-**Phase:** Ticketing/checkout implementation phase.
-
-**Confidence:** HIGH — this is a fundamental database concurrency pattern, not plugin-specific.
-
----
-
-### Pitfall 6: PCI Compliance Scope Misunderstood — Stripe.js / Payment Element Not Enforced
-
-**What goes wrong:** Developers add card fields as plain HTML inputs (or use a non-Stripe-hosted checkout flow) without understanding that card data must never touch the WordPress server. Even temporarily logging a card number in a debug statement creates full PCI DSS Level 1 audit scope.
-
-**Why it happens:** Stripe Connect can be integrated in multiple ways. The "easy" path (passing raw card data to your server first) creates massive PCI liability. Stripe's hosted Payment Element or Checkout eliminates this risk, but requires deliberately choosing and enforcing it.
-
-**Consequences:**
-- PCI DSS Level 1 compliance requirement if card data touches the server — annual QSA audit, penetration testing, quarterly scans
-- Catastrophic liability if a breach occurs
-- Stripe's ToS violation if card data is proxied through the platform server
-
-**Prevention:**
-- Enforce Stripe.js / Stripe Payment Element exclusively — no custom card input fields
-- Payment Element renders in an iframe hosted by Stripe; no card data ever reaches WordPress
-- Use `payment_intent` + `confirmPayment()` client-side flow for Connected accounts
-- Document this architectural constraint in the developer spec before any payment code is written
-- Add a code review checklist item: "Does any PHP code receive card numbers, CVVs, or expiry dates? If yes, reject."
-
-**Detection (warning signs):**
-- Any PHP that receives `card_number`, `cvv`, or `expiry` POST parameters
-- WP AJAX handler that processes card data server-side
-
-**Phase:** Architecture/spec phase (before any code), enforced in payment implementation phase.
-
-**Confidence:** HIGH — Stripe's documentation on PCI scope reduction is explicit.
+**Phase to address:** Front-end submission phase.
 
 ---
 
-## Moderate Pitfalls
+### Pitfall 6: Custom Registration Fields Answers Have Nowhere to Live in the Existing Schema
+
+**What goes wrong:**
+The existing `bp_events_attendees` table has no column for custom field answers. When custom registration fields (text, dropdown, checkbox) are added per event, the answers collected at RSVP time need persistent storage. The tempting shortcut is to serialize all field answers into a single `answers` column added to `bp_events_attendees`. This works until: (a) you need to filter attendees by a specific field answer, (b) you need to export CSVs with one column per field, or (c) a field definition changes after answers were already collected.
+
+The second risk: storing field definitions as serialized postmeta (or a JSON blob in `bp_events_meta`) means you cannot `WHERE meta_key = 'field_3_type'` — every query that needs field definitions must pull the entire blob and parse it in PHP, making field-aware queries prohibitively expensive.
+
+**Why it happens:**
+The EAV (entity-attribute-value) pattern for custom fields looks simple to add quickly. Developers know WordPress uses `wp_postmeta` this way and copy the pattern without understanding that postmeta-style EAV kills query performance and makes CSV export require a full PHP-side join.
+
+**How to avoid:**
+- Create two new custom tables: `bp_events_fields` (field definitions: event_id, field_order, field_type, field_label, field_options, required) and `bp_events_field_answers` (attendee_id, field_id, answer_value)
+- Index `field_id` and `attendee_id` on the answers table
+- Store field definitions as rows, not as a serialized blob — this allows `JOIN` queries for CSV export and answer filtering
+- When a field definition changes (label rename, option added), version it: add a `field_version` column so existing answers remain interpretable against their original field version
+- For CSV export, use a single SQL query with `GROUP_CONCAT` or pivot logic rather than loading all attendees into PHP and looping
+
+**Warning signs:**
+- Field answers stored as serialized array in a single `answers` column
+- Field definitions stored as serialized postmeta
+- CSV export implemented by looping attendees in PHP and calling per-attendee queries for field answers (N+1)
+- No migration plan for what happens to existing attendee records when a field is deleted
+
+**Phase to address:** Custom registration fields phase. Table schema must be designed before any field storage code is written.
 
 ---
 
-### Pitfall 7: Plugin Activation / Deactivation / Uninstall Hooks Done Wrong
+## Technical Debt Patterns
 
-**What goes wrong:** Custom DB tables, scheduled events, and options are created on `register_activation_hook`, but the hook fires only when a user clicks "Activate" in the WP admin — not on plugin updates. This means DB schema changes in updates are never applied. Conversely, uninstall hooks that delete all data are too aggressive and destroy organizer event data when an admin deactivates/reactivates to troubleshoot.
+Shortcuts that seem reasonable but create long-term problems.
 
-**Why it happens:** Misunderstanding of WP plugin lifecycle. `register_activation_hook` ≠ "runs on every update". Updates run `upgrader_process_complete` or the plugin's own `init` hook.
-
-**Consequences:**
-- DB schema drift between plugin versions — queries against new columns fail silently
-- Organizers lose all event data if `uninstall.php` deletes tables unconditionally
-- Scheduled `wp_cron` jobs orphaned after deactivation pollute the cron table
-
-**Prevention:**
-- Store a `buddyboss_events_db_version` option; on `plugins_loaded`, compare to current schema version and run `dbDelta()` migrations if outdated — this handles both activation and update scenarios
-- `register_deactivation_hook`: clear scheduled cron events only (not data)
-- `uninstall.php`: delete data only if a "Remove all data on uninstall" option is explicitly enabled by the admin (default: OFF)
-- Use `dbDelta()` for all table creation/alteration — it is idempotent and safe to call repeatedly
-
-**Detection (warning signs):**
-- All DB table creation only in `register_activation_hook`
-- `uninstall.php` drops tables unconditionally
-
-**Phase:** Plugin scaffolding phase (Phase 1).
-
-**Confidence:** HIGH — standard WP plugin development pattern.
+| Shortcut | Immediate Benefit | Long-term Cost | When Acceptable |
+|----------|-------------------|----------------|-----------------|
+| Store field answers as serialized postmeta | No new table needed | Cannot query by answer value; CSV export requires full PHP loop; breaks on serialization corruption during migration | Never |
+| Register taxonomy as `public => true` without privacy filter | Archive pages work out of the box | Private group events leak to public taxonomy archives | Never |
+| Load Google Maps API on every page | Simple implementation | GDPR violation; unnecessary billing on pages with no venue | Never |
+| Use `is_user_logged_in()` alone as front-end form permission guard | Quick to write | Bypasses admin-configured capability restrictions | Never |
+| Add new REST response fields without documentation | Fast to ship | Breaks strict-schema consumers; no way to know what's safe to remove later | Only if a REST changelog entry is added |
+| Store sessions/agenda as serialized postmeta | No new table | Cannot query sessions independently; N+1 on event listing pages | Only for MVP with explicit refactor ticket created |
+| Build analytics from live `COUNT()` queries against the attendees table | No caching layer needed | Slow on events with thousands of RSVPs; blocks on every page load | Only if < 500 events total |
 
 ---
 
-### Pitfall 8: Timezone Handling Assumes Server or WordPress Timezone
+## Integration Gotchas
 
-**What goes wrong:** Event start/end times stored in server timezone (or WP `date_default_timezone_get()`) display incorrectly for attendees in other timezones. Worse, recurring event boundary calculations (e.g., "repeat every Monday at 9am") drift across DST transitions if not anchored to the event's declared timezone.
+Common mistakes when connecting to external services or existing plugin systems.
 
-**Why it happens:** PHP datetime handling is notoriously easy to get wrong. WordPress stores `post_date` in local time and `post_date_gmt` in UTC, but custom event date fields often default to whatever `date()` returns — which depends on server config.
-
-**Consequences:**
-- Event shows at wrong time for attendees; especially damaging for virtual events with international attendees
-- Recurring events scheduled for "9am Monday" shift by 1 hour after DST transition
-
-**Prevention:**
-- Store ALL event datetimes in UTC in the database
-- Store the event's declared timezone separately (e.g., `America/New_York`) as a string
-- Display times by converting from UTC to the viewer's timezone client-side (using Intl.DateTimeFormat or a lightweight library like day.js with timezone plugin), or to the event's declared timezone for the organizer
-- For recurring events, generate occurrence datetimes using PHP's `DateTimeImmutable` with the event timezone, then store the UTC equivalent
-- Never use `date()` — always use `DateTime` / `DateTimeImmutable` with explicit timezone
-
-**Detection (warning signs):**
-- Event times stored as formatted strings (`"2026-03-15 09:00:00"`) without a timezone column
-- `date('Y-m-d H:i:s')` calls in event creation code
-
-**Phase:** Data model phase.
-
-**Confidence:** HIGH
+| Integration | Common Mistake | Correct Approach |
+|-------------|----------------|------------------|
+| Google Maps JavaScript API | Injecting the key into every page regardless of whether the event has a venue | Conditionally enqueue Maps script only on single event pages where `venue_lat` and `venue_lng` are non-null |
+| Google Maps + GDPR | Loading Maps script on page load without consent | Show a placeholder with "Click to load map" (two-click solution); defer Maps script until user interaction or cookie consent signal |
+| BuddyBoss group privacy + taxonomy archives | Using default `WP_Query` on public taxonomy archive | Hook `pre_get_posts` to exclude events where the viewer lacks group membership |
+| BuddyBoss existing event creation permissions | Writing a separate capability check in the front-end handler | Use the same capability function (`bp_events_get_create_capability()`) as the admin path — single source of truth |
+| Existing v1 REST API consumers | Restructuring the event response object to nest virtual fields | Additive fields only on `/v1/events`; restructuring requires `/v2/events` |
+| Speakers CPT + BuddyBoss activity feed | Registering Speakers CPT with `public => true` causing speaker posts to appear in BuddyBoss activity feed via `bp_activity_add_screen_notifications` hooks | Register Speakers CPT with `show_in_activity_stream => false` or explicitly unregister the post-type activity hook |
+| wp_cron for analytics aggregation | Scheduling analytics cron jobs without checking if the job is already scheduled, resulting in duplicate jobs after each plugin update | Use `wp_next_scheduled()` before `wp_schedule_event()`; clear old cron on deactivation hook |
 
 ---
 
-### Pitfall 9: WooCommerce Conflict — Incompatible Checkout Flows and Template Overrides
+## Performance Traps
 
-**What goes wrong:** Many BuddyBoss sites already have WooCommerce installed for membership or merchandise sales. The events plugin's ticket checkout flow can conflict with WC in multiple ways: WC's `woocommerce_checkout` shortcode captures the `/checkout` URL slug; WC template overrides in themes can affect event confirmation pages; WC's `wp_redirect` on order completion can hijack the post-payment flow.
+Patterns that work at small scale but fail as usage grows.
 
-**Why it happens:** WooCommerce aggressively hooks into WP's request lifecycle (query vars, template loading, URL rewriting). A custom checkout that also manipulates these will collide.
-
-**Consequences:**
-- "Thank you" page after ticket purchase routes to WC order confirmation instead of event confirmation
-- CSS conflicts between WC payment form styling and event plugin styles
-- WC session/cart cookie conflicts if the event plugin also uses WP sessions
-
-**Prevention:**
-- Use unique URL slugs for event checkout — never `/checkout`, `/cart`, or `/order-received` (WC owns these)
-- Namespace all query vars: `buddyboss_event_checkout` not `checkout`
-- Test on a site with WooCommerce + WC Memberships + WC Subscriptions installed — this is the most common BuddyBoss stack
-- Consider building the ticket checkout ON TOP of WooCommerce as a product type — this resolves all conflicts by delegating payment processing to WC, but adds WC as a hard dependency (evaluate this tradeoff explicitly)
-- If not using WC: add explicit compatibility declarations using `woocommerce_checkout_process` guards to bail early when in WC context
-
-**Detection (warning signs):**
-- Any use of `/checkout` as a URL slug
-- No WooCommerce installed in development environment
-
-**Phase:** Checkout/payment implementation phase.
-
-**Confidence:** MEDIUM — specific conflict patterns vary by WC version; test against current WC.
+| Trap | Symptoms | Prevention | When It Breaks |
+|------|----------|------------|----------------|
+| Counting attendees with `COUNT(*)` on every event card in a loop | Event listing pages take 2+ seconds; each event card triggers its own DB query | Pre-cache `attendee_count` as a column in `bp_events` table, updated atomically on RSVP; or use `get_transient` with a 5-minute TTL | Noticeably slow at 50+ events on a listing page |
+| Loading sessions/agenda rows per event in a listing query | N+1: 1 query for events + 1 per event for sessions | Use a single `WHERE event_id IN (...)` query for all session data after the event list is fetched, then map in PHP | Slow at 20+ events per page |
+| Analytics view counting via `UPDATE ... SET views = views + 1` on every page load | View count query blocks on high-traffic single event pages | Batch increment using a transient counter that flushes to the DB every N requests or every minute via cron | Contention visible at 10+ concurrent visitors on the same event page |
+| Taxonomy term queries without `hide_empty => false` returning wrong counts | Taxonomy archive pages show term with 0 events after the last event is deleted | Always specify `hide_empty` explicitly; if showing empty categories is desired, set `hide_empty => false` | Immediate — confusing UX from the first deleted event |
+| `WP_Query` on taxonomy archive using `tax_query` with `LIKE` operator for tag search | Slow full-table scan on large sites | Use exact term ID matching; index the `bp_events` table on `group_id` | Slow at 10,000+ events |
+| Speakers CPT with `posts_per_page => -1` on the event single page to load all speakers | Memory exhaustion on events with 100+ speaker assignments | Paginate speaker lists; load speakers via a targeted `WHERE event_id = %d` query against the sessions/speakers join table, not via `WP_Query` | Memory issue at 50+ speakers per event |
 
 ---
 
-### Pitfall 10: Email Deliverability — Ticket Confirmations Sent via wp_mail with Default Config
+## Security Mistakes
 
-**What goes wrong:** WordPress `wp_mail()` uses PHP's `mail()` function by default, which sends from the server's IP without SPF, DKIM, or DMARC alignment. Ticket confirmation emails hit spam folders or are silently dropped. For paid events, this is a support emergency — buyers think their purchase failed.
+Domain-specific security issues beyond general web security.
 
-**Why it happens:** `wp_mail()` is fine for low-volume admin notifications but not for transactional email at scale. Most WP hosting setups don't configure outbound SMTP authentication.
-
-**Consequences:**
-- Ticket confirmation emails marked spam or dropped — buyer has no proof of purchase
-- Duplicate purchase attempts from confused buyers (double charges)
-- Organizer and site admin flooded with "I didn't get my ticket" support requests
-
-**Prevention:**
-- Document the requirement for a transactional email provider in the plugin's system requirements (Postmark, SendGrid, Mailgun, or Amazon SES)
-- Provide a settings field for SMTP configuration, or recommend a WP SMTP plugin (WP Mail SMTP by WPForms is the standard recommendation)
-- Add a "send test email" button in the admin settings so admins can verify deliverability before going live
-- Use HTML email templates with plain-text fallback; include a unique booking reference number in the subject line
-- Queue confirmation emails via `wp_schedule_single_event()` with a retry mechanism rather than sending synchronously in the checkout request — prevents checkout timeout if mail is slow
-
-**Detection (warning signs):**
-- Direct `wp_mail()` calls in checkout with no SMTP documentation
-- No test email feature in admin settings
-
-**Phase:** Email/notification implementation phase.
-
-**Confidence:** HIGH — well-documented WP ecosystem problem.
+| Mistake | Risk | Prevention |
+|---------|------|------------|
+| Front-end event submission handler checking only `is_user_logged_in()` | Any logged-in user can submit events regardless of admin-configured capability restrictions | Check `current_user_can( bp_events_get_create_capability() )` after nonce verification |
+| Nonce created with one action string and verified with a different action string | CSRF protection silently fails — `wp_verify_nonce()` returns false but code ignores the return value | Assert that creation and verification use the same action string; treat nonce failure as hard abort, not a warning |
+| Google Maps API key logged in WP_DEBUG output or stored in a world-readable option | API key exposed via debug logs or REST API options endpoint | Never log the key; store with `autoload = false`; exclude from any plugin export/debug report |
+| Sessions/Speakers REST endpoint returning draft speaker data to unauthenticated requests | Unpublished speaker profiles visible via API | Enforce `post_status = 'publish'` filter on Speakers CPT REST queries for unauthenticated requests; set `permission_callback` to check role for draft access |
+| Front-end approval workflow "publish" button backed by a nonce-less AJAX call | Admin-equivalent action (publishing a post) executable via CSRF from any page the approver visits | Nonce + `current_user_can('publish_events')` check on every approval/rejection action |
+| Custom registration field `field_type = 'text'` answers not sanitised before storage | XSS stored in field answers, rendered on event management page | Run `sanitize_text_field()` on all text answers; run `sanitize_textarea_field()` on textarea answers; escape on output with `esc_html()` |
+| Analytics CSV export endpoint accessible without authentication | Any visitor can download full attendee list with names and emails | Add `permission_callback` requiring `manage_events` capability on the CSV export REST route |
 
 ---
 
-### Pitfall 11: Tiered Commission Rate Applied at Wrong Point in Transaction
+## UX Pitfalls
 
-**What goes wrong:** The application fee percentage is looked up from the organizer's BuddyBoss plan tier at event-creation time (or worse, at purchase time from a site option). If the site admin changes the commission rate or the organizer changes plans between ticket creation and purchase, buyers pay under the wrong commission structure. Worse: if the rate is applied after the PaymentIntent is confirmed, it can't be changed — Stripe captures the PaymentIntent with the fee amount baked in.
+Common user experience mistakes in this domain.
 
-**Why it happens:** Commission rate is dynamic (per-plan, admin-configurable), but PaymentIntent application fee amount is set at intent creation and cannot be modified post-confirmation.
-
-**Consequences:**
-- BuddyBoss under-collects commission on old tickets sold under a changed rate
-- Attempting to retroactively adjust fees requires voiding and reissuing — complex, disruptive
-
-**Prevention:**
-- Lock the commission rate at ticket purchase time (not event creation time) and store the captured rate on the order record
-- Create the PaymentIntent with the calculated `application_fee_amount` at checkout initiation — not before
-- Log the plan tier and rate used for each transaction for auditing
-- Consider whether commission rate changes should be effective immediately or only for new events (a product/policy decision that needs answering before the data model is built)
-
-**Detection (warning signs):**
-- Commission rate fetched from `get_option()` at checkout without being stored on the order
-- PaymentIntent created at event creation rather than at checkout
-
-**Phase:** Stripe Connect / commission implementation phase.
-
-**Confidence:** HIGH — Stripe PaymentIntent behavior is well-documented.
+| Pitfall | User Impact | Better Approach |
+|---------|-------------|-----------------|
+| Google Maps loads immediately on page load, before GDPR consent | Cookie banner appears; map is already running; legal violation | Show a static map placeholder image (use the Maps Static API or a screenshot) with a "View interactive map" button that loads the JS map only on click |
+| Taxonomy category archive shows events from private groups with no indication of restricted access | Visitor sees event titles and details they should not see | Apply group privacy filter in `pre_get_posts`; exclude private group events entirely from public archive |
+| Front-end submission form available to users who lack `create_events` capability | Form renders, user fills it out, submits, gets a permission error — wasted effort | Gate the form display with `current_user_can( bp_events_get_create_capability() )` — show a "Request organizer access" prompt instead |
+| Pending approval events invisible to submitter after they submit | Organizer thinks submission was lost; re-submits | Show submitted events in the organizer's dashboard with status badge: "Pending Review" |
+| Sessions listed with no speaker photos or bios on the event page | Attendees have no context for who is presenting | Speaker CPT must require an avatar (enforce in admin); session display template must include speaker card with photo and bio excerpt |
+| Custom registration fields with `required = true` not validated client-side | User submits form with missing required fields; server rejects; confusing error state | Add HTML5 `required` attribute and JS validation; match server-side validation exactly so there are no server-only rules that surprise the user |
 
 ---
 
-## Minor Pitfalls
+## "Looks Done But Isn't" Checklist
+
+Things that appear complete but are missing critical pieces.
+
+- [ ] **Taxonomy registration:** Verify that private group events do NOT appear on public taxonomy archive pages — browse the category archive while logged out and confirm
+- [ ] **Google Maps embed:** Confirm the map does NOT load on events with no venue address and does NOT load before GDPR consent interaction
+- [ ] **Google Maps API key:** Verify HTTP referrer restriction is documented in the settings UI help text and that the key is not visible in any debug log
+- [ ] **Hybrid event type:** Confirm existing events with `type = 'in-person'` or `type = 'virtual'` render correctly with no visible regression after the new meeting fields are added
+- [ ] **Front-end submission:** Confirm the form does not appear to users lacking `create_events` capability — log out, log in as a subscriber, confirm
+- [ ] **Front-end submission:** Confirm submitted events appear in the admin moderation queue with status "Pending Review"
+- [ ] **Approval workflow:** Confirm nonce verification runs before the approval/rejection action executes — not after
+- [ ] **Custom registration fields:** Confirm field answers survive a round-trip: submit answers, view in admin, export CSV — all three surfaces show the same data
+- [ ] **Custom registration fields:** Confirm required fields are validated both client-side AND server-side — disable JavaScript and confirm the server rejects an empty required field
+- [ ] **Sessions/Speakers:** Confirm draft speaker posts are NOT returned by the Speakers REST endpoint to unauthenticated requests
+- [ ] **Analytics CSV export:** Confirm the export route returns HTTP 403 to an unauthenticated request
+- [ ] **Analytics queries:** Confirm the attendee count on event listing pages does NOT trigger one DB query per event — use Query Monitor to verify
 
 ---
 
-### Pitfall 12: REST API Endpoints Not Namespaced, Collide with Future Core or Plugin Routes
+## Recovery Strategies
 
-**What goes wrong:** Event API endpoints registered as `/wp-json/events/...` collide with other plugins or future WP core additions.
+When pitfalls occur despite prevention, how to recover.
 
-**Prevention:** Use a unique namespace: `/wp-json/buddyboss-events/v1/...`. Include version number from day one.
-
-**Phase:** API design / scaffolding phase.
-
-**Confidence:** HIGH
-
----
-
-### Pitfall 13: Capacity Check Exposed in REST API Response Without Auth Check
-
-**What goes wrong:** An unauthenticated REST call returns remaining ticket capacity, allowing competitors or bad actors to monitor event inventory.
-
-**Prevention:** Gate detailed inventory data (specific remaining count) behind authentication; public-facing only needs "available / sold out". Add `permission_callback` to all REST routes — never use `'__return_true'` on routes that return sensitive event or financial data.
-
-**Phase:** API implementation phase.
-
-**Confidence:** HIGH
+| Pitfall | Recovery Cost | Recovery Steps |
+|---------|---------------|----------------|
+| Private group events leaking in taxonomy archives | MEDIUM | Add `pre_get_posts` filter immediately; purge any page caches (object cache, CDN) so old archive pages expire; audit server logs for what was exposed |
+| Google Maps API key abused (billing or Gemini access) | HIGH | Rotate the key immediately in Google Cloud Console; update `wp_options` with the new key; add HTTP referrer restriction to the new key; review GCP billing alerts for unusual activity |
+| Custom field answers stored as serialized blobs and now need querying | HIGH | Write a one-time PHP migration script that reads each serialized blob, expands it into rows in a new `bp_events_field_answers` table; run during a maintenance window; validate row counts before/after |
+| Hybrid event REST response restructured and broke existing JS consumers | HIGH | Revert the response shape change; add the new structure under a new property while keeping the old flat properties; declare the restructuring approach in a v2 migration guide |
+| Front-end submission handler bypassing capability check — events created by unauthorized users | LOW | Add capability check to handler; run a SQL audit to identify events created via the front-end path that should not have been; mark them as `draft` pending review |
+| Analytics queries causing DB timeout on high-traffic events | MEDIUM | Add a `get_transient`/`set_transient` caching layer around the analytics query with a 5-minute TTL; add a dedicated index on `event_id` in the attendees table; defer to cron-based pre-aggregation if queries remain slow |
 
 ---
 
-### Pitfall 14: BuddyBoss Activity Feed Spam on Bulk Operations
+## Pitfall-to-Phase Mapping
 
-**What goes wrong:** When an organizer creates a recurring event with 52 occurrences, 52 activity feed items are posted simultaneously — flooding group and site-wide feeds.
+How roadmap phases should address these pitfalls.
 
-**Prevention:** Post a single activity item for the parent recurring event, not per-occurrence. Add a filter `buddyboss_events_post_activity` so site admins can control when activity items are generated.
-
-**Phase:** Recurring events + BuddyBoss integration phase.
-
-**Confidence:** HIGH — activity feed flooding is a classic BuddyPress/BuddyBoss integration mistake.
-
----
-
-### Pitfall 15: No Idempotency Keys on Stripe API Calls
-
-**What goes wrong:** Network timeout during PaymentIntent creation causes the PHP code to retry, creating duplicate charges. Buyer is charged twice.
-
-**Prevention:** Pass a unique `idempotencyKey` on every Stripe API mutation. The key should be derived from the order's internal ID so retries hit the cached result. Stripe returns the same response for duplicate requests with the same key within 24 hours.
-
-**Phase:** Stripe integration phase.
-
-**Confidence:** HIGH — Stripe's own documentation calls this out as a required best practice.
-
----
-
-## Phase-Specific Warnings
-
-| Phase Topic | Likely Pitfall | Mitigation |
-|-------------|---------------|------------|
-| Plugin scaffolding | Activation hook only (no update migration path) | Use `plugins_loaded` version check + `dbDelta()` |
-| Data model design | Recurring events as flat copies | Parent + RRULE + lazy generation from day one |
-| Data model design | Datetimes in local/server timezone | Store UTC + timezone name column |
-| Stripe Connect onboarding | Abandoned onboarding leaves broken organizer state | Check `charges_enabled` before allowing paid events |
-| Stripe payments | Application fee not reversed on refund/dispute | Webhook handlers for `charge.refunded` and `charge.dispute.created` |
-| Stripe payments | No idempotency keys | Add keys to all Stripe mutations |
-| Stripe payments | Commission rate sourced at wrong time | Lock rate at PaymentIntent creation, store on order |
-| Ticketing / checkout | Read-modify-write capacity check | Atomic MySQL update with row check |
-| Ticketing / checkout | WooCommerce URL and hook conflicts | Unique slugs; test with WC installed |
-| Payment UI | PCI scope via custom card inputs | Stripe Payment Element only — no raw card fields in PHP |
-| Email / notifications | wp_mail deliverability | Require SMTP; queue emails; test button in admin |
-| BuddyBoss integration | Hook / function names change across versions | Version guard in activation; `function_exists()` wrappers |
-| BuddyBoss integration | Activity feed flooding on bulk operations | Single activity item per parent event |
-| REST API | Namespace collision | `/wp-json/buddyboss-events/v1/` from day one |
+| Pitfall | Prevention Phase | Verification |
+|---------|------------------|--------------|
+| Taxonomy archive leaks private group events | Taxonomy registration phase | Browse category archive while logged out; confirm no private group events appear |
+| Google Maps API key exposure + Gemini risk | Google Maps embed phase | Verify HTTP referrer restriction in GCP is documented in settings UI; key not in debug logs |
+| Google Maps + GDPR (loads before consent) | Google Maps embed phase | Load single event page, confirm Maps JS does not fire before consent interaction |
+| venue_address blob → structured fields dbDelta migration | Structured location / Maps phase | Run migration against a staging DB with existing events; verify address data preserved |
+| Hybrid event type REST response shape change | Hybrid event type phase | Check all front-end templates that read `virtual_url`; confirm field is still present at same path |
+| Front-end submission bypasses capability guard | Front-end submission phase | Log in as subscriber; confirm form is not displayed and AJAX handler rejects the request |
+| Approval workflow CSRF (nonce-less publish action) | Front-end submission / approval phase | Attempt to call the approval AJAX endpoint directly without a valid nonce; confirm 403 response |
+| Custom registration field answers have no table | Custom registration fields phase | Schema must be reviewed before any field answer code is written |
+| Custom field answers: N+1 on CSV export | Custom registration fields phase | Export CSV with 200 attendees; confirm Query Monitor shows a bounded number of queries, not 200 |
+| Sessions/Speakers: draft content visible via REST | Sessions / Speakers CPT phase | Call `/wp-json/bp/v1/events/{id}/speakers` without authentication; confirm no draft speakers in response |
+| Analytics: live COUNT() queries on listing page | Analytics / reports phase | Load event listing with 100 events; confirm Query Monitor shows attendee count comes from cache or a single batched query |
+| Speakers CPT triggering BuddyBoss activity feed entries | Speakers CPT phase | Create a speaker post; confirm no activity feed item is generated in the BuddyBoss activity stream |
 
 ---
 
 ## Sources
 
-- Stripe Connect application fees documentation (docs.stripe.com/connect/direct-charges#collect-fees) — HIGH confidence, verify against current Stripe docs
-- Stripe idempotency documentation (docs.stripe.com/api/idempotent_requests) — HIGH confidence
-- WordPress Plugin Developer Handbook — activation/deactivation/uninstall hooks — HIGH confidence
-- BuddyPress/BuddyBoss hook patterns — MEDIUM confidence (verify BuddyBoss-specific hooks against current BuddyBoss developer docs)
-- WooCommerce checkout conflict patterns — MEDIUM confidence (verify against current WC version)
-- PCI DSS SAQ A scope reduction via Stripe.js — HIGH confidence (Stripe's own PCI guide confirms this)
-- RFC 5545 (iCalendar RRULE) for recurring event modeling — HIGH confidence
+- BuddyBoss Platform GitHub issue #1692 (private group documents showing to non-members) — MEDIUM confidence, documents the category of privacy bug this pitfall belongs to
+- WordPress `pre_get_posts` hook documentation — HIGH confidence (developer.wordpress.org/reference/hooks/pre_get_posts/)
+- Truffle Security: "Google API Keys Weren't Secrets. But then Gemini Changed the Rules." (trufflesecurity.com/blog/google-api-keys-werent-secrets-but-then-gemini-changed-the-rules) — MEDIUM confidence, verify API key scope restrictions against current GCP docs
+- Patchstack: API KEY for Google Maps WordPress plugin vulnerabilities (patchstack.com/database/wordpress/plugin/api-key-for-google-maps) — MEDIUM confidence
+- Complianz: Google Maps and GDPR (complianz.io/google-maps-and-gdpr-what-you-should-know/) — MEDIUM confidence, verify against current EU/GDPR guidance
+- WordPress Developer Blog: Understand and use WordPress nonces properly (developer.wordpress.org/news/2023/08/understand-and-use-wordpress-nonces-properly/) — HIGH confidence
+- WP-Firewall CVE-2026-1867: Preventing Sensitive Data Exposure in Front Editor — MEDIUM confidence, illustrates the class of front-editor data exposure vulnerability
+- WordPress core Trac #30814: Large wp_postmeta table causing slow queries — HIGH confidence, documents postmeta EAV performance degradation
+- Advanced Custom Fields: WordPress Post Meta Query Performance Best Practices (advancedcustomfields.com/blog/wordpress-post-meta-query/) — MEDIUM confidence
+- Sarathlal N: Scaling WordPress — How Custom Database Tables Solve the Post Meta Bottleneck — MEDIUM confidence
+- Current schema inspection: `/Users/tom/Local Sites/Events/buddyboss-events/src/bp-events/bp-events-functions.php` — HIGH confidence (source of record for v1 table definitions)
 
-*Note: All sources are from training data (cutoff August 2025). No live web verification was possible in this session. Flag all MEDIUM-confidence items for verification before implementation begins.*
+---
+*Pitfalls research for: BuddyBoss Events v2.0 feature additions*
+*Researched: 2026-03-17*
