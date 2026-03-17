@@ -74,14 +74,14 @@ function bb_notifications_sanitize_types( $value ) {
 	}
 
 	// Sanitize: rebuild with sanitized keys, only 'yes' or 'no' values.
-	$allowed_values      = array( 'yes', 'no' );
+	$allowed_values       = array( 'yes', 'no' );
 	$enabled_notification = array();
 	foreach ( $value as $key => $sub_values ) {
 		if ( ! is_string( $key ) || ! is_array( $sub_values ) ) {
 			continue;
 		}
 
-		$safe_key                              = sanitize_key( $key );
+		$safe_key                          = sanitize_key( $key );
 		$enabled_notification[ $safe_key ] = array();
 
 		foreach ( $sub_values as $sub_key => $val ) {

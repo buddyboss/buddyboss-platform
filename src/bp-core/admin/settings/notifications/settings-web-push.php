@@ -72,7 +72,7 @@ function bb_notifications_register_web_push_panel_fields() {
 				'description'       => sprintf(
 					/* translators: %s: BuddyBoss Pro link. */
 					__( 'Please update %s to version 2.0.3 to use web push notifications on your site.', 'buddyboss' ),
-					'<a target="_blank" href="' . esc_url( 'https://www.buddyboss.com/platform' ) . '">' . __( 'BuddyBoss Platform Pro', 'buddyboss' ) . '</a>'
+					'<a target="_blank" rel="noopener noreferrer" href="' . esc_url( 'https://www.buddyboss.com/platform' ) . '">' . __( 'BuddyBoss Platform Pro', 'buddyboss' ) . '</a>'
 				),
 				'sanitize_callback' => '__return_empty_string',
 				'order'             => 10,

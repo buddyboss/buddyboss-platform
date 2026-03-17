@@ -1882,6 +1882,57 @@ add_action(
 	}
 );
 
+/**
+ * Fire the legacy `bp_admin_tab_setting_save` and `bp_admin_tab_setting_saved`
+ * hooks when notification settings are saved via Settings 2.0.
+ *
+ * Follows the same pattern as `bb_media_fire_deprecated_save_hooks()` and
+ * `bb_members_fire_deprecated_save_hooks()`.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id Feature ID.
+ * @param array  $settings   Full submitted settings.
+ * @param array  $saved      Keys and values saved by core.
+ */
+function bb_notifications_fire_deprecated_save_hooks( $feature_id, $settings, $saved ) {
+	if ( 'notifications' !== $feature_id ) {
+		return;
+	}
+
+	/**
+	 * Fires before the notification settings are saved.
+	 *
+	 * @since BuddyBoss 1.9.3
+	 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_admin_save_feature_settings_after'} with feature_id='notifications'.
+	 *
+	 * @param string $tab_name The tab name.
+	 */
+	do_action_deprecated(
+		'bp_admin_tab_setting_save',
+		array( 'bp-notifications' ),
+		'BuddyBoss [BBVERSION]',
+		'bb_admin_save_feature_settings_after'
+	);
+
+	/**
+	 * Fires after the notification settings have been saved.
+	 *
+	 * @since BuddyBoss 1.9.3
+	 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_admin_save_feature_settings_after'} with feature_id='notifications'.
+	 *
+	 * @param string $tab_name The tab name.
+	 */
+	do_action_deprecated(
+		'bp_admin_tab_setting_saved',
+		array( 'bp-notifications' ),
+		'BuddyBoss [BBVERSION]',
+		'bb_admin_save_feature_settings_after'
+	);
+}
+
+add_action( 'bb_admin_save_feature_settings_after', 'bb_notifications_fire_deprecated_save_hooks', 99, 3 );
+
 // ──────────────────────────────────────────────────────────────────────────────
 // Deprecated notification settings public API functions.
 // Removed in Settings 2.0 migration. Stubs prevent fatal errors in third-party
@@ -1950,5 +2001,24 @@ if ( ! function_exists( 'bb_notification_get_settings_fields_for_section' ) ) {
 			'BuddyBoss [BBVERSION]',
 			'Settings 2.0 feature registration'
 		);
+	}
+}
+
+if ( ! function_exists( 'bb_activate_notification' ) ) {
+	/**
+	 * Render a notification type toggle checkbox.
+	 *
+	 * This was a rendering helper used by the legacy notification types admin UI.
+	 * Settings 2.0 renders notification types via the React `notification_types`
+	 * field type instead.
+	 *
+	 * @since BuddyBoss 1.9.3
+	 * @deprecated BuddyBoss [BBVERSION] Use Settings 2.0 notification_types field type.
+	 *
+	 * @param array $field   Notification field definition.
+	 * @param bool  $checked Whether the checkbox is checked.
+	 */
+	function bb_activate_notification( $field, $checked ) {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 notification_types field type' );
 	}
 }

@@ -114,7 +114,7 @@ function bb_notifications_register_types_panel_fields() {
 			'description'       => sprintf(
 				/* translators: %s: Tutorial link. */
 				__( 'You can register your own notification types by following the steps in %s. Once registered, they\'ll be configurable in the options above.', 'buddyboss' ),
-				'<a href="' . esc_url( 'https://www.buddyboss.com/resources/dev-docs/app-development/extending-the-buddyboss-app-plugin/migrating-custom-notifications-to-modern-notifications-api/' ) . '" target="_blank">' . __( 'this tutorial', 'buddyboss' ) . '</a>'
+				'<a href="' . esc_url( 'https://www.buddyboss.com/resources/dev-docs/app-development/extending-the-buddyboss-app-plugin/migrating-custom-notifications-to-modern-notifications-api/' ) . '" target="_blank" rel="noopener noreferrer">' . __( 'this tutorial', 'buddyboss' ) . '</a>'
 			),
 			'sanitize_callback' => '__return_empty_string',
 			'order'             => 10,

@@ -1485,14 +1485,14 @@ class BB_Admin_Settings_Ajax {
 						if ( ! empty( $options ) ) {
 							foreach ( $options as $key => $v ) {
 								$parent_disabled = ! empty( $notification_field['notification_read_only'] ) && true === $notification_field['notification_read_only'];
-								$is_disabled     = apply_filters( 'bb_is_' . $notification_field['key'] . '_' . $key . '_preference_enabled', ! $checked );
+								$is_disabled     = apply_filters( 'bb_is_' . $notification_field['key'] . '_' . $key . '_preference_type_disabled', $v['disabled'], $notification_field['key'], $key );
 								$is_render       = apply_filters( 'bb_is_' . $notification_field['key'] . '_' . $key . '_preference_type_render', $v['is_render'], $notification_field['key'], $key );
 
 								$sub_types[ $key ] = array(
 									'label'      => $v['label'],
 									'is_checked' => $v['is_checked'],
 									'is_render'  => $is_render,
-									'disabled'   => $is_disabled && $parent_disabled,
+									'disabled'   => $is_disabled || $parent_disabled,
 								);
 							}
 						}

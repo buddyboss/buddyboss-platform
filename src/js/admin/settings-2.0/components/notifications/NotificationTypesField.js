@@ -209,6 +209,14 @@ var NotificationTypesField = function( props ) {
 												disabled={ fieldData.read_only }
 												__nextHasNoMarginBottom
 											/>
+											{ fieldData.tooltip && (
+												<span
+													className="bb-notification-types__tooltip"
+													title={ decodeEntities( fieldData.tooltip ) }
+												>
+													<i className="bb-icons-rl bb-icons-rl-info-circle"></i>
+												</span>
+											) }
 										</div>
 										<div className="bb-notification-types__sub-types">
 											{ subTypeKeys.map( function( subKey ) {
