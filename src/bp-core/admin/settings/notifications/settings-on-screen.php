@@ -46,7 +46,7 @@ function bb_notifications_register_on_screen_panel_fields() {
 			'description'       => __( 'Enable on-screen notifications', 'buddyboss' ),
 			'help_text'         => __( 'Show members new notifications received while on a page on-screen.', 'buddyboss' ),
 			'default'           => bp_get_option( '_bp_on_screen_notifications_enable', 0 ),
-			'sanitize_callback' => 'intval',
+			'sanitize_callback' => 'absint',
 			'order'             => 10,
 		)
 	);
@@ -95,7 +95,7 @@ function bb_notifications_register_on_screen_panel_fields() {
 			'description'       => __( 'Show on-screen notifications on small screens', 'buddyboss' ),
 			'help_text'         => __( 'Enable this option to show on-screen notifications at the bottom of the screen smaller than 500px wide.', 'buddyboss' ),
 			'default'           => bp_get_option( '_bp_on_screen_notifications_mobile_support', 0 ),
-			'sanitize_callback' => 'intval',
+			'sanitize_callback' => 'absint',
 			'order'             => 30,
 			'conditional'       => array(
 				'field'  => '_bp_on_screen_notifications_enable',
@@ -177,7 +177,7 @@ function bb_notifications_register_on_screen_panel_fields() {
 			'description'       => __( 'Show new notifications in the title of the browser tab', 'buddyboss' ),
 			'help_text'         => __( 'Update the page &lt;title&gt; tab when new notifications are received.', 'buddyboss' ),
 			'default'           => bp_get_option( '_bp_on_screen_notifications_browser_tab', 0 ),
-			'sanitize_callback' => 'intval',
+			'sanitize_callback' => 'absint',
 			'order'             => 50,
 			'conditional'       => array(
 				'field'  => '_bp_on_screen_notifications_enable',
