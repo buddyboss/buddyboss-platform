@@ -84,7 +84,7 @@ function bb_notifications_register_types_panel_fields() {
 			'label'             => '',
 			'type'              => 'notification_types',
 			'default'           => $enabled_notification,
-			'sanitize_callback' => 'bb_notifications_sanitize_types_noop',
+			'sanitize_callback' => 'bb_notifications_sanitize_types',
 			'full_width'        => true,
 			'order'             => 10,
 		)

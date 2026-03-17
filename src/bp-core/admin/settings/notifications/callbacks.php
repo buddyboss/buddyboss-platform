@@ -56,27 +56,111 @@ function bb_notifications_sanitize_visibility( $value ) {
 }
 
 /**
- * No-op sanitize callback for notification types field.
+ * Sanitize notification types (bb_enabled_notification).
  *
- * Notification types (bb_enabled_notification) are managed via a custom save
- * handler and should not be overwritten by the auto-save pipeline.
- * This callback returns the existing stored value so it is never clobbered.
+ * Validates the submitted notification types array: sanitizes keys,
+ * enforces yes/no values, whitelists against registered preferences,
+ * and preserves read-only preference defaults.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param mixed $value The submitted value (ignored).
+ * @param mixed $value The submitted value.
  *
- * @return array The existing stored value.
+ * @return array Sanitized notification types.
  */
-function bb_notifications_sanitize_types_noop( $value ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
-	return bp_get_option( 'bb_enabled_notification', array() );
+function bb_notifications_sanitize_types( $value ) {
+	if ( ! is_array( $value ) ) {
+		return bp_get_option( 'bb_enabled_notification', array() );
+	}
+
+	// Sanitize: rebuild with sanitized keys, only 'yes' or 'no' values.
+	$allowed_values      = array( 'yes', 'no' );
+	$enabled_notification = array();
+	foreach ( $value as $key => $sub_values ) {
+		if ( ! is_string( $key ) || ! is_array( $sub_values ) ) {
+			continue;
+		}
+
+		$safe_key                              = sanitize_key( $key );
+		$enabled_notification[ $safe_key ] = array();
+
+		foreach ( $sub_values as $sub_key => $val ) {
+			$val = sanitize_text_field( $val );
+			if ( ! in_array( $val, $allowed_values, true ) ) {
+				$val = 'no';
+			}
+			$enabled_notification[ $safe_key ][ sanitize_key( $sub_key ) ] = $val;
+		}
+	}
+
+	// Whitelist: discard keys not registered in notification preferences.
+	$notification_preferences = bb_register_notification_preferences();
+	$registered_keys          = array();
+	if ( ! empty( $notification_preferences ) ) {
+		foreach ( $notification_preferences as $group_data ) {
+			if ( ! empty( $group_data['fields'] ) ) {
+				foreach ( $group_data['fields'] as $field ) {
+					if ( ! empty( $field['key'] ) ) {
+						$registered_keys[] = $field['key'];
+					}
+				}
+			}
+		}
+	}
+
+	if ( ! empty( $registered_keys ) ) {
+		$enabled_notification = array_intersect_key( $enabled_notification, array_flip( $registered_keys ) );
+	}
+
+	// Filter out read-only preferences (maintain their defaults).
+	$preferences = array();
+	if ( ! empty( $notification_preferences ) ) {
+		foreach ( $notification_preferences as $group_data ) {
+			if ( ! empty( $group_data['fields'] ) ) {
+				$keys = array_filter(
+					array_map(
+						function ( $fields ) {
+							if (
+								isset( $fields['notification_read_only'] ) &&
+								true === (bool) $fields['notification_read_only']
+							) {
+								return array(
+									'key'     => $fields['key'],
+									'default' => $fields['default'],
+								);
+							}
+						},
+						$group_data['fields']
+					)
+				);
+
+				if ( ! empty( $keys ) ) {
+					$preferences = array_merge( $keys, $preferences );
+				}
+			}
+		}
+	}
+
+	if ( ! empty( $preferences ) ) {
+		foreach ( $preferences as $preference ) {
+			if ( isset( $preference['key'] ) && isset( $preference['default'] ) ) {
+				if ( isset( $enabled_notification[ $preference['key'] ] ) && 'yes' === $preference['default'] ) {
+					$enabled_notification[ $preference['key'] ]['main'] = $preference['default'];
+				} else {
+					unset( $enabled_notification[ $preference['key'] ] );
+				}
+			}
+		}
+	}
+
+	return $enabled_notification;
 }
 
 /**
  * Custom save handler for notification settings.
  *
- * Handles the complex notification types save logic, messaging notification
- * fields, and fires legacy hooks for backward compatibility.
+ * Fires legacy hooks for backward compatibility after notification
+ * settings are saved.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -91,94 +175,6 @@ function bb_notifications_after_save_settings( $feature_id, $settings, $saved ) 
 		return;
 	}
 
-	// Handle notification types save (bb_enabled_notification).
-	if ( isset( $settings['bb_enabled_notification'] ) && is_array( $settings['bb_enabled_notification'] ) ) {
-		$enabled_notification = $settings['bb_enabled_notification'];
-
-		// Sanitize: rebuild with sanitized keys, only 'yes' or 'no' values.
-		$allowed_values = array( 'yes', 'no' );
-		$sanitized      = array();
-		foreach ( $enabled_notification as $key => $sub_values ) {
-			if ( ! is_string( $key ) || ! is_array( $sub_values ) ) {
-				continue;
-			}
-
-			$safe_key               = sanitize_key( $key );
-			$sanitized[ $safe_key ] = array();
-
-			foreach ( $sub_values as $sub_key => $val ) {
-				$val = sanitize_text_field( $val );
-				if ( ! in_array( $val, $allowed_values, true ) ) {
-					$val = 'no';
-				}
-				$sanitized[ $safe_key ][ sanitize_key( $sub_key ) ] = $val;
-			}
-		}
-		$enabled_notification = $sanitized;
-
-		// Whitelist: discard keys not registered in notification preferences.
-		$notification_preferences = bb_register_notification_preferences();
-		$registered_keys          = array();
-		if ( ! empty( $notification_preferences ) ) {
-			foreach ( $notification_preferences as $group_data ) {
-				if ( ! empty( $group_data['fields'] ) ) {
-					foreach ( $group_data['fields'] as $field ) {
-						if ( ! empty( $field['key'] ) ) {
-							$registered_keys[] = $field['key'];
-						}
-					}
-				}
-			}
-		}
-
-		if ( ! empty( $registered_keys ) ) {
-			$enabled_notification = array_intersect_key( $enabled_notification, array_flip( $registered_keys ) );
-		}
-
-		// Filter out read-only preferences (maintain their defaults).
-		$preferences = array();
-		if ( ! empty( $notification_preferences ) ) {
-			foreach ( $notification_preferences as $group_data ) {
-				if ( ! empty( $group_data['fields'] ) ) {
-					$keys = array_filter(
-						array_map(
-							function ( $fields ) {
-								if (
-									isset( $fields['notification_read_only'] ) &&
-									true === (bool) $fields['notification_read_only']
-								) {
-									return array(
-										'key'     => $fields['key'],
-										'default' => $fields['default'],
-									);
-								}
-							},
-							$group_data['fields']
-						)
-					);
-
-					if ( ! empty( $keys ) ) {
-						$preferences = array_merge( $keys, $preferences );
-					}
-				}
-			}
-		}
-
-		if ( ! empty( $preferences ) ) {
-			foreach ( $preferences as $preference ) {
-				if ( isset( $preference['key'] ) && isset( $preference['default'] ) ) {
-					if ( isset( $enabled_notification[ $preference['key'] ] ) && 'yes' === $preference['default'] ) {
-						$enabled_notification[ $preference['key'] ]['main'] = $preference['default'];
-					} else {
-						unset( $enabled_notification[ $preference['key'] ] );
-					}
-				}
-			}
-		}
-
-		bp_update_option( 'bb_enabled_notification', $enabled_notification );
-	}
-
 	/**
 	 * Fires after notification settings are saved in Settings 2.0.
 	 *
@@ -191,34 +187,3 @@ function bb_notifications_after_save_settings( $feature_id, $settings, $saved ) 
 }
 
 add_action( 'bb_admin_save_feature_settings_after', 'bb_notifications_after_save_settings', 10, 3 );
-
-/**
- * Fix stale bb_enabled_notification in the save response.
- *
- * The noop sanitizer prevents the core save loop from clobbering the value,
- * but also causes the response to contain the old stored value instead of
- * the freshly saved one. This filter replaces it with the actual saved data
- * so the frontend stays in sync.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param array  $response_data Response data.
- * @param string $feature_id    Feature ID.
- * @param array  $settings      Submitted settings.
- * @param array  $saved         Keys/values saved by core.
- *
- * @return array Modified response data.
- */
-function bb_notifications_fix_save_response( $response_data, $feature_id, $settings, $saved ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
-	if ( 'notifications' !== $feature_id ) {
-		return $response_data;
-	}
-
-	if ( isset( $response_data['saved']['bb_enabled_notification'] ) ) {
-		$response_data['saved']['bb_enabled_notification'] = bp_get_option( 'bb_enabled_notification', array() );
-	}
-
-	return $response_data;
-}
-
-add_filter( 'bb_admin_save_feature_settings_response', 'bb_notifications_fix_save_response', 10, 4 );
