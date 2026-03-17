@@ -88,12 +88,13 @@ function bb_admin_settings_register_email_invites_feature() {
 		'email_invites',
 		'emails',
 		array(
-			'title' => __( 'Emails', 'buddyboss' ),
-			'icon'  => array(
+			'title'   => __( 'Emails', 'buddyboss' ),
+			'icon'    => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-list-bullets',
 			),
-			'order' => 20,
+			'divider' => true,
+			'order'   => 20,
 		)
 	);
 
