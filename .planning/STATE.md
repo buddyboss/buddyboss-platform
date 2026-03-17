@@ -5,9 +5,9 @@ milestone_name: Feature Parity
 status: planning
 stopped_at: ""
 last_updated: "2026-03-17T00:00:00.000Z"
-last_activity: 2026-03-17 — Milestone v2.0 started
+last_activity: 2026-03-17 — v2.0 roadmap created (Phases 4-8)
 progress:
-  total_phases: 0
+  total_phases: 5
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -25,29 +25,44 @@ See: .planning/PROJECT.md (updated 2026-03-17)
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: Phase 4 (Meta API Foundation + Taxonomy) — ready to plan
 Plan: —
-Status: Defining requirements
-Last activity: 2026-03-17 — Milestone v2.0 started
+Status: Roadmap complete — ready for /gsd:plan-phase 4
+Last activity: 2026-03-17 — v2.0 roadmap created (Phases 4-8)
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [░░░░░░░░░░] 0% (v2.0 phases)
+
+## Milestone v2.0 Phase Map
+
+| Phase | Name | Requirements | Depends on |
+|-------|------|--------------|------------|
+| 4 | Meta API Foundation + Taxonomy | TAX-01, TAX-02, TAX-03 | Phase 3 (complete) |
+| 5 | Data Enrichment | LOC-01, LOC-02, LOC-03, LOC-04, CONT-01, CONT-02 | Phase 4 |
+| 6 | Sessions + Speakers | SESS-01, SESS-02 | Phase 4 |
+| 7 | Front-End Submission + Organizer Dashboard | FEND-01, FEND-02, FEND-03 | Phase 5, Phase 6 |
+| 8 | Analytics + Reports | REPT-01, REPT-02 | Phase 7 |
+
+Note: Phase 5 and Phase 6 both depend only on Phase 4. They can execute in parallel. Phase 7 requires both Phase 5 and Phase 6 to be complete before the front-end wizard can include all enrichment fields and session/speaker steps in one pass.
 
 ## Performance Metrics
 
-**Velocity:**
-- Total plans completed: 0
-- Average duration: —
-- Total execution time: —
+**Velocity (v1.0 historical):**
+- Total plans completed: 21
+- Average duration: ~4 min/plan
+- Total execution time: ~84 min
 
-**By Phase:**
+**By Phase (v1.0 complete):**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| - | - | - | - |
+| 01-foundation-event-management | 9 | ~36min | ~4min |
+| 02-payments-ticketing | 6 | ~27min | ~4.5min |
+| 03-buddyboss-integration | 6 | ~26min | ~4.3min |
 
-**Recent Trend:**
-- Last 5 plans: —
-- Trend: —
+**v2.0 Velocity:**
+- Total plans completed: 0
+- Average duration: —
+- Total execution time: —
 
 *Updated after each plan completion*
 | Phase 01-foundation-event-management P00 | 2min | 2 tasks | 9 files |
@@ -123,6 +138,14 @@ Recent decisions affecting current work:
 - [Phase 03-buddyboss-integration]: bp_template_content hook must be added inside screen function BEFORE bp_core_load_template() — without it the member profile plugin area renders blank
 - [Phase 03-buddyboss-integration]: late_includes() attending/hosting branches gate on bp_is_user() to distinguish profile sub-tabs from directory/single event routes
 - [Phase 03-buddyboss-integration]: Phase 3 declared complete — all four BuddyBoss integration surfaces (BB-01 through BB-04) verified by user in live MAMP environment
+- [v2.0 roadmap]: 5 phases (4-8) derived from 16 requirements — standard granularity, natural delivery boundaries
+- [v2.0 roadmap]: Phase 4 is the prerequisite gate — bb_eventmeta PHP API is called by Phases 5, 6, 7, and 8; taxonomy privacy filter applied from day one
+- [v2.0 roadmap]: Phase 5 and Phase 6 have no inter-dependency — can execute in parallel; Phase 7 depends on both being complete to include all fields in wizard in a single pass
+- [v2.0 roadmap]: Phase 6 depends only on Phase 4 (meta API), not Phase 5 — sessions/speakers need meta API but not enrichment fields
+- [v2.0 roadmap]: Architecture constraint — bb_eventmeta table exists but has NO PHP API; implementing bp_event_get/update_meta() is Phase 4's first deliverable and a prerequisite for every downstream feature
+- [v2.0 roadmap]: Architecture constraint — venue_address column migration via dbDelta() must happen in Phase 5 before structured address fields can be written
+- [v2.0 roadmap]: Security constraint — taxonomy archive pre_get_posts privacy filter applied in Phase 4 from the moment taxonomies are registered; cannot be retrofitted
+- [v2.0 roadmap]: Research flag for Phase 7 — verify BuddyBoss notification system hooks before writing approval/rejection email code; determine whether BuddyBoss Platform provides notification infrastructure that should be used instead of raw wp_mail()
 
 ### Pending Todos
 
@@ -132,6 +155,9 @@ None yet.
 
 - [Phase 2] Stripe Connect destination charges vs direct charges — verify current recommended pattern against Stripe docs before Phase 2 implementation
 - [Phase 3] BuddyBoss hook stability — every integration point needs function_exists() guards; verify BP_Group_Extension API against current BuddyBoss Platform developer reference before Phase 3
+- [Phase 4] Verify wp_set_object_terms() accepts arbitrary integer object_id on the target WP version before writing taxonomy assignment code (BuddyBoss group types use this pattern — strong precedent, but confirm directly)
+- [Phase 4] Verify bp_get_meta() function signature against current BuddyBoss Platform version before implementing the bb_eventmeta API
+- [Phase 7] BuddyBoss notification system hooks — determine whether BuddyBoss Platform provides notification infrastructure (push + email + in-app) before writing approval/rejection email code; research flag from SUMMARY.md
 
 ## Session Continuity
 

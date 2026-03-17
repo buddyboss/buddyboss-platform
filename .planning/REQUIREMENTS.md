@@ -143,32 +143,32 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ADMN-03 | Phase 1 | Complete |
 | ADMN-04 | Phase 1 | Complete |
 
-### v2 (Milestone v2.0 — phases TBD by roadmap)
+### v2 (Milestone v2.0)
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| TAX-01 | TBD | Pending |
-| TAX-02 | TBD | Pending |
-| TAX-03 | TBD | Pending |
-| LOC-01 | TBD | Pending |
-| LOC-02 | TBD | Pending |
-| LOC-03 | TBD | Pending |
-| LOC-04 | TBD | Pending |
-| CONT-01 | TBD | Pending |
-| CONT-02 | TBD | Pending |
-| SESS-01 | TBD | Pending |
-| SESS-02 | TBD | Pending |
-| FEND-01 | TBD | Pending |
-| FEND-02 | TBD | Pending |
-| FEND-03 | TBD | Pending |
-| REPT-01 | TBD | Pending |
-| REPT-02 | TBD | Pending |
+| TAX-01 | Phase 4 | Pending |
+| TAX-02 | Phase 4 | Pending |
+| TAX-03 | Phase 4 | Pending |
+| LOC-01 | Phase 5 | Pending |
+| LOC-02 | Phase 5 | Pending |
+| LOC-03 | Phase 5 | Pending |
+| LOC-04 | Phase 5 | Pending |
+| CONT-01 | Phase 5 | Pending |
+| CONT-02 | Phase 5 | Pending |
+| SESS-01 | Phase 6 | Pending |
+| SESS-02 | Phase 6 | Pending |
+| FEND-01 | Phase 7 | Pending |
+| FEND-02 | Phase 7 | Pending |
+| FEND-03 | Phase 7 | Pending |
+| REPT-01 | Phase 8 | Pending |
+| REPT-02 | Phase 8 | Pending |
 
 **Coverage:**
 - v2 requirements: 16 total
-- Mapped to phases: 0 (TBD — filled by roadmapper)
-- Unmapped: 16 (pending roadmap)
+- Mapped to phases: 16 (100%)
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-10*
-*Last updated: 2026-03-17 after milestone v2.0 requirements definition*
+*Last updated: 2026-03-17 after milestone v2.0 roadmap creation (Phases 4-8)*
