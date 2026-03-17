@@ -57,7 +57,10 @@ if ( ! empty( $_GET['bb-rl-scope'] ) ) {
 
 <?php if ( bp_has_members( $members_query_string ) ) : ?>
 
-	<?php if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) : ?>
+	<?php
+	$bb_current_page = isset( $_POST['page'] ) ? absint( $_POST['page'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+	if ( empty( $bb_current_page ) || 1 === $bb_current_page ) :
+	?>
 
 		<?php if ( bp_get_current_member_type() ) : ?>
 			<div class="bp-feedback info">
@@ -303,7 +306,8 @@ if ( ! empty( $_GET['bb-rl-scope'] ) ) {
 	<?php
 	// Load more button when more pages exist.
 	global $members_template;
-	$members_total_pages = ceil( (int) $members_template->total_member_count / (int) $members_template->pag_num );
+	$members_pag_num     = max( 1, (int) $members_template->pag_num );
+	$members_total_pages = ceil( (int) $members_template->total_member_count / $members_pag_num );
 	if ( (int) $members_template->pag_page < $members_total_pages ) :
 		$next_page_url = add_query_arg( $members_template->pag_arg, (int) $members_template->pag_page + 1, '' );
 		?>
@@ -312,7 +316,7 @@ if ( ! empty( $_GET['bb-rl-scope'] ) ) {
 		</li>
 	<?php endif; ?>
 
-	<?php if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) : ?>
+	<?php if ( empty( $bb_current_page ) || 1 === $bb_current_page ) : ?>
 	</ul>
 	<?php endif; ?>
 
@@ -323,7 +327,7 @@ endif;
 
 bp_nouveau_after_loop();
 
-if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) :
+if ( empty( $bb_current_page ) || 1 === $bb_current_page ) :
 ?>
 
 <!-- Remove Connection confirmation popup -->

@@ -1116,7 +1116,9 @@ window.bp = window.bp || {};
 
 			// Members/Groups load more (infinite scroll).
 			$( '#buddypress [data-bp-list="members"], #buddypress [data-bp-list="groups"]' ).on( 'click', 'li.load-more a', this, this.loadMoreItems );
-			$( window ).on( 'scroll', this.autoLoadMoreItems );
+			if ( $( '#buddypress [data-bp-list="members"], #buddypress [data-bp-list="groups"]' ).length ) {
+				$( window ).on( 'scroll', this.autoLoadMoreItems );
+			}
 
 			$( document ).on( 'click', this.closePickersOnClick );
 			document.addEventListener( 'keydown', this.closePickersOnEsc );
@@ -3140,32 +3142,44 @@ window.bp = window.bp || {};
 						jQuery( window ).scroll();
 					}
 				}
+			).fail(
+				function () {
+					$loadMore.find( 'a' ).first().removeClass( 'loading' );
+				}
 			);
 		},
 
 		/**
 		 * Auto-trigger "Load More" when scrolling near the button (Members/Groups).
 		 */
-		autoLoadMoreItems: function () {
-			var $loadMoreBtns = $( '#buddypress [data-bp-list="members"] li.load-more:visible, #buddypress [data-bp-list="groups"] li.load-more:visible' );
-
-			$loadMoreBtns.each( function () {
-				var $btn = $( this );
-
-				if ( $btn.data( 'bp-autoloaded' ) ) {
+		autoLoadMoreItems: (function () {
+			var throttleTimer;
+			return function () {
+				if ( throttleTimer ) {
 					return;
 				}
+				throttleTimer = setTimeout( function () { throttleTimer = null; }, 200 );
 
-				var pos    = $btn.offset(),
-					offset = pos.top - 50;
+				var $loadMoreBtns = $( '#buddypress [data-bp-list="members"] li.load-more:visible, #buddypress [data-bp-list="groups"] li.load-more:visible' );
 
-				if ( $( window ).scrollTop() + $( window ).height() > offset ) {
-					$btn.data( 'bp-autoloaded', 1 );
-					$btn.find( 'a' ).text( BP_Nouveau.loadingMore );
-					$btn.find( 'a' ).trigger( 'click' );
-				}
-			} );
-		},
+				$loadMoreBtns.each( function () {
+					var $btn = $( this );
+
+					if ( $btn.data( 'bp-autoloaded' ) ) {
+						return;
+					}
+
+					var pos    = $btn.offset(),
+						offset = pos.top - 50;
+
+					if ( $( window ).scrollTop() + $( window ).height() > offset ) {
+						$btn.data( 'bp-autoloaded', 1 );
+						$btn.find( 'a' ).text( BP_Nouveau.loadingMore );
+						$btn.find( 'a' ).trigger( 'click' );
+					}
+				} );
+			};
+		})(),
 
 		enableSubmitOnLegalAgreement: function () {
 			if ( $( 'body #buddypress #register-page #signup-form #legal_agreement' ).length ) {

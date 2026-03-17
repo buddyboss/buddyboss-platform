@@ -25,7 +25,8 @@ $group_cover_height = function_exists( 'bb_get_group_cover_image_height' ) ? bb_
 
 if ( bp_has_groups( bp_ajax_querystring( 'groups' ) ) ) {
 
-	if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) :
+	$bb_current_page = isset( $_POST['page'] ) ? absint( $_POST['page'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+	if ( empty( $bb_current_page ) || 1 === $bb_current_page ) :
 
 		if ( bp_get_current_group_directory_type() ) {
 			?>
@@ -145,7 +146,8 @@ if ( bp_has_groups( bp_ajax_querystring( 'groups' ) ) ) {
 	<?php
 	// Load more button when more pages exist.
 	global $groups_template;
-	$groups_total_pages = ceil( (int) $groups_template->total_group_count / (int) $groups_template->pag_num );
+	$groups_pag_num     = max( 1, (int) $groups_template->pag_num );
+	$groups_total_pages = ceil( (int) $groups_template->total_group_count / $groups_pag_num );
 	if ( (int) $groups_template->pag_page < $groups_total_pages ) :
 		$next_page_url = add_query_arg( $groups_template->pag_arg, (int) $groups_template->pag_page + 1, '' );
 		?>
@@ -154,7 +156,7 @@ if ( bp_has_groups( bp_ajax_querystring( 'groups' ) ) ) {
 		</li>
 	<?php endif; ?>
 
-	<?php if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) : ?>
+	<?php if ( empty( $bb_current_page ) || 1 === $bb_current_page ) : ?>
 	</ul>
 
 	<!-- Leave Group confirmation popup -->

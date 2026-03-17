@@ -187,8 +187,8 @@
 					display: inline-block;
 					height: 16px;
 					width: 16px;
-					border: 2px solid #ccc;
-					border-top-color: #555;
+					border: 2px solid $light-grey;
+					border-top-color: $dark-grey;
 					border-radius: 50%;
 					animation: spin 3s infinite linear;
 					margin-left: 8px;

@@ -10344,7 +10344,7 @@ form.ac-form .activity-attached-gif-container .gif-image-remove:hover .bb-icon-t
   display: inline-block;
   height: 16px;
   width: 16px;
-  border: 2px solid #ccc;
+  border: 2px solid #eaeaea;
   border-top-color: #555;
   border-radius: 50%;
   animation: spin 3s infinite linear;
@@ -10643,7 +10643,7 @@ form.ac-form .activity-attached-gif-container .gif-image-remove:hover .bb-icon-t
   display: inline-block;
   height: 16px;
   width: 16px;
-  border: 2px solid #ccc;
+  border: 2px solid #eaeaea;
   border-top-color: #555;
   border-radius: 50%;
   animation: spin 3s infinite linear;
