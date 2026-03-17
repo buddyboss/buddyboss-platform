@@ -155,35 +155,3 @@ function bb_notifications_sanitize_types( $value ) {
 
 	return $enabled_notification;
 }
-
-/**
- * Custom save handler for notification settings.
- *
- * Fires legacy hooks for backward compatibility after notification
- * settings are saved.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param string $feature_id Feature ID being saved.
- * @param array  $settings   Full submitted settings.
- * @param array  $saved      Keys and values saved by core.
- *
- * @return void
- */
-function bb_notifications_after_save_settings( $feature_id, $settings, $saved ) {
-	if ( 'notifications' !== $feature_id ) {
-		return;
-	}
-
-	/**
-	 * Fires after notification settings are saved in Settings 2.0.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param array $settings Full submitted settings.
-	 * @param array $saved    Keys and values saved by core.
-	 */
-	do_action( 'bb_notification_settings_after_save', $settings, $saved );
-}
-
-add_action( 'bb_admin_save_feature_settings_after', 'bb_notifications_after_save_settings', 10, 3 );
