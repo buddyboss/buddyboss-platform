@@ -113,7 +113,8 @@ var NotificationTypesField = function( props ) {
 	 * @return {boolean} Whether the sub-type is disabled.
 	 */
 	var isSubTypeDisabled = function( fieldData, subType, mainActive ) {
-		if ( ! mainActive && fieldData.read_only ) {
+		// When main toggle is OFF, all sub-types should be disabled.
+		if ( ! mainActive ) {
 			return true;
 		}
 		if ( fieldData.sub_types && fieldData.sub_types[ subType ] ) {
