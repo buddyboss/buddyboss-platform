@@ -1579,7 +1579,7 @@ function bp_activity_get_user_mentionname($user_id)
  * user_login properties.
  * @return string $mentionname Formatted mention name.
  */
-function bp_activity_format_mentionname($user_data): string
+function bb_activity_format_mentionname($user_data): string
 {
 	$mentionname = '';
 
