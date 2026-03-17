@@ -112,6 +112,7 @@ class BB_Admin_Groups_Ajax {
 		add_action( 'wp_ajax_bb_admin_get_group_members', array( $this, 'get_group_members' ) );
 		add_action( 'wp_ajax_bb_admin_update_group_member', array( $this, 'update_group_member' ) );
 		add_action( 'wp_ajax_bb_admin_member_autocomplete', array( $this, 'member_autocomplete' ) );
+		add_action( 'wp_ajax_bb_admin_forum_autocomplete', array( $this, 'forum_autocomplete' ) );
 		add_action( 'wp_ajax_bb_admin_get_group_topics', array( $this, 'get_group_topics' ) );
 	}
 
