@@ -500,6 +500,17 @@ select.bb-admin-settings__select {
         }
     }
 
+    &.bb-admin-notice--plain {
+        background: none;
+        border: none;
+        padding: 0;
+        color: $bb-text-tertiary-color;
+
+        &:before {
+            display: none;
+        }
+    }
+
     // Ensure links stay inline so they don't become separate flex items.
     a {
         display: inline;

@@ -90,34 +90,24 @@ function bb_notifications_register_types_panel_fields() {
 		)
 	);
 
-	// -------------------------------------------------------------------------
-	// SECTION: Developer Tutorial Notice
-	// -------------------------------------------------------------------------
-	bb_register_feature_section(
-		'notifications',
-		'notification_types',
-		'notification_types_tutorial',
-		array(
-			'title' => '',
-			'order' => 20,
-		)
-	);
-
+	// FIELD: Developer Tutorial Notice (inside the same section, below notification types).
 	bb_register_feature_field(
 		'notifications',
 		'notification_types',
-		'notification_types_tutorial',
+		'notification_types',
 		array(
 			'name'              => '_bb_notification_types_tutorial_notice',
 			'label'             => '',
 			'type'              => 'notice',
+			'notice_type'       => 'plain',
 			'description'       => sprintf(
 				/* translators: %s: Tutorial link. */
 				__( 'You can register your own notification types by following the steps in %s. Once registered, they\'ll be configurable in the options above.', 'buddyboss' ),
 				'<a href="' . esc_url( 'https://www.buddyboss.com/resources/dev-docs/app-development/extending-the-buddyboss-app-plugin/migrating-custom-notifications-to-modern-notifications-api/' ) . '" target="_blank" rel="noopener noreferrer">' . __( 'this tutorial', 'buddyboss' ) . '</a>'
 			),
 			'sanitize_callback' => '__return_empty_string',
-			'order'             => 10,
+			'full_width'        => true,
+			'order'             => 20,
 		)
 	);
 
