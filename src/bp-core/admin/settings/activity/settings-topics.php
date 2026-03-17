@@ -43,7 +43,7 @@ function bb_activity_register_topics_panel_fields() {
 			'type'              => 'toggle',
 			'description'       => __( 'Enable topics in activity feed', 'buddyboss' ),
 			'default'           => bb_is_enabled_activity_topics(),
-			'sanitize_callback' => 'intval',
+			'sanitize_callback' => 'absint',
 			'order'             => 10,
 			'group'             => 'activity_topics_group',
 		)
@@ -60,7 +60,7 @@ function bb_activity_register_topics_panel_fields() {
 			'type'              => 'toggle',
 			'description'       => __( 'Require users to select a topic before posting in activity feed', 'buddyboss' ),
 			'default'           => bb_is_activity_topic_required(),
-			'sanitize_callback' => 'intval',
+			'sanitize_callback' => 'absint',
 			'order'             => 20,
 			'group'             => 'activity_topics_group',
 			'conditional'       => array(
@@ -127,7 +127,7 @@ function bb_activity_register_topics_panel_fields() {
 			'description'       => __( 'Enable topics for groups', 'buddyboss' ),
 			'help_text'         => __( 'Allow group organizers to set topics for members to use in group posts.', 'buddyboss' ),
 			'default'           => function_exists( 'bb_is_enabled_group_activity_topics' ) && bb_is_enabled_group_activity_topics(),
-			'sanitize_callback' => 'intval',
+			'sanitize_callback' => 'absint',
 			'order'             => 10,
 			'pro_only'          => true,
 		);

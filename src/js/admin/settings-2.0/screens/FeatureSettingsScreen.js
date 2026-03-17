@@ -194,8 +194,13 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 	// we only need updated panels (migration_data); we must not replace settings or we overwrite
 	// the user's mode (e.g. Likes) with stale server data.
 	useEffect(() => {
+		var refetchAbort = null;
 		const handleRefetchFeature = () => {
-			ajaxFetch('bb_admin_get_feature_settings', { feature_id: featureId })
+			if ( refetchAbort ) {
+				refetchAbort.abort();
+			}
+			refetchAbort = new AbortController();
+			ajaxFetch('bb_admin_get_feature_settings', { feature_id: featureId }, { signal: refetchAbort.signal })
 				.then((response) => {
 					if (response.success && response.data) {
 						if (featureId === 'reactions') {
@@ -215,13 +220,21 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 						}
 					}
 				})
-				.catch(() => {
+				.catch((err) => {
+					if ( err && 'AbortError' === err.name ) {
+						return;
+					}
 					setToast({ status: 'error', message: __('Failed to refresh settings. Please try again.', 'buddyboss') });
 				});
 		};
 
 		window.addEventListener('bb-admin-refetch-feature', handleRefetchFeature);
-		return () => window.removeEventListener('bb-admin-refetch-feature', handleRefetchFeature);
+		return () => {
+			window.removeEventListener('bb-admin-refetch-feature', handleRefetchFeature);
+			if ( refetchAbort ) {
+				refetchAbort.abort();
+			}
+		};
 	}, [featureId]);
 
 	// Listen for field value updates dispatched by InputButtonField (e.g. after credential save).

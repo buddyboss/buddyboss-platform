@@ -927,8 +927,8 @@ class BB_Admin_Settings_Ajax {
 						if ( ! empty( $control['sanitize_callback'] ) && is_callable( $control['sanitize_callback'] ) ) {
 							$control_value = call_user_func( $control['sanitize_callback'], $control_value );
 						} elseif ( 'number' === $control_type || 'select' === $control_type ) {
-							// Numeric types: use intval as default sanitizer.
-							$control_value = intval( $control_value );
+							// Numeric types and inline selects: use absint as default sanitizer.
+							$control_value = absint( $control_value );
 						} else {
 							$control_value = sanitize_text_field( $control_value );
 						}
