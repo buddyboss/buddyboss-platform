@@ -1,36 +1,36 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
+milestone: v2.0
+milestone_name: Feature Parity
 status: planning
-stopped_at: Completed 03-buddyboss-integration 03-05-PLAN.md
-last_updated: "2026-03-16T11:40:35.069Z"
-last_activity: 2026-03-14 — Phase 2 complete; human approved all 8 RSVP/waitlist/calendar end-to-end scenarios
+stopped_at: ""
+last_updated: "2026-03-17T00:00:00.000Z"
+last_activity: 2026-03-17 — Milestone v2.0 started
 progress:
-  total_phases: 3
-  completed_phases: 3
-  total_plans: 21
-  completed_plans: 21
-  percent: 67
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-10)
+See: .planning/PROJECT.md (updated 2026-03-17)
 
-**Core value:** Site admins on BuddyBoss can create, manage, and monetize events deeply embedded in their community's groups, activity feeds, and member profiles — without a third-party plugin.
-**Current focus:** Phase 3 — BuddyBoss Integration
+**Core value:** Site admins on BuddyBoss can create, manage, and promote events deeply embedded in their community's groups, activity feeds, and member profiles — without a third-party plugin.
+**Current focus:** Milestone v2.0 — Feature Parity
 
 ## Current Position
 
-Phase: 3 of 3 (BuddyBoss Integration)
-Plan: 0 of TBD in current phase
-Status: Ready to plan
-Last activity: 2026-03-14 — Phase 2 complete; human approved all 8 RSVP/waitlist/calendar end-to-end scenarios
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-03-17 — Milestone v2.0 started
 
-Progress: [██████░░░░] 67%
+Progress: [░░░░░░░░░░] 0%
 
 ## Performance Metrics
 
