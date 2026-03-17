@@ -543,18 +543,6 @@ export function saveForum( data, options ) {
 }
 
 /**
- * Delete a single forum.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param {number} forumId - Forum ID.
- * @return {Promise} Promise resolving to response.
- */
-export function deleteForum( forumId ) {
-	return ajaxFetch( 'bb_admin_delete_forum', { forum_id: forumId } );
-}
-
-/**
  * Perform bulk action on forums.
  *
  * @since BuddyBoss [BBVERSION]

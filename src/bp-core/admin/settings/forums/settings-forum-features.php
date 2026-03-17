@@ -15,6 +15,8 @@ defined( 'ABSPATH' ) || exit;
  * Register Forum Features panel sections and fields.
  *
  * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
  */
 function bb_forums_register_features_panel_fields() {
 
@@ -217,12 +219,11 @@ function bb_forums_register_features_panel_fields() {
 				'order'             => 10,
 			)
 		);
+		/**
+		 * Fires after Group Forums section fields are registered.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		do_action( 'bb_forums_settings_after_group_forums_fields' );
 	}
-
-	/**
-	 * Fires after Group Forums section fields are registered.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	do_action( 'bb_forums_settings_after_group_forums_fields' );
 }

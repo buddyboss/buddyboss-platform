@@ -15,6 +15,8 @@ defined( 'ABSPATH' ) || exit;
  * Register Forum Permalinks panel sections and fields.
  *
  * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
  */
 function bb_forums_register_permalinks_panel_fields() {
 
