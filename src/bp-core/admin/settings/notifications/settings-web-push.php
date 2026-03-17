@@ -86,9 +86,16 @@ function bb_notifications_register_web_push_panel_fields() {
 				'order'             => 10,
 			)
 		);
-	} elseif ( ! function_exists( 'bb_platform_pro' ) ) {
-		// Pro not installed — show OneSignal section with pro-gated disabled fields
-		// matching the Figma design instead of a plain notice.
+	} elseif (
+		! function_exists( 'bb_platform_pro' ) ||
+		(
+			function_exists( 'bb_platform_pro' ) &&
+			function_exists( 'bb_integration_bridge' ) &&
+			! bb_integration_bridge()->is_managed_integration( 'onesignal' )
+		)
+	) {
+		// Pro not installed OR Pro OLD (doesn't register OneSignal as managed integration) —
+		// show OneSignal section with pro-gated disabled fields.
 		bb_notifications_register_web_push_pro_placeholder_fields();
 	} elseif (
 		function_exists( 'bb_platform_pro' ) &&
