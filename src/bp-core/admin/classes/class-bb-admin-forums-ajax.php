@@ -963,6 +963,7 @@ class BB_Admin_Forums_Ajax {
 			wp_send_json_error( array( 'message' => __( 'You do not have permission to upload files.', 'buddyboss' ) ) );
 		}
 
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified in bb_admin_verify_ajax_request() above.
 		if ( empty( $_FILES['file'] ) ) {
 			wp_send_json_error( array( 'message' => __( 'No file uploaded.', 'buddyboss' ) ) );
 		}
@@ -970,6 +971,7 @@ class BB_Admin_Forums_Ajax {
 		// Validate MIME type using server-side file extension check (not client-supplied type).
 		$allowed_types = array( 'image/jpeg', 'image/png', 'image/gif', 'image/webp' );
 		$file_name     = ! empty( $_FILES['file']['name'] ) ? sanitize_file_name( wp_unslash( $_FILES['file']['name'] ) ) : '';
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
 		$file_type     = wp_check_filetype( $file_name );
 
 		if ( empty( $file_type['type'] ) || ! in_array( $file_type['type'], $allowed_types, true ) ) {

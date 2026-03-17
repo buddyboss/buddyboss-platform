@@ -452,6 +452,14 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 		 * @since bbPress (r5224)
 		 */
 		public function enqueue_styles() {
+			// Skip legacy bbPress admin CSS on Settings 2.0 page — React UI has its own styles.
+			if ( function_exists( 'bb_register_feature' ) ) {
+				$screen = get_current_screen();
+				if ( ! empty( $screen->id ) && false !== strpos( $screen->id, 'bb-settings' ) ) {
+					return;
+				}
+			}
+
 			wp_enqueue_style( 'bbp-admin-css' );
 		}
 
