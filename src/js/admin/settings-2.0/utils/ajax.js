@@ -992,6 +992,35 @@ export function reorderProfileSearchFields( data, options ) {
 }
 
 /**
+ * Get email templates listing with pagination, search, and sorting.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data    - Query parameters (page, per_page, search, sort, include_meta).
+ * @param {Object} options - Optional fetch options (e.g. { signal } for AbortController).
+ * @return {Promise} Promise resolving to response.
+ */
+export function getEmailTemplates( data, options ) {
+	return ajaxFetch( 'bb_admin_get_email_templates', data, options );
+}
+
+/**
+ * Perform bulk action on email templates.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Array}  emailIds Array of email template IDs.
+ * @param {string} action   Bulk action to perform (e.g. 'trash').
+ * @return {Promise} Promise resolving to response.
+ */
+export function emailTemplateBulkAction( emailIds, action ) {
+	return ajaxFetch( 'bb_admin_email_template_bulk_action', {
+		email_ids: emailIds.join( ',' ),
+		do_action: action,
+	} );
+}
+
+/**
  * Upload a forum featured image.
  *
  * Sends the file to a dedicated AJAX endpoint that creates a WordPress

@@ -35,6 +35,7 @@ const ForumsListScreen = lazy(() => import('./ForumsListScreen'));
 const DiscussionsListScreen = lazy(() => import('./DiscussionsListScreen'));
 const DiscussionTagsListScreen = lazy(() => import('./DiscussionTagsListScreen'));
 const RepliesListScreen = lazy(() => import('./RepliesListScreen'));
+const EmailTemplatesListScreen = lazy(() => import('./EmailTemplatesListScreen'));
 
 /**
  * Map of feature + panel combinations that render custom screens instead of settings forms.
@@ -50,6 +51,7 @@ const CUSTOM_PANEL_SCREENS = {
 	'forums:discussions': DiscussionsListScreen,
 	'forums:discussion_tags': DiscussionTagsListScreen,
 	'forums:replies': RepliesListScreen,
+	'email_invites:emails': EmailTemplatesListScreen,
 };
 
 
