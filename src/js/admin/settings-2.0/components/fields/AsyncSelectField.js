@@ -34,6 +34,7 @@ var SEARCH_DEBOUNCE_MS = 300;
  * @since BuddyBoss [BBVERSION]
  *
  * @param {Object}   props
+ * @param {string}   props.id           Optional ID attribute for the input element.
  * @param {string}   props.value        Current selected value (string ID).
  * @param {Function} props.onChange     Called with new value when selection changes.
  * @param {string}   props.asyncAction       WP AJAX action name for fetching options.
@@ -42,7 +43,7 @@ var SEARCH_DEBOUNCE_MS = 300;
  * @param {boolean}  props.disabled          Whether the field is disabled.
  * @return {WPElement} Rendered component.
  */
-export function AsyncSelectField( { value, onChange, asyncAction, asyncExtraParams, placeholder, disabled } ) {
+export function AsyncSelectField( { id, value, onChange, asyncAction, asyncExtraParams, placeholder, disabled } ) {
 	// Display label for the currently selected value.
 	var selectedLabelState = useState( '' );
 	var selectedLabel = selectedLabelState[ 0 ];
@@ -292,6 +293,7 @@ export function AsyncSelectField( { value, onChange, asyncAction, asyncExtraPara
 		>
 			<div className="bb-async-select__input-wrapper">
 				<input
+					id={ id || undefined }
 					type="text"
 					className="bb-async-select__input"
 					value={ displayValue }

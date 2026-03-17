@@ -8,7 +8,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useRef, useEffect } from '@wordpress/element';
+import { useState, useRef, useEffect, useCallback } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
 import { searchTopicTags } from '../../utils/ajax';
@@ -34,9 +34,16 @@ export function TagsAutocomplete( { value, onChange, label, placeholder } ) {
 	var showDropdown = showDropdownState[ 0 ];
 	var setShowDropdown = showDropdownState[ 1 ];
 
+	var activeIndexState = useState( -1 );
+	var activeIndex = activeIndexState[ 0 ];
+	var setActiveIndex = activeIndexState[ 1 ];
+
 	var searchAbortRef = useRef( null );
 	var searchTimerRef = useRef( null );
 	var wrapperRef = useRef( null );
+	var inputRef = useRef( null );
+	var inputId = 'bb-tags-autocomplete-input';
+	var listboxId = 'bb-tags-autocomplete-listbox';
 
 	// Close dropdown on outside click.
 	useEffect( function () {
@@ -143,17 +150,51 @@ export function TagsAutocomplete( { value, onChange, label, placeholder } ) {
 		onChange( newValue );
 		setSuggestions( [] );
 		setShowDropdown( false );
+		setActiveIndex( -1 );
 	};
+
+	/**
+	 * Handle keyboard navigation for the suggestions dropdown.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {KeyboardEvent} e Keyboard event.
+	 */
+	var handleKeyDown = useCallback( function ( e ) {
+		if ( ! showDropdown || ! suggestions.length ) {
+			return;
+		}
+
+		if ( 'ArrowDown' === e.key ) {
+			e.preventDefault();
+			setActiveIndex( function ( prev ) {
+				return prev < suggestions.length - 1 ? prev + 1 : 0;
+			} );
+		} else if ( 'ArrowUp' === e.key ) {
+			e.preventDefault();
+			setActiveIndex( function ( prev ) {
+				return prev > 0 ? prev - 1 : suggestions.length - 1;
+			} );
+		} else if ( 'Enter' === e.key && activeIndex >= 0 && activeIndex < suggestions.length ) {
+			e.preventDefault();
+			handleSelectTag( suggestions[ activeIndex ] );
+		} else if ( 'Escape' === e.key ) {
+			setShowDropdown( false );
+			setActiveIndex( -1 );
+		}
+	}, [ showDropdown, suggestions, activeIndex ] );
 
 	return (
 		<div className="components-base-control bb-tags-autocomplete" ref={ wrapperRef }>
 			{ label && (
-				<label className="components-base-control__label">
+				<label className="components-base-control__label" htmlFor={ inputId }>
 					{ label }
 				</label>
 			) }
 			<div className="bb-tags-autocomplete__wrapper">
 				<input
+					id={ inputId }
+					ref={ inputRef }
 					type="text"
 					value={ value }
 					onChange={ function ( e ) {
@@ -165,17 +206,26 @@ export function TagsAutocomplete( { value, onChange, label, placeholder } ) {
 							setShowDropdown( true );
 						}
 					} }
+					onKeyDown={ handleKeyDown }
 					placeholder={ placeholder || __( 'Enter tags, separated by commas', 'buddyboss' ) }
 					className="components-text-control__input bb-tags-autocomplete__input"
+					role="combobox"
+					aria-expanded={ showDropdown && suggestions.length > 0 ? 'true' : 'false' }
+					aria-owns={ listboxId }
+					aria-autocomplete="list"
+					aria-activedescendant={ activeIndex >= 0 && suggestions[ activeIndex ] ? 'bb-tag-option-' + suggestions[ activeIndex ].id : undefined }
 				/>
 				{ showDropdown && suggestions.length > 0 && (
-					<div className="bb-tags-autocomplete__dropdown">
-						{ suggestions.map( function ( tag ) {
+					<div className="bb-tags-autocomplete__dropdown" role="listbox" id={ listboxId }>
+						{ suggestions.map( function ( tag, index ) {
 							return (
 								<button
 									key={ tag.id }
+									id={ 'bb-tag-option-' + tag.id }
 									type="button"
-									className="bb-tags-autocomplete__option"
+									role="option"
+									aria-selected={ index === activeIndex ? 'true' : 'false' }
+									className={ 'bb-tags-autocomplete__option' + ( index === activeIndex ? ' bb-tags-autocomplete__option--active' : '' ) }
 									onMouseDown={ function ( e ) {
 										e.preventDefault();
 										handleSelectTag( tag );

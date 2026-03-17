@@ -226,10 +226,11 @@ export function ReplyCreateModal( { isOpen, onClose, onCreated } ) {
 				</div>
 
 				<div className="components-base-control">
-					<label className="components-base-control__label">
+					<label className="components-base-control__label" htmlFor="bb-reply-create-forum">
 						{ __( 'Forum', 'buddyboss' ) }
 					</label>
 					<AsyncSelectField
+						id="bb-reply-create-forum"
 						value={ String( forumId ) }
 						onChange={ handleForumChange }
 						asyncAction="bb_admin_forum_autocomplete"
@@ -238,10 +239,11 @@ export function ReplyCreateModal( { isOpen, onClose, onCreated } ) {
 				</div>
 
 				<div className="components-base-control">
-					<label className="components-base-control__label">
+					<label className="components-base-control__label" htmlFor="bb-reply-create-discussion">
 						{ __( 'Discussion', 'buddyboss' ) }
 					</label>
 					<AsyncSelectField
+						id="bb-reply-create-discussion"
 						key={ 'discussion-' + discussionKey }
 						value={ String( topicId ) }
 						onChange={ handleTopicChange }
@@ -252,10 +254,11 @@ export function ReplyCreateModal( { isOpen, onClose, onCreated } ) {
 				</div>
 
 				<div className="components-base-control bb-reply-modal__row--separator">
-					<label className="components-base-control__label">
+					<label className="components-base-control__label" htmlFor="bb-reply-create-reply-to">
 						{ __( 'Reply to', 'buddyboss' ) }
 					</label>
 					<AsyncSelectField
+						id="bb-reply-create-reply-to"
 						key={ 'reply-to-' + replyToKey }
 						value={ String( replyTo ) }
 						onChange={ function ( val ) {
