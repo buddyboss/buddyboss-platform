@@ -22,6 +22,9 @@ defined( 'ABSPATH' ) || exit;
  */
 function bb_notifications_register_web_push_panel_fields() {
 
+	// Minimum Pro version that supports Settings 2.0 OneSignal integration.
+	$min_pro_settings2_version = '2.0.2';
+
 	// Check if OneSignal integration feature is disabled via the Integration Bridge.
 	$onesignal_feature_disabled = false;
 	if (
@@ -54,7 +57,7 @@ function bb_notifications_register_web_push_panel_fields() {
 			// Pro not installed — OneSignal placeholder section is the primary header.
 			$show_web_push_title = false;
 		} elseif (
-			version_compare( bb_platform_pro()->version, '2.0.2', '>' ) &&
+			version_compare( bb_platform_pro()->version, $min_pro_settings2_version, '>' ) &&
 			( ! function_exists( 'bb_enabled_legacy_email_preference' ) || ! bb_enabled_legacy_email_preference() )
 		) {
 			// Pro NEW with modern notifications — Pro registers its own OneSignal section.
@@ -125,7 +128,7 @@ function bb_notifications_register_web_push_panel_fields() {
 		);
 	} elseif (
 		function_exists( 'bb_platform_pro' ) &&
-		version_compare( bb_platform_pro()->version, '2.0.2', '<=' )
+		version_compare( bb_platform_pro()->version, $min_pro_settings2_version, '<=' )
 	) {
 		// Pro installed but older version.
 		bb_register_feature_field(
