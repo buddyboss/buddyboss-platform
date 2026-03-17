@@ -43,7 +43,7 @@ function bb_notifications_register_types_panel_fields() {
 				'name'              => '_bb_notification_types_legacy_notice',
 				'label'             => '',
 				'type'              => 'notice',
-				'default'           => __( 'Notification Types are not supported when using the legacy notifications system.', 'buddyboss' ),
+				'description'       => __( 'Notification Types are not supported when using the legacy notifications system.', 'buddyboss' ),
 				'sanitize_callback' => '__return_empty_string',
 				'order'             => 10,
 			)
@@ -109,7 +109,7 @@ function bb_notifications_register_types_panel_fields() {
 			'name'              => '_bb_notification_types_tutorial_notice',
 			'label'             => '',
 			'type'              => 'notice',
-			'default'           => sprintf(
+			'description'       => sprintf(
 				/* translators: %s: Tutorial link. */
 				__( 'You can register your own notification types by following the steps in %s. Once registered, they\'ll be configurable in the options above.', 'buddyboss' ),
 				'<a href="' . esc_url( 'https://www.buddyboss.com/resources/dev-docs/app-development/extending-the-buddyboss-app-plugin/migrating-custom-notifications-to-modern-notifications-api/' ) . '" target="_blank">' . __( 'this tutorial', 'buddyboss' ) . '</a>'

@@ -56,40 +56,6 @@ function bb_notifications_sanitize_visibility( $value ) {
 }
 
 /**
- * Sanitize delay email notification time setting.
- *
- * Validates against allowed cron delay times.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param mixed $value The value to sanitize.
- *
- * @return int Sanitized delay time in minutes.
- */
-function bb_notifications_sanitize_delay_time( $value ) {
-	$value = absint( $value );
-
-	// Build allowed values from digest cron times.
-	$allowed = array();
-	if ( function_exists( 'bb_notification_get_digest_cron_times' ) ) {
-		foreach ( bb_notification_get_digest_cron_times() as $time ) {
-			$allowed[] = (int) $time['value'];
-		}
-	}
-
-	// Fallback if function is unavailable.
-	if ( empty( $allowed ) ) {
-		$allowed = array( 5, 15, 30, 60, 180, 360, 720 );
-	}
-
-	if ( ! in_array( $value, $allowed, true ) ) {
-		return 15;
-	}
-
-	return $value;
-}
-
-/**
  * No-op sanitize callback for notification types field.
  *
  * Notification types (bb_enabled_notification) are managed via a custom save

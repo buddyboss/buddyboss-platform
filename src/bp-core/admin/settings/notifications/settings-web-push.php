@@ -56,7 +56,7 @@ function bb_notifications_register_web_push_panel_fields() {
 				'name'              => '_bb_web_push_pro_notice',
 				'label'             => '',
 				'type'              => 'notice',
-				'default'           => sprintf(
+				'description'       => sprintf(
 					/* translators: %s: BuddyBoss Pro link. */
 					__( 'Please install %s to use web push notifications on your site.', 'buddyboss' ),
 					'<a href="' . esc_url( 'https://www.buddyboss.com/platform' ) . '" target="_blank">' . __( 'BuddyBoss Platform Pro', 'buddyboss' ) . '</a>'
@@ -78,7 +78,7 @@ function bb_notifications_register_web_push_panel_fields() {
 				'name'              => '_bb_web_push_pro_outdated_notice',
 				'label'             => '',
 				'type'              => 'notice',
-				'default'           => sprintf(
+				'description'       => sprintf(
 					/* translators: %s: BuddyBoss Pro link. */
 					__( 'Please update %s to version 2.0.3 to use web push notifications on your site.', 'buddyboss' ),
 					'<a target="_blank" href="' . esc_url( 'https://www.buddyboss.com/platform' ) . '">' . __( 'BuddyBoss Platform Pro', 'buddyboss' ) . '</a>'
@@ -101,7 +101,7 @@ function bb_notifications_register_web_push_panel_fields() {
 				'name'              => '_bb_web_push_legacy_notice',
 				'label'             => '',
 				'type'              => 'notice',
-				'default'           => __( 'Web Push Notifications are not supported when using the legacy notifications system.', 'buddyboss' ),
+				'description'       => __( 'Web Push Notifications are not supported when using the legacy notifications system.', 'buddyboss' ),
 				'sanitize_callback' => '__return_empty_string',
 				'order'             => 10,
 			)

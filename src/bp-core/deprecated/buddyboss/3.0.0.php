@@ -1899,7 +1899,13 @@ if ( ! function_exists( 'bb_notification_get_settings_sections' ) ) {
 	 */
 	function bb_notification_get_settings_sections() {
 		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 feature registration' );
-		return array();
+
+		return apply_filters_deprecated(
+			'bb_notification_get_settings_sections',
+			array( array() ),
+			'BuddyBoss [BBVERSION]',
+			'Settings 2.0 feature registration'
+		);
 	}
 }
 
@@ -1914,7 +1920,13 @@ if ( ! function_exists( 'bb_notification_get_settings_fields' ) ) {
 	 */
 	function bb_notification_get_settings_fields() {
 		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 feature registration' );
-		return array();
+
+		return apply_filters_deprecated(
+			'bb_notification_get_settings_fields',
+			array( array() ),
+			'BuddyBoss [BBVERSION]',
+			'Settings 2.0 feature registration'
+		);
 	}
 }
 
@@ -1931,6 +1943,12 @@ if ( ! function_exists( 'bb_notification_get_settings_fields_for_section' ) ) {
 	 */
 	function bb_notification_get_settings_fields_for_section( $section_id = '' ) {
 		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 feature registration' );
-		return array();
+
+		return apply_filters_deprecated(
+			'bb_notification_get_settings_fields_for_section',
+			array( array(), $section_id ),
+			'BuddyBoss [BBVERSION]',
+			'Settings 2.0 feature registration'
+		);
 	}
 }
