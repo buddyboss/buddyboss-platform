@@ -1573,7 +1573,7 @@ function bp_activity_get_user_mentionname($user_id)
 /**
  * Format a user's mentionname based on username compatibility mode.
  *
- * @since BuddyPress 2.18.0
+ * @since BuddyBoss [BBVERSION]
  *
  * @param object $user_data User data object. Must contain at least ID and
  * user_login properties.
