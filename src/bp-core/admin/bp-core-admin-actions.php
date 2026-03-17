@@ -682,10 +682,11 @@ function bb_redirect_legacy_settings_to_settings_2() {
 		'bp-groups'    => 'groups',
 		'bp-xprofile'  => 'members',
 		'bp-forums'    => 'forums',
-		'bp-friends'   => array(
+		'bp-friends'       => array(
 			'tab'   => 'members',
 			'panel' => 'member_connection',
 		),
+		'bp-notifications' => 'notifications',
 		// Add more mappings here as more tabs are migrated to Settings 2.0.
 	);
 
