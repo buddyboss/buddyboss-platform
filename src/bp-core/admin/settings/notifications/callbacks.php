@@ -191,3 +191,34 @@ function bb_notifications_after_save_settings( $feature_id, $settings, $saved ) 
 }
 
 add_action( 'bb_admin_save_feature_settings_after', 'bb_notifications_after_save_settings', 10, 3 );
+
+/**
+ * Fix stale bb_enabled_notification in the save response.
+ *
+ * The noop sanitizer prevents the core save loop from clobbering the value,
+ * but also causes the response to contain the old stored value instead of
+ * the freshly saved one. This filter replaces it with the actual saved data
+ * so the frontend stays in sync.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array  $response_data Response data.
+ * @param string $feature_id    Feature ID.
+ * @param array  $settings      Submitted settings.
+ * @param array  $saved         Keys/values saved by core.
+ *
+ * @return array Modified response data.
+ */
+function bb_notifications_fix_save_response( $response_data, $feature_id, $settings, $saved ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+	if ( 'notifications' !== $feature_id ) {
+		return $response_data;
+	}
+
+	if ( isset( $response_data['saved']['bb_enabled_notification'] ) ) {
+		$response_data['saved']['bb_enabled_notification'] = bp_get_option( 'bb_enabled_notification', array() );
+	}
+
+	return $response_data;
+}
+
+add_filter( 'bb_admin_save_feature_settings_response', 'bb_notifications_fix_save_response', 10, 4 );
