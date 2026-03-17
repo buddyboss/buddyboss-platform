@@ -117,7 +117,7 @@ function bb_activity_register_visibility_post_type_fields( $feature_id ) {
 				'description'       => __( 'Show WordPress Posts', 'buddyboss' ),
 				'help_text'         => __( 'When checked, new blog posts published by members will appear in the activity feed.', 'buddyboss' ),
 				'default'           => function_exists( 'bp_is_post_type_feed_enable' ) ? bp_is_post_type_feed_enable( 'post', false ) : false,
-				'sanitize_callback' => 'intval',
+				'sanitize_callback' => 'absint',
 				'order'             => $field_order,
 				'group'             => 'wordpress_feed',
 			)
@@ -135,7 +135,7 @@ function bb_activity_register_visibility_post_type_fields( $feature_id ) {
 				'description'       => __( 'Enable WordPress Post comments in the activity feed', 'buddyboss' ),
 				'help_text'         => __( 'Allow members to view and create comments to blog posts in the activity feed.', 'buddyboss' ),
 				'default'           => function_exists( 'bb_is_post_type_feed_comment_enable' ) ? bb_is_post_type_feed_comment_enable( 'post', false ) : false,
-				'sanitize_callback' => 'intval',
+				'sanitize_callback' => 'absint',
 				'order'             => $field_order + 1,
 				'group'             => 'wordpress_feed',
 				'conditional'       => array(
@@ -186,7 +186,7 @@ function bb_activity_register_visibility_post_type_fields( $feature_id ) {
 					'type'              => 'toggle',
 					'description'       => $post_type_label,
 					'default'           => function_exists( 'bp_is_post_type_feed_enable' ) ? bp_is_post_type_feed_enable( $post_type, false ) : false,
-					'sanitize_callback' => 'intval',
+					'sanitize_callback' => 'absint',
 					'order'             => $field_order,
 					'group'             => $group_id,
 				)
@@ -228,7 +228,7 @@ function bb_activity_register_visibility_post_type_fields( $feature_id ) {
 						'type'              => 'checkbox',
 						'description'       => __( 'Enable comments', 'buddyboss' ),
 						'default'           => function_exists( 'bb_is_post_type_feed_comment_enable' ) ? bb_is_post_type_feed_comment_enable( $post_type, false ) : false,
-						'sanitize_callback' => 'intval',
+						'sanitize_callback' => 'absint',
 						'order'             => $field_order + 1,
 						'group'             => $group_id,
 						'conditional'       => array(

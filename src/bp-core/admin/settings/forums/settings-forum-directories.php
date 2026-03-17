@@ -69,7 +69,7 @@ function bb_forums_register_directories_panel_fields() {
 			'type'              => 'toggle',
 			'description'       => __( 'Prefix all forum content with the Forums page slug (Recommended)', 'buddyboss' ),
 			'default'           => bbp_include_root_slug(),
-			'sanitize_callback' => 'intval',
+			'sanitize_callback' => 'absint',
 			/* translators: %s: Forums page link. */
 			'help_text'         => sprintf( __( 'When enabled, it adds the <a href="%s">Forums page</a> slug to all forum URLs for cleaner, more organized links.', 'buddyboss' ), $forums_page_url ),
 			'order'             => 10,

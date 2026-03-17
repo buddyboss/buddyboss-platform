@@ -45,7 +45,7 @@ function bb_forums_register_features_panel_fields() {
 			'type'              => 'toggle',
 			'description'       => __( 'Allow discussion and reply revision logging', 'buddyboss' ),
 			'default'           => bbp_allow_revisions(),
-			'sanitize_callback' => 'intval',
+			'sanitize_callback' => 'absint',
 			'order'             => 10,
 		)
 	);
@@ -61,7 +61,7 @@ function bb_forums_register_features_panel_fields() {
 			'type'              => 'toggle',
 			'description'       => __( 'Allow members to mark discussions as favorites', 'buddyboss' ),
 			'default'           => bbp_is_favorites_active(),
-			'sanitize_callback' => 'intval',
+			'sanitize_callback' => 'absint',
 			'order'             => 20,
 		)
 	);
@@ -77,7 +77,7 @@ function bb_forums_register_features_panel_fields() {
 			'type'              => 'toggle',
 			'description'       => __( 'Allow members to subscribe to discussions and standalone forums', 'buddyboss' ),
 			'default'           => bbp_is_subscriptions_active(),
-			'sanitize_callback' => 'intval',
+			'sanitize_callback' => 'absint',
 			'order'             => 30,
 		)
 	);
@@ -93,7 +93,7 @@ function bb_forums_register_features_panel_fields() {
 			'type'              => 'toggle',
 			'description'       => __( 'Allow discussions to have tags', 'buddyboss' ),
 			'default'           => bbp_allow_topic_tags(),
-			'sanitize_callback' => 'intval',
+			'sanitize_callback' => 'absint',
 			'refresh_panels'    => true,
 			'order'             => 40,
 		)
@@ -110,7 +110,7 @@ function bb_forums_register_features_panel_fields() {
 			'type'              => 'toggle',
 			'description'       => __( 'Allow forum-wide search', 'buddyboss' ),
 			'default'           => bbp_allow_search(),
-			'sanitize_callback' => 'intval',
+			'sanitize_callback' => 'absint',
 			'order'             => 50,
 		)
 	);
@@ -126,7 +126,7 @@ function bb_forums_register_features_panel_fields() {
 			'type'              => 'toggle',
 			'description'       => __( 'Add toolbar & buttons to text areas to help with HTML formatting', 'buddyboss' ),
 			'default'           => bbp_use_wp_editor(),
-			'sanitize_callback' => 'intval',
+			'sanitize_callback' => 'absint',
 			'order'             => 60,
 		)
 	);
@@ -142,7 +142,7 @@ function bb_forums_register_features_panel_fields() {
 			'type'              => 'toggle',
 			'description'       => __( 'Embed media (YouTube, Twitter, Vimeo, etc...) directly into discussions and replies', 'buddyboss' ),
 			'default'           => bbp_use_autoembed(),
-			'sanitize_callback' => 'intval',
+			'sanitize_callback' => 'absint',
 			'order'             => 70,
 		)
 	);
@@ -158,7 +158,7 @@ function bb_forums_register_features_panel_fields() {
 			'type'              => 'toggle',
 			'description'       => __( 'Allow guest users without accounts to create discussions and replies', 'buddyboss' ),
 			'default'           => bbp_allow_anonymous(),
-			'sanitize_callback' => 'intval',
+			'sanitize_callback' => 'absint',
 			'order'             => 80,
 		)
 	);
@@ -175,7 +175,7 @@ function bb_forums_register_features_panel_fields() {
 				'type'              => 'toggle',
 				'description'       => __( 'Allow Akismet spam filtering to actively prevent forum spam', 'buddyboss' ),
 				'default'           => bbp_is_akismet_active(),
-				'sanitize_callback' => 'intval',
+				'sanitize_callback' => 'absint',
 				'order'             => 90,
 			)
 		);
@@ -215,7 +215,7 @@ function bb_forums_register_features_panel_fields() {
 				'type'              => 'toggle',
 				'description'       => __( 'Allow social groups to have their own forums', 'buddyboss' ),
 				'default'           => bbp_is_group_forums_active(),
-				'sanitize_callback' => 'intval',
+				'sanitize_callback' => 'absint',
 				'order'             => 10,
 			)
 		);
