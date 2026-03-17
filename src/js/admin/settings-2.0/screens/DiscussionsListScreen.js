@@ -1238,10 +1238,11 @@ function DiscussionEditModal( { discussion, onClose, onSave, isSaving } ) {
 				</div>
 
 				<div className="components-base-control">
-					<label className="components-base-control__label">
+					<label className="components-base-control__label" htmlFor="bb-discussion-edit-forum">
 						{ __( 'Forum', 'buddyboss' ) }
 					</label>
 					<AsyncSelectField
+						id="bb-discussion-edit-forum"
 						value={ String( forumId ) }
 						onChange={ function ( val ) {
 							setForumId( parseInt( val, 10 ) || 0 );

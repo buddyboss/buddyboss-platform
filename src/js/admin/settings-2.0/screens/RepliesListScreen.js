@@ -456,11 +456,7 @@ export default function RepliesListScreen( { onNavigate } ) {
 		if ( 'edit' === action ) {
 			setBulkEditVisibility( 'no_change' );
 			setBulkEditOpen( true );
-			return;
 		}
-
-		// For other actions (spam, etc.) execute directly.
-		performBulkAction( action );
 	};
 
 	/**
@@ -898,6 +894,7 @@ export default function RepliesListScreen( { onNavigate } ) {
 								handleSearch( e.target.value );
 							} }
 							placeholder={ __( 'Search replies', 'buddyboss' ) }
+							aria-label={ __( 'Search replies', 'buddyboss' ) }
 							className="bb-replies-list__search-input"
 						/>
 						{ search && (
@@ -1199,10 +1196,11 @@ export default function RepliesListScreen( { onNavigate } ) {
 								</div>
 
 								<div className="components-base-control">
-									<label className="components-base-control__label">
+									<label className="components-base-control__label" htmlFor="bb-reply-edit-forum">
 										{ __( 'Forum', 'buddyboss' ) }
 									</label>
 									<AsyncSelectField
+										id="bb-reply-edit-forum"
 										value={ String( editForumId ) }
 										onChange={ function ( val ) {
 											setEditForumId( parseInt( val, 10 ) || 0 );
@@ -1213,10 +1211,11 @@ export default function RepliesListScreen( { onNavigate } ) {
 								</div>
 
 								<div className="components-base-control">
-									<label className="components-base-control__label">
+									<label className="components-base-control__label" htmlFor="bb-reply-edit-discussion">
 										{ __( 'Discussion', 'buddyboss' ) }
 									</label>
 									<AsyncSelectField
+										id="bb-reply-edit-discussion"
 										value={ String( editTopicId ) }
 										onChange={ function ( val ) {
 											setEditTopicId( parseInt( val, 10 ) || 0 );
@@ -1228,10 +1227,11 @@ export default function RepliesListScreen( { onNavigate } ) {
 								</div>
 
 								<div className="components-base-control bb-reply-modal__row--separator">
-									<label className="components-base-control__label">
+									<label className="components-base-control__label" htmlFor="bb-reply-edit-reply-to">
 										{ __( 'Reply to', 'buddyboss' ) }
 									</label>
 									<AsyncSelectField
+										id="bb-reply-edit-reply-to"
 										value={ String( editReplyTo ) }
 										onChange={ function ( val ) {
 											setEditReplyTo( parseInt( val, 10 ) || 0 );

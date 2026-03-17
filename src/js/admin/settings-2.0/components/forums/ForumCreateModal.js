@@ -361,10 +361,11 @@ export function ForumCreateModal( { isOpen, onClose, onCreated } ) {
 				</div>
 
 				<div className="components-base-control bb-forum-modal__row--separator">
-					<label className="components-base-control__label">
+					<label className="components-base-control__label" htmlFor="bb-forum-create-parent">
 						{ __( 'Parent Forum', 'buddyboss' ) }
 					</label>
 					<AsyncSelectField
+						id="bb-forum-create-parent"
 						value={ String( parentId ) }
 						onChange={ function ( val ) {
 							setParentId( parseInt( val, 10 ) || 0 );
@@ -375,7 +376,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated } ) {
 				</div>
 
 				<div className="bb-forum-modal__image-field bb-forum-create-modal__image-field">
-					<label className="components-base-control__label">
+					<label className="components-base-control__label" htmlFor="bb-forum-create-image">
 						{ __( 'Feature Image (Optional)', 'buddyboss' ) }
 					</label>
 					<input
