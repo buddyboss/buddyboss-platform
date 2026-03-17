@@ -115,10 +115,9 @@ export function InputButtonField( props ) {
 
 		if ( isButtonOnly && Array.isArray( field.related_fields ) && values ) {
 			// Button-only mode with related fields: send sibling field values.
+			// When disconnecting, send empty values so the server clears credentials.
 			field.related_fields.forEach( function( relatedFieldName ) {
-				if ( undefined !== values[ relatedFieldName ] ) {
-					formData.append( relatedFieldName, values[ relatedFieldName ] );
-				}
+				formData.append( relatedFieldName, connected ? '' : ( values[ relatedFieldName ] || '' ) );
 			} );
 		} else {
 			// Standard mode: send connect_action and the input's own value.
@@ -152,10 +151,17 @@ export function InputButtonField( props ) {
 					// Invalidate feature cache so navigating away and back fetches fresh data.
 					invalidateFeatureCache();
 
-					if ( ! isButtonOnly && ! data.is_connected ) {
-						// Disconnected: clear the input value.
-						setInputValue( '' );
-						onChange( field.name, '' );
+					if ( ! data.is_connected ) {
+						if ( isButtonOnly && Array.isArray( field.related_fields ) ) {
+							// Button-only disconnect: clear related field values in the form.
+							field.related_fields.forEach( function( relatedFieldName ) {
+								onChange( relatedFieldName, '' );
+							} );
+						} else if ( ! isButtonOnly ) {
+							// Standard disconnect: clear the input value.
+							setInputValue( '' );
+							onChange( field.name, '' );
+						}
 					}
 
 					// Dispatch custom event to update section status badge.

@@ -608,6 +608,27 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 													} )()}
 												</div>
 												<div className="bb-admin-feature-settings__section-header-right">
+													{/* Section-level PRO badge (e.g. UPGRADE PRO) */}
+													{section.pro_notice && section.pro_notice.show && (
+														<span className="bb-admin-feature-settings__section-pro-notice">
+															{section.pro_notice.link_url ? (
+																<a
+																	href={safeUrl(section.pro_notice.link_url)}
+																	target="_blank"
+																	rel="noopener noreferrer"
+																	className="bb-admin-feature-settings__section-pro-badge"
+																>
+																	<i className={section.pro_notice.badge_icon || 'bb-icons-rl-crown-simple'} />
+																	<span>{section.pro_notice.badge_text || 'UPGRADE PRO'}</span>
+																</a>
+															) : (
+																<span className="bb-admin-feature-settings__section-pro-badge">
+																	<i className={section.pro_notice.badge_icon || 'bb-icons-rl-crown-simple'} />
+																	<span>{section.pro_notice.badge_text || 'UPGRADE PRO'}</span>
+																</span>
+															)}
+														</span>
+													)}
 													{/* Help icon - opens help slider modal */}
 													{activePanel.help_url && (
 														<HelpIcon

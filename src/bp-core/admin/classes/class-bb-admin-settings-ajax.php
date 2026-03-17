@@ -365,6 +365,16 @@ class BB_Admin_Settings_Ajax {
 					);
 				}
 
+				// Include pro_notice if set (e.g. UPGRADE PRO badge in section header).
+				if ( ! empty( $section['pro_notice'] ) && is_array( $section['pro_notice'] ) ) {
+					$formatted_section['pro_notice'] = array(
+						'show'       => ! empty( $section['pro_notice']['show'] ),
+						'badge_text' => sanitize_text_field( $section['pro_notice']['badge_text'] ?? __( 'UPGRADE PRO', 'buddyboss' ) ),
+						'badge_icon' => sanitize_text_field( $section['pro_notice']['badge_icon'] ?? 'bb-icons-rl-crown-simple' ),
+						'link_url'   => esc_url_raw( $section['pro_notice']['link_url'] ?? '' ),
+					);
+				}
+
 				$formatted_sections[] = $formatted_section;
 			}
 
@@ -646,6 +656,8 @@ class BB_Admin_Settings_Ajax {
 				// Input button fields (text input + action button, e.g. API key connect/disconnect).
 				'placeholder'          => $field['placeholder'] ?? null,
 				'button_label'         => $field['button_label'] ?? null,
+				'button_only'          => ! empty( $field['button_only'] ),
+				'related_fields'       => ! empty( $field['related_fields'] ) && is_array( $field['related_fields'] ) ? array_map( 'sanitize_key', $field['related_fields'] ) : null,
 				'is_connected'         => ! empty( $field['is_connected'] ),
 				// Max length for text inputs.
 				'maxlength'            => $field['maxlength'] ?? null,
