@@ -973,7 +973,8 @@
 		color: $bb-text-color;
 		cursor: pointer;
 
-		&:hover {
+		&:hover,
+		&--active {
 			background: $bb-background-primary-hover-color;
 		}
 	}

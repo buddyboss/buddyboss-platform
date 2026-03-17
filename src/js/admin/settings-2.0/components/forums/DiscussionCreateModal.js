@@ -214,10 +214,11 @@ export function DiscussionCreateModal( { isOpen, onClose, onCreated } ) {
 				</div>
 
 				<div className="components-base-control">
-					<label className="components-base-control__label">
+					<label className="components-base-control__label" htmlFor="bb-discussion-create-forum">
 						{ __( 'Forum', 'buddyboss' ) }
 					</label>
 					<AsyncSelectField
+						id="bb-discussion-create-forum"
 						value={ String( forumId ) }
 						onChange={ function ( val ) {
 							setForumId( parseInt( val, 10 ) || 0 );
