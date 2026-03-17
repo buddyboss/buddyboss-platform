@@ -22,6 +22,8 @@ defined( 'ABSPATH' ) || exit;
  * @param string $feature_id Feature ID.
  * @param array  $settings   Full submitted settings.
  * @param array  $saved      Keys and values saved by core.
+ *
+ * @return void
  */
 function bb_forums_after_save_settings( $feature_id, $settings, $saved ) {
 	if ( 'forums' !== $feature_id ) {

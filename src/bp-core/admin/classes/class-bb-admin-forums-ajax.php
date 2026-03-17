@@ -823,6 +823,19 @@ class BB_Admin_Forums_Ajax {
 		$processed = 0;
 		$failed    = 0;
 
+		// Populate legacy $_POST keys once before loop — values are constant across all forums.
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
+		if ( 'edit' === $do_action ) {
+			if ( ! empty( $edit_status ) && 'no_change' !== $edit_status ) {
+				$_POST['bbp_forum_status'] = $edit_status;
+			}
+			$_POST['bbp_forum_type'] = 'forum';
+			if ( ! empty( $edit_visibility ) && 'no_change' !== $edit_visibility ) {
+				$_POST['bbp_forum_visibility'] = $edit_visibility;
+			}
+		}
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
+
 		foreach ( $forum_ids as $forum_id ) {
 			$forum = get_post( $forum_id );
 
@@ -885,17 +898,6 @@ class BB_Admin_Forums_Ajax {
 					 *
 					 * @param int $forum_id Forum ID.
 					 */
-					// Populate legacy $_POST keys expected by bbp_save_forum_extras() and third-party hooks.
-					// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
-					if ( ! empty( $edit_status ) && 'no_change' !== $edit_status ) {
-						$_POST['bbp_forum_status'] = $edit_status;
-					}
-					$_POST['bbp_forum_type'] = 'forum';
-					if ( ! empty( $edit_visibility ) && 'no_change' !== $edit_visibility ) {
-						$_POST['bbp_forum_visibility'] = $edit_visibility;
-					}
-					// phpcs:enable WordPress.Security.NonceVerification.Missing
-
 					do_action( 'bbp_edit_forum_post_extras', $forum_id );
 					++$processed;
 				} else {
@@ -957,15 +959,20 @@ class BB_Admin_Forums_Ajax {
 	public function upload_forum_image() {
 		bb_admin_verify_ajax_request( self::NONCE_ACTION );
 
+		if ( ! current_user_can( 'upload_files' ) ) {
+			wp_send_json_error( array( 'message' => __( 'You do not have permission to upload files.', 'buddyboss' ) ) );
+		}
+
 		if ( empty( $_FILES['file'] ) ) {
 			wp_send_json_error( array( 'message' => __( 'No file uploaded.', 'buddyboss' ) ) );
 		}
 
-		// Validate MIME type.
+		// Validate MIME type using server-side file extension check (not client-supplied type).
 		$allowed_types = array( 'image/jpeg', 'image/png', 'image/gif', 'image/webp' );
-		$file_type     = ! empty( $_FILES['file']['type'] ) ? sanitize_mime_type( wp_unslash( $_FILES['file']['type'] ) ) : '';
+		$file_name     = ! empty( $_FILES['file']['name'] ) ? sanitize_file_name( wp_unslash( $_FILES['file']['name'] ) ) : '';
+		$file_type     = wp_check_filetype( $file_name );
 
-		if ( ! in_array( $file_type, $allowed_types, true ) ) {
+		if ( empty( $file_type['type'] ) || ! in_array( $file_type['type'], $allowed_types, true ) ) {
 			wp_send_json_error( array( 'message' => __( 'Invalid file type. Only JPEG, PNG, GIF, and WebP images are allowed.', 'buddyboss' ) ) );
 		}
 

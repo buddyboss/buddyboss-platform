@@ -15,6 +15,8 @@ defined( 'ABSPATH' ) || exit;
  * Register Forum Directories panel sections and fields.
  *
  * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
  */
 function bb_forums_register_directories_panel_fields() {
 

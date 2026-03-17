@@ -72,9 +72,6 @@ add_action( 'bbp_deactivation', 'bbp_delete_rewrite_rules' );
 // New Site
 add_action( 'bbp_new_site', 'bbp_create_initial_content', 8 );
 
-// Contextual Helpers
-add_action( 'load-settings_page_bbpress', 'bbp_admin_settings_help' );
-
 // Handle submission of Tools pages
 add_action( 'load-tools_page_bbp-repair', 'bbp_admin_repair_handler' );
 add_action( 'load-tools_page_bbp-reset', 'bbp_admin_reset_handler' );
