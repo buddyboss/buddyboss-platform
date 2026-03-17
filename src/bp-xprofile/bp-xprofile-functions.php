@@ -1567,7 +1567,7 @@ function bp_activity_get_user_mentionname($user_id)
 
 	$userdata = bp_core_get_core_userdata($user_id);
 
-	return bp_activity_format_mentionname($userdata);
+	return bb_activity_format_mentionname($userdata);
 }
 
 /**
