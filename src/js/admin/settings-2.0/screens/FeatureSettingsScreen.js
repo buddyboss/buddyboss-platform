@@ -382,6 +382,28 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 	// Value may be a function (prevValue) => newValue for functional updates (avoids stale state when merging).
 	// When a parent toggle is turned OFF, cascade to child fields (parent_field) and turn them OFF too.
 	const handleSettingChange = useCallback((fieldName, value) => {
+		// Check if this field is managed by an input_button (saved via its own AJAX, not auto-save).
+		// Fields listed in an input_button's related_fields are saved by the Connect/Disconnect button.
+		var isButtonManaged = false;
+		sidePanels.forEach( function( panel ) {
+			( panel.sections || [] ).forEach( function( section ) {
+				( section.fields || [] ).forEach( function( field ) {
+					if ( 'input_button' === field.type && Array.isArray( field.related_fields ) &&
+						field.related_fields.indexOf( fieldName ) !== -1 ) {
+						isButtonManaged = true;
+					}
+				} );
+			} );
+		} );
+
+		// Button-managed fields: update settings state only (no auto-save, no toast).
+		if ( isButtonManaged ) {
+			setSettings( function( prev ) {
+				return Object.assign( {}, prev, { [fieldName]: value } );
+			} );
+			return;
+		}
+
 		setToast({ status: 'saving', message: __('Saving changes...', 'buddyboss') });
 
 		// Collect child fields that depend on this field via parent_field.
