@@ -82,6 +82,15 @@
 			align-items: center;
 			gap: 8px;
 			margin-bottom: 18px;
+
+			&--with-line {
+				&::after {
+					content: '';
+					flex: 1;
+					height: 1px;
+					background-color: $bb-border-tertiary-color;
+				}
+			}
 		}
 
 		&-title {
