@@ -96,7 +96,25 @@ class BB_Admin_Settings_Ajax {
 					}
 				}
 
-				// settings_route: browser URL (query params); generated from feature_id. Frontend uses urlToRoute() for navigation.
+				// settings_route: build query-param URL from the feature's settings_route.
+				// React's urlToRoute() converts these to hash routes for SPA navigation.
+				$settings_route = function_exists( 'bb_get_feature_settings_url' )
+					? bb_get_feature_settings_url( $feature_id )
+					: '';
+
+				// Custom settings_route points to a different feature's panel
+				// (e.g., OneSignal '/settings/notifications/onesignal' → Notifications > OneSignal panel).
+				if (
+					! empty( $feature['settings_route'] ) &&
+					$feature['settings_route'] !== '/settings/' . $feature_id &&
+					function_exists( 'bb_get_feature_settings_url' )
+				) {
+					$parts     = array_values( array_filter( explode( '/', $feature['settings_route'] ) ) );
+					$route_tab = isset( $parts[1] ) ? $parts[1] : $feature_id;
+					$route_pan = isset( $parts[2] ) ? $parts[2] : '';
+					$settings_route = bb_get_feature_settings_url( $route_tab, $route_pan );
+				}
+
 				$formatted = array(
 					'id'             => $feature_id,
 					'label'          => $feature['label'] ?? $feature_id,
@@ -106,7 +124,7 @@ class BB_Admin_Settings_Ajax {
 					'status'         => $is_active ? 'active' : 'inactive',
 					'available'      => $is_available,
 					'required'       => ! empty( $feature['required'] ),
-					'settings_route' => function_exists( 'bb_get_feature_settings_url' ) ? bb_get_feature_settings_url( $feature_id ) : '',
+					'settings_route' => $settings_route,
 				);
 
 				// Format icon like REST API.
@@ -435,7 +453,22 @@ class BB_Admin_Settings_Ajax {
 	 * @return array Formatted feature data.
 	 */
 	private function bb_format_feature_for_response( $feature_id, $feature, $registry, $icon_registry ) {
-		// settings_route: browser URL (query params); generated from feature_id. Frontend uses urlToRoute() for navigation.
+		// Build settings_route — use custom route when it points to a different feature's panel.
+		$settings_route = function_exists( 'bb_get_feature_settings_url' )
+			? bb_get_feature_settings_url( $feature_id )
+			: '';
+
+		if (
+			! empty( $feature['settings_route'] ) &&
+			$feature['settings_route'] !== '/settings/' . $feature_id &&
+			function_exists( 'bb_get_feature_settings_url' )
+		) {
+			$parts     = array_values( array_filter( explode( '/', $feature['settings_route'] ) ) );
+			$route_tab = isset( $parts[1] ) ? $parts[1] : $feature_id;
+			$route_pan = isset( $parts[2] ) ? $parts[2] : '';
+			$settings_route = bb_get_feature_settings_url( $route_tab, $route_pan );
+		}
+
 		$formatted = array(
 			'id'             => $feature_id,
 			'label'          => $feature['label'] ?? $feature_id,
@@ -445,7 +478,7 @@ class BB_Admin_Settings_Ajax {
 			'status'         => $registry->bb_is_feature_active( $feature_id ) ? 'active' : 'inactive',
 			'available'      => $registry->bb_is_feature_available( $feature_id ),
 			'required'       => ! empty( $feature['required'] ),
-			'settings_route' => function_exists( 'bb_get_feature_settings_url' ) ? bb_get_feature_settings_url( $feature_id ) : '',
+			'settings_route' => $settings_route,
 		);
 
 		// Format icon.
@@ -1388,9 +1421,11 @@ class BB_Admin_Settings_Ajax {
 		if ( ! empty( $slug_term_ids ) ) {
 			$email_posts = get_posts(
 				array(
-					'posts_per_page' => 200,
-					'post_type'      => bp_get_email_post_type(),
-					'tax_query'      => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+					'posts_per_page'         => -1, // Bounded by tax_query — all matching email templates needed.
+					'no_found_rows'          => true, // Skip COUNT(*) — not paginating.
+					'update_post_meta_cache' => false, // Post meta not needed for URL resolution.
+					'post_type'              => bp_get_email_post_type(),
+					'tax_query'              => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 						array(
 							'taxonomy' => bp_get_email_tax_type(),
 							'field'    => 'slug',

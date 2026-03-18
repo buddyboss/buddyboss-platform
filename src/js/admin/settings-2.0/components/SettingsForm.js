@@ -346,17 +346,29 @@ export function SettingsForm({ fields, values, onChange }) {
 			case 'email':
 			case 'url':
 				return (
-					<TextControl
-						key={field.name}
-						label=""
-						value={value || ''}
-						onChange={(newValue) => onChange(field.name, newValue)}
-						type={ 'email' === field.type ? 'email' : 'url' === field.type ? 'url' : 'text' }
-						disabled={disabled}
-						placeholder={field.placeholder || ''}
-						maxLength={ field.maxlength > 0 ? field.maxlength : undefined }
-						__nextHasNoMarginBottom
-					/>
+					<div className={ field.maxlength > 0 ? 'bb-admin-settings-form__text-wrapper' : '' }>
+						<TextControl
+							key={field.name}
+							label=""
+							value={value || ''}
+							onChange={function( newValue ) {
+								if ( field.maxlength && newValue.length > field.maxlength ) {
+									newValue = newValue.substring( 0, field.maxlength );
+								}
+								onChange( field.name, newValue );
+							}}
+							type={ 'email' === field.type ? 'email' : 'url' === field.type ? 'url' : 'text' }
+							disabled={disabled}
+							placeholder={field.placeholder || ''}
+							maxLength={ field.maxlength > 0 ? field.maxlength : undefined }
+							__nextHasNoMarginBottom
+						/>
+						{ field.maxlength > 0 && (
+							<span className="bb-admin-settings-form__textarea-counter">
+								{ ( value || '' ).length + '/' + field.maxlength }
+							</span>
+						) }
+					</div>
 				);
 
 			case 'textarea':

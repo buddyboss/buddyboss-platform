@@ -152,8 +152,8 @@ export function InputButtonField( props ) {
 					invalidateFeatureCache();
 
 					// Only clear fields on actual disconnect (was connected, now disconnected).
-				// Skip on failed connect attempts so the user can fix and retry.
-				if ( ! data.is_connected && connected ) {
+					// Skip on failed connect attempts so the user can fix and retry.
+					if ( ! data.is_connected && connected ) {
 						if ( isButtonOnly && Array.isArray( field.related_fields ) ) {
 							// Button-only disconnect: clear related field values in the form.
 							field.related_fields.forEach( function( relatedFieldName ) {
