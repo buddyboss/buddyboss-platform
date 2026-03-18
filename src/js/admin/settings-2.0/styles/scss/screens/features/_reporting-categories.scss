@@ -220,14 +220,10 @@
    ---------------------------------------------------------------- */
 
 .bb-admin-reporting-category-modal {
-	background: $bb-background-base-color;
-	border-radius: $bb-border-radius-2xl;
-	width: 90%;
-	max-width: 600px;
-	max-height: 85vh;
-	display: flex;
-	flex-direction: column;
-	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+
+	&.components-modal__frame {
+		max-width: 680px;
+	}
 
 	&__body {
 		flex: 1;
@@ -258,6 +254,19 @@
 		}
 	}
 
+	.components-text-control__input,
+	.components-textarea-control__input {
+		@include bb-input-text;
+	}
+
+	.components-textarea-control__input {
+		padding: 8px;
+	}
+
+	textarea {
+		min-height: 72px;
+	}
+
 	// Override WP component uppercase labels to match Figma title case.
 	.components-base-control__label,
 	label.components-input-control__label.components-text {
@@ -265,13 +274,6 @@
 	}
 
 	.components-input-control__container {
-
-		.components-input-control__label {
-			color: $bb-text-secondary-color;
-			text-transform: none;
-			font-size: 13px;
-			font-weight: 500;
-		}
 
 		.components-select-control__input {
 			@include bb-admin-settings-select;
@@ -284,12 +286,6 @@
 	}
 
 	&__footer {
-		display: flex;
-		align-items: center;
-		justify-content: flex-end;
-		gap: 8px;
-		padding: 16px 24px;
-		border-top: 1px solid $bb-border-primary-color;
 		position: sticky;
 		bottom: 0;
 		background: #fff;
