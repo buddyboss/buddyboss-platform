@@ -712,7 +712,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			);
 
 			if ( ! is_network_admin() && ! bp_is_network_activated() ) {
-				$email_url = 'edit.php?post_type=' . bp_get_email_post_type();
+				$email_url = 'admin.php?page=bb-settings&tab=emails&panel=all_emails';
 				$hooks[]   = add_submenu_page(
 					'buddyboss-platform',
 					__( 'Emails', 'buddyboss' ),
@@ -731,7 +731,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		public function bp_emails_add_sub_menu_page_admin_menu() {
 
 			if ( is_multisite() && bp_is_network_activated() && bp_is_root_blog() ) {
-				$email_url = get_admin_url( bp_get_root_blog_id(), 'edit.php?post_type=' . bp_get_email_post_type() ); // buddyboss-settings
+				$email_url = get_admin_url( bp_get_root_blog_id(), 'admin.php?page=bb-settings&tab=emails&panel=all_emails' );
 				// Add our screen.
 				$hook = add_submenu_page(
 					'buddyboss-platform',
@@ -995,12 +995,12 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * @return array $custom_menus List of top-level BP menu items, with Emails added.
 		 */
 		public function emails_admin_menu_order( $custom_menus = array() ) {
-			array_push( $custom_menus, 'edit.php?post_type=' . bp_get_email_post_type() );
+			array_push( $custom_menus, 'admin.php?page=bb-settings&tab=emails&panel=all_emails' );
 
 			if ( is_network_admin() && bp_is_network_activated() ) {
 				array_push(
 					$custom_menus,
-					get_admin_url( bp_get_root_blog_id(), 'edit.php?post_type=' . bp_get_email_post_type() )
+					get_admin_url( bp_get_root_blog_id(), 'admin.php?page=bb-settings&tab=emails&panel=all_emails' )
 				);
 			}
 

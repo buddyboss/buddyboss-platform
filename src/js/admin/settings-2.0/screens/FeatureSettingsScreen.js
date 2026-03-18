@@ -51,7 +51,7 @@ const CUSTOM_PANEL_SCREENS = {
 	'forums:discussions': DiscussionsListScreen,
 	'forums:discussion_tags': DiscussionTagsListScreen,
 	'forums:replies': RepliesListScreen,
-	'email_invites:emails': EmailTemplatesListScreen,
+	'emails:all_emails': EmailTemplatesListScreen,
 };
 
 

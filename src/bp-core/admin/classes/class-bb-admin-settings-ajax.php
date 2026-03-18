@@ -73,6 +73,11 @@ class BB_Admin_Settings_Ajax {
 			$active_components = bp_get_option( 'bp-active-components', array() );
 
 			foreach ( $registered as $feature_id => $feature ) {
+				// Skip hidden features (e.g. Emails — has settings page but no grid card).
+				if ( ! empty( $feature['hidden'] ) ) {
+					continue;
+				}
+
 				// Determine active status.
 				// Priority: 1) bb-active-features, 2) bp-active-components (migration fallback).
 				if ( isset( $active_features[ $feature_id ] ) ) {

@@ -83,21 +83,6 @@ function bb_admin_settings_register_email_invites_feature() {
 		)
 	);
 
-	// Side Panel 2: Emails.
-	bb_register_side_panel(
-		'email_invites',
-		'emails',
-		array(
-			'title'   => __( 'Emails', 'buddyboss' ),
-			'icon'    => array(
-				'type'  => 'font',
-				'class' => 'bb-icons-rl bb-icons-rl-list-bullets',
-			),
-			'divider' => true,
-			'order'   => 20,
-		)
-	);
-
 	// =========================================================================
 	// PANEL FIELDS — EMAIL INVITE SETTINGS
 	// =========================================================================

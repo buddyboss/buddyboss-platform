@@ -275,6 +275,7 @@ class BB_Feature_Registry {
 			'integration_id'        => null, // Integration ID (for integration features).
 			'standalone'            => false, // Whether this is a standalone feature.
 			'required'              => false, // Whether this feature is required and cannot be deactivated.
+			'hidden'                => false, // Whether to hide from the features grid (e.g. utility features like Emails).
 			'depends_on'            => array(),
 			'order'                 => 100,
 		);

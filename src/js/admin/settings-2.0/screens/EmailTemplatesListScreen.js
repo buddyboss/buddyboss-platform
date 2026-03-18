@@ -13,6 +13,9 @@ import { useState, useEffect, useCallback, useRef, useMemo } from '@wordpress/el
 import {
 	Button,
 	CheckboxControl,
+	DropdownMenu,
+	MenuGroup,
+	MenuItem,
 	SelectControl,
 	Spinner,
 } from '@wordpress/components';
@@ -479,6 +482,7 @@ export default function EmailTemplatesListScreen( props ) {
 								<th className="bb-email-templates-list__th--date">
 									{ __( 'Published', 'buddyboss' ) }
 								</th>
+								<th className="bb-email-templates-list__th--actions"></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -521,6 +525,58 @@ export default function EmailTemplatesListScreen( props ) {
 										</td>
 										<td className="bb-email-templates-list__td--date">
 											{ item.date }
+										</td>
+										<td className="bb-email-templates-list__td--actions">
+											<DropdownMenu
+												icon={ <i className="bb-icons-rl-dots-three"></i> }
+												label={ __( 'More options', 'buddyboss' ) }
+											>
+												{ function( { onClose } ) {
+													return (
+														<MenuGroup className="bb_dropdown_menu_group">
+															<MenuItem
+																onClick={ function() {
+																	if ( item.edit_url ) {
+																		window.location.href = safeUrl( item.edit_url );
+																	}
+																	onClose();
+																} }
+															>
+																<i className="bb-icons-rl bb-icons-rl-pencil-simple"></i>
+																{ __( 'Edit', 'buddyboss' ) }
+															</MenuItem>
+															<MenuItem
+																isDestructive
+																onClick={ function() {
+																	onClose();
+																	setBulkProcessing( true );
+																	emailTemplateBulkAction( [ item.id ], 'trash' )
+																		.then( function( response ) {
+																			setBulkProcessing( false );
+																			if ( response.success ) {
+																				setToast( { status: 'success', message: response.data.message } );
+																				isFirstLoad.current = true;
+																				fetchTemplates( { fetchPage: page, fetchSort: sort, fetchSearch: search } );
+																			} else {
+																				setToast( {
+																					status: 'error',
+																					message: ( response.data && response.data.message ) || __( 'Something went wrong.', 'buddyboss' ),
+																				} );
+																			}
+																		} )
+																		.catch( function() {
+																			setBulkProcessing( false );
+																			setToast( { status: 'error', message: __( 'Something went wrong.', 'buddyboss' ) } );
+																		} );
+																} }
+															>
+																<i className="bb-icons-rl bb-icons-rl-trash"></i>
+																{ __( 'Trash', 'buddyboss' ) }
+															</MenuItem>
+														</MenuGroup>
+													);
+												} }
+											</DropdownMenu>
 										</td>
 									</tr>
 								);
