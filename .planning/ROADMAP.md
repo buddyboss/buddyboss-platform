@@ -93,7 +93,14 @@ Plans:
   2. Organizer can assign free-form tags to an event — tags are searchable and visible on the event detail page
   3. Public category archive page (/event-category/[slug]/) lists events in that category — a logged-out visitor sees zero results for events belonging to private or hidden BuddyBoss groups regardless of category assignment
   4. Admin can manage event categories and tags from the WordPress admin — creating, editing, and deleting categories with icon/image support
-**Plans**: TBD
+**Plans**: 5 plans
+
+Plans:
+- [ ] 04-00-PLAN.md — PHPUnit test stubs for META-API, TAX-01, TAX-02, TAX-03
+- [ ] 04-01-PLAN.md — Meta API (setup_globals meta_tables + wrapper functions) + taxonomy registration + privacy filter
+- [ ] 04-02-PLAN.md — Taxonomy filtering in bp_events_get_events() + REST params + admin category icon UI
+- [ ] 04-03-PLAN.md — Creation wizard category/tag step + directory filter + taxonomy archive template
+- [ ] 04-04-PLAN.md — End-to-end human verification checkpoint
 
 ### Phase 5: Data Enrichment
 **Goal**: Event pages carry structured location data with an embedded map, support hybrid and virtual meeting details, and organizers can add a countdown timer and external redirect link — all stored as bb_eventmeta keys with zero schema migration on the main bb_events table
@@ -150,7 +157,7 @@ Note: Phase 6 depends only on Phase 4 (not Phase 5) — Sessions/Speakers need t
 | 1. Foundation + Event Management | 9/9 | Complete   | 2026-03-14 |
 | 2. Payments + Ticketing | 6/6 | Complete   | 2026-03-14 |
 | 3. BuddyBoss Integration | 6/6 | Complete   | 2026-03-16 |
-| 4. Meta API Foundation + Taxonomy | 0/TBD | Not started | - |
+| 4. Meta API Foundation + Taxonomy | 0/5 | Not started | - |
 | 5. Data Enrichment | 0/TBD | Not started | - |
 | 6. Sessions + Speakers | 0/TBD | Not started | - |
 | 7. Front-End Submission + Organizer Dashboard | 0/TBD | Not started | - |
