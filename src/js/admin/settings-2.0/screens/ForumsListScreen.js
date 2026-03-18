@@ -1173,6 +1173,7 @@ export function ForumsListScreen( { onNavigate } ) {
 					} }
 					onSave={ handleSaveForum }
 					isSaving={ isEditSaving }
+					forumBaseSlug={ forumBaseSlug }
 				/>
 			) }
 		</div>
@@ -1191,7 +1192,7 @@ export function ForumsListScreen( { onNavigate } ) {
  * @param {boolean}  props.isSaving Whether save is in progress.
  * @returns {JSX.Element} Edit modal.
  */
-function ForumEditModal( { forum, onClose, onSave, isSaving } ) {
+function ForumEditModal( { forum, onClose, onSave, isSaving, forumBaseSlug } ) {
 	var nameState = useState( forum.name || '' );
 	var name = nameState[ 0 ];
 	var setName = nameState[ 1 ];
