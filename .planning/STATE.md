@@ -1,16 +1,16 @@
 ---
 gsd_state_version: 1.0
 milestone: v2.0
-milestone_name: Feature Parity
-status: planning
-stopped_at: ""
-last_updated: "2026-03-17T00:00:00.000Z"
+milestone_name: milestone
+status: completed
+stopped_at: Completed 04-meta-api-foundation-taxonomy 04-00-PLAN.md
+last_updated: "2026-03-18T09:20:40.016Z"
 last_activity: 2026-03-17 — v2.0 roadmap created (Phases 4-8)
 progress:
-  total_phases: 5
-  completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
+  total_phases: 8
+  completed_phases: 3
+  total_plans: 26
+  completed_plans: 22
   percent: 0
 ---
 
@@ -86,6 +86,7 @@ Note: Phase 5 and Phase 6 both depend only on Phase 4. They can execute in paral
 | Phase 03-buddyboss-integration P03 | 3min | 2 tasks | 5 files |
 | Phase 03-buddyboss-integration P04 | 2min | 2 tasks | 6 files |
 | Phase 03-buddyboss-integration P05 | 5min | 2 tasks | 0 files |
+| Phase 04-meta-api-foundation-taxonomy P00 | 2 | 1 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -146,6 +147,8 @@ Recent decisions affecting current work:
 - [v2.0 roadmap]: Architecture constraint — venue_address column migration via dbDelta() must happen in Phase 5 before structured address fields can be written
 - [v2.0 roadmap]: Security constraint — taxonomy archive pre_get_posts privacy filter applied in Phase 4 from the moment taxonomies are registered; cannot be retrofitted
 - [v2.0 roadmap]: Research flag for Phase 7 — verify BuddyBoss notification system hooks before writing approval/rejection email code; determine whether BuddyBoss Platform provides notification infrastructure that should be used instead of raw wp_mail()
+- [Phase 04-meta-api-foundation-taxonomy]: All Phase 4 stubs use plan-number references in markTestIncomplete messages — TAX-03 privacy stubs point to 04-01-PLAN since privacy filter is registered at taxonomy bootstrap time
+- [Phase 04-meta-api-foundation-taxonomy]: Tab indentation and BP_Events_Test_ class prefix maintained per WordPress Coding Standards in all Phase 4 test stubs
 
 ### Pending Todos
 
@@ -161,6 +164,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-16T11:35:21.495Z
-Stopped at: Completed 03-buddyboss-integration 03-05-PLAN.md
+Last session: 2026-03-18T09:20:40.012Z
+Stopped at: Completed 04-meta-api-foundation-taxonomy 04-00-PLAN.md
 Resume file: None

@@ -42,9 +42,9 @@
 
 ### Taxonomy
 
-- [ ] **TAX-01**: Organizer can assign one or more hierarchical categories (with optional icon) to an event — categories are filterable on the event directory
-- [ ] **TAX-02**: Organizer can assign free-form tags to an event — tags are searchable and displayed on the event page
-- [ ] **TAX-03**: Public category archive pages (`/event-category/[slug]/`) list events in that category — private group events are never surfaced regardless of category assignment
+- [x] **TAX-01**: Organizer can assign one or more hierarchical categories (with optional icon) to an event — categories are filterable on the event directory
+- [x] **TAX-02**: Organizer can assign free-form tags to an event — tags are searchable and displayed on the event page
+- [x] **TAX-03**: Public category archive pages (`/event-category/[slug]/`) list events in that category — private group events are never surfaced regardless of category assignment
 
 ### Location & Event Type
 
@@ -147,9 +147,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| TAX-01 | Phase 4 | Pending |
-| TAX-02 | Phase 4 | Pending |
-| TAX-03 | Phase 4 | Pending |
+| TAX-01 | Phase 4 | Complete |
+| TAX-02 | Phase 4 | Complete |
+| TAX-03 | Phase 4 | Complete |
 | LOC-01 | Phase 5 | Pending |
 | LOC-02 | Phase 5 | Pending |
 | LOC-03 | Phase 5 | Pending |
