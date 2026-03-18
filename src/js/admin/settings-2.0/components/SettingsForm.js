@@ -346,7 +346,7 @@ export function SettingsForm({ fields, values, onChange }) {
 			case 'email':
 			case 'url':
 				return (
-					<div className={ field.maxlength > 0 ? 'bb-admin-settings-form__text-wrapper' : '' }>
+					<div className={ field.maxlength > 0 ? 'bb-admin-settings-form__field-text-wrapper' : '' }>
 						<TextControl
 							key={field.name}
 							label=""
