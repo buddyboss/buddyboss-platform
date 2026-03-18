@@ -1192,7 +1192,12 @@ export function ForumsListScreen( { onNavigate } ) {
  * @param {boolean}  props.isSaving Whether save is in progress.
  * @returns {JSX.Element} Edit modal.
  */
-function ForumEditModal( { forum, onClose, onSave, isSaving, forumBaseSlug } ) {
+function ForumEditModal( props ) {
+	var forum = props.forum;
+	var onClose = props.onClose;
+	var onSave = props.onSave;
+	var isSaving = props.isSaving;
+	var forumBaseSlug = props.forumBaseSlug || 'forum';
 	var nameState = useState( forum.name || '' );
 	var name = nameState[ 0 ];
 	var setName = nameState[ 1 ];
@@ -1399,7 +1404,7 @@ function ForumEditModal( { forum, onClose, onSave, isSaving, forumBaseSlug } ) {
 					/>
 					{ slug && siteUrl && (
 						<p className="bb-forum-create-modal__permalink-preview">
-							{ siteUrl + '/' + forumBaseSlug + '/' + slug + '/' }
+							{ siteUrl + '/' + ( forumBaseSlug || 'forum' ) + '/' + slug + '/' }
 						</p>
 					) }
 				</div>
