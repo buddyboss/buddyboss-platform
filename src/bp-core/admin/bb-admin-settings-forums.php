@@ -131,7 +131,7 @@ function bb_admin_settings_register_forums_feature() {
 		'forums',
 		'all_forums',
 		array(
-			'title'      => __( 'All Forums', 'buddyboss' ),
+			'title'      => __( 'Forums', 'buddyboss' ),
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-chat-text',
