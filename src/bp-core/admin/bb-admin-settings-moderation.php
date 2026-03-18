@@ -169,7 +169,7 @@ function bb_admin_settings_register_moderation_feature() {
 			'title'      => __( 'Member Moderation', 'buddyboss' ),
 			'icon'       => array(
 				'type'  => 'font',
-				'class' => 'bb-icons-rl bb-icons-rl-user-circle-minus',
+				'class' => 'bb-icons-rl bb-icons-rl-user-minus',
 			),
 			'help_url'   => bp_get_admin_url(
 				add_query_arg(
@@ -193,7 +193,7 @@ function bb_admin_settings_register_moderation_feature() {
 			'title'    => __( 'Content Reporting', 'buddyboss' ),
 			'icon'     => array(
 				'type'  => 'font',
-				'class' => 'bb-icons-rl bb-icons-rl-file-text',
+				'class' => 'bb-icons-rl bb-icons-rl-flag',
 			),
 			'help_url' => bp_get_admin_url(
 				add_query_arg(
@@ -230,7 +230,7 @@ function bb_admin_settings_register_moderation_feature() {
 			'title'   => __( 'Flagged Members', 'buddyboss' ),
 			'icon'    => array(
 				'type'  => 'font',
-				'class' => 'bb-icons-rl bb-icons-rl-user-circle-minus',
+				'class' => 'bb-icons-rl bb-icons-rl-users',
 			),
 			'divider' => true,
 			'order'   => 100,
