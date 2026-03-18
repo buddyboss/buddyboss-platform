@@ -33,7 +33,7 @@ class BP_Events_Component extends BP_Component {
 		parent::start(
 			'events',
 			__( 'Events', 'buddyboss' ),
-			buddypress()->plugin_dir,
+			BP_EVENTS_PLUGIN_DIR . 'src/',
 			array(
 				'adminbar_myaccount_order' => 80,
 				'search_query_arg'         => 'events_search',
@@ -102,10 +102,10 @@ class BP_Events_Component extends BP_Component {
 		$bp = buddypress();
 
 		// Tables.
-		$this->table_name           = $wpdb->prefix . 'bp_events';
-		$this->table_name_meta      = $wpdb->prefix . 'bp_eventmeta';
-		$this->table_name_attendees = $wpdb->prefix . 'bp_event_attendees';
-		$this->table_name_invites   = $wpdb->prefix . 'bp_event_invites';
+		$this->table_name           = $wpdb->prefix . 'bb_events';
+		$this->table_name_meta      = $wpdb->prefix . 'bb_eventmeta';
+		$this->table_name_attendees = $wpdb->prefix . 'bb_event_attendees';
+		$this->table_name_invites   = $wpdb->prefix . 'bb_event_invites';
 
 		$global_tables = array(
 			'table_name'           => $this->table_name,
@@ -122,6 +122,9 @@ class BP_Events_Component extends BP_Component {
 				'directory_title'       => __( 'Events', 'buddyboss' ),
 				'search_string'         => __( 'Search Events...', 'buddyboss' ),
 				'global_tables'         => $global_tables,
+				'meta_tables'           => array(
+					'event' => $this->table_name_meta,
+				),
 				'notification_callback' => 'bp_events_format_notifications',
 			)
 		);

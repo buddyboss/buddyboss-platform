@@ -1569,4 +1569,77 @@ function bp_events_notify_waitlist( $event_id ) {
 			wp_mail( $user->user_email, $subject, $message );
 		}
 	}
+
+/** Event Meta API ************************************************************/
+
+/**
+ * Get event meta.
+ *
+ * @since BuddyBoss Events 2.0.0
+ *
+ * @param int    $event_id Event ID.
+ * @param string $meta_key Meta key.
+ * @param bool   $single   Return single value. Default true.
+ * @return mixed Meta value or array of values.
+ */
+function bp_event_get_meta( $event_id, $meta_key = '', $single = true ) {
+	add_filter( 'query', 'bp_filter_metaid_column_name' );
+	$retval = get_metadata( 'event', $event_id, $meta_key, $single );
+	remove_filter( 'query', 'bp_filter_metaid_column_name' );
+	return $retval;
+}
+
+/**
+ * Update event meta.
+ *
+ * @since BuddyBoss Events 2.0.0
+ *
+ * @param int    $event_id   Event ID.
+ * @param string $meta_key   Meta key.
+ * @param mixed  $meta_value Meta value.
+ * @param mixed  $prev_value Previous value to check before updating. Default empty.
+ * @return int|bool Meta ID on first add, true on update, false on failure.
+ */
+function bp_event_update_meta( $event_id, $meta_key, $meta_value, $prev_value = '' ) {
+	add_filter( 'query', 'bp_filter_metaid_column_name' );
+	$retval = update_metadata( 'event', $event_id, $meta_key, $meta_value, $prev_value );
+	remove_filter( 'query', 'bp_filter_metaid_column_name' );
+	return $retval;
+}
+
+/**
+ * Add event meta.
+ *
+ * @since BuddyBoss Events 2.0.0
+ *
+ * @param int    $event_id   Event ID.
+ * @param string $meta_key   Meta key.
+ * @param mixed  $meta_value Meta value.
+ * @param bool   $unique     Whether the key should be unique. Default false.
+ * @return int|false Meta ID on success, false on failure.
+ */
+function bp_event_add_meta( $event_id, $meta_key, $meta_value, $unique = false ) {
+	add_filter( 'query', 'bp_filter_metaid_column_name' );
+	$retval = add_metadata( 'event', $event_id, $meta_key, $meta_value, $unique );
+	remove_filter( 'query', 'bp_filter_metaid_column_name' );
+	return $retval;
+}
+
+/**
+ * Delete event meta.
+ *
+ * @since BuddyBoss Events 2.0.0
+ *
+ * @param int    $event_id   Event ID.
+ * @param string $meta_key   Meta key. Pass false to delete all meta for event.
+ * @param mixed  $meta_value Meta value to match. Default false.
+ * @param bool   $delete_all Delete for all events. Default false.
+ * @return bool True on success, false on failure.
+ */
+function bp_event_delete_meta( $event_id, $meta_key = false, $meta_value = false, $delete_all = false ) {
+	add_filter( 'query', 'bp_filter_metaid_column_name' );
+	$retval = delete_metadata( 'event', $event_id, $meta_key, $meta_value, $delete_all );
+	remove_filter( 'query', 'bp_filter_metaid_column_name' );
+	return $retval;
+}
 }
