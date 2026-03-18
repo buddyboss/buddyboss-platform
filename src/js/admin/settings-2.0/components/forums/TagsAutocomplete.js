@@ -42,8 +42,9 @@ export function TagsAutocomplete( { value, onChange, label, placeholder } ) {
 	var searchTimerRef = useRef( null );
 	var wrapperRef = useRef( null );
 	var inputRef = useRef( null );
-	var inputId = 'bb-tags-autocomplete-input';
-	var listboxId = 'bb-tags-autocomplete-listbox';
+	var instanceIdRef = useRef( 'bb-tags-autocomplete-' + Math.random().toString( 36 ).substr( 2, 9 ) );
+	var inputId = instanceIdRef.current + '-input';
+	var listboxId = instanceIdRef.current + '-listbox';
 
 	// Close dropdown on outside click.
 	useEffect( function () {
