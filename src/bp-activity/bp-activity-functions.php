@@ -2980,6 +2980,19 @@ function bp_activity_new_comment( $args = '' ) {
 		)
 	);
 
+	/**
+	 * Filters the parsed arguments for a new activity comment before processing.
+	 *
+	 * This filter allows modification of comment arguments before any validation
+	 * or database operations occur. It can be used to redirect replies to different
+	 * parent comments (e.g., for threading depth limits).
+	 *
+	 * @since BuddyBoss 2.20.0
+	 *
+	 * @param array $r Parsed arguments for the new comment.
+	 */
+	$r = apply_filters( 'bb_activity_new_comment_pre_validate', $r );
+
 	// Error type is boolean; need to initialize some variables for backpat.
 	if ( 'bool' === $r['error_type'] ) {
 		if ( empty( $bp->activity->errors ) ) {
@@ -3167,9 +3180,14 @@ function bp_activity_new_comment( $args = '' ) {
 	wp_cache_delete( $activity_id, 'bp_activity_comments' );
 	wp_cache_delete( 'bp_get_child_comments_' . $activity_id, 'bp_activity_comments' );
 
+	// Clear comment chain cache for the parent comment.
+	if ( ! empty( $r['parent_id'] ) && (int) $r['parent_id'] !== (int) $activity_id ) {
+		wp_cache_delete( 'bb_comment_chain_' . (int) $r['parent_id'] . '_' . (int) $activity_id, 'bp_activity_comments' );
+	}
+
 	// Walk the tree to clear caches for all parent items.
 	$clear_id = $r['parent_id'];
-	while ( $clear_id != $activity_id ) {
+	while ( (int) $clear_id !== (int) $activity_id ) {
 		$clear_object = new BP_Activity_Activity( $clear_id );
 		wp_cache_delete( $clear_id, 'bp_activity' );
 		$clear_id = intval( $clear_object->secondary_item_id );
@@ -3569,6 +3587,9 @@ function bp_activity_delete_comment( $activity_id, $comment_id ) {
 	// Purge comment cache for the root activity update.
 	wp_cache_delete( $activity_id, 'bp_activity_comments' );
 	wp_cache_delete( 'bp_get_child_comments_' . $activity_id, 'bp_activity_comments' );
+
+	// Clear comment chain cache for the deleted comment.
+	wp_cache_delete( 'bb_comment_chain_' . (int) $comment_id . '_' . (int) $activity_id, 'bp_activity_comments' );
 
 	// Recalculate the comment tree.
 	BP_Activity_Activity::rebuild_activity_comment_tree( $activity_id );
@@ -7067,6 +7088,159 @@ function bb_get_activity_comment_loading( $default = 10 ) {
 	 * @param bool $default Value of activity comments loading.
 	 */
 	return (int) apply_filters( 'bb_get_activity_comment_loading', bp_get_option( '_bb_activity_comment_loading', $default ) );
+}
+
+/**
+ * Get the ancestor chain info for an activity comment.
+ *
+ * Traverses up the comment tree in a single pass to build the full ancestor
+ * chain, compute depth, and allow lookup of ancestors at any depth level.
+ *
+ * Uses optimized single-column queries instead of loading full activity objects.
+ *
+ * @since BuddyBoss 2.20.0
+ *
+ * @param int $comment_id  The ID of the comment to check.
+ * @param int $activity_id The ID of the root activity.
+ *
+ * @return array {
+ *     @type int   $depth     The depth of the comment (1 = first level).
+ *     @type int[] $ancestors Array of ancestor IDs from depth 1 to the comment's depth.
+ * }
+ */
+function bb_get_activity_comment_chain_info( $comment_id, $activity_id ) {
+	global $wpdb;
+
+	$comment_id  = (int) $comment_id;
+	$activity_id = (int) $activity_id;
+
+	$cache_key = 'bb_comment_chain_' . $comment_id . '_' . $activity_id;
+	$info      = wp_cache_get( $cache_key, 'bp_activity_comments' );
+
+	if ( false !== $info ) {
+		return $info;
+	}
+
+	$bp             = buddypress();
+	$current_id     = $comment_id;
+	$max_iterations = 50;
+	$iterations     = 0;
+	$ancestors      = array();
+
+	while ( $current_id !== $activity_id && $iterations < $max_iterations ) {
+		$iterations++;
+
+		$parent_id = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT secondary_item_id FROM {$bp->activity->table_name} WHERE id = %d AND type = 'activity_comment'",
+				$current_id
+			)
+		);
+
+		if ( ! $parent_id || (int) $parent_id === $current_id ) {
+			break;
+		}
+
+		$ancestors[] = $current_id;
+		$current_id  = (int) $parent_id;
+	}
+
+	// Reverse so index 0 = depth 1 (shallowest ancestor).
+	$ancestors = array_reverse( $ancestors );
+
+	$info = array(
+		'depth'     => max( 1, count( $ancestors ) ),
+		'ancestors' => $ancestors,
+	);
+
+	wp_cache_set( $cache_key, $info, 'bp_activity_comments' );
+
+	return $info;
+}
+
+/**
+ * Calculate the depth of an activity comment.
+ *
+ * Wrapper around bb_get_activity_comment_chain_info() for backward compatibility.
+ *
+ * @since BuddyBoss 2.20.0
+ *
+ * @param int $comment_id  The ID of the comment to check.
+ * @param int $activity_id The ID of the root activity.
+ *
+ * @return int The depth of the comment (1 = first level, 2 = second level, etc.).
+ */
+function bb_get_activity_comment_depth_by_id( $comment_id, $activity_id ) {
+	$info = bb_get_activity_comment_chain_info( $comment_id, $activity_id );
+
+	return $info['depth'];
+}
+
+/**
+ * Find the ancestor comment at a specific depth level.
+ *
+ * Wrapper around bb_get_activity_comment_chain_info() for backward compatibility.
+ *
+ * @since BuddyBoss 2.20.0
+ *
+ * @param int $comment_id   The ID of the starting comment.
+ * @param int $activity_id  The ID of the root activity.
+ * @param int $target_depth The depth level to find (1 = first level comment).
+ *
+ * @return int The ID of the ancestor at the target depth, or the activity_id if not found.
+ */
+function bb_get_activity_comment_ancestor_at_depth( $comment_id, $activity_id, $target_depth ) {
+	$info         = bb_get_activity_comment_chain_info( $comment_id, $activity_id );
+	$target_index = $target_depth - 1;
+	$activity_id  = (int) $activity_id;
+
+	if ( isset( $info['ancestors'][ $target_index ] ) ) {
+		return $info['ancestors'][ $target_index ];
+	} elseif ( $target_depth > 0 && ! empty( $info['ancestors'] ) ) {
+		return end( $info['ancestors'] );
+	}
+
+	return $activity_id;
+}
+
+/**
+ * Adjust the parent ID for activity comments at max threading depth.
+ *
+ * When a user replies to a comment that is already at the maximum threading depth,
+ * this function redirects the reply to an ancestor comment so that the new comment
+ * is stored at the maximum depth level instead of exceeding it.
+ *
+ * @since BuddyBoss 2.20.0
+ *
+ * @param array $args Arguments for the new activity comment.
+ *
+ * @return array Modified arguments with adjusted parent_id if necessary.
+ */
+function bb_adjust_activity_comment_threading_parent( $args ) {
+
+	if ( ! bb_is_activity_comment_threading_enabled() ) {
+		return $args;
+	}
+
+	$parent_id   = (int) $args['parent_id'];
+	$activity_id = (int) $args['activity_id'];
+
+	if ( empty( $parent_id ) || $parent_id === $activity_id ) {
+		return $args;
+	}
+
+	$max_depth = bb_get_activity_comment_threading_depth();
+	$info      = bb_get_activity_comment_chain_info( $parent_id, $activity_id );
+
+	if ( $info['depth'] >= $max_depth ) {
+		$target_index = $max_depth - 2; // (max_depth - 1) depth, zero-indexed.
+
+		if ( isset( $info['ancestors'][ $target_index ] ) ) {
+			$args['parent_id'] = $info['ancestors'][ $target_index ];
+		}
+	}
+
+	return $args;
 }
 
 /**

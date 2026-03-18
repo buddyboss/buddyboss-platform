@@ -1801,7 +1801,22 @@ class BP_Activity_Activity {
 				$sql['select'] = 'SELECT a.id';
 				$sql['from']   = "FROM {$bp->activity->table_name} a";
 				if ( true === $exclude_childrens ) {
-					$sql['where'] = "WHERE a.type = 'activity_comment' {$spam_sql} AND a.secondary_item_id = $activity_id";
+					// When filtering spam (ham_only), also includes orphaned comments.
+					// Orphaned comments are replies to spam comments - they should appear at root level.
+					if ( 'ham_only' === $spam ) {
+						// Get spam comment IDs for this activity to find orphaned comments.
+						$spam_comment_ids = self::get_spam_comment_ids( $activity_id );
+
+						if ( ! empty( $spam_comment_ids ) ) {
+							$spam_ids_list = implode( ',', array_map( 'intval', $spam_comment_ids ) );
+							// Include direct replies OR orphaned comments (replies to spam).
+							$sql['where'] = "WHERE a.type = 'activity_comment' {$spam_sql} AND a.item_id = {$activity_id} AND (a.secondary_item_id = {$activity_id} OR a.secondary_item_id IN ({$spam_ids_list}))";
+						} else {
+							$sql['where'] = "WHERE a.type = 'activity_comment' {$spam_sql} AND a.secondary_item_id = {$activity_id}";
+						}
+					} else {
+						$sql['where'] = "WHERE a.type = 'activity_comment' {$spam_sql} AND a.secondary_item_id = $activity_id";
+					}
 				} else {
 					$sql['where'] = "WHERE a.type = 'activity_comment' {$spam_sql} AND a.item_id = $top_level_parent_id and a.mptt_left > $left AND a.mptt_left < $right";
 				}
@@ -1854,6 +1869,24 @@ class BP_Activity_Activity {
 						// Condition to handle other random order of ID if any.
 						$comparison_eq_op = ( 'DESC' === strtoupper( $args['comment_order_by'] ) ) ? '>=' : '<=';
 
+						// Handle timestamp conversion with proper validation.
+						$last_timestamp = $args['last_comment_timestamp'];
+						if ( is_numeric( $last_timestamp ) ) {
+							// Validate Unix timestamp is positive and not impossibly far in future.
+							$timestamp = (int) $last_timestamp;
+							if ( $timestamp <= 0 ) {
+								$timestamp = time(); // Fallback to current time for invalid timestamps.
+							}
+							$last_timestamp_formatted = date_i18n( 'Y-m-d H:i:s', $timestamp );
+						} else {
+							// Sanitize and validate date string.
+							$timestamp = strtotime( sanitize_text_field( $last_timestamp ) );
+							if ( false === $timestamp || $timestamp <= 0 ) {
+								$timestamp = time(); // Fallback for invalid date strings.
+							}
+							$last_timestamp_formatted = date_i18n( 'Y-m-d H:i:s', $timestamp );
+						}
+
 						$sql['where'] .= $wpdb->prepare(
 							" AND (
 								a.id {$comparison_op} %d
@@ -1864,7 +1897,7 @@ class BP_Activity_Activity {
 							) ",
 							$args['last_comment_id'],
 							$args['last_comment_id'],
-							date_i18n( 'Y-m-d H:i:s', strtotime( $args['last_comment_timestamp'] ) )
+							$last_timestamp_formatted
 						);
 					}
 
@@ -2405,9 +2438,23 @@ class BP_Activity_Activity {
 		}
 
 		// Select conditions.
+		// When filtering spam (ham_only), also count orphaned comments in top_level_count.
+		// Orphaned comments are replies to spam comments - they should be counted as root level.
+		$top_level_case = 'a.secondary_item_id = ' . $comment_id;
+
+		if ( ! empty( $args['spam'] ) && 'ham_only' === $args['spam'] ) {
+			// Get spam comment IDs for this activity to include orphaned comments in count.
+			$spam_comment_ids = self::get_spam_comment_ids( $comment_id );
+
+			if ( ! empty( $spam_comment_ids ) ) {
+				$spam_ids_list  = implode( ',', array_map( 'intval', $spam_comment_ids ) );
+				$top_level_case = "(a.secondary_item_id = {$comment_id} OR a.secondary_item_id IN ({$spam_ids_list}))";
+			}
+		}
+
 		$select_sql = 'SELECT
 			COUNT(*) AS all_child_count,
-			SUM( CASE WHEN a.secondary_item_id = ' . $comment_id . ' THEN 1 ELSE 0 END ) AS top_level_count';
+			SUM( CASE WHEN ' . $top_level_case . ' THEN 1 ELSE 0 END ) AS top_level_count';
 
 		$from_sql = ' FROM ' . $bp->activity->table_name . ' a';
 
@@ -2487,5 +2534,37 @@ class BP_Activity_Activity {
 		}
 
 		return $status;
+	}
+
+	/**
+	 * Get spam comment IDs for an activity.
+	 *
+	 * Used to identify orphaned comments (non-spam replies to spam comments)
+	 * that should appear at root level when their parent is marked as spam.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $activity_id The activity ID to get spam comment IDs for.
+	 *
+	 * @return array Array of spam comment IDs.
+	 */
+	private static function get_spam_comment_ids( $activity_id ) {
+		static $cache = array();
+
+		$activity_id = (int) $activity_id;
+
+		if ( ! isset( $cache[ $activity_id ] ) ) {
+			global $wpdb;
+			$bp = buddypress();
+
+			$cache[ $activity_id ] = $wpdb->get_col(
+				$wpdb->prepare(
+					"SELECT id FROM {$bp->activity->table_name} WHERE type = 'activity_comment' AND item_id = %d AND is_spam = 1",
+					$activity_id
+				)
+			);
+		}
+
+		return $cache[ $activity_id ];
 	}
 }

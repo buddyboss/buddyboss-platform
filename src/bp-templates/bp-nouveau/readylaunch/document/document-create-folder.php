@@ -19,13 +19,15 @@ defined( 'ABSPATH' ) || exit;
 		<input class="bb-rl-popup-on-fly-create-folder-title" value="" type="text" placeholder="<?php esc_attr_e( 'Enter folder title', 'buddyboss' ); ?>">
 		<small class="error-box"><?php esc_html_e( 'Following special characters are not supported: \ / ? % * : | " < >', 'buddyboss' ); ?></small>
 	</div>
-	<?php
-	if ( ! bp_is_group() ) :
-		bp_get_template_part( 'document/document-privacy' );
-	endif;
-	?>
-	<div class="db-modal-buttons">
-		<a class="bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small bb-rl-close-create-popup-folder" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
-		<a class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small bb-rl-document-create-popup-folder-submit" href="#"><?php esc_html_e( 'Create', 'buddyboss' ); ?></a>
+	<div class="bb-rl-footer-alt">
+		<?php
+		if ( ! bp_is_group() ) :
+			bp_get_template_part( 'document/document-privacy' );
+		endif;
+		?>
+		<div class="db-modal-buttons">
+			<a class="bb-rl-button bb-rl-button--secondaryFill bb-rl-button--small bb-rl-close-create-popup-folder" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
+			<a class="bb-rl-button bb-rl-button--brandFill bb-rl-button--small bb-rl-document-create-popup-folder-submit" href="#"><?php esc_html_e( 'Create', 'buddyboss' ); ?></a>
+		</div>
 	</div>
 </div>

@@ -387,6 +387,12 @@ function bp_nouveau_ajax_media_save() {
 	$media_personal_count = 0;
 	$media_group_count    = 0;
 	$media_all_count      = 0;
+	$album_counts         = array(
+		'album_total_count' => 0,
+		'album_media_count' => 0,
+		'album_video_count' => 0,
+	);
+
 	if ( bp_is_user_media() ) {
 		add_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_personal_scope', 20 );
 		bp_has_media( bp_ajax_querystring( 'media' ) );
@@ -416,12 +422,21 @@ function bp_nouveau_ajax_media_save() {
 		remove_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_groups_scope', 20 );
 
 	}
+
+	// Get album counts if uploading to an album.
+	if ( ! empty( $album_id ) ) {
+		$album_counts = bb_media_get_album_counts( $album_id, $group_id );
+	}
+
 	wp_send_json_success(
 		array(
 			'media'                => $media,
 			'media_personal_count' => $media_personal_count,
 			'media_group_count'    => $media_group_count,
 			'media_all_count'      => $media_all_count,
+			'album_total_count'    => (int) $album_counts['album_total_count'],
+			'album_media_count'    => (int) $album_counts['album_media_count'],
+			'album_video_count'    => (int) $album_counts['album_video_count'],
 		)
 	);
 
@@ -471,6 +486,17 @@ function bp_nouveau_ajax_media_delete() {
 		wp_send_json_error( $response );
 	}
 
+	// Get album ID and group ID before deletion for count updates.
+	$album_id = 0;
+	$group_id = 0;
+	if ( ! empty( $media[0] ) ) {
+		$first_media = new BP_Media( $media[0] );
+		if ( ! empty( $first_media->id ) ) {
+			$album_id = $first_media->album_id;
+			$group_id = $first_media->group_id;
+		}
+	}
+
 	$media_ids = array();
 	foreach ( $media as $media_id ) {
 
@@ -509,6 +535,7 @@ function bp_nouveau_ajax_media_delete() {
 			if ( bp_has_activities(
 				array(
 					'include' => $activity_id,
+					'scope'   => false,
 				)
 			) ) {
 				while ( bp_activities() ) {
@@ -602,6 +629,16 @@ function bp_nouveau_ajax_media_delete() {
 		wp_cache_flush();
 	}
 
+	// Get album counts after deletion if we were in an album.
+	$album_counts = array(
+		'album_total_count' => 0,
+		'album_media_count' => 0,
+		'album_video_count' => 0,
+	);
+	if ( ! empty( $album_id ) ) {
+		$album_counts = bb_media_get_album_counts( $album_id, $group_id );
+	}
+
 	wp_send_json_success(
 		array(
 			'media'                    => $media,
@@ -613,6 +650,9 @@ function bp_nouveau_ajax_media_delete() {
 			'media_group_count'        => $media_group_count,
 			'media_html_content'       => $media_html_content,
 			'group_media_html_content' => $group_media_html_content,
+			'album_total_count'        => (int) $album_counts['album_total_count'],
+			'album_media_count'        => (int) $album_counts['album_media_count'],
+			'album_video_count'        => (int) $album_counts['album_video_count'],
 		)
 	);
 
@@ -671,6 +711,15 @@ function bp_nouveau_ajax_media_move_to_album() {
 
 	$group_id = filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
 
+	// Get source album ID before moving (from first media item).
+	$source_album_id = 0;
+	if ( ! empty( $medias[0] ) ) {
+		$first_media = new BP_Media( $medias[0] );
+		if ( ! empty( $first_media->id ) ) {
+			$source_album_id = $first_media->album_id;
+		}
+	}
+
 	// Save media.
 	$media_ids = array();
 	foreach ( $medias as $media_id ) {
@@ -726,9 +775,37 @@ function bp_nouveau_ajax_media_move_to_album() {
 		ob_end_clean();
 	}
 
+	// Get album counts for source album (after move - items removed).
+	$source_album_counts = array(
+		'album_total_count' => 0,
+		'album_media_count' => 0,
+		'album_video_count' => 0,
+	);
+	if ( ! empty( $source_album_id ) ) {
+		$source_album_counts = bb_media_get_album_counts( $source_album_id, $group_id );
+	}
+
+	// Get album counts for destination album (after move - items added).
+	$dest_album_counts = array(
+		'album_total_count' => 0,
+		'album_media_count' => 0,
+		'album_video_count' => 0,
+	);
+	if ( ! empty( $album_id ) ) {
+		$dest_album_counts = bb_media_get_album_counts( $album_id, $group_id );
+	}
+
 	wp_send_json_success(
 		array(
-			'media' => $media,
+			'media'                      => $media,
+			'source_album_id'            => (int) $source_album_id,
+			'source_album_total_count'   => (int) $source_album_counts['album_total_count'],
+			'source_album_media_count'   => (int) $source_album_counts['album_media_count'],
+			'source_album_video_count'   => (int) $source_album_counts['album_video_count'],
+			'dest_album_id'              => (int) $album_id,
+			'dest_album_total_count'     => (int) $dest_album_counts['album_total_count'],
+			'dest_album_media_count'     => (int) $dest_album_counts['album_media_count'],
+			'dest_album_video_count'     => (int) $dest_album_counts['album_video_count'],
 		)
 	);
 }
@@ -784,6 +861,14 @@ function bp_nouveau_ajax_media_album_save() {
 
 	$user_id = bp_loggedin_user_id();
 	if ( $id ) {
+		if ( ! bp_album_user_can_edit( $id ) ) {
+			$response['feedback'] = sprintf(
+				'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+				esc_html__( 'You don\'t have permission to edit this album.', 'buddyboss' )
+			);
+			wp_send_json_error( $response );
+		}
+
 		$album   = new BP_Media_Album( $id );
 		$user_id = $album->user_id;
 	}
@@ -1629,6 +1714,13 @@ function bp_nouveau_ajax_media_move() {
 		wp_send_json_error( $response );
 	}
 
+	// Get source album ID before moving.
+	$source_album_id = 0;
+	$media_object    = new BP_Media( $media_id );
+	if ( ! empty( $media_object->id ) ) {
+		$source_album_id = $media_object->album_id;
+	}
+
 	if ( (int) $media_id > 0 ) {
 		$has_access = bp_media_user_can_edit( $media_id );
 		if ( ! $has_access ) {
@@ -1653,13 +1745,41 @@ function bp_nouveau_ajax_media_move() {
 	$response = bp_media_get_activity_media( $activity_id );
 
 	if ( $media > 0 ) {
+		// Get album counts for source album (after move - items removed).
+		$source_album_counts = array(
+			'album_total_count' => 0,
+			'album_media_count' => 0,
+			'album_video_count' => 0,
+		);
+		if ( ! empty( $source_album_id ) ) {
+			$source_album_counts = bb_media_get_album_counts( $source_album_id, $group_id );
+		}
+
+		// Get album counts for destination album (after move - items added).
+		$dest_album_counts = array(
+			'album_total_count' => 0,
+			'album_media_count' => 0,
+			'album_video_count' => 0,
+		);
+		if ( ! empty( $album_id ) ) {
+			$dest_album_counts = bb_media_get_album_counts( $album_id, $group_id );
+		}
+
 		$content = '';
 		wp_send_json_success(
 			array(
-				'media_ids'     => $response['media_activity_ids'],
-				'media_content' => $response['content'],
-				'message'       => 'success',
-				'html'          => $content,
+				'media_ids'                  => $response['media_activity_ids'],
+				'media_content'              => $response['content'],
+				'message'                    => 'success',
+				'html'                       => $content,
+				'source_album_id'            => (int) $source_album_id,
+				'source_album_total_count'   => (int) $source_album_counts['album_total_count'],
+				'source_album_media_count'   => (int) $source_album_counts['album_media_count'],
+				'source_album_video_count'   => (int) $source_album_counts['album_video_count'],
+				'dest_album_id'              => (int) $album_id,
+				'dest_album_total_count'     => (int) $dest_album_counts['album_total_count'],
+				'dest_album_media_count'     => (int) $dest_album_counts['album_media_count'],
+				'dest_album_video_count'     => (int) $dest_album_counts['album_video_count'],
 			)
 		);
 	} else {

@@ -255,7 +255,7 @@ module.exports = function (grunt) {
 						dest: BUILD_DIR,
 						dot: true,
 						expand: true,
-						src: ['composer.json']
+						src: ['composer.json', '!CLAUDE.md']
 					}
 					]
 				},
