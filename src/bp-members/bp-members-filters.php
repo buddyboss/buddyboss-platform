@@ -640,11 +640,11 @@ function bb_core_prime_mentions_results() {
 				)
 			);
 
-			if (!empty($user->display_name)) {
+			if ( ! empty( $user->display_name ) ) {
 				bp_disable_profile_sync();
 			}
-			$result->name = bp_core_get_user_displayname($user->ID);
-			
+			$result->name = bp_core_get_user_displayname( $user->ID );
+
 			$result->user_id = $user->ID;
 
 			$friends[] = $result;
