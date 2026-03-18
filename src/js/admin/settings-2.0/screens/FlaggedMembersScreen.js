@@ -8,7 +8,15 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from '@wordpress/element';
-import { Spinner, Button } from '@wordpress/components';
+import {
+	Spinner,
+	Button,
+	CheckboxControl,
+	SelectControl,
+	DropdownMenu,
+	MenuGroup,
+	MenuItem,
+} from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { getFlaggedMembers, suspendMember, unsuspendMember, flaggedMembersBulkAction } from '../utils/ajax';
 import { ViewReportModal } from '../components/modals/ViewReportModal';
@@ -62,11 +70,6 @@ export function FlaggedMembersScreen() {
 	var selectedIdsState = useState( [] );
 	var selectedIds = selectedIdsState[ 0 ];
 	var setSelectedIds = selectedIdsState[ 1 ];
-
-	// 3-dot menu state.
-	var openMenuState = useState( null );
-	var openMenuId = openMenuState[ 0 ];
-	var setOpenMenuId = openMenuState[ 1 ];
 
 	// View report modal state.
 	var reportModalState = useState( null );
@@ -130,20 +133,6 @@ export function FlaggedMembersScreen() {
 		};
 	}, [] );
 
-	// Close menu on outside click.
-	useEffect( function () {
-		if ( openMenuId === null ) {
-			return;
-		}
-		function handleClick() {
-			setOpenMenuId( null );
-		}
-		document.addEventListener( 'click', handleClick );
-		return function () {
-			document.removeEventListener( 'click', handleClick );
-		};
-	}, [ openMenuId ] );
-
 	// Handle search.
 	var handleSearch = useCallback( function ( e ) {
 		if ( e ) {
@@ -155,8 +144,7 @@ export function FlaggedMembersScreen() {
 	}, [ search, statusFilter, fetchMembers ] );
 
 	// Handle status filter change.
-	var handleStatusFilterChange = useCallback( function ( e ) {
-		var newStatus = e.target.value;
+	var handleStatusFilterChange = useCallback( function ( newStatus ) {
 		setStatusFilter( newStatus );
 		setPage( 1 );
 		setSelectedIds( [] );
@@ -171,22 +159,25 @@ export function FlaggedMembersScreen() {
 	}, [ search, statusFilter, fetchMembers ] );
 
 	// Select all checkbox.
-	var handleSelectAll = useCallback( function () {
-		if ( selectedIds.length === members.length && members.length > 0 ) {
-			setSelectedIds( [] );
-		} else {
+	var handleSelectAll = useCallback( function ( checked ) {
+		if ( checked ) {
 			setSelectedIds( members.map( function ( m ) { return m.user_id; } ) );
+		} else {
+			setSelectedIds( [] );
 		}
-	}, [ members, selectedIds ] );
+	}, [ members ] );
 
 	// Select single row.
-	var handleSelectRow = useCallback( function ( userId ) {
-		setSelectedIds( function ( prev ) {
-			if ( prev.indexOf( userId ) > -1 ) {
+	var handleSelectRow = useCallback( function ( userId, checked ) {
+		if ( checked ) {
+			setSelectedIds( function ( prev ) {
+				return prev.concat( [ userId ] );
+			} );
+		} else {
+			setSelectedIds( function ( prev ) {
 				return prev.filter( function ( id ) { return id !== userId; } );
-			}
-			return prev.concat( [ userId ] );
-		} );
+			} );
+		}
 	}, [] );
 
 	// Handle bulk action apply.
@@ -220,18 +211,20 @@ export function FlaggedMembersScreen() {
 	}, [ bulkAction, selectedIds, page, search, statusFilter, fetchMembers ] );
 
 	// Handle suspend/unsuspend with confirmation dialog.
-	var handleSuspendAction = useCallback( function ( member, action ) {
+	var handleSuspendAction = useCallback( function ( member, action, onClose ) {
 		var confirmMessage = ( 'suspend' === action )
 			? __( 'Please confirm you want to suspend this member. Members who are suspended will be logged out and not allowed to login again. Their content will be hidden from all members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' )
 			: __( 'Please confirm you want to unsuspend this member. Members who are unsuspended will be allowed to login again, and their content will no longer be hidden from other members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' );
 
 		if ( ! window.confirm( confirmMessage ) ) {
-			setOpenMenuId( null );
 			return;
 		}
 
+		if ( onClose ) {
+			onClose();
+		}
+
 		setActionInProgress( member.user_id );
-		setOpenMenuId( null );
 
 		// Optimistically mark suspend_in_progress so button stays disabled after refetch.
 		setMembers( function ( prev ) {
@@ -257,8 +250,10 @@ export function FlaggedMembersScreen() {
 	}, [ page, search, statusFilter, fetchMembers ] );
 
 	// Handle view report.
-	var handleViewReport = useCallback( function ( member ) {
-		setOpenMenuId( null );
+	var handleViewReport = useCallback( function ( member, onClose ) {
+		if ( onClose ) {
+			onClose();
+		}
 		setReportModalMember( member );
 	}, [] );
 
@@ -270,7 +265,9 @@ export function FlaggedMembersScreen() {
 			{ errorMessage && (
 				<div className="bb-admin-flagged-members__error-notice">
 					<span>{ errorMessage }</span>
-					<button type="button" onClick={ function () { setErrorMessage( '' ); } }>&times;</button>
+					<button type="button" onClick={ function () { setErrorMessage( '' ); } }>
+						<i className="bb-icons-rl bb-icons-rl-x"></i>
+					</button>
 				</div>
 			) }
 			<div className="bb-admin-flagged-members__card">
@@ -286,205 +283,216 @@ export function FlaggedMembersScreen() {
 					{/* Action Bar */}
 					<div className="bb-admin-flagged-members__action-bar">
 						<div className="bb-admin-flagged-members__action-bar-left">
-							<select
-								className={ 'bb-admin-flagged-members__bulk-select' + ( ! hasBulkSelection ? ' bb-admin-flagged-members__bulk-select--disabled' : '' ) }
-								value={ bulkAction }
-								onChange={ function ( e ) { setBulkAction( e.target.value ); } }
-								disabled={ ! hasBulkSelection }
-							>
-								<option value="">{ __( 'Bulk actions', 'buddyboss' ) }</option>
-								<option value="suspend">{ __( 'Suspend', 'buddyboss' ) }</option>
-								<option value="unsuspend">{ __( 'Unsuspend', 'buddyboss' ) }</option>
-							</select>
-							<button
-								className={ 'bb-admin-flagged-members__bulk-apply' + ( ( ! bulkAction || ! hasBulkSelection ) ? ' bb-admin-flagged-members__bulk-apply--disabled' : '' ) }
-								onClick={ handleBulkApply }
-								disabled={ ! bulkAction || ! hasBulkSelection || actionInProgress === 'bulk' }
-							>
-								{ actionInProgress === 'bulk' ? <Spinner /> : __( 'Apply', 'buddyboss' ) }
-							</button>
+							<div className="bb-admin-flagged-members__bulk-actions">
+								<SelectControl
+									value={ bulkAction }
+									options={ [
+										{ label: __( 'Bulk actions', 'buddyboss' ), value: '' },
+										{ label: __( 'Suspend', 'buddyboss' ), value: 'suspend' },
+										{ label: __( 'Unsuspend', 'buddyboss' ), value: 'unsuspend' },
+									] }
+									onChange={ setBulkAction }
+									disabled={ ! hasBulkSelection }
+									__nextHasNoMarginBottom
+								/>
+								<Button
+									variant="secondary"
+									onClick={ handleBulkApply }
+									disabled={ ! bulkAction || ! hasBulkSelection || actionInProgress === 'bulk' }
+									className="bb-admin-flagged-members__bulk-apply"
+								>
+									{ actionInProgress === 'bulk' ? <Spinner /> : __( 'Apply', 'buddyboss' ) }
+								</Button>
+							</div>
 						</div>
 						<div className="bb-admin-flagged-members__action-bar-right">
-							<select
-								className="bb-admin-flagged-members__status-select"
+							<SelectControl
 								value={ statusFilter }
+								options={ [
+									{ label: __( 'All', 'buddyboss' ) + ' (' + statusCounts.all + ')', value: '' },
+									{ label: __( 'Suspended', 'buddyboss' ) + ' (' + statusCounts.suspended + ')', value: 'suspended' },
+									{ label: __( 'Active', 'buddyboss' ) + ' (' + statusCounts.active + ')', value: 'active' },
+								] }
 								onChange={ handleStatusFilterChange }
-							>
-								<option value="">{ __( 'All', 'buddyboss' ) + ' (' + statusCounts.all + ')' }</option>
-								<option value="suspended">{ __( 'Suspended', 'buddyboss' ) + ' (' + statusCounts.suspended + ')' }</option>
-								<option value="active">{ __( 'Active', 'buddyboss' ) + ' (' + statusCounts.active + ')' }</option>
-							</select>
-							<form className="bb-admin-flagged-members__search-form" onSubmit={ handleSearch }>
-								<input
-									type="text"
-									className="bb-admin-flagged-members__search-input"
-									placeholder={ __( 'Search members', 'buddyboss' ) }
-									value={ search }
-									onChange={ function ( e ) { setSearch( e.target.value ); } }
-								/>
-								<button type="submit" className="bb-admin-flagged-members__search-btn">
-									<i className="bb-icons-rl bb-icons-rl-search"></i>
-								</button>
-							</form>
-						</div>
-					</div>
-
-					{/* Table Header */}
-					<div className="bb-admin-flagged-members__table-header">
-						<div className="bb-admin-flagged-members__table-header-left">
-							<div className="bb-admin-flagged-members__checkbox-col">
-								<input
-									type="checkbox"
-									className="bb-admin-flagged-members__checkbox"
-									checked={ allSelected }
-									onChange={ handleSelectAll }
-								/>
+								className="bb-admin-flagged-members__status-select"
+								__nextHasNoMarginBottom
+							/>
+							<div className="bb-admin-flagged-members__search">
+								<form className="bb-admin-flagged-members__search-form" onSubmit={ handleSearch }>
+									<input
+										type="text"
+										className="bb-admin-flagged-members__search-input"
+										placeholder={ __( 'Search members', 'buddyboss' ) }
+										value={ search }
+										onChange={ function ( e ) { setSearch( e.target.value ); } }
+									/>
+									<span className="bb-admin-flagged-members__search-icon">
+										<i className="bb-icons-rl bb-icons-rl-magnifying-glass"></i>
+									</span>
+								</form>
 							</div>
-							<span className="bb-admin-flagged-members__col-label bb-admin-flagged-members__col-label--member">
-								{ __( 'Member', 'buddyboss' ) }
-							</span>
 						</div>
-						<span className="bb-admin-flagged-members__col-label bb-admin-flagged-members__col-label--blocks">
-							{ __( 'Blocks', 'buddyboss' ) }
-						</span>
-						<span className="bb-admin-flagged-members__col-label bb-admin-flagged-members__col-label--reports">
-							{ __( 'Reports', 'buddyboss' ) }
-						</span>
 					</div>
 
-					{ isLoading ? (
-						<div className="bb-admin-loading">
-							<Spinner />
-						</div>
-					) : members.length === 0 ? (
-						<div className="bb-admin-flagged-members__empty">
-							<p>{ __( 'No flagged members found.', 'buddyboss' ) }</p>
-						</div>
-					) : (
-						<>
-							<div className="bb-admin-flagged-members__list">
-								{ members.map( function ( member ) {
-									var isBusy = actionInProgress === member.user_id;
-									var isSelected = selectedIds.indexOf( member.user_id ) > -1;
-									return (
-										<div key={ member.id } className={ 'bb-admin-flagged-members__list-item' + ( isSelected ? ' bb-admin-flagged-members__list-item--selected' : '' ) }>
-											{/* Items row */}
-											<div className="bb-admin-flagged-members__items">
-												{/* Member column (264px) — checkbox + avatar + name */}
-												<div className="bb-admin-flagged-members__member-col">
-													<div className="bb-admin-flagged-members__checkbox-col">
-														<input
-															type="checkbox"
-															className="bb-admin-flagged-members__checkbox"
-															checked={ isSelected }
-															onChange={ function () { handleSelectRow( member.user_id ); } }
-														/>
-													</div>
-													<img
-														src={ member.avatar }
-														alt={ member.display_name }
-														className="bb-admin-flagged-members__avatar"
+					{/* Table */}
+					<div className="bb-admin-flagged-members__table-wrapper">
+						{ isLoading ? (
+							<div className="bb-admin-loading">
+								<Spinner />
+							</div>
+						) : 0 === members.length ? (
+							<div className="bb-admin-flagged-members__empty">
+								<p>{ __( 'No flagged members found.', 'buddyboss' ) }</p>
+							</div>
+						) : (
+							<table className="bb-admin-flagged-members__table">
+								<thead>
+									<tr>
+										<th className="bb-admin-flagged-members__th--checkbox">
+											<CheckboxControl
+												checked={ allSelected }
+												onChange={ handleSelectAll }
+												__nextHasNoMarginBottom
+											/>
+										</th>
+										<th className="bb-admin-flagged-members__th--member">
+											{ __( 'Member', 'buddyboss' ) }
+										</th>
+										<th className="bb-admin-flagged-members__th--blocks">
+											{ __( 'Blocks', 'buddyboss' ) }
+										</th>
+										<th className="bb-admin-flagged-members__th--reports">
+											{ __( 'Reports', 'buddyboss' ) }
+										</th>
+										<th className="bb-admin-flagged-members__th--status">
+											{ __( 'Status', 'buddyboss' ) }
+										</th>
+										<th className="bb-admin-flagged-members__th--actions">&nbsp;</th>
+									</tr>
+								</thead>
+								<tbody>
+									{ members.map( function ( member ) {
+										var isBusy = actionInProgress === member.user_id;
+										var isSelected = selectedIds.indexOf( member.user_id ) > -1;
+										return (
+											<tr
+												key={ member.id }
+												className={ 'bb-admin-flagged-members__row' + ( isSelected ? ' bb-admin-flagged-members__row--selected' : '' ) }
+											>
+												<td className="bb-admin-flagged-members__td--checkbox">
+													<CheckboxControl
+														checked={ isSelected }
+														onChange={ function ( checked ) {
+															handleSelectRow( member.user_id, checked );
+														} }
+														__nextHasNoMarginBottom
 													/>
-													<a
-														href={ member.profile_url }
-														target="_blank"
-														rel="noopener noreferrer"
-														className="bb-admin-flagged-members__name"
-													>
-														{ member.display_name }
-													</a>
-												</div>
-
-												{/* Blocks */}
-												<div className={ 'bb-admin-flagged-members__blocks-col' + ( member.blocks > 0 ? ' bb-admin-flagged-members__col--active' : '' ) }>
+												</td>
+												<td className="bb-admin-flagged-members__td--member">
+													<div className="bb-admin-flagged-members__member">
+														<img
+															src={ member.avatar }
+															alt={ member.display_name }
+															className="bb-admin-flagged-members__avatar"
+														/>
+														<a
+															href={ member.profile_url }
+															target="_blank"
+															rel="noopener noreferrer"
+															className="bb-admin-flagged-members__name"
+														>
+															{ member.display_name }
+														</a>
+													</div>
+												</td>
+												<td className={ 'bb-admin-flagged-members__td--blocks' + ( member.blocks > 0 ? ' bb-admin-flagged-members__td--active' : '' ) }>
 													<i className="bb-icons-rl bb-icons-rl-prohibit"></i>
 													{ member.blocks }
-												</div>
-
-												{/* Reports */}
-												<div className={ 'bb-admin-flagged-members__reports-col' + ( member.reports > 0 ? ' bb-admin-flagged-members__col--active' : '' ) }>
+												</td>
+												<td className={ 'bb-admin-flagged-members__td--reports' + ( member.reports > 0 ? ' bb-admin-flagged-members__td--active' : '' ) }>
 													<i className="bb-icons-rl bb-icons-rl-flag"></i>
 													{ member.reports }
-												</div>
-
-												{/* Suspended badge */}
-												{ member.is_suspended && (
-													<div className="bb-admin-flagged-members__status-col">
+												</td>
+												<td className="bb-admin-flagged-members__td--status">
+													{ member.is_suspended && (
 														<span className="bb-admin-flagged-members__suspended-badge">
 															{ __( 'Suspended', 'buddyboss' ) }
 														</span>
-													</div>
-												) }
-											</div>
-
-											{/* Actions */}
-											<div className="bb-admin-flagged-members__actions-col">
-												{ isBusy ? (
-													<Spinner />
-												) : (
-													<div className="bb-admin-flagged-members__menu-wrapper">
-														<button
-															className="bb-admin-flagged-members__menu-trigger"
-															onClick={ function ( e ) {
-																e.stopPropagation();
-																setOpenMenuId( openMenuId === member.id ? null : member.id );
-															} }
+													) }
+												</td>
+												<td className="bb-admin-flagged-members__td--actions">
+													{ isBusy ? (
+														<Spinner />
+													) : (
+														<DropdownMenu
+															icon={ <i className="bb-icons-rl bb-icons-rl-dots-three"></i> }
+															label={ __( 'More options', 'buddyboss' ) }
 														>
-															<i className="bb-icons-rl bb-icons-rl-dots-three"></i>
-														</button>
-														{ openMenuId === member.id && (
-															<div className="bb-admin-flagged-members__menu-dropdown">
-																<button
-																	className="bb-admin-flagged-members__menu-item"
-																	onClick={ function () { handleViewReport( member ); } }
-																>
-																	<i className="bb-icons-rl bb-icons-rl-eye"></i>
-																	{ __( 'View Report', 'buddyboss' ) }
-																</button>
-																{ ! member.is_admin && (
-																	member.suspend_in_progress ? (
-																		<span
-																			className="bb-admin-flagged-members__menu-item bb-admin-flagged-members__menu-item--disabled"
-																			data-balloon={ __( 'The background process is currently in the queue. Please refresh the page after a short while.', 'buddyboss' ) }
-																			data-balloon-pos="up"
-																		>
-																			<i className={ member.is_suspended ? 'bb-icons-rl bb-icons-rl-user-circle-check' : 'bb-icons-rl bb-icons-rl-user-circle-minus' }></i>
-																			{ member.is_suspended ? __( 'Unsuspend Member', 'buddyboss' ) : __( 'Suspend Member', 'buddyboss' ) }
-																		</span>
-																	) : (
-																		<button
-																			className="bb-admin-flagged-members__menu-item"
+															{ function ( { onClose } ) {
+																return (
+																	<MenuGroup className="bb_dropdown_menu_group">
+																		<MenuItem
 																			onClick={ function () {
-																				handleSuspendAction(
-																					member,
-																					member.is_suspended ? 'unsuspend' : 'suspend'
-																				);
+																				handleViewReport( member, onClose );
 																			} }
 																		>
-																			<i className={ member.is_suspended ? 'bb-icons-rl bb-icons-rl-user-circle-check' : 'bb-icons-rl bb-icons-rl-user-circle-minus' }></i>
-																			{ member.is_suspended ? __( 'Unsuspend Member', 'buddyboss' ) : __( 'Suspend Member', 'buddyboss' ) }
-																		</button>
-																	)
-																) }
-															</div>
-														) }
-													</div>
-												) }
-											</div>
-										</div>
-									);
-								} ) }
-							</div>
+																			<i className="bb-icons-rl bb-icons-rl-eye"></i>
+																			{ __( 'View Report', 'buddyboss' ) }
+																		</MenuItem>
+																		{ ! member.is_admin && (
+																			member.suspend_in_progress ? (
+																				<MenuItem
+																					disabled
+																					aria-label={ __( 'The background process is currently in the queue. Please refresh the page after a short while.', 'buddyboss' ) }
+																				>
+																					<i className={ member.is_suspended ? 'bb-icons-rl bb-icons-rl-user-circle-check' : 'bb-icons-rl bb-icons-rl-user-circle-minus' }></i>
+																					{ member.is_suspended ? __( 'Unsuspend Member', 'buddyboss' ) : __( 'Suspend Member', 'buddyboss' ) }
+																				</MenuItem>
+																			) : (
+																				<MenuItem
+																					onClick={ function () {
+																						handleSuspendAction(
+																							member,
+																							member.is_suspended ? 'unsuspend' : 'suspend',
+																							onClose
+																						);
+																					} }
+																				>
+																					<i className={ member.is_suspended ? 'bb-icons-rl bb-icons-rl-user-circle-check' : 'bb-icons-rl bb-icons-rl-user-circle-minus' }></i>
+																					{ member.is_suspended ? __( 'Unsuspend Member', 'buddyboss' ) : __( 'Suspend Member', 'buddyboss' ) }
+																				</MenuItem>
+																			)
+																		) }
+																	</MenuGroup>
+																);
+															} }
+														</DropdownMenu>
+													) }
+												</td>
+											</tr>
+										);
+									} ) }
+								</tbody>
+							</table>
+						) }
+					</div>
 
-							{/* Pagination */}
+					{/* Footer */}
+					{ ! isLoading && total > 0 && (
+						<div className="bb-admin-flagged-members__footer">
+							<span className="bb-admin-flagged-members__item-count">
+								{ total } { __( 'items', 'buddyboss' ) }
+							</span>
+
 							{ totalPages > 1 && (
 								<div className="bb-admin-flagged-members__pagination">
 									<Button
 										variant="secondary"
 										disabled={ page <= 1 }
 										onClick={ function () { handlePageChange( page - 1 ); } }
+										className="bb-admin-flagged-members__pagination-btn bb-admin-flagged-members__pagination-btn--previous"
 									>
-										{ __( '← Previous', 'buddyboss' ) }
+										&lsaquo;
 									</Button>
 									<span className="bb-admin-flagged-members__page-info">
 										{ page + ' / ' + totalPages }
@@ -493,12 +501,13 @@ export function FlaggedMembersScreen() {
 										variant="secondary"
 										disabled={ page >= totalPages }
 										onClick={ function () { handlePageChange( page + 1 ); } }
+										className="bb-admin-flagged-members__pagination-btn bb-admin-flagged-members__pagination-btn--next"
 									>
-										{ __( 'Next →', 'buddyboss' ) }
+										&rsaquo;
 									</Button>
 								</div>
 							) }
-						</>
+						</div>
 					) }
 				</div>
 			</div>
