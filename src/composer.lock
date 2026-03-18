@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4190a0c06701f537550910556f38e99d",
+    "content-hash": "86127cdb632461cfaee1b1300d48e3b1",
     "packages": [
         {
             "name": "alchemy/binary-driver",
@@ -229,7 +229,7 @@
             ],
             "description": "The GroundLevel Support package.",
             "support": {
-                "source": "https://github.com/caseproof/ground-level-support/tree/2.2.1"
+                "source": "https://github.com/caseproof/ground-level-support/tree/3.0.1"
             },
             "time": "2026-01-27T21:29:41+00:00"
         },

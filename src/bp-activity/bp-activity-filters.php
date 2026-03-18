@@ -156,6 +156,12 @@ add_filter( 'bp_activity_can_comment', 'bb_activity_has_comment_access' );
 // Obey BuddyBoss comment reply rules.
 add_filter( 'bp_activity_can_comment_reply', 'bb_activity_has_comment_reply_access', 10, 2 );
 
+// Adjust parent ID for max-depth activity comment replies to maintain threading depth limit.
+add_filter( 'bb_activity_new_comment_pre_validate', 'bb_adjust_activity_comment_threading_parent' );
+
+// Add max-depth class to the last threaded level UL element.
+add_filter( 'bb_activity_recurse_comments_start_ul', 'bb_add_max_depth_class_to_comment_ul' );
+
 // Filter for comment meta button.
 add_filter( 'bp_nouveau_get_activity_comment_buttons', 'bb_remove_discussion_comment_reply_button', 10, 3 );
 
@@ -2865,7 +2871,12 @@ function bb_activity_has_comment_access( $retval ) {
 /**
  * Disable the comment reply for discussion activity.
  *
+ * Modified to allow replies at max depth for non-blog activities.
+ * Replies at max depth will be redirected to parent comments
+ * to maintain the depth limit. See bb_adjust_activity_comment_threading_parent().
+ *
  * @since BuddyBoss 1.7.2
+ * @since BuddyBoss 2.20.0
  *
  * @param boolean $can_comment Comment permission status.
  * @param object  $comment     Activity data.
@@ -2894,6 +2905,8 @@ function bb_activity_has_comment_reply_access( $can_comment, $comment ) {
 	$main_activity = new BP_Activity_Activity( $comment->item_id );
 
 	// Disallow replies if threading disabled or depth condition is matched.
+	// For blogs component, we still hide the reply button at max depth (WordPress behavior).
+	// For other activities, we allow replies at max depth but redirect them to parent comments.
 	if ( isset( $main_activity->component ) && 'blogs' === $main_activity->component ) {
 		if (
 			empty( get_option( 'thread_comments' ) ) ||
@@ -2905,18 +2918,62 @@ function bb_activity_has_comment_reply_access( $can_comment, $comment ) {
 			$can_comment = false;
 		}
 	} else {
-		if (
-			false === bb_is_activity_comment_threading_enabled() ||
-			(
-				isset( $comment->depth ) &&
-				$comment->depth >= bb_get_activity_comment_threading_depth()
-			)
-		) {
+		// Only disable if threading is completely disabled.
+		// We no longer hide at max depth - instead replies are redirected to parent.
+		// See bb_adjust_activity_comment_threading_parent() for the redirection logic.
+		if ( false === bb_is_activity_comment_threading_enabled() ) {
 			$can_comment = false;
 		}
 	}
 
 	return $can_comment;
+}
+
+/**
+ * Add max-depth class to the last threaded level UL element.
+ *
+ * This function adds a 'bb-threaded-level-max' class to the UL element
+ * that contains comments at the maximum threading depth. This allows
+ * for CSS styling specific to the deepest comment level.
+ *
+ * @since BuddyBoss 2.20.0
+ *
+ * @param string $ul_html The opening UL tag HTML.
+ *
+ * @return string Modified UL tag HTML with max-depth class if applicable.
+ */
+function bb_add_max_depth_class_to_comment_ul( $ul_html ) {
+	global $activities_template;
+
+	// Check if threading is enabled.
+	if ( ! bb_is_activity_comment_threading_enabled() ) {
+		return $ul_html;
+	}
+
+	// Get the current comment being processed.
+	$current_comment = isset( $activities_template->activity->current_comment )
+		? $activities_template->activity->current_comment
+		: null;
+
+	// If no current comment, this is the root level UL, skip it.
+	if ( empty( $current_comment ) || ! isset( $current_comment->depth ) ) {
+		return $ul_html;
+	}
+
+	$max_depth     = (int) bb_get_activity_comment_threading_depth();
+	$current_depth = (int) $current_comment->depth;
+
+	// The UL being created will contain comments at depth = current_depth + 1.
+	// If current_depth + 1 equals max_depth, this UL is the max level.
+	if ( ( $current_depth + 1 ) === $max_depth ) {
+		if ( false !== strpos( $ul_html, 'class="' ) ) {
+			$ul_html = str_replace( 'class="', 'class="bb-threaded-level-max ', $ul_html );
+		} else {
+			$ul_html = str_replace( '<ul ', '<ul class="bb-threaded-level-max" ', $ul_html );
+		}
+	}
+
+	return $ul_html;
 }
 
 /**
@@ -3602,6 +3659,50 @@ add_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_po
 add_action( 'bb_media_after_create_parent_activity', 'bb_activity_send_email_to_following_post', 10, 3 );
 add_action( 'bb_document_after_create_parent_activity', 'bb_activity_send_email_to_following_post', 10, 3 );
 add_action( 'bb_video_after_create_parent_activity', 'bb_activity_send_email_to_following_post', 10, 3 );
+add_action( 'bp_activity_post_type_published', 'bb_activity_send_notification_for_post_type', 10, 3 );
+
+/**
+ * Send follower notifications when a post type activity is published (e.g. blog posts).
+ *
+ * The existing `bb_activity_send_email_to_following_post()` only handles direct
+ * activity updates (component === 'activity'). Blog posts create activities with
+ * component === 'blogs' and fire `bp_activity_post_type_published` with a different
+ * hook signature. This function bridges that gap.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param int     $activity_id   ID of the newly published activity item.
+ * @param WP_Post $post          Post object.
+ * @param array   $activity_args Array of activity arguments.
+ */
+function bb_activity_send_notification_for_post_type( $activity_id, $post, $activity_args ) {
+	// Bail if follow is not active or activity ID is empty.
+	if ( empty( $activity_id ) || ! bp_is_activity_follow_active() ) {
+		return;
+	}
+
+	$activity = new BP_Activity_Activity( $activity_id );
+
+	// Bail if activity not found or not published.
+	if (
+		empty( $activity->id ) ||
+		bb_get_activity_published_status() !== $activity->status
+	) {
+		return;
+	}
+
+	$content   = ! empty( $activity->content ) ? $activity->content : '';
+	$usernames = bp_activity_do_mentions() ? bp_activity_find_mentions( $content ) : array();
+
+	$parse_args = array(
+		'activity'  => $activity,
+		'usernames' => $usernames,
+		'item_id'   => $activity->user_id,
+	);
+
+	// Send notification to followers.
+	bb_activity_create_following_post_notification( $parse_args );
+}
 
 /**
  * Function will send notification to following user.

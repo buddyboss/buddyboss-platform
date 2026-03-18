@@ -83,7 +83,26 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			$this->load_template_stack();
-			$this->load_login_registration_integration();
+
+			/*
+			 * Only load ReadyLaunch login/registration integration when enabled in settings.
+			 * When disabled, the theme's default login/register styling and templates are used.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 */
+			if ( $this->bb_rl_is_page_enabled_for_integration( 'registration' ) ) {
+				$this->load_login_registration_integration();
+			} elseif (
+				isset( $_SERVER['SCRIPT_NAME'] ) &&
+				false !== stripos( wp_login_url(), $_SERVER['SCRIPT_NAME'] ) &&
+				! $this->bb_rl_is_page_enabled_for_integration( 'registration' )
+			) {
+				// On wp-login.php with registration disabled, restore the default
+				// template stack so bp_locate_template_asset() finds Platform CSS
+				// (buddypress.css, bb-icons.css) in the standard template directory.
+				$this->bb_rl_restore_default_template_stack();
+			}
+
 			$this->load_hooks();
 
 			// Added support for Forums integration.
@@ -237,6 +256,20 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_action( 'login_form_login', array( $this, 'bb_rl_overwrite_login_email_field_label_hook' ) );
 
 			add_action( 'wp_login_errors', array( $this, 'bb_rl_wp_login_errors' ) );
+		}
+
+		/**
+		 * Restore the default BuddyBoss/BuddyPress template stack.
+		 *
+		 * Removes ReadyLaunch template locations and re-adds the standard ones so that
+		 * bp_locate_template() and bp_locate_template_asset() resolve files from the
+		 * default template directories instead of ReadyLaunch.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		protected function bb_rl_restore_default_template_stack() {
+			remove_filter( 'bp_get_template_stack', array( $this, 'add_template_stack' ), PHP_INT_MAX );
+			add_filter( 'bp_get_template_stack', 'bp_add_template_stack_locations' );
 		}
 
 		/**
@@ -953,9 +986,26 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				return $template;
 			}
 
+			// @since BuddyBoss [BBVERSION] Only use ReadyLaunch register template when setting is enabled.
 			if ( bp_is_register_page() ) {
-				$this->bb_rl_required_load();
-				return bp_locate_template( 'register.php' );
+				if ( $this->bb_rl_is_page_enabled_for_integration( 'registration' ) ) {
+					$this->bb_rl_required_load();
+					return bp_locate_template( 'register.php' );
+				}
+
+				// Login & Registration is disabled — restore default template stack
+				// so BuddyPress templates are used instead of ReadyLaunch.
+				$this->bb_rl_restore_default_template_stack();
+
+				// Use the theme's buddypress.php which provides the full page
+				// wrapper (header, logo, footer) for the register form.
+				$theme_bp_template = locate_template( 'buddypress.php' );
+				if ( $theme_bp_template ) {
+					return $theme_bp_template;
+				}
+
+				// Fallback: let WordPress handle it normally.
+				return $template;
 			}
 
 			if ( bp_is_activation_page() ) {
@@ -1094,10 +1144,18 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			wp_enqueue_style( 'bb-readylaunch-font', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/assets/fonts/fonts.css', array(), bp_get_version() );
 			wp_enqueue_style( 'bb-readylaunch-style-main', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/main{$min}.css", array(), bp_get_version() );
+			wp_style_add_data( 'bb-readylaunch-style-main', 'rtl', 'replace' );
+			if ( $min ) {
+				wp_style_add_data( 'bb-readylaunch-style-main', 'suffix', $min );
+			}
 
 			// Register only if it's an Activity component.
 			if ( bp_is_active( 'activity' ) && bp_is_activity_component() ) {
 				wp_enqueue_style( 'bb-readylaunch-activity', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/activity{$min}.css", array(), bp_get_version() );
+				wp_style_add_data( 'bb-readylaunch-activity', 'rtl', 'replace' );
+				if ( $min ) {
+					wp_style_add_data( 'bb-readylaunch-activity', 'suffix', $min );
+				}
 
 				// BB icon version.
 				$bb_icon_version = function_exists( 'bb_icon_font_map_data' ) ? bb_icon_font_map_data( 'version' ) : '';
@@ -1109,6 +1167,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			// Register only if it's Message component.
 			if ( bp_is_active( 'messages' ) && bp_is_messages_component() ) {
 				wp_enqueue_style( 'bb-readylaunch-message', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/message{$min}.css", array(), bp_get_version() );
+				wp_style_add_data( 'bb-readylaunch-message', 'rtl', 'replace' );
+				if ( $min ) {
+					wp_style_add_data( 'bb-readylaunch-message', 'suffix', $min );
+				}
 			}
 
 			// Register only if it's Groups component.
@@ -1119,6 +1181,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					bp_is_user_groups()
 				) {
 					wp_enqueue_style( 'bb-readylaunch-group-single', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/groups-single{$min}.css", array(), bp_get_version() );
+					wp_style_add_data( 'bb-readylaunch-group-single', 'rtl', 'replace' );
+					if ( $min ) {
+						wp_style_add_data( 'bb-readylaunch-group-single', 'suffix', $min );
+					}
 					wp_enqueue_script( 'bb-rl-groups' );
 					wp_localize_script(
 						'bb-rl-groups',
@@ -1135,6 +1201,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			wp_enqueue_style( 'bb-icons-rl-css', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css", array(), bp_get_version() );
+			wp_style_add_data( 'bb-icons-rl-css', 'rtl', 'replace' );
+			if ( $min ) {
+				wp_style_add_data( 'bb-icons-rl-css', 'suffix', $min );
+			}
 
 			if ( bp_is_members_directory() ) {
 				wp_register_script(
@@ -1188,6 +1258,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		public function bb_admin_enqueue_scripts() {
 			$min = bp_core_get_minified_asset_suffix();
 			wp_enqueue_style( 'bb-icons-rl-css', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl{$min}.css", array(), bp_get_version() );
+			wp_style_add_data( 'bb-icons-rl-css', 'rtl', 'replace' );
+			if ( $min ) {
+				wp_style_add_data( 'bb-icons-rl-css', 'suffix', $min );
+			}
 		}
 
 		/**
@@ -2547,7 +2621,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		public function bb_rl_login_enqueue_scripts() {
 			wp_enqueue_style( 'bb-rl-login-fonts', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/assets/fonts/fonts.css', array(), bp_get_version() );
 			wp_enqueue_style( 'bb-rl-login-style', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/css/login.css', array(), bp_get_version() );
+			wp_style_add_data( 'bb-rl-login-style', 'rtl', 'replace' );
 			wp_enqueue_style( 'bb-rl-login-style-icons', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl.min.css', array(), bp_get_version() );
+			wp_style_add_data( 'bb-rl-login-style-icons', 'rtl', 'replace' );
 		}
 
 		/**
@@ -3187,6 +3263,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				array(),
 				bp_get_version()
 			);
+			wp_style_add_data( 'bb-readylaunch-lms', 'rtl', 'replace' );
 		}
 
 		/**
@@ -3206,6 +3283,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				array(),
 				bp_get_version()
 			);
+			wp_style_add_data( 'bb-readylaunch-meprlms', 'rtl', 'replace' );
 
 			// Enqueue our MemberPress Courses helper JavaScript.
 			wp_enqueue_script(
@@ -3682,6 +3760,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				! (
 					bp_is_active( 'forums' ) &&
 					bbp_is_single_user()
+				) &&
+				! (
+					bp_is_active( 'forums' ) &&
+					bp_is_active( 'activity' ) &&
+					bp_is_activity_component()
 				)
 			) {
 				return;
@@ -3709,6 +3792,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				array(),
 				bp_get_version()
 			);
+			wp_style_add_data( 'bb-readylaunch-forums', 'rtl', 'replace' );
+			if ( $min ) {
+				wp_style_add_data( 'bb-readylaunch-forums', 'suffix', $min );
+			}
 
 			// Dequeue default bbpress scripts to avoid conflict with readylaunch scripts.
 			// Should load after readylaunch scripts.
