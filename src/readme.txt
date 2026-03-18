@@ -57,7 +57,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
-= 2.20.1 =
+= 2.21.0 =
 * Bug: Activity - Fixed an issue where deleting a single media item from an activity with multiple media temporarily removed the entire activity
 * Bug: Activity - Fixed an issue where replies to spammed activity comments were not displayed while still being counted
 * Bug: Core - Fixed incorrect API documentation by updating the method from GET to POST
