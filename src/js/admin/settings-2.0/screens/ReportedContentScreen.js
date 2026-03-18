@@ -78,11 +78,10 @@ function getPageNumbers( currentPage, totalPages ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param {Object}   props              Component props.
- * @param {Function} props.onNavigate   Navigation callback.
+ * @param {Object} props Component props.
  * @returns {JSX.Element} Reported content screen.
  */
-export function ReportedContentScreen( { onNavigate } ) {
+export function ReportedContentScreen() {
 	var itemsState = useState( [] );
 	var items = itemsState[ 0 ];
 	var setItems = itemsState[ 1 ];
@@ -133,6 +132,11 @@ export function ReportedContentScreen( { onNavigate } ) {
 	var reportModalState = useState( null );
 	var reportModalItem = reportModalState[ 0 ];
 	var setReportModalItem = reportModalState[ 1 ];
+
+	// Error toast state.
+	var errorMessageState = useState( '' );
+	var errorMessage = errorMessageState[ 0 ];
+	var setErrorMessage = errorMessageState[ 1 ];
 
 	// Action in progress.
 	var actionInProgressState = useState( null );
@@ -276,6 +280,7 @@ export function ReportedContentScreen( { onNavigate } ) {
 			} )
 			.catch( function () {
 				setActionInProgress( null );
+				setErrorMessage( __( 'An error occurred. Please try again.', 'buddyboss' ) );
 			} );
 	}, [ bulkAction, selectedIds, page, contentType, statusFilter, fetchItems ] );
 
@@ -306,6 +311,7 @@ export function ReportedContentScreen( { onNavigate } ) {
 			} )
 			.catch( function () {
 				setActionInProgress( null );
+				setErrorMessage( __( 'An error occurred. Please try again.', 'buddyboss' ) );
 			} );
 	}, [ page, contentType, statusFilter, fetchItems ] );
 
@@ -343,6 +349,7 @@ export function ReportedContentScreen( { onNavigate } ) {
 			} )
 			.catch( function () {
 				setActionInProgress( null );
+				setErrorMessage( __( 'An error occurred. Please try again.', 'buddyboss' ) );
 			} );
 	}, [ page, contentType, statusFilter, fetchItems ] );
 
@@ -357,6 +364,12 @@ export function ReportedContentScreen( { onNavigate } ) {
 
 	return (
 		<div className="bb-admin-reported-content">
+			{ errorMessage && (
+				<div className="bb-admin-reported-content__error-notice">
+					<span>{ errorMessage }</span>
+					<button type="button" onClick={ function () { setErrorMessage( '' ); } }>&times;</button>
+				</div>
+			) }
 			<div className="bb-admin-reported-content__card">
 				{/* Title */}
 				<div className="bb-admin-reported-content__title-bar">

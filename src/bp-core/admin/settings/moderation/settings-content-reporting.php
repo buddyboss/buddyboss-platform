@@ -93,11 +93,6 @@ function bb_moderation_lazy_register_content_type_fields( $feature_id ) {
 
 	foreach ( $content_types as $slug => $type_label ) {
 
-		// Skip the member blocking type (handled in Member Moderation panel).
-		if ( BP_Moderation_Members::$moderation_type === $slug ) {
-			continue;
-		}
-
 		// FIELD: Allow {type} to be reported (Toggle).
 		$reporting_field_name = 'bpm_reporting_content_reporting_' . $slug;
 		bb_register_feature_field(

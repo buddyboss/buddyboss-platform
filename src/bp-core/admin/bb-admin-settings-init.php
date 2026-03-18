@@ -63,16 +63,16 @@ function bb_admin_settings_init() {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-groups-ajax.php';
 		}
 
-		if ( bp_is_active( 'moderation' ) && file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-moderation-ajax.php' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-moderation-ajax.php';
-		}
-
-		if ( bp_is_active( 'moderation' ) && file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-flagged-members-ajax.php' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-flagged-members-ajax.php';
-		}
-
-		if ( bp_is_active( 'moderation' ) && file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-reported-content-ajax.php' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-reported-content-ajax.php';
+		if ( bp_is_active( 'moderation' ) ) {
+			if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-moderation-ajax.php' ) ) {
+				require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-moderation-ajax.php';
+			}
+			if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-flagged-members-ajax.php' ) ) {
+				require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-flagged-members-ajax.php';
+			}
+			if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-reported-content-ajax.php' ) ) {
+				require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-reported-content-ajax.php';
+			}
 		}
 
 		// Admin settings page (menu registration, render function).

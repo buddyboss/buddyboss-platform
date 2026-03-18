@@ -5,7 +5,7 @@
  * Handles AJAX requests for Reporting Categories CRUD
  * in the Settings 2.0 admin interface.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since BuddyBoss [BBVERSION]
  * @package BuddyBoss\Core\Administration
  */
 

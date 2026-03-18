@@ -74,9 +74,6 @@ function bb_moderation_sync_content_reporting_to_legacy( $feature_id, $settings,
 	$arrays_changed   = false;
 
 	foreach ( $content_types as $slug => $type_label ) {
-		if ( BP_Moderation_Members::$moderation_type === $slug ) {
-			continue;
-		}
 
 		// Sync content reporting toggle.
 		$reporting_key = 'bpm_reporting_content_reporting_' . $slug;

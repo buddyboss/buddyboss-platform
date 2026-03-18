@@ -5,7 +5,7 @@
  * Handles AJAX requests for Flagged Members list
  * in the Settings 2.0 admin interface.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since BuddyBoss [BBVERSION]
  * @package BuddyBoss\Core\Administration
  */
 
@@ -60,74 +60,6 @@ class BB_Admin_Flagged_Members_Ajax {
 	}
 
 	/**
-	 * Temporarily bypass suspension filters so admin can see real user data.
-	 *
-	 * The suspension system replaces display names with "Unknown Member" and
-	 * avatars with a generic placeholder for suspended users. In the admin
-	 * Flagged Members panel, administrators need to see the actual user data.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	private function bb_bypass_suspend_filters() {
-		global $moderation_suspend;
-
-		if ( empty( $moderation_suspend['user'] ) || ! $moderation_suspend['user'] instanceof BP_Suspend_Member ) {
-			return;
-		}
-
-		$suspend = $moderation_suspend['user'];
-
-		// Remove display name filters.
-		remove_filter( 'bp_core_get_user_displayname', array( $suspend, 'get_the_author_name' ), 9999 );
-		remove_filter( 'get_the_author_display_name', array( $suspend, 'get_the_author_name' ), 9999 );
-
-		// Remove user nicename/login/email filters (nicename affects profile URL slug).
-		remove_filter( 'get_the_author_user_nicename', array( $suspend, 'get_the_author_name' ), 9999 );
-		remove_filter( 'get_the_author_user_login', array( $suspend, 'get_the_author_name' ), 9999 );
-		remove_filter( 'get_the_author_user_email', array( $suspend, 'get_the_author_name' ), 9999 );
-
-		// Remove avatar filters.
-		remove_filter( 'get_avatar_url', array( $suspend, 'get_avatar_url' ), 9999 );
-		remove_filter( 'bp_core_fetch_avatar_url_check', array( $suspend, 'bp_fetch_avatar_url' ), 1005 );
-		remove_filter( 'bp_core_fetch_gravatar_url_check', array( $suspend, 'bp_fetch_avatar_url' ), 1005 );
-
-		// Remove user domain filter.
-		remove_filter( 'bp_core_get_user_domain', array( $suspend, 'bp_core_get_user_domain' ), 9999 );
-	}
-
-	/**
-	 * Restore suspension filters after admin data fetch.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	private function bb_restore_suspend_filters() {
-		global $moderation_suspend;
-
-		if ( empty( $moderation_suspend['user'] ) || ! $moderation_suspend['user'] instanceof BP_Suspend_Member ) {
-			return;
-		}
-
-		$suspend = $moderation_suspend['user'];
-
-		// Restore display name filters.
-		add_filter( 'bp_core_get_user_displayname', array( $suspend, 'get_the_author_name' ), 9999, 2 );
-		add_filter( 'get_the_author_display_name', array( $suspend, 'get_the_author_name' ), 9999, 2 );
-
-		// Restore user nicename/login/email filters.
-		add_filter( 'get_the_author_user_nicename', array( $suspend, 'get_the_author_name' ), 9999, 2 );
-		add_filter( 'get_the_author_user_login', array( $suspend, 'get_the_author_name' ), 9999, 2 );
-		add_filter( 'get_the_author_user_email', array( $suspend, 'get_the_author_name' ), 9999, 2 );
-
-		// Restore avatar filters.
-		add_filter( 'get_avatar_url', array( $suspend, 'get_avatar_url' ), 9999, 3 );
-		add_filter( 'bp_core_fetch_avatar_url_check', array( $suspend, 'bp_fetch_avatar_url' ), 1005, 2 );
-		add_filter( 'bp_core_fetch_gravatar_url_check', array( $suspend, 'bp_fetch_avatar_url' ), 1005, 2 );
-
-		// Restore user domain filter.
-		add_filter( 'bp_core_get_user_domain', array( $suspend, 'bp_core_get_user_domain' ), 9999, 2 );
-	}
-
-	/**
 	 * Verify AJAX request (nonce + capability).
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -152,9 +84,15 @@ class BB_Admin_Flagged_Members_Ajax {
 		$this->bb_verify_request();
 
 		$page     = isset( $_POST['page'] ) ? absint( $_POST['page'] ) : 1;
-		$per_page = isset( $_POST['per_page'] ) ? absint( $_POST['per_page'] ) : 20;
+		$per_page = isset( $_POST['per_page'] ) ? min( absint( $_POST['per_page'] ), 100 ) : 20;
 		$search   = isset( $_POST['search'] ) ? sanitize_text_field( wp_unslash( $_POST['search'] ) ) : '';
 		$status   = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : '';
+
+		// Whitelist validate status filter.
+		$valid_statuses = array( '', 'suspended', 'active' );
+		if ( ! in_array( $status, $valid_statuses, true ) ) {
+			$status = '';
+		}
 
 		$moderation_args = array(
 			'page'         => $page,
@@ -176,10 +114,16 @@ class BB_Admin_Flagged_Members_Ajax {
 		remove_filter( 'bp_moderation_get_where_conditions', array( $this, 'bb_update_where_conditions' ), 10 );
 
 		$members = array();
-		$admins  = array_map( 'intval', get_users( array( 'role' => 'administrator', 'fields' => 'ID' ) ) );
+		$admins  = bb_moderation_get_admin_user_ids();
+
+		// Pre-warm user caches to avoid N+1 queries in the loop.
+		if ( ! empty( $result['moderations'] ) ) {
+			$user_ids = wp_list_pluck( $result['moderations'], 'item_id' );
+			cache_users( array_map( 'intval', $user_ids ) );
+		}
 
 		// Bypass suspension filters so admin sees real names, avatars, and profile URLs.
-		$this->bb_bypass_suspend_filters();
+		bb_moderation_bypass_suspend_filters();
 
 		if ( ! empty( $result['moderations'] ) ) {
 			foreach ( $result['moderations'] as $item ) {
@@ -223,7 +167,7 @@ class BB_Admin_Flagged_Members_Ajax {
 			}
 		}
 
-		$this->bb_restore_suspend_filters();
+		bb_moderation_restore_suspend_filters();
 
 		// Get status counts for the filter dropdown.
 		$status_counts = $this->bb_get_status_counts();
@@ -241,7 +185,7 @@ class BB_Admin_Flagged_Members_Ajax {
 	}
 
 	/**
-	 * Get counts for each status filter option.
+	 * Get counts for each status filter option using a single query.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -253,21 +197,16 @@ class BB_Admin_Flagged_Members_Ajax {
 
 		$member_type = BP_Moderation_Members::$moderation_type;
 
-		// Count all flagged members.
-		$all = (int) $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		// Single query with conditional aggregation instead of two separate COUNT queries.
+		$row = $wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->prepare(
-				"SELECT COUNT(*) FROM {$bp->moderation->table_name} WHERE item_type = %s AND ( reported != 0 OR user_report != 0 OR hide_sitewide != 0 )",
+				"SELECT COUNT(*) AS total_all, SUM( CASE WHEN hide_sitewide = 1 THEN 1 ELSE 0 END ) AS total_suspended FROM {$bp->moderation->table_name} WHERE item_type = %s AND ( reported != 0 OR user_report != 0 OR hide_sitewide != 0 )",
 				$member_type
 			)
 		);
 
-		// Count suspended members.
-		$suspended = (int) $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-			$wpdb->prepare(
-				"SELECT COUNT(*) FROM {$bp->moderation->table_name} WHERE item_type = %s AND hide_sitewide = 1",
-				$member_type
-			)
-		);
+		$all       = $row ? (int) $row->total_all : 0;
+		$suspended = $row ? (int) $row->total_suspended : 0;
 
 		return array(
 			'all'       => $all,
@@ -306,13 +245,19 @@ class BB_Admin_Flagged_Members_Ajax {
 		$report_count = (int) bp_moderation_get_meta( $moderation_id, '_count_user_reported' );
 
 		// Bypass suspension filters so admin sees real names, avatars, and profile URLs.
-		$this->bb_bypass_suspend_filters();
+		bb_moderation_bypass_suspend_filters();
 
 		// Get reporters (user_report = 1).
 		$reporters_raw = BP_Moderation::get_moderation_reporters(
 			$moderation_id,
 			array( 'user_repoted' => true )
 		);
+
+		// Pre-warm user caches for reporters.
+		if ( ! empty( $reporters_raw ) ) {
+			$reporter_user_ids = wp_list_pluck( $reporters_raw, 'user_id' );
+			cache_users( array_map( 'intval', $reporter_user_ids ) );
+		}
 
 		$reporters = array();
 		if ( ! empty( $reporters_raw ) ) {
@@ -337,7 +282,7 @@ class BB_Admin_Flagged_Members_Ajax {
 						: __( 'Other', 'buddyboss' ),
 					'category_desc' => ( ! is_wp_error( $term_data ) && ! empty( $term_data->description ) )
 						? wp_specialchars_decode( $term_data->description, ENT_QUOTES )
-						: $reporter->content,
+						: sanitize_text_field( $reporter->content ),
 					'date'          => ! empty( $reporter->date_created )
 						? date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $reporter->date_created ) )
 						: '',
@@ -350,6 +295,12 @@ class BB_Admin_Flagged_Members_Ajax {
 			$moderation_id,
 			array( 'user_repoted' => false )
 		);
+
+		// Pre-warm user caches for blockers.
+		if ( ! empty( $blockers_raw ) ) {
+			$blocker_user_ids = wp_list_pluck( $blockers_raw, 'user_id' );
+			cache_users( array_map( 'intval', $blocker_user_ids ) );
+		}
 
 		$blockers = array();
 		if ( ! empty( $blockers_raw ) ) {
@@ -394,7 +345,7 @@ class BB_Admin_Flagged_Members_Ajax {
 			'blockers'      => $blockers,
 		);
 
-		$this->bb_restore_suspend_filters();
+		bb_moderation_restore_suspend_filters();
 
 		wp_send_json_success( $response );
 	}
@@ -414,8 +365,7 @@ class BB_Admin_Flagged_Members_Ajax {
 		}
 
 		// Don't allow suspending administrators.
-		$admins = array_map( 'intval', get_users( array( 'role' => 'administrator', 'fields' => 'ID' ) ) );
-		if ( in_array( $user_id, $admins, true ) ) {
+		if ( user_can( $user_id, 'administrator' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Cannot suspend an administrator.', 'buddyboss' ) ) );
 		}
 
@@ -466,7 +416,7 @@ class BB_Admin_Flagged_Members_Ajax {
 		$this->bb_verify_request();
 
 		$action   = isset( $_POST['bulk_action'] ) ? sanitize_text_field( wp_unslash( $_POST['bulk_action'] ) ) : '';
-		$user_ids = isset( $_POST['user_ids'] ) ? array_map( 'absint', (array) $_POST['user_ids'] ) : array();
+		$user_ids = isset( $_POST['user_ids'] ) ? array_map( 'absint', wp_unslash( (array) $_POST['user_ids'] ) ) : array();
 
 		if ( empty( $action ) || empty( $user_ids ) ) {
 			wp_send_json_error( array( 'message' => __( 'Invalid action or no members selected.', 'buddyboss' ) ) );
@@ -478,7 +428,7 @@ class BB_Admin_Flagged_Members_Ajax {
 		}
 
 		// Don't allow suspending administrators.
-		$admins  = array_map( 'intval', get_users( array( 'role' => 'administrator', 'fields' => 'ID' ) ) );
+		$admins  = bb_moderation_get_admin_user_ids();
 		$success = 0;
 
 		foreach ( $user_ids as $user_id ) {

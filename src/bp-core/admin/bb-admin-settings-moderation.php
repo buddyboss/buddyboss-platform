@@ -13,6 +13,106 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Get administrator user IDs with static caching.
+ *
+ * Avoids repeated get_users() calls within the same request.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return int[] Array of administrator user IDs.
+ */
+function bb_moderation_get_admin_user_ids() {
+	static $admins = null;
+
+	if ( null === $admins ) {
+		$admins = array_map(
+			'intval',
+			get_users(
+				array(
+					'role'   => 'administrator',
+					'fields' => 'ID',
+					'number' => 1000,
+				)
+			)
+		);
+	}
+
+	return $admins;
+}
+
+/**
+ * Temporarily bypass suspension filters so admin can see real user data.
+ *
+ * The suspension system replaces display names with "Unknown Member" and
+ * avatars with a generic placeholder for suspended users. In admin panels,
+ * administrators need to see the actual user data.
+ *
+ * Shared between BB_Admin_Flagged_Members_Ajax and BB_Admin_Reported_Content_Ajax.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_moderation_bypass_suspend_filters() {
+	global $moderation_suspend;
+
+	if ( empty( $moderation_suspend['user'] ) || ! $moderation_suspend['user'] instanceof BP_Suspend_Member ) {
+		return;
+	}
+
+	$suspend = $moderation_suspend['user'];
+
+	// Remove display name filters.
+	remove_filter( 'bp_core_get_user_displayname', array( $suspend, 'get_the_author_name' ), 9999 );
+	remove_filter( 'get_the_author_display_name', array( $suspend, 'get_the_author_name' ), 9999 );
+
+	// Remove user nicename/login/email filters (nicename affects profile URL slug).
+	remove_filter( 'get_the_author_user_nicename', array( $suspend, 'get_the_author_name' ), 9999 );
+	remove_filter( 'get_the_author_user_login', array( $suspend, 'get_the_author_name' ), 9999 );
+	remove_filter( 'get_the_author_user_email', array( $suspend, 'get_the_author_name' ), 9999 );
+
+	// Remove avatar filters.
+	remove_filter( 'get_avatar_url', array( $suspend, 'get_avatar_url' ), 9999 );
+	remove_filter( 'bp_core_fetch_avatar_url_check', array( $suspend, 'bp_fetch_avatar_url' ), 1005 );
+	remove_filter( 'bp_core_fetch_gravatar_url_check', array( $suspend, 'bp_fetch_avatar_url' ), 1005 );
+
+	// Remove user domain filter.
+	remove_filter( 'bp_core_get_user_domain', array( $suspend, 'bp_core_get_user_domain' ), 9999 );
+}
+
+/**
+ * Restore suspension filters after admin data fetch.
+ *
+ * Shared between BB_Admin_Flagged_Members_Ajax and BB_Admin_Reported_Content_Ajax.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_moderation_restore_suspend_filters() {
+	global $moderation_suspend;
+
+	if ( empty( $moderation_suspend['user'] ) || ! $moderation_suspend['user'] instanceof BP_Suspend_Member ) {
+		return;
+	}
+
+	$suspend = $moderation_suspend['user'];
+
+	// Restore display name filters.
+	add_filter( 'bp_core_get_user_displayname', array( $suspend, 'get_the_author_name' ), 9999, 2 );
+	add_filter( 'get_the_author_display_name', array( $suspend, 'get_the_author_name' ), 9999, 2 );
+
+	// Restore user nicename/login/email filters.
+	add_filter( 'get_the_author_user_nicename', array( $suspend, 'get_the_author_name' ), 9999, 2 );
+	add_filter( 'get_the_author_user_login', array( $suspend, 'get_the_author_name' ), 9999, 2 );
+	add_filter( 'get_the_author_user_email', array( $suspend, 'get_the_author_name' ), 9999, 2 );
+
+	// Restore avatar filters.
+	add_filter( 'get_avatar_url', array( $suspend, 'get_avatar_url' ), 9999, 3 );
+	add_filter( 'bp_core_fetch_avatar_url_check', array( $suspend, 'bp_fetch_avatar_url' ), 1005, 2 );
+	add_filter( 'bp_core_fetch_gravatar_url_check', array( $suspend, 'bp_fetch_avatar_url' ), 1005, 2 );
+
+	// Restore user domain filter.
+	add_filter( 'bp_core_get_user_domain', array( $suspend, 'bp_core_get_user_domain' ), 9999, 2 );
+}
+
+/**
  * Register Moderation feature and settings in Feature Registry.
  *
  * Registers the feature, side panels, and delegates field registration
@@ -151,7 +251,7 @@ function bb_admin_settings_register_moderation_feature() {
 		)
 	);
 
-	// Side Panel: Blog Posts (navigation link).
+	// @todo: Add Blog Posts side panel when the blog posts moderation screen is implemented.
 	/*
 	bb_register_side_panel(
 		'moderation',

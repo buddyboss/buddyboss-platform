@@ -130,14 +130,23 @@ function bp_moderation_highlight_admin_menu() {
 			bbModHighlightMenu();
 		}
 
-		// Poll for SPA URL changes (React uses history.replaceState which
-		// cannot be reliably monkey-patched when multiple scripts compete).
-		setInterval( function() {
+		// Listen for popstate (browser back/forward).
+		window.addEventListener( 'popstate', function() {
 			if ( window.location.href !== bbModLastUrl ) {
 				bbModLastUrl = window.location.href;
 				bbModHighlightMenu();
 			}
-		}, 300 );
+		} );
+
+		// Patch history.replaceState to detect SPA navigation.
+		var origReplaceState = history.replaceState;
+		history.replaceState = function() {
+			origReplaceState.apply( this, arguments );
+			if ( window.location.href !== bbModLastUrl ) {
+				bbModLastUrl = window.location.href;
+				bbModHighlightMenu();
+			}
+		};
 	} )();
 	</script>
 	<?php

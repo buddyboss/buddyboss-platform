@@ -11,6 +11,29 @@
 	width: 100%;
 	padding: 32px;
 
+	/* Error notice */
+	&__error-notice {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 8px 12px;
+		background-color: #fef2f2;
+		border: 1px solid #fecaca;
+		border-radius: 6px;
+		color: #991b1b;
+		font-size: 13px;
+
+		button {
+			background: none;
+			border: none;
+			color: #991b1b;
+			font-size: 16px;
+			cursor: pointer;
+			padding: 0 4px;
+			line-height: 1;
+		}
+	}
+
 	/* Card container */
 	&__card {
 		background: $bb-background-base-color;

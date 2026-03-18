@@ -465,14 +465,12 @@
         padding-bottom: 0;
     }
 
-    // No-label fields: stack tightly with previous field (no separator, reduced spacing).
+    // No-label fields: stack tightly with previous field (no separator, reduced spacing)
+    // and indent content to align with parent's content area.
     &--no-label {
         border-bottom: none;
         padding-top: 8px;
-    }
 
-    // No-label fields: indent content to align with parent's content area.
-    &--no-label {
         .bb-admin-settings-form__field-content {
             flex: 1;
             // 245px (label width) + 32px (gap) = 277px offset to align with sibling field content.

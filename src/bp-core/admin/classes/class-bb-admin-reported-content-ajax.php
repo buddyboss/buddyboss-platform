@@ -5,7 +5,7 @@
  * Handles AJAX requests for Reported Content list
  * in the Settings 2.0 admin interface.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since BuddyBoss [BBVERSION]
  * @package BuddyBoss\Core\Administration
  */
 
@@ -62,59 +62,6 @@ class BB_Admin_Reported_Content_Ajax {
 	}
 
 	/**
-	 * Temporarily bypass suspension filters so admin can see real user data.
-	 *
-	 * Content owners may be suspended — admin needs to see actual names
-	 * and avatars, not "Unknown Member" placeholders.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	private function bb_bypass_suspend_filters() {
-		global $moderation_suspend;
-
-		if ( empty( $moderation_suspend['user'] ) || ! $moderation_suspend['user'] instanceof BP_Suspend_Member ) {
-			return;
-		}
-
-		$suspend = $moderation_suspend['user'];
-
-		remove_filter( 'bp_core_get_user_displayname', array( $suspend, 'get_the_author_name' ), 9999 );
-		remove_filter( 'get_the_author_display_name', array( $suspend, 'get_the_author_name' ), 9999 );
-		remove_filter( 'get_the_author_user_nicename', array( $suspend, 'get_the_author_name' ), 9999 );
-		remove_filter( 'get_the_author_user_login', array( $suspend, 'get_the_author_name' ), 9999 );
-		remove_filter( 'get_the_author_user_email', array( $suspend, 'get_the_author_name' ), 9999 );
-		remove_filter( 'get_avatar_url', array( $suspend, 'get_avatar_url' ), 9999 );
-		remove_filter( 'bp_core_fetch_avatar_url_check', array( $suspend, 'bp_fetch_avatar_url' ), 1005 );
-		remove_filter( 'bp_core_fetch_gravatar_url_check', array( $suspend, 'bp_fetch_avatar_url' ), 1005 );
-		remove_filter( 'bp_core_get_user_domain', array( $suspend, 'bp_core_get_user_domain' ), 9999 );
-	}
-
-	/**
-	 * Restore suspension filters after admin data fetch.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	private function bb_restore_suspend_filters() {
-		global $moderation_suspend;
-
-		if ( empty( $moderation_suspend['user'] ) || ! $moderation_suspend['user'] instanceof BP_Suspend_Member ) {
-			return;
-		}
-
-		$suspend = $moderation_suspend['user'];
-
-		add_filter( 'bp_core_get_user_displayname', array( $suspend, 'get_the_author_name' ), 9999, 2 );
-		add_filter( 'get_the_author_display_name', array( $suspend, 'get_the_author_name' ), 9999, 2 );
-		add_filter( 'get_the_author_user_nicename', array( $suspend, 'get_the_author_name' ), 9999, 2 );
-		add_filter( 'get_the_author_user_login', array( $suspend, 'get_the_author_name' ), 9999, 2 );
-		add_filter( 'get_the_author_user_email', array( $suspend, 'get_the_author_name' ), 9999, 2 );
-		add_filter( 'get_avatar_url', array( $suspend, 'get_avatar_url' ), 9999, 3 );
-		add_filter( 'bp_core_fetch_avatar_url_check', array( $suspend, 'bp_fetch_avatar_url' ), 1005, 2 );
-		add_filter( 'bp_core_fetch_gravatar_url_check', array( $suspend, 'bp_fetch_avatar_url' ), 1005, 2 );
-		add_filter( 'bp_core_get_user_domain', array( $suspend, 'bp_core_get_user_domain' ), 9999, 2 );
-	}
-
-	/**
 	 * Verify AJAX request (nonce + capability).
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -165,10 +112,24 @@ class BB_Admin_Reported_Content_Ajax {
 		$this->bb_verify_request();
 
 		$page         = isset( $_POST['page'] ) ? absint( $_POST['page'] ) : 1;
-		$per_page     = isset( $_POST['per_page'] ) ? absint( $_POST['per_page'] ) : 20;
+		$per_page     = isset( $_POST['per_page'] ) ? min( absint( $_POST['per_page'] ), 100 ) : 20;
 		$search       = isset( $_POST['search'] ) ? sanitize_text_field( wp_unslash( $_POST['search'] ) ) : '';
 		$content_type = isset( $_POST['content_type'] ) ? sanitize_text_field( wp_unslash( $_POST['content_type'] ) ) : '';
 		$status       = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : '';
+
+		// Whitelist validate status filter.
+		$valid_statuses = array( '', 'hidden', 'visible' );
+		if ( ! in_array( $status, $valid_statuses, true ) ) {
+			$status = '';
+		}
+
+		// Whitelist validate content type against registered types.
+		if ( ! empty( $content_type ) ) {
+			$valid_types = array_keys( bp_moderation_content_types() );
+			if ( ! in_array( $content_type, $valid_types, true ) ) {
+				$content_type = '';
+			}
+		}
 
 		$moderation_args = array(
 			'page'          => $page,
@@ -197,21 +158,29 @@ class BB_Admin_Reported_Content_Ajax {
 		$items         = array();
 		$content_types = bp_moderation_content_types();
 
-		// Cache admin user IDs for the loop (same pattern as legacy list table).
-		$admins = array_map(
-			'intval',
-			get_users(
-				array(
-					'role'   => 'administrator',
-					'fields' => 'ID',
-				)
-			)
-		);
+		// Cache admin user IDs for the loop.
+		$admins = bb_moderation_get_admin_user_ids();
 
 		// Bypass suspension filters so admin sees real names and avatars.
-		$this->bb_bypass_suspend_filters();
+		bb_moderation_bypass_suspend_filters();
 
 		if ( ! empty( $result['moderations'] ) ) {
+
+			// Pre-warm user caches for all content owners to avoid N+1 queries.
+			$owner_ids = array();
+			foreach ( $result['moderations'] as $moderation ) {
+				$owner_id = bp_moderation_get_content_owner_id( (int) $moderation->item_id, $moderation->item_type );
+				if ( is_array( $owner_id ) ) {
+					$owner_id = ! empty( $owner_id ) ? (int) $owner_id[0] : 0;
+				}
+				if ( (int) $owner_id > 0 ) {
+					$owner_ids[] = (int) $owner_id;
+				}
+			}
+			if ( ! empty( $owner_ids ) ) {
+				cache_users( array_unique( $owner_ids ) );
+			}
+
 			foreach ( $result['moderations'] as $moderation ) {
 				$item_id      = (int) $moderation->item_id;
 				$item_type    = $moderation->item_type;
@@ -283,7 +252,7 @@ class BB_Admin_Reported_Content_Ajax {
 			}
 		}
 
-		$this->bb_restore_suspend_filters();
+		bb_moderation_restore_suspend_filters();
 
 		// Get status counts for the filter dropdown.
 		$status_counts = $this->bb_get_status_counts();
@@ -301,7 +270,7 @@ class BB_Admin_Reported_Content_Ajax {
 	}
 
 	/**
-	 * Get counts for each status filter option.
+	 * Get counts for each status filter option using a single query.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -313,21 +282,16 @@ class BB_Admin_Reported_Content_Ajax {
 
 		$member_type = BP_Moderation_Members::$moderation_type;
 
-		// Count all reported content (excluding members).
-		$all = (int) $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		// Single query with conditional aggregation instead of two separate COUNT queries.
+		$row = $wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->prepare(
-				"SELECT COUNT(*) FROM {$bp->moderation->table_name} WHERE item_type != %s AND ( reported != 0 OR user_report != 0 OR hide_sitewide != 0 )",
+				"SELECT COUNT(*) AS total_all, SUM( CASE WHEN hide_sitewide = 1 THEN 1 ELSE 0 END ) AS total_hidden FROM {$bp->moderation->table_name} WHERE item_type != %s AND ( reported != 0 OR user_report != 0 OR hide_sitewide != 0 )",
 				$member_type
 			)
 		);
 
-		// Count hidden content.
-		$hidden = (int) $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-			$wpdb->prepare(
-				"SELECT COUNT(*) FROM {$bp->moderation->table_name} WHERE item_type != %s AND hide_sitewide = 1",
-				$member_type
-			)
-		);
+		$all    = $row ? (int) $row->total_all : 0;
+		$hidden = $row ? (int) $row->total_hidden : 0;
 
 		return array(
 			'all'     => $all,
@@ -376,7 +340,7 @@ class BB_Admin_Reported_Content_Ajax {
 		$owner_id = (int) $owner_id;
 
 		// Bypass suspension filters.
-		$this->bb_bypass_suspend_filters();
+		bb_moderation_bypass_suspend_filters();
 
 		$owner_data = array(
 			'user_id'      => $owner_id,
@@ -407,6 +371,12 @@ class BB_Admin_Reported_Content_Ajax {
 			array( 'user_repoted' => true )
 		);
 
+		// Pre-warm user caches for reporters.
+		if ( ! empty( $reporters_raw ) ) {
+			$reporter_user_ids = wp_list_pluck( $reporters_raw, 'user_id' );
+			cache_users( array_map( 'intval', $reporter_user_ids ) );
+		}
+
 		$reporters = array();
 		if ( ! empty( $reporters_raw ) ) {
 			foreach ( $reporters_raw as $reporter ) {
@@ -430,7 +400,7 @@ class BB_Admin_Reported_Content_Ajax {
 						: __( 'Other', 'buddyboss' ),
 					'category_desc' => ( ! is_wp_error( $term_data ) && ! empty( $term_data->description ) )
 						? wp_specialchars_decode( $term_data->description, ENT_QUOTES )
-						: $reporter->content,
+						: sanitize_text_field( $reporter->content ),
 					'date'          => ! empty( $reporter->date_created )
 						? date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $reporter->date_created ) )
 						: '',
@@ -452,7 +422,7 @@ class BB_Admin_Reported_Content_Ajax {
 			'reporters'          => $reporters,
 		);
 
-		$this->bb_restore_suspend_filters();
+		bb_moderation_restore_suspend_filters();
 
 		wp_send_json_success( $response );
 	}
@@ -470,6 +440,11 @@ class BB_Admin_Reported_Content_Ajax {
 
 		if ( empty( $item_id ) || empty( $item_type ) ) {
 			wp_send_json_error( array( 'message' => __( 'Invalid content ID or type.', 'buddyboss' ) ) );
+		}
+
+		// Whitelist validate content type.
+		if ( ! array_key_exists( $item_type, bp_moderation_content_types() ) ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid content type.', 'buddyboss' ) ) );
 		}
 
 		$result = bp_moderation_hide(
@@ -503,6 +478,11 @@ class BB_Admin_Reported_Content_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Invalid content ID or type.', 'buddyboss' ) ) );
 		}
 
+		// Whitelist validate content type.
+		if ( ! array_key_exists( $item_type, bp_moderation_content_types() ) ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid content type.', 'buddyboss' ) ) );
+		}
+
 		$result = bp_moderation_unhide(
 			array(
 				'content_id'   => $item_id,
@@ -534,8 +514,7 @@ class BB_Admin_Reported_Content_Ajax {
 		}
 
 		// Don't allow suspending administrators.
-		$admins = array_map( 'intval', get_users( array( 'role' => 'administrator', 'fields' => 'ID' ) ) );
-		if ( in_array( $user_id, $admins, true ) ) {
+		if ( user_can( $user_id, 'administrator' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Cannot suspend an administrator.', 'buddyboss' ) ) );
 		}
 
@@ -586,7 +565,7 @@ class BB_Admin_Reported_Content_Ajax {
 		$this->bb_verify_request();
 
 		$action = isset( $_POST['bulk_action'] ) ? sanitize_text_field( wp_unslash( $_POST['bulk_action'] ) ) : '';
-		$ids    = isset( $_POST['ids'] ) ? array_map( 'absint', (array) $_POST['ids'] ) : array();
+		$ids    = isset( $_POST['ids'] ) ? array_map( 'absint', wp_unslash( (array) $_POST['ids'] ) ) : array();
 
 		if ( empty( $action ) || empty( $ids ) ) {
 			wp_send_json_error( array( 'message' => __( 'Invalid action or no items selected.', 'buddyboss' ) ) );
@@ -601,31 +580,36 @@ class BB_Admin_Reported_Content_Ajax {
 		$bp      = buddypress();
 		$success = 0;
 
-		foreach ( $ids as $moderation_id ) {
-			$row = $wpdb->get_row( $wpdb->prepare( "SELECT item_id, item_type FROM {$bp->moderation->table_name} WHERE id = %d", $moderation_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		// Batch-fetch all moderation rows in a single query instead of N+1.
+		$placeholders = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
+		$rows         = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->prepare(
+				"SELECT id, item_id, item_type FROM {$bp->moderation->table_name} WHERE id IN ({$placeholders})", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				...$ids
+			)
+		);
 
-			if ( empty( $row ) ) {
-				continue;
-			}
+		if ( ! empty( $rows ) ) {
+			foreach ( $rows as $row ) {
+				if ( 'hide' === $action ) {
+					$result = bp_moderation_hide(
+						array(
+							'content_id'   => (int) $row->item_id,
+							'content_type' => $row->item_type,
+						)
+					);
+				} else {
+					$result = bp_moderation_unhide(
+						array(
+							'content_id'   => (int) $row->item_id,
+							'content_type' => $row->item_type,
+						)
+					);
+				}
 
-			if ( 'hide' === $action ) {
-				$result = bp_moderation_hide(
-					array(
-						'content_id'   => (int) $row->item_id,
-						'content_type' => $row->item_type,
-					)
-				);
-			} else {
-				$result = bp_moderation_unhide(
-					array(
-						'content_id'   => (int) $row->item_id,
-						'content_type' => $row->item_type,
-					)
-				);
-			}
-
-			if ( $result ) {
-				$success++;
+				if ( $result ) {
+					$success++;
+				}
 			}
 		}
 

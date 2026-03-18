@@ -18,11 +18,10 @@ import { ViewReportModal } from '../components/modals/ViewReportModal';
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param {Object}   props              Component props.
- * @param {Function} props.onNavigate   Navigation callback.
+ * @param {Object} props Component props.
  * @returns {JSX.Element} Flagged members screen.
  */
-export function FlaggedMembersScreen( { onNavigate } ) {
+export function FlaggedMembersScreen() {
 	var membersState = useState( [] );
 	var members = membersState[ 0 ];
 	var setMembers = membersState[ 1 ];
@@ -73,6 +72,11 @@ export function FlaggedMembersScreen( { onNavigate } ) {
 	var reportModalState = useState( null );
 	var reportModalMember = reportModalState[ 0 ];
 	var setReportModalMember = reportModalState[ 1 ];
+
+	// Error toast state.
+	var errorMessageState = useState( '' );
+	var errorMessage = errorMessageState[ 0 ];
+	var setErrorMessage = errorMessageState[ 1 ];
 
 	// Action in progress.
 	var actionInProgressState = useState( null );
@@ -211,6 +215,7 @@ export function FlaggedMembersScreen( { onNavigate } ) {
 			} )
 			.catch( function () {
 				setActionInProgress( null );
+				setErrorMessage( __( 'An error occurred. Please try again.', 'buddyboss' ) );
 			} );
 	}, [ bulkAction, selectedIds, page, search, statusFilter, fetchMembers ] );
 
@@ -247,6 +252,7 @@ export function FlaggedMembersScreen( { onNavigate } ) {
 			} )
 			.catch( function () {
 				setActionInProgress( null );
+				setErrorMessage( __( 'An error occurred. Please try again.', 'buddyboss' ) );
 			} );
 	}, [ page, search, statusFilter, fetchMembers ] );
 
@@ -261,6 +267,12 @@ export function FlaggedMembersScreen( { onNavigate } ) {
 
 	return (
 		<div className="bb-admin-flagged-members">
+			{ errorMessage && (
+				<div className="bb-admin-flagged-members__error-notice">
+					<span>{ errorMessage }</span>
+					<button type="button" onClick={ function () { setErrorMessage( '' ); } }>&times;</button>
+				</div>
+			) }
 			<div className="bb-admin-flagged-members__card">
 				{/* Title */}
 				<div className="bb-admin-flagged-members__title-bar">
