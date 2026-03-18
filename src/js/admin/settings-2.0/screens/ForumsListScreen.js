@@ -1110,7 +1110,7 @@ export function ForumsListScreen( { onNavigate } ) {
 									{ __( 'Warning', 'buddyboss' ) }
 								</span>
 								<span className="bb-admin-delete__warning-desc">
-									{ __( 'This permanently deletes forums from the community and cannot be undone.', 'buddyboss' ) }
+									{ __( 'This permanently deletes forum from the community and cannot be undone.', 'buddyboss' ) }
 								</span>
 							</div>
 						</div>
@@ -1499,7 +1499,7 @@ function ForumEditModal( props ) {
 						</button>
 					) }
 					<p className="bb-forum-create-modal__image-help">
-						{ __( 'For best results, use an image at least 1200px by 300px or higher.', 'buddyboss' ) }
+						{ __( 'For best results, use an image at least 1500px by 300px or higher.', 'buddyboss' ) }
 					</p>
 				</div>
 			</div>

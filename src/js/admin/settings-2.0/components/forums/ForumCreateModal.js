@@ -425,7 +425,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug } 
 						</button>
 					) }
 					<p className="bb-forum-create-modal__image-help">
-						{ __( 'For best results, use an image at least 1200px by 300px or higher.', 'buddyboss' ) }
+						{ __( 'For best results, use an image at least 1500px by 300px or higher.', 'buddyboss' ) }
 					</p>
 				</div>
 			</div>
