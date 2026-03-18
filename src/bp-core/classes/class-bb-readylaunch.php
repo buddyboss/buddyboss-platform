@@ -83,7 +83,19 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			$this->load_template_stack();
-			$this->load_login_registration_integration();
+
+			// Only load ReadyLaunch login/registration integration when enabled in settings.
+			// When disabled, the theme's default login/register styling and templates are used.
+			if ( $this->bb_rl_is_page_enabled_for_integration( 'registration' ) ) {
+				$this->load_login_registration_integration();
+			} elseif ( is_login() && ! $this->bb_rl_is_page_enabled_for_integration( 'registration' ) ) {
+				// On wp-login.php with registration disabled, restore the default
+				// template stack so bp_locate_template_asset() finds Platform CSS
+				// (buddypress.css, bb-icons.css) in the standard template directory.
+				remove_filter( 'bp_get_template_stack', array( $this, 'add_template_stack' ), PHP_INT_MAX );
+				add_filter( 'bp_get_template_stack', 'bp_add_template_stack_locations' );
+			}
+
 			$this->load_hooks();
 
 			// Added support for Forums integration.
@@ -954,8 +966,26 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			if ( bp_is_register_page() ) {
-				$this->bb_rl_required_load();
-				return bp_locate_template( 'register.php' );
+				if ( $this->bb_rl_is_page_enabled_for_integration( 'registration' ) ) {
+					$this->bb_rl_required_load();
+					return bp_locate_template( 'register.php' );
+				}
+
+				// Login & Registration is disabled in ReadyLaunch settings.
+				// Restore default BuddyBoss template stack so the standard
+				// BuddyPress templates are used instead of ReadyLaunch.
+				remove_filter( 'bp_get_template_stack', array( $this, 'add_template_stack' ), PHP_INT_MAX );
+				add_filter( 'bp_get_template_stack', 'bp_add_template_stack_locations' );
+
+				// Use the theme's buddypress.php which provides the full page
+				// wrapper (header, logo, footer) for the register form.
+				$theme_bp_template = locate_template( 'buddypress.php' );
+				if ( $theme_bp_template ) {
+					return $theme_bp_template;
+				}
+
+				// Fallback: let WordPress handle it normally.
+				return $template;
 			}
 
 			if ( bp_is_activation_page() ) {
