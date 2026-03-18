@@ -83,7 +83,26 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			$this->load_template_stack();
-			$this->load_login_registration_integration();
+
+			/*
+			 * Only load ReadyLaunch login/registration integration when enabled in settings.
+			 * When disabled, the theme's default login/register styling and templates are used.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 */
+			if ( $this->bb_rl_is_page_enabled_for_integration( 'registration' ) ) {
+				$this->load_login_registration_integration();
+			} elseif (
+				isset( $_SERVER['SCRIPT_NAME'] ) &&
+				false !== stripos( wp_login_url(), $_SERVER['SCRIPT_NAME'] ) &&
+				! $this->bb_rl_is_page_enabled_for_integration( 'registration' )
+			) {
+				// On wp-login.php with registration disabled, restore the default
+				// template stack so bp_locate_template_asset() finds Platform CSS
+				// (buddypress.css, bb-icons.css) in the standard template directory.
+				$this->bb_rl_restore_default_template_stack();
+			}
+
 			$this->load_hooks();
 
 			// Added support for Forums integration.
@@ -237,6 +256,20 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_action( 'login_form_login', array( $this, 'bb_rl_overwrite_login_email_field_label_hook' ) );
 
 			add_action( 'wp_login_errors', array( $this, 'bb_rl_wp_login_errors' ) );
+		}
+
+		/**
+		 * Restore the default BuddyBoss/BuddyPress template stack.
+		 *
+		 * Removes ReadyLaunch template locations and re-adds the standard ones so that
+		 * bp_locate_template() and bp_locate_template_asset() resolve files from the
+		 * default template directories instead of ReadyLaunch.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		protected function bb_rl_restore_default_template_stack() {
+			remove_filter( 'bp_get_template_stack', array( $this, 'add_template_stack' ), PHP_INT_MAX );
+			add_filter( 'bp_get_template_stack', 'bp_add_template_stack_locations' );
 		}
 
 		/**
@@ -953,9 +986,26 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				return $template;
 			}
 
+			// @since BuddyBoss [BBVERSION] Only use ReadyLaunch register template when setting is enabled.
 			if ( bp_is_register_page() ) {
-				$this->bb_rl_required_load();
-				return bp_locate_template( 'register.php' );
+				if ( $this->bb_rl_is_page_enabled_for_integration( 'registration' ) ) {
+					$this->bb_rl_required_load();
+					return bp_locate_template( 'register.php' );
+				}
+
+				// Login & Registration is disabled — restore default template stack
+				// so BuddyPress templates are used instead of ReadyLaunch.
+				$this->bb_rl_restore_default_template_stack();
+
+				// Use the theme's buddypress.php which provides the full page
+				// wrapper (header, logo, footer) for the register form.
+				$theme_bp_template = locate_template( 'buddypress.php' );
+				if ( $theme_bp_template ) {
+					return $theme_bp_template;
+				}
+
+				// Fallback: let WordPress handle it normally.
+				return $template;
 			}
 
 			if ( bp_is_activation_page() ) {
