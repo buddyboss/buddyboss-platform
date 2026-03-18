@@ -72,4 +72,35 @@ document.addEventListener( 'DOMContentLoaded', function() {
 			btn.classList.add( 'active' );
 		} );
 	} );
+
+	// Category filter dropdown.
+	var categorySelect = document.getElementById( 'bb-rl-events-category-select' );
+	if ( categorySelect ) {
+		categorySelect.addEventListener( 'change', function() {
+			var catId = this.value;
+
+			// Remove all existing event sources and re-add with updated URL.
+			calendar.removeAllEventSources();
+
+			var url = settings.restUrl + '?_fc=1&per_page=200&_wpnonce=' + settings.nonce;
+			if ( catId ) {
+				url += '&category_id=' + encodeURIComponent( catId );
+			}
+
+			calendar.addEventSource( {
+				url:    url,
+				method: 'GET',
+				failure: function() {
+					el.insertAdjacentHTML(
+						'beforeend',
+						'<p class="bb-rl-calendar-error">' +
+						( settings.i18n && settings.i18n.loadError
+							? settings.i18n.loadError
+							: 'Could not load events.' ) +
+						'</p>'
+					);
+				}
+			} );
+		} );
+	}
 } );
