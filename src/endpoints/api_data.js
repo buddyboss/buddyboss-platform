@@ -7686,7 +7686,7 @@ define({ "api": [
     "groupTitle": "Messages"
   },
   {
-    "type": "GET",
+    "type": "POST",
     "url": "/wp-json/buddyboss/v1/messages/action/:id",
     "title": "Thread Action",
     "name": "GetBBThreadsAction",
