@@ -88,7 +88,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			 * Only load ReadyLaunch login/registration integration when enabled in settings.
 			 * When disabled, the theme's default login/register styling and templates are used.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 2.21.0
 			 */
 			if ( $this->bb_rl_is_page_enabled_for_integration( 'registration' ) ) {
 				$this->load_login_registration_integration();
@@ -265,7 +265,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * bp_locate_template() and bp_locate_template_asset() resolve files from the
 		 * default template directories instead of ReadyLaunch.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.21.0
 		 */
 		protected function bb_rl_restore_default_template_stack() {
 			remove_filter( 'bp_get_template_stack', array( $this, 'add_template_stack' ), PHP_INT_MAX );
@@ -988,7 +988,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				return $template;
 			}
 
-			// @since BuddyBoss [BBVERSION] Only use ReadyLaunch register template when setting is enabled.
+			// @since BuddyBoss 2.21.0 Only use ReadyLaunch register template when setting is enabled.
 			if ( bp_is_register_page() ) {
 				if ( $this->bb_rl_is_page_enabled_for_integration( 'registration' ) ) {
 					$this->bb_rl_required_load();
@@ -4707,7 +4707,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		/**
 		 * Handle document/folder rename and privacy update in a single AJAX request.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 2.21.0
 		 */
 		public function bb_rl_document_rename_and_privacy_update() {
 			$response = array(
