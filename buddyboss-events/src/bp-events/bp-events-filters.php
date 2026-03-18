@@ -14,7 +14,7 @@ add_action( 'bp_events_activated', 'bp_events_install' );
 
 /**
  * Register 'events' as an optional BuddyBoss component.
- * This tells bp-core to auto-include bp-events/bp-events-loader.php.
+ * This tells bp-core to include it in the active-components list.
  *
  * @since BuddyBoss Events 1.0.0
  *
@@ -26,6 +26,21 @@ function bp_events_register_optional_component( $components ) {
 	return $components;
 }
 add_filter( 'bp_optional_components', 'bp_events_register_optional_component' );
+
+/**
+ * Load the events component files directly.
+ *
+ * Must run at bp_loaded priority 1 — before bp_setup_components fires at
+ * priority 2 — so that bp_setup_events() is registered in time.
+ *
+ * @since BuddyBoss Events 1.0.0
+ */
+function bp_events_force_load() {
+	if ( ! function_exists( 'bp_setup_events' ) ) {
+		require_once BP_EVENTS_PLUGIN_DIR . 'src/bp-events/bp-events-loader.php';
+	}
+}
+add_action( 'bp_loaded', 'bp_events_force_load', 1 );
 
 /**
  * Register Events REST API classes in the BuddyBoss autoloader map.
@@ -362,3 +377,127 @@ function bp_events_readylaunch_template_filter( $templates, $slug, $name ) {
 
 	return array_merge( $rl_templates, $templates );
 }
+
+/** Event Taxonomies **********************************************************/
+
+/**
+ * Register event taxonomies: bb_event_category (hierarchical) and bb_event_tag (flat).
+ *
+ * Uses 'bb_event' as the object type string. Events are not a CPT, but
+ * wp_set_object_terms() accepts any integer object_id with no FK check.
+ *
+ * @since BuddyBoss Events 2.0.0
+ */
+function bp_events_register_taxonomies() {
+	register_taxonomy( 'bb_event_category', 'bb_event', array(
+		'hierarchical'       => true,
+		'labels'             => array(
+			'name'              => __( 'Event Categories', 'buddyboss' ),
+			'singular_name'     => __( 'Event Category', 'buddyboss' ),
+			'add_new_item'      => __( 'Add New Event Category', 'buddyboss' ),
+			'edit_item'         => __( 'Edit Event Category', 'buddyboss' ),
+			'new_item_name'     => __( 'New Event Category Name', 'buddyboss' ),
+			'search_items'      => __( 'Search Event Categories', 'buddyboss' ),
+			'all_items'         => __( 'All Event Categories', 'buddyboss' ),
+			'parent_item'       => __( 'Parent Event Category', 'buddyboss' ),
+			'parent_item_colon' => __( 'Parent Event Category:', 'buddyboss' ),
+			'menu_name'         => __( 'Event Categories', 'buddyboss' ),
+		),
+		'show_ui'            => true,
+		'show_in_menu'       => 'bp-events',
+		'show_in_rest'       => true,
+		'show_admin_column'  => false,
+		'public'             => true,
+		'publicly_queryable' => true,
+		'rewrite'            => array( 'slug' => 'event-category' ),
+	) );
+
+	register_taxonomy( 'bb_event_tag', 'bb_event', array(
+		'hierarchical'       => false,
+		'labels'             => array(
+			'name'              => __( 'Event Tags', 'buddyboss' ),
+			'singular_name'     => __( 'Event Tag', 'buddyboss' ),
+			'add_new_item'      => __( 'Add New Event Tag', 'buddyboss' ),
+			'edit_item'         => __( 'Edit Event Tag', 'buddyboss' ),
+			'new_item_name'     => __( 'New Event Tag Name', 'buddyboss' ),
+			'search_items'      => __( 'Search Event Tags', 'buddyboss' ),
+			'all_items'         => __( 'All Event Tags', 'buddyboss' ),
+			'menu_name'         => __( 'Event Tags', 'buddyboss' ),
+		),
+		'show_ui'            => true,
+		'show_in_menu'       => 'bp-events',
+		'show_in_rest'       => true,
+		'public'             => true,
+		'publicly_queryable' => true,
+		'rewrite'            => array( 'slug' => 'event-tag' ),
+	) );
+}
+add_action( 'init', 'bp_events_register_taxonomies' );
+
+/**
+ * Exclude private/hidden group events from public taxonomy archive pages.
+ *
+ * TAX-03 security requirement: private group events MUST never appear on
+ * public category or tag archive pages regardless of category assignment.
+ *
+ * IMPORTANT: This filter MUST be registered at the same time as taxonomy
+ * registration. Do NOT defer to a separate hook — any gap is a security window.
+ *
+ * @since BuddyBoss Events 2.0.0
+ *
+ * @param WP_Query $query The current WP_Query instance.
+ */
+function bp_events_taxonomy_privacy_filter( $query ) {
+	if ( is_admin() || ! $query->is_main_query() ) {
+		return;
+	}
+
+	if ( ! $query->is_tax( array( 'bb_event_category', 'bb_event_tag' ) ) ) {
+		return;
+	}
+
+	global $wpdb;
+	$groups_table = $wpdb->prefix . 'bp_groups';
+	$events_table = buddypress()->events->table_name;
+
+	// Get all event IDs belonging to non-public groups.
+	$private_event_ids = $wpdb->get_col(
+		"SELECT e.id
+		 FROM {$events_table} e
+		 INNER JOIN {$groups_table} g ON e.group_id = g.id
+		 WHERE g.status != 'public'"
+	);
+
+	if ( ! empty( $private_event_ids ) ) {
+		// post__not_in excludes these object_ids from the taxonomy archive query.
+		$existing = $query->get( 'post__not_in' );
+		if ( ! is_array( $existing ) ) {
+			$existing = array();
+		}
+		$query->set( 'post__not_in', array_merge( $existing, array_map( 'intval', $private_event_ids ) ) );
+	}
+}
+add_action( 'pre_get_posts', 'bp_events_taxonomy_privacy_filter' );
+
+/**
+ * Override taxonomy archive template for event categories and tags.
+ *
+ * Since events are stored in bb_events (not wp_posts), the default WP_Query
+ * archive returns empty results. This template override calls
+ * bp_events_get_events() directly with the queried term.
+ *
+ * @since BuddyBoss Events 2.0.0
+ *
+ * @param string $template Template file path.
+ * @return string Modified template path.
+ */
+function bp_events_taxonomy_archive_template( $template ) {
+	if ( is_tax( 'bb_event_category' ) || is_tax( 'bb_event_tag' ) ) {
+		$custom = BP_EVENTS_PLUGIN_DIR . 'src/bp-templates/bp-nouveau/readylaunch/events/taxonomy-archive.php';
+		if ( file_exists( $custom ) ) {
+			return $custom;
+		}
+	}
+	return $template;
+}
+add_filter( 'template_include', 'bp_events_taxonomy_archive_template' );
