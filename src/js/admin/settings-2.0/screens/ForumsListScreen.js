@@ -1057,10 +1057,10 @@ export function ForumsListScreen( { onNavigate } ) {
 				</Modal>
 			) }
 
-			{ /* Delete Forum Modal */ }
+			{ /* Delete Forum Modal — single delete (no item list) or bulk delete (with item list) */ }
 			{ deleteModalOpen && (
 				<Modal
-					title={ __( 'Delete Forum?', 'buddyboss' ) }
+					title={ deleteTargetIds.length > 1 ? __( 'Bulk Delete', 'buddyboss' ) : __( 'Delete forum?', 'buddyboss' ) }
 					onRequestClose={ function () {
 						setDeleteModalOpen( false );
 					} }
@@ -1068,33 +1068,36 @@ export function ForumsListScreen( { onNavigate } ) {
 					shouldCloseOnClickOutside={ false }
 				>
 					<div className="bb-forum-delete-modal__body">
-						<div className="bb-admin-bulk-modal__selected-items">
-							{ deleteTargetForumNames.map( function ( item ) {
-								return (
-									<div key={ item.id } className="bb-admin-bulk-modal__selected-item">
-										<CheckboxControl
-											checked={ true }
-											onChange={ function () {
-												setDeleteTargetIds( function ( prev ) {
-													var next = prev.filter( function ( i ) { return i !== item.id; } );
-													if ( 0 === next.length ) {
-														setDeleteModalOpen( false );
-													}
-													return next;
-												} );
-												setSelectedIds( function ( prev ) {
-													return prev.filter( function ( i ) { return i !== item.id; } );
-												} );
-											} }
-											__nextHasNoMarginBottom
-										/>
-										<span className="bb-admin-bulk-modal__selected-item-name">
-											{ decodeEntities( item.title ) }
-										</span>
-									</div>
-								);
-							} ) }
-						</div>
+						{ /* Bulk: show item list with checkboxes */ }
+						{ deleteTargetIds.length > 1 && (
+							<div className="bb-admin-bulk-modal__selected-items">
+								{ deleteTargetForumNames.map( function ( item ) {
+									return (
+										<div key={ item.id } className="bb-admin-bulk-modal__selected-item">
+											<CheckboxControl
+												checked={ true }
+												onChange={ function () {
+													setDeleteTargetIds( function ( prev ) {
+														var next = prev.filter( function ( i ) { return i !== item.id; } );
+														if ( 0 === next.length ) {
+															setDeleteModalOpen( false );
+														}
+														return next;
+													} );
+													setSelectedIds( function ( prev ) {
+														return prev.filter( function ( i ) { return i !== item.id; } );
+													} );
+												} }
+												__nextHasNoMarginBottom
+											/>
+											<span className="bb-admin-bulk-modal__selected-item-name">
+												{ decodeEntities( item.title ) }
+											</span>
+										</div>
+									);
+								} ) }
+							</div>
+						) }
 						<div className="bb-admin-delete__warning">
 							<i className="bb-icons-rl bb-icons-rl-warning-circle"></i>
 							<div className="bb-admin-delete__warning-text">
@@ -1102,15 +1105,15 @@ export function ForumsListScreen( { onNavigate } ) {
 									{ __( 'Warning', 'buddyboss' ) }
 								</span>
 								<span className="bb-admin-delete__warning-desc">
-									{ __( 'This permanently deletes selected forums and all associated discussions and replies. This cannot be undone.', 'buddyboss' ) }
+									{ __( 'This permanently deletes forums from the community and cannot be undone.', 'buddyboss' ) }
 								</span>
 							</div>
 						</div>
 						<p className="bb-forum-delete-modal__description">
-							{ __( 'Deleting forums will remove them from the community and all associated discussions and replies will be permanently deleted.', 'buddyboss' ) }
+							{ __( 'Deletes the forum and all associated discussions, replies, media, and related content from the community. This action cannot be undone.', 'buddyboss' ) }
 						</p>
 						<CheckboxControl
-							label={ __( 'I understand this will permanently delete the forum.', 'buddyboss' ) }
+							label={ __( 'I understand that this deletes the forum and its discussions.', 'buddyboss' ) }
 							checked={ deleteConfirmChecked }
 							onChange={ setDeleteConfirmChecked }
 							__nextHasNoMarginBottom

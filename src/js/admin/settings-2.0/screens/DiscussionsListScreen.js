@@ -180,6 +180,10 @@ export function DiscussionsListScreen( { onNavigate } ) {
 	var bulkEditStatus = bulkEditStatusState[ 0 ];
 	var setBulkEditStatus = bulkEditStatusState[ 1 ];
 
+	var bulkEditTagsState = useState( '' );
+	var bulkEditTags = bulkEditTagsState[ 0 ];
+	var setBulkEditTags = bulkEditTagsState[ 1 ];
+
 	// Read tag_id from URL params (e.g. linked from Discussion Tags count).
 	var urlTagIdState = useState( function () {
 		var params = new URLSearchParams( window.location.search );
@@ -476,11 +480,15 @@ export function DiscussionsListScreen( { onNavigate } ) {
 	 */
 	var handleConfirmBulkEdit = function () {
 		setBulkEditOpen( false );
-		performAction( 'edit', selectedIds, {
+		var editData = {
 			edit_type: bulkEditType,
 			edit_visibility: bulkEditVisibility,
 			edit_status: bulkEditStatus,
-		} );
+		};
+		if ( bulkEditTags ) {
+			editData.edit_tags = bulkEditTags;
+		}
+		performAction( 'edit', selectedIds, editData );
 	};
 
 	/**
@@ -920,10 +928,10 @@ export function DiscussionsListScreen( { onNavigate } ) {
 				</div>
 			) }
 
-			{ /* Delete Discussion Modal */ }
+			{ /* Delete Discussion Modal — single (no item list) or bulk (with item list) */ }
 			{ deleteModalOpen && (
 				<Modal
-					title={ __( 'Delete Discussion?', 'buddyboss' ) }
+					title={ deleteTargetIds.length > 1 ? __( 'Bulk Delete', 'buddyboss' ) : __( 'Delete discussion?', 'buddyboss' ) }
 					onRequestClose={ function () {
 						setDeleteModalOpen( false );
 					} }
@@ -931,30 +939,36 @@ export function DiscussionsListScreen( { onNavigate } ) {
 					shouldCloseOnClickOutside={ false }
 				>
 					<div className="bb-discussion-delete-modal__body">
-						<div className="bb-admin-bulk-modal__selected-items">
-							{ deleteTargetDiscussionNames.map( function ( item ) {
-								return (
-									<div key={ item.id } className="bb-admin-bulk-modal__selected-item">
-										<CheckboxControl
-											checked={ true }
-											onChange={ function () {
-												setDeleteTargetIds( function ( prev ) {
-													var next = prev.filter( function ( i ) { return i !== item.id; } );
-													if ( 0 === next.length ) {
-														setDeleteModalOpen( false );
-													}
-													return next;
-												} );
-											} }
-											__nextHasNoMarginBottom
-										/>
-										<span className="bb-admin-bulk-modal__selected-item-name">
-											{ decodeEntities( item.title ) }
-										</span>
-									</div>
-								);
-							} ) }
-						</div>
+						{ /* Bulk: show item list with checkboxes */ }
+						{ deleteTargetIds.length > 1 && (
+							<div className="bb-admin-bulk-modal__selected-items">
+								{ deleteTargetDiscussionNames.map( function ( item ) {
+									return (
+										<div key={ item.id } className="bb-admin-bulk-modal__selected-item">
+											<CheckboxControl
+												checked={ true }
+												onChange={ function () {
+													setDeleteTargetIds( function ( prev ) {
+														var next = prev.filter( function ( i ) { return i !== item.id; } );
+														if ( 0 === next.length ) {
+															setDeleteModalOpen( false );
+														}
+														return next;
+													} );
+													setSelectedIds( function ( prev ) {
+														return prev.filter( function ( i ) { return i !== item.id; } );
+													} );
+												} }
+												__nextHasNoMarginBottom
+											/>
+											<span className="bb-admin-bulk-modal__selected-item-name">
+												{ decodeEntities( item.title ) }
+											</span>
+										</div>
+									);
+								} ) }
+							</div>
+						) }
 						<div className="bb-admin-delete__warning">
 							<i className="bb-icons-rl bb-icons-rl-warning-circle"></i>
 							<div className="bb-admin-delete__warning-text">
@@ -962,15 +976,15 @@ export function DiscussionsListScreen( { onNavigate } ) {
 									{ __( 'Warning', 'buddyboss' ) }
 								</span>
 								<span className="bb-admin-delete__warning-desc">
-									{ __( 'This permanently deletes selected discussions and all associated replies. This cannot be undone.', 'buddyboss' ) }
+									{ __( 'This permanently deletes discussions from the community and cannot be undone.', 'buddyboss' ) }
 								</span>
 							</div>
 						</div>
 						<p className="bb-discussion-delete-modal__description">
-							{ __( 'Deleting discussions will remove them from the community and all associated replies will be permanently deleted.', 'buddyboss' ) }
+							{ __( 'Deletes the discussions and all associated replies, media, and related content from the community. This action cannot be undone.', 'buddyboss' ) }
 						</p>
 						<CheckboxControl
-							label={ __( 'I understand this will permanently delete the discussion.', 'buddyboss' ) }
+							label={ __( 'I understand that this deletes the discussions.', 'buddyboss' ) }
 							checked={ deleteConfirmChecked }
 							onChange={ setDeleteConfirmChecked }
 							__nextHasNoMarginBottom
@@ -1033,17 +1047,11 @@ export function DiscussionsListScreen( { onNavigate } ) {
 							} ) }
 						</div>
 
-						<SelectControl
-							label={ __( 'Type', 'buddyboss' ) }
-							value={ bulkEditType }
-							options={ [
-								{ value: 'no_change', label: __( '\u2014 No Change \u2014', 'buddyboss' ) },
-								{ value: 'normal', label: __( 'Normal', 'buddyboss' ) },
-								{ value: 'sticky', label: __( 'Sticky', 'buddyboss' ) },
-								{ value: 'super_sticky', label: __( 'Super Sticky', 'buddyboss' ) },
-							] }
-							onChange={ setBulkEditType }
-							__nextHasNoMarginBottom
+						<TagsAutocomplete
+							label={ __( 'Tags (Optional)', 'buddyboss' ) }
+							value={ bulkEditTags }
+							onChange={ setBulkEditTags }
+							placeholder={ __( 'Enter tags, separated by commas', 'buddyboss' ) }
 						/>
 
 						<SelectControl
@@ -1053,6 +1061,7 @@ export function DiscussionsListScreen( { onNavigate } ) {
 								{ value: 'no_change', label: __( '\u2014 No Change \u2014', 'buddyboss' ) },
 								{ value: 'open', label: __( 'Open', 'buddyboss' ) },
 								{ value: 'closed', label: __( 'Closed', 'buddyboss' ) },
+								{ value: 'spam', label: __( 'Spam', 'buddyboss' ) },
 							] }
 							onChange={ setBulkEditStatus }
 							__nextHasNoMarginBottom
@@ -1065,7 +1074,7 @@ export function DiscussionsListScreen( { onNavigate } ) {
 								{ value: 'no_change', label: __( '\u2014 No Change \u2014', 'buddyboss' ) },
 								{ value: 'publish', label: __( 'Public', 'buddyboss' ) },
 								{ value: 'private', label: __( 'Private', 'buddyboss' ) },
-								{ value: 'hidden', label: __( 'Hidden', 'buddyboss' ) },
+								{ value: 'password', label: __( 'Password Protected', 'buddyboss' ) },
 							] }
 							onChange={ setBulkEditVisibility }
 							__nextHasNoMarginBottom
@@ -1083,7 +1092,7 @@ export function DiscussionsListScreen( { onNavigate } ) {
 						<Button
 							variant="primary"
 							onClick={ handleConfirmBulkEdit }
-							disabled={ 'no_change' === bulkEditType && 'no_change' === bulkEditStatus && 'no_change' === bulkEditVisibility }
+							disabled={ 'no_change' === bulkEditStatus && 'no_change' === bulkEditVisibility && ! bulkEditTags }
 						>
 							{ __( 'Save', 'buddyboss' ) }
 						</Button>
