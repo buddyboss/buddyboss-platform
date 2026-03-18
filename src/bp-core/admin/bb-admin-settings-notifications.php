@@ -97,7 +97,7 @@ function bb_admin_settings_register_notifications_feature() {
 			'title'    => __( 'On-screen Notifications', 'buddyboss' ),
 			'icon'     => array(
 				'type'  => 'font',
-				'class' => 'bb-icons-rl bb-icons-rl-monitor',
+				'class' => 'bb-icons-rl bb-icons-rl-desktop',
 			),
 			'help_url' => bp_get_admin_url(
 				add_query_arg(
@@ -120,7 +120,7 @@ function bb_admin_settings_register_notifications_feature() {
 			'title'    => __( 'Web Push Notifications', 'buddyboss' ),
 			'icon'     => array(
 				'type'  => 'font',
-				'class' => 'bb-icons-rl bb-icons-rl-paper-plane-tilt',
+				'class' => 'bb-icons-rl bb-icons-rl-browser',
 			),
 			'help_url' => bp_get_admin_url(
 				add_query_arg(

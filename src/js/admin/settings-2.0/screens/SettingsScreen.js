@@ -290,7 +290,7 @@ export function SettingsScreen({ onNavigate }) {
 					{Object.entries(groupedFeatures).map(([category, categoryFeatures]) => (
 						<div key={category} className="bb-admin-settings__category">
 							{/* Category Divider */}
-							<div className="bb-admin-settings__category-divider">
+							<div className={ 'community' === category ? 'bb-admin-settings__category-divider' : 'bb-admin-settings__category-divider bb-admin-settings__category-divider--with-line' }>
 								<h2 className="bb-admin-settings__category-title">
 									{ 'community' === category
 										? __('BUDDYBOSS COMMUNITY SETTINGS', 'buddyboss')

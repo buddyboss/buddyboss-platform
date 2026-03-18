@@ -348,6 +348,8 @@ class BB_Admin_Forums_Ajax {
 			}
 			$response['columns'] = $columns_response;
 
+			// Forum base slug for permalink preview in create/edit modals.
+			$response['forum_base_slug'] = get_option( '_bbp_forum_slug', 'forum' );
 		}
 
 		/**
@@ -894,10 +896,20 @@ class BB_Admin_Forums_Ajax {
 					/**
 					 * Fires after a forum is bulk-edited in Settings 2.0 admin.
 					 *
+					 * Fires the primary lifecycle hook so that bbp_update_forum()
+					 * runs count recalculation (registered at core/actions.php:169).
+					 *
 					 * @since BuddyBoss [BBVERSION]
 					 *
 					 * @param int $forum_id Forum ID.
 					 */
+					do_action(
+						'bbp_edit_forum',
+						array(
+							'forum_id'    => $forum_id,
+							'post_parent' => $forum->post_parent,
+						)
+					);
 					do_action( 'bbp_edit_forum_post_extras', $forum_id );
 					++$processed;
 				} else {
@@ -1024,7 +1036,7 @@ class BB_Admin_Forums_Ajax {
 			foreach ( $status_counts as $row ) {
 				$counts_map[ $row->post_status ] = (int) $row->cnt;
 			}
-			wp_cache_set( $cache_key, $counts_map, 'bbpress' );
+			wp_cache_set( $cache_key, $counts_map, 'bbpress', HOUR_IN_SECONDS );
 		}
 
 		return $counts_map;

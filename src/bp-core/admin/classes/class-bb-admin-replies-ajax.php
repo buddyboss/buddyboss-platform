@@ -243,7 +243,6 @@ class BB_Admin_Replies_Ajax {
 			$item = array(
 				'id'            => $reply_id,
 				'content'       => $content_excerpt,
-				'content_raw'   => $reply->post_content,
 				'forum_id'      => $reply_forum_id,
 				'forum_name'    => $reply_forum_id ? get_the_title( $reply_forum_id ) : '',
 				'topic_id'      => $reply_topic_id,
@@ -878,13 +877,29 @@ class BB_Admin_Replies_Ajax {
 				}
 
 				if ( $updated ) {
+					$topic_id = bbp_get_reply_topic_id( $rid );
+					$forum_id = bbp_get_reply_forum_id( $rid );
+
 					/**
 					 * Fires after a reply is bulk-edited in Settings 2.0 admin.
+					 *
+					 * Fires the primary lifecycle hook so that bbp_update_reply()
+					 * runs count recalculation (registered at core/actions.php:178).
 					 *
 					 * @since BuddyBoss [BBVERSION]
 					 *
 					 * @param int $rid Reply ID.
 					 */
+					do_action(
+						'bbp_edit_reply',
+						$rid,
+						$topic_id,
+						$forum_id,
+						array(),
+						get_post_field( 'post_author', $rid ),
+						true,
+						bbp_get_reply_to( $rid )
+					);
 					do_action( 'bbp_edit_reply_post_extras', $rid );
 					++$processed;
 				} else {
