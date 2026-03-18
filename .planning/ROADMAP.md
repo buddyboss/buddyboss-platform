@@ -157,7 +157,7 @@ Note: Phase 6 depends only on Phase 4 (not Phase 5) — Sessions/Speakers need t
 | 1. Foundation + Event Management | 9/9 | Complete   | 2026-03-14 |
 | 2. Payments + Ticketing | 6/6 | Complete   | 2026-03-14 |
 | 3. BuddyBoss Integration | 6/6 | Complete   | 2026-03-16 |
-| 4. Meta API Foundation + Taxonomy | 1/5 | In Progress|  |
+| 4. Meta API Foundation + Taxonomy | 2/5 | In Progress|  |
 | 5. Data Enrichment | 0/TBD | Not started | - |
 | 6. Sessions + Speakers | 0/TBD | Not started | - |
 | 7. Front-End Submission + Organizer Dashboard | 0/TBD | Not started | - |

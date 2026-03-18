@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 04-meta-api-foundation-taxonomy 04-00-PLAN.md
-last_updated: "2026-03-18T09:20:40.016Z"
+stopped_at: Completed 04-meta-api-foundation-taxonomy 04-01-PLAN.md
+last_updated: "2026-03-18T09:24:56.936Z"
 last_activity: 2026-03-17 — v2.0 roadmap created (Phases 4-8)
 progress:
   total_phases: 8
   completed_phases: 3
   total_plans: 26
-  completed_plans: 22
+  completed_plans: 23
   percent: 0
 ---
 
@@ -87,6 +87,7 @@ Note: Phase 5 and Phase 6 both depend only on Phase 4. They can execute in paral
 | Phase 03-buddyboss-integration P04 | 2min | 2 tasks | 6 files |
 | Phase 03-buddyboss-integration P05 | 5min | 2 tasks | 0 files |
 | Phase 04-meta-api-foundation-taxonomy P00 | 2 | 1 tasks | 3 files |
+| Phase 04-meta-api-foundation-taxonomy P01 | 2min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -149,6 +150,9 @@ Recent decisions affecting current work:
 - [v2.0 roadmap]: Research flag for Phase 7 — verify BuddyBoss notification system hooks before writing approval/rejection email code; determine whether BuddyBoss Platform provides notification infrastructure that should be used instead of raw wp_mail()
 - [Phase 04-meta-api-foundation-taxonomy]: All Phase 4 stubs use plan-number references in markTestIncomplete messages — TAX-03 privacy stubs point to 04-01-PLAN since privacy filter is registered at taxonomy bootstrap time
 - [Phase 04-meta-api-foundation-taxonomy]: Tab indentation and BP_Events_Test_ class prefix maintained per WordPress Coding Standards in all Phase 4 test stubs
+- [Phase 04-meta-api-foundation-taxonomy]: bp_filter_metaid_column_name wrapped around all metadata calls — bb_eventmeta uses 'id' as PK not 'meta_id'
+- [Phase 04-meta-api-foundation-taxonomy]: meta_tables registration mirrors bp-groups pattern — passes 'event' key to parent::setup_globals() which calls register_meta_tables() to set $wpdb->eventmeta
+- [Phase 04-meta-api-foundation-taxonomy]: Privacy filter registered on same init hook as taxonomy registration — no window where taxonomy is live but TAX-03 filter is absent
 
 ### Pending Todos
 
@@ -164,6 +168,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-18T09:20:40.012Z
-Stopped at: Completed 04-meta-api-foundation-taxonomy 04-00-PLAN.md
+Last session: 2026-03-18T09:24:56.929Z
+Stopped at: Completed 04-meta-api-foundation-taxonomy 04-01-PLAN.md
 Resume file: None
