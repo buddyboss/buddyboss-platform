@@ -1421,9 +1421,11 @@ class BB_Admin_Settings_Ajax {
 		if ( ! empty( $slug_term_ids ) ) {
 			$email_posts = get_posts(
 				array(
-					'posts_per_page' => 200,
-					'post_type'      => bp_get_email_post_type(),
-					'tax_query'      => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+					'posts_per_page'         => -1, // Bounded by tax_query — all matching email templates needed.
+					'no_found_rows'          => true, // Skip COUNT(*) — not paginating.
+					'update_post_meta_cache' => false, // Post meta not needed for URL resolution.
+					'post_type'              => bp_get_email_post_type(),
+					'tax_query'              => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 						array(
 							'taxonomy' => bp_get_email_tax_type(),
 							'field'    => 'slug',
