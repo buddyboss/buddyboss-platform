@@ -33,6 +33,8 @@
 		recurrence_rule: '',           // e.g. 'FREQ=WEEKLY;INTERVAL=1;BYDAY=MO,WE;COUNT=10'
 		rsvp_restrict:   false,        // true when RSVP is restricted to a group
 		rsvp_group_id:   0,            // BuddyPress group ID for restriction
+		category_ids:    [],           // selected event category term IDs
+		tags:            [],           // tag strings entered by the user
 		status:          'draft'       // 'draft' | 'published'
 	};
 
@@ -53,27 +55,29 @@
 	/**
 	 * Total number of wizard steps.
 	 * Fixed steps: 1 Type, 2 Basic Details, 3 Date & Time, 4 Location,
-	 *              5 Recurrence (may be skipped), 6 RSVP Settings, 7 Review.
+	 *              5 Recurrence (may be skipped), 6 RSVP Settings,
+	 *              7 Categories & Tags, 8 Review.
 	 * Step 5 (Recurrence) is skipped in navigation when showRecurrence is false,
 	 * but totalSteps always reflects visible steps for the indicator strip.
 	 *
 	 * @returns {number}
 	 */
 	function totalSteps() {
-		return state.showRecurrence ? 7 : 6;
+		return state.showRecurrence ? 8 : 7;
 	}
 
 	/**
 	 * Logical step number → display step label mapping.
-	 * When recurrence is hidden the indicator strip only shows 6 steps, with
-	 * what would be step 6 displayed as position 5, and step 7 as position 6.
+	 * When recurrence is hidden the indicator strip only shows 7 steps, with
+	 * what would be step 6 displayed as position 5, step 7 as position 6,
+	 * and step 8 as position 7.
 	 *
 	 * @param {number} logicalStep  Display position (1-based index in indicator).
 	 * @returns {string}
 	 */
 	function stepLabel( logicalStep ) {
 		if ( state.showRecurrence ) {
-			// All 7 steps visible.
+			// All 8 steps visible.
 			var labelsAll = [
 				'Event Type',
 				'Basic Details',
@@ -81,17 +85,19 @@
 				'Location / Virtual',
 				'Recurrence',
 				'RSVP Settings',
+				'Categories & Tags',
 				'Review & Publish'
 			];
 			return labelsAll[ logicalStep - 1 ] || '';
 		}
-		// 6 steps visible (recurrence hidden).
+		// 7 steps visible (recurrence hidden).
 		var labelsNo = [
 			'Event Type',
 			'Basic Details',
 			'Date & Time',
 			'Location / Virtual',
 			'RSVP Settings',
+			'Categories & Tags',
 			'Review & Publish'
 		];
 		return labelsNo[ logicalStep - 1 ] || '';
@@ -477,7 +483,84 @@
 	}
 
 	/**
-	 * Render the review step (step 5 without recurrence, step 6 with it).
+	 * Render step 7 — Categories & Tags.
+	 *
+	 * Renders category checkboxes (from bpEventsCreate.categories) with
+	 * hierarchical indentation, plus a tokenised tag input.
+	 *
+	 * @returns {string} HTML string.
+	 */
+	function renderCategoriesStep() {
+		var categories = ( window.bpEventsCreate && bpEventsCreate.categories )
+			? bpEventsCreate.categories
+			: [];
+
+		var html = '<div class="bb-rl-wizard-step bb-rl-step-categories">';
+		html += '<h2 class="bb-rl-step-title">Categories &amp; Tags</h2>';
+
+		// Category checkboxes.
+		html += '<div class="bb-rl-form-group">';
+		html += '<label class="bb-rl-field-label">Event Categories</label>';
+		html += '<div class="bb-rl-category-list" id="bb-event-categories">';
+
+		if ( categories.length ) {
+			categories.forEach( function( cat ) {
+				var checked  = ( state.category_ids.indexOf( cat.id ) !== -1 ) ? ' checked' : '';
+				var indent   = cat.parent ? ' style="margin-left:20px;"' : '';
+				var iconHtml = '';
+				if ( cat.meta && cat.meta._bb_event_cat_icon_id ) {
+					// Icon ID is present — would need attachment URL lookup; skip for now.
+				}
+				html += '<label class="bb-rl-category-item"' + indent + '>';
+				html += '<input type="checkbox" class="bb-rl-category-check" value="' + esc( cat.id ) + '"' + checked + '> ';
+				html += esc( cat.name );
+				html += '</label>';
+			} );
+		} else {
+			html += '<p class="bb-rl-notice">';
+			html += 'No categories available. You can add categories from the admin dashboard.';
+			html += '</p>';
+		}
+
+		html += '</div>'; // .bb-rl-category-list
+		html += '</div>'; // .bb-rl-form-group
+
+		// Tag input.
+		html += '<div class="bb-rl-form-group">';
+		html += '<label class="bb-rl-field-label">Tags</label>';
+		html += '<div class="bb-rl-tag-input-wrap">';
+		html += '<div class="bb-rl-tag-tokens" id="bb-event-tag-tokens">';
+
+		state.tags.forEach( function( tag ) {
+			html += '<span class="bb-rl-tag-token">' + esc( tag );
+			html += '<button type="button" class="bb-rl-tag-remove" data-tag="' + esc( tag ) + '">&times;</button>';
+			html += '</span>';
+		} );
+
+		html += '</div>'; // .bb-rl-tag-tokens
+		html += '<input type="text" id="bb-event-tags-input" class="bb-rl-input"';
+		html += ' placeholder="Type and press comma or Enter to add tags" />';
+		html += '</div>'; // .bb-rl-tag-input-wrap
+		html += '</div>'; // .bb-rl-form-group
+
+		html += '</div>';
+		return html;
+	}
+
+	/**
+	 * Add a tag string to state.tags if not already present.
+	 *
+	 * @param {string} tagStr
+	 */
+	function addTag( tagStr ) {
+		var trimmed = tagStr.trim().replace( /,+$/, '' ).trim();
+		if ( trimmed && state.tags.indexOf( trimmed ) === -1 ) {
+			state.tags.push( trimmed );
+		}
+	}
+
+	/**
+	 * Render the review step (step 8).
 	 *
 	 * @returns {string} HTML string.
 	 */
@@ -514,6 +597,23 @@
 			rows.push( [ 'RSVP Restriction', 'Group members only (Group ID: ' + state.rsvp_group_id + ')' ] );
 		}
 
+		// Categories.
+		if ( state.category_ids.length > 0 ) {
+			var categories = ( window.bpEventsCreate && bpEventsCreate.categories )
+				? bpEventsCreate.categories
+				: [];
+			var selectedNames = state.category_ids.map( function( id ) {
+				var match = categories.filter( function( c ) { return c.id === id; } );
+				return match.length ? match[0].name : 'ID: ' + id;
+			} );
+			rows.push( [ 'Categories', selectedNames.join( ', ' ) ] );
+		}
+
+		// Tags.
+		if ( state.tags.length > 0 ) {
+			rows.push( [ 'Tags', state.tags.join( ', ' ) ] );
+		}
+
 		var tableRows = rows.map( function( row ) {
 			return '<tr><th class="bb-rl-review-label">' + esc( row[0] ) + '</th>' +
 				'<td class="bb-rl-review-value">' + esc( row[1] ) + '</td></tr>';
@@ -545,9 +645,9 @@
 		// Build the ordered list of logical step numbers that are visible.
 		var visibleSteps;
 		if ( state.showRecurrence ) {
-			visibleSteps = [ 1, 2, 3, 4, 5, 6, 7 ];
+			visibleSteps = [ 1, 2, 3, 4, 5, 6, 7, 8 ];
 		} else {
-			visibleSteps = [ 1, 2, 3, 4, 6, 7 ]; // Skip step 5 (Recurrence).
+			visibleSteps = [ 1, 2, 3, 4, 6, 7, 8 ]; // Skip step 5 (Recurrence).
 		}
 
 		var html = '';
@@ -588,7 +688,7 @@
 		}
 
 		var isFirst  = ( state.step === 1 );
-		var isReview = ( state.step === 7 ); // Step 7 is always Review & Publish.
+		var isReview = ( state.step === 8 ); // Step 8 is always Review & Publish.
 
 		prev.style.display    = isFirst  ? 'none'         : 'inline-block';
 		next.style.display    = isReview ? 'none'         : 'inline-block';
@@ -630,6 +730,10 @@
 			// Step 6 is always RSVP Settings.
 			html = renderRsvpSettingsStep();
 		} else if ( stepNumber === 7 ) {
+			// Step 7 is always Categories & Tags.
+			html = renderCategoriesStep();
+		} else if ( stepNumber === 8 ) {
+			// Step 8 is always Review & Publish.
 			html = renderReviewStep();
 		}
 
@@ -669,6 +773,9 @@
 		} else if ( stepNumber === 6 ) {
 			// Step 6 = RSVP Settings.
 			bindRsvpSettingsEvents();
+		} else if ( stepNumber === 7 ) {
+			// Step 7 = Categories & Tags.
+			bindCategoriesStepEvents();
 		}
 	}
 
@@ -923,6 +1030,91 @@
 		}
 	}
 
+	/**
+	 * Bind events for the Categories & Tags step.
+	 *
+	 * - Category checkboxes update state.category_ids.
+	 * - Tag input: comma or Enter converts the typed text into a tag token.
+	 * - Tag remove buttons delete tokens from state.tags and re-render tokens.
+	 */
+	function bindCategoriesStepEvents() {
+		// Category checkboxes.
+		var categoryChecks = document.querySelectorAll( '.bb-rl-category-check' );
+		categoryChecks.forEach( function( chk ) {
+			chk.addEventListener( 'change', function() {
+				var id  = parseInt( this.value, 10 );
+				var idx = state.category_ids.indexOf( id );
+				if ( this.checked && idx === -1 ) {
+					state.category_ids.push( id );
+				} else if ( ! this.checked && idx !== -1 ) {
+					state.category_ids.splice( idx, 1 );
+				}
+			} );
+		} );
+
+		// Tag input.
+		var tagInput  = document.getElementById( 'bb-event-tags-input' );
+		var tagTokens = document.getElementById( 'bb-event-tag-tokens' );
+
+		function renderTagTokens() {
+			if ( ! tagTokens ) {
+				return;
+			}
+			tagTokens.innerHTML = '';
+			state.tags.forEach( function( tag ) {
+				var span = document.createElement( 'span' );
+				span.className = 'bb-rl-tag-token';
+
+				var text = document.createTextNode( tag );
+				span.appendChild( text );
+
+				var btn = document.createElement( 'button' );
+				btn.type = 'button';
+				btn.className = 'bb-rl-tag-remove';
+				btn.setAttribute( 'data-tag', tag );
+				btn.innerHTML = '&times;';
+				btn.addEventListener( 'click', function() {
+					var removeTag = this.getAttribute( 'data-tag' );
+					state.tags = state.tags.filter( function( t ) { return t !== removeTag; } );
+					renderTagTokens();
+				} );
+
+				span.appendChild( btn );
+				tagTokens.appendChild( span );
+			} );
+		}
+
+		if ( tagInput ) {
+			tagInput.addEventListener( 'keydown', function( e ) {
+				if ( e.key === 'Enter' || e.key === ',' ) {
+					e.preventDefault();
+					addTag( this.value );
+					this.value = '';
+					renderTagTokens();
+				}
+			} );
+
+			tagInput.addEventListener( 'blur', function() {
+				if ( this.value.trim() ) {
+					addTag( this.value );
+					this.value = '';
+					renderTagTokens();
+				}
+			} );
+		}
+
+		// Wire remove buttons for any tokens already in the DOM (pre-rendered state).
+		if ( tagTokens ) {
+			tagTokens.querySelectorAll( '.bb-rl-tag-remove' ).forEach( function( btn ) {
+				btn.addEventListener( 'click', function() {
+					var removeTag = this.getAttribute( 'data-tag' );
+					state.tags = state.tags.filter( function( t ) { return t !== removeTag; } );
+					renderTagTokens();
+				} );
+			} );
+		}
+	}
+
 	// -------------------------------------------------------------------------
 	// Validation
 	// -------------------------------------------------------------------------
@@ -1039,7 +1231,9 @@
 			virtual_type:    state.virtual_type,
 			capacity:        state.capacity,
 			status:          state.status,
-			recurrence_rule: state.recurrence_rule
+			recurrence_rule: state.recurrence_rule,
+			category_ids:    state.category_ids,
+			tags:            state.tags
 		};
 
 		if ( state.rsvp_restrict && state.rsvp_group_id > 0 ) {
@@ -1086,8 +1280,8 @@
 	 * Advance to the next step.
 	 *
 	 * Step sequence:
-	 *   With recurrence:    1 → 2 → 3 → 4 → 5 → 6 → 7
-	 *   Without recurrence: 1 → 2 → 3 → 4 → 6 → 7  (step 5 skipped)
+	 *   With recurrence:    1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
+	 *   Without recurrence: 1 → 2 → 3 → 4 → 6 → 7 → 8  (step 5 skipped)
 	 */
 	function goNext() {
 		if ( ! validateCurrentStep() ) {
@@ -1101,8 +1295,8 @@
 			next = 6; // Jump to RSVP Settings.
 		}
 
-		// Step 7 is the last step (Review); do not advance past it.
-		if ( next > 7 ) {
+		// Step 8 is the last step (Review); do not advance past it.
+		if ( next > 8 ) {
 			return;
 		}
 
@@ -1113,8 +1307,8 @@
 	 * Go back one step.
 	 *
 	 * Step sequence (reverse):
-	 *   With recurrence:    7 → 6 → 5 → 4 → 3 → 2 → 1
-	 *   Without recurrence: 7 → 6 → 4 → 3 → 2 → 1  (step 5 skipped)
+	 *   With recurrence:    8 → 7 → 6 → 5 → 4 → 3 → 2 → 1
+	 *   Without recurrence: 8 → 7 → 6 → 4 → 3 → 2 → 1  (step 5 skipped)
 	 */
 	function goPrev() {
 		var prev = state.step - 1;

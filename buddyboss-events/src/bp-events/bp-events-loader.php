@@ -55,8 +55,17 @@ function bp_events_enqueue_create_assets() {
 		'bp-events-create',
 		'bpEventsCreate',
 		array(
-			'restUrl' => rest_url( 'buddyboss/v1/events' ),
-			'nonce'   => wp_create_nonce( 'wp_rest' ),
+			'restUrl'          => rest_url( 'buddyboss/v1/events' ),
+			'nonce'            => wp_create_nonce( 'wp_rest' ),
+			'categoriesRestUrl' => rest_url( 'wp/v2/bb_event_category' ),
+			'tagsRestUrl'       => rest_url( 'wp/v2/bb_event_tag' ),
+			'categories'        => taxonomy_exists( 'bb_event_category' )
+				? get_terms( array(
+					'taxonomy'   => 'bb_event_category',
+					'hide_empty' => false,
+					'fields'     => 'all',
+				) )
+				: array(),
 		)
 	);
 }
