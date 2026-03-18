@@ -77,7 +77,7 @@
 							<?php esc_html_e( 'Create Folder', 'buddyboss' ); ?>
 						</a>
 						<?php if ( ! bp_is_group() ) : ?>
-							<div class="bb-dropdown-wrap">
+							<div class="bb-dropdown-wrap bb-rl-filter">
 								<select id="bb-document-privacy">
 									<?php
 									foreach ( bp_document_get_visibility_levels() as $k => $option ) {
