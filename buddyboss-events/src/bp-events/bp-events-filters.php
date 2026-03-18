@@ -501,3 +501,48 @@ function bp_events_taxonomy_archive_template( $template ) {
 	return $template;
 }
 add_filter( 'template_include', 'bp_events_taxonomy_archive_template' );
+
+/**
+ * Add taxonomy-based WHERE clauses to bp_events_get_events().
+ *
+ * Filters events by category_id or tag_id using subqueries against
+ * wp_term_relationships and wp_term_taxonomy.
+ *
+ * @since BuddyBoss Events 2.0.0
+ *
+ * @param array $where_clauses Existing WHERE fragments.
+ * @param array $r             Parsed query arguments.
+ * @return array Modified WHERE fragments.
+ */
+function bp_events_add_taxonomy_where_clauses( $where_clauses, $r ) {
+	global $wpdb;
+
+	if ( ! empty( $r['category_id'] ) ) {
+		$category_id = absint( $r['category_id'] );
+		$where_clauses[] = $wpdb->prepare(
+			"e.id IN (
+				SELECT tr.object_id FROM {$wpdb->term_relationships} tr
+				INNER JOIN {$wpdb->term_taxonomy} tt ON tr.term_taxonomy_id = tt.term_taxonomy_id
+				WHERE tt.taxonomy = 'bb_event_category'
+				AND tt.term_id = %d
+			)",
+			$category_id
+		);
+	}
+
+	if ( ! empty( $r['tag_id'] ) ) {
+		$tag_id = absint( $r['tag_id'] );
+		$where_clauses[] = $wpdb->prepare(
+			"e.id IN (
+				SELECT tr.object_id FROM {$wpdb->term_relationships} tr
+				INNER JOIN {$wpdb->term_taxonomy} tt ON tr.term_taxonomy_id = tt.term_taxonomy_id
+				WHERE tt.taxonomy = 'bb_event_tag'
+				AND tt.term_id = %d
+			)",
+			$tag_id
+		);
+	}
+
+	return $where_clauses;
+}
+add_filter( 'bp_events_get_events_where_clauses', 'bp_events_add_taxonomy_where_clauses', 10, 2 );

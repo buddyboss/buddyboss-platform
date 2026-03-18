@@ -268,6 +268,8 @@ class BP_REST_Events_Endpoint extends WP_REST_Controller {
 			'from'         => $from,
 			'to'           => $to,
 			'search'       => $request->get_param( 'search' ),
+			'category_id'  => $request->get_param( 'category_id' ),
+			'tag_id'       => $request->get_param( 'tag_id' ),
 			'per_page'     => absint( $per_page ?: 20 ),
 			'page'         => absint( $request->get_param( 'page' ) ?: 1 ),
 			'orderby'      => $request->get_param( 'orderby' ) ?: 'start_date',
@@ -337,6 +339,15 @@ class BP_REST_Events_Endpoint extends WP_REST_Controller {
 			}
 		}
 
+		// Assign taxonomy terms if provided.
+		if ( $request->has_param( 'category_ids' ) || $request->has_param( 'tags' ) ) {
+			bp_events_set_event_terms(
+				$event_id,
+				$request->get_param( 'category_ids' ) ?: array(),
+				$request->get_param( 'tags' ) ?: array()
+			);
+		}
+
 		$event    = bp_events_get_event( $event_id );
 		$response = $this->prepare_item_for_response( $event, $request );
 		$response->set_status( 201 );
@@ -402,6 +413,15 @@ class BP_REST_Events_Endpoint extends WP_REST_Controller {
 		// saved when the waitlist broadcast fires.
 		if ( $request->has_param( 'capacity' ) ) {
 			bp_events_update_capacity( $event_id, $request->get_param( 'capacity' ) );
+		}
+
+		// Update taxonomy terms if provided.
+		if ( $request->has_param( 'category_ids' ) || $request->has_param( 'tags' ) ) {
+			bp_events_set_event_terms(
+				$event_id,
+				$request->get_param( 'category_ids' ) ?: array(),
+				$request->get_param( 'tags' ) ?: array()
+			);
 		}
 
 		$event = bp_events_get_event( $event_id );
@@ -711,6 +731,21 @@ class BP_REST_Events_Endpoint extends WP_REST_Controller {
 			'date_created'    => $event->date_created,
 			'date_modified'   => $event->date_modified,
 			'user_can_edit'   => $event->user_can_edit(),
+			'categories'      => array_map( function( $term ) {
+				return array(
+					'id'       => $term->term_id,
+					'name'     => $term->name,
+					'slug'     => $term->slug,
+					'icon_url' => bp_event_get_category_icon_url( $term->term_id ),
+				);
+			}, bp_events_get_event_categories( $event->id ) ),
+			'tags'            => array_map( function( $term ) {
+				return array(
+					'id'   => $term->term_id,
+					'name' => $term->name,
+					'slug' => $term->slug,
+				);
+			}, bp_events_get_event_tags( $event->id ) ),
 		);
 
 		return rest_ensure_response( $data );
@@ -751,6 +786,30 @@ class BP_REST_Events_Endpoint extends WP_REST_Controller {
 				'date_created'    => array( 'type' => 'string', 'format' => 'date-time', 'readonly' => true ),
 				'date_modified'   => array( 'type' => 'string', 'format' => 'date-time', 'readonly' => true ),
 				'user_can_edit'   => array( 'type' => 'boolean', 'readonly' => true ),
+				'categories'      => array(
+					'description' => __( 'Event categories.', 'buddyboss' ),
+					'type'        => 'array',
+					'readonly'    => true,
+					'items'       => array( 'type' => 'object' ),
+				),
+				'tags'            => array(
+					'description' => __( 'Event tags.', 'buddyboss' ),
+					'type'        => 'array',
+					'readonly'    => true,
+					'items'       => array( 'type' => 'object' ),
+				),
+				'category_ids'    => array(
+					'description' => __( 'Array of event category term IDs.', 'buddyboss' ),
+					'type'        => 'array',
+					'items'       => array( 'type' => 'integer' ),
+					'default'     => array(),
+				),
+				'tags_input'      => array(
+					'description' => __( 'Array of event tag names or term IDs.', 'buddyboss' ),
+					'type'        => 'array',
+					'items'       => array( 'type' => array( 'integer', 'string' ) ),
+					'default'     => array(),
+				),
 			),
 		);
 	}
@@ -963,6 +1022,16 @@ class BP_REST_Events_Endpoint extends WP_REST_Controller {
 				),
 				'orderby'      => array( 'type' => 'string', 'sanitize_callback' => 'sanitize_text_field', 'default' => 'start_date' ),
 				'order'        => array( 'type' => 'string', 'sanitize_callback' => 'sanitize_text_field', 'default' => 'ASC' ),
+				'category_id'  => array(
+					'description' => __( 'Filter by event category term ID.', 'buddyboss' ),
+					'type'        => 'integer',
+					'default'     => null,
+				),
+				'tag_id'       => array(
+					'description' => __( 'Filter by event tag term ID.', 'buddyboss' ),
+					'type'        => 'integer',
+					'default'     => null,
+				),
 			)
 		);
 	}

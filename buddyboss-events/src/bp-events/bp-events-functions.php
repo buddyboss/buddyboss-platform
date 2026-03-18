@@ -275,6 +275,8 @@ function bp_events_get_event( $event_id ) {
  *     @type string   $from        Start date filter (Y-m-d).
  *     @type string   $to          End date filter (Y-m-d).
  *     @type string   $search      Search term.
+ *     @type int      $category_id Filter by event category term ID.
+ *     @type int      $tag_id      Filter by event tag term ID.
  *     @type int      $per_page    Results per page. Default 20.
  *     @type int      $page        Page number. Default 1.
  *     @type string   $orderby     Order by column. Default start_date.
@@ -298,6 +300,8 @@ function bp_events_get_events( $args = array() ) {
 			'from'         => null,
 			'to'           => null,
 			'search'       => '',
+			'category_id'  => null,
+			'tag_id'       => null,
 			'per_page'     => 20,
 			'page'         => 1,
 			'orderby'      => 'start_date',
@@ -744,6 +748,74 @@ function bp_events_delete_meta( $event_id, $meta_key = '', $meta_value = '' ) {
 	}
 
 	return false !== $result;
+}
+
+/** Taxonomy Helpers ***********************************************************/
+
+/**
+ * Assign categories and tags to an event.
+ *
+ * Uses wp_set_object_terms() which accepts any integer object_id.
+ * Category IDs must be integers (existing term IDs). Tags can be
+ * integers (existing) or strings (created on the fly).
+ *
+ * @since BuddyBoss Events 2.0.0
+ *
+ * @param int   $event_id     Event ID.
+ * @param array $category_ids Array of category term IDs.
+ * @param array $tags         Array of tag term IDs or tag name strings.
+ * @return void
+ */
+function bp_events_set_event_terms( $event_id, $category_ids = array(), $tags = array() ) {
+	if ( ! empty( $category_ids ) ) {
+		wp_set_object_terms( $event_id, array_map( 'intval', $category_ids ), 'bb_event_category' );
+	}
+
+	if ( ! empty( $tags ) ) {
+		wp_set_object_terms( $event_id, $tags, 'bb_event_tag' );
+	}
+}
+
+/**
+ * Get categories assigned to an event.
+ *
+ * @since BuddyBoss Events 2.0.0
+ *
+ * @param int $event_id Event ID.
+ * @return array Array of WP_Term objects.
+ */
+function bp_events_get_event_categories( $event_id ) {
+	$terms = wp_get_object_terms( $event_id, 'bb_event_category' );
+	return is_wp_error( $terms ) ? array() : $terms;
+}
+
+/**
+ * Get tags assigned to an event.
+ *
+ * @since BuddyBoss Events 2.0.0
+ *
+ * @param int $event_id Event ID.
+ * @return array Array of WP_Term objects.
+ */
+function bp_events_get_event_tags( $event_id ) {
+	$terms = wp_get_object_terms( $event_id, 'bb_event_tag' );
+	return is_wp_error( $terms ) ? array() : $terms;
+}
+
+/**
+ * Get category icon URL.
+ *
+ * @since BuddyBoss Events 2.0.0
+ *
+ * @param int $term_id Category term ID.
+ * @return string Icon URL or empty string.
+ */
+function bp_event_get_category_icon_url( $term_id ) {
+	$icon_id = get_term_meta( $term_id, '_bb_event_cat_icon_id', true );
+	if ( ! $icon_id ) {
+		return '';
+	}
+	return wp_get_attachment_image_url( $icon_id, 'thumbnail' );
 }
 
 /** Recurring Events ***********************************************************/
