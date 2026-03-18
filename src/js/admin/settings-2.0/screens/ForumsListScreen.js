@@ -657,7 +657,7 @@ export function ForumsListScreen( { onNavigate } ) {
 
 			{ /* Header */ }
 			<div className="bb-forums-list__header">
-				<h2 className="bb-forums-list__title">{ __( 'All Forums', 'buddyboss' ) }</h2>
+				<h2 className="bb-forums-list__title">{ __( 'Forums', 'buddyboss' ) }</h2>
 				<Button
 					variant="primary"
 					className="bb-forums-list__create-btn"
