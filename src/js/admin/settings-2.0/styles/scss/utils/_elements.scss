@@ -193,9 +193,22 @@ select.bb-admin-settings__select {
 }
 
 /* Inputs */
-.buddyboss_page_bb-settings  .components-text-control__input {
-	@include bb-input-text;
+.buddyboss_page_bb-settings  {
+
+    .bb-admin-settings-form__inline-number,
+    .components-text-control__input {
+        @include bb-input-text;
+    }
+
+    .bb-admin-settings-form__inline-number {
+        margin: 0 8px;
+        height: 26px;
+        min-height: auto;
+        max-width: 85px;
+        width: auto;
+    }
 }
+
 
 /* WordPress DropdownMenu */
 .components-popover__content:has(.bb_dropdown_menu_group) {
