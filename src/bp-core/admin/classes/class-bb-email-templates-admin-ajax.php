@@ -139,6 +139,29 @@ class BB_Email_Templates_Admin_Ajax {
 			}
 		}
 
+		// Get columns via filter so third-party plugins (WPML, Polylang, etc.) can add custom columns.
+		$all_columns = apply_filters(
+			'bb_admin_email_templates_column_headers',
+			array(
+				'cb'          => '<input type="checkbox" />',
+				'title'       => __( 'Title', 'buddyboss' ),
+				'description' => __( 'Situations', 'buddyboss' ),
+				'date'        => __( 'Published', 'buddyboss' ),
+			)
+		);
+
+		// Identify custom columns (added by third-party plugins).
+		$core_columns   = array( 'cb', 'title', 'description', 'date' );
+		$custom_columns = array();
+		foreach ( $all_columns as $col_key => $col_label ) {
+			if ( ! in_array( $col_key, $core_columns, true ) ) {
+				$custom_columns[ $col_key ] = $col_label;
+			}
+		}
+
+		// Buffer output to capture stray HTML from legacy filters.
+		ob_start();
+
 		$items = array();
 		foreach ( $posts as $email_post ) {
 			$email_id    = $email_post->ID;
@@ -146,7 +169,7 @@ class BB_Email_Templates_Admin_Ajax {
 			$description = $term ? $term->description : '';
 			$email_type  = $term ? $term->slug : '';
 
-			$items[] = array(
+			$item = array(
 				'id'          => $email_id,
 				'title'       => $email_post->post_title,
 				'description' => $description,
@@ -155,7 +178,34 @@ class BB_Email_Templates_Admin_Ajax {
 				'edit_url'    => get_edit_post_link( $email_id, 'raw' ),
 				'email_type'  => $email_type,
 			);
+
+			// Render custom columns via filter (e.g., WPML language flags).
+			if ( ! empty( $custom_columns ) ) {
+				$item['custom_columns'] = array();
+				foreach ( $custom_columns as $col_key => $col_label ) {
+					ob_start();
+					/**
+					 * Fires for custom column data rendering in the email templates admin list.
+					 *
+					 * Third-party plugins (WPML, Polylang, etc.) can use this to add
+					 * translation flags, status icons, or other column content.
+					 *
+					 * @since BuddyBoss [BBVERSION]
+					 *
+					 * @param string  $col_key    Column key.
+					 * @param int     $email_id   Email template post ID.
+					 * @param WP_Post $email_post Email template post object.
+					 */
+					do_action( 'bb_admin_email_templates_column_data', $col_key, $email_id, $email_post );
+					$item['custom_columns'][ $col_key ] = wp_kses_post( ob_get_clean() );
+				}
+			}
+
+			$items[] = $item;
 		}
+
+		// End output buffer.
+		ob_end_clean();
 
 		$response = array(
 			'items'       => $items,
@@ -169,6 +219,16 @@ class BB_Email_Templates_Admin_Ajax {
 			$response['bulk_actions']  = array(
 				'trash' => __( 'Move to Trash', 'buddyboss' ),
 			);
+
+			// Return column definitions (excluding cb) so React can render custom column headers.
+			$columns_response = array();
+			foreach ( $all_columns as $col_key => $col_label ) {
+				if ( 'cb' === $col_key ) {
+					continue;
+				}
+				$columns_response[ $col_key ] = $col_label;
+			}
+			$response['columns'] = $columns_response;
 		}
 
 		/**

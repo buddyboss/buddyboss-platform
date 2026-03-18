@@ -9,7 +9,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useEffect, useCallback, useRef } from '@wordpress/element';
+import { useState, useEffect, useCallback, useRef, useMemo } from '@wordpress/element';
 import {
 	Button,
 	CheckboxControl,
@@ -19,7 +19,7 @@ import {
 import { __, sprintf } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { getEmailTemplates, emailTemplateBulkAction } from '../utils/ajax';
-import { safeUrl } from '../utils/sanitize';
+import { safeUrl, sanitizeHtml } from '../utils/sanitize';
 import { getPageNumbers } from '../utils/pagination';
 import { Toast } from '../components/Toast';
 
@@ -43,6 +43,16 @@ var sortOptions = [
  * @type {number}
  */
 var PER_PAGE = 20;
+
+/**
+ * Core column keys (built-in). Anything not in this list is a custom column
+ * added by third-party plugins (e.g., WPML translation flags).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @type {Array}
+ */
+var CORE_COLUMNS = [ 'title', 'description', 'date' ];
 
 /**
  * Email Templates List Screen Component
@@ -93,6 +103,10 @@ export default function EmailTemplatesListScreen( props ) {
 	var stateBulkActions = useState( {} );
 	var bulkActions = stateBulkActions[0];
 	var setBulkActions = stateBulkActions[1];
+
+	var stateColumns = useState( {} );
+	var columns = stateColumns[0];
+	var setColumns = stateColumns[1];
 
 	var stateSelectedIds = useState( [] );
 	var selectedIds = stateSelectedIds[0];
@@ -165,6 +179,10 @@ export default function EmailTemplatesListScreen( props ) {
 
 					if ( response.data.bulk_actions ) {
 						setBulkActions( response.data.bulk_actions );
+					}
+
+					if ( response.data.columns ) {
+						setColumns( response.data.columns );
 					}
 				}
 				setIsLoading( false );
@@ -340,6 +358,13 @@ export default function EmailTemplatesListScreen( props ) {
 		bulkActionOptions.push( { label: decodeEntities( bulkActions[ key ] ), value: key } );
 	} );
 
+	// Derive custom column keys from server-provided columns (third-party plugins like WPML).
+	var customColumnKeys = useMemo( function() {
+		return Object.keys( columns ).filter( function( key ) {
+			return CORE_COLUMNS.indexOf( key ) === -1;
+		} );
+	}, [ columns ] );
+
 	var pageNumbers = getPageNumbers( page, totalPages );
 
 	return (
@@ -441,6 +466,13 @@ export default function EmailTemplatesListScreen( props ) {
 								<th className="bb-email-templates-list__th--title">
 									{ __( 'Title', 'buddyboss' ) }
 								</th>
+								{ customColumnKeys.map( function( key ) {
+									return (
+										<th key={ key } className={ 'bb-email-templates-list__th--custom bb-email-templates-list__th--' + key }>
+											{ columns[ key ] ? decodeEntities( columns[ key ] ) : '' }
+										</th>
+									);
+								} ) }
 								<th className="bb-email-templates-list__th--description">
 									{ __( 'Situations', 'buddyboss' ) }
 								</th>
@@ -477,6 +509,13 @@ export default function EmailTemplatesListScreen( props ) {
 												{ decodeEntities( item.title ) }
 											</a>
 										</td>
+										{ item.custom_columns && customColumnKeys.map( function( key ) {
+											return (
+												<td key={ key } className={ 'bb-email-templates-list__td--custom bb-email-templates-list__td--' + key }>
+													<span dangerouslySetInnerHTML={ { __html: sanitizeHtml( item.custom_columns[ key ] ) } } />
+												</td>
+											);
+										} ) }
 										<td className="bb-email-templates-list__td--description">
 											{ decodeEntities( item.description ) }
 										</td>
