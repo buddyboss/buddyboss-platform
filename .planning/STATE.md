@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 04-meta-api-foundation-taxonomy 04-01-PLAN.md
-last_updated: "2026-03-18T09:24:56.936Z"
+stopped_at: Completed 04-meta-api-foundation-taxonomy 04-02-PLAN.md
+last_updated: "2026-03-18T09:30:58.455Z"
 last_activity: 2026-03-17 — v2.0 roadmap created (Phases 4-8)
 progress:
   total_phases: 8
   completed_phases: 3
   total_plans: 26
-  completed_plans: 23
+  completed_plans: 24
   percent: 0
 ---
 
@@ -88,6 +88,7 @@ Note: Phase 5 and Phase 6 both depend only on Phase 4. They can execute in paral
 | Phase 03-buddyboss-integration P05 | 5min | 2 tasks | 0 files |
 | Phase 04-meta-api-foundation-taxonomy P00 | 2 | 1 tasks | 3 files |
 | Phase 04-meta-api-foundation-taxonomy P01 | 2min | 2 tasks | 3 files |
+| Phase 04-meta-api-foundation-taxonomy P02 | 5min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -153,6 +154,8 @@ Recent decisions affecting current work:
 - [Phase 04-meta-api-foundation-taxonomy]: bp_filter_metaid_column_name wrapped around all metadata calls — bb_eventmeta uses 'id' as PK not 'meta_id'
 - [Phase 04-meta-api-foundation-taxonomy]: meta_tables registration mirrors bp-groups pattern — passes 'event' key to parent::setup_globals() which calls register_meta_tables() to set $wpdb->eventmeta
 - [Phase 04-meta-api-foundation-taxonomy]: Privacy filter registered on same init hook as taxonomy registration — no window where taxonomy is live but TAX-03 filter is absent
+- [Phase 04-meta-api-foundation-taxonomy]: Taxonomy WHERE clauses use subqueries (e.id IN SELECT) not JOIN — avoids duplicate rows when event matches multiple terms
+- [Phase 04-meta-api-foundation-taxonomy]: Category icon stored as _bb_event_cat_icon_id term meta (underscore prefix = internal meta, hidden in default WP term meta UI)
 
 ### Pending Todos
 
@@ -168,6 +171,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-18T09:24:56.929Z
-Stopped at: Completed 04-meta-api-foundation-taxonomy 04-01-PLAN.md
+Last session: 2026-03-18T09:30:58.452Z
+Stopped at: Completed 04-meta-api-foundation-taxonomy 04-02-PLAN.md
 Resume file: None
