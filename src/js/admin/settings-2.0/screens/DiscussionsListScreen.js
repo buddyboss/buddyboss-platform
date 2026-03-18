@@ -464,6 +464,37 @@ export function DiscussionsListScreen( { onNavigate } ) {
 	};
 
 	/**
+	 * Handle spam toggle for a single discussion.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {Object} disc Discussion object.
+	 */
+	var handleSpamToggle = function ( disc ) {
+		discussionBulkAction( [ disc.id ], 'spam' ).then( function ( response ) {
+			if ( response.success ) {
+				setNotice( {
+					message: 'spam' === disc.post_status
+						? __( 'Discussion unmarked as spam.', 'buddyboss' )
+						: __( 'Discussion marked as spam.', 'buddyboss' ),
+					type: 'success',
+				} );
+				resetAndRefetch();
+			} else {
+				setNotice( {
+					message: __( 'Failed to update discussion.', 'buddyboss' ),
+					type: 'error',
+				} );
+			}
+		} ).catch( function () {
+			setNotice( {
+				message: __( 'Failed to update discussion.', 'buddyboss' ),
+				type: 'error',
+			} );
+		} );
+	};
+
+	/**
 	 * Confirm delete from the delete modal.
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -841,6 +872,18 @@ export function DiscussionsListScreen( { onNavigate } ) {
 																{ __( 'Edit', 'buddyboss' ) }
 															</MenuItem>
 															<MenuItem
+																onClick={ function () {
+																	handleSpamToggle( disc );
+																	onClose();
+																} }
+															>
+																<i className="bb-icons-rl bb-icons-rl-warning-circle"></i>
+																{ 'spam' === disc.post_status
+																	? __( 'Not Spam', 'buddyboss' )
+																	: __( 'Spam', 'buddyboss' )
+																}
+															</MenuItem>
+															<MenuItem
 																isDestructive
 																onClick={ function () {
 																	handleDeleteDiscussion( disc );
@@ -1061,7 +1104,6 @@ export function DiscussionsListScreen( { onNavigate } ) {
 								{ value: 'no_change', label: __( '\u2014 No Change \u2014', 'buddyboss' ) },
 								{ value: 'open', label: __( 'Open', 'buddyboss' ) },
 								{ value: 'closed', label: __( 'Closed', 'buddyboss' ) },
-								{ value: 'spam', label: __( 'Spam', 'buddyboss' ) },
 							] }
 							onChange={ setBulkEditStatus }
 							__nextHasNoMarginBottom
@@ -1074,7 +1116,7 @@ export function DiscussionsListScreen( { onNavigate } ) {
 								{ value: 'no_change', label: __( '\u2014 No Change \u2014', 'buddyboss' ) },
 								{ value: 'publish', label: __( 'Public', 'buddyboss' ) },
 								{ value: 'private', label: __( 'Private', 'buddyboss' ) },
-								{ value: 'password', label: __( 'Password Protected', 'buddyboss' ) },
+								{ value: 'hidden', label: __( 'Hidden', 'buddyboss' ) },
 							] }
 							onChange={ setBulkEditVisibility }
 							__nextHasNoMarginBottom

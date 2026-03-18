@@ -28,13 +28,14 @@ import { RichTextEditor, forceRemoveEditor } from '../common/RichTextEditor';
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param {Object}   props              Component props.
- * @param {boolean}  props.isOpen       Whether the modal is open.
- * @param {Function} props.onClose      Close handler.
- * @param {Function} props.onCreated    Success handler (receives forum_id).
+ * @param {Object}   props                Component props.
+ * @param {boolean}  props.isOpen         Whether the modal is open.
+ * @param {Function} props.onClose        Close handler.
+ * @param {Function} props.onCreated      Success handler (receives forum_id).
+ * @param {string}   props.forumBaseSlug  Forum base slug from _bbp_forum_slug option.
  * @returns {JSX.Element|null} Modal component or null.
  */
-export function ForumCreateModal( { isOpen, onClose, onCreated } ) {
+export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug } ) {
 	var nameState = useState( '' );
 	var name = nameState[ 0 ];
 	var setName = nameState[ 1 ];
@@ -329,7 +330,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated } ) {
 					/>
 					{ permalink && siteUrl && (
 						<p className="bb-forum-create-modal__permalink-preview">
-							{ siteUrl + '/forum/' + permalink + '/' }
+							{ siteUrl + '/' + ( forumBaseSlug || 'forum' ) + '/' + permalink + '/' }
 						</p>
 					) }
 				</div>

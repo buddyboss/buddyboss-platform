@@ -912,7 +912,7 @@ class BB_Admin_Topics_Ajax {
 		$edit_visibility = isset( $_POST['edit_visibility'] ) ? sanitize_key( wp_unslash( $_POST['edit_visibility'] ) ) : '';
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
-		$allowed_actions = array( 'delete', 'edit' );
+		$allowed_actions = array( 'delete', 'edit', 'spam' );
 		if ( ! in_array( $do_action, $allowed_actions, true ) ) {
 			wp_send_json_error( array( 'message' => __( 'Invalid action.', 'buddyboss' ) ) );
 		}
@@ -948,6 +948,15 @@ class BB_Admin_Topics_Ajax {
 				} else {
 					++$failed;
 				}
+			} elseif ( 'spam' === $do_action ) {
+				// Toggle spam status: spam -> unspam, anything else -> spam.
+				$current_status = get_post_status( $topic_id );
+				if ( bbp_get_spam_status_id() === $current_status ) {
+					bbp_unspam_topic( $topic_id );
+				} else {
+					bbp_spam_topic( $topic_id );
+				}
+				++$processed;
 			} elseif ( 'edit' === $do_action ) {
 				$updated = false;
 
@@ -992,7 +1001,7 @@ class BB_Admin_Topics_Ajax {
 					}
 				}
 
-				// Update status (open/closed) if provided and not "no change".
+				// Update status (open/closed/spam) if provided and not "no change".
 				// Runs after visibility so that bbp_close_topic()'s post_status
 				// change is the final write and is not overridden.
 				if ( ! empty( $edit_status ) && 'no_change' !== $edit_status ) {
@@ -1003,17 +1012,33 @@ class BB_Admin_Topics_Ajax {
 					} elseif ( 'open' === $edit_status && 'closed' === $current_status ) {
 						bbp_open_topic( $topic_id );
 						$updated = true;
+					} elseif ( 'spam' === $edit_status && bbp_get_spam_status_id() !== get_post_status( $topic_id ) ) {
+						bbp_spam_topic( $topic_id );
+						$updated = true;
 					}
 				}
 
 				if ( $updated ) {
+					$forum_id = bbp_get_topic_forum_id( $topic_id );
+
 					/**
 					 * Fires after a discussion is bulk-edited in Settings 2.0 admin.
+					 *
+					 * Fires the primary lifecycle hook so that bbp_update_topic()
+					 * runs count recalculation (registered at core/actions.php:193).
 					 *
 					 * @since BuddyBoss [BBVERSION]
 					 *
 					 * @param int $topic_id Topic ID.
 					 */
+					do_action(
+						'bbp_edit_topic',
+						$topic_id,
+						$forum_id,
+						array(),
+						$topic->post_author,
+						true
+					);
 					do_action( 'bbp_edit_topic_post_extras', $topic_id );
 					++$processed;
 				} else {
@@ -1146,7 +1171,7 @@ class BB_Admin_Topics_Ajax {
 					$counts_map[ $row->forum_id ] = (int) $row->cnt;
 				}
 			}
-			wp_cache_set( $cache_key, $counts_map, 'bbpress' );
+			wp_cache_set( $cache_key, $counts_map, 'bbpress', HOUR_IN_SECONDS );
 		}
 
 		return $counts_map;

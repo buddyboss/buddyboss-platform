@@ -145,7 +145,9 @@ export function ForumsListScreen( { onNavigate } ) {
 	var columns = columnsState[ 0 ];
 	var setColumns = columnsState[ 1 ];
 
-
+	var forumBaseSlugState = useState( 'forum' );
+	var forumBaseSlug = forumBaseSlugState[ 0 ];
+	var setForumBaseSlug = forumBaseSlugState[ 1 ];
 
 	var bulkActionState = useState( '' );
 	var bulkAction = bulkActionState[ 0 ];
@@ -244,6 +246,9 @@ export function ForumsListScreen( { onNavigate } ) {
 				}
 				if ( response.data.columns ) {
 					setColumns( response.data.columns );
+				}
+				if ( response.data.forum_base_slug ) {
+					setForumBaseSlug( response.data.forum_base_slug );
 				}
 				hasMetaRef.current = true;
 			}
@@ -1154,6 +1159,7 @@ export function ForumsListScreen( { onNavigate } ) {
 					setCreateModalOpen( false );
 				} }
 				onCreated={ handleForumCreated }
+				forumBaseSlug={ forumBaseSlug }
 
 			/>
 
@@ -1392,7 +1398,7 @@ function ForumEditModal( { forum, onClose, onSave, isSaving } ) {
 					/>
 					{ slug && siteUrl && (
 						<p className="bb-forum-create-modal__permalink-preview">
-							{ siteUrl + '/forum/' + slug + '/' }
+							{ siteUrl + '/' + forumBaseSlug + '/' + slug + '/' }
 						</p>
 					) }
 				</div>

@@ -637,8 +637,8 @@
 		}
 
 		.is-destructive.is-primary {
-			background-color: #d63638;
-			border-color: #d63638;
+			background-color: $bb-error-color;
+			border-color: $bb-error-color;
 			color: #fff;
 			border-radius: $bb-border-radius-md;
 			font-size: 13px;
@@ -648,8 +648,8 @@
 			box-shadow: none;
 
 			&:hover {
-				background-color: #b32d2e;
-				border-color: #b32d2e;
+				background-color: darken($bb-error-color, 5%);
+				border-color: darken($bb-error-color, 5%);
 			}
 
 			&:disabled {
@@ -783,7 +783,7 @@
 	}
 
 	&__error {
-		color: #d63638;
+		color: $bb-error-color;
 		font-size: 13px;
 		margin: 0 0 16px;
 	}
