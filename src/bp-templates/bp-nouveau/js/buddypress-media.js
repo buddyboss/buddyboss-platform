@@ -286,11 +286,37 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '.activity .bp-media-move-activity, #media-stream .bp-media-move-activity', this.moveMediaIntoAlbum.bind( this ) );
 
 			// Document move option.
-			var mediaStream = $( '#bb-media-model-container .activity-list, #media-stream' );
-			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, #media-stream' ).on( 'click', '.ac-document-move, .ac-folder-move', this.openDocumentMove.bind( this ) );
-			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, #media-stream, .group-media #media-stream' ).on( 'click', '.ac-media-move', this.openMediaMove.bind( this ) );
-			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, #media-stream' ).on( 'click', '.ac-document-close-button, .ac-folder-close-button', this.closeDocumentMove.bind( this ) );
-			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, #media-stream' ).on( 'click', '.ac-media-close-button', this.closeMediaMove.bind( this ) );
+			var mediaStream = $( '#bb-media-model-container .activity-list, #media-stream' ),
+				activityListSelector = '#buddypress .activity-list',
+				activityDataSelector = '#buddypress [data-bp-list="activity"]',
+				modalListSelector = '#bb-media-model-container .activity-list',
+				mediaStreamSelector = '#media-stream';
+
+			$( document ).on( 'click',
+				activityListSelector + ' .ac-document-move, ' + activityDataSelector + ' .ac-document-move, ' +
+				activityListSelector + ' .ac-folder-move, ' + activityDataSelector + ' .ac-folder-move, ' +
+				modalListSelector + ' .ac-document-move, ' + modalListSelector + ' .ac-folder-move, ' +
+				mediaStreamSelector + ' .ac-document-move, ' + mediaStreamSelector + ' .ac-folder-move',
+				this.openDocumentMove.bind( this )
+			);
+			$( document ).on( 'click',
+				activityListSelector + ' .ac-media-move, ' + activityDataSelector + ' .ac-media-move, ' +
+				modalListSelector + ' .ac-media-move, ' + mediaStreamSelector + ' .ac-media-move, ' +
+				'.group-media ' + mediaStreamSelector + ' .ac-media-move',
+				this.openMediaMove.bind( this )
+			);
+			$( document ).on( 'click',
+				activityListSelector + ' .ac-document-close-button, ' + activityDataSelector + ' .ac-document-close-button, ' +
+				activityListSelector + ' .ac-folder-close-button, ' + activityDataSelector + ' .ac-folder-close-button, ' +
+				modalListSelector + ' .ac-document-close-button, ' + modalListSelector + ' .ac-folder-close-button, ' +
+				mediaStreamSelector + ' .ac-document-close-button, ' + mediaStreamSelector + ' .ac-folder-close-button',
+				this.closeDocumentMove.bind( this )
+			);
+			$( document ).on( 'click',
+				activityListSelector + ' .ac-media-close-button, ' + activityDataSelector + ' .ac-media-close-button, ' +
+				modalListSelector + ' .ac-media-close-button, ' + mediaStreamSelector + ' .ac-media-close-button',
+				this.closeMediaMove.bind( this )
+			);
 			mediaStream.on( 'click', '.ac-document-rename', this.renameDocument.bind( this ) );
 			mediaStream.on( 'click', '.ac-document-privacy', this.editPrivacyDocument.bind( this ) );
 			//mediaStream.on( 'mouseup', '#bb-folder-privacy', this.editPrivacyDocumentSubmit.bind( this ) );
