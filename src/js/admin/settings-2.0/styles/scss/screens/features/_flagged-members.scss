@@ -537,28 +537,30 @@
 
 	&__name {
 		font-size: 14px;
-		font-weight: 600;
 		color: $bb-link-color;
 		text-decoration: none;
 
 		&:hover {
-			text-decoration: underline;
+			color: $bb-link-color;
 		}
 	}
 
 	&__stats {
 		display: flex;
 		align-items: center;
+		justify-content: space-around;
+		flex: 1;
 		gap: 16px;
+		width: 50%;
 	}
 
 	&__stat {
 		display: flex;
 		align-items: center;
-		gap: 6px;
+		gap: 8px;
 		font-size: 13px;
 		font-weight: 400;
-		color: $bb-text-tertiary-color;
+		color: $bb-text-color;
 
 		[class*="bb-icons-"] {
 			font-size: 16px;
@@ -597,7 +599,7 @@
 		flex-direction: column;
 		gap: 0;
 		background: $bb-background-primary-color;
-		border-radius: $bb-border-radius-lg;
+		border-radius: $bb-border-radius-xl;
 		padding: 4px 0;
 	}
 
@@ -605,7 +607,13 @@
 		display: flex;
 		align-items: center;
 		gap: 16px;
-		padding: 12px 16px;
+		padding: 16px 0;
+		margin: 0 16px;
+		border-bottom: 1px solid $bb-border-secondary-color;
+
+		&:last-child {
+			border-bottom: 0;
+		}
 
 		&--blocker {
 			.bb-admin-view-report-modal__list-item-date {
@@ -617,27 +625,26 @@
 	&__list-item-user {
 		display: flex;
 		align-items: center;
-		gap: 10px;
+		gap: 8px;
 		flex-shrink: 0;
-		min-width: 140px;
+		min-width: 160px;
 	}
 
 	&__list-avatar {
-		width: 36px;
-		height: 36px;
+		width: 40px;
+		height: 40px;
 		border-radius: 50%;
 		object-fit: cover;
 	}
 
 	&__list-name {
-		font-size: 13px;
-		font-weight: 500;
+		font-size: 14px;
 		color: $bb-link-color;
 		text-decoration: none;
 		white-space: nowrap;
 
 		&:hover {
-			text-decoration: underline;
+			color: $bb-link-color;
 		}
 	}
 
@@ -651,9 +658,10 @@
 
 	&__category-name {
 		font-size: 13px;
-		font-weight: 600;
+		font-weight: 500;
 		color: $bb-text-color;
 		line-height: 18px;
+		margin-bottom: 4px;
 	}
 
 	&__category-desc {
@@ -667,9 +675,8 @@
 	}
 
 	&__list-item-date {
-		font-size: 12px;
-		font-weight: 400;
-		color: $bb-text-tertiary-color;
+		font-size: 13px;
+		color: $bb-text-color;
 		line-height: 16px;
 		white-space: nowrap;
 		flex-shrink: 0;
