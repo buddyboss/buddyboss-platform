@@ -21,7 +21,7 @@ import { __, _n, sprintf } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { getTopicTags, getTopicTag, deleteTopicTag, topicTagBulkAction } from '../utils/ajax';
 import { safeUrl } from '../utils/sanitize';
-import { getPageNumbers } from '../utils/pagination';
+import { ListPagination } from '../components/common/ListPagination';
 import { TagCreateModal } from '../components/forums/TagCreateModal';
 
 /**
@@ -699,64 +699,14 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 			) }
 
 			{ /* Footer */ }
-			{ ! isLoading && total > 0 && (
-				<div className="bb-discussion-tags-list__footer">
-					<span className="bb-discussion-tags-list__item-count">
-						{ sprintf(
-						/* translators: %s: total number of items. */
-						_n( '%s item', '%s items', total, 'buddyboss' ),
-						total
-					) }
-					</span>
-
-					{ totalPages > 1 && (
-						<div className="bb-discussion-tags-list__pagination">
-							<Button
-								variant="secondary"
-								disabled={ 1 === currentPage }
-								onClick={ function () {
-									handlePageChange( Math.max( 1, currentPage - 1 ) );
-								} }
-								className="bb-discussion-tags-list__pagination-btn bb-discussion-tags-list__pagination-btn--previous"
-							>
-								&lsaquo;
-							</Button>
-
-							{ getPageNumbers( currentPage, totalPages ).map( function ( page, index ) {
-								if ( '...' === page ) {
-									return (
-										<span key={ 'ellipsis-' + index } className="bb-discussion-tags-list__pagination-ellipsis">
-											&hellip;
-										</span>
-									);
-								}
-								return (
-									<Button
-										key={ page }
-										variant={ currentPage === page ? 'primary' : 'secondary' }
-										onClick={ function () {
-											handlePageChange( page );
-										} }
-										className={ 'bb-discussion-tags-list__pagination-btn' + ( currentPage === page ? ' bb-discussion-tags-list__pagination-btn--current' : '' ) }
-									>
-										{ page }
-									</Button>
-								);
-							} ) }
-
-							<Button
-								variant="secondary"
-								disabled={ currentPage >= totalPages }
-								onClick={ function () {
-									handlePageChange( Math.min( totalPages, currentPage + 1 ) );
-								} }
-								className="bb-discussion-tags-list__pagination-btn bb-discussion-tags-list__pagination-btn--next"
-							>
-								&rsaquo;
-							</Button>
-						</div>
-					) }
-				</div>
+			{ ! isLoading && (
+				<ListPagination
+					currentPage={ currentPage }
+					totalPages={ totalPages }
+					total={ total }
+					onPageChange={ handlePageChange }
+					className="bb-discussion-tags-list"
+				/>
 			) }
 
 			{ /* Create Modal */ }

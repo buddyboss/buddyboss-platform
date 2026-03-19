@@ -20,7 +20,7 @@ import { __ } from '@wordpress/i18n';
 import { dateI18n } from '@wordpress/date';
 import { ajaxFetch } from '../utils/ajax';
 import { sanitizeHtml, safeUrl } from '../utils/sanitize';
-import { getPageNumbers } from '../utils/pagination';
+import { ListPagination } from '../components/common/ListPagination';
 import { ActivityEditModal } from '../components/activity/ActivityEditModal';
 import { ActivityCommentModal } from '../components/activity/ActivityCommentModal';
 
@@ -824,64 +824,14 @@ export function ActivityListScreen( { onNavigate } ) {
 			</div>
 
 			{ /* Footer */ }
-			{ ! isLoading && total > 0 && (
-				<div className="bb-activity-list__footer">
-					<span className="bb-activity-list__item-count">
-						{ total } { __( 'items', 'buddyboss' ) }
-					</span>
-
-					{ totalPages > 1 && (
-						<div className="bb-activity-list__pagination">
-							<Button
-								variant="secondary"
-								disabled={ 1 === currentPage }
-								onClick={ function () {
-									setCurrentPage( function ( p ) {
-										return Math.max( 1, p - 1 );
-									} );
-								} }
-								className="bb-activity-list__pagination-btn bb-activity-list__pagination-btn--previous"
-							>
-								&lsaquo;
-							</Button>
-
-							{ getPageNumbers( currentPage, totalPages ).map( function ( page, index ) {
-								if ( '...' === page ) {
-									return (
-										<span key={ 'ellipsis-' + index } className="bb-activity-list__pagination-ellipsis">
-											&hellip;
-										</span>
-									);
-								}
-								return (
-									<Button
-										key={ page }
-										variant={ page === currentPage ? 'primary' : 'secondary' }
-										onClick={ function () {
-											setCurrentPage( page );
-										} }
-										className={ 'bb-activity-list__pagination-btn' + ( page === currentPage ? ' bb-activity-list__pagination-btn--current' : '' ) }
-									>
-										{ page }
-									</Button>
-								);
-							} ) }
-
-							<Button
-								variant="secondary"
-								disabled={ currentPage >= totalPages }
-								onClick={ function () {
-									setCurrentPage( function ( p ) {
-										return Math.min( totalPages, p + 1 );
-									} );
-								} }
-								className="bb-activity-list__pagination-btn bb-activity-list__pagination-btn--next"
-							>
-								&rsaquo;
-							</Button>
-						</div>
-					) }
-				</div>
+			{ ! isLoading && (
+				<ListPagination
+					currentPage={ currentPage }
+					totalPages={ totalPages }
+					total={ total }
+					onPageChange={ function ( page ) { setCurrentPage( page ); } }
+					className="bb-activity-list"
+				/>
 			) }
 
 			{ /* Edit Loading Overlay */ }

@@ -21,7 +21,7 @@ import { __, _n, sprintf } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { getForums, getForum, saveForum, forumBulkAction, uploadForumImage } from '../utils/ajax';
 import { sanitizeHtml, safeUrl, sanitizeCustomColumns } from '../utils/sanitize';
-import { getPageNumbers } from '../utils/pagination';
+import { ListPagination } from '../components/common/ListPagination';
 import { toSlug } from '../utils/format';
 import { ForumCreateModal } from '../components/forums/ForumCreateModal';
 import { AsyncSelectField } from '../components/fields/AsyncSelectField';
@@ -917,68 +917,14 @@ export function ForumsListScreen( { onNavigate } ) {
 			</div>
 
 			{ /* Footer */ }
-			{ ! isLoading && total > 0 && (
-				<div className="bb-forums-list__footer">
-					<span className="bb-forums-list__item-count">
-						{ sprintf(
-						/* translators: %s: total number of items. */
-						_n( '%s item', '%s items', total, 'buddyboss' ),
-						total
-					) }
-					</span>
-
-					{ totalPages > 1 && (
-						<div className="bb-forums-list__pagination">
-							<Button
-								variant="secondary"
-								disabled={ 1 === currentPage }
-								onClick={ function () {
-									setCurrentPage( function ( p ) {
-										return Math.max( 1, p - 1 );
-									} );
-								} }
-								className="bb-forums-list__pagination-btn bb-forums-list__pagination-btn--previous"
-							>
-								&lsaquo;
-							</Button>
-
-							{ getPageNumbers( currentPage, totalPages ).map( function ( page, index ) {
-								if ( '...' === page ) {
-									return (
-										<span key={ 'ellipsis-' + index } className="bb-forums-list__pagination-ellipsis">
-											&hellip;
-										</span>
-									);
-								}
-								return (
-									<Button
-										key={ page }
-										variant={ currentPage === page ? 'primary' : 'secondary' }
-										onClick={ function () {
-											setCurrentPage( page );
-										} }
-										className={ 'bb-forums-list__pagination-btn' + ( currentPage === page ? ' bb-forums-list__pagination-btn--current' : '' ) }
-									>
-										{ page }
-									</Button>
-								);
-							} ) }
-
-							<Button
-								variant="secondary"
-								disabled={ currentPage >= totalPages }
-								onClick={ function () {
-									setCurrentPage( function ( p ) {
-										return Math.min( totalPages, p + 1 );
-									} );
-								} }
-								className="bb-forums-list__pagination-btn bb-forums-list__pagination-btn--next"
-							>
-								&rsaquo;
-							</Button>
-						</div>
-					) }
-				</div>
+			{ ! isLoading && (
+				<ListPagination
+					currentPage={ currentPage }
+					totalPages={ totalPages }
+					total={ total }
+					onPageChange={ function ( page ) { setCurrentPage( page ); } }
+					className="bb-forums-list"
+				/>
 			) }
 
 			{ /* Bulk Edit Forum Modal */ }

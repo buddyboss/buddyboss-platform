@@ -20,7 +20,7 @@ import { __, _n, sprintf } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { getReplies, getReply, saveReply, deleteReply, replyBulkAction } from '../utils/ajax';
 import { sanitizeHtml, safeUrl, sanitizeCustomColumns } from '../utils/sanitize';
-import { getPageNumbers } from '../utils/pagination';
+import { ListPagination } from '../components/common/ListPagination';
 import { ReplyCreateModal } from '../components/forums/ReplyCreateModal';
 import { AsyncSelectField } from '../components/fields/AsyncSelectField';
 import { RichTextEditor, forceRemoveEditor } from '../components/common/RichTextEditor';
@@ -1103,63 +1103,14 @@ export default function RepliesListScreen( { onNavigate } ) {
 			) }
 
 			{ /* Footer */ }
-			{ ! isLoading && ! error && replies.length > 0 && (
-				<div className="bb-replies-list__footer">
-					<span className="bb-replies-list__item-count">
-						{ sprintf(
-							_n( '%s item', '%s items', totalItems, 'buddyboss' ),
-							totalItems
-						) }
-					</span>
-
-					{ totalPages > 1 && (
-						<div className="bb-replies-list__pagination">
-							<Button
-								variant="secondary"
-								disabled={ 1 === page }
-								onClick={ function () {
-									handlePageChange( Math.max( 1, page - 1 ) );
-								} }
-								className="bb-replies-list__pagination-btn bb-replies-list__pagination-btn--previous"
-							>
-								&lsaquo;
-							</Button>
-
-							{ getPageNumbers( page, totalPages ).map( function ( num, index ) {
-								if ( '...' === num ) {
-									return (
-										<span key={ 'ellipsis-' + index } className="bb-replies-list__pagination-ellipsis">
-											&hellip;
-										</span>
-									);
-								}
-								return (
-									<Button
-										key={ num }
-										variant={ page === num ? 'primary' : 'secondary' }
-										onClick={ function () {
-											handlePageChange( num );
-										} }
-										className={ 'bb-replies-list__pagination-btn' + ( page === num ? ' bb-replies-list__pagination-btn--current' : '' ) }
-									>
-										{ num }
-									</Button>
-								);
-							} ) }
-
-							<Button
-								variant="secondary"
-								disabled={ page >= totalPages }
-								onClick={ function () {
-									handlePageChange( Math.min( totalPages, page + 1 ) );
-								} }
-								className="bb-replies-list__pagination-btn bb-replies-list__pagination-btn--next"
-							>
-								&rsaquo;
-							</Button>
-						</div>
-					) }
-				</div>
+			{ ! isLoading && ! error && (
+				<ListPagination
+					currentPage={ page }
+					totalPages={ totalPages }
+					total={ totalItems }
+					onPageChange={ handlePageChange }
+					className="bb-replies-list"
+				/>
 			) }
 
 			{ /* Create Modal */ }

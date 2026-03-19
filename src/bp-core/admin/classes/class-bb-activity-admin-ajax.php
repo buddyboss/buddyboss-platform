@@ -562,12 +562,12 @@ class BB_Activity_Admin_Ajax {
 			'per_page'   => $per_page,
 			'page'       => $page,
 			'spam_count' => $spam_count,
-			'views'      => $views,
 		);
 
 		// Only include static meta on first request (include_meta=true).
 		// Omitting keys entirely so JS truthy checks don't overwrite cached values with empty arrays.
 		if ( $include_meta ) {
+			$response_data['views']                    = $views;
 			$response_data['activity_actions']         = $activity_actions;
 			$response_data['activity_actions_grouped'] = $activity_actions_grouped;
 			$response_data['bulk_actions']             = $bulk_actions;
