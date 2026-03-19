@@ -78,23 +78,22 @@ function bb_notifications_register_web_push_panel_fields() {
 
 	if ( $onesignal_feature_disabled ) {
 		// Pro installed but OneSignal feature disabled via Settings 2.0 toggle —
-		// show a notice directing admin to enable the integration.
+		// show a centered empty state card directing admin to enable the integration.
 		bb_register_feature_field(
 			'notifications',
 			'onesignal',
 			'onesignal',
 			array(
-				'name'              => '_bb_onesignal_disabled_notice',
-				'label'             => '',
-				'type'              => 'notice',
-				'notice_type'       => 'info',
-				'description'       => sprintf(
-					/* translators: %s: BuddyBoss Settings 2.0 URL */
-					__( 'OneSignal integration is currently disabled. Go to <a href="%s">BuddyBoss Settings</a> and enable the OneSignal integration to configure web push notifications.', 'buddyboss' ),
-					esc_url( admin_url( 'admin.php?page=bb-settings' ) )
-				),
-				'sanitize_callback' => '__return_empty_string',
-				'order'             => 10,
+				'name'                  => '_bb_onesignal_disabled_notice',
+				'label'                 => '',
+				'type'                  => 'empty_state',
+				'icon'                  => 'bb-icons-rl bb-icons-rl-warning-circle',
+				'empty_state_title'     => __( 'OneSignal Integration is Disabled', 'buddyboss' ),
+				'empty_state_description' => __( 'OneSignal integration for BuddyBoss is currently disabled. Enable it to configure web push notifications.', 'buddyboss' ),
+				'button_label'          => __( 'BuddyBoss Settings', 'buddyboss' ),
+				'button_url'            => admin_url( 'admin.php?page=bb-settings' ),
+				'sanitize_callback'     => '__return_empty_string',
+				'order'                 => 10,
 			)
 		);
 	} elseif ( ! function_exists( 'bb_platform_pro' ) ) {
@@ -106,24 +105,22 @@ function bb_notifications_register_web_push_panel_fields() {
 		! bb_integration_bridge()->is_managed_integration( 'onesignal' )
 	) {
 		// Pro installed but OLD (doesn't register OneSignal as managed integration).
-		// Show update notice — don't show UPGRADE PRO placeholder since Pro IS installed.
+		// Show centered empty state card directing admin to update Pro.
 		bb_register_feature_field(
 			'notifications',
 			'onesignal',
 			'onesignal',
 			array(
-				'name'              => '_bb_onesignal_pro_update_notice',
-				'label'             => '',
-				'type'              => 'notice',
-				'notice_type'       => 'info',
-				'description'       => sprintf(
-					/* translators: %s: BuddyBoss Pro link. */
-					__( 'Please update %s to manage Web Push Notifications from this panel. You can still manage OneSignal settings from the legacy <a href="%s">Integrations</a> page.', 'buddyboss' ),
-					'<strong>' . __( 'BuddyBoss Platform Pro', 'buddyboss' ) . '</strong>',
-					esc_url( admin_url( 'admin.php?page=bp-integrations&tab=bb-onesignal' ) )
-				),
-				'sanitize_callback' => '__return_empty_string',
-				'order'             => 10,
+				'name'                    => '_bb_onesignal_pro_update_notice',
+				'label'                   => '',
+				'type'                    => 'empty_state',
+				'icon'                    => 'bb-icons-rl bb-icons-rl-warning-circle',
+				'empty_state_title'       => __( 'BuddyBoss Platform Pro Update Required', 'buddyboss' ),
+				'empty_state_description' => __( 'Please update to the latest version of BuddyBoss Pro to manage your web push notification settings.', 'buddyboss' ),
+				'button_label'            => __( 'Update Now', 'buddyboss' ),
+				'button_url'              => admin_url( 'update-core.php' ),
+				'sanitize_callback'       => '__return_empty_string',
+				'order'                   => 10,
 			)
 		);
 	} elseif (

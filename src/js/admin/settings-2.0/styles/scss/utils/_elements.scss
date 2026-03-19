@@ -921,3 +921,62 @@ select.bb-admin-settings__select {
         white-space: nowrap;
     }
 }
+
+/* Empty state card (centered icon + title + description + button) */
+.bb-admin-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 24px 24px 16px;
+
+    &__icon {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid $bb-border-secondary-color;
+        border-radius: $bb-border-radius-md;
+        margin-bottom: 12px;
+
+        i {
+            font-size: 20px;
+            color: $bb-icon-tertiary-color;
+        }
+    }
+
+    &__title {
+        font-size: 15px;
+        font-weight: 600;
+        color: $bb-text-color;
+        margin: 0 0 6px;
+    }
+
+    &__description {
+        font-size: 13px;
+        color: $bb-text-secondary-color;
+        margin: 0 0 16px;
+        max-width: 440px;
+        line-height: 1.5;
+    }
+
+    &__button {
+        display: inline-block;
+        padding: 7px 16px;
+        font-size: 13px;
+        font-weight: 500;
+        color: #fff;
+        background-color: $bb-background-brand-primary-color;
+        border-radius: $bb-border-radius-md;
+        text-decoration: none;
+        transition: background-color 0.15s ease;
+
+        &:hover {
+            background-color: darken($bb-background-brand-primary-color, 8%);
+            color: #fff;
+            text-decoration: none;
+        }
+    }
+}
