@@ -25,6 +25,7 @@ import { ListPagination } from '../components/common/ListPagination';
 import { AdminNotice } from '../components/common/AdminNotice';
 import { ListToolbar } from '../components/common/ListToolbar';
 import { DeleteConfirmModal } from '../components/common/DeleteConfirmModal';
+import { useListScreenHandlers } from '../hooks/useListScreenHandlers';
 import { toSlug } from '../utils/format';
 import { ForumCreateModal } from '../components/forums/ForumCreateModal';
 import { AsyncSelectField } from '../components/fields/AsyncSelectField';
@@ -208,7 +209,6 @@ export function ForumsListScreen( { onNavigate } ) {
 	var refetchCounter = refetchCounterState[ 0 ];
 	var setRefetchCounter = refetchCounterState[ 1 ];
 
-	var searchTimerRef = useRef( null );
 	var hasMetaRef = useRef( false );
 	var editAbortRef = useRef( null );
 
@@ -280,8 +280,8 @@ export function ForumsListScreen( { onNavigate } ) {
 	// Cleanup on unmount.
 	useEffect( function () {
 		return function () {
-			if ( searchTimerRef.current ) {
-				clearTimeout( searchTimerRef.current );
+			if ( handlers.searchTimerRef.current ) {
+				clearTimeout( handlers.searchTimerRef.current );
 			}
 			if ( editAbortRef.current ) {
 				editAbortRef.current.abort();
@@ -289,88 +289,23 @@ export function ForumsListScreen( { onNavigate } ) {
 		};
 	}, [] );
 
-	/**
-	 * Handle search input with debounce.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {string} value Search value.
-	 */
-	var handleSearchChange = function ( value ) {
-		setSearchInput( value );
-		if ( searchTimerRef.current ) {
-			clearTimeout( searchTimerRef.current );
-		}
-		searchTimerRef.current = setTimeout( function () {
-			setSearchQuery( value );
-			setCurrentPage( 1 );
-		}, 500 );
-	};
-
-	/**
-	 * Handle filter change.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {string} newFilter Filter value.
-	 */
-	var handleFilterChange = function ( newFilter ) {
-		setFilter( newFilter );
-		setCurrentPage( 1 );
-		setSelectedIds( [] );
-	};
-
-	/**
-	 * Handle sort change.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {string} value Sort value.
-	 */
-	var handleSortChange = function ( value ) {
-		setSortBy( value );
-		setCurrentPage( 1 );
-		setSelectedIds( [] );
-	};
-
-	/**
-	 * Handle select all checkbox.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {boolean} checked Checked state.
-	 */
-	var handleSelectAll = function ( checked ) {
-		if ( checked ) {
-			setSelectedIds( forums.map( function ( f ) {
-				return f.id;
-			} ) );
-		} else {
-			setSelectedIds( [] );
-		}
-	};
-
-	/**
-	 * Handle individual row checkbox.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {number}  id      Forum ID.
-	 * @param {boolean} checked Checked state.
-	 */
-	var handleSelectRow = function ( id, checked ) {
-		if ( checked ) {
-			setSelectedIds( function ( prev ) {
-				return prev.concat( [ id ] );
-			} );
-		} else {
-			setSelectedIds( function ( prev ) {
-				return prev.filter( function ( i ) {
-					return i !== id;
-				} );
-			} );
-		}
-	};
+	// Common list screen handlers (search, sort, filter, select).
+	var handlers = useListScreenHandlers( {
+		setSearchInput: setSearchInput,
+		setSearchQuery: setSearchQuery,
+		setPage: setCurrentPage,
+		setSelectedIds: setSelectedIds,
+		setSort: setSortBy,
+		setFilter: setFilter,
+		getItemIds: function () {
+			return forums.map( function ( f ) { return f.id; } );
+		},
+	} );
+	var handleSearchChange = handlers.handleSearchChange;
+	var handleFilterChange = handlers.handleFilterChange;
+	var handleSortChange = handlers.handleSortChange;
+	var handleSelectAll = handlers.handleSelectAll;
+	var handleSelectRow = handlers.handleSelectRow;
 
 	/**
 	 * Reset metadata and refetch the forums list from page 1.

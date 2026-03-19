@@ -23,6 +23,7 @@ import { sanitizeHtml, safeUrl } from '../utils/sanitize';
 import { ListPagination } from '../components/common/ListPagination';
 import { AdminNotice } from '../components/common/AdminNotice';
 import { ListToolbar } from '../components/common/ListToolbar';
+import { useListScreenHandlers } from '../hooks/useListScreenHandlers';
 import { ActivityEditModal } from '../components/activity/ActivityEditModal';
 import { ActivityCommentModal } from '../components/activity/ActivityCommentModal';
 
@@ -133,7 +134,6 @@ export function ActivityListScreen( { onNavigate } ) {
 	var deleteConfirm = deleteConfirmState[ 0 ];
 	var setDeleteConfirm = deleteConfirmState[ 1 ];
 
-	var searchTimerRef = useRef( null );
 	var hasMetaRef = useRef( false );
 
 	var totalPages = Math.ceil( total / perPage );
@@ -233,82 +233,32 @@ export function ActivityListScreen( { onNavigate } ) {
 	// Cleanup search debounce timer on unmount.
 	useEffect( function () {
 		return function () {
-			if ( searchTimerRef.current ) {
-				clearTimeout( searchTimerRef.current );
+			if ( handlers.searchTimerRef.current ) {
+				clearTimeout( handlers.searchTimerRef.current );
 			}
 		};
 	}, [] );
 
-	/**
-	 * Handle search input with debounce.
-	 *
-	 * @param {string} value Search value.
-	 */
-	var handleSearchChange = function ( value ) {
-		setSearchInput( value );
-		if ( searchTimerRef.current ) {
-			clearTimeout( searchTimerRef.current );
-		}
-		searchTimerRef.current = setTimeout( function () {
-			setSearchQuery( value );
-			setCurrentPage( 1 );
-		}, 500 );
-	};
+	// Common list screen handlers (search, sort, filter, select).
+	var handlers = useListScreenHandlers( {
+		setSearchInput: setSearchInput,
+		setSearchQuery: setSearchQuery,
+		setPage: setCurrentPage,
+		setSelectedIds: setSelectedIds,
+		setFilter: setFilter,
+		getItemIds: function () {
+			return activities.map( function ( a ) { return a.id; } );
+		},
+	} );
+	var handleSearchChange = handlers.handleSearchChange;
+	var handleFilterChange = handlers.handleFilterChange;
+	var handleSelectAll = handlers.handleSelectAll;
+	var handleSelectRow = handlers.handleSelectRow;
 
-	/**
-	 * Handle filter change from dropdown.
-	 *
-	 * @param {string} newFilter Filter value.
-	 */
-	var handleFilterChange = function ( newFilter ) {
-		setFilter( newFilter );
-		setCurrentPage( 1 );
-		setSelectedIds( [] );
-	};
-
-	/**
-	 * Handle action type filter change.
-	 *
-	 * @param {string} value Action type value.
-	 */
+	// Action type filter — separate from status filter, only resets page (not selection).
 	var handleActionFilterChange = function ( value ) {
 		setActionFilter( value );
 		setCurrentPage( 1 );
-	};
-
-	/**
-	 * Handle select all checkbox.
-	 *
-	 * @param {boolean} checked Checked state.
-	 */
-	var handleSelectAll = function ( checked ) {
-		if ( checked ) {
-			setSelectedIds( activities.map( function ( a ) {
-				return a.id;
-			} ) );
-		} else {
-			setSelectedIds( [] );
-		}
-	};
-
-	/**
-	 * Handle individual row checkbox.
-	 *
-	 * @param {number}  id      Activity ID.
-	 * @param {boolean} checked Checked state.
-	 */
-	var handleSelectRow = function ( id, checked ) {
-		if ( checked ) {
-			setSelectedIds( function ( prev ) {
-				return prev.concat( [ id ] );
-			} );
-		} else {
-			setSelectedIds( function ( prev ) {
-				return prev.filter( function ( i ) {
-					return i !== id;
-				} );
-			} );
-		}
 	};
 
 	/**

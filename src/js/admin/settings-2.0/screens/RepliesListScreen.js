@@ -24,6 +24,7 @@ import { ListPagination } from '../components/common/ListPagination';
 import { AdminNotice } from '../components/common/AdminNotice';
 import { ListToolbar } from '../components/common/ListToolbar';
 import { DeleteConfirmModal } from '../components/common/DeleteConfirmModal';
+import { useListScreenHandlers } from '../hooks/useListScreenHandlers';
 import { ReplyCreateModal } from '../components/forums/ReplyCreateModal';
 import { AsyncSelectField } from '../components/fields/AsyncSelectField';
 import { RichTextEditor, forceRemoveEditor } from '../components/common/RichTextEditor';
@@ -391,44 +392,18 @@ export default function RepliesListScreen( { onNavigate } ) {
 		fetchReplies( { page: 1, sort: newSort } );
 	};
 
-	/**
-	 * Handle select all checkbox toggle.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {boolean} checked Whether checkbox is checked.
-	 */
-	var handleSelectAll = function ( checked ) {
-		if ( checked ) {
-			setSelected( replies.map( function ( r ) {
-				return r.id;
-			} ) );
-		} else {
-			setSelected( [] );
-		}
-	};
-
-	/**
-	 * Handle individual row checkbox toggle.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {number}  replyId Reply ID.
-	 * @param {boolean} checked Whether checkbox is checked.
-	 */
-	var handleSelectRow = function ( replyId, checked ) {
-		if ( checked ) {
-			setSelected( function ( prev ) {
-				return prev.concat( [ replyId ] );
-			} );
-		} else {
-			setSelected( function ( prev ) {
-				return prev.filter( function ( id ) {
-					return id !== replyId;
-				} );
-			} );
-		}
-	};
+	// Common selection handlers.
+	var handlers = useListScreenHandlers( {
+		setSearchInput: setSearch,
+		setSearchQuery: setSearch,
+		setPage: setPage,
+		setSelectedIds: setSelected,
+		getItemIds: function () {
+			return replies.map( function ( r ) { return r.id; } );
+		},
+	} );
+	var handleSelectAll = handlers.handleSelectAll;
+	var handleSelectRow = handlers.handleSelectRow;
 
 	/**
 	 * Handle bulk action apply — routes to confirmation/edit modals.

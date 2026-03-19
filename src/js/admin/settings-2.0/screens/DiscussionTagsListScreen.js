@@ -25,6 +25,7 @@ import { ListPagination } from '../components/common/ListPagination';
 import { AdminNotice } from '../components/common/AdminNotice';
 import { ListToolbar } from '../components/common/ListToolbar';
 import { DeleteConfirmModal } from '../components/common/DeleteConfirmModal';
+import { useListScreenHandlers } from '../hooks/useListScreenHandlers';
 import { TagCreateModal } from '../components/forums/TagCreateModal';
 
 /**
@@ -78,7 +79,6 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 	var searchQuery = searchQueryState[ 0 ];
 	var setSearchQuery = searchQueryState[ 1 ];
 
-	var searchTimerRef = useRef( null );
 
 	// Selection state for bulk actions.
 	var selectedIdsState = useState( [] );
@@ -198,8 +198,8 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 			if ( abortRef.current ) {
 				abortRef.current.abort();
 			}
-			if ( searchTimerRef.current ) {
-				clearTimeout( searchTimerRef.current );
+			if ( handlers.searchTimerRef.current ) {
+				clearTimeout( handlers.searchTimerRef.current );
 			}
 		};
 	}, [] );
@@ -213,56 +213,27 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 
 
 
-	/**
-	 * Handle search input change with debounce.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {string} value Search input value.
-	 */
-	var handleSearchChange = function ( value ) {
-		setSearchInput( value );
+	// Common list screen handlers (search, select).
+	var handlers = useListScreenHandlers( {
+		setSearchInput: setSearchInput,
+		setSearchQuery: setSearchQuery,
+		setPage: setCurrentPage,
+		setSelectedIds: setSelectedIds,
+		getItemIds: function () {
+			return tags.map( function ( t ) { return t.id; } );
+		},
+	} );
+	var handleSearchChange = handlers.handleSearchChange;
+	var handleSearchClear = handlers.handleSearchClear;
 
-		if ( searchTimerRef.current ) {
-			clearTimeout( searchTimerRef.current );
-		}
-
-		searchTimerRef.current = setTimeout( function () {
-			setSearchQuery( value );
-		}, 500 );
-	};
-
-	/**
-	 * Clear search input.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	var handleSearchClear = function () {
-		setSearchInput( '' );
-		if ( searchTimerRef.current ) {
-			clearTimeout( searchTimerRef.current );
-		}
-		setSearchQuery( '' );
-	};
-
-	/**
-	 * Handle page change.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {number} newPage Page number.
-	 */
+	// Tags uses manual fetch on page change (not dependency-driven).
 	var handlePageChange = function ( newPage ) {
 		setCurrentPage( newPage );
 		setSelectedIds( [] );
 		fetchTags( { page: newPage, search: searchQuery } );
 	};
 
-	/**
-	 * Handle select all checkbox toggle.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
+	// Tags uses toggle pattern for select (no checked param from CheckboxControl).
 	var handleSelectAll = function () {
 		if ( selectedIds.length === tags.length ) {
 			setSelectedIds( [] );
@@ -271,13 +242,6 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 		}
 	};
 
-	/**
-	 * Handle single row checkbox toggle.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {number} tagId Tag ID.
-	 */
 	var handleSelectRow = function ( tagId ) {
 		setSelectedIds( function ( prev ) {
 			if ( -1 !== prev.indexOf( tagId ) ) {

@@ -25,6 +25,7 @@ import { ListPagination } from '../components/common/ListPagination';
 import { AdminNotice } from '../components/common/AdminNotice';
 import { ListToolbar } from '../components/common/ListToolbar';
 import { DeleteConfirmModal } from '../components/common/DeleteConfirmModal';
+import { useListScreenHandlers } from '../hooks/useListScreenHandlers';
 import { DiscussionCreateModal } from '../components/forums/DiscussionCreateModal';
 import { AsyncSelectField } from '../components/fields/AsyncSelectField';
 import { RichTextEditor, forceRemoveEditor } from '../components/common/RichTextEditor';
@@ -194,7 +195,6 @@ export function DiscussionsListScreen( { onNavigate } ) {
 	} );
 	var urlTagId = urlTagIdState[ 0 ];
 
-	var searchTimerRef = useRef( null );
 	var hasMetaRef = useRef( false );
 	var editAbortRef = useRef( null );
 
@@ -270,8 +270,8 @@ export function DiscussionsListScreen( { onNavigate } ) {
 	// Cleanup on unmount.
 	useEffect( function () {
 		return function () {
-			if ( searchTimerRef.current ) {
-				clearTimeout( searchTimerRef.current );
+			if ( handlers.searchTimerRef.current ) {
+				clearTimeout( handlers.searchTimerRef.current );
 			}
 			if ( editAbortRef.current ) {
 				editAbortRef.current.abort();
@@ -279,88 +279,23 @@ export function DiscussionsListScreen( { onNavigate } ) {
 		};
 	}, [] );
 
-	/**
-	 * Handle search input with debounce.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {string} value Search value.
-	 */
-	var handleSearchChange = function ( value ) {
-		setSearchInput( value );
-		if ( searchTimerRef.current ) {
-			clearTimeout( searchTimerRef.current );
-		}
-		searchTimerRef.current = setTimeout( function () {
-			setSearchQuery( value );
-			setCurrentPage( 1 );
-		}, 500 );
-	};
-
-	/**
-	 * Handle forum filter change.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {string} newFilter Forum ID as string, or '0' for all.
-	 */
-	var handleFilterChange = function ( newFilter ) {
-		setForumFilter( newFilter );
-		setCurrentPage( 1 );
-		setSelectedIds( [] );
-	};
-
-	/**
-	 * Handle sort change.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {string} value Sort value.
-	 */
-	var handleSortChange = function ( value ) {
-		setSortBy( value );
-		setCurrentPage( 1 );
-		setSelectedIds( [] );
-	};
-
-	/**
-	 * Handle select all checkbox.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {boolean} checked Checked state.
-	 */
-	var handleSelectAll = function ( checked ) {
-		if ( checked ) {
-			setSelectedIds( discussions.map( function ( d ) {
-				return d.id;
-			} ) );
-		} else {
-			setSelectedIds( [] );
-		}
-	};
-
-	/**
-	 * Handle individual row checkbox.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {number}  id      Discussion ID.
-	 * @param {boolean} checked Checked state.
-	 */
-	var handleSelectRow = function ( id, checked ) {
-		if ( checked ) {
-			setSelectedIds( function ( prev ) {
-				return prev.concat( [ id ] );
-			} );
-		} else {
-			setSelectedIds( function ( prev ) {
-				return prev.filter( function ( i ) {
-					return i !== id;
-				} );
-			} );
-		}
-	};
+	// Common list screen handlers (search, sort, filter, select).
+	var handlers = useListScreenHandlers( {
+		setSearchInput: setSearchInput,
+		setSearchQuery: setSearchQuery,
+		setPage: setCurrentPage,
+		setSelectedIds: setSelectedIds,
+		setSort: setSortBy,
+		setFilter: setForumFilter,
+		getItemIds: function () {
+			return discussions.map( function ( d ) { return d.id; } );
+		},
+	} );
+	var handleSearchChange = handlers.handleSearchChange;
+	var handleFilterChange = handlers.handleFilterChange;
+	var handleSortChange = handlers.handleSortChange;
+	var handleSelectAll = handlers.handleSelectAll;
+	var handleSelectRow = handlers.handleSelectRow;
 
 	/**
 	 * Reset metadata and refetch the discussions list from page 1.
