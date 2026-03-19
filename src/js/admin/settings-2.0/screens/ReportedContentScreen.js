@@ -8,7 +8,15 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from '@wordpress/element';
-import { Spinner } from '@wordpress/components';
+import {
+	Spinner,
+	Button,
+	CheckboxControl,
+	SelectControl,
+	DropdownMenu,
+	MenuGroup,
+	MenuItem,
+} from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import {
 	getReportedContent,
@@ -123,11 +131,6 @@ export function ReportedContentScreen() {
 	var selectedIds = selectedIdsState[ 0 ];
 	var setSelectedIds = selectedIdsState[ 1 ];
 
-	// 3-dot menu state.
-	var openMenuState = useState( null );
-	var openMenuId = openMenuState[ 0 ];
-	var setOpenMenuId = openMenuState[ 1 ];
-
 	// View report modal state.
 	var reportModalState = useState( null );
 	var reportModalItem = reportModalState[ 0 ];
@@ -196,23 +199,8 @@ export function ReportedContentScreen() {
 	// Get content types from localized data.
 	var reportedContentTypes = ( window.bbAdminData && window.bbAdminData.reportedContentTypes ) || {};
 
-	// Close menu on outside click.
-	useEffect( function () {
-		if ( openMenuId === null ) {
-			return;
-		}
-		function handleClick() {
-			setOpenMenuId( null );
-		}
-		document.addEventListener( 'click', handleClick );
-		return function () {
-			document.removeEventListener( 'click', handleClick );
-		};
-	}, [ openMenuId ] );
-
 	// Handle content type filter change.
-	var handleContentTypeChange = useCallback( function ( e ) {
-		var newType = e.target.value;
+	var handleContentTypeChange = useCallback( function ( newType ) {
 		setContentType( newType );
 		setPage( 1 );
 		setSelectedIds( [] );
@@ -220,8 +208,7 @@ export function ReportedContentScreen() {
 	}, [ fetchItems, statusFilter ] );
 
 	// Handle status filter change.
-	var handleStatusFilterChange = useCallback( function ( e ) {
-		var newStatus = e.target.value;
+	var handleStatusFilterChange = useCallback( function ( newStatus ) {
 		setStatusFilter( newStatus );
 		setPage( 1 );
 		setSelectedIds( [] );
@@ -236,22 +223,25 @@ export function ReportedContentScreen() {
 	}, [ contentType, statusFilter, fetchItems ] );
 
 	// Select all checkbox.
-	var handleSelectAll = useCallback( function () {
-		if ( selectedIds.length === items.length && items.length > 0 ) {
-			setSelectedIds( [] );
-		} else {
+	var handleSelectAll = useCallback( function ( checked ) {
+		if ( checked ) {
 			setSelectedIds( items.map( function ( item ) { return item.id; } ) );
+		} else {
+			setSelectedIds( [] );
 		}
-	}, [ items, selectedIds ] );
+	}, [ items ] );
 
 	// Select single row.
-	var handleSelectRow = useCallback( function ( id ) {
-		setSelectedIds( function ( prev ) {
-			if ( prev.indexOf( id ) > -1 ) {
+	var handleSelectRow = useCallback( function ( id, checked ) {
+		if ( checked ) {
+			setSelectedIds( function ( prev ) {
+				return prev.concat( [ id ] );
+			} );
+		} else {
+			setSelectedIds( function ( prev ) {
 				return prev.filter( function ( i ) { return i !== id; } );
-			}
-			return prev.concat( [ id ] );
-		} );
+			} );
+		}
 	}, [] );
 
 	// Handle bulk action apply.
@@ -285,18 +275,20 @@ export function ReportedContentScreen() {
 	}, [ bulkAction, selectedIds, page, contentType, statusFilter, fetchItems ] );
 
 	// Handle hide/unhide content with confirmation dialog.
-	var handleHideAction = useCallback( function ( item, action ) {
+	var handleHideAction = useCallback( function ( item, action, onClose ) {
 		var confirmMessage = ( 'hide' === action )
 			? __( 'Please confirm you want to hide this content. It will be hidden from all members in your network.', 'buddyboss' )
 			: __( 'Please confirm you want to unhide this content. It will be open for all members in your network.', 'buddyboss' );
 
 		if ( ! window.confirm( confirmMessage ) ) {
-			setOpenMenuId( null );
 			return;
 		}
 
+		if ( onClose ) {
+			onClose();
+		}
+
 		setActionInProgress( item.id );
-		setOpenMenuId( null );
 
 		var promise = ( 'hide' === action )
 			? hideContent( item.item_id, item.item_type )
@@ -316,18 +308,20 @@ export function ReportedContentScreen() {
 	}, [ page, contentType, statusFilter, fetchItems ] );
 
 	// Handle suspend/unsuspend owner with confirmation dialog.
-	var handleSuspendAction = useCallback( function ( item, action ) {
+	var handleSuspendAction = useCallback( function ( item, action, onClose ) {
 		var confirmMessage = ( 'suspend' === action )
 			? __( 'Please confirm you want to suspend this member. Members who are suspended will be logged out and not allowed to login again. Their content will be hidden from all members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' )
 			: __( 'Please confirm you want to unsuspend this member. Members who are unsuspended will be allowed to login again, and their content will no longer be hidden from other members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' );
 
 		if ( ! window.confirm( confirmMessage ) ) {
-			setOpenMenuId( null );
 			return;
 		}
 
+		if ( onClose ) {
+			onClose();
+		}
+
 		setActionInProgress( item.id );
-		setOpenMenuId( null );
 
 		// Optimistically mark suspend_in_progress so button stays disabled after refetch.
 		setItems( function ( prev ) {
@@ -354,20 +348,30 @@ export function ReportedContentScreen() {
 	}, [ page, contentType, statusFilter, fetchItems ] );
 
 	// Handle view report.
-	var handleViewReport = useCallback( function ( item ) {
-		setOpenMenuId( null );
+	var handleViewReport = useCallback( function ( item, onClose ) {
+		if ( onClose ) {
+			onClose();
+		}
 		setReportModalItem( item );
 	}, [] );
 
 	var allSelected = items.length > 0 && selectedIds.length === items.length;
 	var hasBulkSelection = selectedIds.length > 0;
 
+	// Build content type options for SelectControl.
+	var contentTypeOptions = [ { label: __( 'All Content Types', 'buddyboss' ), value: '' } ];
+	Object.keys( reportedContentTypes ).forEach( function ( key ) {
+		contentTypeOptions.push( { label: reportedContentTypes[ key ], value: key } );
+	} );
+
 	return (
 		<div className="bb-admin-reported-content">
 			{ errorMessage && (
 				<div className="bb-admin-reported-content__error-notice">
 					<span>{ errorMessage }</span>
-					<button type="button" onClick={ function () { setErrorMessage( '' ); } }>&times;</button>
+					<button type="button" onClick={ function () { setErrorMessage( '' ); } }>
+						<i className="bb-icons-rl bb-icons-rl-x"></i>
+					</button>
 				</div>
 			) }
 			<div className="bb-admin-reported-content__card">
@@ -383,304 +387,316 @@ export function ReportedContentScreen() {
 					{/* Action Bar */}
 					<div className="bb-admin-reported-content__action-bar">
 						<div className="bb-admin-reported-content__action-bar-left">
-							<select
-								className={ 'bb-admin-reported-content__bulk-select' + ( ! hasBulkSelection ? ' bb-admin-reported-content__bulk-select--disabled' : '' ) }
-								value={ bulkAction }
-								onChange={ function ( e ) { setBulkAction( e.target.value ); } }
-								disabled={ ! hasBulkSelection }
-							>
-								<option value="">{ __( 'Bulk actions', 'buddyboss' ) }</option>
-								<option value="hide">{ __( 'Hide Content', 'buddyboss' ) }</option>
-								<option value="unhide">{ __( 'Unhide Content', 'buddyboss' ) }</option>
-							</select>
-							<button
-								className={ 'bb-admin-reported-content__bulk-apply' + ( ( ! bulkAction || ! hasBulkSelection ) ? ' bb-admin-reported-content__bulk-apply--disabled' : '' ) }
-								onClick={ handleBulkApply }
-								disabled={ ! bulkAction || ! hasBulkSelection || actionInProgress === 'bulk' }
-							>
-								{ actionInProgress === 'bulk' ? <Spinner /> : __( 'Apply', 'buddyboss' ) }
-							</button>
+							<div className="bb-admin-reported-content__bulk-actions">
+								<SelectControl
+									value={ bulkAction }
+									options={ [
+										{ label: __( 'Bulk actions', 'buddyboss' ), value: '' },
+										{ label: __( 'Hide Content', 'buddyboss' ), value: 'hide' },
+										{ label: __( 'Unhide Content', 'buddyboss' ), value: 'unhide' },
+									] }
+									onChange={ setBulkAction }
+									disabled={ ! hasBulkSelection }
+									__nextHasNoMarginBottom
+								/>
+								<Button
+									variant="secondary"
+									onClick={ handleBulkApply }
+									disabled={ ! bulkAction || ! hasBulkSelection || actionInProgress === 'bulk' }
+									className="bb-admin-reported-content__bulk-apply"
+								>
+									{ actionInProgress === 'bulk' ? <Spinner /> : __( 'Apply', 'buddyboss' ) }
+								</Button>
+							</div>
 						</div>
 						<div className="bb-admin-reported-content__action-bar-right">
-							<select
-								className="bb-admin-reported-content__status-select"
+							<SelectControl
 								value={ statusFilter }
+								options={ [
+									{ label: __( 'All', 'buddyboss' ) + ' (' + statusCounts.all + ')', value: '' },
+									{ label: __( 'Hidden', 'buddyboss' ) + ' (' + statusCounts.hidden + ')', value: 'hidden' },
+									{ label: __( 'Visible', 'buddyboss' ) + ' (' + statusCounts.visible + ')', value: 'visible' },
+								] }
 								onChange={ handleStatusFilterChange }
-							>
-								<option value="">{ __( 'All', 'buddyboss' ) + ' (' + statusCounts.all + ')' }</option>
-								<option value="hidden">{ __( 'Hidden', 'buddyboss' ) + ' (' + statusCounts.hidden + ')' }</option>
-								<option value="visible">{ __( 'Visible', 'buddyboss' ) + ' (' + statusCounts.visible + ')' }</option>
-							</select>
-							{ Object.keys( reportedContentTypes ).length > 0 && (
-								<select
-									className="bb-admin-reported-content__filter-select"
+								className="bb-admin-reported-content__status-select"
+								__nextHasNoMarginBottom
+							/>
+							{ contentTypeOptions.length > 1 && (
+								<SelectControl
 									value={ contentType }
+									options={ contentTypeOptions }
 									onChange={ handleContentTypeChange }
-								>
-									<option value="">{ __( 'All Content Types', 'buddyboss' ) }</option>
-									{ Object.keys( reportedContentTypes ).map( function ( key ) {
-										return (
-											<option key={ key } value={ key }>
-												{ reportedContentTypes[ key ] }
-											</option>
-										);
-									} ) }
-								</select>
+									className="bb-admin-reported-content__filter-select"
+									__nextHasNoMarginBottom
+								/>
 							) }
 						</div>
 					</div>
 
-					{/* Table Header */}
-					<div className="bb-admin-reported-content__table-header">
-						<div className="bb-admin-reported-content__table-header-left">
-							<div className="bb-admin-reported-content__checkbox-col">
-								<input
-									type="checkbox"
-									className="bb-admin-reported-content__checkbox"
-									checked={ allSelected }
-									onChange={ handleSelectAll }
-								/>
+					{/* Table */}
+					<div className="bb-admin-reported-content__table-wrapper">
+						{ isLoading ? (
+							<div className="bb-admin-loading">
+								<Spinner />
 							</div>
-							<span className="bb-admin-reported-content__col-label bb-admin-reported-content__col-label--content">
-								{ __( 'Content', 'buddyboss' ) }
-							</span>
-						</div>
-						<span className="bb-admin-reported-content__col-label bb-admin-reported-content__col-label--owner">
-							{ __( 'Owner', 'buddyboss' ) }
-						</span>
-						<span className="bb-admin-reported-content__col-label bb-admin-reported-content__col-label--reports">
-							{ __( 'Reports', 'buddyboss' ) }
-						</span>
-					</div>
-
-					{ isLoading ? (
-						<div className="bb-admin-loading">
-							<Spinner />
-						</div>
-					) : items.length === 0 ? (
-						<div className="bb-admin-reported-content__empty">
-							<p>{ __( 'No reported content found.', 'buddyboss' ) }</p>
-						</div>
-					) : (
-						<>
-							<div className="bb-admin-reported-content__list">
-								{ items.map( function ( item ) {
-									var isBusy = actionInProgress === item.id;
-									var isSelected = selectedIds.indexOf( item.id ) > -1;
-									return (
-										<div key={ item.id } className={ 'bb-admin-reported-content__list-item' + ( isSelected ? ' bb-admin-reported-content__list-item--selected' : '' ) }>
-											{/* Items row */}
-											<div className="bb-admin-reported-content__items">
-												{/* Content column (264px) — checkbox + icon + name */}
-												<div className="bb-admin-reported-content__content-col">
-													<div className="bb-admin-reported-content__checkbox-col">
-														<input
-															type="checkbox"
-															className="bb-admin-reported-content__checkbox"
-															checked={ isSelected }
-															onChange={ function () { handleSelectRow( item.id ); } }
-														/>
+						) : 0 === items.length ? (
+							<div className="bb-admin-reported-content__empty">
+								<p>{ __( 'No reported content found.', 'buddyboss' ) }</p>
+							</div>
+						) : (
+							<table className="bb-admin-reported-content__table">
+								<thead>
+									<tr>
+										<th className="bb-admin-reported-content__th--checkbox">
+											<CheckboxControl
+												checked={ allSelected }
+												onChange={ handleSelectAll }
+												__nextHasNoMarginBottom
+											/>
+										</th>
+										<th className="bb-admin-reported-content__th--content">
+											{ __( 'Content', 'buddyboss' ) }
+										</th>
+										<th className="bb-admin-reported-content__th--owner">
+											{ __( 'Owner', 'buddyboss' ) }
+										</th>
+										<th className="bb-admin-reported-content__th--reports">
+											{ __( 'Reports', 'buddyboss' ) }
+										</th>
+										<th className="bb-admin-reported-content__th--status">
+											{ __( 'Status', 'buddyboss' ) }
+										</th>
+										<th className="bb-admin-reported-content__th--actions">&nbsp;</th>
+									</tr>
+								</thead>
+								<tbody>
+									{ items.map( function ( item ) {
+										var isBusy = actionInProgress === item.id;
+										var isSelected = selectedIds.indexOf( item.id ) > -1;
+										return (
+											<tr
+												key={ item.id }
+												className={ 'bb-admin-reported-content__row' + ( isSelected ? ' bb-admin-reported-content__row--selected' : '' ) }
+											>
+												<td className="bb-admin-reported-content__td--checkbox">
+													<CheckboxControl
+														checked={ isSelected }
+														onChange={ function ( checked ) {
+															handleSelectRow( item.id, checked );
+														} }
+														__nextHasNoMarginBottom
+													/>
+												</td>
+												<td className="bb-admin-reported-content__td--content">
+													<div className="bb-admin-reported-content__content">
+														<span className="bb-admin-reported-content__content-icon">
+															<i className={ item.content_icon }></i>
+														</span>
+														{ item.content_url ? (
+															<a
+																href={ item.content_url }
+																target="_blank"
+																rel="noopener noreferrer"
+																className="bb-admin-reported-content__content-name"
+															>
+																{ item.content_label + ' #' + item.item_id }
+															</a>
+														) : (
+															<span className="bb-admin-reported-content__content-name">
+																{ item.content_label + ' #' + item.item_id }
+															</span>
+														) }
 													</div>
-													<span className="bb-admin-reported-content__content-icon">
-														<i className={ item.content_icon }></i>
-													</span>
-													{ item.content_url ? (
-														<a
-															href={ item.content_url }
-															target="_blank"
-															rel="noopener noreferrer"
-															className="bb-admin-reported-content__content-name"
-														>
-															{ item.content_label + ' #' + item.item_id }
-														</a>
-													) : (
-														<span className="bb-admin-reported-content__content-name">
-															{ item.content_label + ' #' + item.item_id }
-														</span>
-													) }
-												</div>
-
-												{/* Owner */}
-												<div className="bb-admin-reported-content__owner-col">
-													{ item.owner && item.owner.avatar && (
-														<img
-															src={ item.owner.avatar }
-															alt={ item.owner.display_name }
-															className="bb-admin-reported-content__avatar"
-														/>
-													) }
-													{ item.owner && item.owner.display_name ? (
-														<a
-															href={ item.owner.profile_url }
-															target="_blank"
-															rel="noopener noreferrer"
-															className="bb-admin-reported-content__owner-name"
-														>
-															{ item.owner.display_name }
-														</a>
-													) : (
-														<span className="bb-admin-reported-content__owner-name">
-															{ __( 'Unknown', 'buddyboss' ) }
-														</span>
-													) }
-												</div>
-
-												{/* Reports */}
-												<div className={ 'bb-admin-reported-content__reports-col' + ( item.reports > 0 ? ' bb-admin-reported-content__col--active' : '' ) }>
+												</td>
+												<td className="bb-admin-reported-content__td--owner">
+													<div className="bb-admin-reported-content__owner">
+														{ item.owner && item.owner.avatar && (
+															<img
+																src={ item.owner.avatar }
+																alt={ item.owner.display_name }
+																className="bb-admin-reported-content__avatar"
+															/>
+														) }
+														{ item.owner && item.owner.display_name ? (
+															<a
+																href={ item.owner.profile_url }
+																target="_blank"
+																rel="noopener noreferrer"
+																className="bb-admin-reported-content__owner-name"
+															>
+																{ item.owner.display_name }
+															</a>
+														) : (
+															<span className="bb-admin-reported-content__owner-name">
+																{ __( 'Unknown', 'buddyboss' ) }
+															</span>
+														) }
+													</div>
+												</td>
+												<td className={ 'bb-admin-reported-content__td--reports' + ( item.reports > 0 ? ' bb-admin-reported-content__td--active' : '' ) }>
 													<i className="bb-icons-rl bb-icons-rl-flag"></i>
 													{ item.reports }
-												</div>
-
-												{/* Hidden badge */}
-												{ item.is_hidden && (
-													<div className="bb-admin-reported-content__status-col">
+												</td>
+												<td className="bb-admin-reported-content__td--status">
+													{ item.is_hidden && (
 														<span className="bb-admin-reported-content__hidden-badge">
 															{ __( 'Hidden', 'buddyboss' ) }
 														</span>
-													</div>
-												) }
-											</div>
-
-											{/* Actions */}
-											<div className="bb-admin-reported-content__actions-col">
-												{ isBusy ? (
-													<Spinner />
-												) : (
-													<div className="bb-admin-reported-content__menu-wrapper">
-														<button
-															className="bb-admin-reported-content__menu-trigger"
-															onClick={ function ( e ) {
-																e.stopPropagation();
-																setOpenMenuId( openMenuId === item.id ? null : item.id );
-															} }
+													) }
+												</td>
+												<td className="bb-admin-reported-content__td--actions">
+													{ isBusy ? (
+														<Spinner />
+													) : (
+														<DropdownMenu
+															icon={ <i className="bb-icons-rl bb-icons-rl-dots-three"></i> }
+															label={ __( 'More options', 'buddyboss' ) }
 														>
-															<i className="bb-icons-rl bb-icons-rl-dots-three"></i>
-														</button>
-														{ openMenuId === item.id && (
-															<div className="bb-admin-reported-content__menu-dropdown">
-																<button
-																	className="bb-admin-reported-content__menu-item"
-																	onClick={ function () { handleViewReport( item ); } }
-																>
-																	<i className="bb-icons-rl bb-icons-rl-eye"></i>
-																	{ __( 'View Report', 'buddyboss' ) }
-																</button>
-																{ item.content_url && (
-																	<a
-																		href={ item.content_url }
-																		target="_blank"
-																		rel="noopener noreferrer"
-																		className="bb-admin-reported-content__menu-item"
-																	>
-																		<i className="bb-icons-rl bb-icons-rl-file-text"></i>
-																		{ __( 'View Content', 'buddyboss' ) }
-																		<span className="bb-admin-reported-content__menu-item-external">
-																			<i className="bb-icons-rl bb-icons-rl-arrow-square-out"></i>
-																		</span>
-																	</a>
-																) }
-																{/* Hide/Unhide: not shown when owner is suspended */}
-																{ ! item.is_owner_suspended && (
-																	item.is_hidden ? (
-																		<button
-																			className="bb-admin-reported-content__menu-item"
-																			onClick={ function () { handleHideAction( item, 'unhide' ); } }
+															{ function ( { onClose } ) {
+																return (
+																	<MenuGroup className="bb_dropdown_menu_group">
+																		<MenuItem
+																			onClick={ function () {
+																				handleViewReport( item, onClose );
+																			} }
 																		>
 																			<i className="bb-icons-rl bb-icons-rl-eye"></i>
-																			{ __( 'Unhide Content', 'buddyboss' ) }
-																		</button>
-																	) : (
-																		<button
-																			className="bb-admin-reported-content__menu-item"
-																			onClick={ function () { handleHideAction( item, 'hide' ); } }
-																		>
-																			<i className="bb-icons-rl bb-icons-rl-eye-slash"></i>
-																			{ __( 'Hide Content', 'buddyboss' ) }
-																		</button>
-																	)
-																) }
-																{/* Suspend/Unsuspend: not shown for admins */}
-																{ item.owner && item.owner.user_id > 0 && ! item.is_owner_admin && (
-																	item.suspend_in_progress ? (
-																		<span
-																			className="bb-admin-reported-content__menu-item bb-admin-reported-content__menu-item--disabled"
-																			data-balloon={ __( 'The background process is currently in the queue. Please refresh the page after a short while.', 'buddyboss' ) }
-																			data-balloon-pos="up"
-																		>
-																			<i className={ item.is_owner_suspended ? 'bb-icons-rl bb-icons-rl-plus-circle' : 'bb-icons-rl bb-icons-rl-minus-circle' }></i>
-																			{ item.is_owner_suspended ? __( 'Unsuspend Owner', 'buddyboss' ) : __( 'Suspend Owner', 'buddyboss' ) }
-																		</span>
-																	) : (
-																		item.is_owner_suspended ? (
-																			<button
-																				className="bb-admin-reported-content__menu-item"
-																				onClick={ function () { handleSuspendAction( item, 'unsuspend' ); } }
+																			{ __( 'View Report', 'buddyboss' ) }
+																		</MenuItem>
+																		{ item.content_url && (
+																			<MenuItem
+																				onClick={ function () {
+																					try {
+																						var parsed = new URL( item.content_url, window.location.origin );
+																						if ( 'http:' === parsed.protocol || 'https:' === parsed.protocol ) {
+																							window.open( parsed.href, '_blank', 'noopener,noreferrer' );
+																						}
+																					} catch ( e ) {
+																						// Invalid URL — do nothing.
+																					}
+																					onClose();
+																				} }
 																			>
-																				<i className="bb-icons-rl bb-icons-rl-plus-circle"></i>
-																				{ __( 'Unsuspend Owner', 'buddyboss' ) }
-																			</button>
-																		) : (
-																			<button
-																				className="bb-admin-reported-content__menu-item"
-																				onClick={ function () { handleSuspendAction( item, 'suspend' ); } }
-																			>
-																				<i className="bb-icons-rl bb-icons-rl-minus-circle"></i>
-																				{ __( 'Suspend Owner', 'buddyboss' ) }
-																			</button>
-																		)
-																	)
-																) }
-															</div>
-														) }
-													</div>
-												) }
-											</div>
-										</div>
-									);
-								} ) }
-							</div>
+																				<i className="bb-icons-rl bb-icons-rl-file-text"></i>
+																				{ __( 'View Content', 'buddyboss' ) }
+																				<i className="bb-icons-rl bb-icons-rl-arrow-up-right bb-icons-external"></i>
+																			</MenuItem>
+																		) }
+																		{/* Hide/Unhide: not shown when owner is suspended */}
+																		{ ! item.is_owner_suspended && (
+																			item.is_hidden ? (
+																				<MenuItem
+																					onClick={ function () {
+																						handleHideAction( item, 'unhide', onClose );
+																					} }
+																				>
+																					<i className="bb-icons-rl bb-icons-rl-eye"></i>
+																					{ __( 'Unhide Content', 'buddyboss' ) }
+																				</MenuItem>
+																			) : (
+																				<MenuItem
+																					onClick={ function () {
+																						handleHideAction( item, 'hide', onClose );
+																					} }
+																				>
+																					<i className="bb-icons-rl bb-icons-rl-eye-slash"></i>
+																					{ __( 'Hide Content', 'buddyboss' ) }
+																				</MenuItem>
+																			)
+																		) }
+																		{/* Suspend/Unsuspend: not shown for admins */}
+																		{ item.owner && item.owner.user_id > 0 && ! item.is_owner_admin && (
+																			item.suspend_in_progress ? (
+																				<MenuItem
+																					disabled
+																					aria-label={ __( 'The background process is currently in the queue. Please refresh the page after a short while.', 'buddyboss' ) }
+																				>
+																					<i className={ item.is_owner_suspended ? 'bb-icons-rl bb-icons-rl-plus-circle' : 'bb-icons-rl bb-icons-rl-minus-circle' }></i>
+																					{ item.is_owner_suspended ? __( 'Unsuspend Owner', 'buddyboss' ) : __( 'Suspend Owner', 'buddyboss' ) }
+																				</MenuItem>
+																			) : (
+																				item.is_owner_suspended ? (
+																					<MenuItem
+																						onClick={ function () {
+																							handleSuspendAction( item, 'unsuspend', onClose );
+																						} }
+																					>
+																						<i className="bb-icons-rl bb-icons-rl-plus-circle"></i>
+																						{ __( 'Unsuspend Owner', 'buddyboss' ) }
+																					</MenuItem>
+																				) : (
+																					<MenuItem
+																						onClick={ function () {
+																							handleSuspendAction( item, 'suspend', onClose );
+																						} }
+																					>
+																						<i className="bb-icons-rl bb-icons-rl-minus-circle"></i>
+																						{ __( 'Suspend Owner', 'buddyboss' ) }
+																					</MenuItem>
+																				)
+																			)
+																		) }
+																	</MenuGroup>
+																);
+															} }
+														</DropdownMenu>
+													) }
+												</td>
+											</tr>
+										);
+									} ) }
+								</tbody>
+							</table>
+						) }
+					</div>
 
-							{/* Pagination */}
+					{/* Footer */}
+					{ ! isLoading && total > 0 && (
+						<div className="bb-admin-reported-content__footer">
+							<span className="bb-admin-reported-content__item-count">
+								{ total } { total === 1 ? __( 'item', 'buddyboss' ) : __( 'items', 'buddyboss' ) }
+							</span>
+
 							{ totalPages > 1 && (
 								<div className="bb-admin-reported-content__pagination">
-									<span className="bb-admin-reported-content__page-total">
-										{ total + ' ' + ( total === 1 ? __( 'item', 'buddyboss' ) : __( 'items', 'buddyboss' ) ) }
-									</span>
-									<button
-										className="bb-admin-reported-content__page-btn bb-admin-reported-content__page-btn--nav"
+									<Button
+										variant="secondary"
 										disabled={ page <= 1 }
 										onClick={ function () { handlePageChange( page - 1 ); } }
+										className="bb-admin-reported-content__pagination-btn bb-admin-reported-content__pagination-btn--previous"
 									>
-										<i className="bb-icons-rl bb-icons-rl-caret-left"></i>
-									</button>
+										&lsaquo;
+									</Button>
 									{ getPageNumbers( page, totalPages ).map( function ( p, idx ) {
-										if ( p === '...' ) {
+										if ( '...' === p ) {
 											return (
-												<span key={ 'ellipsis-' + idx } className="bb-admin-reported-content__page-ellipsis">
-													{ '...' }
+												<span key={ 'ellipsis-' + idx } className="bb-admin-reported-content__pagination-ellipsis">
+													&hellip;
 												</span>
 											);
 										}
 										return (
-											<button
+											<Button
 												key={ p }
-												className={ 'bb-admin-reported-content__page-btn' + ( p === page ? ' bb-admin-reported-content__page-btn--active' : '' ) }
+												variant={ p === page ? 'primary' : 'secondary' }
 												onClick={ function () { handlePageChange( p ); } }
+												className={ 'bb-admin-reported-content__pagination-btn' + ( p === page ? ' bb-admin-reported-content__pagination-btn--current' : '' ) }
 											>
 												{ p }
-											</button>
+											</Button>
 										);
 									} ) }
-									<button
-										className="bb-admin-reported-content__page-btn bb-admin-reported-content__page-btn--nav"
+									<Button
+										variant="secondary"
 										disabled={ page >= totalPages }
 										onClick={ function () { handlePageChange( page + 1 ); } }
+										className="bb-admin-reported-content__pagination-btn bb-admin-reported-content__pagination-btn--next"
 									>
-										<i className="bb-icons-rl bb-icons-rl-caret-right"></i>
-									</button>
+										&rsaquo;
+									</Button>
 								</div>
 							) }
-						</>
+						</div>
 					) }
 				</div>
 			</div>
