@@ -598,6 +598,7 @@
 	&__summary {
 		display: flex;
 		align-items: center;
+		justify-content: space-between;
 		gap: 16px;
 		padding-bottom: 20px;
 		border-bottom: 1px solid $bb-border-primary-color;
@@ -621,28 +622,27 @@
 
 	&__owner-name {
 		font-size: 14px;
-		font-weight: 600;
 		color: $bb-link-color;
 		text-decoration: none;
 
 		&:hover {
-			text-decoration: underline;
+			color: $bb-link-color;
 		}
 	}
 
 	&__owner-label {
-		font-size: 13px;
+		font-size: 14px;
 		font-weight: 400;
-		color: $bb-text-tertiary-color;
+		color: $bb-text-secondary-color;
 	}
 
 	&__stat {
 		display: flex;
 		align-items: center;
-		gap: 6px;
+		gap: 8px;
 		font-size: 13px;
 		font-weight: 400;
-		color: $bb-text-tertiary-color;
+		color: $bb-text-color;
 
 		[class*="bb-icons-"] {
 			font-size: 16px;
@@ -653,32 +653,32 @@
 	&__content-link {
 		display: flex;
 		align-items: center;
-		gap: 6px;
+		gap: 8px;
 		font-size: 13px;
 		font-weight: 400;
 		color: $bb-link-color;
 		text-decoration: none;
 
-		[class*="bb-icons-"] {
-			font-size: 16px;
+		> [class*="bb-icons-"] {
+			color: $bb-icon-tertiary-color;
+			font-size: 20px;
+			background-color: $bb-background-primary-color;
+			border-radius: $bb-border-radius-full;
+			padding: 6px;
 		}
 
 		&:hover {
-			text-decoration: underline;
+			color: $bb-link-color;
 		}
 	}
 
 	&__content-link-external {
-		font-size: 12px;
-		color: $bb-icon-tertiary-color;
-
-		[class*="bb-icons-"] {
-			font-size: 12px;
-		}
+		font-size: 16px;
 	}
 
 	&__hidden-badge {
 		display: inline-flex;
+		gap: 4px;
 		align-items: center;
 		padding: 0 4px;
 		font-size: 11px;
@@ -688,6 +688,10 @@
 		border: 0.5px solid $bb-border-warning-secondary-color;
 		border-radius: $bb-border-radius-full;
 		line-height: 16px;
+
+		[class*="bb-icons-"] {
+			font-size: 12px;
+		}
 	}
 
 	/* Reporter section */

@@ -127,12 +127,13 @@ export function ViewContentReportModal( { isOpen, onClose, item } ) {
 									<i className={ report.content_icon }></i>
 									{ report.content_label + ' #' + report.item_id }
 									<span className="bb-admin-view-content-report-modal__content-link-external">
-										<i className="bb-icons-rl bb-icons-rl-arrow-square-out"></i>
+										<i className="bb-icons-rl bb-icons-rl-arrow-up-right"></i>
 									</span>
 								</a>
 							) }
 							{ report.is_hidden && (
 								<span className="bb-admin-view-content-report-modal__hidden-badge">
+									<i className="bb-icons-rl bb-icons-rl-eye-slash"></i>
 									{ __( 'Hidden', 'buddyboss' ) }
 								</span>
 							) }
