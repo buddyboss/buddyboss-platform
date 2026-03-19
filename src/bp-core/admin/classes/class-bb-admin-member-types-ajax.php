@@ -152,17 +152,23 @@ class BB_Admin_Member_Types_Ajax {
 		// Prime post cache.
 		_prime_post_caches( $member_type_ids );
 
-		// Get member counts per type in a single SQL query.
-		global $wpdb;
-		$count_rows    = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT t.slug, tt.count FROM {$wpdb->term_taxonomy} tt LEFT JOIN {$wpdb->terms} t ON tt.term_id = t.term_id WHERE tt.taxonomy = %s",
-				bp_get_member_type_tax_name()
-			)
-		);
-		$member_counts = array();
-		foreach ( $count_rows as $row ) {
-			$member_counts[ $row->slug ] = (int) $row->count;
+		// Get member counts per type — cached to avoid repeated taxonomy queries.
+		$cache_key     = 'bb_admin_member_type_counts';
+		$member_counts = wp_cache_get( $cache_key, 'bp_member_type' );
+
+		if ( false === $member_counts ) {
+			global $wpdb;
+			$count_rows    = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT t.slug, tt.count FROM {$wpdb->term_taxonomy} tt LEFT JOIN {$wpdb->terms} t ON tt.term_id = t.term_id WHERE tt.taxonomy = %s",
+					bp_get_member_type_tax_name()
+				)
+			);
+			$member_counts = array();
+			foreach ( $count_rows as $row ) {
+				$member_counts[ $row->slug ] = (int) $row->count;
+			}
+			wp_cache_set( $cache_key, $member_counts, 'bp_member_type', HOUR_IN_SECONDS );
 		}
 
 		$member_types = array();
@@ -800,6 +806,7 @@ class BB_Admin_Member_Types_Ajax {
 		wp_cache_delete( 'bp_get_all_member_types_posts', 'bp_member_member_type' );
 		wp_cache_delete( 'bp_get_hidden_member_types_cache', 'bp_member_member_type' );
 		wp_cache_delete( 'bb-member-type-label-css', 'bp_member_member_type' );
+		wp_cache_delete( 'bb_admin_member_type_counts', 'bp_member_type' ); // Clear taxonomy counts cache.
 
 		$type_key = get_post_meta( $post_id, '_bp_member_type_key', true );
 		if ( ! empty( $type_key ) ) {

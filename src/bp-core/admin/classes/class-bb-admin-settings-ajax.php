@@ -21,6 +21,8 @@ class BB_Admin_Settings_Ajax {
 	/**
 	 * Nonce action.
 	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @var string
 	 */
 	const NONCE_ACTION = 'bb_admin_settings';
@@ -242,21 +244,7 @@ class BB_Admin_Settings_Ajax {
 	 * @return bool|void
 	 */
 	private function bb_verify_request() {
-		if ( ! bp_current_user_can( 'bp_moderate' ) ) {
-			wp_send_json_error(
-				array( 'message' => __( 'Permission denied.', 'buddyboss' ) ),
-				403
-			);
-		}
-
-		if ( ! check_ajax_referer( self::NONCE_ACTION, 'nonce', false ) ) {
-			wp_send_json_error(
-				array( 'message' => __( 'Security check failed.', 'buddyboss' ) ),
-				403
-			);
-		}
-
-		return true;
+		bb_admin_verify_ajax_request( self::NONCE_ACTION );
 	}
 
 	/**
@@ -579,6 +567,10 @@ class BB_Admin_Settings_Ajax {
 
 			// toggle_list: normalize to int 0|1 for JS.
 			// For extension_data fields (e.g., video extensions), extract is_active from nested arrays.
+			// Guard against corrupted option (string instead of array) — PHP 8+ throws TypeError on array_map.
+			if ( 'toggle_list' === ( $field['type'] ?? '' ) && ! is_array( $field_value ) ) {
+				$field_value = array();
+			}
 			if ( 'toggle_list' === ( $field['type'] ?? '' ) && is_array( $field_value ) ) {
 				if ( ! empty( $field['extension_data'] ) ) {
 					$field_value = $this->bb_extract_extension_toggle_values( $field_value );
@@ -688,7 +680,7 @@ class BB_Admin_Settings_Ajax {
 				// Icon options for extension icon dropdown.
 				'icon_options'         => $field['icon_options'] ?? null,
 				// Manage link fields.
-				'manage_url'           => ! empty( $field['manage_url'] ) ? esc_url( $field['manage_url'] ) : null,
+				'manage_url'           => ! empty( $field['manage_url'] ) ? esc_url_raw( $field['manage_url'] ) : null,
 				'manage_label'         => $field['manage_label'] ?? null,
 				'manage_icon'          => $field['manage_icon'] ?? null,
 				// Input button fields (text input + action button, e.g. API key connect/disconnect).
@@ -772,7 +764,7 @@ class BB_Admin_Settings_Ajax {
 					$upload_url = call_user_func( $url_getter );
 				}
 
-				$field_data['upload_url'] = esc_url( $upload_url );
+				$field_data['upload_url'] = esc_url_raw( $upload_url );
 
 				// Strip server-only keys before passing to frontend.
 				unset( $upload_config['url_getter'] );

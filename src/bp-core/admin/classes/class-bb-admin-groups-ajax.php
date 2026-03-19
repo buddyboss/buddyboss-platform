@@ -125,19 +125,7 @@ class BB_Admin_Groups_Ajax {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	private function bb_verify_request() {
-		if ( ! bp_current_user_can( 'bp_moderate' ) ) {
-			wp_send_json_error(
-				array( 'message' => __( 'Permission denied.', 'buddyboss' ) ),
-				403
-			);
-		}
-
-		if ( ! check_ajax_referer( self::NONCE_ACTION, 'nonce', false ) ) {
-			wp_send_json_error(
-				array( 'message' => __( 'Security check failed.', 'buddyboss' ) ),
-				403
-			);
-		}
+		bb_admin_verify_ajax_request( self::NONCE_ACTION );
 	}
 
 	/**
@@ -224,17 +212,23 @@ class BB_Admin_Groups_Ajax {
 			)
 		);
 
-		// Get all group type counts in a single query instead of N identical queries.
-		global $wpdb;
-		$count_rows   = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT t.slug, tt.count FROM {$wpdb->term_taxonomy} tt LEFT JOIN {$wpdb->terms} t ON tt.term_id = t.term_id WHERE tt.taxonomy = %s",
-				'bp_group_type'
-			)
-		);
-		$group_counts = array();
-		foreach ( $count_rows as $row ) {
-			$group_counts[ $row->slug ] = (int) $row->count;
+		// Get all group type counts — cached to avoid repeated taxonomy queries.
+		$cache_key    = 'bb_admin_group_type_counts';
+		$group_counts = wp_cache_get( $cache_key, 'bp_group_type' );
+
+		if ( false === $group_counts ) {
+			global $wpdb;
+			$count_rows   = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT t.slug, tt.count FROM {$wpdb->term_taxonomy} tt LEFT JOIN {$wpdb->terms} t ON tt.term_id = t.term_id WHERE tt.taxonomy = %s",
+					'bp_group_type'
+				)
+			);
+			$group_counts = array();
+			foreach ( $count_rows as $row ) {
+				$group_counts[ $row->slug ] = (int) $row->count;
+			}
+			wp_cache_set( $cache_key, $group_counts, 'bp_group_type', HOUR_IN_SECONDS );
 		}
 
 		$group_types = array();
@@ -2415,6 +2409,7 @@ class BB_Admin_Groups_Ajax {
 	private function bb_clear_group_type_cache( $post_id ) {
 		wp_cache_delete( 'bb-group-type-label-css', 'bp_groups_group_type' );
 		wp_cache_delete( 'bp_group_types', 'bp_groups' ); // Clear group type registry cache populated by bp_groups_get_group_types().
+		wp_cache_delete( 'bb_admin_group_type_counts', 'bp_group_type' ); // Clear taxonomy counts cache.
 
 		$type_key = get_post_meta( $post_id, '_bp_group_type_key', true );
 		if ( ! empty( $type_key ) ) {

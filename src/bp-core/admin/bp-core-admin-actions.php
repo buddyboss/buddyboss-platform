@@ -677,17 +677,28 @@ function bb_redirect_legacy_settings_to_settings_2() {
 	// Mapping of old Settings 1.0 tab names to new Settings 2.0 URLs.
 	// Values can be a string (feature ID only) or array with 'tab' and 'panel'.
 	$legacy_tabs_mapping = array(
-		'bp-reactions' => 'reactions',
-		'bp-activity'  => 'activity',
-		'bp-groups'    => 'groups',
-		'bp-xprofile'  => 'members',
-		'bp-forums'    => 'forums',
+		'bp-reactions'     => 'reactions',
+		'bp-activity'      => 'activity',
+		'bp-groups'        => 'groups',
+		'bp-xprofile'      => 'members',
+		'bp-forums'        => 'forums',
 		'bp-friends'       => array(
 			'tab'   => 'members',
 			'panel' => 'member_connection',
 		),
 		'bp-notifications' => 'notifications',
-		// Add more mappings here as more tabs are migrated to Settings 2.0.
+		'bp-media'         => 'media',
+		'bp-video'         => array(
+			'tab'   => 'media',
+			'panel' => 'videos',
+		),
+		'bp-document'      => array(
+			'tab'   => 'media',
+			'panel' => 'documents',
+		),
+		'bp-messages'      => 'messages',
+		'bp-search'        => 'search',
+		'bp-invites'       => 'email_invites',
 	);
 
 	/**

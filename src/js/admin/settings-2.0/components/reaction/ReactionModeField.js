@@ -145,13 +145,13 @@ export function ReactionModeField({ field, value, values, onChange, defaultEmoti
 			);
 		}
 		if ( 'custom' === reaction.type && reaction.icon_path ) {
-			return <img src={reaction.icon_path} alt="" />;
+			return <img src={safeUrl(reaction.icon_path)} alt="" />;
 		}
 		if ( 'emotions' === reaction.type ) {
 			return (
 				<span className="bbpro-icon-emoji">
 					{reaction.icon_path ? (
-						<img src={reaction.icon_path} alt="" />
+						<img src={safeUrl(reaction.icon_path)} alt="" />
 					) : (
 						reaction.icon
 					)}

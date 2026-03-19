@@ -141,6 +141,8 @@ export function getCachedFeatures() {
 			featuresCache = response.data;
 			return featuresCache;
 		}
+		// Clear promise so next call retries instead of returning empty forever.
+		featuresCachePromise = null;
 		return [];
 	} ).catch( function ( error ) {
 		featuresCachePromise = null;
@@ -1047,6 +1049,11 @@ export function uploadForumImage( file, signal ) {
 		body: formData,
 		signal: signal,
 	} ).then( function ( response ) {
-		return response.json();
+		if ( ! response.ok ) {
+			return { success: false, data: { message: 'HTTP error ' + response.status } };
+		}
+		return response.json().catch( function () {
+			return { success: false, data: { message: 'Invalid server response.' } };
+		} );
 	} );
 }

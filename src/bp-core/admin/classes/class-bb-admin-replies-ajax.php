@@ -181,13 +181,13 @@ class BB_Admin_Replies_Ajax {
 		if ( ! empty( $posts ) ) {
 			$parent_ids = array();
 			foreach ( $posts as $reply ) {
-				$forum_id = (int) get_post_meta( $reply->ID, '_bbp_forum_id', true );
-				$topic_id = (int) get_post_meta( $reply->ID, '_bbp_topic_id', true );
-				if ( $forum_id ) {
-					$parent_ids[] = $forum_id;
+				$reply_forum_id = (int) get_post_meta( $reply->ID, '_bbp_forum_id', true );
+				$reply_topic_id = (int) get_post_meta( $reply->ID, '_bbp_topic_id', true );
+				if ( $reply_forum_id ) {
+					$parent_ids[] = $reply_forum_id;
 				}
-				if ( $topic_id ) {
-					$parent_ids[] = $topic_id;
+				if ( $reply_topic_id ) {
+					$parent_ids[] = $reply_topic_id;
 				}
 			}
 

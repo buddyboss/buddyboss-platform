@@ -1257,6 +1257,18 @@ class BB_Feature_Registry {
 
 		bp_update_option( 'bp-active-components', $active_components );
 
+		// Run core install to create DB tables for newly activated components
+		// and create directory pages. This mirrors the legacy component toggle
+		// at bp_core_admin_components_settings_handler() which calls these
+		// after every component activation.
+		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bp-core-admin-schema.php' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+			require_once buddypress()->plugin_dir . 'bp-core/admin/bp-core-admin-schema.php';
+			bp_core_install( $active_components );
+		}
+		bp_core_add_page_mappings( $active_components );
+		flush_rewrite_rules();
+
 		// Clear caches.
 		$this->bb_clear_feature_caches( $feature_id );
 
@@ -1349,6 +1361,10 @@ class BB_Feature_Registry {
 
 		bp_update_option( 'bb-active-features', $active_features );
 		bp_update_option( 'bp-active-components', $active_components );
+
+		// Flush rewrite rules so deactivated component URLs return 404
+		// instead of serving stale content.
+		flush_rewrite_rules();
 
 		// Clear caches for all deactivated features.
 		foreach ( $all_to_deactivate as $fid_to_deactivate ) {

@@ -221,6 +221,11 @@ function bb_admin_settings_page() {
 	?>
 	<div class="wrap bb-admin-settings-2-0-wrap">
 		<div id="bb-admin-settings-2-0"></div>
+		<noscript>
+			<p style="padding: 20px; font-size: 14px;">
+				<?php esc_html_e( 'JavaScript is required for BuddyBoss Settings. Please enable JavaScript in your browser.', 'buddyboss' ); ?>
+			</p>
+		</noscript>
 	</div>
 	<?php
 }
