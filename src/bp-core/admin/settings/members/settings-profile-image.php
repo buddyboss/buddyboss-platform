@@ -93,6 +93,11 @@ function bb_members_register_profile_image_panel_fields() {
 			'label'             => '',
 			'type'              => 'toggle',
 			'description'       => __( 'Allow members to use Gravatars for profile avatars', 'buddyboss' ),
+			'help_text'         => sprintf(
+				/* translators: Gravatar Link */
+				__( 'When enabled, members will be able to use avatars from their %s account.', 'buddyboss' ),
+				'<a href="https://gravatar.com/" target="_blank">' . __( 'Gravatar', 'buddyboss' ) . '</a>'
+			),
 			'default'           => bp_enable_profile_gravatar(),
 			'sanitize_callback' => 'absint',
 			'conditional'       => array(
