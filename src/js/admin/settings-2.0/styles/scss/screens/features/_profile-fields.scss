@@ -74,6 +74,7 @@
 	background: $bb-background-base-color;
 	border: 1px solid $bb-border-primary-color;
 	border-radius: $bb-border-radius-xl;
+	margin-bottom: 24px;
 	transition: border-color 0.15s ease;
 
 	&.bb-pf-drag-over {
@@ -92,6 +93,10 @@
 	.bb-pf-fieldset-card:not(.collapsed) & {
 		border-bottom-color: $bb-border-primary-color;
 	}
+
+	.bb-pf-fieldset-card--collapsed & {
+		border-bottom-color: transparent !important;
+	}
 }
 
 .bb-pf-fieldset-header-left {
@@ -100,9 +105,24 @@
 	gap: 4px;
 	min-width: 0;
 	flex: 1;
+
+	h3 {
+		font-size: 18px;
+		font-weight: 600;
+		color: $bb-text-color;
+		margin: 0;
+		line-height: 1.4;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		margin-left: 8px;
+	}
 }
 
 .bb-pf-fieldset-header-right {
+	display: flex;
+	align-items: center;
+	gap: 12px;
 	flex-shrink: 0;
 	margin-left: 16px;
 
@@ -156,17 +176,6 @@
 		font-size: 16px;
 		color: $bb-icon-tertiary-color;
 		flex-shrink: 0;
-	}
-
-	h3 {
-		font-size: 14px;
-		font-weight: 600;
-		color: $bb-text-color;
-		margin: 0;
-		line-height: 1.4;
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
 	}
 }
 
