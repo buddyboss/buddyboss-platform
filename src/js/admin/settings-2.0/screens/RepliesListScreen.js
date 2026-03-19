@@ -23,6 +23,7 @@ import { sanitizeHtml, safeUrl, sanitizeCustomColumns } from '../utils/sanitize'
 import { ListPagination } from '../components/common/ListPagination';
 import { AdminNotice } from '../components/common/AdminNotice';
 import { ListToolbar } from '../components/common/ListToolbar';
+import { DeleteConfirmModal } from '../components/common/DeleteConfirmModal';
 import { ReplyCreateModal } from '../components/forums/ReplyCreateModal';
 import { AsyncSelectField } from '../components/fields/AsyncSelectField';
 import { RichTextEditor, forceRemoveEditor } from '../components/common/RichTextEditor';
@@ -1170,139 +1171,45 @@ export default function RepliesListScreen( { onNavigate } ) {
 				</Modal>
 			) }
 
-			{ /* Single Delete Confirmation Modal — matches Forums/Discussions pattern */ }
-			{ deleteReplyItem && (
-				<Modal
-					title={ __( 'Delete reply?', 'buddyboss' ) }
-					onRequestClose={ function () {
-						setDeleteReplyItem( null );
-						setDeleteConfirmChecked( false );
-					} }
-					className="bb-reply-delete-modal bb-admin-settings-modal"
-					shouldCloseOnClickOutside={ false }
-				>
-					<div className="bb-reply-delete-modal__body">
-						<div className="bb-admin-delete__warning">
-							<i className="bb-icons-rl bb-icons-rl-warning-circle"></i>
-							<div className="bb-admin-delete__warning-text">
-								<span className="bb-admin-delete__warning-title">
-									{ __( 'Warning', 'buddyboss' ) }
-								</span>
-								<span className="bb-admin-delete__warning-desc">
-									{ __( 'This permanently deletes replies from the community and cannot be undone.', 'buddyboss' ) }
-								</span>
-							</div>
-						</div>
-						<p className="bb-reply-delete-modal__description">
-							{ __( 'Deletes the reply and all related content from the community. This action cannot be undone.', 'buddyboss' ) }
-						</p>
-						<CheckboxControl
-							label={ __( 'I understand that this deletes the reply.', 'buddyboss' ) }
-							checked={ deleteConfirmChecked }
-							onChange={ setDeleteConfirmChecked }
-							__nextHasNoMarginBottom
-						/>
-					</div>
-					<div className="bb-reply-delete-modal__footer">
-						<Button
-							variant="secondary"
-							onClick={ function () {
-								setDeleteReplyItem( null );
-								setDeleteConfirmChecked( false );
-							} }
-							disabled={ isDeleting }
-						>
-							{ __( 'Cancel', 'buddyboss' ) }
-						</Button>
-						<Button
-							variant="primary"
-							isDestructive
-							onClick={ handleDeleteConfirm }
-							isBusy={ isDeleting }
-							disabled={ ! deleteConfirmChecked || isDeleting }
-						>
-							{ __( 'Delete', 'buddyboss' ) }
-						</Button>
-					</div>
-				</Modal>
-			) }
+			{ /* Single Delete Confirmation Modal */ }
+			<DeleteConfirmModal
+				isOpen={ !! deleteReplyItem }
+				singleTitle={ __( 'Delete reply?', 'buddyboss' ) }
+				items={ deleteReplyItem ? [ { id: deleteReplyItem.id, title: deleteReplyItem.content || deleteReplyItem.id } ] : [] }
+				warningText={ __( 'This permanently deletes replies from the community and cannot be undone.', 'buddyboss' ) }
+				description={ __( 'Deletes the reply and all related content from the community. This action cannot be undone.', 'buddyboss' ) }
+				confirmLabel={ __( 'I understand that this deletes the reply.', 'buddyboss' ) }
+				confirmChecked={ deleteConfirmChecked }
+				onConfirmChange={ setDeleteConfirmChecked }
+				onConfirm={ handleDeleteConfirm }
+				onClose={ function () { setDeleteReplyItem( null ); setDeleteConfirmChecked( false ); } }
+				isProcessing={ isDeleting }
+				className="bb-reply-delete-modal"
+			/>
 
 			{ /* Bulk Delete Confirmation Modal */ }
-			{ bulkDeleteOpen && (
-				<Modal
-					title={ __( 'Bulk Delete', 'buddyboss' ) }
-					onRequestClose={ function () {
-						setBulkDeleteOpen( false );
-					} }
-					className="bb-reply-delete-modal bb-admin-settings-modal"
-					shouldCloseOnClickOutside={ false }
-				>
-					<div className="bb-reply-delete-modal__body">
-						<div className="bb-admin-bulk-modal__selected-items">
-							{ selectedReplyNames.map( function ( item ) {
-								return (
-									<div key={ item.id } className="bb-admin-bulk-modal__selected-item">
-										<CheckboxControl
-											checked={ true }
-											onChange={ function () {
-												setSelected( function ( prev ) {
-													var next = prev.filter( function ( i ) { return i !== item.id; } );
-													if ( 0 === next.length ) {
-														setBulkDeleteOpen( false );
-													}
-													return next;
-												} );
-											} }
-											__nextHasNoMarginBottom
-										/>
-										<span className="bb-admin-bulk-modal__selected-item-name">
-											{ decodeEntities( item.title ) }
-										</span>
-									</div>
-								);
-							} ) }
-						</div>
-						<div className="bb-admin-delete__warning">
-							<i className="bb-icons-rl bb-icons-rl-warning-circle"></i>
-							<div className="bb-admin-delete__warning-text">
-								<span className="bb-admin-delete__warning-title">
-									{ __( 'Warning', 'buddyboss' ) }
-								</span>
-								<span className="bb-admin-delete__warning-desc">
-									{ __( 'This permanently deletes replies from the community and cannot be undone.', 'buddyboss' ) }
-								</span>
-							</div>
-						</div>
-						<p className="bb-reply-delete-modal__description">
-							{ __( 'Deletes the reply and all related content from the community. This action cannot be undone.', 'buddyboss' ) }
-						</p>
-						<CheckboxControl
-							label={ __( 'I understand that this deletes the reply.', 'buddyboss' ) }
-							checked={ bulkDeleteConfirmChecked }
-							onChange={ setBulkDeleteConfirmChecked }
-							__nextHasNoMarginBottom
-						/>
-					</div>
-					<div className="bb-reply-delete-modal__footer">
-						<Button
-							variant="secondary"
-							onClick={ function () {
-								setBulkDeleteOpen( false );
-							} }
-						>
-							{ __( 'Cancel', 'buddyboss' ) }
-						</Button>
-						<Button
-							variant="primary"
-							isDestructive
-							onClick={ handleConfirmBulkDelete }
-							disabled={ ! bulkDeleteConfirmChecked }
-						>
-							{ __( 'Delete', 'buddyboss' ) }
-						</Button>
-					</div>
-				</Modal>
-			) }
+			<DeleteConfirmModal
+				isOpen={ bulkDeleteOpen }
+				singleTitle={ __( 'Delete reply?', 'buddyboss' ) }
+				items={ selectedReplyNames }
+				onRemoveItem={ function ( id ) {
+					setSelected( function ( prev ) {
+						var next = prev.filter( function ( i ) { return i !== id; } );
+						if ( 0 === next.length ) {
+							setBulkDeleteOpen( false );
+						}
+						return next;
+					} );
+				} }
+				warningText={ __( 'This permanently deletes replies from the community and cannot be undone.', 'buddyboss' ) }
+				description={ __( 'Deletes the reply and all related content from the community. This action cannot be undone.', 'buddyboss' ) }
+				confirmLabel={ __( 'I understand that this deletes the reply.', 'buddyboss' ) }
+				confirmChecked={ bulkDeleteConfirmChecked }
+				onConfirmChange={ setBulkDeleteConfirmChecked }
+				onConfirm={ handleConfirmBulkDelete }
+				onClose={ function () { setBulkDeleteOpen( false ); } }
+				className="bb-reply-delete-modal"
+			/>
 
 			{ /* Bulk Edit Modal */ }
 			{ bulkEditOpen && (

@@ -24,6 +24,7 @@ import { sanitizeHtml, safeUrl, sanitizeCustomColumns } from '../utils/sanitize'
 import { ListPagination } from '../components/common/ListPagination';
 import { AdminNotice } from '../components/common/AdminNotice';
 import { ListToolbar } from '../components/common/ListToolbar';
+import { DeleteConfirmModal } from '../components/common/DeleteConfirmModal';
 import { toSlug } from '../utils/format';
 import { ForumCreateModal } from '../components/forums/ForumCreateModal';
 import { AsyncSelectField } from '../components/fields/AsyncSelectField';
@@ -951,88 +952,32 @@ export function ForumsListScreen( { onNavigate } ) {
 				</Modal>
 			) }
 
-			{ /* Delete Forum Modal — single delete (no item list) or bulk delete (with item list) */ }
-			{ deleteModalOpen && (
-				<Modal
-					title={ deleteTargetIds.length > 1 ? __( 'Bulk Delete', 'buddyboss' ) : __( 'Delete forum?', 'buddyboss' ) }
-					onRequestClose={ function () {
-						setDeleteModalOpen( false );
-					} }
-					className="bb-forum-delete-modal bb-admin-settings-modal"
-					shouldCloseOnClickOutside={ false }
-				>
-					<div className="bb-forum-delete-modal__body">
-						{ /* Bulk: show item list with checkboxes */ }
-						{ deleteTargetIds.length > 1 && (
-							<div className="bb-admin-bulk-modal__selected-items">
-								{ deleteTargetForumNames.map( function ( item ) {
-									return (
-										<div key={ item.id } className="bb-admin-bulk-modal__selected-item">
-											<CheckboxControl
-												checked={ true }
-												onChange={ function () {
-													setDeleteTargetIds( function ( prev ) {
-														var next = prev.filter( function ( i ) { return i !== item.id; } );
-														if ( 0 === next.length ) {
-															setDeleteModalOpen( false );
-														}
-														return next;
-													} );
-													setSelectedIds( function ( prev ) {
-														return prev.filter( function ( i ) { return i !== item.id; } );
-													} );
-												} }
-												__nextHasNoMarginBottom
-											/>
-											<span className="bb-admin-bulk-modal__selected-item-name">
-												{ decodeEntities( item.title ) }
-											</span>
-										</div>
-									);
-								} ) }
-							</div>
-						) }
-						<div className="bb-admin-delete__warning">
-							<i className="bb-icons-rl bb-icons-rl-warning-circle"></i>
-							<div className="bb-admin-delete__warning-text">
-								<span className="bb-admin-delete__warning-title">
-									{ __( 'Warning', 'buddyboss' ) }
-								</span>
-								<span className="bb-admin-delete__warning-desc">
-									{ __( 'This permanently deletes forum from the community and cannot be undone.', 'buddyboss' ) }
-								</span>
-							</div>
-						</div>
-						<p className="bb-forum-delete-modal__description">
-							{ __( 'Deletes the forum and all associated discussions, replies, media, and related content from the community. This action cannot be undone.', 'buddyboss' ) }
-						</p>
-						<CheckboxControl
-							label={ __( 'I understand that this deletes the forum and its discussions.', 'buddyboss' ) }
-							checked={ deleteConfirmChecked }
-							onChange={ setDeleteConfirmChecked }
-							__nextHasNoMarginBottom
-						/>
-					</div>
-					<div className="bb-forum-delete-modal__footer">
-						<Button
-							variant="secondary"
-							onClick={ function () {
-								setDeleteModalOpen( false );
-							} }
-						>
-							{ __( 'Cancel', 'buddyboss' ) }
-						</Button>
-						<Button
-							variant="primary"
-							isDestructive
-							onClick={ handleConfirmDelete }
-							disabled={ ! deleteConfirmChecked }
-						>
-							{ __( 'Delete', 'buddyboss' ) }
-						</Button>
-					</div>
-				</Modal>
-			) }
+			{ /* Delete Forum Modal */ }
+			<DeleteConfirmModal
+				isOpen={ deleteModalOpen }
+				singleTitle={ __( 'Delete forum?', 'buddyboss' ) }
+				items={ deleteTargetForumNames }
+				onRemoveItem={ function ( id ) {
+					setDeleteTargetIds( function ( prev ) {
+						var next = prev.filter( function ( i ) { return i !== id; } );
+						if ( 0 === next.length ) {
+							setDeleteModalOpen( false );
+						}
+						return next;
+					} );
+					setSelectedIds( function ( prev ) {
+						return prev.filter( function ( i ) { return i !== id; } );
+					} );
+				} }
+				warningText={ __( 'This permanently deletes forum from the community and cannot be undone.', 'buddyboss' ) }
+				description={ __( 'Deletes the forum and all associated discussions, replies, media, and related content from the community. This action cannot be undone.', 'buddyboss' ) }
+				confirmLabel={ __( 'I understand that this deletes the forum and its discussions.', 'buddyboss' ) }
+				confirmChecked={ deleteConfirmChecked }
+				onConfirmChange={ setDeleteConfirmChecked }
+				onConfirm={ handleConfirmDelete }
+				onClose={ function () { setDeleteModalOpen( false ); } }
+				className="bb-forum-delete-modal"
+			/>
 
 			{ /* Edit Loading Overlay */ }
 			{ isEditLoading && (

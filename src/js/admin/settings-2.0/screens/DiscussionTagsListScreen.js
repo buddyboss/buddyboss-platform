@@ -24,6 +24,7 @@ import { safeUrl } from '../utils/sanitize';
 import { ListPagination } from '../components/common/ListPagination';
 import { AdminNotice } from '../components/common/AdminNotice';
 import { ListToolbar } from '../components/common/ListToolbar';
+import { DeleteConfirmModal } from '../components/common/DeleteConfirmModal';
 import { TagCreateModal } from '../components/forums/TagCreateModal';
 
 /**
@@ -685,148 +686,49 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 				isLoading={ isEditLoading }
 			/>
 
-			{ /* Single Delete Confirmation Modal (Figma: warning + confirm checkbox) */ }
-			{ deleteTagItem && (
-				<Modal
-					title={ __( 'Delete Tag', 'buddyboss' ) }
-					onRequestClose={ function () {
-						setDeleteTagItem( null );
-						setDeleteConfirm( false );
-					} }
-					className="bb-tag-delete-modal bb-admin-settings-modal"
-					shouldCloseOnClickOutside={ false }
-				>
-					<div className="bb-tag-delete-modal__body">
-						<div className="bb-admin-delete__warning">
-							<i className="bb-icons-rl bb-icons-rl-warning-circle"></i>
-							<div className="bb-admin-delete__warning-text">
-								<span className="bb-admin-delete__warning-title">
-									{ __( 'Warning', 'buddyboss' ) }
-								</span>
-								<span className="bb-admin-delete__warning-desc">
-									{ __( 'This permanently deletes discussion tags from the community and cannot be undone.', 'buddyboss' ) }
-								</span>
-							</div>
-						</div>
-						<p className="bb-tag-delete-modal__description">
-							{ __( 'Deleting discussion tags removes them from discussions, leaving those discussions untagged.', 'buddyboss' ) }
-						</p>
-						<CheckboxControl
-							label={ __( 'I understand that this deletes the discussion tags.', 'buddyboss' ) }
-							checked={ deleteConfirm }
-							onChange={ setDeleteConfirm }
-							__nextHasNoMarginBottom
-						/>
-					</div>
-					<div className="bb-tag-delete-modal__footer">
-						<Button
-							variant="secondary"
-							onClick={ function () {
-								setDeleteTagItem( null );
-								setDeleteConfirm( false );
-							} }
-							disabled={ isDeleting }
-						>
-							{ __( 'Cancel', 'buddyboss' ) }
-						</Button>
-						<Button
-							variant="primary"
-							onClick={ handleDeleteConfirm }
-							isBusy={ isDeleting }
-							disabled={ ! deleteConfirm || isDeleting }
-							isDestructive
-						>
-							{ __( 'Delete', 'buddyboss' ) }
-						</Button>
-					</div>
-				</Modal>
-			) }
+			{ /* Single Delete Confirmation Modal */ }
+			<DeleteConfirmModal
+				isOpen={ !! deleteTagItem }
+				singleTitle={ __( 'Delete Tag', 'buddyboss' ) }
+				items={ deleteTagItem ? [ { id: deleteTagItem.id, name: deleteTagItem.name } ] : [] }
+				warningText={ __( 'This permanently deletes discussion tags from the community and cannot be undone.', 'buddyboss' ) }
+				description={ __( 'Deleting discussion tags removes them from discussions, leaving those discussions untagged.', 'buddyboss' ) }
+				confirmLabel={ __( 'I understand that this deletes the discussion tags.', 'buddyboss' ) }
+				confirmChecked={ deleteConfirm }
+				onConfirmChange={ setDeleteConfirm }
+				onConfirm={ handleDeleteConfirm }
+				onClose={ function () { setDeleteTagItem( null ); setDeleteConfirm( false ); } }
+				isProcessing={ isDeleting }
+				className="bb-tag-delete-modal"
+			/>
 
-			{ /* Bulk Delete Confirmation Modal (Figma: item list + warning + confirm) */ }
-			{ bulkDeleteOpen && (
-				<Modal
-					title={ __( 'Bulk Delete', 'buddyboss' ) }
-					onRequestClose={ function () {
-						setBulkDeleteOpen( false );
-						setBulkDeleteTargetIds( [] );
-						setBulkDeleteConfirm( false );
-					} }
-					className="bb-tag-bulk-delete-modal bb-admin-settings-modal"
-					shouldCloseOnClickOutside={ false }
-				>
-					<div className="bb-tag-bulk-delete-modal__body">
-						<div className="bb-admin-bulk-modal__selected-items">
-							{ bulkDeleteTagNames.map( function ( item ) {
-								return (
-									<div key={ item.id } className="bb-admin-bulk-modal__selected-item">
-										<CheckboxControl
-											checked={ true }
-											onChange={ function () {
-												setBulkDeleteTargetIds( function ( prev ) {
-													var next = prev.filter( function ( i ) { return i !== item.id; } );
-													if ( 0 === next.length ) {
-														setBulkDeleteOpen( false );
-													}
-													return next;
-												} );
-												setSelectedIds( function ( prev ) {
-													return prev.filter( function ( i ) { return i !== item.id; } );
-												} );
-											} }
-											__nextHasNoMarginBottom
-										/>
-										<span className="bb-admin-bulk-modal__selected-item-name">
-											{ decodeEntities( item.name ) }
-										</span>
-									</div>
-								);
-							} ) }
-						</div>
-						<div className="bb-admin-delete__warning">
-							<i className="bb-icons-rl bb-icons-rl-warning-circle"></i>
-							<div className="bb-admin-delete__warning-text">
-								<span className="bb-admin-delete__warning-title">
-									{ __( 'Warning', 'buddyboss' ) }
-								</span>
-								<span className="bb-admin-delete__warning-desc">
-									{ __( 'This permanently deletes discussion tags from the community and cannot be undone.', 'buddyboss' ) }
-								</span>
-							</div>
-						</div>
-						<p className="bb-tag-bulk-delete-modal__description">
-							{ __( 'Deleting discussion tags removes them from discussions, leaving those discussions untagged.', 'buddyboss' ) }
-						</p>
-						<CheckboxControl
-							label={ __( 'I understand that this deletes the discussion tags.', 'buddyboss' ) }
-							checked={ bulkDeleteConfirm }
-							onChange={ setBulkDeleteConfirm }
-							__nextHasNoMarginBottom
-						/>
-					</div>
-					<div className="bb-tag-bulk-delete-modal__footer">
-						<Button
-							variant="secondary"
-							onClick={ function () {
-								setBulkDeleteOpen( false );
-								setBulkDeleteTargetIds( [] );
-								setBulkDeleteConfirm( false );
-							} }
-							disabled={ isBulkProcessing }
-						>
-							{ __( 'Cancel', 'buddyboss' ) }
-						</Button>
-						<Button
-							variant="primary"
-							isDestructive
-							onClick={ handleBulkDeleteConfirm }
-							isBusy={ isBulkProcessing }
-							disabled={ ! bulkDeleteConfirm || isBulkProcessing }
-						>
-							{ __( 'Delete', 'buddyboss' ) }
-						</Button>
-					</div>
-				</Modal>
-			) }
+			{ /* Bulk Delete Confirmation Modal */ }
+			<DeleteConfirmModal
+				isOpen={ bulkDeleteOpen }
+				singleTitle={ __( 'Delete Tag', 'buddyboss' ) }
+				items={ bulkDeleteTagNames }
+				onRemoveItem={ function ( id ) {
+					setBulkDeleteTargetIds( function ( prev ) {
+						var next = prev.filter( function ( i ) { return i !== id; } );
+						if ( 0 === next.length ) {
+							setBulkDeleteOpen( false );
+						}
+						return next;
+					} );
+					setSelectedIds( function ( prev ) {
+						return prev.filter( function ( i ) { return i !== id; } );
+					} );
+				} }
+				warningText={ __( 'This permanently deletes discussion tags from the community and cannot be undone.', 'buddyboss' ) }
+				description={ __( 'Deleting discussion tags removes them from discussions, leaving those discussions untagged.', 'buddyboss' ) }
+				confirmLabel={ __( 'I understand that this deletes the discussion tags.', 'buddyboss' ) }
+				confirmChecked={ bulkDeleteConfirm }
+				onConfirmChange={ setBulkDeleteConfirm }
+				onConfirm={ handleBulkDeleteConfirm }
+				onClose={ function () { setBulkDeleteOpen( false ); setBulkDeleteTargetIds( [] ); setBulkDeleteConfirm( false ); } }
+				isProcessing={ isBulkProcessing }
+				className="bb-tag-bulk-delete-modal"
+			/>
 		</div>
 	);
 }
