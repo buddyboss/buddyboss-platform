@@ -6,7 +6,7 @@
  */
 
 import { useState, useEffect, useRef, useMemo } from '@wordpress/element';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { Button, Spinner, ToggleControl } from '@wordpress/components';
 import { getCachedFeatures, toggleFeature, updateFeatureInCache } from '../utils/ajax';
 import { invalidateFeatureCache } from '../utils/featureCache';
@@ -378,6 +378,11 @@ export function SettingsScreen({ onNavigate }) {
 											<div className="bb-admin-settings__feature-right">
 												<ToggleControl
 													className="components-form-toggle--is-big"
+													label={ sprintf(
+														/* translators: %s: feature label */
+														__( 'Toggle %s', 'buddyboss' ),
+														feature.label
+													) }
 													checked={ 'active' === feature.status }
 													onChange={(checked) => handleFeatureToggle(feature.id, checked)}
 													disabled={!feature.available || feature.required}

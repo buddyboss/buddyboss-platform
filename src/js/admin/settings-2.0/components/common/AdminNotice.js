@@ -9,6 +9,7 @@
  */
 
 import { useEffect } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
 
 /**
  * Admin Notice Component
@@ -41,11 +42,12 @@ export function AdminNotice( { notice, onDismiss, autoDismiss } ) {
 	}
 
 	return (
-		<div className={ 'bb-admin-notice bb-admin-notice--' + notice.type }>
+		<div className={ 'bb-admin-notice bb-admin-notice--' + notice.type } role={ 'error' === notice.type ? 'alert' : 'status' } aria-live={ 'error' === notice.type ? 'assertive' : 'polite' }>
 			<span>{ notice.message }</span>
 			<button
 				className="bb-admin-notice--dismiss"
 				onClick={ onDismiss }
+				aria-label={ __( 'Dismiss notice', 'buddyboss' ) }
 			>
 				<i className="bb-icons-rl bb-icons-rl-x"></i>
 			</button>

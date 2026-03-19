@@ -6,6 +6,7 @@
  */
 
 import { useState, useEffect } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
 import { Header } from './components/Header';
 import { Router } from './Router';
 
@@ -296,8 +297,13 @@ export function App() {
 
 	return (
 		<div className="bb-admin-app">
+			<a href="#bb-admin-settings-main" className="screen-reader-shortcut">
+				{ __( 'Skip to settings content', 'buddyboss' ) }
+			</a>
 			<Header onNavigate={setCurrentRoute} />
-			<Router currentRoute={currentRoute} onNavigate={setCurrentRoute} />
+			<div id="bb-admin-settings-main" tabIndex="-1">
+				<Router currentRoute={currentRoute} onNavigate={setCurrentRoute} />
+			</div>
 		</div>
 	);
 }

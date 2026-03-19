@@ -138,7 +138,7 @@ export function ActivityCommentModal( { isOpen, activity, onClose, onSave, isSav
 		>
 			<div className="bb-activity-comment-modal__body">
 				{ error && (
-					<p className="bb-activity-comment-modal__error">{ error }</p>
+					<p className="bb-activity-comment-modal__error" role="alert">{ error }</p>
 				) }
 
 				<div className="bb-admin-meta-field__editor-field">

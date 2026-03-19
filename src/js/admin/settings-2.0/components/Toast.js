@@ -23,13 +23,14 @@ export const Toast = ({ status, message, onDismiss, showIcon = true }) => {
 	};
 
 	return (
-		<div className={`bb-toast bb-toast--${status}`}>
+		<div className={`bb-toast bb-toast--${status}`} role={ 'error' === status ? 'alert' : 'status' } aria-live={ 'error' === status ? 'assertive' : 'polite' }>
 			{showIcon && <div className="bb-toast__icon">{getIcon()}</div>}
 			<div className="bb-toast__message">{message}</div>
 			{ 'error' === status && onDismiss && (
 				<Button
 					onClick={onDismiss}
 					className="bb-toast__dismiss"
+					aria-label={__('Dismiss', 'buddyboss')}
 					icon={<i className="bb-icons-rl-x" />}
 				/>
 			)}
