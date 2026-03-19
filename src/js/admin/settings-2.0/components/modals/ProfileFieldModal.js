@@ -19,7 +19,7 @@ import {
 	Modal,
 	SelectControl,
 } from '@wordpress/components';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { saveProfileField } from '../../utils/ajax';
@@ -697,10 +697,10 @@ export function ProfileFieldModal( {
 		<Modal
 			title={ isEditing
 				? ( groupName
-					? wp.i18n.sprintf( __( 'Edit Field - %s', 'buddyboss' ), decodeEntities( groupName ) )
+					? sprintf( __( 'Edit Field - %s', 'buddyboss' ), decodeEntities( groupName ) )
 					: __( 'Edit Field', 'buddyboss' ) )
 				: ( groupName
-					? wp.i18n.sprintf( __( 'Add New Field - %s', 'buddyboss' ), decodeEntities( groupName ) )
+					? sprintf( __( 'Add New Field - %s', 'buddyboss' ), decodeEntities( groupName ) )
 					: __( 'Add New Field', 'buddyboss' ) )
 			}
 			onRequestClose={ onClose }

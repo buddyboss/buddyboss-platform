@@ -29,6 +29,33 @@ class BB_Admin_Member_Types_Ajax {
 	const NONCE_ACTION = 'bb_admin_settings';
 
 	/**
+	 * Flag for partial role update (too many users to process synchronously).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var bool
+	 */
+	private $role_update_partial = false;
+
+	/**
+	 * Total user count for partial role update.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var int
+	 */
+	private $role_update_total = 0;
+
+	/**
+	 * Number of users synced in the partial role update.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var int
+	 */
+	private $role_update_synced = 0;
+
+	/**
 	 * Verify AJAX request (capability + nonce).
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -405,12 +432,22 @@ class BB_Admin_Member_Types_Ajax {
 		/** This action is documented in class-bb-admin-member-types-ajax.php */
 		do_action( 'bb_member_type_after_save', $type_id );
 
-		wp_send_json_success(
-			array(
-				'message' => __( 'Profile type updated successfully.', 'buddyboss' ),
-				'id'      => $type_id,
-			)
+		$response = array(
+			'message' => __( 'Profile type updated successfully.', 'buddyboss' ),
+			'id'      => $type_id,
 		);
+
+		// Add partial role update warning if applicable.
+		if ( $this->role_update_partial ) {
+			$response['role_update_warning'] = sprintf(
+				/* translators: 1: number of users synced, 2: total number of users. */
+				__( 'WordPress role updated for %1$d of %2$d members. The remaining members will need to be updated manually or via WP-CLI.', 'buddyboss' ),
+				$this->role_update_synced,
+				$this->role_update_total
+			);
+		}
+
+		wp_send_json_success( $response );
 	}
 
 	/**
@@ -448,6 +485,15 @@ class BB_Admin_Member_Types_Ajax {
 		if ( ! $result ) {
 			wp_send_json_error( array( 'message' => __( 'Failed to delete profile type.', 'buddyboss' ) ) );
 		}
+
+		/**
+		 * Fires after a member/profile type is deleted via Settings 2.0.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $type_id The deleted member type post ID.
+		 */
+		do_action( 'bb_member_type_after_delete', $type_id );
 
 		wp_send_json_success(
 			array( 'message' => __( 'Profile type deleted successfully.', 'buddyboss' ) )
@@ -535,12 +581,12 @@ class BB_Admin_Member_Types_Ajax {
 		}
 
 		// Redirections — values are '' (default), '0' (custom URL), or numeric page ID.
-		$login_redirection         = isset( $_POST['login_redirection'] ) ? sanitize_text_field( wp_unslash( $_POST['login_redirection'] ) ) : '';
+		$login_redirection = isset( $_POST['login_redirection'] ) ? sanitize_text_field( wp_unslash( $_POST['login_redirection'] ) ) : '';
 		if ( '' !== $login_redirection && '0' !== $login_redirection && ! is_numeric( $login_redirection ) ) {
 			$login_redirection = '';
 		}
-		$custom_login_redirection  = isset( $_POST['custom_login_redirection'] ) ? esc_url_raw( wp_unslash( $_POST['custom_login_redirection'] ) ) : '';
-		$logout_redirection        = isset( $_POST['logout_redirection'] ) ? sanitize_text_field( wp_unslash( $_POST['logout_redirection'] ) ) : '';
+		$custom_login_redirection = isset( $_POST['custom_login_redirection'] ) ? esc_url_raw( wp_unslash( $_POST['custom_login_redirection'] ) ) : '';
+		$logout_redirection       = isset( $_POST['logout_redirection'] ) ? sanitize_text_field( wp_unslash( $_POST['logout_redirection'] ) ) : '';
 		if ( '' !== $logout_redirection && '0' !== $logout_redirection && ! is_numeric( $logout_redirection ) ) {
 			$logout_redirection = '';
 		}
@@ -650,13 +696,27 @@ class BB_Admin_Member_Types_Ajax {
 			if ( $type_term ) {
 				$selected_roles = get_post_meta( $post_id, '_bp_member_type_wp_roles', true );
 
-				if ( isset( $selected_roles[0] ) && 'none' !== $selected_roles[0] ) {
-					if ( ! empty( $get_user_ids ) ) {
-						foreach ( $get_user_ids as $single_user ) {
-							$bp_user = new WP_User( $single_user );
-							// Use set_role() for atomic role swap instead of remove+add.
-							$bp_user->set_role( $selected_roles[0] );
-						}
+				if ( isset( $selected_roles[0] ) && 'none' !== $selected_roles[0] && ! empty( $get_user_ids ) ) {
+
+					// Limit synchronous role updates to prevent AJAX timeouts on large sites.
+					// Each set_role() call triggers wp_update_user() which is expensive.
+					$max_sync_users = 500;
+					$users_to_sync  = array_slice( $get_user_ids, 0, $max_sync_users );
+
+					// Prime user cache to avoid N+1 queries inside the loop.
+					cache_users( array_map( 'absint', $users_to_sync ) );
+
+					foreach ( $users_to_sync as $single_user ) {
+						$bp_user = new WP_User( $single_user );
+						// Use set_role() for atomic role swap instead of remove+add.
+						$bp_user->set_role( $selected_roles[0] );
+					}
+
+					// Flag partial update for the response so admin knows.
+					if ( count( $get_user_ids ) > $max_sync_users ) {
+						$this->role_update_partial = true;
+						$this->role_update_total   = count( $get_user_ids );
+						$this->role_update_synced  = $max_sync_users;
 					}
 				}
 			}

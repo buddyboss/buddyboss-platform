@@ -42,9 +42,10 @@ window.bp = window.bp || {};
 
 			var bodySelector = $( 'body' );
 
-			this.thumbnail_xhr          = null;
-			this.thumbnail_interval     = null;
-			this.thumbnail_max_interval = 6;
+			this.thumbnail_xhr              = null;
+			this.thumbnail_interval         = null;
+			this.thumbnail_max_interval     = 6;
+			this.thumbnail_cleanup_complete = false;
 
 			this.current_page             = 1;
 			this.video_dropzone_obj       = null;
@@ -110,7 +111,67 @@ window.bp = window.bp || {};
 			if ( typeof BP_Nouveau.video.dropzone_options !== 'undefined' ) {
 				Object.assign( this.options, BP_Nouveau.video.dropzone_options );
 			}
+		},
 
+		/**
+		 * Update album photo and video counts in single album view.
+		 * Works for both Standard and ReadyLaunch modes.
+		 *
+		 * @param {Object} albumCounts - Album count data from server response
+		 * @param {number} albumCounts.album_media_count - Number of photos
+		 * @param {number} albumCounts.album_video_count - Number of videos
+		 */
+		updateAlbumCounts: function ( albumCounts ) {
+			// Check if we're in a single album view.
+			if ( ! $( '#buddypress #bp-media-single-album' ).length ) {
+				return;
+			}
+
+			var photoCount = parseInt( albumCounts.album_media_count ) || 0;
+			var videoCount = parseInt( albumCounts.album_video_count ) || 0;
+
+			// Format number with thousands separator.
+			var formatNumber = function( num ) {
+				return num.toString().replace( /\B(?=(\d{3})+(?!\d))/g, ',' );
+			};
+
+			// Update the photo count display.
+			var $photoCountSpan = $( '#buddypress .bb-album-photo-count' );
+			if ( $photoCountSpan.length > 0 ) {
+				var photoLabel = 1 === photoCount ? BP_Nouveau.media.i18n_strings.photo : BP_Nouveau.media.i18n_strings.photos;
+				$photoCountSpan.text( formatNumber( photoCount ) + ' ' + photoLabel );
+			}
+
+			// Update the video count display.
+			var $videoCountSpan = $( '#buddypress .bb-album-video-count' );
+			if ( $videoCountSpan.length > 0 ) {
+				var videoLabel = 1 === videoCount ? BP_Nouveau.media.i18n_strings.video : BP_Nouveau.media.i18n_strings.videos;
+				$videoCountSpan.text( formatNumber( videoCount ) + ' ' + videoLabel );
+			}
+		},
+
+		/**
+		 * Check if ffmpeg thumbnail generation is still in progress.
+		 * Returns true only if ffmpeg_generated has a value that is not 'no', 'yes', or empty.
+		 *
+		 * @param {Object} videoAttachments The video attachments object.
+		 * @return {boolean} True if generation is pending, false otherwise.
+		 */
+		isFFmpegGenerationPending: function ( videoAttachments ) {
+			return videoAttachments.ffmpeg_generated &&
+				'no' !== videoAttachments.ffmpeg_generated &&
+				'yes' !== videoAttachments.ffmpeg_generated;
+		},
+
+		/**
+		 * Check if the video has fewer than 2 auto-generated thumbnails.
+		 *
+		 * @param {Object} videoAttachments The video attachments object.
+		 * @return {boolean} True if thumbnails are insufficient, false otherwise.
+		 */
+		hasInsufficientThumbnails: function ( videoAttachments ) {
+			return typeof videoAttachments.default_images === 'undefined' ||
+				videoAttachments.default_images.length < 2;
 		},
 
 		/**
@@ -503,6 +564,11 @@ window.bp = window.bp || {};
 									}
 								}
 
+								// Update album counts if uploading to an album.
+								if ( response.data.album_total_count !== undefined ) {
+									self.updateAlbumCounts( response.data );
+								}
+
 								for ( var i = 0; i < self.dropzone_video.length; i++ ) {
 									self.dropzone_video[ i ].saved = true;
 								}
@@ -574,6 +640,28 @@ window.bp = window.bp || {};
 										}
 									}
 								);
+
+								// Update album counts for both source and destination albums if present.
+								if ( response.data.source_album_id !== undefined || response.data.dest_album_id !== undefined ) {
+									var $albumContainer = $( '#buddypress #bp-media-single-album' );
+									if ( $albumContainer.length ) {
+										// Determine which album we're currently viewing from the DOM.
+										var currentAlbumId = parseInt( $albumContainer.attr( 'data-album-id' ) ) || 0;
+										var albumCounts = {};
+
+										// If we're viewing the source album, use source counts (item was removed).
+										// If we're viewing the destination album, use dest counts (item was added).
+										if ( currentAlbumId === response.data.source_album_id ) {
+											albumCounts.album_media_count = response.data.source_album_media_count;
+											albumCounts.album_video_count = response.data.source_album_video_count;
+										} else if ( currentAlbumId === response.data.dest_album_id ) {
+											albumCounts.album_media_count = response.data.dest_album_media_count;
+											albumCounts.album_video_count = response.data.dest_album_video_count;
+										}
+
+										self.updateAlbumCounts( albumCounts );
+									}
+								}
 
 								jQuery( window ).scroll();
 
@@ -959,6 +1047,9 @@ window.bp = window.bp || {};
 
 			$( popupSelector ).find( '.bp-video-thumbnail-uploader' ).removeClass( 'no_generated_thumb' );
 
+			// Reset cleanup flag for new modal session.
+			this.thumbnail_cleanup_complete = false;
+
 			$( document ).on(
 				'click',
 				'.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated .bb-action-check-wrap',
@@ -1186,11 +1277,15 @@ window.bp = window.bp || {};
 						if ( default_images_html != '' ) {
 							$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' ).removeClass( 'loading' );
 							$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' ).html( default_images_html );
-							$( '.bp-video-thumbnail-uploader' ).removeClass( 'generating_thumb' );
-							if ( videoAttachments.default_images.length < 2 && BP_Nouveau.video.is_ffpmeg_installed ) {
+							$( '.bp-video-thumbnail-uploader' ).removeClass( 'generating_thumb ffmpeg_failed' );
+
+							// Only show spinners if ffmpeg is actively generating.
+							if ( bp.Nouveau.Video.hasInsufficientThumbnails( videoAttachments ) && BP_Nouveau.video.is_ffmpeg_installed && bp.Nouveau.Video.isFFmpegGenerationPending( videoAttachments ) ) {
 								$( '.bp-video-thumbnail-uploader' ).addClass( 'generating_thumb' );
 								$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' ).append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 thumb_loader"><div class="video-thumb-block"><i class="bb-icon-spinner bb-icon-l animate-spin"></i><span>' + BP_Nouveau.video.generating_thumb + '</span></div></li>' );
 								$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' ).append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 thumb_loader"><div class="video-thumb-block"><i class="bb-icon-spinner bb-icon-l animate-spin"></i><span>' + BP_Nouveau.video.generating_thumb + '</span></div></li>' );
+							} else if ( 'no' === videoAttachments.ffmpeg_generated || '' === videoAttachments.ffmpeg_generated ) {
+								$( '.bp-video-thumbnail-uploader' ).addClass( 'ffmpeg_failed' );
 							}
 						}
 					} else {
@@ -1225,7 +1320,13 @@ window.bp = window.bp || {};
 					'video_id': videoId,
 				};
 
-				if ( BP_Nouveau.video.is_ffpmeg_installed && ( ( typeof videoAttachments.default_images === 'undefined' ) || videoAttachments.default_images.length < 2 ) ) {
+				// Only trigger AJAX polling if ffmpeg is installed, we have fewer than 2 thumbnails,
+				// AND ffmpeg is actively generating (not empty, not 'no', not 'yes').
+				var shouldPollForThumbnails = BP_Nouveau.video.is_ffmpeg_installed &&
+					bp.Nouveau.Video.hasInsufficientThumbnails( videoAttachments ) &&
+					bp.Nouveau.Video.isFFmpegGenerationPending( videoAttachments );
+
+				if ( shouldPollForThumbnails ) {
 					if ( this.thumbnail_xhr ) {
 						this.thumbnail_xhr.abort();
 					}
@@ -1270,17 +1371,29 @@ window.bp = window.bp || {};
 								ulSelector.html( response.data.default_images );
 							}
 
-							if ( response.data.ffmpeg_generated && 'no' === response.data.ffmpeg_generated ) {
-								ulSelector.html( '' );
-							}
+							// When ffmpeg_generated is 'no', 'yes', or empty, stop polling and clean up UI.
+							// Do NOT clear the list - we want to keep any existing thumbnails from default_images.
+							// Use flag to prevent multiple cleanup executions from overlapping AJAX requests.
+							var ffmpegDone = 'no' === response.data.ffmpeg_generated || 'yes' === response.data.ffmpeg_generated || '' === response.data.ffmpeg_generated;
 
-							if ( $( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list li' ).length < 2 ) {
+							if ( ffmpegDone && ! bp.Nouveau.Video.thumbnail_cleanup_complete ) {
+								bp.Nouveau.Video.thumbnail_cleanup_complete = true;
+								// Stop the polling interval - no more thumbnails will be generated.
+								clearTimeout( bp.Nouveau.Video.thumbnail_interval );
+								// Remove any loading spinners since generation is complete/failed.
+								ulSelector.find( 'li.thumb_loader' ).remove();
+								// Update UI state - remove generating class.
+								$( '.bp-video-thumbnail-uploader' ).removeClass( 'generating_thumb' );
+								// If we have no thumbnails at all, mark as no_generated_thumb.
+								if ( ulSelector.find( 'li' ).length === 0 ) {
+									$( '.bp-video-thumbnail-uploader' ).addClass( 'no_generated_thumb' );
+								}
+							} else if ( ! ffmpegDone && $( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list li' ).length < 2 ) {
 								$( '.bp-video-thumbnail-uploader' ).addClass( 'generating_thumb' ).removeClass( 'no_generated_thumb' );
 								if ( $( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list li.thumb_loader' ).length === 0 ) {
 									$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' ).append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 thumb_loader"><div class="video-thumb-block"><i class="bb-icon-l bb-icon-spinner animate-spin"></i><span>' + BP_Nouveau.video.generating_thumb + '</span></div></li>' );
 									$( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list' ).append( '<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3 thumb_loader"><div class="video-thumb-block"><i class="bb-icon-l bb-icon-spinner animate-spin"></i><span>' + BP_Nouveau.video.generating_thumb + '</span></div></li>' );
 								}
-
 							} else if ( $( '.bp-video-thumbnail-uploader.opened-edit-thumbnail .bp-video-thumbnail-auto-generated ul.video-thumb-list li.thumb_loader' ).length === 0 ) {
 								$( '.bp-video-thumbnail-uploader' ).removeClass( 'generating_thumb no_generated_thumb' );
 							}
@@ -1600,11 +1713,6 @@ window.bp = window.bp || {};
 									}
 								);
 
-								var length = $( '#activity-stream ul.activity-list li[data-bp-activity-id="' + activityId + '"] .activity-content .activity-inner .bb-activity-video-elem' ).length;
-								if ( length == 0 ) {
-									$( '#activity-stream ul.activity-list li[data-bp-activity-id="' + activityId + '"]' ).remove();
-								}
-
 								if ( true === response.data.delete_activity ) {
 									$( 'body #buddypress .activity-list li#activity-' + activityId ).remove();
 									$( 'body .bb-activity-video-elem.video-activity.' + id ).remove();
@@ -1719,6 +1827,11 @@ window.bp = window.bp || {};
 										);
 									}
 								}
+
+								// Update album counts if deleting from an album.
+								if ( response.data.album_total_count !== undefined ) {
+									self.updateAlbumCounts( response.data );
+								}
 							}
 						} else {
 							setTimeout(
@@ -1786,6 +1899,11 @@ window.bp = window.bp || {};
 											$( this ).closest( 'li' ).remove();
 										}
 									);
+								}
+
+								// Update album counts if deleting from an album.
+								if ( response.data.album_total_count !== undefined ) {
+									self.updateAlbumCounts( response.data );
 								}
 							} else {
 								$( '#buddypress #video-stream.video' ).prepend( response.data.feedback );
@@ -2298,6 +2416,28 @@ window.bp = window.bp || {};
 							}
 							target.closest( '.bp-video-move-file' ).find( '.ac-video-close-button' ).trigger( 'click' );
 							$( document ).find( 'a.bb-open-video-theatre[data-id="' + video_id + '"]' ).data( 'album-id', album_id );
+
+							// Update album counts for both source and destination albums if present.
+							if ( response.data.source_album_id !== undefined || response.data.dest_album_id !== undefined ) {
+								var $albumContainer = $( '#buddypress #bp-media-single-album' );
+								if ( $albumContainer.length ) {
+									// Determine which album we're currently viewing from the DOM.
+									var currentAlbumId = parseInt( $albumContainer.attr( 'data-album-id' ) ) || 0;
+									var albumCounts = {};
+
+									// If we're viewing the source album, use source counts (item was removed).
+									// If we're viewing the destination album, use dest counts (item was added).
+									if ( currentAlbumId === response.data.source_album_id ) {
+										albumCounts.album_media_count = response.data.source_album_media_count;
+										albumCounts.album_video_count = response.data.source_album_video_count;
+									} else if ( currentAlbumId === response.data.dest_album_id ) {
+										albumCounts.album_media_count = response.data.dest_album_media_count;
+										albumCounts.album_video_count = response.data.dest_album_video_count;
+									}
+
+									self.updateAlbumCounts( albumCounts );
+								}
+							}
 
 						} else {
 							/* jshint ignore:start */
