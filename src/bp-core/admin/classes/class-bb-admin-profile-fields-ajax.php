@@ -981,12 +981,13 @@ class BB_Admin_Profile_Fields_Ajax {
 		$has_member_types = isset( $_POST['has_member_types'] ) ? absint( wp_unslash( $_POST['has_member_types'] ) ) : 0;
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
-		if ( $has_member_types ) {
-			$field = xprofile_get_field( $field_id, null, false );
-			if ( ! $field || ! method_exists( $field, 'set_member_types' ) ) {
-				return;
-			}
+		// Fetch the field once for both branches.
+		$field = xprofile_get_field( $field_id, null, false );
+		if ( ! $field || ! method_exists( $field, 'set_member_types' ) ) {
+			return;
+		}
 
+		if ( $has_member_types ) {
 			// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce verified above, sanitized below.
 			$raw_types = isset( $_POST['member_types'] ) ? wp_unslash( $_POST['member_types'] ) : array();
 
@@ -1008,10 +1009,7 @@ class BB_Admin_Profile_Fields_Ajax {
 			// available to every type, including types registered in the future.
 			// Passing an empty array to set_member_types() deletes all meta rows,
 			// which BuddyPress interprets as "unrestricted" (same as legacy behavior).
-			$field = xprofile_get_field( $field_id, null, false );
-			if ( $field && method_exists( $field, 'set_member_types' ) ) {
-				$field->set_member_types( array() );
-			}
+			$field->set_member_types( array() );
 		}
 	}
 }
