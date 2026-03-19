@@ -23,6 +23,7 @@ import { getGroups, groupBulkAction, getGroup, saveGroup } from '../utils/ajax';
 import { sanitizeHtml, safeUrl } from '../utils/sanitize';
 import { ListPagination } from '../components/common/ListPagination';
 import { AdminNotice } from '../components/common/AdminNotice';
+import { ListToolbar } from '../components/common/ListToolbar';
 import { GroupCreateModal } from '../components/groups/GroupCreateModal';
 import { GroupEditModal } from '../components/groups/GroupEditModal';
 import { ConfirmToggleModal } from '../components/modals/ConfirmToggleModal';
@@ -701,79 +702,42 @@ export function GroupsListScreen( { onNavigate } ) {
 			</div>
 
 			{ /* Toolbar */ }
-			<div className="bb-groups-list__toolbar">
-				<div className="bb-groups-list__toolbar-left">
-					{ /* Bulk Actions */ }
-					<div className="bb-groups-list__bulk-actions">
-						<SelectControl
-							value={ bulkAction }
-							options={ [ { label: __( 'Bulk actions', 'buddyboss' ), value: '' } ].concat(
-								Object.keys( bulkActions ).map( function ( key ) {
-									return { label: bulkActions[ key ], value: key };
-								} )
-							) }
-							onChange={ setBulkAction }
-							__nextHasNoMarginBottom
-						/>
-						<Button
-							variant="secondary"
-							onClick={ handleBulkApply }
-							disabled={ ! bulkAction || 0 === selectedIds.length || isBulkProcessing }
-							className="bb-groups-list__bulk-apply"
-						>
-							{ __( 'Apply', 'buddyboss' ) }
-						</Button>
-					</div>
-				</div>
-
-				<div className="bb-groups-list__toolbar-right">
-					{ /* Status Filter */ }
+			<ListToolbar
+				className="bb-groups-list"
+				bulkAction={ bulkAction }
+				bulkActions={ bulkActions }
+				onBulkActionChange={ setBulkAction }
+				onBulkApply={ handleBulkApply }
+				selectedCount={ selectedIds.length }
+				isBulkProcessing={ isBulkProcessing }
+				searchInput={ searchInput }
+				onSearchChange={ handleSearchChange }
+				searchPlaceholder={ __( 'Search groups', 'buddyboss' ) }
+			>
+				<SelectControl
+					value={ filter }
+					options={ filterOptions }
+					onChange={ handleFilterChange }
+					className="bb-groups-list__filter-select"
+					__nextHasNoMarginBottom
+				/>
+				{ groupTypes.length > 0 && (
 					<SelectControl
-						value={ filter }
-						options={ filterOptions }
-						onChange={ handleFilterChange }
-						className="bb-groups-list__filter-select"
+						value={ groupTypeFilter }
+						options={ groupTypeOptions }
+						onChange={ handleGroupTypeFilterChange }
+						className="bb-groups-list__type-filter"
 						__nextHasNoMarginBottom
 					/>
-
-					{ /* Group Type Filter */ }
-					{ groupTypes.length > 0 && (
-						<SelectControl
-							value={ groupTypeFilter }
-							options={ groupTypeOptions }
-							onChange={ handleGroupTypeFilterChange }
-							className="bb-groups-list__type-filter"
-							__nextHasNoMarginBottom
-						/>
-					) }
-
-					{ /* Sort Dropdown */ }
-					<SelectControl
-						value={ sortBy }
-						options={ sortOptions }
-						onChange={ handleSortChange }
-						className="bb-groups-list__sort-select"
-						__nextHasNoMarginBottom
-					/>
-
-					{ /* Search */ }
-					<div className="bb-groups-list__search">
-						<input
-							type="text"
-							value={ searchInput }
-							onChange={ function ( e ) {
-								handleSearchChange( e.target.value );
-							} }
-							placeholder={ __( 'Search groups', 'buddyboss' ) }
-							aria-label={ __( 'Search groups', 'buddyboss' ) }
-							className="bb-groups-list__search-input"
-						/>
-						<span className="bb-groups-list__search-icon">
-							<i className="bb-icons-rl bb-icons-rl-search"></i>
-						</span>
-					</div>
-				</div>
-			</div>
+				) }
+				<SelectControl
+					value={ sortBy }
+					options={ sortOptions }
+					onChange={ handleSortChange }
+					className="bb-groups-list__sort-select"
+					__nextHasNoMarginBottom
+				/>
+			</ListToolbar>
 
 			{ /* Table */ }
 			<div className="bb-groups-list__table-wrapper">

@@ -23,6 +23,7 @@ import { getDiscussions, getDiscussion, saveDiscussion, discussionBulkAction } f
 import { sanitizeHtml, safeUrl, sanitizeCustomColumns } from '../utils/sanitize';
 import { ListPagination } from '../components/common/ListPagination';
 import { AdminNotice } from '../components/common/AdminNotice';
+import { ListToolbar } from '../components/common/ListToolbar';
 import { DiscussionCreateModal } from '../components/forums/DiscussionCreateModal';
 import { AsyncSelectField } from '../components/fields/AsyncSelectField';
 import { RichTextEditor, forceRemoveEditor } from '../components/common/RichTextEditor';
@@ -649,63 +650,31 @@ export function DiscussionsListScreen( { onNavigate } ) {
 			</div>
 
 			{ /* Toolbar */ }
-			<div className="bb-discussions-list__toolbar">
-				<div className="bb-discussions-list__toolbar-left">
-					{ /* Bulk Actions */ }
-					<div className="bb-discussions-list__bulk-actions">
-						<SelectControl
-							value={ bulkAction }
-							options={ [ { label: __( 'Bulk actions', 'buddyboss' ), value: '' } ].concat(
-								Object.keys( bulkActions ).map( function ( key ) {
-									return { label: bulkActions[ key ], value: key };
-								} )
-							) }
-							onChange={ setBulkAction }
-							__nextHasNoMarginBottom
-						/>
-						<Button
-							variant="secondary"
-							onClick={ handleBulkApply }
-							disabled={ ! bulkAction || 0 === selectedIds.length || isBulkProcessing }
-							className="bb-discussions-list__bulk-apply"
-						>
-							{ __( 'Apply', 'buddyboss' ) }
-						</Button>
-					</div>
-				</div>
-
-				<div className="bb-discussions-list__toolbar-right">
-					{ /* Forum Filter (Searchable) */ }
-					<SearchableForumFilter
-						options={ filterOptions }
-						value={ forumFilter }
-						onChange={ handleFilterChange }
-					/>
-
-					{ /* Sort Dropdown */ }
-					<SelectControl
-						value={ sortBy }
-						options={ sortOptions }
-						onChange={ handleSortChange }
-						className="bb-discussions-list__sort-select"
-						__nextHasNoMarginBottom
-					/>
-
-					{ /* Search */ }
-					<div className="bb-discussions-list__search">
-						<input
-							type="text"
-							value={ searchInput }
-							onChange={ function ( e ) {
-								handleSearchChange( e.target.value );
-							} }
-							placeholder={ __( 'Search discussions', 'buddyboss' ) }
-							aria-label={ __( 'Search discussions', 'buddyboss' ) }
-							className="bb-discussions-list__search-input"
-						/>
-					</div>
-				</div>
-			</div>
+			<ListToolbar
+				className="bb-discussions-list"
+				bulkAction={ bulkAction }
+				bulkActions={ bulkActions }
+				onBulkActionChange={ setBulkAction }
+				onBulkApply={ handleBulkApply }
+				selectedCount={ selectedIds.length }
+				isBulkProcessing={ isBulkProcessing }
+				searchInput={ searchInput }
+				onSearchChange={ handleSearchChange }
+				searchPlaceholder={ __( 'Search discussions', 'buddyboss' ) }
+			>
+				<SearchableForumFilter
+					options={ filterOptions }
+					value={ forumFilter }
+					onChange={ handleFilterChange }
+				/>
+				<SelectControl
+					value={ sortBy }
+					options={ sortOptions }
+					onChange={ handleSortChange }
+					className="bb-discussions-list__sort-select"
+					__nextHasNoMarginBottom
+				/>
+			</ListToolbar>
 
 			{ /* Table */ }
 			<div className="bb-discussions-list__table-wrapper">

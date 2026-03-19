@@ -23,6 +23,7 @@ import { getForums, getForum, saveForum, forumBulkAction, uploadForumImage } fro
 import { sanitizeHtml, safeUrl, sanitizeCustomColumns } from '../utils/sanitize';
 import { ListPagination } from '../components/common/ListPagination';
 import { AdminNotice } from '../components/common/AdminNotice';
+import { ListToolbar } from '../components/common/ListToolbar';
 import { toSlug } from '../utils/format';
 import { ForumCreateModal } from '../components/forums/ForumCreateModal';
 import { AsyncSelectField } from '../components/fields/AsyncSelectField';
@@ -648,68 +649,33 @@ export function ForumsListScreen( { onNavigate } ) {
 			</div>
 
 			{ /* Toolbar */ }
-			<div className="bb-forums-list__toolbar">
-				<div className="bb-forums-list__toolbar-left">
-					{ /* Bulk Actions */ }
-					<div className="bb-forums-list__bulk-actions">
-						<SelectControl
-							value={ bulkAction }
-							options={ [ { label: __( 'Bulk actions', 'buddyboss' ), value: '' } ].concat(
-								Object.keys( bulkActions ).map( function ( key ) {
-									return { label: bulkActions[ key ], value: key };
-								} )
-							) }
-							onChange={ setBulkAction }
-							__nextHasNoMarginBottom
-						/>
-						<Button
-							variant="secondary"
-							onClick={ handleBulkApply }
-							disabled={ ! bulkAction || 0 === selectedIds.length || isBulkProcessing }
-							className="bb-forums-list__bulk-apply"
-						>
-							{ __( 'Apply', 'buddyboss' ) }
-						</Button>
-					</div>
-				</div>
-
-				<div className="bb-forums-list__toolbar-right">
-					{ /* Status Filter */ }
-					<SelectControl
-						value={ filter }
-						options={ filterOptions }
-						onChange={ handleFilterChange }
-						className="bb-forums-list__filter-select"
-						__nextHasNoMarginBottom
-					/>
-
-					{ /* Sort Dropdown */ }
-					<SelectControl
-						value={ sortBy }
-						options={ sortOptions }
-						onChange={ handleSortChange }
-						className="bb-forums-list__sort-select"
-						__nextHasNoMarginBottom
-					/>
-
-					{ /* Search */ }
-					<div className="bb-forums-list__search">
-						<input
-							type="text"
-							value={ searchInput }
-							onChange={ function ( e ) {
-								handleSearchChange( e.target.value );
-							} }
-							placeholder={ __( 'Search forums', 'buddyboss' ) }
-							aria-label={ __( 'Search forums', 'buddyboss' ) }
-							className="bb-forums-list__search-input"
-						/>
-						<span className="bb-forums-list__search-icon">
-							<i className="bb-icons-rl bb-icons-rl-search"></i>
-						</span>
-					</div>
-				</div>
-			</div>
+			<ListToolbar
+				className="bb-forums-list"
+				bulkAction={ bulkAction }
+				bulkActions={ bulkActions }
+				onBulkActionChange={ setBulkAction }
+				onBulkApply={ handleBulkApply }
+				selectedCount={ selectedIds.length }
+				isBulkProcessing={ isBulkProcessing }
+				searchInput={ searchInput }
+				onSearchChange={ handleSearchChange }
+				searchPlaceholder={ __( 'Search forums', 'buddyboss' ) }
+			>
+				<SelectControl
+					value={ filter }
+					options={ filterOptions }
+					onChange={ handleFilterChange }
+					className="bb-forums-list__filter-select"
+					__nextHasNoMarginBottom
+				/>
+				<SelectControl
+					value={ sortBy }
+					options={ sortOptions }
+					onChange={ handleSortChange }
+					className="bb-forums-list__sort-select"
+					__nextHasNoMarginBottom
+				/>
+			</ListToolbar>
 
 			{ /* Table */ }
 			<div className="bb-forums-list__table-wrapper">

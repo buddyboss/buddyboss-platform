@@ -22,6 +22,7 @@ import { getReplies, getReply, saveReply, deleteReply, replyBulkAction } from '.
 import { sanitizeHtml, safeUrl, sanitizeCustomColumns } from '../utils/sanitize';
 import { ListPagination } from '../components/common/ListPagination';
 import { AdminNotice } from '../components/common/AdminNotice';
+import { ListToolbar } from '../components/common/ListToolbar';
 import { ReplyCreateModal } from '../components/forums/ReplyCreateModal';
 import { AsyncSelectField } from '../components/fields/AsyncSelectField';
 import { RichTextEditor, forceRemoveEditor } from '../components/common/RichTextEditor';
@@ -783,115 +784,79 @@ export default function RepliesListScreen( { onNavigate } ) {
 			<AdminNotice notice={ notice } onDismiss={ function () { setNotice( null ); } } />
 
 			{ /* Toolbar */ }
-			<div className="bb-replies-list__toolbar">
-				<div className="bb-replies-list__toolbar-left">
-					<div className="bb-replies-list__bulk-actions">
-						<SelectControl
-							value={ bulkAction }
-							options={ bulkActionOptions }
-							onChange={ setBulkAction }
-							__nextHasNoMarginBottom
-						/>
-						<Button
-							variant="secondary"
-							onClick={ handleBulkApply }
-							disabled={ ! bulkAction || 0 === selected.length || isBulkProcessing }
-							isBusy={ isBulkProcessing }
-							className="bb-replies-list__bulk-apply"
-						>
-							{ __( 'Apply', 'buddyboss' ) }
-						</Button>
-					</div>
-				</div>
-				<div className="bb-replies-list__toolbar-right">
-					{ /* Forum Filter */ }
-					<div className="bb-replies-list__forum-filter" ref={ forumFilterRef }>
-						<button
-							type="button"
-							className="bb-replies-list__forum-filter-btn"
-							onClick={ function () {
-								setIsForumFilterOpen( ! isForumFilterOpen );
-							} }
-						>
-							{ forumFilterLabel }
-							<i className="bb-icons-rl bb-icons-rl-caret-down"></i>
-						</button>
-						{ isForumFilterOpen && (
-							<div className="bb-replies-list__forum-filter-dropdown">
-								<input
-									type="text"
-									className="bb-replies-list__forum-filter-search"
-									placeholder={ __( 'Search forums', 'buddyboss' ) }
-									value={ forumFilterSearch }
-									onChange={ function ( e ) {
-										setForumFilterSearch( e.target.value );
-									} }
-									autoFocus
-								/>
-								<div className="bb-replies-list__forum-filter-options">
-									<button
-										type="button"
-										className={ 'bb-replies-list__forum-filter-option' + ( 0 === forumId ? ' is-active' : '' ) }
-										onClick={ function () {
-											handleForumFilter( 0 );
-										} }
-									>
-										{ sprintf( __( 'All Forums (%s)', 'buddyboss' ), forumsList.length ) }
-									</button>
-									{ filteredForums.map( function ( f ) {
-										return (
-											<button
-												key={ f.id }
-												type="button"
-												className={ 'bb-replies-list__forum-filter-option' + ( f.id === forumId ? ' is-active' : '' ) }
-												onClick={ function () {
-													handleForumFilter( f.id );
-												} }
-											>
-												{ decodeEntities( f.name ) + ' (' + f.count + ')' }
-											</button>
-										);
-									} ) }
-								</div>
-							</div>
-						) }
-					</div>
-
-					{ /* Sort */ }
-					<SelectControl
-						value={ sort }
-						options={ sortOptions }
-						onChange={ handleSortChange }
-						__nextHasNoMarginBottom
-						className="bb-replies-list__sort-select"
-					/>
-
-					{ /* Search */ }
-					<div className="bb-replies-list__search">
-						<input
-							type="text"
-							value={ search }
-							onChange={ function ( e ) {
-								handleSearch( e.target.value );
-							} }
-							placeholder={ __( 'Search replies', 'buddyboss' ) }
-							aria-label={ __( 'Search replies', 'buddyboss' ) }
-							className="bb-replies-list__search-input"
-						/>
-						{ search && (
-							<button
-								type="button"
-								className="bb-replies-list__search-clear"
-								onClick={ function () {
-									handleSearch( '' );
+			<ListToolbar
+				className="bb-replies-list"
+				bulkAction={ bulkAction }
+				bulkOptions={ bulkActionOptions }
+				onBulkActionChange={ setBulkAction }
+				onBulkApply={ handleBulkApply }
+				selectedCount={ selected.length }
+				isBulkProcessing={ isBulkProcessing }
+				searchInput={ search }
+				onSearchChange={ handleSearch }
+				searchPlaceholder={ __( 'Search replies', 'buddyboss' ) }
+				onSearchClear={ function () { handleSearch( '' ); } }
+			>
+				{ /* Forum Filter */ }
+				<div className="bb-replies-list__forum-filter" ref={ forumFilterRef }>
+					<button
+						type="button"
+						className="bb-replies-list__forum-filter-btn"
+						onClick={ function () {
+							setIsForumFilterOpen( ! isForumFilterOpen );
+						} }
+					>
+						{ forumFilterLabel }
+						<i className="bb-icons-rl bb-icons-rl-caret-down"></i>
+					</button>
+					{ isForumFilterOpen && (
+						<div className="bb-replies-list__forum-filter-dropdown">
+							<input
+								type="text"
+								className="bb-replies-list__forum-filter-search"
+								placeholder={ __( 'Search forums', 'buddyboss' ) }
+								value={ forumFilterSearch }
+								onChange={ function ( e ) {
+									setForumFilterSearch( e.target.value );
 								} }
-							>
-								<i className="bb-icons-rl-x"></i>
-							</button>
-						) }
-					</div>
+								autoFocus
+							/>
+							<div className="bb-replies-list__forum-filter-options">
+								<button
+									type="button"
+									className={ 'bb-replies-list__forum-filter-option' + ( 0 === forumId ? ' is-active' : '' ) }
+									onClick={ function () {
+										handleForumFilter( 0 );
+									} }
+								>
+									{ sprintf( __( 'All Forums (%s)', 'buddyboss' ), forumsList.length ) }
+								</button>
+								{ filteredForums.map( function ( f ) {
+									return (
+										<button
+											key={ f.id }
+											type="button"
+											className={ 'bb-replies-list__forum-filter-option' + ( f.id === forumId ? ' is-active' : '' ) }
+											onClick={ function () {
+												handleForumFilter( f.id );
+											} }
+										>
+											{ decodeEntities( f.name ) + ' (' + f.count + ')' }
+										</button>
+									);
+								} ) }
+							</div>
+						</div>
+					) }
 				</div>
-			</div>
+				<SelectControl
+					value={ sort }
+					options={ sortOptions }
+					onChange={ handleSortChange }
+					__nextHasNoMarginBottom
+					className="bb-replies-list__sort-select"
+				/>
+			</ListToolbar>
 
 			{ /* Loading / Error / Empty */ }
 			{ isLoading && (

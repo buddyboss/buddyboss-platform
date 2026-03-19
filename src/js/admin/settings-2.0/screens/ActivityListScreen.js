@@ -22,6 +22,7 @@ import { ajaxFetch } from '../utils/ajax';
 import { sanitizeHtml, safeUrl } from '../utils/sanitize';
 import { ListPagination } from '../components/common/ListPagination';
 import { AdminNotice } from '../components/common/AdminNotice';
+import { ListToolbar } from '../components/common/ListToolbar';
 import { ActivityEditModal } from '../components/activity/ActivityEditModal';
 import { ActivityCommentModal } from '../components/activity/ActivityCommentModal';
 
@@ -514,82 +515,49 @@ export function ActivityListScreen( { onNavigate } ) {
 			</div>
 
 			{ /* Toolbar */ }
-			<div className="bb-activity-list__toolbar">
-				<div className="bb-activity-list__toolbar-left">
-					{ /* Bulk Actions */ }
-					<div className="bb-activity-list__bulk-actions">
-						<SelectControl
-							value={ bulkAction }
-							options={ [ { label: __( 'Bulk actions', 'buddyboss' ), value: '' } ].concat(
-								Object.keys( bulkActions ).map( function ( key ) {
-									return { label: bulkActions[ key ], value: key };
-								} )
-							) }
-							onChange={ setBulkAction }
-							__nextHasNoMarginBottom
-						/>
-						<Button
-							variant="secondary"
-							onClick={ handleBulkApply }
-							disabled={ ! bulkAction || 0 === selectedIds.length }
-							className="bb-activity-list__bulk-apply"
-						>
-							{ __( 'Apply', 'buddyboss' ) }
-						</Button>
-					</div>
+			<ListToolbar
+				className="bb-activity-list"
+				bulkAction={ bulkAction }
+				bulkActions={ bulkActions }
+				onBulkActionChange={ setBulkAction }
+				onBulkApply={ handleBulkApply }
+				selectedCount={ selectedIds.length }
+				isBulkProcessing={ false }
+				searchInput={ searchInput }
+				onSearchChange={ handleSearchChange }
+				searchPlaceholder={ __( 'Search activities', 'buddyboss' ) }
+			>
+				<SelectControl
+					value={ filter }
+					options={ filterOptions }
+					onChange={ handleFilterChange }
+					className="bb-activity-list__filter-select"
+					__nextHasNoMarginBottom
+				/>
+				<div className="bb-activity-list__action-filter">
+					<select
+						value={ actionFilter }
+						onChange={ function ( e ) {
+							handleActionFilterChange( e.target.value );
+						} }
+					>
+						<option value="">{ __( 'All Actions', 'buddyboss' ) }</option>
+						{ activityActionsGrouped.map( function ( group, idx ) {
+							return (
+								<optgroup key={ idx } label={ group.label }>
+									{ group.options.map( function ( opt ) {
+										return (
+											<option key={ opt.value } value={ opt.value }>
+												{ opt.label }
+											</option>
+										);
+									} ) }
+								</optgroup>
+							);
+						} ) }
+					</select>
 				</div>
-
-				<div className="bb-activity-list__toolbar-right">
-					{ /* Filter Dropdown */ }
-					<SelectControl
-						value={ filter }
-						options={ filterOptions }
-						onChange={ handleFilterChange }
-						className="bb-activity-list__filter-select"
-						__nextHasNoMarginBottom
-					/>
-
-					{ /* Action Type Filter */ }
-					<div className="bb-activity-list__action-filter">
-						<select
-							value={ actionFilter }
-							onChange={ function ( e ) {
-								handleActionFilterChange( e.target.value );
-							} }
-						>
-							<option value="">{ __( 'All Actions', 'buddyboss' ) }</option>
-							{ activityActionsGrouped.map( function ( group, idx ) {
-								return (
-									<optgroup key={ idx } label={ group.label }>
-										{ group.options.map( function ( opt ) {
-											return (
-												<option key={ opt.value } value={ opt.value }>
-													{ opt.label }
-												</option>
-											);
-										} ) }
-									</optgroup>
-								);
-							} ) }
-						</select>
-					</div>
-					{ /* Search */ }
-					<div className="bb-activity-list__search">
-						<input
-							type="text"
-							value={ searchInput }
-							onChange={ function ( e ) {
-								handleSearchChange( e.target.value );
-							} }
-							placeholder={ __( 'Search activities', 'buddyboss' ) }
-							className="bb-activity-list__search-input"
-						/>
-						<span className="bb-activity-list__search-icon">
-							<i className="bb-icons-rl bb-icons-rl-search"></i>
-						</span>
-					</div>
-				</div>
-			</div>
+			</ListToolbar>
 
 			{ /* Table */ }
 			<div className="bb-activity-list__table-wrapper">

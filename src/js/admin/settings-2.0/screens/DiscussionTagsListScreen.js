@@ -23,6 +23,7 @@ import { getTopicTags, getTopicTag, deleteTopicTag, topicTagBulkAction } from '.
 import { safeUrl } from '../utils/sanitize';
 import { ListPagination } from '../components/common/ListPagination';
 import { AdminNotice } from '../components/common/AdminNotice';
+import { ListToolbar } from '../components/common/ListToolbar';
 import { TagCreateModal } from '../components/forums/TagCreateModal';
 
 /**
@@ -474,49 +475,22 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 			</div>
 
 			{ /* Toolbar: Bulk actions + Search */ }
-			<div className="bb-discussion-tags-list__toolbar">
-				<div className="bb-discussion-tags-list__toolbar-left">
-					<SelectControl
-						value={ bulkAction }
-						options={ [
-							{ value: '', label: __( 'Bulk actions', 'buddyboss' ) },
-							{ value: 'bulk_delete', label: __( 'Delete', 'buddyboss' ) },
-						] }
-						onChange={ setBulkAction }
-						__nextHasNoMarginBottom
-					/>
-					<Button
-						variant="secondary"
-						className="bb-discussion-tags-list__bulk-apply"
-						onClick={ handleBulkApply }
-						disabled={ ! bulkAction || 0 === selectedIds.length || isBulkProcessing }
-					>
-						{ __( 'Apply', 'buddyboss' ) }
-					</Button>
-				</div>
-				<div className="bb-discussion-tags-list__toolbar-right">
-					<div className="bb-discussion-tags-list__search">
-						<input
-							type="text"
-							value={ searchInput }
-							onChange={ function ( e ) {
-								handleSearchChange( e.target.value );
-							} }
-							placeholder={ __( 'Search tags', 'buddyboss' ) }
-							className="bb-discussion-tags-list__search-input"
-						/>
-						{ searchInput && (
-							<button
-								className="bb-discussion-tags-list__search-clear"
-								onClick={ handleSearchClear }
-								type="button"
-							>
-								<i className="bb-icons-rl bb-icons-rl-x"></i>
-							</button>
-						) }
-					</div>
-				</div>
-			</div>
+			<ListToolbar
+				className="bb-discussion-tags-list"
+				bulkAction={ bulkAction }
+				bulkOptions={ [
+					{ value: '', label: __( 'Bulk actions', 'buddyboss' ) },
+					{ value: 'bulk_delete', label: __( 'Delete', 'buddyboss' ) },
+				] }
+				onBulkActionChange={ setBulkAction }
+				onBulkApply={ handleBulkApply }
+				selectedCount={ selectedIds.length }
+				isBulkProcessing={ isBulkProcessing }
+				searchInput={ searchInput }
+				onSearchChange={ handleSearchChange }
+				searchPlaceholder={ __( 'Search tags', 'buddyboss' ) }
+				onSearchClear={ handleSearchClear }
+			/>
 
 			{ /* Loading / Error / Empty */ }
 			{ isLoading && (
