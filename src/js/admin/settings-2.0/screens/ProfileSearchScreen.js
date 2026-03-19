@@ -10,7 +10,7 @@
 
 import { useState, useEffect, useCallback, useRef } from '@wordpress/element';
 import { ToggleControl, Button, Spinner } from '@wordpress/components';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import {
 	getProfileSearchFields,
@@ -529,7 +529,7 @@ export default function ProfileSearchScreen( { onNavigate, helpUrl, onHelpClick,
 				isOpen={ null !== deleteFieldData }
 				title={ __( 'Remove Field', 'buddyboss' ) }
 				message={ deleteFieldData
-					? wp.i18n.sprintf( __( 'Are you sure you want to remove the field "%s"? This action cannot be undone.', 'buddyboss' ), decodeEntities( deleteFieldData.label || deleteFieldData.name ) )
+					? sprintf( __( 'Are you sure you want to remove the field "%s"? This action cannot be undone.', 'buddyboss' ), decodeEntities( deleteFieldData.label || deleteFieldData.name ) )
 					: ''
 				}
 				confirmLabel={ __( 'Remove', 'buddyboss' ) }

@@ -544,7 +544,7 @@ function bb_members_validate_image_settings_after_save( $feature_id, $settings, 
 		}
 
 		// If 'display-name' but no image editor available, revert.
-		if ( 'display-name' === $avatar_type && empty( _wp_image_editor_choose() ) ) {
+		if ( 'display-name' === $avatar_type && ! wp_image_editor_supports() ) {
 			bp_update_option( 'bp-default-profile-avatar-type', 'buddyboss' );
 		}
 	}
