@@ -1235,8 +1235,7 @@ function bb_clear_group_thread_cache( $thread_id ) {
 		return;
 	}
 
-	$cache_key = "{$thread_id}99999999";
-	wp_cache_delete( $cache_key, 'bp_messages_threads' );
+	wp_cache_delete( "{$thread_id}99999999", 'bp_messages_threads' );
 	bp_messages_delete_thread_paginated_messages_cache( $thread_id );
 	wp_cache_delete( 'thread_recipients_' . $thread_id, 'bp_messages' );
 	bp_core_reset_incrementor( 'bp_messages' );
