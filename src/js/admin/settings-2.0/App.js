@@ -42,6 +42,7 @@ function fixAdminMenuHighlight( route ) {
 	var listingPanels = {
 		groups: [ 'all_groups', 'group_types', 'group_navigation' ],
 		activity: [ 'all_activities' ],
+		members: [ 'profile_fields', 'profile_types', 'profile_search', 'profile_navigation' ],
 	};
 
 	var isListing = false;
@@ -80,8 +81,14 @@ function fixAdminMenuHighlight( route ) {
 			return;
 		}
 
+		// Map feature names to legacy submenu page slugs where they differ.
+		var slugMap = {
+			members: 'bp-profile-setup',
+		};
+		var pageSlug = slugMap[ targetSlug ] || ( 'bp-' + targetSlug );
+
 		// Match submenu items by page slug (e.g. page=bp-groups).
-		if ( -1 !== href.indexOf( 'page=bp-' + targetSlug ) ) {
+		if ( -1 !== href.indexOf( 'page=' + pageSlug ) ) {
 			targetItem = li;
 		}
 

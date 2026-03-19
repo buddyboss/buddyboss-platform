@@ -274,6 +274,7 @@ class BB_Feature_Registry {
 			'components'            => array(), // Multiple components controlled by this feature.
 			'integration_id'        => null, // Integration ID (for integration features).
 			'standalone'            => false, // Whether this is a standalone feature.
+			'required'              => false, // Whether this feature is required and cannot be deactivated.
 			'depends_on'            => array(),
 			'order'                 => 100,
 		);
@@ -1286,6 +1287,18 @@ class BB_Feature_Registry {
 		}
 
 		$feature = $this->features[ $feature_id ];
+
+		// Block deactivation of required features.
+		if ( ! empty( $feature['required'] ) ) {
+			return new WP_Error(
+				'feature_required',
+				sprintf(
+					/* translators: %s: feature label */
+					__( '"%s" is a required feature and cannot be deactivated.', 'buddyboss' ),
+					$feature['label']
+				)
+			);
+		}
 
 		// Auto-deactivate any features that depend on this one (O(1) lookup via reverse index when available).
 		$deactivated_dependents = array();

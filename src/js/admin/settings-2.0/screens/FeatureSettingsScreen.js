@@ -22,11 +22,15 @@ import { HelpIcon } from '../components/HelpIcon';
 import { HelpSliderModal } from '../components/HelpSliderModal';
 import { sanitizeHtml, safeUrl } from '../utils/sanitize';
 import { useGroupNavSync } from '../components/groups/GroupNavSync';
+import { useProfileNavSync } from '../components/members/ProfileNavSync';
 
 // Lazy load custom panel screens.
 const ActivityListScreen = lazy(() => import('./ActivityListScreen'));
 const GroupsListScreen = lazy(() => import('./GroupsListScreen'));
 const GroupTypeScreen = lazy(() => import('./GroupTypeScreen'));
+const ProfileTypeScreen = lazy(() => import('./ProfileTypeScreen'));
+const ProfileFieldsScreen = lazy(() => import('./ProfileFieldsScreen'));
+const ProfileSearchScreen = lazy(() => import('./ProfileSearchScreen'));
 
 /**
  * Map of feature + panel combinations that render custom screens instead of settings forms.
@@ -35,6 +39,9 @@ const CUSTOM_PANEL_SCREENS = {
 	'activity:all_activities': ActivityListScreen,
 	'groups:all_groups': GroupsListScreen,
 	'groups:group_types': GroupTypeScreen,
+	'members:profile_types': ProfileTypeScreen,
+	'members:profile_fields': ProfileFieldsScreen,
+	'members:profile_search': ProfileSearchScreen,
 };
 
 
@@ -354,6 +361,17 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 
 	// Sync Default Tab dropdown with Navigation Order toggles (groups feature only).
 	useGroupNavSync( {
+		featureId: featureId,
+		settings: settings,
+		settingsRef: settingsRef,
+		initialLoad: initialLoad,
+		setSidePanels: setSidePanels,
+		setSettings: setSettings,
+		handleSettingChange: handleSettingChange,
+	} );
+
+	// Sync Default Tab dropdown with Navigation Order toggles (members feature only).
+	useProfileNavSync( {
 		featureId: featureId,
 		settings: settings,
 		settingsRef: settingsRef,

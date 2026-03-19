@@ -105,6 +105,7 @@ class BB_Admin_Settings_Ajax {
 					'license_tier'   => $feature['license_tier'] ?? 'free',
 					'status'         => $is_active ? 'active' : 'inactive',
 					'available'      => $is_available,
+					'required'       => ! empty( $feature['required'] ),
 					'settings_route' => function_exists( 'bb_get_feature_settings_url' ) ? bb_get_feature_settings_url( $feature_id ) : '',
 				);
 
@@ -433,6 +434,7 @@ class BB_Admin_Settings_Ajax {
 			'license_tier'   => $feature['license_tier'] ?? 'free',
 			'status'         => $registry->bb_is_feature_active( $feature_id ) ? 'active' : 'inactive',
 			'available'      => $registry->bb_is_feature_available( $feature_id ),
+			'required'       => ! empty( $feature['required'] ),
 			'settings_route' => function_exists( 'bb_get_feature_settings_url' ) ? bb_get_feature_settings_url( $feature_id ) : '',
 		);
 

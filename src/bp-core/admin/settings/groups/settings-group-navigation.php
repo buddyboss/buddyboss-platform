@@ -240,19 +240,22 @@ function bb_get_group_nav_items_for_settings() {
 		return array();
 	}
 
-	// Determine which features are inactive for "Hidden" badge.
+	// Skip nav items whose parent component/feature is inactive.
+	// Legacy Customizer only shows nav from active components
+	// (inactive components never register their nav items).
 	$inactive_slugs = bb_get_inactive_group_nav_slugs();
 
 	$options = array();
 	foreach ( $nav_items as $nav_item ) {
-		$slug      = $nav_item->slug;
-		$is_hidden = in_array( $slug, $inactive_slugs, true );
+		$slug = $nav_item->slug;
+
+		if ( in_array( $slug, $inactive_slugs, true ) ) {
+			continue;
+		}
 
 		$options[] = array(
-			'value'       => $slug,
-			'label'       => $nav_item->name,
-			'disabled'    => $is_hidden,
-			'badge_label' => $is_hidden ? __( 'Hidden', 'buddyboss' ) : '',
+			'value' => $slug,
+			'label' => $nav_item->name,
 		);
 	}
 
