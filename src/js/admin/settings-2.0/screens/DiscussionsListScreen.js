@@ -25,6 +25,7 @@ import { ListPagination } from '../components/common/ListPagination';
 import { AdminNotice } from '../components/common/AdminNotice';
 import { ListToolbar } from '../components/common/ListToolbar';
 import { DeleteConfirmModal } from '../components/common/DeleteConfirmModal';
+import { BulkEditModal } from '../components/common/BulkEditModal';
 import { useListScreenHandlers } from '../hooks/useListScreenHandlers';
 import { DiscussionCreateModal } from '../components/forums/DiscussionCreateModal';
 import { AsyncSelectField } from '../components/fields/AsyncSelectField';
@@ -829,92 +830,53 @@ export function DiscussionsListScreen( { onNavigate } ) {
 			/>
 
 			{ /* Bulk Edit Modal */ }
-			{ bulkEditOpen && (
-				<Modal
-					title={ __( 'Bulk Edit', 'buddyboss' ) }
-					onRequestClose={ function () {
-						setBulkEditOpen( false );
-					} }
-					className="bb-discussion-bulk-edit-modal bb-admin-settings-modal"
-					shouldCloseOnClickOutside={ false }
-				>
-					<div className="bb-discussion-bulk-edit-modal__body">
-						<div className="bb-admin-bulk-modal__selected-items">
-							{ selectedDiscussionNames.map( function ( item ) {
-								return (
-									<div key={ item.id } className="bb-admin-bulk-modal__selected-item">
-										<CheckboxControl
-											checked={ true }
-											onChange={ function () {
-												setSelectedIds( function ( prev ) {
-													var next = prev.filter( function ( i ) { return i !== item.id; } );
-													if ( 0 === next.length ) {
-														setBulkEditOpen( false );
-													}
-													return next;
-												} );
-											} }
-											__nextHasNoMarginBottom
-										/>
-										<span className="bb-admin-bulk-modal__selected-item-name">
-											{ decodeEntities( item.title ) }
-										</span>
-									</div>
-								);
-							} ) }
-						</div>
-
-						<TagsAutocomplete
-							label={ __( 'Tags (Optional)', 'buddyboss' ) }
-							value={ bulkEditTags }
-							onChange={ setBulkEditTags }
-							placeholder={ __( 'Enter tags, separated by commas', 'buddyboss' ) }
-						/>
-
-						<SelectControl
-							label={ __( 'Status', 'buddyboss' ) }
-							value={ bulkEditStatus }
-							options={ [
-								{ value: 'no_change', label: __( '\u2014 No Change \u2014', 'buddyboss' ) },
-								{ value: 'open', label: __( 'Open', 'buddyboss' ) },
-								{ value: 'closed', label: __( 'Closed', 'buddyboss' ) },
-							] }
-							onChange={ setBulkEditStatus }
-							__nextHasNoMarginBottom
-						/>
-
-						<SelectControl
-							label={ __( 'Visibility', 'buddyboss' ) }
-							value={ bulkEditVisibility }
-							options={ [
-								{ value: 'no_change', label: __( '\u2014 No Change \u2014', 'buddyboss' ) },
-								{ value: 'publish', label: __( 'Public', 'buddyboss' ) },
-								{ value: 'private', label: __( 'Private', 'buddyboss' ) },
-								{ value: 'hidden', label: __( 'Hidden', 'buddyboss' ) },
-							] }
-							onChange={ setBulkEditVisibility }
-							__nextHasNoMarginBottom
-						/>
-					</div>
-					<div className="bb-discussion-bulk-edit-modal__footer">
-						<Button
-							variant="secondary"
-							onClick={ function () {
-								setBulkEditOpen( false );
-							} }
-						>
-							{ __( 'Cancel', 'buddyboss' ) }
-						</Button>
-						<Button
-							variant="primary"
-							onClick={ handleConfirmBulkEdit }
-							disabled={ 'no_change' === bulkEditStatus && 'no_change' === bulkEditVisibility && ! bulkEditTags }
-						>
-							{ __( 'Save', 'buddyboss' ) }
-						</Button>
-					</div>
-				</Modal>
-			) }
+			<BulkEditModal
+				isOpen={ bulkEditOpen }
+				items={ selectedDiscussionNames }
+				onRemoveItem={ function ( id ) {
+					setSelectedIds( function ( prev ) {
+						var next = prev.filter( function ( i ) { return i !== id; } );
+						if ( 0 === next.length ) {
+							setBulkEditOpen( false );
+						}
+						return next;
+					} );
+				} }
+				onConfirm={ handleConfirmBulkEdit }
+				onClose={ function () { setBulkEditOpen( false ); } }
+				confirmDisabled={ 'no_change' === bulkEditStatus && 'no_change' === bulkEditVisibility && ! bulkEditTags }
+				className="bb-discussion-bulk-edit-modal"
+			>
+				<TagsAutocomplete
+					label={ __( 'Tags (Optional)', 'buddyboss' ) }
+					value={ bulkEditTags }
+					onChange={ setBulkEditTags }
+					placeholder={ __( 'Enter tags, separated by commas', 'buddyboss' ) }
+				/>
+				<SelectControl
+					label={ __( 'Status', 'buddyboss' ) }
+					value={ bulkEditStatus }
+					options={ [
+						{ value: 'no_change', label: __( '\u2014 No Change \u2014', 'buddyboss' ) },
+						{ value: 'open', label: __( 'Open', 'buddyboss' ) },
+						{ value: 'closed', label: __( 'Closed', 'buddyboss' ) },
+					] }
+					onChange={ setBulkEditStatus }
+					__nextHasNoMarginBottom
+				/>
+				<SelectControl
+					label={ __( 'Visibility', 'buddyboss' ) }
+					value={ bulkEditVisibility }
+					options={ [
+						{ value: 'no_change', label: __( '\u2014 No Change \u2014', 'buddyboss' ) },
+						{ value: 'publish', label: __( 'Public', 'buddyboss' ) },
+						{ value: 'private', label: __( 'Private', 'buddyboss' ) },
+						{ value: 'hidden', label: __( 'Hidden', 'buddyboss' ) },
+					] }
+					onChange={ setBulkEditVisibility }
+					__nextHasNoMarginBottom
+				/>
+			</BulkEditModal>
 
 			{ /* Edit Loading Overlay */ }
 			{ isEditLoading && (
