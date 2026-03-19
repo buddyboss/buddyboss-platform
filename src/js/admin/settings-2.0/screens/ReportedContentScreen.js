@@ -16,6 +16,7 @@ import {
 	DropdownMenu,
 	MenuGroup,
 	MenuItem,
+	Modal,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import {
@@ -146,6 +147,11 @@ export function ReportedContentScreen() {
 	var actionInProgress = actionInProgressState[ 0 ];
 	var setActionInProgress = actionInProgressState[ 1 ];
 
+	// Confirm modal state: { title, message, confirmLabel, onConfirm }.
+	var confirmModalState = useState( null );
+	var confirmModal = confirmModalState[ 0 ];
+	var setConfirmModal = confirmModalState[ 1 ];
+
 	var abortRef = useRef( null );
 
 	var PER_PAGE = 20;
@@ -244,20 +250,9 @@ export function ReportedContentScreen() {
 		}
 	}, [] );
 
-	// Handle bulk action apply.
-	var handleBulkApply = useCallback( function () {
-		if ( ! bulkAction || selectedIds.length === 0 ) {
-			return;
-		}
-
-		var confirmMessage = 'hide' === bulkAction
-			? __( 'Are you sure you want to hide the selected content items?', 'buddyboss' )
-			: __( 'Are you sure you want to unhide the selected content items?', 'buddyboss' );
-
-		if ( ! window.confirm( confirmMessage ) ) {
-			return;
-		}
-
+	// Execute bulk action after confirmation.
+	var executeBulkAction = useCallback( function () {
+		setConfirmModal( null );
 		setActionInProgress( 'bulk' );
 		reportedContentBulkAction( bulkAction, selectedIds )
 			.then( function ( response ) {
@@ -274,77 +269,103 @@ export function ReportedContentScreen() {
 			} );
 	}, [ bulkAction, selectedIds, page, contentType, statusFilter, fetchItems ] );
 
-	// Handle hide/unhide content with confirmation dialog.
+	// Handle bulk action apply.
+	var handleBulkApply = useCallback( function () {
+		if ( ! bulkAction || selectedIds.length === 0 ) {
+			return;
+		}
+
+		var confirmMessage = 'hide' === bulkAction
+			? __( 'Are you sure you want to hide the selected content items?', 'buddyboss' )
+			: __( 'Are you sure you want to unhide the selected content items?', 'buddyboss' );
+
+		setConfirmModal( {
+			title: 'hide' === bulkAction ? __( 'Hide Content', 'buddyboss' ) : __( 'Unhide Content', 'buddyboss' ),
+			message: confirmMessage,
+			confirmLabel: 'hide' === bulkAction ? __( 'Hide', 'buddyboss' ) : __( 'Unhide', 'buddyboss' ),
+			onConfirm: executeBulkAction,
+		} );
+	}, [ bulkAction, selectedIds, executeBulkAction ] );
+
+	// Handle hide/unhide content with confirmation modal.
 	var handleHideAction = useCallback( function ( item, action, onClose ) {
+		if ( onClose ) {
+			onClose();
+		}
+
 		var confirmMessage = ( 'hide' === action )
 			? __( 'Please confirm you want to hide this content. It will be hidden from all members in your network.', 'buddyboss' )
 			: __( 'Please confirm you want to unhide this content. It will be open for all members in your network.', 'buddyboss' );
 
-		if ( ! window.confirm( confirmMessage ) ) {
-			return;
-		}
+		setConfirmModal( {
+			title: 'hide' === action ? __( 'Hide Content', 'buddyboss' ) : __( 'Unhide Content', 'buddyboss' ),
+			message: confirmMessage,
+			confirmLabel: 'hide' === action ? __( 'Hide', 'buddyboss' ) : __( 'Unhide', 'buddyboss' ),
+			onConfirm: function () {
+				setConfirmModal( null );
+				setActionInProgress( item.id );
 
+				var promise = ( 'hide' === action )
+					? hideContent( item.item_id, item.item_type )
+					: unhideContent( item.item_id, item.item_type );
+
+				promise
+					.then( function ( response ) {
+						setActionInProgress( null );
+						if ( response.success ) {
+							fetchItems( page, contentType, statusFilter );
+						}
+					} )
+					.catch( function () {
+						setActionInProgress( null );
+						setErrorMessage( __( 'An error occurred. Please try again.', 'buddyboss' ) );
+					} );
+			},
+		} );
+	}, [ page, contentType, statusFilter, fetchItems ] );
+
+	// Handle suspend/unsuspend owner with confirmation modal.
+	var handleSuspendAction = useCallback( function ( item, action, onClose ) {
 		if ( onClose ) {
 			onClose();
 		}
 
-		setActionInProgress( item.id );
-
-		var promise = ( 'hide' === action )
-			? hideContent( item.item_id, item.item_type )
-			: unhideContent( item.item_id, item.item_type );
-
-		promise
-			.then( function ( response ) {
-				setActionInProgress( null );
-				if ( response.success ) {
-					fetchItems( page, contentType, statusFilter );
-				}
-			} )
-			.catch( function () {
-				setActionInProgress( null );
-				setErrorMessage( __( 'An error occurred. Please try again.', 'buddyboss' ) );
-			} );
-	}, [ page, contentType, statusFilter, fetchItems ] );
-
-	// Handle suspend/unsuspend owner with confirmation dialog.
-	var handleSuspendAction = useCallback( function ( item, action, onClose ) {
 		var confirmMessage = ( 'suspend' === action )
 			? __( 'Please confirm you want to suspend this member. Members who are suspended will be logged out and not allowed to login again. Their content will be hidden from all members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' )
 			: __( 'Please confirm you want to unsuspend this member. Members who are unsuspended will be allowed to login again, and their content will no longer be hidden from other members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' );
 
-		if ( ! window.confirm( confirmMessage ) ) {
-			return;
-		}
+		setConfirmModal( {
+			title: 'suspend' === action ? __( 'Suspend Owner', 'buddyboss' ) : __( 'Unsuspend Owner', 'buddyboss' ),
+			message: confirmMessage,
+			confirmLabel: 'suspend' === action ? __( 'Suspend', 'buddyboss' ) : __( 'Unsuspend', 'buddyboss' ),
+			onConfirm: function () {
+				setConfirmModal( null );
+				setActionInProgress( item.id );
 
-		if ( onClose ) {
-			onClose();
-		}
+				// Optimistically mark suspend_in_progress so button stays disabled after refetch.
+				setItems( function ( prev ) {
+					return prev.map( function ( i ) {
+						return i.id === item.id ? Object.assign( {}, i, { suspend_in_progress: true } ) : i;
+					} );
+				} );
 
-		setActionInProgress( item.id );
+				var promise = ( 'suspend' === action )
+					? suspendContentOwner( item.owner.user_id )
+					: unsuspendContentOwner( item.owner.user_id );
 
-		// Optimistically mark suspend_in_progress so button stays disabled after refetch.
-		setItems( function ( prev ) {
-			return prev.map( function ( i ) {
-				return i.id === item.id ? Object.assign( {}, i, { suspend_in_progress: true } ) : i;
-			} );
+				promise
+					.then( function ( response ) {
+						setActionInProgress( null );
+						if ( response.success ) {
+							fetchItems( page, contentType, statusFilter );
+						}
+					} )
+					.catch( function () {
+						setActionInProgress( null );
+						setErrorMessage( __( 'An error occurred. Please try again.', 'buddyboss' ) );
+					} );
+			},
 		} );
-
-		var promise = ( 'suspend' === action )
-			? suspendContentOwner( item.owner.user_id )
-			: unsuspendContentOwner( item.owner.user_id );
-
-		promise
-			.then( function ( response ) {
-				setActionInProgress( null );
-				if ( response.success ) {
-					fetchItems( page, contentType, statusFilter );
-				}
-			} )
-			.catch( function () {
-				setActionInProgress( null );
-				setErrorMessage( __( 'An error occurred. Please try again.', 'buddyboss' ) );
-			} );
 	}, [ page, contentType, statusFilter, fetchItems ] );
 
 	// Handle view report.
@@ -707,6 +728,37 @@ export function ReportedContentScreen() {
 				onClose={ function () { setReportModalItem( null ); } }
 				item={ reportModalItem }
 			/>
+
+			{/* Confirm Action Modal */}
+			{ confirmModal && (
+				<Modal
+					title={ confirmModal.title }
+					onRequestClose={ function () {
+						setConfirmModal( null );
+					} }
+					className="bb-admin-reported-content__confirm-modal bb-admin-settings-modal"
+				>
+					<div className="bb-admin-settings-modal__body">
+						<p>{ confirmModal.message }</p>
+					</div>
+					<div className="bb-admin-settings-modal__footer">
+						<Button
+							variant="primary"
+							onClick={ confirmModal.onConfirm }
+						>
+							{ confirmModal.confirmLabel }
+						</Button>
+						<Button
+							variant="secondary"
+							onClick={ function () {
+								setConfirmModal( null );
+							} }
+						>
+							{ __( 'Cancel', 'buddyboss' ) }
+						</Button>
+					</div>
+				</Modal>
+			) }
 		</div>
 	);
 }
