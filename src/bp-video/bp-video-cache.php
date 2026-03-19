@@ -19,6 +19,10 @@ defined( 'ABSPATH' ) || exit;
 function bp_video_clear_cache_for_video( $video ) {
 	wp_cache_delete( $video->id, 'bp_video' );
 	wp_cache_delete( 'bb_video_activity_' . $video->id, 'bp_video' ); // Used in bb_moderation_get_media_record_by_id().
+
+	if ( ! empty( $video->album_id ) ) {
+		wp_cache_delete( $video->album_id, 'bp_video_album' );
+	}
 }
 add_action( 'bp_video_after_save', 'bp_video_clear_cache_for_video' );
 
@@ -48,7 +52,10 @@ add_action( 'bp_video_deleted_videos', 'bp_video_clear_cache_for_deleted_video' 
  * @return bool True on success, false on failure.
  */
 function bp_video_reset_cache_incrementor() {
-	return bp_core_reset_incrementor( 'bp_video' );
+	// Reset both bp_video and bp_media cache groups since videos are stored in
+	// the media table and album count queries use the bp_media cache group.
+	bp_core_reset_incrementor( 'bp_video' );
+	return bp_core_reset_incrementor( 'bp_media' );
 }
 add_action( 'bp_video_delete', 'bp_video_reset_cache_incrementor' );
 add_action( 'bp_video_add', 'bp_video_reset_cache_incrementor' );

@@ -990,6 +990,59 @@ function bp_media_get_total_group_album_count( $group_id = 0 ) {
 }
 
 /**
+ * Get album counts including total, media, and video counts.
+ *
+ * @since BuddyBoss 2.20.0
+ *
+ * @param int $album_id Album ID.
+ * @param int $group_id Optional. Group ID if this is a group album.
+ *
+ * @return array Array containing album_total_count, album_media_count, and album_video_count.
+ */
+function bb_media_get_album_counts( $album_id = 0, $group_id = 0 ) {
+	$counts = array(
+		'album_total_count' => 0,
+		'album_media_count' => 0,
+		'album_video_count' => 0,
+	);
+
+	if ( empty( $album_id ) ) {
+		return $counts;
+	}
+
+	// Use bp_media_get to get both photo and video counts efficiently.
+	$media_args = array(
+		'album_id'    => $album_id,
+		'count_total' => true,
+		'video'       => true,
+		'per_page'    => 1,
+	);
+
+	if ( ! empty( $group_id ) ) {
+		$media_args['group_id'] = $group_id;
+	}
+
+	$media_data = bp_media_get( $media_args );
+
+	if ( ! empty( $media_data ) ) {
+		$counts['album_media_count'] = isset( $media_data['total'] ) ? (int) $media_data['total'] : 0;
+		$counts['album_video_count'] = isset( $media_data['total_video'] ) ? (int) $media_data['total_video'] : 0;
+		$counts['album_total_count'] = $counts['album_media_count'] + $counts['album_video_count'];
+	}
+
+	/**
+	 * Filters the album counts.
+	 *
+	 * @since BuddyBoss 2.20.0
+	 *
+	 * @param array $counts   Array of counts (album_total_count, album_media_count, album_video_count).
+	 * @param int   $album_id Album ID.
+	 * @param int   $group_id Group ID.
+	 */
+	return apply_filters( 'bb_media_get_album_counts', $counts, $album_id, $group_id );
+}
+
+/**
  * Return the total media count in your BP instance.
  *
  * @return int Media count.
@@ -3099,7 +3152,12 @@ function bp_media_get_activity_media( $activity_id ) {
 			return;
 		}
 
-		$media_content = bb_media_get_activity_media( $activity_id, array( 'user_id' => false ) );
+		$activity = new BP_Activity_Activity( $activity_id );
+		if ( empty( $activity ) || empty( $activity->id ) ) {
+			return;
+		}
+
+		$media_content = bb_media_get_activity_media( $activity, array( 'user_id' => false ) );
 		if ( empty( $media_content ) ) {
 			return;
 		}
@@ -4179,7 +4237,7 @@ function bb_check_valid_giphy_api_key( $api_key = '', $message = false ) {
 	}
 
 	$output = wp_remote_get( 'https://api.giphy.com/v1/gifs/trending?api_key=' . $api_key . '&limit=1' );
-	if ( $output ) {
+	if ( $output && ! is_wp_error( $output ) ) {
 		$cache[ $api_key ] = $output;
 		if ( $use_caching ) {
 			$cache_expiry = MONTH_IN_SECONDS;
@@ -4188,6 +4246,10 @@ function bb_check_valid_giphy_api_key( $api_key = '', $message = false ) {
 			}
 			set_transient( $cache_key, array( $api_key => $output ), $cache_expiry );
 		}
+	} elseif ( is_wp_error( $output ) ) {
+		$cache[ $api_key ] = $output;
+	} else {
+		return false;
 	}
 	if ( true === $message ) {
 		return $cache[ $api_key ];

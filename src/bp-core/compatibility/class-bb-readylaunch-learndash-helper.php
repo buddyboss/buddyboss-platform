@@ -173,6 +173,7 @@ if ( ! class_exists( 'BB_Readylaunch_Learndash_Helper' ) ) {
 				array(),
 				bp_get_version()
 			);
+			wp_style_add_data( 'bb-readylaunch-learndash', 'rtl', 'replace' );
 
 			// Enqueue our LearnDash helper JavaScript.
 			wp_enqueue_script(
