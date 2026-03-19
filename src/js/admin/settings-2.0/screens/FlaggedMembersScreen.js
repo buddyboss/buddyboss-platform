@@ -16,6 +16,7 @@ import {
 	DropdownMenu,
 	MenuGroup,
 	MenuItem,
+	Modal,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { getFlaggedMembers, suspendMember, unsuspendMember, flaggedMembersBulkAction } from '../utils/ajax';
@@ -85,6 +86,11 @@ export function FlaggedMembersScreen() {
 	var actionInProgressState = useState( null );
 	var actionInProgress = actionInProgressState[ 0 ];
 	var setActionInProgress = actionInProgressState[ 1 ];
+
+	// Confirm modal state: { title, message, confirmLabel, onConfirm }.
+	var confirmModalState = useState( null );
+	var confirmModal = confirmModalState[ 0 ];
+	var setConfirmModal = confirmModalState[ 1 ];
 
 	var abortRef = useRef( null );
 
@@ -180,20 +186,9 @@ export function FlaggedMembersScreen() {
 		}
 	}, [] );
 
-	// Handle bulk action apply.
-	var handleBulkApply = useCallback( function () {
-		if ( ! bulkAction || selectedIds.length === 0 ) {
-			return;
-		}
-
-		var confirmMessage = 'suspend' === bulkAction
-			? __( 'Are you sure you want to suspend the selected members? They will be logged out and their content will be hidden. Please allow a few minutes for this process to complete.', 'buddyboss' )
-			: __( 'Are you sure you want to unsuspend the selected members? They will be allowed to login again and their content will be visible. Please allow a few minutes for this process to complete.', 'buddyboss' );
-
-		if ( ! window.confirm( confirmMessage ) ) {
-			return;
-		}
-
+	// Execute bulk action after confirmation.
+	var executeBulkAction = useCallback( function () {
+		setConfirmModal( null );
 		setActionInProgress( 'bulk' );
 		flaggedMembersBulkAction( bulkAction, selectedIds )
 			.then( function ( response ) {
@@ -210,43 +205,64 @@ export function FlaggedMembersScreen() {
 			} );
 	}, [ bulkAction, selectedIds, page, search, statusFilter, fetchMembers ] );
 
-	// Handle suspend/unsuspend with confirmation dialog.
-	var handleSuspendAction = useCallback( function ( member, action, onClose ) {
-		var confirmMessage = ( 'suspend' === action )
-			? __( 'Please confirm you want to suspend this member. Members who are suspended will be logged out and not allowed to login again. Their content will be hidden from all members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' )
-			: __( 'Please confirm you want to unsuspend this member. Members who are unsuspended will be allowed to login again, and their content will no longer be hidden from other members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' );
-
-		if ( ! window.confirm( confirmMessage ) ) {
+	// Handle bulk action apply.
+	var handleBulkApply = useCallback( function () {
+		if ( ! bulkAction || selectedIds.length === 0 ) {
 			return;
 		}
 
+		var confirmMessage = 'suspend' === bulkAction
+			? __( 'Are you sure you want to suspend the selected members? They will be logged out and their content will be hidden. Please allow a few minutes for this process to complete.', 'buddyboss' )
+			: __( 'Are you sure you want to unsuspend the selected members? They will be allowed to login again and their content will be visible. Please allow a few minutes for this process to complete.', 'buddyboss' );
+
+		setConfirmModal( {
+			title: 'suspend' === bulkAction ? __( 'Suspend Members', 'buddyboss' ) : __( 'Unsuspend Members', 'buddyboss' ),
+			message: confirmMessage,
+			confirmLabel: 'suspend' === bulkAction ? __( 'Suspend', 'buddyboss' ) : __( 'Unsuspend', 'buddyboss' ),
+			onConfirm: executeBulkAction,
+		} );
+	}, [ bulkAction, selectedIds, executeBulkAction ] );
+
+	// Handle suspend/unsuspend with confirmation modal.
+	var handleSuspendAction = useCallback( function ( member, action, onClose ) {
 		if ( onClose ) {
 			onClose();
 		}
 
-		setActionInProgress( member.user_id );
+		var confirmMessage = ( 'suspend' === action )
+			? __( 'Please confirm you want to suspend this member. Members who are suspended will be logged out and not allowed to login again. Their content will be hidden from all members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' )
+			: __( 'Please confirm you want to unsuspend this member. Members who are unsuspended will be allowed to login again, and their content will no longer be hidden from other members in your network. Please allow a few minutes for this process to complete.', 'buddyboss' );
 
-		// Optimistically mark suspend_in_progress so button stays disabled after refetch.
-		setMembers( function ( prev ) {
-			return prev.map( function ( m ) {
-				return m.user_id === member.user_id ? Object.assign( {}, m, { suspend_in_progress: true } ) : m;
-			} );
+		setConfirmModal( {
+			title: 'suspend' === action ? __( 'Suspend Member', 'buddyboss' ) : __( 'Unsuspend Member', 'buddyboss' ),
+			message: confirmMessage,
+			confirmLabel: 'suspend' === action ? __( 'Suspend', 'buddyboss' ) : __( 'Unsuspend', 'buddyboss' ),
+			onConfirm: function () {
+				setConfirmModal( null );
+				setActionInProgress( member.user_id );
+
+				// Optimistically mark suspend_in_progress so button stays disabled after refetch.
+				setMembers( function ( prev ) {
+					return prev.map( function ( m ) {
+						return m.user_id === member.user_id ? Object.assign( {}, m, { suspend_in_progress: true } ) : m;
+					} );
+				} );
+
+				var promise = ( 'suspend' === action ) ? suspendMember( member.user_id ) : unsuspendMember( member.user_id );
+
+				promise
+					.then( function ( response ) {
+						setActionInProgress( null );
+						if ( response.success ) {
+							fetchMembers( page, search, statusFilter );
+						}
+					} )
+					.catch( function () {
+						setActionInProgress( null );
+						setErrorMessage( __( 'An error occurred. Please try again.', 'buddyboss' ) );
+					} );
+			},
 		} );
-
-		var promise = ( 'suspend' === action ) ? suspendMember( member.user_id ) : unsuspendMember( member.user_id );
-
-		promise
-			.then( function ( response ) {
-				setActionInProgress( null );
-				if ( response.success ) {
-					// Refresh the list.
-					fetchMembers( page, search, statusFilter );
-				}
-			} )
-			.catch( function () {
-				setActionInProgress( null );
-				setErrorMessage( __( 'An error occurred. Please try again.', 'buddyboss' ) );
-			} );
 	}, [ page, search, statusFilter, fetchMembers ] );
 
 	// Handle view report.
@@ -518,6 +534,37 @@ export function FlaggedMembersScreen() {
 				onClose={ function () { setReportModalMember( null ); } }
 				member={ reportModalMember }
 			/>
+
+			{/* Confirm Action Modal */}
+			{ confirmModal && (
+				<Modal
+					title={ confirmModal.title }
+					onRequestClose={ function () {
+						setConfirmModal( null );
+					} }
+					className="bb-admin-flagged-members__confirm-modal bb-admin-settings-modal"
+				>
+					<div className="bb-admin-settings-modal__body">
+						<p>{ confirmModal.message }</p>
+					</div>
+					<div className="bb-admin-settings-modal__footer">
+						<Button
+							variant="primary"
+							onClick={ confirmModal.onConfirm }
+						>
+							{ confirmModal.confirmLabel }
+						</Button>
+						<Button
+							variant="secondary"
+							onClick={ function () {
+								setConfirmModal( null );
+							} }
+						>
+							{ __( 'Cancel', 'buddyboss' ) }
+						</Button>
+					</div>
+				</Modal>
+			) }
 		</div>
 	);
 }
