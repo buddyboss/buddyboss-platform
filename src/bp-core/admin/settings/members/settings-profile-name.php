@@ -341,4 +341,44 @@ function bb_members_register_profile_name_panel_fields() {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	do_action( 'bb_members_settings_after_profile_link_fields' );
+
+	// =========================================================================
+	// SECTION: User Settings
+	// =========================================================================
+
+	bb_register_feature_section(
+		'members',
+		'profile_name',
+		'user_settings',
+		array(
+			'title' => __( 'User Settings', 'buddyboss' ),
+			'order' => 30,
+		)
+	);
+
+	// FIELD: Account Deletion.
+	// `invert_value`: Legacy DB stores 1 = disabled. Toggle shows "Allow", so invert for display.
+	// Raw DB value preserved for backward compatibility with `bp_disable_account_deletion()`.
+	bb_register_feature_field(
+		'members',
+		'profile_name',
+		'user_settings',
+		array(
+			'name'              => 'bp-disable-account-deletion',
+			'label'             => __( 'Account Deletion', 'buddyboss' ),
+			'type'              => 'toggle',
+			'description'       => __( 'Allow members to delete their profiles', 'buddyboss' ),
+			'default'           => bp_disable_account_deletion( false ),
+			'sanitize_callback' => 'absint',
+			'invert_value'      => true,
+			'order'             => 10,
+		)
+	);
+
+	/**
+	 * Fires after User Settings section fields are registered.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	do_action( 'bb_members_settings_after_user_settings_fields' );
 }

@@ -549,6 +549,56 @@ export function SettingsForm({ fields, values, onChange }) {
 					</div>
 				);
 
+			case 'empty_state':
+				// Reusable empty state card: centered icon + title + description + optional button.
+				// Used for placeholder states (e.g., OneSignal disabled, Pro update required,
+				// feature not installed, upgrade prompts).
+				//
+				// PHP registration example:
+				//   'type'                    => 'empty_state',
+				//   'icon'                    => 'bb-icons-rl bb-icons-rl-warning-circle', // optional, default warning icon
+				//   'empty_state_title'       => 'Title Text',
+				//   'empty_state_description' => 'Description text (supports HTML via description field)',
+				//   'button_label'            => 'Button Text',       // optional
+				//   'button_url'              => 'https://...',        // optional
+				//   'button_target'           => '_blank',             // optional, default '_self'
+				//   'notice_type'             => 'warning',            // optional, adds modifier class
+				return (
+					<div key={field.name} className={ 'bb-admin-empty-state' + ( field.notice_type ? ' bb-admin-empty-state--' + field.notice_type : '' ) }>
+						{ ( field.icon !== false ) && (
+							<div className="bb-admin-empty-state__icon">
+								<i className={ field.icon || 'bb-icons-rl bb-icons-rl-warning-circle' }></i>
+							</div>
+						) }
+						{ field.empty_state_title && (
+							<h3 className="bb-admin-empty-state__title">
+								{ decodeEntities( field.empty_state_title ) }
+							</h3>
+						) }
+						{ field.empty_state_description && (
+							<p className="bb-admin-empty-state__description">
+								{ decodeEntities( field.empty_state_description ) }
+							</p>
+						) }
+						{ ( ! field.empty_state_description && field.description ) && (
+							<div
+								className="bb-admin-empty-state__description"
+								dangerouslySetInnerHTML={{ __html: sanitizedHtml[ field.name + '__desc' ] || '' }}
+							/>
+						) }
+						{ field.button_label && field.button_url && (
+							<a
+								href={ safeUrl( field.button_url ) }
+								className="bb-admin-empty-state__button"
+								target={ field.button_target || '_self' }
+								rel={ '_blank' === field.button_target ? 'noopener noreferrer' : undefined }
+							>
+								{ field.button_label }
+							</a>
+						) }
+					</div>
+				);
+
 			case 'reaction_migration': {
 				// Reaction migration: warning notice for pending migration with "Start Conversion" button.
 				// Check conditions here to avoid rendering empty wrapper div.

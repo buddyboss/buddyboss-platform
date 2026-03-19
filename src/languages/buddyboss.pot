@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.21.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-03-19 12:12:50+00:00\n"
+"POT-Creation-Date: 2026-03-19 13:53:51+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -4413,7 +4413,7 @@ msgstr ""
 
 #: bp-core/admin/bb-admin-settings-activity.php:75
 #: bp-core/admin/settings/activity/settings-activity.php:31
-#: bp-core/admin/settings/bp-admin-setting-general.php:178
+#: bp-core/admin/settings/bp-admin-setting-general.php:175
 msgid "Activity Settings"
 msgstr ""
 
@@ -4721,7 +4721,7 @@ msgid "Email Subject"
 msgstr ""
 
 #: bp-core/admin/bb-admin-settings-invites.php:113
-#: bp-core/admin/bp-core-admin-settings.php:416
+#: bp-core/admin/bp-core-admin-settings.php:401
 msgid "Allow members to customize the email subject"
 msgstr ""
 
@@ -4731,7 +4731,7 @@ msgid "Email Content"
 msgstr ""
 
 #: bp-core/admin/bb-admin-settings-invites.php:129
-#: bp-core/admin/bp-core-admin-settings.php:428
+#: bp-core/admin/bp-core-admin-settings.php:413
 msgid "Allow members to customize the email body content"
 msgstr ""
 
@@ -4741,7 +4741,7 @@ msgid "Set Profile Type"
 msgstr ""
 
 #: bp-core/admin/bb-admin-settings-invites.php:147
-#: bp-core/admin/bp-core-admin-settings.php:440
+#: bp-core/admin/bp-core-admin-settings.php:425
 msgid "Allow members to select profile type of invitee"
 msgstr ""
 
@@ -5644,7 +5644,7 @@ msgid "This email address or domain has been blacklisted. If you think you are s
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-actions.php:434
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:1008
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:1013
 msgid "Settings saved successfully."
 msgstr ""
 
@@ -5801,7 +5801,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-components.php:379
 #: bp-core/admin/bp-core-admin-functions.php:680
-#: bp-core/admin/bp-core-admin-settings.php:289
+#: bp-core/admin/bp-core-admin-settings.php:274
 #: bp-core/admin/settings/members/settings-profile-navigation.php:250
 #: bp-core/classes/class-bp-admin.php:316
 #: bp-core/classes/class-bp-admin.php:477
@@ -5866,7 +5866,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:685
 #: bp-core/admin/bp-core-admin-functions.php:2789
-#: bp-core/admin/bp-core-admin-settings.php:319
+#: bp-core/admin/bp-core-admin-settings.php:304
 #: bp-core/classes/class-bp-admin.php:325
 #: bp-core/classes/class-bp-admin.php:486
 #: bp-core/admin/bb-settings/settings-2.0/build/726.js:3
@@ -6146,7 +6146,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-functions.php:2588
 #: bp-core/admin/bp-core-admin-functions.php:2624
 #: bp-core/admin/bp-core-admin-functions.php:2631
-#: bp-core/admin/bp-core-admin-settings.php:1431
+#: bp-core/admin/bp-core-admin-settings.php:1416
 msgid "to unlock"
 msgstr ""
 
@@ -6165,8 +6165,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:2623
 #: bp-core/admin/bp-core-admin-functions.php:2630
-#: bp-core/admin/settings/notifications/settings-web-push.php:122
-#: bp-core/admin/settings/notifications/settings-web-push.php:145
+#: bp-core/admin/settings/notifications/settings-web-push.php:142
 #: bp-core/admin/templates/upgrade-screen.php:35
 #: bp-integrations/pusher/bb-pusher-admin-tab.php:251
 #: bp-integrations/pusher/bb-pusher-admin-tab.php:268
@@ -6290,18 +6289,18 @@ msgid "Associate a WordPress page with each of the following components."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-pages.php:266
-#: bp-core/admin/bp-core-admin-settings.php:91
-#: bp-core/admin/bp-core-admin-settings.php:156
-#: bp-core/admin/bp-core-admin-settings.php:213
-#: bp-core/admin/bp-core-admin-settings.php:254
-#: bp-core/admin/bp-core-admin-settings.php:647
-#: bp-core/admin/bp-core-admin-settings.php:815
-#: bp-core/admin/bp-core-admin-settings.php:842
-#: bp-core/admin/bp-core-admin-settings.php:869
-#: bp-core/admin/bp-core-admin-settings.php:1174
-#: bp-core/admin/bp-core-admin-settings.php:1465
-#: bp-core/admin/bp-core-admin-settings.php:1630
-#: bp-core/admin/bp-core-admin-settings.php:1657
+#: bp-core/admin/bp-core-admin-settings.php:76
+#: bp-core/admin/bp-core-admin-settings.php:141
+#: bp-core/admin/bp-core-admin-settings.php:198
+#: bp-core/admin/bp-core-admin-settings.php:239
+#: bp-core/admin/bp-core-admin-settings.php:632
+#: bp-core/admin/bp-core-admin-settings.php:800
+#: bp-core/admin/bp-core-admin-settings.php:827
+#: bp-core/admin/bp-core-admin-settings.php:854
+#: bp-core/admin/bp-core-admin-settings.php:1159
+#: bp-core/admin/bp-core-admin-settings.php:1450
+#: bp-core/admin/bp-core-admin-settings.php:1615
+#: bp-core/admin/bp-core-admin-settings.php:1642
 #: bp-integrations/learndash/bp-learndash-functions.php:408
 #: bp-integrations/learndash/bp-learndash-functions.php:431
 #: bp-integrations/learndash/bp-learndash-functions.php:454
@@ -6315,7 +6314,7 @@ msgid "Associate a WordPress page with the following Registration and Login sect
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-pages.php:285
-#: bp-core/admin/bp-core-admin-settings.php:582
+#: bp-core/admin/bp-core-admin-settings.php:567
 msgid "Because <a href=\"%s\">Email Invites</a> is enabled, invited users will still be allowed to register new accounts."
 msgstr ""
 
@@ -6371,257 +6370,253 @@ msgid "Show the Toolbar for logged out users"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:35
-msgid "Allow members to delete their profiles"
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-settings.php:50
 msgid "Show the Toolbar for logged-in members (non-admins)"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:64
+#: bp-core/admin/bp-core-admin-settings.php:49
 msgid "Show the Toolbar for logged-in admins"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:105
+#: bp-core/admin/bp-core-admin-settings.php:90
 msgid "Restrict site access to only logged-in members"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:110
+#: bp-core/admin/bp-core-admin-settings.php:95
 msgid "Login and <a href=\"%s\">Registration</a> content will remain publicly visible."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:129
+#: bp-core/admin/bp-core-admin-settings.php:114
 msgid "Enter URLs or URI fragments (e.g. /groups/) to remain publicly visible always. Enter one URL or URI per line. "
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:172
+#: bp-core/admin/bp-core-admin-settings.php:157
 msgid "Enable Akismet spam protection for activity feed"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:186
+#: bp-core/admin/bp-core-admin-settings.php:171
 msgid "Allow activity feed commenting on blog posts, custom post types, and forum discussions"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:227
+#: bp-core/admin/bp-core-admin-settings.php:212
 msgid "When links are used in activity posts, display an image and excerpt from the site"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:341
+#: bp-core/admin/bp-core-admin-settings.php:326
 #: bp-integrations/buddyboss-app/templates/admin/integration-tab-intro.php:10
 #: bp-integrations/buddyboss-app/templates/admin/integration-tab-intro.php:20
 msgid "BuddyBoss App"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:445
+#: bp-core/admin/bp-core-admin-settings.php:430
 msgid "Customize this setting while editing any of your <a href=\"%s\">Profile Types</a>."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:469
+#: bp-core/admin/bp-core-admin-settings.php:454
 msgid "Select which custom post types show in the activity feed when members publish them. For each custom post type, you can select whether or not to show comments in these activity posts (if comments are supported)."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:483
+#: bp-core/admin/bp-core-admin-settings.php:468
 msgid "WordPress Posts"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:490
+#: bp-core/admin/bp-core-admin-settings.php:475
 msgid "When members publish new blog posts, show them in the activity feed."
 msgstr ""
 
 #. translators: %s: comment post type
 #. translators: %s: Post type name (e.g. "Quizzes").
-#: bp-core/admin/bp-core-admin-settings.php:516
+#: bp-core/admin/bp-core-admin-settings.php:501
 #: bp-core/admin/settings/activity/settings-visibility.php:208
 msgid "Comments are not supported for %s."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:536
+#: bp-core/admin/bp-core-admin-settings.php:521
 #: bp-core/admin/settings/activity/settings-visibility.php:135
 msgid "Enable WordPress Post comments in the activity feed"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:536
+#: bp-core/admin/bp-core-admin-settings.php:521
 msgid "Enable %s comments in the activity feed."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:543
+#: bp-core/admin/bp-core-admin-settings.php:528
 #: bp-core/admin/settings/activity/settings-visibility.php:136
 msgid "Allow members to view and create comments to blog posts in the activity feed."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:576
+#: bp-core/admin/bp-core-admin-settings.php:561
 msgid "Allow non-members to register new accounts"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:615
+#: bp-core/admin/bp-core-admin-settings.php:600
 msgid "Only allow the selected profile types to send invites."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:706
+#: bp-core/admin/bp-core-admin-settings.php:691
 msgid "Add Email confirmation to register form"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:720
+#: bp-core/admin/bp-core-admin-settings.php:705
 msgid "Add Legal Agreement checkbox to register form"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:724
+#: bp-core/admin/bp-core-admin-settings.php:709
 msgid "Require non-members to explicitly agree to your Terms of Service and Privacy Policy before registering."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:737
+#: bp-core/admin/bp-core-admin-settings.php:722
 msgid "Add Password confirmation to register form"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:753
+#: bp-core/admin/bp-core-admin-settings.php:738
 msgid "BuddyBoss Registration"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:754
-#: bp-core/admin/bp-core-admin-settings.php:1518
-#: bp-core/admin/bp-core-admin-settings.php:1568
+#: bp-core/admin/bp-core-admin-settings.php:739
+#: bp-core/admin/bp-core-admin-settings.php:1503
+#: bp-core/admin/bp-core-admin-settings.php:1553
 #: bp-core/admin/bb-settings/settings-2.0/build/656.js:1
 msgid "Custom URL"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:761
+#: bp-core/admin/bp-core-admin-settings.php:746
 msgid "Use the default BuddyBoss registration form. Make sure to configure the <a href=\"%s\">registration pages</a>."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:789
+#: bp-core/admin/bp-core-admin-settings.php:774
 msgid "Enter a custom URL to redirect users to register to your site. Useful for membership plugins."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:929
+#: bp-core/admin/bp-core-admin-settings.php:914
 msgid "Restrict REST API access to only logged-in members"
 msgstr ""
 
 #. translators: Registration link.
-#: bp-core/admin/bp-core-admin-settings.php:935
+#: bp-core/admin/bp-core-admin-settings.php:920
 msgid "Login and %s APIs will remain publicly visible."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:938
-#: bp-core/admin/settings/bp-admin-setting-general.php:50
+#: bp-core/admin/bp-core-admin-settings.php:923
+#: bp-core/admin/settings/bp-admin-setting-general.php:47
 #: bp-core/admin/settings/bp-admin-setting-registration.php:21
 #: bp-integrations/recaptcha/bb-recaptcha-functions.php:208
 msgid "Registration"
 msgstr ""
 
 #. translators: Settings link.
-#: bp-core/admin/bp-core-admin-settings.php:959
+#: bp-core/admin/bp-core-admin-settings.php:944
 msgid "Your BuddyBoss App is currently public. To restrict access to REST APIs for logged-out members, please enable \"Private App\" in the %s."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:962
+#: bp-core/admin/bp-core-admin-settings.php:947
 msgid "BuddyBoss App's settings"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:990
+#: bp-core/admin/bp-core-admin-settings.php:975
 msgid "Enter REST API endpoint URLs or URI fragments (e.g. wp-json/wp/v2/pages/&lt;id&gt;) to remain publicly visible always. Enter one URL or URI per line."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1004
+#: bp-core/admin/bp-core-admin-settings.php:989
 msgid "Restrict RSS feed access to only logged-in members"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1016
+#: bp-core/admin/bp-core-admin-settings.php:1001
 msgid "Enter RSS feed URLs or URI fragments (e.g. /post-name/feed/) to remain publicly visible always. Enter one URL or URI per line."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1033
+#: bp-core/admin/bp-core-admin-settings.php:1018
 msgid "BuddyBoss Labs"
 msgstr ""
 
 #. translators: Support portal.
-#: bp-core/admin/bp-core-admin-settings.php:1103
+#: bp-core/admin/bp-core-admin-settings.php:1088
 msgid "BuddyBoss Labs provides early-access to upcoming BuddyBoss features. You can help us prepare these features for official release by reporting issues and providing feedback through the <a href=\"%s\" target=\"_blank\" >support portal</a>."
 msgstr ""
 
 #. translators: Support portal.
-#: bp-core/admin/bp-core-admin-settings.php:1120
+#: bp-core/admin/bp-core-admin-settings.php:1105
 msgid "Please note, customer support will not be able to provide support for these features until their official release."
 msgstr ""
 
 #. translators: Support portal.
-#: bp-core/admin/bp-core-admin-settings.php:1144
+#: bp-core/admin/bp-core-admin-settings.php:1129
 msgid "There are currently no BuddyBoss Labs features available."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1188
-#: bp-core/admin/bp-core-admin-settings.php:1327
+#: bp-core/admin/bp-core-admin-settings.php:1173
+#: bp-core/admin/bp-core-admin-settings.php:1312
 msgid "Select Condition"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1189
-#: bp-core/admin/bp-core-admin-settings.php:1328
+#: bp-core/admin/bp-core-admin-settings.php:1174
+#: bp-core/admin/bp-core-admin-settings.php:1313
 msgid "Always Allow"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1190
-#: bp-core/admin/bp-core-admin-settings.php:1329
+#: bp-core/admin/bp-core-admin-settings.php:1175
+#: bp-core/admin/bp-core-admin-settings.php:1314
 msgid "Never Allow"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1191
+#: bp-core/admin/bp-core-admin-settings.php:1176
 msgid "Only Allow"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1196
+#: bp-core/admin/bp-core-admin-settings.php:1181
 msgid ""
 "Add domain(s) to restrict new users from being able to register, you can use a wildcard (*) symbol to apply restrictions to an entire extension.\n"
 "\t\tWhen multiple restrictions are in place, a domain will always take priority over an extension.\n"
 "\t\t"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1223
-#: bp-core/admin/bp-core-admin-settings.php:1272
+#: bp-core/admin/bp-core-admin-settings.php:1208
+#: bp-core/admin/bp-core-admin-settings.php:1257
 msgid "Domain name"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1226
-#: bp-core/admin/bp-core-admin-settings.php:1275
+#: bp-core/admin/bp-core-admin-settings.php:1211
+#: bp-core/admin/bp-core-admin-settings.php:1260
 #: bp-core/admin/bb-settings/settings-2.0/build/index.js:3
 msgid "Extension"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1304
-#: bp-core/admin/bp-core-admin-settings.php:1386
+#: bp-core/admin/bp-core-admin-settings.php:1289
+#: bp-core/admin/bp-core-admin-settings.php:1371
 msgid "Remove Rule"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1313
+#: bp-core/admin/bp-core-admin-settings.php:1298
 msgid "Add Domain"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1332
+#: bp-core/admin/bp-core-admin-settings.php:1317
 msgid "Enter specific email addresses which you want to allow for user registrations. Enter one address per line."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1342
-#: bp-core/admin/bp-core-admin-settings.php:1372
+#: bp-core/admin/bp-core-admin-settings.php:1327
+#: bp-core/admin/bp-core-admin-settings.php:1357
 #: bp-templates/bp-nouveau/readylaunch/members/index.php:178
 msgid "Email address"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1395
+#: bp-core/admin/bp-core-admin-settings.php:1380
 msgid "Add Email"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1408
+#: bp-core/admin/bp-core-admin-settings.php:1393
 msgid "Domain restrictions can be configured to limit new user registrations to specific domains or extensions. This setting is only available when using the BuddyBoss Registration Form."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1429
+#: bp-core/admin/bp-core-admin-settings.php:1414
 msgid "Enable the"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1430
+#: bp-core/admin/bp-core-admin-settings.php:1415
 msgid "BuddyBoss Registration Form"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1517
-#: bp-core/admin/bp-core-admin-settings.php:1567
+#: bp-core/admin/bp-core-admin-settings.php:1502
+#: bp-core/admin/bp-core-admin-settings.php:1552
 #: bp-core/admin/settings/groups/settings-group-images.php:217
 #: bp-core/admin/settings/members/settings-profile-image.php:231
 #: bp-document/bp-document-functions.php:2077
@@ -6632,51 +6627,51 @@ msgstr ""
 msgid "Default"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1530
-#: bp-core/admin/bp-core-admin-settings.php:1549
+#: bp-core/admin/bp-core-admin-settings.php:1515
+#: bp-core/admin/bp-core-admin-settings.php:1534
 msgid "Select a page or external link to redirect your members to after they login."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1580
-#: bp-core/admin/bp-core-admin-settings.php:1599
+#: bp-core/admin/bp-core-admin-settings.php:1565
+#: bp-core/admin/bp-core-admin-settings.php:1584
 msgid "Select a page or external link to redirect your members to after they logout."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1670
-#: bp-core/admin/bp-core-admin-settings.php:1706
+#: bp-core/admin/bp-core-admin-settings.php:1655
+#: bp-core/admin/bp-core-admin-settings.php:1691
 msgid "Load"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1675
+#: bp-core/admin/bp-core-admin-settings.php:1660
 msgid "page requests on page load"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1676
+#: bp-core/admin/bp-core-admin-settings.php:1661
 msgid "Select how many requests will be sent on page load. We recommend 1 request for high performing servers, and 2 for slower performing environments, or those who see conflicts with third party plugins."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1700
+#: bp-core/admin/bp-core-admin-settings.php:1685
 msgid "Infinite scrolling"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1701
+#: bp-core/admin/bp-core-admin-settings.php:1686
 #: bp-core/admin/bb-settings/settings-2.0/build/index.js:1
 msgid "Load more"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1714
+#: bp-core/admin/bp-core-admin-settings.php:1699
 msgid "activity posts at a time using"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1722
+#: bp-core/admin/bp-core-admin-settings.php:1707
 msgid "Use infinite scrolling to automatically load new posts while scrolling down feeds. Increasing the number of posts retrieved in each request may negatively impact page loading speeds."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1735
+#: bp-core/admin/bp-core-admin-settings.php:1720
 msgid "Enable content counts across your site"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1738
+#: bp-core/admin/bp-core-admin-settings.php:1723
 msgid "Disabling content counts will remove the counts on pages such as Members Directory, Groups Directory, Media pages such as Photos & Videos. This will also remove the counts under the profile tabs and can improve page load performance."
 msgstr ""
 
@@ -8052,7 +8047,7 @@ msgstr[1] ""
 
 #: bp-core/admin/classes/class-bb-admin-settings-ajax.php:167
 #: bp-core/admin/classes/class-bb-admin-settings-ajax.php:263
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:855
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:860
 msgid "Feature ID is required."
 msgstr ""
 
@@ -8062,7 +8057,7 @@ msgstr ""
 
 #: bp-core/admin/classes/class-bb-admin-settings-ajax.php:175
 #: bp-core/admin/classes/class-bb-admin-settings-ajax.php:267
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:859
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:864
 msgid "Feature registry not available."
 msgstr ""
 
@@ -8084,19 +8079,19 @@ msgid "Feature not found."
 msgstr ""
 
 #: bp-core/admin/classes/class-bb-admin-settings-ajax.php:383
-#: bp-core/admin/settings/notifications/settings-web-push.php:216
+#: bp-core/admin/settings/notifications/settings-web-push.php:213
 msgid "UPGRADE PRO"
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:851
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:856
 msgid "Invalid settings format."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:864
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:869
 msgid "Invalid settings data."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:901
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:906
 msgid "No fields registered for this feature."
 msgstr ""
 
@@ -9582,56 +9577,52 @@ msgstr ""
 msgid "General Settings"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:32
-msgid "Account Deletion"
-msgstr ""
-
-#: bp-core/admin/settings/bp-admin-setting-general.php:37
+#: bp-core/admin/settings/bp-admin-setting-general.php:34
 msgid "Toolbar"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:47
+#: bp-core/admin/settings/bp-admin-setting-general.php:44
 msgid "Content Counts"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:55
+#: bp-core/admin/settings/bp-admin-setting-general.php:52
 #: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:636
 msgid "Enable Registration"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:61
+#: bp-core/admin/settings/bp-admin-setting-general.php:58
 msgid "Registration Form"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:89
+#: bp-core/admin/settings/bp-admin-setting-general.php:86
 msgid "Enable Social Login"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:108
+#: bp-core/admin/settings/bp-admin-setting-general.php:105
 msgid "Redirection"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:110
+#: bp-core/admin/settings/bp-admin-setting-general.php:107
 msgid "After Login"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:115
+#: bp-core/admin/settings/bp-admin-setting-general.php:112
 msgid "After Logout"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:121
+#: bp-core/admin/settings/bp-admin-setting-general.php:118
 msgid "Registration Restrictions"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:126
+#: bp-core/admin/settings/bp-admin-setting-general.php:123
 msgid "Domain Restrictions"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:131
+#: bp-core/admin/settings/bp-admin-setting-general.php:128
 msgid "Email Restrictions"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:134
+#: bp-core/admin/settings/bp-admin-setting-general.php:131
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:990
 #: bp-templates/bp-nouveau/buddypress/document/document-privacy.php:22
 #: bp-templates/bp-nouveau/buddypress/media/media-privacy.php:22
@@ -9648,44 +9639,44 @@ msgstr ""
 msgid "Privacy"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:137
+#: bp-core/admin/settings/bp-admin-setting-general.php:134
 msgid "Private Website"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:140
+#: bp-core/admin/settings/bp-admin-setting-general.php:137
 msgid "Public Website Content"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:144
+#: bp-core/admin/settings/bp-admin-setting-general.php:141
 msgid "Private REST APIs"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:156
+#: bp-core/admin/settings/bp-admin-setting-general.php:153
 msgid "Public REST APIs"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:160
+#: bp-core/admin/settings/bp-admin-setting-general.php:157
 msgid "Private RSS Feeds"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:162
+#: bp-core/admin/settings/bp-admin-setting-general.php:159
 msgid "Public RSS Feeds"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:169
+#: bp-core/admin/settings/bp-admin-setting-general.php:166
 msgid "Main Settings"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:172
+#: bp-core/admin/settings/bp-admin-setting-general.php:169
 msgctxt "BuddyPress setting tab"
 msgid "Profile Settings"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:175
+#: bp-core/admin/settings/bp-admin-setting-general.php:172
 msgid "Groups Settings"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:200
+#: bp-core/admin/settings/bp-admin-setting-general.php:197
 msgid "Allow users to sign in with social login"
 msgstr ""
 
@@ -10451,7 +10442,7 @@ msgstr ""
 #: bp-core/admin/settings/media/settings-gifs.php:64
 #: bp-core/admin/settings/members/settings-member-directory.php:156
 #: bp-core/admin/settings/members/settings-member-directory.php:193
-#: bp-core/admin/settings/notifications/settings-web-push.php:279
+#: bp-core/admin/settings/notifications/settings-web-push.php:276
 #: bp-friends/bp-friends-template.php:477
 #: bp-members/bp-members-admin.php:146
 #: bp-templates/bp-nouveau/includes/customizer.php:239
@@ -10462,7 +10453,7 @@ msgstr ""
 #: bp-core/admin/settings/media/callbacks.php:412
 #: bp-core/admin/settings/media/callbacks.php:458
 #: bp-core/admin/settings/media/settings-gifs.php:39
-#: bp-core/admin/settings/notifications/settings-web-push.php:212
+#: bp-core/admin/settings/notifications/settings-web-push.php:209
 #: bp-integrations/pusher/bb-pusher-admin-tab.php:117
 #: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:179
 msgid "Not Connected"
@@ -11177,6 +11168,18 @@ msgstr ""
 msgid "Unique Identifier"
 msgstr ""
 
+#: bp-core/admin/settings/members/settings-profile-name.php:354
+msgid "User Settings"
+msgstr ""
+
+#: bp-core/admin/settings/members/settings-profile-name.php:368
+msgid "Account Deletion"
+msgstr ""
+
+#: bp-core/admin/settings/members/settings-profile-name.php:370
+msgid "Allow members to delete their profiles"
+msgstr ""
+
 #: bp-core/admin/settings/members/settings-profile-navigation.php:47
 msgid "Display the profile navigation vertically"
 msgstr ""
@@ -11375,51 +11378,67 @@ msgstr ""
 msgid "Members can manage which on-screen notifications they receive in their notification preferences by enabling or disabling the \"Web\" options."
 msgstr ""
 
-#. translators: %s: BuddyBoss Settings 2.0 URL
+#: bp-core/admin/settings/notifications/settings-web-push.php:91
+msgid "OneSignal Integration is Disabled"
+msgstr ""
+
+#: bp-core/admin/settings/notifications/settings-web-push.php:92
+msgid "OneSignal integration for BuddyBoss is currently disabled. Enable it to configure web push notifications."
+msgstr ""
+
 #: bp-core/admin/settings/notifications/settings-web-push.php:93
-msgid "OneSignal integration is currently disabled. Go to <a href=\"%s\">BuddyBoss Settings</a> and enable the OneSignal integration to configure web push notifications."
+#: bp-core/classes/class-bp-admin.php:315
+#: bp-core/classes/class-bp-admin.php:476
+msgid "BuddyBoss Settings"
+msgstr ""
+
+#: bp-core/admin/settings/notifications/settings-web-push.php:118
+msgid "BuddyBoss Platform Pro Update Required"
+msgstr ""
+
+#: bp-core/admin/settings/notifications/settings-web-push.php:119
+msgid "Please update to the latest version of BuddyBoss Pro to manage your web push notification settings."
+msgstr ""
+
+#: bp-core/admin/settings/notifications/settings-web-push.php:120
+msgid "Update Now"
 msgstr ""
 
 #. translators: %s: BuddyBoss Pro link.
-#: bp-core/admin/settings/notifications/settings-web-push.php:121
-msgid "Please update %s to manage Web Push Notifications from this panel. You can still manage OneSignal settings from the legacy <a href=\"%s\">Integrations</a> page."
-msgstr ""
-
-#. translators: %s: BuddyBoss Pro link.
-#: bp-core/admin/settings/notifications/settings-web-push.php:144
+#: bp-core/admin/settings/notifications/settings-web-push.php:141
 msgid "Please update %s to version 2.0.3 to use web push notifications on your site."
 msgstr ""
 
-#: bp-core/admin/settings/notifications/settings-web-push.php:165
+#: bp-core/admin/settings/notifications/settings-web-push.php:162
 msgid "Web Push Notifications are not supported when using the legacy notifications system."
 msgstr ""
 
-#: bp-core/admin/settings/notifications/settings-web-push.php:208
+#: bp-core/admin/settings/notifications/settings-web-push.php:205
 msgid "OneSignal"
 msgstr ""
 
 #. translators: %s: OneSignal URL
-#: bp-core/admin/settings/notifications/settings-web-push.php:222
+#: bp-core/admin/settings/notifications/settings-web-push.php:219
 msgid "To use <a href=\"%s\" target=\"_blank\" rel=\"noopener noreferrer\">OneSignal</a> for web push notifications, create an app in your account and enter the API credentials from the settings below."
 msgstr ""
 
-#: bp-core/admin/settings/notifications/settings-web-push.php:235
+#: bp-core/admin/settings/notifications/settings-web-push.php:232
 msgid "API Credentials"
 msgstr ""
 
-#: bp-core/admin/settings/notifications/settings-web-push.php:239
+#: bp-core/admin/settings/notifications/settings-web-push.php:236
 msgid "Enter OneSignal APP ID"
 msgstr ""
 
-#: bp-core/admin/settings/notifications/settings-web-push.php:243
+#: bp-core/admin/settings/notifications/settings-web-push.php:240
 msgid "App ID"
 msgstr ""
 
-#: bp-core/admin/settings/notifications/settings-web-push.php:260
+#: bp-core/admin/settings/notifications/settings-web-push.php:257
 msgid "Enter Rest API key"
 msgstr ""
 
-#: bp-core/admin/settings/notifications/settings-web-push.php:264
+#: bp-core/admin/settings/notifications/settings-web-push.php:261
 msgid "Rest API Key"
 msgstr ""
 
@@ -15789,11 +15808,6 @@ msgstr ""
 #: bp-core/classes/class-bp-admin.php:297
 #: bp-core/classes/class-bp-admin.php:458
 msgid "BuddyBoss Components"
-msgstr ""
-
-#: bp-core/classes/class-bp-admin.php:315
-#: bp-core/classes/class-bp-admin.php:476
-msgid "BuddyBoss Settings"
 msgstr ""
 
 #: bp-core/classes/class-bp-admin.php:324

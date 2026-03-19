@@ -687,6 +687,11 @@ class BB_Admin_Settings_Ajax {
 				'placeholder'          => $field['placeholder'] ?? null,
 				'button_label'         => $field['button_label'] ?? null,
 				'button_only'          => ! empty( $field['button_only'] ),
+				'button_url'           => ! empty( $field['button_url'] ) ? esc_url_raw( $field['button_url'] ) : null,
+				'button_target'        => $field['button_target'] ?? null,
+				// Empty state fields (centered card with icon + title + description + button).
+				'empty_state_title'       => $field['empty_state_title'] ?? null,
+				'empty_state_description' => $field['empty_state_description'] ?? null,
 				'related_fields'       => ! empty( $field['related_fields'] ) && is_array( $field['related_fields'] ) ? array_map( 'sanitize_key', $field['related_fields'] ) : null,
 				'is_connected'         => ! empty( $field['is_connected'] ),
 				// Max length for text inputs.

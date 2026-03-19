@@ -28,9 +28,6 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 		// Main General Settings Section.
 		$this->add_section( 'bp_main', __( 'General Settings', 'buddyboss' ), '', 'bp_admin_setting_tutorial' );
 
-		// Account Deletion Settings.
-		$this->add_field( 'bp-disable-account-deletion', __( 'Account Deletion', 'buddyboss' ), 'bp_admin_setting_callback_account_deletion', 'intval' );
-
 		// Toolbar Settings.
 		$args          = array();
 		$args['class'] = 'child-no-padding-first';
