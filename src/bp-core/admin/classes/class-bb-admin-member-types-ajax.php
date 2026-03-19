@@ -35,25 +35,6 @@ class BB_Admin_Member_Types_Ajax {
 	 *
 	 * @var bool
 	 */
-	private $role_update_partial = false;
-
-	/**
-	 * Total user count for partial role update.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @var int
-	 */
-	private $role_update_total = 0;
-
-	/**
-	 * Number of users synced in the partial role update.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @var int
-	 */
-	private $role_update_synced = 0;
 
 	/**
 	 * Verify AJAX request (capability + nonce).
@@ -443,16 +424,6 @@ class BB_Admin_Member_Types_Ajax {
 			'id'      => $type_id,
 		);
 
-		// Add partial role update warning if applicable.
-		if ( $this->role_update_partial ) {
-			$response['role_update_warning'] = sprintf(
-				/* translators: 1: number of users synced, 2: total number of users. */
-				__( 'WordPress role updated for %1$d of %2$d members. The remaining members will need to be updated manually or via WP-CLI.', 'buddyboss' ),
-				$this->role_update_synced,
-				$this->role_update_total
-			);
-		}
-
 		wp_send_json_success( $response );
 	}
 
@@ -704,25 +675,14 @@ class BB_Admin_Member_Types_Ajax {
 
 				if ( isset( $selected_roles[0] ) && 'none' !== $selected_roles[0] && ! empty( $get_user_ids ) ) {
 
-					// Limit synchronous role updates to prevent AJAX timeouts on large sites.
-					// Each set_role() call triggers wp_update_user() which is expensive.
-					$max_sync_users = 500;
-					$users_to_sync  = array_slice( $get_user_ids, 0, $max_sync_users );
-
-					// Prime user cache to avoid N+1 queries inside the loop.
-					cache_users( array_map( 'absint', $users_to_sync ) );
-
-					foreach ( $users_to_sync as $single_user ) {
+					// Process all users — matches legacy behavior (no cap).
+					// @todo: Add background queue for large sites in a future release.
+					foreach ( $get_user_ids as $single_user ) {
 						$bp_user = new WP_User( $single_user );
-						// Use set_role() for atomic role swap instead of remove+add.
-						$bp_user->set_role( $selected_roles[0] );
-					}
-
-					// Flag partial update for the response so admin knows.
-					if ( count( $get_user_ids ) > $max_sync_users ) {
-						$this->role_update_partial = true;
-						$this->role_update_total   = count( $get_user_ids );
-						$this->role_update_synced  = $max_sync_users;
+						foreach ( $bp_user->roles as $role ) {
+							$bp_user->remove_role( $role );
+						}
+						$bp_user->add_role( $selected_roles[0] );
 					}
 				}
 			}
