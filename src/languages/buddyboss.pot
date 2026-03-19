@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.21.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-03-19 04:51:53+00:00\n"
+"POT-Creation-Date: 2026-03-19 07:17:49+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -869,8 +869,8 @@ msgstr ""
 #: bp-core/admin/settings/groups/settings-group-images.php:75
 #: bp-core/admin/settings/groups/settings-group-images.php:166
 #: bp-core/admin/settings/members/settings-profile-image.php:57
-#: bp-core/admin/settings/members/settings-profile-image.php:132
-#: bp-core/admin/settings/members/settings-profile-image.php:296
+#: bp-core/admin/settings/members/settings-profile-image.php:137
+#: bp-core/admin/settings/members/settings-profile-image.php:301
 #: bp-core/admin/bb-settings/settings-2.0/build/index.js:1
 msgid "BuddyBoss"
 msgstr ""
@@ -6623,7 +6623,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:1657
 #: bp-core/admin/bp-core-admin-settings.php:1707
 #: bp-core/admin/settings/groups/settings-group-images.php:217
-#: bp-core/admin/settings/members/settings-profile-image.php:226
+#: bp-core/admin/settings/members/settings-profile-image.php:231
 #: bp-document/bp-document-functions.php:2077
 #: bp-video/bp-video-functions.php:2720
 #: bp-core/admin/bb-settings/settings-2.0/build/553.js:1
@@ -9390,7 +9390,7 @@ msgstr ""
 #: bp-core/admin/settings/activity/settings-comments.php:93
 #: bp-core/admin/settings/groups/settings-group-images.php:171
 #: bp-core/admin/settings/members/settings-member-directory.php:185
-#: bp-core/admin/settings/members/settings-profile-image.php:301
+#: bp-core/admin/settings/members/settings-profile-image.php:306
 #: bp-core/bp-core-functions.php:7409
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:218
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:233
@@ -10199,8 +10199,8 @@ msgstr ""
 
 #: bp-core/admin/settings/groups/settings-group-images.php:85
 #: bp-core/admin/settings/groups/settings-group-images.php:176
-#: bp-core/admin/settings/members/settings-profile-image.php:142
-#: bp-core/admin/settings/members/settings-profile-image.php:306
+#: bp-core/admin/settings/members/settings-profile-image.php:147
+#: bp-core/admin/settings/members/settings-profile-image.php:311
 #: bp-xprofile/classes/class-bp-xprofile-field-type-gender.php:241
 #: bp-xprofile/classes/class-bp-xprofile-field-type-social-networks.php:194
 #: bp-xprofile/classes/class-bp-xprofile-field-type.php:339
@@ -10210,7 +10210,7 @@ msgid "Custom"
 msgstr ""
 
 #: bp-core/admin/settings/groups/settings-group-images.php:96
-#: bp-core/admin/settings/members/settings-profile-image.php:153
+#: bp-core/admin/settings/members/settings-profile-image.php:158
 msgid "Upload Custom Avatar"
 msgstr ""
 
@@ -10232,22 +10232,22 @@ msgid "Default Group Cover Image"
 msgstr ""
 
 #: bp-core/admin/settings/groups/settings-group-images.php:187
-#: bp-core/admin/settings/members/settings-profile-image.php:317
+#: bp-core/admin/settings/members/settings-profile-image.php:322
 msgid "Upload Custom Cover"
 msgstr ""
 
 #: bp-core/admin/settings/groups/settings-group-images.php:209
-#: bp-core/admin/settings/members/settings-profile-image.php:218
+#: bp-core/admin/settings/members/settings-profile-image.php:223
 msgid "Cover Image Sizes"
 msgstr ""
 
 #: bp-core/admin/settings/groups/settings-group-images.php:221
-#: bp-core/admin/settings/members/settings-profile-image.php:230
+#: bp-core/admin/settings/members/settings-profile-image.php:235
 msgid "Full Width"
 msgstr ""
 
 #: bp-core/admin/settings/groups/settings-group-images.php:231
-#: bp-core/admin/settings/members/settings-profile-image.php:240
+#: bp-core/admin/settings/members/settings-profile-image.php:245
 msgid "Width"
 msgstr ""
 
@@ -10256,17 +10256,17 @@ msgid "Changing the size of your cover images will reposition those already uplo
 msgstr ""
 
 #: bp-core/admin/settings/groups/settings-group-images.php:252
-#: bp-core/admin/settings/members/settings-profile-image.php:261
+#: bp-core/admin/settings/members/settings-profile-image.php:266
 msgid "Small"
 msgstr ""
 
 #: bp-core/admin/settings/groups/settings-group-images.php:256
-#: bp-core/admin/settings/members/settings-profile-image.php:265
+#: bp-core/admin/settings/members/settings-profile-image.php:270
 msgid "Large"
 msgstr ""
 
 #: bp-core/admin/settings/groups/settings-group-images.php:266
-#: bp-core/admin/settings/members/settings-profile-image.php:275
+#: bp-core/admin/settings/members/settings-profile-image.php:280
 msgid "Height"
 msgstr ""
 
@@ -11045,26 +11045,35 @@ msgstr ""
 msgid "Allow members to use Gravatars for profile avatars"
 msgstr ""
 
-#: bp-core/admin/settings/members/settings-profile-image.php:114
+#. translators: Gravatar Link
+#: bp-core/admin/settings/members/settings-profile-image.php:98
+msgid "When enabled, members will be able to use avatars from their %s account."
+msgstr ""
+
+#: bp-core/admin/settings/members/settings-profile-image.php:99
+msgid "Gravatar"
+msgstr ""
+
+#: bp-core/admin/settings/members/settings-profile-image.php:119
 msgid "Default Profile Avatar"
 msgstr ""
 
 #. translators: 1: Profile settings link, 2: Imagick link.
-#: bp-core/admin/settings/members/settings-profile-image.php:119
+#: bp-core/admin/settings/members/settings-profile-image.php:124
 msgid "Display name shows as one or two initials based on your %1$s. Select a default image for members without a profile avatar. Note: Your server needs %2$s installed to use the \"Display Name\" option."
 msgstr ""
 
-#: bp-core/admin/settings/members/settings-profile-image.php:120
-#: bp-core/admin/settings/members/settings-profile-image.php:126
+#: bp-core/admin/settings/members/settings-profile-image.php:125
+#: bp-core/admin/settings/members/settings-profile-image.php:131
 msgid "profile settings"
 msgstr ""
 
 #. translators: %s: Profile settings link.
-#: bp-core/admin/settings/members/settings-profile-image.php:125
+#: bp-core/admin/settings/members/settings-profile-image.php:130
 msgid "Display name shows as one or two initials based on your %s. Select a default image for members without a profile avatar."
 msgstr ""
 
-#: bp-core/admin/settings/members/settings-profile-image.php:137
+#: bp-core/admin/settings/members/settings-profile-image.php:142
 #: bp-core/admin/settings/search/settings-network-search.php:69
 #: bp-members/classes/class-bp-members-admin.php:2469
 #: bp-search/bp-search-functions.php:508
@@ -11072,31 +11081,31 @@ msgstr ""
 msgid "Display Name"
 msgstr ""
 
-#: bp-core/admin/settings/members/settings-profile-image.php:187
+#: bp-core/admin/settings/members/settings-profile-image.php:192
 msgid "Profile Covers"
 msgstr ""
 
-#: bp-core/admin/settings/members/settings-profile-image.php:200
+#: bp-core/admin/settings/members/settings-profile-image.php:205
 msgid "Profile Cover Images"
 msgstr ""
 
-#: bp-core/admin/settings/members/settings-profile-image.php:202
+#: bp-core/admin/settings/members/settings-profile-image.php:207
 msgid "Enable cover images for member profiles"
 msgstr ""
 
-#: bp-core/admin/settings/members/settings-profile-image.php:203
+#: bp-core/admin/settings/members/settings-profile-image.php:208
 msgid "When enabled, members will be able to upload cover images in their profile settings."
 msgstr ""
 
-#: bp-core/admin/settings/members/settings-profile-image.php:255
+#: bp-core/admin/settings/members/settings-profile-image.php:260
 msgid "Changing the cover image size will reposition existing member images."
 msgstr ""
 
-#: bp-core/admin/settings/members/settings-profile-image.php:289
+#: bp-core/admin/settings/members/settings-profile-image.php:294
 msgid "Default Profile Cover Image"
 msgstr ""
 
-#: bp-core/admin/settings/members/settings-profile-image.php:291
+#: bp-core/admin/settings/members/settings-profile-image.php:296
 msgid "Select which image should be used for members who haven't uploaded a profile cover image."
 msgstr ""
 
