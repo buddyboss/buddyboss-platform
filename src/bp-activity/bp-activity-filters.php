@@ -3659,6 +3659,50 @@ add_action( 'bp_activity_posted_update', 'bb_activity_send_email_to_following_po
 add_action( 'bb_media_after_create_parent_activity', 'bb_activity_send_email_to_following_post', 10, 3 );
 add_action( 'bb_document_after_create_parent_activity', 'bb_activity_send_email_to_following_post', 10, 3 );
 add_action( 'bb_video_after_create_parent_activity', 'bb_activity_send_email_to_following_post', 10, 3 );
+add_action( 'bp_activity_post_type_published', 'bb_activity_send_notification_for_post_type', 10, 3 );
+
+/**
+ * Send follower notifications when a post type activity is published (e.g. blog posts).
+ *
+ * The existing `bb_activity_send_email_to_following_post()` only handles direct
+ * activity updates (component === 'activity'). Blog posts create activities with
+ * component === 'blogs' and fire `bp_activity_post_type_published` with a different
+ * hook signature. This function bridges that gap.
+ *
+ * @since BuddyBoss 2.21.0
+ *
+ * @param int     $activity_id   ID of the newly published activity item.
+ * @param WP_Post $post          Post object.
+ * @param array   $activity_args Array of activity arguments.
+ */
+function bb_activity_send_notification_for_post_type( $activity_id, $post, $activity_args ) {
+	// Bail if follow is not active or activity ID is empty.
+	if ( empty( $activity_id ) || ! bp_is_activity_follow_active() ) {
+		return;
+	}
+
+	$activity = new BP_Activity_Activity( $activity_id );
+
+	// Bail if activity not found or not published.
+	if (
+		empty( $activity->id ) ||
+		bb_get_activity_published_status() !== $activity->status
+	) {
+		return;
+	}
+
+	$content   = ! empty( $activity->content ) ? $activity->content : '';
+	$usernames = bp_activity_do_mentions() ? bp_activity_find_mentions( $content ) : array();
+
+	$parse_args = array(
+		'activity'  => $activity,
+		'usernames' => $usernames,
+		'item_id'   => $activity->user_id,
+	);
+
+	// Send notification to followers.
+	bb_activity_create_following_post_notification( $parse_args );
+}
 
 /**
  * Function will send notification to following user.
