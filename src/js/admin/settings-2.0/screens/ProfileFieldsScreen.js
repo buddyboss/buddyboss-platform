@@ -540,7 +540,7 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 				return (
 					<div
 						key={ group.id }
-						className={ 'bb-pf-fieldset-card' + ( isDragOver ? ' bb-pf-drag-over' : '' ) }
+						className={ 'bb-pf-fieldset-card' + ( isDragOver ? ' bb-pf-drag-over' : '' ) + ( isCollapsed ? ' bb-pf-fieldset-card--collapsed' : '' ) }
 						draggable={ true }
 						onDragStart={ function ( e ) { handleGroupDragStart( e, groupIndex ); } }
 						onDragOver={ function ( e ) { handleGroupDragOver( e, groupIndex ); } }
@@ -561,19 +561,12 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 								>
 									<i className="bb-icons-rl-list" />
 								</span>
-								<button
-									className="bb-pf-fieldset-toggle"
-									onClick={ function () { toggleCollapse( group.id ); } }
-									aria-expanded={ ! isCollapsed }
-								>
-									<i className={ isCollapsed ? 'bb-icons-rl-caret-right' : 'bb-icons-rl-caret-down' } />
-									<h3>{ decodeEntities( group.name ) }</h3>
-									{ group.is_repeater && (
-										<span className="bb-pf-badge bb-pf-badge--repeater">
-											{ __( 'Repeater', 'buddyboss' ) }
-										</span>
-									) }
-								</button>
+								<h3>{ decodeEntities( group.name ) }</h3>
+								{ group.is_repeater && (
+									<span className="bb-pf-badge bb-pf-badge--repeater">
+										{ __( 'Repeater', 'buddyboss' ) }
+									</span>
+								) }
 							</div>
 							<div className="bb-pf-fieldset-header-right">
 								<Button
@@ -587,6 +580,14 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 									{ ' ' }
 									{ __( 'Edit Field Set', 'buddyboss' ) }
 								</Button>
+
+								<button
+									className="bb-pf-fieldset-toggle"
+									onClick={ function () { toggleCollapse( group.id ); } }
+									aria-expanded={ ! isCollapsed }
+								>
+									<i className={ isCollapsed ? 'bb-icons-rl-caret-right' : 'bb-icons-rl-caret-down' } />
+								</button>
 							</div>
 						</div>
 
