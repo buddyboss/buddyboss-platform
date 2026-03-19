@@ -26,6 +26,7 @@ import { ListToolbar } from '../components/common/ListToolbar';
 import { DeleteConfirmModal } from '../components/common/DeleteConfirmModal';
 import { BulkEditModal } from '../components/common/BulkEditModal';
 import { useListScreenHandlers } from '../hooks/useListScreenHandlers';
+import { useListScreenState } from '../hooks/useListScreenState';
 import { ReplyCreateModal } from '../components/forums/ReplyCreateModal';
 import { AsyncSelectField } from '../components/fields/AsyncSelectField';
 import { RichTextEditor, forceRemoveEditor } from '../components/common/RichTextEditor';
@@ -70,13 +71,27 @@ var CORE_COLUMNS = [ 'cb', 'title', 'bbp_reply_forum', 'bbp_reply_topic', 'bbp_r
  * @returns {JSX.Element} Replies list screen.
  */
 export default function RepliesListScreen( { onNavigate } ) {
+	// Common list screen state (loading, notice, selection, bulk, search).
+	var common = useListScreenState();
+	var isLoading = common.isLoading;
+	var setIsLoading = common.setIsLoading;
+	var notice = common.notice;
+	var setNotice = common.setNotice;
+	var selected = common.selectedIds;
+	var setSelected = common.setSelectedIds;
+	var bulkAction = common.bulkAction;
+	var setBulkAction = common.setBulkAction;
+	var isBulkProcessing = common.isBulkProcessing;
+	var setIsBulkProcessing = common.setIsBulkProcessing;
+	var search = common.searchInput;
+	var setSearch = common.setSearchInput;
+	var searchQuery = common.searchQuery;
+	var setSearchQuery = common.setSearchQuery;
+
+	// Screen-specific state.
 	var repliesState = useState( [] );
 	var replies = repliesState[ 0 ];
 	var setReplies = repliesState[ 1 ];
-
-	var isLoadingState = useState( true );
-	var isLoading = isLoadingState[ 0 ];
-	var setIsLoading = isLoadingState[ 1 ];
 
 	var errorState = useState( '' );
 	var error = errorState[ 0 ];
@@ -104,10 +119,6 @@ export default function RepliesListScreen( { onNavigate } ) {
 	var sort = sortState[ 0 ];
 	var setSort = sortState[ 1 ];
 
-	var searchState = useState( '' );
-	var search = searchState[ 0 ];
-	var setSearch = searchState[ 1 ];
-
 	var searchTimerRef = useRef( null );
 
 	// Metadata (views, bulk actions, columns).
@@ -124,20 +135,6 @@ export default function RepliesListScreen( { onNavigate } ) {
 	var setColumns = columnsState[ 1 ];
 
 	var hasMetaRef = useRef( false );
-
-	// Selection state.
-	var selectedState = useState( [] );
-	var selected = selectedState[ 0 ];
-	var setSelected = selectedState[ 1 ];
-
-	// Bulk action state.
-	var bulkActionState = useState( '' );
-	var bulkAction = bulkActionState[ 0 ];
-	var setBulkAction = bulkActionState[ 1 ];
-
-	var isBulkProcessingState = useState( false );
-	var isBulkProcessing = isBulkProcessingState[ 0 ];
-	var setIsBulkProcessing = isBulkProcessingState[ 1 ];
 
 	// Create modal.
 	var isCreateOpenState = useState( false );
@@ -216,12 +213,6 @@ export default function RepliesListScreen( { onNavigate } ) {
 	var bulkEditVisibilityState = useState( 'no_change' );
 	var bulkEditVisibility = bulkEditVisibilityState[ 0 ];
 	var setBulkEditVisibility = bulkEditVisibilityState[ 1 ];
-
-	// Notice state.
-	var noticeState = useState( null );
-	var notice = noticeState[ 0 ];
-	var setNotice = noticeState[ 1 ];
-
 
 	// Forum filter UI state.
 	var isForumFilterOpenState = useState( false );

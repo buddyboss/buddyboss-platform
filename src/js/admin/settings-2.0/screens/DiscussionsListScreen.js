@@ -27,6 +27,7 @@ import { ListToolbar } from '../components/common/ListToolbar';
 import { DeleteConfirmModal } from '../components/common/DeleteConfirmModal';
 import { BulkEditModal } from '../components/common/BulkEditModal';
 import { useListScreenHandlers } from '../hooks/useListScreenHandlers';
+import { useListScreenState } from '../hooks/useListScreenState';
 import { DiscussionCreateModal } from '../components/forums/DiscussionCreateModal';
 import { AsyncSelectField } from '../components/fields/AsyncSelectField';
 import { RichTextEditor, forceRemoveEditor } from '../components/common/RichTextEditor';
@@ -76,6 +77,24 @@ var CORE_COLUMNS = [ 'cb', 'title', 'bbp_topic_author', 'bbp_topic_forum', 'bbp_
  * @returns {JSX.Element} Discussions list screen.
  */
 export function DiscussionsListScreen( { onNavigate } ) {
+	// Common list screen state (loading, notice, selection, bulk, search).
+	var common = useListScreenState();
+	var isLoading = common.isLoading;
+	var setIsLoading = common.setIsLoading;
+	var notice = common.notice;
+	var setNotice = common.setNotice;
+	var selectedIds = common.selectedIds;
+	var setSelectedIds = common.setSelectedIds;
+	var bulkAction = common.bulkAction;
+	var setBulkAction = common.setBulkAction;
+	var isBulkProcessing = common.isBulkProcessing;
+	var setIsBulkProcessing = common.setIsBulkProcessing;
+	var searchInput = common.searchInput;
+	var setSearchInput = common.setSearchInput;
+	var searchQuery = common.searchQuery;
+	var setSearchQuery = common.setSearchQuery;
+
+	// Screen-specific state.
 	var discussionsState = useState( [] );
 	var discussions = discussionsState[ 0 ];
 	var setDiscussions = discussionsState[ 1 ];
@@ -96,22 +115,6 @@ export function DiscussionsListScreen( { onNavigate } ) {
 	var sortBy = sortByState[ 0 ];
 	var setSortBy = sortByState[ 1 ];
 
-	var searchQueryState = useState( '' );
-	var searchQuery = searchQueryState[ 0 ];
-	var setSearchQuery = searchQueryState[ 1 ];
-
-	var searchInputState = useState( '' );
-	var searchInput = searchInputState[ 0 ];
-	var setSearchInput = searchInputState[ 1 ];
-
-	var selectedIdsState = useState( [] );
-	var selectedIds = selectedIdsState[ 0 ];
-	var setSelectedIds = selectedIdsState[ 1 ];
-
-	var isLoadingState = useState( true );
-	var isLoading = isLoadingState[ 0 ];
-	var setIsLoading = isLoadingState[ 1 ];
-
 	var bulkActionsState = useState( {} );
 	var bulkActions = bulkActionsState[ 0 ];
 	var setBulkActions = bulkActionsState[ 1 ];
@@ -123,14 +126,6 @@ export function DiscussionsListScreen( { onNavigate } ) {
 	var columnsState = useState( {} );
 	var columns = columnsState[ 0 ];
 	var setColumns = columnsState[ 1 ];
-
-	var bulkActionState = useState( '' );
-	var bulkAction = bulkActionState[ 0 ];
-	var setBulkAction = bulkActionState[ 1 ];
-
-	var noticeState = useState( null );
-	var notice = noticeState[ 0 ];
-	var setNotice = noticeState[ 1 ];
 
 	var deleteModalState = useState( false );
 	var deleteModalOpen = deleteModalState[ 0 ];
@@ -159,10 +154,6 @@ export function DiscussionsListScreen( { onNavigate } ) {
 	var isEditSavingState = useState( false );
 	var isEditSaving = isEditSavingState[ 0 ];
 	var setIsEditSaving = isEditSavingState[ 1 ];
-
-	var isBulkProcessingState = useState( false );
-	var isBulkProcessing = isBulkProcessingState[ 0 ];
-	var setIsBulkProcessing = isBulkProcessingState[ 1 ];
 
 	var refetchCounterState = useState( 0 );
 	var refetchCounter = refetchCounterState[ 0 ];

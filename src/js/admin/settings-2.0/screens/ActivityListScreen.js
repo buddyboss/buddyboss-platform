@@ -24,6 +24,7 @@ import { ListPagination } from '../components/common/ListPagination';
 import { AdminNotice } from '../components/common/AdminNotice';
 import { ListToolbar } from '../components/common/ListToolbar';
 import { useListScreenHandlers } from '../hooks/useListScreenHandlers';
+import { useListScreenState } from '../hooks/useListScreenState';
 import { ActivityEditModal } from '../components/activity/ActivityEditModal';
 import { ActivityCommentModal } from '../components/activity/ActivityCommentModal';
 
@@ -35,6 +36,24 @@ import { ActivityCommentModal } from '../components/activity/ActivityCommentModa
  * @returns {JSX.Element} Activity list screen.
  */
 export function ActivityListScreen( { onNavigate } ) {
+	// Common list screen state (loading, notice, selection, bulk, search).
+	var common = useListScreenState();
+	var isLoading = common.isLoading;
+	var setIsLoading = common.setIsLoading;
+	var notice = common.notice;
+	var setNotice = common.setNotice;
+	var selectedIds = common.selectedIds;
+	var setSelectedIds = common.setSelectedIds;
+	var bulkAction = common.bulkAction;
+	var setBulkAction = common.setBulkAction;
+	var isBulkProcessing = common.isBulkProcessing;
+	var setIsBulkProcessing = common.setIsBulkProcessing;
+	var searchInput = common.searchInput;
+	var setSearchInput = common.setSearchInput;
+	var searchQuery = common.searchQuery;
+	var setSearchQuery = common.setSearchQuery;
+
+	// Screen-specific state.
 	var activitiesState = useState( [] );
 	var activities = activitiesState[ 0 ];
 	var setActivities = activitiesState[ 1 ];
@@ -66,22 +85,6 @@ export function ActivityListScreen( { onNavigate } ) {
 	var actionFilter = actionFilterState[ 0 ];
 	var setActionFilter = actionFilterState[ 1 ];
 
-	var searchQueryState = useState( '' );
-	var searchQuery = searchQueryState[ 0 ];
-	var setSearchQuery = searchQueryState[ 1 ];
-
-	var searchInputState = useState( '' );
-	var searchInput = searchInputState[ 0 ];
-	var setSearchInput = searchInputState[ 1 ];
-
-	var selectedIdsState = useState( [] );
-	var selectedIds = selectedIdsState[ 0 ];
-	var setSelectedIds = selectedIdsState[ 1 ];
-
-	var isLoadingState = useState( true );
-	var isLoading = isLoadingState[ 0 ];
-	var setIsLoading = isLoadingState[ 1 ];
-
 	var activityActionsState = useState( {} );
 	var activityActions = activityActionsState[ 0 ];
 	var setActivityActions = activityActionsState[ 1 ];
@@ -102,10 +105,6 @@ export function ActivityListScreen( { onNavigate } ) {
 	var views = viewsState[ 0 ];
 	var setViews = viewsState[ 1 ];
 
-	var bulkActionState = useState( '' );
-	var bulkAction = bulkActionState[ 0 ];
-	var setBulkAction = bulkActionState[ 1 ];
-
 	var editActivityState = useState( null );
 	var editActivity = editActivityState[ 0 ];
 	var setEditActivity = editActivityState[ 1 ];
@@ -125,10 +124,6 @@ export function ActivityListScreen( { onNavigate } ) {
 	var isEditLoadingState = useState( false );
 	var isEditLoading = isEditLoadingState[ 0 ];
 	var setIsEditLoading = isEditLoadingState[ 1 ];
-
-	var noticeState = useState( null );
-	var notice = noticeState[ 0 ];
-	var setNotice = noticeState[ 1 ];
 
 	var deleteConfirmState = useState( null ); // { action, ids, message }
 	var deleteConfirm = deleteConfirmState[ 0 ];

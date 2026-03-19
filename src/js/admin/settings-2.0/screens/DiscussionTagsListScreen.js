@@ -26,6 +26,7 @@ import { AdminNotice } from '../components/common/AdminNotice';
 import { ListToolbar } from '../components/common/ListToolbar';
 import { DeleteConfirmModal } from '../components/common/DeleteConfirmModal';
 import { useListScreenHandlers } from '../hooks/useListScreenHandlers';
+import { useListScreenState } from '../hooks/useListScreenState';
 import { TagCreateModal } from '../components/forums/TagCreateModal';
 
 /**
@@ -47,13 +48,27 @@ var TAGS_PER_PAGE = 20;
  * @returns {JSX.Element} Discussion tags list screen.
  */
 export default function DiscussionTagsListScreen( { onNavigate } ) {
+	// Common list screen state (loading, notice, selection, bulk, search).
+	var common = useListScreenState();
+	var isLoading = common.isLoading;
+	var setIsLoading = common.setIsLoading;
+	var notice = common.notice;
+	var setNotice = common.setNotice;
+	var selectedIds = common.selectedIds;
+	var setSelectedIds = common.setSelectedIds;
+	var bulkAction = common.bulkAction;
+	var setBulkAction = common.setBulkAction;
+	var isBulkProcessing = common.isBulkProcessing;
+	var setIsBulkProcessing = common.setIsBulkProcessing;
+	var searchInput = common.searchInput;
+	var setSearchInput = common.setSearchInput;
+	var searchQuery = common.searchQuery;
+	var setSearchQuery = common.setSearchQuery;
+
+	// Screen-specific state.
 	var tagsState = useState( [] );
 	var tags = tagsState[ 0 ];
 	var setTags = tagsState[ 1 ];
-
-	var isLoadingState = useState( true );
-	var isLoading = isLoadingState[ 0 ];
-	var setIsLoading = isLoadingState[ 1 ];
 
 	var errorState = useState( '' );
 	var error = errorState[ 0 ];
@@ -69,30 +84,6 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 	var setTotal = totalState[ 1 ];
 
 	var totalPages = Math.ceil( total / TAGS_PER_PAGE );
-
-	// Search.
-	var searchInputState = useState( '' );
-	var searchInput = searchInputState[ 0 ];
-	var setSearchInput = searchInputState[ 1 ];
-
-	var searchQueryState = useState( '' );
-	var searchQuery = searchQueryState[ 0 ];
-	var setSearchQuery = searchQueryState[ 1 ];
-
-
-	// Selection state for bulk actions.
-	var selectedIdsState = useState( [] );
-	var selectedIds = selectedIdsState[ 0 ];
-	var setSelectedIds = selectedIdsState[ 1 ];
-
-	// Bulk actions.
-	var bulkActionState = useState( '' );
-	var bulkAction = bulkActionState[ 0 ];
-	var setBulkAction = bulkActionState[ 1 ];
-
-	var isBulkProcessingState = useState( false );
-	var isBulkProcessing = isBulkProcessingState[ 0 ];
-	var setIsBulkProcessing = isBulkProcessingState[ 1 ];
 
 	// Bulk delete modal.
 	var bulkDeleteOpenState = useState( false );
@@ -137,11 +128,6 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 	var deleteConfirmState = useState( false );
 	var deleteConfirm = deleteConfirmState[ 0 ];
 	var setDeleteConfirm = deleteConfirmState[ 1 ];
-
-	// Notice state.
-	var noticeState = useState( null );
-	var notice = noticeState[ 0 ];
-	var setNotice = noticeState[ 1 ];
 
 	// AbortController ref for cancelling stale requests.
 	var abortRef = useRef( null );

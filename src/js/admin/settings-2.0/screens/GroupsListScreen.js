@@ -25,6 +25,7 @@ import { ListPagination } from '../components/common/ListPagination';
 import { AdminNotice } from '../components/common/AdminNotice';
 import { ListToolbar } from '../components/common/ListToolbar';
 import { useListScreenHandlers } from '../hooks/useListScreenHandlers';
+import { useListScreenState } from '../hooks/useListScreenState';
 import { GroupCreateModal } from '../components/groups/GroupCreateModal';
 import { GroupEditModal } from '../components/groups/GroupEditModal';
 import { ConfirmToggleModal } from '../components/modals/ConfirmToggleModal';
@@ -101,6 +102,24 @@ var CORE_COLUMNS = [ 'cb', 'comment', 'description', 'status', 'members', 'last_
  * @returns {JSX.Element} Groups list screen.
  */
 export function GroupsListScreen( { onNavigate } ) {
+	// Common list screen state (loading, notice, selection, bulk, search).
+	var common = useListScreenState();
+	var isLoading = common.isLoading;
+	var setIsLoading = common.setIsLoading;
+	var notice = common.notice;
+	var setNotice = common.setNotice;
+	var selectedIds = common.selectedIds;
+	var setSelectedIds = common.setSelectedIds;
+	var bulkAction = common.bulkAction;
+	var setBulkAction = common.setBulkAction;
+	var isBulkProcessing = common.isBulkProcessing;
+	var setIsBulkProcessing = common.setIsBulkProcessing;
+	var searchInput = common.searchInput;
+	var setSearchInput = common.setSearchInput;
+	var searchQuery = common.searchQuery;
+	var setSearchQuery = common.setSearchQuery;
+
+	// Screen-specific state.
 	var groupsState = useState( [] );
 	var groups = groupsState[ 0 ];
 	var setGroups = groupsState[ 1 ];
@@ -125,22 +144,6 @@ export function GroupsListScreen( { onNavigate } ) {
 	var groupTypeFilter = groupTypeFilterState[ 0 ];
 	var setGroupTypeFilter = groupTypeFilterState[ 1 ];
 
-	var searchQueryState = useState( '' );
-	var searchQuery = searchQueryState[ 0 ];
-	var setSearchQuery = searchQueryState[ 1 ];
-
-	var searchInputState = useState( '' );
-	var searchInput = searchInputState[ 0 ];
-	var setSearchInput = searchInputState[ 1 ];
-
-	var selectedIdsState = useState( [] );
-	var selectedIds = selectedIdsState[ 0 ];
-	var setSelectedIds = selectedIdsState[ 1 ];
-
-	var isLoadingState = useState( true );
-	var isLoading = isLoadingState[ 0 ];
-	var setIsLoading = isLoadingState[ 1 ];
-
 	var bulkActionsState = useState( {} );
 	var bulkActions = bulkActionsState[ 0 ];
 	var setBulkActions = bulkActionsState[ 1 ];
@@ -156,14 +159,6 @@ export function GroupsListScreen( { onNavigate } ) {
 	var groupTypesState = useState( [] );
 	var groupTypes = groupTypesState[ 0 ];
 	var setGroupTypes = groupTypesState[ 1 ];
-
-	var bulkActionState = useState( '' );
-	var bulkAction = bulkActionState[ 0 ];
-	var setBulkAction = bulkActionState[ 1 ];
-
-	var noticeState = useState( null );
-	var notice = noticeState[ 0 ];
-	var setNotice = noticeState[ 1 ];
 
 	var deleteModalState = useState( false );
 	var deleteModalOpen = deleteModalState[ 0 ];
@@ -204,10 +199,6 @@ export function GroupsListScreen( { onNavigate } ) {
 	var isEditSavingState = useState( false );
 	var isEditSaving = isEditSavingState[ 0 ];
 	var setIsEditSaving = isEditSavingState[ 1 ];
-
-	var isBulkProcessingState = useState( false );
-	var isBulkProcessing = isBulkProcessingState[ 0 ];
-	var setIsBulkProcessing = isBulkProcessingState[ 1 ];
 
 	var refetchCounterState = useState( 0 );
 	var refetchCounter = refetchCounterState[ 0 ];

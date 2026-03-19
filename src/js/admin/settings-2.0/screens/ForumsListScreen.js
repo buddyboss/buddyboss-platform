@@ -27,6 +27,7 @@ import { ListToolbar } from '../components/common/ListToolbar';
 import { DeleteConfirmModal } from '../components/common/DeleteConfirmModal';
 import { BulkEditModal } from '../components/common/BulkEditModal';
 import { useListScreenHandlers } from '../hooks/useListScreenHandlers';
+import { useListScreenState } from '../hooks/useListScreenState';
 import { toSlug } from '../utils/format';
 import { ForumCreateModal } from '../components/forums/ForumCreateModal';
 import { AsyncSelectField } from '../components/fields/AsyncSelectField';
@@ -102,6 +103,24 @@ var CORE_COLUMNS = [ 'cb', 'title', 'bbp_forum_topic_count', 'bbp_forum_reply_co
  * @returns {JSX.Element} Forums list screen.
  */
 export function ForumsListScreen( { onNavigate } ) {
+	// Common list screen state (loading, notice, selection, bulk, search).
+	var common = useListScreenState();
+	var isLoading = common.isLoading;
+	var setIsLoading = common.setIsLoading;
+	var notice = common.notice;
+	var setNotice = common.setNotice;
+	var selectedIds = common.selectedIds;
+	var setSelectedIds = common.setSelectedIds;
+	var bulkAction = common.bulkAction;
+	var setBulkAction = common.setBulkAction;
+	var isBulkProcessing = common.isBulkProcessing;
+	var setIsBulkProcessing = common.setIsBulkProcessing;
+	var searchInput = common.searchInput;
+	var setSearchInput = common.setSearchInput;
+	var searchQuery = common.searchQuery;
+	var setSearchQuery = common.setSearchQuery;
+
+	// Screen-specific state.
 	var forumsState = useState( [] );
 	var forums = forumsState[ 0 ];
 	var setForums = forumsState[ 1 ];
@@ -122,22 +141,6 @@ export function ForumsListScreen( { onNavigate } ) {
 	var sortBy = sortByState[ 0 ];
 	var setSortBy = sortByState[ 1 ];
 
-	var searchQueryState = useState( '' );
-	var searchQuery = searchQueryState[ 0 ];
-	var setSearchQuery = searchQueryState[ 1 ];
-
-	var searchInputState = useState( '' );
-	var searchInput = searchInputState[ 0 ];
-	var setSearchInput = searchInputState[ 1 ];
-
-	var selectedIdsState = useState( [] );
-	var selectedIds = selectedIdsState[ 0 ];
-	var setSelectedIds = selectedIdsState[ 1 ];
-
-	var isLoadingState = useState( true );
-	var isLoading = isLoadingState[ 0 ];
-	var setIsLoading = isLoadingState[ 1 ];
-
 	var bulkActionsState = useState( {} );
 	var bulkActions = bulkActionsState[ 0 ];
 	var setBulkActions = bulkActionsState[ 1 ];
@@ -153,14 +156,6 @@ export function ForumsListScreen( { onNavigate } ) {
 	var forumBaseSlugState = useState( 'forum' );
 	var forumBaseSlug = forumBaseSlugState[ 0 ];
 	var setForumBaseSlug = forumBaseSlugState[ 1 ];
-
-	var bulkActionState = useState( '' );
-	var bulkAction = bulkActionState[ 0 ];
-	var setBulkAction = bulkActionState[ 1 ];
-
-	var noticeState = useState( null );
-	var notice = noticeState[ 0 ];
-	var setNotice = noticeState[ 1 ];
 
 	var deleteModalState = useState( false );
 	var deleteModalOpen = deleteModalState[ 0 ];
@@ -202,9 +197,7 @@ export function ForumsListScreen( { onNavigate } ) {
 	var isEditSaving = isEditSavingState[ 0 ];
 	var setIsEditSaving = isEditSavingState[ 1 ];
 
-	var isBulkProcessingState = useState( false );
-	var isBulkProcessing = isBulkProcessingState[ 0 ];
-	var setIsBulkProcessing = isBulkProcessingState[ 1 ];
+
 
 	var refetchCounterState = useState( 0 );
 	var refetchCounter = refetchCounterState[ 0 ];
