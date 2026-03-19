@@ -170,6 +170,10 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 		// Optimistic update.
 		if ( isGroupTypeSetting ) {
 			setEnableGroupTypes( newValue );
+			// Show spinner immediately when re-enabling to avoid flash of empty state.
+			if ( newValue ) {
+				setIsLoading( true );
+			}
 		} else if ( 'bp-enable-group-auto-join' === optionName ) {
 			setAutoMembershipApproval( newValue );
 		}
@@ -178,6 +182,12 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 			.then( function ( response ) {
 				if ( response.success ) {
 					setToast( { status: 'success', message: __( 'Setting saved.', 'buddyboss' ) } );
+
+					// Refetch types when re-enabling — the list may be stale/empty
+					// from when the feature was disabled and the component remounted.
+					if ( isGroupTypeSetting && newValue ) {
+						loadGroupTypes();
+					}
 				} else {
 					// Rollback only the setting that failed.
 					if ( isGroupTypeSetting ) {
@@ -197,7 +207,7 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 				}
 				setToast( { status: 'error', message: __( 'Failed to save setting.', 'buddyboss' ) } );
 			} );
-	}, [ enableGroupTypes, autoMembershipApproval ] );
+	}, [ enableGroupTypes, autoMembershipApproval, loadGroupTypes ] );
 
 	// Handle delete — open confirmation modal.
 	var handleDelete = useCallback( function ( typeId ) {
