@@ -21,6 +21,7 @@ import { dateI18n } from '@wordpress/date';
 import { ajaxFetch } from '../utils/ajax';
 import { sanitizeHtml, safeUrl } from '../utils/sanitize';
 import { ListPagination } from '../components/common/ListPagination';
+import { AdminNotice } from '../components/common/AdminNotice';
 import { ActivityEditModal } from '../components/activity/ActivityEditModal';
 import { ActivityCommentModal } from '../components/activity/ActivityCommentModal';
 
@@ -227,18 +228,6 @@ export function ActivityListScreen( { onNavigate } ) {
 			controller.abort();
 		};
 	}, [ fetchActivities ] );
-
-	// Clear notice after 5 seconds.
-	useEffect( function () {
-		if ( notice ) {
-			var timer = setTimeout( function () {
-				setNotice( null );
-			}, 5000 );
-			return function () {
-				clearTimeout( timer );
-			};
-		}
-	}, [ notice ] );
 
 	// Cleanup search debounce timer on unmount.
 	useEffect( function () {
@@ -517,19 +506,7 @@ export function ActivityListScreen( { onNavigate } ) {
 	return (
 		<div className="bb-activity-list">
 			{ /* Notice */ }
-			{ notice && (
-				<div className={ 'bb-admin-notice bb-admin-notice--' + notice.type }>
-					<span>{ notice.message }</span>
-					<button
-						className="bb-admin-notice--dismiss"
-						onClick={ function () {
-							setNotice( null );
-						} }
-					>
-						<i className='bb-icons-rl bb-icons-rl-x'></i>
-					</button>
-				</div>
-			) }
+			<AdminNotice notice={ notice } onDismiss={ function () { setNotice( null ); } } />
 
 			{ /* Header */ }
 			<div className="bb-activity-list__header">

@@ -22,6 +22,7 @@ import { decodeEntities } from '@wordpress/html-entities';
 import { getDiscussions, getDiscussion, saveDiscussion, discussionBulkAction } from '../utils/ajax';
 import { sanitizeHtml, safeUrl, sanitizeCustomColumns } from '../utils/sanitize';
 import { ListPagination } from '../components/common/ListPagination';
+import { AdminNotice } from '../components/common/AdminNotice';
 import { DiscussionCreateModal } from '../components/forums/DiscussionCreateModal';
 import { AsyncSelectField } from '../components/fields/AsyncSelectField';
 import { RichTextEditor, forceRemoveEditor } from '../components/common/RichTextEditor';
@@ -262,17 +263,7 @@ export function DiscussionsListScreen( { onNavigate } ) {
 		};
 	}, [ fetchDiscussions ] );
 
-	// Clear notice after 5 seconds.
-	useEffect( function () {
-		if ( notice ) {
-			var timer = setTimeout( function () {
-				setNotice( null );
-			}, 5000 );
-			return function () {
-				clearTimeout( timer );
-			};
-		}
-	}, [ notice ] );
+
 
 	// Cleanup on unmount.
 	useEffect( function () {
@@ -640,19 +631,7 @@ export function DiscussionsListScreen( { onNavigate } ) {
 	return (
 		<div className="bb-discussions-list">
 			{ /* Notice */ }
-			{ notice && (
-				<div className={ 'bb-admin-notice bb-admin-notice--' + notice.type }>
-					<span>{ notice.message }</span>
-					<button
-						className="bb-admin-notice--dismiss"
-						onClick={ function () {
-							setNotice( null );
-						} }
-					>
-						<i className='bb-icons-rl bb-icons-rl-x'></i>
-					</button>
-				</div>
-			) }
+			<AdminNotice notice={ notice } onDismiss={ function () { setNotice( null ); } } />
 
 			{ /* Header */ }
 			<div className="bb-discussions-list__header">

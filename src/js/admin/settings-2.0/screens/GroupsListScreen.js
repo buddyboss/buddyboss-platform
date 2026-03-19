@@ -22,6 +22,7 @@ import { decodeEntities } from '@wordpress/html-entities';
 import { getGroups, groupBulkAction, getGroup, saveGroup } from '../utils/ajax';
 import { sanitizeHtml, safeUrl } from '../utils/sanitize';
 import { ListPagination } from '../components/common/ListPagination';
+import { AdminNotice } from '../components/common/AdminNotice';
 import { GroupCreateModal } from '../components/groups/GroupCreateModal';
 import { GroupEditModal } from '../components/groups/GroupEditModal';
 import { ConfirmToggleModal } from '../components/modals/ConfirmToggleModal';
@@ -295,18 +296,6 @@ export function GroupsListScreen( { onNavigate } ) {
 			controller.abort();
 		};
 	}, [ fetchGroups ] );
-
-	// Clear notice after 5 seconds.
-	useEffect( function () {
-		if ( notice ) {
-			var timer = setTimeout( function () {
-				setNotice( null );
-			}, 5000 );
-			return function () {
-				clearTimeout( timer );
-			};
-		}
-	}, [ notice ] );
 
 	// Cleanup search debounce timer and edit abort controller on unmount.
 	useEffect( function () {
@@ -694,19 +683,7 @@ export function GroupsListScreen( { onNavigate } ) {
 	return (
 		<div className="bb-groups-list">
 			{ /* Notice */ }
-			{ notice && (
-				<div className={ 'bb-admin-notice bb-admin-notice--' + notice.type }>
-					<span>{ notice.message }</span>
-					<button
-						className="bb-admin-notice--dismiss"
-						onClick={ function () {
-							setNotice( null );
-						} }
-					>
-						<i className='bb-icons-rl bb-icons-rl-x'></i>
-					</button>
-				</div>
-			) }
+			<AdminNotice notice={ notice } onDismiss={ function () { setNotice( null ); } } />
 
 			{ /* Header */ }
 			<div className="bb-groups-list__header">

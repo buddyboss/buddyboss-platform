@@ -21,6 +21,7 @@ import { decodeEntities } from '@wordpress/html-entities';
 import { getReplies, getReply, saveReply, deleteReply, replyBulkAction } from '../utils/ajax';
 import { sanitizeHtml, safeUrl, sanitizeCustomColumns } from '../utils/sanitize';
 import { ListPagination } from '../components/common/ListPagination';
+import { AdminNotice } from '../components/common/AdminNotice';
 import { ReplyCreateModal } from '../components/forums/ReplyCreateModal';
 import { AsyncSelectField } from '../components/fields/AsyncSelectField';
 import { RichTextEditor, forceRemoveEditor } from '../components/common/RichTextEditor';
@@ -217,18 +218,6 @@ export default function RepliesListScreen( { onNavigate } ) {
 	var notice = noticeState[ 0 ];
 	var setNotice = noticeState[ 1 ];
 
-	// Clear notice after 5 seconds.
-	useEffect( function () {
-		if ( ! notice ) {
-			return;
-		}
-		var timer = setTimeout( function () {
-			setNotice( null );
-		}, 5000 );
-		return function () {
-			clearTimeout( timer );
-		};
-	}, [ notice ] );
 
 	// Forum filter UI state.
 	var isForumFilterOpenState = useState( false );
@@ -791,19 +780,7 @@ export default function RepliesListScreen( { onNavigate } ) {
 			</div>
 
 			{ /* Notice */ }
-			{ notice && (
-				<div className={ 'bb-admin-notice bb-admin-notice--' + notice.type }>
-					<span>{ notice.message }</span>
-					<button
-						className="bb-admin-notice--dismiss"
-						onClick={ function () {
-							setNotice( null );
-						} }
-					>
-						<i className='bb-icons-rl bb-icons-rl-x'></i>
-					</button>
-				</div>
-			) }
+			<AdminNotice notice={ notice } onDismiss={ function () { setNotice( null ); } } />
 
 			{ /* Toolbar */ }
 			<div className="bb-replies-list__toolbar">
