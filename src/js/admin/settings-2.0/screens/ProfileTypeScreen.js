@@ -181,6 +181,10 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 		// Optimistic update.
 		if ( isProfileTypeSetting ) {
 			setEnableProfileTypes( newValue );
+			// Show spinner immediately when re-enabling to avoid flash of empty state.
+			if ( newValue ) {
+				setIsLoading( true );
+			}
 		} else if ( 'bp-member-type-display-on-profile' === optionName ) {
 			setDisplayOnProfile( newValue );
 		}
@@ -189,6 +193,12 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 			.then( function ( response ) {
 				if ( response.success ) {
 					setToast( { status: 'success', message: __( 'Setting saved.', 'buddyboss' ) } );
+
+					// Refetch types when re-enabling — the list may be stale/empty
+					// from when the feature was disabled and the component remounted.
+					if ( isProfileTypeSetting && newValue ) {
+						loadMemberTypes();
+					}
 				} else {
 					// Rollback only the setting that failed.
 					if ( isProfileTypeSetting ) {
@@ -208,7 +218,7 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 				}
 				setToast( { status: 'error', message: __( 'Failed to save setting.', 'buddyboss' ) } );
 			} );
-	}, [ enableProfileTypes, displayOnProfile ] );
+	}, [ enableProfileTypes, displayOnProfile, loadMemberTypes ] );
 
 	// Handle default profile type select change.
 	var handleDefaultTypeChange = useCallback( function ( newValue ) {
