@@ -1669,7 +1669,7 @@ window.bp = window.bp || {};
 								if ( true === response.data.delete_activity ) {
 									$( 'body #buddypress .bb-rl-activity-list li#bb-rl-activity-' + activityId ).remove();
 									$( 'body .bb-rl-activity-video-elem.' + id ).remove();
-									$( 'body .activity-comments li#bb-rl-acomment-' + activityId ).remove();
+									$( 'body .bb-rl-activity-comments li#bb-rl-acomment-' + activityId ).remove();
 
 									if ( rootParentActivity && $( '.bb-rl-activity-list' ).length ) {
 										var liCount = $( '.bb-rl-activity-list li#activity-' + rootParentActivity + ' .activity-comments > ul > li' ).length;
