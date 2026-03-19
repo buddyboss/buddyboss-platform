@@ -197,8 +197,6 @@ export function ForumsListScreen( { onNavigate } ) {
 	var isEditSaving = isEditSavingState[ 0 ];
 	var setIsEditSaving = isEditSavingState[ 1 ];
 
-
-
 	var refetchCounterState = useState( 0 );
 	var refetchCounter = refetchCounterState[ 0 ];
 	var setRefetchCounter = refetchCounterState[ 1 ];

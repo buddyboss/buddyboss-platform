@@ -257,8 +257,6 @@ export function DiscussionsListScreen( { onNavigate } ) {
 		};
 	}, [ fetchDiscussions ] );
 
-
-
 	// Cleanup on unmount.
 	useEffect( function () {
 		return function () {

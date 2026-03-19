@@ -197,8 +197,6 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 		fetchTags( { page: 1, search: searchQuery } );
 	}, [ searchQuery ] );
 
-
-
 	// Common list screen handlers (search, select).
 	var handlers = useListScreenHandlers( {
 		setSearchInput: setSearchInput,
