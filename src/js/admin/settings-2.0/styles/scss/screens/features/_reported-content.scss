@@ -36,6 +36,10 @@
 
 	&__confirm-modal {
 
+		&.bb-admin-settings-modal {
+			max-width: 650px;
+		}
+
 		.bb-admin-settings-modal__body > p {
 			margin: 0;
 		}
