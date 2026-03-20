@@ -1317,7 +1317,7 @@ function DiscussionEditModal( { discussion, onClose, onSave, isSaving } ) {
 			// Separators: after richtext, before row groups, and after author_info (before Tags).
 			var hasSeparator = 'richtext' === item.field.type || nextIsRow || 'author_info' === item.field.id;
 			return (
-				<div key={ item.field.id + '-' + discussion.id } className={ hasSeparator ? 'bb-admin-settings-modal__row--separator' : '' }>
+				<div key={ item.field.id + '-' + discussion.id } className={ 'components-base-control ' + ( hasSeparator ? 'bb-admin-settings-modal__row--separator' : '' ) }>
 					<RegisteredMetaField
 						field={ item.field }
 						value={ registeredValues[ item.field.id ] }

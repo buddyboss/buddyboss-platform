@@ -1524,7 +1524,7 @@ function ForumEditModal( props ) {
 				);
 			}
 			return (
-				<div key={ item.field.id + '-' + forum.id } className={ 'components-base-control' + ( 'richtext' === item.field.type || nextIsRow ? 'bb-admin-settings-modal__row--separator' : '' ) }>
+				<div key={ item.field.id + '-' + forum.id } className={ 'components-base-control ' + ( 'richtext' === item.field.type || nextIsRow ? 'bb-admin-settings-modal__row--separator' : '' ) }>
 					<RegisteredMetaField
 						field={ item.field }
 						value={ registeredValues[ item.field.id ] }

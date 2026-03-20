@@ -962,16 +962,19 @@ select.bb-admin-settings__select {
 	.bb-admin-meta-field__author-avatar {
 		border-radius: 50%;
 		flex-shrink: 0;
+        height: 40px;
+        width: 40px;
+        object-fit: cover;
+        border: 1px solid $bb-border-secondary-color;
 	}
 
 	.bb-admin-meta-field__author-name {
-		font-size: 13px;
-		font-weight: 500;
-		color: $bb-background-brand-primary-color;
+		font-size: 14px;
+		color: $bb-link-color;
 		text-decoration: none;
 
 		&:hover {
-			text-decoration: underline;
+			color: $bb-link-color;
 		}
 	}
 }
