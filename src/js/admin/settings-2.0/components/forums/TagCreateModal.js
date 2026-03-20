@@ -170,9 +170,9 @@ export function TagCreateModal( { isOpen, onClose, onSaved, editTag, isLoading }
 				</div>
 			) : (
 				<>
-					<div className="bb-tag-create-modal__body">
+					<div className="bb-tag-create-modal__body bb-admin-settings-modal__body">
 						{ error && (
-							<p className="bb-tag-create-modal__error">{ error }</p>
+							<p className="bb-admin-settings-modal__error">{ error }</p>
 						) }
 
 						<TextControl

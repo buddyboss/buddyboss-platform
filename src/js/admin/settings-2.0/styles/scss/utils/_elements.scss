@@ -615,6 +615,16 @@ select.bb-admin-settings__select {
     &__body {
         padding: 24px;
 
+        .components-text-control__input,
+		.components-textarea-control__input {
+			@include bb-input-text;
+		}
+
+        textarea.components-textarea-control__input {
+			min-height: 72px;
+            padding: 8px
+		}
+
         .components-input-control__container {
 
 			.components-select-control__input {
@@ -637,12 +647,15 @@ select.bb-admin-settings__select {
 
         .components-select-control {
             gap: 0;
+            cursor: default;
         }
 
         .components-base-control__label,
         .components-input-control__label.components-text {
+            display: table;
             color: $bb-text-secondary-color;
             font-size: 13px;
+            font-weight: 500;
             margin-bottom: 10px;
             text-transform: none;
         }
@@ -667,6 +680,34 @@ select.bb-admin-settings__select {
 		.bb-icons-rl {
 			display: block;
 		}
+	}
+
+    &__row {
+		display: flex;
+		gap: 16px;
+		margin-bottom: 16px;
+
+		.components-base-control {
+			flex: 1;
+			margin-bottom: 0;
+		}
+	}
+
+    &__row--separator {
+		margin-bottom: 24px;
+		padding-bottom: 24px;
+		border-bottom: 1px solid $bb-border-tertiary-color;
+
+        > .components-base-control,
+		> .bb-admin-meta-field__editor-field {
+			margin-bottom: 0;
+		}
+	}
+
+    &__error {
+		color: $bb-error-color;
+		font-size: 13px;
+		margin: 0 0 16px;
 	}
 
 	&__footer {

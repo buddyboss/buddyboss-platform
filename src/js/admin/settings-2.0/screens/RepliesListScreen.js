@@ -1185,12 +1185,12 @@ export default function RepliesListScreen( { onNavigate } ) {
 						</div>
 					) : (
 						<>
-							<div className="bb-reply-modal__body">
+							<div className="bb-reply-modal__body bb-admin-settings-modal__body">
 								{ editError && (
-									<p className="bb-reply-modal__error">{ editError }</p>
+									<p className="bb-admin-settings-modal__error">{ editError }</p>
 								) }
 
-								<div className="bb-reply-modal__row--separator">
+								<div className="bb-admin-settings-modal__row--separator">
 									<RichTextEditor
 										id="bb-reply-edit-description"
 										label={ __( 'Description', 'buddyboss' ) }
@@ -1230,7 +1230,7 @@ export default function RepliesListScreen( { onNavigate } ) {
 									/>
 								</div>
 
-								<div className="components-base-control bb-reply-modal__row--separator">
+								<div className="components-base-control bb-admin-settings-modal__row--separator">
 									<label className="components-base-control__label" htmlFor="bb-reply-edit-reply-to">
 										{ __( 'Reply to', 'buddyboss' ) }
 									</label>

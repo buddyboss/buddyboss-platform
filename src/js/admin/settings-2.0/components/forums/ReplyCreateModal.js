@@ -211,12 +211,12 @@ export function ReplyCreateModal( { isOpen, onClose, onCreated } ) {
 			className="bb-reply-modal bb-reply-create-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
 		>
-			<div className="bb-reply-modal__body">
+			<div className="bb-reply-modal__body bb-admin-settings-modal__body">
 				{ error && (
-					<p className="bb-reply-modal__error">{ error }</p>
+					<p className="bb-admin-settings-modal__error">{ error }</p>
 				) }
 
-				<div className="bb-reply-modal__row--separator">
+				<div className="bb-admin-settings-modal__row--separator">
 					<RichTextEditor
 						id="bb-reply-create-description"
 						label={ __( 'Description', 'buddyboss' ) }
@@ -253,7 +253,7 @@ export function ReplyCreateModal( { isOpen, onClose, onCreated } ) {
 					/>
 				</div>
 
-				<div className="components-base-control bb-reply-modal__row--separator">
+				<div className="components-base-control bb-admin-settings-modal__row--separator">
 					<label className="components-base-control__label" htmlFor="bb-reply-create-reply-to">
 						{ __( 'Reply to', 'buddyboss' ) }
 					</label>

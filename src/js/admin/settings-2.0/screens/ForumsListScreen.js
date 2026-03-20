@@ -1381,7 +1381,7 @@ function ForumEditModal( props ) {
 			className="bb-forum-modal bb-forum-edit-modal bb-forum-create-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
 		>
-			<div className="bb-forum-modal__body bb-forum-edit-modal__body">
+			<div className="bb-forum-modal__body bb-forum-edit-modal__body bb-admin-settings-modal__body">
 				{ error && (
 					<p className="bb-forum-modal__error">{ error }</p>
 				) }
@@ -1418,7 +1418,7 @@ function ForumEditModal( props ) {
 					/>
 				</div>
 
-				<div className="bb-forum-create-modal__row bb-forum-modal__row--separator">
+				<div className="bb-admin-settings-modal__row bb-admin-settings-modal__row--separator">
 					<SelectControl
 						label={ __( 'Status', 'buddyboss' ) }
 						value={ forumStatus }
@@ -1435,7 +1435,7 @@ function ForumEditModal( props ) {
 					/>
 				</div>
 
-				<div className="components-base-control bb-forum-modal__row--separator">
+				<div className="components-base-control bb-admin-settings-modal__row--separator">
 					<label className="components-base-control__label" htmlFor="bb-forum-edit-parent">
 						{ __( 'Parent Forum', 'buddyboss' ) }
 					</label>
