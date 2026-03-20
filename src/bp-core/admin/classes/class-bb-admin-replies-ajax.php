@@ -80,7 +80,6 @@ class BB_Admin_Replies_Ajax {
 		add_action( 'wp_ajax_bb_admin_reply_autocomplete', array( $this, 'reply_autocomplete' ) );
 	}
 
-
 	/**
 	 * Clear the admin replies forum counts cache.
 	 *

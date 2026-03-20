@@ -69,7 +69,6 @@ class BB_Admin_Topic_Tags_Ajax {
 		add_action( 'wp_ajax_bb_admin_topic_tag_bulk_action', array( $this, 'topic_tag_bulk_action' ) );
 	}
 
-
 	/**
 	 * Get discussion tags listing with pagination and search.
 	 *

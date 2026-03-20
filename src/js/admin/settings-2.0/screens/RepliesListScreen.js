@@ -307,6 +307,9 @@ export default function RepliesListScreen( { onNavigate } ) {
 			if ( abortRef.current ) {
 				abortRef.current.abort();
 			}
+			if ( editAbortRef.current ) {
+				editAbortRef.current.abort();
+			}
 			if ( searchTimerRef.current ) {
 				clearTimeout( searchTimerRef.current );
 			}
@@ -558,7 +561,10 @@ export default function RepliesListScreen( { onNavigate } ) {
 					type: 'error',
 				} );
 			}
-		} ).catch( function () {
+		} ).catch( function ( err ) {
+			if ( err && 'AbortError' === err.name ) {
+				return;
+			}
 			setIsEditLoading( false );
 			setIsEditOpen( false );
 			setNotice( {
@@ -756,10 +762,9 @@ export default function RepliesListScreen( { onNavigate } ) {
 			forumFilterLabel = decodeEntities( matchedForum[ 0 ].name );
 		}
 	} else {
-		forumFilterLabel = sprintf(
-			__( 'All Forums (%s)', 'buddyboss' ),
-			forumsList.length
-		);
+		forumFilterLabel = views && views.all
+			? sprintf( __( 'All Forums (%s)', 'buddyboss' ), views.all )
+			: __( 'All Forums', 'buddyboss' );
 	}
 
 	// Compute custom column keys (columns added by third-party plugins).
@@ -867,7 +872,7 @@ export default function RepliesListScreen( { onNavigate } ) {
 											handleForumFilter( 0 );
 										} }
 									>
-										{ sprintf( __( 'All Forums (%s)', 'buddyboss' ), forumsList.length ) }
+										{ views && views.all ? sprintf( __( 'All Forums (%s)', 'buddyboss' ), views.all ) : __( 'All Forums', 'buddyboss' ) }
 									</button>
 									{ filteredForums.map( function ( f ) {
 										return (

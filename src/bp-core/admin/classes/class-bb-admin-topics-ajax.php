@@ -77,7 +77,6 @@ class BB_Admin_Topics_Ajax {
 		add_action( 'wp_ajax_bb_admin_topic_tag_autocomplete', array( $this, 'topic_tag_autocomplete' ) );
 	}
 
-
 	/**
 	 * Clear the admin discussion forum counts cache.
 	 *
