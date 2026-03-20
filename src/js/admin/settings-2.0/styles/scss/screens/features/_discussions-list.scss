@@ -932,7 +932,7 @@
 		height: 36px;
 		border: 1px solid $bb-border-secondary-color;
 		border-radius: $bb-border-radius-md;
-		padding: 0 8px;
+		padding: 0 32px 0 8px;
 		font-size: 13px;
 		color: $bb-text-color;
 		outline: none;
@@ -943,6 +943,22 @@
 
 		&:focus {
 			border-color: $bb-border-brand-primary-color;
+		}
+	}
+
+	&__spinner {
+		position: absolute;
+		right: 8px;
+		top: 50%;
+		transform: translateY(-50%);
+		display: flex;
+		align-items: center;
+		pointer-events: none;
+
+		.components-spinner {
+			margin: 0;
+			width: 16px;
+			height: 16px;
 		}
 	}
 

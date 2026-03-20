@@ -9,6 +9,7 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from '@wordpress/element';
+import { Spinner } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
 import { searchTopicTags } from '../../utils/ajax';
@@ -37,6 +38,10 @@ export function TagsAutocomplete( { value, onChange, label, placeholder } ) {
 	var activeIndexState = useState( -1 );
 	var activeIndex = activeIndexState[ 0 ];
 	var setActiveIndex = activeIndexState[ 1 ];
+
+	var isSearchingState = useState( false );
+	var isSearching = isSearchingState[ 0 ];
+	var setIsSearching = isSearchingState[ 1 ];
 
 	var searchAbortRef = useRef( null );
 	var searchTimerRef = useRef( null );
@@ -97,8 +102,11 @@ export function TagsAutocomplete( { value, onChange, label, placeholder } ) {
 		if ( partial.length < 2 ) {
 			setSuggestions( [] );
 			setShowDropdown( false );
+			setIsSearching( false );
 			return;
 		}
+
+		setIsSearching( true );
 
 		searchTimerRef.current = setTimeout( function () {
 			if ( searchAbortRef.current ) {
@@ -107,6 +115,7 @@ export function TagsAutocomplete( { value, onChange, label, placeholder } ) {
 			searchAbortRef.current = new AbortController();
 
 			searchTopicTags( partial, { signal: searchAbortRef.current.signal } ).then( function ( response ) {
+				setIsSearching( false );
 				if ( response.success && response.data && response.data.tags ) {
 					// Filter out tags already in the value.
 					var existingTags = value.split( ',' ).map( function ( t ) {
@@ -125,6 +134,7 @@ export function TagsAutocomplete( { value, onChange, label, placeholder } ) {
 				if ( err && 'AbortError' === err.name ) {
 					return;
 				}
+				setIsSearching( false );
 				setSuggestions( [] );
 				setShowDropdown( false );
 			} );
@@ -216,6 +226,11 @@ export function TagsAutocomplete( { value, onChange, label, placeholder } ) {
 					aria-autocomplete="list"
 					aria-activedescendant={ activeIndex >= 0 && suggestions[ activeIndex ] ? 'bb-tag-option-' + suggestions[ activeIndex ].id : undefined }
 				/>
+				{ isSearching && (
+					<span className="bb-tags-autocomplete__spinner">
+						<Spinner />
+					</span>
+				) }
 				{ showDropdown && suggestions.length > 0 && (
 					<div className="bb-tags-autocomplete__dropdown" role="listbox" id={ listboxId }>
 						{ suggestions.map( function ( tag, index ) {
