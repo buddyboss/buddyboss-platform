@@ -496,5 +496,5 @@ class BB_Admin_Flagged_Members_Ajax {
 	}
 }
 
-// Initialize.
+// Initialise.
 new BB_Admin_Flagged_Members_Ajax();
