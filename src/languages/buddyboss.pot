@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.21.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-03-19 13:53:51+00:00\n"
+"POT-Creation-Date: 2026-03-20 04:25:23+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -40283,7 +40283,7 @@ msgid "Something went wrong. Please try again"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/settings-2.0/build/index.js:2
+#: bp-core/admin/bb-settings/settings-2.0/build/index.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/index.js:3
 msgid "Saving changes..."
 msgstr ""
@@ -42050,21 +42050,21 @@ msgstr ""
 msgid "No description available."
 msgstr ""
 
-#. translators: %s: feature label
-#: bp-core/admin/bb-settings/settings-2.0/build/index.js:2
-msgid "Toggle %s"
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings-2.0/build/index.js:2
+#: bp-core/admin/bb-settings/settings-2.0/build/index.js:1
 msgid "%s has been enabled."
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings-2.0/build/index.js:2
+#: bp-core/admin/bb-settings/settings-2.0/build/index.js:1
 msgid "%s has been disabled."
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings-2.0/build/index.js:2
+#: bp-core/admin/bb-settings/settings-2.0/build/index.js:1
 msgid "Failed to update feature. Please try again."
+msgstr ""
+
+#. translators: %s: feature label
+#: bp-core/admin/bb-settings/settings-2.0/build/index.js:2
+msgid "Toggle %s"
 msgstr ""
 
 #: bp-core/admin/bb-settings/settings-2.0/build/index.js:2
