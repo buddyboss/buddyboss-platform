@@ -261,6 +261,7 @@ class BB_Admin_Forums_Ajax {
 				'visibility'        => $visibility,
 				'visibility_label'  => isset( $visibility_labels[ $visibility ] ) ? $visibility_labels[ $visibility ] : $visibility,
 				'forum_status'      => bbp_get_forum_status( $forum_id ),
+				'forum_type'        => bbp_get_forum_type( $forum_id ),
 				'discussions_count' => (int) get_post_meta( $forum_id, '_bbp_total_topic_count', true ),
 				'replies_count'     => (int) get_post_meta( $forum_id, '_bbp_total_reply_count', true ),
 				'author_id'         => $author_id,
@@ -270,6 +271,9 @@ class BB_Admin_Forums_Ajax {
 				'date_created'      => $forum->post_date,
 				'permalink'         => bbp_get_forum_permalink( $forum_id ),
 				'parent_id'         => (int) $forum->post_parent,
+				'order'             => (int) $forum->menu_order,
+				'is_group_forum'       => ! empty( bbp_get_forum_group_ids( $forum_id ) ),
+				'is_group_forum_child' => function_exists( 'bb_get_child_forum_group_ids' ) && ! empty( bb_get_child_forum_group_ids( $forum_id ) ),
 				'featured_image'    => $thumbnail_id ? wp_get_attachment_url( $thumbnail_id ) : '',
 			);
 
@@ -399,8 +403,12 @@ class BB_Admin_Forums_Ajax {
 			'description'       => $forum->post_content,
 			'visibility'        => get_post_status( $forum_id ),
 			'forum_status'      => bbp_get_forum_status( $forum_id ),
+			'forum_type'        => bbp_get_forum_type( $forum_id ),
 			'parent_id'         => (int) $forum->post_parent,
-			'permalink'         => bbp_get_forum_permalink( $forum_id ),
+			'order'             => (int) $forum->menu_order,
+			'is_group_forum'       => ! empty( bbp_get_forum_group_ids( $forum_id ) ),
+			'is_group_forum_child' => function_exists( 'bb_get_child_forum_group_ids' ) && ! empty( bb_get_child_forum_group_ids( $forum_id ) ),
+			'permalink'            => bbp_get_forum_permalink( $forum_id ),
 			'featured_image'    => $thumbnail_id ? wp_get_attachment_url( $thumbnail_id ) : '',
 			'featured_image_id' => $thumbnail_id ? (int) $thumbnail_id : 0,
 		);
@@ -436,7 +444,9 @@ class BB_Admin_Forums_Ajax {
 		$description  = isset( $_POST['description'] ) ? wp_kses_post( wp_unslash( $_POST['description'] ) ) : '';
 		$visibility   = isset( $_POST['visibility'] ) ? sanitize_key( wp_unslash( $_POST['visibility'] ) ) : 'publish';
 		$forum_status = isset( $_POST['forum_status'] ) ? sanitize_key( wp_unslash( $_POST['forum_status'] ) ) : 'open';
+		$forum_type   = isset( $_POST['forum_type'] ) ? sanitize_key( wp_unslash( $_POST['forum_type'] ) ) : 'forum';
 		$parent_id    = isset( $_POST['parent_id'] ) ? absint( wp_unslash( $_POST['parent_id'] ) ) : 0;
+		$order        = isset( $_POST['order'] ) ? absint( wp_unslash( $_POST['order'] ) ) : 0;
 		$image_id     = isset( $_POST['image_id'] ) ? absint( wp_unslash( $_POST['image_id'] ) ) : 0;
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
@@ -456,6 +466,12 @@ class BB_Admin_Forums_Ajax {
 			$forum_status = 'open';
 		}
 
+		// Validate forum type (forum/category).
+		$allowed_types = array( 'forum', 'category' );
+		if ( ! in_array( $forum_type, $allowed_types, true ) ) {
+			$forum_type = 'forum';
+		}
+
 		// Use slug from name if not provided.
 		if ( empty( $slug ) ) {
 			$slug = sanitize_title( $name );
@@ -467,6 +483,7 @@ class BB_Admin_Forums_Ajax {
 			'post_status'  => $visibility,
 			'post_parent'  => $parent_id,
 			'post_name'    => $slug,
+			'menu_order'   => $order,
 		);
 
 		$forum_id = bbp_insert_forum( $forum_data );
@@ -490,7 +507,7 @@ class BB_Admin_Forums_Ajax {
 		// Populate legacy $_POST keys expected by bbp_save_forum_extras() and third-party hooks.
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
 		$_POST['bbp_forum_status']     = $forum_status;
-		$_POST['bbp_forum_type']       = 'forum';
+		$_POST['bbp_forum_type']       = $forum_type;
 		$_POST['bbp_forum_visibility'] = $visibility;
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
@@ -579,7 +596,9 @@ class BB_Admin_Forums_Ajax {
 		$description  = isset( $_POST['description'] ) ? wp_kses_post( wp_unslash( $_POST['description'] ) ) : '';
 		$visibility   = isset( $_POST['visibility'] ) ? sanitize_key( wp_unslash( $_POST['visibility'] ) ) : '';
 		$forum_status = isset( $_POST['forum_status'] ) ? sanitize_key( wp_unslash( $_POST['forum_status'] ) ) : '';
+		$forum_type   = isset( $_POST['forum_type'] ) ? sanitize_key( wp_unslash( $_POST['forum_type'] ) ) : '';
 		$parent_id    = isset( $_POST['parent_id'] ) ? absint( wp_unslash( $_POST['parent_id'] ) ) : 0;
+		$order        = isset( $_POST['order'] ) ? absint( wp_unslash( $_POST['order'] ) ) : null;
 		$image_id     = isset( $_POST['image_id'] ) ? absint( wp_unslash( $_POST['image_id'] ) ) : 0;
 		$remove_image = isset( $_POST['remove_image'] ) ? absint( wp_unslash( $_POST['remove_image'] ) ) : 0;
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
@@ -629,6 +648,11 @@ class BB_Admin_Forums_Ajax {
 
 		$update_args['post_parent'] = $parent_id;
 
+		// Update menu_order if provided.
+		if ( null !== $order ) {
+			$update_args['menu_order'] = $order;
+		}
+
 		$result = wp_update_post( $update_args, true );
 		if ( is_wp_error( $result ) ) {
 			wp_send_json_error( array( 'message' => html_entity_decode( $result->get_error_message(), ENT_QUOTES, 'UTF-8' ) ) );
@@ -666,12 +690,18 @@ class BB_Admin_Forums_Ajax {
 			}
 		}
 
+		// Validate forum type (forum/category).
+		$allowed_types = array( 'forum', 'category' );
+		if ( ! empty( $forum_type ) && ! in_array( $forum_type, $allowed_types, true ) ) {
+			$forum_type = '';
+		}
+
 		// Populate legacy $_POST keys expected by bbp_save_forum_extras() and third-party hooks.
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
 		if ( ! empty( $forum_status ) ) {
 			$_POST['bbp_forum_status'] = $forum_status;
 		}
-		$_POST['bbp_forum_type'] = 'forum';
+		$_POST['bbp_forum_type'] = ! empty( $forum_type ) ? $forum_type : bbp_get_forum_type( $forum_id );
 		if ( ! empty( $visibility ) ) {
 			$_POST['bbp_forum_visibility'] = $visibility;
 		}
@@ -1174,6 +1204,16 @@ class BB_Admin_Forums_Ajax {
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param int $forum_id Forum ID whose children should be updated.
+	 *
+	 * @return void
+	 */
+
+	/**
+	 * Propagate visibility changes to child forums for group forums.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $forum_id Forum ID.
 	 *
 	 * @return void
 	 */

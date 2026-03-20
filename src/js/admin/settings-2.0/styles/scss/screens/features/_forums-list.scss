@@ -700,6 +700,12 @@
    ---------------------------------------------------------------- */
 .bb-forum-modal {
 
+	// Disabled field wrapper — reduces opacity and blocks interaction.
+	&__field--disabled {
+		opacity: 0.5;
+		pointer-events: none;
+	}
+
 	&__body {
 		padding: 24px;
 

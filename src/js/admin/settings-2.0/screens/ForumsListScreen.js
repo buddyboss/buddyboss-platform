@@ -1218,9 +1218,17 @@ function ForumEditModal( props ) {
 	var visibility = visibilityState[ 0 ];
 	var setVisibility = visibilityState[ 1 ];
 
+	var forumTypeState = useState( forum.forum_type || 'forum' );
+	var forumType = forumTypeState[ 0 ];
+	var setForumType = forumTypeState[ 1 ];
+
 	var parentIdState = useState( forum.parent_id || 0 );
 	var parentId = parentIdState[ 0 ];
 	var setParentId = parentIdState[ 1 ];
+
+	var orderState = useState( forum.order || 0 );
+	var order = orderState[ 0 ];
+	var setOrder = orderState[ 1 ];
 
 	var imageIdState = useState( forum.featured_image_id || 0 );
 	var imageId = imageIdState[ 0 ];
@@ -1357,7 +1365,9 @@ function ForumEditModal( props ) {
 			description: description,
 			visibility: visibility,
 			forum_status: forumStatus,
+			forum_type: forumType,
 			parent_id: parentId,
+			order: order,
 			image_id: imageId,
 			remove_image: removeImage ? 1 : 0,
 		} );
@@ -1373,6 +1383,16 @@ function ForumEditModal( props ) {
 		{ value: 'private', label: __( 'Private', 'buddyboss' ) },
 		{ value: 'hidden', label: __( 'Hidden', 'buddyboss' ) },
 	];
+
+	var forumTypeOptions = [
+		{ value: 'forum', label: __( 'Forum', 'buddyboss' ) },
+		{ value: 'category', label: __( 'Category', 'buddyboss' ) },
+	];
+
+	// Direct group forum (root): disable Type, Parent.
+	var isGroupForum = ! ! forum.is_group_forum;
+	// Group forum or child of group forum: disable Visibility only.
+	var isGroupForumChild = ! ! forum.is_group_forum_child;
 
 	return (
 		<Modal
@@ -1404,7 +1424,10 @@ function ForumEditModal( props ) {
 					/>
 					{ slug && siteUrl && (
 						<p className="bb-forum-create-modal__permalink-preview">
-							{ siteUrl + '/' + ( forumBaseSlug || 'forum' ) + '/' + slug + '/' }
+							{ isGroupForumChild && forum.permalink
+								? safeUrl( forum.permalink )
+								: siteUrl + '/' + ( forumBaseSlug || 'forum' ) + '/' + slug + '/'
+							}
 						</p>
 					) }
 				</div>
@@ -1426,27 +1449,53 @@ function ForumEditModal( props ) {
 						onChange={ setForumStatus }
 						__nextHasNoMarginBottom
 					/>
-					<SelectControl
-						label={ __( 'Visibility', 'buddyboss' ) }
-						value={ visibility }
-						options={ visibilityOptions }
-						onChange={ setVisibility }
-						__nextHasNoMarginBottom
-					/>
+					<div className={ isGroupForumChild ? 'bb-forum-modal__field--disabled' : '' } style={ { flex: 1 } }>
+						<SelectControl
+							label={ __( 'Visibility', 'buddyboss' ) }
+							value={ visibility }
+							options={ visibilityOptions }
+							onChange={ setVisibility }
+							disabled={ isGroupForumChild }
+							__nextHasNoMarginBottom
+						/>
+					</div>
+					<div className={ isGroupForum ? 'bb-forum-modal__field--disabled' : '' } style={ { flex: 1 } }>
+						<SelectControl
+							label={ __( 'Type', 'buddyboss' ) }
+							value={ forumType }
+							options={ forumTypeOptions }
+							onChange={ setForumType }
+							disabled={ isGroupForum }
+							__nextHasNoMarginBottom
+						/>
+					</div>
 				</div>
 
-				<div className="components-base-control bb-forum-modal__row--separator">
-					<label className="components-base-control__label" htmlFor="bb-forum-edit-parent">
-						{ __( 'Parent Forum', 'buddyboss' ) }
-					</label>
-					<AsyncSelectField
-						id="bb-forum-edit-parent"
-						value={ String( parentId ) }
+				<div className="bb-forum-create-modal__row bb-forum-modal__row--separator">
+					<div className={ 'components-base-control' + ( isGroupForum ? ' bb-forum-modal__field--disabled' : '' ) } style={ { flex: 1 } }>
+						<label className="components-base-control__label" htmlFor="bb-forum-edit-parent">
+							{ __( 'Parent Forum', 'buddyboss' ) }
+						</label>
+						<AsyncSelectField
+							id="bb-forum-edit-parent"
+							value={ String( parentId ) }
+							onChange={ function ( val ) {
+								setParentId( parseInt( val, 10 ) || 0 );
+							} }
+							asyncAction="bb_admin_forum_autocomplete"
+							placeholder={ __( 'None', 'buddyboss' ) }
+							disabled={ isGroupForum }
+						/>
+					</div>
+					<TextControl
+						label={ __( 'Order', 'buddyboss' ) }
+						type="number"
+						value={ order }
 						onChange={ function ( val ) {
-							setParentId( parseInt( val, 10 ) || 0 );
+							setOrder( parseInt( val, 10 ) || 0 );
 						} }
-						asyncAction="bb_admin_forum_autocomplete"
-						placeholder={ __( 'None', 'buddyboss' ) }
+						min={ 0 }
+						__nextHasNoMarginBottom
 					/>
 				</div>
 

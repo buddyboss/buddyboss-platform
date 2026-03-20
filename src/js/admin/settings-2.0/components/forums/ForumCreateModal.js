@@ -60,9 +60,17 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug } 
 	var visibility = visibilityState[ 0 ];
 	var setVisibility = visibilityState[ 1 ];
 
+	var forumTypeState = useState( 'forum' );
+	var forumType = forumTypeState[ 0 ];
+	var setForumType = forumTypeState[ 1 ];
+
 	var parentIdState = useState( 0 );
 	var parentId = parentIdState[ 0 ];
 	var setParentId = parentIdState[ 1 ];
+
+	var orderState = useState( 0 );
+	var order = orderState[ 0 ];
+	var setOrder = orderState[ 1 ];
 
 	var imageIdState = useState( 0 );
 	var imageId = imageIdState[ 0 ];
@@ -222,7 +230,9 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug } 
 			description: description,
 			visibility: visibility,
 			forum_status: forumStatus,
+			forum_type: forumType,
 			parent_id: parentId,
+			order: order,
 			image_id: imageId,
 		} ).then( function ( response ) {
 			if ( ! isMountedRef.current ) {
@@ -258,7 +268,9 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug } 
 		setDescription( '' );
 		setForumStatus( 'open' );
 		setVisibility( 'publish' );
+		setForumType( 'forum' );
 		setParentId( 0 );
+		setOrder( 0 );
 		setImageId( 0 );
 		setImageUrl( '' );
 		setIsUploading( false );
@@ -296,6 +308,11 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug } 
 		{ value: 'publish', label: __( 'Public', 'buddyboss' ) },
 		{ value: 'private', label: __( 'Private', 'buddyboss' ) },
 		{ value: 'hidden', label: __( 'Hidden', 'buddyboss' ) },
+	];
+
+	var forumTypeOptions = [
+		{ value: 'forum', label: __( 'Forum', 'buddyboss' ) },
+		{ value: 'category', label: __( 'Category', 'buddyboss' ) },
 	];
 
 	var siteUrl = ( window.bbAdminData && window.bbAdminData.siteUrl ) || '';
@@ -359,20 +376,39 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug } 
 						onChange={ setVisibility }
 						__nextHasNoMarginBottom
 					/>
+					<SelectControl
+						label={ __( 'Type', 'buddyboss' ) }
+						value={ forumType }
+						options={ forumTypeOptions }
+						onChange={ setForumType }
+						__nextHasNoMarginBottom
+					/>
 				</div>
 
-				<div className="components-base-control bb-forum-modal__row--separator">
-					<label className="components-base-control__label" htmlFor="bb-forum-create-parent">
-						{ __( 'Parent Forum', 'buddyboss' ) }
-					</label>
-					<AsyncSelectField
-						id="bb-forum-create-parent"
-						value={ String( parentId ) }
+				<div className="bb-forum-create-modal__row bb-forum-modal__row--separator">
+					<div className="components-base-control" style={ { flex: 1 } }>
+						<label className="components-base-control__label" htmlFor="bb-forum-create-parent">
+							{ __( 'Parent Forum', 'buddyboss' ) }
+						</label>
+						<AsyncSelectField
+							id="bb-forum-create-parent"
+							value={ String( parentId ) }
+							onChange={ function ( val ) {
+								setParentId( parseInt( val, 10 ) || 0 );
+							} }
+							asyncAction="bb_admin_forum_autocomplete"
+							placeholder={ __( 'None', 'buddyboss' ) }
+						/>
+					</div>
+					<TextControl
+						label={ __( 'Order', 'buddyboss' ) }
+						type="number"
+						value={ order }
 						onChange={ function ( val ) {
-							setParentId( parseInt( val, 10 ) || 0 );
+							setOrder( parseInt( val, 10 ) || 0 );
 						} }
-						asyncAction="bb_admin_forum_autocomplete"
-						placeholder={ __( 'None', 'buddyboss' ) }
+						min={ 0 }
+						__nextHasNoMarginBottom
 					/>
 				</div>
 
