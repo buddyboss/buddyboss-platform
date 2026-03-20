@@ -324,7 +324,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug } 
 			className="bb-forum-modal bb-forum-create-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
 		>
-			<div className="bb-forum-modal__body bb-forum-create-modal__body">
+			<div className="bb-forum-modal__body bb-forum-create-modal__body bb-admin-settings-modal__body">
 				{ error && (
 					<p className="bb-forum-modal__error">{ error }</p>
 				) }
@@ -361,7 +361,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug } 
 					/>
 				</div>
 
-				<div className="bb-forum-create-modal__row bb-forum-modal__row--separator">
+				<div className="bb-admin-settings-modal__row bb-admin-settings-modal__row--separator">
 					<SelectControl
 						label={ __( 'Status', 'buddyboss' ) }
 						value={ forumStatus }

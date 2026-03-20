@@ -191,9 +191,9 @@ export function DiscussionCreateModal( { isOpen, onClose, onCreated } ) {
 			className="bb-discussion-modal bb-discussion-create-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
 		>
-			<div className="bb-discussion-modal__body">
+			<div className="bb-discussion-modal__body bb-admin-settings-modal__body">
 				{ error && (
-					<p className="bb-discussion-modal__error">{ error }</p>
+					<p className="bb-admin-settings-modal__error">{ error }</p>
 				) }
 
 				<TextControl
@@ -204,7 +204,7 @@ export function DiscussionCreateModal( { isOpen, onClose, onCreated } ) {
 					__nextHasNoMarginBottom
 				/>
 
-				<div className="bb-discussion-modal__row--separator">
+				<div className="bb-admin-settings-modal__row--separator">
 					<RichTextEditor
 						id="bb-discussion-create-description"
 						label={ __( 'Description', 'buddyboss' ) }
@@ -228,7 +228,7 @@ export function DiscussionCreateModal( { isOpen, onClose, onCreated } ) {
 					/>
 				</div>
 
-				<div className="bb-discussion-modal__row--separator">
+				<div className="bb-admin-settings-modal__row--separator">
 					<SelectControl
 						label={ __( 'Type', 'buddyboss' ) }
 						value={ type }
@@ -238,7 +238,7 @@ export function DiscussionCreateModal( { isOpen, onClose, onCreated } ) {
 					/>
 				</div>
 
-				<div className="bb-discussion-modal__row bb-discussion-modal__row--separator">
+				<div className="bb-admin-settings-modal__row bb-admin-settings-modal__row--separator">
 					<SelectControl
 						label={ __( 'Status', 'buddyboss' ) }
 						value={ topicStatus }

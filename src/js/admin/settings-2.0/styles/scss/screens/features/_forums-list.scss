@@ -788,38 +788,6 @@
 		font-size: 12px;
 	}
 
-	&__error {
-		color: $bb-error-color;
-		font-size: 13px;
-		margin: 0 0 16px;
-	}
-
-	&__footer {
-
-		.is-secondary {
-			@include bb-button-secondary;
-		}
-
-		.is-primary {
-			@include bb-button-primary;
-
-			&:disabled {
-				opacity: 0.5;
-				cursor: not-allowed;
-			}
-		}
-	}
-
-	&__row--separator {
-		margin-bottom: 24px;
-		padding-bottom: 24px;
-		border-bottom: 1px solid $bb-border-tertiary-color;
-
-		> .bb-admin-meta-field__editor-field {
-			margin-bottom: 0;
-		}
-	}
-
 	&__image-preview {
 		position: relative;
 

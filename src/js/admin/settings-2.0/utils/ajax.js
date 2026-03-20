@@ -1018,6 +1018,9 @@ export function uploadForumImage( file, signal ) {
 		body: formData,
 		signal: signal,
 	} ).then( function ( response ) {
+		if ( ! response.ok ) {
+			throw new Error( 'HTTP ' + response.status );
+		}
 		return response.json();
 	} );
 }

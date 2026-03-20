@@ -877,7 +877,7 @@ export function DiscussionsListScreen( { onNavigate } ) {
 																	onClose();
 																} }
 															>
-																<i className="bb-icons-rl bb-icons-rl-warning-circle"></i>
+																<i className="bb-icons-rl bb-icons-rl-flag"></i>
 																{ 'spam' === disc.post_status
 																	? __( 'Not Spam', 'buddyboss' )
 																	: __( 'Spam', 'buddyboss' )
@@ -1267,9 +1267,9 @@ function DiscussionEditModal( { discussion, onClose, onSave, isSaving } ) {
 			className="bb-discussion-modal bb-discussion-edit-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
 		>
-			<div className="bb-discussion-modal__body">
+			<div className="bb-discussion-modal__body bb-admin-settings-modal__body">
 				{ error && (
-					<p className="bb-discussion-modal__error">{ error }</p>
+					<p className="bb-admin-settings-modal__error">{ error }</p>
 				) }
 
 				<TextControl
@@ -1279,7 +1279,7 @@ function DiscussionEditModal( { discussion, onClose, onSave, isSaving } ) {
 					__nextHasNoMarginBottom
 				/>
 
-				<div className="bb-discussion-modal__row--separator">
+				<div className="bb-admin-settings-modal__row--separator">
 					<RichTextEditor
 						id="bb-discussion-edit-description"
 						label={ __( 'Description', 'buddyboss' ) }
@@ -1303,7 +1303,7 @@ function DiscussionEditModal( { discussion, onClose, onSave, isSaving } ) {
 					/>
 				</div>
 
-				<div className="bb-discussion-modal__row--separator">
+				<div className="bb-admin-settings-modal__row--separator">
 					<SelectControl
 						label={ __( 'Type', 'buddyboss' ) }
 						value={ type }
@@ -1313,7 +1313,7 @@ function DiscussionEditModal( { discussion, onClose, onSave, isSaving } ) {
 					/>
 				</div>
 
-				<div className="bb-discussion-modal__row bb-discussion-modal__row--separator">
+				<div className="bb-admin-settings-modal__row bb-admin-settings-modal__row--separator">
 					<SelectControl
 						label={ __( 'Status', 'buddyboss' ) }
 						value={ topicStatus }
