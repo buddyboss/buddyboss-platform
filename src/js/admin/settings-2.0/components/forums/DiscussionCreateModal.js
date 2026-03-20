@@ -16,7 +16,7 @@ import {
 import { __ } from '@wordpress/i18n';
 
 import { createDiscussion } from '../../utils/ajax';
-import { groupFieldsWithLayout, buildRegisteredFieldPayload } from '../../utils/format';
+import { groupFieldsWithLayout, buildRegisteredFieldPayload, getVisibleFields, needsSeparator } from '../../utils/format';
 import { RegisteredMetaField } from '../common/RegisteredMetaField';
 import { forceRemoveEditor } from '../common/RichTextEditor';
 import { TagsAutocomplete } from './TagsAutocomplete';
@@ -196,10 +196,8 @@ export function DiscussionCreateModal( { isOpen, onClose, onCreated, createField
 		onClose();
 	};
 
-	// Render visible fields.
-	var visibleFields = fields.filter( function ( field ) {
-		return field.visible;
-	} );
+	// Render visible fields (respects client-side conditionals like publish_mode → date/time).
+	var visibleFields = getVisibleFields( fields, registeredValues );
 
 	var grouped = groupFieldsWithLayout( visibleFields );
 
@@ -216,11 +214,11 @@ export function DiscussionCreateModal( { isOpen, onClose, onCreated, createField
 				) }
 
 				{ grouped.map( function ( item, idx ) {
-					var nextIsRow = grouped[ idx + 1 ] && 'row' === grouped[ idx + 1 ].type;
+					var hasSeparator = needsSeparator( item, grouped[ idx + 1 ] );
 
 					if ( 'row' === item.type ) {
 						return (
-							<div key={ 'row-' + idx } className="bb-admin-meta-field__row bb-admin-settings-modal__row bb-admin-settings-modal__row--separator">
+							<div key={ 'row-' + idx } className={ 'bb-admin-meta-field__row bb-admin-settings-modal__row' + ( hasSeparator ? ' bb-admin-settings-modal__row--separator' : '' ) }>
 								{ item.fields.map( function ( field ) {
 									return (
 										<RegisteredMetaField
@@ -238,7 +236,7 @@ export function DiscussionCreateModal( { isOpen, onClose, onCreated, createField
 						);
 					}
 					return (
-						<div key={ item.field.id } className={ 'richtext' === item.field.type || nextIsRow ? 'bb-admin-settings-modal__row--separator' : '' }>
+						<div key={ item.field.id } className={ hasSeparator ? 'bb-admin-settings-modal__row--separator' : '' }>
 							<RegisteredMetaField
 								field={ item.field }
 								value={ registeredValues[ item.field.id ] }
@@ -251,12 +249,14 @@ export function DiscussionCreateModal( { isOpen, onClose, onCreated, createField
 					);
 				} ) }
 
+				<div className="bb-admin-settings-modal__custom-section">
 				<TagsAutocomplete
 					label={ __( 'Tags (Optional)', 'buddyboss' ) }
 					value={ tags }
 					onChange={ setTags }
 					placeholder={ __( 'Enter tags, separated by commas', 'buddyboss' ) }
 				/>
+				</div>
 			</div>
 
 			<div className="bb-discussion-modal__footer bb-admin-settings-modal__footer">

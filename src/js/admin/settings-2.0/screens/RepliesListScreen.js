@@ -21,7 +21,7 @@ import { decodeEntities } from '@wordpress/html-entities';
 import { getReplies, getReply, saveReply, deleteReply, replyBulkAction } from '../utils/ajax';
 import { sanitizeHtml, safeUrl, sanitizeCustomColumns } from '../utils/sanitize';
 import { getPageNumbers } from '../utils/pagination';
-import { groupFieldsWithLayout, buildRegisteredFieldPayload } from '../utils/format';
+import { groupFieldsWithLayout, buildRegisteredFieldPayload, getVisibleFields, needsSeparator } from '../utils/format';
 import { ReplyCreateModal } from '../components/forums/ReplyCreateModal';
 import { RegisteredMetaField } from '../components/common/RegisteredMetaField';
 import { forceRemoveEditor } from '../components/common/RichTextEditor';
@@ -1231,9 +1231,7 @@ export default function RepliesListScreen( { onNavigate } ) {
 								) }
 
 								{ editReply && editReply.registered_fields && ( function () {
-									var visibleFields = editReply.registered_fields.filter( function ( field ) {
-										return field.visible;
-									} );
+									var visibleFields = getVisibleFields( editReply.registered_fields, editRegisteredValues );
 									var grouped = groupFieldsWithLayout( visibleFields );
 
 									var getEditAsyncExtraParams = function ( field ) {
@@ -1272,14 +1270,11 @@ export default function RepliesListScreen( { onNavigate } ) {
 									};
 
 									return grouped.map( function ( item, idx ) {
-										var nextItem = grouped[ idx + 1 ];
-										var nextIsRow = nextItem && 'row' === nextItem.type;
+										var hasSeparator = needsSeparator( item, grouped[ idx + 1 ], [ 'reply_to', 'reply_status', 'author_info' ] );
 
 										if ( 'row' === item.type ) {
-											// Only add separator if next item is also a row; author row flows into author_info below.
-											var rowSeparator = nextIsRow;
 											return (
-												<div key={ 'row-' + idx } className={ 'bb-admin-meta-field__row bb-admin-settings-modal__row' + ( rowSeparator ? ' bb-admin-settings-modal__row--separator' : '' ) }>
+												<div key={ 'row-' + idx } className={ 'bb-admin-meta-field__row bb-admin-settings-modal__row' + ( hasSeparator ? ' bb-admin-settings-modal__row--separator' : '' ) }>
 													{ item.fields.map( function ( field ) {
 														return (
 															<RegisteredMetaField
@@ -1296,9 +1291,6 @@ export default function RepliesListScreen( { onNavigate } ) {
 												</div>
 											);
 										}
-
-										// Separators: after richtext, reply_to, and author_info (before Visibility).
-										var hasSeparator = 'richtext' === item.field.type || 'reply_to' === item.field.id || 'author_info' === item.field.id;
 
 										return (
 											<div key={ item.field.id + '-' + editReply.id + '-' + editCascadeKey } className={ hasSeparator ? 'bb-admin-settings-modal__row--separator' : '' }>

@@ -16,7 +16,7 @@ import {
 import { __ } from '@wordpress/i18n';
 
 import { createReply } from '../../utils/ajax';
-import { groupFieldsWithLayout, buildRegisteredFieldPayload } from '../../utils/format';
+import { groupFieldsWithLayout, buildRegisteredFieldPayload, getVisibleFields, needsSeparator } from '../../utils/format';
 import { RegisteredMetaField } from '../common/RegisteredMetaField';
 import { forceRemoveEditor } from '../common/RichTextEditor';
 
@@ -230,9 +230,7 @@ export function ReplyCreateModal( { isOpen, onClose, onCreated, createFields } )
 	};
 
 	// Render visible fields.
-	var visibleFields = fields.filter( function ( field ) {
-		return field.visible;
-	} );
+	var visibleFields = getVisibleFields( fields, registeredValues );
 
 	var grouped = groupFieldsWithLayout( visibleFields );
 
@@ -249,9 +247,11 @@ export function ReplyCreateModal( { isOpen, onClose, onCreated, createFields } )
 				) }
 
 				{ grouped.map( function ( item, idx ) {
+					var hasSeparator = needsSeparator( item, grouped[ idx + 1 ], [ 'reply_to', 'reply_status' ] );
+
 					if ( 'row' === item.type ) {
 						return (
-							<div key={ 'row-' + idx } className="bb-admin-meta-field__row bb-admin-settings-modal__row bb-admin-settings-modal__row--separator">
+							<div key={ 'row-' + idx } className={ 'bb-admin-meta-field__row bb-admin-settings-modal__row' + ( hasSeparator ? ' bb-admin-settings-modal__row--separator' : '' ) }>
 								{ item.fields.map( function ( field ) {
 									return (
 										<RegisteredMetaField
@@ -268,9 +268,6 @@ export function ReplyCreateModal( { isOpen, onClose, onCreated, createFields } )
 							</div>
 						);
 					}
-
-					// Separators: after Description and Reply-to.
-					var hasSeparator = 'richtext' === item.field.type || 'reply_to' === item.field.id;
 
 					return (
 						<div key={ item.field.id + '-' + cascadeKey } className={ hasSeparator ? 'bb-admin-settings-modal__row--separator' : '' }>

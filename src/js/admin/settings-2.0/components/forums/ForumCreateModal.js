@@ -16,7 +16,7 @@ import {
 import { __ } from '@wordpress/i18n';
 
 import { createForum, uploadForumImage } from '../../utils/ajax';
-import { toSlug, groupFieldsWithLayout, buildRegisteredFieldPayload } from '../../utils/format';
+import { toSlug, groupFieldsWithLayout, buildRegisteredFieldPayload, getVisibleFields, needsSeparator } from '../../utils/format';
 import { safeUrl } from '../../utils/sanitize';
 import { RegisteredMetaField } from '../common/RegisteredMetaField';
 import { forceRemoveEditor } from '../common/RichTextEditor';
@@ -307,9 +307,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 	};
 
 	// Render visible fields.
-	var visibleFields = fields.filter( function ( field ) {
-		return field.visible;
-	} );
+	var visibleFields = getVisibleFields( fields, registeredValues );
 
 	var grouped = groupFieldsWithLayout( visibleFields );
 
@@ -326,12 +324,11 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 				) }
 
 				{ grouped.map( function ( item, idx ) {
-					// Add separator when the next item is a row group (e.g. after description).
-					var nextIsRow = grouped[ idx + 1 ] && 'row' === grouped[ idx + 1 ].type;
+					var hasSeparator = needsSeparator( item, grouped[ idx + 1 ] );
 
 					if ( 'row' === item.type ) {
 						return (
-							<div key={ 'row-' + idx } className="bb-admin-meta-field__row bb-admin-settings-modal__row bb-admin-settings-modal__row--separator">
+							<div key={ 'row-' + idx } className={ 'bb-admin-meta-field__row bb-admin-settings-modal__row' + ( hasSeparator ? ' bb-admin-settings-modal__row--separator' : '' ) }>
 								{ item.fields.map( function ( field ) {
 									return (
 										<RegisteredMetaField
@@ -349,7 +346,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 						);
 					}
 					return (
-						<div key={ item.field.id } className={ 'richtext' === item.field.type || nextIsRow ? 'bb-admin-settings-modal__row--separator' : '' }>
+						<div key={ item.field.id } className={ hasSeparator ? 'bb-admin-settings-modal__row--separator' : '' }>
 							<RegisteredMetaField
 								field={ item.field }
 								value={ registeredValues[ item.field.id ] }

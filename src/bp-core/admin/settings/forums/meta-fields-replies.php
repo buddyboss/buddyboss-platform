@@ -140,7 +140,7 @@ function bb_replies_register_core_meta_fields( $registry, $component ) {
 		)
 	);
 
-	// Visibility — order 70 places it after Author fields.
+	// Visibility — order 45 places it after Reply to, before Status.
 	$registry->register(
 		$component,
 		'visibility',
@@ -148,7 +148,7 @@ function bb_replies_register_core_meta_fields( $registry, $component ) {
 			'label'             => __( 'Visibility', 'buddyboss' ),
 			'type'              => 'select',
 			'tab'               => 'details',
-			'order'             => 70,
+			'order'             => 45,
 			'save_phase'        => 'before',
 			'get_value'         => function ( $reply ) {
 				if ( empty( $reply->ID ) ) {
@@ -167,20 +167,155 @@ function bb_replies_register_core_meta_fields( $registry, $component ) {
 						'label' => __( 'Private', 'buddyboss' ),
 					),
 					array(
-						'value' => 'hidden',
-						'label' => __( 'Hidden', 'buddyboss' ),
+						'value' => 'password',
+						'label' => __( 'Password Protected', 'buddyboss' ),
 					),
 				);
 			},
 			'save_value'        => function ( $reply, $value ) {
-				$allowed = array( 'publish', 'private', 'hidden' );
+				$allowed = array( 'publish', 'private', 'password' );
 				if ( in_array( $value, $allowed, true ) ) {
-					$reply->post_status = $value;
+					if ( 'password' === $value ) {
+						$reply->post_status = 'publish';
+					} else {
+						$reply->post_status = $value;
+					}
 				}
 			},
 			'sanitize_callback' => 'sanitize_key',
 		)
 	);
+
+	// Status (matches legacy WP publish box: Draft, Pending Review, Published).
+	$registry->register(
+		$component,
+		'reply_status',
+		array(
+			'label'             => __( 'Status', 'buddyboss' ),
+			'type'              => 'select',
+			'tab'               => 'details',
+			'order'             => 47,
+			'save_phase'        => 'after',
+			'get_value'         => function ( $reply ) {
+				if ( empty( $reply->ID ) ) {
+					return 'publish';
+				}
+				return get_post_status( $reply->ID );
+			},
+			'get_options'       => function ( $reply ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- Callback signature required by registry.
+				return array(
+					array(
+						'value' => 'publish',
+						'label' => __( 'Published', 'buddyboss' ),
+					),
+					array(
+						'value' => 'pending',
+						'label' => __( 'Pending Review', 'buddyboss' ),
+					),
+					array(
+						'value' => 'draft',
+						'label' => __( 'Draft', 'buddyboss' ),
+					),
+				);
+			},
+			// No-op: status is saved directly by the AJAX handler.
+			'save_value'        => function ( $reply, $value ) {}, // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found, Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+			'sanitize_callback' => 'sanitize_key',
+		)
+	);
+
+	// Publish (Immediately/Schedule).
+	$registry->register(
+		$component,
+		'publish_mode',
+		array(
+			'label'             => __( 'Publish', 'buddyboss' ),
+			'type'              => 'select',
+			'tab'               => 'details',
+			'order'             => 50,
+			'save_phase'        => 'after',
+			'get_value'         => function ( $reply ) {
+				if ( empty( $reply->ID ) ) {
+					return 'immediately';
+				}
+				$post_date = $reply->post_date;
+				$now       = current_time( 'mysql' );
+				return strtotime( $post_date ) > strtotime( $now ) ? 'schedule' : 'immediately';
+			},
+			'get_options'       => function ( $reply ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- Callback signature required by registry.
+				return array(
+					array(
+						'value' => 'immediately',
+						'label' => __( 'Immediately', 'buddyboss' ),
+					),
+					array(
+						'value' => 'schedule',
+						'label' => __( 'Schedule', 'buddyboss' ),
+					),
+				);
+			},
+			// No-op: publish mode is handled by the AJAX handler via post_date.
+			'save_value'        => function ( $reply, $value ) {}, // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found, Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+			'sanitize_callback' => 'sanitize_key',
+		)
+	);
+
+	// Schedule Date (conditional on publish_mode=schedule).
+	$registry->register(
+		$component,
+		'schedule_date',
+		array(
+			'label'             => __( 'Date', 'buddyboss' ),
+			'type'              => 'text',
+			'placeholder'       => 'dd/mm/yy',
+			'tab'               => 'details',
+			'order'             => 51,
+			'layout'            => 'half',
+			'save_phase'        => 'after',
+			'conditional'       => array(
+				'field' => 'publish_mode',
+				'value' => 'schedule',
+			),
+			'get_value'         => function ( $reply ) {
+				if ( empty( $reply->ID ) ) {
+					return '';
+				}
+				return get_the_date( 'd/m/y', $reply->ID );
+			},
+			// No-op: date is handled by the AJAX handler.
+			'save_value'        => function ( $reply, $value ) {}, // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found, Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+			'sanitize_callback' => 'sanitize_text_field',
+		)
+	);
+
+	// Schedule Time (conditional on publish_mode=schedule).
+	$registry->register(
+		$component,
+		'schedule_time',
+		array(
+			'label'             => __( 'Time', 'buddyboss' ),
+			'type'              => 'text',
+			'placeholder'       => 'hh:mm',
+			'tab'               => 'details',
+			'order'             => 52,
+			'layout'            => 'half',
+			'save_phase'        => 'after',
+			'conditional'       => array(
+				'field' => 'publish_mode',
+				'value' => 'schedule',
+			),
+			'get_value'         => function ( $reply ) {
+				if ( empty( $reply->ID ) ) {
+					return '';
+				}
+				return get_the_date( 'H:i', $reply->ID );
+			},
+			// No-op: time is handled by the AJAX handler.
+			'save_value'        => function ( $reply, $value ) {}, // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found, Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+			'sanitize_callback' => 'sanitize_text_field',
+		)
+	);
+
 	// Author ID (editable — allows re-assigning reply author, edit-only).
 	$registry->register(
 		$component,

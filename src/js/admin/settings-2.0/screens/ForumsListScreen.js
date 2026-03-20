@@ -22,7 +22,7 @@ import { decodeEntities } from '@wordpress/html-entities';
 import { getForums, getForum, saveForum, forumBulkAction, uploadForumImage } from '../utils/ajax';
 import { sanitizeHtml, safeUrl, sanitizeCustomColumns } from '../utils/sanitize';
 import { getPageNumbers } from '../utils/pagination';
-import { toSlug, groupFieldsWithLayout as groupForumFieldsWithLayout, buildRegisteredFieldPayload } from '../utils/format';
+import { toSlug, groupFieldsWithLayout as groupForumFieldsWithLayout, buildRegisteredFieldPayload, getVisibleFields, isFieldConditionalMet, needsSeparator } from '../utils/format';
 import { ForumCreateModal } from '../components/forums/ForumCreateModal';
 import { RegisteredMetaField } from '../components/common/RegisteredMetaField';
 import { forceRemoveEditor } from '../components/common/RichTextEditor';
@@ -1490,7 +1490,7 @@ function ForumEditModal( props ) {
 		}
 
 		var tabFields = forum.registered_fields.filter( function ( field ) {
-			return field.tab === tabName && field.visible;
+			return field.tab === tabName && field.visible && isFieldConditionalMet( field, registeredValues );
 		} );
 
 		if ( 0 === tabFields.length ) {
@@ -1500,12 +1500,11 @@ function ForumEditModal( props ) {
 		var grouped = groupForumFieldsWithLayout( tabFields );
 
 		return grouped.map( function ( item, idx ) {
-			// Add separator when the next item is a row group (e.g. after description).
-			var nextIsRow = grouped[ idx + 1 ] && 'row' === grouped[ idx + 1 ].type;
+			var hasSeparator = needsSeparator( item, grouped[ idx + 1 ] );
 
 			if ( 'row' === item.type ) {
 				return (
-					<div key={ 'row-' + idx } className="bb-admin-meta-field__row bb-admin-settings-modal__row bb-admin-settings-modal__row--separator">
+					<div key={ 'row-' + idx } className={ 'bb-admin-meta-field__row bb-admin-settings-modal__row' + ( hasSeparator ? ' bb-admin-settings-modal__row--separator' : '' ) }>
 						{ item.fields.map( function ( field ) {
 							return (
 								<RegisteredMetaField
@@ -1524,7 +1523,7 @@ function ForumEditModal( props ) {
 				);
 			}
 			return (
-				<div key={ item.field.id + '-' + forum.id } className={ 'richtext' === item.field.type || nextIsRow ? 'bb-admin-settings-modal__row--separator' : '' }>
+				<div key={ item.field.id + '-' + forum.id } className={ hasSeparator ? 'bb-admin-settings-modal__row--separator' : '' }>
 					<RegisteredMetaField
 						field={ item.field }
 						value={ registeredValues[ item.field.id ] }

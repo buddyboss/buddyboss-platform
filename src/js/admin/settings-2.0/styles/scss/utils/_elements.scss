@@ -710,6 +710,12 @@ select.bb-admin-settings__select {
 		margin: 0 0 16px;
 	}
 
+	// Custom section separator (e.g. Tags below registered fields).
+	&__custom-section {
+		padding-top: 24px;
+		border-top: 1px solid $bb-border-tertiary-color;
+	}
+
 	&__footer {
         display: flex;
 		align-items: center;

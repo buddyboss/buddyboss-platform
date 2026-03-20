@@ -21,7 +21,7 @@ import { decodeEntities } from '@wordpress/html-entities';
 import { getDiscussions, getDiscussion, saveDiscussion, discussionBulkAction } from '../utils/ajax';
 import { sanitizeHtml, safeUrl, sanitizeCustomColumns } from '../utils/sanitize';
 import { getPageNumbers } from '../utils/pagination';
-import { groupFieldsWithLayout, buildRegisteredFieldPayload } from '../utils/format';
+import { groupFieldsWithLayout, buildRegisteredFieldPayload, getVisibleFields, needsSeparator } from '../utils/format';
 import { DiscussionCreateModal } from '../components/forums/DiscussionCreateModal';
 import { RegisteredMetaField } from '../components/common/RegisteredMetaField';
 import { forceRemoveEditor } from '../components/common/RichTextEditor';
@@ -1282,21 +1282,16 @@ function DiscussionEditModal( { discussion, onClose, onSave, isSaving } ) {
 			return null;
 		}
 
-		var visibleFields = discussion.registered_fields.filter( function ( field ) {
-			return field.visible;
-		} );
+		var visibleFields = getVisibleFields( discussion.registered_fields, registeredValues );
 
 		var grouped = groupFieldsWithLayout( visibleFields );
 
 		return grouped.map( function ( item, idx ) {
-			var nextItem = grouped[ idx + 1 ];
-			var nextIsRow = nextItem && 'row' === nextItem.type;
+			var hasSeparator = needsSeparator( item, grouped[ idx + 1 ], [ 'author_info' ] );
 
 			if ( 'row' === item.type ) {
-				// Only add separator if next item is also a row; author row flows into author_info below.
-				var rowSeparator = nextIsRow;
 				return (
-					<div key={ 'row-' + idx } className={ 'bb-admin-meta-field__row bb-admin-settings-modal__row' + ( rowSeparator ? ' bb-admin-settings-modal__row--separator' : '' ) }>
+					<div key={ 'row-' + idx } className={ 'bb-admin-meta-field__row bb-admin-settings-modal__row' + ( hasSeparator ? ' bb-admin-settings-modal__row--separator' : '' ) }>
 						{ item.fields.map( function ( field ) {
 							return (
 								<RegisteredMetaField
@@ -1313,9 +1308,6 @@ function DiscussionEditModal( { discussion, onClose, onSave, isSaving } ) {
 					</div>
 				);
 			}
-
-			// Separators: after richtext, before row groups, and after author_info (before Tags).
-			var hasSeparator = 'richtext' === item.field.type || nextIsRow || 'author_info' === item.field.id;
 			return (
 				<div key={ item.field.id + '-' + discussion.id } className={ hasSeparator ? 'bb-admin-settings-modal__row--separator' : '' }>
 					<RegisteredMetaField
@@ -1349,12 +1341,14 @@ function DiscussionEditModal( { discussion, onClose, onSave, isSaving } ) {
 
 				{ renderFields() }
 
+				<div className="bb-admin-settings-modal__custom-section">
 				<TagsAutocomplete
 					label={ __( 'Tags (Optional)', 'buddyboss' ) }
 					value={ tagNames }
 					onChange={ setTagNames }
 					placeholder={ __( 'Enter tags, separated by commas', 'buddyboss' ) }
 				/>
+				</div>
 			</div>
 
 			<div className="bb-discussion-modal__footer bb-admin-settings-modal__footer">

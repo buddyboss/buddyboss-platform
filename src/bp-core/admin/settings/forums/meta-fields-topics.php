@@ -170,7 +170,7 @@ function bb_discussions_register_core_meta_fields( $registry, $component ) {
 		)
 	);
 
-	// Status (Open/Closed).
+	// Status (Open/Closed/Spam/Trash/Pending) — matches legacy bbp_get_topic_statuses().
 	$registry->register(
 		$component,
 		'topic_status',
@@ -183,21 +183,20 @@ function bb_discussions_register_core_meta_fields( $registry, $component ) {
 			'save_phase'        => 'after',
 			'get_value'         => function ( $topic ) {
 				if ( empty( $topic->ID ) ) {
-					return 'open';
+					return bbp_get_public_status_id();
 				}
-				return bbp_is_topic_closed( $topic->ID ) ? 'closed' : 'open';
+				return get_post_status( $topic->ID );
 			},
 			'get_options'       => function ( $topic ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- Callback signature required by registry.
-				return array(
-					array(
-						'value' => 'open',
-						'label' => __( 'Open', 'buddyboss' ),
-					),
-					array(
-						'value' => 'closed',
-						'label' => __( 'Closed', 'buddyboss' ),
-					),
-				);
+				$statuses = function_exists( 'bbp_get_topic_statuses' ) ? bbp_get_topic_statuses() : array();
+				$options  = array();
+				foreach ( $statuses as $status_id => $label ) {
+					$options[] = array(
+						'value' => $status_id,
+						'label' => $label,
+					);
+				}
+				return $options;
 			},
 			// No-op: status is saved directly by the AJAX handlers (bbp_close/open_topic).
 			'save_value'        => function ( $topic, $value ) {}, // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found, Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
@@ -233,20 +232,122 @@ function bb_discussions_register_core_meta_fields( $registry, $component ) {
 						'label' => __( 'Private', 'buddyboss' ),
 					),
 					array(
-						'value' => 'hidden',
-						'label' => __( 'Hidden', 'buddyboss' ),
+						'value' => 'password',
+						'label' => __( 'Password Protected', 'buddyboss' ),
 					),
 				);
 			},
 			'save_value'        => function ( $topic, $value ) {
-				$allowed = array( 'publish', 'private', 'hidden' );
+				$allowed = array( 'publish', 'private', 'password' );
 				if ( in_array( $value, $allowed, true ) ) {
-					$topic->post_status = $value;
+					// Password Protected uses 'publish' post_status with a post_password.
+					if ( 'password' === $value ) {
+						$topic->post_status = 'publish';
+					} else {
+						$topic->post_status = $value;
+					}
 				}
 			},
 			'sanitize_callback' => 'sanitize_key',
 		)
 	);
+
+	// =========================================================================
+	// Publish fields (order 56–59).
+	// =========================================================================
+
+	// Publish (Immediately/Schedule).
+	$registry->register(
+		$component,
+		'publish_mode',
+		array(
+			'label'             => __( 'Publish', 'buddyboss' ),
+			'type'              => 'select',
+			'tab'               => 'details',
+			'order'             => 56,
+			'save_phase'        => 'after',
+			'get_value'         => function ( $topic ) {
+				if ( empty( $topic->ID ) ) {
+					return 'immediately';
+				}
+				$post_date = $topic->post_date;
+				$now       = current_time( 'mysql' );
+				return strtotime( $post_date ) > strtotime( $now ) ? 'schedule' : 'immediately';
+			},
+			'get_options'       => function ( $topic ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- Callback signature required by registry.
+				return array(
+					array(
+						'value' => 'immediately',
+						'label' => __( 'Immediately', 'buddyboss' ),
+					),
+					array(
+						'value' => 'schedule',
+						'label' => __( 'Schedule', 'buddyboss' ),
+					),
+				);
+			},
+			// No-op: publish mode is handled by the AJAX handler via post_date.
+			'save_value'        => function ( $topic, $value ) {}, // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found, Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+			'sanitize_callback' => 'sanitize_key',
+		)
+	);
+
+	// Schedule Date (conditional on publish_mode=schedule).
+	$registry->register(
+		$component,
+		'schedule_date',
+		array(
+			'label'             => __( 'Date', 'buddyboss' ),
+			'type'              => 'text',
+			'placeholder'       => 'dd/mm/yy',
+			'tab'               => 'details',
+			'order'             => 57,
+			'layout'            => 'half',
+			'save_phase'        => 'after',
+			'conditional'       => array(
+				'field' => 'publish_mode',
+				'value' => 'schedule',
+			),
+			'get_value'         => function ( $topic ) {
+				if ( empty( $topic->ID ) ) {
+					return '';
+				}
+				return get_the_date( 'd/m/y', $topic->ID );
+			},
+			// No-op: date is handled by the AJAX handler.
+			'save_value'        => function ( $topic, $value ) {}, // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found, Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+			'sanitize_callback' => 'sanitize_text_field',
+		)
+	);
+
+	// Schedule Time (conditional on publish_mode=schedule).
+	$registry->register(
+		$component,
+		'schedule_time',
+		array(
+			'label'             => __( 'Time', 'buddyboss' ),
+			'type'              => 'text',
+			'placeholder'       => 'hh:mm',
+			'tab'               => 'details',
+			'order'             => 58,
+			'layout'            => 'half',
+			'save_phase'        => 'after',
+			'conditional'       => array(
+				'field' => 'publish_mode',
+				'value' => 'schedule',
+			),
+			'get_value'         => function ( $topic ) {
+				if ( empty( $topic->ID ) ) {
+					return '';
+				}
+				return get_the_date( 'H:i', $topic->ID );
+			},
+			// No-op: time is handled by the AJAX handler.
+			'save_value'        => function ( $topic, $value ) {}, // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found, Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+			'sanitize_callback' => 'sanitize_text_field',
+		)
+	);
+
 	// =========================================================================
 	// Author fields (edit only — order 60–70).
 	// =========================================================================
