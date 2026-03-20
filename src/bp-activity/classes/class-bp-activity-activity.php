@@ -1002,7 +1002,9 @@ class BP_Activity_Activity {
 				}
 			}
 
-			$activities[] = $activity;
+			if ( ! empty( $activity ) ) {
+				$activities[] = $activity;
+			}
 		}
 
 		$user_ids  = wp_list_pluck( $activities, 'user_id' );
