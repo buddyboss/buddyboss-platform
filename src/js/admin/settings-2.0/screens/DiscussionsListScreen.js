@@ -168,10 +168,6 @@ export function DiscussionsListScreen( { onNavigate } ) {
 	var bulkEditOpen = bulkEditOpenState[ 0 ];
 	var setBulkEditOpen = bulkEditOpenState[ 1 ];
 
-	var bulkEditTypeState = useState( 'no_change' );
-	var bulkEditType = bulkEditTypeState[ 0 ];
-	var setBulkEditType = bulkEditTypeState[ 1 ];
-
 	var bulkEditVisibilityState = useState( 'no_change' );
 	var bulkEditVisibility = bulkEditVisibilityState[ 0 ];
 	var setBulkEditVisibility = bulkEditVisibilityState[ 1 ];
@@ -440,7 +436,6 @@ export function DiscussionsListScreen( { onNavigate } ) {
 		}
 
 		if ( 'edit' === action ) {
-			setBulkEditType( 'no_change' );
 			setBulkEditVisibility( 'no_change' );
 			setBulkEditStatus( 'no_change' );
 			setBulkEditOpen( true );
@@ -512,7 +507,6 @@ export function DiscussionsListScreen( { onNavigate } ) {
 	var handleConfirmBulkEdit = function () {
 		setBulkEditOpen( false );
 		var editData = {
-			edit_type: bulkEditType,
 			edit_visibility: bulkEditVisibility,
 			edit_status: bulkEditStatus,
 		};

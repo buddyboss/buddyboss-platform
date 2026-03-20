@@ -580,7 +580,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 									/>
 								</th>
 								<th className="bb-discussion-tags-list__col-tag">
-									{ __( 'Discussion', 'buddyboss' ) }
+									{ __( 'Name', 'buddyboss' ) }
 								</th>
 								<th className="bb-discussion-tags-list__col-slug">
 									{ __( 'Slug', 'buddyboss' ) }
