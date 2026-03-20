@@ -818,27 +818,98 @@
 
 	&__wrapper {
 		position: relative;
-	}
-
-	&__input {
-		width: 100%;
-		height: 36px;
 		border: 1px solid $bb-border-secondary-color;
 		border-radius: $bb-border-radius-md;
-		padding: 0 32px 0 8px;
-		font-size: 13px;
-		color: $bb-text-color;
-		outline: none;
+		background: $bb-background-base-color;
+		cursor: text;
 
-		&::placeholder {
-			color: $bb-text-disabled-color;
-		}
-
-		&:focus {
+		&:focus-within {
 			border-color: $bb-border-brand-primary-color;
 		}
 	}
 
+	// Tags area — flex wrap container for chips + inline input.
+	&__tags-area {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 4px;
+		padding: 4px 28px 4px 6px;
+		min-height: 36px;
+		position: relative;
+
+		input[type] {
+			border: 0;
+			outline: none;
+			box-shadow: none;
+		}
+	}
+
+	// Tag chip.
+	&__tag {
+		display: inline-flex;
+		align-items: center;
+		gap: 2px;
+		padding: 2px 4px 2px 8px;
+		background: $bb-background-secondary-color;
+		border: 1px solid $bb-border-tertiary-color;
+		border-radius: $bb-border-radius-sm;
+		font-size: 13px;
+		line-height: 18px;
+		color: $bb-text-color;
+		white-space: nowrap;
+		max-width: 100%;
+	}
+
+	&__tag-text {
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	&__tag-remove {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 18px;
+		height: 18px;
+		padding: 0;
+		border: none;
+		background: none;
+		cursor: pointer;
+		color: $bb-icon-tertiary-color;
+		border-radius: $bb-border-radius-sm;
+		flex-shrink: 0;
+
+		i {
+			font-size: 12px;
+			font-weight: 700;
+			line-height: 1;
+		}
+
+		&:hover {
+			color: $bb-text-color;
+			background: rgba(0, 0, 0, 0.06);
+		}
+	}
+
+	// Inline input — grows to fill remaining space.
+	&__input {
+		flex: 1 1 60px;
+		min-width: 60px;
+		height: 26px;
+		border: none;
+		outline: none;
+		padding: 0 2px;
+		font-size: 13px;
+		color: $bb-text-color;
+		background: transparent;
+
+		&::placeholder {
+			color: $bb-text-disabled-color;
+		}
+	}
+
+	// Spinner inside the tags area.
 	&__spinner {
 		position: absolute;
 		right: 8px;
@@ -855,6 +926,7 @@
 		}
 	}
 
+	// Dropdown.
 	&__dropdown {
 		position: absolute;
 		top: 100%;
@@ -872,7 +944,9 @@
 	}
 
 	&__option {
-		display: block;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
 		width: 100%;
 		padding: 6px 12px;
 		border: none;
@@ -886,5 +960,19 @@
 		&--active {
 			background: $bb-background-primary-hover-color;
 		}
+
+		&--create {
+			color: $bb-text-tertiary-color;
+
+			strong {
+				color: $bb-text-color;
+				margin-left: 2px;
+			}
+		}
+	}
+
+	&__option-count {
+		font-size: 12px;
+		color: $bb-text-tertiary-color;
 	}
 }

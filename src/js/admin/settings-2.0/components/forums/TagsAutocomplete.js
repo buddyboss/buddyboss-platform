@@ -1,8 +1,9 @@
 /**
  * BuddyBoss Admin Settings 2.0 - Tags Autocomplete
  *
- * Text input with autocomplete suggestions for topic tags.
- * Supports comma-separated values and free-form tag entry.
+ * Tag input with autocomplete suggestions for topic tags.
+ * Displays selected tags as chips with remove buttons.
+ * Supports free-form tag creation and comma/Enter to confirm.
  *
  * @package BuddyBoss\Core\Administration
  * @since BuddyBoss [BBVERSION]
@@ -13,6 +14,23 @@ import { Spinner } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
 import { searchTopicTags } from '../../utils/ajax';
+
+/**
+ * Parse comma-separated string into array of trimmed, non-empty tag names.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {string} str Comma-separated tag string.
+ * @returns {Array} Array of tag name strings.
+ */
+function parseTags( str ) {
+	if ( ! str ) {
+		return [];
+	}
+	return str.split( ',' ).map( function ( t ) {
+		return t.trim();
+	} ).filter( Boolean );
+}
 
 /**
  * Tags Autocomplete Component
@@ -43,6 +61,11 @@ export function TagsAutocomplete( { value, onChange, label, placeholder } ) {
 	var isSearching = isSearchingState[ 0 ];
 	var setIsSearching = isSearchingState[ 1 ];
 
+	// The text currently being typed in the input (not yet confirmed as a tag).
+	var inputTextState = useState( '' );
+	var inputText = inputTextState[ 0 ];
+	var setInputText = inputTextState[ 1 ];
+
 	var searchAbortRef = useRef( null );
 	var searchTimerRef = useRef( null );
 	var wrapperRef = useRef( null );
@@ -51,11 +74,33 @@ export function TagsAutocomplete( { value, onChange, label, placeholder } ) {
 	var inputId = instanceIdRef.current + '-input';
 	var listboxId = instanceIdRef.current + '-listbox';
 
-	// Close dropdown on outside click.
+	// Derive tags array from the comma-separated value prop.
+	var tags = parseTags( value );
+
+	// Use a ref to always have the latest inputText/tags without re-registering the listener.
+	var stateRef = useRef( { inputText: '', tags: [] } );
+	stateRef.current.inputText = inputText;
+	stateRef.current.tags = tags;
+
+	// Close dropdown on outside click (registered once).
 	useEffect( function () {
 		var handleClickOutside = function ( e ) {
 			if ( wrapperRef.current && ! wrapperRef.current.contains( e.target ) ) {
+				// Confirm any pending text as a tag on blur.
+				var pending = stateRef.current.inputText.trim();
+				if ( pending ) {
+					var currentTags = stateRef.current.tags;
+					var exists = currentTags.some( function ( t ) {
+						return t.toLowerCase() === pending.toLowerCase();
+					} );
+					if ( ! exists ) {
+						onChange( currentTags.concat( [ pending ] ).join( ', ' ) );
+					}
+					setInputText( '' );
+				}
+				setSuggestions( [] );
 				setShowDropdown( false );
+				setIsSearching( false );
 			}
 		};
 		document.addEventListener( 'mousedown', handleClickOutside );
@@ -71,30 +116,76 @@ export function TagsAutocomplete( { value, onChange, label, placeholder } ) {
 	}, [] );
 
 	/**
-	 * Get the current partial tag being typed (text after last comma).
+	 * Build comma-separated string from tags array and call onChange.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param {string} val Full input value.
-	 * @returns {string} The partial tag text.
+	 * @param {Array} newTags Array of tag name strings.
 	 */
-	var getCurrentPartial = function ( val ) {
-		var parts = val.split( ',' );
-		return ( parts[ parts.length - 1 ] || '' ).trim();
+	var updateValue = function ( newTags ) {
+		onChange( newTags.join( ', ' ) );
 	};
 
 	/**
-	 * Handle input change with debounced tag search.
+	 * Add a tag if it doesn't already exist.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param {string} newValue New input value.
+	 * @param {string} tagName Tag name to add.
 	 */
-	var handleInputChange = function ( newValue ) {
-		onChange( newValue );
+	var addTag = function ( tagName ) {
+		var trimmed = tagName.trim();
+		if ( ! trimmed ) {
+			return;
+		}
 
-		var partial = getCurrentPartial( newValue );
+		// Check for duplicate (case-insensitive).
+		var exists = tags.some( function ( t ) {
+			return t.toLowerCase() === trimmed.toLowerCase();
+		} );
 
+		if ( ! exists ) {
+			updateValue( tags.concat( [ trimmed ] ) );
+		}
+
+		setInputText( '' );
+		setSuggestions( [] );
+		setShowDropdown( false );
+		setActiveIndex( -1 );
+		setIsSearching( false );
+
+		if ( searchTimerRef.current ) {
+			clearTimeout( searchTimerRef.current );
+		}
+	};
+
+	/**
+	 * Remove a tag by index.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {number} index Tag index to remove.
+	 */
+	var removeTag = function ( index ) {
+		var newTags = tags.filter( function ( _t, i ) {
+			return i !== index;
+		} );
+		updateValue( newTags );
+
+		// Refocus input after removing.
+		if ( inputRef.current ) {
+			inputRef.current.focus();
+		}
+	};
+
+	/**
+	 * Search for tags via AJAX with debounce.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {string} partial Text to search for.
+	 */
+	var doSearch = function ( partial ) {
 		if ( searchTimerRef.current ) {
 			clearTimeout( searchTimerRef.current );
 		}
@@ -117,18 +208,18 @@ export function TagsAutocomplete( { value, onChange, label, placeholder } ) {
 			searchTopicTags( partial, { signal: searchAbortRef.current.signal } ).then( function ( response ) {
 				setIsSearching( false );
 				if ( response.success && response.data && response.data.tags ) {
-					// Filter out tags already in the value.
-					var existingTags = value.split( ',' ).map( function ( t ) {
-						return t.trim().toLowerCase();
+					// Filter out tags already selected.
+					var existingLower = tags.map( function ( t ) {
+						return t.toLowerCase();
 					} );
 					var filtered = response.data.tags.filter( function ( tag ) {
-						return existingTags.indexOf( tag.name.toLowerCase() ) === -1;
+						return existingLower.indexOf( tag.name.toLowerCase() ) === -1;
 					} );
 					setSuggestions( filtered );
-					setShowDropdown( filtered.length > 0 );
+					setShowDropdown( true );
 				} else {
 					setSuggestions( [] );
-					setShowDropdown( false );
+					setShowDropdown( partial.length >= 2 );
 				}
 			} ).catch( function ( err ) {
 				if ( err && 'AbortError' === err.name ) {
@@ -136,64 +227,129 @@ export function TagsAutocomplete( { value, onChange, label, placeholder } ) {
 				}
 				setIsSearching( false );
 				setSuggestions( [] );
-				setShowDropdown( false );
+				setShowDropdown( partial.length >= 2 );
 			} );
 		}, 300 );
 	};
 
 	/**
-	 * Handle selecting a suggestion.
+	 * Handle input text change.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param {Object} tag Selected tag object.
+	 * @param {Event} e Input change event.
 	 */
-	var handleSelectTag = function ( tag ) {
-		var parts = value.split( ',' ).map( function ( t ) {
-			return t.trim();
-		} );
+	var handleInputChange = function ( e ) {
+		var newText = e.target.value;
 
-		// Replace the last partial with the selected tag.
-		parts[ parts.length - 1 ] = tag.name;
+		// If the user typed a comma, confirm the text before it as a tag.
+		if ( newText.indexOf( ',' ) > -1 ) {
+			var parts = newText.split( ',' );
+			// Add all comma-separated parts except the last (which is the new partial).
+			for ( var i = 0; i < parts.length - 1; i++ ) {
+				var part = parts[ i ].trim();
+				if ( part ) {
+					addTag( part );
+				}
+			}
+			// Keep the remainder after last comma as new input text.
+			var remainder = parts[ parts.length - 1 ];
+			setInputText( remainder );
+			doSearch( remainder.trim() );
+			return;
+		}
 
-		// Build new value with trailing comma+space for next entry.
-		var newValue = parts.filter( Boolean ).join( ', ' ) + ', ';
-		onChange( newValue );
-		setSuggestions( [] );
-		setShowDropdown( false );
-		setActiveIndex( -1 );
+		setInputText( newText );
+		doSearch( newText.trim() );
 	};
 
 	/**
-	 * Handle keyboard navigation for the suggestions dropdown.
+	 * Handle selecting a suggestion from the dropdown.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {string} tagName Tag name to add.
+	 */
+	var handleSelectSuggestion = function ( tagName ) {
+		addTag( tagName );
+		if ( inputRef.current ) {
+			inputRef.current.focus();
+		}
+	};
+
+	/**
+	 * Handle keyboard navigation and tag confirmation.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param {KeyboardEvent} e Keyboard event.
 	 */
 	var handleKeyDown = useCallback( function ( e ) {
-		if ( ! showDropdown || ! suggestions.length ) {
-			return;
+		var totalOptions = suggestions.length;
+		// Include "Create" option if inputText is non-empty and not in suggestions.
+		var trimmed = inputText.trim();
+		var showCreate = trimmed.length > 0 && ! suggestions.some( function ( s ) {
+			return s.name.toLowerCase() === trimmed.toLowerCase();
+		} ) && ! tags.some( function ( t ) {
+			return t.toLowerCase() === trimmed.toLowerCase();
+		} );
+
+		if ( showCreate ) {
+			totalOptions = totalOptions + 1;
 		}
 
-		if ( 'ArrowDown' === e.key ) {
-			e.preventDefault();
-			setActiveIndex( function ( prev ) {
-				return prev < suggestions.length - 1 ? prev + 1 : 0;
-			} );
-		} else if ( 'ArrowUp' === e.key ) {
-			e.preventDefault();
-			setActiveIndex( function ( prev ) {
-				return prev > 0 ? prev - 1 : suggestions.length - 1;
-			} );
-		} else if ( 'Enter' === e.key && activeIndex >= 0 && activeIndex < suggestions.length ) {
-			e.preventDefault();
-			handleSelectTag( suggestions[ activeIndex ] );
-		} else if ( 'Escape' === e.key ) {
-			setShowDropdown( false );
-			setActiveIndex( -1 );
+		if ( showDropdown && totalOptions > 0 ) {
+			if ( 'ArrowDown' === e.key ) {
+				e.preventDefault();
+				setActiveIndex( function ( prev ) {
+					return prev < totalOptions - 1 ? prev + 1 : 0;
+				} );
+				return;
+			} else if ( 'ArrowUp' === e.key ) {
+				e.preventDefault();
+				setActiveIndex( function ( prev ) {
+					return prev > 0 ? prev - 1 : totalOptions - 1;
+				} );
+				return;
+			} else if ( 'Enter' === e.key && activeIndex >= 0 && activeIndex < totalOptions ) {
+				e.preventDefault();
+				if ( activeIndex < suggestions.length ) {
+					handleSelectSuggestion( suggestions[ activeIndex ].name );
+				} else if ( showCreate ) {
+					handleSelectSuggestion( trimmed );
+				}
+				return;
+			} else if ( 'Escape' === e.key ) {
+				setShowDropdown( false );
+				setActiveIndex( -1 );
+				return;
+			}
 		}
-	}, [ showDropdown, suggestions, activeIndex ] );
+
+		// Enter or Tab confirms the current input text as a tag.
+		if ( 'Enter' === e.key ) {
+			e.preventDefault();
+			if ( trimmed ) {
+				addTag( trimmed );
+			}
+		}
+
+		// Backspace with empty input removes the last tag.
+		if ( 'Backspace' === e.key && '' === inputText && tags.length > 0 ) {
+			removeTag( tags.length - 1 );
+		}
+	}, [ showDropdown, suggestions, activeIndex, inputText, tags ] );
+
+	// Check if "Create" option should show.
+	var trimmedInput = inputText.trim();
+	var showCreateOption = trimmedInput.length > 0 && ! suggestions.some( function ( s ) {
+		return s.name.toLowerCase() === trimmedInput.toLowerCase();
+	} ) && ! tags.some( function ( t ) {
+		return t.toLowerCase() === trimmedInput.toLowerCase();
+	} );
+
+	// Show dropdown if we have suggestions OR the create option.
+	var dropdownVisible = showDropdown && ( suggestions.length > 0 || showCreateOption );
 
 	return (
 		<div className="components-base-control bb-tags-autocomplete" ref={ wrapperRef }>
@@ -202,55 +358,98 @@ export function TagsAutocomplete( { value, onChange, label, placeholder } ) {
 					{ label }
 				</label>
 			) }
-			<div className="bb-tags-autocomplete__wrapper">
-				<input
-					id={ inputId }
-					ref={ inputRef }
-					type="text"
-					value={ value }
-					onChange={ function ( e ) {
-						handleInputChange( e.target.value );
-					} }
-					onFocus={ function () {
-						var partial = getCurrentPartial( value );
-						if ( partial.length >= 2 && suggestions.length > 0 ) {
-							setShowDropdown( true );
-						}
-					} }
-					onKeyDown={ handleKeyDown }
-					placeholder={ placeholder || __( 'Enter tags, separated by commas', 'buddyboss' ) }
-					className="components-text-control__input bb-tags-autocomplete__input"
-					role="combobox"
-					aria-expanded={ showDropdown && suggestions.length > 0 ? 'true' : 'false' }
-					aria-owns={ listboxId }
-					aria-autocomplete="list"
-					aria-activedescendant={ activeIndex >= 0 && suggestions[ activeIndex ] ? 'bb-tag-option-' + suggestions[ activeIndex ].id : undefined }
-				/>
-				{ isSearching && (
-					<span className="bb-tags-autocomplete__spinner">
-						<Spinner />
-					</span>
-				) }
-				{ showDropdown && suggestions.length > 0 && (
+			<div
+				className="bb-tags-autocomplete__wrapper"
+				onClick={ function () {
+					if ( inputRef.current ) {
+						inputRef.current.focus();
+					}
+				} }
+			>
+				<div className="bb-tags-autocomplete__tags-area">
+					{ tags.map( function ( tag, index ) {
+						return (
+							<span key={ tag + '-' + index } className="bb-tags-autocomplete__tag">
+								<span className="bb-tags-autocomplete__tag-text">{ tag }</span>
+								<button
+									type="button"
+									className="bb-tags-autocomplete__tag-remove"
+									onClick={ function ( e ) {
+										e.stopPropagation();
+										removeTag( index );
+									} }
+									aria-label={ tag + ' - ' + __( 'Remove', 'buddyboss' ) }
+								>
+									<i className="bb-icons-rl bb-icons-rl-x"></i>
+								</button>
+							</span>
+						);
+					} ) }
+					<input
+						id={ inputId }
+						ref={ inputRef }
+						type="text"
+						value={ inputText }
+						onChange={ handleInputChange }
+						onFocus={ function () {
+							if ( trimmedInput.length >= 2 && ( suggestions.length > 0 || showCreateOption ) ) {
+								setShowDropdown( true );
+							}
+						} }
+						onKeyDown={ handleKeyDown }
+						placeholder={ tags.length > 0 ? '' : ( placeholder || __( 'Enter tags, separated by commas', 'buddyboss' ) ) }
+						className="bb-tags-autocomplete__input"
+						role="combobox"
+						aria-expanded={ dropdownVisible ? 'true' : 'false' }
+						aria-owns={ listboxId }
+						aria-autocomplete="list"
+						aria-activedescendant={ activeIndex >= 0 ? 'bb-tag-option-' + activeIndex : undefined }
+					/>
+					{ isSearching && (
+						<span className="bb-tags-autocomplete__spinner">
+							<Spinner />
+						</span>
+					) }
+				</div>
+				{ dropdownVisible && (
 					<div className="bb-tags-autocomplete__dropdown" role="listbox" id={ listboxId }>
 						{ suggestions.map( function ( tag, index ) {
 							return (
 								<button
 									key={ tag.id }
-									id={ 'bb-tag-option-' + tag.id }
+									id={ 'bb-tag-option-' + index }
 									type="button"
 									role="option"
 									aria-selected={ index === activeIndex ? 'true' : 'false' }
 									className={ 'bb-tags-autocomplete__option' + ( index === activeIndex ? ' bb-tags-autocomplete__option--active' : '' ) }
 									onMouseDown={ function ( e ) {
 										e.preventDefault();
-										handleSelectTag( tag );
+										handleSelectSuggestion( tag.name );
 									} }
 								>
 									{ tag.name }
+									{ tag.count > 0 && (
+										<span className="bb-tags-autocomplete__option-count">{ tag.count }</span>
+									) }
 								</button>
 							);
 						} ) }
+						{ showCreateOption && (
+							<button
+								id={ 'bb-tag-option-' + suggestions.length }
+								type="button"
+								role="option"
+								aria-selected={ suggestions.length === activeIndex ? 'true' : 'false' }
+								className={ 'bb-tags-autocomplete__option bb-tags-autocomplete__option--create' + ( suggestions.length === activeIndex ? ' bb-tags-autocomplete__option--active' : '' ) }
+								onMouseDown={ function ( e ) {
+									e.preventDefault();
+									handleSelectSuggestion( trimmedInput );
+								} }
+							>
+								{ __( 'Create', 'buddyboss' ) + ': ' }
+								<strong>{ trimmedInput }</strong>
+							</button>
+						) }
 					</div>
 				) }
 			</div>
