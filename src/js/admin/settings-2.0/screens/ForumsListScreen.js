@@ -15,6 +15,7 @@ import {
 	MenuGroup,
 	MenuItem,
 	Modal,
+	TabPanel,
 	TextControl,
 } from '@wordpress/components';
 import { __, _n, sprintf } from '@wordpress/i18n';
@@ -22,10 +23,10 @@ import { decodeEntities } from '@wordpress/html-entities';
 import { getForums, getForum, saveForum, forumBulkAction, uploadForumImage } from '../utils/ajax';
 import { sanitizeHtml, safeUrl, sanitizeCustomColumns } from '../utils/sanitize';
 import { getPageNumbers } from '../utils/pagination';
-import { toSlug } from '../utils/format';
+import { toSlug, groupFieldsWithLayout as groupForumFieldsWithLayout } from '../utils/format';
 import { ForumCreateModal } from '../components/forums/ForumCreateModal';
-import { AsyncSelectField } from '../components/fields/AsyncSelectField';
-import { RichTextEditor, forceRemoveEditor } from '../components/common/RichTextEditor';
+import { RegisteredMetaField } from '../components/common/RegisteredMetaField';
+import { forceRemoveEditor } from '../components/common/RichTextEditor';
 
 /**
  * Sort options for the forums list dropdown (static, never changes).
@@ -149,6 +150,10 @@ export function ForumsListScreen( { onNavigate } ) {
 	var forumBaseSlug = forumBaseSlugState[ 0 ];
 	var setForumBaseSlug = forumBaseSlugState[ 1 ];
 
+	var createFieldsState = useState( [] );
+	var createFields = createFieldsState[ 0 ];
+	var setCreateFields = createFieldsState[ 1 ];
+
 	var bulkActionState = useState( '' );
 	var bulkAction = bulkActionState[ 0 ];
 	var setBulkAction = bulkActionState[ 1 ];
@@ -249,6 +254,9 @@ export function ForumsListScreen( { onNavigate } ) {
 				}
 				if ( response.data.forum_base_slug ) {
 					setForumBaseSlug( response.data.forum_base_slug );
+				}
+				if ( response.data.create_fields ) {
+					setCreateFields( response.data.create_fields );
 				}
 				hasMetaRef.current = true;
 			}
@@ -1160,7 +1168,7 @@ export function ForumsListScreen( { onNavigate } ) {
 				} }
 				onCreated={ handleForumCreated }
 				forumBaseSlug={ forumBaseSlug }
-
+				createFields={ createFields }
 			/>
 
 			{ /* Forum Edit Modal */ }
@@ -1168,7 +1176,14 @@ export function ForumsListScreen( { onNavigate } ) {
 				<ForumEditModal
 					forum={ editForum }
 					onClose={ function () {
-						forceRemoveEditor( 'bb-forum-edit-description' );
+						// Clean up TinyMCE editors for richtext registry fields.
+						if ( editForum && editForum.registered_fields ) {
+							editForum.registered_fields.forEach( function ( field ) {
+								if ( 'richtext' === field.type ) {
+									forceRemoveEditor( 'bb-admin-edit-' + field.id + '-' + editForum.id );
+								}
+							} );
+						}
 						setEditForum( null );
 					} }
 					onSave={ handleSaveForum }
@@ -1181,15 +1196,63 @@ export function ForumsListScreen( { onNavigate } ) {
 }
 
 /**
- * Forum Edit Modal Component (inline).
+ * Tab label mapping for forum edit modal.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param {Object}   props          Component props.
- * @param {Object}   props.forum    Forum data from server.
- * @param {Function} props.onClose  Close handler.
- * @param {Function} props.onSave   Save handler.
- * @param {boolean}  props.isSaving Whether save is in progress.
+ * @type {Object}
+ */
+var forumTabLabels = {
+	details: __( 'Details', 'buddyboss' ),
+};
+
+/**
+ * Tab order for known tabs.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @type {Object}
+ */
+var forumTabOrder = {
+	details: 1,
+};
+
+/**
+ * Determine if a field should be disabled for group forums.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {string}  fieldId            Field ID.
+ * @param {boolean} isGroupForum       Whether forum belongs to a group.
+ * @param {boolean} isGroupForumChild  Whether forum is child of a group forum.
+ * @returns {boolean} True if the field should be disabled.
+ */
+function isForumFieldDisabled( fieldId, isGroupForum, isGroupForumChild ) {
+	// Visibility: disabled for group forum children.
+	if ( 'visibility' === fieldId ) {
+		return isGroupForumChild;
+	}
+	// Type and Parent: disabled for direct group forums.
+	if ( 'forum_type' === fieldId || 'parent_id' === fieldId ) {
+		return isGroupForum;
+	}
+	return false;
+}
+
+/**
+ * Forum Edit Modal Component — uses BB_Admin_Meta_Field_Registry.
+ *
+ * Renders registered fields via RegisteredMetaField with tabbed layout.
+ * Featured image remains a custom section (not in registry).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object}   props               Component props.
+ * @param {Object}   props.forum          Forum data from server (includes registered_fields).
+ * @param {Function} props.onClose        Close handler.
+ * @param {Function} props.onSave         Save handler.
+ * @param {boolean}  props.isSaving       Whether save is in progress.
+ * @param {string}   props.forumBaseSlug  Forum base slug.
  * @returns {JSX.Element} Edit modal.
  */
 function ForumEditModal( props ) {
@@ -1197,39 +1260,13 @@ function ForumEditModal( props ) {
 	var onClose = props.onClose;
 	var onSave = props.onSave;
 	var isSaving = props.isSaving;
-	var forumBaseSlug = props.forumBaseSlug || 'forum';
-	var nameState = useState( forum.name || '' );
-	var name = nameState[ 0 ];
-	var setName = nameState[ 1 ];
 
-	var slugState = useState( forum.slug || '' );
-	var slug = slugState[ 0 ];
-	var setSlug = slugState[ 1 ];
+	// All registered field values keyed by field ID.
+	var registeredValuesState = useState( {} );
+	var registeredValues = registeredValuesState[ 0 ];
+	var setRegisteredValues = registeredValuesState[ 1 ];
 
-	var descriptionState = useState( forum.description || '' );
-	var description = descriptionState[ 0 ];
-	var setDescription = descriptionState[ 1 ];
-
-	var forumStatusState = useState( forum.forum_status || 'open' );
-	var forumStatus = forumStatusState[ 0 ];
-	var setForumStatus = forumStatusState[ 1 ];
-
-	var visibilityState = useState( forum.visibility || 'publish' );
-	var visibility = visibilityState[ 0 ];
-	var setVisibility = visibilityState[ 1 ];
-
-	var forumTypeState = useState( forum.forum_type || 'forum' );
-	var forumType = forumTypeState[ 0 ];
-	var setForumType = forumTypeState[ 1 ];
-
-	var parentIdState = useState( forum.parent_id || 0 );
-	var parentId = parentIdState[ 0 ];
-	var setParentId = parentIdState[ 1 ];
-
-	var orderState = useState( forum.order || 0 );
-	var order = orderState[ 0 ];
-	var setOrder = orderState[ 1 ];
-
+	// Featured image state (not in registry).
 	var imageIdState = useState( forum.featured_image_id || 0 );
 	var imageId = imageIdState[ 0 ];
 	var setImageId = imageIdState[ 1 ];
@@ -1253,7 +1290,7 @@ function ForumEditModal( props ) {
 	var fileInputRef = useRef( null );
 	var uploadAbortRef = useRef( null );
 
-	// Track mounted state to prevent state updates after unmount.
+	// Track mounted state.
 	var isMountedRef = useRef( true );
 	useEffect( function () {
 		isMountedRef.current = true;
@@ -1265,7 +1302,66 @@ function ForumEditModal( props ) {
 		};
 	}, [] );
 
-	var siteUrl = ( window.bbAdminData && window.bbAdminData.siteUrl ) || '';
+	// Initialize registered values from forum data.
+	useEffect( function () {
+		if ( forum && forum.registered_fields && Array.isArray( forum.registered_fields ) ) {
+			var initialValues = {};
+			forum.registered_fields.forEach( function ( field ) {
+				initialValues[ field.id ] = field.value;
+			} );
+			setRegisteredValues( initialValues );
+		}
+	}, [ forum ] );
+
+	var isGroupForum = ! ! forum.is_group_forum;
+	var isGroupForumChild = ! ! forum.is_group_forum_child;
+
+	/**
+	 * Handle change for a registered field.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {string} fieldId Field ID.
+	 * @param {*}      val     New value.
+	 */
+	var handleRegisteredFieldChange = useCallback( function ( fieldId, val ) {
+		setRegisteredValues( function ( prev ) {
+			var next = {};
+			Object.keys( prev ).forEach( function ( k ) {
+				next[ k ] = prev[ k ];
+			} );
+			next[ fieldId ] = val;
+			return next;
+		} );
+	}, [] );
+
+	// Build tabs from registered fields.
+	var tabs = useMemo( function () {
+		if ( ! forum || ! forum.registered_fields ) {
+			return [];
+		}
+
+		var tabKeys = {};
+		forum.registered_fields.forEach( function ( field ) {
+			if ( field.tab && field.visible ) {
+				tabKeys[ field.tab ] = true;
+			}
+		} );
+
+		var tabArray = Object.keys( tabKeys ).map( function ( key ) {
+			return {
+				name: key,
+				title: forumTabLabels[ key ] || key.charAt( 0 ).toUpperCase() + key.slice( 1 ),
+				order: forumTabOrder[ key ] || 100,
+			};
+		} );
+
+		tabArray.sort( function ( a, b ) {
+			return a.order - b.order;
+		} );
+
+		return tabArray;
+	}, [ forum ] );
 
 	/**
 	 * Trigger hidden file input for image selection.
@@ -1298,7 +1394,6 @@ function ForumEditModal( props ) {
 			return;
 		}
 
-		// 10MB limit.
 		if ( file.size > 10 * 1024 * 1024 ) {
 			setError( __( 'File size exceeds the maximum allowed size of 10MB.', 'buddyboss' ) );
 			return;
@@ -1347,57 +1442,219 @@ function ForumEditModal( props ) {
 	};
 
 	/**
-	 * Handle save.
+	 * Handle save — collects all registered field values + image data.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	var handleSave = function () {
-		if ( ! name.trim() ) {
+		var nameVal = registeredValues.name || '';
+		if ( ! nameVal.trim() ) {
 			setError( __( 'Forum name is required.', 'buddyboss' ) );
 			return;
 		}
 
 		setError( '' );
-		onSave( {
+
+		var payload = {
 			forum_id: forum.id,
-			name: name.trim(),
-			slug: slug,
-			description: description,
-			visibility: visibility,
-			forum_status: forumStatus,
-			forum_type: forumType,
-			parent_id: parentId,
-			order: order,
 			image_id: imageId,
 			remove_image: removeImage ? 1 : 0,
+		};
+
+		// Build payload from all registered fields.
+		if ( forum.registered_fields && Array.isArray( forum.registered_fields ) ) {
+			forum.registered_fields.forEach( function ( field ) {
+				if ( field.readonly ) {
+					return;
+				}
+
+				var val = registeredValues[ field.id ];
+
+				// For richtext fields, pull latest content from TinyMCE.
+				if ( 'richtext' === field.type && window.tinymce ) {
+					var editorInstance = window.tinymce.get( 'bb-admin-edit-' + field.id + '-' + forum.id );
+					if ( editorInstance ) {
+						val = editorInstance.getContent();
+					}
+				}
+
+				payload[ 'registered_field_' + field.id ] = null !== val && undefined !== val ? val : '';
+			} );
+		}
+
+		// Also pass core fields directly for backward compatibility with save_forum() handler.
+		payload.name = ( registeredValues.name || '' ).trim();
+		payload.slug = registeredValues.slug || '';
+		payload.description = registeredValues.description || '';
+		payload.visibility = registeredValues.visibility || 'publish';
+		payload.forum_status = registeredValues.forum_status || 'open';
+		payload.forum_type = registeredValues.forum_type || 'forum';
+		payload.parent_id = registeredValues.parent_id || 0;
+		payload.order = registeredValues.order || 0;
+
+		onSave( payload );
+	};
+
+	/**
+	 * Render registered meta fields for a specific tab.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {string} tabName Tab name to render fields for.
+	 * @returns {Array|null} Rendered field elements or null.
+	 */
+	var renderTabFields = function ( tabName ) {
+		if ( ! forum.registered_fields ) {
+			return null;
+		}
+
+		var tabFields = forum.registered_fields.filter( function ( field ) {
+			return field.tab === tabName && field.visible;
+		} );
+
+		if ( 0 === tabFields.length ) {
+			return null;
+		}
+
+		var grouped = groupForumFieldsWithLayout( tabFields );
+
+		return grouped.map( function ( item, idx ) {
+			// Add separator when the next item is a row group (e.g. after description).
+			var nextIsRow = grouped[ idx + 1 ] && 'row' === grouped[ idx + 1 ].type;
+
+			if ( 'row' === item.type ) {
+				return (
+					<div key={ 'row-' + idx } className="bb-admin-meta-field__row bb-admin-settings-modal__row bb-admin-settings-modal__row--separator">
+						{ item.fields.map( function ( field ) {
+							return (
+								<RegisteredMetaField
+									key={ field.id + '-' + forum.id }
+									field={ field }
+									value={ registeredValues[ field.id ] }
+									onChange={ function ( val ) {
+										handleRegisteredFieldChange( field.id, val );
+									} }
+									itemId={ forum.id }
+									disabled={ isForumFieldDisabled( field.id, isGroupForum, isGroupForumChild ) }
+								/>
+							);
+						} ) }
+					</div>
+				);
+			}
+			return (
+				<div key={ item.field.id + '-' + forum.id } className={ nextIsRow ? 'bb-admin-settings-modal__row--separator' : '' }>
+					<RegisteredMetaField
+						field={ item.field }
+						value={ registeredValues[ item.field.id ] }
+						onChange={ function ( val ) {
+							handleRegisteredFieldChange( item.field.id, val );
+						} }
+						itemId={ forum.id }
+						disabled={ isForumFieldDisabled( item.field.id, isGroupForum, isGroupForumChild ) }
+					/>
+				</div>
+			);
 		} );
 	};
 
-	var statusOptions = [
-		{ value: 'open', label: __( 'Open', 'buddyboss' ) },
-		{ value: 'closed', label: __( 'Closed', 'buddyboss' ) },
-	];
+	/**
+	 * Render featured image section (custom, not registry-based).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @returns {JSX.Element} Featured image section.
+	 */
+	var renderFeaturedImage = function () {
+		return (
+			<div className="bb-forum-modal__image-field bb-forum-create-modal__image-field">
+				<label className="components-base-control__label" htmlFor="bb-forum-edit-image">
+					{ __( 'Feature Image (Optional)', 'buddyboss' ) }
+				</label>
+				<input
+					type="file"
+					ref={ fileInputRef }
+					accept="image/jpeg,image/png,image/gif,image/webp"
+					onChange={ handleFileSelect }
+					style={ { display: 'none' } }
+				/>
+				{ imageUrl ? (
+					<div className="bb-forum-modal__image-preview">
+						<img src={ safeUrl( imageUrl ) } alt="" />
+						<div className="bb-forum-modal__image-actions">
+							<Button
+								variant="secondary"
+								onClick={ triggerFileInput }
+								className="bb-forum-modal__replace-image"
+								disabled={ isUploading }
+							>
+								{ __( 'Replace', 'buddyboss' ) }
+							</Button>
+							<Button
+								variant="secondary"
+								isDestructive
+								onClick={ handleRemoveImage }
+								className="bb-forum-modal__remove-image"
+								disabled={ isUploading }
+							>
+								{ __( 'Reset', 'buddyboss' ) }
+							</Button>
+						</div>
+					</div>
+				) : (
+					<button
+						type="button"
+						onClick={ triggerFileInput }
+						className={ 'bb-forum-create-modal__upload-zone' + ( isUploading ? ' bb-forum-create-modal__upload-zone--uploading' : '' ) }
+						disabled={ isUploading }
+					>
+						{ isUploading ? (
+							<span className="bb-forum-create-modal__upload-spinner"></span>
+						) : (
+							<span className="bb-forum-create-modal__upload-icon"><i className="bb-icons-rl-plus"></i></span>
+						) }
+					</button>
+				) }
+				<p className="bb-forum-create-modal__image-help">
+					{ __( 'For best results, use an image at least 1500px by 300px or higher.', 'buddyboss' ) }
+				</p>
+			</div>
+		);
+	};
 
-	var visibilityOptions = [
-		{ value: 'publish', label: __( 'Public', 'buddyboss' ) },
-		{ value: 'private', label: __( 'Private', 'buddyboss' ) },
-		{ value: 'hidden', label: __( 'Hidden', 'buddyboss' ) },
-	];
+	/**
+	 * Render tab content.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {Object} tab Tab object with name property.
+	 * @returns {JSX.Element} Tab content.
+	 */
+	var renderTabContent = function ( tab ) {
+		if ( 'details' === tab.name ) {
+			return (
+				<div className="bb-forum-edit-modal__tab-content">
+					{ renderTabFields( tab.name ) }
+					{ renderFeaturedImage() }
+				</div>
+			);
+		}
 
-	var forumTypeOptions = [
-		{ value: 'forum', label: __( 'Forum', 'buddyboss' ) },
-		{ value: 'category', label: __( 'Category', 'buddyboss' ) },
-	];
-
-	// Direct group forum (root): disable Type, Parent.
-	var isGroupForum = ! ! forum.is_group_forum;
-	// Group forum or child of group forum: disable Visibility only.
-	var isGroupForumChild = ! ! forum.is_group_forum_child;
+		return (
+			<div className="bb-forum-edit-modal__tab-content">
+				{ renderTabFields( tab.name ) }
+			</div>
+		);
+	};
 
 	return (
 		<Modal
 			title={ __( 'Edit Forum', 'buddyboss' ) }
-			onRequestClose={ onClose }
+			onRequestClose={ function () {
+				if ( ! isSaving ) {
+					onClose();
+				}
+			} }
 			className="bb-forum-modal bb-forum-edit-modal bb-forum-create-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
 		>
@@ -1406,151 +1663,19 @@ function ForumEditModal( props ) {
 					<p className="bb-forum-modal__error">{ error }</p>
 				) }
 
-				<TextControl
-					label={ __( 'Forum Name', 'buddyboss' ) }
-					value={ name }
-					onChange={ setName }
-					__nextHasNoMarginBottom
-				/>
-
-				<div className="bb-forum-modal__permalink-field">
-					<TextControl
-						label={ __( 'Permalink', 'buddyboss' ) }
-						value={ slug }
-						onChange={ function ( val ) {
-							setSlug( toSlug( val ) );
-						} }
-						__nextHasNoMarginBottom
-					/>
-					{ slug && siteUrl && (
-						<p className="bb-forum-create-modal__permalink-preview">
-							{ isGroupForumChild && forum.permalink
-								? safeUrl( forum.permalink )
-								: siteUrl + '/' + ( forumBaseSlug || 'forum' ) + '/' + slug + '/'
-							}
-						</p>
-					) }
-				</div>
-
-				<div className="bb-forum-modal__row--separator">
-					<RichTextEditor
-						id="bb-forum-edit-description"
-						label={ __( 'Forum Description (Optional)', 'buddyboss' ) }
-						value={ description }
-						onChange={ setDescription }
-					/>
-				</div>
-
-				<div className="bb-admin-settings-modal__row bb-admin-settings-modal__row--separator">
-					<SelectControl
-						label={ __( 'Status', 'buddyboss' ) }
-						value={ forumStatus }
-						options={ statusOptions }
-						onChange={ setForumStatus }
-						__nextHasNoMarginBottom
-					/>
-					<div className={ isGroupForumChild ? 'bb-forum-modal__field--disabled' : '' } style={ { flex: 1 } }>
-						<SelectControl
-							label={ __( 'Visibility', 'buddyboss' ) }
-							value={ visibility }
-							options={ visibilityOptions }
-							onChange={ setVisibility }
-							disabled={ isGroupForumChild }
-							__nextHasNoMarginBottom
-						/>
+				{ tabs.length > 1 ? (
+					<TabPanel
+						className="bb-forum-edit-modal__tabs"
+						tabs={ tabs }
+					>
+						{ renderTabContent }
+					</TabPanel>
+				) : (
+					<div className="bb-forum-edit-modal__tab-content">
+						{ renderTabFields( 'details' ) }
+						{ renderFeaturedImage() }
 					</div>
-					<div className={ isGroupForum ? 'bb-forum-modal__field--disabled' : '' } style={ { flex: 1 } }>
-						<SelectControl
-							label={ __( 'Type', 'buddyboss' ) }
-							value={ forumType }
-							options={ forumTypeOptions }
-							onChange={ setForumType }
-							disabled={ isGroupForum }
-							__nextHasNoMarginBottom
-						/>
-					</div>
-				</div>
-
-				<div className="bb-admin-settings-modal__row bb-admin-settings-modal__row--separator">
-					<div className={ 'components-base-control' + ( isGroupForum ? ' bb-admin-settings-modal__field--disabled' : '' ) } style={ { flex: 1 } }>
-						<label className="components-base-control__label" htmlFor="bb-forum-edit-parent">
-							{ __( 'Parent Forum', 'buddyboss' ) }
-						</label>
-						<AsyncSelectField
-							id="bb-forum-edit-parent"
-							value={ String( parentId ) }
-							onChange={ function ( val ) {
-								setParentId( parseInt( val, 10 ) || 0 );
-							} }
-							asyncAction="bb_admin_forum_autocomplete"
-							placeholder={ __( 'None', 'buddyboss' ) }
-							disabled={ isGroupForum }
-						/>
-					</div>
-					<TextControl
-						label={ __( 'Order', 'buddyboss' ) }
-						type="number"
-						value={ order }
-						onChange={ function ( val ) {
-							setOrder( parseInt( val, 10 ) || 0 );
-						} }
-						min={ 0 }
-						__nextHasNoMarginBottom
-					/>
-				</div>
-
-				<div className="bb-forum-modal__image-field bb-forum-create-modal__image-field">
-					<label className="components-base-control__label" htmlFor="bb-forum-edit-image">
-						{ __( 'Feature Image (Optional)', 'buddyboss' ) }
-					</label>
-					<input
-						type="file"
-						ref={ fileInputRef }
-						accept="image/jpeg,image/png,image/gif,image/webp"
-						onChange={ handleFileSelect }
-						style={ { display: 'none' } }
-					/>
-					{ imageUrl ? (
-						<div className="bb-forum-modal__image-preview">
-							<img src={ safeUrl( imageUrl ) } alt="" />
-							<div className="bb-forum-modal__image-actions">
-								<Button
-									variant="secondary"
-									onClick={ triggerFileInput }
-									className="bb-forum-modal__replace-image"
-									disabled={ isUploading }
-								>
-									{ __( 'Replace', 'buddyboss' ) }
-								</Button>
-								<Button
-									variant="secondary"
-									isDestructive
-									onClick={ handleRemoveImage }
-									className="bb-forum-modal__remove-image"
-									disabled={ isUploading }
-								>
-									{ __( 'Reset', 'buddyboss' ) }
-								</Button>
-							</div>
-						</div>
-					) : (
-						<button
-							type="button"
-							onClick={ triggerFileInput }
-							className={ 'bb-forum-create-modal__upload-zone' + ( isUploading ? ' bb-forum-create-modal__upload-zone--uploading' : '' ) }
-							disabled={ isUploading }
-						>
-							{ isUploading ? (
-								<span className="bb-forum-create-modal__upload-spinner"></span>
-							) : (
-								<span className="bb-forum-create-modal__upload-icon">+</span>
-							) }
-						</button>
-					) }
-					<p className="bb-forum-create-modal__image-help">
-						{ __( 'For best results, use an image at least 1500px by 300px or higher.', 'buddyboss' ) }
-					</p>
-				</div>
+				) }
 			</div>
 
 			<div className="bb-forum-modal__footer bb-admin-settings-modal__footer">
@@ -1565,7 +1690,7 @@ function ForumEditModal( props ) {
 					variant="primary"
 					onClick={ handleSave }
 					isBusy={ isSaving }
-					disabled={ isSaving || isUploading || ! name.trim() }
+					disabled={ isSaving || isUploading }
 				>
 					{ __( 'Save', 'buddyboss' ) }
 				</Button>

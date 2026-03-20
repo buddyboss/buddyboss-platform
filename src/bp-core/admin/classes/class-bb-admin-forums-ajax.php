@@ -354,6 +354,25 @@ class BB_Admin_Forums_Ajax {
 
 			// Forum base slug for permalink preview in create/edit modals.
 			$response['forum_base_slug'] = get_option( '_bbp_forum_slug', 'forum' );
+
+			// Provide registered field definitions for the create modal.
+			// Uses a stdClass with default values instead of WP_Post to avoid
+			// unnecessary class constructor overhead. All get_value callbacks
+			// guard against ID=0 to prevent DB queries on this dummy object.
+			$response['create_fields'] = bb_admin_meta_field_registry()->get_fields_data(
+				'forums',
+				(object) array(
+					'ID'           => 0,
+					'post_title'   => '',
+					'post_name'    => '',
+					'post_content' => '',
+					'post_status'  => 'publish',
+					'post_parent'  => 0,
+					'post_author'  => get_current_user_id(),
+					'menu_order'   => 0,
+					'post_type'    => bbp_get_forum_post_type(),
+				)
+			);
 		}
 
 		/**
@@ -397,20 +416,21 @@ class BB_Admin_Forums_Ajax {
 		$thumbnail_id = get_post_thumbnail_id( $forum_id );
 
 		$data = array(
-			'id'                => (int) $forum->ID,
-			'name'              => $forum->post_title,
-			'slug'              => $forum->post_name,
-			'description'       => $forum->post_content,
-			'visibility'        => get_post_status( $forum_id ),
-			'forum_status'      => bbp_get_forum_status( $forum_id ),
-			'forum_type'        => bbp_get_forum_type( $forum_id ),
-			'parent_id'         => (int) $forum->post_parent,
-			'order'             => (int) $forum->menu_order,
+			'id'                   => (int) $forum->ID,
+			'name'                 => $forum->post_title,
+			'slug'                 => $forum->post_name,
+			'description'          => $forum->post_content,
+			'visibility'           => get_post_status( $forum_id ),
+			'forum_status'         => bbp_get_forum_status( $forum_id ),
+			'forum_type'           => bbp_get_forum_type( $forum_id ),
+			'parent_id'            => (int) $forum->post_parent,
+			'order'                => (int) $forum->menu_order,
 			'is_group_forum'       => ! empty( bbp_get_forum_group_ids( $forum_id ) ),
 			'is_group_forum_child' => function_exists( 'bb_get_child_forum_group_ids' ) && ! empty( bb_get_child_forum_group_ids( $forum_id ) ),
 			'permalink'            => bbp_get_forum_permalink( $forum_id ),
-			'featured_image'    => $thumbnail_id ? wp_get_attachment_url( $thumbnail_id ) : '',
-			'featured_image_id' => $thumbnail_id ? (int) $thumbnail_id : 0,
+			'featured_image'       => $thumbnail_id ? wp_get_attachment_url( $thumbnail_id ) : '',
+			'featured_image_id'    => $thumbnail_id ? (int) $thumbnail_id : 0,
+			'registered_fields'    => bb_admin_meta_field_registry()->get_fields_data( 'forums', $forum ),
 		);
 
 		/**
@@ -564,6 +584,12 @@ class BB_Admin_Forums_Ajax {
 		// (registered at bp-forums/core/actions.php:172). Firing both would cause
 		// bbp_save_forum_extras() to run twice.
 
+		// Save "after" phase extension fields (Pro/third-party) via meta field registry.
+		$created_forum = get_post( $forum_id );
+		if ( $created_forum ) {
+			bb_admin_meta_field_registry()->save_fields_data( 'forums', $created_forum, 'after' );
+		}
+
 		// Clear status counts cache.
 		$this->bb_clear_status_counts_cache();
 
@@ -659,10 +685,11 @@ class BB_Admin_Forums_Ajax {
 		}
 
 		// Update forum status (open/closed) using bbPress lifecycle functions.
-		if ( ! empty( $forum_status ) ) {
+		$allowed_statuses = array( 'open', 'closed' );
+		if ( ! empty( $forum_status ) && in_array( $forum_status, $allowed_statuses, true ) ) {
 			if ( 'closed' === $forum_status ) {
 				bbp_close_forum( $forum_id );
-			} elseif ( 'open' === $forum_status ) {
+			} else {
 				bbp_open_forum( $forum_id );
 			}
 		}
@@ -759,6 +786,13 @@ class BB_Admin_Forums_Ajax {
 		// bbp_save_forum_extras() is already triggered by bbp_edit_forum_post_extras
 		// (registered at bp-forums/core/actions.php:174). Firing both would cause
 		// bbp_save_forum_extras() to run twice.
+
+		// Re-fetch the forum post after wp_update_post() so extension field callbacks
+		// receive up-to-date data (post_status, post_parent, etc. may have changed).
+		$forum = get_post( $forum_id );
+
+		// Save "after" phase extension fields (Pro/third-party) via meta field registry.
+		bb_admin_meta_field_registry()->save_fields_data( 'forums', $forum, 'after' );
 
 		// Clear status counts cache.
 		$this->bb_clear_status_counts_cache();
@@ -1029,9 +1063,8 @@ class BB_Admin_Forums_Ajax {
 		}
 
 		// Server-side file size validation using WordPress/PHP configured max.
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified above.
 		$max_upload_size = wp_max_upload_size();
-		if ( ! empty( $_FILES['file']['size'] ) && $_FILES['file']['size'] > $max_upload_size ) {
+		if ( ! empty( $_FILES['file']['size'] ) && $_FILES['file']['size'] > $max_upload_size ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified above.
 			wp_send_json_error(
 				array(
 					'message' => sprintf(

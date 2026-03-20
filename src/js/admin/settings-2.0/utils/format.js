@@ -33,3 +33,45 @@ export function toSlug( str ) {
 		.replace( /-+/g, '-' )
 		.replace( /^-|-$/g, '' );
 }
+
+/**
+ * Group consecutive fields with layout='half' or 'third' into row wrappers.
+ * Flushes the buffer when the layout type changes (e.g. third -> half)
+ * so each row contains only fields of the same layout width.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Array} fields Array of field objects with optional layout property.
+ * @returns {Array} Array of { type: 'single', field } or { type: 'row', fields }.
+ */
+export function groupFieldsWithLayout( fields ) {
+	var result = [];
+	var buffer = [];
+	var bufferLayout = null;
+
+	var flush = function () {
+		if ( buffer.length > 0 ) {
+			result.push( { type: 'row', fields: buffer } );
+			buffer = [];
+			bufferLayout = null;
+		}
+	};
+
+	fields.forEach( function ( field ) {
+		if ( 'half' === field.layout || 'third' === field.layout ) {
+			// Flush when layout type changes (e.g. third -> half).
+			if ( bufferLayout && bufferLayout !== field.layout ) {
+				flush();
+			}
+			buffer.push( field );
+			bufferLayout = field.layout;
+		} else {
+			flush();
+			result.push( { type: 'single', field: field } );
+		}
+	} );
+
+	flush();
+
+	return result;
+}

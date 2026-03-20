@@ -251,8 +251,9 @@ function AjaxMultiSelectField( { field, value, onChange } ) {
  * @param {number}   props.itemId     Generic item ID (used when activityId is not applicable).
  * @returns {JSX.Element|null} Field component or null.
  */
-export function RegisteredMetaField( { field, value, onChange, activityId, itemId } ) {
+export function RegisteredMetaField( { field, value, onChange, activityId, itemId, disabled } ) {
 	var editorItemId = activityId || itemId || 0;
+	var isDisabled = disabled || field.disabled || false;
 	if ( ! field.visible ) {
 		return null;
 	}
@@ -291,26 +292,29 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 	// Rich text field (TinyMCE).
 	if ( 'richtext' === field.type ) {
 		return (
-			<RichTextEditor
-				key={ field.id + '-' + editorItemId }
-				id={ 'bb-admin-edit-' + field.id + '-' + editorItemId }
-				label={ field.label }
-				value={ null != value ? String( value ) : '' }
-				onChange={ onChange }
-			/>
+			<div className={ isDisabled ? 'bb-admin-meta-field--disabled' : '' }>
+				<RichTextEditor
+					key={ field.id + '-' + editorItemId }
+					id={ 'bb-admin-edit-' + field.id + '-' + editorItemId }
+					label={ field.label }
+					value={ null != value ? String( value ) : '' }
+					onChange={ isDisabled ? function () {} : onChange }
+				/>
+			</div>
 		);
 	}
 
 	// Textarea field.
 	if ( 'textarea' === field.type ) {
 		return (
-			<div>
+			<div className={ isDisabled ? 'bb-admin-meta-field--disabled' : '' }>
 				<TextareaControl
 					label={ field.label }
 					value={ null != value ? String( value ) : '' }
 					onChange={ onChange }
 					rows={ 4 }
 					placeholder={ field.placeholder || '' }
+					disabled={ isDisabled }
 					__nextHasNoMarginBottom
 				/>
 				{ field.description && (
@@ -323,28 +327,34 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 	// Permalink field (slug with URL preview below input).
 	if ( 'permalink' === field.type ) {
 		var baseUrl = ( field.extra_data && field.extra_data.base_url ) ? field.extra_data.base_url : '';
+		var isChildForum = field.extra_data && field.extra_data.is_child_forum;
 		var slugValue = null != value ? String( value ) : '';
 
 		return (
-			<div className="bb-admin-meta-field__permalink-field">
+			<div className={ 'bb-admin-meta-field__permalink-field' + ( isDisabled ? ' bb-admin-meta-field--disabled' : '' ) }>
 				<label className="bb-admin-meta-field__label">{ field.label }</label>
 				<TextControl
 					value={ slugValue }
 					onChange={ onChange }
 					placeholder={ field.placeholder || '' }
+					disabled={ isDisabled }
 					__nextHasNoMarginBottom
 				/>
 				{ baseUrl && (
 					<div className="bb-admin-meta-field__permalink-preview">
-						<a
-							href={ safeUrl( baseUrl + slugValue + '/' ) }
-							target="_blank"
-							rel="noopener noreferrer"
-						>
-							{ baseUrl }
-							<strong>{ slugValue }</strong>
-							{ '/' }
-						</a>
+						{ isChildForum ? (
+							<span>{ baseUrl }</span>
+						) : (
+							<a
+								href={ safeUrl( baseUrl + slugValue + '/' ) }
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								{ baseUrl }
+								<strong>{ slugValue }</strong>
+								{ '/' }
+							</a>
+						) }
 					</div>
 				) }
 			</div>
@@ -356,7 +366,7 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 		var isChecked = !! value && '0' !== String( value ) && 0 !== value;
 
 		return (
-			<div className="bb-admin-meta-field__checkbox-field">
+			<div className={ 'bb-admin-meta-field__checkbox-field' + ( isDisabled ? ' bb-admin-meta-field--disabled' : '' ) }>
 				<CheckboxControl
 					id={ field.id + '-' + editorItemId }
 					label={ field.label }
@@ -364,6 +374,7 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 					onChange={ function ( checked ) {
 						onChange( checked ? '1' : '0' );
 					} }
+					disabled={ isDisabled }
 					help={ field.description || undefined }
 					__nextHasNoMarginBottom
 				/>
@@ -380,7 +391,7 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 		var toggleValues = value && 'object' === typeof value ? value : {};
 
 		return (
-			<div className="bb-admin-meta-field__toggle-list-field">
+			<div className={ 'bb-admin-meta-field__toggle-list-field' + ( isDisabled ? ' bb-admin-meta-field--disabled' : '' ) }>
 				<label className="bb-admin-meta-field__label">{ field.label }</label>
 				<div className="bb-admin-meta-field__toggle-list-options">
 					{ toggleOptions.map( function ( option ) {
@@ -391,6 +402,7 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 								key={ option.value }
 								label={ decodeEntities( option.label ) }
 								checked={ isOptionChecked }
+								disabled={ isDisabled }
 								onChange={ function ( checked ) {
 									var updated = Object.assign( {}, toggleValues );
 									updated[ option.value ] = checked ? 1 : 0;
@@ -414,6 +426,7 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 			<AjaxMultiSelectField
 				field={ field }
 				value={ value }
+				disabled={ isDisabled }
 				onChange={ onChange }
 			/>
 		);
@@ -427,7 +440,7 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 		}
 
 		return (
-			<div className="bb-admin-meta-field__radio-field">
+			<div className={ 'bb-admin-meta-field__radio-field' + ( isDisabled ? ' bb-admin-meta-field--disabled' : '' ) }>
 				<label className="bb-admin-meta-field__label">{ field.label }</label>
 				<div className="bb-admin-meta-field__radio-options">
 					{ radioOptions.map( function ( option ) {
@@ -440,6 +453,7 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 									name={ field.id + '-' + editorItemId }
 									value={ option.value }
 									checked={ String( value ) === String( option.value ) }
+									disabled={ isDisabled }
 									onChange={ function () {
 										onChange( option.value );
 									} }
@@ -462,7 +476,7 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 	// Async select field (searchable, server-side, load-more).
 	if ( 'async_select' === field.type ) {
 		return (
-			<div className="bb-admin-meta-field__async-select-field">
+			<div className={ 'bb-admin-meta-field__async-select-field' + ( isDisabled ? ' bb-admin-meta-field--disabled' : '' ) }>
 				{ field.label && (
 					<label className="components-base-control__label">{ field.label }</label>
 				) }
@@ -471,6 +485,7 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 					onChange={ onChange }
 					asyncAction={ field.async_action || '' }
 					placeholder={ field.placeholder || '' }
+					disabled={ isDisabled }
 				/>
 				{ field.description && (
 					<p className="bb-admin-meta-field__description">{ field.description }</p>
@@ -492,12 +507,13 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 		} );
 
 		return (
-			<div className="bb-admin-meta-field__select-field">
+			<div className={ 'bb-admin-meta-field__select-field' + ( isDisabled ? ' bb-admin-meta-field--disabled' : '' ) }>
 				<SelectControl
 					label={ field.label }
 					value={ String( null != value ? value : '' ) }
 					options={ decodedOptions }
 					onChange={ onChange }
+					disabled={ isDisabled }
 					__nextHasNoMarginBottom
 				/>
 				{ field.description && (
@@ -515,16 +531,17 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 		inputType = 'url';
 	}
 
-	var showDescription = field.description && 'half' !== field.layout;
+	var showDescription = field.description && 'half' !== field.layout && 'third' !== field.layout;
 
 	return (
-		<div>
+		<div className={ isDisabled ? 'bb-admin-meta-field--disabled' : '' }>
 			<TextControl
 				label={ field.label }
 				value={ null != value ? String( value ) : '' }
 				onChange={ onChange }
 				type={ inputType }
 				placeholder={ field.placeholder || '' }
+				disabled={ isDisabled }
 				__nextHasNoMarginBottom
 			/>
 			{ showDescription && (

@@ -61,6 +61,7 @@ function bb_admin_settings_register_forums_feature() {
 	require_once __DIR__ . '/settings/forums/settings-forum-features.php';
 	require_once __DIR__ . '/settings/forums/settings-forum-directories.php';
 	require_once __DIR__ . '/settings/forums/settings-forum-permalinks.php';
+	require_once __DIR__ . '/settings/forums/meta-fields.php';
 
 	// =========================================================================
 	// SIDE PANELS
