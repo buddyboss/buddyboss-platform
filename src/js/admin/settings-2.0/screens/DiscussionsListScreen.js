@@ -1287,7 +1287,7 @@ function DiscussionEditModal( { discussion, onClose, onSave, isSaving } ) {
 		var grouped = groupFieldsWithLayout( visibleFields );
 
 		return grouped.map( function ( item, idx ) {
-			var hasSeparator = needsSeparator( item, grouped[ idx + 1 ], [ 'author_info' ] );
+			var hasSeparator = needsSeparator( item, grouped[ idx + 1 ] );
 
 			if ( 'row' === item.type ) {
 				return (

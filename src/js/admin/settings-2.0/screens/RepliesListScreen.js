@@ -1270,7 +1270,7 @@ export default function RepliesListScreen( { onNavigate } ) {
 									};
 
 									return grouped.map( function ( item, idx ) {
-										var hasSeparator = needsSeparator( item, grouped[ idx + 1 ], [ 'reply_to', 'reply_status', 'author_info' ] );
+										var hasSeparator = needsSeparator( item, grouped[ idx + 1 ], [ 'reply_to', 'reply_status' ] );
 
 										if ( 'row' === item.type ) {
 											return (
