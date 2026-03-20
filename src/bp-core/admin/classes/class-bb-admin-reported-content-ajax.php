@@ -326,7 +326,10 @@ class BB_Admin_Reported_Content_Ajax {
 		$item_id      = (int) $row->item_id;
 		$item_type    = $row->item_type;
 		$is_hidden    = (int) $row->hide_sitewide === 1;
-		$report_count = (int) bp_moderation_get_meta( $moderation_id, '_count_user_reported' );
+		// Use '_count' meta (total reports) to match the list screen count.
+		// '_count_user_reported' only counts user_report=1 and may be 0 when
+		// reports are stored with user_report=0 (e.g., content blocks with reasons).
+		$report_count = (int) bp_moderation_get_meta( $moderation_id, '_count' );
 
 		$content_types = bp_moderation_content_types();
 		$content_label = isset( $content_types[ $item_type ] ) ? $content_types[ $item_type ] : $item_type;
@@ -365,11 +368,10 @@ class BB_Admin_Reported_Content_Ajax {
 
 		$is_owner_suspended = ( $owner_id > 0 ) ? bp_moderation_is_user_suspended( $owner_id ) : false;
 
-		// Get reporters (user_report = 1).
-		$reporters_raw = BP_Moderation::get_moderation_reporters(
-			$moderation_id,
-			array( 'user_repoted' => true )
-		);
+		// Get all reporters (both reports and blocks).
+		// Don't filter by user_report=1 — content reports may be stored with
+		// user_report=0 (content blocks with reasons) and should still appear.
+		$reporters_raw = BP_Moderation::get_moderation_reporters( $moderation_id );
 
 		// Pre-warm user caches for reporters.
 		if ( ! empty( $reporters_raw ) ) {
