@@ -1471,7 +1471,7 @@ function ForumEditModal( props ) {
 					</div>
 				</div>
 
-				<div className="bb-forum-create-modal__row bb-forum-modal__row--separator">
+				<div className="bb-admin-settings-modal__row bb-admin-settings-modal__row--separator">
 					<div className={ 'components-base-control' + ( isGroupForum ? ' bb-admin-settings-modal__field--disabled' : '' ) } style={ { flex: 1 } }>
 						<label className="components-base-control__label" htmlFor="bb-forum-edit-parent">
 							{ __( 'Parent Forum', 'buddyboss' ) }

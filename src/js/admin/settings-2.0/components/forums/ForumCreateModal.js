@@ -385,7 +385,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug } 
 					/>
 				</div>
 
-				<div className="bb-forum-create-modal__row bb-forum-modal__row--separator">
+				<div className="bb-admin-settings-modal__row bb-admin-settings-modal__row--separator">
 					<div className="components-base-control" style={ { flex: 1 } }>
 						<label className="components-base-control__label" htmlFor="bb-forum-create-parent">
 							{ __( 'Parent Forum', 'buddyboss' ) }
