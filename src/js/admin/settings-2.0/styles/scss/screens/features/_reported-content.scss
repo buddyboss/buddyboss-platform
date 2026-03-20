@@ -702,7 +702,7 @@
 	&__section-title {
 		font-size: 13px;
 		font-weight: 500;
-		color: $bb-text-tertiary-color;
+		color: $bb-text-secondary-color;
 		margin: 0 0 12px 0;
 		line-height: 18px;
 	}
@@ -720,7 +720,13 @@
 		display: flex;
 		align-items: center;
 		gap: 16px;
-		padding: 12px 16px;
+		padding: 16px 0;
+		margin: 0 16px;
+		border-bottom: 1px solid $bb-border-secondary-color;
+
+		&:last-child {
+			border-bottom: 0;
+		}
 	}
 
 	&__list-item-user {
@@ -728,25 +734,27 @@
 		align-items: center;
 		gap: 10px;
 		flex-shrink: 0;
-		min-width: 120px;
+		width: 180px;
 	}
 
 	&__list-avatar {
-		width: 36px;
-		height: 36px;
+		width: 40px;
+		height: 40px;
 		border-radius: 50%;
 		object-fit: cover;
 	}
 
 	&__list-name {
-		font-size: 13px;
-		font-weight: 500;
+		font-size: 14px;
 		color: $bb-link-color;
 		text-decoration: none;
+		max-width: 100%;
 		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 
 		&:hover {
-			text-decoration: underline;
+			color: $bb-link-color;
 		}
 	}
 
@@ -763,6 +771,10 @@
 		font-weight: 600;
 		color: $bb-text-color;
 		line-height: 18px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		max-width: 100%;
 	}
 
 	&__category-desc {
@@ -773,13 +785,13 @@
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
-		max-width: 208px;
+		max-width: 100%;
 	}
 
 	&__list-item-date {
-		font-size: 12px;
+		font-size: 13px;
 		font-weight: 400;
-		color: $bb-text-tertiary-color;
+		color: $bb-text-color;
 		line-height: 16px;
 		white-space: nowrap;
 		flex-shrink: 0;
