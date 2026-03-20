@@ -180,13 +180,15 @@ function bb_registration_register_panel_fields() {
 		);
 	}
 
-	// Field 7: Enable Social Login (Pro only).
+	// Field 7: Enable Social Login (Pro placeholder).
+	// Platform registers with a generic name. Pro enriches via bb_admin_settings_format_field_data
+	// filter to map to the actual option key (bb-enable-sso) and unlock the toggle.
 	bb_register_feature_field(
 		$feature_id,
 		$panel_id,
 		'registration_general',
 		array(
-			'name'              => 'bb-enable-sso',
+			'name'              => 'bb-social-login',
 			'label'             => __( 'Enable Social Login', 'buddyboss' ),
 			'description'       => __( 'Allow users to sign in with social login.', 'buddyboss' ),
 			'type'              => 'toggle',
@@ -199,7 +201,7 @@ function bb_registration_register_panel_fields() {
 
 	/**
 	 * Fires after registration general section fields are registered.
-	 * Pro hooks here to add SSO provider fields.
+	 * Pro hooks here to enrich the SSO field and add provider cards.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
