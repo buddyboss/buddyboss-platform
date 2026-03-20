@@ -378,16 +378,18 @@ export function SettingsScreen({ onNavigate }) {
 											<div className="bb-admin-settings__feature-right">
 												<ToggleControl
 													className="components-form-toggle--is-big"
-													label={ sprintf(
-														/* translators: %s: feature label */
-														__( 'Toggle %s', 'buddyboss' ),
-														feature.label
-													) }
 													checked={ 'active' === feature.status }
 													onChange={(checked) => handleFeatureToggle(feature.id, checked)}
 													disabled={!feature.available || feature.required}
 													__nextHasNoMarginBottom
 												/>
+												<span className="screen-reader-text">
+													{ sprintf(
+														/* translators: %s: feature label */
+														__( 'Toggle %s', 'buddyboss' ),
+														feature.label
+													) }
+												</span>
 											</div>
 										</div>
 									</div>
