@@ -2524,20 +2524,12 @@ function bp_core_get_components( $type = 'all' ) {
 	$required_components = array(
 		'members'  => array(
 			'title'       => __( 'Member Profiles', 'buddyboss' ),
-			'settings'    => bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page' => 'bp-settings',
-						'tab'  => 'bp-xprofile',
-					),
-					'admin.php'
-				)
-			),
+			'settings'    => bp_get_admin_url( 'admin.php?page=bb-settings&tab=members' ),
 			'description' => __( 'Everything in a community website revolves around its members. All website users are given member profiles.', 'buddyboss' ),
 		),
 		'xprofile' => array(
 			'title'       => __( 'Profile Fields', 'buddyboss' ),
-			'settings'    => bp_get_admin_url( 'admin.php?page=bp-profile-setup' ),
+			'settings'    => bp_get_admin_url( 'admin.php?page=bb-settings&tab=members&panel=profile_fields' ),
 			'description' => __( 'Customize your community with fully editable profile fields that allow members to share details about themselves.', 'buddyboss' ),
 			'default'     => true,
 		),
@@ -2621,15 +2613,7 @@ function bp_core_get_components( $type = 'all' ) {
 		),
 		'friends'       => array(
 			'title'       => __( 'Member Connections', 'buddyboss' ),
-			'settings'    => bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page' => 'bp-settings',
-						'tab'  => 'bp-friends',
-					),
-					'admin.php'
-				)
-			),
+			'settings'    => bp_get_admin_url( 'admin.php?page=bb-settings&tab=members&panel=member_connection' ),
 			'description' => __( 'Allow members to make connections with one another and focus on those they care about most.', 'buddyboss' ),
 			'default'     => false,
 		),

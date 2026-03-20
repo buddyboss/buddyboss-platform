@@ -560,50 +560,6 @@
 		padding: 24px;
 	}
 
-	&__warning {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		padding: 8px;
-		background-color: $bb-background-warning-primary-color;
-		border: 1px solid $bb-border-warning-secondary-color;
-		border-radius: $bb-border-radius-xl;
-		margin-bottom: 16px;
-
-		i {
-			font-size: 32px;
-			color: $bb-icon-warning-primary-color;
-			flex-shrink: 0;
-			line-height: 1;
-
-			&:before {
-				opacity: 1;
-			}
-		}
-	}
-
-	&__warning-text {
-		display: flex;
-		flex-direction: column;
-		flex: 1;
-		min-width: 0;
-	}
-
-	&__warning-title {
-		font-size: 13px;
-		font-weight: 500;
-		line-height: 18px;
-		color: $bb-text-color;
-		padding: 3px 0;
-	}
-
-	&__warning-desc {
-		font-size: 11px;
-		font-weight: 400;
-		line-height: 16px;
-		color: $bb-text-secondary-color;
-	}
-
 	&__description {
 		font-size: 13px;
 		line-height: 1.6;

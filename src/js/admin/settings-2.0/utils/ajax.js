@@ -6,6 +6,54 @@
  */
 
 /**
+ * Recursively append a value to FormData using PHP bracket notation.
+ *
+ * Handles scalars, arrays, nested objects, and Blobs at any depth.
+ * Example: appendToFormData( fd, 'order', { 5: { 0: 381 } } )
+ *   → order[5][0] = 381
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {FormData} formData The FormData instance to append to.
+ * @param {string}   key      The current bracket-notation key.
+ * @param {*}        value    The value to append.
+ * @param {Array}    seen     Visited objects tracker to prevent circular reference loops.
+ */
+function appendToFormData( formData, key, value, seen ) {
+	if ( ! Array.isArray( seen ) ) {
+		seen = [];
+	}
+	if ( null === value || 'undefined' === typeof value ) {
+		return;
+	}
+	if ( value instanceof Blob ) {
+		formData.append( key, value );
+	} else if ( Array.isArray( value ) ) {
+		if ( -1 !== seen.indexOf( value ) ) {
+			return;
+		}
+		seen.push( value );
+		value.forEach( function ( item, idx ) {
+			appendToFormData( formData, key + '[' + idx + ']', item, seen );
+		} );
+	} else if ( 'object' === typeof value ) {
+		if ( -1 !== seen.indexOf( value ) ) {
+			return;
+		}
+		seen.push( value );
+		Object.keys( value ).forEach( function ( subKey ) {
+			appendToFormData( formData, key + '[' + subKey + ']', value[ subKey ], seen );
+		} );
+	} else if ( 'boolean' === typeof value ) {
+		// Convert booleans to 1/0 so PHP empty() works correctly
+		// ("false" string is truthy in PHP, "0" is falsy).
+		formData.append( key, value ? '1' : '0' );
+	} else {
+		formData.append( key, value );
+	}
+}
+
+/**
  * Make an AJAX request to WordPress admin-ajax.php
  *
  * @since BuddyBoss [BBVERSION]
@@ -26,20 +74,9 @@ export function ajaxFetch( action, data, options ) {
 	formData.append( 'action', action );
 	formData.append( 'nonce', nonce );
 
-	// Append additional data, handling arrays and objects with bracket notation.
+	// Append additional data using recursive bracket notation serialization.
 	Object.keys( data ).forEach( function ( key ) {
-		var val = data[ key ];
-		if ( Array.isArray( val ) ) {
-			val.forEach( function ( item ) {
-				formData.append( key + '[]', item );
-			} );
-		} else if ( val && 'object' === typeof val && ! ( val instanceof Blob ) ) {
-			Object.keys( val ).forEach( function ( subKey ) {
-				formData.append( key + '[' + subKey + ']', val[ subKey ] );
-			} );
-		} else {
-			formData.append( key, val );
-		}
+		appendToFormData( formData, key, data[ key ] );
 	} );
 
 	return fetch( ajaxUrl, {
@@ -351,6 +388,55 @@ export function updateGroupMember( data ) {
 }
 
 /**
+ * Get all member/profile types.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return {Promise} Promise resolving to member types array.
+ */
+export function getMemberTypes( options ) {
+	return ajaxFetch( 'bb_admin_get_member_types', {}, options );
+}
+
+/**
+ * Create a new member/profile type.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data - Member type data.
+ * @return {Promise} Promise resolving to response.
+ */
+export function createMemberType( data ) {
+	return ajaxFetch( 'bb_admin_create_member_type', data );
+}
+
+/**
+ * Update an existing member/profile type.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {number} typeId - Member type post ID.
+ * @param {Object} data   - Member type data.
+ * @return {Promise} Promise resolving to response.
+ */
+export function updateMemberType( typeId, data ) {
+	return ajaxFetch( 'bb_admin_update_member_type', Object.assign( {}, data, { type_id: typeId } ) );
+}
+
+/**
+ * Delete a member/profile type.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {number} typeId  - Member type post ID.
+ * @param {Object} options - Optional fetch options (e.g. { signal } for AbortController).
+ * @return {Promise} Promise resolving to response.
+ */
+export function deleteMemberType( typeId, options ) {
+	return ajaxFetch( 'bb_admin_delete_member_type', { type_id: typeId }, options );
+}
+
+/**
  * Get topics for a group.
  *
  * @since BuddyBoss [BBVERSION]
@@ -403,6 +489,142 @@ export function groupBulkAction( groupIds, action, extraData ) {
  */
 export function forumAutocomplete( params, options ) {
 	return ajaxFetch( 'bb_admin_forum_autocomplete', params || {}, options || {} );
+}
+
+/**
+ * Get all profile field groups with their fields.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} options - Optional fetch options (e.g. { signal }).
+ * @return {Promise} Promise resolving to response.
+ */
+export function getProfileFieldGroups( options ) {
+	return ajaxFetch( 'bb_admin_get_profile_field_groups', {}, options || {} );
+}
+
+/**
+ * Create a new profile field group (field set).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data - Field group data (name, description, group_is_repeater).
+ * @return {Promise} Promise resolving to response.
+ */
+export function createFieldGroup( data ) {
+	return ajaxFetch( 'bb_admin_create_field_group', data );
+}
+
+/**
+ * Update an existing profile field group (field set).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data - Field group data (group_id, name, description, group_is_repeater).
+ * @return {Promise} Promise resolving to response.
+ */
+export function updateFieldGroup( data ) {
+	return ajaxFetch( 'bb_admin_update_field_group', data );
+}
+
+/**
+ * Delete a profile field group (field set).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {number} groupId - Field group ID.
+ * @return {Promise} Promise resolving to response.
+ */
+export function deleteFieldGroup( groupId ) {
+	return ajaxFetch( 'bb_admin_delete_field_group', { group_id: groupId } );
+}
+
+/**
+ * Create or update a profile field.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data - Field data.
+ * @return {Promise} Promise resolving to response.
+ */
+export function saveProfileField( data ) {
+	return ajaxFetch( 'bb_admin_save_profile_field', data );
+}
+
+/**
+ * Delete a profile field.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {number} fieldId - Field ID.
+ * @param {Object} options - Optional fetch options (e.g. { signal }).
+ * @return {Promise} Promise resolving to response.
+ */
+export function deleteProfileField( fieldId, options ) {
+	return ajaxFetch( 'bb_admin_delete_profile_field', { field_id: fieldId }, options );
+}
+
+/**
+ * Reorder profile field groups and fields.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data    - Order data (group_order, field_order).
+ * @param {Object} options - Optional fetch options (e.g. { signal }).
+ * @return {Promise} Promise resolving to response.
+ */
+export function reorderProfileFields( data, options ) {
+	return ajaxFetch( 'bb_admin_reorder_profile_fields', data, options );
+}
+
+/**
+ * Get profile search form fields (saved + available).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} options - Optional fetch options (e.g. { signal }).
+ * @return {Promise} Promise resolving to response.
+ */
+export function getProfileSearchFields( options ) {
+	return ajaxFetch( 'bb_admin_get_profile_search_fields', {}, options || {} );
+}
+
+/**
+ * Save (add or update) a profile search field.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data - Field data (field_code, field_label, field_desc, field_mode, field_index).
+ * @return {Promise} Promise resolving to response.
+ */
+export function saveProfileSearchField( data ) {
+	return ajaxFetch( 'bb_admin_save_profile_search_field', data );
+}
+
+/**
+ * Delete a profile search field by index.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data    - Delete data (field_index).
+ * @param {Object} options - Optional fetch options (e.g. { signal }).
+ * @return {Promise} Promise resolving to response.
+ */
+export function deleteProfileSearchField( data, options ) {
+	return ajaxFetch( 'bb_admin_delete_profile_search_field', data, options );
+}
+
+/**
+ * Reorder profile search fields.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data    - Order data (field_order array of old indices in new order).
+ * @param {Object} options - Optional fetch options (e.g. { signal }).
+ * @return {Promise} Promise resolving to response.
+ */
+export function reorderProfileSearchFields( data, options ) {
+	return ajaxFetch( 'bb_admin_reorder_profile_search_fields', data, options || {} );
 }
 
 /**

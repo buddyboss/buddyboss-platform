@@ -1093,13 +1093,13 @@ export function GroupsListScreen( { onNavigate } ) {
 					shouldCloseOnClickOutside={ false }
 				>
 					<div className="bb-group-delete-modal__body">
-						<div className="bb-group-delete-modal__warning">
-							<i className="bb-icons-rl bb-icons-rl-warning-circle bb-icons-rl-duotone"></i>
-							<div className="bb-group-delete-modal__warning-text">
-								<span className="bb-group-delete-modal__warning-title">
+						<div className="bb-admin-delete__warning">
+							<i className="bb-icons-rl bb-icons-rl-warning-circle"></i>
+							<div className="bb-admin-delete__warning-text">
+								<span className="bb-admin-delete__warning-title">
 									{ __( 'Warning', 'buddyboss' ) }
 								</span>
-								<span className="bb-group-delete-modal__warning-desc">
+								<span className="bb-admin-delete__warning-desc">
 									{ __( 'This permanently deletes selected groups from the community and cannot be undone.', 'buddyboss' ) }
 								</span>
 							</div>

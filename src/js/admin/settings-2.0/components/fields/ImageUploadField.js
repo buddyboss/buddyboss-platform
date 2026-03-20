@@ -254,7 +254,9 @@ export function ImageUploadField( { uploadConfig, uploadUrl, onUpload, onRemove,
 
 		var action;
 		if ( isAvatar ) {
-			formData.append( 'nonce', nonces.avatarDelete || '' );
+			// The avatar delete handler uses different nonce actions for groups vs members.
+			var avatarNonce = 'group' === uploadConfig.object ? nonces.avatarDeleteGroup : nonces.avatarDelete;
+			formData.append( 'nonce', avatarNonce || '' );
 			action = 'bp_avatar_delete';
 		} else {
 			formData.append( 'nonce', nonces.coverDelete || '' );

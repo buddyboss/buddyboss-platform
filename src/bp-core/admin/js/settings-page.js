@@ -1,4 +1,4 @@
-/* global BP_ADMIN, BP_Uploader, BP_Confirm, bp, BBTopicsManager */
+/* global BP_ADMIN, BP_Uploader, BP_Confirm, bp */
 
 window.bp = window.bp || {};
 
@@ -259,23 +259,8 @@ window.bp = window.bp || {};
 				$( '#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li' ).find( 'a[href*="post_type=forum"]' ).parent().addClass( 'current' );
 			}
 
-			// Set Profile selected on Profile Type post types.
-			if ( $( 'body.buddypress.post-type-bp-member-type' ).length ) {
-				var selectorProfileTypes = $( '#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li a[href*="bp-profile-setup"]' );
-				$( menuOpen ).removeClass( 'current' );
-				$( selectorProfileTypes ).addClass( 'current' );
-				$( selectorProfileTypes ).attr( 'aria-current','page' );
-				$( '#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li' ).find( 'a[href*="bp-profile-setup"]' ).parent().addClass( 'current' );
-			}
-
-			// Set Profile selected on Profile Search post types.
-			if ( $( 'body.buddypress.post-type-bp_ps_form' ).length ) {
-				var selectorProfileSearch = $( '#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li a[href*="bp-profile-setup"]' );
-				$( menuOpen ).removeClass( 'current' );
-				$( selectorProfileSearch ).addClass( 'current' );
-				$( selectorProfileSearch ).attr( 'aria-current','page' );
-				$( '#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li' ).find( 'a[href*="bp-profile-setup"]' ).parent().addClass( 'current' );
-			}
+			// Legacy menu highlighting for bp-member-type and bp_ps_form CPTs
+			// removed — both CPTs now have show_ui: false and redirect to Settings 2.0.
 
 			// Set Tools selected on Repair Forums Page.
 			if ( $( 'body.buddypress.buddyboss_page_bbp-repair' ).length ) {

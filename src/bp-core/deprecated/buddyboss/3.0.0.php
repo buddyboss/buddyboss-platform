@@ -1292,6 +1292,339 @@ function bp_group_type_sort_items( $qv ) {
 	return $qv;
 }
 
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Members / Connections settings hooks (moved to Settings 2.0).
+// ──────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Fire deprecated xprofile register_fields hook for backward compatibility.
+ *
+ * Legacy Settings 1.0 passed a BP_Admin_Setting_tab instance that third-party
+ * plugins called ->add_section() / ->add_field() on. Settings 2.0 uses
+ * bb_register_feature_field() instead. Third-party/Pro plugins should hook into
+ * 'bb_members_after_register_settings_fields'.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_deprecated_xprofile_register_fields_hook() {
+	if ( ! function_exists( 'bb_register_feature' ) || ! bp_is_active( 'xprofile' ) ) {
+		return;
+	}
+
+	/**
+	 * Fires to register xProfile tab settings fields and section.
+	 *
+	 * The original hook passed a BP_Admin_Setting_Xprofile instance. Settings 2.0
+	 * no longer uses that class, so a no-op stub is passed to satisfy callbacks
+	 * that call add_section()/add_field() on the argument.
+	 *
+	 * @since BuddyBoss 1.2.6
+	 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_members_after_register_settings_fields'} hook with bb_register_feature_field().
+	 *
+	 * @param object $deprecated No-op stub (was BP_Admin_Setting_tab instance).
+	 */
+	do_action_deprecated(
+		'bp_admin_setting_xprofile_register_fields',
+		array(
+			new class() {
+				/**
+				 * No-op stub for BP_Admin_Setting_tab::add_section().
+				 *
+				 * @param mixed ...$args Ignored.
+				 */
+				public function add_section( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+
+				/**
+				 * No-op stub for BP_Admin_Setting_tab::add_field().
+				 *
+				 * @param mixed ...$args Ignored.
+				 */
+				public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+			},
+		),
+		'BuddyBoss [BBVERSION]',
+		'bb_members_after_register_settings_fields'
+	);
+}
+
+add_action( 'bb_members_after_register_settings_fields', 'bb_deprecated_xprofile_register_fields_hook', 0 );
+
+/**
+ * Fire deprecated friends register_fields hook for backward compatibility.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_deprecated_friends_register_fields_hook() {
+	if ( ! function_exists( 'bb_register_feature' ) || ! bp_is_active( 'friends' ) ) {
+		return;
+	}
+
+	/**
+	 * Fires to register Friends tab settings fields and section.
+	 *
+	 * The original hook passed a BP_Admin_Setting_Friends instance. Settings 2.0
+	 * no longer uses that class, so a no-op stub is passed to satisfy callbacks
+	 * that call add_section()/add_field() on the argument.
+	 *
+	 * @since BuddyBoss 1.2.6
+	 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_members_after_register_settings_fields'} hook with bb_register_feature_field().
+	 *
+	 * @param object $deprecated No-op stub (was BP_Admin_Setting_tab instance).
+	 */
+	do_action_deprecated(
+		'bp_admin_setting_friends_register_fields',
+		array(
+			new class() {
+				/**
+				 * No-op stub for BP_Admin_Setting_tab::add_section().
+				 *
+				 * @param mixed ...$args Ignored.
+				 */
+				public function add_section( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+
+				/**
+				 * No-op stub for BP_Admin_Setting_tab::add_field().
+				 *
+				 * @param mixed ...$args Ignored.
+				 */
+				public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+			},
+		),
+		'BuddyBoss [BBVERSION]',
+		'bb_members_after_register_settings_fields'
+	);
+}
+
+add_action( 'bb_members_after_register_settings_fields', 'bb_deprecated_friends_register_fields_hook', 0 );
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Members settings save hooks (backward-compatible with Settings 1.0 tabs).
+// ──────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Fire deprecated legacy setting save hooks for backward compatibility.
+ *
+ * Legacy Settings 1.0 fires do_action('bp_admin_tab_setting_save', $tab_name)
+ * when any settings tab is saved. Third-party plugins may hook into this for
+ * 'bp-xprofile' or 'bp-friends' tab names. This bridge ensures those hooks
+ * still fire when members settings are saved via Settings 2.0.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id Feature ID.
+ * @param array  $settings   Full submitted settings.
+ * @param array  $saved      Keys and values saved by core.
+ */
+function bb_members_fire_deprecated_save_hooks( $feature_id, $settings, $saved ) {
+	if ( 'members' !== $feature_id ) {
+		return;
+	}
+
+	/**
+	 * Fires when xprofile settings are saved.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_admin_save_feature_settings_after'} with feature_id='members'.
+	 *
+	 * @param string $tab_name The tab name.
+	 */
+	do_action_deprecated(
+		'bp_admin_tab_setting_save',
+		array( 'bp-xprofile' ),
+		'BuddyBoss [BBVERSION]',
+		'bb_admin_save_feature_settings_after'
+	);
+
+	// Fire for friends tab if connection settings were included.
+	if ( bp_is_active( 'friends' ) ) {
+
+		/**
+		 * Fires when friends settings are saved.
+		 *
+		 * @since BuddyBoss 1.0.0
+		 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_admin_save_feature_settings_after'} with feature_id='members'.
+		 *
+		 * @param string $tab_name The tab name.
+		 */
+		do_action_deprecated(
+			'bp_admin_tab_setting_save',
+			array( 'bp-friends' ),
+			'BuddyBoss [BBVERSION]',
+			'bb_admin_save_feature_settings_after'
+		);
+	}
+
+	/**
+	 * Fires after xprofile settings have been saved.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_admin_save_feature_settings_after'} with feature_id='members'.
+	 *
+	 * @param string $tab_name The tab name.
+	 */
+	do_action_deprecated(
+		'bp_admin_tab_setting_saved',
+		array( 'bp-xprofile' ),
+		'BuddyBoss [BBVERSION]',
+		'bb_admin_save_feature_settings_after'
+	);
+
+	if ( bp_is_active( 'friends' ) ) {
+
+		/**
+		 * Fires after friends settings have been saved.
+		 *
+		 * @since BuddyBoss 1.0.0
+		 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_admin_save_feature_settings_after'} with feature_id='members'.
+		 *
+		 * @param string $tab_name The tab name.
+		 */
+		do_action_deprecated(
+			'bp_admin_tab_setting_saved',
+			array( 'bp-friends' ),
+			'BuddyBoss [BBVERSION]',
+			'bb_admin_save_feature_settings_after'
+		);
+	}
+}
+
+add_action( 'bb_admin_save_feature_settings_after', 'bb_members_fire_deprecated_save_hooks', 99, 3 );
+
+// ──────────────────────────────────────────────────────────────────────────────
+// XProfile admin rendering hooks (replaced by Settings 2.0 React UI).
+// These hooks only fired in the legacy wp-admin XProfile field editor.
+// The data hooks (xprofile_group_before_save, xprofile_field_before_save, etc.)
+// are preserved because they fire from within BP_XProfile_Group::save() and
+// BP_XProfile_Field::save() which are still used by the AJAX handler.
+// ──────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Register deprecation notices for legacy XProfile admin rendering hooks.
+ *
+ * These hooks were used to add custom UI in the legacy XProfile field editor
+ * admin page. Since Settings 2.0 uses a React interface, these rendering hooks
+ * no longer fire. Third-party plugins should extend the React UI instead.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_deprecated_xprofile_admin_rendering_hooks() {
+	$deprecated_hooks = array(
+		'xprofile_group_admin_after_description' => __( 'XProfile group admin after description', 'buddyboss' ),
+		'xprofile_group_before_submitbox'        => __( 'XProfile group before submitbox', 'buddyboss' ),
+		'xprofile_group_submitbox_start'         => __( 'XProfile group submitbox start', 'buddyboss' ),
+		'xprofile_group_after_submitbox'         => __( 'XProfile group after submitbox', 'buddyboss' ),
+		'xprofile_field_before_contentbox'       => __( 'XProfile field before contentbox', 'buddyboss' ),
+		'xprofile_field_after_contentbox'        => __( 'XProfile field after contentbox', 'buddyboss' ),
+		'xprofile_field_before_submitbox'        => __( 'XProfile field before submitbox', 'buddyboss' ),
+		'xprofile_field_submitbox_start'         => __( 'XProfile field submitbox start', 'buddyboss' ),
+		'xprofile_field_after_submitbox'         => __( 'XProfile field after submitbox', 'buddyboss' ),
+		'xprofile_field_after_sidebarbox'        => __( 'XProfile field after sidebarbox', 'buddyboss' ),
+		'xprofile_field_additional_options'       => __( 'XProfile field additional options', 'buddyboss' ),
+		'xprofile_admin_field_name_legend'       => __( 'XProfile admin field name legend', 'buddyboss' ),
+		'xprofile_admin_field_action'            => __( 'XProfile admin field action', 'buddyboss' ),
+		'xprofile_admin_group_action'            => __( 'XProfile admin group action', 'buddyboss' ),
+	);
+
+	foreach ( $deprecated_hooks as $hook => $description ) {
+		if ( has_action( $hook ) ) {
+			_deprecated_hook(
+				$hook,
+				'BuddyBoss [BBVERSION]',
+				'',
+				sprintf(
+					/* translators: %s: hook name */
+					__( 'The %s hook is no longer fired in the Settings 2.0 React admin interface. Extend the React UI via custom JavaScript instead.', 'buddyboss' ),
+					$hook
+				)
+			);
+		}
+	}
+}
+
+add_action( 'admin_init', 'bb_deprecated_xprofile_admin_rendering_hooks' );
+
+/**
+ * Register deprecation notices for legacy Profile admin tab hooks.
+ *
+ * The `bp_core_admin_users_tabs` and `bp_core_get_users_admin_tabs` filters
+ * were used to add tabs to the legacy bp-profile-setup admin page. Since
+ * Settings 2.0, Profile Fields, Profile Types, Profile Search, and Profile
+ * Navigation are managed via the React admin interface.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_deprecated_profile_admin_tab_hooks() {
+	$deprecated_filters = array(
+		'bp_core_admin_users_tabs',
+		'bp_core_get_users_admin_tabs',
+	);
+
+	foreach ( $deprecated_filters as $hook ) {
+		if ( has_filter( $hook ) ) {
+			_deprecated_hook(
+				$hook,
+				'BuddyBoss [BBVERSION]',
+				'bb_register_side_panel()',
+				sprintf(
+					/* translators: %s: hook name */
+					__( 'The %s filter is no longer used. Profile admin tabs are now managed via Settings 2.0 side panels.', 'buddyboss' ),
+					$hook
+				)
+			);
+		}
+	}
+}
+
+add_action( 'admin_init', 'bb_deprecated_profile_admin_tab_hooks' );
+
+/**
+ * Backward-compatible stub for legacy Profile admin tab renderer.
+ *
+ * The admin tab bar for bp-profile-setup has been removed in Settings 2.0.
+ * This stub prevents fatal errors if third-party code or legacy model class
+ * `render_admin_form()` methods call the function.
+ *
+ * @since BuddyBoss [BBVERSION]
+ * @deprecated BuddyBoss [BBVERSION] Use Settings 2.0 side panels via bb_register_side_panel().
+ *
+ * @param string $active_tab Active tab slug (ignored).
+ */
+function bp_core_admin_users_tabs( $active_tab = '' ) {
+	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_register_side_panel()' );
+}
+
+/**
+ * Backward-compatible stub for legacy Profile admin tabs data.
+ *
+ * @since BuddyBoss [BBVERSION]
+ * @deprecated BuddyBoss [BBVERSION] Use Settings 2.0 side panels via bb_register_side_panel().
+ *
+ * @param string $active_tab Active tab slug (ignored).
+ *
+ * @return array Empty array.
+ */
+function bp_core_get_users_admin_tabs( $active_tab = '' ) {
+	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_register_side_panel()' );
+
+	return array();
+}
+
+/**
+ * Backward-compatible stub for legacy field type dropdown renderer.
+ *
+ * Called from BP_XProfile_Field::render_admin_form(). No longer needed since
+ * field type selection is handled by the Settings 2.0 React modal.
+ *
+ * @since BuddyBoss [BBVERSION]
+ * @deprecated BuddyBoss [BBVERSION]
+ *
+ * @param string $select_field_type Currently selected field type.
+ */
+function bp_xprofile_admin_form_field_types( $select_field_type = '' ) {
+	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]' );
+}
+
 // ──────────────────────────────────────────────────────────────────────────────
 // Moderation Settings 2.0 deprecated functions and hook compatibility.
 // Legacy settings API functions were removed from bp-moderation-settings.php.

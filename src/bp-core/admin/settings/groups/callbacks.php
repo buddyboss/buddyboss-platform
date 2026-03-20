@@ -281,6 +281,40 @@ function bb_groups_enrich_cover_upload_help_text( $field_data, $field, $feature_
 
 add_filter( 'bb_admin_settings_format_field_data', 'bb_groups_enrich_cover_upload_help_text', 10, 3 );
 
+/**
+ * Inject dynamic avatar dimensions into the upload help text at AJAX time.
+ *
+ * `bp_core_avatar_full_width`/`bp_core_avatar_full_height` return 0 at registration time
+ * (bp_loaded priority 5) because avatar setup hasn't run yet. This filter runs during
+ * the AJAX request when dimensions are fully available.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array  $field_data Formatted field data.
+ * @param array  $field      Original field registration data.
+ * @param string $feature_id Feature ID.
+ *
+ * @return array Modified field data.
+ */
+function bb_groups_enrich_avatar_upload_help_text( $field_data, $field, $feature_id ) {
+	if ( 'groups' !== $feature_id || 'bp-default-group-avatar-type' !== ( isset( $field_data['name'] ) ? $field_data['name'] : '' ) ) {
+		return $field_data;
+	}
+
+	if ( ! empty( $field_data['upload_config'] ) && empty( $field_data['upload_config']['help_text'] ) ) {
+		$field_data['upload_config']['help_text'] = sprintf(
+			/* translators: 1: width in pixels, 2: height in pixels. */
+			__( 'Upload a default avatar image (JPG or PNG, recommended size: %1$spx × %2$spx).', 'buddyboss' ),
+			absint( bp_core_avatar_full_width() ),
+			absint( bp_core_avatar_full_height() )
+		);
+	}
+
+	return $field_data;
+}
+
+add_filter( 'bb_admin_settings_format_field_data', 'bb_groups_enrich_avatar_upload_help_text', 10, 3 );
+
 // =========================================================================
 // POST-SAVE VALIDATION HOOKS
 // =========================================================================

@@ -100,6 +100,12 @@ var IMAGE_PREVIEWS = {
 	'header-centered-group': function () {
 		return <LayoutPreview alignment="centered" />;
 	},
+	'header-left-profile': function () {
+		return <LayoutPreview alignment="left" />;
+	},
+	'header-centered-profile': function () {
+		return <LayoutPreview alignment="centered" />;
+	},
 };
 
 /**
@@ -107,14 +113,15 @@ var IMAGE_PREVIEWS = {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param {Object}   props          Component props.
- * @param {Object}   props.field    Field definition.
- * @param {*}        props.value    Current field value.
- * @param {Function} props.onChange Change handler (fieldName, newValue).
- * @param {boolean}  props.disabled Whether the field is disabled.
+ * @param {Object}   props                 Component props.
+ * @param {Object}   props.field            Field definition.
+ * @param {*}        props.value            Current field value.
+ * @param {Function} props.onChange         Change handler (fieldName, newValue).
+ * @param {boolean}  props.disabled         Whether the field is disabled.
+ * @param {string}   props.descriptionHtml  Sanitized HTML description to render between options and upload.
  * @returns {JSX.Element} ImageRadioField component.
  */
-export function ImageRadioField( { field, value, onChange, disabled } ) {
+export function ImageRadioField( { field, value, onChange, disabled, descriptionHtml } ) {
 	var [ selected, setSelected ] = useState( value );
 
 	// Use cached URL if available (survives unmount/remount), otherwise fall back to server value.
@@ -138,7 +145,7 @@ export function ImageRadioField( { field, value, onChange, disabled } ) {
 
 	return (
 		<div className="bb-admin-settings-field__image-radio-wrapper">
-		<div className={ 'bb-admin-settings-field__image-radio' + ( showUpload ? ' bb-admin-settings-field__image-radio--with-divider' : '' ) }>
+		<div className="bb-admin-settings-field__image-radio">
 			{ ( field.options || [] ).map( function ( option ) {
 				return (
 					<button
@@ -156,6 +163,12 @@ export function ImageRadioField( { field, value, onChange, disabled } ) {
 				);
 			} ) }
 		</div>
+		{ descriptionHtml && (
+			<p
+				className={ 'bb-admin-settings-form__field-description bb-admin-settings-form__field-description--image-radio' + ( showUpload ? ' bb-admin-settings-field__image-radio--with-divider' : '' ) }
+				dangerouslySetInnerHTML={{ __html: descriptionHtml }}
+			/>
+		) }
 		{ showUpload && (
 			<ImageUploadField
 				uploadConfig={ field.upload_config }

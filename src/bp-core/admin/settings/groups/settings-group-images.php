@@ -95,7 +95,7 @@ function bb_groups_register_images_panel_fields() {
 				'url_getter'  => 'bb_get_default_custom_upload_group_avatar',
 				'label'       => __( 'Upload Custom Avatar', 'buddyboss' ),
 				/* translators: 1: avatar width in pixels, 2: avatar height in pixels. */
-				'help_text'   => sprintf( __( 'Upload a default avatar image (JPG or PNG, recommended size: %1$spx × %2$spx).', 'buddyboss' ), absint( bp_core_avatar_full_width() ), absint( bp_core_avatar_full_height() ) ),
+				'help_text'   => '', // Injected at AJAX time via bb_groups_enrich_avatar_upload_help_text() — avatar dimensions not available at registration.
 				'conditional' => array(
 					'value' => 'custom',
 				),

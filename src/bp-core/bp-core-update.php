@@ -4145,6 +4145,12 @@ function bb_update_to_3_0_0() {
 	if ( 'legacy' === $avatar_type ) {
 		bp_update_option( 'bp-default-group-avatar-type', 'buddyboss' );
 	}
+
+	// Migrate legacy profile avatar type: 'legacy' option removed from Settings 2.0.
+	$profile_avatar_type = bp_get_option( 'bp-default-profile-avatar-type', 'buddyboss' );
+	if ( 'legacy' === $profile_avatar_type ) {
+		bp_update_option( 'bp-default-profile-avatar-type', 'buddyboss' );
+	}
 }
 
 /**

@@ -63,6 +63,29 @@ function bb_admin_settings_init() {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-groups-ajax.php';
 		}
 
+		// Profile AJAX handlers (only when xprofile component is active).
+		if ( bp_is_active( 'xprofile' ) ) {
+			if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-member-types-ajax.php' ) ) {
+				require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-member-types-ajax.php';
+			}
+			if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php' ) ) {
+				require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php';
+			}
+
+			// Also ensure profile search module is loaded — it may not be when the
+			// toggle is OFF because bp_core_load_profile_search() returns early.
+			if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-profile-search-ajax.php' ) ) {
+				$bps_start = buddypress()->plugin_dir . 'bp-core/profile-search/bps-start.php';
+				if ( ! function_exists( 'bp_profile_search_main_form' ) && file_exists( $bps_start ) ) {
+					if ( ! defined( 'BPS_VERSION' ) ) {
+						define( 'BPS_VERSION', BP_PLATFORM_VERSION );
+					}
+					require_once $bps_start;
+				}
+				require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-profile-search-ajax.php';
+			}
+		}
+
 		if ( bp_is_active( 'moderation' ) ) {
 			if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-moderation-ajax.php' ) ) {
 				require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-moderation-ajax.php';
@@ -99,6 +122,10 @@ function bb_admin_settings_init() {
 
 		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-search.php' ) ) {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-search.php';
+		}
+
+		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-members.php' ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-members.php';
 		}
 
 		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-moderation.php' ) ) {

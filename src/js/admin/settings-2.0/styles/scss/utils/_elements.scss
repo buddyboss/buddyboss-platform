@@ -120,6 +120,7 @@ select.bb-admin-settings__select {
             height: 18px;
             border: 1px solid transparent;
             background-color: $bb-background-tertiary-hover-color;
+            border-radius: $bb-border-radius-full;
         }
 
         .components-form-toggle__thumb {
@@ -127,6 +128,7 @@ select.bb-admin-settings__select {
             width: 12px;
             top: 3px;
             left: 3px;
+            background-color: $bb-background-base-color;
         }
 
         &.is-checked {
@@ -140,6 +142,17 @@ select.bb-admin-settings__select {
                 background-color: $bb-background-brand-primary-color;
             }
         }
+    }
+}
+
+/* Divider */
+.bb-admin-settings--divided-section {
+    padding-bottom: 18px;
+    border-bottom: 1px solid $bb-border-secondary-color;
+    margin-bottom: 24px;
+
+    &:has(.components-base-control__help) {
+        padding-bottom: 8px;
     }
 }
 
@@ -174,6 +187,23 @@ select.bb-admin-settings__select {
 			}
 		}
     }
+
+	.components-radio-control {
+		margin: 0;
+		padding: 0;
+		border: none;
+		min-inline-size: auto;
+
+		> legend {
+			display: none;
+		}
+	}
+
+	.components-radio-control__group-wrapper {
+		flex-direction: row;
+		justify-content: flex-start;
+		gap: 16px;
+	}
 }
 
 /* Checkbox */
@@ -193,22 +223,31 @@ select.bb-admin-settings__select {
 }
 
 /* Inputs */
-.buddyboss_page_bb-settings  {
+.buddyboss_page_bb-settings {
 
-    .bb-admin-settings-form__inline-number,
+    .components-textarea-control__input,
     .components-text-control__input {
-        @include bb-input-text;
+	    @include bb-input-text;
     }
 
-    .bb-admin-settings-form__inline-number {
-        margin: 0 8px;
-        height: 26px;
-        min-height: auto;
-        max-width: 85px;
-        width: auto;
+    .components-textarea-control__input {
+        min-height: 100px;
+        padding: 8px;
     }
+
+	.bb-admin-settings-form__inline-number {
+		margin: 0 8px;
+		height: 26px;
+		min-height: auto;
+		max-width: 85px;
+		width: auto;
+	}
 }
 
+/* Buttons */
+.bb-admin-button-danger {
+    @include bb-button-danger;
+}
 
 /* WordPress DropdownMenu */
 .components-popover__content:has(.bb_dropdown_menu_group) {
@@ -582,6 +621,38 @@ select.bb-admin-settings__select {
 
     &__body {
         padding: 24px;
+
+        .components-input-control__container {
+
+			.components-select-control__input {
+				@include bb-admin-settings-select;
+			}
+
+			&:has(> .components-select-control__input) {
+				padding: 0 !important;
+
+				.components-input-control__suffix,
+				.components-input-control__backdrop {
+					display: none !important;
+				}
+			}
+		}
+
+        > .components-base-control {
+            margin-bottom: 16px;
+        }
+
+        .components-select-control {
+            gap: 0;
+        }
+
+        .components-base-control__label,
+        .components-input-control__label.components-text {
+            color: $bb-text-secondary-color;
+            font-size: 13px;
+            margin-bottom: 10px;
+            text-transform: none;
+        }
     }
 
 	&__content {
@@ -751,5 +822,53 @@ select.bb-admin-settings__select {
             color: $bb-text-tertiary-color;
             cursor: default;
         }
+    }
+}
+
+/* Warning block */
+.bb-admin-delete {
+    &__warning {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px;
+        background-color: $bb-background-warning-primary-color;
+        border: 1px solid $bb-border-warning-secondary-color;
+        border-radius: $bb-border-radius-xl;
+        margin-bottom: 16px;
+
+        i {
+            font-size: 32px;
+            font-weight: 500;
+            color: $bb-icon-warning-primary-color;
+            flex-shrink: 0;
+            line-height: 1;
+
+            &:before {
+                opacity: 1;
+            }
+        }
+    }
+
+    &__warning-text {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        min-width: 0;
+    }
+
+    &__warning-title {
+        font-size: 13px;
+        font-weight: 500;
+        line-height: 18px;
+        color: $bb-text-color;
+        padding: 3px 0;
+    }
+
+    &__warning-desc {
+        font-size: 11px;
+        font-weight: 400;
+        line-height: 16px;
+        color: $bb-text-secondary-color;
     }
 }
