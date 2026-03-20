@@ -402,7 +402,7 @@ export function SettingsForm({ fields, values, onChange }) {
 					<SelectControl
 						key={field.name}
 						label=""
-						value={value || ''}
+						value={value != null ? String(value) : ''}
 						options={field.options || []}
 						onChange={(newValue) => onChange(field.name, newValue)}
 						disabled={disabled}
@@ -427,7 +427,7 @@ export function SettingsForm({ fields, values, onChange }) {
 					<RadioControl
 						key={field.name}
 						label=""
-						selected={value || ''}
+						selected={value != null ? String(value) : ''}
 						options={field.options || []}
 						onChange={(newValue) => onChange(field.name, newValue)}
 					/>
