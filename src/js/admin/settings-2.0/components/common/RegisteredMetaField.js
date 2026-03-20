@@ -34,7 +34,7 @@ import { AsyncSelectField } from '../fields/AsyncSelectField';
  * @param {Function} props.onChange  Change handler.
  * @returns {JSX.Element} Multi-select component.
  */
-function AjaxMultiSelectField( { field, value, onChange } ) {
+function AjaxMultiSelectField( { field, value, onChange, disabled } ) {
 	var extraData = field.extra_data || {};
 	var initialItems = extraData.selected_items || [];
 	var ajaxAction = extraData.ajax_action || '';
@@ -174,7 +174,7 @@ function AjaxMultiSelectField( { field, value, onChange } ) {
 	}
 
 	return (
-		<div className="bb-admin-meta-field__ajax-multiselect" ref={ wrapperRef }>
+		<div className={ 'bb-admin-meta-field__ajax-multiselect' + ( disabled ? ' bb-admin-meta-field--disabled' : '' ) } ref={ wrapperRef }>
 			<label className="bb-admin-meta-field__label">{ field.label }</label>
 
 			{ selectedIds.length > 0 && (
@@ -189,6 +189,7 @@ function AjaxMultiSelectField( { field, value, onChange } ) {
 									onClick={ function () {
 										handleRemove( id );
 									} }
+									disabled={ disabled }
 									aria-label={ __( 'Remove', 'buddyboss' ) }
 								>
 									<i className="bb-icons-rl-x"></i>
@@ -208,6 +209,7 @@ function AjaxMultiSelectField( { field, value, onChange } ) {
 						setSearchQuery( e.target.value );
 					} }
 					placeholder={ placeholder }
+					disabled={ disabled }
 				/>
 				{ isLoading && (
 					<span className="bb-admin-meta-field__search-spinner spinner is-active"></span>
@@ -253,13 +255,42 @@ function AjaxMultiSelectField( { field, value, onChange } ) {
  */
 export function RegisteredMetaField( { field, value, onChange, activityId, itemId, disabled } ) {
 	var editorItemId = activityId || itemId || 0;
-	var isDisabled = disabled || field.disabled || false;
+	var isDisabled = disabled || field.disabled || field.readonly || false;
 	if ( ! field.visible ) {
 		return null;
 	}
 
-	// Read-only field (e.g. Activity History).
+	// Read-only field (e.g. Activity History, Author Info).
 	if ( 'readonly' === field.type ) {
+		// Author info style: avatar + name link.
+		if ( value && 'object' === typeof value && value.author_name ) {
+			return (
+				<div className="bb-admin-meta-field__author-info">
+					{ value.author_avatar && (
+						<img
+							src={ safeUrl( value.author_avatar ) }
+							alt={ value.author_name }
+							className="bb-admin-meta-field__author-avatar"
+							width="32"
+							height="32"
+						/>
+					) }
+					{ value.author_url ? (
+						<a
+							href={ safeUrl( value.author_url ) }
+							className="bb-admin-meta-field__author-name"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							{ value.author_name }
+						</a>
+					) : (
+						<span className="bb-admin-meta-field__author-name">{ value.author_name }</span>
+					) }
+				</div>
+			);
+		}
+
 		// History-style: value is an object with time_since + message.
 		if ( value && 'object' === typeof value && value.time_since ) {
 			return (
@@ -272,6 +303,25 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 						{ ' – ' }
 						<span className="bb-admin-meta-field__history-message">{ value.message }</span>
 					</div>
+				</div>
+			);
+		}
+
+		// URL read-only: render as clickable link (e.g. reply permalink).
+		if ( value && 'string' === typeof value && 0 === value.indexOf( 'http' ) ) {
+			return (
+				<div className="bb-admin-meta-field__readonly-field">
+					{ field.label && (
+						<label className="bb-admin-meta-field__label">{ field.label }</label>
+					) }
+					<a
+						href={ safeUrl( value ) }
+						className="bb-admin-meta-field__readonly-link"
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						{ value }
+					</a>
 				</div>
 			);
 		}
@@ -340,7 +390,7 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 					disabled={ isDisabled }
 					__nextHasNoMarginBottom
 				/>
-				{ baseUrl && (
+				{ baseUrl && slugValue && (
 					<div className="bb-admin-meta-field__permalink-preview">
 						{ isChildForum ? (
 							<span>{ baseUrl }</span>
@@ -484,6 +534,7 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 					value={ null != value ? String( value ) : '0' }
 					onChange={ onChange }
 					asyncAction={ field.async_action || '' }
+					asyncExtraParams={ field.asyncExtraParams || {} }
 					placeholder={ field.placeholder || '' }
 					disabled={ isDisabled }
 				/>

@@ -131,6 +131,7 @@ class BB_Admin_Meta_Field_Registry {
 	 *     @type string   $tab               Optional tab identifier for tabbed modals. Default ''.
 	 *     @type callable $get_extra_data    Optional. function( $item ) returning array of extra data for JS.
 	 *     @type string   $async_action      Optional. AJAX action for 'async_select' field type. Default ''.
+	 *     @type string   $async_depends_on  Optional. Field ID whose value is passed as extra param for cascading async selects. Default ''.
 	 *     @type array    $conditional      Optional. Client-side dependency: array( 'field' => 'field_id', 'value' => 'expected_value' ).
 	 * }
 	 * @return bool True on success.
@@ -157,6 +158,7 @@ class BB_Admin_Meta_Field_Registry {
 			'sanitize_callback' => null, // Must be explicitly set for non-scalar (array) fields.
 			'is_visible'        => null,
 			'async_action'      => '',
+			'async_depends_on'  => '',
 			'conditional'       => null,
 		);
 
@@ -234,20 +236,21 @@ class BB_Admin_Meta_Field_Registry {
 			}
 
 			$field_data = array(
-				'id'           => $field_id,
-				'label'        => $args['label'],
-				'description'  => $args['description'],
-				'placeholder'  => $args['placeholder'],
-				'type'         => $args['type'],
-				'context'      => $args['context'],
-				'layout'       => $args['layout'],
-				'tab'          => $args['tab'],
-				'visible'      => $visible,
-				'value'        => null,
-				'options'      => array(),
-				'readonly'     => ( null === $args['save_value'] ),
-				'conditional'  => $args['conditional'],
-				'async_action' => $args['async_action'],
+				'id'               => $field_id,
+				'label'            => $args['label'],
+				'description'      => $args['description'],
+				'placeholder'      => $args['placeholder'],
+				'type'             => $args['type'],
+				'context'          => $args['context'],
+				'layout'           => $args['layout'],
+				'tab'              => $args['tab'],
+				'visible'          => $visible,
+				'value'            => null,
+				'options'          => array(),
+				'readonly'         => ( null === $args['save_value'] ),
+				'conditional'      => $args['conditional'],
+				'async_action'     => $args['async_action'],
+				'async_depends_on' => $args['async_depends_on'],
 			);
 
 			// Skip fetching value, options, and extra data for invisible fields

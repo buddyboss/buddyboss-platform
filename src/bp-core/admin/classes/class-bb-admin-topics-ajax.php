@@ -388,6 +388,20 @@ class BB_Admin_Topics_Ajax {
 				$columns_response[ $col_key ] = $col_label;
 			}
 			$response['columns'] = $columns_response;
+
+			// Provide registered field definitions for the create modal.
+			$response['create_fields'] = bb_admin_meta_field_registry()->get_fields_data(
+				'discussions',
+				(object) array(
+					'ID'           => 0,
+					'post_title'   => '',
+					'post_content' => '',
+					'post_status'  => 'publish',
+					'post_parent'  => 0,
+					'post_author'  => get_current_user_id(),
+					'post_type'    => bbp_get_topic_post_type(),
+				)
+			);
 		}
 
 		/**
@@ -457,17 +471,18 @@ class BB_Admin_Topics_Ajax {
 		}
 
 		$data = array(
-			'id'           => (int) $topic->ID,
-			'title'        => $topic->post_title,
-			'description'  => $topic->post_content,
-			'forum_id'     => $topic_forum_id,
-			'forum_name'   => $topic_forum_id ? get_the_title( $topic_forum_id ) : '',
-			'type'         => $type,
-			'post_status'  => get_post_status( $topic_id ),
-			'topic_status' => bbp_is_topic_closed( $topic_id ) ? 'closed' : 'open',
-			'permalink'    => bbp_get_topic_permalink( $topic_id ),
-			'tags'         => $tags,
-			'tag_names'    => implode( ', ', $tag_names ),
+			'id'                => (int) $topic->ID,
+			'title'             => $topic->post_title,
+			'description'       => $topic->post_content,
+			'forum_id'          => $topic_forum_id,
+			'forum_name'        => $topic_forum_id ? get_the_title( $topic_forum_id ) : '',
+			'type'              => $type,
+			'post_status'       => get_post_status( $topic_id ),
+			'topic_status'      => bbp_is_topic_closed( $topic_id ) ? 'closed' : 'open',
+			'permalink'         => bbp_get_topic_permalink( $topic_id ),
+			'tags'              => $tags,
+			'tag_names'         => implode( ', ', $tag_names ),
+			'registered_fields' => bb_admin_meta_field_registry()->get_fields_data( 'discussions', $topic ),
 		);
 
 		/**
@@ -615,6 +630,12 @@ class BB_Admin_Topics_Ajax {
 		 * @param int $forum_id Forum ID.
 		 */
 		do_action( 'bbp_topic_attributes_metabox_save', $topic_id, $forum_id );
+
+		// Save "after" phase extension fields (Pro/third-party) via meta field registry.
+		$created_topic = get_post( $topic_id );
+		if ( $created_topic ) {
+			bb_admin_meta_field_registry()->save_fields_data( 'discussions', $created_topic, 'after' );
+		}
 
 		// Clear forum counts cache.
 		$this->bb_clear_forum_counts_cache();
@@ -836,6 +857,12 @@ class BB_Admin_Topics_Ajax {
 		 */
 		do_action( 'bbp_author_metabox_save', $topic_id, array() );
 
+		// Re-fetch the topic after wp_update_post() so extension field callbacks receive up-to-date data.
+		$topic = get_post( $topic_id );
+
+		// Save "after" phase extension fields (Pro/third-party) via meta field registry.
+		bb_admin_meta_field_registry()->save_fields_data( 'discussions', $topic, 'after' );
+
 		// Clear forum counts cache.
 		$this->bb_clear_forum_counts_cache();
 
@@ -936,7 +963,7 @@ class BB_Admin_Topics_Ajax {
 		// Prime the post cache in a single query to prevent N+1 get_post() calls.
 		// _prime_post_caches() is public since WP 6.1; guard for WP 6.0 compat.
 		if ( function_exists( '_prime_post_caches' ) ) {
-			_prime_post_caches( $topic_ids, false, false );
+			_prime_post_caches( $topic_ids, true, false );
 		}
 
 		foreach ( $topic_ids as $topic_id ) {

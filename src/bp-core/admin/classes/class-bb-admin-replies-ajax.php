@@ -322,6 +322,19 @@ class BB_Admin_Replies_Ajax {
 
 			$response['bulk_actions'] = $bulk_actions;
 			$response['columns']      = $columns;
+
+			// Provide registered field definitions for the create modal.
+			$response['create_fields'] = bb_admin_meta_field_registry()->get_fields_data(
+				'replies',
+				(object) array(
+					'ID'           => 0,
+					'post_content' => '',
+					'post_status'  => 'publish',
+					'post_parent'  => 0,
+					'post_author'  => get_current_user_id(),
+					'post_type'    => bbp_get_reply_post_type(),
+				)
+			);
 		}
 
 		/**
@@ -434,15 +447,16 @@ class BB_Admin_Replies_Ajax {
 		$reply_to = (int) get_post_meta( $reply_id, '_bbp_reply_to', true );
 
 		$data = array(
-			'id'          => $reply_id,
-			'content'     => $reply->post_content,
-			'forum_id'    => $forum_id,
-			'forum_name'  => $forum_id ? get_the_title( $forum_id ) : '',
-			'topic_id'    => $topic_id,
-			'topic_title' => $topic_id ? get_the_title( $topic_id ) : '',
-			'reply_to'    => $reply_to,
-			'post_status' => get_post_status( $reply_id ),
-			'permalink'   => bbp_get_reply_url( $reply_id ),
+			'id'                => $reply_id,
+			'content'           => $reply->post_content,
+			'forum_id'          => $forum_id,
+			'forum_name'        => $forum_id ? get_the_title( $forum_id ) : '',
+			'topic_id'          => $topic_id,
+			'topic_title'       => $topic_id ? get_the_title( $topic_id ) : '',
+			'reply_to'          => $reply_to,
+			'post_status'       => get_post_status( $reply_id ),
+			'permalink'         => bbp_get_reply_url( $reply_id ),
+			'registered_fields' => bb_admin_meta_field_registry()->get_fields_data( 'replies', $reply ),
 		);
 
 		/**
@@ -571,6 +585,12 @@ class BB_Admin_Replies_Ajax {
 		 */
 		do_action( 'bbp_reply_attributes_metabox_save', $reply_id, $topic_id, $forum_id, $reply_to );
 
+		// Save "after" phase extension fields (Pro/third-party) via meta field registry.
+		$created_reply = get_post( $reply_id );
+		if ( $created_reply ) {
+			bb_admin_meta_field_registry()->save_fields_data( 'replies', $created_reply, 'after' );
+		}
+
 		$this->bb_clear_forum_counts_cache();
 
 		wp_send_json_success(
@@ -655,12 +675,15 @@ class BB_Admin_Replies_Ajax {
 			update_post_meta( $reply_id, '_bbp_topic_id', $topic_id );
 		}
 
-		// Update reply-to threading with validation.
-		if ( $reply_to > 0 ) {
-			$reply_to = bbp_validate_reply_to( $reply_to );
-			update_post_meta( $reply_id, '_bbp_reply_to', $reply_to );
-		} else {
-			delete_post_meta( $reply_id, '_bbp_reply_to' );
+		// Update reply-to threading with validation (only when explicitly sent).
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified above.
+		if ( isset( $_POST['reply_to'] ) ) {
+			if ( $reply_to > 0 ) {
+				$reply_to = bbp_validate_reply_to( $reply_to );
+				update_post_meta( $reply_id, '_bbp_reply_to', $reply_to );
+			} else {
+				delete_post_meta( $reply_id, '_bbp_reply_to' );
+			}
 		}
 
 		// Recalculate topic/forum counts when parent changes.
@@ -738,6 +761,12 @@ class BB_Admin_Replies_Ajax {
 		 * @param array $anonymous_data Empty array (admin users are not anonymous).
 		 */
 		do_action( 'bbp_author_metabox_save', $reply_id, array() );
+
+		// Re-fetch the reply after wp_update_post() so extension field callbacks receive up-to-date data.
+		$reply = get_post( $reply_id );
+
+		// Save "after" phase extension fields (Pro/third-party) via meta field registry.
+		bb_admin_meta_field_registry()->save_fields_data( 'replies', $reply, 'after' );
 
 		$this->bb_clear_forum_counts_cache();
 
@@ -838,7 +867,7 @@ class BB_Admin_Replies_Ajax {
 		// Prime the post cache in a single query to prevent N+1 get_post() calls.
 		// _prime_post_caches() is public since WP 6.1; guard for WP 6.0 compat.
 		if ( function_exists( '_prime_post_caches' ) ) {
-			_prime_post_caches( $reply_ids, false, false );
+			_prime_post_caches( $reply_ids, true, false );
 		}
 
 		foreach ( $reply_ids as $rid ) {

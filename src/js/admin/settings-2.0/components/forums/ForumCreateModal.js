@@ -8,7 +8,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useRef, useEffect, useCallback, useMemo } from '@wordpress/element';
+import { useState, useRef, useEffect, useCallback } from '@wordpress/element';
 import {
 	Modal,
 	Button,
@@ -16,7 +16,7 @@ import {
 import { __ } from '@wordpress/i18n';
 
 import { createForum, uploadForumImage } from '../../utils/ajax';
-import { toSlug, groupFieldsWithLayout } from '../../utils/format';
+import { toSlug, groupFieldsWithLayout, buildRegisteredFieldPayload } from '../../utils/format';
 import { safeUrl } from '../../utils/sanitize';
 import { RegisteredMetaField } from '../common/RegisteredMetaField';
 import { forceRemoveEditor } from '../common/RichTextEditor';
@@ -40,10 +40,8 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 	var registeredValues = registeredValuesState[ 0 ];
 	var setRegisteredValues = registeredValuesState[ 1 ];
 
-	// Track whether permalink has been manually edited.
-	var permalinkEditedState = useState( false );
-	var permalinkEdited = permalinkEditedState[ 0 ];
-	var setPermalinkEdited = permalinkEditedState[ 1 ];
+	// Track whether permalink has been manually edited (ref to avoid stale closure in useCallback).
+	var permalinkEditedRef = useRef( false );
 
 	// Featured image state (not in registry).
 	var imageIdState = useState( 0 );
@@ -89,7 +87,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 				initialValues[ field.id ] = field.value;
 			} );
 			setRegisteredValues( initialValues );
-			setPermalinkEdited( false );
+			permalinkEditedRef.current = false;
 		}
 	}, [ isOpen, createFields ] );
 
@@ -107,25 +105,22 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 	 */
 	var handleFieldChange = useCallback( function ( fieldId, val ) {
 		setRegisteredValues( function ( prev ) {
-			var next = {};
-			Object.keys( prev ).forEach( function ( k ) {
-				next[ k ] = prev[ k ];
-			} );
+			var next = Object.assign( {}, prev );
 			next[ fieldId ] = val;
 
 			// Auto-generate slug from name when not manually edited.
-			if ( 'name' === fieldId && ! permalinkEdited ) {
+			if ( 'name' === fieldId && ! permalinkEditedRef.current ) {
 				next.slug = toSlug( val );
 			}
 
 			// Mark permalink as manually edited when slug field changes directly.
 			if ( 'slug' === fieldId ) {
-				setPermalinkEdited( true );
+				permalinkEditedRef.current = true;
 			}
 
 			return next;
 		} );
-	}, [ permalinkEdited ] );
+	}, [] );
 
 	if ( ! isOpen ) {
 		return null;
@@ -223,36 +218,20 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 		setIsSaving( true );
 		setError( '' );
 
-		var payload = {
-			name: nameVal.trim(),
-			slug: registeredValues.slug || '',
-			description: registeredValues.description || '',
-			visibility: registeredValues.visibility || 'publish',
-			forum_status: registeredValues.forum_status || 'open',
-			forum_type: registeredValues.forum_type || 'forum',
-			parent_id: registeredValues.parent_id || 0,
-			order: registeredValues.order || 0,
-			image_id: imageId,
-		};
-
-		// Include registered field values for extension fields (Pro/third-party).
-		fields.forEach( function ( field ) {
-			if ( field.readonly ) {
-				return;
-			}
-
-			var val = registeredValues[ field.id ];
-
-			// For richtext fields, pull latest content from TinyMCE.
-			if ( 'richtext' === field.type && window.tinymce ) {
-				var editorInstance = window.tinymce.get( 'bb-admin-edit-' + field.id + '-0' );
-				if ( editorInstance ) {
-					val = editorInstance.getContent();
-				}
-			}
-
-			payload[ 'registered_field_' + field.id ] = null !== val && undefined !== val ? val : '';
-		} );
+		var payload = Object.assign(
+			{
+				name: nameVal.trim(),
+				slug: registeredValues.slug || '',
+				description: registeredValues.description || '',
+				visibility: registeredValues.visibility || 'publish',
+				forum_status: registeredValues.forum_status || 'open',
+				forum_type: registeredValues.forum_type || 'forum',
+				parent_id: registeredValues.parent_id || 0,
+				order: registeredValues.order || 0,
+				image_id: imageId,
+			},
+			buildRegisteredFieldPayload( fields, registeredValues, 0 )
+		);
 
 		createForum( payload ).then( function ( response ) {
 			if ( ! isMountedRef.current ) {
@@ -289,7 +268,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 			} );
 		}
 		setRegisteredValues( initialValues );
-		setPermalinkEdited( false );
+		permalinkEditedRef.current = false;
 		setImageId( 0 );
 		setImageUrl( '' );
 		setIsUploading( false );
@@ -370,7 +349,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 						);
 					}
 					return (
-						<div key={ item.field.id } className={ nextIsRow ? 'bb-admin-settings-modal__row--separator' : '' }>
+						<div key={ item.field.id } className={ 'richtext' === item.field.type || nextIsRow ? 'bb-admin-settings-modal__row--separator' : '' }>
 							<RegisteredMetaField
 								field={ item.field }
 								value={ registeredValues[ item.field.id ] }

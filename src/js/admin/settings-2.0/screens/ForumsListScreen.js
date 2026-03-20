@@ -16,14 +16,13 @@ import {
 	MenuItem,
 	Modal,
 	TabPanel,
-	TextControl,
 } from '@wordpress/components';
 import { __, _n, sprintf } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { getForums, getForum, saveForum, forumBulkAction, uploadForumImage } from '../utils/ajax';
 import { sanitizeHtml, safeUrl, sanitizeCustomColumns } from '../utils/sanitize';
 import { getPageNumbers } from '../utils/pagination';
-import { toSlug, groupFieldsWithLayout as groupForumFieldsWithLayout } from '../utils/format';
+import { toSlug, groupFieldsWithLayout as groupForumFieldsWithLayout, buildRegisteredFieldPayload } from '../utils/format';
 import { ForumCreateModal } from '../components/forums/ForumCreateModal';
 import { RegisteredMetaField } from '../components/common/RegisteredMetaField';
 import { forceRemoveEditor } from '../components/common/RichTextEditor';
@@ -1455,42 +1454,24 @@ function ForumEditModal( props ) {
 
 		setError( '' );
 
-		var payload = {
+		var registeredPayload = forum.registered_fields
+			? buildRegisteredFieldPayload( forum.registered_fields, registeredValues, forum.id )
+			: {};
+
+		var payload = Object.assign( registeredPayload, {
 			forum_id: forum.id,
 			image_id: imageId,
 			remove_image: removeImage ? 1 : 0,
-		};
-
-		// Build payload from all registered fields.
-		if ( forum.registered_fields && Array.isArray( forum.registered_fields ) ) {
-			forum.registered_fields.forEach( function ( field ) {
-				if ( field.readonly ) {
-					return;
-				}
-
-				var val = registeredValues[ field.id ];
-
-				// For richtext fields, pull latest content from TinyMCE.
-				if ( 'richtext' === field.type && window.tinymce ) {
-					var editorInstance = window.tinymce.get( 'bb-admin-edit-' + field.id + '-' + forum.id );
-					if ( editorInstance ) {
-						val = editorInstance.getContent();
-					}
-				}
-
-				payload[ 'registered_field_' + field.id ] = null !== val && undefined !== val ? val : '';
-			} );
-		}
-
-		// Also pass core fields directly for backward compatibility with save_forum() handler.
-		payload.name = ( registeredValues.name || '' ).trim();
-		payload.slug = registeredValues.slug || '';
-		payload.description = registeredValues.description || '';
-		payload.visibility = registeredValues.visibility || 'publish';
-		payload.forum_status = registeredValues.forum_status || 'open';
-		payload.forum_type = registeredValues.forum_type || 'forum';
-		payload.parent_id = registeredValues.parent_id || 0;
-		payload.order = registeredValues.order || 0;
+			// Core fields for backward compatibility with save_forum() handler.
+			name: ( registeredValues.name || '' ).trim(),
+			slug: registeredValues.slug || '',
+			description: registeredValues.description || '',
+			visibility: registeredValues.visibility || 'publish',
+			forum_status: registeredValues.forum_status || 'open',
+			forum_type: registeredValues.forum_type || 'forum',
+			parent_id: registeredValues.parent_id || 0,
+			order: registeredValues.order || 0,
+		} );
 
 		onSave( payload );
 	};
@@ -1543,7 +1524,7 @@ function ForumEditModal( props ) {
 				);
 			}
 			return (
-				<div key={ item.field.id + '-' + forum.id } className={ nextIsRow ? 'bb-admin-settings-modal__row--separator' : '' }>
+				<div key={ item.field.id + '-' + forum.id } className={ 'richtext' === item.field.type || nextIsRow ? 'bb-admin-settings-modal__row--separator' : '' }>
 					<RegisteredMetaField
 						field={ item.field }
 						value={ registeredValues[ item.field.id ] }

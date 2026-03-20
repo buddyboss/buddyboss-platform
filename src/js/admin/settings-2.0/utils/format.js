@@ -57,12 +57,22 @@ export function groupFieldsWithLayout( fields ) {
 		}
 	};
 
+	// Maximum fields per row by layout type.
+	var maxPerRow = { half: 2, third: 3 };
+
 	fields.forEach( function ( field ) {
 		if ( 'half' === field.layout || 'third' === field.layout ) {
 			// Flush when layout type changes (e.g. third -> half).
 			if ( bufferLayout && bufferLayout !== field.layout ) {
 				flush();
 			}
+
+			// Flush when max per row reached (e.g. 2 for half, 3 for third).
+			var max = maxPerRow[ field.layout ] || 2;
+			if ( buffer.length >= max ) {
+				flush();
+			}
+
 			buffer.push( field );
 			bufferLayout = field.layout;
 		} else {
@@ -74,4 +84,42 @@ export function groupFieldsWithLayout( fields ) {
 	flush();
 
 	return result;
+}
+
+/**
+ * Build registered field payload for AJAX save.
+ *
+ * Iterates registered fields, pulls TinyMCE content for richtext fields,
+ * and returns an object with `registered_field_{id}` keys. Used by all
+ * create/edit modals to avoid duplicating this pattern.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Array}  fields Array of field definitions from the registry.
+ * @param {Object} values Current field values keyed by field ID.
+ * @param {number} itemId Item ID (0 for create, post ID for edit).
+ * @returns {Object} Payload with registered_field_* keys.
+ */
+export function buildRegisteredFieldPayload( fields, values, itemId ) {
+	var payload = {};
+
+	fields.forEach( function ( field ) {
+		if ( field.readonly ) {
+			return;
+		}
+
+		var val = values[ field.id ];
+
+		// For richtext fields, pull latest content from TinyMCE.
+		if ( 'richtext' === field.type && window.tinymce ) {
+			var editor = window.tinymce.get( 'bb-admin-edit-' + field.id + '-' + itemId );
+			if ( editor ) {
+				val = editor.getContent();
+			}
+		}
+
+		payload[ 'registered_field_' + field.id ] = null !== val && undefined !== val ? val : '';
+	} );
+
+	return payload;
 }

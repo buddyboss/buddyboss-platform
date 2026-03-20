@@ -68,7 +68,7 @@ function bb_forums_register_core_meta_fields( $registry, $component ) {
 				$is_child_forum = ! empty( $forum->ID ) && function_exists( 'bb_get_child_forum_group_ids' ) && ! empty( bb_get_child_forum_group_ids( $forum->ID ) );
 
 				// For child group forums, show the full permalink instead of base URL.
-				if ( $is_child_forum && ! empty( $forum->ID ) ) {
+				if ( $is_child_forum ) {
 					return array(
 						'base_url'       => bbp_get_forum_permalink( $forum->ID ),
 						'is_child_forum' => true,
@@ -106,7 +106,7 @@ function bb_forums_register_core_meta_fields( $registry, $component ) {
 		)
 	);
 
-	// Type (Forum/Category) — Figma order: Type, Status, Visibility.
+	// Type (Forum/Category).
 	$registry->register(
 		$component,
 		'forum_type',
@@ -173,7 +173,7 @@ function bb_forums_register_core_meta_fields( $registry, $component ) {
 			// No-op: forum status is saved directly by create_forum()/save_forum()
 			// AJAX handlers via bbp_close_forum()/bbp_open_forum(). Defining
 			// save_value so the field is not marked readonly in the JSON response.
-			'save_value'        => function ( $forum, $value ) {},
+			'save_value'        => function ( $forum, $value ) {}, // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found, Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 			'sanitize_callback' => 'sanitize_key',
 		)
 	);
@@ -212,7 +212,10 @@ function bb_forums_register_core_meta_fields( $registry, $component ) {
 				);
 			},
 			'save_value'        => function ( $forum, $value ) {
-				$forum->post_status = $value;
+				$allowed = array( 'publish', 'private', 'hidden' );
+				if ( in_array( $value, $allowed, true ) ) {
+					$forum->post_status = $value;
+				}
 			},
 			'sanitize_callback' => 'sanitize_key',
 		)

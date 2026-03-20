@@ -1,56 +1,41 @@
 /**
  * BuddyBoss Admin Settings 2.0 - Reply Create Modal
  *
- * Modal with Description, Forum, Discussion, Reply to, Visibility
- * fields for creating a reply.
+ * Uses BB_Admin_Meta_Field_Registry for field rendering via RegisteredMetaField.
+ * Handles cascading async selects: Forum → Discussion → Reply-to.
  *
  * @package BuddyBoss\Core\Administration
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useRef, useEffect } from '@wordpress/element';
+import { useState, useRef, useEffect, useCallback } from '@wordpress/element';
 import {
 	Modal,
 	Button,
-	SelectControl,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
 import { createReply } from '../../utils/ajax';
-import { AsyncSelectField } from '../fields/AsyncSelectField';
-import { RichTextEditor, forceRemoveEditor } from '../common/RichTextEditor';
+import { groupFieldsWithLayout, buildRegisteredFieldPayload } from '../../utils/format';
+import { RegisteredMetaField } from '../common/RegisteredMetaField';
+import { forceRemoveEditor } from '../common/RichTextEditor';
 
 /**
  * Reply Create Modal Component
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param {Object}   props           Component props.
- * @param {boolean}  props.isOpen    Whether the modal is open.
- * @param {Function} props.onClose   Close handler.
- * @param {Function} props.onCreated Success handler (receives reply_id).
+ * @param {Object}   props              Component props.
+ * @param {boolean}  props.isOpen       Whether the modal is open.
+ * @param {Function} props.onClose      Close handler.
+ * @param {Function} props.onCreated    Success handler (receives reply_id).
+ * @param {Array}    props.createFields Registered field definitions from server.
  * @returns {JSX.Element|null} Modal component or null.
  */
-export function ReplyCreateModal( { isOpen, onClose, onCreated } ) {
-	var contentState = useState( '' );
-	var content = contentState[ 0 ];
-	var setContent = contentState[ 1 ];
-
-	var forumIdState = useState( 0 );
-	var forumId = forumIdState[ 0 ];
-	var setForumId = forumIdState[ 1 ];
-
-	var topicIdState = useState( 0 );
-	var topicId = topicIdState[ 0 ];
-	var setTopicId = topicIdState[ 1 ];
-
-	var replyToState = useState( 0 );
-	var replyTo = replyToState[ 0 ];
-	var setReplyTo = replyToState[ 1 ];
-
-	var visibilityState = useState( 'publish' );
-	var visibility = visibilityState[ 0 ];
-	var setVisibility = visibilityState[ 1 ];
+export function ReplyCreateModal( { isOpen, onClose, onCreated, createFields } ) {
+	var registeredValuesState = useState( {} );
+	var registeredValues = registeredValuesState[ 0 ];
+	var setRegisteredValues = registeredValuesState[ 1 ];
 
 	var isSavingState = useState( false );
 	var isSaving = isSavingState[ 0 ];
@@ -60,22 +45,65 @@ export function ReplyCreateModal( { isOpen, onClose, onCreated } ) {
 	var error = errorState[ 0 ];
 	var setError = errorState[ 1 ];
 
-	// Reset keys to force AsyncSelectField re-mount when forum/topic changes.
-	var discussionKeyState = useState( 0 );
-	var discussionKey = discussionKeyState[ 0 ];
-	var setDiscussionKey = discussionKeyState[ 1 ];
+	// Key counters to force AsyncSelectField re-mount on cascading changes.
+	var cascadeKeyState = useState( 0 );
+	var cascadeKey = cascadeKeyState[ 0 ];
+	var setCascadeKey = cascadeKeyState[ 1 ];
 
-	var replyToKeyState = useState( 0 );
-	var replyToKey = replyToKeyState[ 0 ];
-	var setReplyToKey = replyToKeyState[ 1 ];
-
-	// Track mounted state.
 	var isMountedRef = useRef( true );
 	useEffect( function () {
 		isMountedRef.current = true;
 		return function () {
 			isMountedRef.current = false;
 		};
+	}, [] );
+
+	useEffect( function () {
+		if ( isOpen && createFields && Array.isArray( createFields ) ) {
+			var initialValues = {};
+			createFields.forEach( function ( field ) {
+				initialValues[ field.id ] = field.value;
+			} );
+			setRegisteredValues( initialValues );
+		}
+	}, [ isOpen, createFields ] );
+
+	var fields = createFields && Array.isArray( createFields ) ? createFields : [];
+
+	/**
+	 * Handle change for a registered field with cascading reset.
+	 *
+	 * When forum_id changes, reset topic_id and reply_to.
+	 * When topic_id changes, reset reply_to.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {string} fieldId Field ID.
+	 * @param {*}      val     New value.
+	 */
+	var handleFieldChange = useCallback( function ( fieldId, val ) {
+		setRegisteredValues( function ( prev ) {
+			var next = {};
+			Object.keys( prev ).forEach( function ( k ) {
+				next[ k ] = prev[ k ];
+			} );
+			next[ fieldId ] = val;
+
+			// Cascade: forum_id change resets topic_id and reply_to.
+			if ( 'forum_id' === fieldId ) {
+				next.topic_id = 0;
+				next.reply_to = 0;
+				setCascadeKey( function ( k ) { return k + 1; } );
+			}
+
+			// Cascade: topic_id change resets reply_to.
+			if ( 'topic_id' === fieldId ) {
+				next.reply_to = 0;
+				setCascadeKey( function ( k ) { return k + 1; } );
+			}
+
+			return next;
+		} );
 	}, [] );
 
 	if ( ! isOpen ) {
@@ -88,12 +116,23 @@ export function ReplyCreateModal( { isOpen, onClose, onCreated } ) {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	var handleCreate = function () {
-		if ( ! content.trim() ) {
+		var contentVal = registeredValues.content || '';
+		if ( ! contentVal.trim() ) {
+			// Pull from TinyMCE if available.
+			if ( window.tinymce ) {
+				var editor = window.tinymce.get( 'bb-admin-edit-content-0' );
+				if ( editor ) {
+					contentVal = editor.getContent();
+				}
+			}
+		}
+
+		if ( ! contentVal.trim() ) {
 			setError( __( 'Description is required.', 'buddyboss' ) );
 			return;
 		}
 
-		if ( ! topicId ) {
+		if ( ! registeredValues.topic_id ) {
 			setError( __( 'Discussion is required.', 'buddyboss' ) );
 			return;
 		}
@@ -101,13 +140,18 @@ export function ReplyCreateModal( { isOpen, onClose, onCreated } ) {
 		setIsSaving( true );
 		setError( '' );
 
-		createReply( {
-			content: content,
-			forum_id: forumId,
-			topic_id: topicId,
-			reply_to: replyTo,
-			visibility: visibility,
-		} ).then( function ( response ) {
+		var payload = Object.assign(
+			{
+				content: contentVal,
+				forum_id: registeredValues.forum_id || 0,
+				topic_id: registeredValues.topic_id || 0,
+				reply_to: registeredValues.reply_to || 0,
+				visibility: registeredValues.visibility || 'publish',
+			},
+			buildRegisteredFieldPayload( fields, registeredValues, 0 )
+		);
+
+		createReply( payload ).then( function ( response ) {
 			if ( ! isMountedRef.current ) {
 				return;
 			}
@@ -129,80 +173,68 @@ export function ReplyCreateModal( { isOpen, onClose, onCreated } ) {
 		} );
 	};
 
-	/**
-	 * Reset all form fields.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
 	var resetForm = function () {
-		setContent( '' );
-		setForumId( 0 );
-		setTopicId( 0 );
-		setReplyTo( 0 );
-		setVisibility( 'publish' );
+		var initialValues = {};
+		if ( createFields && Array.isArray( createFields ) ) {
+			createFields.forEach( function ( field ) {
+				initialValues[ field.id ] = field.value;
+			} );
+		}
+		setRegisteredValues( initialValues );
 		setError( '' );
+		setCascadeKey( function ( k ) { return k + 1; } );
 
-		// Reset TinyMCE editor content.
 		if ( window.tinymce ) {
-			var editor = window.tinymce.get( 'bb-reply-create-description' );
-			if ( editor ) {
-				editor.setContent( '' );
-			}
+			fields.forEach( function ( field ) {
+				if ( 'richtext' === field.type ) {
+					var editor = window.tinymce.get( 'bb-admin-edit-' + field.id + '-0' );
+					if ( editor ) {
+						editor.setContent( '' );
+					}
+				}
+			} );
 		}
 	};
 
-	/**
-	 * Handle modal close and reset form state.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
 	var handleClose = function () {
-		forceRemoveEditor( 'bb-reply-create-description' );
+		fields.forEach( function ( field ) {
+			if ( 'richtext' === field.type ) {
+				forceRemoveEditor( 'bb-admin-edit-' + field.id + '-0' );
+			}
+		} );
 		resetForm();
 		onClose();
 	};
 
 	/**
-	 * Handle forum change — reset discussion and reply-to.
+	 * Build asyncExtraParams for cascading fields.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param {string} val Selected forum ID.
+	 * @param {Object} field Field definition.
+	 * @returns {Object} Extra params for async select.
 	 */
-	var handleForumChange = function ( val ) {
-		var newForumId = parseInt( val, 10 ) || 0;
-		setForumId( newForumId );
-		setTopicId( 0 );
-		setReplyTo( 0 );
-		setDiscussionKey( function ( prev ) {
-			return prev + 1;
-		} );
-		setReplyToKey( function ( prev ) {
-			return prev + 1;
-		} );
+	var getAsyncExtraParams = function ( field ) {
+		if ( ! field.async_depends_on ) {
+			return {};
+		}
+
+		var dependsValue = registeredValues[ field.async_depends_on ];
+		if ( ! dependsValue ) {
+			return {};
+		}
+
+		var params = {};
+		params[ field.async_depends_on ] = dependsValue;
+		return params;
 	};
 
-	/**
-	 * Handle discussion change — reset reply-to.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {string} val Selected topic ID.
-	 */
-	var handleTopicChange = function ( val ) {
-		var newTopicId = parseInt( val, 10 ) || 0;
-		setTopicId( newTopicId );
-		setReplyTo( 0 );
-		setReplyToKey( function ( prev ) {
-			return prev + 1;
-		} );
-	};
+	// Render visible fields.
+	var visibleFields = fields.filter( function ( field ) {
+		return field.visible;
+	} );
 
-	var visibilityOptions = [
-		{ value: 'publish', label: __( 'Public', 'buddyboss' ) },
-		{ value: 'private', label: __( 'Private', 'buddyboss' ) },
-		{ value: 'hidden', label: __( 'Hidden', 'buddyboss' ) },
-	];
+	var grouped = groupFieldsWithLayout( visibleFields );
 
 	return (
 		<Modal
@@ -216,67 +248,43 @@ export function ReplyCreateModal( { isOpen, onClose, onCreated } ) {
 					<p className="bb-admin-settings-modal__error">{ error }</p>
 				) }
 
-				<div className="bb-admin-settings-modal__row--separator">
-					<RichTextEditor
-						id="bb-reply-create-description"
-						label={ __( 'Description', 'buddyboss' ) }
-						value={ content }
-						onChange={ setContent }
-					/>
-				</div>
+				{ grouped.map( function ( item, idx ) {
+					if ( 'row' === item.type ) {
+						return (
+							<div key={ 'row-' + idx } className="bb-admin-meta-field__row bb-admin-settings-modal__row bb-admin-settings-modal__row--separator">
+								{ item.fields.map( function ( field ) {
+									return (
+										<RegisteredMetaField
+											key={ field.id + '-' + cascadeKey }
+											field={ Object.assign( {}, field, { asyncExtraParams: getAsyncExtraParams( field ) } ) }
+											value={ registeredValues[ field.id ] }
+											onChange={ function ( val ) {
+												handleFieldChange( field.id, val );
+											} }
+											itemId={ 0 }
+										/>
+									);
+								} ) }
+							</div>
+						);
+					}
 
-				<div className="components-base-control">
-					<label className="components-base-control__label" htmlFor="bb-reply-create-forum">
-						{ __( 'Forum', 'buddyboss' ) }
-					</label>
-					<AsyncSelectField
-						id="bb-reply-create-forum"
-						value={ String( forumId ) }
-						onChange={ handleForumChange }
-						asyncAction="bb_admin_forum_autocomplete"
-						placeholder={ __( 'Select Forum', 'buddyboss' ) }
-					/>
-				</div>
+					// Separators: after Description and Reply-to.
+					var hasSeparator = 'richtext' === item.field.type || 'reply_to' === item.field.id;
 
-				<div className="components-base-control">
-					<label className="components-base-control__label" htmlFor="bb-reply-create-discussion">
-						{ __( 'Discussion', 'buddyboss' ) }
-					</label>
-					<AsyncSelectField
-						id="bb-reply-create-discussion"
-						key={ 'discussion-' + discussionKey }
-						value={ String( topicId ) }
-						onChange={ handleTopicChange }
-						asyncAction="bb_admin_discussion_autocomplete"
-						asyncExtraParams={ forumId ? { forum_id: forumId } : {} }
-						placeholder={ __( 'Select Discussion', 'buddyboss' ) }
-					/>
-				</div>
-
-				<div className="components-base-control bb-admin-settings-modal__row--separator">
-					<label className="components-base-control__label" htmlFor="bb-reply-create-reply-to">
-						{ __( 'Reply to', 'buddyboss' ) }
-					</label>
-					<AsyncSelectField
-						id="bb-reply-create-reply-to"
-						key={ 'reply-to-' + replyToKey }
-						value={ String( replyTo ) }
-						onChange={ function ( val ) {
-							setReplyTo( parseInt( val, 10 ) || 0 );
-						} }
-						asyncAction="bb_admin_reply_autocomplete"
-						asyncExtraParams={ topicId ? { topic_id: topicId } : {} }
-						placeholder={ __( 'Select Reply', 'buddyboss' ) }
-					/>
-				</div>
-
-				<SelectControl
-					label={ __( 'Visibility', 'buddyboss' ) }
-					value={ visibility }
-					options={ visibilityOptions }
-					onChange={ setVisibility }
-					__nextHasNoMarginBottom
-				/>
+					return (
+						<div key={ item.field.id + '-' + cascadeKey } className={ hasSeparator ? 'bb-admin-settings-modal__row--separator' : '' }>
+							<RegisteredMetaField
+								field={ Object.assign( {}, item.field, { asyncExtraParams: getAsyncExtraParams( item.field ) } ) }
+								value={ registeredValues[ item.field.id ] }
+								onChange={ function ( val ) {
+									handleFieldChange( item.field.id, val );
+								} }
+								itemId={ 0 }
+							/>
+						</div>
+					);
+				} ) }
 			</div>
 
 			<div className="bb-reply-modal__footer bb-admin-settings-modal__footer">
@@ -291,7 +299,7 @@ export function ReplyCreateModal( { isOpen, onClose, onCreated } ) {
 					variant="primary"
 					onClick={ handleCreate }
 					isBusy={ isSaving }
-					disabled={ isSaving || ! content.trim() || ! topicId }
+					disabled={ isSaving || ! registeredValues.topic_id }
 				>
 					{ __( 'Save', 'buddyboss' ) }
 				</Button>

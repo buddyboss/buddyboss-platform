@@ -951,3 +951,33 @@ select.bb-admin-settings__select {
         white-space: nowrap;
     }
 }
+
+// Author info display (avatar + name link) for meta field registry.
+.bb-admin-meta-field__author-info {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-top: 4px;
+
+	.bb-admin-meta-field__author-avatar {
+		border-radius: 50%;
+		flex-shrink: 0;
+	}
+
+	.bb-admin-meta-field__author-name {
+		font-size: 13px;
+		font-weight: 500;
+		color: $bb-background-brand-primary-color;
+		text-decoration: none;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+}
+
+// Disabled state for meta field registry fields.
+.bb-admin-meta-field--disabled {
+	opacity: 0.6;
+	pointer-events: none;
+}

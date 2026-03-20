@@ -21,9 +21,10 @@ import { decodeEntities } from '@wordpress/html-entities';
 import { getReplies, getReply, saveReply, deleteReply, replyBulkAction } from '../utils/ajax';
 import { sanitizeHtml, safeUrl, sanitizeCustomColumns } from '../utils/sanitize';
 import { getPageNumbers } from '../utils/pagination';
+import { groupFieldsWithLayout, buildRegisteredFieldPayload } from '../utils/format';
 import { ReplyCreateModal } from '../components/forums/ReplyCreateModal';
-import { AsyncSelectField } from '../components/fields/AsyncSelectField';
-import { RichTextEditor, forceRemoveEditor } from '../components/common/RichTextEditor';
+import { RegisteredMetaField } from '../components/common/RegisteredMetaField';
+import { forceRemoveEditor } from '../components/common/RichTextEditor';
 
 /**
  * Sort options for replies.
@@ -140,6 +141,10 @@ export default function RepliesListScreen( { onNavigate } ) {
 	var setIsCreateOpen = isCreateOpenState[ 1 ];
 
 	// Edit modal.
+	var createFieldsState = useState( [] );
+	var createFields = createFieldsState[ 0 ];
+	var setCreateFields = createFieldsState[ 1 ];
+
 	var editReplyState = useState( null );
 	var editReply = editReplyState[ 0 ];
 	var setEditReply = editReplyState[ 1 ];
@@ -156,26 +161,14 @@ export default function RepliesListScreen( { onNavigate } ) {
 	var isEditSaving = isEditSavingState[ 0 ];
 	var setIsEditSaving = isEditSavingState[ 1 ];
 
-	// Edit form fields.
-	var editContentState = useState( '' );
-	var editContent = editContentState[ 0 ];
-	var setEditContent = editContentState[ 1 ];
+	// Edit form: registered field values keyed by field ID.
+	var editRegisteredValuesState = useState( {} );
+	var editRegisteredValues = editRegisteredValuesState[ 0 ];
+	var setEditRegisteredValues = editRegisteredValuesState[ 1 ];
 
-	var editForumIdState = useState( 0 );
-	var editForumId = editForumIdState[ 0 ];
-	var setEditForumId = editForumIdState[ 1 ];
-
-	var editTopicIdState = useState( 0 );
-	var editTopicId = editTopicIdState[ 0 ];
-	var setEditTopicId = editTopicIdState[ 1 ];
-
-	var editReplyToState = useState( 0 );
-	var editReplyTo = editReplyToState[ 0 ];
-	var setEditReplyTo = editReplyToState[ 1 ];
-
-	var editVisibilityState = useState( 'publish' );
-	var editVisibility = editVisibilityState[ 0 ];
-	var setEditVisibility = editVisibilityState[ 1 ];
+	var editCascadeKeyState = useState( 0 );
+	var editCascadeKey = editCascadeKeyState[ 0 ];
+	var setEditCascadeKey = editCascadeKeyState[ 1 ];
 
 	var editErrorState = useState( '' );
 	var editError = editErrorState[ 0 ];
@@ -284,6 +277,9 @@ export default function RepliesListScreen( { onNavigate } ) {
 				}
 				if ( response.data.columns ) {
 					setColumns( response.data.columns );
+				}
+				if ( response.data.create_fields ) {
+					setCreateFields( response.data.create_fields );
 				}
 				hasMetaRef.current = true;
 			} else {
@@ -549,11 +545,15 @@ export default function RepliesListScreen( { onNavigate } ) {
 			if ( response.success && response.data ) {
 				var data = response.data;
 				setEditReply( data );
-				setEditContent( data.content || '' );
-				setEditForumId( data.forum_id || 0 );
-				setEditTopicId( data.topic_id || 0 );
-				setEditReplyTo( data.reply_to || 0 );
-				setEditVisibility( data.post_status || 'publish' );
+
+				// Initialize registered values from registered_fields.
+				var initVals = {};
+				if ( data.registered_fields && Array.isArray( data.registered_fields ) ) {
+					data.registered_fields.forEach( function ( field ) {
+						initVals[ field.id ] = field.value;
+					} );
+				}
+				setEditRegisteredValues( initVals );
 			} else {
 				setIsEditOpen( false );
 				setNotice( {
@@ -580,7 +580,16 @@ export default function RepliesListScreen( { onNavigate } ) {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	var handleEditSave = function () {
-		if ( ! editContent.trim() ) {
+		var contentVal = editRegisteredValues.content || '';
+		// Pull from TinyMCE if available.
+		if ( window.tinymce ) {
+			var tinymceEditor = window.tinymce.get( 'bb-admin-edit-content-' + editReply.id );
+			if ( tinymceEditor ) {
+				contentVal = tinymceEditor.getContent();
+			}
+		}
+
+		if ( ! contentVal.trim() ) {
 			setEditError( __( 'Description is required.', 'buddyboss' ) );
 			return;
 		}
@@ -588,17 +597,30 @@ export default function RepliesListScreen( { onNavigate } ) {
 		setIsEditSaving( true );
 		setEditError( '' );
 
-		saveReply( {
+		var registeredPayload = editReply.registered_fields
+			? buildRegisteredFieldPayload( editReply.registered_fields, editRegisteredValues, editReply.id )
+			: {};
+
+		var payload = Object.assign( registeredPayload, {
 			reply_id: editReply.id,
-			content: editContent,
-			forum_id: editForumId,
-			topic_id: editTopicId,
-			reply_to: editReplyTo,
-			visibility: editVisibility,
-		} ).then( function ( response ) {
+			content: contentVal,
+			forum_id: editRegisteredValues.forum_id || 0,
+			topic_id: editRegisteredValues.topic_id || 0,
+			reply_to: editRegisteredValues.reply_to || 0,
+			visibility: editRegisteredValues.visibility || 'publish',
+		} );
+
+		saveReply( payload ).then( function ( response ) {
 			setIsEditSaving( false );
 			if ( response.success ) {
-				forceRemoveEditor( 'bb-reply-edit-description' );
+				// Clean up TinyMCE editors for richtext fields.
+				if ( editReply && editReply.registered_fields ) {
+					editReply.registered_fields.forEach( function ( field ) {
+						if ( 'richtext' === field.type ) {
+							forceRemoveEditor( 'bb-admin-edit-' + field.id + '-' + editReply.id );
+						}
+					} );
+				}
 				setIsEditOpen( false );
 				setEditReply( null );
 				setNotice( {
@@ -621,7 +643,14 @@ export default function RepliesListScreen( { onNavigate } ) {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	var handleEditClose = function () {
-		forceRemoveEditor( 'bb-reply-edit-description' );
+		// Clean up TinyMCE editors for richtext fields.
+		if ( editReply && editReply.registered_fields ) {
+			editReply.registered_fields.forEach( function ( field ) {
+				if ( 'richtext' === field.type ) {
+					forceRemoveEditor( 'bb-admin-edit-' + field.id + '-' + editReply.id );
+				}
+			} );
+		}
 		setIsEditOpen( false );
 		setEditReply( null );
 	};
@@ -776,13 +805,6 @@ export default function RepliesListScreen( { onNavigate } ) {
 			return CORE_COLUMNS.indexOf( key ) === -1;
 		} );
 	}, [ columns ] );
-
-	// Visibility options for edit modal.
-	var visibilityOptions = [
-		{ value: 'publish', label: __( 'Public', 'buddyboss' ) },
-		{ value: 'private', label: __( 'Private', 'buddyboss' ) },
-		{ value: 'hidden', label: __( 'Hidden', 'buddyboss' ) },
-	];
 
 	return (
 		<div className="bb-replies-list">
@@ -1182,13 +1204,18 @@ export default function RepliesListScreen( { onNavigate } ) {
 					setIsCreateOpen( false );
 				} }
 				onCreated={ handleReplyCreated }
+				createFields={ createFields }
 			/>
 
 			{ /* Edit Modal */ }
 			{ isEditOpen && (
 				<Modal
 					title={ __( 'Edit Reply', 'buddyboss' ) }
-					onRequestClose={ handleEditClose }
+					onRequestClose={ function () {
+						if ( ! isEditSaving ) {
+							handleEditClose();
+						}
+					} }
 					className="bb-reply-edit-modal bb-reply-modal bb-admin-settings-modal"
 					shouldCloseOnClickOutside={ false }
 				>
@@ -1203,69 +1230,90 @@ export default function RepliesListScreen( { onNavigate } ) {
 									<p className="bb-admin-settings-modal__error">{ editError }</p>
 								) }
 
-								<div className="bb-admin-settings-modal__row--separator">
-									<RichTextEditor
-										id="bb-reply-edit-description"
-										label={ __( 'Description', 'buddyboss' ) }
-										value={ editContent }
-										onChange={ setEditContent }
-									/>
-								</div>
+								{ editReply && editReply.registered_fields && ( function () {
+									var visibleFields = editReply.registered_fields.filter( function ( field ) {
+										return field.visible;
+									} );
+									var grouped = groupFieldsWithLayout( visibleFields );
 
-								<div className="components-base-control">
-									<label className="components-base-control__label" htmlFor="bb-reply-edit-forum">
-										{ __( 'Forum', 'buddyboss' ) }
-									</label>
-									<AsyncSelectField
-										id="bb-reply-edit-forum"
-										value={ String( editForumId ) }
-										onChange={ function ( val ) {
-											setEditForumId( parseInt( val, 10 ) || 0 );
-										} }
-										asyncAction="bb_admin_forum_autocomplete"
-										placeholder={ __( 'Select Forum', 'buddyboss' ) }
-									/>
-								</div>
+									var getEditAsyncExtraParams = function ( field ) {
+										if ( ! field.async_depends_on ) {
+											return {};
+										}
+										var depVal = editRegisteredValues[ field.async_depends_on ];
+										if ( ! depVal ) {
+											return {};
+										}
+										var params = {};
+										params[ field.async_depends_on ] = depVal;
+										return params;
+									};
 
-								<div className="components-base-control">
-									<label className="components-base-control__label" htmlFor="bb-reply-edit-discussion">
-										{ __( 'Discussion', 'buddyboss' ) }
-									</label>
-									<AsyncSelectField
-										id="bb-reply-edit-discussion"
-										value={ String( editTopicId ) }
-										onChange={ function ( val ) {
-											setEditTopicId( parseInt( val, 10 ) || 0 );
-										} }
-										asyncAction="bb_admin_discussion_autocomplete"
-										asyncExtraParams={ editForumId ? { forum_id: editForumId } : {} }
-										placeholder={ __( 'Select Discussion', 'buddyboss' ) }
-									/>
-								</div>
+									var handleEditFieldChange = function ( fieldId, val ) {
+										setEditRegisteredValues( function ( prev ) {
+											var next = {};
+											Object.keys( prev ).forEach( function ( k ) {
+												next[ k ] = prev[ k ];
+											} );
+											next[ fieldId ] = val;
 
-								<div className="components-base-control bb-admin-settings-modal__row--separator">
-									<label className="components-base-control__label" htmlFor="bb-reply-edit-reply-to">
-										{ __( 'Reply to', 'buddyboss' ) }
-									</label>
-									<AsyncSelectField
-										id="bb-reply-edit-reply-to"
-										value={ String( editReplyTo ) }
-										onChange={ function ( val ) {
-											setEditReplyTo( parseInt( val, 10 ) || 0 );
-										} }
-										asyncAction="bb_admin_reply_autocomplete"
-										asyncExtraParams={ editTopicId ? { topic_id: editTopicId } : {} }
-										placeholder={ __( 'Select Reply', 'buddyboss' ) }
-									/>
-								</div>
+											if ( 'forum_id' === fieldId ) {
+												next.topic_id = 0;
+												next.reply_to = 0;
+												setEditCascadeKey( function ( k ) { return k + 1; } );
+											}
+											if ( 'topic_id' === fieldId ) {
+												next.reply_to = 0;
+												setEditCascadeKey( function ( k ) { return k + 1; } );
+											}
 
-								<SelectControl
-									label={ __( 'Visibility', 'buddyboss' ) }
-									value={ editVisibility }
-									options={ visibilityOptions }
-									onChange={ setEditVisibility }
-									__nextHasNoMarginBottom
-								/>
+											return next;
+										} );
+									};
+
+									return grouped.map( function ( item, idx ) {
+										var nextItem = grouped[ idx + 1 ];
+										var nextIsRow = nextItem && 'row' === nextItem.type;
+
+										if ( 'row' === item.type ) {
+											// Only add separator if next item is also a row; author row flows into author_info below.
+											var rowSeparator = nextIsRow;
+											return (
+												<div key={ 'row-' + idx } className={ 'bb-admin-meta-field__row bb-admin-settings-modal__row' + ( rowSeparator ? ' bb-admin-settings-modal__row--separator' : '' ) }>
+													{ item.fields.map( function ( field ) {
+														return (
+															<RegisteredMetaField
+																key={ field.id + '-' + editReply.id + '-' + editCascadeKey }
+																field={ Object.assign( {}, field, { asyncExtraParams: getEditAsyncExtraParams( field ) } ) }
+																value={ editRegisteredValues[ field.id ] }
+																onChange={ function ( val ) {
+																	handleEditFieldChange( field.id, val );
+																} }
+																itemId={ editReply.id }
+															/>
+														);
+													} ) }
+												</div>
+											);
+										}
+
+										// Separators: after richtext, reply_to, and author_info (before Visibility).
+										var hasSeparator = 'richtext' === item.field.type || 'reply_to' === item.field.id || 'author_info' === item.field.id;
+
+										return (
+											<div key={ item.field.id + '-' + editReply.id + '-' + editCascadeKey } className={ hasSeparator ? 'bb-admin-settings-modal__row--separator' : '' }>
+												<RegisteredMetaField
+													field={ Object.assign( {}, item.field, { asyncExtraParams: getEditAsyncExtraParams( item.field ) } ) }
+													value={ editRegisteredValues[ item.field.id ] }
+													onChange={ function ( val ) {
+														handleEditFieldChange( item.field.id, val );
+													} }
+													itemId={ editReply.id }
+												/>
+											</div>
+										);
+									} );
+								} )() }
 							</div>
 
 							<div className="bb-reply-modal__footer bb-admin-settings-modal__footer">
@@ -1280,7 +1328,7 @@ export default function RepliesListScreen( { onNavigate } ) {
 									variant="primary"
 									onClick={ handleEditSave }
 									isBusy={ isEditSaving }
-									disabled={ isEditSaving || ! editContent.trim() }
+									disabled={ isEditSaving }
 								>
 									{ __( 'Save', 'buddyboss' ) }
 								</Button>
