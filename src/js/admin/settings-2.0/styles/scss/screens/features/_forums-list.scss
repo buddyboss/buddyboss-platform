@@ -888,6 +888,13 @@
 			max-width: 200px;
 		}
 	}
+
+	&__tab-content {
+
+		> .components-base-control {
+			margin-bottom: 16px;
+		}
+	}
 }
 
 #section-forum_permalinks_section,

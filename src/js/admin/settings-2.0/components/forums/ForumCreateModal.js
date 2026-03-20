@@ -349,7 +349,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 						);
 					}
 					return (
-						<div key={ item.field.id } className={ 'richtext' === item.field.type || nextIsRow ? 'bb-admin-settings-modal__row--separator' : '' }>
+						<div key={ item.field.id } className={ 'components-base-control' + ( 'richtext' === item.field.type || nextIsRow ? ' bb-admin-settings-modal__row--separator' : '' ) }>
 							<RegisteredMetaField
 								field={ item.field }
 								value={ registeredValues[ item.field.id ] }
