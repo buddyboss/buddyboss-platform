@@ -167,14 +167,18 @@ class BB_Admin_Reported_Content_Ajax {
 		if ( ! empty( $result['moderations'] ) ) {
 
 			// Pre-warm user caches for all content owners to avoid N+1 queries.
+			// Store owner IDs in a map so we don't call bp_moderation_get_content_owner_id() twice.
 			$owner_ids = array();
+			$owner_map = array();
 			foreach ( $result['moderations'] as $moderation ) {
 				$owner_id = bp_moderation_get_content_owner_id( (int) $moderation->item_id, $moderation->item_type );
 				if ( is_array( $owner_id ) ) {
 					$owner_id = ! empty( $owner_id ) ? (int) $owner_id[0] : 0;
 				}
-				if ( (int) $owner_id > 0 ) {
-					$owner_ids[] = (int) $owner_id;
+				$owner_id                        = (int) $owner_id;
+				$owner_map[ $moderation->id ] = $owner_id;
+				if ( $owner_id > 0 ) {
+					$owner_ids[] = $owner_id;
 				}
 			}
 			if ( ! empty( $owner_ids ) ) {
@@ -193,12 +197,8 @@ class BB_Admin_Reported_Content_Ajax {
 				// Content URL.
 				$content_url = bp_moderation_get_permalink( $item_id, $item_type );
 
-				// Content owner.
-				$owner_id = bp_moderation_get_content_owner_id( $item_id, $item_type );
-				if ( is_array( $owner_id ) ) {
-					$owner_id = ! empty( $owner_id ) ? (int) $owner_id[0] : 0;
-				}
-				$owner_id = (int) $owner_id;
+				// Content owner (cached from first pass).
+				$owner_id = isset( $owner_map[ $moderation->id ] ) ? $owner_map[ $moderation->id ] : 0;
 
 				$owner_data = array(
 					'user_id'      => $owner_id,
@@ -373,10 +373,18 @@ class BB_Admin_Reported_Content_Ajax {
 		// user_report=0 (content blocks with reasons) and should still appear.
 		$reporters_raw = BP_Moderation::get_moderation_reporters( $moderation_id );
 
-		// Pre-warm user caches for reporters.
+		// Pre-warm user and term caches for reporters to avoid N+1 queries.
 		if ( ! empty( $reporters_raw ) ) {
 			$reporter_user_ids = wp_list_pluck( $reporters_raw, 'user_id' );
 			cache_users( array_map( 'intval', $reporter_user_ids ) );
+
+			// _prime_term_caches() is available since WP 6.2; guard for WP 6.0 compat.
+			if ( function_exists( '_prime_term_caches' ) ) {
+				$term_ids = array_unique( array_filter( array_map( 'intval', wp_list_pluck( $reporters_raw, 'category_id' ) ) ) );
+				if ( ! empty( $term_ids ) ) {
+					_prime_term_caches( $term_ids );
+				}
+			}
 		}
 
 		$reporters = array();

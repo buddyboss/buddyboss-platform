@@ -699,8 +699,8 @@ export function getFlaggedMembers( params, options ) {
  * @param {number} userId User ID.
  * @return {Promise} Promise resolving to response.
  */
-export function getMemberReport( userId, moderationId ) {
-	return ajaxFetch( 'bb_admin_get_member_report', { user_id: userId, moderation_id: moderationId } );
+export function getMemberReport( userId, moderationId, options ) {
+	return ajaxFetch( 'bb_admin_get_member_report', { user_id: userId, moderation_id: moderationId }, options || {} );
 }
 
 /**
@@ -766,8 +766,8 @@ export function getReportedContent( params, options ) {
  * @param {number} moderationId Moderation record ID.
  * @return {Promise} Promise resolving to response.
  */
-export function getContentReport( moderationId ) {
-	return ajaxFetch( 'bb_admin_get_content_report', { moderation_id: moderationId } );
+export function getContentReport( moderationId, options ) {
+	return ajaxFetch( 'bb_admin_get_content_report', { moderation_id: moderationId }, options || {} );
 }
 
 /**

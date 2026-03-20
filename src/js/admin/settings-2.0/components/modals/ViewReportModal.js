@@ -42,11 +42,13 @@ export function ViewReportModal( { isOpen, onClose, member } ) {
 			return;
 		}
 
+		var controller = new AbortController();
+
 		setIsLoading( true );
 		setError( '' );
 		setReport( null );
 
-		getMemberReport( member.user_id, member.id )
+		getMemberReport( member.user_id, member.id, { signal: controller.signal } )
 			.then( function ( response ) {
 				setIsLoading( false );
 				if ( response.success && response.data ) {
@@ -55,10 +57,17 @@ export function ViewReportModal( { isOpen, onClose, member } ) {
 					setError( ( response.data && response.data.message ) || __( 'Failed to load report.', 'buddyboss' ) );
 				}
 			} )
-			.catch( function () {
+			.catch( function ( err ) {
+				if ( err && 'AbortError' === err.name ) {
+					return;
+				}
 				setIsLoading( false );
 				setError( __( 'Failed to load report.', 'buddyboss' ) );
 			} );
+
+		return function () {
+			controller.abort();
+		};
 	}, [ isOpen, member ] );
 
 	if ( ! isOpen ) {

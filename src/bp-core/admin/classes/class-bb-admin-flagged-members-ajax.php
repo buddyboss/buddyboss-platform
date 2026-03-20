@@ -253,10 +253,18 @@ class BB_Admin_Flagged_Members_Ajax {
 			array( 'user_repoted' => true )
 		);
 
-		// Pre-warm user caches for reporters.
+		// Pre-warm user and term caches for reporters to avoid N+1 queries.
 		if ( ! empty( $reporters_raw ) ) {
 			$reporter_user_ids = wp_list_pluck( $reporters_raw, 'user_id' );
 			cache_users( array_map( 'intval', $reporter_user_ids ) );
+
+			// _prime_term_caches() is available since WP 6.2; guard for WP 6.0 compat.
+			if ( function_exists( '_prime_term_caches' ) ) {
+				$term_ids = array_unique( array_filter( array_map( 'intval', wp_list_pluck( $reporters_raw, 'category_id' ) ) ) );
+				if ( ! empty( $term_ids ) ) {
+					_prime_term_caches( $term_ids );
+				}
+			}
 		}
 
 		$reporters = array();

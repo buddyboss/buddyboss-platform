@@ -1712,6 +1712,45 @@ if ( ! function_exists( 'bp_moderation_get_settings_fields_for_section' ) ) {
 	}
 }
 
+/**
+ * Fire the legacy `bp_admin_setting_moderation_register_fields` hook after
+ * Settings 2.0 finishes registering moderation fields.
+ *
+ * The original hook passed a `BP_Admin_Setting_Moderation` instance. Settings 2.0
+ * no longer uses that class, so a no-op stub is passed to satisfy callbacks
+ * that call add_section()/add_field() on the argument.
+ *
+ * @since BuddyBoss 1.5.6
+ * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_moderation_after_register_settings_fields'} instead.
+ */
+add_action(
+	'bb_moderation_after_register_settings_fields',
+	static function () {
+		do_action_deprecated(
+			'bp_admin_setting_moderation_register_fields',
+			array(
+				new class() {
+					/**
+					 * No-op stub for BP_Admin_Setting_tab::add_section().
+					 *
+					 * @param mixed ...$args Ignored.
+					 */
+					public function add_section( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+
+					/**
+					 * No-op stub for BP_Admin_Setting_tab::add_field().
+					 *
+					 * @param mixed ...$args Ignored.
+					 */
+					public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+				},
+			),
+			'BuddyBoss [BBVERSION]',
+			'bb_moderation_after_register_settings_fields'
+		);
+	}
+);
+
 if ( ! function_exists( 'bp_moderation_admin_category_listing_add_tab' ) ) {
 	/**
 	 * Legacy navigation tab for Moderation > Reporting Categories.

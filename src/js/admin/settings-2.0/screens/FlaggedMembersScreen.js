@@ -497,7 +497,7 @@ export function FlaggedMembersScreen() {
 					{ ! isLoading && total > 0 && (
 						<div className="bb-admin-flagged-members__footer">
 							<span className="bb-admin-flagged-members__item-count">
-								{ total } { __( 'items', 'buddyboss' ) }
+								{ total } { total === 1 ? __( 'item', 'buddyboss' ) : __( 'items', 'buddyboss' ) }
 							</span>
 
 							{ totalPages > 1 && (
