@@ -556,6 +556,10 @@
             flex: 1;
             // 245px (label width) + 32px (gap) = 277px offset to align with sibling field content.
             margin-left: 277px;
+
+            &:has(> .bb-admin-settings-form__field-input-wrapper > .bb-admin-empty-state) {
+                margin-left: 0;
+            }
         }
 
         // Full-width field types (checkbox_list) should span the entire card when unlabeled.
