@@ -825,6 +825,12 @@ class BB_Admin_Forums_Ajax {
 		$processed = 0;
 		$failed    = 0;
 
+		// Prime the post cache in a single query to prevent N+1 get_post() calls.
+		// _prime_post_caches() is public since WP 6.1; guard for WP 6.0 compat.
+		if ( function_exists( '_prime_post_caches' ) ) {
+			_prime_post_caches( $forum_ids, false, false );
+		}
+
 		// Populate legacy $_POST keys once before loop — values are constant across all forums.
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
 		if ( 'edit' === $do_action ) {

@@ -3087,15 +3087,15 @@ function bb_sync_blogs_component_state( $is_feed_enabled_cb ) {
 function bb_admin_verify_ajax_request( $nonce_action ) {
 	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
 		wp_send_json_error(
-				array( 'message' => __( 'Permission denied.', 'buddyboss' ) ),
-				403
+			array( 'message' => __( 'Permission denied.', 'buddyboss' ) ),
+			403
 		);
 	}
 
 	if ( ! check_ajax_referer( $nonce_action, 'nonce', false ) ) {
 		wp_send_json_error(
-				array( 'message' => __( 'Security check failed.', 'buddyboss' ) ),
-				403
+			array( 'message' => __( 'Security check failed.', 'buddyboss' ) ),
+			403
 		);
 	}
 }

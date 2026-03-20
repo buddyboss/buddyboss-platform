@@ -281,10 +281,10 @@ function bb_activity_register_settings_panel_fields( $edit_time_options = array(
 			'label'       => __( 'Activity Feed Filters', 'buddyboss' ),
 			'type'        => 'checkbox_list',
 			'description' => __( 'Allow members to filter activity posts by:', 'buddyboss' ),
-			'default'     => bb_get_enabled_activity_filter_options(),
-			'options'     => $activity_feed_filter_options,
-			// Uses registry default sanitize_callback for checkbox_list type.
-			'order'       => 20,
+			'default'           => bb_get_enabled_activity_filter_options(),
+			'options'           => $activity_feed_filter_options,
+			'sanitize_callback' => 'bb_sanitize_checkbox_list',
+			'order'             => 20,
 		)
 	);
 
@@ -324,9 +324,9 @@ function bb_activity_register_settings_panel_fields( $edit_time_options = array(
 				'mentions'  => 1,
 				'following' => 1,
 			),
-			'options'     => $activity_timeline_filter_options,
-			// Uses registry default sanitize_callback for checkbox_list type.
-			'order'       => 30,
+			'options'           => $activity_timeline_filter_options,
+			'sanitize_callback' => 'bb_sanitize_checkbox_list',
+			'order'             => 30,
 		)
 	);
 
@@ -359,9 +359,9 @@ function bb_activity_register_settings_panel_fields( $edit_time_options = array(
 			'type'        => 'checkbox_list',
 			'description' => __( 'Allow members to sort activity posts by:', 'buddyboss' ),
 			'default'     => bb_get_enabled_activity_sorting_options(),
-			'options'     => $activity_sorting_options,
-			// Uses registry default sanitize_callback for checkbox_list type.
-			'order'       => 40,
+			'options'           => $activity_sorting_options,
+			'sanitize_callback' => 'bb_sanitize_checkbox_list',
+			'order'             => 40,
 		)
 	);
 }

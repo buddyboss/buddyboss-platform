@@ -830,6 +830,12 @@ class BB_Admin_Replies_Ajax {
 		$failed    = 0;
 		$reply_pt  = bbp_get_reply_post_type();
 
+		// Prime the post cache in a single query to prevent N+1 get_post() calls.
+		// _prime_post_caches() is public since WP 6.1; guard for WP 6.0 compat.
+		if ( function_exists( '_prime_post_caches' ) ) {
+			_prime_post_caches( $reply_ids, false, false );
+		}
+
 		foreach ( $reply_ids as $rid ) {
 			$reply = get_post( $rid );
 			if ( ! $reply || $reply_pt !== $reply->post_type ) {
