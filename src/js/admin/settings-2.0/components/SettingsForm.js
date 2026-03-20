@@ -38,6 +38,8 @@ import { AsyncSelectField } from './fields/AsyncSelectField';
 import { ExtensionListField } from './fields/ExtensionListField';
 import { DocumentExtensionsField } from './fields/DocumentExtensionsField';
 import { InputButtonField } from './fields/InputButtonField';
+import { DomainRestrictionsField } from './fields/DomainRestrictionsField';
+import { EmailRestrictionsField } from './fields/EmailRestrictionsField';
 import { PasswordField } from './fields/PasswordField';
 import { StatusCheckField } from './fields/StatusCheckField';
 import { ImageUploadField } from './fields/ImageUploadField';
@@ -743,6 +745,26 @@ export function SettingsForm({ fields, values, onChange }) {
 						field={field}
 						value={value}
 						onChange={function( newValue ) { onChange( field.name, newValue ); }}
+					/>
+				);
+
+			case 'domain_restrictions':
+				return (
+					<DomainRestrictionsField
+						field={field}
+						value={value}
+						onChange={onChange}
+						disabled={disabled}
+					/>
+				);
+
+			case 'email_restrictions':
+				return (
+					<EmailRestrictionsField
+						field={field}
+						value={value}
+						onChange={onChange}
+						disabled={disabled}
 					/>
 				);
 

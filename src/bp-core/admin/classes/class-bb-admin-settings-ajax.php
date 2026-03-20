@@ -81,8 +81,11 @@ class BB_Admin_Settings_Ajax {
 				}
 
 				// Determine active status.
-				// Priority: 1) bb-active-features, 2) bp-active-components (migration fallback).
-				if ( isset( $active_features[ $feature_id ] ) ) {
+				// Priority: 1) is_active_callback (for features with custom logic),
+				// 2) bb-active-features, 3) bp-active-components (migration fallback).
+				if ( ! is_null( $feature['is_active_callback'] ) ) {
+					$is_active = (bool) call_user_func( $feature['is_active_callback'] );
+				} elseif ( isset( $active_features[ $feature_id ] ) ) {
 					$is_active = ! empty( $active_features[ $feature_id ] );
 				} elseif ( isset( $active_components[ $feature_id ] ) ) {
 					// Migration fallback: use legacy component status.

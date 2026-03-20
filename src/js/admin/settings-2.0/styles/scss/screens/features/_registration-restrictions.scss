@@ -1,0 +1,159 @@
+/**
+ * BuddyBoss Admin Settings 2.0 - Registration Restrictions Styles
+ *
+ * Styles for Domain Restrictions and Email Restrictions repeater fields.
+ *
+ * @package BuddyBoss\Core\Administration
+ * @since BuddyBoss [BBVERSION]
+ */
+
+// Domain Restrictions
+.bb-domain-restrictions {
+	width: 100%;
+
+	&__rows {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		margin-bottom: 12px;
+	}
+
+	&__row {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	&__domain {
+		flex: 1;
+		min-width: 0;
+
+		.components-text-control__input {
+			margin: 0;
+		}
+	}
+
+	&__dot {
+		font-size: 16px;
+		font-weight: 600;
+		color: $bb-text-tertiary-color;
+		flex-shrink: 0;
+		line-height: 36px;
+	}
+
+	&__tld {
+		flex: 0 0 120px;
+		min-width: 0;
+
+		.components-text-control__input {
+			margin: 0;
+		}
+	}
+
+	&__condition {
+		flex: 0 0 180px;
+		min-width: 0;
+
+		.components-select-control__input {
+			margin: 0;
+		}
+	}
+
+	&__remove {
+		flex-shrink: 0;
+		background: none;
+		border: none;
+		cursor: pointer;
+		padding: 4px;
+		color: $bb-text-tertiary-color;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: $bb-border-radius-sm;
+
+		&:hover {
+			color: $bb-error-color;
+			background-color: rgba($bb-error-color, 0.08);
+		}
+
+		&:disabled {
+			opacity: 0.4;
+			cursor: not-allowed;
+		}
+
+		i {
+			font-size: 16px;
+		}
+	}
+
+	&__add {
+		margin-top: 4px;
+	}
+}
+
+// Email Restrictions
+.bb-email-restrictions {
+	width: 100%;
+
+	&__rows {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		margin-bottom: 12px;
+	}
+
+	&__row {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	&__address {
+		flex: 1;
+		min-width: 0;
+
+		.components-text-control__input {
+			margin: 0;
+		}
+	}
+
+	&__condition {
+		flex: 0 0 180px;
+		min-width: 0;
+
+		.components-select-control__input {
+			margin: 0;
+		}
+	}
+
+	&__remove {
+		flex-shrink: 0;
+		background: none;
+		border: none;
+		cursor: pointer;
+		padding: 4px;
+		color: $bb-text-tertiary-color;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: $bb-border-radius-sm;
+
+		&:hover {
+			color: $bb-error-color;
+			background-color: rgba($bb-error-color, 0.08);
+		}
+
+		&:disabled {
+			opacity: 0.4;
+			cursor: not-allowed;
+		}
+
+		i {
+			font-size: 16px;
+		}
+	}
+
+	&__add {
+		margin-top: 4px;
+	}
+}
