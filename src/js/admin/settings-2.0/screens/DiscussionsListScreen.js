@@ -1309,7 +1309,7 @@ function DiscussionEditModal( { discussion, onClose, onSave, isSaving } ) {
 				);
 			}
 			return (
-				<div key={ item.field.id + '-' + discussion.id } className={ hasSeparator ? 'bb-admin-settings-modal__row--separator' : '' }>
+				<div key={ item.field.id + '-' + discussion.id } className={ 'components-base-control ' + ( hasSeparator ? 'bb-admin-settings-modal__row--separator' : '' ) }>
 					<RegisteredMetaField
 						field={ item.field }
 						value={ registeredValues[ item.field.id ] }
