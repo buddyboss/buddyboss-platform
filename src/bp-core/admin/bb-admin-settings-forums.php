@@ -76,6 +76,15 @@ function bb_admin_settings_register_forums_feature() {
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-gear-six',
 			),
+			'help_url'   => bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 62857,
+					),
+					'admin.php'
+				)
+			),
 			'order'      => 10,
 			'is_default' => true,
 		)
@@ -90,6 +99,15 @@ function bb_admin_settings_register_forums_feature() {
 			'icon'       => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-chats-teardrop',
+			),
+			'help_url'   => bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 62857,
+					),
+					'admin.php'
+				)
 			),
 			'order'      => 20,
 			'is_default' => false,

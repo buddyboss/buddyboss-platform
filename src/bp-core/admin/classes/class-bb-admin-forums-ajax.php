@@ -655,7 +655,7 @@ class BB_Admin_Forums_Ajax {
 
 		$result = wp_update_post( $update_args, true );
 		if ( is_wp_error( $result ) ) {
-			wp_send_json_error( array( 'message' => html_entity_decode( $result->get_error_message(), ENT_QUOTES, 'UTF-8' ) ) );
+			wp_send_json_error( array( 'message' => wp_strip_all_tags( $result->get_error_message() ) ) );
 		}
 
 		// Update forum status (open/closed) using bbPress lifecycle functions.
@@ -861,13 +861,12 @@ class BB_Admin_Forums_Ajax {
 			_prime_post_caches( $forum_ids, false, false );
 		}
 
-		// Populate legacy $_POST keys once before loop — values are constant across all forums.
+		// Populate legacy $_POST keys before loop — status/visibility are constant, type must be per-forum.
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
 		if ( 'edit' === $do_action ) {
 			if ( ! empty( $edit_status ) && 'no_change' !== $edit_status ) {
 				$_POST['bbp_forum_status'] = $edit_status;
 			}
-			$_POST['bbp_forum_type'] = 'forum';
 			if ( ! empty( $edit_visibility ) && 'no_change' !== $edit_visibility ) {
 				$_POST['bbp_forum_visibility'] = $edit_visibility;
 			}
@@ -892,6 +891,9 @@ class BB_Admin_Forums_Ajax {
 				}
 			} elseif ( 'edit' === $do_action ) {
 				$updated = false;
+
+				// Preserve existing forum type per-forum so bbp_save_forum_extras() doesn't overwrite it.
+				$_POST['bbp_forum_type'] = bbp_get_forum_type( $forum_id ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
 				// Update status (open/closed) if provided and not "no change".
 				if ( ! empty( $edit_status ) && 'no_change' !== $edit_status ) {
@@ -1026,6 +1028,21 @@ class BB_Admin_Forums_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Invalid file type. Only JPEG, PNG, GIF, and WebP images are allowed.', 'buddyboss' ) ) );
 		}
 
+		// Server-side file size validation using WordPress/PHP configured max.
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified above.
+		$max_upload_size = wp_max_upload_size();
+		if ( ! empty( $_FILES['file']['size'] ) && $_FILES['file']['size'] > $max_upload_size ) {
+			wp_send_json_error(
+				array(
+					'message' => sprintf(
+						/* translators: %s: Maximum upload size (e.g., "64 MB"). */
+						__( 'File size exceeds the maximum upload limit of %s.', 'buddyboss' ),
+						size_format( $max_upload_size )
+					),
+				)
+			);
+		}
+
 		// Load required WordPress upload functions.
 		require_once ABSPATH . 'wp-admin/includes/image.php';
 		require_once ABSPATH . 'wp-admin/includes/file.php';
@@ -1034,7 +1051,7 @@ class BB_Admin_Forums_Ajax {
 		$attachment_id = media_handle_upload( 'file', 0 );
 
 		if ( is_wp_error( $attachment_id ) ) {
-			wp_send_json_error( array( 'message' => $attachment_id->get_error_message() ) );
+			wp_send_json_error( array( 'message' => __( 'Image upload failed. Please try again.', 'buddyboss' ) ) );
 		}
 
 		wp_send_json_success(
@@ -1200,19 +1217,6 @@ class BB_Admin_Forums_Ajax {
 			)
 		);
 	}
-
-	/**
-	 * Propagate visibility to child forums for group-attached forums.
-	 *
-	 * Ensures that when a group forum's visibility changes, all its
-	 * child/nested forums inherit the same visibility state.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param int $forum_id Forum ID whose children should be updated.
-	 *
-	 * @return void
-	 */
 
 	/**
 	 * Propagate visibility changes to child forums for group forums.

@@ -243,6 +243,7 @@ export default function RepliesListScreen( { onNavigate } ) {
 
 	// AbortController ref.
 	var abortRef = useRef( null );
+	var editAbortRef = useRef( null );
 
 	/**
 	 * Fetch replies from the server.
@@ -533,7 +534,14 @@ export default function RepliesListScreen( { onNavigate } ) {
 		setEditReply( null );
 		setEditError( '' );
 
-		getReply( reply.id ).then( function ( response ) {
+		// Abort any previous edit fetch.
+		if ( editAbortRef.current ) {
+			editAbortRef.current.abort();
+		}
+		var controller = new AbortController();
+		editAbortRef.current = controller;
+
+		getReply( reply.id, { signal: controller.signal } ).then( function ( response ) {
 			setIsEditLoading( false );
 			if ( response.success && response.data ) {
 				var data = response.data;

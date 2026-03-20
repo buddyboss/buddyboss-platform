@@ -695,7 +695,7 @@ class BB_Admin_Topics_Ajax {
 
 		$result = wp_update_post( $update_args, true );
 		if ( is_wp_error( $result ) ) {
-			wp_send_json_error( array( 'message' => html_entity_decode( $result->get_error_message(), ENT_QUOTES, 'UTF-8' ) ) );
+			wp_send_json_error( array( 'message' => wp_strip_all_tags( $result->get_error_message() ) ) );
 		}
 
 		// Recalculate forum counts when forum changes.
@@ -910,6 +910,7 @@ class BB_Admin_Topics_Ajax {
 		$edit_type       = isset( $_POST['edit_type'] ) ? sanitize_key( wp_unslash( $_POST['edit_type'] ) ) : '';
 		$edit_status     = isset( $_POST['edit_status'] ) ? sanitize_key( wp_unslash( $_POST['edit_status'] ) ) : '';
 		$edit_visibility = isset( $_POST['edit_visibility'] ) ? sanitize_key( wp_unslash( $_POST['edit_visibility'] ) ) : '';
+		$edit_tags       = isset( $_POST['edit_tags'] ) ? sanitize_text_field( wp_unslash( $_POST['edit_tags'] ) ) : '';
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		$allowed_actions = array( 'delete', 'edit', 'spam' );
@@ -1020,6 +1021,15 @@ class BB_Admin_Topics_Ajax {
 						$updated = true;
 					} elseif ( 'spam' === $edit_status && bbp_get_spam_status_id() !== get_post_status( $topic_id ) ) {
 						bbp_spam_topic( $topic_id );
+						$updated = true;
+					}
+				}
+
+				// Append tags if provided (comma-separated string).
+				if ( ! empty( $edit_tags ) && bbp_allow_topic_tags() ) {
+					$tag_names = array_filter( array_map( 'trim', explode( ',', $edit_tags ) ) );
+					if ( ! empty( $tag_names ) ) {
+						wp_set_object_terms( $topic_id, $tag_names, bbp_get_topic_tag_tax_id(), true );
 						$updated = true;
 					}
 				}

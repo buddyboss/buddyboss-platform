@@ -142,8 +142,14 @@ class BB_Admin_Replies_Ajax {
 
 		// Forum filter.
 		if ( ! empty( $forum_id ) ) {
-			$query_args['meta_key']   = '_bbp_forum_id'; // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
-			$query_args['meta_value'] = $forum_id; // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+			$query_args['meta_query'] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+				array(
+					'key'     => '_bbp_forum_id',
+					'value'   => $forum_id,
+					'type'    => 'NUMERIC',
+					'compare' => '=',
+				),
+			);
 		}
 
 		// Search.
@@ -638,7 +644,7 @@ class BB_Admin_Replies_Ajax {
 
 		$result = wp_update_post( $update_args, true );
 		if ( is_wp_error( $result ) ) {
-			wp_send_json_error( array( 'message' => html_entity_decode( $result->get_error_message(), ENT_QUOTES, 'UTF-8' ) ) );
+			wp_send_json_error( array( 'message' => wp_strip_all_tags( $result->get_error_message() ) ) );
 		}
 
 		// Update meta.
