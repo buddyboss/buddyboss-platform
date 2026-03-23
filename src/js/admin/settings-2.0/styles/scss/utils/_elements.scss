@@ -1079,77 +1079,79 @@ select.bb-admin-settings__select {
 	}
 }
 
-// Time Input custom picker inside Popover.
+// Time Input editable field + scrollable list inside Popover.
 .bb-admin-time-input {
 
-	&__picker {
-		padding: 16px;
-	}
-
-	&__fields {
-		display: flex;
-		align-items: flex-end;
-		gap: 8px;
-	}
-
-	&__field-group {
-		display: flex;
-		flex-direction: column;
-		gap: 6px;
-	}
-
-	&__field-label {
-		font-size: 11px;
-		font-weight: 600;
-		color: $bb-text-tertiary-color;
-		text-transform: uppercase;
-		letter-spacing: 0.5px;
-	}
-
-	&__field {
-		width: 72px;
-		height: 48px;
-		padding: 8px;
-		background: $bb-background-base-color;
-		border: 1px solid $bb-border-secondary-color;
-		border-radius: $bb-border-radius-md;
-		font-size: 20px;
-		font-weight: 500;
-		text-align: center;
-
-		&:focus {
+	&__button {
+		// Focus-within so the wrapper border highlights when the inner input is focused.
+		&:focus-within {
 			border-color: $bb-background-brand-primary-color;
-			outline: none;
-			box-shadow: 0 0 0 1px $bb-background-brand-primary-color;
 		}
-
-		// Hide number spinners.
-		&::-webkit-inner-spin-button,
-		&::-webkit-outer-spin-button {
-			-webkit-appearance: none;
-			margin: 0;
-		}
-		-moz-appearance: textfield;
 	}
 
-	&__separator {
-		font-size: 24px;
-		font-weight: 600;
-		color: $bb-text-tertiary-color;
-		padding-bottom: 10px;
+	&__icon {
+		flex-shrink: 0;
+		pointer-events: none;
 	}
 
-	&__set-btn {
+	&__input,
+	&__input[type="text"] {
+		flex: 1;
+		border: none !important;
+		background: transparent !important;
+		font-size: 14px;
+		color: $bb-text-color;
+		padding: 0 !important;
+		margin: 0;
+		outline: none !important;
+		line-height: 1.4;
+		min-width: 0;
+		box-shadow: none !important;
+		min-height: auto;
+		height: auto;
+
+		&:focus,
+		&:active {
+			border: none !important;
+			box-shadow: none !important;
+			outline: none !important;
+		}
+
+		&::placeholder {
+			color: $bb-text-tertiary-color;
+		}
+	}
+
+	&__list {
+		min-width: 192px;
+		max-height: 296px;
+		overflow-y: auto;
+		padding: 4px 0;
+	}
+
+	&__item {
 		display: block;
 		width: 100%;
-		margin-top: 12px;
-		text-align: center;
-		justify-content: center;
-		@include bb-button-primary;
+		padding: 10px 16px;
+		background: none;
+		border: none;
+		border-radius: 0;
+		font-size: 14px;
+		line-height: 20px;
+		color: $bb-text-color;
+		text-align: left;
+		cursor: pointer;
+		outline: none;
 
-		// Override WP Popover context where Settings 2.0 scoped styles may not reach.
-		&.components-button.is-primary {
-			@include bb-button-primary;
+		&:hover,
+		&:focus {
+			background-color: $bb-background-primary-hover-color;
+		}
+
+		&--selected {
+			font-weight: 600;
+			color: $bb-background-brand-primary-color;
+			background-color: $bb-background-primary-color;
 		}
 	}
 }
