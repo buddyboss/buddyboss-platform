@@ -100,7 +100,7 @@ function bb_admin_settings_page() {
 
 	// Check Meta Field Registry (Activity/Groups edit modals use richtext fields).
 	if ( ! $has_rich_text && function_exists( 'bb_admin_meta_field_registry' ) ) {
-		$meta_components = array( 'activity', 'groups' );
+		$meta_components = array( 'activity', 'groups', 'forums', 'discussions', 'replies' );
 		foreach ( $meta_components as $component ) {
 			$meta_fields = bb_admin_meta_field_registry()->get_fields( $component );
 			foreach ( $meta_fields as $field ) {
@@ -151,17 +151,17 @@ function bb_admin_settings_page() {
 		$groups_per_page = 20;
 	}
 	$localize_data = array(
-		'apiUrl'         => rest_url( bp_rest_namespace() . '/' . bp_rest_version() . '/' ),
-		'nonce'          => wp_create_nonce( 'wp_rest' ),
-		'ajaxUrl'        => esc_url( admin_url( 'admin-ajax.php' ) ),
-		'ajaxNonce'      => wp_create_nonce( 'bb_admin_settings' ),
-		'logoUrl'        => buddypress()->plugin_url . 'bp-core/images/admin/BBLogo.png',
-		'isReadyLaunch'  => function_exists( 'bb_is_readylaunch_enabled' ) && bb_is_readylaunch_enabled(),
-		'currentUser'    => array(
+		'apiUrl'        => rest_url( bp_rest_namespace() . '/' . bp_rest_version() . '/' ),
+		'nonce'         => wp_create_nonce( 'wp_rest' ),
+		'ajaxUrl'       => esc_url( admin_url( 'admin-ajax.php' ) ),
+		'ajaxNonce'     => wp_create_nonce( 'bb_admin_settings' ),
+		'logoUrl'       => buddypress()->plugin_url . 'bp-core/images/admin/BBLogo.png',
+		'isReadyLaunch' => function_exists( 'bb_is_readylaunch_enabled' ) && bb_is_readylaunch_enabled(),
+		'currentUser'   => array(
 			'id'   => get_current_user_id(),
 			'name' => wp_get_current_user()->display_name,
 		),
-		'siteUrl'        => untrailingslashit( home_url() ),
+		'siteUrl'       => untrailingslashit( home_url() ),
 		// Pass the user's legacy groups-per-page screen option so GroupsListScreen
 		// can honour the preference set in the old WP admin list table.
 		'groupsPerPage' => $groups_per_page,

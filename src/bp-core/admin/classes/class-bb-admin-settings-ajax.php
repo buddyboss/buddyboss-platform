@@ -161,7 +161,7 @@ class BB_Admin_Settings_Ajax {
 	public function bb_admin_toggle_feature() {
 		$this->bb_verify_request();
 
-		// phpcs:disable WordPress.Security.NonceVerification.Missing
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
 		$feature_id = isset( $_POST['feature_id'] ) ? sanitize_text_field( wp_unslash( $_POST['feature_id'] ) ) : '';
 		$status     = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : '';
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
@@ -258,7 +258,7 @@ class BB_Admin_Settings_Ajax {
 	public function bb_admin_get_feature_settings() {
 		$this->bb_verify_request();
 
-		// phpcs:disable WordPress.Security.NonceVerification.Missing
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
 		$feature_id = isset( $_POST['feature_id'] ) ? sanitize_text_field( wp_unslash( $_POST['feature_id'] ) ) : '';
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
@@ -850,7 +850,7 @@ class BB_Admin_Settings_Ajax {
 	public function bb_admin_save_feature_settings() {
 		$this->bb_verify_request();
 
-		// phpcs:disable WordPress.Security.NonceVerification.Missing
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
 		$feature_id = isset( $_POST['feature_id'] ) ? sanitize_text_field( wp_unslash( $_POST['feature_id'] ) ) : '';
 		$raw_json   = isset( $_POST['settings'] ) ? wp_unslash( $_POST['settings'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- JSON decoded and per-field sanitized below.
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
@@ -917,6 +917,12 @@ class BB_Admin_Settings_Ajax {
 			// Skip pro_only fields when Pro is not active — defense-in-depth
 			// against crafted AJAX requests. The UI already disables these fields.
 			if ( ! empty( $field['pro_only'] ) && ! function_exists( 'bb_platform_pro' ) ) {
+				continue;
+			}
+
+			// Skip denylisted option names — defense-in-depth against a malicious
+			// extension registering a field named 'siteurl', 'active_plugins', etc.
+			if ( function_exists( 'bb_get_options_denylist' ) && in_array( $name, bb_get_options_denylist(), true ) ) {
 				continue;
 			}
 

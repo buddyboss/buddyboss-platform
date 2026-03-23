@@ -169,3 +169,12 @@
 		right: 8px;
 	}
 }
+
+// Soft prompt inline button fields: override flex on input wrapper
+// so the text input fills the full available width.
+.bb-admin-settings-form__field--grouped[data-group="soft_prompt_fields"][data-group-inline="true"] {
+
+	.bb-admin-settings-form__field-input-wrapper {
+		display: block;
+	}
+}

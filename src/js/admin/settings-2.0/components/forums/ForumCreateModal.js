@@ -1,27 +1,25 @@
 /**
  * BuddyBoss Admin Settings 2.0 - Forum Create Modal
  *
- * Modal with Name, Permalink, Description, Status, Visibility, Parent Forum, Feature Image
- * fields for creating a forum.
+ * Uses BB_Admin_Meta_Field_Registry for field rendering via RegisteredMetaField.
+ * Featured image remains a custom section (not in registry).
  *
  * @package BuddyBoss\Core\Administration
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useRef, useEffect } from '@wordpress/element';
+import { useState, useRef, useEffect, useCallback } from '@wordpress/element';
 import {
 	Modal,
 	Button,
-	TextControl,
-	SelectControl,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
 import { createForum, uploadForumImage } from '../../utils/ajax';
-import { toSlug } from '../../utils/format';
+import { toSlug, groupFieldsWithLayout, buildRegisteredFieldPayload, getVisibleFields, needsSeparator } from '../../utils/format';
 import { safeUrl } from '../../utils/sanitize';
-import { AsyncSelectField } from '../fields/AsyncSelectField';
-import { RichTextEditor, forceRemoveEditor } from '../common/RichTextEditor';
+import { RegisteredMetaField } from '../common/RegisteredMetaField';
+import { forceRemoveEditor } from '../common/RichTextEditor';
 
 /**
  * Forum Create Modal Component
@@ -33,37 +31,19 @@ import { RichTextEditor, forceRemoveEditor } from '../common/RichTextEditor';
  * @param {Function} props.onClose        Close handler.
  * @param {Function} props.onCreated      Success handler (receives forum_id).
  * @param {string}   props.forumBaseSlug  Forum base slug from _bbp_forum_slug option.
+ * @param {Array}    props.createFields   Registered field definitions from server.
  * @returns {JSX.Element|null} Modal component or null.
  */
-export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug } ) {
-	var nameState = useState( '' );
-	var name = nameState[ 0 ];
-	var setName = nameState[ 1 ];
+export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, createFields } ) {
+	// All registered field values keyed by field ID.
+	var registeredValuesState = useState( {} );
+	var registeredValues = registeredValuesState[ 0 ];
+	var setRegisteredValues = registeredValuesState[ 1 ];
 
-	var permalinkState = useState( '' );
-	var permalink = permalinkState[ 0 ];
-	var setPermalink = permalinkState[ 1 ];
+	// Track whether permalink has been manually edited (ref to avoid stale closure in useCallback).
+	var permalinkEditedRef = useRef( false );
 
-	var permalinkEditedState = useState( false );
-	var permalinkEdited = permalinkEditedState[ 0 ];
-	var setPermalinkEdited = permalinkEditedState[ 1 ];
-
-	var descriptionState = useState( '' );
-	var description = descriptionState[ 0 ];
-	var setDescription = descriptionState[ 1 ];
-
-	var forumStatusState = useState( 'open' );
-	var forumStatus = forumStatusState[ 0 ];
-	var setForumStatus = forumStatusState[ 1 ];
-
-	var visibilityState = useState( 'publish' );
-	var visibility = visibilityState[ 0 ];
-	var setVisibility = visibilityState[ 1 ];
-
-	var parentIdState = useState( 0 );
-	var parentId = parentIdState[ 0 ];
-	var setParentId = parentIdState[ 1 ];
-
+	// Featured image state (not in registry).
 	var imageIdState = useState( 0 );
 	var imageId = imageIdState[ 0 ];
 	var setImageId = imageIdState[ 1 ];
@@ -99,31 +79,52 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug } 
 		};
 	}, [] );
 
+	// Initialize registered values from create field defaults when modal opens.
+	useEffect( function () {
+		if ( isOpen && createFields && Array.isArray( createFields ) ) {
+			var initialValues = {};
+			createFields.forEach( function ( field ) {
+				initialValues[ field.id ] = field.value;
+			} );
+			setRegisteredValues( initialValues );
+			permalinkEditedRef.current = false;
+		}
+	}, [ isOpen, createFields ] );
+
+	// Get the fields to render (from props or empty array).
+	var fields = createFields && Array.isArray( createFields ) ? createFields : [];
+
+	/**
+	 * Handle change for a registered field.
+	 * Auto-generates permalink from name if not manually edited.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {string} fieldId Field ID.
+	 * @param {*}      val     New value.
+	 */
+	var handleFieldChange = useCallback( function ( fieldId, val ) {
+		setRegisteredValues( function ( prev ) {
+			var next = Object.assign( {}, prev );
+			next[ fieldId ] = val;
+
+			// Auto-generate slug from name when not manually edited.
+			if ( 'name' === fieldId && ! permalinkEditedRef.current ) {
+				next.slug = toSlug( val );
+			}
+
+			// Mark permalink as manually edited when slug field changes directly.
+			if ( 'slug' === fieldId ) {
+				permalinkEditedRef.current = true;
+			}
+
+			return next;
+		} );
+	}, [] );
+
 	if ( ! isOpen ) {
 		return null;
 	}
-
-	/**
-	 * Handle name change — auto-generate permalink if not manually edited.
-	 *
-	 * @param {string} val New name value.
-	 */
-	var handleNameChange = function ( val ) {
-		setName( val );
-		if ( ! permalinkEdited ) {
-			setPermalink( toSlug( val ) );
-		}
-	};
-
-	/**
-	 * Handle permalink change — mark as manually edited.
-	 *
-	 * @param {string} val New permalink value.
-	 */
-	var handlePermalinkChange = function ( val ) {
-		setPermalink( toSlug( val ) );
-		setPermalinkEdited( true );
-	};
 
 	/**
 	 * Trigger hidden file input for image selection.
@@ -208,7 +209,8 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug } 
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	var handleCreate = function () {
-		if ( ! name.trim() ) {
+		var nameVal = registeredValues.name || '';
+		if ( ! nameVal.trim() ) {
 			setError( __( 'Forum name is required.', 'buddyboss' ) );
 			return;
 		}
@@ -216,15 +218,16 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug } 
 		setIsSaving( true );
 		setError( '' );
 
-		createForum( {
-			name: name.trim(),
-			slug: permalink,
-			description: description,
-			visibility: visibility,
-			forum_status: forumStatus,
-			parent_id: parentId,
-			image_id: imageId,
-		} ).then( function ( response ) {
+		// buildRegisteredFieldPayload emits both plain keys and registered_field_* keys automatically.
+		var payload = Object.assign(
+			buildRegisteredFieldPayload( fields, registeredValues, 0 ),
+			{
+				name: nameVal.trim(), // Override with trimmed value.
+				image_id: imageId,    // Custom section, not in registry.
+			}
+		);
+
+		createForum( payload ).then( function ( response ) {
 			if ( ! isMountedRef.current ) {
 				return;
 			}
@@ -252,13 +255,14 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug } 
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	var resetForm = function () {
-		setName( '' );
-		setPermalink( '' );
-		setPermalinkEdited( false );
-		setDescription( '' );
-		setForumStatus( 'open' );
-		setVisibility( 'publish' );
-		setParentId( 0 );
+		var initialValues = {};
+		if ( createFields && Array.isArray( createFields ) ) {
+			createFields.forEach( function ( field ) {
+				initialValues[ field.id ] = field.value;
+			} );
+		}
+		setRegisteredValues( initialValues );
+		permalinkEditedRef.current = false;
 		setImageId( 0 );
 		setImageUrl( '' );
 		setIsUploading( false );
@@ -267,12 +271,16 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug } 
 			uploadAbortRef.current.abort();
 		}
 
-		// Reset TinyMCE editor content.
+		// Reset TinyMCE editors for richtext fields.
 		if ( window.tinymce ) {
-			var editor = window.tinymce.get( 'bb-forum-create-description' );
-			if ( editor ) {
-				editor.setContent( '' );
-			}
+			fields.forEach( function ( field ) {
+				if ( 'richtext' === field.type ) {
+					var editor = window.tinymce.get( 'bb-admin-edit-' + field.id + '-0' );
+					if ( editor ) {
+						editor.setContent( '' );
+					}
+				}
+			} );
 		}
 	};
 
@@ -282,23 +290,20 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug } 
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	var handleClose = function () {
-		forceRemoveEditor( 'bb-forum-create-description' );
+		// Force remove richtext editors.
+		fields.forEach( function ( field ) {
+			if ( 'richtext' === field.type ) {
+				forceRemoveEditor( 'bb-admin-edit-' + field.id + '-0' );
+			}
+		} );
 		resetForm();
 		onClose();
 	};
 
-	var statusOptions = [
-		{ value: 'open', label: __( 'Open', 'buddyboss' ) },
-		{ value: 'closed', label: __( 'Closed', 'buddyboss' ) },
-	];
+	// Render visible fields.
+	var visibleFields = getVisibleFields( fields, registeredValues );
 
-	var visibilityOptions = [
-		{ value: 'publish', label: __( 'Public', 'buddyboss' ) },
-		{ value: 'private', label: __( 'Private', 'buddyboss' ) },
-		{ value: 'hidden', label: __( 'Hidden', 'buddyboss' ) },
-	];
-
-	var siteUrl = ( window.bbAdminData && window.bbAdminData.siteUrl ) || '';
+	var grouped = groupFieldsWithLayout( visibleFields );
 
 	return (
 		<Modal
@@ -307,74 +312,46 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug } 
 			className="bb-forum-modal bb-forum-create-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
 		>
-			<div className="bb-forum-modal__body bb-forum-create-modal__body">
+			<div className="bb-forum-modal__body bb-forum-create-modal__body bb-admin-settings-modal__body">
 				{ error && (
 					<p className="bb-forum-modal__error">{ error }</p>
 				) }
 
-				<TextControl
-					label={ __( 'Forum Name', 'buddyboss' ) }
-					value={ name }
-					onChange={ handleNameChange }
-					placeholder={ __( 'Enter forum name', 'buddyboss' ) }
-					__nextHasNoMarginBottom
-				/>
+				{ grouped.map( function ( item, idx ) {
+					var hasSeparator = needsSeparator( item, grouped[ idx + 1 ] );
 
-				<div className="bb-forum-modal__permalink-field">
-					<TextControl
-						label={ __( 'Permalink', 'buddyboss' ) }
-						value={ permalink }
-						onChange={ handlePermalinkChange }
-						placeholder={ __( 'forum-slug', 'buddyboss' ) }
-						__nextHasNoMarginBottom
-					/>
-					{ permalink && siteUrl && (
-						<p className="bb-forum-create-modal__permalink-preview">
-							{ siteUrl + '/' + ( forumBaseSlug || 'forum' ) + '/' + permalink + '/' }
-						</p>
-					) }
-				</div>
-
-				<div className="bb-forum-modal__row--separator">
-					<RichTextEditor
-						id="bb-forum-create-description"
-						label={ __( 'Forum Description (Optional)', 'buddyboss' ) }
-						value={ description }
-						onChange={ setDescription }
-					/>
-				</div>
-
-				<div className="bb-forum-create-modal__row bb-forum-modal__row--separator">
-					<SelectControl
-						label={ __( 'Status', 'buddyboss' ) }
-						value={ forumStatus }
-						options={ statusOptions }
-						onChange={ setForumStatus }
-						__nextHasNoMarginBottom
-					/>
-					<SelectControl
-						label={ __( 'Visibility', 'buddyboss' ) }
-						value={ visibility }
-						options={ visibilityOptions }
-						onChange={ setVisibility }
-						__nextHasNoMarginBottom
-					/>
-				</div>
-
-				<div className="components-base-control bb-forum-modal__row--separator">
-					<label className="components-base-control__label" htmlFor="bb-forum-create-parent">
-						{ __( 'Parent Forum', 'buddyboss' ) }
-					</label>
-					<AsyncSelectField
-						id="bb-forum-create-parent"
-						value={ String( parentId ) }
-						onChange={ function ( val ) {
-							setParentId( parseInt( val, 10 ) || 0 );
-						} }
-						asyncAction="bb_admin_forum_autocomplete"
-						placeholder={ __( 'None', 'buddyboss' ) }
-					/>
-				</div>
+					if ( 'row' === item.type ) {
+						return (
+							<div key={ 'row-' + idx } className={ 'bb-admin-meta-field__row bb-admin-settings-modal__row' + ( hasSeparator ? ' bb-admin-settings-modal__row--separator' : '' ) }>
+								{ item.fields.map( function ( field ) {
+									return (
+										<RegisteredMetaField
+											key={ field.id }
+											field={ field }
+											value={ registeredValues[ field.id ] }
+											onChange={ function ( val ) {
+												handleFieldChange( field.id, val );
+											} }
+											itemId={ 0 }
+										/>
+									);
+								} ) }
+							</div>
+						);
+					}
+					return (
+						<div key={ item.field.id } className={ 'components-base-control ' + ( hasSeparator ? 'bb-admin-settings-modal__row--separator' : '' ) }>
+							<RegisteredMetaField
+								field={ item.field }
+								value={ registeredValues[ item.field.id ] }
+								onChange={ function ( val ) {
+									handleFieldChange( item.field.id, val );
+								} }
+								itemId={ 0 }
+							/>
+						</div>
+					);
+				} ) }
 
 				<div className="bb-forum-modal__image-field bb-forum-create-modal__image-field">
 					<label className="components-base-control__label" htmlFor="bb-forum-create-image">
@@ -442,7 +419,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug } 
 					variant="primary"
 					onClick={ handleCreate }
 					isBusy={ isSaving }
-					disabled={ isSaving || isUploading || ! name.trim() }
+					disabled={ isSaving || isUploading || ! ( registeredValues.name || '' ).trim() }
 				>
 					{ __( 'Save', 'buddyboss' ) }
 				</Button>
