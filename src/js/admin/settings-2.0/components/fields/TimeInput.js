@@ -17,12 +17,13 @@ import { __ } from '@wordpress/i18n';
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param {number} interval Minutes between each slot.
+ * @param {number} interval Minutes between each slot (must be >= 1).
  * @returns {Array} Array of time strings in HH:MM format.
  */
 function generateTimeSlots( interval ) {
+	var safeInterval = ( interval && interval >= 1 ) ? Math.floor( interval ) : 60;
 	var slots = [];
-	for ( var minutes = 0; minutes < 24 * 60; minutes += interval ) {
+	for ( var minutes = 0; minutes < 24 * 60; minutes += safeInterval ) {
 		var h = Math.floor( minutes / 60 );
 		var m = minutes % 60;
 		slots.push( String( h ).padStart( 2, '0' ) + ':' + String( m ).padStart( 2, '0' ) );
@@ -146,13 +147,22 @@ export function TimeInput( props ) {
 			return;
 		}
 
-		var normalized = normalizeTime( inputValue );
+		var trimmed = inputValue.trim();
+
+		// Empty input — revert to last valid value.
+		if ( ! trimmed ) {
+			setInputValue( value || '' );
+			setIsOpen( false );
+			return;
+		}
+
+		var normalized = normalizeTime( trimmed );
 		if ( normalized ) {
 			setInputValue( normalized );
 			if ( onChange && normalized !== value ) {
 				onChange( normalized );
 			}
-		} else if ( inputValue && ! normalized ) {
+		} else {
 			// Invalid input — revert to last valid value.
 			setInputValue( value || '' );
 		}
@@ -160,7 +170,7 @@ export function TimeInput( props ) {
 	};
 
 	/**
-	 * Handle Enter key to commit value.
+	 * Handle keyboard events — Enter to commit, Escape to close.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -177,8 +187,16 @@ export function TimeInput( props ) {
 				}
 			}
 			setIsOpen( false );
+		} else if ( 'Escape' === e.key ) {
+			e.preventDefault();
+			e.stopPropagation();
+			setInputValue( value || '' );
+			setIsOpen( false );
 		}
 	};
+
+	// Pre-compute normalized value once for the list comparison.
+	var normalizedInput = normalizeTime( inputValue ) || value;
 
 	return (
 		<div className="bb-admin-time-input" ref={ wrapperRef }>
@@ -230,7 +248,7 @@ export function TimeInput( props ) {
 							aria-label={ __( 'Select time', 'buddyboss' ) }
 						>
 							{ timeSlots.map( function ( time ) {
-								var isSelected = time === ( normalizeTime( inputValue ) || value );
+								var isSelected = time === normalizedInput;
 								return (
 									<button
 										key={ time }
