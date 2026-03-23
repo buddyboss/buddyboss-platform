@@ -103,7 +103,7 @@ function bb_admin_settings_register_notifications_feature() {
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
-						'article' => 62793,
+						'article' => 124801,
 					),
 					'admin.php'
 				)

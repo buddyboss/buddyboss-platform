@@ -171,9 +171,14 @@ function bb_forums_register_features_panel_fields() {
 			'forum_features_section',
 			array(
 				'name'              => '_bbp_enable_akismet',
-				'label'             => __( 'Akismet', 'buddyboss' ),
+				'label'             => __( 'Akismet Spam Protection', 'buddyboss' ),
 				'type'              => 'toggle',
-				'description'       => __( 'Allow Akismet spam filtering to actively prevent forum spam', 'buddyboss' ),
+				'description'       => __( 'Allow Akismet spam filtering to actively prevent forum spam.', 'buddyboss' ),
+				'help_text'         => sprintf(
+					/* translators: %s: Akismet link. */
+					__( 'Learn more about %s.', 'buddyboss' ),
+					'<a href="https://akismet.com/" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Akismet', 'buddyboss' ) . '</a>'
+				),
 				'default'           => bbp_is_akismet_active(),
 				'sanitize_callback' => 'absint',
 				'order'             => 90,
