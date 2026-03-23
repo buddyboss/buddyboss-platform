@@ -106,7 +106,7 @@ class BB_Admin_Settings_Ajax {
 					'status'         => $is_active ? 'active' : 'inactive',
 					'available'      => $is_available,
 					'required'       => ! empty( $feature['required'] ),
-					'settings_route' => function_exists( 'bb_get_feature_settings_url' ) ? bb_get_feature_settings_url( $feature_id ) : '',
+					'settings_route' => ! empty( $feature['settings_route'] ) && function_exists( 'bb_get_feature_settings_url' ) ? bb_get_feature_settings_url( $feature_id ) : '',
 				);
 
 				// Format icon like REST API.
@@ -435,7 +435,7 @@ class BB_Admin_Settings_Ajax {
 			'status'         => $registry->bb_is_feature_active( $feature_id ) ? 'active' : 'inactive',
 			'available'      => $registry->bb_is_feature_available( $feature_id ),
 			'required'       => ! empty( $feature['required'] ),
-			'settings_route' => function_exists( 'bb_get_feature_settings_url' ) ? bb_get_feature_settings_url( $feature_id ) : '',
+			'settings_route' => ! empty( $feature['settings_route'] ) && function_exists( 'bb_get_feature_settings_url' ) ? bb_get_feature_settings_url( $feature_id ) : '',
 		);
 
 		// Format icon.
