@@ -924,7 +924,7 @@ export function SettingsForm({ fields, values, onChange }) {
 						<label className="bb-admin-settings-form__field-group-label">{field.group.label}</label>
 					) }
 					{/* Field with optional prefix/suffix — skip wrapper when control is null (e.g., hidden parent fields). */}
-					{ null !== controlOutput && (
+					{ null !== controlOutput && false !== controlOutput && (
 						<div className="bb-admin-settings-form__field-input-wrapper">
 							{field.prefix && (
 								<span className="bb-admin-settings-form__field-prefix">{field.prefix}</span>
