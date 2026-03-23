@@ -15,16 +15,16 @@ import {
 	MenuGroup,
 	MenuItem,
 	Modal,
-	TextControl,
 } from '@wordpress/components';
 import { __, _n, sprintf } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { getDiscussions, getDiscussion, saveDiscussion, discussionBulkAction } from '../utils/ajax';
 import { sanitizeHtml, safeUrl, sanitizeCustomColumns } from '../utils/sanitize';
 import { getPageNumbers } from '../utils/pagination';
+import { groupFieldsWithLayout, buildRegisteredFieldPayload, getVisibleFields, needsSeparator } from '../utils/format';
 import { DiscussionCreateModal } from '../components/forums/DiscussionCreateModal';
-import { AsyncSelectField } from '../components/fields/AsyncSelectField';
-import { RichTextEditor, forceRemoveEditor } from '../components/common/RichTextEditor';
+import { RegisteredMetaField } from '../components/common/RegisteredMetaField';
+import { forceRemoveEditor } from '../components/common/RichTextEditor';
 import { TagsAutocomplete } from '../components/forums/TagsAutocomplete';
 
 /**
@@ -143,6 +143,10 @@ export function DiscussionsListScreen( { onNavigate } ) {
 	var createModalOpen = createModalState[ 0 ];
 	var setCreateModalOpen = createModalState[ 1 ];
 
+	var createFieldsState = useState( [] );
+	var createFields = createFieldsState[ 0 ];
+	var setCreateFields = createFieldsState[ 1 ];
+
 	var editDiscussionState = useState( null );
 	var editDiscussion = editDiscussionState[ 0 ];
 	var setEditDiscussion = editDiscussionState[ 1 ];
@@ -167,10 +171,6 @@ export function DiscussionsListScreen( { onNavigate } ) {
 	var bulkEditOpenState = useState( false );
 	var bulkEditOpen = bulkEditOpenState[ 0 ];
 	var setBulkEditOpen = bulkEditOpenState[ 1 ];
-
-	var bulkEditTypeState = useState( 'no_change' );
-	var bulkEditType = bulkEditTypeState[ 0 ];
-	var setBulkEditType = bulkEditTypeState[ 1 ];
 
 	var bulkEditVisibilityState = useState( 'no_change' );
 	var bulkEditVisibility = bulkEditVisibilityState[ 0 ];
@@ -238,6 +238,9 @@ export function DiscussionsListScreen( { onNavigate } ) {
 				if ( response.data.columns ) {
 					setColumns( response.data.columns );
 				}
+				if ( response.data.create_fields ) {
+					setCreateFields( response.data.create_fields );
+				}
 				hasMetaRef.current = true;
 			}
 			setIsLoading( false );
@@ -301,6 +304,7 @@ export function DiscussionsListScreen( { onNavigate } ) {
 		searchTimerRef.current = setTimeout( function () {
 			setSearchQuery( value );
 			setCurrentPage( 1 );
+			setSelectedIds( [] );
 		}, 500 );
 	};
 
@@ -440,9 +444,9 @@ export function DiscussionsListScreen( { onNavigate } ) {
 		}
 
 		if ( 'edit' === action ) {
-			setBulkEditType( 'no_change' );
 			setBulkEditVisibility( 'no_change' );
 			setBulkEditStatus( 'no_change' );
+			setBulkEditTags( '' );
 			setBulkEditOpen( true );
 			return;
 		}
@@ -512,7 +516,6 @@ export function DiscussionsListScreen( { onNavigate } ) {
 	var handleConfirmBulkEdit = function () {
 		setBulkEditOpen( false );
 		var editData = {
-			edit_type: bulkEditType,
 			edit_visibility: bulkEditVisibility,
 			edit_status: bulkEditStatus,
 		};
@@ -802,6 +805,12 @@ export function DiscussionsListScreen( { onNavigate } ) {
 											>
 												{ decodeEntities( disc.title ) }
 											</a>
+											{ disc.status_label && (
+												<span className={ 'spam' === disc.post_status ? 'bb-admin-list__spam-badge' : 'bb-admin-list__status-badge' }>
+													{ 'spam' === disc.post_status && ( <i className="bb-icons-rl-flag"></i> ) }
+													{ disc.status_label }
+												</span>
+											) }
 										</td>
 										<td className="bb-discussions-list__td--forum">
 											{ decodeEntities( disc.forum_name ) }
@@ -877,7 +886,7 @@ export function DiscussionsListScreen( { onNavigate } ) {
 																	onClose();
 																} }
 															>
-																<i className="bb-icons-rl bb-icons-rl-warning-circle"></i>
+																<i className="bb-icons-rl bb-icons-rl-flag"></i>
 																{ 'spam' === disc.post_status
 																	? __( 'Not Spam', 'buddyboss' )
 																	: __( 'Spam', 'buddyboss' )
@@ -926,6 +935,7 @@ export function DiscussionsListScreen( { onNavigate } ) {
 									setCurrentPage( function ( p ) {
 										return Math.max( 1, p - 1 );
 									} );
+									setSelectedIds( [] );
 								} }
 								className="bb-discussions-list__pagination-btn bb-discussions-list__pagination-btn--previous"
 							>
@@ -946,6 +956,7 @@ export function DiscussionsListScreen( { onNavigate } ) {
 										variant={ currentPage === page ? 'primary' : 'secondary' }
 										onClick={ function () {
 											setCurrentPage( page );
+											setSelectedIds( [] );
 										} }
 										className={ 'bb-discussions-list__pagination-btn' + ( currentPage === page ? ' bb-discussions-list__pagination-btn--current' : '' ) }
 									>
@@ -961,6 +972,7 @@ export function DiscussionsListScreen( { onNavigate } ) {
 									setCurrentPage( function ( p ) {
 										return Math.min( totalPages, p + 1 );
 									} );
+									setSelectedIds( [] );
 								} }
 								className="bb-discussions-list__pagination-btn bb-discussions-list__pagination-btn--next"
 							>
@@ -1156,6 +1168,7 @@ export function DiscussionsListScreen( { onNavigate } ) {
 					setCreateModalOpen( false );
 				} }
 				onCreated={ handleDiscussionCreated }
+				createFields={ createFields }
 			/>
 
 			{ /* Discussion Edit Modal */ }
@@ -1163,7 +1176,14 @@ export function DiscussionsListScreen( { onNavigate } ) {
 				<DiscussionEditModal
 					discussion={ editDiscussion }
 					onClose={ function () {
-						forceRemoveEditor( 'bb-discussion-edit-description' );
+						// Clean up TinyMCE editors for richtext registry fields.
+						if ( editDiscussion && editDiscussion.registered_fields ) {
+							editDiscussion.registered_fields.forEach( function ( field ) {
+								if ( 'richtext' === field.type ) {
+									forceRemoveEditor( 'bb-admin-edit-' + field.id + '-' + editDiscussion.id );
+								}
+							} );
+						}
 						setEditDiscussion( null );
 					} }
 					onSave={ handleSaveDiscussion }
@@ -1175,42 +1195,27 @@ export function DiscussionsListScreen( { onNavigate } ) {
 }
 
 /**
- * Discussion Edit Modal Component (inline).
+ * Discussion Edit Modal Component — uses BB_Admin_Meta_Field_Registry.
+ *
+ * Renders registered fields via RegisteredMetaField.
+ * Tags (Optional) remains a custom section (TagsAutocomplete component).
  *
  * @since BuddyBoss [BBVERSION]
  *
  * @param {Object}   props              Component props.
- * @param {Object}   props.discussion   Discussion data from server.
+ * @param {Object}   props.discussion   Discussion data from server (includes registered_fields).
  * @param {Function} props.onClose      Close handler.
  * @param {Function} props.onSave       Save handler.
  * @param {boolean}  props.isSaving     Whether save is in progress.
  * @returns {JSX.Element} Edit modal.
  */
 function DiscussionEditModal( { discussion, onClose, onSave, isSaving } ) {
-	var titleState = useState( discussion.title || '' );
-	var title = titleState[ 0 ];
-	var setTitle = titleState[ 1 ];
+	// All registered field values keyed by field ID.
+	var registeredValuesState = useState( {} );
+	var registeredValues = registeredValuesState[ 0 ];
+	var setRegisteredValues = registeredValuesState[ 1 ];
 
-	var descriptionState = useState( discussion.description || '' );
-	var description = descriptionState[ 0 ];
-	var setDescription = descriptionState[ 1 ];
-
-	var forumIdState = useState( discussion.forum_id || 0 );
-	var forumId = forumIdState[ 0 ];
-	var setForumId = forumIdState[ 1 ];
-
-	var typeState = useState( discussion.type || 'normal' );
-	var type = typeState[ 0 ];
-	var setType = typeState[ 1 ];
-
-	var topicStatusState = useState( discussion.topic_status || 'open' );
-	var topicStatus = topicStatusState[ 0 ];
-	var setTopicStatus = topicStatusState[ 1 ];
-
-	var visibilityState = useState( discussion.post_status || 'publish' );
-	var visibility = visibilityState[ 0 ];
-	var setVisibility = visibilityState[ 1 ];
-
+	// Tags state (custom, not in registry).
 	var tagNamesState = useState( discussion.tag_names || '' );
 	var tagNames = tagNamesState[ 0 ];
 	var setTagNames = tagNamesState[ 1 ];
@@ -1219,123 +1224,137 @@ function DiscussionEditModal( { discussion, onClose, onSave, isSaving } ) {
 	var error = errorState[ 0 ];
 	var setError = errorState[ 1 ];
 
+	// Initialize registered values from discussion data.
+	useEffect( function () {
+		if ( discussion && discussion.registered_fields && Array.isArray( discussion.registered_fields ) ) {
+			var initialValues = {};
+			discussion.registered_fields.forEach( function ( field ) {
+				initialValues[ field.id ] = field.value;
+			} );
+			setRegisteredValues( initialValues );
+		}
+	}, [ discussion ] );
+
 	/**
-	 * Handle save.
+	 * Handle change for a registered field.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {string} fieldId Field ID.
+	 * @param {*}      val     New value.
+	 */
+	var handleRegisteredFieldChange = useCallback( function ( fieldId, val ) {
+		setRegisteredValues( function ( prev ) {
+			var next = {};
+			Object.keys( prev ).forEach( function ( k ) {
+				next[ k ] = prev[ k ];
+			} );
+			next[ fieldId ] = val;
+			return next;
+		} );
+	}, [] );
+
+	/**
+	 * Handle save — collects all registered field values + tags.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	var handleSave = function () {
-		if ( ! title.trim() ) {
+		var titleVal = registeredValues.title || '';
+		if ( ! titleVal.trim() ) {
 			setError( __( 'Discussion title is required.', 'buddyboss' ) );
 			return;
 		}
 
 		setError( '' );
-		onSave( {
+
+		// buildRegisteredFieldPayload emits both plain keys and registered_field_* keys automatically.
+		var registeredPayload = discussion.registered_fields
+			? buildRegisteredFieldPayload( discussion.registered_fields, registeredValues, discussion.id )
+			: {};
+
+		var payload = Object.assign( registeredPayload, {
 			topic_id: discussion.id,
-			title: title.trim(),
-			description: description,
-			forum_id: forumId,
-			type: type,
-			topic_status: topicStatus,
-			visibility: visibility,
-			tags: tagNames,
+			title: ( registeredValues.title || '' ).trim(), // Override with trimmed value.
+			tags: tagNames, // Custom section, not in registry.
 		} );
+
+		onSave( payload );
 	};
 
-	var typeOptions = [
-		{ value: 'normal', label: __( 'Normal', 'buddyboss' ) },
-		{ value: 'sticky', label: __( 'Sticky', 'buddyboss' ) },
-		{ value: 'super_sticky', label: __( 'Super Sticky', 'buddyboss' ) },
-	];
+	// Render registered fields.
+	var renderFields = function () {
+		if ( ! discussion.registered_fields ) {
+			return null;
+		}
 
-	var statusOptions = [
-		{ value: 'open', label: __( 'Open', 'buddyboss' ) },
-		{ value: 'closed', label: __( 'Closed', 'buddyboss' ) },
-	];
+		var visibleFields = getVisibleFields( discussion.registered_fields, registeredValues );
 
-	var visibilityOptions = [
-		{ value: 'publish', label: __( 'Public', 'buddyboss' ) },
-		{ value: 'private', label: __( 'Private', 'buddyboss' ) },
-		{ value: 'hidden', label: __( 'Hidden', 'buddyboss' ) },
-	];
+		var grouped = groupFieldsWithLayout( visibleFields );
+
+		return grouped.map( function ( item, idx ) {
+			var hasSeparator = needsSeparator( item, grouped[ idx + 1 ] );
+
+			if ( 'row' === item.type ) {
+				return (
+					<div key={ 'row-' + idx } className={ 'bb-admin-meta-field__row bb-admin-settings-modal__row' + ( hasSeparator ? ' bb-admin-settings-modal__row--separator' : '' ) }>
+						{ item.fields.map( function ( field ) {
+							return (
+								<RegisteredMetaField
+									key={ field.id + '-' + discussion.id }
+									field={ field }
+									value={ registeredValues[ field.id ] }
+									onChange={ function ( val ) {
+										handleRegisteredFieldChange( field.id, val );
+									} }
+									itemId={ discussion.id }
+								/>
+							);
+						} ) }
+					</div>
+				);
+			}
+			return (
+				<div key={ item.field.id + '-' + discussion.id } className={ 'components-base-control ' + ( hasSeparator ? 'bb-admin-settings-modal__row--separator' : '' ) }>
+					<RegisteredMetaField
+						field={ item.field }
+						value={ registeredValues[ item.field.id ] }
+						onChange={ function ( val ) {
+							handleRegisteredFieldChange( item.field.id, val );
+						} }
+						itemId={ discussion.id }
+					/>
+				</div>
+			);
+		} );
+	};
 
 	return (
 		<Modal
 			title={ __( 'Edit Discussion', 'buddyboss' ) }
-			onRequestClose={ onClose }
+			onRequestClose={ function () {
+				if ( ! isSaving ) {
+					onClose();
+				}
+			} }
 			className="bb-discussion-modal bb-discussion-edit-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
 		>
-			<div className="bb-discussion-modal__body">
+			<div className="bb-discussion-modal__body bb-admin-settings-modal__body">
 				{ error && (
-					<p className="bb-discussion-modal__error">{ error }</p>
+					<p className="bb-admin-settings-modal__error">{ error }</p>
 				) }
 
-				<TextControl
-					label={ __( 'Title', 'buddyboss' ) }
-					value={ title }
-					onChange={ setTitle }
-					__nextHasNoMarginBottom
-				/>
+				{ renderFields() }
 
-				<div className="bb-discussion-modal__row--separator">
-					<RichTextEditor
-						id="bb-discussion-edit-description"
-						label={ __( 'Description', 'buddyboss' ) }
-						value={ description }
-						onChange={ setDescription }
-					/>
-				</div>
-
-				<div className="components-base-control">
-					<label className="components-base-control__label" htmlFor="bb-discussion-edit-forum">
-						{ __( 'Forum', 'buddyboss' ) }
-					</label>
-					<AsyncSelectField
-						id="bb-discussion-edit-forum"
-						value={ String( forumId ) }
-						onChange={ function ( val ) {
-							setForumId( parseInt( val, 10 ) || 0 );
-						} }
-						asyncAction="bb_admin_forum_autocomplete"
-						placeholder={ __( 'Select Forum', 'buddyboss' ) }
-					/>
-				</div>
-
-				<div className="bb-discussion-modal__row--separator">
-					<SelectControl
-						label={ __( 'Type', 'buddyboss' ) }
-						value={ type }
-						options={ typeOptions }
-						onChange={ setType }
-						__nextHasNoMarginBottom
-					/>
-				</div>
-
-				<div className="bb-discussion-modal__row bb-discussion-modal__row--separator">
-					<SelectControl
-						label={ __( 'Status', 'buddyboss' ) }
-						value={ topicStatus }
-						options={ statusOptions }
-						onChange={ setTopicStatus }
-						__nextHasNoMarginBottom
-					/>
-					<SelectControl
-						label={ __( 'Visibility', 'buddyboss' ) }
-						value={ visibility }
-						options={ visibilityOptions }
-						onChange={ setVisibility }
-						__nextHasNoMarginBottom
-					/>
-				</div>
-
+				<div className="bb-admin-settings-modal__custom-section">
 				<TagsAutocomplete
 					label={ __( 'Tags (Optional)', 'buddyboss' ) }
 					value={ tagNames }
 					onChange={ setTagNames }
 					placeholder={ __( 'Enter tags, separated by commas', 'buddyboss' ) }
 				/>
+				</div>
 			</div>
 
 			<div className="bb-discussion-modal__footer bb-admin-settings-modal__footer">
@@ -1350,7 +1369,7 @@ function DiscussionEditModal( { discussion, onClose, onSave, isSaving } ) {
 					variant="primary"
 					onClick={ handleSave }
 					isBusy={ isSaving }
-					disabled={ isSaving || ! title.trim() }
+					disabled={ isSaving }
 				>
 					{ __( 'Save', 'buddyboss' ) }
 				</Button>

@@ -202,17 +202,6 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 						);
 					}
 
-					if ( current_user_can( 'bbp_tools_reset_page' ) ) {
-						//				$hooks[] = add_submenu_page(
-						//					'buddyboss-platform',
-						//					__( 'Reset Forums', 'buddyboss' ),
-						//					__( 'Forum Reset', 'buddyboss' ),
-						//					$this->minimum_capability,
-						//					'bbp-reset',
-						//					'bbp_admin_reset'
-						//				);
-					}
-
 					// Fudge the highlighted subnav item when on a Forums admin page
 					foreach ( $hooks as $hook ) {
 						add_action( "admin_head-$hook", 'bbp_tools_modify_menu_highlight' );
