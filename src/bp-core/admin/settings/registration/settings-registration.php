@@ -199,6 +199,76 @@ function bb_registration_register_panel_fields() {
 		)
 	);
 
+	// Field 8: SSO Provider Cards (Pro placeholder).
+	// Shows greyed-out provider cards when Pro is not active.
+	// Pro enriches via bb_admin_settings_format_field_data to inject real provider data.
+	bb_register_feature_field(
+		$feature_id,
+		$panel_id,
+		'registration_general',
+		array(
+			'name'              => '_bb-sso-providers',
+			'label'             => '',
+			'type'              => 'sso_providers',
+			'default'           => array(),
+			'sanitize_callback' => '__return_empty_array',
+			'pro_only'          => true,
+			'conditional'       => array(
+				'field' => 'bb-social-login',
+				'value' => true,
+			),
+			'providers'         => array(
+				array(
+					'id'    => 'google',
+					'label' => __( 'Google', 'buddyboss' ),
+					'icon'  => '',
+				),
+				array(
+					'id'    => 'facebook',
+					'label' => __( 'Facebook', 'buddyboss' ),
+					'icon'  => '',
+				),
+				array(
+					'id'    => 'twitter',
+					'label' => __( 'X', 'buddyboss' ),
+					'icon'  => '',
+				),
+				array(
+					'id'    => 'linkedin',
+					'label' => __( 'Linkedin', 'buddyboss' ),
+					'icon'  => '',
+				),
+				array(
+					'id'    => 'apple',
+					'label' => __( 'Apple', 'buddyboss' ),
+					'icon'  => '',
+				),
+			),
+			'order'             => 75,
+		)
+	);
+
+	// Field 9: SSO App Notice (hidden by default, Pro shows when bbapp() exists).
+	bb_register_feature_field(
+		$feature_id,
+		$panel_id,
+		'registration_general',
+		array(
+			'name'              => '_bb-sso-app-notice',
+			'label'             => '',
+			'type'              => 'notice',
+			'notice_type'       => 'info',
+			'description'       => __( 'Any changes will require new iOS and Android app builds.', 'buddyboss' ),
+			'sanitize_callback' => '__return_empty_string',
+			'conditional'       => array(
+				'field' => 'bb-social-login',
+				'value' => true,
+			),
+			'hidden'            => true,
+			'order'             => 80,
+		)
+	);
+
 	/**
 	 * Fires after registration general section fields are registered.
 	 * Pro hooks here to enrich the SSO field and add provider cards.

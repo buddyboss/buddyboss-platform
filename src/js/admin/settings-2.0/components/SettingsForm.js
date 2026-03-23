@@ -28,6 +28,7 @@ import { decodeEntities } from '@wordpress/html-entities';
 import { sanitizeHtml, safeUrl } from '../utils/sanitize';
 import { TopicListField } from './activity/topics/topic-list';
 import { SharePlatformsField } from './activity/sharing';
+import { SsoProvidersField } from './fields/SsoProvidersField';
 import { AccessControlField } from './access-control/AccessControlField';
 import { NotificationTypesField } from './notifications';
 import { CheckboxListField } from './fields/CheckboxListField';
@@ -310,6 +311,17 @@ export function SettingsForm({ fields, values, onChange }) {
 						field={field}
 						value={value}
 						onChange={onChange}
+					/>
+				);
+
+			case 'sso_providers':
+				// SSO provider cards (Google, Facebook, X, LinkedIn, Apple).
+				return (
+					<SsoProvidersField
+						field={field}
+						value={value}
+						onChange={onChange}
+						disabled={disabled}
 					/>
 				);
 
