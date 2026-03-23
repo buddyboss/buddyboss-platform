@@ -13,6 +13,18 @@
 		gap: 8px;
 	}
 
+	// Hidden edit trigger — invisible but still clickable by jQuery event delegation.
+	&__edit-trigger {
+		position: absolute;
+		width: 0;
+		height: 0;
+		padding: 0;
+		margin: 0;
+		border: 0;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+	}
+
 	&__card {
 		width: 120px;
 		background: $bb-background-base-color;
@@ -107,6 +119,67 @@
 		&:disabled {
 			cursor: default;
 			opacity: 0.4;
+		}
+	}
+
+	&__menu-popover {
+		.components-popover__content {
+			padding: 0;
+		}
+	}
+
+	&__menu {
+		min-width: 120px;
+		padding: 4px 0;
+	}
+
+	// SSO modal override — ensure fixed positioning works inside React app.
+	.bb-modal-backdrop.bb-hello-backdrop-sso {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 100000;
+		background: rgba(0, 0, 0, 0.6);
+	}
+
+	.bb-modal-panel.bb-hello-sso {
+		position: fixed;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		z-index: 100001;
+		background: $bb-background-base-color;
+		border-radius: $bb-border-radius-xl;
+		box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+		max-width: 600px;
+		width: 90%;
+		max-height: 80vh;
+		overflow-y: auto;
+	}
+
+	&__menu-item {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		width: 100%;
+		padding: 8px 12px;
+		background: none;
+		border: none;
+		border-radius: 0;
+		font-size: 13px;
+		color: $bb-text-color;
+		cursor: pointer;
+		text-align: left;
+
+		&:hover {
+			background: $bb-background-primary-hover-color;
+		}
+
+		i {
+			font-size: 16px;
+			color: $bb-icon-tertiary-color;
 		}
 	}
 }
