@@ -505,9 +505,17 @@ select.bb-admin-settings__select {
         border: none;
         padding: 0;
         color: $bb-text-tertiary-color;
+        flex-wrap: wrap;
+        gap: 8px;
 
         &:before {
             display: none;
+        }
+
+        img {
+            display: block;
+            border-radius: 50%;
+            object-fit: cover;
         }
     }
 

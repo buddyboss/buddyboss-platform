@@ -535,7 +535,7 @@
     // Textarea character counter (e.g. "12/250").
     .bb-admin-settings-form__textarea-counter {
         display: block;
-        text-align: right;
+        text-align: left;
         font-size: 12px;
         color: $bb-text-secondary-color;
         margin-top: 4px;
