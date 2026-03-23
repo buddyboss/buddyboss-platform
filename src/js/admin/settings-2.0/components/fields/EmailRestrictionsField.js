@@ -80,13 +80,14 @@ export function EmailRestrictionsField( { field, value, onChange, disabled } ) {
 
 	/**
 	 * Add a new empty row.
+	 * Does NOT trigger onChange (auto-save) — the empty row is local-only
+	 * until the user fills in data via updateRow().
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	function addRow() {
 		var updated = rows.concat( [ { address: '', condition: '' } ] );
 		setRows( updated );
-		onChange( field.name, updated );
 	}
 
 	/**
