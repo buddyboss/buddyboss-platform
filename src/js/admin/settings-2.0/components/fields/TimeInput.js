@@ -187,7 +187,7 @@ export function TimeInput( props ) {
 				}
 			}
 			setIsOpen( false );
-		} else if ( 'Escape' === e.key ) {
+		} else if ( 'Escape' === e.key && isOpen ) {
 			e.preventDefault();
 			e.stopPropagation();
 			setInputValue( value || '' );
