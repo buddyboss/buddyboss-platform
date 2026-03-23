@@ -985,8 +985,160 @@ select.bb-admin-settings__select {
 	}
 }
 
+// Status badge displayed below title in list views (Scheduled, Pending Review, Draft).
+.bb-admin-list__status-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	margin-top: 4px;
+	padding: 2px 8px;
+	font-size: 12px;
+	font-weight: 500;
+	color: $bb-text-tertiary-color;
+	background: $bb-background-primary-color;
+	border-radius: 99px;
+}
+
+// Spam badge for list views (matches reply spam badge pattern).
+.bb-admin-list__spam-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	margin-top: 4px;
+	padding: 2px 8px;
+	font-size: 12px;
+	font-weight: 500;
+	color: $bb-text-warning-primary-color;
+	background: $bb-background-warning-primary-color;
+	border: 1px solid $bb-border-warning-secondary-color;
+	border-radius: 99px;
+}
+
 // Disabled state for meta field registry fields.
 .bb-admin-meta-field--disabled {
 	opacity: 0.6;
 	pointer-events: none;
+}
+
+// Date Input component (calendar picker in Popover).
+.bb-admin-date-input,
+.bb-admin-time-input {
+
+	&__wrapper {
+		position: relative;
+	}
+
+	&__button {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+		min-height: 40px;
+		padding: 8px 12px;
+		background: $bb-background-base-color;
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-md;
+		cursor: pointer;
+		font-size: 14px;
+		color: $bb-text-color;
+
+		&:hover,
+		&:focus {
+			border-color: $bb-background-brand-primary-color;
+		}
+	}
+
+	&__value--placeholder {
+		color: $bb-text-tertiary-color;
+	}
+
+	&__icon {
+		font-size: 16px;
+		color: $bb-icon-tertiary-color;
+	}
+
+	&__popover {
+		.components-popover__content {
+			padding: 0;
+		}
+	}
+
+	&__picker {
+		padding: 8px;
+	}
+}
+
+// Time Input custom picker inside Popover.
+.bb-admin-time-input {
+
+	&__picker {
+		padding: 16px;
+	}
+
+	&__fields {
+		display: flex;
+		align-items: flex-end;
+		gap: 8px;
+	}
+
+	&__field-group {
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+	}
+
+	&__field-label {
+		font-size: 11px;
+		font-weight: 600;
+		color: $bb-text-tertiary-color;
+		text-transform: uppercase;
+		letter-spacing: 0.5px;
+	}
+
+	&__field {
+		width: 72px;
+		height: 48px;
+		padding: 8px;
+		background: $bb-background-base-color;
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-md;
+		font-size: 20px;
+		font-weight: 500;
+		text-align: center;
+
+		&:focus {
+			border-color: $bb-background-brand-primary-color;
+			outline: none;
+			box-shadow: 0 0 0 1px $bb-background-brand-primary-color;
+		}
+
+		// Hide number spinners.
+		&::-webkit-inner-spin-button,
+		&::-webkit-outer-spin-button {
+			-webkit-appearance: none;
+			margin: 0;
+		}
+		-moz-appearance: textfield;
+	}
+
+	&__separator {
+		font-size: 24px;
+		font-weight: 600;
+		color: $bb-text-tertiary-color;
+		padding-bottom: 10px;
+	}
+
+	&__set-btn {
+		display: block;
+		width: 100%;
+		margin-top: 12px;
+		text-align: center;
+		justify-content: center;
+		@include bb-button-primary;
+
+		// Override WP Popover context where Settings 2.0 scoped styles may not reach.
+		&.components-button.is-primary {
+			@include bb-button-primary;
+		}
+	}
 }

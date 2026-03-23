@@ -22,6 +22,8 @@ import { decodeEntities } from '@wordpress/html-entities';
 import { RichTextEditor } from './RichTextEditor';
 import { safeUrl } from '../../utils/sanitize';
 import { AsyncSelectField } from '../fields/AsyncSelectField';
+import { DateInput } from '../fields/DateInput';
+import { TimeInput } from '../fields/TimeInput';
 
 /**
  * AJAX-powered searchable multi-select field.
@@ -570,6 +572,36 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 				{ field.description && (
 					<p className="bb-admin-meta-field__description">{ field.description }</p>
 				) }
+			</div>
+		);
+	}
+
+	// Date picker field.
+	if ( 'date' === field.type ) {
+		return (
+			<div className={ isDisabled ? 'bb-admin-meta-field--disabled' : '' }>
+				<DateInput
+					label={ field.label }
+					value={ null != value ? String( value ) : '' }
+					onChange={ onChange }
+					placeholder={ field.placeholder || '' }
+					disabled={ isDisabled }
+				/>
+			</div>
+		);
+	}
+
+	// Time picker field.
+	if ( 'time' === field.type ) {
+		return (
+			<div className={ isDisabled ? 'bb-admin-meta-field--disabled' : '' }>
+				<TimeInput
+					label={ field.label }
+					value={ null != value ? String( value ) : '' }
+					onChange={ onChange }
+					placeholder={ field.placeholder || '' }
+					disabled={ isDisabled }
+				/>
 			</div>
 		);
 	}

@@ -140,7 +140,7 @@ class BB_Admin_Topics_Ajax {
 			'post_type'      => bbp_get_topic_post_type(),
 			'posts_per_page' => $per_page,
 			'paged'          => $page,
-			'post_status'    => array( 'publish', 'closed', 'private', 'hidden', 'spam' ),
+			'post_status'    => array( 'publish', 'closed', 'private', 'hidden', 'spam', 'future', 'pending', 'draft' ),
 		);
 
 		// Forum filter — use meta_query to avoid conflict with meta-based sorting.
@@ -271,6 +271,13 @@ class BB_Admin_Topics_Ajax {
 		// Buffer output to capture stray HTML from legacy filters.
 		ob_start();
 
+		$status_labels_map = array(
+			'future'  => __( 'Scheduled', 'buddyboss' ),
+			'pending' => __( 'Pending Review', 'buddyboss' ),
+			'draft'   => __( 'Draft', 'buddyboss' ),
+			'spam'    => __( 'Spam', 'buddyboss' ),
+		);
+
 		$items = array();
 		foreach ( $posts as $topic ) {
 			$topic_id       = $topic->ID;
@@ -296,9 +303,17 @@ class BB_Admin_Topics_Ajax {
 
 			$last_active = get_post_meta( $topic_id, '_bbp_last_active_time', true );
 
+			// Build status label for non-published items.
+			$topic_post_status = get_post_status( $topic_id );
+			$status_label      = '';
+			if ( isset( $status_labels_map[ $topic_post_status ] ) ) {
+				$status_label = $status_labels_map[ $topic_post_status ];
+			}
+
 			$item = array(
 				'id'              => $topic_id,
 				'title'           => $topic->post_title,
+				'status_label'    => $status_label,
 				'slug'            => $topic->post_name,
 				'description'     => $topic->post_content,
 				'forum_id'        => $topic_forum_id,
@@ -310,7 +325,7 @@ class BB_Admin_Topics_Ajax {
 				'author_name'     => $user ? $user->display_name : '',
 				'author_avatar'   => get_avatar_url( $author_id, array( 'size' => 32 ) ),
 				'permalink'       => bbp_get_topic_permalink( $topic_id ),
-				'post_status'     => get_post_status( $topic_id ),
+				'post_status'     => $topic_post_status,
 				'topic_status'    => bbp_is_topic_closed( $topic_id ) ? 'closed' : 'open',
 				'is_sticky'       => bbp_is_topic_sticky( $topic_id ),
 				'is_super_sticky' => bbp_is_topic_super_sticky( $topic_id ),
@@ -528,6 +543,12 @@ class BB_Admin_Topics_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Forum is required.', 'buddyboss' ) ) );
 		}
 
+		// Validate that forum_id references an actual forum post type.
+		$forum_post = get_post( $forum_id );
+		if ( ! $forum_post || bbp_get_forum_post_type() !== $forum_post->post_type ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid forum.', 'buddyboss' ) ) );
+		}
+
 		// Validate visibility.
 		$allowed_visibilities = array( 'publish', 'private', 'hidden' );
 		if ( ! in_array( $visibility, $allowed_visibilities, true ) ) {
@@ -546,12 +567,36 @@ class BB_Admin_Topics_Ajax {
 			$type = 'normal';
 		}
 
+		// Handle scheduling (publish_mode=schedule with date + time).
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified above.
+		$publish_mode  = isset( $_POST['publish_mode'] ) ? sanitize_key( wp_unslash( $_POST['publish_mode'] ) ) : 'immediately';
+		$schedule_date = isset( $_POST['schedule_date'] ) ? sanitize_text_field( wp_unslash( $_POST['schedule_date'] ) ) : '';
+		$schedule_time = isset( $_POST['schedule_time'] ) ? sanitize_text_field( wp_unslash( $_POST['schedule_time'] ) ) : '';
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
+
+		// Validate date format (YYYY-MM-DD) and time format (HH:MM).
+		if ( ! empty( $schedule_date ) && ! preg_match( '/^\d{4}-\d{2}-\d{2}$/', $schedule_date ) ) {
+			$schedule_date = '';
+		}
+		if ( ! empty( $schedule_time ) && ! preg_match( '/^\d{2}:\d{2}$/', $schedule_time ) ) {
+			$schedule_time = '';
+		}
+
 		$topic_data = array(
 			'post_title'   => $title,
 			'post_content' => $description,
 			'post_status'  => $visibility,
 			'post_parent'  => $forum_id,
 		);
+
+		// If scheduling, set post_date and change status to 'future'.
+		if ( 'schedule' === $publish_mode && ! empty( $schedule_date ) ) {
+			$time_part                  = ! empty( $schedule_time ) ? $schedule_time . ':00' : '00:00:00';
+			$scheduled_datetime         = $schedule_date . ' ' . $time_part;
+			$topic_data['post_date']    = $scheduled_datetime;
+			$topic_data['post_date_gmt'] = get_gmt_from_date( $scheduled_datetime );
+			$topic_data['post_status']  = 'future';
+		}
 
 		$topic_meta = array(
 			'forum_id' => $forum_id,
@@ -631,6 +676,20 @@ class BB_Admin_Topics_Ajax {
 		 */
 		do_action( 'bbp_topic_attributes_metabox_save', $topic_id, $forum_id );
 
+		/**
+		 * Fires after topic author is set during creation in Settings 2.0 admin.
+		 *
+		 * In legacy bbPress, this hook fired on both create and edit via save_post.
+		 * Ensures third-party plugins that set custom author data on creation
+		 * continue to work.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int   $topic_id       Topic ID.
+		 * @param array $anonymous_data Empty array (admin users are not anonymous).
+		 */
+		do_action( 'bbp_author_metabox_save', $topic_id, array() );
+
 		// Save "after" phase extension fields (Pro/third-party) via meta field registry.
 		$created_topic = get_post( $topic_id );
 		if ( $created_topic ) {
@@ -704,18 +763,52 @@ class BB_Admin_Topics_Ajax {
 			}
 		}
 
+		// Handle scheduling (publish_mode=schedule with date + time).
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified above.
+		$publish_mode  = isset( $_POST['publish_mode'] ) ? sanitize_key( wp_unslash( $_POST['publish_mode'] ) ) : '';
+		$schedule_date = isset( $_POST['schedule_date'] ) ? sanitize_text_field( wp_unslash( $_POST['schedule_date'] ) ) : '';
+		$schedule_time = isset( $_POST['schedule_time'] ) ? sanitize_text_field( wp_unslash( $_POST['schedule_time'] ) ) : '';
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
+
+		// Validate date format (YYYY-MM-DD) and time format (HH:MM).
+		if ( ! empty( $schedule_date ) && ! preg_match( '/^\d{4}-\d{2}-\d{2}$/', $schedule_date ) ) {
+			$schedule_date = '';
+		}
+		if ( ! empty( $schedule_time ) && ! preg_match( '/^\d{2}:\d{2}$/', $schedule_time ) ) {
+			$schedule_time = '';
+		}
+
+		if ( 'schedule' === $publish_mode && ! empty( $schedule_date ) ) {
+			$time_part                      = ! empty( $schedule_time ) ? $schedule_time . ':00' : '00:00:00';
+			$scheduled_datetime             = $schedule_date . ' ' . $time_part;
+			$update_args['post_date']       = $scheduled_datetime;
+			$update_args['post_date_gmt']   = get_gmt_from_date( $scheduled_datetime );
+			$update_args['post_status']     = 'future';
+			$update_args['edit_date']       = true;
+		} elseif ( 'immediately' === $publish_mode && 'future' === get_post_status( $topic_id ) ) {
+			// Switching from scheduled back to immediately — publish now.
+			$update_args['post_date']       = current_time( 'mysql' );
+			$update_args['post_date_gmt']   = current_time( 'mysql', true );
+			$update_args['post_status']     = ! empty( $visibility ) ? $visibility : 'publish';
+			$update_args['edit_date']       = true;
+		}
+
 		// Capture old forum ID before update for count recalculation.
 		$old_forum_id = (int) bbp_get_topic_forum_id( $topic_id );
 
-		// Update forum if changed.
+		// Validate and update forum if changed.
 		if ( ! empty( $forum_id ) ) {
+			$forum_post = get_post( $forum_id );
+			if ( ! $forum_post || bbp_get_forum_post_type() !== $forum_post->post_type ) {
+				wp_send_json_error( array( 'message' => __( 'Invalid forum.', 'buddyboss' ) ) );
+			}
 			$update_args['post_parent'] = $forum_id;
 			update_post_meta( $topic_id, '_bbp_forum_id', $forum_id );
 		}
 
 		$result = wp_update_post( $update_args, true );
 		if ( is_wp_error( $result ) ) {
-			wp_send_json_error( array( 'message' => wp_strip_all_tags( $result->get_error_message() ) ) );
+			wp_send_json_error( array( 'message' => __( 'Failed to update discussion. Please try again.', 'buddyboss' ) ) );
 		}
 
 		// Recalculate forum counts when forum changes.
@@ -966,6 +1059,9 @@ class BB_Admin_Topics_Ajax {
 			_prime_post_caches( $topic_ids, true, false );
 		}
 
+		// Defer term counting to avoid recalculating after each individual item.
+		wp_defer_term_counting( true );
+
 		foreach ( $topic_ids as $topic_id ) {
 			$topic = get_post( $topic_id );
 			if ( ! $topic || bbp_get_topic_post_type() !== $topic->post_type ) {
@@ -1088,6 +1184,9 @@ class BB_Admin_Topics_Ajax {
 				}
 			}
 		}
+
+		// Resume deferred term counting.
+		wp_defer_term_counting( false );
 
 		// Clear forum counts cache.
 		$this->bb_clear_forum_counts_cache();

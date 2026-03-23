@@ -320,6 +320,7 @@ export function ForumsListScreen( { onNavigate } ) {
 		searchTimerRef.current = setTimeout( function () {
 			setSearchQuery( value );
 			setCurrentPage( 1 );
+			setSelectedIds( [] );
 		}, 500 );
 	};
 
@@ -943,6 +944,7 @@ export function ForumsListScreen( { onNavigate } ) {
 									setCurrentPage( function ( p ) {
 										return Math.max( 1, p - 1 );
 									} );
+									setSelectedIds( [] );
 								} }
 								className="bb-forums-list__pagination-btn bb-forums-list__pagination-btn--previous"
 							>
@@ -963,6 +965,7 @@ export function ForumsListScreen( { onNavigate } ) {
 										variant={ currentPage === page ? 'primary' : 'secondary' }
 										onClick={ function () {
 											setCurrentPage( page );
+											setSelectedIds( [] );
 										} }
 										className={ 'bb-forums-list__pagination-btn' + ( currentPage === page ? ' bb-forums-list__pagination-btn--current' : '' ) }
 									>
@@ -978,6 +981,7 @@ export function ForumsListScreen( { onNavigate } ) {
 									setCurrentPage( function ( p ) {
 										return Math.min( totalPages, p + 1 );
 									} );
+									setSelectedIds( [] );
 								} }
 								className="bb-forums-list__pagination-btn bb-forums-list__pagination-btn--next"
 							>
@@ -1454,23 +1458,16 @@ function ForumEditModal( props ) {
 
 		setError( '' );
 
+		// buildRegisteredFieldPayload emits both plain keys and registered_field_* keys automatically.
 		var registeredPayload = forum.registered_fields
 			? buildRegisteredFieldPayload( forum.registered_fields, registeredValues, forum.id )
 			: {};
 
 		var payload = Object.assign( registeredPayload, {
 			forum_id: forum.id,
-			image_id: imageId,
+			name: ( registeredValues.name || '' ).trim(), // Override with trimmed value.
+			image_id: imageId,            // Custom section, not in registry.
 			remove_image: removeImage ? 1 : 0,
-			// Core fields for backward compatibility with save_forum() handler.
-			name: ( registeredValues.name || '' ).trim(),
-			slug: registeredValues.slug || '',
-			description: registeredValues.description || '',
-			visibility: registeredValues.visibility || 'publish',
-			forum_status: registeredValues.forum_status || 'open',
-			forum_type: registeredValues.forum_type || 'forum',
-			parent_id: registeredValues.parent_id || 0,
-			order: registeredValues.order || 0,
 		} );
 
 		onSave( payload );

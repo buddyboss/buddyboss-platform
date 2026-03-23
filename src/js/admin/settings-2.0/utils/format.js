@@ -174,15 +174,18 @@ export function needsSeparator( item, nextItem, separatorFieldIds ) {
  * Build registered field payload for AJAX save.
  *
  * Iterates registered fields, pulls TinyMCE content for richtext fields,
- * and returns an object with `registered_field_{id}` keys. Used by all
- * create/edit modals to avoid duplicating this pattern.
+ * and returns an object with BOTH plain keys (for AJAX handler direct reads)
+ * and `registered_field_{id}` keys (for registry save_fields_data).
+ *
+ * This means new fields added to meta-fields.php are automatically included
+ * in the payload — no manual key addition needed in React modals.
  *
  * @since BuddyBoss [BBVERSION]
  *
  * @param {Array}  fields Array of field definitions from the registry.
  * @param {Object} values Current field values keyed by field ID.
  * @param {number} itemId Item ID (0 for create, post ID for edit).
- * @returns {Object} Payload with registered_field_* keys.
+ * @returns {Object} Payload with both plain and registered_field_* keys.
  */
 export function buildRegisteredFieldPayload( fields, values, itemId ) {
 	var payload = {};
@@ -202,7 +205,13 @@ export function buildRegisteredFieldPayload( fields, values, itemId ) {
 			}
 		}
 
-		payload[ 'registered_field_' + field.id ] = null !== val && undefined !== val ? val : '';
+		var safeVal = null !== val && undefined !== val ? val : '';
+
+		// Plain key — read by AJAX handlers directly (e.g. $_POST['publish_mode']).
+		payload[ field.id ] = safeVal;
+
+		// Prefixed key — read by registry save_fields_data() for extension fields.
+		payload[ 'registered_field_' + field.id ] = safeVal;
 	} );
 
 	return payload;

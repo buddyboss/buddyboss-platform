@@ -601,13 +601,10 @@ export default function RepliesListScreen( { onNavigate } ) {
 			? buildRegisteredFieldPayload( editReply.registered_fields, editRegisteredValues, editReply.id )
 			: {};
 
+		// buildRegisteredFieldPayload emits both plain keys and registered_field_* keys automatically.
 		var payload = Object.assign( registeredPayload, {
 			reply_id: editReply.id,
-			content: contentVal,
-			forum_id: editRegisteredValues.forum_id || 0,
-			topic_id: editRegisteredValues.topic_id || 0,
-			reply_to: editRegisteredValues.reply_to || 0,
-			visibility: editRegisteredValues.visibility || 'publish',
+			content: contentVal, // Override with TinyMCE-pulled value.
 		} );
 
 		saveReply( payload ).then( function ( response ) {
@@ -1042,10 +1039,10 @@ export default function RepliesListScreen( { onNavigate } ) {
 											) : (
 												decodeEntities( reply.content )
 											) }
-											{ reply.is_spam && (
-												<span className="bb-replies-list__spam-badge">
-													<i className="bb-icons-rl-flag"></i>
-													{ __( 'Spam', 'buddyboss' ) }
+											{ reply.status_label && (
+												<span className={ reply.is_spam ? 'bb-admin-list__spam-badge' : 'bb-admin-list__status-badge' }>
+													{ reply.is_spam && ( <i className="bb-icons-rl-flag"></i> ) }
+													{ reply.status_label }
 												</span>
 											) }
 										</div>

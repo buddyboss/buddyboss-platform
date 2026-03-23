@@ -298,8 +298,7 @@ function bb_discussions_register_core_meta_fields( $registry, $component ) {
 		'schedule_date',
 		array(
 			'label'             => __( 'Date', 'buddyboss' ),
-			'type'              => 'text',
-			'placeholder'       => 'dd/mm/yy',
+			'type'              => 'date',
 			'tab'               => 'details',
 			'order'             => 57,
 			'layout'            => 'half',
@@ -312,7 +311,7 @@ function bb_discussions_register_core_meta_fields( $registry, $component ) {
 				if ( empty( $topic->ID ) ) {
 					return '';
 				}
-				return get_the_date( 'd/m/y', $topic->ID );
+				return get_the_date( 'Y-m-d', $topic->ID );
 			},
 			// No-op: date is handled by the AJAX handler.
 			'save_value'        => function ( $topic, $value ) {}, // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found, Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
@@ -326,8 +325,7 @@ function bb_discussions_register_core_meta_fields( $registry, $component ) {
 		'schedule_time',
 		array(
 			'label'             => __( 'Time', 'buddyboss' ),
-			'type'              => 'text',
-			'placeholder'       => 'hh:mm',
+			'type'              => 'time',
 			'tab'               => 'details',
 			'order'             => 58,
 			'layout'            => 'half',

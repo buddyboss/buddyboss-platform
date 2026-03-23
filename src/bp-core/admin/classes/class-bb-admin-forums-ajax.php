@@ -474,6 +474,14 @@ class BB_Admin_Forums_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Forum name is required.', 'buddyboss' ) ) );
 		}
 
+		// Validate parent_id references an actual forum if provided.
+		if ( ! empty( $parent_id ) ) {
+			$parent_post = get_post( $parent_id );
+			if ( ! $parent_post || bbp_get_forum_post_type() !== $parent_post->post_type ) {
+				wp_send_json_error( array( 'message' => __( 'Invalid parent forum.', 'buddyboss' ) ) );
+			}
+		}
+
 		// Validate visibility.
 		$allowed_visibilities = array( 'publish', 'private', 'hidden' );
 		if ( ! in_array( $visibility, $allowed_visibilities, true ) ) {
@@ -669,6 +677,14 @@ class BB_Admin_Forums_Ajax {
 			$parent_id = 0;
 		}
 
+		// Validate parent_id references an actual forum if provided.
+		if ( ! empty( $parent_id ) ) {
+			$parent_post = get_post( $parent_id );
+			if ( ! $parent_post || bbp_get_forum_post_type() !== $parent_post->post_type ) {
+				wp_send_json_error( array( 'message' => __( 'Invalid parent forum.', 'buddyboss' ) ) );
+			}
+		}
+
 		// Capture old parent before update for count recalculation.
 		$old_parent_id = (int) $forum->post_parent;
 
@@ -681,7 +697,7 @@ class BB_Admin_Forums_Ajax {
 
 		$result = wp_update_post( $update_args, true );
 		if ( is_wp_error( $result ) ) {
-			wp_send_json_error( array( 'message' => wp_strip_all_tags( $result->get_error_message() ) ) );
+			wp_send_json_error( array( 'message' => __( 'Failed to update forum. Please try again.', 'buddyboss' ) ) );
 		}
 
 		// Update forum status (open/closed) using bbPress lifecycle functions.
@@ -907,6 +923,9 @@ class BB_Admin_Forums_Ajax {
 		}
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
+		// Defer term counting to avoid recalculating after each individual item.
+		wp_defer_term_counting( true );
+
 		foreach ( $forum_ids as $forum_id ) {
 			$forum = get_post( $forum_id );
 
@@ -995,6 +1014,9 @@ class BB_Admin_Forums_Ajax {
 				}
 			}
 		}
+
+		// Resume deferred term counting.
+		wp_defer_term_counting( false );
 
 		// Clear status counts cache.
 		$this->bb_clear_status_counts_cache();

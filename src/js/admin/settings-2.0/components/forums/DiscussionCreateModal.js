@@ -118,17 +118,14 @@ export function DiscussionCreateModal( { isOpen, onClose, onCreated, createField
 		setIsSaving( true );
 		setError( '' );
 
+		// buildRegisteredFieldPayload emits both plain keys and registered_field_* keys
+		// automatically — no manual field list needed.
 		var payload = Object.assign(
+			buildRegisteredFieldPayload( fields, registeredValues, 0 ),
 			{
-				title: titleVal.trim(),
-				description: registeredValues.description || '',
-				forum_id: forumIdVal,
-				type: registeredValues.type || 'normal',
-				topic_status: registeredValues.topic_status || 'open',
-				visibility: registeredValues.visibility || 'publish',
-				tags: tags,
-			},
-			buildRegisteredFieldPayload( fields, registeredValues, 0 )
+				title: titleVal.trim(), // Override with trimmed value.
+				tags: tags,             // Custom section, not in registry.
+			}
 		);
 
 		createDiscussion( payload ).then( function ( response ) {

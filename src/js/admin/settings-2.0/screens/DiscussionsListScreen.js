@@ -304,6 +304,7 @@ export function DiscussionsListScreen( { onNavigate } ) {
 		searchTimerRef.current = setTimeout( function () {
 			setSearchQuery( value );
 			setCurrentPage( 1 );
+			setSelectedIds( [] );
 		}, 500 );
 	};
 
@@ -445,6 +446,7 @@ export function DiscussionsListScreen( { onNavigate } ) {
 		if ( 'edit' === action ) {
 			setBulkEditVisibility( 'no_change' );
 			setBulkEditStatus( 'no_change' );
+			setBulkEditTags( '' );
 			setBulkEditOpen( true );
 			return;
 		}
@@ -803,6 +805,12 @@ export function DiscussionsListScreen( { onNavigate } ) {
 											>
 												{ decodeEntities( disc.title ) }
 											</a>
+											{ disc.status_label && (
+												<span className={ 'spam' === disc.post_status ? 'bb-admin-list__spam-badge' : 'bb-admin-list__status-badge' }>
+													{ 'spam' === disc.post_status && ( <i className="bb-icons-rl-flag"></i> ) }
+													{ disc.status_label }
+												</span>
+											) }
 										</td>
 										<td className="bb-discussions-list__td--forum">
 											{ decodeEntities( disc.forum_name ) }
@@ -927,6 +935,7 @@ export function DiscussionsListScreen( { onNavigate } ) {
 									setCurrentPage( function ( p ) {
 										return Math.max( 1, p - 1 );
 									} );
+									setSelectedIds( [] );
 								} }
 								className="bb-discussions-list__pagination-btn bb-discussions-list__pagination-btn--previous"
 							>
@@ -947,6 +956,7 @@ export function DiscussionsListScreen( { onNavigate } ) {
 										variant={ currentPage === page ? 'primary' : 'secondary' }
 										onClick={ function () {
 											setCurrentPage( page );
+											setSelectedIds( [] );
 										} }
 										className={ 'bb-discussions-list__pagination-btn' + ( currentPage === page ? ' bb-discussions-list__pagination-btn--current' : '' ) }
 									>
@@ -962,6 +972,7 @@ export function DiscussionsListScreen( { onNavigate } ) {
 									setCurrentPage( function ( p ) {
 										return Math.min( totalPages, p + 1 );
 									} );
+									setSelectedIds( [] );
 								} }
 								className="bb-discussions-list__pagination-btn bb-discussions-list__pagination-btn--next"
 							>
@@ -1257,20 +1268,15 @@ function DiscussionEditModal( { discussion, onClose, onSave, isSaving } ) {
 
 		setError( '' );
 
+		// buildRegisteredFieldPayload emits both plain keys and registered_field_* keys automatically.
 		var registeredPayload = discussion.registered_fields
 			? buildRegisteredFieldPayload( discussion.registered_fields, registeredValues, discussion.id )
 			: {};
 
 		var payload = Object.assign( registeredPayload, {
 			topic_id: discussion.id,
-			tags: tagNames,
-			// Core fields for backward compatibility with save_discussion() handler.
-			title: ( registeredValues.title || '' ).trim(),
-			description: registeredValues.description || '',
-			forum_id: registeredValues.forum_id || 0,
-			type: registeredValues.type || 'normal',
-			topic_status: registeredValues.topic_status || 'open',
-			visibility: registeredValues.visibility || 'publish',
+			title: ( registeredValues.title || '' ).trim(), // Override with trimmed value.
+			tags: tagNames, // Custom section, not in registry.
 		} );
 
 		onSave( payload );

@@ -140,15 +140,12 @@ export function ReplyCreateModal( { isOpen, onClose, onCreated, createFields } )
 		setIsSaving( true );
 		setError( '' );
 
+		// buildRegisteredFieldPayload emits both plain keys and registered_field_* keys automatically.
 		var payload = Object.assign(
+			buildRegisteredFieldPayload( fields, registeredValues, 0 ),
 			{
-				content: contentVal,
-				forum_id: registeredValues.forum_id || 0,
-				topic_id: registeredValues.topic_id || 0,
-				reply_to: registeredValues.reply_to || 0,
-				visibility: registeredValues.visibility || 'publish',
-			},
-			buildRegisteredFieldPayload( fields, registeredValues, 0 )
+				content: contentVal, // Override with TinyMCE-pulled value.
+			}
 		);
 
 		createReply( payload ).then( function ( response ) {

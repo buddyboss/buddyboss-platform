@@ -218,19 +218,13 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 		setIsSaving( true );
 		setError( '' );
 
+		// buildRegisteredFieldPayload emits both plain keys and registered_field_* keys automatically.
 		var payload = Object.assign(
+			buildRegisteredFieldPayload( fields, registeredValues, 0 ),
 			{
-				name: nameVal.trim(),
-				slug: registeredValues.slug || '',
-				description: registeredValues.description || '',
-				visibility: registeredValues.visibility || 'publish',
-				forum_status: registeredValues.forum_status || 'open',
-				forum_type: registeredValues.forum_type || 'forum',
-				parent_id: registeredValues.parent_id || 0,
-				order: registeredValues.order || 0,
-				image_id: imageId,
-			},
-			buildRegisteredFieldPayload( fields, registeredValues, 0 )
+				name: nameVal.trim(), // Override with trimmed value.
+				image_id: imageId,    // Custom section, not in registry.
+			}
 		);
 
 		createForum( payload ).then( function ( response ) {
