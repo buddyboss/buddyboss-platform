@@ -93,16 +93,26 @@ function bb_notifications_sanitize_types( $value ) {
 		}
 	}
 
-	// Whitelist: discard keys not registered in notification preferences.
+	// Whitelist against registered preferences and collect read-only fields in a single pass.
 	$notification_preferences = bb_register_notification_preferences();
 	$registered_keys          = array();
+	$preferences              = array();
 	if ( ! empty( $notification_preferences ) ) {
 		foreach ( $notification_preferences as $group_data ) {
-			if ( ! empty( $group_data['fields'] ) ) {
-				foreach ( $group_data['fields'] as $field ) {
-					if ( ! empty( $field['key'] ) ) {
-						$registered_keys[] = $field['key'];
-					}
+			if ( empty( $group_data['fields'] ) ) {
+				continue;
+			}
+			foreach ( $group_data['fields'] as $field ) {
+				if ( empty( $field['key'] ) ) {
+					continue;
+				}
+				$registered_keys[] = $field['key'];
+
+				if ( ! empty( $field['notification_read_only'] ) ) {
+					$preferences[] = array(
+						'key'     => $field['key'],
+						'default' => $field['default'],
+					);
 				}
 			}
 		}
@@ -110,35 +120,6 @@ function bb_notifications_sanitize_types( $value ) {
 
 	if ( ! empty( $registered_keys ) ) {
 		$enabled_notification = array_intersect_key( $enabled_notification, array_flip( $registered_keys ) );
-	}
-
-	// Filter out read-only preferences (maintain their defaults).
-	$preferences = array();
-	if ( ! empty( $notification_preferences ) ) {
-		foreach ( $notification_preferences as $group_data ) {
-			if ( ! empty( $group_data['fields'] ) ) {
-				$keys = array_filter(
-					array_map(
-						function ( $fields ) {
-							if (
-								isset( $fields['notification_read_only'] ) &&
-								true === (bool) $fields['notification_read_only']
-							) {
-								return array(
-									'key'     => $fields['key'],
-									'default' => $fields['default'],
-								);
-							}
-						},
-						$group_data['fields']
-					)
-				);
-
-				if ( ! empty( $keys ) ) {
-					$preferences = array_merge( $keys, $preferences );
-				}
-			}
-		}
 	}
 
 	if ( ! empty( $preferences ) ) {
