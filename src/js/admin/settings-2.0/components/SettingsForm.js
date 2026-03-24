@@ -426,7 +426,7 @@ export function SettingsForm({ fields, values, onChange }) {
 				return (
 					<AsyncSelectField
 						key={field.name}
-						value={value || '0'}
+						value={value != null ? String(value) : ''}
 						onChange={(newValue) => onChange(field.name, newValue)}
 						asyncAction={field.async_action || ''}
 						placeholder={field.placeholder || ''}

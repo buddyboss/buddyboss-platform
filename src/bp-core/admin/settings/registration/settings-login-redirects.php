@@ -23,28 +23,6 @@ function bb_registration_register_login_redirects_panel_fields() {
 	$feature_id = 'registration';
 	$panel_id   = 'login_redirects';
 
-	// Build page options for select fields: Default, Custom URL, + published pages.
-	$page_options = array(
-		array(
-			'value' => '',
-			'label' => __( 'Default', 'buddyboss' ),
-		),
-		array(
-			'value' => '0',
-			'label' => __( 'Custom URL', 'buddyboss' ),
-		),
-	);
-
-	// Merge published pages (bb_get_published_pages(true) returns [{value, label}] format).
-	// Guard with function_exists — bp-core-admin-settings.php may not be loaded yet
-	// during early feature registration.
-	if ( function_exists( 'bb_get_published_pages' ) ) {
-		$published_pages = bb_get_published_pages( true );
-		if ( ! empty( $published_pages ) ) {
-			$page_options = array_merge( $page_options, $published_pages );
-		}
-	}
-
 	// =========================================================================
 	// SECTION 1: Global Redirects — global_redirects
 	// =========================================================================
@@ -69,10 +47,11 @@ function bb_registration_register_login_redirects_panel_fields() {
 			'name'              => 'bb-login-redirection',
 			'label'             => __( 'After Login', 'buddyboss' ),
 			'description'       => __( 'Select a page or external link to redirect your members to after they login.', 'buddyboss' ),
-			'type'              => 'select',
+			'type'              => 'async_select',
+			'async_action'      => 'bb_admin_search_published_pages',
 			'default'           => '',
 			'sanitize_callback' => 'bb_registration_sanitize_redirection',
-			'options'           => $page_options,
+			'placeholder'       => __( 'Default', 'buddyboss' ),
 			'order'             => 10,
 		)
 	);
@@ -106,10 +85,11 @@ function bb_registration_register_login_redirects_panel_fields() {
 			'name'              => 'bb-logout-redirection',
 			'label'             => __( 'After Logout', 'buddyboss' ),
 			'description'       => __( 'Select a page or external link to redirect your members to after they logout.', 'buddyboss' ),
-			'type'              => 'select',
+			'type'              => 'async_select',
+			'async_action'      => 'bb_admin_search_published_pages',
 			'default'           => '',
 			'sanitize_callback' => 'bb_registration_sanitize_redirection',
-			'options'           => $page_options,
+			'placeholder'       => __( 'Default', 'buddyboss' ),
 			'order'             => 20,
 		)
 	);
