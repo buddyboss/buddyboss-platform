@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name:  Broadcast
+ * Plugin Name:  BuddyBoss Broadcast
  * Plugin URI:   https://github.com/tomjutla/broadcast
  * Description:  Targeted announcements inside BuddyBoss.
  * Version:      1.0.0
