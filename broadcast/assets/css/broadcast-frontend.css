@@ -1,0 +1,148 @@
+/* =========================================================
+   Broadcast Frontend Styles
+   Loaded only when a matched announcement is present.
+   Uses high z-index to display above community site theme.
+   ========================================================= */
+
+/* --- Popup Overlay --------------------------------------- */
+#broadcast-popup-overlay {
+	position: fixed;
+	inset: 0;
+	z-index: 99999;
+	background: rgba(0, 0, 0, 0.6);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	opacity: 0;
+	transition: opacity 0.2s ease;
+}
+#broadcast-popup-overlay.broadcast-visible {
+	opacity: 1;
+}
+
+/* --- Popup Card ------------------------------------------ */
+#broadcast-popup {
+	position: relative;
+	max-width: 480px;
+	width: 90%;
+	background: #ffffff;
+	border-radius: 8px;
+	padding: 24px;
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+}
+/* Position variants */
+#broadcast-popup-overlay.broadcast-pos-top    { align-items: flex-start; padding-top: 48px; }
+#broadcast-popup-overlay.broadcast-pos-bottom { align-items: flex-end; padding-bottom: 48px; }
+
+.broadcast-popup-image {
+	max-width: 100%;
+	height: auto;
+	border-radius: 4px;
+	margin-bottom: 16px;
+	display: block;
+}
+.broadcast-popup-title {
+	font-size: 16px;
+	font-weight: 600;
+	line-height: 1.4;
+	margin: 0 0 12px;
+	color: #1d2327;
+}
+.broadcast-popup-body {
+	font-size: 14px;
+	line-height: 1.5;
+	color: #3c434a;
+	margin: 0 0 16px;
+}
+.broadcast-cta-btn {
+	display: inline-block;
+	padding: 8px 20px;
+	border-radius: 4px;
+	font-size: 16px;
+	font-weight: 600;
+	background-color: #2271b1;
+	color: #ffffff;
+	text-decoration: none;
+	border: none;
+	cursor: pointer;
+}
+.broadcast-cta-btn:hover { background-color: #135e96; color: #fff; }
+
+/* --- Close Button ---------------------------------------- */
+.broadcast-close-btn {
+	position: absolute;
+	top: 8px;
+	right: 8px;
+	width: 44px;
+	height: 44px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: transparent;
+	border: none;
+	cursor: pointer;
+	color: #72777c;
+	font-size: 20px;
+	line-height: 1;
+	padding: 0;
+}
+.broadcast-close-btn:hover { color: #1d2327; }
+.broadcast-close-btn .dashicons { font-size: 20px; width: 20px; height: 20px; }
+
+/* --- Banner --------------------------------------------- */
+#broadcast-banner {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 99998;
+	min-height: 56px;
+	padding: 12px 16px;
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	background: #1d2327;
+	color: #ffffff;
+	transform: translateY(-100%);
+	transition: transform 0.2s ease;
+}
+#broadcast-banner.broadcast-banner-bottom {
+	top: auto;
+	bottom: 0;
+	transform: translateY(100%);
+}
+#broadcast-banner.broadcast-visible {
+	transform: translateY(0);
+}
+
+.broadcast-banner-image {
+	width: 40px;
+	height: 40px;
+	object-fit: cover;
+	border-radius: 4px;
+	flex-shrink: 0;
+}
+.broadcast-banner-message {
+	flex: 1;
+	font-size: 14px;
+	line-height: 1.4;
+}
+#broadcast-banner .broadcast-close-btn {
+	position: static;
+	color: rgba(255, 255, 255, 0.7);
+	flex-shrink: 0;
+}
+#broadcast-banner .broadcast-close-btn:hover { color: #fff; }
+
+/* --- Utility: screen-reader-text ------------------------- */
+.broadcast-sr-only {
+	clip: rect(1px, 1px, 1px, 1px);
+	clip-path: inset(50%);
+	height: 1px;
+	width: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	word-wrap: normal !important;
+}

@@ -1,0 +1,21 @@
+{
+    "name": "broadcast/broadcast",
+    "description": "Targeted announcements for BuddyBoss communities",
+    "type": "wordpress-plugin",
+    "require": {
+        "woocommerce/action-scheduler": "^3.9"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.6"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Broadcast\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    }
+}

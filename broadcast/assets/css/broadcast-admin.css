@@ -1,0 +1,201 @@
+/* =========================================================
+   Broadcast Admin Styles
+   Scoped to Broadcast admin pages only (enqueued conditionally).
+   ========================================================= */
+
+/* --- Status Badges ---------------------------------------- */
+.broadcast-status-badge {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #fff;
+    line-height: 1.4;
+}
+.broadcast-status-active    { background-color: #00a32a; }
+.broadcast-status-scheduled { background-color: #996800; }
+.broadcast-status-ended     { background-color: #72777c; }
+.broadcast-status-disabled  { background-color: #72777c; }
+
+/* --- Enable/Disable Toggle -------------------------------- */
+.broadcast-toggle {
+    display: inline-block;
+    width: 36px;
+    height: 20px;
+    border-radius: 10px;
+    background-color: #72777c;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    vertical-align: middle;
+    transition: background-color 0.15s ease;
+    margin-left: 8px;
+    padding: 0;
+}
+.broadcast-toggle::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #fff;
+    transition: transform 0.15s ease;
+}
+.broadcast-toggle[aria-checked="true"] {
+    background-color: #2271b1;
+}
+.broadcast-toggle[aria-checked="true"]::after {
+    transform: translateX(16px);
+}
+.broadcast-toggle.broadcast-toggle-saving {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* --- Form Validation Errors ------------------------------- */
+.broadcast-field-error input,
+.broadcast-field-error textarea,
+.broadcast-field-error select {
+    border-color: #d63638;
+}
+
+/* --- Image Preview (edit form) ---------------------------- */
+#broadcast-image-preview {
+    display: block;
+    max-width: 120px;
+    max-height: 120px;
+    margin-top: 8px;
+    border-radius: 4px;
+}
+#broadcast-image-remove {
+    display: inline-block;
+    margin-top: 4px;
+    color: #d63638;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+/* --- Screen-reader utility -------------------------------- */
+.screen-reader-text {
+    clip: rect(1px,1px,1px,1px);
+    clip-path: inset(50%);
+    height: 1px;
+    width: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    word-wrap: normal !important;
+}
+
+/* --- Single-column form layout ---------------------------- */
+#post-body.broadcast-single-col {
+    display: block;
+}
+#post-body.broadcast-single-col #post-body-content {
+    float: none;
+    width: 100%;
+    max-width: 860px;
+}
+#post-body.broadcast-single-col #postbox-container-1 {
+    float: none;
+    width: 100%;
+    max-width: 860px;
+    clear: both;
+}
+#post-body.broadcast-single-col .postbox {
+    border-radius: 6px;
+    border: 1px solid #e2e4e7;
+    box-shadow: 0 1px 3px rgba(0,0,0,.04);
+    margin-bottom: 20px;
+}
+#post-body.broadcast-single-col .postbox .hndle {
+    border-bottom: 1px solid #e2e4e7;
+    padding: 14px 16px;
+    font-size: 14px;
+    font-weight: 600;
+}
+#post-body.broadcast-single-col .postbox .inside {
+    padding: 16px 20px 20px;
+}
+
+/* --- Button group (Type selector) ------------------------- */
+.broadcast-btn-group {
+    display: inline-flex;
+    gap: 0;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    overflow: hidden;
+}
+.broadcast-btn-option {
+    background: #fff;
+    border: none;
+    border-right: 1px solid #c3c4c7;
+    padding: 7px 18px;
+    font-size: 13px;
+    color: #3c434a;
+    cursor: pointer;
+    line-height: 1.4;
+    transition: background 0.1s, color 0.1s;
+}
+.broadcast-btn-option:last-child {
+    border-right: none;
+}
+.broadcast-btn-option:hover {
+    background: #f6f7f7;
+}
+.broadcast-btn-option.is-active {
+    background: #2271b1;
+    color: #fff;
+}
+
+/* --- Position grid ---------------------------------------- */
+.broadcast-position-grid {
+    display: inline-flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 2px;
+}
+.broadcast-pos-btn {
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    padding: 8px 16px;
+    font-size: 12px;
+    color: #3c434a;
+    cursor: pointer;
+    min-width: 80px;
+    text-align: center;
+    transition: background 0.1s, border-color 0.1s, color 0.1s;
+}
+.broadcast-pos-btn:hover {
+    border-color: #2271b1;
+    color: #2271b1;
+}
+.broadcast-pos-btn.is-active {
+    background: #2271b1;
+    border-color: #2271b1;
+    color: #fff;
+}
+
+/* --- Phase 4: Email Settings + Templates --- */
+.broadcast-method-fields { display: none; margin-top: 12px; padding: 12px; background: #f9f9f9; border: 1px solid #ddd; border-radius: 4px; }
+.broadcast-method-fields.active { display: block; }
+#broadcast-test-result { display: inline-block; margin-left: 12px; font-style: italic; }
+.broadcast-tokens-panel { margin-top: 16px; padding: 12px; background: #f0f6fc; border: 1px solid #c3d1e0; border-radius: 4px; }
+.broadcast-tokens-panel h3 { margin: 0 0 8px; font-size: 13px; }
+.broadcast-tokens-list { margin: 0; padding: 0; list-style: none; }
+.broadcast-tokens-list li { padding: 2px 0; font-size: 12px; font-family: monospace; }
+.broadcast-tokens-list li code { background: #e8e8e8; padding: 1px 4px; border-radius: 2px; }
+.broadcast-template-status-override { color: #00a32a; font-weight: 600; }
+.broadcast-template-status-default { color: #999; }
+.broadcast-email-table { width: 100%; border-collapse: collapse; }
+.broadcast-email-table th { text-align: left; padding: 8px 10px; border-bottom: 1px solid #ddd; }
+.broadcast-email-table td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; }
+.broadcast-email-table tr:hover td { background: #f9f9f9; }

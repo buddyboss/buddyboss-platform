@@ -1,0 +1,65 @@
+/**
+ * Broadcast Campaigns — Admin Styles
+ */
+.bb-camp-wizard-nav{display:flex;align-items:center;gap:0;margin:20px 0 0;padding:0;background:#fff;border:1px solid #e5e7eb;border-radius:8px;overflow:hidden}
+.bb-camp-step-btn{display:flex;align-items:center;gap:10px;padding:14px 20px;background:none;border:none;cursor:pointer;color:#64748b;font-size:13px;font-weight:500;transition:background .15s,color .15s;white-space:nowrap}
+.bb-camp-step-btn:hover{background:#f8fafc;color:#374151}
+.bb-camp-step-btn.is-active{color:#2271b1;font-weight:600}
+.bb-camp-step-btn.is-active .step-num{background:#2271b1;color:#fff}
+.bb-camp-step-btn.is-done .step-num{background:#10b981;color:#fff}
+.step-num{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:#e5e7eb;color:#6b7280;font-size:12px;font-weight:700;flex-shrink:0;transition:background .15s,color .15s}
+.step-arrow{color:#d1d5db;font-size:18px;line-height:1;padding:0 4px;flex-shrink:0}
+.bb-camp-wizard-layout{display:flex;gap:20px;align-items:flex-start;margin-top:20px}
+.bb-camp-wizard-steps{flex:1 1 auto;min-width:0}
+.bb-camp-step-footer{display:flex;align-items:center;gap:10px;padding:16px 0 4px}
+.bb-camp-step-footer-actions{display:flex;align-items:center;gap:10px;margin-left:auto}
+.bb-camp-review-table th{width:160px;font-weight:600;color:#374151}
+.bb-camp-test-email-row{display:flex;align-items:center;gap:10px;margin-top:10px}
+.bb-camp-builder-card{padding:8px 0}
+.bb-camp-builder-status{margin-bottom:16px}
+.bb-camp-body-status{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;padding:4px 0}
+.bb-camp-body-status.is-has-content{color:#10b981}
+.bb-camp-body-status.is-empty{color:#f59e0b}
+.bb-camp-body-preview{color:#6b7280;font-size:12px;font-style:italic;margin:6px 0 0;line-height:1.5}
+.bb-camp-open-builder-btn{display:inline-flex!important;align-items:center;gap:8px;font-size:14px!important;height:auto!important;padding:10px 20px!important;text-decoration:none!important}
+.bb-camp-open-builder-btn .dashicons{font-size:18px;width:18px;height:18px;flex-shrink:0}
+.bb-camp-edit-layout{display:flex;gap:20px;align-items:flex-start;margin-top:20px}
+.bb-camp-main{flex:1 1 auto;min-width:0}
+.bb-camp-sidebar{flex:0 0 260px;width:260px}
+.bb-camp-status-badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.03em;color:#fff;background:#64748b;line-height:1.8}
+.bb-camp-status-badge.is-draft{background:#64748b}
+.bb-camp-status-badge.is-queued{background:#f59e0b}
+.bb-camp-status-badge.is-sending{background:#f59e0b}
+.bb-camp-status-badge.is-sent{background:#10b981}
+.bb-camp-status-badge.is-failed{background:#ef4444}
+.bb-camp-recipient-tags{display:flex;flex-wrap:wrap;gap:4px}
+.bb-camp-tag-pill{display:inline-block;padding:2px 8px;background:#e8f0fe;color:#1a56db;border-radius:12px;font-size:12px;font-weight:500;white-space:nowrap}
+.bb-camp-row-actions .button{margin-right:4px}
+.bb-camp-row-actions .button-link-delete{color:#b32d2e}
+.bb-camp-recipients-panel{margin-top:14px;padding:14px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:4px}
+.bb-camp-radio-label,.bb-camp-checkbox-label{display:block;margin-bottom:8px;font-size:13px;cursor:pointer}
+.bb-camp-radio-label input,.bb-camp-checkbox-label input{margin-right:6px}
+.bb-camp-merge-tags{margin-top:12px}
+.bb-camp-merge-tags-toggle{background:none;border:none;color:#2271b1;cursor:pointer;font-size:12px;padding:0;text-decoration:underline}
+.bb-camp-merge-tags-toggle:hover{color:#135e96}
+.bb-camp-merge-tags-list{margin-top:8px;padding:10px 14px;background:#f0f4f8;border:1px solid #d1d5db;border-radius:4px;font-size:12px;color:#374151}
+.bb-camp-merge-tags-list table{border-collapse:collapse;width:100%}
+.bb-camp-merge-tags-list td{padding:3px 8px 3px 0;vertical-align:top}
+.bb-camp-merge-tags-list code{background:#e2e8f0;padding:1px 5px;border-radius:3px;font-size:11px}
+.bb-crm-empty-state{text-align:center;padding:60px 20px;background:#fff;border:1px solid #e5e7eb;border-radius:6px;margin-top:20px}
+.bb-crm-empty-state .dashicons{font-size:48px;width:48px;height:48px;color:#9ca3af;margin-bottom:12px}
+.bb-crm-empty-state h3{font-size:18px;margin:0 0 8px;color:#374151}
+.bb-crm-empty-state p{color:#6b7280;margin-bottom:20px}
+.bb-camp-table .column-primary{width:30%}
+.bb-camp-table .column-primary strong a{text-decoration:none}
+.bb-camp-table .column-primary strong a:hover{text-decoration:underline}
+.bb-crm-wrap .postbox{margin-bottom:20px}
+.bb-crm-wrap .postbox .postbox-header{border-bottom:1px solid #e5e7eb}
+.bb-crm-wrap .postbox .postbox-header h2{font-size:14px;font-weight:600;padding:12px 16px}
+.bb-crm-wrap .postbox .inside{padding:16px}
+.required{color:#ef4444}
+.bb-camp-sidebar .button-large{text-align:center;display:block;box-sizing:border-box}
+.bb-camp-recipient-count{display:inline-flex;align-items:center;gap:8px;margin:16px 0 20px;padding:10px 18px;background:#f0f6fc;border:1px solid #b8daff;border-radius:6px;color:#0073aa;font-size:14px;font-weight:500;transition:background .2s}
+.bb-camp-recipient-count .dashicons{font-size:18px;width:18px;height:18px;color:#0073aa}
+.bb-camp-recipient-count.is-loaded{background:#f0fdf4;border-color:#bbf7d0;color:#16a34a}
+.bb-camp-recipient-count.is-loaded .dashicons{color:#16a34a}

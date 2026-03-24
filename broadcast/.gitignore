@@ -1,0 +1,5 @@
+vendor/
+.phpunit.result.cache
+wp-admin/
+composer.phar
+composer
