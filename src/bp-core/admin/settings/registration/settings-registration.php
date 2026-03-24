@@ -126,8 +126,9 @@ function bb_registration_register_panel_fields() {
 			'registration_general',
 			array(
 				'name'              => 'register-legal-agreement',
-				'label'             => __( 'Legal Agreement', 'buddyboss' ),
-				'description'       => __( 'Require non-members to explicitly agree to your Terms of Service and Privacy Policy before registering.', 'buddyboss' ),
+				'label'             => '',
+				'description'       => __( 'Add Legal Agreement checkbox to register form', 'buddyboss' ),
+				'help_text'         => __( 'Require non-members to explicitly agree to your Terms of Service and Privacy Policy before registering.', 'buddyboss' ),
 				'type'              => 'toggle',
 				'default'           => 0,
 				'sanitize_callback' => 'absint',
@@ -136,6 +137,7 @@ function bb_registration_register_panel_fields() {
 					'value'  => false,
 					'action' => 'show',
 				),
+				'group'             => 'registration_form',
 				'order'             => 40,
 			)
 		);
@@ -147,7 +149,7 @@ function bb_registration_register_panel_fields() {
 			'registration_general',
 			array(
 				'name'              => 'register-confirm-email',
-				'label'             => __( 'Confirm Email', 'buddyboss' ),
+				'label'             => '',
 				'description'       => __( 'Add Email confirmation to register form.', 'buddyboss' ),
 				'type'              => 'toggle',
 				'default'           => 0,
@@ -157,6 +159,7 @@ function bb_registration_register_panel_fields() {
 					'value'  => false,
 					'action' => 'show',
 				),
+				'group'             => 'registration_form',
 				'order'             => 50,
 			)
 		);
@@ -168,7 +171,7 @@ function bb_registration_register_panel_fields() {
 			'registration_general',
 			array(
 				'name'              => 'register-confirm-password',
-				'label'             => __( 'Confirm Password', 'buddyboss' ),
+				'label'             => '',
 				'description'       => __( 'Add Password confirmation to register form.', 'buddyboss' ),
 				'type'              => 'toggle',
 				'default'           => 0,
@@ -178,6 +181,7 @@ function bb_registration_register_panel_fields() {
 					'value'  => false,
 					'action' => 'show',
 				),
+				'group'             => 'registration_form',
 				'order'             => 60,
 			)
 		);
