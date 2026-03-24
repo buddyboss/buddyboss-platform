@@ -21,6 +21,7 @@ import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { createMemberType, updateMemberType } from '../../utils/ajax';
 import { safeUrl } from '../../utils/sanitize';
+import { AsyncSelectField } from '../fields/AsyncSelectField';
 
 /**
  * Strip leading '#' from a hex color value.
@@ -128,37 +129,11 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 
 	var availableGroupTypes = groupTypes || [];
 	var availableWpRoles = wpRoles || [];
-	// Login redirection searchable dropdown state.
-	var loginSearchState = useState( '' );
-	var loginSearchText = loginSearchState[ 0 ];
-	var setLoginSearchText = loginSearchState[ 1 ];
-	var loginDropdownState = useState( false );
-	var isLoginDropdownOpen = loginDropdownState[ 0 ];
-	var setIsLoginDropdownOpen = loginDropdownState[ 1 ];
-	var loginDropdownRef = useRef( null );
-
-	// Logout redirection searchable dropdown state.
-	var logoutSearchState = useState( '' );
-	var logoutSearchText = logoutSearchState[ 0 ];
-	var setLogoutSearchText = logoutSearchState[ 1 ];
-	var logoutDropdownState = useState( false );
-	var isLogoutDropdownOpen = logoutDropdownState[ 0 ];
-	var setIsLogoutDropdownOpen = logoutDropdownState[ 1 ];
-	var logoutDropdownRef = useRef( null );
-
-	// Build redirection dropdown options once.
-	var redirectionOptions = useMemo( function () {
-		var baseOptions = [
-			{ label: __( 'Default', 'buddyboss' ), value: '' },
-			{ label: __( 'Custom URL', 'buddyboss' ), value: '0' },
-		];
-		if ( publishedPages && publishedPages.length ) {
-			return baseOptions.concat( publishedPages.map( function ( page ) {
-				return { label: decodeEntities( page.label ), value: page.value };
-			} ) );
-		}
-		return baseOptions;
-	}, [ publishedPages ] );
+	// Login/logout redirection key counters to force AsyncSelectField re-mount on modal open.
+	var loginKeyState = useState( 0 );
+	var loginKey = loginKeyState[ 0 ];
+	var logoutKeyState = useState( 0 );
+	var logoutKey = logoutKeyState[ 0 ];
 
 	// Populate form data when editing.
 	useEffect( function () {
@@ -209,42 +184,13 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 		setError( '' );
 	}, [ isOpen, memberType ] );
 
-	// Sync search text with current redirection value label when modal opens or data loads.
+	// Force AsyncSelectField re-mount when modal opens with new data.
 	useEffect( function () {
-		if ( ! isOpen || ! redirectionOptions.length ) {
-			return;
+		if ( isOpen ) {
+			loginKeyState[ 1 ]( function ( prev ) { return prev + 1; } );
+			logoutKeyState[ 1 ]( function ( prev ) { return prev + 1; } );
 		}
-
-		var loginOption = redirectionOptions.find( function ( o ) {
-			return o.value === formData.login_redirection;
-		} );
-		setLoginSearchText( loginOption ? loginOption.label : '' );
-
-		var logoutOption = redirectionOptions.find( function ( o ) {
-			return o.value === formData.logout_redirection;
-		} );
-		setLogoutSearchText( logoutOption ? logoutOption.label : '' );
-	}, [ isOpen, memberType, redirectionOptions ] ); // eslint-disable-line react-hooks/exhaustive-deps
-
-	// Close dropdown on click outside — only register when modal is open and a dropdown is active.
-	useEffect( function () {
-		if ( ! isOpen || ( ! isLoginDropdownOpen && ! isLogoutDropdownOpen ) ) {
-			return;
-		}
-
-		function handleClickOutside( e ) {
-			if ( isLoginDropdownOpen && loginDropdownRef.current && ! loginDropdownRef.current.contains( e.target ) ) {
-				setIsLoginDropdownOpen( false );
-			}
-			if ( isLogoutDropdownOpen && logoutDropdownRef.current && ! logoutDropdownRef.current.contains( e.target ) ) {
-				setIsLogoutDropdownOpen( false );
-			}
-		}
-		document.addEventListener( 'mousedown', handleClickOutside );
-		return function () {
-			document.removeEventListener( 'mousedown', handleClickOutside );
-		};
-	}, [ isOpen, isLoginDropdownOpen, isLogoutDropdownOpen ] );
+	}, [ isOpen, memberType ] ); // eslint-disable-line react-hooks/exhaustive-deps
 
 	// Update a field in form data.
 	var updateField = useCallback( function ( field, value ) {
@@ -561,51 +507,16 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 
 				{/* After Login Redirection */}
 				<div className="bb-admin-profile-type-modal__section bb-admin-profile-type-modal__section--no-border">
-					<div className="bb-admin-profile-type-modal__searchable-select" ref={ loginDropdownRef }>
-						<label className="components-base-control__label">
-							{ __( 'After Login Redirection', 'buddyboss' ) }
-						</label>
-						<div className="bb-admin-profile-type-modal__search-input-wrap">
-							<input
-								type="text"
-								className="bb-admin-profile-type-modal__search-input components-text-control__input"
-								value={ loginSearchText }
-								placeholder={ __( 'Select a page', 'buddyboss' ) }
-								onChange={ function ( e ) {
-									setLoginSearchText( e.target.value );
-									setIsLoginDropdownOpen( true );
-								} }
-								onFocus={ function () {
-									setIsLoginDropdownOpen( true );
-								} }
-							/>
-						</div>
-						{ isLoginDropdownOpen && (
-							<ul className="bb-admin-profile-type-modal__dropdown-list">
-								{ redirectionOptions.filter( function ( opt ) {
-									if ( ! loginSearchText ) {
-										return true;
-									}
-									return opt.label.toLowerCase().indexOf( loginSearchText.toLowerCase() ) !== -1;
-								} ).map( function ( opt ) {
-									return (
-										<li
-											key={ 'login-' + opt.value }
-											className={ 'bb-admin-profile-type-modal__dropdown-item' + ( opt.value === formData.login_redirection ? ' is-selected' : '' ) }
-											onMouseDown={ function ( e ) {
-												e.preventDefault();
-												setLoginSearchText( opt.label );
-												updateField( 'login_redirection', opt.value );
-												setIsLoginDropdownOpen( false );
-											} }
-										>
-											{ opt.label }
-										</li>
-									);
-								} ) }
-							</ul>
-						) }
-					</div>
+					<label className="components-base-control__label">
+						{ __( 'After Login Redirection', 'buddyboss' ) }
+					</label>
+					<AsyncSelectField
+						key={ 'login-redirect-' + loginKey }
+						value={ formData.login_redirection || '' }
+						onChange={ function ( val ) { updateField( 'login_redirection', val ); } }
+						asyncAction="bb_admin_search_published_pages"
+						placeholder={ __( 'Select a page', 'buddyboss' ) }
+					/>
 					{ '0' === formData.login_redirection && (
 						<TextControl
 							label={ __( 'Custom URL', 'buddyboss' ) }
@@ -618,51 +529,16 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 
 				<div className="bb-admin-profile-type-modal__section">
 					{/* After Logout Redirection */}
-					<div className="bb-admin-profile-type-modal__searchable-select" ref={ logoutDropdownRef }>
-						<label className="components-base-control__label">
-							{ __( 'After Logout Redirection', 'buddyboss' ) }
-						</label>
-						<div className="bb-admin-profile-type-modal__search-input-wrap">
-							<input
-								type="text"
-								className="bb-admin-profile-type-modal__search-input components-text-control__input"
-								value={ logoutSearchText }
-								placeholder={ __( 'Select a page', 'buddyboss' ) }
-								onChange={ function ( e ) {
-									setLogoutSearchText( e.target.value );
-									setIsLogoutDropdownOpen( true );
-								} }
-								onFocus={ function () {
-									setIsLogoutDropdownOpen( true );
-								} }
-							/>
-						</div>
-						{ isLogoutDropdownOpen && (
-							<ul className="bb-admin-profile-type-modal__dropdown-list">
-								{ redirectionOptions.filter( function ( opt ) {
-									if ( ! logoutSearchText ) {
-										return true;
-									}
-									return opt.label.toLowerCase().indexOf( logoutSearchText.toLowerCase() ) !== -1;
-								} ).map( function ( opt ) {
-									return (
-										<li
-											key={ 'logout-' + opt.value }
-											className={ 'bb-admin-profile-type-modal__dropdown-item' + ( opt.value === formData.logout_redirection ? ' is-selected' : '' ) }
-											onMouseDown={ function ( e ) {
-												e.preventDefault();
-												setLogoutSearchText( opt.label );
-												updateField( 'logout_redirection', opt.value );
-												setIsLogoutDropdownOpen( false );
-											} }
-										>
-											{ opt.label }
-										</li>
-									);
-								} ) }
-							</ul>
-						) }
-					</div>
+					<label className="components-base-control__label">
+						{ __( 'After Logout Redirection', 'buddyboss' ) }
+					</label>
+					<AsyncSelectField
+						key={ 'logout-redirect-' + logoutKey }
+						value={ formData.logout_redirection || '' }
+						onChange={ function ( val ) { updateField( 'logout_redirection', val ); } }
+						asyncAction="bb_admin_search_published_pages"
+						placeholder={ __( 'Select a page', 'buddyboss' ) }
+					/>
 					{ '0' === formData.logout_redirection && (
 						<TextControl
 							label={ __( 'Custom URL', 'buddyboss' ) }
