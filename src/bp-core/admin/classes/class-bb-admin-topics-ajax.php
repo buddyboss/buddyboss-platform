@@ -526,13 +526,14 @@ class BB_Admin_Topics_Ajax {
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
-		$title        = isset( $_POST['title'] ) ? sanitize_text_field( wp_unslash( $_POST['title'] ) ) : '';
-		$description  = isset( $_POST['description'] ) ? wp_kses_post( wp_unslash( $_POST['description'] ) ) : '';
-		$forum_id     = isset( $_POST['forum_id'] ) ? absint( wp_unslash( $_POST['forum_id'] ) ) : 0;
-		$type         = isset( $_POST['type'] ) ? sanitize_key( wp_unslash( $_POST['type'] ) ) : 'normal';
-		$topic_status = isset( $_POST['topic_status'] ) ? sanitize_key( wp_unslash( $_POST['topic_status'] ) ) : 'open';
-		$visibility   = isset( $_POST['visibility'] ) ? sanitize_key( wp_unslash( $_POST['visibility'] ) ) : 'publish';
-		$tags_raw     = isset( $_POST['tags'] ) ? sanitize_text_field( wp_unslash( $_POST['tags'] ) ) : '';
+		$title         = isset( $_POST['title'] ) ? sanitize_text_field( wp_unslash( $_POST['title'] ) ) : '';
+		$description   = isset( $_POST['description'] ) ? wp_kses_post( wp_unslash( $_POST['description'] ) ) : '';
+		$forum_id      = isset( $_POST['forum_id'] ) ? absint( wp_unslash( $_POST['forum_id'] ) ) : 0;
+		$type          = isset( $_POST['type'] ) ? sanitize_key( wp_unslash( $_POST['type'] ) ) : 'normal';
+		$topic_status  = isset( $_POST['topic_status'] ) ? sanitize_key( wp_unslash( $_POST['topic_status'] ) ) : 'open';
+		$visibility    = isset( $_POST['visibility'] ) ? sanitize_key( wp_unslash( $_POST['visibility'] ) ) : 'publish';
+		$post_password = isset( $_POST['post_password'] ) ? sanitize_text_field( wp_unslash( $_POST['post_password'] ) ) : '';
+		$tags_raw      = isset( $_POST['tags'] ) ? sanitize_text_field( wp_unslash( $_POST['tags'] ) ) : '';
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $title ) ) {
@@ -550,15 +551,15 @@ class BB_Admin_Topics_Ajax {
 		}
 
 		// Validate visibility.
-		$allowed_visibilities = array( 'publish', 'private', 'hidden' );
+		$allowed_visibilities = array( 'publish', 'private', 'hidden', 'password' );
 		if ( ! in_array( $visibility, $allowed_visibilities, true ) ) {
 			$visibility = 'publish';
 		}
 
-		// Validate topic status.
-		$allowed_statuses = array( 'open', 'closed' );
+		// Validate topic status — values from bbp_get_topic_statuses(): publish, closed, spam, trash, pending.
+		$allowed_statuses = function_exists( 'bbp_get_topic_statuses' ) ? array_keys( bbp_get_topic_statuses() ) : array( 'publish', 'closed' );
 		if ( ! in_array( $topic_status, $allowed_statuses, true ) ) {
-			$topic_status = 'open';
+			$topic_status = bbp_get_public_status_id();
 		}
 
 		// Validate type.
@@ -582,11 +583,20 @@ class BB_Admin_Topics_Ajax {
 			$schedule_time = '';
 		}
 
+		// Password-protected: use 'publish' status with post_password set.
+		// Fall back to public if password is empty (matches WP core behavior).
+		if ( 'password' === $visibility && empty( $post_password ) ) {
+			$visibility = 'publish';
+		}
+		$resolved_status   = 'password' === $visibility ? 'publish' : $visibility;
+		$resolved_password = 'password' === $visibility ? $post_password : '';
+
 		$topic_data = array(
-			'post_title'   => $title,
-			'post_content' => $description,
-			'post_status'  => $visibility,
-			'post_parent'  => $forum_id,
+			'post_title'    => $title,
+			'post_content'  => $description,
+			'post_status'   => $resolved_status,
+			'post_parent'   => $forum_id,
+			'post_password' => $resolved_password,
 		);
 
 		// If scheduling, set post_date and change status to 'future'.
@@ -620,9 +630,20 @@ class BB_Admin_Topics_Ajax {
 			}
 		}
 
-		// Handle topic status (open/closed).
-		if ( 'closed' === $topic_status ) {
+		// Handle topic status — values from bbp_get_topic_statuses(): publish, closed, spam, trash, pending.
+		if ( bbp_get_closed_status_id() === $topic_status ) {
 			bbp_close_topic( $topic_id );
+		} elseif ( bbp_get_spam_status_id() === $topic_status ) {
+			bbp_spam_topic( $topic_id );
+		} elseif ( bbp_get_pending_status_id() === $topic_status ) {
+			wp_update_post(
+				array(
+					'ID'          => $topic_id,
+					'post_status' => bbp_get_pending_status_id(),
+				)
+			);
+		} elseif ( bbp_get_trash_status_id() === $topic_status ) {
+			wp_trash_post( $topic_id );
 		}
 
 		// Handle tags.
@@ -722,14 +743,15 @@ class BB_Admin_Topics_Ajax {
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
-		$topic_id     = isset( $_POST['topic_id'] ) ? absint( wp_unslash( $_POST['topic_id'] ) ) : 0;
-		$title        = isset( $_POST['title'] ) ? sanitize_text_field( wp_unslash( $_POST['title'] ) ) : '';
-		$description  = isset( $_POST['description'] ) ? wp_kses_post( wp_unslash( $_POST['description'] ) ) : '';
-		$forum_id     = isset( $_POST['forum_id'] ) ? absint( wp_unslash( $_POST['forum_id'] ) ) : 0;
-		$type         = isset( $_POST['type'] ) ? sanitize_key( wp_unslash( $_POST['type'] ) ) : '';
-		$topic_status = isset( $_POST['topic_status'] ) ? sanitize_key( wp_unslash( $_POST['topic_status'] ) ) : '';
-		$visibility   = isset( $_POST['visibility'] ) ? sanitize_key( wp_unslash( $_POST['visibility'] ) ) : '';
-		$tags_raw     = isset( $_POST['tags'] ) ? sanitize_text_field( wp_unslash( $_POST['tags'] ) ) : '';
+		$topic_id      = isset( $_POST['topic_id'] ) ? absint( wp_unslash( $_POST['topic_id'] ) ) : 0;
+		$title         = isset( $_POST['title'] ) ? sanitize_text_field( wp_unslash( $_POST['title'] ) ) : '';
+		$description   = isset( $_POST['description'] ) ? wp_kses_post( wp_unslash( $_POST['description'] ) ) : '';
+		$forum_id      = isset( $_POST['forum_id'] ) ? absint( wp_unslash( $_POST['forum_id'] ) ) : 0;
+		$type          = isset( $_POST['type'] ) ? sanitize_key( wp_unslash( $_POST['type'] ) ) : '';
+		$topic_status  = isset( $_POST['topic_status'] ) ? sanitize_key( wp_unslash( $_POST['topic_status'] ) ) : '';
+		$visibility    = isset( $_POST['visibility'] ) ? sanitize_key( wp_unslash( $_POST['visibility'] ) ) : '';
+		$post_password = isset( $_POST['post_password'] ) ? sanitize_text_field( wp_unslash( $_POST['post_password'] ) ) : '';
+		$tags_raw      = isset( $_POST['tags'] ) ? sanitize_text_field( wp_unslash( $_POST['tags'] ) ) : '';
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $topic_id ) ) {
@@ -757,9 +779,15 @@ class BB_Admin_Topics_Ajax {
 
 		// Validate and set visibility.
 		if ( ! empty( $visibility ) ) {
-			$allowed_visibilities = array( 'publish', 'private', 'hidden' );
+			$allowed_visibilities = array( 'publish', 'private', 'hidden', 'password' );
 			if ( in_array( $visibility, $allowed_visibilities, true ) ) {
-				$update_args['post_status'] = $visibility;
+				if ( 'password' === $visibility ) {
+					$update_args['post_status']   = 'publish';
+					$update_args['post_password'] = $post_password;
+				} else {
+					$update_args['post_status']   = $visibility;
+					$update_args['post_password'] = '';
+				}
 			}
 		}
 
@@ -789,8 +817,14 @@ class BB_Admin_Topics_Ajax {
 			// Switching from scheduled back to immediately — publish now.
 			$update_args['post_date']       = current_time( 'mysql' );
 			$update_args['post_date_gmt']   = current_time( 'mysql', true );
-			$update_args['post_status']     = ! empty( $visibility ) ? $visibility : 'publish';
 			$update_args['edit_date']       = true;
+
+			if ( 'password' === $visibility ) {
+				$update_args['post_status']   = 'publish';
+				$update_args['post_password'] = $post_password;
+			} else {
+				$update_args['post_status'] = ! empty( $visibility ) ? $visibility : 'publish';
+			}
 		}
 
 		// Capture old forum ID before update for count recalculation.
@@ -874,14 +908,42 @@ class BB_Admin_Topics_Ajax {
 			}
 		}
 
-		// Handle topic status (open/closed).
+		// Handle topic status — values from bbp_get_topic_statuses(): publish, closed, spam, trash, pending.
 		if ( ! empty( $topic_status ) ) {
-			$allowed_statuses = array( 'open', 'closed' );
+			$allowed_statuses = function_exists( 'bbp_get_topic_statuses' ) ? array_keys( bbp_get_topic_statuses() ) : array();
 			if ( in_array( $topic_status, $allowed_statuses, true ) ) {
-				if ( 'closed' === $topic_status ) {
+				$current_status = get_post_status( $topic_id );
+
+				if ( bbp_get_closed_status_id() === $topic_status ) {
 					bbp_close_topic( $topic_id );
-				} else {
-					bbp_open_topic( $topic_id );
+				} elseif ( bbp_get_public_status_id() === $topic_status ) {
+					// Restore from spam/trash/pending/closed → open.
+					if ( bbp_get_spam_status_id() === $current_status ) {
+						bbp_unspam_topic( $topic_id );
+					} elseif ( bbp_get_trash_status_id() === $current_status ) {
+						wp_untrash_post( $topic_id );
+					} elseif ( bbp_get_closed_status_id() === $current_status ) {
+						bbp_open_topic( $topic_id );
+					} else {
+						// Pending or other → publish directly.
+						wp_update_post(
+							array(
+								'ID'          => $topic_id,
+								'post_status' => bbp_get_public_status_id(),
+							)
+						);
+					}
+				} elseif ( bbp_get_spam_status_id() === $topic_status ) {
+					bbp_spam_topic( $topic_id );
+				} elseif ( bbp_get_pending_status_id() === $topic_status ) {
+					wp_update_post(
+						array(
+							'ID'          => $topic_id,
+							'post_status' => bbp_get_pending_status_id(),
+						)
+					);
+				} elseif ( bbp_get_trash_status_id() === $topic_status ) {
+					wp_trash_post( $topic_id );
 				}
 			}
 		}
@@ -1115,8 +1177,9 @@ class BB_Admin_Topics_Ajax {
 					if ( in_array( $edit_visibility, $allowed_visibilities, true ) ) {
 						$update_result = wp_update_post(
 							array(
-								'ID'          => $topic_id,
-								'post_status' => $edit_visibility,
+								'ID'            => $topic_id,
+								'post_status'   => $edit_visibility,
+								'post_password' => '',
 							),
 							true
 						);

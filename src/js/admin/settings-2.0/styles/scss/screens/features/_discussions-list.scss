@@ -404,6 +404,13 @@
 	&__td--name {
 		max-width: 232px;
 		overflow: hidden;
+
+		&:has(.bb-admin-list__spam-badge) {
+
+			.bb-discussions-list__discussion-name {
+				max-width: calc(100% - 80px);
+			}
+		}
 	}
 
 	&__td--forum {
@@ -417,7 +424,8 @@
 
 	// Discussion Name Column
 	&__discussion-name {
-		display: block;
+		display: inline-block;
+		vertical-align: middle;
 		font-size: 14px;
 		font-weight: 400;
 		color: $bb-link-color;
@@ -426,6 +434,7 @@
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		text-decoration: none;
+		max-width: 100%;
 	}
 
 	// Count Column (Replies, Members)
