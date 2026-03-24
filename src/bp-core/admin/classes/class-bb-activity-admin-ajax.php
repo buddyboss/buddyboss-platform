@@ -61,7 +61,6 @@ class BB_Activity_Admin_Ajax {
 				array( 'message' => __( 'Permission denied.', 'buddyboss' ) ),
 				403
 			);
-			exit;
 		}
 
 		if ( ! check_ajax_referer( self::NONCE_ACTION, 'nonce', false ) ) {
@@ -69,7 +68,6 @@ class BB_Activity_Admin_Ajax {
 				array( 'message' => __( 'Security check failed.', 'buddyboss' ) ),
 				403
 			);
-			exit;
 		}
 
 		return true;

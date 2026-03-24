@@ -8,6 +8,7 @@
  */
 
 import { __ } from '@wordpress/i18n';
+import { safeUrl } from '../utils/sanitize';
 
 /**
  * Side Navigation Component
@@ -71,7 +72,7 @@ export function SideNavigation({ featureId, sidePanels, navItems, currentPanel, 
 										<span className={panel.icon.class}></span>
 									)}
 									{( 'svg' === panel.icon.type || 'image' === panel.icon.type ) && panel.icon.url && (
-										<img src={panel.icon.url} alt={panel.title} className="bb-admin-side-nav__icon-img" />
+										<img src={safeUrl( panel.icon.url )} alt={panel.title} className="bb-admin-side-nav__icon-img" />
 									)}
 								</span>
 							)}
@@ -107,7 +108,7 @@ export function SideNavigation({ featureId, sidePanels, navItems, currentPanel, 
 												<span className={item.icon.class}></span>
 											)}
 											{ 'object' === typeof item.icon && ( 'svg' === item.icon.type || 'image' === item.icon.type ) && item.icon.url && (
-												<img src={item.icon.url} alt={item.label} className="bb-admin-side-nav__icon-img" />
+												<img src={safeUrl( item.icon.url )} alt={item.label} className="bb-admin-side-nav__icon-img" />
 											)}
 										</span>
 									)}

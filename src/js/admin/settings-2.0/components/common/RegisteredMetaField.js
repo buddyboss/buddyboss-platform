@@ -22,6 +22,8 @@ import { decodeEntities } from '@wordpress/html-entities';
 import { RichTextEditor } from './RichTextEditor';
 import { safeUrl } from '../../utils/sanitize';
 import { AsyncSelectField } from '../fields/AsyncSelectField';
+import { DateInput } from '../fields/DateInput';
+import { TimeInput } from '../fields/TimeInput';
 
 /**
  * AJAX-powered searchable multi-select field.
@@ -34,7 +36,7 @@ import { AsyncSelectField } from '../fields/AsyncSelectField';
  * @param {Function} props.onChange  Change handler.
  * @returns {JSX.Element} Multi-select component.
  */
-function AjaxMultiSelectField( { field, value, onChange } ) {
+function AjaxMultiSelectField( { field, value, onChange, disabled } ) {
 	var extraData = field.extra_data || {};
 	var initialItems = extraData.selected_items || [];
 	var ajaxAction = extraData.ajax_action || '';
@@ -75,6 +77,18 @@ function AjaxMultiSelectField( { field, value, onChange } ) {
 	var wrapperRef = useRef( null );
 	var selectedIdsRef = useRef( selectedIds );
 	selectedIdsRef.current = selectedIds;
+
+	// Abort in-flight requests and clear timers on unmount.
+	useEffect( function () {
+		return function () {
+			if ( abortRef.current ) {
+				abortRef.current.abort();
+			}
+			if ( timerRef.current ) {
+				clearTimeout( timerRef.current );
+			}
+		};
+	}, [] );
 
 	// Close dropdown on outside click.
 	useEffect( function () {
@@ -174,7 +188,7 @@ function AjaxMultiSelectField( { field, value, onChange } ) {
 	}
 
 	return (
-		<div className="bb-admin-meta-field__ajax-multiselect" ref={ wrapperRef }>
+		<div className={ 'bb-admin-meta-field__ajax-multiselect' + ( disabled ? ' bb-admin-meta-field--disabled' : '' ) } ref={ wrapperRef }>
 			<label className="bb-admin-meta-field__label">{ field.label }</label>
 
 			{ selectedIds.length > 0 && (
@@ -189,6 +203,7 @@ function AjaxMultiSelectField( { field, value, onChange } ) {
 									onClick={ function () {
 										handleRemove( id );
 									} }
+									disabled={ disabled }
 									aria-label={ __( 'Remove', 'buddyboss' ) }
 								>
 									<i className="bb-icons-rl-x"></i>
@@ -208,6 +223,7 @@ function AjaxMultiSelectField( { field, value, onChange } ) {
 						setSearchQuery( e.target.value );
 					} }
 					placeholder={ placeholder }
+					disabled={ disabled }
 				/>
 				{ isLoading && (
 					<span className="bb-admin-meta-field__search-spinner spinner is-active"></span>
@@ -251,14 +267,44 @@ function AjaxMultiSelectField( { field, value, onChange } ) {
  * @param {number}   props.itemId     Generic item ID (used when activityId is not applicable).
  * @returns {JSX.Element|null} Field component or null.
  */
-export function RegisteredMetaField( { field, value, onChange, activityId, itemId } ) {
+export function RegisteredMetaField( { field, value, onChange, activityId, itemId, disabled } ) {
 	var editorItemId = activityId || itemId || 0;
+	var isDisabled = disabled || field.disabled || field.readonly || false;
 	if ( ! field.visible ) {
 		return null;
 	}
 
-	// Read-only field (e.g. Activity History).
+	// Read-only field (e.g. Activity History, Author Info).
 	if ( 'readonly' === field.type ) {
+		// Author info style: avatar + name link.
+		if ( value && 'object' === typeof value && value.author_name ) {
+			return (
+				<div className="bb-admin-meta-field__author-info">
+					{ value.author_avatar && (
+						<img
+							src={ safeUrl( value.author_avatar ) }
+							alt={ value.author_name }
+							className="bb-admin-meta-field__author-avatar"
+							width="32"
+							height="32"
+						/>
+					) }
+					{ value.author_url ? (
+						<a
+							href={ safeUrl( value.author_url ) }
+							className="bb-admin-meta-field__author-name"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							{ value.author_name }
+						</a>
+					) : (
+						<span className="bb-admin-meta-field__author-name">{ value.author_name }</span>
+					) }
+				</div>
+			);
+		}
+
 		// History-style: value is an object with time_since + message.
 		if ( value && 'object' === typeof value && value.time_since ) {
 			return (
@@ -271,6 +317,25 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 						{ ' – ' }
 						<span className="bb-admin-meta-field__history-message">{ value.message }</span>
 					</div>
+				</div>
+			);
+		}
+
+		// URL read-only: render as clickable link (e.g. reply permalink).
+		if ( value && 'string' === typeof value && 0 === value.indexOf( 'http' ) ) {
+			return (
+				<div className="bb-admin-meta-field__readonly-field">
+					{ field.label && (
+						<label className="bb-admin-meta-field__label">{ field.label }</label>
+					) }
+					<a
+						href={ safeUrl( value ) }
+						className="bb-admin-meta-field__readonly-link"
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						{ value }
+					</a>
 				</div>
 			);
 		}
@@ -291,26 +356,29 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 	// Rich text field (TinyMCE).
 	if ( 'richtext' === field.type ) {
 		return (
-			<RichTextEditor
-				key={ field.id + '-' + editorItemId }
-				id={ 'bb-admin-edit-' + field.id + '-' + editorItemId }
-				label={ field.label }
-				value={ null != value ? String( value ) : '' }
-				onChange={ onChange }
-			/>
+			<div className={ isDisabled ? 'bb-admin-meta-field--disabled' : '' }>
+				<RichTextEditor
+					key={ field.id + '-' + editorItemId }
+					id={ 'bb-admin-edit-' + field.id + '-' + editorItemId }
+					label={ field.label }
+					value={ null != value ? String( value ) : '' }
+					onChange={ isDisabled ? function () {} : onChange }
+				/>
+			</div>
 		);
 	}
 
 	// Textarea field.
 	if ( 'textarea' === field.type ) {
 		return (
-			<div>
+			<div className={ isDisabled ? 'bb-admin-meta-field--disabled' : '' }>
 				<TextareaControl
 					label={ field.label }
 					value={ null != value ? String( value ) : '' }
 					onChange={ onChange }
 					rows={ 4 }
 					placeholder={ field.placeholder || '' }
+					disabled={ isDisabled }
 					__nextHasNoMarginBottom
 				/>
 				{ field.description && (
@@ -323,28 +391,34 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 	// Permalink field (slug with URL preview below input).
 	if ( 'permalink' === field.type ) {
 		var baseUrl = ( field.extra_data && field.extra_data.base_url ) ? field.extra_data.base_url : '';
+		var isChildForum = field.extra_data && field.extra_data.is_child_forum;
 		var slugValue = null != value ? String( value ) : '';
 
 		return (
-			<div className="bb-admin-meta-field__permalink-field">
+			<div className={ 'bb-admin-meta-field__permalink-field' + ( isDisabled ? ' bb-admin-meta-field--disabled' : '' ) }>
 				<label className="bb-admin-meta-field__label">{ field.label }</label>
 				<TextControl
 					value={ slugValue }
 					onChange={ onChange }
 					placeholder={ field.placeholder || '' }
+					disabled={ isDisabled }
 					__nextHasNoMarginBottom
 				/>
-				{ baseUrl && (
+				{ baseUrl && slugValue && (
 					<div className="bb-admin-meta-field__permalink-preview">
-						<a
-							href={ safeUrl( baseUrl + slugValue + '/' ) }
-							target="_blank"
-							rel="noopener noreferrer"
-						>
-							{ baseUrl }
-							<strong>{ slugValue }</strong>
-							{ '/' }
-						</a>
+						{ isChildForum ? (
+							<span>{ baseUrl }</span>
+						) : (
+							<a
+								href={ safeUrl( baseUrl + slugValue + '/' ) }
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								{ baseUrl }
+								<strong>{ slugValue }</strong>
+								{ '/' }
+							</a>
+						) }
 					</div>
 				) }
 			</div>
@@ -356,7 +430,7 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 		var isChecked = !! value && '0' !== String( value ) && 0 !== value;
 
 		return (
-			<div className="bb-admin-meta-field__checkbox-field">
+			<div className={ 'bb-admin-meta-field__checkbox-field' + ( isDisabled ? ' bb-admin-meta-field--disabled' : '' ) }>
 				<CheckboxControl
 					id={ field.id + '-' + editorItemId }
 					label={ field.label }
@@ -364,6 +438,7 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 					onChange={ function ( checked ) {
 						onChange( checked ? '1' : '0' );
 					} }
+					disabled={ isDisabled }
 					help={ field.description || undefined }
 					__nextHasNoMarginBottom
 				/>
@@ -380,7 +455,7 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 		var toggleValues = value && 'object' === typeof value ? value : {};
 
 		return (
-			<div className="bb-admin-meta-field__toggle-list-field">
+			<div className={ 'bb-admin-meta-field__toggle-list-field' + ( isDisabled ? ' bb-admin-meta-field--disabled' : '' ) }>
 				<label className="bb-admin-meta-field__label">{ field.label }</label>
 				<div className="bb-admin-meta-field__toggle-list-options">
 					{ toggleOptions.map( function ( option ) {
@@ -391,6 +466,7 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 								key={ option.value }
 								label={ decodeEntities( option.label ) }
 								checked={ isOptionChecked }
+								disabled={ isDisabled }
 								onChange={ function ( checked ) {
 									var updated = Object.assign( {}, toggleValues );
 									updated[ option.value ] = checked ? 1 : 0;
@@ -414,6 +490,7 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 			<AjaxMultiSelectField
 				field={ field }
 				value={ value }
+				disabled={ isDisabled }
 				onChange={ onChange }
 			/>
 		);
@@ -427,7 +504,7 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 		}
 
 		return (
-			<div className="bb-admin-meta-field__radio-field">
+			<div className={ 'bb-admin-meta-field__radio-field' + ( isDisabled ? ' bb-admin-meta-field--disabled' : '' ) }>
 				<label className="bb-admin-meta-field__label">{ field.label }</label>
 				<div className="bb-admin-meta-field__radio-options">
 					{ radioOptions.map( function ( option ) {
@@ -440,6 +517,7 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 									name={ field.id + '-' + editorItemId }
 									value={ option.value }
 									checked={ String( value ) === String( option.value ) }
+									disabled={ isDisabled }
 									onChange={ function () {
 										onChange( option.value );
 									} }
@@ -462,7 +540,7 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 	// Async select field (searchable, server-side, load-more).
 	if ( 'async_select' === field.type ) {
 		return (
-			<div className="bb-admin-meta-field__async-select-field">
+			<div className={ 'bb-admin-meta-field__async-select-field' + ( isDisabled ? ' bb-admin-meta-field--disabled' : '' ) }>
 				{ field.label && (
 					<label className="components-base-control__label">{ field.label }</label>
 				) }
@@ -470,7 +548,9 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 					value={ null != value ? String( value ) : '0' }
 					onChange={ onChange }
 					asyncAction={ field.async_action || '' }
+					asyncExtraParams={ field.asyncExtraParams || {} }
 					placeholder={ field.placeholder || '' }
+					disabled={ isDisabled }
 				/>
 				{ field.description && (
 					<p className="bb-admin-meta-field__description">{ field.description }</p>
@@ -492,17 +572,48 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 		} );
 
 		return (
-			<div className="bb-admin-meta-field__select-field">
+			<div className={ 'bb-admin-meta-field__select-field' + ( isDisabled ? ' bb-admin-meta-field--disabled' : '' ) }>
 				<SelectControl
 					label={ field.label }
 					value={ String( null != value ? value : '' ) }
 					options={ decodedOptions }
 					onChange={ onChange }
+					disabled={ isDisabled }
 					__nextHasNoMarginBottom
 				/>
 				{ field.description && (
 					<p className="bb-admin-meta-field__description">{ field.description }</p>
 				) }
+			</div>
+		);
+	}
+
+	// Date picker field.
+	if ( 'date' === field.type ) {
+		return (
+			<div className={ isDisabled ? 'bb-admin-meta-field--disabled' : '' }>
+				<DateInput
+					label={ field.label }
+					value={ null != value ? String( value ) : '' }
+					onChange={ onChange }
+					placeholder={ field.placeholder || '' }
+					disabled={ isDisabled }
+				/>
+			</div>
+		);
+	}
+
+	// Time picker field.
+	if ( 'time' === field.type ) {
+		return (
+			<div className={ isDisabled ? 'bb-admin-meta-field--disabled' : '' }>
+				<TimeInput
+					label={ field.label }
+					value={ null != value ? String( value ) : '' }
+					onChange={ onChange }
+					placeholder={ field.placeholder || '' }
+					disabled={ isDisabled }
+				/>
 			</div>
 		);
 	}
@@ -515,16 +626,17 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 		inputType = 'url';
 	}
 
-	var showDescription = field.description && 'half' !== field.layout;
+	var showDescription = field.description && 'half' !== field.layout && 'third' !== field.layout;
 
 	return (
-		<div>
+		<div className={ isDisabled ? 'bb-admin-meta-field--disabled' : '' }>
 			<TextControl
 				label={ field.label }
 				value={ null != value ? String( value ) : '' }
 				onChange={ onChange }
 				type={ inputType }
 				placeholder={ field.placeholder || '' }
+				disabled={ isDisabled }
 				__nextHasNoMarginBottom
 			/>
 			{ showDescription && (

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.21.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-03-19 04:41:39+00:00\n"
+"POT-Creation-Date: 2026-03-19 07:17:49+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -869,8 +869,8 @@ msgstr ""
 #: bp-core/admin/settings/groups/settings-group-images.php:75
 #: bp-core/admin/settings/groups/settings-group-images.php:166
 #: bp-core/admin/settings/members/settings-profile-image.php:57
-#: bp-core/admin/settings/members/settings-profile-image.php:132
-#: bp-core/admin/settings/members/settings-profile-image.php:296
+#: bp-core/admin/settings/members/settings-profile-image.php:137
+#: bp-core/admin/settings/members/settings-profile-image.php:301
 #: bp-core/admin/bb-settings/settings-2.0/build/index.js:1
 msgid "BuddyBoss"
 msgstr ""
@@ -992,6 +992,7 @@ msgstr ""
 #: bb-features/community/reactions/bb-activity-reactions.php:583
 #: bp-activity/classes/class-bb-activity-topics-manager.php:982
 #: bp-core/admin/classes/class-bb-activity-admin-ajax.php:514
+#: bp-core/admin/classes/class-bb-admin-forums-ajax.php:315
 #: bp-core/admin/classes/class-bb-admin-groups-ajax.php:875
 #: bp-core/admin/templates/upgrade-integrations-screen.php:45
 #: bp-core/bp-core-functions.php:7409
@@ -1012,6 +1013,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/readylaunch/common/filters/member-filters.php:93
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/messages/index.php:30
 #: bp-templates/bp-nouveau/readylaunch/learndash/ld30/archive-course-header.php:122
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/726.js:3
 #: bp-core/admin/bb-settings/settings-2.0/build/923.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/index.js:1
@@ -1719,7 +1721,6 @@ msgstr ""
 #: bp-core/classes/class-bp-admin.php:533
 #: bp-core/classes/class-bp-admin.php:555
 #: bp-core/classes/class-bp-admin.php:556
-#: bp-forums/admin/settings.php:1438
 #: bp-forums/admin/tools.php:29
 #: bp-forums/admin/tools.php:1778
 #: bp-media/bp-media-filters.php:1354
@@ -2138,8 +2139,12 @@ msgstr ""
 #: bp-activity/bp-activity-template.php:3036
 #: bp-core/admin/classes/class-bb-activity-admin-ajax.php:335
 #: bp-core/admin/classes/class-bb-activity-admin-ajax.php:487
+#: bp-core/admin/classes/class-bb-admin-forums-ajax.php:338
 #: bp-core/admin/classes/class-bb-admin-groups-ajax.php:897
 #: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1054
+#: bp-core/admin/classes/class-bb-admin-replies-ajax.php:297
+#: bp-core/admin/classes/class-bb-admin-topic-tags-ajax.php:168
+#: bp-core/admin/classes/class-bb-admin-topics-ajax.php:380
 #: bp-core/bp-core-attachments.php:936
 #: bp-forums/classes/class-bp-forums-component.php:527
 #: bp-forums/replies/template.php:2246
@@ -2200,12 +2205,19 @@ msgstr ""
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
 #: bp-core/admin/bb-settings/rl-onboarding/build/rl-onboarding.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/192.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/534.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/553.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:2
 #: bp-core/admin/bb-settings/settings-2.0/build/656.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/681.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/681.js:2
 #: bp-core/admin/bb-settings/settings-2.0/build/726.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/726.js:3
 #: bp-core/admin/bb-settings/settings-2.0/build/726.js:4
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:2
 #: bp-core/admin/bb-settings/settings-2.0/build/923.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/index.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/index.js:2
@@ -2219,8 +2231,6 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-pages.php:392
 #: bp-core/deprecated/buddyboss/1.0.php:75
 #: bp-document/bp-document-filters.php:288
-#: bp-forums/admin/replies.php:803
-#: bp-forums/admin/topics.php:888
 #: bp-invites/bp-invites-admin.php:277
 #: bp-members/classes/class-bp-members-component.php:403
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:923
@@ -2237,7 +2247,11 @@ msgstr ""
 #: bp-templates/bp-nouveau/readylaunch/memberpress/quizzes/section_quiz_row.php:50
 #: bp-xprofile/classes/class-bp-xprofile-component.php:266
 #: bp-xprofile/classes/class-bp-xprofile-component.php:384
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/681.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/726.js:3
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
 msgid "View"
 msgstr ""
 
@@ -2338,6 +2352,8 @@ msgid "%d Replies"
 msgstr ""
 
 #: bp-activity/classes/class-bb-activity-readylaunch.php:466
+#: bp-core/admin/classes/class-bb-admin-replies-ajax.php:205
+#: bp-core/admin/settings/forums/settings-forum-permalinks.php:104
 #: bp-core/bp-core-wp-emails.php:233
 #: bp-core/bp-core-wp-emails.php:524
 #: bp-core/classes/class-bb-readylaunch.php:4082
@@ -2347,7 +2363,6 @@ msgstr ""
 #: bp-core/classes/class-bp-email-tokens.php:1181
 #: bp-core/compatibility/class-bb-readylaunch-learndash-helper.php:1960
 #: bp-core/compatibility/class-bb-readylaunch-memberpress-courses-helper.php:829
-#: bp-forums/admin/settings.php:336
 #: bp-forums/replies/template.php:51
 #: bp-forums/replies/template.php:1788
 #: bp-forums/replies/template.php:1831
@@ -2358,6 +2373,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1062
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1170
 #: bp-templates/bp-nouveau/readylaunch/single-bp-email.php:407
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
 msgid "Reply"
 msgstr ""
 
@@ -2589,6 +2605,8 @@ msgid "Arguments passed to %1$s should be in an associative array. See the inlin
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-component.php:178
+#: bp-core/admin/classes/class-bb-admin-forums-ajax.php:238
+#: bp-core/admin/classes/class-bb-admin-forums-ajax.php:319
 #: bp-core/admin/classes/class-bb-admin-groups-ajax.php:765
 #: bp-core/admin/classes/class-bb-admin-groups-ajax.php:879
 #: bp-core/admin/settings/groups/meta-fields.php:120
@@ -2610,10 +2628,15 @@ msgstr ""
 #: bp-templates/bp-nouveau/readylaunch/groups/single/admin/group-settings.php:36
 #: bp-video/classes/class-bp-video-component.php:143
 #: bp-xprofile/classes/class-bp-xprofile-component.php:183
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/553.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:2
 #: bp-core/admin/bb-settings/settings-2.0/build/656.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/726.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/726.js:3
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:2
 msgid "Public"
 msgstr ""
 
@@ -3231,11 +3254,11 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-functions.php:1543
 #: bp-core/admin/classes/class-bb-activity-admin-ajax.php:333
 #: bp-core/admin/classes/class-bb-activity-admin-ajax.php:518
-#: bp-forums/admin/replies.php:826
-#: bp-forums/admin/topics.php:960
 #: bp-forums/classes/class-bbpress.php:574
 #: bp-forums/replies/template.php:2368
 #: bp-forums/topics/template.php:3255
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/923.js:1
 msgid "Spam"
 msgstr ""
@@ -3977,7 +4000,6 @@ msgstr ""
 #: bp-core/classes/class-bb-post-notification.php:64
 #: bp-core/classes/class-bb-post-notification.php:65
 #: bp-core/classes/class-bb-readylaunch.php:4086
-#: bp-forums/admin/settings.php:1647
 #: bp-forums/templates/default/bbpress/loop-forums.php:20
 #: bp-forums/templates/default/bbpress/loop-replies.php:23
 #: bp-forums/templates/default/bbpress/loop-replies.php:68
@@ -4157,6 +4179,8 @@ msgid "%s's Recent Comments"
 msgstr ""
 
 #: bp-blogs/bp-blogs-template.php:1402
+#: bp-core/admin/settings/forums/settings-forum-features.php:109
+#: bp-core/admin/settings/forums/settings-forum-permalinks.php:119
 #: bp-core/bb-core-blocks.php:284
 #: bp-core/bb-core-blocks.php:290
 #: bp-core/bp-core-cssjs.php:244
@@ -4164,8 +4188,6 @@ msgstr ""
 #: bp-core/compatibility/class-bb-readylaunch-memberpress-courses-helper.php:513
 #: bp-core/deprecated/buddypress/1.5.php:440
 #: bp-core/profile-search/templates/members/bps-form-default.php:229
-#: bp-forums/admin/settings.php:156
-#: bp-forums/admin/settings.php:344
 #: bp-forums/common/template.php:2716
 #: bp-forums/search/template.php:216
 #: bp-forums/templates/default/bbpress/form-search.php:16
@@ -4424,6 +4446,170 @@ msgstr ""
 
 #: bp-core/admin/bb-admin-settings-activity.php:212
 msgid "Forever"
+msgstr ""
+
+#: bp-core/admin/bb-admin-settings-forums.php:34
+#: bp-core/admin/templates/upgrade-screen.php:45
+#: bp-core/bp-core-functions.php:2564
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:594
+#: bp-core/gdpr/class-bp-bbp-gdpr-topics.php:39
+#: bp-core/gdpr/class-bp-bbp-gdpr-topics.php:57
+#: bp-core/gdpr/class-bp-bbp-gdpr-topics.php:98
+#: bp-forums/admin/metaboxes.php:40
+#: bp-forums/classes/class-bbpress.php:489
+#: bp-moderation/classes/class-bp-moderation-forum-topics.php:123
+#: bp-performance/bp-performance-includes.php:110
+#: bp-search/bp-search-functions.php:370
+msgid "Forum Discussions"
+msgstr ""
+
+#: bp-core/admin/bb-admin-settings-forums.php:35
+msgid "Allow members to hold discussions in Q&A-style forums, which can operate independently or be linked to social groups."
+msgstr ""
+
+#: bp-core/admin/bb-admin-settings-forums.php:74
+#: bp-core/admin/settings/forums/settings-forum-settings.php:31
+#: bp-forums/admin/tools.php:1801
+msgid "Forum Settings"
+msgstr ""
+
+#: bp-core/admin/bb-admin-settings-forums.php:89
+#: bp-core/admin/settings/forums/settings-forum-features.php:31
+msgid "Forum Features"
+msgstr ""
+
+#: bp-core/admin/bb-admin-settings-forums.php:104
+#: bp-core/admin/settings/forums/settings-forum-directories.php:44
+msgid "Forum Directories"
+msgstr ""
+
+#: bp-core/admin/bb-admin-settings-forums.php:119
+msgid "Permalinks"
+msgstr ""
+
+#: bp-core/admin/bb-admin-settings-forums.php:134
+#: bp-core/admin/bb-settings/rl-onboarding/class-bb-readylaunch-onboarding.php:1149
+#: bp-core/admin/bp-core-admin-slugs.php:46
+#: bp-core/admin/bp-core-admin-slugs.php:48
+#: bp-core/admin/bp-core-admin-tools.php:175
+#: bp-core/admin/classes/class-bb-activity-admin-ajax.php:460
+#: bp-core/admin/settings/forums/settings-forum-settings.php:130
+#: bp-core/admin/settings/media/settings-documents.php:101
+#: bp-core/admin/settings/media/settings-emoji.php:101
+#: bp-core/admin/settings/media/settings-gifs.php:136
+#: bp-core/admin/settings/media/settings-photos.php:135
+#: bp-core/admin/settings/media/settings-videos.php:118
+#: bp-core/admin/settings/members/settings-profile-navigation.php:146
+#: bp-core/admin/settings/members/settings-profile-navigation.php:234
+#: bp-core/admin/settings/search/settings-network-search.php:107
+#: bp-core/bb-core-subscriptions.php:599
+#: bp-core/bp-core-functions.php:801
+#: bp-core/classes/class-bb-readylaunch.php:651
+#: bp-core/gdpr/class-bp-bbp-gdpr-forums.php:46
+#: bp-core/gdpr/class-bp-bbp-gdpr-forums.php:64
+#: bp-core/gdpr/class-bp-bbp-gdpr-forums.php:105
+#: bp-document/classes/class-bp-document.php:730
+#: bp-forums/admin.php:28
+#: bp-forums/admin.php:29
+#: bp-forums/admin.php:45
+#: bp-forums/admin.php:46
+#: bp-forums/admin.php:231
+#: bp-forums/admin.php:274
+#: bp-forums/admin/tools.php:1796
+#: bp-forums/classes/class-bbpress.php:457
+#: bp-forums/classes/class-bp-forums-component.php:196
+#: bp-forums/classes/class-bp-forums-component.php:272
+#: bp-forums/classes/class-bp-forums-component.php:315
+#: bp-forums/classes/class-bp-forums-notification.php:189
+#: bp-forums/common/widgets.php:777
+#: bp-forums/core/actions.php:362
+#: bp-forums/forums/template.php:49
+#: bp-media/bp-media-filters.php:1414
+#: bp-media/classes/class-bp-media.php:802
+#: bp-members/classes/class-bp-rest-members-details-endpoint.php:1245
+#: bp-search/bp-search-functions.php:369
+#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:950
+#: bp-templates/bp-nouveau/readylaunch/forums/content-archive-forum.php:46
+#: bp-templates/bp-nouveau/readylaunch/forums/content-archive-forum.php:72
+#: bp-templates/bp-nouveau/readylaunch/forums/content-archive-topic.php:51
+#: bp-video/classes/class-bp-video.php:783
+#: bp-core/admin/bb-settings/readylaunch/build/index.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+msgid "Forums"
+msgstr ""
+
+#: bp-core/admin/bb-admin-settings-forums.php:150
+#: bp-core/admin/bp-core-admin-tools.php:184
+#: bp-core/admin/classes/class-bb-admin-forums-ajax.php:219
+#: bp-core/admin/settings/forums/settings-forum-settings.php:148
+#: bp-core/admin/settings/forums/settings-forum-settings.php:198
+#: bp-core/bb-core-subscriptions.php:600
+#: bp-forums/activity.php:218
+#: bp-forums/admin.php:237
+#: bp-forums/admin.php:293
+#: bp-forums/admin/tools.php:1797
+#: bp-forums/classes/class-bp-forums-component.php:218
+#: bp-forums/classes/class-bp-forums-notification.php:129
+#: bp-forums/forums/template.php:2927
+#: bp-forums/groups.php:53
+#: bp-forums/templates/default/bbpress/content-statistics.php:27
+#: bp-forums/templates/default/bbpress/loop-forums.php:19
+#: bp-forums/templates/default/bbpress/loop-topics.php:18
+#: bp-forums/topics/template.php:49
+#: bp-forums/topics/template.php:50
+#: bp-media/bp-media-filters.php:1420
+#: bp-templates/bp-nouveau/includes/groups/classes.php:325
+#: bp-templates/bp-nouveau/readylaunch/forums/content-archive-forum.php:82
+#: bp-templates/bp-nouveau/readylaunch/forums/content-archive-topic.php:25
+#: bp-templates/bp-nouveau/readylaunch/forums/content-archive-topic.php:61
+#: bp-templates/bp-nouveau/readylaunch/forums/content-single-forum.php:123
+#: bp-templates/bp-nouveau/readylaunch/forums/content-statistics.php:32
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+msgid "Discussions"
+msgstr ""
+
+#: bp-core/admin/bb-admin-settings-forums.php:166
+#: bp-core/admin/settings/forums/settings-forum-features.php:92
+#: bp-core/admin/settings/search/settings-network-search.php:139
+#: bp-forums/admin.php:243
+#: bp-forums/admin.php:331
+#: bp-forums/admin/tools.php:1799
+#: bp-forums/templates/default/bbpress/content-statistics.php:38
+#: bp-forums/topics/template.php:3794
+#: bp-templates/bp-nouveau/readylaunch/forums/content-statistics.php:43
+#: bp-core/admin/bb-settings/settings-2.0/build/681.js:1
+msgid "Discussion Tags"
+msgstr ""
+
+#: bp-core/admin/bb-admin-settings-forums.php:182
+#: bp-core/admin/bp-core-admin-tools.php:193
+#: bp-core/admin/classes/class-bb-admin-forums-ajax.php:220
+#: bp-core/admin/classes/class-bb-admin-topics-ajax.php:257
+#: bp-core/admin/settings/forums/settings-forum-settings.php:166
+#: bp-core/admin/settings/forums/settings-forum-settings.php:216
+#: bp-core/admin/settings/search/settings-network-search.php:155
+#: bp-core/classes/class-bb-readylaunch.php:4082
+#: bp-forums/activity.php:227
+#: bp-forums/admin.php:249
+#: bp-forums/admin.php:312
+#: bp-forums/admin/tools.php:1798
+#: bp-forums/classes/class-bp-forums-component.php:229
+#: bp-forums/core/theme-compat.php:668
+#: bp-forums/forums/template.php:2996
+#: bp-forums/replies/template.php:49
+#: bp-forums/replies/template.php:50
+#: bp-forums/templates/default/bbpress/content-statistics.php:32
+#: bp-forums/templates/default/bbpress/loop-forums.php:20
+#: bp-forums/templates/default/bbpress/loop-replies.php:31
+#: bp-forums/templates/default/bbpress/loop-replies.php:72
+#: bp-forums/templates/default/bbpress/loop-topics.php:19
+#: bp-media/bp-media-filters.php:1426
+#: bp-templates/bp-nouveau/readylaunch/forums/content-statistics.php:37
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+msgid "Replies"
 msgstr ""
 
 #: bp-core/admin/bb-admin-settings-groups.php:32
@@ -4771,7 +4957,6 @@ msgstr ""
 #: bp-core/admin/templates/moderation-deactivate-confirmation-popup.php:30
 #: bp-core/admin/templates/update-buddyboss.php:82
 #: bp-core/classes/class-bp-admin-tab.php:195
-#: bp-forums/admin/topics.php:908
 #: bp-forums/core/actions.php:596
 #: bp-forums/topics/template.php:3031
 #: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:560
@@ -4874,7 +5059,6 @@ msgstr ""
 #: bp-core/classes/class-bp-admin.php:307
 #: bp-core/classes/class-bp-admin.php:467
 #: bp-core/classes/class-bp-admin.php:468
-#: bp-forums/admin/settings.php:1652
 #: bp-search/bp-search-functions.php:362
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
 msgid "Pages"
@@ -5173,6 +5357,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-tools.php:63
 #: bp-core/admin/bp-core-admin-tools.php:129
 #: bp-core/admin/classes/class-bb-admin-groups-ajax.php:734
+#: bp-core/admin/classes/class-bb-admin-topics-ajax.php:258
 #: bp-core/admin/settings/groups/settings-group-directory.php:163
 #: bp-core/admin/settings/groups/settings-group-navigation.php:129
 #: bp-core/admin/settings/groups/settings-group-navigation.php:137
@@ -5182,7 +5367,6 @@ msgstr ""
 #: bp-core/bp-core-update.php:1131
 #: bp-core/classes/class-bb-readylaunch.php:643
 #: bp-core/classes/class-bp-email-tokens.php:457
-#: bp-forums/admin/topics.php:740
 #: bp-groups/bp-groups-functions.php:4374
 #: bp-groups/bp-groups-functions.php:4393
 #: bp-groups/bp-groups-functions.php:4410
@@ -5204,6 +5388,7 @@ msgstr ""
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/553.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/726.js:3
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
 msgid "Members"
 msgstr ""
 
@@ -5239,56 +5424,6 @@ msgstr ""
 #: bp-templates/bp-nouveau/readylaunch/groups/index.php:25
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
 msgid "Groups"
-msgstr ""
-
-#: bp-core/admin/bb-settings/rl-onboarding/class-bb-readylaunch-onboarding.php:1149
-#: bp-core/admin/bp-core-admin-slugs.php:46
-#: bp-core/admin/bp-core-admin-slugs.php:48
-#: bp-core/admin/bp-core-admin-tools.php:175
-#: bp-core/admin/classes/class-bb-activity-admin-ajax.php:460
-#: bp-core/admin/settings/bp-admin-setting-forums.php:21
-#: bp-core/admin/settings/media/settings-documents.php:101
-#: bp-core/admin/settings/media/settings-emoji.php:101
-#: bp-core/admin/settings/media/settings-gifs.php:136
-#: bp-core/admin/settings/media/settings-photos.php:135
-#: bp-core/admin/settings/media/settings-videos.php:118
-#: bp-core/admin/settings/members/settings-profile-navigation.php:146
-#: bp-core/admin/settings/members/settings-profile-navigation.php:234
-#: bp-core/admin/settings/search/settings-network-search.php:107
-#: bp-core/bb-core-subscriptions.php:599
-#: bp-core/bp-core-functions.php:801
-#: bp-core/classes/class-bb-readylaunch.php:651
-#: bp-core/gdpr/class-bp-bbp-gdpr-forums.php:46
-#: bp-core/gdpr/class-bp-bbp-gdpr-forums.php:64
-#: bp-core/gdpr/class-bp-bbp-gdpr-forums.php:105
-#: bp-document/classes/class-bp-document.php:730
-#: bp-forums/admin.php:28
-#: bp-forums/admin.php:29
-#: bp-forums/admin.php:45
-#: bp-forums/admin.php:46
-#: bp-forums/admin.php:231
-#: bp-forums/admin.php:274
-#: bp-forums/admin/settings.php:254
-#: bp-forums/admin/tools.php:1796
-#: bp-forums/classes/class-bbpress.php:457
-#: bp-forums/classes/class-bp-forums-component.php:196
-#: bp-forums/classes/class-bp-forums-component.php:272
-#: bp-forums/classes/class-bp-forums-component.php:315
-#: bp-forums/classes/class-bp-forums-notification.php:189
-#: bp-forums/common/widgets.php:777
-#: bp-forums/core/actions.php:362
-#: bp-forums/forums/template.php:49
-#: bp-media/bp-media-filters.php:1414
-#: bp-media/classes/class-bp-media.php:802
-#: bp-members/classes/class-bp-rest-members-details-endpoint.php:1245
-#: bp-search/bp-search-functions.php:369
-#: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:950
-#: bp-templates/bp-nouveau/readylaunch/forums/content-archive-forum.php:46
-#: bp-templates/bp-nouveau/readylaunch/forums/content-archive-forum.php:72
-#: bp-templates/bp-nouveau/readylaunch/forums/content-archive-topic.php:51
-#: bp-video/classes/class-bp-video.php:783
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-msgid "Forums"
 msgstr ""
 
 #: bp-core/admin/bb-settings/rl-onboarding/class-bb-readylaunch-onboarding.php:1157
@@ -5406,7 +5541,7 @@ msgid "This email address or domain has been blacklisted. If you think you are s
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-actions.php:434
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:945
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:956
 msgid "Settings saved successfully."
 msgstr ""
 
@@ -5469,12 +5604,10 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-components.php:226
 #: bp-core/admin/bp-core-admin-components.php:431
-#: bp-forums/admin/forums.php:191
-#: bp-forums/admin/replies.php:176
-#: bp-forums/admin/topics.php:178
 #: bp-messages/bp-messages-template.php:1053
 #: bp-notifications/bp-notifications-template.php:1049
 #: bp-templates/bp-nouveau/includes/notifications/template-tags.php:107
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
 msgid "Bulk Actions"
 msgstr ""
 
@@ -5511,7 +5644,11 @@ msgstr ""
 #: bp-templates/bp-nouveau/readylaunch/groups/single/admin/search-manage-members.php:90
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
 #: bp-core/admin/bb-settings/rl-onboarding/build/rl-onboarding.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/681.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/726.js:3
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/923.js:1
 msgid "Apply"
 msgstr ""
@@ -5534,6 +5671,9 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/form-forum.php:64
 #: bp-templates/bp-nouveau/readylaunch/forums/form-forum.php:73
 #: bp-core/admin/bb-settings/settings-2.0/build/192.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:2
 #: bp-core/admin/bb-settings/settings-2.0/build/index.js:2
 msgid "Description"
 msgstr ""
@@ -5562,10 +5702,10 @@ msgstr ""
 #: bp-core/admin/settings/members/settings-profile-navigation.php:250
 #: bp-core/classes/class-bp-admin.php:316
 #: bp-core/classes/class-bp-admin.php:477
-#: bp-core/classes/class-bp-admin.php:809
+#: bp-core/classes/class-bp-admin.php:808
 #: bp-core/gdpr/class-bp-settings-export.php:29
 #: bp-core/gdpr/class-bp-settings-export.php:55
-#: bp-forums/admin/admin.php:429
+#: bp-forums/admin/admin.php:406
 #: bp-groups/classes/class-bp-groups-component.php:426
 #: bp-groups/classes/class-bp-groups-component.php:935
 #: bp-integrations/compatibility/bp-compatibility-integration.php:80
@@ -5651,10 +5791,6 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-functions.php:974
 #: bp-core/admin/bp-core-admin-functions.php:993
 #: bp-core/admin/templates/update-buddyboss.php:95
-#: bp-forums/admin/forums.php:151
-#: bp-forums/admin/replies.php:133
-#: bp-forums/admin/settings.php:1498
-#: bp-forums/admin/topics.php:134
 #: bp-members/classes/class-bp-members-admin.php:936
 #: bp-members/classes/class-bp-members-admin.php:1829
 #: bp-moderation/bp-moderation-admin.php:136
@@ -5666,13 +5802,6 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-functions.php:962
 #: bp-core/admin/bp-core-admin-functions.php:981
 #: bp-core/admin/bp-core-admin-functions.php:1000
-#: bp-forums/admin/forums.php:200
-#: bp-forums/admin/forums.php:269
-#: bp-forums/admin/replies.php:185
-#: bp-forums/admin/replies.php:252
-#: bp-forums/admin/settings.php:1551
-#: bp-forums/admin/topics.php:187
-#: bp-forums/admin/topics.php:252
 #: bp-members/classes/class-bp-members-admin.php:946
 #: bp-members/classes/class-bp-members-admin.php:1853
 #: bp-moderation/bp-moderation-admin.php:144
@@ -5684,13 +5813,6 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-functions.php:963
 #: bp-core/admin/bp-core-admin-functions.php:982
 #: bp-core/admin/bp-core-admin-functions.php:1001
-#: bp-forums/admin/forums.php:201
-#: bp-forums/admin/forums.php:270
-#: bp-forums/admin/replies.php:186
-#: bp-forums/admin/replies.php:253
-#: bp-forums/admin/settings.php:1552
-#: bp-forums/admin/topics.php:188
-#: bp-forums/admin/topics.php:253
 #: bp-members/classes/class-bp-members-admin.php:947
 #: bp-members/classes/class-bp-members-admin.php:1854
 msgid "<a href=\"https://www.buddyboss.com/resources/\">Documentation</a>"
@@ -5776,6 +5898,8 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-functions.php:1540
 #: bp-core/admin/classes/class-bb-activity-admin-ajax.php:334
 #: bp-core/admin/classes/class-bb-activity-admin-ajax.php:486
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/923.js:1
 msgid "Not Spam"
 msgstr ""
@@ -5873,28 +5997,27 @@ msgid "Default Data"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:2327
-#: bp-forums/admin/admin.php:209
-#: bp-forums/admin/functions.php:216
-#: bp-forums/admin/functions.php:248
+#: bp-forums/admin/admin.php:186
+#: bp-forums/admin/functions.php:214
+#: bp-forums/admin/functions.php:246
 #: bp-forums/admin/tools.php:46
 msgid "Repair Forums"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:2328
-#: bp-forums/admin/admin.php:210
+#: bp-forums/admin/admin.php:187
 msgid "Forum Repair"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:2336
-#: bp-forums/admin/admin.php:220
-#: bp-forums/admin/functions.php:220
-#: bp-forums/admin/functions.php:270
-#: bp-forums/admin/settings.php:1185
+#: bp-forums/admin/admin.php:197
+#: bp-forums/admin/functions.php:218
+#: bp-forums/admin/functions.php:268
 msgid "Import Forums"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:2337
-#: bp-forums/admin/admin.php:221
+#: bp-forums/admin/admin.php:198
 msgid "Forum Import"
 msgstr ""
 
@@ -6500,7 +6623,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:1657
 #: bp-core/admin/bp-core-admin-settings.php:1707
 #: bp-core/admin/settings/groups/settings-group-images.php:217
-#: bp-core/admin/settings/members/settings-profile-image.php:226
+#: bp-core/admin/settings/members/settings-profile-image.php:231
 #: bp-document/bp-document-functions.php:2077
 #: bp-video/bp-video-functions.php:2720
 #: bp-core/admin/bb-settings/settings-2.0/build/553.js:1
@@ -6589,61 +6712,6 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-tools.php:156
 msgid "Forums in Groups (with data)"
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-tools.php:184
-#: bp-core/bb-core-subscriptions.php:600
-#: bp-forums/activity.php:218
-#: bp-forums/admin.php:237
-#: bp-forums/admin.php:293
-#: bp-forums/admin/forums.php:498
-#: bp-forums/admin/settings.php:262
-#: bp-forums/admin/settings.php:283
-#: bp-forums/admin/tools.php:1797
-#: bp-forums/admin/topics.php:737
-#: bp-forums/classes/class-bp-forums-component.php:218
-#: bp-forums/classes/class-bp-forums-notification.php:129
-#: bp-forums/forums/template.php:2927
-#: bp-forums/groups.php:53
-#: bp-forums/templates/default/bbpress/content-statistics.php:27
-#: bp-forums/templates/default/bbpress/loop-forums.php:19
-#: bp-forums/templates/default/bbpress/loop-topics.php:18
-#: bp-forums/topics/template.php:49
-#: bp-forums/topics/template.php:50
-#: bp-media/bp-media-filters.php:1420
-#: bp-templates/bp-nouveau/includes/groups/classes.php:325
-#: bp-templates/bp-nouveau/readylaunch/forums/content-archive-forum.php:82
-#: bp-templates/bp-nouveau/readylaunch/forums/content-archive-topic.php:25
-#: bp-templates/bp-nouveau/readylaunch/forums/content-archive-topic.php:61
-#: bp-templates/bp-nouveau/readylaunch/forums/content-single-forum.php:123
-#: bp-templates/bp-nouveau/readylaunch/forums/content-statistics.php:32
-msgid "Discussions"
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-tools.php:193
-#: bp-core/admin/settings/search/settings-network-search.php:155
-#: bp-core/classes/class-bb-readylaunch.php:4082
-#: bp-forums/activity.php:227
-#: bp-forums/admin.php:249
-#: bp-forums/admin.php:312
-#: bp-forums/admin/forums.php:499
-#: bp-forums/admin/settings.php:270
-#: bp-forums/admin/settings.php:291
-#: bp-forums/admin/tools.php:1798
-#: bp-forums/admin/topics.php:739
-#: bp-forums/classes/class-bp-forums-component.php:229
-#: bp-forums/core/theme-compat.php:668
-#: bp-forums/forums/template.php:2996
-#: bp-forums/replies/template.php:49
-#: bp-forums/replies/template.php:50
-#: bp-forums/templates/default/bbpress/content-statistics.php:32
-#: bp-forums/templates/default/bbpress/loop-forums.php:20
-#: bp-forums/templates/default/bbpress/loop-replies.php:31
-#: bp-forums/templates/default/bbpress/loop-replies.php:72
-#: bp-forums/templates/default/bbpress/loop-topics.php:19
-#: bp-media/bp-media-filters.php:1426
-#: bp-templates/bp-nouveau/readylaunch/forums/content-statistics.php:37
-msgid "Replies"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-tools.php:207
@@ -6962,13 +7030,14 @@ msgid "Activity component is not active."
 msgstr ""
 
 #: bp-core/admin/classes/class-bb-activity-admin-ajax.php:206
+#: bp-core/admin/classes/class-bb-admin-replies-ajax.php:208
+#: bp-core/admin/classes/class-bb-admin-topics-ajax.php:255
 #: bp-core/compatibility/class-bb-readylaunch-memberpress-courses-helper.php:502
-#: bp-forums/admin/replies.php:645
-#: bp-forums/admin/topics.php:741
 #: bp-forums/templates/default/bbpress/loop-replies.php:17
 #: bp-forums/templates/default/bbpress/loop-replies.php:62
 #: bp-forums/templates/default/bbpress/loop-search.php:17
 #: bp-forums/templates/default/bbpress/loop-search.php:42
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/923.js:1
 msgid "Author"
 msgstr ""
@@ -6985,6 +7054,9 @@ msgid "In Response To"
 msgstr ""
 
 #: bp-core/admin/classes/class-bb-activity-admin-ajax.php:332
+#: bp-core/admin/classes/class-bb-admin-forums-ajax.php:337
+#: bp-core/admin/classes/class-bb-admin-replies-ajax.php:296
+#: bp-core/admin/classes/class-bb-admin-topics-ajax.php:379
 #: bp-core/compatibility/class-bb-readylaunch-learndash-helper.php:1971
 #: bp-core/compatibility/class-bb-readylaunch-memberpress-courses-helper.php:840
 #: bp-forums/common/template.php:2597
@@ -7025,11 +7097,15 @@ msgstr ""
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
 #: bp-core/admin/bb-settings/rl-onboarding/build/rl-onboarding.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/192.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/534.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/553.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/656.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/681.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/726.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/726.js:3
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/923.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/index.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/index.js:2
@@ -7061,7 +7137,10 @@ msgid "Activity IDs and action are required."
 msgstr ""
 
 #: bp-core/admin/classes/class-bb-activity-admin-ajax.php:842
+#: bp-core/admin/classes/class-bb-admin-forums-ajax.php:809
 #: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1062
+#: bp-core/admin/classes/class-bb-admin-topic-tags-ajax.php:410
+#: bp-core/admin/classes/class-bb-admin-topics-ajax.php:917
 msgid "Invalid action."
 msgstr ""
 
@@ -7100,6 +7179,216 @@ msgstr ""
 
 #: bp-core/admin/classes/class-bb-activity-admin-ajax.php:1039
 msgid "Comment posted successfully."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-forums-ajax.php:113
+#: bp-core/admin/classes/class-bb-admin-forums-ajax.php:378
+#: bp-core/admin/classes/class-bb-admin-forums-ajax.php:430
+#: bp-core/admin/classes/class-bb-admin-forums-ajax.php:572
+#: bp-core/admin/classes/class-bb-admin-forums-ajax.php:755
+#: bp-core/admin/classes/class-bb-admin-forums-ajax.php:797
+#: bp-core/admin/classes/class-bb-admin-forums-ajax.php:1093
+#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1942
+#: bp-core/admin/classes/class-bb-admin-replies-ajax.php:113
+#: bp-core/admin/classes/class-bb-admin-replies-ajax.php:411
+#: bp-core/admin/classes/class-bb-admin-replies-ajax.php:465
+#: bp-core/admin/classes/class-bb-admin-replies-ajax.php:590
+#: bp-core/admin/classes/class-bb-admin-replies-ajax.php:758
+#: bp-core/admin/classes/class-bb-admin-replies-ajax.php:802
+#: bp-core/admin/classes/class-bb-admin-replies-ajax.php:959
+#: bp-core/admin/classes/class-bb-admin-replies-ajax.php:1052
+#: bp-core/admin/classes/class-bb-admin-topic-tags-ajax.php:84
+#: bp-core/admin/classes/class-bb-admin-topic-tags-ajax.php:201
+#: bp-core/admin/classes/class-bb-admin-topic-tags-ajax.php:251
+#: bp-core/admin/classes/class-bb-admin-topic-tags-ajax.php:299
+#: bp-core/admin/classes/class-bb-admin-topic-tags-ajax.php:358
+#: bp-core/admin/classes/class-bb-admin-topic-tags-ajax.php:401
+#: bp-core/admin/classes/class-bb-admin-topics-ajax.php:116
+#: bp-core/admin/classes/class-bb-admin-topics-ajax.php:417
+#: bp-core/admin/classes/class-bb-admin-topics-ajax.php:496
+#: bp-core/admin/classes/class-bb-admin-topics-ajax.php:642
+#: bp-core/admin/classes/class-bb-admin-topics-ajax.php:862
+#: bp-core/admin/classes/class-bb-admin-topics-ajax.php:904
+#: bp-core/admin/classes/class-bb-admin-topics-ajax.php:1103
+msgid "Forums component is not active."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-forums-ajax.php:218
+#: bp-core/admin/classes/class-bb-admin-replies-ajax.php:206
+#: bp-core/admin/classes/class-bb-admin-topics-ajax.php:256
+#: bp-core/admin/settings/forums/settings-forum-permalinks.php:44
+#: bp-core/admin/settings/groups/meta-fields.php:401
+#: bp-core/bb-core-subscriptions.php:599
+#: bp-forums/classes/class-bp-forums-notification.php:188
+#: bp-forums/forums/functions.php:1759
+#: bp-forums/forums/template.php:51
+#: bp-forums/groups.php:52
+#: bp-forums/templates/default/bbpress/loop-forums.php:18
+#: bp-moderation/classes/class-bp-moderation-activity.php:513
+#: bp-moderation/classes/class-bp-moderation-forums.php:251
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:2
+msgid "Forum"
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-forums-ajax.php:221
+#: bp-forums/templates/default/bbpress/content-single-topic-lead.php:17
+#: bp-forums/templates/default/bbpress/content-single-topic-lead.php:86
+msgid "Creator"
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-forums-ajax.php:222
+#: bp-core/admin/classes/class-bb-admin-replies-ajax.php:209
+#: bp-messages/classes/class-bp-messages-notices-list-table.php:85
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+msgid "Created"
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-forums-ajax.php:223
+#: bp-core/admin/classes/class-bb-admin-topics-ajax.php:259
+#: bp-forums/templates/default/bbpress/loop-forums.php:21
+#: bp-forums/templates/default/bbpress/loop-topics.php:20
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+msgid "Last Post"
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-forums-ajax.php:239
+#: bp-core/admin/classes/class-bb-admin-forums-ajax.php:323
+#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:768
+#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:883
+#: bp-core/admin/settings/groups/meta-fields.php:124
+#: bp-core/classes/class-bp-email-tokens.php:207
+#: bp-forums/forums/functions.php:1780
+#: bp-forums/templates/default/bbpress/feedback-no-access.php:12
+#: bp-groups/bp-groups-template.php:778
+#: bp-groups/bp-groups-template.php:779
+#: bp-groups/bp-groups-template.php:791
+#: bp-groups/bp-groups-template.php:1568
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:335
+#: bp-templates/bp-nouveau/readylaunch/forums/feedback-no-access.php:16
+#: bp-templates/bp-nouveau/readylaunch/groups/single/admin/group-settings.php:37
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/553.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:2
+#: bp-core/admin/bb-settings/settings-2.0/build/656.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/726.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/726.js:3
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:2
+msgid "Private"
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-forums-ajax.php:240
+#: bp-core/admin/classes/class-bb-admin-forums-ajax.php:327
+#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:771
+#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:887
+#: bp-core/admin/settings/groups/meta-fields.php:128
+#: bp-core/classes/class-bp-email-tokens.php:205
+#: bp-forums/classes/class-bbpress.php:608
+#: bp-forums/forums/functions.php:1781
+#: bp-groups/bp-groups-template.php:773
+#: bp-groups/bp-groups-template.php:774
+#: bp-groups/bp-groups-template.php:789
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:336
+#: bp-moderation/classes/class-bp-moderation-list-table.php:326
+#: bp-moderation/classes/class-bp-moderation-list-table.php:407
+#: bp-templates/bp-nouveau/readylaunch/groups/single/admin/group-settings.php:38
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:2
+#: bp-core/admin/bb-settings/settings-2.0/build/726.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/726.js:3
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:2
+msgid "Hidden"
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-forums-ajax.php:331
+msgid "Mine"
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-forums-ajax.php:385
+#: bp-core/admin/classes/class-bb-admin-forums-ajax.php:588
+#: bp-core/admin/classes/class-bb-admin-forums-ajax.php:762
+msgid "Forum ID is required."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-forums-ajax.php:390
+#: bp-core/admin/classes/class-bb-admin-forums-ajax.php:593
+#: bp-core/admin/classes/class-bb-admin-forums-ajax.php:767
+msgid "Forum not found."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-forums-ajax.php:444
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:2
+msgid "Forum name is required."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-forums-ajax.php:475
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+msgid "Failed to create forum."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-forums-ajax.php:555
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:2
+msgid "Forum created successfully."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-forums-ajax.php:738
+msgid "Forum updated successfully."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-forums-ajax.php:775
+msgid "Failed to delete forum."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-forums-ajax.php:782
+msgid "Forum deleted successfully."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-forums-ajax.php:813
+msgid "No forums selected."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-forums-ajax.php:819
+msgid "No valid forum IDs provided."
+msgstr ""
+
+#. translators: %d: Number of forums processed.
+#: bp-core/admin/classes/class-bb-admin-forums-ajax.php:928
+msgid "%d forum updated successfully."
+msgid_plural "%d forums updated successfully."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: Number of forums processed.
+#: bp-core/admin/classes/class-bb-admin-forums-ajax.php:939
+msgid "%d forum deleted successfully."
+msgid_plural "%d forums deleted successfully."
+msgstr[0] ""
+msgstr[1] ""
+
+#: bp-core/admin/classes/class-bb-admin-forums-ajax.php:957
+msgid "No forums were processed."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-forums-ajax.php:975
+msgid "You do not have permission to upload files."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-forums-ajax.php:980
+msgid "No file uploaded."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-forums-ajax.php:990
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:2
+msgid "Invalid file type. Only JPEG, PNG, GIF, and WebP images are allowed."
 msgstr ""
 
 #: bp-core/admin/classes/class-bb-admin-groups-ajax.php:209
@@ -7170,7 +7459,6 @@ msgstr ""
 #: bp-core/admin/classes/class-bb-admin-groups-ajax.php:731
 #: bp-core/admin/settings/groups/meta-fields.php:37
 #: bp-core/deprecated/buddypress/1.5.php:159
-#: bp-forums/admin/metaboxes.php:596
 #: bp-members/classes/class-bp-members-list-table.php:156
 #: bp-members/classes/class-bp-members-ms-list-table.php:143
 #: bp-templates/bp-nouveau/buddypress/document/document-loop.php:49
@@ -7184,6 +7472,7 @@ msgstr ""
 #: bp-core/admin/bb-settings/settings-2.0/build/534.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/553.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/656.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/681.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/726.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/726.js:3
 msgid "Name"
@@ -7199,6 +7488,10 @@ msgstr ""
 #: bp-templates/bp-nouveau/readylaunch/forums/form-forum.php:99
 #: bp-templates/bp-nouveau/readylaunch/learndash/ld30/course.php:754
 #: bp-templates/bp-nouveau/readylaunch/members/single/invites/sent-invites.php:112
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:2
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:2
 msgid "Status"
 msgstr ""
 
@@ -7211,45 +7504,6 @@ msgstr ""
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:859
 #: bp-core/admin/bb-settings/settings-2.0/build/726.js:3
 msgid "Last Active"
-msgstr ""
-
-#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:768
-#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:883
-#: bp-core/admin/settings/groups/meta-fields.php:124
-#: bp-core/classes/class-bp-email-tokens.php:207
-#: bp-forums/forums/functions.php:1780
-#: bp-forums/templates/default/bbpress/feedback-no-access.php:12
-#: bp-groups/bp-groups-template.php:778
-#: bp-groups/bp-groups-template.php:779
-#: bp-groups/bp-groups-template.php:791
-#: bp-groups/bp-groups-template.php:1568
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:335
-#: bp-templates/bp-nouveau/readylaunch/forums/feedback-no-access.php:16
-#: bp-templates/bp-nouveau/readylaunch/groups/single/admin/group-settings.php:37
-#: bp-core/admin/bb-settings/settings-2.0/build/553.js:1
-#: bp-core/admin/bb-settings/settings-2.0/build/656.js:1
-#: bp-core/admin/bb-settings/settings-2.0/build/726.js:1
-#: bp-core/admin/bb-settings/settings-2.0/build/726.js:3
-msgid "Private"
-msgstr ""
-
-#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:771
-#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:887
-#: bp-core/admin/settings/groups/meta-fields.php:128
-#: bp-core/classes/class-bp-email-tokens.php:205
-#: bp-forums/admin/forums.php:128
-#: bp-forums/classes/class-bbpress.php:608
-#: bp-forums/forums/functions.php:1781
-#: bp-groups/bp-groups-template.php:773
-#: bp-groups/bp-groups-template.php:774
-#: bp-groups/bp-groups-template.php:789
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:336
-#: bp-moderation/classes/class-bp-moderation-list-table.php:326
-#: bp-moderation/classes/class-bp-moderation-list-table.php:407
-#: bp-templates/bp-nouveau/readylaunch/groups/single/admin/group-settings.php:38
-#: bp-core/admin/bb-settings/settings-2.0/build/726.js:1
-#: bp-core/admin/bb-settings/settings-2.0/build/726.js:3
-msgid "Hidden"
 msgstr ""
 
 #: bp-core/admin/classes/class-bb-admin-groups-ajax.php:909
@@ -7403,10 +7657,6 @@ msgstr ""
 
 #: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1938
 msgid "Forums are not available."
-msgstr ""
-
-#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1942
-msgid "Forums component is not active."
 msgstr ""
 
 #: bp-core/admin/classes/class-bb-admin-groups-ajax.php:2049
@@ -7631,7 +7881,6 @@ msgstr ""
 #. translators: accessibility text
 #: bp-core/admin/classes/class-bb-admin-profile-fields-ajax.php:784
 #: bp-core/deprecated/buddypress/1.5.php:177
-#: bp-forums/admin/metaboxes.php:608
 #: bp-templates/bp-nouveau/includes/members/functions.php:472
 #: bp-xprofile/classes/class-bp-xprofile-field-type-url.php:28
 #: bp-xprofile/classes/class-bp-xprofile-field-type-url.php:118
@@ -7715,9 +7964,107 @@ msgstr ""
 msgid "Order updated."
 msgstr ""
 
+#: bp-core/admin/classes/class-bb-admin-replies-ajax.php:207
+#: bp-core/admin/classes/class-bb-admin-topics-ajax.php:254
+#: bp-core/admin/settings/forums/settings-forum-permalinks.php:59
+#: bp-core/admin/settings/search/settings-network-search.php:123
+#: bp-core/bb-core-subscriptions.php:600
+#: bp-forums/classes/class-bp-forums-notification.php:128
+#: bp-forums/templates/default/bbpress/content-single-topic-lead.php:21
+#: bp-forums/templates/default/bbpress/content-single-topic-lead.php:90
+#: bp-forums/topics/template.php:51
+#: bp-moderation/classes/class-bp-moderation-activity.php:517
+#: bp-moderation/classes/class-bp-moderation-forum-topics.php:259
+#: bp-templates/bp-nouveau/readylaunch/forums/content-single-forum.php:58
+#: bp-templates/bp-nouveau/readylaunch/forums/loop-forum-card.php:47
+#: bp-templates/bp-nouveau/readylaunch/forums/loop-search-forum.php:44
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/681.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+msgid "Discussion"
+msgid_plural "Discussions"
+msgstr[0] ""
+msgstr[1] ""
+
+#: bp-core/admin/classes/class-bb-admin-replies-ajax.php:418
+#: bp-core/admin/classes/class-bb-admin-replies-ajax.php:603
+#: bp-core/admin/classes/class-bb-admin-replies-ajax.php:765
+msgid "Reply ID is required."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-replies-ajax.php:424
+#: bp-core/admin/classes/class-bb-admin-replies-ajax.php:608
+#: bp-core/admin/classes/class-bb-admin-replies-ajax.php:770
+msgid "Reply not found."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-replies-ajax.php:477
+msgid "Reply content is required."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-replies-ajax.php:481
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+msgid "Discussion is required."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-replies-ajax.php:514
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+msgid "Failed to create reply."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-replies-ajax.php:574
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+msgid "Reply created successfully."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-replies-ajax.php:742
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+msgid "Reply updated successfully."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-replies-ajax.php:777
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+msgid "Failed to delete reply."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-replies-ajax.php:784
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+msgid "Reply deleted successfully."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-replies-ajax.php:812
+msgid "Invalid bulk action parameters."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-replies-ajax.php:818
+msgid "Invalid bulk action."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-replies-ajax.php:823
+msgid "No replies selected."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-replies-ajax.php:916
+msgid "No replies were processed."
+msgstr ""
+
+#. translators: %d: number of replies updated.
+#: bp-core/admin/classes/class-bb-admin-replies-ajax.php:928
+msgid "%d reply updated."
+msgid_plural "%d replies updated."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: number of replies processed.
+#: bp-core/admin/classes/class-bb-admin-replies-ajax.php:940
+msgid "%d reply processed."
+msgid_plural "%d replies processed."
+msgstr[0] ""
+msgstr[1] ""
+
 #: bp-core/admin/classes/class-bb-admin-settings-ajax.php:142
 #: bp-core/admin/classes/class-bb-admin-settings-ajax.php:252
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:801
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:803
 msgid "Feature ID is required."
 msgstr ""
 
@@ -7727,7 +8074,7 @@ msgstr ""
 
 #: bp-core/admin/classes/class-bb-admin-settings-ajax.php:150
 #: bp-core/admin/classes/class-bb-admin-settings-ajax.php:256
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:805
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:807
 msgid "Feature registry not available."
 msgstr ""
 
@@ -7748,16 +8095,160 @@ msgstr ""
 msgid "Feature not found."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:797
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:799
 msgid "Invalid settings format."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:810
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:812
 msgid "Invalid settings data."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:847
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:849
 msgid "No fields registered for this feature."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-topic-tags-ajax.php:89
+msgid "Topic tags are not available."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-topic-tags-ajax.php:172
+msgid "Tag"
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-topic-tags-ajax.php:173
+#: bp-core/admin/bb-settings/settings-2.0/build/681.js:1
+msgid "Slug"
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-topic-tags-ajax.php:174
+#: bp-core/admin/bb-settings/settings-2.0/build/681.js:1
+msgid "Count"
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-topic-tags-ajax.php:208
+#: bp-core/admin/classes/class-bb-admin-topic-tags-ajax.php:310
+#: bp-core/admin/classes/class-bb-admin-topic-tags-ajax.php:365
+msgid "Tag ID is required."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-topic-tags-ajax.php:215
+#: bp-core/admin/classes/class-bb-admin-topic-tags-ajax.php:321
+#: bp-core/admin/classes/class-bb-admin-topic-tags-ajax.php:372
+msgid "Tag not found."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-topic-tags-ajax.php:261
+#: bp-core/admin/classes/class-bb-admin-topic-tags-ajax.php:314
+#: bp-core/admin/bb-settings/settings-2.0/build/681.js:1
+msgid "Tag name is required."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-topic-tags-ajax.php:282
+msgid "Tag created successfully."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-topic-tags-ajax.php:341
+msgid "Tag updated successfully."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-topic-tags-ajax.php:382
+#: bp-core/admin/bb-settings/settings-2.0/build/681.js:2
+msgid "Failed to delete tag."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-topic-tags-ajax.php:386
+#: bp-core/admin/bb-settings/settings-2.0/build/681.js:2
+msgid "Tag deleted successfully."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-topic-tags-ajax.php:414
+msgid "No tags selected."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-topic-tags-ajax.php:420
+msgid "No valid tag IDs provided."
+msgstr ""
+
+#. translators: %d: Number of tags deleted.
+#: bp-core/admin/classes/class-bb-admin-topic-tags-ajax.php:448
+msgid "%d tag deleted successfully."
+msgid_plural "%d tags deleted successfully."
+msgstr[0] ""
+msgstr[1] ""
+
+#: bp-core/admin/classes/class-bb-admin-topic-tags-ajax.php:465
+msgid "No tags were deleted."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-topics-ajax.php:424
+#: bp-core/admin/classes/class-bb-admin-topics-ajax.php:657
+#: bp-core/admin/classes/class-bb-admin-topics-ajax.php:869
+msgid "Discussion ID is required."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-topics-ajax.php:429
+#: bp-core/admin/classes/class-bb-admin-topics-ajax.php:662
+#: bp-core/admin/classes/class-bb-admin-topics-ajax.php:874
+msgid "Discussion not found."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-topics-ajax.php:510
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:2
+msgid "Discussion title is required."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-topics-ajax.php:514
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+msgid "Forum is required."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-topics-ajax.php:549
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+msgid "Failed to create discussion."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-topics-ajax.php:625
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:2
+msgid "Discussion created successfully."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-topics-ajax.php:845
+msgid "Discussion updated successfully."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-topics-ajax.php:882
+msgid "Failed to delete discussion."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-topics-ajax.php:889
+msgid "Discussion deleted successfully."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-topics-ajax.php:921
+msgid "No discussions selected."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-topics-ajax.php:927
+msgid "No valid discussion IDs provided."
+msgstr ""
+
+#. translators: %d: Number of discussions processed.
+#: bp-core/admin/classes/class-bb-admin-topics-ajax.php:1057
+msgid "%d discussion deleted successfully."
+msgid_plural "%d discussions deleted successfully."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: Number of discussions processed.
+#: bp-core/admin/classes/class-bb-admin-topics-ajax.php:1068
+msgid "%d discussion updated successfully."
+msgid_plural "%d discussions updated successfully."
+msgstr[0] ""
+msgstr[1] ""
+
+#: bp-core/admin/classes/class-bb-admin-topics-ajax.php:1086
+msgid "No discussions were processed."
 msgstr ""
 
 #: bp-core/admin/classes/class-bb-performance-tester.php:58
@@ -8097,8 +8588,12 @@ msgstr ""
 
 #: bp-core/admin/drm/class-bb-drm-helper.php:633
 #: bp-core/admin/drm/class-bb-drm-helper.php:758
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/534.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:2
+#: bp-core/admin/bb-settings/settings-2.0/build/681.js:2
 #: bp-core/admin/bb-settings/settings-2.0/build/726.js:4
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:2
 msgid "Warning"
 msgstr ""
 
@@ -8669,7 +9164,6 @@ msgid "Content"
 msgstr ""
 
 #: bp-core/admin/settings/activity/meta-fields.php:85
-#: bp-forums/admin/replies.php:642
 #: bp-templates/bp-nouveau/buddypress/document/create-child-folder.php:32
 #: bp-templates/bp-nouveau/buddypress/document/create-folder.php:24
 #: bp-templates/bp-nouveau/buddypress/media/create-album.php:24
@@ -8690,15 +9184,18 @@ msgstr ""
 #: bp-templates/bp-nouveau/readylaunch/video/single-album.php:43
 #: bp-templates/bp-nouveau/readylaunch/video/video-create-album.php:20
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:2
 msgid "Title"
 msgstr ""
 
 #: bp-core/admin/settings/activity/meta-fields.php:106
-#: bp-forums/admin/metaboxes.php:390
 #: bp-templates/bp-nouveau/readylaunch/common/filters/group-filters.php:53
 #: bp-templates/bp-nouveau/readylaunch/common/filters/member-filters.php:45
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1777
 #: bp-core/admin/bb-settings/settings-2.0/build/534.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:2
 msgid "Type"
 msgstr ""
 
@@ -8893,7 +9390,7 @@ msgstr ""
 #: bp-core/admin/settings/activity/settings-comments.php:93
 #: bp-core/admin/settings/groups/settings-group-images.php:171
 #: bp-core/admin/settings/members/settings-member-directory.php:185
-#: bp-core/admin/settings/members/settings-profile-image.php:301
+#: bp-core/admin/settings/members/settings-profile-image.php:306
 #: bp-core/bp-core-functions.php:7409
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:218
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:233
@@ -8905,6 +9402,8 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bb-activity-post-form-topic-selector.php:32
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/activity/parts/bb-activity-post-form-topic-selector.php:32
 #: bp-core/admin/bb-settings/settings-2.0/build/553.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:2
 #: bp-core/admin/bb-settings/settings-2.0/build/656.js:1
 msgid "None"
 msgstr ""
@@ -9117,6 +9616,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/readylaunch/video/video-privacy.php:26
 #: bp-xprofile/classes/class-bp-xprofile-component.php:345
 #: bp-xprofile/classes/class-bp-xprofile-component.php:498
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/726.js:3
 msgid "Privacy"
 msgstr ""
@@ -9146,7 +9646,6 @@ msgid "Public RSS Feeds"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-general.php:169
-#: bp-forums/admin/settings.php:1508
 msgid "Main Settings"
 msgstr ""
 
@@ -9222,6 +9721,193 @@ msgstr ""
 msgid "Registration Settings"
 msgstr ""
 
+#. translators: %s: Shortcodes link.
+#: bp-core/admin/settings/forums/settings-forum-directories.php:46
+msgid "Customize your Forums directory. Use <a href=\"%s\" target=\"_blank\">Shortcodes</a> for more flexibility."
+msgstr ""
+
+#: bp-core/admin/settings/forums/settings-forum-directories.php:68
+msgid "Forums Prefix"
+msgstr ""
+
+#: bp-core/admin/settings/forums/settings-forum-directories.php:70
+msgid "Prefix all forum content with the Forums page slug (Recommended)"
+msgstr ""
+
+#. translators: %s: Forums page link.
+#: bp-core/admin/settings/forums/settings-forum-directories.php:74
+msgid "When enabled, it adds the <a href=\"%s\">Forums page</a> slug to all forum URLs for cleaner, more organized links."
+msgstr ""
+
+#: bp-core/admin/settings/forums/settings-forum-directories.php:86
+msgid "Forums Directory Shows"
+msgstr ""
+
+#: bp-core/admin/settings/forums/settings-forum-directories.php:92
+msgid "Forum Index"
+msgstr ""
+
+#: bp-core/admin/settings/forums/settings-forum-directories.php:96
+msgid "Discussions by Last Post"
+msgstr ""
+
+#: bp-core/admin/settings/forums/settings-forum-features.php:44
+msgid "Revisions"
+msgstr ""
+
+#: bp-core/admin/settings/forums/settings-forum-features.php:46
+msgid "Allow discussion and reply revision logging"
+msgstr ""
+
+#: bp-core/admin/settings/forums/settings-forum-features.php:60
+#: bp-forums/classes/class-bp-forums-component.php:241
+msgid "Favorites"
+msgstr ""
+
+#: bp-core/admin/settings/forums/settings-forum-features.php:62
+msgid "Allow members to mark discussions as favorites"
+msgstr ""
+
+#: bp-core/admin/settings/forums/settings-forum-features.php:76
+#: bp-core/admin/settings/forums/settings-forum-permalinks.php:178
+#: bp-core/admin/settings/groups/settings-group-settings.php:68
+#: bp-performance/bp-performance-includes.php:145
+#: bp-settings/classes/class-bp-settings-component.php:198
+msgid "Subscriptions"
+msgstr ""
+
+#: bp-core/admin/settings/forums/settings-forum-features.php:78
+msgid "Allow members to subscribe to discussions and standalone forums"
+msgstr ""
+
+#: bp-core/admin/settings/forums/settings-forum-features.php:94
+msgid "Allow discussions to have tags"
+msgstr ""
+
+#: bp-core/admin/settings/forums/settings-forum-features.php:111
+msgid "Allow forum-wide search"
+msgstr ""
+
+#: bp-core/admin/settings/forums/settings-forum-features.php:125
+msgid "Post Formatting"
+msgstr ""
+
+#: bp-core/admin/settings/forums/settings-forum-features.php:127
+msgid "Add toolbar & buttons to text areas to help with HTML formatting"
+msgstr ""
+
+#: bp-core/admin/settings/forums/settings-forum-features.php:141
+msgid "Link Previews"
+msgstr ""
+
+#: bp-core/admin/settings/forums/settings-forum-features.php:143
+msgid "Embed media (YouTube, Twitter, Vimeo, etc...) directly into discussions and replies"
+msgstr ""
+
+#: bp-core/admin/settings/forums/settings-forum-features.php:157
+msgid "Anonymous Posting"
+msgstr ""
+
+#: bp-core/admin/settings/forums/settings-forum-features.php:159
+msgid "Allow guest users without accounts to create discussions and replies"
+msgstr ""
+
+#: bp-core/admin/settings/forums/settings-forum-features.php:174
+msgid "Akismet"
+msgstr ""
+
+#: bp-core/admin/settings/forums/settings-forum-features.php:176
+msgid "Allow Akismet spam filtering to actively prevent forum spam"
+msgstr ""
+
+#: bp-core/admin/settings/forums/settings-forum-features.php:201
+#: bp-core/admin/settings/forums/settings-forum-features.php:214
+#: bp-forums/admin/tools.php:556
+msgid "Group Forums"
+msgstr ""
+
+#: bp-core/admin/settings/forums/settings-forum-features.php:216
+msgid "Allow social groups to have their own forums"
+msgstr ""
+
+#: bp-core/admin/settings/forums/settings-forum-permalinks.php:31
+msgid "Forum Permalinks"
+msgstr ""
+
+#: bp-core/admin/settings/forums/settings-forum-permalinks.php:32
+msgid "Custom URL slugs for Forum content. Slugs should be all lowercase and contain only letters, numbers, and hyphens."
+msgstr ""
+
+#: bp-core/admin/settings/forums/settings-forum-permalinks.php:74
+#: bp-forums/topics/template.php:3795
+msgid "Discussion Tag"
+msgstr ""
+
+#: bp-core/admin/settings/forums/settings-forum-permalinks.php:89
+msgid "Discussion View"
+msgstr ""
+
+#: bp-core/admin/settings/forums/settings-forum-permalinks.php:135
+msgid "Forum Profile Permalinks"
+msgstr ""
+
+#: bp-core/admin/settings/forums/settings-forum-permalinks.php:136
+msgid "Custom URL slugs for the Forums tab in member profiles. Slugs should be all lowercase and contain only letters, numbers, and hyphens."
+msgstr ""
+
+#: bp-core/admin/settings/forums/settings-forum-permalinks.php:148
+msgid "Replies Created"
+msgstr ""
+
+#: bp-core/admin/settings/forums/settings-forum-permalinks.php:163
+msgid "Favorite Discussions"
+msgstr ""
+
+#: bp-core/admin/settings/forums/settings-forum-settings.php:44
+msgid "Disallow Editing After"
+msgstr ""
+
+#: bp-core/admin/settings/forums/settings-forum-settings.php:50
+#: bp-core/bp-core-cssjs.php:817
+#: bp-forums/common/functions.php:124
+msgid "minutes"
+msgstr ""
+
+#: bp-core/admin/settings/forums/settings-forum-settings.php:62
+msgid "Throttle Posting Every"
+msgstr ""
+
+#: bp-core/admin/settings/forums/settings-forum-settings.php:68
+#: bp-core/bp-core-cssjs.php:815
+#: bp-forums/common/functions.php:125
+msgid "seconds"
+msgstr ""
+
+#: bp-core/admin/settings/forums/settings-forum-settings.php:90
+msgid "Reply Threading"
+msgstr ""
+
+#. translators: %s: Thread depth select control.
+#: bp-core/admin/settings/forums/settings-forum-settings.php:93
+msgid "Enable threaded (nested) replies %s levels deep"
+msgstr ""
+
+#: bp-core/admin/settings/forums/settings-forum-settings.php:117
+msgid "Discussions and Replies Per Page"
+msgstr ""
+
+#: bp-core/admin/settings/forums/settings-forum-settings.php:136
+#: bp-core/admin/settings/forums/settings-forum-settings.php:154
+#: bp-core/admin/settings/forums/settings-forum-settings.php:172
+#: bp-core/admin/settings/forums/settings-forum-settings.php:204
+#: bp-core/admin/settings/forums/settings-forum-settings.php:222
+msgid "per page"
+msgstr ""
+
+#: bp-core/admin/settings/forums/settings-forum-settings.php:185
+msgid "Discussions and Replies Per RSS Page"
+msgstr ""
+
 #. translators: 1: width in pixels, 2: height in pixels.
 #: bp-core/admin/settings/groups/callbacks.php:273
 msgid "Upload a default cover image (JPG or PNG, recommended size: %1$spx × %2$spx)."
@@ -9233,11 +9919,14 @@ msgid "Upload a default avatar image (JPG or PNG, recommended size: %1$spx × %2
 msgstr ""
 
 #: bp-core/admin/settings/groups/meta-fields.php:57
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:2
 #: bp-core/admin/bb-settings/settings-2.0/build/726.js:1
 msgid "Permalink"
 msgstr ""
 
 #: bp-core/admin/settings/groups/meta-fields.php:88
+#: bp-core/admin/bb-settings/settings-2.0/build/681.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/726.js:1
 msgid "Description (Optional)"
 msgstr ""
@@ -9320,24 +10009,6 @@ msgstr ""
 #: bp-core/admin/settings/groups/meta-fields.php:377
 #: bp-forums/groups.php:339
 msgid "Connect a discussion forum to allow members of this group to communicate in a structured, bulletin-board style fashion. Unchecking this option will not delete existing forum content."
-msgstr ""
-
-#: bp-core/admin/settings/groups/meta-fields.php:401
-#: bp-core/bb-core-subscriptions.php:599
-#: bp-forums/admin/forums.php:497
-#: bp-forums/admin/metaboxes.php:421
-#: bp-forums/admin/metaboxes.php:482
-#: bp-forums/admin/replies.php:643
-#: bp-forums/admin/settings.php:304
-#: bp-forums/admin/topics.php:738
-#: bp-forums/classes/class-bp-forums-notification.php:188
-#: bp-forums/forums/functions.php:1759
-#: bp-forums/forums/template.php:51
-#: bp-forums/groups.php:52
-#: bp-forums/templates/default/bbpress/loop-forums.php:18
-#: bp-moderation/classes/class-bp-moderation-activity.php:513
-#: bp-moderation/classes/class-bp-moderation-forums.php:251
-msgid "Forum"
 msgstr ""
 
 #: bp-core/admin/settings/groups/meta-fields.php:404
@@ -9528,8 +10199,8 @@ msgstr ""
 
 #: bp-core/admin/settings/groups/settings-group-images.php:85
 #: bp-core/admin/settings/groups/settings-group-images.php:176
-#: bp-core/admin/settings/members/settings-profile-image.php:142
-#: bp-core/admin/settings/members/settings-profile-image.php:306
+#: bp-core/admin/settings/members/settings-profile-image.php:147
+#: bp-core/admin/settings/members/settings-profile-image.php:311
 #: bp-xprofile/classes/class-bp-xprofile-field-type-gender.php:241
 #: bp-xprofile/classes/class-bp-xprofile-field-type-social-networks.php:194
 #: bp-xprofile/classes/class-bp-xprofile-field-type.php:339
@@ -9539,7 +10210,7 @@ msgid "Custom"
 msgstr ""
 
 #: bp-core/admin/settings/groups/settings-group-images.php:96
-#: bp-core/admin/settings/members/settings-profile-image.php:153
+#: bp-core/admin/settings/members/settings-profile-image.php:158
 msgid "Upload Custom Avatar"
 msgstr ""
 
@@ -9561,22 +10232,22 @@ msgid "Default Group Cover Image"
 msgstr ""
 
 #: bp-core/admin/settings/groups/settings-group-images.php:187
-#: bp-core/admin/settings/members/settings-profile-image.php:317
+#: bp-core/admin/settings/members/settings-profile-image.php:322
 msgid "Upload Custom Cover"
 msgstr ""
 
 #: bp-core/admin/settings/groups/settings-group-images.php:209
-#: bp-core/admin/settings/members/settings-profile-image.php:218
+#: bp-core/admin/settings/members/settings-profile-image.php:223
 msgid "Cover Image Sizes"
 msgstr ""
 
 #: bp-core/admin/settings/groups/settings-group-images.php:221
-#: bp-core/admin/settings/members/settings-profile-image.php:230
+#: bp-core/admin/settings/members/settings-profile-image.php:235
 msgid "Full Width"
 msgstr ""
 
 #: bp-core/admin/settings/groups/settings-group-images.php:231
-#: bp-core/admin/settings/members/settings-profile-image.php:240
+#: bp-core/admin/settings/members/settings-profile-image.php:245
 msgid "Width"
 msgstr ""
 
@@ -9585,17 +10256,17 @@ msgid "Changing the size of your cover images will reposition those already uplo
 msgstr ""
 
 #: bp-core/admin/settings/groups/settings-group-images.php:252
-#: bp-core/admin/settings/members/settings-profile-image.php:261
+#: bp-core/admin/settings/members/settings-profile-image.php:266
 msgid "Small"
 msgstr ""
 
 #: bp-core/admin/settings/groups/settings-group-images.php:256
-#: bp-core/admin/settings/members/settings-profile-image.php:265
+#: bp-core/admin/settings/members/settings-profile-image.php:270
 msgid "Large"
 msgstr ""
 
 #: bp-core/admin/settings/groups/settings-group-images.php:266
-#: bp-core/admin/settings/members/settings-profile-image.php:275
+#: bp-core/admin/settings/members/settings-profile-image.php:280
 msgid "Height"
 msgstr ""
 
@@ -9657,14 +10328,6 @@ msgstr ""
 #. translators: %s: Access Controls link.
 #: bp-core/admin/settings/groups/settings-group-settings.php:50
 msgid "Administrators can always create groups, regardless of this setting. You can configure who can create groups in %s."
-msgstr ""
-
-#: bp-core/admin/settings/groups/settings-group-settings.php:68
-#: bp-forums/admin/settings.php:140
-#: bp-forums/admin/settings.php:381
-#: bp-performance/bp-performance-includes.php:145
-#: bp-settings/classes/class-bp-settings-component.php:198
-msgid "Subscriptions"
 msgstr ""
 
 #: bp-core/admin/settings/groups/settings-group-settings.php:70
@@ -10382,26 +11045,35 @@ msgstr ""
 msgid "Allow members to use Gravatars for profile avatars"
 msgstr ""
 
-#: bp-core/admin/settings/members/settings-profile-image.php:114
+#. translators: Gravatar Link
+#: bp-core/admin/settings/members/settings-profile-image.php:98
+msgid "When enabled, members will be able to use avatars from their %s account."
+msgstr ""
+
+#: bp-core/admin/settings/members/settings-profile-image.php:99
+msgid "Gravatar"
+msgstr ""
+
+#: bp-core/admin/settings/members/settings-profile-image.php:119
 msgid "Default Profile Avatar"
 msgstr ""
 
 #. translators: 1: Profile settings link, 2: Imagick link.
-#: bp-core/admin/settings/members/settings-profile-image.php:119
+#: bp-core/admin/settings/members/settings-profile-image.php:124
 msgid "Display name shows as one or two initials based on your %1$s. Select a default image for members without a profile avatar. Note: Your server needs %2$s installed to use the \"Display Name\" option."
 msgstr ""
 
-#: bp-core/admin/settings/members/settings-profile-image.php:120
-#: bp-core/admin/settings/members/settings-profile-image.php:126
+#: bp-core/admin/settings/members/settings-profile-image.php:125
+#: bp-core/admin/settings/members/settings-profile-image.php:131
 msgid "profile settings"
 msgstr ""
 
 #. translators: %s: Profile settings link.
-#: bp-core/admin/settings/members/settings-profile-image.php:125
+#: bp-core/admin/settings/members/settings-profile-image.php:130
 msgid "Display name shows as one or two initials based on your %s. Select a default image for members without a profile avatar."
 msgstr ""
 
-#: bp-core/admin/settings/members/settings-profile-image.php:137
+#: bp-core/admin/settings/members/settings-profile-image.php:142
 #: bp-core/admin/settings/search/settings-network-search.php:69
 #: bp-members/classes/class-bp-members-admin.php:2469
 #: bp-search/bp-search-functions.php:508
@@ -10409,31 +11081,31 @@ msgstr ""
 msgid "Display Name"
 msgstr ""
 
-#: bp-core/admin/settings/members/settings-profile-image.php:187
+#: bp-core/admin/settings/members/settings-profile-image.php:192
 msgid "Profile Covers"
 msgstr ""
 
-#: bp-core/admin/settings/members/settings-profile-image.php:200
+#: bp-core/admin/settings/members/settings-profile-image.php:205
 msgid "Profile Cover Images"
 msgstr ""
 
-#: bp-core/admin/settings/members/settings-profile-image.php:202
+#: bp-core/admin/settings/members/settings-profile-image.php:207
 msgid "Enable cover images for member profiles"
 msgstr ""
 
-#: bp-core/admin/settings/members/settings-profile-image.php:203
+#: bp-core/admin/settings/members/settings-profile-image.php:208
 msgid "When enabled, members will be able to upload cover images in their profile settings."
 msgstr ""
 
-#: bp-core/admin/settings/members/settings-profile-image.php:255
+#: bp-core/admin/settings/members/settings-profile-image.php:260
 msgid "Changing the cover image size will reposition existing member images."
 msgstr ""
 
-#: bp-core/admin/settings/members/settings-profile-image.php:289
+#: bp-core/admin/settings/members/settings-profile-image.php:294
 msgid "Default Profile Cover Image"
 msgstr ""
 
-#: bp-core/admin/settings/members/settings-profile-image.php:291
+#: bp-core/admin/settings/members/settings-profile-image.php:296
 msgid "Select which image should be used for members who haven't uploaded a profile cover image."
 msgstr ""
 
@@ -10628,35 +11300,6 @@ msgstr ""
 msgid "Allow forum searching"
 msgstr ""
 
-#: bp-core/admin/settings/search/settings-network-search.php:123
-#: bp-core/bb-core-subscriptions.php:600
-#: bp-forums/admin/metaboxes.php:510
-#: bp-forums/admin/replies.php:644
-#: bp-forums/admin/settings.php:312
-#: bp-forums/classes/class-bp-forums-notification.php:128
-#: bp-forums/templates/default/bbpress/content-single-topic-lead.php:21
-#: bp-forums/templates/default/bbpress/content-single-topic-lead.php:90
-#: bp-forums/topics/template.php:51
-#: bp-moderation/classes/class-bp-moderation-activity.php:517
-#: bp-moderation/classes/class-bp-moderation-forum-topics.php:259
-#: bp-templates/bp-nouveau/readylaunch/forums/content-single-forum.php:58
-#: bp-templates/bp-nouveau/readylaunch/forums/loop-forum-card.php:47
-#: bp-templates/bp-nouveau/readylaunch/forums/loop-search-forum.php:44
-msgid "Discussion"
-msgid_plural "Discussions"
-msgstr[0] ""
-msgstr[1] ""
-
-#: bp-core/admin/settings/search/settings-network-search.php:139
-#: bp-forums/admin.php:243
-#: bp-forums/admin.php:331
-#: bp-forums/admin/tools.php:1799
-#: bp-forums/templates/default/bbpress/content-statistics.php:38
-#: bp-forums/topics/template.php:3794
-#: bp-templates/bp-nouveau/readylaunch/forums/content-statistics.php:43
-msgid "Discussion Tags"
-msgstr ""
-
 #: bp-core/admin/settings/search/settings-network-search.php:176
 msgid "Allow group searching"
 msgstr ""
@@ -10836,13 +11479,20 @@ msgstr ""
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
 #: bp-core/admin/bb-settings/rl-onboarding/build/rl-onboarding.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/192.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/534.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/553.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:2
 #: bp-core/admin/bb-settings/settings-2.0/build/656.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/681.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/681.js:2
 #: bp-core/admin/bb-settings/settings-2.0/build/726.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/726.js:2
 #: bp-core/admin/bb-settings/settings-2.0/build/726.js:3
 #: bp-core/admin/bb-settings/settings-2.0/build/726.js:4
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:2
 #: bp-core/admin/bb-settings/settings-2.0/build/923.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/index.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/index.js:2
@@ -10854,7 +11504,7 @@ msgid "Yes I understand, Deactivate"
 msgstr ""
 
 #: bp-core/admin/templates/update-buddyboss.php:87
-#: bp-core/classes/class-bp-admin.php:811
+#: bp-core/classes/class-bp-admin.php:810
 msgid "Release Notes"
 msgstr ""
 
@@ -10973,20 +11623,6 @@ msgstr ""
 
 #: bp-core/admin/templates/upgrade-screen.php:43
 msgid "Email Notifications"
-msgstr ""
-
-#: bp-core/admin/templates/upgrade-screen.php:45
-#: bp-core/bp-core-functions.php:2564
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:594
-#: bp-core/gdpr/class-bp-bbp-gdpr-topics.php:39
-#: bp-core/gdpr/class-bp-bbp-gdpr-topics.php:57
-#: bp-core/gdpr/class-bp-bbp-gdpr-topics.php:98
-#: bp-forums/admin/metaboxes.php:40
-#: bp-forums/classes/class-bbpress.php:489
-#: bp-moderation/classes/class-bp-moderation-forum-topics.php:123
-#: bp-performance/bp-performance-includes.php:110
-#: bp-search/bp-search-functions.php:370
-msgid "Forum Discussions"
 msgstr ""
 
 #: bp-core/admin/templates/upgrade-screen.php:52
@@ -11695,18 +12331,6 @@ msgstr ""
 msgid "a second"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:815
-#: bp-forums/admin/settings.php:455
-#: bp-forums/common/functions.php:125
-msgid "seconds"
-msgstr ""
-
-#: bp-core/bp-core-cssjs.php:817
-#: bp-forums/admin/settings.php:439
-#: bp-forums/common/functions.php:124
-msgid "minutes"
-msgstr ""
-
 #: bp-core/bp-core-cssjs.php:819
 #: bp-forums/common/functions.php:123
 msgid "hours"
@@ -12273,7 +12897,6 @@ msgstr ""
 #: bp-core/bp-core-functions.php:3395
 #: bp-core/bp-core-functions.php:7379
 #: bp-core/classes/class-bb-readylaunch.php:4461
-#: bp-forums/admin/metaboxes.php:602
 #: bp-members/classes/class-bp-members-admin.php:2474
 #: bp-members/classes/class-bp-members-list-table.php:157
 #: bp-members/classes/class-bp-members-list-table.php:173
@@ -12316,7 +12939,7 @@ msgid "Edit Email Situations"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:3388
-#: bp-core/classes/class-bp-admin.php:911
+#: bp-core/classes/class-bp-admin.php:910
 msgid "Situations"
 msgstr ""
 
@@ -12930,7 +13553,6 @@ msgid "BuddyBoss email types"
 msgstr ""
 
 #: bp-core/bp-core-template.php:119
-#: bp-forums/admin/settings.php:1312
 #: bp-moderation/classes/class-bp-moderation-comment.php:344
 #: bp-templates/bp-nouveau/buddypress/common/more-options-view.php:13
 #: bp-templates/bp-nouveau/readylaunch/common/more-options-view.php:19
@@ -13753,18 +14375,18 @@ msgid "Navigation item ID \"%s\" already registered for feature."
 msgstr ""
 
 #. translators: %s: feature ID
-#: bp-core/classes/class-bb-feature-registry.php:1206
-#: bp-core/classes/class-bb-feature-registry.php:1283
+#: bp-core/classes/class-bb-feature-registry.php:1211
+#: bp-core/classes/class-bb-feature-registry.php:1288
 msgid "Feature \"%s\" not found."
 msgstr ""
 
 #. translators: 1: feature ID, 2: dependency feature ID
-#: bp-core/classes/class-bb-feature-registry.php:1221
+#: bp-core/classes/class-bb-feature-registry.php:1226
 msgid "Cannot activate feature \"%1$s\". Required dependency \"%2$s\" is not active."
 msgstr ""
 
 #. translators: %s: feature label
-#: bp-core/classes/class-bb-feature-registry.php:1297
+#: bp-core/classes/class-bb-feature-registry.php:1302
 msgid "\"%s\" is a required feature and cannot be deactivated."
 msgstr ""
 
@@ -14199,7 +14821,6 @@ msgid "Type your discussion content here"
 msgstr ""
 
 #: bp-core/classes/class-bb-readylaunch.php:3866
-#: bp-forums/admin/admin.php:508
 #: bp-forums/templates/default/bbpress-functions.php:240
 msgid "Loading"
 msgstr ""
@@ -14216,7 +14837,8 @@ msgid "Something went wrong. Refresh your browser and try again."
 msgstr ""
 
 #: bp-core/classes/class-bb-readylaunch.php:3890
-#: bp-forums/activity.php:430
+#: bp-forums/activity.php:436
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
 msgid "Reply to"
 msgstr ""
 
@@ -14249,6 +14871,7 @@ msgstr ""
 #: bp-core/classes/class-bb-readylaunch.php:4388
 #: bp-forums/topics/functions.php:2214
 #: bp-templates/bp-nouveau/readylaunch/forums/loop-single-topic.php:66
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:2
 msgid "Super Sticky"
 msgstr ""
 
@@ -14335,7 +14958,6 @@ msgid "Report"
 msgstr ""
 
 #: bp-core/classes/class-bb-readylaunch.php:4682
-#: bp-forums/admin/settings.php:1158
 #: bp-groups/classes/class-bp-group-extension.php:524
 #: bp-templates/bp-nouveau/buddypress/groups/single/cover-image-header.php:66
 #: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:103
@@ -15050,17 +15672,17 @@ msgstr ""
 msgid "Contact"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:810
-#: bp-forums/admin/admin.php:434
+#: bp-core/classes/class-bp-admin.php:809
+#: bp-forums/admin/admin.php:411
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/messages/parts/bp-messages-right-panel.php:21
 msgid "About"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:864
+#: bp-core/classes/class-bp-admin.php:863
 msgid "Docs"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:865
+#: bp-core/classes/class-bp-admin.php:864
 msgid "<strong>You are offline.</strong> Documentation requires internet access."
 msgstr ""
 
@@ -16106,7 +16728,6 @@ msgid "The selected Template Pack will serve all BuddyPress templates."
 msgstr ""
 
 #: bp-core/deprecated/buddyboss/1.0.php:508
-#: bp-forums/admin/settings.php:697
 msgid "No template packages available."
 msgstr ""
 
@@ -16144,6 +16765,7 @@ msgstr[1] ""
 #: bp-forums/forums/template.php:1631
 #: bp-forums/templates/default/bbpress/feedback-forum-category.php:20
 #: bp-templates/bp-nouveau/readylaunch/forums/feedback-forum-category.php:27
+#: bp-core/admin/bb-settings/settings-2.0/build/681.js:1
 msgid "%s discussion"
 msgid_plural "%s discussions"
 msgstr[0] ""
@@ -16287,6 +16909,18 @@ msgstr ""
 msgid "The %s filter is no longer used. Profile admin tabs are now managed via Settings 2.0 side panels."
 msgstr ""
 
+#: bp-core/deprecated/buddyboss/3.0.0.php:1786
+msgid "This endpoint has been deprecated. Use bb_admin_discussion_autocomplete instead."
+msgstr ""
+
+#: bp-core/deprecated/buddyboss/3.0.0.php:1800
+msgid "This endpoint has been deprecated. Use bb_admin_reply_autocomplete instead."
+msgstr ""
+
+#: bp-core/deprecated/buddyboss/3.0.0.php:1814
+msgid "This endpoint has been deprecated."
+msgstr ""
+
 #: bp-core/deprecated/buddypress/1.5.php:168
 #: bp-templates/bp-nouveau/includes/members/functions.php:471
 msgid "About Me"
@@ -16341,7 +16975,10 @@ msgstr ""
 #: bp-members/classes/class-bp-core-members-widget.php:274
 #: bp-templates/bp-nouveau/includes/blogs/functions.php:109
 #: bp-templates/bp-nouveau/includes/members/functions.php:120
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/726.js:3
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
 msgid "Newest"
 msgstr ""
 
@@ -17866,99 +18503,86 @@ msgstr ""
 msgid "New forum reply"
 msgstr ""
 
-#: bp-forums/activity.php:513
-#: bp-forums/activity.php:514
-#: bp-forums/activity.php:556
-#: bp-forums/activity.php:557
+#: bp-forums/activity.php:519
+#: bp-forums/activity.php:520
+#: bp-forums/activity.php:568
+#: bp-forums/activity.php:569
 msgid "Join Discussion"
 msgstr ""
 
-#: bp-forums/activity.php:949
+#: bp-forums/activity.php:961
 msgid "%1$s started the discussion %2$s in the group %3$s"
 msgstr ""
 
-#: bp-forums/activity.php:981
+#: bp-forums/activity.php:993
 msgid "%1$s replied to the discussion %2$s in the group %3$s"
 msgstr ""
 
-#: bp-forums/activity.php:1251
+#: bp-forums/activity.php:1263
 msgid "%1$s started the discussion %2$s in the forum %3$s"
 msgstr ""
 
-#: bp-forums/activity.php:1252
+#: bp-forums/activity.php:1264
 msgid "%1$s replied to the discussion %2$s in the forum %3$s"
 msgstr ""
 
+#: bp-forums/admin/admin.php:229
+#: bp-forums/admin/admin.php:230
 #: bp-forums/admin/admin.php:252
 #: bp-forums/admin/admin.php:253
-#: bp-forums/admin/admin.php:275
-#: bp-forums/admin/admin.php:276
-#: bp-forums/admin/admin.php:829
-#: bp-forums/admin/admin.php:926
+#: bp-forums/admin/admin.php:638
+#: bp-forums/admin/admin.php:735
 msgid "Update Forums"
 msgstr ""
 
-#: bp-forums/admin/admin.php:449
+#: bp-forums/admin/admin.php:426
 msgid "Right Now in Forums"
 msgstr ""
 
-#: bp-forums/admin/admin.php:465
+#: bp-forums/admin/admin.php:442
 msgid "About BuddyBoss"
 msgstr ""
 
-#: bp-forums/admin/admin.php:563
+#: bp-forums/admin/admin.php:519
 msgid "Mint"
 msgstr ""
 
-#: bp-forums/admin/admin.php:576
+#: bp-forums/admin/admin.php:532
 msgid "Evergreen"
 msgstr ""
 
-#: bp-forums/admin/admin.php:659
-msgid "-- Select Discussion --"
-msgstr ""
-
-#: bp-forums/admin/admin.php:696
-msgid "-- Select Reply --"
-msgstr ""
-
-#: bp-forums/admin/admin.php:754
-#: bp-forums/admin/settings.php:686
-msgid "%1$s - %2$s"
-msgstr ""
-
-#: bp-forums/admin/admin.php:777
-#: bp-forums/admin/admin.php:800
+#: bp-forums/admin/admin.php:586
+#: bp-forums/admin/admin.php:609
 msgid "Update Forum"
 msgstr ""
 
-#: bp-forums/admin/admin.php:788
-#: bp-forums/admin/admin.php:846
+#: bp-forums/admin/admin.php:597
+#: bp-forums/admin/admin.php:655
 msgid "All done!"
 msgstr ""
 
-#: bp-forums/admin/admin.php:789
-#: bp-forums/admin/admin.php:847
+#: bp-forums/admin/admin.php:598
+#: bp-forums/admin/admin.php:656
 msgid "Go Back"
 msgstr ""
 
-#: bp-forums/admin/admin.php:799
+#: bp-forums/admin/admin.php:608
 msgid "You can update your forum through this page. Hit the link below to update."
 msgstr ""
 
-#: bp-forums/admin/admin.php:878
+#: bp-forums/admin/admin.php:687
 msgid "Warning! Problem updating %1$s. Your server may not be able to connect to sites running on it. Error message: <em>%2$s</em>"
 msgstr ""
 
-#: bp-forums/admin/admin.php:904
+#: bp-forums/admin/admin.php:713
 msgid "If your browser doesn't start loading the next page automatically, click this link:"
 msgstr ""
 
-#: bp-forums/admin/admin.php:905
+#: bp-forums/admin/admin.php:714
 msgid "Next Forums"
 msgstr ""
 
-#: bp-forums/admin/admin.php:925
+#: bp-forums/admin/admin.php:734
 msgid "You can update all the forums on your network through this page. It works by calling the update script of each site automatically. Hit the link below to update."
 msgstr ""
 
@@ -18011,7 +18635,6 @@ msgid "Purge Previous Import"
 msgstr ""
 
 #: bp-forums/admin/converter.php:237
-#: bp-forums/admin/settings.php:1429
 #: bp-templates/bp-nouveau/readylaunch/memberpress/assignments/section_assignment_row.php:71
 #: bp-templates/bp-nouveau/readylaunch/memberpress/courses/courses_classroom_section_lessons.php:94
 #: bp-templates/bp-nouveau/readylaunch/memberpress/courses/courses_section_lesson_list.php:83
@@ -18321,205 +18944,7 @@ msgstr ""
 msgid "Re: "
 msgstr ""
 
-#: bp-forums/admin/forums.php:153
-msgid "This screen displays the individual forums on your site. You can customize the display of this screen to suit your workflow."
-msgstr ""
-
-#: bp-forums/admin/forums.php:161
-#: bp-forums/admin/replies.php:143
-#: bp-forums/admin/topics.php:144
-msgid "Screen Content"
-msgstr ""
-
-#: bp-forums/admin/forums.php:163
-#: bp-forums/admin/replies.php:145
-#: bp-forums/admin/topics.php:146
-msgid "You can customize the display of this screen's contents in a number of ways:"
-msgstr ""
-
-#: bp-forums/admin/forums.php:165
-msgid "You can hide/display columns based on your needs and decide how many forums to list per screen using the Screen Options tab."
-msgstr ""
-
-#: bp-forums/admin/forums.php:166
-msgid "You can filter the list of forums by forum status using the text links in the upper left to show All, Published, or Trashed forums. The default view is to show all forums."
-msgstr ""
-
-#: bp-forums/admin/forums.php:167
-msgid "You can refine the list to show only forums from a specific month by using the dropdown menus above the forums list. Click the Filter button after making your selection. You also can refine the list by clicking on the forum creator in the forums list."
-msgstr ""
-
-#: bp-forums/admin/forums.php:176
-#: bp-forums/admin/replies.php:159
-#: bp-forums/admin/topics.php:159
-msgid "Available Actions"
-msgstr ""
-
-#: bp-forums/admin/forums.php:178
-msgid "Hovering over a row in the forums list will display action links that allow you to manage your forum. You can perform the following actions:"
-msgstr ""
-
-#: bp-forums/admin/forums.php:180
-msgid "<strong>Edit</strong> takes you to the editing screen for that forum. You can also reach that screen by clicking on the forum title."
-msgstr ""
-
-#: bp-forums/admin/forums.php:181
-msgid "<strong>Trash</strong> removes your forum from this list and places it in the trash, from which you can permanently delete it."
-msgstr ""
-
-#: bp-forums/admin/forums.php:182
-msgid "<strong>View</strong> will show you what your draft forum will look like if you publish it. View will take you to your live site to view the forum. Which link is available depends on your forum's status."
-msgstr ""
-
-#: bp-forums/admin/forums.php:193
-msgid "You can also edit or move multiple forums to the trash at once. Select the forums you want to act on using the checkboxes, then select the action you want to take from the Bulk Actions menu and click Apply."
-msgstr ""
-
-#: bp-forums/admin/forums.php:194
-msgid "When using Bulk Edit, you can change the status (Published, Private, etc.) for all selected forums at once. To remove a forum from the grouping, just click the x next to its name in the Bulk Edit area that appears."
-msgstr ""
-
-#: bp-forums/admin/forums.php:217
-msgid "The title field and the big forum editing Area are fixed in place, but you can reposition all the other boxes using drag and drop, and can minimize or expand them by clicking the title bar of each box. Use the Screen Options tab to unhide more boxes (Excerpt, Send Trackbacks, Custom Fields, Discussion, Slug, Author) or to choose a 1- or 2-column layout for this screen."
-msgstr ""
-
-#: bp-forums/admin/forums.php:222
-#: bp-forums/admin/replies.php:207
-#: bp-forums/admin/topics.php:209
-msgid "Customizing This Display"
-msgstr ""
-
-#: bp-forums/admin/forums.php:230
-msgid "Title and Forum Editor"
-msgstr ""
-
-#: bp-forums/admin/forums.php:232
-msgid "<strong>Title</strong> - Enter a title for your forum. After you enter a title, you'll see the permalink below, which you can edit."
-msgstr ""
-
-#: bp-forums/admin/forums.php:233
-msgid "<strong>Forum Editor</strong> - Enter the text for your forum. There are two modes of editing: Visual and HTML. Choose the mode by clicking on the appropriate tab. Visual mode gives you a WYSIWYG editor. Click the last icon in the row to get a second row of controls. The HTML mode allows you to enter raw HTML along with your forum text. You can insert media files by clicking the icons above the forum editor and following the directions. You can go to the distraction-free writing screen via the Fullscreen icon in Visual mode (second to last in the top row) or the Fullscreen button in HTML mode (last in the row). Once there, you can make buttons visible by hovering over the top area. Exit Fullscreen back to the regular forum editor."
-msgstr ""
-
-#: bp-forums/admin/forums.php:237
-msgid "<strong>Publish</strong> - You can set the terms of publishing your forum in the Publish box. For Status, Visibility, and Publish (immediately), click on the Edit link to reveal more options. Visibility includes options for password-protecting a forum or making it stay at the top of your blog indefinitely (sticky). Publish (immediately) allows you to set a future or past date and time, so you can schedule a forum to be published in the future or backdate a forum."
-msgstr ""
-
-#: bp-forums/admin/forums.php:240
-msgid "<strong>Featured Image</strong> - This allows you to associate an image with your forum without inserting it. This is usually useful only if your theme makes use of the featured image as a forum thumbnail on the home page, a custom header, etc."
-msgstr ""
-
-#: bp-forums/admin/forums.php:246
-#: bp-forums/admin/forums.php:291
-msgid "Forum Attributes"
-msgstr ""
-
-#: bp-forums/admin/forums.php:248
-msgid "Select the attributes that your forum should have:"
-msgstr ""
-
-#: bp-forums/admin/forums.php:250
-msgid "<strong>Type</strong> indicates if the forum is a category or forum. Categories generally contain other forums."
-msgstr ""
-
-#: bp-forums/admin/forums.php:251
-msgid "<strong>Status</strong> allows you to close a forum to new discussions and replies."
-msgstr ""
-
-#: bp-forums/admin/forums.php:252
-msgid "<strong>Visibility</strong> lets you pick the scope of each forum and what users are allowed to access it."
-msgstr ""
-
-#: bp-forums/admin/forums.php:253
-msgid "<strong>Parent</strong> dropdown determines the parent forum. Select the forum or category from the dropdown, or leave the default (No Parent) to create the forum at the root of your forums."
-msgstr ""
-
-#: bp-forums/admin/forums.php:254
-msgid "<strong>Order</strong> allows you to order your forums numerically."
-msgstr ""
-
-#: bp-forums/admin/forums.php:262
-#: bp-forums/admin/replies.php:245
-#: bp-forums/admin/topics.php:246
-msgid "Publish Box"
-msgstr ""
-
-#: bp-forums/admin/forums.php:500
-#: bp-forums/templates/default/bbpress/content-single-topic-lead.php:17
-#: bp-forums/templates/default/bbpress/content-single-topic-lead.php:86
-msgid "Creator"
-msgstr ""
-
-#: bp-forums/admin/forums.php:501
-#: bp-forums/admin/replies.php:646
-#: bp-forums/admin/topics.php:742
-#: bp-messages/classes/class-bp-messages-notices-list-table.php:85
-msgid "Created"
-msgstr ""
-
-#: bp-forums/admin/forums.php:502
-#: bp-forums/admin/topics.php:743
-#: bp-forums/templates/default/bbpress/loop-forums.php:21
-#: bp-forums/templates/default/bbpress/loop-topics.php:20
-msgid "Last Post"
-msgstr ""
-
-#: bp-forums/admin/forums.php:554
-#: bp-forums/forums/template.php:714
-msgid "No Discussions"
-msgstr ""
-
-#: bp-forums/admin/forums.php:634
-msgid "Forum updated. <a href=\"%s\">View forum</a>"
-msgstr ""
-
-#: bp-forums/admin/forums.php:637
-#: bp-forums/admin/replies.php:949
-#: bp-forums/admin/topics.php:1082
-msgid "Custom field updated."
-msgstr ""
-
-#: bp-forums/admin/forums.php:640
-#: bp-forums/admin/replies.php:952
-#: bp-forums/admin/topics.php:1085
-msgid "Custom field deleted."
-msgstr ""
-
-#: bp-forums/admin/forums.php:643
-msgid "Forum updated."
-msgstr ""
-
-#: bp-forums/admin/forums.php:648
-msgid "Forum restored to revision from %s"
-msgstr ""
-
-#: bp-forums/admin/forums.php:652
-msgid "Forum created. <a href=\"%s\">View forum</a>"
-msgstr ""
-
-#: bp-forums/admin/forums.php:655
-msgid "Forum saved."
-msgstr ""
-
-#: bp-forums/admin/forums.php:658
-msgid "Forum submitted. <a target=\"_blank\" href=\"%s\">Preview forum</a>"
-msgstr ""
-
-#: bp-forums/admin/forums.php:662
-msgid "Forum scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" href=\"%2$s\">Preview forum</a>"
-msgstr ""
-
-#: bp-forums/admin/forums.php:665
-#: bp-forums/admin/replies.php:977
-#: bp-forums/admin/topics.php:1110
-msgid "M j, Y @ G:i"
-msgstr ""
-
-#: bp-forums/admin/forums.php:672
-msgid "Forum draft updated. <a target=\"_blank\" href=\"%s\">Preview forum</a>"
-msgstr ""
-
-#: bp-forums/admin/functions.php:224
+#: bp-forums/admin/functions.php:222
 #: bp-forums/admin/tools.php:1831
 msgid "Reset Forums"
 msgstr ""
@@ -18527,7 +18952,7 @@ msgstr ""
 #. translators: Total Forums.
 #. translators: %s: number of forums
 #: bp-forums/admin/metaboxes.php:50
-#: bp-forums/admin/metaboxes.php:683
+#: bp-forums/admin/metaboxes.php:309
 msgid "%s Forum"
 msgid_plural "%s Forums"
 msgstr[0] ""
@@ -18536,7 +18961,7 @@ msgstr[1] ""
 #. translators: Total Discussions.
 #. translators: %s: number of topics
 #: bp-forums/admin/metaboxes.php:69
-#: bp-forums/admin/metaboxes.php:698
+#: bp-forums/admin/metaboxes.php:324
 msgid "%s Discussion"
 msgid_plural "%s Discussions"
 msgstr[0] ""
@@ -18545,7 +18970,7 @@ msgstr[1] ""
 #. translators: Total Discussion Tag.
 #. translators: %s: number of topic tags
 #: bp-forums/admin/metaboxes.php:91
-#: bp-forums/admin/metaboxes.php:729
+#: bp-forums/admin/metaboxes.php:355
 msgid "%s Discussion Tag"
 msgid_plural "%s Discussion Tags"
 msgstr[0] ""
@@ -18554,7 +18979,7 @@ msgstr[1] ""
 #. translators: Total Replies.
 #. translators: %s: number of replies
 #: bp-forums/admin/metaboxes.php:118
-#: bp-forums/admin/metaboxes.php:713
+#: bp-forums/admin/metaboxes.php:339
 msgid "%s Reply"
 msgid_plural "%s Replies"
 msgstr[0] ""
@@ -18567,7 +18992,7 @@ msgstr ""
 #. translators: Total Users.
 #. translators: %s: number of users
 #: bp-forums/admin/metaboxes.php:151
-#: bp-forums/admin/metaboxes.php:668
+#: bp-forums/admin/metaboxes.php:294
 msgid "%s User"
 msgid_plural "%s Users"
 msgstr[0] ""
@@ -18593,830 +19018,6 @@ msgid "%s Empty Discussion Tag"
 msgid_plural "%s Empty Discussion Tags"
 msgstr[0] ""
 msgstr[1] ""
-
-#: bp-forums/admin/metaboxes.php:289
-#: bp-forums/admin/metaboxes.php:290
-#: bp-forums/admin/metaboxes.php:389
-#: bp-forums/templates/default/bbpress/form-topic.php:145
-#: bp-templates/bp-nouveau/readylaunch/forums/form-topic.php:72
-msgid "Type:"
-msgstr ""
-
-#: bp-forums/admin/metaboxes.php:301
-#: bp-forums/admin/metaboxes.php:302
-#: bp-forums/admin/metaboxes.php:401
-msgid "Status:"
-msgstr ""
-
-#: bp-forums/admin/metaboxes.php:313
-#: bp-forums/admin/metaboxes.php:314
-#: bp-templates/bp-nouveau/readylaunch/members/single/parts/profile-visibility.php:25
-msgid "Visibility:"
-msgstr ""
-
-#: bp-forums/admin/metaboxes.php:327
-msgid "Parent:"
-msgstr ""
-
-#: bp-forums/admin/metaboxes.php:328
-msgid "Forum Parent"
-msgstr ""
-
-#: bp-forums/admin/metaboxes.php:344
-#: bp-forums/admin/metaboxes.php:437
-#: bp-forums/admin/metaboxes.php:498
-msgid "- Select Forum -"
-msgstr ""
-
-#: bp-forums/admin/metaboxes.php:353
-msgid "Order:"
-msgstr ""
-
-#: bp-forums/admin/metaboxes.php:354
-msgid "Forum Order"
-msgstr ""
-
-#: bp-forums/admin/metaboxes.php:402
-msgid "Select whether to open or close the discussion."
-msgstr ""
-
-#: bp-forums/admin/metaboxes.php:420
-#: bp-forums/admin/metaboxes.php:481
-#: bp-forums/groups.php:1217
-#: bp-forums/templates/default/bbpress/form-topic.php:124
-#: bp-forums/topics/template.php:63
-#: bp-templates/bp-nouveau/readylaunch/forums/form-topic.php:167
-msgid "Forum:"
-msgstr ""
-
-#: bp-forums/admin/metaboxes.php:509
-#: bp-forums/replies/template.php:63
-msgid "Discussion:"
-msgstr ""
-
-#: bp-forums/admin/metaboxes.php:527
-msgid "- Select Discussion -"
-msgstr ""
-
-#: bp-forums/admin/metaboxes.php:538
-msgid "Reply To:"
-msgstr ""
-
-#: bp-forums/admin/metaboxes.php:539
-msgid "Reply To"
-msgstr ""
-
-#: bp-forums/admin/metaboxes.php:556
-msgid "- Select Reply -"
-msgstr ""
-
-#: bp-forums/admin/metaboxes.php:595
-#: bp-forums/templates/default/bbpress/form-topic-tag.php:36
-#: bp-templates/bp-nouveau/readylaunch/forums/form-topic-tag.php:44
-msgid "Name:"
-msgstr ""
-
-#: bp-forums/admin/metaboxes.php:601
-#: bp-templates/bp-nouveau/readylaunch/memberpress/courses/courses_instructor.php:54
-msgid "Email:"
-msgstr ""
-
-#: bp-forums/admin/metaboxes.php:607
-#: bp-forums/templates/default/bbpress/form-anonymous.php:31
-#: bp-templates/bp-nouveau/readylaunch/forums/form-anonymous.php:35
-#: bp-templates/bp-nouveau/readylaunch/memberpress/courses/courses_instructor.php:58
-msgid "Website:"
-msgstr ""
-
-#: bp-forums/admin/metaboxes.php:615
-msgid "ID:"
-msgstr ""
-
-#: bp-forums/admin/metaboxes.php:616
-msgid "ID"
-msgstr ""
-
-#: bp-forums/admin/metaboxes.php:623
-msgid "IP:"
-msgstr ""
-
-#: bp-forums/admin/metaboxes.php:624
-msgid "IP Address"
-msgstr ""
-
-#: bp-forums/admin/replies.php:135
-msgid "This screen provides access to all of your replies. You can customize the display of this screen to suit your workflow."
-msgstr ""
-
-#: bp-forums/admin/replies.php:147
-msgid "You can hide/display columns based on your needs and decide how many replies to list per screen using the Screen Options tab."
-msgstr ""
-
-#: bp-forums/admin/replies.php:148
-msgid "You can filter the list of replies by reply status using the text links in the upper left to show All, Published, Draft, or Trashed replies. The default view is to show all replies."
-msgstr ""
-
-#: bp-forums/admin/replies.php:149
-msgid "You can view replies in a simple title list or with an excerpt. Choose the view you prefer by clicking on the icons at the top of the list on the right."
-msgstr ""
-
-#: bp-forums/admin/replies.php:150
-msgid "You can refine the list to show only replies in a specific category or from a specific month by using the dropdown menus above the replies list. Click the Filter button after making your selection. You also can refine the list by clicking on the reply author, category or tag in the replies list."
-msgstr ""
-
-#: bp-forums/admin/replies.php:161
-msgid "Hovering over a row in the replies list will display action links that allow you to manage your reply. You can perform the following actions:"
-msgstr ""
-
-#: bp-forums/admin/replies.php:163
-msgid "<strong>Edit</strong> takes you to the editing screen for that reply. You can also reach that screen by clicking on the reply title."
-msgstr ""
-
-#: bp-forums/admin/replies.php:165
-msgid "<strong>Trash</strong> removes your reply from this list and places it in the trash, from which you can permanently delete it."
-msgstr ""
-
-#: bp-forums/admin/replies.php:166
-msgid "<strong>Spam</strong> removes your reply from this list and places it in the spam queue, from which you can permanently delete it."
-msgstr ""
-
-#: bp-forums/admin/replies.php:167
-msgid "<strong>Preview</strong> will show you what your draft reply will look like if you publish it. View will take you to your live site to view the reply. Which link is available depends on your reply's status."
-msgstr ""
-
-#: bp-forums/admin/replies.php:178
-msgid "You can also edit or move multiple replies to the trash at once. Select the replies you want to act on using the checkboxes, then select the action you want to take from the Bulk Actions menu and click Apply."
-msgstr ""
-
-#: bp-forums/admin/replies.php:179
-msgid "When using Bulk Edit, you can change the status (Published, Private, etc.) for all selected replies at once. To remove a reply from the grouping, just click the x next to its name in the Bulk Edit area that appears."
-msgstr ""
-
-#: bp-forums/admin/replies.php:202
-msgid "The title field and the big reply editing Area are fixed in place, but you can reposition all the other boxes using drag and drop, and can minimize or expand them by clicking the title bar of each box. Use the Screen Options tab to unhide more boxes (Excerpt, Send Trackbacks, Custom Fields, Discussion, Slug, Author) or to choose a 1- or 2-column layout for this screen."
-msgstr ""
-
-#: bp-forums/admin/replies.php:215
-msgid "Title and Reply Editor"
-msgstr ""
-
-#: bp-forums/admin/replies.php:217
-msgid "<strong>Title</strong> - Enter a title for your reply. After you enter a title, you'll see the permalink below, which you can edit."
-msgstr ""
-
-#: bp-forums/admin/replies.php:218
-msgid "<strong>Reply Editor</strong> - Enter the text for your reply. There are two modes of editing: Visual and HTML. Choose the mode by clicking on the appropriate tab. Visual mode gives you a WYSIWYG editor. Click the last icon in the row to get a second row of controls. The HTML mode allows you to enter raw HTML along with your reply text. You can insert media files by clicking the icons above the reply editor and following the directions. You can go to the distraction-free writing screen via the Fullscreen icon in Visual mode (second to last in the top row) or the Fullscreen button in HTML mode (last in the row). Once there, you can make buttons visible by hovering over the top area. Exit Fullscreen back to the regular reply editor."
-msgstr ""
-
-#: bp-forums/admin/replies.php:222
-msgid "<strong>Publish</strong> - You can set the terms of publishing your reply in the Publish box. For Status, Visibility, and Publish (immediately), click on the Edit link to reveal more options. Visibility includes options for password-protecting a reply or making it stay at the top of your blog indefinitely (sticky). Publish (immediately) allows you to set a future or past date and time, so you can schedule a reply to be published in the future or backdate a reply."
-msgstr ""
-
-#: bp-forums/admin/replies.php:225
-msgid "<strong>Featured Image</strong> - This allows you to associate an image with your reply without inserting it. This is usually useful only if your theme makes use of the featured image as a reply thumbnail on the home page, a custom header, etc."
-msgstr ""
-
-#: bp-forums/admin/replies.php:231
-#: bp-forums/admin/replies.php:274
-msgid "Reply Attributes"
-msgstr ""
-
-#: bp-forums/admin/replies.php:233
-msgid "Select the attributes that your reply should have:"
-msgstr ""
-
-#: bp-forums/admin/replies.php:235
-msgid "<strong>Forum</strong> dropdown determines the parent forum that the reply belongs to. Select the forum, or leave the default (Use Forum of Discussion) to post the reply in forum of the discussion."
-msgstr ""
-
-#: bp-forums/admin/replies.php:236
-msgid "<strong>Discussion</strong> determines the parent discussion that the reply belongs to."
-msgstr ""
-
-#: bp-forums/admin/replies.php:237
-msgid "<strong>Reply To</strong> determines the threading of the reply."
-msgstr ""
-
-#: bp-forums/admin/replies.php:399
-#: bp-forums/admin/topics.php:455
-#: bp-forums/templates/default/bbpress/form-anonymous.php:16
-#: bp-templates/bp-nouveau/readylaunch/forums/form-anonymous.php:20
-msgid "Author Information"
-msgstr ""
-
-#: bp-forums/admin/replies.php:525
-msgid "The reply was not found!"
-msgstr ""
-
-#: bp-forums/admin/replies.php:529
-#: bp-forums/admin/topics.php:585
-msgid "You do not have the permission to do that!"
-msgstr ""
-
-#: bp-forums/admin/replies.php:603
-msgid "There was a problem marking the reply \"%1$s\" as spam."
-msgstr ""
-
-#: bp-forums/admin/replies.php:603
-msgid "Reply \"%1$s\" successfully marked as spam."
-msgstr ""
-
-#: bp-forums/admin/replies.php:607
-msgid "There was a problem unmarking the reply \"%1$s\" as spam."
-msgstr ""
-
-#: bp-forums/admin/replies.php:607
-msgid "Reply \"%1$s\" successfully unmarked as spam."
-msgstr ""
-
-#: bp-forums/admin/replies.php:699
-#: bp-forums/admin/replies.php:707
-msgid "No Discussion"
-msgstr ""
-
-#: bp-forums/admin/replies.php:724
-#: bp-forums/admin/replies.php:739
-#: bp-forums/admin/topics.php:793
-msgid "No Forum"
-msgstr ""
-
-#: bp-forums/admin/replies.php:730
-msgid "(Mismatch)"
-msgstr ""
-
-#: bp-forums/admin/replies.php:803
-#: bp-forums/admin/topics.php:888
-msgid "View \"%s\""
-msgstr ""
-
-#: bp-forums/admin/replies.php:824
-msgid "Mark the reply as not spam"
-msgstr ""
-
-#: bp-forums/admin/replies.php:824
-#: bp-forums/admin/topics.php:958
-msgid "Not spam"
-msgstr ""
-
-#: bp-forums/admin/replies.php:826
-msgid "Mark this reply as spam"
-msgstr ""
-
-#: bp-forums/admin/replies.php:835
-#: bp-forums/admin/topics.php:968
-#: bp-forums/replies/template.php:2273
-#: bp-forums/topics/template.php:2937
-msgid "Restore this item from the Trash"
-msgstr ""
-
-#: bp-forums/admin/replies.php:835
-#: bp-forums/admin/topics.php:968
-#: bp-forums/replies/template.php:2245
-#: bp-forums/topics/template.php:2909
-msgid "Restore"
-msgstr ""
-
-#: bp-forums/admin/replies.php:837
-#: bp-forums/admin/topics.php:970
-#: bp-forums/replies/template.php:2286
-#: bp-forums/topics/template.php:2950
-msgid "Move this item to the Trash"
-msgstr ""
-
-#: bp-forums/admin/replies.php:837
-#: bp-forums/admin/topics.php:970
-#: bp-forums/replies/template.php:2244
-#: bp-forums/topics/template.php:2908
-msgid "Trash"
-msgstr ""
-
-#: bp-forums/admin/replies.php:841
-#: bp-forums/admin/topics.php:974
-#: bp-forums/replies/template.php:2301
-#: bp-forums/topics/template.php:2965
-msgid "Delete this item permanently"
-msgstr ""
-
-#: bp-forums/admin/replies.php:841
-#: bp-forums/admin/topics.php:974
-msgid "Delete Permanently"
-msgstr ""
-
-#: bp-forums/admin/replies.php:869
-#: bp-forums/admin/topics.php:1002
-msgid "Empty Spam"
-msgstr ""
-
-#: bp-forums/admin/replies.php:880
-#: bp-forums/admin/topics.php:1013
-msgid "In all forums"
-msgstr ""
-
-#: bp-forums/admin/replies.php:946
-msgid "Reply updated. <a href=\"%s\">View topic</a>"
-msgstr ""
-
-#: bp-forums/admin/replies.php:955
-msgid "Reply updated."
-msgstr ""
-
-#: bp-forums/admin/replies.php:960
-msgid "Reply restored to revision from %s"
-msgstr ""
-
-#: bp-forums/admin/replies.php:964
-msgid "Reply created. <a href=\"%s\">View topic</a>"
-msgstr ""
-
-#: bp-forums/admin/replies.php:967
-msgid "Reply saved."
-msgstr ""
-
-#: bp-forums/admin/replies.php:970
-msgid "Reply submitted. <a target=\"_blank\" href=\"%s\">Preview topic</a>"
-msgstr ""
-
-#: bp-forums/admin/replies.php:974
-msgid "Reply scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" href=\"%2$s\">Preview topic</a>"
-msgstr ""
-
-#: bp-forums/admin/replies.php:984
-msgid "Reply draft updated. <a target=\"_blank\" href=\"%s\">Preview topic</a>"
-msgstr ""
-
-#: bp-forums/admin/settings.php:25
-#: bp-forums/admin/tools.php:1801
-msgid "Forum Settings"
-msgstr ""
-
-#: bp-forums/admin/settings.php:29
-msgid "Forum Features"
-msgstr ""
-
-#: bp-forums/admin/settings.php:33
-#: bp-forums/admin/settings.php:212
-#: bp-forums/admin/tools.php:556
-msgid "Group Forums"
-msgstr ""
-
-#: bp-forums/admin/settings.php:37
-msgid "Forums Directory"
-msgstr ""
-
-#: bp-forums/admin/settings.php:42
-msgid "Forum Theme Packages"
-msgstr ""
-
-#: bp-forums/admin/settings.php:47
-msgid "Discussions and Replies Per Page"
-msgstr ""
-
-#: bp-forums/admin/settings.php:51
-msgid "Discussions and Replies Per RSS Page"
-msgstr ""
-
-#: bp-forums/admin/settings.php:55
-msgid "Forum Permalinks"
-msgstr ""
-
-#: bp-forums/admin/settings.php:60
-msgid "Forum Profile Permalinks"
-msgstr ""
-
-#: bp-forums/admin/settings.php:65
-msgid "Akismet Integration"
-msgstr ""
-
-#: bp-forums/admin/settings.php:89
-msgid "Disallow editing after"
-msgstr ""
-
-#: bp-forums/admin/settings.php:97
-msgid "Throttle posting every"
-msgstr ""
-
-#: bp-forums/admin/settings.php:105
-msgid "Anonymous posting"
-msgstr ""
-
-#: bp-forums/admin/settings.php:124
-#: bp-forums/admin/settings.php:1657
-msgid "Revisions"
-msgstr ""
-
-#: bp-forums/admin/settings.php:132
-#: bp-forums/classes/class-bp-forums-component.php:241
-msgid "Favorites"
-msgstr ""
-
-#: bp-forums/admin/settings.php:148
-msgid "Discussion tags"
-msgstr ""
-
-#: bp-forums/admin/settings.php:164
-msgid "Post Formatting"
-msgstr ""
-
-#: bp-forums/admin/settings.php:172
-msgid "Link Previews"
-msgstr ""
-
-#: bp-forums/admin/settings.php:180
-msgid "Reply Threading"
-msgstr ""
-
-#: bp-forums/admin/settings.php:199
-msgid "Current Package"
-msgstr ""
-
-#: bp-forums/admin/settings.php:233
-msgid "Forums Prefix"
-msgstr ""
-
-#: bp-forums/admin/settings.php:241
-msgid "Forums Directory shows"
-msgstr ""
-
-#: bp-forums/admin/settings.php:320
-#: bp-forums/topics/template.php:3795
-msgid "Discussion Tag"
-msgstr ""
-
-#: bp-forums/admin/settings.php:328
-msgid "Discussion View"
-msgstr ""
-
-#: bp-forums/admin/settings.php:365
-msgid "Replies Created"
-msgstr ""
-
-#: bp-forums/admin/settings.php:373
-msgid "Favorite Discussions"
-msgstr ""
-
-#: bp-forums/admin/settings.php:394
-msgid "Akismet Spam Protection"
-msgstr ""
-
-#: bp-forums/admin/settings.php:476
-msgid "Allow guest users without accounts to create discussions and replies"
-msgstr ""
-
-#: bp-forums/admin/settings.php:499
-msgid "Allow members to mark discussions as favorites"
-msgstr ""
-
-#: bp-forums/admin/settings.php:520
-msgid "Allow members to subscribe to discussions and standalone forums"
-msgstr ""
-
-#: bp-forums/admin/settings.php:541
-msgid "Allow discussions to have tags"
-msgstr ""
-
-#: bp-forums/admin/settings.php:562
-msgid "Allow forum wide search"
-msgstr ""
-
-#: bp-forums/admin/settings.php:606
-msgid "Enable threaded (nested) replies %s levels deep"
-msgstr ""
-
-#: bp-forums/admin/settings.php:628
-msgid "Allow discussion and reply revision logging"
-msgstr ""
-
-#: bp-forums/admin/settings.php:649
-msgid "Add toolbar & buttons to textareas to help with HTML formatting"
-msgstr ""
-
-#: bp-forums/admin/settings.php:662
-msgid "How your forum content is displayed within your existing theme."
-msgstr ""
-
-#: bp-forums/admin/settings.php:693
-msgid "will serve all Forums templates"
-msgstr ""
-
-#: bp-forums/admin/settings.php:719
-msgid "Embed media (YouTube, Twitter, Vimeo, etc&hellip;) directly into discussions and replies"
-msgstr ""
-
-#: bp-forums/admin/settings.php:735
-#: bp-forums/admin/settings.php:751
-#: bp-forums/admin/settings.php:767
-#: bp-forums/admin/settings.php:785
-#: bp-forums/admin/settings.php:801
-msgid "per page"
-msgstr ""
-
-#. translators: Description with link.
-#: bp-forums/admin/settings.php:827
-msgid "Customize your Forums directory. Use %s for more flexibility."
-msgstr ""
-
-#: bp-forums/admin/settings.php:840
-msgid "Shortcodes"
-msgstr ""
-
-#: bp-forums/admin/settings.php:883
-msgid "Prefix all forum content with the  <a href=\"%s\">Forums page</a> slug (Recommended)"
-msgstr ""
-
-#: bp-forums/admin/settings.php:910
-msgid "Forum Index"
-msgstr ""
-
-#: bp-forums/admin/settings.php:913
-msgid "Discussions by Last Post"
-msgstr ""
-
-#: bp-forums/admin/settings.php:941
-msgid "Custom URL slugs for Forum content. Slugs should be all lowercase and contain only letters, numbers, and hyphens."
-msgstr ""
-
-#: bp-forums/admin/settings.php:1066
-msgid "Allow social groups to have their own forums"
-msgstr ""
-
-#: bp-forums/admin/settings.php:1083
-msgid "- Forums Directory -"
-msgstr ""
-
-#: bp-forums/admin/settings.php:1093
-msgid "is the parent for all group forums"
-msgstr ""
-
-#: bp-forums/admin/settings.php:1094
-msgid "Changing this does not move existing forums."
-msgstr ""
-
-#. translators: Description with link.
-#: bp-forums/admin/settings.php:1123
-msgid "Allow %s spam filtering to actively prevent forum spam."
-msgstr ""
-
-#: bp-forums/admin/settings.php:1128
-msgid "Akismet"
-msgstr ""
-
-#: bp-forums/admin/settings.php:1149
-msgid "Forums Settings"
-msgstr ""
-
-#: bp-forums/admin/settings.php:1188
-msgid "Database Settings"
-msgstr ""
-
-#: bp-forums/admin/settings.php:1189
-msgid "Information about your previous forums database so that they can be converted. <strong>Backup your database before proceeding.</strong>"
-msgstr ""
-
-#: bp-forums/admin/settings.php:1227
-msgid "is the previous forum software"
-msgstr ""
-
-#: bp-forums/admin/settings.php:1241
-msgid "IP or hostname"
-msgstr ""
-
-#: bp-forums/admin/settings.php:1255
-msgid "Use default 3306 if unsure"
-msgstr ""
-
-#: bp-forums/admin/settings.php:1269
-msgid "User for your database connection"
-msgstr ""
-
-#: bp-forums/admin/settings.php:1286
-msgid "Password to access the database"
-msgstr ""
-
-#: bp-forums/admin/settings.php:1300
-msgid "Name of the database with your old forum data"
-msgstr ""
-
-#: bp-forums/admin/settings.php:1313
-msgid "Some optional parameters to help tune the conversion process."
-msgstr ""
-
-#: bp-forums/admin/settings.php:1327
-msgid "(If converting from BuddyBoss Forums, use \"wp_bb_\" or your custom prefix)"
-msgstr ""
-
-#: bp-forums/admin/settings.php:1341
-msgid "rows to process at a time"
-msgstr ""
-
-#: bp-forums/admin/settings.php:1342
-msgid "Keep this low if you experience out-of-memory issues."
-msgstr ""
-
-#: bp-forums/admin/settings.php:1356
-msgid "second(s) delay between each group of rows"
-msgstr ""
-
-#: bp-forums/admin/settings.php:1357
-msgid "Keep this high to prevent too-many-connection issues."
-msgstr ""
-
-#: bp-forums/admin/settings.php:1371
-msgid "Start a fresh conversion from the beginning"
-msgstr ""
-
-#: bp-forums/admin/settings.php:1372
-msgid "You should clean old conversion information before starting over."
-msgstr ""
-
-#: bp-forums/admin/settings.php:1386
-msgid "Purge all information from a previously attempted import"
-msgstr ""
-
-#: bp-forums/admin/settings.php:1387
-msgid "Use this if an import failed and you want to remove that incomplete data."
-msgstr ""
-
-#: bp-forums/admin/settings.php:1401
-msgid "Attempt to import user accounts from previous forums"
-msgstr ""
-
-#: bp-forums/admin/settings.php:1402
-msgid "Non-Forums passwords cannot be automatically converted. They will be converted as each user logs in."
-msgstr ""
-
-#: bp-forums/admin/settings.php:1423
-msgid "Up next: step %s"
-msgstr ""
-
-#: bp-forums/admin/settings.php:1424
-msgid "Ready"
-msgstr ""
-
-#: bp-forums/admin/settings.php:1428
-msgid "Resume"
-msgstr ""
-
-#: bp-forums/admin/settings.php:1433
-msgid "Previously stopped at step %1$d of %2$d"
-msgstr ""
-
-#: bp-forums/admin/settings.php:1434
-msgid "Ready to go."
-msgstr ""
-
-#: bp-forums/admin/settings.php:1456
-#: bp-templates/bp-nouveau/includes/video/functions.php:162
-msgid "Pause"
-msgstr ""
-
-#: bp-forums/admin/settings.php:1461
-msgid "Import Monitor"
-msgstr ""
-
-#: bp-forums/admin/settings.php:1499
-msgid "This screen provides access to all of the Forums settings."
-msgstr ""
-
-#: bp-forums/admin/settings.php:1500
-msgid "Please see the additional help tabs for more information on each indiviual section."
-msgstr ""
-
-#: bp-forums/admin/settings.php:1509
-msgid "In the Main Settings you have a number of options:"
-msgstr ""
-
-#: bp-forums/admin/settings.php:1512
-msgid "You can choose to lock a post after a certain number of minutes. \"Locking post editing\" will prevent the author from editing some amount of time after saving a post."
-msgstr ""
-
-#: bp-forums/admin/settings.php:1513
-msgid "\"Throttle time\" is the amount of time required between posts from a single author. The higher the throttle time, the longer a user will need to wait between posting to the forum."
-msgstr ""
-
-#: bp-forums/admin/settings.php:1514
-msgid "Saving discussions allows users to return later to discussions they are interested in. This is enabled by default."
-msgstr ""
-
-#: bp-forums/admin/settings.php:1515
-msgid "Subscriptions allow users to subscribe for notifications to discussions that interest them. This is enabled by default."
-msgstr ""
-
-#: bp-forums/admin/settings.php:1516
-msgid "Discussion-Tags allow users to filter discussions between forums. This is enabled by default."
-msgstr ""
-
-#: bp-forums/admin/settings.php:1517
-msgid "\"Anonymous Posting\" allows guest users who do not have accounts on your site to both create discussions as well as replies."
-msgstr ""
-
-#: bp-forums/admin/settings.php:1518
-msgid "The Fancy Editor brings the luxury of the Visual editor and HTML editor from the traditional WordPress dashboard into your theme."
-msgstr ""
-
-#: bp-forums/admin/settings.php:1519
-msgid "Auto-embed will embed the media content from a URL directly into the replies. For example: links to Flickr and YouTube."
-msgstr ""
-
-#: bp-forums/admin/settings.php:1522
-msgid "You must click the Save Changes button at the bottom of the screen for new settings to take effect."
-msgstr ""
-
-#: bp-forums/admin/settings.php:1530
-msgid "Per Page"
-msgstr ""
-
-#: bp-forums/admin/settings.php:1531
-msgid "Per Page settings allow you to control the number of discussions and replies to appear on each page."
-msgstr ""
-
-#: bp-forums/admin/settings.php:1532
-msgid "This is comparable to the WordPress \"Reading Settings\" page, where you can set the number of posts that should show on blog pages and in feeds."
-msgstr ""
-
-#: bp-forums/admin/settings.php:1533
-msgid "These are broken up into two separate groups: one for what appears in your theme, another for RSS feeds."
-msgstr ""
-
-#: bp-forums/admin/settings.php:1541
-msgid "Slugs"
-msgstr ""
-
-#: bp-forums/admin/settings.php:1542
-msgid "The Slugs section allows you to control the permalink structure for your forums."
-msgstr ""
-
-#: bp-forums/admin/settings.php:1543
-msgid "\"Archive Slugs\" are used as the \"root\" for your forums and discussions. If you combine these values with existing page slugs, Forums will attempt to output the most correct title and content."
-msgstr ""
-
-#: bp-forums/admin/settings.php:1544
-msgid "\"Single Slugs\" are used as a prefix when viewing an individual forum, discussion, reply, user, or view."
-msgstr ""
-
-#: bp-forums/admin/settings.php:1545
-msgid "In the event of a slug collision with WordPress or BuddyBoss, a warning will appear next to the problem slug(s)."
-msgstr ""
-
-#: bp-forums/admin/settings.php:1662
-msgid "Attachments"
-msgstr ""
-
-#: bp-forums/admin/settings.php:1667
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-msgid "Menus"
-msgstr ""
-
-#: bp-forums/admin/settings.php:1674
-msgid "Tag base"
-msgstr ""
-
-#: bp-forums/admin/settings.php:1681
-msgid "Category base"
-msgstr ""
-
-#: bp-forums/admin/settings.php:1690
-msgid "Forums base"
-msgstr ""
-
-#: bp-forums/admin/settings.php:1697
-msgid "Discussions base"
-msgstr ""
-
-#: bp-forums/admin/settings.php:1704
-msgid "Forum slug"
-msgstr ""
-
-#: bp-forums/admin/settings.php:1711
-msgid "Discussion slug"
-msgstr ""
-
-#: bp-forums/admin/settings.php:1718
-msgid "Reply slug"
-msgstr ""
-
-#: bp-forums/admin/settings.php:1725
-msgid "User base"
-msgstr ""
-
-#: bp-forums/admin/settings.php:1732
-msgid "View base"
-msgstr ""
-
-#: bp-forums/admin/settings.php:1739
-msgid "Discussion tag slug"
-msgstr ""
-
-#: bp-forums/admin/settings.php:1755
-msgid "%s page"
-msgstr ""
-
-#: bp-forums/admin/settings.php:1779
-msgid "Possible %1$s conflict: %2$s"
-msgstr ""
-
-#: bp-forums/admin/settings.php:1796
-msgid "Custom URL slugs for the Forums tab in member profiles. Slugs should be all lowercase and contain only letters, numbers, and hyphens."
-msgstr ""
 
 #: bp-forums/admin/tools.php:50
 msgid "BuddyBoss keeps track of relationships between forums, discussions, replies, and discussion tags, and users. Occasionally these relationships become out of sync, most often after an import or migration. Use the tools below to manually recalculate these relationships."
@@ -19723,256 +19324,6 @@ msgstr ""
 msgid "Copies favorites from user meta to topic meta&hellip; Complete!"
 msgstr ""
 
-#: bp-forums/admin/topics.php:136
-msgid "This screen displays the individual discussions on your site. You can customize the display of this screen to suit your workflow."
-msgstr ""
-
-#: bp-forums/admin/topics.php:148
-msgid "You can hide/display columns based on your needs and decide how many discussions to list per screen using the Screen Options tab."
-msgstr ""
-
-#: bp-forums/admin/topics.php:149
-msgid "You can filter the list of discussions by discussion status using the text links in the upper left to show All, Published, or Trashed discussions. The default view is to show all discussions."
-msgstr ""
-
-#: bp-forums/admin/topics.php:150
-msgid "You can refine the list to show only discussions from a specific month by using the dropdown menus above the discussions list. Click the Filter button after making your selection. You also can refine the list by clicking on the discussion creator in the discussions list."
-msgstr ""
-
-#: bp-forums/admin/topics.php:161
-msgid "Hovering over a row in the discussions list will display action links that allow you to manage your discussion. You can perform the following actions:"
-msgstr ""
-
-#: bp-forums/admin/topics.php:163
-msgid "<strong>Edit</strong> takes you to the editing screen for that discussion. You can also reach that screen by clicking on the discussion title."
-msgstr ""
-
-#: bp-forums/admin/topics.php:164
-msgid "<strong>Trash</strong> removes your discussion from this list and places it in the trash, from which you can permanently delete it."
-msgstr ""
-
-#: bp-forums/admin/topics.php:165
-msgid "<strong>Spam</strong> removes your discussion from this list and places it in the spam queue, from which you can permanently delete it."
-msgstr ""
-
-#: bp-forums/admin/topics.php:166
-msgid "<strong>Preview</strong> will show you what your draft discussion will look like if you publish it. View will take you to your live site to view the discussion. Which link is available depends on your discussion's status."
-msgstr ""
-
-#: bp-forums/admin/topics.php:167
-msgid "<strong>Close</strong> will mark the selected discussion as \"closed\" and disable the option to post new replies to the discussion."
-msgstr ""
-
-#: bp-forums/admin/topics.php:168
-msgid "<strong>Stick</strong> will keep the selected discussion \"pinned\" to the top the parent forum discussion list."
-msgstr ""
-
-#: bp-forums/admin/topics.php:169
-msgid "<strong>Stick <em>(to front)</em></strong> will keep the selected discussion \"pinned\" to the top of ALL forums and be visable in any forums discussions list."
-msgstr ""
-
-#: bp-forums/admin/topics.php:180
-msgid "You can also edit or move multiple discussions to the trash at once. Select the discussions you want to act on using the checkboxes, then select the action you want to take from the Bulk Actions menu and click Apply."
-msgstr ""
-
-#: bp-forums/admin/topics.php:181
-msgid "When using Bulk Edit, you can change the status (Published, Private, etc.) and add discussion tags for all selected discussions at once. To remove a discussion from the grouping, just click the x next to its name in the Bulk Edit area that appears."
-msgstr ""
-
-#: bp-forums/admin/topics.php:204
-msgid "The title field and the big discussion editing Area are fixed in place, but you can reposition all the other boxes using drag and drop, and can minimize or expand them by clicking the title bar of each box. Use the Screen Options tab to unhide more boxes (Excerpt, Send Trackbacks, Custom Fields, Discussion, Slug, Author) or to choose a 1- or 2-column layout for this screen."
-msgstr ""
-
-#: bp-forums/admin/topics.php:217
-msgid "Title and Discussion Editor"
-msgstr ""
-
-#: bp-forums/admin/topics.php:219
-msgid "<strong>Title</strong> - Enter a title for your discussion. After you enter a title, you'll see the permalink below, which you can edit."
-msgstr ""
-
-#: bp-forums/admin/topics.php:220
-msgid "<strong>Discussion Editor</strong> - Enter the text for your discussion. There are two modes of editing: Visual and HTML. Choose the mode by clicking on the appropriate tab. Visual mode gives you a WYSIWYG editor. Click the last icon in the row to get a second row of controls. The HTML mode allows you to enter raw HTML along with your discussion text. You can insert media files by clicking the icons above the discussion editor and following the directions. You can go to the distraction-free writing screen via the Fullscreen icon in Visual mode (second to last in the top row) or the Fullscreen button in HTML mode (last in the row). Once there, you can make buttons visible by hovering over the top area. Exit Fullscreen back to the regular discussion editor."
-msgstr ""
-
-#: bp-forums/admin/topics.php:224
-msgid "<strong>Publish</strong> - You can set the terms of publishing your discussion in the Publish box. For Status, Visibility, and Publish (immediately), click on the Edit link to reveal more options. Visibility includes options for password-protecting a discussion or making it stay at the top of your blog indefinitely (sticky). Publish (immediately) allows you to set a future or past date and time, so you can schedule a discussion to be published in the future or backdate a discussion."
-msgstr ""
-
-#: bp-forums/admin/topics.php:227
-msgid "<strong>Featured Image</strong> - This allows you to associate an image with your discussion without inserting it. This is usually useful only if your theme makes use of the featured image as a discussion thumbnail on the home page, a custom header, etc."
-msgstr ""
-
-#: bp-forums/admin/topics.php:233
-#: bp-forums/admin/topics.php:274
-msgid "Discussion Attributes"
-msgstr ""
-
-#: bp-forums/admin/topics.php:235
-msgid "Select the attributes that your discussion should have:"
-msgstr ""
-
-#: bp-forums/admin/topics.php:237
-msgid "<strong>Forum</strong> dropdown determines the parent forum that the discussion belongs to. Select the forum or category from the dropdown, or leave the default (No Forum) to post the discussion without an assigned forum."
-msgstr ""
-
-#: bp-forums/admin/topics.php:238
-msgid "<strong>Discussion Type</strong> dropdown indicates the sticky status of the discussion. Selecting the super sticky option would stick the discussion to the front of your forums, i.e. the discussion index, sticky option would stick the discussion to its respective forum. Selecting normal would not stick the discussion anywhere."
-msgstr ""
-
-#: bp-forums/admin/topics.php:581
-msgid "The discussion was not found!"
-msgstr ""
-
-#: bp-forums/admin/topics.php:678
-msgid "There was a problem opening the discussion \"%1$s\"."
-msgstr ""
-
-#: bp-forums/admin/topics.php:678
-msgid "Discussion \"%1$s\" successfully opened."
-msgstr ""
-
-#: bp-forums/admin/topics.php:682
-msgid "There was a problem closing the discussion \"%1$s\"."
-msgstr ""
-
-#: bp-forums/admin/topics.php:682
-msgid "Discussion \"%1$s\" successfully closed."
-msgstr ""
-
-#: bp-forums/admin/topics.php:686
-msgid "There was a problem sticking the discussion \"%1$s\" to front."
-msgstr ""
-
-#: bp-forums/admin/topics.php:686
-msgid "Discussion \"%1$s\" successfully sticked to front."
-msgstr ""
-
-#: bp-forums/admin/topics.php:690
-msgid "There was a problem sticking the discussion \"%1$s\"."
-msgstr ""
-
-#: bp-forums/admin/topics.php:690
-msgid "Discussion \"%1$s\" successfully sticked."
-msgstr ""
-
-#: bp-forums/admin/topics.php:694
-msgid "There was a problem unsticking the discussion \"%1$s\"."
-msgstr ""
-
-#: bp-forums/admin/topics.php:694
-msgid "Discussion \"%1$s\" successfully unsticked."
-msgstr ""
-
-#: bp-forums/admin/topics.php:698
-msgid "There was a problem marking the discussion \"%1$s\" as spam."
-msgstr ""
-
-#: bp-forums/admin/topics.php:698
-msgid "Discussion \"%1$s\" successfully marked as spam."
-msgstr ""
-
-#: bp-forums/admin/topics.php:702
-msgid "There was a problem unmarking the discussion \"%1$s\" as spam."
-msgstr ""
-
-#: bp-forums/admin/topics.php:702
-msgid "Discussion \"%1$s\" successfully unmarked as spam."
-msgstr ""
-
-#: bp-forums/admin/topics.php:800
-#: bp-forums/groups.php:358
-#: bp-forums/templates/default/bbpress/form-topic.php:128
-#: bp-templates/bp-nouveau/readylaunch/forums/form-topic.php:171
-msgid "(No Forum)"
-msgstr ""
-
-#: bp-forums/admin/topics.php:836
-#: bp-forums/topics/template.php:2296
-msgid "No Replies"
-msgstr ""
-
-#: bp-forums/admin/topics.php:908
-msgid "Close this discussion"
-msgstr ""
-
-#: bp-forums/admin/topics.php:910
-msgid "Open this discussion"
-msgstr ""
-
-#: bp-forums/admin/topics.php:910
-#: bp-forums/forums/functions.php:1739
-#: bp-forums/topics/template.php:3032
-msgid "Open"
-msgstr ""
-
-#: bp-forums/admin/topics.php:929
-msgid "Unstick this discussion"
-msgstr ""
-
-#: bp-forums/admin/topics.php:929
-#: bp-forums/topics/template.php:3104
-msgid "Unstick"
-msgstr ""
-
-#: bp-forums/admin/topics.php:942
-msgid "Stick this discussion to its forum"
-msgstr ""
-
-#: bp-forums/admin/topics.php:942
-#: bp-forums/topics/template.php:3103
-msgid "Stick"
-msgstr ""
-
-#: bp-forums/admin/topics.php:942
-msgid "Stick this discussion to front"
-msgstr ""
-
-#: bp-forums/admin/topics.php:942
-#: bp-forums/topics/template.php:3105
-msgid "(to front)"
-msgstr ""
-
-#: bp-forums/admin/topics.php:958
-msgid "Mark the discussion as not spam"
-msgstr ""
-
-#: bp-forums/admin/topics.php:960
-msgid "Mark this discussion as spam"
-msgstr ""
-
-#: bp-forums/admin/topics.php:1079
-msgid "Discussion updated. <a href=\"%s\">View discussion</a>"
-msgstr ""
-
-#: bp-forums/admin/topics.php:1088
-msgid "Discussion updated."
-msgstr ""
-
-#: bp-forums/admin/topics.php:1093
-msgid "Discussion restored to revision from %s"
-msgstr ""
-
-#: bp-forums/admin/topics.php:1097
-msgid "Discussion created. <a href=\"%s\">View discussion</a>"
-msgstr ""
-
-#: bp-forums/admin/topics.php:1100
-msgid "Discussion saved."
-msgstr ""
-
-#: bp-forums/admin/topics.php:1103
-msgid "Discussion submitted. <a target=\"_blank\" href=\"%s\">Preview discussion</a>"
-msgstr ""
-
-#: bp-forums/admin/topics.php:1107
-msgid "Discussion scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" href=\"%2$s\">Preview discussion</a>"
-msgstr ""
-
-#: bp-forums/admin/topics.php:1117
-msgid "Discussion draft updated. <a target=\"_blank\" href=\"%s\">Preview discussion</a>"
-msgstr ""
-
 #: bp-forums/classes/class-bb-rest-forums-link-preview-endpoint.php:142
 msgid "Sorry, Forums component was not enabled."
 msgstr ""
@@ -19998,6 +19349,10 @@ msgstr ""
 #: bp-forums/forums/functions.php:1740
 #: bp-templates/bp-nouveau/readylaunch/forums/content-single-topic-lead.php:54
 #: bp-templates/bp-nouveau/readylaunch/forums/loop-single-topic.php:60
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:2
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:2
 msgid "Closed"
 msgstr ""
 
@@ -20059,12 +19414,14 @@ msgstr ""
 
 #: bp-forums/classes/class-bp-forums-component.php:458
 #: bp-forums/forums/template.php:56
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:2
 msgid "Edit Forum"
 msgstr ""
 
 #: bp-forums/classes/class-bp-forums-component.php:467
 #: bp-forums/topics/template.php:56
 #: bp-templates/bp-nouveau/readylaunch/forums/form-topic.php:59
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:2
 msgid "Edit Discussion"
 msgstr ""
 
@@ -21999,8 +21356,20 @@ msgstr ""
 msgid "<strong>ERROR</strong>: The following problem(s) have been found with your forum:"
 msgstr ""
 
+#: bp-forums/forums/functions.php:1739
+#: bp-forums/topics/template.php:3032
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:2
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:2
+msgid "Open"
+msgstr ""
+
 #: bp-forums/forums/template.php:50
 #: bp-forums/forums/template.php:52
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:2
 msgid "All Forums"
 msgstr ""
 
@@ -22013,6 +21382,7 @@ msgstr ""
 #: bp-forums/forums/template.php:54
 #: bp-forums/templates/default/bbpress/form-forum.php:33
 #: bp-templates/bp-nouveau/readylaunch/forums/form-forum.php:37
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
 msgid "Create New Forum"
 msgstr ""
 
@@ -22031,6 +21401,11 @@ msgstr ""
 
 #: bp-forums/forums/template.php:63
 msgid "Parent Forum:"
+msgstr ""
+
+#: bp-forums/forums/template.php:714
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+msgid "No Discussions"
 msgstr ""
 
 #: bp-forums/forums/template.php:1066
@@ -22115,6 +21490,12 @@ msgstr ""
 msgid "Connected Forum"
 msgstr ""
 
+#: bp-forums/groups.php:358
+#: bp-forums/templates/default/bbpress/form-topic.php:128
+#: bp-templates/bp-nouveau/readylaunch/forums/form-topic.php:171
+msgid "(No Forum)"
+msgstr ""
+
 #: bp-forums/groups.php:568
 msgid "Group Forum details were successfully updated."
 msgstr ""
@@ -22130,6 +21511,13 @@ msgstr ""
 
 #: bp-forums/groups.php:936
 msgid "This group does not currently have a forum."
+msgstr ""
+
+#: bp-forums/groups.php:1217
+#: bp-forums/templates/default/bbpress/form-topic.php:124
+#: bp-forums/topics/template.php:63
+#: bp-templates/bp-nouveau/readylaunch/forums/form-topic.php:167
+msgid "Forum:"
 msgstr ""
 
 #: bp-forums/groups.php:1879
@@ -22460,10 +21848,12 @@ msgid "New Reply"
 msgstr ""
 
 #: bp-forums/replies/template.php:54
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
 msgid "Create New Reply"
 msgstr ""
 
 #: bp-forums/replies/template.php:56
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
 msgid "Edit Reply"
 msgstr ""
 
@@ -22477,6 +21867,10 @@ msgstr ""
 
 #: bp-forums/replies/template.php:62
 msgid "No replies found in trash"
+msgstr ""
+
+#: bp-forums/replies/template.php:63
+msgid "Discussion:"
 msgstr ""
 
 #: bp-forums/replies/template.php:762
@@ -22509,6 +21903,31 @@ msgstr ""
 #: bp-forums/topics/template.php:1648
 #: bp-forums/users/template.php:1698
 msgid "Visit %s's website"
+msgstr ""
+
+#: bp-forums/replies/template.php:2244
+#: bp-forums/topics/template.php:2908
+msgid "Trash"
+msgstr ""
+
+#: bp-forums/replies/template.php:2245
+#: bp-forums/topics/template.php:2909
+msgid "Restore"
+msgstr ""
+
+#: bp-forums/replies/template.php:2273
+#: bp-forums/topics/template.php:2937
+msgid "Restore this item from the Trash"
+msgstr ""
+
+#: bp-forums/replies/template.php:2286
+#: bp-forums/topics/template.php:2950
+msgid "Move this item to the Trash"
+msgstr ""
+
+#: bp-forums/replies/template.php:2301
+#: bp-forums/topics/template.php:2965
+msgid "Delete this item permanently"
 msgstr ""
 
 #: bp-forums/replies/template.php:2312
@@ -22658,8 +22077,11 @@ msgstr ""
 #: bp-templates/bp-nouveau/readylaunch/header/unread-notifications.php:39
 #: bp-templates/bp-nouveau/readylaunch/members/members-loop.php:271
 #: bp-templates/bp-nouveau/readylaunch/members/members-loop.php:282
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/681.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/726.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/726.js:3
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/923.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/index.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/index.js:2
@@ -22739,6 +22161,11 @@ msgstr ""
 
 #: bp-forums/templates/default/bbpress/form-anonymous.php:16
 #: bp-templates/bp-nouveau/readylaunch/forums/form-anonymous.php:20
+msgid "Author Information"
+msgstr ""
+
+#: bp-forums/templates/default/bbpress/form-anonymous.php:16
+#: bp-templates/bp-nouveau/readylaunch/forums/form-anonymous.php:20
 msgid "Your information:"
 msgstr ""
 
@@ -22750,6 +22177,12 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/form-anonymous.php:26
 #: bp-templates/bp-nouveau/readylaunch/forums/form-anonymous.php:30
 msgid "Email (will not be published) (required):"
+msgstr ""
+
+#: bp-forums/templates/default/bbpress/form-anonymous.php:31
+#: bp-templates/bp-nouveau/readylaunch/forums/form-anonymous.php:35
+#: bp-templates/bp-nouveau/readylaunch/memberpress/courses/courses_instructor.php:58
+msgid "Website:"
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/form-attachments.php:39
@@ -22997,14 +22430,21 @@ msgstr ""
 #: bp-templates/bp-nouveau/readylaunch/forums/form-forum.php:106
 #: bp-templates/bp-nouveau/readylaunch/members/single/settings/profile.php:37
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1697
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/534.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/553.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:2
 #: bp-core/admin/bb-settings/settings-2.0/build/656.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:2
 msgid "Visibility"
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/form-forum.php:104
 #: bp-templates/bp-nouveau/readylaunch/forums/form-forum.php:113
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:2
 msgid "Parent Forum"
 msgstr ""
 
@@ -23325,6 +22765,11 @@ msgstr ""
 msgid "Changing the slug affects its permalink. Any links to the old slug will stop working."
 msgstr ""
 
+#: bp-forums/templates/default/bbpress/form-topic-tag.php:36
+#: bp-templates/bp-nouveau/readylaunch/forums/form-topic-tag.php:44
+msgid "Name:"
+msgstr ""
+
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:41
 #: bp-templates/bp-nouveau/readylaunch/forums/form-topic-tag.php:49
 msgid "Slug:"
@@ -23379,12 +22824,18 @@ msgstr ""
 
 #: bp-forums/templates/default/bbpress/form-topic.php:40
 #: bp-forums/topics/template.php:54
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
 msgid "Start New Discussion"
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/form-topic.php:52
 #: bp-templates/bp-nouveau/readylaunch/forums/form-topic.php:95
 msgid "This forum is marked as closed to new discussions, however your posting capabilities still allow you to do so."
+msgstr ""
+
+#: bp-forums/templates/default/bbpress/form-topic.php:145
+#: bp-templates/bp-nouveau/readylaunch/forums/form-topic.php:72
+msgid "Type:"
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/form-topic.php:277
@@ -23725,11 +23176,15 @@ msgstr ""
 
 #: bp-forums/topics/functions.php:2212
 #: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:825
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:2
 msgid "Normal"
 msgstr ""
 
 #: bp-forums/topics/functions.php:2213
 #: bp-templates/bp-nouveau/readylaunch/forums/loop-single-topic.php:68
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:2
 msgid "Sticky"
 msgstr ""
 
@@ -23809,8 +23264,25 @@ msgstr ""
 msgid "Unfavorite"
 msgstr ""
 
+#: bp-forums/topics/template.php:2296
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+msgid "No Replies"
+msgstr ""
+
 #: bp-forums/topics/template.php:2547
 msgid "Tagged:"
+msgstr ""
+
+#: bp-forums/topics/template.php:3103
+msgid "Stick"
+msgstr ""
+
+#: bp-forums/topics/template.php:3104
+msgid "Unstick"
+msgstr ""
+
+#: bp-forums/topics/template.php:3105
+msgid "(to front)"
 msgstr ""
 
 #: bp-forums/topics/template.php:3461
@@ -23850,6 +23322,7 @@ msgid "All Tags"
 msgstr ""
 
 #: bp-forums/topics/template.php:3799
+#: bp-core/admin/bb-settings/settings-2.0/build/681.js:1
 msgid "Edit Tag"
 msgstr ""
 
@@ -23858,6 +23331,7 @@ msgid "Update Tag"
 msgstr ""
 
 #: bp-forums/topics/template.php:3801
+#: bp-core/admin/bb-settings/settings-2.0/build/681.js:1
 msgid "Add New Tag"
 msgstr ""
 
@@ -24853,7 +24327,10 @@ msgstr ""
 
 #: bp-groups/bp-groups-template.php:5613
 #: bp-templates/bp-nouveau/includes/members/functions.php:121
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/726.js:3
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
 msgid "Oldest"
 msgstr ""
 
@@ -30096,6 +29573,7 @@ msgstr ""
 #: bp-messages/classes/class-bp-messages-component.php:260
 #: bp-templates/bp-nouveau/buddypress/members/single/notifications/notifications-loop.php:29
 #: bp-core/admin/bb-settings/settings-2.0/build/192.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/534.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/553.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/656.js:1
@@ -34174,13 +33652,19 @@ msgstr ""
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
 #: bp-core/admin/bb-settings/rl-onboarding/build/rl-onboarding.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/192.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/534.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/553.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:2
 #: bp-core/admin/bb-settings/settings-2.0/build/656.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/681.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/726.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/726.js:2
 #: bp-core/admin/bb-settings/settings-2.0/build/726.js:3
 #: bp-core/admin/bb-settings/settings-2.0/build/726.js:4
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:2
 #: bp-core/admin/bb-settings/settings-2.0/build/923.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/index.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/index.js:2
@@ -34488,6 +33972,8 @@ msgstr ""
 #: bp-templates/bp-nouveau/readylaunch/groups/single/invite/pending-invites.php:39
 #: bp-templates/bp-nouveau/readylaunch/groups/single/invite/send-invites.php:42
 #: bp-templates/bp-nouveau/readylaunch/groups/single/messages/private-message.php:89
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:2
 msgid "Reset"
 msgstr ""
 
@@ -38384,6 +37870,10 @@ msgstr ""
 msgid "Play"
 msgstr ""
 
+#: bp-templates/bp-nouveau/includes/video/functions.php:162
+msgid "Pause"
+msgstr ""
+
 #: bp-templates/bp-nouveau/includes/video/functions.php:163
 msgid "Uploaded"
 msgstr ""
@@ -38960,6 +38450,10 @@ msgstr ""
 msgid "Course Instructor"
 msgstr ""
 
+#: bp-templates/bp-nouveau/readylaunch/memberpress/courses/courses_instructor.php:54
+msgid "Email:"
+msgstr ""
+
 #: bp-templates/bp-nouveau/readylaunch/memberpress/courses/single-mpcs-course.php:77
 msgid "This course was last updated on"
 msgstr ""
@@ -39030,6 +38524,10 @@ msgid "View More (%d)"
 msgid_plural "View More (%d)"
 msgstr[0] ""
 msgstr[1] ""
+
+#: bp-templates/bp-nouveau/readylaunch/members/single/parts/profile-visibility.php:25
+msgid "Visibility:"
+msgstr ""
 
 #: bp-templates/bp-nouveau/readylaunch/search/results-page.php:23
 msgid "Showing results for <span class=\"bb-rl-result-label\">'%s'</span>"
@@ -40664,6 +40162,10 @@ msgid "Pages & Sidebars"
 msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
+msgid "Menus"
+msgstr ""
+
+#: bp-core/admin/bb-settings/readylaunch/build/index.js:1
 msgid "Edit Link"
 msgstr ""
 
@@ -40732,6 +40234,8 @@ msgstr ""
 
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
 #: bp-core/admin/bb-settings/rl-onboarding/build/rl-onboarding.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:2
 msgid "Replace"
 msgstr ""
 
@@ -41200,6 +40704,132 @@ msgstr ""
 msgid "Failed to remove field."
 msgstr ""
 
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:2
+msgid "Select Forum"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+msgid "Select Discussion"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+msgid "Select Reply"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/681.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/726.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+msgid "An error occurred. Please try again."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+msgid "Description is required."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+msgid "Failed to load replies."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+msgid "Bulk action completed."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+msgid "Bulk action failed."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+msgid "All Forums (%s)"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+msgid "Search forums"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+msgid "Search replies"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/681.js:1
+msgid "Retry"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+msgid "No replies found matching your search."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+msgid "No replies found."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+msgid "Failed to load reply data."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+msgid "Reply unmarked as spam."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+msgid "Reply marked as spam."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+msgid "Failed to update reply."
+msgstr ""
+
+#. translators: %s: total number of items.
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:2
+#: bp-core/admin/bb-settings/settings-2.0/build/681.js:2
+#: bp-core/admin/bb-settings/settings-2.0/build/726.js:4
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:2
+msgid "%s item"
+msgid_plural "%s items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+msgid "Delete reply?"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+msgid "This permanently deletes replies from the community and cannot be undone."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+msgid "Deletes the reply and all related content from the community. This action cannot be undone."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+msgid "I understand that this deletes the reply."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:2
+#: bp-core/admin/bb-settings/settings-2.0/build/681.js:2
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:2
+msgid "Bulk Delete"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:2
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:2
+msgid "Bulk Edit"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/266.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:2
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:2
+msgid "— No Change —"
+msgstr ""
+
 #: bp-core/admin/bb-settings/settings-2.0/build/534.js:1
 msgid "Add New Field Set"
 msgstr ""
@@ -41571,6 +41201,130 @@ msgstr ""
 msgid "Are you sure you want to delete this group type?"
 msgstr ""
 
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:2
+msgid "Forum Name"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+msgid "Enter forum name"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+msgid "forum-slug"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:2
+msgid "Forum Description (Optional)"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:2
+msgid "Feature Image (Optional)"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:2
+msgid "File size exceeds the maximum allowed size of 10MB."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:2
+msgid "Failed to upload image."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:2
+msgid "An error occurred while uploading. Please try again."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:2
+msgid "For best results, use an image at least 1500px by 300px or higher."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+msgid "Highest Discussions"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+msgid "Lowest Discussions"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+msgid "Highest Replies"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+msgid "Lowest Replies"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+msgid "Failed to load forums. Please try again."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/726.js:3
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/923.js:1
+msgid "Action failed."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/726.js:3
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/923.js:1
+msgid "An error occurred."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/681.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/726.js:3
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/923.js:1
+msgid "Bulk actions"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:2
+msgid "No forums found."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+msgid "Failed to load forum data."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:1
+msgid "An error occurred loading forum data."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:2
+msgid "Delete forum?"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:2
+msgid "This permanently deletes forum from the community and cannot be undone."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:2
+msgid "Deletes the forum and all associated discussions, replies, media, and related content from the community. This action cannot be undone."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:2
+msgid "I understand that this deletes the forum and its discussions."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:2
+msgid "Failed to save forum."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/563.js:2
+msgid "An error occurred saving the forum."
+msgstr ""
+
 #: bp-core/admin/bb-settings/settings-2.0/build/656.js:1
 msgid "Failed to save profile type."
 msgstr ""
@@ -41705,6 +41459,70 @@ msgstr ""
 msgid "Are you sure you want to delete this profile type?"
 msgstr ""
 
+#: bp-core/admin/bb-settings/settings-2.0/build/681.js:1
+msgid "This name is how it appears on your site."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/681.js:1
+msgid "The \"slug\" is the URL-friendly version of the name. It is usually all lowercase and contains only letters, numbers, and hyphens."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/681.js:1
+msgid "Enter description"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/681.js:1
+msgid "Failed to save tag."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/681.js:1
+msgid "Failed to load tags."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/681.js:1
+msgid "Tag saved successfully."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/681.js:1
+msgid "Search tags"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/681.js:1
+msgid "No tags found matching your search."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/681.js:1
+msgid "No discussion tags found."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/681.js:1
+msgid "Failed to load tag data."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/681.js:2
+msgid "Delete Tag"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/681.js:2
+msgid "This permanently deletes discussion tags from the community and cannot be undone."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/681.js:2
+msgid "Deleting discussion tags removes them from discussions, leaving those discussions untagged."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/681.js:2
+msgid "I understand that this deletes the discussion tags."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/681.js:2
+msgid "Tags deleted successfully."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/681.js:2
+msgid "Failed to delete tags."
+msgstr ""
+
 #: bp-core/admin/bb-settings/settings-2.0/build/726.js:1
 #: bp-core/admin/bb-settings/settings-2.0/build/726.js:3
 msgid "Create New Group"
@@ -41716,10 +41534,6 @@ msgstr ""
 
 #: bp-core/admin/bb-settings/settings-2.0/build/726.js:1
 msgid "group-slug"
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings-2.0/build/726.js:1
-msgid "An error occurred. Please try again."
 msgstr ""
 
 #: bp-core/admin/bb-settings/settings-2.0/build/726.js:1
@@ -41896,34 +41710,12 @@ msgid "Failed to load groups. Please try again."
 msgstr ""
 
 #: bp-core/admin/bb-settings/settings-2.0/build/726.js:3
-#: bp-core/admin/bb-settings/settings-2.0/build/923.js:1
-msgid "Action failed."
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings-2.0/build/726.js:3
-#: bp-core/admin/bb-settings/settings-2.0/build/923.js:1
-msgid "An error occurred."
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings-2.0/build/726.js:3
-#: bp-core/admin/bb-settings/settings-2.0/build/923.js:1
-msgid "Bulk actions"
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings-2.0/build/726.js:3
 msgid "Failed to load group data."
 msgstr ""
 
 #: bp-core/admin/bb-settings/settings-2.0/build/726.js:3
 msgid "An error occurred loading group data."
 msgstr ""
-
-#. translators: %s: total number of items.
-#: bp-core/admin/bb-settings/settings-2.0/build/726.js:4
-msgid "%s item"
-msgid_plural "%s items"
-msgstr[0] ""
-msgstr[1] ""
 
 #: bp-core/admin/bb-settings/settings-2.0/build/726.js:4
 msgid "Delete Group?"
@@ -41959,6 +41751,96 @@ msgstr ""
 
 #: bp-core/admin/bb-settings/settings-2.0/build/726.js:4
 msgid "Select group type"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:2
+msgid "Enter tags, separated by commas"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+msgid "Super Sticky (To front)"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+msgid "Enter discussion title"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:2
+msgid "Tags (Optional)"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+msgid "Highest Members"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+msgid "Lowest Members"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+msgid "Failed to load discussions. Please try again."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+msgid "All Forums (%d)"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+msgid "Search discussions"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+msgid "No discussions found."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+msgid "Failed to load discussion data."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+msgid "An error occurred loading discussion data."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+msgid "Discussion unmarked as spam."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+msgid "Discussion marked as spam."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:1
+msgid "Failed to update discussion."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:2
+msgid "Delete discussion?"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:2
+msgid "This permanently deletes discussions from the community and cannot be undone."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:2
+msgid "Deletes the discussions and all associated replies, media, and related content from the community. This action cannot be undone."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:2
+msgid "I understand that this deletes the discussions."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:2
+msgid "Failed to save discussion."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:2
+msgid "An error occurred saving the discussion."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/829.js:2
+msgid "Search forums..."
 msgstr ""
 
 #: bp-core/admin/bb-settings/settings-2.0/build/923.js:1

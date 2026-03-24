@@ -121,7 +121,7 @@ class BB_Admin_Meta_Field_Registry {
 	 *     @type string   $type              Field type: 'text', 'number', 'url', 'select', 'richtext', 'readonly'.
 	 *     @type int      $order             Display order. Default 100.
 	 *     @type string   $context           'normal' (inside form) or 'after' (below form). Default 'normal'.
-	 *     @type string   $layout            'default' (full width) or 'half' (half width, grouped with adjacent half fields). Default 'default'.
+	 *     @type string   $layout            'default' (full width), 'half' (half width), or 'third' (third width). Default 'default'.
 	 *     @type string   $save_phase        'before' (set object properties before save) or 'after' (save meta after save). Default 'after'.
 	 *     @type callable $get_value         Required. function( $item ) returning mixed.
 	 *     @type callable $get_options       Optional. function( $item ) returning array for 'select' type.
@@ -130,6 +130,8 @@ class BB_Admin_Meta_Field_Registry {
 	 *     @type callable $is_visible        Optional. function( $item ) returning bool. Default true.
 	 *     @type string   $tab               Optional tab identifier for tabbed modals. Default ''.
 	 *     @type callable $get_extra_data    Optional. function( $item ) returning array of extra data for JS.
+	 *     @type string   $async_action      Optional. AJAX action for 'async_select' field type. Default ''.
+	 *     @type string   $async_depends_on  Optional. Field ID whose value is passed as extra param for cascading async selects. Default ''.
 	 *     @type array    $conditional      Optional. Client-side dependency: array( 'field' => 'field_id', 'value' => 'expected_value' ).
 	 * }
 	 * @return bool True on success.
@@ -155,6 +157,8 @@ class BB_Admin_Meta_Field_Registry {
 			'save_value'        => null,
 			'sanitize_callback' => null, // Must be explicitly set for non-scalar (array) fields.
 			'is_visible'        => null,
+			'async_action'      => '',
+			'async_depends_on'  => '',
 			'conditional'       => null,
 		);
 
@@ -232,20 +236,21 @@ class BB_Admin_Meta_Field_Registry {
 			}
 
 			$field_data = array(
-				'id'           => $field_id,
-				'label'        => $args['label'],
-				'description'  => $args['description'],
-				'placeholder'  => $args['placeholder'],
-				'type'         => $args['type'],
-				'context'      => $args['context'],
-				'layout'       => $args['layout'],
-				'tab'          => $args['tab'],
-				'visible'      => $visible,
-				'value'        => null,
-				'options'      => array(),
-				'readonly'     => ( null === $args['save_value'] ),
-				'conditional'  => $args['conditional'],
-				'async_action' => isset( $args['async_action'] ) ? $args['async_action'] : '',
+				'id'               => $field_id,
+				'label'            => $args['label'],
+				'description'      => $args['description'],
+				'placeholder'      => $args['placeholder'],
+				'type'             => $args['type'],
+				'context'          => $args['context'],
+				'layout'           => $args['layout'],
+				'tab'              => $args['tab'],
+				'visible'          => $visible,
+				'value'            => null,
+				'options'          => array(),
+				'readonly'         => ( null === $args['save_value'] ),
+				'conditional'      => $args['conditional'],
+				'async_action'     => $args['async_action'],
+				'async_depends_on' => $args['async_depends_on'],
 			);
 
 			// Skip fetching value, options, and extra data for invisible fields

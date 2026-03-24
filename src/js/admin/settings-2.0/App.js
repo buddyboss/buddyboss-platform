@@ -43,6 +43,7 @@ function fixAdminMenuHighlight( route ) {
 		groups: [ 'all_groups', 'group_types', 'group_navigation' ],
 		activity: [ 'all_activities' ],
 		members: [ 'profile_fields', 'profile_types', 'profile_search', 'profile_navigation' ],
+		forums: [ 'all_forums', 'discussions', 'discussion_tags', 'replies' ],
 	};
 
 	var isListing = false;
@@ -50,7 +51,7 @@ function fixAdminMenuHighlight( route ) {
 		isListing = -1 !== listingPanels[ feature ].indexOf( panel );
 	}
 	// Direct component routes like /activity/all or /groups/all.
-	if ( 'settings' !== mainRoute && ( 'activity' === mainRoute || 'groups' === mainRoute ) ) {
+	if ( 'settings' !== mainRoute && ( 'activity' === mainRoute || 'groups' === mainRoute || 'forums' === mainRoute ) ) {
 		isListing = true;
 	}
 
@@ -89,6 +90,11 @@ function fixAdminMenuHighlight( route ) {
 
 		// Match submenu items by page slug (e.g. page=bp-groups).
 		if ( -1 !== href.indexOf( 'page=' + pageSlug ) ) {
+			targetItem = li;
+		}
+
+		// Match Forums submenu by CPT URL (edit.php?post_type=forum).
+		if ( ! targetItem && 'forums' === targetSlug && -1 !== href.indexOf( 'post_type=forum' ) ) {
 			targetItem = li;
 		}
 

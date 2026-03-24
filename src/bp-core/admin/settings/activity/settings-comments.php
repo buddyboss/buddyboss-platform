@@ -46,7 +46,7 @@ function bb_activity_register_comments_panel_fields( $edit_time_options ) {
 			'description'       => __( 'Allow members to comment on activity posts', 'buddyboss' ),
 			'help_text'         => __( 'Comments on an individual activity post can be closed or disabled all together by site admins.', 'buddyboss' ),
 			'default'           => bb_is_activity_comments_enabled(),
-			'sanitize_callback' => 'intval',
+			'sanitize_callback' => 'absint',
 			'order'             => 10,
 		)
 	);
@@ -62,7 +62,7 @@ function bb_activity_register_comments_panel_fields( $edit_time_options ) {
 			'type'                 => 'toggle',
 			'description'          => __( 'Allow members to edit their comment for a duration of %s', 'buddyboss' ),
 			'default'              => bb_is_activity_comment_edit_enabled(),
-			'sanitize_callback'    => 'intval',
+			'sanitize_callback'    => 'absint',
 			'description_controls' => array(
 				array(
 					'type'              => 'select',
@@ -136,7 +136,7 @@ function bb_activity_register_comments_panel_fields( $edit_time_options ) {
 			'description'          => __( 'Organize replies into threads %s levels deep', 'buddyboss' ),
 			'help_text'            => __( 'Replies to activity comments appear in threads, except for replies at the deepest level. Applies to platform only, not app.', 'buddyboss' ),
 			'default'              => bb_is_activity_comment_threading_enabled(),
-			'sanitize_callback'    => 'intval',
+			'sanitize_callback'    => 'absint',
 			'description_controls' => array(
 				array(
 					'type'              => 'select',

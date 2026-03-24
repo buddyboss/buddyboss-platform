@@ -15,6 +15,7 @@ import { FeatureSettingsScreen } from './screens/FeatureSettingsScreen';
 // Lazy load feature-specific screens (code splitting)
 const ActivityListScreen = lazy(() => import('./screens/ActivityListScreen'));
 const GroupsListScreen = lazy(() => import('./screens/GroupsListScreen'));
+const ForumsListScreen = lazy(() => import('./screens/ForumsListScreen'));
 
 // Re-export for consumers that import from Router
 export { invalidateFeaturesCache, updateFeatureInCache };
@@ -108,7 +109,7 @@ export function Router({ currentRoute, onNavigate }) {
 	const mainRoute = routeParts[0] || 'dashboard';
 
 	// Check if current route needs feature verification
-	const needsFeatureCheck = 'settings' === mainRoute || 'activity' === mainRoute || 'groups' === mainRoute;
+	const needsFeatureCheck = 'settings' === mainRoute || 'activity' === mainRoute || 'groups' === mainRoute || 'forums' === mainRoute;
 
 	// Load features on mount AND when navigating to routes that need feature check.
 	// Only show the loading spinner on the initial load (before features are fetched
@@ -270,6 +271,31 @@ export function Router({ currentRoute, onNavigate }) {
 				return (
 					<Suspense fallback={<LoadingSpinner />}>
 						<GroupsListScreen onNavigate={onNavigate} />
+					</Suspense>
+				);
+			}
+			return <LoadingSpinner />;
+
+		case 'forums':
+			// Check if forums feature is enabled
+			if (isCheckingFeatures) {
+				return <LoadingSpinner />;
+			}
+
+			if (!isFeatureEnabled(features, 'forums')) {
+				return (
+					<FeatureDisabled
+						featureId="forums"
+						featureLabel={getFeatureLabel('forums')}
+						onNavigate={onNavigate}
+					/>
+				);
+			}
+
+			if (routeParts[1] === 'all') {
+				return (
+					<Suspense fallback={<LoadingSpinner />}>
+						<ForumsListScreen onNavigate={onNavigate} />
 					</Suspense>
 				);
 			}
