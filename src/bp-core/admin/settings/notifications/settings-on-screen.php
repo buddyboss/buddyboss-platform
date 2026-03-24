@@ -188,7 +188,7 @@ function bb_notifications_register_on_screen_panel_fields() {
 	);
 
 	// Notice: Members can manage on-screen notification preferences.
-	if ( ! bb_enabled_legacy_email_preference() ) {
+	if ( ! function_exists( 'bb_enabled_legacy_email_preference' ) || ! bb_enabled_legacy_email_preference() ) {
 		bb_register_feature_field(
 			'notifications',
 			'on_screen_notifications',

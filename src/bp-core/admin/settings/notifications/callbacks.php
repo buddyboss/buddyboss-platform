@@ -118,18 +118,30 @@ function bb_notifications_sanitize_types( $value ) {
 		}
 	}
 
-	if ( ! empty( $registered_keys ) ) {
-		$enabled_notification = array_intersect_key( $enabled_notification, array_flip( $registered_keys ) );
+	// When no registered keys are available (e.g., notifications component toggled off
+	// mid-request), preserve the existing stored value rather than accepting unfiltered input.
+	if ( empty( $registered_keys ) ) {
+		return bp_get_option( 'bb_enabled_notification', array() );
 	}
+
+	$enabled_notification = array_intersect_key( $enabled_notification, array_flip( $registered_keys ) );
 
 	if ( ! empty( $preferences ) ) {
 		foreach ( $preferences as $preference ) {
-			if ( isset( $preference['key'] ) && isset( $preference['default'] ) ) {
-				if ( isset( $enabled_notification[ $preference['key'] ] ) && 'yes' === $preference['default'] ) {
-					$enabled_notification[ $preference['key'] ]['main'] = $preference['default'];
-				} else {
-					unset( $enabled_notification[ $preference['key'] ] );
-				}
+			if ( ! isset( $preference['key'], $preference['default'] ) ) {
+				continue;
+			}
+
+			// Skip entries not present in the submitted data.
+			if ( ! isset( $enabled_notification[ $preference['key'] ] ) ) {
+				continue;
+			}
+
+			// Force read-only fields back to their registered default.
+			if ( 'yes' === $preference['default'] ) {
+				$enabled_notification[ $preference['key'] ]['main'] = 'yes';
+			} else {
+				$enabled_notification[ $preference['key'] ]['main'] = 'no';
 			}
 		}
 	}
