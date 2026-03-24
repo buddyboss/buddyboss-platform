@@ -204,7 +204,7 @@ function bb_discussions_register_core_meta_fields( $registry, $component ) {
 		)
 	);
 
-	// Visibility (Public/Private/Hidden).
+	// Visibility (Public/Private/Password Protected).
 	$registry->register(
 		$component,
 		'visibility',
@@ -219,6 +219,12 @@ function bb_discussions_register_core_meta_fields( $registry, $component ) {
 				if ( empty( $topic->ID ) ) {
 					return 'publish';
 				}
+
+				// Password-protected posts have post_status='publish' with a non-empty post_password.
+				if ( ! empty( $topic->post_password ) ) {
+					return 'password';
+				}
+
 				return get_post_status( $topic->ID );
 			},
 			'get_options'       => function ( $topic ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- Callback signature required by registry.
@@ -252,8 +258,35 @@ function bb_discussions_register_core_meta_fields( $registry, $component ) {
 		)
 	);
 
+	// Password (conditional: only when visibility='password').
+	$registry->register(
+		$component,
+		'post_password',
+		array(
+			'label'             => __( 'Password', 'buddyboss' ),
+			'type'              => 'text',
+			'tab'               => 'details',
+			'order'             => 56,
+			'save_phase'        => 'before',
+			'conditional'       => array(
+				'field' => 'visibility',
+				'value' => 'password',
+			),
+			'get_value'         => function ( $topic ) {
+				if ( empty( $topic->ID ) ) {
+					return '';
+				}
+				return $topic->post_password;
+			},
+			'save_value'        => function ( $topic, $value ) {
+				$topic->post_password = $value;
+			},
+			'sanitize_callback' => 'sanitize_text_field',
+		)
+	);
+
 	// =========================================================================
-	// Publish fields (order 56–59).
+	// Publish fields (order 57–59).
 	// =========================================================================
 
 	// Publish (Immediately/Schedule).
@@ -264,7 +297,7 @@ function bb_discussions_register_core_meta_fields( $registry, $component ) {
 			'label'             => __( 'Publish', 'buddyboss' ),
 			'type'              => 'select',
 			'tab'               => 'details',
-			'order'             => 56,
+			'order'             => 57,
 			'save_phase'        => 'after',
 			'get_value'         => function ( $topic ) {
 				if ( empty( $topic->ID ) ) {
@@ -300,7 +333,7 @@ function bb_discussions_register_core_meta_fields( $registry, $component ) {
 			'label'             => __( 'Date', 'buddyboss' ),
 			'type'              => 'date',
 			'tab'               => 'details',
-			'order'             => 57,
+			'order'             => 58,
 			'layout'            => 'half',
 			'save_phase'        => 'after',
 			'conditional'       => array(
@@ -327,7 +360,7 @@ function bb_discussions_register_core_meta_fields( $registry, $component ) {
 			'label'             => __( 'Time', 'buddyboss' ),
 			'type'              => 'time',
 			'tab'               => 'details',
-			'order'             => 58,
+			'order'             => 59,
 			'layout'            => 'half',
 			'save_phase'        => 'after',
 			'conditional'       => array(
