@@ -132,14 +132,26 @@ var NotificationTypesField = function( props ) {
 	 * @return {JSX.Element|null} Rendered link or null.
 	 */
 	var renderEmailTemplateLink = function( emailTemplate ) {
-		if ( ! emailTemplate || ! emailTemplate.has_templates ) {
+		if ( ! emailTemplate ) {
 			return null;
 		}
 
-		var isMissing = emailTemplate.missing;
-		var label = isMissing
-			? ( emailTemplate.count > 1 ? __( 'Missing Email Templates', 'buddyboss' ) : __( 'Missing Email Template', 'buddyboss' ) )
-			: ( emailTemplate.count > 1 ? __( 'Email Templates', 'buddyboss' ) : __( 'Email Template', 'buddyboss' ) );
+		var isMissing = ! emailTemplate.has_templates || emailTemplate.missing;
+		var label, missingCount;
+
+		if ( ! emailTemplate.has_templates ) {
+			// No email templates registered at all — show as missing.
+			label = __( 'Missing Email Template', 'buddyboss' );
+		} else if ( emailTemplate.missing ) {
+			missingCount = emailTemplate.count - ( emailTemplate.existing_count || 0 );
+			label = missingCount > 1
+				? __( 'Missing Email Templates', 'buddyboss' )
+				: __( 'Missing Email Template', 'buddyboss' );
+		} else {
+			label = emailTemplate.count > 1
+				? __( 'Email Templates', 'buddyboss' )
+				: __( 'Email Template', 'buddyboss' );
+		}
 
 		var className = 'bb-notification-types__email-link';
 		if ( isMissing ) {

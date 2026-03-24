@@ -1487,9 +1487,10 @@ class BB_Admin_Settings_Ajax {
 					);
 
 					if ( ! empty( $registered_emails ) ) {
+						// Count templates that have a published email post (not just a term).
 						$total_email_count = 0;
 						foreach ( $registered_emails as $email_type ) {
-							if ( isset( $slug_term_counts[ $email_type ] ) ) {
+							if ( ! empty( $slug_post_map[ $email_type ] ) ) {
 								++$total_email_count;
 							}
 						}
@@ -1519,9 +1520,16 @@ class BB_Admin_Settings_Ajax {
 						} else {
 							$email_template['url'] = get_admin_url(
 								bp_get_root_blog_id(),
-								'edit.php?post_type=' . bp_get_email_post_type() . '&popup=yes'
+								'admin.php?page=bb-settings&tab=emails&panel=all_emails&popup=yes'
 							);
 						}
+					} else {
+						// No registered email templates — provide URL to emails admin
+						// so React can show "Missing Email Template" with a link.
+						$email_template['url'] = get_admin_url(
+							bp_get_root_blog_id(),
+							'admin.php?page=bb-settings&tab=emails&panel=all_emails&popup=yes'
+						);
 					}
 
 					// Get preference sub-types (email, web, app).
