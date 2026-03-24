@@ -358,7 +358,10 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 
 		setIsDeleting( true );
 
-		deleteTopicTag( deleteTagItem.id ).then( function ( response ) {
+		// Capture ID before clearing state to avoid stale closure.
+		var tagId = deleteTagItem.id;
+
+		deleteTopicTag( tagId ).then( function ( response ) {
 			setIsDeleting( false );
 			setDeleteTagItem( null );
 			setDeleteConfirm( false );
@@ -368,7 +371,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 					type: 'success',
 				} );
 				setSelectedIds( function ( prev ) {
-					return prev.filter( function ( id ) { return id !== deleteTagItem.id; } );
+					return prev.filter( function ( id ) { return id !== tagId; } );
 				} );
 				fetchTags( { page: currentPage, search: searchQuery } );
 			} else {
