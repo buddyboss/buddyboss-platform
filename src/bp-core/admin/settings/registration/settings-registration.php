@@ -50,6 +50,7 @@ function bb_registration_register_panel_fields() {
 			'type'              => 'toggle',
 			'default'           => 0,
 			'sanitize_callback' => 'absint',
+			'refresh_panels'    => true,
 			'order'             => 10,
 		)
 	);
