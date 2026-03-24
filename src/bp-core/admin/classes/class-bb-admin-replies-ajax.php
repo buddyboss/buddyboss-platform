@@ -499,11 +499,13 @@ class BB_Admin_Replies_Ajax {
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
-		$content    = isset( $_POST['content'] ) ? wp_kses_post( wp_unslash( $_POST['content'] ) ) : '';
-		$forum_id   = isset( $_POST['forum_id'] ) ? absint( wp_unslash( $_POST['forum_id'] ) ) : 0;
-		$topic_id   = isset( $_POST['topic_id'] ) ? absint( wp_unslash( $_POST['topic_id'] ) ) : 0;
-		$reply_to   = isset( $_POST['reply_to'] ) ? absint( wp_unslash( $_POST['reply_to'] ) ) : 0;
-		$visibility = isset( $_POST['visibility'] ) ? sanitize_key( wp_unslash( $_POST['visibility'] ) ) : 'publish';
+		$content       = isset( $_POST['content'] ) ? wp_kses_post( wp_unslash( $_POST['content'] ) ) : '';
+		$forum_id      = isset( $_POST['forum_id'] ) ? absint( wp_unslash( $_POST['forum_id'] ) ) : 0;
+		$topic_id      = isset( $_POST['topic_id'] ) ? absint( wp_unslash( $_POST['topic_id'] ) ) : 0;
+		$reply_to      = isset( $_POST['reply_to'] ) ? absint( wp_unslash( $_POST['reply_to'] ) ) : 0;
+		$visibility    = isset( $_POST['visibility'] ) ? sanitize_key( wp_unslash( $_POST['visibility'] ) ) : 'publish';
+		$post_password = isset( $_POST['post_password'] ) ? sanitize_text_field( wp_unslash( $_POST['post_password'] ) ) : '';
+		$reply_status  = isset( $_POST['reply_status'] ) ? sanitize_key( wp_unslash( $_POST['reply_status'] ) ) : 'publish';
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $content ) ) {
@@ -521,7 +523,7 @@ class BB_Admin_Replies_Ajax {
 		}
 
 		// Validate visibility.
-		$allowed_visibilities = array( 'publish', 'private', 'hidden' );
+		$allowed_visibilities = array( 'publish', 'private', 'hidden', 'password' );
 		if ( ! in_array( $visibility, $allowed_visibilities, true ) ) {
 			$visibility = 'publish';
 		}
@@ -551,10 +553,29 @@ class BB_Admin_Replies_Ajax {
 			$schedule_time = '';
 		}
 
+		// Fall back to public if password is empty (matches WP core behavior).
+		if ( 'password' === $visibility && empty( $post_password ) ) {
+			$visibility = 'publish';
+		}
+
+		// Resolve post_status from reply_status and visibility.
+		// Draft/Pending take priority — visibility only applies to Published replies.
+		if ( in_array( $reply_status, array( 'pending', 'draft' ), true ) ) {
+			$resolved_status   = $reply_status;
+			$resolved_password = '';
+		} elseif ( 'password' === $visibility ) {
+			$resolved_status   = 'publish';
+			$resolved_password = $post_password;
+		} else {
+			$resolved_status   = $visibility;
+			$resolved_password = '';
+		}
+
 		$reply_data = array(
-			'post_content' => $content,
-			'post_status'  => $visibility,
-			'post_parent'  => $topic_id,
+			'post_content'  => $content,
+			'post_status'   => $resolved_status,
+			'post_parent'   => $topic_id,
+			'post_password' => $resolved_password,
 		);
 
 		// If scheduling, set post_date and change status to 'future'.
@@ -674,12 +695,14 @@ class BB_Admin_Replies_Ajax {
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
-		$reply_id   = isset( $_POST['reply_id'] ) ? absint( wp_unslash( $_POST['reply_id'] ) ) : 0;
-		$content    = isset( $_POST['content'] ) ? wp_kses_post( wp_unslash( $_POST['content'] ) ) : '';
-		$forum_id   = isset( $_POST['forum_id'] ) ? absint( wp_unslash( $_POST['forum_id'] ) ) : 0;
-		$topic_id   = isset( $_POST['topic_id'] ) ? absint( wp_unslash( $_POST['topic_id'] ) ) : 0;
-		$reply_to   = isset( $_POST['reply_to'] ) ? absint( wp_unslash( $_POST['reply_to'] ) ) : 0;
-		$visibility = isset( $_POST['visibility'] ) ? sanitize_key( wp_unslash( $_POST['visibility'] ) ) : '';
+		$reply_id      = isset( $_POST['reply_id'] ) ? absint( wp_unslash( $_POST['reply_id'] ) ) : 0;
+		$content       = isset( $_POST['content'] ) ? wp_kses_post( wp_unslash( $_POST['content'] ) ) : '';
+		$forum_id      = isset( $_POST['forum_id'] ) ? absint( wp_unslash( $_POST['forum_id'] ) ) : 0;
+		$topic_id      = isset( $_POST['topic_id'] ) ? absint( wp_unslash( $_POST['topic_id'] ) ) : 0;
+		$reply_to      = isset( $_POST['reply_to'] ) ? absint( wp_unslash( $_POST['reply_to'] ) ) : 0;
+		$visibility    = isset( $_POST['visibility'] ) ? sanitize_key( wp_unslash( $_POST['visibility'] ) ) : '';
+		$post_password = isset( $_POST['post_password'] ) ? sanitize_text_field( wp_unslash( $_POST['post_password'] ) ) : '';
+		$reply_status  = isset( $_POST['reply_status'] ) ? sanitize_key( wp_unslash( $_POST['reply_status'] ) ) : '';
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $reply_id ) ) {
@@ -692,7 +715,7 @@ class BB_Admin_Replies_Ajax {
 		}
 
 		// Validate visibility.
-		$allowed_visibilities = array( 'publish', 'private', 'hidden' );
+		$allowed_visibilities = array( 'publish', 'private', 'hidden', 'password' );
 		if ( ! empty( $visibility ) && ! in_array( $visibility, $allowed_visibilities, true ) ) {
 			$visibility = 'publish';
 		}
@@ -733,8 +756,18 @@ class BB_Admin_Replies_Ajax {
 			// Switching from scheduled back to immediately — publish now.
 			$update_args['post_date']       = current_time( 'mysql' );
 			$update_args['post_date_gmt']   = current_time( 'mysql', true );
-			$update_args['post_status']     = ! empty( $visibility ) ? $visibility : 'publish';
 			$update_args['edit_date']       = true;
+
+			// Draft/Pending from reply_status take priority over visibility.
+			if ( ! empty( $reply_status ) && in_array( $reply_status, array( 'pending', 'draft' ), true ) ) {
+				$update_args['post_status']   = $reply_status;
+				$update_args['post_password'] = '';
+			} elseif ( 'password' === $visibility ) {
+				$update_args['post_status']   = 'publish';
+				$update_args['post_password'] = $post_password;
+			} else {
+				$update_args['post_status'] = ! empty( $visibility ) ? $visibility : 'publish';
+			}
 		}
 
 		// Allow empty content to clear it (matches save_discussion() pattern).
@@ -742,9 +775,22 @@ class BB_Admin_Replies_Ajax {
 			$update_args['post_content'] = $content;
 		}
 
-		// Only set visibility if scheduling hasn't already set post_status to 'future'.
-		if ( ! empty( $visibility ) && ! isset( $update_args['post_status'] ) ) {
-			$update_args['post_status'] = $visibility;
+		// Only set post_status if scheduling hasn't already set it to 'future'.
+		if ( ! isset( $update_args['post_status'] ) ) {
+
+			// Draft/Pending from reply_status take priority over visibility.
+			if ( ! empty( $reply_status ) && in_array( $reply_status, array( 'pending', 'draft' ), true ) ) {
+				$update_args['post_status']   = $reply_status;
+				$update_args['post_password'] = '';
+			} elseif ( ! empty( $visibility ) ) {
+				if ( 'password' === $visibility ) {
+					$update_args['post_status']   = 'publish';
+					$update_args['post_password'] = $post_password;
+				} else {
+					$update_args['post_status']   = $visibility;
+					$update_args['post_password'] = '';
+				}
+			}
 		}
 
 		// Validate topic_id references an actual topic if provided.
@@ -1007,8 +1053,9 @@ class BB_Admin_Replies_Ajax {
 					if ( in_array( $edit_visibility, $allowed_visibilities, true ) ) {
 						$update_result = wp_update_post(
 							array(
-								'ID'          => $rid,
-								'post_status' => $edit_visibility,
+								'ID'            => $rid,
+								'post_status'   => $edit_visibility,
+								'post_password' => '',
 							),
 							true
 						);
