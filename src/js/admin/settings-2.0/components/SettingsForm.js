@@ -920,6 +920,7 @@ export function SettingsForm({ fields, values, onChange }) {
 			disabled ? 'bb-admin-settings-form__field--disabled' : '',
 			isToggleWithChildren ? 'bb-admin-settings-form__field--has-children' : '',
 			field.group?.key ? 'bb-admin-settings-form__field--grouped' : '',
+			field.group?.key && groupLastNames[ field.group.key ] === field.name ? 'bb-admin-settings-form__field--group-last' : '',
 		].filter(Boolean).join(' ');
 
 		const hasLabel = field.label && field.label.trim() !== '';
@@ -1084,8 +1085,22 @@ export function SettingsForm({ fields, values, onChange }) {
 		);
 	};
 
-	// Filter out child fields from top level (they'll be rendered inside their parents)
+	// Filter out child fields from top level (they'll be rendered inside their parents).
 	const topLevelFields = fields.filter(field => !field.parent_field);
+
+	// Compute which fields are the last visible field in their group (for CSS border).
+	// Re-computed on every render since conditional visibility depends on current values.
+	const groupLastNames = useMemo( function () {
+		var visible = topLevelFields.filter( isFieldVisible );
+		var lastMap = {};
+		for ( var gi = visible.length - 1; gi >= 0; gi-- ) {
+			var gf = visible[ gi ];
+			if ( gf.group?.key && ! lastMap[ gf.group.key ] ) {
+				lastMap[ gf.group.key ] = gf.name;
+			}
+		}
+		return lastMap;
+	}, [ topLevelFields, values ] ); // eslint-disable-line react-hooks/exhaustive-deps
 
 	return (
 		<>

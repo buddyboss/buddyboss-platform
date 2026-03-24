@@ -16,6 +16,7 @@
 import { CheckboxControl, Popover } from '@wordpress/components';
 import { useState, useRef } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+import { safeUrl } from '../../utils/sanitize';
 
 /**
  * SSO Providers Field Component
@@ -99,7 +100,7 @@ export function SsoProvidersField( { field, value, onChange, disabled } ) {
 							<div className="bb-admin-sso-providers__card-icon">
 								{ provider.icon ? (
 									<img
-										src={ provider.icon }
+										src={ safeUrl( provider.icon ) }
 										alt={ provider.label }
 									/>
 								) : (

@@ -711,6 +711,8 @@ class BB_Admin_Settings_Ajax {
 				'child_group_label'    => $field['child_group_label'] ?? null,
 				// When true, saving this field triggers a full feature refetch to update side panels.
 				'refresh_panels'       => ! empty( $field['refresh_panels'] ),
+				// SSO providers array (for sso_providers field type).
+				'providers'            => ! empty( $field['providers'] ) && is_array( $field['providers'] ) ? $field['providers'] : null,
 			);
 
 			// access_control: populate access-control data via filter so Pro can inject types/options.

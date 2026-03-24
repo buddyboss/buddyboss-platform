@@ -105,7 +105,7 @@ function bb_registration_register_panel_fields() {
 				'label'             => __( 'Custom URL', 'buddyboss' ),
 				'type'              => 'text',
 				'default'           => '',
-				'sanitize_callback' => 'sanitize_text_field',
+				'sanitize_callback' => 'esc_url_raw',
 				'conditional'       => array(
 					'field'  => 'allow-custom-registration',
 					'value'  => true,

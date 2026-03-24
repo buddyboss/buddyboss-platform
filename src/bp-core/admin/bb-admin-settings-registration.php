@@ -132,14 +132,38 @@ function bb_admin_settings_register_registration_feature() {
 	// =========================================================================
 
 	/**
-	 * Deprecate legacy hooks that are no longer fired in Settings 2.0.
+	 * Deprecated: bb_admin_setting_general_registration_fields.
 	 *
-	 * bb_admin_setting_general_registration_fields — Pro SSO used this to add
-	 * provider fields. In Settings 2.0, Pro should hook into
+	 * Legacy hook used by Pro SSO to add provider fields to the registration
+	 * settings page. In Settings 2.0, Pro should hook into
 	 * bb_registration_after_general_settings_fields instead.
 	 *
-	 * bp_admin_setting_registration_register_fields — Nobody consumes this hook.
+	 * @since BuddyBoss 2.6.30
+	 * @deprecated BuddyBoss [BBVERSION] Use bb_registration_after_general_settings_fields hook.
 	 */
+	do_action_deprecated(
+		'bb_admin_setting_general_registration_fields',
+		array(),
+		'[BBVERSION]',
+		'bb_registration_after_general_settings_fields',
+		'Registration fields are now registered via bb_register_feature_field() in Settings 2.0.'
+	);
+
+	/**
+	 * Deprecated: bp_admin_setting_registration_register_fields.
+	 *
+	 * Legacy hook fired after registration fields were registered.
+	 *
+	 * @since BuddyPress 1.6.0
+	 * @deprecated BuddyBoss [BBVERSION]
+	 */
+	do_action_deprecated(
+		'bp_admin_setting_registration_register_fields',
+		array(),
+		'[BBVERSION]',
+		'',
+		'Registration fields are now registered via bb_register_feature_field() in Settings 2.0.'
+	);
 }
 
 add_action( 'bb_register_features', 'bb_admin_settings_register_registration_feature', 16 );

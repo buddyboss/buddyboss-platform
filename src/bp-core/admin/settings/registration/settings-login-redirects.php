@@ -52,6 +52,7 @@ function bb_registration_register_login_redirects_panel_fields() {
 			'default'           => '',
 			'sanitize_callback' => 'bb_registration_sanitize_redirection',
 			'placeholder'       => __( 'Default', 'buddyboss' ),
+			'group'             => 'login_redirect',
 			'order'             => 10,
 		)
 	);
@@ -63,15 +64,17 @@ function bb_registration_register_login_redirects_panel_fields() {
 		'global_redirects',
 		array(
 			'name'              => 'bb-custom-login-redirection',
-			'label'             => __( 'Custom Login URL', 'buddyboss' ),
+			'label'             => '',
 			'type'              => 'text',
 			'default'           => '',
 			'sanitize_callback' => 'esc_url_raw',
+			'placeholder'       => __( 'Enter custom URL', 'buddyboss' ),
 			'conditional'       => array(
 				'field'  => 'bb-login-redirection',
 				'value'  => '0',
 				'action' => 'show',
 			),
+			'group'             => 'login_redirect',
 			'order'             => 15,
 		)
 	);
@@ -90,6 +93,7 @@ function bb_registration_register_login_redirects_panel_fields() {
 			'default'           => '',
 			'sanitize_callback' => 'bb_registration_sanitize_redirection',
 			'placeholder'       => __( 'Default', 'buddyboss' ),
+			'group'             => 'logout_redirect',
 			'order'             => 20,
 		)
 	);
@@ -101,15 +105,17 @@ function bb_registration_register_login_redirects_panel_fields() {
 		'global_redirects',
 		array(
 			'name'              => 'bb-custom-logout-redirection',
-			'label'             => __( 'Custom Logout URL', 'buddyboss' ),
+			'label'             => '',
 			'type'              => 'text',
 			'default'           => '',
 			'sanitize_callback' => 'esc_url_raw',
+			'placeholder'       => __( 'Enter custom URL', 'buddyboss' ),
 			'conditional'       => array(
 				'field'  => 'bb-logout-redirection',
 				'value'  => '0',
 				'action' => 'show',
 			),
+			'group'             => 'logout_redirect',
 			'order'             => 25,
 		)
 	);
