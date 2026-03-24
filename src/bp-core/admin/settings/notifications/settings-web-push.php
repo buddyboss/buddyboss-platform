@@ -24,12 +24,14 @@ function bb_notifications_register_web_push_panel_fields() {
 
 	// Minimum Pro version that supports Settings 2.0 OneSignal integration.
 	$min_pro_settings2_version = '2.0.2';
+	$pro_available             = function_exists( 'bb_platform_pro' );
+	$bridge_available          = function_exists( 'bb_integration_bridge' );
 
 	// Check if OneSignal integration feature is disabled via the Integration Bridge.
 	$onesignal_feature_disabled = false;
 	if (
-		function_exists( 'bb_platform_pro' ) &&
-		function_exists( 'bb_integration_bridge' ) &&
+		$pro_available &&
+		$bridge_available &&
 		bb_integration_bridge()->is_managed_integration( 'onesignal' ) &&
 		! bb_integration_bridge()->is_integration_feature_enabled( 'onesignal' )
 	) {
@@ -37,14 +39,7 @@ function bb_notifications_register_web_push_panel_fields() {
 	}
 
 	// Check if Pro OLD (installed but doesn't register OneSignal as managed integration).
-	$is_pro_old = false;
-	if (
-		function_exists( 'bb_platform_pro' ) &&
-		function_exists( 'bb_integration_bridge' ) &&
-		! bb_integration_bridge()->is_managed_integration( 'onesignal' )
-	) {
-		$is_pro_old = true;
-	}
+	$is_pro_old = $pro_available && $bridge_available && ! bb_integration_bridge()->is_managed_integration( 'onesignal' );
 
 	// -------------------------------------------------------------------------
 	// SECTION: Web Push Notifications
@@ -53,7 +48,7 @@ function bb_notifications_register_web_push_panel_fields() {
 	// -------------------------------------------------------------------------
 	$show_web_push_title = true;
 	if ( ! $onesignal_feature_disabled && ! $is_pro_old ) {
-		if ( ! function_exists( 'bb_platform_pro' ) ) {
+		if ( ! $pro_available ) {
 			// Pro not installed — OneSignal placeholder section is the primary header.
 			$show_web_push_title = false;
 		} elseif (
@@ -96,14 +91,10 @@ function bb_notifications_register_web_push_panel_fields() {
 				'order'                 => 10,
 			)
 		);
-	} elseif ( ! function_exists( 'bb_platform_pro' ) ) {
+	} elseif ( ! $pro_available ) {
 		// Pro not installed — show OneSignal section with pro-gated disabled fields.
 		bb_notifications_register_web_push_pro_placeholder_fields();
-	} elseif (
-		function_exists( 'bb_platform_pro' ) &&
-		function_exists( 'bb_integration_bridge' ) &&
-		! bb_integration_bridge()->is_managed_integration( 'onesignal' )
-	) {
+	} elseif ( $is_pro_old ) {
 		// Pro installed but OLD (doesn't register OneSignal as managed integration).
 		// Show centered empty state card directing admin to update Pro.
 		bb_register_feature_field(
@@ -124,7 +115,7 @@ function bb_notifications_register_web_push_panel_fields() {
 			)
 		);
 	} elseif (
-		function_exists( 'bb_platform_pro' ) &&
+		$pro_available &&
 		version_compare( bb_platform_pro()->version, $min_pro_settings2_version, '<=' )
 	) {
 		// Pro installed but older version.
@@ -146,7 +137,7 @@ function bb_notifications_register_web_push_panel_fields() {
 			)
 		);
 	} elseif (
-		function_exists( 'bb_platform_pro' ) &&
+		$pro_available &&
 		function_exists( 'bb_enabled_legacy_email_preference' ) &&
 		bb_enabled_legacy_email_preference()
 	) {

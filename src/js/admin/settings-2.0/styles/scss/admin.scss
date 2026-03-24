@@ -11,6 +11,14 @@
 
 .buddyboss_page_bb-settings {
 	background-color: $bb-background-color;
+
+	// Override WP admin blue theme color with BuddyBoss brand color.
+	// This affects focus rings, active states, and wp-components accents.
+	--wp-admin-theme-color: #{$bb-background-brand-primary-color};
+	--wp-admin-theme-color--rgb: #{red($bb-background-brand-primary-color)}, #{green($bb-background-brand-primary-color)}, #{blue($bb-background-brand-primary-color)};
+	--wp-components-color-accent: #{$bb-background-brand-primary-color};
+	--wp-components-color-accent-darker-10: #{$bb-background-brand-primary-hover-color};
+	--wp-components-color-accent-darker-20: #{darken($bb-background-brand-primary-color, 15%)};
 }
 
  /* Header */

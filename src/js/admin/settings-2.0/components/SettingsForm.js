@@ -683,6 +683,12 @@ export function SettingsForm({ fields, values, onChange }) {
 					/>
 				);
 
+			case 'static_text':
+				// Description-only field: renders the field row with label + description,
+				// no input control. Used for informational text like OneSignal image hint.
+				// Return empty string (truthy) so the field row renders, but no visible element.
+				return '';
+
 			case 'hidden':
 				// With description_controls: render hidden span so the field row shows
 				// and description_controls handles the inline select/input.
@@ -918,7 +924,7 @@ export function SettingsForm({ fields, values, onChange }) {
 						<label className="bb-admin-settings-form__field-group-label">{field.group.label}</label>
 					) }
 					{/* Field with optional prefix/suffix — skip wrapper when control is null (e.g., hidden parent fields). */}
-					{ null !== controlOutput && (
+					{ null !== controlOutput && false !== controlOutput && (
 						<div className="bb-admin-settings-form__field-input-wrapper">
 							{field.prefix && (
 								<span className="bb-admin-settings-form__field-prefix">{field.prefix}</span>

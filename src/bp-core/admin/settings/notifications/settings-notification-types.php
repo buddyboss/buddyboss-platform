@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
 function bb_notifications_register_types_panel_fields() {
 
 	// Only show notification types when using modern notification system.
-	if ( bb_enabled_legacy_email_preference() ) {
+	if ( function_exists( 'bb_enabled_legacy_email_preference' ) && bb_enabled_legacy_email_preference() ) {
 
 		// -------------------------------------------------------------------------
 		// SECTION: Legacy Notice

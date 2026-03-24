@@ -24,22 +24,19 @@ import { safeUrl } from '../../utils/sanitize';
  * @param {Function} props.onChange Callback to update value.
  * @return {JSX.Element} Rendered notification types table.
  */
-var NotificationTypesField = function( props ) {
-	var field = props.field;
-	var value = props.value || {};
-	var onChange = props.onChange;
-	var groups = field.notification_groups || [];
+const NotificationTypesField = ( props ) => {
+	const { field, onChange } = props;
+	const value = props.value || {};
+	const groups = field.notification_groups || [];
 
 	/**
 	 * Handle main toggle change for a notification type.
 	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
 	 * @param {string}  key     Notification type key.
 	 * @param {boolean} checked New checked state.
 	 */
-	var handleMainToggle = function( key, checked ) {
-		var newValue = Object.assign( {}, value );
+	const handleMainToggle = ( key, checked ) => {
+		const newValue = Object.assign( {}, value );
 		if ( ! newValue[ key ] ) {
 			newValue[ key ] = {};
 		}
@@ -52,14 +49,12 @@ var NotificationTypesField = function( props ) {
 	/**
 	 * Handle sub-type checkbox change (email, web, app).
 	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
 	 * @param {string}  key      Notification type key.
 	 * @param {string}  subType  Sub-type key (email, web, app).
 	 * @param {boolean} checked  New checked state.
 	 */
-	var handleSubTypeChange = function( key, subType, checked ) {
-		var newValue = Object.assign( {}, value );
+	const handleSubTypeChange = ( key, subType, checked ) => {
+		const newValue = Object.assign( {}, value );
 		if ( ! newValue[ key ] ) {
 			newValue[ key ] = {};
 		}
@@ -71,12 +66,10 @@ var NotificationTypesField = function( props ) {
 	/**
 	 * Get the current main toggle state for a notification type.
 	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
 	 * @param {Object} fieldData Field data from notification_groups.
 	 * @return {boolean} Whether the main toggle is checked.
 	 */
-	var isMainChecked = function( fieldData ) {
+	const isMainChecked = ( fieldData ) => {
 		if ( value[ fieldData.key ] && 'undefined' !== typeof value[ fieldData.key ].main ) {
 			return 'yes' === value[ fieldData.key ].main;
 		}
@@ -86,13 +79,11 @@ var NotificationTypesField = function( props ) {
 	/**
 	 * Get the current sub-type checkbox state.
 	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
 	 * @param {Object} fieldData Field data from notification_groups.
 	 * @param {string} subType   Sub-type key (email, web, app).
 	 * @return {boolean} Whether the sub-type is checked.
 	 */
-	var isSubTypeChecked = function( fieldData, subType ) {
+	const isSubTypeChecked = ( fieldData, subType ) => {
 		if ( value[ fieldData.key ] && 'undefined' !== typeof value[ fieldData.key ][ subType ] ) {
 			return 'yes' === value[ fieldData.key ][ subType ];
 		}
@@ -105,14 +96,12 @@ var NotificationTypesField = function( props ) {
 	/**
 	 * Check if a sub-type should be disabled.
 	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
 	 * @param {Object}  fieldData  Field data from notification_groups.
 	 * @param {string}  subType    Sub-type key (email, web, app).
 	 * @param {boolean} mainActive Whether the main toggle is active.
 	 * @return {boolean} Whether the sub-type is disabled.
 	 */
-	var isSubTypeDisabled = function( fieldData, subType, mainActive ) {
+	const isSubTypeDisabled = ( fieldData, subType, mainActive ) => {
 		// When main toggle is OFF, all sub-types should be disabled.
 		if ( ! mainActive ) {
 			return true;
@@ -126,22 +115,32 @@ var NotificationTypesField = function( props ) {
 	/**
 	 * Render the email template link for a notification type.
 	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
 	 * @param {Object} emailTemplate Email template data.
 	 * @return {JSX.Element|null} Rendered link or null.
 	 */
-	var renderEmailTemplateLink = function( emailTemplate ) {
-		if ( ! emailTemplate || ! emailTemplate.has_templates ) {
+	const renderEmailTemplateLink = ( emailTemplate ) => {
+		if ( ! emailTemplate ) {
 			return null;
 		}
 
-		var isMissing = emailTemplate.missing;
-		var label = isMissing
-			? ( emailTemplate.count > 1 ? __( 'Missing Email Templates', 'buddyboss' ) : __( 'Missing Email Template', 'buddyboss' ) )
-			: ( emailTemplate.count > 1 ? __( 'Email Templates', 'buddyboss' ) : __( 'Email Template', 'buddyboss' ) );
+		const isMissing = ! emailTemplate.has_templates || emailTemplate.missing;
+		let label, missingCount;
 
-		var className = 'bb-notification-types__email-link';
+		if ( ! emailTemplate.has_templates ) {
+			// No email templates registered at all.
+			label = __( 'Add Email Template', 'buddyboss' );
+		} else if ( emailTemplate.missing ) {
+			missingCount = emailTemplate.count - ( emailTemplate.existing_count || 0 );
+			label = missingCount > 1
+				? __( 'Add Email Templates', 'buddyboss' )
+				: __( 'Add Email Template', 'buddyboss' );
+		} else {
+			label = emailTemplate.count > 1
+				? __( 'Email Templates', 'buddyboss' )
+				: __( 'Email Template', 'buddyboss' );
+		}
+
+		let className = 'bb-notification-types__email-link';
 		if ( isMissing ) {
 			className += ' bb-notification-types__email-link--missing';
 		}
@@ -168,7 +167,7 @@ var NotificationTypesField = function( props ) {
 
 	return (
 		<div className="bb-notification-types">
-			{ groups.map( function( group ) {
+			{ groups.map( ( group ) => {
 				if ( ! group.fields || ! group.fields.length ) {
 					return null;
 				}
@@ -181,12 +180,12 @@ var NotificationTypesField = function( props ) {
 							</div>
 						) }
 						<div className="bb-notification-types__rows">
-							{ group.fields.map( function( fieldData ) {
-								var mainChecked = isMainChecked( fieldData );
-								var subTypes = fieldData.sub_types || {};
-								var subTypeKeys = Object.keys( subTypes ).filter( function( key ) {
-									return subTypes[ key ] && subTypes[ key ].is_render;
-								} );
+							{ group.fields.map( ( fieldData ) => {
+								const mainChecked = isMainChecked( fieldData );
+								const subTypes = fieldData.sub_types || {};
+								const subTypeKeys = Object.keys( subTypes ).filter(
+									( key ) => subTypes[ key ] && subTypes[ key ].is_render
+								);
 
 								return (
 									<div
@@ -201,7 +200,7 @@ var NotificationTypesField = function( props ) {
 											<ToggleControl
 												label={ decodeEntities( fieldData.label ) }
 												checked={ mainChecked }
-												onChange={ function( checked ) {
+												onChange={ ( checked ) => {
 													if ( ! fieldData.read_only ) {
 														handleMainToggle( fieldData.key, checked );
 													}
@@ -219,10 +218,10 @@ var NotificationTypesField = function( props ) {
 											) }
 										</div>
 										<div className="bb-notification-types__sub-types">
-											{ subTypeKeys.map( function( subKey ) {
-												var subData = subTypes[ subKey ];
-												var subChecked = isSubTypeChecked( fieldData, subKey );
-												var subDisabled = isSubTypeDisabled( fieldData, subKey, mainChecked );
+											{ subTypeKeys.map( ( subKey ) => {
+												const subData = subTypes[ subKey ];
+												const subChecked = isSubTypeChecked( fieldData, subKey );
+												const subDisabled = isSubTypeDisabled( fieldData, subKey, mainChecked );
 
 												return (
 													<div
@@ -235,10 +234,12 @@ var NotificationTypesField = function( props ) {
 														<CheckboxControl
 															label={ decodeEntities( subData.label ) }
 															checked={ subChecked }
-															onChange={ function( checked ) {
-																handleSubTypeChange( fieldData.key, subKey, checked );
+															onChange={ ( checked ) => {
+																if ( ! fieldData.read_only ) {
+																	handleSubTypeChange( fieldData.key, subKey, checked );
+																}
 															} }
-															disabled={ subDisabled }
+															disabled={ subDisabled || fieldData.read_only }
 															__nextHasNoMarginBottom
 														/>
 													</div>

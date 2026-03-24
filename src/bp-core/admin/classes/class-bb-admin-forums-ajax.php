@@ -254,23 +254,27 @@ class BB_Admin_Forums_Ajax {
 			$thumbnail_id = get_post_thumbnail_id( $forum_id );
 
 			$item = array(
-				'id'                => $forum_id,
-				'name'              => $forum->post_title,
-				'slug'              => $forum->post_name,
-				'description'       => wp_trim_words( wp_strip_all_tags( $forum->post_content ), 20 ),
-				'visibility'        => $visibility,
-				'visibility_label'  => isset( $visibility_labels[ $visibility ] ) ? $visibility_labels[ $visibility ] : $visibility,
-				'forum_status'      => bbp_get_forum_status( $forum_id ),
-				'discussions_count' => (int) get_post_meta( $forum_id, '_bbp_total_topic_count', true ),
-				'replies_count'     => (int) get_post_meta( $forum_id, '_bbp_total_reply_count', true ),
-				'author_id'         => $author_id,
-				'author_name'       => $user ? $user->display_name : '',
-				'author_avatar'     => get_avatar_url( $author_id, array( 'size' => 32 ) ),
-				'last_active'       => ! empty( $last_active ) ? $last_active : '',
-				'date_created'      => $forum->post_date,
-				'permalink'         => bbp_get_forum_permalink( $forum_id ),
-				'parent_id'         => (int) $forum->post_parent,
-				'featured_image'    => $thumbnail_id ? wp_get_attachment_url( $thumbnail_id ) : '',
+				'id'                   => $forum_id,
+				'name'                 => $forum->post_title,
+				'slug'                 => $forum->post_name,
+				'description'          => wp_trim_words( wp_strip_all_tags( $forum->post_content ), 20 ),
+				'visibility'           => $visibility,
+				'visibility_label'     => isset( $visibility_labels[ $visibility ] ) ? $visibility_labels[ $visibility ] : $visibility,
+				'forum_status'         => bbp_get_forum_status( $forum_id ),
+				'forum_type'           => bbp_get_forum_type( $forum_id ),
+				'discussions_count'    => (int) get_post_meta( $forum_id, '_bbp_total_topic_count', true ),
+				'replies_count'        => (int) get_post_meta( $forum_id, '_bbp_total_reply_count', true ),
+				'author_id'            => $author_id,
+				'author_name'          => $user ? $user->display_name : '',
+				'author_avatar'        => get_avatar_url( $author_id, array( 'size' => 32 ) ),
+				'last_active'          => ! empty( $last_active ) ? $last_active : '',
+				'date_created'         => $forum->post_date,
+				'permalink'            => bbp_get_forum_permalink( $forum_id ),
+				'parent_id'            => (int) $forum->post_parent,
+				'order'                => (int) $forum->menu_order,
+				'is_group_forum'       => ! empty( bbp_get_forum_group_ids( $forum_id ) ),
+				'is_group_forum_child' => function_exists( 'bb_get_child_forum_group_ids' ) && ! empty( bb_get_child_forum_group_ids( $forum_id ) ),
+				'featured_image'       => $thumbnail_id ? wp_get_attachment_url( $thumbnail_id ) : '',
 			);
 
 			// Render custom columns via legacy filter.
@@ -350,6 +354,25 @@ class BB_Admin_Forums_Ajax {
 
 			// Forum base slug for permalink preview in create/edit modals.
 			$response['forum_base_slug'] = get_option( '_bbp_forum_slug', 'forum' );
+
+			// Provide registered field definitions for the create modal.
+			// Uses a stdClass with default values instead of WP_Post to avoid
+			// unnecessary class constructor overhead. All get_value callbacks
+			// guard against ID=0 to prevent DB queries on this dummy object.
+			$response['create_fields'] = bb_admin_meta_field_registry()->get_fields_data(
+				'forums',
+				(object) array(
+					'ID'           => 0,
+					'post_title'   => '',
+					'post_name'    => '',
+					'post_content' => '',
+					'post_status'  => 'publish',
+					'post_parent'  => 0,
+					'post_author'  => get_current_user_id(),
+					'menu_order'   => 0,
+					'post_type'    => bbp_get_forum_post_type(),
+				)
+			);
 		}
 
 		/**
@@ -393,16 +416,21 @@ class BB_Admin_Forums_Ajax {
 		$thumbnail_id = get_post_thumbnail_id( $forum_id );
 
 		$data = array(
-			'id'                => (int) $forum->ID,
-			'name'              => $forum->post_title,
-			'slug'              => $forum->post_name,
-			'description'       => $forum->post_content,
-			'visibility'        => get_post_status( $forum_id ),
-			'forum_status'      => bbp_get_forum_status( $forum_id ),
-			'parent_id'         => (int) $forum->post_parent,
-			'permalink'         => bbp_get_forum_permalink( $forum_id ),
-			'featured_image'    => $thumbnail_id ? wp_get_attachment_url( $thumbnail_id ) : '',
-			'featured_image_id' => $thumbnail_id ? (int) $thumbnail_id : 0,
+			'id'                   => (int) $forum->ID,
+			'name'                 => $forum->post_title,
+			'slug'                 => $forum->post_name,
+			'description'          => $forum->post_content,
+			'visibility'           => get_post_status( $forum_id ),
+			'forum_status'         => bbp_get_forum_status( $forum_id ),
+			'forum_type'           => bbp_get_forum_type( $forum_id ),
+			'parent_id'            => (int) $forum->post_parent,
+			'order'                => (int) $forum->menu_order,
+			'is_group_forum'       => ! empty( bbp_get_forum_group_ids( $forum_id ) ),
+			'is_group_forum_child' => function_exists( 'bb_get_child_forum_group_ids' ) && ! empty( bb_get_child_forum_group_ids( $forum_id ) ),
+			'permalink'            => bbp_get_forum_permalink( $forum_id ),
+			'featured_image'       => $thumbnail_id ? wp_get_attachment_url( $thumbnail_id ) : '',
+			'featured_image_id'    => $thumbnail_id ? (int) $thumbnail_id : 0,
+			'registered_fields'    => bb_admin_meta_field_registry()->get_fields_data( 'forums', $forum ),
 		);
 
 		/**
@@ -436,12 +464,22 @@ class BB_Admin_Forums_Ajax {
 		$description  = isset( $_POST['description'] ) ? wp_kses_post( wp_unslash( $_POST['description'] ) ) : '';
 		$visibility   = isset( $_POST['visibility'] ) ? sanitize_key( wp_unslash( $_POST['visibility'] ) ) : 'publish';
 		$forum_status = isset( $_POST['forum_status'] ) ? sanitize_key( wp_unslash( $_POST['forum_status'] ) ) : 'open';
+		$forum_type   = isset( $_POST['forum_type'] ) ? sanitize_key( wp_unslash( $_POST['forum_type'] ) ) : 'forum';
 		$parent_id    = isset( $_POST['parent_id'] ) ? absint( wp_unslash( $_POST['parent_id'] ) ) : 0;
+		$order        = isset( $_POST['order'] ) ? absint( wp_unslash( $_POST['order'] ) ) : 0;
 		$image_id     = isset( $_POST['image_id'] ) ? absint( wp_unslash( $_POST['image_id'] ) ) : 0;
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $name ) ) {
 			wp_send_json_error( array( 'message' => __( 'Forum name is required.', 'buddyboss' ) ) );
+		}
+
+		// Validate parent_id references an actual forum if provided.
+		if ( ! empty( $parent_id ) ) {
+			$parent_post = get_post( $parent_id );
+			if ( ! $parent_post || bbp_get_forum_post_type() !== $parent_post->post_type ) {
+				wp_send_json_error( array( 'message' => __( 'Invalid parent forum.', 'buddyboss' ) ) );
+			}
 		}
 
 		// Validate visibility.
@@ -456,6 +494,12 @@ class BB_Admin_Forums_Ajax {
 			$forum_status = 'open';
 		}
 
+		// Validate forum type (forum/category).
+		$allowed_types = array( 'forum', 'category' );
+		if ( ! in_array( $forum_type, $allowed_types, true ) ) {
+			$forum_type = 'forum';
+		}
+
 		// Use slug from name if not provided.
 		if ( empty( $slug ) ) {
 			$slug = sanitize_title( $name );
@@ -467,6 +511,7 @@ class BB_Admin_Forums_Ajax {
 			'post_status'  => $visibility,
 			'post_parent'  => $parent_id,
 			'post_name'    => $slug,
+			'menu_order'   => $order,
 		);
 
 		$forum_id = bbp_insert_forum( $forum_data );
@@ -490,7 +535,7 @@ class BB_Admin_Forums_Ajax {
 		// Populate legacy $_POST keys expected by bbp_save_forum_extras() and third-party hooks.
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
 		$_POST['bbp_forum_status']     = $forum_status;
-		$_POST['bbp_forum_type']       = 'forum';
+		$_POST['bbp_forum_type']       = $forum_type;
 		$_POST['bbp_forum_visibility'] = $visibility;
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
@@ -547,6 +592,12 @@ class BB_Admin_Forums_Ajax {
 		// (registered at bp-forums/core/actions.php:172). Firing both would cause
 		// bbp_save_forum_extras() to run twice.
 
+		// Save "after" phase extension fields (Pro/third-party) via meta field registry.
+		$created_forum = get_post( $forum_id );
+		if ( $created_forum ) {
+			bb_admin_meta_field_registry()->save_fields_data( 'forums', $created_forum, 'after' );
+		}
+
 		// Clear status counts cache.
 		$this->bb_clear_status_counts_cache();
 
@@ -579,7 +630,9 @@ class BB_Admin_Forums_Ajax {
 		$description  = isset( $_POST['description'] ) ? wp_kses_post( wp_unslash( $_POST['description'] ) ) : '';
 		$visibility   = isset( $_POST['visibility'] ) ? sanitize_key( wp_unslash( $_POST['visibility'] ) ) : '';
 		$forum_status = isset( $_POST['forum_status'] ) ? sanitize_key( wp_unslash( $_POST['forum_status'] ) ) : '';
+		$forum_type   = isset( $_POST['forum_type'] ) ? sanitize_key( wp_unslash( $_POST['forum_type'] ) ) : '';
 		$parent_id    = isset( $_POST['parent_id'] ) ? absint( wp_unslash( $_POST['parent_id'] ) ) : 0;
+		$order        = isset( $_POST['order'] ) ? absint( wp_unslash( $_POST['order'] ) ) : null;
 		$image_id     = isset( $_POST['image_id'] ) ? absint( wp_unslash( $_POST['image_id'] ) ) : 0;
 		$remove_image = isset( $_POST['remove_image'] ) ? absint( wp_unslash( $_POST['remove_image'] ) ) : 0;
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
@@ -624,21 +677,35 @@ class BB_Admin_Forums_Ajax {
 			$parent_id = 0;
 		}
 
+		// Validate parent_id references an actual forum if provided.
+		if ( ! empty( $parent_id ) ) {
+			$parent_post = get_post( $parent_id );
+			if ( ! $parent_post || bbp_get_forum_post_type() !== $parent_post->post_type ) {
+				wp_send_json_error( array( 'message' => __( 'Invalid parent forum.', 'buddyboss' ) ) );
+			}
+		}
+
 		// Capture old parent before update for count recalculation.
 		$old_parent_id = (int) $forum->post_parent;
 
 		$update_args['post_parent'] = $parent_id;
 
+		// Update menu_order if provided.
+		if ( null !== $order ) {
+			$update_args['menu_order'] = $order;
+		}
+
 		$result = wp_update_post( $update_args, true );
 		if ( is_wp_error( $result ) ) {
-			wp_send_json_error( array( 'message' => html_entity_decode( $result->get_error_message(), ENT_QUOTES, 'UTF-8' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Failed to update forum. Please try again.', 'buddyboss' ) ) );
 		}
 
 		// Update forum status (open/closed) using bbPress lifecycle functions.
-		if ( ! empty( $forum_status ) ) {
+		$allowed_statuses = array( 'open', 'closed' );
+		if ( ! empty( $forum_status ) && in_array( $forum_status, $allowed_statuses, true ) ) {
 			if ( 'closed' === $forum_status ) {
 				bbp_close_forum( $forum_id );
-			} elseif ( 'open' === $forum_status ) {
+			} else {
 				bbp_open_forum( $forum_id );
 			}
 		}
@@ -666,12 +733,18 @@ class BB_Admin_Forums_Ajax {
 			}
 		}
 
+		// Validate forum type (forum/category).
+		$allowed_types = array( 'forum', 'category' );
+		if ( ! empty( $forum_type ) && ! in_array( $forum_type, $allowed_types, true ) ) {
+			$forum_type = '';
+		}
+
 		// Populate legacy $_POST keys expected by bbp_save_forum_extras() and third-party hooks.
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
 		if ( ! empty( $forum_status ) ) {
 			$_POST['bbp_forum_status'] = $forum_status;
 		}
-		$_POST['bbp_forum_type'] = 'forum';
+		$_POST['bbp_forum_type'] = ! empty( $forum_type ) ? $forum_type : bbp_get_forum_type( $forum_id );
 		if ( ! empty( $visibility ) ) {
 			$_POST['bbp_forum_visibility'] = $visibility;
 		}
@@ -729,6 +802,13 @@ class BB_Admin_Forums_Ajax {
 		// bbp_save_forum_extras() is already triggered by bbp_edit_forum_post_extras
 		// (registered at bp-forums/core/actions.php:174). Firing both would cause
 		// bbp_save_forum_extras() to run twice.
+
+		// Re-fetch the forum post after wp_update_post() so extension field callbacks
+		// receive up-to-date data (post_status, post_parent, etc. may have changed).
+		$forum = get_post( $forum_id );
+
+		// Save "after" phase extension fields (Pro/third-party) via meta field registry.
+		bb_admin_meta_field_registry()->save_fields_data( 'forums', $forum, 'after' );
 
 		// Clear status counts cache.
 		$this->bb_clear_status_counts_cache();
@@ -825,18 +905,26 @@ class BB_Admin_Forums_Ajax {
 		$processed = 0;
 		$failed    = 0;
 
-		// Populate legacy $_POST keys once before loop — values are constant across all forums.
+		// Prime the post cache in a single query to prevent N+1 get_post() calls.
+		// _prime_post_caches() is public since WP 6.1; guard for WP 6.0 compat.
+		if ( function_exists( '_prime_post_caches' ) ) {
+			_prime_post_caches( $forum_ids, true, false );
+		}
+
+		// Populate legacy $_POST keys before loop — status/visibility are constant, type must be per-forum.
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
 		if ( 'edit' === $do_action ) {
 			if ( ! empty( $edit_status ) && 'no_change' !== $edit_status ) {
 				$_POST['bbp_forum_status'] = $edit_status;
 			}
-			$_POST['bbp_forum_type'] = 'forum';
 			if ( ! empty( $edit_visibility ) && 'no_change' !== $edit_visibility ) {
 				$_POST['bbp_forum_visibility'] = $edit_visibility;
 			}
 		}
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
+
+		// Defer term counting to avoid recalculating after each individual item.
+		wp_defer_term_counting( true );
 
 		foreach ( $forum_ids as $forum_id ) {
 			$forum = get_post( $forum_id );
@@ -856,6 +944,9 @@ class BB_Admin_Forums_Ajax {
 				}
 			} elseif ( 'edit' === $do_action ) {
 				$updated = false;
+
+				// Preserve existing forum type per-forum so bbp_save_forum_extras() doesn't overwrite it.
+				$_POST['bbp_forum_type'] = bbp_get_forum_type( $forum_id ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
 				// Update status (open/closed) if provided and not "no change".
 				if ( ! empty( $edit_status ) && 'no_change' !== $edit_status ) {
@@ -906,8 +997,14 @@ class BB_Admin_Forums_Ajax {
 					do_action(
 						'bbp_edit_forum',
 						array(
-							'forum_id'    => $forum_id,
-							'post_parent' => $forum->post_parent,
+							'forum_id'           => $forum_id,
+							'post_parent'        => $forum->post_parent,
+							'forum_author'       => $forum->post_author,
+							'last_topic_id'      => 0,
+							'last_reply_id'      => 0,
+							'last_active_id'     => 0,
+							'last_active_time'   => 0,
+							'last_active_status' => bbp_get_public_status_id(),
 						)
 					);
 					do_action( 'bbp_edit_forum_post_extras', $forum_id );
@@ -917,6 +1014,9 @@ class BB_Admin_Forums_Ajax {
 				}
 			}
 		}
+
+		// Resume deferred term counting.
+		wp_defer_term_counting( false );
 
 		// Clear status counts cache.
 		$this->bb_clear_status_counts_cache();
@@ -984,10 +1084,24 @@ class BB_Admin_Forums_Ajax {
 		$allowed_types = array( 'image/jpeg', 'image/png', 'image/gif', 'image/webp' );
 		$file_name     = ! empty( $_FILES['file']['name'] ) ? sanitize_file_name( wp_unslash( $_FILES['file']['name'] ) ) : '';
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
-		$file_type     = wp_check_filetype( $file_name );
+		$file_type = wp_check_filetype( $file_name );
 
 		if ( empty( $file_type['type'] ) || ! in_array( $file_type['type'], $allowed_types, true ) ) {
 			wp_send_json_error( array( 'message' => __( 'Invalid file type. Only JPEG, PNG, GIF, and WebP images are allowed.', 'buddyboss' ) ) );
+		}
+
+		// Server-side file size validation using WordPress/PHP configured max.
+		$max_upload_size = wp_max_upload_size();
+		if ( ! empty( $_FILES['file']['size'] ) && $_FILES['file']['size'] > $max_upload_size ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified above.
+			wp_send_json_error(
+				array(
+					'message' => sprintf(
+						/* translators: %s: Maximum upload size (e.g., "64 MB"). */
+						__( 'File size exceeds the maximum upload limit of %s.', 'buddyboss' ),
+						size_format( $max_upload_size )
+					),
+				)
+			);
 		}
 
 		// Load required WordPress upload functions.
@@ -998,7 +1112,7 @@ class BB_Admin_Forums_Ajax {
 		$attachment_id = media_handle_upload( 'file', 0 );
 
 		if ( is_wp_error( $attachment_id ) ) {
-			wp_send_json_error( array( 'message' => $attachment_id->get_error_message() ) );
+			wp_send_json_error( array( 'message' => __( 'Image upload failed. Please try again.', 'buddyboss' ) ) );
 		}
 
 		wp_send_json_success(
@@ -1166,14 +1280,11 @@ class BB_Admin_Forums_Ajax {
 	}
 
 	/**
-	 * Propagate visibility to child forums for group-attached forums.
-	 *
-	 * Ensures that when a group forum's visibility changes, all its
-	 * child/nested forums inherit the same visibility state.
+	 * Propagate visibility changes to child forums for group forums.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param int $forum_id Forum ID whose children should be updated.
+	 * @param int $forum_id Forum ID.
 	 *
 	 * @return void
 	 */

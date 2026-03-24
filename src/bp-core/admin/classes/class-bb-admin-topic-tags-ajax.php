@@ -69,7 +69,6 @@ class BB_Admin_Topic_Tags_Ajax {
 		add_action( 'wp_ajax_bb_admin_topic_tag_bulk_action', array( $this, 'topic_tag_bulk_action' ) );
 	}
 
-
 	/**
 	 * Get discussion tags listing with pagination and search.
 	 *
@@ -274,7 +273,7 @@ class BB_Admin_Topic_Tags_Ajax {
 		$result = wp_insert_term( $name, $tag_tax_id, $args );
 
 		if ( is_wp_error( $result ) ) {
-			wp_send_json_error( array( 'message' => html_entity_decode( $result->get_error_message(), ENT_QUOTES, 'UTF-8' ) ) );
+			wp_send_json_error( array( 'message' => wp_strip_all_tags( $result->get_error_message() ) ) );
 		}
 
 		wp_send_json_success(
@@ -333,7 +332,7 @@ class BB_Admin_Topic_Tags_Ajax {
 		$result = wp_update_term( $term_id, $tag_tax_id, $args );
 
 		if ( is_wp_error( $result ) ) {
-			wp_send_json_error( array( 'message' => html_entity_decode( $result->get_error_message(), ENT_QUOTES, 'UTF-8' ) ) );
+			wp_send_json_error( array( 'message' => wp_strip_all_tags( $result->get_error_message() ) ) );
 		}
 
 		wp_send_json_success(
@@ -375,7 +374,7 @@ class BB_Admin_Topic_Tags_Ajax {
 		$result = wp_delete_term( $term_id, $tag_tax_id );
 
 		if ( is_wp_error( $result ) ) {
-			wp_send_json_error( array( 'message' => html_entity_decode( $result->get_error_message(), ENT_QUOTES, 'UTF-8' ) ) );
+			wp_send_json_error( array( 'message' => wp_strip_all_tags( $result->get_error_message() ) ) );
 		}
 
 		if ( ! $result ) {
@@ -426,6 +425,12 @@ class BB_Admin_Topic_Tags_Ajax {
 		$tag_tax_id = bbp_get_topic_tag_tax_id();
 		$processed  = 0;
 		$failed     = 0;
+
+		// Prime the term cache in a single query to prevent N+1 get_term() calls.
+		// _prime_term_caches() is available since WP 6.2; guard for WP 6.0 compat.
+		if ( function_exists( '_prime_term_caches' ) ) {
+			_prime_term_caches( $term_ids );
+		}
 
 		foreach ( $term_ids as $term_id ) {
 			$term = get_term( $term_id, $tag_tax_id );

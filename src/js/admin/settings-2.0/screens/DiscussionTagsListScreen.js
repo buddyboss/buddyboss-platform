@@ -131,6 +131,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 
 	// AbortController ref for cancelling stale requests.
 	var abortRef = useRef( null );
+	var editAbortRef = useRef( null );
 
 	/**
 	 * Fetch tags from the server.
@@ -183,6 +184,9 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 		return function () {
 			if ( abortRef.current ) {
 				abortRef.current.abort();
+			}
+			if ( editAbortRef.current ) {
+				editAbortRef.current.abort();
 			}
 			if ( handlers.searchTimerRef.current ) {
 				clearTimeout( handlers.searchTimerRef.current );
@@ -297,11 +301,16 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 	 * @param {Object} tag Tag object from the list.
 	 */
 	var handleEdit = function ( tag ) {
+		if ( editAbortRef.current ) {
+			editAbortRef.current.abort();
+		}
+		editAbortRef.current = new AbortController();
+
 		setEditTag( null );
 		setIsEditOpen( true );
 		setIsEditLoading( true );
 
-		getTopicTag( tag.id ).then( function ( response ) {
+		getTopicTag( tag.id, { signal: editAbortRef.current.signal } ).then( function ( response ) {
 			if ( response.success && response.data ) {
 				setEditTag( response.data );
 			} else {
@@ -312,7 +321,10 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 				} );
 			}
 			setIsEditLoading( false );
-		} ).catch( function () {
+		} ).catch( function ( err ) {
+			if ( err && 'AbortError' === err.name ) {
+				return;
+			}
 			setIsEditOpen( false );
 			setIsEditLoading( false );
 			setNotice( {
@@ -346,7 +358,10 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 
 		setIsDeleting( true );
 
-		deleteTopicTag( deleteTagItem.id ).then( function ( response ) {
+		// Capture ID before clearing state to avoid stale closure.
+		var tagId = deleteTagItem.id;
+
+		deleteTopicTag( tagId ).then( function ( response ) {
 			setIsDeleting( false );
 			setDeleteTagItem( null );
 			setDeleteConfirm( false );
@@ -356,7 +371,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 					type: 'success',
 				} );
 				setSelectedIds( function ( prev ) {
-					return prev.filter( function ( id ) { return id !== deleteTagItem.id; } );
+					return prev.filter( function ( id ) { return id !== tagId; } );
 				} );
 				fetchTags( { page: currentPage, search: searchQuery } );
 			} else {
@@ -482,7 +497,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 									/>
 								</th>
 								<th className="bb-discussion-tags-list__col-tag">
-									{ __( 'Discussion', 'buddyboss' ) }
+									{ __( 'Name', 'buddyboss' ) }
 								</th>
 								<th className="bb-discussion-tags-list__col-slug">
 									{ __( 'Slug', 'buddyboss' ) }

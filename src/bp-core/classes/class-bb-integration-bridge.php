@@ -64,9 +64,11 @@ class BB_Integration_Bridge {
 		// Hook into integration activation check.
 		add_filter( 'bb_integration_is_activated', array( $this, 'check_feature_status' ), 10, 2 );
 
-		// Sync feature activation/deactivation with integration status.
-		add_action( 'bb_feature_activated', array( $this, 'on_feature_activated' ) );
-		add_action( 'bb_feature_deactivated', array( $this, 'on_feature_deactivated' ) );
+		// Sync feature activation/deactivation with integration status (admin-only).
+		if ( is_admin() || wp_doing_ajax() ) {
+			add_action( 'bb_feature_activated', array( $this, 'on_feature_activated' ) );
+			add_action( 'bb_feature_deactivated', array( $this, 'on_feature_deactivated' ) );
+		}
 	}
 
 	/**

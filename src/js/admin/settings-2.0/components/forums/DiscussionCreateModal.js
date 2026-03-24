@@ -1,25 +1,24 @@
 /**
  * BuddyBoss Admin Settings 2.0 - Discussion Create Modal
  *
- * Modal with Title, Description, Forum, Type, Status, Visibility, Tags
- * fields for creating a discussion (topic).
+ * Uses BB_Admin_Meta_Field_Registry for field rendering via RegisteredMetaField.
+ * Tags (Optional) remains a custom section (TagsAutocomplete component).
  *
  * @package BuddyBoss\Core\Administration
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useRef, useEffect } from '@wordpress/element';
+import { useState, useRef, useEffect, useCallback } from '@wordpress/element';
 import {
 	Modal,
 	Button,
-	TextControl,
-	SelectControl,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
 import { createDiscussion } from '../../utils/ajax';
-import { AsyncSelectField } from '../fields/AsyncSelectField';
-import { RichTextEditor, forceRemoveEditor } from '../common/RichTextEditor';
+import { groupFieldsWithLayout, buildRegisteredFieldPayload, getVisibleFields, needsSeparator } from '../../utils/format';
+import { RegisteredMetaField } from '../common/RegisteredMetaField';
+import { forceRemoveEditor } from '../common/RichTextEditor';
 import { TagsAutocomplete } from './TagsAutocomplete';
 
 /**
@@ -27,37 +26,20 @@ import { TagsAutocomplete } from './TagsAutocomplete';
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param {Object}   props           Component props.
- * @param {boolean}  props.isOpen    Whether the modal is open.
- * @param {Function} props.onClose   Close handler.
- * @param {Function} props.onCreated Success handler (receives topic_id).
+ * @param {Object}   props              Component props.
+ * @param {boolean}  props.isOpen       Whether the modal is open.
+ * @param {Function} props.onClose      Close handler.
+ * @param {Function} props.onCreated    Success handler (receives topic_id).
+ * @param {Array}    props.createFields Registered field definitions from server.
  * @returns {JSX.Element|null} Modal component or null.
  */
-export function DiscussionCreateModal( { isOpen, onClose, onCreated } ) {
-	var titleState = useState( '' );
-	var title = titleState[ 0 ];
-	var setTitle = titleState[ 1 ];
+export function DiscussionCreateModal( { isOpen, onClose, onCreated, createFields } ) {
+	// All registered field values keyed by field ID.
+	var registeredValuesState = useState( {} );
+	var registeredValues = registeredValuesState[ 0 ];
+	var setRegisteredValues = registeredValuesState[ 1 ];
 
-	var descriptionState = useState( '' );
-	var description = descriptionState[ 0 ];
-	var setDescription = descriptionState[ 1 ];
-
-	var forumIdState = useState( 0 );
-	var forumId = forumIdState[ 0 ];
-	var setForumId = forumIdState[ 1 ];
-
-	var typeState = useState( 'normal' );
-	var type = typeState[ 0 ];
-	var setType = typeState[ 1 ];
-
-	var topicStatusState = useState( 'open' );
-	var topicStatus = topicStatusState[ 0 ];
-	var setTopicStatus = topicStatusState[ 1 ];
-
-	var visibilityState = useState( 'publish' );
-	var visibility = visibilityState[ 0 ];
-	var setVisibility = visibilityState[ 1 ];
-
+	// Tags state (custom, not in registry).
 	var tagsState = useState( '' );
 	var tags = tagsState[ 0 ];
 	var setTags = tagsState[ 1 ];
@@ -79,6 +61,38 @@ export function DiscussionCreateModal( { isOpen, onClose, onCreated } ) {
 		};
 	}, [] );
 
+	// Initialize registered values from create field defaults when modal opens.
+	useEffect( function () {
+		if ( isOpen && createFields && Array.isArray( createFields ) ) {
+			var initialValues = {};
+			createFields.forEach( function ( field ) {
+				initialValues[ field.id ] = field.value;
+			} );
+			setRegisteredValues( initialValues );
+		}
+	}, [ isOpen, createFields ] );
+
+	var fields = createFields && Array.isArray( createFields ) ? createFields : [];
+
+	/**
+	 * Handle change for a registered field.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {string} fieldId Field ID.
+	 * @param {*}      val     New value.
+	 */
+	var handleFieldChange = useCallback( function ( fieldId, val ) {
+		setRegisteredValues( function ( prev ) {
+			var next = {};
+			Object.keys( prev ).forEach( function ( k ) {
+				next[ k ] = prev[ k ];
+			} );
+			next[ fieldId ] = val;
+			return next;
+		} );
+	}, [] );
+
 	if ( ! isOpen ) {
 		return null;
 	}
@@ -89,12 +103,14 @@ export function DiscussionCreateModal( { isOpen, onClose, onCreated } ) {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	var handleCreate = function () {
-		if ( ! title.trim() ) {
+		var titleVal = registeredValues.title || '';
+		if ( ! titleVal.trim() ) {
 			setError( __( 'Discussion title is required.', 'buddyboss' ) );
 			return;
 		}
 
-		if ( ! forumId ) {
+		var forumIdVal = registeredValues.forum_id || 0;
+		if ( ! forumIdVal ) {
 			setError( __( 'Forum is required.', 'buddyboss' ) );
 			return;
 		}
@@ -102,15 +118,17 @@ export function DiscussionCreateModal( { isOpen, onClose, onCreated } ) {
 		setIsSaving( true );
 		setError( '' );
 
-		createDiscussion( {
-			title: title.trim(),
-			description: description,
-			forum_id: forumId,
-			type: type,
-			topic_status: topicStatus,
-			visibility: visibility,
-			tags: tags,
-		} ).then( function ( response ) {
+		// buildRegisteredFieldPayload emits both plain keys and registered_field_* keys
+		// automatically — no manual field list needed.
+		var payload = Object.assign(
+			buildRegisteredFieldPayload( fields, registeredValues, 0 ),
+			{
+				title: titleVal.trim(), // Override with trimmed value.
+				tags: tags,             // Custom section, not in registry.
+			}
+		);
+
+		createDiscussion( payload ).then( function ( response ) {
 			if ( ! isMountedRef.current ) {
 				return;
 			}
@@ -138,21 +156,25 @@ export function DiscussionCreateModal( { isOpen, onClose, onCreated } ) {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	var resetForm = function () {
-		setTitle( '' );
-		setDescription( '' );
-		setForumId( 0 );
-		setType( 'normal' );
-		setTopicStatus( 'open' );
-		setVisibility( 'publish' );
+		var initialValues = {};
+		if ( createFields && Array.isArray( createFields ) ) {
+			createFields.forEach( function ( field ) {
+				initialValues[ field.id ] = field.value;
+			} );
+		}
+		setRegisteredValues( initialValues );
 		setTags( '' );
 		setError( '' );
 
-		// Reset TinyMCE editor content.
 		if ( window.tinymce ) {
-			var editor = window.tinymce.get( 'bb-discussion-create-description' );
-			if ( editor ) {
-				editor.setContent( '' );
-			}
+			fields.forEach( function ( field ) {
+				if ( 'richtext' === field.type ) {
+					var editor = window.tinymce.get( 'bb-admin-edit-' + field.id + '-0' );
+					if ( editor ) {
+						editor.setContent( '' );
+					}
+				}
+			} );
 		}
 	};
 
@@ -162,27 +184,19 @@ export function DiscussionCreateModal( { isOpen, onClose, onCreated } ) {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	var handleClose = function () {
-		forceRemoveEditor( 'bb-discussion-create-description' );
+		fields.forEach( function ( field ) {
+			if ( 'richtext' === field.type ) {
+				forceRemoveEditor( 'bb-admin-edit-' + field.id + '-0' );
+			}
+		} );
 		resetForm();
 		onClose();
 	};
 
-	var typeOptions = [
-		{ value: 'normal', label: __( 'Normal', 'buddyboss' ) },
-		{ value: 'sticky', label: __( 'Sticky', 'buddyboss' ) },
-		{ value: 'super_sticky', label: __( 'Super Sticky (To front)', 'buddyboss' ) },
-	];
+	// Render visible fields (respects client-side conditionals like publish_mode → date/time).
+	var visibleFields = getVisibleFields( fields, registeredValues );
 
-	var statusOptions = [
-		{ value: 'open', label: __( 'Open', 'buddyboss' ) },
-		{ value: 'closed', label: __( 'Closed', 'buddyboss' ) },
-	];
-
-	var visibilityOptions = [
-		{ value: 'publish', label: __( 'Public', 'buddyboss' ) },
-		{ value: 'private', label: __( 'Private', 'buddyboss' ) },
-		{ value: 'hidden', label: __( 'Hidden', 'buddyboss' ) },
-	];
+	var grouped = groupFieldsWithLayout( visibleFields );
 
 	return (
 		<Modal
@@ -191,76 +205,55 @@ export function DiscussionCreateModal( { isOpen, onClose, onCreated } ) {
 			className="bb-discussion-modal bb-discussion-create-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
 		>
-			<div className="bb-discussion-modal__body">
+			<div className="bb-discussion-modal__body bb-admin-settings-modal__body">
 				{ error && (
-					<p className="bb-discussion-modal__error">{ error }</p>
+					<p className="bb-admin-settings-modal__error">{ error }</p>
 				) }
 
-				<TextControl
-					label={ __( 'Title', 'buddyboss' ) }
-					value={ title }
-					onChange={ setTitle }
-					placeholder={ __( 'Enter discussion title', 'buddyboss' ) }
-					__nextHasNoMarginBottom
-				/>
+				{ grouped.map( function ( item, idx ) {
+					var hasSeparator = needsSeparator( item, grouped[ idx + 1 ] );
 
-				<div className="bb-discussion-modal__row--separator">
-					<RichTextEditor
-						id="bb-discussion-create-description"
-						label={ __( 'Description', 'buddyboss' ) }
-						value={ description }
-						onChange={ setDescription }
-					/>
-				</div>
+					if ( 'row' === item.type ) {
+						return (
+							<div key={ 'row-' + idx } className={ 'bb-admin-meta-field__row bb-admin-settings-modal__row' + ( hasSeparator ? ' bb-admin-settings-modal__row--separator' : '' ) }>
+								{ item.fields.map( function ( field ) {
+									return (
+										<RegisteredMetaField
+											key={ field.id }
+											field={ field }
+											value={ registeredValues[ field.id ] }
+											onChange={ function ( val ) {
+												handleFieldChange( field.id, val );
+											} }
+											itemId={ 0 }
+										/>
+									);
+								} ) }
+							</div>
+						);
+					}
+					return (
+						<div key={ item.field.id } className={ 'components-base-control ' + ( hasSeparator ? 'bb-admin-settings-modal__row--separator' : '' ) }>
+							<RegisteredMetaField
+								field={ item.field }
+								value={ registeredValues[ item.field.id ] }
+								onChange={ function ( val ) {
+									handleFieldChange( item.field.id, val );
+								} }
+								itemId={ 0 }
+							/>
+						</div>
+					);
+				} ) }
 
-				<div className="components-base-control">
-					<label className="components-base-control__label" htmlFor="bb-discussion-create-forum">
-						{ __( 'Forum', 'buddyboss' ) }
-					</label>
-					<AsyncSelectField
-						id="bb-discussion-create-forum"
-						value={ String( forumId ) }
-						onChange={ function ( val ) {
-							setForumId( parseInt( val, 10 ) || 0 );
-						} }
-						asyncAction="bb_admin_forum_autocomplete"
-						placeholder={ __( 'Select Forum', 'buddyboss' ) }
-					/>
-				</div>
-
-				<div className="bb-discussion-modal__row--separator">
-					<SelectControl
-						label={ __( 'Type', 'buddyboss' ) }
-						value={ type }
-						options={ typeOptions }
-						onChange={ setType }
-						__nextHasNoMarginBottom
-					/>
-				</div>
-
-				<div className="bb-discussion-modal__row bb-discussion-modal__row--separator">
-					<SelectControl
-						label={ __( 'Status', 'buddyboss' ) }
-						value={ topicStatus }
-						options={ statusOptions }
-						onChange={ setTopicStatus }
-						__nextHasNoMarginBottom
-					/>
-					<SelectControl
-						label={ __( 'Visibility', 'buddyboss' ) }
-						value={ visibility }
-						options={ visibilityOptions }
-						onChange={ setVisibility }
-						__nextHasNoMarginBottom
-					/>
-				</div>
-
+				<div className="bb-admin-settings-modal__custom-section">
 				<TagsAutocomplete
 					label={ __( 'Tags (Optional)', 'buddyboss' ) }
 					value={ tags }
 					onChange={ setTags }
 					placeholder={ __( 'Enter tags, separated by commas', 'buddyboss' ) }
 				/>
+				</div>
 			</div>
 
 			<div className="bb-discussion-modal__footer bb-admin-settings-modal__footer">
@@ -275,7 +268,7 @@ export function DiscussionCreateModal( { isOpen, onClose, onCreated } ) {
 					variant="primary"
 					onClick={ handleCreate }
 					isBusy={ isSaving }
-					disabled={ isSaving || ! title.trim() || ! forumId }
+					disabled={ isSaving || ! ( registeredValues.title || '' ).trim() || ! registeredValues.forum_id }
 				>
 					{ __( 'Save', 'buddyboss' ) }
 				</Button>

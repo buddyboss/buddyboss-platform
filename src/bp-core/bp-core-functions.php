@@ -6979,7 +6979,11 @@ function bb_core_get_user_notifications_preferences_value( $user_id = 0, $pref_t
  */
 function bb_register_notification_email_templates( $notification_type = '' ) {
 
-	$notification_emails = apply_filters( 'bb_register_notification_emails', array() );
+	static $notification_emails = null;
+
+	if ( null === $notification_emails ) {
+		$notification_emails = apply_filters( 'bb_register_notification_emails', array() );
+	}
 
 	if ( ! empty( $notification_emails ) && ! empty( $notification_type ) ) {
 		return ( isset( $notification_emails[ $notification_type ] ) ? $notification_emails[ $notification_type ] : array() );

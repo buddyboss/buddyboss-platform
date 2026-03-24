@@ -838,7 +838,10 @@ class BB_Admin_Profile_Fields_Ajax {
 
 		// Batch-load post meta to avoid N+1 queries.
 		update_postmeta_cache( $member_type_ids );
-		_prime_post_caches( $member_type_ids );
+		// _prime_post_caches() is public since WP 6.1; guard for WP 6.0 compat.
+		if ( function_exists( '_prime_post_caches' ) ) {
+			_prime_post_caches( $member_type_ids );
+		}
 
 		foreach ( $member_type_ids as $post_id ) {
 			$post = get_post( $post_id );

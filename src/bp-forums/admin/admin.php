@@ -152,6 +152,11 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 			// Map settings capabilities
 			add_filter( 'bbp_map_meta_caps', array( $this, 'map_settings_meta_caps' ), 10, 4 );
 
+			// Remove Comments/Discussion metaboxes from reply post type.
+			// The WP post editor is still accessible via direct URL even though
+			// Settings 2.0 replaces the admin UI with React modals.
+			add_action( 'admin_init', array( $this, 'bbp_remove_comments_discussion_meta_boxes' ), 9999 );
+
 			/** Network Admin */
 
 			// Add menu item to settings menu
@@ -162,6 +167,20 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 			// Allow plugins to modify these actions
 			do_action_ref_array( 'bbp_admin_loaded', array( &$this ) );
 
+		}
+
+		/**
+		 * Remove Comments and Discussion metaboxes from the reply post type.
+		 *
+		 * Even though Settings 2.0 replaces the admin UI, the WP post editor
+		 * is still accessible via direct URL. This prevents the Comments
+		 * metabox from showing on reply edit screens.
+		 *
+		 * @since BuddyBoss 1.0.0
+		 */
+		public function bbp_remove_comments_discussion_meta_boxes() {
+			remove_meta_box( 'commentstatusdiv', bbp_get_reply_post_type(), 'normal' );
+			remove_meta_box( 'commentsdiv', bbp_get_reply_post_type(), 'normal' );
 		}
 
 		/**
@@ -200,17 +219,6 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 							'bbp-converter',
 							'bbp_converter_settings'
 						);
-					}
-
-					if ( current_user_can( 'bbp_tools_reset_page' ) ) {
-						//				$hooks[] = add_submenu_page(
-						//					'buddyboss-platform',
-						//					__( 'Reset Forums', 'buddyboss' ),
-						//					__( 'Forum Reset', 'buddyboss' ),
-						//					$this->minimum_capability,
-						//					'bbp-reset',
-						//					'bbp_admin_reset'
-						//				);
 					}
 
 					// Fudge the highlighted subnav item when on a Forums admin page

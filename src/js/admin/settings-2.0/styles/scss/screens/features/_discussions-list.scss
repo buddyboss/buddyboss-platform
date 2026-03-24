@@ -404,6 +404,14 @@
 	&__td--name {
 		max-width: 232px;
 		overflow: hidden;
+
+		&:has(.bb-admin-list__spam-badge),
+		&:has(.bb-admin-list__status-badge) {
+
+			.bb-discussions-list__discussion-name {
+				max-width: calc(100% - 90px);
+			}
+		}
 	}
 
 	&__td--forum {
@@ -417,7 +425,8 @@
 
 	// Discussion Name Column
 	&__discussion-name {
-		display: block;
+		display: inline-block;
+		vertical-align: middle;
 		font-size: 14px;
 		font-weight: 400;
 		color: $bb-link-color;
@@ -426,6 +435,7 @@
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		text-decoration: none;
+		max-width: 100%;
 	}
 
 	// Count Column (Replies, Members)
@@ -657,7 +667,7 @@
 		.is-destructive.is-primary {
 			background-color: $bb-error-color;
 			border-color: $bb-error-color;
-			color: #fff;
+			color: $bb-text-inverse-color;
 			border-radius: $bb-border-radius-md;
 			font-size: 13px;
 			font-weight: 500;
@@ -791,113 +801,6 @@
 }
 
 /* ----------------------------------------------------------------
-   Discussion Modal
-   ---------------------------------------------------------------- */
-.bb-discussion-modal {
-
-	&__body {
-		padding: 24px;
-
-		.components-base-control {
-			margin-bottom: 16px;
-		}
-
-		// Override WordPress components uppercase labels to sentence case.
-		.components-input-control__label,
-		.components-base-control__label {
-			display: block;
-			text-transform: none !important;
-			font-size: 13px !important;
-			font-weight: 500 !important;
-			color: $bb-text-color;
-			margin-bottom: 8px;
-		}
-
-		.components-select-control .components-input-control__label {
-			margin-bottom: 0;
-		}
-
-		.components-text-control__input,
-		.components-textarea-control__input {
-			@include bb-input-text;
-		}
-
-		.components-input-control__container {
-
-			.components-select-control__input {
-				@include bb-admin-settings-select;
-			}
-
-			&:has(> .components-select-control__input) {
-				padding: 0 !important;
-
-				.components-input-control__suffix,
-				.components-input-control__backdrop {
-					display: none !important;
-				}
-			}
-		}
-	}
-
-	&__row {
-		display: flex;
-		gap: 16px;
-		margin-bottom: 16px;
-
-		.components-base-control {
-			flex: 1;
-			margin-bottom: 0;
-		}
-	}
-
-	&__row--separator {
-		margin-bottom: 24px;
-		padding-bottom: 24px;
-		border-bottom: 1px solid $bb-border-tertiary-color;
-
-		> .components-base-control,
-		> .bb-admin-meta-field__editor-field {
-			margin-bottom: 0;
-		}
-	}
-
-	&__error {
-		color: $bb-error-color;
-		font-size: 13px;
-		margin: 0 0 16px;
-	}
-
-	&__footer {
-
-		.is-secondary {
-			@include bb-button-secondary;
-		}
-
-		.is-primary {
-			@include bb-button-primary;
-
-			&:disabled {
-				opacity: 0.5;
-				cursor: not-allowed;
-			}
-		}
-	}
-}
-
-/* ----------------------------------------------------------------
-   Discussion Create Modal
-   ---------------------------------------------------------------- */
-.bb-discussion-create-modal {
-
-	.bb-discussion-modal__body {
-
-		textarea {
-			min-height: 72px;
-		}
-	}
-}
-
-/* ----------------------------------------------------------------
    Discussion Edit Modal
    ---------------------------------------------------------------- */
 .bb-discussion-edit-modal {
@@ -925,27 +828,115 @@
 
 	&__wrapper {
 		position: relative;
-	}
-
-	&__input {
-		width: 100%;
-		height: 36px;
 		border: 1px solid $bb-border-secondary-color;
 		border-radius: $bb-border-radius-md;
-		padding: 0 8px;
-		font-size: 13px;
-		color: $bb-text-color;
-		outline: none;
+		background: $bb-background-base-color;
+		cursor: text;
 
-		&::placeholder {
-			color: $bb-text-disabled-color;
-		}
-
-		&:focus {
+		&:focus-within {
 			border-color: $bb-border-brand-primary-color;
 		}
 	}
 
+	// Tags area — flex wrap container for chips + inline input.
+	&__tags-area {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 4px;
+		padding: 4px 28px 4px 6px;
+		min-height: 36px;
+		position: relative;
+
+		input[type] {
+			border: 0;
+			outline: none;
+			box-shadow: none;
+		}
+	}
+
+	// Tag chip.
+	&__tag {
+		display: inline-flex;
+		align-items: center;
+		gap: 2px;
+		padding: 2px 4px 2px 8px;
+		background: $bb-background-secondary-color;
+		border: 1px solid $bb-border-tertiary-color;
+		border-radius: $bb-border-radius-sm;
+		font-size: 13px;
+		line-height: 18px;
+		color: $bb-text-color;
+		white-space: nowrap;
+		max-width: 100%;
+	}
+
+	&__tag-text {
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	&__tag-remove {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 18px;
+		height: 18px;
+		padding: 0;
+		border: none;
+		background: none;
+		cursor: pointer;
+		color: $bb-icon-tertiary-color;
+		border-radius: $bb-border-radius-sm;
+		flex-shrink: 0;
+
+		i {
+			font-size: 12px;
+			font-weight: 700;
+			line-height: 1;
+		}
+
+		&:hover {
+			color: $bb-text-color;
+			background: rgba(0, 0, 0, 0.06);
+		}
+	}
+
+	// Inline input — grows to fill remaining space.
+	&__input {
+		flex: 1 1 60px;
+		min-width: 60px;
+		height: 26px;
+		border: none;
+		outline: none;
+		padding: 0 2px;
+		font-size: 13px;
+		color: $bb-text-color;
+		background: transparent;
+
+		&::placeholder {
+			color: $bb-text-disabled-color;
+		}
+	}
+
+	// Spinner inside the tags area.
+	&__spinner {
+		position: absolute;
+		right: 8px;
+		top: 50%;
+		transform: translateY(-50%);
+		display: flex;
+		align-items: center;
+		pointer-events: none;
+
+		.components-spinner {
+			margin: 0;
+			width: 16px;
+			height: 16px;
+		}
+	}
+
+	// Dropdown.
 	&__dropdown {
 		position: absolute;
 		top: 100%;
@@ -963,7 +954,9 @@
 	}
 
 	&__option {
-		display: block;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
 		width: 100%;
 		padding: 6px 12px;
 		border: none;
@@ -977,5 +970,19 @@
 		&--active {
 			background: $bb-background-primary-hover-color;
 		}
+
+		&--create {
+			color: $bb-text-tertiary-color;
+
+			strong {
+				color: $bb-text-color;
+				margin-left: 2px;
+			}
+		}
+	}
+
+	&__option-count {
+		font-size: 12px;
+		color: $bb-text-tertiary-color;
 	}
 }
