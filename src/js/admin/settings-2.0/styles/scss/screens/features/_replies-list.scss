@@ -459,10 +459,10 @@
 	}
 
 	&__action-delete {
-		color: #dc2626 !important;
+		color: $bb-error-color !important;
 
 		&:hover {
-			color: #b91c1c !important;
+			color: $bb-background-danger-secondary-hover-color !important;
 		}
 	}
 
@@ -688,7 +688,7 @@
 		.is-destructive.is-primary {
 			background-color: $bb-error-color;
 			border-color: $bb-error-color;
-			color: #fff;
+			color: $bb-text-inverse-color;
 			border-radius: $bb-border-radius-md;
 			font-size: 13px;
 			font-weight: 500;

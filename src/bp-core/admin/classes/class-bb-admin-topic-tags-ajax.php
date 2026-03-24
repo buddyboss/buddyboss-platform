@@ -426,6 +426,12 @@ class BB_Admin_Topic_Tags_Ajax {
 		$processed  = 0;
 		$failed     = 0;
 
+		// Prime the term cache in a single query to prevent N+1 get_term() calls.
+		// _prime_term_caches() is available since WP 6.2; guard for WP 6.0 compat.
+		if ( function_exists( '_prime_term_caches' ) ) {
+			_prime_term_caches( $term_ids );
+		}
+
 		foreach ( $term_ids as $term_id ) {
 			$term = get_term( $term_id, $tag_tax_id );
 			if ( ! $term || is_wp_error( $term ) ) {
