@@ -16,8 +16,8 @@ defined( 'ABSPATH' ) || exit;
  */
 function bp_events_admin_menu() {
 	add_menu_page(
-		__( 'BB Events', 'buddyboss' ),
-		__( 'BB Events', 'buddyboss' ),
+		__( 'Events', 'buddyboss' ),
+		__( 'Events', 'buddyboss' ),
 		'manage_options',
 		'bp-events',
 		'bp_events_admin_page',
@@ -392,7 +392,7 @@ function bp_events_admin_settings_page() {
 	$base_url    = admin_url( 'admin.php?page=bp-events-settings' );
 	?>
 	<div class="wrap">
-		<h1><?php esc_html_e( 'BB Events Settings', 'buddyboss' ); ?></h1>
+		<h1><?php esc_html_e( 'Events Settings', 'buddyboss' ); ?></h1>
 
 		<nav class="nav-tab-wrapper wp-clearfix" style="margin-bottom:20px;">
 			<?php foreach ( $tabs as $slug => $label ) : ?>
