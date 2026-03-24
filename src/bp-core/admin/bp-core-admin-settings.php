@@ -980,6 +980,47 @@ function bb_labs_no_settings_callback() {
 }
 
 /**
+ * Get the published page list.
+ *
+ * @since BuddyBoss 2.4.70
+ *
+ * @param bool $for_json Optional. When true, returns array of {value, label} objects
+ *                       for Settings 2.0 JSON responses. Default false.
+ *
+ * @return array Associative array of page id and page title of pages,
+ *               or indexed array of {value, label} when $for_json is true.
+ */
+function bb_get_published_pages( $as_options = false ) {
+	static $published_pages = null;
+
+	if ( null === $published_pages ) {
+		$published_pages = array();
+		$pages           = get_pages(
+				array(
+						'post_status' => 'publish',
+				)
+		);
+
+		foreach ( $pages as $page ) {
+			$published_pages[ $page->ID ] = $page->post_title;
+		}
+	}
+
+	if ( $as_options ) {
+		$options = array();
+		foreach ( $published_pages as $id => $title ) {
+			$options[] = array(
+					'value' => (string) $id,
+					'label' => $title,
+			);
+		}
+		return $options;
+	}
+
+	return $published_pages;
+}
+
+/**
  * Link to General Performance tutorial.
  *
  * @since BuddyBoss 2.5.80
@@ -1117,4 +1158,3 @@ function bb_admin_setting_callback_content_counts() {
 	</p>
 	<?php
 }
-
