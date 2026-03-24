@@ -29,6 +29,7 @@ import { sanitizeHtml, safeUrl } from '../utils/sanitize';
 import { TopicListField } from './activity/topics/topic-list';
 import { SharePlatformsField } from './activity/sharing';
 import { SsoProvidersField } from './fields/SsoProvidersField';
+import { ProfileTypeRedirectsField } from './fields/ProfileTypeRedirectsField';
 import { AccessControlField } from './access-control/AccessControlField';
 import { NotificationTypesField } from './notifications';
 import { CheckboxListField } from './fields/CheckboxListField';
@@ -323,6 +324,12 @@ export function SettingsForm({ fields, values, onChange }) {
 						onChange={onChange}
 						disabled={disabled}
 					/>
+				);
+
+			case 'profile_type_redirects':
+				// Profile type redirect list with per-type login/logout dropdowns.
+				return (
+					<ProfileTypeRedirectsField />
 				);
 
 			case 'input_button':

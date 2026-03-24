@@ -122,9 +122,38 @@ function bb_registration_register_login_redirects_panel_fields() {
 
 	// =========================================================================
 	// SECTION 2: Profile Type Redirects — profile_type_redirects
-	// Custom field type rendered by a dedicated React component + AJAX endpoint.
-	// Deferred to Phase 2 along with Registration Form panel.
+	// Renders a paginated list of profile types with per-type login/logout
+	// redirect dropdowns. Only visible when xProfile component is active
+	// and member types exist.
 	// =========================================================================
+
+	if ( bp_is_active( 'xprofile' ) && function_exists( 'bp_get_member_types' ) ) {
+		bb_register_feature_section(
+			$feature_id,
+			$panel_id,
+			'profile_type_redirects',
+			array(
+				'title'       => __( 'Profile Type Redirects', 'buddyboss' ),
+				'description' => __( 'Choose a page or external link where each profile type will be redirected after login or logout.', 'buddyboss' ),
+				'order'       => 20,
+			)
+		);
+
+		bb_register_feature_field(
+			$feature_id,
+			$panel_id,
+			'profile_type_redirects',
+			array(
+				'name'              => '_bb-profile-type-redirects',
+				'label'             => '',
+				'type'              => 'profile_type_redirects',
+				'default'           => array(),
+				'sanitize_callback' => '__return_empty_array',
+				'full_width'        => true,
+				'order'             => 10,
+			)
+		);
+	}
 
 	/**
 	 * Fires after Login Redirects panel fields are registered.
