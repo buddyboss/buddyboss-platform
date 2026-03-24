@@ -1156,8 +1156,15 @@ class BB_Feature_Registry {
 		static $cache = array();
 
 		// Reset static cache when features have been toggled.
-		if ( $this->active_cache_dirty ) {
-			$cache = array();
+		// Use a separate dirty tracker so we don't consume active_cache_dirty
+		// (which bb_is_feature_active() also reads).
+		static $available_cache_clean = true;
+
+		if ( $this->active_cache_dirty && $available_cache_clean ) {
+			$cache                 = array();
+			$available_cache_clean = false;
+		} elseif ( ! $this->active_cache_dirty ) {
+			$available_cache_clean = true;
 		}
 
 		if ( isset( $cache[ $feature_id ] ) ) {

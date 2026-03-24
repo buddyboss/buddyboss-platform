@@ -639,7 +639,7 @@
 		.is-destructive.is-primary {
 			background-color: $bb-error-color;
 			border-color: $bb-error-color;
-			color: #fff;
+			color: $bb-text-inverse-color;
 			border-radius: $bb-border-radius-md;
 			font-size: 13px;
 			font-weight: 500;
