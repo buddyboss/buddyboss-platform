@@ -127,13 +127,13 @@ const NotificationTypesField = ( props ) => {
 		let label, missingCount;
 
 		if ( ! emailTemplate.has_templates ) {
-			// No email templates registered at all — show as missing.
-			label = __( 'Missing Email Template', 'buddyboss' );
+			// No email templates registered at all.
+			label = __( 'Add Email Template', 'buddyboss' );
 		} else if ( emailTemplate.missing ) {
 			missingCount = emailTemplate.count - ( emailTemplate.existing_count || 0 );
 			label = missingCount > 1
-				? __( 'Missing Email Templates', 'buddyboss' )
-				: __( 'Missing Email Template', 'buddyboss' );
+				? __( 'Add Email Templates', 'buddyboss' )
+				: __( 'Add Email Template', 'buddyboss' );
 		} else {
 			label = emailTemplate.count > 1
 				? __( 'Email Templates', 'buddyboss' )
