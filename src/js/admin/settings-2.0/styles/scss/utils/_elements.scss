@@ -723,6 +723,10 @@ select.bb-admin-settings__select {
 		gap: 8px;
 		padding: 16px 24px;
 		border-top: 1px solid $bb-border-secondary-color;
+		position: sticky;
+		bottom: 0;
+		background: $bb-background-base-color;
+		z-index: 1;
 
 		.components-button {
 
