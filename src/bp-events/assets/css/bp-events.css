@@ -1,0 +1,377 @@
+/**
+ * BuddyBoss Events — Calendar styles.
+ *
+ * @package BuddyBoss\Events
+ * @since   BuddyBoss Events 1.0.0
+ */
+
+/* Calendar container */
+#bb-rl-events-calendar {
+	min-height: 600px;
+}
+
+/* View toggle */
+.bb-rl-calendar-view-toggle {
+	margin-bottom: 1rem;
+}
+
+.bb-rl-view-btn {
+	cursor: pointer;
+	padding: 0.5rem 1rem;
+	border: 1px solid #ccc;
+	background: #fff;
+}
+
+.bb-rl-view-btn.active {
+	background: #000;
+	color: #fff;
+	border-color: #000;
+}
+
+/* Make events look clickable */
+.fc-event {
+	cursor: pointer;
+}
+
+/* Error state */
+.bb-rl-calendar-error {
+	color: #d63638;
+	padding: 1rem 0;
+}
+
+/* =========================================================================
+   Event creation wizard
+   ========================================================================= */
+
+.bb-rl-event-wizard {
+	max-width: 680px;
+	margin: 2rem auto;
+}
+
+/* Step indicators */
+.bb-rl-wizard-steps {
+	display: flex;
+	gap: 0.5rem;
+	margin-bottom: 2rem;
+	flex-wrap: wrap;
+}
+
+.bb-rl-step-indicator {
+	display: flex;
+	align-items: center;
+	gap: 0.4rem;
+	padding: 0.4rem 0.75rem;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	font-size: 0.85rem;
+	background: #f9f9f9;
+	color: #555;
+}
+
+.bb-rl-step-indicator.is-active {
+	background: #000;
+	color: #fff;
+	border-color: #000;
+}
+
+.bb-rl-step-indicator.is-complete {
+	background: #4caf50;
+	color: #fff;
+	border-color: #4caf50;
+}
+
+.bb-rl-step-num {
+	font-weight: 700;
+}
+
+/* Wizard content area */
+.bb-rl-wizard-content {
+	margin-bottom: 1.5rem;
+}
+
+/* Step headings */
+.bb-rl-step-title {
+	margin-top: 0;
+	margin-bottom: 0.5rem;
+}
+
+.bb-rl-step-desc {
+	color: #666;
+	margin-bottom: 1.5rem;
+}
+
+.bb-rl-fields-subheading {
+	font-size: 1rem;
+	margin-bottom: 0.75rem;
+	border-bottom: 1px solid #eee;
+	padding-bottom: 0.25rem;
+}
+
+/* Fields */
+.bb-rl-field {
+	margin-bottom: 1.25rem;
+}
+
+.bb-rl-field label {
+	display: block;
+	font-weight: 600;
+	margin-bottom: 0.3rem;
+}
+
+.bb-rl-required {
+	color: #d63638;
+}
+
+.bb-rl-input,
+.bb-rl-textarea,
+.bb-rl-select {
+	width: 100%;
+	padding: 0.5rem 0.75rem;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	font-size: 1rem;
+}
+
+.bb-rl-input-narrow {
+	width: 80px;
+}
+
+.bb-rl-textarea {
+	resize: vertical;
+}
+
+/* Event type radios */
+.bb-rl-event-type-options {
+	display: flex;
+	gap: 1rem;
+	flex-wrap: wrap;
+}
+
+.bb-rl-event-type-label {
+	display: flex;
+	align-items: center;
+	gap: 0.4rem;
+	cursor: pointer;
+	font-weight: 400;
+}
+
+/* Recurrence day checkboxes */
+.bb-rl-day-checkboxes {
+	display: flex;
+	gap: 0.5rem;
+	flex-wrap: wrap;
+}
+
+.bb-rl-day-label {
+	display: flex;
+	align-items: center;
+	gap: 0.25rem;
+	cursor: pointer;
+	font-weight: 400;
+}
+
+/* End condition options */
+.bb-rl-end-options {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.bb-rl-end-label {
+	display: flex;
+	align-items: center;
+	gap: 0.4rem;
+	cursor: pointer;
+	font-weight: 400;
+}
+
+/* Review table */
+.bb-rl-review-table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.bb-rl-review-table tr {
+	border-bottom: 1px solid #eee;
+}
+
+.bb-rl-review-label {
+	width: 35%;
+	padding: 0.5rem 0.75rem 0.5rem 0;
+	font-weight: 600;
+	text-align: left;
+	vertical-align: top;
+}
+
+.bb-rl-review-value {
+	padding: 0.5rem 0;
+	word-break: break-word;
+}
+
+/* Navigation */
+.bb-rl-wizard-nav {
+	display: flex;
+	gap: 0.75rem;
+	align-items: center;
+}
+
+.bb-rl-btn {
+	padding: 0.6rem 1.25rem;
+	border: none;
+	border-radius: 3px;
+	font-size: 1rem;
+	cursor: pointer;
+}
+
+.bb-rl-btn-primary {
+	background: #000;
+	color: #fff;
+}
+
+.bb-rl-btn-primary:hover {
+	background: #333;
+}
+
+.bb-rl-btn-secondary {
+	background: #f3f3f3;
+	color: #333;
+	border: 1px solid #ccc;
+}
+
+.bb-rl-btn-secondary:hover {
+	background: #e8e8e8;
+}
+
+.bb-rl-btn:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+/* Error message */
+.bb-rl-wizard-error {
+	padding: 0.75rem 1rem;
+	background: #fdf2f2;
+	border: 1px solid #d63638;
+	border-radius: 3px;
+	color: #d63638;
+	margin-bottom: 1rem;
+}
+
+/* =========================================================================
+   Single event — RSVP panel
+   ========================================================================= */
+
+.bb-rl-event-tickets-panel {
+	margin-bottom: 20px;
+}
+
+.bb-rl-event-capacity-info {
+	font-size: 0.85em;
+	color: #666;
+	margin-top: 8px;
+}
+
+.bb-rl-rsvp-cancel-hint {
+	font-size: 0.85em;
+	margin-top: 6px;
+}
+
+/* RSVP button variants */
+.bb-rl-btn--primary {
+	background: #000;
+	color: #fff;
+	border: none;
+}
+
+.bb-rl-btn--primary:hover {
+	background: #333;
+}
+
+.bb-rl-btn--secondary {
+	background: #f3f3f3;
+	color: #333;
+	border: 1px solid #ccc;
+}
+
+.bb-rl-btn--secondary:hover {
+	background: #e8e8e8;
+}
+
+.bb-rl-btn--success {
+	background: #4caf50;
+	color: #fff;
+	border: none;
+}
+
+.bb-rl-btn--success:hover {
+	background: #43a047;
+}
+
+.bb-rl-btn--danger {
+	background: #d63638;
+	color: #fff;
+	border: none;
+}
+
+.bb-rl-btn--danger:hover {
+	background: #b32d2e;
+}
+
+.bb-rl-btn--sm {
+	padding: 0.3rem 0.75rem;
+	font-size: 0.85rem;
+}
+
+/* =========================================================================
+   Single event — public attendee list
+   ========================================================================= */
+
+.bb-rl-event-attendees {
+	margin-bottom: 16px;
+}
+
+.bb-rl-attendee-list {
+	list-style: none;
+	padding: 0;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.bb-rl-attendee-list__item {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.bb-rl-attendee-list__name {
+	font-size: 0.875em;
+}
+
+/* =========================================================================
+   Single event — organizer management panel
+   ========================================================================= */
+
+.bb-rl-event-organizer-panel {
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	padding: 16px;
+	margin-top: 16px;
+}
+
+.bb-rl-attendee-manage-list {
+	list-style: none;
+	padding: 0;
+}
+
+.bb-rl-attendee-manage-list__item {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 6px 0;
+	border-bottom: 1px solid #f0f0f0;
+}
+
+.bb-rl-attendee-manage-list__item:last-child {
+	border-bottom: none;
+}
