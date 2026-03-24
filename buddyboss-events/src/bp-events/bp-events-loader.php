@@ -15,6 +15,14 @@ defined( 'ABSPATH' ) || exit;
 // Load the moderation integration class.
 require_once __DIR__ . '/classes/class-bp-moderation-events.php';
 
+// Load the notification class (must come after BP_Core_Notification_Abstract is available).
+add_action( 'bp_loaded', function () {
+	if ( class_exists( 'BP_Core_Notification_Abstract' ) ) {
+		require_once __DIR__ . '/classes/class-bp-events-notification.php';
+		BP_Events_Notification::instance();
+	}
+} );
+
 /**
  * Set up the bp-events component.
  *
