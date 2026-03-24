@@ -74,6 +74,7 @@ var DEFAULT_FORM_DATA = {
 	custom_logout_redirection: '',
 	visibility: 'publish',
 	post_password: '',
+	invite_member_types: [],
 	label_color: {
 		type: 'default',
 		background_color: '',
@@ -105,16 +106,18 @@ function getGroupTypeCreateMode( value ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param {Object}   props                Component props.
- * @param {boolean}  props.isOpen         Whether modal is open.
- * @param {Function} props.onClose        Close handler.
- * @param {Function} props.onSave         Save handler.
- * @param {Object}   props.memberType     Member type to edit (null for create).
- * @param {Array}    props.groupTypes      Available group types.
- * @param {Array}    props.wpRoles         Available WordPress roles.
+ * @param {Object}   props                   Component props.
+ * @param {boolean}  props.isOpen            Whether modal is open.
+ * @param {Function} props.onClose           Close handler.
+ * @param {Function} props.onSave            Save handler.
+ * @param {Object}   props.memberType        Member type to edit (null for create).
+ * @param {Array}    props.allMemberTypes     All member types (for Email Invites checkboxes).
+ * @param {Array}    props.groupTypes         Available group types.
+ * @param {Array}    props.wpRoles            Available WordPress roles.
+ * @param {Array}    props.publishedPages     Published pages (for redirect dropdowns).
  * @returns {JSX.Element|null} Modal element or null.
  */
-export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTypes, wpRoles, publishedPages } ) {
+export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, allMemberTypes, groupTypes, wpRoles, publishedPages } ) {
 	var formDataState = useState( DEFAULT_FORM_DATA );
 	var formData = formDataState[ 0 ];
 	var setFormData = formDataState[ 1 ];
@@ -150,6 +153,7 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 			var gtCreate = memberType.group_type_create || [];
 			var gtAutoJoin = memberType.group_type_auto_join || [];
 			var existingWpRoles = memberType.wp_roles || [];
+			var existingInviteTypes = memberType.invite_member_types || [];
 
 			setFormData( {
 				name: decodeEntities( memberType.post_title || '' ),
@@ -163,6 +167,7 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 				group_type_create_mode: getGroupTypeCreateMode( gtCreate ),
 				group_type_create: Array.isArray( gtCreate ) ? gtCreate.map( String ) : [],
 				group_type_auto_join: Array.isArray( gtAutoJoin ) ? gtAutoJoin.map( String ) : [],
+				invite_member_types: Array.isArray( existingInviteTypes ) ? existingInviteTypes.map( String ) : [],
 				wp_roles: Array.isArray( existingWpRoles ) ? existingWpRoles : [],
 				login_redirection: memberType.login_redirection || '',
 				custom_login_redirection: memberType.custom_login_redirection || '',
@@ -282,6 +287,16 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 			formData.group_type_auto_join.forEach( function ( id, idx ) {
 				data[ 'group_type_auto_join[' + idx + ']' ] = id;
 			} );
+		}
+
+		// Email Invites — allowed member types.
+		if ( formData.invite_member_types.length > 0 ) {
+			formData.invite_member_types.forEach( function ( id, idx ) {
+				data[ 'invite_member_types[' + idx + ']' ] = id;
+			} );
+		} else {
+			// Send empty array so PHP knows the field was submitted (for conditional save).
+			data[ 'invite_member_types' ] = '';
 		}
 
 		// WP roles.
@@ -473,6 +488,33 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, groupTy
 						</div>
 						<p className="bb-admin-profile-type-modal__section-description" style={ { marginTop: 16, marginBottom: 0 } }>
 							{ __( 'Automatically add members of this profile type to these group types after account activation. Hidden groups are excluded.', 'buddyboss' ) }
+						</p>
+					</div>
+				) }
+
+				{/* Email Invites — only when Invites active and member type invites enabled */}
+				{ ( allMemberTypes || [] ).length > 0 && !! ( window.bbAdminData && window.bbAdminData.isEmailInviteEnabled ) && (
+					<div className="bb-admin-profile-type-modal__section">
+						<h4 className="bb-admin-profile-type-modal__section-title">
+							{ __( 'Email Invites', 'buddyboss' ) }
+						</h4>
+						<div className="bb-admin-profile-type-modal__checkbox-grid">
+							{ ( allMemberTypes || [] ).map( function ( mt ) {
+								var isChecked = -1 !== formData.invite_member_types.indexOf( String( mt.id ) );
+								return (
+									<CheckboxControl
+										key={ mt.id }
+										label={ decodeEntities( mt.post_title ) }
+										checked={ isChecked }
+										onChange={ function () {
+											toggleListItem( 'invite_member_types', mt.id );
+										} }
+									/>
+								);
+							} ) }
+						</div>
+						<p className="bb-admin-profile-type-modal__section-description" style={ { marginTop: 16, marginBottom: 0 } }>
+							{ __( 'Select which profile types can be assigned when members choose a profile type for invited users.', 'buddyboss' ) }
 						</p>
 					</div>
 				) }

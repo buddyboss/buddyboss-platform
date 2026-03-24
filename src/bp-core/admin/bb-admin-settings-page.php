@@ -173,6 +173,7 @@ function bb_admin_settings_page() {
 	$localize_data['isGroupCreationAllowed']             = bp_is_active( 'groups' ) && ! bp_restrict_group_creation();
 	$localize_data['isGroupTypeCreationEnabled']         = bp_is_active( 'groups' ) && bp_disable_group_type_creation();
 	$localize_data['isGroupAutoJoinEnabled']             = bp_is_active( 'groups' ) && bp_disable_group_type_creation() && bp_enable_group_auto_join();
+	$localize_data['isEmailInviteEnabled']               = bp_is_active( 'invites' ) && function_exists( 'bp_disable_invite_member_type' ) && bp_disable_invite_member_type();
 	// Upload nonces for image upload fields (avatar/cover).
 	// Only expose when the user has capability to manage group settings.
 	if ( bp_current_user_can( 'bp_moderate' ) ) {

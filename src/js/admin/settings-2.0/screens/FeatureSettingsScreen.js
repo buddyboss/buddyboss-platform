@@ -114,6 +114,20 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 		};
 	}, [] );
 
+	// Listen for toast events from child components (e.g. ProfileTypeRedirectsField save).
+	useEffect( function() {
+		function handleToast( event ) {
+			var detail = event.detail;
+			if ( detail && detail.status ) {
+				setToast( { status: detail.status, message: detail.message || '' } );
+			}
+		}
+		window.addEventListener( BB_EVENTS.TOAST, handleToast );
+		return function() {
+			window.removeEventListener( BB_EVENTS.TOAST, handleToast );
+		};
+	}, [] );
+
 	// Load feature settings via AJAX - only when featureId changes
 	// Uses caching to prevent re-fetching on navigation within the same feature
 	// AbortController cancels stale requests when featureId changes rapidly

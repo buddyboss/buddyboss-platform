@@ -12,9 +12,11 @@
 import { useState, useEffect, useCallback } from '@wordpress/element';
 import { TextControl, Spinner } from '@wordpress/components';
 import { __, sprintf, _n } from '@wordpress/i18n';
+import { decodeEntities } from '@wordpress/html-entities';
 import { getMemberTypes, updateMemberType } from '../../utils/ajax';
 import { AsyncSelectField } from './AsyncSelectField';
 import { getPageNumbers } from '../../utils/pagination';
+import { BB_EVENTS } from '../../utils/constants';
 
 var PER_PAGE = 5;
 
@@ -105,6 +107,22 @@ export function ProfileTypeRedirectsField() {
 		} );
 
 		updateMemberType( typeId, saveData )
+			.then( function ( response ) {
+				if ( response.success ) {
+					window.dispatchEvent( new CustomEvent( BB_EVENTS.TOAST, {
+						detail: { status: 'success', message: __( 'Setting saved.', 'buddyboss' ) },
+					} ) );
+				} else {
+					window.dispatchEvent( new CustomEvent( BB_EVENTS.TOAST, {
+						detail: { status: 'error', message: ( response.data && response.data.message ) || __( 'Failed to save.', 'buddyboss' ) },
+					} ) );
+				}
+			} )
+			.catch( function () {
+				window.dispatchEvent( new CustomEvent( BB_EVENTS.TOAST, {
+					detail: { status: 'error', message: __( 'Failed to save.', 'buddyboss' ) },
+				} ) );
+			} )
 			.finally( function () {
 				setSavingIds( function ( prev ) {
 					var next = Object.assign( {}, prev );
@@ -144,7 +162,7 @@ export function ProfileTypeRedirectsField() {
 					<div key={ mt.id } className={ 'bb-profile-type-redirects__row' + ( isSaving ? ' bb-profile-type-redirects__row--saving' : '' ) }>
 						<div className="bb-profile-type-redirects__type">
 							<span className="bb-profile-type-redirects__badge" style={ labelStyle }>
-								{ mt.post_title || mt.key }
+								{ decodeEntities( mt.post_title || mt.key ) }
 							</span>
 						</div>
 
