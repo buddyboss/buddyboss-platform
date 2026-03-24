@@ -17,6 +17,7 @@ import { CheckboxControl, Popover } from '@wordpress/components';
 import { useState, useRef } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { safeUrl } from '../../utils/sanitize';
+import { BB_EVENTS } from '../../utils/constants';
 
 // Default brand icons — used as fallback when Pro doesn't provide icon URLs.
 import googleIcon from '../../images/sso/google.png';
@@ -46,11 +47,14 @@ var DEFAULT_ICONS = {
  * @returns {JSX.Element} SSO providers field.
  */
 export function SsoProvidersField( { field, value, onChange, disabled } ) {
-	var providers = field.providers || [];
+	var providersState = useState( field.providers || [] );
+	var providers = providersState[ 0 ];
+	var setProviders = providersState[ 1 ];
 	var openMenuState = useState( null );
 	var openMenu = openMenuState[ 0 ];
 	var setOpenMenu = openMenuState[ 1 ];
 	var menuButtonRefs = useRef( {} );
+	var savingRef = useRef( {} );
 
 	/**
 	 * Check if a provider is enabled.
@@ -65,6 +69,93 @@ export function SsoProvidersField( { field, value, onChange, disabled } ) {
 			return !! provider.enabled;
 		}
 		return false;
+	};
+
+	/**
+	 * Toggle provider enabled/disabled via Pro SSO AJAX.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {Object} provider Provider data.
+	 */
+	var handleProviderToggle = function ( provider ) {
+		if ( savingRef.current[ provider.id ] || ! provider.tested ) {
+			return;
+		}
+		savingRef.current[ provider.id ] = true;
+
+		var oldState = provider.state;
+		var newState = 'enabled' === oldState ? 'disabled' : 'enabled';
+
+		// Optimistic update — toggle instantly.
+		setProviders( function ( prev ) {
+			return prev.map( function ( p ) {
+				if ( p.id === provider.id ) {
+					return Object.assign( {}, p, {
+						enabled: 'enabled' === newState,
+						state: newState,
+					} );
+				}
+				return p;
+			} );
+		} );
+
+		var ssoVars = window.bbSSOAdminVars || {};
+		var formData = new FormData();
+		formData.append( 'action', 'bb_sso_enable_provider' );
+		formData.append( 'nonce', ssoVars.nonce || '' );
+		formData.append( 'provider', provider.id );
+		formData.append( 'state', oldState );
+
+		fetch( ssoVars.ajax_url || window.bbAdminData.ajaxUrl, {
+			method: 'POST',
+			credentials: 'same-origin',
+			body: formData,
+		} )
+			.then( function ( res ) { return res.json(); } )
+			.then( function ( response ) {
+				if ( response.success ) {
+					window.dispatchEvent( new CustomEvent( BB_EVENTS.TOAST, {
+						detail: { status: 'success', message: __( 'Setting saved.', 'buddyboss' ) },
+					} ) );
+				} else {
+					// Revert on failure.
+					setProviders( function ( prev ) {
+						return prev.map( function ( p ) {
+							if ( p.id === provider.id ) {
+								return Object.assign( {}, p, {
+									enabled: 'enabled' === oldState,
+									state: oldState,
+								} );
+							}
+							return p;
+						} );
+					} );
+					window.dispatchEvent( new CustomEvent( BB_EVENTS.TOAST, {
+						detail: { status: 'error', message: __( 'Failed to save.', 'buddyboss' ) },
+					} ) );
+				}
+			} )
+			.catch( function () {
+				// Revert on error.
+				setProviders( function ( prev ) {
+					return prev.map( function ( p ) {
+						if ( p.id === provider.id ) {
+							return Object.assign( {}, p, {
+								enabled: 'enabled' === oldState,
+								state: oldState,
+							} );
+						}
+						return p;
+					} );
+				} );
+				window.dispatchEvent( new CustomEvent( BB_EVENTS.TOAST, {
+					detail: { status: 'error', message: __( 'Failed to save.', 'buddyboss' ) },
+				} ) );
+			} )
+			.finally( function () {
+				delete savingRef.current[ provider.id ];
+			} );
 	};
 
 	/**
@@ -129,14 +220,14 @@ export function SsoProvidersField( { field, value, onChange, disabled } ) {
 									</span>
 								) }
 								<CheckboxControl
-									checked={ checked }
-									className="bb-admin-sso-providers__card-checkbox"
-									disabled={ disabled }
-									onChange={ function () {
-										// Provider enable/disable managed via legacy SSO admin.
-									} }
-									__nextHasNoMarginBottom
-								/>
+								checked={ checked }
+								className="bb-admin-sso-providers__card-checkbox"
+								disabled={ disabled || ! provider.tested }
+								onChange={ function () {
+									handleProviderToggle( provider );
+								} }
+								__nextHasNoMarginBottom
+							/>
 							</div>
 
 							<div className="bb-admin-sso-providers__card-footer">
