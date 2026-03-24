@@ -405,7 +405,8 @@
 		max-width: 232px;
 		overflow: hidden;
 
-		&:has(.bb-admin-list__spam-badge) {
+		&:has(.bb-admin-list__spam-badge),
+		&:has(.bb-admin-list__status-badge) {
 
 			.bb-discussions-list__discussion-name {
 				max-width: calc(100% - 80px);

@@ -990,13 +990,14 @@ select.bb-admin-settings__select {
 	display: inline-flex;
 	align-items: center;
 	gap: 4px;
-	margin-top: 4px;
+	margin: 0 0 0 8px;
 	padding: 2px 8px;
 	font-size: 12px;
 	font-weight: 500;
 	color: $bb-text-tertiary-color;
-	background: $bb-background-primary-color;
-	border-radius: 99px;
+	background: $bb-background-color;
+	border: 1px solid $bb-border-tertiary-color;
+	border-radius: $bb-border-radius-full;
 }
 
 // Spam badge for list views (matches reply spam badge pattern).
@@ -1004,7 +1005,7 @@ select.bb-admin-settings__select {
 	display: inline-flex;
 	align-items: center;
 	gap: 4px;
-    margin: 4px 0 0 8px;
+	margin: 0 0 0 8px;
 	padding: 2px 8px;
 	font-size: 12px;
 	font-weight: 500;
