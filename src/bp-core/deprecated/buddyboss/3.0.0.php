@@ -1768,6 +1768,62 @@ add_action(
 );
 
 // ──────────────────────────────────────────────────────────────────────────────
+// Forums Settings API function stubs.
+// These functions were defined in bp-forums/admin/settings.php (deleted).
+// Third-party code calling them directly would get a fatal error without stubs.
+// ──────────────────────────────────────────────────────────────────────────────
+
+if ( ! function_exists( 'bbp_admin_get_settings_sections' ) ) {
+	/**
+	 * Get the bbPress admin settings sections.
+	 *
+	 * @since bbPress (r4001)
+	 * @deprecated BuddyBoss [BBVERSION] Forum settings are now managed by Settings 2.0.
+	 *
+	 * @return array Empty array.
+	 */
+	function bbp_admin_get_settings_sections() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Forums feature (bb_admin_settings_register_forums_feature)' );
+
+		return array();
+	}
+}
+
+if ( ! function_exists( 'bbp_admin_get_settings_fields' ) ) {
+	/**
+	 * Get the bbPress admin settings fields.
+	 *
+	 * @since bbPress (r4001)
+	 * @deprecated BuddyBoss [BBVERSION] Forum settings are now managed by Settings 2.0.
+	 *
+	 * @return array Empty array.
+	 */
+	function bbp_admin_get_settings_fields() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Forums feature (bb_admin_settings_register_forums_feature)' );
+
+		return array();
+	}
+}
+
+if ( ! function_exists( 'bbp_admin_get_settings_fields_for_section' ) ) {
+	/**
+	 * Get the bbPress admin settings fields for a specific section.
+	 *
+	 * @since bbPress (r4001)
+	 * @deprecated BuddyBoss [BBVERSION] Forum settings are now managed by Settings 2.0.
+	 *
+	 * @param string $section_id Section ID.
+	 *
+	 * @return array Empty array.
+	 */
+	function bbp_admin_get_settings_fields_for_section( $section_id = '' ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Forums feature (bb_admin_settings_register_forums_feature)' );
+
+		return array();
+	}
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
 // Forums Settings 2.0 deprecated AJAX endpoint stubs.
 // These AJAX actions were in BBP_Admin and have been replaced by
 // Settings 2.0 AJAX handlers (BB_Admin_Topics_Ajax, BB_Admin_Replies_Ajax).

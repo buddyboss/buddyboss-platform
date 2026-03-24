@@ -197,7 +197,7 @@ class BB_Admin_Replies_Ajax {
 			}
 
 			$parent_ids = array_unique( array_filter( $parent_ids ) );
-			if ( ! empty( $parent_ids ) ) {
+			if ( ! empty( $parent_ids ) && function_exists( '_prime_post_caches' ) ) {
 				_prime_post_caches( $parent_ids, false, false );
 			}
 		}
@@ -406,7 +406,7 @@ class BB_Admin_Replies_Ajax {
 			$forum_ids = wp_list_pluck( $results, 'forum_id' );
 
 			// Prime post cache.
-			if ( ! empty( $forum_ids ) ) {
+			if ( ! empty( $forum_ids ) && function_exists( '_prime_post_caches' ) ) {
 				_prime_post_caches( $forum_ids, false, false );
 			}
 

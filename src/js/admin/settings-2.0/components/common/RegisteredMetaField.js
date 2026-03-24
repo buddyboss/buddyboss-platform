@@ -78,6 +78,18 @@ function AjaxMultiSelectField( { field, value, onChange, disabled } ) {
 	var selectedIdsRef = useRef( selectedIds );
 	selectedIdsRef.current = selectedIds;
 
+	// Abort in-flight requests and clear timers on unmount.
+	useEffect( function () {
+		return function () {
+			if ( abortRef.current ) {
+				abortRef.current.abort();
+			}
+			if ( timerRef.current ) {
+				clearTimeout( timerRef.current );
+			}
+		};
+	}, [] );
+
 	// Close dropdown on outside click.
 	useEffect( function () {
 		function handleClickOutside( e ) {
