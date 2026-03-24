@@ -449,6 +449,7 @@ export function SettingsForm({ fields, values, onChange }) {
 						selected={value != null ? String(value) : ''}
 						options={field.options || []}
 						onChange={(newValue) => onChange(field.name, newValue)}
+						disabled={disabled}
 					/>
 				);
 
