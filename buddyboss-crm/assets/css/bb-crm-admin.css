@@ -1,0 +1,295 @@
+/**
+ * BuddyBoss CRM Admin Styles
+ *
+ * @package BuddyBossCRM
+ * @since 1.0.0
+ */
+
+/* ==========================================================================
+   Dashboard Stats Grid
+   ========================================================================== */
+
+.bb-crm-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin: 20px 0 30px;
+}
+
+.bb-crm-stat-card {
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    transition: all 0.2s ease;
+}
+
+.bb-crm-stat-card:hover {
+    border-color: #2271b1;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.bb-crm-stat-icon {
+    font-size: 32px;
+    color: #2271b1;
+}
+
+.bb-crm-stat-icon .dashicons {
+    width: 48px;
+    height: 48px;
+    font-size: 48px;
+}
+
+.bb-crm-stat-content h3 {
+    font-size: 36px;
+    font-weight: 600;
+    margin: 0;
+    color: #1d2327;
+}
+
+.bb-crm-stat-content p {
+    margin: 5px 0 0;
+    color: #646970;
+    font-size: 14px;
+}
+
+.bb-crm-stat-action {
+    margin-top: auto;
+}
+
+.bb-crm-stat-note {
+    font-size: 12px;
+    color: #787c82;
+}
+
+/* ==========================================================================
+   Quick Actions
+   ========================================================================== */
+
+.bb-crm-section {
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.bb-crm-section h2 {
+    margin: 0 0 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.bb-crm-quick-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.bb-crm-action-card {
+    background: #f6f7f7;
+    border: 1px solid #dcdcde;
+    border-radius: 6px;
+    padding: 20px;
+    text-align: center;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.2s ease;
+    display: block;
+}
+
+.bb-crm-action-card:hover {
+    background: #fff;
+    border-color: #2271b1;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.bb-crm-action-card .dashicons {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    color: #2271b1;
+}
+
+.bb-crm-action-card h3 {
+    font-size: 16px;
+    margin: 15px 0 10px;
+}
+
+.bb-crm-action-card p {
+    font-size: 13px;
+    color: #646970;
+    margin: 0;
+}
+
+.bb-crm-action-card-disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.bb-crm-action-card-disabled:hover {
+    transform: none;
+    border-color: #dcdcde;
+    box-shadow: none;
+}
+
+/* ==========================================================================
+   System Status Table
+   ========================================================================== */
+
+.bb-crm-status-table {
+    margin-top: 20px;
+}
+
+.bb-crm-status-label {
+    width: 30%;
+    padding: 12px;
+}
+
+.bb-crm-status-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.bb-crm-status-success {
+    background: #d4edda;
+    color: #155724;
+}
+
+.bb-crm-status-warning {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.bb-crm-status-error {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+/* ==========================================================================
+   Getting Started Steps
+   ========================================================================== */
+
+.bb-crm-getting-started {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.bb-crm-step {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    padding: 20px;
+    background: #f6f7f7;
+    border-radius: 6px;
+    border-left: 4px solid #2271b1;
+}
+
+.bb-crm-step-number {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #2271b1;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.bb-crm-step-content h3 {
+    margin: 0 0 10px;
+    font-size: 16px;
+}
+
+.bb-crm-step-content p {
+    margin: 0 0 15px;
+    color: #646970;
+}
+
+/* ==========================================================================
+   Empty States
+   ========================================================================== */
+
+.bb-crm-empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+.bb-crm-empty-state .dashicons {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    color: #c3c4c7;
+    margin-bottom: 20px;
+}
+
+.bb-crm-empty-state h2 {
+    margin: 0 0 10px;
+    color: #1d2327;
+}
+
+.bb-crm-empty-state p {
+    margin: 0 0 20px;
+    color: #646970;
+}
+
+/* ==========================================================================
+   Tag Badge
+   ========================================================================== */
+
+.bb-crm-tag-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #fff;
+}
+
+/* ==========================================================================
+   Tags Table
+   ========================================================================== */
+
+.bb-crm-tags-table td {
+    vertical-align: middle;
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+@media screen and (max-width: 768px) {
+    .bb-crm-stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .bb-crm-quick-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .bb-crm-step {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .bb-crm-step-number {
+        margin: 0 auto;
+    }
+}
