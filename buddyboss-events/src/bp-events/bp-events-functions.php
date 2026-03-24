@@ -48,7 +48,7 @@ function bp_events_install() {
 		parent_event_id bigint(20)            DEFAULT NULL,
 		date_created   datetime      NOT NULL DEFAULT '0000-00-00 00:00:00',
 		date_modified  datetime      NOT NULL DEFAULT '0000-00-00 00:00:00',
-		PRIMARY KEY (id),
+		PRIMARY KEY  (id),
 		KEY organizer_id (organizer_id),
 		KEY group_id (group_id),
 		KEY status (status),
@@ -62,7 +62,7 @@ function bp_events_install() {
 		event_id   bigint(20)   NOT NULL DEFAULT 0,
 		meta_key   varchar(255)          DEFAULT NULL,
 		meta_value longtext              DEFAULT NULL,
-		PRIMARY KEY (id),
+		PRIMARY KEY  (id),
 		KEY event_id (event_id),
 		KEY meta_key (meta_key(191))
 	) {$charset_collate};";
@@ -76,7 +76,7 @@ function bp_events_install() {
 		order_id     bigint(20)           DEFAULT NULL,
 		status       varchar(20) NOT NULL DEFAULT 'registered',
 		date_created datetime    NOT NULL DEFAULT '0000-00-00 00:00:00',
-		PRIMARY KEY (id),
+		PRIMARY KEY  (id),
 		KEY event_id (event_id),
 		KEY user_id (user_id),
 		KEY status (status),
@@ -91,7 +91,7 @@ function bp_events_install() {
 		invitee_id   bigint(20)  NOT NULL DEFAULT 0,
 		status       varchar(20) NOT NULL DEFAULT 'pending',
 		date_created datetime    NOT NULL DEFAULT '0000-00-00 00:00:00',
-		PRIMARY KEY (id),
+		PRIMARY KEY  (id),
 		KEY event_id (event_id),
 		KEY invitee_id (invitee_id),
 		UNIQUE KEY event_invitee (event_id, invitee_id)
@@ -99,9 +99,7 @@ function bp_events_install() {
 
 	require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
-	foreach ( $sql as $query ) {
-		dbDelta( $query );
-	}
+	dbDelta( $sql );
 }
 
 /** Event CRUD *****************************************************************/

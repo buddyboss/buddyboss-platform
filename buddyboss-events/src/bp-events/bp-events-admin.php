@@ -21,8 +21,8 @@ function bp_events_admin_menu() {
 		'manage_options',
 		'bp-events',
 		'bp_events_admin_page',
-		'dashicons-calendar-alt',
-		3.05
+		'none',
+		3.3
 	);
 
 	add_submenu_page(
@@ -824,6 +824,42 @@ function bp_events_category_admin_scripts( $hook ) {
 	wp_add_inline_script( 'media-editor', $inline_js );
 }
 add_action( 'admin_enqueue_scripts', 'bp_events_category_admin_scripts' );
+
+// ---------------------------------------------------------------------------
+// Admin menu icon — bb-icons glyph, matching BuddyBoss Platform style.
+// Output on every admin page so the icon shows in the sidebar everywhere.
+// ---------------------------------------------------------------------------
+
+/**
+ * Render the bb-icons glyph for the BB Events menu item.
+ *
+ * Uses the same \edc8 codepoint and font-family as BuddyBoss Platform and
+ * BuddyBoss CRM. The icon is 'none' in add_menu_page so WordPress does not
+ * output a dashicon; this CSS replaces it with the bb-icons glyph.
+ *
+ * @since BuddyBoss Events 1.0.0
+ */
+function bp_events_admin_menu_icon() {
+	?>
+	<style type="text/css">
+		#adminmenu li.toplevel_page_bp-events .wp-menu-image:before {
+			content: "\edc8";
+			font-family: "bb-icons";
+			font-style: normal;
+			font-weight: 300;
+			speak: none;
+			display: inline-block;
+			text-decoration: inherit;
+			width: 1em;
+			margin-right: 0.2em;
+			text-align: center;
+			font-variant: normal;
+			text-transform: none;
+		}
+	</style>
+	<?php
+}
+add_action( 'admin_head', 'bp_events_admin_menu_icon' );
 
 // Legacy aliases kept so existing code that calls the old callback names still works.
 function bp_events_admin_setting_callback_events_enabled()       { bp_events_setting_events_enabled(); }

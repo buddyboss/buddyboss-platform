@@ -1332,7 +1332,7 @@
 	/**
 	 * Initialise the wizard when the DOM is ready.
 	 */
-	document.addEventListener( 'DOMContentLoaded', function() {
+	function initWizard() {
 		var form = document.getElementById( 'bb-rl-event-create-form' );
 
 		if ( ! form ) {
@@ -1373,6 +1373,13 @@
 
 		// Render first step.
 		renderStep( 1 );
-	} );
+	}
+
+	// Script is enqueued in the footer — DOM is already ready when this runs.
+	if ( document.readyState === 'loading' ) {
+		document.addEventListener( 'DOMContentLoaded', initWizard );
+	} else {
+		initWizard();
+	}
 
 } )();
