@@ -140,6 +140,15 @@
 
 		&--missing {
 			color: $bb-error-color;
+			border-color: $bb-error-color;
+			background-color: transparent;
+
+			&:hover {
+				color: $bb-error-color;
+				border-color: $bb-error-color;
+				background-color: transparent;
+				opacity: 0.8;
+			}
 		}
 	}
 }

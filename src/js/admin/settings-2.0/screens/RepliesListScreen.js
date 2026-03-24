@@ -829,7 +829,7 @@ export default function RepliesListScreen( { onNavigate } ) {
 										handleForumFilter( 0 );
 									} }
 								>
-									{ sprintf( __( 'All Forums (%s)', 'buddyboss' ), forumsList.length ) }
+									{ views && views.all ? sprintf( __( 'All Forums (%s)', 'buddyboss' ), views.all ) : __( 'All Forums', 'buddyboss' ) }
 								</button>
 								{ filteredForums.map( function ( f ) {
 									return (

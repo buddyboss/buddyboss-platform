@@ -107,24 +107,7 @@ class BB_Admin_Settings_Ajax {
 					}
 				}
 
-				// settings_route: build query-param URL from the feature's settings_route.
-				// React's urlToRoute() converts these to hash routes for SPA navigation.
-				$settings_route = function_exists( 'bb_get_feature_settings_url' )
-					? bb_get_feature_settings_url( $feature_id )
-					: '';
-
-				// Custom settings_route points to a different feature's panel
-				// (e.g., OneSignal '/settings/notifications/onesignal' → Notifications > OneSignal panel).
-				if (
-					! empty( $feature['settings_route'] ) &&
-					$feature['settings_route'] !== '/settings/' . $feature_id &&
-					function_exists( 'bb_get_feature_settings_url' )
-				) {
-					$parts     = array_values( array_filter( explode( '/', $feature['settings_route'] ) ) );
-					$route_tab = isset( $parts[1] ) ? $parts[1] : $feature_id;
-					$route_pan = isset( $parts[2] ) ? $parts[2] : '';
-					$settings_route = bb_get_feature_settings_url( $route_tab, $route_pan );
-				}
+				$settings_route = $this->bb_resolve_settings_route( $feature_id, $feature );
 
 				$formatted = array(
 					'id'             => $feature_id,
@@ -450,21 +433,7 @@ class BB_Admin_Settings_Ajax {
 	 * @return array Formatted feature data.
 	 */
 	private function bb_format_feature_for_response( $feature_id, $feature, $registry, $icon_registry ) {
-		// Build settings_route — use custom route when it points to a different feature's panel.
-		$settings_route = function_exists( 'bb_get_feature_settings_url' )
-			? bb_get_feature_settings_url( $feature_id )
-			: '';
-
-		if (
-			! empty( $feature['settings_route'] ) &&
-			$feature['settings_route'] !== '/settings/' . $feature_id &&
-			function_exists( 'bb_get_feature_settings_url' )
-		) {
-			$parts     = array_values( array_filter( explode( '/', $feature['settings_route'] ) ) );
-			$route_tab = isset( $parts[1] ) ? $parts[1] : $feature_id;
-			$route_pan = isset( $parts[2] ) ? $parts[2] : '';
-			$settings_route = bb_get_feature_settings_url( $route_tab, $route_pan );
-		}
+		$settings_route = $this->bb_resolve_settings_route( $feature_id, $feature );
 
 		$formatted = array(
 			'id'             => $feature_id,
@@ -1341,6 +1310,42 @@ class BB_Admin_Settings_Ajax {
 	}
 
 	/**
+	 * Resolve the settings route URL for a feature.
+	 *
+	 * Handles both default routes (/settings/{feature_id}) and custom routes
+	 * that point to a different feature's panel (e.g., '/settings/notifications/onesignal').
+	 * React's urlToRoute() converts the resulting query-param URL to a hash route.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $feature_id Feature ID.
+	 * @param array  $feature    Feature data array.
+	 *
+	 * @return string Settings route URL or empty string.
+	 */
+	private function bb_resolve_settings_route( $feature_id, $feature ) {
+		if ( ! function_exists( 'bb_get_feature_settings_url' ) ) {
+			return '';
+		}
+
+		$settings_route = bb_get_feature_settings_url( $feature_id );
+
+		// Custom settings_route points to a different feature's panel
+		// (e.g., OneSignal '/settings/notifications/onesignal' → Notifications > OneSignal panel).
+		if (
+			! empty( $feature['settings_route'] ) &&
+			$feature['settings_route'] !== '/settings/' . $feature_id
+		) {
+			$parts     = array_values( array_filter( explode( '/', $feature['settings_route'] ) ) );
+			$route_tab = isset( $parts[1] ) ? $parts[1] : $feature_id;
+			$route_pan = isset( $parts[2] ) ? $parts[2] : '';
+			$settings_route = bb_get_feature_settings_url( $route_tab, $route_pan );
+		}
+
+		return $settings_route;
+	}
+
+	/**
 	 * Normalize the field group parameter to a consistent array format.
 	 *
 	 * Accepts either a string (group key only, backward compatible) or an
@@ -1492,9 +1497,10 @@ class BB_Admin_Settings_Ajax {
 					);
 
 					if ( ! empty( $registered_emails ) ) {
+						// Count templates that have a published email post (not just a term).
 						$total_email_count = 0;
 						foreach ( $registered_emails as $email_type ) {
-							if ( isset( $slug_term_counts[ $email_type ] ) ) {
+							if ( ! empty( $slug_post_map[ $email_type ] ) ) {
 								++$total_email_count;
 							}
 						}
@@ -1524,9 +1530,16 @@ class BB_Admin_Settings_Ajax {
 						} else {
 							$email_template['url'] = get_admin_url(
 								bp_get_root_blog_id(),
-								'edit.php?post_type=' . bp_get_email_post_type() . '&popup=yes'
+								'admin.php?page=bb-settings&tab=emails&panel=all_emails&popup=yes'
 							);
 						}
+					} else {
+						// No registered email templates — provide URL to emails admin
+						// so React can show "Missing Email Template" with a link.
+						$email_template['url'] = get_admin_url(
+							bp_get_root_blog_id(),
+							'admin.php?page=bb-settings&tab=emails&panel=all_emails&popup=yes'
+						);
 					}
 
 					// Get preference sub-types (email, web, app).

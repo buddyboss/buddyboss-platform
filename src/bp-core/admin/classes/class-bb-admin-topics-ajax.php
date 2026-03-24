@@ -240,7 +240,7 @@ class BB_Admin_Topics_Ajax {
 				}
 			}
 			$forum_ids = array_unique( array_filter( $forum_ids ) );
-			if ( ! empty( $forum_ids ) ) {
+			if ( ! empty( $forum_ids ) && function_exists( '_prime_post_caches' ) ) {
 				_prime_post_caches( $forum_ids, false, false );
 			}
 		}
@@ -369,7 +369,7 @@ class BB_Admin_Topics_Ajax {
 
 			// Prime post cache in batch to avoid N+1 queries from get_the_title().
 			$forum_ids = array_keys( $forum_counts );
-			if ( ! empty( $forum_ids ) ) {
+			if ( ! empty( $forum_ids ) && function_exists( '_prime_post_caches' ) ) {
 				_prime_post_caches( $forum_ids, false, false );
 			}
 
