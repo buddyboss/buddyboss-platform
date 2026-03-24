@@ -155,7 +155,7 @@ export function AsyncSelectField( { id, value, onChange, asyncAction, asyncExtra
 					setIsLoadingMore( false );
 				} );
 		},
-		[ asyncAction ]
+		[ asyncAction, asyncExtraParams ]
 	);
 
 	// On mount: resolve the label for the current value if one exists.
