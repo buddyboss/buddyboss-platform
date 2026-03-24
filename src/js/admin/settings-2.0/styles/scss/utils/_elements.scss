@@ -1035,8 +1035,8 @@ select.bb-admin-settings__select {
 		width: 100%;
 		min-height: 40px;
 		padding: 8px 12px;
-		background: $bb-background-base-color;
-		border: 1px solid $bb-border-secondary-color;
+		background: $bb-background-color;
+		border: 1px solid $bb-border-tertiary-color;
 		border-radius: $bb-border-radius-md;
 		cursor: pointer;
 		font-size: 14px;
@@ -1044,7 +1044,8 @@ select.bb-admin-settings__select {
 
 		&:hover,
 		&:focus {
-			border-color: $bb-background-brand-primary-color;
+            border-color: $bb-border-quaternary-color;
+            box-shadow: none;
 		}
 	}
 
@@ -1053,7 +1054,7 @@ select.bb-admin-settings__select {
 	}
 
 	&__icon {
-		font-size: 16px;
+		font-size: 18px;
 		color: $bb-icon-tertiary-color;
 	}
 
@@ -1061,10 +1062,17 @@ select.bb-admin-settings__select {
 		.components-popover__content {
 			padding: 0;
 		}
+
+        .components-popover__content {
+            background-color: $bb-background-base-color;
+            border-radius: $bb-border-radius-lg;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, .1);
+            border: 1px solid $bb-border-secondary-color;
+        }
 	}
 
 	&__picker {
-		padding: 8px;
+		padding: 12px;
 	}
 }
 
@@ -1074,7 +1082,7 @@ select.bb-admin-settings__select {
 	&__button {
 		// Focus-within so the wrapper border highlights when the inner input is focused.
 		&:focus-within {
-			border-color: $bb-background-brand-primary-color;
+			border-color: $bb-border-quaternary-color;
 		}
 	}
 
