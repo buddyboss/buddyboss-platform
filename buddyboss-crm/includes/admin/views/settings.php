@@ -21,11 +21,6 @@ $tag_history       = get_option( 'bb_crm_enable_tag_history', '1' );
 $auto_tag          = get_option( 'bb_crm_auto_tag_on_register', '0' );
 $auto_tag_id       = get_option( 'bb_crm_auto_tag_id', 0 );
 $tag_cap           = get_option( 'bb_crm_tag_cap', 'manage_options' );
-$camp_plugin_file  = 'buddyboss-campaigns/buddyboss-campaigns.php';
-$camp_active       = defined( 'BB_CRM_CAMP_VERSION' );
-$camp_installed    = file_exists( WP_PLUGIN_DIR . '/' . $camp_plugin_file );
-
-$activate_camp_url = wp_nonce_url( admin_url( 'plugins.php?action=activate&plugin=' . urlencode( $camp_plugin_file ) ), 'activate-plugin_' . $camp_plugin_file );
 ?>
 
 <style>
@@ -378,36 +373,6 @@ $activate_camp_url = wp_nonce_url( admin_url( 'plugins.php?action=activate&plugi
 						<option value="moderate_comments" <?php selected( $tag_cap, 'moderate_comments' ); ?>><?php esc_html_e( 'Moderators+', 'buddyboss-crm' ); ?></option>
 					</select>
 				</div>
-			</div>
-		</div>
-
-		<!-- ── Add-ons ───────────────────────────────────────────────────────── -->
-		<div class="bb-crm-section-card">
-			<div class="bb-crm-section-header">
-				<h2 class="bb-crm-section-title"><?php esc_html_e( 'Add-ons', 'buddyboss-crm' ); ?></h2>
-			</div>
-			<div class="bb-crm-addons-grid">
-
-				<!-- Campaigns -->
-				<div class="bb-crm-addon-card">
-					<div class="bb-crm-addon-header">
-						<span class="bb-crm-addon-name"><?php esc_html_e( 'Campaigns', 'buddyboss-crm' ); ?></span>
-						<?php if ( $camp_active ) : ?>
-							<span class="bb-crm-addon-version"><?php echo esc_html( 'v' . BB_CRM_CAMP_VERSION ); ?></span>
-						<?php endif; ?>
-					</div>
-					<p class="bb-crm-addon-desc"><?php esc_html_e( 'Send targeted email campaigns to member segments based on tags and lists.', 'buddyboss-crm' ); ?></p>
-					<div class="bb-crm-addon-footer">
-						<?php if ( $camp_active ) : ?>
-							<span class="bb-crm-badge-active"><?php esc_html_e( 'Active', 'buddyboss-crm' ); ?></span>
-						<?php elseif ( $camp_installed ) : ?>
-							<a href="<?php echo esc_url( $activate_camp_url ); ?>" class="bb-crm-btn-activate"><?php esc_html_e( 'Activate', 'buddyboss-crm' ); ?></a>
-						<?php else : ?>
-							<span class="bb-crm-badge-inactive"><?php esc_html_e( 'Not installed', 'buddyboss-crm' ); ?></span>
-						<?php endif; ?>
-					</div>
-				</div>
-
 			</div>
 		</div>
 

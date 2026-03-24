@@ -71,7 +71,6 @@ class BB_CRM_Install {
             'bp_automation_queue'      => 'bb_automation_queue',
             'bp_automation_log'        => 'bb_automation_log',
             'bp_tag_history'           => 'bb_tag_history',
-            'bp_crm_campaigns'         => 'bb_crm_campaigns',
         );
 
         foreach ( $renames as $old => $new ) {
@@ -283,29 +282,6 @@ class BB_CRM_Install {
             KEY user_tag (user_id, tag_id)
         ) $charset_collate;";
 
-        // Table 11: Email Campaigns
-        $sql_campaigns = "CREATE TABLE {$bb_prefix}bb_crm_campaigns (
-            id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-            name varchar(200) NOT NULL,
-            subject varchar(500) NOT NULL DEFAULT '',
-            preheader varchar(500) NOT NULL DEFAULT '',
-            from_name varchar(200) NOT NULL DEFAULT '',
-            from_email varchar(200) NOT NULL DEFAULT '',
-            reply_to varchar(200) NOT NULL DEFAULT '',
-            body longtext,
-            recipient_type varchar(20) DEFAULT 'list',
-            recipient_ids longtext,
-            status enum('draft','sending','sent','failed') DEFAULT 'draft',
-            sent_at datetime DEFAULT NULL,
-            total_recipients int(11) DEFAULT 0,
-            created_by bigint(20) UNSIGNED DEFAULT 0,
-            created_at datetime NOT NULL,
-            updated_at datetime NOT NULL,
-            PRIMARY KEY  (id),
-            KEY status (status),
-            KEY created_by (created_by)
-        ) $charset_collate;";
-
         // Execute table creation
         dbDelta( $sql_tags );
         dbDelta( $sql_user_tags );
@@ -317,7 +293,6 @@ class BB_CRM_Install {
         dbDelta( $sql_automation_queue );
         dbDelta( $sql_automation_log );
         dbDelta( $sql_tag_history );
-        dbDelta( $sql_campaigns );
 
         wp_cache_flush();
         flush_rewrite_rules();

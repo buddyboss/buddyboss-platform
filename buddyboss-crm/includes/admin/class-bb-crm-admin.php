@@ -173,18 +173,6 @@ class BB_CRM_Admin {
             array( $this, 'render_export_page' )
         );
 
-        // Campaigns placeholder (only when add-on not active).
-        if ( ! class_exists( 'BB_CRM_Campaigns_Admin' ) ) {
-            add_submenu_page(
-                'buddyboss-crm',
-                __( 'Campaigns', 'buddyboss-crm' ),
-                __( 'Campaigns', 'buddyboss-crm' ) . ' <span class="awaiting-mod">Add-on</span>',
-                'manage_options',
-                'buddyboss-crm-campaigns',
-                array( $this, 'render_campaigns_page' )
-            );
-        }
-
         // Settings
         add_submenu_page(
             'buddyboss-crm',
@@ -343,13 +331,6 @@ class BB_CRM_Admin {
     }
 
     /**
-     * Render Campaigns page
-     */
-    public function render_campaigns_page() {
-        include BB_CRM_PLUGIN_DIR . 'includes/admin/views/campaigns.php';
-    }
-
-    /**
      * Render Broadcasts page
      *
      * @since 1.0.0
@@ -458,33 +439,6 @@ class BB_CRM_Admin {
             exit;
         }
 
-        // ── Profile: resubscribe user (Campaigns add-on) ─────────────────────
-        if ( 'resub_user' === $action && isset( $_GET['user_id'] ) ) {
-            $uid = absint( $_GET['user_id'] );
-            check_admin_referer( 'bb_crm_resub_' . $uid );
-            if ( $uid && class_exists( 'BB_Camp_Unsubscribe' ) ) {
-                $target = get_userdata( $uid );
-                if ( $target && is_email( $target->user_email ) ) {
-                    BB_Camp_Unsubscribe::resubscribe( $target->user_email );
-                }
-            }
-            wp_safe_redirect( add_query_arg( array( 'action' => 'view', 'user_id' => $uid, 'msg' => 'resubscribed' ), $page_url ) );
-            exit;
-        }
-
-        // ── Profile: unsubscribe user (Campaigns add-on) ────────────────────
-        if ( 'unsub_user' === $action && isset( $_GET['user_id'] ) ) {
-            $uid = absint( $_GET['user_id'] );
-            check_admin_referer( 'bb_crm_unsub_' . $uid );
-            if ( $uid && class_exists( 'BB_Camp_Unsubscribe' ) ) {
-                $target = get_userdata( $uid );
-                if ( $target && is_email( $target->user_email ) ) {
-                    BB_Camp_Unsubscribe::unsubscribe( $target->user_email );
-                }
-            }
-            wp_safe_redirect( add_query_arg( array( 'action' => 'view', 'user_id' => $uid, 'msg' => 'unsubscribed' ), $page_url ) );
-            exit;
-        }
     }
 
     /**

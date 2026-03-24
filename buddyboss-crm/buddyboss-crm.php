@@ -153,7 +153,6 @@ final class BuddyBoss_CRM {
         $wpdb->bb_automation_queue      = $bb_prefix . 'bb_automation_queue';
         $wpdb->bb_automation_log        = $bb_prefix . 'bb_automation_log';
         $wpdb->bb_tag_history           = $bb_prefix . 'bb_tag_history';
-        $wpdb->bb_crm_campaigns         = $bb_prefix . 'bb_crm_campaigns';
     }
 
     /**

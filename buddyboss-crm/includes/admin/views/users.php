@@ -92,8 +92,6 @@ $notice_msgs = array(
     'no_selection'      => 'Please select at least one user.',
     'no_tag'            => 'Please select a tag for the bulk action.',
     'no_list'           => 'Please select a list for the bulk action.',
-    'resubscribed'      => 'User resubscribed to email campaigns.',
-    'unsubscribed'      => 'User unsubscribed from email campaigns.',
 );
 $notice_is_error = in_array( $notice, array( 'no_selection', 'no_tag', 'no_list' ), true );
 
@@ -145,12 +143,6 @@ if ( 'view' === $action && $view_uid ) :
          ORDER BY h.performed_at DESC
          LIMIT 50", $view_uid
     ) );
-
-    // Email subscription status (Campaigns add-on).
-    $camp_unsub_status = false;
-    if ( class_exists( 'BB_Camp_Unsubscribe' ) ) {
-        $camp_unsub_status = BB_Camp_Unsubscribe::is_unsubscribed( $wp_user->user_email );
-    }
 
     // BuddyBoss / BuddyPress activity feed.
     $bp_activity   = array();
@@ -362,39 +354,6 @@ if ( 'view' === $action && $view_uid ) :
             <?php endif; ?>
         </div>
 
-        <?php if ( class_exists( 'BB_Camp_Unsubscribe' ) ) : ?>
-        <!-- ── Email Subscription card ── -->
-        <div style="background:#fff;border:1px solid #e0e0e0;border-radius:4px;padding:20px;grid-column:1/-1">
-            <h3 style="margin:0 0 14px;font-size:14px;text-transform:uppercase;letter-spacing:.05em;color:#555"><?php esc_html_e( 'Email Campaigns Subscription', 'buddyboss-crm' ); ?></h3>
-            <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
-                <?php if ( $camp_unsub_status ) : ?>
-                    <span style="display:inline-flex;align-items:center;gap:6px;background:#fef2f2;color:#dc2626;border:1px solid #fecaca;border-radius:20px;padding:5px 14px;font-size:13px;font-weight:600">
-                        <span class="dashicons dashicons-no" style="font-size:16px;width:16px;height:16px"></span>
-                        <?php esc_html_e( 'Unsubscribed', 'buddyboss-crm' ); ?>
-                    </span>
-                    <span style="color:#888;font-size:13px"><?php esc_html_e( 'This user has unsubscribed and will be skipped when sending campaigns.', 'buddyboss-crm' ); ?></span>
-                    <a href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'action' => 'resub_user', 'user_id' => $view_uid ), $page_url ), 'bb_crm_resub_' . $view_uid ) ); ?>"
-                       class="button button-primary"
-                       onclick="return confirm('<?php esc_attr_e( 'Resubscribe this user to email campaigns?', 'buddyboss-crm' ); ?>')">
-                        <?php esc_html_e( 'Resubscribe User', 'buddyboss-crm' ); ?>
-                    </a>
-                <?php else : ?>
-                    <span style="display:inline-flex;align-items:center;gap:6px;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:20px;padding:5px 14px;font-size:13px;font-weight:600">
-                        <span class="dashicons dashicons-yes" style="font-size:16px;width:16px;height:16px"></span>
-                        <?php esc_html_e( 'Subscribed', 'buddyboss-crm' ); ?>
-                    </span>
-                    <span style="color:#888;font-size:13px"><?php esc_html_e( 'This user will receive campaign emails.', 'buddyboss-crm' ); ?></span>
-                    <a href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'action' => 'unsub_user', 'user_id' => $view_uid ), $page_url ), 'bb_crm_unsub_' . $view_uid ) ); ?>"
-                       class="button"
-                       style="color:#dc2626;border-color:#fecaca"
-                       onclick="return confirm('<?php esc_attr_e( 'Unsubscribe this user from email campaigns?', 'buddyboss-crm' ); ?>')">
-                        <?php esc_html_e( 'Unsubscribe User', 'buddyboss-crm' ); ?>
-                    </a>
-                <?php endif; ?>
-            </div>
-        </div>
-        <?php endif; ?>
-
     </div><!-- /grid -->
 
     <?php if ( function_exists( 'buddypress' ) ) : ?>
@@ -509,40 +468,6 @@ if ( $search ) {
     $args['search_columns'] = array( 'display_name', 'user_email', 'user_login' );
 }
 
-// Apply subscription status filter (Campaigns add-on).
-if ( $sub_filter && class_exists( 'BB_Camp_Unsubscribe' ) ) {
-    $camp_unsub_table = $wpdb->prefix . 'bb_crm_unsubscribes';
-    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching
-    $unsub_email_list = $wpdb->get_col( "SELECT email FROM `{$camp_unsub_table}`" );
-    if ( ! empty( $unsub_email_list ) ) {
-        $unsub_uid_list = get_users( array(
-            'search'         => '',
-            'search_columns' => array( 'user_email' ),
-            'fields'         => 'ID',
-            'number'         => -1,
-            'meta_query'     => array(),
-        ) );
-        // get_users by email list — use a direct query for precision.
-        $placeholders   = implode( ',', array_fill( 0, count( $unsub_email_list ), '%s' ) );
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching
-        $unsub_uid_list = $wpdb->get_col( $wpdb->prepare(
-            "SELECT ID FROM {$wpdb->users} WHERE user_email IN ($placeholders)",
-            $unsub_email_list
-        ) );
-        $unsub_uid_list = array_map( 'absint', $unsub_uid_list );
-    } else {
-        $unsub_uid_list = array();
-    }
-
-    if ( 'unsubscribed' === $sub_filter ) {
-        $args['include'] = empty( $unsub_uid_list ) ? array( 0 ) : $unsub_uid_list;
-    } elseif ( 'subscribed' === $sub_filter ) {
-        if ( ! empty( $unsub_uid_list ) ) {
-            $args['exclude'] = $unsub_uid_list;
-        }
-    }
-}
-
 $user_query  = new WP_User_Query( $args );
 $users       = $user_query->get_results();
 $total_users = $user_query->get_total();
@@ -567,19 +492,6 @@ if ( ! empty( $user_ids ) ) {
     }
 }
 
-// Load unsubscribed emails for displayed users (Campaigns add-on).
-$unsub_emails = array();
-if ( class_exists( 'BB_Camp_Unsubscribe' ) && ! empty( $users ) ) {
-    $camp_unsub_table = $wpdb->prefix . 'bb_crm_unsubscribes';
-    $email_list = array_map( function( $u ) { return $u->user_email; }, $users );
-    $placeholders = implode( ',', array_fill( 0, count( $email_list ), '%s' ) );
-    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching
-    $unsub_rows = $wpdb->get_col( $wpdb->prepare(
-        "SELECT email FROM `{$camp_unsub_table}` WHERE email IN ($placeholders)",
-        $email_list
-    ) );
-    $unsub_emails = array_flip( $unsub_rows );
-}
 ?>
 
 <div class="wrap bb-crm-wrap">
