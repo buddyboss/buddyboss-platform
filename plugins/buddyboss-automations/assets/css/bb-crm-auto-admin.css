@@ -1,0 +1,271 @@
+/* BuddyBoss CRM Automations Admin Styles */
+
+.bb-crm-auto-stats {
+	display: flex;
+	gap: 12px;
+	align-items: center;
+	margin: 12px 0;
+	font-size: 13px;
+}
+
+/* Edit page layout */
+.bb-crm-auto-edit-layout {
+	display: flex;
+	gap: 20px;
+	margin-top: 20px;
+}
+.bb-crm-auto-main    { flex: 1; min-width: 0; }
+.bb-crm-auto-sidebar { width: 280px; flex-shrink: 0; }
+
+/* Trigger badge */
+.bb-crm-trigger-badge {
+	display: inline-block;
+	background: #e0f0ff;
+	color: #0073aa;
+	border-radius: 3px;
+	padding: 2px 8px;
+	font-size: 12px;
+	font-weight: 500;
+}
+
+/* Condition / Action rows */
+.bb-crm-condition-row,
+.bb-crm-action-row {
+	display: flex;
+	align-items: flex-start;
+	gap: 8px;
+	margin-bottom: 10px;
+	padding: 10px;
+	background: #f9f9f9;
+	border: 1px solid #e0e0e0;
+	border-radius: 4px;
+	flex-wrap: wrap;
+}
+.bb-crm-action-handle {
+	cursor: move;
+	color: #aaa;
+	margin-top: 6px;
+}
+.bb-crm-condition-config,
+.bb-crm-action-config {
+	flex: 1;
+	min-width: 200px;
+}
+.bb-crm-condition-config input,
+.bb-crm-action-config input,
+.bb-crm-condition-config select,
+.bb-crm-action-config select,
+.bb-crm-action-config textarea {
+	margin-bottom: 4px;
+}
+
+/* Table */
+.bb-crm-auto-table th,
+.bb-crm-auto-table td { vertical-align: middle; }
+.bb-crm-auto-row-actions { display: flex; gap: 4px; flex-wrap: wrap; align-items: center; }
+.button-link-delete { color: #b32d2e !important; }
+.button-link-delete:hover { color: #dc3545 !important; }
+
+/* Log */
+.bb-crm-log-action { margin-bottom: 4px; font-size: 12px; }
+.bb-crm-log-action.success code { color: #46b450; }
+.bb-crm-log-action.failed  code { color: #dc3232; }
+
+/* Status badges */
+.bb-crm-status-badge        { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 11px; font-weight: 600; background: #e8e8e8; color: #555; }
+.bb-crm-status-success      { background: #d4edda; color: #155724; }
+.bb-crm-status-warning      { background: #fff3cd; color: #856404; }
+.bb-crm-status-error        { background: #f8d7da; color: #721c24; }
+
+/* Empty state */
+.bb-crm-empty-state {
+	text-align: center;
+	padding: 60px 20px;
+	color: #888;
+}
+.bb-crm-empty-state .dashicons { font-size: 48px; width: 48px; height: 48px; margin-bottom: 12px; }
+.bb-crm-empty-state h3 { font-size: 18px; margin-bottom: 8px; color: #555; }
+.bb-crm-empty-state p  { margin-bottom: 20px; }
+
+/* ── Trigger category picker ──────────────────────────────────────────── */
+
+.bb-crm-trigger-question {
+	font-size: 14px;
+	font-weight: 600;
+	margin: 0 0 14px;
+	color: #1e2327;
+}
+
+.bb-crm-trigger-cat-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 12px;
+	margin-bottom: 4px;
+}
+
+.bb-crm-trigger-cat-card {
+	border: 2px solid #e0e0e0;
+	border-radius: 8px;
+	padding: 16px 12px 12px;
+	text-align: center;
+	cursor: pointer;
+	background: #fff;
+	transition: border-color .15s, box-shadow .15s, transform .1s;
+}
+.bb-crm-trigger-cat-card:hover {
+	border-color: #2271b1;
+	box-shadow: 0 3px 10px rgba(0,0,0,.10);
+	transform: translateY(-1px);
+}
+.bb-crm-trigger-cat-card .dashicons {
+	font-size: 30px;
+	width: 30px;
+	height: 30px;
+	display: block;
+	margin: 0 auto 8px;
+}
+.bb-crm-trigger-cat-card strong {
+	display: block;
+	font-size: 13px;
+	margin-bottom: 5px;
+}
+.bb-crm-cat-desc {
+	display: block;
+	font-size: 11px;
+	color: #666;
+	line-height: 1.4;
+	margin-bottom: 6px;
+}
+.bb-crm-cat-count {
+	display: inline-block;
+	font-size: 10px;
+	color: #fff;
+	background: #aaa;
+	border-radius: 10px;
+	padding: 1px 8px;
+}
+
+/* Step 2 — trigger list */
+.bb-crm-step2-header {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 12px;
+}
+.bb-crm-cat-badge {
+	font-size: 12px;
+	font-weight: 600;
+	background: #e8f0fe;
+	color: #2271b1;
+	border-radius: 12px;
+	padding: 3px 12px;
+}
+
+.bb-crm-trigger-list {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 8px;
+	max-height: 340px;
+	overflow-y: auto;
+	padding-right: 2px;
+}
+.bb-crm-trigger-item {
+	border: 1px solid #e0e0e0;
+	border-radius: 6px;
+	padding: 10px 12px;
+	cursor: pointer;
+	background: #fafafa;
+	transition: border-color .12s, background .12s;
+}
+.bb-crm-trigger-item:hover {
+	border-color: #2271b1;
+	background: #f0f6ff;
+}
+.bb-crm-trigger-item strong {
+	display: block;
+	font-size: 12px;
+	margin-bottom: 2px;
+}
+.bb-crm-trigger-item small {
+	color: #666;
+	font-size: 11px;
+	line-height: 1.3;
+}
+
+/* State 2 — selected trigger */
+.bb-crm-trigger-selected {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 12px 14px;
+	background: #f0f6ff;
+	border: 1px solid #c3d9f7;
+	border-radius: 6px;
+}
+.bb-crm-cat-pill {
+	font-size: 11px;
+	font-weight: 600;
+	color: #fff;
+	border-radius: 10px;
+	padding: 3px 10px;
+	white-space: nowrap;
+}
+.bb-crm-trigger-selected strong {
+	flex: 1;
+	font-size: 13px;
+}
+
+/* Postbox header consistency */
+.postbox-header h2 { font-size: 14px; }
+
+@media ( max-width: 960px ) {
+	.bb-crm-auto-edit-layout { flex-direction: column; }
+	.bb-crm-auto-sidebar { width: 100%; }
+	.bb-crm-trigger-cat-grid { grid-template-columns: repeat(2, 1fr); }
+	.bb-crm-trigger-list { grid-template-columns: 1fr; }
+}
+@media ( max-width: 600px ) {
+	.bb-crm-trigger-cat-grid { grid-template-columns: 1fr; }
+}
+
+/* ── Workflow step types ──────────────────────────────────────────────── */
+
+/* Condition steps — blue left border + tinted background */
+.bb-crm-condition-step {
+	background: #f0f6ff;
+	border-color: #c3d9f7;
+	border-left: 3px solid #2271b1;
+}
+.bb-crm-condition-step-badge {
+	background: #2271b1;
+	color: #fff;
+	font-size: 10px;
+	font-weight: 700;
+	letter-spacing: .5px;
+	text-transform: uppercase;
+	border-radius: 3px;
+	padding: 4px 8px;
+	white-space: nowrap;
+	margin-top: 4px;
+	flex-shrink: 0;
+}
+.bb-crm-inline-condition-type {
+	flex-shrink: 0;
+}
+
+/* Add buttons row */
+.bb-crm-workflow-add-buttons {
+	display: flex;
+	gap: 8px;
+	margin-top: 8px;
+	flex-wrap: wrap;
+}
+.bb-crm-workflow-add-buttons .button-condition {
+	color: #2271b1;
+	border-color: #2271b1;
+}
+.bb-crm-workflow-add-buttons .button-condition:hover {
+	background: #f0f6ff;
+	border-color: #135e96;
+	color: #135e96;
+}
