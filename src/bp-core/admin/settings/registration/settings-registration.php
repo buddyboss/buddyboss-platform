@@ -91,6 +91,7 @@ function bb_registration_register_panel_fields() {
 						'label' => __( 'Custom URL', 'buddyboss' ),
 					),
 				),
+				'group'             => 'registration_form',
 				'order'             => 30,
 			)
 		);
@@ -102,15 +103,17 @@ function bb_registration_register_panel_fields() {
 			'registration_general',
 			array(
 				'name'              => 'register-page-url',
-				'label'             => __( 'Custom URL', 'buddyboss' ),
+				'label'             => '',
 				'type'              => 'text',
 				'default'           => '',
 				'sanitize_callback' => 'esc_url_raw',
+				'placeholder'       => __( 'Enter custom URL', 'buddyboss' ),
 				'conditional'       => array(
 					'field'  => 'allow-custom-registration',
 					'value'  => true,
 					'action' => 'show',
 				),
+				'group'             => 'registration_form',
 				'order'             => 35,
 			)
 		);
@@ -195,6 +198,7 @@ function bb_registration_register_panel_fields() {
 			'default'           => 0,
 			'sanitize_callback' => 'absint',
 			'pro_only'          => true,
+			'group'             => 'social_login',
 			'order'             => 70,
 		)
 	);
@@ -217,6 +221,7 @@ function bb_registration_register_panel_fields() {
 				'field' => 'bb-social-login',
 				'value' => true,
 			),
+			'group'             => 'social_login',
 			'providers'         => array(
 				array(
 					'id'    => 'google',
@@ -264,6 +269,7 @@ function bb_registration_register_panel_fields() {
 				'field' => 'bb-social-login',
 				'value' => true,
 			),
+			'group'             => 'social_login',
 			'hidden'            => true,
 			'order'             => 80,
 		)
