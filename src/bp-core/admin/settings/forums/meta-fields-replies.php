@@ -154,6 +154,12 @@ function bb_replies_register_core_meta_fields( $registry, $component ) {
 				if ( empty( $reply->ID ) ) {
 					return 'publish';
 				}
+
+				// Password-protected posts have post_status='publish' with a non-empty post_password.
+				if ( ! empty( $reply->post_password ) ) {
+					return 'password';
+				}
+
 				return get_post_status( $reply->ID );
 			},
 			'get_options'       => function ( $reply ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- Callback signature required by registry.
@@ -183,6 +189,33 @@ function bb_replies_register_core_meta_fields( $registry, $component ) {
 				}
 			},
 			'sanitize_callback' => 'sanitize_key',
+		)
+	);
+
+	// Password (conditional: only when visibility='password').
+	$registry->register(
+		$component,
+		'post_password',
+		array(
+			'label'             => __( 'Password', 'buddyboss' ),
+			'type'              => 'text',
+			'tab'               => 'details',
+			'order'             => 46,
+			'save_phase'        => 'before',
+			'conditional'       => array(
+				'field' => 'visibility',
+				'value' => 'password',
+			),
+			'get_value'         => function ( $reply ) {
+				if ( empty( $reply->ID ) ) {
+					return '';
+				}
+				return $reply->post_password;
+			},
+			'save_value'        => function ( $reply, $value ) {
+				$reply->post_password = $value;
+			},
+			'sanitize_callback' => 'sanitize_text_field',
 		)
 	);
 
