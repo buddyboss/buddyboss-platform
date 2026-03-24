@@ -95,7 +95,7 @@ class BB_CRM_Admin {
         // Standalone top-level menu, positioned just below BuddyBoss (position 3).
         add_menu_page(
             __( 'BuddyBoss CRM', 'buddyboss-crm' ),
-            __( 'BuddyBoss CRM', 'buddyboss-crm' ),
+            __( 'CRM', 'buddyboss-crm' ),
             'manage_options',
             'buddyboss-crm',
             array( $this, 'render_dashboard_page' ),
