@@ -18,6 +18,21 @@ import { useState, useRef } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { safeUrl } from '../../utils/sanitize';
 
+// Default brand icons — used as fallback when Pro doesn't provide icon URLs.
+import googleIcon from '../../images/sso/google.png';
+import facebookIcon from '../../images/sso/facebook.png';
+import twitterIcon from '../../images/sso/twitter.png';
+import linkedinIcon from '../../images/sso/linkedin.png';
+import appleIcon from '../../images/sso/apple.png';
+
+var DEFAULT_ICONS = {
+	google: googleIcon,
+	facebook: facebookIcon,
+	twitter: twitterIcon,
+	linkedin: linkedinIcon,
+	apple: appleIcon,
+};
+
 /**
  * SSO Providers Field Component
  *
@@ -101,6 +116,11 @@ export function SsoProvidersField( { field, value, onChange, disabled } ) {
 								{ provider.icon ? (
 									<img
 										src={ safeUrl( provider.icon ) }
+										alt={ provider.label }
+									/>
+								) : DEFAULT_ICONS[ provider.id ] ? (
+									<img
+										src={ DEFAULT_ICONS[ provider.id ] }
 										alt={ provider.label }
 									/>
 								) : (

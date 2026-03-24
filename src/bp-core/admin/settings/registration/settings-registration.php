@@ -209,7 +209,7 @@ function bb_registration_register_panel_fields() {
 	);
 
 	// Field 8: SSO Provider Cards (Pro placeholder).
-	// Shows greyed-out provider cards when Pro is not active.
+	// Always visible as a preview — shows greyed-out provider cards when Pro is not active.
 	// Pro enriches via bb_admin_settings_format_field_data to inject real provider data.
 	bb_register_feature_field(
 		$feature_id,
@@ -222,10 +222,6 @@ function bb_registration_register_panel_fields() {
 			'default'           => array(),
 			'sanitize_callback' => '__return_empty_array',
 			'pro_only'          => true,
-			'conditional'       => array(
-				'field' => 'bb-social-login',
-				'value' => true,
-			),
 			'group'             => 'social_login',
 			'providers'         => array(
 				array(
