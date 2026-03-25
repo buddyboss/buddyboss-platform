@@ -177,7 +177,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 			})
 			.catch((err) => {
 				// Ignore aborted requests
-				if (err?.name === 'AbortError') {
+				if (err && 'AbortError' === err.name) {
 					return;
 				}
 				setIsLoading(false);
@@ -243,6 +243,58 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 		};
 	}, [featureId]);
 
+	// Listen for field value updates dispatched by InputButtonField (e.g. after credential save).
+	// Updates settings and side panel field defaults so notice fields reflect new connection status.
+	useEffect( function() {
+		function handleFieldValueUpdate( e ) {
+			var updatedFields = e.detail && e.detail.fields;
+			if ( ! updatedFields || 'object' !== typeof updatedFields ) {
+				return;
+			}
+
+			// Update current settings state.
+			setSettings( function( prev ) {
+				return Object.assign( {}, prev, updatedFields );
+			} );
+
+			// Update field data in side panels so notice/other fields render updated content.
+			// Notice fields render from `description`, other fields from `default`.
+			setSidePanels( function( prevPanels ) {
+				return prevPanels.map( function( panel ) {
+					return Object.assign( {}, panel, {
+						sections: ( panel.sections || [] ).map( function( section ) {
+							return Object.assign( {}, section, {
+								fields: ( section.fields || [] ).map( function( field ) {
+									if ( undefined !== updatedFields[ field.name ] ) {
+										var updates = { default: updatedFields[ field.name ] };
+										// Notice fields render from description, so update that too.
+										if ( 'notice' === field.type ) {
+											updates.description = updatedFields[ field.name ];
+										}
+										// Update is_connected for input_button fields.
+										if ( undefined !== e.detail.is_connected && 'input_button' === field.type ) {
+											updates.is_connected = e.detail.is_connected;
+										}
+										return Object.assign( {}, field, updates );
+									}
+									return field;
+								} ),
+							} );
+						} ),
+					} );
+				} );
+			} );
+
+			// Invalidate cache so next navigation fetches fresh data.
+			invalidateFeatureCache();
+		}
+
+		window.addEventListener( BB_EVENTS.FIELD_VALUE_UPDATE, handleFieldValueUpdate );
+		return function() {
+			window.removeEventListener( BB_EVENTS.FIELD_VALUE_UPDATE, handleFieldValueUpdate );
+		};
+	}, [] );
+
 	// Setup debounced save (auto-save on change)
 	// Uses AJAX endpoint for feature settings.
 	useEffect(() => {
@@ -299,7 +351,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 					} else {
 						setToast({
 							status: 'error',
-							message: response.data?.message || __('Something went wrong. Please try again.', 'buddyboss'),
+							message: ( response.data && response.data.message ) || __('Something went wrong. Please try again.', 'buddyboss'),
 						});
 					}
 				})
@@ -312,7 +364,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 		}, 1000);
 
 		return () => {
-			if (debouncedSaveRef.current?.cancel) {
+			if (debouncedSaveRef.current && debouncedSaveRef.current.cancel) {
 				debouncedSaveRef.current.cancel();
 			}
 		};
@@ -349,6 +401,28 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 	// Value may be a function (prevValue) => newValue for functional updates (avoids stale state when merging).
 	// When a parent toggle is turned OFF, cascade to child fields (parent_field) and turn them OFF too.
 	const handleSettingChange = useCallback((fieldName, value) => {
+		// Check if this field is managed by an input_button (saved via its own AJAX, not auto-save).
+		// Fields listed in an input_button's related_fields are saved by the Connect/Disconnect button.
+		var isButtonManaged = false;
+		sidePanels.forEach( function( panel ) {
+			( panel.sections || [] ).forEach( function( section ) {
+				( section.fields || [] ).forEach( function( field ) {
+					if ( 'input_button' === field.type && Array.isArray( field.related_fields ) &&
+						field.related_fields.indexOf( fieldName ) !== -1 ) {
+						isButtonManaged = true;
+					}
+				} );
+			} );
+		} );
+
+		// Button-managed fields: update settings state only (no auto-save, no toast).
+		if ( isButtonManaged ) {
+			setSettings( function( prev ) {
+				return Object.assign( {}, prev, { [fieldName]: value } );
+			} );
+			return;
+		}
+
 		setToast({ status: 'saving', message: __('Saving changes...', 'buddyboss') });
 
 		// Collect child fields that depend on this field via parent_field.
@@ -575,6 +649,27 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 													} )()}
 												</div>
 												<div className="bb-admin-feature-settings__section-header-right">
+													{/* Section-level PRO badge (e.g. UPGRADE PRO) */}
+													{section.pro_notice && section.pro_notice.show && (
+														<span className="bb-admin-feature-settings__section-pro-notice">
+															{section.pro_notice.link_url ? (
+																<a
+																	href={safeUrl(section.pro_notice.link_url)}
+																	target="_blank"
+																	rel="noopener noreferrer"
+																	className="bb-admin-feature-settings__section-pro-badge"
+																>
+																	<i className={section.pro_notice.badge_icon || 'bb-icons-rl-crown-simple'} />
+																	<span>{section.pro_notice.badge_text || 'UPGRADE PRO'}</span>
+																</a>
+															) : (
+																<span className="bb-admin-feature-settings__section-pro-badge">
+																	<i className={section.pro_notice.badge_icon || 'bb-icons-rl-crown-simple'} />
+																	<span>{section.pro_notice.badge_text || 'UPGRADE PRO'}</span>
+																</span>
+															)}
+														</span>
+													)}
 													{/* Help icon - opens help slider modal */}
 													{activePanel.help_url && (
 														<HelpIcon
@@ -641,7 +736,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 			<HelpSliderModal
 				isOpen={isHelpOpen}
 				onClose={handleHelpClose}
-				title={helpContent?.title || __('Help', 'buddyboss')}
+				title={( helpContent && helpContent.title ) || __('Help', 'buddyboss')}
 			>
 				{isHelpLoading ? (
 					<div className="help-content-loading">

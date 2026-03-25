@@ -757,7 +757,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			require_once trailingslashit( $bp->plugin_dir . 'bp-core/classes' ) . '/class-bb-admin-setting-fields.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-general.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-messages.php';
-			require_once $this->admin_dir . '/settings/bp-admin-setting-notifications.php';
+			// Notification settings class removed — migrated to Settings 2.0.
 			require_once $this->admin_dir . '/settings/bp-admin-setting-registration.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-credit.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-invites.php';

@@ -45,6 +45,26 @@ function LayoutPreview( { alignment } ) {
  *
  * @type {Object<string, Function>}
  */
+/**
+ * Notification position preview for on-screen notifications.
+ *
+ * Shows a screen mockup with a notification bar at bottom-left or bottom-right.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} props           Component props.
+ * @param {string} props.position  Position: 'left' or 'right'.
+ * @returns {JSX.Element} Notification position preview.
+ */
+function NotificationPositionPreview( { position } ) {
+	var base = 'bb-admin-settings-field__notification-position';
+	return (
+		<div className={ base + ' ' + base + '--' + position }>
+			<div className={ base + '-bar' }></div>
+		</div>
+	);
+}
+
 // Module-level cache for upload URLs — survives component unmount/remount cycles
 // caused by conditional toggling (e.g., disable then re-enable Group Avatars).
 var uploadUrlCache = {};
@@ -105,6 +125,12 @@ var IMAGE_PREVIEWS = {
 	},
 	'header-centered-profile': function () {
 		return <LayoutPreview alignment="centered" />;
+	},
+	'notification-position-left': function () {
+		return <NotificationPositionPreview position="left" />;
+	},
+	'notification-position-right': function () {
+		return <NotificationPositionPreview position="right" />;
 	},
 };
 

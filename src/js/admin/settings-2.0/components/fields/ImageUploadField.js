@@ -15,6 +15,7 @@ import { useState, useRef, useEffect, useCallback } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { invalidateFeatureCache } from '../../utils/featureCache';
 import { AvatarCropModal } from './AvatarCropModal';
+import { safeUrl } from '../../utils/sanitize';
 
 // Maximum file size: 10 MB (matches WordPress default).
 var MAX_FILE_SIZE = 10 * 1024 * 1024;
@@ -65,10 +66,21 @@ function sendAjax( ajaxUrl, action, formData, signal ) {
  * @returns {JSX.Element} ImageUploadField component.
  */
 export function ImageUploadField( { uploadConfig, uploadUrl, onUpload, onRemove, disabled } ) {
-	var [ status, setStatus ] = useState( uploadUrl ? 'preview' : 'idle' );
-	var [ previewUrl, setPreviewUrl ] = useState( uploadUrl || '' );
-	var [ error, setError ] = useState( '' );
-	var [ cropData, setCropData ] = useState( null );
+	var statusState = useState( uploadUrl ? 'preview' : 'idle' );
+	var status = statusState[ 0 ];
+	var setStatus = statusState[ 1 ];
+
+	var previewState = useState( uploadUrl || '' );
+	var previewUrl = previewState[ 0 ];
+	var setPreviewUrl = previewState[ 1 ];
+
+	var errorState = useState( '' );
+	var error = errorState[ 0 ];
+	var setError = errorState[ 1 ];
+
+	var cropState = useState( null );
+	var cropData = cropState[ 0 ];
+	var setCropData = cropState[ 1 ];
 	var fileInputRef = useRef( null );
 	var abortRef = useRef( null );
 
@@ -93,8 +105,8 @@ export function ImageUploadField( { uploadConfig, uploadUrl, onUpload, onRemove,
 	}, [] );
 
 	var isAvatar = 'avatar' === uploadConfig.type;
-	var nonces = window.bbAdminData?.uploadNonces || {};
-	var ajaxUrl = window.bbAdminData?.ajaxUrl || '/wp-admin/admin-ajax.php';
+	var nonces = ( window.bbAdminData && window.bbAdminData.uploadNonces ) || {};
+	var ajaxUrl = ( window.bbAdminData && window.bbAdminData.ajaxUrl ) || '/wp-admin/admin-ajax.php';
 
 	// Sanitize type for className — only allow known types.
 	var typeClass = ALLOWED_TYPES[ uploadConfig.type ] ? uploadConfig.type : 'unknown';
@@ -351,7 +363,7 @@ export function ImageUploadField( { uploadConfig, uploadUrl, onUpload, onRemove,
 			{ 'preview' === status && previewUrl && (
 				<div className="bb-admin-image-upload__preview-area">
 					<div className="bb-admin-image-upload__preview">
-						<img src={ previewUrl } alt={ __( 'Uploaded image', 'buddyboss' ) } />
+						<img src={ safeUrl( previewUrl ) } alt={ __( 'Uploaded image', 'buddyboss' ) } />
 					</div>
 					<div className="bb-admin-image-upload__actions">
 						<button

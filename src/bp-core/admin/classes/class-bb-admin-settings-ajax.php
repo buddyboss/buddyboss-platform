@@ -96,7 +96,8 @@ class BB_Admin_Settings_Ajax {
 					}
 				}
 
-				// settings_route: browser URL (query params); generated from feature_id. Frontend uses urlToRoute() for navigation.
+				$settings_route = $this->bb_resolve_settings_route( $feature_id, $feature );
+
 				$formatted = array(
 					'id'             => $feature_id,
 					'label'          => $feature['label'] ?? $feature_id,
@@ -106,7 +107,7 @@ class BB_Admin_Settings_Ajax {
 					'status'         => $is_active ? 'active' : 'inactive',
 					'available'      => $is_available,
 					'required'       => ! empty( $feature['required'] ),
-					'settings_route' => ! empty( $feature['settings_route'] ) && function_exists( 'bb_get_feature_settings_url' ) ? bb_get_feature_settings_url( $feature_id ) : '',
+					'settings_route' => $settings_route,
 				);
 
 				// Format icon like REST API.
@@ -365,6 +366,16 @@ class BB_Admin_Settings_Ajax {
 					);
 				}
 
+				// Include pro_notice if set (e.g. UPGRADE PRO badge in section header).
+				if ( ! empty( $section['pro_notice'] ) && is_array( $section['pro_notice'] ) ) {
+					$formatted_section['pro_notice'] = array(
+						'show'       => ! empty( $section['pro_notice']['show'] ),
+						'badge_text' => sanitize_text_field( $section['pro_notice']['badge_text'] ?? __( 'UPGRADE PRO', 'buddyboss' ) ),
+						'badge_icon' => sanitize_text_field( $section['pro_notice']['badge_icon'] ?? 'bb-icons-rl-crown-simple' ),
+						'link_url'   => esc_url_raw( $section['pro_notice']['link_url'] ?? '' ),
+					);
+				}
+
 				$formatted_sections[] = $formatted_section;
 			}
 
@@ -425,7 +436,8 @@ class BB_Admin_Settings_Ajax {
 	 * @return array Formatted feature data.
 	 */
 	private function bb_format_feature_for_response( $feature_id, $feature, $registry, $icon_registry ) {
-		// settings_route: browser URL (query params); generated from feature_id. Frontend uses urlToRoute() for navigation.
+		$settings_route = $this->bb_resolve_settings_route( $feature_id, $feature );
+
 		$formatted = array(
 			'id'             => $feature_id,
 			'label'          => $feature['label'] ?? $feature_id,
@@ -435,7 +447,7 @@ class BB_Admin_Settings_Ajax {
 			'status'         => $registry->bb_is_feature_active( $feature_id ) ? 'active' : 'inactive',
 			'available'      => $registry->bb_is_feature_available( $feature_id ),
 			'required'       => ! empty( $feature['required'] ),
-			'settings_route' => ! empty( $feature['settings_route'] ) && function_exists( 'bb_get_feature_settings_url' ) ? bb_get_feature_settings_url( $feature_id ) : '',
+			'settings_route' => $settings_route,
 		);
 
 		// Format icon.
@@ -646,7 +658,16 @@ class BB_Admin_Settings_Ajax {
 				// Input button fields (text input + action button, e.g. API key connect/disconnect).
 				'placeholder'          => $field['placeholder'] ?? null,
 				'button_label'         => $field['button_label'] ?? null,
+				'button_only'          => ! empty( $field['button_only'] ),
+				'button_url'           => ! empty( $field['button_url'] ) ? esc_url_raw( $field['button_url'] ) : null,
+				'button_target'        => $field['button_target'] ?? null,
+				// Empty state fields (centered card with icon + title + description + button).
+				'empty_state_title'       => $field['empty_state_title'] ?? null,
+				'empty_state_description' => $field['empty_state_description'] ?? null,
+				'related_fields'       => ! empty( $field['related_fields'] ) && is_array( $field['related_fields'] ) ? array_map( 'sanitize_key', $field['related_fields'] ) : null,
 				'is_connected'         => ! empty( $field['is_connected'] ),
+				// Max length for text inputs.
+				'maxlength'            => $field['maxlength'] ?? null,
 				// Status check fields (AJAX-triggered server-side checks, e.g. Direct Access).
 				'ajax_action'          => ! empty( $field['ajax_action'] ) ? sanitize_key( $field['ajax_action'] ) : null,
 				'watch_field'          => $field['watch_field'] ?? null,
@@ -687,9 +708,10 @@ class BB_Admin_Settings_Ajax {
 				$field_data['pro_notice'] = ! empty( $pro_notice['show'] ) ? $pro_notice : null;
 			}
 
-			// Inject upload_config and resolved upload_url for image_radio fields with upload support.
+			// Inject upload_config and resolved upload_url for image_radio/image_upload fields with upload support.
 			// Only whitelisted keys are sent to the frontend — url_getter stays server-side.
-			if ( 'image_radio' === ( $field_data['type'] ?? '' ) && ! empty( $field['upload_config'] ) ) {
+			$upload_types = array( 'image_radio', 'image_upload' );
+			if ( in_array( ( $field_data['type'] ?? '' ), $upload_types, true ) && ! empty( $field['upload_config'] ) ) {
 				$upload_config = $field['upload_config'];
 
 				// Resolve the current upload URL using the registered getter function.
@@ -745,6 +767,13 @@ class BB_Admin_Settings_Ajax {
 			}
 			if ( isset( $field_data['help_text'] ) && is_string( $field_data['help_text'] ) ) {
 				$field_data['help_text'] = wp_kses_post( $field_data['help_text'] );
+			}
+
+			// Attach notification_groups data for notification_types fields.
+			// Built lazily here (not during registration) because bb_register_notification_preferences()
+			// depends on component hooks that haven't fired yet at bb_register_features time.
+			if ( 'notification_types' === ( $field['type'] ?? '' ) && function_exists( 'bb_register_notification_preferences' ) ) {
+				$field_data['notification_groups'] = $this->bb_build_notification_groups();
 			}
 
 			// Attach topic data and nonces for topic_list fields.
@@ -1276,6 +1305,42 @@ class BB_Admin_Settings_Ajax {
 	}
 
 	/**
+	 * Resolve the settings route URL for a feature.
+	 *
+	 * Handles both default routes (/settings/{feature_id}) and custom routes
+	 * that point to a different feature's panel (e.g., '/settings/notifications/onesignal').
+	 * React's urlToRoute() converts the resulting query-param URL to a hash route.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $feature_id Feature ID.
+	 * @param array  $feature    Feature data array.
+	 *
+	 * @return string Settings route URL or empty string.
+	 */
+	private function bb_resolve_settings_route( $feature_id, $feature ) {
+		if ( ! function_exists( 'bb_get_feature_settings_url' ) ) {
+			return '';
+		}
+
+		$settings_route = bb_get_feature_settings_url( $feature_id );
+
+		// Custom settings_route points to a different feature's panel
+		// (e.g., OneSignal '/settings/notifications/onesignal' → Notifications > OneSignal panel).
+		if (
+			! empty( $feature['settings_route'] ) &&
+			$feature['settings_route'] !== '/settings/' . $feature_id
+		) {
+			$parts     = array_values( array_filter( explode( '/', $feature['settings_route'] ) ) );
+			$route_tab = isset( $parts[1] ) ? $parts[1] : $feature_id;
+			$route_pan = isset( $parts[2] ) ? $parts[2] : '';
+			$settings_route = bb_get_feature_settings_url( $route_tab, $route_pan );
+		}
+
+		return $settings_route;
+	}
+
+	/**
 	 * Normalize the field group parameter to a consistent array format.
 	 *
 	 * Accepts either a string (group key only, backward compatible) or an
@@ -1304,12 +1369,210 @@ class BB_Admin_Settings_Ajax {
 		// Array format: ensure both keys exist.
 		if ( is_array( $group ) && ! empty( $group['key'] ) ) {
 			return array(
-				'key'   => $group['key'],
-				'label' => $group['label'] ?? null,
+				'key'    => $group['key'],
+				'label'  => $group['label'] ?? null,
+				'inline' => ! empty( $group['inline'] ),
 			);
 		}
 
 		return null;
+	}
+
+	/**
+	 * Build notification groups data for the notification_types custom field.
+	 *
+	 * Called lazily at AJAX time because bb_register_notification_preferences()
+	 * depends on component hooks that haven't fired yet during bb_register_features.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return array Notification groups with fields, sub-types, and email template info.
+	 */
+	private function bb_build_notification_groups() {
+		$all_notifications    = bb_register_notification_preferences();
+		$enabled_notification = bp_get_option( 'bb_enabled_notification', array() );
+		$notification_groups  = array();
+
+		if ( empty( $all_notifications ) ) {
+			return $notification_groups;
+		}
+
+		// Batch-collect all email template slugs across every field to avoid N+1 queries.
+		$all_email_slugs = array();
+		foreach ( $all_notifications as $field_group ) {
+			if ( empty( $field_group['fields'] ) ) {
+				continue;
+			}
+			foreach ( $field_group['fields'] as $notification_field ) {
+				$slugs = bb_register_notification_email_templates( $notification_field['key'] );
+				if ( ! empty( $slugs ) ) {
+					$all_email_slugs = array_merge( $all_email_slugs, $slugs );
+				}
+			}
+		}
+		$all_email_slugs = array_unique( $all_email_slugs );
+
+		// Single batched term query: slug → count mapping.
+		$slug_term_counts = array();
+		$slug_term_ids    = array();
+		if ( ! empty( $all_email_slugs ) ) {
+			$terms = get_terms(
+				array(
+					'taxonomy'   => bp_get_email_tax_type(),
+					'slug'       => $all_email_slugs,
+					'hide_empty' => false,
+				)
+			);
+
+			if ( ! is_wp_error( $terms ) ) {
+				foreach ( $terms as $term ) {
+					$slug_term_counts[ $term->slug ] = 1;
+					$slug_term_ids[ $term->slug ]    = $term->term_id;
+				}
+			}
+		}
+
+		// Single batched post query: get all email posts for existing term slugs.
+		$slug_post_map = array();
+		if ( ! empty( $slug_term_ids ) ) {
+			$email_posts = get_posts(
+				array(
+					'posts_per_page'         => -1, // Bounded by tax_query — all matching email templates needed.
+					'no_found_rows'          => true, // Skip COUNT(*) — not paginating.
+					'update_post_meta_cache' => false, // Post meta not needed for URL resolution.
+					'post_type'              => bp_get_email_post_type(),
+					'tax_query'              => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+						array(
+							'taxonomy' => bp_get_email_tax_type(),
+							'field'    => 'slug',
+							'terms'    => array_keys( $slug_term_ids ),
+						),
+					),
+					'fields'         => 'ids',
+				)
+			);
+
+			// Prime the term cache for all email posts to avoid N+1 queries.
+			update_object_term_cache( $email_posts, bp_get_email_post_type() );
+
+			// Map each post to its email type slug(s).
+			foreach ( $email_posts as $post_id ) {
+				$post_terms = wp_get_object_terms( $post_id, bp_get_email_tax_type(), array( 'fields' => 'slugs' ) );
+				if ( ! is_wp_error( $post_terms ) ) {
+					foreach ( $post_terms as $slug ) {
+						if ( ! isset( $slug_post_map[ $slug ] ) ) {
+							$slug_post_map[ $slug ] = array();
+						}
+						$slug_post_map[ $slug ][] = $post_id;
+					}
+				}
+			}
+		}
+
+		foreach ( $all_notifications as $group_key => $field_group ) {
+			$group_data = array(
+				'key'         => $group_key,
+				'admin_label' => isset( $field_group['admin_label'] ) ? $field_group['admin_label'] : '',
+				'fields'      => array(),
+			);
+
+			if ( ! empty( $field_group['fields'] ) ) {
+				foreach ( $field_group['fields'] as $notification_field ) {
+					$checked = isset( $notification_field['default'] ) && 'yes' === $notification_field['default'];
+
+					if ( array_key_exists( $notification_field['key'], $enabled_notification ) ) {
+						$checked = isset( $enabled_notification[ $notification_field['key'] ]['main'] ) && 'yes' === $enabled_notification[ $notification_field['key'] ]['main'];
+					}
+
+					// Get email template info using pre-fetched batch data.
+					$registered_emails = bb_register_notification_email_templates( $notification_field['key'] );
+					$email_template    = array(
+						'has_templates' => ! empty( $registered_emails ),
+						'count'         => count( $registered_emails ),
+					);
+
+					if ( ! empty( $registered_emails ) ) {
+						// Count templates that have a published email post (not just a term).
+						$total_email_count = 0;
+						foreach ( $registered_emails as $email_type ) {
+							if ( ! empty( $slug_post_map[ $email_type ] ) ) {
+								++$total_email_count;
+							}
+						}
+
+						$email_template['existing_count'] = $total_email_count;
+						$email_template['missing']        = count( $registered_emails ) > $total_email_count;
+
+						if ( ! $email_template['missing'] ) {
+							// Use pre-fetched post map for single-template edit links.
+							if ( 1 === count( $registered_emails ) ) {
+								$single_slug = current( $registered_emails );
+								if ( ! empty( $slug_post_map[ $single_slug ] ) ) {
+									$email_template['url'] = get_edit_post_link( $slug_post_map[ $single_slug ][0], 'raw' );
+								}
+							}
+
+							if ( empty( $email_template['url'] ) ) {
+								$email_template['url'] = add_query_arg(
+									array(
+										'post_type' => bp_get_email_post_type(),
+										'taxonomy'  => bp_get_email_tax_type(),
+										'terms'     => implode( ',', $registered_emails ),
+									),
+									admin_url( 'edit.php' )
+								);
+							}
+						} else {
+							$email_template['url'] = get_admin_url(
+								bp_get_root_blog_id(),
+								'admin.php?page=bb-settings&tab=emails&panel=all_emails&popup=yes'
+							);
+						}
+					} else {
+						// No registered email templates — provide URL to emails admin
+						// so React can show "Missing Email Template" with a link.
+						$email_template['url'] = get_admin_url(
+							bp_get_root_blog_id(),
+							'admin.php?page=bb-settings&tab=emails&panel=all_emails&popup=yes'
+						);
+					}
+
+					// Get preference sub-types (email, web, app).
+					$sub_types = array();
+					if ( function_exists( 'bb_notification_preferences_types' ) ) {
+						$options = bb_notification_preferences_types( $notification_field );
+						if ( ! empty( $options ) ) {
+							foreach ( $options as $key => $v ) {
+								$parent_disabled = ! empty( $notification_field['notification_read_only'] ) && true === $notification_field['notification_read_only'];
+								$is_disabled     = apply_filters( 'bb_is_' . $notification_field['key'] . '_' . $key . '_preference_type_disabled', $v['disabled'], $notification_field['key'], $key );
+								$is_render       = apply_filters( 'bb_is_' . $notification_field['key'] . '_' . $key . '_preference_type_render', $v['is_render'], $notification_field['key'], $key );
+
+								$sub_types[ $key ] = array(
+									'label'      => $v['label'],
+									'is_checked' => $v['is_checked'],
+									'is_render'  => $is_render,
+									'disabled'   => $is_disabled || $parent_disabled,
+								);
+							}
+						}
+					}
+
+					$group_data['fields'][] = array(
+						'key'            => $notification_field['key'],
+						'label'          => ! empty( $notification_field['admin_label'] ) ? $notification_field['admin_label'] : $notification_field['label'],
+						'checked'        => $checked,
+						'read_only'      => ! empty( $notification_field['notification_read_only'] ),
+						'tooltip'        => ! empty( $notification_field['notification_tooltip_text'] ) ? $notification_field['notification_tooltip_text'] : '',
+						'email_template' => $email_template,
+						'sub_types'      => $sub_types,
+					);
+				}
+			}
+
+			$notification_groups[] = $group_data;
+		}
+
+		return $notification_groups;
 	}
 
 	/**

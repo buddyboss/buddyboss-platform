@@ -29,6 +29,7 @@ import { sanitizeHtml, safeUrl } from '../utils/sanitize';
 import { TopicListField } from './activity/topics/topic-list';
 import { SharePlatformsField } from './activity/sharing';
 import { AccessControlField } from './access-control/AccessControlField';
+import { NotificationTypesField } from './notifications';
 import { CheckboxListField } from './fields/CheckboxListField';
 import { ImageRadioField } from './fields/ImageRadioField';
 import { DimensionsField } from './fields/DimensionsField';
@@ -37,7 +38,9 @@ import { AsyncSelectField } from './fields/AsyncSelectField';
 import { ExtensionListField } from './fields/ExtensionListField';
 import { DocumentExtensionsField } from './fields/DocumentExtensionsField';
 import { InputButtonField } from './fields/InputButtonField';
+import { PasswordField } from './fields/PasswordField';
 import { StatusCheckField } from './fields/StatusCheckField';
+import { ImageUploadField } from './fields/ImageUploadField';
 
 /**
  * Settings Form Component (matching Figma settingsSection)
@@ -94,7 +97,7 @@ export function SettingsForm({ fields, values, onChange }) {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param {Object} cond          Single condition: { field, value }.
+	 * @param {Object} cond Single condition: { field, value }.
 	 * @return {boolean} Whether the condition is met.
 	 */
 	const evaluateCondition = (cond) => {
@@ -118,7 +121,7 @@ export function SettingsForm({ fields, values, onChange }) {
 	};
 
 	/**
-	 * Check if a field should be visible based on its conditional logic.
+	 * Check if a field's conditional is met.
 	 *
 	 * Supports two formats:
 	 *   1. Single condition:   { field: 'name', value: expected }
@@ -126,30 +129,52 @@ export function SettingsForm({ fields, values, onChange }) {
 	 *      operator defaults to 'AND'.
 	 *
 	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {Object} field Field config with optional conditional property.
+	 * @return {boolean} True when condition is met (or no conditional exists).
 	 */
-	const isFieldVisible = (field) => {
-		// If field has a "conditional" property, check it
-		if (field.conditional) {
+	const isConditionalMet = ( field ) => {
+		if ( ! field.conditional ) {
+			return true;
+		}
 
-			// Skip visibility check for disable-only conditionals — they stay visible.
+		// Skip visibility check for disable-only conditionals — they stay visible.
 			if ( 'disable' === field.conditional.action ) {
 				return true;
 			}
 
 			// Multiple conditions with operator.
-			if (Array.isArray(field.conditional.conditions)) {
-				var operator = (field.conditional.operator || 'AND').toUpperCase();
-				var conditions = field.conditional.conditions;
+		if ( Array.isArray( field.conditional.conditions ) ) {
+			var operator = ( field.conditional.operator || 'AND' ).toUpperCase();
+			var conditions = field.conditional.conditions;
 
-				if ('OR' === operator) {
-					return conditions.some(evaluateCondition);
-				}
-				// Default: AND — all conditions must match.
-				return conditions.every(evaluateCondition);
+			if ( 'OR' === operator ) {
+				return conditions.some( evaluateCondition );
 			}
+			// Default: AND — all conditions must match.
+			return conditions.every( evaluateCondition );
+		}
 
-			// Single condition (backward-compatible).
-			return evaluateCondition(field.conditional);
+		// Single condition (backward-compatible).
+		return evaluateCondition( field.conditional );
+	};
+
+	/**
+	 * Check if a field should be visible based on its conditional logic.
+	 * Fields with action:'disable' stay visible but get disabled instead.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {Object} field Field config with optional conditional property.
+	 * @return {boolean} True when the field should be rendered.
+	 */
+	const isFieldVisible = (field) => {
+		if ( field.conditional ) {
+			// When action is 'disable', keep visible (handled by isFieldConditionallyDisabled).
+			if ( 'disable' === field.conditional.action ) {
+				return true;
+			}
+			return isConditionalMet( field );
 		}
 
 		// For parent_field (nesting), always show the field but it may be disabled
@@ -309,6 +334,7 @@ export function SettingsForm({ fields, values, onChange }) {
 						value={value}
 						onChange={onChange}
 						disabled={disabled}
+						values={values}
 					/>
 				);
 
@@ -321,30 +347,68 @@ export function SettingsForm({ fields, values, onChange }) {
 					/>
 				);
 
+			case 'password':
+				return (
+					<PasswordField
+						key={field.name}
+						field={field}
+						value={value}
+						onChange={onChange}
+						disabled={disabled}
+					/>
+				);
+
 			case 'text':
 			case 'email':
 			case 'url':
 				return (
-					<TextControl
-						key={field.name}
-						label=""
-						value={value || ''}
-						onChange={(newValue) => onChange(field.name, newValue)}
-						type={ 'email' === field.type ? 'email' : 'url' === field.type ? 'url' : 'text' }
-						disabled={disabled}
-						__nextHasNoMarginBottom
-					/>
+					<div className={ field.maxlength > 0 ? 'bb-admin-settings-form__field-text-wrapper' : '' }>
+						<TextControl
+							key={field.name}
+							label=""
+							value={value || ''}
+							onChange={function( newValue ) {
+								if ( field.maxlength && newValue.length > field.maxlength ) {
+									newValue = newValue.substring( 0, field.maxlength );
+								}
+								onChange( field.name, newValue );
+							}}
+							type={ 'email' === field.type ? 'email' : 'url' === field.type ? 'url' : 'text' }
+							disabled={disabled}
+							placeholder={field.placeholder || ''}
+							maxLength={ field.maxlength > 0 ? field.maxlength : undefined }
+							__nextHasNoMarginBottom
+						/>
+						{ field.maxlength > 0 && (
+							<span className="bb-admin-settings-form__textarea-counter">
+								{ ( value || '' ).length + '/' + field.maxlength }
+							</span>
+						) }
+					</div>
 				);
 
 			case 'textarea':
 				return (
-					<TextareaControl
-						key={field.name}
-						label=""
-						value={value || ''}
-						onChange={(newValue) => onChange(field.name, newValue)}
-						__nextHasNoMarginBottom
-					/>
+					<div className="bb-admin-settings-form__textarea-wrapper">
+						<TextareaControl
+							key={field.name}
+							label=""
+							value={value || ''}
+							onChange={function( newValue ) {
+								if ( field.maxlength && newValue.length > field.maxlength ) {
+									newValue = newValue.substring( 0, field.maxlength );
+								}
+								onChange( field.name, newValue );
+							}}
+							placeholder={field.placeholder || ''}
+							__nextHasNoMarginBottom
+						/>
+						{ field.maxlength > 0 && (
+							<span className="bb-admin-settings-form__textarea-counter">
+								{ ( value || '' ).length + '/' + field.maxlength }
+							</span>
+						) }
+					</div>
 				);
 
 			case 'select':
@@ -501,6 +565,56 @@ export function SettingsForm({ fields, values, onChange }) {
 					</div>
 				);
 
+			case 'empty_state':
+				// Reusable empty state card: centered icon + title + description + optional button.
+				// Used for placeholder states (e.g., OneSignal disabled, Pro update required,
+				// feature not installed, upgrade prompts).
+				//
+				// PHP registration example:
+				//   'type'                    => 'empty_state',
+				//   'icon'                    => 'bb-icons-rl bb-icons-rl-warning-circle', // optional, default warning icon
+				//   'empty_state_title'       => 'Title Text',
+				//   'empty_state_description' => 'Description text (supports HTML via description field)',
+				//   'button_label'            => 'Button Text',       // optional
+				//   'button_url'              => 'https://...',        // optional
+				//   'button_target'           => '_blank',             // optional, default '_self'
+				//   'notice_type'             => 'warning',            // optional, adds modifier class
+				return (
+					<div key={field.name} className={ 'bb-admin-empty-state' + ( field.notice_type ? ' bb-admin-empty-state--' + field.notice_type : '' ) }>
+						{ ( field.icon !== false ) && (
+							<div className="bb-admin-empty-state__icon">
+								<i className={ field.icon || 'bb-icons-rl bb-icons-rl-warning-circle' }></i>
+							</div>
+						) }
+						{ field.empty_state_title && (
+							<h3 className="bb-admin-empty-state__title">
+								{ decodeEntities( field.empty_state_title ) }
+							</h3>
+						) }
+						{ field.empty_state_description && (
+							<p className="bb-admin-empty-state__description">
+								{ decodeEntities( field.empty_state_description ) }
+							</p>
+						) }
+						{ ( ! field.empty_state_description && field.description ) && (
+							<div
+								className="bb-admin-empty-state__description"
+								dangerouslySetInnerHTML={{ __html: sanitizedHtml[ field.name + '__desc' ] || '' }}
+							/>
+						) }
+						{ field.button_label && field.button_url && (
+							<a
+								href={ safeUrl( field.button_url ) }
+								className="bb-admin-empty-state__button"
+								target={ field.button_target || '_self' }
+								rel={ '_blank' === field.button_target ? 'noopener noreferrer' : undefined }
+							>
+								{ field.button_label }
+							</a>
+						) }
+					</div>
+				);
+
 			case 'reaction_migration': {
 				// Reaction migration: warning notice for pending migration with "Start Conversion" button.
 				// Check conditions here to avoid rendering empty wrapper div.
@@ -585,6 +699,12 @@ export function SettingsForm({ fields, values, onChange }) {
 					/>
 				);
 
+			case 'static_text':
+				// Description-only field: renders the field row with label + description,
+				// no input control. Used for informational text like OneSignal image hint.
+				// Return empty string (truthy) so the field row renders, but no visible element.
+				return '';
+
 			case 'hidden':
 				// With description_controls: render hidden span so the field row shows
 				// and description_controls handles the inline select/input.
@@ -601,6 +721,21 @@ export function SettingsForm({ fields, values, onChange }) {
 						value={value}
 						onChange={onChange}
 						disabled={disabled}
+					/>
+				);
+
+			case 'image_upload':
+				return (
+					<ImageUploadField
+						uploadConfig={ field.upload_config || {} }
+						uploadUrl={ value || '' }
+						onUpload={ function ( newUrl ) {
+							onChange( field.name, newUrl );
+						} }
+						onRemove={ function () {
+							onChange( field.name, '' );
+						} }
+						disabled={ disabled }
 					/>
 				);
 
@@ -623,6 +758,16 @@ export function SettingsForm({ fields, values, onChange }) {
 					</button>
 				);
 
+			case 'notification_types':
+				// Delegate to NotificationTypesField component.
+				return (
+					<NotificationTypesField
+						field={field}
+						value={value}
+						onChange={function( newValue ) { onChange( field.name, newValue ); }}
+					/>
+				);
+
 			default:
 				return (
 					<p className="bb-admin-settings-field__unsupported">
@@ -641,7 +786,7 @@ export function SettingsForm({ fields, values, onChange }) {
 			return null;
 		}
 
-		const disabled = parentDisabled || isFieldDisabled(field);
+		const disabled = parentDisabled || isFieldDisabled(field) || isFieldConditionallyDisabled(field);
 
 		// Checkbox children: render CheckboxControl with inline label (no separate label element).
 		// When description_controls are present (e.g., "Auto hide after %s reports"),
@@ -756,8 +901,13 @@ export function SettingsForm({ fields, values, onChange }) {
 			);
 		}
 
+		var childClasses = [
+			'bb-admin-settings-form__child-field',
+			disabled ? 'bb-admin-settings-form__child-field--disabled' : '',
+		].filter( Boolean ).join( ' ' );
+
 		return (
-			<div key={field.name} className={`bb-admin-settings-form__child-field ${disabled ? 'bb-admin-settings-form__child-field--disabled' : ''}`}>
+			<div key={field.name} className={childClasses}>
 				{field.label && (
 					<label className="bb-admin-settings-form__child-field-label">{field.label}</label>
 				)}
@@ -828,7 +978,7 @@ export function SettingsForm({ fields, values, onChange }) {
 		const hasLabel = field.label && field.label.trim() !== '';
 
 		return (
-			<div key={field.name} className={fieldClasses + ( ! hasLabel ? ' bb-admin-settings-form__field--no-label' : '' ) + ( 'reaction_mode' !== field.type && field.pro_notice?.show ? ' bb-admin-settings-form__field--pro-locked' : '' )} data-group={field.group?.key || undefined}>
+			<div key={field.name} className={fieldClasses + ( ! hasLabel ? ' bb-admin-settings-form__field--no-label' : '' ) + ( 'reaction_mode' !== field.type && field.pro_notice?.show ? ' bb-admin-settings-form__field--pro-locked' : '' )} data-group={field.group?.key || undefined} data-group-inline={ field.group && field.group.inline ? 'true' : undefined }>
 				{ hasLabel && (
 					<div className="bb-admin-settings-form__field-label">
 						<label>
@@ -861,7 +1011,7 @@ export function SettingsForm({ fields, values, onChange }) {
 						<label className="bb-admin-settings-form__field-group-label">{field.group.label}</label>
 					) }
 					{/* Field with optional prefix/suffix — skip wrapper when control is null (e.g., hidden parent fields). */}
-					{ null !== controlOutput && (
+					{ null !== controlOutput && false !== controlOutput && (
 						<div className="bb-admin-settings-form__field-input-wrapper">
 							{field.prefix && (
 								<span className="bb-admin-settings-form__field-prefix">{field.prefix}</span>

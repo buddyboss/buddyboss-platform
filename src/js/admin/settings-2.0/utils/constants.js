@@ -16,4 +16,5 @@
  */
 export var BB_EVENTS = {
 	SECTION_STATUS_UPDATE: 'bb-section-status-update',
+	FIELD_VALUE_UPDATE: 'bb-field-value-update',
 };

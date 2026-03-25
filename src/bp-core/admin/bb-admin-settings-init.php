@@ -152,6 +152,10 @@ function bb_admin_settings_init() {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-account.php';
 		}
 
+		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-notifications.php' ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-notifications.php';
+		}
+
 		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-moderation.php' ) ) {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-moderation.php';
 		}
@@ -166,6 +170,36 @@ function bb_admin_settings_init() {
 }
 
 add_action( 'bp_loaded', 'bb_admin_settings_init', 4 );
+
+/**
+ * Initialize the Integration Bridge early.
+ *
+ * Must run at priority 2 (before bp_setup_integrations at priority 3)
+ * so the bb_integration_is_activated filter is registered before
+ * BP_Integration::is_activated() is called during integration setup.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_integration_bridge_early_init() {
+	if ( ! class_exists( 'BB_Integration_Bridge' ) ) {
+		require_once buddypress()->plugin_dir . 'bp-core/classes/class-bb-integration-bridge.php';
+	}
+
+	// Initialize the bridge singleton (registers hooks).
+	bb_integration_bridge();
+
+	/**
+	 * Fires after the Integration Bridge is initialized.
+	 *
+	 * Plugins can use this to register managed integrations via
+	 * bb_integration_bridge()->register_managed_integration().
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	do_action( 'bb_integration_bridge_init' );
+}
+
+add_action( 'bp_loaded', 'bb_integration_bridge_early_init', 2 );
 
 // Clear feature discovery cache when plugins are activated, deactivated, or upgraded.
 add_action( 'activated_plugin', array( 'BB_Feature_Autoloader', 'bb_clear_feature_discovery_cache' ) );
