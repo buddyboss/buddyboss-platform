@@ -105,12 +105,30 @@
 		@include bb-button-primary-outline;
 	}
 
-	// Count badge
+	// Count badge (styled as a dropdown-like select)
 	&__count-badge {
-		font-size: 13px;
-		font-weight: 500;
-		color: $bb-text-secondary-color;
 		white-space: nowrap;
+
+		.components-select-control {
+			margin-bottom: 0;
+
+			.components-input-control__label {
+				color: $bb-text-secondary-color;
+				text-transform: none;
+				font-size: 13px;
+				font-weight: 500;
+			}
+
+			.components-select-control__input {
+				@include bb-admin-settings-select;
+				min-width: 85px;
+			}
+
+			.components-input-control-suffix-wrapper,
+			.components-input-control__backdrop {
+				display: none;
+			}
+		}
 	}
 
 	// Sort
@@ -207,11 +225,6 @@
 		text-align: left;
 		white-space: nowrap;
 
-		&.bb-email-templates-list__th--title {
-			color: $bb-text-color;
-			font-size: 14px;
-		}
-
 		&:first-child {
 			padding: 10px 0 10px 4px;
 		}
@@ -223,10 +236,6 @@
 
 	&__th--checkbox {
 		width: 30px;
-	}
-
-	&__th--description {
-		min-width: 200px;
 	}
 
 	&__th--date {
@@ -276,9 +285,18 @@
 		}
 	}
 
+	&__th--title {
+
+		.bb-email-templates-list__table & {
+			width: 28%;
+			color: $bb-text-color;
+			font-size: 14px;
+		}
+	}
+
 	// Title column
 	&__td--title {
-		max-width: 300px;
+		width: 28%;
 		overflow: hidden;
 	}
 
@@ -288,22 +306,79 @@
 		font-weight: 400;
 		color: $bb-link-color;
 		line-height: 20px;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
 		text-decoration: none;
+		word-break: break-word;
+
+		&:hover {
+			color: $bb-link-color;
+			transition: none;
+		}
+	}
+
+	&__th--description {
+		width: 25%;
 	}
 
 	// Description column
 	&__td--description {
 		color: $bb-text-tertiary-color;
-		max-width: 300px;
+		width: 25%;
 	}
 
 	// Date column
 	&__td--date {
 		white-space: nowrap;
 		color: $bb-text-tertiary-color;
+
+		i {
+			font-size: 16px;
+			color: $bb-icon-tertiary-color;
+			margin-right: 8px;
+			vertical-align: middle;
+		}
+	}
+
+	&__th--actions {
+		width: 30px;
+	}
+
+	&__td--actions {
+
+		.components-dropdown-menu__toggle {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background: none;
+			border: none;
+			cursor: pointer;
+			padding: 4px;
+			min-width: 32px;
+			width: 32px;
+			height: 32px;
+			color: $bb-icon-tertiary-color;
+			border-radius: $bb-border-radius-sm;
+
+			i {
+				color: $bb-icon-secondary-color;
+				font-size: 24px;
+				line-height: 1;
+				font-weight: 700;
+			}
+
+			&:hover,
+			&:focus,
+			&.is-pressed,
+			&.is-opened {
+				color: $bb-text-color;
+				background: $bb-background-primary-hover-color;
+				box-shadow: none;
+			}
+
+			.dashicon,
+			svg:not(:first-child) {
+				display: none;
+			}
+		}
 	}
 
 	// Footer

@@ -2634,15 +2634,7 @@ function bp_core_get_components( $type = 'all' ) {
 		'moderation'    => array(
 			'title'                => __( 'Moderation', 'buddyboss' ),
 			'description'          => __( 'Allow members to block each other, and report inappropriate content to be reviewed by the site admin.', 'buddyboss' ),
-			'settings'             => bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page' => 'bp-settings',
-						'tab'  => 'bp-moderation',
-					),
-					'admin.php'
-				)
-			),
+			'settings'             => bp_get_admin_url( 'admin.php?page=bb-settings&tab=moderation&panel=member_moderation' ),
 			'default'              => false,
 			'deactivation_confirm' => true,
 			'deactivation_message' => '<p>' . __( 'Please confirm you want to deactivate the Moderation component.', 'buddyboss' ) . '</p>' .
@@ -7818,12 +7810,6 @@ function bb_admin_icons( $id ) {
 			break;
 		case 'bp_invites':
 			$meta_icon = $bb_icon_bf . ' bb-icon-envelope';
-			break;
-		case 'bp_moderation_settings_blocking':
-			$meta_icon = $bb_icon_bf . ' bb-icon-user-slash';
-			break;
-		case 'bp_moderation_settings_reporting':
-			$meta_icon = $bb_icon_bf . ' bb-icon-flag';
 			break;
 		case 'bp_search_settings_general':
 			$meta_icon = $bb_icon_bf . ' bb-icon-caret-down';

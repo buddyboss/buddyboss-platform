@@ -224,7 +224,7 @@ select.bb-admin-settings__select {
 
 /* Inputs */
 .buddyboss_page_bb-settings {
-   
+
     .components-textarea-control__input,
     .components-text-control__input {
 	    @include bb-input-text;
@@ -234,6 +234,14 @@ select.bb-admin-settings__select {
         min-height: 100px;
         padding: 8px;
     }
+
+	.bb-admin-settings-form__inline-number {
+		margin: 0 8px;
+		height: 26px;
+		min-height: auto;
+		max-width: 85px;
+		width: auto;
+	}
 }
 
 /* Buttons */
@@ -671,12 +679,9 @@ select.bb-admin-settings__select {
 
         .components-base-control__label,
         .components-input-control__label.components-text {
+			@include bb-input-label;
             display: table;
-            color: $bb-text-secondary-color;
-            font-size: 13px;
-            font-weight: 500;
             margin-bottom: 10px;
-            text-transform: none;
         }
     }
 
@@ -742,6 +747,10 @@ select.bb-admin-settings__select {
 		gap: 8px;
 		padding: 16px 24px;
 		border-top: 1px solid $bb-border-secondary-color;
+		position: sticky;
+		bottom: 0;
+		background: $bb-background-base-color;
+		z-index: 1;
 
 		.components-button {
 
@@ -894,27 +903,27 @@ select.bb-admin-settings__select {
         border: 1px solid $bb-border-warning-secondary-color;
         border-radius: $bb-border-radius-xl;
         margin-bottom: 16px;
-    
+
         i {
             font-size: 32px;
             font-weight: 500;
             color: $bb-icon-warning-primary-color;
             flex-shrink: 0;
             line-height: 1;
-    
+
             &:before {
                 opacity: 1;
             }
         }
     }
-    
+
     &__warning-text {
         display: flex;
         flex-direction: column;
         flex: 1;
         min-width: 0;
     }
-    
+
     &__warning-title {
         font-size: 13px;
         font-weight: 500;
@@ -922,7 +931,7 @@ select.bb-admin-settings__select {
         color: $bb-text-color;
         padding: 3px 0;
     }
-    
+
     &__warning-desc {
         font-size: 11px;
         font-weight: 400;

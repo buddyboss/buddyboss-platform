@@ -433,53 +433,14 @@
 
 .bb-pf-fieldset-modal {
 
-	.components-modal__content {
-		padding: 0;
-	}
-
-	.bb-pf-modal-body {
-		padding: 24px;
-		display: flex;
-		flex-direction: column;
-		gap: 16px;
-
-		.components-base-control {
-			margin-bottom: 0;
-		}
-
-		.components-base-control__label,
-		label.components-input-control__label.components-text {
-			@include bb-input-label;
-		}
-
-		.components-radio-control__option {
-			margin-bottom: 4px;
-		}
-	}
-
 	.bb-pf-modal-footer {
-		display: flex;
-		align-items: center;
 		justify-content: space-between;
-		gap: 8px;
-		padding: 16px 24px;
-		border-top: 1px solid $bb-border-primary-color;
 
 		.bb-pf-modal-footer-right {
 			display: flex;
 			align-items: center;
 			gap: 8px;
 			margin-left: auto;
-
-			.components-button.is-secondary {
-				@include bb-button-secondary;
-				padding: 8px 16px;
-			}
-	
-			.components-button.is-primary {
-				@include bb-button-primary;
-				padding: 8px 16px;
-			}
 		}
 	}
 }
@@ -525,34 +486,6 @@
 	}
 
 	.bb-admin-settings-modal__body {
-
-		.components-base-control__label,
-		label.components-input-control__label.components-text {
-			@include bb-input-label;
-		}
-
-		.components-base-control {
-		
-			.components-input-control__label {
-				color: $bb-text-secondary-color;
-				text-transform: none;
-				font-size: 13px;
-				font-weight: 500;
-			}
-	
-			.components-select-control__input {
-				@include bb-admin-settings-select;
-			}
-	
-			.components-input-control-suffix-wrapper,
-			.components-input-control__backdrop {
-				display: none;
-			}
-		}
-
-		> .components-base-control {
-			margin-bottom: 16px;
-		}
 
 		.bb-pf-field-member-types {
 			margin-bottom: 20px;

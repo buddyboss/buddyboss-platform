@@ -1057,3 +1057,212 @@ export function uploadForumImage( file, signal ) {
 		} );
 	} );
 }
+
+/**
+ * Get all reporting categories (bpm_category taxonomy terms).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} options Optional fetch options (e.g. { signal }).
+ * @return {Promise} Promise resolving to { categories, show_when_options }.
+ */
+export function getReportingCategories( options ) {
+	return ajaxFetch( 'bb_admin_get_reporting_categories', {}, options );
+}
+
+/**
+ * Create a new reporting category.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data Category data (name, description, show_when_reporting).
+ * @return {Promise} Promise resolving to response.
+ */
+export function createReportingCategory( data ) {
+	return ajaxFetch( 'bb_admin_create_reporting_category', data );
+}
+
+/**
+ * Update an existing reporting category.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {number} termId Term ID.
+ * @param {Object} data   Category data (name, description, show_when_reporting).
+ * @return {Promise} Promise resolving to response.
+ */
+export function updateReportingCategory( termId, data ) {
+	return ajaxFetch( 'bb_admin_update_reporting_category', Object.assign( { term_id: termId }, data ) );
+}
+
+/**
+ * Delete a reporting category.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {number} termId Term ID.
+ * @return {Promise} Promise resolving to response.
+ */
+export function deleteReportingCategory( termId ) {
+	return ajaxFetch( 'bb_admin_delete_reporting_category', { term_id: termId } );
+}
+
+// ── Flagged Members ───────────────────────────────────────────────────────
+
+/**
+ * Get flagged members list.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} params       Query parameters.
+ * @param {Object} [options={}] Fetch options (signal, etc.).
+ * @return {Promise} Promise resolving to response.
+ */
+export function getFlaggedMembers( params, options ) {
+	return ajaxFetch( 'bb_admin_get_flagged_members', params || {}, options );
+}
+
+/**
+ * Get member report details (reporters + blockers).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {number} userId User ID.
+ * @return {Promise} Promise resolving to response.
+ */
+export function getMemberReport( userId, moderationId, options ) {
+	return ajaxFetch( 'bb_admin_get_member_report', { user_id: userId, moderation_id: moderationId }, options || {} );
+}
+
+/**
+ * Suspend a member.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {number} userId User ID.
+ * @return {Promise} Promise resolving to response.
+ */
+export function suspendMember( userId ) {
+	return ajaxFetch( 'bb_admin_suspend_member', { user_id: userId } );
+}
+
+/**
+ * Unsuspend a member.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {number} userId User ID.
+ * @return {Promise} Promise resolving to response.
+ */
+export function unsuspendMember( userId ) {
+	return ajaxFetch( 'bb_admin_unsuspend_member', { user_id: userId } );
+}
+
+/**
+ * Bulk action on flagged members.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {string} action  Bulk action (suspend, unsuspend).
+ * @param {Array}  userIds Array of user IDs.
+ * @return {Promise} Promise resolving to response.
+ */
+export function flaggedMembersBulkAction( action, userIds ) {
+	return ajaxFetch( 'bb_admin_flagged_members_bulk_action', {
+		bulk_action: action,
+		user_ids: userIds,
+	} );
+}
+
+// ── Reported Content ─────────────────────────────────────────────────────
+
+/**
+ * Get reported content list.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} params       Query parameters.
+ * @param {Object} [options={}] Fetch options (signal, etc.).
+ * @return {Promise} Promise resolving to response.
+ */
+export function getReportedContent( params, options ) {
+	return ajaxFetch( 'bb_admin_get_reported_content', params || {}, options );
+}
+
+/**
+ * Get content report details (reporters).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {number} moderationId Moderation record ID.
+ * @return {Promise} Promise resolving to response.
+ */
+export function getContentReport( moderationId, options ) {
+	return ajaxFetch( 'bb_admin_get_content_report', { moderation_id: moderationId }, options || {} );
+}
+
+/**
+ * Hide reported content.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {number} itemId   Content item ID.
+ * @param {string} itemType Content type slug.
+ * @return {Promise} Promise resolving to response.
+ */
+export function hideContent( itemId, itemType ) {
+	return ajaxFetch( 'bb_admin_hide_content', { item_id: itemId, item_type: itemType } );
+}
+
+/**
+ * Unhide reported content.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {number} itemId   Content item ID.
+ * @param {string} itemType Content type slug.
+ * @return {Promise} Promise resolving to response.
+ */
+export function unhideContent( itemId, itemType ) {
+	return ajaxFetch( 'bb_admin_unhide_content', { item_id: itemId, item_type: itemType } );
+}
+
+/**
+ * Suspend the owner of reported content.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {number} userId User ID.
+ * @return {Promise} Promise resolving to response.
+ */
+export function suspendContentOwner( userId ) {
+	return ajaxFetch( 'bb_admin_suspend_content_owner', { user_id: userId } );
+}
+
+/**
+ * Unsuspend the owner of reported content.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {number} userId User ID.
+ * @return {Promise} Promise resolving to response.
+ */
+export function unsuspendContentOwner( userId ) {
+	return ajaxFetch( 'bb_admin_unsuspend_content_owner', { user_id: userId } );
+}
+
+/**
+ * Bulk action on reported content items.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {string} action Bulk action (hide, unhide).
+ * @param {Array}  ids    Array of moderation IDs.
+ * @return {Promise} Promise resolving to response.
+ */
+export function reportedContentBulkAction( action, ids ) {
+	return ajaxFetch( 'bb_admin_reported_content_bulk_action', {
+		bulk_action: action,
+		ids: ids,
+	} );
+}

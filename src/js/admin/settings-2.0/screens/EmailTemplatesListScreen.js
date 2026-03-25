@@ -411,13 +411,23 @@ export default function EmailTemplatesListScreen( props ) {
 
 				<div className="bb-email-templates-list__toolbar-right">
 					{/* Count badge */}
-					<span className="bb-email-templates-list__count-badge">
-						{ sprintf(
-							/* translators: %d: total number of email templates */
-							__( 'All (%d)', 'buddyboss' ),
-							total
-						) }
-					</span>
+					<div className="bb-email-templates-list__count-badge">
+						<SelectControl
+							value="all"
+							options={ [
+								{
+									label: sprintf(
+										/* translators: %d: total number of email templates */
+										__( 'All (%d)', 'buddyboss' ),
+										total
+									),
+									value: 'all',
+								},
+							] }
+							onChange={ function() {} }
+							__nextHasNoMarginBottom
+						/>
+					</div>
 
 					{/* Sort */}
 					<div className="bb-email-templates-list__sort-select">
@@ -524,6 +534,7 @@ export default function EmailTemplatesListScreen( props ) {
 											{ decodeEntities( item.description ) }
 										</td>
 										<td className="bb-email-templates-list__td--date">
+											<i className="bb-icons-rl bb-icons-rl-clock"></i>
 											{ item.date }
 										</td>
 										<td className="bb-email-templates-list__td--actions">

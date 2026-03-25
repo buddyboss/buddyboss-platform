@@ -142,7 +142,12 @@ export function SettingsForm({ fields, values, onChange }) {
 			return true;
 		}
 
-		// Multiple conditions with operator.
+		// Skip visibility check for disable-only conditionals — they stay visible.
+			if ( 'disable' === field.conditional.action ) {
+				return true;
+			}
+
+			// Multiple conditions with operator.
 		if ( Array.isArray( field.conditional.conditions ) ) {
 			var operator = ( field.conditional.operator || 'AND' ).toUpperCase();
 			var conditions = field.conditional.conditions;
@@ -182,18 +187,29 @@ export function SettingsForm({ fields, values, onChange }) {
 	};
 
 	/**
-	 * Check if a field should be disabled because its conditional (action:'disable') is not met.
+	 * Check if a field should be disabled based on its conditional logic
+	 * when action is 'disable' instead of 'hide'.
 	 *
 	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {Object} field Field config with optional conditional property.
-	 * @return {boolean} True when the field should be disabled.
 	 */
-	const isFieldConditionallyDisabled = ( field ) => {
-		if ( field.conditional && 'disable' === field.conditional.action ) {
-			return ! isConditionalMet( field );
+	const isFieldConditionallyDisabled = (field) => {
+		if ( ! field.conditional || 'disable' !== field.conditional.action ) {
+			return false;
 		}
-		return false;
+
+		// Multiple conditions with operator.
+		if (Array.isArray(field.conditional.conditions)) {
+			var operator = (field.conditional.operator || 'AND').toUpperCase();
+			var conditions = field.conditional.conditions;
+
+			if ('OR' === operator) {
+				return ! conditions.some(evaluateCondition);
+			}
+			return ! conditions.every(evaluateCondition);
+		}
+
+		// Single condition.
+		return ! evaluateCondition(field.conditional);
 	};
 
 	/**
@@ -848,14 +864,85 @@ export function SettingsForm({ fields, values, onChange }) {
 		const disabled = parentDisabled || isFieldDisabled(field) || isFieldConditionallyDisabled(field);
 
 		// Checkbox children: render CheckboxControl with inline label (no separate label element).
+		// When description_controls are present (e.g., "Auto hide after %s reports"),
+		// render the checkbox with inline controls replacing %s placeholders.
 		if ( 'checkbox' === field.type ) {
 			const cbInverted = true === field.invert_value;
 			const cbVal = values[ field.name ] !== undefined ? values[ field.name ] : field.default;
 			const cbDisplay = cbInverted ? ! cbVal : !! cbVal;
+			const cbDesc = field.description || '';
+			const cbControls = field.description_controls;
+			const cbHasControls = cbDesc.indexOf( '%s' ) !== -1 && cbControls && cbControls.length > 0;
+
+			if ( cbHasControls ) {
+				const cachedParts = sanitizedHtml[ field.name + '__parts' ];
+				const parts = cachedParts || cbDesc.split( '%s' ).map( function ( part ) {
+					return sanitizeHtml( part );
+				} );
+				const cbControlDisabled = disabled || ! cbDisplay;
+
+				return (
+					<div key={field.name} className={`bb-admin-settings-form__child-field bb-admin-settings-form__child-field--checkbox bb-admin-settings-form__child-field--has-controls ${disabled ? 'bb-admin-settings-form__child-field--disabled' : ''}`}>
+						<CheckboxControl
+							checked={ cbDisplay }
+							onChange={ function( checked ) {
+								var saveVal = cbInverted ? ! checked : checked;
+								onChange( field.name, saveVal ? 1 : 0 );
+							} }
+							disabled={ disabled }
+							__nextHasNoMarginBottom
+						/>
+						<span className="bb-admin-settings-form__child-field-inline-desc">
+							{ parts.map( function ( part, index ) {
+								var control = index < cbControls.length ? cbControls[ index ] : null;
+								var controlName = control ? control.name : null;
+								var controlDefault = control ? ( control.value ?? control.default ?? '' ) : '';
+								var controlVal = controlName && values[ controlName ] !== undefined
+									? values[ controlName ]
+									: controlDefault;
+
+								return (
+									<span key={ index }>
+										<span dangerouslySetInnerHTML={ { __html: part } } />
+										{ control && 'number' === control.type && (
+											<input
+												type="number"
+												name={ controlName }
+												className="bb-admin-settings-form__inline-number"
+												value={ controlVal }
+												min={ control.min }
+												max={ control.max }
+												step={ control.step }
+												aria-label={ controlName }
+												onChange={ function ( e ) { onChange( controlName, parseInt( e.target.value, 10 ) || 0 ); } }
+												disabled={ cbControlDisabled }
+											/>
+										) }
+										{ control && 'select' === control.type && (
+											<select
+												name={ controlName }
+												className="bb-admin-settings-form__inline-select"
+												value={ controlVal }
+												onChange={ function ( e ) { onChange( controlName, e.target.value ); } }
+												disabled={ cbControlDisabled }
+											>
+												{ ( control.options || [] ).map( function ( opt ) {
+													return <option key={ opt.value } value={ opt.value }>{ opt.label }</option>;
+												} ) }
+											</select>
+										) }
+									</span>
+								);
+							} ) }
+						</span>
+					</div>
+				);
+			}
+
 			return (
 				<div key={field.name} className={`bb-admin-settings-form__child-field bb-admin-settings-form__child-field--checkbox ${disabled ? 'bb-admin-settings-form__child-field--disabled' : ''}`}>
 					<CheckboxControl
-						label={ field.label || field.description || '' }
+						label={ field.label || cbDesc }
 						checked={ cbDisplay }
 						onChange={ function( checked ) {
 							var saveVal = cbInverted ? ! checked : checked;
@@ -1073,7 +1160,9 @@ export function SettingsForm({ fields, values, onChange }) {
 														value={ controlVal }
 														min={ control.min }
 														max={ control.max }
-														onChange={ ( e ) => onChange( controlName, e.target.value ) }
+														step={ control.step }
+														aria-label={ controlName }
+														onChange={ ( e ) => onChange( controlName, parseInt( e.target.value, 10 ) || 0 ) }
 														disabled={ controlDisabled }
 													/>
 												) }

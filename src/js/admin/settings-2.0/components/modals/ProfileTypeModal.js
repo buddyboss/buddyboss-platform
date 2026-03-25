@@ -346,9 +346,9 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, allMemb
 			className="bb-admin-profile-type-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
 		>
-			<div className="bb-admin-profile-type-modal__body">
+			<div className="bb-admin-profile-type-modal__body bb-admin-settings-modal__body">
 				{ error && (
-					<div className="bb-admin-profile-type-modal__error">
+					<div className="bb-admin-settings-modal__error">
 						{ error }
 					</div>
 				) }

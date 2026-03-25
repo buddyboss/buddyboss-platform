@@ -102,6 +102,18 @@ function bb_admin_settings_init() {
 			}
 		}
 
+		if ( bp_is_active( 'moderation' ) ) {
+			if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-moderation-ajax.php' ) ) {
+				require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-moderation-ajax.php';
+			}
+			if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-flagged-members-ajax.php' ) ) {
+				require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-flagged-members-ajax.php';
+			}
+			if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-reported-content-ajax.php' ) ) {
+				require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-reported-content-ajax.php';
+			}
+		}
+
 		// Email Templates AJAX handler (always loaded — email templates are a core feature).
 		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-email-templates-admin-ajax.php' ) ) {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-email-templates-admin-ajax.php';
@@ -149,8 +161,16 @@ function bb_admin_settings_init() {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-members.php';
 		}
 
+		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-account.php' ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-account.php';
+		}
+
 		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-notifications.php' ) ) {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-notifications.php';
+		}
+
+		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-moderation.php' ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-moderation.php';
 		}
 
 		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-registration.php' ) ) {

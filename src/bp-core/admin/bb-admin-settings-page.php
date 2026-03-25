@@ -186,6 +186,19 @@ function bb_admin_settings_page() {
 		);
 	}
 
+	// Reported Content: pass content types for the filter dropdown.
+	if ( bp_is_active( 'moderation' ) ) {
+		$content_types = bp_moderation_content_types();
+
+		// Exclude member types (shown in separate Flagged Members panel).
+		unset( $content_types[ BP_Moderation_Members::$moderation_type ] );
+		if ( isset( $content_types[ BP_Moderation_Members::$moderation_type_report ] ) ) {
+			unset( $content_types[ BP_Moderation_Members::$moderation_type_report ] );
+		}
+
+		$localize_data['reportedContentTypes'] = $content_types;
+	}
+
 	// Only expose debug data when WP_DEBUG is enabled.
 	if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 		$registry               = bb_feature_registry();

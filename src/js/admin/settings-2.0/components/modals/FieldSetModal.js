@@ -102,7 +102,7 @@ export function FieldSetModal( { fieldSet, onClose, onSave, onDelete, setToast }
 			className="bb-pf-fieldset-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
 		>
-			<div className="bb-pf-modal-body">
+			<div className="bb-admin-settings-modal__body">
 				<TextControl
 					label={ __( 'Name', 'buddyboss' ) }
 					value={ name }
@@ -125,7 +125,7 @@ export function FieldSetModal( { fieldSet, onClose, onSave, onDelete, setToast }
 				) }
 			</div>
 
-			<div className="bb-pf-modal-footer">
+			<div className="bb-pf-modal-footer bb-admin-settings-modal__footer">
 				{ /* Delete button (edit mode only, and only if can_delete). */ }
 				{ isEditing && fieldSet.can_delete && (
 					<Button
