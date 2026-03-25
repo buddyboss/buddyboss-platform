@@ -26,7 +26,7 @@
 	}
 
 	&__card {
-		width: 120px;
+		width: 96px;
 		background: $bb-background-base-color;
 		border: 1px solid $bb-border-secondary-color;
 		border-radius: $bb-border-radius-lg;
@@ -40,7 +40,7 @@
 	}
 
 	&__card-icon {
-		height: 72px;
+		height: 64px;
 		background: $bb-background-primary-color;
 		display: flex;
 		align-items: center;
@@ -49,8 +49,8 @@
 		flex-shrink: 0;
 
 		img {
-			width: 32px;
-			height: 32px;
+			width: 30px;
+			height: 30px;
 			object-fit: contain;
 		}
 
@@ -62,6 +62,10 @@
 
 			.components-base-control__field {
 				margin-bottom: 0;
+			}
+
+			.components-checkbox-control__input-container {
+				margin-right: 0;
 			}
 		}
 	}
@@ -86,14 +90,14 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		padding: 4px 8px;
+		padding: 0 8px;
 		gap: 4px;
 	}
 
 	&__card-label {
-		font-size: 12px;
+		font-size: 11px;
 		font-weight: 400;
-		line-height: 18px;
+		line-height: 16px;
 		color: $bb-text-color;
 		overflow: hidden;
 		text-overflow: ellipsis;
@@ -111,6 +115,11 @@
 		flex-shrink: 0;
 		display: flex;
 		align-items: center;
+
+		i {
+			font-size: 16px;
+			font-weight: 700;
+		}
 
 		&:hover {
 			color: $bb-icon-color;

@@ -246,7 +246,7 @@ export function SsoProvidersField( { field, value, onChange, disabled } ) {
 										setOpenMenu( isMenuOpen ? null : provider.id );
 									} }
 								>
-									<i className="bb-icon-l bb-icon-ellipsis-h"></i>
+									<i className="bb-icons-rl-dots-three"></i>
 								</button>
 
 								{ isMenuOpen && menuButtonRefs.current[ provider.id ] && (
