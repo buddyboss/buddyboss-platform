@@ -396,6 +396,10 @@
         }
     }
 
+    &-text-wrapper {
+        width: 100%;
+    }
+
     &-suffix {
         color: $bb-text-secondary-color;
         font-size: 13px;
@@ -467,6 +471,76 @@
         }
     }
 
+    // Inline grouped fields rendered side-by-side.
+    &--grouped[data-group-inline="true"] {
+        display: inline-flex;
+        flex-direction: column;
+        width: calc(50% - 12px);
+        vertical-align: top;
+        gap: 8px;
+
+        // Second+ inline field: gap between siblings.
+        + .bb-admin-settings-form__field--grouped[data-group-inline="true"] {
+            margin-left: 24px;
+        }
+
+        // Stack label above input instead of side-by-side.
+        .bb-admin-settings-form__field-label {
+            width: 100%;
+        }
+
+        .bb-admin-settings-form__field-content {
+            width: 100%;
+        }
+
+        .bb-admin-settings-form__field-input-wrapper {
+            width: 100%;
+
+            .components-base-control {
+                width: 100%;
+            }
+
+            input[type="text"],
+            input[type="url"],
+            input[type="number"] {
+                width: 100%;
+            }
+        }
+
+        // No-label inline grouped fields
+        &.bb-admin-settings-form__field--no-label {
+
+            .bb-admin-settings-form__field-content {
+                margin-left: 0;
+            }
+
+            width: calc((100% - 277px - 24px) / 2);
+        }
+    }
+
+    // First inline field after a non-inline sibling: offset to align with the content area.
+    &--grouped:not([data-group-inline="true"]) + &--grouped[data-group-inline="true"].bb-admin-settings-form__field--no-label {
+        margin-left: 277px;
+    }
+
+    // Textarea wrapper ensures counter renders below (not beside) the textarea.
+    .bb-admin-settings-form__textarea-wrapper {
+        width: 100%;
+
+        .components-textarea-control {
+            width: 100%;
+        }
+    }
+
+    // Textarea character counter (e.g. "12/250").
+    .bb-admin-settings-form__textarea-counter {
+        display: block;
+        text-align: left;
+        font-size: 12px;
+        color: $bb-text-secondary-color;
+        margin-top: 4px;
+    }
+
     // Group sub-label (e.g. "Width", "Height") shown above control within a group.
     &-group-label {
         display: block;
@@ -482,6 +556,10 @@
             flex: 1;
             // 245px (label width) + 32px (gap) = 277px offset to align with sibling field content.
             margin-left: 277px;
+
+            &:has(> .bb-admin-settings-form__field-input-wrapper > .bb-admin-empty-state) {
+                margin-left: 0;
+            }
         }
 
         // Full-width field types (checkbox_list) should span the entire card when unlabeled.
@@ -587,6 +665,7 @@
             line-height: 18px;
             margin: 8px 0 0 0;
         }
+
     }
 
     .bb-admin-reaction-info {
@@ -742,7 +821,7 @@
             cursor: not-allowed;
         }
 
-        &--disconnect {
+        &--connected {
             background-color: transparent;
             color: $bb-text-tertiary-color;
             border: 1px solid $bb-border-secondary-color;
@@ -765,6 +844,56 @@
         font-size: 13px;
         line-height: 18px;
         margin: 0;
+    }
+}
+
+/* Password Field (e.g. API credentials with show/hide toggle) */
+.bb-admin-settings-field__password {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+
+    &-input[type] {
+        @include bb-input-text;
+
+        &:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+    }
+
+    &-toggle {
+        position: absolute;
+        right: 4px;
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        padding: 0;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: $bb-text-tertiary-color;
+        border-radius: $bb-border-radius-sm;
+        transition: color 0.2s ease;
+
+        &:hover {
+            color: $bb-text-color;
+        }
+
+        &--visible {
+            color: $bb-text-secondary-color;
+        }
+
+        [class*="bb-icon"] {
+            color: $bb-icon-tertiary-color;
+            font-size: 20px;
+        }
     }
 }
 
@@ -1617,6 +1746,32 @@
             border: 1px solid $bb-border-secondary-color;
             border-radius: $bb-border-radius-full;
         }
+    }
+}
+
+// Section-level PRO badge (e.g. UPGRADE PRO in section header).
+.bb-admin-feature-settings__section-pro-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 8px;
+    border: 1px solid #e0623d;
+    border-radius: $bb-border-radius-full;
+    background: linear-gradient(100deg, rgba(224, 98, 61, 0.10) 4.86%, rgba(62, 52, 255, 0.10) 91.52%);
+    text-decoration: none;
+    cursor: pointer;
+
+    span {
+        font-size: 11px;
+        font-weight: 500;
+        line-height: 16px;
+        color: $bb-text-secondary-color;
+    }
+
+    [class*="bb-icon"] {
+        font-size: 16px;
+        line-height: 1;
+        font-weight: 400;
+        margin-right: 4px;
     }
 }
 

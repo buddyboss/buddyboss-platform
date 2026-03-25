@@ -149,8 +149,10 @@ class BB_Admin_Member_Types_Ajax {
 		// Batch-load post meta to avoid N+1 queries.
 		update_postmeta_cache( $member_type_ids );
 
-		// Prime post cache.
-		_prime_post_caches( $member_type_ids );
+		// _prime_post_caches() is public since WP 6.1; guard for WP 6.0 compat.
+		if ( function_exists( '_prime_post_caches' ) ) {
+			_prime_post_caches( $member_type_ids );
+		}
 
 		// Get member counts per type in a single SQL query.
 		global $wpdb;

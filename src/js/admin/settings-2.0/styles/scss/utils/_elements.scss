@@ -500,6 +500,25 @@ select.bb-admin-settings__select {
         }
     }
 
+    &.bb-admin-notice--plain {
+        background: none;
+        border: none;
+        padding: 0;
+        color: $bb-text-tertiary-color;
+        flex-wrap: wrap;
+        gap: 8px;
+
+        &:before {
+            display: none;
+        }
+
+        img {
+            display: block;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+    }
+
     // Ensure links stay inline so they don't become separate flex items.
     a {
         display: inline;
@@ -1156,4 +1175,49 @@ select.bb-admin-settings__select {
 			background-color: $bb-background-primary-color;
 		}
 	}
+}
+
+/* Empty state card (centered icon + title + description + button) */
+.bb-admin-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 24px 24px 16px;
+    width: 100%;
+
+    &__icon {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid $bb-border-secondary-color;
+        border-radius: $bb-border-radius-lg;
+        margin-bottom: 18px;
+
+        i {
+            font-size: 24px;
+            color: $bb-icon-tertiary-color;
+        }
+    }
+
+    &__title {
+        font-size: 16px;
+        font-weight: 500;
+        color: $bb-text-color;
+        margin: 0 0 8px;
+    }
+
+    &__description {
+        font-size: 13px;
+        color: $bb-text-secondary-color;
+        margin: 0 0 16px;
+        line-height: 1.5;
+    }
+
+    &__button {
+        @include bb-button-primary;
+    }
 }

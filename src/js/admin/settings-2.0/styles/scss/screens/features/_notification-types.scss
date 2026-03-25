@@ -1,0 +1,189 @@
+/**
+ * BuddyBoss Admin Settings 2.0 - Notification Types Styles
+ *
+ * @package BuddyBoss\Core\Administration
+ * @since BuddyBoss [BBVERSION]
+ */
+
+.bb-notification-types {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+
+	&__empty {
+		color: $bb-text-tertiary-color;
+		font-size: 13px;
+		padding: 16px 0;
+	}
+
+	&__group {
+		&:not(:last-child) {
+			margin-bottom: 4px;
+		}
+	}
+
+	&__group-header {
+		font-size: 14px;
+		font-weight: 400;
+		color: $bb-text-color;
+		margin-bottom: 10px;
+	}
+
+	&__rows {
+		display: flex;
+		flex-direction: column;
+		padding: 16px;
+		gap: 24px;
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-lg;
+		margin-bottom: 24px;
+	}
+
+	&__row {
+		display: flex;
+		align-items: center;
+		gap: 24px;
+
+		&--disabled {
+			.bb-notification-types__label,
+			.bb-notification-types__sub-types {
+				opacity: 0.5;
+			}
+		}
+	}
+
+	&__toggle {
+		flex-shrink: 0;
+
+		.components-toggle-control {
+			margin-bottom: 0;
+		}
+
+		.components-base-control__field {
+			margin-bottom: 0;
+		}
+	}
+
+	&__label {
+		flex: 1;
+		font-size: 14px;
+		font-weight: 400;
+		color: $bb-text-color;
+		line-height: 1.4;
+		min-width: 0;
+	}
+
+	&__tooltip {
+		margin-left: 4px;
+		color: $bb-icon-tertiary-color;
+		cursor: help;
+		display: inline-flex;
+		align-items: center;
+		vertical-align: middle;
+
+		i {
+			font-size: 14px;
+		}
+	}
+
+	&__sub-types {
+		display: flex;
+		align-items: center;
+		gap: 24px;
+		flex-shrink: 0;
+		margin-left: auto;
+	}
+
+	&__sub-type {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+		cursor: pointer;
+		font-size: 13px;
+		color: $bb-text-secondary-color;
+
+		input[type="checkbox"] {
+			margin: 0;
+			width: 16px;
+			height: 16px;
+		}
+
+		&--disabled {
+			opacity: 0.5;
+			cursor: default;
+		}
+	}
+
+	&__sub-type-label {
+		font-size: 13px;
+		line-height: 1;
+	}
+
+	&__email-template {
+		flex-shrink: 0;
+		min-width: 120px;
+		text-align: right;
+	}
+
+	&__email-link {
+		display: inline-block;
+		font-size: 13px;
+		color: $bb-text-color;
+		text-align: center;
+		background-color: $bb-background-secondary-color;
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-md;
+		text-decoration: none;
+		white-space: nowrap;
+		padding: 4px 8px;
+		min-width: 100px;
+
+		&--missing {
+			color: $bb-error-color;
+			border-color: $bb-error-color;
+			background-color: transparent;
+
+			&:hover {
+				color: $bb-error-color;
+				border-color: $bb-error-color;
+				background-color: transparent;
+				opacity: 0.8;
+			}
+		}
+	}
+}
+
+/* Notification Position Preview (On-screen Notifications) */
+.bb-admin-settings-field__notification-position {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	background: $bb-background-primary-color;
+	border-radius: $bb-border-radius-xl;
+
+	&-bar {
+		position: absolute;
+		bottom: 8px;
+		width: 48px;
+		height: 24px;
+		border-radius: $bb-border-radius-sm;
+		background: $bb-background-tertiary-color;
+	}
+
+	&--left &-bar {
+		left: 8px;
+	}
+
+	&--right &-bar {
+		right: 8px;
+	}
+}
+
+// Soft prompt inline button fields: override flex on input wrapper
+// so the text input fills the full available width.
+.bb-admin-settings-form__field--grouped[data-group="soft_prompt_fields"][data-group-inline="true"] {
+
+	.bb-admin-settings-form__field-input-wrapper {
+		display: block;
+	}
+}

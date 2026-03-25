@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.21.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-03-19 07:17:49+00:00\n"
+"POT-Creation-Date: 2026-03-19 12:08:31+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -995,7 +995,7 @@ msgstr ""
 #: bp-core/admin/classes/class-bb-admin-forums-ajax.php:315
 #: bp-core/admin/classes/class-bb-admin-groups-ajax.php:875
 #: bp-core/admin/templates/upgrade-integrations-screen.php:45
-#: bp-core/bp-core-functions.php:7409
+#: bp-core/bp-core-functions.php:7412
 #: bp-core/classes/class-bb-readylaunch.php:1247
 #: bp-core/classes/class-bb-readylaunch.php:3017
 #: bp-core/compatibility/class-bb-readylaunch-memberpress-courses-helper.php:492
@@ -2087,7 +2087,7 @@ msgstr[1] ""
 #: bp-members/classes/class-bp-members-component.php:489
 #: bp-messages/bp-messages-template.php:732
 #: bp-messages/classes/class-bp-messages-component.php:399
-#: bp-notifications/classes/class-bp-notifications-component.php:277
+#: bp-notifications/classes/class-bp-notifications-component.php:276
 #: bp-templates/bp-nouveau/includes/activity/functions.php:139
 #: bp-templates/bp-nouveau/readylaunch/moderation/moderation-blocked-members-entry.php:34
 #: bp-xprofile/classes/class-bp-xprofile-component.php:449
@@ -4911,6 +4911,51 @@ msgstr ""
 msgid "Delay Message Notifications"
 msgstr ""
 
+#: bp-core/admin/bb-admin-settings-notifications.php:34
+#: bp-core/admin/bb-settings/rl-onboarding/class-bb-readylaunch-onboarding.php:1165
+#: bp-core/admin/settings/members/settings-profile-navigation.php:230
+#: bp-core/bb-core-blocks.php:338
+#: bp-core/bp-core-functions.php:2545
+#: bp-core/classes/class-bb-readylaunch.php:685
+#: bp-core/deprecated/buddypress/2.1.php:538
+#: bp-core/gdpr/class-bp-notification-export.php:27
+#: bp-core/gdpr/class-bp-notification-export.php:57
+#: bp-members/classes/class-bp-rest-members-details-endpoint.php:1044
+#: bp-notifications/classes/class-bp-notifications-component.php:160
+#: bp-notifications/classes/class-bp-notifications-component.php:167
+#: bp-notifications/classes/class-bp-notifications-component.php:225
+#: bp-notifications/classes/class-bp-notifications-component.php:270
+#: bp-performance/bp-performance-includes.php:117
+#: bp-templates/bp-nouveau/readylaunch/header/notification-dropdown.php:21
+#: bp-templates/bp-nouveau/readylaunch/header/notification-dropdown.php:22
+#: bp-templates/bp-nouveau/readylaunch/header/notification-dropdown.php:31
+#: bp-templates/bp-nouveau/readylaunch/header/readylaunch-header.php:182
+#: bp-templates/bp-nouveau/readylaunch/members/single/notifications.php:19
+#: bp-core/admin/bb-settings/readylaunch/build/index.js:1
+#: bp-core/admin/bb-settings/settings-2.0/build/index.js:1
+msgid "Notifications"
+msgstr ""
+
+#: bp-core/admin/bb-admin-settings-notifications.php:35
+msgid "Notify members of relevant activity with a toolbar bubble or email, and let them customize their notification settings."
+msgstr ""
+
+#: bp-core/admin/bb-admin-settings-notifications.php:73
+#: bp-core/admin/settings/notifications/settings-notification-types.php:35
+#: bp-core/admin/settings/notifications/settings-notification-types.php:65
+msgid "Notification Types"
+msgstr ""
+
+#: bp-core/admin/bb-admin-settings-notifications.php:97
+#: bp-core/admin/settings/notifications/settings-on-screen.php:31
+msgid "On-screen Notifications"
+msgstr ""
+
+#: bp-core/admin/bb-admin-settings-notifications.php:120
+#: bp-core/admin/settings/notifications/settings-web-push.php:73
+msgid "Web Push Notifications"
+msgstr ""
+
 #: bp-core/admin/bb-admin-settings-page.php:22
 #: bp-core/admin/bb-admin-settings-page.php:23
 msgid "Settings 2.0"
@@ -5455,31 +5500,6 @@ msgstr ""
 msgid "Messages"
 msgstr ""
 
-#: bp-core/admin/bb-settings/rl-onboarding/class-bb-readylaunch-onboarding.php:1165
-#: bp-core/admin/settings/bp-admin-setting-notifications.php:28
-#: bp-core/admin/settings/members/settings-profile-navigation.php:230
-#: bp-core/bb-core-blocks.php:338
-#: bp-core/bp-core-functions.php:2545
-#: bp-core/classes/class-bb-readylaunch.php:685
-#: bp-core/deprecated/buddypress/2.1.php:538
-#: bp-core/gdpr/class-bp-notification-export.php:27
-#: bp-core/gdpr/class-bp-notification-export.php:57
-#: bp-members/classes/class-bp-rest-members-details-endpoint.php:1044
-#: bp-notifications/classes/class-bp-notifications-component.php:161
-#: bp-notifications/classes/class-bp-notifications-component.php:168
-#: bp-notifications/classes/class-bp-notifications-component.php:226
-#: bp-notifications/classes/class-bp-notifications-component.php:271
-#: bp-performance/bp-performance-includes.php:117
-#: bp-templates/bp-nouveau/readylaunch/header/notification-dropdown.php:21
-#: bp-templates/bp-nouveau/readylaunch/header/notification-dropdown.php:22
-#: bp-templates/bp-nouveau/readylaunch/header/notification-dropdown.php:31
-#: bp-templates/bp-nouveau/readylaunch/header/readylaunch-header.php:182
-#: bp-templates/bp-nouveau/readylaunch/members/single/notifications.php:19
-#: bp-core/admin/bb-settings/readylaunch/build/index.js:1
-#: bp-core/admin/bb-settings/settings-2.0/build/index.js:1
-msgid "Notifications"
-msgstr ""
-
 #: bp-core/admin/bp-core-admin-actions.php:282
 msgid "Invalid Nickname"
 msgstr ""
@@ -5541,7 +5561,7 @@ msgid "This email address or domain has been blacklisted. If you think you are s
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-actions.php:434
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:956
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:1011
 msgid "Settings saved successfully."
 msgstr ""
 
@@ -6055,7 +6075,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-functions.php:2588
 #: bp-core/admin/bp-core-admin-functions.php:2624
 #: bp-core/admin/bp-core-admin-functions.php:2631
-#: bp-core/admin/bp-core-admin-settings.php:1571
+#: bp-core/admin/bp-core-admin-settings.php:1431
 msgid "to unlock"
 msgstr ""
 
@@ -6074,11 +6094,11 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:2623
 #: bp-core/admin/bp-core-admin-functions.php:2630
+#: bp-core/admin/settings/notifications/settings-web-push.php:122
+#: bp-core/admin/settings/notifications/settings-web-push.php:145
 #: bp-core/admin/templates/upgrade-screen.php:35
 #: bp-integrations/pusher/bb-pusher-admin-tab.php:251
 #: bp-integrations/pusher/bb-pusher-admin-tab.php:268
-#: bp-notifications/bp-notifications-settings.php:481
-#: bp-notifications/bp-notifications-settings.php:498
 msgid "BuddyBoss Platform Pro"
 msgstr ""
 
@@ -6094,7 +6114,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-functions.php:3090
 #: bp-core/admin/classes/class-bb-activity-admin-ajax.php:61
 #: bp-core/admin/classes/class-bb-admin-groups-ajax.php:130
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:224
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:242
 #: bp-core/admin/settings/media/callbacks.php:383
 #: bp-core/admin/settings/media/callbacks.php:507
 #: bp-core/admin/settings/media/callbacks.php:600
@@ -6105,7 +6125,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-functions.php:3097
 #: bp-core/admin/classes/class-bb-activity-admin-ajax.php:69
 #: bp-core/admin/classes/class-bb-admin-groups-ajax.php:137
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:231
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:249
 #: bp-core/admin/settings/media/callbacks.php:391
 #: bp-core/admin/settings/media/callbacks.php:515
 #: bp-core/admin/settings/media/callbacks.php:608
@@ -6213,18 +6233,15 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:815
 #: bp-core/admin/bp-core-admin-settings.php:842
 #: bp-core/admin/bp-core-admin-settings.php:869
-#: bp-core/admin/bp-core-admin-settings.php:1009
-#: bp-core/admin/bp-core-admin-settings.php:1314
-#: bp-core/admin/bp-core-admin-settings.php:1605
-#: bp-core/admin/bp-core-admin-settings.php:1770
-#: bp-core/admin/bp-core-admin-settings.php:1797
+#: bp-core/admin/bp-core-admin-settings.php:1174
+#: bp-core/admin/bp-core-admin-settings.php:1465
+#: bp-core/admin/bp-core-admin-settings.php:1630
+#: bp-core/admin/bp-core-admin-settings.php:1657
 #: bp-integrations/learndash/bp-learndash-functions.php:408
 #: bp-integrations/learndash/bp-learndash-functions.php:431
 #: bp-integrations/learndash/bp-learndash-functions.php:454
 #: bp-integrations/pusher/bb-pusher-admin-tab.php:219
 #: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:387
-#: bp-notifications/bp-notifications-settings.php:85
-#: bp-notifications/bp-notifications-settings.php:115
 msgid "View Tutorial"
 msgstr ""
 
@@ -6408,8 +6425,8 @@ msgid "BuddyBoss Registration"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:754
-#: bp-core/admin/bp-core-admin-settings.php:1658
-#: bp-core/admin/bp-core-admin-settings.php:1708
+#: bp-core/admin/bp-core-admin-settings.php:1518
+#: bp-core/admin/bp-core-admin-settings.php:1568
 #: bp-core/admin/bb-settings/settings-2.0/build/656.js:1
 msgid "Custom URL"
 msgstr ""
@@ -6422,86 +6439,16 @@ msgstr ""
 msgid "Enter a custom URL to redirect users to register to your site. Useful for membership plugins."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:884
-msgid "Enable on-screen notifications"
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-settings.php:885
-msgid "Show members new notifications received while on a page on-screen."
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-settings.php:903
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:869
-msgid "Bottom Left"
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-settings.php:911
-#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:865
-msgid "Bottom Right"
-msgstr ""
-
 #: bp-core/admin/bp-core-admin-settings.php:929
-msgid "Show on-screen notifications on small screens"
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-settings.php:930
-msgid "Enable this option to show on-screen notifications at the bottom of the screen smaller than 500px wide."
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-settings.php:944
-msgid "Show new notifications in the title of the browser tab"
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-settings.php:945
-msgid "Update the page <title> tab when new notifications are received."
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-settings.php:960
-msgid "Never Hide"
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-settings.php:961
-msgid "5 Seconds"
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-settings.php:962
-msgid "10 Seconds"
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-settings.php:963
-msgid "30 Seconds"
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-settings.php:964
-msgid "1 Minute"
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-settings.php:965
-msgid "2 Minutes"
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-settings.php:966
-msgid "3 Minutes"
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-settings.php:967
-msgid "4 Minutes"
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-settings.php:968
-msgid "5 Minutes"
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-settings.php:1069
 msgid "Restrict REST API access to only logged-in members"
 msgstr ""
 
 #. translators: Registration link.
-#: bp-core/admin/bp-core-admin-settings.php:1075
+#: bp-core/admin/bp-core-admin-settings.php:935
 msgid "Login and %s APIs will remain publicly visible."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1078
+#: bp-core/admin/bp-core-admin-settings.php:938
 #: bp-core/admin/settings/bp-admin-setting-general.php:50
 #: bp-core/admin/settings/bp-admin-setting-registration.php:21
 #: bp-integrations/recaptcha/bb-recaptcha-functions.php:208
@@ -6509,119 +6456,119 @@ msgid "Registration"
 msgstr ""
 
 #. translators: Settings link.
-#: bp-core/admin/bp-core-admin-settings.php:1099
+#: bp-core/admin/bp-core-admin-settings.php:959
 msgid "Your BuddyBoss App is currently public. To restrict access to REST APIs for logged-out members, please enable \"Private App\" in the %s."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1102
+#: bp-core/admin/bp-core-admin-settings.php:962
 msgid "BuddyBoss App's settings"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1130
+#: bp-core/admin/bp-core-admin-settings.php:990
 msgid "Enter REST API endpoint URLs or URI fragments (e.g. wp-json/wp/v2/pages/&lt;id&gt;) to remain publicly visible always. Enter one URL or URI per line."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1144
+#: bp-core/admin/bp-core-admin-settings.php:1004
 msgid "Restrict RSS feed access to only logged-in members"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1156
+#: bp-core/admin/bp-core-admin-settings.php:1016
 msgid "Enter RSS feed URLs or URI fragments (e.g. /post-name/feed/) to remain publicly visible always. Enter one URL or URI per line."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1173
+#: bp-core/admin/bp-core-admin-settings.php:1033
 msgid "BuddyBoss Labs"
 msgstr ""
 
 #. translators: Support portal.
-#: bp-core/admin/bp-core-admin-settings.php:1243
+#: bp-core/admin/bp-core-admin-settings.php:1103
 msgid "BuddyBoss Labs provides early-access to upcoming BuddyBoss features. You can help us prepare these features for official release by reporting issues and providing feedback through the <a href=\"%s\" target=\"_blank\" >support portal</a>."
 msgstr ""
 
 #. translators: Support portal.
-#: bp-core/admin/bp-core-admin-settings.php:1260
+#: bp-core/admin/bp-core-admin-settings.php:1120
 msgid "Please note, customer support will not be able to provide support for these features until their official release."
 msgstr ""
 
 #. translators: Support portal.
-#: bp-core/admin/bp-core-admin-settings.php:1284
+#: bp-core/admin/bp-core-admin-settings.php:1144
 msgid "There are currently no BuddyBoss Labs features available."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1328
-#: bp-core/admin/bp-core-admin-settings.php:1467
+#: bp-core/admin/bp-core-admin-settings.php:1188
+#: bp-core/admin/bp-core-admin-settings.php:1327
 msgid "Select Condition"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1329
-#: bp-core/admin/bp-core-admin-settings.php:1468
+#: bp-core/admin/bp-core-admin-settings.php:1189
+#: bp-core/admin/bp-core-admin-settings.php:1328
 msgid "Always Allow"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1330
-#: bp-core/admin/bp-core-admin-settings.php:1469
+#: bp-core/admin/bp-core-admin-settings.php:1190
+#: bp-core/admin/bp-core-admin-settings.php:1329
 msgid "Never Allow"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1331
+#: bp-core/admin/bp-core-admin-settings.php:1191
 msgid "Only Allow"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1336
+#: bp-core/admin/bp-core-admin-settings.php:1196
 msgid ""
 "Add domain(s) to restrict new users from being able to register, you can use a wildcard (*) symbol to apply restrictions to an entire extension.\n"
 "\t\tWhen multiple restrictions are in place, a domain will always take priority over an extension.\n"
 "\t\t"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1363
-#: bp-core/admin/bp-core-admin-settings.php:1412
+#: bp-core/admin/bp-core-admin-settings.php:1223
+#: bp-core/admin/bp-core-admin-settings.php:1272
 msgid "Domain name"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1366
-#: bp-core/admin/bp-core-admin-settings.php:1415
+#: bp-core/admin/bp-core-admin-settings.php:1226
+#: bp-core/admin/bp-core-admin-settings.php:1275
 #: bp-core/admin/bb-settings/settings-2.0/build/index.js:2
 msgid "Extension"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1444
-#: bp-core/admin/bp-core-admin-settings.php:1526
+#: bp-core/admin/bp-core-admin-settings.php:1304
+#: bp-core/admin/bp-core-admin-settings.php:1386
 msgid "Remove Rule"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1453
+#: bp-core/admin/bp-core-admin-settings.php:1313
 msgid "Add Domain"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1472
+#: bp-core/admin/bp-core-admin-settings.php:1332
 msgid "Enter specific email addresses which you want to allow for user registrations. Enter one address per line."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1482
-#: bp-core/admin/bp-core-admin-settings.php:1512
+#: bp-core/admin/bp-core-admin-settings.php:1342
+#: bp-core/admin/bp-core-admin-settings.php:1372
 #: bp-templates/bp-nouveau/readylaunch/members/index.php:178
 msgid "Email address"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1535
+#: bp-core/admin/bp-core-admin-settings.php:1395
 msgid "Add Email"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1548
+#: bp-core/admin/bp-core-admin-settings.php:1408
 msgid "Domain restrictions can be configured to limit new user registrations to specific domains or extensions. This setting is only available when using the BuddyBoss Registration Form."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1569
+#: bp-core/admin/bp-core-admin-settings.php:1429
 msgid "Enable the"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1570
+#: bp-core/admin/bp-core-admin-settings.php:1430
 msgid "BuddyBoss Registration Form"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1657
-#: bp-core/admin/bp-core-admin-settings.php:1707
+#: bp-core/admin/bp-core-admin-settings.php:1517
+#: bp-core/admin/bp-core-admin-settings.php:1567
 #: bp-core/admin/settings/groups/settings-group-images.php:217
 #: bp-core/admin/settings/members/settings-profile-image.php:231
 #: bp-document/bp-document-functions.php:2077
@@ -6632,51 +6579,51 @@ msgstr ""
 msgid "Default"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1670
-#: bp-core/admin/bp-core-admin-settings.php:1689
+#: bp-core/admin/bp-core-admin-settings.php:1530
+#: bp-core/admin/bp-core-admin-settings.php:1549
 msgid "Select a page or external link to redirect your members to after they login."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1720
-#: bp-core/admin/bp-core-admin-settings.php:1739
+#: bp-core/admin/bp-core-admin-settings.php:1580
+#: bp-core/admin/bp-core-admin-settings.php:1599
 msgid "Select a page or external link to redirect your members to after they logout."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1810
-#: bp-core/admin/bp-core-admin-settings.php:1846
+#: bp-core/admin/bp-core-admin-settings.php:1670
+#: bp-core/admin/bp-core-admin-settings.php:1706
 msgid "Load"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1815
+#: bp-core/admin/bp-core-admin-settings.php:1675
 msgid "page requests on page load"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1816
+#: bp-core/admin/bp-core-admin-settings.php:1676
 msgid "Select how many requests will be sent on page load. We recommend 1 request for high performing servers, and 2 for slower performing environments, or those who see conflicts with third party plugins."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1840
+#: bp-core/admin/bp-core-admin-settings.php:1700
 msgid "Infinite scrolling"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1841
+#: bp-core/admin/bp-core-admin-settings.php:1701
 #: bp-core/admin/bb-settings/settings-2.0/build/index.js:1
 msgid "Load more"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1854
+#: bp-core/admin/bp-core-admin-settings.php:1714
 msgid "activity posts at a time using"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1862
+#: bp-core/admin/bp-core-admin-settings.php:1722
 msgid "Use infinite scrolling to automatically load new posts while scrolling down feeds. Increasing the number of posts retrieved in each request may negatively impact page loading speeds."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1875
+#: bp-core/admin/bp-core-admin-settings.php:1735
 msgid "Enable content counts across your site"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1878
+#: bp-core/admin/bp-core-admin-settings.php:1738
 msgid "Disabling content counts will remove the counts on pages such as Members Directory, Groups Directory, Media pages such as Photos & Videos. This will also remove the counts under the profile tabs and can improve page load performance."
 msgstr ""
 
@@ -8062,48 +8009,53 @@ msgid_plural "%d replies processed."
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:142
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:252
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:803
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:160
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:270
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:858
 msgid "Feature ID is required."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:146
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:164
 msgid "Invalid status. Must be \"active\" or \"inactive\"."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:150
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:256
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:807
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:168
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:274
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:862
 msgid "Feature registry not available."
 msgstr ""
 
 #. translators: 1: feature label, 2: activated/deactivated
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:178
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:196
 msgid "Feature \"%1$s\" %2$s successfully."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:180
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:198
 msgid "activated"
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:180
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:198
 msgid "deactivated"
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:264
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:282
 msgid "Feature not found."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:799
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:390
+#: bp-core/admin/settings/notifications/settings-web-push.php:216
+msgid "UPGRADE PRO"
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:854
 msgid "Invalid settings format."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:812
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:867
 msgid "Invalid settings data."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:849
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:904
 msgid "No fields registered for this feature."
 msgstr ""
 
@@ -9391,7 +9343,7 @@ msgstr ""
 #: bp-core/admin/settings/groups/settings-group-images.php:171
 #: bp-core/admin/settings/members/settings-member-directory.php:185
 #: bp-core/admin/settings/members/settings-profile-image.php:306
-#: bp-core/bp-core-functions.php:7409
+#: bp-core/bp-core-functions.php:7412
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:218
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:233
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:247
@@ -9702,15 +9654,6 @@ msgstr ""
 #: bp-moderation/bp-moderation-admin.php:74
 #: bp-core/admin/bb-settings/readylaunch/build/index.js:1
 msgid "Moderation"
-msgstr ""
-
-#. translators: Tutorial link.
-#: bp-core/admin/settings/bp-admin-setting-notifications.php:192
-msgid "Your site is currently using the legacy notifications system. To disable, please %s."
-msgstr ""
-
-#: bp-core/admin/settings/bp-admin-setting-notifications.php:194
-msgid "review this tutorial"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-performance.php:27
@@ -10442,6 +10385,7 @@ msgstr ""
 #: bp-core/admin/settings/media/settings-gifs.php:64
 #: bp-core/admin/settings/members/settings-member-directory.php:156
 #: bp-core/admin/settings/members/settings-member-directory.php:193
+#: bp-core/admin/settings/notifications/settings-web-push.php:279
 #: bp-friends/bp-friends-template.php:477
 #: bp-members/bp-members-admin.php:146
 #: bp-templates/bp-nouveau/includes/customizer.php:239
@@ -10452,6 +10396,7 @@ msgstr ""
 #: bp-core/admin/settings/media/callbacks.php:412
 #: bp-core/admin/settings/media/callbacks.php:458
 #: bp-core/admin/settings/media/settings-gifs.php:39
+#: bp-core/admin/settings/notifications/settings-web-push.php:212
 #: bp-integrations/pusher/bb-pusher-admin-tab.php:117
 #: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:179
 msgid "Not Connected"
@@ -11251,6 +11196,165 @@ msgstr ""
 
 #: bp-core/admin/settings/messages/settings-access-control.php:71
 msgid "Note: These settings do not apply to administrators or group messages."
+msgstr ""
+
+#: bp-core/admin/settings/notifications/settings-notification-types.php:48
+msgid "Notification Types are not supported when using the legacy notifications system."
+msgstr ""
+
+#: bp-core/admin/settings/notifications/settings-notification-types.php:66
+msgid "Choose which notifications are sent for site actions. Disabled notifications won't be generated. Members can manage them in Notification Preferences (email, web, app)."
+msgstr ""
+
+#. translators: %s: Tutorial link.
+#: bp-core/admin/settings/notifications/settings-notification-types.php:105
+msgid "You can register your own notification types by following the steps in %s. Once registered, they'll be configurable in the options above."
+msgstr ""
+
+#: bp-core/admin/settings/notifications/settings-notification-types.php:106
+msgid "this tutorial"
+msgstr ""
+
+#: bp-core/admin/settings/notifications/settings-on-screen.php:44
+msgid "On-screen notifications"
+msgstr ""
+
+#: bp-core/admin/settings/notifications/settings-on-screen.php:46
+msgid "Enable on-screen notifications"
+msgstr ""
+
+#: bp-core/admin/settings/notifications/settings-on-screen.php:47
+msgid "Show members new notifications received while on a page on-screen."
+msgstr ""
+
+#: bp-core/admin/settings/notifications/settings-on-screen.php:61
+msgid "Position on Screen"
+msgstr ""
+
+#: bp-core/admin/settings/notifications/settings-on-screen.php:67
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:869
+msgid "Bottom Left"
+msgstr ""
+
+#: bp-core/admin/settings/notifications/settings-on-screen.php:72
+#: bp-integrations/recaptcha/classes/class-bb-recaptcha-admin-tab.php:865
+msgid "Bottom Right"
+msgstr ""
+
+#: bp-core/admin/settings/notifications/settings-on-screen.php:93
+msgid "Mobile Support"
+msgstr ""
+
+#: bp-core/admin/settings/notifications/settings-on-screen.php:95
+msgid "Show on-screen notifications on small screens"
+msgstr ""
+
+#: bp-core/admin/settings/notifications/settings-on-screen.php:96
+msgid "Enable this option to show on-screen notifications at the bottom of the screen smaller than 500px wide."
+msgstr ""
+
+#: bp-core/admin/settings/notifications/settings-on-screen.php:111
+msgid "Never Hide"
+msgstr ""
+
+#: bp-core/admin/settings/notifications/settings-on-screen.php:115
+msgid "5 Seconds"
+msgstr ""
+
+#: bp-core/admin/settings/notifications/settings-on-screen.php:119
+msgid "10 Seconds"
+msgstr ""
+
+#: bp-core/admin/settings/notifications/settings-on-screen.php:123
+msgid "30 Seconds"
+msgstr ""
+
+#: bp-core/admin/settings/notifications/settings-on-screen.php:127
+msgid "1 Minute"
+msgstr ""
+
+#: bp-core/admin/settings/notifications/settings-on-screen.php:131
+msgid "2 Minutes"
+msgstr ""
+
+#: bp-core/admin/settings/notifications/settings-on-screen.php:135
+msgid "3 Minutes"
+msgstr ""
+
+#: bp-core/admin/settings/notifications/settings-on-screen.php:139
+msgid "4 Minutes"
+msgstr ""
+
+#: bp-core/admin/settings/notifications/settings-on-screen.php:143
+msgid "5 Minutes"
+msgstr ""
+
+#: bp-core/admin/settings/notifications/settings-on-screen.php:154
+msgid "Automatically Hide"
+msgstr ""
+
+#: bp-core/admin/settings/notifications/settings-on-screen.php:175
+msgid "Show in Browser Tab"
+msgstr ""
+
+#: bp-core/admin/settings/notifications/settings-on-screen.php:177
+msgid "Show new notifications in the title of the browser tab"
+msgstr ""
+
+#: bp-core/admin/settings/notifications/settings-on-screen.php:178
+msgid "Update the page &lt;title&gt; tab when new notifications are received."
+msgstr ""
+
+#: bp-core/admin/settings/notifications/settings-on-screen.php:200
+msgid "Members can manage which on-screen notifications they receive in their notification preferences by enabling or disabling the \"Web\" options."
+msgstr ""
+
+#. translators: %s: BuddyBoss Settings 2.0 URL
+#: bp-core/admin/settings/notifications/settings-web-push.php:93
+msgid "OneSignal integration is currently disabled. Go to <a href=\"%s\">BuddyBoss Settings</a> and enable the OneSignal integration to configure web push notifications."
+msgstr ""
+
+#. translators: %s: BuddyBoss Pro link.
+#: bp-core/admin/settings/notifications/settings-web-push.php:121
+msgid "Please update %s to manage Web Push Notifications from this panel. You can still manage OneSignal settings from the legacy <a href=\"%s\">Integrations</a> page."
+msgstr ""
+
+#. translators: %s: BuddyBoss Pro link.
+#: bp-core/admin/settings/notifications/settings-web-push.php:144
+msgid "Please update %s to version 2.0.3 to use web push notifications on your site."
+msgstr ""
+
+#: bp-core/admin/settings/notifications/settings-web-push.php:165
+msgid "Web Push Notifications are not supported when using the legacy notifications system."
+msgstr ""
+
+#: bp-core/admin/settings/notifications/settings-web-push.php:208
+msgid "OneSignal"
+msgstr ""
+
+#. translators: %s: OneSignal URL
+#: bp-core/admin/settings/notifications/settings-web-push.php:222
+msgid "To use <a href=\"%s\" target=\"_blank\" rel=\"noopener noreferrer\">OneSignal</a> for web push notifications, create an app in your account and enter the API credentials from the settings below."
+msgstr ""
+
+#: bp-core/admin/settings/notifications/settings-web-push.php:235
+msgid "API Credentials"
+msgstr ""
+
+#: bp-core/admin/settings/notifications/settings-web-push.php:239
+msgid "Enter OneSignal APP ID"
+msgstr ""
+
+#: bp-core/admin/settings/notifications/settings-web-push.php:243
+msgid "App ID"
+msgstr ""
+
+#: bp-core/admin/settings/notifications/settings-web-push.php:260
+msgid "Enter Rest API key"
+msgstr ""
+
+#: bp-core/admin/settings/notifications/settings-web-push.php:264
+msgid "Rest API Key"
 msgstr ""
 
 #: bp-core/admin/settings/search/settings-autocomplete.php:44
@@ -12876,7 +12980,7 @@ msgid "Email list navigation"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:3294
-#: bp-notifications/bp-notifications-settings.php:332
+#: bp-core/admin/bb-settings/settings-2.0/build/index.js:2
 msgid "Email Templates"
 msgstr ""
 
@@ -12895,7 +12999,7 @@ msgstr ""
 
 #: bp-core/bp-core-functions.php:3299
 #: bp-core/bp-core-functions.php:3395
-#: bp-core/bp-core-functions.php:7379
+#: bp-core/bp-core-functions.php:7382
 #: bp-core/classes/class-bb-readylaunch.php:4461
 #: bp-members/classes/class-bp-members-admin.php:2474
 #: bp-members/classes/class-bp-members-list-table.php:157
@@ -13263,68 +13367,68 @@ msgstr ""
 msgid "In a browser, the <strong>Cover Image Background</strong> color can be changed with custom CSS. In the app, it can be changed in the <a href=\"%s\">Color</a> settings."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7044
+#: bp-core/bp-core-functions.php:7047
 msgctxt "Notification preference label"
 msgid "Email"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7057
+#: bp-core/bp-core-functions.php:7060
 msgctxt "Notification preference label"
 msgid "Web"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7071
+#: bp-core/bp-core-functions.php:7074
 msgctxt "Notification preference label"
 msgid "App"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7279
-#: bp-core/bp-core-functions.php:7499
-#: bp-core/bp-core-functions.php:7528
+#: bp-core/bp-core-functions.php:7282
+#: bp-core/bp-core-functions.php:7502
+#: bp-core/bp-core-functions.php:7531
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:204
 #: bp-templates/bp-nouveau/readylaunch/document/document-entry.php:210
 msgid "-"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7328
-#: bp-core/bp-core-functions.php:7329
+#: bp-core/bp-core-functions.php:7331
+#: bp-core/bp-core-functions.php:7332
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:975
 msgid "Email Preferences"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7331
-#: bp-core/bp-core-functions.php:7332
+#: bp-core/bp-core-functions.php:7334
+#: bp-core/bp-core-functions.php:7335
 msgid "Email Settings"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7338
+#: bp-core/bp-core-functions.php:7341
 msgid "Choose your email notification preferences."
-msgstr ""
-
-#: bp-core/bp-core-functions.php:7344
-#: bp-core/bp-core-functions.php:7345
-msgid "Notification Preferences"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:7347
 #: bp-core/bp-core-functions.php:7348
+msgid "Notification Preferences"
+msgstr ""
+
+#: bp-core/bp-core-functions.php:7350
+#: bp-core/bp-core-functions.php:7351
 msgid "Notification Settings"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7351
+#: bp-core/bp-core-functions.php:7354
 msgid "Choose which notifications to receive across all your devices."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7356
+#: bp-core/bp-core-functions.php:7359
 msgid "Choose which notifications to receive by email."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7377
+#: bp-core/bp-core-functions.php:7380
 msgid "Enable Notifications"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7384
-#: bp-core/bp-core-functions.php:7464
+#: bp-core/bp-core-functions.php:7387
+#: bp-core/bp-core-functions.php:7467
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:662
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:58
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:63
@@ -13332,8 +13436,8 @@ msgstr ""
 msgid "Web"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7388
-#: bp-core/bp-core-functions.php:7470
+#: bp-core/bp-core-functions.php:7391
+#: bp-core/bp-core-functions.php:7473
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:664
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:71
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:76
@@ -13341,7 +13445,7 @@ msgstr ""
 msgid "App"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7459
+#: bp-core/bp-core-functions.php:7462
 msgid "A manual notification from a site admin"
 msgstr ""
 
@@ -27635,11 +27739,6 @@ msgstr ""
 
 #: bp-integrations/pusher/bb-pusher-admin-tab.php:177
 #: bp-integrations/pusher/bb-pusher-admin-tab.php:187
-#: bp-notifications/bp-notifications-settings.php:191
-#: bp-notifications/bp-notifications-settings.php:206
-#: bp-notifications/bp-notifications-settings.php:217
-#: bp-notifications/bp-notifications-settings.php:227
-#: bp-notifications/bp-notifications-settings.php:240
 msgid "Notes"
 msgstr ""
 
@@ -30112,16 +30211,16 @@ msgstr ""
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1050
 #: bp-messages/bp-messages-template.php:1021
 #: bp-notifications/bp-notifications-template.php:671
-#: bp-notifications/classes/class-bp-notifications-component.php:184
-#: bp-notifications/classes/class-bp-notifications-component.php:227
+#: bp-notifications/classes/class-bp-notifications-component.php:183
+#: bp-notifications/classes/class-bp-notifications-component.php:226
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/messages/index.php:33
 msgid "Unread"
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1056
 #: bp-notifications/bp-notifications-template.php:579
-#: bp-notifications/classes/class-bp-notifications-component.php:195
-#: bp-notifications/classes/class-bp-notifications-component.php:250
+#: bp-notifications/classes/class-bp-notifications-component.php:194
+#: bp-notifications/classes/class-bp-notifications-component.php:249
 msgid "Read"
 msgstr ""
 
@@ -32937,93 +33036,6 @@ msgstr ""
 msgid "No new notifications"
 msgstr ""
 
-#: bp-notifications/bp-notifications-settings.php:26
-msgid "On-screen Notifications"
-msgstr ""
-
-#: bp-notifications/bp-notifications-settings.php:28
-msgid "Members can manage which on-screen notifications they receive in their notification preferences by enabling or disabling the \"Web\" options."
-msgstr ""
-
-#: bp-notifications/bp-notifications-settings.php:35
-msgid "Notification Types"
-msgstr ""
-
-#. translators: Tutorial link.
-#: bp-notifications/bp-notifications-settings.php:42
-msgid "You can register your own notifications types by following the steps in %s. Once registered, they'll be configurable in the options above."
-msgstr ""
-
-#: bp-notifications/bp-notifications-settings.php:46
-msgid "this tutorial"
-msgstr ""
-
-#: bp-notifications/bp-notifications-settings.php:54
-msgid "Web Push Notifications"
-msgstr ""
-
-#: bp-notifications/bp-notifications-settings.php:156
-msgid "On-screen notifications"
-msgstr ""
-
-#: bp-notifications/bp-notifications-settings.php:162
-msgid "Position on Screen"
-msgstr ""
-
-#: bp-notifications/bp-notifications-settings.php:168
-msgid "Mobile Support"
-msgstr ""
-
-#: bp-notifications/bp-notifications-settings.php:174
-msgid "Automatically Hide"
-msgstr ""
-
-#: bp-notifications/bp-notifications-settings.php:180
-msgid "Show in Browser Tab"
-msgstr ""
-
-#: bp-notifications/bp-notifications-settings.php:198
-msgid "Notification Fields"
-msgstr ""
-
-#: bp-notifications/bp-notifications-settings.php:259
-msgid "Select which types of notifications are sent to members when specific actions happen on your site. When a notification is disabled, it will not be generated for any member. Members can configure which notifications they receive via email, web or app in their Notification Preferences."
-msgstr ""
-
-#: bp-notifications/bp-notifications-settings.php:320
-msgid "Missing Email Template"
-msgstr ""
-
-#: bp-notifications/bp-notifications-settings.php:323
-msgid "Missing Email Templates"
-msgstr ""
-
-#: bp-notifications/bp-notifications-settings.php:330
-msgid "Email Template"
-msgstr ""
-
-#: bp-notifications/bp-notifications-settings.php:367
-msgid "Manage Defaults"
-msgstr ""
-
-#: bp-notifications/bp-notifications-settings.php:417
-msgid "Notification Types are not supported when using the legacy notifications system."
-msgstr ""
-
-#. translators: BuddyBoss Pro purchase link
-#: bp-notifications/bp-notifications-settings.php:479
-msgid "Please install %1$s to use web push notifications on your site."
-msgstr ""
-
-#. translators: BuddyBoss Pro purchase link
-#: bp-notifications/bp-notifications-settings.php:496
-msgid "Please update %1$s to version 2.0.3 to use web push notifications on your site."
-msgstr ""
-
-#: bp-notifications/bp-notifications-settings.php:511
-msgid "Web Push Notifications are not supported when using the legacy notifications system."
-msgstr ""
-
 #: bp-notifications/bp-notifications-template.php:477
 msgid "Date not found"
 msgstr ""
@@ -33052,7 +33064,7 @@ msgstr ""
 msgid "Clear All"
 msgstr ""
 
-#: bp-notifications/classes/class-bp-notifications-component.php:122
+#: bp-notifications/classes/class-bp-notifications-component.php:121
 msgid "Search Notifications..."
 msgstr ""
 
@@ -42077,6 +42089,22 @@ msgid "Specific"
 msgstr ""
 
 #: bp-core/admin/bb-settings/settings-2.0/build/index.js:2
+msgid "Missing Email Templates"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/index.js:2
+msgid "Missing Email Template"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/index.js:2
+msgid "Email Template"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/index.js:2
+msgid "No notification types registered."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/index.js:2
 msgid "Crop Avatar"
 msgstr ""
 
@@ -42213,7 +42241,11 @@ msgid "Connection failed. Please try again."
 msgstr ""
 
 #: bp-core/admin/bb-settings/settings-2.0/build/index.js:2
-msgid "Connecting..."
+msgid "Hide value"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings-2.0/build/index.js:2
+msgid "Show value"
 msgstr ""
 
 #: bp-core/admin/bb-settings/settings-2.0/build/index.js:2

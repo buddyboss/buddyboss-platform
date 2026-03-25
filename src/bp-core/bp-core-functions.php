@@ -6874,14 +6874,17 @@ function bb_register_notifications( $component = '' ) {
  * @param string $component component name.
  */
 function bb_register_notification_preferences( $component = '' ) {
+	static $cache = null;
 
-	$notifications = apply_filters( 'bb_register_notification_preferences', array() );
-
-	if ( ! empty( $component ) && isset( $notifications[ $component ] ) ) {
-		return $notifications[ $component ];
+	if ( null === $cache ) {
+		$cache = apply_filters( 'bb_register_notification_preferences', array() );
 	}
 
-	return $notifications;
+	if ( ! empty( $component ) && isset( $cache[ $component ] ) ) {
+		return $cache[ $component ];
+	}
+
+	return $cache;
 }
 
 /**
@@ -6976,7 +6979,11 @@ function bb_core_get_user_notifications_preferences_value( $user_id = 0, $pref_t
  */
 function bb_register_notification_email_templates( $notification_type = '' ) {
 
-	$notification_emails = apply_filters( 'bb_register_notification_emails', array() );
+	static $notification_emails = null;
+
+	if ( null === $notification_emails ) {
+		$notification_emails = apply_filters( 'bb_register_notification_emails', array() );
+	}
 
 	if ( ! empty( $notification_emails ) && ! empty( $notification_type ) ) {
 		return ( isset( $notification_emails[ $notification_type ] ) ? $notification_emails[ $notification_type ] : array() );
@@ -10221,6 +10228,31 @@ function bb_admin_meta_field_registry() {
  */
 function bb_register_feature_nav_item( $feature_id, $args = array() ) {
 	return bb_feature_registry()->bb_register_nav_item( $feature_id, $args );
+}
+
+/**
+ * Register an integration feature.
+ *
+ * Helper function to register a feature as an integration.
+ * Automatically sets the category to 'integrations' and
+ * integration_id if not provided.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id Feature ID (integration slug).
+ * @param array  $args       Feature arguments (same as bb_register_feature).
+ * @return bool|WP_Error True on success, WP_Error on failure.
+ */
+function bb_register_integration( $feature_id, $args = array() ) {
+	// Force category to 'integrations'.
+	$args['category'] = 'integrations';
+
+	// Set integration_id if not already set.
+	if ( empty( $args['integration_id'] ) ) {
+		$args['integration_id'] = $feature_id;
+	}
+
+	return bb_feature_registry()->bb_register_feature( $feature_id, $args );
 }
 
 /**

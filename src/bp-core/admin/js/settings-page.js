@@ -1902,31 +1902,6 @@ window.bp = window.bp || {};
 				}
 			);
 
-			$( document ).on(
-				'click',
-				'.notification-defaults',
-				function () {
-					var isHidden = $( this ).next( '.manage-defaults' );
-					if ( isHidden.hasClass( 'manage-defaults-hide' ) ) {
-						$( this ).next( '.manage-defaults' ).removeClass( 'manage-defaults-hide' );
-					} else {
-						$( this ).next( '.manage-defaults' ).addClass( 'manage-defaults-hide' );
-					}
-				}
-			);
-
-			$( document ).on(
-				'click',
-				'.bb-notification-checkbox',
-				function () {
-					if ( false === $( this ).prop( 'checked' ) ) {
-						$( this ).parents( '.field-block' ).find( '.manage-defaults .field-wrap' ).addClass( 'disabled' );
-					} else {
-						$( this ).parents( '.field-block' ).find( '.manage-defaults .field-wrap' ).removeClass( 'disabled' );
-					}
-				}
-			);
-
 			// Run only post_type is member type and group type.
 			if (
 				'undefined' !== typeof BP_ADMIN.post_type &&

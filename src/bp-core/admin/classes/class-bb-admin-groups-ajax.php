@@ -2362,7 +2362,10 @@ class BB_Admin_Groups_Ajax {
 		}
 
 		// Prime post cache in a single query to avoid N+1 lookups.
-		_prime_post_caches( $member_type_ids );
+		// _prime_post_caches() is public since WP 6.1; guard for WP 6.0 compat.
+		if ( function_exists( '_prime_post_caches' ) ) {
+			_prime_post_caches( $member_type_ids );
+		}
 
 		// Prime post meta cache to avoid N+1 for _bp_member_type_key lookups.
 		update_postmeta_cache( $member_type_ids );

@@ -1870,3 +1870,211 @@ add_action(
 		wp_send_json_error( array( 'message' => __( 'This endpoint has been deprecated.', 'buddyboss' ) ) );
 	}
 );
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Notifications Settings 2.0 deprecated hook compatibility.
+// ──────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Fire the legacy `bb_admin_setting_notifications_register_fields` hook after
+ * Settings 2.0 finishes registering notification fields.
+ *
+ * The original hook passed a `BB_Admin_Setting_Notifications` instance. Settings 2.0
+ * no longer uses that class, so a no-op stub is passed to satisfy callbacks
+ * (e.g. Pro extensions) that call add_section()/add_field() on the argument.
+ *
+ * @since BuddyBoss [BBVERSION]
+ * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_notifications_after_register_settings_fields'} instead.
+ */
+add_action(
+	'bb_notifications_after_register_settings_fields',
+	static function () {
+		do_action_deprecated(
+			'bb_admin_setting_notifications_register_fields',
+			array(
+				new class() {
+					/**
+					 * No-op stub for BP_Admin_Setting_tab::add_section().
+					 *
+					 * @param mixed ...$args Ignored.
+					 */
+					public function add_section( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+
+					/**
+					 * No-op stub for BP_Admin_Setting_tab::add_field().
+					 *
+					 * @param mixed ...$args Ignored.
+					 */
+					public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+				},
+			),
+			'BuddyBoss [BBVERSION]',
+			'bb_notifications_after_register_settings_fields'
+		);
+	}
+);
+
+/**
+ * Fire the legacy `bb_notification_web_push_notification_settings` filter after
+ * Settings 2.0 finishes registering web push notification fields.
+ *
+ * The original filter received and returned an array of bbPress-style field
+ * definitions for the web push settings section. Settings 2.0 uses
+ * `bb_register_feature_field()` instead, so this fires with an empty array
+ * solely to trigger deprecation notices for third-party code still filtering it.
+ *
+ * @since BuddyBoss [BBVERSION]
+ * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_notifications_web_push_after_settings_fields'} instead.
+ */
+add_action(
+	'bb_notifications_web_push_after_settings_fields',
+	static function () {
+		apply_filters_deprecated(
+			'bb_notification_web_push_notification_settings',
+			array( array() ),
+			'BuddyBoss [BBVERSION]',
+			'bb_notifications_web_push_after_settings_fields'
+		);
+	}
+);
+
+/**
+ * Fire the legacy `bp_admin_tab_setting_save` and `bp_admin_tab_setting_saved`
+ * hooks when notification settings are saved via Settings 2.0.
+ *
+ * Follows the same pattern as `bb_media_fire_deprecated_save_hooks()` and
+ * `bb_members_fire_deprecated_save_hooks()`.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id Feature ID.
+ * @param array  $settings   Full submitted settings.
+ * @param array  $saved      Keys and values saved by core.
+ */
+function bb_notifications_fire_deprecated_save_hooks( $feature_id, $settings, $saved ) {
+	if ( 'notifications' !== $feature_id ) {
+		return;
+	}
+
+	/**
+	 * Fires before the notification settings are saved.
+	 *
+	 * @since BuddyBoss 1.9.3
+	 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_admin_save_feature_settings_after'} with feature_id='notifications'.
+	 *
+	 * @param string $tab_name The tab name.
+	 */
+	do_action_deprecated(
+		'bp_admin_tab_setting_save',
+		array( 'bp-notifications' ),
+		'BuddyBoss [BBVERSION]',
+		'bb_admin_save_feature_settings_after'
+	);
+
+	/**
+	 * Fires after the notification settings have been saved.
+	 *
+	 * @since BuddyBoss 1.9.3
+	 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_admin_save_feature_settings_after'} with feature_id='notifications'.
+	 *
+	 * @param string $tab_name The tab name.
+	 */
+	do_action_deprecated(
+		'bp_admin_tab_setting_saved',
+		array( 'bp-notifications' ),
+		'BuddyBoss [BBVERSION]',
+		'bb_admin_save_feature_settings_after'
+	);
+}
+
+add_action( 'bb_admin_save_feature_settings_after', 'bb_notifications_fire_deprecated_save_hooks', 99, 3 );
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Deprecated notification settings public API functions.
+// Removed in Settings 2.0 migration. Stubs prevent fatal errors in third-party
+// code that may call these directly.
+// ──────────────────────────────────────────────────────────────────────────────
+
+if ( ! function_exists( 'bb_notification_get_settings_sections' ) ) {
+	/**
+	 * Get the Notification settings sections.
+	 *
+	 * @since BuddyBoss 1.9.3
+	 * @deprecated BuddyBoss [BBVERSION] Notification settings migrated to Settings 2.0.
+	 *
+	 * @return array Empty array.
+	 */
+	function bb_notification_get_settings_sections() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 feature registration' );
+
+		return apply_filters_deprecated(
+			'bb_notification_get_settings_sections',
+			array( array() ),
+			'BuddyBoss [BBVERSION]',
+			'Settings 2.0 feature registration'
+		);
+	}
+}
+
+if ( ! function_exists( 'bb_notification_get_settings_fields' ) ) {
+	/**
+	 * Get all the notification settings fields.
+	 *
+	 * @since BuddyBoss 1.9.3
+	 * @deprecated BuddyBoss [BBVERSION] Notification settings migrated to Settings 2.0.
+	 *
+	 * @return array Empty array.
+	 */
+	function bb_notification_get_settings_fields() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 feature registration' );
+
+		return apply_filters_deprecated(
+			'bb_notification_get_settings_fields',
+			array( array() ),
+			'BuddyBoss [BBVERSION]',
+			'Settings 2.0 feature registration'
+		);
+	}
+}
+
+if ( ! function_exists( 'bb_notification_get_settings_fields_for_section' ) ) {
+	/**
+	 * Get settings fields by section.
+	 *
+	 * @since BuddyBoss 1.9.3
+	 * @deprecated BuddyBoss [BBVERSION] Notification settings migrated to Settings 2.0.
+	 *
+	 * @param string $section_id Section id.
+	 *
+	 * @return array Empty array.
+	 */
+	function bb_notification_get_settings_fields_for_section( $section_id = '' ) {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 feature registration' );
+
+		return apply_filters_deprecated(
+			'bb_notification_get_settings_fields_for_section',
+			array( array(), $section_id ),
+			'BuddyBoss [BBVERSION]',
+			'Settings 2.0 feature registration'
+		);
+	}
+}
+
+if ( ! function_exists( 'bb_activate_notification' ) ) {
+	/**
+	 * Render a notification type toggle checkbox.
+	 *
+	 * This was a rendering helper used by the legacy notification types admin UI.
+	 * Settings 2.0 renders notification types via the React `notification_types`
+	 * field type instead.
+	 *
+	 * @since BuddyBoss 1.9.3
+	 * @deprecated BuddyBoss [BBVERSION] Use Settings 2.0 notification_types field type.
+	 *
+	 * @param array $field   Notification field definition.
+	 * @param bool  $checked Whether the checkbox is checked.
+	 */
+	function bb_activate_notification( $field, $checked ) {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 notification_types field type' );
+	}
+}
