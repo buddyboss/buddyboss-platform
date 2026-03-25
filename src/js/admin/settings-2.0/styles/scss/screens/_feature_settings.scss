@@ -550,12 +550,6 @@
         margin-bottom: 6px;
     }
 
-    // Remove separator between a labeled field and its following no-label sibling.
-    &:has(+ .bb-admin-settings-form__field--no-label) {
-        border-bottom: none;
-        padding-bottom: 0;
-    }
-
     // No-label fields: stack tightly with previous field (no separator, reduced spacing)
     // and indent content to align with parent's content area.
     &--no-label {
