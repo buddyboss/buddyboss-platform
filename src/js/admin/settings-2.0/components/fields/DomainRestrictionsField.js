@@ -212,7 +212,8 @@ export function DomainRestrictionsField( { field, value, onChange, disabled } ) 
 				onClick={ addRow }
 				disabled={ disabled }
 			>
-				{ __( '+ Add Domain', 'buddyboss' ) }
+				<i className="bb-icons-rl-plus"></i>
+				{ __( 'Add Domain', 'buddyboss' ) }
 			</Button>
 		</div>
 	);

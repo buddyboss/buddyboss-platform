@@ -93,7 +93,7 @@
 
     &:focus {
         border-color: transparent;
-        outline: 2px solid $bb-border-quinery;
+        outline: 2px solid $bb-border-quinery !important;
         box-shadow: none !important;
     }
 
