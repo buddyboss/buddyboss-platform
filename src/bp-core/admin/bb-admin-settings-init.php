@@ -136,6 +136,10 @@ function bb_admin_settings_init() {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-members.php';
 		}
 
+		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-account.php' ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-account.php';
+		}
+
 		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-notifications.php' ) ) {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-notifications.php';
 		}

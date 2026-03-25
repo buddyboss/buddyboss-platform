@@ -366,15 +366,17 @@ export function SettingsScreen({ onNavigate }) {
 										{/* Bottom Section: Settings Button + Toggle */}
 										<div className="bb-admin-settings__feature-bottom">
 											<div className="bb-admin-settings__feature-left">
-												<Button
-													variant="secondary"
-													className={`bb-admin-settings__feature-settings-btn ${feature.status !== 'active' ? 'bb-admin-settings__feature-settings-btn--disabled' : ''}`}
-													onClick={() => onNavigate(feature.settings_route ? urlToRoute(feature.settings_route) : `/settings/${feature.id}`)}
-													disabled={feature.status !== 'active'}
-												>
-													<i className="bb-icon-settings"></i>
-													{__('Settings', 'buddyboss')}
-												</Button>
+												{ feature.settings_route && (
+													<Button
+														variant="secondary"
+														className={`bb-admin-settings__feature-settings-btn ${feature.status !== 'active' ? 'bb-admin-settings__feature-settings-btn--disabled' : ''}`}
+														onClick={() => onNavigate(urlToRoute(feature.settings_route))}
+														disabled={feature.status !== 'active'}
+													>
+														<i className="bb-icon-settings"></i>
+														{__('Settings', 'buddyboss')}
+													</Button>
+												) }
 											</div>
 											<div className="bb-admin-settings__feature-right">
 												<ToggleControl
