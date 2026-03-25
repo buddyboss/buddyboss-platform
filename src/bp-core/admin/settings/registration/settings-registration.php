@@ -358,7 +358,7 @@ function bb_registration_register_panel_fields() {
 			),
 			'group'             => 'social_login',
 			'hidden'            => true,
-			'order'             => 80,
+			'order'             => 76,
 		)
 	);
 

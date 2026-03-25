@@ -5,7 +5,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useMemo } from '@wordpress/element';
+import { useState, useMemo, useEffect, useRef } from '@wordpress/element';
 import {
 	ToggleControl,
 	TextControl,
@@ -441,17 +441,50 @@ export function SettingsForm({ fields, values, onChange }) {
 					/>
 				);
 
-			case 'radio':
+			case 'radio': {
+				var radioOptions = field.options || [];
+				var disabledOptionValues = radioOptions
+					.filter( function ( opt ) { return !! opt.disabled; } )
+					.map( function ( opt ) { return String( opt.value ); } );
+
 				return (
-					<RadioControl
-						key={field.name}
-						label=""
-						selected={value != null ? String(value) : ''}
-						options={field.options || []}
-						onChange={(newValue) => onChange(field.name, newValue)}
-						disabled={disabled}
-					/>
+					<div key={field.name} ref={ function ( el ) {
+						if ( ! el ) {
+							return;
+						}
+						// Reset all options first, then disable specific ones.
+						el.querySelectorAll( 'input[type="radio"]' ).forEach( function ( input ) {
+							var optionWrap = input.closest( '.components-radio-control__option' );
+							if ( disabledOptionValues.length && -1 !== disabledOptionValues.indexOf( input.value ) ) {
+								input.disabled = true;
+								if ( optionWrap ) {
+									optionWrap.style.opacity = '0.5';
+									optionWrap.style.pointerEvents = 'none';
+								}
+							} else {
+								input.disabled = false;
+								if ( optionWrap ) {
+									optionWrap.style.opacity = '';
+									optionWrap.style.pointerEvents = '';
+								}
+							}
+						} );
+					} }>
+						<RadioControl
+							label=""
+							selected={value != null ? String(value) : ''}
+							options={radioOptions}
+							onChange={ function ( newValue ) {
+								if ( disabledOptionValues.length && -1 !== disabledOptionValues.indexOf( newValue ) ) {
+									return;
+								}
+								onChange( field.name, newValue );
+							} }
+							disabled={disabled}
+						/>
+					</div>
 				);
+			}
 
 			case 'number':
 				return (
