@@ -47,6 +47,15 @@ class BB_Admin_Moderation_Ajax {
 	const META_KEY = 'bb_category_show_when_reporting';
 
 	/**
+	 * Valid "show when reporting" values.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var array
+	 */
+	const VALID_SHOW_WHEN = array( 'content', 'members', 'content_members' );
+
+	/**
 	 * Constructor.
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -110,18 +119,10 @@ class BB_Admin_Moderation_Ajax {
 		foreach ( $terms as $term ) {
 			$show_when = get_term_meta( $term->term_id, self::META_KEY, true );
 			if ( empty( $show_when ) ) {
-				$show_when = 'content_members';
+				$show_when = 'content';
 			}
 
-			// Decode HTML entities — WP escapes term name/description for HTML context,
-			// but React handles its own escaping so we send plain text via JSON.
-			$categories[] = array(
-				'id'                        => $term->term_id,
-				'name'                      => wp_specialchars_decode( $term->name, ENT_QUOTES ),
-				'description'               => wp_specialchars_decode( $term->description, ENT_QUOTES ),
-				'show_when_reporting'       => $show_when,
-				'show_when_reporting_label' => wp_specialchars_decode( $this->bb_get_show_when_label( $show_when ), ENT_QUOTES ),
-			);
+			$categories[] = $this->bb_format_category( $term, $show_when );
 		}
 
 		// Also return the "show when" options for the modal select.
@@ -139,7 +140,7 @@ class BB_Admin_Moderation_Ajax {
 
 		wp_send_json_success(
 			array(
-				'categories'       => $categories,
+				'categories'        => $categories,
 				'show_when_options' => $show_when_options,
 			)
 		);
@@ -153,18 +154,20 @@ class BB_Admin_Moderation_Ajax {
 	public function bb_create_reporting_category() {
 		$this->bb_verify_request();
 
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified in bb_verify_request() above.
 		$name        = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
 		$description = isset( $_POST['description'] ) ? sanitize_textarea_field( wp_unslash( $_POST['description'] ) ) : '';
-		$show_when   = isset( $_POST['show_when_reporting'] ) ? sanitize_key( wp_unslash( $_POST['show_when_reporting'] ) ) : 'content_members';
+		$show_when   = isset( $_POST['show_when_reporting'] ) ? sanitize_key( wp_unslash( $_POST['show_when_reporting'] ) ) : 'content';
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $name ) ) {
 			wp_send_json_error( array( 'message' => __( 'Category name is required.', 'buddyboss' ) ) );
 		}
 
 		// Validate show_when value.
-		$valid_values = array( 'content', 'members', 'content_members' );
+		$valid_values = self::VALID_SHOW_WHEN;
 		if ( ! in_array( $show_when, $valid_values, true ) ) {
-			$show_when = 'content_members';
+			$show_when = 'content';
 		}
 
 		$result = wp_insert_term(
@@ -184,13 +187,7 @@ class BB_Admin_Moderation_Ajax {
 
 		wp_send_json_success(
 			array(
-				'category' => array(
-					'id'                        => $term->term_id,
-					'name'                      => wp_specialchars_decode( $term->name, ENT_QUOTES ),
-					'description'               => wp_specialchars_decode( $term->description, ENT_QUOTES ),
-					'show_when_reporting'        => $show_when,
-					'show_when_reporting_label'  => wp_specialchars_decode( $this->bb_get_show_when_label( $show_when ), ENT_QUOTES ),
-				),
+				'category' => $this->bb_format_category( $term, $show_when ),
 			)
 		);
 	}
@@ -203,10 +200,12 @@ class BB_Admin_Moderation_Ajax {
 	public function bb_update_reporting_category() {
 		$this->bb_verify_request();
 
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified in bb_verify_request() above.
 		$term_id     = isset( $_POST['term_id'] ) ? absint( $_POST['term_id'] ) : 0;
 		$name        = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
 		$description = isset( $_POST['description'] ) ? sanitize_textarea_field( wp_unslash( $_POST['description'] ) ) : '';
 		$show_when   = isset( $_POST['show_when_reporting'] ) ? sanitize_key( wp_unslash( $_POST['show_when_reporting'] ) ) : '';
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $term_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Invalid category ID.', 'buddyboss' ) ) );
@@ -217,9 +216,9 @@ class BB_Admin_Moderation_Ajax {
 		}
 
 		// Validate show_when value.
-		$valid_values = array( 'content', 'members', 'content_members' );
+		$valid_values = self::VALID_SHOW_WHEN;
 		if ( ! empty( $show_when ) && ! in_array( $show_when, $valid_values, true ) ) {
-			$show_when = 'content_members';
+			$show_when = 'content';
 		}
 
 		$result = wp_update_term(
@@ -239,19 +238,13 @@ class BB_Admin_Moderation_Ajax {
 			update_term_meta( $term_id, self::META_KEY, $show_when );
 		}
 
-		$term      = get_term( $term_id, self::TAXONOMY );
-		$meta_val  = get_term_meta( $term_id, self::META_KEY, true );
-		$show_val  = $meta_val ?: 'content_members';
+		$term     = get_term( $term_id, self::TAXONOMY );
+		$meta_val = get_term_meta( $term_id, self::META_KEY, true );
+		$show_val = ! empty( $meta_val ) ? $meta_val : 'content';
 
 		wp_send_json_success(
 			array(
-				'category' => array(
-					'id'                        => $term->term_id,
-					'name'                      => wp_specialchars_decode( $term->name, ENT_QUOTES ),
-					'description'               => wp_specialchars_decode( $term->description, ENT_QUOTES ),
-					'show_when_reporting'        => $show_val,
-					'show_when_reporting_label'  => wp_specialchars_decode( $this->bb_get_show_when_label( $show_val ), ENT_QUOTES ),
-				),
+				'category' => $this->bb_format_category( $term, $show_val ),
 			)
 		);
 	}
@@ -264,7 +257,7 @@ class BB_Admin_Moderation_Ajax {
 	public function bb_delete_reporting_category() {
 		$this->bb_verify_request();
 
-		$term_id = isset( $_POST['term_id'] ) ? absint( $_POST['term_id'] ) : 0;
+		$term_id = isset( $_POST['term_id'] ) ? absint( $_POST['term_id'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified in bb_verify_request() above.
 
 		if ( empty( $term_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Invalid category ID.', 'buddyboss' ) ) );
@@ -292,21 +285,29 @@ class BB_Admin_Moderation_Ajax {
 	 * @return string Label.
 	 */
 	private function bb_get_show_when_label( $value ) {
-		if ( function_exists( 'bb_moderation_get_reporting_category_fields_array' ) ) {
-			$options = bb_moderation_get_reporting_category_fields_array();
-			if ( isset( $options[ $value ] ) ) {
-				return $options[ $value ];
-			}
-		}
+		$options = bb_moderation_get_reporting_category_fields_array();
 
-		// Fallback labels.
-		$labels = array(
-			'content'         => __( 'Content', 'buddyboss' ),
-			'members'         => __( 'Members', 'buddyboss' ),
-			'content_members' => __( 'Content & Members', 'buddyboss' ),
+		return isset( $options[ $value ] ) ? $options[ $value ] : __( 'Content', 'buddyboss' );
+	}
+
+	/**
+	 * Format a category term into a response array.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param WP_Term $term      Term object.
+	 * @param string  $show_when Show-when-reporting meta value.
+	 *
+	 * @return array Formatted category data.
+	 */
+	private function bb_format_category( $term, $show_when ) {
+		return array(
+			'id'                        => $term->term_id,
+			'name'                      => wp_specialchars_decode( $term->name, ENT_QUOTES ),
+			'description'               => wp_specialchars_decode( $term->description, ENT_QUOTES ),
+			'show_when_reporting'       => $show_when,
+			'show_when_reporting_label' => wp_specialchars_decode( $this->bb_get_show_when_label( $show_when ), ENT_QUOTES ),
 		);
-
-		return isset( $labels[ $value ] ) ? $labels[ $value ] : __( 'Content', 'buddyboss' );
 	}
 }
 

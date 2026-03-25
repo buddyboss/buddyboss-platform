@@ -64,17 +64,7 @@ function bb_moderation_register_member_moderation_fields() {
 				__( 'If a member believes another member has violated one of your %s, they can report it to the site administrators.', 'buddyboss' ),
 				sprintf(
 					'<a href="%s">%s</a>',
-					esc_url(
-						bp_get_admin_url(
-							add_query_arg(
-								array(
-									'taxonomy' => 'bpm_category',
-									'tab'      => 'report-categories',
-								),
-								'edit-tags.php'
-							)
-						)
-					),
+					esc_url( bb_get_feature_settings_url( 'moderation', 'reporting_categories' ) ),
 					__( 'reporting categories', 'buddyboss' )
 				)
 			),
@@ -94,6 +84,7 @@ function bb_moderation_register_member_moderation_fields() {
 			'name'                 => 'bpm_blocking_auto_suspend',
 			'label'                => __( 'Auto Suspend', 'buddyboss' ),
 			'type'                 => 'toggle',
+			/* translators: %s: threshold number input placeholder. */
 			'description'          => __( 'Auto suspend members after %s blocks', 'buddyboss' ),
 			'default'              => bp_is_moderation_auto_suspend_enable( false ),
 			'sanitize_callback'    => 'absint',
@@ -126,6 +117,7 @@ function bb_moderation_register_member_moderation_fields() {
 			'name'                 => 'bb_reporting_auto_suspend',
 			'label'                => '',
 			'type'                 => 'toggle',
+			/* translators: %s: threshold number input placeholder. */
 			'description'          => __( 'Auto suspend members after %s reports', 'buddyboss' ),
 			'default'              => bb_is_moderation_auto_suspend_report_enable( false ),
 			'sanitize_callback'    => 'absint',

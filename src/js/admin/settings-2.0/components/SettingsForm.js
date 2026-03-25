@@ -693,7 +693,8 @@ export function SettingsForm({ fields, values, onChange }) {
 												min={ control.min }
 												max={ control.max }
 												step={ control.step }
-												onChange={ function ( e ) { onChange( controlName, e.target.value ); } }
+												aria-label={ controlName }
+												onChange={ function ( e ) { onChange( controlName, parseInt( e.target.value, 10 ) || 0 ); } }
 												disabled={ cbControlDisabled }
 											/>
 										) }
@@ -933,7 +934,9 @@ export function SettingsForm({ fields, values, onChange }) {
 														value={ controlVal }
 														min={ control.min }
 														max={ control.max }
-														onChange={ ( e ) => onChange( controlName, e.target.value ) }
+														step={ control.step }
+														aria-label={ controlName }
+														onChange={ ( e ) => onChange( controlName, parseInt( e.target.value, 10 ) || 0 ) }
 														disabled={ controlDisabled }
 													/>
 												) }

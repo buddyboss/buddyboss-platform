@@ -68,10 +68,10 @@ function bb_moderation_sync_content_reporting_to_legacy( $feature_id, $settings,
 	unset( $content_types[ BP_Moderation_Members::$moderation_type ] );
 	unset( $content_types[ BP_Moderation_Members::$moderation_type_report ] );
 
-	$reporting_array  = (array) get_option( 'bpm_reporting_content_reporting', array() );
-	$auto_hide_array  = (array) get_option( 'bpm_reporting_auto_hide', array() );
-	$threshold_array  = (array) get_option( 'bpm_reporting_auto_hide_threshold', array() );
-	$arrays_changed   = false;
+	$reporting_array = (array) get_option( 'bpm_reporting_content_reporting', array() );
+	$auto_hide_array = (array) get_option( 'bpm_reporting_auto_hide', array() );
+	$threshold_array = (array) get_option( 'bpm_reporting_auto_hide_threshold', array() );
+	$arrays_changed  = false;
 
 	foreach ( $content_types as $slug => $type_label ) {
 

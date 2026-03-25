@@ -31,7 +31,7 @@ function bb_moderation_get_admin_user_ids() {
 				array(
 					'role'   => 'administrator',
 					'fields' => 'ID',
-					'number' => 1000,
+					'number' => max( 1, absint( apply_filters( 'bb_moderation_admin_user_query_limit', 1000 ) ) ),
 				)
 			)
 		);

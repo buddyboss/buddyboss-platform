@@ -27,7 +27,7 @@ import { createReportingCategory, updateReportingCategory } from '../../utils/aj
 var DEFAULT_FORM_DATA = {
 	name: '',
 	description: '',
-	show_when_reporting: 'content_members',
+	show_when_reporting: 'content',
 };
 
 /**
@@ -66,7 +66,7 @@ export function ReportingCategoryModal( { isOpen, onClose, onSave, category, sho
 			setFormData( {
 				name: decodeEntities( category.name || '' ),
 				description: decodeEntities( category.description || '' ),
-				show_when_reporting: category.show_when_reporting || 'content_members',
+				show_when_reporting: category.show_when_reporting || 'content',
 			} );
 		} else {
 			setFormData( JSON.parse( JSON.stringify( DEFAULT_FORM_DATA ) ) );
