@@ -399,14 +399,6 @@
 		padding: 24px;
 	}
 
-	&__error {
-		background: rgba($bb-error-color, 0.08);
-		color: $bb-error-color;
-		padding: 10px 16px;
-		border-radius: $bb-border-radius-lg;
-		font-size: 13px;
-	}
-
 	&__section {
 		padding-bottom: 24px;
 		border-bottom: 1px solid $bb-border-secondary-color;
@@ -718,18 +710,5 @@
 		&.is-selected {
 			background-color: $bb-background-primary-hover-color;
 		}
-	}
-
-	&__footer {
-		display: flex;
-		align-items: center;
-		justify-content: flex-end;
-		gap: 8px;
-		padding: 16px 24px;
-		border-top: 1px solid $bb-border-primary-color;
-		position: sticky;
-		bottom: 0;
-		background: #fff;
-		z-index: 1;
 	}
 }

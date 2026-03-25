@@ -671,12 +671,9 @@ select.bb-admin-settings__select {
 
         .components-base-control__label,
         .components-input-control__label.components-text {
+			@include bb-input-label;
             display: table;
-            color: $bb-text-secondary-color;
-            font-size: 13px;
-            font-weight: 500;
             margin-bottom: 10px;
-            text-transform: none;
         }
     }
 
@@ -742,6 +739,10 @@ select.bb-admin-settings__select {
 		gap: 8px;
 		padding: 16px 24px;
 		border-top: 1px solid $bb-border-secondary-color;
+		position: sticky;
+		bottom: 0;
+		background: $bb-background-base-color;
+		z-index: 1;
 
 		.components-button {
 
