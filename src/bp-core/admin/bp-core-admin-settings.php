@@ -24,21 +24,6 @@ function bp_admin_setting_callback_admin_bar() {
 }
 
 /**
- * Allow members to delete their accounts setting field.
- *
- * @since BuddyPress 1.6.0
- */
-function bp_admin_setting_callback_account_deletion() {
-	?>
-
-	<input id="bp-disable-account-deletion" name="bp-disable-account-deletion" type="checkbox" value="1" <?php checked( ! bp_disable_account_deletion( false ) ); ?> />
-	<label for="bp-disable-account-deletion"><?php esc_html_e( 'Allow members to delete their profiles', 'buddyboss' ); ?></label>
-
-	<?php
-}
-
-
-/**
  * Admin bar for logged in users setting field.
  *
  * @since BuddyBoss 1.1.0

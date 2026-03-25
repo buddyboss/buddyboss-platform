@@ -1626,6 +1626,252 @@ function bp_xprofile_admin_form_field_types( $select_field_type = '' ) {
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
+// Forums Settings 2.0 deprecated hook compatibility.
+// ──────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Fire the legacy `bp_admin_setting_forums_register_fields` hook after
+ * Settings 2.0 finishes registering forum fields.
+ *
+ * The original hook passed a `BP_Admin_Setting_Forums` instance. Settings 2.0
+ * no longer uses that class, so a no-op stub is passed to satisfy callbacks
+ * that call add_section()/add_field() on the argument.
+ *
+ * @since BuddyBoss 1.2.6
+ * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_forums_after_register_settings_fields'} instead.
+ */
+add_action(
+	'bb_forums_after_register_settings_fields',
+	static function () {
+		do_action_deprecated(
+			'bp_admin_setting_forums_register_fields',
+			array(
+				new class() {
+					/**
+					 * No-op stub for BP_Admin_Setting_tab::add_section().
+					 *
+					 * @param mixed ...$args Ignored.
+					 */
+					public function add_section( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+
+					/**
+					 * No-op stub for BP_Admin_Setting_tab::add_field().
+					 *
+					 * @param mixed ...$args Ignored.
+					 */
+					public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+				},
+			),
+			'BuddyBoss [BBVERSION]',
+			'bb_forums_after_register_settings_fields'
+		);
+	}
+);
+
+/**
+ * Fire the legacy `bp_admin_tab_setting_save` and `bp_admin_tab_setting_saved`
+ * hooks when forums settings are saved via Settings 2.0.
+ *
+ * @since BuddyBoss 1.0.0
+ * @deprecated BuddyBoss [BBVERSION] Use Settings 2.0 per-field sanitize/validate callbacks.
+ */
+add_action(
+	'bb_forums_after_save_settings',
+	static function () {
+		do_action_deprecated(
+			'bp_admin_tab_setting_save',
+			array( 'bp-forums' ),
+			'BuddyBoss [BBVERSION]',
+			'bb_forums_after_save_settings'
+		);
+
+		do_action_deprecated(
+			'bp_admin_tab_setting_saved',
+			array( 'bp-forums' ),
+			'BuddyBoss [BBVERSION]',
+			'bb_forums_after_save_settings'
+		);
+	}
+);
+
+/**
+ * Fire the legacy `bbp_admin_get_settings_sections` filter after Settings 2.0
+ * finishes registering forum fields.
+ *
+ * In legacy bbPress, this filter was applied inside bbp_admin_get_settings_sections()
+ * allowing third-party plugins to add settings sections to the WordPress Settings API
+ * pages. Settings 2.0 no longer calls that function for registration; this deprecation
+ * wrapper notifies developers to use bb_register_feature_section() instead.
+ *
+ * @since bbPress (r4001)
+ * @deprecated BuddyBoss [BBVERSION] Use {@see bb_register_feature_section()} to register forum settings sections.
+ */
+add_action(
+	'bb_forums_after_register_settings_fields',
+	static function () {
+		apply_filters_deprecated(
+			'bbp_admin_get_settings_sections',
+			array( array() ),
+			'BuddyBoss [BBVERSION]',
+			'bb_register_feature_section()'
+		);
+	}
+);
+
+/**
+ * Fire the legacy `bbp_admin_get_settings_fields` filter after Settings 2.0
+ * finishes registering forum fields.
+ *
+ * In legacy bbPress, this filter was applied inside bbp_admin_get_settings_fields()
+ * allowing third-party plugins to add settings fields to the WordPress Settings API
+ * pages. Settings 2.0 no longer calls that function for registration; this deprecation
+ * wrapper notifies developers to use bb_register_feature_field() instead.
+ *
+ * @since bbPress (r4001)
+ * @deprecated BuddyBoss [BBVERSION] Use {@see bb_register_feature_field()} to register forum settings fields.
+ */
+add_action(
+	'bb_forums_after_register_settings_fields',
+	static function () {
+		apply_filters_deprecated(
+			'bbp_admin_get_settings_fields',
+			array( array() ),
+			'BuddyBoss [BBVERSION]',
+			'bb_register_feature_field()'
+		);
+	}
+);
+
+/**
+ * Fire the legacy `bbp_admin_get_settings_fields_for_section` filter after
+ * Settings 2.0 finishes registering forum fields.
+ *
+ * In legacy bbPress, this filter was applied inside
+ * bbp_admin_get_settings_fields_for_section() allowing third-party plugins
+ * to modify fields for a specific section. Settings 2.0 no longer calls that
+ * function for registration; this deprecation wrapper notifies developers to
+ * use bb_register_feature_field() instead.
+ *
+ * @since bbPress (r4001)
+ * @deprecated BuddyBoss [BBVERSION] Use {@see bb_register_feature_field()} to register forum settings fields.
+ */
+add_action(
+	'bb_forums_after_register_settings_fields',
+	static function () {
+		apply_filters_deprecated(
+			'bbp_admin_get_settings_fields_for_section',
+			array( array(), '' ),
+			'BuddyBoss [BBVERSION]',
+			'bb_register_feature_field()'
+		);
+	}
+);
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Forums Settings API function stubs.
+// These functions were defined in bp-forums/admin/settings.php (deleted).
+// Third-party code calling them directly would get a fatal error without stubs.
+// ──────────────────────────────────────────────────────────────────────────────
+
+if ( ! function_exists( 'bbp_admin_get_settings_sections' ) ) {
+	/**
+	 * Get the bbPress admin settings sections.
+	 *
+	 * @since bbPress (r4001)
+	 * @deprecated BuddyBoss [BBVERSION] Forum settings are now managed by Settings 2.0.
+	 *
+	 * @return array Empty array.
+	 */
+	function bbp_admin_get_settings_sections() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Forums feature (bb_admin_settings_register_forums_feature)' );
+
+		return array();
+	}
+}
+
+if ( ! function_exists( 'bbp_admin_get_settings_fields' ) ) {
+	/**
+	 * Get the bbPress admin settings fields.
+	 *
+	 * @since bbPress (r4001)
+	 * @deprecated BuddyBoss [BBVERSION] Forum settings are now managed by Settings 2.0.
+	 *
+	 * @return array Empty array.
+	 */
+	function bbp_admin_get_settings_fields() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Forums feature (bb_admin_settings_register_forums_feature)' );
+
+		return array();
+	}
+}
+
+if ( ! function_exists( 'bbp_admin_get_settings_fields_for_section' ) ) {
+	/**
+	 * Get the bbPress admin settings fields for a specific section.
+	 *
+	 * @since bbPress (r4001)
+	 * @deprecated BuddyBoss [BBVERSION] Forum settings are now managed by Settings 2.0.
+	 *
+	 * @param string $section_id Section ID.
+	 *
+	 * @return array Empty array.
+	 */
+	function bbp_admin_get_settings_fields_for_section( $section_id = '' ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Forums feature (bb_admin_settings_register_forums_feature)' );
+
+		return array();
+	}
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Forums Settings 2.0 deprecated AJAX endpoint stubs.
+// These AJAX actions were in BBP_Admin and have been replaced by
+// Settings 2.0 AJAX handlers (BB_Admin_Topics_Ajax, BB_Admin_Replies_Ajax).
+// ──────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Deprecated: Topic suggest AJAX handler.
+ *
+ * @since bbPress (r4261)
+ * @deprecated BuddyBoss [BBVERSION] Use bb_admin_discussion_autocomplete instead.
+ */
+add_action(
+	'wp_ajax_bbp_suggest_topic',
+	static function () {
+		_deprecated_function( 'bbp_suggest_topic AJAX action', 'BuddyBoss [BBVERSION]', 'bb_admin_discussion_autocomplete' );
+		wp_send_json_error( array( 'message' => __( 'This endpoint has been deprecated. Use bb_admin_discussion_autocomplete instead.', 'buddyboss' ) ) );
+	}
+);
+
+/**
+ * Deprecated: Reply suggest AJAX handler.
+ *
+ * @since BuddyBoss 1.0.0
+ * @deprecated BuddyBoss [BBVERSION] Use bb_admin_reply_autocomplete instead.
+ */
+add_action(
+	'wp_ajax_bbp_suggest_reply',
+	static function () {
+		_deprecated_function( 'bbp_suggest_reply AJAX action', 'BuddyBoss [BBVERSION]', 'bb_admin_reply_autocomplete' );
+		wp_send_json_error( array( 'message' => __( 'This endpoint has been deprecated. Use bb_admin_reply_autocomplete instead.', 'buddyboss' ) ) );
+	}
+);
+
+/**
+ * Deprecated: User suggest AJAX handler.
+ *
+ * @since bbPress (r5014)
+ * @deprecated BuddyBoss [BBVERSION] Use standard WordPress user search instead.
+ */
+add_action(
+	'wp_ajax_bbp_suggest_user',
+	static function () {
+		_deprecated_function( 'bbp_suggest_user AJAX action', 'BuddyBoss [BBVERSION]', 'WordPress user search' );
+		wp_send_json_error( array( 'message' => __( 'This endpoint has been deprecated.', 'buddyboss' ) ) );
+	}
+);
+
+// ──────────────────────────────────────────────────────────────────────────────
 // Moderation Settings 2.0 deprecated functions and hook compatibility.
 // Legacy settings API functions were removed from bp-moderation-settings.php.
 // Moderation settings are now managed by Settings 2.0 (bb-admin-settings-moderation.php).

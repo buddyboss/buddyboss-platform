@@ -632,6 +632,21 @@
 					padding: 4px;
 				}
 
+				&[aria-haspopup="true"] {
+					@include bb-admin-settings-select;
+					padding: 2px 4px;
+
+					.mce-caret {
+						display: none;
+					}
+
+					&:focus,
+					&:hover {
+						background-color: $bb-background-color;
+						border-color: $bb-border-quaternary-color;
+					}
+				}
+
 				&.mce-active .mce-ico:before {
 					font-weight: 700;
 				}

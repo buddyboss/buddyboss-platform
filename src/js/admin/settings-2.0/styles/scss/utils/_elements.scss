@@ -326,6 +326,7 @@ select.bb-admin-settings__select {
         background-color: $bb-background-base-color;
         border-radius: $bb-border-radius-lg;
         box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
+        padding: 0;
         min-width: 190px;
 
         // Menu item button
@@ -622,6 +623,16 @@ select.bb-admin-settings__select {
     &__body {
         padding: 24px;
 
+        .components-text-control__input,
+		.components-textarea-control__input {
+			@include bb-input-text;
+		}
+
+        textarea.components-textarea-control__input {
+			min-height: 72px;
+            padding: 8px;
+		}
+
         .components-input-control__container {
 
 			.components-select-control__input {
@@ -644,12 +655,15 @@ select.bb-admin-settings__select {
 
         .components-select-control {
             gap: 0;
+            cursor: default;
         }
 
         .components-base-control__label,
         .components-input-control__label.components-text {
+            display: table;
             color: $bb-text-secondary-color;
             font-size: 13px;
+            font-weight: 500;
             margin-bottom: 10px;
             text-transform: none;
         }
@@ -676,6 +690,40 @@ select.bb-admin-settings__select {
 		}
 	}
 
+    &__row {
+		display: flex;
+		gap: 16px;
+		margin-bottom: 16px;
+
+		.components-base-control {
+			flex: 1;
+			margin-bottom: 0;
+		}
+	}
+
+    &__row--separator {
+		margin-bottom: 24px;
+		padding-bottom: 24px;
+		border-bottom: 1px solid $bb-border-tertiary-color;
+
+        > .components-base-control,
+		> .bb-admin-meta-field__editor-field {
+			margin-bottom: 0;
+		}
+	}
+
+    &__error {
+		color: $bb-error-color;
+		font-size: 13px;
+		margin: 0 0 16px;
+	}
+
+	// Custom section separator (e.g. Tags below registered fields).
+	&__custom-section {
+		padding-top: 24px;
+		border-top: 1px solid $bb-border-tertiary-color;
+	}
+
 	&__footer {
         display: flex;
 		align-items: center;
@@ -683,6 +731,10 @@ select.bb-admin-settings__select {
 		gap: 8px;
 		padding: 16px 24px;
 		border-top: 1px solid $bb-border-secondary-color;
+		position: sticky;
+		bottom: 0;
+		background: $bb-background-base-color;
+		z-index: 1;
 
 		.components-button {
 
@@ -795,8 +847,7 @@ select.bb-admin-settings__select {
         }
 
         &.is-selected button {
-            font-weight: 600;
-            color: $bb-primary-color;
+            background-color: $bb-background-secondary-color;
         }
     }
 
@@ -815,7 +866,7 @@ select.bb-admin-settings__select {
         padding: 4px 8px;
 
         &:hover {
-            text-decoration: underline;
+            text-decoration: none;
         }
 
         &:disabled {
@@ -871,4 +922,246 @@ select.bb-admin-settings__select {
         line-height: 16px;
         color: $bb-text-secondary-color;
     }
+}
+
+/* Bulk modal selected items list (shared pattern for bulk edit/delete) */
+.bb-admin-bulk-modal {
+
+    &__selected-items {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        margin-bottom: 16px;
+        max-height: 125px;
+        overflow: auto;
+    }
+
+    &__selected-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        > .components-checkbox-control {
+            margin-bottom: 0 !important;
+        }
+
+        .components-checkbox-control__input-container {
+            margin: 0;
+        }
+
+        .components-base-control__field {
+            margin-bottom: 0;
+        }
+
+        .components-checkbox-control__input[type="checkbox"]:checked {
+            background-color: $bb-background-brand-primary-color;
+            border-color: $bb-background-brand-primary-color;
+        }
+    }
+
+    &__selected-item-name {
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 20px;
+        color: $bb-link-color;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+// Author info display (avatar + name link) for meta field registry.
+.bb-admin-meta-field__author-info {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-top: 4px;
+
+	.bb-admin-meta-field__author-avatar {
+		border-radius: 50%;
+		flex-shrink: 0;
+        height: 40px;
+        width: 40px;
+        object-fit: cover;
+        border: 1px solid $bb-border-secondary-color;
+	}
+
+	.bb-admin-meta-field__author-name {
+		font-size: 14px;
+		color: $bb-link-color;
+		text-decoration: none;
+
+		&:hover {
+			color: $bb-link-color;
+		}
+	}
+}
+
+// Status badge displayed below title in list views (Scheduled, Pending Review, Draft).
+.bb-admin-list__status-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	margin: 0 0 0 8px;
+	padding: 2px 8px;
+	font-size: 12px;
+	font-weight: 500;
+	color: $bb-text-tertiary-color;
+	background: $bb-background-color;
+	border: 1px solid $bb-border-tertiary-color;
+	border-radius: $bb-border-radius-full;
+}
+
+// Spam badge for list views (matches reply spam badge pattern).
+.bb-admin-list__spam-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	margin: 0 0 0 8px;
+	padding: 2px 8px;
+	font-size: 12px;
+	font-weight: 500;
+	color: $bb-text-warning-primary-color;
+	background: $bb-background-warning-primary-color;
+	border: 1px solid $bb-border-warning-secondary-color;
+	border-radius: 99px;
+}
+
+// Disabled state for meta field registry fields.
+.bb-admin-meta-field--disabled {
+	opacity: 0.6;
+	pointer-events: none;
+}
+
+// Date Input component (calendar picker in Popover).
+.bb-admin-date-input,
+.bb-admin-time-input {
+
+	&__wrapper {
+		position: relative;
+	}
+
+	&__button {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+		min-height: 40px;
+		padding: 8px 12px;
+		background: $bb-background-color;
+		border: 1px solid $bb-border-tertiary-color;
+		border-radius: $bb-border-radius-md;
+		cursor: pointer;
+		font-size: 14px;
+		color: $bb-text-color;
+
+		&:hover,
+		&:focus {
+            border-color: $bb-border-quaternary-color;
+            box-shadow: none;
+		}
+	}
+
+	&__value--placeholder {
+		color: $bb-text-tertiary-color;
+	}
+
+	&__icon {
+		font-size: 18px;
+		color: $bb-icon-tertiary-color;
+	}
+
+	&__popover {
+		.components-popover__content {
+			padding: 0;
+		}
+
+        .components-popover__content {
+            background-color: $bb-background-base-color;
+            border-radius: $bb-border-radius-lg;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, .1);
+            border: 1px solid $bb-border-secondary-color;
+        }
+	}
+
+	&__picker {
+		padding: 12px;
+	}
+}
+
+// Time Input editable field + scrollable list inside Popover.
+.bb-admin-time-input {
+
+	&__button {
+		// Focus-within so the wrapper border highlights when the inner input is focused.
+		&:focus-within {
+			border-color: $bb-border-quaternary-color;
+		}
+	}
+
+	&__icon {
+		flex-shrink: 0;
+		pointer-events: none;
+	}
+
+	&__input,
+	&__input[type="text"] {
+		flex: 1;
+		border: none !important;
+		background: transparent !important;
+		font-size: 14px;
+		color: $bb-text-color;
+		padding: 0 !important;
+		margin: 0;
+		outline: none !important;
+		line-height: 1.4;
+		min-width: 0;
+		box-shadow: none !important;
+		min-height: auto;
+		height: auto;
+
+		&:focus,
+		&:active {
+			border: none !important;
+			box-shadow: none !important;
+			outline: none !important;
+		}
+
+		&::placeholder {
+			color: $bb-text-tertiary-color;
+		}
+	}
+
+	&__list {
+		min-width: 192px;
+		max-height: 296px;
+		overflow-y: auto;
+		padding: 4px 0;
+	}
+
+	&__item {
+		display: block;
+		width: 100%;
+		padding: 10px 16px;
+		background: none;
+		border: none;
+		border-radius: 0;
+		font-size: 14px;
+		line-height: 20px;
+		color: $bb-text-color;
+		text-align: left;
+		cursor: pointer;
+		outline: none;
+
+		&:hover,
+		&:focus {
+			background-color: $bb-background-primary-hover-color;
+		}
+
+		&--selected {
+			font-weight: 600;
+			color: $bb-background-brand-primary-color;
+			background-color: $bb-background-primary-color;
+		}
+	}
 }

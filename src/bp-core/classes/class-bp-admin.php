@@ -759,7 +759,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			require_once $this->admin_dir . '/settings/bp-admin-setting-messages.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-notifications.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-registration.php';
-			require_once $this->admin_dir . '/settings/bp-admin-setting-forums.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-credit.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-invites.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-labs.php';

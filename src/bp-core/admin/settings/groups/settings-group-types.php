@@ -48,7 +48,7 @@ function bb_groups_register_group_types_panel_fields() {
 			'description'       => __( 'Enable group types', 'buddyboss' ),
 			'help_text'         => __( 'When enabled, group types allow you to better organize groups.', 'buddyboss' ),
 			'default'           => (int) bp_disable_group_type_creation(),
-			'sanitize_callback' => 'intval',
+			'sanitize_callback' => 'absint',
 			'order'             => 10,
 		)
 	);
@@ -65,7 +65,7 @@ function bb_groups_register_group_types_panel_fields() {
 			'description'       => __( 'Allow selected profile types to automatically join groups', 'buddyboss' ),
 			'help_text'         => __( 'When a member requests to join a group their membership is automatically accepted.', 'buddyboss' ),
 			'default'           => (int) bp_enable_group_auto_join(),
-			'sanitize_callback' => 'intval',
+			'sanitize_callback' => 'absint',
 			'order'             => 20,
 		)
 	);

@@ -644,6 +644,31 @@ function bb_redirect_legacy_settings_to_settings_2() {
 		exit;
 	}
 
+	// Redirect legacy Forum CPT pages to Settings 2.0.
+	if ( bp_is_active( 'forums' ) ) {
+		// Check taxonomy first — edit-tags.php passes both taxonomy and post_type params.
+		$taxonomy = isset( $_GET['taxonomy'] ) ? sanitize_key( wp_unslash( $_GET['taxonomy'] ) ) : '';
+		if ( 'topic-tag' === $taxonomy ) {
+			wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=forums&panel=discussion_tags' ) );
+			exit;
+		}
+
+		if ( 'forum' === $post_type ) {
+			wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=forums&panel=all_forums' ) );
+			exit;
+		}
+
+		if ( 'topic' === $post_type ) {
+			wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=forums&panel=discussions' ) );
+			exit;
+		}
+
+		if ( 'reply' === $post_type ) {
+			wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=forums&panel=replies' ) );
+			exit;
+		}
+	}
+
 	// Check if we're on the old settings page.
 	if ( 'bp-settings' !== $page || empty( $tab ) ) {
 		return;
@@ -656,6 +681,7 @@ function bb_redirect_legacy_settings_to_settings_2() {
 		'bp-activity'  => 'activity',
 		'bp-groups'    => 'groups',
 		'bp-xprofile'  => 'members',
+		'bp-forums'    => 'forums',
 		'bp-friends'   => array(
 			'tab'   => 'members',
 			'panel' => 'member_connection',
