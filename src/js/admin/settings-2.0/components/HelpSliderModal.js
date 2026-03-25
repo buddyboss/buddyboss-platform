@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from '@wordpress/element';
 import { extractH2Headings } from '../../utils/headingExtractor';
 import { __ } from '@wordpress/i18n';
 
@@ -53,28 +53,14 @@ export const HelpSliderModal = ({ isOpen, onClose, children, title }) => {
 				</div>
 				<div className="bb-rl-help-modal-content">
 					{toc.length > 0 && (
-						<nav className="bb-rl-help-modal-toc" style={{
-							marginBottom: 20,
-							padding: 15,
-							background: '#f8f9fa',
-							borderRadius: 0,
-							borderLeft: '4px solid #007cba',
-						}}>
-							<h3 style={{ margin: '0 0 10px 0', fontSize: 16 }}>{__('Contents', 'buddyboss')}</h3>
-							<ol style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+						<nav className="bb-rl-help-modal-toc">
+							<h3>{__('Contents', 'buddyboss')}</h3>
+							<ol>
 								{toc.map(({ text, anchor }) => (
-									<li key={anchor} style={{ marginBottom: 8 }}>
+									<li key={anchor}>
 										<a
 											href={`#${anchor}`}
 											onClick={(e) => handleTocClick(anchor, e)}
-											style={{
-												color: '#007cba',
-												textDecoration: 'none',
-												padding: '6px 8px',
-												borderRadius: 4,
-												display: 'block',
-												fontWeight: 500,
-											}}
 										>
 											{text}
 										</a>
@@ -88,20 +74,6 @@ export const HelpSliderModal = ({ isOpen, onClose, children, title }) => {
 					</div>
 				</div>
 			</div>
-			<style>{`
-				.bb-rl-help-modal-header {
-					display: flex; align-items: center; justify-content: space-between; padding: 16px 24px 0 24px;
-				}
-				.bb-rl-help-modal-close {
-					background: none; border: none; font-size: 28px; cursor: pointer; color: #888;
-				}
-				.bb-rl-help-modal-content {
-					padding: 24px;
-				}
-				.bb-rl-help-modal-main-content h2 {
-					scroll-margin-top: 10px;
-				}
-			`}</style>
 		</div>
 	);
 }; 

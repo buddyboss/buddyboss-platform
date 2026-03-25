@@ -34,14 +34,16 @@ var SEARCH_DEBOUNCE_MS = 300;
  * @since BuddyBoss [BBVERSION]
  *
  * @param {Object}   props
+ * @param {string}   props.id           Optional ID attribute for the input element.
  * @param {string}   props.value        Current selected value (string ID).
  * @param {Function} props.onChange     Called with new value when selection changes.
- * @param {string}   props.asyncAction  WP AJAX action name for fetching options.
- * @param {string}   props.placeholder  Input placeholder text.
- * @param {boolean}  props.disabled     Whether the field is disabled.
+ * @param {string}   props.asyncAction       WP AJAX action name for fetching options.
+ * @param {Object}   props.asyncExtraParams  Extra params to include in every AJAX request.
+ * @param {string}   props.placeholder       Input placeholder text.
+ * @param {boolean}  props.disabled          Whether the field is disabled.
  * @return {WPElement} Rendered component.
  */
-export function AsyncSelectField( { value, onChange, asyncAction, placeholder, disabled } ) {
+export function AsyncSelectField( { id, value, onChange, asyncAction, asyncExtraParams, placeholder, disabled } ) {
 	// Display label for the currently selected value.
 	var selectedLabelState = useState( '' );
 	var selectedLabel = selectedLabelState[ 0 ];
@@ -116,9 +118,16 @@ export function AsyncSelectField( { value, onChange, asyncAction, placeholder, d
 				}
 			}
 
+			var fetchParams = { term: term, page: fetchPage };
+			if ( asyncExtraParams ) {
+				Object.keys( asyncExtraParams ).forEach( function ( key ) {
+					fetchParams[ key ] = asyncExtraParams[ key ];
+				} );
+			}
+
 			ajaxFetch(
 				asyncAction,
-				{ term: term, page: fetchPage },
+				fetchParams,
 				{ signal: abortRef.current.signal }
 			)
 				.then( function ( response ) {
@@ -146,7 +155,7 @@ export function AsyncSelectField( { value, onChange, asyncAction, placeholder, d
 					setIsLoadingMore( false );
 				} );
 		},
-		[ asyncAction ]
+		[ asyncAction, asyncExtraParams ]
 	);
 
 	// On mount: resolve the label for the current value if one exists.
@@ -284,6 +293,7 @@ export function AsyncSelectField( { value, onChange, asyncAction, placeholder, d
 		>
 			<div className="bb-async-select__input-wrapper">
 				<input
+					id={ id || undefined }
 					type="text"
 					className="bb-async-select__input"
 					value={ displayValue }

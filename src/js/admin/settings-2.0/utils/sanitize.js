@@ -250,3 +250,28 @@ export function safeUrl(url) {
 	}
 	return isAllowedUrl(url) ? url : '#';
 }
+
+/**
+ * Sanitize custom column HTML for a list of items.
+ *
+ * Each item may contain a `custom_columns` object whose values are raw HTML
+ * from server-registered column callbacks. This function sanitizes each value
+ * via sanitizeHtml() and returns a new array with sanitized columns.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Array} items Array of item objects (forums, discussions, replies, etc.).
+ * @returns {Array} New array with sanitized custom_columns.
+ */
+export function sanitizeCustomColumns( items ) {
+	return items.map( function ( item ) {
+		if ( ! item.custom_columns ) {
+			return item;
+		}
+		var sanitizedCols = {};
+		Object.keys( item.custom_columns ).forEach( function ( key ) {
+			sanitizedCols[ key ] = sanitizeHtml( item.custom_columns[ key ] );
+		} );
+		return Object.assign( {}, item, { custom_columns: sanitizedCols } );
+	} );
+}

@@ -31,6 +31,10 @@ const GroupTypeScreen = lazy(() => import('./GroupTypeScreen'));
 const ProfileTypeScreen = lazy(() => import('./ProfileTypeScreen'));
 const ProfileFieldsScreen = lazy(() => import('./ProfileFieldsScreen'));
 const ProfileSearchScreen = lazy(() => import('./ProfileSearchScreen'));
+const ForumsListScreen = lazy(() => import('./ForumsListScreen'));
+const DiscussionsListScreen = lazy(() => import('./DiscussionsListScreen'));
+const DiscussionTagsListScreen = lazy(() => import('./DiscussionTagsListScreen'));
+const RepliesListScreen = lazy(() => import('./RepliesListScreen'));
 
 /**
  * Map of feature + panel combinations that render custom screens instead of settings forms.
@@ -42,6 +46,10 @@ const CUSTOM_PANEL_SCREENS = {
 	'members:profile_types': ProfileTypeScreen,
 	'members:profile_fields': ProfileFieldsScreen,
 	'members:profile_search': ProfileSearchScreen,
+	'forums:all_forums': ForumsListScreen,
+	'forums:discussions': DiscussionsListScreen,
+	'forums:discussion_tags': DiscussionTagsListScreen,
+	'forums:replies': RepliesListScreen,
 };
 
 
@@ -186,8 +194,13 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 	// we only need updated panels (migration_data); we must not replace settings or we overwrite
 	// the user's mode (e.g. Likes) with stale server data.
 	useEffect(() => {
+		var refetchAbort = null;
 		const handleRefetchFeature = () => {
-			ajaxFetch('bb_admin_get_feature_settings', { feature_id: featureId })
+			if ( refetchAbort ) {
+				refetchAbort.abort();
+			}
+			refetchAbort = new AbortController();
+			ajaxFetch('bb_admin_get_feature_settings', { feature_id: featureId }, { signal: refetchAbort.signal })
 				.then((response) => {
 					if (response.success && response.data) {
 						if (featureId === 'reactions') {
@@ -207,13 +220,21 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 						}
 					}
 				})
-				.catch(() => {
+				.catch((err) => {
+					if ( err && 'AbortError' === err.name ) {
+						return;
+					}
 					setToast({ status: 'error', message: __('Failed to refresh settings. Please try again.', 'buddyboss') });
 				});
 		};
 
 		window.addEventListener('bb-admin-refetch-feature', handleRefetchFeature);
-		return () => window.removeEventListener('bb-admin-refetch-feature', handleRefetchFeature);
+		return () => {
+			window.removeEventListener('bb-admin-refetch-feature', handleRefetchFeature);
+			if ( refetchAbort ) {
+				refetchAbort.abort();
+			}
+		};
 	}, [featureId]);
 
 	// Setup debounced save (auto-save on change)
@@ -251,7 +272,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 						} else {
 							// Use actual saved values from server response (may differ from
 							// submitted values due to server-side validation/revert).
-							var actualSaved = response.data?.saved || fieldsToSave;
+							var actualSaved = ( response.data && response.data.saved ) ? response.data.saved : fieldsToSave;
 							setSettings((prev) => ({ ...prev, ...actualSaved }));
 							setOriginalSettings((prev) => ({ ...prev, ...actualSaved }));
 							const cachedData = getCachedFeatureData(featureId);
@@ -260,6 +281,13 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 									...cachedData,
 									settings: { ...cachedData.settings, ...actualSaved },
 								});
+							}
+
+							// If the server indicates panel visibility changed, refetch
+							// feature data to update the side navigation (e.g. Discussion Tags toggle).
+							if ( response.data && response.data.refresh_panels ) {
+								invalidateFeatureCache();
+								window.dispatchEvent( new Event( 'bb-admin-refetch-feature' ) );
 							}
 						}
 					} else {

@@ -261,3 +261,28 @@ function bb_activity_sync_blogs_component_after_save( $feature_id, $settings, $s
 }
 
 add_action( 'bb_admin_save_feature_settings_after', 'bb_activity_sync_blogs_component_after_save', 10, 3 );
+
+/**
+ * Sanitize a checkbox_list field value.
+ *
+ * Expects an associative array of key => 0|1 values.
+ * Keys are sanitized via sanitize_key(), values cast to absint().
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed $value Raw value from the AJAX request.
+ *
+ * @return array Sanitized associative array.
+ */
+function bb_sanitize_checkbox_list( $value ) {
+	if ( ! is_array( $value ) ) {
+		return array();
+	}
+
+	$sanitized = array();
+	foreach ( $value as $key => $val ) {
+		$sanitized[ sanitize_key( $key ) ] = absint( $val );
+	}
+
+	return $sanitized;
+}

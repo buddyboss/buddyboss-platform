@@ -133,7 +133,7 @@ class BB_Admin_Settings_Ajax {
 	public function bb_admin_toggle_feature() {
 		$this->bb_verify_request();
 
-		// phpcs:disable WordPress.Security.NonceVerification.Missing
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
 		$feature_id = isset( $_POST['feature_id'] ) ? sanitize_text_field( wp_unslash( $_POST['feature_id'] ) ) : '';
 		$status     = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : '';
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
@@ -244,7 +244,7 @@ class BB_Admin_Settings_Ajax {
 	public function bb_admin_get_feature_settings() {
 		$this->bb_verify_request();
 
-		// phpcs:disable WordPress.Security.NonceVerification.Missing
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
 		$feature_id = isset( $_POST['feature_id'] ) ? sanitize_text_field( wp_unslash( $_POST['feature_id'] ) ) : '';
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
@@ -654,6 +654,8 @@ class BB_Admin_Settings_Ajax {
 				'full_width'           => ! empty( $field['full_width'] ),
 				// Group label for child fields (e.g., xProfile group names under Members).
 				'child_group_label'    => $field['child_group_label'] ?? null,
+				// When true, saving this field triggers a full feature refetch to update side panels.
+				'refresh_panels'       => ! empty( $field['refresh_panels'] ),
 			);
 
 			// access_control: populate access-control data via filter so Pro can inject types/options.
@@ -788,7 +790,7 @@ class BB_Admin_Settings_Ajax {
 	public function bb_admin_save_feature_settings() {
 		$this->bb_verify_request();
 
-		// phpcs:disable WordPress.Security.NonceVerification.Missing
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
 		$feature_id = isset( $_POST['feature_id'] ) ? sanitize_text_field( wp_unslash( $_POST['feature_id'] ) ) : '';
 		$raw_json   = isset( $_POST['settings'] ) ? wp_unslash( $_POST['settings'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- JSON decoded and per-field sanitized below.
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
@@ -858,6 +860,12 @@ class BB_Admin_Settings_Ajax {
 				continue;
 			}
 
+			// Skip denylisted option names — defense-in-depth against a malicious
+			// extension registering a field named 'siteurl', 'active_plugins', etc.
+			if ( function_exists( 'bb_get_options_denylist' ) && in_array( $name, bb_get_options_denylist(), true ) ) {
+				continue;
+			}
+
 			// Save the main field if it was submitted.
 			if ( array_key_exists( $name, $settings ) ) {
 				$value = $settings[ $name ];
@@ -903,8 +911,8 @@ class BB_Admin_Settings_Ajax {
 						if ( ! empty( $control['sanitize_callback'] ) && is_callable( $control['sanitize_callback'] ) ) {
 							$control_value = call_user_func( $control['sanitize_callback'], $control_value );
 						} elseif ( 'number' === $control_type || 'select' === $control_type ) {
-							// Numeric types: use intval as default sanitizer.
-							$control_value = intval( $control_value );
+							// Numeric types and inline selects: use absint as default sanitizer.
+							$control_value = absint( $control_value );
 						} else {
 							$control_value = sanitize_text_field( $control_value );
 						}
@@ -941,9 +949,19 @@ class BB_Admin_Settings_Ajax {
 		 */
 		do_action( 'bb_admin_save_feature_settings_after', $feature_id, $settings, $saved );
 
+		// Check if any saved field requires a panel refresh (e.g. Discussion Tags toggle).
+		$refresh_panels = false;
+		foreach ( $all_fields as $field ) {
+			if ( ! empty( $field['refresh_panels'] ) && array_key_exists( $field['name'], $saved ) ) {
+				$refresh_panels = true;
+				break;
+			}
+		}
+
 		$response_data = array(
-			'message' => __( 'Settings saved successfully.', 'buddyboss' ),
-			'saved'   => $saved,
+			'message'        => __( 'Settings saved successfully.', 'buddyboss' ),
+			'saved'          => $saved,
+			'refresh_panels' => $refresh_panels,
 		);
 
 		/**

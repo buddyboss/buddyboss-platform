@@ -1,0 +1,636 @@
+/* ----------------------------------------------------------------
+   Discussion Tags List Screen
+   ---------------------------------------------------------------- */
+
+.bb-discussion-tags-list {
+	max-width: calc(100% - 64px);
+	padding: 0 24px 16px;
+	background-color: $bb-background-base-color;
+	border: 0.5px solid $bb-border-primary-color;
+	border-radius: $bb-border-radius-2xl;
+	box-shadow: 0px 1.5px 1px 0px rgba(0, 0, 0, 0.16);
+	margin: 32px 32px 0;
+
+	// Notice (shared pattern)
+	.bb-admin-notice {
+		margin-top: 24px;
+	}
+
+	.bb-admin-notice--dismiss {
+		background: none;
+		border: none;
+		cursor: pointer;
+	}
+
+	// Header
+	&__header {
+		border-bottom: 1px solid $bb-border-secondary-color;
+		padding: 16px 0;
+		min-height: 64px;
+		margin-bottom: 24px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		box-sizing: border-box;
+	}
+
+	&__title {
+		font-size: 18px;
+		font-weight: 500;
+		color: $bb-text-color;
+		margin: 0;
+	}
+
+	&__add-btn.is-primary {
+		@include bb-button-primary;
+
+		i {
+			font-size: 16px;
+			font-weight: 700;
+			margin-right: 6px;
+		}
+	}
+
+	// Toolbar
+	&__toolbar {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+		padding-bottom: 16px;
+		border-bottom: 1px solid $bb-border-secondary-color;
+		flex-wrap: wrap;
+
+		.components-select-control {
+			margin-bottom: 0;
+
+			.components-input-control__label {
+				color: $bb-text-secondary-color;
+				text-transform: none;
+				font-size: 13px;
+				font-weight: 500;
+			}
+
+			.components-select-control__input {
+				@include bb-admin-settings-select;
+				min-width: 135px;
+			}
+
+			.components-input-control-suffix-wrapper,
+			.components-input-control__backdrop {
+				display: none;
+			}
+		}
+
+		select {
+			@include bb-admin-settings-select;
+		}
+	}
+
+	&__toolbar-left {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		flex-wrap: wrap;
+	}
+
+	&__toolbar-right {
+		display: flex;
+		align-items: center;
+		gap: 13px;
+	}
+
+	// Bulk Actions
+	&__bulk-actions {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+
+		select {
+			min-width: 160px;
+			height: 32px;
+			font-size: 13px;
+		}
+	}
+
+	&__bulk-apply.is-secondary {
+		@include bb-button-primary-outline;
+	}
+
+	// Search
+	&__search {
+		position: relative;
+		min-width: 224px;
+
+		input {
+			@include bb-input-text;
+			padding-right: 30px;
+		}
+
+		&:after {
+			content: "\e30c";
+			font-family: "bb-icons-rl";
+			font-size: 20px;
+			color: $bb-icon-tertiary-color;
+			position: absolute;
+			right: 8px;
+			top: 50%;
+			transform: translateY(-50%);
+			pointer-events: none;
+		}
+	}
+
+	&__search-input {
+		width: 224px;
+		height: 32px;
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-md;
+		padding: 0 32px 0 8px;
+		font-size: 13px;
+		color: $bb-text-color;
+		background-color: $bb-background-base-color;
+		outline: none;
+
+		&::placeholder {
+			color: $bb-text-disabled-color;
+		}
+
+		&:focus {
+			border-color: $bb-border-brand-primary-color;
+		}
+	}
+
+	&__search-clear {
+		position: absolute;
+		right: 8px;
+		top: 50%;
+		transform: translateY(-50%);
+		background: none;
+		border: none;
+		cursor: pointer;
+		font-size: 16px;
+		color: $bb-text-tertiary-color;
+		padding: 0;
+		line-height: 1;
+		z-index: 1;
+
+		&:hover {
+			color: $bb-text-color;
+		}
+	}
+
+	// Loading / Error / Empty
+	&__loading {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 60px 0;
+	}
+
+	&__error {
+		text-align: center;
+		padding: 32px 0;
+		color: $bb-text-tertiary-color;
+	}
+
+	&__empty {
+		padding: 40px;
+		text-align: center;
+		color: $bb-text-tertiary-color;
+		font-size: 14px;
+	}
+
+	// Table
+	&__table-wrap {
+		overflow: hidden;
+		background: $bb-background-base-color;
+	}
+
+	&__table {
+		width: 100%;
+		border-collapse: collapse;
+	}
+
+	// Table Header
+	&__table thead {
+		border-bottom: 0.5px solid $bb-border-secondary-color;
+	}
+
+	&__table th {
+		padding: 10px 16px 10px 0;
+		font-size: 13px;
+		font-weight: 400;
+		color: $bb-text-tertiary-color;
+		text-align: left;
+		white-space: nowrap;
+
+		&:first-child {
+			padding: 10px 0 10px 4px;
+		}
+
+		&:last-child {
+			padding: 10px 4px 10px 0;
+		}
+	}
+
+	// Table Rows
+	&__row {
+		transition: background-color 0.15s ease;
+
+		&--selected {
+			background-color: $bb-background-positive-primary-color;
+		}
+	}
+
+	&__table tbody tr {
+		border-bottom: 0.5px solid $bb-border-primary-color;
+	}
+
+	&__table td {
+		padding: 16px 10px 16px 0;
+		font-size: 13px;
+		color: $bb-text-secondary-color;
+		vertical-align: middle;
+		overflow: hidden;
+
+		&:first-child {
+			padding-left: 4px;
+		}
+
+		&:last-child {
+			padding-right: 4px;
+		}
+	}
+
+	// Checkbox column
+	&__col-cb {
+		width: 30px;
+
+		.components-checkbox-control {
+			margin-bottom: 0;
+		}
+
+		.components-base-control__field {
+			margin-bottom: 0;
+		}
+
+		.components-checkbox-control__input-container {
+			margin: 0;
+		}
+	}
+
+	// Tag column
+	&__col-tag {
+		min-width: 200px;
+	}
+
+	&__tag-cell {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	&__tag-icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: $bb-icon-tertiary-color;
+		font-size: 20px;
+		flex-shrink: 0;
+		height: 32px;
+		width: 32px;
+		background-color: $bb-background-color;
+		border-radius: $bb-border-radius-full;
+	}
+
+	&__tag-name {
+		font-size: 14px;
+		font-weight: 500;
+		color: $bb-text-color;
+	}
+
+	// Slug column
+	&__col-slug {
+		min-width: 120px;
+	}
+
+	&__slug-badge {
+		display: inline-block;
+		padding: 4px 8px;
+		font-size: 11px;
+		font-weight: 500;
+		line-height: 1.4;
+		color: $bb-text-secondary-color;
+		background-color: $bb-background-secondary-color;
+		border: 1px solid $bb-border-tertiary-color;
+		border-radius: $bb-border-radius-full;
+		min-width: 14px;
+		text-align: center;
+	}
+
+	// Count column
+	&__col-count {
+		min-width: 140px;
+	}
+
+	&__count-cell {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	&__count-icon {
+		font-size: 16px;
+		color: $bb-icon-tertiary-color;
+		flex-shrink: 0;
+	}
+
+	&__count-link {
+		color: $bb-link-color;
+		font-size: 13px;
+		text-decoration: none;
+
+		&:hover {
+			color: $bb-link-color;
+		}
+	}
+
+	&__count-zero {
+		color: $bb-text-secondary-color;
+		font-size: 13px;
+	}
+
+	// Actions column
+	&__col-actions {
+		width: 40px;
+		text-align: center;
+
+		.components-dropdown-menu__toggle {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background: none;
+			border: none;
+			cursor: pointer;
+			padding: 4px;
+			min-width: 32px;
+			width: 32px;
+			height: 32px;
+			color: $bb-icon-tertiary-color;
+			border-radius: $bb-border-radius-sm;
+
+			i {
+				color: $bb-icon-secondary-color;
+				font-size: 24px;
+				line-height: 1;
+				font-weight: 700;
+			}
+
+			&:hover,
+			&:focus,
+			&.is-pressed,
+			&.is-opened {
+				color: $bb-text-color;
+				background: $bb-background-primary-hover-color;
+				box-shadow: none;
+			}
+
+			.dashicon,
+			svg:not(:first-child) {
+				display: none;
+			}
+		}
+	}
+
+	// Footer
+	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 16px;
+		padding: 16px 0;
+		margin-top: 8px;
+	}
+
+	// Item Count
+	&__item-count {
+		font-size: 13px;
+		color: $bb-text-secondary-color;
+	}
+
+	// Pagination
+	&__pagination {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+	}
+
+	&__pagination-btn.is-secondary,
+	&__pagination-btn.is-primary {
+		min-width: 32px;
+		height: 32px;
+		padding: 0 6px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: $bb-text-tertiary-color;
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 1;
+		border: 1px solid transparent;
+		box-shadow: none;
+		border-radius: $bb-border-radius-md;
+
+		&:hover {
+			background-color: $bb-background-base-color !important;
+			border-color: $bb-border-secondary-color;
+			box-shadow: none !important;
+			color: $bb-text-tertiary-color !important;
+		}
+	}
+
+	&__pagination-btn--current.is-primary {
+		background-color: $bb-background-base-color;
+		border-color: $bb-border-quinery;
+		color: $bb-text-color;
+		border-radius: $bb-border-radius-md;
+
+		&:hover {
+			background-color: $bb-background-base-color !important;
+			color: $bb-text-color !important;
+			border-color: $bb-border-quinery;
+			box-shadow: none;
+		}
+	}
+
+	&__pagination-ellipsis {
+		font-size: 13px;
+		font-weight: 500;
+		color: $bb-text-tertiary-color;
+		min-width: 24px;
+		text-align: center;
+		line-height: 32px;
+	}
+
+	&__pagination-btn--previous,
+	&__pagination-btn--next {
+		border: none !important;
+		box-shadow: none !important;
+		color: transparent !important;
+		font-size: 0 !important;
+
+		&:before {
+			content: "\e138";
+			font-family: "bb-icons-rl";
+			font-size: 16px;
+			color: $bb-icon-secondary-color;
+			font-weight: 400;
+		}
+
+		&[disabled] {
+			opacity: 0.5;
+			pointer-events: none;
+		}
+	}
+
+	&__pagination-btn--next:before {
+		content: "\e13a";
+	}
+}
+
+// Full-width for custom panel screen.
+.bb-admin-feature-settings__main--custom-panel {
+	.bb-discussion-tags-list {
+		max-width: 100%;
+	}
+}
+
+// Tag Create/Edit Modal
+.bb-tag-create-modal {
+	.components-modal__content {
+		padding: 0;
+	}
+
+	&__loading {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 48px 24px;
+	}
+}
+
+// Tag Single Delete Modal (warning + confirm pattern)
+.bb-tag-delete-modal {
+
+	&.components-modal__frame {
+		max-width: 500px;
+	}
+
+	&__body {
+		padding: 24px;
+	}
+
+	&__description {
+		font-size: 13px;
+		line-height: 1.6;
+		color: $bb-text-color;
+		margin: 0 0 16px;
+	}
+
+	.components-checkbox-control {
+		margin-bottom: 0;
+	}
+
+	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 8px;
+		padding: 16px 24px;
+		border-top: 1px solid $bb-border-secondary-color;
+
+		.is-secondary {
+			@include bb-button-secondary;
+		}
+
+		.is-destructive.is-primary {
+			background-color: $bb-error-color;
+			border-color: $bb-error-color;
+			color: $bb-text-inverse-color;
+			border-radius: $bb-border-radius-md;
+			font-size: 13px;
+			font-weight: 500;
+			padding: 6px 16px;
+			height: 32px;
+			box-shadow: none;
+
+			&:hover {
+				background-color: darken($bb-error-color, 5%);
+				border-color: darken($bb-error-color, 5%);
+			}
+
+			&:disabled {
+				opacity: 0.5;
+				cursor: not-allowed;
+			}
+		}
+	}
+}
+
+// Tag Bulk Delete Modal
+.bb-tag-bulk-delete-modal {
+
+	&.components-modal__frame {
+		max-width: 500px;
+	}
+
+	&__body {
+		padding: 24px;
+	}
+
+	&__description {
+		font-size: 13px;
+		line-height: 1.6;
+		color: $bb-text-color;
+		margin: 0 0 16px;
+	}
+
+	.components-checkbox-control {
+		margin-bottom: 0;
+	}
+
+	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 8px;
+		padding: 16px 24px;
+		border-top: 1px solid $bb-border-secondary-color;
+
+		.is-secondary {
+			@include bb-button-secondary;
+		}
+
+		.is-destructive.is-primary {
+			background-color: $bb-error-color;
+			border-color: $bb-error-color;
+			color: $bb-text-inverse-color;
+			border-radius: $bb-border-radius-md;
+			font-size: 13px;
+			font-weight: 500;
+			padding: 6px 16px;
+			height: 32px;
+			box-shadow: none;
+
+			&:hover {
+				background-color: darken($bb-error-color, 5%);
+				border-color: darken($bb-error-color, 5%);
+			}
+
+			&:disabled {
+				opacity: 0.5;
+				cursor: not-allowed;
+			}
+		}
+	}
+}
