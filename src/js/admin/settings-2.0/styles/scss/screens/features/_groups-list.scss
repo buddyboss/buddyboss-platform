@@ -646,76 +646,6 @@
 }
 
 /* ----------------------------------------------------------------
-   Group Create Modal
-   ---------------------------------------------------------------- */
-.bb-group-create-modal {
-
-	&__body {
-		padding: 24px;
-
-		.components-base-control {
-			margin-bottom: 16px;
-		}
-
-		// Override WordPress components uppercase labels to sentence case.
-		.components-input-control__label,
-		.components-base-control__label {
-			text-transform: none !important;
-			font-size: 13px !important;
-			font-weight: 500 !important;
-			color: $bb-text-color;
-		}
-
-		.components-text-control__input,
-		.components-textarea-control__input {
-			@include bb-input-text;
-		}
-
-		textarea {
-			min-height: 72px;
-		}
-
-		.components-input-control__container {
-
-			.components-select-control__input {
-				@include bb-admin-settings-select;
-			}
-
-			&:has(> .components-select-control__input) {
-				padding: 0 !important;
-
-				.components-input-control__suffix,
-				.components-input-control__backdrop {
-					display: none !important;
-				}
-			}
-		}
-	}
-
-	&__error {
-		color: $bb-error-color;
-		font-size: 13px;
-		margin: 0 0 16px;
-	}
-
-	&__footer {
-
-		.is-secondary {
-			@include bb-button-secondary;
-		}
-
-		.is-primary {
-			@include bb-button-primary;
-
-			&:disabled {
-				opacity: 0.5;
-				cursor: not-allowed;
-			}
-		}
-	}
-}
-
-/* ----------------------------------------------------------------
    Group Edit Modal
    ---------------------------------------------------------------- */
 .bb-group-edit-modal {
@@ -729,15 +659,6 @@
 			+ .bb-admin-meta-field__description {
 				margin-top: -6px;
 			}
-		}
-
-		// Override WordPress components uppercase labels to sentence case.
-		.components-input-control__label,
-		.components-base-control__label {
-			text-transform: none;
-			font-size: 13px;
-			font-weight: 500;
-			color: $bb-text-color;
 		}
 
 		.bb-admin-notice {
