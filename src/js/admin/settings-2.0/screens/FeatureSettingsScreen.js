@@ -35,6 +35,9 @@ const ForumsListScreen = lazy(() => import('./ForumsListScreen'));
 const DiscussionsListScreen = lazy(() => import('./DiscussionsListScreen'));
 const DiscussionTagsListScreen = lazy(() => import('./DiscussionTagsListScreen'));
 const RepliesListScreen = lazy(() => import('./RepliesListScreen'));
+const ReportingCategoriesScreen = lazy(() => import('./ReportingCategoriesScreen'));
+const FlaggedMembersScreen = lazy(() => import('./FlaggedMembersScreen'));
+const ReportedContentScreen = lazy(() => import('./ReportedContentScreen'));
 const EmailTemplatesListScreen = lazy(() => import('./EmailTemplatesListScreen'));
 
 /**
@@ -51,6 +54,9 @@ const CUSTOM_PANEL_SCREENS = {
 	'forums:discussions': DiscussionsListScreen,
 	'forums:discussion_tags': DiscussionTagsListScreen,
 	'forums:replies': RepliesListScreen,
+	'moderation:reporting_categories': ReportingCategoriesScreen,
+	'moderation:flagged_members': FlaggedMembersScreen,
+	'moderation:reported_content': ReportedContentScreen,
 	'emails:all_emails': EmailTemplatesListScreen,
 };
 

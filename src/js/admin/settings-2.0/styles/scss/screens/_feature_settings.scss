@@ -550,8 +550,18 @@
         margin-bottom: 6px;
     }
 
-    // No-label fields: indent content to align with parent's content area.
+    // Remove separator between a labeled field and its following no-label sibling.
+    &:has(+ .bb-admin-settings-form__field--no-label) {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+    // No-label fields: stack tightly with previous field (no separator, reduced spacing)
+    // and indent content to align with parent's content area.
     &--no-label {
+        border-bottom: none;
+        padding-top: 8px;
+
         .bb-admin-settings-form__field-content {
             flex: 1;
             // 245px (label width) + 32px (gap) = 277px offset to align with sibling field content.
@@ -666,6 +676,19 @@
             margin: 8px 0 0 0;
         }
 
+
+        // Checkbox child with inline description_controls (e.g., "Auto hide after [5] reports").
+        &--has-controls {
+            display: flex;
+            align-items: center;
+            gap: 0;
+        }
+
+        &-inline-desc {
+            font-size: 13px;
+            line-height: 18px;
+            color: $bb-text-color;
+        }
     }
 
     .bb-admin-reaction-info {
