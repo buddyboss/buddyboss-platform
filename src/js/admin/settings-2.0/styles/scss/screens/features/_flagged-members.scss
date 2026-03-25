@@ -693,20 +693,6 @@
 		flex-shrink: 0;
 	}
 
-	/* Footer */
-	&__footer {
-		display: flex;
-		align-items: center;
-		justify-content: flex-end;
-		gap: 8px;
-		padding: 16px 24px;
-		border-top: 1px solid $bb-border-primary-color;
-		position: sticky;
-		bottom: 0;
-		background: $bb-background-base-color;
-		z-index: 1;
-	}
-
 	&__close-btn {
 		background: $bb-background-brand-primary-color !important;
 		color: $bb-text-inverse-color !important;
