@@ -173,12 +173,12 @@ export function GroupCreateModal( { isOpen, onClose, onCreated } ) {
 		<Modal
 			title={ __( 'Create New Group', 'buddyboss' ) }
 			onRequestClose={ handleClose }
-			className="bb-group-create-modal bb-admin-settings-modal"
+			className="bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
 		>
-			<div className="bb-group-create-modal__body">
+			<div className="bb-admin-settings-modal__body">
 				{ error && (
-					<p className="bb-group-create-modal__error">{ error }</p>
+					<p className="bb-admin-settings-modal__error">{ error }</p>
 				) }
 
 				<TextControl
@@ -213,7 +213,7 @@ export function GroupCreateModal( { isOpen, onClose, onCreated } ) {
 				/>
 			</div>
 
-			<div className="bb-group-create-modal__footer bb-admin-settings-modal__footer">
+			<div className="bb-admin-settings-modal__footer">
 				<Button
 					variant="secondary"
 					onClick={ handleClose }
