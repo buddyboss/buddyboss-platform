@@ -256,7 +256,7 @@ export function SsoProvidersField( { field, value, onChange, disabled } ) {
 										onClose={ function () {
 											setOpenMenu( null );
 										} }
-										className="bb-admin-sso-providers__menu-popover"
+										className="bb-admin-sso-providers__menu-popover	"
 									>
 										<div className="bb-admin-sso-providers__menu">
 											<button
@@ -266,7 +266,7 @@ export function SsoProvidersField( { field, value, onChange, disabled } ) {
 													handleEdit( provider.id );
 												} }
 											>
-												<i className="bb-icon-l bb-icon-pencil"></i>
+												<i className="bb-icons-rl bb-icons-rl-pencil-simple"></i>
 												{ __( 'Edit', 'buddyboss' ) }
 											</button>
 										</div>
