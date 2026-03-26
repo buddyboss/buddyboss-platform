@@ -198,7 +198,7 @@
 		background: rgba(0, 0, 0, 0.6);
 	}
 
-	.bb-modal-panel.bb-hello-sso {
+	#bb-hello-container.bb-hello-sso {
 		position: fixed;
 		top: 50%;
 		left: 50%;
@@ -211,5 +211,83 @@
 		width: 90%;
 		max-height: 80vh;
 		overflow-y: auto;
+
+		.bb-hello-header {
+			position: relative;
+			padding: 8px 23px;
+		}
+
+		.bb-hello-title h2 {
+			color: $bb-text-color;
+			font-size: 18px;
+			font-weight: 500;
+		}
+
+		.bb-hello-close {
+			top: 50%;
+			right: 24px;
+			transform: translateY(-50%);
+
+			[class*="bb-icon"] {
+
+				&:before {
+					content: "\e4f6";
+					color: $bb-icon-secondary-color;
+					font-size: 24px;
+					font-family: "bb-icons-rl";
+				}
+			}
+		}
+
+		.form-fields {
+			padding: 14px 0;
+			
+			.form-field {
+				margin-bottom: 10px;
+			}
+
+			.field-label label {
+				color: $bb-text-secondary-color;
+				font-size: 13px;
+				font-weight: 500;
+			}
+
+			input[type="text"] {
+				@include bb-input-text;
+			}
+
+			.show-full-width {
+				display: inline-block;
+				width: 100%;
+			}
+
+			.description {
+				font-size: 13px;
+				line-height: 1.6;
+				color: $bb-text-secondary-color;
+				margin-bottom: 16px;
+			}
+		}
+
+		.bb-popup-buttons {
+			display: flex;
+			justify-content: flex-end;
+			align-items: center;
+			gap: 4px;
+			padding: 16px 24px;
+			border-top: 1px solid $bb-border-secondary-color;
+			background-color: $bb-background-base-color;
+			box-sizing: border-box;
+
+			.button:not(.button-primary) {
+				@include bb-button-secondary;
+				line-height: 1.3;
+			}
+
+			.button-primary {
+				@include bb-button-primary;
+				line-height: 1.3;
+			}
+		}
 	}
 }
