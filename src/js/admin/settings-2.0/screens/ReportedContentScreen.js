@@ -679,19 +679,19 @@ export function ReportedContentScreen() {
 							</span>
 
 							{ totalPages > 1 && (
-								<div className="bb-admin-reported-content__pagination">
+								<div className="bb-admin-pagination__pagination">
 									<Button
 										variant="secondary"
 										disabled={ page <= 1 }
 										onClick={ function () { handlePageChange( page - 1 ); } }
-										className="bb-admin-reported-content__pagination-btn bb-admin-reported-content__pagination-btn--previous"
+										className="bb-admin-pagination__pagination-btn bb-admin-pagination__pagination-btn--previous"
 									>
 										&lsaquo;
 									</Button>
 									{ getPageNumbers( page, totalPages ).map( function ( p, idx ) {
 										if ( '...' === p ) {
 											return (
-												<span key={ 'ellipsis-' + idx } className="bb-admin-reported-content__pagination-ellipsis">
+												<span key={ 'ellipsis-' + idx } className="bb-admin-pagination__pagination-ellipsis">
 													&hellip;
 												</span>
 											);
@@ -701,7 +701,7 @@ export function ReportedContentScreen() {
 												key={ p }
 												variant={ p === page ? 'primary' : 'secondary' }
 												onClick={ function () { handlePageChange( p ); } }
-												className={ 'bb-admin-reported-content__pagination-btn' + ( p === page ? ' bb-admin-reported-content__pagination-btn--current' : '' ) }
+												className={ 'bb-admin-pagination__pagination-btn' + ( p === page ? ' bb-admin-pagination__pagination-btn--current' : '' ) }
 											>
 												{ p }
 											</Button>
@@ -711,7 +711,7 @@ export function ReportedContentScreen() {
 										variant="secondary"
 										disabled={ page >= totalPages }
 										onClick={ function () { handlePageChange( page + 1 ); } }
-										className="bb-admin-reported-content__pagination-btn bb-admin-reported-content__pagination-btn--next"
+										className="bb-admin-pagination__pagination-btn bb-admin-pagination__pagination-btn--next"
 									>
 										&rsaquo;
 									</Button>

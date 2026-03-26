@@ -527,8 +527,6 @@
 		color: $bb-text-secondary-color;
 	}
 
-	// Pagination
-	@include bb-admin-pagination;
 
 	// Edit Loading Overlay
 	&__edit-loading {

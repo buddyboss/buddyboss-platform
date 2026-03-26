@@ -609,9 +609,9 @@ export default function EmailTemplatesListScreen( props ) {
 							total
 						) }
 					</span>
-					<div className="bb-email-templates-list__pagination">
+					<div className="bb-admin-pagination__pagination">
 						<Button
-							className="bb-email-templates-list__pagination-btn bb-email-templates-list__pagination-btn--previous is-secondary"
+							className="bb-admin-pagination__pagination-btn bb-admin-pagination__pagination-btn--previous is-secondary"
 							disabled={ 1 === page }
 							onClick={ function() {
 								handlePageChange( page - 1 );
@@ -622,7 +622,7 @@ export default function EmailTemplatesListScreen( props ) {
 						{ pageNumbers.map( function( p, idx ) {
 							if ( '...' === p ) {
 								return (
-									<span key={ 'ellipsis-' + idx } className="bb-email-templates-list__pagination-ellipsis">
+									<span key={ 'ellipsis-' + idx } className="bb-admin-pagination__pagination-ellipsis">
 										&hellip;
 									</span>
 								);
@@ -631,8 +631,8 @@ export default function EmailTemplatesListScreen( props ) {
 								<Button
 									key={ p }
 									className={
-										'bb-email-templates-list__pagination-btn' +
-										( p === page ? ' bb-email-templates-list__pagination-btn--current is-primary' : ' is-secondary' )
+										'bb-admin-pagination__pagination-btn' +
+										( p === page ? ' bb-admin-pagination__pagination-btn--current is-primary' : ' is-secondary' )
 									}
 									onClick={ function() {
 										handlePageChange( p );
@@ -643,7 +643,7 @@ export default function EmailTemplatesListScreen( props ) {
 							);
 						} ) }
 						<Button
-							className="bb-email-templates-list__pagination-btn bb-email-templates-list__pagination-btn--next is-secondary"
+							className="bb-admin-pagination__pagination-btn bb-admin-pagination__pagination-btn--next is-secondary"
 							disabled={ page === totalPages }
 							onClick={ function() {
 								handlePageChange( page + 1 );

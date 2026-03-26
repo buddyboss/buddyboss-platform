@@ -481,8 +481,6 @@
 		color: $bb-text-secondary-color;
 	}
 
-	// Pagination
-	@include bb-admin-pagination;
 }
 
 // Custom panel main - Allow full width for custom screens (ActivityList, GroupsList).

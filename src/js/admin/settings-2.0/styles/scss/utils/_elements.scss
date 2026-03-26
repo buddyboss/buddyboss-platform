@@ -1,3 +1,8 @@
+/* Shared Pagination */
+.bb-admin-pagination {
+	@include bb-admin-pagination;
+}
+
 /* Loading Spinner */
 .bb-admin-loading {
     display: flex;

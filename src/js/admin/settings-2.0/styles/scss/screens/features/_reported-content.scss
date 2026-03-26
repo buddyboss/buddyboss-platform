@@ -463,17 +463,6 @@
 		color: $bb-text-secondary-color;
 	}
 
-	/* Pagination */
-	@include bb-admin-pagination;
-
-	// Override: prev/next hover for reported-content variant.
-	&__pagination-btn--previous,
-	&__pagination-btn--next {
-		&:hover {
-			background-color: $bb-background-base-color !important;
-			box-shadow: none !important;
-		}
-	}
 }
 
 // Custom panel main — Allow full width for custom screens.
