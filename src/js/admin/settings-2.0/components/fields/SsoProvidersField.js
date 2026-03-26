@@ -14,7 +14,7 @@
  */
 
 import { CheckboxControl, Popover } from '@wordpress/components';
-import { useState, useRef } from '@wordpress/element';
+import { useState, useRef, useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { safeUrl } from '../../utils/sanitize';
 import { BB_EVENTS } from '../../utils/constants';
@@ -55,6 +55,48 @@ export function SsoProvidersField( { field, value, onChange, disabled } ) {
 	var setOpenMenu = openMenuState[ 1 ];
 	var menuButtonRefs = useRef( {} );
 	var savingRef = useRef( {} );
+
+	/**
+	 * Intercept SSO modal close/cancel clicks to prevent legacy jQuery
+	 * handler (bb-sso-admin.js) from reloading the page.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	useEffect( function () {
+		var handler = function ( e ) {
+			var target = e.target;
+			if (
+				! target.closest( '#bb-hello-container' )
+			) {
+				return;
+			}
+			if (
+				target.matches( '.close-modal' ) ||
+				target.closest( '.close-modal' ) ||
+				target.matches( '#sso_cancel' ) ||
+				target.closest( '#sso_cancel' )
+			) {
+				e.stopImmediatePropagation();
+				e.preventDefault();
+
+				var container = document.getElementById( 'bb-hello-container' );
+				var backdrop = document.getElementById( 'bb-hello-backdrop' );
+				if ( container ) {
+					container.style.display = 'none';
+				}
+				if ( backdrop ) {
+					backdrop.style.display = 'none';
+				}
+				document.body.classList.remove( 'bp-disable-scroll' );
+			}
+		};
+
+		// Capture phase runs before jQuery delegated handlers.
+		document.addEventListener( 'click', handler, true );
+		return function () {
+			document.removeEventListener( 'click', handler, true );
+		};
+	}, [] );
 
 	/**
 	 * Check if a provider is enabled.
