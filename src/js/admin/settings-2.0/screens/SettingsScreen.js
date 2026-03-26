@@ -184,13 +184,12 @@ export function SettingsScreen({ onNavigate }) {
 					invalidateFeatureCache();
 
 					// Toggle admin submenu visibility for features with external settings pages.
-					var featureData = features.find( function( f ) { return f.id === featureId; } );
-					if ( featureData && featureData.settings_route && featureData.settings_route.startsWith( 'http' ) ) {
+					if ( currentFeature && currentFeature.settings_route && currentFeature.settings_route.startsWith( 'http' ) ) {
 						try {
-							var routeUrl = new URL( featureData.settings_route );
+							var routeUrl = new URL( currentFeature.settings_route );
 							var pageSlug = routeUrl.searchParams.get( 'page' );
 							if ( pageSlug ) {
-								var menuLink = document.querySelector( '#adminmenu a[href*="page=' + pageSlug + '"]' );
+								var menuLink = document.querySelector( '#adminmenu a[href*="page=' + CSS.escape( pageSlug ) + '"]' );
 								if ( menuLink ) {
 									// Menu item exists in DOM — toggle visibility.
 									var menuItem = menuLink.closest( 'li' );

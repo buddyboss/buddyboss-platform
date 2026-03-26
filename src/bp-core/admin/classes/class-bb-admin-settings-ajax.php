@@ -1327,9 +1327,9 @@ class BB_Admin_Settings_Ajax {
 		// These contain full URLs (http/https) or non-Settings-2.0 page params.
 		if (
 			! empty( $feature['settings_route'] ) &&
-			( 0 === strpos( $feature['settings_route'], 'http' ) || 0 === strpos( $feature['settings_route'], admin_url() ) )
+			0 === strpos( $feature['settings_route'], 'http' )
 		) {
-			return $feature['settings_route'];
+			return esc_url_raw( $feature['settings_route'] );
 		}
 
 		$settings_route = bb_get_feature_settings_url( $feature_id );
