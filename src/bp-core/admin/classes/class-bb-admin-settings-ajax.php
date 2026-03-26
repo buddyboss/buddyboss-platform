@@ -1323,6 +1323,15 @@ class BB_Admin_Settings_Ajax {
 			return '';
 		}
 
+		// External settings route — add-on plugins with their own admin page.
+		// These contain full URLs (http/https) or non-Settings-2.0 page params.
+		if (
+			! empty( $feature['settings_route'] ) &&
+			( 0 === strpos( $feature['settings_route'], 'http' ) || 0 === strpos( $feature['settings_route'], admin_url() ) )
+		) {
+			return $feature['settings_route'];
+		}
+
 		$settings_route = bb_get_feature_settings_url( $feature_id );
 
 		// Custom settings_route points to a different feature's panel

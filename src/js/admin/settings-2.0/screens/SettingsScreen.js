@@ -183,6 +183,32 @@ export function SettingsScreen({ onNavigate }) {
 					// (e.g. Reactions depends on Activity) fetch fresh data.
 					invalidateFeatureCache();
 
+					// Toggle admin submenu visibility for features with external settings pages.
+					var featureData = features.find( function( f ) { return f.id === featureId; } );
+					if ( featureData && featureData.settings_route && featureData.settings_route.startsWith( 'http' ) ) {
+						try {
+							var routeUrl = new URL( featureData.settings_route );
+							var pageSlug = routeUrl.searchParams.get( 'page' );
+							if ( pageSlug ) {
+								var menuLink = document.querySelector( '#adminmenu a[href*="page=' + pageSlug + '"]' );
+								if ( menuLink ) {
+									// Menu item exists in DOM — toggle visibility.
+									var menuItem = menuLink.closest( 'li' );
+									if ( menuItem ) {
+										menuItem.style.display = checked ? '' : 'none';
+									}
+								} else if ( checked ) {
+									// Menu item was never rendered server-side — reload
+									// so WordPress registers it properly with correct
+									// classes, position, and label.
+									window.location.reload();
+								}
+							}
+						} catch ( e ) {
+							// Ignore URL parsing errors.
+						}
+					}
+
 					// Show success toast.
 					const successMessage = checked
 						? __('%s has been enabled.', 'buddyboss').replace('%s', featureLabel)
@@ -370,7 +396,14 @@ export function SettingsScreen({ onNavigate }) {
 													<Button
 														variant="secondary"
 														className={`bb-admin-settings__feature-settings-btn ${feature.status !== 'active' ? 'bb-admin-settings__feature-settings-btn--disabled' : ''}`}
-														onClick={() => onNavigate(urlToRoute(feature.settings_route))}
+														onClick={() => {
+															// External URL (add-on plugins with their own settings page).
+															if ( feature.settings_route && feature.settings_route.startsWith( 'http' ) ) {
+																window.location.href = feature.settings_route;
+															} else {
+																onNavigate( urlToRoute( feature.settings_route ) );
+															}
+														}}
 														disabled={feature.status !== 'active'}
 													>
 														<i className="bb-icon-settings"></i>
