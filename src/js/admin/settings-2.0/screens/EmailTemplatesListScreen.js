@@ -440,10 +440,10 @@ export default function EmailTemplatesListScreen( props ) {
 					</div>
 
 					{/* Search */}
-					<div className="bb-email-templates-list__search">
+					<div className="bb-email-templates-list__search bb-admin-list-search">
 						<input
 							type="text"
-							className="bb-email-templates-list__search-input"
+							className="bb-email-templates-list__search-input bb-admin-list-search__input"
 							placeholder={ __( 'Search emails', 'buddyboss' ) }
 							value={ searchInput }
 							onChange={ handleSearchChange }

@@ -38,28 +38,7 @@
 
 	// Toolbar — layout styled via .bb-admin-list-toolbar
 
-	// Search
-	&__search {
-		position: relative;
-		min-width: 225px;
-
-		input {
-			@include bb-input-text;
-			padding-right: 30px;
-		}
-
-		&:after {
-			content: "\e30c";
-			font-family: "bb-icons-rl";
-			font-size: 20px;
-			color: $bb-icon-tertiary-color;
-			position: absolute;
-			right: 8px;
-			top: 50%;
-			transform: translateY(-50%);
-			pointer-events: none;
-		}
-	}
+	// Search — styled via .bb-admin-list-search
 
 	// Bulk Actions
 	&__bulk-actions {
@@ -91,47 +70,6 @@
 			height: 32px;
 			font-size: 13px;
 		}
-	}
-
-	// Search
-	&__search {
-		position: relative;
-		min-width: 225px;
-
-		input {
-			@include bb-input-text;
-			padding-right: 30px;
-		}
-	}
-
-	&__search-input {
-		width: 200px;
-		height: 32px;
-		border: 1px solid $bb-border-secondary-color;
-		border-radius: $bb-border-radius-md;
-		padding: 0 32px 0 8px;
-		font-size: 13px;
-		color: $bb-text-color;
-		background-color: $bb-background-base-color;
-		outline: none;
-
-		&::placeholder {
-			color: $bb-text-disabled-color;
-		}
-
-		&:focus {
-			border-color: $bb-border-brand-primary-color;
-		}
-	}
-
-	&__search-icon {
-		position: absolute;
-		right: 8px;
-		top: 50%;
-		transform: translateY(-50%);
-		color: $bb-icon-tertiary-color;
-		font-size: 16px;
-		pointer-events: none;
 	}
 
 	// Table — base styled via .bb-admin-list-table

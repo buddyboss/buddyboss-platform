@@ -84,7 +84,7 @@ export function ListToolbar( {
 			<div className={ className + '__toolbar-right bb-admin-list-toolbar__right' }>
 				{ children }
 
-				<div className={ className + '__search' }>
+				<div className={ className + '__search bb-admin-list-search' }>
 					<input
 						type="text"
 						value={ searchInput }
@@ -93,18 +93,18 @@ export function ListToolbar( {
 						} }
 						placeholder={ searchPlaceholder || __( 'Search', 'buddyboss' ) }
 						aria-label={ searchPlaceholder || __( 'Search', 'buddyboss' ) }
-						className={ className + '__search-input' }
+						className={ className + '__search-input bb-admin-list-search__input' }
 					/>
 					{ onSearchClear && searchInput ? (
 						<button
-							className={ className + '__search-clear' }
+							className={ className + '__search-clear bb-admin-list-search__clear' }
 							onClick={ onSearchClear }
 							type="button"
 						>
 							<i className="bb-icons-rl bb-icons-rl-x"></i>
 						</button>
 					) : (
-						<span className={ className + '__search-icon' }>
+						<span className={ className + '__search-icon bb-admin-list-search__icon' }>
 							<i className="bb-icons-rl bb-icons-rl-search"></i>
 						</span>
 					) }
