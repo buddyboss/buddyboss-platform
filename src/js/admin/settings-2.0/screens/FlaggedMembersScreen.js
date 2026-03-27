@@ -436,7 +436,7 @@ export function FlaggedMembersScreen() {
 														</span>
 													) }
 												</td>
-												<td className="bb-admin-flagged-members__td--actions">
+												<td className="bb-admin-flagged-members__td--actions bb-admin-actions-toggle">
 													{ isBusy ? (
 														<Spinner />
 													) : (

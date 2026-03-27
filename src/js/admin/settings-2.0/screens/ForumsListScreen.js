@@ -746,7 +746,7 @@ export function ForumsListScreen( { onNavigate } ) {
 												</td>
 											);
 										} ) }
-										<td className="bb-forums-list__td--actions">
+										<td className="bb-forums-list__td--actions bb-admin-actions-toggle">
 											<DropdownMenu
 												icon={ <i className="bb-icons-rl-dots-three"></i> }
 												label={ __( 'More options', 'buddyboss' ) }

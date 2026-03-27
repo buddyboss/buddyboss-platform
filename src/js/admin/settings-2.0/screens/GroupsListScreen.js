@@ -777,7 +777,7 @@ export function GroupsListScreen( { onNavigate } ) {
 												</td>
 											);
 										} ) }
-										<td className="bb-groups-list__td--actions">
+										<td className="bb-groups-list__td--actions bb-admin-actions-toggle">
 											<DropdownMenu
 												icon={ <i className="bb-icons-rl-dots-three"></i> }
 												label={ __( 'More options', 'buddyboss' ) }

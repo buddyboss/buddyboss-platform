@@ -403,45 +403,9 @@
 		}
 	}
 
-	// Actions Column
+	// Actions Column — toggle styled via .bb-admin-actions-toggle
 	&__td--actions {
 		text-align: center;
-
-		.components-dropdown-menu__toggle {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			background: none;
-			border: none;
-			cursor: pointer;
-			padding: 4px;
-			min-width: 32px;
-			width: 32px;
-			height: 32px;
-			color: $bb-icon-tertiary-color;
-			border-radius: $bb-border-radius-sm;
-
-			i {
-				color: $bb-icon-secondary-color;
-				font-size: 24px;
-				line-height: 1;
-				font-weight: 700;
-			}
-
-			&:hover,
-			&:focus,
-			&.is-pressed,
-			&.is-opened {
-				color: $bb-text-color;
-				background: $bb-background-primary-hover-color;
-				box-shadow: none;
-			}
-
-			.dashicon,
-			svg:not(:first-child) {
-				display: none;
-			}
-		}
 	}
 
 	// Footer

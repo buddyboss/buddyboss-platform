@@ -975,7 +975,7 @@ export default function RepliesListScreen( { onNavigate } ) {
 											</td>
 										);
 									} ) }
-									<td className="bb-replies-list__col-actions">
+									<td className="bb-replies-list__col-actions bb-admin-actions-toggle">
 										<DropdownMenu
 											icon={ <i className="bb-icons-rl-dots-three"></i> }
 											label={ __( 'Actions', 'buddyboss' ) }

@@ -558,7 +558,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 												) }
 											</div>
 										</td>
-										<td className="bb-discussion-tags-list__col-actions">
+										<td className="bb-discussion-tags-list__col-actions bb-admin-actions-toggle">
 											<DropdownMenu
 												icon={ <i className="bb-icons-rl-dots-three"></i> }
 												label={ __( 'More options', 'buddyboss' ) }

@@ -537,7 +537,7 @@ export default function EmailTemplatesListScreen( props ) {
 											<i className="bb-icons-rl bb-icons-rl-clock"></i>
 											{ item.date }
 										</td>
-										<td className="bb-email-templates-list__td--actions">
+										<td className="bb-email-templates-list__td--actions bb-admin-actions-toggle">
 											<DropdownMenu
 												icon={ <i className="bb-icons-rl-dots-three"></i> }
 												label={ __( 'More options', 'buddyboss' ) }

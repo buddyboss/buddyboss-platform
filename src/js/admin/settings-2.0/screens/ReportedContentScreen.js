@@ -565,7 +565,7 @@ export function ReportedContentScreen() {
 														</span>
 													) }
 												</td>
-												<td className="bb-admin-reported-content__td--actions">
+												<td className="bb-admin-reported-content__td--actions bb-admin-actions-toggle">
 													{ isBusy ? (
 														<Spinner />
 													) : (
