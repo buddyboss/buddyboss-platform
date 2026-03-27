@@ -397,8 +397,8 @@ export function SettingsScreen({ onNavigate }) {
 														variant="secondary"
 														className={`bb-admin-settings__feature-settings-btn ${feature.status !== 'active' ? 'bb-admin-settings__feature-settings-btn--disabled' : ''}`}
 														onClick={() => {
-															// External URL (add-on plugins with their own settings page).
-															if ( feature.settings_route && feature.settings_route.startsWith( 'http' ) ) {
+															// External URL (add-on plugins with own settings page, not bb-settings).
+															if ( feature.settings_route && feature.settings_route.startsWith( 'http' ) && ! feature.settings_route.includes( 'page=bb-settings' ) ) {
 																window.location.href = feature.settings_route;
 															} else {
 																onNavigate( urlToRoute( feature.settings_route ) );
