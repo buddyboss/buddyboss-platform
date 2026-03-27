@@ -183,12 +183,13 @@ export function SettingsScreen({ onNavigate }) {
 					// (e.g. Reactions depends on Activity) fetch fresh data.
 					invalidateFeatureCache();
 
-					// Toggle admin submenu visibility for features with external settings pages.
+					// Toggle admin submenu visibility for add-on features with their own admin page.
+					// Only for external pages (page != bb-settings), not internal Settings 2.0 routes.
 					if ( currentFeature && currentFeature.settings_route && currentFeature.settings_route.startsWith( 'http' ) ) {
 						try {
 							var routeUrl = new URL( currentFeature.settings_route );
 							var pageSlug = routeUrl.searchParams.get( 'page' );
-							if ( pageSlug ) {
+							if ( pageSlug && 'bb-settings' !== pageSlug ) {
 								var menuLink = document.querySelector( '#adminmenu a[href*="page=' + CSS.escape( pageSlug ) + '"]' );
 								if ( menuLink ) {
 									// Menu item exists in DOM — toggle visibility.
