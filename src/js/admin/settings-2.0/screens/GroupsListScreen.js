@@ -662,18 +662,18 @@ export function GroupsListScreen( { onNavigate } ) {
 			{ /* Table */ }
 			<div className="bb-groups-list__table-wrapper">
 				{ isLoading ? (
-					<div className="bb-groups-list__loading">
+					<div className="bb-groups-list__loading bb-admin-list-table__loading">
 						<Spinner />
 					</div>
 				) : 0 === groups.length ? (
-					<div className="bb-groups-list__empty">
+					<div className="bb-groups-list__empty bb-admin-list-table__empty">
 						<p>{ __( 'No groups found.', 'buddyboss' ) }</p>
 					</div>
 				) : (
-					<table className="bb-groups-list__table">
+					<table className="bb-groups-list__table bb-admin-list-table">
 						<thead>
 							<tr>
-								<th className="bb-groups-list__th--checkbox">
+								<th className="bb-groups-list__th--checkbox bb-admin-list-table__checkbox">
 									<CheckboxControl
 										checked={ allSelected }
 										onChange={ handleSelectAll }
@@ -713,9 +713,9 @@ export function GroupsListScreen( { onNavigate } ) {
 								return (
 									<tr
 										key={ group.id }
-										className={ 'bb-groups-list__row' + ( isSelected ? ' bb-groups-list__row--selected' : '' ) }
+										className={ 'bb-groups-list__row bb-admin-list-table__row' + ( isSelected ? ' bb-groups-list__row--selected bb-admin-list-table__row--selected' : '' ) }
 									>
-										<td className="bb-groups-list__td--checkbox">
+										<td className="bb-groups-list__td--checkbox bb-admin-list-table__checkbox">
 											<CheckboxControl
 												checked={ isSelected }
 												onChange={ function ( checked ) {

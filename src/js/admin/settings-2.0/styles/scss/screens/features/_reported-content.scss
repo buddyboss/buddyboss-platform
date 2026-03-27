@@ -133,71 +133,10 @@
 		}
 	}
 
-	/* Table */
-	&__table-wrapper {
-		overflow: hidden;
-		background: $bb-background-base-color;
-	}
+	// Table — base styled via .bb-admin-list-table
 
 	&__table {
-		display: table;
-		width: 100%;
-		border-collapse: collapse;
 		table-layout: fixed;
-
-		thead {
-			display: table-header-group;
-			border-bottom: 0.5px solid $bb-border-secondary-color;
-		}
-
-		tbody {
-			display: table-row-group;
-		}
-
-		tr {
-			display: table-row;
-		}
-
-		th,
-		td {
-			display: table-cell;
-		}
-
-		th {
-			padding: 10px 16px 10px 0;
-			font-size: 13px;
-			font-weight: 400;
-			color: $bb-text-tertiary-color;
-			text-align: left;
-			white-space: nowrap;
-
-			&:first-child {
-				padding: 10px 0 10px 4px;
-			}
-
-			&:last-child {
-				padding: 10px 4px 10px 0;
-			}
-		}
-
-		tbody tr {
-			border-bottom: 0.5px solid $bb-border-primary-color;
-		}
-
-		td {
-			padding: 16px 10px 16px 0;
-			font-size: 13px;
-			color: $bb-text-secondary-color;
-			vertical-align: middle;
-
-			&:first-child {
-				padding-left: 4px;
-			}
-
-			&:last-child {
-				padding-right: 4px;
-			}
-		}
 	}
 
 	&__th--checkbox {
@@ -226,26 +165,6 @@
 
 	&__th--actions {
 		width: 30px;
-	}
-
-	&__row {
-		transition: background-color 0.15s ease;
-
-		&--selected {
-			background-color: $bb-background-positive-primary-color;
-		}
-	}
-
-	// Checkbox cells
-	&__th--checkbox,
-	&__td--checkbox {
-		.components-checkbox-control {
-			margin-bottom: 0;
-		}
-
-		.components-base-control__field {
-			margin-bottom: 0;
-		}
 	}
 
 	// Content Column
@@ -353,22 +272,6 @@
 	// Actions Column — toggle styled via .bb-admin-actions-toggle
 	&__td--actions {
 		text-align: center;
-	}
-
-	/* Loading */
-	.bb-admin-loading {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		padding: 60px 0;
-	}
-
-	/* Empty state */
-	&__empty {
-		padding: 40px;
-		text-align: center;
-		color: $bb-text-tertiary-color;
-		font-size: 14px;
 	}
 
 	/* Footer */

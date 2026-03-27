@@ -455,21 +455,21 @@ export default function EmailTemplatesListScreen( props ) {
 			{/* Table */}
 			<div className="bb-email-templates-list__table-wrapper">
 				{ isLoading ? (
-					<div className="bb-email-templates-list__loading">
+					<div className="bb-email-templates-list__loading bb-admin-list-table__loading">
 						<Spinner />
 					</div>
 				) : 0 === items.length ? (
-					<div className="bb-email-templates-list__empty">
+					<div className="bb-email-templates-list__empty bb-admin-list-table__empty">
 						{ search
 							? __( 'No email templates found matching your search.', 'buddyboss' )
 							: __( 'No email templates found.', 'buddyboss' )
 						}
 					</div>
 				) : (
-					<table className="bb-email-templates-list__table">
+					<table className="bb-email-templates-list__table bb-admin-list-table">
 						<thead>
 							<tr>
-								<th className="bb-email-templates-list__th--checkbox">
+								<th className="bb-email-templates-list__th--checkbox bb-admin-list-table__checkbox">
 									<CheckboxControl
 										checked={ allSelected }
 										onChange={ handleSelectAll }
@@ -502,11 +502,11 @@ export default function EmailTemplatesListScreen( props ) {
 									<tr
 										key={ item.id }
 										className={
-											'bb-email-templates-list__row' +
-											( isSelected ? ' bb-email-templates-list__row--selected' : '' )
+											'bb-email-templates-list__row bb-admin-list-table__row' +
+											( isSelected ? ' bb-email-templates-list__row--selected bb-admin-list-table__row--selected' : '' )
 										}
 									>
-										<td className="bb-email-templates-list__td--checkbox">
+										<td className="bb-email-templates-list__td--checkbox bb-admin-list-table__checkbox">
 											<CheckboxControl
 												checked={ isSelected }
 												onChange={ function() {

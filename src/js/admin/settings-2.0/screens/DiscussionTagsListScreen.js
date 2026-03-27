@@ -458,7 +458,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 
 			{ /* Loading / Error / Empty */ }
 			{ isLoading && (
-				<div className="bb-discussion-tags-list__loading">
+				<div className="bb-discussion-tags-list__loading bb-admin-list-table__loading">
 					<Spinner />
 				</div>
 			) }
@@ -478,7 +478,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 			) }
 
 			{ ! isLoading && ! error && 0 === tags.length && (
-				<div className="bb-discussion-tags-list__empty">
+				<div className="bb-discussion-tags-list__empty bb-admin-list-table__empty">
 					<p>{ searchQuery ? __( 'No tags found matching your search.', 'buddyboss' ) : __( 'No discussion tags found.', 'buddyboss' ) }</p>
 				</div>
 			) }
@@ -486,10 +486,10 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 			{ /* Table */ }
 			{ ! isLoading && ! error && tags.length > 0 && (
 				<div className="bb-discussion-tags-list__table-wrap">
-					<table className="bb-discussion-tags-list__table">
+					<table className="bb-discussion-tags-list__table bb-admin-list-table">
 						<thead>
 							<tr>
-								<th className="bb-discussion-tags-list__col-cb">
+								<th className="bb-discussion-tags-list__col-cb bb-admin-list-table__checkbox">
 									<CheckboxControl
 										checked={ isAllSelected }
 										onChange={ handleSelectAll }
@@ -512,8 +512,8 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 							{ tags.map( function ( tag ) {
 								var isSelected = -1 !== selectedIds.indexOf( tag.id );
 								return (
-									<tr key={ tag.id } className={ 'bb-discussion-tags-list__row' + ( isSelected ? ' bb-discussion-tags-list__row--selected' : '' ) }>
-										<td className="bb-discussion-tags-list__col-cb">
+									<tr key={ tag.id } className={ 'bb-discussion-tags-list__row bb-admin-list-table__row' + ( isSelected ? ' bb-discussion-tags-list__row--selected bb-admin-list-table__row--selected' : '' ) }>
+										<td className="bb-discussion-tags-list__col-cb bb-admin-list-table__checkbox">
 											<CheckboxControl
 												checked={ isSelected }
 												onChange={ function () {

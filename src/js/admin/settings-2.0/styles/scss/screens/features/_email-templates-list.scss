@@ -140,52 +140,7 @@
 		}
 	}
 
-	// Table
-	&__table-wrapper {
-		overflow: hidden;
-		background: $bb-background-base-color;
-	}
-
-	&__loading {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		padding: 60px 0;
-	}
-
-	&__empty {
-		padding: 40px;
-		text-align: center;
-		color: $bb-text-tertiary-color;
-		font-size: 14px;
-	}
-
-	&__table {
-		width: 100%;
-		border-collapse: collapse;
-	}
-
-	// Table Header
-	&__table thead {
-		border-bottom: 0.5px solid $bb-border-secondary-color;
-	}
-
-	&__table th {
-		padding: 10px 16px 10px 0;
-		font-size: 13px;
-		font-weight: 400;
-		color: $bb-text-tertiary-color;
-		text-align: left;
-		white-space: nowrap;
-
-		&:first-child {
-			padding: 10px 0 10px 4px;
-		}
-
-		&:last-child {
-			padding: 10px 4px 10px 0;
-		}
-	}
+	// Table — base styled via .bb-admin-list-table
 
 	&__th--checkbox {
 		width: 30px;
@@ -193,49 +148,6 @@
 
 	&__th--date {
 		white-space: nowrap;
-	}
-
-	// Table Rows
-	&__table tbody tr {
-		border-bottom: 0.5px solid $bb-border-primary-color;
-	}
-
-	&__row {
-		transition: background-color 0.15s ease;
-
-		&--selected {
-			background-color: $bb-background-positive-primary-color;
-		}
-	}
-
-	&__table td {
-		padding: 16px 10px 16px 0;
-		font-size: 13px;
-		color: $bb-text-secondary-color;
-		vertical-align: middle;
-		overflow: hidden;
-
-		&:first-child {
-			padding-left: 4px;
-		}
-
-		&:last-child {
-			padding-right: 4px;
-		}
-	}
-
-	// Checkbox cells
-	&__th--checkbox,
-	&__td--checkbox {
-		width: 30px;
-
-		.components-checkbox-control {
-			margin-bottom: 0;
-		}
-
-		.components-base-control__field {
-			margin-bottom: 0;
-		}
 	}
 
 	&__th--title {

@@ -227,76 +227,10 @@
 		}
 	}
 
-	// Loading / Error / Empty
-	&__loading {
-		display: flex;
-		justify-content: center;
-		padding: 48px 0;
-	}
+	// Table — base styled via .bb-admin-list-table
 
-	&__error {
-		text-align: center;
-		padding: 32px 0;
-		color: $bb-text-tertiary-color;
-	}
-
-	&__empty {
-		text-align: center;
-		padding: 48px 0;
-		color: $bb-text-tertiary-color;
-	}
-
-	// Table
 	&__table {
-		width: 100%;
-		border-collapse: collapse;
 		border-spacing: 0;
-
-		thead {
-			border-bottom: 0.5px solid $bb-border-secondary-color;
-		}
-
-		thead th {
-			padding: 10px 16px 10px 0;
-			font-size: 13px;
-			font-weight: 400;
-			color: $bb-text-tertiary-color;
-			text-align: left;
-			white-space: nowrap;
-
-			&.bb-replies-list__col-reply {
-				color: $bb-text-color;
-				font-size: 14px;
-			}
-
-			&:first-child {
-				padding: 10px 0 10px 4px;
-			}
-
-			&:last-child {
-				padding: 10px 4px 10px 0;
-			}
-		}
-
-		tbody tr {
-			border-bottom: 0.5px solid $bb-border-primary-color;
-		}
-
-		tbody td {
-			padding: 16px 10px 16px 0;
-			font-size: 13px;
-			color: $bb-text-secondary-color;
-			vertical-align: middle;
-			overflow: hidden;
-
-			&:first-child {
-				padding-left: 4px;
-			}
-
-			&:last-child {
-				padding-right: 4px;
-			}
-		}
 	}
 
 	// Column widths

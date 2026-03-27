@@ -461,14 +461,14 @@ export function ReportedContentScreen() {
 								<Spinner />
 							</div>
 						) : 0 === items.length ? (
-							<div className="bb-admin-reported-content__empty">
+							<div className="bb-admin-reported-content__empty bb-admin-list-table__empty">
 								<p>{ __( 'No reported content found.', 'buddyboss' ) }</p>
 							</div>
 						) : (
-							<table className="bb-admin-reported-content__table">
+							<table className="bb-admin-reported-content__table bb-admin-list-table">
 								<thead>
 									<tr>
-										<th className="bb-admin-reported-content__th--checkbox">
+										<th className="bb-admin-reported-content__th--checkbox bb-admin-list-table__checkbox">
 											<CheckboxControl
 												checked={ allSelected }
 												onChange={ handleSelectAll }
@@ -497,9 +497,9 @@ export function ReportedContentScreen() {
 										return (
 											<tr
 												key={ item.id }
-												className={ 'bb-admin-reported-content__row' + ( isSelected ? ' bb-admin-reported-content__row--selected' : '' ) }
+												className={ 'bb-admin-reported-content__row bb-admin-list-table__row' + ( isSelected ? ' bb-admin-reported-content__row--selected bb-admin-list-table__row--selected' : '' ) }
 											>
-												<td className="bb-admin-reported-content__td--checkbox">
+												<td className="bb-admin-reported-content__td--checkbox bb-admin-list-table__checkbox">
 													<CheckboxControl
 														checked={ isSelected }
 														onChange={ function ( checked ) {

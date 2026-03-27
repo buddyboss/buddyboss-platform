@@ -94,6 +94,90 @@
 	}
 }
 
+/* Shared List Table — reusable table structure for list screens */
+.bb-admin-list-table {
+	width: 100%;
+	border-collapse: collapse;
+
+	thead {
+		border-bottom: 0.5px solid $bb-border-secondary-color;
+	}
+
+	th {
+		padding: 10px 16px 10px 0;
+		font-size: 13px;
+		font-weight: 400;
+		color: $bb-text-tertiary-color;
+		text-align: left;
+		white-space: nowrap;
+
+		&:first-child {
+			padding: 10px 0 10px 4px;
+		}
+
+		&:last-child {
+			padding: 10px 4px 10px 0;
+		}
+	}
+
+	tbody tr {
+		border-bottom: 0.5px solid $bb-border-primary-color;
+	}
+
+	td {
+		padding: 16px 10px 16px 0;
+		font-size: 13px;
+		color: $bb-text-secondary-color;
+		vertical-align: middle;
+
+		&:first-child {
+			padding-left: 4px;
+		}
+
+		&:last-child {
+			padding-right: 4px;
+		}
+	}
+}
+
+.bb-admin-list-table__row {
+	transition: background-color 0.15s ease;
+
+	&--selected {
+		background-color: $bb-background-positive-primary-color;
+	}
+}
+
+.bb-admin-list-table__checkbox {
+	width: 30px;
+
+	.components-checkbox-control {
+		margin-bottom: 0;
+	}
+
+	.components-base-control__field {
+		margin-bottom: 0;
+	}
+
+	.components-checkbox-control__input-container {
+		margin: 0;
+	}
+}
+
+.bb-admin-list-table__loading {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 60px 0;
+}
+
+.bb-admin-list-table__empty {
+	padding: 40px;
+	text-align: center;
+	color: $bb-text-tertiary-color;
+	font-size: 14px;
+}
+
 /* Loading Spinner */
 .bb-admin-loading {
     display: flex;

@@ -623,18 +623,18 @@ export function ForumsListScreen( { onNavigate } ) {
 			{ /* Table */ }
 			<div className="bb-forums-list__table-wrapper">
 				{ isLoading ? (
-					<div className="bb-forums-list__loading">
+					<div className="bb-forums-list__loading bb-admin-list-table__loading">
 						<Spinner />
 					</div>
 				) : 0 === forums.length ? (
-					<div className="bb-forums-list__empty">
+					<div className="bb-forums-list__empty bb-admin-list-table__empty">
 						<p>{ __( 'No forums found.', 'buddyboss' ) }</p>
 					</div>
 				) : (
-					<table className="bb-forums-list__table">
+					<table className="bb-forums-list__table bb-admin-list-table">
 						<thead>
 							<tr>
-								<th className="bb-forums-list__th--checkbox">
+								<th className="bb-forums-list__th--checkbox bb-admin-list-table__checkbox">
 									<CheckboxControl
 										checked={ allSelected }
 										onChange={ handleSelectAll }
@@ -677,9 +677,9 @@ export function ForumsListScreen( { onNavigate } ) {
 								return (
 									<tr
 										key={ forum.id }
-										className={ 'bb-forums-list__row' + ( isSelected ? ' bb-forums-list__row--selected' : '' ) }
+										className={ 'bb-forums-list__row bb-admin-list-table__row' + ( isSelected ? ' bb-forums-list__row--selected bb-admin-list-table__row--selected' : '' ) }
 									>
-										<td className="bb-forums-list__td--checkbox">
+										<td className="bb-forums-list__td--checkbox bb-admin-list-table__checkbox">
 											<CheckboxControl
 												checked={ isSelected }
 												onChange={ function ( checked ) {
