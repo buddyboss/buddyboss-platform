@@ -82,48 +82,7 @@
 	}
 
 	/* Action Bar */
-	&__action-bar {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 12px;
-		padding-bottom: 16px;
-		border-bottom: 1px solid $bb-border-secondary-color;
-		flex-wrap: wrap;
-
-		.components-select-control {
-			margin-bottom: 0;
-
-			.components-input-control__label {
-				color: $bb-text-secondary-color;
-				text-transform: none;
-				font-size: 13px;
-				font-weight: 500;
-			}
-
-			.components-select-control__input {
-				@include bb-admin-settings-select;
-			}
-
-			.components-input-control-suffix-wrapper,
-			.components-input-control__backdrop {
-				display: none;
-			}
-		}
-	}
-
-	&__action-bar-left {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		flex-wrap: wrap;
-	}
-
-	&__action-bar-right {
-		display: flex;
-		align-items: center;
-		gap: 12px;
-	}
+	// Action bar — layout styled via .bb-admin-list-toolbar
 
 	/* Bulk Actions */
 	&__bulk-actions {

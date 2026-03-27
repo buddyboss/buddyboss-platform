@@ -406,8 +406,8 @@ export function ReportedContentScreen() {
 				{/* Body */}
 				<div className="bb-admin-reported-content__body">
 					{/* Action Bar */}
-					<div className="bb-admin-reported-content__action-bar">
-						<div className="bb-admin-reported-content__action-bar-left">
+					<div className="bb-admin-reported-content__action-bar bb-admin-list-toolbar">
+						<div className="bb-admin-reported-content__action-bar-left bb-admin-list-toolbar__left">
 							<div className="bb-admin-reported-content__bulk-actions">
 								<SelectControl
 									value={ bulkAction }
@@ -430,7 +430,7 @@ export function ReportedContentScreen() {
 								</Button>
 							</div>
 						</div>
-						<div className="bb-admin-reported-content__action-bar-right">
+						<div className="bb-admin-reported-content__action-bar-right bb-admin-list-toolbar__right">
 							<SelectControl
 								value={ statusFilter }
 								options={ [

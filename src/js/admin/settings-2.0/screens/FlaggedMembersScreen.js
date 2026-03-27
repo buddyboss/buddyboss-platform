@@ -297,8 +297,8 @@ export function FlaggedMembersScreen() {
 				{/* Body */}
 				<div className="bb-admin-flagged-members__body">
 					{/* Action Bar */}
-					<div className="bb-admin-flagged-members__action-bar">
-						<div className="bb-admin-flagged-members__action-bar-left">
+					<div className="bb-admin-flagged-members__action-bar bb-admin-list-toolbar">
+						<div className="bb-admin-flagged-members__action-bar-left bb-admin-list-toolbar__left">
 							<div className="bb-admin-flagged-members__bulk-actions">
 								<SelectControl
 									value={ bulkAction }
@@ -321,7 +321,7 @@ export function FlaggedMembersScreen() {
 								</Button>
 							</div>
 						</div>
-						<div className="bb-admin-flagged-members__action-bar-right">
+						<div className="bb-admin-flagged-members__action-bar-right bb-admin-list-toolbar__right">
 							<SelectControl
 								value={ statusFilter }
 								options={ [

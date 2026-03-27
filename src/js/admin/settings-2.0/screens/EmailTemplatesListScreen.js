@@ -389,8 +389,8 @@ export default function EmailTemplatesListScreen( props ) {
 			</div>
 
 			{/* Toolbar */}
-			<div className="bb-email-templates-list__toolbar">
-				<div className="bb-email-templates-list__toolbar-left">
+			<div className="bb-email-templates-list__toolbar bb-admin-list-toolbar">
+				<div className="bb-email-templates-list__toolbar-left bb-admin-list-toolbar__left">
 					{/* Bulk Actions */}
 					<div className="bb-email-templates-list__bulk-actions">
 						<SelectControl
@@ -409,7 +409,7 @@ export default function EmailTemplatesListScreen( props ) {
 					</div>
 				</div>
 
-				<div className="bb-email-templates-list__toolbar-right">
+				<div className="bb-email-templates-list__toolbar-right bb-admin-list-toolbar__right">
 					{/* Count badge */}
 					<div className="bb-email-templates-list__count-badge">
 						<SelectControl

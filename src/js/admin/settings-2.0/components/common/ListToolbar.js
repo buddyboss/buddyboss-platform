@@ -61,8 +61,8 @@ export function ListToolbar( {
 	}
 
 	return (
-		<div className={ className + '__toolbar' }>
-			<div className={ className + '__toolbar-left' }>
+		<div className={ className + '__toolbar bb-admin-list-toolbar' }>
+			<div className={ className + '__toolbar-left bb-admin-list-toolbar__left' }>
 				<div className={ className + '__bulk-actions' }>
 					<SelectControl
 						value={ bulkAction }
@@ -81,7 +81,7 @@ export function ListToolbar( {
 				</div>
 			</div>
 
-			<div className={ className + '__toolbar-right' }>
+			<div className={ className + '__toolbar-right bb-admin-list-toolbar__right' }>
 				{ children }
 
 				<div className={ className + '__search' }>
