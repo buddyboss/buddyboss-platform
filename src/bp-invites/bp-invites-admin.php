@@ -22,8 +22,8 @@ function bp_invites_add_admin_menu() {
 	global $submenu;
 
 	$settings_url = function_exists( 'bb_get_feature_settings_url' )
-		? bb_get_feature_settings_url( 'email_invites', 'email_invites_list' )
-		: admin_url( 'admin.php?page=bb-settings&tab=email_invites&panel=email_invites_list' );
+		? bb_get_feature_settings_url( 'invites', 'invites_list' )
+		: admin_url( 'admin.php?page=bb-settings&tab=invites&panel=invites_list' );
 
 	$submenu['buddyboss-platform'][] = array(
 		__( 'Invites', 'buddyboss' ),
@@ -43,10 +43,10 @@ function bp_invites_add_sub_menu_page_admin_menu() {
 
 	if ( is_multisite() && bp_is_network_activated() ) {
 		$settings_url = function_exists( 'bb_get_feature_settings_url' )
-			? bb_get_feature_settings_url( 'email_invites', 'email_invites_list' )
-			: admin_url( 'admin.php?page=bb-settings&tab=email_invites&panel=email_invites_list' );
+			? bb_get_feature_settings_url( 'invites', 'invites_list' )
+			: admin_url( 'admin.php?page=bb-settings&tab=invites&panel=invites_list' );
 
-		$submenu_page = add_submenu_page(
+		add_submenu_page(
 			'buddyboss-platform',
 			__( 'Invites', 'buddyboss' ),
 			__( 'Invites', 'buddyboss' ),
@@ -62,6 +62,7 @@ add_action( 'admin_menu', 'bp_invites_add_sub_menu_page_admin_menu', 10 );
  * Add Invites menu item to custom menus array.
  *
  * @since BuddyBoss 1.0.0
+ * @since BuddyBoss [BBVERSION] Updated to point to Settings 2.0 React list screen.
  *
  * @param array $custom_menus The list of top-level BP menu items.
  * @return array
@@ -69,14 +70,10 @@ add_action( 'admin_menu', 'bp_invites_add_sub_menu_page_admin_menu', 10 );
 function invites_admin_menu_order( $custom_menus = array() ) {
 
 	$settings_url = function_exists( 'bb_get_feature_settings_url' )
-		? bb_get_feature_settings_url( 'email_invites', 'email_invites_list' )
-		: admin_url( 'admin.php?page=bb-settings&tab=email_invites&panel=email_invites_list' );
+		? bb_get_feature_settings_url( 'invites', 'invites_list' )
+		: admin_url( 'admin.php?page=bb-settings&tab=invites&panel=invites_list' );
 
 	array_push( $custom_menus, $settings_url );
-
-	if ( is_network_admin() && bp_is_network_activated() ) {
-		array_push( $custom_menus, $settings_url );
-	}
 
 	return $custom_menus;
 }

@@ -154,10 +154,13 @@ class BB_Admin_Invites_Ajax {
 		$posts = $query->posts;
 		$total = (int) $query->found_posts;
 
-		// Batch prime post meta to avoid N+1.
+		// Batch prime post meta and user caches to avoid N+1.
 		if ( ! empty( $posts ) ) {
-			$post_ids = wp_list_pluck( $posts, 'ID' );
+			$post_ids   = wp_list_pluck( $posts, 'ID' );
+			$author_ids = array_unique( array_map( 'intval', wp_list_pluck( $posts, 'post_author' ) ) );
+
 			update_postmeta_cache( $post_ids );
+			cache_users( $author_ids );
 		}
 
 		// Build items.
@@ -171,9 +174,9 @@ class BB_Admin_Invites_Ajax {
 
 			$items[] = array(
 				'id'              => $post->ID,
-				'sender_id'      => $author_id,
-				'sender_name'    => bp_core_get_user_displayname( $author_id ),
-				'sender_avatar'  => bp_core_fetch_avatar(
+				'sender_id'       => $author_id,
+				'sender_name'     => bp_core_get_user_displayname( $author_id ),
+				'sender_avatar'   => bp_core_fetch_avatar(
 					array(
 						'item_id' => $author_id,
 						'type'    => 'thumb',
@@ -182,17 +185,17 @@ class BB_Admin_Invites_Ajax {
 						'html'    => false,
 					)
 				),
-				'sender_url'     => bp_core_get_user_domain( $author_id ),
-				'recipient_name' => $invitee_name ? $invitee_name : '',
+				'sender_url'      => bp_core_get_user_domain( $author_id ),
+				'recipient_name'  => $invitee_name ? $invitee_name : '',
 				'recipient_email' => $invitee_email ? $invitee_email : '',
-				'status'         => $is_registered ? 'registered' : 'pending',
-				'status_label'   => $is_registered
-					? __( 'Approved', 'buddyboss' )
+				'status'          => $is_registered ? 'registered' : 'pending',
+				'status_label'    => $is_registered
+					? __( 'Registered', 'buddyboss' )
 					: __( 'Pending', 'buddyboss' ),
-				'date_invited'   => get_the_date( 'd M Y H:i', $post ),
-				'can_revoke'     => ! $is_registered,
-				'view_url'       => bp_core_get_user_domain( $author_id ),
-				'edit_url'       => admin_url( 'user-edit.php?user_id=' . $author_id ),
+				'date_invited'    => get_the_date( 'd M Y H:i', $post ),
+				'can_revoke'      => ! $is_registered,
+				'view_url'        => bp_core_get_user_domain( $author_id ),
+				'edit_url'        => admin_url( 'user-edit.php?user_id=' . $author_id ),
 			);
 		}
 
@@ -269,10 +272,18 @@ class BB_Admin_Invites_Ajax {
 			$revoked = 0;
 			foreach ( $id_array as $post_id ) {
 				$post = get_post( $post_id );
-				if ( $post && $post_type === $post->post_type ) {
-					wp_delete_post( $post_id, true );
-					++$revoked;
+				if ( ! $post || $post_type !== $post->post_type ) {
+					continue;
 				}
+
+				// Do not revoke invites for already-registered users.
+				$status = get_post_meta( $post_id, '_bp_invitee_status', true );
+				if ( '1' === $status ) {
+					continue;
+				}
+
+				wp_delete_post( $post_id, true );
+				++$revoked;
 			}
 
 			wp_send_json_success(
@@ -303,22 +314,21 @@ class BB_Admin_Invites_Ajax {
 	 * @return array View counts keyed by filter slug.
 	 */
 	private function bb_get_invite_views() {
+		global $wpdb;
+
 		$post_type = bp_get_invite_post_type();
 
 		// Total count.
 		$all_count = (int) wp_count_posts( $post_type )->publish;
 
-		// My invites count.
-		$mine_args = array(
-			'post_type'      => $post_type,
-			'post_status'    => 'publish',
-			'author'         => get_current_user_id(),
-			'posts_per_page' => 1,
-			'fields'         => 'ids',
-			'no_found_rows'  => false,
+		// My invites count — direct query (lighter than WP_Query for a simple count).
+		$mine_count = (int) $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT COUNT(*) FROM {$wpdb->posts} WHERE post_type = %s AND post_status = 'publish' AND post_author = %d",
+				$post_type,
+				get_current_user_id()
+			)
 		);
-		$mine_query = new WP_Query( $mine_args );
-		$mine_count = (int) $mine_query->found_posts;
 
 		return array(
 			'all'       => array(

@@ -19,14 +19,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss [BBVERSION]
  */
-function bb_admin_settings_register_email_invites_feature() {
+function bb_admin_settings_register_invites_feature() {
 
 	// =========================================================================
 	// REGISTER FEATURE
 	// =========================================================================
 
 	bb_register_feature(
-		'email_invites',
+		'invites',
 		array(
 			'label'              => __( 'Email Invites', 'buddyboss' ),
 			'description'        => __( 'Allow your members to send email invitations to non-members.', 'buddyboss' ),
@@ -40,8 +40,7 @@ function bb_admin_settings_register_email_invites_feature() {
 			'is_active_callback' => function () {
 				return bp_is_active( 'invites' );
 			},
-			'components'         => array( 'invites' ),
-			'settings_route'     => '/settings/email_invites',
+			'settings_route'     => '/settings/invites',
 			'order'              => 60,
 		)
 	);
@@ -61,7 +60,7 @@ function bb_admin_settings_register_email_invites_feature() {
 
 	// Side Panel 1: Email Invite Settings (default).
 	bb_register_side_panel(
-		'email_invites',
+		'invites',
 		'email_invite_settings',
 		array(
 			'title'      => __( 'Email Invite Settings', 'buddyboss' ),
@@ -85,8 +84,8 @@ function bb_admin_settings_register_email_invites_feature() {
 
 	// Side Panel 2: Email Invites (list screen).
 	bb_register_side_panel(
-		'email_invites',
-		'email_invites_list',
+		'invites',
+		'invites_list',
 		array(
 			'title' => __( 'Email Invites', 'buddyboss' ),
 			'icon'  => array(
@@ -106,18 +105,18 @@ function bb_admin_settings_register_email_invites_feature() {
 	// -------------------------------------------------------------------------
 
 	bb_register_feature_section(
-		'email_invites',
+		'invites',
 		'email_invite_settings',
 		'email_invite_general',
 		array(
-			'title' => __( 'Email invite Settings', 'buddyboss' ),
+			'title' => __( 'Email Invite Settings', 'buddyboss' ),
 			'order' => 10,
 		)
 	);
 
 	// FIELD: Customize Email Subject (Toggle).
 	bb_register_feature_field(
-		'email_invites',
+		'invites',
 		'email_invite_settings',
 		'email_invite_general',
 		array(
@@ -133,7 +132,7 @@ function bb_admin_settings_register_email_invites_feature() {
 
 	// FIELD: Customize Email Content (Toggle).
 	bb_register_feature_field(
-		'email_invites',
+		'invites',
 		'email_invite_settings',
 		'email_invite_general',
 		array(
@@ -151,7 +150,7 @@ function bb_admin_settings_register_email_invites_feature() {
 	// Only show when profile types feature is enabled.
 	if ( true === bp_member_type_enable_disable() ) {
 		bb_register_feature_field(
-			'email_invites',
+			'invites',
 			'email_invite_settings',
 			'email_invite_general',
 			array(
@@ -170,7 +169,7 @@ function bb_admin_settings_register_email_invites_feature() {
 			)
 		);
 
-		// Profile type child fields registered lazily via bb_email_invites_register_profile_type_fields()
+		// Profile type child fields registered lazily via bb_invites_register_profile_type_fields()
 		// in settings/invites/callbacks.php — they fire on bb_admin_settings_before_get_feature.
 	}
 
@@ -184,11 +183,27 @@ function bb_admin_settings_register_email_invites_feature() {
 	 * @since BuddyBoss 1.2.6
 	 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_register_feature_field'} instead.
 	 *
-	 * @param null $deprecated Deprecated. Previously BP_Admin_Setting_Email_Invites instance.
+	 * @param object $deprecated No-op stub. Previously BP_Admin_Setting_Email_Invites instance.
 	 */
 	do_action_deprecated(
 		'bp_admin_setting_invites_register_fields',
-		array( null ),
+		array(
+			// phpcs:ignore PHPCompatibility.Classes.NewAnonymousClasses.Found -- PHP 7.4+ required.
+			new class() {
+				/**
+				 * No-op: legacy add_section stub.
+				 *
+				 * @param mixed ...$args Arguments.
+				 */
+				public function add_section( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+				/**
+				 * No-op: legacy add_field stub.
+				 *
+				 * @param mixed ...$args Arguments.
+				 */
+				public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+			},
+		),
 		'BuddyBoss [BBVERSION]',
 		'bb_register_feature_field'
 	);
@@ -199,7 +214,7 @@ function bb_admin_settings_register_email_invites_feature() {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	do_action( 'bb_email_invites_after_register_settings_fields' );
+	do_action( 'bb_invites_after_register_settings_fields' );
 }
 
-add_action( 'bb_register_features', 'bb_admin_settings_register_email_invites_feature', 20 );
+add_action( 'bb_register_features', 'bb_admin_settings_register_invites_feature', 20 );

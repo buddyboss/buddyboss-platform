@@ -59,7 +59,7 @@ const CUSTOM_PANEL_SCREENS = {
 	'moderation:flagged_members': FlaggedMembersScreen,
 	'moderation:reported_content': ReportedContentScreen,
 	'emails:all_emails': EmailTemplatesListScreen,
-	'email_invites:email_invites_list': InvitesListScreen,
+	'invites:invites_list': InvitesListScreen,
 };
 
 

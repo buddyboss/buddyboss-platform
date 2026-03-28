@@ -671,7 +671,7 @@ function bb_redirect_legacy_settings_to_settings_2() {
 
 	// Redirect legacy Email Invites CPT page (edit.php?post_type=bp-invite).
 	if ( function_exists( 'bp_get_invite_post_type' ) && bp_get_invite_post_type() === $post_type ) {
-		wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=email_invites&panel=email_invites_list' ) );
+		wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=invites&panel=invites_list' ) );
 		exit;
 	}
 
@@ -704,7 +704,7 @@ function bb_redirect_legacy_settings_to_settings_2() {
 		),
 		'bp-messages'      => 'messages',
 		'bp-search'        => 'search',
-		'bp-invites'       => 'email_invites',
+		'bp-invites'       => 'invites',
 	);
 
 	/**

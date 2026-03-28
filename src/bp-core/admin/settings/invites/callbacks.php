@@ -23,9 +23,9 @@ defined( 'ABSPATH' ) || exit;
  *
  * @param string $feature_id The feature being fetched.
  */
-function bb_email_invites_register_profile_type_fields( $feature_id ) {
+function bb_invites_register_profile_type_fields( $feature_id ) {
 
-	if ( 'email_invites' !== $feature_id ) {
+	if ( 'invites' !== $feature_id ) {
 		return;
 	}
 
@@ -61,6 +61,7 @@ function bb_email_invites_register_profile_type_fields( $feature_id ) {
 			'label'             => $is_first ? __( 'Allowed Profile Types', 'buddyboss' ) : '',
 			'type'              => 'toggle',
 			'description'       => $member_type_label,
+			'help_text'         => $is_first ? __( 'Only allow the selected profile types to send invites.', 'buddyboss' ) : '',
 			'default'           => absint( bp_get_option( 'bp-enable-send-invite-member-type-' . $type_name, 0 ) ),
 			'sanitize_callback' => 'absint',
 			'conditional'       => array(
@@ -74,7 +75,7 @@ function bb_email_invites_register_profile_type_fields( $feature_id ) {
 		);
 
 		bb_register_feature_field(
-			'email_invites',
+			'invites',
 			'email_invite_settings',
 			'email_invite_general',
 			$field_args
@@ -84,4 +85,4 @@ function bb_email_invites_register_profile_type_fields( $feature_id ) {
 		$order   += 10;
 	}
 }
-add_action( 'bb_admin_settings_before_get_feature', 'bb_email_invites_register_profile_type_fields' );
+add_action( 'bb_admin_settings_before_get_feature', 'bb_invites_register_profile_type_fields' );
