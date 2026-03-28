@@ -13,26 +13,23 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Register the Invites component in BuddyBoss > Invites admin screen.
- *
- * Kept for backward compatibility — direct URL access to the CPT list
- * still works via edit.php?post_type=bp-invite.
+ * Register the Invites component admin menu pointing to Settings 2.0.
  *
  * @since BuddyBoss 1.0.0
+ * @since BuddyBoss [BBVERSION] Updated to point to Settings 2.0 React list screen.
  */
 function bp_invites_add_admin_menu() {
+	global $submenu;
 
-	if ( ! is_network_admin() && ! bp_is_network_activated() ) {
-		$invites_url = 'edit.php?post_type=' . bp_get_invite_post_type();
-		add_submenu_page(
-			'buddyboss-platform',
-			__( 'Invites', 'buddyboss' ),
-			__( 'Invites', 'buddyboss' ),
-			'bp_moderate',
-			$invites_url,
-			''
-		);
-	}
+	$settings_url = function_exists( 'bb_get_feature_settings_url' )
+		? bb_get_feature_settings_url( 'email_invites', 'email_invites_list' )
+		: admin_url( 'admin.php?page=bb-settings&tab=email_invites&panel=email_invites_list' );
+
+	$submenu['buddyboss-platform'][] = array(
+		__( 'Invites', 'buddyboss' ),
+		'bp_moderate',
+		$settings_url,
+	);
 }
 add_action( bp_core_admin_hook(), 'bp_invites_add_admin_menu', 65 );
 
@@ -40,17 +37,21 @@ add_action( bp_core_admin_hook(), 'bp_invites_add_admin_menu', 65 );
  * Register the Invites submenu for multisite network admin.
  *
  * @since BuddyBoss 1.0.0
+ * @since BuddyBoss [BBVERSION] Updated to point to Settings 2.0 React list screen.
  */
 function bp_invites_add_sub_menu_page_admin_menu() {
 
 	if ( is_multisite() && bp_is_network_activated() ) {
-		$invites_url = 'edit.php?post_type=' . bp_get_invite_post_type();
-		add_submenu_page(
+		$settings_url = function_exists( 'bb_get_feature_settings_url' )
+			? bb_get_feature_settings_url( 'email_invites', 'email_invites_list' )
+			: admin_url( 'admin.php?page=bb-settings&tab=email_invites&panel=email_invites_list' );
+
+		$submenu_page = add_submenu_page(
 			'buddyboss-platform',
 			__( 'Invites', 'buddyboss' ),
 			__( 'Invites', 'buddyboss' ),
 			'bp_moderate',
-			$invites_url,
+			$settings_url,
 			''
 		);
 	}
@@ -67,13 +68,14 @@ add_action( 'admin_menu', 'bp_invites_add_sub_menu_page_admin_menu', 10 );
  */
 function invites_admin_menu_order( $custom_menus = array() ) {
 
-	array_push( $custom_menus, 'edit.php?post_type=' . bp_get_invite_post_type() );
+	$settings_url = function_exists( 'bb_get_feature_settings_url' )
+		? bb_get_feature_settings_url( 'email_invites', 'email_invites_list' )
+		: admin_url( 'admin.php?page=bb-settings&tab=email_invites&panel=email_invites_list' );
+
+	array_push( $custom_menus, $settings_url );
 
 	if ( is_network_admin() && bp_is_network_activated() ) {
-		array_push(
-			$custom_menus,
-			get_admin_url( bp_get_root_blog_id(), 'edit.php?post_type=' . bp_get_invite_post_type() )
-		);
+		array_push( $custom_menus, $settings_url );
 	}
 
 	return $custom_menus;
