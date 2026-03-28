@@ -148,16 +148,7 @@ function bb_admin_settings_register_email_invites_feature() {
 				'help_text'         => sprintf(
 					/* translators: %s: profile type link. */
 					__( 'Customize this setting while editing any of your %s.', 'buddyboss' ),
-					'<a href="' . esc_url(
-						bp_get_admin_url(
-							add_query_arg(
-								array(
-									'page' => 'bp-member-type',
-								),
-								'admin.php'
-							)
-						)
-					) . '">' . __( 'profile type', 'buddyboss' ) . '</a>'
+					'<a href="' . esc_url( bb_get_feature_settings_url( 'members', 'profile_types' ) ) . '">' . __( 'profile type', 'buddyboss' ) . '</a>'
 				),
 				'default'           => absint( bp_get_option( 'bp-disable-invite-member-type', 0 ) ),
 				'sanitize_callback' => 'absint',
