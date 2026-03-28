@@ -666,6 +666,10 @@ class BB_Admin_Settings_Ajax {
 				'empty_state_title'       => $field['empty_state_title'] ?? null,
 				'empty_state_description' => $field['empty_state_description'] ?? null,
 				'related_fields'       => ! empty( $field['related_fields'] ) && is_array( $field['related_fields'] ) ? array_map( 'sanitize_key', $field['related_fields'] ) : null,
+				// Per-option descriptions for select fields (description swaps on value change).
+				'option_descriptions'  => ! empty( $field['option_descriptions'] ) && is_array( $field['option_descriptions'] )
+					? array_map( 'wp_kses_post', $field['option_descriptions'] )
+					: null,
 				'is_connected'         => ! empty( $field['is_connected'] ),
 				// Max length for text inputs.
 				'maxlength'            => $field['maxlength'] ?? null,

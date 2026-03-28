@@ -699,6 +699,9 @@ function bb_redirect_legacy_settings_to_settings_2() {
 		'bp-messages'      => 'messages',
 		'bp-search'        => 'search',
 		'bp-invites'       => 'email_invites',
+		'bp-general'       => 'advanced',
+		'bp-advanced'      => 'advanced',
+		'bp-moderation'    => 'moderation',
 	);
 
 	/**

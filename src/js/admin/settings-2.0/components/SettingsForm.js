@@ -92,6 +92,12 @@ export function SettingsForm({ fields, values, onChange }) {
 			if ( field.help_text ) {
 				cache[ field.name + '__help' ] = sanitizeHtml( field.help_text );
 			}
+			// Pre-sanitize per-option descriptions for fields with option_descriptions.
+			if ( field.option_descriptions && 'object' === typeof field.option_descriptions ) {
+				Object.keys( field.option_descriptions ).forEach( function ( key ) {
+					cache[ field.name + '__optdesc__' + key ] = sanitizeHtml( field.option_descriptions[ key ] );
+				} );
+			}
 		} );
 		return cache;
 	}, [ fields ] );
@@ -1173,10 +1179,21 @@ export function SettingsForm({ fields, values, onChange }) {
 							);
 						}
 
+						// For fields with option_descriptions, use the description
+						// matching the currently selected value (dynamic swap on change).
+						var descKey = field.name + '__desc';
+						var currentVal = values[ field.name ];
+						if ( field.option_descriptions && currentVal != null ) {
+							var optDescKey = field.name + '__optdesc__' + String( currentVal );
+							if ( sanitizedHtml[ optDescKey ] ) {
+								descKey = optDescKey;
+							}
+						}
+
 						return (
 							<p
 								className="bb-admin-settings-form__field-description"
-								dangerouslySetInnerHTML={{ __html: sanitizedHtml[ field.name + '__desc' ] || '' }}
+								dangerouslySetInnerHTML={{ __html: sanitizedHtml[ descKey ] || '' }}
 							/>
 						);
 					} )() }
