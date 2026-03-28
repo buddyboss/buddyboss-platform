@@ -44,6 +44,7 @@
 	// Apply button — brand outline style matching other list screens.
 	&__bulk-apply.is-secondary {
 		@include bb-button-primary-outline;
+		color: $bb-text-brand-primary-color !important;
 	}
 
 	// Filter/sort dropdowns.
