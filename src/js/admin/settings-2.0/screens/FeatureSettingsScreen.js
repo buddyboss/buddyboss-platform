@@ -39,6 +39,7 @@ const ReportingCategoriesScreen = lazy(() => import('./ReportingCategoriesScreen
 const FlaggedMembersScreen = lazy(() => import('./FlaggedMembersScreen'));
 const ReportedContentScreen = lazy(() => import('./ReportedContentScreen'));
 const EmailTemplatesListScreen = lazy(() => import('./EmailTemplatesListScreen'));
+const InvitesListScreen = lazy(() => import('./InvitesListScreen'));
 
 /**
  * Map of feature + panel combinations that render custom screens instead of settings forms.
@@ -58,6 +59,7 @@ const CUSTOM_PANEL_SCREENS = {
 	'moderation:flagged_members': FlaggedMembersScreen,
 	'moderation:reported_content': ReportedContentScreen,
 	'emails:all_emails': EmailTemplatesListScreen,
+	'email_invites:email_invites_list': InvitesListScreen,
 };
 
 

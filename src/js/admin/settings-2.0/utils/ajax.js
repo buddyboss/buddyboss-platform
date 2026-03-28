@@ -1059,6 +1059,36 @@ export function uploadForumImage( file, signal ) {
 }
 
 /**
+ * Fetch paginated email invites list.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data            Query parameters (page, per_page, search, sort, filter, include_meta).
+ * @param {Object} options         Optional fetch options.
+ * @param {AbortSignal} options.signal AbortController signal.
+ * @return {Promise} Promise resolving to response.
+ */
+export function getInvites( data, options ) {
+	return ajaxFetch( 'bb_admin_get_invites', data, options );
+}
+
+/**
+ * Perform bulk action on email invites.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Array}  inviteIds Array of invite post IDs.
+ * @param {string} action    Bulk action to perform (e.g. 'revoke').
+ * @return {Promise} Promise resolving to response.
+ */
+export function invitesBulkAction( inviteIds, action ) {
+	return ajaxFetch( 'bb_admin_invites_bulk_action', {
+		invite_ids: inviteIds.join( ',' ),
+		do_action: action,
+	} );
+}
+
+/**
  * Get all reporting categories (bpm_category taxonomy terms).
  *
  * @since BuddyBoss [BBVERSION]

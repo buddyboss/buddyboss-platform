@@ -63,6 +63,12 @@ function bb_admin_settings_init() {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-groups-ajax.php';
 		}
 
+		// Email Invites AJAX handlers (only when invites component is active).
+		if ( bp_is_active( 'invites' ) && file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-invites-ajax.php' ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-invites-ajax.php';
+			new BB_Admin_Invites_Ajax();
+		}
+
 		// Forums AJAX handlers (only when forums component is active).
 		if ( bp_is_active( 'forums' ) ) {
 			if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-forums-ajax.php' ) ) {

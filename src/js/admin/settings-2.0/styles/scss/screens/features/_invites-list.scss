@@ -1,0 +1,116 @@
+/* ----------------------------------------------------------------
+   Email Invites List Screen
+   ---------------------------------------------------------------- */
+
+.bb-invites-list {
+	max-width: calc(100% - 64px);
+	padding: 0 24px 16px;
+	background-color: $bb-background-base-color;
+	border: 1px solid $bb-border-primary-color;
+	border-radius: $bb-border-radius-2xl;
+	box-shadow: 0px 1.5px 1px 0px rgba(0, 0, 0, 0.16);
+	margin: 32px 32px 0;
+
+	// Header
+	&__header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		border-bottom: 1px solid $bb-border-secondary-color;
+		padding: 18px 0;
+		margin-bottom: 24px;
+	}
+
+	&__title {
+		font-size: 18px;
+		font-weight: 500;
+		color: $bb-text-color;
+		margin: 0;
+	}
+
+	// Bulk Actions — inline layout.
+	&__bulk-actions {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+
+		select {
+			min-width: 140px;
+			height: 32px;
+			font-size: 13px;
+		}
+	}
+
+	// Apply button — brand outline style matching other list screens.
+	&__bulk-apply.is-secondary {
+		@include bb-button-primary-outline;
+	}
+
+	// Filter/sort dropdowns.
+	&__filter-select,
+	&__sort-select {
+		.components-select-control {
+			margin-bottom: 0;
+		}
+	}
+
+	// Sender cell — avatar + name.
+	&__sender {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+	}
+
+	&__sender-avatar {
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		object-fit: cover;
+		flex-shrink: 0;
+	}
+
+	&__sender-name {
+		color: $bb-link-color;
+		text-decoration: none;
+		font-weight: 500;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+
+	// Table row spacing — match Figma's spacious rows.
+	&__table {
+		td {
+			padding-top: 16px;
+			padding-bottom: 16px;
+		}
+	}
+
+	// Status badge — pill style.
+	&__status-badge {
+		display: inline-flex;
+		align-items: center;
+		padding: 2px 8px;
+		font-size: 12px;
+		font-weight: 500;
+		border-radius: $bb-border-radius-full;
+		border: 1px solid $bb-border-tertiary-color;
+		color: $bb-text-tertiary-color;
+		background-color: $bb-background-primary-color;
+
+		// Approved — green pill.
+		&--approved {
+			color: $bb-text-positive-primary-color;
+			background-color: $bb-background-positive-primary-color;
+			border-color: $bb-border-positive-secondary-color;
+		}
+
+		// Pending — gray pill (default).
+		&--pending {
+			color: $bb-text-tertiary-color;
+			background-color: $bb-background-primary-color;
+			border-color: $bb-border-tertiary-color;
+		}
+	}
+}
