@@ -88,6 +88,19 @@
 		}
 	}
 
+	// Date cell — icon + text inline with gap.
+	&__td--date {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		white-space: nowrap;
+
+		i {
+			font-size: 16px;
+			color: $bb-icon-tertiary-color;
+		}
+	}
+
 	// Status badge — pill style.
 	&__status-badge {
 		display: inline-flex;
