@@ -37,7 +37,7 @@ function bb_advanced_register_general_fields() {
 		)
 	);
 
-	// Field 1: Page Requests — inline select with surrounding text.
+	// Field 1: Page Requests — inline select with surrounding text (no toggle per Figma).
 	// Figma: "Load [2 ▾] page requests on page load"
 	bb_register_feature_field(
 		$feature_id,
@@ -46,11 +46,11 @@ function bb_advanced_register_general_fields() {
 		array(
 			'name'                 => 'bb_ajax_request_page_load',
 			'label'               => __( 'Page Requests', 'buddyboss' ),
-			'type'                 => 'toggle',
+			'type'                 => 'hidden',
 			/* translators: %s: inline select for number of page requests. */
 			'description'          => __( 'Load %s page requests on page load', 'buddyboss' ),
 			'help_text'            => __( 'Select how many requests will be sent on page load. We recommend 1 request for high performing servers, and 2 for slower performing environments, or those who see conflicts with third party plugins.', 'buddyboss' ),
-			'default'              => 1,
+			'default'              => bb_get_ajax_request_page_load(),
 			'sanitize_callback'    => 'absint',
 			'description_controls' => array(
 				array(
@@ -156,6 +156,7 @@ function bb_advanced_register_general_fields() {
 			);
 		}
 
+		// Figma: "Load [10 ▾] activity posts at a time using [Infinite Scroll ▾]" (no toggle).
 		bb_register_feature_field(
 			$feature_id,
 			$panel_id,
@@ -163,11 +164,11 @@ function bb_advanced_register_general_fields() {
 			array(
 				'name'                 => 'bb_load_activity_per_request',
 				'label'               => __( 'Activity Loading', 'buddyboss' ),
-				'type'                 => 'toggle',
+				'type'                 => 'hidden',
 				/* translators: 1: inline select for number of posts, 2: inline select for load type. */
 				'description'          => __( 'Load %s activity posts at a time using %s', 'buddyboss' ),
 				'help_text'            => __( 'Use infinite scrolling to automatically load new posts while scrolling down feeds. Increasing the number of posts retrieved in each request may negatively impact page loading speeds.', 'buddyboss' ),
-				'default'              => 1,
+				'default'              => bb_get_load_activity_per_request(),
 				'sanitize_callback'    => 'absint',
 				'description_controls' => array(
 					array(
