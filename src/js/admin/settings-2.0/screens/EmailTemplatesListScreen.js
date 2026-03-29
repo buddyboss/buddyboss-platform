@@ -570,6 +570,11 @@ export default function EmailTemplatesListScreen( props ) {
 											>
 												{ decodeEntities( item.title ) }
 											</a>
+											{ item.status_label && (
+												<span className="bb-admin-list__status-badge">
+													{ item.status_label }
+												</span>
+											) }
 										</td>
 										{ item.custom_columns && customColumnKeys.map( function( key ) {
 											return (

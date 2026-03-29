@@ -168,6 +168,13 @@ class BB_Email_Templates_Admin_Ajax {
 		// Buffer output to capture stray HTML from legacy filters.
 		ob_start();
 
+		$status_labels_map = array(
+			'future'  => __( 'Scheduled', 'buddyboss' ),
+			'pending' => __( 'Pending Review', 'buddyboss' ),
+			'draft'   => __( 'Draft', 'buddyboss' ),
+			'private' => __( 'Private', 'buddyboss' ),
+		);
+
 		$items = array();
 		foreach ( $posts as $email_post ) {
 			$email_id    = $email_post->ID;
@@ -175,14 +182,23 @@ class BB_Email_Templates_Admin_Ajax {
 			$description = $term ? $term->description : '';
 			$email_type  = $term ? $term->slug : '';
 
+			// Build status label for non-published items.
+			$email_post_status = get_post_status( $email_id );
+			$status_label      = '';
+			if ( isset( $status_labels_map[ $email_post_status ] ) ) {
+				$status_label = $status_labels_map[ $email_post_status ];
+			}
+
 			$item = array(
-				'id'          => $email_id,
-				'title'       => $email_post->post_title,
-				'description' => $description,
-				'status'      => get_post_status( $email_id ),
-				'date'        => get_the_date( 'j M, H:i:s', $email_id ),
-				'edit_url'    => get_edit_post_link( $email_id, 'raw' ),
-				'email_type'  => $email_type,
+				'id'           => $email_id,
+				'title'        => $email_post->post_title,
+				'description'  => $description,
+				'status'       => $email_post_status,
+				'status_label' => $status_label,
+				'post_status'  => $email_post_status,
+				'date'         => get_the_date( 'j M, H:i:s', $email_id ),
+				'edit_url'     => get_edit_post_link( $email_id, 'raw' ),
+				'email_type'   => $email_type,
 			);
 
 			// Render custom columns via filter (e.g., WPML language flags).
@@ -233,7 +249,7 @@ class BB_Email_Templates_Admin_Ajax {
 					'post_title'    => '',
 					'post_content'  => '',
 					'post_excerpt'  => '',
-					'post_status'   => 'draft',
+					'post_status'   => 'publish',
 					'post_password' => '',
 					'post_date'     => '',
 					'post_date_gmt' => '',
@@ -436,7 +452,7 @@ class BB_Email_Templates_Admin_Ajax {
 			$post->post_title    = '';
 			$post->post_content  = '';
 			$post->post_excerpt  = '';
-			$post->post_status   = 'draft';
+			$post->post_status   = 'publish';
 			$post->post_password = '';
 			$post->post_date     = '';
 			$post->post_date_gmt = '';
@@ -460,12 +476,32 @@ class BB_Email_Templates_Admin_Ajax {
 			'post_password' => $post->post_password,
 		);
 
-		// Set post_date for scheduled posts.
-		if ( 'future' === $post->post_status && ! empty( $post->post_date ) ) {
-			$post_data['post_date']     = $post->post_date;
-			$post_data['post_date_gmt'] = ! empty( $post->post_date_gmt )
-				? $post->post_date_gmt
-				: get_gmt_from_date( $post->post_date );
+		// Handle scheduling (publish_mode=schedule with date + time).
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified above.
+		$publish_mode  = isset( $_POST['publish_mode'] ) ? sanitize_key( wp_unslash( $_POST['publish_mode'] ) ) : 'immediately';
+		$schedule_date = isset( $_POST['schedule_date'] ) ? sanitize_text_field( wp_unslash( $_POST['schedule_date'] ) ) : '';
+		$schedule_time = isset( $_POST['schedule_time'] ) ? sanitize_text_field( wp_unslash( $_POST['schedule_time'] ) ) : '';
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
+
+		// Validate date format (YYYY-MM-DD) and time format (HH:MM).
+		if ( ! empty( $schedule_date ) && ! preg_match( '/^\d{4}-\d{2}-\d{2}$/', $schedule_date ) ) {
+			$schedule_date = '';
+		}
+		if ( ! empty( $schedule_time ) && ! preg_match( '/^\d{2}:\d{2}$/', $schedule_time ) ) {
+			$schedule_time = '';
+		}
+
+		if ( 'schedule' === $publish_mode && ! empty( $schedule_date ) ) {
+			$time_part                  = ! empty( $schedule_time ) ? $schedule_time . ':00' : '00:00:00';
+			$scheduled_datetime         = $schedule_date . ' ' . $time_part;
+			$post_data['post_date']     = $scheduled_datetime;
+			$post_data['post_date_gmt'] = get_gmt_from_date( $scheduled_datetime );
+			$post_data['post_status']   = 'future';
+		} elseif ( 'immediately' === $publish_mode && $email_id > 0 && 'future' === get_post_status( $email_id ) ) {
+			// Switching from scheduled back to immediately — publish now.
+			$post_data['post_date']     = current_time( 'mysql' );
+			$post_data['post_date_gmt'] = current_time( 'mysql', true );
+			$post_data['edit_date']     = true;
 		}
 
 		if ( $email_id > 0 ) {

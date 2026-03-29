@@ -126,7 +126,8 @@ function bb_emails_register_core_meta_fields( $registry, $component = 'emails' )
 	);
 
 	// =========================================================================
-	// TAB: Publish (order 60–100)
+	// Context: after — Publish fields rendered after Custom Fields + Situation
+	// (order 60–100)
 	// =========================================================================
 
 	// 6. Status.
@@ -136,7 +137,8 @@ function bb_emails_register_core_meta_fields( $registry, $component = 'emails' )
 		array(
 			'label'             => __( 'Status', 'buddyboss' ),
 			'type'              => 'select',
-			'tab'               => 'publish',
+			'tab'               => 'details',
+			'context'           => 'after',
 			'order'             => 60,
 			'layout'            => 'half',
 			'save_phase'        => 'before',
@@ -144,6 +146,10 @@ function bb_emails_register_core_meta_fields( $registry, $component = 'emails' )
 				$status = $post->post_status;
 				// Map private/future back to their UI equivalents.
 				if ( 'private' === $status || 'future' === $status ) {
+					return 'publish';
+				}
+				// Default to publish for new templates.
+				if ( empty( $post->ID ) || 'auto-draft' === $status ) {
 					return 'publish';
 				}
 				return $status;
@@ -180,7 +186,8 @@ function bb_emails_register_core_meta_fields( $registry, $component = 'emails' )
 		array(
 			'label'             => __( 'Visibility', 'buddyboss' ),
 			'type'              => 'select',
-			'tab'               => 'publish',
+			'tab'               => 'details',
+			'context'           => 'after',
 			'order'             => 70,
 			'layout'            => 'half',
 			'save_phase'        => 'before',
@@ -226,7 +233,8 @@ function bb_emails_register_core_meta_fields( $registry, $component = 'emails' )
 		array(
 			'label'             => __( 'Password', 'buddyboss' ),
 			'type'              => 'text',
-			'tab'               => 'publish',
+			'tab'               => 'details',
+			'context'           => 'after',
 			'order'             => 75,
 			'save_phase'        => 'before',
 			'conditional'       => array(
@@ -250,57 +258,83 @@ function bb_emails_register_core_meta_fields( $registry, $component = 'emails' )
 		array(
 			'label'             => __( 'Publish', 'buddyboss' ),
 			'type'              => 'select',
-			'tab'               => 'publish',
+			'tab'               => 'details',
+			'context'           => 'after',
 			'order'             => 80,
-			'layout'            => 'half',
 			'save_phase'        => 'before',
 			'get_value'         => function ( $post ) {
 				return 'future' === $post->post_status ? 'schedule' : 'immediately';
 			},
-			'get_options'       => function ( $post ) {
+			'get_options'       => function ( $post ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- Callback signature required by registry.
 				return array(
 					array(
-						'label' => __( 'Immediately', 'buddyboss' ),
 						'value' => 'immediately',
+						'label' => __( 'Immediately', 'buddyboss' ),
 					),
 					array(
-						'label' => __( 'Schedule', 'buddyboss' ),
 						'value' => 'schedule',
+						'label' => __( 'Schedule', 'buddyboss' ),
 					),
 				);
 			},
-			'save_value'        => function ( $post, $value ) {
-				if ( 'schedule' === $value ) {
-					$post->post_status = 'future';
-				}
-			},
+			// No-op: publish mode is handled by the AJAX handler via post_date.
+			'save_value'        => function ( $post, $value ) {}, // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found, Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 			'sanitize_callback' => 'sanitize_key',
 		)
 	);
 
-	// 10. Schedule date (conditional on publish_mode = schedule).
+	// 10. Schedule Date (conditional on publish_mode=schedule).
 	$registry->register(
 		$component,
-		'publish_date',
+		'schedule_date',
 		array(
-			'label'             => __( 'Schedule Date', 'buddyboss' ),
+			'label'             => __( 'Date', 'buddyboss' ),
 			'type'              => 'date',
-			'tab'               => 'publish',
-			'order'             => 90,
-			'save_phase'        => 'before',
+			'tab'               => 'details',
+			'context'           => 'after',
+			'order'             => 85,
+			'layout'            => 'half',
+			'save_phase'        => 'after',
 			'conditional'       => array(
 				'field' => 'publish_mode',
 				'value' => 'schedule',
 			),
 			'get_value'         => function ( $post ) {
-				return $post->post_date;
-			},
-			'save_value'        => function ( $post, $value ) {
-				if ( ! empty( $value ) ) {
-					$post->post_date     = $value;
-					$post->post_date_gmt = get_gmt_from_date( $value );
+				if ( empty( $post->ID ) ) {
+					return '';
 				}
+				return get_the_date( 'Y-m-d', $post->ID );
 			},
+			// No-op: date is handled by the AJAX handler.
+			'save_value'        => function ( $post, $value ) {}, // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found, Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+			'sanitize_callback' => 'sanitize_text_field',
+		)
+	);
+
+	// 11. Schedule Time (conditional on publish_mode=schedule).
+	$registry->register(
+		$component,
+		'schedule_time',
+		array(
+			'label'             => __( 'Time', 'buddyboss' ),
+			'type'              => 'time',
+			'tab'               => 'details',
+			'context'           => 'after',
+			'order'             => 90,
+			'layout'            => 'half',
+			'save_phase'        => 'after',
+			'conditional'       => array(
+				'field' => 'publish_mode',
+				'value' => 'schedule',
+			),
+			'get_value'         => function ( $post ) {
+				if ( empty( $post->ID ) ) {
+					return '';
+				}
+				return get_the_date( 'H:i', $post->ID );
+			},
+			// No-op: time is handled by the AJAX handler.
+			'save_value'        => function ( $post, $value ) {}, // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found, Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 			'sanitize_callback' => 'sanitize_text_field',
 		)
 	);

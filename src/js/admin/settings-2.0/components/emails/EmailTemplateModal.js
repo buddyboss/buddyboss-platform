@@ -23,50 +23,9 @@ import {
 import { __, sprintf } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { getEmailTemplate, saveEmailTemplate, getEmailSituations, getEmailMetaKeys } from '../../utils/ajax';
+import { groupFieldsWithLayout, buildRegisteredFieldPayload, getVisibleFields, needsSeparator } from '../../utils/format';
 import { RegisteredMetaField } from '../common/RegisteredMetaField';
 import { forceRemoveEditor } from '../common/RichTextEditor';
-
-/**
- * Group registered fields by layout for half-width pairing.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param {Array} fields Registered fields array.
- * @returns {Array} Grouped items: { type: 'single', field } or { type: 'row', fields: [f1, f2] }.
- */
-function groupFieldsWithLayout( fields ) {
-	var result = [];
-	var halfBuffer = null;
-
-	fields.forEach( function ( field ) {
-		if ( ! field.visible ) {
-			return;
-		}
-
-		if ( 'half' === field.layout ) {
-			if ( halfBuffer ) {
-				result.push( { type: 'row', fields: [ halfBuffer, field ] } );
-				halfBuffer = null;
-			} else {
-				halfBuffer = field;
-			}
-		} else {
-			// Flush any unpaired half field.
-			if ( halfBuffer ) {
-				result.push( { type: 'single', field: halfBuffer } );
-				halfBuffer = null;
-			}
-			result.push( { type: 'single', field: field } );
-		}
-	} );
-
-	// Flush trailing half field.
-	if ( halfBuffer ) {
-		result.push( { type: 'single', field: halfBuffer } );
-	}
-
-	return result;
-}
 
 /**
  * Email Template Add/Edit Modal Component
@@ -235,26 +194,34 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 		}
 	}, [ isOpen, emailId, createFields ] );
 
-	// Separate registered fields by tab — must be before early return to maintain hook order.
-	var detailsFields = useMemo( function () {
-		return registeredFields.filter( function ( f ) {
-			// Skip email_type — rendered as custom Situation TabPanel below.
-			if ( 'email_type' === f.id ) {
-				return false;
+	// Separate registered fields by context (same pattern as ActivityEditModal).
+	// Filter out email_type (rendered as custom Situation TabPanel).
+	// 'normal' (default) fields render first, 'after' fields render after Custom Fields + Situation.
+	var normalFields = useMemo( function () {
+		var fields = [];
+		registeredFields.forEach( function ( f ) {
+			if ( 'email_type' !== f.id && 'after' !== f.context ) {
+				fields.push( f );
 			}
-			return 'details' === f.tab || ! f.tab;
 		} );
+		return fields;
 	}, [ registeredFields ] );
 
-	var publishFields = useMemo( function () {
-		return registeredFields.filter( function ( f ) {
-			return 'publish' === f.tab;
+	var afterFields = useMemo( function () {
+		var fields = [];
+		registeredFields.forEach( function ( f ) {
+			if ( 'after' === f.context ) {
+				fields.push( f );
+			}
 		} );
+		return fields;
 	}, [ registeredFields ] );
 
-	var groupedPublishFields = useMemo( function () {
-		return groupFieldsWithLayout( publishFields );
-	}, [ publishFields ] );
+	var visibleNormalFields = getVisibleFields( normalFields, registeredValues );
+	var groupedNormalFields = groupFieldsWithLayout( visibleNormalFields );
+
+	var visibleAfterFields = getVisibleFields( afterFields, registeredValues );
+	var groupedAfterFields = groupFieldsWithLayout( visibleAfterFields );
 
 	if ( ! isOpen ) {
 		return null;
@@ -319,32 +286,11 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 		setError( '' );
 		setIsSaving( true );
 
-		// Build payload from registered fields (same pattern as GroupEditModal).
-		var payload = {
-			email_id: emailId || 0,
-			custom_meta: customMeta,
-		};
-
-		registeredFields.forEach( function ( field ) {
-			if ( field.readonly ) {
-				return;
-			}
-
-			var val = registeredValues[ field.id ];
-
-			// For richtext fields, pull latest content from TinyMCE.
-			if ( 'richtext' === field.type && window.tinymce ) {
-				var editorId = emailId
-					? 'bb-admin-edit-' + field.id + '-' + emailId
-					: 'bb-admin-create-email-' + field.id;
-				var editorInstance = window.tinymce.get( editorId );
-				if ( editorInstance ) {
-					val = editorInstance.getContent();
-				}
-			}
-
-			payload[ 'registered_field_' + field.id ] = null !== val && undefined !== val ? val : '';
-		} );
+		// Build payload using shared utility (same as ForumCreateModal).
+		var itemId = emailId || 0;
+		var payload = buildRegisteredFieldPayload( registeredFields, registeredValues, itemId );
+		payload.email_id    = itemId;
+		payload.custom_meta = customMeta;
 
 		saveEmailTemplate( payload ).then( function ( response ) {
 			if ( ! isMountedRef.current ) {
@@ -393,18 +339,6 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 		} );
 	};
 
-	// Check conditional field visibility.
-	var isFieldVisible = function ( field ) {
-		if ( ! field.visible ) {
-			return false;
-		}
-		if ( field.conditional ) {
-			var depValue = registeredValues[ field.conditional.field ];
-			return depValue === field.conditional.value;
-		}
-		return true;
-	};
-
 	var modalTitle = emailId
 		? __( 'Edit Email Template', 'buddyboss' )
 		: __( 'Add New Email', 'buddyboss' );
@@ -429,26 +363,44 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 							<p className="bb-admin-settings-modal__error">{ error }</p>
 						) }
 
-						{/* Details tab fields — rendered via RegisteredMetaField */}
-						{ detailsFields.map( function ( field ) {
-							if ( ! isFieldVisible( field ) ) {
-								return null;
+						{/* Normal fields (Title, Description, Plain Text) */}
+						{ groupedNormalFields.map( function ( item, idx ) {
+							var hasSeparator = needsSeparator( item, groupedNormalFields[ idx + 1 ] );
+
+							if ( 'row' === item.type ) {
+								return (
+									<div key={ 'det-row-' + idx } className={ 'bb-admin-meta-field__row bb-admin-settings-modal__row' + ( hasSeparator ? ' bb-admin-settings-modal__row--separator' : '' ) }>
+										{ item.fields.map( function ( field ) {
+											return (
+												<RegisteredMetaField
+													key={ field.id }
+													field={ field }
+													value={ registeredValues[ field.id ] }
+													onChange={ function ( val ) {
+														handleRegisteredFieldChange( field.id, val );
+													} }
+													itemId={ emailId || 0 }
+												/>
+											);
+										} ) }
+									</div>
+								);
 							}
 							return (
-								<div key={ field.id } className="bb-email-template-modal__field">
+								<div key={ item.field.id } className={ 'components-base-control' + ( hasSeparator ? ' bb-admin-settings-modal__row--separator' : '' ) }>
 									<RegisteredMetaField
-										field={ field }
-										value={ registeredValues[ field.id ] }
+										field={ item.field }
+										value={ registeredValues[ item.field.id ] }
 										onChange={ function ( val ) {
-											handleRegisteredFieldChange( field.id, val );
+											handleRegisteredFieldChange( item.field.id, val );
 										} }
-										itemId={ itemId }
+										itemId={ emailId || 0 }
 									/>
 								</div>
 							);
 						} ) }
 
-						{/* Custom Fields repeater — ABOVE Situation per Figma */}
+						{/* Custom Fields repeater — between details and publish per Figma */}
 						<div className="bb-email-template-modal__field bb-email-template-modal__custom-fields">
 							<label className="bb-email-template-modal__field-label">
 								{ __( 'Custom Fields', 'buddyboss' ) }
@@ -618,19 +570,16 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 							</div>
 						) }
 
-						{/* Publish tab fields — Status, Visibility, Password, Publish, Schedule Date */}
-						{ groupedPublishFields.length > 0 && (
-							<div className="bb-email-template-modal__field bb-email-template-modal__publish-fields">
-								{ groupedPublishFields.map( function ( item, idx ) {
+						{/* After fields (Status, Visibility, Password, Publish, Date, Time) */}
+						{ groupedAfterFields.length > 0 && (
+							<div className="bb-email-template-modal__publish-fields">
+								{ groupedAfterFields.map( function ( item, idx ) {
+									var hasSeparator = needsSeparator( item, groupedAfterFields[ idx + 1 ] );
+
 									if ( 'row' === item.type ) {
-										// Check visibility for both fields in the row.
-										var visibleFields = item.fields.filter( isFieldVisible );
-										if ( 0 === visibleFields.length ) {
-											return null;
-										}
 										return (
-											<div key={ 'pub-row-' + idx } className="bb-admin-meta-field__row bb-email-template-modal__publish-row">
-												{ visibleFields.map( function ( field ) {
+											<div key={ 'pub-row-' + idx } className={ 'bb-admin-meta-field__row bb-admin-settings-modal__row' + ( hasSeparator ? ' bb-admin-settings-modal__row--separator' : '' ) }>
+												{ item.fields.map( function ( field ) {
 													return (
 														<RegisteredMetaField
 															key={ field.id }
@@ -639,31 +588,29 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 															onChange={ function ( val ) {
 																handleRegisteredFieldChange( field.id, val );
 															} }
-															itemId={ itemId }
+															itemId={ emailId || 0 }
 														/>
 													);
 												} ) }
 											</div>
 										);
 									}
-
-									if ( ! isFieldVisible( item.field ) ) {
-										return null;
-									}
 									return (
-										<RegisteredMetaField
-											key={ item.field.id }
-											field={ item.field }
-											value={ registeredValues[ item.field.id ] }
-											onChange={ function ( val ) {
-												handleRegisteredFieldChange( item.field.id, val );
-											} }
-											itemId={ itemId }
-										/>
+										<div key={ item.field.id } className={ 'components-base-control' + ( hasSeparator ? ' bb-admin-settings-modal__row--separator' : '' ) }>
+											<RegisteredMetaField
+												field={ item.field }
+												value={ registeredValues[ item.field.id ] }
+												onChange={ function ( val ) {
+													handleRegisteredFieldChange( item.field.id, val );
+												} }
+												itemId={ emailId || 0 }
+											/>
+										</div>
 									);
 								} ) }
 							</div>
 						) }
+
 					</>
 				) }
 			</div>
