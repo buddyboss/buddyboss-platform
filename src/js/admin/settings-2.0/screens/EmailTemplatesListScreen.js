@@ -25,6 +25,9 @@ import { getEmailTemplates, emailTemplateBulkAction } from '../utils/ajax';
 import { safeUrl, sanitizeHtml } from '../utils/sanitize';
 import { getPageNumbers } from '../utils/pagination';
 import { Toast } from '../components/Toast';
+import { EmailTemplateModal } from '../components/emails/EmailTemplateModal';
+import { EmailTemplateBulkEditModal } from '../components/emails/EmailTemplateBulkEditModal';
+import { EmailTemplateBulkDeleteModal } from '../components/emails/EmailTemplateBulkDeleteModal';
 
 /**
  * Sort options for the email templates list dropdown (static, never changes).
@@ -127,6 +130,28 @@ export default function EmailTemplatesListScreen( props ) {
 	var toast = stateToast[0];
 	var setToast = stateToast[1];
 
+	// Create field definitions from server (for add modal).
+	var stateCreateFields = useState( [] );
+	var createFields = stateCreateFields[0];
+	var setCreateFields = stateCreateFields[1];
+
+	// Modal states.
+	var stateEditModalOpen = useState( false );
+	var editModalOpen = stateEditModalOpen[0];
+	var setEditModalOpen = stateEditModalOpen[1];
+
+	var stateEditEmailId = useState( 0 );
+	var editEmailId = stateEditEmailId[0];
+	var setEditEmailId = stateEditEmailId[1];
+
+	var stateBulkEditModalOpen = useState( false );
+	var bulkEditModalOpen = stateBulkEditModalOpen[0];
+	var setBulkEditModalOpen = stateBulkEditModalOpen[1];
+
+	var stateBulkDeleteModalOpen = useState( false );
+	var bulkDeleteModalOpen = stateBulkDeleteModalOpen[0];
+	var setBulkDeleteModalOpen = stateBulkDeleteModalOpen[1];
+
 	var abortRef = useRef( null );
 	var searchTimerRef = useRef( null );
 	var isFirstLoad = useRef( true );
@@ -186,6 +211,10 @@ export default function EmailTemplatesListScreen( props ) {
 
 					if ( response.data.columns ) {
 						setColumns( response.data.columns );
+					}
+
+					if ( response.data.create_fields ) {
+						setCreateFields( response.data.create_fields );
 					}
 				}
 				setIsLoading( false );
@@ -326,6 +355,17 @@ export default function EmailTemplatesListScreen( props ) {
 			return;
 		}
 
+		// Route bulk_edit and delete to their modals.
+		if ( 'bulk_edit' === bulkAction ) {
+			setBulkEditModalOpen( true );
+			return;
+		}
+
+		if ( 'delete' === bulkAction ) {
+			setBulkDeleteModalOpen( true );
+			return;
+		}
+
 		setBulkProcessing( true );
 
 		emailTemplateBulkAction( selectedIds, bulkAction )
@@ -355,11 +395,13 @@ export default function EmailTemplatesListScreen( props ) {
 		return -1 !== selectedIds.indexOf( item.id );
 	} );
 
-	// Build bulk action options for the dropdown.
+	// Build bulk action options for the dropdown (server actions + client-only modals).
 	var bulkActionOptions = [ { label: __( 'Bulk actions', 'buddyboss' ), value: '' } ];
+	bulkActionOptions.push( { label: __( 'Bulk Edit', 'buddyboss' ), value: 'bulk_edit' } );
 	Object.keys( bulkActions ).forEach( function( key ) {
 		bulkActionOptions.push( { label: decodeEntities( bulkActions[ key ] ), value: key } );
 	} );
+	bulkActionOptions.push( { label: __( 'Delete Permanently', 'buddyboss' ), value: 'delete' } );
 
 	// Derive custom column keys from server-provided columns (third-party plugins like WPML).
 	var customColumnKeys = useMemo( function() {
@@ -377,15 +419,16 @@ export default function EmailTemplatesListScreen( props ) {
 				<h2 className="bb-email-templates-list__title">
 					{ __( 'Email Templates', 'buddyboss' ) }
 				</h2>
-				{ addNewUrl && (
-					<a
-						href={ safeUrl( addNewUrl ) }
-						className="bb-email-templates-list__create-btn components-button is-primary"
-					>
-						<i className="bb-icons-rl bb-icons-rl-plus" />
-						{ __( 'Add New Email', 'buddyboss' ) }
-					</a>
-				) }
+				<Button
+					className="bb-email-templates-list__create-btn is-primary"
+					onClick={ function() {
+						setEditEmailId( 0 );
+						setEditModalOpen( true );
+					} }
+				>
+					<i className="bb-icons-rl bb-icons-rl-plus" />
+					{ __( 'Add New Email', 'buddyboss' ) }
+				</Button>
 			</div>
 
 			{/* Toolbar */}
@@ -517,8 +560,13 @@ export default function EmailTemplatesListScreen( props ) {
 										</td>
 										<td className="bb-email-templates-list__td--title">
 											<a
-												href={ safeUrl( item.edit_url ) }
+												href="#"
 												className="bb-email-templates-list__item-title"
+												onClick={ function( e ) {
+													e.preventDefault();
+													setEditEmailId( item.id );
+													setEditModalOpen( true );
+												} }
 											>
 												{ decodeEntities( item.title ) }
 											</a>
@@ -547,10 +595,9 @@ export default function EmailTemplatesListScreen( props ) {
 														<MenuGroup className="bb_dropdown_menu_group">
 															<MenuItem
 																onClick={ function() {
-																	if ( item.edit_url ) {
-																		window.location.href = safeUrl( item.edit_url );
-																	}
 																	onClose();
+																	setEditEmailId( item.id );
+																	setEditModalOpen( true );
 																} }
 															>
 																<i className="bb-icons-rl bb-icons-rl-pencil-simple"></i>
@@ -665,6 +712,62 @@ export default function EmailTemplatesListScreen( props ) {
 					/>
 				</div>
 			) }
+
+			{/* Add/Edit Modal */}
+			<EmailTemplateModal
+				isOpen={ editModalOpen }
+				emailId={ editEmailId }
+				createFields={ createFields }
+				onClose={ function() {
+					setEditModalOpen( false );
+					setEditEmailId( 0 );
+				} }
+				onSaved={ function() {
+					setEditModalOpen( false );
+					setEditEmailId( 0 );
+					isFirstLoad.current = true;
+					fetchTemplates( { fetchPage: page, fetchSort: sort, fetchSearch: search } );
+					setToast( { status: 'success', message: __( 'Email template saved.', 'buddyboss' ) } );
+				} }
+			/>
+
+			{/* Bulk Edit Modal */}
+			<EmailTemplateBulkEditModal
+				isOpen={ bulkEditModalOpen }
+				selectedItems={ items.filter( function( item ) {
+					return -1 !== selectedIds.indexOf( item.id );
+				} ) }
+				onClose={ function() {
+					setBulkEditModalOpen( false );
+				} }
+				onSaved={ function() {
+					setBulkEditModalOpen( false );
+					setSelectedIds( [] );
+					setBulkAction( '' );
+					isFirstLoad.current = true;
+					fetchTemplates( { fetchPage: page, fetchSort: sort, fetchSearch: search } );
+					setToast( { status: 'success', message: __( 'Email templates updated.', 'buddyboss' ) } );
+				} }
+			/>
+
+			{/* Bulk Delete Modal */}
+			<EmailTemplateBulkDeleteModal
+				isOpen={ bulkDeleteModalOpen }
+				selectedItems={ items.filter( function( item ) {
+					return -1 !== selectedIds.indexOf( item.id );
+				} ) }
+				onClose={ function() {
+					setBulkDeleteModalOpen( false );
+				} }
+				onDeleted={ function() {
+					setBulkDeleteModalOpen( false );
+					setSelectedIds( [] );
+					setBulkAction( '' );
+					isFirstLoad.current = true;
+					fetchTemplates( { fetchPage: page, fetchSort: sort, fetchSearch: search } );
+				} }
+				setToast={ setToast }
+			/>
 		</div>
 	);
 }

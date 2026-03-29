@@ -43,6 +43,9 @@ function bb_admin_settings_register_emails_feature() {
 		)
 	);
 
+	// Load meta field registrations for the email template edit modal.
+	require_once __DIR__ . '/settings/emails/meta-fields.php';
+
 	// =========================================================================
 	// SIDE PANELS
 	// =========================================================================

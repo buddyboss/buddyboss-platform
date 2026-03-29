@@ -1089,6 +1089,82 @@ export function invitesBulkAction( inviteIds, action ) {
 }
 
 /**
+ * Fetch a single email template for editing.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data            Query parameters (email_id).
+ * @param {Object} options         Optional fetch options.
+ * @return {Promise} Promise resolving to response.
+ */
+export function getEmailTemplate( data, options ) {
+	return ajaxFetch( 'bb_admin_get_email_template', data, options );
+}
+
+/**
+ * Create or update an email template.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data    Email template data (email_id, title, content, etc.).
+ * @param {Object} options Optional fetch options.
+ * @return {Promise} Promise resolving to response.
+ */
+export function saveEmailTemplate( data, options ) {
+	return ajaxFetch( 'bb_admin_save_email_template', data, options );
+}
+
+/**
+ * Permanently delete email templates.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Array} emailIds Array of email template post IDs.
+ * @return {Promise} Promise resolving to response.
+ */
+export function deleteEmailTemplates( emailIds ) {
+	return ajaxFetch( 'bb_admin_delete_email_templates', {
+		email_ids: emailIds.join( ',' ),
+	} );
+}
+
+/**
+ * Bulk edit email templates (status and/or situation).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data Bulk edit data (email_ids, status, email_type).
+ * @return {Promise} Promise resolving to response.
+ */
+export function bulkEditEmailTemplates( data ) {
+	return ajaxFetch( 'bb_admin_bulk_edit_email_templates', data );
+}
+
+/**
+ * Get all email situations grouped by category.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} options Optional fetch options.
+ * @return {Promise} Promise resolving to grouped situations.
+ */
+export function getEmailSituations( options ) {
+	return ajaxFetch( 'bb_admin_get_email_situations', {}, options );
+}
+
+/**
+ * Get distinct post meta keys for email template custom field autocomplete.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} options Optional fetch options.
+ * @return {Promise} Promise resolving to array of meta key strings.
+ */
+export function getEmailMetaKeys( options ) {
+	return ajaxFetch( 'bb_admin_get_email_meta_keys', {}, options );
+}
+
+/**
  * Get all reporting categories (bpm_category taxonomy terms).
  *
  * @since BuddyBoss [BBVERSION]

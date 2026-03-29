@@ -63,6 +63,12 @@ class BB_Email_Templates_Admin_Ajax {
 	private function bb_register_ajax_handlers() {
 		add_action( 'wp_ajax_bb_admin_get_email_templates', array( $this, 'get_email_templates' ) );
 		add_action( 'wp_ajax_bb_admin_email_template_bulk_action', array( $this, 'email_template_bulk_action' ) );
+		add_action( 'wp_ajax_bb_admin_get_email_template', array( $this, 'bb_admin_get_email_template' ) );
+		add_action( 'wp_ajax_bb_admin_save_email_template', array( $this, 'bb_admin_save_email_template' ) );
+		add_action( 'wp_ajax_bb_admin_delete_email_templates', array( $this, 'bb_admin_delete_email_templates' ) );
+		add_action( 'wp_ajax_bb_admin_bulk_edit_email_templates', array( $this, 'bb_admin_bulk_edit_email_templates' ) );
+		add_action( 'wp_ajax_bb_admin_get_email_situations', array( $this, 'bb_admin_get_email_situations' ) );
+		add_action( 'wp_ajax_bb_admin_get_email_meta_keys', array( $this, 'bb_admin_get_email_meta_keys' ) );
 	}
 
 	/**
@@ -215,9 +221,23 @@ class BB_Email_Templates_Admin_Ajax {
 
 		// Include metadata on first request.
 		if ( $include_meta ) {
-			$response['add_new_url']   = admin_url( 'post-new.php?post_type=' . bp_get_email_post_type() );
 			$response['bulk_actions']  = array(
 				'trash' => __( 'Move to Trash', 'buddyboss' ),
+			);
+
+			// Provide registered field definitions for the create modal.
+			$response['create_fields'] = bb_admin_meta_field_registry()->get_fields_data(
+				'emails',
+				(object) array(
+					'ID'            => 0,
+					'post_title'    => '',
+					'post_content'  => '',
+					'post_excerpt'  => '',
+					'post_status'   => 'draft',
+					'post_password' => '',
+					'post_date'     => '',
+					'post_date_gmt' => '',
+				)
 			);
 
 			// Return column definitions (excluding cb) so React can render custom column headers.
@@ -321,6 +341,446 @@ class BB_Email_Templates_Admin_Ajax {
 		} else {
 			wp_send_json_error( array( 'message' => __( 'No email templates were processed.', 'buddyboss' ) ) );
 		}
+	}
+
+	/**
+	 * Get a single email template for the edit modal.
+	 *
+	 * Uses BB_Admin_Meta_Field_Registry to provide registered_fields,
+	 * following the same pattern as Groups and Activity edit modals.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return void
+	 */
+	public function bb_admin_get_email_template() {
+		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified above.
+		$email_id = isset( $_POST['email_id'] ) ? absint( wp_unslash( $_POST['email_id'] ) ) : 0;
+
+		if ( empty( $email_id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid email template ID.', 'buddyboss' ) ) );
+		}
+
+		$post = get_post( $email_id );
+		if ( ! $post || bp_get_email_post_type() !== $post->post_type ) {
+			wp_send_json_error( array( 'message' => __( 'Email template not found.', 'buddyboss' ) ) );
+		}
+
+		// Get custom meta (exclude internal WP/BP meta keys).
+		$all_meta    = get_post_meta( $email_id );
+		$custom_meta = array();
+		foreach ( $all_meta as $key => $values ) {
+			if ( 0 === strpos( $key, '_' ) || 'bp_email_preheader' === $key ) {
+				continue;
+			}
+			$custom_meta[] = array(
+				'key'   => $key,
+				'value' => $values[0],
+			);
+		}
+
+		$response = array(
+			'id'                => $email_id,
+			'registered_fields' => bb_admin_meta_field_registry()->get_fields_data( 'emails', $post ),
+			'custom_meta'       => $custom_meta,
+		);
+
+		/**
+		 * Filters the single email template response.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array   $response Response data.
+		 * @param WP_Post $post     Email template post object.
+		 */
+		$response = apply_filters( 'bb_admin_get_email_template_response', $response, $post );
+
+		wp_send_json_success( $response );
+	}
+
+	/**
+	 * Create or update an email template.
+	 *
+	 * Uses BB_Admin_Meta_Field_Registry for field handling, following
+	 * the same pattern as Groups and Activity save handlers.
+	 * Uses wp_insert_post / wp_update_post to preserve save_post_bp-email hook.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return void
+	 */
+	public function bb_admin_save_email_template() {
+		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified above.
+		$email_id = isset( $_POST['email_id'] ) ? absint( wp_unslash( $_POST['email_id'] ) ) : 0;
+		$raw_meta = isset( $_POST['custom_meta'] ) ? wp_unslash( $_POST['custom_meta'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized per-field below.
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
+
+		$registry       = bb_admin_meta_field_registry();
+		$email_post_type = bp_get_email_post_type();
+
+		if ( $email_id > 0 ) {
+			// Update existing — load post as object for registry to modify.
+			$post = get_post( $email_id );
+			if ( ! $post || $email_post_type !== $post->post_type ) {
+				wp_send_json_error( array( 'message' => __( 'Email template not found.', 'buddyboss' ) ) );
+			}
+		} else {
+			// Create new — build a stub post object for registry to populate.
+			$post                = new stdClass();
+			$post->ID            = 0;
+			$post->post_type     = $email_post_type;
+			$post->post_title    = '';
+			$post->post_content  = '';
+			$post->post_excerpt  = '';
+			$post->post_status   = 'draft';
+			$post->post_password = '';
+			$post->post_date     = '';
+			$post->post_date_gmt = '';
+		}
+
+		// Apply "before" phase — sets properties on $post object from $_POST[registered_field_*].
+		$registry->save_fields_data( 'emails', $post, 'before' );
+
+		// Validate title.
+		if ( empty( $post->post_title ) ) {
+			wp_send_json_error( array( 'message' => __( 'Title is required.', 'buddyboss' ) ) );
+		}
+
+		// Build post data array for wp_insert_post / wp_update_post.
+		$post_data = array(
+			'post_type'     => $email_post_type,
+			'post_title'    => $post->post_title,
+			'post_content'  => $post->post_content,
+			'post_excerpt'  => $post->post_excerpt,
+			'post_status'   => $post->post_status,
+			'post_password' => $post->post_password,
+		);
+
+		// Set post_date for scheduled posts.
+		if ( 'future' === $post->post_status && ! empty( $post->post_date ) ) {
+			$post_data['post_date']     = $post->post_date;
+			$post_data['post_date_gmt'] = ! empty( $post->post_date_gmt )
+				? $post->post_date_gmt
+				: get_gmt_from_date( $post->post_date );
+		}
+
+		if ( $email_id > 0 ) {
+			$post_data['ID'] = $email_id;
+			$result          = wp_update_post( $post_data, true );
+		} else {
+			$result = wp_insert_post( $post_data, true );
+		}
+
+		if ( is_wp_error( $result ) ) {
+			wp_send_json_error( array( 'message' => $result->get_error_message() ) );
+		}
+
+		$saved_id   = absint( $result );
+		$saved_post = get_post( $saved_id );
+
+		// Apply "after" phase — saves taxonomy terms, post meta, etc.
+		$registry->save_fields_data( 'emails', $saved_post, 'after' );
+
+		// Handle custom meta — save new/updated, delete removed.
+		$existing_meta = get_post_meta( $saved_id );
+		$new_keys      = array();
+
+		if ( is_array( $raw_meta ) ) {
+			foreach ( $raw_meta as $meta_item ) {
+				if ( ! is_array( $meta_item ) || empty( $meta_item['key'] ) ) {
+					continue;
+				}
+				$meta_key   = sanitize_key( $meta_item['key'] );
+				$meta_value = sanitize_text_field( $meta_item['value'] ?? '' );
+
+				if ( 0 === strpos( $meta_key, '_' ) || 'bp_email_preheader' === $meta_key ) {
+					continue;
+				}
+
+				update_post_meta( $saved_id, $meta_key, $meta_value );
+				$new_keys[] = $meta_key;
+			}
+		}
+
+		// Delete removed custom meta.
+		foreach ( $existing_meta as $key => $values ) {
+			if ( 0 === strpos( $key, '_' ) || 'bp_email_preheader' === $key ) {
+				continue;
+			}
+			if ( ! in_array( $key, $new_keys, true ) ) {
+				delete_post_meta( $saved_id, $key );
+			}
+		}
+
+		/**
+		 * Fires after an email template is saved via Settings 2.0.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int      $saved_id  Saved post ID.
+		 * @param WP_Post  $saved_post Saved post object.
+		 */
+		do_action( 'bb_admin_save_email_template_after', $saved_id, $saved_post );
+
+		$message = $email_id > 0
+			? __( 'Email template updated successfully.', 'buddyboss' )
+			: __( 'Email template created successfully.', 'buddyboss' );
+
+		wp_send_json_success(
+			array(
+				'message' => $message,
+				'post_id' => $saved_id,
+			)
+		);
+	}
+
+	/**
+	 * Permanently delete email templates.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return void
+	 */
+	public function bb_admin_delete_email_templates() {
+		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified above.
+		$raw_ids = isset( $_POST['email_ids'] ) ? sanitize_text_field( wp_unslash( $_POST['email_ids'] ) ) : '';
+
+		if ( empty( $raw_ids ) ) {
+			wp_send_json_error( array( 'message' => __( 'No email templates selected.', 'buddyboss' ) ) );
+		}
+
+		$email_ids       = array_filter( array_map( 'absint', explode( ',', $raw_ids ) ) );
+		$email_ids        = array_slice( $email_ids, 0, self::BULK_CAP );
+		$email_post_type = bp_get_email_post_type();
+		$deleted         = 0;
+
+		foreach ( $email_ids as $email_id ) {
+			$post = get_post( $email_id );
+			if ( ! $post || $email_post_type !== $post->post_type ) {
+				continue;
+			}
+
+			wp_delete_post( $email_id, true );
+			++$deleted;
+		}
+
+		wp_send_json_success(
+			array(
+				'message' => sprintf(
+					/* translators: %d: Number of email templates deleted. */
+					_n(
+						'%d email template permanently deleted.',
+						'%d email templates permanently deleted.',
+						$deleted,
+						'buddyboss'
+					),
+					$deleted
+				),
+				'deleted' => $deleted,
+			)
+		);
+	}
+
+	/**
+	 * Bulk edit email templates (status and/or situation).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return void
+	 */
+	public function bb_admin_bulk_edit_email_templates() {
+		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified above.
+		$raw_ids    = isset( $_POST['email_ids'] ) ? sanitize_text_field( wp_unslash( $_POST['email_ids'] ) ) : '';
+		$new_status = isset( $_POST['status'] ) ? sanitize_key( wp_unslash( $_POST['status'] ) ) : '';
+		$email_type = isset( $_POST['email_type'] ) ? sanitize_key( wp_unslash( $_POST['email_type'] ) ) : '';
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
+
+		if ( empty( $raw_ids ) ) {
+			wp_send_json_error( array( 'message' => __( 'No email templates selected.', 'buddyboss' ) ) );
+		}
+
+		$email_ids       = array_filter( array_map( 'absint', explode( ',', $raw_ids ) ) );
+		$email_ids        = array_slice( $email_ids, 0, self::BULK_CAP );
+		$email_post_type = bp_get_email_post_type();
+
+		// Validate status if provided.
+		$allowed_statuses = array( 'publish', 'draft', 'pending', 'private' );
+		if ( ! empty( $new_status ) && ! in_array( $new_status, $allowed_statuses, true ) ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid status.', 'buddyboss' ) ) );
+		}
+
+		$updated = 0;
+
+		foreach ( $email_ids as $email_id ) {
+			$post = get_post( $email_id );
+			if ( ! $post || $email_post_type !== $post->post_type ) {
+				continue;
+			}
+
+			// Update status if provided.
+			if ( ! empty( $new_status ) ) {
+				wp_update_post(
+					array(
+						'ID'          => $email_id,
+						'post_status' => $new_status,
+					)
+				);
+			}
+
+			// Update situation if provided.
+			if ( ! empty( $email_type ) ) {
+				wp_set_object_terms( $email_id, $email_type, bp_get_email_tax_type() );
+			}
+
+			++$updated;
+		}
+
+		wp_send_json_success(
+			array(
+				'message' => sprintf(
+					/* translators: %d: Number of email templates updated. */
+					_n(
+						'%d email template updated.',
+						'%d email templates updated.',
+						$updated,
+						'buddyboss'
+					),
+					$updated
+				),
+				'updated' => $updated,
+			)
+		);
+	}
+
+	/**
+	 * Get all email situations (taxonomy terms) grouped by category.
+	 *
+	 * Categories are derived from term slug prefixes.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return void
+	 */
+	public function bb_admin_get_email_situations() {
+		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+
+		$taxonomy = bp_get_email_tax_type();
+		$terms    = get_terms(
+			array(
+				'taxonomy'   => $taxonomy,
+				'hide_empty' => false,
+			)
+		);
+
+		if ( is_wp_error( $terms ) ) {
+			wp_send_json_error( array( 'message' => $terms->get_error_message() ) );
+		}
+
+		// Category mapping by slug prefix.
+		$prefix_map = array(
+			'activity'      => 'activity',
+			'groups'        => 'groups_discussions',
+			'group-message' => 'groups_discussions',
+			'bbp'           => 'groups_discussions',
+			'messages'      => 'messages',
+			'friends'       => 'connections',
+			'core-user'     => 'account',
+			'settings'      => 'account',
+			'invites'       => 'account',
+			'content'       => 'account',
+			'user'          => 'account',
+		);
+
+		$category_labels = array(
+			'activity'            => __( 'Activity', 'buddyboss' ),
+			'groups_discussions'  => __( 'Groups & Discussions', 'buddyboss' ),
+			'messages'            => __( 'Messages', 'buddyboss' ),
+			'connections'         => __( 'Connections', 'buddyboss' ),
+			'account'             => __( 'Account', 'buddyboss' ),
+		);
+
+		$grouped = array();
+		foreach ( $category_labels as $cat_key => $cat_label ) {
+			$grouped[ $cat_key ] = array(
+				'label' => $cat_label,
+				'terms' => array(),
+			);
+		}
+
+		foreach ( $terms as $term ) {
+			$category = 'account'; // Default fallback.
+
+			// Match longest prefix first (e.g., 'group-message' before 'group').
+			$matched_len = 0;
+			foreach ( $prefix_map as $prefix => $cat ) {
+				if ( 0 === strpos( $term->slug, $prefix ) && strlen( $prefix ) > $matched_len ) {
+					$category    = $cat;
+					$matched_len = strlen( $prefix );
+				}
+			}
+
+			$grouped[ $category ]['terms'][] = array(
+				'slug'        => $term->slug,
+				'description' => $term->description,
+			);
+		}
+
+		// Remove empty categories.
+		foreach ( $grouped as $cat_key => $cat_data ) {
+			if ( empty( $cat_data['terms'] ) ) {
+				unset( $grouped[ $cat_key ] );
+			}
+		}
+
+		/**
+		 * Filters the email situations response.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $grouped Grouped situations by category.
+		 */
+		$grouped = apply_filters( 'bb_admin_email_situations_response', $grouped );
+
+		wp_send_json_success( $grouped );
+	}
+
+	/**
+	 * Get distinct post meta keys used across bp-email posts.
+	 *
+	 * Returns a filtered, sorted list for the custom field name autocomplete.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return void
+	 */
+	public function bb_admin_get_email_meta_keys() {
+		bb_admin_verify_ajax_request( self::NONCE_ACTION );
+
+		global $wpdb;
+
+		// Get distinct public meta keys across all posts (matching legacy Custom Fields metabox behavior).
+		// Excludes internal WP meta (prefixed with _) and known BP meta.
+		$keys = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT DISTINCT meta_key
+				FROM {$wpdb->postmeta}
+				WHERE meta_key NOT LIKE %s
+				AND meta_key != 'bp_email_preheader'
+				ORDER BY meta_key ASC
+				LIMIT 200",
+				$wpdb->esc_like( '_' ) . '%'
+			)
+		);
+
+		wp_send_json_success( ! empty( $keys ) ? $keys : array() );
 	}
 }
 
