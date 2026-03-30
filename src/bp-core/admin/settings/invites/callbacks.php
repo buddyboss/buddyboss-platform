@@ -43,6 +43,9 @@ function bb_invites_register_profile_type_fields( $feature_id ) {
 	$order    = 40;
 	$is_first = true;
 
+	// Prime post meta cache to avoid N+1 queries in the loop.
+	update_postmeta_cache( $member_types );
+
 	foreach ( $member_types as $member_type_id ) {
 		$type_name = bp_get_member_type_key( $member_type_id );
 

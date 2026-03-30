@@ -2216,3 +2216,107 @@ if ( ! function_exists( 'bp_moderation_admin_category_listing_add_tab' ) ) {
 		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Moderation feature (bb-admin-settings-moderation.php)' );
 	}
 }
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Email Invites Settings 2.0 deprecated functions.
+// Legacy settings render callbacks were removed from bp-core-admin-settings.php.
+// Invites settings are now managed by Settings 2.0 (bb-admin-settings-invites.php).
+// ──────────────────────────────────────────────────────────────────────────────
+
+if ( ! function_exists( 'bp_admin_setting_callback_member_invite_email_subject' ) ) {
+	/**
+	 * Legacy render callback for the Email Subject invite setting.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @deprecated BuddyBoss [BBVERSION] Invites settings are now managed by Settings 2.0.
+	 */
+	function bp_admin_setting_callback_member_invite_email_subject() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Invites feature (bb-admin-settings-invites.php)' );
+	}
+}
+
+if ( ! function_exists( 'bp_admin_setting_callback_member_invite_email_content' ) ) {
+	/**
+	 * Legacy render callback for the Email Content invite setting.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @deprecated BuddyBoss [BBVERSION] Invites settings are now managed by Settings 2.0.
+	 */
+	function bp_admin_setting_callback_member_invite_email_content() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Invites feature (bb-admin-settings-invites.php)' );
+	}
+}
+
+if ( ! function_exists( 'bp_admin_setting_callback_member_invite_member_type' ) ) {
+	/**
+	 * Legacy render callback for the Set Profile Type invite setting.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @deprecated BuddyBoss [BBVERSION] Invites settings are now managed by Settings 2.0.
+	 */
+	function bp_admin_setting_callback_member_invite_member_type() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Invites feature (bb-admin-settings-invites.php)' );
+	}
+}
+
+if ( ! function_exists( 'bp_admin_setting_callback_enable_send_invite_member_type' ) ) {
+	/**
+	 * Legacy render callback for per-profile-type invite setting.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @deprecated BuddyBoss [BBVERSION] Invites settings are now managed by Settings 2.0.
+	 *
+	 * @param array $args Field arguments.
+	 */
+	function bp_admin_setting_callback_enable_send_invite_member_type( $args = array() ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Invites feature (bb-admin-settings-invites.php)' );
+	}
+}
+
+if ( ! function_exists( 'bp_email_invites_tutorial' ) ) {
+	/**
+	 * Legacy tutorial link for Email Invites section.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @deprecated BuddyBoss [BBVERSION] Invites settings are now managed by Settings 2.0.
+	 */
+	function bp_email_invites_tutorial() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Invites feature (bb-admin-settings-invites.php)' );
+	}
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Email Templates Settings 2.0 deprecated functions.
+// Legacy email admin tabs were removed from bp-core-admin-functions.php.
+// Email Templates are now managed by Settings 2.0 (bb-admin-settings-emails.php).
+// ──────────────────────────────────────────────────────────────────────────────
+
+if ( ! function_exists( 'bp_core_admin_emails_tabs' ) ) {
+	/**
+	 * Legacy admin tab output for BuddyBoss > Emails screens.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @deprecated BuddyBoss [BBVERSION] Email Templates are now managed by Settings 2.0.
+	 *
+	 * @param string $active_tab Name of the active tab.
+	 */
+	function bp_core_admin_emails_tabs( $active_tab = '' ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Emails feature (bb-admin-settings-emails.php)' );
+	}
+}
+
+if ( ! function_exists( 'bp_core_get_emails_admin_tabs' ) ) {
+	/**
+	 * Legacy tab data builder for BuddyBoss > Emails screens.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @deprecated BuddyBoss [BBVERSION] Email Templates are now managed by Settings 2.0.
+	 *
+	 * @param string $active_tab Name of the active tab.
+	 * @return array Empty array (legacy data no longer applicable).
+	 */
+	function bp_core_get_emails_admin_tabs( $active_tab = '' ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Emails feature (bb-admin-settings-emails.php)' );
+		return array();
+	}
+}

@@ -270,6 +270,7 @@ class BB_Email_Templates_Admin_Ajax {
 				(object) array(
 					'ID'            => 0,
 					'post_title'    => '',
+					'post_name'     => '',
 					'post_content'  => '',
 					'post_excerpt'  => '',
 					'post_status'   => 'publish',
@@ -288,6 +289,11 @@ class BB_Email_Templates_Admin_Ajax {
 				$columns_response[ $col_key ] = $col_label;
 			}
 			$response['columns'] = $columns_response;
+
+			// Detect missing email templates (registered in schema but no published post).
+			$missing_emails             = $this->bb_get_missing_email_templates();
+			$response['missing_count']  = count( $missing_emails );
+			$response['missing_emails'] = $missing_emails;
 		}
 
 		/**
@@ -483,6 +489,7 @@ class BB_Email_Templates_Admin_Ajax {
 			$post->post_excerpt  = '';
 			$post->post_status   = 'publish';
 			$post->post_password = '';
+			$post->post_name     = '';
 			$post->post_date     = '';
 			$post->post_date_gmt = '';
 		}
@@ -513,12 +520,28 @@ class BB_Email_Templates_Admin_Ajax {
 		$schedule_time = isset( $_POST['schedule_time'] ) ? sanitize_text_field( wp_unslash( $_POST['schedule_time'] ) ) : '';
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
-		// Validate date format (YYYY-MM-DD) and time format (HH:MM).
-		if ( ! empty( $schedule_date ) && ! preg_match( '/^\d{4}-\d{2}-\d{2}$/', $schedule_date ) ) {
-			$schedule_date = '';
+		// Validate publish_mode against allowed values.
+		if ( ! in_array( $publish_mode, array( 'immediately', 'schedule' ), true ) ) {
+			$publish_mode = 'immediately';
 		}
-		if ( ! empty( $schedule_time ) && ! preg_match( '/^\d{2}:\d{2}$/', $schedule_time ) ) {
-			$schedule_time = '';
+
+		// Validate date format (YYYY-MM-DD) with checkdate.
+		if ( ! empty( $schedule_date ) ) {
+			if ( ! preg_match( '/^\d{4}-\d{2}-\d{2}$/', $schedule_date ) ) {
+				$schedule_date = '';
+			} else {
+				$date_parts = explode( '-', $schedule_date );
+				if ( ! checkdate( (int) $date_parts[1], (int) $date_parts[2], (int) $date_parts[0] ) ) {
+					$schedule_date = '';
+				}
+			}
+		}
+
+		// Validate time format (HH:MM) with hour/minute range check.
+		if ( ! empty( $schedule_time ) ) {
+			if ( ! preg_match( '/^([01]\d|2[0-3]):[0-5]\d$/', $schedule_time ) ) {
+				$schedule_time = '';
+			}
 		}
 
 		if ( 'schedule' === $publish_mode && ! empty( $schedule_date ) ) {
@@ -542,7 +565,7 @@ class BB_Email_Templates_Admin_Ajax {
 		}
 
 		if ( is_wp_error( $result ) ) {
-			wp_send_json_error( array( 'message' => $result->get_error_message() ) );
+			wp_send_json_error( array( 'message' => __( 'Failed to save email template.', 'buddyboss' ) ) );
 		}
 
 		$saved_id   = absint( $result );
@@ -564,7 +587,7 @@ class BB_Email_Templates_Admin_Ajax {
 				if ( ! is_array( $meta_item ) || empty( $meta_item['key'] ) ) {
 					continue;
 				}
-				$meta_key   = sanitize_key( $meta_item['key'] );
+				$meta_key   = sanitize_text_field( $meta_item['key'] );
 				$meta_value = sanitize_text_field( isset( $meta_item['value'] ) ? $meta_item['value'] : '' );
 
 				if ( 0 === strpos( $meta_key, '_' ) || 'bp_email_preheader' === $meta_key ) {
@@ -574,15 +597,15 @@ class BB_Email_Templates_Admin_Ajax {
 				update_post_meta( $saved_id, $meta_key, $meta_value );
 				$new_keys[] = $meta_key;
 			}
-		}
 
-		// Delete removed custom meta.
-		foreach ( $existing_meta as $key => $values ) {
-			if ( 0 === strpos( $key, '_' ) || 'bp_email_preheader' === $key ) {
-				continue;
-			}
-			if ( ! in_array( $key, $new_keys, true ) ) {
-				delete_post_meta( $saved_id, $key );
+			// Delete removed custom meta.
+			foreach ( $existing_meta as $key => $values ) {
+				if ( 0 === strpos( $key, '_' ) || 'bp_email_preheader' === $key ) {
+					continue;
+				}
+				if ( ! in_array( $key, $new_keys, true ) ) {
+					delete_post_meta( $saved_id, $key );
+				}
 			}
 		}
 
@@ -698,7 +721,11 @@ class BB_Email_Templates_Admin_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Invalid status.', 'buddyboss' ) ) );
 		}
 
-		$updated = 0;
+		$updated  = 0;
+		$taxonomy = bp_get_email_tax_type();
+
+		// Validate email_type term exists before the loop (avoid N+1 term_exists queries).
+		$valid_email_type = ! empty( $email_type ) && term_exists( $email_type, $taxonomy );
 
 		// Prime post cache to avoid N+1 queries in the loop.
 		if ( function_exists( '_prime_post_caches' ) ) {
@@ -727,8 +754,8 @@ class BB_Email_Templates_Admin_Ajax {
 			}
 
 			// Update situation if provided.
-			if ( ! empty( $email_type ) ) {
-				$term_result = wp_set_object_terms( $email_id, $email_type, bp_get_email_tax_type() );
+			if ( $valid_email_type ) {
+				$term_result = wp_set_object_terms( $email_id, $email_type, $taxonomy );
 				if ( ! is_wp_error( $term_result ) ) {
 					$has_update = true;
 				}
@@ -870,17 +897,74 @@ class BB_Email_Templates_Admin_Ajax {
 		// Excludes internal WP meta (prefixed with _) and known BP meta.
 		$keys = $wpdb->get_col(
 			$wpdb->prepare(
-				"SELECT DISTINCT meta_key
-				FROM {$wpdb->postmeta}
-				WHERE meta_key NOT LIKE %s
-				AND meta_key != 'bp_email_preheader'
-				ORDER BY meta_key ASC
+				"SELECT DISTINCT pm.meta_key
+				FROM {$wpdb->postmeta} pm
+				INNER JOIN {$wpdb->posts} p ON p.ID = pm.post_id
+				WHERE p.post_type = %s
+				AND pm.meta_key NOT LIKE %s
+				AND pm.meta_key != 'bp_email_preheader'
+				ORDER BY pm.meta_key ASC
 				LIMIT 200",
+				bp_get_email_post_type(),
 				$wpdb->esc_like( '_' ) . '%'
 			)
 		);
 
 		wp_send_json_success( ! empty( $keys ) ? $keys : array() );
+	}
+
+	/**
+	 * Get list of missing email templates.
+	 *
+	 * Compares registered email types from bp_email_get_schema() against
+	 * published bp-email posts to find which ones are missing.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return array Array of missing emails, each with 'slug' and 'description'.
+	 */
+	private function bb_get_missing_email_templates() {
+		global $wpdb;
+
+		$schema       = bp_email_get_schema();
+		$descriptions = bp_email_get_type_schema( 'description' );
+
+		// Single query to get all taxonomy term slugs that have at least one published bp-email post.
+		// This avoids fetching post objects entirely — only term slugs are returned.
+		// Scales to any number of posts (no pagination needed).
+		$existing_slugs = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT DISTINCT t.slug
+				FROM {$wpdb->terms} t
+				INNER JOIN {$wpdb->term_taxonomy} tt ON t.term_id = tt.term_id
+				INNER JOIN {$wpdb->term_relationships} tr ON tt.term_taxonomy_id = tr.term_taxonomy_id
+				INNER JOIN {$wpdb->posts} p ON tr.object_id = p.ID
+				WHERE tt.taxonomy = %s
+				AND p.post_type = %s
+				AND p.post_status = 'publish'",
+				bp_get_email_tax_type(),
+				bp_get_email_post_type()
+			)
+		);
+
+		$existing_slugs = ! empty( $existing_slugs ) ? array_flip( $existing_slugs ) : array();
+
+		$missing = array();
+		foreach ( $schema as $slug => $email_data ) {
+			// Skip multisite-only emails on single site.
+			if ( ! is_multisite() && isset( $email_data['args'] ) && ! empty( $email_data['args']['multisite'] ) ) {
+				continue;
+			}
+
+			if ( ! isset( $existing_slugs[ $slug ] ) ) {
+				$missing[] = array(
+					'slug'        => $slug,
+					'description' => isset( $descriptions[ $slug ] ) ? wp_specialchars_decode( $descriptions[ $slug ] ) : $slug,
+				);
+			}
+		}
+
+		return $missing;
 	}
 }
 

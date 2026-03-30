@@ -75,6 +75,14 @@ function invites_admin_menu_order( $custom_menus = array() ) {
 
 	array_push( $custom_menus, $settings_url );
 
+	// Network admin: also push the root site's Settings 2.0 URL (matches emails_admin_menu_order pattern).
+	if ( is_network_admin() && bp_is_network_activated() ) {
+		array_push(
+			$custom_menus,
+			get_admin_url( bp_get_root_blog_id(), 'admin.php?page=bb-settings&tab=invites&panel=invites_list' )
+		);
+	}
+
 	return $custom_menus;
 }
 add_filter( 'bp_admin_menu_order', 'invites_admin_menu_order', 20 );

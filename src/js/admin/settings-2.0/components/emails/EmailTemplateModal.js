@@ -289,6 +289,9 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 	 * Handle save.
 	 */
 	var handleSave = function () {
+		if ( isSaving ) {
+			return;
+		}
 		setError( '' );
 		setIsSaving( true );
 

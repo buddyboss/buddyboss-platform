@@ -145,8 +145,12 @@ function bb_emails_register_core_meta_fields( $registry, $component = 'emails' )
 				return '';
 			},
 			'save_value'        => function ( $post, $value ) {
-				if ( ! empty( $post->ID ) && ! empty( $value ) ) {
-					wp_set_object_terms( $post->ID, $value, bp_get_email_tax_type() );
+				if ( ! empty( $post->ID ) ) {
+					if ( ! empty( $value ) && term_exists( $value, bp_get_email_tax_type() ) ) {
+						wp_set_object_terms( $post->ID, $value, bp_get_email_tax_type() );
+					} else {
+						wp_set_object_terms( $post->ID, array(), bp_get_email_tax_type() );
+					}
 				}
 			},
 			'sanitize_callback' => 'sanitize_key',

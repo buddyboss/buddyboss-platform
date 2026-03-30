@@ -96,8 +96,8 @@ class BB_Admin_Invites_Ajax {
 		$page         = isset( $_POST['page'] ) ? absint( wp_unslash( $_POST['page'] ) ) : 1;
 		$per_page     = isset( $_POST['per_page'] ) ? absint( wp_unslash( $_POST['per_page'] ) ) : 20;
 		$search       = isset( $_POST['search'] ) ? sanitize_text_field( wp_unslash( $_POST['search'] ) ) : '';
-		$sort         = isset( $_POST['sort'] ) ? sanitize_text_field( wp_unslash( $_POST['sort'] ) ) : 'newest';
-		$filter       = isset( $_POST['filter'] ) ? sanitize_text_field( wp_unslash( $_POST['filter'] ) ) : 'all';
+		$sort         = isset( $_POST['sort'] ) ? sanitize_key( wp_unslash( $_POST['sort'] ) ) : 'newest';
+		$filter       = isset( $_POST['filter'] ) ? sanitize_key( wp_unslash( $_POST['filter'] ) ) : 'all';
 		$include_meta = isset( $_POST['include_meta'] ) ? absint( wp_unslash( $_POST['include_meta'] ) ) : 0;
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
@@ -163,6 +163,9 @@ class BB_Admin_Invites_Ajax {
 			cache_users( $author_ids );
 		}
 
+		// Check custom registration once before the loop (avoids per-item call).
+		$is_custom_registration = bp_allow_custom_registration() && '' !== bp_custom_register_page_url();
+
 		// Build items.
 		$items = array();
 		foreach ( $posts as $post ) {
@@ -191,17 +194,21 @@ class BB_Admin_Invites_Ajax {
 				'status'          => $is_registered ? 'registered' : 'pending',
 				'status_label'    => $is_registered
 					? __( 'Registered', 'buddyboss' )
-					: __( 'Pending', 'buddyboss' ),
+					: ( $is_custom_registration
+						? __( 'Invited', 'buddyboss' )
+						: __( 'Pending', 'buddyboss' )
+					),
 				'date_invited'    => get_the_date( 'd M Y H:i', $post ),
-				'can_revoke'      => ! $is_registered,
+				'can_revoke'      => ! $is_registered && ! $is_custom_registration,
 				'view_url'        => bp_core_get_user_domain( $author_id ),
 				'edit_url'        => admin_url( 'user-edit.php?user_id=' . $author_id ),
 			);
 		}
 
 		$response = array(
-			'items' => $items,
-			'total' => $total,
+			'items'       => $items,
+			'total'       => $total,
+			'total_pages' => $per_page > 0 ? (int) ceil( $total / $per_page ) : 1,
 		);
 
 		// Include columns, bulk actions, and views on first load (include_meta = 1).
@@ -254,8 +261,14 @@ class BB_Admin_Invites_Ajax {
 		$ids    = isset( $_POST['invite_ids'] ) ? sanitize_text_field( wp_unslash( $_POST['invite_ids'] ) ) : '';
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
-		if ( empty( $action ) || empty( $ids ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid request.', 'buddyboss' ) ) );
+		// Validate action against allowlist.
+		$allowed_actions = array( 'revoke' );
+		if ( empty( $action ) || ! in_array( $action, $allowed_actions, true ) ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid action.', 'buddyboss' ) ) );
+		}
+
+		if ( empty( $ids ) ) {
+			wp_send_json_error( array( 'message' => __( 'No invites selected.', 'buddyboss' ) ) );
 		}
 
 		$id_array = array_map( 'absint', array_filter( explode( ',', $ids ) ) );
@@ -269,6 +282,12 @@ class BB_Admin_Invites_Ajax {
 		$post_type = bp_get_invite_post_type();
 
 		if ( 'revoke' === $action ) {
+			// Prime post and meta caches to avoid N+1 queries.
+			if ( function_exists( '_prime_post_caches' ) ) {
+				_prime_post_caches( $id_array, false, false );
+			}
+			update_postmeta_cache( $id_array );
+
 			$revoked = 0;
 			foreach ( $id_array as $post_id ) {
 				$post = get_post( $post_id );
@@ -299,6 +318,7 @@ class BB_Admin_Invites_Ajax {
 						$revoked
 					),
 					'revoked' => $revoked,
+					'views'   => $this->bb_get_invite_views(),
 				)
 			);
 		}

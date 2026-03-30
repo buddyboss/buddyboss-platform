@@ -111,6 +111,9 @@ export function EmailTemplateBulkEditModal( { isOpen, selectedItems, onClose, on
 	};
 
 	var handleSave = function () {
+		if ( isSaving ) {
+			return;
+		}
 		if ( ! status && ! emailType ) {
 			setError( __( 'Please select at least one change to apply.', 'buddyboss' ) );
 			return;

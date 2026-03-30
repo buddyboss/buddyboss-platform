@@ -16,6 +16,7 @@ import {
 	DropdownMenu,
 	MenuGroup,
 	MenuItem,
+	Modal,
 	SelectControl,
 	Spinner,
 } from '@wordpress/components';
@@ -112,6 +113,14 @@ export default function InvitesListScreen( props ) {
 	var stateToast = useState( null );
 	var toast = stateToast[0];
 	var setToast = stateToast[1];
+
+	var revokeConfirmState = useState( false );
+	var revokeConfirmOpen = revokeConfirmState[0];
+	var setRevokeConfirmOpen = revokeConfirmState[1];
+
+	var revokeConfirmIdsState = useState( [] );
+	var revokeConfirmIds = revokeConfirmIdsState[0];
+	var setRevokeConfirmIds = revokeConfirmIdsState[1];
 
 	var abortRef = useRef( null );
 	var searchTimerRef = useRef( null );
@@ -332,6 +341,9 @@ export default function InvitesListScreen( props ) {
 					setToast( { status: 'success', message: response.data.message } );
 					setSelectedIds( [] );
 					setBulkAction( '' );
+					if ( response.data.views ) {
+						setViews( response.data.views );
+					}
 					isFirstLoad.current = true;
 					fetchInvites( { fetchPage: page, fetchSort: sort, fetchSearch: search, fetchFilter: filter } );
 				} else {
@@ -358,9 +370,10 @@ export default function InvitesListScreen( props ) {
 		}
 
 		if ( 'revoke' === bulkAction ) {
-			performRevoke( selectedIds );
+			setRevokeConfirmIds( selectedIds );
+			setRevokeConfirmOpen( true );
 		}
-	}, [ bulkAction, selectedIds, bulkProcessing, performRevoke ] );
+	}, [ bulkAction, selectedIds, bulkProcessing ] );
 
 	var allSelected = items.length > 0 && items.every( function( item ) {
 		return -1 !== selectedIds.indexOf( item.id );
@@ -589,7 +602,8 @@ export default function InvitesListScreen( props ) {
 																	isDestructive
 																	onClick={ function() {
 																		onClose();
-																		performRevoke( [ item.id ] );
+																		setRevokeConfirmIds( [ item.id ] );
+																		setRevokeConfirmOpen( true );
 																	} }
 																>
 																	<i className="bb-icons-rl bb-icons-rl-trash"></i>
@@ -629,6 +643,44 @@ export default function InvitesListScreen( props ) {
 						onDismiss={ function() { setToast( null ); } }
 					/>
 				</div>
+			) }
+
+			{/* Revoke confirmation modal */}
+			{ revokeConfirmOpen && revokeConfirmIds.length > 0 && (
+				<Modal
+					title={ __( 'Revoke Invite', 'buddyboss' ) }
+					onRequestClose={ function () { setRevokeConfirmOpen( false ); } }
+					className="bb-admin-settings-modal bb-invites-revoke-modal"
+					shouldCloseOnClickOutside={ false }
+				>
+					<div className="bb-admin-settings-modal__body">
+						<p>
+							{ 1 === revokeConfirmIds.length
+								? __( 'Are you sure you want to revoke this invitation?', 'buddyboss' )
+								: __( 'Are you sure you want to revoke all selected invitations?', 'buddyboss' )
+							}
+						</p>
+					</div>
+					<div className="bb-admin-settings-modal__footer">
+						<Button
+							variant="secondary"
+							onClick={ function () { setRevokeConfirmOpen( false ); } }
+							disabled={ bulkProcessing }
+						>
+							{ __( 'Cancel', 'buddyboss' ) }
+						</Button>
+						<Button
+							className="bb-admin-button-danger"
+							onClick={ function () {
+								setRevokeConfirmOpen( false );
+								performRevoke( revokeConfirmIds );
+							} }
+							isBusy={ bulkProcessing }
+						>
+							{ __( 'Revoke', 'buddyboss' ) }
+						</Button>
+					</div>
+				</Modal>
 			) }
 		</div>
 	);

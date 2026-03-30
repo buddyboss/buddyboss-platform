@@ -198,6 +198,10 @@ function bb_admin_settings_page() {
 		$localize_data['reportedContentTypes'] = $content_types;
 	}
 
+	// Repair tools nonce — used by Email Missing modal to call existing
+	// bp_admin_repair_tools_wrapper_function AJAX action.
+	$localize_data['repairNonce'] = wp_create_nonce( 'bp-do-counts' );
+
 	// Only expose debug data when WP_DEBUG is enabled.
 	if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 		$registry               = bb_feature_registry();
