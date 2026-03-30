@@ -29,28 +29,7 @@
 	}
 
 	&__customize-btn {
-		display: inline-flex;
-		align-items: center;
-		gap: 8px;
-		padding: 6px 16px;
-		min-height: 32px;
-		font-size: 13px;
-		font-weight: 400;
-		color: $bb-text-color;
-		background-color: $bb-background-primary-color;
-		border: 0.5px solid $bb-border-secondary-color;
-		border-radius: $bb-border-radius-lg;
-		text-decoration: none;
-		cursor: pointer;
-
-		&:hover {
-			background-color: $bb-background-primary-hover-color;
-			color: $bb-text-color;
-		}
-
-		i {
-			font-size: 16px;
-		}
+		@include bb-button-secondary;
 	}
 
 	&__create-btn.is-primary {
@@ -176,15 +155,16 @@
 	}
 
 	// Date column
-	&__td--date {
-		white-space: nowrap;
+	&__td--date[class] {
+		display: flex;
+		align-items: center;
 		color: $bb-text-tertiary-color;
+		white-space: nowrap;
 
 		i {
 			font-size: 16px;
 			color: $bb-icon-tertiary-color;
 			margin-right: 8px;
-			vertical-align: middle;
 		}
 	}
 
