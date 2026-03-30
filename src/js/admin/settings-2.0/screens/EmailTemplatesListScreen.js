@@ -102,6 +102,10 @@ export default function EmailTemplatesListScreen( props ) {
 	var filter = stateFilter[0];
 	var setFilter = stateFilter[1];
 
+	// Ref for filter so fetchTemplates always reads the latest value without re-creating the callback.
+	var filterRef = useRef( filter );
+	filterRef.current = filter;
+
 	var stateViews = useState( null );
 	var views = stateViews[0];
 	var setViews = stateViews[1];
@@ -174,7 +178,7 @@ export default function EmailTemplatesListScreen( props ) {
 		var fetchPage = params.fetchPage || 1;
 		var fetchSort = params.fetchSort || 'newest';
 		var fetchSearch = params.fetchSearch !== undefined ? params.fetchSearch : '';
-		var fetchFilter = params.fetchFilter !== undefined ? params.fetchFilter : filter;
+		var fetchFilter = params.fetchFilter !== undefined ? params.fetchFilter : filterRef.current;
 
 		// Cancel any stale request.
 		if ( abortRef.current ) {

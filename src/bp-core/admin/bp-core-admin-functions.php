@@ -2051,44 +2051,6 @@ function bb_discussion_page_show_notice_in_avatar_section() {
 	}
 }
 
-/**
- * Add Navigation tab on top of the page BuddyBoss > Emails
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_emails_admin_email_listing_add_tab() {
-	global $pagenow, $current_screen;
-
-	if ( ( isset( $current_screen->post_type ) && $current_screen->post_type == bp_get_email_post_type() && $pagenow == 'edit.php' ) || ( isset( $current_screen->post_type ) && $current_screen->post_type == bp_get_email_post_type() && $pagenow == 'post-new.php' ) || ( isset( $current_screen->post_type ) && $current_screen->post_type == bp_get_email_post_type() && $pagenow == 'post.php' ) ) {
-		?>
-		<div class="wrap">
-			<h2 class="nav-tab-wrapper"><?php bp_core_admin_emails_tabs( __( 'Emails', 'buddyboss' ) ); ?></h2>
-		</div>
-		<?php
-	}
-
-}
-
-add_action( 'admin_notices', 'bp_emails_admin_email_listing_add_tab' );
-
-add_filter( 'parent_file', 'bp_set_emails_platform_tab_submenu_active' );
-/**
- * Highlights the submenu item using WordPress native styles.
- *
- * @param string $parent_file The filename of the parent menu.
- *
- * @return string $parent_file The filename of the parent menu.
- */
-function bp_set_emails_platform_tab_submenu_active( $parent_file ) {
-	global $pagenow, $current_screen;
-
-	if ( ( isset( $current_screen->post_type ) && $current_screen->post_type == bp_get_email_post_type() && $pagenow == 'edit.php' ) || ( isset( $current_screen->post_type ) && $current_screen->post_type == bp_get_email_post_type() && $pagenow == 'post-new.php' ) || ( isset( $current_screen->post_type ) && $current_screen->post_type == bp_get_email_post_type() && $pagenow == 'post.php' ) ) {
-		$parent_file = 'buddyboss-platform';
-	}
-
-	return $parent_file;
-}
-
 // Functions bp_core_admin_groups_tabs() and bp_core_get_groups_admin_tabs()
 // moved to bp-core/deprecated/buddyboss/3.0.0.php
 

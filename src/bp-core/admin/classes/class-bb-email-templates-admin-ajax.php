@@ -499,6 +499,7 @@ class BB_Email_Templates_Admin_Ajax {
 		$post_data = array(
 			'post_type'     => $email_post_type,
 			'post_title'    => $post->post_title,
+			'post_name'     => $post->post_name,
 			'post_content'  => $post->post_content,
 			'post_excerpt'  => $post->post_excerpt,
 			'post_status'   => $post->post_status,
