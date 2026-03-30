@@ -73,10 +73,9 @@
 	&__sender-name {
 		color: $bb-link-color;
 		text-decoration: none;
-		font-weight: 500;
 
 		&:hover {
-			text-decoration: underline;
+			color: $bb-link-color;
 		}
 	}
 
@@ -88,7 +87,17 @@
 		}
 	}
 
-	// Date cell — icon + text inline with gap.
+	&__th--sender[class] {
+		color: $bb-text-color;
+		font-size: 14px;
+		font-weight: 400;
+		width: 22%;
+	}
+
+	&__th--email[class] {
+		width: 24%;
+	}
+
 	&__td--date {
 		display: flex;
 		align-items: center;
@@ -101,29 +110,26 @@
 		}
 	}
 
-	// Status badge — pill style.
 	&__status-badge {
 		display: inline-flex;
 		align-items: center;
-		padding: 2px 8px;
-		font-size: 12px;
+		padding: 0 6px;
+		font-size: 11px;
 		font-weight: 500;
 		border-radius: $bb-border-radius-full;
 		border: 1px solid $bb-border-tertiary-color;
 		color: $bb-text-tertiary-color;
 		background-color: $bb-background-primary-color;
 
-		// Approved — green pill.
 		&--approved {
 			color: $bb-text-positive-primary-color;
 			background-color: $bb-background-positive-primary-color;
 			border-color: $bb-border-positive-secondary-color;
 		}
 
-		// Pending — gray pill (default).
 		&--pending {
-			color: $bb-text-tertiary-color;
-			background-color: $bb-background-primary-color;
+			color: $bb-text-positive-primary-color;
+			background-color: $bb-background-secondary-color;
 			border-color: $bb-border-tertiary-color;
 		}
 	}
