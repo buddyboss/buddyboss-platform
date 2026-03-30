@@ -520,7 +520,16 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 								{ __( '+ Add Custom Field', 'buddyboss' ) }
 							</Button>
 							<p className="bb-email-template-modal__field-help">
-								{ __( 'Custom fields can be used to add extra metadata to a post that you can use in your theme.', 'buddyboss' ) }
+								{ __( 'Custom fields can be used to add extra metadata to a post that you can', 'buddyboss' ) }
+								{ ' ' }
+								<a
+									href="https://wordpress.org/documentation/article/assign-custom-fields/"
+									target="_blank"
+									rel="noopener noreferrer"
+								>
+									{ __( 'use in your theme', 'buddyboss' ) }
+								</a>
+								{ '.' }
 							</p>
 						</div>
 

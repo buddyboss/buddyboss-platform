@@ -51,13 +51,49 @@ function bb_emails_register_core_meta_fields( $registry, $component = 'emails' )
 		)
 	);
 
-	// 2. Description (HTML body — rich text with {{token}} support).
+	// 2. Slug / Permalink (edit only — auto-generated from title on create).
+	$registry->register(
+		$component,
+		'slug',
+		array(
+			'label'             => __( 'Permalink', 'buddyboss' ),
+			'type'              => 'permalink',
+			'tab'               => 'details',
+			'order'             => 15,
+			'save_phase'        => 'before',
+			'is_visible'        => function ( $post ) {
+				return ! empty( $post->ID );
+			},
+			'get_value'         => function ( $post ) {
+				return $post->post_name;
+			},
+			'get_extra_data'    => function ( $post ) {
+				if ( empty( $post->ID ) ) {
+					return array( 'base_url' => '' );
+				}
+
+				$permalink = get_permalink( $post->ID );
+				$slug      = $post->post_name;
+				$base_url  = $slug ? str_replace( $slug . '/', '', $permalink ) : $permalink;
+
+				return array(
+					'base_url' => $base_url,
+				);
+			},
+			'save_value'        => function ( $post, $value ) {
+				$post->post_name = sanitize_title( $value );
+			},
+			'sanitize_callback' => 'sanitize_title',
+		)
+	);
+
+	// 3. Description (HTML body — rich text with {{token}} support).
 	$registry->register(
 		$component,
 		'content',
 		array(
 			'label'             => __( 'Description', 'buddyboss' ),
-			'description'       => __( 'Phrases wrapped in braces {{ }} are email tokens.', 'buddyboss' ),
+			'description'       => __( 'Phrases wrapped in braces {{ }} are email tokens. Learn about email tokens.', 'buddyboss' ),
 			'type'              => 'richtext',
 			'tab'               => 'details',
 			'order'             => 20,
@@ -78,7 +114,7 @@ function bb_emails_register_core_meta_fields( $registry, $component = 'emails' )
 		'excerpt',
 		array(
 			'label'             => __( 'Plain Text Email Content (Optional)', 'buddyboss' ),
-			'description'       => __( 'Most email clients support HTML. For text-only clients, enter a plain text version.', 'buddyboss' ),
+			'description'       => __( 'Most email clients support HTML email. However, some people prefer to receive plain text email. Enter a plain text alternative version of your email here.', 'buddyboss' ),
 			'type'              => 'textarea',
 			'tab'               => 'details',
 			'order'             => 30,

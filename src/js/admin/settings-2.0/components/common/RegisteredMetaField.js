@@ -364,6 +364,9 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 					value={ null != value ? String( value ) : '' }
 					onChange={ isDisabled ? function () {} : onChange }
 				/>
+				{ field.description && (
+					<p className="bb-admin-meta-field__description">{ field.description }</p>
+				) }
 			</div>
 		);
 	}

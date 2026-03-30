@@ -15,7 +15,7 @@
 	&__header {
 		display: flex;
 		align-items: center;
-		justify-content: space-between;
+		gap: 16px;
 		border-bottom: 1px solid $bb-border-secondary-color;
 		padding: 18px 0;
 		margin-bottom: 24px;
@@ -28,9 +28,35 @@
 		margin: 0;
 	}
 
+	&__customize-btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 6px 16px;
+		min-height: 32px;
+		font-size: 13px;
+		font-weight: 400;
+		color: $bb-text-color;
+		background-color: $bb-background-primary-color;
+		border: 0.5px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-lg;
+		text-decoration: none;
+		cursor: pointer;
+
+		&:hover {
+			background-color: $bb-background-primary-hover-color;
+			color: $bb-text-color;
+		}
+
+		i {
+			font-size: 16px;
+		}
+	}
+
 	&__create-btn.is-primary {
 		@include bb-button-primary;
 		text-decoration: none;
+		margin-left: auto;
 
 		i {
 			font-size: 16px;
@@ -58,8 +84,8 @@
 		@include bb-button-primary-outline;
 	}
 
-	// Count badge (styled as a dropdown-like select)
-	&__count-badge {
+	// Status filter dropdown.
+	&__filter-select {
 		white-space: nowrap;
 
 		.components-select-control {

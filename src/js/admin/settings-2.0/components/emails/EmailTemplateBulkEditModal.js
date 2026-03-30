@@ -11,8 +11,10 @@ import { useState, useEffect, useRef } from '@wordpress/element';
 import {
 	Modal,
 	Button,
+	CheckboxControl,
 	SelectControl,
 	TabPanel,
+	Spinner,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
@@ -34,6 +36,10 @@ var situationsCache = null;
  * @returns {JSX.Element|null} Modal or null.
  */
 export function EmailTemplateBulkEditModal( { isOpen, selectedItems, onClose, onSaved } ) {
+	var localItemsState = useState( [] );
+	var localItems = localItemsState[0];
+	var setLocalItems = localItemsState[1];
+
 	var statusState = useState( '' );
 	var status = statusState[0];
 	var setStatus = statusState[1];
@@ -62,6 +68,13 @@ export function EmailTemplateBulkEditModal( { isOpen, selectedItems, onClose, on
 			isMountedRef.current = false;
 		};
 	}, [] );
+
+	// Sync local items from parent selection when modal opens.
+	useEffect( function () {
+		if ( isOpen && selectedItems ) {
+			setLocalItems( selectedItems );
+		}
+	}, [ isOpen, selectedItems ] );
 
 	// Fetch situations.
 	useEffect( function () {
@@ -93,6 +106,7 @@ export function EmailTemplateBulkEditModal( { isOpen, selectedItems, onClose, on
 		setStatus( '' );
 		setEmailType( '' );
 		setError( '' );
+		setLocalItems( [] );
 		onClose();
 	};
 
@@ -106,7 +120,7 @@ export function EmailTemplateBulkEditModal( { isOpen, selectedItems, onClose, on
 		setError( '' );
 
 		bulkEditEmailTemplates( {
-			email_ids: selectedItems.map( function ( item ) { return item.id; } ).join( ',' ),
+			email_ids: localItems.map( function ( item ) { return item.id; } ).join( ',' ),
 			status: status,
 			email_type: emailType,
 		} ).then( function ( response ) {
@@ -164,18 +178,40 @@ export function EmailTemplateBulkEditModal( { isOpen, selectedItems, onClose, on
 				) }
 
 				{/* Selected items */}
-				<div className="bb-email-template-modal__selected-items">
-					{ selectedItems.map( function ( item ) {
+				<div className="bb-admin-bulk-modal__selected-items">
+					{ localItems.map( function ( item ) {
 						return (
-							<div key={ item.id } className="bb-email-template-modal__selected-item">
-								<i className="bb-icons-rl bb-icons-rl-envelope-simple" />
-								<span>{ decodeEntities( item.title ) }</span>
+							<div key={ item.id } className="bb-admin-bulk-modal__selected-item">
+								<CheckboxControl
+									checked={ true }
+									onChange={ function () {
+										setLocalItems( function ( prev ) {
+											return prev.filter( function ( i ) {
+												return i.id !== item.id;
+											} );
+										} );
+									} }
+									__nextHasNoMarginBottom
+								/>
+								<span className="bb-admin-bulk-modal__selected-item-name">
+									{ decodeEntities( item.title ) }
+								</span>
 							</div>
 						);
 					} ) }
 				</div>
 
 				{/* Situation tabs */}
+				{ ! situations && (
+					<div className="bb-email-template-modal__field bb-email-template-modal__situation">
+						<label className="bb-email-template-modal__field-label">
+							{ __( 'Situation', 'buddyboss' ) }
+						</label>
+						<div className="bb-email-template-modal__loading">
+							<Spinner />
+						</div>
+					</div>
+				) }
 				{ situationTabs.length > 0 && (
 					<div className="bb-email-template-modal__field bb-email-template-modal__situation">
 						<label className="bb-email-template-modal__field-label">
@@ -193,12 +229,10 @@ export function EmailTemplateBulkEditModal( { isOpen, selectedItems, onClose, on
 											return (
 												<label key={ term.slug } className="bb-email-template-modal__situation-item">
 													<input
-														type="radio"
-														name="bb_bulk_email_situation"
-														value={ term.slug }
+														type="checkbox"
 														checked={ emailType === term.slug }
 														onChange={ function () {
-															setEmailType( term.slug );
+															setEmailType( emailType === term.slug ? '' : term.slug );
 														} }
 													/>
 													<span>{ decodeEntities( term.description || term.slug ) }</span>
@@ -209,11 +243,14 @@ export function EmailTemplateBulkEditModal( { isOpen, selectedItems, onClose, on
 								);
 							} }
 						</TabPanel>
+						<p className="bb-email-template-modal__field-help">
+							{ __( 'Choose when this email will be sent.', 'buddyboss' ) }
+						</p>
 					</div>
 				) }
 
 				{/* Status */}
-				<div className="bb-email-template-modal__field">
+				<div className="bb-email-template-modal__field bb-email-template-modal__publish-fields">
 					<SelectControl
 						label={ __( 'Status', 'buddyboss' ) }
 						value={ status }
@@ -228,7 +265,7 @@ export function EmailTemplateBulkEditModal( { isOpen, selectedItems, onClose, on
 				<Button variant="secondary" onClick={ handleClose } disabled={ isSaving }>
 					{ __( 'Cancel', 'buddyboss' ) }
 				</Button>
-				<Button variant="primary" onClick={ handleSave } isBusy={ isSaving } disabled={ isSaving }>
+				<Button variant="primary" onClick={ handleSave } isBusy={ isSaving } disabled={ isSaving || 0 === localItems.length }>
 					{ isSaving ? __( 'Saving...', 'buddyboss' ) : __( 'Save', 'buddyboss' ) }
 				</Button>
 			</div>

@@ -85,15 +85,16 @@ class BB_Email_Templates_Admin_Ajax {
 		bb_admin_verify_ajax_request( self::NONCE_ACTION );
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_admin_verify_ajax_request() above.
-		$page         = isset( $_POST['page'] ) ? absint( wp_unslash( $_POST['page'] ) ) : 1;
-		$per_page     = isset( $_POST['per_page'] ) ? absint( wp_unslash( $_POST['per_page'] ) ) : 20;
-		$search       = isset( $_POST['search'] ) ? sanitize_text_field( wp_unslash( $_POST['search'] ) ) : '';
-		$sort         = isset( $_POST['sort'] ) ? sanitize_key( wp_unslash( $_POST['sort'] ) ) : 'newest';
-		$include_meta = isset( $_POST['include_meta'] ) ? absint( wp_unslash( $_POST['include_meta'] ) ) : 0;
+		$page          = isset( $_POST['page'] ) ? absint( wp_unslash( $_POST['page'] ) ) : 1;
+		$per_page      = isset( $_POST['per_page'] ) ? absint( wp_unslash( $_POST['per_page'] ) ) : 20;
+		$search        = isset( $_POST['search'] ) ? sanitize_text_field( wp_unslash( $_POST['search'] ) ) : '';
+		$sort          = isset( $_POST['sort'] ) ? sanitize_key( wp_unslash( $_POST['sort'] ) ) : 'newest';
+		$status_filter = isset( $_POST['status_filter'] ) ? sanitize_key( wp_unslash( $_POST['status_filter'] ) ) : 'all';
+		$include_meta  = isset( $_POST['include_meta'] ) ? absint( wp_unslash( $_POST['include_meta'] ) ) : 0;
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		// Validate sort.
-		$allowed_sorts = array( 'newest', 'oldest' );
+		$allowed_sorts = array( 'newest', 'oldest', 'last_modified' );
 		if ( ! in_array( $sort, $allowed_sorts, true ) ) {
 			$sort = 'newest';
 		}
@@ -110,6 +111,12 @@ class BB_Email_Templates_Admin_Ajax {
 			'post_status'    => 'any',
 		);
 
+		// Apply status filter.
+		$allowed_filters = array( 'publish', 'draft', 'pending', 'private', 'future' );
+		if ( 'all' !== $status_filter && in_array( $status_filter, $allowed_filters, true ) ) {
+			$query_args['post_status'] = $status_filter;
+		}
+
 		// Search by title.
 		if ( ! empty( $search ) ) {
 			$query_args['s'] = $search;
@@ -119,6 +126,9 @@ class BB_Email_Templates_Admin_Ajax {
 		if ( 'oldest' === $sort ) {
 			$query_args['orderby'] = 'date';
 			$query_args['order']   = 'ASC';
+		} elseif ( 'last_modified' === $sort ) {
+			$query_args['orderby'] = 'modified';
+			$query_args['order']   = 'DESC';
 		} else {
 			$query_args['orderby'] = 'date';
 			$query_args['order']   = 'DESC';
@@ -198,6 +208,7 @@ class BB_Email_Templates_Admin_Ajax {
 				'post_status'  => $email_post_status,
 				'date'         => get_the_date( 'j M, H:i:s', $email_id ),
 				'email_type'   => $email_type,
+				'permalink'    => get_permalink( $email_id ),
 			);
 
 			// Render custom columns via filter (e.g., WPML language flags).
@@ -228,10 +239,23 @@ class BB_Email_Templates_Admin_Ajax {
 		// End output buffer.
 		ob_end_clean();
 
+		// Status counts for filter dropdown.
+		$email_post_type_name = bp_get_email_post_type();
+		$status_counts        = wp_count_posts( $email_post_type_name );
+
 		$response = array(
 			'items'       => $items,
 			'total'       => $total,
 			'total_pages' => (int) ceil( $total / $per_page ),
+			'views'       => array(
+				'all'     => ( isset( $status_counts->publish ) ? (int) $status_counts->publish : 0 )
+							+ ( isset( $status_counts->draft ) ? (int) $status_counts->draft : 0 )
+							+ ( isset( $status_counts->pending ) ? (int) $status_counts->pending : 0 )
+							+ ( isset( $status_counts->future ) ? (int) $status_counts->future : 0 )
+							+ ( isset( $status_counts->private ) ? (int) $status_counts->private : 0 ),
+				'publish' => isset( $status_counts->publish ) ? (int) $status_counts->publish : 0,
+				'draft'   => isset( $status_counts->draft ) ? (int) $status_counts->draft : 0,
+			),
 		);
 
 		// Include metadata on first request.

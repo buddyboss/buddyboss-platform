@@ -232,6 +232,9 @@
 
 	// Selected items (bulk modals).
 	&__selected-items {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
 		margin-bottom: 20px;
 	}
 
@@ -242,13 +245,22 @@
 		padding: 8px 12px;
 		border: 1px solid $bb-border-tertiary-color;
 		border-radius: $bb-border-radius-md;
-		margin-bottom: 4px;
 		font-size: 13px;
 		color: $bb-text-color;
 
 		i {
 			color: $bb-icon-tertiary-color;
 			font-size: 16px;
+		}
+
+		&--checked {
+			border: none;
+			padding: 4px 0;
+
+			i {
+				color: $bb-error-color;
+				font-size: 20px;
+			}
 		}
 
 		&--destructive {
