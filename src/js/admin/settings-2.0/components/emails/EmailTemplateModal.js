@@ -515,25 +515,27 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 										</div>
 									);
 								} ) }
-							</div>
-							<Button
-								onClick={ handleAddCustomField }
-								className="bb-email-template-modal__add-custom-field"
-							>
-								{ __( '+ Add Custom Field', 'buddyboss' ) }
-							</Button>
-							<p className="bb-email-template-modal__field-help">
-								{ __( 'Custom fields can be used to add extra metadata to a post that you can', 'buddyboss' ) }
-								{ ' ' }
-								<a
-									href="https://wordpress.org/documentation/article/assign-custom-fields/"
-									target="_blank"
-									rel="noopener noreferrer"
+								<Button
+									onClick={ handleAddCustomField }
+									className="bb-email-template-modal__add-custom-field"
+									variant="tertiary"
 								>
-									{ __( 'use in your theme', 'buddyboss' ) }
-								</a>
-								{ '.' }
-							</p>
+									<i className="bb-icons-rl-plus"></i>
+									{ __( 'Add Custom Field', 'buddyboss' ) }
+								</Button>
+								<p className="bb-email-template-modal__field-help">
+									{ __( 'Custom fields can be used to add extra metadata to a post that you can', 'buddyboss' ) }
+									{ ' ' }
+									<a
+										href="https://wordpress.org/documentation/article/assign-custom-fields/"
+										target="_blank"
+										rel="noopener noreferrer"
+									>
+										{ __( 'use in your theme', 'buddyboss' ) }
+									</a>
+									{ '.' }
+								</p>
+							</div>
 						</div>
 
 						{/* Situation — Tabbed checkboxes (acting as radio, single-select) */}
@@ -594,7 +596,7 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 
 									if ( 'row' === item.type ) {
 										return (
-											<div key={ 'pub-row-' + idx } className={ 'bb-admin-meta-field__row bb-admin-settings-modal__row' + ( hasSeparator ? ' bb-admin-settings-modal__row--separator' : '' ) }>
+											<div key={ 'pub-row-' + idx } className={ 'bb-admin-meta-field__row bb-admin-settings-modal__row bb-admin-settings-modal__row--separator'}>
 												{ item.fields.map( function ( field ) {
 													return (
 														<RegisteredMetaField
