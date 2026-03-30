@@ -217,7 +217,8 @@
 		color: $bb-text-color;
 		cursor: pointer;
 
-		input[type="radio"] {
+		input[type="radio"],
+		input[type="checkbox"] {
 			margin-top: 2px;
 			flex-shrink: 0;
 		}
@@ -302,18 +303,3 @@
 	}
 }
 
-// Danger button for delete.
-.bb-admin-button-danger {
-	background-color: $bb-error-color !important;
-	color: $bb-text-inverse-color !important;
-	border-color: $bb-error-color !important;
-
-	&:hover {
-		opacity: 0.9;
-	}
-
-	&:disabled {
-		opacity: 0.5;
-		cursor: not-allowed;
-	}
-}

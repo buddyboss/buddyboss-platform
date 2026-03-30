@@ -183,7 +183,7 @@ class BB_Email_Templates_Admin_Ajax {
 			$email_type  = $term ? $term->slug : '';
 
 			// Build status label for non-published items.
-			$email_post_status = get_post_status( $email_id );
+			$email_post_status = $email_post->post_status;
 			$status_label      = '';
 			if ( isset( $status_labels_map[ $email_post_status ] ) ) {
 				$status_label = $status_labels_map[ $email_post_status ];
@@ -197,7 +197,6 @@ class BB_Email_Templates_Admin_Ajax {
 				'status_label' => $status_label,
 				'post_status'  => $email_post_status,
 				'date'         => get_the_date( 'j M, H:i:s', $email_id ),
-				'edit_url'     => get_edit_post_link( $email_id, 'raw' ),
 				'email_type'   => $email_type,
 			);
 
@@ -278,6 +277,7 @@ class BB_Email_Templates_Admin_Ajax {
 
 		wp_send_json_success( $response );
 	}
+
 	/**
 	 * Perform bulk action on email templates.
 	 *
@@ -316,6 +316,11 @@ class BB_Email_Templates_Admin_Ajax {
 		$email_post_type = bp_get_email_post_type();
 		$processed       = 0;
 		$failed          = 0;
+
+		// Prime post cache to avoid N+1 queries in the loop.
+		if ( function_exists( '_prime_post_caches' ) ) {
+			_prime_post_caches( $email_ids, false, false );
+		}
 
 		foreach ( $email_ids as $email_id ) {
 			$post = get_post( $email_id );
@@ -518,6 +523,10 @@ class BB_Email_Templates_Admin_Ajax {
 		$saved_id   = absint( $result );
 		$saved_post = get_post( $saved_id );
 
+		if ( ! $saved_post ) {
+			wp_send_json_error( array( 'message' => __( 'Failed to retrieve saved email template.', 'buddyboss' ) ) );
+		}
+
 		// Apply "after" phase — saves taxonomy terms, post meta, etc.
 		$registry->save_fields_data( 'emails', $saved_post, 'after' );
 
@@ -531,7 +540,7 @@ class BB_Email_Templates_Admin_Ajax {
 					continue;
 				}
 				$meta_key   = sanitize_key( $meta_item['key'] );
-				$meta_value = sanitize_text_field( $meta_item['value'] ?? '' );
+				$meta_value = sanitize_text_field( isset( $meta_item['value'] ) ? $meta_item['value'] : '' );
 
 				if ( 0 === strpos( $meta_key, '_' ) || 'bp_email_preheader' === $meta_key ) {
 					continue;
@@ -592,9 +601,14 @@ class BB_Email_Templates_Admin_Ajax {
 		}
 
 		$email_ids       = array_filter( array_map( 'absint', explode( ',', $raw_ids ) ) );
-		$email_ids        = array_slice( $email_ids, 0, self::BULK_CAP );
+		$email_ids       = array_slice( $email_ids, 0, self::BULK_CAP );
 		$email_post_type = bp_get_email_post_type();
 		$deleted         = 0;
+
+		// Prime post cache to avoid N+1 queries in the loop.
+		if ( function_exists( '_prime_post_caches' ) ) {
+			_prime_post_caches( $email_ids, false, false );
+		}
 
 		foreach ( $email_ids as $email_id ) {
 			$post = get_post( $email_id );
@@ -602,8 +616,14 @@ class BB_Email_Templates_Admin_Ajax {
 				continue;
 			}
 
-			wp_delete_post( $email_id, true );
-			++$deleted;
+			$result = wp_delete_post( $email_id, true );
+			if ( $result ) {
+				++$deleted;
+			}
+		}
+
+		if ( 0 === $deleted ) {
+			wp_send_json_error( array( 'message' => __( 'No email templates were deleted.', 'buddyboss' ) ) );
 		}
 
 		wp_send_json_success(
@@ -644,7 +664,7 @@ class BB_Email_Templates_Admin_Ajax {
 		}
 
 		$email_ids       = array_filter( array_map( 'absint', explode( ',', $raw_ids ) ) );
-		$email_ids        = array_slice( $email_ids, 0, self::BULK_CAP );
+		$email_ids       = array_slice( $email_ids, 0, self::BULK_CAP );
 		$email_post_type = bp_get_email_post_type();
 
 		// Validate status if provided.
@@ -655,6 +675,11 @@ class BB_Email_Templates_Admin_Ajax {
 
 		$updated = 0;
 
+		// Prime post cache to avoid N+1 queries in the loop.
+		if ( function_exists( '_prime_post_caches' ) ) {
+			_prime_post_caches( $email_ids, false, false );
+		}
+
 		foreach ( $email_ids as $email_id ) {
 			$post = get_post( $email_id );
 			if ( ! $post || $email_post_type !== $post->post_type ) {
@@ -662,21 +687,35 @@ class BB_Email_Templates_Admin_Ajax {
 			}
 
 			// Update status if provided.
+			$has_update = false;
 			if ( ! empty( $new_status ) ) {
-				wp_update_post(
+				$result = wp_update_post(
 					array(
 						'ID'          => $email_id,
 						'post_status' => $new_status,
-					)
+					),
+					true
 				);
+				if ( ! is_wp_error( $result ) ) {
+					$has_update = true;
+				}
 			}
 
 			// Update situation if provided.
 			if ( ! empty( $email_type ) ) {
-				wp_set_object_terms( $email_id, $email_type, bp_get_email_tax_type() );
+				$term_result = wp_set_object_terms( $email_id, $email_type, bp_get_email_tax_type() );
+				if ( ! is_wp_error( $term_result ) ) {
+					$has_update = true;
+				}
 			}
 
-			++$updated;
+			if ( $has_update ) {
+				++$updated;
+			}
+		}
+
+		if ( 0 === $updated ) {
+			wp_send_json_error( array( 'message' => __( 'No email templates were updated.', 'buddyboss' ) ) );
 		}
 
 		wp_send_json_success(

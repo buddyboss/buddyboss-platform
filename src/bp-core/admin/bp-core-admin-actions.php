@@ -675,6 +675,12 @@ function bb_redirect_legacy_settings_to_settings_2() {
 		exit;
 	}
 
+	// Redirect legacy Email Templates CPT page (edit.php?post_type=bp-email).
+	if ( function_exists( 'bp_get_email_post_type' ) && bp_get_email_post_type() === $post_type ) {
+		wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=emails&panel=all_emails' ) );
+		exit;
+	}
+
 	// Check if we're on the old settings page.
 	if ( 'bp-settings' !== $page || empty( $tab ) ) {
 		return;

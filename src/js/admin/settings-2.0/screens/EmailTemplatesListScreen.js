@@ -22,7 +22,7 @@ import {
 import { __, sprintf } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { getEmailTemplates, emailTemplateBulkAction } from '../utils/ajax';
-import { safeUrl, sanitizeHtml } from '../utils/sanitize';
+import { sanitizeHtml } from '../utils/sanitize';
 import { getPageNumbers } from '../utils/pagination';
 import { Toast } from '../components/Toast';
 import { EmailTemplateModal } from '../components/emails/EmailTemplateModal';
@@ -65,8 +65,7 @@ var CORE_COLUMNS = [ 'title', 'description', 'date' ];
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param {Object}   props            Component props.
- * @param {Function} props.onNavigate Navigation callback.
+ * @param {Object} props Component props.
  * @returns {JSX.Element} The email templates list screen.
  */
 export default function EmailTemplatesListScreen( props ) {
@@ -101,10 +100,6 @@ export default function EmailTemplatesListScreen( props ) {
 	var stateIsLoading = useState( true );
 	var isLoading = stateIsLoading[0];
 	var setIsLoading = stateIsLoading[1];
-
-	var stateAddNewUrl = useState( '' );
-	var addNewUrl = stateAddNewUrl[0];
-	var setAddNewUrl = stateAddNewUrl[1];
 
 	var stateBulkActions = useState( {} );
 	var bulkActions = stateBulkActions[0];
@@ -201,10 +196,7 @@ export default function EmailTemplatesListScreen( props ) {
 					setTotal( response.data.total || 0 );
 					setTotalPages( response.data.total_pages || 0 );
 
-					if ( response.data.add_new_url ) {
-						setAddNewUrl( response.data.add_new_url );
-					}
-
+	
 					if ( response.data.bulk_actions ) {
 						setBulkActions( response.data.bulk_actions );
 					}

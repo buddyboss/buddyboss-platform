@@ -11,7 +11,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useEffect, useRef, useCallback, useMemo } from '@wordpress/element';
+import { useState, useEffect, useRef, useMemo } from '@wordpress/element';
 import {
 	Modal,
 	Button,
@@ -20,7 +20,7 @@ import {
 	Spinner,
 	Popover,
 } from '@wordpress/components';
-import { __, sprintf } from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { getEmailTemplate, saveEmailTemplate, getEmailSituations, getEmailMetaKeys } from '../../utils/ajax';
 import { groupFieldsWithLayout, buildRegisteredFieldPayload, getVisibleFields, needsSeparator } from '../../utils/format';
@@ -84,12 +84,20 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 	var setMetaKeys = metaKeysState[1];
 
 	var isMountedRef = useRef( true );
+	var registeredFieldsRef = useRef( registeredFields );
+	registeredFieldsRef.current = registeredFields;
 	var situationsCacheRef = useRef( null );
 
 	useEffect( function () {
 		isMountedRef.current = true;
 		return function () {
 			isMountedRef.current = false;
+			// Clean up TinyMCE editors on unmount (defensive — normally handled by handleClose).
+			registeredFieldsRef.current.forEach( function ( field ) {
+				if ( 'richtext' === field.type ) {
+					forceRemoveEditor( 'bb-admin-edit-' + field.id + '-' + ( emailId || 0 ) );
+				}
+			} );
 		};
 	}, [] );
 
@@ -262,9 +270,7 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 	var cleanupEditors = function () {
 		registeredFields.forEach( function ( field ) {
 			if ( 'richtext' === field.type ) {
-				var editorId = emailId
-					? 'bb-admin-edit-' + field.id + '-' + emailId
-					: 'bb-admin-create-email-' + field.id;
+				var editorId = 'bb-admin-edit-' + field.id + '-' + ( emailId || 0 );
 				forceRemoveEditor( editorId );
 			}
 		} );
@@ -342,8 +348,6 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 	var modalTitle = emailId
 		? __( 'Edit Email Template', 'buddyboss' )
 		: __( 'Add New Email', 'buddyboss' );
-
-	var itemId = emailId || 'new';
 
 	return (
 		<Modal
