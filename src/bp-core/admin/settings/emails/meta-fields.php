@@ -51,34 +51,18 @@ function bb_emails_register_core_meta_fields( $registry, $component = 'emails' )
 		)
 	);
 
-	// 2. Slug / Permalink (edit only — auto-generated from title on create).
+	// 2. Slug (optional — auto-generated from title if left empty).
 	$registry->register(
 		$component,
 		'slug',
 		array(
-			'label'             => __( 'Permalink', 'buddyboss' ),
-			'type'              => 'permalink',
+			'label'             => __( 'Slug (Optional)', 'buddyboss' ),
+			'type'              => 'text',
 			'tab'               => 'details',
 			'order'             => 15,
 			'save_phase'        => 'before',
-			'is_visible'        => function ( $post ) {
-				return ! empty( $post->ID );
-			},
 			'get_value'         => function ( $post ) {
 				return $post->post_name;
-			},
-			'get_extra_data'    => function ( $post ) {
-				if ( empty( $post->ID ) ) {
-					return array( 'base_url' => '' );
-				}
-
-				$permalink = get_permalink( $post->ID );
-				$slug      = $post->post_name;
-				$base_url  = $slug ? str_replace( $slug . '/', '', $permalink ) : $permalink;
-
-				return array(
-					'base_url' => $base_url,
-				);
 			},
 			'save_value'        => function ( $post, $value ) {
 				$post->post_name = sanitize_title( $value );
@@ -93,11 +77,19 @@ function bb_emails_register_core_meta_fields( $registry, $component = 'emails' )
 		'content',
 		array(
 			'label'             => __( 'Description', 'buddyboss' ),
-			'description'       => __( 'Phrases wrapped in braces {{ }} are email tokens. Learn about email tokens.', 'buddyboss' ),
+			'description'       => __( 'Phrases wrapped in braces {{ }} are email tokens.', 'buddyboss' ),
 			'type'              => 'richtext',
 			'tab'               => 'details',
 			'order'             => 20,
 			'save_phase'        => 'before',
+			'get_extra_data'    => function ( $post ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- Callback signature required by registry.
+				return array(
+					'description_link' => array(
+						'text' => __( 'Learn about email tokens.', 'buddyboss' ),
+						'url'  => admin_url( 'admin.php?page=bp-help&article=62844' ),
+					),
+				);
+			},
 			'get_value'         => function ( $post ) {
 				return $post->post_content;
 			},

@@ -355,6 +355,8 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 
 	// Rich text field (TinyMCE).
 	if ( 'richtext' === field.type ) {
+		var descLink = field.extra_data && field.extra_data.description_link;
+
 		return (
 			<div className={ isDisabled ? 'bb-admin-meta-field--disabled' : '' }>
 				<RichTextEditor
@@ -364,8 +366,18 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 					value={ null != value ? String( value ) : '' }
 					onChange={ isDisabled ? function () {} : onChange }
 				/>
-				{ field.description && (
-					<p className="bb-admin-meta-field__description">{ field.description }</p>
+				{ ( field.description || descLink ) && (
+					<p className="bb-admin-meta-field__description">
+						{ field.description }
+						{ descLink && descLink.url && (
+							<>
+								{ field.description ? ' ' : '' }
+								<a href={ safeUrl( descLink.url ) } target="_blank" rel="noopener noreferrer">
+									{ descLink.text }
+								</a>
+							</>
+						) }
+					</p>
 				) }
 			</div>
 		);
