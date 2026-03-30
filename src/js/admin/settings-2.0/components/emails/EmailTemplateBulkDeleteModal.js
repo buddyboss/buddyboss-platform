@@ -25,12 +25,13 @@ import { deleteEmailTemplates } from '../../utils/ajax';
  * @param {Object}   props               Component props.
  * @param {boolean}  props.isOpen        Whether the modal is open.
  * @param {Array}    props.selectedItems Selected items [{id, title}].
+ * @param {Function} props.onRemoveItem  Handler when an item is unchecked. Receives item id.
  * @param {Function} props.onClose       Close handler.
  * @param {Function} props.onDeleted     Success handler.
  * @param {Function} props.setToast      Toast notification setter.
  * @returns {JSX.Element|null} Modal or null.
  */
-export function EmailTemplateBulkDeleteModal( { isOpen, selectedItems, onClose, onDeleted, setToast } ) {
+export function EmailTemplateBulkDeleteModal( { isOpen, selectedItems, onRemoveItem, onClose, onDeleted, setToast } ) {
 	var confirmedState = useState( false );
 	var isConfirmed = confirmedState[0];
 	var setIsConfirmed = confirmedState[1];
@@ -109,12 +110,22 @@ export function EmailTemplateBulkDeleteModal( { isOpen, selectedItems, onClose, 
 		>
 			<div className="bb-admin-settings-modal__body bb-email-template-modal__body">
 				{/* Selected items */}
-				<div className="bb-email-template-modal__selected-items">
+				<div className="bb-admin-bulk-modal__selected-items">
 					{ selectedItems.map( function ( item ) {
 						return (
-							<div key={ item.id } className="bb-email-template-modal__selected-item bb-email-template-modal__selected-item--destructive">
-								<i className="bb-icons-rl bb-icons-rl-warning-circle" />
-								<span>{ decodeEntities( item.title ) }</span>
+							<div key={ item.id } className="bb-admin-bulk-modal__selected-item">
+								<CheckboxControl
+									checked={ true }
+									onChange={ function () {
+										if ( onRemoveItem ) {
+											onRemoveItem( item.id );
+										}
+									} }
+									__nextHasNoMarginBottom
+								/>
+								<span className="bb-admin-bulk-modal__selected-item-name">
+									{ decodeEntities( item.title ) }
+								</span>
 							</div>
 						);
 					} ) }
@@ -122,12 +133,16 @@ export function EmailTemplateBulkDeleteModal( { isOpen, selectedItems, onClose, 
 
 				{/* Warning */}
 				<div className="bb-email-template-modal__delete-warning">
-					<i className="bb-icons-rl bb-icons-rl-warning" />
+					<i className="bb-icons-rl bb-icons-rl-warning-circle" />
 					<div>
-						<p><strong>{ __( 'This permanently deletes email templates and cannot be undone.', 'buddyboss' ) }</strong></p>
-						<p>{ __( 'Deleting the email template will remove it from the list and automatically unlink it from any associated situations.', 'buddyboss' ) }</p>
+						<p><strong>{ __( 'Warning', 'buddyboss' ) }</strong></p>
+						<p>{ __( 'This permanently deletes email templates and cannot be undone.', 'buddyboss' ) }</p>
 					</div>
 				</div>
+
+				<p className="bb-email-template-modal__delete-description">
+					{ __( 'Deleting the email template will remove it from the list and automatically unlink it from any associated situations.', 'buddyboss' ) }
+				</p>
 
 				{/* Confirmation checkbox */}
 				<div className="bb-email-template-modal__confirm-checkbox">

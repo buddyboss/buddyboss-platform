@@ -799,6 +799,15 @@ export default function EmailTemplatesListScreen( props ) {
 				selectedItems={ items.filter( function( item ) {
 					return -1 !== selectedIds.indexOf( item.id );
 				} ) }
+				onRemoveItem={ function( id ) {
+					setSelectedIds( function( prev ) {
+						var next = prev.filter( function( i ) { return i !== id; } );
+						if ( 0 === next.length ) {
+							setBulkDeleteModalOpen( false );
+						}
+						return next;
+					} );
+				} }
 				onClose={ function() {
 					setBulkDeleteModalOpen( false );
 				} }
