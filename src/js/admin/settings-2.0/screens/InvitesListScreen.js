@@ -23,8 +23,8 @@ import { __, sprintf } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { getInvites, invitesBulkAction } from '../utils/ajax';
 import { safeUrl } from '../utils/sanitize';
-import { getPageNumbers } from '../utils/pagination';
 import { Toast } from '../components/Toast';
+import { ListPagination } from '../components/common/ListPagination';
 
 /**
  * Sort options (static).
@@ -390,8 +390,6 @@ export default function InvitesListScreen( props ) {
 		return opts.length > 0 ? opts : [ { label: __( 'All', 'buddyboss' ), value: 'all' } ];
 	}, [ views ] );
 
-	var pageNumbers = getPageNumbers( page, totalPages );
-
 	return (
 		<div className="bb-invites-list">
 			{/* Header */}
@@ -612,61 +610,14 @@ export default function InvitesListScreen( props ) {
 			</div>
 
 			{/* Footer with pagination */}
-			{ totalPages > 1 && ! isLoading && (
-				<div className="bb-invites-list__footer">
-					<span className="bb-invites-list__item-count">
-						{ sprintf(
-							/* translators: 1: start index, 2: end index, 3: total items */
-							__( '%1$d\u2013%2$d of %3$d', 'buddyboss' ),
-							( page - 1 ) * PER_PAGE + 1,
-							Math.min( page * PER_PAGE, total ),
-							total
-						) }
-					</span>
-					<div className="bb-admin-pagination__pagination">
-						<Button
-							className="bb-admin-pagination__pagination-btn bb-admin-pagination__pagination-btn--previous is-secondary"
-							disabled={ 1 === page }
-							onClick={ function() {
-								handlePageChange( page - 1 );
-							} }
-						>
-							{ __( 'Previous', 'buddyboss' ) }
-						</Button>
-						{ pageNumbers.map( function( p, idx ) {
-							if ( '...' === p ) {
-								return (
-									<span key={ 'ellipsis-' + idx } className="bb-admin-pagination__pagination-ellipsis">
-										&hellip;
-									</span>
-								);
-							}
-							return (
-								<Button
-									key={ p }
-									className={
-										'bb-admin-pagination__pagination-btn' +
-										( p === page ? ' bb-admin-pagination__pagination-btn--current is-primary' : ' is-secondary' )
-									}
-									onClick={ function() {
-										handlePageChange( p );
-									} }
-								>
-									{ p }
-								</Button>
-							);
-						} ) }
-						<Button
-							className="bb-admin-pagination__pagination-btn bb-admin-pagination__pagination-btn--next is-secondary"
-							disabled={ page === totalPages }
-							onClick={ function() {
-								handlePageChange( page + 1 );
-							} }
-						>
-							{ __( 'Next', 'buddyboss' ) }
-						</Button>
-					</div>
-				</div>
+			{ ! isLoading && (
+				<ListPagination
+					currentPage={ page }
+					totalPages={ totalPages }
+					total={ total }
+					onPageChange={ handlePageChange }
+					className="bb-invites-list"
+				/>
 			) }
 
 			{/* Toast notification */}

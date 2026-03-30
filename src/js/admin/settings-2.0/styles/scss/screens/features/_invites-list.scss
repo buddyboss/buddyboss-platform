@@ -110,6 +110,22 @@
 		}
 	}
 
+	// Footer
+	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 16px;
+		padding: 16px 0;
+		margin-top: 8px;
+	}
+
+	// Item Count
+	&__item-count {
+		font-size: 13px;
+		color: $bb-text-secondary-color;
+	}
+
 	&__status-badge {
 		display: inline-flex;
 		align-items: center;
@@ -128,7 +144,7 @@
 		}
 
 		&--pending {
-			color: $bb-text-positive-primary-color;
+			color: $bb-icon-color;
 			background-color: $bb-background-secondary-color;
 			border-color: $bb-border-tertiary-color;
 		}
