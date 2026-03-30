@@ -111,6 +111,7 @@
     padding: 8px 16px;
     box-shadow: none;
     border-radius: $bb-border-radius-lg;
+    text-decoration: none;
 
     &:hover {
         color: $bb-text-color !important;
@@ -127,6 +128,13 @@
     &[disabled] {
         opacity: 0.5;
         pointer-events: none;
+    }
+
+    > [class*="bb-icon"] {
+        color: $bb-icon-color;
+        font-size: 16px;
+        vertical-align: middle;
+        margin-right: 8px;
     }
 }
 
