@@ -90,7 +90,7 @@ function bb_admin_settings_register_invites_feature() {
 			'title' => __( 'Email Invites', 'buddyboss' ),
 			'icon'  => array(
 				'type'  => 'font',
-				'class' => 'bb-icons-rl bb-icons-rl--envelope-simple-open',
+				'class' => 'bb-icons-rl bb-icons-rl-envelope-simple-open',
 			),
 			'order' => 20,
 		)
