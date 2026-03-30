@@ -26,6 +26,7 @@ import { getInvites, invitesBulkAction } from '../utils/ajax';
 import { safeUrl } from '../utils/sanitize';
 import { Toast } from '../components/Toast';
 import { ListPagination } from '../components/common/ListPagination';
+import { DeleteConfirmModal } from '../components/common/DeleteConfirmModal';
 
 /**
  * Sort options (static).
@@ -121,6 +122,10 @@ export default function InvitesListScreen( props ) {
 	var revokeConfirmIdsState = useState( [] );
 	var revokeConfirmIds = revokeConfirmIdsState[0];
 	var setRevokeConfirmIds = revokeConfirmIdsState[1];
+
+	var revokeConfirmCheckedState = useState( false );
+	var revokeConfirmChecked = revokeConfirmCheckedState[0];
+	var setRevokeConfirmChecked = revokeConfirmCheckedState[1];
 
 	var abortRef = useRef( null );
 	var searchTimerRef = useRef( null );
@@ -370,7 +375,8 @@ export default function InvitesListScreen( props ) {
 		}
 
 		if ( 'revoke' === bulkAction ) {
-			setRevokeConfirmIds( selectedIds );
+			setRevokeConfirmIds( selectedIds.slice() );
+			setRevokeConfirmChecked( false );
 			setRevokeConfirmOpen( true );
 		}
 	}, [ bulkAction, selectedIds, bulkProcessing ] );
@@ -603,6 +609,7 @@ export default function InvitesListScreen( props ) {
 																	onClick={ function() {
 																		onClose();
 																		setRevokeConfirmIds( [ item.id ] );
+																		setRevokeConfirmChecked( false );
 																		setRevokeConfirmOpen( true );
 																	} }
 																>
@@ -645,43 +652,55 @@ export default function InvitesListScreen( props ) {
 				</div>
 			) }
 
-			{/* Revoke confirmation modal */}
-			{ revokeConfirmOpen && revokeConfirmIds.length > 0 && (
-				<Modal
-					title={ __( 'Revoke Invite', 'buddyboss' ) }
-					onRequestClose={ function () { setRevokeConfirmOpen( false ); } }
-					className="bb-admin-settings-modal bb-invites-revoke-modal"
-					shouldCloseOnClickOutside={ false }
-				>
-					<div className="bb-admin-settings-modal__body">
-						<p>
-							{ 1 === revokeConfirmIds.length
-								? __( 'Are you sure you want to revoke this invitation?', 'buddyboss' )
-								: __( 'Are you sure you want to revoke all selected invitations?', 'buddyboss' )
-							}
-						</p>
-					</div>
-					<div className="bb-admin-settings-modal__footer">
-						<Button
-							variant="secondary"
-							onClick={ function () { setRevokeConfirmOpen( false ); } }
-							disabled={ bulkProcessing }
-						>
-							{ __( 'Cancel', 'buddyboss' ) }
-						</Button>
-						<Button
-							className="bb-admin-button-danger"
-							onClick={ function () {
-								setRevokeConfirmOpen( false );
-								performRevoke( revokeConfirmIds );
-							} }
-							isBusy={ bulkProcessing }
-						>
-							{ __( 'Revoke', 'buddyboss' ) }
-						</Button>
-					</div>
-				</Modal>
-			) }
+			{/* Single Revoke Confirmation */}
+			<DeleteConfirmModal
+				isOpen={ revokeConfirmOpen && 1 === revokeConfirmIds.length }
+				singleTitle={ __( 'Revoke Invite', 'buddyboss' ) }
+				items={ revokeConfirmIds.length === 1 ? [ { id: revokeConfirmIds[0], title: ( items.find( function( i ) { return i.id === revokeConfirmIds[0]; } ) || {} ).recipient_email || '' } ] : [] }
+				warningText={ __( 'This permanently revoke email invitations and cannot be undone.', 'buddyboss' ) }
+				confirmLabel={ __( 'I understand that this removes email invitations.', 'buddyboss' ) }
+				confirmChecked={ revokeConfirmChecked }
+				onConfirmChange={ setRevokeConfirmChecked }
+				onConfirm={ function () {
+					setRevokeConfirmOpen( false );
+					setRevokeConfirmChecked( false );
+					performRevoke( revokeConfirmIds );
+				} }
+				onClose={ function () { setRevokeConfirmOpen( false ); setRevokeConfirmChecked( false ); } }
+				isProcessing={ bulkProcessing }
+				className="bb-invites-revoke-modal"
+			/>
+
+			{/* Bulk Revoke Confirmation */}
+			<DeleteConfirmModal
+				isOpen={ revokeConfirmOpen && revokeConfirmIds.length > 1 }
+				bulkTitle={ __( 'Bulk Revoke Invitations', 'buddyboss' ) }
+				items={ items.filter( function( item ) { return -1 !== revokeConfirmIds.indexOf( item.id ); } ).map( function( item ) { return { id: item.id, title: item.recipient_email || '' }; } ) }
+				onRemoveItem={ function ( id ) {
+					setRevokeConfirmIds( function ( prev ) {
+						var next = prev.filter( function ( i ) { return i !== id; } );
+						if ( 0 === next.length ) {
+							setRevokeConfirmOpen( false );
+						}
+						return next;
+					} );
+					setSelectedIds( function ( prev ) {
+						return prev.filter( function ( i ) { return i !== id; } );
+					} );
+				} }
+				warningText={ __( 'This permanently revoke email invitations and cannot be undone.', 'buddyboss' ) }
+				confirmLabel={ __( 'I understand that this removes email invitations.', 'buddyboss' ) }
+				confirmChecked={ revokeConfirmChecked }
+				onConfirmChange={ setRevokeConfirmChecked }
+				onConfirm={ function () {
+					setRevokeConfirmOpen( false );
+					setRevokeConfirmChecked( false );
+					performRevoke( revokeConfirmIds );
+				} }
+				onClose={ function () { setRevokeConfirmOpen( false ); setRevokeConfirmChecked( false ); } }
+				isProcessing={ bulkProcessing }
+				className="bb-invites-revoke-modal"
+			/>
 		</div>
 	);
 }
