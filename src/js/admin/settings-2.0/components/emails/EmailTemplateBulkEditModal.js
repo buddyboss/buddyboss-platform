@@ -13,7 +13,6 @@ import {
 	Button,
 	CheckboxControl,
 	SelectControl,
-	TabPanel,
 	Spinner,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
@@ -149,17 +148,8 @@ export function EmailTemplateBulkEditModal( { isOpen, selectedItems, onClose, on
 		} );
 	};
 
-	// Build situation tabs.
-	var situationTabs = [];
-	if ( situations ) {
-		Object.keys( situations ).forEach( function ( catKey ) {
-			situationTabs.push( {
-				name: catKey,
-				title: situations[ catKey ].label,
-				className: 'bb-email-template-modal__situation-tab',
-			} );
-		} );
-	}
+	// Check if situations are loaded.
+	var hasSituations = situations && Object.keys( situations ).length > 0;
 
 	var statusOptions = [
 		{ label: __( 'No Change', 'buddyboss' ), value: '' },
@@ -204,53 +194,44 @@ export function EmailTemplateBulkEditModal( { isOpen, selectedItems, onClose, on
 					} ) }
 				</div>
 
-				{/* Situation tabs */}
-				{ ! situations && (
-					<div className="bb-email-template-modal__field bb-email-template-modal__situation">
-						<label className="bb-email-template-modal__field-label">
-							{ __( 'Situation', 'buddyboss' ) }
-						</label>
+				{/* Situation — Flat scrollable list */}
+				<div className="bb-email-template-modal__field bb-email-template-modal__situation">
+					<label className="bb-email-template-modal__field-label">
+						{ __( 'Situation', 'buddyboss' ) }
+					</label>
+					{ ! situations && (
 						<div className="bb-email-template-modal__loading">
 							<Spinner />
 						</div>
-					</div>
-				) }
-				{ situationTabs.length > 0 && (
-					<div className="bb-email-template-modal__field bb-email-template-modal__situation">
-						<label className="bb-email-template-modal__field-label">
-							{ __( 'Situation', 'buddyboss' ) }
-						</label>
-						<TabPanel
-							className="bb-email-template-modal__situation-tabs"
-							tabs={ situationTabs }
-						>
-							{ function ( tab ) {
-								var catTerms = situations[ tab.name ] ? situations[ tab.name ].terms : [];
-								return (
-									<div className="bb-email-template-modal__situation-list">
-										{ catTerms.map( function ( term ) {
-											return (
-												<label key={ term.slug } className="bb-email-template-modal__situation-item">
-													<input
-														type="checkbox"
-														checked={ emailType === term.slug }
-														onChange={ function () {
-															setEmailType( emailType === term.slug ? '' : term.slug );
-														} }
-													/>
-													<span>{ decodeEntities( term.description || term.slug ) }</span>
-												</label>
-											);
-										} ) }
-									</div>
-								);
-							} }
-						</TabPanel>
-						<p className="bb-email-template-modal__field-help">
-							{ __( 'Choose when this email will be sent.', 'buddyboss' ) }
-						</p>
-					</div>
-				) }
+					) }
+					{ hasSituations && (
+						<div className="bb-email-template-modal__situation-list">
+							{ Object.keys( situations ).map( function ( catKey ) {
+								var catTerms = situations[ catKey ].terms;
+								if ( ! catTerms || 0 === catTerms.length ) {
+									return null;
+								}
+								return catTerms.map( function ( term ) {
+									return (
+										<label key={ term.slug } className="bb-email-template-modal__situation-item">
+											<input
+												type="checkbox"
+												checked={ emailType === term.slug }
+												onChange={ function () {
+													setEmailType( emailType === term.slug ? '' : term.slug );
+												} }
+											/>
+											<span>{ decodeEntities( term.description || term.slug ) }</span>
+										</label>
+									);
+								} );
+							} ) }
+						</div>
+					) }
+					<p className="bb-email-template-modal__field-help">
+						{ __( 'Choose when this email will be sent.', 'buddyboss' ) }
+					</p>
+				</div>
 
 				{/* Status */}
 				<div className="bb-email-template-modal__field bb-email-template-modal__publish-fields">

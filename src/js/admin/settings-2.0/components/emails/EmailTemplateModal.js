@@ -16,7 +16,6 @@ import {
 	Modal,
 	Button,
 	TextControl,
-	TabPanel,
 	Spinner,
 	Popover,
 } from '@wordpress/components';
@@ -536,50 +535,35 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 							</p>
 						</div>
 
-						{/* Situation — Tabbed checkboxes (acting as radio, single-select) */}
+						{/* Situation — Flat scrollable list (single-select) */}
 						{ situations && Object.keys( situations ).length > 0 && (
 							<div className="bb-email-template-modal__field bb-email-template-modal__situation">
 								<label className="bb-email-template-modal__field-label">
 									{ __( 'Situation', 'buddyboss' ) }
 								</label>
-								<TabPanel
-									className="bb-email-template-modal__situation-tabs"
-									tabs={ Object.keys( situations ).map( function ( catKey ) {
-										return {
-											name: catKey,
-											title: situations[ catKey ].label,
-											className: 'bb-email-template-modal__situation-tab',
-										};
+								<div className="bb-email-template-modal__situation-list">
+									{ Object.keys( situations ).map( function ( catKey ) {
+										var catTerms = situations[ catKey ].terms;
+										if ( ! catTerms || 0 === catTerms.length ) {
+											return null;
+										}
+										return catTerms.map( function ( term ) {
+											var isSelected = registeredValues.email_type === term.slug;
+											return (
+												<label key={ term.slug } className={ 'bb-email-template-modal__situation-item' + ( isSelected ? ' bb-email-template-modal__situation-item--selected' : '' ) }>
+													<input
+														type="checkbox"
+														checked={ isSelected }
+														onChange={ function () {
+															handleRegisteredFieldChange( 'email_type', isSelected ? '' : term.slug );
+														} }
+													/>
+													<span>{ decodeEntities( term.description || term.slug ) }</span>
+												</label>
+											);
+										} );
 									} ) }
-								>
-									{ function ( tab ) {
-										var catTerms = situations[ tab.name ] ? situations[ tab.name ].terms : [];
-										return (
-											<div className="bb-email-template-modal__situation-list">
-												{ catTerms.map( function ( term ) {
-													var isSelected = registeredValues.email_type === term.slug;
-													return (
-														<label key={ term.slug } className={ 'bb-email-template-modal__situation-item' + ( isSelected ? ' bb-email-template-modal__situation-item--selected' : '' ) }>
-															<input
-																type="checkbox"
-																checked={ isSelected }
-																onChange={ function () {
-																	handleRegisteredFieldChange( 'email_type', isSelected ? '' : term.slug );
-																} }
-															/>
-															<span>{ decodeEntities( term.description || term.slug ) }</span>
-														</label>
-													);
-												} ) }
-												{ 0 === catTerms.length && (
-													<p className="bb-email-template-modal__situation-empty">
-														{ __( 'No situations in this category.', 'buddyboss' ) }
-													</p>
-												) }
-											</div>
-										);
-									} }
-								</TabPanel>
+								</div>
 								<p className="bb-email-template-modal__field-help">
 									{ __( 'Choose when this email will be sent.', 'buddyboss' ) }
 								</p>
