@@ -85,6 +85,8 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 	var isMountedRef = useRef( true );
 	var registeredFieldsRef = useRef( registeredFields );
 	registeredFieldsRef.current = registeredFields;
+	var emailIdRef = useRef( emailId );
+	emailIdRef.current = emailId;
 	var situationsCacheRef = useRef( null );
 
 	useEffect( function () {
@@ -94,7 +96,7 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 			// Clean up TinyMCE editors on unmount (defensive — normally handled by handleClose).
 			registeredFieldsRef.current.forEach( function ( field ) {
 				if ( 'richtext' === field.type ) {
-					forceRemoveEditor( 'bb-admin-edit-' + field.id + '-' + ( emailId || 0 ) );
+					forceRemoveEditor( 'bb-admin-edit-' + field.id + '-' + ( emailIdRef.current || 0 ) );
 				}
 			} );
 		};
@@ -535,7 +537,7 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 							</p>
 						</div>
 
-						{/* Situation — Flat scrollable list (single-select) */}
+						{/* Situation — Grouped scrollable list (single-select) */}
 						{ situations && Object.keys( situations ).length > 0 && (
 							<div className="bb-email-template-modal__field bb-email-template-modal__situation">
 								<label className="bb-email-template-modal__field-label">
@@ -543,25 +545,33 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 								</label>
 								<div className="bb-email-template-modal__situation-list">
 									{ Object.keys( situations ).map( function ( catKey ) {
-										var catTerms = situations[ catKey ].terms;
+										var catData  = situations[ catKey ];
+										var catTerms = catData.terms;
 										if ( ! catTerms || 0 === catTerms.length ) {
 											return null;
 										}
-										return catTerms.map( function ( term ) {
-											var isSelected = registeredValues.email_type === term.slug;
-											return (
-												<label key={ term.slug } className={ 'bb-email-template-modal__situation-item' + ( isSelected ? ' bb-email-template-modal__situation-item--selected' : '' ) }>
-													<input
-														type="checkbox"
-														checked={ isSelected }
-														onChange={ function () {
-															handleRegisteredFieldChange( 'email_type', isSelected ? '' : term.slug );
-														} }
-													/>
-													<span>{ decodeEntities( term.description || term.slug ) }</span>
-												</label>
-											);
-										} );
+										return (
+											<div key={ catKey } className="bb-email-template-modal__situation-group">
+												<span className="bb-email-template-modal__situation-group-label">
+													{ decodeEntities( catData.label ) }
+												</span>
+												{ catTerms.map( function ( term ) {
+													var isSelected = registeredValues.email_type === term.slug;
+													return (
+														<label key={ term.slug } className={ 'bb-email-template-modal__situation-item' + ( isSelected ? ' bb-email-template-modal__situation-item--selected' : '' ) }>
+															<input
+																type="checkbox"
+																checked={ isSelected }
+																onChange={ function () {
+																	handleRegisteredFieldChange( 'email_type', isSelected ? '' : term.slug );
+																} }
+															/>
+															<span>{ decodeEntities( term.description || term.slug ) }</span>
+														</label>
+													);
+												} ) }
+											</div>
+										);
 									} ) }
 								</div>
 								<p className="bb-email-template-modal__field-help">

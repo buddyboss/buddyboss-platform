@@ -3935,11 +3935,13 @@ function bp_email_get_type_schema( $field = 'description' ) {
 	$core_user_registration = array(
 		'description' => esc_html__( 'Activate a new account', 'buddyboss' ),
 		'unsubscribe' => false,
+		'group'       => 'account',
 	);
 
 	$core_user_registration_with_blog = array(
 		'description' => esc_html__( 'Activate a new account and site', 'buddyboss' ),
 		'unsubscribe' => false,
+		'group'       => 'account',
 	);
 
 	$activity_at_message = array(
@@ -3948,6 +3950,7 @@ function bp_email_get_type_schema( $field = 'description' ) {
 			'meta_key' => 'notification_activity_new_mention',
 			'message'  => esc_html__( 'You will no longer receive emails when someone mentions you in an update.', 'buddyboss' ),
 		),
+		'group'       => 'activity',
 	);
 
 	$groups_at_message = array(
@@ -3956,26 +3959,31 @@ function bp_email_get_type_schema( $field = 'description' ) {
 			'meta_key' => 'notification_activity_new_mention',
 			'message'  => esc_html__( 'You will no longer receive emails when someone mentions you in an update.', 'buddyboss' ),
 		),
+		'group'       => 'groups_discussions',
 	);
 
 	$settings_verify_email_change = array(
 		'description' => esc_html__( 'A member\'s email is changed', 'buddyboss' ),
 		'unsubscribe' => false,
+		'group'       => 'account',
 	);
 
 	$invites_member_invite = array(
 		'description' => esc_html__( 'Recepient is invited to the site by a member', 'buddyboss' ),
 		'unsubscribe' => false,
+		'group'       => 'account',
 	);
 
 	$content_moderation_email = array(
 		'description' => esc_html__( 'Content is automatically hidden due to reaching the reporting threshold', 'buddyboss' ), // Todo: Add proper description of email.
 		'unsubscribe' => false,
+		'group'       => 'account',
 	);
 
 	$user_moderation_email = array(
 		'description' => esc_html__( 'A member is automatically suspended due to reaching the reporting threshold', 'buddyboss' ), // Todo: Add proper description of email.
 		'unsubscribe' => false,
+		'group'       => 'account',
 	);
 
 	$types = array(
@@ -3998,7 +4006,7 @@ function bp_email_get_type_schema( $field = 'description' ) {
 	 */
 	$types = apply_filters( 'bp_email_get_type_schema', $types );
 
-	if ( $field !== 'all' ) {
+	if ( 'all' !== $field ) {
 		return wp_list_pluck( $types, $field );
 	} else {
 		return $types;
@@ -10303,4 +10311,85 @@ function bb_icon_registry() {
  */
 function bb_register_icon( $icon_id, $args = array() ) {
 	return bb_icon_registry()->bb_register_icon( $icon_id, $args );
+}
+
+/**
+ * Get the available email type group definitions with labels.
+ *
+ * Groups are used to visually categorize email situations in the
+ * Settings 2.0 email template modal.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array Associative array of group_key => translated label.
+ */
+function bb_email_get_type_groups() {
+	$groups = array(
+		'activity'           => __( 'Activity', 'buddyboss' ),
+		'groups_discussions' => __( 'Groups & Discussions', 'buddyboss' ),
+		'messages'           => __( 'Messages', 'buddyboss' ),
+		'connections'        => __( 'Connections', 'buddyboss' ),
+		'account'            => __( 'Account', 'buddyboss' ),
+		'other'              => __( 'Other', 'buddyboss' ),
+	);
+
+	/**
+	 * Filters the email type group definitions.
+	 *
+	 * Third-party plugins can add custom groups so their email types
+	 * are grouped under a meaningful label instead of "Other".
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $groups Group key => translated label map.
+	 */
+	return apply_filters( 'bb_email_get_type_groups', $groups );
+}
+
+/**
+ * Get the group key for a given email type slug.
+ *
+ * Resolves the group from the `bp_email_get_type_schema()` 'group' key.
+ * Falls back to 'other' for terms not in the schema (e.g., third-party).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $type_slug The email type taxonomy term slug.
+ *
+ * @return string The group key (e.g., 'activity', 'account', 'other').
+ */
+function bb_email_get_type_group( $type_slug ) {
+	$schema = bp_email_get_type_schema( 'all' );
+	$group  = 'other';
+
+	if ( isset( $schema[ $type_slug ]['group'] ) ) {
+		$group = $schema[ $type_slug ]['group'];
+	} else {
+		// Fallback group map for core BB email types that were added
+		// via update functions and are not registered in bp_email_get_type_schema().
+		$fallback_map = array(
+			'new-activity-following' => 'activity',
+			'new-comment-reply'      => 'activity',
+			'new-follower'           => 'connections',
+			'groups-new-activity'    => 'groups_discussions',
+			'groups-new-discussion'  => 'groups_discussions',
+		);
+
+		if ( isset( $fallback_map[ $type_slug ] ) ) {
+			$group = $fallback_map[ $type_slug ];
+		}
+	}
+
+	/**
+	 * Filters the resolved group for an email type slug.
+	 *
+	 * Third-party plugins can override the group for their email types
+	 * without needing to hook into `bp_email_get_type_schema`.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $group     The resolved group key.
+	 * @param string $type_slug The email type taxonomy term slug.
+	 */
+	return apply_filters( 'bb_email_type_group', $group, $type_slug );
 }

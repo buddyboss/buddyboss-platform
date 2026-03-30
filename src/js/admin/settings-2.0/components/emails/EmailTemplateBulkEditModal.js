@@ -194,7 +194,7 @@ export function EmailTemplateBulkEditModal( { isOpen, selectedItems, onClose, on
 					} ) }
 				</div>
 
-				{/* Situation — Flat scrollable list */}
+				{/* Situation — Grouped scrollable list */}
 				<div className="bb-email-template-modal__field bb-email-template-modal__situation">
 					<label className="bb-email-template-modal__field-label">
 						{ __( 'Situation', 'buddyboss' ) }
@@ -207,24 +207,32 @@ export function EmailTemplateBulkEditModal( { isOpen, selectedItems, onClose, on
 					{ hasSituations && (
 						<div className="bb-email-template-modal__situation-list">
 							{ Object.keys( situations ).map( function ( catKey ) {
-								var catTerms = situations[ catKey ].terms;
+								var catData  = situations[ catKey ];
+								var catTerms = catData.terms;
 								if ( ! catTerms || 0 === catTerms.length ) {
 									return null;
 								}
-								return catTerms.map( function ( term ) {
-									return (
-										<label key={ term.slug } className="bb-email-template-modal__situation-item">
-											<input
-												type="checkbox"
-												checked={ emailType === term.slug }
-												onChange={ function () {
-													setEmailType( emailType === term.slug ? '' : term.slug );
-												} }
-											/>
-											<span>{ decodeEntities( term.description || term.slug ) }</span>
-										</label>
-									);
-								} );
+								return (
+									<div key={ catKey } className="bb-email-template-modal__situation-group">
+										<span className="bb-email-template-modal__situation-group-label">
+											{ decodeEntities( catData.label ) }
+										</span>
+										{ catTerms.map( function ( term ) {
+											return (
+												<label key={ term.slug } className="bb-email-template-modal__situation-item">
+													<input
+														type="checkbox"
+														checked={ emailType === term.slug }
+														onChange={ function () {
+															setEmailType( emailType === term.slug ? '' : term.slug );
+														} }
+													/>
+													<span>{ decodeEntities( term.description || term.slug ) }</span>
+												</label>
+											);
+										} ) }
+									</div>
+								);
 							} ) }
 						</div>
 					) }

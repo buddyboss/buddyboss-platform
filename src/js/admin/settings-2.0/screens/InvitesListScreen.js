@@ -657,7 +657,7 @@ export default function InvitesListScreen( props ) {
 				isOpen={ revokeConfirmOpen && 1 === revokeConfirmIds.length }
 				singleTitle={ __( 'Revoke Invite', 'buddyboss' ) }
 				items={ revokeConfirmIds.length === 1 ? [ { id: revokeConfirmIds[0], title: ( items.find( function( i ) { return i.id === revokeConfirmIds[0]; } ) || {} ).recipient_email || '' } ] : [] }
-				warningText={ __( 'This permanently revoke email invitations and cannot be undone.', 'buddyboss' ) }
+				warningText={ __( 'This will permanently revoke email invitations and cannot be undone.', 'buddyboss' ) }
 				confirmLabel={ __( 'I understand that this removes email invitations.', 'buddyboss' ) }
 				confirmChecked={ revokeConfirmChecked }
 				onConfirmChange={ setRevokeConfirmChecked }
@@ -688,7 +688,7 @@ export default function InvitesListScreen( props ) {
 						return prev.filter( function ( i ) { return i !== id; } );
 					} );
 				} }
-				warningText={ __( 'This permanently revoke email invitations and cannot be undone.', 'buddyboss' ) }
+				warningText={ __( 'This will permanently revoke email invitations and cannot be undone.', 'buddyboss' ) }
 				confirmLabel={ __( 'I understand that this removes email invitations.', 'buddyboss' ) }
 				confirmChecked={ revokeConfirmChecked }
 				onConfirmChange={ setRevokeConfirmChecked }

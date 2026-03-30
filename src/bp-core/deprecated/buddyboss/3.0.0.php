@@ -2286,6 +2286,64 @@ if ( ! function_exists( 'bp_email_invites_tutorial' ) ) {
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
+// Invites settings save hooks (backward-compatible with Settings 1.0 tabs).
+// ──────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Fire deprecated legacy setting save hooks for invites backward compatibility.
+ *
+ * Legacy Settings 1.0 fires do_action('bp_admin_tab_setting_save', $tab_name)
+ * and do_action('bp_admin_tab_setting_saved', $tab_name) when any settings tab
+ * is saved. This bridge ensures those hooks still fire when invites settings
+ * are saved via Settings 2.0.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id Feature ID.
+ * @param array  $settings   Full submitted settings.
+ * @param array  $saved      Keys and values saved by core.
+ */
+function bb_invites_fire_deprecated_save_hooks( $feature_id, $settings, $saved ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+	if ( 'invites' !== $feature_id ) {
+		return;
+	}
+
+	/**
+	 * Fires when invites settings are saved.
+	 *
+	 * @since      BuddyBoss 1.0.0
+	 *
+	 * @param string $tab_name The tab name.
+	 *
+	 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_admin_save_feature_settings_after'} with feature_id='invites'.
+	 */
+	do_action_deprecated(
+		'bp_admin_tab_setting_save',
+		array( 'bp-invites' ),
+		'BuddyBoss [BBVERSION]',
+		'bb_admin_save_feature_settings_after'
+	);
+
+	/**
+	 * Fires after invites settings have been saved.
+	 *
+	 * @since      BuddyBoss 1.0.0
+	 *
+	 * @param string $tab_name The tab name.
+	 *
+	 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_admin_save_feature_settings_after'} with feature_id='invites'.
+	 */
+	do_action_deprecated(
+		'bp_admin_tab_setting_saved',
+		array( 'bp-invites' ),
+		'BuddyBoss [BBVERSION]',
+		'bb_admin_save_feature_settings_after'
+	);
+}
+
+add_action( 'bb_admin_save_feature_settings_after', 'bb_invites_fire_deprecated_save_hooks', 99, 3 );
+
+// ──────────────────────────────────────────────────────────────────────────────
 // Email Templates Settings 2.0 deprecated functions.
 // Legacy email admin tabs were removed from bp-core-admin-functions.php.
 // Email Templates are now managed by Settings 2.0 (bb-admin-settings-emails.php).

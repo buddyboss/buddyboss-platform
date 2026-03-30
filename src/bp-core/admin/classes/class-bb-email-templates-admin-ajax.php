@@ -587,10 +587,26 @@ class BB_Email_Templates_Admin_Ajax {
 				if ( ! is_array( $meta_item ) || empty( $meta_item['key'] ) ) {
 					continue;
 				}
-				$meta_key   = sanitize_text_field( $meta_item['key'] );
+				$meta_key   = sanitize_key( $meta_item['key'] );
 				$meta_value = sanitize_text_field( isset( $meta_item['value'] ) ? $meta_item['value'] : '' );
 
-				if ( 0 === strpos( $meta_key, '_' ) || 'bp_email_preheader' === $meta_key ) {
+				/**
+				 * Filters the list of protected meta keys for email templates.
+				 *
+				 * Third-party plugins can add their own meta keys to this list
+				 * to prevent them from being overwritten or deleted via the
+				 * email template edit modal.
+				 *
+				 * @since BuddyBoss [BBVERSION]
+				 *
+				 * @param array $protected_keys List of protected meta key names.
+				 */
+				$protected_keys = apply_filters(
+					'bb_admin_email_protected_meta_keys',
+					array( 'bp_email_preheader' )
+				);
+
+				if ( 0 === strpos( $meta_key, '_' ) || is_protected_meta( $meta_key, 'post' ) || in_array( $meta_key, $protected_keys, true ) ) {
 					continue;
 				}
 
@@ -599,8 +615,14 @@ class BB_Email_Templates_Admin_Ajax {
 			}
 
 			// Delete removed custom meta.
+			/** This filter is documented above. */
+			$protected_keys = apply_filters(
+				'bb_admin_email_protected_meta_keys',
+				array( 'bp_email_preheader' )
+			);
+
 			foreach ( $existing_meta as $key => $values ) {
-				if ( 0 === strpos( $key, '_' ) || 'bp_email_preheader' === $key ) {
+				if ( 0 === strpos( $key, '_' ) || is_protected_meta( $key, 'post' ) || in_array( $key, $protected_keys, true ) ) {
 					continue;
 				}
 				if ( ! in_array( $key, $new_keys, true ) ) {
@@ -790,7 +812,8 @@ class BB_Email_Templates_Admin_Ajax {
 	/**
 	 * Get all email situations (taxonomy terms) grouped by category.
 	 *
-	 * Categories are derived from term slug prefixes.
+	 * Categories are resolved from the 'group' key in bp_email_get_type_schema().
+	 * Terms not in the schema fall back to the 'other' group.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -808,50 +831,29 @@ class BB_Email_Templates_Admin_Ajax {
 		);
 
 		if ( is_wp_error( $terms ) ) {
-			wp_send_json_error( array( 'message' => $terms->get_error_message() ) );
+			wp_send_json_error( array( 'message' => __( 'Failed to load email situations.', 'buddyboss' ) ) );
 		}
 
-		// Category mapping by slug prefix.
-		$prefix_map = array(
-			'activity'      => 'activity',
-			'groups'        => 'groups_discussions',
-			'group-message' => 'groups_discussions',
-			'bbp'           => 'groups_discussions',
-			'messages'      => 'messages',
-			'friends'       => 'connections',
-			'core-user'     => 'account',
-			'settings'      => 'account',
-			'invites'       => 'account',
-			'content'       => 'account',
-			'user'          => 'account',
-		);
-
-		$category_labels = array(
-			'activity'            => __( 'Activity', 'buddyboss' ),
-			'groups_discussions'  => __( 'Groups & Discussions', 'buddyboss' ),
-			'messages'            => __( 'Messages', 'buddyboss' ),
-			'connections'         => __( 'Connections', 'buddyboss' ),
-			'account'             => __( 'Account', 'buddyboss' ),
-		);
-
-		$grouped = array();
-		foreach ( $category_labels as $cat_key => $cat_label ) {
-			$grouped[ $cat_key ] = array(
-				'label' => $cat_label,
+		// Get group definitions and build empty structure.
+		$group_labels = bb_email_get_type_groups();
+		$grouped      = array();
+		foreach ( $group_labels as $group_key => $group_label ) {
+			$grouped[ $group_key ] = array(
+				'label' => $group_label,
 				'terms' => array(),
 			);
 		}
 
+		// Assign each term to its group using the schema 'group' key.
 		foreach ( $terms as $term ) {
-			$category = 'account'; // Default fallback.
+			$category = bb_email_get_type_group( $term->slug );
 
-			// Match longest prefix first (e.g., 'group-message' before 'group').
-			$matched_len = 0;
-			foreach ( $prefix_map as $prefix => $cat ) {
-				if ( 0 === strpos( $term->slug, $prefix ) && strlen( $prefix ) > $matched_len ) {
-					$category    = $cat;
-					$matched_len = strlen( $prefix );
-				}
+			// Ensure the group exists (third-party may return a custom key).
+			if ( ! isset( $grouped[ $category ] ) ) {
+				$grouped[ $category ] = array(
+					'label' => ucwords( str_replace( '_', ' ', $category ) ),
+					'terms' => array(),
+				);
 			}
 
 			$grouped[ $category ]['terms'][] = array(
