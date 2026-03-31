@@ -1,5 +1,50 @@
 // reCAPTCHA feature styles.
 
+// API Keys section: widen child password inputs to 456px (Figma spec).
+// Remove the default child-field separator when inside the API Keys parent.
+.bb-admin-settings-form__field[data-field-name="bb_recaptcha_api_keys"] {
+
+	.bb-admin-settings-form__child-fields {
+		margin-top: 0;
+		padding-top: 0;
+		border-top: none;
+	}
+
+	.bb-admin-settings-form__child-field {
+
+		&-control {
+			max-width: 456px;
+
+			.bb-admin-settings-field__password-input {
+				max-width: 456px;
+			}
+		}
+
+		// Space between child fields matching Figma.
+		& + .bb-admin-settings-form__child-field {
+			margin-top: 16px;
+		}
+	}
+}
+
+// Plain notice: description text without icon or background (Figma: "noticeAndDescripton").
+.bb-admin-notice--plain {
+	background: none;
+	border: none;
+	padding: 0;
+	font-size: 13px;
+	line-height: 18px;
+	color: $bb-text-tertiary-color;
+
+	&::before {
+		display: none;
+	}
+
+	a {
+		color: #2c6bff;
+	}
+}
+
 // Bypass field: checkbox + text input + copy URL.
 .bb-admin-settings-field__recaptcha-bypass {
 

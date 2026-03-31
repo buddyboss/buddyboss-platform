@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * @param string $path Path to recaptcha integration.
  */
 function bb_recaptcha_integration_url( $path = '' ) {
-	return trailingslashit( buddypress()->integration_url ) . 'recaptcha/' . trim( $path, '/\\' );
+	return trailingslashit( buddypress()->plugin_url ) . 'bb-features/integrations/recaptcha/' . trim( $path, '/\\' );
 }
 
 /**

@@ -1000,7 +1000,7 @@ export function SettingsForm({ fields, values, onChange }) {
 		const hasLabel = field.label && field.label.trim() !== '';
 
 		return (
-			<div key={field.name} className={fieldClasses + ( ! hasLabel ? ' bb-admin-settings-form__field--no-label' : '' ) + ( 'reaction_mode' !== field.type && field.pro_notice?.show ? ' bb-admin-settings-form__field--pro-locked' : '' )} data-group={field.group?.key || undefined} data-group-inline={ field.group && field.group.inline ? 'true' : undefined }>
+			<div key={field.name} className={fieldClasses + ( ! hasLabel ? ' bb-admin-settings-form__field--no-label' : '' ) + ( 'reaction_mode' !== field.type && field.pro_notice?.show ? ' bb-admin-settings-form__field--pro-locked' : '' )} data-field-name={field.name} data-group={field.group?.key || undefined} data-group-inline={ field.group && field.group.inline ? 'true' : undefined }>
 				{ hasLabel && (
 					<div className="bb-admin-settings-form__field-label">
 						<label>

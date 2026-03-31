@@ -108,7 +108,22 @@ bb_register_feature_field(
 	)
 );
 
-// FIELD: Site Key.
+// FIELD: API Keys (parent label for Site Key, Secret Key, and Verify).
+bb_register_feature_field(
+	'recaptcha',
+	'recaptcha_settings',
+	'recaptcha_connection',
+	array(
+		'name'              => 'bb_recaptcha_api_keys',
+		'label'             => __( 'API Keys', 'buddyboss' ),
+		'type'              => 'hidden',
+		'default'           => '',
+		'sanitize_callback' => '__return_empty_string',
+		'order'             => 20,
+	)
+);
+
+// FIELD: Site Key (child of API Keys).
 bb_register_feature_field(
 	'recaptcha',
 	'recaptcha_settings',
@@ -120,11 +135,12 @@ bb_register_feature_field(
 		'default'           => bb_recaptcha_site_key(),
 		'placeholder'       => '',
 		'sanitize_callback' => 'sanitize_text_field',
-		'order'             => 20,
+		'order'             => 21,
+		'parent_field'      => 'bb_recaptcha_api_keys',
 	)
 );
 
-// FIELD: Secret Key.
+// FIELD: Secret Key (child of API Keys).
 bb_register_feature_field(
 	'recaptcha',
 	'recaptcha_settings',
@@ -136,11 +152,12 @@ bb_register_feature_field(
 		'default'           => bb_recaptcha_secret_key(),
 		'placeholder'       => '',
 		'sanitize_callback' => 'sanitize_text_field',
-		'order'             => 30,
+		'order'             => 22,
+		'parent_field'      => 'bb_recaptcha_api_keys',
 	)
 );
 
-// FIELD: Verify button.
+// FIELD: Verify button (child of API Keys).
 bb_register_feature_field(
 	'recaptcha',
 	'recaptcha_settings',
@@ -152,11 +169,12 @@ bb_register_feature_field(
 		'is_connected'      => ( 'connected' === $verified ),
 		'default'           => '',
 		'sanitize_callback' => '__return_empty_string',
-		'order'             => 40,
+		'order'             => 23,
+		'parent_field'      => 'bb_recaptcha_api_keys',
 	)
 );
 
-// FIELD: Admin Console notice.
+// FIELD: Admin Console notice (plain description text per Figma).
 bb_register_feature_field(
 	'recaptcha',
 	'recaptcha_settings',
@@ -165,7 +183,7 @@ bb_register_feature_field(
 		'name'              => 'bb_recaptcha_admin_console_notice',
 		'label'             => '',
 		'type'              => 'notice',
-		'notice_type'       => 'info',
+		'notice_type'       => 'plain',
 		'description'       => sprintf(
 			/* translators: %s: Admin Console link. */
 			__( 'Check reCAPTCHA %s for usage statistics and monitor its performance. Adjust settings if necessary to maintain security.', 'buddyboss' ),
@@ -341,7 +359,7 @@ bb_register_feature_field(
 	)
 );
 
-// Admin Console notice for settings section.
+// Admin Console notice for settings section (plain description text per Figma).
 bb_register_feature_field(
 	'recaptcha',
 	'recaptcha_settings',
@@ -350,7 +368,7 @@ bb_register_feature_field(
 		'name'              => 'bb_recaptcha_settings_console_notice',
 		'label'             => '',
 		'type'              => 'notice',
-		'notice_type'       => 'info',
+		'notice_type'       => 'plain',
 		'description'       => sprintf(
 			/* translators: %s: Admin Console link. */
 			__( 'Check reCAPTCHA %s for usage statistics and monitor its performance. Adjust settings if necessary to maintain security.', 'buddyboss' ),

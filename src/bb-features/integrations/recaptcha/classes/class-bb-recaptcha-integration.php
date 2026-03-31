@@ -35,6 +35,28 @@ class BB_Recaptcha_Integration extends BP_Integration {
 	}
 
 	/**
+	 * Get the base directory for this integration.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return string Integration base directory path.
+	 */
+	private function get_integration_dir() {
+		return trailingslashit( buddypress()->plugin_dir ) . 'bb-features/integrations/' . $this->id . '/';
+	}
+
+	/**
+	 * Get the base URL for this integration.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return string Integration base URL.
+	 */
+	private function get_integration_url() {
+		return trailingslashit( buddypress()->plugin_url ) . 'bb-features/integrations/' . $this->id . '/';
+	}
+
+	/**
 	 * Includes.
 	 *
 	 * @since BuddyBoss 2.5.60
@@ -42,7 +64,7 @@ class BB_Recaptcha_Integration extends BP_Integration {
 	 * @param array $includes Array of file paths to include.
 	 */
 	public function includes( $includes = array() ) {
-		$slashed_path = trailingslashit( buddypress()->integration_dir ) . $this->id . '/';
+		$slashed_path = $this->get_integration_dir();
 
 		$includes = array(
 			'actions',
@@ -78,20 +100,13 @@ class BB_Recaptcha_Integration extends BP_Integration {
 	/**
 	 * Register Recaptcha setting tab.
 	 *
+	 * Legacy admin tab removed — reCAPTCHA settings are managed
+	 * via Settings 2.0 at bb-settings&tab=recaptcha.
+	 *
 	 * @since BuddyBoss 2.5.60
+	 * @since BuddyBoss [BBVERSION] Removed legacy integration tab.
 	 */
 	public function setup_admin_integration_tab() {
-
-		require_once trailingslashit( buddypress()->integration_dir ) . $this->id . '/classes/class-bb-recaptcha-admin-tab.php';
-
-		new BB_Recaptcha_Admin_Tab(
-			"bb-$this->id",
-			$this->name,
-			array(
-				'root_path'       => trailingslashit( buddypress()->integration_dir ) . $this->id,
-				'root_url'        => trailingslashit( buddypress()->integration_url ) . $this->id,
-				'required_plugin' => $this->required_plugin,
-			)
-		);
+		// No-op: Settings managed via Settings 2.0.
 	}
 }
