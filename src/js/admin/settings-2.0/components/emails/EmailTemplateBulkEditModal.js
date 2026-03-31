@@ -20,8 +20,7 @@ import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { bulkEditEmailTemplates, getEmailSituations } from '../../utils/ajax';
 
-// Share situations cache with EmailTemplateModal.
-var situationsCache = null;
+// Situations cache is managed in utils/ajax.js (shared across all modals).
 
 /**
  * Email Template Bulk Edit Modal Component
@@ -82,17 +81,11 @@ export function EmailTemplateBulkEditModal( { isOpen, selectedItems, onClose, on
 			return;
 		}
 
-		if ( situationsCache ) {
-			setSituations( situationsCache );
-			return;
-		}
-
 		getEmailSituations().then( function ( response ) {
 			if ( ! isMountedRef.current ) {
 				return;
 			}
 			if ( response.success && response.data ) {
-				situationsCache = response.data;
 				setSituations( response.data );
 			}
 		} ).catch( function () {} );

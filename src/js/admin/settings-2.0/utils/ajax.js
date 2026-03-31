@@ -1148,8 +1148,18 @@ export function bulkEditEmailTemplates( data ) {
  * @param {Object} options Optional fetch options.
  * @return {Promise} Promise resolving to grouped situations.
  */
+var emailSituationsCache = null;
+
 export function getEmailSituations( options ) {
-	return ajaxFetch( 'bb_admin_get_email_situations', {}, options );
+	if ( emailSituationsCache ) {
+		return Promise.resolve( { success: true, data: emailSituationsCache } );
+	}
+	return ajaxFetch( 'bb_admin_get_email_situations', {}, options ).then( function ( response ) {
+		if ( response.success && response.data ) {
+			emailSituationsCache = response.data;
+		}
+		return response;
+	} );
 }
 
 /**

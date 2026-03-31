@@ -234,7 +234,6 @@ export default function EmailTemplatesListScreen( props ) {
 					setTotal( response.data.total || 0 );
 					setTotalPages( response.data.total_pages || 0 );
 
-	
 					if ( response.data.bulk_actions ) {
 						setBulkActions( response.data.bulk_actions );
 					}

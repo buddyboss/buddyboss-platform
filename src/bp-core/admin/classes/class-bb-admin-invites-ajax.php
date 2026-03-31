@@ -444,3 +444,6 @@ class BB_Admin_Invites_Ajax {
 		return $where;
 	}
 }
+
+// Initialize.
+new BB_Admin_Invites_Ajax();

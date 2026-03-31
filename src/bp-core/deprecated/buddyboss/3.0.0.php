@@ -2378,3 +2378,4 @@ if ( ! function_exists( 'bp_core_get_emails_admin_tabs' ) ) {
 		return array();
 	}
 }
+

@@ -89,8 +89,6 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 	registeredFieldsRef.current = registeredFields;
 	var emailIdRef = useRef( emailId );
 	emailIdRef.current = emailId;
-	var situationsCacheRef = useRef( null );
-
 	useEffect( function () {
 		isMountedRef.current = true;
 		return function () {
@@ -128,19 +126,14 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 			return;
 		}
 
-		if ( situationsCacheRef.current ) {
-			setSituations( situationsCacheRef.current );
-		} else {
-			getEmailSituations().then( function ( response ) {
-				if ( ! isMountedRef.current ) {
-					return;
-				}
-				if ( response.success && response.data ) {
-					situationsCacheRef.current = response.data;
-					setSituations( response.data );
-				}
-			} ).catch( function () {} );
-		}
+		getEmailSituations().then( function ( response ) {
+			if ( ! isMountedRef.current ) {
+				return;
+			}
+			if ( response.success && response.data ) {
+				setSituations( response.data );
+			}
+		} ).catch( function () {} );
 
 		// Fetch meta key suggestions for custom field name autocomplete.
 		if ( 0 === metaKeys.length ) {
