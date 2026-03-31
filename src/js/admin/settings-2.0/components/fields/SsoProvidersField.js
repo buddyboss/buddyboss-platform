@@ -55,6 +55,8 @@ export function SsoProvidersField( { field, value, onChange, disabled } ) {
 	var setOpenMenu = openMenuState[ 1 ];
 	var menuButtonRefs = useRef( {} );
 	var savingRef = useRef( {} );
+	var toastTimerRef = useRef( null );
+	var lastDisabledStateRef = useRef( null );
 
 	/**
 	 * Intercept SSO modal close/cancel clicks to prevent legacy jQuery
@@ -157,9 +159,33 @@ export function SsoProvidersField( { field, value, onChange, disabled } ) {
 			.then( function ( res ) { return res.json(); } )
 			.then( function ( response ) {
 				if ( response.success ) {
-					window.dispatchEvent( new CustomEvent( BB_EVENTS.TOAST, {
-						detail: { status: 'success', message: __( 'Setting saved.', 'buddyboss' ) },
-					} ) );
+					// Debounce toast — show one "saved" after rapid toggles settle.
+					clearTimeout( toastTimerRef.current );
+					toastTimerRef.current = setTimeout( function () {
+						window.dispatchEvent( new CustomEvent( BB_EVENTS.TOAST, {
+							detail: { status: 'success', message: __( 'Setting saved.', 'buddyboss' ) },
+						} ) );
+					}, 500 );
+
+					// Check if only Twitter/X is enabled — disable additional data fields.
+					// Skip dispatch if state hasn't changed to avoid unnecessary re-renders.
+					setProviders( function ( current ) {
+						var enabledIds = current.filter( function ( p ) { return 'enabled' === p.state; } ).map( function ( p ) { return p.id; } );
+						var onlyTwitter = 1 === enabledIds.length && 'twitter' === enabledIds[0];
+						var shouldDisable = onlyTwitter || 0 === enabledIds.length;
+
+						if ( lastDisabledStateRef.current !== shouldDisable ) {
+							lastDisabledStateRef.current = shouldDisable;
+							window.dispatchEvent( new CustomEvent( BB_EVENTS.FIELD_DISABLED_UPDATE, {
+								detail: {
+									fields: [ 'bb-additional-sso-name', 'bb-additional-sso-profile-picture' ],
+									disabled: shouldDisable,
+								},
+							} ) );
+						}
+
+						return current;
+					} );
 				} else {
 					// Revert on failure.
 					setProviders( function ( prev ) {
@@ -298,7 +324,7 @@ export function SsoProvidersField( { field, value, onChange, disabled } ) {
 										onClose={ function () {
 											setOpenMenu( null );
 										} }
-										className="bb-admin-sso-providers__menu-popover	"
+										className="bb-admin-sso-providers__menu-popover"
 									>
 										<div className="bb-admin-sso-providers__menu">
 											<button

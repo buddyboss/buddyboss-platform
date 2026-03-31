@@ -235,7 +235,7 @@ function bb_registration_register_panel_fields() {
 		)
 	);
 
-	// Field 8: Domain Restrictions (custom repeater).
+	// Field 7: Domain Restrictions (custom repeater).
 	bb_register_feature_field(
 		$feature_id,
 		$panel_id,
@@ -251,7 +251,7 @@ function bb_registration_register_panel_fields() {
 		)
 	);
 
-	// Field 9: Email Restrictions (custom repeater).
+	// Field 8: Email Restrictions (custom repeater).
 	bb_register_feature_field(
 		$feature_id,
 		$panel_id,
@@ -274,7 +274,7 @@ function bb_registration_register_panel_fields() {
 	 */
 	do_action( 'bb_registration_after_restrictions_settings_fields' );
 
-	// Field 7: Enable Social Login (Pro placeholder).
+	// Field 9: Enable Social Login (Pro placeholder).
 	// Platform registers with a generic name. Pro enriches via bb_admin_settings_format_field_data
 	// filter to map to the actual option key (bb-enable-sso) and unlock the toggle.
 	bb_register_feature_field(
@@ -294,7 +294,7 @@ function bb_registration_register_panel_fields() {
 		)
 	);
 
-	// Field 8: SSO Provider Cards (Pro placeholder).
+	// Field 10: SSO Provider Cards (Pro placeholder).
 	// Always visible as a preview — shows greyed-out provider cards when Pro is not active.
 	// Pro enriches via bb_admin_settings_format_field_data to inject real provider data.
 	bb_register_feature_field(
@@ -340,7 +340,7 @@ function bb_registration_register_panel_fields() {
 		)
 	);
 
-	// Field 9: SSO App Notice (hidden by default, Pro shows when bbapp() exists).
+	// Field 11: SSO App Notice (hidden by default, Pro shows when bbapp() exists).
 	bb_register_feature_field(
 		$feature_id,
 		$panel_id,
@@ -353,8 +353,9 @@ function bb_registration_register_panel_fields() {
 			'description'       => __( 'Any changes will require new iOS and Android app builds.', 'buddyboss' ),
 			'sanitize_callback' => '__return_empty_string',
 			'conditional'       => array(
-				'field' => 'bb-social-login',
-				'value' => true,
+				'field'  => 'bb-social-login',
+				'value'  => true,
+				'action' => 'show',
 			),
 			'group'             => 'social_login',
 			'hidden'            => true,
