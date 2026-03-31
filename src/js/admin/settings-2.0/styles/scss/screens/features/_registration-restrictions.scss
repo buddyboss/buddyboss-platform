@@ -7,8 +7,9 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-// Domain Restrictions
-.bb-domain-restrictions {
+// Shared repeater styles for both domain and email restrictions.
+.bb-domain-restrictions,
+.bb-email-restrictions {
 	width: 100%;
 
 	&__rows {
@@ -23,6 +24,55 @@
 		align-items: center;
 		gap: 8px;
 	}
+
+	&__condition {
+		flex: 0 0 180px;
+		min-width: 0;
+
+		.components-select-control__input {
+			margin: 0;
+		}
+	}
+
+	&__remove {
+		flex-shrink: 0;
+		background: none;
+		border: none;
+		cursor: pointer;
+		padding: 4px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: $bb-border-radius-sm;
+
+		&:hover {
+			background-color: $bb-background-secondary-color;
+		}
+
+		&:disabled {
+			opacity: 0.4;
+			cursor: not-allowed;
+		}
+
+		i {
+			color: $bb-text-secondary-color;
+			font-size: 16px;
+		}
+	}
+
+	&__add[class] {
+		margin-top: 4px;
+		@include bb-button-primary-outline;
+
+		i {
+			font-size: 16px;
+			margin-right: 4px;
+		}
+	}
+}
+
+// Domain Restrictions — unique fields.
+.bb-domain-restrictions {
 
 	&__domain {
 		flex: 1;
@@ -49,64 +99,10 @@
 			margin: 0;
 		}
 	}
-
-	&__condition {
-		flex: 0 0 180px;
-		min-width: 0;
-
-		.components-select-control__input {
-			margin: 0;
-		}
-	}
-
-	&__remove {
-		flex-shrink: 0;
-		background: none;
-		border: none;
-		cursor: pointer;
-		padding: 4px;
-		color: $bb-text-tertiary-color;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		border-radius: $bb-border-radius-sm;
-
-		&:hover {
-			color: $bb-error-color;
-			background-color: rgba($bb-error-color, 0.08);
-		}
-
-		&:disabled {
-			opacity: 0.4;
-			cursor: not-allowed;
-		}
-
-		i {
-			font-size: 16px;
-		}
-	}
-
-	&__add {
-		margin-top: 4px;
-	}
 }
 
-// Email Restrictions
+// Email Restrictions — unique fields.
 .bb-email-restrictions {
-	width: 100%;
-
-	&__rows {
-		display: flex;
-		flex-direction: column;
-		gap: 8px;
-		margin-bottom: 12px;
-	}
-
-	&__row {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-	}
 
 	&__address {
 		flex: 1;
@@ -115,45 +111,5 @@
 		.components-text-control__input {
 			margin: 0;
 		}
-	}
-
-	&__condition {
-		flex: 0 0 180px;
-		min-width: 0;
-
-		.components-select-control__input {
-			margin: 0;
-		}
-	}
-
-	&__remove {
-		flex-shrink: 0;
-		background: none;
-		border: none;
-		cursor: pointer;
-		padding: 4px;
-		color: $bb-text-tertiary-color;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		border-radius: $bb-border-radius-sm;
-
-		&:hover {
-			color: $bb-error-color;
-			background-color: rgba($bb-error-color, 0.08);
-		}
-
-		&:disabled {
-			opacity: 0.4;
-			cursor: not-allowed;
-		}
-
-		i {
-			font-size: 16px;
-		}
-	}
-
-	&__add {
-		margin-top: 4px;
 	}
 }

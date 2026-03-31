@@ -574,17 +574,14 @@ function bb_render_admin_header() {
 				'bp_ps_form' === $screen->post_type ||
 				( function_exists( 'bp_groups_get_group_type_post_type' ) && bp_groups_get_group_type_post_type() === $screen->post_type ) ||
 				( function_exists( 'bp_get_member_type_post_type' ) && bp_get_member_type_post_type() === $screen->post_type ) ||
-				( function_exists( 'bp_get_invite_post_type' ) && bp_get_invite_post_type() === $screen->post_type ) ||
 				( function_exists( 'bbp_get_forum_post_type' ) && bbp_get_forum_post_type() === $screen->post_type ) ||
 				( function_exists( 'bbp_get_topic_post_type' ) && bbp_get_topic_post_type() === $screen->post_type ) ||
-				( function_exists( 'bbp_get_reply_post_type' ) && bbp_get_reply_post_type() === $screen->post_type ) ||
-				( function_exists( 'bp_get_email_post_type' ) && bp_get_email_post_type() === $screen->post_type )
+				( function_exists( 'bbp_get_reply_post_type' ) && bbp_get_reply_post_type() === $screen->post_type )
 			)
 		) || (
 			! empty( $screen->taxonomy ) &&
 			(
-				( function_exists( 'bbp_get_topic_tag_tax_id' ) && bbp_get_topic_tag_tax_id() === $screen->taxonomy ) ||
-				( function_exists( 'bp_get_email_tax_type' ) && bp_get_email_tax_type() === $screen->taxonomy )
+				( function_exists( 'bbp_get_topic_tag_tax_id' ) && bbp_get_topic_tag_tax_id() === $screen->taxonomy )
 			)
 		)
 	) {
@@ -610,9 +607,58 @@ function bb_redirect_legacy_settings_to_settings_2() {
 		return;
 	}
 
+	// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Redirect only, no data modification.
 	$page      = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
 	$tab       = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : '';
 	$post_type = isset( $_GET['post_type'] ) ? sanitize_key( wp_unslash( $_GET['post_type'] ) ) : '';
+
+	// Redirect legacy CPT single edit screens (post.php?post=ID&action=edit) to Settings 2.0.
+	// These post types are now managed via React admin — the classic editor should not be accessible.
+	$post_id = isset( $_GET['post'] ) ? absint( $_GET['post'] ) : 0;
+	$action  = isset( $_GET['action'] ) ? sanitize_key( wp_unslash( $_GET['action'] ) ) : '';
+	// phpcs:enable WordPress.Security.NonceVerification.Recommended
+
+	if ( $post_id > 0 && 'edit' === $action ) {
+		$edit_post_type = get_post_type( $post_id );
+
+		/**
+		 * Map of migrated CPT slugs to their Settings 2.0 redirect URLs.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $cpt_redirects Post type slug => Settings 2.0 URL path.
+		 */
+		$cpt_redirects = array(
+			bp_get_email_post_type()              => 'admin.php?page=bb-settings&tab=emails&panel=all_emails',
+			bp_get_invite_post_type()             => 'admin.php?page=bb-settings&tab=invites&panel=invites_list',
+			bp_groups_get_group_type_post_type()  => 'admin.php?page=bb-settings&tab=groups&panel=group_types',
+			bp_get_member_type_post_type()        => 'admin.php?page=bb-settings&tab=members&panel=profile_types',
+		);
+
+		// Forum CPTs (only when forums component is active).
+		if ( bp_is_active( 'forums' ) ) {
+			$cpt_redirects['forum'] = 'admin.php?page=bb-settings&tab=forums&panel=all_forums';
+			$cpt_redirects['topic'] = 'admin.php?page=bb-settings&tab=forums&panel=discussions';
+			$cpt_redirects['reply'] = 'admin.php?page=bb-settings&tab=forums&panel=replies';
+		}
+
+		/**
+		 * Filters the CPT edit screen redirect map for Settings 2.0.
+		 *
+		 * Third-party plugins can add their own CPT redirects when they
+		 * migrate admin screens to Settings 2.0.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $cpt_redirects Post type slug => Settings 2.0 URL path.
+		 */
+		$cpt_redirects = apply_filters( 'bb_legacy_cpt_edit_redirects', $cpt_redirects );
+
+		if ( $edit_post_type && isset( $cpt_redirects[ $edit_post_type ] ) ) {
+			wp_safe_redirect( bp_get_admin_url( $cpt_redirects[ $edit_post_type ] ) );
+			exit;
+		}
+	}
 
 	// Redirect legacy Group Types CPT page (edit.php?post_type=bp-group-type).
 	if ( 'bp-group-type' === $post_type ) {
@@ -669,6 +715,18 @@ function bb_redirect_legacy_settings_to_settings_2() {
 		}
 	}
 
+	// Redirect legacy Email Invites CPT page (edit.php?post_type=bp-invite).
+	if ( function_exists( 'bp_get_invite_post_type' ) && bp_get_invite_post_type() === $post_type ) {
+		wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=invites&panel=invites_list' ) );
+		exit;
+	}
+
+	// Redirect legacy Email Templates CPT page (edit.php?post_type=bp-email).
+	if ( function_exists( 'bp_get_email_post_type' ) && bp_get_email_post_type() === $post_type ) {
+		wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=emails&panel=all_emails' ) );
+		exit;
+	}
+
 	// Check if we're on the old settings page.
 	if ( 'bp-settings' !== $page || empty( $tab ) ) {
 		return;
@@ -698,7 +756,8 @@ function bb_redirect_legacy_settings_to_settings_2() {
 		),
 		'bp-messages'      => 'messages',
 		'bp-search'        => 'search',
-		'bp-invites'       => 'email_invites',
+		'bp-invites'       => 'invites',
+		'bp-registration'  => 'registration',
 		'bp-general'       => 'advanced',
 		'bp-advanced'      => 'advanced',
 		'bp-moderation'    => 'moderation',

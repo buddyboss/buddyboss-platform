@@ -257,51 +257,6 @@ function bp_get_form_option( $option, $default = '', $slug = false ) {
 	return apply_filters( 'bp_get_form_option', $value, $option );
 }
 
-/** Invites Section ************************************************************/
-
-/**
- * Enable email subject field markup.
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_admin_setting_callback_member_invite_email_subject() {
-	?>
-	<input id="bp-disable-invite-member-email-subject" name="bp-disable-invite-member-email-subject" type="checkbox" value="1" <?php checked( bp_disable_invite_member_email_subject() ); ?> />
-	<label for="bp-disable-invite-member-email-subject"><?php esc_html_e( 'Allow members to customize the email subject', 'buddyboss' ); ?></label>
-	<?php
-}
-
-/**
- * Enable email content field markup.
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_admin_setting_callback_member_invite_email_content() {
-	?>
-	<input id="bp-disable-invite-member-email-content" name="bp-disable-invite-member-email-content" type="checkbox" value="1" <?php checked( bp_disable_invite_member_email_content() ); ?> />
-	<label for="bp-disable-invite-member-email-content"><?php esc_html_e( 'Allow members to customize the email body content', 'buddyboss' ); ?></label>
-	<?php
-}
-
-/**
- * Enable member invite field markup.
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_admin_setting_callback_member_invite_member_type() {
-	?>
-	<input id="bp-disable-invite-member-type" name="bp-disable-invite-member-type" type="checkbox" value="1" <?php checked( bp_disable_invite_member_type() ); ?> />
-	<label for="bp-disable-invite-member-type"><?php esc_html_e( 'Allow members to select profile type of invitee', 'buddyboss' ); ?></label>
-	<?php
-		printf(
-			'<p class="description">%s</p>',
-			sprintf(
-				__( 'Customize this setting while editing any of your <a href="%s">Profile Types</a>.', 'buddyboss' ),
-				bb_get_feature_settings_url( 'members', 'profile_types' )
-			)
-		);
-}
-
 /**
  * Allow Post Type feed setting field
  *
@@ -417,60 +372,6 @@ function bp_feed_settings_callback_platform( $args ) {
 	<?php
 
 }
-
-
-/**
- * Allow member type to send invites setting field
- *
- * @since BuddyBoss 1.0.0
- *
- * @param $args array
- *
- * @uses checked() To display the checked attribute
- */
-function bp_admin_setting_callback_enable_send_invite_member_type( $args ) {
-
-	$option_name = $args['name'];
-
-	if ( true === $args['description'] ) {
-		?>
-		<p class="description" style="margin-bottom: 10px;"><?php esc_html_e( 'Only allow the selected profile types to send invites.', 'buddyboss' ); ?></p>
-		<?php
-	}
-	?>
-	<input name="<?php echo esc_attr( 'bp-enable-send-invite-member-type-' . $option_name ); ?>" id="<?php echo esc_attr( $option_name ); ?>" type="checkbox" value="1" <?php checked( bp_enable_send_invite_member_type( 'bp-enable-send-invite-member-type-' . $option_name, false ) ); ?>/>
-	<label for="<?php echo esc_attr( $option_name ); ?>"><?php echo esc_html( $args['member_type_name'] ); ?></label>
-	<?php
-
-}
-
-/**
- * Link to Email Invites tutorial
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_email_invites_tutorial() {
-	?>
-	<p>
-		<a class="button" target="_blank" href="
-		<?php
-			echo esc_url(
-				bp_get_admin_url(
-					add_query_arg(
-						array(
-							'page'    => 'bp-help',
-							'article' => 62838,
-						),
-						'admin.php'
-					)
-				)
-			);
-		?>
-		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
-	</p>
-	<?php
-}
-
 
 /**
  * Save our settings.

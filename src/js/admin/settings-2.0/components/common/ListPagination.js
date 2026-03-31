@@ -22,10 +22,12 @@ import { getPageNumbers } from '../../utils/pagination';
  * @param {number}   props.totalPages  Total number of pages.
  * @param {number}   props.total       Total number of items.
  * @param {Function} props.onPageChange Page change handler.
- * @param {string}   props.className   CSS class prefix (e.g., 'bb-forums-list').
+ * @param {string}   props.className   CSS class prefix for the footer wrapper (e.g., 'bb-forums-list').
  * @returns {JSX.Element|null} Pagination footer or null if no items.
  */
 export function ListPagination( { currentPage, totalPages, total, onPageChange, className } ) {
+	var p = 'bb-admin-pagination';
+
 	if ( ! total || total <= 0 ) {
 		return null;
 	}
@@ -41,14 +43,14 @@ export function ListPagination( { currentPage, totalPages, total, onPageChange, 
 			</span>
 
 			{ totalPages > 1 && (
-				<div className={ className + '__pagination' }>
+				<div className={ p + '__pagination' }>
 					<Button
 						variant="secondary"
 						disabled={ 1 === currentPage }
 						onClick={ function () {
 							onPageChange( Math.max( 1, currentPage - 1 ) );
 						} }
-						className={ className + '__pagination-btn ' + className + '__pagination-btn--previous' }
+						className={ p + '__pagination-btn ' + p + '__pagination-btn--previous' }
 					>
 						&lsaquo;
 					</Button>
@@ -56,7 +58,7 @@ export function ListPagination( { currentPage, totalPages, total, onPageChange, 
 					{ getPageNumbers( currentPage, totalPages ).map( function ( page, index ) {
 						if ( '...' === page ) {
 							return (
-								<span key={ 'ellipsis-' + index } className={ className + '__pagination-ellipsis' }>
+								<span key={ 'ellipsis-' + index } className={ p + '__pagination-ellipsis' }>
 									&hellip;
 								</span>
 							);
@@ -68,7 +70,7 @@ export function ListPagination( { currentPage, totalPages, total, onPageChange, 
 								onClick={ function () {
 									onPageChange( page );
 								} }
-								className={ className + '__pagination-btn' + ( currentPage === page ? ' ' + className + '__pagination-btn--current' : '' ) }
+								className={ p + '__pagination-btn' + ( currentPage === page ? ' ' + p + '__pagination-btn--current' : '' ) }
 							>
 								{ page }
 							</Button>
@@ -81,7 +83,7 @@ export function ListPagination( { currentPage, totalPages, total, onPageChange, 
 						onClick={ function () {
 							onPageChange( Math.min( totalPages, currentPage + 1 ) );
 						} }
-						className={ className + '__pagination-btn ' + className + '__pagination-btn--next' }
+						className={ p + '__pagination-btn ' + p + '__pagination-btn--next' }
 					>
 						&rsaquo;
 					</Button>

@@ -1059,6 +1059,122 @@ export function uploadForumImage( file, signal ) {
 }
 
 /**
+ * Fetch paginated email invites list.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data            Query parameters (page, per_page, search, sort, filter, include_meta).
+ * @param {Object} options         Optional fetch options.
+ * @param {AbortSignal} options.signal AbortController signal.
+ * @return {Promise} Promise resolving to response.
+ */
+export function getInvites( data, options ) {
+	return ajaxFetch( 'bb_admin_get_invites', data, options );
+}
+
+/**
+ * Perform bulk action on email invites.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Array}  inviteIds Array of invite post IDs.
+ * @param {string} action    Bulk action to perform (e.g. 'revoke').
+ * @return {Promise} Promise resolving to response.
+ */
+export function invitesBulkAction( inviteIds, action ) {
+	return ajaxFetch( 'bb_admin_invites_bulk_action', {
+		invite_ids: inviteIds.join( ',' ),
+		do_action: action,
+	} );
+}
+
+/**
+ * Fetch a single email template for editing.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data            Query parameters (email_id).
+ * @param {Object} options         Optional fetch options.
+ * @return {Promise} Promise resolving to response.
+ */
+export function getEmailTemplate( data, options ) {
+	return ajaxFetch( 'bb_admin_get_email_template', data, options );
+}
+
+/**
+ * Create or update an email template.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data    Email template data (email_id, title, content, etc.).
+ * @param {Object} options Optional fetch options.
+ * @return {Promise} Promise resolving to response.
+ */
+export function saveEmailTemplate( data, options ) {
+	return ajaxFetch( 'bb_admin_save_email_template', data, options );
+}
+
+/**
+ * Permanently delete email templates.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Array} emailIds Array of email template post IDs.
+ * @return {Promise} Promise resolving to response.
+ */
+export function deleteEmailTemplates( emailIds ) {
+	return ajaxFetch( 'bb_admin_delete_email_templates', {
+		email_ids: emailIds.join( ',' ),
+	} );
+}
+
+/**
+ * Bulk edit email templates (status and/or situation).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} data Bulk edit data (email_ids, status, email_type).
+ * @return {Promise} Promise resolving to response.
+ */
+export function bulkEditEmailTemplates( data ) {
+	return ajaxFetch( 'bb_admin_bulk_edit_email_templates', data );
+}
+
+/**
+ * Get all email situations grouped by category.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} options Optional fetch options.
+ * @return {Promise} Promise resolving to grouped situations.
+ */
+var emailSituationsCache = null;
+
+export function getEmailSituations( options ) {
+	if ( emailSituationsCache ) {
+		return Promise.resolve( { success: true, data: emailSituationsCache } );
+	}
+	return ajaxFetch( 'bb_admin_get_email_situations', {}, options ).then( function ( response ) {
+		if ( response.success && response.data ) {
+			emailSituationsCache = response.data;
+		}
+		return response;
+	} );
+}
+
+/**
+ * Get distinct post meta keys for email template custom field autocomplete.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} options Optional fetch options (e.g. { signal }).
+ * @return {Promise} Promise resolving to array of meta key strings.
+ */
+export function getEmailMetaKeys( options ) {
+	return ajaxFetch( 'bb_admin_get_email_meta_keys', {}, options );
+}
+
+/**
  * Get all reporting categories (bpm_category taxonomy terms).
  *
  * @since BuddyBoss [BBVERSION]

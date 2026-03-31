@@ -44,6 +44,12 @@
         background-color: $bb-background-brand-secondary-hover-color !important;
         pointer-events: none;
     }
+
+    > [class*="bb-icon"] {
+        font-size: 16px;
+        vertical-align: middle;
+        margin-right: 6px;
+    }
 }
 
 @mixin bb-button-danger {
@@ -73,6 +79,12 @@
         background-color: $bb-background-danger-primary-hover-color !important;
         pointer-events: none;
     }
+
+    > [class*="bb-icon"] {
+        font-size: 16px;
+        vertical-align: middle;
+        margin-right: 6px;
+    }
 }
 
 @mixin bb-button-primary-outline {
@@ -93,13 +105,19 @@
 
     &:focus {
         border-color: transparent;
-        outline: 2px solid $bb-border-quinery;
+        outline: 2px solid $bb-border-quinery !important;
         box-shadow: none !important;
     }
 
     &[disabled] {
         opacity: 0.5;
         pointer-events: none;
+    }
+
+    > [class*="bb-icon"] {
+        font-size: 16px;
+        vertical-align: middle;
+        margin-right: 6px;
     }
 }
 
@@ -111,6 +129,7 @@
     padding: 8px 16px;
     box-shadow: none;
     border-radius: $bb-border-radius-lg;
+    text-decoration: none;
 
     &:hover {
         color: $bb-text-color !important;
@@ -128,6 +147,13 @@
         opacity: 0.5;
         pointer-events: none;
     }
+
+    > [class*="bb-icon"] {
+        color: $bb-icon-color;
+        font-size: 16px;
+        vertical-align: middle;
+        margin-right: 6px;
+    }
 }
 
 @mixin bb-input-text {
@@ -144,6 +170,86 @@
         box-shadow: none;
         border-color: $bb-border-quaternary-color;
     }
+}
+
+@mixin bb-admin-pagination {
+	&__pagination {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+	}
+
+	&__pagination-btn.is-secondary,
+	&__pagination-btn.is-primary {
+		min-width: 32px;
+		height: 32px;
+		padding: 0 6px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: $bb-text-tertiary-color;
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 1;
+		border: 1px solid transparent;
+		box-shadow: none;
+		border-radius: $bb-border-radius-md;
+
+		&:hover {
+			background-color: $bb-background-base-color !important;
+			border-color: $bb-border-secondary-color;
+			box-shadow: none !important;
+			color: $bb-text-tertiary-color !important;
+		}
+	}
+
+	&__pagination-btn--current.is-primary {
+		background-color: $bb-background-base-color;
+		border-color: $bb-border-quinery;
+		color: $bb-text-color;
+		border-radius: $bb-border-radius-md;
+
+		&:hover {
+			background-color: $bb-background-base-color !important;
+			color: $bb-text-color !important;
+			border-color: $bb-border-quinery;
+			box-shadow: none;
+		}
+	}
+
+	&__pagination-ellipsis {
+		font-size: 13px;
+		font-weight: 500;
+		color: $bb-text-tertiary-color;
+		min-width: 24px;
+		text-align: center;
+		line-height: 32px;
+	}
+
+	&__pagination-btn--previous,
+	&__pagination-btn--next {
+		border: none !important;
+		box-shadow: none !important;
+		color: transparent !important;
+		font-size: 0 !important;
+
+		&:before {
+			content: "\e138";
+			font-family: "bb-icons-rl";
+			font-size: 16px;
+			color: $bb-icon-secondary-color;
+			font-weight: 400;
+		}
+
+		&[disabled] {
+			opacity: 0.5;
+			pointer-events: none;
+		}
+	}
+
+	&__pagination-btn--next:before {
+		content: "\e13a";
+	}
 }
 
 @mixin bb-input-label {

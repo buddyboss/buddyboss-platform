@@ -100,7 +100,7 @@ function bb_admin_settings_page() {
 
 	// Check Meta Field Registry (Activity/Groups edit modals use richtext fields).
 	if ( ! $has_rich_text && function_exists( 'bb_admin_meta_field_registry' ) ) {
-		$meta_components = array( 'activity', 'groups', 'forums', 'discussions', 'replies' );
+		$meta_components = array( 'activity', 'groups', 'forums', 'discussions', 'replies', 'emails' );
 		foreach ( $meta_components as $component ) {
 			$meta_fields = bb_admin_meta_field_registry()->get_fields( $component );
 			foreach ( $meta_fields as $field ) {
@@ -198,6 +198,10 @@ function bb_admin_settings_page() {
 
 		$localize_data['reportedContentTypes'] = $content_types;
 	}
+
+	// Repair tools nonce — used by Email Missing modal to call existing
+	// bp_admin_repair_tools_wrapper_function AJAX action.
+	$localize_data['repairNonce'] = wp_create_nonce( 'bp-do-counts' );
 
 	// Only expose debug data when WP_DEBUG is enabled.
 	if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {

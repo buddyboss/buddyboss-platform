@@ -860,7 +860,7 @@ export default function RepliesListScreen( { onNavigate } ) {
 
 			{ /* Loading / Error / Empty */ }
 			{ isLoading && (
-				<div className="bb-replies-list__loading">
+				<div className="bb-replies-list__loading bb-admin-list-table__loading">
 					<Spinner />
 				</div>
 			) }
@@ -880,17 +880,17 @@ export default function RepliesListScreen( { onNavigate } ) {
 			) }
 
 			{ ! isLoading && ! error && 0 === replies.length && (
-				<div className="bb-replies-list__empty">
+				<div className="bb-replies-list__empty bb-admin-list-table__empty">
 					<p>{ search ? __( 'No replies found matching your search.', 'buddyboss' ) : __( 'No replies found.', 'buddyboss' ) }</p>
 				</div>
 			) }
 
 			{ /* Table */ }
 			{ ! isLoading && ! error && replies.length > 0 && (
-				<table className="bb-replies-list__table">
+				<table className="bb-replies-list__table bb-admin-list-table">
 					<thead>
 						<tr>
-							<th className="bb-replies-list__col-cb">
+							<th className="bb-replies-list__col-cb bb-admin-list-table__checkbox">
 								<CheckboxControl
 									checked={ replies.length > 0 && selected.length === replies.length }
 									onChange={ handleSelectAll }
@@ -926,7 +926,7 @@ export default function RepliesListScreen( { onNavigate } ) {
 
 							return (
 								<tr key={ reply.id } className={ ( isSelected ? 'is-selected' : '' ) + ( reply.is_spam ? ' is-spam' : '' ) }>
-									<td className="bb-replies-list__col-cb">
+									<td className="bb-replies-list__col-cb bb-admin-list-table__checkbox">
 										<CheckboxControl
 											checked={ isSelected }
 											onChange={ function ( checked ) {
@@ -975,7 +975,7 @@ export default function RepliesListScreen( { onNavigate } ) {
 											</td>
 										);
 									} ) }
-									<td className="bb-replies-list__col-actions">
+									<td className="bb-replies-list__col-actions bb-admin-actions-toggle">
 										<DropdownMenu
 											icon={ <i className="bb-icons-rl-dots-three"></i> }
 											label={ __( 'Actions', 'buddyboss' ) }

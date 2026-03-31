@@ -174,9 +174,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			// On non-multisite, catch.
 			add_action( 'load-users.php', 'bp_core_admin_user_manage_spammers' );
 
-			// Emails.
-			add_filter( 'manage_' . bp_get_email_post_type() . '_posts_columns', array( $this, 'emails_register_situation_column' ) );
-			add_action( 'manage_' . bp_get_email_post_type() . '_posts_custom_column', array( $this, 'emails_display_situation_column_data' ), 10, 2 );
+			// Email CPT column hooks removed — migrated to Settings 2.0 (AJAX handler).
 
 			// Hello BuddyBoss/App.
 			add_action( 'admin_footer', array( $this, 'about_buddyboss_app_screen' ) );
@@ -577,28 +575,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				''
 			);
 
-			// For network-wide configs, add a link to (the root site's) Emails screen.
-			if ( is_network_admin() && bp_is_network_activated() ) {
-				$email_labels = bp_get_email_post_type_labels();
-				$email_url    = get_admin_url( bp_get_root_blog_id(), 'edit.php?post_type=' . bp_get_email_post_type() );
-
-				$hooks[] = add_menu_page(
-					$email_labels['name'],
-					$email_labels['menu_name'],
-					$this->capability,
-					'',
-					'',
-					'dashicons-email-alt',
-					26
-				);
-
-				// Hack: change the link to point to the root site's admin, not the network admin.
-				// $GLOBALS['menu'][26][2] = esc_url_raw( $email_url );
-			}
-
-			// foreach( $hooks as $hook ) {
-			// add_action( "admin_head-$hook", 'bp_core_modify_admin_menu_highlight' );
-			// }
+			// Network admin email menu removed — migrated to Settings 2.0.
 		}
 
 		/**
@@ -760,7 +737,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			// Notification settings class removed — migrated to Settings 2.0.
 			require_once $this->admin_dir . '/settings/bp-admin-setting-registration.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-credit.php';
-			require_once $this->admin_dir . '/settings/bp-admin-setting-invites.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-labs.php';
 		}
 
@@ -887,47 +863,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			}
 
 			include $this->admin_dir . 'templates/about-buddyboss-app.php';
-		}
-
-		/** Emails ****************************************************************/
-
-		/**
-		 * Registers 'Situations' column on Emails dashboard page.
-		 *
-		 * @since BuddyPress 2.6.0
-		 *
-		 * @param array $columns Current column data.
-		 * @return array
-		 */
-		public function emails_register_situation_column( $columns = array() ) {
-			$situation = array(
-				'situation' => __( 'Situations', 'buddyboss' ),
-			);
-
-			// Inject our 'Situations' column just before the last 'Date' column.
-			return array_slice( $columns, 0, -1, true ) + $situation + array_slice( $columns, -1, null, true );
-		}
-
-		/**
-		 * Output column data for our custom 'Situations' column.
-		 *
-		 * @since BuddyPress 2.6.0
-		 *
-		 * @param string $column  Current column name.
-		 * @param int    $post_id Current post ID.
-		 */
-		public function emails_display_situation_column_data( $column = '', $post_id = 0 ) {
-			if ( 'situation' !== $column ) {
-				return;
-			}
-
-			// Grab email situations for the current post.
-			$situations = wp_list_pluck( get_the_terms( $post_id, bp_get_email_tax_type() ), 'description' );
-
-			// Output each situation as a list item.
-			echo '<ul><li>';
-			echo implode( '</li><li>', $situations );
-			echo '</li></ul>';
 		}
 
 		/** Helpers ***************************************************************/

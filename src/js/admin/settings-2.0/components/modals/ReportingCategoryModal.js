@@ -160,45 +160,39 @@ export function ReportingCategoryModal( { isOpen, onClose, onSave, category, sho
 			className="bb-admin-reporting-category-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
 		>
-			<div className="bb-admin-reporting-category-modal__body">
+			<div className="bb-admin-settings-modal__body">
 				{ error && (
-					<div className="bb-admin-reporting-category-modal__error">
+					<div className="bb-admin-settings-modal__error">
 						{ error }
 					</div>
 				) }
 
 				{/* Name */}
-				<div className="bb-admin-reporting-category-modal__section">
-					<TextControl
-						label={ __( 'Name', 'buddyboss' ) }
-						value={ formData.name }
-						onChange={ function ( val ) { updateField( 'name', val ); } }
-						required
-					/>
-				</div>
+				<TextControl
+					label={ __( 'Name', 'buddyboss' ) }
+					value={ formData.name }
+					onChange={ function ( val ) { updateField( 'name', val ); } }
+					required
+				/>
 
 				{/* Description */}
-				<div className="bb-admin-reporting-category-modal__section">
-					<TextareaControl
-						label={ __( 'Description', 'buddyboss' ) }
-						value={ formData.description }
-						onChange={ function ( val ) { updateField( 'description', val ); } }
-						placeholder={ __( 'Enter category description...', 'buddyboss' ) }
-					/>
-				</div>
+				<TextareaControl
+					label={ __( 'Description', 'buddyboss' ) }
+					value={ formData.description }
+					onChange={ function ( val ) { updateField( 'description', val ); } }
+					placeholder={ __( 'Enter category description...', 'buddyboss' ) }
+				/>
 
 				{/* Show When Reporting */}
-				<div className="bb-admin-reporting-category-modal__section">
-					<SelectControl
-						label={ __( 'Show When Reporting', 'buddyboss' ) }
-						value={ formData.show_when_reporting }
-						options={ selectOptions }
-						onChange={ function ( val ) { updateField( 'show_when_reporting', val ); } }
-					/>
-				</div>
+				<SelectControl
+					label={ __( 'Show When Reporting', 'buddyboss' ) }
+					value={ formData.show_when_reporting }
+					options={ selectOptions }
+					onChange={ function ( val ) { updateField( 'show_when_reporting', val ); } }
+				/>
 			</div>
 
-			<div className="bb-admin-settings-modal__footer bb-admin-reporting-category-modal__footer">
+			<div className="bb-admin-settings-modal__footer">
 				<Button
 					variant="secondary"
 					onClick={ onClose }

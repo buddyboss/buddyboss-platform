@@ -14,7 +14,7 @@
  */
 
 import { CheckboxControl, Popover } from '@wordpress/components';
-import { useState, useRef } from '@wordpress/element';
+import { useState, useRef, useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { safeUrl } from '../../utils/sanitize';
 import { BB_EVENTS } from '../../utils/constants';
@@ -55,6 +55,50 @@ export function SsoProvidersField( { field, value, onChange, disabled } ) {
 	var setOpenMenu = openMenuState[ 1 ];
 	var menuButtonRefs = useRef( {} );
 	var savingRef = useRef( {} );
+	var toastTimerRef = useRef( null );
+	var lastDisabledStateRef = useRef( null );
+
+	/**
+	 * Intercept SSO modal close/cancel clicks to prevent legacy jQuery
+	 * handler (bb-sso-admin.js) from reloading the page.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	useEffect( function () {
+		var handler = function ( e ) {
+			var target = e.target;
+			if (
+				! target.closest( '#bb-hello-container' )
+			) {
+				return;
+			}
+			if (
+				target.matches( '.close-modal' ) ||
+				target.closest( '.close-modal' ) ||
+				target.matches( '#sso_cancel' ) ||
+				target.closest( '#sso_cancel' )
+			) {
+				e.stopImmediatePropagation();
+				e.preventDefault();
+
+				var container = document.getElementById( 'bb-hello-container' );
+				var backdrop = document.getElementById( 'bb-hello-backdrop' );
+				if ( container ) {
+					container.style.display = 'none';
+				}
+				if ( backdrop ) {
+					backdrop.style.display = 'none';
+				}
+				document.body.classList.remove( 'bp-disable-scroll' );
+			}
+		};
+
+		// Capture phase runs before jQuery delegated handlers.
+		document.addEventListener( 'click', handler, true );
+		return function () {
+			document.removeEventListener( 'click', handler, true );
+		};
+	}, [] );
 
 	/**
 	 * Check if a provider is enabled.
@@ -115,9 +159,33 @@ export function SsoProvidersField( { field, value, onChange, disabled } ) {
 			.then( function ( res ) { return res.json(); } )
 			.then( function ( response ) {
 				if ( response.success ) {
-					window.dispatchEvent( new CustomEvent( BB_EVENTS.TOAST, {
-						detail: { status: 'success', message: __( 'Setting saved.', 'buddyboss' ) },
-					} ) );
+					// Debounce toast — show one "saved" after rapid toggles settle.
+					clearTimeout( toastTimerRef.current );
+					toastTimerRef.current = setTimeout( function () {
+						window.dispatchEvent( new CustomEvent( BB_EVENTS.TOAST, {
+							detail: { status: 'success', message: __( 'Setting saved.', 'buddyboss' ) },
+						} ) );
+					}, 500 );
+
+					// Check if only Twitter/X is enabled — disable additional data fields.
+					// Skip dispatch if state hasn't changed to avoid unnecessary re-renders.
+					setProviders( function ( current ) {
+						var enabledIds = current.filter( function ( p ) { return 'enabled' === p.state; } ).map( function ( p ) { return p.id; } );
+						var onlyTwitter = 1 === enabledIds.length && 'twitter' === enabledIds[0];
+						var shouldDisable = onlyTwitter || 0 === enabledIds.length;
+
+						if ( lastDisabledStateRef.current !== shouldDisable ) {
+							lastDisabledStateRef.current = shouldDisable;
+							window.dispatchEvent( new CustomEvent( BB_EVENTS.FIELD_DISABLED_UPDATE, {
+								detail: {
+									fields: [ 'bb-additional-sso-name', 'bb-additional-sso-profile-picture' ],
+									disabled: shouldDisable,
+								},
+							} ) );
+						}
+
+						return current;
+					} );
 				} else {
 					// Revert on failure.
 					setProviders( function ( prev ) {
@@ -246,7 +314,7 @@ export function SsoProvidersField( { field, value, onChange, disabled } ) {
 										setOpenMenu( isMenuOpen ? null : provider.id );
 									} }
 								>
-									<i className="bb-icon-l bb-icon-ellipsis-h"></i>
+									<i className="bb-icons-rl-dots-three"></i>
 								</button>
 
 								{ isMenuOpen && menuButtonRefs.current[ provider.id ] && (
@@ -266,7 +334,7 @@ export function SsoProvidersField( { field, value, onChange, disabled } ) {
 													handleEdit( provider.id );
 												} }
 											>
-												<i className="bb-icon-l bb-icon-pencil"></i>
+												<i className="bb-icons-rl bb-icons-rl-pencil-simple"></i>
 												{ __( 'Edit', 'buddyboss' ) }
 											</button>
 										</div>

@@ -155,7 +155,8 @@ export function EmailRestrictionsField( { field, value, onChange, disabled } ) {
 				onClick={ addRow }
 				disabled={ disabled }
 			>
-				{ __( '+ Add Email', 'buddyboss' ) }
+				<i className="bb-icons-rl-plus"></i>
+				{ __( 'Add Email', 'buddyboss' ) }
 			</Button>
 		</div>
 	);
