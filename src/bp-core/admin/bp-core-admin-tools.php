@@ -1249,6 +1249,11 @@ function bp_admin_repair_tools_wrapper_function() {
 		),
 	);
 
+	// Capability check — repair tools require admin privileges.
+	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+		wp_send_json_error( $response );
+	}
+
 	$type = bb_filter_input_string( INPUT_POST, 'type' );
 
 	if ( empty( $type ) ) {

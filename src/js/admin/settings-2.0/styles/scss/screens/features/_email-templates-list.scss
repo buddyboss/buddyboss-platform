@@ -15,7 +15,7 @@
 	&__header {
 		display: flex;
 		align-items: center;
-		justify-content: space-between;
+		gap: 16px;
 		border-bottom: 1px solid $bb-border-secondary-color;
 		padding: 18px 0;
 		margin-bottom: 24px;
@@ -28,9 +28,14 @@
 		margin: 0;
 	}
 
+	&__customize-btn {
+		@include bb-button-secondary;
+	}
+
 	&__create-btn.is-primary {
 		@include bb-button-primary;
 		text-decoration: none;
+		margin-left: auto;
 
 		i {
 			font-size: 16px;
@@ -39,54 +44,7 @@
 		}
 	}
 
-	// Toolbar
-	&__toolbar {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 12px;
-		padding-bottom: 16px;
-		border-bottom: 1px solid $bb-border-secondary-color;
-		flex-wrap: wrap;
-
-		.components-select-control {
-			margin-bottom: 0;
-
-			.components-input-control__label {
-				color: $bb-text-secondary-color;
-				text-transform: none;
-				font-size: 13px;
-				font-weight: 500;
-			}
-
-			.components-select-control__input {
-				@include bb-admin-settings-select;
-				min-width: 135px;
-			}
-
-			.components-input-control-suffix-wrapper,
-			.components-input-control__backdrop {
-				display: none;
-			}
-		}
-
-		select {
-			@include bb-admin-settings-select;
-		}
-	}
-
-	&__toolbar-left {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		flex-wrap: wrap;
-	}
-
-	&__toolbar-right {
-		display: flex;
-		align-items: center;
-		gap: 12px;
-	}
+	// Toolbar — layout styled via .bb-admin-list-toolbar
 
 	// Bulk Actions
 	&__bulk-actions {
@@ -105,8 +63,8 @@
 		@include bb-button-primary-outline;
 	}
 
-	// Count badge (styled as a dropdown-like select)
-	&__count-badge {
+	// Status filter dropdown.
+	&__filter-select {
 		white-space: nowrap;
 
 		.components-select-control {
@@ -144,95 +102,9 @@
 		}
 	}
 
-	// Search
-	&__search {
-		position: relative;
-		min-width: 225px;
+	// Search — styled via .bb-admin-list-search
 
-		input {
-			@include bb-input-text;
-			padding-right: 30px;
-		}
-
-		&:after {
-			content: "\e30c";
-			font-family: "bb-icons-rl";
-			font-size: 20px;
-			color: $bb-icon-tertiary-color;
-			position: absolute;
-			right: 8px;
-			top: 50%;
-			transform: translateY(-50%);
-			pointer-events: none;
-		}
-	}
-
-	&__search-input {
-		width: 200px;
-		height: 32px;
-		border: 1px solid $bb-border-secondary-color;
-		border-radius: $bb-border-radius-md;
-		padding: 0 32px 0 8px;
-		font-size: 13px;
-		color: $bb-text-color;
-		background-color: $bb-background-base-color;
-		outline: none;
-
-		&::placeholder {
-			color: $bb-text-disabled-color;
-		}
-
-		&:focus {
-			border-color: $bb-border-brand-primary-color;
-		}
-	}
-
-	// Table
-	&__table-wrapper {
-		overflow: hidden;
-		background: $bb-background-base-color;
-	}
-
-	&__loading {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		padding: 60px 0;
-	}
-
-	&__empty {
-		padding: 40px;
-		text-align: center;
-		color: $bb-text-tertiary-color;
-		font-size: 14px;
-	}
-
-	&__table {
-		width: 100%;
-		border-collapse: collapse;
-	}
-
-	// Table Header
-	&__table thead {
-		border-bottom: 0.5px solid $bb-border-secondary-color;
-	}
-
-	&__table th {
-		padding: 10px 16px 10px 0;
-		font-size: 13px;
-		font-weight: 400;
-		color: $bb-text-tertiary-color;
-		text-align: left;
-		white-space: nowrap;
-
-		&:first-child {
-			padding: 10px 0 10px 4px;
-		}
-
-		&:last-child {
-			padding: 10px 4px 10px 0;
-		}
-	}
+	// Table — base styled via .bb-admin-list-table
 
 	&__th--checkbox {
 		width: 30px;
@@ -240,49 +112,6 @@
 
 	&__th--date {
 		white-space: nowrap;
-	}
-
-	// Table Rows
-	&__table tbody tr {
-		border-bottom: 0.5px solid $bb-border-primary-color;
-	}
-
-	&__row {
-		transition: background-color 0.15s ease;
-
-		&--selected {
-			background-color: $bb-background-positive-primary-color;
-		}
-	}
-
-	&__table td {
-		padding: 16px 10px 16px 0;
-		font-size: 13px;
-		color: $bb-text-secondary-color;
-		vertical-align: middle;
-		overflow: hidden;
-
-		&:first-child {
-			padding-left: 4px;
-		}
-
-		&:last-child {
-			padding-right: 4px;
-		}
-	}
-
-	// Checkbox cells
-	&__th--checkbox,
-	&__td--checkbox {
-		width: 30px;
-
-		.components-checkbox-control {
-			margin-bottom: 0;
-		}
-
-		.components-base-control__field {
-			margin-bottom: 0;
-		}
 	}
 
 	&__th--title {
@@ -326,15 +155,16 @@
 	}
 
 	// Date column
-	&__td--date {
-		white-space: nowrap;
+	&__td--date[class] {
+		display: flex;
+		align-items: center;
 		color: $bb-text-tertiary-color;
+		white-space: nowrap;
 
 		i {
 			font-size: 16px;
 			color: $bb-icon-tertiary-color;
 			margin-right: 8px;
-			vertical-align: middle;
 		}
 	}
 
@@ -342,44 +172,7 @@
 		width: 30px;
 	}
 
-	&__td--actions {
-
-		.components-dropdown-menu__toggle {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			background: none;
-			border: none;
-			cursor: pointer;
-			padding: 4px;
-			min-width: 32px;
-			width: 32px;
-			height: 32px;
-			color: $bb-icon-tertiary-color;
-			border-radius: $bb-border-radius-sm;
-
-			i {
-				color: $bb-icon-secondary-color;
-				font-size: 24px;
-				line-height: 1;
-				font-weight: 700;
-			}
-
-			&:hover,
-			&:focus,
-			&.is-pressed,
-			&.is-opened {
-				color: $bb-text-color;
-				background: $bb-background-primary-hover-color;
-				box-shadow: none;
-			}
-
-			.dashicon,
-			svg:not(:first-child) {
-				display: none;
-			}
-		}
-	}
+	// Actions Column — toggle styled via .bb-admin-actions-toggle
 
 	// Footer
 	&__footer {
@@ -397,89 +190,136 @@
 		color: $bb-text-secondary-color;
 	}
 
-	// Pagination
-	&__pagination {
-		display: flex;
-		align-items: center;
-		gap: 4px;
-	}
-
-	&__pagination-btn.is-secondary,
-	&__pagination-btn.is-primary {
-		min-width: 32px;
-		height: 32px;
-		padding: 0 6px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		color: $bb-text-tertiary-color;
-		font-size: 13px;
-		font-weight: 500;
-		line-height: 1;
-		border: 1px solid transparent;
-		box-shadow: none;
-		border-radius: $bb-border-radius-md;
-
-		&:hover {
-			background-color: $bb-background-base-color !important;
-			border-color: $bb-border-secondary-color;
-			box-shadow: none !important;
-			color: $bb-text-tertiary-color !important;
-		}
-	}
-
-	&__pagination-btn--current.is-primary {
-		background-color: $bb-background-base-color;
-		border-color: $bb-border-quinery;
-		color: $bb-text-color;
-		border-radius: $bb-border-radius-md;
-
-		&:hover {
-			background-color: $bb-background-base-color !important;
-			color: $bb-text-color !important;
-			border-color: $bb-border-quinery;
-			box-shadow: none;
-		}
-	}
-
-	&__pagination-ellipsis {
-		font-size: 13px;
-		font-weight: 500;
-		color: $bb-text-tertiary-color;
-		min-width: 24px;
-		text-align: center;
-		line-height: 32px;
-	}
-
-	&__pagination-btn--previous,
-	&__pagination-btn--next {
-		border: none !important;
-		box-shadow: none !important;
-		color: transparent !important;
-		font-size: 0 !important;
-
-		&:before {
-			content: "\e138";
-			font-family: "bb-icons-rl";
-			font-size: 16px;
-			color: $bb-icon-secondary-color;
-			font-weight: 400;
-		}
-
-		&[disabled] {
-			opacity: 0.5;
-			pointer-events: none;
-		}
-	}
-
-	&__pagination-btn--next:before {
-		content: "\e13a";
-	}
 }
 
 // Full-width for custom panel screen.
 .bb-admin-feature-settings__main--custom-panel {
 	.bb-email-templates-list {
 		max-width: 100%;
+	}
+}
+
+/* ----------------------------------------------------------------
+   Email Missing Banner
+   ---------------------------------------------------------------- */
+
+.bb-email-missing-banner {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	padding: 6px 8px;
+	background-color: $bb-background-warning-primary-color;
+	border: 1px solid $bb-border-warning-secondary-color;
+	border-radius: $bb-border-radius-lg;
+	margin-bottom: 16px;
+
+	&__left {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		font-size: 13px;
+		color: $bb-text-color;
+
+		i {
+			font-size: 20px;
+			color: $bb-icon-warning-primary-color;
+			font-weight: 500;
+		}
+	}
+
+	&__action {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+		font-size: 13px;
+		color: $bb-text-color;
+		text-decoration: none;
+		white-space: nowrap;
+		cursor: pointer;
+
+		&:hover {
+			color: $bb-text-color;
+		}
+
+		i {
+			font-size: 15px;
+		}
+	}
+}
+
+/* ----------------------------------------------------------------
+   Email Missing Modal
+   ---------------------------------------------------------------- */
+
+.bb-email-missing-modal {
+
+	&__title-wrap {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	&__count-badge {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 20px;
+		height: 20px;
+		padding: 0 6px;
+		font-size: 12px;
+		font-weight: 600;
+		color: $bb-text-warning-primary-color;
+		background-color: $bb-background-warning-primary-color;
+		border: 1px solid $bb-border-warning-secondary-color;
+		border-radius: $bb-border-radius-full;
+	}
+
+	&__body {
+		padding: 16px 24px;
+	}
+
+	&__warning {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 10px 16px;
+		background-color: $bb-background-warning-primary-color;
+		border: 1px solid $bb-border-warning-secondary-color;
+		border-radius: $bb-border-radius-lg;
+		margin-bottom: 16px;
+		font-size: 13px;
+		font-weight: 500;
+		color: $bb-text-warning-primary-color;
+
+		i {
+			font-size: 18px;
+			color: $bb-icon-warning-primary-color;
+		}
+	}
+
+	&__list {
+		margin: 0 0 8px;
+		padding: 0 0 0 20px;
+		list-style: disc;
+	}
+
+	&__list-item {
+		font-size: 13px;
+		color: $bb-text-color;
+		line-height: 1.6;
+		margin-bottom: 4px;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+
+	&__footer {
+		display: flex;
+		justify-content: flex-end;
+		gap: 8px;
+		padding: 16px 24px;
+		border-top: 1px solid $bb-border-secondary-color;
 	}
 }

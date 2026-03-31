@@ -22,9 +22,14 @@ import {
 import { __, sprintf } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { getEmailTemplates, emailTemplateBulkAction } from '../utils/ajax';
-import { safeUrl, sanitizeHtml } from '../utils/sanitize';
-import { getPageNumbers } from '../utils/pagination';
+import { sanitizeHtml, safeUrl } from '../utils/sanitize';
+import { ListPagination } from '../components/common/ListPagination';
 import { Toast } from '../components/Toast';
+import { EmailTemplateModal } from '../components/emails/EmailTemplateModal';
+import { EmailTemplateBulkEditModal } from '../components/emails/EmailTemplateBulkEditModal';
+import { EmailTemplateBulkDeleteModal } from '../components/emails/EmailTemplateBulkDeleteModal';
+import { DeleteConfirmModal } from '../components/common/DeleteConfirmModal';
+import { EmailMissingModal } from '../components/emails/EmailMissingModal';
 
 /**
  * Sort options for the email templates list dropdown (static, never changes).
@@ -36,6 +41,7 @@ import { Toast } from '../components/Toast';
 var sortOptions = [
 	{ label: __( 'Newest', 'buddyboss' ), value: 'newest' },
 	{ label: __( 'Oldest', 'buddyboss' ), value: 'oldest' },
+	{ label: __( 'Last Modified', 'buddyboss' ), value: 'last_modified' },
 ];
 
 /**
@@ -62,8 +68,7 @@ var CORE_COLUMNS = [ 'title', 'description', 'date' ];
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param {Object}   props            Component props.
- * @param {Function} props.onNavigate Navigation callback.
+ * @param {Object} props Component props.
  * @returns {JSX.Element} The email templates list screen.
  */
 export default function EmailTemplatesListScreen( props ) {
@@ -95,13 +100,21 @@ export default function EmailTemplatesListScreen( props ) {
 	var searchInput = stateSearchInput[0];
 	var setSearchInput = stateSearchInput[1];
 
+	var stateFilter = useState( 'all' );
+	var filter = stateFilter[0];
+	var setFilter = stateFilter[1];
+
+	// Ref for filter so fetchTemplates always reads the latest value without re-creating the callback.
+	var filterRef = useRef( filter );
+	filterRef.current = filter;
+
+	var stateViews = useState( null );
+	var views = stateViews[0];
+	var setViews = stateViews[1];
+
 	var stateIsLoading = useState( true );
 	var isLoading = stateIsLoading[0];
 	var setIsLoading = stateIsLoading[1];
-
-	var stateAddNewUrl = useState( '' );
-	var addNewUrl = stateAddNewUrl[0];
-	var setAddNewUrl = stateAddNewUrl[1];
 
 	var stateBulkActions = useState( {} );
 	var bulkActions = stateBulkActions[0];
@@ -127,6 +140,49 @@ export default function EmailTemplatesListScreen( props ) {
 	var toast = stateToast[0];
 	var setToast = stateToast[1];
 
+	// Create field definitions from server (for add modal).
+	var stateCreateFields = useState( [] );
+	var createFields = stateCreateFields[0];
+	var setCreateFields = stateCreateFields[1];
+
+	// Modal states.
+	var stateEditModalOpen = useState( false );
+	var editModalOpen = stateEditModalOpen[0];
+	var setEditModalOpen = stateEditModalOpen[1];
+
+	var stateEditEmailId = useState( 0 );
+	var editEmailId = stateEditEmailId[0];
+	var setEditEmailId = stateEditEmailId[1];
+
+	var stateBulkEditModalOpen = useState( false );
+	var bulkEditModalOpen = stateBulkEditModalOpen[0];
+	var setBulkEditModalOpen = stateBulkEditModalOpen[1];
+
+	var stateBulkDeleteModalOpen = useState( false );
+	var bulkDeleteModalOpen = stateBulkDeleteModalOpen[0];
+	var setBulkDeleteModalOpen = stateBulkDeleteModalOpen[1];
+
+	var stateDeleteItem = useState( null );
+	var deleteItem = stateDeleteItem[0];
+	var setDeleteItem = stateDeleteItem[1];
+
+	var stateDeleteConfirmChecked = useState( false );
+	var deleteConfirmChecked = stateDeleteConfirmChecked[0];
+	var setDeleteConfirmChecked = stateDeleteConfirmChecked[1];
+
+	// Missing email states.
+	var stateMissingCount = useState( 0 );
+	var missingCount = stateMissingCount[0];
+	var setMissingCount = stateMissingCount[1];
+
+	var stateMissingEmails = useState( [] );
+	var missingEmails = stateMissingEmails[0];
+	var setMissingEmails = stateMissingEmails[1];
+
+	var stateMissingModalOpen = useState( false );
+	var missingModalOpen = stateMissingModalOpen[0];
+	var setMissingModalOpen = stateMissingModalOpen[1];
+
 	var abortRef = useRef( null );
 	var searchTimerRef = useRef( null );
 	var isFirstLoad = useRef( true );
@@ -145,6 +201,7 @@ export default function EmailTemplatesListScreen( props ) {
 		var fetchPage = params.fetchPage || 1;
 		var fetchSort = params.fetchSort || 'newest';
 		var fetchSearch = params.fetchSearch !== undefined ? params.fetchSearch : '';
+		var fetchFilter = params.fetchFilter !== undefined ? params.fetchFilter : filterRef.current;
 
 		// Cancel any stale request.
 		if ( abortRef.current ) {
@@ -161,6 +218,7 @@ export default function EmailTemplatesListScreen( props ) {
 			per_page: PER_PAGE,
 			sort: fetchSort,
 			search: fetchSearch,
+			status_filter: fetchFilter,
 		};
 
 		// Include metadata on first load.
@@ -176,16 +234,28 @@ export default function EmailTemplatesListScreen( props ) {
 					setTotal( response.data.total || 0 );
 					setTotalPages( response.data.total_pages || 0 );
 
-					if ( response.data.add_new_url ) {
-						setAddNewUrl( response.data.add_new_url );
-					}
-
 					if ( response.data.bulk_actions ) {
 						setBulkActions( response.data.bulk_actions );
 					}
 
 					if ( response.data.columns ) {
 						setColumns( response.data.columns );
+					}
+
+					if ( response.data.create_fields ) {
+						setCreateFields( response.data.create_fields );
+					}
+
+					if ( response.data.views ) {
+						setViews( response.data.views );
+					}
+
+					// Update missing email data when metadata is included.
+					if ( 'undefined' !== typeof response.data.missing_count ) {
+						setMissingCount( response.data.missing_count );
+					}
+					if ( response.data.missing_emails ) {
+						setMissingEmails( response.data.missing_emails );
 					}
 				}
 				setIsLoading( false );
@@ -198,9 +268,15 @@ export default function EmailTemplatesListScreen( props ) {
 			} );
 	}, [] );
 
-	// Initial fetch.
+	// Initial fetch + auto-open missing modal if ?popup=yes.
 	useEffect( function() {
 		fetchTemplates( { fetchPage: 1, fetchSort: sort, fetchSearch: '' } );
+
+		// Check URL params for auto-open missing email modal.
+		var urlParams = new URLSearchParams( window.location.search );
+		if ( 'yes' === urlParams.get( 'popup' ) ) {
+			setMissingModalOpen( true );
+		}
 
 		return function() {
 			if ( abortRef.current ) {
@@ -261,8 +337,22 @@ export default function EmailTemplatesListScreen( props ) {
 		setSort( newSort );
 		setPage( 1 );
 		setSelectedIds( [] );
-		fetchTemplates( { fetchPage: 1, fetchSort: newSort, fetchSearch: search } );
-	}, [ search, fetchTemplates ] );
+		fetchTemplates( { fetchPage: 1, fetchSort: newSort, fetchSearch: search, fetchFilter: filter } );
+	}, [ search, filter, fetchTemplates ] );
+
+	/**
+	 * Handle filter change.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {string} newFilter New filter value.
+	 */
+	var handleFilterChange = useCallback( function( newFilter ) {
+		setFilter( newFilter );
+		setPage( 1 );
+		setSelectedIds( [] );
+		fetchTemplates( { fetchPage: 1, fetchSort: sort, fetchSearch: search, fetchFilter: newFilter } );
+	}, [ sort, search, fetchTemplates ] );
 
 	/**
 	 * Handle page change.
@@ -326,6 +416,17 @@ export default function EmailTemplatesListScreen( props ) {
 			return;
 		}
 
+		// Route bulk_edit and delete to their modals.
+		if ( 'bulk_edit' === bulkAction ) {
+			setBulkEditModalOpen( true );
+			return;
+		}
+
+		if ( 'delete' === bulkAction ) {
+			setBulkDeleteModalOpen( true );
+			return;
+		}
+
 		setBulkProcessing( true );
 
 		emailTemplateBulkAction( selectedIds, bulkAction )
@@ -355,11 +456,12 @@ export default function EmailTemplatesListScreen( props ) {
 		return -1 !== selectedIds.indexOf( item.id );
 	} );
 
-	// Build bulk action options for the dropdown.
-	var bulkActionOptions = [ { label: __( 'Bulk actions', 'buddyboss' ), value: '' } ];
-	Object.keys( bulkActions ).forEach( function( key ) {
-		bulkActionOptions.push( { label: decodeEntities( bulkActions[ key ] ), value: key } );
-	} );
+	// Build bulk action options for the dropdown — Edit + Delete per Figma.
+	var bulkActionOptions = [
+		{ label: __( 'Bulk actions', 'buddyboss' ), value: '' },
+		{ label: __( 'Edit', 'buddyboss' ), value: 'bulk_edit' },
+		{ label: __( 'Delete', 'buddyboss' ), value: 'delete' },
+	];
 
 	// Derive custom column keys from server-provided columns (third-party plugins like WPML).
 	var customColumnKeys = useMemo( function() {
@@ -368,8 +470,6 @@ export default function EmailTemplatesListScreen( props ) {
 		} );
 	}, [ columns ] );
 
-	var pageNumbers = getPageNumbers( page, totalPages );
-
 	return (
 		<div className="bb-email-templates-list">
 			{/* Header */}
@@ -377,20 +477,57 @@ export default function EmailTemplatesListScreen( props ) {
 				<h2 className="bb-email-templates-list__title">
 					{ __( 'Email Templates', 'buddyboss' ) }
 				</h2>
-				{ addNewUrl && (
-					<a
-						href={ safeUrl( addNewUrl ) }
-						className="bb-email-templates-list__create-btn components-button is-primary"
-					>
-						<i className="bb-icons-rl bb-icons-rl-plus" />
-						{ __( 'Add New Email', 'buddyboss' ) }
-					</a>
-				) }
+				<a
+					href="themes.php?page=bp-emails-customizer-redirect"
+					className="bb-email-templates-list__customize-btn is-secondary"
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					<i className="bb-icons-rl bb-icons-rl-gear" />
+					{ __( 'Customize Layout', 'buddyboss' ) }
+				</a>
+				<Button
+					className="bb-email-templates-list__create-btn is-primary"
+					onClick={ function() {
+						setEditEmailId( 0 );
+						setEditModalOpen( true );
+					} }
+				>
+					<i className="bb-icons-rl bb-icons-rl-plus" />
+					{ __( 'Add New Email', 'buddyboss' ) }
+				</Button>
 			</div>
 
+			{/* Missing email warning banner */}
+			{ missingCount > 0 && (
+				<div className="bb-email-missing-banner">
+					<div className="bb-email-missing-banner__left">
+						<i className="bb-icons-rl bb-icons-rl-warning-circle" />
+						<span>
+							{ sprintf(
+								/* translators: %d: number of missing emails */
+								__( 'Email Missing (%d)', 'buddyboss' ),
+								missingCount
+							) }
+						</span>
+					</div>
+					<a
+						href="#"
+						className="bb-email-missing-banner__action"
+						onClick={ function( e ) {
+							e.preventDefault();
+							setMissingModalOpen( true );
+						} }
+					>
+						{ __( 'Add Missing Email', 'buddyboss' ) }
+						<i className="bb-icons-rl-plus"></i>
+					</a>
+				</div>
+			) }
+
 			{/* Toolbar */}
-			<div className="bb-email-templates-list__toolbar">
-				<div className="bb-email-templates-list__toolbar-left">
+			<div className="bb-email-templates-list__toolbar bb-admin-list-toolbar">
+				<div className="bb-email-templates-list__toolbar-left bb-admin-list-toolbar__left">
 					{/* Bulk Actions */}
 					<div className="bb-email-templates-list__bulk-actions">
 						<SelectControl
@@ -409,22 +546,19 @@ export default function EmailTemplatesListScreen( props ) {
 					</div>
 				</div>
 
-				<div className="bb-email-templates-list__toolbar-right">
-					{/* Count badge */}
-					<div className="bb-email-templates-list__count-badge">
+				<div className="bb-email-templates-list__toolbar-right bb-admin-list-toolbar__right">
+					{/* Status filter */}
+					<div className="bb-email-templates-list__filter-select">
 						<SelectControl
-							value="all"
-							options={ [
-								{
-									label: sprintf(
-										/* translators: %d: total number of email templates */
-										__( 'All (%d)', 'buddyboss' ),
-										total
-									),
-									value: 'all',
-								},
+							value={ filter }
+							options={ views ? [
+								{ label: sprintf( __( 'All (%d)', 'buddyboss' ), views.all || 0 ), value: 'all' },
+								{ label: sprintf( __( 'Published (%d)', 'buddyboss' ), views.publish || 0 ), value: 'publish' },
+								{ label: sprintf( __( 'Draft (%d)', 'buddyboss' ), views.draft || 0 ), value: 'draft' },
+							] : [
+								{ label: sprintf( __( 'All (%d)', 'buddyboss' ), total ), value: 'all' },
 							] }
-							onChange={ function() {} }
+							onChange={ handleFilterChange }
 							__nextHasNoMarginBottom
 						/>
 					</div>
@@ -440,10 +574,10 @@ export default function EmailTemplatesListScreen( props ) {
 					</div>
 
 					{/* Search */}
-					<div className="bb-email-templates-list__search">
+					<div className="bb-email-templates-list__search bb-admin-list-search">
 						<input
 							type="text"
-							className="bb-email-templates-list__search-input"
+							className="bb-email-templates-list__search-input bb-admin-list-search__input"
 							placeholder={ __( 'Search emails', 'buddyboss' ) }
 							value={ searchInput }
 							onChange={ handleSearchChange }
@@ -455,21 +589,21 @@ export default function EmailTemplatesListScreen( props ) {
 			{/* Table */}
 			<div className="bb-email-templates-list__table-wrapper">
 				{ isLoading ? (
-					<div className="bb-email-templates-list__loading">
+					<div className="bb-email-templates-list__loading bb-admin-list-table__loading">
 						<Spinner />
 					</div>
 				) : 0 === items.length ? (
-					<div className="bb-email-templates-list__empty">
+					<div className="bb-email-templates-list__empty bb-admin-list-table__empty">
 						{ search
 							? __( 'No email templates found matching your search.', 'buddyboss' )
 							: __( 'No email templates found.', 'buddyboss' )
 						}
 					</div>
 				) : (
-					<table className="bb-email-templates-list__table">
+					<table className="bb-email-templates-list__table bb-admin-list-table">
 						<thead>
 							<tr>
-								<th className="bb-email-templates-list__th--checkbox">
+								<th className="bb-email-templates-list__th--checkbox bb-admin-list-table__checkbox">
 									<CheckboxControl
 										checked={ allSelected }
 										onChange={ handleSelectAll }
@@ -502,11 +636,11 @@ export default function EmailTemplatesListScreen( props ) {
 									<tr
 										key={ item.id }
 										className={
-											'bb-email-templates-list__row' +
-											( isSelected ? ' bb-email-templates-list__row--selected' : '' )
+											'bb-email-templates-list__row bb-admin-list-table__row' +
+											( isSelected ? ' bb-email-templates-list__row--selected bb-admin-list-table__row--selected' : '' )
 										}
 									>
-										<td className="bb-email-templates-list__td--checkbox">
+										<td className="bb-email-templates-list__td--checkbox bb-admin-list-table__checkbox">
 											<CheckboxControl
 												checked={ isSelected }
 												onChange={ function() {
@@ -517,11 +651,21 @@ export default function EmailTemplatesListScreen( props ) {
 										</td>
 										<td className="bb-email-templates-list__td--title">
 											<a
-												href={ safeUrl( item.edit_url ) }
+												href="#"
 												className="bb-email-templates-list__item-title"
+												onClick={ function( e ) {
+													e.preventDefault();
+													setEditEmailId( item.id );
+													setEditModalOpen( true );
+												} }
 											>
 												{ decodeEntities( item.title ) }
 											</a>
+											{ item.status_label && (
+												<span className="bb-admin-list__status-badge">
+													{ item.status_label }
+												</span>
+											) }
 										</td>
 										{ item.custom_columns && customColumnKeys.map( function( key ) {
 											return (
@@ -537,7 +681,7 @@ export default function EmailTemplatesListScreen( props ) {
 											<i className="bb-icons-rl bb-icons-rl-clock"></i>
 											{ item.date }
 										</td>
-										<td className="bb-email-templates-list__td--actions">
+										<td className="bb-email-templates-list__td--actions bb-admin-actions-toggle">
 											<DropdownMenu
 												icon={ <i className="bb-icons-rl-dots-three"></i> }
 												label={ __( 'More options', 'buddyboss' ) }
@@ -545,44 +689,38 @@ export default function EmailTemplatesListScreen( props ) {
 												{ function( { onClose } ) {
 													return (
 														<MenuGroup className="bb_dropdown_menu_group">
+															{ item.permalink && (
+																<MenuItem
+																	onClick={ function() {
+																		window.open( safeUrl( item.permalink ), '_blank', 'noopener noreferrer' );
+																		onClose();
+																	} }
+																>
+																	<i className="bb-icons-rl bb-icons-rl-eye"></i>
+																	{ __( 'Preview', 'buddyboss' ) }
+																	<i className="bb-icons-rl bb-icons-rl-arrow-up-right bb-icons-external"></i>
+																</MenuItem>
+															) }
 															<MenuItem
 																onClick={ function() {
-																	if ( item.edit_url ) {
-																		window.location.href = safeUrl( item.edit_url );
-																	}
 																	onClose();
+																	setEditEmailId( item.id );
+																	setEditModalOpen( true );
 																} }
 															>
-																<i className="bb-icons-rl bb-icons-rl-pencil-simple"></i>
+																<i className="bb-icons-rl bb-icons-rl-note-pencil"></i>
 																{ __( 'Edit', 'buddyboss' ) }
 															</MenuItem>
 															<MenuItem
 																isDestructive
 																onClick={ function() {
 																	onClose();
-																	setBulkProcessing( true );
-																	emailTemplateBulkAction( [ item.id ], 'trash' )
-																		.then( function( response ) {
-																			setBulkProcessing( false );
-																			if ( response.success ) {
-																				setToast( { status: 'success', message: response.data.message } );
-																				isFirstLoad.current = true;
-																				fetchTemplates( { fetchPage: page, fetchSort: sort, fetchSearch: search } );
-																			} else {
-																				setToast( {
-																					status: 'error',
-																					message: ( response.data && response.data.message ) || __( 'Something went wrong.', 'buddyboss' ),
-																				} );
-																			}
-																		} )
-																		.catch( function() {
-																			setBulkProcessing( false );
-																			setToast( { status: 'error', message: __( 'Something went wrong.', 'buddyboss' ) } );
-																		} );
+																	setDeleteConfirmChecked( false );
+																	setDeleteItem( item );
 																} }
 															>
 																<i className="bb-icons-rl bb-icons-rl-trash"></i>
-																{ __( 'Trash', 'buddyboss' ) }
+																{ __( 'Delete', 'buddyboss' ) }
 															</MenuItem>
 														</MenuGroup>
 													);
@@ -598,61 +736,14 @@ export default function EmailTemplatesListScreen( props ) {
 			</div>
 
 			{/* Footer with pagination */}
-			{ totalPages > 1 && ! isLoading && (
-				<div className="bb-email-templates-list__footer">
-					<span className="bb-email-templates-list__item-count">
-						{ sprintf(
-							/* translators: 1: start index, 2: end index, 3: total items */
-							__( '%1$d\u2013%2$d of %3$d', 'buddyboss' ),
-							( page - 1 ) * PER_PAGE + 1,
-							Math.min( page * PER_PAGE, total ),
-							total
-						) }
-					</span>
-					<div className="bb-email-templates-list__pagination">
-						<Button
-							className="bb-email-templates-list__pagination-btn bb-email-templates-list__pagination-btn--previous is-secondary"
-							disabled={ 1 === page }
-							onClick={ function() {
-								handlePageChange( page - 1 );
-							} }
-						>
-							{ __( 'Previous', 'buddyboss' ) }
-						</Button>
-						{ pageNumbers.map( function( p, idx ) {
-							if ( '...' === p ) {
-								return (
-									<span key={ 'ellipsis-' + idx } className="bb-email-templates-list__pagination-ellipsis">
-										&hellip;
-									</span>
-								);
-							}
-							return (
-								<Button
-									key={ p }
-									className={
-										'bb-email-templates-list__pagination-btn' +
-										( p === page ? ' bb-email-templates-list__pagination-btn--current is-primary' : ' is-secondary' )
-									}
-									onClick={ function() {
-										handlePageChange( p );
-									} }
-								>
-									{ p }
-								</Button>
-							);
-						} ) }
-						<Button
-							className="bb-email-templates-list__pagination-btn bb-email-templates-list__pagination-btn--next is-secondary"
-							disabled={ page === totalPages }
-							onClick={ function() {
-								handlePageChange( page + 1 );
-							} }
-						>
-							{ __( 'Next', 'buddyboss' ) }
-						</Button>
-					</div>
-				</div>
+			{ ! isLoading && (
+				<ListPagination
+					currentPage={ page }
+					totalPages={ totalPages }
+					total={ total }
+					onPageChange={ handlePageChange }
+					className="bb-email-templates-list"
+				/>
 			) }
 
 			{/* Toast notification */}
@@ -665,6 +756,132 @@ export default function EmailTemplatesListScreen( props ) {
 					/>
 				</div>
 			) }
+
+			{/* Add/Edit Modal */}
+			<EmailTemplateModal
+				isOpen={ editModalOpen }
+				emailId={ editEmailId }
+				createFields={ createFields }
+				onClose={ function() {
+					setEditModalOpen( false );
+					setEditEmailId( 0 );
+				} }
+				onSaved={ function() {
+					setEditModalOpen( false );
+					setEditEmailId( 0 );
+					isFirstLoad.current = true;
+					fetchTemplates( { fetchPage: page, fetchSort: sort, fetchSearch: search } );
+					setToast( { status: 'success', message: __( 'Email template saved.', 'buddyboss' ) } );
+				} }
+			/>
+
+			{/* Bulk Edit Modal */}
+			<EmailTemplateBulkEditModal
+				isOpen={ bulkEditModalOpen }
+				selectedItems={ items.filter( function( item ) {
+					return -1 !== selectedIds.indexOf( item.id );
+				} ) }
+				onClose={ function() {
+					setBulkEditModalOpen( false );
+				} }
+				onSaved={ function() {
+					setBulkEditModalOpen( false );
+					setSelectedIds( [] );
+					setBulkAction( '' );
+					isFirstLoad.current = true;
+					fetchTemplates( { fetchPage: page, fetchSort: sort, fetchSearch: search } );
+					setToast( { status: 'success', message: __( 'Email templates updated.', 'buddyboss' ) } );
+				} }
+			/>
+
+			{/* Single Delete Confirmation Modal */}
+			<DeleteConfirmModal
+				isOpen={ !! deleteItem }
+				singleTitle={ __( 'Delete email template?', 'buddyboss' ) }
+				items={ deleteItem ? [ { id: deleteItem.id, title: deleteItem.title } ] : [] }
+				warningText={ __( 'This permanently deletes email templates and cannot be undone.', 'buddyboss' ) }
+				description={ __( 'Deleting the email template will remove it from the list and automatically unlink it from any associated situations.', 'buddyboss' ) }
+				confirmLabel={ __( 'I understand that this deletes the email template.', 'buddyboss' ) }
+				confirmChecked={ deleteConfirmChecked }
+				onConfirmChange={ setDeleteConfirmChecked }
+				onConfirm={ function () {
+					if ( ! deleteItem ) {
+						return;
+					}
+					var itemId = deleteItem.id;
+					setDeleteItem( null );
+					setDeleteConfirmChecked( false );
+					setBulkProcessing( true );
+					emailTemplateBulkAction( [ itemId ], 'trash' )
+						.then( function ( response ) {
+							setBulkProcessing( false );
+							if ( response.success ) {
+								setToast( { status: 'success', message: response.data.message } );
+								isFirstLoad.current = true;
+								fetchTemplates( { fetchPage: page, fetchSort: sort, fetchSearch: search } );
+							} else {
+								setToast( {
+									status: 'error',
+									message: ( response.data && response.data.message ) || __( 'Something went wrong.', 'buddyboss' ),
+								} );
+							}
+						} )
+						.catch( function () {
+							setBulkProcessing( false );
+							setToast( { status: 'error', message: __( 'Something went wrong.', 'buddyboss' ) } );
+						} );
+				} }
+				onClose={ function () { setDeleteItem( null ); setDeleteConfirmChecked( false ); } }
+				isProcessing={ bulkProcessing }
+				className="bb-email-delete-modal"
+			/>
+
+			{/* Bulk Delete Modal */}
+			<EmailTemplateBulkDeleteModal
+				isOpen={ bulkDeleteModalOpen }
+				selectedItems={ items.filter( function( item ) {
+					return -1 !== selectedIds.indexOf( item.id );
+				} ) }
+				onRemoveItem={ function( id ) {
+					setSelectedIds( function( prev ) {
+						var next = prev.filter( function( i ) { return i !== id; } );
+						if ( 0 === next.length ) {
+							setBulkDeleteModalOpen( false );
+						}
+						return next;
+					} );
+				} }
+				onClose={ function() {
+					setBulkDeleteModalOpen( false );
+				} }
+				onDeleted={ function() {
+					setBulkDeleteModalOpen( false );
+					setSelectedIds( [] );
+					setBulkAction( '' );
+					isFirstLoad.current = true;
+					fetchTemplates( { fetchPage: page, fetchSort: sort, fetchSearch: search } );
+				} }
+				setToast={ setToast }
+			/>
+
+			{/* Email Missing Modal */}
+			<EmailMissingModal
+				isOpen={ missingModalOpen }
+				isLoading={ isLoading && 0 === missingEmails.length }
+				missingCount={ missingCount }
+				missingEmails={ missingEmails }
+				onClose={ function() {
+					setMissingModalOpen( false );
+				} }
+				onInstalled={ function() {
+					setMissingModalOpen( false );
+					setMissingCount( 0 );
+					setMissingEmails( [] );
+					isFirstLoad.current = true;
+					fetchTemplates( { fetchPage: page, fetchSort: sort, fetchSearch: search } );
+				} }
+				setToast={ setToast }
+			/>
 		</div>
 	);
 }

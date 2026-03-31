@@ -1,0 +1,210 @@
+/* ----------------------------------------------------------------
+   Email Invites List Screen
+   ---------------------------------------------------------------- */
+
+.bb-invites-list {
+	max-width: calc(100% - 64px);
+	padding: 0 24px 16px;
+	background-color: $bb-background-base-color;
+	border: 1px solid $bb-border-primary-color;
+	border-radius: $bb-border-radius-2xl;
+	box-shadow: 0px 1.5px 1px 0px rgba(0, 0, 0, 0.16);
+	margin: 32px 32px 0;
+
+	// Header
+	&__header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		border-bottom: 1px solid $bb-border-secondary-color;
+		padding: 18px 0;
+		margin-bottom: 24px;
+	}
+
+	&__title {
+		font-size: 18px;
+		font-weight: 500;
+		color: $bb-text-color;
+		margin: 0;
+	}
+
+	// Bulk Actions — inline layout.
+	&__bulk-actions {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+
+		select {
+			min-width: 140px;
+			height: 32px;
+			font-size: 13px;
+		}
+	}
+
+	// Apply button — brand outline style matching other list screens.
+	&__bulk-apply.is-secondary {
+		@include bb-button-primary-outline;
+		color: $bb-text-brand-primary-color !important;
+	}
+
+	// Filter/sort dropdowns.
+	&__filter-select,
+	&__sort-select {
+		.components-select-control {
+			margin-bottom: 0;
+		}
+	}
+
+	// Sender cell — avatar + name.
+	&__sender {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+	}
+
+	&__sender-avatar {
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		object-fit: cover;
+		flex-shrink: 0;
+	}
+
+	&__sender-name {
+		color: $bb-link-color;
+		text-decoration: none;
+
+		&:hover {
+			color: $bb-link-color;
+		}
+	}
+
+	// Table row spacing — match Figma's spacious rows.
+	&__table {
+		td {
+			padding-top: 16px;
+			padding-bottom: 16px;
+		}
+	}
+
+	&__th--sender[class] {
+		color: $bb-text-color;
+		font-size: 14px;
+		font-weight: 400;
+		width: 22%;
+	}
+
+	&__th--email[class] {
+		width: 24%;
+	}
+
+	&__td--date {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		white-space: nowrap;
+
+		i {
+			font-size: 16px;
+			color: $bb-icon-tertiary-color;
+		}
+	}
+
+	// Footer
+	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 16px;
+		padding: 16px 0;
+		margin-top: 8px;
+	}
+
+	// Item Count
+	&__item-count {
+		font-size: 13px;
+		color: $bb-text-secondary-color;
+	}
+
+	&__status-badge {
+		display: inline-flex;
+		align-items: center;
+		padding: 0 6px;
+		font-size: 11px;
+		font-weight: 500;
+		border-radius: $bb-border-radius-full;
+		border: 1px solid $bb-border-tertiary-color;
+		color: $bb-text-tertiary-color;
+		background-color: $bb-background-primary-color;
+
+		&--approved {
+			color: $bb-text-positive-primary-color;
+			background-color: $bb-background-positive-primary-color;
+			border-color: $bb-border-positive-secondary-color;
+		}
+
+		&--pending {
+			color: $bb-icon-color;
+			background-color: $bb-background-secondary-color;
+			border-color: $bb-border-tertiary-color;
+		}
+	}
+}
+
+// Revoke invite confirmation modal.
+.bb-invites-revoke-modal {
+
+	&.components-modal__frame {
+		max-width: 500px;
+	}
+
+	&__body {
+		padding: 24px;
+	}
+
+	&__description {
+		font-size: 13px;
+		line-height: 1.6;
+		color: $bb-text-color;
+		margin: 0 0 16px;
+	}
+
+	.components-checkbox-control {
+		margin-bottom: 0;
+	}
+
+	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 8px;
+		padding: 16px 24px;
+		border-top: 1px solid $bb-border-secondary-color;
+
+		.is-secondary {
+			@include bb-button-secondary;
+		}
+
+		.is-destructive.is-primary {
+			background-color: $bb-error-color;
+			border-color: $bb-error-color;
+			color: $bb-text-inverse-color;
+			border-radius: $bb-border-radius-md;
+			font-size: 13px;
+			font-weight: 500;
+			padding: 6px 16px;
+			height: 32px;
+			box-shadow: none;
+
+			&:hover {
+				background-color: darken($bb-error-color, 5%);
+				border-color: darken($bb-error-color, 5%);
+			}
+
+			&:disabled {
+				opacity: 0.5;
+				cursor: not-allowed;
+			}
+		}
+	}
+}
