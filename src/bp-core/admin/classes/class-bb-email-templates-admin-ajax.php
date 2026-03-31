@@ -428,7 +428,7 @@ class BB_Email_Templates_Admin_Ajax {
 			}
 			$custom_meta[] = array(
 				'key'   => $key,
-				'value' => $values[0],
+				'value' => sanitize_text_field( $values[0] ),
 			);
 		}
 
@@ -468,6 +468,7 @@ class BB_Email_Templates_Admin_Ajax {
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified above.
 		$email_id = isset( $_POST['email_id'] ) ? absint( wp_unslash( $_POST['email_id'] ) ) : 0;
 		$raw_meta = isset( $_POST['custom_meta'] ) ? wp_unslash( $_POST['custom_meta'] ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized per-field below.
+		$raw_meta = is_array( $raw_meta ) ? $raw_meta : array();
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		$registry       = bb_admin_meta_field_registry();
@@ -583,28 +584,28 @@ class BB_Email_Templates_Admin_Ajax {
 		$new_keys      = array();
 
 		if ( is_array( $raw_meta ) ) {
+			/**
+			 * Filters the list of protected meta keys for email templates.
+			 *
+			 * Third-party plugins can add their own meta keys to this list
+			 * to prevent them from being overwritten or deleted via the
+			 * email template edit modal.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param array $protected_keys List of protected meta key names.
+			 */
+			$protected_keys = apply_filters(
+				'bb_admin_email_protected_meta_keys',
+				array( 'bp_email_preheader' )
+			);
+
 			foreach ( $raw_meta as $meta_item ) {
 				if ( ! is_array( $meta_item ) || empty( $meta_item['key'] ) ) {
 					continue;
 				}
 				$meta_key   = sanitize_key( $meta_item['key'] );
 				$meta_value = sanitize_text_field( isset( $meta_item['value'] ) ? $meta_item['value'] : '' );
-
-				/**
-				 * Filters the list of protected meta keys for email templates.
-				 *
-				 * Third-party plugins can add their own meta keys to this list
-				 * to prevent them from being overwritten or deleted via the
-				 * email template edit modal.
-				 *
-				 * @since BuddyBoss [BBVERSION]
-				 *
-				 * @param array $protected_keys List of protected meta key names.
-				 */
-				$protected_keys = apply_filters(
-					'bb_admin_email_protected_meta_keys',
-					array( 'bp_email_preheader' )
-				);
 
 				if ( 0 === strpos( $meta_key, '_' ) || is_protected_meta( $meta_key, 'post' ) || in_array( $meta_key, $protected_keys, true ) ) {
 					continue;
@@ -615,12 +616,6 @@ class BB_Email_Templates_Admin_Ajax {
 			}
 
 			// Delete removed custom meta.
-			/** This filter is documented above. */
-			$protected_keys = apply_filters(
-				'bb_admin_email_protected_meta_keys',
-				array( 'bp_email_preheader' )
-			);
-
 			foreach ( $existing_meta as $key => $values ) {
 				if ( 0 === strpos( $key, '_' ) || is_protected_meta( $key, 'post' ) || in_array( $key, $protected_keys, true ) ) {
 					continue;

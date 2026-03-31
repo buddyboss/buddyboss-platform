@@ -545,7 +545,7 @@ function bp_version_updater() {
 		}
 
 		// Version 3.0.0 - Settings 2.0 feature migration.
-		if ( $raw_db_version < 23582 ) {
+		if ( $raw_db_version < 23583 ) {
 			bb_update_to_3_0_0();
 		}
 
@@ -4233,6 +4233,8 @@ function bb_migrate_email_type_groups() {
 		'content-moderation-email'            => 'account',
 		'user-moderation-email'               => 'account',
 		'settings-password-changed'           => 'account',
+		'zoom-scheduled-meeting-email'        => 'account',
+		'zoom-scheduled-webinar-email'        => 'account',
 
 		// Activity.
 		'activity-at-message'                 => 'activity',
@@ -4251,13 +4253,9 @@ function bb_migrate_email_type_groups() {
 		'groups-membership-request'           => 'groups_discussions',
 		'groups-membership-request-accepted'  => 'groups_discussions',
 		'groups-membership-request-rejected'  => 'groups_discussions',
-		'group-message-email'                 => 'groups_discussions',
-		'group-message-digest'                => 'groups_discussions',
 		'groups-new-activity'                 => 'groups_discussions',
 		'groups-new-discussion'               => 'groups_discussions',
 		'new-mention-group'                   => 'groups_discussions',
-		'zoom-scheduled-meeting-email'        => 'groups_discussions',
-		'zoom-scheduled-webinar-email'        => 'groups_discussions',
 
 		// Forums (under Groups & Discussions).
 		'bbp-new-forum-reply'                 => 'groups_discussions',
@@ -4271,6 +4269,8 @@ function bb_migrate_email_type_groups() {
 		// Messages.
 		'messages-unread'                     => 'messages',
 		'messages-unread-digest'              => 'messages',
+		'group-message-email'                 => 'messages',
+		'group-message-digest'                => 'messages',
 	);
 
 	/**
@@ -4286,13 +4286,15 @@ function bb_migrate_email_type_groups() {
 	$group_map = apply_filters( 'bb_email_type_group_migration_map', $group_map );
 
 	foreach ( $terms as $term ) {
-		// Skip if term already has group meta (don't overwrite manual assignment).
-		$existing = get_term_meta( $term->term_id, 'bb_email_group', true );
-		if ( ! empty( $existing ) ) {
-			continue;
+		if ( isset( $group_map[ $term->slug ] ) ) {
+			// Known BB/Pro term — always set the correct group (overwrites stale values).
+			update_term_meta( $term->term_id, 'bb_email_group', sanitize_key( $group_map[ $term->slug ] ) );
+		} else {
+			// Unknown/third-party term — only set if no meta exists (don't overwrite).
+			$existing = get_term_meta( $term->term_id, 'bb_email_group', true );
+			if ( empty( $existing ) ) {
+				update_term_meta( $term->term_id, 'bb_email_group', 'other' );
+			}
 		}
-
-		$group = isset( $group_map[ $term->slug ] ) ? $group_map[ $term->slug ] : 'other';
-		update_term_meta( $term->term_id, 'bb_email_group', sanitize_key( $group ) );
 	}
 }

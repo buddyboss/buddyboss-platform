@@ -95,7 +95,7 @@ export function EmailTemplateBulkEditModal( { isOpen, selectedItems, onClose, on
 				situationsCache = response.data;
 				setSituations( response.data );
 			}
-		} );
+		} ).catch( function () {} );
 	}, [ isOpen ] );
 
 	if ( ! isOpen ) {

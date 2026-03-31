@@ -138,7 +138,7 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 					situationsCacheRef.current = response.data;
 					setSituations( response.data );
 				}
-			} );
+			} ).catch( function () {} );
 		}
 
 		// Fetch meta key suggestions for custom field name autocomplete.
@@ -150,7 +150,7 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 				if ( response.success && response.data ) {
 					setMetaKeys( response.data );
 				}
-			} );
+			} ).catch( function () {} );
 		}
 	}, [ isOpen ] );
 

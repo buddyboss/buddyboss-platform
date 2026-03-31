@@ -305,6 +305,10 @@ class BB_Admin_Invites_Ajax {
 				++$revoked;
 			}
 
+			if ( 0 === $revoked ) {
+				wp_send_json_error( array( 'message' => __( 'No invites were revoked.', 'buddyboss' ) ) );
+			}
+
 			wp_send_json_success(
 				array(
 					'message' => sprintf(

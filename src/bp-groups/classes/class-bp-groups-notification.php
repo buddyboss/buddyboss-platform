@@ -363,7 +363,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 				'email_plain_content' => __( "{{{sender.name}}} from {{{group.name}}} sent you a message.\n\n{{{message}}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss' ),
 				'situation_label'     => __( 'A member receives a new group message', 'buddyboss' ),
 				'unsubscribe_text'    => __( 'You will no longer receive emails when someone sends you a group message.', 'buddyboss' ),
-				'group'               => 'groups_discussions',
+				'group'               => 'messages',
 			),
 			'bb_groups_new_message'
 		);
@@ -380,7 +380,7 @@ class BP_Groups_Notification extends BP_Core_Notification_Abstract {
 					'email_plain_content' => __( "You have {{{unread.count}}} unread messages from {{{group.name}}}.\n\n{{{message}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss' ),
 					'situation_label'     => __( 'A member receives a new group message', 'buddyboss' ),
 					'unsubscribe_text'    => __( 'You will no longer receive emails when someone sends you a group message.', 'buddyboss' ),
-					'group'               => 'groups_discussions',
+					'group'               => 'messages',
 				),
 				'bb_groups_new_message'
 			);
