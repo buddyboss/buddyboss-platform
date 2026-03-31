@@ -142,6 +142,33 @@
 	}
 }
 
+/* Image Selection for Theme and Size */
+.bb-admin-settings-field__image-radio-wrapper {
+
+	&--bb_recaptcha_size,
+	&--bb_recaptcha_theme {
+
+		.bb-admin-settings-field__image-radio-option {
+			width: 200px;
+
+			.bb-admin-settings-field__image-radio-img {
+				max-height: calc(100% - 30px);
+				max-width: calc(100% - 30px);
+				margin: 0 15px;
+			}
+		}
+	}
+
+	&--bb_recaptcha_badge_position {
+
+		.bb-admin-settings-field__image-radio-img {
+			width: 100%;
+			height: 100%;
+			object-fit: contain;
+		}
+	}
+}
+
 // reCAPTCHA Verification Modal.
 .bb-recaptcha-modal {
 	position: fixed;

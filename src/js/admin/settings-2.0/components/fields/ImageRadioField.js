@@ -170,7 +170,7 @@ export function ImageRadioField( { field, value, onChange, disabled, description
 	var showUpload = uploadConditional && selected === uploadConditional.value;
 
 	return (
-		<div className="bb-admin-settings-field__image-radio-wrapper">
+		<div className={ 'bb-admin-settings-field__image-radio-wrapper' + ( field.name ? ' bb-admin-settings-field__image-radio-wrapper--' + field.name : '' ) }>
 		<div className="bb-admin-settings-field__image-radio">
 			{ ( field.options || [] ).map( function ( option ) {
 				return (
