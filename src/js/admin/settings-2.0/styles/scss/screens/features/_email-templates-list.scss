@@ -207,8 +207,8 @@
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	gap: 12px;
-	padding: 10px 16px;
+	gap: 8px;
+	padding: 6px 8px;
 	background-color: $bb-background-warning-primary-color;
 	border: 1px solid $bb-border-warning-secondary-color;
 	border-radius: $bb-border-radius-lg;
@@ -219,26 +219,31 @@
 		align-items: center;
 		gap: 8px;
 		font-size: 13px;
-		font-weight: 500;
-		color: $bb-text-warning-primary-color;
+		color: $bb-text-color;
 
 		i {
-			font-size: 18px;
+			font-size: 20px;
 			color: $bb-icon-warning-primary-color;
+			font-weight: 500;
 		}
 	}
 
 	&__action {
+		display: flex;
+		align-items: center;
+		gap: 4px;
 		font-size: 13px;
-		font-weight: 500;
-		color: $bb-text-warning-primary-color;
+		color: $bb-text-color;
 		text-decoration: none;
 		white-space: nowrap;
 		cursor: pointer;
 
 		&:hover {
-			color: $bb-text-warning-primary-color;
-			text-decoration: underline;
+			color: $bb-text-color;
+		}
+
+		i {
+			font-size: 15px;
 		}
 	}
 }
