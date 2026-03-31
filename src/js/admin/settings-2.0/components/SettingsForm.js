@@ -41,6 +41,7 @@ import { InputButtonField } from './fields/InputButtonField';
 import { PasswordField } from './fields/PasswordField';
 import { StatusCheckField } from './fields/StatusCheckField';
 import { ImageUploadField } from './fields/ImageUploadField';
+import { RecaptchaVerifyField } from './recaptcha/RecaptchaVerifyField';
 
 /**
  * Settings Form Component (matching Figma settingsSection)
@@ -341,6 +342,15 @@ export function SettingsForm({ fields, values, onChange }) {
 			case 'status_check':
 				return (
 					<StatusCheckField
+						field={field}
+						values={values}
+						disabled={disabled}
+					/>
+				);
+
+			case 'recaptcha_verify':
+				return (
+					<RecaptchaVerifyField
 						field={field}
 						values={values}
 						disabled={disabled}

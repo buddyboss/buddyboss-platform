@@ -182,7 +182,12 @@ export function ImageRadioField( { field, value, onChange, disabled, description
 						disabled={ disabled }
 					>
 						<div className="bb-admin-settings-field__image-radio-preview">
-							{ IMAGE_PREVIEWS[ option.image ] && IMAGE_PREVIEWS[ option.image ]() }
+							{ IMAGE_PREVIEWS[ option.image ]
+								? IMAGE_PREVIEWS[ option.image ]()
+								: option.image && ( option.image.indexOf( 'http' ) === 0 || option.image.indexOf( '/' ) === 0 )
+									? <img src={ option.image } alt={ option.label || '' } className="bb-admin-settings-field__image-radio-img" />
+									: null
+							}
 						</div>
 						<span className="bb-admin-settings-field__image-radio-label">{ option.label }</span>
 					</button>
