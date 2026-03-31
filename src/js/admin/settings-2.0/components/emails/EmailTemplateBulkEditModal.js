@@ -226,16 +226,16 @@ export function EmailTemplateBulkEditModal( { isOpen, selectedItems, onClose, on
 									<div className="bb-email-template-modal__situation-list">
 										{ catTerms.map( function ( term ) {
 											return (
-												<label key={ term.slug } className="bb-email-template-modal__situation-item">
-													<input
-														type="checkbox"
+												<div key={ term.slug } className="bb-email-template-modal__situation-item">
+													<CheckboxControl
+														label={ decodeEntities( term.description || term.slug ) }
 														checked={ emailType === term.slug }
 														onChange={ function () {
 															setEmailType( emailType === term.slug ? '' : term.slug );
 														} }
+														__nextHasNoMarginBottom
 													/>
-													<span>{ decodeEntities( term.description || term.slug ) }</span>
-												</label>
+												</div>
 											);
 										} ) }
 									</div>
