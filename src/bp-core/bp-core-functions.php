@@ -10349,8 +10349,10 @@ function bb_email_get_type_groups() {
 /**
  * Get the group key for a given email type slug.
  *
- * Resolves the group from the `bp_email_get_type_schema()` 'group' key.
- * Falls back to 'other' for terms not in the schema (e.g., third-party).
+ * Resolution order:
+ * 1. Schema 'group' key (from bp_email_get_type_schema — active components).
+ * 2. Term meta 'bb_email_group' (persisted — works when component is disabled).
+ * 3. Falls back to 'other'.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -10360,24 +10362,24 @@ function bb_email_get_type_groups() {
  */
 function bb_email_get_type_group( $type_slug ) {
 	$schema = bp_email_get_type_schema( 'all' );
-	$group  = 'other';
+	$group  = '';
 
+	// 1. Check schema 'group' key (set via register_email_type email_group or core schema).
 	if ( isset( $schema[ $type_slug ]['group'] ) ) {
 		$group = $schema[ $type_slug ]['group'];
-	} else {
-		// Fallback group map for core BB email types that were added
-		// via update functions and are not registered in bp_email_get_type_schema().
-		$fallback_map = array(
-			'new-activity-following' => 'activity',
-			'new-comment-reply'      => 'activity',
-			'new-follower'           => 'connections',
-			'groups-new-activity'    => 'groups_discussions',
-			'groups-new-discussion'  => 'groups_discussions',
-		);
+	}
 
-		if ( isset( $fallback_map[ $type_slug ] ) ) {
-			$group = $fallback_map[ $type_slug ];
+	// 2. Fallback to term meta (persisted when component was last active).
+	if ( empty( $group ) ) {
+		$term = get_term_by( 'slug', $type_slug, bp_get_email_tax_type() );
+		if ( $term && ! is_wp_error( $term ) ) {
+			$group = get_term_meta( $term->term_id, 'bb_email_group', true );
 		}
+	}
+
+	// 3. Default fallback.
+	if ( empty( $group ) ) {
+		$group = 'other';
 	}
 
 	/**

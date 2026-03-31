@@ -834,6 +834,12 @@ class BB_Email_Templates_Admin_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Failed to load email situations.', 'buddyboss' ) ) );
 		}
 
+		// Batch-prime term meta cache to avoid N+1 queries in bb_email_get_type_group().
+		$term_ids = wp_list_pluck( $terms, 'term_id' );
+		if ( ! empty( $term_ids ) ) {
+			update_termmeta_cache( $term_ids );
+		}
+
 		// Get group definitions and build empty structure.
 		$group_labels = bb_email_get_type_groups();
 		$grouped      = array();
@@ -844,9 +850,17 @@ class BB_Email_Templates_Admin_Ajax {
 			);
 		}
 
-		// Assign each term to its group using the schema 'group' key.
+		// Resolve group for each term and persist to term meta if missing.
+		$schema = bp_email_get_type_schema( 'all' );
 		foreach ( $terms as $term ) {
-			$category = bb_email_get_type_group( $term->slug );
+			$category       = bb_email_get_type_group( $term->slug );
+			$stored_group   = get_term_meta( $term->term_id, 'bb_email_group', true );
+
+			// Persist group to term meta when schema has it but term meta doesn't.
+			// This ensures the group survives even when the component is later disabled.
+			if ( 'other' !== $category && $stored_group !== $category ) {
+				update_term_meta( $term->term_id, 'bb_email_group', $category );
+			}
 
 			// Ensure the group exists (third-party may return a custom key).
 			if ( ! isset( $grouped[ $category ] ) ) {
