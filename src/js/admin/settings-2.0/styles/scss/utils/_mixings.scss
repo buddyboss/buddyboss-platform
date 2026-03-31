@@ -44,6 +44,12 @@
         background-color: $bb-background-brand-secondary-hover-color !important;
         pointer-events: none;
     }
+
+    > [class*="bb-icon"] {
+        font-size: 16px;
+        vertical-align: middle;
+        margin-right: 6px;
+    }
 }
 
 @mixin bb-button-danger {
@@ -73,6 +79,12 @@
         background-color: $bb-background-danger-primary-hover-color !important;
         pointer-events: none;
     }
+
+    > [class*="bb-icon"] {
+        font-size: 16px;
+        vertical-align: middle;
+        margin-right: 6px;
+    }
 }
 
 @mixin bb-button-primary-outline {
@@ -93,13 +105,19 @@
 
     &:focus {
         border-color: transparent;
-        outline: 2px solid $bb-border-quinery;
+        outline: 2px solid $bb-border-quinery !important;
         box-shadow: none !important;
     }
 
     &[disabled] {
         opacity: 0.5;
         pointer-events: none;
+    }
+
+    > [class*="bb-icon"] {
+        font-size: 16px;
+        vertical-align: middle;
+        margin-right: 6px;
     }
 }
 
@@ -134,7 +152,7 @@
         color: $bb-icon-color;
         font-size: 16px;
         vertical-align: middle;
-        margin-right: 8px;
+        margin-right: 6px;
     }
 }
 

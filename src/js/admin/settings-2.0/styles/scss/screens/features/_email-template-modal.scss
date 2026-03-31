@@ -4,13 +4,6 @@
 
 .bb-email-template-modal {
 
-	// Body — scrollable content area.
-	&__body {
-		max-height: 70vh;
-		overflow-y: auto;
-		padding: 0 24px;
-	}
-
 	// Field wrapper.
 	&__field {
 		margin-bottom: 20px;
@@ -28,6 +21,11 @@
 		font-size: 12px;
 		color: $bb-text-tertiary-color;
 		margin: 4px 0 0;
+		
+		a {
+			color: $bb-link-color;
+			text-decoration: none;
+		}
 	}
 
 	// Loading spinner.
@@ -64,9 +62,10 @@
 
 	// Custom fields repeater.
 	&__custom-fields-list {
-		border: 1px solid $bb-border-tertiary-color;
-		border-radius: $bb-border-radius-lg;
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-xl;
 		overflow: visible;
+		padding: 16px;
 		margin-bottom: 8px;
 	}
 
@@ -77,13 +76,8 @@
 	&__custom-field-row {
 		display: flex;
 		gap: 16px;
-		padding: 16px;
-		align-items: flex-start;
-		border-bottom: 1px solid $bb-border-tertiary-color;
-
-		&:last-child {
-			border-bottom: none;
-		}
+		align-items: center;
+		margin-bottom: 12px;
 
 		.components-base-control {
 			flex: 1;
@@ -93,13 +87,15 @@
 		.components-base-control__label {
 			display: block;
 			font-size: 13px;
-			font-weight: 600;
-			color: $bb-text-color;
+			font-weight: 500;
+			color: $bb-text-secondary-color;
 			margin-bottom: 6px;
 		}
 	}
 
 	&__custom-field-delete {
+		color: $bb-icon-secondary-color !important;
+		font-size: 24px;
 		flex-shrink: 0;
 		margin-top: 28px;
 	}
@@ -107,6 +103,7 @@
 	// Meta key autocomplete — Popover-based dropdown.
 	&__meta-key-autocomplete {
 		position: relative;
+		flex: 1;
 	}
 
 	// Popover wrapper needs width override.
@@ -177,7 +174,7 @@
 	&__add-custom-field {
 		@include bb-button-primary-outline;
 		font-size: 13px;
-		margin-top: 8px;
+		margin: 8px 0 16px 0;
 	}
 
 	// Situation section — divider above.
@@ -310,13 +307,22 @@
 		margin-bottom: 16px;
 	}
 
-	// Footer.
-	&__footer {
-		display: flex;
-		justify-content: flex-end;
-		gap: 8px;
-		padding: 16px 24px;
-		border-top: 1px solid $bb-border-secondary-color;
+	.bb-admin-meta-field__description {
+		font-size: 13px;
+	}
+
+	.bb-admin-meta-field__editor-field {
+
+		+ .bb-admin-meta-field__description {
+			margin-bottom: 0;
+		}
+	}
+
+	.components-base-control {
+
+		.bb-admin-meta-field__description {
+			margin-top: 10px;
+		}
 	}
 }
 
