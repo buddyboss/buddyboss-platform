@@ -757,6 +757,7 @@ function bb_redirect_legacy_settings_to_settings_2() {
 		'bp-messages'      => 'messages',
 		'bp-search'        => 'search',
 		'bp-invites'       => 'invites',
+		'bp-registration'  => 'registration',
 	);
 
 	/**

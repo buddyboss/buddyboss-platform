@@ -159,10 +159,26 @@ function bb_admin_settings_register_registration_feature() {
 	 */
 	do_action_deprecated(
 		'bp_admin_setting_registration_register_fields',
-		array(),
-		'[BBVERSION]',
-		'',
-		'Registration fields are now registered via bb_register_feature_field() in Settings 2.0.'
+		array(
+			// phpcs:ignore PHPCompatibility.Classes.NewAnonymousClasses.Found -- PHP 7.4+ required.
+			new class() {
+				/**
+				 * No-op: legacy add_section stub.
+				 *
+				 * @param mixed ...$args Arguments.
+				 */
+				public function add_section( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+				/**
+				 * No-op: legacy add_field stub.
+				 *
+				 * @param mixed ...$args Arguments.
+				 */
+				public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+			},
+		),
+		'BuddyBoss [BBVERSION]',
+		'bb_register_feature_field',
+		__( 'Registration fields are now registered via bb_register_feature_field() in Settings 2.0.', 'buddyboss' )
 	);
 }
 
