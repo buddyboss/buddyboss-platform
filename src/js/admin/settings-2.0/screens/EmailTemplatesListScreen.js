@@ -520,7 +520,8 @@ export default function EmailTemplatesListScreen( props ) {
 							setMissingModalOpen( true );
 						} }
 					>
-						{ __( 'Add Missing Email +', 'buddyboss' ) }
+						{ __( 'Add Missing Email', 'buddyboss' ) }
+						<i className="bb-icons-rl-plus"></i>
 					</a>
 				</div>
 			) }
