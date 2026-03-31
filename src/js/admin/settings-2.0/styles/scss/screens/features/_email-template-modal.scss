@@ -12,9 +12,9 @@
 	&__field-label {
 		display: block;
 		font-size: 13px;
-		font-weight: 600;
+		font-weight: 500;
 		color: $bb-text-color;
-		margin-bottom: 6px;
+		margin-bottom: 10px;
 	}
 
 	&__field-help {
@@ -28,7 +28,6 @@
 		}
 	}
 
-	// Loading spinner.
 	&__loading {
 		display: flex;
 		justify-content: center;
@@ -36,10 +35,10 @@
 		min-height: 200px;
 	}
 
-	// Status / Visibility / Publish row.
 	&__publish-fields {
 		border-top: 1px solid $bb-border-secondary-color;
 		padding-top: 20px;
+		margin-bottom: 0;
 	}
 
 	&__publish-row {
@@ -177,14 +176,11 @@
 		margin: 8px 0 16px 0;
 	}
 
-	// Situation section — divider above.
 	&__situation {
-		border-top: 1px solid $bb-border-secondary-color;
-		padding-top: 24px;
+		padding-top: 16px;
 		margin-top: 4px;
 	}
 
-	// Situation tabs.
 	&__situation-tabs {
 		border: 1px solid $bb-border-tertiary-color;
 		border-radius: $bb-border-radius-lg;

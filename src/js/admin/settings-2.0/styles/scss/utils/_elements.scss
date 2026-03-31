@@ -1202,7 +1202,7 @@ select.bb-admin-settings__select {
     &__selected-items {
         display: flex;
         flex-direction: column;
-        gap: 4px;
+        gap: 6px;
         margin-bottom: 16px;
         max-height: 125px;
         overflow: auto;
@@ -1235,7 +1235,7 @@ select.bb-admin-settings__select {
         font-size: 14px;
         font-weight: 400;
         line-height: 20px;
-        color: $bb-link-color;
+        color: $bb-text-secondary-color;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
