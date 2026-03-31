@@ -227,6 +227,15 @@
 		font-style: italic;
 	}
 
+	&__situation-loading {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 80px;
+		border: 1px solid $bb-border-tertiary-color;
+		border-radius: $bb-border-radius-lg;
+	}
+
 	// Selected items (bulk modals).
 	&__selected-items {
 		display: flex;

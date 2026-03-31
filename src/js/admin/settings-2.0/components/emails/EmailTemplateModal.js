@@ -541,6 +541,16 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 						</div>
 
 						{/* Situation — Tabbed checkboxes (acting as radio, single-select) */}
+						{ ! situations && (
+							<div className="bb-email-template-modal__field bb-email-template-modal__situation">
+								<label className="bb-email-template-modal__field-label">
+									{ __( 'Situation', 'buddyboss' ) }
+								</label>
+								<div className="bb-email-template-modal__situation-loading">
+									<Spinner />
+								</div>
+							</div>
+						) }
 						{ situations && Object.keys( situations ).length > 0 && (
 							<div className="bb-email-template-modal__field bb-email-template-modal__situation">
 								<label className="bb-email-template-modal__field-label">
