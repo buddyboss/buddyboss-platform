@@ -126,60 +126,6 @@ function bb_admin_settings_register_registration_feature() {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	do_action( 'bb_registration_after_register_settings_fields' );
-
-	// =========================================================================
-	// LEGACY HOOK DEPRECATION
-	// =========================================================================
-
-	/**
-	 * Deprecated: bb_admin_setting_general_registration_fields.
-	 *
-	 * Legacy hook used by Pro SSO to add provider fields to the registration
-	 * settings page. In Settings 2.0, Pro should hook into
-	 * bb_registration_after_general_settings_fields instead.
-	 *
-	 * @since BuddyBoss 2.6.30
-	 * @deprecated BuddyBoss [BBVERSION] Use bb_registration_after_general_settings_fields hook.
-	 */
-	do_action_deprecated(
-		'bb_admin_setting_general_registration_fields',
-		array(),
-		'[BBVERSION]',
-		'bb_registration_after_general_settings_fields',
-		'Registration fields are now registered via bb_register_feature_field() in Settings 2.0.'
-	);
-
-	/**
-	 * Deprecated: bp_admin_setting_registration_register_fields.
-	 *
-	 * Legacy hook fired after registration fields were registered.
-	 *
-	 * @since BuddyPress 1.6.0
-	 * @deprecated BuddyBoss [BBVERSION]
-	 */
-	do_action_deprecated(
-		'bp_admin_setting_registration_register_fields',
-		array(
-			// phpcs:ignore PHPCompatibility.Classes.NewAnonymousClasses.Found -- PHP 7.4+ required.
-			new class() {
-				/**
-				 * No-op: legacy add_section stub.
-				 *
-				 * @param mixed ...$args Arguments.
-				 */
-				public function add_section( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
-				/**
-				 * No-op: legacy add_field stub.
-				 *
-				 * @param mixed ...$args Arguments.
-				 */
-				public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
-			},
-		),
-		'BuddyBoss [BBVERSION]',
-		'bb_register_feature_field',
-		__( 'Registration fields are now registered via bb_register_feature_field() in Settings 2.0.', 'buddyboss' )
-	);
 }
 
 add_action( 'bb_register_features', 'bb_admin_settings_register_registration_feature', 16 );
