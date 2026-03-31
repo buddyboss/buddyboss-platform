@@ -263,6 +263,70 @@ add_action(
 );
 
 // ──────────────────────────────────────────────────────────────────────────────
+// Registration Settings 2.0 deprecated hook compatibility.
+// Registration migrated to Settings 2.0 — legacy BP_Admin_Setting_Registration class removed.
+
+/**
+ * Fire the legacy `bb_admin_setting_general_registration_fields` hook after
+ * Settings 2.0 finishes registering registration fields.
+ *
+ * @since BuddyBoss 2.6.30
+ * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_registration_after_general_settings_fields'} instead.
+ */
+add_action(
+	'bb_registration_after_register_settings_fields',
+	static function () {
+		do_action_deprecated(
+			'bb_admin_setting_general_registration_fields',
+			array(),
+			'BuddyBoss [BBVERSION]',
+			'bb_registration_after_general_settings_fields',
+			__( 'Registration fields are now registered via bb_register_feature_field() in Settings 2.0.', 'buddyboss' )
+		);
+	}
+);
+
+/**
+ * Fire the legacy `bp_admin_setting_registration_register_fields` hook after
+ * Settings 2.0 finishes registering registration fields.
+ *
+ * The original hook passed a `BP_Admin_Setting_Registration` instance. Settings 2.0
+ * no longer uses that class, so a no-op stub is passed to satisfy callbacks
+ * that call add_section()/add_field() on the argument.
+ *
+ * @since BuddyPress 1.6.0
+ * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_register_feature_field'} instead.
+ */
+add_action(
+	'bb_registration_after_register_settings_fields',
+	static function () {
+		do_action_deprecated(
+			'bp_admin_setting_registration_register_fields',
+			array(
+				// phpcs:ignore PHPCompatibility.Classes.NewAnonymousClasses.Found -- PHP 7.4+ required.
+				new class() {
+					/**
+					 * No-op stub for BP_Admin_Setting_tab::add_section().
+					 *
+					 * @param mixed ...$args Ignored.
+					 */
+					public function add_section( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+
+					/**
+					 * No-op stub for BP_Admin_Setting_tab::add_field().
+					 *
+					 * @param mixed ...$args Ignored.
+					 */
+					public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+				},
+			),
+			'BuddyBoss [BBVERSION]',
+			'bb_register_feature_field'
+		);
+	}
+);
+
+// ──────────────────────────────────────────────────────────────────────────────
 // Media Settings 2.0 deprecated hook compatibility.
 // Media is a "super-feature" wrapping bp-media (photos), bp-video, bp-document.
 // ──────────────────────────────────────────────────────────────────────────────
