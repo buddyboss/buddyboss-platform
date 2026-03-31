@@ -18,7 +18,7 @@
 	}
 
 	&__field-help {
-		font-size: 12px;
+		font-size: 13px;
 		color: $bb-text-tertiary-color;
 		margin: 4px 0 0;
 		
@@ -182,38 +182,63 @@
 	}
 
 	&__situation-tabs {
-		border: 1px solid $bb-border-tertiary-color;
-		border-radius: $bb-border-radius-lg;
-		overflow: hidden;
 
 		.components-tab-panel__tabs {
-			border-bottom: 1px solid $bb-border-tertiary-color;
-			background-color: $bb-background-primary-color;
+			border-bottom: none;
+			margin: 0;
+			padding: 0 0 12px;
+			gap: 8px;
 		}
 
-		.components-tab-panel__tab-content {
-			padding: 12px 16px;
+		.components-tab-panel__tabs-item {
+			padding: 4px 14px;
+			font-size: 13px;
+			font-weight: 400;
+			line-height: 1.5;
+			color: $bb-text-tertiary-color;
+			border: 1px solid $bb-border-tertiary-color;
+			border-radius: $bb-border-radius-md;
+			background: none;
+			cursor: pointer;
+			height: auto !important;
+
+			// Remove default underline indicator.
+			&:after,
+			&:before {
+				display: none !important;
+			}
+
+			&:hover,
+			&.is-active {
+				color: $bb-text-color;
+				background-color: $bb-background-primary-hover-color;
+				border-color: $bb-border-tertiary-color;
+				box-shadow: none;
+			}
+
+			&:focus:not(:disabled) {
+				box-shadow: none;
+			}
 		}
 	}
 
 	&__situation-list {
 		display: flex;
 		flex-direction: column;
-		gap: 8px;
+		margin-bottom: 10px;
 	}
 
 	&__situation-item {
-		display: flex;
-		align-items: flex-start;
-		gap: 8px;
-		font-size: 13px;
-		color: $bb-text-color;
-		cursor: pointer;
+		padding: 8px 0;
 
-		input[type="radio"],
-		input[type="checkbox"] {
-			margin-top: 2px;
-			flex-shrink: 0;
+		.components-checkbox-control__label {
+			font-size: 14px;
+			line-height: 20px;
+			color: $bb-text-color;
+		}
+
+		.components-checkbox-control .components-flex {
+			align-items: center;
 		}
 	}
 

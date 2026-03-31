@@ -17,6 +17,7 @@ import {
 	Button,
 	TextControl,
 	TabPanel,
+	CheckboxControl,
 	Spinner,
 	Popover,
 } from '@wordpress/components';
@@ -573,16 +574,16 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 												{ catTerms.map( function ( term ) {
 													var isSelected = registeredValues.email_type === term.slug;
 													return (
-														<label key={ term.slug } className={ 'bb-email-template-modal__situation-item' + ( isSelected ? ' bb-email-template-modal__situation-item--selected' : '' ) }>
-															<input
-																type="checkbox"
+														<div key={ term.slug } className={ 'bb-email-template-modal__situation-item' + ( isSelected ? ' bb-email-template-modal__situation-item--selected' : '' ) }>
+															<CheckboxControl
+																label={ decodeEntities( term.description || term.slug ) }
 																checked={ isSelected }
 																onChange={ function () {
 																	handleRegisteredFieldChange( 'email_type', isSelected ? '' : term.slug );
 																} }
+																__nextHasNoMarginBottom
 															/>
-															<span>{ decodeEntities( term.description || term.slug ) }</span>
-														</label>
+														</div>
 													);
 												} ) }
 												{ 0 === catTerms.length && (
