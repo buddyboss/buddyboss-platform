@@ -42,6 +42,7 @@ import { PasswordField } from './fields/PasswordField';
 import { StatusCheckField } from './fields/StatusCheckField';
 import { ImageUploadField } from './fields/ImageUploadField';
 import { RecaptchaVerifyField } from './recaptcha/RecaptchaVerifyField';
+import { RecaptchaBypassField } from './recaptcha/RecaptchaBypassField';
 
 /**
  * Settings Form Component (matching Figma settingsSection)
@@ -353,6 +354,17 @@ export function SettingsForm({ fields, values, onChange }) {
 					<RecaptchaVerifyField
 						field={field}
 						values={values}
+						disabled={disabled}
+					/>
+				);
+
+			case 'recaptcha_bypass':
+				return (
+					<RecaptchaBypassField
+						field={field}
+						value={value}
+						values={values}
+						onChange={onChange}
 						disabled={disabled}
 					/>
 				);

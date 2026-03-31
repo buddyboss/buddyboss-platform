@@ -247,7 +247,7 @@ bb_register_feature_field(
 	)
 );
 
-// FIELD: Allow Bypass (checkbox with inline text input).
+// FIELD: Allow Bypass (checkbox + text input + copy URL).
 $allow_bypass = bb_recaptcha_setting( 'allow_bypass', false );
 $bypass_text  = bb_recaptcha_setting( 'bypass_text', '' );
 
@@ -256,23 +256,28 @@ bb_register_feature_field(
 	'recaptcha_settings',
 	'recaptcha_general',
 	array(
-		'name'                 => 'bb_recaptcha_allow_bypass',
-		'label'                => '',
-		'type'                 => 'checkbox',
-		'default'              => $allow_bypass ? 1 : 0,
-		'description'          => __( 'Allow bypass, enter a 6 to 10-character string to customize your URL', 'buddyboss' ),
-		'help_text'            => __( 'The bypass URL enables you to bypass reCAPTCHA in case of issues. We recommend keeping the link below securely stored for accessing your site.', 'buddyboss' ),
-		'sanitize_callback'    => 'absint',
-		'order'                => 30,
-		'description_controls' => array(
-			array(
-				'type'              => 'text',
-				'name'              => 'bb_recaptcha_bypass_text',
-				'default'           => $bypass_text,
-				'placeholder'       => 'stringxs',
-				'sanitize_callback' => 'bb_recaptcha_sanitize_bypass_text',
-			),
-		),
+		'name'              => 'bb_recaptcha_allow_bypass',
+		'label'             => '',
+		'type'              => 'recaptcha_bypass',
+		'default'           => $allow_bypass ? 1 : 0,
+		'sanitize_callback' => 'absint',
+		'order'             => 30,
+		'bypass_text'       => $bypass_text,
+	)
+);
+
+// Hidden field for bypass text (saved alongside the checkbox).
+bb_register_feature_field(
+	'recaptcha',
+	'recaptcha_settings',
+	'recaptcha_general',
+	array(
+		'name'              => 'bb_recaptcha_bypass_text',
+		'label'             => '',
+		'type'              => 'hidden',
+		'default'           => $bypass_text,
+		'sanitize_callback' => 'bb_recaptcha_sanitize_bypass_text',
+		'order'             => 31,
 	)
 );
 

@@ -1,5 +1,102 @@
 // reCAPTCHA feature styles.
 
+// Bypass field: checkbox + text input + copy URL.
+.bb-admin-settings-field__recaptcha-bypass {
+
+	&-row {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		flex-wrap: wrap;
+	}
+
+	&-label {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		font-size: 14px;
+		line-height: 20px;
+		color: $bb-text-color;
+		cursor: pointer;
+	}
+
+	&-checkbox {
+		margin: 0;
+	}
+
+	&-text {
+		width: 120px;
+		padding: 4px 8px;
+		font-size: 13px;
+		line-height: 18px;
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-sm;
+		color: $bb-text-color;
+
+		&:disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+		}
+
+		&::placeholder {
+			color: $bb-text-disabled-color;
+		}
+	}
+
+	&-description {
+		color: $bb-text-tertiary-color;
+		font-size: 13px;
+		line-height: 18px;
+		margin: 8px 0 0;
+	}
+
+	&-url {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		margin-top: 8px;
+
+		&--invalid {
+			opacity: 0.5;
+		}
+	}
+
+	&-link {
+		font-size: 13px;
+		line-height: 18px;
+		color: $bb-text-brand-primary-color;
+		word-break: break-all;
+		text-decoration: none;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+
+	&-copy {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 28px;
+		height: 28px;
+		background: none;
+		border: none;
+		cursor: pointer;
+		color: $bb-icon-color;
+		border-radius: $bb-border-radius-sm;
+		flex-shrink: 0;
+		transition: background-color 0.15s ease;
+
+		&:hover {
+			background-color: $bb-background-primary-color;
+		}
+
+		i {
+			font-size: 16px;
+		}
+	}
+}
+
 .bb-admin-settings-field__recaptcha-verify {
 
 	&-row {
