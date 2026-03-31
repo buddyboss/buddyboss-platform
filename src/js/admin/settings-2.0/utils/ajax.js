@@ -1157,7 +1157,7 @@ export function getEmailSituations( options ) {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param {Object} options Optional fetch options.
+ * @param {Object} options Optional fetch options (e.g. { signal }).
  * @return {Promise} Promise resolving to array of meta key strings.
  */
 export function getEmailMetaKeys( options ) {

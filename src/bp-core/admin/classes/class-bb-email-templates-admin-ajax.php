@@ -904,22 +904,39 @@ class BB_Email_Templates_Admin_Ajax {
 
 		global $wpdb;
 
-		// Get distinct public meta keys across all posts (matching legacy Custom Fields metabox behavior).
-		// Excludes internal WP meta (prefixed with _) and known BP meta.
+		// Get distinct public meta keys across ALL posts.
+		// Matches WordPress core meta_form() behavior (wp-admin/includes/template.php:718).
+		// Uses same SQL pattern and default limit of 30.
+
+		/**
+		 * Filters the number of custom meta keys to retrieve for the dropdown.
+		 *
+		 * Matches WordPress core's postmeta_form_limit filter default of 30.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int $limit Number of meta keys to retrieve. Default 30.
+		 */
+		$limit = (int) apply_filters( 'bb_email_meta_keys_limit', 30 );
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$keys = $wpdb->get_col(
 			$wpdb->prepare(
-				"SELECT DISTINCT pm.meta_key
-				FROM {$wpdb->postmeta} pm
-				INNER JOIN {$wpdb->posts} p ON p.ID = pm.post_id
-				WHERE p.post_type = %s
-				AND pm.meta_key NOT LIKE %s
-				AND pm.meta_key != 'bp_email_preheader'
-				ORDER BY pm.meta_key ASC
-				LIMIT 200",
-				bp_get_email_post_type(),
-				$wpdb->esc_like( '_' ) . '%'
+				"SELECT DISTINCT meta_key
+				FROM {$wpdb->postmeta}
+				WHERE meta_key NOT BETWEEN '_' AND '_z'
+				HAVING meta_key NOT LIKE %s
+				ORDER BY meta_key
+				LIMIT %d",
+				$wpdb->esc_like( '_' ) . '%',
+				$limit
 			)
 		);
+
+		if ( $keys ) {
+			natcasesort( $keys );
+			$keys = array_values( $keys );
+		}
 
 		wp_send_json_success( ! empty( $keys ) ? $keys : array() );
 	}
