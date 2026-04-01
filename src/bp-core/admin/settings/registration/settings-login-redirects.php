@@ -67,7 +67,7 @@ function bb_registration_register_login_redirects_panel_fields() {
 			'label'             => '',
 			'type'              => 'text',
 			'default'           => '',
-			'sanitize_callback' => 'esc_url_raw',
+			'sanitize_callback' => 'bb_registration_sanitize_redirect_url',
 			'placeholder'       => __( 'Enter custom URL', 'buddyboss' ),
 			'conditional'       => array(
 				'field'  => 'bb-login-redirection',
@@ -108,7 +108,7 @@ function bb_registration_register_login_redirects_panel_fields() {
 			'label'             => '',
 			'type'              => 'text',
 			'default'           => '',
-			'sanitize_callback' => 'esc_url_raw',
+			'sanitize_callback' => 'bb_registration_sanitize_redirect_url',
 			'placeholder'       => __( 'Enter custom URL', 'buddyboss' ),
 			'conditional'       => array(
 				'field'  => 'bb-logout-redirection',

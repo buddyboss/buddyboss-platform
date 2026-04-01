@@ -278,7 +278,12 @@ add_action(
 	static function () {
 		do_action_deprecated(
 			'bb_admin_setting_general_registration_fields',
-			array(),
+			array(
+				new class() {
+					public function add_section( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+					public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+				},
+			),
 			'BuddyBoss [BBVERSION]',
 			'bb_registration_after_general_settings_fields',
 			__( 'Registration fields are now registered via bb_register_feature_field() in Settings 2.0.', 'buddyboss' )

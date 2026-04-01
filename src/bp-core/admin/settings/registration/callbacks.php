@@ -146,3 +146,29 @@ function bb_registration_sanitize_redirection( $value ) {
 
 	return '';
 }
+
+/**
+ * Sanitize custom redirect URL.
+ *
+ * Validates the URL is safe for redirection — allows same-site URLs and
+ * prevents open redirect to external domains.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $value The submitted URL.
+ *
+ * @return string Sanitized URL or empty string.
+ */
+function bb_registration_sanitize_redirect_url( $value ) {
+	$value = esc_url_raw( $value );
+
+	if ( empty( $value ) ) {
+		return '';
+	}
+
+	// Use wp_validate_redirect to ensure the URL is same-site.
+	// Falls back to home_url() if the URL is external.
+	$validated = wp_validate_redirect( $value, '' );
+
+	return ! empty( $validated ) ? $validated : '';
+}
