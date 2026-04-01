@@ -34,8 +34,9 @@
 		display: flex;
 		flex-direction: column;
 
-		&--disabled {
+		.bb-admin-settings-form__field--disabled & {
 			opacity: 0.5;
+			pointer-events: none;
 		}
 	}
 
