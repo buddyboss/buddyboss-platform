@@ -39,7 +39,7 @@ function bb_admin_settings_register_registration_feature() {
 			'description'        => __( 'Manage member registration, login redirects, account settings, and registration restrictions.', 'buddyboss' ),
 			'icon'               => array(
 				'type'  => 'font',
-				'class' => 'bb-icons-rl bb-icons-rl-user-plus',
+				'class' => 'bb-icons-rl bb-icons-rl-user-square',
 			),
 			'license_tier'       => 'free',
 			'category'           => 'community',
