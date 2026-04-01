@@ -77,7 +77,8 @@ export function SettingsScreen({ onNavigate }) {
 		setFilteredFeatures(filtered);
 	}, [features, activeFilter, selectedCategory, searchQuery]);
 
-	// Group features by category
+	// Group features by category with defined display order.
+	const categoryOrder = [ 'community', 'add-ons', 'integrations' ];
 	const groupedFeatures = filteredFeatures.reduce((acc, feature) => {
 		const category = feature.category || 'community';
 		if (!acc[category]) {
@@ -86,6 +87,20 @@ export function SettingsScreen({ onNavigate }) {
 		acc[category].push(feature);
 		return acc;
 	}, {});
+
+	// Sort categories into the defined display order.
+	const sortedGroupedFeatures = {};
+	categoryOrder.forEach(function( cat ) {
+		if ( groupedFeatures[ cat ] ) {
+			sortedGroupedFeatures[ cat ] = groupedFeatures[ cat ];
+		}
+	});
+	// Append any categories not in the predefined order.
+	Object.keys( groupedFeatures ).forEach(function( cat ) {
+		if ( ! sortedGroupedFeatures[ cat ] ) {
+			sortedGroupedFeatures[ cat ] = groupedFeatures[ cat ];
+		}
+	});
 
 	// Get filter counts
 	const filterCounts = {
@@ -287,7 +302,7 @@ export function SettingsScreen({ onNavigate }) {
 
 				{/* Feature Grid */}
 				<div className="bb-admin-settings__grid">
-					{Object.entries(groupedFeatures).map(([category, categoryFeatures]) => (
+					{Object.entries(sortedGroupedFeatures).map(([category, categoryFeatures]) => (
 						<div key={category} className="bb-admin-settings__category">
 							{/* Category Divider */}
 							<div className={ 'community' === category ? 'bb-admin-settings__category-divider' : 'bb-admin-settings__category-divider bb-admin-settings__category-divider--with-line' }>
@@ -299,7 +314,7 @@ export function SettingsScreen({ onNavigate }) {
 										: __('BUDDYBOSS INTEGRATIONS', 'buddyboss') }
 								</h2>
 							</div>
-							
+
 							{/* Features Grid */}
 							<div className="bb-admin-settings__features-grid">
 								{categoryFeatures.map((feature) => (
@@ -318,37 +333,37 @@ export function SettingsScreen({ onNavigate }) {
 															if (!feature.icon) {
 																return <span className="dashicons dashicons-admin-generic"></span>;
 															}
-															
+
 															// If icon has nested data (from registered icons)
 															const iconData = feature.icon.data || feature.icon;
 															const iconType = feature.icon.type || iconData.type;
-															
+
 															if ( 'dashicon' === iconType ) {
 																const slug = feature.icon.slug || iconData.slug || 'dashicons-admin-generic';
 																return <span className={`dashicons ${slug}`}></span>;
 															}
-															
+
 															if ( 'svg' === iconType ) {
 																const url = feature.icon.url || iconData.url || iconData.data_uri || (iconData.data && iconData.data.url) || (iconData.data && iconData.data.data_uri);
 																if (url) {
 																	return <img src={url} alt={feature.label} className="bb-admin-settings__feature-icon-img" />;
 																}
 															}
-															
+
 															if ( 'image' === iconType ) {
 																const url = feature.icon.url || iconData.url || iconData.path || (iconData.data && iconData.data.url) || (iconData.data && iconData.data.path);
 																if (url) {
 																	return <img src={url} alt={feature.label} className="bb-admin-settings__feature-icon-img" />;
 																}
 															}
-															
+
 															if ( 'font' === iconType ) {
 																const className = feature.icon.class || iconData.class || (iconData.data && iconData.data.class);
 																if (className) {
 																	return <span className={className}></span>;
 																}
 															}
-															
+
 															// Fallback
 															return <span className="dashicons dashicons-admin-generic"></span>;
 														})()}
@@ -356,13 +371,13 @@ export function SettingsScreen({ onNavigate }) {
 													<h3 className="bb-admin-settings__feature-title">{feature.label}</h3>
 												</div>
 											</div>
-											
+
 											{/* Description */}
 											<p className="bb-admin-settings__feature-description">
 												{feature.description || __('No description available.', 'buddyboss')}
 											</p>
 										</div>
-										
+
 										{/* Bottom Section: Settings Button + Toggle */}
 										<div className="bb-admin-settings__feature-bottom">
 											<div className="bb-admin-settings__feature-left">
