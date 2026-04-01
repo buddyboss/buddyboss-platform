@@ -35,6 +35,25 @@ class BB_Recaptcha_Integration extends BP_Integration {
 	}
 
 	/**
+	 * Check if the reCAPTCHA feature is enabled in New Settings.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return bool True if feature is enabled.
+	 */
+	private function is_feature_enabled() {
+		$active_features = bp_get_option( 'bb-active-features', array() );
+
+		// If the feature key doesn't exist yet (pre-migration), treat as enabled
+		// for backward compatibility.
+		if ( ! array_key_exists( 'recaptcha', $active_features ) ) {
+			return true;
+		}
+
+		return ! empty( $active_features['recaptcha'] );
+	}
+
+	/**
 	 * Get the base directory for this integration.
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -59,40 +78,30 @@ class BB_Recaptcha_Integration extends BP_Integration {
 	/**
 	 * Includes.
 	 *
+	 * Loads reCAPTCHA integration files. Functions always load (public API
+	 * used by New Settings). Actions and filters only load when the feature
+	 * is enabled — they register the frontend hooks (login form, registration, etc.).
+	 *
 	 * @since BuddyBoss 2.5.60
+	 * @since BuddyBoss [BBVERSION] Simplified path resolution, added feature gate.
 	 *
 	 * @param array $includes Array of file paths to include.
 	 */
 	public function includes( $includes = array() ) {
-		$slashed_path = $this->get_integration_dir();
+		$dir   = $this->get_integration_dir();
+		$files = array( 'actions', 'filters', 'functions' );
 
-		$includes = array(
-			'actions',
-			'filters',
-			'functions',
-		);
+		foreach ( $files as $file ) {
+			// Skip frontend hooks (actions/filters) when the feature is disabled.
+			// Functions file always loads — it's the public API used by Settings 2.0.
+			if ( ! $this->is_feature_enabled() && 'functions' !== $file ) {
+				continue;
+			}
 
-		// Loop through files to be included.
-		foreach ( (array) $includes as $file ) {
+			$file_path = $dir . 'bb-recaptcha-' . $file . '.php';
 
-			$paths = array(
-
-				// Passed with no extension.
-				'bb-' . $this->id . '/bb-' . $this->id . '-' . $file . '.php',
-				'bb-' . $this->id . '-' . $file . '.php',
-				'bb-' . $this->id . '/' . $file . '.php',
-
-				// Passed with extension.
-				$file,
-				'bb-' . $this->id . '-' . $file,
-				'bb-' . $this->id . '/' . $file,
-			);
-
-			foreach ( $paths as $path ) {
-				if ( @is_file( $slashed_path . $path ) ) { // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
-					require $slashed_path . $path;
-					break;
-				}
+			if ( file_exists( $file_path ) ) {
+				require_once $file_path;
 			}
 		}
 	}
@@ -101,7 +110,7 @@ class BB_Recaptcha_Integration extends BP_Integration {
 	 * Register Recaptcha setting tab.
 	 *
 	 * Legacy admin tab removed — reCAPTCHA settings are managed
-	 * via Settings 2.0 at bb-settings&tab=recaptcha.
+	 * via New Settings at bb-settings&tab=recaptcha.
 	 *
 	 * @since BuddyBoss 2.5.60
 	 * @since BuddyBoss [BBVERSION] Removed legacy integration tab.

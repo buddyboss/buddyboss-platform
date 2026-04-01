@@ -242,7 +242,7 @@ function bb_recaptcha_actions() {
  */
 function bb_recaptcha_is_enabled( $key ) {
 	$enabled_keys = bb_recaptcha_setting( 'enabled_for', array() );
-	$retval = ! empty( $key ) && array_key_exists( $key, $enabled_keys ) && ! empty( $enabled_keys[ $key ] );
+	$retval       = ! empty( $key ) && array_key_exists( $key, $enabled_keys ) && ! empty( $enabled_keys[ $key ] );
 
 	/**
 	 * Filters the enabled status of reCAPTCHA for a specific action.
