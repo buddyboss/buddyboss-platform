@@ -2448,6 +2448,43 @@ if ( ! function_exists( 'bp_core_get_emails_admin_tabs' ) ) {
 	}
 }
 
+/**
+ * Fire deprecated bp_admin_tab_setting_save/saved hooks for the legacy bp-registration tab.
+ *
+ * Follows the same pattern as `bb_advanced_fire_deprecated_save_hooks()`.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id Feature ID.
+ * @param array  $settings   Full submitted settings.
+ * @param array  $saved      Keys and values saved by core.
+ */
+function bb_registration_fire_deprecated_save_hooks( $feature_id, $settings, $saved ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+	if ( 'registration' !== $feature_id ) {
+		return;
+	}
+
+	/**
+	 * Fires when registration settings are saved (legacy bridge).
+	 *
+	 * @since      BuddyBoss 1.0.0
+	 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_admin_save_feature_settings_after'} with feature_id='registration'.
+	 *
+	 * @param string $tab_name Tab name.
+	 */
+	do_action_deprecated( 'bp_admin_tab_setting_save', array( 'bp-registration' ), 'BuddyBoss [BBVERSION]', 'bb_admin_save_feature_settings_after' );
+
+	/**
+	 * Fires after registration settings have been saved (legacy bridge).
+	 *
+	 * @since      BuddyBoss 1.0.0
+	 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_admin_save_feature_settings_after'} with feature_id='registration'.
+	 *
+	 * @param string $tab_name Tab name.
+	 */
+	do_action_deprecated( 'bp_admin_tab_setting_saved', array( 'bp-registration' ), 'BuddyBoss [BBVERSION]', 'bb_admin_save_feature_settings_after' );
+}
+add_action( 'bb_admin_save_feature_settings_after', 'bb_registration_fire_deprecated_save_hooks', 99, 3 );
 
 // ──────────────────────────────────────────────────────────────────────────────
 // General Settings (Privacy, Toolbar, Content Counts) — migrated to Advanced.
