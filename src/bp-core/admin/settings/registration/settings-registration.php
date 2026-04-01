@@ -309,6 +309,11 @@ function bb_registration_register_panel_fields() {
 			'sanitize_callback' => '__return_empty_array',
 			'pro_only'          => true,
 			'group'             => 'social_login',
+			'conditional'       => array(
+				'field'  => 'bb-social-login',
+				'value'  => true,
+				'action' => 'disable',
+			),
 			'providers'         => array(
 				array(
 					'id'    => 'google',
@@ -352,11 +357,6 @@ function bb_registration_register_panel_fields() {
 			'notice_type'       => 'info',
 			'description'       => __( 'Any changes will require new iOS and Android app builds.', 'buddyboss' ),
 			'sanitize_callback' => '__return_empty_string',
-			'conditional'       => array(
-				'field'  => 'bb-social-login',
-				'value'  => true,
-				'action' => 'show',
-			),
 			'group'             => 'social_login',
 			'hidden'            => true,
 			'order'             => 76,

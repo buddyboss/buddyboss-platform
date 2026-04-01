@@ -215,6 +215,8 @@
 		.bb-hello-header {
 			position: relative;
 			padding: 8px 23px;
+			background-color: $bb-background-base-color;
+			border-bottom: 1px solid $bb-border-secondary-color;
 		}
 
 		.bb-hello-title h2 {
@@ -239,10 +241,59 @@
 			}
 		}
 
+		.bb-hello-content {
+			max-height: initial;
+			min-height: initial;
+			margin-bottom: 0;
+		}
+
 		.form-fields {
 			padding: 14px 0;
+
+			.bb-sso-field-group--has-card {
+				padding: 8px 16px;
+				border: 1px solid $bb-border-secondary-color;
+				border-radius: $bb-border-radius-xl;
+				margin-bottom: 55px;
+				margin-top: 40px;
+
+				&:last-child {
+					margin-bottom: 24px;
+				}
+
+				> .bb-sso-field-group__title {
+					margin: -40px 0 30px -16px;
+				}
+			}
 			
 			.form-field {
+				margin-bottom: 12px;
+
+				&.form-field--radio  {
+
+					.field-input > label {
+						padding-bottom: 0;
+
+						.bb-sso-radio-label__control {
+							display: flex;
+							align-items: center;
+							gap: 8px;
+							margin-bottom: 12px;
+						}
+
+						input[type=radio] {
+							margin: 0;
+							flex-shrink: 0;
+						}
+
+						.bb-sso-radio-label__text input {
+							margin-top: 8px;
+						}
+					}
+				}
+			}
+
+			.field-label {
 				margin-bottom: 10px;
 			}
 
@@ -252,8 +303,19 @@
 				font-weight: 500;
 			}
 
+			textarea,
 			input[type="text"] {
 				@include bb-input-text;
+
+				&[disabled] {
+					color: $bb-text-disabled-color;
+					background-color: transparent;
+					border-color: $bb-background-secondary-color;
+				}
+			}
+
+			textarea {
+				padding: 5px 8px;
 			}
 
 			.show-full-width {
@@ -264,8 +326,45 @@
 			.description {
 				font-size: 13px;
 				line-height: 1.6;
-				color: $bb-text-secondary-color;
-				margin-bottom: 16px;
+				color: $bb-text-tertiary-color;
+				margin-bottom: 0;
+
+				a {
+					color: $bb-link-color;
+					text-decoration: none;
+
+					&:hover {
+						color: $bb-link-color;
+					}
+				}
+			}
+
+			[data-bp-tooltip] {
+				position: relative;
+				cursor: pointer;
+
+				&:after {
+					content: attr(data-bp-tooltip);
+					position: absolute;
+					bottom: 20px;
+					left: 50%;
+					transform: translateX(-50%);
+					padding: 2px 8px;
+					background-color: $bb-background-black-color;
+					color: $bb-text-inverse-color;
+					font-size: 11px;
+					font-weight: 400;
+					text-align: center;
+					border-radius: $bb-border-radius-lg;
+					white-space: nowrap;
+					opacity: 0;
+					visibility: hidden;
+				}
+
+				&:hover:after {
+					opacity: 1;
+					visibility: visible;
+				}
 			}
 		}
 
@@ -278,6 +377,8 @@
 			border-top: 1px solid $bb-border-secondary-color;
 			background-color: $bb-background-base-color;
 			box-sizing: border-box;
+			position: static;
+			width: auto;
 
 			.button:not(.button-primary) {
 				@include bb-button-secondary;
