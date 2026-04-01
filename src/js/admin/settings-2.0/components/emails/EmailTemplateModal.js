@@ -85,6 +85,7 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 	var setMetaKeys = metaKeysState[1];
 
 	var isMountedRef = useRef( true );
+	var abortRef = useRef( null );
 	var registeredFieldsRef = useRef( registeredFields );
 	registeredFieldsRef.current = registeredFields;
 	var emailIdRef = useRef( emailId );
@@ -93,6 +94,10 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 		isMountedRef.current = true;
 		return function () {
 			isMountedRef.current = false;
+			// Abort any pending AJAX requests.
+			if ( abortRef.current ) {
+				abortRef.current.abort();
+			}
 			// Clean up TinyMCE editors on unmount (defensive — normally handled by handleClose).
 			registeredFieldsRef.current.forEach( function ( field ) {
 				if ( 'richtext' === field.type ) {
@@ -126,7 +131,10 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 			return;
 		}
 
-		getEmailSituations().then( function ( response ) {
+		var controller = new AbortController();
+		var opts = { signal: controller.signal };
+
+		getEmailSituations( opts ).then( function ( response ) {
 			if ( ! isMountedRef.current ) {
 				return;
 			}
@@ -137,7 +145,7 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 
 		// Fetch meta key suggestions for custom field name autocomplete.
 		if ( 0 === metaKeys.length ) {
-			getEmailMetaKeys().then( function ( response ) {
+			getEmailMetaKeys( opts ).then( function ( response ) {
 				if ( ! isMountedRef.current ) {
 					return;
 				}
@@ -146,6 +154,10 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 				}
 			} ).catch( function () {} );
 		}
+
+		return function () {
+			controller.abort();
+		};
 	}, [ isOpen ] );
 
 	// Load fields: add mode uses createFields prop, edit mode fetches from server.
@@ -169,9 +181,12 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 			setCustomMeta( [] );
 			setIsLoading( false );
 		} else {
-			// Edit mode — fetch from server.
+			// Edit mode — fetch from server with AbortController.
+			var controller = new AbortController();
+			abortRef.current = controller;
+
 			setIsLoading( true );
-			getEmailTemplate( { email_id: emailId } ).then( function ( response ) {
+			getEmailTemplate( { email_id: emailId }, { signal: controller.signal } ).then( function ( response ) {
 				if ( ! isMountedRef.current ) {
 					return;
 				}
@@ -195,6 +210,10 @@ export function EmailTemplateModal( { isOpen, emailId, createFields, onClose, on
 					setError( __( 'An error occurred loading the template.', 'buddyboss' ) );
 				}
 			} );
+
+			return function () {
+				controller.abort();
+			};
 		}
 	}, [ isOpen, emailId, createFields ] );
 
