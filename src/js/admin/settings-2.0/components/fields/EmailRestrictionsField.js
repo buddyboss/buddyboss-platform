@@ -11,7 +11,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useEffect } from '@wordpress/element';
+import { useState, useEffect, useRef } from '@wordpress/element';
 import { Button, SelectControl, TextControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
@@ -43,8 +43,17 @@ var conditionOptions = [
  * @returns {JSX.Element} Email restrictions repeater.
  */
 export function EmailRestrictionsField( { field, value, onChange, disabled } ) {
+	var keyCounterRef = useRef( 0 );
+
+	function assignKey( row ) {
+		if ( ! row._key ) {
+			row._key = 'er-' + ( ++keyCounterRef.current );
+		}
+		return row;
+	}
+
 	var initialRows = Array.isArray( value ) && value.length > 0
-		? value
+		? value.map( assignKey )
 		: [];
 
 	var [ rows, setRows ] = useState( initialRows );
@@ -52,7 +61,7 @@ export function EmailRestrictionsField( { field, value, onChange, disabled } ) {
 	// Sync rows when value prop changes (e.g., after settings reload).
 	useEffect( function() {
 		if ( Array.isArray( value ) ) {
-			setRows( value );
+			setRows( value.map( assignKey ) );
 		}
 	}, [ value ] );
 
@@ -86,7 +95,7 @@ export function EmailRestrictionsField( { field, value, onChange, disabled } ) {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	function addRow() {
-		var updated = rows.concat( [ { address: '', condition: '' } ] );
+		var updated = rows.concat( [ assignKey( { address: '', condition: '' } ) ] );
 		setRows( updated );
 	}
 
@@ -110,7 +119,7 @@ export function EmailRestrictionsField( { field, value, onChange, disabled } ) {
 			<div className="bb-email-restrictions__rows">
 				{ rows.map( function( row, index ) {
 					return (
-						<div key={ index } className="bb-email-restrictions__row">
+						<div key={ row._key } className="bb-email-restrictions__row">
 							<div className="bb-email-restrictions__address">
 								<TextControl
 									type="email"

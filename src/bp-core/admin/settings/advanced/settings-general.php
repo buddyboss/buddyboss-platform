@@ -166,7 +166,7 @@ function bb_advanced_register_general_fields() {
 				'label'               => __( 'Activity Loading', 'buddyboss' ),
 				'type'                 => 'hidden',
 				/* translators: 1: inline select for number of posts, 2: inline select for load type. */
-				'description'          => __( 'Load %s activity posts at a time using %s', 'buddyboss' ),
+				'description'          => __( 'Load %1$s activity posts at a time using %2$s', 'buddyboss' ),
 				'help_text'            => __( 'Use infinite scrolling to automatically load new posts while scrolling down feeds. Increasing the number of posts retrieved in each request may negatively impact page loading speeds.', 'buddyboss' ),
 				'default'              => bb_get_load_activity_per_request(),
 				'sanitize_callback'    => 'absint',

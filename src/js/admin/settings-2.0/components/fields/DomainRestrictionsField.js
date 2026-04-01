@@ -14,7 +14,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useEffect } from '@wordpress/element';
+import { useState, useEffect, useRef } from '@wordpress/element';
 import { Button, SelectControl, TextControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
@@ -49,8 +49,17 @@ var conditionOptions = [
  * @returns {JSX.Element} Domain restrictions repeater.
  */
 export function DomainRestrictionsField( { field, value, onChange, disabled } ) {
+	var keyCounterRef = useRef( 0 );
+
+	function assignKey( row ) {
+		if ( ! row._key ) {
+			row._key = 'dr-' + ( ++keyCounterRef.current );
+		}
+		return row;
+	}
+
 	var initialRows = Array.isArray( value ) && value.length > 0
-		? value
+		? value.map( assignKey )
 		: [];
 
 	var [ rows, setRows ] = useState( initialRows );
@@ -58,7 +67,7 @@ export function DomainRestrictionsField( { field, value, onChange, disabled } ) 
 	// Sync rows when value prop changes (e.g., after settings reload).
 	useEffect( function() {
 		if ( Array.isArray( value ) ) {
-			setRows( value );
+			setRows( value.map( assignKey ) );
 		}
 	}, [ value ] );
 
@@ -132,7 +141,7 @@ export function DomainRestrictionsField( { field, value, onChange, disabled } ) 
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	function addRow() {
-		var updated = rows.concat( [ { domain: '', tld: '', condition: '' } ] );
+		var updated = rows.concat( [ assignKey( { domain: '', tld: '', condition: '' } ) ] );
 		setRows( updated );
 	}
 
@@ -156,7 +165,7 @@ export function DomainRestrictionsField( { field, value, onChange, disabled } ) 
 			<div className="bb-domain-restrictions__rows">
 				{ rows.map( function( row, index ) {
 					return (
-						<div key={ index } className="bb-domain-restrictions__row">
+						<div key={ row._key } className="bb-domain-restrictions__row">
 							<div className="bb-domain-restrictions__domain">
 								<TextControl
 									value={ row.domain || '' }
