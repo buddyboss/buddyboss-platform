@@ -23,6 +23,31 @@
 		display: flex;
 		align-items: center;
 		gap: 8px;
+		border: 1px solid transparent;
+		border-radius: $bb-border-radius-lg;
+		padding: 4px;
+		margin: -4px;
+		transition: border-color 0.15s ease;
+
+		&--drag-over {
+			border-color: $bb-background-brand-primary-color;
+		}
+	}
+
+	&__drag-handle {
+		cursor: grab;
+		display: flex;
+		align-items: center;
+		color: $bb-icon-tertiary-color;
+		flex-shrink: 0;
+
+		&:active {
+			cursor: grabbing;
+		}
+
+		i {
+			font-size: 24px;
+		}
 	}
 
 	&__condition {
@@ -84,11 +109,12 @@
 	}
 
 	&__dot {
-		font-size: 16px;
-		font-weight: 600;
-		color: $bb-text-tertiary-color;
-		flex-shrink: 0;
-		line-height: 36px;
+		height: 4px;
+		width: 4px;
+		align-self: flex-end;
+		margin-bottom: 4px;
+		background-color: $bb-background-tertiary-color;
+		border-radius: $bb-border-radius-full;
 	}
 
 	&__tld {

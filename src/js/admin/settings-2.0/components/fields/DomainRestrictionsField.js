@@ -14,7 +14,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useEffect, useRef } from '@wordpress/element';
+import { useState, useEffect, useRef, useCallback } from '@wordpress/element';
 import { Button, SelectControl, TextControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
@@ -63,6 +63,9 @@ export function DomainRestrictionsField( { field, value, onChange, disabled } ) 
 		: [];
 
 	var [ rows, setRows ] = useState( initialRows );
+	var dragIndexRef = useRef( null );
+	var dragOverIndexRef = useRef( null );
+	var [ dragOverIdx, setDragOverIdx ] = useState( null );
 
 	// Sync rows when value prop changes (e.g., after settings reload).
 	useEffect( function() {
@@ -160,12 +163,88 @@ export function DomainRestrictionsField( { field, value, onChange, disabled } ) 
 		onChange( field.name, updated );
 	}
 
+	/**
+	 * Handle drag start — store dragged row index.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {number} index Row index.
+	 */
+	var handleDragStart = useCallback( function( index ) {
+		dragIndexRef.current = index;
+	}, [] );
+
+	/**
+	 * Handle drag over — highlight the row being hovered.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {Event}  e     Drag event.
+	 * @param {number} index Row index.
+	 */
+	var handleDragOver = useCallback( function( e, index ) {
+		e.preventDefault();
+		dragOverIndexRef.current = index;
+		setDragOverIdx( index );
+	}, [] );
+
+	/**
+	 * Handle drop — reorder rows and save.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	var handleDrop = useCallback( function() {
+		var fromIndex = dragIndexRef.current;
+		var toIndex = dragOverIndexRef.current;
+
+		dragIndexRef.current = null;
+		dragOverIndexRef.current = null;
+		setDragOverIdx( null );
+
+		if ( null === fromIndex || null === toIndex || fromIndex === toIndex ) {
+			return;
+		}
+
+		var updated = rows.slice();
+		var moved = updated.splice( fromIndex, 1 )[ 0 ];
+		updated.splice( toIndex, 0, moved );
+
+		setRows( updated );
+		onChange( field.name, updated );
+	}, [ rows, field.name, onChange ] );
+
+	/**
+	 * Handle drag end — reset visual state.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	var handleDragEnd = useCallback( function() {
+		dragIndexRef.current = null;
+		dragOverIndexRef.current = null;
+		setDragOverIdx( null );
+	}, [] );
+
 	return (
 		<div className="bb-domain-restrictions">
 			<div className="bb-domain-restrictions__rows">
 				{ rows.map( function( row, index ) {
 					return (
-						<div key={ row._key } className="bb-domain-restrictions__row">
+						<div
+							key={ row._key }
+							className={ 'bb-domain-restrictions__row' + ( dragOverIdx === index && dragIndexRef.current !== index ? ' bb-domain-restrictions__row--drag-over' : '' ) }
+							draggable={ ! disabled }
+							onDragStart={ function() {
+								handleDragStart( index );
+							} }
+							onDragOver={ function( e ) {
+								handleDragOver( e, index );
+							} }
+							onDrop={ handleDrop }
+							onDragEnd={ handleDragEnd }
+						>
+							<span className="bb-domain-restrictions__drag-handle">
+								<i className="bb-icons-rl bb-icons-rl-list" />
+							</span>
 							<div className="bb-domain-restrictions__domain">
 								<TextControl
 									value={ row.domain || '' }
@@ -177,7 +256,7 @@ export function DomainRestrictionsField( { field, value, onChange, disabled } ) 
 									__nextHasNoMarginBottom
 								/>
 							</div>
-							<span className="bb-domain-restrictions__dot">.</span>
+							<span className="bb-domain-restrictions__dot"></span>
 							<div className="bb-domain-restrictions__tld">
 								<TextControl
 									value={ row.tld || '' }
