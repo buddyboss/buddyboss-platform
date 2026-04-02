@@ -45,10 +45,12 @@ export function ProfileTypeRedirectsField() {
 	var savingIds = savingState[ 0 ];
 	var setSavingIds = savingState[ 1 ];
 
-	// Fetch member types on mount.
+	// Fetch member types on mount with AbortController cleanup.
 	useEffect( function () {
+		var controller = new AbortController();
+
 		setIsLoading( true );
-		getMemberTypes()
+		getMemberTypes( { signal: controller.signal } )
 			.then( function ( response ) {
 				if ( response.success && response.data && response.data.member_types ) {
 					setMemberTypes( response.data.member_types );
@@ -58,6 +60,10 @@ export function ProfileTypeRedirectsField() {
 			.finally( function () {
 				setIsLoading( false );
 			} );
+
+		return function () {
+			controller.abort();
+		};
 	}, [] );
 
 	// Pagination.
