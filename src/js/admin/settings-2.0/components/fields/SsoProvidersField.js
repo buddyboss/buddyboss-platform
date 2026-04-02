@@ -59,6 +59,9 @@ export function SsoProvidersField( { field, value, onChange, disabled } ) {
 	var lastDisabledStateRef = useRef( null );
 	var dragIndexRef = useRef( null );
 	var dragOverIndexRef = useRef( null );
+	var dragOverState = useState( null );
+	var dragOverId = dragOverState[ 0 ];
+	var setDragOverId = dragOverState[ 1 ];
 
 	/**
 	 * Intercept SSO modal close/cancel clicks to prevent legacy jQuery
@@ -272,9 +275,10 @@ export function SsoProvidersField( { field, value, onChange, disabled } ) {
 	 * @param {Event}  e     Drag event.
 	 * @param {number} index Index of the hovered provider.
 	 */
-	var handleDragOver = useCallback( function ( e, index ) {
+	var handleDragOver = useCallback( function ( e, index, providerId ) {
 		e.preventDefault();
 		dragOverIndexRef.current = index;
+		setDragOverId( providerId );
 	}, [] );
 
 	/**
@@ -288,26 +292,18 @@ export function SsoProvidersField( { field, value, onChange, disabled } ) {
 
 		dragIndexRef.current = null;
 		dragOverIndexRef.current = null;
+		setDragOverId( null );
 
 		if ( null === fromIndex || null === toIndex || fromIndex === toIndex ) {
 			return;
 		}
 
-		// Compute new order outside state updater (keep updater pure).
-		var newProviders = null;
+		// Compute new order before setting state so AJAX can use it synchronously.
+		var newProviders = providers.slice();
+		var moved = newProviders.splice( fromIndex, 1 )[ 0 ];
+		newProviders.splice( toIndex, 0, moved );
 
-		setProviders( function ( prev ) {
-			var updated = prev.slice();
-			var moved = updated.splice( fromIndex, 1 )[ 0 ];
-			updated.splice( toIndex, 0, moved );
-			newProviders = updated;
-			return updated;
-		} );
-
-		// Save new order via legacy SSO AJAX endpoint (side effect outside state updater).
-		if ( ! newProviders ) {
-			return;
-		}
+		setProviders( newProviders );
 
 		var ordering = newProviders.map( function ( p ) {
 			return p.id;
@@ -347,7 +343,7 @@ export function SsoProvidersField( { field, value, onChange, disabled } ) {
 				detail: { status: 'error', message: __( 'Failed to save order.', 'buddyboss' ) },
 			} ) );
 		} );
-	}, [] );
+	}, [ providers ] );
 
 	return (
 		<div className="bb-admin-sso-providers bb-sso-list">
@@ -360,18 +356,19 @@ export function SsoProvidersField( { field, value, onChange, disabled } ) {
 					return (
 						<div
 							key={ provider.id }
-							className={ 'bb-admin-sso-providers__card bb-sso-item' + ( ! checked ? ' bb-admin-sso-providers__card--disabled is-disabled' : '' ) }
+							className={ 'bb-admin-sso-providers__card bb-sso-item' + ( ! checked ? ' bb-admin-sso-providers__card--disabled is-disabled' : '' ) + ( dragOverId === provider.id && dragIndexRef.current !== index ? ' bb-admin-sso-providers__card--drag-over' : '' ) }
 							draggable={ ! disabled }
 							onDragStart={ function () {
 								handleDragStart( index );
 							} }
 							onDragOver={ function ( e ) {
-								handleDragOver( e, index );
+								handleDragOver( e, index, provider.id );
 							} }
 							onDrop={ handleDrop }
 							onDragEnd={ function () {
 								dragIndexRef.current = null;
 								dragOverIndexRef.current = null;
+								setDragOverId( null );
 							} }
 							data-provider={ provider.id }
 							data-state={ provider.state || '' }
