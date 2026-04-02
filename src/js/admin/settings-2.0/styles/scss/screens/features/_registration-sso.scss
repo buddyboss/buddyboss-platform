@@ -44,6 +44,10 @@
 			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 		}
 
+		&--drag-over {
+			border-color: $bb-border-brand-primary-color;
+		}
+
 		.bb-admin-settings-form__field--disabled & {
 			opacity: 0.5;
 			pointer-events: none;
