@@ -146,6 +146,11 @@ export function SsoProvidersField( { field, value, onChange, disabled } ) {
 			} );
 		} );
 
+		// Show "Saving changes..." toast immediately.
+		window.dispatchEvent( new CustomEvent( BB_EVENTS.TOAST, {
+			detail: { status: 'saving', message: __( 'Saving changes...', 'buddyboss' ) },
+		} ) );
+
 		var ssoVars = window.bbSSOAdminVars || {};
 		var formData = new FormData();
 		formData.append( 'action', 'bb_sso_enable_provider' );
@@ -165,7 +170,7 @@ export function SsoProvidersField( { field, value, onChange, disabled } ) {
 					clearTimeout( toastTimerRef.current );
 					toastTimerRef.current = setTimeout( function () {
 						window.dispatchEvent( new CustomEvent( BB_EVENTS.TOAST, {
-							detail: { status: 'success', message: __( 'Setting saved.', 'buddyboss' ) },
+							detail: { status: 'success', message: __( 'Settings saved.', 'buddyboss' ) },
 						} ) );
 					}, 500 );
 
