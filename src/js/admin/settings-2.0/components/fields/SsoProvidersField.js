@@ -14,7 +14,7 @@
  */
 
 import { CheckboxControl, Popover } from '@wordpress/components';
-import { useState, useRef, useEffect } from '@wordpress/element';
+import { useState, useRef, useEffect, useCallback } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { safeUrl } from '../../utils/sanitize';
 import { BB_EVENTS } from '../../utils/constants';
@@ -57,6 +57,8 @@ export function SsoProvidersField( { field, value, onChange, disabled } ) {
 	var savingRef = useRef( {} );
 	var toastTimerRef = useRef( null );
 	var lastDisabledStateRef = useRef( null );
+	var dragIndexRef = useRef( null );
+	var dragOverIndexRef = useRef( null );
 
 	/**
 	 * Intercept SSO modal close/cancel clicks to prevent legacy jQuery
@@ -246,11 +248,107 @@ export function SsoProvidersField( { field, value, onChange, disabled } ) {
 		}
 	};
 
+	/**
+	 * Handle drag start — store the dragged index.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {number} index Index of the dragged provider.
+	 */
+	var handleDragStart = useCallback( function ( index ) {
+		dragIndexRef.current = index;
+	}, [] );
+
+	/**
+	 * Handle drag over — track which card we're hovering.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {Event}  e     Drag event.
+	 * @param {number} index Index of the hovered provider.
+	 */
+	var handleDragOver = useCallback( function ( e, index ) {
+		e.preventDefault();
+		dragOverIndexRef.current = index;
+	}, [] );
+
+	/**
+	 * Handle drop — reorder providers and save via AJAX.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	var handleDrop = useCallback( function () {
+		var fromIndex = dragIndexRef.current;
+		var toIndex = dragOverIndexRef.current;
+
+		dragIndexRef.current = null;
+		dragOverIndexRef.current = null;
+
+		if ( null === fromIndex || null === toIndex || fromIndex === toIndex ) {
+			return;
+		}
+
+		// Compute new order outside state updater (keep updater pure).
+		var newProviders = null;
+
+		setProviders( function ( prev ) {
+			var updated = prev.slice();
+			var moved = updated.splice( fromIndex, 1 )[ 0 ];
+			updated.splice( toIndex, 0, moved );
+			newProviders = updated;
+			return updated;
+		} );
+
+		// Save new order via legacy SSO AJAX endpoint (side effect outside state updater).
+		if ( ! newProviders ) {
+			return;
+		}
+
+		var ordering = newProviders.map( function ( p ) {
+			return p.id;
+		} );
+
+		var ssoNonce = window.bbSSOAdminVars ? window.bbSSOAdminVars.nonce : '';
+		var formData = new FormData();
+		formData.append( 'action', 'bb-social-login' );
+		formData.append( 'nonce', ssoNonce );
+		formData.append( 'view', 'orderProviders' );
+		ordering.forEach( function ( id ) {
+			formData.append( 'ordering[]', id );
+		} );
+
+		// Show "Saving changes..." toast immediately.
+		window.dispatchEvent( new CustomEvent( BB_EVENTS.TOAST, {
+			detail: { status: 'saving', message: __( 'Saving changes...', 'buddyboss' ) },
+		} ) );
+
+		fetch( window.bbAdminData.ajaxUrl, {
+			method: 'POST',
+			body: formData,
+		} ).then( function ( response ) {
+			return response.json();
+		} ).then( function ( result ) {
+			if ( result.success ) {
+				window.dispatchEvent( new CustomEvent( BB_EVENTS.TOAST, {
+					detail: { status: 'success', message: __( 'Settings saved.', 'buddyboss' ) },
+				} ) );
+			} else {
+				window.dispatchEvent( new CustomEvent( BB_EVENTS.TOAST, {
+					detail: { status: 'error', message: result.data && result.data.message ? result.data.message : __( 'Failed to save order.', 'buddyboss' ) },
+				} ) );
+			}
+		} ).catch( function () {
+			window.dispatchEvent( new CustomEvent( BB_EVENTS.TOAST, {
+				detail: { status: 'error', message: __( 'Failed to save order.', 'buddyboss' ) },
+			} ) );
+		} );
+	}, [] );
+
 	return (
 		<div className="bb-admin-sso-providers bb-sso-list">
-			{ /* Provider Cards */ }
+			{ /* Provider Cards — draggable for reordering */ }
 			<div className="bb-admin-sso-providers__grid">
-				{ providers.map( function ( provider ) {
+				{ providers.map( function ( provider, index ) {
 					var checked = isProviderChecked( provider );
 					var isMenuOpen = openMenu === provider.id;
 
@@ -258,6 +356,18 @@ export function SsoProvidersField( { field, value, onChange, disabled } ) {
 						<div
 							key={ provider.id }
 							className={ 'bb-admin-sso-providers__card bb-sso-item' + ( ! checked ? ' bb-admin-sso-providers__card--disabled is-disabled' : '' ) }
+							draggable={ ! disabled }
+							onDragStart={ function () {
+								handleDragStart( index );
+							} }
+							onDragOver={ function ( e ) {
+								handleDragOver( e, index );
+							} }
+							onDrop={ handleDrop }
+							onDragEnd={ function () {
+								dragIndexRef.current = null;
+								dragOverIndexRef.current = null;
+							} }
 							data-provider={ provider.id }
 							data-state={ provider.state || '' }
 						>

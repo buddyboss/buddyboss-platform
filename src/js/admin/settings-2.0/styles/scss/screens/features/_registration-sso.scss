@@ -33,10 +33,21 @@
 		overflow: hidden;
 		display: flex;
 		flex-direction: column;
+		cursor: grab;
+		transition: opacity 0.2s, box-shadow 0.2s;
+
+		&:active {
+			cursor: grabbing;
+		}
+
+		&[draggable="true"]:hover {
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+		}
 
 		.bb-admin-settings-form__field--disabled & {
 			opacity: 0.5;
 			pointer-events: none;
+			cursor: default;
 		}
 	}
 
