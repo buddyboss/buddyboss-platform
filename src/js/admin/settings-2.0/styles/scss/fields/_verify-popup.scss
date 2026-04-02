@@ -3,6 +3,7 @@
  *
  * Generic verify button + modal styles for the bb_verify_popup field type.
  * Used by any plugin that registers credential verification flows.
+ * Matches the reCAPTCHA modal design pattern.
  *
  * @package BuddyBoss\Core\Administration
  * @since BuddyBoss [BBVERSION]
@@ -15,19 +16,18 @@
 		align-items: center;
 		justify-content: center;
 		padding: 8px 20px;
-		border-radius: 4px;
-		font-size: 13px;
+		font-size: 14px;
 		font-weight: 500;
-		line-height: 1.4;
+		line-height: 20px;
+		border-radius: $bb-border-radius-md;
+		border: none;
 		cursor: pointer;
-		transition: background-color 0.15s, border-color 0.15s;
 		background-color: $bb-background-brand-primary-color;
-		color: #fff;
-		border: 1px solid $bb-background-brand-primary-color;
+		color: $bb-text-inverse-color;
+		transition: background-color 0.15s ease;
 
 		&:hover:not(:disabled) {
-			background-color: darken($bb-background-brand-primary-color, 8%);
-			border-color: darken($bb-background-brand-primary-color, 8%);
+			background-color: $bb-background-brand-primary-hover-color;
 		}
 
 		&:disabled {
@@ -37,26 +37,39 @@
 	}
 }
 
-// Verify modal.
+// Verify modal — matches reCAPTCHA modal structure.
 .bb-admin-verify-modal {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 100100;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
 	&__backdrop {
 		position: fixed;
-		inset: 0;
-		z-index: 100000;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
 		background: rgba(0, 0, 0, 0.5);
+		z-index: 1;
 	}
 
 	&__container {
-		position: fixed;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-		z-index: 100001;
-		background: #fff;
-		border-radius: 8px;
-		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-		width: 100%;
-		max-width: 440px;
+		position: relative;
+		z-index: 2;
+		background: $bb-background-base-color;
+		border-radius: $bb-border-radius-lg;
+		box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+		width: 480px;
+		max-width: 90vw;
+		max-height: 80vh;
+		display: flex;
+		flex-direction: column;
 		overflow: hidden;
 	}
 
@@ -64,99 +77,134 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		padding: 20px 24px 0;
+		padding: 16px 20px;
+		border-bottom: 1px solid $bb-border-secondary-color;
 	}
 
 	&__title {
-		font-size: 18px;
+		font-size: 16px;
 		font-weight: 600;
+		line-height: 24px;
+		color: $bb-text-color;
 		margin: 0;
-		color: #1e1e1e;
+		padding: 0;
 	}
 
 	&__close {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 32px;
+		height: 32px;
 		background: none;
 		border: none;
 		cursor: pointer;
-		padding: 4px;
-		color: #666;
+		color: $bb-icon-color;
+		border-radius: $bb-border-radius-sm;
+		transition: background-color 0.15s ease;
 
 		&:hover {
-			color: #1e1e1e;
+			background-color: $bb-background-primary-color;
 		}
 
 		i {
-			font-size: 18px;
+			font-size: 16px;
 		}
 	}
 
 	&__content {
-		padding: 24px;
+		padding: 24px 20px;
+		min-height: 120px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		overflow-y: auto;
 	}
 
 	&__status {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 		text-align: center;
+		gap: 12px;
 
 		p {
 			font-size: 14px;
-			color: #555;
-			margin: 12px 0 0;
-			line-height: 1.5;
+			line-height: 20px;
+			color: $bb-text-color;
+			margin: 0;
+		}
+
+		&--success p {
+			color: $bb-text-positive-primary-color;
+		}
+
+		&--error p {
+			color: $bb-error-color;
 		}
 	}
 
 	&__icon {
-		width: 64px;
-		height: 64px;
+		width: 48px;
+		height: 48px;
 		border-radius: 50%;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		margin: 0 auto;
-
-		i {
-			font-size: 28px;
-		}
 
 		&--loading {
-			background: rgba($bb-background-brand-primary-color, 0.1);
-			color: $bb-background-brand-primary-color;
-			animation: bb-admin-verify-pulse 1.5s ease-in-out infinite;
+			border: 3px solid $bb-background-secondary-color;
+			border-top-color: $bb-background-brand-primary-color;
+			animation: bb-admin-verify-spin 0.8s linear infinite;
 		}
 
 		&--success {
-			background: #edf7ed;
-			color: #4caf50;
+			background-color: $bb-background-positive-primary-color;
+
+			&::after {
+				content: '\2713';
+				font-size: 24px;
+				color: $bb-text-positive-primary-color;
+			}
 		}
 
 		&--error {
-			background: #fef2f0;
-			color: #cc1818;
+			background-color: #fef2f2;
+
+			&::after {
+				content: '\2717';
+				font-size: 24px;
+				color: $bb-error-color;
+			}
 		}
 	}
 
 	&__footer {
 		display: flex;
-		justify-content: center;
-		gap: 10px;
-		padding: 0 24px 20px;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 8px;
+		padding: 12px 20px;
+		border-top: 1px solid $bb-border-secondary-color;
 	}
 
 	&__btn {
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		padding: 8px 20px;
-		border-radius: 4px;
-		font-size: 13px;
+		padding: 8px 16px;
+		font-size: 14px;
 		font-weight: 500;
+		line-height: 20px;
+		border-radius: $bb-border-radius-md;
+		border: 1px solid $bb-border-secondary-color;
+		background: $bb-background-base-color;
+		color: $bb-text-color;
 		cursor: pointer;
-		background: #fff;
-		color: #1e1e1e;
-		border: 1px solid #d0d5dd;
+		transition: background-color 0.15s ease;
 
 		&:hover:not(:disabled) {
-			background: #f6f6f6;
+			background-color: $bb-background-primary-color;
 		}
 
 		&:disabled {
@@ -166,22 +214,18 @@
 
 		&--primary {
 			background-color: $bb-background-brand-primary-color;
-			color: #fff;
 			border-color: $bb-background-brand-primary-color;
+			color: $bb-text-inverse-color;
 
 			&:hover:not(:disabled) {
-				background-color: darken($bb-background-brand-primary-color, 8%);
-				border-color: darken($bb-background-brand-primary-color, 8%);
+				background-color: $bb-background-brand-primary-hover-color;
 			}
 		}
 	}
 }
 
-@keyframes bb-admin-verify-pulse {
-	0%, 100% {
-		opacity: 1;
-	}
-	50% {
-		opacity: 0.5;
+@keyframes bb-admin-verify-spin {
+	to {
+		transform: rotate(360deg);
 	}
 }

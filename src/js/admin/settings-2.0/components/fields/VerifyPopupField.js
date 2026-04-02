@@ -457,27 +457,21 @@ export function VerifyPopupField( props ) {
 								<>
 									{ ( 'loading' === modalPhase || 'submitting' === modalPhase ) && (
 										<div className="bb-admin-verify-modal__status">
-											<div className={ 'bb-admin-verify-modal__icon bb-admin-verify-modal__icon--loading' }>
-												<i className={ loadingIcon } />
-											</div>
+											<div className="bb-admin-verify-modal__icon bb-admin-verify-modal__icon--loading" />
 											<p>{ loadingMessage }</p>
 										</div>
 									) }
 
 									{ 'success' === modalPhase && (
 										<div className="bb-admin-verify-modal__status bb-admin-verify-modal__status--success">
-											<div className="bb-admin-verify-modal__icon bb-admin-verify-modal__icon--success">
-												<i className={ successIcon } />
-											</div>
+											<div className="bb-admin-verify-modal__icon bb-admin-verify-modal__icon--success" />
 											<p>{ modalMessage }</p>
 										</div>
 									) }
 
 									{ 'error' === modalPhase && (
 										<div className="bb-admin-verify-modal__status bb-admin-verify-modal__status--error">
-											<div className="bb-admin-verify-modal__icon bb-admin-verify-modal__icon--error">
-												<i className={ errorIcon } />
-											</div>
+											<div className="bb-admin-verify-modal__icon bb-admin-verify-modal__icon--error" />
 											<p>{ modalMessage }</p>
 										</div>
 									) }
