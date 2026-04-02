@@ -465,7 +465,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 		sidePanels.forEach( function ( panel ) {
 			( panel.sections || [] ).forEach( function ( section ) {
 				( section.fields || [] ).forEach( function ( field ) {
-					if ( 'input_button' === field.type && Array.isArray( field.related_fields ) ) {
+					if ( ( 'input_button' === field.type || 'bb_verify_popup' === field.type ) && Array.isArray( field.related_fields ) ) {
 						field.related_fields.forEach( function ( rf ) {
 							managed[ rf ] = true;
 						} );

@@ -45,6 +45,7 @@ import { EmailRestrictionsField } from './fields/EmailRestrictionsField';
 import { PasswordField } from './fields/PasswordField';
 import { StatusCheckField } from './fields/StatusCheckField';
 import { ImageUploadField } from './fields/ImageUploadField';
+import { VerifyPopupField } from './fields/VerifyPopupField';
 
 /**
  * Settings Form Component (matching Figma settingsSection)
@@ -845,6 +846,15 @@ export function SettingsForm({ fields, values, onChange }) {
 						field={field}
 						value={value}
 						onChange={onChange}
+						disabled={disabled}
+					/>
+				);
+
+			case 'bb_verify_popup':
+				return (
+					<VerifyPopupField
+						field={field}
+						values={values}
 						disabled={disabled}
 					/>
 				);

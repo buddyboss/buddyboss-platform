@@ -1,0 +1,187 @@
+/**
+ * BuddyBoss Admin Settings 2.0 - Verify Popup Field Styles
+ *
+ * Generic verify button + modal styles for the bb_verify_popup field type.
+ * Used by any plugin that registers credential verification flows.
+ *
+ * @package BuddyBoss\Core\Administration
+ * @since BuddyBoss [BBVERSION]
+ */
+
+// Verify button.
+.bb-admin-verify-field {
+	&__btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 8px 20px;
+		border-radius: 4px;
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 1.4;
+		cursor: pointer;
+		transition: background-color 0.15s, border-color 0.15s;
+		background-color: $bb-background-brand-primary-color;
+		color: #fff;
+		border: 1px solid $bb-background-brand-primary-color;
+
+		&:hover:not(:disabled) {
+			background-color: darken($bb-background-brand-primary-color, 8%);
+			border-color: darken($bb-background-brand-primary-color, 8%);
+		}
+
+		&:disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+		}
+	}
+}
+
+// Verify modal.
+.bb-admin-verify-modal {
+	&__backdrop {
+		position: fixed;
+		inset: 0;
+		z-index: 100000;
+		background: rgba(0, 0, 0, 0.5);
+	}
+
+	&__container {
+		position: fixed;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		z-index: 100001;
+		background: #fff;
+		border-radius: 8px;
+		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+		width: 100%;
+		max-width: 440px;
+		overflow: hidden;
+	}
+
+	&__header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 20px 24px 0;
+	}
+
+	&__title {
+		font-size: 18px;
+		font-weight: 600;
+		margin: 0;
+		color: #1e1e1e;
+	}
+
+	&__close {
+		background: none;
+		border: none;
+		cursor: pointer;
+		padding: 4px;
+		color: #666;
+
+		&:hover {
+			color: #1e1e1e;
+		}
+
+		i {
+			font-size: 18px;
+		}
+	}
+
+	&__content {
+		padding: 24px;
+	}
+
+	&__status {
+		text-align: center;
+
+		p {
+			font-size: 14px;
+			color: #555;
+			margin: 12px 0 0;
+			line-height: 1.5;
+		}
+	}
+
+	&__icon {
+		width: 64px;
+		height: 64px;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin: 0 auto;
+
+		i {
+			font-size: 28px;
+		}
+
+		&--loading {
+			background: rgba($bb-background-brand-primary-color, 0.1);
+			color: $bb-background-brand-primary-color;
+			animation: bb-admin-verify-pulse 1.5s ease-in-out infinite;
+		}
+
+		&--success {
+			background: #edf7ed;
+			color: #4caf50;
+		}
+
+		&--error {
+			background: #fef2f0;
+			color: #cc1818;
+		}
+	}
+
+	&__footer {
+		display: flex;
+		justify-content: center;
+		gap: 10px;
+		padding: 0 24px 20px;
+	}
+
+	&__btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 8px 20px;
+		border-radius: 4px;
+		font-size: 13px;
+		font-weight: 500;
+		cursor: pointer;
+		background: #fff;
+		color: #1e1e1e;
+		border: 1px solid #d0d5dd;
+
+		&:hover:not(:disabled) {
+			background: #f6f6f6;
+		}
+
+		&:disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+		}
+
+		&--primary {
+			background-color: $bb-background-brand-primary-color;
+			color: #fff;
+			border-color: $bb-background-brand-primary-color;
+
+			&:hover:not(:disabled) {
+				background-color: darken($bb-background-brand-primary-color, 8%);
+				border-color: darken($bb-background-brand-primary-color, 8%);
+			}
+		}
+	}
+}
+
+@keyframes bb-admin-verify-pulse {
+	0%, 100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.5;
+	}
+}

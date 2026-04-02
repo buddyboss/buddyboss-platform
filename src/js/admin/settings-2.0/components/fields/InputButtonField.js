@@ -108,27 +108,6 @@ export function InputButtonField( props ) {
 		setErrorMessage( '' );
 		setWarningMessage( '' );
 
-		// Allow plugins to handle the AJAX call themselves (e.g. custom verify flow with modal).
-		// Return true from the filter to prevent Platform's default AJAX.
-		var handled = wp.hooks.applyFilters(
-			'bb_admin_settings_input_button_handle_click',
-			false,
-			field,
-			connected,
-			values,
-			{
-				setIsLoading: setIsLoading,
-				setConnected: setConnected,
-				setButtonLabel: setButtonLabel,
-				setErrorMessage: setErrorMessage,
-				setWarningMessage: setWarningMessage,
-			}
-		);
-
-		if ( handled ) {
-			return;
-		}
-
 		var ajaxAction = field.ajax_action || 'bb_media_giphy_connect';
 		var formData = new FormData();
 		formData.append( 'action', ajaxAction );
@@ -160,9 +139,6 @@ export function InputButtonField( props ) {
 			} )
 			.then( function( result ) {
 				setIsLoading( false );
-
-				// Allow plugins to react to the AJAX result (e.g. update a modal).
-				wp.hooks.doAction( 'bb_admin_settings_input_button_after_ajax', field, result );
 
 				if ( result.success ) {
 					var data = result.data;
@@ -234,19 +210,6 @@ export function InputButtonField( props ) {
 	var isButtonDisabled = disabled || isLoading;
 	if ( ! isButtonOnly && ! connected && ! inputValue ) {
 		isButtonDisabled = true;
-	}
-
-	// Allow external plugins to control input_button visibility.
-	var isButtonHidden = wp.hooks.applyFilters(
-		'bb_admin_settings_input_button_hidden',
-		false,
-		field,
-		connected,
-		values
-	);
-
-	if ( isButtonHidden ) {
-		return null;
 	}
 
 	return (
