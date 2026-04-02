@@ -9,7 +9,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useEffect, useCallback } from '@wordpress/element';
+import { useState, useEffect, useCallback, useRef } from '@wordpress/element';
 import { TextControl, Spinner } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
@@ -44,6 +44,7 @@ export function ProfileTypeRedirectsField() {
 	var savingState = useState( {} );
 	var savingIds = savingState[ 0 ];
 	var setSavingIds = savingState[ 1 ];
+	var debounceTimersRef = useRef( {} );
 
 	// Fetch member types on mount with AbortController cleanup.
 	useEffect( function () {
@@ -63,6 +64,10 @@ export function ProfileTypeRedirectsField() {
 
 		return function () {
 			controller.abort();
+			// Clear all debounce timers.
+			Object.keys( debounceTimersRef.current ).forEach( function ( key ) {
+				clearTimeout( debounceTimersRef.current[ key ] );
+			} );
 		};
 	}, [] );
 
@@ -101,41 +106,56 @@ export function ProfileTypeRedirectsField() {
 			} );
 		} );
 
-		// Build save data from current + new value.
-		var saveData = {};
-		saveData[ fieldKey ] = fieldValue;
+		// Debounce per type — batch rapid changes (login + logout) into one save.
+		var timerKey = typeId + '-' + fieldKey;
+		if ( debounceTimersRef.current[ timerKey ] ) {
+			clearTimeout( debounceTimersRef.current[ timerKey ] );
+		}
 
-		// Mark as saving.
-		setSavingIds( function ( prev ) {
-			var next = Object.assign( {}, prev );
-			next[ typeId ] = true;
-			return next;
-		} );
+		debounceTimersRef.current[ timerKey ] = setTimeout( function () {
+			delete debounceTimersRef.current[ timerKey ];
 
-		updateMemberType( typeId, saveData )
-			.then( function ( response ) {
-				if ( response.success ) {
-					window.dispatchEvent( new CustomEvent( BB_EVENTS.TOAST, {
-						detail: { status: 'success', message: __( 'Setting saved.', 'buddyboss' ) },
-					} ) );
-				} else {
-					window.dispatchEvent( new CustomEvent( BB_EVENTS.TOAST, {
-						detail: { status: 'error', message: ( response.data && response.data.message ) || __( 'Failed to save.', 'buddyboss' ) },
-					} ) );
-				}
-			} )
-			.catch( function () {
-				window.dispatchEvent( new CustomEvent( BB_EVENTS.TOAST, {
-					detail: { status: 'error', message: __( 'Failed to save.', 'buddyboss' ) },
-				} ) );
-			} )
-			.finally( function () {
-				setSavingIds( function ( prev ) {
-					var next = Object.assign( {}, prev );
-					delete next[ typeId ];
-					return next;
-				} );
+			// Show "Saving changes..." toast once per debounce batch (not per keystroke).
+			window.dispatchEvent( new CustomEvent( BB_EVENTS.TOAST, {
+				detail: { status: 'saving', message: __( 'Saving changes...', 'buddyboss' ) },
+			} ) );
+
+			// Build save data from current + new value.
+			var saveData = {};
+			saveData[ fieldKey ] = fieldValue;
+
+			// Mark as saving.
+			setSavingIds( function ( prev ) {
+				var next = Object.assign( {}, prev );
+				next[ typeId ] = true;
+				return next;
 			} );
+
+			updateMemberType( typeId, saveData )
+				.then( function ( response ) {
+					if ( response.success ) {
+						window.dispatchEvent( new CustomEvent( BB_EVENTS.TOAST, {
+							detail: { status: 'success', message: __( 'Settings saved.', 'buddyboss' ) },
+						} ) );
+					} else {
+						window.dispatchEvent( new CustomEvent( BB_EVENTS.TOAST, {
+							detail: { status: 'error', message: ( response.data && response.data.message ) || __( 'Failed to save.', 'buddyboss' ) },
+						} ) );
+					}
+				} )
+				.catch( function () {
+					window.dispatchEvent( new CustomEvent( BB_EVENTS.TOAST, {
+						detail: { status: 'error', message: __( 'Failed to save.', 'buddyboss' ) },
+					} ) );
+				} )
+				.finally( function () {
+					setSavingIds( function ( prev ) {
+						var next = Object.assign( {}, prev );
+						delete next[ typeId ];
+						return next;
+					} );
+				} );
+		}, 800 );
 	}, [] );
 
 	if ( isLoading ) {

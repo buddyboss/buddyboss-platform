@@ -44,12 +44,32 @@ var conditionOptions = [
  */
 export function EmailRestrictionsField( { field, value, onChange, disabled } ) {
 	var keyCounterRef = useRef( 0 );
+	var debounceTimerRef = useRef( null );
+	var lastSentValueRef = useRef( null );
 
 	function assignKey( row ) {
 		if ( ! row._key ) {
 			row._key = 'er-' + ( ++keyCounterRef.current );
 		}
 		return row;
+	}
+
+	/**
+	 * Debounced onChange — batches rapid edits into one save call.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {string} fieldName Field name.
+	 * @param {Array}  newRows   Updated rows.
+	 */
+	function debouncedOnChange( fieldName, newRows ) {
+		if ( debounceTimerRef.current ) {
+			clearTimeout( debounceTimerRef.current );
+		}
+		debounceTimerRef.current = setTimeout( function () {
+			lastSentValueRef.current = newRows;
+			onChange( fieldName, newRows );
+		}, 800 );
 	}
 
 	var initialRows = Array.isArray( value ) && value.length > 0
@@ -59,11 +79,27 @@ export function EmailRestrictionsField( { field, value, onChange, disabled } ) {
 	var [ rows, setRows ] = useState( initialRows );
 
 	// Sync rows when value prop changes (e.g., after settings reload).
+	// Skip sync when the value matches what we last sent — that's just our own save echoing back.
 	useEffect( function() {
-		if ( Array.isArray( value ) ) {
+		if ( ! Array.isArray( value ) ) {
+			return;
+		}
+		if ( lastSentValueRef.current && lastSentValueRef.current === value ) {
+			return;
+		}
+		if ( null === lastSentValueRef.current ) {
 			setRows( value.map( assignKey ) );
 		}
 	}, [ value ] );
+
+	// Cleanup debounce timer on unmount.
+	useEffect( function () {
+		return function () {
+			if ( debounceTimerRef.current ) {
+				clearTimeout( debounceTimerRef.current );
+			}
+		};
+	}, [] );
 
 	/**
 	 * Update a row and propagate change.
@@ -84,7 +120,7 @@ export function EmailRestrictionsField( { field, value, onChange, disabled } ) {
 			return newRow;
 		} );
 		setRows( updated );
-		onChange( field.name, updated );
+		debouncedOnChange( field.name, updated );
 	}
 
 	/**
@@ -111,7 +147,7 @@ export function EmailRestrictionsField( { field, value, onChange, disabled } ) {
 			return i !== index;
 		} );
 		setRows( updated );
-		onChange( field.name, updated );
+		debouncedOnChange( field.name, updated );
 	}
 
 	return (
