@@ -212,6 +212,19 @@ export function InputButtonField( props ) {
 		isButtonDisabled = true;
 	}
 
+	// Allow external plugins to control input_button visibility.
+	var isButtonHidden = wp.hooks.applyFilters(
+		'bb_admin_settings_input_button_hidden',
+		false,
+		field,
+		connected,
+		values
+	);
+
+	if ( isButtonHidden ) {
+		return null;
+	}
+
 	return (
 		<div className="bb-admin-settings-field__input-button">
 			<div className="bb-admin-settings-field__input-button-row">
