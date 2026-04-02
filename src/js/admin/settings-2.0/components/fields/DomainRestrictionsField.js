@@ -50,12 +50,32 @@ var conditionOptions = [
  */
 export function DomainRestrictionsField( { field, value, onChange, disabled } ) {
 	var keyCounterRef = useRef( 0 );
+	var debounceTimerRef = useRef( null );
+	var lastSentValueRef = useRef( null );
 
 	function assignKey( row ) {
 		if ( ! row._key ) {
 			row._key = 'dr-' + ( ++keyCounterRef.current );
 		}
 		return row;
+	}
+
+	/**
+	 * Debounced onChange — batches rapid edits into one save call.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {string} fieldName Field name.
+	 * @param {Array}  newRows   Updated rows.
+	 */
+	function debouncedOnChange( fieldName, newRows ) {
+		if ( debounceTimerRef.current ) {
+			clearTimeout( debounceTimerRef.current );
+		}
+		debounceTimerRef.current = setTimeout( function () {
+			lastSentValueRef.current = newRows;
+			onChange( fieldName, newRows );
+		}, 800 );
 	}
 
 	var initialRows = Array.isArray( value ) && value.length > 0
@@ -68,11 +88,29 @@ export function DomainRestrictionsField( { field, value, onChange, disabled } ) 
 	var [ dragOverIdx, setDragOverIdx ] = useState( null );
 
 	// Sync rows when value prop changes (e.g., after settings reload).
+	// Skip sync when the value matches what we last sent — that's just our own save echoing back.
 	useEffect( function() {
-		if ( Array.isArray( value ) ) {
+		if ( ! Array.isArray( value ) ) {
+			return;
+		}
+		// If the incoming value is our own save response, ignore it — local state is already correct.
+		if ( lastSentValueRef.current && lastSentValueRef.current === value ) {
+			return;
+		}
+		// Only sync from server when it's genuinely new data (e.g., panel switch, initial load).
+		if ( null === lastSentValueRef.current ) {
 			setRows( value.map( assignKey ) );
 		}
 	}, [ value ] );
+
+	// Cleanup debounce timer on unmount.
+	useEffect( function () {
+		return function () {
+			if ( debounceTimerRef.current ) {
+				clearTimeout( debounceTimerRef.current );
+			}
+		};
+	}, [] );
 
 	/**
 	 * Determine which conditions are mutually exclusive.
@@ -133,7 +171,7 @@ export function DomainRestrictionsField( { field, value, onChange, disabled } ) 
 			return newRow;
 		} );
 		setRows( updated );
-		onChange( field.name, updated );
+		debouncedOnChange( field.name, updated );
 	}
 
 	/**
@@ -160,7 +198,7 @@ export function DomainRestrictionsField( { field, value, onChange, disabled } ) 
 			return i !== index;
 		} );
 		setRows( updated );
-		onChange( field.name, updated );
+		debouncedOnChange( field.name, updated );
 	}
 
 	/**
