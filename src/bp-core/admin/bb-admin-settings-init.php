@@ -166,6 +166,11 @@ function bb_admin_settings_init() {
 		}
 
 		bb_icon_registry();
+
+		// Placeholder features provider for unregistered add-ons/integrations.
+		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-placeholder-features.php' ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-placeholder-features.php';
+		}
 	}
 }
 
