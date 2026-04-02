@@ -70,7 +70,7 @@ function bb_admin_settings_register_registration_feature() {
 			'title'      => __( 'Registration', 'buddyboss' ),
 			'icon'       => array(
 				'type'  => 'font',
-				'class' => 'bb-icons-rl bb-icons-rl-user-plus',
+				'class' => 'bb-icons-rl bb-icons-rl-identification-badge',
 			),
 			'help_url'   => bp_get_admin_url(
 				add_query_arg(
@@ -94,7 +94,7 @@ function bb_admin_settings_register_registration_feature() {
 			'title'    => __( 'Login Redirects', 'buddyboss' ),
 			'icon'     => array(
 				'type'  => 'font',
-				'class' => 'bb-icons-rl bb-icons-rl-arrow-bend-up-right',
+				'class' => 'bb-icons-rl bb-icons-rl-arrow-elbow-right',
 			),
 			'help_url' => bp_get_admin_url(
 				add_query_arg(
