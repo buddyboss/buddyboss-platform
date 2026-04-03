@@ -78,26 +78,11 @@ function bb_get_placeholder_plugin_status( $item ) {
 		return 'not_in_plan';
 	}
 
-	// Check if plugin is installed (file exists).
-	$plugin_path = WP_PLUGIN_DIR . '/' . $plugin_file;
-	$is_installed = file_exists( $plugin_path );
-
-	// Check if plugin is active.
-	if ( ! function_exists( 'is_plugin_active' ) ) {
-		require_once ABSPATH . 'wp-admin/includes/plugin.php';
-	}
-	$is_active = is_plugin_active( $plugin_file );
-
-	// If active, the feature should be registered and deduplicated out — this
-	// shouldn't be reached, but return a safe value just in case.
-	if ( $is_active ) {
-		return 'installed_inactive';
-	}
-
-	// Check if this product is in the user's addon plan.
+	// Step 1: Check if this product is in the user's addon plan.
+	// This must come first — if not in plan, always show upgrade badge
+	// regardless of install status.
 	$in_plan = false;
 	if ( class_exists( '\\BuddyBoss\\Core\\Admin\\Mothership\\BB_Addons_Manager' ) ) {
-		// Extract plugin slug from plugin_file (e.g., 'buddyboss-gamification/buddyboss-gamification.php' -> 'buddyboss-gamification').
 		$plugin_slug = dirname( $plugin_file );
 		$product     = \BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::checkProductBySlug( $plugin_slug );
 		$in_plan     = ! empty( $product );
@@ -106,6 +91,14 @@ function bb_get_placeholder_plugin_status( $item ) {
 	if ( ! $in_plan ) {
 		return 'not_in_plan';
 	}
+
+	// Step 2: Product is in plan — check install/active status.
+	if ( ! function_exists( 'is_plugin_active' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/plugin.php';
+	}
+
+	$plugin_path  = WP_PLUGIN_DIR . '/' . $plugin_file;
+	$is_installed = file_exists( $plugin_path );
 
 	if ( ! $is_installed ) {
 		return 'not_installed';
@@ -160,6 +153,8 @@ function bb_admin_inject_placeholder_features( $features ) {
 		$plugin_status = bb_get_placeholder_plugin_status( $item );
 		$plugin_file   = isset( $item['plugin_file'] ) ? $item['plugin_file'] : '';
 
+		$plugin_slug = ! empty( $plugin_file ) ? dirname( $plugin_file ) : '';
+
 		$features[] = array(
 			'id'                => $item['id'],
 			'label'             => isset( $item['label'] ) ? $item['label'] : '',
@@ -173,7 +168,7 @@ function bb_admin_inject_placeholder_features( $features ) {
 			'icon'              => isset( $item['icon'] ) ? $item['icon'] : null,
 			'is_placeholder'    => true,
 			'plugin_status'     => $plugin_status,
-			'plugin_action_url' => admin_url( 'admin.php?page=buddyboss-addons' ),
+			'plugin_slug'       => $plugin_slug,
 			'upgrade_tier'      => isset( $item['upgrade_tier'] ) ? $item['upgrade_tier'] : 'plus',
 			'upgrade_url'       => isset( $item['upgrade_url'] ) ? $item['upgrade_url'] : '',
 			'upgrade_image_url' => isset( $item['upgrade_image_url'] ) ? $item['upgrade_image_url'] : '',
@@ -297,3 +292,41 @@ function bb_maybe_clear_placeholder_features_cache() {
 	}
 }
 add_action( 'admin_init', 'bb_maybe_clear_placeholder_features_cache' );
+
+/**
+ * Clear the placeholder features cache when the license status changes.
+ *
+ * Hooks into the existing {plugin_id}_license_status_changed action fired by
+ * BB_Mothership_Loader::handle_license_status_change(). This ensures that
+ * plugin_status is re-evaluated when the license is activated or deactivated,
+ * so the correct card state (upgrade badge vs install/activate button) is
+ * shown immediately.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_clear_placeholder_cache_on_license_change() {
+	delete_transient( 'bb_placeholder_features_data' );
+}
+
+/**
+ * Register the license change hook with the dynamic plugin ID.
+ *
+ * Must run after the Mothership loader initializes so the plugin ID is available.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_register_placeholder_cache_clear_hooks() {
+	if ( ! class_exists( '\\BuddyBoss\\Core\\Admin\\Mothership\\BB_Plugin_Connector' ) ) {
+		return;
+	}
+
+	$plugin_id = get_option( 'buddyboss_dynamic_plugin_id', '' );
+	if ( empty( $plugin_id ) && defined( 'PLATFORM_EDITION' ) ) {
+		$plugin_id = PLATFORM_EDITION;
+	}
+
+	if ( ! empty( $plugin_id ) ) {
+		add_action( $plugin_id . '_license_status_changed', 'bb_clear_placeholder_cache_on_license_change' );
+	}
+}
+add_action( 'admin_init', 'bb_register_placeholder_cache_clear_hooks' );

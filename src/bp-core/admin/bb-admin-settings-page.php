@@ -155,6 +155,7 @@ function bb_admin_settings_page() {
 		'nonce'         => wp_create_nonce( 'wp_rest' ),
 		'ajaxUrl'       => esc_url( admin_url( 'admin-ajax.php' ) ),
 		'ajaxNonce'     => wp_create_nonce( 'bb_admin_settings' ),
+		'addonNonce'    => wp_create_nonce( 'mosh_addons' ),
 		'logoUrl'       => buddypress()->plugin_url . 'bp-core/images/admin/BBLogo.png',
 		'isReadyLaunch' => function_exists( 'bb_is_readylaunch_enabled' ) && bb_is_readylaunch_enabled(),
 		'currentUser'   => array(

@@ -291,6 +291,60 @@ export function SettingsScreen({ onNavigate }) {
 			});
 	};
 
+	/**
+	 * Handle addon install/activate via mothership AJAX.
+	 *
+	 * @param {Object} feature  Placeholder feature object with plugin_slug.
+	 * @param {string} action   'mosh_addon_install' or 'mosh_addon_activate'.
+	 */
+	const handleAddonAction = (feature, action) => {
+		if ( ! feature.plugin_slug || ! window.bbAdminData.addonNonce ) {
+			return;
+		}
+
+		var label = feature.label || feature.id;
+		var isInstall = 'mosh_addon_install' === action;
+
+		setToast({
+			status: 'saving',
+			message: isInstall
+				? __('Installing & activating...', 'buddyboss').replace('...', ' ' + label + '...')
+				: __('Activating...', 'buddyboss').replace('...', ' ' + label + '...'),
+		});
+
+		var formData = new FormData();
+		formData.append('action', action);
+		formData.append('_ajax_nonce', window.bbAdminData.addonNonce);
+		formData.append('slug', feature.plugin_slug);
+		formData.append('extension_type', 'plugin');
+
+		fetch(window.bbAdminData.ajaxUrl, { method: 'POST', body: formData })
+			.then(function( response ) { return response.json(); })
+			.then(function( response ) {
+				if ( response && response.success ) {
+					setToast({
+						status: 'success',
+						message: isInstall
+							? __('%s has been installed and activated.', 'buddyboss').replace('%s', label)
+							: __('%s has been activated.', 'buddyboss').replace('%s', label),
+					});
+					// Reload to show the real feature card.
+					setTimeout(function() { window.location.reload(); }, 1500);
+				} else {
+					var errorMsg = ( response && response.data && response.data.message )
+						? response.data.message
+						: __('Failed to process. Please try again.', 'buddyboss');
+					setToast({ status: 'error', message: errorMsg });
+				}
+			})
+			.catch(function() {
+				setToast({
+					status: 'error',
+					message: __('Failed to process. Please try again.', 'buddyboss'),
+				});
+			});
+	};
+
 	if (isLoading) {
 		return (
 			<div className="bb-admin-settings bb-admin-loading">
@@ -439,19 +493,19 @@ export function SettingsScreen({ onNavigate }) {
 										{/* Bottom Section: Settings Button + Toggle */}
 										<div className="bb-admin-settings__feature-bottom">
 											<div className="bb-admin-settings__feature-left">
-												{ feature.is_placeholder && 'not_installed' === feature.plugin_status && feature.plugin_action_url ? (
+												{ feature.is_placeholder && 'not_installed' === feature.plugin_status && feature.plugin_slug ? (
 													<Button
 														variant="secondary"
 														className="bb-admin-settings__feature-settings-btn"
-														onClick={() => { window.location.href = feature.plugin_action_url; }}
+														onClick={() => handleAddonAction(feature, 'mosh_addon_install')}
 													>
 														{__('Install & Activate', 'buddyboss')}
 													</Button>
-												) : feature.is_placeholder && 'installed_inactive' === feature.plugin_status && feature.plugin_action_url ? (
+												) : feature.is_placeholder && 'installed_inactive' === feature.plugin_status && feature.plugin_slug ? (
 													<Button
 														variant="secondary"
 														className="bb-admin-settings__feature-settings-btn"
-														onClick={() => { window.location.href = feature.plugin_action_url; }}
+														onClick={() => handleAddonAction(feature, 'mosh_addon_activate')}
 													>
 														{__('Activate', 'buddyboss')}
 													</Button>
