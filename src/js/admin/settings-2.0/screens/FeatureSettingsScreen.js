@@ -7,7 +7,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useEffect, useRef, useCallback, lazy, Suspense, RawHTML } from '@wordpress/element';
+import { useState, useEffect, useRef, useCallback, useMemo, lazy, Suspense, RawHTML } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { Spinner, ToggleControl } from '@wordpress/components';
 import { ajaxFetch } from '../utils/ajax';
@@ -38,6 +38,8 @@ const RepliesListScreen = lazy(() => import('./RepliesListScreen'));
 const ReportingCategoriesScreen = lazy(() => import('./ReportingCategoriesScreen'));
 const FlaggedMembersScreen = lazy(() => import('./FlaggedMembersScreen'));
 const ReportedContentScreen = lazy(() => import('./ReportedContentScreen'));
+const EmailTemplatesListScreen = lazy(() => import('./EmailTemplatesListScreen'));
+const InvitesListScreen = lazy(() => import('./InvitesListScreen'));
 
 /**
  * Map of feature + panel combinations that render custom screens instead of settings forms.
@@ -56,6 +58,8 @@ const CUSTOM_PANEL_SCREENS = {
 	'moderation:reporting_categories': ReportingCategoriesScreen,
 	'moderation:flagged_members': FlaggedMembersScreen,
 	'moderation:reported_content': ReportedContentScreen,
+	'emails:all_emails': EmailTemplatesListScreen,
+	'invites:invites_list': InvitesListScreen,
 };
 
 
@@ -397,26 +401,46 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 		}
 	}, [toast]);
 
+	// Pre-build lookup maps to avoid triple-nested loops in handleSettingChange.
+	var buttonManagedFields = useMemo( function () {
+		var managed = {};
+		sidePanels.forEach( function ( panel ) {
+			( panel.sections || [] ).forEach( function ( section ) {
+				( section.fields || [] ).forEach( function ( field ) {
+					if ( 'input_button' === field.type && Array.isArray( field.related_fields ) ) {
+						field.related_fields.forEach( function ( rf ) {
+							managed[ rf ] = true;
+						} );
+					}
+				} );
+			} );
+		} );
+		return managed;
+	}, [ sidePanels ] );
+
+	var parentChildMap = useMemo( function () {
+		var map = {};
+		sidePanels.forEach( function ( panel ) {
+			( panel.sections || [] ).forEach( function ( section ) {
+				( section.fields || [] ).forEach( function ( field ) {
+					if ( field.parent_field ) {
+						if ( ! map[ field.parent_field ] ) {
+							map[ field.parent_field ] = [];
+						}
+						map[ field.parent_field ].push( field.name );
+					}
+				} );
+			} );
+		} );
+		return map;
+	}, [ sidePanels ] );
+
 	// Handle setting change (all fields) - triggers auto-save.
 	// Value may be a function (prevValue) => newValue for functional updates (avoids stale state when merging).
 	// When a parent toggle is turned OFF, cascade to child fields (parent_field) and turn them OFF too.
 	const handleSettingChange = useCallback((fieldName, value) => {
 		// Check if this field is managed by an input_button (saved via its own AJAX, not auto-save).
-		// Fields listed in an input_button's related_fields are saved by the Connect/Disconnect button.
-		var isButtonManaged = false;
-		sidePanels.forEach( function( panel ) {
-			( panel.sections || [] ).forEach( function( section ) {
-				( section.fields || [] ).forEach( function( field ) {
-					if ( 'input_button' === field.type && Array.isArray( field.related_fields ) &&
-						field.related_fields.indexOf( fieldName ) !== -1 ) {
-						isButtonManaged = true;
-					}
-				} );
-			} );
-		} );
-
-		// Button-managed fields: update settings state only (no auto-save, no toast).
-		if ( isButtonManaged ) {
+		if ( buttonManagedFields[ fieldName ] ) {
 			setSettings( function( prev ) {
 				return Object.assign( {}, prev, { [fieldName]: value } );
 			} );
@@ -429,15 +453,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 		var childNames = [];
 		var resolvedValue = value;
 		if ( typeof resolvedValue !== 'function' && ! resolvedValue ) {
-			sidePanels.forEach( function( panel ) {
-				( panel.sections || [] ).forEach( function( section ) {
-					( section.fields || [] ).forEach( function( field ) {
-						if ( field.parent_field === fieldName ) {
-							childNames.push( field.name );
-						}
-					} );
-				} );
-			} );
+			childNames = parentChildMap[ fieldName ] || [];
 		}
 
 		setSettings((prev) => {
@@ -465,7 +481,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 			} );
 			return next;
 		});
-	}, [sidePanels]);
+	}, [buttonManagedFields, parentChildMap]);
 
 	// Sync Default Tab dropdown with Navigation Order toggles (groups feature only).
 	useGroupNavSync( {

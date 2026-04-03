@@ -981,7 +981,7 @@ export function SettingsForm({ fields, values, onChange }) {
 			<div key={field.name} className={fieldClasses + ( ! hasLabel ? ' bb-admin-settings-form__field--no-label' : '' ) + ( 'reaction_mode' !== field.type && field.pro_notice?.show ? ' bb-admin-settings-form__field--pro-locked' : '' )} data-group={field.group?.key || undefined} data-group-inline={ field.group && field.group.inline ? 'true' : undefined }>
 				{ hasLabel && (
 					<div className="bb-admin-settings-form__field-label">
-						<label>
+						<label htmlFor={ 'bb-field-' + field.name }>
 							<span className="bb-admin-settings-form__field-label-text">{field.label}</span>
 							{ 'reaction_mode' !== field.type && field.pro_notice?.show && (
 								<>

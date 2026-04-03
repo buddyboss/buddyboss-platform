@@ -20,7 +20,13 @@ import { __, _n, sprintf } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { getReplies, getReply, saveReply, deleteReply, replyBulkAction } from '../utils/ajax';
 import { sanitizeHtml, safeUrl, sanitizeCustomColumns } from '../utils/sanitize';
-import { getPageNumbers } from '../utils/pagination';
+import { ListPagination } from '../components/common/ListPagination';
+import { AdminNotice } from '../components/common/AdminNotice';
+import { ListToolbar } from '../components/common/ListToolbar';
+import { DeleteConfirmModal } from '../components/common/DeleteConfirmModal';
+import { BulkEditModal } from '../components/common/BulkEditModal';
+import { useListScreenHandlers } from '../hooks/useListScreenHandlers';
+import { useListScreenState } from '../hooks/useListScreenState';
 import { groupFieldsWithLayout, buildRegisteredFieldPayload, getVisibleFields, needsSeparator } from '../utils/format';
 import { ReplyCreateModal } from '../components/forums/ReplyCreateModal';
 import { RegisteredMetaField } from '../components/common/RegisteredMetaField';
@@ -66,13 +72,27 @@ var CORE_COLUMNS = [ 'cb', 'title', 'bbp_reply_forum', 'bbp_reply_topic', 'bbp_r
  * @returns {JSX.Element} Replies list screen.
  */
 export default function RepliesListScreen( { onNavigate } ) {
+	// Common list screen state (loading, notice, selection, bulk, search).
+	var common = useListScreenState();
+	var isLoading = common.isLoading;
+	var setIsLoading = common.setIsLoading;
+	var notice = common.notice;
+	var setNotice = common.setNotice;
+	var selected = common.selectedIds;
+	var setSelected = common.setSelectedIds;
+	var bulkAction = common.bulkAction;
+	var setBulkAction = common.setBulkAction;
+	var isBulkProcessing = common.isBulkProcessing;
+	var setIsBulkProcessing = common.setIsBulkProcessing;
+	var search = common.searchInput;
+	var setSearch = common.setSearchInput;
+	var searchQuery = common.searchQuery;
+	var setSearchQuery = common.setSearchQuery;
+
+	// Screen-specific state.
 	var repliesState = useState( [] );
 	var replies = repliesState[ 0 ];
 	var setReplies = repliesState[ 1 ];
-
-	var isLoadingState = useState( true );
-	var isLoading = isLoadingState[ 0 ];
-	var setIsLoading = isLoadingState[ 1 ];
 
 	var errorState = useState( '' );
 	var error = errorState[ 0 ];
@@ -100,10 +120,6 @@ export default function RepliesListScreen( { onNavigate } ) {
 	var sort = sortState[ 0 ];
 	var setSort = sortState[ 1 ];
 
-	var searchState = useState( '' );
-	var search = searchState[ 0 ];
-	var setSearch = searchState[ 1 ];
-
 	var searchTimerRef = useRef( null );
 
 	// Metadata (views, bulk actions, columns).
@@ -120,20 +136,6 @@ export default function RepliesListScreen( { onNavigate } ) {
 	var setColumns = columnsState[ 1 ];
 
 	var hasMetaRef = useRef( false );
-
-	// Selection state.
-	var selectedState = useState( [] );
-	var selected = selectedState[ 0 ];
-	var setSelected = selectedState[ 1 ];
-
-	// Bulk action state.
-	var bulkActionState = useState( '' );
-	var bulkAction = bulkActionState[ 0 ];
-	var setBulkAction = bulkActionState[ 1 ];
-
-	var isBulkProcessingState = useState( false );
-	var isBulkProcessing = isBulkProcessingState[ 0 ];
-	var setIsBulkProcessing = isBulkProcessingState[ 1 ];
 
 	// Create modal.
 	var isCreateOpenState = useState( false );
@@ -204,24 +206,6 @@ export default function RepliesListScreen( { onNavigate } ) {
 	var bulkEditVisibilityState = useState( 'no_change' );
 	var bulkEditVisibility = bulkEditVisibilityState[ 0 ];
 	var setBulkEditVisibility = bulkEditVisibilityState[ 1 ];
-
-	// Notice state.
-	var noticeState = useState( null );
-	var notice = noticeState[ 0 ];
-	var setNotice = noticeState[ 1 ];
-
-	// Clear notice after 5 seconds.
-	useEffect( function () {
-		if ( ! notice ) {
-			return;
-		}
-		var timer = setTimeout( function () {
-			setNotice( null );
-		}, 5000 );
-		return function () {
-			clearTimeout( timer );
-		};
-	}, [ notice ] );
 
 	// Forum filter UI state.
 	var isForumFilterOpenState = useState( false );
@@ -400,44 +384,18 @@ export default function RepliesListScreen( { onNavigate } ) {
 		fetchReplies( { page: 1, sort: newSort } );
 	};
 
-	/**
-	 * Handle select all checkbox toggle.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {boolean} checked Whether checkbox is checked.
-	 */
-	var handleSelectAll = function ( checked ) {
-		if ( checked ) {
-			setSelected( replies.map( function ( r ) {
-				return r.id;
-			} ) );
-		} else {
-			setSelected( [] );
-		}
-	};
-
-	/**
-	 * Handle individual row checkbox toggle.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {number}  replyId Reply ID.
-	 * @param {boolean} checked Whether checkbox is checked.
-	 */
-	var handleSelectRow = function ( replyId, checked ) {
-		if ( checked ) {
-			setSelected( function ( prev ) {
-				return prev.concat( [ replyId ] );
-			} );
-		} else {
-			setSelected( function ( prev ) {
-				return prev.filter( function ( id ) {
-					return id !== replyId;
-				} );
-			} );
-		}
-	};
+	// Common selection handlers.
+	var handlers = useListScreenHandlers( {
+		setSearchInput: setSearch,
+		setSearchQuery: setSearch,
+		setPage: setPage,
+		setSelectedIds: setSelected,
+		getItemIds: function () {
+			return replies.map( function ( r ) { return r.id; } );
+		},
+	} );
+	var handleSelectAll = handlers.handleSelectAll;
+	var handleSelectRow = handlers.handleSelectRow;
 
 	/**
 	 * Handle bulk action apply — routes to confirmation/edit modals.
@@ -823,134 +781,86 @@ export default function RepliesListScreen( { onNavigate } ) {
 			</div>
 
 			{ /* Notice */ }
-			{ notice && (
-				<div className={ 'bb-admin-notice bb-admin-notice--' + notice.type }>
-					<span>{ notice.message }</span>
-					<button
-						className="bb-admin-notice--dismiss"
-						onClick={ function () {
-							setNotice( null );
-						} }
-					>
-						<i className='bb-icons-rl bb-icons-rl-x'></i>
-					</button>
-				</div>
-			) }
+			<AdminNotice notice={ notice } onDismiss={ function () { setNotice( null ); } } />
 
 			{ /* Toolbar */ }
-			<div className="bb-replies-list__toolbar">
-				<div className="bb-replies-list__toolbar-left">
-					<div className="bb-replies-list__bulk-actions">
-						<SelectControl
-							value={ bulkAction }
-							options={ bulkActionOptions }
-							onChange={ setBulkAction }
-							__nextHasNoMarginBottom
-						/>
-						<Button
-							variant="secondary"
-							onClick={ handleBulkApply }
-							disabled={ ! bulkAction || 0 === selected.length || isBulkProcessing }
-							isBusy={ isBulkProcessing }
-							className="bb-replies-list__bulk-apply"
-						>
-							{ __( 'Apply', 'buddyboss' ) }
-						</Button>
-					</div>
-				</div>
-				<div className="bb-replies-list__toolbar-right">
-					{ /* Forum Filter */ }
-					<div className="bb-replies-list__forum-filter" ref={ forumFilterRef }>
-						<button
-							type="button"
-							className="bb-replies-list__forum-filter-btn"
-							onClick={ function () {
-								setIsForumFilterOpen( ! isForumFilterOpen );
-							} }
-						>
-							{ forumFilterLabel }
-							<i className="bb-icons-rl bb-icons-rl-caret-down"></i>
-						</button>
-						{ isForumFilterOpen && (
-							<div className="bb-replies-list__forum-filter-dropdown">
-								<input
-									type="text"
-									className="bb-replies-list__forum-filter-search"
-									placeholder={ __( 'Search forums', 'buddyboss' ) }
-									value={ forumFilterSearch }
-									onChange={ function ( e ) {
-										setForumFilterSearch( e.target.value );
-									} }
-									autoFocus
-								/>
-								<div className="bb-replies-list__forum-filter-options">
-									<button
-										type="button"
-										className={ 'bb-replies-list__forum-filter-option' + ( 0 === forumId ? ' is-active' : '' ) }
-										onClick={ function () {
-											handleForumFilter( 0 );
-										} }
-									>
-										{ views && views.all ? sprintf( __( 'All Forums (%s)', 'buddyboss' ), views.all ) : __( 'All Forums', 'buddyboss' ) }
-									</button>
-									{ filteredForums.map( function ( f ) {
-										return (
-											<button
-												key={ f.id }
-												type="button"
-												className={ 'bb-replies-list__forum-filter-option' + ( f.id === forumId ? ' is-active' : '' ) }
-												onClick={ function () {
-													handleForumFilter( f.id );
-												} }
-											>
-												{ decodeEntities( f.name ) + ' (' + f.count + ')' }
-											</button>
-										);
-									} ) }
-								</div>
-							</div>
-						) }
-					</div>
-
-					{ /* Sort */ }
-					<SelectControl
-						value={ sort }
-						options={ sortOptions }
-						onChange={ handleSortChange }
-						__nextHasNoMarginBottom
-						className="bb-replies-list__sort-select"
-					/>
-
-					{ /* Search */ }
-					<div className="bb-replies-list__search">
-						<input
-							type="text"
-							value={ search }
-							onChange={ function ( e ) {
-								handleSearch( e.target.value );
-							} }
-							placeholder={ __( 'Search replies', 'buddyboss' ) }
-							aria-label={ __( 'Search replies', 'buddyboss' ) }
-							className="bb-replies-list__search-input"
-						/>
-						{ search && (
-							<button
-								type="button"
-								className="bb-replies-list__search-clear"
-								onClick={ function () {
-									handleSearch( '' );
+			<ListToolbar
+				className="bb-replies-list"
+				bulkAction={ bulkAction }
+				bulkOptions={ bulkActionOptions }
+				onBulkActionChange={ setBulkAction }
+				onBulkApply={ handleBulkApply }
+				selectedCount={ selected.length }
+				isBulkProcessing={ isBulkProcessing }
+				searchInput={ search }
+				onSearchChange={ handleSearch }
+				searchPlaceholder={ __( 'Search replies', 'buddyboss' ) }
+				onSearchClear={ function () { handleSearch( '' ); } }
+			>
+				{ /* Forum Filter */ }
+				<div className="bb-replies-list__forum-filter" ref={ forumFilterRef }>
+					<button
+						type="button"
+						className="bb-replies-list__forum-filter-btn"
+						onClick={ function () {
+							setIsForumFilterOpen( ! isForumFilterOpen );
+						} }
+					>
+						{ forumFilterLabel }
+						<i className="bb-icons-rl bb-icons-rl-caret-down"></i>
+					</button>
+					{ isForumFilterOpen && (
+						<div className="bb-replies-list__forum-filter-dropdown">
+							<input
+								type="text"
+								className="bb-replies-list__forum-filter-search"
+								placeholder={ __( 'Search forums', 'buddyboss' ) }
+								value={ forumFilterSearch }
+								onChange={ function ( e ) {
+									setForumFilterSearch( e.target.value );
 								} }
-							>
-								<i className="bb-icons-rl-x"></i>
-							</button>
-						) }
-					</div>
+								autoFocus
+							/>
+							<div className="bb-replies-list__forum-filter-options">
+								<button
+									type="button"
+									className={ 'bb-replies-list__forum-filter-option' + ( 0 === forumId ? ' is-active' : '' ) }
+									onClick={ function () {
+										handleForumFilter( 0 );
+									} }
+								>
+									{ views && views.all ? sprintf( __( 'All Forums (%s)', 'buddyboss' ), views.all ) : __( 'All Forums', 'buddyboss' ) }
+								</button>
+								{ filteredForums.map( function ( f ) {
+									return (
+										<button
+											key={ f.id }
+											type="button"
+											className={ 'bb-replies-list__forum-filter-option' + ( f.id === forumId ? ' is-active' : '' ) }
+											onClick={ function () {
+												handleForumFilter( f.id );
+											} }
+										>
+											{ decodeEntities( f.name ) + ' (' + f.count + ')' }
+										</button>
+									);
+								} ) }
+							</div>
+						</div>
+					) }
 				</div>
-			</div>
+				<SelectControl
+					value={ sort }
+					options={ sortOptions }
+					onChange={ handleSortChange }
+					__nextHasNoMarginBottom
+					className="bb-replies-list__sort-select"
+				/>
+			</ListToolbar>
 
 			{ /* Loading / Error / Empty */ }
 			{ isLoading && (
-				<div className="bb-replies-list__loading">
+				<div className="bb-replies-list__loading bb-admin-list-table__loading">
 					<Spinner />
 				</div>
 			) }
@@ -970,17 +880,17 @@ export default function RepliesListScreen( { onNavigate } ) {
 			) }
 
 			{ ! isLoading && ! error && 0 === replies.length && (
-				<div className="bb-replies-list__empty">
+				<div className="bb-replies-list__empty bb-admin-list-table__empty">
 					<p>{ search ? __( 'No replies found matching your search.', 'buddyboss' ) : __( 'No replies found.', 'buddyboss' ) }</p>
 				</div>
 			) }
 
 			{ /* Table */ }
 			{ ! isLoading && ! error && replies.length > 0 && (
-				<table className="bb-replies-list__table">
+				<table className="bb-replies-list__table bb-admin-list-table">
 					<thead>
 						<tr>
-							<th className="bb-replies-list__col-cb">
+							<th className="bb-replies-list__col-cb bb-admin-list-table__checkbox">
 								<CheckboxControl
 									checked={ replies.length > 0 && selected.length === replies.length }
 									onChange={ handleSelectAll }
@@ -1016,7 +926,7 @@ export default function RepliesListScreen( { onNavigate } ) {
 
 							return (
 								<tr key={ reply.id } className={ ( isSelected ? 'is-selected' : '' ) + ( reply.is_spam ? ' is-spam' : '' ) }>
-									<td className="bb-replies-list__col-cb">
+									<td className="bb-replies-list__col-cb bb-admin-list-table__checkbox">
 										<CheckboxControl
 											checked={ isSelected }
 											onChange={ function ( checked ) {
@@ -1065,7 +975,7 @@ export default function RepliesListScreen( { onNavigate } ) {
 											</td>
 										);
 									} ) }
-									<td className="bb-replies-list__col-actions">
+									<td className="bb-replies-list__col-actions bb-admin-actions-toggle">
 										<DropdownMenu
 											icon={ <i className="bb-icons-rl-dots-three"></i> }
 											label={ __( 'Actions', 'buddyboss' ) }
@@ -1135,63 +1045,14 @@ export default function RepliesListScreen( { onNavigate } ) {
 			) }
 
 			{ /* Footer */ }
-			{ ! isLoading && ! error && replies.length > 0 && (
-				<div className="bb-replies-list__footer">
-					<span className="bb-replies-list__item-count">
-						{ sprintf(
-							_n( '%s item', '%s items', totalItems, 'buddyboss' ),
-							totalItems
-						) }
-					</span>
-
-					{ totalPages > 1 && (
-						<div className="bb-replies-list__pagination">
-							<Button
-								variant="secondary"
-								disabled={ 1 === page }
-								onClick={ function () {
-									handlePageChange( Math.max( 1, page - 1 ) );
-								} }
-								className="bb-replies-list__pagination-btn bb-replies-list__pagination-btn--previous"
-							>
-								&lsaquo;
-							</Button>
-
-							{ getPageNumbers( page, totalPages ).map( function ( num, index ) {
-								if ( '...' === num ) {
-									return (
-										<span key={ 'ellipsis-' + index } className="bb-replies-list__pagination-ellipsis">
-											&hellip;
-										</span>
-									);
-								}
-								return (
-									<Button
-										key={ num }
-										variant={ page === num ? 'primary' : 'secondary' }
-										onClick={ function () {
-											handlePageChange( num );
-										} }
-										className={ 'bb-replies-list__pagination-btn' + ( page === num ? ' bb-replies-list__pagination-btn--current' : '' ) }
-									>
-										{ num }
-									</Button>
-								);
-							} ) }
-
-							<Button
-								variant="secondary"
-								disabled={ page >= totalPages }
-								onClick={ function () {
-									handlePageChange( Math.min( totalPages, page + 1 ) );
-								} }
-								className="bb-replies-list__pagination-btn bb-replies-list__pagination-btn--next"
-							>
-								&rsaquo;
-							</Button>
-						</div>
-					) }
-				</div>
+			{ ! isLoading && ! error && (
+				<ListPagination
+					currentPage={ page }
+					totalPages={ totalPages }
+					total={ totalItems }
+					onPageChange={ handlePageChange }
+					className="bb-replies-list"
+				/>
 			) }
 
 			{ /* Create Modal */ }
@@ -1327,208 +1188,77 @@ export default function RepliesListScreen( { onNavigate } ) {
 				</Modal>
 			) }
 
-			{ /* Single Delete Confirmation Modal — matches Forums/Discussions pattern */ }
-			{ deleteReplyItem && (
-				<Modal
-					title={ __( 'Delete reply?', 'buddyboss' ) }
-					onRequestClose={ function () {
-						setDeleteReplyItem( null );
-						setDeleteConfirmChecked( false );
-					} }
-					className="bb-reply-delete-modal bb-admin-settings-modal"
-					shouldCloseOnClickOutside={ false }
-				>
-					<div className="bb-reply-delete-modal__body">
-						<div className="bb-admin-delete__warning">
-							<i className="bb-icons-rl bb-icons-rl-warning-circle"></i>
-							<div className="bb-admin-delete__warning-text">
-								<span className="bb-admin-delete__warning-title">
-									{ __( 'Warning', 'buddyboss' ) }
-								</span>
-								<span className="bb-admin-delete__warning-desc">
-									{ __( 'This permanently deletes replies from the community and cannot be undone.', 'buddyboss' ) }
-								</span>
-							</div>
-						</div>
-						<p className="bb-reply-delete-modal__description">
-							{ __( 'Deletes the reply and all related content from the community. This action cannot be undone.', 'buddyboss' ) }
-						</p>
-						<CheckboxControl
-							label={ __( 'I understand that this deletes the reply.', 'buddyboss' ) }
-							checked={ deleteConfirmChecked }
-							onChange={ setDeleteConfirmChecked }
-							__nextHasNoMarginBottom
-						/>
-					</div>
-					<div className="bb-reply-delete-modal__footer">
-						<Button
-							variant="secondary"
-							onClick={ function () {
-								setDeleteReplyItem( null );
-								setDeleteConfirmChecked( false );
-							} }
-							disabled={ isDeleting }
-						>
-							{ __( 'Cancel', 'buddyboss' ) }
-						</Button>
-						<Button
-							variant="primary"
-							isDestructive
-							onClick={ handleDeleteConfirm }
-							isBusy={ isDeleting }
-							disabled={ ! deleteConfirmChecked || isDeleting }
-						>
-							{ __( 'Delete', 'buddyboss' ) }
-						</Button>
-					</div>
-				</Modal>
-			) }
+			{ /* Single Delete Confirmation Modal */ }
+			<DeleteConfirmModal
+				isOpen={ !! deleteReplyItem }
+				singleTitle={ __( 'Delete reply?', 'buddyboss' ) }
+				items={ deleteReplyItem ? [ { id: deleteReplyItem.id, title: deleteReplyItem.content || deleteReplyItem.id } ] : [] }
+				warningText={ __( 'This permanently deletes replies from the community and cannot be undone.', 'buddyboss' ) }
+				description={ __( 'Deletes the reply and all related content from the community. This action cannot be undone.', 'buddyboss' ) }
+				confirmLabel={ __( 'I understand that this deletes the reply.', 'buddyboss' ) }
+				confirmChecked={ deleteConfirmChecked }
+				onConfirmChange={ setDeleteConfirmChecked }
+				onConfirm={ handleDeleteConfirm }
+				onClose={ function () { setDeleteReplyItem( null ); setDeleteConfirmChecked( false ); } }
+				isProcessing={ isDeleting }
+				className="bb-reply-delete-modal"
+			/>
 
 			{ /* Bulk Delete Confirmation Modal */ }
-			{ bulkDeleteOpen && (
-				<Modal
-					title={ __( 'Bulk Delete', 'buddyboss' ) }
-					onRequestClose={ function () {
-						setBulkDeleteOpen( false );
-					} }
-					className="bb-reply-delete-modal bb-admin-settings-modal"
-					shouldCloseOnClickOutside={ false }
-				>
-					<div className="bb-reply-delete-modal__body">
-						<div className="bb-admin-bulk-modal__selected-items">
-							{ selectedReplyNames.map( function ( item ) {
-								return (
-									<div key={ item.id } className="bb-admin-bulk-modal__selected-item">
-										<CheckboxControl
-											checked={ true }
-											onChange={ function () {
-												setSelected( function ( prev ) {
-													var next = prev.filter( function ( i ) { return i !== item.id; } );
-													if ( 0 === next.length ) {
-														setBulkDeleteOpen( false );
-													}
-													return next;
-												} );
-											} }
-											__nextHasNoMarginBottom
-										/>
-										<span className="bb-admin-bulk-modal__selected-item-name">
-											{ decodeEntities( item.title ) }
-										</span>
-									</div>
-								);
-							} ) }
-						</div>
-						<div className="bb-admin-delete__warning">
-							<i className="bb-icons-rl bb-icons-rl-warning-circle"></i>
-							<div className="bb-admin-delete__warning-text">
-								<span className="bb-admin-delete__warning-title">
-									{ __( 'Warning', 'buddyboss' ) }
-								</span>
-								<span className="bb-admin-delete__warning-desc">
-									{ __( 'This permanently deletes replies from the community and cannot be undone.', 'buddyboss' ) }
-								</span>
-							</div>
-						</div>
-						<p className="bb-reply-delete-modal__description">
-							{ __( 'Deletes the reply and all related content from the community. This action cannot be undone.', 'buddyboss' ) }
-						</p>
-						<CheckboxControl
-							label={ __( 'I understand that this deletes the reply.', 'buddyboss' ) }
-							checked={ bulkDeleteConfirmChecked }
-							onChange={ setBulkDeleteConfirmChecked }
-							__nextHasNoMarginBottom
-						/>
-					</div>
-					<div className="bb-reply-delete-modal__footer">
-						<Button
-							variant="secondary"
-							onClick={ function () {
-								setBulkDeleteOpen( false );
-							} }
-						>
-							{ __( 'Cancel', 'buddyboss' ) }
-						</Button>
-						<Button
-							variant="primary"
-							isDestructive
-							onClick={ handleConfirmBulkDelete }
-							disabled={ ! bulkDeleteConfirmChecked }
-						>
-							{ __( 'Delete', 'buddyboss' ) }
-						</Button>
-					</div>
-				</Modal>
-			) }
+			<DeleteConfirmModal
+				isOpen={ bulkDeleteOpen }
+				singleTitle={ __( 'Delete reply?', 'buddyboss' ) }
+				items={ selectedReplyNames }
+				onRemoveItem={ function ( id ) {
+					setSelected( function ( prev ) {
+						var next = prev.filter( function ( i ) { return i !== id; } );
+						if ( 0 === next.length ) {
+							setBulkDeleteOpen( false );
+						}
+						return next;
+					} );
+				} }
+				warningText={ __( 'This permanently deletes replies from the community and cannot be undone.', 'buddyboss' ) }
+				description={ __( 'Deletes the reply and all related content from the community. This action cannot be undone.', 'buddyboss' ) }
+				confirmLabel={ __( 'I understand that this deletes the reply.', 'buddyboss' ) }
+				confirmChecked={ bulkDeleteConfirmChecked }
+				onConfirmChange={ setBulkDeleteConfirmChecked }
+				onConfirm={ handleConfirmBulkDelete }
+				onClose={ function () { setBulkDeleteOpen( false ); } }
+				className="bb-reply-delete-modal"
+			/>
 
 			{ /* Bulk Edit Modal */ }
-			{ bulkEditOpen && (
-				<Modal
-					title={ __( 'Bulk Edit', 'buddyboss' ) }
-					onRequestClose={ function () {
-						setBulkEditOpen( false );
-					} }
-					className="bb-reply-bulk-edit-modal bb-admin-settings-modal"
-					shouldCloseOnClickOutside={ false }
-				>
-					<div className="bb-reply-bulk-edit-modal__body">
-						<div className="bb-admin-bulk-modal__selected-items">
-							{ selectedReplyNames.map( function ( item ) {
-								return (
-									<div key={ item.id } className="bb-admin-bulk-modal__selected-item">
-										<CheckboxControl
-											checked={ true }
-											onChange={ function () {
-												setSelected( function ( prev ) {
-													var next = prev.filter( function ( i ) { return i !== item.id; } );
-													if ( 0 === next.length ) {
-														setBulkEditOpen( false );
-													}
-													return next;
-												} );
-											} }
-											__nextHasNoMarginBottom
-										/>
-										<span className="bb-admin-bulk-modal__selected-item-name">
-											{ decodeEntities( item.title ) }
-										</span>
-									</div>
-								);
-							} ) }
-						</div>
-
-						<SelectControl
-							label={ __( 'Visibility', 'buddyboss' ) }
-							value={ bulkEditVisibility }
-							options={ [
-								{ value: 'no_change', label: __( '\u2014 No Change \u2014', 'buddyboss' ) },
-								{ value: 'publish', label: __( 'Public', 'buddyboss' ) },
-								{ value: 'private', label: __( 'Private', 'buddyboss' ) },
-								{ value: 'hidden', label: __( 'Hidden', 'buddyboss' ) },
-							] }
-							onChange={ setBulkEditVisibility }
-							__nextHasNoMarginBottom
-						/>
-					</div>
-					<div className="bb-reply-bulk-edit-modal__footer">
-						<Button
-							variant="secondary"
-							onClick={ function () {
-								setBulkEditOpen( false );
-							} }
-						>
-							{ __( 'Cancel', 'buddyboss' ) }
-						</Button>
-						<Button
-							variant="primary"
-							onClick={ handleConfirmBulkEdit }
-							disabled={ 'no_change' === bulkEditVisibility }
-						>
-							{ __( 'Save', 'buddyboss' ) }
-						</Button>
-					</div>
-				</Modal>
-			) }
+			<BulkEditModal
+				isOpen={ bulkEditOpen }
+				items={ selectedReplyNames }
+				onRemoveItem={ function ( id ) {
+					setSelected( function ( prev ) {
+						var next = prev.filter( function ( i ) { return i !== id; } );
+						if ( 0 === next.length ) {
+							setBulkEditOpen( false );
+						}
+						return next;
+					} );
+				} }
+				onConfirm={ handleConfirmBulkEdit }
+				onClose={ function () { setBulkEditOpen( false ); } }
+				confirmDisabled={ 'no_change' === bulkEditVisibility }
+				className="bb-reply-bulk-edit-modal"
+			>
+				<SelectControl
+					label={ __( 'Visibility', 'buddyboss' ) }
+					value={ bulkEditVisibility }
+					options={ [
+						{ value: 'no_change', label: __( '\u2014 No Change \u2014', 'buddyboss' ) },
+						{ value: 'publish', label: __( 'Public', 'buddyboss' ) },
+						{ value: 'private', label: __( 'Private', 'buddyboss' ) },
+						{ value: 'hidden', label: __( 'Hidden', 'buddyboss' ) },
+					] }
+					onChange={ setBulkEditVisibility }
+					__nextHasNoMarginBottom
+				/>
+			</BulkEditModal>
 		</div>
 	);
 }

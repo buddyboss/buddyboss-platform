@@ -5,12 +5,13 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useEffect, useRef } from '@wordpress/element';
-import { __ } from '@wordpress/i18n';
+import { useState, useEffect, useRef, useMemo } from '@wordpress/element';
+import { __, sprintf } from '@wordpress/i18n';
 import { Button, Spinner, ToggleControl } from '@wordpress/components';
 import { getCachedFeatures, toggleFeature, updateFeatureInCache } from '../utils/ajax';
 import { invalidateFeatureCache } from '../utils/featureCache';
 import { urlToRoute } from '../utils/url';
+import { safeUrl } from '../utils/sanitize';
 import { Toast } from '../components/Toast';
 
 /**
@@ -22,7 +23,6 @@ import { Toast } from '../components/Toast';
  */
 export function SettingsScreen({ onNavigate }) {
 	const [features, setFeatures] = useState([]);
-	const [filteredFeatures, setFilteredFeatures] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [activeFilter, setActiveFilter] = useState('all'); // 'all', 'active', 'inactive'
 	const [selectedCategory, setSelectedCategory] = useState(''); // 'community', 'add-ons', 'integrations'
@@ -35,47 +35,46 @@ export function SettingsScreen({ onNavigate }) {
 			.then((data) => {
 				if (Array.isArray(data)) {
 					setFeatures(data);
-					setFilteredFeatures(data);
 				} else {
 					setFeatures([]);
-					setFilteredFeatures([]);
 				}
 				setIsLoading(false);
 			})
-			.catch((error) => {
-				console.error('Failed to load features:', error);
+			.catch(function () {
 				setFeatures([]);
-				setFilteredFeatures([]);
 				setIsLoading(false);
 			});
 	}, []);
 
-	// Filter features
-	useEffect(() => {
-		let filtered = [...features];
+	// Derive filtered features via useMemo (avoids double-render from useEffect + setState).
+	var filteredFeatures = useMemo( function () {
+		var filtered = features.slice();
 
-		// Filter by status
-		if (activeFilter !== 'all') {
-			filtered = filtered.filter((feature) => feature.status === activeFilter);
+		// Filter by status.
+		if ( 'all' !== activeFilter ) {
+			filtered = filtered.filter( function ( feature ) {
+				return feature.status === activeFilter;
+			} );
 		}
 
-		// Filter by category
-		if (selectedCategory) {
-			filtered = filtered.filter((feature) => feature.category === selectedCategory);
+		// Filter by category.
+		if ( selectedCategory ) {
+			filtered = filtered.filter( function ( feature ) {
+				return feature.category === selectedCategory;
+			} );
 		}
 
-		// Filter by search
-		if (searchQuery && searchQuery.length >= 2) {
-			const queryLower = searchQuery.toLowerCase();
-			filtered = filtered.filter(
-				(feature) =>
-					feature.label.toLowerCase().includes(queryLower) ||
-					(feature.description && feature.description.toLowerCase().includes(queryLower))
-			);
+		// Filter by search.
+		if ( searchQuery && searchQuery.length >= 2 ) {
+			var queryLower = searchQuery.toLowerCase();
+			filtered = filtered.filter( function ( feature ) {
+				return feature.label.toLowerCase().indexOf( queryLower ) !== -1 ||
+					( feature.description && feature.description.toLowerCase().indexOf( queryLower ) !== -1 );
+			} );
 		}
 
-		setFilteredFeatures(filtered);
-	}, [features, activeFilter, selectedCategory, searchQuery]);
+		return filtered;
+	}, [ features, activeFilter, selectedCategory, searchQuery ] );
 
 	// Group features by category
 	const groupedFeatures = filteredFeatures.reduce((acc, feature) => {
@@ -329,15 +328,15 @@ export function SettingsScreen({ onNavigate }) {
 															}
 															
 															if ( 'svg' === iconType ) {
-																const url = feature.icon.url || iconData.url || iconData.data_uri || (iconData.data && iconData.data.url) || (iconData.data && iconData.data.data_uri);
-																if (url) {
+																const url = safeUrl( feature.icon.url || iconData.url || iconData.data_uri || (iconData.data && iconData.data.url) || (iconData.data && iconData.data.data_uri) || '' );
+																if (url && '#' !== url) {
 																	return <img src={url} alt={feature.label} className="bb-admin-settings__feature-icon-img" />;
 																}
 															}
 															
 															if ( 'image' === iconType ) {
-																const url = feature.icon.url || iconData.url || iconData.path || (iconData.data && iconData.data.url) || (iconData.data && iconData.data.path);
-																if (url) {
+																const url = safeUrl( feature.icon.url || iconData.url || iconData.path || (iconData.data && iconData.data.url) || (iconData.data && iconData.data.path) || '' );
+																if (url && '#' !== url) {
 																	return <img src={url} alt={feature.label} className="bb-admin-settings__feature-icon-img" />;
 																}
 															}
@@ -386,6 +385,13 @@ export function SettingsScreen({ onNavigate }) {
 													disabled={!feature.available || feature.required}
 													__nextHasNoMarginBottom
 												/>
+												<span className="screen-reader-text">
+													{ sprintf(
+														/* translators: %s: feature label */
+														__( 'Toggle %s', 'buddyboss' ),
+														feature.label
+													) }
+												</span>
 											</div>
 										</div>
 									</div>

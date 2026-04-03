@@ -139,15 +139,12 @@
 		min-width: 100px;
 
 		&--missing {
-			color: $bb-error-color;
-			border-color: $bb-error-color;
+			color: $bb-text-brand-primary-color;
+			border-color: $bb-border-brand-primary-color;
 			background-color: transparent;
 
 			&:hover {
-				color: $bb-error-color;
-				border-color: $bb-error-color;
-				background-color: transparent;
-				opacity: 0.8;
+				color: $bb-text-brand-primary-color;
 			}
 		}
 	}

@@ -21,7 +21,13 @@ import { __, _n, sprintf } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { getForums, getForum, saveForum, forumBulkAction, uploadForumImage } from '../utils/ajax';
 import { sanitizeHtml, safeUrl, sanitizeCustomColumns } from '../utils/sanitize';
-import { getPageNumbers } from '../utils/pagination';
+import { ListPagination } from '../components/common/ListPagination';
+import { AdminNotice } from '../components/common/AdminNotice';
+import { ListToolbar } from '../components/common/ListToolbar';
+import { DeleteConfirmModal } from '../components/common/DeleteConfirmModal';
+import { BulkEditModal } from '../components/common/BulkEditModal';
+import { useListScreenHandlers } from '../hooks/useListScreenHandlers';
+import { useListScreenState } from '../hooks/useListScreenState';
 import { toSlug, groupFieldsWithLayout as groupForumFieldsWithLayout, buildRegisteredFieldPayload, getVisibleFields, isFieldConditionalMet, needsSeparator } from '../utils/format';
 import { ForumCreateModal } from '../components/forums/ForumCreateModal';
 import { RegisteredMetaField } from '../components/common/RegisteredMetaField';
@@ -97,6 +103,24 @@ var CORE_COLUMNS = [ 'cb', 'title', 'bbp_forum_topic_count', 'bbp_forum_reply_co
  * @returns {JSX.Element} Forums list screen.
  */
 export function ForumsListScreen( { onNavigate } ) {
+	// Common list screen state (loading, notice, selection, bulk, search).
+	var common = useListScreenState();
+	var isLoading = common.isLoading;
+	var setIsLoading = common.setIsLoading;
+	var notice = common.notice;
+	var setNotice = common.setNotice;
+	var selectedIds = common.selectedIds;
+	var setSelectedIds = common.setSelectedIds;
+	var bulkAction = common.bulkAction;
+	var setBulkAction = common.setBulkAction;
+	var isBulkProcessing = common.isBulkProcessing;
+	var setIsBulkProcessing = common.setIsBulkProcessing;
+	var searchInput = common.searchInput;
+	var setSearchInput = common.setSearchInput;
+	var searchQuery = common.searchQuery;
+	var setSearchQuery = common.setSearchQuery;
+
+	// Screen-specific state.
 	var forumsState = useState( [] );
 	var forums = forumsState[ 0 ];
 	var setForums = forumsState[ 1 ];
@@ -116,22 +140,6 @@ export function ForumsListScreen( { onNavigate } ) {
 	var sortByState = useState( 'newest' );
 	var sortBy = sortByState[ 0 ];
 	var setSortBy = sortByState[ 1 ];
-
-	var searchQueryState = useState( '' );
-	var searchQuery = searchQueryState[ 0 ];
-	var setSearchQuery = searchQueryState[ 1 ];
-
-	var searchInputState = useState( '' );
-	var searchInput = searchInputState[ 0 ];
-	var setSearchInput = searchInputState[ 1 ];
-
-	var selectedIdsState = useState( [] );
-	var selectedIds = selectedIdsState[ 0 ];
-	var setSelectedIds = selectedIdsState[ 1 ];
-
-	var isLoadingState = useState( true );
-	var isLoading = isLoadingState[ 0 ];
-	var setIsLoading = isLoadingState[ 1 ];
 
 	var bulkActionsState = useState( {} );
 	var bulkActions = bulkActionsState[ 0 ];
@@ -201,15 +209,10 @@ export function ForumsListScreen( { onNavigate } ) {
 	var isEditSaving = isEditSavingState[ 0 ];
 	var setIsEditSaving = isEditSavingState[ 1 ];
 
-	var isBulkProcessingState = useState( false );
-	var isBulkProcessing = isBulkProcessingState[ 0 ];
-	var setIsBulkProcessing = isBulkProcessingState[ 1 ];
-
 	var refetchCounterState = useState( 0 );
 	var refetchCounter = refetchCounterState[ 0 ];
 	var setRefetchCounter = refetchCounterState[ 1 ];
 
-	var searchTimerRef = useRef( null );
 	var hasMetaRef = useRef( false );
 	var editAbortRef = useRef( null );
 
@@ -281,23 +284,11 @@ export function ForumsListScreen( { onNavigate } ) {
 		};
 	}, [ fetchForums ] );
 
-	// Clear notice after 5 seconds.
-	useEffect( function () {
-		if ( notice ) {
-			var timer = setTimeout( function () {
-				setNotice( null );
-			}, 5000 );
-			return function () {
-				clearTimeout( timer );
-			};
-		}
-	}, [ notice ] );
-
 	// Cleanup on unmount.
 	useEffect( function () {
 		return function () {
-			if ( searchTimerRef.current ) {
-				clearTimeout( searchTimerRef.current );
+			if ( handlers.searchTimerRef.current ) {
+				clearTimeout( handlers.searchTimerRef.current );
 			}
 			if ( editAbortRef.current ) {
 				editAbortRef.current.abort();
@@ -305,89 +296,23 @@ export function ForumsListScreen( { onNavigate } ) {
 		};
 	}, [] );
 
-	/**
-	 * Handle search input with debounce.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {string} value Search value.
-	 */
-	var handleSearchChange = function ( value ) {
-		setSearchInput( value );
-		if ( searchTimerRef.current ) {
-			clearTimeout( searchTimerRef.current );
-		}
-		searchTimerRef.current = setTimeout( function () {
-			setSearchQuery( value );
-			setCurrentPage( 1 );
-			setSelectedIds( [] );
-		}, 500 );
-	};
-
-	/**
-	 * Handle filter change.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {string} newFilter Filter value.
-	 */
-	var handleFilterChange = function ( newFilter ) {
-		setFilter( newFilter );
-		setCurrentPage( 1 );
-		setSelectedIds( [] );
-	};
-
-	/**
-	 * Handle sort change.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {string} value Sort value.
-	 */
-	var handleSortChange = function ( value ) {
-		setSortBy( value );
-		setCurrentPage( 1 );
-		setSelectedIds( [] );
-	};
-
-	/**
-	 * Handle select all checkbox.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {boolean} checked Checked state.
-	 */
-	var handleSelectAll = function ( checked ) {
-		if ( checked ) {
-			setSelectedIds( forums.map( function ( f ) {
-				return f.id;
-			} ) );
-		} else {
-			setSelectedIds( [] );
-		}
-	};
-
-	/**
-	 * Handle individual row checkbox.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {number}  id      Forum ID.
-	 * @param {boolean} checked Checked state.
-	 */
-	var handleSelectRow = function ( id, checked ) {
-		if ( checked ) {
-			setSelectedIds( function ( prev ) {
-				return prev.concat( [ id ] );
-			} );
-		} else {
-			setSelectedIds( function ( prev ) {
-				return prev.filter( function ( i ) {
-					return i !== id;
-				} );
-			} );
-		}
-	};
+	// Common list screen handlers (search, sort, filter, select).
+	var handlers = useListScreenHandlers( {
+		setSearchInput: setSearchInput,
+		setSearchQuery: setSearchQuery,
+		setPage: setCurrentPage,
+		setSelectedIds: setSelectedIds,
+		setSort: setSortBy,
+		setFilter: setFilter,
+		getItemIds: function () {
+			return forums.map( function ( f ) { return f.id; } );
+		},
+	} );
+	var handleSearchChange = handlers.handleSearchChange;
+	var handleFilterChange = handlers.handleFilterChange;
+	var handleSortChange = handlers.handleSortChange;
+	var handleSelectAll = handlers.handleSelectAll;
+	var handleSelectRow = handlers.handleSelectRow;
 
 	/**
 	 * Reset metadata and refetch the forums list from page 1.
@@ -649,19 +574,7 @@ export function ForumsListScreen( { onNavigate } ) {
 	return (
 		<div className="bb-forums-list">
 			{ /* Notice */ }
-			{ notice && (
-				<div className={ 'bb-admin-notice bb-admin-notice--' + notice.type }>
-					<span>{ notice.message }</span>
-					<button
-						className="bb-admin-notice--dismiss"
-						onClick={ function () {
-							setNotice( null );
-						} }
-					>
-						<i className='bb-icons-rl bb-icons-rl-x'></i>
-					</button>
-				</div>
-			) }
+			<AdminNotice notice={ notice } onDismiss={ function () { setNotice( null ); } } />
 
 			{ /* Header */ }
 			<div className="bb-forums-list__header">
@@ -679,84 +592,49 @@ export function ForumsListScreen( { onNavigate } ) {
 			</div>
 
 			{ /* Toolbar */ }
-			<div className="bb-forums-list__toolbar">
-				<div className="bb-forums-list__toolbar-left">
-					{ /* Bulk Actions */ }
-					<div className="bb-forums-list__bulk-actions">
-						<SelectControl
-							value={ bulkAction }
-							options={ [ { label: __( 'Bulk actions', 'buddyboss' ), value: '' } ].concat(
-								Object.keys( bulkActions ).map( function ( key ) {
-									return { label: bulkActions[ key ], value: key };
-								} )
-							) }
-							onChange={ setBulkAction }
-							__nextHasNoMarginBottom
-						/>
-						<Button
-							variant="secondary"
-							onClick={ handleBulkApply }
-							disabled={ ! bulkAction || 0 === selectedIds.length || isBulkProcessing }
-							className="bb-forums-list__bulk-apply"
-						>
-							{ __( 'Apply', 'buddyboss' ) }
-						</Button>
-					</div>
-				</div>
-
-				<div className="bb-forums-list__toolbar-right">
-					{ /* Status Filter */ }
-					<SelectControl
-						value={ filter }
-						options={ filterOptions }
-						onChange={ handleFilterChange }
-						className="bb-forums-list__filter-select"
-						__nextHasNoMarginBottom
-					/>
-
-					{ /* Sort Dropdown */ }
-					<SelectControl
-						value={ sortBy }
-						options={ sortOptions }
-						onChange={ handleSortChange }
-						className="bb-forums-list__sort-select"
-						__nextHasNoMarginBottom
-					/>
-
-					{ /* Search */ }
-					<div className="bb-forums-list__search">
-						<input
-							type="text"
-							value={ searchInput }
-							onChange={ function ( e ) {
-								handleSearchChange( e.target.value );
-							} }
-							placeholder={ __( 'Search forums', 'buddyboss' ) }
-							aria-label={ __( 'Search forums', 'buddyboss' ) }
-							className="bb-forums-list__search-input"
-						/>
-						<span className="bb-forums-list__search-icon">
-							<i className="bb-icons-rl bb-icons-rl-search"></i>
-						</span>
-					</div>
-				</div>
-			</div>
+			<ListToolbar
+				className="bb-forums-list"
+				bulkAction={ bulkAction }
+				bulkActions={ bulkActions }
+				onBulkActionChange={ setBulkAction }
+				onBulkApply={ handleBulkApply }
+				selectedCount={ selectedIds.length }
+				isBulkProcessing={ isBulkProcessing }
+				searchInput={ searchInput }
+				onSearchChange={ handleSearchChange }
+				searchPlaceholder={ __( 'Search forums', 'buddyboss' ) }
+			>
+				<SelectControl
+					value={ filter }
+					options={ filterOptions }
+					onChange={ handleFilterChange }
+					className="bb-forums-list__filter-select"
+					__nextHasNoMarginBottom
+				/>
+				<SelectControl
+					value={ sortBy }
+					options={ sortOptions }
+					onChange={ handleSortChange }
+					className="bb-forums-list__sort-select"
+					__nextHasNoMarginBottom
+				/>
+			</ListToolbar>
 
 			{ /* Table */ }
 			<div className="bb-forums-list__table-wrapper">
 				{ isLoading ? (
-					<div className="bb-forums-list__loading">
+					<div className="bb-forums-list__loading bb-admin-list-table__loading">
 						<Spinner />
 					</div>
 				) : 0 === forums.length ? (
-					<div className="bb-forums-list__empty">
+					<div className="bb-forums-list__empty bb-admin-list-table__empty">
 						<p>{ __( 'No forums found.', 'buddyboss' ) }</p>
 					</div>
 				) : (
-					<table className="bb-forums-list__table">
+					<table className="bb-forums-list__table bb-admin-list-table">
 						<thead>
 							<tr>
-								<th className="bb-forums-list__th--checkbox">
+								<th className="bb-forums-list__th--checkbox bb-admin-list-table__checkbox">
 									<CheckboxControl
 										checked={ allSelected }
 										onChange={ handleSelectAll }
@@ -799,9 +677,9 @@ export function ForumsListScreen( { onNavigate } ) {
 								return (
 									<tr
 										key={ forum.id }
-										className={ 'bb-forums-list__row' + ( isSelected ? ' bb-forums-list__row--selected' : '' ) }
+										className={ 'bb-forums-list__row bb-admin-list-table__row' + ( isSelected ? ' bb-forums-list__row--selected bb-admin-list-table__row--selected' : '' ) }
 									>
-										<td className="bb-forums-list__td--checkbox">
+										<td className="bb-forums-list__td--checkbox bb-admin-list-table__checkbox">
 											<CheckboxControl
 												checked={ isSelected }
 												onChange={ function ( checked ) {
@@ -868,7 +746,7 @@ export function ForumsListScreen( { onNavigate } ) {
 												</td>
 											);
 										} ) }
-										<td className="bb-forums-list__td--actions">
+										<td className="bb-forums-list__td--actions bb-admin-actions-toggle">
 											<DropdownMenu
 												icon={ <i className="bb-icons-rl-dots-three"></i> }
 												label={ __( 'More options', 'buddyboss' ) }
@@ -925,236 +803,85 @@ export function ForumsListScreen( { onNavigate } ) {
 			</div>
 
 			{ /* Footer */ }
-			{ ! isLoading && total > 0 && (
-				<div className="bb-forums-list__footer">
-					<span className="bb-forums-list__item-count">
-						{ sprintf(
-						/* translators: %s: total number of items. */
-						_n( '%s item', '%s items', total, 'buddyboss' ),
-						total
-					) }
-					</span>
-
-					{ totalPages > 1 && (
-						<div className="bb-forums-list__pagination">
-							<Button
-								variant="secondary"
-								disabled={ 1 === currentPage }
-								onClick={ function () {
-									setCurrentPage( function ( p ) {
-										return Math.max( 1, p - 1 );
-									} );
-									setSelectedIds( [] );
-								} }
-								className="bb-forums-list__pagination-btn bb-forums-list__pagination-btn--previous"
-							>
-								&lsaquo;
-							</Button>
-
-							{ getPageNumbers( currentPage, totalPages ).map( function ( page, index ) {
-								if ( '...' === page ) {
-									return (
-										<span key={ 'ellipsis-' + index } className="bb-forums-list__pagination-ellipsis">
-											&hellip;
-										</span>
-									);
-								}
-								return (
-									<Button
-										key={ page }
-										variant={ currentPage === page ? 'primary' : 'secondary' }
-										onClick={ function () {
-											setCurrentPage( page );
-											setSelectedIds( [] );
-										} }
-										className={ 'bb-forums-list__pagination-btn' + ( currentPage === page ? ' bb-forums-list__pagination-btn--current' : '' ) }
-									>
-										{ page }
-									</Button>
-								);
-							} ) }
-
-							<Button
-								variant="secondary"
-								disabled={ currentPage >= totalPages }
-								onClick={ function () {
-									setCurrentPage( function ( p ) {
-										return Math.min( totalPages, p + 1 );
-									} );
-									setSelectedIds( [] );
-								} }
-								className="bb-forums-list__pagination-btn bb-forums-list__pagination-btn--next"
-							>
-								&rsaquo;
-							</Button>
-						</div>
-					) }
-				</div>
+			{ ! isLoading && (
+				<ListPagination
+					currentPage={ currentPage }
+					totalPages={ totalPages }
+					total={ total }
+					onPageChange={ function ( page ) { setCurrentPage( page ); } }
+					className="bb-forums-list"
+				/>
 			) }
 
 			{ /* Bulk Edit Forum Modal */ }
-			{ bulkEditOpen && (
-				<Modal
-					title={ __( 'Bulk Edit', 'buddyboss' ) }
-					onRequestClose={ function () {
-						setBulkEditOpen( false );
-					} }
-					className="bb-forum-bulk-edit-modal bb-admin-settings-modal"
-					shouldCloseOnClickOutside={ false }
-				>
-					<div className="bb-forum-bulk-edit-modal__body">
-						<div className="bb-admin-bulk-modal__selected-items">
-							{ selectedForumNames.map( function ( item ) {
-								return (
-									<div key={ item.id } className="bb-admin-bulk-modal__selected-item">
-										<CheckboxControl
-											checked={ true }
-											onChange={ function () {
-												setSelectedIds( function ( prev ) {
-													var next = prev.filter( function ( i ) { return i !== item.id; } );
-													if ( 0 === next.length ) {
-														setBulkEditOpen( false );
-													}
-													return next;
-												} );
-											} }
-											__nextHasNoMarginBottom
-										/>
-										<span className="bb-admin-bulk-modal__selected-item-name">
-											{ decodeEntities( item.title ) }
-										</span>
-									</div>
-								);
-							} ) }
-						</div>
+			<BulkEditModal
+				isOpen={ bulkEditOpen }
+				items={ selectedForumNames }
+				onRemoveItem={ function ( id ) {
+					setSelectedIds( function ( prev ) {
+						var next = prev.filter( function ( i ) { return i !== id; } );
+						if ( 0 === next.length ) {
+							setBulkEditOpen( false );
+						}
+						return next;
+					} );
+				} }
+				onConfirm={ handleConfirmBulkEdit }
+				onClose={ function () { setBulkEditOpen( false ); } }
+				confirmDisabled={ 'no_change' === bulkEditStatus && 'no_change' === bulkEditVisibility }
+				className="bb-forum-bulk-edit-modal"
+			>
+				<SelectControl
+					label={ __( 'Status', 'buddyboss' ) }
+					value={ bulkEditStatus }
+					options={ [
+						{ value: 'no_change', label: __( '\u2014 No Change \u2014', 'buddyboss' ) },
+						{ value: 'open', label: __( 'Open', 'buddyboss' ) },
+						{ value: 'closed', label: __( 'Closed', 'buddyboss' ) },
+					] }
+					onChange={ setBulkEditStatus }
+					__nextHasNoMarginBottom
+				/>
+				<SelectControl
+					label={ __( 'Visibility', 'buddyboss' ) }
+					value={ bulkEditVisibility }
+					options={ [
+						{ value: 'no_change', label: __( '\u2014 No Change \u2014', 'buddyboss' ) },
+						{ value: 'publish', label: __( 'Public', 'buddyboss' ) },
+						{ value: 'private', label: __( 'Private', 'buddyboss' ) },
+						{ value: 'hidden', label: __( 'Hidden', 'buddyboss' ) },
+					] }
+					onChange={ setBulkEditVisibility }
+					__nextHasNoMarginBottom
+				/>
+			</BulkEditModal>
 
-						<SelectControl
-							label={ __( 'Status', 'buddyboss' ) }
-							value={ bulkEditStatus }
-							options={ [
-								{ value: 'no_change', label: __( '\u2014 No Change \u2014', 'buddyboss' ) },
-								{ value: 'open', label: __( 'Open', 'buddyboss' ) },
-								{ value: 'closed', label: __( 'Closed', 'buddyboss' ) },
-							] }
-							onChange={ setBulkEditStatus }
-							__nextHasNoMarginBottom
-						/>
-
-						<SelectControl
-							label={ __( 'Visibility', 'buddyboss' ) }
-							value={ bulkEditVisibility }
-							options={ [
-								{ value: 'no_change', label: __( '\u2014 No Change \u2014', 'buddyboss' ) },
-								{ value: 'publish', label: __( 'Public', 'buddyboss' ) },
-								{ value: 'private', label: __( 'Private', 'buddyboss' ) },
-								{ value: 'hidden', label: __( 'Hidden', 'buddyboss' ) },
-							] }
-							onChange={ setBulkEditVisibility }
-							__nextHasNoMarginBottom
-						/>
-					</div>
-					<div className="bb-forum-bulk-edit-modal__footer">
-						<Button
-							variant="secondary"
-							onClick={ function () {
-								setBulkEditOpen( false );
-							} }
-						>
-							{ __( 'Cancel', 'buddyboss' ) }
-						</Button>
-						<Button
-							variant="primary"
-							onClick={ handleConfirmBulkEdit }
-							disabled={ 'no_change' === bulkEditStatus && 'no_change' === bulkEditVisibility }
-						>
-							{ __( 'Save', 'buddyboss' ) }
-						</Button>
-					</div>
-				</Modal>
-			) }
-
-			{ /* Delete Forum Modal — single delete (no item list) or bulk delete (with item list) */ }
-			{ deleteModalOpen && (
-				<Modal
-					title={ deleteTargetIds.length > 1 ? __( 'Bulk Delete', 'buddyboss' ) : __( 'Delete forum?', 'buddyboss' ) }
-					onRequestClose={ function () {
-						setDeleteModalOpen( false );
-					} }
-					className="bb-forum-delete-modal bb-admin-settings-modal"
-					shouldCloseOnClickOutside={ false }
-				>
-					<div className="bb-forum-delete-modal__body">
-						{ /* Bulk: show item list with checkboxes */ }
-						{ deleteTargetIds.length > 1 && (
-							<div className="bb-admin-bulk-modal__selected-items">
-								{ deleteTargetForumNames.map( function ( item ) {
-									return (
-										<div key={ item.id } className="bb-admin-bulk-modal__selected-item">
-											<CheckboxControl
-												checked={ true }
-												onChange={ function () {
-													setDeleteTargetIds( function ( prev ) {
-														var next = prev.filter( function ( i ) { return i !== item.id; } );
-														if ( 0 === next.length ) {
-															setDeleteModalOpen( false );
-														}
-														return next;
-													} );
-													setSelectedIds( function ( prev ) {
-														return prev.filter( function ( i ) { return i !== item.id; } );
-													} );
-												} }
-												__nextHasNoMarginBottom
-											/>
-											<span className="bb-admin-bulk-modal__selected-item-name">
-												{ decodeEntities( item.title ) }
-											</span>
-										</div>
-									);
-								} ) }
-							</div>
-						) }
-						<div className="bb-admin-delete__warning">
-							<i className="bb-icons-rl bb-icons-rl-warning-circle"></i>
-							<div className="bb-admin-delete__warning-text">
-								<span className="bb-admin-delete__warning-title">
-									{ __( 'Warning', 'buddyboss' ) }
-								</span>
-								<span className="bb-admin-delete__warning-desc">
-									{ __( 'This permanently deletes forum from the community and cannot be undone.', 'buddyboss' ) }
-								</span>
-							</div>
-						</div>
-						<p className="bb-forum-delete-modal__description">
-							{ __( 'Deletes the forum and all associated discussions, replies, media, and related content from the community. This action cannot be undone.', 'buddyboss' ) }
-						</p>
-						<CheckboxControl
-							label={ __( 'I understand that this deletes the forum and its discussions.', 'buddyboss' ) }
-							checked={ deleteConfirmChecked }
-							onChange={ setDeleteConfirmChecked }
-							__nextHasNoMarginBottom
-						/>
-					</div>
-					<div className="bb-forum-delete-modal__footer">
-						<Button
-							variant="secondary"
-							onClick={ function () {
-								setDeleteModalOpen( false );
-							} }
-						>
-							{ __( 'Cancel', 'buddyboss' ) }
-						</Button>
-						<Button
-							variant="primary"
-							isDestructive
-							onClick={ handleConfirmDelete }
-							disabled={ ! deleteConfirmChecked }
-						>
-							{ __( 'Delete', 'buddyboss' ) }
-						</Button>
-					</div>
-				</Modal>
-			) }
+			{ /* Delete Forum Modal */ }
+			<DeleteConfirmModal
+				isOpen={ deleteModalOpen }
+				singleTitle={ __( 'Delete forum?', 'buddyboss' ) }
+				items={ deleteTargetForumNames }
+				onRemoveItem={ function ( id ) {
+					setDeleteTargetIds( function ( prev ) {
+						var next = prev.filter( function ( i ) { return i !== id; } );
+						if ( 0 === next.length ) {
+							setDeleteModalOpen( false );
+						}
+						return next;
+					} );
+					setSelectedIds( function ( prev ) {
+						return prev.filter( function ( i ) { return i !== id; } );
+					} );
+				} }
+				warningText={ __( 'This permanently deletes forum from the community and cannot be undone.', 'buddyboss' ) }
+				description={ __( 'Deletes the forum and all associated discussions, replies, media, and related content from the community. This action cannot be undone.', 'buddyboss' ) }
+				confirmLabel={ __( 'I understand that this deletes the forum and its discussions.', 'buddyboss' ) }
+				confirmChecked={ deleteConfirmChecked }
+				onConfirmChange={ setDeleteConfirmChecked }
+				onConfirm={ handleConfirmDelete }
+				onClose={ function () { setDeleteModalOpen( false ); } }
+				className="bb-forum-delete-modal"
+			/>
 
 			{ /* Edit Loading Overlay */ }
 			{ isEditLoading && (

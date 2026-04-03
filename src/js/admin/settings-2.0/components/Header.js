@@ -115,6 +115,7 @@ export function Header({ onNavigate }) {
 								value={searchQuery}
 								onChange={(e) => setSearchQuery(e.target.value)}
 								placeholder={__('Search for settings...', 'buddyboss')}
+								aria-label={__('Search for settings', 'buddyboss')}
 								className="bb-admin-header__search-input"
 							/>
 							<i className="bb-icon-search bb-admin-header__search-icon"></i>

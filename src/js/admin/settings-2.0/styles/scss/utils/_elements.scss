@@ -1,3 +1,259 @@
+/* Shared Pagination */
+.bb-admin-pagination {
+	@include bb-admin-pagination;
+}
+
+/* Shared Actions Toggle — reusable dropdown-menu toggle for list action cells */
+.bb-admin-actions-toggle {
+	text-align: center;
+
+	.components-dropdown-menu__toggle,
+	.components-button {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: none;
+		border: none;
+		cursor: pointer;
+		padding: 4px;
+		min-width: 32px;
+		width: 32px;
+		height: 32px;
+		color: $bb-icon-tertiary-color;
+		border-radius: $bb-border-radius-sm;
+
+		i {
+			color: $bb-icon-secondary-color;
+			font-size: 24px;
+			line-height: 1;
+			font-weight: 700;
+		}
+
+		&:hover,
+		&:focus,
+		&.is-pressed,
+		&.is-opened {
+			color: $bb-text-color;
+			background: $bb-background-primary-hover-color;
+			box-shadow: none;
+		}
+
+		.dashicon,
+		svg:not(:first-child) {
+			display: none;
+		}
+	}
+}
+
+/* Shared List Toolbar — reusable toolbar layout for list screens */
+.bb-admin-list-toolbar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	padding-bottom: 16px;
+	border-bottom: 1px solid $bb-border-secondary-color;
+	flex-wrap: wrap;
+
+	.components-select-control {
+		margin-bottom: 0;
+
+		.components-input-control__label {
+			color: $bb-text-secondary-color;
+			text-transform: none;
+			font-size: 13px;
+			font-weight: 500;
+		}
+
+		.components-select-control__input {
+			@include bb-admin-settings-select;
+			min-width: 135px;
+		}
+
+		.components-input-control-suffix-wrapper,
+		.components-input-control__backdrop {
+			display: none;
+		}
+	}
+
+	select {
+		@include bb-admin-settings-select;
+	}
+
+	&__left {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		flex-wrap: wrap;
+	}
+
+	&__right {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+	}
+}
+
+/* Shared List Search — reusable search input with icon for list screens */
+.bb-admin-list-search {
+	position: relative;
+	min-width: 224px;
+
+	input {
+		@include bb-input-text;
+		padding-right: 30px;
+	}
+
+	&:after {
+		content: "\e30c";
+		font-family: "bb-icons-rl";
+		font-size: 20px;
+		color: $bb-icon-tertiary-color;
+		position: absolute;
+		right: 8px;
+		top: 50%;
+		transform: translateY(-50%);
+		pointer-events: none;
+	}
+
+	&:has(.bb-admin-list-search__clear):after {
+		display: none;
+	}
+}
+
+.bb-admin-list-search__input {
+	width: 100%;
+	height: 32px;
+	border: 1px solid $bb-border-secondary-color;
+	border-radius: $bb-border-radius-md;
+	padding: 0 32px 0 8px;
+	font-size: 13px;
+	color: $bb-text-color;
+	background-color: $bb-background-base-color;
+	outline: none;
+
+	&::placeholder {
+		color: $bb-text-disabled-color;
+	}
+
+	&:focus {
+		border-color: $bb-border-brand-primary-color;
+	}
+}
+
+.bb-admin-list-search__icon {
+	position: absolute;
+	right: 8px;
+	top: 50%;
+	transform: translateY(-50%);
+	color: $bb-icon-tertiary-color;
+	font-size: 16px;
+	pointer-events: none;
+}
+
+.bb-admin-list-search__clear {
+	position: absolute;
+	right: 8px;
+	top: 50%;
+	transform: translateY(-50%);
+	background: none;
+	border: none;
+	cursor: pointer;
+	font-size: 18px;
+	color: $bb-icon-tertiary-color;
+	padding: 0;
+	line-height: 1;
+	z-index: 1;
+
+	&:hover {
+		color: $bb-text-color;
+	}
+}
+
+/* Shared List Table — reusable table structure for list screens */
+.bb-admin-list-table {
+	width: 100%;
+	border-collapse: collapse;
+
+	thead {
+		border-bottom: 0.5px solid $bb-border-secondary-color;
+	}
+
+	th {
+		padding: 10px 16px 10px 0;
+		font-size: 13px;
+		font-weight: 400;
+		color: $bb-text-tertiary-color;
+		text-align: left;
+		white-space: nowrap;
+
+		&:first-child {
+			padding: 10px 0 10px 4px;
+		}
+
+		&:last-child {
+			padding: 10px 4px 10px 0;
+		}
+	}
+
+	tbody tr {
+		border-bottom: 0.5px solid $bb-border-primary-color;
+	}
+
+	td {
+		padding: 16px 10px 16px 0;
+		font-size: 13px;
+		color: $bb-text-secondary-color;
+		vertical-align: middle;
+
+		&:first-child {
+			padding-left: 4px;
+		}
+
+		&:last-child {
+			padding-right: 4px;
+		}
+	}
+}
+
+.bb-admin-list-table__row {
+	transition: background-color 0.15s ease;
+
+	&--selected {
+		background-color: $bb-background-positive-primary-color;
+	}
+}
+
+.bb-admin-list-table__checkbox {
+	width: 30px;
+
+	.components-checkbox-control {
+		margin-bottom: 0;
+	}
+
+	.components-base-control__field {
+		margin-bottom: 0;
+	}
+
+	.components-checkbox-control__input-container {
+		margin: 0;
+	}
+}
+
+.bb-admin-list-table__loading {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 60px 0;
+}
+
+.bb-admin-list-table__empty {
+	padding: 40px;
+	text-align: center;
+	color: $bb-text-tertiary-color;
+	font-size: 14px;
+}
+
 /* Loading Spinner */
 .bb-admin-loading {
     display: flex;
@@ -679,12 +935,9 @@ select.bb-admin-settings__select {
 
         .components-base-control__label,
         .components-input-control__label.components-text {
+			@include bb-input-label;
             display: table;
-            color: $bb-text-secondary-color;
-            font-size: 13px;
-            font-weight: 500;
             margin-bottom: 10px;
-            text-transform: none;
         }
     }
 
@@ -949,7 +1202,7 @@ select.bb-admin-settings__select {
     &__selected-items {
         display: flex;
         flex-direction: column;
-        gap: 4px;
+        gap: 6px;
         margin-bottom: 16px;
         max-height: 125px;
         overflow: auto;
@@ -982,7 +1235,7 @@ select.bb-admin-settings__select {
         font-size: 14px;
         font-weight: 400;
         line-height: 20px;
-        color: $bb-link-color;
+        color: $bb-text-secondary-color;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;

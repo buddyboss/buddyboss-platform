@@ -599,17 +599,4 @@
 			margin-bottom: 0;
 		}
 	}
-
-	&__footer {
-		display: flex;
-		align-items: center;
-		justify-content: flex-end;
-		gap: 8px;
-		padding: 16px 24px;
-		border-top: 1px solid $bb-border-primary-color;
-		position: sticky;
-		bottom: 0;
-		background: #fff;
-		z-index: 1;
-	}
 }

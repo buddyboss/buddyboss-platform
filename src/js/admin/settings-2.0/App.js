@@ -6,6 +6,7 @@
  */
 
 import { useState, useEffect } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
 import { Header } from './components/Header';
 import { Router } from './Router';
 
@@ -44,6 +45,7 @@ function fixAdminMenuHighlight( route ) {
 		activity: [ 'all_activities' ],
 		members: [ 'profile_fields', 'profile_types', 'profile_search', 'profile_navigation' ],
 		forums: [ 'all_forums', 'discussions', 'discussion_tags', 'replies' ],
+		emails: [ 'all_emails' ],
 	};
 
 	var isListing = false;
@@ -295,8 +297,13 @@ export function App() {
 
 	return (
 		<div className="bb-admin-app">
+			<a href="#bb-admin-settings-main" className="screen-reader-shortcut">
+				{ __( 'Skip to settings content', 'buddyboss' ) }
+			</a>
 			<Header onNavigate={setCurrentRoute} />
-			<Router currentRoute={currentRoute} onNavigate={setCurrentRoute} />
+			<div id="bb-admin-settings-main" tabIndex="-1">
+				<Router currentRoute={currentRoute} onNavigate={setCurrentRoute} />
+			</div>
 		</div>
 	);
 }

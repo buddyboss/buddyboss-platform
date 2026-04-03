@@ -215,9 +215,9 @@ export function ActivityEditModal( { isOpen, activity, activityActions, onClose,
 			className="bb-activity-edit-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
 		>
-			<div className="bb-activity-edit-modal__body">
+			<div className="bb-activity-edit-modal__body bb-admin-settings-modal__body">
 				{ error && (
-					<p className="bb-activity-edit-modal__error">{ error }</p>
+					<p className="bb-activity-edit-modal__error" role="alert">{ error }</p>
 				) }
 
 				{ renderGroupedFields( groupedNormalFields ) }
