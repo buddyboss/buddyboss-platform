@@ -263,6 +263,75 @@ add_action(
 );
 
 // ──────────────────────────────────────────────────────────────────────────────
+// Registration Settings 2.0 deprecated hook compatibility.
+// Registration migrated to Settings 2.0 — legacy BP_Admin_Setting_Registration class removed.
+
+/**
+ * Fire the legacy `bb_admin_setting_general_registration_fields` hook after
+ * Settings 2.0 finishes registering registration fields.
+ *
+ * @since BuddyBoss 2.6.30
+ * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_registration_after_general_settings_fields'} instead.
+ */
+add_action(
+	'bb_registration_after_register_settings_fields',
+	static function () {
+		do_action_deprecated(
+			'bb_admin_setting_general_registration_fields',
+			array(
+				new class() {
+					public function add_section( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+					public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+				},
+			),
+			'BuddyBoss [BBVERSION]',
+			'bb_registration_after_general_settings_fields',
+			__( 'Registration fields are now registered via bb_register_feature_field() in Settings 2.0.', 'buddyboss' )
+		);
+	}
+);
+
+/**
+ * Fire the legacy `bp_admin_setting_registration_register_fields` hook after
+ * Settings 2.0 finishes registering registration fields.
+ *
+ * The original hook passed a `BP_Admin_Setting_Registration` instance. Settings 2.0
+ * no longer uses that class, so a no-op stub is passed to satisfy callbacks
+ * that call add_section()/add_field() on the argument.
+ *
+ * @since BuddyPress 1.6.0
+ * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_register_feature_field'} instead.
+ */
+add_action(
+	'bb_registration_after_register_settings_fields',
+	static function () {
+		do_action_deprecated(
+			'bp_admin_setting_registration_register_fields',
+			array(
+				// phpcs:ignore PHPCompatibility.Classes.NewAnonymousClasses.Found -- PHP 7.4+ required.
+				new class() {
+					/**
+					 * No-op stub for BP_Admin_Setting_tab::add_section().
+					 *
+					 * @param mixed ...$args Ignored.
+					 */
+					public function add_section( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+
+					/**
+					 * No-op stub for BP_Admin_Setting_tab::add_field().
+					 *
+					 * @param mixed ...$args Ignored.
+					 */
+					public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+				},
+			),
+			'BuddyBoss [BBVERSION]',
+			'bb_register_feature_field'
+		);
+	}
+);
+
+// ──────────────────────────────────────────────────────────────────────────────
 // Media Settings 2.0 deprecated hook compatibility.
 // Media is a "super-feature" wrapping bp-media (photos), bp-video, bp-document.
 // ──────────────────────────────────────────────────────────────────────────────
@@ -2379,3 +2448,130 @@ if ( ! function_exists( 'bp_core_get_emails_admin_tabs' ) ) {
 	}
 }
 
+/**
+ * Fire deprecated bp_admin_tab_setting_save/saved hooks for the legacy bp-registration tab.
+ *
+ * Follows the same pattern as `bb_advanced_fire_deprecated_save_hooks()`.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id Feature ID.
+ * @param array  $settings   Full submitted settings.
+ * @param array  $saved      Keys and values saved by core.
+ */
+function bb_registration_fire_deprecated_save_hooks( $feature_id, $settings, $saved ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+	if ( 'registration' !== $feature_id ) {
+		return;
+	}
+
+	/**
+	 * Fires when registration settings are saved (legacy bridge).
+	 *
+	 * @since      BuddyBoss 1.0.0
+	 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_admin_save_feature_settings_after'} with feature_id='registration'.
+	 *
+	 * @param string $tab_name Tab name.
+	 */
+	do_action_deprecated( 'bp_admin_tab_setting_save', array( 'bp-registration' ), 'BuddyBoss [BBVERSION]', 'bb_admin_save_feature_settings_after' );
+
+	/**
+	 * Fires after registration settings have been saved (legacy bridge).
+	 *
+	 * @since      BuddyBoss 1.0.0
+	 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_admin_save_feature_settings_after'} with feature_id='registration'.
+	 *
+	 * @param string $tab_name Tab name.
+	 */
+	do_action_deprecated( 'bp_admin_tab_setting_saved', array( 'bp-registration' ), 'BuddyBoss [BBVERSION]', 'bb_admin_save_feature_settings_after' );
+}
+add_action( 'bb_admin_save_feature_settings_after', 'bb_registration_fire_deprecated_save_hooks', 99, 3 );
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Registration Settings 2.0 deprecated render callbacks.
+// Legacy render callbacks were removed from bp-core-admin-settings.php.
+// Registration settings are now managed by Settings 2.0 (bb-admin-settings-registration.php).
+// ──────────────────────────────────────────────────────────────────────────────
+
+if ( ! function_exists( 'bp_admin_setting_callback_register' ) ) {
+	/**
+	 * Legacy render callback for the Enable Registration checkbox.
+	 *
+	 * @since BuddyPress 1.6.0
+	 * @deprecated BuddyBoss [BBVERSION] Registration settings are now managed by Settings 2.0.
+	 */
+	function bp_admin_setting_callback_register() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Registration feature (bb-admin-settings-registration.php)' );
+	}
+}
+
+if ( ! function_exists( 'bp_admin_setting_callback_register_show_confirm_email' ) ) {
+	/**
+	 * Legacy render callback for the Confirm Email checkbox.
+	 *
+	 * @since BuddyBoss 1.1.6
+	 * @deprecated BuddyBoss [BBVERSION] Registration settings are now managed by Settings 2.0.
+	 */
+	function bp_admin_setting_callback_register_show_confirm_email() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Registration feature (bb-admin-settings-registration.php)' );
+	}
+}
+
+if ( ! function_exists( 'bb_admin_setting_callback_register_show_legal_agreement' ) ) {
+	/**
+	 * Legacy render callback for the Legal Agreement checkbox.
+	 *
+	 * @since BuddyBoss 1.5.8.3
+	 * @deprecated BuddyBoss [BBVERSION] Registration settings are now managed by Settings 2.0.
+	 */
+	function bb_admin_setting_callback_register_show_legal_agreement() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Registration feature (bb-admin-settings-registration.php)' );
+	}
+}
+
+if ( ! function_exists( 'bp_admin_setting_callback_register_show_confirm_password' ) ) {
+	/**
+	 * Legacy render callback for the Confirm Password checkbox.
+	 *
+	 * @since BuddyBoss 1.1.6
+	 * @deprecated BuddyBoss [BBVERSION] Registration settings are now managed by Settings 2.0.
+	 */
+	function bp_admin_setting_callback_register_show_confirm_password() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Registration feature (bb-admin-settings-registration.php)' );
+	}
+}
+
+if ( ! function_exists( 'bp_admin_setting_callback_register_allow_custom_registration' ) ) {
+	/**
+	 * Legacy render callback for the Registration Form select.
+	 *
+	 * @since BuddyBoss 1.2.8
+	 * @deprecated BuddyBoss [BBVERSION] Registration settings are now managed by Settings 2.0.
+	 */
+	function bp_admin_setting_callback_register_allow_custom_registration() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Registration feature (bb-admin-settings-registration.php)' );
+	}
+}
+
+if ( ! function_exists( 'bp_admin_setting_callback_register_page_url' ) ) {
+	/**
+	 * Legacy render callback for the Custom Registration Page URL input.
+	 *
+	 * @since BuddyBoss 1.2.8
+	 * @deprecated BuddyBoss [BBVERSION] Registration settings are now managed by Settings 2.0.
+	 */
+	function bp_admin_setting_callback_register_page_url() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Registration feature (bb-admin-settings-registration.php)' );
+	}
+}
+
+if ( ! function_exists( 'bp_admin_registration_setting_tutorial' ) ) {
+	/**
+	 * Legacy tutorial link for the Registration settings section.
+	 *
+	 * @since BuddyBoss 1.2.8
+	 * @deprecated BuddyBoss [BBVERSION] Registration settings are now managed by Settings 2.0.
+	 */
+	function bp_admin_registration_setting_tutorial() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Registration feature (bb-admin-settings-registration.php)' );
+	}
+}

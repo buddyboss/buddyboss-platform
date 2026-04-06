@@ -122,6 +122,20 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 		};
 	}, [] );
 
+	// Listen for toast events from child components (e.g. ProfileTypeRedirectsField save).
+	useEffect( function() {
+		function handleToast( event ) {
+			var detail = event.detail;
+			if ( detail && detail.status ) {
+				setToast( { status: detail.status, message: detail.message || '' } );
+			}
+		}
+		window.addEventListener( BB_EVENTS.TOAST, handleToast );
+		return function() {
+			window.removeEventListener( BB_EVENTS.TOAST, handleToast );
+		};
+	}, [] );
+
 	// Load feature settings via AJAX - only when featureId changes
 	// Uses caching to prevent re-fetching on navigation within the same feature
 	// AbortController cancels stale requests when featureId changes rapidly
@@ -247,6 +261,31 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 		};
 	}, [featureId]);
 
+	/**
+	 * Update properties on specific fields across all side panels.
+	 *
+	 * @param {Array}  fieldNames Array of field name strings to match.
+	 * @param {Object} props      Properties to merge into matched fields.
+	 */
+	function updateFieldProps( fieldNames, props ) {
+		setSidePanels( function( prevPanels ) {
+			return prevPanels.map( function( panel ) {
+				return Object.assign( {}, panel, {
+					sections: ( panel.sections || [] ).map( function( section ) {
+						return Object.assign( {}, section, {
+							fields: ( section.fields || [] ).map( function( field ) {
+								if ( -1 !== fieldNames.indexOf( field.name ) ) {
+									return Object.assign( {}, field, props );
+								}
+								return field;
+							} ),
+						} );
+					} ),
+				} );
+			} );
+		} );
+	}
+
 	// Listen for field value updates dispatched by InputButtonField (e.g. after credential save).
 	// Updates settings and side panel field defaults so notice fields reflect new connection status.
 	useEffect( function() {
@@ -296,6 +335,25 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 		window.addEventListener( BB_EVENTS.FIELD_VALUE_UPDATE, handleFieldValueUpdate );
 		return function() {
 			window.removeEventListener( BB_EVENTS.FIELD_VALUE_UPDATE, handleFieldValueUpdate );
+		};
+	}, [] );
+
+	// Listen for field disabled state updates (e.g., SSO provider toggle disables additional data fields).
+	useEffect( function() {
+		function handleFieldDisabledUpdate( e ) {
+			var fieldNames = e.detail && e.detail.fields;
+			var isDisabled = !! ( e.detail && e.detail.disabled );
+
+			if ( ! fieldNames || ! Array.isArray( fieldNames ) ) {
+				return;
+			}
+
+			updateFieldProps( fieldNames, { disabled: isDisabled } );
+		}
+
+		window.addEventListener( BB_EVENTS.FIELD_DISABLED_UPDATE, handleFieldDisabledUpdate );
+		return function() {
+			window.removeEventListener( BB_EVENTS.FIELD_DISABLED_UPDATE, handleFieldDisabledUpdate );
 		};
 	}, [] );
 

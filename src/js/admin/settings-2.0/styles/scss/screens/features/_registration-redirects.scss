@@ -1,0 +1,154 @@
+/**
+ * BuddyBoss Admin Settings 2.0 - Login Redirects
+ *
+ * @package BuddyBoss\Core\Administration
+ * @since BuddyBoss [BBVERSION]
+ */
+
+// Global Redirects section — constrain fields to match Figma.
+#section-global_redirects {
+
+	.bb-async-select {
+		max-width: 300px;
+	}
+
+	// Custom URL input (grouped no-label field below dropdown).
+	.bb-admin-settings-form__field--grouped.bb-admin-settings-form__field--no-label {
+
+		.bb-admin-settings-form__field-input-wrapper input[type="text"] {
+			max-width: 300px;
+		}
+	}
+}
+
+#section-global_redirects,
+#section-profile_type_redirects {
+
+	.bb-async-select__input-wrapper {
+		position: relative;
+
+		> input {
+			background: $bb-background-primary-color url(data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2211%22%20height%3D%226%22%20viewBox%3D%220%200%2011%206%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M10.854%200.854028L5.85403%205.85403C5.80759%205.90052%205.75245%205.9374%205.69175%205.96256C5.63105%205.98772%205.56599%206.00067%205.50028%206.00067C5.43457%206.00067%205.36951%205.98772%205.30881%205.96256C5.24811%205.9374%205.19296%205.90052%205.14653%205.85403L0.146528%200.854028C0.0527077%200.760208%200%200.63296%200%200.500278C0%200.367596%200.0527077%200.240348%200.146528%200.146528C0.240348%200.0527074%200.367596%200%200.500278%200C0.63296%200%200.760208%200.0527074%200.854028%200.146528L5.50028%204.7934L10.1465%200.146528C10.193%200.100073%2010.2481%200.0632225%2010.3088%200.0380812C10.3695%200.0129398%2010.4346%200%2010.5003%200C10.566%200%2010.631%200.0129398%2010.6917%200.0380812C10.7524%200.0632225%2010.8076%200.100073%2010.854%200.146528C10.9005%200.192983%2010.9373%200.248133%2010.9625%200.30883C10.9876%200.369526%2011.0006%200.434581%2011.0006%200.500278C11.0006%200.565975%2010.9876%200.63103%2010.9625%200.691726C10.9373%200.752423%2010.9005%200.807573%2010.854%200.854028Z%22%20fill%3D%22%23666666%22%2F%3E%3C%2Fsvg%3E) no-repeat right 8px center;
+		}
+	}
+}
+
+// Profile Type Redirects — paginated list with per-type login/logout dropdowns.
+.bb-profile-type-redirects {
+	width: 100%;
+
+	&__loading {
+		display: flex;
+		justify-content: center;
+		padding: 24px 0;
+		width: 100%;
+	}
+
+	&__empty {
+		color: $bb-text-tertiary-color;
+		font-size: 13px;
+		padding: 16px 0;
+	}
+
+	&__row {
+		display: flex;
+		gap: 24px;
+		padding: 24px 0;
+		border-bottom: 1px solid $bb-border-secondary-color;
+
+		&:last-child {
+			border-bottom: none;
+		}
+
+		&--saving {
+			opacity: 0.6;
+			pointer-events: none;
+		}
+	}
+
+	&__type {
+		flex: 0 0 200px;
+		display: flex;
+		align-items: flex-start;
+		padding-top: 28px;
+	}
+
+	&__badge {
+		display: inline-block;
+		padding: 4px 12px;
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 18px;
+		color: $bb-text-color;
+		background-color: $bb-background-secondary-color;
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-full;
+	}
+
+	&__fields {
+		flex: 1;
+		display: flex;
+		gap: 24px;
+	}
+
+	&__field {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+	}
+
+	&__field-label {
+		font-size: 13px;
+		font-weight: 500;
+		color: $bb-text-secondary-color;
+	}
+
+	// Pagination — right-aligned, minimal style matching Figma.
+	&__pagination {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 4px;
+		padding: 16px 0 0;
+	}
+
+	&__page-btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 32px;
+		height: 32px;
+		padding: 0 8px;
+		background: none;
+		border: 1px solid transparent;
+		border-radius: $bb-border-radius-md;
+		font-size: 13px;
+		color: $bb-text-color;
+		cursor: pointer;
+
+		&:hover:not(:disabled) {
+			border-color: $bb-border-secondary-color;
+		}
+
+		&:disabled {
+			color: $bb-text-disabled-color;
+			cursor: default;
+		}
+
+		&--active {
+			border-color: $bb-border-secondary-color;
+			font-weight: 600;
+		}
+	}
+
+	&__page-ellipsis {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 24px;
+		height: 32px;
+		font-size: 13px;
+		color: $bb-text-tertiary-color;
+	}
+}

@@ -161,14 +161,6 @@ export function ForumsListScreen( { onNavigate } ) {
 	var createFields = createFieldsState[ 0 ];
 	var setCreateFields = createFieldsState[ 1 ];
 
-	var bulkActionState = useState( '' );
-	var bulkAction = bulkActionState[ 0 ];
-	var setBulkAction = bulkActionState[ 1 ];
-
-	var noticeState = useState( null );
-	var notice = noticeState[ 0 ];
-	var setNotice = noticeState[ 1 ];
-
 	var deleteModalState = useState( false );
 	var deleteModalOpen = deleteModalState[ 0 ];
 	var setDeleteModalOpen = deleteModalState[ 1 ];

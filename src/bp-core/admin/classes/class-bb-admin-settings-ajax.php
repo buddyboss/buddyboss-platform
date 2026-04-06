@@ -49,6 +49,7 @@ class BB_Admin_Settings_Ajax {
 		add_action( 'wp_ajax_bb_admin_save_feature_settings', array( $this, 'bb_admin_save_feature_settings' ) );
 
 		add_action( 'wp_ajax_bb_admin_search_settings', array( $this, 'bb_admin_search_settings' ) );
+		add_action( 'wp_ajax_bb_admin_search_published_pages', array( $this, 'bb_admin_search_published_pages' ) );
 
 		add_action( 'bb_admin_save_feature_settings_after', array( $this, 'bb_invalidate_search_index_after_save' ), 10, 3 );
 	}
@@ -81,8 +82,11 @@ class BB_Admin_Settings_Ajax {
 				}
 
 				// Determine active status.
-				// Priority: 1) bb-active-features, 2) bp-active-components (migration fallback).
-				if ( isset( $active_features[ $feature_id ] ) ) {
+				// Priority: 1) is_active_callback (for features with custom logic),
+				// 2) bb-active-features, 3) bp-active-components (migration fallback).
+				if ( ! is_null( $feature['is_active_callback'] ) ) {
+					$is_active = (bool) call_user_func( $feature['is_active_callback'] );
+				} elseif ( isset( $active_features[ $feature_id ] ) ) {
 					$is_active = ! empty( $active_features[ $feature_id ] );
 				} elseif ( isset( $active_components[ $feature_id ] ) ) {
 					// Migration fallback: use legacy component status.
@@ -667,6 +671,8 @@ class BB_Admin_Settings_Ajax {
 				'maxlength'            => $field['maxlength'] ?? null,
 				// Status check fields (AJAX-triggered server-side checks, e.g. Direct Access).
 				'ajax_action'          => ! empty( $field['ajax_action'] ) ? sanitize_key( $field['ajax_action'] ) : null,
+				// Async select fields (searchable server-side select with AJAX loading).
+				'async_action'         => ! empty( $field['async_action'] ) ? sanitize_key( $field['async_action'] ) : null,
 				'watch_field'          => $field['watch_field'] ?? null,
 				// Layout: full-width fields render without the label column.
 				'full_width'           => ! empty( $field['full_width'] ),
@@ -674,6 +680,8 @@ class BB_Admin_Settings_Ajax {
 				'child_group_label'    => $field['child_group_label'] ?? null,
 				// When true, saving this field triggers a full feature refetch to update side panels.
 				'refresh_panels'       => ! empty( $field['refresh_panels'] ),
+				// SSO providers array (for sso_providers field type).
+				'providers'            => ! empty( $field['providers'] ) && is_array( $field['providers'] ) ? $field['providers'] : null,
 			);
 
 			// access_control: populate access-control data via filter so Pro can inject types/options.
@@ -1594,6 +1602,90 @@ class BB_Admin_Settings_Ajax {
 			}
 		}
 		return $toggle_values;
+	}
+
+	/**
+	 * AJAX handler: search published pages for async_select fields.
+	 *
+	 * Returns paginated {value, label} results with optional search term.
+	 * Includes "Default" and "Custom URL" as the first two options.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_admin_search_published_pages() {
+		$this->bb_verify_request();
+
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_verify_request().
+		$term        = isset( $_POST['term'] ) ? sanitize_text_field( wp_unslash( $_POST['term'] ) ) : '';
+		$page        = isset( $_POST['page'] ) ? absint( $_POST['page'] ) : 1;
+		$selected_id = isset( $_POST['selected_id'] ) ? sanitize_text_field( wp_unslash( $_POST['selected_id'] ) ) : '';
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
+
+		$per_page = 20;
+
+		// Build full options list: Default + Custom URL + published pages.
+		$all_options = array(
+			array(
+				'value' => '',
+				'label' => __( 'Default', 'buddyboss' ),
+			),
+			array(
+				'value' => '0',
+				'label' => __( 'Custom URL', 'buddyboss' ),
+			),
+		);
+
+		if ( function_exists( 'bb_get_published_pages' ) ) {
+			$published = bb_get_published_pages( true );
+			if ( ! empty( $published ) ) {
+				$all_options = array_merge( $all_options, $published );
+			}
+		}
+
+		// If resolving a selected ID, return just that item.
+		if ( '' !== $selected_id ) {
+			foreach ( $all_options as $opt ) {
+				if ( (string) $opt['value'] === (string) $selected_id ) {
+					wp_send_json_success(
+						array(
+							'results'  => array( $opt ),
+							'has_more' => false,
+						)
+					);
+				}
+			}
+			// Fallback: return Default if not found.
+			wp_send_json_success(
+				array(
+					'results'  => array( $all_options[0] ),
+					'has_more' => false,
+				)
+			);
+		}
+
+		// Filter by search term.
+		if ( '' !== $term ) {
+			$term_lower  = strtolower( $term );
+			$all_options = array_filter(
+				$all_options,
+				function ( $opt ) use ( $term_lower ) {
+					return false !== strpos( strtolower( $opt['label'] ), $term_lower );
+				}
+			);
+			$all_options = array_values( $all_options );
+		}
+
+		// Paginate.
+		$total  = count( $all_options );
+		$offset = ( $page - 1 ) * $per_page;
+		$paged  = array_slice( $all_options, $offset, $per_page );
+
+		wp_send_json_success(
+			array(
+				'results'  => $paged,
+				'has_more' => ( $offset + $per_page ) < $total,
+			)
+		);
 	}
 }
 

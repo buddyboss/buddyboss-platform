@@ -5,7 +5,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useMemo } from '@wordpress/element';
+import { useState, useMemo, useEffect, useRef } from '@wordpress/element';
 import {
 	ToggleControl,
 	TextControl,
@@ -28,6 +28,8 @@ import { decodeEntities } from '@wordpress/html-entities';
 import { sanitizeHtml, safeUrl } from '../utils/sanitize';
 import { TopicListField } from './activity/topics/topic-list';
 import { SharePlatformsField } from './activity/sharing';
+import { SsoProvidersField } from './fields/SsoProvidersField';
+import { ProfileTypeRedirectsField } from './fields/ProfileTypeRedirectsField';
 import { AccessControlField } from './access-control/AccessControlField';
 import { NotificationTypesField } from './notifications';
 import { CheckboxListField } from './fields/CheckboxListField';
@@ -38,6 +40,8 @@ import { AsyncSelectField } from './fields/AsyncSelectField';
 import { ExtensionListField } from './fields/ExtensionListField';
 import { DocumentExtensionsField } from './fields/DocumentExtensionsField';
 import { InputButtonField } from './fields/InputButtonField';
+import { DomainRestrictionsField } from './fields/DomainRestrictionsField';
+import { EmailRestrictionsField } from './fields/EmailRestrictionsField';
 import { PasswordField } from './fields/PasswordField';
 import { StatusCheckField } from './fields/StatusCheckField';
 import { ImageUploadField } from './fields/ImageUploadField';
@@ -327,6 +331,23 @@ export function SettingsForm({ fields, values, onChange }) {
 					/>
 				);
 
+			case 'sso_providers':
+				// SSO provider cards (Google, Facebook, X, LinkedIn, Apple).
+				return (
+					<SsoProvidersField
+						field={field}
+						value={value}
+						onChange={onChange}
+						disabled={disabled}
+					/>
+				);
+
+			case 'profile_type_redirects':
+				// Profile type redirect list with per-type login/logout dropdowns.
+				return (
+					<ProfileTypeRedirectsField />
+				);
+
 			case 'input_button':
 				return (
 					<InputButtonField
@@ -416,7 +437,7 @@ export function SettingsForm({ fields, values, onChange }) {
 					<SelectControl
 						key={field.name}
 						label=""
-						value={value || ''}
+						value={value != null ? String(value) : ''}
 						options={field.options || []}
 						onChange={(newValue) => onChange(field.name, newValue)}
 						disabled={disabled}
@@ -428,7 +449,7 @@ export function SettingsForm({ fields, values, onChange }) {
 				return (
 					<AsyncSelectField
 						key={field.name}
-						value={value || '0'}
+						value={value != null ? String(value) : ''}
 						onChange={(newValue) => onChange(field.name, newValue)}
 						asyncAction={field.async_action || ''}
 						placeholder={field.placeholder || ''}
@@ -436,16 +457,50 @@ export function SettingsForm({ fields, values, onChange }) {
 					/>
 				);
 
-			case 'radio':
+			case 'radio': {
+				var radioOptions = field.options || [];
+				var disabledOptionValues = radioOptions
+					.filter( function ( opt ) { return !! opt.disabled; } )
+					.map( function ( opt ) { return String( opt.value ); } );
+
 				return (
-					<RadioControl
-						key={field.name}
-						label=""
-						selected={value || ''}
-						options={field.options || []}
-						onChange={(newValue) => onChange(field.name, newValue)}
-					/>
+					<div key={field.name} ref={ function ( el ) {
+						if ( ! el ) {
+							return;
+						}
+						// Reset all options first, then disable specific ones.
+						el.querySelectorAll( 'input[type="radio"]' ).forEach( function ( input ) {
+							var optionWrap = input.closest( '.components-radio-control__option' );
+							if ( disabledOptionValues.length && -1 !== disabledOptionValues.indexOf( input.value ) ) {
+								input.disabled = true;
+								if ( optionWrap ) {
+									optionWrap.style.opacity = '0.5';
+									optionWrap.style.pointerEvents = 'none';
+								}
+							} else {
+								input.disabled = false;
+								if ( optionWrap ) {
+									optionWrap.style.opacity = '';
+									optionWrap.style.pointerEvents = '';
+								}
+							}
+						} );
+					} }>
+						<RadioControl
+							label=""
+							selected={value != null ? String(value) : ''}
+							options={radioOptions}
+							onChange={ function ( newValue ) {
+								if ( disabledOptionValues.length && -1 !== disabledOptionValues.indexOf( newValue ) ) {
+									return;
+								}
+								onChange( field.name, newValue );
+							} }
+							disabled={disabled}
+						/>
+					</div>
 				);
+			}
 
 			case 'number':
 				return (
@@ -768,6 +823,26 @@ export function SettingsForm({ fields, values, onChange }) {
 					/>
 				);
 
+			case 'domain_restrictions':
+				return (
+					<DomainRestrictionsField
+						field={field}
+						value={value}
+						onChange={onChange}
+						disabled={disabled}
+					/>
+				);
+
+			case 'email_restrictions':
+				return (
+					<EmailRestrictionsField
+						field={field}
+						value={value}
+						onChange={onChange}
+						disabled={disabled}
+					/>
+				);
+
 			default:
 				return (
 					<p className="bb-admin-settings-field__unsupported">
@@ -973,6 +1048,7 @@ export function SettingsForm({ fields, values, onChange }) {
 			disabled ? 'bb-admin-settings-form__field--disabled' : '',
 			isToggleWithChildren ? 'bb-admin-settings-form__field--has-children' : '',
 			field.group?.key ? 'bb-admin-settings-form__field--grouped' : '',
+			field.group?.key && groupLastNames[ field.group.key ] === field.name ? 'bb-admin-settings-form__field--group-last' : '',
 		].filter(Boolean).join(' ');
 
 		const hasLabel = field.label && field.label.trim() !== '';
@@ -1139,8 +1215,22 @@ export function SettingsForm({ fields, values, onChange }) {
 		);
 	};
 
-	// Filter out child fields from top level (they'll be rendered inside their parents)
+	// Filter out child fields from top level (they'll be rendered inside their parents).
 	const topLevelFields = fields.filter(field => !field.parent_field);
+
+	// Compute which fields are the last visible field in their group (for CSS border).
+	// Re-computed on every render since conditional visibility depends on current values.
+	const groupLastNames = useMemo( function () {
+		var visible = topLevelFields.filter( isFieldVisible );
+		var lastMap = {};
+		for ( var gi = visible.length - 1; gi >= 0; gi-- ) {
+			var gf = visible[ gi ];
+			if ( gf.group?.key && ! lastMap[ gf.group.key ] ) {
+				lastMap[ gf.group.key ] = gf.name;
+			}
+		}
+		return lastMap;
+	}, [ topLevelFields, values ] ); // eslint-disable-line react-hooks/exhaustive-deps
 
 	return (
 		<>

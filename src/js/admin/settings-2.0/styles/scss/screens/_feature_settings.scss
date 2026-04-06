@@ -454,20 +454,45 @@
     }
 
     // Grouped fields: remove border/spacing between consecutive fields in same group.
+    // But keep spacing after --group-last (boundary between different groups).
     &--grouped + &--grouped[data-group] {
         margin-top: 0;
         padding-top: 0;
+    }
+
+    &--group-last + &--grouped[data-group] {
+        margin-top: 0;
+        padding-top: 24px;
+    }
+
+    // Grouped no-label fields (e.g., Custom URL below dropdown): full-width input.
+    &--grouped#{&}--no-label {
+        .bb-admin-settings-form__field-input-wrapper {
+            display: block;
+
+            input[type="text"],
+            input[type="url"] {
+                width: 100%;
+            }
+        }
     }
 
     &--grouped:not(.bb-admin-settings-form__field--full-width) {
         border-bottom: none;
         padding-bottom: 12px;
 
-        // Last field in a group restores the bottom border.
+        // Last visible field in a group restores the bottom border.
+        &.bb-admin-settings-form__field--group-last,
         &:has(+ :not([data-group])),
         &:has(+ .bb-admin-settings-form__field:not(.bb-admin-settings-form__field--grouped)) {
             border-bottom: 1px solid $bb-border-secondary-color;
             padding-bottom: 24px;
+        }
+
+        // Last field in the section — no bottom border needed.
+        &:last-child {
+            border-bottom: none;
+            padding-bottom: 12px;
         }
     }
 

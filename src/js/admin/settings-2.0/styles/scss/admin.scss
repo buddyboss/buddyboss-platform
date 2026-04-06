@@ -339,5 +339,14 @@
 /* Notification Types */
 @import 'screens/features/notification-types';
 
+/* Registration Restrictions */
+@import 'screens/features/registration-restrictions';
+
+/* Registration SSO Providers */
+@import 'screens/features/registration-sso';
+
+/* Registration Profile Type Redirects */
+@import 'screens/features/registration-redirects';
+
 /* Help Modal */
 @import 'utils/help-modal';
