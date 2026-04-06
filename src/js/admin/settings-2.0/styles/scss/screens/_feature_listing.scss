@@ -13,6 +13,7 @@
 		margin: 24px 0;
 		align-items: center;
 		justify-content: space-between;
+		flex-wrap: wrap;
 		padding: 0 0 24px 0;
 		border-bottom: 1px solid $bb-border-primary-color;
 	}
@@ -110,15 +111,15 @@
 		gap: 16px;
 		justify-content: start;
 
-		@media (max-width: 1400px) {
+		@media (max-width: 1590px) {
 			grid-template-columns: repeat(3, 328px);
 		}
 
-		@media (max-width: 1100px) {
+		@media (max-width: 1250px) {
 			grid-template-columns: repeat(2, 328px);
 		}
 
-		@media (max-width: 700px) {
+		@media (max-width: 740px) {
 			grid-template-columns: 1fr;
 		}
 	}
