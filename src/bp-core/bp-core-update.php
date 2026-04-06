@@ -4210,6 +4210,11 @@ add_action( 'bb_feature_activated', 'bb_on_media_feature_activated' );
  */
 function bb_migrate_email_type_groups() {
 
+	// One-time migration guard — skip if already completed.
+	if ( bp_get_option( 'bb_email_type_groups_migrated' ) ) {
+		return;
+	}
+
 	$taxonomy = function_exists( 'bp_get_email_tax_type' ) ? bp_get_email_tax_type() : 'bp_email_type';
 	$terms    = get_terms(
 		array(
@@ -4297,4 +4302,7 @@ function bb_migrate_email_type_groups() {
 			}
 		}
 	}
+
+	// Mark migration as completed so it doesn't run again.
+	bp_update_option( 'bb_email_type_groups_migrated', true );
 }

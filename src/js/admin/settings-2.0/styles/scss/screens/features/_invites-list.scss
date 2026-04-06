@@ -79,14 +79,6 @@
 		}
 	}
 
-	// Table row spacing — match Figma's spacious rows.
-	&__table {
-		td {
-			padding-top: 16px;
-			padding-bottom: 16px;
-		}
-	}
-
 	&__th--sender[class] {
 		color: $bb-text-color;
 		font-size: 14px;

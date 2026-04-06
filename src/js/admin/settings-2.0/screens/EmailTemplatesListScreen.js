@@ -25,6 +25,8 @@ import { getEmailTemplates, emailTemplateBulkAction } from '../utils/ajax';
 import { sanitizeHtml, safeUrl } from '../utils/sanitize';
 import { ListPagination } from '../components/common/ListPagination';
 import { Toast } from '../components/Toast';
+import { useListScreenState } from '../hooks/useListScreenState';
+import { useListScreenHandlers } from '../hooks/useListScreenHandlers';
 import { EmailTemplateModal } from '../components/emails/EmailTemplateModal';
 import { EmailTemplateBulkEditModal } from '../components/emails/EmailTemplateBulkEditModal';
 import { EmailTemplateBulkDeleteModal } from '../components/emails/EmailTemplateBulkDeleteModal';
@@ -72,6 +74,22 @@ var CORE_COLUMNS = [ 'title', 'description', 'date' ];
  * @returns {JSX.Element} The email templates list screen.
  */
 export default function EmailTemplatesListScreen( props ) {
+	// Common list screen state (loading, notice, selection, bulk, search).
+	var common = useListScreenState();
+	var isLoading = common.isLoading;
+	var setIsLoading = common.setIsLoading;
+	var selectedIds = common.selectedIds;
+	var setSelectedIds = common.setSelectedIds;
+	var bulkAction = common.bulkAction;
+	var setBulkAction = common.setBulkAction;
+	var bulkProcessing = common.isBulkProcessing;
+	var setBulkProcessing = common.setIsBulkProcessing;
+	var searchInput = common.searchInput;
+	var setSearchInput = common.setSearchInput;
+	var search = common.searchQuery;
+	var setSearch = common.setSearchQuery;
+
+	// Screen-specific state.
 	var stateItems = useState( [] );
 	var items = stateItems[0];
 	var setItems = stateItems[1];
@@ -92,14 +110,6 @@ export default function EmailTemplatesListScreen( props ) {
 	var sort = stateSort[0];
 	var setSort = stateSort[1];
 
-	var stateSearch = useState( '' );
-	var search = stateSearch[0];
-	var setSearch = stateSearch[1];
-
-	var stateSearchInput = useState( '' );
-	var searchInput = stateSearchInput[0];
-	var setSearchInput = stateSearchInput[1];
-
 	var stateFilter = useState( 'all' );
 	var filter = stateFilter[0];
 	var setFilter = stateFilter[1];
@@ -112,10 +122,6 @@ export default function EmailTemplatesListScreen( props ) {
 	var views = stateViews[0];
 	var setViews = stateViews[1];
 
-	var stateIsLoading = useState( true );
-	var isLoading = stateIsLoading[0];
-	var setIsLoading = stateIsLoading[1];
-
 	var stateBulkActions = useState( {} );
 	var bulkActions = stateBulkActions[0];
 	var setBulkActions = stateBulkActions[1];
@@ -123,18 +129,6 @@ export default function EmailTemplatesListScreen( props ) {
 	var stateColumns = useState( {} );
 	var columns = stateColumns[0];
 	var setColumns = stateColumns[1];
-
-	var stateSelectedIds = useState( [] );
-	var selectedIds = stateSelectedIds[0];
-	var setSelectedIds = stateSelectedIds[1];
-
-	var stateBulkAction = useState( '' );
-	var bulkAction = stateBulkAction[0];
-	var setBulkAction = stateBulkAction[1];
-
-	var stateBulkProcessing = useState( false );
-	var bulkProcessing = stateBulkProcessing[0];
-	var setBulkProcessing = stateBulkProcessing[1];
 
 	var stateToast = useState( null );
 	var toast = stateToast[0];
@@ -184,8 +178,21 @@ export default function EmailTemplatesListScreen( props ) {
 	var setMissingModalOpen = stateMissingModalOpen[1];
 
 	var abortRef = useRef( null );
-	var searchTimerRef = useRef( null );
 	var isFirstLoad = useRef( true );
+
+	// Common list screen handlers (select all, select row, search timer cleanup).
+	var handlers = useListScreenHandlers( {
+		setSearchInput: setSearchInput,
+		setSearchQuery: setSearch,
+		setPage: setPage,
+		setSelectedIds: setSelectedIds,
+		setSort: setSort,
+		setFilter: setFilter,
+		getItemIds: function () {
+			return items.map( function ( item ) { return item.id; } );
+		},
+	} );
+	var searchTimerRef = handlers.searchTimerRef;
 
 	/**
 	 * Fetch email templates from the server.
@@ -367,44 +374,10 @@ export default function EmailTemplatesListScreen( props ) {
 		fetchTemplates( { fetchPage: newPage, fetchSort: sort, fetchSearch: search } );
 	}, [ sort, search, fetchTemplates ] );
 
-	/**
-	 * Toggle individual item selection.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {number} id Item ID.
-	 */
-	var handleToggleSelect = useCallback( function( id ) {
-		setSelectedIds( function( prev ) {
-			var idx = prev.indexOf( id );
-			if ( -1 === idx ) {
-				return prev.concat( [ id ] );
-			}
-			return prev.filter( function( i ) {
-				return i !== id;
-			} );
-		} );
-	}, [] );
-
-	/**
-	 * Toggle select all items on current page.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	var handleSelectAll = useCallback( function() {
-		var allIds = items.map( function( item ) {
-			return item.id;
-		} );
-		var allSelected = allIds.length > 0 && allIds.every( function( id ) {
-			return -1 !== selectedIds.indexOf( id );
-		} );
-
-		if ( allSelected ) {
-			setSelectedIds( [] );
-		} else {
-			setSelectedIds( allIds );
-		}
-	}, [ items, selectedIds ] );
+	// Use shared select handlers from useListScreenHandlers.
+	var handleToggleSelect = function( id ) {
+		handlers.handleSelectRow( id, -1 === selectedIds.indexOf( id ) );
+	};
 
 	/**
 	 * Handle bulk action apply.
@@ -606,7 +579,7 @@ export default function EmailTemplatesListScreen( props ) {
 								<th className="bb-email-templates-list__th--checkbox bb-admin-list-table__checkbox">
 									<CheckboxControl
 										checked={ allSelected }
-										onChange={ handleSelectAll }
+										onChange={ handlers.handleSelectAll }
 										__nextHasNoMarginBottom
 									/>
 								</th>
