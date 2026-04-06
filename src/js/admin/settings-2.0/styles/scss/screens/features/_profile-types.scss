@@ -144,9 +144,8 @@
 		display: flex;
 		align-items: center;
 		gap: 8px;
-		width: 264px;
+		min-width: 22%;
 		flex-shrink: 0;
-		min-width: 0;
 	}
 
 	&__list-item-label-col {
@@ -158,12 +157,12 @@
 		display: flex;
 		align-items: center;
 		gap: 8px;
-		width: 152px;
+		min-width: 15%;
 		flex-shrink: 0;
 	}
 
 	&__list-item-visibility-col {
-		width: 152px;
+		min-width: 20%;
 		flex-shrink: 0;
 	}
 

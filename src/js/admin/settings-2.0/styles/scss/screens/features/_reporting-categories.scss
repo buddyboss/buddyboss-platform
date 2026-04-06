@@ -10,6 +10,7 @@
 	margin: 0 auto;
 	width: 100%;
 	padding: 32px;
+	box-sizing: border-box;
 
 	/* Section header override — match Figma 64px total height (border-box). */
 	.bb-admin-feature-settings__section-header {
@@ -85,21 +86,18 @@
 
 	/* Column layout */
 	&__list-item-name-col {
-		width: 264px;
+		min-width: 24%;
 		flex-shrink: 0;
-		min-width: 0;
 	}
 
 	&__list-item-desc-col {
-		width: 200px;
+		min-width: 48%;
 		flex-shrink: 0;
-		min-width: 0;
 	}
 
 	&__list-item-show-when-col {
-		width: 152px;
+		min-width: 15%;
 		flex-shrink: 0;
-		min-width: 0;
 	}
 
 	&__list-item-actions-col {
