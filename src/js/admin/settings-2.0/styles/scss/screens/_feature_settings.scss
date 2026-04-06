@@ -266,6 +266,20 @@
             pointer-events: none;
         }
     }
+
+    @media screen and (max-width: 1250px) {
+
+        &__container {
+            flex-wrap: wrap;
+        }
+
+        &__sidebar {
+            width: calc(100% - 64px);
+            margin: 0 32px;
+            border: 1px solid $bb-border-secondary-color;
+            border-radius: $bb-border-radius-2xl;
+        }
+    }
 }
 
 .bb-admin-settings-form__field {
@@ -744,6 +758,20 @@
             max-width: 275px;
         }
 	}
+
+    @media screen and (max-width: 1250px) {
+
+         &-label {
+            width: 195px;
+         }
+
+         &--no-label {
+
+            .bb-admin-settings-form__field-content {
+                margin-left: 227px;
+            }
+        }
+    }
 }
 
 .bb-admin-settings-field__toggle-list {
