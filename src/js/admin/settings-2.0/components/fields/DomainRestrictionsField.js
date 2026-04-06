@@ -54,10 +54,10 @@ export function DomainRestrictionsField( { field, value, onChange, disabled } ) 
 	var lastSentValueRef = useRef( null );
 
 	function assignKey( row ) {
-		if ( ! row._key ) {
-			row._key = 'dr-' + ( ++keyCounterRef.current );
+		if ( row._key ) {
+			return row;
 		}
-		return row;
+		return Object.assign( {}, row, { _key: 'dr-' + ( ++keyCounterRef.current ) } );
 	}
 
 	/**

@@ -2485,3 +2485,93 @@ function bb_registration_fire_deprecated_save_hooks( $feature_id, $settings, $sa
 	do_action_deprecated( 'bp_admin_tab_setting_saved', array( 'bp-registration' ), 'BuddyBoss [BBVERSION]', 'bb_admin_save_feature_settings_after' );
 }
 add_action( 'bb_admin_save_feature_settings_after', 'bb_registration_fire_deprecated_save_hooks', 99, 3 );
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Registration Settings 2.0 deprecated render callbacks.
+// Legacy render callbacks were removed from bp-core-admin-settings.php.
+// Registration settings are now managed by Settings 2.0 (bb-admin-settings-registration.php).
+// ──────────────────────────────────────────────────────────────────────────────
+
+if ( ! function_exists( 'bp_admin_setting_callback_register' ) ) {
+	/**
+	 * Legacy render callback for the Enable Registration checkbox.
+	 *
+	 * @since BuddyPress 1.6.0
+	 * @deprecated BuddyBoss [BBVERSION] Registration settings are now managed by Settings 2.0.
+	 */
+	function bp_admin_setting_callback_register() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Registration feature (bb-admin-settings-registration.php)' );
+	}
+}
+
+if ( ! function_exists( 'bp_admin_setting_callback_register_show_confirm_email' ) ) {
+	/**
+	 * Legacy render callback for the Confirm Email checkbox.
+	 *
+	 * @since BuddyBoss 1.1.6
+	 * @deprecated BuddyBoss [BBVERSION] Registration settings are now managed by Settings 2.0.
+	 */
+	function bp_admin_setting_callback_register_show_confirm_email() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Registration feature (bb-admin-settings-registration.php)' );
+	}
+}
+
+if ( ! function_exists( 'bb_admin_setting_callback_register_show_legal_agreement' ) ) {
+	/**
+	 * Legacy render callback for the Legal Agreement checkbox.
+	 *
+	 * @since BuddyBoss 1.5.8.3
+	 * @deprecated BuddyBoss [BBVERSION] Registration settings are now managed by Settings 2.0.
+	 */
+	function bb_admin_setting_callback_register_show_legal_agreement() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Registration feature (bb-admin-settings-registration.php)' );
+	}
+}
+
+if ( ! function_exists( 'bp_admin_setting_callback_register_show_confirm_password' ) ) {
+	/**
+	 * Legacy render callback for the Confirm Password checkbox.
+	 *
+	 * @since BuddyBoss 1.1.6
+	 * @deprecated BuddyBoss [BBVERSION] Registration settings are now managed by Settings 2.0.
+	 */
+	function bp_admin_setting_callback_register_show_confirm_password() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Registration feature (bb-admin-settings-registration.php)' );
+	}
+}
+
+if ( ! function_exists( 'bp_admin_setting_callback_register_allow_custom_registration' ) ) {
+	/**
+	 * Legacy render callback for the Registration Form select.
+	 *
+	 * @since BuddyBoss 1.2.8
+	 * @deprecated BuddyBoss [BBVERSION] Registration settings are now managed by Settings 2.0.
+	 */
+	function bp_admin_setting_callback_register_allow_custom_registration() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Registration feature (bb-admin-settings-registration.php)' );
+	}
+}
+
+if ( ! function_exists( 'bp_admin_setting_callback_register_page_url' ) ) {
+	/**
+	 * Legacy render callback for the Custom Registration Page URL input.
+	 *
+	 * @since BuddyBoss 1.2.8
+	 * @deprecated BuddyBoss [BBVERSION] Registration settings are now managed by Settings 2.0.
+	 */
+	function bp_admin_setting_callback_register_page_url() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Registration feature (bb-admin-settings-registration.php)' );
+	}
+}
+
+if ( ! function_exists( 'bp_admin_registration_setting_tutorial' ) ) {
+	/**
+	 * Legacy tutorial link for the Registration settings section.
+	 *
+	 * @since BuddyBoss 1.2.8
+	 * @deprecated BuddyBoss [BBVERSION] Registration settings are now managed by Settings 2.0.
+	 */
+	function bp_admin_registration_setting_tutorial() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Registration feature (bb-admin-settings-registration.php)' );
+	}
+}

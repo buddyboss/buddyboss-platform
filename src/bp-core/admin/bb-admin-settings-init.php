@@ -124,11 +124,6 @@ function bb_admin_settings_init() {
 			}
 		}
 
-		// Email Templates AJAX handler (always loaded — email templates are a core feature).
-		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-email-templates-admin-ajax.php' ) ) {
-			require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-email-templates-admin-ajax.php';
-		}
-
 		// Admin settings page (menu registration, render function).
 		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-page.php' ) ) {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-page.php';
