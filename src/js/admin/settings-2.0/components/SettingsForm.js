@@ -867,7 +867,7 @@ export function SettingsForm({ fields, values, onChange }) {
 			return null;
 		}
 
-		const disabled = parentDisabled || isFieldDisabled(field) || isFieldConditionallyDisabled(field);
+		const disabled = parentDisabled || !!field.disabled || isFieldDisabled(field) || isFieldConditionallyDisabled(field);
 
 		// Checkbox children: render CheckboxControl with inline label (no separate label element).
 		// When description_controls are present (e.g., "Auto hide after %s reports"),

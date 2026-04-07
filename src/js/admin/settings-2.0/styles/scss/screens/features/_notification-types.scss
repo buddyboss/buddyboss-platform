@@ -102,12 +102,6 @@
 		font-size: 13px;
 		color: $bb-text-secondary-color;
 
-		input[type="checkbox"] {
-			margin: 0;
-			width: 16px;
-			height: 16px;
-		}
-
 		&--disabled {
 			opacity: 0.5;
 			cursor: default;
@@ -147,6 +141,10 @@
 				color: $bb-text-brand-primary-color;
 			}
 		}
+	}
+
+	@media screen and (max-width: 960px) {
+		min-width: 800px;
 	}
 }
 

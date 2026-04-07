@@ -10,6 +10,7 @@
 	margin: 0 auto;
 	width: 100%;
 	padding: 32px;
+	box-sizing: border-box;
 
 	/* List section body override — standard section-body is 32px 24px,
 	   but the group types list needs reduced bottom padding per Figma. */
@@ -99,6 +100,10 @@
 		&:last-child {
 			border-bottom: 0;
 		}
+
+		@media screen and (max-width: 960px) {
+			min-width: 560px;
+		}
 	}
 
 	/* Column layout matching Figma */
@@ -106,9 +111,8 @@
 		display: flex;
 		align-items: center;
 		gap: 8px;
-		width: 264px;
+		min-width: 22%;
 		flex-shrink: 0;
-		min-width: 0;
 	}
 
 	&__list-item-label-col {
@@ -120,12 +124,12 @@
 		display: flex;
 		align-items: center;
 		gap: 8px;
-		width: 152px;
+		min-width: 15%;
 		flex-shrink: 0;
 	}
 
 	&__list-item-visibility-col {
-		width: 152px;
+		min-width: 15%;
 		flex-shrink: 0;
 	}
 

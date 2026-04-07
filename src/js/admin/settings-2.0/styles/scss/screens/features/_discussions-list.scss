@@ -323,6 +323,17 @@
 		justify-content: center;
 		z-index: 100000;
 	}
+
+	@media screen and (max-width: 960px) {
+		overflow: auto;
+
+		&__header,
+		&__toolbar,
+		&__table-wrapper,
+		&__footer {
+			min-width: 820px;
+		}
+	}
 }
 
 // Full-width for custom panel screen.

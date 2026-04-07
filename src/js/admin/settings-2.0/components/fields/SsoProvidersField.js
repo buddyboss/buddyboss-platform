@@ -63,6 +63,13 @@ export function SsoProvidersField( { field, value, onChange, disabled } ) {
 	var dragOverId = dragOverState[ 0 ];
 	var setDragOverId = dragOverState[ 1 ];
 
+	// Cleanup toast debounce timer on unmount.
+	useEffect( function () {
+		return function () {
+			clearTimeout( toastTimerRef.current );
+		};
+	}, [] );
+
 	/**
 	 * Intercept SSO modal close/cancel clicks to prevent legacy jQuery
 	 * handler (bb-sso-admin.js) from reloading the page.

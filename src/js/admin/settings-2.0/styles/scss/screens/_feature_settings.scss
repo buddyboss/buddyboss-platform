@@ -104,6 +104,8 @@
     &__main {
         flex: 1;
         padding: 32px;
+        width: 100%;
+        box-sizing: border-box;
     }
 
     &__content {
@@ -264,6 +266,27 @@
         &--disabled {
             opacity: 0.5;
             pointer-events: none;
+        }
+    }
+
+    @media screen and (max-width: 1250px) {
+
+        &__container {
+            flex-wrap: wrap;
+        }
+
+        &__sidebar {
+            width: calc(100% - 64px);
+            margin: 0 32px;
+            border: 1px solid $bb-border-secondary-color;
+            border-radius: $bb-border-radius-2xl;
+        }
+    }
+
+    @media screen and (max-width: 980px) {
+
+        &__section-body {
+            overflow: auto;
         }
     }
 }
@@ -540,12 +563,20 @@
             }
 
             width: calc((100% - 277px - 24px) / 2);
+
+             @media screen and (max-width: 980px) {
+                width: calc(50% - 16px);
+            }
         }
     }
 
     // First inline field after a non-inline sibling: offset to align with the content area.
     &--grouped:not([data-group-inline="true"]) + &--grouped[data-group-inline="true"].bb-admin-settings-form__field--no-label {
         margin-left: 277px;
+
+        @media screen and (max-width: 980px) {
+            margin-left: 0;
+        }
     }
 
     // Textarea wrapper ensures counter renders below (not beside) the textarea.
@@ -744,6 +775,35 @@
             max-width: 275px;
         }
 	}
+
+    @media screen and (max-width: 1250px) {
+
+         &-label {
+            width: 195px;
+         }
+
+         &--no-label {
+
+            .bb-admin-settings-form__field-content {
+                margin-left: 227px;
+            }
+        }
+    }
+
+    @media screen and (max-width: 980px) {
+        flex-wrap: wrap;
+
+         &-label {
+            width: 100%;
+         }
+
+         &--no-label {
+
+            .bb-admin-settings-form__field-content {
+                margin-left: 0;
+            }
+        }
+    }
 }
 
 .bb-admin-settings-field__toggle-list {
