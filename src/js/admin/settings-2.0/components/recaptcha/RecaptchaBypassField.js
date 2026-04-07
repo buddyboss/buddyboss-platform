@@ -11,6 +11,7 @@
 import { useState, useEffect, useRef } from '@wordpress/element';
 import { ToggleControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
+import { safeUrl } from '../../utils/sanitize';
 
 /**
  * RecaptchaBypassField Component
@@ -121,7 +122,7 @@ export function RecaptchaBypassField( props ) {
 			{ isChecked && (
 				<div className={ 'bb-admin-settings-field__recaptcha-bypass-url' + ( ! isValidLength ? ' bb-admin-settings-field__recaptcha-bypass-url--invalid' : '' ) }>
 					<a
-						href={ bypassUrl }
+						href={ safeUrl( bypassUrl ) }
 						className="bb-admin-settings-field__recaptcha-bypass-link"
 						target="_blank"
 						rel="noopener noreferrer"

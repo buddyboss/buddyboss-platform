@@ -10,7 +10,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useRef, useEffect, useCallback } from '@wordpress/element';
+import { useState, useRef, useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { BB_EVENTS } from '../../utils/constants';
 import { invalidateFeatureCache } from '../../utils/featureCache';
@@ -380,14 +380,12 @@ export function RecaptchaVerifyField( props ) {
 		setCaptchaToken( '' );
 	}
 
-	// Button label and state.
-	var buttonLabel = connected
-		? __( 'Connected', 'buddyboss' )
-		: __( 'Verify', 'buddyboss' );
-
+	// Button label and state — hidden when connected (matches legacy bp-hide behavior).
+	// Visible as "Verify" only when not connected and keys are entered.
 	var siteKey = values.bb_recaptcha_site_key || '';
 	var secretKey = values.bb_recaptcha_secret_key || '';
-	var isButtonDisabled = disabled || connected || ! siteKey || ! secretKey;
+	var showVerifyButton = ! connected && siteKey && secretKey;
+	var isButtonDisabled = disabled;
 
 	var version = values.bb_recaptcha_version || 'recaptcha_v3';
 	var isV2Checkbox = 'recaptcha_v2_checkbox' === version;
@@ -397,19 +395,18 @@ export function RecaptchaVerifyField( props ) {
 
 	return (
 		<div className="bb-admin-settings-field__recaptcha-verify">
-			<div className="bb-admin-settings-field__recaptcha-verify-row">
-				<button
-					type="button"
-					className={
-						'bb-admin-settings-field__recaptcha-verify-btn' +
-						( connected ? ' bb-admin-settings-field__recaptcha-verify-btn--connected' : '' )
-					}
-					onClick={ openModal }
-					disabled={ isButtonDisabled }
-				>
-					{ buttonLabel }
-				</button>
-			</div>
+			{ showVerifyButton && (
+				<div className="bb-admin-settings-field__recaptcha-verify-row">
+					<button
+						type="button"
+						className="bb-admin-settings-field__recaptcha-verify-btn"
+						onClick={ openModal }
+						disabled={ isButtonDisabled }
+					>
+						{ __( 'Verify', 'buddyboss' ) }
+					</button>
+				</div>
+			) }
 
 			{ /* Verification Modal */ }
 			{ isModalOpen && (

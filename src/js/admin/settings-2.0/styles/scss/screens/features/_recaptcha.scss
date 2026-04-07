@@ -41,7 +41,7 @@
 	}
 
 	a {
-		color: #2c6bff;
+		color: $bb-link-color;
 	}
 }
 
@@ -232,7 +232,7 @@
 		left: 0;
 		right: 0;
 		bottom: 0;
-		background: rgba(0, 0, 0, 0.5);
+		background: $bb-overlay-color;
 		z-index: 1;
 	}
 

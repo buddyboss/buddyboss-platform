@@ -121,20 +121,20 @@ function bb_recaptcha_sanitize_version( $value ) {
  *
  * @param mixed $value The value to sanitize.
  *
- * @return float Sanitized score threshold.
+ * @return string Sanitized score threshold.
  */
 function bb_recaptcha_sanitize_score_threshold( $value ) {
 	$value = floatval( $value );
 
 	if ( $value < 0 ) {
-		return 0;
+		$value = 0;
 	}
 
 	if ( $value > 1 ) {
-		return 1;
+		$value = 1;
 	}
 
-	return $value;
+	return (string) round( $value, 1 );
 }
 
 /**
@@ -303,7 +303,7 @@ function bb_recaptcha_write_back_serialized_option( $feature_id, $settings, $sav
 		( isset( $saved['bb_recaptcha_site_key'] ) && empty( $saved['bb_recaptcha_site_key'] ) ) ||
 		( isset( $saved['bb_recaptcha_secret_key'] ) && empty( $saved['bb_recaptcha_secret_key'] ) )
 	) {
-		$recaptcha_settings['connection_status'] = 'not-connected';
+		$recaptcha_settings['connection_status'] = 'not_connected';
 	}
 
 	// Bypass validation: if allow_bypass is off or bypass_text is empty, clear bypass.
@@ -396,8 +396,7 @@ function bb_recaptcha_verify_settings_2() {
 					'text' => __( 'Connected', 'buddyboss' ),
 				),
 				'updated_fields' => array(
-					'bb_recaptcha_site_key'   => $site_key,
-					'bb_recaptcha_secret_key' => $secret_key,
+					'bb_recaptcha_site_key' => $site_key,
 				),
 			)
 		);
