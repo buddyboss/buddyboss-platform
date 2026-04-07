@@ -141,6 +141,17 @@
 			border-color: $bb-border-tertiary-color;
 		}
 	}
+
+	@media screen and (max-width: 960px) {
+		overflow: auto;
+
+		&__header,
+		&__toolbar,
+		&__table-wrapper,
+		&__footer {
+			min-width: 820px;
+		}
+	}
 }
 
 // Revoke invite confirmation modal.
