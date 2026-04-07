@@ -280,6 +280,13 @@
             border-radius: $bb-border-radius-2xl;
         }
     }
+
+    @media screen and (max-width: 980px) {
+
+        &__section-body {
+            overflow: auto;
+        }
+    }
 }
 
 .bb-admin-settings-form__field {
@@ -769,6 +776,21 @@
 
             .bb-admin-settings-form__field-content {
                 margin-left: 227px;
+            }
+        }
+    }
+
+    @media screen and (max-width: 980px) {
+        flex-wrap: wrap;
+
+         &-label {
+            width: 100%;
+         }
+
+         &--no-label {
+
+            .bb-admin-settings-form__field-content {
+                margin-left: 0;
             }
         }
     }

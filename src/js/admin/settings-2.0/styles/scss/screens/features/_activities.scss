@@ -265,6 +265,16 @@
 		color: $bb-text-secondary-color;
 	}
 
+	@media screen and (max-width: 960px) {
+		overflow: auto;
+
+		&__toolbar,
+		&__table-wrapper,
+		&__footer {
+			min-width: 820px;
+		}
+	}
+
 }
 
 // Custom panel main - Allow full width for custom screens (ActivityList, GroupsList).
@@ -272,6 +282,7 @@
 	padding: 0;
     max-width: 1600px;
 	margin: 0 auto;
+	width: 100%;
 
 	.bb-activity-list {
 		max-width: 100%;
