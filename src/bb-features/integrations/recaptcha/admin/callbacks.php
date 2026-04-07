@@ -53,16 +53,19 @@ function bb_recaptcha_admin_get_combined_version( $settings = array() ) {
  *
  * @return string Description text.
  */
-function bb_recaptcha_admin_get_version_description( $version ) {
-	switch ( $version ) {
-		case 'recaptcha_v2_checkbox':
-			return __( 'reCAPTCHA v2 (Checkbox) validate request with the "I\'m not a robot" checkbox.', 'buddyboss' );
-		case 'recaptcha_v2_invisible':
-			return __( 'Shows invisible reCaptcha badge. It is invoked directly when the user clicks on an existing button on your site.', 'buddyboss' );
-		case 'recaptcha_v3':
-		default:
-			return __( 'reCAPTCHA v3 runs silently in the background to detect spam and bot activity using a score system. No user action needed.', 'buddyboss' );
+function bb_recaptcha_admin_get_version_description( $version = '' ) {
+	$descriptions = array(
+		'recaptcha_v3'           => __( 'reCAPTCHA v3 runs silently in the background to detect spam and bot activity using a score system. No user action needed.', 'buddyboss' ),
+		'recaptcha_v2_checkbox'  => __( 'reCAPTCHA v2 (Checkbox) validate request with the "I\'m not a robot" checkbox.', 'buddyboss' ),
+		'recaptcha_v2_invisible' => __( 'Shows invisible reCaptcha badge. It is invoked directly when the user clicks on an existing button on your site.', 'buddyboss' ),
+	);
+
+	// Return all descriptions when no version specified (for option_descriptions map).
+	if ( empty( $version ) ) {
+		return $descriptions;
 	}
+
+	return isset( $descriptions[ $version ] ) ? $descriptions[ $version ] : $descriptions['recaptcha_v3'];
 }
 
 /**

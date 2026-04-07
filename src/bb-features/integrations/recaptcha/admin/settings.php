@@ -78,16 +78,19 @@ bb_register_feature_section(
 $recaptcha_settings = bb_recaptcha_options();
 $current_version    = bb_recaptcha_admin_get_combined_version( $recaptcha_settings );
 
+// Per-option descriptions for version select (dynamic swap in React via option_descriptions).
+$version_descriptions = bb_recaptcha_admin_get_version_description();
+
 // FIELD: Versions (combined select).
 bb_register_feature_field(
 	'recaptcha',
 	'recaptcha_settings',
 	'recaptcha_connection',
 	array(
-		'name'              => 'bb_recaptcha_version',
-		'label'             => __( 'Versions', 'buddyboss' ),
-		'type'              => 'select',
-		'options'           => array(
+		'name'                => 'bb_recaptcha_version',
+		'label'               => __( 'Versions', 'buddyboss' ),
+		'type'                => 'select',
+		'options'             => array(
 			array(
 				'label' => __( 'reCAPTCHA v3 (Recommended)', 'buddyboss' ),
 				'value' => 'recaptcha_v3',
@@ -101,10 +104,11 @@ bb_register_feature_field(
 				'value' => 'recaptcha_v2_invisible',
 			),
 		),
-		'default'           => $current_version,
-		'description'       => bb_recaptcha_admin_get_version_description( $current_version ),
-		'sanitize_callback' => 'bb_recaptcha_sanitize_version',
-		'order'             => 10,
+		'default'             => $current_version,
+		'description'         => $version_descriptions[ $current_version ] ?? $version_descriptions['recaptcha_v3'],
+		'option_descriptions' => $version_descriptions,
+		'sanitize_callback'   => 'bb_recaptcha_sanitize_version',
+		'order'               => 10,
 	)
 );
 
