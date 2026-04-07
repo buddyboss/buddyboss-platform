@@ -1,0 +1,319 @@
+/* ----------------------------------------------------------------
+   Email Templates List Screen
+   ---------------------------------------------------------------- */
+
+.bb-email-templates-list {
+	max-width: calc(100% - 64px);
+	padding: 0 24px 16px;
+	background-color: $bb-background-base-color;
+	border: 1px solid $bb-border-primary-color;
+	border-radius: $bb-border-radius-2xl;
+	box-shadow: 0px 1.5px 1px 0px rgba(0, 0, 0, 0.16);
+	margin: 32px 32px 0;
+
+	// Header
+	&__header {
+		display: flex;
+		align-items: center;
+		gap: 16px;
+		border-bottom: 1px solid $bb-border-secondary-color;
+		padding: 18px 0;
+		margin-bottom: 24px;
+	}
+
+	&__title {
+		font-size: 18px;
+		font-weight: 500;
+		color: $bb-text-color;
+		margin: 0;
+	}
+
+	&__customize-btn {
+		@include bb-button-secondary;
+	}
+
+	&__create-btn.is-primary {
+		@include bb-button-primary;
+		text-decoration: none;
+		margin-left: auto;
+
+		i {
+			font-size: 16px;
+			font-weight: 700;
+			margin-right: 6px;
+		}
+	}
+
+	// Toolbar — layout styled via .bb-admin-list-toolbar
+
+	// Bulk Actions
+	&__bulk-actions {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+
+		select {
+			min-width: 140px;
+			height: 32px;
+			font-size: 13px;
+		}
+	}
+
+	&__bulk-apply.is-secondary {
+		@include bb-button-primary-outline;
+	}
+
+	// Status filter dropdown.
+	&__filter-select {
+		white-space: nowrap;
+
+		.components-select-control {
+			margin-bottom: 0;
+
+			.components-input-control__label {
+				color: $bb-text-secondary-color;
+				text-transform: none;
+				font-size: 13px;
+				font-weight: 500;
+			}
+
+			.components-select-control__input {
+				@include bb-admin-settings-select;
+				min-width: 85px;
+			}
+
+			.components-input-control-suffix-wrapper,
+			.components-input-control__backdrop {
+				display: none;
+			}
+		}
+	}
+
+	// Sort
+	&__sort-select {
+		.components-select-control {
+			margin-bottom: 0;
+		}
+
+		select {
+			min-width: 100px;
+			height: 32px;
+			font-size: 13px;
+		}
+	}
+
+	// Search — styled via .bb-admin-list-search
+
+	// Table — base styled via .bb-admin-list-table
+
+	&__th--checkbox {
+		width: 30px;
+	}
+
+	&__th--date {
+		white-space: nowrap;
+	}
+
+	&__th--title {
+
+		.bb-email-templates-list__table & {
+			width: 28%;
+			color: $bb-text-color;
+			font-size: 14px;
+		}
+	}
+
+	// Title column
+	&__td--title {
+		width: 28%;
+		overflow: hidden;
+	}
+
+	&__item-title {
+		display: block;
+		font-size: 14px;
+		font-weight: 400;
+		color: $bb-link-color;
+		line-height: 20px;
+		text-decoration: none;
+		word-break: break-word;
+
+		&:hover {
+			color: $bb-link-color;
+			transition: none;
+		}
+	}
+
+	&__th--description {
+		width: 25%;
+	}
+
+	// Date column
+	&__td--date[class] {
+		display: flex;
+		align-items: center;
+		color: $bb-text-tertiary-color;
+		white-space: nowrap;
+
+		i {
+			font-size: 16px;
+			color: $bb-icon-tertiary-color;
+			margin-right: 8px;
+		}
+	}
+
+	&__th--actions {
+		width: 30px;
+	}
+
+	// Actions Column — toggle styled via .bb-admin-actions-toggle
+
+	// Footer
+	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 16px;
+		padding: 16px 0;
+		margin-top: 8px;
+	}
+
+	// Item Count
+	&__item-count {
+		font-size: 13px;
+		color: $bb-text-secondary-color;
+	}
+
+}
+
+// Full-width for custom panel screen.
+.bb-admin-feature-settings__main--custom-panel {
+	.bb-email-templates-list {
+		max-width: 100%;
+	}
+}
+
+/* ----------------------------------------------------------------
+   Email Missing Banner
+   ---------------------------------------------------------------- */
+
+.bb-email-missing-banner {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	padding: 6px 8px;
+	background-color: $bb-background-warning-primary-color;
+	border: 1px solid $bb-border-warning-secondary-color;
+	border-radius: $bb-border-radius-lg;
+	margin-bottom: 16px;
+
+	&__left {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		font-size: 13px;
+		color: $bb-text-color;
+
+		i {
+			font-size: 20px;
+			color: $bb-icon-warning-primary-color;
+			font-weight: 500;
+		}
+	}
+
+	&__action {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+		font-size: 13px;
+		color: $bb-text-color;
+		text-decoration: none;
+		white-space: nowrap;
+		cursor: pointer;
+
+		&:hover {
+			color: $bb-text-color;
+		}
+
+		i {
+			font-size: 15px;
+		}
+	}
+}
+
+/* ----------------------------------------------------------------
+   Email Missing Modal
+   ---------------------------------------------------------------- */
+
+.bb-email-missing-modal {
+
+	&__title-wrap {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	&__count-badge {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 20px;
+		height: 20px;
+		padding: 0 6px;
+		font-size: 12px;
+		font-weight: 600;
+		color: $bb-text-warning-primary-color;
+		background-color: $bb-background-warning-primary-color;
+		border: 1px solid $bb-border-warning-secondary-color;
+		border-radius: $bb-border-radius-full;
+	}
+
+	&__body {
+		padding: 16px 24px;
+	}
+
+	&__warning {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 10px 16px;
+		background-color: $bb-background-warning-primary-color;
+		border: 1px solid $bb-border-warning-secondary-color;
+		border-radius: $bb-border-radius-lg;
+		margin-bottom: 16px;
+		font-size: 13px;
+		font-weight: 500;
+		color: $bb-text-warning-primary-color;
+
+		i {
+			font-size: 18px;
+			color: $bb-icon-warning-primary-color;
+		}
+	}
+
+	&__list {
+		margin: 0 0 8px;
+		padding: 0 0 0 20px;
+		list-style: disc;
+	}
+
+	&__list-item {
+		font-size: 13px;
+		color: $bb-text-color;
+		line-height: 1.6;
+		margin-bottom: 4px;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+
+	&__footer {
+		display: flex;
+		justify-content: flex-end;
+		gap: 8px;
+		padding: 16px 24px;
+		border-top: 1px solid $bb-border-secondary-color;
+	}
+}

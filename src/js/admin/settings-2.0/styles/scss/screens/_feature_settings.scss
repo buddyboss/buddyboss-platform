@@ -104,6 +104,8 @@
     &__main {
         flex: 1;
         padding: 32px;
+        width: 100%;
+        box-sizing: border-box;
     }
 
     &__content {
@@ -264,6 +266,27 @@
         &--disabled {
             opacity: 0.5;
             pointer-events: none;
+        }
+    }
+
+    @media screen and (max-width: 1250px) {
+
+        &__container {
+            flex-wrap: wrap;
+        }
+
+        &__sidebar {
+            width: calc(100% - 64px);
+            margin: 0 32px;
+            border: 1px solid $bb-border-secondary-color;
+            border-radius: $bb-border-radius-2xl;
+        }
+    }
+
+    @media screen and (max-width: 980px) {
+
+        &__section-body {
+            overflow: auto;
         }
     }
 }
@@ -454,20 +477,45 @@
     }
 
     // Grouped fields: remove border/spacing between consecutive fields in same group.
+    // But keep spacing after --group-last (boundary between different groups).
     &--grouped + &--grouped[data-group] {
         margin-top: 0;
         padding-top: 0;
+    }
+
+    &--group-last + &--grouped[data-group] {
+        margin-top: 0;
+        padding-top: 24px;
+    }
+
+    // Grouped no-label fields (e.g., Custom URL below dropdown): full-width input.
+    &--grouped#{&}--no-label {
+        .bb-admin-settings-form__field-input-wrapper {
+            display: block;
+
+            input[type="text"],
+            input[type="url"] {
+                width: 100%;
+            }
+        }
     }
 
     &--grouped:not(.bb-admin-settings-form__field--full-width) {
         border-bottom: none;
         padding-bottom: 12px;
 
-        // Last field in a group restores the bottom border.
+        // Last visible field in a group restores the bottom border.
+        &.bb-admin-settings-form__field--group-last,
         &:has(+ :not([data-group])),
         &:has(+ .bb-admin-settings-form__field:not(.bb-admin-settings-form__field--grouped)) {
             border-bottom: 1px solid $bb-border-secondary-color;
             padding-bottom: 24px;
+        }
+
+        // Last field in the section — no bottom border needed.
+        &:last-child {
+            border-bottom: none;
+            padding-bottom: 12px;
         }
     }
 
@@ -515,12 +563,20 @@
             }
 
             width: calc((100% - 277px - 24px) / 2);
+
+             @media screen and (max-width: 980px) {
+                width: calc(50% - 16px);
+            }
         }
     }
 
     // First inline field after a non-inline sibling: offset to align with the content area.
     &--grouped:not([data-group-inline="true"]) + &--grouped[data-group-inline="true"].bb-admin-settings-form__field--no-label {
         margin-left: 277px;
+
+        @media screen and (max-width: 980px) {
+            margin-left: 0;
+        }
     }
 
     // Textarea wrapper ensures counter renders below (not beside) the textarea.
@@ -719,6 +775,35 @@
             max-width: 275px;
         }
 	}
+
+    @media screen and (max-width: 1250px) {
+
+         &-label {
+            width: 195px;
+         }
+
+         &--no-label {
+
+            .bb-admin-settings-form__field-content {
+                margin-left: 227px;
+            }
+        }
+    }
+
+    @media screen and (max-width: 980px) {
+        flex-wrap: wrap;
+
+         &-label {
+            width: 100%;
+         }
+
+         &--no-label {
+
+            .bb-admin-settings-form__field-content {
+                margin-left: 0;
+            }
+        }
+    }
 }
 
 .bb-admin-settings-field__toggle-list {

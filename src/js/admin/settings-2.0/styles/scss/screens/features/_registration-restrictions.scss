@@ -1,0 +1,141 @@
+/**
+ * BuddyBoss Admin Settings 2.0 - Registration Restrictions Styles
+ *
+ * Styles for Domain Restrictions and Email Restrictions repeater fields.
+ *
+ * @package BuddyBoss\Core\Administration
+ * @since BuddyBoss [BBVERSION]
+ */
+
+// Shared repeater styles for both domain and email restrictions.
+.bb-domain-restrictions,
+.bb-email-restrictions {
+	width: 100%;
+
+	&__rows {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		margin-bottom: 12px;
+	}
+
+	&__row {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		border: 1px solid transparent;
+		border-radius: $bb-border-radius-lg;
+		padding: 4px;
+		margin: -4px;
+		transition: border-color 0.15s ease;
+
+		&--drag-over {
+			border-color: $bb-background-brand-primary-color;
+		}
+	}
+
+	&__drag-handle {
+		cursor: grab;
+		display: flex;
+		align-items: center;
+		color: $bb-icon-tertiary-color;
+		flex-shrink: 0;
+
+		&:active {
+			cursor: grabbing;
+		}
+
+		i {
+			font-size: 24px;
+		}
+	}
+
+	&__condition {
+		flex: 0 0 180px;
+		min-width: 0;
+
+		.components-select-control__input {
+			margin: 0;
+		}
+	}
+
+	&__remove {
+		flex-shrink: 0;
+		background: none;
+		border: none;
+		cursor: pointer;
+		padding: 4px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: $bb-border-radius-sm;
+
+		&:hover {
+			background-color: $bb-background-secondary-color;
+		}
+
+		&:disabled {
+			opacity: 0.4;
+			cursor: not-allowed;
+		}
+
+		i {
+			color: $bb-text-secondary-color;
+			font-size: 16px;
+		}
+	}
+
+	&__add[class] {
+		margin-top: 4px;
+		@include bb-button-primary-outline;
+
+		i {
+			font-size: 16px;
+			margin-right: 4px;
+		}
+	}
+}
+
+// Domain Restrictions — unique fields.
+.bb-domain-restrictions {
+
+	&__domain {
+		flex: 1;
+		min-width: 0;
+
+		.components-text-control__input {
+			margin: 0;
+		}
+	}
+
+	&__dot {
+		height: 4px;
+		width: 4px;
+		align-self: flex-end;
+		margin-bottom: 4px;
+		background-color: $bb-background-tertiary-color;
+		border-radius: $bb-border-radius-full;
+	}
+
+	&__tld {
+		flex: 0 0 120px;
+		min-width: 0;
+
+		.components-text-control__input {
+			margin: 0;
+		}
+	}
+}
+
+// Email Restrictions — unique fields.
+.bb-email-restrictions {
+
+	&__address {
+		flex: 1;
+		min-width: 0;
+
+		.components-text-control__input {
+			margin: 0;
+		}
+	}
+}

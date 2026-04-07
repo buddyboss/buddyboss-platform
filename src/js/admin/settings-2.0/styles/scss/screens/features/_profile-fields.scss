@@ -10,6 +10,7 @@
 	margin: 0 auto;
 	width: 100%;
 	padding: 32px;
+	box-sizing: border-box;
 }
 
 /* Banner */
@@ -260,7 +261,7 @@
 	display: flex;
 	align-items: center;
 	gap: 8px;
-	width: 320px;
+	width: 50%;
 	flex-shrink: 0;
 }
 
@@ -433,53 +434,14 @@
 
 .bb-pf-fieldset-modal {
 
-	.components-modal__content {
-		padding: 0;
-	}
-
-	.bb-pf-modal-body {
-		padding: 24px;
-		display: flex;
-		flex-direction: column;
-		gap: 16px;
-
-		.components-base-control {
-			margin-bottom: 0;
-		}
-
-		.components-base-control__label,
-		label.components-input-control__label.components-text {
-			@include bb-input-label;
-		}
-
-		.components-radio-control__option {
-			margin-bottom: 4px;
-		}
-	}
-
 	.bb-pf-modal-footer {
-		display: flex;
-		align-items: center;
 		justify-content: space-between;
-		gap: 8px;
-		padding: 16px 24px;
-		border-top: 1px solid $bb-border-primary-color;
 
 		.bb-pf-modal-footer-right {
 			display: flex;
 			align-items: center;
 			gap: 8px;
 			margin-left: auto;
-
-			.components-button.is-secondary {
-				@include bb-button-secondary;
-				padding: 8px 16px;
-			}
-	
-			.components-button.is-primary {
-				@include bb-button-primary;
-				padding: 8px 16px;
-			}
 		}
 	}
 }
@@ -584,6 +546,7 @@
 			display: flex;
 			align-items: center;
 			gap: 16px;
+			width: calc(60% - 100px);
 
 			> i {
 				font-size: 24px;
@@ -595,7 +558,7 @@
 
 		&__input[type="text"] {
 			@include bb-input-text;
-			width: 320px;
+			width: 100%;
 		}
 
 		&__select {

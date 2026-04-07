@@ -297,8 +297,8 @@ export function FlaggedMembersScreen() {
 				{/* Body */}
 				<div className="bb-admin-flagged-members__body">
 					{/* Action Bar */}
-					<div className="bb-admin-flagged-members__action-bar">
-						<div className="bb-admin-flagged-members__action-bar-left">
+					<div className="bb-admin-flagged-members__action-bar bb-admin-list-toolbar">
+						<div className="bb-admin-flagged-members__action-bar-left bb-admin-list-toolbar__left">
 							<div className="bb-admin-flagged-members__bulk-actions">
 								<SelectControl
 									value={ bulkAction }
@@ -321,7 +321,7 @@ export function FlaggedMembersScreen() {
 								</Button>
 							</div>
 						</div>
-						<div className="bb-admin-flagged-members__action-bar-right">
+						<div className="bb-admin-flagged-members__action-bar-right bb-admin-list-toolbar__right">
 							<SelectControl
 								value={ statusFilter }
 								options={ [
@@ -357,14 +357,14 @@ export function FlaggedMembersScreen() {
 								<Spinner />
 							</div>
 						) : 0 === members.length ? (
-							<div className="bb-admin-flagged-members__empty">
+							<div className="bb-admin-flagged-members__empty bb-admin-list-table__empty">
 								<p>{ __( 'No flagged members found.', 'buddyboss' ) }</p>
 							</div>
 						) : (
-							<table className="bb-admin-flagged-members__table">
+							<table className="bb-admin-flagged-members__table bb-admin-list-table">
 								<thead>
 									<tr>
-										<th className="bb-admin-flagged-members__th--checkbox">
+										<th className="bb-admin-flagged-members__th--checkbox bb-admin-list-table__checkbox">
 											<CheckboxControl
 												checked={ allSelected }
 												onChange={ handleSelectAll }
@@ -393,9 +393,9 @@ export function FlaggedMembersScreen() {
 										return (
 											<tr
 												key={ member.id }
-												className={ 'bb-admin-flagged-members__row' + ( isSelected ? ' bb-admin-flagged-members__row--selected' : '' ) }
+												className={ 'bb-admin-flagged-members__row bb-admin-list-table__row' + ( isSelected ? ' bb-admin-flagged-members__row--selected bb-admin-list-table__row--selected' : '' ) }
 											>
-												<td className="bb-admin-flagged-members__td--checkbox">
+												<td className="bb-admin-flagged-members__td--checkbox bb-admin-list-table__checkbox">
 													<CheckboxControl
 														checked={ isSelected }
 														onChange={ function ( checked ) {
@@ -436,7 +436,7 @@ export function FlaggedMembersScreen() {
 														</span>
 													) }
 												</td>
-												<td className="bb-admin-flagged-members__td--actions">
+												<td className="bb-admin-flagged-members__td--actions bb-admin-actions-toggle">
 													{ isBusy ? (
 														<Spinner />
 													) : (

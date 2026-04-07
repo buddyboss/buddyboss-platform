@@ -327,8 +327,26 @@
 /* Profile Fields */
 @import 'screens/features/profile-fields';
 
+/* Email Templates List */
+@import 'screens/features/email-templates-list';
+
+/* Email Invites List */
+@import 'screens/features/invites-list';
+
+/* Email Template Modal */
+@import 'screens/features/email-template-modal';
+
 /* Notification Types */
 @import 'screens/features/notification-types';
+
+/* Registration Restrictions */
+@import 'screens/features/registration-restrictions';
+
+/* Registration SSO Providers */
+@import 'screens/features/registration-sso';
+
+/* Registration Profile Type Redirects */
+@import 'screens/features/registration-redirects';
 
 /* Help Modal */
 @import 'utils/help-modal';

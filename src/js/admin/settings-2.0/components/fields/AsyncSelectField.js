@@ -161,7 +161,7 @@ export function AsyncSelectField( { id, value, onChange, asyncAction, asyncExtra
 	// On mount: resolve the label for the current value if one exists.
 	useEffect(
 		function () {
-			if ( ! value || '0' === String( value ) ) {
+			if ( null === value || undefined === value || '' === String( value ) ) {
 				setSelectedLabel( '' );
 				return;
 			}
@@ -303,12 +303,12 @@ export function AsyncSelectField( { id, value, onChange, asyncAction, asyncExtra
 					disabled={ disabled }
 					autoComplete="off"
 				/>
-				{ value && '0' !== String( value ) && (
+				{ null !== value && undefined !== value && '' !== String( value ) && (
 					<button
 						type="button"
 						className="bb-async-select__clear"
 						onClick={ function () {
-							onChange( '0' );
+							onChange( '' );
 							setSelectedLabel( '' );
 							setSearch( '' );
 							setIsOpen( false );

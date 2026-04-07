@@ -352,7 +352,7 @@ export function GroupEditModal( { isOpen, group, onClose, onSave, isSaving } ) {
 			className="bb-group-edit-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
 		>
-			<div className="bb-group-edit-modal__body">
+			<div className="bb-group-edit-modal__body bb-admin-settings-modal__body">
 				{ error && (
 					<p className="bb-group-edit-modal__error">{ error }</p>
 				) }

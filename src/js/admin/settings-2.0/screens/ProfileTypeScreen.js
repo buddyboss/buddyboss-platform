@@ -554,6 +554,7 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 				onClose={ handleModalClose }
 				onSave={ handleModalSave }
 				memberType={ editingType }
+				allMemberTypes={ memberTypes }
 				groupTypes={ groupTypes }
 				wpRoles={ wpRoles }
 				publishedPages={ publishedPages }

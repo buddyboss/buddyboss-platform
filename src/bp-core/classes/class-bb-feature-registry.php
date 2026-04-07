@@ -275,6 +275,7 @@ class BB_Feature_Registry {
 			'integration_id'        => null, // Integration ID (for integration features).
 			'standalone'            => false, // Whether this is a standalone feature.
 			'required'              => false, // Whether this feature is required and cannot be deactivated.
+			'hidden'                => false, // Whether to hide from the features grid (e.g. utility features like Emails).
 			'depends_on'            => array(),
 			'order'                 => 100,
 		);
@@ -1263,6 +1264,18 @@ class BB_Feature_Registry {
 
 		bp_update_option( 'bp-active-components', $active_components );
 
+		// Run core install to create DB tables for newly activated components
+		// and create directory pages. This mirrors the legacy component toggle
+		// at bp_core_admin_components_settings_handler() which calls these
+		// after every component activation.
+		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bp-core-admin-schema.php' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+			require_once buddypress()->plugin_dir . 'bp-core/admin/bp-core-admin-schema.php';
+			bp_core_install( $active_components );
+		}
+		bp_core_add_page_mappings( $active_components );
+		$this->bb_schedule_rewrite_flush();
+
 		// Clear caches.
 		$this->bb_clear_feature_caches( $feature_id );
 
@@ -1356,6 +1369,10 @@ class BB_Feature_Registry {
 		bp_update_option( 'bb-active-features', $active_features );
 		bp_update_option( 'bp-active-components', $active_components );
 
+		// Flush rewrite rules so deactivated component URLs return 404
+		// instead of serving stale content.
+		$this->bb_schedule_rewrite_flush();
+
 		// Clear caches for all deactivated features.
 		foreach ( $all_to_deactivate as $fid_to_deactivate ) {
 			$this->bb_clear_feature_caches( $fid_to_deactivate );
@@ -1379,6 +1396,27 @@ class BB_Feature_Registry {
 	// =========================================================================
 	// UTILITY METHODS
 	// =========================================================================
+
+	/**
+	 * Schedule a single rewrite rules flush at shutdown.
+	 *
+	 * Multiple feature toggles in one request only trigger one flush.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	private function bb_schedule_rewrite_flush() {
+		static $scheduled = false;
+
+		if ( ! $scheduled ) {
+			$scheduled = true;
+			add_action(
+				'shutdown',
+				static function () {
+					flush_rewrite_rules();
+				}
+			);
+		}
+	}
 
 	/**
 	 * Check for circular dependencies using DFS.

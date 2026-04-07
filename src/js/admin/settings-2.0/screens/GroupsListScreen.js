@@ -21,7 +21,11 @@ import { dateI18n } from '@wordpress/date';
 import { decodeEntities } from '@wordpress/html-entities';
 import { getGroups, groupBulkAction, getGroup, saveGroup } from '../utils/ajax';
 import { sanitizeHtml, safeUrl } from '../utils/sanitize';
-import { getPageNumbers } from '../utils/pagination';
+import { ListPagination } from '../components/common/ListPagination';
+import { AdminNotice } from '../components/common/AdminNotice';
+import { ListToolbar } from '../components/common/ListToolbar';
+import { useListScreenHandlers } from '../hooks/useListScreenHandlers';
+import { useListScreenState } from '../hooks/useListScreenState';
 import { GroupCreateModal } from '../components/groups/GroupCreateModal';
 import { GroupEditModal } from '../components/groups/GroupEditModal';
 import { ConfirmToggleModal } from '../components/modals/ConfirmToggleModal';
@@ -98,6 +102,24 @@ var CORE_COLUMNS = [ 'cb', 'comment', 'description', 'status', 'members', 'last_
  * @returns {JSX.Element} Groups list screen.
  */
 export function GroupsListScreen( { onNavigate } ) {
+	// Common list screen state (loading, notice, selection, bulk, search).
+	var common = useListScreenState();
+	var isLoading = common.isLoading;
+	var setIsLoading = common.setIsLoading;
+	var notice = common.notice;
+	var setNotice = common.setNotice;
+	var selectedIds = common.selectedIds;
+	var setSelectedIds = common.setSelectedIds;
+	var bulkAction = common.bulkAction;
+	var setBulkAction = common.setBulkAction;
+	var isBulkProcessing = common.isBulkProcessing;
+	var setIsBulkProcessing = common.setIsBulkProcessing;
+	var searchInput = common.searchInput;
+	var setSearchInput = common.setSearchInput;
+	var searchQuery = common.searchQuery;
+	var setSearchQuery = common.setSearchQuery;
+
+	// Screen-specific state.
 	var groupsState = useState( [] );
 	var groups = groupsState[ 0 ];
 	var setGroups = groupsState[ 1 ];
@@ -122,22 +144,6 @@ export function GroupsListScreen( { onNavigate } ) {
 	var groupTypeFilter = groupTypeFilterState[ 0 ];
 	var setGroupTypeFilter = groupTypeFilterState[ 1 ];
 
-	var searchQueryState = useState( '' );
-	var searchQuery = searchQueryState[ 0 ];
-	var setSearchQuery = searchQueryState[ 1 ];
-
-	var searchInputState = useState( '' );
-	var searchInput = searchInputState[ 0 ];
-	var setSearchInput = searchInputState[ 1 ];
-
-	var selectedIdsState = useState( [] );
-	var selectedIds = selectedIdsState[ 0 ];
-	var setSelectedIds = selectedIdsState[ 1 ];
-
-	var isLoadingState = useState( true );
-	var isLoading = isLoadingState[ 0 ];
-	var setIsLoading = isLoadingState[ 1 ];
-
 	var bulkActionsState = useState( {} );
 	var bulkActions = bulkActionsState[ 0 ];
 	var setBulkActions = bulkActionsState[ 1 ];
@@ -153,14 +159,6 @@ export function GroupsListScreen( { onNavigate } ) {
 	var groupTypesState = useState( [] );
 	var groupTypes = groupTypesState[ 0 ];
 	var setGroupTypes = groupTypesState[ 1 ];
-
-	var bulkActionState = useState( '' );
-	var bulkAction = bulkActionState[ 0 ];
-	var setBulkAction = bulkActionState[ 1 ];
-
-	var noticeState = useState( null );
-	var notice = noticeState[ 0 ];
-	var setNotice = noticeState[ 1 ];
 
 	var deleteModalState = useState( false );
 	var deleteModalOpen = deleteModalState[ 0 ];
@@ -202,15 +200,10 @@ export function GroupsListScreen( { onNavigate } ) {
 	var isEditSaving = isEditSavingState[ 0 ];
 	var setIsEditSaving = isEditSavingState[ 1 ];
 
-	var isBulkProcessingState = useState( false );
-	var isBulkProcessing = isBulkProcessingState[ 0 ];
-	var setIsBulkProcessing = isBulkProcessingState[ 1 ];
-
 	var refetchCounterState = useState( 0 );
 	var refetchCounter = refetchCounterState[ 0 ];
 	var setRefetchCounter = refetchCounterState[ 1 ];
 
-	var searchTimerRef = useRef( null );
 	var hasMetaRef = useRef( false );
 	var editAbortRef = useRef( null );
 
@@ -296,23 +289,11 @@ export function GroupsListScreen( { onNavigate } ) {
 		};
 	}, [ fetchGroups ] );
 
-	// Clear notice after 5 seconds.
-	useEffect( function () {
-		if ( notice ) {
-			var timer = setTimeout( function () {
-				setNotice( null );
-			}, 5000 );
-			return function () {
-				clearTimeout( timer );
-			};
-		}
-	}, [ notice ] );
-
 	// Cleanup search debounce timer and edit abort controller on unmount.
 	useEffect( function () {
 		return function () {
-			if ( searchTimerRef.current ) {
-				clearTimeout( searchTimerRef.current );
+			if ( handlers.searchTimerRef.current ) {
+				clearTimeout( handlers.searchTimerRef.current );
 			}
 			if ( editAbortRef.current ) {
 				editAbortRef.current.abort();
@@ -320,100 +301,29 @@ export function GroupsListScreen( { onNavigate } ) {
 		};
 	}, [] );
 
-	/**
-	 * Handle search input with debounce.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {string} value Search value.
-	 */
-	var handleSearchChange = function ( value ) {
-		setSearchInput( value );
-		if ( searchTimerRef.current ) {
-			clearTimeout( searchTimerRef.current );
-		}
-		searchTimerRef.current = setTimeout( function () {
-			setSearchQuery( value );
-			setCurrentPage( 1 );
-		}, 500 );
-	};
+	// Common list screen handlers (search, sort, filter, select).
+	var handlers = useListScreenHandlers( {
+		setSearchInput: setSearchInput,
+		setSearchQuery: setSearchQuery,
+		setPage: setCurrentPage,
+		setSelectedIds: setSelectedIds,
+		setSort: setSortBy,
+		setFilter: setFilter,
+		getItemIds: function () {
+			return groups.map( function ( g ) { return g.id; } );
+		},
+	} );
+	var handleSearchChange = handlers.handleSearchChange;
+	var handleFilterChange = handlers.handleFilterChange;
+	var handleSortChange = handlers.handleSortChange;
+	var handleSelectAll = handlers.handleSelectAll;
+	var handleSelectRow = handlers.handleSelectRow;
 
-	/**
-	 * Handle filter change from dropdown.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {string} newFilter Filter value.
-	 */
-	var handleFilterChange = function ( newFilter ) {
-		setFilter( newFilter );
-		setCurrentPage( 1 );
-		setSelectedIds( [] );
-	};
-
-	/**
-	 * Handle sort change.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {string} value Sort value.
-	 */
-	var handleSortChange = function ( value ) {
-		setSortBy( value );
-		setCurrentPage( 1 );
-		setSelectedIds( [] );
-	};
-
-	/**
-	 * Handle group type filter change.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {string} value Group type value.
-	 */
+	// Group type filter uses the same pattern as handleFilterChange but for a separate state.
 	var handleGroupTypeFilterChange = function ( value ) {
 		setGroupTypeFilter( value );
 		setCurrentPage( 1 );
 		setSelectedIds( [] );
-	};
-
-	/**
-	 * Handle select all checkbox.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {boolean} checked Checked state.
-	 */
-	var handleSelectAll = function ( checked ) {
-		if ( checked ) {
-			setSelectedIds( groups.map( function ( g ) {
-				return g.id;
-			} ) );
-		} else {
-			setSelectedIds( [] );
-		}
-	};
-
-	/**
-	 * Handle individual row checkbox.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {number}  id      Group ID.
-	 * @param {boolean} checked Checked state.
-	 */
-	var handleSelectRow = function ( id, checked ) {
-		if ( checked ) {
-			setSelectedIds( function ( prev ) {
-				return prev.concat( [ id ] );
-			} );
-		} else {
-			setSelectedIds( function ( prev ) {
-				return prev.filter( function ( i ) {
-					return i !== id;
-				} );
-			} );
-		}
 	};
 
 	/**
@@ -694,19 +604,7 @@ export function GroupsListScreen( { onNavigate } ) {
 	return (
 		<div className="bb-groups-list">
 			{ /* Notice */ }
-			{ notice && (
-				<div className={ 'bb-admin-notice bb-admin-notice--' + notice.type }>
-					<span>{ notice.message }</span>
-					<button
-						className="bb-admin-notice--dismiss"
-						onClick={ function () {
-							setNotice( null );
-						} }
-					>
-						<i className='bb-icons-rl bb-icons-rl-x'></i>
-					</button>
-				</div>
-			) }
+			<AdminNotice notice={ notice } onDismiss={ function () { setNotice( null ); } } />
 
 			{ /* Header */ }
 			<div className="bb-groups-list__header">
@@ -724,95 +622,58 @@ export function GroupsListScreen( { onNavigate } ) {
 			</div>
 
 			{ /* Toolbar */ }
-			<div className="bb-groups-list__toolbar">
-				<div className="bb-groups-list__toolbar-left">
-					{ /* Bulk Actions */ }
-					<div className="bb-groups-list__bulk-actions">
-						<SelectControl
-							value={ bulkAction }
-							options={ [ { label: __( 'Bulk actions', 'buddyboss' ), value: '' } ].concat(
-								Object.keys( bulkActions ).map( function ( key ) {
-									return { label: bulkActions[ key ], value: key };
-								} )
-							) }
-							onChange={ setBulkAction }
-							__nextHasNoMarginBottom
-						/>
-						<Button
-							variant="secondary"
-							onClick={ handleBulkApply }
-							disabled={ ! bulkAction || 0 === selectedIds.length || isBulkProcessing }
-							className="bb-groups-list__bulk-apply"
-						>
-							{ __( 'Apply', 'buddyboss' ) }
-						</Button>
-					</div>
-				</div>
-
-				<div className="bb-groups-list__toolbar-right">
-					{ /* Status Filter */ }
+			<ListToolbar
+				className="bb-groups-list"
+				bulkAction={ bulkAction }
+				bulkActions={ bulkActions }
+				onBulkActionChange={ setBulkAction }
+				onBulkApply={ handleBulkApply }
+				selectedCount={ selectedIds.length }
+				isBulkProcessing={ isBulkProcessing }
+				searchInput={ searchInput }
+				onSearchChange={ handleSearchChange }
+				searchPlaceholder={ __( 'Search groups', 'buddyboss' ) }
+			>
+				<SelectControl
+					value={ filter }
+					options={ filterOptions }
+					onChange={ handleFilterChange }
+					className="bb-groups-list__filter-select"
+					__nextHasNoMarginBottom
+				/>
+				{ groupTypes.length > 0 && (
 					<SelectControl
-						value={ filter }
-						options={ filterOptions }
-						onChange={ handleFilterChange }
-						className="bb-groups-list__filter-select"
+						value={ groupTypeFilter }
+						options={ groupTypeOptions }
+						onChange={ handleGroupTypeFilterChange }
+						className="bb-groups-list__type-filter"
 						__nextHasNoMarginBottom
 					/>
-
-					{ /* Group Type Filter */ }
-					{ groupTypes.length > 0 && (
-						<SelectControl
-							value={ groupTypeFilter }
-							options={ groupTypeOptions }
-							onChange={ handleGroupTypeFilterChange }
-							className="bb-groups-list__type-filter"
-							__nextHasNoMarginBottom
-						/>
-					) }
-
-					{ /* Sort Dropdown */ }
-					<SelectControl
-						value={ sortBy }
-						options={ sortOptions }
-						onChange={ handleSortChange }
-						className="bb-groups-list__sort-select"
-						__nextHasNoMarginBottom
-					/>
-
-					{ /* Search */ }
-					<div className="bb-groups-list__search">
-						<input
-							type="text"
-							value={ searchInput }
-							onChange={ function ( e ) {
-								handleSearchChange( e.target.value );
-							} }
-							placeholder={ __( 'Search groups', 'buddyboss' ) }
-							aria-label={ __( 'Search groups', 'buddyboss' ) }
-							className="bb-groups-list__search-input"
-						/>
-						<span className="bb-groups-list__search-icon">
-							<i className="bb-icons-rl bb-icons-rl-search"></i>
-						</span>
-					</div>
-				</div>
-			</div>
+				) }
+				<SelectControl
+					value={ sortBy }
+					options={ sortOptions }
+					onChange={ handleSortChange }
+					className="bb-groups-list__sort-select"
+					__nextHasNoMarginBottom
+				/>
+			</ListToolbar>
 
 			{ /* Table */ }
 			<div className="bb-groups-list__table-wrapper">
 				{ isLoading ? (
-					<div className="bb-groups-list__loading">
+					<div className="bb-groups-list__loading bb-admin-list-table__loading">
 						<Spinner />
 					</div>
 				) : 0 === groups.length ? (
-					<div className="bb-groups-list__empty">
+					<div className="bb-groups-list__empty bb-admin-list-table__empty">
 						<p>{ __( 'No groups found.', 'buddyboss' ) }</p>
 					</div>
 				) : (
-					<table className="bb-groups-list__table">
+					<table className="bb-groups-list__table bb-admin-list-table">
 						<thead>
 							<tr>
-								<th className="bb-groups-list__th--checkbox">
+								<th className="bb-groups-list__th--checkbox bb-admin-list-table__checkbox">
 									<CheckboxControl
 										checked={ allSelected }
 										onChange={ handleSelectAll }
@@ -852,9 +713,9 @@ export function GroupsListScreen( { onNavigate } ) {
 								return (
 									<tr
 										key={ group.id }
-										className={ 'bb-groups-list__row' + ( isSelected ? ' bb-groups-list__row--selected' : '' ) }
+										className={ 'bb-groups-list__row bb-admin-list-table__row' + ( isSelected ? ' bb-groups-list__row--selected bb-admin-list-table__row--selected' : '' ) }
 									>
-										<td className="bb-groups-list__td--checkbox">
+										<td className="bb-groups-list__td--checkbox bb-admin-list-table__checkbox">
 											<CheckboxControl
 												checked={ isSelected }
 												onChange={ function ( checked ) {
@@ -916,7 +777,7 @@ export function GroupsListScreen( { onNavigate } ) {
 												</td>
 											);
 										} ) }
-										<td className="bb-groups-list__td--actions">
+										<td className="bb-groups-list__td--actions bb-admin-actions-toggle">
 											<DropdownMenu
 												icon={ <i className="bb-icons-rl-dots-three"></i> }
 												label={ __( 'More options', 'buddyboss' ) }
@@ -973,68 +834,14 @@ export function GroupsListScreen( { onNavigate } ) {
 			</div>
 
 			{ /* Footer */ }
-			{ ! isLoading && total > 0 && (
-				<div className="bb-groups-list__footer">
-					<span className="bb-groups-list__item-count">
-						{ sprintf(
-						/* translators: %s: total number of items. */
-						_n( '%s item', '%s items', total, 'buddyboss' ),
-						total
-					) }
-					</span>
-
-					{ totalPages > 1 && (
-						<div className="bb-groups-list__pagination">
-							<Button
-								variant="secondary"
-								disabled={ 1 === currentPage }
-								onClick={ function () {
-									setCurrentPage( function ( p ) {
-										return Math.max( 1, p - 1 );
-									} );
-								} }
-								className="bb-groups-list__pagination-btn bb-groups-list__pagination-btn--previous"
-							>
-								&lsaquo;
-							</Button>
-
-							{ getPageNumbers( currentPage, totalPages ).map( function ( page, index ) {
-								if ( '...' === page ) {
-									return (
-										<span key={ 'ellipsis-' + index } className="bb-groups-list__pagination-ellipsis">
-											&hellip;
-										</span>
-									);
-								}
-								return (
-									<Button
-										key={ page }
-										variant={ currentPage === page ? 'primary' : 'secondary' }
-										onClick={ function () {
-											setCurrentPage( page );
-										} }
-										className={ 'bb-groups-list__pagination-btn' + ( currentPage === page ? ' bb-groups-list__pagination-btn--current' : '' ) }
-									>
-										{ page }
-									</Button>
-								);
-							} ) }
-
-							<Button
-								variant="secondary"
-								disabled={ currentPage >= totalPages }
-								onClick={ function () {
-									setCurrentPage( function ( p ) {
-										return Math.min( totalPages, p + 1 );
-									} );
-								} }
-								className="bb-groups-list__pagination-btn bb-groups-list__pagination-btn--next"
-							>
-								&rsaquo;
-							</Button>
-						</div>
-					) }
-				</div>
+			{ ! isLoading && (
+				<ListPagination
+					currentPage={ currentPage }
+					totalPages={ totalPages }
+					total={ total }
+					onPageChange={ function ( page ) { setCurrentPage( page ); } }
+					className="bb-groups-list"
+				/>
 			) }
 
 			{ /* Delete Group Modal */ }

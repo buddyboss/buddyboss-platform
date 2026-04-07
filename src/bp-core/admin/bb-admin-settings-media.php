@@ -45,6 +45,7 @@ function bb_admin_settings_register_media_feature() {
 			'is_active_callback' => function () {
 				return bp_is_active( 'media' );
 			},
+			'components'         => array( 'media', 'video', 'document' ),
 			'settings_route'     => '/settings/media',
 			'order'              => 70,
 		)

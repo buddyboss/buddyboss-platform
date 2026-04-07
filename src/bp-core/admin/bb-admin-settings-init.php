@@ -63,6 +63,16 @@ function bb_admin_settings_init() {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-groups-ajax.php';
 		}
 
+		// Email Templates AJAX handlers (emails feature is required — always active).
+		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-email-templates-admin-ajax.php' ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-email-templates-admin-ajax.php';
+		}
+
+		// Email Invites AJAX handlers (only when invites component is active).
+		if ( bp_is_active( 'invites' ) && file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-invites-ajax.php' ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-invites-ajax.php';
+		}
+
 		// Forums AJAX handlers (only when forums component is active).
 		if ( bp_is_active( 'forums' ) ) {
 			if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-forums-ajax.php' ) ) {
@@ -140,6 +150,14 @@ function bb_admin_settings_init() {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-messages.php';
 		}
 
+		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-invites.php' ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-invites.php';
+		}
+
+		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-emails.php' ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-emails.php';
+		}
+
 		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-search.php' ) ) {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-search.php';
 		}
@@ -158,6 +176,10 @@ function bb_admin_settings_init() {
 
 		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-moderation.php' ) ) {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-moderation.php';
+		}
+
+		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-registration.php' ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-registration.php';
 		}
 
 		// Icon registry.

@@ -242,10 +242,10 @@ export function InputButtonField( props ) {
 				</button>
 			</div>
 			{ errorMessage && (
-				<p className="bb-admin-settings-field__input-button-error">{ errorMessage }</p>
+				<p className="bb-admin-settings-field__input-button-error" role="alert">{ errorMessage }</p>
 			) }
 			{ warningMessage && (
-				<p className="bb-admin-settings-field__input-button-warning">{ warningMessage }</p>
+				<p className="bb-admin-settings-field__input-button-warning" role="alert">{ warningMessage }</p>
 			) }
 		</div>
 	);
