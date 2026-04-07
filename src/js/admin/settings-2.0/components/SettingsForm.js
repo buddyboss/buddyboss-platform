@@ -92,6 +92,9 @@ export function SettingsForm({ fields, values, onChange }) {
 			if ( field.help_text ) {
 				cache[ field.name + '__help' ] = sanitizeHtml( field.help_text );
 			}
+			if ( field.empty_state_title && 'string' === typeof field.empty_state_title ) {
+				cache[ field.name + '__empty_title' ] = sanitizeHtml( field.empty_state_title );
+			}
 		} );
 		return cache;
 	}, [ fields ] );
@@ -642,9 +645,10 @@ export function SettingsForm({ fields, values, onChange }) {
 							</div>
 						) }
 						{ field.empty_state_title && (
-							<h3 className="bb-admin-empty-state__title">
-								{ decodeEntities( field.empty_state_title ) }
-							</h3>
+							<h3
+								className="bb-admin-empty-state__title"
+								dangerouslySetInnerHTML={{ __html: sanitizedHtml[ field.name + '__empty_title' ] || '' }}
+							/>
 						) }
 						{ field.empty_state_description && (
 							<p className="bb-admin-empty-state__description">
