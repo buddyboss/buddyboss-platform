@@ -100,6 +100,10 @@
 		&:last-child {
 			border-bottom: 0;
 		}
+
+		@media screen and (max-width: 960px) {
+			min-width: 560px;
+		}
 	}
 
 	/* Column layout matching Figma */

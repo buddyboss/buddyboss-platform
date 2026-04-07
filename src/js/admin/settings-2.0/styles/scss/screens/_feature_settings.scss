@@ -104,6 +104,8 @@
     &__main {
         flex: 1;
         padding: 32px;
+        width: 100%;
+        box-sizing: border-box;
     }
 
     &__content {
@@ -561,12 +563,20 @@
             }
 
             width: calc((100% - 277px - 24px) / 2);
+
+             @media screen and (max-width: 980px) {
+                width: calc(50% - 16px);
+            }
         }
     }
 
     // First inline field after a non-inline sibling: offset to align with the content area.
     &--grouped:not([data-group-inline="true"]) + &--grouped[data-group-inline="true"].bb-admin-settings-form__field--no-label {
         margin-left: 277px;
+
+        @media screen and (max-width: 980px) {
+            margin-left: 0;
+        }
     }
 
     // Textarea wrapper ensures counter renders below (not beside) the textarea.
