@@ -13,6 +13,7 @@ import { invalidateFeatureCache } from '../utils/featureCache';
 import { urlToRoute } from '../utils/url';
 import { safeUrl } from '../utils/sanitize';
 import { Toast } from '../components/Toast';
+import { UpgradeModal } from '../components/modals/UpgradeModal';
 
 /**
  * Settings Screen Component
@@ -23,25 +24,33 @@ import { Toast } from '../components/Toast';
  */
 export function SettingsScreen({ onNavigate }) {
 	const [features, setFeatures] = useState([]);
+	const [placeholderFeatures, setPlaceholderFeatures] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [activeFilter, setActiveFilter] = useState('all'); // 'all', 'active', 'inactive'
 	const [selectedCategory, setSelectedCategory] = useState(''); // 'community', 'add-ons', 'integrations'
 	const [searchQuery, setSearchQuery] = useState('');
 	const [toast, setToast] = useState(null);
+	const [upgradeModal, setUpgradeModal] = useState(null); // { feature } or null
 
 	useEffect(() => {
 		// Load features via shared cache (prevents duplicate AJAX calls with Router)
 		getCachedFeatures()
 			.then((data) => {
 				if (Array.isArray(data)) {
-					setFeatures(data);
+					// Separate real features from placeholder features.
+					var realFeatures = data.filter(function( item ) { return ! item.is_placeholder; });
+					var placeholders = data.filter(function( item ) { return !! item.is_placeholder; });
+					setFeatures(realFeatures);
+					setPlaceholderFeatures(placeholders);
 				} else {
 					setFeatures([]);
+					setPlaceholderFeatures([]);
 				}
 				setIsLoading(false);
 			})
 			.catch(function () {
 				setFeatures([]);
+				setPlaceholderFeatures([]);
 				setIsLoading(false);
 			});
 	}, []);
@@ -49,12 +58,14 @@ export function SettingsScreen({ onNavigate }) {
 	// Derive filtered features via useMemo (avoids double-render from useEffect + setState).
 	var filteredFeatures = useMemo( function () {
 		var filtered = features.slice();
+		var showPlaceholders = true;
 
-		// Filter by status.
+		// Filter by status — placeholders never appear in Active/Inactive.
 		if ( 'all' !== activeFilter ) {
 			filtered = filtered.filter( function ( feature ) {
 				return feature.status === activeFilter;
 			} );
+			showPlaceholders = false;
 		}
 
 		// Filter by category.
@@ -64,19 +75,34 @@ export function SettingsScreen({ onNavigate }) {
 			} );
 		}
 
-		// Filter by search.
+		// Filter by search — placeholders excluded from search results.
 		if ( searchQuery && searchQuery.length >= 2 ) {
 			var queryLower = searchQuery.toLowerCase();
 			filtered = filtered.filter( function ( feature ) {
 				return feature.label.toLowerCase().indexOf( queryLower ) !== -1 ||
-					( feature.description && feature.description.toLowerCase().indexOf( queryLower ) !== -1 );
+				       ( feature.description && feature.description.toLowerCase().indexOf( queryLower ) !== -1 );
 			} );
+			showPlaceholders = false;
+		}
+
+		// Append placeholders for "All" and category views (not Active/Inactive/Search).
+		if ( showPlaceholders ) {
+			var filteredPlaceholders = placeholderFeatures.slice();
+
+			if ( selectedCategory ) {
+				filteredPlaceholders = filteredPlaceholders.filter( function ( feature ) {
+					return feature.category === selectedCategory;
+				} );
+			}
+
+			filtered = filtered.concat( filteredPlaceholders );
 		}
 
 		return filtered;
-	}, [ features, activeFilter, selectedCategory, searchQuery ] );
+	}, [ features, placeholderFeatures, activeFilter, selectedCategory, searchQuery ] );
 
-	// Group features by category
+	// Group features by category with defined display order.
+	const categoryOrder = [ 'community', 'add-ons', 'integrations' ];
 	const groupedFeatures = filteredFeatures.reduce((acc, feature) => {
 		const category = feature.category || 'community';
 		if (!acc[category]) {
@@ -86,16 +112,32 @@ export function SettingsScreen({ onNavigate }) {
 		return acc;
 	}, {});
 
-	// Get filter counts
+	// Sort categories into the defined display order.
+	const sortedGroupedFeatures = {};
+	categoryOrder.forEach(function( cat ) {
+		if ( groupedFeatures[ cat ] ) {
+			sortedGroupedFeatures[ cat ] = groupedFeatures[ cat ];
+		}
+	});
+	// Append any categories not in the predefined order.
+	Object.keys( groupedFeatures ).forEach(function( cat ) {
+		if ( ! sortedGroupedFeatures[ cat ] ) {
+			sortedGroupedFeatures[ cat ] = groupedFeatures[ cat ];
+		}
+	});
+
+	// Get filter counts — only real features count (not placeholders).
+	var allCount = features.length + placeholderFeatures.length;
 	const filterCounts = {
-		all: features.length,
-		active: features.filter((item) => 'active' === item.status).length,
-		inactive: features.filter((item) => 'inactive' === item.status).length,
+		all: allCount,
+		active: features.filter(function( item ) { return 'active' === item.status; }).length,
+		inactive: features.filter(function( item ) { return 'inactive' === item.status; }).length,
 	};
 
-	// Get category counts
-	const categoryCounts = features.reduce((acc, feature) => {
-		const category = feature.category || 'community';
+	// Get category counts — include placeholders so their categories appear in the dropdown.
+	var allForCategories = [].concat(features, placeholderFeatures);
+	const categoryCounts = allForCategories.reduce(function( acc, feature ) {
+		var category = feature.category || 'community';
 		acc[category] = (acc[category] || 0) + 1;
 		return acc;
 	}, {});
@@ -116,6 +158,16 @@ export function SettingsScreen({ onNavigate }) {
 	const toggleControllers = useRef({});
 
 	const handleFeatureToggle = (featureId, checked) => {
+		// Guard: never toggle placeholder or DRM-locked features.
+		var isPlaceholder = placeholderFeatures.some(function( item ) { return item.id === featureId; });
+		if ( isPlaceholder ) {
+			return;
+		}
+		var isDrmLocked = features.some(function( item ) { return item.id === featureId && item.is_drm_locked; });
+		if ( isDrmLocked ) {
+			return;
+		}
+
 		const newStatus = checked ? 'active' : 'inactive';
 		const prevStatus = checked ? 'inactive' : 'active';
 
@@ -182,10 +234,36 @@ export function SettingsScreen({ onNavigate }) {
 					// (e.g. Reactions depends on Activity) fetch fresh data.
 					invalidateFeatureCache();
 
+					// Toggle admin submenu visibility for add-on features with their own admin page.
+					// Only for external pages (page != bb-settings), not internal Settings 2.0 routes.
+					if ( currentFeature && currentFeature.settings_route && currentFeature.settings_route.startsWith( 'http' ) ) {
+						try {
+							var routeUrl = new URL( currentFeature.settings_route );
+							var pageSlug = routeUrl.searchParams.get( 'page' );
+							if ( pageSlug && 'bb-settings' !== pageSlug ) {
+								var menuLink = document.querySelector( '#adminmenu a[href*="page=' + CSS.escape( pageSlug ) + '"]' );
+								if ( menuLink ) {
+									// Menu item exists in DOM — toggle visibility.
+									var menuItem = menuLink.closest( 'li' );
+									if ( menuItem ) {
+										menuItem.style.display = checked ? '' : 'none';
+									}
+								} else if ( checked ) {
+									// Menu item was never rendered server-side — reload
+									// so WordPress registers it properly with correct
+									// classes, position, and label.
+									window.location.reload();
+								}
+							}
+						} catch ( e ) {
+							// Ignore URL parsing errors.
+						}
+					}
+
 					// Show success toast.
 					const successMessage = checked
-						? __('%s has been enabled.', 'buddyboss').replace('%s', featureLabel)
-						: __('%s has been disabled.', 'buddyboss').replace('%s', featureLabel);
+						? sprintf( __( '%s has been enabled.', 'buddyboss' ), featureLabel )
+						: sprintf( __( '%s has been disabled.', 'buddyboss' ), featureLabel );
 					setToast({ status: 'success', message: successMessage });
 				} else {
 					// Server rejected — revert.
@@ -226,6 +304,60 @@ export function SettingsScreen({ onNavigate }) {
 				setToast({
 					status: 'error',
 					message: __('Failed to update feature. Please try again.', 'buddyboss'),
+				});
+			});
+	};
+
+	/**
+	 * Handle addon install/activate via mothership AJAX.
+	 *
+	 * @param {Object} feature  Placeholder feature object with plugin_slug.
+	 * @param {string} action   'mosh_addon_install' or 'mosh_addon_activate'.
+	 */
+	const handleAddonAction = (feature, action) => {
+		if ( ! feature.plugin_slug || ! window.bbAdminData.addonNonce ) {
+			return;
+		}
+
+		var label = feature.label || feature.id;
+		var isInstall = 'mosh_addon_install' === action;
+
+		setToast({
+			status: 'saving',
+			message: isInstall
+				? sprintf( __( 'Installing & activating %s...', 'buddyboss' ), label )
+				: sprintf( __( 'Activating %s...', 'buddyboss' ), label ),
+		});
+
+		var formData = new FormData();
+		formData.append('action', action);
+		formData.append('_ajax_nonce', window.bbAdminData.addonNonce);
+		formData.append('slug', feature.plugin_slug);
+		formData.append('extension_type', 'plugin');
+
+		fetch(window.bbAdminData.ajaxUrl, { method: 'POST', body: formData })
+			.then(function( response ) { return response.json(); })
+			.then(function( response ) {
+				if ( response && response.success ) {
+					setToast({
+						status: 'success',
+						message: isInstall
+							? sprintf( __( '%s has been installed and activated.', 'buddyboss' ), label )
+							: sprintf( __( '%s has been activated.', 'buddyboss' ), label ),
+					});
+					// Reload to show the real feature card.
+					setTimeout(function() { window.location.reload(); }, 1500);
+				} else {
+					var errorMsg = ( response && response.data && response.data.message )
+						? response.data.message
+						: __('Failed to process. Please try again.', 'buddyboss');
+					setToast({ status: 'error', message: errorMsg });
+				}
+			})
+			.catch(function() {
+				setToast({
+					status: 'error',
+					message: __('Failed to process. Please try again.', 'buddyboss'),
 				});
 			});
 	};
@@ -286,7 +418,7 @@ export function SettingsScreen({ onNavigate }) {
 
 				{/* Feature Grid */}
 				<div className="bb-admin-settings__grid">
-					{Object.entries(groupedFeatures).map(([category, categoryFeatures]) => (
+					{Object.entries(sortedGroupedFeatures).map(([category, categoryFeatures]) => (
 						<div key={category} className="bb-admin-settings__category">
 							{/* Category Divider */}
 							<div className={ 'community' === category ? 'bb-admin-settings__category-divider' : 'bb-admin-settings__category-divider bb-admin-settings__category-divider--with-line' }>
@@ -298,14 +430,27 @@ export function SettingsScreen({ onNavigate }) {
 										: __('BUDDYBOSS INTEGRATIONS', 'buddyboss') }
 								</h2>
 							</div>
-							
+
 							{/* Features Grid */}
 							<div className="bb-admin-settings__features-grid">
 								{categoryFeatures.map((feature) => (
 									<div
 										key={feature.id}
-										className={`bb-admin-settings__feature-card bb-admin-settings__feature-card--${feature.status}${!feature.available ? ' bb-admin-settings__feature-card--unavailable' : ''}`}
+										className={`bb-admin-settings__feature-card bb-admin-settings__feature-card--${feature.status}${!feature.available && !feature.is_placeholder && !feature.is_drm_locked ? ' bb-admin-settings__feature-card--unavailable' : ''}${feature.is_placeholder ? ' bb-admin-settings__feature-card--placeholder' : ''}${feature.is_drm_locked ? ' bb-admin-settings__feature-card--drm-locked' : ''}`}
 									>
+										{/* Plan Badge — only for upgrade (not_in_plan) or DRM-locked features */}
+										{((feature.is_placeholder && 'not_in_plan' === feature.plugin_status) || feature.is_drm_locked) && feature.upgrade_tier && (
+											<button
+												className={`bb-admin-settings__plan-badge bb-admin-settings__plan-badge--${feature.upgrade_tier}`}
+												onClick={() => setUpgradeModal({ feature: feature })}
+												type="button"
+											>
+												<i className="bb-icons-rl bb-icons-rl-crown-simple"></i>
+												{'plus' === feature.upgrade_tier
+													? __('UPGRADE PLUS', 'buddyboss')
+													: __('UPGRADE PRO', 'buddyboss')}
+											</button>
+										)}
 										{/* Card Body */}
 										<div className="bb-admin-settings__feature-body">
 											{/* Top Section: Icon + Title */}
@@ -317,37 +462,37 @@ export function SettingsScreen({ onNavigate }) {
 															if (!feature.icon) {
 																return <span className="dashicons dashicons-admin-generic"></span>;
 															}
-															
+
 															// If icon has nested data (from registered icons)
 															const iconData = feature.icon.data || feature.icon;
 															const iconType = feature.icon.type || iconData.type;
-															
+
 															if ( 'dashicon' === iconType ) {
 																const slug = feature.icon.slug || iconData.slug || 'dashicons-admin-generic';
 																return <span className={`dashicons ${slug}`}></span>;
 															}
-															
+
 															if ( 'svg' === iconType ) {
 																const url = safeUrl( feature.icon.url || iconData.url || iconData.data_uri || (iconData.data && iconData.data.url) || (iconData.data && iconData.data.data_uri) || '' );
 																if (url && '#' !== url) {
 																	return <img src={url} alt={feature.label} className="bb-admin-settings__feature-icon-img" />;
 																}
 															}
-															
+
 															if ( 'image' === iconType ) {
 																const url = safeUrl( feature.icon.url || iconData.url || iconData.path || (iconData.data && iconData.data.url) || (iconData.data && iconData.data.path) || '' );
 																if (url && '#' !== url) {
 																	return <img src={url} alt={feature.label} className="bb-admin-settings__feature-icon-img" />;
 																}
 															}
-															
+
 															if ( 'font' === iconType ) {
 																const className = feature.icon.class || iconData.class || (iconData.data && iconData.data.class);
 																if (className) {
 																	return <span className={className}></span>;
 																}
 															}
-															
+
 															// Fallback
 															return <span className="dashicons dashicons-admin-generic"></span>;
 														})()}
@@ -355,34 +500,69 @@ export function SettingsScreen({ onNavigate }) {
 													<h3 className="bb-admin-settings__feature-title">{feature.label}</h3>
 												</div>
 											</div>
-											
+
 											{/* Description */}
 											<p className="bb-admin-settings__feature-description">
 												{feature.description || __('No description available.', 'buddyboss')}
 											</p>
 										</div>
-										
+
 										{/* Bottom Section: Settings Button + Toggle */}
 										<div className="bb-admin-settings__feature-bottom">
 											<div className="bb-admin-settings__feature-left">
-												{ feature.settings_route && (
+												{ feature.is_placeholder && 'not_installed' === feature.plugin_status && feature.plugin_slug ? (
 													<Button
 														variant="secondary"
-														className={`bb-admin-settings__feature-settings-btn ${feature.status !== 'active' ? 'bb-admin-settings__feature-settings-btn--disabled' : ''}`}
-														onClick={() => onNavigate(urlToRoute(feature.settings_route))}
-														disabled={feature.status !== 'active'}
+														className="bb-admin-settings__feature-settings-btn"
+														onClick={() => handleAddonAction(feature, 'mosh_addon_install')}
+													>
+														{__('Install & Activate', 'buddyboss')}
+													</Button>
+												) : feature.is_placeholder && 'installed_inactive' === feature.plugin_status && feature.plugin_slug ? (
+													<Button
+														variant="secondary"
+														className="bb-admin-settings__feature-settings-btn"
+														onClick={() => handleAddonAction(feature, 'mosh_addon_activate')}
+													>
+														{__('Activate', 'buddyboss')}
+													</Button>
+												) : feature.is_placeholder ? (
+													<Button
+														variant="secondary"
+														className="bb-admin-settings__feature-settings-btn bb-admin-settings__feature-settings-btn--disabled bb-admin-settings__feature-settings-btn--placeholder"
+														disabled
 													>
 														<i className="bb-icon-settings"></i>
 														{__('Settings', 'buddyboss')}
 													</Button>
-												) }
+												) : feature.settings_route ? (
+													<Button
+														variant="secondary"
+														className={`bb-admin-settings__feature-settings-btn ${feature.status !== 'active' || feature.is_drm_locked ? 'bb-admin-settings__feature-settings-btn--disabled' : ''}`}
+														onClick={() => {
+															if ( feature.is_drm_locked ) {
+																return;
+															}
+															// External URL (add-on plugins with own settings page, not bb-settings).
+															if ( feature.settings_route && feature.settings_route.startsWith( 'http' ) && ! feature.settings_route.includes( 'page=bb-settings' ) ) {
+																window.location.href = feature.settings_route;
+															} else {
+																onNavigate( urlToRoute( feature.settings_route ) );
+															}
+														}}
+														disabled={feature.status !== 'active' || !!feature.is_drm_locked}
+													>
+														<i className="bb-icon-settings"></i>
+														{__('Settings', 'buddyboss')}
+													</Button>
+												) : null }
 											</div>
 											<div className="bb-admin-settings__feature-right">
 												<ToggleControl
-													className="components-form-toggle--is-big"
+													className={`components-form-toggle--is-big${feature.is_placeholder ? ' bb-admin-settings__toggle--placeholder' : ''}${feature.is_drm_locked ? ' bb-admin-settings__toggle--drm-locked' : ''}`}
 													checked={ 'active' === feature.status }
 													onChange={(checked) => handleFeatureToggle(feature.id, checked)}
-													disabled={!feature.available || feature.required}
+													disabled={!feature.available || feature.required || !!feature.is_placeholder || !!feature.is_drm_locked}
 													__nextHasNoMarginBottom
 												/>
 												<span className="screen-reader-text">
@@ -417,6 +597,14 @@ export function SettingsScreen({ onNavigate }) {
 						onDismiss={() => setToast(null)}
 					/>
 				</div>
+			)}
+
+			{/* Upgrade Modal for placeholder features */}
+			{upgradeModal && (
+				<UpgradeModal
+					feature={upgradeModal.feature}
+					onClose={() => setUpgradeModal(null)}
+				/>
 			)}
 		</div>
 	);

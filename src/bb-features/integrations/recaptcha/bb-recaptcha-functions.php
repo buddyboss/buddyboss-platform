@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * @param string $path Path to recaptcha integration.
  */
 function bb_recaptcha_integration_url( $path = '' ) {
-	return trailingslashit( buddypress()->integration_url ) . 'recaptcha/' . trim( $path, '/\\' );
+	return trailingslashit( buddypress()->plugin_url ) . 'bb-features/integrations/recaptcha/' . trim( $path, '/\\' );
 }
 
 /**
@@ -242,7 +242,7 @@ function bb_recaptcha_actions() {
  */
 function bb_recaptcha_is_enabled( $key ) {
 	$enabled_keys = bb_recaptcha_setting( 'enabled_for', array() );
-	$retval = ! empty( $key ) && array_key_exists( $key, $enabled_keys ) && ! empty( $enabled_keys[ $key ] );
+	$retval       = ! empty( $key ) && array_key_exists( $key, $enabled_keys ) && ! empty( $enabled_keys[ $key ] );
 
 	/**
 	 * Filters the enabled status of reCAPTCHA for a specific action.

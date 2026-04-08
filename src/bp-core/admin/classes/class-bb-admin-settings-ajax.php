@@ -130,7 +130,17 @@ class BB_Admin_Settings_Ajax {
 			}
 		}
 
-		wp_send_json_success( $features );
+		/**
+		 * Filters the features array before sending the AJAX response.
+		 *
+		 * Allows placeholder features and third-party extensions to append
+		 * feature objects to the Settings 2.0 feature list.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $features Array of formatted feature objects.
+		 */
+		wp_send_json_success( apply_filters( 'bb_admin_features_response', $features ) );
 	}
 
 	/**
@@ -1330,6 +1340,15 @@ class BB_Admin_Settings_Ajax {
 	private function bb_resolve_settings_route( $feature_id, $feature ) {
 		if ( ! function_exists( 'bb_get_feature_settings_url' ) ) {
 			return '';
+		}
+
+		// External settings route — add-on plugins with their own admin page.
+		// These contain full URLs (http/https) or non-Settings-2.0 page params.
+		if (
+			! empty( $feature['settings_route'] ) &&
+			0 === strpos( $feature['settings_route'], 'http' )
+		) {
+			return esc_url_raw( $feature['settings_route'] );
 		}
 
 		$settings_route = bb_get_feature_settings_url( $feature_id );

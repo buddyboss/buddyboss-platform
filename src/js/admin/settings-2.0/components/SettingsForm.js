@@ -45,6 +45,8 @@ import { EmailRestrictionsField } from './fields/EmailRestrictionsField';
 import { PasswordField } from './fields/PasswordField';
 import { StatusCheckField } from './fields/StatusCheckField';
 import { ImageUploadField } from './fields/ImageUploadField';
+import { RecaptchaVerifyField } from './recaptcha/RecaptchaVerifyField';
+import { RecaptchaBypassField } from './recaptcha/RecaptchaBypassField';
 
 /**
  * Settings Form Component (matching Figma settingsSection)
@@ -91,6 +93,9 @@ export function SettingsForm({ fields, values, onChange }) {
 			}
 			if ( field.help_text ) {
 				cache[ field.name + '__help' ] = sanitizeHtml( field.help_text );
+			}
+			if ( field.empty_state_title && 'string' === typeof field.empty_state_title ) {
+				cache[ field.name + '__empty_title' ] = sanitizeHtml( field.empty_state_title );
 			}
 			// Pre-sanitize per-option descriptions for fields with option_descriptions.
 			if ( field.option_descriptions && 'object' === typeof field.option_descriptions ) {
@@ -374,6 +379,26 @@ export function SettingsForm({ fields, values, onChange }) {
 					/>
 				);
 
+			case 'recaptcha_verify':
+				return (
+					<RecaptchaVerifyField
+						field={field}
+						values={values}
+						disabled={disabled}
+					/>
+				);
+
+			case 'recaptcha_bypass':
+				return (
+					<RecaptchaBypassField
+						field={field}
+						value={value}
+						values={values}
+						onChange={onChange}
+						disabled={disabled}
+					/>
+				);
+
 			case 'password':
 				return (
 					<PasswordField
@@ -648,9 +673,10 @@ export function SettingsForm({ fields, values, onChange }) {
 							</div>
 						) }
 						{ field.empty_state_title && (
-							<h3 className="bb-admin-empty-state__title">
-								{ decodeEntities( field.empty_state_title ) }
-							</h3>
+							<h3
+								className="bb-admin-empty-state__title"
+								dangerouslySetInnerHTML={{ __html: sanitizedHtml[ field.name + '__empty_title' ] || '' }}
+							/>
 						) }
 						{ field.empty_state_description && (
 							<p className="bb-admin-empty-state__description">
@@ -1060,7 +1086,7 @@ export function SettingsForm({ fields, values, onChange }) {
 		const hasLabel = field.label && field.label.trim() !== '';
 
 		return (
-			<div key={field.name} className={fieldClasses + ( ! hasLabel ? ' bb-admin-settings-form__field--no-label' : '' ) + ( 'reaction_mode' !== field.type && field.pro_notice?.show ? ' bb-admin-settings-form__field--pro-locked' : '' )} data-group={field.group?.key || undefined} data-group-inline={ field.group && field.group.inline ? 'true' : undefined }>
+			<div key={field.name} className={fieldClasses + ( ! hasLabel ? ' bb-admin-settings-form__field--no-label' : '' ) + ( 'reaction_mode' !== field.type && field.pro_notice?.show ? ' bb-admin-settings-form__field--pro-locked' : '' )} data-field-name={field.name} data-group={field.group?.key || undefined} data-group-inline={ field.group && field.group.inline ? 'true' : undefined }>
 				{ hasLabel && (
 					<div className="bb-admin-settings-form__field-label">
 						<label htmlFor={ 'bb-field-' + field.name }>

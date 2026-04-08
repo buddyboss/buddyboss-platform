@@ -1,0 +1,418 @@
+// reCAPTCHA feature styles.
+
+// API Keys section: widen child password inputs to 456px (Figma spec).
+// Remove the default child-field separator when inside the API Keys parent.
+.bb-admin-settings-form__field[data-field-name="bb_recaptcha_api_keys"] {
+
+	.bb-admin-settings-form__child-fields {
+		margin-top: 0;
+		padding-top: 0;
+		border-top: none;
+	}
+
+	.bb-admin-settings-form__child-field {
+
+		&-control {
+			max-width: 456px;
+
+			.bb-admin-settings-field__password-input {
+				max-width: 456px;
+			}
+		}
+
+		// Space between child fields matching Figma.
+		& + .bb-admin-settings-form__child-field {
+			margin-top: 16px;
+		}
+	}
+}
+
+// Plain notice: description text without icon or background (Figma: "noticeAndDescripton").
+.bb-admin-notice--plain {
+	background: none;
+	border: none;
+	padding: 0;
+	font-size: 13px;
+	line-height: 18px;
+	color: $bb-text-tertiary-color;
+
+	&::before {
+		display: none;
+	}
+
+	a {
+		color: $bb-link-color;
+	}
+}
+
+// Bypass field: checkbox + text input + copy URL.
+.bb-admin-settings-field__recaptcha-bypass {
+
+	&-row {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		flex-wrap: wrap;
+	}
+
+	&-label {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		font-size: 14px;
+		line-height: 20px;
+		color: $bb-text-color;
+		cursor: pointer;
+	}
+
+	&-checkbox {
+		margin: 0;
+	}
+
+	&-text {
+		width: 120px;
+		padding: 4px 8px;
+		font-size: 13px;
+		line-height: 18px;
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-sm;
+		color: $bb-text-color;
+
+		&:disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+		}
+
+		&::placeholder {
+			color: $bb-text-disabled-color;
+		}
+	}
+
+	&-description {
+		color: $bb-text-tertiary-color;
+		font-size: 13px;
+		line-height: 18px;
+		margin: 8px 0 0;
+	}
+
+	&-url {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		margin-top: 8px;
+
+		&--invalid {
+			opacity: 0.5;
+		}
+	}
+
+	&-link {
+		font-size: 13px;
+		line-height: 18px;
+		color: $bb-text-brand-primary-color;
+		word-break: break-all;
+		text-decoration: none;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+
+	&-copy {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 28px;
+		height: 28px;
+		background: none;
+		border: none;
+		cursor: pointer;
+		color: $bb-icon-color;
+		border-radius: $bb-border-radius-sm;
+		flex-shrink: 0;
+		transition: background-color 0.15s ease;
+
+		&:hover {
+			background-color: $bb-background-primary-color;
+		}
+
+		i {
+			font-size: 16px;
+		}
+	}
+}
+
+.bb-admin-settings-field__recaptcha-verify {
+
+	&-row {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+	}
+
+	&-btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 8px 20px;
+		font-size: 14px;
+		font-weight: 500;
+		line-height: 20px;
+		border-radius: $bb-border-radius-md;
+		border: none;
+		cursor: pointer;
+		background-color: $bb-background-brand-primary-color;
+		color: $bb-text-inverse-color;
+		transition: background-color 0.15s ease;
+
+		&:hover:not(:disabled) {
+			background-color: $bb-background-brand-primary-hover-color;
+		}
+
+		&:disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+		}
+
+		&--connected {
+			background-color: $bb-background-positive-primary-color;
+			color: $bb-text-positive-primary-color;
+			border: 1px solid $bb-border-positive-secondary-color;
+			cursor: default;
+
+			&:hover {
+				background-color: $bb-background-positive-primary-color;
+			}
+		}
+	}
+}
+
+/* Image Selection for Theme and Size */
+.bb-admin-settings-field__image-radio-wrapper {
+
+	&--bb_recaptcha_size,
+	&--bb_recaptcha_theme {
+
+		.bb-admin-settings-field__image-radio-option {
+			width: 200px;
+
+			.bb-admin-settings-field__image-radio-img {
+				max-height: calc(100% - 30px);
+				max-width: calc(100% - 30px);
+				margin: 0 15px;
+			}
+		}
+	}
+
+	&--bb_recaptcha_badge_position {
+
+		.bb-admin-settings-field__image-radio-img {
+			width: 100%;
+			height: 100%;
+			object-fit: contain;
+		}
+	}
+}
+
+// reCAPTCHA Verification Modal.
+.bb-recaptcha-modal {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 100100;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	&__backdrop {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: $bb-overlay-color;
+		z-index: 1;
+	}
+
+	&__container {
+		position: relative;
+		z-index: 2;
+		background: $bb-background-base-color;
+		border-radius: $bb-border-radius-lg;
+		box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+		width: 480px;
+		max-width: 90vw;
+		max-height: 80vh;
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+	}
+
+	&__header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 16px 20px;
+		border-bottom: 1px solid $bb-border-secondary-color;
+	}
+
+	&__title {
+		font-size: 16px;
+		font-weight: 600;
+		line-height: 24px;
+		color: $bb-text-color;
+		margin: 0;
+		padding: 0;
+	}
+
+	&__close {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 32px;
+		height: 32px;
+		background: none;
+		border: none;
+		cursor: pointer;
+		color: $bb-icon-color;
+		border-radius: $bb-border-radius-sm;
+		transition: background-color 0.15s ease;
+
+		&:hover {
+			background-color: $bb-background-primary-color;
+		}
+
+		i {
+			font-size: 16px;
+		}
+	}
+
+	&__content {
+		padding: 24px 20px;
+		min-height: 120px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		overflow-y: auto;
+	}
+
+	&__status {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+		gap: 12px;
+
+		p {
+			font-size: 14px;
+			line-height: 20px;
+			color: $bb-text-color;
+			margin: 0;
+		}
+
+		&--success p {
+			color: $bb-text-positive-primary-color;
+		}
+
+		&--error p {
+			color: $bb-error-color;
+		}
+	}
+
+	&__icon {
+		width: 48px;
+		height: 48px;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background-size: contain;
+		background-repeat: no-repeat;
+		background-position: center;
+
+		&--loading {
+			border: 3px solid $bb-background-secondary-color;
+			border-top-color: $bb-background-brand-primary-color;
+			animation: bb-recaptcha-spin 0.8s linear infinite;
+		}
+
+		&--success {
+			background-color: $bb-background-positive-primary-color;
+
+			&::after {
+				content: '\2713';
+				font-size: 24px;
+				color: $bb-text-positive-primary-color;
+			}
+		}
+
+		&--error {
+			background-color: #fef2f2;
+
+			&::after {
+				content: '\2717';
+				font-size: 24px;
+				color: $bb-error-color;
+			}
+		}
+	}
+
+	&__v2-container {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 80px;
+	}
+
+	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 8px;
+		padding: 12px 20px;
+		border-top: 1px solid $bb-border-secondary-color;
+	}
+
+	&__btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 8px 16px;
+		font-size: 14px;
+		font-weight: 500;
+		line-height: 20px;
+		border-radius: $bb-border-radius-md;
+		border: 1px solid $bb-border-secondary-color;
+		background: $bb-background-base-color;
+		color: $bb-text-color;
+		cursor: pointer;
+		transition: background-color 0.15s ease;
+
+		&:hover:not(:disabled) {
+			background-color: $bb-background-primary-color;
+		}
+
+		&:disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+		}
+
+		&--primary {
+			background-color: $bb-background-brand-primary-color;
+			border-color: $bb-background-brand-primary-color;
+			color: $bb-text-inverse-color;
+
+			&:hover:not(:disabled) {
+				background-color: $bb-background-brand-primary-hover-color;
+			}
+		}
+	}
+}
+
+@keyframes bb-recaptcha-spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
