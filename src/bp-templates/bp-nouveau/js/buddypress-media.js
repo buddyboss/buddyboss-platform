@@ -4716,7 +4716,9 @@ window.bp = window.bp || {};
 				}
 			}
 
-			$currentTarget.find( '.bp-document-move' ).attr( 'id', eventTarget.closest( '.document-activity' ).attr( 'data-id' ) );
+			if ( $currentTarget && $currentTarget.length > 0 ) {
+				$currentTarget.find( '.bp-document-move' ).attr( 'id', eventTarget.closest( '.document-activity' ).attr( 'data-id' ) );
+			}
 			this.currentTargetParent = eventTarget.closest( '.bb-activity-media-elem' ).attr( 'data-parent-id' );
 
 			// Change if this is not from Activity Page.
