@@ -461,6 +461,89 @@ select.bb-admin-settings__select {
 		justify-content: flex-start;
 		gap: 16px;
 	}
+
+	/* Vertical radio layout — use 'field_class' => 'bb-admin-settings-field__radio--vertical'. */
+	.bb-admin-settings-field__radio--vertical .components-radio-control__group-wrapper {
+		flex-direction: column;
+		gap: 12px;
+	}
+}
+
+/* Full control width — forces the field input to use full available width.
+   Use 'field_class' => 'bb-admin-settings-field--full-control-width' in registration. */
+.bb-admin-settings-field--full-control-width {
+	.bb-admin-settings-form__field-content,
+	.bb-admin-settings-form__field-input-wrapper {
+		width: 100%;
+	}
+
+	.bb-admin-settings-form__field-input-wrapper {
+		> div,
+		.components-base-control,
+		.components-base-control__field {
+			width: 100%;
+		}
+
+		/* WordPress SelectControl wrapper chain */
+		.components-select-control,
+		.components-input-base,
+		.components-input-control__container,
+		.components-flex {
+			width: 100% !important;
+		}
+
+		.components-text-control__input,
+		.components-select-control__input,
+		select,
+		input[type="text"] {
+			width: 100% !important;
+			max-width: 100% !important;
+		}
+	}
+}
+
+/* Select field inside grouped fields — match password field width */
+.bb-admin-settings-form__field--grouped {
+	.components-select-control {
+		.components-input-base {
+			width: 100%;
+		}
+	}
+}
+
+/* Text field with copy button */
+.bb-admin-settings-form__field-text-copy {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	width: 100%;
+
+	.components-base-control {
+		flex: 1;
+	}
+}
+
+.bb-admin-settings-form__copy-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 36px;
+	height: 36px;
+	padding: 0;
+	border: 1px solid $bb-border-secondary-color;
+	border-radius: $bb-border-radius-md;
+	background: $bb-background-base-color;
+	color: $bb-icon-color;
+	cursor: pointer;
+	flex-shrink: 0;
+
+	&:hover {
+		background: $bb-background-primary-hover-color;
+	}
+
+	i {
+		font-size: 16px;
+	}
 }
 
 /* Checkbox */

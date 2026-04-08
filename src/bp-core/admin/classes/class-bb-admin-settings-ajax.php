@@ -690,6 +690,8 @@ class BB_Admin_Settings_Ajax {
 				'watch_field'          => $field['watch_field'] ?? null,
 				// Layout: full-width fields render without the label column.
 				'full_width'           => ! empty( $field['full_width'] ),
+				// Custom CSS class(es) appended to the field wrapper div (space-separated).
+				'field_class'          => ! empty( $field['field_class'] ) ? implode( ' ', array_map( 'sanitize_html_class', explode( ' ', $field['field_class'] ) ) ) : null,
 				// Group label for child fields (e.g., xProfile group names under Members).
 				'child_group_label'    => $field['child_group_label'] ?? null,
 				// When true, saving this field triggers a full feature refetch to update side panels.

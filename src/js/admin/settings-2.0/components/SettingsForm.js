@@ -412,9 +412,11 @@ export function SettingsForm({ fields, values, onChange }) {
 
 			case 'text':
 			case 'email':
-			case 'url':
+			case 'url': {
+				var hasCopy = field.field_class && -1 !== field.field_class.indexOf( 'bb-admin-settings-form__field--copy' );
+
 				return (
-					<div className={ field.maxlength > 0 ? 'bb-admin-settings-form__field-text-wrapper' : '' }>
+					<div className={ ( field.maxlength > 0 ? 'bb-admin-settings-form__field-text-wrapper' : '' ) + ( hasCopy ? ' bb-admin-settings-form__field-text-copy' : '' ) }>
 						<TextControl
 							key={field.name}
 							label=""
@@ -431,6 +433,20 @@ export function SettingsForm({ fields, values, onChange }) {
 							maxLength={ field.maxlength > 0 ? field.maxlength : undefined }
 							__nextHasNoMarginBottom
 						/>
+						{ hasCopy && (
+							<button
+								type="button"
+								className="bb-admin-settings-form__copy-btn"
+								title={ __( 'Copy to clipboard', 'buddyboss' ) }
+								onClick={ function() {
+									if ( navigator.clipboard && value ) {
+										navigator.clipboard.writeText( value );
+									}
+								} }
+							>
+								<i className="bb-icons-rl bb-icons-rl-copy" />
+							</button>
+						) }
 						{ field.maxlength > 0 && (
 							<span className="bb-admin-settings-form__textarea-counter">
 								{ ( value || '' ).length + '/' + field.maxlength }
@@ -438,6 +454,7 @@ export function SettingsForm({ fields, values, onChange }) {
 						) }
 					</div>
 				);
+			}
 
 			case 'textarea':
 				return (
@@ -1081,6 +1098,7 @@ export function SettingsForm({ fields, values, onChange }) {
 			isToggleWithChildren ? 'bb-admin-settings-form__field--has-children' : '',
 			field.group?.key ? 'bb-admin-settings-form__field--grouped' : '',
 			field.group?.key && groupLastNames[ field.group.key ] === field.name ? 'bb-admin-settings-form__field--group-last' : '',
+			field.field_class || '',
 		].filter(Boolean).join(' ');
 
 		const hasLabel = field.label && field.label.trim() !== '';
