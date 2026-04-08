@@ -10,6 +10,7 @@
 
 import { Modal } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
+import { safeUrl } from '../../utils/sanitize';
 
 /**
  * Upgrade Modal Component
@@ -41,7 +42,7 @@ export function UpgradeModal( { feature, onClose } ) {
 				{feature.upgrade_image_url && (
 					<div className="bb-upgrade-modal__image-wrapper">
 						<img
-							src={feature.upgrade_image_url}
+							src={ safeUrl( feature.upgrade_image_url ) }
 							alt={feature.label}
 							className="bb-upgrade-modal__image"
 						/>
@@ -54,7 +55,7 @@ export function UpgradeModal( { feature, onClose } ) {
 					</p>
 
 					<a
-						href={feature.upgrade_url || 'https://www.buddyboss.com/pricing/'}
+						href={ safeUrl( feature.upgrade_url ) || 'https://www.buddyboss.com/pricing/' }
 						target="_blank"
 						rel="noopener noreferrer"
 						className={`bb-upgrade-modal__cta bb-upgrade-modal__cta--${feature.upgrade_tier || 'plus'}`}

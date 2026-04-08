@@ -262,8 +262,8 @@ export function SettingsScreen({ onNavigate }) {
 
 					// Show success toast.
 					const successMessage = checked
-						? __('%s has been enabled.', 'buddyboss').replace('%s', featureLabel)
-						: __('%s has been disabled.', 'buddyboss').replace('%s', featureLabel);
+						? sprintf( __( '%s has been enabled.', 'buddyboss' ), featureLabel )
+						: sprintf( __( '%s has been disabled.', 'buddyboss' ), featureLabel );
 					setToast({ status: 'success', message: successMessage });
 				} else {
 					// Server rejected — revert.
@@ -325,8 +325,8 @@ export function SettingsScreen({ onNavigate }) {
 		setToast({
 			status: 'saving',
 			message: isInstall
-				? __('Installing & activating...', 'buddyboss').replace('...', ' ' + label + '...')
-				: __('Activating...', 'buddyboss').replace('...', ' ' + label + '...'),
+				? sprintf( __( 'Installing & activating %s...', 'buddyboss' ), label )
+				: sprintf( __( 'Activating %s...', 'buddyboss' ), label ),
 		});
 
 		var formData = new FormData();
@@ -342,8 +342,8 @@ export function SettingsScreen({ onNavigate }) {
 					setToast({
 						status: 'success',
 						message: isInstall
-							? __('%s has been installed and activated.', 'buddyboss').replace('%s', label)
-							: __('%s has been activated.', 'buddyboss').replace('%s', label),
+							? sprintf( __( '%s has been installed and activated.', 'buddyboss' ), label )
+							: sprintf( __( '%s has been activated.', 'buddyboss' ), label ),
 					});
 					// Reload to show the real feature card.
 					setTimeout(function() { window.location.reload(); }, 1500);

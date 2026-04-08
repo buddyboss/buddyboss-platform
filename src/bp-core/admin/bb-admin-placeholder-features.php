@@ -156,11 +156,11 @@ function bb_admin_inject_placeholder_features( $features ) {
 		$plugin_slug = ! empty( $plugin_file ) ? dirname( $plugin_file ) : '';
 
 		$features[] = array(
-			'id'                => $item['id'],
-			'label'             => isset( $item['label'] ) ? $item['label'] : '',
-			'description'       => isset( $item['description'] ) ? $item['description'] : '',
-			'category'          => isset( $item['category'] ) ? $item['category'] : 'add-ons',
-			'license_tier'      => isset( $item['upgrade_tier'] ) ? $item['upgrade_tier'] : 'plus',
+			'id'                => sanitize_key( $item['id'] ),
+			'label'             => isset( $item['label'] ) ? sanitize_text_field( $item['label'] ) : '',
+			'description'       => isset( $item['description'] ) ? sanitize_text_field( $item['description'] ) : '',
+			'category'          => isset( $item['category'] ) ? sanitize_key( $item['category'] ) : 'add-ons',
+			'license_tier'      => isset( $item['upgrade_tier'] ) ? sanitize_key( $item['upgrade_tier'] ) : 'plus',
 			'status'            => 'inactive',
 			'available'         => false,
 			'required'          => false,
@@ -169,9 +169,9 @@ function bb_admin_inject_placeholder_features( $features ) {
 			'is_placeholder'    => true,
 			'plugin_status'     => $plugin_status,
 			'plugin_slug'       => $plugin_slug,
-			'upgrade_tier'      => isset( $item['upgrade_tier'] ) ? $item['upgrade_tier'] : 'plus',
-			'upgrade_url'       => isset( $item['upgrade_url'] ) ? $item['upgrade_url'] : '',
-			'upgrade_image_url' => isset( $item['upgrade_image_url'] ) ? $item['upgrade_image_url'] : '',
+			'upgrade_tier'      => isset( $item['upgrade_tier'] ) ? sanitize_key( $item['upgrade_tier'] ) : 'plus',
+			'upgrade_url'       => isset( $item['upgrade_url'] ) ? esc_url_raw( $item['upgrade_url'] ) : '',
+			'upgrade_image_url' => isset( $item['upgrade_image_url'] ) ? esc_url_raw( $item['upgrade_image_url'] ) : '',
 			'order'             => isset( $item['order'] ) ? (int) $item['order'] : 999,
 		);
 	}
