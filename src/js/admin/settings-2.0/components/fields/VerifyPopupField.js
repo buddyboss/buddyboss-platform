@@ -116,7 +116,9 @@ export function VerifyPopupField( props ) {
 		setConnected( field.is_connected || false );
 	}, [ field.is_connected ] );
 
-	// Reset connected state when any related field value changes.
+	// Reset internal connected state when any related field value changes.
+	// This controls button visibility (show Update when fields changed) but does NOT
+	// update the section status badge — badge only changes after clicking Update.
 	useEffect( function() {
 		if ( ! connected || ! initialValuesRef.current ) {
 			return;
@@ -128,17 +130,6 @@ export function VerifyPopupField( props ) {
 
 		if ( hasChanges ) {
 			setConnected( false );
-
-			// Update section status badge to "Not Connected".
-			window.dispatchEvent( new CustomEvent( BB_EVENTS.SECTION_STATUS_UPDATE, {
-				detail: {
-					fieldName: field.name,
-					status: {
-						type: 'warning',
-						text: __( 'Not Connected', 'buddyboss' ),
-					},
-				},
-			} ) );
 
 			/**
 			 * Action: Fires when connected state resets due to value changes.
@@ -281,11 +272,26 @@ export function VerifyPopupField( props ) {
 					 */
 					wp.hooks.doAction( 'bb_admin_verify_field_success', field, data, values );
 				} else {
-					var errorMsg = ( result.data && result.data.message ) || __( 'Verification failed.', 'buddyboss' );
+					var errorData = result.data || {};
+					var errorMsg = errorData.message || __( 'Verification failed.', 'buddyboss' );
 					setModalPhase( 'error' );
 					setModalMessage( errorMsg );
 
-					wp.hooks.doAction( 'bb_admin_verify_field_phase_change', field, 'error', result.data || {} );
+					// Update section status badge on error.
+					if ( errorData.status ) {
+						window.dispatchEvent( new CustomEvent( BB_EVENTS.SECTION_STATUS_UPDATE, {
+							detail: { fieldName: field.name, status: errorData.status },
+						} ) );
+					}
+
+					// Update hidden fields on error (e.g. _is_connected = 0).
+					if ( errorData.updated_fields ) {
+						window.dispatchEvent( new CustomEvent( BB_EVENTS.FIELD_VALUE_UPDATE, {
+							detail: { fields: errorData.updated_fields, is_connected: false },
+						} ) );
+					}
+
+					wp.hooks.doAction( 'bb_admin_verify_field_phase_change', field, 'error', errorData );
 
 					/**
 					 * Action: Fires on failed verification.
@@ -294,7 +300,7 @@ export function VerifyPopupField( props ) {
 					 * @param {Object} data     Error response data.
 					 * @param {Object} values   Form values at time of verification.
 					 */
-					wp.hooks.doAction( 'bb_admin_verify_field_error', field, result.data || {}, values );
+					wp.hooks.doAction( 'bb_admin_verify_field_error', field, errorData, values );
 				}
 			} )
 			.catch( function( err ) {

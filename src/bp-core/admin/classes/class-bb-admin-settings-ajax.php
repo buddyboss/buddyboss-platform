@@ -692,6 +692,17 @@ class BB_Admin_Settings_Ajax {
 				// Async select fields (searchable server-side select with AJAX loading).
 				'async_action'         => ! empty( $field['async_action'] ) ? sanitize_key( $field['async_action'] ) : null,
 				'watch_field'          => $field['watch_field'] ?? null,
+				// Fetch fresh data via AJAX when specified fields change (e.g. refresh select options after credentials entered).
+				'fetch_on_change'      => ! empty( $field['fetch_on_change'] ) && is_array( $field['fetch_on_change'] )
+					? array(
+						'fields'         => ! empty( $field['fetch_on_change']['fields'] ) ? array_map( 'sanitize_key', $field['fetch_on_change']['fields'] ) : array(),
+						'require_all'    => ! empty( $field['fetch_on_change']['require_all'] ),
+						'ajax_action'    => ! empty( $field['fetch_on_change']['ajax_action'] ) ? sanitize_key( $field['fetch_on_change']['ajax_action'] ) : '',
+						'debounce'       => ! empty( $field['fetch_on_change']['debounce'] ) ? absint( $field['fetch_on_change']['debounce'] ) : 500,
+						'loading_text'   => ! empty( $field['fetch_on_change']['loading_text'] ) ? sanitize_text_field( $field['fetch_on_change']['loading_text'] ) : '',
+						'disable_fields' => ! empty( $field['fetch_on_change']['disable_fields'] ) ? array_map( 'sanitize_key', $field['fetch_on_change']['disable_fields'] ) : array(),
+					)
+					: null,
 				// Layout: full-width fields render without the label column.
 				'full_width'           => ! empty( $field['full_width'] ),
 				// Custom CSS class(es) appended to the field wrapper div (space-separated).

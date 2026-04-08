@@ -48,6 +48,7 @@ import { ImageUploadField } from './fields/ImageUploadField';
 import { RecaptchaVerifyField } from './recaptcha/RecaptchaVerifyField';
 import { RecaptchaBypassField } from './recaptcha/RecaptchaBypassField';
 import { VerifyPopupField } from './fields/VerifyPopupField';
+import { useFetchOnChange } from '../hooks/useFetchOnChange';
 
 /**
  * Settings Form Component (matching Figma settingsSection)
@@ -61,6 +62,9 @@ import { VerifyPopupField } from './fields/VerifyPopupField';
 export function SettingsForm({ fields, values, onChange }) {
 	// Use reaction callbacks hook for jQuery emotion picker integration
 	const { defaultEmotionsRef } = useReactionCallbacks(onChange, values);
+
+	// Fetch-on-change: watches fields and triggers AJAX to refresh select options dynamically.
+	var fetchOnChange = useFetchOnChange( fields, values );
 
 	// Track migration modal state
 	const [isMigrationModalOpen, setIsMigrationModalOpen] = useState(false);
@@ -481,18 +485,43 @@ export function SettingsForm({ fields, values, onChange }) {
 					</div>
 				);
 
-			case 'select':
+			case 'select': {
+				// Apply fetch_on_change overrides (dynamic options from AJAX).
+				var selectOverrides = fetchOnChange.getFieldOverrides( field.name );
+				var selectOptions   = ( selectOverrides && selectOverrides.options ) ? selectOverrides.options : ( field.options || [] );
+				var selectDisabled  = disabled || ( selectOverrides ? selectOverrides.disabled : false );
+				var selectLoading   = selectOverrides && selectOverrides.loading;
+
+				// Auto-select default value when fetch returns one and current value is empty.
+				if ( selectOverrides && selectOverrides.defaultValue && ! value ) {
+					onChange( field.name, selectOverrides.defaultValue );
+				}
+
+				if ( selectLoading ) {
+					return (
+						<SelectControl
+							key={field.name}
+							label=""
+							value=""
+							options={ [ { value: '', label: selectOverrides.loadingText || __( 'Loading...', 'buddyboss' ) } ] }
+							disabled
+							__nextHasNoMarginBottom
+						/>
+					);
+				}
+
 				return (
 					<SelectControl
 						key={field.name}
 						label=""
 						value={value != null ? String(value) : ''}
-						options={field.options || []}
+						options={selectOptions}
 						onChange={(newValue) => onChange(field.name, newValue)}
-						disabled={disabled}
+						disabled={selectDisabled}
 						__nextHasNoMarginBottom
 					/>
 				);
+			}
 
 			case 'async_select':
 				return (
