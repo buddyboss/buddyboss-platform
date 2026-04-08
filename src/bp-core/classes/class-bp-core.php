@@ -195,15 +195,24 @@ class BP_Core extends BP_Component {
 			)
 		);
 
-		$integration_dir = $bp->plugin_dir . '/bp-integrations/';
+		$integration_dir     = $bp->plugin_dir . '/bp-integrations/';
+		$feature_integration_dir = $bp->plugin_dir . '/bb-features/integrations/';
 
 		foreach ( $bp->available_integrations as $integration ) {
 			$file = "{$integration_dir}{$integration}/bp-{$integration}-loader.php";
 			if ( file_exists( $file ) ) {
 				include $file;
+				continue;
 			}
 
 			$file = "{$integration_dir}{$integration}/bb-{$integration}-loader.php";
+			if ( file_exists( $file ) ) {
+				include $file;
+				continue;
+			}
+
+			// Check bb-features/integrations/ for migrated integrations.
+			$file = "{$feature_integration_dir}{$integration}/bb-{$integration}-loader.php";
 			if ( file_exists( $file ) ) {
 				include $file;
 			}

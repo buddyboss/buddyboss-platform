@@ -21,7 +21,12 @@ import { __, _n, sprintf } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { getTopicTags, getTopicTag, deleteTopicTag, topicTagBulkAction } from '../utils/ajax';
 import { safeUrl } from '../utils/sanitize';
-import { getPageNumbers } from '../utils/pagination';
+import { ListPagination } from '../components/common/ListPagination';
+import { AdminNotice } from '../components/common/AdminNotice';
+import { ListToolbar } from '../components/common/ListToolbar';
+import { DeleteConfirmModal } from '../components/common/DeleteConfirmModal';
+import { useListScreenHandlers } from '../hooks/useListScreenHandlers';
+import { useListScreenState } from '../hooks/useListScreenState';
 import { TagCreateModal } from '../components/forums/TagCreateModal';
 
 /**
@@ -43,13 +48,27 @@ var TAGS_PER_PAGE = 20;
  * @returns {JSX.Element} Discussion tags list screen.
  */
 export default function DiscussionTagsListScreen( { onNavigate } ) {
+	// Common list screen state (loading, notice, selection, bulk, search).
+	var common = useListScreenState();
+	var isLoading = common.isLoading;
+	var setIsLoading = common.setIsLoading;
+	var notice = common.notice;
+	var setNotice = common.setNotice;
+	var selectedIds = common.selectedIds;
+	var setSelectedIds = common.setSelectedIds;
+	var bulkAction = common.bulkAction;
+	var setBulkAction = common.setBulkAction;
+	var isBulkProcessing = common.isBulkProcessing;
+	var setIsBulkProcessing = common.setIsBulkProcessing;
+	var searchInput = common.searchInput;
+	var setSearchInput = common.setSearchInput;
+	var searchQuery = common.searchQuery;
+	var setSearchQuery = common.setSearchQuery;
+
+	// Screen-specific state.
 	var tagsState = useState( [] );
 	var tags = tagsState[ 0 ];
 	var setTags = tagsState[ 1 ];
-
-	var isLoadingState = useState( true );
-	var isLoading = isLoadingState[ 0 ];
-	var setIsLoading = isLoadingState[ 1 ];
 
 	var errorState = useState( '' );
 	var error = errorState[ 0 ];
@@ -65,31 +84,6 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 	var setTotal = totalState[ 1 ];
 
 	var totalPages = Math.ceil( total / TAGS_PER_PAGE );
-
-	// Search.
-	var searchInputState = useState( '' );
-	var searchInput = searchInputState[ 0 ];
-	var setSearchInput = searchInputState[ 1 ];
-
-	var searchQueryState = useState( '' );
-	var searchQuery = searchQueryState[ 0 ];
-	var setSearchQuery = searchQueryState[ 1 ];
-
-	var searchTimerRef = useRef( null );
-
-	// Selection state for bulk actions.
-	var selectedIdsState = useState( [] );
-	var selectedIds = selectedIdsState[ 0 ];
-	var setSelectedIds = selectedIdsState[ 1 ];
-
-	// Bulk actions.
-	var bulkActionState = useState( '' );
-	var bulkAction = bulkActionState[ 0 ];
-	var setBulkAction = bulkActionState[ 1 ];
-
-	var isBulkProcessingState = useState( false );
-	var isBulkProcessing = isBulkProcessingState[ 0 ];
-	var setIsBulkProcessing = isBulkProcessingState[ 1 ];
 
 	// Bulk delete modal.
 	var bulkDeleteOpenState = useState( false );
@@ -134,11 +128,6 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 	var deleteConfirmState = useState( false );
 	var deleteConfirm = deleteConfirmState[ 0 ];
 	var setDeleteConfirm = deleteConfirmState[ 1 ];
-
-	// Notice state.
-	var noticeState = useState( null );
-	var notice = noticeState[ 0 ];
-	var setNotice = noticeState[ 1 ];
 
 	// AbortController ref for cancelling stale requests.
 	var abortRef = useRef( null );
@@ -199,8 +188,8 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 			if ( editAbortRef.current ) {
 				editAbortRef.current.abort();
 			}
-			if ( searchTimerRef.current ) {
-				clearTimeout( searchTimerRef.current );
+			if ( handlers.searchTimerRef.current ) {
+				clearTimeout( handlers.searchTimerRef.current );
 			}
 		};
 	}, [] );
@@ -212,68 +201,27 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 		fetchTags( { page: 1, search: searchQuery } );
 	}, [ searchQuery ] );
 
-	// Clear notice after 5 seconds.
-	useEffect( function () {
-		if ( notice ) {
-			var timer = setTimeout( function () {
-				setNotice( null );
-			}, 5000 );
-			return function () {
-				clearTimeout( timer );
-			};
-		}
-	}, [ notice ] );
+	// Common list screen handlers (search, select).
+	var handlers = useListScreenHandlers( {
+		setSearchInput: setSearchInput,
+		setSearchQuery: setSearchQuery,
+		setPage: setCurrentPage,
+		setSelectedIds: setSelectedIds,
+		getItemIds: function () {
+			return tags.map( function ( t ) { return t.id; } );
+		},
+	} );
+	var handleSearchChange = handlers.handleSearchChange;
+	var handleSearchClear = handlers.handleSearchClear;
 
-	/**
-	 * Handle search input change with debounce.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {string} value Search input value.
-	 */
-	var handleSearchChange = function ( value ) {
-		setSearchInput( value );
-
-		if ( searchTimerRef.current ) {
-			clearTimeout( searchTimerRef.current );
-		}
-
-		searchTimerRef.current = setTimeout( function () {
-			setSearchQuery( value );
-		}, 500 );
-	};
-
-	/**
-	 * Clear search input.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	var handleSearchClear = function () {
-		setSearchInput( '' );
-		if ( searchTimerRef.current ) {
-			clearTimeout( searchTimerRef.current );
-		}
-		setSearchQuery( '' );
-	};
-
-	/**
-	 * Handle page change.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {number} newPage Page number.
-	 */
+	// Tags uses manual fetch on page change (not dependency-driven).
 	var handlePageChange = function ( newPage ) {
 		setCurrentPage( newPage );
 		setSelectedIds( [] );
 		fetchTags( { page: newPage, search: searchQuery } );
 	};
 
-	/**
-	 * Handle select all checkbox toggle.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
+	// Tags uses toggle pattern for select (no checked param from CheckboxControl).
 	var handleSelectAll = function () {
 		if ( selectedIds.length === tags.length ) {
 			setSelectedIds( [] );
@@ -282,13 +230,6 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 		}
 	};
 
-	/**
-	 * Handle single row checkbox toggle.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {number} tagId Tag ID.
-	 */
 	var handleSelectRow = function ( tagId ) {
 		setSelectedIds( function ( prev ) {
 			if ( -1 !== prev.indexOf( tagId ) ) {
@@ -477,19 +418,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 	return (
 		<div className="bb-discussion-tags-list">
 			{ /* Notice */ }
-			{ notice && (
-				<div className={ 'bb-admin-notice bb-admin-notice--' + notice.type }>
-					<span>{ notice.message }</span>
-					<button
-						className="bb-admin-notice--dismiss"
-						onClick={ function () {
-							setNotice( null );
-						} }
-					>
-						<i className="bb-icons-rl bb-icons-rl-x"></i>
-					</button>
-				</div>
-			) }
+			<AdminNotice notice={ notice } onDismiss={ function () { setNotice( null ); } } />
 
 			{ /* Header */ }
 			<div className="bb-discussion-tags-list__header">
@@ -510,53 +439,26 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 			</div>
 
 			{ /* Toolbar: Bulk actions + Search */ }
-			<div className="bb-discussion-tags-list__toolbar">
-				<div className="bb-discussion-tags-list__toolbar-left">
-					<SelectControl
-						value={ bulkAction }
-						options={ [
-							{ value: '', label: __( 'Bulk actions', 'buddyboss' ) },
-							{ value: 'bulk_delete', label: __( 'Delete', 'buddyboss' ) },
-						] }
-						onChange={ setBulkAction }
-						__nextHasNoMarginBottom
-					/>
-					<Button
-						variant="secondary"
-						className="bb-discussion-tags-list__bulk-apply"
-						onClick={ handleBulkApply }
-						disabled={ ! bulkAction || 0 === selectedIds.length || isBulkProcessing }
-					>
-						{ __( 'Apply', 'buddyboss' ) }
-					</Button>
-				</div>
-				<div className="bb-discussion-tags-list__toolbar-right">
-					<div className="bb-discussion-tags-list__search">
-						<input
-							type="text"
-							value={ searchInput }
-							onChange={ function ( e ) {
-								handleSearchChange( e.target.value );
-							} }
-							placeholder={ __( 'Search tags', 'buddyboss' ) }
-							className="bb-discussion-tags-list__search-input"
-						/>
-						{ searchInput && (
-							<button
-								className="bb-discussion-tags-list__search-clear"
-								onClick={ handleSearchClear }
-								type="button"
-							>
-								<i className="bb-icons-rl bb-icons-rl-x"></i>
-							</button>
-						) }
-					</div>
-				</div>
-			</div>
+			<ListToolbar
+				className="bb-discussion-tags-list"
+				bulkAction={ bulkAction }
+				bulkOptions={ [
+					{ value: '', label: __( 'Bulk actions', 'buddyboss' ) },
+					{ value: 'bulk_delete', label: __( 'Delete', 'buddyboss' ) },
+				] }
+				onBulkActionChange={ setBulkAction }
+				onBulkApply={ handleBulkApply }
+				selectedCount={ selectedIds.length }
+				isBulkProcessing={ isBulkProcessing }
+				searchInput={ searchInput }
+				onSearchChange={ handleSearchChange }
+				searchPlaceholder={ __( 'Search tags', 'buddyboss' ) }
+				onSearchClear={ handleSearchClear }
+			/>
 
 			{ /* Loading / Error / Empty */ }
 			{ isLoading && (
-				<div className="bb-discussion-tags-list__loading">
+				<div className="bb-discussion-tags-list__loading bb-admin-list-table__loading">
 					<Spinner />
 				</div>
 			) }
@@ -576,7 +478,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 			) }
 
 			{ ! isLoading && ! error && 0 === tags.length && (
-				<div className="bb-discussion-tags-list__empty">
+				<div className="bb-discussion-tags-list__empty bb-admin-list-table__empty">
 					<p>{ searchQuery ? __( 'No tags found matching your search.', 'buddyboss' ) : __( 'No discussion tags found.', 'buddyboss' ) }</p>
 				</div>
 			) }
@@ -584,10 +486,10 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 			{ /* Table */ }
 			{ ! isLoading && ! error && tags.length > 0 && (
 				<div className="bb-discussion-tags-list__table-wrap">
-					<table className="bb-discussion-tags-list__table">
+					<table className="bb-discussion-tags-list__table bb-admin-list-table">
 						<thead>
 							<tr>
-								<th className="bb-discussion-tags-list__col-cb">
+								<th className="bb-discussion-tags-list__col-cb bb-admin-list-table__checkbox">
 									<CheckboxControl
 										checked={ isAllSelected }
 										onChange={ handleSelectAll }
@@ -610,8 +512,8 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 							{ tags.map( function ( tag ) {
 								var isSelected = -1 !== selectedIds.indexOf( tag.id );
 								return (
-									<tr key={ tag.id } className={ 'bb-discussion-tags-list__row' + ( isSelected ? ' bb-discussion-tags-list__row--selected' : '' ) }>
-										<td className="bb-discussion-tags-list__col-cb">
+									<tr key={ tag.id } className={ 'bb-discussion-tags-list__row bb-admin-list-table__row' + ( isSelected ? ' bb-discussion-tags-list__row--selected bb-admin-list-table__row--selected' : '' ) }>
+										<td className="bb-discussion-tags-list__col-cb bb-admin-list-table__checkbox">
 											<CheckboxControl
 												checked={ isSelected }
 												onChange={ function () {
@@ -656,7 +558,7 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 												) }
 											</div>
 										</td>
-										<td className="bb-discussion-tags-list__col-actions">
+										<td className="bb-discussion-tags-list__col-actions bb-admin-actions-toggle">
 											<DropdownMenu
 												icon={ <i className="bb-icons-rl-dots-three"></i> }
 												label={ __( 'More options', 'buddyboss' ) }
@@ -714,64 +616,14 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 			) }
 
 			{ /* Footer */ }
-			{ ! isLoading && total > 0 && (
-				<div className="bb-discussion-tags-list__footer">
-					<span className="bb-discussion-tags-list__item-count">
-						{ sprintf(
-						/* translators: %s: total number of items. */
-						_n( '%s item', '%s items', total, 'buddyboss' ),
-						total
-					) }
-					</span>
-
-					{ totalPages > 1 && (
-						<div className="bb-discussion-tags-list__pagination">
-							<Button
-								variant="secondary"
-								disabled={ 1 === currentPage }
-								onClick={ function () {
-									handlePageChange( Math.max( 1, currentPage - 1 ) );
-								} }
-								className="bb-discussion-tags-list__pagination-btn bb-discussion-tags-list__pagination-btn--previous"
-							>
-								&lsaquo;
-							</Button>
-
-							{ getPageNumbers( currentPage, totalPages ).map( function ( page, index ) {
-								if ( '...' === page ) {
-									return (
-										<span key={ 'ellipsis-' + index } className="bb-discussion-tags-list__pagination-ellipsis">
-											&hellip;
-										</span>
-									);
-								}
-								return (
-									<Button
-										key={ page }
-										variant={ currentPage === page ? 'primary' : 'secondary' }
-										onClick={ function () {
-											handlePageChange( page );
-										} }
-										className={ 'bb-discussion-tags-list__pagination-btn' + ( currentPage === page ? ' bb-discussion-tags-list__pagination-btn--current' : '' ) }
-									>
-										{ page }
-									</Button>
-								);
-							} ) }
-
-							<Button
-								variant="secondary"
-								disabled={ currentPage >= totalPages }
-								onClick={ function () {
-									handlePageChange( Math.min( totalPages, currentPage + 1 ) );
-								} }
-								className="bb-discussion-tags-list__pagination-btn bb-discussion-tags-list__pagination-btn--next"
-							>
-								&rsaquo;
-							</Button>
-						</div>
-					) }
-				</div>
+			{ ! isLoading && (
+				<ListPagination
+					currentPage={ currentPage }
+					totalPages={ totalPages }
+					total={ total }
+					onPageChange={ handlePageChange }
+					className="bb-discussion-tags-list"
+				/>
 			) }
 
 			{ /* Create Modal */ }
@@ -797,148 +649,49 @@ export default function DiscussionTagsListScreen( { onNavigate } ) {
 				isLoading={ isEditLoading }
 			/>
 
-			{ /* Single Delete Confirmation Modal (Figma: warning + confirm checkbox) */ }
-			{ deleteTagItem && (
-				<Modal
-					title={ __( 'Delete Tag', 'buddyboss' ) }
-					onRequestClose={ function () {
-						setDeleteTagItem( null );
-						setDeleteConfirm( false );
-					} }
-					className="bb-tag-delete-modal bb-admin-settings-modal"
-					shouldCloseOnClickOutside={ false }
-				>
-					<div className="bb-tag-delete-modal__body">
-						<div className="bb-admin-delete__warning">
-							<i className="bb-icons-rl bb-icons-rl-warning-circle"></i>
-							<div className="bb-admin-delete__warning-text">
-								<span className="bb-admin-delete__warning-title">
-									{ __( 'Warning', 'buddyboss' ) }
-								</span>
-								<span className="bb-admin-delete__warning-desc">
-									{ __( 'This permanently deletes discussion tags from the community and cannot be undone.', 'buddyboss' ) }
-								</span>
-							</div>
-						</div>
-						<p className="bb-tag-delete-modal__description">
-							{ __( 'Deleting discussion tags removes them from discussions, leaving those discussions untagged.', 'buddyboss' ) }
-						</p>
-						<CheckboxControl
-							label={ __( 'I understand that this deletes the discussion tags.', 'buddyboss' ) }
-							checked={ deleteConfirm }
-							onChange={ setDeleteConfirm }
-							__nextHasNoMarginBottom
-						/>
-					</div>
-					<div className="bb-tag-delete-modal__footer">
-						<Button
-							variant="secondary"
-							onClick={ function () {
-								setDeleteTagItem( null );
-								setDeleteConfirm( false );
-							} }
-							disabled={ isDeleting }
-						>
-							{ __( 'Cancel', 'buddyboss' ) }
-						</Button>
-						<Button
-							variant="primary"
-							onClick={ handleDeleteConfirm }
-							isBusy={ isDeleting }
-							disabled={ ! deleteConfirm || isDeleting }
-							isDestructive
-						>
-							{ __( 'Delete', 'buddyboss' ) }
-						</Button>
-					</div>
-				</Modal>
-			) }
+			{ /* Single Delete Confirmation Modal */ }
+			<DeleteConfirmModal
+				isOpen={ !! deleteTagItem }
+				singleTitle={ __( 'Delete Tag', 'buddyboss' ) }
+				items={ deleteTagItem ? [ { id: deleteTagItem.id, name: deleteTagItem.name } ] : [] }
+				warningText={ __( 'This permanently deletes discussion tags from the community and cannot be undone.', 'buddyboss' ) }
+				description={ __( 'Deleting discussion tags removes them from discussions, leaving those discussions untagged.', 'buddyboss' ) }
+				confirmLabel={ __( 'I understand that this deletes the discussion tags.', 'buddyboss' ) }
+				confirmChecked={ deleteConfirm }
+				onConfirmChange={ setDeleteConfirm }
+				onConfirm={ handleDeleteConfirm }
+				onClose={ function () { setDeleteTagItem( null ); setDeleteConfirm( false ); } }
+				isProcessing={ isDeleting }
+				className="bb-tag-delete-modal"
+			/>
 
-			{ /* Bulk Delete Confirmation Modal (Figma: item list + warning + confirm) */ }
-			{ bulkDeleteOpen && (
-				<Modal
-					title={ __( 'Bulk Delete', 'buddyboss' ) }
-					onRequestClose={ function () {
-						setBulkDeleteOpen( false );
-						setBulkDeleteTargetIds( [] );
-						setBulkDeleteConfirm( false );
-					} }
-					className="bb-tag-bulk-delete-modal bb-admin-settings-modal"
-					shouldCloseOnClickOutside={ false }
-				>
-					<div className="bb-tag-bulk-delete-modal__body">
-						<div className="bb-admin-bulk-modal__selected-items">
-							{ bulkDeleteTagNames.map( function ( item ) {
-								return (
-									<div key={ item.id } className="bb-admin-bulk-modal__selected-item">
-										<CheckboxControl
-											checked={ true }
-											onChange={ function () {
-												setBulkDeleteTargetIds( function ( prev ) {
-													var next = prev.filter( function ( i ) { return i !== item.id; } );
-													if ( 0 === next.length ) {
-														setBulkDeleteOpen( false );
-													}
-													return next;
-												} );
-												setSelectedIds( function ( prev ) {
-													return prev.filter( function ( i ) { return i !== item.id; } );
-												} );
-											} }
-											__nextHasNoMarginBottom
-										/>
-										<span className="bb-admin-bulk-modal__selected-item-name">
-											{ decodeEntities( item.name ) }
-										</span>
-									</div>
-								);
-							} ) }
-						</div>
-						<div className="bb-admin-delete__warning">
-							<i className="bb-icons-rl bb-icons-rl-warning-circle"></i>
-							<div className="bb-admin-delete__warning-text">
-								<span className="bb-admin-delete__warning-title">
-									{ __( 'Warning', 'buddyboss' ) }
-								</span>
-								<span className="bb-admin-delete__warning-desc">
-									{ __( 'This permanently deletes discussion tags from the community and cannot be undone.', 'buddyboss' ) }
-								</span>
-							</div>
-						</div>
-						<p className="bb-tag-bulk-delete-modal__description">
-							{ __( 'Deleting discussion tags removes them from discussions, leaving those discussions untagged.', 'buddyboss' ) }
-						</p>
-						<CheckboxControl
-							label={ __( 'I understand that this deletes the discussion tags.', 'buddyboss' ) }
-							checked={ bulkDeleteConfirm }
-							onChange={ setBulkDeleteConfirm }
-							__nextHasNoMarginBottom
-						/>
-					</div>
-					<div className="bb-tag-bulk-delete-modal__footer">
-						<Button
-							variant="secondary"
-							onClick={ function () {
-								setBulkDeleteOpen( false );
-								setBulkDeleteTargetIds( [] );
-								setBulkDeleteConfirm( false );
-							} }
-							disabled={ isBulkProcessing }
-						>
-							{ __( 'Cancel', 'buddyboss' ) }
-						</Button>
-						<Button
-							variant="primary"
-							isDestructive
-							onClick={ handleBulkDeleteConfirm }
-							isBusy={ isBulkProcessing }
-							disabled={ ! bulkDeleteConfirm || isBulkProcessing }
-						>
-							{ __( 'Delete', 'buddyboss' ) }
-						</Button>
-					</div>
-				</Modal>
-			) }
+			{ /* Bulk Delete Confirmation Modal */ }
+			<DeleteConfirmModal
+				isOpen={ bulkDeleteOpen }
+				singleTitle={ __( 'Delete Tag', 'buddyboss' ) }
+				items={ bulkDeleteTagNames }
+				onRemoveItem={ function ( id ) {
+					setBulkDeleteTargetIds( function ( prev ) {
+						var next = prev.filter( function ( i ) { return i !== id; } );
+						if ( 0 === next.length ) {
+							setBulkDeleteOpen( false );
+						}
+						return next;
+					} );
+					setSelectedIds( function ( prev ) {
+						return prev.filter( function ( i ) { return i !== id; } );
+					} );
+				} }
+				warningText={ __( 'This permanently deletes discussion tags from the community and cannot be undone.', 'buddyboss' ) }
+				description={ __( 'Deleting discussion tags removes them from discussions, leaving those discussions untagged.', 'buddyboss' ) }
+				confirmLabel={ __( 'I understand that this deletes the discussion tags.', 'buddyboss' ) }
+				confirmChecked={ bulkDeleteConfirm }
+				onConfirmChange={ setBulkDeleteConfirm }
+				onConfirm={ handleBulkDeleteConfirm }
+				onClose={ function () { setBulkDeleteOpen( false ); setBulkDeleteTargetIds( [] ); setBulkDeleteConfirm( false ); } }
+				isProcessing={ isBulkProcessing }
+				className="bb-tag-bulk-delete-modal"
+			/>
 		</div>
 	);
 }

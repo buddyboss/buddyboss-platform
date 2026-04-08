@@ -102,12 +102,6 @@
 		font-size: 13px;
 		color: $bb-text-secondary-color;
 
-		input[type="checkbox"] {
-			margin: 0;
-			width: 16px;
-			height: 16px;
-		}
-
 		&--disabled {
 			opacity: 0.5;
 			cursor: default;
@@ -139,17 +133,18 @@
 		min-width: 100px;
 
 		&--missing {
-			color: $bb-error-color;
-			border-color: $bb-error-color;
+			color: $bb-text-brand-primary-color;
+			border-color: $bb-border-brand-primary-color;
 			background-color: transparent;
 
 			&:hover {
-				color: $bb-error-color;
-				border-color: $bb-error-color;
-				background-color: transparent;
-				opacity: 0.8;
+				color: $bb-text-brand-primary-color;
 			}
 		}
+	}
+
+	@media screen and (max-width: 960px) {
+		min-width: 800px;
 	}
 }
 

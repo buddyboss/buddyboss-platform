@@ -29,6 +29,15 @@ class BB_Activity_Admin_Ajax {
 	const NONCE_ACTION = 'bb_admin_settings';
 
 	/**
+	 * Maximum number of items per bulk operation.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var int
+	 */
+	const BULK_CAP = 100;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -56,21 +65,7 @@ class BB_Activity_Admin_Ajax {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	private function bb_verify_request() {
-		if ( ! bp_current_user_can( 'bp_moderate' ) ) {
-			wp_send_json_error(
-				array( 'message' => __( 'Permission denied.', 'buddyboss' ) ),
-				403
-			);
-		}
-
-		if ( ! check_ajax_referer( self::NONCE_ACTION, 'nonce', false ) ) {
-			wp_send_json_error(
-				array( 'message' => __( 'Security check failed.', 'buddyboss' ) ),
-				403
-			);
-		}
-
-		return true;
+		bb_admin_verify_ajax_request( self::NONCE_ACTION );
 	}
 
 	/**
@@ -567,12 +562,12 @@ class BB_Activity_Admin_Ajax {
 			'per_page'   => $per_page,
 			'page'       => $page,
 			'spam_count' => $spam_count,
-			'views'      => $views,
 		);
 
 		// Only include static meta on first request (include_meta=true).
 		// Omitting keys entirely so JS truthy checks don't overwrite cached values with empty arrays.
 		if ( $include_meta ) {
+			$response_data['views']                    = $views;
 			$response_data['activity_actions']         = $activity_actions;
 			$response_data['activity_actions_grouped'] = $activity_actions_grouped;
 			$response_data['bulk_actions']             = $bulk_actions;
@@ -847,6 +842,9 @@ class BB_Activity_Admin_Ajax {
 		if ( empty( $activity_ids ) ) {
 			wp_send_json_error( array( 'message' => __( 'No valid activity IDs provided.', 'buddyboss' ) ) );
 		}
+
+		// Cap bulk operations to prevent timeout.
+		$activity_ids = array_slice( $activity_ids, 0, self::BULK_CAP );
 
 		/**
 		 * Filters list of IDs being spammed/un-spammed/deleted (same as legacy admin).

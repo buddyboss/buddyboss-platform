@@ -179,6 +179,13 @@ class BB_Feature_Autoloader {
 	public static function bb_discover_features() {
 		$base_dir = buddypress()->plugin_dir . 'bb-features/';
 
+		// Allow admins to manually clear the feature discovery cache via query parameter.
+		// Usage: Add ?bb_clear_features_cache=1 to any admin URL.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only cache clear, capability-gated.
+		if ( ! empty( $_GET['bb_clear_features_cache'] ) && is_admin() && current_user_can( 'manage_options' ) ) {
+			self::bb_clear_feature_discovery_cache();
+		}
+
 		// Try to use cached config file paths to avoid glob() on every page load.
 		$config_files = get_transient( 'bb_feature_config_paths' );
 

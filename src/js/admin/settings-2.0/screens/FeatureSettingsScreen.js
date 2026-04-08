@@ -7,7 +7,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useEffect, useRef, useCallback, lazy, Suspense, RawHTML } from '@wordpress/element';
+import { useState, useEffect, useRef, useCallback, useMemo, lazy, Suspense, RawHTML } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { Spinner, ToggleControl } from '@wordpress/components';
 import { ajaxFetch } from '../utils/ajax';
@@ -38,6 +38,8 @@ const RepliesListScreen = lazy(() => import('./RepliesListScreen'));
 const ReportingCategoriesScreen = lazy(() => import('./ReportingCategoriesScreen'));
 const FlaggedMembersScreen = lazy(() => import('./FlaggedMembersScreen'));
 const ReportedContentScreen = lazy(() => import('./ReportedContentScreen'));
+const EmailTemplatesListScreen = lazy(() => import('./EmailTemplatesListScreen'));
+const InvitesListScreen = lazy(() => import('./InvitesListScreen'));
 
 /**
  * Map of feature + panel combinations that render custom screens instead of settings forms.
@@ -56,6 +58,8 @@ const CUSTOM_PANEL_SCREENS = {
 	'moderation:reporting_categories': ReportingCategoriesScreen,
 	'moderation:flagged_members': FlaggedMembersScreen,
 	'moderation:reported_content': ReportedContentScreen,
+	'emails:all_emails': EmailTemplatesListScreen,
+	'invites:invites_list': InvitesListScreen,
 };
 
 
@@ -115,6 +119,20 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 		window.addEventListener( BB_EVENTS.SECTION_STATUS_UPDATE, handleStatusUpdate );
 		return function() {
 			window.removeEventListener( BB_EVENTS.SECTION_STATUS_UPDATE, handleStatusUpdate );
+		};
+	}, [] );
+
+	// Listen for toast events from child components (e.g. ProfileTypeRedirectsField save).
+	useEffect( function() {
+		function handleToast( event ) {
+			var detail = event.detail;
+			if ( detail && detail.status ) {
+				setToast( { status: detail.status, message: detail.message || '' } );
+			}
+		}
+		window.addEventListener( BB_EVENTS.TOAST, handleToast );
+		return function() {
+			window.removeEventListener( BB_EVENTS.TOAST, handleToast );
 		};
 	}, [] );
 
@@ -243,6 +261,31 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 		};
 	}, [featureId]);
 
+	/**
+	 * Update properties on specific fields across all side panels.
+	 *
+	 * @param {Array}  fieldNames Array of field name strings to match.
+	 * @param {Object} props      Properties to merge into matched fields.
+	 */
+	function updateFieldProps( fieldNames, props ) {
+		setSidePanels( function( prevPanels ) {
+			return prevPanels.map( function( panel ) {
+				return Object.assign( {}, panel, {
+					sections: ( panel.sections || [] ).map( function( section ) {
+						return Object.assign( {}, section, {
+							fields: ( section.fields || [] ).map( function( field ) {
+								if ( -1 !== fieldNames.indexOf( field.name ) ) {
+									return Object.assign( {}, field, props );
+								}
+								return field;
+							} ),
+						} );
+					} ),
+				} );
+			} );
+		} );
+	}
+
 	// Listen for field value updates dispatched by InputButtonField (e.g. after credential save).
 	// Updates settings and side panel field defaults so notice fields reflect new connection status.
 	useEffect( function() {
@@ -292,6 +335,25 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 		window.addEventListener( BB_EVENTS.FIELD_VALUE_UPDATE, handleFieldValueUpdate );
 		return function() {
 			window.removeEventListener( BB_EVENTS.FIELD_VALUE_UPDATE, handleFieldValueUpdate );
+		};
+	}, [] );
+
+	// Listen for field disabled state updates (e.g., SSO provider toggle disables additional data fields).
+	useEffect( function() {
+		function handleFieldDisabledUpdate( e ) {
+			var fieldNames = e.detail && e.detail.fields;
+			var isDisabled = !! ( e.detail && e.detail.disabled );
+
+			if ( ! fieldNames || ! Array.isArray( fieldNames ) ) {
+				return;
+			}
+
+			updateFieldProps( fieldNames, { disabled: isDisabled } );
+		}
+
+		window.addEventListener( BB_EVENTS.FIELD_DISABLED_UPDATE, handleFieldDisabledUpdate );
+		return function() {
+			window.removeEventListener( BB_EVENTS.FIELD_DISABLED_UPDATE, handleFieldDisabledUpdate );
 		};
 	}, [] );
 
@@ -397,26 +459,46 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 		}
 	}, [toast]);
 
+	// Pre-build lookup maps to avoid triple-nested loops in handleSettingChange.
+	var buttonManagedFields = useMemo( function () {
+		var managed = {};
+		sidePanels.forEach( function ( panel ) {
+			( panel.sections || [] ).forEach( function ( section ) {
+				( section.fields || [] ).forEach( function ( field ) {
+					if ( 'input_button' === field.type && Array.isArray( field.related_fields ) ) {
+						field.related_fields.forEach( function ( rf ) {
+							managed[ rf ] = true;
+						} );
+					}
+				} );
+			} );
+		} );
+		return managed;
+	}, [ sidePanels ] );
+
+	var parentChildMap = useMemo( function () {
+		var map = {};
+		sidePanels.forEach( function ( panel ) {
+			( panel.sections || [] ).forEach( function ( section ) {
+				( section.fields || [] ).forEach( function ( field ) {
+					if ( field.parent_field ) {
+						if ( ! map[ field.parent_field ] ) {
+							map[ field.parent_field ] = [];
+						}
+						map[ field.parent_field ].push( field.name );
+					}
+				} );
+			} );
+		} );
+		return map;
+	}, [ sidePanels ] );
+
 	// Handle setting change (all fields) - triggers auto-save.
 	// Value may be a function (prevValue) => newValue for functional updates (avoids stale state when merging).
 	// When a parent toggle is turned OFF, cascade to child fields (parent_field) and turn them OFF too.
 	const handleSettingChange = useCallback((fieldName, value) => {
 		// Check if this field is managed by an input_button (saved via its own AJAX, not auto-save).
-		// Fields listed in an input_button's related_fields are saved by the Connect/Disconnect button.
-		var isButtonManaged = false;
-		sidePanels.forEach( function( panel ) {
-			( panel.sections || [] ).forEach( function( section ) {
-				( section.fields || [] ).forEach( function( field ) {
-					if ( 'input_button' === field.type && Array.isArray( field.related_fields ) &&
-						field.related_fields.indexOf( fieldName ) !== -1 ) {
-						isButtonManaged = true;
-					}
-				} );
-			} );
-		} );
-
-		// Button-managed fields: update settings state only (no auto-save, no toast).
-		if ( isButtonManaged ) {
+		if ( buttonManagedFields[ fieldName ] ) {
 			setSettings( function( prev ) {
 				return Object.assign( {}, prev, { [fieldName]: value } );
 			} );
@@ -429,15 +511,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 		var childNames = [];
 		var resolvedValue = value;
 		if ( typeof resolvedValue !== 'function' && ! resolvedValue ) {
-			sidePanels.forEach( function( panel ) {
-				( panel.sections || [] ).forEach( function( section ) {
-					( section.fields || [] ).forEach( function( field ) {
-						if ( field.parent_field === fieldName ) {
-							childNames.push( field.name );
-						}
-					} );
-				} );
-			} );
+			childNames = parentChildMap[ fieldName ] || [];
 		}
 
 		setSettings((prev) => {
@@ -465,7 +539,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 			} );
 			return next;
 		});
-	}, [sidePanels]);
+	}, [buttonManagedFields, parentChildMap]);
 
 	// Sync Default Tab dropdown with Navigation Order toggles (groups feature only).
 	useGroupNavSync( {
@@ -589,8 +663,14 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 										if ( section.conditional ) {
 											var condVal = settings[section.conditional.field];
 											var expected = section.conditional.value;
+											var condOperator = section.conditional.operator || '==';
 											var isTruthy = !!condVal && condVal !== '0' && condVal !== 0;
-											var condMet = ( expected === true || expected === false ) ? isTruthy === expected : condVal === expected;
+											var condMet;
+											if ( '!=' === condOperator ) {
+												condMet = ( expected === true || expected === false ) ? isTruthy !== expected : condVal !== expected;
+											} else {
+												condMet = ( expected === true || expected === false ) ? isTruthy === expected : condVal === expected;
+											}
 											if ( ! condMet ) {
 												if ( 'disable' === section.conditional.action ) {
 													isSectionDisabled = true;

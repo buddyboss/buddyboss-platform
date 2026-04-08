@@ -29,33 +29,6 @@ class BB_Admin_Member_Types_Ajax {
 	const NONCE_ACTION = 'bb_admin_settings';
 
 	/**
-	 * Flag for partial role update (too many users to process synchronously).
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @var bool
-	 */
-	private $role_update_partial = false;
-
-	/**
-	 * Total user count for partial role update.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @var int
-	 */
-	private $role_update_total = 0;
-
-	/**
-	 * Number of users synced in the partial role update.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @var int
-	 */
-	private $role_update_synced = 0;
-
-	/**
 	 * Verify AJAX request (capability + nonce).
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -154,17 +127,23 @@ class BB_Admin_Member_Types_Ajax {
 			_prime_post_caches( $member_type_ids );
 		}
 
-		// Get member counts per type in a single SQL query.
-		global $wpdb;
-		$count_rows    = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT t.slug, tt.count FROM {$wpdb->term_taxonomy} tt LEFT JOIN {$wpdb->terms} t ON tt.term_id = t.term_id WHERE tt.taxonomy = %s",
-				bp_get_member_type_tax_name()
-			)
-		);
-		$member_counts = array();
-		foreach ( $count_rows as $row ) {
-			$member_counts[ $row->slug ] = (int) $row->count;
+		// Get member counts per type — cached to avoid repeated taxonomy queries.
+		$cache_key     = 'bb_admin_member_type_counts';
+		$member_counts = wp_cache_get( $cache_key, 'bp_member_type' );
+
+		if ( false === $member_counts ) {
+			global $wpdb;
+			$count_rows    = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT t.slug, tt.count FROM {$wpdb->term_taxonomy} tt LEFT JOIN {$wpdb->terms} t ON tt.term_id = t.term_id WHERE tt.taxonomy = %s",
+					bp_get_member_type_tax_name()
+				)
+			);
+			$member_counts = array();
+			foreach ( $count_rows as $row ) {
+				$member_counts[ $row->slug ] = (int) $row->count;
+			}
+			wp_cache_set( $cache_key, $member_counts, 'bp_member_type', HOUR_IN_SECONDS );
 		}
 
 		$member_types = array();
@@ -211,6 +190,12 @@ class BB_Admin_Member_Types_Ajax {
 				$wp_roles_meta = ! empty( $wp_roles_meta ) ? array( $wp_roles_meta ) : array();
 			}
 
+			// Get Email Invites allowed member types.
+			$invite_member_types = get_post_meta( $post_id, '_bp_member_type_allowed_member_type_invite', true );
+			if ( ! is_array( $invite_member_types ) ) {
+				$invite_member_types = ! empty( $invite_member_types ) ? array( $invite_member_types ) : array();
+			}
+
 			$member_types[] = array(
 				'id'                                 => $post_id,
 				'post_title'                         => $post->post_title,
@@ -233,6 +218,7 @@ class BB_Admin_Member_Types_Ajax {
 				'visibility'                         => $visibility,
 				'has_password'                       => ! empty( $post->post_password ),
 				'allow_messaging_without_connection' => absint( get_post_meta( $post_id, '_bp_member_type_allow_messaging_without_connection', true ) ),
+				'invite_member_types'                => array_map( 'absint', $invite_member_types ),
 			);
 		}
 
@@ -439,16 +425,6 @@ class BB_Admin_Member_Types_Ajax {
 			'id'      => $type_id,
 		);
 
-		// Add partial role update warning if applicable.
-		if ( $this->role_update_partial ) {
-			$response['role_update_warning'] = sprintf(
-				/* translators: 1: number of users synced, 2: total number of users. */
-				__( 'WordPress role updated for %1$d of %2$d members. The remaining members will need to be updated manually or via WP-CLI.', 'buddyboss' ),
-				$this->role_update_synced,
-				$this->role_update_total
-			);
-		}
-
 		wp_send_json_success( $response );
 	}
 
@@ -597,40 +573,91 @@ class BB_Admin_Member_Types_Ajax {
 		// Messaging without connection.
 		$allow_messaging_without_connection = isset( $_POST['allow_messaging_without_connection'] ) ? absint( wp_unslash( $_POST['allow_messaging_without_connection'] ) ) : 0;
 
+		// Email Invites — allowed member types.
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized below.
+		$raw_invite_member_types = isset( $_POST['invite_member_types'] ) ? wp_unslash( $_POST['invite_member_types'] ) : '';
+		if ( is_array( $raw_invite_member_types ) ) {
+			$invite_member_types = array_map( 'absint', $raw_invite_member_types );
+		} else {
+			$invite_member_types = array();
+		}
+
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
-		// Save all meta.
-		update_post_meta( $post_id, '_bp_member_type_label_singular_name', $singular_label );
-		update_post_meta( $post_id, '_bp_member_type_label_name', $plural_label );
-		update_post_meta( $post_id, '_bp_member_type_enable_filter', $enable_filter );
-		update_post_meta( $post_id, '_bp_member_type_enable_remove', $enable_remove );
-		update_post_meta( $post_id, '_bp_member_type_enable_search_remove', $enable_search_remove );
-		update_post_meta( $post_id, '_bp_member_type_enable_profile_field', $enable_profile_field );
-		update_post_meta( $post_id, '_bp_member_type_enabled_group_type_create', $group_type_create );
-		update_post_meta( $post_id, '_bp_member_type_enabled_group_type_auto_join', $group_type_auto_join );
-		update_post_meta( $post_id, '_bp_member_type_label_color', $label_color );
-		update_post_meta( $post_id, '_bp_member_type_login_redirection', $login_redirection );
-		update_post_meta( $post_id, '_bp_member_type_custom_login_redirection', $custom_login_redirection );
-		update_post_meta( $post_id, '_bp_member_type_logout_redirection', $logout_redirection );
-		update_post_meta( $post_id, '_bp_member_type_custom_logout_redirection', $custom_logout_redirection );
-		update_post_meta( $post_id, '_bp_member_type_allow_messaging_without_connection', $allow_messaging_without_connection );
+		// Save only meta fields that were explicitly submitted in the request.
+		// This prevents partial updates (e.g., saving only redirect fields from
+		// the Profile Type Redirects panel) from wiping unrelated meta values.
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified above.
+		if ( isset( $_POST['singular_label'] ) ) {
+			update_post_meta( $post_id, '_bp_member_type_label_singular_name', $singular_label );
+		}
+		if ( isset( $_POST['plural_label'] ) ) {
+			update_post_meta( $post_id, '_bp_member_type_label_name', $plural_label );
+		}
+		if ( isset( $_POST['enable_filter'] ) ) {
+			update_post_meta( $post_id, '_bp_member_type_enable_filter', $enable_filter );
+		}
+		if ( isset( $_POST['enable_remove'] ) ) {
+			update_post_meta( $post_id, '_bp_member_type_enable_remove', $enable_remove );
+		}
+		if ( isset( $_POST['enable_search_remove'] ) ) {
+			update_post_meta( $post_id, '_bp_member_type_enable_search_remove', $enable_search_remove );
+		}
+		if ( isset( $_POST['enable_profile_field'] ) ) {
+			update_post_meta( $post_id, '_bp_member_type_enable_profile_field', $enable_profile_field );
+		}
+		if ( isset( $_POST['group_type_create'] ) ) {
+			update_post_meta( $post_id, '_bp_member_type_enabled_group_type_create', $group_type_create );
+		}
+		if ( isset( $_POST['group_type_auto_join'] ) ) {
+			update_post_meta( $post_id, '_bp_member_type_enabled_group_type_auto_join', $group_type_auto_join );
+		}
+		if ( isset( $_POST['label_color'] ) ) {
+			update_post_meta( $post_id, '_bp_member_type_label_color', $label_color );
+		}
+		if ( isset( $_POST['login_redirection'] ) ) {
+			update_post_meta( $post_id, '_bp_member_type_login_redirection', $login_redirection );
+		}
+		if ( isset( $_POST['custom_login_redirection'] ) ) {
+			update_post_meta( $post_id, '_bp_member_type_custom_login_redirection', $custom_login_redirection );
+		}
+		if ( isset( $_POST['logout_redirection'] ) ) {
+			update_post_meta( $post_id, '_bp_member_type_logout_redirection', $logout_redirection );
+		}
+		if ( isset( $_POST['custom_logout_redirection'] ) ) {
+			update_post_meta( $post_id, '_bp_member_type_custom_logout_redirection', $custom_logout_redirection );
+		}
+		if ( isset( $_POST['allow_messaging_without_connection'] ) ) {
+			update_post_meta( $post_id, '_bp_member_type_allow_messaging_without_connection', $allow_messaging_without_connection );
+		}
+		if ( isset( $_POST['invite_member_types'] ) ) {
+			update_post_meta( $post_id, '_bp_member_type_allowed_member_type_invite', $invite_member_types );
+			// Derive enable_invite from whether any types are selected (matches legacy behavior).
+			$enable_invite = ! empty( $invite_member_types ) ? 1 : 0;
+			update_post_meta( $post_id, '_bp_member_type_enable_invite', $enable_invite );
+		}
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
-		// Update messaging-without-connection option (matching legacy lines 2340-2351).
-		$type_key_for_option             = get_post_meta( $post_id, '_bp_member_type_key', true );
-		$profile_types_allowed_messaging = get_option( 'bp_member_types_allowed_messaging_without_connection', array() );
-		if ( ! is_array( $profile_types_allowed_messaging ) ) {
-			$profile_types_allowed_messaging = array();
+		// Update messaging-without-connection option only when submitted.
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified above.
+		if ( isset( $_POST['allow_messaging_without_connection'] ) ) {
+			$type_key_for_option             = get_post_meta( $post_id, '_bp_member_type_key', true );
+			$profile_types_allowed_messaging = get_option( 'bp_member_types_allowed_messaging_without_connection', array() );
+			if ( ! is_array( $profile_types_allowed_messaging ) ) {
+				$profile_types_allowed_messaging = array();
+			}
+
+			if ( $allow_messaging_without_connection ) {
+				$profile_types_allowed_messaging[ $type_key_for_option ] = true;
+			} elseif ( array_key_exists( $type_key_for_option, $profile_types_allowed_messaging ) ) {
+				unset( $profile_types_allowed_messaging[ $type_key_for_option ] );
+			}
+			update_option( 'bp_member_types_allowed_messaging_without_connection', $profile_types_allowed_messaging );
 		}
 
-		if ( $allow_messaging_without_connection ) {
-			$profile_types_allowed_messaging[ $type_key_for_option ] = true;
-		} elseif ( array_key_exists( $type_key_for_option, $profile_types_allowed_messaging ) ) {
-			unset( $profile_types_allowed_messaging[ $type_key_for_option ] );
-		}
-		update_option( 'bp_member_types_allowed_messaging_without_connection', $profile_types_allowed_messaging );
-
-		// WP Role assignment logic (from legacy lines 2341-2412).
-		$old_wp_roles            = get_post_meta( $post_id, '_bp_member_type_wp_roles', true );
+		// WP Role assignment logic — only when wp_roles is submitted.
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified above.
+		$old_wp_roles            = isset( $_POST['wp_roles'] ) ? ( get_post_meta( $post_id, '_bp_member_type_wp_roles', true ) ) : $wp_roles;
 		$check_both_old_new_same = ( $wp_roles === $old_wp_roles );
 
 		if ( false === $check_both_old_new_same ) {
@@ -665,7 +692,8 @@ class BB_Admin_Member_Types_Ajax {
 
 					$get_user_ids = array_merge( $get_user_ids, $batch );
 					$offset      += $batch_size;
-				} while ( count( $batch ) === $batch_size );
+					$batch_count  = count( $batch );
+				} while ( $batch_count === $batch_size );
 
 				if ( ! empty( $get_user_ids ) && in_array( (string) get_current_user_id(), $get_user_ids, true ) ) {
 					$bp_prevent_data_update = true;
@@ -700,25 +728,14 @@ class BB_Admin_Member_Types_Ajax {
 
 				if ( isset( $selected_roles[0] ) && 'none' !== $selected_roles[0] && ! empty( $get_user_ids ) ) {
 
-					// Limit synchronous role updates to prevent AJAX timeouts on large sites.
-					// Each set_role() call triggers wp_update_user() which is expensive.
-					$max_sync_users = 500;
-					$users_to_sync  = array_slice( $get_user_ids, 0, $max_sync_users );
-
-					// Prime user cache to avoid N+1 queries inside the loop.
-					cache_users( array_map( 'absint', $users_to_sync ) );
-
-					foreach ( $users_to_sync as $single_user ) {
+					// Process all users — matches legacy behavior (no cap).
+					// @todo: Add background queue for large sites in a future release.
+					foreach ( $get_user_ids as $single_user ) {
 						$bp_user = new WP_User( $single_user );
-						// Use set_role() for atomic role swap instead of remove+add.
-						$bp_user->set_role( $selected_roles[0] );
-					}
-
-					// Flag partial update for the response so admin knows.
-					if ( count( $get_user_ids ) > $max_sync_users ) {
-						$this->role_update_partial = true;
-						$this->role_update_total   = count( $get_user_ids );
-						$this->role_update_synced  = $max_sync_users;
+						foreach ( $bp_user->roles as $role ) {
+							$bp_user->remove_role( $role );
+						}
+						$bp_user->add_role( $selected_roles[0] );
 					}
 				}
 			}
@@ -802,6 +819,7 @@ class BB_Admin_Member_Types_Ajax {
 		wp_cache_delete( 'bp_get_all_member_types_posts', 'bp_member_member_type' );
 		wp_cache_delete( 'bp_get_hidden_member_types_cache', 'bp_member_member_type' );
 		wp_cache_delete( 'bb-member-type-label-css', 'bp_member_member_type' );
+		wp_cache_delete( 'bb_admin_member_type_counts', 'bp_member_type' ); // Clear taxonomy counts cache.
 
 		$type_key = get_post_meta( $post_id, '_bp_member_type_key', true );
 		if ( ! empty( $type_key ) ) {

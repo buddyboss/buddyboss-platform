@@ -406,8 +406,8 @@ export function ReportedContentScreen() {
 				{/* Body */}
 				<div className="bb-admin-reported-content__body">
 					{/* Action Bar */}
-					<div className="bb-admin-reported-content__action-bar">
-						<div className="bb-admin-reported-content__action-bar-left">
+					<div className="bb-admin-reported-content__action-bar bb-admin-list-toolbar">
+						<div className="bb-admin-reported-content__action-bar-left bb-admin-list-toolbar__left">
 							<div className="bb-admin-reported-content__bulk-actions">
 								<SelectControl
 									value={ bulkAction }
@@ -430,7 +430,7 @@ export function ReportedContentScreen() {
 								</Button>
 							</div>
 						</div>
-						<div className="bb-admin-reported-content__action-bar-right">
+						<div className="bb-admin-reported-content__action-bar-right bb-admin-list-toolbar__right">
 							<SelectControl
 								value={ statusFilter }
 								options={ [
@@ -461,14 +461,14 @@ export function ReportedContentScreen() {
 								<Spinner />
 							</div>
 						) : 0 === items.length ? (
-							<div className="bb-admin-reported-content__empty">
+							<div className="bb-admin-reported-content__empty bb-admin-list-table__empty">
 								<p>{ __( 'No reported content found.', 'buddyboss' ) }</p>
 							</div>
 						) : (
-							<table className="bb-admin-reported-content__table">
+							<table className="bb-admin-reported-content__table bb-admin-list-table">
 								<thead>
 									<tr>
-										<th className="bb-admin-reported-content__th--checkbox">
+										<th className="bb-admin-reported-content__th--checkbox bb-admin-list-table__checkbox">
 											<CheckboxControl
 												checked={ allSelected }
 												onChange={ handleSelectAll }
@@ -497,9 +497,9 @@ export function ReportedContentScreen() {
 										return (
 											<tr
 												key={ item.id }
-												className={ 'bb-admin-reported-content__row' + ( isSelected ? ' bb-admin-reported-content__row--selected' : '' ) }
+												className={ 'bb-admin-reported-content__row bb-admin-list-table__row' + ( isSelected ? ' bb-admin-reported-content__row--selected bb-admin-list-table__row--selected' : '' ) }
 											>
-												<td className="bb-admin-reported-content__td--checkbox">
+												<td className="bb-admin-reported-content__td--checkbox bb-admin-list-table__checkbox">
 													<CheckboxControl
 														checked={ isSelected }
 														onChange={ function ( checked ) {
@@ -565,7 +565,7 @@ export function ReportedContentScreen() {
 														</span>
 													) }
 												</td>
-												<td className="bb-admin-reported-content__td--actions">
+												<td className="bb-admin-reported-content__td--actions bb-admin-actions-toggle">
 													{ isBusy ? (
 														<Spinner />
 													) : (
@@ -679,19 +679,19 @@ export function ReportedContentScreen() {
 							</span>
 
 							{ totalPages > 1 && (
-								<div className="bb-admin-reported-content__pagination">
+								<div className="bb-admin-pagination__pagination">
 									<Button
 										variant="secondary"
 										disabled={ page <= 1 }
 										onClick={ function () { handlePageChange( page - 1 ); } }
-										className="bb-admin-reported-content__pagination-btn bb-admin-reported-content__pagination-btn--previous"
+										className="bb-admin-pagination__pagination-btn bb-admin-pagination__pagination-btn--previous"
 									>
 										&lsaquo;
 									</Button>
 									{ getPageNumbers( page, totalPages ).map( function ( p, idx ) {
 										if ( '...' === p ) {
 											return (
-												<span key={ 'ellipsis-' + idx } className="bb-admin-reported-content__pagination-ellipsis">
+												<span key={ 'ellipsis-' + idx } className="bb-admin-pagination__pagination-ellipsis">
 													&hellip;
 												</span>
 											);
@@ -701,7 +701,7 @@ export function ReportedContentScreen() {
 												key={ p }
 												variant={ p === page ? 'primary' : 'secondary' }
 												onClick={ function () { handlePageChange( p ); } }
-												className={ 'bb-admin-reported-content__pagination-btn' + ( p === page ? ' bb-admin-reported-content__pagination-btn--current' : '' ) }
+												className={ 'bb-admin-pagination__pagination-btn' + ( p === page ? ' bb-admin-pagination__pagination-btn--current' : '' ) }
 											>
 												{ p }
 											</Button>
@@ -711,7 +711,7 @@ export function ReportedContentScreen() {
 										variant="secondary"
 										disabled={ page >= totalPages }
 										onClick={ function () { handlePageChange( page + 1 ); } }
-										className="bb-admin-reported-content__pagination-btn bb-admin-reported-content__pagination-btn--next"
+										className="bb-admin-pagination__pagination-btn bb-admin-pagination__pagination-btn--next"
 									>
 										&rsaquo;
 									</Button>

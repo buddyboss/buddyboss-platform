@@ -5,12 +5,13 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useEffect, useRef } from '@wordpress/element';
-import { __ } from '@wordpress/i18n';
+import { useState, useEffect, useRef, useMemo } from '@wordpress/element';
+import { __, sprintf } from '@wordpress/i18n';
 import { Button, Spinner, ToggleControl } from '@wordpress/components';
 import { getCachedFeatures, toggleFeature, updateFeatureInCache } from '../utils/ajax';
 import { invalidateFeatureCache } from '../utils/featureCache';
 import { urlToRoute } from '../utils/url';
+import { safeUrl } from '../utils/sanitize';
 import { Toast } from '../components/Toast';
 import { UpgradeModal } from '../components/modals/UpgradeModal';
 
@@ -24,7 +25,6 @@ import { UpgradeModal } from '../components/modals/UpgradeModal';
 export function SettingsScreen({ onNavigate }) {
 	const [features, setFeatures] = useState([]);
 	const [placeholderFeatures, setPlaceholderFeatures] = useState([]);
-	const [filteredFeatures, setFilteredFeatures] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [activeFilter, setActiveFilter] = useState('all'); // 'all', 'active', 'inactive'
 	const [selectedCategory, setSelectedCategory] = useState(''); // 'community', 'add-ons', 'integrations'
@@ -42,64 +42,67 @@ export function SettingsScreen({ onNavigate }) {
 					var placeholders = data.filter(function( item ) { return !! item.is_placeholder; });
 					setFeatures(realFeatures);
 					setPlaceholderFeatures(placeholders);
-					setFilteredFeatures(realFeatures);
 				} else {
 					setFeatures([]);
 					setPlaceholderFeatures([]);
-					setFilteredFeatures([]);
 				}
 				setIsLoading(false);
 			})
-			.catch((error) => {
-				console.error('Failed to load features:', error);
+			.catch(function () {
 				setFeatures([]);
 				setPlaceholderFeatures([]);
-				setFilteredFeatures([]);
 				setIsLoading(false);
 			});
 	}, []);
 
-	// Filter features — placeholders excluded from Active/Inactive tabs and search.
-	useEffect(() => {
-		var filtered = [].concat(features);
+	// Derive filtered features via useMemo (avoids double-render from useEffect + setState).
+	var filteredFeatures = useMemo( function () {
+		var filtered = features.slice();
 		var showPlaceholders = true;
 
 		// Filter by status — placeholders never appear in Active/Inactive.
-		if (activeFilter !== 'all') {
-			filtered = filtered.filter(function( feature ) { return feature.status === activeFilter; });
+		if ( 'all' !== activeFilter ) {
+			filtered = filtered.filter( function ( feature ) {
+				return feature.status === activeFilter;
+			} );
 			showPlaceholders = false;
 		}
 
 		// Filter by category.
-		if (selectedCategory) {
-			filtered = filtered.filter(function( feature ) { return feature.category === selectedCategory; });
+		if ( selectedCategory ) {
+			filtered = filtered.filter( function ( feature ) {
+				return feature.category === selectedCategory;
+			} );
 		}
 
 		// Filter by search — placeholders excluded from search results.
-		if (searchQuery && searchQuery.length >= 2) {
+		if ( searchQuery && searchQuery.length >= 2 ) {
 			var queryLower = searchQuery.toLowerCase();
-			filtered = filtered.filter(function( feature ) {
-				return feature.label.toLowerCase().indexOf(queryLower) !== -1 ||
-					(feature.description && feature.description.toLowerCase().indexOf(queryLower) !== -1);
-			});
+			filtered = filtered.filter( function ( feature ) {
+				return feature.label.toLowerCase().indexOf( queryLower ) !== -1 ||
+				       ( feature.description && feature.description.toLowerCase().indexOf( queryLower ) !== -1 );
+			} );
 			showPlaceholders = false;
 		}
 
 		// Append placeholders for "All" and category views (not Active/Inactive/Search).
-		if (showPlaceholders) {
-			var filteredPlaceholders = [].concat(placeholderFeatures);
-			if (selectedCategory) {
-				filteredPlaceholders = filteredPlaceholders.filter(function( feature ) {
+		if ( showPlaceholders ) {
+			var filteredPlaceholders = placeholderFeatures.slice();
+
+			if ( selectedCategory ) {
+				filteredPlaceholders = filteredPlaceholders.filter( function ( feature ) {
 					return feature.category === selectedCategory;
-				});
+				} );
 			}
-			filtered = filtered.concat(filteredPlaceholders);
+
+			filtered = filtered.concat( filteredPlaceholders );
 		}
 
-		setFilteredFeatures(filtered);
-	}, [features, placeholderFeatures, activeFilter, selectedCategory, searchQuery]);
+		return filtered;
+	}, [ features, placeholderFeatures, activeFilter, selectedCategory, searchQuery ] );
 
-	// Group features by category
+	// Group features by category with defined display order.
+	const categoryOrder = [ 'community', 'add-ons', 'integrations' ];
 	const groupedFeatures = filteredFeatures.reduce((acc, feature) => {
 		const category = feature.category || 'community';
 		if (!acc[category]) {
@@ -108,6 +111,20 @@ export function SettingsScreen({ onNavigate }) {
 		acc[category].push(feature);
 		return acc;
 	}, {});
+
+	// Sort categories into the defined display order.
+	const sortedGroupedFeatures = {};
+	categoryOrder.forEach(function( cat ) {
+		if ( groupedFeatures[ cat ] ) {
+			sortedGroupedFeatures[ cat ] = groupedFeatures[ cat ];
+		}
+	});
+	// Append any categories not in the predefined order.
+	Object.keys( groupedFeatures ).forEach(function( cat ) {
+		if ( ! sortedGroupedFeatures[ cat ] ) {
+			sortedGroupedFeatures[ cat ] = groupedFeatures[ cat ];
+		}
+	});
 
 	// Get filter counts — only real features count (not placeholders).
 	var allCount = features.length + placeholderFeatures.length;
@@ -401,7 +418,7 @@ export function SettingsScreen({ onNavigate }) {
 
 				{/* Feature Grid */}
 				<div className="bb-admin-settings__grid">
-					{Object.entries(groupedFeatures).map(([category, categoryFeatures]) => (
+					{Object.entries(sortedGroupedFeatures).map(([category, categoryFeatures]) => (
 						<div key={category} className="bb-admin-settings__category">
 							{/* Category Divider */}
 							<div className={ 'community' === category ? 'bb-admin-settings__category-divider' : 'bb-admin-settings__category-divider bb-admin-settings__category-divider--with-line' }>
@@ -413,7 +430,7 @@ export function SettingsScreen({ onNavigate }) {
 										: __('BUDDYBOSS INTEGRATIONS', 'buddyboss') }
 								</h2>
 							</div>
-							
+
 							{/* Features Grid */}
 							<div className="bb-admin-settings__features-grid">
 								{categoryFeatures.map((feature) => (
@@ -445,37 +462,37 @@ export function SettingsScreen({ onNavigate }) {
 															if (!feature.icon) {
 																return <span className="dashicons dashicons-admin-generic"></span>;
 															}
-															
+
 															// If icon has nested data (from registered icons)
 															const iconData = feature.icon.data || feature.icon;
 															const iconType = feature.icon.type || iconData.type;
-															
+
 															if ( 'dashicon' === iconType ) {
 																const slug = feature.icon.slug || iconData.slug || 'dashicons-admin-generic';
 																return <span className={`dashicons ${slug}`}></span>;
 															}
-															
+
 															if ( 'svg' === iconType ) {
-																const url = feature.icon.url || iconData.url || iconData.data_uri || (iconData.data && iconData.data.url) || (iconData.data && iconData.data.data_uri);
-																if (url) {
+																const url = safeUrl( feature.icon.url || iconData.url || iconData.data_uri || (iconData.data && iconData.data.url) || (iconData.data && iconData.data.data_uri) || '' );
+																if (url && '#' !== url) {
 																	return <img src={url} alt={feature.label} className="bb-admin-settings__feature-icon-img" />;
 																}
 															}
-															
+
 															if ( 'image' === iconType ) {
-																const url = feature.icon.url || iconData.url || iconData.path || (iconData.data && iconData.data.url) || (iconData.data && iconData.data.path);
-																if (url) {
+																const url = safeUrl( feature.icon.url || iconData.url || iconData.path || (iconData.data && iconData.data.url) || (iconData.data && iconData.data.path) || '' );
+																if (url && '#' !== url) {
 																	return <img src={url} alt={feature.label} className="bb-admin-settings__feature-icon-img" />;
 																}
 															}
-															
+
 															if ( 'font' === iconType ) {
 																const className = feature.icon.class || iconData.class || (iconData.data && iconData.data.class);
 																if (className) {
 																	return <span className={className}></span>;
 																}
 															}
-															
+
 															// Fallback
 															return <span className="dashicons dashicons-admin-generic"></span>;
 														})()}
@@ -483,13 +500,13 @@ export function SettingsScreen({ onNavigate }) {
 													<h3 className="bb-admin-settings__feature-title">{feature.label}</h3>
 												</div>
 											</div>
-											
+
 											{/* Description */}
 											<p className="bb-admin-settings__feature-description">
 												{feature.description || __('No description available.', 'buddyboss')}
 											</p>
 										</div>
-										
+
 										{/* Bottom Section: Settings Button + Toggle */}
 										<div className="bb-admin-settings__feature-bottom">
 											<div className="bb-admin-settings__feature-left">
@@ -548,6 +565,13 @@ export function SettingsScreen({ onNavigate }) {
 													disabled={!feature.available || feature.required || !!feature.is_placeholder || !!feature.is_drm_locked}
 													__nextHasNoMarginBottom
 												/>
+												<span className="screen-reader-text">
+													{ sprintf(
+														/* translators: %s: feature label */
+														__( 'Toggle %s', 'buddyboss' ),
+														feature.label
+													) }
+												</span>
 											</div>
 										</div>
 									</div>

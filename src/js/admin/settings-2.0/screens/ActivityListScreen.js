@@ -20,7 +20,11 @@ import { __ } from '@wordpress/i18n';
 import { dateI18n } from '@wordpress/date';
 import { ajaxFetch } from '../utils/ajax';
 import { sanitizeHtml, safeUrl } from '../utils/sanitize';
-import { getPageNumbers } from '../utils/pagination';
+import { ListPagination } from '../components/common/ListPagination';
+import { AdminNotice } from '../components/common/AdminNotice';
+import { ListToolbar } from '../components/common/ListToolbar';
+import { useListScreenHandlers } from '../hooks/useListScreenHandlers';
+import { useListScreenState } from '../hooks/useListScreenState';
 import { ActivityEditModal } from '../components/activity/ActivityEditModal';
 import { ActivityCommentModal } from '../components/activity/ActivityCommentModal';
 
@@ -32,6 +36,24 @@ import { ActivityCommentModal } from '../components/activity/ActivityCommentModa
  * @returns {JSX.Element} Activity list screen.
  */
 export function ActivityListScreen( { onNavigate } ) {
+	// Common list screen state (loading, notice, selection, bulk, search).
+	var common = useListScreenState();
+	var isLoading = common.isLoading;
+	var setIsLoading = common.setIsLoading;
+	var notice = common.notice;
+	var setNotice = common.setNotice;
+	var selectedIds = common.selectedIds;
+	var setSelectedIds = common.setSelectedIds;
+	var bulkAction = common.bulkAction;
+	var setBulkAction = common.setBulkAction;
+	var isBulkProcessing = common.isBulkProcessing;
+	var setIsBulkProcessing = common.setIsBulkProcessing;
+	var searchInput = common.searchInput;
+	var setSearchInput = common.setSearchInput;
+	var searchQuery = common.searchQuery;
+	var setSearchQuery = common.setSearchQuery;
+
+	// Screen-specific state.
 	var activitiesState = useState( [] );
 	var activities = activitiesState[ 0 ];
 	var setActivities = activitiesState[ 1 ];
@@ -63,22 +85,6 @@ export function ActivityListScreen( { onNavigate } ) {
 	var actionFilter = actionFilterState[ 0 ];
 	var setActionFilter = actionFilterState[ 1 ];
 
-	var searchQueryState = useState( '' );
-	var searchQuery = searchQueryState[ 0 ];
-	var setSearchQuery = searchQueryState[ 1 ];
-
-	var searchInputState = useState( '' );
-	var searchInput = searchInputState[ 0 ];
-	var setSearchInput = searchInputState[ 1 ];
-
-	var selectedIdsState = useState( [] );
-	var selectedIds = selectedIdsState[ 0 ];
-	var setSelectedIds = selectedIdsState[ 1 ];
-
-	var isLoadingState = useState( true );
-	var isLoading = isLoadingState[ 0 ];
-	var setIsLoading = isLoadingState[ 1 ];
-
 	var activityActionsState = useState( {} );
 	var activityActions = activityActionsState[ 0 ];
 	var setActivityActions = activityActionsState[ 1 ];
@@ -98,10 +104,6 @@ export function ActivityListScreen( { onNavigate } ) {
 	var viewsState = useState( {} );
 	var views = viewsState[ 0 ];
 	var setViews = viewsState[ 1 ];
-
-	var bulkActionState = useState( '' );
-	var bulkAction = bulkActionState[ 0 ];
-	var setBulkAction = bulkActionState[ 1 ];
 
 	var editActivityState = useState( null );
 	var editActivity = editActivityState[ 0 ];
@@ -123,15 +125,10 @@ export function ActivityListScreen( { onNavigate } ) {
 	var isEditLoading = isEditLoadingState[ 0 ];
 	var setIsEditLoading = isEditLoadingState[ 1 ];
 
-	var noticeState = useState( null );
-	var notice = noticeState[ 0 ];
-	var setNotice = noticeState[ 1 ];
-
 	var deleteConfirmState = useState( null ); // { action, ids, message }
 	var deleteConfirm = deleteConfirmState[ 0 ];
 	var setDeleteConfirm = deleteConfirmState[ 1 ];
 
-	var searchTimerRef = useRef( null );
 	var hasMetaRef = useRef( false );
 
 	var totalPages = Math.ceil( total / perPage );
@@ -228,97 +225,35 @@ export function ActivityListScreen( { onNavigate } ) {
 		};
 	}, [ fetchActivities ] );
 
-	// Clear notice after 5 seconds.
-	useEffect( function () {
-		if ( notice ) {
-			var timer = setTimeout( function () {
-				setNotice( null );
-			}, 5000 );
-			return function () {
-				clearTimeout( timer );
-			};
-		}
-	}, [ notice ] );
-
 	// Cleanup search debounce timer on unmount.
 	useEffect( function () {
 		return function () {
-			if ( searchTimerRef.current ) {
-				clearTimeout( searchTimerRef.current );
+			if ( handlers.searchTimerRef.current ) {
+				clearTimeout( handlers.searchTimerRef.current );
 			}
 		};
 	}, [] );
 
-	/**
-	 * Handle search input with debounce.
-	 *
-	 * @param {string} value Search value.
-	 */
-	var handleSearchChange = function ( value ) {
-		setSearchInput( value );
-		if ( searchTimerRef.current ) {
-			clearTimeout( searchTimerRef.current );
-		}
-		searchTimerRef.current = setTimeout( function () {
-			setSearchQuery( value );
-			setCurrentPage( 1 );
-		}, 500 );
-	};
+	// Common list screen handlers (search, sort, filter, select).
+	var handlers = useListScreenHandlers( {
+		setSearchInput: setSearchInput,
+		setSearchQuery: setSearchQuery,
+		setPage: setCurrentPage,
+		setSelectedIds: setSelectedIds,
+		setFilter: setFilter,
+		getItemIds: function () {
+			return activities.map( function ( a ) { return a.id; } );
+		},
+	} );
+	var handleSearchChange = handlers.handleSearchChange;
+	var handleFilterChange = handlers.handleFilterChange;
+	var handleSelectAll = handlers.handleSelectAll;
+	var handleSelectRow = handlers.handleSelectRow;
 
-	/**
-	 * Handle filter change from dropdown.
-	 *
-	 * @param {string} newFilter Filter value.
-	 */
-	var handleFilterChange = function ( newFilter ) {
-		setFilter( newFilter );
-		setCurrentPage( 1 );
-		setSelectedIds( [] );
-	};
-
-	/**
-	 * Handle action type filter change.
-	 *
-	 * @param {string} value Action type value.
-	 */
+	// Action type filter — separate from status filter, only resets page (not selection).
 	var handleActionFilterChange = function ( value ) {
 		setActionFilter( value );
 		setCurrentPage( 1 );
-	};
-
-	/**
-	 * Handle select all checkbox.
-	 *
-	 * @param {boolean} checked Checked state.
-	 */
-	var handleSelectAll = function ( checked ) {
-		if ( checked ) {
-			setSelectedIds( activities.map( function ( a ) {
-				return a.id;
-			} ) );
-		} else {
-			setSelectedIds( [] );
-		}
-	};
-
-	/**
-	 * Handle individual row checkbox.
-	 *
-	 * @param {number}  id      Activity ID.
-	 * @param {boolean} checked Checked state.
-	 */
-	var handleSelectRow = function ( id, checked ) {
-		if ( checked ) {
-			setSelectedIds( function ( prev ) {
-				return prev.concat( [ id ] );
-			} );
-		} else {
-			setSelectedIds( function ( prev ) {
-				return prev.filter( function ( i ) {
-					return i !== id;
-				} );
-			} );
-		}
 	};
 
 	/**
@@ -517,19 +452,7 @@ export function ActivityListScreen( { onNavigate } ) {
 	return (
 		<div className="bb-activity-list">
 			{ /* Notice */ }
-			{ notice && (
-				<div className={ 'bb-admin-notice bb-admin-notice--' + notice.type }>
-					<span>{ notice.message }</span>
-					<button
-						className="bb-admin-notice--dismiss"
-						onClick={ function () {
-							setNotice( null );
-						} }
-					>
-						<i className='bb-icons-rl bb-icons-rl-x'></i>
-					</button>
-				</div>
-			) }
+			<AdminNotice notice={ notice } onDismiss={ function () { setNotice( null ); } } />
 
 			{ /* Header */ }
 			<div className="bb-activity-list__header">
@@ -537,98 +460,65 @@ export function ActivityListScreen( { onNavigate } ) {
 			</div>
 
 			{ /* Toolbar */ }
-			<div className="bb-activity-list__toolbar">
-				<div className="bb-activity-list__toolbar-left">
-					{ /* Bulk Actions */ }
-					<div className="bb-activity-list__bulk-actions">
-						<SelectControl
-							value={ bulkAction }
-							options={ [ { label: __( 'Bulk actions', 'buddyboss' ), value: '' } ].concat(
-								Object.keys( bulkActions ).map( function ( key ) {
-									return { label: bulkActions[ key ], value: key };
-								} )
-							) }
-							onChange={ setBulkAction }
-							__nextHasNoMarginBottom
-						/>
-						<Button
-							variant="secondary"
-							onClick={ handleBulkApply }
-							disabled={ ! bulkAction || 0 === selectedIds.length }
-							className="bb-activity-list__bulk-apply"
-						>
-							{ __( 'Apply', 'buddyboss' ) }
-						</Button>
-					</div>
+			<ListToolbar
+				className="bb-activity-list"
+				bulkAction={ bulkAction }
+				bulkActions={ bulkActions }
+				onBulkActionChange={ setBulkAction }
+				onBulkApply={ handleBulkApply }
+				selectedCount={ selectedIds.length }
+				isBulkProcessing={ false }
+				searchInput={ searchInput }
+				onSearchChange={ handleSearchChange }
+				searchPlaceholder={ __( 'Search activities', 'buddyboss' ) }
+			>
+				<SelectControl
+					value={ filter }
+					options={ filterOptions }
+					onChange={ handleFilterChange }
+					className="bb-activity-list__filter-select"
+					__nextHasNoMarginBottom
+				/>
+				<div className="bb-activity-list__action-filter">
+					<select
+						value={ actionFilter }
+						onChange={ function ( e ) {
+							handleActionFilterChange( e.target.value );
+						} }
+					>
+						<option value="">{ __( 'All Actions', 'buddyboss' ) }</option>
+						{ activityActionsGrouped.map( function ( group, idx ) {
+							return (
+								<optgroup key={ idx } label={ group.label }>
+									{ group.options.map( function ( opt ) {
+										return (
+											<option key={ opt.value } value={ opt.value }>
+												{ opt.label }
+											</option>
+										);
+									} ) }
+								</optgroup>
+							);
+						} ) }
+					</select>
 				</div>
-
-				<div className="bb-activity-list__toolbar-right">
-					{ /* Filter Dropdown */ }
-					<SelectControl
-						value={ filter }
-						options={ filterOptions }
-						onChange={ handleFilterChange }
-						className="bb-activity-list__filter-select"
-						__nextHasNoMarginBottom
-					/>
-
-					{ /* Action Type Filter */ }
-					<div className="bb-activity-list__action-filter">
-						<select
-							value={ actionFilter }
-							onChange={ function ( e ) {
-								handleActionFilterChange( e.target.value );
-							} }
-						>
-							<option value="">{ __( 'All Actions', 'buddyboss' ) }</option>
-							{ activityActionsGrouped.map( function ( group, idx ) {
-								return (
-									<optgroup key={ idx } label={ group.label }>
-										{ group.options.map( function ( opt ) {
-											return (
-												<option key={ opt.value } value={ opt.value }>
-													{ opt.label }
-												</option>
-											);
-										} ) }
-									</optgroup>
-								);
-							} ) }
-						</select>
-					</div>
-					{ /* Search */ }
-					<div className="bb-activity-list__search">
-						<input
-							type="text"
-							value={ searchInput }
-							onChange={ function ( e ) {
-								handleSearchChange( e.target.value );
-							} }
-							placeholder={ __( 'Search activities', 'buddyboss' ) }
-							className="bb-activity-list__search-input"
-						/>
-						<span className="bb-activity-list__search-icon">
-							<i className="bb-icons-rl bb-icons-rl-search"></i>
-						</span>
-					</div>
-				</div>
-			</div>
+			</ListToolbar>
 
 			{ /* Table */ }
 			<div className="bb-activity-list__table-wrapper">
 				{ isLoading ? (
-					<div className="bb-activity-list__loading">
+					<div className="bb-admin-list-table__loading">
 						<Spinner />
 					</div>
 				) : 0 === activities.length ? (
-					<div className="bb-activity-list__empty">
+					<div className="bb-admin-list-table__empty">
 						<p>{ __( 'No activities found.', 'buddyboss' ) }</p>
 					</div>
 				) : (
-					<table className="bb-activity-list__table">
+					<table className="bb-activity-list__table bb-admin-list-table">
 						<thead>
 							<tr>
-								<th className="bb-activity-list__th--checkbox">
+								<th className="bb-activity-list__th--checkbox bb-admin-list-table__checkbox">
 									<CheckboxControl
 										checked={ allSelected }
 										onChange={ handleSelectAll }
@@ -665,9 +555,9 @@ export function ActivityListScreen( { onNavigate } ) {
 								return (
 									<tr
 										key={ activity.id }
-										className={ 'bb-activity-list__row' + ( isSelected ? ' bb-activity-list__row--selected' : '' ) + ( isSpam ? ' bb-activity-list__row--spam' : '' ) }
+										className={ 'bb-activity-list__row bb-admin-list-table__row' + ( isSelected ? ' bb-activity-list__row--selected bb-admin-list-table__row--selected' : '' ) + ( isSpam ? ' bb-activity-list__row--spam' : '' ) }
 									>
-										<td className="bb-activity-list__td--checkbox">
+										<td className="bb-activity-list__td--checkbox bb-admin-list-table__checkbox">
 											<CheckboxControl
 												checked={ isSelected }
 												onChange={ function ( checked ) {
@@ -731,7 +621,7 @@ export function ActivityListScreen( { onNavigate } ) {
 												{ formatDate( activity.date_recorded ) }
 											</span>
 										</td>
-										<td className="bb-activity-list__td--actions">
+										<td className="bb-activity-list__td--actions bb-admin-actions-toggle">
 											<DropdownMenu
 												icon={ <i className="bb-icons-rl-dots-three"></i> }
 												label={ __( 'More options', 'buddyboss' ) }
@@ -824,64 +714,14 @@ export function ActivityListScreen( { onNavigate } ) {
 			</div>
 
 			{ /* Footer */ }
-			{ ! isLoading && total > 0 && (
-				<div className="bb-activity-list__footer">
-					<span className="bb-activity-list__item-count">
-						{ total } { __( 'items', 'buddyboss' ) }
-					</span>
-
-					{ totalPages > 1 && (
-						<div className="bb-activity-list__pagination">
-							<Button
-								variant="secondary"
-								disabled={ 1 === currentPage }
-								onClick={ function () {
-									setCurrentPage( function ( p ) {
-										return Math.max( 1, p - 1 );
-									} );
-								} }
-								className="bb-activity-list__pagination-btn bb-activity-list__pagination-btn--previous"
-							>
-								&lsaquo;
-							</Button>
-
-							{ getPageNumbers( currentPage, totalPages ).map( function ( page, index ) {
-								if ( '...' === page ) {
-									return (
-										<span key={ 'ellipsis-' + index } className="bb-activity-list__pagination-ellipsis">
-											&hellip;
-										</span>
-									);
-								}
-								return (
-									<Button
-										key={ page }
-										variant={ page === currentPage ? 'primary' : 'secondary' }
-										onClick={ function () {
-											setCurrentPage( page );
-										} }
-										className={ 'bb-activity-list__pagination-btn' + ( page === currentPage ? ' bb-activity-list__pagination-btn--current' : '' ) }
-									>
-										{ page }
-									</Button>
-								);
-							} ) }
-
-							<Button
-								variant="secondary"
-								disabled={ currentPage >= totalPages }
-								onClick={ function () {
-									setCurrentPage( function ( p ) {
-										return Math.min( totalPages, p + 1 );
-									} );
-								} }
-								className="bb-activity-list__pagination-btn bb-activity-list__pagination-btn--next"
-							>
-								&rsaquo;
-							</Button>
-						</div>
-					) }
-				</div>
+			{ ! isLoading && (
+				<ListPagination
+					currentPage={ currentPage }
+					totalPages={ totalPages }
+					total={ total }
+					onPageChange={ function ( page ) { setCurrentPage( page ); } }
+					className="bb-activity-list"
+				/>
 			) }
 
 			{ /* Edit Loading Overlay */ }

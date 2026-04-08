@@ -100,7 +100,7 @@ function bb_admin_settings_page() {
 
 	// Check Meta Field Registry (Activity/Groups edit modals use richtext fields).
 	if ( ! $has_rich_text && function_exists( 'bb_admin_meta_field_registry' ) ) {
-		$meta_components = array( 'activity', 'groups', 'forums', 'discussions', 'replies' );
+		$meta_components = array( 'activity', 'groups', 'forums', 'discussions', 'replies', 'emails' );
 		foreach ( $meta_components as $component ) {
 			$meta_fields = bb_admin_meta_field_registry()->get_fields( $component );
 			foreach ( $meta_fields as $field ) {
@@ -174,6 +174,7 @@ function bb_admin_settings_page() {
 	$localize_data['isGroupCreationAllowed']             = bp_is_active( 'groups' ) && ! bp_restrict_group_creation();
 	$localize_data['isGroupTypeCreationEnabled']         = bp_is_active( 'groups' ) && bp_disable_group_type_creation();
 	$localize_data['isGroupAutoJoinEnabled']             = bp_is_active( 'groups' ) && bp_disable_group_type_creation() && bp_enable_group_auto_join();
+	$localize_data['isEmailInviteEnabled']               = bp_is_active( 'invites' ) && function_exists( 'bp_disable_invite_member_type' ) && bp_disable_invite_member_type();
 	// Upload nonces for image upload fields (avatar/cover).
 	// Only expose when the user has capability to manage group settings.
 	if ( bp_current_user_can( 'bp_moderate' ) ) {
@@ -198,6 +199,10 @@ function bb_admin_settings_page() {
 
 		$localize_data['reportedContentTypes'] = $content_types;
 	}
+
+	// Repair tools nonce — used by Email Missing modal to call existing
+	// bp_admin_repair_tools_wrapper_function AJAX action.
+	$localize_data['repairNonce'] = wp_create_nonce( 'bp-do-counts' );
 
 	// Only expose debug data when WP_DEBUG is enabled.
 	if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
@@ -235,6 +240,11 @@ function bb_admin_settings_page() {
 	?>
 	<div class="wrap bb-admin-settings-2-0-wrap">
 		<div id="bb-admin-settings-2-0"></div>
+		<noscript>
+			<p style="padding: 20px; font-size: 14px;">
+				<?php esc_html_e( 'JavaScript is required for BuddyBoss Settings. Please enable JavaScript in your browser.', 'buddyboss' ); ?>
+			</p>
+		</noscript>
 	</div>
 	<?php
 }

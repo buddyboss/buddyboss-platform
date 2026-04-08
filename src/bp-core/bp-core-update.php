@@ -545,7 +545,7 @@ function bp_version_updater() {
 		}
 
 		// Version 3.0.0 - Settings 2.0 feature migration.
-		if ( $raw_db_version < 23571 ) {
+		if ( $raw_db_version < 23583 ) {
 			bb_update_to_3_0_0();
 		}
 
@@ -4118,26 +4118,34 @@ function bb_update_to_3_0_0() {
 		bb_seed_media_section_toggle_defaults();
 	}
 
-	// Only run reactions migration if bb-active-features hasn't been set yet (first upgrade to 3.0).
 	$active_features = bp_get_option( 'bb-active-features', array() );
-	if ( isset( $active_features['reactions'] ) ) {
-		return; // Already migrated — don't overwrite user's Settings 2.0 choice.
-	}
 
-	// Check the legacy bb_all_reactions option.
-	// Default: array( 'activity' => true, 'activity_comment' => true ).
-	$all_reactions = (array) bp_get_option( 'bb_all_reactions', array() );
+	// Reactions migration: only run if not yet migrated.
+	if ( ! isset( $active_features['reactions'] ) ) {
+		// Check the legacy bb_all_reactions option.
+		// Default: array( 'activity' => true, 'activity_comment' => true ).
+		$all_reactions = (array) bp_get_option( 'bb_all_reactions', array() );
 
-	// If ANY reaction type was enabled, enable the reactions feature.
-	$any_enabled = false;
-	foreach ( $all_reactions as $value ) {
-		if ( ! empty( $value ) ) {
-			$any_enabled = true;
-			break;
+		// If ANY reaction type was enabled, enable the reactions feature.
+		$any_enabled = false;
+		foreach ( $all_reactions as $value ) {
+			if ( ! empty( $value ) ) {
+				$any_enabled = true;
+				break;
+			}
 		}
+
+		$active_features['reactions'] = $any_enabled ? 1 : 0;
 	}
 
-	$active_features['reactions'] = $any_enabled ? 1 : 0;
+	// reCAPTCHA migration: auto-enable if already connected.
+	if ( ! isset( $active_features['recaptcha'] ) ) {
+		$recaptcha_settings = bp_get_option( 'bb_recaptcha', array() );
+		$is_connected       = ! empty( $recaptcha_settings['connection_status'] ) && 'connected' === $recaptcha_settings['connection_status'];
+
+		$active_features['recaptcha'] = $is_connected ? 1 : 0;
+	}
+
 	bp_update_option( 'bb-active-features', $active_features );
 
 	// Migrate legacy group avatar type: 'legacy' option removed from Settings 2.0.
@@ -4151,6 +4159,8 @@ function bb_update_to_3_0_0() {
 	if ( 'legacy' === $profile_avatar_type ) {
 		bp_update_option( 'bp-default-profile-avatar-type', 'buddyboss' );
 	}
+
+	bb_migrate_email_type_groups();
 }
 
 /**
@@ -4191,3 +4201,116 @@ function bb_on_media_feature_activated( $feature_id ) {
 	}
 }
 add_action( 'bb_feature_activated', 'bb_on_media_feature_activated' );
+
+/**
+ * Backfill bb_email_group term meta for all bp_email_type taxonomy terms.
+ *
+ * Email situations in Settings 2.0 are grouped by category (Activity, Groups, etc.).
+ * The group is resolved from the schema 'group' key at runtime, but the schema only
+ * includes email types from ACTIVE components. When a component is disabled, its email
+ * types disappear from the schema and would fall to "Other" group.
+ *
+ * This migration writes the group as term meta so it persists regardless of component state.
+ * Uses a hardcoded map of all known BB email types — safe because these slugs are controlled
+ * by BuddyBoss and never change.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_migrate_email_type_groups() {
+
+	// One-time migration guard — skip if already completed.
+	if ( bp_get_option( 'bb_email_type_groups_migrated' ) ) {
+		return;
+	}
+
+	$taxonomy = function_exists( 'bp_get_email_tax_type' ) ? bp_get_email_tax_type() : 'bp_email_type';
+	$terms    = get_terms(
+		array(
+			'taxonomy'   => $taxonomy,
+			'hide_empty' => false,
+		)
+	);
+
+	if ( empty( $terms ) || is_wp_error( $terms ) ) {
+		return;
+	}
+
+	// Complete map of all known BB Platform + Pro email type slugs to group keys.
+	// This covers all 34 email types: 8 from core schema, 24 from notification classes, 2 from Pro Zoom.
+	$group_map = array(
+		// Account.
+		'core-user-registration'              => 'account',
+		'core-user-registration-with-blog'    => 'account',
+		'settings-verify-email-change'        => 'account',
+		'invites-member-invite'               => 'account',
+		'content-moderation-email'            => 'account',
+		'user-moderation-email'               => 'account',
+		'settings-password-changed'           => 'account',
+		'zoom-scheduled-meeting-email'        => 'account',
+		'zoom-scheduled-webinar-email'        => 'account',
+
+		// Activity.
+		'activity-at-message'                 => 'activity',
+		'activity-comment'                    => 'activity',
+		'activity-comment-author'             => 'activity',
+		'new-activity-following'              => 'activity',
+		'new-activity-following-poll'         => 'activity',
+		'new-comment-reply'                   => 'activity',
+		'new-mention'                         => 'activity',
+
+		// Groups & Discussions.
+		'groups-at-message'                   => 'groups_discussions',
+		'groups-details-updated'              => 'groups_discussions',
+		'groups-member-promoted'              => 'groups_discussions',
+		'groups-invitation'                   => 'groups_discussions',
+		'groups-membership-request'           => 'groups_discussions',
+		'groups-membership-request-accepted'  => 'groups_discussions',
+		'groups-membership-request-rejected'  => 'groups_discussions',
+		'groups-new-activity'                 => 'groups_discussions',
+		'groups-new-discussion'               => 'groups_discussions',
+		'new-mention-group'                   => 'groups_discussions',
+
+		// Forums (under Groups & Discussions).
+		'bbp-new-forum-reply'                 => 'groups_discussions',
+		'bbp-new-forum-topic'                 => 'groups_discussions',
+
+		// Connections.
+		'new-follower'                        => 'connections',
+		'friends-request'                     => 'connections',
+		'friends-request-accepted'            => 'connections',
+
+		// Messages.
+		'messages-unread'                     => 'messages',
+		'messages-unread-digest'              => 'messages',
+		'group-message-email'                 => 'messages',
+		'group-message-digest'                => 'messages',
+	);
+
+	/**
+	 * Filters the email type group map used during migration.
+	 *
+	 * Pro or third-party plugins can add their email types to the migration
+	 * so they get proper group assignment instead of falling to "Other".
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $group_map Email type slug => group key map.
+	 */
+	$group_map = apply_filters( 'bb_email_type_group_migration_map', $group_map );
+
+	foreach ( $terms as $term ) {
+		if ( isset( $group_map[ $term->slug ] ) ) {
+			// Known BB/Pro term — always set the correct group (overwrites stale values).
+			update_term_meta( $term->term_id, 'bb_email_group', sanitize_key( $group_map[ $term->slug ] ) );
+		} else {
+			// Unknown/third-party term — only set if no meta exists (don't overwrite).
+			$existing = get_term_meta( $term->term_id, 'bb_email_group', true );
+			if ( empty( $existing ) ) {
+				update_term_meta( $term->term_id, 'bb_email_group', 'other' );
+			}
+		}
+	}
+
+	// Mark migration as completed so it doesn't run again.
+	bp_update_option( 'bb_email_type_groups_migrated', true );
+}
