@@ -681,6 +681,10 @@ class BB_Admin_Settings_Ajax {
 					? array_map( 'wp_kses_post', $field['option_descriptions'] )
 					: null,
 				'is_connected'         => ! empty( $field['is_connected'] ),
+				// Verify field configuration (modal title, icons, messages).
+				'verify_config'        => ! empty( $field['verify_config'] ) && is_array( $field['verify_config'] )
+					? array_map( 'sanitize_text_field', $field['verify_config'] )
+					: null,
 				// Max length for text inputs.
 				'maxlength'            => $field['maxlength'] ?? null,
 				// Status check fields (AJAX-triggered server-side checks, e.g. Direct Access).

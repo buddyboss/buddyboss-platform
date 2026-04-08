@@ -1,0 +1,231 @@
+/**
+ * BuddyBoss Admin Settings 2.0 - Verify Popup Field Styles
+ *
+ * Generic verify button + modal styles for the bb_verify_popup field type.
+ * Used by any plugin that registers credential verification flows.
+ * Matches the reCAPTCHA modal design pattern.
+ *
+ * @package BuddyBoss\Core\Administration
+ * @since BuddyBoss [BBVERSION]
+ */
+
+// Verify button.
+.bb-admin-verify-field {
+	&__btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 8px 20px;
+		font-size: 14px;
+		font-weight: 500;
+		line-height: 20px;
+		border-radius: $bb-border-radius-md;
+		border: none;
+		cursor: pointer;
+		background-color: $bb-background-brand-primary-color;
+		color: $bb-text-inverse-color;
+		transition: background-color 0.15s ease;
+
+		&:hover:not(:disabled) {
+			background-color: $bb-background-brand-primary-hover-color;
+		}
+
+		&:disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+		}
+	}
+}
+
+// Verify modal — matches reCAPTCHA modal structure.
+.bb-admin-verify-modal {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 100100;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	&__backdrop {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: rgba(0, 0, 0, 0.5);
+		z-index: 1;
+	}
+
+	&__container {
+		position: relative;
+		z-index: 2;
+		background: $bb-background-base-color;
+		border-radius: $bb-border-radius-lg;
+		box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+		width: 480px;
+		max-width: 90vw;
+		max-height: 80vh;
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+	}
+
+	&__header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 16px 20px;
+		border-bottom: 1px solid $bb-border-secondary-color;
+	}
+
+	&__title {
+		font-size: 16px;
+		font-weight: 600;
+		line-height: 24px;
+		color: $bb-text-color;
+		margin: 0;
+		padding: 0;
+	}
+
+	&__close {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 32px;
+		height: 32px;
+		background: none;
+		border: none;
+		cursor: pointer;
+		color: $bb-icon-color;
+		border-radius: $bb-border-radius-sm;
+		transition: background-color 0.15s ease;
+
+		&:hover {
+			background-color: $bb-background-primary-color;
+		}
+
+		i {
+			font-size: 16px;
+		}
+	}
+
+	&__content {
+		padding: 24px 20px;
+		min-height: 120px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		overflow-y: auto;
+	}
+
+	&__status {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+		gap: 12px;
+
+		p {
+			font-size: 14px;
+			line-height: 20px;
+			color: $bb-text-color;
+			margin: 0;
+		}
+
+		&--success p {
+			color: $bb-text-positive-primary-color;
+		}
+
+		&--error p {
+			color: $bb-error-color;
+		}
+	}
+
+	&__icon {
+		width: 48px;
+		height: 48px;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		&--loading {
+			border: 3px solid $bb-background-secondary-color;
+			border-top-color: $bb-background-brand-primary-color;
+			animation: bb-admin-verify-spin 0.8s linear infinite;
+		}
+
+		&--success {
+			background-color: $bb-background-positive-primary-color;
+
+			&::after {
+				content: '\2713';
+				font-size: 24px;
+				color: $bb-text-positive-primary-color;
+			}
+		}
+
+		&--error {
+			background-color: #fef2f2;
+
+			&::after {
+				content: '\2717';
+				font-size: 24px;
+				color: $bb-error-color;
+			}
+		}
+	}
+
+	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 8px;
+		padding: 12px 20px;
+		border-top: 1px solid $bb-border-secondary-color;
+	}
+
+	&__btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 8px 16px;
+		font-size: 14px;
+		font-weight: 500;
+		line-height: 20px;
+		border-radius: $bb-border-radius-md;
+		border: 1px solid $bb-border-secondary-color;
+		background: $bb-background-base-color;
+		color: $bb-text-color;
+		cursor: pointer;
+		transition: background-color 0.15s ease;
+
+		&:hover:not(:disabled) {
+			background-color: $bb-background-primary-color;
+		}
+
+		&:disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+		}
+
+		&--primary {
+			background-color: $bb-background-brand-primary-color;
+			border-color: $bb-background-brand-primary-color;
+			color: $bb-text-inverse-color;
+
+			&:hover:not(:disabled) {
+				background-color: $bb-background-brand-primary-hover-color;
+			}
+		}
+	}
+}
+
+@keyframes bb-admin-verify-spin {
+	to {
+		transform: rotate(360deg);
+	}
+}

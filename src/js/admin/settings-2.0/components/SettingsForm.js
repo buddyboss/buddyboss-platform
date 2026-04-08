@@ -47,6 +47,7 @@ import { StatusCheckField } from './fields/StatusCheckField';
 import { ImageUploadField } from './fields/ImageUploadField';
 import { RecaptchaVerifyField } from './recaptcha/RecaptchaVerifyField';
 import { RecaptchaBypassField } from './recaptcha/RecaptchaBypassField';
+import { VerifyPopupField } from './fields/VerifyPopupField';
 
 /**
  * Settings Form Component (matching Figma settingsSection)
@@ -892,12 +893,39 @@ export function SettingsForm({ fields, values, onChange }) {
 					/>
 				);
 
-			default:
+			case 'bb_verify_popup':
+				return (
+					<VerifyPopupField
+						field={field}
+						values={values}
+						disabled={disabled}
+					/>
+				);
+
+			default: {
+				// Allow external plugins to render custom field types via wp.hooks.
+				var customFieldComponent = wp.hooks.applyFilters(
+					'bb_admin_settings_custom_field',
+					null,
+					field,
+					value,
+					function ( newValue ) {
+						onChange( field.name, newValue );
+					},
+					disabled,
+					values
+				);
+
+				if ( customFieldComponent ) {
+					return customFieldComponent;
+				}
+
 				return (
 					<p className="bb-admin-settings-field__unsupported">
 						{__('Field type not yet supported in React UI.', 'buddyboss')}
 					</p>
 				);
+			}
 		}
 	};
 
