@@ -57,7 +57,7 @@ function bb_advanced_register_privacy_fields() {
 			),
 			'type'              => 'toggle',
 			'default'           => bp_enable_private_network(),
-			'invert_value'      => true,
+			'invert_value'      => true, // DB stores 1 = public network. Toggle shows "Restrict", so invert for display.
 			'sanitize_callback' => 'absint',
 			'order'             => 10,
 		)

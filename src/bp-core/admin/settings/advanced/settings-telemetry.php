@@ -57,7 +57,7 @@ function bb_advanced_register_telemetry_fields() {
 		array(
 			'name'                => 'bb_advanced_telemetry_reporting',
 			'label'               => __( 'Telemetry', 'buddyboss' ),
-			'description'         => $option_descriptions[ $current_mode ] ?? $option_descriptions['anonymous'],
+			'description'         => $option_descriptions[ $current_mode ] ?? $option_descriptions['disable'],
 			'type'                => 'select',
 			'default'             => $current_mode,
 			'sanitize_callback'   => 'bb_advanced_sanitize_telemetry_reporting',

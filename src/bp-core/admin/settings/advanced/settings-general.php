@@ -250,7 +250,7 @@ function bb_advanced_register_general_fields() {
 			'description'       => __( 'Show the Toolbar for logged out users', 'buddyboss' ),
 			'type'              => 'toggle',
 			'default'           => bp_hide_loggedout_adminbar( false ),
-			'invert_value'      => true,
+			'invert_value'      => true, // DB stores 1 = hide toolbar. Toggle shows "Show", so invert for display.
 			'sanitize_callback' => 'absint',
 			'group'             => 'toolbar_settings',
 			'order'             => 30,
