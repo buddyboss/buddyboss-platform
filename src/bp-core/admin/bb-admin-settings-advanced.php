@@ -84,18 +84,20 @@ function bb_admin_settings_register_advanced_feature() {
 	);
 
 	// Side Panel 3: Telemetry.
-	bb_register_side_panel(
-		'advanced',
-		'telemetry',
-		array(
-			'title' => __( 'Telemetry', 'buddyboss' ),
-			'icon'  => array(
-				'type'  => 'font',
-				'class' => 'bb-icons-rl bb-icons-rl-chart-bar',
-			),
-			'order' => 30,
-		)
-	);
+	if ( ! function_exists( 'bb_platform_pro' ) ) {
+		bb_register_side_panel(
+			'advanced',
+			'telemetry',
+			array(
+				'title' => __( 'Telemetry', 'buddyboss' ),
+				'icon'  => array(
+					'type'  => 'font',
+					'class' => 'bb-icons-rl bb-icons-rl-chart-bar',
+				),
+				'order' => 30,
+			)
+		);
+	}
 
 	// =========================================================================
 	// REGISTER FIELDS (delegated to sub-files)
@@ -103,7 +105,11 @@ function bb_admin_settings_register_advanced_feature() {
 
 	bb_advanced_register_general_fields();
 	bb_advanced_register_privacy_fields();
-	bb_advanced_register_telemetry_fields();
+
+	// Telemetry fields only for free users.
+	if ( ! function_exists( 'bb_platform_pro' ) ) {
+		bb_advanced_register_telemetry_fields();
+	}
 
 	/**
 	 * Fires after all Advanced settings panels are registered.
