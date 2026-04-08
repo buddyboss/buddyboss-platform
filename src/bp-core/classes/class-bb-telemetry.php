@@ -77,7 +77,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			 *
 			 * @param string $mode Telemetry mode: 'complete', 'anonymous', or 'disable'.
 			 */
-			self::$bb_telemetry_option = apply_filters( 'bb_advanced_telemetry_reporting_value', bp_get_option( 'bb_advanced_telemetry_reporting', 'anonymous' ) );
+			self::$bb_telemetry_option = apply_filters( 'bb_advanced_telemetry_reporting_value', bp_get_option( 'bb_advanced_telemetry_reporting', 'disable' ) );
 
 			// Schedule the CRON event only if it's not already scheduled.
 			if ( ! wp_next_scheduled( 'bb_telemetry_report_cron_event' ) ) {

@@ -24,7 +24,7 @@ function bb_advanced_sanitize_telemetry_reporting( $value ) {
 	$value   = sanitize_text_field( $value );
 	$allowed = array( 'complete', 'anonymous', 'disable' );
 
-	return in_array( $value, $allowed, true ) ? $value : 'anonymous';
+	return in_array( $value, $allowed, true ) ? $value : 'disable';
 }
 
 /**
@@ -73,7 +73,7 @@ function bb_advanced_capture_telemetry_before_save( $feature_id, $settings ) {
 	}
 
 	// Capture old value before the save loop overwrites it.
-	bb_advanced_get_pre_save_telemetry( bp_get_option( 'bb_advanced_telemetry_reporting', 'anonymous' ) );
+	bb_advanced_get_pre_save_telemetry( bp_get_option( 'bb_advanced_telemetry_reporting', 'disable' ) );
 }
 add_action( 'bb_admin_settings_before_save_feature', 'bb_advanced_capture_telemetry_before_save', 10, 2 );
 
