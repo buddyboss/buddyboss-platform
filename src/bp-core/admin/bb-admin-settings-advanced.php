@@ -48,6 +48,7 @@ function bb_admin_settings_register_advanced_feature() {
 	require_once __DIR__ . '/settings/advanced/callbacks.php';
 	require_once __DIR__ . '/settings/advanced/settings-general.php';
 	require_once __DIR__ . '/settings/advanced/settings-privacy.php';
+	require_once __DIR__ . '/settings/advanced/settings-telemetry.php';
 
 	// =========================================================================
 	// SIDE PANELS
@@ -82,12 +83,27 @@ function bb_admin_settings_register_advanced_feature() {
 		)
 	);
 
+	// Side Panel 3: Telemetry.
+	bb_register_side_panel(
+		'advanced',
+		'telemetry',
+		array(
+			'title' => __( 'Telemetry', 'buddyboss' ),
+			'icon'  => array(
+				'type'  => 'font',
+				'class' => 'bb-icons-rl bb-icons-rl-chart-bar',
+			),
+			'order' => 30,
+		)
+	);
+
 	// =========================================================================
 	// REGISTER FIELDS (delegated to sub-files)
 	// =========================================================================
 
 	bb_advanced_register_general_fields();
 	bb_advanced_register_privacy_fields();
+	bb_advanced_register_telemetry_fields();
 
 	/**
 	 * Fires after all Advanced settings panels are registered.
