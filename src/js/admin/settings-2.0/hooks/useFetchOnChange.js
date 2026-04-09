@@ -138,7 +138,7 @@ export function useFetchOnChange( fields, values ) {
 				}
 			} );
 		};
-	} );
+	}, [ values ] );
 
 	/**
 	 * Execute the AJAX fetch for a field.

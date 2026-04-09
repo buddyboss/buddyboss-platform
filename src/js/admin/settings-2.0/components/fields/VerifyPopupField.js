@@ -181,7 +181,7 @@ export function VerifyPopupField( props ) {
 		if ( autoSubmit ) {
 			submitVerification();
 		}
-	}, [ field, values, ajaxAction ] );
+	}, [ field, values, ajaxAction, submitVerification ] );
 
 	/**
 	 * Submit AJAX verification request.
@@ -437,7 +437,7 @@ export function VerifyPopupField( props ) {
 
 			{ isModalOpen && (
 				<div className="bb-admin-verify-modal">
-					<div className="bb-admin-verify-modal__backdrop" onClick={ closeModal } />
+					<div className="bb-admin-verify-modal__backdrop" onClick={ closeModal } role="presentation" />
 					<div
 						className="bb-admin-verify-modal__container"
 						onClick={ function( e ) { e.stopPropagation(); } }
