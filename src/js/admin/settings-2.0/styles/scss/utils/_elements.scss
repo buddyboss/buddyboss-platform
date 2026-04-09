@@ -502,10 +502,28 @@ select.bb-admin-settings__select {
 	}
 }
 
-/* Select field inside grouped fields — match password field width */
-.bb-admin-settings-form__field--grouped {
+/* Text and select fields inside grouped fields — match password field width */
+.bb-admin-settings-form__field--grouped,
+.bb-admin-settings-form__child-field {
 	.components-select-control {
 		.components-input-base {
+			width: 100%;
+		}
+
+		.components-select-control__input {
+			width: 100%;
+		}
+	}
+
+	/* Make text inputs stretch to fill the input wrapper like password fields do. */
+	.bb-admin-settings-form__field-input-wrapper > div {
+		width: 100%;
+
+		.components-base-control {
+			width: 100%;
+		}
+
+		.components-text-control__input {
 			width: 100%;
 		}
 	}
