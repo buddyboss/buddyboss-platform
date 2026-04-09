@@ -184,9 +184,10 @@
             box-shadow: none;
 
             &-icon {
-                font-size: 14px;
+                font-size: 16px;
                 line-height: 1;
                 flex-shrink: 0;
+                font-weight: 500;
             }
 
             &--warning {
