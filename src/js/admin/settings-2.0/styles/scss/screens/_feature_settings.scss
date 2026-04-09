@@ -1002,6 +1002,22 @@
     }
 }
 
+.bb-admin-settings-form__field.bb-admin-settings-form__field--select-full {
+
+    .components-input-control__container {
+        background-color: transparent;
+    }
+
+    .components-select-control {
+        max-width: 500px;
+    }
+
+    .components-select-control__input {
+        max-width: 500px;
+        width: 100%;
+    }
+}
+
 /* Extension List Field */
 .bb-extension-list {
 
