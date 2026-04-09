@@ -277,8 +277,12 @@ function bp_learndash_get_users_certificates( $user_id = '' ) {
 
 		if ( ! empty( $certificate_id ) ) {
 			$certificate_data = get_post( $certificate_id );
-			$filename         = sanitize_file_name( $course_title ) . "-" . sanitize_file_name( $certificate_data->post_title ) . ".pdf";
-			$image            = wp_get_attachment_url( get_post_thumbnail_id( $certificate_id ) );
+			if ( ! empty( $certificate_data ) && ! empty( $certificate_data->post_title ) ) {
+				$filename = sanitize_file_name( $course_title ) . "-" . sanitize_file_name( $certificate_data->post_title ) . ".pdf";
+			} else {
+				$filename = sanitize_file_name( $course_title ) . "-certificate.pdf";
+			}
+			$image = wp_get_attachment_url( get_post_thumbnail_id( $certificate_id ) );
 		}
 
 		$date = get_user_meta( $user_id, 'course_completed_' . $course_id, true );
