@@ -505,7 +505,7 @@
 
     &--grouped:not(.bb-admin-settings-form__field--full-width) {
         border-bottom: none;
-        padding-bottom: 12px;
+        padding-bottom: 18px;
 
         // Last visible field in a group restores the bottom border.
         &.bb-admin-settings-form__field--group-last,
@@ -1013,6 +1013,14 @@
     }
 
     .components-select-control__input {
+        max-width: 500px;
+        width: 100%;
+    }
+}
+
+.bb-admin-settings-form__field.bb-admin-settings-form__field--input-full {
+
+    .components-text-control__input {
         max-width: 500px;
         width: 100%;
     }
