@@ -101,6 +101,7 @@ export function VerifyPopupField( props ) {
 	var setModalMessage   = modalMessageState[ 1 ];
 
 	var abortRef = useRef( null );
+	var submitValuesRef = useRef( null ); // Override values for AJAX submission (used by disconnect)
 
 	// Track initial values of related fields to detect changes.
 	var initialValuesRef = useRef( null );
@@ -161,6 +162,10 @@ export function VerifyPopupField( props ) {
 			emptyValues[ rf ] = '';
 		} );
 
+		// Store empty values in ref so submitVerification() uses them instead of props.values.
+		// This is critical because props.values won't update in time before submitVerification is called.
+		submitValuesRef.current = emptyValues;
+
 		// Dispatch field value update to clear form fields.
 		window.dispatchEvent( new CustomEvent( BB_EVENTS.FIELD_VALUE_UPDATE, {
 			detail: { fields: emptyValues },
@@ -178,11 +183,8 @@ export function VerifyPopupField( props ) {
 
 		wp.hooks.doAction( 'bb_admin_verify_field_phase_change', field, 'disconnecting', values );
 
-		// Use setTimeout to allow the field value update to settle before submitting.
-		// This ensures the AJAX payload includes the cleared values.
-		setTimeout( function() {
-			submitVerification();
-		}, 50 );
+		// Submit immediately with empty values (ref is already set above).
+		submitVerification();
 	}, [ field, values, relatedFields, submitVerification ] );
 
 	/**
@@ -238,9 +240,10 @@ export function VerifyPopupField( props ) {
 		formData.append( 'action', ajaxAction );
 		formData.append( 'nonce', nonce );
 
-		// Send related field values.
+		// Send related field values. Use submitValuesRef if set (for disconnect action).
+		var fieldsToSubmit = submitValuesRef.current || values;
 		relatedFields.forEach( function( rf ) {
-			formData.append( rf, values[ rf ] || '' );
+			formData.append( rf, fieldsToSubmit[ rf ] || '' );
 		} );
 
 		/**
@@ -250,13 +253,13 @@ export function VerifyPopupField( props ) {
 		 *
 		 * @param {FormData} formData The request FormData.
 		 * @param {Object}   field    Field configuration.
-		 * @param {Object}   values   Current form values.
+		 * @param {Object}   values   Current form values (or override values for disconnect).
 		 */
 		formData = wp.hooks.applyFilters(
 			'bb_admin_verify_field_before_ajax',
 			formData,
 			field,
-			values
+			fieldsToSubmit
 		);
 
 		fetch( ajaxUrl, {
@@ -276,12 +279,16 @@ export function VerifyPopupField( props ) {
 					var responseConnected = data.is_connected || false;
 					setConnected( responseConnected );
 
-					// Update initial values snapshot.
+					// Update initial values snapshot. Use submitted values (which may be from submitValuesRef for disconnect).
 					var newSnapshot = {};
+					var snapshotValues = submitValuesRef.current || values;
 					relatedFields.forEach( function( rf ) {
-						newSnapshot[ rf ] = values[ rf ] || '';
+						newSnapshot[ rf ] = snapshotValues[ rf ] || '';
 					} );
 					initialValuesRef.current = newSnapshot;
+
+					// Clear submitValuesRef since we've now submitted and updated the snapshot.
+					submitValuesRef.current = null;
 
 					invalidateFeatureCache();
 
