@@ -1326,7 +1326,7 @@ window.bp = window.bp || {};
 			var onScreenElem = $( '.bb-onscreen-notification' ),
 				enable       = onScreenElem.data( 'enable' );
 
-			if ( '1' !== enable || ( 'undefined' === typeof data.on_screen_notifications && '' === data.on_screen_notifications ) ) {
+			if ( 1 != enable || 'undefined' === typeof data.on_screen_notifications || '' === data.on_screen_notifications ) { // jshint ignore:line
 				return;
 			}
 
