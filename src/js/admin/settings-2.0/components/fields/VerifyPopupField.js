@@ -103,45 +103,27 @@ export function VerifyPopupField( props ) {
 	var abortRef = useRef( null );
 	var submitValuesRef = useRef( null ); // Override values for AJAX submission (used by disconnect)
 
-	// Track initial values of related fields to detect changes.
-	var initialValuesRef = useRef( null );
-	if ( null === initialValuesRef.current && relatedFields.length > 0 ) {
+	// Track the last server-confirmed connected state. Updated only after
+	// successful connect/disconnect AJAX, never by intermediate edits.
+	var savedConnectedRef = useRef( isConnectedInit );
+
+	// Track saved/original values of related fields (from server).
+	// Used to detect whether the user has actually changed anything.
+	// Updated after successful connect/disconnect AJAX.
+	var savedValuesRef = useRef( null );
+	if ( null === savedValuesRef.current && relatedFields.length > 0 ) {
 		var snapshot = {};
 		relatedFields.forEach( function( rf ) {
 			snapshot[ rf ] = values[ rf ] || '';
 		} );
-		initialValuesRef.current = snapshot;
+		savedValuesRef.current = snapshot;
 	}
 
-	// Sync connected state when field config changes (e.g. page reload).
+	// Sync when field config changes externally (e.g. page reload with new data).
 	useEffect( function() {
 		setConnected( field.is_connected || false );
+		savedConnectedRef.current = field.is_connected || false;
 	}, [ field.is_connected ] );
-
-	// Reset internal connected state when any related field value changes.
-	// This controls button visibility (show Update when fields changed) but does NOT
-	// update the section status badge — badge only changes after clicking Update.
-	useEffect( function() {
-		if ( ! connected || ! initialValuesRef.current ) {
-			return;
-		}
-
-		var hasChanges = relatedFields.some( function( rf ) {
-			return ( values[ rf ] || '' ) !== ( initialValuesRef.current[ rf ] || '' );
-		} );
-
-		if ( hasChanges ) {
-			setConnected( false );
-
-			/**
-			 * Action: Fires when connected state resets due to value changes.
-			 *
-			 * @param {Object} field  Field configuration.
-			 * @param {Object} values Current form values.
-			 */
-			wp.hooks.doAction( 'bb_admin_verify_field_phase_change', field, 'disconnected', values );
-		}
-	}, relatedFields.map( function( rf ) { return values[ rf ]; } ) );
 
 	// Cleanup on unmount.
 	useEffect( function() {
@@ -171,10 +153,10 @@ export function VerifyPopupField( props ) {
 			detail: { fields: emptyValues },
 		} ) );
 
-		// NOTE: Do NOT update initialValuesRef here. This allows the component to track
+		// NOTE: Do NOT update savedValuesRef here. This allows the component to track
 		// changes against the originally connected state. If the user re-enters the same
 		// values, the button will change back to Disconnect automatically.
-		// initialValuesRef will only update after the server confirms the disconnect.
+		// savedValuesRef will only update after the server confirms the disconnect.
 
 		// Open modal and submit with empty values.
 		setModalPhase( 'loading' );
@@ -241,9 +223,21 @@ export function VerifyPopupField( props ) {
 		formData.append( 'nonce', nonce );
 
 		// Send related field values. Use submitValuesRef if set (for disconnect action).
+		// For non-disconnect, read from DOM first to handle cases where React state
+		// is stale (e.g. select showing a value but state is empty).
 		var fieldsToSubmit = submitValuesRef.current || values;
 		relatedFields.forEach( function( rf ) {
-			formData.append( rf, fieldsToSubmit[ rf ] || '' );
+			var val = fieldsToSubmit[ rf ] || '';
+
+			// When submitting live values (not disconnect), check DOM for the actual value.
+			if ( ! submitValuesRef.current && ! val ) {
+				var domEl = document.querySelector( 'input[name="' + rf + '"], select[name="' + rf + '"], textarea[name="' + rf + '"]' );
+				if ( domEl && domEl.value ) {
+					val = domEl.value;
+				}
+			}
+
+			formData.append( rf, val );
 		} );
 
 		/**
@@ -278,14 +272,16 @@ export function VerifyPopupField( props ) {
 					// Update connected state based on response (for disconnect, is_connected = false).
 					var responseConnected = data.is_connected || false;
 					setConnected( responseConnected );
+					savedConnectedRef.current = responseConnected;
 
-					// Update initial values snapshot. Use submitted values (which may be from submitValuesRef for disconnect).
+					// Update saved values snapshot to the submitted values.
+					// This becomes the new baseline for change detection.
 					var newSnapshot = {};
 					var snapshotValues = submitValuesRef.current || values;
 					relatedFields.forEach( function( rf ) {
 						newSnapshot[ rf ] = snapshotValues[ rf ] || '';
 					} );
-					initialValuesRef.current = newSnapshot;
+					savedValuesRef.current = newSnapshot;
 
 					// Clear submitValuesRef since we've now submitted and updated the snapshot.
 					submitValuesRef.current = null;
@@ -370,18 +366,21 @@ export function VerifyPopupField( props ) {
 
 	// --- Button visibility and state ---
 
-	var hasChanges = initialValuesRef.current && relatedFields.some( function( rf ) {
-		return ( values[ rf ] || '' ) !== ( initialValuesRef.current[ rf ] || '' );
+	// Compare current values against saved/server values (not intermediate state).
+	// This is the single source of truth for whether the user has changed anything.
+	var hasChanges = savedValuesRef.current && relatedFields.some( function( rf ) {
+		return ( values[ rf ] || '' ) !== ( savedValuesRef.current[ rf ] || '' );
 	} );
 
-	// Determine button state: connect, disconnect, or hidden.
-	// - 'disconnect': connected + no changes → show secondary Disconnect button
-	// - 'connect': not connected (+ has fields) OR connected + has changes → show primary Connect button
+	// Derive button state from saved connected state + value comparison.
+	// No dependency on React state — purely from refs and current prop values.
+	// - 'disconnect': was connected + values unchanged → show Disconnect button
+	// - 'connect': was not connected OR values changed → show Update/Connect button
 	// - 'hidden': not connected + no fields → hidden
 	var buttonState = 'hidden';
-	if ( connected && ! hasChanges ) {
+	if ( savedConnectedRef.current && ! hasChanges ) {
 		buttonState = 'disconnect';
-	} else if ( ! connected || hasChanges ) {
+	} else if ( ! savedConnectedRef.current || hasChanges ) {
 		buttonState = 'connect';
 	}
 

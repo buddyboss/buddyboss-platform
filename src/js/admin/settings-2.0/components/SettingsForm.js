@@ -511,15 +511,24 @@ export function SettingsForm({ fields, values, onChange }) {
 				}
 
 				return (
-					<SelectControl
-						key={field.name}
-						label=""
-						value={value != null ? String(value) : ''}
-						options={selectOptions}
-						onChange={(newValue) => onChange(field.name, newValue)}
-						disabled={selectDisabled}
-						__nextHasNoMarginBottom
-					/>
+					<div key={field.name} ref={ function( el ) {
+						if ( ! el ) {
+							return;
+						}
+						var selectEl = el.querySelector( 'select' );
+						if ( selectEl && selectEl.getAttribute( 'name' ) !== field.name ) {
+							selectEl.setAttribute( 'name', field.name );
+						}
+					} }>
+						<SelectControl
+							label=""
+							value={value != null ? String(value) : ''}
+							options={selectOptions}
+							onChange={(newValue) => onChange(field.name, newValue)}
+							disabled={selectDisabled}
+							__nextHasNoMarginBottom
+						/>
+					</div>
 				);
 			}
 

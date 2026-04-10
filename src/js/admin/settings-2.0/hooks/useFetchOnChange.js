@@ -57,6 +57,8 @@ export function useFetchOnChange( fields, values ) {
 	var fetchFields = useRef( [] );
 
 	// Build fetch field list once (on mount or when fields change).
+	// Also seed lastFetchedRef with the current (server-loaded) values so the
+	// initial render does not trigger a redundant fetch for unchanged data.
 	useEffect( function() {
 		var collected = [];
 
@@ -77,6 +79,21 @@ export function useFetchOnChange( fields, values ) {
 
 		scanFields( fields );
 		fetchFields.current = collected;
+
+		// Seed lastFetchedRef with the initial values so that unchanged fields
+		// are not treated as "new" on the first render.
+		collected.forEach( function( field ) {
+			var fieldName     = field.name;
+			var watchedFields = field.fetch_on_change.fields || [];
+
+			if ( ! lastFetchedRef.current[ fieldName ] ) {
+				var snapshot = {};
+				watchedFields.forEach( function( wf ) {
+					snapshot[ wf ] = values[ wf ] || '';
+				} );
+				lastFetchedRef.current[ fieldName ] = snapshot;
+			}
+		} );
 	}, [ fields ] );
 
 	// Watch values and trigger fetches.
@@ -100,8 +117,16 @@ export function useFetchOnChange( fields, values ) {
 				}
 			} );
 
-			// If require_all and not all filled, skip.
+			// If require_all and not all filled, reset overrides (e.g. clear select
+			// options when credential fields are emptied on disconnect).
 			if ( requireAll && ! allFilled ) {
+				if ( overrides[ fieldName ] && overrides[ fieldName ].options ) {
+					setOverrides( function( prev ) {
+						var next = Object.assign( {}, prev );
+						delete next[ fieldName ];
+						return next;
+					} );
+				}
 				return;
 			}
 
