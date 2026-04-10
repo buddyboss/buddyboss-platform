@@ -51,6 +51,7 @@
 
 import { useState, useRef, useEffect, useCallback } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+import { createPortal } from 'react-dom';
 import { BB_EVENTS } from '../../utils/constants';
 import { invalidateFeatureCache } from '../../utils/featureCache';
 
@@ -151,6 +152,40 @@ export function VerifyPopupField( props ) {
 	}, [] );
 
 	/**
+	 * Handle disconnect action: clear all related field values and submit.
+	 */
+	var handleDisconnect = useCallback( function() {
+		// Create a payload with empty values for all related fields.
+		var emptyValues = {};
+		relatedFields.forEach( function( rf ) {
+			emptyValues[ rf ] = '';
+		} );
+
+		// Dispatch field value update to clear form fields.
+		window.dispatchEvent( new CustomEvent( BB_EVENTS.FIELD_VALUE_UPDATE, {
+			detail: { fields: emptyValues },
+		} ) );
+
+		// NOTE: Do NOT update initialValuesRef here. This allows the component to track
+		// changes against the originally connected state. If the user re-enters the same
+		// values, the button will change back to Disconnect automatically.
+		// initialValuesRef will only update after the server confirms the disconnect.
+
+		// Open modal and submit with empty values.
+		setModalPhase( 'loading' );
+		setModalMessage( '' );
+		setIsModalOpen( true );
+
+		wp.hooks.doAction( 'bb_admin_verify_field_phase_change', field, 'disconnecting', values );
+
+		// Use setTimeout to allow the field value update to settle before submitting.
+		// This ensures the AJAX payload includes the cleared values.
+		setTimeout( function() {
+			submitVerification();
+		}, 50 );
+	}, [ field, values, relatedFields, submitVerification ] );
+
+	/**
 	 * Open modal and start verification.
 	 */
 	var handleVerify = useCallback( function() {
@@ -236,7 +271,10 @@ export function VerifyPopupField( props ) {
 					var data = result.data || {};
 					setModalPhase( 'success' );
 					setModalMessage( data.message || __( 'Verified successfully.', 'buddyboss' ) );
-					setConnected( true );
+
+					// Update connected state based on response (for disconnect, is_connected = false).
+					var responseConnected = data.is_connected || false;
+					setConnected( responseConnected );
 
 					// Update initial values snapshot.
 					var newSnapshot = {};
@@ -254,10 +292,10 @@ export function VerifyPopupField( props ) {
 						} ) );
 					}
 
-					// Update hidden fields (e.g. _is_connected).
+					// Update hidden fields (e.g. _is_connected) with response value.
 					if ( data.updated_fields ) {
 						window.dispatchEvent( new CustomEvent( BB_EVENTS.FIELD_VALUE_UPDATE, {
-							detail: { fields: data.updated_fields, is_connected: true },
+							detail: { fields: data.updated_fields, is_connected: responseConnected },
 						} ) );
 					}
 
@@ -323,11 +361,22 @@ export function VerifyPopupField( props ) {
 		wp.hooks.doAction( 'bb_admin_verify_field_phase_change', field, 'idle', {} );
 	}, [ field ] );
 
-	// --- Button visibility ---
+	// --- Button visibility and state ---
 
 	var hasChanges = initialValuesRef.current && relatedFields.some( function( rf ) {
 		return ( values[ rf ] || '' ) !== ( initialValuesRef.current[ rf ] || '' );
 	} );
+
+	// Determine button state: connect, disconnect, or hidden.
+	// - 'disconnect': connected + no changes → show secondary Disconnect button
+	// - 'connect': not connected (+ has fields) OR connected + has changes → show primary Connect button
+	// - 'hidden': not connected + no fields → hidden
+	var buttonState = 'hidden';
+	if ( connected && ! hasChanges ) {
+		buttonState = 'disconnect';
+	} else if ( ! connected || hasChanges ) {
+		buttonState = 'connect';
+	}
 
 	/**
 	 * Filter: Control button visibility.
@@ -342,20 +391,139 @@ export function VerifyPopupField( props ) {
 	 */
 	var showButton = wp.hooks.applyFilters(
 		'bb_admin_verify_field_button_visible',
-		! connected || hasChanges,
+		'hidden' !== buttonState,
 		field,
 		connected,
 		hasChanges,
 		values
 	);
 
-	// All related fields must have values.
+	// Check if all related fields have values.
+	// Since parent form state may not update properly for all fields, read directly from DOM.
 	var allFilled = relatedFields.every( function( rf ) {
-		return !! ( values[ rf ] || '' ).toString().trim();
+		var domValue = '';
+
+		try {
+			// Helper: Try to find an element by name
+			var findByName = function( name ) {
+				return document.querySelector( 'input[name="' + name + '"]' ) ||
+					   document.querySelector( 'select[name="' + name + '"]' ) ||
+					   document.querySelector( 'textarea[name="' + name + '"]' );
+			};
+
+			// Helper: Try to find an element by placeholder (for inputs)
+			var findByPlaceholder = function( keyPart ) {
+				var allInputs = document.querySelectorAll( 'input[placeholder]' );
+				for ( var i = 0; i < allInputs.length; i++ ) {
+					var placeholder = allInputs[ i ].getAttribute( 'placeholder' ) || '';
+					var ph_lower = placeholder.toLowerCase();
+					var key_lower = keyPart.toLowerCase();
+					if ( ph_lower.indexOf( key_lower ) !== -1 ) {
+						return allInputs[ i ];
+					}
+				}
+				return null;
+			};
+
+			// Helper: Try to find a select by matching group label text or any visible label
+			var findSelectByLabel = function( keyPart ) {
+				var key_lower = keyPart.toLowerCase();
+
+				// Strategy 1: Find by standard label elements, then traverse up to find parent form field
+				var allLabels = document.querySelectorAll( 'label' );
+				for ( var i = 0; i < allLabels.length; i++ ) {
+					var labelText = allLabels[ i ].textContent.toLowerCase();
+					if ( labelText.indexOf( key_lower ) !== -1 ) {
+						// Found a label with matching text. Traverse up the DOM to find the field container
+						var parentEl = allLabels[ i ].parentElement;
+						var levels = 0;
+						while ( parentEl && levels < 10 ) {
+							var selectEl = parentEl.querySelector( 'select' );
+							if ( selectEl ) {
+								return selectEl;
+							}
+							parentEl = parentEl.parentElement;
+							levels++;
+						}
+					}
+				}
+
+				// Strategy 2: Find by field container divs that contain the key text
+				var allDivs = document.querySelectorAll( '[class*="field"], [class*="Field"]' );
+				for ( var i = 0; i < allDivs.length; i++ ) {
+					var text = allDivs[ i ].textContent.toLowerCase();
+					if ( text.indexOf( key_lower ) !== -1 ) {
+						// Found a field container with matching text, look for select inside
+						var selectEl = allDivs[ i ].querySelector( 'select' );
+						if ( selectEl ) {
+							return selectEl;
+						}
+					}
+				}
+
+				// Strategy 3: Brute force - just find any select on the page and check its siblings/context
+				// This is the fallback if other strategies fail
+				var allSelects = document.querySelectorAll( 'select' );
+				for ( var i = 0; i < allSelects.length; i++ ) {
+					var selectContext = allSelects[ i ].parentElement.textContent.toLowerCase();
+					if ( selectContext.indexOf( key_lower ) !== -1 ) {
+						return allSelects[ i ];
+					}
+				}
+
+				return null;
+			};
+
+			var element = null;
+
+			// 1. Try by name attribute
+			element = findByName( rf );
+
+			// 2. If not found, extract field key and search by placeholder
+			if ( ! element ) {
+				var keyParts = rf.replace( 'bb-', '' ).split( '-' );
+				var lastPart = keyParts[ keyParts.length - 1 ]; // 'key', 'secret', 'id', 'cluster', 'email'
+				element = findByPlaceholder( lastPart );
+			}
+
+			// 3. If still not found and it's likely a select field, try finding by label text
+			if ( ! element ) {
+				var keyParts = rf.replace( 'bb-', '' ).split( '-' );
+				var lastPart = keyParts[ keyParts.length - 1 ];
+				element = findSelectByLabel( lastPart );
+			}
+
+			// Get the value from the element
+			if ( element ) {
+				domValue = element.value || '';
+			}
+
+			// For SELECT fields: ONLY use DOM value, don't fall back to React state
+			// React state might have a default value, but empty SELECT means user hasn't selected anything
+			if ( element && 'SELECT' === element.tagName ) {
+				// Trim and validate the select value
+				domValue = ( domValue || '' ).toString().trim();
+				// Don't fall back to React state for selects - trust the DOM
+			} else if ( ! domValue ) {
+				// For non-select elements, fall back to parent form state
+				domValue = values[ rf ] || '';
+			}
+		} catch ( e ) {
+			// Fall back to parent values on error
+			domValue = values[ rf ] || '';
+		}
+
+		return !! domValue.toString().trim();
 	} );
+
 
 	/**
 	 * Filter: Control button disabled state.
+	 *
+	 * Default behavior:
+	 * - For "disconnect" button: never disabled (allow users to clear any time)
+	 * - For "connect" button: disabled until all related fields are filled
+	 * - Ignores parent `disabled` prop since this button manages critical connections
 	 *
 	 * @param {boolean} isDisabled Whether the button is disabled.
 	 * @param {Object}  field      Field configuration.
@@ -364,7 +532,7 @@ export function VerifyPopupField( props ) {
 	 */
 	var isButtonDisabled = wp.hooks.applyFilters(
 		'bb_admin_verify_field_button_disabled',
-		disabled || ! allFilled,
+		'connect' === buttonState && ! allFilled,
 		field,
 		allFilled,
 		values
@@ -377,12 +545,16 @@ export function VerifyPopupField( props ) {
 	 * @param {Object} field Field configuration.
 	 * @param {boolean} connected Whether currently connected.
 	 */
-	var buttonLabel = wp.hooks.applyFilters(
+	var connectLabel = wp.hooks.applyFilters(
 		'bb_admin_verify_field_button_label',
 		field.button_label || __( 'Verify', 'buddyboss' ),
 		field,
 		connected
 	);
+
+	var disconnectLabel = field.disconnect_label || __( 'Disconnect', 'buddyboss' );
+
+	var buttonLabel = 'disconnect' === buttonState ? disconnectLabel : connectLabel;
 
 	/**
 	 * Filter: Override modal title.
@@ -424,10 +596,21 @@ export function VerifyPopupField( props ) {
 
 	return (
 		<div className="bb-admin-verify-field">
-			{ showButton && (
+			{ showButton && 'disconnect' === buttonState && (
 				<button
 					type="button"
-					className="bb-admin-verify-field__btn"
+					className="bb-admin-verify-field__btn bb-admin-verify-field__btn--secondary"
+					onClick={ handleDisconnect }
+					disabled={ isButtonDisabled }
+				>
+					{ buttonLabel }
+				</button>
+			) }
+
+			{ showButton && 'connect' === buttonState && (
+				<button
+					type="button"
+					className="bb-admin-verify-field__btn bb-admin-verify-field__btn--primary"
 					onClick={ handleVerify }
 					disabled={ isButtonDisabled }
 				>
@@ -463,21 +646,21 @@ export function VerifyPopupField( props ) {
 								<>
 									{ ( 'loading' === modalPhase || 'submitting' === modalPhase ) && (
 										<div className="bb-admin-verify-modal__status">
-											<div className="bb-admin-verify-modal__icon bb-admin-verify-modal__icon--loading" />
+											<i className={ loadingIcon } />
 											<p>{ loadingMessage }</p>
 										</div>
 									) }
 
 									{ 'success' === modalPhase && (
 										<div className="bb-admin-verify-modal__status bb-admin-verify-modal__status--success">
-											<div className="bb-admin-verify-modal__icon bb-admin-verify-modal__icon--success" />
+											<i className={ successIcon } />
 											<p>{ modalMessage }</p>
 										</div>
 									) }
 
 									{ 'error' === modalPhase && (
 										<div className="bb-admin-verify-modal__status bb-admin-verify-modal__status--error">
-											<div className="bb-admin-verify-modal__icon bb-admin-verify-modal__icon--error" />
+											<i className={ errorIcon } />
 											<p>{ modalMessage }</p>
 										</div>
 									) }
