@@ -427,7 +427,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				add_filter( 'bbp_after_get_topic_stick_link_parse_args', array( $this, 'bb_rl_modify_get_topic_stick_link_parse_args' ), 10 );
 			}
 
-			add_filter( 'paginate_links_output', array( $this, 'bb_rl_filter_paginate_links_output' ), 10, 2 );
+			// Apply pagination filter to all pages except BuddyBoss user profile's (courses and its sub tabs) when Tutor LMS is active.
+			if ( ! ( function_exists( 'tutor_utils' ) && bp_is_user() && preg_match( '/courses/i', bp_current_action() ) ) ) {
+				add_filter( 'paginate_links_output', array( $this, 'bb_rl_filter_paginate_links_output' ), 10, 2 );
+			}
 
 			if ( class_exists( 'SFWD_LMS' ) ) {
 				require_once buddypress()->compatibility_dir . '/class-bb-readylaunch-learndash-helper.php';
