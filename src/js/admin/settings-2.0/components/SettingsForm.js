@@ -546,10 +546,10 @@ export function SettingsForm({ fields, values, onChange }) {
 						if ( ! el ) {
 							return;
 						}
-						// Reset all options first, then disable specific ones.
+						// Apply field-level and per-option disabled states to radio inputs.
 						el.querySelectorAll( 'input[type="radio"]' ).forEach( function ( input ) {
 							var optionWrap = input.closest( '.components-radio-control__option' );
-							if ( disabledOptionValues.length && -1 !== disabledOptionValues.indexOf( input.value ) ) {
+							if ( disabled || ( disabledOptionValues.length && -1 !== disabledOptionValues.indexOf( input.value ) ) ) {
 								input.disabled = true;
 								if ( optionWrap ) {
 									optionWrap.style.opacity = '0.5';
