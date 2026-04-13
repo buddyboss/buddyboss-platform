@@ -4118,26 +4118,34 @@ function bb_update_to_3_0_0() {
 		bb_seed_media_section_toggle_defaults();
 	}
 
-	// Only run reactions migration if bb-active-features hasn't been set yet (first upgrade to 3.0).
 	$active_features = bp_get_option( 'bb-active-features', array() );
-	if ( isset( $active_features['reactions'] ) ) {
-		return; // Already migrated — don't overwrite user's Settings 2.0 choice.
-	}
 
-	// Check the legacy bb_all_reactions option.
-	// Default: array( 'activity' => true, 'activity_comment' => true ).
-	$all_reactions = (array) bp_get_option( 'bb_all_reactions', array() );
+	// Reactions migration: only run if not yet migrated.
+	if ( ! isset( $active_features['reactions'] ) ) {
+		// Check the legacy bb_all_reactions option.
+		// Default: array( 'activity' => true, 'activity_comment' => true ).
+		$all_reactions = (array) bp_get_option( 'bb_all_reactions', array() );
 
-	// If ANY reaction type was enabled, enable the reactions feature.
-	$any_enabled = false;
-	foreach ( $all_reactions as $value ) {
-		if ( ! empty( $value ) ) {
-			$any_enabled = true;
-			break;
+		// If ANY reaction type was enabled, enable the reactions feature.
+		$any_enabled = false;
+		foreach ( $all_reactions as $value ) {
+			if ( ! empty( $value ) ) {
+				$any_enabled = true;
+				break;
+			}
 		}
+
+		$active_features['reactions'] = $any_enabled ? 1 : 0;
 	}
 
-	$active_features['reactions'] = $any_enabled ? 1 : 0;
+	// reCAPTCHA migration: auto-enable if already connected.
+	if ( ! isset( $active_features['recaptcha'] ) ) {
+		$recaptcha_settings = bp_get_option( 'bb_recaptcha', array() );
+		$is_connected       = ! empty( $recaptcha_settings['connection_status'] ) && 'connected' === $recaptcha_settings['connection_status'];
+
+		$active_features['recaptcha'] = $is_connected ? 1 : 0;
+	}
+
 	bp_update_option( 'bb-active-features', $active_features );
 
 	// Migrate legacy group avatar type: 'legacy' option removed from Settings 2.0.
@@ -4209,6 +4217,11 @@ add_action( 'bb_feature_activated', 'bb_on_media_feature_activated' );
  * @since BuddyBoss [BBVERSION]
  */
 function bb_migrate_email_type_groups() {
+
+	// One-time migration guard — skip if already completed.
+	if ( bp_get_option( 'bb_email_type_groups_migrated' ) ) {
+		return;
+	}
 
 	$taxonomy = function_exists( 'bp_get_email_tax_type' ) ? bp_get_email_tax_type() : 'bp_email_type';
 	$terms    = get_terms(
@@ -4297,4 +4310,7 @@ function bb_migrate_email_type_groups() {
 			}
 		}
 	}
+
+	// Mark migration as completed so it doesn't run again.
+	bp_update_option( 'bb_email_type_groups_migrated', true );
 }

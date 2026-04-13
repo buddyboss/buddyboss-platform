@@ -51,8 +51,10 @@
 
 import { useState, useRef, useEffect, useCallback } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+import { createPortal } from 'react-dom';
 import { BB_EVENTS } from '../../utils/constants';
 import { invalidateFeatureCache } from '../../utils/featureCache';
+import { Spinner } from '@wordpress/components';
 
 /**
  * VerifyField Component
@@ -78,9 +80,9 @@ export function VerifyPopupField( props ) {
 	// Config with defaults.
 	var modalTitle     = verifyConfig.modal_title || __( 'Verify Settings', 'buddyboss' );
 	var loadingMessage = verifyConfig.loading_message || __( 'Verifying credentials...', 'buddyboss' );
-	var loadingIcon    = verifyConfig.loading_icon || 'bb-icon-f bb-icon-cloud';
-	var successIcon    = verifyConfig.success_icon || 'bb-icon-f bb-icon-check';
-	var errorIcon      = verifyConfig.error_icon || 'bb-icon-f bb-icon-exclamation';
+	var loadingIcon    = verifyConfig.loading_icon || 'bb-icons-rl-cloud';
+	var successIcon    = verifyConfig.success_icon || 'bb-icons-rl-check-circle';
+	var errorIcon      = verifyConfig.error_icon || 'bb-icons-rl-warning-circle';
 
 	// State.
 	var connectedState    = useState( isConnectedInit );
@@ -100,55 +102,29 @@ export function VerifyPopupField( props ) {
 	var setModalMessage   = modalMessageState[ 1 ];
 
 	var abortRef = useRef( null );
+	var submitValuesRef = useRef( null ); // Override values for AJAX submission (used by disconnect)
 
-	// Track initial values of related fields to detect changes.
-	var initialValuesRef = useRef( null );
-	if ( null === initialValuesRef.current && relatedFields.length > 0 ) {
+	// Track the last server-confirmed connected state. Updated only after
+	// successful connect/disconnect AJAX, never by intermediate edits.
+	var savedConnectedRef = useRef( isConnectedInit );
+
+	// Track saved/original values of related fields (from server).
+	// Used to detect whether the user has actually changed anything.
+	// Updated after successful connect/disconnect AJAX.
+	var savedValuesRef = useRef( null );
+	if ( null === savedValuesRef.current && relatedFields.length > 0 ) {
 		var snapshot = {};
 		relatedFields.forEach( function( rf ) {
 			snapshot[ rf ] = values[ rf ] || '';
 		} );
-		initialValuesRef.current = snapshot;
+		savedValuesRef.current = snapshot;
 	}
 
-	// Sync connected state when field config changes (e.g. page reload).
+	// Sync when field config changes externally (e.g. page reload with new data).
 	useEffect( function() {
 		setConnected( field.is_connected || false );
+		savedConnectedRef.current = field.is_connected || false;
 	}, [ field.is_connected ] );
-
-	// Reset connected state when any related field value changes.
-	useEffect( function() {
-		if ( ! connected || ! initialValuesRef.current ) {
-			return;
-		}
-
-		var hasChanges = relatedFields.some( function( rf ) {
-			return ( values[ rf ] || '' ) !== ( initialValuesRef.current[ rf ] || '' );
-		} );
-
-		if ( hasChanges ) {
-			setConnected( false );
-
-			// Update section status badge to "Not Connected".
-			window.dispatchEvent( new CustomEvent( BB_EVENTS.SECTION_STATUS_UPDATE, {
-				detail: {
-					fieldName: field.name,
-					status: {
-						type: 'warning',
-						text: __( 'Not Connected', 'buddyboss' ),
-					},
-				},
-			} ) );
-
-			/**
-			 * Action: Fires when connected state resets due to value changes.
-			 *
-			 * @param {Object} field  Field configuration.
-			 * @param {Object} values Current form values.
-			 */
-			wp.hooks.doAction( 'bb_admin_verify_field_phase_change', field, 'disconnected', values );
-		}
-	}, relatedFields.map( function( rf ) { return values[ rf ]; } ) );
 
 	// Cleanup on unmount.
 	useEffect( function() {
@@ -158,6 +134,41 @@ export function VerifyPopupField( props ) {
 			}
 		};
 	}, [] );
+
+	/**
+	 * Handle disconnect action: clear all related field values and submit.
+	 */
+	var handleDisconnect = useCallback( function() {
+		// Create a payload with empty values for all related fields.
+		var emptyValues = {};
+		relatedFields.forEach( function( rf ) {
+			emptyValues[ rf ] = '';
+		} );
+
+		// Store empty values in ref so submitVerification() uses them instead of props.values.
+		// This is critical because props.values won't update in time before submitVerification is called.
+		submitValuesRef.current = emptyValues;
+
+		// Dispatch field value update to clear form fields.
+		window.dispatchEvent( new CustomEvent( BB_EVENTS.FIELD_VALUE_UPDATE, {
+			detail: { fields: emptyValues },
+		} ) );
+
+		// NOTE: Do NOT update savedValuesRef here. This allows the component to track
+		// changes against the originally connected state. If the user re-enters the same
+		// values, the button will change back to Disconnect automatically.
+		// savedValuesRef will only update after the server confirms the disconnect.
+
+		// Open modal and submit with empty values.
+		setModalPhase( 'loading' );
+		setModalMessage( '' );
+		setIsModalOpen( true );
+
+		wp.hooks.doAction( 'bb_admin_verify_field_phase_change', field, 'disconnecting', values );
+
+		// Submit immediately with empty values (ref is already set above).
+		submitVerification();
+	}, [ field, values, relatedFields, submitVerification ] );
 
 	/**
 	 * Open modal and start verification.
@@ -190,7 +201,7 @@ export function VerifyPopupField( props ) {
 		if ( autoSubmit ) {
 			submitVerification();
 		}
-	}, [ field, values, ajaxAction ] );
+	}, [ field, values, ajaxAction, submitVerification ] );
 
 	/**
 	 * Submit AJAX verification request.
@@ -212,9 +223,22 @@ export function VerifyPopupField( props ) {
 		formData.append( 'action', ajaxAction );
 		formData.append( 'nonce', nonce );
 
-		// Send related field values.
+		// Send related field values. Use submitValuesRef if set (for disconnect action).
+		// For non-disconnect, read from DOM first to handle cases where React state
+		// is stale (e.g. select showing a value but state is empty).
+		var fieldsToSubmit = submitValuesRef.current || values;
 		relatedFields.forEach( function( rf ) {
-			formData.append( rf, values[ rf ] || '' );
+			var val = fieldsToSubmit[ rf ] || '';
+
+			// When submitting live values (not disconnect), check DOM for the actual value.
+			if ( ! submitValuesRef.current && ! val ) {
+				var domEl = document.querySelector( 'input[name="' + rf + '"], select[name="' + rf + '"], textarea[name="' + rf + '"]' );
+				if ( domEl && domEl.value ) {
+					val = domEl.value;
+				}
+			}
+
+			formData.append( rf, val );
 		} );
 
 		/**
@@ -224,13 +248,13 @@ export function VerifyPopupField( props ) {
 		 *
 		 * @param {FormData} formData The request FormData.
 		 * @param {Object}   field    Field configuration.
-		 * @param {Object}   values   Current form values.
+		 * @param {Object}   values   Current form values (or override values for disconnect).
 		 */
 		formData = wp.hooks.applyFilters(
 			'bb_admin_verify_field_before_ajax',
 			formData,
 			field,
-			values
+			fieldsToSubmit
 		);
 
 		fetch( ajaxUrl, {
@@ -245,14 +269,23 @@ export function VerifyPopupField( props ) {
 					var data = result.data || {};
 					setModalPhase( 'success' );
 					setModalMessage( data.message || __( 'Verified successfully.', 'buddyboss' ) );
-					setConnected( true );
 
-					// Update initial values snapshot.
+					// Update connected state based on response (for disconnect, is_connected = false).
+					var responseConnected = data.is_connected || false;
+					setConnected( responseConnected );
+					savedConnectedRef.current = responseConnected;
+
+					// Update saved values snapshot to the submitted values.
+					// This becomes the new baseline for change detection.
 					var newSnapshot = {};
+					var snapshotValues = submitValuesRef.current || values;
 					relatedFields.forEach( function( rf ) {
-						newSnapshot[ rf ] = values[ rf ] || '';
+						newSnapshot[ rf ] = snapshotValues[ rf ] || '';
 					} );
-					initialValuesRef.current = newSnapshot;
+					savedValuesRef.current = newSnapshot;
+
+					// Clear submitValuesRef since we've now submitted and updated the snapshot.
+					submitValuesRef.current = null;
 
 					invalidateFeatureCache();
 
@@ -263,10 +296,10 @@ export function VerifyPopupField( props ) {
 						} ) );
 					}
 
-					// Update hidden fields (e.g. _is_connected).
+					// Update hidden fields (e.g. _is_connected) with response value.
 					if ( data.updated_fields ) {
 						window.dispatchEvent( new CustomEvent( BB_EVENTS.FIELD_VALUE_UPDATE, {
-							detail: { fields: data.updated_fields, is_connected: true },
+							detail: { fields: data.updated_fields, is_connected: responseConnected },
 						} ) );
 					}
 
@@ -281,11 +314,26 @@ export function VerifyPopupField( props ) {
 					 */
 					wp.hooks.doAction( 'bb_admin_verify_field_success', field, data, values );
 				} else {
-					var errorMsg = ( result.data && result.data.message ) || __( 'Verification failed.', 'buddyboss' );
+					var errorData = result.data || {};
+					var errorMsg = errorData.message || __( 'Verification failed.', 'buddyboss' );
 					setModalPhase( 'error' );
 					setModalMessage( errorMsg );
 
-					wp.hooks.doAction( 'bb_admin_verify_field_phase_change', field, 'error', result.data || {} );
+					// Update section status badge on error.
+					if ( errorData.status ) {
+						window.dispatchEvent( new CustomEvent( BB_EVENTS.SECTION_STATUS_UPDATE, {
+							detail: { fieldName: field.name, status: errorData.status },
+						} ) );
+					}
+
+					// Update hidden fields on error (e.g. _is_connected = 0).
+					if ( errorData.updated_fields ) {
+						window.dispatchEvent( new CustomEvent( BB_EVENTS.FIELD_VALUE_UPDATE, {
+							detail: { fields: errorData.updated_fields, is_connected: false },
+						} ) );
+					}
+
+					wp.hooks.doAction( 'bb_admin_verify_field_phase_change', field, 'error', errorData );
 
 					/**
 					 * Action: Fires on failed verification.
@@ -294,7 +342,7 @@ export function VerifyPopupField( props ) {
 					 * @param {Object} data     Error response data.
 					 * @param {Object} values   Form values at time of verification.
 					 */
-					wp.hooks.doAction( 'bb_admin_verify_field_error', field, result.data || {}, values );
+					wp.hooks.doAction( 'bb_admin_verify_field_error', field, errorData, values );
 				}
 			} )
 			.catch( function( err ) {
@@ -317,11 +365,25 @@ export function VerifyPopupField( props ) {
 		wp.hooks.doAction( 'bb_admin_verify_field_phase_change', field, 'idle', {} );
 	}, [ field ] );
 
-	// --- Button visibility ---
+	// --- Button visibility and state ---
 
-	var hasChanges = initialValuesRef.current && relatedFields.some( function( rf ) {
-		return ( values[ rf ] || '' ) !== ( initialValuesRef.current[ rf ] || '' );
+	// Compare current values against saved/server values (not intermediate state).
+	// This is the single source of truth for whether the user has changed anything.
+	var hasChanges = savedValuesRef.current && relatedFields.some( function( rf ) {
+		return ( values[ rf ] || '' ) !== ( savedValuesRef.current[ rf ] || '' );
 	} );
+
+	// Derive button state from saved connected state + value comparison.
+	// No dependency on React state — purely from refs and current prop values.
+	// - 'disconnect': was connected + values unchanged → show Disconnect button
+	// - 'connect': was not connected OR values changed → show Update/Connect button
+	// - 'hidden': not connected + no fields → hidden
+	var buttonState = 'hidden';
+	if ( savedConnectedRef.current && ! hasChanges ) {
+		buttonState = 'disconnect';
+	} else if ( ! savedConnectedRef.current || hasChanges ) {
+		buttonState = 'connect';
+	}
 
 	/**
 	 * Filter: Control button visibility.
@@ -336,20 +398,139 @@ export function VerifyPopupField( props ) {
 	 */
 	var showButton = wp.hooks.applyFilters(
 		'bb_admin_verify_field_button_visible',
-		! connected || hasChanges,
+		'hidden' !== buttonState,
 		field,
 		connected,
 		hasChanges,
 		values
 	);
 
-	// All related fields must have values.
+	// Check if all related fields have values.
+	// Since parent form state may not update properly for all fields, read directly from DOM.
 	var allFilled = relatedFields.every( function( rf ) {
-		return !! ( values[ rf ] || '' ).toString().trim();
+		var domValue = '';
+
+		try {
+			// Helper: Try to find an element by name
+			var findByName = function( name ) {
+				return document.querySelector( 'input[name="' + name + '"]' ) ||
+					   document.querySelector( 'select[name="' + name + '"]' ) ||
+					   document.querySelector( 'textarea[name="' + name + '"]' );
+			};
+
+			// Helper: Try to find an element by placeholder (for inputs)
+			var findByPlaceholder = function( keyPart ) {
+				var allInputs = document.querySelectorAll( 'input[placeholder]' );
+				for ( var i = 0; i < allInputs.length; i++ ) {
+					var placeholder = allInputs[ i ].getAttribute( 'placeholder' ) || '';
+					var ph_lower = placeholder.toLowerCase();
+					var key_lower = keyPart.toLowerCase();
+					if ( ph_lower.indexOf( key_lower ) !== -1 ) {
+						return allInputs[ i ];
+					}
+				}
+				return null;
+			};
+
+			// Helper: Try to find a select by matching group label text or any visible label
+			var findSelectByLabel = function( keyPart ) {
+				var key_lower = keyPart.toLowerCase();
+
+				// Strategy 1: Find by standard label elements, then traverse up to find parent form field
+				var allLabels = document.querySelectorAll( 'label' );
+				for ( var i = 0; i < allLabels.length; i++ ) {
+					var labelText = allLabels[ i ].textContent.toLowerCase();
+					if ( labelText.indexOf( key_lower ) !== -1 ) {
+						// Found a label with matching text. Traverse up the DOM to find the field container
+						var parentEl = allLabels[ i ].parentElement;
+						var levels = 0;
+						while ( parentEl && levels < 10 ) {
+							var selectEl = parentEl.querySelector( 'select' );
+							if ( selectEl ) {
+								return selectEl;
+							}
+							parentEl = parentEl.parentElement;
+							levels++;
+						}
+					}
+				}
+
+				// Strategy 2: Find by field container divs that contain the key text
+				var allDivs = document.querySelectorAll( '[class*="field"], [class*="Field"]' );
+				for ( var i = 0; i < allDivs.length; i++ ) {
+					var text = allDivs[ i ].textContent.toLowerCase();
+					if ( text.indexOf( key_lower ) !== -1 ) {
+						// Found a field container with matching text, look for select inside
+						var selectEl = allDivs[ i ].querySelector( 'select' );
+						if ( selectEl ) {
+							return selectEl;
+						}
+					}
+				}
+
+				// Strategy 3: Brute force - just find any select on the page and check its siblings/context
+				// This is the fallback if other strategies fail
+				var allSelects = document.querySelectorAll( 'select' );
+				for ( var i = 0; i < allSelects.length; i++ ) {
+					var selectContext = allSelects[ i ].parentElement.textContent.toLowerCase();
+					if ( selectContext.indexOf( key_lower ) !== -1 ) {
+						return allSelects[ i ];
+					}
+				}
+
+				return null;
+			};
+
+			var element = null;
+
+			// 1. Try by name attribute
+			element = findByName( rf );
+
+			// 2. If not found, extract field key and search by placeholder
+			if ( ! element ) {
+				var keyParts = rf.replace( 'bb-', '' ).split( '-' );
+				var lastPart = keyParts[ keyParts.length - 1 ]; // 'key', 'secret', 'id', 'cluster', 'email'
+				element = findByPlaceholder( lastPart );
+			}
+
+			// 3. If still not found and it's likely a select field, try finding by label text
+			if ( ! element ) {
+				var keyParts = rf.replace( 'bb-', '' ).split( '-' );
+				var lastPart = keyParts[ keyParts.length - 1 ];
+				element = findSelectByLabel( lastPart );
+			}
+
+			// Get the value from the element
+			if ( element ) {
+				domValue = element.value || '';
+			}
+
+			// For SELECT fields: ONLY use DOM value, don't fall back to React state
+			// React state might have a default value, but empty SELECT means user hasn't selected anything
+			if ( element && 'SELECT' === element.tagName ) {
+				// Trim and validate the select value
+				domValue = ( domValue || '' ).toString().trim();
+				// Don't fall back to React state for selects - trust the DOM
+			} else if ( ! domValue ) {
+				// For non-select elements, fall back to parent form state
+				domValue = values[ rf ] || '';
+			}
+		} catch ( e ) {
+			// Fall back to parent values on error
+			domValue = values[ rf ] || '';
+		}
+
+		return !! domValue.toString().trim();
 	} );
+
 
 	/**
 	 * Filter: Control button disabled state.
+	 *
+	 * Default behavior:
+	 * - For "disconnect" button: never disabled (allow users to clear any time)
+	 * - For "connect" button: disabled until all related fields are filled
+	 * - Ignores parent `disabled` prop since this button manages critical connections
 	 *
 	 * @param {boolean} isDisabled Whether the button is disabled.
 	 * @param {Object}  field      Field configuration.
@@ -358,7 +539,7 @@ export function VerifyPopupField( props ) {
 	 */
 	var isButtonDisabled = wp.hooks.applyFilters(
 		'bb_admin_verify_field_button_disabled',
-		disabled || ! allFilled,
+		'connect' === buttonState && ! allFilled,
 		field,
 		allFilled,
 		values
@@ -371,12 +552,16 @@ export function VerifyPopupField( props ) {
 	 * @param {Object} field Field configuration.
 	 * @param {boolean} connected Whether currently connected.
 	 */
-	var buttonLabel = wp.hooks.applyFilters(
+	var connectLabel = wp.hooks.applyFilters(
 		'bb_admin_verify_field_button_label',
 		field.button_label || __( 'Verify', 'buddyboss' ),
 		field,
 		connected
 	);
+
+	var disconnectLabel = field.disconnect_label || __( 'Disconnect', 'buddyboss' );
+
+	var buttonLabel = 'disconnect' === buttonState ? disconnectLabel : connectLabel;
 
 	/**
 	 * Filter: Override modal title.
@@ -418,10 +603,21 @@ export function VerifyPopupField( props ) {
 
 	return (
 		<div className="bb-admin-verify-field">
-			{ showButton && (
+			{ showButton && 'disconnect' === buttonState && (
 				<button
 					type="button"
-					className="bb-admin-verify-field__btn"
+					className="bb-admin-verify-field__btn bb-admin-verify-field__btn--secondary"
+					onClick={ handleDisconnect }
+					disabled={ isButtonDisabled }
+				>
+					{ buttonLabel }
+				</button>
+			) }
+
+			{ showButton && 'connect' === buttonState && (
+				<button
+					type="button"
+					className="bb-admin-verify-field__btn bb-admin-verify-field__btn--primary"
 					onClick={ handleVerify }
 					disabled={ isButtonDisabled }
 				>
@@ -431,7 +627,7 @@ export function VerifyPopupField( props ) {
 
 			{ isModalOpen && (
 				<div className="bb-admin-verify-modal">
-					<div className="bb-admin-verify-modal__backdrop" onClick={ closeModal } />
+					<div className="bb-admin-verify-modal__backdrop" onClick={ closeModal } role="presentation" />
 					<div
 						className="bb-admin-verify-modal__container"
 						onClick={ function( e ) { e.stopPropagation(); } }
@@ -448,7 +644,7 @@ export function VerifyPopupField( props ) {
 								onClick={ closeModal }
 								aria-label={ __( 'Close', 'buddyboss' ) }
 							>
-								<i className="bb-icon-f bb-icon-times" />
+								<i className="bb-icons-rl-x" />
 							</button>
 						</div>
 
@@ -457,21 +653,21 @@ export function VerifyPopupField( props ) {
 								<>
 									{ ( 'loading' === modalPhase || 'submitting' === modalPhase ) && (
 										<div className="bb-admin-verify-modal__status">
-											<div className="bb-admin-verify-modal__icon bb-admin-verify-modal__icon--loading" />
-											<p>{ loadingMessage }</p>
+											<i className={ loadingIcon } />
+											<p>{ loadingMessage } <Spinner /></p>
 										</div>
 									) }
 
 									{ 'success' === modalPhase && (
 										<div className="bb-admin-verify-modal__status bb-admin-verify-modal__status--success">
-											<div className="bb-admin-verify-modal__icon bb-admin-verify-modal__icon--success" />
+											<i className={ successIcon } />
 											<p>{ modalMessage }</p>
 										</div>
 									) }
 
 									{ 'error' === modalPhase && (
 										<div className="bb-admin-verify-modal__status bb-admin-verify-modal__status--error">
-											<div className="bb-admin-verify-modal__icon bb-admin-verify-modal__icon--error" />
+											<i className={ errorIcon } />
 											<p>{ modalMessage }</p>
 										</div>
 									) }

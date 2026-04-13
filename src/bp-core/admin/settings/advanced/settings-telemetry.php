@@ -40,7 +40,7 @@ function bb_advanced_register_telemetry_fields() {
 	// Telemetry descriptions per mode — legacy shows different description text
 	// dynamically when the user switches between radio buttons. React uses
 	// `option_descriptions` so SettingsForm updates the description on select change.
-	$current_mode = bp_get_option( 'bb_advanced_telemetry_reporting', 'anonymous' );
+	$current_mode = bp_get_option( 'bb_advanced_telemetry_reporting', 'disable' );
 
 	$option_descriptions = array(
 		'complete'  => __( 'Telemetry helps us gather usage statistics and information about your configuration and the features and functionality you use. We aggregate this information to help us improve our product and associate it with your customer record to help us serve you better. We do not gather or send any of your users\' personally identifiable information. To stop contributing towards improving the product, you can disable telemetry.', 'buddyboss' ),
@@ -57,7 +57,7 @@ function bb_advanced_register_telemetry_fields() {
 		array(
 			'name'                => 'bb_advanced_telemetry_reporting',
 			'label'               => __( 'Telemetry', 'buddyboss' ),
-			'description'         => $option_descriptions[ $current_mode ] ?? $option_descriptions['anonymous'],
+			'description'         => $option_descriptions[ $current_mode ] ?? $option_descriptions['disable'],
 			'type'                => 'select',
 			'default'             => $current_mode,
 			'sanitize_callback'   => 'bb_advanced_sanitize_telemetry_reporting',

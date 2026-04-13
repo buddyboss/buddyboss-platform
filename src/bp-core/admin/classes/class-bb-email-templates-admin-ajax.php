@@ -846,10 +846,26 @@ class BB_Email_Templates_Admin_Ajax {
 		}
 
 		// Resolve group for each term and persist to term meta if missing.
+		// Inline the resolution logic from bb_email_get_type_group() to avoid
+		// redundant get_term_by() queries — we already have $term objects and $schema.
 		$schema = bp_email_get_type_schema( 'all' );
 		foreach ( $terms as $term ) {
-			$category       = bb_email_get_type_group( $term->slug );
-			$stored_group   = get_term_meta( $term->term_id, 'bb_email_group', true );
+			// 1. Schema group key (active components only).
+			$category = isset( $schema[ $term->slug ]['group'] ) ? $schema[ $term->slug ]['group'] : '';
+
+			// 2. Fallback to persisted term meta (works when component is disabled).
+			if ( empty( $category ) ) {
+				$category = get_term_meta( $term->term_id, 'bb_email_group', true );
+			}
+
+			// 3. Default fallback.
+			if ( empty( $category ) ) {
+				$category = 'other';
+			}
+
+			/** This filter is documented in src/bp-core/bp-core-functions.php */
+			$category     = apply_filters( 'bb_email_type_group', $category, $term->slug );
+			$stored_group = get_term_meta( $term->term_id, 'bb_email_group', true );
 
 			// Persist group to term meta when schema has it but term meta doesn't.
 			// This ensures the group survives even when the component is later disabled.

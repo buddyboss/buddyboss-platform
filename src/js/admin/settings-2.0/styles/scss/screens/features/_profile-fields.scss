@@ -10,6 +10,7 @@
 	margin: 0 auto;
 	width: 100%;
 	padding: 32px;
+	box-sizing: border-box;
 }
 
 /* Banner */
@@ -260,7 +261,7 @@
 	display: flex;
 	align-items: center;
 	gap: 8px;
-	width: 320px;
+	width: 50%;
 	flex-shrink: 0;
 }
 
@@ -545,6 +546,7 @@
 			display: flex;
 			align-items: center;
 			gap: 16px;
+			width: calc(60% - 100px);
 
 			> i {
 				font-size: 24px;
@@ -556,7 +558,7 @@
 
 		&__input[type="text"] {
 			@include bb-input-text;
-			width: 320px;
+			width: 100%;
 		}
 
 		&__select {

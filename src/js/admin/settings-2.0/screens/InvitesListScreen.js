@@ -27,6 +27,8 @@ import { safeUrl } from '../utils/sanitize';
 import { Toast } from '../components/Toast';
 import { ListPagination } from '../components/common/ListPagination';
 import { DeleteConfirmModal } from '../components/common/DeleteConfirmModal';
+import { useListScreenState } from '../hooks/useListScreenState';
+import { useListScreenHandlers } from '../hooks/useListScreenHandlers';
 
 /**
  * Sort options (static).
@@ -59,6 +61,22 @@ var PER_PAGE = 20;
  * @returns {JSX.Element} The invites list screen.
  */
 export default function InvitesListScreen( props ) {
+	// Common list screen state (loading, notice, selection, bulk, search).
+	var common = useListScreenState();
+	var isLoading = common.isLoading;
+	var setIsLoading = common.setIsLoading;
+	var selectedIds = common.selectedIds;
+	var setSelectedIds = common.setSelectedIds;
+	var bulkAction = common.bulkAction;
+	var setBulkAction = common.setBulkAction;
+	var bulkProcessing = common.isBulkProcessing;
+	var setBulkProcessing = common.setIsBulkProcessing;
+	var searchInput = common.searchInput;
+	var setSearchInput = common.setSearchInput;
+	var search = common.searchQuery;
+	var setSearch = common.setSearchQuery;
+
+	// Screen-specific state.
 	var stateItems = useState( [] );
 	var items = stateItems[0];
 	var setItems = stateItems[1];
@@ -79,18 +97,6 @@ export default function InvitesListScreen( props ) {
 	var filter = stateFilter[0];
 	var setFilter = stateFilter[1];
 
-	var stateSearch = useState( '' );
-	var search = stateSearch[0];
-	var setSearch = stateSearch[1];
-
-	var stateSearchInput = useState( '' );
-	var searchInput = stateSearchInput[0];
-	var setSearchInput = stateSearchInput[1];
-
-	var stateIsLoading = useState( true );
-	var isLoading = stateIsLoading[0];
-	var setIsLoading = stateIsLoading[1];
-
 	var stateViews = useState( {} );
 	var views = stateViews[0];
 	var setViews = stateViews[1];
@@ -98,18 +104,6 @@ export default function InvitesListScreen( props ) {
 	var stateBulkActions = useState( {} );
 	var bulkActions = stateBulkActions[0];
 	var setBulkActions = stateBulkActions[1];
-
-	var stateSelectedIds = useState( [] );
-	var selectedIds = stateSelectedIds[0];
-	var setSelectedIds = stateSelectedIds[1];
-
-	var stateBulkAction = useState( '' );
-	var bulkAction = stateBulkAction[0];
-	var setBulkAction = stateBulkAction[1];
-
-	var stateBulkProcessing = useState( false );
-	var bulkProcessing = stateBulkProcessing[0];
-	var setBulkProcessing = stateBulkProcessing[1];
 
 	var stateToast = useState( null );
 	var toast = stateToast[0];
@@ -128,8 +122,21 @@ export default function InvitesListScreen( props ) {
 	var setRevokeConfirmChecked = revokeConfirmCheckedState[1];
 
 	var abortRef = useRef( null );
-	var searchTimerRef = useRef( null );
 	var isFirstLoad = useRef( true );
+
+	// Common list screen handlers (select all, select row, search timer cleanup).
+	var handlers = useListScreenHandlers( {
+		setSearchInput: setSearchInput,
+		setSearchQuery: setSearch,
+		setPage: setPage,
+		setSelectedIds: setSelectedIds,
+		setSort: setSort,
+		setFilter: setFilter,
+		getItemIds: function () {
+			return items.map( function ( item ) { return item.id; } );
+		},
+	} );
+	var searchTimerRef = handlers.searchTimerRef;
 
 	var totalPages = Math.ceil( total / PER_PAGE );
 
@@ -286,44 +293,11 @@ export default function InvitesListScreen( props ) {
 		fetchInvites( { fetchPage: newPage, fetchSort: sort, fetchSearch: search, fetchFilter: filter } );
 	}, [ sort, search, filter, fetchInvites ] );
 
-	/**
-	 * Toggle individual item selection.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {number} id Item ID.
-	 */
-	var handleToggleSelect = useCallback( function( id ) {
-		setSelectedIds( function( prev ) {
-			var idx = prev.indexOf( id );
-			if ( -1 === idx ) {
-				return prev.concat( [ id ] );
-			}
-			return prev.filter( function( i ) {
-				return i !== id;
-			} );
-		} );
-	}, [] );
-
-	/**
-	 * Toggle select all items on current page.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	var handleSelectAll = useCallback( function() {
-		var allIds = items.map( function( item ) {
-			return item.id;
-		} );
-		var allSelected = allIds.length > 0 && allIds.every( function( id ) {
-			return -1 !== selectedIds.indexOf( id );
-		} );
-
-		if ( allSelected ) {
-			setSelectedIds( [] );
-		} else {
-			setSelectedIds( allIds );
-		}
-	}, [ items, selectedIds ] );
+	// Use shared select handlers from useListScreenHandlers.
+	var handleToggleSelect = function( id ) {
+		handlers.handleSelectRow( id, -1 === selectedIds.indexOf( id ) );
+	};
+	var handleSelectAll = handlers.handleSelectAll;
 
 	/**
 	 * Perform revoke action on one or more invites.

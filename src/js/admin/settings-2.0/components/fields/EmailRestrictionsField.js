@@ -48,10 +48,10 @@ export function EmailRestrictionsField( { field, value, onChange, disabled } ) {
 	var lastSentValueRef = useRef( null );
 
 	function assignKey( row ) {
-		if ( ! row._key ) {
-			row._key = 'er-' + ( ++keyCounterRef.current );
+		if ( row._key ) {
+			return row;
 		}
-		return row;
+		return Object.assign( {}, row, { _key: 'er-' + ( ++keyCounterRef.current ) } );
 	}
 
 	/**

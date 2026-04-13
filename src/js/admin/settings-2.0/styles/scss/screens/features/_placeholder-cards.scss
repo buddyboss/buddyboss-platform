@@ -1,0 +1,206 @@
+/**
+ * BuddyBoss Admin Settings 2.0 - Placeholder Feature Cards
+ *
+ * Styles for placeholder add-on/integration cards, plan badges,
+ * and the upgrade modal.
+ *
+ * @package BuddyBoss\Core\Administration
+ * @since BuddyBoss [BBVERSION]
+ */
+
+// Placeholder feature card.
+.bb-admin-settings__feature-card--placeholder {
+	position: relative;
+
+	.bb-admin-settings__feature-settings-btn--placeholder {
+		opacity: 0.4;
+		pointer-events: none;
+	}
+
+	.bb-admin-settings__toggle--placeholder {
+		opacity: 0.4;
+		pointer-events: none;
+	}
+}
+
+// DRM-locked feature card — Settings and toggle disabled in admin UI only.
+.bb-admin-settings__feature-card--drm-locked {
+	position: relative;
+
+	.bb-admin-settings__toggle--drm-locked {
+		opacity: 0.4;
+		pointer-events: none;
+	}
+}
+
+// Plan badge — positioned in top-right of card.
+.bb-admin-settings__plan-badge {
+	position: absolute;
+	top: 16px;
+	right: 16px;
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	padding: 4px 8px;
+	border: 0.5px solid #e0623d;
+	border-radius: 99px;
+	font-family: inherit;
+	font-size: 11px;
+	font-weight: 500;
+	letter-spacing: 0;
+	line-height: 16px;
+	cursor: pointer;
+	transition: opacity 0.15s ease;
+	z-index: 1;
+
+	i {
+		font-size: 12px;
+		line-height: 1;
+
+		&:before {
+			margin: 0;
+		}
+	}
+
+	&:hover {
+		opacity: 0.85;
+	}
+
+	&:focus {
+		outline: none;
+		box-shadow: none;
+	}
+
+	// UPGRADE PLUS — solid gradient, white text.
+	&--plus {
+		background: linear-gradient(132.89deg, #E0623D 4.86%, #3E34FF 91.52%);
+		color: #fff;
+	}
+
+	// UPGRADE PRO — 10% opacity gradient, dark text.
+	&--pro {
+		background: linear-gradient(114.36deg, rgba(224, 98, 61, 0.1) 4.86%, rgba(62, 52, 255, 0.1) 91.52%);
+		color: #2f2f2f;
+	}
+}
+
+// Upgrade Modal.
+.bb-upgrade-modal {
+	&.bb-admin-settings-modal {
+		// Remove default WP Modal padding, let content control spacing.
+		.components-modal__content {
+			padding: 0;
+			margin-top: 0;
+
+			&::before {
+				display: none;
+			}
+		}
+
+		.components-modal__header {
+			padding: 16px 24px;
+			margin: 0;
+			position: relative;
+			z-index: 1;
+		}
+	}
+
+	&__body {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		padding: 24px;
+		gap: 24px;
+	}
+
+	&__image-wrapper {
+		width: 100%;
+		border: 0.5px solid $bb-border-secondary-color;
+		border-radius: 16px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		overflow: hidden;
+		min-height: 200px;
+	}
+
+	&__image {
+		width: 100%;
+		height: auto;
+		display: block;
+		object-fit: cover;
+	}
+
+	&__content {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 24px;
+		text-align: center;
+		max-width: 768px;
+	}
+
+	&__description {
+		font-size: 14px;
+		line-height: 20px;
+		font-weight: 400;
+		color: $bb-text-secondary-color;
+		margin: 0;
+	}
+
+	// CTA button — inline within content, not in a footer.
+	&__cta {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 8px 16px;
+		border-radius: 99px;
+		border: 0.5px solid #e0623d;
+		font-size: 14px;
+		font-weight: 500;
+		line-height: 20px;
+		text-decoration: none;
+		cursor: pointer;
+		transition: opacity 0.15s ease;
+
+		i {
+			font-size: 18px;
+			line-height: 1;
+
+			&:before {
+				margin: 0;
+			}
+		}
+
+		&:hover {
+			opacity: 0.9;
+		}
+
+		&:focus {
+			outline: none;
+			box-shadow: none;
+		}
+
+		// UPGRADE PLUS — solid gradient, white text.
+		&--plus {
+			background: linear-gradient(128.38deg, #E0623D 4.86%, #3E34FF 91.52%);
+			color: #fff;
+
+			&:hover,
+			&:focus {
+				color: #fff;
+			}
+		}
+
+		// UPGRADE PRO — 10% opacity gradient, dark text.
+		&--pro {
+			background: linear-gradient(127.06deg, rgba(224, 98, 61, 0.1) 4.86%, rgba(62, 52, 255, 0.1) 91.52%);
+			color: #2f2f2f;
+
+			&:hover,
+			&:focus {
+				color: #2f2f2f;
+			}
+		}
+	}
+}

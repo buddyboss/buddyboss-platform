@@ -663,8 +663,14 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 										if ( section.conditional ) {
 											var condVal = settings[section.conditional.field];
 											var expected = section.conditional.value;
+											var condOperator = section.conditional.operator || '==';
 											var isTruthy = !!condVal && condVal !== '0' && condVal !== 0;
-											var condMet = ( expected === true || expected === false ) ? isTruthy === expected : condVal === expected;
+											var condMet;
+											if ( '!=' === condOperator ) {
+												condMet = ( expected === true || expected === false ) ? isTruthy !== expected : condVal !== expected;
+											} else {
+												condMet = ( expected === true || expected === false ) ? isTruthy === expected : condVal === expected;
+											}
 											if ( ! condMet ) {
 												if ( 'disable' === section.conditional.action ) {
 													isSectionDisabled = true;

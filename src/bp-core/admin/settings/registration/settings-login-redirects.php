@@ -139,6 +139,9 @@ function bb_registration_register_login_redirects_panel_fields() {
 			)
 		);
 
+		// This field saves per-type redirects via bb_admin_update_member_type AJAX,
+		// not the main settings save handler. sanitize_callback returns empty array
+		// to prevent accidental data persistence through the main save flow.
 		bb_register_feature_field(
 			$feature_id,
 			$panel_id,

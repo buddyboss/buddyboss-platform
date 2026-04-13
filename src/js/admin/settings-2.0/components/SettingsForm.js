@@ -45,7 +45,10 @@ import { EmailRestrictionsField } from './fields/EmailRestrictionsField';
 import { PasswordField } from './fields/PasswordField';
 import { StatusCheckField } from './fields/StatusCheckField';
 import { ImageUploadField } from './fields/ImageUploadField';
+import { RecaptchaVerifyField } from './recaptcha/RecaptchaVerifyField';
+import { RecaptchaBypassField } from './recaptcha/RecaptchaBypassField';
 import { VerifyPopupField } from './fields/VerifyPopupField';
+import { useFetchOnChange } from '../hooks/useFetchOnChange';
 
 /**
  * Settings Form Component (matching Figma settingsSection)
@@ -59,6 +62,9 @@ import { VerifyPopupField } from './fields/VerifyPopupField';
 export function SettingsForm({ fields, values, onChange }) {
 	// Use reaction callbacks hook for jQuery emotion picker integration
 	const { defaultEmotionsRef } = useReactionCallbacks(onChange, values);
+
+	// Fetch-on-change: watches fields and triggers AJAX to refresh select options dynamically.
+	var fetchOnChange = useFetchOnChange( fields, values );
 
 	// Track migration modal state
 	const [isMigrationModalOpen, setIsMigrationModalOpen] = useState(false);
@@ -92,6 +98,9 @@ export function SettingsForm({ fields, values, onChange }) {
 			}
 			if ( field.help_text ) {
 				cache[ field.name + '__help' ] = sanitizeHtml( field.help_text );
+			}
+			if ( field.empty_state_title && 'string' === typeof field.empty_state_title ) {
+				cache[ field.name + '__empty_title' ] = sanitizeHtml( field.empty_state_title );
 			}
 			// Pre-sanitize per-option descriptions for fields with option_descriptions.
 			if ( field.option_descriptions && 'object' === typeof field.option_descriptions ) {
@@ -375,6 +384,26 @@ export function SettingsForm({ fields, values, onChange }) {
 					/>
 				);
 
+			case 'recaptcha_verify':
+				return (
+					<RecaptchaVerifyField
+						field={field}
+						values={values}
+						disabled={disabled}
+					/>
+				);
+
+			case 'recaptcha_bypass':
+				return (
+					<RecaptchaBypassField
+						field={field}
+						value={value}
+						values={values}
+						onChange={onChange}
+						disabled={disabled}
+					/>
+				);
+
 			case 'password':
 				return (
 					<PasswordField
@@ -388,9 +417,11 @@ export function SettingsForm({ fields, values, onChange }) {
 
 			case 'text':
 			case 'email':
-			case 'url':
+			case 'url': {
+				var hasCopy = field.field_class && -1 !== field.field_class.indexOf( 'bb-admin-settings-form__field--copy' );
+
 				return (
-					<div className={ field.maxlength > 0 ? 'bb-admin-settings-form__field-text-wrapper' : '' }>
+					<div className={ ( field.maxlength > 0 ? 'bb-admin-settings-form__field-text-wrapper' : '' ) + ( hasCopy ? ' bb-admin-settings-form__field-text-copy' : '' ) }>
 						<TextControl
 							key={field.name}
 							label=""
@@ -407,6 +438,20 @@ export function SettingsForm({ fields, values, onChange }) {
 							maxLength={ field.maxlength > 0 ? field.maxlength : undefined }
 							__nextHasNoMarginBottom
 						/>
+						{ hasCopy && (
+							<button
+								type="button"
+								className="bb-admin-settings-form__copy-btn"
+								title={ __( 'Copy to clipboard', 'buddyboss' ) }
+								onClick={ function() {
+									if ( navigator.clipboard && value ) {
+										navigator.clipboard.writeText( value );
+									}
+								} }
+							>
+								<i className="bb-icons-rl bb-icons-rl-copy" />
+							</button>
+						) }
 						{ field.maxlength > 0 && (
 							<span className="bb-admin-settings-form__textarea-counter">
 								{ ( value || '' ).length + '/' + field.maxlength }
@@ -414,6 +459,7 @@ export function SettingsForm({ fields, values, onChange }) {
 						) }
 					</div>
 				);
+			}
 
 			case 'textarea':
 				return (
@@ -439,18 +485,52 @@ export function SettingsForm({ fields, values, onChange }) {
 					</div>
 				);
 
-			case 'select':
+			case 'select': {
+				// Apply fetch_on_change overrides (dynamic options from AJAX).
+				var selectOverrides = fetchOnChange.getFieldOverrides( field.name );
+				var selectOptions   = ( selectOverrides && selectOverrides.options ) ? selectOverrides.options : ( field.options || [] );
+				var selectDisabled  = disabled || ( selectOverrides ? selectOverrides.disabled : false );
+				var selectLoading   = selectOverrides && selectOverrides.loading;
+
+				// Auto-select default value when fetch returns one and current value is empty.
+				if ( selectOverrides && selectOverrides.defaultValue && ! value ) {
+					onChange( field.name, selectOverrides.defaultValue );
+				}
+
+				if ( selectLoading ) {
+					return (
+						<SelectControl
+							key={field.name}
+							label=""
+							value=""
+							options={ [ { value: '', label: selectOverrides.loadingText || __( 'Loading...', 'buddyboss' ) } ] }
+							disabled
+							__nextHasNoMarginBottom
+						/>
+					);
+				}
+
 				return (
-					<SelectControl
-						key={field.name}
-						label=""
-						value={value != null ? String(value) : ''}
-						options={field.options || []}
-						onChange={(newValue) => onChange(field.name, newValue)}
-						disabled={disabled}
-						__nextHasNoMarginBottom
-					/>
+					<div key={field.name} ref={ function( el ) {
+						if ( ! el ) {
+							return;
+						}
+						var selectEl = el.querySelector( 'select' );
+						if ( selectEl && selectEl.getAttribute( 'name' ) !== field.name ) {
+							selectEl.setAttribute( 'name', field.name );
+						}
+					} }>
+						<SelectControl
+							label=""
+							value={value != null ? String(value) : ''}
+							options={selectOptions}
+							onChange={(newValue) => onChange(field.name, newValue)}
+							disabled={selectDisabled}
+							__nextHasNoMarginBottom
+						/>
+					</div>
 				);
+			}
 
 			case 'async_select':
 				return (
@@ -475,10 +555,10 @@ export function SettingsForm({ fields, values, onChange }) {
 						if ( ! el ) {
 							return;
 						}
-						// Reset all options first, then disable specific ones.
+						// Apply field-level and per-option disabled states to radio inputs.
 						el.querySelectorAll( 'input[type="radio"]' ).forEach( function ( input ) {
 							var optionWrap = input.closest( '.components-radio-control__option' );
-							if ( disabledOptionValues.length && -1 !== disabledOptionValues.indexOf( input.value ) ) {
+							if ( disabled || ( disabledOptionValues.length && -1 !== disabledOptionValues.indexOf( input.value ) ) ) {
 								input.disabled = true;
 								if ( optionWrap ) {
 									optionWrap.style.opacity = '0.5';
@@ -649,9 +729,10 @@ export function SettingsForm({ fields, values, onChange }) {
 							</div>
 						) }
 						{ field.empty_state_title && (
-							<h3 className="bb-admin-empty-state__title">
-								{ decodeEntities( field.empty_state_title ) }
-							</h3>
+							<h3
+								className="bb-admin-empty-state__title"
+								dangerouslySetInnerHTML={{ __html: sanitizedHtml[ field.name + '__empty_title' ] || '' }}
+							/>
 						) }
 						{ field.empty_state_description && (
 							<p className="bb-admin-empty-state__description">
@@ -895,7 +976,7 @@ export function SettingsForm({ fields, values, onChange }) {
 			return null;
 		}
 
-		const disabled = parentDisabled || isFieldDisabled(field) || isFieldConditionallyDisabled(field);
+		const disabled = parentDisabled || !!field.disabled || isFieldDisabled(field) || isFieldConditionallyDisabled(field);
 
 		// Checkbox children: render CheckboxControl with inline label (no separate label element).
 		// When description_controls are present (e.g., "Auto hide after %s reports"),
@@ -1083,12 +1164,13 @@ export function SettingsForm({ fields, values, onChange }) {
 			isToggleWithChildren ? 'bb-admin-settings-form__field--has-children' : '',
 			field.group?.key ? 'bb-admin-settings-form__field--grouped' : '',
 			field.group?.key && groupLastNames[ field.group.key ] === field.name ? 'bb-admin-settings-form__field--group-last' : '',
+			field.field_class || '',
 		].filter(Boolean).join(' ');
 
 		const hasLabel = field.label && field.label.trim() !== '';
 
 		return (
-			<div key={field.name} className={fieldClasses + ( ! hasLabel ? ' bb-admin-settings-form__field--no-label' : '' ) + ( 'reaction_mode' !== field.type && field.pro_notice?.show ? ' bb-admin-settings-form__field--pro-locked' : '' )} data-group={field.group?.key || undefined} data-group-inline={ field.group && field.group.inline ? 'true' : undefined }>
+			<div key={field.name} className={fieldClasses + ( ! hasLabel ? ' bb-admin-settings-form__field--no-label' : '' ) + ( 'reaction_mode' !== field.type && field.pro_notice?.show ? ' bb-admin-settings-form__field--pro-locked' : '' )} data-field-name={field.name} data-group={field.group?.key || undefined} data-group-inline={ field.group && field.group.inline ? 'true' : undefined }>
 				{ hasLabel && (
 					<div className="bb-admin-settings-form__field-label">
 						<label htmlFor={ 'bb-field-' + field.name }>

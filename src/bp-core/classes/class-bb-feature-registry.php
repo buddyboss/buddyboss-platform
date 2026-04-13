@@ -1274,7 +1274,7 @@ class BB_Feature_Registry {
 			bp_core_install( $active_components );
 		}
 		bp_core_add_page_mappings( $active_components );
-		flush_rewrite_rules();
+		$this->bb_schedule_rewrite_flush();
 
 		// Clear caches.
 		$this->bb_clear_feature_caches( $feature_id );
@@ -1371,7 +1371,7 @@ class BB_Feature_Registry {
 
 		// Flush rewrite rules so deactivated component URLs return 404
 		// instead of serving stale content.
-		flush_rewrite_rules();
+		$this->bb_schedule_rewrite_flush();
 
 		// Clear caches for all deactivated features.
 		foreach ( $all_to_deactivate as $fid_to_deactivate ) {
@@ -1396,6 +1396,27 @@ class BB_Feature_Registry {
 	// =========================================================================
 	// UTILITY METHODS
 	// =========================================================================
+
+	/**
+	 * Schedule a single rewrite rules flush at shutdown.
+	 *
+	 * Multiple feature toggles in one request only trigger one flush.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	private function bb_schedule_rewrite_flush() {
+		static $scheduled = false;
+
+		if ( ! $scheduled ) {
+			$scheduled = true;
+			add_action(
+				'shutdown',
+				static function () {
+					flush_rewrite_rules();
+				}
+			);
+		}
+	}
 
 	/**
 	 * Check for circular dependencies using DFS.

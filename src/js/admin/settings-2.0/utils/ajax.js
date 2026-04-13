@@ -1050,11 +1050,9 @@ export function uploadForumImage( file, signal ) {
 		signal: signal,
 	} ).then( function ( response ) {
 		if ( ! response.ok ) {
-			return { success: false, data: { message: 'HTTP error ' + response.status } };
+			throw new Error( 'HTTP ' + response.status );
 		}
-		return response.json().catch( function () {
-			return { success: false, data: { message: 'Invalid server response.' } };
-		} );
+		return response.json();
 	} );
 }
 

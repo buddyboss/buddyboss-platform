@@ -104,6 +104,8 @@
     &__main {
         flex: 1;
         padding: 32px;
+        width: 100%;
+        box-sizing: border-box;
     }
 
     &__content {
@@ -178,11 +180,14 @@
             line-height: 16px;
             margin-left: 8px;
             flex-shrink: 0;
+            outline: none;
+            box-shadow: none;
 
             &-icon {
-                font-size: 14px;
+                font-size: 16px;
                 line-height: 1;
                 flex-shrink: 0;
+                font-weight: 500;
             }
 
             &--warning {
@@ -192,6 +197,16 @@
 
                 .bb-admin-feature-settings__section-status-icon {
                     color: $bb-icon-warning-primary-color;
+                }
+            }
+
+            &--error {
+                background-color: $bb-background-secondary-color;
+                border: 0.5px solid $bb-border-tertiary-color;
+                color: $bb-text-disabled-color;
+
+                .bb-admin-feature-settings__section-status-icon {
+                    color: $bb-icon-disabled-color;
                 }
             }
 
@@ -264,6 +279,27 @@
         &--disabled {
             opacity: 0.5;
             pointer-events: none;
+        }
+    }
+
+    @media screen and (max-width: 1250px) {
+
+        &__container {
+            flex-wrap: wrap;
+        }
+
+        &__sidebar {
+            width: calc(100% - 64px);
+            margin: 0 32px;
+            border: 1px solid $bb-border-secondary-color;
+            border-radius: $bb-border-radius-2xl;
+        }
+    }
+
+    @media screen and (max-width: 980px) {
+
+        &__section-body {
+            overflow: auto;
         }
     }
 }
@@ -479,7 +515,7 @@
 
     &--grouped:not(.bb-admin-settings-form__field--full-width) {
         border-bottom: none;
-        padding-bottom: 12px;
+        padding-bottom: 18px;
 
         // Last visible field in a group restores the bottom border.
         &.bb-admin-settings-form__field--group-last,
@@ -540,12 +576,20 @@
             }
 
             width: calc((100% - 277px - 24px) / 2);
+
+             @media screen and (max-width: 980px) {
+                width: calc(50% - 16px);
+            }
         }
     }
 
     // First inline field after a non-inline sibling: offset to align with the content area.
     &--grouped:not([data-group-inline="true"]) + &--grouped[data-group-inline="true"].bb-admin-settings-form__field--no-label {
         margin-left: 277px;
+
+        @media screen and (max-width: 980px) {
+            margin-left: 0;
+        }
     }
 
     // Textarea wrapper ensures counter renders below (not beside) the textarea.
@@ -744,6 +788,35 @@
             max-width: 275px;
         }
 	}
+
+    @media screen and (max-width: 1250px) {
+
+         &-label {
+            width: 195px;
+         }
+
+         &--no-label {
+
+            .bb-admin-settings-form__field-content {
+                margin-left: 227px;
+            }
+        }
+    }
+
+    @media screen and (max-width: 980px) {
+        flex-wrap: wrap;
+
+         &-label {
+            width: 100%;
+         }
+
+         &--no-label {
+
+            .bb-admin-settings-form__field-content {
+                margin-left: 0;
+            }
+        }
+    }
 }
 
 .bb-admin-settings-field__toggle-list {
@@ -936,6 +1009,30 @@
             color: $bb-icon-tertiary-color;
             font-size: 20px;
         }
+    }
+}
+
+.bb-admin-settings-form__field.bb-admin-settings-form__field--select-full {
+
+    .components-input-control__container {
+        background-color: transparent;
+    }
+
+    .components-select-control {
+        max-width: 500px;
+    }
+
+    .components-select-control__input {
+        max-width: 500px;
+        width: 100%;
+    }
+}
+
+.bb-admin-settings-form__field.bb-admin-settings-form__field--input-full {
+
+    .components-text-control__input {
+        max-width: 500px;
+        width: 100%;
     }
 }
 
