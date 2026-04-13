@@ -121,6 +121,13 @@
         box-shadow: 0px 1.5px 1px 0px rgba(0, 0, 0, 0.16);
         margin-bottom: 24px;
 
+        // Entire section is disabled (section-level conditional action: disable).
+        // Fields inside are still individually disabled via their own conditionals,
+        // so this purely provides a visual cue (dimmed) for the disabled state.
+        &--disabled {
+            opacity: 0.55;
+        }
+
         &-header {
             display: flex;
             align-items: center;
