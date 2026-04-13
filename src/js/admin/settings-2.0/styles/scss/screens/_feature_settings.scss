@@ -200,6 +200,16 @@
                 }
             }
 
+            &--error {
+                background-color: $bb-background-secondary-color;
+                border: 0.5px solid $bb-border-tertiary-color;
+                color: $bb-text-disabled-color;
+
+                .bb-admin-feature-settings__section-status-icon {
+                    color: $bb-icon-disabled-color;
+                }
+            }
+
             &--success {
                 background-color: $bb-background-positive-primary-color;
                 border: 0.5px solid $bb-border-positive-secondary-color;
