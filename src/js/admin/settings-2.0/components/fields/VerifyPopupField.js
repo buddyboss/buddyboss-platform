@@ -54,6 +54,7 @@ import { __ } from '@wordpress/i18n';
 import { createPortal } from 'react-dom';
 import { BB_EVENTS } from '../../utils/constants';
 import { invalidateFeatureCache } from '../../utils/featureCache';
+import { Spinner } from '@wordpress/components';
 
 /**
  * VerifyField Component
@@ -79,9 +80,9 @@ export function VerifyPopupField( props ) {
 	// Config with defaults.
 	var modalTitle     = verifyConfig.modal_title || __( 'Verify Settings', 'buddyboss' );
 	var loadingMessage = verifyConfig.loading_message || __( 'Verifying credentials...', 'buddyboss' );
-	var loadingIcon    = verifyConfig.loading_icon || 'bb-icon-f bb-icon-cloud';
-	var successIcon    = verifyConfig.success_icon || 'bb-icon-f bb-icon-check';
-	var errorIcon      = verifyConfig.error_icon || 'bb-icon-f bb-icon-exclamation';
+	var loadingIcon    = verifyConfig.loading_icon || 'bb-icons-rl-cloud';
+	var successIcon    = verifyConfig.success_icon || 'bb-icons-rl-check-circle';
+	var errorIcon      = verifyConfig.error_icon || 'bb-icons-rl-warning-circle';
 
 	// State.
 	var connectedState    = useState( isConnectedInit );
@@ -643,7 +644,7 @@ export function VerifyPopupField( props ) {
 								onClick={ closeModal }
 								aria-label={ __( 'Close', 'buddyboss' ) }
 							>
-								<i className="bb-icon-f bb-icon-times" />
+								<i className="bb-icons-rl-x" />
 							</button>
 						</div>
 
@@ -653,7 +654,7 @@ export function VerifyPopupField( props ) {
 									{ ( 'loading' === modalPhase || 'submitting' === modalPhase ) && (
 										<div className="bb-admin-verify-modal__status">
 											<i className={ loadingIcon } />
-											<p>{ loadingMessage }</p>
+											<p>{ loadingMessage } <Spinner /></p>
 										</div>
 									) }
 

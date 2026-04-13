@@ -831,6 +831,7 @@ select.bb-admin-settings__select {
     border-radius: $bb-border-radius-lg;
     margin-bottom: 16px;
     width: 100%;
+    word-break: break-word;
     box-sizing: border-box;
 
     &:not(:has(.bb-admin-notice__icon)):before {

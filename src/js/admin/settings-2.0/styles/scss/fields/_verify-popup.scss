@@ -18,17 +18,18 @@
 		left: 0;
 		right: 0;
 		bottom: 0;
-		background-color: rgba(0, 0, 0, 0.5);
+		background-color: rgba(0, 0, 0, 0.6);
 		cursor: pointer;
 	}
 
 	&__container {
 		position: relative;
 		z-index: 10000;
-		background-color: #fff;
-		border-radius: 8px;
+		background-color: $bb-background-base-color;
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-xl;
 		box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.15);
-		max-width: 500px;
+		max-width: 680px;
 		width: 90%;
 		max-height: 80vh;
 		overflow: auto;
@@ -38,15 +39,15 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		padding: 20px 24px;
-		border-bottom: 1px solid #e5e5e5;
+		padding: 20px;
+		border-bottom: 1px solid $bb-border-secondary-color;
 	}
 
 	&__title {
 		font-size: 18px;
-		font-weight: 600;
-		line-height: 24px;
-		color: #2f2f2f;
+		font-weight: 500;
+		line-height: 1.4;
+		color: $bb-text-color;
 		margin: 0;
 	}
 
@@ -57,15 +58,11 @@
 		margin: 0;
 		cursor: pointer;
 		font-size: 24px;
-		color: #999;
+		color: $bb-icon-secondary-color;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		transition: color 0.2s ease;
-
-		&:hover {
-			color: #666;
-		}
 	}
 
 	&__content {
@@ -87,26 +84,37 @@
 			margin: 16px 0 0 0;
 			font-size: 14px;
 			line-height: 20px;
-			color: #2f2f2f;
+			color: $bb-text-secondary-color;
+			word-break: break-word;
+
+			svg {
+				vertical-align: middle;
+				margin: 0 0 0 8px;
+			}
+		}
+
+		i {
+			color: $bb-icon-secondary-color;
+			font-size: 48px;
+			line-height: 1;
+			display: inline-block;
 		}
 
 		&--success {
-			p {
-				color: #27ae60;
+
+			i {
+				color: $bb-icon-positive-primary-color;
+				font-weight: 500;
 			}
 		}
 
 		&--error {
-			p {
-				color: #e74c3c;
+
+			i {
+				color: $bb-icon-danger-color;
+				font-weight: 500;
 			}
 		}
-	}
-
-	i {
-		font-size: 48px;
-		line-height: 1;
-		display: inline-block;
 	}
 
 	&__status {
@@ -127,44 +135,11 @@
 	}
 
 	&__btn {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		gap: 6px;
-		padding: 8px 20px;
-		font-size: 14px;
-		font-weight: 500;
-		line-height: 20px;
-		border-radius: 6px;
-		border: 1px solid transparent;
-		background-color: #f0f0f0;
-		color: #2f2f2f;
+		@include bb-button-secondary;
 		cursor: pointer;
-		transition: all 0.2s ease;
-
-		&:hover:not(:disabled) {
-			background-color: #e5e5e5;
-		}
-
-		&:disabled {
-			opacity: 0.6;
-			cursor: not-allowed;
-		}
 
 		&--primary {
-			background-color: #ef5d33;
-			color: #fff;
-			border-color: #ef5d33;
-
-			&:hover:not(:disabled) {
-				background-color: #d7542e;
-				border-color: #d7542e;
-			}
-
-			&:active:not(:disabled) {
-				background-color: #c04a29;
-				border-color: #c04a29;
-			}
+			@include bb-button-primary;
 		}
 	}
 }
