@@ -8921,6 +8921,38 @@ li.bb-rl-hideshow {
   width: 1px;
 }
 
+/* Animations */
+@keyframes notification-fadeout {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes notification-close-item {
+  0% {
+    transform: translate(100%, 0);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+}
+
+@keyframes notification-close-item-left {
+  0% {
+    transform: translate(-100%, 0);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+}
+
 .bb-rl-crop-container {
   position: fixed;
   z-index: 999991;
@@ -22713,6 +22745,8 @@ table.profile-settings tbody td select {
   margin: 0;
   padding: 0;
   list-style: none;
+  max-height: initial;
+  overflow: initial;
 }
 
 .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item {
@@ -22720,9 +22754,8 @@ table.profile-settings tbody td select {
   box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.1);
   margin: 12px 0;
   border: solid 1px var(--bb-rl-border-secondary-color);
-  border-radius: 5px;
-  transition: all linear 0.2s;
-  padding: 20px;
+  border-radius: var(--bb-rl-radius-lg);
+  padding: var(--bb-rl-space-200);
   z-index: 4;
   display: flex;
 }
@@ -22761,6 +22794,10 @@ table.profile-settings tbody td select {
   max-width: 53px;
 }
 
+.bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .notification-avatar [class*="bb-icon"]:before {
+  font-weight: 500;
+}
+
 .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .notification-avatar .bb-notification-members img {
   max-width: 40px;
   border: 2px solid var(--bb-rl-background-color);
@@ -22794,6 +22831,8 @@ table.profile-settings tbody td select {
 }
 
 .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .notification-content {
+  font-size: 14px;
+  line-height: 1.4;
   align-self: center;
 }
 
@@ -22815,8 +22854,12 @@ table.profile-settings tbody td select {
   line-height: 20px;
 }
 
-.bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .actions a .dashicons {
+.bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .actions a [class*="bb-icon"] {
   font-size: 20px;
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item.close-item {
+  animation: notification-fadeout 0.6s;
 }
 
 .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list.bb-more-than-3 {
@@ -22827,12 +22870,12 @@ table.profile-settings tbody td select {
 .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list.bb-more-than-3:after {
   content: " ";
   height: 20px;
-  width: 100%;
-  border-radius: 0 0 5px 5px;
+  border-radius: 0 0 var(--bb-rl-radius-lg) var(--bb-rl-radius-lg);
   box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.1);
   position: absolute;
-  left: 0;
-  bottom: -14px;
+  left: 2px;
+  right: 2px;
+  bottom: -10px;
   z-index: 2;
   background: var(--bb-rl-background-color);
 }
@@ -22896,6 +22939,10 @@ table.profile-settings tbody td select {
   justify-content: flex-end;
 }
 
+.bb-onscreen-notification-enable .bb-onscreen-notification.bb-position-right .read-item.pull-animation {
+  animation: notification-close-item 0.6s;
+}
+
 .bb-onscreen-notification-enable .bb-onscreen-notification.bb-position-left {
   right: inherit;
   left: 35px;
@@ -22903,6 +22950,10 @@ table.profile-settings tbody td select {
 
 .bb-onscreen-notification-enable .bb-onscreen-notification.bb-position-left .bb-remove-all-notification {
   justify-content: flex-start;
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification.bb-position-left .read-item.pull-animation {
+  animation: notification-close-item-left 0.6s;
 }
 
 @media screen and (max-width: 500px) {

@@ -34,7 +34,7 @@ if ( bp_has_notifications( $on_screen_notification_query_string ) ) :
 			</div>
 			<div class="actions">
 				<a class="action-close primary" data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_attr_e( 'Close', 'buddyboss' ); ?>" data-notification-id="<?php bp_the_notification_id(); ?>">
-					<span class="dashicons dashicons-no" aria-hidden="true"></span>
+					<span class="bb-icons-rl-x" aria-hidden="true"></span>
 				</a>
 			</div>
 		</li>
