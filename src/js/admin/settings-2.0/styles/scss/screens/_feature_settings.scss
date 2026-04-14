@@ -3,7 +3,6 @@
     &__container {
         display: flex;
         background-color: $bb-background-primary-color;
-        border-right: 1px solid $bb-border-secondary-color;
         min-height: calc(100vh - 50px);
         margin: 0 -20px;
     }
@@ -300,6 +299,14 @@
 
         &__section-body {
             overflow: auto;
+        }
+    }
+
+    @media screen and (max-width: 560px) {
+        overflow: auto;
+        
+        &__container {
+            min-width: 560px;
         }
     }
 }
