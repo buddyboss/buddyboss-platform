@@ -11,12 +11,23 @@
 
 	@media screen and (max-width: 500px) {
 
-		.bb-onscreen-notification .notification-list {
-			display: none;
+		.bb-onscreen-notification {
+
+			div.bb-remove-all-notification,
+			.notification-list {
+				display: none;
+			}
 		}
 
-		&.bb-onscreen-notification-enable-mobile-support .bb-onscreen-notification .notification-list {
-			display: block;
+		&.bb-onscreen-notification-enable-mobile-support .bb-onscreen-notification {
+
+			.notification-list {
+				display: block;
+			}
+
+			.bb-remove-all-notification {
+				display: flex;
+			}
 		}
 
 	}
@@ -155,6 +166,7 @@
 
 						[class*="bb-icon"] {
 							font-size: 20px;
+							color: var(--bb-rl-icon-color);
 						}
 
 					}
@@ -163,7 +175,11 @@
 
 				&.close-item {
 					animation: notification-fadeout 0.6s;
-				}				
+				}
+
+				&.unread:before {
+					display: none;
+				}
 
 			}
 
@@ -207,10 +223,10 @@
 			justify-content: flex-end;
 
 			.action-close {
-				background: var(--bb-rl-text-secondary-color);
+				background: var(--bb-rl-background-color);
 				border-radius: 30px;
 				padding: 4px 35px 4px 15px;
-				color: var(--bb-rl-text-white-color);
+				color: var(--bb-rl-text-color);
 				align-items: center;
 				justify-content: center;
 				cursor: pointer;
@@ -219,10 +235,18 @@
 				position: relative;
 
 				.dashicons {
+					display: flex;
 					position: absolute;
 					right: 10px;
 					top: 50%;
 					transform: translate(0, -50%);
+
+					&:before {
+						content: "\e4f6";
+						font-family: bb-icons-rl !important;
+						font-size: 18px;
+						line-height: 1.2;
+					}
 				}
 
 				.bb-for-mobile {
@@ -293,7 +317,6 @@
 			}
 
 			.notification-list {
-				display: flex;
 				flex-direction: column;
 				width: 100%;
 				margin: 0 10px 0 0;
