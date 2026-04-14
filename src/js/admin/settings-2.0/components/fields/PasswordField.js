@@ -37,6 +37,9 @@ export function PasswordField( props ) {
 		<div className="bb-admin-settings-field__password">
 			<input
 				type={ isVisible ? 'text' : 'password' }
+				name={ field.name }
+				id={ 'bb-field-' + field.name }
+				autoComplete="off"
 				value={ value || '' }
 				placeholder={ field.placeholder || '' }
 				aria-label={ field.label || field.name }

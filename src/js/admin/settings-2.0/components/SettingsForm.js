@@ -47,6 +47,8 @@ import { StatusCheckField } from './fields/StatusCheckField';
 import { ImageUploadField } from './fields/ImageUploadField';
 import { RecaptchaVerifyField } from './recaptcha/RecaptchaVerifyField';
 import { RecaptchaBypassField } from './recaptcha/RecaptchaBypassField';
+import { VerifyPopupField } from './fields/VerifyPopupField';
+import { useFetchOnChange } from '../hooks/useFetchOnChange';
 
 /**
  * Settings Form Component (matching Figma settingsSection)
@@ -60,6 +62,44 @@ import { RecaptchaBypassField } from './recaptcha/RecaptchaBypassField';
 export function SettingsForm({ fields, values, onChange }) {
 	// Use reaction callbacks hook for jQuery emotion picker integration
 	const { defaultEmotionsRef } = useReactionCallbacks(onChange, values);
+
+	// Fetch-on-change: watches fields and triggers AJAX to refresh select options dynamically.
+	const fetchOnChange = useFetchOnChange( fields, values );
+
+	// Track which fetched defaultValue we have already applied per field, so we
+	// only auto-apply once per AJAX response. Without this guard the effect
+	// would re-apply the default whenever the user cleared the field, fighting
+	// the user's input.
+	const appliedFetchDefaultsRef = useRef( {} );
+
+	// Auto-apply defaultValue returned by fetch_on_change when the current value is empty.
+	// Runs in an effect (not during render) to avoid "setState during render" warnings/loops.
+	// `fetchOnChange` is a memoized wrapper that only changes when fetched
+	// overrides actually update, so this effect fires when the AJAX response
+	// arrives and after any value/fields change. The per-field ref guards
+	// against re-applying the same default if the user later clears the field.
+	useEffect( () => {
+		fields.forEach( ( field ) => {
+			if ( 'select' !== field.type ) {
+				return;
+			}
+			const overrides = fetchOnChange.getFieldOverrides( field.name );
+			if ( ! overrides || ! overrides.defaultValue ) {
+				// Reset the applied marker so a later fetch can re-apply.
+				if ( appliedFetchDefaultsRef.current[ field.name ] ) {
+					delete appliedFetchDefaultsRef.current[ field.name ];
+				}
+				return;
+			}
+			if ( appliedFetchDefaultsRef.current[ field.name ] === overrides.defaultValue ) {
+				return; // Already applied this exact default value.
+			}
+			if ( ! values[ field.name ] ) {
+				appliedFetchDefaultsRef.current[ field.name ] = overrides.defaultValue;
+				onChange( field.name, overrides.defaultValue );
+			}
+		} );
+	}, [ fetchOnChange, values, fields, onChange ] );
 
 	// Track migration modal state
 	const [isMigrationModalOpen, setIsMigrationModalOpen] = useState(false);
@@ -85,8 +125,10 @@ export function SettingsForm({ fields, values, onChange }) {
 				cache[ field.name + '__desc' ] = sanitizeHtml( field.description );
 
 				// Pre-split and sanitize parts for fields with inline description controls.
-				if ( field.description.indexOf( '%s' ) !== -1 && field.description_controls && field.description_controls.length > 0 ) {
-					cache[ field.name + '__parts' ] = field.description.split( '%s' ).map( function ( part ) {
+				// Accepts both `%s` and positional `%1$s` / `%2$s` placeholders so translators
+				// can reorder the substitutions without breaking the inline controls.
+				if ( /%(?:\d+\$)?s/.test( field.description ) && field.description_controls && field.description_controls.length > 0 ) {
+					cache[ field.name + '__parts' ] = field.description.split( /%(?:\d+\$)?s/ ).map( function ( part ) {
 						return sanitizeHtml( part );
 					} );
 				}
@@ -96,6 +138,12 @@ export function SettingsForm({ fields, values, onChange }) {
 			}
 			if ( field.empty_state_title && 'string' === typeof field.empty_state_title ) {
 				cache[ field.name + '__empty_title' ] = sanitizeHtml( field.empty_state_title );
+			}
+			// Pre-sanitize per-option descriptions for fields with option_descriptions.
+			if ( field.option_descriptions && 'object' === typeof field.option_descriptions ) {
+				Object.keys( field.option_descriptions ).forEach( function ( key ) {
+					cache[ field.name + '__optdesc__' + key ] = sanitizeHtml( field.option_descriptions[ key ] );
+				} );
 			}
 		} );
 		return cache;
@@ -406,9 +454,11 @@ export function SettingsForm({ fields, values, onChange }) {
 
 			case 'text':
 			case 'email':
-			case 'url':
+			case 'url': {
+				var hasCopy = field.field_class && -1 !== field.field_class.indexOf( 'bb-admin-settings-form__field--copy' );
+
 				return (
-					<div className={ field.maxlength > 0 ? 'bb-admin-settings-form__field-text-wrapper' : '' }>
+					<div className={ ( field.maxlength > 0 ? 'bb-admin-settings-form__field-text-wrapper' : '' ) + ( hasCopy ? ' bb-admin-settings-form__field-text-copy' : '' ) }>
 						<TextControl
 							key={field.name}
 							label=""
@@ -425,6 +475,29 @@ export function SettingsForm({ fields, values, onChange }) {
 							maxLength={ field.maxlength > 0 ? field.maxlength : undefined }
 							__nextHasNoMarginBottom
 						/>
+						{ hasCopy && (
+							<button
+								type="button"
+								className="bb-admin-settings-form__copy-btn"
+								title={ __( 'Copy to clipboard', 'buddyboss' ) }
+								onClick={ function() {
+									if ( ! navigator.clipboard || ! value ) {
+										return;
+									}
+									navigator.clipboard.writeText( value ).then( function () {
+										window.dispatchEvent( new CustomEvent( 'bb-settings-toast', {
+											detail: { status: 'success', message: __( 'Copied to clipboard.', 'buddyboss' ) },
+										} ) );
+									} ).catch( function () {
+										window.dispatchEvent( new CustomEvent( 'bb-settings-toast', {
+											detail: { status: 'error', message: __( 'Failed to copy to clipboard.', 'buddyboss' ) },
+										} ) );
+									} );
+								} }
+							>
+								<i className="bb-icons-rl bb-icons-rl-copy" />
+							</button>
+						) }
 						{ field.maxlength > 0 && (
 							<span className="bb-admin-settings-form__textarea-counter">
 								{ ( value || '' ).length + '/' + field.maxlength }
@@ -432,6 +505,7 @@ export function SettingsForm({ fields, values, onChange }) {
 						) }
 					</div>
 				);
+			}
 
 			case 'textarea':
 				return (
@@ -457,18 +531,52 @@ export function SettingsForm({ fields, values, onChange }) {
 					</div>
 				);
 
-			case 'select':
+			case 'select': {
+				// Apply fetch_on_change overrides (dynamic options from AJAX).
+				// Auto-apply of defaultValue happens in a top-level useEffect (see above).
+				const selectOverrides = fetchOnChange.getFieldOverrides( field.name );
+				const selectOptions   = ( selectOverrides && selectOverrides.options ) ? selectOverrides.options : ( field.options || [] );
+				const selectDisabled  = disabled || ( selectOverrides ? selectOverrides.disabled : false );
+				const selectLoading   = selectOverrides && selectOverrides.loading;
+
+				if ( selectLoading ) {
+					return (
+						<SelectControl
+							key={field.name}
+							label=""
+							value=""
+							options={ [ { value: '', label: selectOverrides.loadingText || __( 'Loading...', 'buddyboss' ) } ] }
+							disabled
+							__nextHasNoMarginBottom
+						/>
+					);
+				}
+
+				// Wrap the SelectControl so we can mutate the inner <select>'s name
+				// attribute on mount — related-field lookups (e.g. VerifyPopupField)
+				// find the control by its `name`. Markup is preserved from the
+				// original implementation to avoid any CSS breakage.
 				return (
-					<SelectControl
-						key={field.name}
-						label=""
-						value={value != null ? String(value) : ''}
-						options={field.options || []}
-						onChange={(newValue) => onChange(field.name, newValue)}
-						disabled={disabled}
-						__nextHasNoMarginBottom
-					/>
+					<div key={field.name} ref={ function ( el ) {
+						if ( ! el ) {
+							return;
+						}
+						const selectEl = el.querySelector( 'select' );
+						if ( selectEl && selectEl.getAttribute( 'name' ) !== field.name ) {
+							selectEl.setAttribute( 'name', field.name );
+						}
+					} }>
+						<SelectControl
+							label=""
+							value={value != null ? String(value) : ''}
+							options={selectOptions}
+							onChange={(newValue) => onChange(field.name, newValue)}
+							disabled={selectDisabled}
+							__nextHasNoMarginBottom
+						/>
+					</div>
 				);
+			}
 
 			case 'async_select':
 				return (
@@ -493,10 +601,10 @@ export function SettingsForm({ fields, values, onChange }) {
 						if ( ! el ) {
 							return;
 						}
-						// Reset all options first, then disable specific ones.
+						// Apply field-level and per-option disabled states to radio inputs.
 						el.querySelectorAll( 'input[type="radio"]' ).forEach( function ( input ) {
 							var optionWrap = input.closest( '.components-radio-control__option' );
-							if ( disabledOptionValues.length && -1 !== disabledOptionValues.indexOf( input.value ) ) {
+							if ( disabled || ( disabledOptionValues.length && -1 !== disabledOptionValues.indexOf( input.value ) ) ) {
 								input.disabled = true;
 								if ( optionWrap ) {
 									optionWrap.style.opacity = '0.5';
@@ -869,12 +977,39 @@ export function SettingsForm({ fields, values, onChange }) {
 					/>
 				);
 
-			default:
+			case 'bb_verify_popup':
+				return (
+					<VerifyPopupField
+						field={field}
+						values={values}
+						disabled={disabled}
+					/>
+				);
+
+			default: {
+				// Allow external plugins to render custom field types via wp.hooks.
+				var customFieldComponent = wp.hooks.applyFilters(
+					'bb_admin_settings_custom_field',
+					null,
+					field,
+					value,
+					function ( newValue ) {
+						onChange( field.name, newValue );
+					},
+					disabled,
+					values
+				);
+
+				if ( customFieldComponent ) {
+					return customFieldComponent;
+				}
+
 				return (
 					<p className="bb-admin-settings-field__unsupported">
 						{__('Field type not yet supported in React UI.', 'buddyboss')}
 					</p>
 				);
+			}
 		}
 	};
 
@@ -898,11 +1033,13 @@ export function SettingsForm({ fields, values, onChange }) {
 			const cbDisplay = cbInverted ? ! cbVal : !! cbVal;
 			const cbDesc = field.description || '';
 			const cbControls = field.description_controls;
-			const cbHasControls = cbDesc.indexOf( '%s' ) !== -1 && cbControls && cbControls.length > 0;
+			// Accept both `%s` and positional `%1$s` / `%2$s` placeholders.
+			const cbPlaceholderRe = /%(?:\d+\$)?s/;
+			const cbHasControls = cbPlaceholderRe.test( cbDesc ) && cbControls && cbControls.length > 0;
 
 			if ( cbHasControls ) {
 				const cachedParts = sanitizedHtml[ field.name + '__parts' ];
-				const parts = cachedParts || cbDesc.split( '%s' ).map( function ( part ) {
+				const parts = cachedParts || cbDesc.split( /%(?:\d+\$)?s/ ).map( function ( part ) {
 					return sanitizeHtml( part );
 				} );
 				const cbControlDisabled = disabled || ! cbDisplay;
@@ -1075,6 +1212,7 @@ export function SettingsForm({ fields, values, onChange }) {
 			isToggleWithChildren ? 'bb-admin-settings-form__field--has-children' : '',
 			field.group?.key ? 'bb-admin-settings-form__field--grouped' : '',
 			field.group?.key && groupLastNames[ field.group.key ] === field.name ? 'bb-admin-settings-form__field--group-last' : '',
+			field.field_class || '',
 		].filter(Boolean).join(' ');
 
 		const hasLabel = field.label && field.label.trim() !== '';
@@ -1131,11 +1269,12 @@ export function SettingsForm({ fields, values, onChange }) {
 					{ field.description && -1 === [ 'notice', 'checkbox_list', 'share_platforms', 'topic_list', 'image_radio' ].indexOf( field.type ) && ! ( field.allow_add && field.extension_data ) && ( 'toggle' !== field.type || ( field.description_controls && field.description_controls.length > 0 ) ) && ( () => {
 						const desc = field.description;
 						const controls = field.description_controls;
-						const hasControls = desc.indexOf( '%s' ) !== -1 && controls && controls.length > 0;
+						// Accept both `%s` and positional `%1$s` / `%2$s` placeholders.
+						const hasControls = /%(?:\d+\$)?s/.test( desc ) && controls && controls.length > 0;
 
 						if ( hasControls ) {
 							const cachedParts = sanitizedHtml[ field.name + '__parts' ];
-							const parts = cachedParts || desc.split( '%s' );
+							const parts = cachedParts || desc.split( /%(?:\d+\$)?s/ );
 							const isToggleOff = ( 'toggle' === field.type || 'checkbox' === field.type ) && ! values[ field.name ];
 
 							return (
@@ -1199,10 +1338,21 @@ export function SettingsForm({ fields, values, onChange }) {
 							);
 						}
 
+						// For fields with option_descriptions, use the description
+						// matching the currently selected value (dynamic swap on change).
+						var descKey = field.name + '__desc';
+						var currentVal = values[ field.name ];
+						if ( field.option_descriptions && currentVal != null ) {
+							var optDescKey = field.name + '__optdesc__' + String( currentVal );
+							if ( sanitizedHtml[ optDescKey ] ) {
+								descKey = optDescKey;
+							}
+						}
+
 						return (
 							<p
 								className="bb-admin-settings-form__field-description"
-								dangerouslySetInnerHTML={{ __html: sanitizedHtml[ field.name + '__desc' ] || '' }}
+								dangerouslySetInnerHTML={{ __html: sanitizedHtml[ descKey ] || '' }}
 							/>
 						);
 					} )() }

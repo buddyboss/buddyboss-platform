@@ -2575,3 +2575,155 @@ if ( ! function_exists( 'bp_admin_registration_setting_tutorial' ) ) {
 		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Registration feature (bb-admin-settings-registration.php)' );
 	}
 }
+
+// ──────────────────────────────────────────────────────────────────────────────
+// General Settings (Privacy, Toolbar, Content Counts) — migrated to Advanced.
+// ──────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Fire deprecated `bp_admin_setting_general_register_fields` hook.
+ *
+ * Legacy General tab fired this action so third-party plugins (e.g., BuddyBoss Sharing)
+ * could add custom fields. Settings 2.0 fires `bb_advanced_after_register_settings_fields`
+ * instead. This bridge ensures legacy listeners still fire (with a deprecation notice).
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+add_action(
+	'bb_advanced_after_register_settings_fields',
+	function () {
+		/**
+		 * Fires after General tab settings fields are registered.
+		 *
+		 * @since BuddyBoss 1.2.6
+		 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_advanced_after_register_settings_fields'} instead.
+		 *
+		 * @param object $stub No-op stub (legacy passed BP_Admin_Setting_General instance).
+		 */
+		do_action_deprecated(
+			'bp_admin_setting_general_register_fields',
+			array(
+				new class() {
+					/**
+					 * No-op: legacy add_section stub.
+					 *
+					 * @param mixed ...$args Arguments.
+					 */
+					public function add_section( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+					/**
+					 * No-op: legacy add_field stub.
+					 *
+					 * @param mixed ...$args Arguments.
+					 */
+					public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+				},
+			),
+			'BuddyBoss [BBVERSION]',
+			'bb_advanced_after_register_settings_fields'
+		);
+	}
+);
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Advanced/Performance Settings (Page Requests, Activity Loading, Telemetry).
+// ──────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Fire deprecated `bb_admin_setting_performance_register_fields` hook.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+add_action(
+	'bb_advanced_after_register_settings_fields',
+	function () {
+		/**
+		 * Fires after Performance/Advanced tab settings fields are registered.
+		 *
+		 * @since BuddyBoss 2.5.80
+		 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_advanced_after_register_settings_fields'} instead.
+		 *
+		 * @param object $stub No-op stub (legacy passed BB_Admin_Setting_Performance instance).
+		 */
+		do_action_deprecated(
+			'bb_admin_setting_performance_register_fields',
+			array(
+				new class() {
+					/**
+					 * No-op stub.
+					 *
+					 * @param mixed ...$args Arguments.
+					 */
+					public function add_section( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+					/**
+					 * No-op stub.
+					 *
+					 * @param mixed ...$args Arguments.
+					 */
+					public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+				},
+			),
+			'BuddyBoss [BBVERSION]',
+			'bb_advanced_after_register_settings_fields'
+		);
+	}
+);
+
+/**
+ * Fire deprecated save hooks for General and Advanced tabs.
+ *
+ * Bridges `bp_admin_tab_setting_save` / `bp_admin_tab_setting_saved` for
+ * `bp-general` and `bp-advanced` tab names so third-party plugins that hooked
+ * into these get proper deprecation notices.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id Feature ID.
+ * @param array  $settings   Submitted settings.
+ * @param array  $saved      Saved settings.
+ */
+function bb_advanced_fire_deprecated_save_hooks( $feature_id, $settings, $saved ) {
+	if ( 'advanced' !== $feature_id ) {
+		return;
+	}
+
+	/**
+	 * Fires before General tab settings are saved.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @deprecated BuddyBoss [BBVERSION]
+	 *
+	 * @param string $tab_name Tab name.
+	 */
+	do_action_deprecated( 'bp_admin_tab_setting_save', array( 'bp-general' ), 'BuddyBoss [BBVERSION]', 'bb_admin_save_feature_settings_after' );
+
+	/**
+	 * Fires after General tab settings are saved.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @deprecated BuddyBoss [BBVERSION]
+	 *
+	 * @param string $tab_name Tab name.
+	 */
+	do_action_deprecated( 'bp_admin_tab_setting_saved', array( 'bp-general' ), 'BuddyBoss [BBVERSION]', 'bb_admin_save_feature_settings_after' );
+
+	/**
+	 * Fires before Advanced tab settings are saved.
+	 *
+	 * @since BuddyBoss 2.5.80
+	 * @deprecated BuddyBoss [BBVERSION]
+	 *
+	 * @param string $tab_name Tab name.
+	 */
+	do_action_deprecated( 'bp_admin_tab_setting_save', array( 'bp-advanced' ), 'BuddyBoss [BBVERSION]', 'bb_admin_save_feature_settings_after' );
+
+	/**
+	 * Fires after Advanced tab settings are saved.
+	 *
+	 * @since BuddyBoss 2.5.80
+	 * @deprecated BuddyBoss [BBVERSION]
+	 *
+	 * @param string $tab_name Tab name.
+	 */
+	do_action_deprecated( 'bp_admin_tab_setting_saved', array( 'bp-advanced' ), 'BuddyBoss [BBVERSION]', 'bb_admin_save_feature_settings_after' );
+}
+add_action( 'bb_admin_save_feature_settings_after', 'bb_advanced_fire_deprecated_save_hooks', 99, 3 );

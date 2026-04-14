@@ -727,6 +727,39 @@ function bb_redirect_legacy_settings_to_settings_2() {
 		exit;
 	}
 
+	// Redirect legacy integration tabs (bp-integrations page).
+	if ( 'bp-integrations' === $page && ! empty( $tab ) ) {
+
+		/**
+		 * Filter the legacy integration tabs mapping.
+		 *
+		 * Pro hooks this to add Zoom, OneSignal, and other integration tab redirects.
+		 * Values can be a string (feature ID only) or array with 'tab' and 'panel'.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $legacy_integration_tabs Array of old integration tab name => new Settings 2.0 route.
+		 */
+		$legacy_integration_tabs = apply_filters( 'bb_legacy_integration_tabs_mapping', array() );
+
+		if ( isset( $legacy_integration_tabs[ $tab ] ) ) {
+			$mapping  = $legacy_integration_tabs[ $tab ];
+			$redirect = bp_get_admin_url( 'admin.php?page=bb-settings' );
+
+			if ( is_array( $mapping ) ) {
+				$redirect = add_query_arg( 'tab', $mapping['tab'], $redirect );
+				if ( ! empty( $mapping['panel'] ) ) {
+					$redirect = add_query_arg( 'panel', $mapping['panel'], $redirect );
+				}
+			} else {
+				$redirect = add_query_arg( 'tab', $mapping, $redirect );
+			}
+
+			wp_safe_redirect( $redirect );
+			exit;
+		}
+	}
+
 	// Check if we're on the old settings page.
 	if ( 'bp-settings' !== $page || empty( $tab ) ) {
 		return;
@@ -758,6 +791,9 @@ function bb_redirect_legacy_settings_to_settings_2() {
 		'bp-search'        => 'search',
 		'bp-invites'       => 'invites',
 		'bp-registration'  => 'registration',
+		'bp-general'       => 'advanced',
+		'bp-advanced'      => 'advanced',
+		'bp-moderation'    => 'moderation',
 	);
 
 	/**

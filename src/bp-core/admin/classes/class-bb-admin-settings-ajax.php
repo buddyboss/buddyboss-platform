@@ -676,7 +676,17 @@ class BB_Admin_Settings_Ajax {
 				'empty_state_title'       => $field['empty_state_title'] ?? null,
 				'empty_state_description' => $field['empty_state_description'] ?? null,
 				'related_fields'       => ! empty( $field['related_fields'] ) && is_array( $field['related_fields'] ) ? array_map( 'sanitize_key', $field['related_fields'] ) : null,
+				// Per-option descriptions for select fields (description swaps on value change).
+				// map_deep handles nested structures safely; each leaf string is kses-filtered.
+				'option_descriptions'  => ! empty( $field['option_descriptions'] ) && is_array( $field['option_descriptions'] )
+					? map_deep( $field['option_descriptions'], 'wp_kses_post' )
+					: null,
 				'is_connected'         => ! empty( $field['is_connected'] ),
+				// Verify field configuration (modal title, icons, messages).
+				// map_deep so nested config structures (e.g. button arrays) do not trip sanitize_text_field.
+				'verify_config'        => ! empty( $field['verify_config'] ) && is_array( $field['verify_config'] )
+					? map_deep( $field['verify_config'], 'sanitize_text_field' )
+					: null,
 				// Max length for text inputs.
 				'maxlength'            => $field['maxlength'] ?? null,
 				// Status check fields (AJAX-triggered server-side checks, e.g. Direct Access).
@@ -684,8 +694,21 @@ class BB_Admin_Settings_Ajax {
 				// Async select fields (searchable server-side select with AJAX loading).
 				'async_action'         => ! empty( $field['async_action'] ) ? sanitize_key( $field['async_action'] ) : null,
 				'watch_field'          => $field['watch_field'] ?? null,
+				// Fetch fresh data via AJAX when specified fields change (e.g. refresh select options after credentials entered).
+				'fetch_on_change'      => ! empty( $field['fetch_on_change'] ) && is_array( $field['fetch_on_change'] )
+					? array(
+						'fields'         => ! empty( $field['fetch_on_change']['fields'] ) ? array_map( 'sanitize_key', $field['fetch_on_change']['fields'] ) : array(),
+						'require_all'    => ! empty( $field['fetch_on_change']['require_all'] ),
+						'ajax_action'    => ! empty( $field['fetch_on_change']['ajax_action'] ) ? sanitize_key( $field['fetch_on_change']['ajax_action'] ) : '',
+						'debounce'       => ! empty( $field['fetch_on_change']['debounce'] ) ? absint( $field['fetch_on_change']['debounce'] ) : 500,
+						'loading_text'   => ! empty( $field['fetch_on_change']['loading_text'] ) ? sanitize_text_field( $field['fetch_on_change']['loading_text'] ) : '',
+						'disable_fields' => ! empty( $field['fetch_on_change']['disable_fields'] ) ? array_map( 'sanitize_key', $field['fetch_on_change']['disable_fields'] ) : array(),
+					)
+					: null,
 				// Layout: full-width fields render without the label column.
 				'full_width'           => ! empty( $field['full_width'] ),
+				// Custom CSS class(es) appended to the field wrapper div (space-separated).
+				'field_class'          => ! empty( $field['field_class'] ) ? implode( ' ', array_map( 'sanitize_html_class', explode( ' ', $field['field_class'] ) ) ) : null,
 				// Group label for child fields (e.g., xProfile group names under Members).
 				'child_group_label'    => $field['child_group_label'] ?? null,
 				// When true, saving this field triggers a full feature refetch to update side panels.

@@ -179,11 +179,14 @@
             line-height: 16px;
             margin-left: 8px;
             flex-shrink: 0;
+            outline: none;
+            box-shadow: none;
 
             &-icon {
-                font-size: 14px;
+                font-size: 16px;
                 line-height: 1;
                 flex-shrink: 0;
+                font-weight: 500;
             }
 
             &--warning {
@@ -193,6 +196,16 @@
 
                 .bb-admin-feature-settings__section-status-icon {
                     color: $bb-icon-warning-primary-color;
+                }
+            }
+
+            &--error {
+                background-color: $bb-background-secondary-color;
+                border: 0.5px solid $bb-border-tertiary-color;
+                color: $bb-text-disabled-color;
+
+                .bb-admin-feature-settings__section-status-icon {
+                    color: $bb-icon-disabled-color;
                 }
             }
 
@@ -509,7 +522,7 @@
 
     &--grouped:not(.bb-admin-settings-form__field--full-width) {
         border-bottom: none;
-        padding-bottom: 12px;
+        padding-bottom: 18px;
 
         // Last visible field in a group restores the bottom border.
         &.bb-admin-settings-form__field--group-last,
@@ -1003,6 +1016,30 @@
             color: $bb-icon-tertiary-color;
             font-size: 20px;
         }
+    }
+}
+
+.bb-admin-settings-form__field.bb-admin-settings-form__field--select-full {
+
+    .components-input-control__container {
+        background-color: transparent;
+    }
+
+    .components-select-control {
+        max-width: 500px;
+    }
+
+    .components-select-control__input {
+        max-width: 500px;
+        width: 100%;
+    }
+}
+
+.bb-admin-settings-form__field.bb-admin-settings-form__field--input-full {
+
+    .components-text-control__input {
+        max-width: 500px;
+        width: 100%;
     }
 }
 

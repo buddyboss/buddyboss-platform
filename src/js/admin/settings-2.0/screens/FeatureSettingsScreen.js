@@ -314,8 +314,8 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 										if ( 'notice' === field.type ) {
 											updates.description = updatedFields[ field.name ];
 										}
-										// Update is_connected for input_button fields.
-										if ( undefined !== e.detail.is_connected && 'input_button' === field.type ) {
+										// Update is_connected for input_button and bb_verify_popup fields.
+										if ( undefined !== e.detail.is_connected && ( 'input_button' === field.type || 'bb_verify_popup' === field.type ) ) {
 											updates.is_connected = e.detail.is_connected;
 										}
 										return Object.assign( {}, field, updates );
@@ -465,7 +465,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 		sidePanels.forEach( function ( panel ) {
 			( panel.sections || [] ).forEach( function ( section ) {
 				( section.fields || [] ).forEach( function ( field ) {
-					if ( 'input_button' === field.type && Array.isArray( field.related_fields ) ) {
+					if ( ( 'input_button' === field.type || 'bb_verify_popup' === field.type ) && Array.isArray( field.related_fields ) ) {
 						field.related_fields.forEach( function ( rf ) {
 							managed[ rf ] = true;
 						} );
