@@ -677,13 +677,15 @@ class BB_Admin_Settings_Ajax {
 				'empty_state_description' => $field['empty_state_description'] ?? null,
 				'related_fields'       => ! empty( $field['related_fields'] ) && is_array( $field['related_fields'] ) ? array_map( 'sanitize_key', $field['related_fields'] ) : null,
 				// Per-option descriptions for select fields (description swaps on value change).
+				// map_deep handles nested structures safely; each leaf string is kses-filtered.
 				'option_descriptions'  => ! empty( $field['option_descriptions'] ) && is_array( $field['option_descriptions'] )
-					? array_map( 'wp_kses_post', $field['option_descriptions'] )
+					? map_deep( $field['option_descriptions'], 'wp_kses_post' )
 					: null,
 				'is_connected'         => ! empty( $field['is_connected'] ),
 				// Verify field configuration (modal title, icons, messages).
+				// map_deep so nested config structures (e.g. button arrays) do not trip sanitize_text_field.
 				'verify_config'        => ! empty( $field['verify_config'] ) && is_array( $field['verify_config'] )
-					? array_map( 'sanitize_text_field', $field['verify_config'] )
+					? map_deep( $field['verify_config'], 'sanitize_text_field' )
 					: null,
 				// Max length for text inputs.
 				'maxlength'            => $field['maxlength'] ?? null,

@@ -38,14 +38,14 @@ function bb_advanced_register_general_fields() {
 	);
 
 	// Field 1: Page Requests — inline select with surrounding text (no toggle per Figma).
-	// Figma: "Load [2 ▾] page requests on page load"
+	// Figma: "Load [2 ▾] page requests on page load".
 	bb_register_feature_field(
 		$feature_id,
 		$panel_id,
 		'advanced_general',
 		array(
 			'name'                 => 'bb_ajax_request_page_load',
-			'label'               => __( 'Page Requests', 'buddyboss' ),
+			'label'                => __( 'Page Requests', 'buddyboss' ),
 			'type'                 => 'hidden',
 			/* translators: %s: inline select for number of page requests. */
 			'description'          => __( 'Load %s page requests on page load', 'buddyboss' ),
@@ -126,7 +126,7 @@ function bb_advanced_register_general_fields() {
 		);
 
 		// Field 6: Activity Loading — two inline selects.
-		// Figma: "Load [10 ▾] activity posts at a time using [Infinite Scroll ▾]"
+		// Figma: "Load [10 ▾] activity posts at a time using [Infinite Scroll ▾]".
 		$activity_per_page = apply_filters( 'bb_performance_activity_per_page', array() );
 		$activity_per_page = bp_parse_args( $activity_per_page, array( 5, 10, 15, 20 ) );
 		asort( $activity_per_page );
@@ -163,10 +163,10 @@ function bb_advanced_register_general_fields() {
 			'advanced_activity',
 			array(
 				'name'                 => 'bb_load_activity_per_request',
-				'label'               => __( 'Activity Loading', 'buddyboss' ),
+				'label'                => __( 'Activity Loading', 'buddyboss' ),
 				'type'                 => 'hidden',
 				/* translators: 1: inline select for number of posts, 2: inline select for load type. */
-				'description'          => __( 'Load %s activity posts at a time using %s', 'buddyboss' ),
+				'description'          => __( 'Load %1$s activity posts at a time using %2$s', 'buddyboss' ),
 				'help_text'            => __( 'Use infinite scrolling to automatically load new posts while scrolling down feeds. Increasing the number of posts retrieved in each request may negatively impact page loading speeds.', 'buddyboss' ),
 				'default'              => bb_get_load_activity_per_request(),
 				'sanitize_callback'    => 'absint',
