@@ -22733,7 +22733,7 @@ table.profile-settings tbody td select {
   position: fixed;
   bottom: 25px;
   right: 35px;
-  max-width: 360px;
+  max-width: 400px;
   width: 100%;
   z-index: 1099;
 }
@@ -22754,14 +22754,15 @@ table.profile-settings tbody td select {
 }
 
 .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item {
+  display: flex;
+  align-items: flex-start;
   background: var(--bb-rl-background-color);
   box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.1);
-  margin: 12px 0;
   border: solid 1px var(--bb-rl-border-secondary-color);
   border-radius: var(--bb-rl-radius-lg);
   padding: var(--bb-rl-space-200);
+  margin: 12px 0;
   z-index: 4;
-  display: flex;
 }
 
 .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .bb-full-link {
@@ -22783,23 +22784,19 @@ table.profile-settings tbody td select {
   border-radius: 5px 0 0 5px;
 }
 
-.bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item:hover {
-  background: var(--bb-rl-background-hover-color);
-}
-
 .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .notification-avatar {
-  margin-right: 22px;
-  min-width: 53px;
-  max-height: 53px;
+  margin-right: var(--bb-rl-space-200);
+  min-width: 32px;
+  max-height: 32px;
   position: relative;
 }
 
 .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .notification-avatar img {
-  max-width: 53px;
+  max-width: 32px;
 }
 
 .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .notification-avatar [class*="bb-icon"]:before {
-  font-weight: 500;
+  font-weight: 700;
 }
 
 .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .notification-avatar .bb-notification-members img {
@@ -22816,18 +22813,18 @@ table.profile-settings tbody td select {
 }
 
 .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .notification-avatar a > i {
-  align-items: center;
-  background-color: var(--bb-rl-text-tertiary-color);
-  border-radius: 50%;
-  bottom: -10px;
-  color: var(--bb-rl-text-white-color);
   display: flex;
-  font-size: 18px;
+  align-items: center;
   justify-content: center;
-  height: 25px;
+  background-color: var(--bb-rl-background-positive-primary-color);
+  color: var(--bb-rl-text-white-color);
+  font-size: 18px;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
   position: absolute;
-  right: -10px;
-  width: 25px;
+  right: 2px;
+  bottom: -8px;
 }
 
 .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .notification-avatar a > i.bb-icon-calendar {
@@ -22836,8 +22833,17 @@ table.profile-settings tbody td select {
 
 .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .notification-content {
   font-size: 14px;
+  font-weight: 500;
   line-height: 1.4;
   align-self: center;
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .notification-content a {
+  color: var(--bb-rl-text-color);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
 }
 
 .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .notification-content span {
@@ -22849,18 +22855,33 @@ table.profile-settings tbody td select {
   display: none;
 }
 
+.bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .notification-content .posted {
+  color: var(--bb-rl-text-secondary-color);
+  font-size: 12px;
+  font-weight: 400;
+}
+
 .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .actions {
-  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bb-rl-background-color);
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  height: 24px;
+  width: 24px;
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-full);
 }
 
 .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .actions a {
-  height: 20px;
-  line-height: 20px;
+  display: flex;
 }
 
 .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .actions a [class*="bb-icon"] {
-  font-size: 20px;
-  color: var(--bb-rl-icon-color);
+  font-size: 16px;
+  color: var(--bb-rl-icon-primary-color);
 }
 
 .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item.close-item {
@@ -22906,9 +22927,12 @@ table.profile-settings tbody td select {
 }
 
 .bb-onscreen-notification-enable .bb-onscreen-notification .bb-remove-all-notification .action-close {
-  background: var(--bb-rl-background-color);
-  border-radius: 30px;
-  padding: 4px 35px 4px 15px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.2;
+  background: var(--bb-rl-background-tertiary-color);
+  border-radius: var(--bb-rl-radius-md);
+  padding: 8px 15px 7px 35px;
   color: var(--bb-rl-text-color);
   align-items: center;
   justify-content: center;
@@ -22920,8 +22944,9 @@ table.profile-settings tbody td select {
 
 .bb-onscreen-notification-enable .bb-onscreen-notification .bb-remove-all-notification .action-close .dashicons {
   display: flex;
+  height: 16px;
   position: absolute;
-  right: 10px;
+  left: 13px;
   top: 50%;
   transform: translate(0, -50%);
 }
@@ -22929,8 +22954,8 @@ table.profile-settings tbody td select {
 .bb-onscreen-notification-enable .bb-onscreen-notification .bb-remove-all-notification .action-close .dashicons:before {
   content: "\e4f6";
   font-family: bb-icons-rl !important;
-  font-size: 18px;
-  line-height: 1.2;
+  font-size: 16px;
+  line-height: 1;
 }
 
 .bb-onscreen-notification-enable .bb-onscreen-notification .bb-remove-all-notification .action-close .bb-for-mobile {
