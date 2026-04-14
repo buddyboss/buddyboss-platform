@@ -63,11 +63,13 @@ function bb_advanced_sanitize_activity_load_type( $value ) {
  * @since BuddyBoss [BBVERSION]
  *
  * @param string $feature_id Feature ID.
- * @param array  $settings   Submitted settings.
+ * @param array  $settings   Submitted settings (required by hook signature, unused here).
  *
  * @return void
  */
-function bb_advanced_capture_telemetry_before_save( $feature_id, $settings ) {
+function bb_advanced_capture_telemetry_before_save( $feature_id, $settings ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+	unset( $settings );
+
 	if ( 'advanced' !== $feature_id ) {
 		return;
 	}
@@ -78,18 +80,29 @@ function bb_advanced_capture_telemetry_before_save( $feature_id, $settings ) {
 add_action( 'bb_admin_settings_before_save_feature', 'bb_advanced_capture_telemetry_before_save', 10, 2 );
 
 /**
- * Store/retrieve the pre-save telemetry value.
+ * Store, retrieve, or clear the pre-save telemetry value.
+ *
+ * Acts as a tiny request-scoped state holder used by the before/after save
+ * pair so the after handler can compare old vs new without re-reading from
+ * the database (which would already contain the new value at that point).
+ *
+ * Pass a non-null string to store. Pass the special sentinel `false` to
+ * clear after consumption — this guarantees that a second save within the
+ * same request never re-uses a stale value from the first save.
+ * Call with no argument (or null) to retrieve.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param string|null $set_value Value to store, or null to retrieve.
+ * @param string|false|null $set_value Value to store, false to clear, null to read.
  *
- * @return string The stored telemetry value.
+ * @return string|null The stored telemetry value or null if unset.
  */
 function bb_advanced_get_pre_save_telemetry( $set_value = null ) {
 	static $old_value = null;
 
-	if ( null !== $set_value ) {
+	if ( false === $set_value ) {
+		$old_value = null;
+	} elseif ( null !== $set_value ) {
 		$old_value = $set_value;
 	}
 
@@ -123,13 +136,23 @@ function bb_advanced_handle_telemetry_save( $feature_id, $settings, $saved ) {
 	$new_value = $saved['bb_advanced_telemetry_reporting'];
 	$old_value = bb_advanced_get_pre_save_telemetry();
 
-	// Dismiss telemetry notice if reporting status has changed.
-	if ( null !== $old_value && $old_value !== $new_value ) {
-		bp_update_option( 'bb_telemetry_notice_dismissed', 1 );
+	// Clear the static immediately so a follow-up save in the same request
+	// does not re-use a stale value if its before-save capture is bypassed.
+	bb_advanced_get_pre_save_telemetry( false );
+
+	// If the before-save capture did not run (e.g. direct REST save or unusual hook
+	// priority), there is no reliable old value to compare against. Skip the
+	// side effects — it is safer to do nothing than to fire a telemetry send
+	// that may duplicate the scheduled cron report.
+	if ( null === $old_value || $old_value === $new_value ) {
+		return;
 	}
 
+	// Dismiss telemetry notice since the user has made an explicit choice.
+	bp_update_option( 'bb_telemetry_notice_dismissed', 1 );
+
 	// Send immediate telemetry report when switching TO "complete" mode.
-	if ( 'complete' === $new_value && ( null === $old_value || $old_value !== $new_value ) && class_exists( 'BB_Telemetry' ) ) {
+	if ( 'complete' === $new_value && class_exists( 'BB_Telemetry' ) ) {
 		// Clear single scheduled cron.
 		if ( wp_next_scheduled( 'bb_telemetry_report_single_cron_event' ) ) {
 			wp_clear_scheduled_hook( 'bb_telemetry_report_single_cron_event' );

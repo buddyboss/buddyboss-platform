@@ -613,6 +613,9 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 		public function bb_telemetry_notice_dismissed() {
 
 			// Capability check before nonce — cheaper, avoids consuming nonce for unauthorized users.
+			// Use manage_options to match the audience that sees the admin notice
+			// (admin_notices fires for any admin viewer; manage_options matches
+			// the network-admin-friendly subset that can dismiss it).
 			if ( ! current_user_can( 'manage_options' ) ) {
 				wp_send_json_error( array( 'error' => __( 'You do not have permission to perform this action.', 'buddyboss' ) ) );
 			}

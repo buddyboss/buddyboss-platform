@@ -325,8 +325,8 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 										if ( 'notice' === field.type ) {
 											updates.description = updatedFields[ field.name ];
 										}
-										// Update is_connected for input_button fields.
-										if ( undefined !== e.detail.is_connected && 'input_button' === field.type ) {
+										// Update is_connected for input_button and bb_verify_popup fields.
+										if ( undefined !== e.detail.is_connected && ( 'input_button' === field.type || 'bb_verify_popup' === field.type ) ) {
 											updates.is_connected = e.detail.is_connected;
 										}
 									}
