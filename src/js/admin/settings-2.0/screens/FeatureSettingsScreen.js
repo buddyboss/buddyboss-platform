@@ -290,26 +290,37 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 	// Updates settings and side panel field defaults so notice fields reflect new connection status.
 	useEffect( function() {
 		function handleFieldValueUpdate( e ) {
-			var updatedFields = e.detail && e.detail.fields;
-			if ( ! updatedFields || 'object' !== typeof updatedFields ) {
+			var updatedFields  = e.detail && e.detail.fields;
+			var updatedOptions = e.detail && e.detail.field_options;
+
+			if ( ( ! updatedFields || 'object' !== typeof updatedFields ) &&
+				( ! updatedOptions || 'object' !== typeof updatedOptions ) ) {
 				return;
 			}
 
-			// Update current settings state.
-			setSettings( function( prev ) {
-				return Object.assign( {}, prev, updatedFields );
-			} );
+			// Update current settings state (values).
+			if ( updatedFields && 'object' === typeof updatedFields ) {
+				setSettings( function( prev ) {
+					return Object.assign( {}, prev, updatedFields );
+				} );
+			}
 
 			// Update field data in side panels so notice/other fields render updated content.
 			// Notice fields render from `description`, other fields from `default`.
+			// When field_options is provided, replace the field's options array (used by select fields).
 			setSidePanels( function( prevPanels ) {
 				return prevPanels.map( function( panel ) {
 					return Object.assign( {}, panel, {
 						sections: ( panel.sections || [] ).map( function( section ) {
 							return Object.assign( {}, section, {
 								fields: ( section.fields || [] ).map( function( field ) {
-									if ( undefined !== updatedFields[ field.name ] ) {
-										var updates = { default: updatedFields[ field.name ] };
+									var updates  = null;
+									var hasValue = updatedFields && undefined !== updatedFields[ field.name ];
+									var hasOpts  = updatedOptions && Array.isArray( updatedOptions[ field.name ] );
+
+									if ( hasValue ) {
+										updates                 = updates || {};
+										updates.default         = updatedFields[ field.name ];
 										// Notice fields render from description, so update that too.
 										if ( 'notice' === field.type ) {
 											updates.description = updatedFields[ field.name ];
@@ -318,9 +329,14 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 										if ( undefined !== e.detail.is_connected && 'input_button' === field.type ) {
 											updates.is_connected = e.detail.is_connected;
 										}
-										return Object.assign( {}, field, updates );
 									}
-									return field;
+
+									if ( hasOpts ) {
+										updates         = updates || {};
+										updates.options = updatedOptions[ field.name ];
+									}
+
+									return updates ? Object.assign( {}, field, updates ) : field;
 								} ),
 							} );
 						} ),

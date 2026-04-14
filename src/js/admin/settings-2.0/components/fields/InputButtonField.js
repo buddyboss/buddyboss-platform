@@ -178,11 +178,13 @@ export function InputButtonField( props ) {
 					}
 
 					// Dispatch event to update related notice fields (e.g. connection_status).
-					if ( data.updated_fields ) {
+					// Also support field_options for dynamically refreshing select field options.
+					if ( data.updated_fields || data.field_options ) {
 						var updateEvent = new CustomEvent( BB_EVENTS.FIELD_VALUE_UPDATE, {
 							detail: {
-								fields: data.updated_fields,
-								is_connected: data.is_connected,
+								fields:        data.updated_fields || {},
+								field_options: data.field_options || null,
+								is_connected:  data.is_connected,
 							},
 						} );
 						window.dispatchEvent( updateEvent );

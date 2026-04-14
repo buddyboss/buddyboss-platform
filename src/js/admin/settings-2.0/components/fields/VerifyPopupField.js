@@ -297,9 +297,15 @@ export function VerifyPopupField( props ) {
 					}
 
 					// Update hidden fields (e.g. _is_connected) with response value.
-					if ( data.updated_fields ) {
+					// Also support field_options for dynamically refreshing select field options
+					// (e.g. bucket dropdowns after credential verification).
+					if ( data.updated_fields || data.field_options ) {
 						window.dispatchEvent( new CustomEvent( BB_EVENTS.FIELD_VALUE_UPDATE, {
-							detail: { fields: data.updated_fields, is_connected: responseConnected },
+							detail: {
+								fields:        data.updated_fields || {},
+								field_options: data.field_options || null,
+								is_connected:  responseConnected,
+							},
 						} ) );
 					}
 
