@@ -1578,22 +1578,16 @@ function bp_activity_get_user_mentionname( $user_id ) {
  * user_login properties.
  * @return string $mentionname Formatted mention name.
  */
-function bb_activity_format_mentionname( $user_data ): string {
-	$mentionname = '';
-
-	if ( is_object( $user_data ) ) {
-		if ( bp_is_username_compatibility_mode() ) {
-			$mentionname = str_replace(
-				' ',
-				'-',
-				$user_data->user_login
-			);
-		} else {
-			$mentionname = get_user_meta( $user_data->ID, 'nickname', true );
-		}
+function bb_activity_format_mentionname( $user_data ) {
+	if ( ! is_object( $user_data ) || empty( $user_data->ID ) || empty( $user_data->user_login ) ) {
+		return '';
 	}
 
-	return $mentionname;
+	if ( bp_is_username_compatibility_mode() ) {
+		return str_replace( ' ', '-', $user_data->user_login );
+	}
+
+	return get_user_meta( $user_data->ID, 'nickname', true );
 }
 
 /**
