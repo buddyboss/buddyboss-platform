@@ -65,7 +65,7 @@ $move_type              = ( 0 < $group_id ) ? 'group' : 'profile';
 					}
 				}
 				if ( $can_delete ) {
-					$item_id = ( bp_is_active( 'activity' ) ) ? ( bp_get_activity_comment_id() ?? bp_get_activity_id() ) : 0;
+					$item_id = bp_is_active( 'activity' ) ? ( bp_get_activity_comment_id() ?: bp_get_activity_id() ) : 0;
 					?>
 					<li class="bb_rl_delete_file bb-rl-document-action-class">
 						<a class="bb-rl-document-file-delete" data-item-activity-id="<?php echo esc_attr( $item_id ); ?>" data-item-from="activity" data-item-preview-attachment-id="<?php echo esc_attr( $document_attachment_id ); ?>" data-item-attachment-id="<?php echo esc_attr( $document_attachment_id ); ?>" data-item-id="<?php echo esc_attr( $document_id ); ?>" data-type="<?php echo esc_attr( 'document' ); ?>" href="#"><?php esc_attr_e( 'Delete', 'buddyboss' ); ?></a>
