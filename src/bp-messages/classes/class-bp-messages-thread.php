@@ -1083,8 +1083,18 @@ class BP_Messages_Thread {
 				// For deleted users - paginated iteration to safely fetch all records
 				// without loading the entire result set into memory at once.
 				$current_user_participants = array();
-				$batch_size                = 100;
-				$batch_page                = 1;
+
+				/**
+				 * Filters the batch size for paginated recipient/thread lookups.
+				 * Lower values use less memory per batch; higher values reduce
+				 * the number of DB round-trips.
+				 *
+				 * @since BuddyBoss [BBVERSION]
+				 *
+				 * @param int $batch_size Default batch size. Default 500.
+				 */
+				$batch_size = (int) apply_filters( 'bb_messages_thread_search_batch_size', 500 );
+				$batch_page = 1;
 				do {
 					$batch_query = self::get(
 						array(
