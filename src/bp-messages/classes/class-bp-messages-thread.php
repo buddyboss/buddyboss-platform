@@ -1083,7 +1083,7 @@ class BP_Messages_Thread {
 				// For deleted users - paginated iteration to safely fetch all records
 				// without loading the entire result set into memory at once.
 				$current_user_participants = array();
-				$batch_size                = 1000;
+				$batch_size                = 100;
 				$batch_page                = 1;
 				do {
 					$batch_query = self::get(
