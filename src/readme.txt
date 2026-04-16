@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.8.1
 Requires PHP: 7.4.0
-Stable tag: 2.20.0
+Stable tag: 2.21.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,18 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 2.21.0 =
+* Bug: Activity - Fixed an issue where deleting a single media item from an activity with multiple media temporarily removed the entire activity
+* Bug: Activity - Fixed an issue where replies to spammed activity comments were not displayed while still being counted
+* Bug: Core - Fixed incorrect API documentation by updating the method from GET to POST
+* Bug: Media - Fixed a security issue by enforcing proper permission checks to prevent unauthorized album edits
+* Bug: Media - Fixed duplicate AJAX calls for document folder and media album views when using the move action with page request setting enabled
+* Bug: Messages - Fixed a PHP 8+ fatal error in Messages caused by invalid message data handling in avatar rendering
+* Bug: Notifications - Fixed an issue where activity push notifications were not sent when a blog post was published
+* Bug: ReadyLaunch - Fixed an issue where document folder and file privacy could not be changed when ReadyLaunch was enabled
+* Bug: ReadyLaunch - Fixed an issue where ReadyLaunch styles loaded on login and registration pages even when disabled
+* Bug: ReadyLaunch - Fixed Connections and My Network widgets to hide when no data is available, show correct user data, and resolved ReadyLaunch sidebar settings mismatch
 
 = 2.20.0 =
 * Bug: Activity - Fixed an issue where the Reply button was missing on comments that reached the maximum nesting level, preventing users from continuing the conversation in the thread

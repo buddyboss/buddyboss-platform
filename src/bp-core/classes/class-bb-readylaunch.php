@@ -83,7 +83,26 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			$this->load_template_stack();
-			$this->load_login_registration_integration();
+
+			/*
+			 * Only load ReadyLaunch login/registration integration when enabled in settings.
+			 * When disabled, the theme's default login/register styling and templates are used.
+			 *
+			 * @since BuddyBoss 2.21.0
+			 */
+			if ( $this->bb_rl_is_page_enabled_for_integration( 'registration' ) ) {
+				$this->load_login_registration_integration();
+			} elseif (
+				isset( $_SERVER['SCRIPT_NAME'] ) &&
+				false !== stripos( wp_login_url(), $_SERVER['SCRIPT_NAME'] ) &&
+				! $this->bb_rl_is_page_enabled_for_integration( 'registration' )
+			) {
+				// On wp-login.php with registration disabled, restore the default
+				// template stack so bp_locate_template_asset() finds Platform CSS
+				// (buddypress.css, bb-icons.css) in the standard template directory.
+				$this->bb_rl_restore_default_template_stack();
+			}
+
 			$this->load_hooks();
 
 			// Added support for Forums integration.
@@ -240,6 +259,20 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		}
 
 		/**
+		 * Restore the default BuddyBoss/BuddyPress template stack.
+		 *
+		 * Removes ReadyLaunch template locations and re-adds the standard ones so that
+		 * bp_locate_template() and bp_locate_template_asset() resolve files from the
+		 * default template directories instead of ReadyLaunch.
+		 *
+		 * @since BuddyBoss 2.21.0
+		 */
+		protected function bb_rl_restore_default_template_stack() {
+			remove_filter( 'bp_get_template_stack', array( $this, 'add_template_stack' ), PHP_INT_MAX );
+			add_filter( 'bp_get_template_stack', 'bp_add_template_stack_locations' );
+		}
+
+		/**
 		 * Load hooks for ReadyLaunch.
 		 *
 		 * @since BuddyBoss 2.9.00
@@ -327,6 +360,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			add_filter( 'bp_nouveau_get_submit_button', array( $this, 'bb_rl_modify_bp_nouveau_get_submit_button' ) );
+
+			add_action( 'wp_ajax_bb_rl_document_rename_and_privacy_update', array( $this, 'bb_rl_document_rename_and_privacy_update' ) );
 		}
 
 		/**
@@ -953,9 +988,26 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				return $template;
 			}
 
+			// @since BuddyBoss 2.21.0 Only use ReadyLaunch register template when setting is enabled.
 			if ( bp_is_register_page() ) {
-				$this->bb_rl_required_load();
-				return bp_locate_template( 'register.php' );
+				if ( $this->bb_rl_is_page_enabled_for_integration( 'registration' ) ) {
+					$this->bb_rl_required_load();
+					return bp_locate_template( 'register.php' );
+				}
+
+				// Login & Registration is disabled — restore default template stack
+				// so BuddyPress templates are used instead of ReadyLaunch.
+				$this->bb_rl_restore_default_template_stack();
+
+				// Use the theme's buddypress.php which provides the full page
+				// wrapper (header, logo, footer) for the register form.
+				$theme_bp_template = locate_template( 'buddypress.php' );
+				if ( $theme_bp_template ) {
+					return $theme_bp_template;
+				}
+
+				// Fallback: let WordPress handle it normally.
+				return $template;
 			}
 
 			if ( bp_is_activation_page() ) {
@@ -3044,14 +3096,22 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				bp_update_option( 'bb_rl_activity_sidebars', $activity_sidebars );
 			}
 
+			$saved_activity_sidebars = bp_get_option( 'bb_rl_activity_sidebars', $activity_sidebars );
+
+			// If saved data is a simple array (numeric keys), convert to boolean map.
+			if ( is_array( $saved_activity_sidebars ) && ! empty( $saved_activity_sidebars ) && isset( $saved_activity_sidebars[0] ) ) {
+				$converted = array();
+				foreach ( array_keys( $activity_sidebars ) as $key ) {
+					$converted[ $key ] = in_array( $key, $saved_activity_sidebars, true );
+				}
+				$saved_activity_sidebars = $converted;
+			}
+
 			$settings['bb_rl_activity_sidebars'] = array_map(
 				function ( $value ) {
 					return (bool) $value;
 				},
-				bp_get_option(
-					'bb_rl_activity_sidebars',
-					$activity_sidebars
-				)
+				wp_parse_args( $saved_activity_sidebars, $activity_sidebars )
 			);
 
 			$member_sidebar = array( 'complete_profile' => true );
@@ -3068,10 +3128,18 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				bp_update_option( 'bb_rl_member_profile_sidebars', $member_sidebar );
 			}
 
-			$member_sidebar = wp_parse_args(
-				bp_get_option( 'bb_rl_member_profile_sidebars', $member_sidebar ),
-				$member_sidebar
-			);
+			$saved_option = bp_get_option( 'bb_rl_member_profile_sidebars', $member_sidebar );
+
+			// If saved data is a simple array (numeric keys), convert to a boolean map.
+			if ( is_array( $saved_option ) && ! empty( $saved_option ) && isset( $saved_option[0] ) ) {
+				$converted = array();
+				foreach ( array_keys( $member_sidebar ) as $key ) {
+					$converted[ $key ] = in_array( $key, $saved_option, true );
+				}
+				$saved_option = $converted;
+			}
+
+			$member_sidebar = wp_parse_args( $saved_option, $member_sidebar );
 
 			$settings['bb_rl_member_profile_sidebars'] = array_map(
 				function ( $value ) {
@@ -3089,14 +3157,22 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				bp_update_option( 'bb_rl_groups_sidebars', $group_sidebars );
 			}
 
+			$saved_group_sidebars = bp_get_option( 'bb_rl_groups_sidebars', $group_sidebars );
+
+			// If saved data is a simple array (numeric keys), convert to boolean map.
+			if ( is_array( $saved_group_sidebars ) && ! empty( $saved_group_sidebars ) && isset( $saved_group_sidebars[0] ) ) {
+				$converted = array();
+				foreach ( array_keys( $group_sidebars ) as $key ) {
+					$converted[ $key ] = in_array( $key, $saved_group_sidebars, true );
+				}
+				$saved_group_sidebars = $converted;
+			}
+
 			$settings['bb_rl_groups_sidebars'] = array_map(
 				function ( $value ) {
 					return (bool) $value;
 				},
-				bp_get_option(
-					'bb_rl_groups_sidebars',
-					$group_sidebars
-				)
+				wp_parse_args( $saved_group_sidebars, $group_sidebars )
 			);
 
 			// Menu Settings.
@@ -4626,6 +4702,172 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$visibility_levels['adminsonly']['label'] = __( 'Only me', 'buddyboss' );
 
 			return $visibility_levels;
+		}
+
+		/**
+		 * Handle document/folder rename and privacy update in a single AJAX request.
+		 *
+		 * @since BuddyBoss 2.21.0
+		 */
+		public function bb_rl_document_rename_and_privacy_update() {
+			$response = array(
+				'feedback' => esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' ),
+			);
+
+			// Bail if not a POST action.
+			if ( ! bp_is_post_request() ) {
+				wp_send_json_error( $response );
+			}
+
+			// Check if document component is active.
+			if ( ! bp_is_active( 'document' ) ) {
+				wp_send_json_error( $response );
+			}
+
+			if ( ! is_user_logged_in() ) {
+				$response['feedback'] = esc_html__( 'Please login to perform this action.', 'buddyboss' );
+				wp_send_json_error( $response );
+			}
+
+			// Nonce check.
+			$nonce = bb_filter_input_string( INPUT_POST, '_wpnonce' );
+			if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, 'bp_nouveau_media' ) ) {
+				wp_send_json_error( $response );
+			}
+
+			$document_id            = filter_input( INPUT_POST, 'document_id', FILTER_VALIDATE_INT );
+			$attachment_document_id = filter_input( INPUT_POST, 'attachment_document_id', FILTER_VALIDATE_INT );
+			$type                   = bb_filter_input_string( INPUT_POST, 'document_type' );
+			$name                   = bb_filter_input_string( INPUT_POST, 'name' );
+			$privacy                = bb_filter_input_string( INPUT_POST, 'privacy' );
+			$update_name            = filter_input( INPUT_POST, 'update_name', FILTER_VALIDATE_BOOLEAN );
+			$update_privacy         = filter_input( INPUT_POST, 'update_privacy', FILTER_VALIDATE_BOOLEAN );
+
+			if ( empty( $document_id ) || empty( $type ) ) {
+				wp_send_json_error( $response );
+			}
+
+			$result = array(
+				'document_id' => $document_id,
+				'type'        => $type,
+			);
+
+			// Handle document type.
+			if ( 'document' === $type ) {
+				// Check permission.
+				if ( ! bp_document_user_can_edit( $document_id ) ) {
+					$response['feedback'] = esc_html__( 'You don\'t have permission to edit this document.', 'buddyboss' );
+					wp_send_json_error( $response );
+				}
+
+				// Update name if requested.
+				if ( $update_name && ! empty( $name ) ) {
+					$renamed = bp_document_rename_file( $document_id, $attachment_document_id, $name );
+					if ( isset( $renamed['document_id'] ) && $renamed['document_id'] > 0 ) {
+						$result['name']    = $name;
+						$result['renamed'] = true;
+					} else {
+						$response['feedback'] = is_string( $renamed ) && '' !== $renamed ? $renamed : esc_html__( 'Failed to rename document.', 'buddyboss' );
+						wp_send_json_error( $response );
+					}
+				}
+
+				// Update privacy if requested.
+				if ( $update_privacy && ! empty( $privacy ) ) {
+					$document_visibilities = bp_document_get_visibility_levels();
+					if ( ! array_key_exists( $privacy, $document_visibilities ) ) {
+						$response['feedback'] = esc_html__( 'Invalid privacy status.', 'buddyboss' );
+						wp_send_json_error( $response );
+					}
+
+					$document_object = new BP_Document( $document_id );
+					if (
+						'grouponly' !== $privacy &&
+						! empty( $document_object->id ) &&
+						0 === (int) $document_object->group_id &&
+						0 === (int) $document_object->folder_id
+					) {
+						bp_document_update_privacy( $document_id, $privacy, 'document' );
+						$result['privacy']         = $privacy;
+						$result['privacy_label']   = isset( $document_visibilities[ $privacy ] ) ? $document_visibilities[ $privacy ] : '';
+						$result['privacy_updated'] = true;
+					}
+				}
+
+				// Only generate document HTML if name was updated (needed for updated file links).
+				// When only privacy changes, skip HTML generation for better performance and return URL same as core ajax method.
+				if ( $update_name ) {
+					ob_start();
+					if (
+						bp_has_document(
+							array(
+								'include'  => $document_id,
+								'per_page' => 0,
+							)
+						)
+					) {
+						while ( bp_document() ) {
+							bp_the_document();
+							bp_get_template_part( 'document/document-entry' );
+						}
+					}
+					$result['document'] = ob_get_clean();
+				} else {
+					// For privacy only updates, return URL same as core ajax method.
+					$document_data = new BP_Document( $document_id );
+					if ( ! empty( $document_data->attachment_id ) ) {
+						$result['url'] = bp_document_download_link( $document_data->attachment_id, $document_id );
+					}
+				}
+			} else {
+				// Handle folder type.
+				// Check permission.
+				if ( ! bp_folder_user_can_edit( $document_id ) ) {
+					$response['feedback'] = esc_html__( 'You don\'t have permission to edit this folder.', 'buddyboss' );
+					wp_send_json_error( $response );
+				}
+
+				// Update name if requested.
+				if ( $update_name && ! empty( $name ) ) {
+					$renamed = bp_document_rename_folder( $document_id, $name );
+					if ( $renamed > 0 ) {
+						$result['name']    = $name;
+						$result['renamed'] = true;
+					} else {
+						$response['feedback'] = esc_html__( 'Failed to rename folder.', 'buddyboss' );
+						wp_send_json_error( $response );
+					}
+				}
+
+				// Update privacy if requested.
+				if ( $update_privacy && ! empty( $privacy ) ) {
+					$document_visibilities = bp_document_get_visibility_levels();
+					if ( ! array_key_exists( $privacy, $document_visibilities ) ) {
+						$response['feedback'] = esc_html__( 'Invalid privacy status.', 'buddyboss' );
+						wp_send_json_error( $response );
+					}
+
+					$folder_object = new BP_Document_Folder( $document_id );
+					if (
+						'grouponly' !== $privacy &&
+						! empty( $folder_object->id ) &&
+						0 === (int) $folder_object->group_id &&
+						0 === (int) $folder_object->parent
+					) {
+						bp_document_update_privacy( $document_id, $privacy, 'folder' );
+						$result['privacy']         = $privacy;
+						$result['privacy_label']   = isset( $document_visibilities[ $privacy ] ) ? $document_visibilities[ $privacy ] : '';
+						$result['privacy_updated'] = true;
+					}
+				}
+			}
+
+			wp_send_json_success(
+				array(
+					'message'  => 'success',
+					'response' => $result,
+				)
+			);
 		}
 	}
 }
