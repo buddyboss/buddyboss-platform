@@ -644,8 +644,23 @@ class BP_Document_Folder {
 		$folders = $wpdb->get_results( "SELECT * FROM {$bp->document->table_name_folder} {$where_sql}" ); // db call ok; no-cache ok;
 
 		if ( ! empty( $r['id'] ) && empty( $r['date_created'] ) && empty( $r['group_id'] ) && empty( $r['user_id'] ) ) {
-			$recursive_folders = $wpdb->get_results( "SELECT * FROM {$bp->document->table_name_folder} WHERE FIND_IN_SET(ID,(SELECT GROUP_CONCAT(lv SEPARATOR ',') FROM ( SELECT @pv:=(SELECT GROUP_CONCAT(id SEPARATOR ',') FROM {$bp->document->table_name_folder} WHERE parent IN (@pv)) AS lv FROM {$bp->document->table_name_folder} JOIN (SELECT @pv:= {$r['id']})tmp WHERE parent IN (@pv)) a))" ); // db call ok; no-cache ok;
-			$folders           = array_merge( $folders, $recursive_folders );
+			// Use iterative BFS to find descendants instead of unreliable
+			// recursive GROUP_CONCAT/FIND_IN_SET/session variable approach.
+			$descendant_ids = array();
+			$queue          = array( absint( $r['id'] ) );
+
+			while ( ! empty( $queue ) ) {
+				$ids_sql  = implode( ',', array_map( 'absint', $queue ) );
+				$children = $wpdb->get_results( "SELECT * FROM {$bp->document->table_name_folder} WHERE parent IN ({$ids_sql})" ); // db call ok; no-cache ok;
+
+				if ( ! empty( $children ) ) {
+					$folders        = array_merge( $folders, $children );
+					$descendant_ids = array_merge( $descendant_ids, wp_list_pluck( $children, 'id' ) );
+					$queue          = wp_list_pluck( $children, 'id' );
+				} else {
+					$queue = array();
+				}
+			}
 		}
 
 		/**
@@ -659,18 +674,13 @@ class BP_Document_Folder {
 		do_action_ref_array( 'bp_document_folder_before_delete', array( $folders, $r ) );
 
 		if ( ! empty( $r['id'] ) && empty( $r['date_created'] ) && empty( $r['group_id'] ) && empty( $r['user_id'] ) ) {
-			$recursive_folders = $wpdb->get_results( "SELECT * FROM {$bp->document->table_name_folder} WHERE FIND_IN_SET(ID,(SELECT GROUP_CONCAT(lv SEPARATOR ',') FROM ( SELECT @pv:=(SELECT GROUP_CONCAT(id SEPARATOR ',') FROM {$bp->document->table_name_folder} WHERE parent IN (@pv)) AS lv FROM {$bp->document->table_name_folder} JOIN (SELECT @pv:= {$r['id']})tmp WHERE parent IN (@pv)) a))" ); // db call ok; no-cache ok;
-			$folders           = array_merge( $folders, $recursive_folders );
-
 			// Pluck the document folders IDs out of the $folders array.
 			$foldr_ids = wp_parse_id_list( wp_list_pluck( $folders, 'id' ) );
 
-			// delete the document associated with folder.
+			// Bulk delete all folders in one query instead of per-row DELETE loop.
 			if ( ! empty( $foldr_ids ) ) {
-				foreach ( $foldr_ids as $folder_id ) {
-					// Attempt to delete document folders from the database.
-					$deleted = $wpdb->query( "DELETE FROM {$bp->document->table_name_folder} where id = {$folder_id}" ); // db call ok; no-cache ok;
-				}
+				$ids_sql = implode( ',', array_map( 'absint', $foldr_ids ) );
+				$deleted = $wpdb->query( "DELETE FROM {$bp->document->table_name_folder} WHERE id IN ({$ids_sql})" ); // db call ok; no-cache ok;
 			}
 		} else {
 			// Attempt to delete document folders from the database.

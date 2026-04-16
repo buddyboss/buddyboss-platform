@@ -200,6 +200,17 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 			$members      = array_values( $member_query->results );
 
 			$retval = array();
+
+			// Batch-prime user meta caches to avoid N+1 queries per member.
+			if ( ! empty( $members ) ) {
+				$member_ids = wp_list_pluck( $members, 'ID' );
+				update_meta_cache( 'user', $member_ids );
+
+				if ( bp_is_active( 'xprofile' ) && class_exists( 'BP_XProfile_ProfileData' ) ) {
+					BP_XProfile_ProfileData::get_data_for_users( $member_ids );
+				}
+			}
+
 			foreach ( $members as $member ) {
 				$retval[] = $this->prepare_response_for_collection(
 					$this->members_endpoint->prepare_item_for_response( $member, $request )
@@ -220,6 +231,16 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 
 			// Get our members.
 			$members = groups_get_group_members( $args );
+
+			// Batch-prime user meta caches to avoid N+1 queries per member.
+			if ( ! empty( $members['members'] ) ) {
+				$member_ids = wp_list_pluck( $members['members'], 'user_id' );
+				update_meta_cache( 'user', $member_ids );
+
+				if ( bp_is_active( 'xprofile' ) && class_exists( 'BP_XProfile_ProfileData' ) ) {
+					BP_XProfile_ProfileData::get_data_for_users( $member_ids );
+				}
+			}
 
 			foreach ( $members['members'] as $member ) {
 				$retval[] = $this->prepare_response_for_collection(
