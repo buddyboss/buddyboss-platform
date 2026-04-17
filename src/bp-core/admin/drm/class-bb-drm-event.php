@@ -266,6 +266,12 @@ class BB_DRM_Event {
 			array( '%d' )
 		);
 
+		// Clear cache when event is destroyed.
+		if ( $result ) {
+			$cache_key = 'bb_drm_latest_' . md5( $this->event );
+			wp_cache_delete( $cache_key, 'bb_drm_events' );
+		}
+
 		return (bool) $result;
 	}
 
@@ -328,6 +334,10 @@ class BB_DRM_Event {
 	/**
 	 * Get the latest event for a given event name.
 	 *
+	 * Uses multi-level caching to prevent duplicate database queries:
+	 * 1. Static cache (per-request)
+	 * 2. WordPress object cache (persistent)
+	 *
 	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param string $event Event name.
@@ -336,6 +346,24 @@ class BB_DRM_Event {
 	public static function latest( $event ) {
 		global $wpdb;
 
+		// Level 1: Static cache for per-request performance.
+		static $cache = array();
+
+		// Return cached result if available.
+		if ( array_key_exists( $event, $cache ) ) {
+			return $cache[ $event ];
+		}
+
+		// Level 2: WordPress object cache for persistence across calls.
+		$cache_key = 'bb_drm_latest_' . md5( $event );
+		$cached    = wp_cache_get( $cache_key, 'bb_drm_events' );
+
+		if ( false !== $cached ) {
+			$cache[ $event ] = $cached;
+			return $cached;
+		}
+
+		// Level 3: Query database.
 		$table_name = self::get_table_name();
 		$result     = $wpdb->get_row(
 			$wpdb->prepare(
@@ -345,9 +373,19 @@ class BB_DRM_Event {
 		);
 
 		if ( $result ) {
-			return new self( $result );
+			$event_obj = new self( $result );
+			$cache[ $event ] = $event_obj;
+			
+			// Cache in WordPress object cache for 5 minutes.
+			wp_cache_set( $cache_key, $event_obj, 'bb_drm_events', 300 );
+			
+			return $event_obj;
 		}
 
+		// Cache null result too to prevent repeated queries for non-existent events.
+		$cache[ $event ] = null;
+		wp_cache_set( $cache_key, null, 'bb_drm_events', 300 );
+		
 		return null;
 	}
 
