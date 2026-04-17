@@ -2542,7 +2542,7 @@ class BP_Activity_Activity {
 	 * Used to identify orphaned comments (non-spam replies to spam comments)
 	 * that should appear at root level when their parent is marked as spam.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 2.21.0
 	 *
 	 * @param int $activity_id The activity ID to get spam comment IDs for.
 	 *

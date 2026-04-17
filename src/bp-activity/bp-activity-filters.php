@@ -3669,7 +3669,7 @@ add_action( 'bp_activity_post_type_published', 'bb_activity_send_notification_fo
  * component === 'blogs' and fire `bp_activity_post_type_published` with a different
  * hook signature. This function bridges that gap.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 2.21.0
  *
  * @param int     $activity_id   ID of the newly published activity item.
  * @param WP_Post $post          Post object.

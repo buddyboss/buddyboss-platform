@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.8.1
 Requires PHP: 7.4.0
-Stable tag: 2.20.0
+Stable tag: 2.21.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -57,7 +57,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
-= 2.20.1 =
+= 2.21.0 =
 * Bug: Activity - Fixed an issue where deleting a single media item from an activity with multiple media temporarily removed the entire activity
 * Bug: Activity - Fixed an issue where replies to spammed activity comments were not displayed while still being counted
 * Bug: Core - Fixed incorrect API documentation by updating the method from GET to POST
