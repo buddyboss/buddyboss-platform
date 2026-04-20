@@ -676,10 +676,6 @@ class BB_Admin_Settings_Ajax {
 				'icon_only'            => ! empty( $field['icon_only'] ),
 				'icon'                 => ! empty( $field['icon'] ) ? sanitize_text_field( $field['icon'] ) : null,
 				'icon_label'           => ! empty( $field['icon_label'] ) ? sanitize_text_field( $field['icon_label'] ) : null,
-				// Custom bucket-select (offload-media) props: inline resync icon button.
-				'resync_action'        => ! empty( $field['resync_action'] ) ? sanitize_key( $field['resync_action'] ) : null,
-				'resync_label'         => ! empty( $field['resync_label'] ) ? sanitize_text_field( $field['resync_label'] ) : null,
-				'resync_icon'          => ! empty( $field['resync_icon'] ) ? sanitize_text_field( $field['resync_icon'] ) : null,
 				'button_url'           => ! empty( $field['button_url'] ) ? esc_url_raw( $field['button_url'] ) : null,
 				'button_target'        => $field['button_target'] ?? null,
 				// Empty state fields (centered card with icon + title + description + button).
