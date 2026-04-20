@@ -688,7 +688,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 						 */
 						$info = apply_filters(
 							'bb_readylaunch_primary_nav_courses_info',
-							array( 'is_active' => false, 'url' => '' )
+							array(
+								'is_active' => false,
+								'url'       => '',
+							)
 						);
 
 						if ( ! empty( $info['is_active'] ) ) {
