@@ -429,9 +429,23 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			add_filter( 'paginate_links_output', array( $this, 'bb_rl_filter_paginate_links_output' ), 10, 2 );
 
-			if ( class_exists( 'SFWD_LMS' ) ) {
-				require_once buddypress()->compatibility_dir . '/class-bb-readylaunch-learndash-helper.php';
-			}
+			/**
+			 * Fires after ReadyLaunch has finished its own init work, so
+			 * integrations can attach their ReadyLaunch-specific overrides
+			 * (template filters, enqueues, meta-boxes, etc.) at the right
+			 * moment — i.e. AFTER bb_rl_load() but before LearnDash/theme
+			 * templates render.
+			 *
+			 * The LearnDash integration (buddyboss-learndash) used to live
+			 * at buddypress()->compatibility_dir . '/class-bb-readylaunch-learndash-helper.php'
+			 * inside Platform. It now hooks this action from inside the
+			 * addon instead.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param BB_Readylaunch $readylaunch The current ReadyLaunch instance.
+			 */
+			do_action( 'bb_integration_readylaunch_loaded', $this );
 		}
 
 		/**
