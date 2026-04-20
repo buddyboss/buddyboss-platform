@@ -556,7 +556,6 @@ class BuddyPress {
 		require $this->plugin_dir . 'bp-core/bp-core-customizer-email.php';
 		require $this->plugin_dir . 'bp-core/bp-core-emails.php';
 		require $this->plugin_dir . 'bp-core/bp-core-wp-emails.php';
-		require $this->plugin_dir . 'bp-core/bp-core-learndash-emails.php';
 		require $this->plugin_dir . 'bp-core/bp-core-profile-search.php';
 		require $this->plugin_dir . 'bp-core/bp-core-gdpr.php';
 		require $this->plugin_dir . 'bp-core/bp-core-rest-api.php';
