@@ -666,15 +666,34 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 					} elseif ( 'courses' === $key ) {
 						$item['label'] = __( 'Courses', 'buddyboss' );
 						$item['url']   = '';
-						if ( class_exists( 'SFWD_LMS' ) ) {
-							$options = bp_get_option( 'bp_ld_sync_settings', array() );
-							if (
-								! empty( $options['buddypress']['enabled'] ) ||
-								! empty( $options['learndash']['enabled'] )
-							) {
-								$is_active   = true;
-								$item['url'] = get_post_type_archive_link( learndash_get_post_type_slug( 'course' ) );
-							}
+
+						/**
+						 * Filter the courses nav resolution in ReadyLaunch's
+						 * primary nav. Integrations return a modified array
+						 * with 'is_active' => true and 'url' => <archive URL>
+						 * to claim ownership of the courses nav item.
+						 *
+						 * First subscriber whose return sets is_active=true
+						 * wins, by natural filter ordering. Subscribers that
+						 * don't apply should return $info unchanged.
+						 *
+						 * LearnDash (buddyboss-learndash) subscribes to this
+						 * filter in BBLDVERSION. Tutor LMS and MemberPress
+						 * Courses are still resolved inline below until
+						 * their own addon extractions land.
+						 *
+						 * @since BuddyBoss [BBVERSION]
+						 *
+						 * @param array $info { is_active: bool, url: string }.
+						 */
+						$info = apply_filters(
+							'bb_readylaunch_primary_nav_courses_info',
+							array( 'is_active' => false, 'url' => '' )
+						);
+
+						if ( ! empty( $info['is_active'] ) ) {
+							$is_active   = true;
+							$item['url'] = ! empty( $info['url'] ) ? $info['url'] : '';
 						} elseif (
 							function_exists( 'tutor_utils' ) &&
 							function_exists( 'bb_tutorlms_enable' ) &&
@@ -1460,23 +1479,32 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @return bool True if the sidebar is enabled for courses, false otherwise.
 		 */
 		public function bb_is_sidebar_enabled_for_courses() {
-			$is_active = false;
-			if ( class_exists( 'SFWD_LMS' ) ) {
-				$options = bp_get_option( 'bp_ld_sync_settings', array() );
+			/**
+			 * Allow integrations to claim courses-sidebar activation.
+			 *
+			 * LearnDash (buddyboss-learndash) subscribes in BBLDVERSION.
+			 * Tutor LMS and MemberPress Courses continue to be resolved
+			 * inline below until their own addon extractions land.
+			 *
+			 * Subscribers return true to claim is_active; false/null to
+			 * defer. First truthy wins by filter priority order.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param bool $is_active Current active state (default false).
+			 */
+			$is_active = (bool) apply_filters( 'bb_readylaunch_courses_sidebar_is_active', false );
+
+			if ( ! $is_active ) {
 				if (
-					! empty( $options['buddypress']['enabled'] ) ||
-					! empty( $options['learndash']['enabled'] )
+					function_exists( 'tutor_utils' ) &&
+					function_exists( 'bb_tutorlms_enable' ) &&
+					bb_tutorlms_enable()
 				) {
 					$is_active = true;
+				} elseif ( class_exists( 'memberpress\courses\helpers\Courses' ) ) {
+					$is_active = true;
 				}
-			} elseif (
-				function_exists( 'tutor_utils' ) &&
-				function_exists( 'bb_tutorlms_enable' ) &&
-				bb_tutorlms_enable()
-			) {
-				$is_active = true;
-			} elseif ( class_exists( 'memberpress\courses\helpers\Courses' ) ) {
-				$is_active = true;
 			}
 
 			// Get sidebar setting.
