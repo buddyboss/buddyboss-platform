@@ -22,7 +22,15 @@ const scssRule = {
     use: [
         'style-loader',
         'css-loader',
-        'sass-loader',
+        {
+            loader: 'sass-loader',
+            options: {
+                sassOptions: {
+                    // TODO: Remove silenceDeprecations once SCSS files are updated to Dart Sass syntax
+                    silenceDeprecations: ['import', 'global-builtin', 'color-functions', 'slash-div', 'legacy-js-api', 'if-function'],
+                },
+            },
+        },
     ],
 };
 
