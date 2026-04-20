@@ -1,0 +1,32 @@
+name: PHP Compatibility
+on:
+  pull_request:
+    branches:
+      - '**'
+    paths:
+      - '.github/workflows/compatibility.yml'
+      - '**.css'
+      - '**.scss'
+      - '**.js'
+      - '**.php'
+      - 'composer.json'
+      - 'package.json'
+      - 'phpcs.xml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: PHP / PHP ${{ matrix.php }}
+    uses: johnbillion/plugin-infrastructure/.github/workflows/reusable-coding-standards.yml@trunk
+    strategy:
+      matrix:
+        php:
+          - '8.0'
+          - '7.4'
+          - '7.3'
+      fail-fast: false
+    with:
+      php: ${{ matrix.php }}
