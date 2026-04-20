@@ -356,6 +356,20 @@ body.register .buddypress-wrap .page ul {
 	opacity: 1;
 }
 
+
+/* Focus */
+#item-header-avatar:focus,
+#item-header-avatar:focus-within {
+
+	a.link-change-profile-image {
+		opacity: 1;
+	}
+}
+
+.link-change-profile-image:focus {
+	filter: brightness(0.8);
+}
+
 .users-header #social-networks-popup,
 .bp-widget.social #social-networks-popup {
 	display: none;
@@ -411,14 +425,36 @@ body.register .buddypress-wrap .page ul {
 		transform: translateX(-50%);
 	}
 
-	&:hover .link-change-overlay {
-		position: absolute;
-		left: 3px;
-		right: 3px;
-		top: 3px;
-		height: 164px;
-		background-color: rgba(0, 0, 0, 0.3);
-		border-radius: 50%;
+	&:focus {
+		outline: 0;
+	}
+
+	&:focus,
+	&:focus-within,
+	&:hover {
+
+		.link-change-overlay {
+			position: absolute;
+			left: 3px;
+			right: 3px;
+			top: 3px;
+			height: 164px;
+			background-color: rgba(0, 0, 0, 0.3);
+			border-radius: 50%;
+		}
+	}
+
+	&:has(.bb-gm-avatar-with-rank-badge):focus,
+	&:has(.bb-gm-avatar-with-rank-badge):focus-within {
+
+		.link-change-overlay {
+			height: 148px;
+			left: 2px;
+			pointer-events: none;
+			right: 2px;
+			top: 2px;
+			z-index: 1;
+		}
 	}
 
 }
