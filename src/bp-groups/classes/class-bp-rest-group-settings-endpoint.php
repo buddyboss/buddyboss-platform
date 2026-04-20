@@ -52,12 +52,19 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			$this->nav[] = 'forum';
 		}
 
-		if ( function_exists( 'bp_ld_sync' ) ) {
-			$va = bp_ld_sync( 'settings' )->get( 'buddypress.enabled', true );
-			if ( '1' === $va ) {
-				$this->nav[] = 'courses';
-			}
-		}
+		/**
+		 * Filter the group settings nav slugs. Integrations (e.g. LearnDash
+		 * courses sync) add their own nav entries here.
+		 *
+		 * Replaced an inline LearnDash-specific check in BuddyBoss [BBVERSION];
+		 * the LearnDash integration (buddyboss-learndash) now adds 'courses'
+		 * to this nav via the filter.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $nav Array of nav slugs.
+		 */
+		$this->nav = apply_filters( 'bb_integration_rest_group_settings_nav_items', $this->nav );
 
 		register_rest_route(
 			$this->namespace,
@@ -1415,15 +1422,40 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 	/**
 	 * Get Group course Settings.
 	 *
+	 * Platform intentionally ships no default courses fields. Integrations
+	 * (e.g. LearnDash) provide them via `bb_integration_rest_group_courses_fields`.
+	 * When no integration is active, the 'courses' nav item will not have
+	 * been registered either (see register_routes()), so this code path is
+	 * unreachable in that case.
+	 *
 	 * @param integer $group_id Group ID.
 	 *
 	 * @return mixed|void
 	 */
 	protected function get_courses_fields( $group_id ) {
-		$fields                             = array();
 		buddypress()->groups->current_group = groups_get_group( $group_id );
 
-		if ( ! function_exists( 'bp_ld_sync' ) || '1' !== bp_ld_sync( 'settings' )->get( 'buddypress.enabled', true ) ) {
+		/**
+		 * Filter group courses settings fields. Integrations register their
+		 * course-sync UI fields here; an empty return means no integration
+		 * is active for this group.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array|WP_Error $fields   Array of fields, or WP_Error to short-circuit.
+		 * @param integer        $group_id Group ID.
+		 */
+		$fields = apply_filters( 'bb_integration_rest_group_courses_fields', array(), $group_id );
+
+		// Back-compat: retain the pre-[BBVERSION] filter for any third-party
+		// consumers that already subscribed to it.
+		$fields = apply_filters( 'bp_rest_group_settings_courses', $fields, $group_id );
+
+		if ( is_wp_error( $fields ) ) {
+			return $fields;
+		}
+
+		if ( empty( $fields ) ) {
 			return new WP_Error(
 				'bp_rest_invalid_group_setting_nav',
 				__( 'Sorry, you are not allowed to see the courses group settings options.', 'buddyboss' ),
@@ -1433,51 +1465,24 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$has_ld_group = bp_ld_sync( 'buddypress' )->sync->generator( $group_id )->hasLdGroup();
-
-		$fields[] = array(
-			'label'       => esc_html__( 'Group Courses Settings', 'buddyboss' ),
-			'name'        => '',
-			'description' => esc_html__( 'Create and associate to a LearnDash group, allowing courses and reports to be managed within the group.', 'buddyboss' ),
-			'field'       => 'heading',
-			'value'       => '',
-			'options'     => array(),
-		);
-
-		$fields[] = array(
-			'label'       => esc_html__( 'Yes. I want this group to sync with a LearnDash group.', 'buddyboss' ),
-			'name'        => 'bp-ld-sync-enable',
-			'description' => '',
-			'field'       => 'checkbox',
-			'value'       => $has_ld_group,
-			'options'     => array(),
-		);
-
-		return apply_filters( 'bp_rest_group_settings_courses', $fields, $group_id );
+		return $fields;
 	}
 
 	/**
 	 * Update Group Courses settings.
 	 *
+	 * Platform dispatches the save to the `bb_integration_rest_update_group_courses_fields`
+	 * filter; integrations (e.g. LearnDash) subscribe and perform their sync.
+	 *
 	 * @param WP_REST_Request $request Request used to generate the response.
 	 *
-	 * @return array
+	 * @return array|WP_Error
 	 */
 	protected function update_courses_fields( $request ) {
 		$post_fields                        = $request->get_param( 'fields' );
 		$group_id                           = $request->get_param( 'id' );
 		$group                              = groups_get_group( $group_id );
 		buddypress()->groups->current_group = $group;
-
-		if ( ! function_exists( 'bp_ld_sync' ) || '1' !== bp_ld_sync( 'settings' )->get( 'buddypress.enabled', true ) ) {
-			return new WP_Error(
-				'bp_rest_invalid_group_setting_nav',
-				__( 'Sorry, you are not allowed to update the courses group settings options.', 'buddyboss' ),
-				array(
-					'status' => 400,
-				)
-			);
-		}
 
 		if ( empty( $post_fields ) ) {
 			return array(
@@ -1486,19 +1491,37 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$generator = bp_ld_sync( 'buddypress' )->sync->generator( $group_id );
+		/**
+		 * Filter the result of updating group courses settings. Integrations
+		 * process the $post_fields and return either a success payload
+		 * ( array with 'error'/'notice' keys ) or a WP_Error to short-circuit.
+		 *
+		 * A `null` return from all subscribers means no integration handled
+		 * the request and Platform should reject it.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array|WP_Error|null $result      Return value. Null means unhandled.
+		 * @param array               $post_fields Fields submitted by client.
+		 * @param integer             $group_id    Group ID.
+		 */
+		$result = apply_filters( 'bb_integration_rest_update_group_courses_fields', null, $post_fields, $group_id );
 
-		if ( array_key_exists( 'bp-ld-sync-enable', (array) $post_fields ) && empty( $post_fields['bp-ld-sync-enable'] ) ) {
-			$generator->desyncFromLearndash();
-		} elseif ( array_key_exists( 'bp-ld-sync-enable', (array) $post_fields ) && ! empty( $post_fields['bp-ld-sync-enable'] ) ) {
-			$generator->associateToLearndash()->syncBpAdmins();
+		if ( is_wp_error( $result ) ) {
+			return $result;
 		}
 
-		$notice = __( 'Group settings were successfully updated.', 'buddyboss' );
+		if ( is_array( $result ) ) {
+			return $result;
+		}
 
-		return array(
-			'error'  => '',
-			'notice' => $notice,
+		// No integration handled it.
+		return new WP_Error(
+			'bp_rest_invalid_group_setting_nav',
+			__( 'Sorry, you are not allowed to update the courses group settings options.', 'buddyboss' ),
+			array(
+				'status' => 400,
+			)
 		);
 	}
 
