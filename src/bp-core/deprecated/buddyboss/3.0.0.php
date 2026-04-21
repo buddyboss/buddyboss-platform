@@ -2629,7 +2629,7 @@ add_action(
 // ──────────────────────────────────────────────────────────────────────────────
 
 /**
- * Fire deprecated `bb_admin_setting_performance_register_fields` hook.
+ * Fire deprecated `bp_admin_setting_performance_register_fields` hook.
  *
  * @since BuddyBoss [BBVERSION]
  */
@@ -2642,10 +2642,10 @@ add_action(
 		 * @since BuddyBoss 2.5.80
 		 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_advanced_after_register_settings_fields'} instead.
 		 *
-		 * @param object $stub No-op stub (legacy passed BB_Admin_Setting_Performance instance).
+		 * @param object $stub No-op stub (legacy passed BP_Admin_Setting_Performance instance).
 		 */
 		do_action_deprecated(
-			'bb_admin_setting_performance_register_fields',
+			'bp_admin_setting_performance_register_fields',
 			array(
 				new class() {
 					/**
@@ -2791,3 +2791,47 @@ if ( ! function_exists( 'bb_readylaunch_settings_page_enqueue_style_script' ) ) 
 		unset( $admin_page );
 	}
 }
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Invites Settings 2.0 deprecated hook compatibility.
+// ──────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Fire the legacy `bp_admin_setting_invites_register_fields` hook after
+ * Settings 2.0 finishes registering invites fields.
+ *
+ * The original hook passed a `BP_Admin_Setting_Invites` instance. Settings 2.0
+ * no longer uses that class, so a no-op stub is passed to satisfy callbacks
+ * that call add_section()/add_field() on the argument.
+ *
+ * @since BuddyBoss 1.0.0
+ * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_invites_after_register_settings_fields'} instead.
+ */
+add_action(
+	'bb_invites_after_register_settings_fields',
+	static function () {
+		do_action_deprecated(
+			'bp_admin_setting_invites_register_fields',
+			array(
+				new class() {
+					/**
+					 * No-op stub for BP_Admin_Setting_tab::add_section().
+					 *
+					 * @param mixed ...$args Ignored.
+					 */
+					public function add_section( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+
+					/**
+					 * No-op stub for BP_Admin_Setting_tab::add_field().
+					 *
+					 * @param mixed ...$args Ignored.
+					 */
+					public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+				},
+			),
+			'BuddyBoss [BBVERSION]',
+			'bb_invites_after_register_settings_fields'
+		);
+	}
+);
+
