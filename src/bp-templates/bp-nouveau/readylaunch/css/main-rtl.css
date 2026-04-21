@@ -18554,9 +18554,9 @@ body:not(.bb-is-mobile) .bb-rl-activity-list .acomment-display .ac-emotions_list
   width: 2px;
   background-color: var(--bb-rl-border-tertiary-color);
   position: absolute;
-  right: -32px;
-  top: 15px;
-  height: calc(100% - 20px);
+  right: 24px;
+  top: 64px;
+  height: calc(100% - 60px);
 }
 
 .activity-item.has-comments .bb-rl-activity-comments.bb-rl-threaded-level-2 > ul > .has-child-comments:first-of-type > .bb-rl-acomment-display:before {
@@ -22741,7 +22741,9 @@ table.profile-settings tbody td select {
 .activity-modal-open .bb-onscreen-notification-enable .bb-onscreen-notification,
 .acomments-modal-open .bb-onscreen-notification-enable .bb-onscreen-notification,
 .media-modal-open .bb-onscreen-notification-enable .bb-onscreen-notification,
-.document-modal-open .bb-onscreen-notification-enable .bb-onscreen-notification {
+.document-modal-open .bb-onscreen-notification-enable .bb-onscreen-notification,
+.bb-rl-activity-modal-open .bb-onscreen-notification-enable .bb-onscreen-notification,
+.bb-rl-modal-overlay-open .bb-onscreen-notification-enable .bb-onscreen-notification {
   z-index: 999999;
 }
 
