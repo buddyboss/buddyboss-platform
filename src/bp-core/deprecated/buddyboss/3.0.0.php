@@ -2727,3 +2727,34 @@ function bb_advanced_fire_deprecated_save_hooks( $feature_id, $settings, $saved 
 	do_action_deprecated( 'bp_admin_tab_setting_saved', array( 'bp-advanced' ), 'BuddyBoss [BBVERSION]', 'bb_admin_save_feature_settings_after' );
 }
 add_action( 'bb_admin_save_feature_settings_after', 'bb_advanced_fire_deprecated_save_hooks', 99, 3 );
+
+// ──────────────────────────────────────────────────────────────────────────────
+// LearnDash integration extracted to buddyboss-learndash addon.
+// `bp_register_learndash_integration()` used to live in
+// `bp-integrations/learndash/bp-learndash-loader.php` and registered the
+// bundled integration on `bp_setup_integrations`. The bundled integration was
+// removed in BuddyBoss [BBVERSION]; the addon registers its own copy via
+// `bb_learndash_register_integration()`. Any third-party code that called
+// `bp_register_learndash_integration()` directly will hit this stub instead
+// of a fatal.
+// ──────────────────────────────────────────────────────────────────────────────
+
+if ( ! function_exists( 'bp_register_learndash_integration' ) ) {
+	/**
+	 * Deprecated: previously registered the bundled LearnDash integration.
+	 *
+	 * @since      BuddyBoss 1.0.0
+	 * @deprecated BuddyBoss [BBVERSION] The LearnDash integration moved to the
+	 *             standalone `buddyboss-learndash` addon, which registers
+	 *             itself via `bb_learndash_register_integration()`.
+	 *
+	 * @return void
+	 */
+	function bp_register_learndash_integration() {
+		_deprecated_function(
+			__FUNCTION__,
+			'BuddyBoss [BBVERSION]',
+			'bb_learndash_register_integration() in the buddyboss-learndash addon'
+		);
+	}
+}
