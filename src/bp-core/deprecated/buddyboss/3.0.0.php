@@ -2727,3 +2727,67 @@ function bb_advanced_fire_deprecated_save_hooks( $feature_id, $settings, $saved 
 	do_action_deprecated( 'bp_admin_tab_setting_saved', array( 'bp-advanced' ), 'BuddyBoss [BBVERSION]', 'bb_admin_save_feature_settings_after' );
 }
 add_action( 'bb_admin_save_feature_settings_after', 'bb_advanced_fire_deprecated_save_hooks', 99, 3 );
+
+// ──────────────────────────────────────────────────────────────────────────────
+// ReadyLaunch legacy admin page deprecated functions.
+// The standalone `admin.php?page=bb-readylaunch` page was retired in
+// BuddyBoss [BBVERSION]. Its URL now redirects to the Appearance feature in
+// Settings 2.0 (`admin.php?page=bb-settings&tab=appearance&panel=general`).
+// These stubs prevent fatals in third-party code that still calls the helpers.
+// ──────────────────────────────────────────────────────────────────────────────
+
+if ( ! function_exists( 'bb_readylaunch_settings_page_html' ) ) {
+	/**
+	 * Render the legacy ReadyLaunch React Settings page.
+	 *
+	 * @since BuddyBoss 2.9.00
+	 * @deprecated BuddyBoss [BBVERSION] ReadyLaunch settings moved to Settings 2.0 Appearance feature.
+	 *
+	 * @return void
+	 */
+	function bb_readylaunch_settings_page_html() {
+		_deprecated_function(
+			__FUNCTION__,
+			'BuddyBoss [BBVERSION]',
+			'Settings 2.0 Appearance feature (admin.php?page=bb-settings&tab=appearance)'
+		);
+	}
+}
+
+if ( ! function_exists( 'bb_readylaunch_register_enqueue_style_script' ) ) {
+	/**
+	 * Register legacy ReadyLaunch React Settings page styles + scripts.
+	 *
+	 * @since BuddyBoss 2.9.00
+	 * @deprecated BuddyBoss [BBVERSION] ReadyLaunch admin page retired.
+	 *
+	 * @return void
+	 */
+	function bb_readylaunch_register_enqueue_style_script() {
+		_deprecated_function(
+			__FUNCTION__,
+			'BuddyBoss [BBVERSION]',
+			'Settings 2.0 Appearance feature (admin.php?page=bb-settings&tab=appearance)'
+		);
+	}
+}
+
+if ( ! function_exists( 'bb_readylaunch_settings_page_enqueue_style_script' ) ) {
+	/**
+	 * Enqueue legacy ReadyLaunch React Settings page styles + scripts.
+	 *
+	 * @since BuddyBoss 2.9.00
+	 * @deprecated BuddyBoss [BBVERSION] ReadyLaunch admin page retired.
+	 *
+	 * @param string $admin_page The admin page hook suffix (unused, kept for signature compat).
+	 * @return void
+	 */
+	function bb_readylaunch_settings_page_enqueue_style_script( $admin_page ) {
+		_deprecated_function(
+			__FUNCTION__,
+			'BuddyBoss [BBVERSION]',
+			'Settings 2.0 Appearance feature (admin.php?page=bb-settings&tab=appearance)'
+		);
+		unset( $admin_page );
+	}
+}

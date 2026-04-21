@@ -29,27 +29,6 @@ const scssRule = {
 // Check if we're building for a specific target
 const buildTarget = process.env.BUILD_TARGET || 'all';
 
-// ReadyLaunch configuration
-const readylaunchConfig = {
-    ...defaultConfig,
-    name: 'readylaunch',
-    entry: {
-        'index': path.resolve(__dirname, 'readylaunch/index.js'),
-    },
-    output: {
-        path: path.resolve(__dirname, '../../bp-core/admin/bb-settings/readylaunch/build'),
-        filename: '[name].js',
-        clean: false, // Prevent cleaning other build directories
-    },
-    module: {
-        ...defaultConfig.module,
-        rules: [
-            ...rules,
-            scssRule,
-        ],
-    },
-};
-
 // RL Onboarding configuration
 const rlOnboardingConfig = {
     ...defaultConfig,
@@ -94,14 +73,14 @@ const settings20Config = {
     },
 };
 
-// Export configuration based on build target
-if (buildTarget === 'readylaunch') {
-    module.exports = readylaunchConfig;
-} else if (buildTarget === 'rl-onboarding') {
+// Export configuration based on build target.
+// `readylaunch` target retired in BuddyBoss [BBVERSION] — legacy admin page
+// folded into Settings 2.0 Appearance feature.
+if (buildTarget === 'rl-onboarding') {
     module.exports = rlOnboardingConfig;
 } else if (buildTarget === 'settings-2.0') {
     module.exports = settings20Config;
 } else {
-    // Default: export all configurations for combined builds
-    module.exports = [readylaunchConfig, rlOnboardingConfig, settings20Config];
+    // Default: export all configurations for combined builds.
+    module.exports = [rlOnboardingConfig, settings20Config];
 } 

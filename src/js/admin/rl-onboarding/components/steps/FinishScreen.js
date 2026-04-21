@@ -41,7 +41,7 @@ export const FinishScreen = ({ stepData, onFinish, onViewSite }) => {
                                 <h2>{__('ReadyLaunch Settings', 'buddyboss')}</h2>
                                 <p>{__('Tailor styles, pages, and widgets to match your brand.', 'buddyboss')}</p>
                             </div>
-                            <a href={window.bbRlOnboarding?.readylaunch?.admin_url + 'admin.php?page=bb-readylaunch'} className="bb-rl-finish-action-button" variant="primary">
+                            <a href={window.bbRlOnboarding?.readylaunch?.admin_url + 'admin.php?page=bb-settings&tab=appearance&panel=general'} className="bb-rl-finish-action-button" variant="primary">
                                 {__('Open Settings', 'buddyboss')}
                             </a>
                         </div>

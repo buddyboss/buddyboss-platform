@@ -510,16 +510,9 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				array( $this, 'bp_credits_screen' )
 			);
 
-			// ReadyLaunch.
-			$hooks[] = add_submenu_page(
-				$this->settings_page,
-				__( 'ReadyLaunch', 'buddyboss' ),
-				__( 'ReadyLaunch', 'buddyboss' ),
-				$this->capability,
-				'bb-readylaunch',
-				'bb_readylaunch_settings_page_html',
-				99
-			);
+			// ReadyLaunch legacy admin page retired in BuddyBoss [BBVERSION] —
+			// the `bb-readylaunch` URL now redirects to Appearance in Settings 2.0
+			// via `bp_core_admin_backpat_menu()` (`bp-core-admin-actions.php`).
 
 			// For consistency with non-Multisite, we add a Tools menu in
 			// the Network Admin as a home for our Tools panel.

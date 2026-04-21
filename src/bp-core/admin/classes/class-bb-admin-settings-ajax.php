@@ -383,6 +383,11 @@ class BB_Admin_Settings_Ajax {
 					);
 				}
 
+				// Section-level help URL (renders a (?) icon in the section header).
+				if ( ! empty( $section['help_url'] ) ) {
+					$formatted_section['help_url'] = esc_url_raw( $section['help_url'] );
+				}
+
 				$formatted_sections[] = $formatted_section;
 			}
 
@@ -390,14 +395,17 @@ class BB_Admin_Settings_Ajax {
 			usort( $formatted_sections, 'bb_sort_by_order' );
 
 			$formatted_side_panels[] = array(
-				'id'         => $side_panel_id,
-				'title'      => $side_panel['title'],
-				'icon'       => $side_panel['icon'] ?? null,
-				'help_url'   => $side_panel['help_url'] ?? '',
-				'order'      => $side_panel['order'] ?? 100,
-				'is_default' => $side_panel['is_default'] ?? false,
-				'divider'    => ! empty( $side_panel['divider'] ),
-				'sections'   => $formatted_sections,
+				'id'          => $side_panel_id,
+				'title'       => $side_panel['title'],
+				'icon'        => $side_panel['icon'] ?? null,
+				'help_url'    => $side_panel['help_url'] ?? '',
+				'order'       => $side_panel['order'] ?? 100,
+				'is_default'  => $side_panel['is_default'] ?? false,
+				'divider'     => ! empty( $side_panel['divider'] ),
+				// Optional conditional visibility based on a field value (Phase 5).
+				// Shape: array( 'field' => 'fieldname', 'value' => mixed, 'operator' => '==' (default) | '!=' ).
+				'conditional' => ! empty( $side_panel['conditional'] ) && is_array( $side_panel['conditional'] ) ? $side_panel['conditional'] : null,
+				'sections'    => $formatted_sections,
 			);
 		}
 
@@ -721,6 +729,24 @@ class BB_Admin_Settings_Ajax {
 				'refresh_panels'       => ! empty( $field['refresh_panels'] ),
 				// SSO providers array (for sso_providers field type).
 				'providers'            => ! empty( $field['providers'] ) && is_array( $field['providers'] ) ? $field['providers'] : null,
+				// Generic media-picker config (for media_picker field type — library_type, multiple, frame_title, etc.).
+				'media_picker_config'      => ! empty( $field['media_picker_config'] ) && is_array( $field['media_picker_config'] ) ? $field['media_picker_config'] : null,
+				// Predefined items for sortable_toggle_list (e.g. side menu items, footer menu items).
+				'available_items'          => ! empty( $field['available_items'] ) && is_array( $field['available_items'] ) ? array_values( $field['available_items'] ) : null,
+				// Generic editable-link-list config (add_label, modal_title_add, modal_title_edit).
+				'editable_link_list_config' => ! empty( $field['editable_link_list_config'] ) && is_array( $field['editable_link_list_config'] ) ? $field['editable_link_list_config'] : null,
+				// Optional secondary description rendered under the field label (Figma "left-column help").
+				'label_description'    => isset( $field['label_description'] ) ? wp_kses_post( $field['label_description'] ) : null,
+				// SEO/Social preview-card config (site_name, site_url, title_key, description_key, etc.).
+				// map_deep ensures nested strings are text-field sanitized without tripping on arrays.
+				'preview_config'       => ! empty( $field['preview_config'] ) && is_array( $field['preview_config'] )
+					? map_deep( $field['preview_config'], 'sanitize_text_field' )
+					: null,
+				// Available-tag reference list consumed by the `tags_reference` display-only field type.
+				// Each row is { tag: string, description: string } — both values are kses-filtered.
+				'tags'                 => ! empty( $field['tags'] ) && is_array( $field['tags'] )
+					? map_deep( $field['tags'], 'wp_kses_post' )
+					: null,
 			);
 
 			// access_control: populate access-control data via filter so Pro can inject types/options.

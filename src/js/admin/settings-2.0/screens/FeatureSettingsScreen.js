@@ -652,6 +652,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 						currentPanel={activePanelId}
 						onNavigate={onNavigate}
 						onBack={handleBack}
+						formValues={settings}
 					/>
 				</aside>
 
@@ -766,11 +767,11 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 															)}
 														</span>
 													)}
-													{/* Help icon - opens help slider modal */}
-													{activePanel.help_url && (
+													{/* Help icon — section-level overrides panel-level when both are set. */}
+													{( section.help_url || activePanel.help_url ) && (
 														<HelpIcon
 															onClick={handleHelpClick}
-															contentId={activePanel.help_url}
+															contentId={section.help_url || activePanel.help_url}
 														/>
 													)}
 													{/* Section toggle - enables/disables all fields in this section */}

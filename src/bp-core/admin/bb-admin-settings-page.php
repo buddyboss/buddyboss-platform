@@ -116,6 +116,10 @@ function bb_admin_settings_page() {
 		wp_enqueue_editor();
 	}
 
+	// Enqueue WordPress media library so the MediaPickerField field type can open
+	// wp.media() (used by Appearance → Branding logos, future Site SEO OG image, etc.).
+	wp_enqueue_media();
+
 	// Enqueue scripts and styles.
 	wp_enqueue_script(
 		'bb-admin-settings-2-0',

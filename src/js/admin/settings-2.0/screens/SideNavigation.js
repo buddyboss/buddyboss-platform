@@ -9,6 +9,7 @@
 
 import { __ } from '@wordpress/i18n';
 import { safeUrl } from '../utils/sanitize';
+import { evaluateConditional } from '../utils/conditional';
 
 /**
  * Side Navigation Component
@@ -20,9 +21,14 @@ import { safeUrl } from '../utils/sanitize';
  * @param {string} props.currentPanel Current panel ID
  * @param {Function} props.onNavigate Navigation callback
  * @param {Function} props.onBack Back button callback
+ * @param {Object} [props.formValues] Live form values for conditional panel visibility.
  * @returns {JSX.Element} Side navigation component
  */
-export function SideNavigation({ featureId, sidePanels, navItems, currentPanel, onNavigate, onBack }) {
+export function SideNavigation({ featureId, sidePanels, navItems, currentPanel, onNavigate, onBack, formValues }) {
+	// Filter out panels whose `conditional` arg evaluates to false against the live form state.
+	const visibleSidePanels = ( sidePanels || [] ).filter( function ( panel ) {
+		return evaluateConditional( panel.conditional, formValues || {} );
+	} );
 	const handlePanelClick = (panelId) => {
 		if ( 'function' === typeof onNavigate ) {
 			onNavigate(`/settings/${featureId}/${panelId}`);
@@ -51,7 +57,7 @@ export function SideNavigation({ featureId, sidePanels, navItems, currentPanel, 
 
 			{/* Menu list - Side Panels */}
 			<ul className="bb-admin-side-nav__list">
-				{(sidePanels || []).map((panel) => (
+				{visibleSidePanels.map((panel) => (
 					<li key={panel.id} className="bb-admin-side-nav__item">
 						{ panel.divider && (
 							<div className="bb-admin-side-nav__divider"></div>

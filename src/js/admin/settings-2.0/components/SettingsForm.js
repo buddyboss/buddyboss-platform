@@ -45,9 +45,15 @@ import { EmailRestrictionsField } from './fields/EmailRestrictionsField';
 import { PasswordField } from './fields/PasswordField';
 import { StatusCheckField } from './fields/StatusCheckField';
 import { ImageUploadField } from './fields/ImageUploadField';
+import { MediaPickerField } from './fields/MediaPickerField';
+import { SortableToggleList } from './fields/SortableToggleList';
+import { EditableLinkList } from './fields/EditableLinkList';
 import { RecaptchaVerifyField } from './recaptcha/RecaptchaVerifyField';
 import { RecaptchaBypassField } from './recaptcha/RecaptchaBypassField';
 import { VerifyPopupField } from './fields/VerifyPopupField';
+import { SEOPreviewField } from './fields/SEOPreviewField';
+import { SocialPreviewField } from './fields/SocialPreviewField';
+import { TagsReferenceField } from './fields/TagsReferenceField';
 import { useFetchOnChange } from '../hooks/useFetchOnChange';
 
 /**
@@ -152,29 +158,35 @@ export function SettingsForm({ fields, values, onChange }) {
 	/**
 	 * Evaluate a single condition object against current values.
 	 *
+	 * Honors `cond.operator` ('==' default, '!=' inverts the match) so fields
+	 * can be hidden/shown via "not equal" conditionals (e.g., show Logo (Light
+	 * mode) when theme_mode != 'dark').
+	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param {Object} cond Single condition: { field, value }.
+	 * @param {Object} cond Single condition: { field, value, operator? }.
 	 * @return {boolean} Whether the condition is met.
 	 */
 	const evaluateCondition = (cond) => {
 		const condValue = values[cond.field];
 		const expectedValue = cond.value;
+		const operator = cond.operator || '==';
+		let matched;
 
 		// When expected value is boolean, use truthy/falsy comparison
 		// because DB values can be 1, 0, "1", "0" while conditional uses true/false.
 		if (expectedValue === true || expectedValue === false) {
 			const isTruthy = !!condValue && condValue !== '0' && condValue !== 0;
-			return isTruthy === expectedValue;
+			matched = isTruthy === expectedValue;
+		} else if (Array.isArray(expectedValue)) {
+			// When expected value is an array, check if current value is in the array.
+			matched = expectedValue.indexOf(condValue) !== -1;
+		} else {
+			// For non-boolean values, use strict comparison.
+			matched = condValue === expectedValue;
 		}
 
-		// When expected value is an array, check if current value is in the array.
-		if (Array.isArray(expectedValue)) {
-			return expectedValue.indexOf(condValue) !== -1;
-		}
-
-		// For non-boolean values, use strict comparison.
-		return condValue === expectedValue;
+		return '!=' === operator ? ! matched : matched;
 	};
 
 	/**
@@ -928,6 +940,57 @@ export function SettingsForm({ fields, values, onChange }) {
 					/>
 				);
 
+			case 'media_picker':
+				return (
+					<MediaPickerField
+						value={ value }
+						onChange={ function ( newValue ) {
+							onChange( field.name, newValue );
+						} }
+						disabled={ disabled }
+						config={ field.media_picker_config || {} }
+					/>
+				);
+
+			case 'sortable_toggle_list':
+				return (
+					<SortableToggleList
+						value={ value }
+						onChange={ function ( newValue ) {
+							onChange( field.name, newValue );
+						} }
+						availableItems={ field.available_items || [] }
+						disabled={ disabled }
+					/>
+				);
+
+			case 'editable_link_list':
+				return (
+					<EditableLinkList
+						value={ value }
+						onChange={ function ( newValue ) {
+							onChange( field.name, newValue );
+						} }
+						disabled={ disabled }
+						config={ field.editable_link_list_config || {} }
+					/>
+				);
+
+			case 'seo_preview':
+				return (
+					<SEOPreviewField field={ field } values={ values } />
+				);
+
+			case 'social_preview':
+				return (
+					<SocialPreviewField field={ field } values={ values } />
+				);
+
+			case 'tags_reference':
+				return (
+					<TagsReferenceField field={ field } />
+				);
+
 			case 'manage_link':
 				return (
 					<button
@@ -1215,7 +1278,10 @@ export function SettingsForm({ fields, values, onChange }) {
 			field.field_class || '',
 		].filter(Boolean).join(' ');
 
-		const hasLabel = field.label && field.label.trim() !== '';
+		// For grouped fields, only the first visible field in the group renders
+		// the left-column label (shared label across the group per Figma spec).
+		const isNonFirstInGroup = field.group?.key && groupFirstNames[ field.group.key ] && groupFirstNames[ field.group.key ] !== field.name;
+		const hasLabel = field.label && field.label.trim() !== '' && ! isNonFirstInGroup;
 
 		return (
 			<div key={field.name} className={fieldClasses + ( ! hasLabel ? ' bb-admin-settings-form__field--no-label' : '' ) + ( 'reaction_mode' !== field.type && field.pro_notice?.show ? ' bb-admin-settings-form__field--pro-locked' : '' )} data-field-name={field.name} data-group={field.group?.key || undefined} data-group-inline={ field.group && field.group.inline ? 'true' : undefined }>
@@ -1243,6 +1309,11 @@ export function SettingsForm({ fields, values, onChange }) {
 								</>
 							)}
 						</label>
+						{ field.label_description && (
+							<p className="bb-admin-settings-form__field-label-description">
+								<span dangerouslySetInnerHTML={{ __html: sanitizeHtml( field.label_description ) }} />
+							</p>
+						)}
 					</div>
 				)}
 				<div className={ 'bb-admin-settings-form__field-content' + ( ( 'toggle' === field.type || 'checkbox' === field.type ) && field.description && ! isToggleWithChildren ? ' bb-admin-settings-form__field-content--inline' : '' ) }>
@@ -1406,6 +1477,21 @@ export function SettingsForm({ fields, values, onChange }) {
 			}
 		}
 		return lastMap;
+	}, [ topLevelFields, values ] ); // eslint-disable-line react-hooks/exhaustive-deps
+
+	// Compute which fields are the FIRST visible field in their group, so only the
+	// first row in a shared-label group renders the left-column label (Figma: one
+	// "Logo" / "Heading" label per group even when multiple rows are visible).
+	const groupFirstNames = useMemo( function () {
+		var visible = topLevelFields.filter( isFieldVisible );
+		var firstMap = {};
+		for ( var gi = 0; gi < visible.length; gi++ ) {
+			var gf = visible[ gi ];
+			if ( gf.group?.key && ! firstMap[ gf.group.key ] ) {
+				firstMap[ gf.group.key ] = gf.name;
+			}
+		}
+		return firstMap;
 	}, [ topLevelFields, values ] ); // eslint-disable-line react-hooks/exhaustive-deps
 
 	return (

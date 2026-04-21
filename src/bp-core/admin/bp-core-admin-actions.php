@@ -727,6 +727,14 @@ function bb_redirect_legacy_settings_to_settings_2() {
 		exit;
 	}
 
+	// Redirect legacy ReadyLaunch admin page (admin.php?page=bb-readylaunch) to
+	// the Appearance feature in Settings 2.0. Anyone bookmarked to the old URL
+	// lands on General → Site Layout with zero data loss.
+	if ( 'bb-readylaunch' === $page ) {
+		wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=appearance&panel=general' ) );
+		exit;
+	}
+
 	// Redirect legacy integration tabs (bp-integrations page).
 	if ( 'bp-integrations' === $page && ! empty( $tab ) ) {
 
