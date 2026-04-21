@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.21.0\n"
+"Project-Id-Version: BuddyBoss Platform 2.21.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-04-21 10:12:18+00:00\n"
+"POT-Creation-Date: 2026-04-21 10:58:03+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -9202,8 +9202,8 @@ msgstr ""
 #: bp-core/bp-core-attachments.php:814
 #: bp-core/bp-core-attachments.php:1008
 #: bp-core/bp-core-avatars.php:1102
-#: bp-core/classes/class-bp-rest-settings-endpoint.php:1489
-#: bp-core/classes/class-bp-rest-settings-endpoint.php:1500
+#: bp-core/classes/class-bp-rest-settings-endpoint.php:1469
+#: bp-core/classes/class-bp-rest-settings-endpoint.php:1480
 msgid "For best results, upload an image that is %1$spx by %2$spx or larger."
 msgstr ""
 
