@@ -1,9 +1,4 @@
 // BP On-screen Notifications
-// @version 1.0.0
-
-// 1. Global Styling
-
-// Global Styling
 
 /*__ Global Styling __*/
 .bb-onscreen-notification-enable {
@@ -43,7 +38,9 @@
 		.activity-modal-open &,
 		.acomments-modal-open &,
 		.media-modal-open &,
-		.document-modal-open & {
+		.document-modal-open &,
+		.bb-rl-activity-modal-open &,
+		.bb-rl-modal-overlay-open & {
 			z-index: 999999;
 		}
 
