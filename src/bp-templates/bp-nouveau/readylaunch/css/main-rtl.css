@@ -8921,6 +8921,38 @@ li.bb-rl-hideshow {
   width: 1px;
 }
 
+/* Animations */
+@keyframes notification-fadeout {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes notification-close-item {
+  0% {
+    transform: translate(-100%, 0);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+}
+
+@keyframes notification-close-item-left {
+  0% {
+    transform: translate(100%, 0);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+}
+
 .bb-rl-crop-container {
   position: fixed;
   z-index: 999991;
@@ -22676,5 +22708,369 @@ table.profile-settings tbody td select {
   }
   .notifications-header .notifications-header-actions .bb-rl-profile-subnav {
     width: 100%;
+  }
+}
+
+/*__ Global Styling __*/
+.bb-onscreen-notification-enable {
+  position: relative;
+}
+
+@media screen and (max-width: 500px) {
+  .bb-onscreen-notification-enable .bb-onscreen-notification div.bb-remove-all-notification,
+  .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list {
+    display: none;
+  }
+  .bb-onscreen-notification-enable.bb-onscreen-notification-enable-mobile-support .bb-onscreen-notification .notification-list {
+    display: block;
+  }
+  .bb-onscreen-notification-enable.bb-onscreen-notification-enable-mobile-support .bb-onscreen-notification .bb-remove-all-notification {
+    display: flex;
+  }
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification {
+  position: fixed;
+  bottom: 25px;
+  left: 35px;
+  max-width: 400px;
+  width: 100%;
+  z-index: 1099;
+}
+
+.activity-modal-open .bb-onscreen-notification-enable .bb-onscreen-notification,
+.acomments-modal-open .bb-onscreen-notification-enable .bb-onscreen-notification,
+.media-modal-open .bb-onscreen-notification-enable .bb-onscreen-notification,
+.document-modal-open .bb-onscreen-notification-enable .bb-onscreen-notification,
+.bb-rl-activity-modal-open .bb-onscreen-notification-enable .bb-onscreen-notification,
+.bb-rl-modal-overlay-open .bb-onscreen-notification-enable .bb-onscreen-notification {
+  z-index: 999999;
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification .notification-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-height: initial;
+  overflow: initial;
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item {
+  display: flex;
+  align-items: flex-start;
+  background: var(--bb-rl-background-color);
+  box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.1);
+  border: solid 1px var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-lg);
+  padding: var(--bb-rl-space-200);
+  margin: 12px 0;
+  z-index: 4;
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .bb-full-link {
+  display: none;
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item.recent-item {
+  position: relative;
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item.recent-item:before {
+  content: " ";
+  right: -1px;
+  top: 0;
+  height: 100%;
+  width: 5px;
+  background: var(--bb-rl-primary-color);
+  position: absolute;
+  border-radius: 0 5px 5px 0;
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .notification-avatar {
+  margin-left: var(--bb-rl-space-200);
+  min-width: 32px;
+  max-height: 32px;
+  position: relative;
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .notification-avatar img {
+  max-width: 32px;
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .notification-avatar [class*="bb-icon"]:before {
+  font-weight: 700;
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .notification-avatar .bb-notification-members img {
+  max-width: 40px;
+  border: 2px solid var(--bb-rl-background-color);
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .notification-avatar .bb-notification-members img:nth-child(1) {
+  transform: translate(0, 0);
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .notification-avatar .bb-notification-members img:nth-child(2) {
+  transform: translate(-14px, -25px);
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .notification-avatar a > i {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bb-rl-background-positive-primary-color);
+  color: var(--bb-rl-text-white-color);
+  font-size: 18px;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  position: absolute;
+  left: 2px;
+  bottom: -8px;
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .notification-avatar a > i.bb-icon-calendar {
+  font-size: 17px;
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .notification-content {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  align-self: center;
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .notification-content a {
+  color: var(--bb-rl-text-color);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .notification-content span {
+  display: flex;
+  flex-direction: column;
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .notification-content span.bb-full-link {
+  display: none;
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .notification-content .posted {
+  color: var(--bb-rl-text-secondary-color);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bb-rl-background-color);
+  position: absolute;
+  top: -12px;
+  left: -12px;
+  height: 24px;
+  width: 24px;
+  border: 1px solid var(--bb-rl-border-secondary-color);
+  border-radius: var(--bb-rl-radius-full);
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .actions a {
+  display: flex;
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .actions a [class*="bb-icon"] {
+  font-size: 16px;
+  color: var(--bb-rl-icon-primary-color);
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item.close-item {
+  animation: notification-fadeout 0.6s;
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item.unread:before {
+  display: none;
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification .notification-list.bb-more-than-3 {
+  margin-bottom: 32px;
+  position: relative;
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification .notification-list.bb-more-than-3:after {
+  content: " ";
+  height: 20px;
+  border-radius: 0 0 var(--bb-rl-radius-lg) var(--bb-rl-radius-lg);
+  box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.1);
+  position: absolute;
+  right: 2px;
+  left: 2px;
+  bottom: -10px;
+  z-index: 2;
+  background: var(--bb-rl-background-color);
+}
+
+@media screen and (max-width: 500px) {
+  .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list.bb-more-than-3:after {
+    display: none;
+  }
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification .notification-list.bb-more-than-3 .read-item.bb-more-item {
+  display: none;
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification .bb-remove-all-notification {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification .bb-remove-all-notification .action-close {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.2;
+  background: var(--bb-rl-background-tertiary-color);
+  border-radius: var(--bb-rl-radius-md);
+  padding: 8px 35px 7px 15px;
+  color: var(--bb-rl-text-color);
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.1);
+  display: none;
+  position: relative;
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification .bb-remove-all-notification .action-close .dashicons {
+  display: flex;
+  height: 16px;
+  position: absolute;
+  right: 13px;
+  top: 50%;
+  transform: translate(0, -50%);
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification .bb-remove-all-notification .action-close .dashicons:before {
+  content: "\e4f6";
+  font-family: bb-icons-rl !important;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification .bb-remove-all-notification .action-close .bb-for-mobile {
+  display: none;
+}
+
+@media screen and (max-width: 500px) {
+  .bb-onscreen-notification-enable .bb-onscreen-notification .bb-remove-all-notification .action-close .bb-for-desktop {
+    display: none;
+  }
+  .bb-onscreen-notification-enable .bb-onscreen-notification .bb-remove-all-notification .action-close .bb-for-mobile {
+    display: inline-block;
+    line-height: 1.3;
+  }
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification.bb-position-right {
+  left: 35px;
+  right: inherit;
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification.bb-position-right .bb-remove-all-notification {
+  justify-content: flex-end;
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification.bb-position-right .read-item.pull-animation {
+  animation: notification-close-item 0.6s;
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification.bb-position-left {
+  left: inherit;
+  right: 35px;
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification.bb-position-left .bb-remove-all-notification {
+  justify-content: flex-start;
+}
+
+.bb-onscreen-notification-enable .bb-onscreen-notification.bb-position-left .read-item.pull-animation {
+  animation: notification-close-item-left 0.6s;
+}
+
+@media screen and (max-width: 500px) {
+  .bb-onscreen-notification-enable .bb-onscreen-notification {
+    max-width: calc(100% - 30px);
+    display: flex;
+    justify-content: space-between;
+    left: 15px;
+  }
+  .bb-onscreen-notification-enable .bb-onscreen-notification.bb-position-right {
+    left: 15px;
+  }
+  .bb-onscreen-notification-enable .bb-onscreen-notification.bb-position-left {
+    right: 15px;
+  }
+  .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list {
+    flex-direction: column;
+    width: 100%;
+    margin: 0 0 0 10px;
+    flex: 0 0 calc(100% - 80px);
+    /* &.bb-more-than-3 {
+					width: calc(100% - 15px);
+					margin: 0 10px 14px 0;
+				} */
+  }
+  .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item {
+    margin: 0;
+    padding: 12px;
+    display: none;
+  }
+  .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item:first-child {
+    display: flex;
+  }
+  .bb-onscreen-notification-enable .bb-onscreen-notification .notification-list .read-item .notification-avatar {
+    margin-left: 10px;
+  }
+  .bb-onscreen-notification-enable .bb-onscreen-notification .bb-remove-all-notification .action-close {
+    border-radius: 5px;
+    padding: 12px 10px;
+    text-align: center;
+    width: 70px;
+  }
+  .bb-onscreen-notification-enable .bb-onscreen-notification .bb-remove-all-notification .action-close .dashicons {
+    display: none;
+  }
+  .bb-onscreen-notification-enable .bb-onscreen-notification.single-notification .notification-list {
+    width: 100%;
+    margin: 0;
+    flex: 0 0 100%;
+  }
+  .bb-onscreen-notification-enable .bb-onscreen-notification.single-notification .bb-remove-all-notification {
+    display: none;
+  }
+  .bb-onscreen-notification-enable .bb-onscreen-notification.active-button .notification-list {
+    margin-bottom: 14px;
+  }
+  .bb-onscreen-notification-enable .bb-onscreen-notification.active-button .notification-list:before {
+    content: " ";
+    height: 20px;
+    width: calc(100% - 80px);
+    border-radius: 0 0 5px 5px;
+    box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.1);
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    background: var(--bb-rl-background-color);
+  }
+  .bb-onscreen-notification-enable .bb-onscreen-notification.active-button .notification-list.bb-more-than-3:before {
+    width: 100%;
+    bottom: -14px;
+  }
+  .bb-onscreen-notification-enable .bb-onscreen-notification.active-button .bb-remove-all-notification .action-close {
+    display: flex !important;
   }
 }
