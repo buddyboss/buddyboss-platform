@@ -1326,6 +1326,7 @@ window.bp = window.bp || {};
 			var onScreenElem = $( '.bb-onscreen-notification' ),
 				enable       = onScreenElem.data( 'enable' );
 
+			// Loose equality is intentional: jQuery .data( 'enable' ) may return 1 (number) or "1" (string) depending on how the attribute was rendered.
 			if ( 1 != enable || 'undefined' === typeof data.on_screen_notifications || '' === data.on_screen_notifications ) { // jshint ignore:line
 				return;
 			}
