@@ -734,7 +734,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			require_once trailingslashit( $bp->plugin_dir . 'bp-core/classes' ) . '/class-bb-admin-setting-fields.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-general.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-credit.php';
-			require_once $this->admin_dir . '/settings/bp-admin-setting-labs.php';
 		}
 
 		/**
