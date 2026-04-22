@@ -28,6 +28,7 @@ import {
 	reportedContentBulkAction,
 } from '../utils/ajax';
 import { ViewContentReportModal } from '../components/modals/ViewContentReportModal';
+import { safeUrl } from '../utils/sanitize';
 
 /**
  * Build an array of page numbers with ellipsis for pagination.
@@ -515,7 +516,7 @@ export function ReportedContentScreen() {
 														</span>
 														{ item.content_url ? (
 															<a
-																href={ item.content_url }
+																href={ safeUrl( item.content_url ) }
 																target="_blank"
 																rel="noopener noreferrer"
 																className="bb-admin-reported-content__content-name"
@@ -533,14 +534,14 @@ export function ReportedContentScreen() {
 													<div className="bb-admin-reported-content__owner">
 														{ item.owner && item.owner.avatar && (
 															<img
-																src={ item.owner.avatar }
+																src={ safeUrl( item.owner.avatar ) }
 																alt={ item.owner.display_name }
 																className="bb-admin-reported-content__avatar"
 															/>
 														) }
 														{ item.owner && item.owner.display_name ? (
 															<a
-																href={ item.owner.profile_url }
+																href={ safeUrl( item.owner.profile_url ) }
 																target="_blank"
 																rel="noopener noreferrer"
 																className="bb-admin-reported-content__owner-name"

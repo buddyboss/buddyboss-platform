@@ -670,6 +670,12 @@ class BB_Admin_Settings_Ajax {
 				'placeholder'          => $field['placeholder'] ?? null,
 				'button_label'         => $field['button_label'] ?? null,
 				'button_only'          => ! empty( $field['button_only'] ),
+				// Icon-only input button variant: renders the button as an icon control (no text).
+				// 'icon' is an icon font class (e.g. "bb-icons-rl bb-icons-rl-arrow-clockwise").
+				// 'icon_label' is used for aria-label / title on icon-only buttons.
+				'icon_only'            => ! empty( $field['icon_only'] ),
+				'icon'                 => ! empty( $field['icon'] ) ? sanitize_text_field( $field['icon'] ) : null,
+				'icon_label'           => ! empty( $field['icon_label'] ) ? sanitize_text_field( $field['icon_label'] ) : null,
 				'button_url'           => ! empty( $field['button_url'] ) ? esc_url_raw( $field['button_url'] ) : null,
 				'button_target'        => $field['button_target'] ?? null,
 				// Empty state fields (centered card with icon + title + description + button).

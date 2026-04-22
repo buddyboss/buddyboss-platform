@@ -11,6 +11,7 @@ import { useState, useEffect } from '@wordpress/element';
 import { Button, Modal, Spinner } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { getMemberReport } from '../../utils/ajax';
+import { safeUrl } from '../../utils/sanitize';
 
 /**
  * View Report Modal Component
@@ -100,12 +101,12 @@ export function ViewReportModal( { isOpen, onClose, member } ) {
 						<div className="bb-admin-view-report-modal__summary">
 							<div className="bb-admin-view-report-modal__member-info">
 								<img
-									src={ report.avatar }
+									src={ safeUrl( report.avatar ) }
 									alt={ report.display_name }
 									className="bb-admin-view-report-modal__avatar"
 								/>
 								<a
-									href={ report.profile_url }
+									href={ safeUrl( report.profile_url ) }
 									target="_blank"
 									rel="noopener noreferrer"
 									className="bb-admin-view-report-modal__name"
@@ -142,12 +143,12 @@ export function ViewReportModal( { isOpen, onClose, member } ) {
 											<div key={ index } className="bb-admin-view-report-modal__list-item">
 												<div className="bb-admin-view-report-modal__list-item-user">
 													<img
-														src={ reporter.avatar }
+														src={ safeUrl( reporter.avatar ) }
 														alt={ reporter.display_name }
 														className="bb-admin-view-report-modal__list-avatar"
 													/>
 													<a
-														href={ reporter.profile_url }
+														href={ safeUrl( reporter.profile_url ) }
 														target="_blank"
 														rel="noopener noreferrer"
 														className="bb-admin-view-report-modal__list-name"
@@ -185,12 +186,12 @@ export function ViewReportModal( { isOpen, onClose, member } ) {
 											<div key={ index } className="bb-admin-view-report-modal__list-item bb-admin-view-report-modal__list-item--blocker">
 												<div className="bb-admin-view-report-modal__list-item-user">
 													<img
-														src={ blocker.avatar }
+														src={ safeUrl( blocker.avatar ) }
 														alt={ blocker.display_name }
 														className="bb-admin-view-report-modal__list-avatar"
 													/>
 													<a
-														href={ blocker.profile_url }
+														href={ safeUrl( blocker.profile_url ) }
 														target="_blank"
 														rel="noopener noreferrer"
 														className="bb-admin-view-report-modal__list-name"

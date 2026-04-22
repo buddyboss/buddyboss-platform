@@ -120,6 +120,13 @@
         box-shadow: 0px 1.5px 1px 0px rgba(0, 0, 0, 0.16);
         margin-bottom: 24px;
 
+        // Entire section is disabled (section-level conditional action: disable).
+        // Fields inside are still individually disabled via their own conditionals,
+        // so this purely provides a visual cue (dimmed) for the disabled state.
+        &--disabled {
+            opacity: 0.55;
+        }
+
         &-header {
             display: flex;
             align-items: center;
@@ -952,6 +959,42 @@
                 background-color: $bb-background-primary-color;
             }
         }
+
+        // Icon-only variant: compact square button with only an icon.
+        &--icon-only {
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            border-radius: $bb-border-radius-md;
+            background-color: transparent;
+            color: $bb-text-tertiary-color;
+            border: 0.5px solid $bb-border-secondary-color;
+            flex-shrink: 0;
+
+            &:hover {
+                background-color: $bb-background-primary-color;
+                color: $bb-text-color;
+                border-color: $bb-border-brand-primary-color;
+            }
+
+            &:disabled {
+                background-color: transparent;
+                opacity: 0.5;
+            }
+
+            .bb-admin-settings-field__input-button-icon {
+                font-size: 16px;
+                line-height: 1;
+                display: inline-block;
+            }
+        }
+    }
+
+    &-icon {
+
+        &.is-spinning {
+            animation: bb-admin-spin 0.9s linear infinite;
+        }
     }
 
     &-error {
@@ -966,6 +1009,17 @@
         font-size: 13px;
         line-height: 18px;
         margin: 0;
+    }
+}
+
+@keyframes bb-admin-spin {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
     }
 }
 

@@ -10004,6 +10004,21 @@ function bb_get_feature_settings_url( $feature_id, $panel_id = '' ) {
 }
 
 /**
+ * Whether the Settings 2.0 framework supports custom field types via wp.hooks.
+ *
+ * External plugins check this function to decide between embedding custom
+ * field components inside Settings 2.0 panels (when available) or falling
+ * back to a standalone admin page.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool Always true when this function exists.
+ */
+function bb_settings_supports_custom_field_types() {
+	return true;
+}
+
+/**
  * Get the admin URL for the main settings page (Features grid).
  *
  * @since BuddyBoss [BBVERSION]
