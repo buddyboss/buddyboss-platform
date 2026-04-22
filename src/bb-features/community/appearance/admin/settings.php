@@ -189,6 +189,7 @@ function bb_admin_settings_register_appearance_settings() {
 			'description'       => __( 'This matches the WordPress Site Title. Updating it here will update it site-wide.', 'buddyboss' ),
 			'default'           => get_option( 'blogname', '' ),
 			'sanitize_callback' => 'sanitize_text_field',
+			'field_class'       => 'bb-admin-settings-form__field--custom-full-width',
 			'order'             => 10,
 		)
 	);
@@ -234,6 +235,7 @@ function bb_admin_settings_register_appearance_settings() {
 			),
 			'default'           => bp_get_option( 'bb_rl_enabled', false ) ? '1' : '0',
 			'sanitize_callback' => 'bb_appearance_sanitize_layout',
+			'field_class'       => 'bb-admin-settings-form__field--custom-full-width',
 			'order'             => 10,
 		)
 	);

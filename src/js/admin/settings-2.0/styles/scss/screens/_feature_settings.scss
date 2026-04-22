@@ -1117,6 +1117,32 @@
     }
 }
 
+// Appearance → General: Site Name input & Site Layout select render at full
+// content-column width (no 500px cap). Scoped so it does NOT affect the
+// shared `--input-full` / `--select-full` modifiers used elsewhere.
+.bb-admin-settings-form__field.bb-admin-settings-form__field--custom-full-width {
+
+    .bb-admin-settings-form__field-input-wrapper {
+        width: 100%;
+
+        > div {
+            width: 100%;
+        }
+    }
+
+    .components-base-control,
+    .components-select-control,
+    .components-text-control__input {
+        max-width: none;
+        width: 100%;
+    }
+
+    .components-base-control .components-select-control__input {
+        max-width: none;
+        width: 100%;
+    }
+}
+
 /* Extension List Field */
 .bb-extension-list {
 
