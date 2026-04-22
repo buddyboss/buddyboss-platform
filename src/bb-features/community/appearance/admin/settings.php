@@ -602,7 +602,7 @@ function bb_admin_settings_register_appearance_settings() {
 		'branding',
 		array(
 			'name'              => 'bb_rl_color_light',
-			'label'             => __( 'Heading', 'buddyboss' ),
+			'label'             => __( 'Theme Color', 'buddyboss' ),
 			'type'              => 'color',
 			'label_description' => __( 'Select the primary color of your community. This is used across buttons, links and secondary elements.', 'buddyboss' ),
 			'default'           => bp_get_option( 'bb_rl_color_light', '#3E34FF' ),
@@ -626,7 +626,7 @@ function bb_admin_settings_register_appearance_settings() {
 		'branding',
 		array(
 			'name'              => 'bb_rl_color_dark',
-			'label'             => __( 'Heading', 'buddyboss' ),
+			'label'             => __( 'Theme Color', 'buddyboss' ),
 			'label_description' => __( 'Select the primary color of your community. This is used across buttons, links and secondary elements.', 'buddyboss' ),
 			'type'              => 'color',
 			'default'           => bp_get_option( 'bb_rl_color_dark', '#A347FF' ),
