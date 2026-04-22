@@ -2729,6 +2729,120 @@ function bb_advanced_fire_deprecated_save_hooks( $feature_id, $settings, $saved 
 add_action( 'bb_admin_save_feature_settings_after', 'bb_advanced_fire_deprecated_save_hooks', 99, 3 );
 
 // ──────────────────────────────────────────────────────────────────────────────
+// Labs tab deprecated functions and hook compatibility.
+// The Labs tab (bp-settings&tab=bp-labs), its class (BB_Admin_Setting_Labs),
+// section/field helpers, and template callbacks were removed in Settings 2.0.
+// These stubs keep third-party code that still references the public helpers
+// from fataling; all return empty to indicate "no Labs features".
+// ──────────────────────────────────────────────────────────────────────────────
+
+if ( ! function_exists( 'bb_labs_get_settings_sections' ) ) {
+	/**
+	 * Register the labs settings section.
+	 *
+	 * @since      BuddyBoss 1.9.3
+	 * @deprecated BuddyBoss [BBVERSION] The Labs tab has been removed.
+	 *
+	 * @return array Empty array.
+	 */
+	function bb_labs_get_settings_sections() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]' );
+
+		/**
+		 * Filter the (now empty) Labs settings sections.
+		 *
+		 * @since      BuddyBoss 1.9.3
+		 * @deprecated BuddyBoss [BBVERSION] The Labs tab has been removed.
+		 *
+		 * @param array $settings Labs sections.
+		 */
+		return (array) apply_filters_deprecated(
+			'bb_labs_get_settings_sections',
+			array( array() ),
+			'BuddyBoss [BBVERSION]'
+		);
+	}
+}
+
+if ( ! function_exists( 'bb_labs_get_settings_fields_for_section' ) ) {
+	/**
+	 * Get Labs settings fields by section.
+	 *
+	 * @since      BuddyBoss 1.9.3
+	 * @deprecated BuddyBoss [BBVERSION] The Labs tab has been removed.
+	 *
+	 * @param string $section_id Section id.
+	 *
+	 * @return array Empty array.
+	 */
+	function bb_labs_get_settings_fields_for_section( $section_id = '' ) {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]' );
+
+		return (array) apply_filters_deprecated(
+			'bb_labs_get_settings_fields_for_section',
+			array( array(), $section_id ),
+			'BuddyBoss [BBVERSION]'
+		);
+	}
+}
+
+if ( ! function_exists( 'bb_labs_get_settings_fields' ) ) {
+	/**
+	 * Get all of the Labs settings fields.
+	 *
+	 * @since      BuddyBoss 1.9.3
+	 * @deprecated BuddyBoss [BBVERSION] The Labs tab has been removed.
+	 *
+	 * @return array Empty array.
+	 */
+	function bb_labs_get_settings_fields() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]' );
+
+		return (array) apply_filters_deprecated(
+			'bb_labs_get_settings_fields',
+			array( array() ),
+			'BuddyBoss [BBVERSION]'
+		);
+	}
+}
+
+if ( ! function_exists( 'bb_labs_info_section_callback' ) ) {
+	/**
+	 * Labs settings section info callback.
+	 *
+	 * @since      BuddyBoss 1.9.3
+	 * @deprecated BuddyBoss [BBVERSION] The Labs tab has been removed.
+	 */
+	function bb_labs_info_section_callback() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]' );
+	}
+}
+
+if ( ! function_exists( 'bb_labs_no_settings_callback' ) ) {
+	/**
+	 * Labs empty-state callback.
+	 *
+	 * @since      BuddyBoss 2.1.5.1
+	 * @deprecated BuddyBoss [BBVERSION] The Labs tab has been removed.
+	 */
+	function bb_labs_no_settings_callback() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]' );
+	}
+}
+
+/**
+ * Stub out the `bb_admin_setting_labs_register_fields` action so callers
+ * (typically third-party plugins) can still `add_action` against it without
+ * errors; the action will never fire because the tab is gone.
+ *
+ * No active hook needed here — `add_action`/`do_action` are always available
+ * on non-existent action names. Documented as a no-op for clarity.
+ *
+ * @since      BuddyBoss 1.9.3
+ * @deprecated BuddyBoss [BBVERSION] The Labs tab has been removed.
+ */
+
+// ──────────────────────────────────────────────────────────────────────────────
 // ReadyLaunch legacy admin page deprecated functions.
 // The standalone `admin.php?page=bb-readylaunch` page was retired in
 // BuddyBoss [BBVERSION]. Its URL now redirects to the Appearance feature in

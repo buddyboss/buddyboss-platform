@@ -159,30 +159,14 @@ function bp_core_admin_settings() {
 	<?php
 }
 
-/**
- * The main Integrations page
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_core_admin_integrations() {
-	$active_tab  = bp_core_get_admin_integration_active_tab();
-	$form_action = bp_core_admin_integrations_url( $active_tab );
-	?>
-
-	<div class="wrap">
-		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Integrations', 'buddyboss' ) ); ?></h2>
-		<div class="nav-settings-subsubsub">
-			<ul class="subsubsub">
-				<?php bp_core_admin_integration_tabs(); ?>
-			</ul>
-		</div>
-		<form action="<?php echo esc_url( $form_action ); ?>" method="post">
-			<?php bp_core_get_admin_integration_active_tab_object()->form_html(); ?>
-		</form>
-	</div>
-
-	<?php
-}
+// Legacy bp_core_admin_integrations() page renderer removed in Settings 2.0.
+// Integrations now live inside the Settings grid under the "Integrations" category.
+// The bp-integrations URL is redirected by bb_redirect_bp_integrations_*
+// in bp-core-admin-actions.php. Tab-infrastructure helpers
+// (bp_core_admin_integrations_url, bp_core_admin_integration_tabs,
+// bp_core_get_admin_integration_active_tab*) are intentionally preserved —
+// they are still referenced by the BP_Admin_Integration_tab base class
+// which Pro and third-party integration tabs extend.
 
 /**
  * Load the BuddyBoss App integration admin screen.
@@ -378,44 +362,10 @@ function bp_feed_settings_callback_platform( $args ) {
  *
  * @since 1.6.0
  */
-function bp_core_admin_settings_save() {
-	global $wp_settings_fields;
-
-	if (
-		isset( $_GET['page'] )
-		&& 'bp-integrations' == $_GET['page']
-		&& isset( $_GET['tab'] )
-		&& 'bp-compatibility' == $_GET['tab']
-		&& ! empty( $_POST['submit'] ) ) {
-
-		check_admin_referer( 'buddypress-options' );
-
-		// Because many settings are saved with checkboxes, and thus will have no values
-		// in the $_POST array when unchecked, we loop through the registered settings.
-		if ( isset( $wp_settings_fields['buddypress'] ) ) {
-			foreach ( (array) $wp_settings_fields['buddypress'] as $section => $settings ) {
-				foreach ( $settings as $setting_name => $setting ) {
-					$value = isset( $_POST[ $setting_name ] ) ? $_POST[ $setting_name ] : '';
-
-					bp_update_option( $setting_name, $value );
-				}
-			}
-		}
-
-		bp_core_redirect(
-			add_query_arg(
-				array(
-					'page'    => 'bp-integrations',
-					'tab'     => 'bp-compatibility',
-					'updated' => 'true',
-				),
-				bp_get_admin_url( 'admin.php' )
-			)
-		);
-	}
-}
-
-add_action( 'bp_admin_init', 'bp_core_admin_settings_save', 100 );
+// Legacy BuddyPress-compatibility save handler removed — it persisted settings
+// from the `bp-integrations&tab=bp-compatibility` tab form, which no longer
+// exists. Compatibility settings live in Settings 2.0 and use the Settings 2.0
+// AJAX save path (class-bb-admin-settings-ajax.php).
 
 /**
  * Link to Moderation Block tutorial
@@ -510,136 +460,10 @@ add_action( 'bp_admin_tab_setting_save', 'bb_after_update_activity_settings', 10
 // Legacy Privacy callbacks (REST APIs, RSS Feeds) removed — migrated to Settings 2.0 Advanced feature.
 // See: settings/advanced/settings-privacy.php
 
-/**
- * Register the labs settings section.
- *
- * @since BuddyBoss 1.9.3
- *
- * @return array
- */
-function bb_labs_get_settings_sections() {
-
-	$settings = array(
-		'bp_labs_settings' => array(
-			'page'     => 'labs',
-			'title'    => esc_html__( 'BuddyBoss Labs', 'buddyboss' ),
-			'callback' => 'bb_labs_info_section_callback',
-		),
-	);
-
-	return (array) apply_filters( 'bb_labs_get_settings_sections', $settings );
-
-}
-
-/**
- * Get settings fields by section.
- *
- * @since BuddyBoss 1.9.3
- *
- * @param string $section_id Section id.
- *
- * @return mixed False if section is invalid, array of fields otherwise.
- */
-function bb_labs_get_settings_fields_for_section( $section_id = '' ) {
-
-	// Bail if section is empty.
-	if ( empty( $section_id ) ) {
-		return false;
-	}
-
-	$fields = bb_labs_get_settings_fields();
-	$retval = isset( $fields[ $section_id ] ) ? $fields[ $section_id ] : false;
-
-	return (array) apply_filters( 'bb_labs_get_settings_fields_for_section', $retval, $section_id );
-}
-
-/**
- * Get all the settings fields.
- *
- * @since BuddyBoss 1.9.3
- *
- * @return array
- */
-function bb_labs_get_settings_fields() {
-
-	$fields = (array) apply_filters( 'bb_labs_get_settings_fields', array() );
-
-	if ( empty( $fields ) ) {
-		$fields['bp_labs_settings'] = array(
-			'bb_labs_no_settings_callback' => array(
-				'title'    => ' ',
-				'callback' => 'bb_labs_no_settings_callback',
-				'args'     => array( 'class' => 'notes-hidden-header' ),
-			),
-		);
-	}
-
-	return $fields;
-}
-
-/**
- * BuddyBoss Labs settings section callback.
- *
- * @since BuddyBoss 1.9.3
- */
-function bb_labs_info_section_callback() {
-	?>
-
-	<p>
-		<?php
-		printf(
-			'<p class="description">%s</p>',
-			sprintf(
-				wp_kses_post(
-				/* translators: Support portal. */
-					__(
-						'BuddyBoss Labs provides early-access to upcoming BuddyBoss features. You can help us prepare these features for official release by reporting issues and providing feedback through the <a href="%s" target="_blank" >support portal</a>.',
-						'buddyboss'
-					)
-				),
-				'https://support.buddyboss.com'
-			)
-		);
-		?>
-	</p>
-
-	<p>
-		<?php
-		printf(
-			'<p class="description">%s</p>',
-			wp_kses_post(
-			/* translators: Support portal. */
-				__(
-					'Please note, customer support will not be able to provide support for these features until their official release.',
-					'buddyboss'
-				)
-			)
-		);
-		?>
-	</p>
-
-	<?php
-}
-
-/**
- * Function to show the notice about the no labs features available.
- *
- * @since BuddyBoss 2.1.5.1
- *
- * @return void
- */
-function bb_labs_no_settings_callback() {
-	printf(
-		'<p class="no-field-notice">%s</p><style>.submit{display:none;}</style>',
-		wp_kses_post(
-		/* translators: Support portal. */
-			__(
-				'There are currently no BuddyBoss Labs features available.',
-				'buddyboss'
-			)
-		)
-	);
-}
+// Legacy Labs settings tab (BB_Admin_Setting_Labs) removed in Settings 2.0. Helper functions,
+// section/field registrations, and callbacks removed along with settings/bp-admin-setting-labs.php.
+// Deprecation stubs live in bp-core/deprecated/buddyboss/3.0.0.php for any third-party code that
+// still references bb_labs_get_settings_sections() or the associated filters.
 
 /**
  * Get the published page list.
