@@ -208,6 +208,12 @@ function bb_admin_settings_page() {
 	// bp_admin_repair_tools_wrapper_function AJAX action.
 	$localize_data['repairNonce'] = wp_create_nonce( 'bp-do-counts' );
 
+	// ReadyLaunch onboarding completion flag — used by the Appearance → General
+	// welcome banner to hide the Setup Wizard button once the wizard has been
+	// completed at least once. Mirrors the legacy `BP_ADMIN.rl_onboarding_completed`
+	// gate from the retired admin page.
+	$localize_data['rlOnboardingCompleted'] = (bool) bp_get_option( 'bb_rl_onboarding_completed', false );
+
 	// Only expose debug data when WP_DEBUG is enabled.
 	if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 		$registry               = bb_feature_registry();

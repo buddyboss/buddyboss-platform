@@ -23,6 +23,7 @@ import { HelpSliderModal } from '../components/HelpSliderModal';
 import { sanitizeHtml, safeUrl } from '../utils/sanitize';
 import { useGroupNavSync } from '../components/groups/GroupNavSync';
 import { useProfileNavSync } from '../components/members/ProfileNavSync';
+import { WelcomeBanner } from '../components/appearance/WelcomeBanner';
 
 // Lazy load custom panel screens.
 const ActivityListScreen = lazy(() => import('./ActivityListScreen'));
@@ -670,6 +671,10 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 
 						{/* Settings Form - Show sections for active side panel */}
 						<div className="bb-admin-feature-settings__content">
+							{/* Appearance → General welcome banner (intro card above Site Name). */}
+							{ 'appearance' === featureId && 'general' === activePanelId && (
+								<WelcomeBanner />
+							) }
 							{activePanel ? (
 								<>
 									{/* Render all sections within the active side panel */}

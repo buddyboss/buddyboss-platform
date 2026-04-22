@@ -1,0 +1,146 @@
+/**
+ * Appearance → General — Welcome Banner.
+ *
+ * Ported from legacy `bb-rl-welcome-section` styles in
+ * `src/js/admin/readylaunch/styles/scss/settings.scss` (lines 679–810 of the
+ * `bb-backend-setting` branch), re-namespaced to the Settings 2.0 class
+ * prefix. Visual shape per Figma: orange-bordered card, text on the left,
+ * 16:9 YouTube embed on the right, two-column at ≥900px, stacked below.
+ */
+
+.bb-admin-welcome-banner {
+	box-sizing: border-box;
+	max-width: 100%;
+	margin: 0 0 24px 0;
+	padding: 24px;
+	background: #fff;
+	border: 1px solid $bb-background-brand-primary-color;
+	border-radius: 8px;
+	box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05);
+
+	&__content {
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+		gap: 32px;
+		flex-wrap: nowrap;
+	}
+
+	&__text {
+		width: 54%;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: flex-start;
+	}
+
+	&__title {
+		font-size: 22px;
+		font-weight: 500;
+		margin: 0 0 15px 0;
+		color: $bb-text-color;
+	}
+
+	&__description {
+		font-size: 14px;
+		line-height: 20px;
+		color: $bb-text-color;
+		margin: 0 0 16px 0;
+	}
+
+	&__actions {
+		display: flex;
+		gap: 12px;
+		margin-top: 8px;
+		flex-wrap: wrap;
+	}
+
+	&__btn {
+		&.components-button {
+			font-size: 14px;
+			line-height: 20px;
+			font-weight: 500;
+			padding: 10px 20px;
+			height: auto;
+			border-radius: 4px;
+			white-space: nowrap;
+			box-shadow: none;
+		}
+
+		&--primary.components-button {
+			background: $bb-background-brand-primary-color;
+			color: #fff;
+			border: 1px solid $bb-background-brand-primary-color;
+
+			&:hover,
+			&:focus {
+				background: $bb-background-brand-primary-hover-color;
+				color: #fff;
+				border-color: $bb-background-brand-primary-hover-color;
+			}
+		}
+
+		&--secondary.components-button {
+			background: #fff;
+			color: $bb-background-brand-primary-color;
+			border: 1px solid $bb-background-brand-primary-color;
+
+			&:hover,
+			&:focus {
+				background: $bb-background-brand-primary-color;
+				color: #fff;
+			}
+		}
+	}
+
+	&__video {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
+		justify-content: flex-start;
+		width: 46%;
+		aspect-ratio: 16 / 9;
+
+		// Fallback for browsers that don't support aspect-ratio.
+		&::before {
+			content: '';
+			display: block;
+			padding-top: 56.25%;
+			height: 0;
+			width: 100%;
+		}
+
+		iframe {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			border-radius: 16px;
+			border: none;
+			box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+			background: #f6f6f6;
+			object-fit: cover;
+			display: block;
+		}
+	}
+
+	@media (max-width: 900px) {
+		&__content {
+			flex-direction: column;
+			align-items: stretch;
+			gap: 24px;
+		}
+
+		&__text,
+		&__video {
+			width: 100%;
+		}
+
+		&__video {
+			align-items: flex-start;
+			order: -1;
+		}
+	}
+}
