@@ -130,54 +130,36 @@ function bb_admin_settings_register_appearance_settings() {
 		)
 	);
 
-	// Platform only registers the locked Site SEO placeholder when the Sharing
-	// plugin is absent — the "Pattern A" used by other Pro-gated fields (see
-	// settings-sharing.php). When BuddyBoss_Sharing is loaded it registers the
-	// real section + fields at `bb_register_features` priority 20, including
-	// its own pro_notice when the license is invalid. This avoids the
-	// merge-mode section override while still showing an upgrade prompt to
-	// free-tier admins who never installed Sharing.
-	// Guard on the Settings 2.0 registration class, NOT the main plugin class.
-	// A customer on Sharing 1.2.0 ships `BuddyBoss_Sharing` but does NOT ship
-	// the Settings 2.0 registration path. If they upgrade Platform first they'd
-	// otherwise see a blank Site SEO panel (Platform skips the placeholder, old
-	// Sharing doesn't register). Key on `Site_SEO_Settings` so the placeholder
-	// renders whenever Sharing can't actually fill the panel.
-	// Three possible states for the Site SEO panel:
+	// Three possible states for the Site SEO panel (mirrors the Web Push
+	// Notifications panel pattern in `settings-web-push.php`):
 	//   1. NEW Sharing installed — `Site_SEO_Settings` class exists and
 	//      registers its own fields. Platform skips the fallback.
 	//   2. OLD Sharing installed — `BuddyBoss_Sharing` main class exists but
-	//      predates Settings 2.0 (`Site_SEO_Settings` missing). Show an
-	//      Update-Required empty state with a "Update Now" CTA. No "UPGRADE
-	//      PRO" badge — the plugin is already present, just out of date.
-	//   3. Sharing NOT installed — show the upgrade-to-get-Sharing empty
-	//      state with the "UPGRADE PRO" badge and a pricing link.
+	//      predates Settings 2.0. Show an Update-Required empty state card
+	//      (mirrors Web Push "Pro OLD" branch). No "UPGRADE PRO" badge —
+	//      plugin is already present, just out of date.
+	//   3. Sharing NOT installed / deactivated — show the full Figma fields
+	//      as PRO-gated disabled placeholders with an "UPGRADE PRO" badge
+	//      on the section (mirrors OneSignal `bb_notifications_register_web_push_pro_placeholder_fields()`).
 	$has_new_sharing = class_exists( '\\BuddyBoss\\Sharing\\Admin\\Site_SEO_Settings' );
 	$has_old_sharing = ! $has_new_sharing && class_exists( 'BuddyBoss_Sharing' );
 
-	if ( ! $has_new_sharing ) {
-		// Register the section. Only attach the UPGRADE PRO badge when the
-		// plugin is entirely absent — showing it when the admin already has
-		// the plugin installed is misleading.
-		$section_args = array(
-			'title' => __( 'Site SEO', 'buddyboss' ),
-			'order' => 10,
+	if ( $has_old_sharing ) {
+		// OLD Sharing — Update Required empty state, no UPGRADE PRO badge.
+		bb_register_feature_section(
+			'appearance',
+			'site_seo',
+			'seo',
+			array(
+				'title' => __( 'Site SEO', 'buddyboss' ),
+				'order' => 10,
+			)
 		);
-		if ( ! $has_old_sharing ) {
-			$section_args['pro_notice'] = array(
-				'show'       => true,
-				'badge_text' => __( 'UPGRADE PRO', 'buddyboss' ),
-				'badge_icon' => 'bb-icons-rl-crown-simple',
-				'link_url'   => 'https://www.buddyboss.com/pricing/',
-			);
-		}
-		bb_register_feature_section( 'appearance', 'site_seo', 'seo', $section_args );
-
-		// Empty-state card — centered icon + title + description + CTA, same
-		// pattern as the OneSignal "Pro Update Required" state. Rendered via
-		// the `empty_state` field type (see SettingsForm.js:691).
-		if ( $has_old_sharing ) {
-			$empty_state_args = array(
+		bb_register_feature_field(
+			'appearance',
+			'site_seo',
+			'seo',
+			array(
 				'name'                    => 'bb_appearance_site_seo_update_notice',
 				'label'                   => '',
 				'type'                    => 'empty_state',
@@ -188,23 +170,12 @@ function bb_admin_settings_register_appearance_settings() {
 				'button_url'              => admin_url( 'update-core.php' ),
 				'sanitize_callback'       => '__return_empty_string',
 				'order'                   => 10,
-			);
-		} else {
-			$empty_state_args = array(
-				'name'                    => 'bb_appearance_site_seo_install_notice',
-				'label'                   => '',
-				'type'                    => 'empty_state',
-				'icon'                    => 'bb-icons-rl bb-icons-rl-magnifying-glass',
-				'empty_state_title'       => __( 'BuddyBoss Sharing Required', 'buddyboss' ),
-				'empty_state_description' => __( 'Install BuddyBoss Sharing to configure SEO metadata, Open Graph tags and search-engine indexing for your community pages. Comes with the Pro license.', 'buddyboss' ),
-				'button_label'            => __( 'Upgrade to Pro', 'buddyboss' ),
-				'button_url'              => 'https://www.buddyboss.com/pricing/',
-				'button_target'           => '_blank',
-				'sanitize_callback'       => '__return_empty_string',
-				'order'                   => 10,
-			);
-		}
-		bb_register_feature_field( 'appearance', 'site_seo', 'seo', $empty_state_args );
+			)
+		);
+	} elseif ( ! $has_new_sharing ) {
+		// Sharing NOT installed — render the full Figma as PRO-gated
+		// disabled placeholders so admins see what they'd get after install.
+		bb_appearance_register_site_seo_pro_placeholder_fields();
 	}
 
 	// =========================================================================
@@ -841,3 +812,222 @@ function bb_admin_settings_register_appearance_settings() {
 	);
 }
 add_action( 'bb_register_features', 'bb_admin_settings_register_appearance_settings', 20 );
+
+/**
+ * Register PRO-gated placeholder fields for the Site SEO panel.
+ *
+ * Called when the BuddyBoss Sharing plugin is NOT installed (or deactivated).
+ * Mirrors `bb_notifications_register_web_push_pro_placeholder_fields()` in
+ * `settings-web-push.php` — registers the full Figma field surface as
+ * `pro_only` disabled placeholders so admins see what they'd unlock by
+ * upgrading to Pro + installing Sharing.
+ *
+ * Field option keys match Sharing's Settings 2.0 registration
+ * (`Site_SEO_Settings::register_*`) so if an admin later installs Sharing,
+ * the stored values (which Platform never actually persists here thanks to
+ * `__return_empty_string`) seamlessly hand over to Sharing's real fields.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_appearance_register_site_seo_pro_placeholder_fields() {
+
+	$feature_id = 'appearance';
+	$panel_id   = 'site_seo';
+	$section_id = 'seo';
+
+	// -------------------------------------------------------------------------
+	// SECTION: Site SEO (pro-gated placeholder, UPGRADE PRO badge).
+	// -------------------------------------------------------------------------
+	bb_register_feature_section(
+		$feature_id,
+		$panel_id,
+		$section_id,
+		array(
+			'title'      => __( 'Site SEO', 'buddyboss' ),
+			'order'      => 10,
+			'pro_notice' => array(
+				'show'       => true,
+				'badge_text' => __( 'UPGRADE PRO', 'buddyboss' ),
+				'badge_icon' => 'bb-icons-rl-crown-simple',
+				'link_url'   => 'https://www.buddyboss.com/pricing/',
+			),
+		)
+	);
+
+	// SEO group: title + description + Google SERP preview card.
+	bb_register_feature_field(
+		$feature_id,
+		$panel_id,
+		$section_id,
+		array(
+			'name'              => 'buddyboss_seo_title',
+			'label'             => __( 'SEO', 'buddyboss' ),
+			'type'              => 'text',
+			'placeholder'       => get_bloginfo( 'name' ),
+			'description'       => __( 'Set the main title of your website that Google will index. The optimal length is about 55 characters.', 'buddyboss' ),
+			'default'           => '',
+			'pro_only'          => true,
+			'sanitize_callback' => '__return_empty_string',
+			'group'             => array(
+				'key'   => 'seo',
+				'label' => __( 'SEO Title', 'buddyboss' ),
+			),
+			'order'             => 10,
+		)
+	);
+
+	bb_register_feature_field(
+		$feature_id,
+		$panel_id,
+		$section_id,
+		array(
+			'name'              => 'buddyboss_seo_description',
+			'label'             => __( 'SEO', 'buddyboss' ),
+			'type'              => 'textarea',
+			'placeholder'       => get_bloginfo( 'description' ),
+			'description'       => __( 'Set the default description that will accompany your SEO title in search engine results. The optimal description length is 155 to 300 characters.', 'buddyboss' ),
+			'default'           => '',
+			'pro_only'          => true,
+			'sanitize_callback' => '__return_empty_string',
+			'group'             => array(
+				'key'   => 'seo',
+				'label' => __( 'SEO Description', 'buddyboss' ),
+			),
+			'order'             => 20,
+		)
+	);
+
+	// Google SERP preview card — reads title/description live from above.
+	bb_register_feature_field(
+		$feature_id,
+		$panel_id,
+		$section_id,
+		array(
+			'name'              => 'buddyboss_seo_preview',
+			'label'             => __( 'SEO', 'buddyboss' ),
+			'type'              => 'seo_preview',
+			'default'           => '',
+			'group'             => array(
+				'key' => 'seo',
+			),
+			'preview_config'    => array(
+				'site_name'       => get_bloginfo( 'name' ),
+				'site_url'        => home_url( '/' ),
+				'site_icon'       => get_site_icon_url( 48 ),
+				'title_key'       => 'buddyboss_seo_title',
+				'description_key' => 'buddyboss_seo_description',
+			),
+			'pro_only'          => true,
+			'sanitize_callback' => '__return_empty_string',
+			'order'             => 30,
+		)
+	);
+
+	// Social group: Open Graph toggle.
+	// `description` = short inline label next to the toggle ("Enable Open-graph").
+	// `help_text`   = secondary helper copy rendered below the field.
+	// Matches Figma layout where the toggle's inline label is the short text
+	// and the long "Open Graph support improves…" paragraph sits underneath.
+	bb_register_feature_field(
+		$feature_id,
+		$panel_id,
+		$section_id,
+		array(
+			'name'              => 'buddyboss_enable_open_graph',
+			'label'             => __( 'Social', 'buddyboss' ),
+			'type'              => 'toggle',
+			'description'       => __( 'Enable Open-graph', 'buddyboss' ),
+			'help_text'         => __( 'Open Graph support improves how your content appears when shared on social platforms such as Facebook, LinkedIn, and X.', 'buddyboss' ),
+			'default'           => 0,
+			'pro_only'          => true,
+			'sanitize_callback' => '__return_empty_string',
+			'order'             => 40,
+		)
+	);
+
+	// Activity Title Template + Available Tags reference list.
+	bb_register_feature_field(
+		$feature_id,
+		$panel_id,
+		$section_id,
+		array(
+			'name'              => 'buddyboss_activity_og_title_template',
+			'label'             => __( 'Activity Title Template', 'buddyboss' ),
+			'type'              => 'text',
+			'placeholder'       => '{activity_action} | {site_title}',
+			'description'       => __( 'Template for activity Open Graph titles. Use the tags below to dynamically insert activity data.', 'buddyboss' ),
+			'default'           => '',
+			'pro_only'          => true,
+			'sanitize_callback' => '__return_empty_string',
+			'order'             => 50,
+		)
+	);
+
+	bb_register_feature_field(
+		$feature_id,
+		$panel_id,
+		$section_id,
+		array(
+			'name'              => 'buddyboss_activity_og_title_template_tags',
+			'label'             => '',
+			'type'              => 'tags_reference',
+			'tags'              => array(
+				array( 'tag' => '{activity_title}',   'description' => __( 'Activity post title (falls back to activity_action if empty)', 'buddyboss' ) ),
+				array( 'tag' => '{activity_action}',  'description' => __( 'Activity action text (e.g., "John posted an update")', 'buddyboss' ) ),
+				array( 'tag' => '{activity_content}', 'description' => __( 'Activity content (limited to 60 characters)', 'buddyboss' ) ),
+				array( 'tag' => '{author_name}',      'description' => __( 'Activity author display name', 'buddyboss' ) ),
+			),
+			'default'           => '',
+			'pro_only'          => true,
+			'sanitize_callback' => '__return_empty_string',
+			'order'             => 55,
+		)
+	);
+
+	// Indexing group: four search-engine indexing toggles.
+	// All four share `label: "Indexing"` + `group.key: 'indexing'` so the
+	// left-column "Indexing" label renders only on the first toggle (Posts);
+	// the other three have their left column auto-suppressed by the group
+	// first/last detection in SettingsForm.
+	//
+	// Each toggle's inline right-column label ("Posts" / "Profiles" / etc.)
+	// goes in `description` (which toggle fields render inline next to the
+	// switch). The LAST toggle also carries the shared `help_text` line
+	// so "Choose whether search engines should index…" renders once below
+	// the cluster, matching the Figma.
+	$indexing_toggles = array(
+		'buddyboss_seo_index_posts'    => __( 'Posts', 'buddyboss' ),
+		'buddyboss_seo_index_profiles' => __( 'Profiles', 'buddyboss' ),
+		'buddyboss_seo_index_groups'   => __( 'Groups', 'buddyboss' ),
+		'buddyboss_seo_index_forums'   => __( 'Forums', 'buddyboss' ),
+	);
+	$indexing_order = 60;
+	$indexing_total = count( $indexing_toggles );
+	$indexing_cur   = 0;
+	foreach ( $indexing_toggles as $toggle_name => $toggle_label ) {
+		$indexing_cur++;
+		$is_last_toggle = ( $indexing_cur === $indexing_total );
+		bb_register_feature_field(
+			$feature_id,
+			$panel_id,
+			$section_id,
+			array(
+				'name'              => $toggle_name,
+				'label'             => __( 'Indexing', 'buddyboss' ),
+				'type'              => 'toggle',
+				'description'       => $toggle_label,
+				'help_text'         => $is_last_toggle ? __( 'Choose whether search engines should index this content. Turning it off will hide it from search results.', 'buddyboss' ) : '',
+				'default'           => 0,
+				'pro_only'          => true,
+				'sanitize_callback' => '__return_empty_string',
+				'group'             => array(
+					'key' => 'indexing',
+				),
+				'order'             => $indexing_order,
+			)
+		);
+		$indexing_order += 10;
+	}
+}
