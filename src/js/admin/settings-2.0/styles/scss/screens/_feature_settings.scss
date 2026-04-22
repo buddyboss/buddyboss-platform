@@ -3500,11 +3500,8 @@
 		@include bb-button-primary;
 	}
 
-	&__modal-actions {
-		display: flex;
-		justify-content: flex-end;
-		gap: 8px;
-		margin-top: 20px;
+	&__modal.components-modal__frame {
+		max-width: 680px;
 	}
 }
 

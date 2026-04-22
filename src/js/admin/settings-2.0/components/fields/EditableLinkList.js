@@ -232,29 +232,31 @@ export function EditableLinkList( { value, onChange, disabled, config } ) {
 				<Modal
 					title={ 'add' === modal.mode ? modalTitleAdd : modalTitleEdit }
 					onRequestClose={ closeModal }
-					className="bb-admin-editable-link-list__modal"
+					className="bb-admin-editable-link-list__modal bb-admin-settings-modal"
 				>
-					<TextControl
-						label={ __( 'Title', 'buddyboss' ) }
-						value={ modal.title }
-						onChange={ function ( newTitle ) {
-							setModal( Object.assign( {}, modal, { title: newTitle } ) );
-						} }
-						placeholder={ __( 'Enter title', 'buddyboss' ) }
-						__nextHasNoMarginBottom
-					/>
-					<TextControl
-						label={ __( 'URL', 'buddyboss' ) }
-						type="url"
-						value={ modal.url }
-						onChange={ function ( newUrl ) {
-							setModal( Object.assign( {}, modal, { url: newUrl } ) );
-						} }
-						placeholder={ __( 'Enter URL', 'buddyboss' ) }
-						__nextHasNoMarginBottom
-					/>
-					<div className="bb-admin-editable-link-list__modal-actions">
-						<Button variant="tertiary" onClick={ closeModal }>
+					<div className="bb-admin-editable-link-list-modal__body bb-admin-settings-modal__body">
+						<TextControl
+							label={ __( 'Title', 'buddyboss' ) }
+							value={ modal.title }
+							onChange={ function ( newTitle ) {
+								setModal( Object.assign( {}, modal, { title: newTitle } ) );
+							} }
+							placeholder={ __( 'Enter title', 'buddyboss' ) }
+							__nextHasNoMarginBottom
+						/>
+						<TextControl
+							label={ __( 'URL', 'buddyboss' ) }
+							type="url"
+							value={ modal.url }
+							onChange={ function ( newUrl ) {
+								setModal( Object.assign( {}, modal, { url: newUrl } ) );
+							} }
+							placeholder={ __( 'Enter URL', 'buddyboss' ) }
+							__nextHasNoMarginBottom
+						/>
+					</div>
+					<div className="bb-admin-editable-link-list__modal-actions bb-admin-settings-modal__footer">
+						<Button variant="secondary" onClick={ closeModal }>
 							{ __( 'Cancel', 'buddyboss' ) }
 						</Button>
 						<Button variant="primary" onClick={ handleSave } disabled={ ! canSubmit }>
