@@ -549,6 +549,11 @@ function bp_version_updater() {
 			bb_update_to_3_0_0();
 		}
 
+		// Version 3.0.1 — canonicalize ReadyLaunch sidebar/menu/pages shapes.
+		if ( $raw_db_version < 23584 ) {
+			bb_update_to_3_0_1();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -4161,6 +4166,64 @@ function bb_update_to_3_0_0() {
 	}
 
 	bb_migrate_email_type_groups();
+}
+
+/**
+ * Migration for BuddyBoss 3.0.1 — canonicalize ReadyLaunch sidebar/menu/pages
+ * option shapes.
+ *
+ * The legacy ReadyLaunch onboarding wizard persisted these options as sequential
+ * arrays:
+ *   bb_rl_activity_sidebars        [ 'complete_profile', 'latest_updates', ... ]
+ *   bb_rl_member_profile_sidebars  [ 'complete_profile', 'connections', ... ]
+ *   bb_rl_groups_sidebars          [ 'about_group', 'group_members' ]
+ *   bb_rl_enabled_pages            [ 'registration', 'courses' ]
+ *   bb_rl_side_menu                [ { id, enabled, order, icon }, ... ]
+ *
+ * Settings 2.0 expects the associative-map shape:
+ *   { complete_profile: 1, latest_updates: 1, ... }
+ *   { activity_feed: { enabled, order, icon }, ... }
+ *
+ * Reading the legacy shape into the Settings 2.0 React admin renders every
+ * toggle as unchecked because the AJAX layer's `array_map( 'absint', ... )`
+ * coerces the string members to `0`. This one-shot migration reads each
+ * option, normalizes via the same helpers the save-side sanitize callbacks
+ * use, and writes back. Idempotent — values already in canonical shape pass
+ * through unchanged.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_update_to_3_0_1() {
+	if ( ! function_exists( 'bb_appearance_normalize_list_to_map' ) || ! function_exists( 'bb_appearance_normalize_side_menu_shape' ) ) {
+		return;
+	}
+
+	// Sequential list → associative `{ key => 1 }` map.
+	$list_options = array(
+		'bb_rl_activity_sidebars',
+		'bb_rl_member_profile_sidebars',
+		'bb_rl_groups_sidebars',
+		'bb_rl_enabled_pages',
+	);
+	foreach ( $list_options as $option_name ) {
+		$stored = bp_get_option( $option_name, null );
+		if ( null === $stored || ! is_array( $stored ) ) {
+			continue;
+		}
+		$normalized = bb_appearance_normalize_list_to_map( $stored );
+		if ( $normalized !== $stored ) {
+			bp_update_option( $option_name, $normalized );
+		}
+	}
+
+	// Sequential list of item objects → associative map keyed by id.
+	$side_menu = bp_get_option( 'bb_rl_side_menu', null );
+	if ( null !== $side_menu && is_array( $side_menu ) ) {
+		$normalized_menu = bb_appearance_normalize_side_menu_shape( $side_menu );
+		if ( $normalized_menu !== $side_menu ) {
+			bp_update_option( 'bb_rl_side_menu', $normalized_menu );
+		}
+	}
 }
 
 /**

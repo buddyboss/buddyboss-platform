@@ -488,25 +488,21 @@ function bb_appearance_on_settings_saved( $feature_id, $settings, $saved ) {
 add_action( 'bb_admin_save_feature_settings_after', 'bb_appearance_on_settings_saved', 10, 3 );
 
 /**
- * Normalize Appearance field values read from legacy shapes on their way to React.
+ * Coerce `bb_rl_enabled` for the Site Layout SelectControl.
  *
- * Three persisted options have drift between the shape the onboarding wizard
- * produced and the shape Settings 2.0 expects:
+ * The option is stored as a boolean (all legacy consumers use truthy checks),
+ * but the Settings 2.0 `select` field compares against the string options
+ * `'1'` / `'0'`. Without this filter React renders the dropdown blank on
+ * sites where the option is already set.
  *
- *   1. `bb_rl_enabled` — stored as boolean, but the Site Layout `select` field
- *      compares against string options `'1'`/`'0'`. Without coercion React
- *      renders the dropdown blank on sites where the option is already set.
- *   2. `bb_rl_activity_sidebars` / `bb_rl_member_profile_sidebars` /
- *      `bb_rl_groups_sidebars` — legacy onboarding stored these as sequential
- *      arrays (`['complete_profile', 'latest_updates']`), Settings 2.0
- *      expects associative maps (`['complete_profile' => 1, ...]`). React's
- *      `toggle_list` does `listValue[option.value]` which returns undefined
- *      on sequential arrays → every toggle renders unchecked.
- *   3. `bb_rl_enabled_pages` — same shape drift as the sidebars.
+ * This is a display-side coercion only — the save-side `bb_appearance_sanitize_layout`
+ * callback coerces back to bool before write, so the stored shape never changes.
  *
- * The filter normalizes on read only — it does not mutate the stored option.
- * Save-side sanitize callbacks already accept both shapes and canonicalize
- * the map form, so once a user saves, the stored option becomes map-shaped.
+ * Sidebar / side-menu / enabled_pages shape normalization used to live here
+ * too, but those shapes are now canonicalized at write time in
+ * `BB_ReadyLaunch_Onboarding::sanitize_final_settings()` and a one-shot
+ * migration (`bb_update_to_3_0_1`) cleans any legacy sequential data in the
+ * DB, so read-side normalization is no longer needed.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -520,40 +516,9 @@ function bb_appearance_normalize_field_data( $field_data, $field, $feature_id ) 
 		return $field_data;
 	}
 
-	$name = $field['name'] ?? '';
-
-	switch ( $name ) {
-		case 'bb_rl_enabled':
-			// Coerce any truthy value (bool/int/string) to '1' or '0' so the
-			// `select` field's options match. Mirrors the legacy `(bool)` cast
-			// at `class-bb-readylaunch.php:3042`, adapted to the string shape
-			// Settings 2.0's select field requires.
-			$field_data['value']   = ! empty( $field_data['value'] ) && '0' !== $field_data['value'] ? '1' : '0';
-			$field_data['default'] = ! empty( $field_data['default'] ) && '0' !== $field_data['default'] ? '1' : '0';
-			break;
-
-		case 'bb_rl_activity_sidebars':
-		case 'bb_rl_member_profile_sidebars':
-		case 'bb_rl_groups_sidebars':
-		case 'bb_rl_enabled_pages':
-			// Sequential-list → map normalization. Mirrors the
-			// `isset( $saved[0] )` + `in_array()` conversion at
-			// `class-bb-readylaunch.php:3102-3108` and siblings.
-			$field_data['value']   = bb_appearance_normalize_list_to_map( $field_data['value'] );
-			$field_data['default'] = bb_appearance_normalize_list_to_map( $field_data['default'] );
-			break;
-
-		case 'bb_rl_side_menu':
-			// Sequential-list-of-items → map-of-items normalization, matching
-			// the `wp_parse_args($raw, $defaults)` + `array_map` normalizer at
-			// `class-bb-readylaunch.php:3242-3256`. Required because the
-			// onboarding wizard's draggable control persists sequential
-			// `[{id, enabled, order, icon}, ...]` and `SortableToggleList`
-			// indexes stored data via `stored[item.id]` (returns undefined on
-			// sequential arrays → toggles all render enabled).
-			$field_data['value']   = bb_appearance_normalize_side_menu_shape( $field_data['value'] );
-			$field_data['default'] = bb_appearance_normalize_side_menu_shape( $field_data['default'] );
-			break;
+	if ( 'bb_rl_enabled' === ( $field['name'] ?? '' ) ) {
+		$field_data['value']   = ! empty( $field_data['value'] ) && '0' !== $field_data['value'] ? '1' : '0';
+		$field_data['default'] = ! empty( $field_data['default'] ) && '0' !== $field_data['default'] ? '1' : '0';
 	}
 
 	return $field_data;

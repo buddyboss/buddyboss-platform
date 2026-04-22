@@ -646,8 +646,24 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 					case 'checkbox_group':
 						if ( is_array( $field_value ) ) {
 							// Ensure all values are sanitised and valid.
-							$allowed_values          = isset( $field_config['options'] ) ? array_keys( $field_config['options'] ) : array();
-							$sanitized[ $field_key ] = array_intersect( $field_value, $allowed_values );
+							$allowed_values = isset( $field_config['options'] ) ? array_keys( $field_config['options'] ) : array();
+							$filtered       = array_intersect( $field_value, $allowed_values );
+
+							// The sidebar widget fields are registered as `checkbox_group` but
+							// the stored shape Settings 2.0 expects is the same associative map
+							// the `draggable` branch produces. Without this delegation
+							// `array_intersect` preserves the sequential-key shape and the
+							// admin React form renders every toggle unchecked (PROD-9859).
+							$sidebar_map_keys = array(
+								'bb_rl_activity_sidebars',
+								'bb_rl_member_profile_sidebars',
+								'bb_rl_groups_sidebars',
+							);
+							if ( in_array( $field_key, $sidebar_map_keys, true ) && function_exists( 'bb_appearance_sanitize_sidebar_map' ) ) {
+								$sanitized[ $field_key ] = bb_appearance_sanitize_sidebar_map( $filtered );
+							} else {
+								$sanitized[ $field_key ] = $filtered;
+							}
 						} else {
 							// If not an array, default to an empty array.
 							$sanitized[ $field_key ] = array();
