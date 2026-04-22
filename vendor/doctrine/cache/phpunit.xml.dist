@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+     backupGlobals="false"
+     colors="true"
+     verbose="true"
+     beStrictAboutOutputDuringTests="true"
+     beStrictAboutTestsThatDoNotTestAnything="true"
+     beStrictAboutChangesToGlobalState="true"
+>
+    <php>
+        <ini name="error_reporting" value="-1" />
+    </php>
+
+    <testsuites>
+        <testsuite name="Doctrine Cache Test Suite">
+            <directory>./tests/Doctrine/</directory>
+        </testsuite>
+    </testsuites>
+
+    <filter>
+        <whitelist>
+            <directory>./lib/Doctrine/</directory>
+            <exclude>
+                <file>lib/Doctrine/Common/Cache/ApcCache.php</file>
+                <file>lib/Doctrine/Common/Cache/CouchbaseCache.php</file>
+                <file>lib/Doctrine/Common/Cache/XcacheCache.php</file>
+            </exclude>
+        </whitelist>
+    </filter>
+</phpunit>
