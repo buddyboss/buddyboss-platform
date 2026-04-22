@@ -162,7 +162,7 @@ export function EditableLinkList( { value, onChange, disabled, config } ) {
 																{ ...providedDrag.dragHandleProps }
 																aria-label={ __( 'Drag to reorder', 'buddyboss' ) }
 															>
-																<i className="bb-icons-rl bb-icons-rl-dots-six-vertical" aria-hidden="true"></i>
+																<i className="bb-icons-rl bb-icons-rl-list" aria-hidden="true"></i>
 															</span>
 
 															<span className="bb-admin-editable-link-list__body">
@@ -170,6 +170,30 @@ export function EditableLinkList( { value, onChange, disabled, config } ) {
 																	<i className="bb-icons-rl bb-icons-rl-link bb-admin-editable-link-list__title-icon" aria-hidden="true"></i>
 																	<span className="bb-admin-editable-link-list__title">
 																		{ link.title }
+																	</span>
+																	<span className="bb-admin-editable-link-list__actions">
+																		<button
+																			type="button"
+																			className="bb-admin-editable-link-list__action-btn"
+																			onClick={ function () {
+																				openEditModal( link );
+																			} }
+																			disabled={ disabled }
+																			aria-label={ __( 'Edit link', 'buddyboss' ) }
+																		>
+																			<i className="bb-icons-rl bb-icons-rl-pencil-simple" aria-hidden="true"></i>
+																		</button>
+																		<button
+																			type="button"
+																			className="bb-admin-editable-link-list__action-btn bb-admin-editable-link-list__action-btn--delete"
+																			onClick={ function () {
+																				handleDelete( link.id );
+																			} }
+																			disabled={ disabled }
+																			aria-label={ __( 'Delete link', 'buddyboss' ) }
+																		>
+																			<i className="bb-icons-rl bb-icons-rl-trash" aria-hidden="true"></i>
+																		</button>
 																	</span>
 																</span>
 																<a
@@ -180,31 +204,6 @@ export function EditableLinkList( { value, onChange, disabled, config } ) {
 																>
 																	{ link.url }
 																</a>
-															</span>
-
-															<span className="bb-admin-editable-link-list__actions">
-																<button
-																	type="button"
-																	className="bb-admin-editable-link-list__action-btn"
-																	onClick={ function () {
-																		openEditModal( link );
-																	} }
-																	disabled={ disabled }
-																	aria-label={ __( 'Edit link', 'buddyboss' ) }
-																>
-																	<i className="bb-icons-rl bb-icons-rl-pencil-simple" aria-hidden="true"></i>
-																</button>
-																<button
-																	type="button"
-																	className="bb-admin-editable-link-list__action-btn bb-admin-editable-link-list__action-btn--delete"
-																	onClick={ function () {
-																		handleDelete( link.id );
-																	} }
-																	disabled={ disabled }
-																	aria-label={ __( 'Delete link', 'buddyboss' ) }
-																>
-																	<i className="bb-icons-rl bb-icons-rl-trash" aria-hidden="true"></i>
-																</button>
 															</span>
 														</li>
 													);
@@ -221,7 +220,6 @@ export function EditableLinkList( { value, onChange, disabled, config } ) {
 			) }
 
 			<Button
-				variant="primary"
 				className="bb-admin-editable-link-list__add"
 				onClick={ openAddModal }
 				disabled={ disabled }
