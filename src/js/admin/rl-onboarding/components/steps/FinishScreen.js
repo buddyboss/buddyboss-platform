@@ -1,6 +1,22 @@
 import { __ } from '@wordpress/i18n';
 import { Button } from '@wordpress/components';
 
+// Safely resolve a URL from the localized onboarding payload. Returns '#' when
+// the expected key isn't populated so we never render
+// `href="undefinedadmin.php?..."` if the PHP localize data is incomplete.
+const safeAdminUrl = ( suffix ) => {
+    const adminUrl = window.bbRlOnboarding?.readylaunch?.admin_url;
+    if ( typeof adminUrl !== 'string' || '' === adminUrl ) {
+        return '#';
+    }
+    return adminUrl + ( suffix || '' );
+};
+
+const safeSiteUrl = () => {
+    const siteUrl = window.bbRlOnboarding?.readylaunch?.site_url;
+    return ( typeof siteUrl === 'string' && '' !== siteUrl ) ? siteUrl : '#';
+};
+
 export const FinishScreen = ({ stepData, onFinish, onViewSite }) => {
     const { title, description } = stepData;
     // Note: Completion is now handled by OnboardingModal when navigating to this screen
@@ -32,7 +48,7 @@ export const FinishScreen = ({ stepData, onFinish, onViewSite }) => {
                                 <h2>{__('View Community', 'buddyboss')}</h2>
                                 <p>{__('See a live preview of your community\'s front-end.', 'buddyboss')}</p>
                             </div>
-                            <a href={window.bbRlOnboarding?.readylaunch?.site_url} className="bb-rl-finish-action-button" variant="primary">
+                            <a href={safeSiteUrl()} className="bb-rl-finish-action-button" variant="primary">
                                 {__('View Site', 'buddyboss')}
                             </a>
                         </div>
@@ -41,7 +57,7 @@ export const FinishScreen = ({ stepData, onFinish, onViewSite }) => {
                                 <h2>{__('ReadyLaunch Settings', 'buddyboss')}</h2>
                                 <p>{__('Tailor styles, pages, and widgets to match your brand.', 'buddyboss')}</p>
                             </div>
-                            <a href={window.bbRlOnboarding?.readylaunch?.admin_url + 'admin.php?page=bb-settings&tab=appearance&panel=general'} className="bb-rl-finish-action-button" variant="primary">
+                            <a href={safeAdminUrl( 'admin.php?page=bb-settings&tab=appearance&panel=general' )} className="bb-rl-finish-action-button" variant="primary">
                                 {__('Open Settings', 'buddyboss')}
                             </a>
                         </div>
@@ -50,7 +66,7 @@ export const FinishScreen = ({ stepData, onFinish, onViewSite }) => {
                                 <h2>{__('Platform Settings', 'buddyboss')}</h2>
                                 <p>{__('Fine-tune features, permissions, and community rules.', 'buddyboss')}</p>
                             </div>
-                            <a href={window.bbRlOnboarding?.readylaunch?.admin_url + 'admin.php?page=bb-settings'} className="bb-rl-finish-action-button" variant="primary">
+                            <a href={safeAdminUrl( 'admin.php?page=bb-settings' )} className="bb-rl-finish-action-button" variant="primary">
                                 {__('Open Settings', 'buddyboss')}
                             </a>
                         </div>

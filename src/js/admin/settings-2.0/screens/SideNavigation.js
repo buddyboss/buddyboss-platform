@@ -7,6 +7,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
+import { useMemo } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { safeUrl } from '../utils/sanitize';
 import { evaluateConditional } from '../utils/conditional';
@@ -25,10 +26,15 @@ import { evaluateConditional } from '../utils/conditional';
  * @returns {JSX.Element} Side navigation component
  */
 export function SideNavigation({ featureId, sidePanels, navItems, currentPanel, onNavigate, onBack, formValues }) {
-	// Filter out panels whose `conditional` arg evaluates to false against the live form state.
-	const visibleSidePanels = ( sidePanels || [] ).filter( function ( panel ) {
-		return evaluateConditional( panel.conditional, formValues || {} );
-	} );
+	// Filter out panels whose `conditional` arg evaluates to false against the
+	// live form state. Memoized so the returned array has a stable reference
+	// when neither dep changes — prevents unnecessary child-component
+	// reconciliation on every parent render.
+	const visibleSidePanels = useMemo( function () {
+		return ( sidePanels || [] ).filter( function ( panel ) {
+			return evaluateConditional( panel.conditional, formValues || {} );
+		} );
+	}, [ sidePanels, formValues ] );
 	const handlePanelClick = (panelId) => {
 		if ( 'function' === typeof onNavigate ) {
 			onNavigate(`/settings/${featureId}/${panelId}`);

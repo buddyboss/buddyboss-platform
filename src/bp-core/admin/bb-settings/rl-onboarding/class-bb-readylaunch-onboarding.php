@@ -649,18 +649,21 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 							$allowed_values = isset( $field_config['options'] ) ? array_keys( $field_config['options'] ) : array();
 							$filtered       = array_intersect( $field_value, $allowed_values );
 
-							// The sidebar widget fields are registered as `checkbox_group` but
-							// the stored shape Settings 2.0 expects is the same associative map
-							// the `draggable` branch produces. Without this delegation
-							// `array_intersect` preserves the sequential-key shape and the
-							// admin React form renders every toggle unchecked (PROD-9859).
+							// Sidebar widget fields persist as `{widget_id => bool}` maps
+							// (the shape Settings 2.0 React and the frontend sidebar
+							// template both read). `array_intersect` on a sequential list
+							// of string IDs preserves numeric keys — pivot to a map with
+							// `array_fill_keys` BEFORE delegating, otherwise
+							// `bb_appearance_sanitize_sidebar_map`'s associative branch
+							// would write `{0=>true, 1=>true, ...}` and lose the IDs
+							// (PROD-9859).
 							$sidebar_map_keys = array(
 								'bb_rl_activity_sidebars',
 								'bb_rl_member_profile_sidebars',
 								'bb_rl_groups_sidebars',
 							);
 							if ( in_array( $field_key, $sidebar_map_keys, true ) && function_exists( 'bb_appearance_sanitize_sidebar_map' ) ) {
-								$sanitized[ $field_key ] = bb_appearance_sanitize_sidebar_map( $filtered );
+								$sanitized[ $field_key ] = bb_appearance_sanitize_sidebar_map( array_fill_keys( $filtered, true ) );
 							} else {
 								$sanitized[ $field_key ] = $filtered;
 							}
@@ -867,8 +870,13 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 		// auto-save and the onboarding wizard run the same side-effect
 		// pipeline. The Appearance feature is always registered (required =>
 		// true, is_active_callback => __return_true), so the function is
-		// guaranteed loaded by the time this method runs.
-		bb_appearance_apply_configuration( $final_settings );
+		// normally loaded by the time this method runs. The `function_exists`
+		// guard is defensive — if a customer somehow rolls Platform back below
+		// the version that ships the Appearance feature while the onboarding
+		// bundle is still cached in their browser, we'd rather no-op than fatal.
+		if ( function_exists( 'bb_appearance_apply_configuration' ) ) {
+			bb_appearance_apply_configuration( $final_settings );
+		}
 
 		// Apply remaining step settings dynamically — onboarding-specific path
 		// that reads dynamic step_options config to cover fields not handled

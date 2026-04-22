@@ -4,7 +4,6 @@
 		"@testing-library/jest-dom": "^5.17.0",
 		"@testing-library/react": "^12.1.5",
 		"@testing-library/user-event": "^14.6.1",
-		"@wordpress/api-fetch": "^5.2.6",
 		"@wordpress/babel-preset-default": "^7.32.0",
 		"@wordpress/browserslist-config": "^5.31.0",
 		"@wordpress/components": "^19.17.0",

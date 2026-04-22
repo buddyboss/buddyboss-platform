@@ -38,9 +38,6 @@ bb_register_feature(
 		'standalone'         => true,
 		'required'           => true, // Non-toggleable — the card renders without an interactive switch.
 		'is_active_callback' => '__return_true', // Always-active. The Site Layout dropdown is the real ReadyLaunch kill-switch.
-		'php_loader'         => function () {
-			require_once __DIR__ . '/loader.php';
-		},
 		'settings_route'     => '/settings/appearance',
 		'order'              => 10,
 	)
@@ -49,6 +46,18 @@ bb_register_feature(
 // Load Settings 2.0 configuration (side panels, sections, fields).
 // Loaded here (not in loader.php) so settings register even when the feature has no
 // sub-feature activation state — matches the Reactions reference implementation.
-if ( file_exists( __DIR__ . '/admin/settings.php' ) ) {
+//
+// Gate on admin/AJAX/REST/CLI contexts — the 781-LOC registration block calls
+// `wp_get_nav_menus()` and primes 14 options, none of which frontend requests
+// need. Skipping on public requests trims startup work for every visitor.
+if (
+	file_exists( __DIR__ . '/admin/settings.php' ) &&
+	(
+		is_admin() ||
+		wp_doing_ajax() ||
+		( defined( 'REST_REQUEST' ) && REST_REQUEST ) ||
+		( defined( 'WP_CLI' ) && WP_CLI )
+	)
+) {
 	require_once __DIR__ . '/admin/settings.php';
 }

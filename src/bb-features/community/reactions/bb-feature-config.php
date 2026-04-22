@@ -64,6 +64,18 @@ bb_register_feature(
 // Load Settings 2.0 configuration (side panels, sections, fields).
 // This must be loaded here (not in loader.php) so settings are registered
 // even when the feature is inactive (needed to show the settings page).
-if ( file_exists( __DIR__ . '/admin/settings.php' ) ) {
+//
+// Gate on admin/AJAX/REST/CLI contexts — Settings 2.0 registration is
+// admin-only work. Skipping it on frontend requests keeps the feature's
+// boot cost off public page loads.
+if (
+	file_exists( __DIR__ . '/admin/settings.php' ) &&
+	(
+		is_admin() ||
+		wp_doing_ajax() ||
+		( defined( 'REST_REQUEST' ) && REST_REQUEST ) ||
+		( defined( 'WP_CLI' ) && WP_CLI )
+	)
+) {
 	require_once __DIR__ . '/admin/settings.php';
 }

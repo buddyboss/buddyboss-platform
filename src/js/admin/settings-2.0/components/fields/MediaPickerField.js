@@ -77,6 +77,13 @@ export function MediaPickerField( { value, onChange, disabled, config } ) {
 	// square picture placeholder plus a separate "Upload" button — used by OG image.
 	var placeholderVariant = mergedConfig.placeholder_variant || 'compact';
 
+	// Mirror the resolved config in a ref so the frame's `select` handler —
+	// which is bound ONCE on first open — reads the latest values on every
+	// invocation instead of closing over the first-render snapshot. Same
+	// pattern as `onChangeRef` above.
+	var configRef = useRef( { libraryType: libraryType, allowMultiple: allowMultiple, frameTitle: frameTitle, frameButton: frameButton } );
+	configRef.current = { libraryType: libraryType, allowMultiple: allowMultiple, frameTitle: frameTitle, frameButton: frameButton };
+
 	// Tear down the wp.media frame on unmount to avoid leaking event handlers.
 	useEffect( function () {
 		return function () {
@@ -105,7 +112,7 @@ export function MediaPickerField( { value, onChange, disabled, config } ) {
 			frameRef.current.on( 'select', function () {
 				var selection = frameRef.current.state().get( 'selection' );
 
-				if ( allowMultiple ) {
+				if ( configRef.current.allowMultiple ) {
 					var values = [];
 					selection.each( function ( model ) {
 						values.push( attachmentToObject( model.toJSON() ) );

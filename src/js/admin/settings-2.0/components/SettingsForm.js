@@ -143,6 +143,9 @@ export function SettingsForm({ fields, values, onChange }) {
 			if ( field.help_text ) {
 				cache[ field.name + '__help' ] = sanitizeHtml( field.help_text );
 			}
+			if ( field.label_description && 'string' === typeof field.label_description ) {
+				cache[ field.name + '__label_desc' ] = sanitizeHtml( field.label_description );
+			}
 			if ( field.empty_state_title && 'string' === typeof field.empty_state_title ) {
 				cache[ field.name + '__empty_title' ] = sanitizeHtml( field.empty_state_title );
 			}
@@ -1230,7 +1233,7 @@ export function SettingsForm({ fields, values, onChange }) {
 						</label>
 						{ field.label_description && (
 							<p className="bb-admin-settings-form__field-label-description">
-								<span dangerouslySetInnerHTML={{ __html: sanitizeHtml( field.label_description ) }} />
+								<span dangerouslySetInnerHTML={{ __html: sanitizedHtml[ field.name + '__label_desc' ] || '' }} />
 							</p>
 						)}
 					</div>

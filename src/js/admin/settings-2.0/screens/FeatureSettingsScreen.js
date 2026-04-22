@@ -24,6 +24,7 @@ import { sanitizeHtml, safeUrl } from '../utils/sanitize';
 import { useGroupNavSync } from '../components/groups/GroupNavSync';
 import { useProfileNavSync } from '../components/members/ProfileNavSync';
 import { WelcomeBanner } from '../components/appearance/WelcomeBanner';
+import { evaluateConditional } from '../utils/conditional';
 
 // Lazy load custom panel screens.
 const ActivityListScreen = lazy(() => import('./ActivityListScreen'));
@@ -634,8 +635,38 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 		);
 	}
 
-	// Get the active side panel
-	const activePanel = sidePanels.find(p => p.id === activePanelId);
+	// Get the active side panel — filtered to only panels whose `conditional`
+	// currently evaluates true. Without this gate, toggling Site Layout off
+	// while a user is parked on Branding/Menus would leave those panels'
+	// sections rendering on the right pane even though the left nav hides
+	// them.
+	const activePanel = sidePanels.find( function ( p ) {
+		if ( p.id !== activePanelId ) {
+			return false;
+		}
+		if ( p.conditional && 'disable' !== p.conditional.action ) {
+			return evaluateConditional( p.conditional, settings );
+		}
+		return true;
+	} );
+
+	// If the requested panel is now hidden (e.g., bb_rl_enabled flipped off
+	// while the user was on Branding), fall back to the first visible panel
+	// — typically General — so the right pane never renders orphan content.
+	useEffect( function () {
+		if ( activePanel || ! sidePanels || ! sidePanels.length ) {
+			return;
+		}
+		var firstVisible = sidePanels.find( function ( p ) {
+			if ( p.conditional && 'disable' !== p.conditional.action ) {
+				return evaluateConditional( p.conditional, settings );
+			}
+			return true;
+		} );
+		if ( firstVisible && firstVisible.id !== activePanelId ) {
+			setActivePanelId( firstVisible.id );
+		}
+	}, [ activePanel, sidePanels, activePanelId, settings ] );
 
 	// Check if this panel has a custom screen (e.g., ActivityListScreen).
 	const customScreenKey = featureId + ':' + activePanelId;
@@ -683,20 +714,14 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 								<>
 									{/* Render all sections within the active side panel */}
 									{(activePanel.sections || []).map((section) => {
-										// Check section-level conditional (hide or disable).
+										// Check section-level conditional (hide or disable) via the
+										// shared `evaluateConditional` util — same evaluator the
+										// side-panel filter, field visibility, and group-first/last
+										// memo use. Keeps conditional semantics in one place.
 										var isSectionDisabled = false;
 										var isSectionHidden = false;
 										if ( section.conditional ) {
-											var condVal = settings[section.conditional.field];
-											var expected = section.conditional.value;
-											var condOperator = section.conditional.operator || '==';
-											var isTruthy = !!condVal && condVal !== '0' && condVal !== 0;
-											var condMet;
-											if ( '!=' === condOperator ) {
-												condMet = ( expected === true || expected === false ) ? isTruthy !== expected : condVal !== expected;
-											} else {
-												condMet = ( expected === true || expected === false ) ? isTruthy === expected : condVal === expected;
-											}
+											var condMet = evaluateConditional( section.conditional, settings );
 											if ( ! condMet ) {
 												if ( 'disable' === section.conditional.action ) {
 													isSectionDisabled = true;

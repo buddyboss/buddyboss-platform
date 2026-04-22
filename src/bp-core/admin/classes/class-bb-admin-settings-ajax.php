@@ -620,96 +620,96 @@ class BB_Admin_Settings_Ajax {
 			}
 
 			$field_data = array(
-				'name'                 => $field['name'],
-				'label'                => $field['label'],
-				'type'                 => $field['type'] ?? 'text',
-				'description'          => $field['description'] ?? '',
-				'default'              => $field['default'] ?? '',
-				'options'              => $field['options'] ?? array(),
-				'conditional'          => $field['conditional'] ?? null,
-				'pro_only'             => $field['pro_only'] ?? false,
-				'license_tier'         => $field['license_tier'] ?? 'free',
-				'order'                => $field['order'] ?? 100,
-				'value'                => $field_value,
+				'name'                      => $field['name'],
+				'label'                     => $field['label'],
+				'type'                      => $field['type'] ?? 'text',
+				'description'               => $field['description'] ?? '',
+				'default'                   => $field['default'] ?? '',
+				'options'                   => $field['options'] ?? array(),
+				'conditional'               => $field['conditional'] ?? null,
+				'pro_only'                  => $field['pro_only'] ?? false,
+				'license_tier'              => $field['license_tier'] ?? 'free',
+				'order'                     => $field['order'] ?? 100,
+				'value'                     => $field_value,
 				// Nested field support.
-				'parent_field'         => $field['parent_field'] ?? null,
-				'parent_value'         => $field['parent_value'] ?? null,
+				'parent_field'              => $field['parent_field'] ?? null,
+				'parent_value'              => $field['parent_value'] ?? null,
 				// Prefix/suffix text support.
-				'prefix'               => $field['prefix'] ?? null,
-				'suffix'               => $field['suffix'] ?? null,
+				'prefix'                    => $field['prefix'] ?? null,
+				'suffix'                    => $field['suffix'] ?? null,
 				// Min/max for number fields.
-				'min'                  => $field['min'] ?? null,
-				'max'                  => $field['max'] ?? null,
+				'min'                       => $field['min'] ?? null,
+				'max'                       => $field['max'] ?? null,
 				// Invert value for "disable" toggles shown as "enable".
-				'invert_value'         => $field['invert_value'] ?? false,
+				'invert_value'              => $field['invert_value'] ?? false,
 				// PRO notice badge data (for pro_only fields).
-				'pro_notice'           => $field['pro_notice'] ?? null,
+				'pro_notice'                => $field['pro_notice'] ?? null,
 				// Notice type for notice fields (info, warning, error, success).
-				'notice_type'          => $field['notice_type'] ?? null,
+				'notice_type'               => $field['notice_type'] ?? null,
 				// Inline controls embedded in description (replaces %s placeholders).
-				'description_controls' => $field['description_controls'] ?? null,
+				'description_controls'      => $field['description_controls'] ?? null,
 				// Help text displayed below description in lighter style.
-				'help_text'            => $field['help_text'] ?? null,
+				'help_text'                 => $field['help_text'] ?? null,
 				// Disabled flag to prevent user interaction.
-				'disabled'             => ! empty( $field['disabled'] ),
+				'disabled'                  => ! empty( $field['disabled'] ),
 				// Group for visual grouping of related fields.
 				// Supports string (key only) or array with 'key' and optional 'label'.
 				// Normalized to array format: { key: string, label: string|null }.
-				'group'                => $this->bb_normalize_field_group( $field['group'] ?? null ),
+				'group'                     => $this->bb_normalize_field_group( $field['group'] ?? null ),
 				// Confirmation message shown in a modal before toggling ON.
-				'confirm_message'      => $field['confirm_message'] ?? null,
+				'confirm_message'           => $field['confirm_message'] ?? null,
 				// Optional overrides for confirm modal customization.
-				'confirm_title'        => $field['confirm_title'] ?? null,
-				'confirm_ok'           => $field['confirm_ok'] ?? null,
-				'confirm_cancel'       => $field['confirm_cancel'] ?? null,
-				'confirm_destructive'  => ! empty( $field['confirm_destructive'] ),
+				'confirm_title'             => $field['confirm_title'] ?? null,
+				'confirm_ok'                => $field['confirm_ok'] ?? null,
+				'confirm_cancel'            => $field['confirm_cancel'] ?? null,
+				'confirm_destructive'       => ! empty( $field['confirm_destructive'] ),
 				// Allow adding new items (e.g., custom extensions).
-				'allow_add'            => ! empty( $field['allow_add'] ),
-				'add_button_label'     => $field['add_button_label'] ?? null,
+				'allow_add'                 => ! empty( $field['allow_add'] ),
+				'add_button_label'          => $field['add_button_label'] ?? null,
 				// Full extension data for extension list fields.
-				'extension_data'       => $field['extension_data'] ?? null,
+				'extension_data'            => $field['extension_data'] ?? null,
 				// Icon options for extension icon dropdown.
-				'icon_options'         => $field['icon_options'] ?? null,
+				'icon_options'              => $field['icon_options'] ?? null,
 				// Manage link fields.
-				'manage_url'           => ! empty( $field['manage_url'] ) ? esc_url_raw( $field['manage_url'] ) : null,
-				'manage_label'         => $field['manage_label'] ?? null,
-				'manage_icon'          => $field['manage_icon'] ?? null,
+				'manage_url'                => ! empty( $field['manage_url'] ) ? esc_url_raw( $field['manage_url'] ) : null,
+				'manage_label'              => $field['manage_label'] ?? null,
+				'manage_icon'               => $field['manage_icon'] ?? null,
 				// Input button fields (text input + action button, e.g. API key connect/disconnect).
-				'placeholder'          => $field['placeholder'] ?? null,
-				'button_label'         => $field['button_label'] ?? null,
-				'button_only'          => ! empty( $field['button_only'] ),
+				'placeholder'               => $field['placeholder'] ?? null,
+				'button_label'              => $field['button_label'] ?? null,
+				'button_only'               => ! empty( $field['button_only'] ),
 				// Icon-only input button variant: renders the button as an icon control (no text).
 				// 'icon' is an icon font class (e.g. "bb-icons-rl bb-icons-rl-arrow-clockwise").
 				// 'icon_label' is used for aria-label / title on icon-only buttons.
-				'icon_only'            => ! empty( $field['icon_only'] ),
-				'icon'                 => ! empty( $field['icon'] ) ? sanitize_text_field( $field['icon'] ) : null,
-				'icon_label'           => ! empty( $field['icon_label'] ) ? sanitize_text_field( $field['icon_label'] ) : null,
-				'button_url'           => ! empty( $field['button_url'] ) ? esc_url_raw( $field['button_url'] ) : null,
-				'button_target'        => $field['button_target'] ?? null,
+				'icon_only'                 => ! empty( $field['icon_only'] ),
+				'icon'                      => ! empty( $field['icon'] ) ? sanitize_text_field( $field['icon'] ) : null,
+				'icon_label'                => ! empty( $field['icon_label'] ) ? sanitize_text_field( $field['icon_label'] ) : null,
+				'button_url'                => ! empty( $field['button_url'] ) ? esc_url_raw( $field['button_url'] ) : null,
+				'button_target'             => $field['button_target'] ?? null,
 				// Empty state fields (centered card with icon + title + description + button).
-				'empty_state_title'       => $field['empty_state_title'] ?? null,
-				'empty_state_description' => $field['empty_state_description'] ?? null,
-				'related_fields'       => ! empty( $field['related_fields'] ) && is_array( $field['related_fields'] ) ? array_map( 'sanitize_key', $field['related_fields'] ) : null,
+				'empty_state_title'         => $field['empty_state_title'] ?? null,
+				'empty_state_description'   => $field['empty_state_description'] ?? null,
+				'related_fields'            => ! empty( $field['related_fields'] ) && is_array( $field['related_fields'] ) ? array_map( 'sanitize_key', $field['related_fields'] ) : null,
 				// Per-option descriptions for select fields (description swaps on value change).
 				// map_deep handles nested structures safely; each leaf string is kses-filtered.
-				'option_descriptions'  => ! empty( $field['option_descriptions'] ) && is_array( $field['option_descriptions'] )
+				'option_descriptions'       => ! empty( $field['option_descriptions'] ) && is_array( $field['option_descriptions'] )
 					? map_deep( $field['option_descriptions'], 'wp_kses_post' )
 					: null,
-				'is_connected'         => ! empty( $field['is_connected'] ),
+				'is_connected'              => ! empty( $field['is_connected'] ),
 				// Verify field configuration (modal title, icons, messages).
 				// map_deep so nested config structures (e.g. button arrays) do not trip sanitize_text_field.
-				'verify_config'        => ! empty( $field['verify_config'] ) && is_array( $field['verify_config'] )
+				'verify_config'             => ! empty( $field['verify_config'] ) && is_array( $field['verify_config'] )
 					? map_deep( $field['verify_config'], 'sanitize_text_field' )
 					: null,
 				// Max length for text inputs.
-				'maxlength'            => $field['maxlength'] ?? null,
+				'maxlength'                 => $field['maxlength'] ?? null,
 				// Status check fields (AJAX-triggered server-side checks, e.g. Direct Access).
-				'ajax_action'          => ! empty( $field['ajax_action'] ) ? sanitize_key( $field['ajax_action'] ) : null,
+				'ajax_action'               => ! empty( $field['ajax_action'] ) ? sanitize_key( $field['ajax_action'] ) : null,
 				// Async select fields (searchable server-side select with AJAX loading).
-				'async_action'         => ! empty( $field['async_action'] ) ? sanitize_key( $field['async_action'] ) : null,
-				'watch_field'          => $field['watch_field'] ?? null,
+				'async_action'              => ! empty( $field['async_action'] ) ? sanitize_key( $field['async_action'] ) : null,
+				'watch_field'               => $field['watch_field'] ?? null,
 				// Fetch fresh data via AJAX when specified fields change (e.g. refresh select options after credentials entered).
-				'fetch_on_change'      => ! empty( $field['fetch_on_change'] ) && is_array( $field['fetch_on_change'] )
+				'fetch_on_change'           => ! empty( $field['fetch_on_change'] ) && is_array( $field['fetch_on_change'] )
 					? array(
 						'fields'         => ! empty( $field['fetch_on_change']['fields'] ) ? array_map( 'sanitize_key', $field['fetch_on_change']['fields'] ) : array(),
 						'require_all'    => ! empty( $field['fetch_on_change']['require_all'] ),
@@ -720,32 +720,53 @@ class BB_Admin_Settings_Ajax {
 					)
 					: null,
 				// Layout: full-width fields render without the label column.
-				'full_width'           => ! empty( $field['full_width'] ),
+				'full_width'                => ! empty( $field['full_width'] ),
 				// Custom CSS class(es) appended to the field wrapper div (space-separated).
-				'field_class'          => ! empty( $field['field_class'] ) ? implode( ' ', array_map( 'sanitize_html_class', explode( ' ', $field['field_class'] ) ) ) : null,
+				'field_class'               => ! empty( $field['field_class'] ) ? implode( ' ', array_map( 'sanitize_html_class', explode( ' ', $field['field_class'] ) ) ) : null,
 				// Group label for child fields (e.g., xProfile group names under Members).
-				'child_group_label'    => $field['child_group_label'] ?? null,
+				'child_group_label'         => $field['child_group_label'] ?? null,
 				// When true, saving this field triggers a full feature refetch to update side panels.
-				'refresh_panels'       => ! empty( $field['refresh_panels'] ),
+				'refresh_panels'            => ! empty( $field['refresh_panels'] ),
 				// SSO providers array (for sso_providers field type).
-				'providers'            => ! empty( $field['providers'] ) && is_array( $field['providers'] ) ? $field['providers'] : null,
+				'providers'                 => ! empty( $field['providers'] ) && is_array( $field['providers'] ) ? $field['providers'] : null,
 				// Generic media-picker config (for media_picker field type — library_type, multiple, frame_title, etc.).
-				'media_picker_config'  => ! empty( $field['media_picker_config'] ) && is_array( $field['media_picker_config'] ) ? $field['media_picker_config'] : null,
+				'media_picker_config'       => ! empty( $field['media_picker_config'] ) && is_array( $field['media_picker_config'] ) ? $field['media_picker_config'] : null,
 				// Predefined items for sortable_toggle_list (e.g. side menu items, footer menu items).
-				'available_items'      => ! empty( $field['available_items'] ) && is_array( $field['available_items'] ) ? array_values( $field['available_items'] ) : null,
+				'available_items'           => ! empty( $field['available_items'] ) && is_array( $field['available_items'] ) ? array_values( $field['available_items'] ) : null,
 				// Generic editable-link-list config (add_label, modal_title_add, modal_title_edit).
 				'editable_link_list_config' => ! empty( $field['editable_link_list_config'] ) && is_array( $field['editable_link_list_config'] ) ? $field['editable_link_list_config'] : null,
 				// Optional secondary description rendered under the field label (Figma "left-column help").
-				'label_description'    => isset( $field['label_description'] ) ? wp_kses_post( $field['label_description'] ) : null,
-				// SEO/Social preview-card config (site_name, site_url, title_key, description_key, etc.).
-				// map_deep ensures nested strings are text-field sanitized without tripping on arrays.
-				'preview_config'       => ! empty( $field['preview_config'] ) && is_array( $field['preview_config'] )
-					? map_deep( $field['preview_config'], 'sanitize_text_field' )
+				'label_description'         => isset( $field['label_description'] ) ? wp_kses_post( $field['label_description'] ) : null,
+				// SEO/Social preview-card config (site_name, site_url, site_icon,
+				// title_key, description_key, etc.). URL-shaped keys go through
+				// esc_url_raw; other string keys get sanitize_text_field. Applying
+				// sanitize_text_field to URLs would strip the protocol colon on
+				// some WP sanitize versions.
+				'preview_config'            => ! empty( $field['preview_config'] ) && is_array( $field['preview_config'] )
+					? $this->bb_sanitize_preview_config( $field['preview_config'] )
 					: null,
 				// Available-tag reference list consumed by the `tags_reference` display-only field type.
-				// Each row is { tag: string, description: string } — both values are kses-filtered.
-				'tags'                 => ! empty( $field['tags'] ) && is_array( $field['tags'] )
-					? map_deep( $field['tags'], 'wp_kses_post' )
+				// Each row is { tag: string, description: string }. The tag is a plain
+				// slug/token — wp_kses_post on it adds no value and could accept partial HTML;
+				// sanitize_text_field is the right tool. The description is authored copy and
+				// may legitimately contain `<code>` / `<strong>` etc., so it gets wp_kses_post.
+				'tags'                      => ! empty( $field['tags'] ) && is_array( $field['tags'] )
+					? array_map(
+						static function ( $row ) {
+							if ( ! is_array( $row ) ) {
+								return $row;
+							}
+							$out = $row;
+							if ( isset( $row['tag'] ) && is_string( $row['tag'] ) ) {
+								$out['tag'] = sanitize_text_field( $row['tag'] );
+							}
+							if ( isset( $row['description'] ) && is_string( $row['description'] ) ) {
+								$out['description'] = wp_kses_post( $row['description'] );
+							}
+							return $out;
+						},
+						$field['tags']
+					)
 					: null,
 			);
 
@@ -1410,13 +1431,47 @@ class BB_Admin_Settings_Ajax {
 			! empty( $feature['settings_route'] ) &&
 			$feature['settings_route'] !== '/settings/' . $feature_id
 		) {
-			$parts     = array_values( array_filter( explode( '/', $feature['settings_route'] ) ) );
-			$route_tab = isset( $parts[1] ) ? $parts[1] : $feature_id;
-			$route_pan = isset( $parts[2] ) ? $parts[2] : '';
+			$parts          = array_values( array_filter( explode( '/', $feature['settings_route'] ) ) );
+			$route_tab      = isset( $parts[1] ) ? $parts[1] : $feature_id;
+			$route_pan      = isset( $parts[2] ) ? $parts[2] : '';
 			$settings_route = bb_get_feature_settings_url( $route_tab, $route_pan );
 		}
 
 		return $settings_route;
+	}
+
+	/**
+	 * Sanitize a `preview_config` array per-key — URL-shaped keys get
+	 * `esc_url_raw`, other string values get `sanitize_text_field`, non-strings
+	 * pass through. Called instead of `map_deep( ..., 'sanitize_text_field' )`
+	 * which would strip the `://` protocol separator from site_url / site_icon
+	 * on some PHP sanitize stacks.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $config Raw preview_config array from field registration.
+	 * @return array Sanitized config.
+	 */
+	private function bb_sanitize_preview_config( $config ) {
+		$url_suffixes = array( '_url', '_icon', '_image' );
+		$sanitized    = array();
+		foreach ( $config as $key => $value ) {
+			if ( is_string( $value ) ) {
+				$is_url_key = false;
+				foreach ( $url_suffixes as $suffix ) {
+					if ( substr( $key, -strlen( $suffix ) ) === $suffix ) {
+						$is_url_key = true;
+						break;
+					}
+				}
+				$sanitized[ $key ] = $is_url_key ? esc_url_raw( $value ) : sanitize_text_field( $value );
+			} elseif ( is_array( $value ) ) {
+				$sanitized[ $key ] = map_deep( $value, 'sanitize_text_field' );
+			} else {
+				$sanitized[ $key ] = $value;
+			}
+		}
+		return $sanitized;
 	}
 
 	/**
@@ -1429,7 +1484,6 @@ class BB_Admin_Settings_Ajax {
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string|array|null $group Raw group value from field registration.
-	 *
 	 * @return array|null Normalized group array or null.
 	 */
 	private function bb_normalize_field_group( $group ) {
@@ -1527,7 +1581,7 @@ class BB_Admin_Settings_Ajax {
 							'terms'    => array_keys( $slug_term_ids ),
 						),
 					),
-					'fields'         => 'ids',
+					'fields'                 => 'ids',
 				)
 			);
 

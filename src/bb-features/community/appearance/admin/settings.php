@@ -137,7 +137,13 @@ function bb_admin_settings_register_appearance_settings() {
 	// its own pro_notice when the license is invalid. This avoids the
 	// merge-mode section override while still showing an upgrade prompt to
 	// free-tier admins who never installed Sharing.
-	if ( ! class_exists( 'BuddyBoss_Sharing' ) ) {
+	// Guard on the Settings 2.0 registration class, NOT the main plugin class.
+	// A customer on Sharing 1.2.0 ships `BuddyBoss_Sharing` but does NOT ship
+	// the Settings 2.0 registration path. If they upgrade Platform first they'd
+	// otherwise see a blank Site SEO panel (Platform skips the placeholder, old
+	// Sharing doesn't register). Key on `Site_SEO_Settings` so the placeholder
+	// renders whenever Sharing can't actually fill the panel.
+	if ( ! class_exists( '\\BuddyBoss\\Sharing\\Admin\\Site_SEO_Settings' ) ) {
 		// Always force `show => true` here: Sharing is ABSENT, so the section
 		// has no fields to render. A licensed Pro user without the Sharing
 		// plugin installed would otherwise see an empty card because
@@ -764,18 +770,18 @@ function bb_admin_settings_register_appearance_settings() {
 		'menus',
 		'menus',
 		array(
-			'name'                       => 'bb_rl_custom_links',
-			'label'                      => __( 'Link', 'buddyboss' ),
-			'type'                       => 'editable_link_list',
-			'label_description'          => __( 'Add and re-order custom links which are shown on the left sidebar.', 'buddyboss' ),
-			'default'                    => bp_get_option( 'bb_rl_custom_links', array() ),
-			'sanitize_callback'          => 'bb_appearance_sanitize_custom_links',
-			'editable_link_list_config'  => array(
+			'name'                      => 'bb_rl_custom_links',
+			'label'                     => __( 'Link', 'buddyboss' ),
+			'type'                      => 'editable_link_list',
+			'label_description'         => __( 'Add and re-order custom links which are shown on the left sidebar.', 'buddyboss' ),
+			'default'                   => bp_get_option( 'bb_rl_custom_links', array() ),
+			'sanitize_callback'         => 'bb_appearance_sanitize_custom_links',
+			'editable_link_list_config' => array(
 				'add_label'        => __( 'Add New Link', 'buddyboss' ),
 				'modal_title_add'  => __( 'Add Link', 'buddyboss' ),
 				'modal_title_edit' => __( 'Edit Link', 'buddyboss' ),
 			),
-			'order'                      => 30,
+			'order'                     => 30,
 		)
 	);
 }

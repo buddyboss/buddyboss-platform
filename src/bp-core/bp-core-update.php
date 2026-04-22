@@ -4194,6 +4194,16 @@ function bb_update_to_3_0_0() {
  * @return void
  */
 function bb_rl_migrate_settings() {
+	// Independent idempotency flag — the outer DB-version gate is shared with
+	// `bb_update_to_3_0_0()`. If that partially fails, the gate stays open and
+	// the version updater re-enters on every request until it succeeds. This
+	// migration is self-idempotent (list-to-map conversions no-op on already
+	// canonical data), but an explicit flag still saves five option reads +
+	// two helper calls per request during an incident window.
+	if ( bp_get_option( 'bb_rl_shapes_migrated' ) ) {
+		return;
+	}
+
 	if ( ! function_exists( 'bb_appearance_normalize_list_to_map' ) || ! function_exists( 'bb_appearance_normalize_side_menu_shape' ) ) {
 		return;
 	}
@@ -4224,6 +4234,10 @@ function bb_rl_migrate_settings() {
 			bp_update_option( 'bb_rl_side_menu', $normalized_menu );
 		}
 	}
+
+	// Mark as complete so future `bp_version_updater` runs short-circuit even
+	// if the outer DB version bump happens to fail mid-flight.
+	bp_update_option( 'bb_rl_shapes_migrated', 1 );
 }
 
 /**

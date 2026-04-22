@@ -85,19 +85,21 @@ function bb_appearance_sanitize_media( $value ) {
 	if ( is_array( $value ) && isset( $value['id'] ) ) {
 		$id = intval( $value['id'] );
 
-		// Verify the submitted URL actually belongs to the attachment ID — guards
-		// against an admin crafting a payload with an arbitrary off-site URL
-		// attached to a legitimate attachment ID. On mismatch, trust the ID and
-		// re-derive the URL via WordPress's own resolver.
-		$submitted_url = isset( $value['url'] ) ? esc_url_raw( $value['url'] ) : '';
+		// Require the attachment ID to resolve to a real WordPress-managed URL.
+		// If `wp_get_attachment_url()` returns false the ID doesn't map to an
+		// attachment on this site, so refuse to persist an off-site URL — most
+		// likely a crafted payload. Clearing the media is the safe default.
 		$canonical_url = $id > 0 ? wp_get_attachment_url( $id ) : '';
-		if ( $canonical_url && $submitted_url !== $canonical_url ) {
-			$submitted_url = $canonical_url;
+		if ( ! $canonical_url ) {
+			return null;
 		}
 
+		// Trust the canonical URL over anything the client submitted — guards
+		// against an admin pairing a legitimate attachment ID with an
+		// off-site URL in the same payload.
 		return array(
 			'id'    => $id,
-			'url'   => $submitted_url,
+			'url'   => $canonical_url,
 			'alt'   => isset( $value['alt'] ) ? sanitize_text_field( $value['alt'] ) : '',
 			'title' => isset( $value['title'] ) ? sanitize_text_field( $value['title'] ) : '',
 		);
@@ -156,8 +158,8 @@ function bb_appearance_sanitize_enabled_pages( $value ) {
  * - Sequential list of widget items with `{id, enabled}` (onboarding shape)
  * - Associative map of `widget_id => bool` (Settings 2.0 + legacy admin + templates)
  *
- * Returns the canonical object-map shape consumed by templates at
- * `bp-templates/bp-nouveau/readylaunch/sidebar/right-sidebar.php:31-75`.
+ * Returns the canonical object-map shape consumed by ReadyLaunch's
+ * `right-sidebar.php` template (keyed by widget slug, value = bool).
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -477,10 +479,27 @@ function bb_appearance_on_settings_saved( $feature_id, $settings, $saved ) {
 	// third-party extensions writing to protected WP options). The Appearance
 	// feature legitimately needs to write blogname — save it directly here
 	// after a capability re-check.
+	//
+	// On multisite we switch to the BuddyPress root blog before writing so a
+	// network admin editing community settings from a sub-site admin updates
+	// the community's site title, not the sub-site's. Falls back gracefully
+	// on single-site where `switch_to_blog()` / `restore_current_blog()`
+	// become no-ops.
 	if ( isset( $settings['blogname'] ) && current_user_can( 'manage_options' ) ) {
 		$new_blogname = sanitize_text_field( (string) $settings['blogname'] );
 		if ( '' !== $new_blogname ) {
+			$switched = false;
+			if ( is_multisite() && function_exists( 'bp_get_root_blog_id' ) ) {
+				$root_blog_id = bp_get_root_blog_id();
+				if ( $root_blog_id && get_current_blog_id() !== $root_blog_id ) {
+					switch_to_blog( $root_blog_id );
+					$switched = true;
+				}
+			}
 			update_option( 'blogname', $new_blogname );
+			if ( $switched ) {
+				restore_current_blog();
+			}
 		}
 	}
 
