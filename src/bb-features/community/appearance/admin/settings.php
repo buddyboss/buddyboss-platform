@@ -275,9 +275,13 @@ function bb_admin_settings_register_appearance_settings() {
 		);
 	}
 
+	// Use the singleton accessor: `new BB_Readylaunch()` bypasses the singleton
+	// guard and runs the constructor a second time, which re-registers
+	// `login_header` / `login_footer` / `login_form` hooks and duplicates
+	// the wp-login.php UI (PROD-9859).
 	if ( class_exists( 'BB_Readylaunch' ) ) {
-		$readylaunch_helper = new BB_Readylaunch();
-		if ( method_exists( $readylaunch_helper, 'bb_is_sidebar_enabled_for_courses' ) && $readylaunch_helper->bb_is_sidebar_enabled_for_courses() ) {
+		$readylaunch_helper = BB_Readylaunch::instance();
+		if ( $readylaunch_helper && method_exists( $readylaunch_helper, 'bb_is_sidebar_enabled_for_courses' ) && $readylaunch_helper->bb_is_sidebar_enabled_for_courses() ) {
 			$template_page_options[] = array(
 				'label' => __( 'Courses', 'buddyboss' ),
 				'value' => 'courses',
