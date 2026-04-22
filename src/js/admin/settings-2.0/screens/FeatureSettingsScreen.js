@@ -618,6 +618,56 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 		setHelpError(null);
 	};
 
+	// Hidden-panel fallback redirect — if the requested panel is hidden (e.g.,
+	// bb_rl_enabled flipped off while the user was on Branding), fall back to
+	// the first visible panel so the right pane never renders orphan content.
+	//
+	// Declared BEFORE the early returns below because React enforces a stable
+	// hook order across renders. When `isLoading` flips from true to false the
+	// component would otherwise call one more hook on the second render and
+	// crash with "Rendered more hooks than during the previous render."
+	// Data-gate happens inside the effect body.
+	useEffect( function () {
+		if ( isLoading || ! feature || ! sidePanels || ! sidePanels.length ) {
+			return;
+		}
+
+		var currentPanel = sidePanels.find( function ( p ) {
+			if ( p.id !== activePanelId ) {
+				return false;
+			}
+			if ( p.conditional && 'disable' !== p.conditional.action ) {
+				return evaluateConditional( p.conditional, settings );
+			}
+			return true;
+		} );
+
+		if ( currentPanel ) {
+			return;
+		}
+
+		var firstVisible = sidePanels.find( function ( p ) {
+			if ( p.conditional && 'disable' !== p.conditional.action ) {
+				return evaluateConditional( p.conditional, settings );
+			}
+			return true;
+		} );
+
+		// Re-entry guard — also check `sidePanelId` (the URL-param panel) so
+		// we don't ping-pong with the URL-sync effect at line ~213 when the
+		// URL still points at the hidden panel.
+		if ( firstVisible && firstVisible.id !== activePanelId && firstVisible.id !== sidePanelId ) {
+			setActivePanelId( firstVisible.id );
+			// Keep the URL in sync with the redirected panel — without this,
+			// `?sidepanel=branding` stays stale in the address bar, and the
+			// URL-sync effect would re-target the hidden panel and bounce
+			// back here, visually flickering.
+			if ( 'function' === typeof onNavigate ) {
+				onNavigate( `/settings/${featureId}/${firstVisible.id}` );
+			}
+		}
+	}, [ isLoading, feature, sidePanels, activePanelId, sidePanelId, settings, featureId, onNavigate ] );
+
 	if (isLoading) {
 		return (
 			<div className="bb-admin-feature-settings bb-admin-loading">
@@ -649,34 +699,6 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 		}
 		return true;
 	} );
-
-	// If the requested panel is now hidden (e.g., bb_rl_enabled flipped off
-	// while the user was on Branding), fall back to the first visible panel
-	// — typically General — so the right pane never renders orphan content.
-	useEffect( function () {
-		if ( activePanel || ! sidePanels || ! sidePanels.length ) {
-			return;
-		}
-		var firstVisible = sidePanels.find( function ( p ) {
-			if ( p.conditional && 'disable' !== p.conditional.action ) {
-				return evaluateConditional( p.conditional, settings );
-			}
-			return true;
-		} );
-		// Re-entry guard — also check `sidePanelId` (the URL-param panel) so
-		// we don't ping-pong with the URL-sync effect at line ~213 when the
-		// URL still points at the hidden panel.
-		if ( firstVisible && firstVisible.id !== activePanelId && firstVisible.id !== sidePanelId ) {
-			setActivePanelId( firstVisible.id );
-			// Keep the URL in sync with the redirected panel — without this,
-			// `?sidepanel=branding` stays stale in the address bar, and the
-			// URL-sync effect would re-target the hidden panel and bounce
-			// back here, visually flickering.
-			if ( 'function' === typeof onNavigate ) {
-				onNavigate( `/settings/${featureId}/${firstVisible.id}` );
-			}
-		}
-	}, [ activePanel, sidePanels, activePanelId, sidePanelId, settings, featureId, onNavigate ] );
 
 	// Check if this panel has a custom screen (e.g., ActivityListScreen).
 	const customScreenKey = featureId + ':' + activePanelId;

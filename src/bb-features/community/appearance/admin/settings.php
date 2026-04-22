@@ -172,6 +172,11 @@ function bb_admin_settings_register_appearance_settings() {
 	// =========================================================================
 	// GENERAL → SECTION: Site Name
 	// =========================================================================
+	// NOTE: Section `help_url` values are the BuddyBoss knowledge-base article
+	// IDs used by the retired legacy ReadyLaunch admin (see the deleted
+	// `ReadyLaunchSettings.js`'s `handleHelpClick('459xxx')` call sites).
+	// Preserved verbatim so the `?` help icon links to the same KB article the
+	// customer is used to.
 	bb_register_feature_section(
 		'appearance',
 		'general',
@@ -179,7 +184,7 @@ function bb_admin_settings_register_appearance_settings() {
 		array(
 			'title'    => __( 'Site Name', 'buddyboss' ),
 			'order'    => 10,
-			'help_url' => '#', // Placeholder — replace with help-content article ID once authored.
+			'help_url' => '459612',
 		)
 	);
 
@@ -210,7 +215,7 @@ function bb_admin_settings_register_appearance_settings() {
 		array(
 			'title'    => __( 'Site Layout', 'buddyboss' ),
 			'order'    => 20,
-			'help_url' => '#',
+			'help_url' => '459617',
 		)
 	);
 
@@ -224,12 +229,15 @@ function bb_admin_settings_register_appearance_settings() {
 		'general',
 		'site_layout',
 		array(
-			'name'              => 'bb_rl_enabled',
-			'label'             => __( 'Layout', 'buddyboss' ),
-			'type'              => 'select',
-			'label_description' => __( 'Choose between ReadyLaunch or WordPress Theme', 'buddyboss' ),
-			'description'       => __( 'ReadyLaunch overrides your theme\'s styles on BuddyBoss pages.', 'buddyboss' ),
-			'options'           => array(
+			'name'                => 'bb_rl_enabled',
+			'label'               => __( 'Layout', 'buddyboss' ),
+			'type'                => 'select',
+			'label_description'   => __( 'Choose between ReadyLaunch or WordPress Theme', 'buddyboss' ),
+			// Fallback description used when `option_descriptions` doesn't
+			// cover the current value — kept for backward compat with the
+			// ReadyLaunch default.
+			'description'         => __( 'ReadyLaunch overrides your theme\'s styles on BuddyBoss pages.', 'buddyboss' ),
+			'options'             => array(
 				array(
 					'label' => __( 'ReadyLaunch', 'buddyboss' ),
 					'value' => '1',
@@ -239,10 +247,17 @@ function bb_admin_settings_register_appearance_settings() {
 					'value' => '0',
 				),
 			),
-			'default'           => bp_get_option( 'bb_rl_enabled', false ) ? '1' : '0',
-			'sanitize_callback' => 'bb_appearance_sanitize_layout',
-			'field_class'       => 'bb-admin-settings-form__field--custom-full-width',
-			'order'             => 10,
+			// Per-option descriptions — swap live as the user changes the
+			// dropdown. SettingsForm keys into this map by the current value
+			// string so option labels and values must match verbatim.
+			'option_descriptions' => array(
+				'1' => __( 'ReadyLaunch overrides your theme\'s styles on BuddyBoss pages.', 'buddyboss' ),
+				'0' => __( 'BuddyBoss pages will use your active theme\'s templates. Any templates not overridden will fall back to the platform default layouts.', 'buddyboss' ),
+			),
+			'default'             => bp_get_option( 'bb_rl_enabled', false ) ? '1' : '0',
+			'sanitize_callback'   => 'bb_appearance_sanitize_layout',
+			'field_class'         => 'bb-admin-settings-form__field--custom-full-width',
+			'order'               => 10,
 		)
 	);
 
@@ -256,7 +271,7 @@ function bb_admin_settings_register_appearance_settings() {
 		array(
 			'title'       => __( 'Template Pages', 'buddyboss' ),
 			'order'       => 30,
-			'help_url'    => '#',
+			'help_url'    => '459627',
 			'conditional' => array(
 				'field' => 'bb_rl_enabled',
 				'value' => true,
@@ -326,7 +341,7 @@ function bb_admin_settings_register_appearance_settings() {
 		array(
 			'title'       => __( 'Template Sidebar Widgets', 'buddyboss' ),
 			'order'       => 40,
-			'help_url'    => '#',
+			'help_url'    => '459623',
 			'conditional' => array(
 				'field' => 'bb_rl_enabled',
 				'value' => true,
@@ -499,8 +514,9 @@ function bb_admin_settings_register_appearance_settings() {
 		'branding',
 		'branding',
 		array(
-			'title' => __( 'Branding', 'buddyboss' ),
-			'order' => 10,
+			'title'    => __( 'Branding', 'buddyboss' ),
+			'order'    => 10,
+			'help_url' => '459621',
 		)
 	);
 
@@ -658,8 +674,9 @@ function bb_admin_settings_register_appearance_settings() {
 		'menus',
 		'menus',
 		array(
-			'title' => __( 'Menus', 'buddyboss' ),
-			'order' => 10,
+			'title'    => __( 'Menus', 'buddyboss' ),
+			'order'    => 10,
+			'help_url' => '459625',
 		)
 	);
 

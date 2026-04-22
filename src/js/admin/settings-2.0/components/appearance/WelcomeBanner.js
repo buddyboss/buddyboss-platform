@@ -84,10 +84,21 @@ export function WelcomeBanner() {
 					</div>
 				</div>
 				<div className="bb-admin-welcome-banner__video">
+					{/*
+					  * Sandbox restricts the YouTube embed to only what the
+					  * player needs:
+					  *  - allow-scripts + allow-same-origin: player runtime
+					  *  - allow-presentation: fullscreen support
+					  *  - allow-popups + allow-popups-to-escape-sandbox:
+					  *    "Watch on YouTube" button opens in a new tab
+					  * Omits allow-top-navigation / allow-forms / allow-modals
+					  * — none of which a passive tutorial embed should need.
+					  */}
 					<iframe
 						title={ __( 'BuddyBoss ReadyLaunch tutorial', 'buddyboss' ) }
 						src={ VIDEO_EMBED }
 						loading="lazy"
+						sandbox="allow-scripts allow-same-origin allow-presentation allow-popups allow-popups-to-escape-sandbox"
 						frameBorder="0"
 						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 						referrerPolicy="strict-origin-when-cross-origin"

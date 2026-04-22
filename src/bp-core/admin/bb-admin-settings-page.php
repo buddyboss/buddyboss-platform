@@ -116,9 +116,29 @@ function bb_admin_settings_page() {
 		wp_enqueue_editor();
 	}
 
-	// Enqueue WordPress media library so the MediaPickerField field type can open
-	// wp.media() (used by Appearance → Branding logos, future Site SEO OG image, etc.).
-	wp_enqueue_media();
+	// Conditionally enqueue the WordPress media library (~200-400ms TTI) only
+	// when a feature actually exposes a media-picking field. Mirrors the
+	// richtext gate above. Scans for the three field types that open
+	// `wp.media()`: `media_picker` (logos, OG image), `image_upload` (cover
+	// uploads), `image_radio` (grouped-options with upload).
+	$has_media_field = false;
+	if ( function_exists( 'bb_feature_registry' ) ) {
+		$media_types  = array( 'media_picker', 'image_upload', 'image_radio' );
+		$all_features = bb_feature_registry()->bb_get_features();
+		foreach ( $all_features as $fid => $f ) {
+			$all_fields = bb_feature_registry()->bb_get_all_fields( $fid );
+			foreach ( $all_fields as $field ) {
+				if ( ! empty( $field['type'] ) && in_array( $field['type'], $media_types, true ) ) {
+					$has_media_field = true;
+					break 2;
+				}
+			}
+		}
+	}
+
+	if ( $has_media_field ) {
+		wp_enqueue_media();
+	}
 
 	// Enqueue scripts and styles.
 	wp_enqueue_script(

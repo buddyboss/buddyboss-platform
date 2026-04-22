@@ -2734,6 +2734,16 @@ add_action( 'bb_admin_save_feature_settings_after', 'bb_advanced_fire_deprecated
 // BuddyBoss [BBVERSION]. Its URL now redirects to the Appearance feature in
 // Settings 2.0 (`admin.php?page=bb-settings&tab=appearance&panel=general`).
 // These stubs prevent fatals in third-party code that still calls the helpers.
+//
+// NOTE: The `BB_Readylaunch::bb_rest_readylaunch_platform_settings()` filter
+// callback that projected `bb_rl_*` keys onto `/buddyboss/v1/settings` was
+// also removed in this release. NO deprecation stub is provided for that
+// filter — ReadyLaunch is web-only (the BuddyBoss App plugin never consumed
+// those keys), every Platform/Pro internal read moved to `bp_get_option()`,
+// and the old admin React client that consumed them was deleted. Third-party
+// REST clients reading `bb_rl_*` from the settings endpoint need to migrate
+// to direct option reads via the REST options API or their own endpoint.
+// Documented in the release notes.
 // ──────────────────────────────────────────────────────────────────────────────
 
 if ( ! function_exists( 'bb_readylaunch_settings_page_html' ) ) {
