@@ -4,8 +4,8 @@
  * `bb_rl_activity_sidebars` / `bb_rl_groups_sidebars` /
  * `bb_rl_member_profile_sidebars` options persist as an associative map of
  * `{ widget_id: boolean }` once the Settings 2.0 admin has saved them — the
- * shape consumed by `BB_Readylaunch::bb_rest_readylaunch_platform_settings()`
- * and the frontend `readylaunch/sidebar/right-sidebar.php` templates.
+ * shape consumed by the frontend `readylaunch/sidebar/right-sidebar.php`
+ * templates.
  *
  * The onboarding wizard's own `draggable` fields push a sequential
  * `[ widget_id, widget_id ]` array during the step flow. Before a save has

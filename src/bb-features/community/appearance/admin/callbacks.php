@@ -195,8 +195,7 @@ function bb_appearance_sanitize_sidebar_map( $value ) {
  * - Sequential list of menu items with `{id, enabled, order, icon}` (onboarding shape)
  * - Associative map of `id => {enabled, order, icon}` (Settings 2.0 shape)
  *
- * Returns the canonical associative map consumed by ReadyLaunch templates and
- * `BB_Readylaunch::bb_rest_readylaunch_platform_settings()`.
+ * Returns the canonical associative map consumed by ReadyLaunch templates.
  *
  * @since BuddyBoss [BBVERSION]
  *

@@ -1,7 +1,5 @@
 import apiFetch from '@wordpress/api-fetch';
 
-// Store the initial settings for comparison
-let initialSettings = null;
 const CACHE_DURATION_DAYS = 3;
 const CACHE_DURATION_IN_MILLIS = CACHE_DURATION_DAYS * 24 * 60 * 60 * 1000;
 
@@ -53,87 +51,6 @@ export const clearHelpContentCache = (contentId = null) => {
 				localStorage.removeItem(key);
 			}
 		}
-	}
-};
-
-/**
- * Fetch ReadyLaunch settings from the WordPress REST API.
- *
- * @returns {Promise} Promise that resolves to settings object.
- */
-export const fetchSettings = async() => {
-	try {
-		const settings = await apiFetch(
-			{
-				path: '/buddyboss/v1/settings',
-				method: 'GET',
-			}
-		);
-		// Store initial settings for comparison
-		initialSettings = JSON.parse(JSON.stringify(settings));
-		return settings;
-	} catch (error) {
-		console.error( 'Error fetching settings:', error );
-		return null;
-	}
-};
-
-/**
- * Get only the changed settings by comparing with initial settings
- *
- * @param {Object} currentSettings - Current settings object
- * @returns {Object} Object containing only changed settings
- */
-const getChangedSettings = (currentSettings) => {
-	if (!initialSettings) {
-		return currentSettings;
-	}
-
-	return currentSettings;
-};
-
-/**
- * Save settings to the WordPress REST API.
- *
- * @param {Object} settings - The settings object to save.
- * @returns {Promise} Promise that resolves to updated settings object.
- */
-export const saveSettings = async(settings) => {
-	if (!settings) {
-		console.error('No settings provided to save');
-		return null;
-	}
-
-	try {
-		// Get only changed settings
-		const changedSettings = getChangedSettings(settings);
-
-		// If no changes, return early
-		if (Object.keys(changedSettings).length === 0) {
-			return settings;
-		}
-
-		// Clean the changed settings object
-		const cleanChangedSettings = { ...changedSettings };
-		if (cleanChangedSettings.hasOwnProperty('_tempIds')) {
-			delete cleanChangedSettings._tempIds;
-		}
-
-		const response = await apiFetch({
-			path: '/buddyboss/v1/settings',
-			method: 'POST',
-			data: cleanChangedSettings,
-		});
-
-		// Update initial settings with the new values
-		if (response) {
-			initialSettings = JSON.parse(JSON.stringify(response));
-		}
-
-		return response;
-	} catch (error) {
-		console.error('Error saving settings:', error);
-		return null;
 	}
 };
 
