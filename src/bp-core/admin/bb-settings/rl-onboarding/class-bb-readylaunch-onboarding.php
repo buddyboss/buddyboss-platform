@@ -530,6 +530,42 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	}
 
 	/**
+	 * Get the bootstrap payload used to mount the wizard on-demand
+	 * from the Settings 2.0 Appearance panel without a page reload.
+	 *
+	 * Bundles the same localised data that `enqueue_scripts()` would
+	 * inject on a full reload plus the build asset URLs so the client
+	 * can lazy-load `rl-onboarding.js` / `onboarding.css` on click.
+	 *
+	 * `shouldShow` is forced to `false` — the Welcome Banner flips it
+	 * to `true` right before it mounts the wizard.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return array Bootstrap payload: { wizardData, assets }.
+	 */
+	public function get_bootstrap_data() {
+		$wizard_data                 = $this->localize_wizard_data();
+		$wizard_data['shouldShow']   = false;
+
+		$asset_file = __DIR__ . '/build/rl-onboarding.asset.php';
+		$asset_data = file_exists( $asset_file ) ? include $asset_file : array(
+			'version' => $this->wizard_version,
+		);
+
+		$rtl = is_rtl() ? '-rtl' : '';
+
+		return array(
+			'wizardData' => $wizard_data,
+			'assets'     => array(
+				'js'  => buddypress()->plugin_url . 'bp-core/admin/bb-settings/rl-onboarding/build/rl-onboarding.js',
+				'css' => buddypress()->plugin_url . "bp-core/admin/bb-settings/rl-onboarding/build/onboarding{$rtl}.css",
+				'ver' => isset( $asset_data['version'] ) ? $asset_data['version'] : $this->wizard_version,
+			),
+		);
+	}
+
+	/**
 	 * AJAX handler to complete the wizard.
 	 *
 	 * @since BuddyBoss 2.10.0

@@ -222,6 +222,14 @@ function bb_admin_settings_page() {
 	// gate from the retired admin page.
 	$localize_data['rlOnboardingCompleted'] = (bool) bp_get_option( 'bb_rl_onboarding_completed', false );
 
+	// Bootstrap payload for the Appearance → General "Setup Wizard" button.
+	// Allows the rl-onboarding React bundle to be lazy-loaded and mounted on
+	// click without navigating away from Settings 2.0. Skipped once the wizard
+	// has been completed (the button is hidden in that state anyway).
+	if ( ! $localize_data['rlOnboardingCompleted'] && class_exists( 'BB_ReadyLaunch_Onboarding' ) ) {
+		$localize_data['rlOnboardingBootstrap'] = BB_ReadyLaunch_Onboarding::instance()->get_bootstrap_data();
+	}
+
 	// Only expose debug data when WP_DEBUG is enabled.
 	if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 		$registry               = bb_feature_registry();
