@@ -569,7 +569,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 				return; // Do not display the notice if it's been dismissed.
 			}
 			// URL for the telemetry settings page.
-			$settings_url  = admin_url( 'admin.php?page=bp-settings&tab=bp-advanced' );
+			$settings_url  = admin_url( 'admin.php?page=bb-settings&tab=advanced&panel=telemetry' );
 			$telemetry_url = 'https://www.buddyboss.com/usage-tracking/?utm_source=product&utm_medium=platform&utm_campaign=telemetry';
 			?>
 			<div class="notice notice-info is-dismissible bb-telemetry-notice" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bb-telemetry-notice-nonce' ) ); ?>">

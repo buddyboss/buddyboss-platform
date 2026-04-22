@@ -308,13 +308,16 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				'bp_core_admin_pages_settings'
 			);
 
+			// Settings 2.0 replaces the legacy bp-settings submenu at the same menu position.
+			// The 'bb-settings' slug points to the React admin registered in bb-admin-settings-page.php;
+			// the label is "Settings" (not "Settings 2.0") so end users don't see transitional naming.
 			$hooks[] = add_submenu_page(
 				$this->settings_page,
 				__( 'BuddyBoss Settings', 'buddyboss' ),
 				__( 'Settings', 'buddyboss' ),
 				$this->capability,
-				'bp-settings',
-				'bp_core_admin_settings'
+				'bb-settings',
+				function_exists( 'bb_admin_settings_page' ) ? 'bb_admin_settings_page' : 'bp_core_admin_settings'
 			);
 
 			$hooks[] = add_submenu_page(
@@ -469,13 +472,16 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				'bp_core_admin_pages_settings'
 			);
 
+			// Settings 2.0 replaces the legacy bp-settings submenu at the same menu position.
+			// The 'bb-settings' slug points to the React admin registered in bb-admin-settings-page.php;
+			// the label is "Settings" (not "Settings 2.0") so end users don't see transitional naming.
 			$hooks[] = add_submenu_page(
 				$this->settings_page,
 				__( 'BuddyBoss Settings', 'buddyboss' ),
 				__( 'Settings', 'buddyboss' ),
 				$this->capability,
-				'bp-settings',
-				'bp_core_admin_settings'
+				'bb-settings',
+				function_exists( 'bb_admin_settings_page' ) ? 'bb_admin_settings_page' : 'bp_core_admin_settings'
 			);
 
 			$hooks[] = add_submenu_page(
@@ -771,7 +777,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			return array_merge(
 				$links,
 				array(
-					'settings'      => '<a href="' . esc_url( bp_get_admin_url( 'admin.php?page=bp-settings' ) ) . '">' . esc_html__( 'Settings', 'buddyboss' ) . '</a>',
+					'settings'      => '<a href="' . esc_url( bp_get_admin_url( 'admin.php?page=bb-settings' ) ) . '">' . esc_html__( 'Settings', 'buddyboss' ) . '</a>',
 					'about'         => '<a href="' . esc_url( bp_get_admin_url( '?hello=buddyboss' ) ) . '">' . esc_html__( 'About', 'buddyboss' ) . '</a>',
 					'release_notes' => '<a href="javascript:void(0);" id="bb-plugin-release-link">' . esc_html__( 'Release Notes', 'buddyboss' ) . '</a>',
 				)
