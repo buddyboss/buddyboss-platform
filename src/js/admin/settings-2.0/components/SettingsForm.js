@@ -54,6 +54,7 @@ import { VerifyPopupField } from './fields/VerifyPopupField';
 import { SEOPreviewField } from './fields/SEOPreviewField';
 import { SocialPreviewField } from './fields/SocialPreviewField';
 import { TagsReferenceField } from './fields/TagsReferenceField';
+import { ColorPickerField } from './fields/ColorPickerField';
 import { useFetchOnChange } from '../hooks/useFetchOnChange';
 import { evaluateConditional } from '../utils/conditional';
 
@@ -585,11 +586,11 @@ export function SettingsForm({ fields, values, onChange }) {
 
 			case 'color':
 				return (
-					<input
-						type="color"
-						value={value || '#000000'}
-						onChange={(e) => onChange(field.name, e.target.value)}
-						className="bb-admin-settings-field__color-input"
+					<ColorPickerField
+						value={ value }
+						onChange={ ( newColor ) => onChange( field.name, newColor ) }
+						fallback={ field.default || '#3E34FF' }
+						disabled={ disabled }
 					/>
 				);
 
