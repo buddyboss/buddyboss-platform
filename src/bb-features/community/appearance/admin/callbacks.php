@@ -115,8 +115,9 @@ function bb_appearance_sanitize_media( $value ) {
  * - Sequential list of page keys (onboarding form shape): `array( 'registration', 'courses' )`
  * - Associative map (Settings 2.0 checkbox_group shape): `array( 'registration' => true, 'courses' => false )`
  *
- * Returns the canonical object-map shape consumed by BB_Readylaunch at
- * `class-bb-readylaunch.php:3073`.
+ * Returns the canonical object-map shape consumed by ReadyLaunch templates
+ * (e.g. the sidebar renderer at `right-sidebar.php` and the page-enabled
+ * check in `BB_Readylaunch::bb_rl_is_page_enabled_for_integration()`).
  *
  * @since BuddyBoss [BBVERSION]
  *
