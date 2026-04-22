@@ -663,10 +663,20 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 			}
 			return true;
 		} );
-		if ( firstVisible && firstVisible.id !== activePanelId ) {
+		// Re-entry guard — also check `sidePanelId` (the URL-param panel) so
+		// we don't ping-pong with the URL-sync effect at line ~213 when the
+		// URL still points at the hidden panel.
+		if ( firstVisible && firstVisible.id !== activePanelId && firstVisible.id !== sidePanelId ) {
 			setActivePanelId( firstVisible.id );
+			// Keep the URL in sync with the redirected panel — without this,
+			// `?sidepanel=branding` stays stale in the address bar, and the
+			// URL-sync effect would re-target the hidden panel and bounce
+			// back here, visually flickering.
+			if ( 'function' === typeof onNavigate ) {
+				onNavigate( `/settings/${featureId}/${firstVisible.id}` );
+			}
 		}
-	}, [ activePanel, sidePanels, activePanelId, settings ] );
+	}, [ activePanel, sidePanels, activePanelId, sidePanelId, settings, featureId, onNavigate ] );
 
 	// Check if this panel has a custom screen (e.g., ActivityListScreen).
 	const customScreenKey = featureId + ':' + activePanelId;

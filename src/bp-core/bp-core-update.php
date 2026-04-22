@@ -4237,6 +4237,10 @@ function bb_rl_migrate_settings() {
 
 	// Mark as complete so future `bp_version_updater` runs short-circuit even
 	// if the outer DB version bump happens to fail mid-flight.
+	//
+	// @todo: Remove after 3 release. Once every active site has run this
+	// migration the flag and the entire `bb_rl_migrate_settings()` function
+	// can be deleted along with its idempotency short-circuit at the top.
 	bp_update_option( 'bb_rl_shapes_migrated', 1 );
 }
 

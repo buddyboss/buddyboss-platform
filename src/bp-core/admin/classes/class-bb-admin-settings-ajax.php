@@ -1441,11 +1441,17 @@ class BB_Admin_Settings_Ajax {
 	}
 
 	/**
-	 * Sanitize a `preview_config` array per-key — URL-shaped keys get
-	 * `esc_url_raw`, other string values get `sanitize_text_field`, non-strings
-	 * pass through. Called instead of `map_deep( ..., 'sanitize_text_field' )`
-	 * which would strip the `://` protocol separator from site_url / site_icon
-	 * on some PHP sanitize stacks.
+	 * Sanitize a `preview_config` array per-leaf.
+	 *
+	 * URL-looking string values go through `esc_url_raw`; other strings get
+	 * `sanitize_text_field`; non-strings pass through. Detection is
+	 * value-shape based (FILTER_VALIDATE_URL + protocol-relative `//` prefix)
+	 * rather than key-suffix based so new URL-shaped keys (`_src`, `_href`,
+	 * `_link`, `_path`, etc.) don't need to be whitelisted as they're added.
+	 *
+	 * Nested arrays get the same per-leaf treatment via recursion —
+	 * `map_deep( ..., 'sanitize_text_field' )` would flatten nested URLs and
+	 * strip the `://` protocol separator.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -1453,25 +1459,44 @@ class BB_Admin_Settings_Ajax {
 	 * @return array Sanitized config.
 	 */
 	private function bb_sanitize_preview_config( $config ) {
-		$url_suffixes = array( '_url', '_icon', '_image' );
-		$sanitized    = array();
+		$sanitized = array();
 		foreach ( $config as $key => $value ) {
-			if ( is_string( $value ) ) {
-				$is_url_key = false;
-				foreach ( $url_suffixes as $suffix ) {
-					if ( substr( $key, -strlen( $suffix ) ) === $suffix ) {
-						$is_url_key = true;
-						break;
-					}
-				}
-				$sanitized[ $key ] = $is_url_key ? esc_url_raw( $value ) : sanitize_text_field( $value );
-			} elseif ( is_array( $value ) ) {
-				$sanitized[ $key ] = map_deep( $value, 'sanitize_text_field' );
+			if ( is_array( $value ) ) {
+				$sanitized[ $key ] = $this->bb_sanitize_preview_config( $value );
+			} elseif ( is_string( $value ) ) {
+				$sanitized[ $key ] = $this->bb_sanitize_preview_value( $value );
 			} else {
 				$sanitized[ $key ] = $value;
 			}
 		}
 		return $sanitized;
+	}
+
+	/**
+	 * Decide between `esc_url_raw` and `sanitize_text_field` for a single
+	 * preview-config string.
+	 *
+	 * Detection is an explicit scheme regex — `http(s)://` or protocol-relative
+	 * `//` — instead of `FILTER_VALIDATE_URL`, which accepts obscure inputs
+	 * like `javascript://comment%0Aalert(1)`. `esc_url_raw` downstream would
+	 * neutralize that payload anyway, but a strict allowlist is defense in
+	 * depth and keeps the intent obvious.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $value Raw string value.
+	 * @return string Sanitized string.
+	 */
+	private function bb_sanitize_preview_value( $value ) {
+		$trimmed = trim( $value );
+		if ( '' === $trimmed ) {
+			return sanitize_text_field( $value );
+		}
+		// Allowlist http/https/protocol-relative only.
+		if ( preg_match( '#^(https?:)?//#i', $trimmed ) ) {
+			return esc_url_raw( $trimmed );
+		}
+		return sanitize_text_field( $value );
 	}
 
 	/**

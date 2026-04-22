@@ -1,21 +1,59 @@
 import { __ } from '@wordpress/i18n';
 import { Button } from '@wordpress/components';
 
-// Safely resolve a URL from the localized onboarding payload. Returns '#' when
-// the expected key isn't populated so we never render
-// `href="undefinedadmin.php?..."` if the PHP localize data is incomplete.
+/**
+ * Allowlist a URL against `http://`, `https://`, or protocol-relative `//`
+ * prefixes. Everything else — including `javascript:` / `data:` / `vbscript:`
+ * payloads that could slip through if `window.bbRlOnboarding` ever gets
+ * poisoned — falls back to `'#'`.
+ *
+ * Stricter than this codebase's general `safeUrl()` helper (rejects
+ * `mailto:`, hash-only, and relative URLs) because the only URLs that flow
+ * into this screen are absolute admin / site URLs — any relative form is
+ * already suspicious.
+ *
+ * @param {string} url Candidate URL.
+ * @returns {string} Trimmed URL when allowed, `'#'` otherwise.
+ */
+const allowlistUrl = ( url ) => {
+    if ( typeof url !== 'string' || '' === url ) {
+        return '#';
+    }
+    const trimmed = url.trim();
+    const lower   = trimmed.toLowerCase();
+    if (
+        0 === lower.indexOf( 'http://' ) ||
+        0 === lower.indexOf( 'https://' ) ||
+        0 === lower.indexOf( '//' )
+    ) {
+        return trimmed;
+    }
+    return '#';
+};
+
+/**
+ * Compose an admin URL by appending `suffix` to the localized `admin_url`.
+ * Guards against an undefined `admin_url` concatenating into
+ * `"undefinedadmin.php?..."` and falls back to `'#'` if the resolved URL fails
+ * the scheme allowlist.
+ *
+ * @param {string} [suffix] Query/path appended to `admin_url`.
+ * @returns {string} Allowlisted URL or `'#'`.
+ */
 const safeAdminUrl = ( suffix ) => {
     const adminUrl = window.bbRlOnboarding?.readylaunch?.admin_url;
     if ( typeof adminUrl !== 'string' || '' === adminUrl ) {
         return '#';
     }
-    return adminUrl + ( suffix || '' );
+    return allowlistUrl( adminUrl + ( suffix || '' ) );
 };
 
-const safeSiteUrl = () => {
-    const siteUrl = window.bbRlOnboarding?.readylaunch?.site_url;
-    return ( typeof siteUrl === 'string' && '' !== siteUrl ) ? siteUrl : '#';
-};
+/**
+ * Resolve and allowlist the localized `site_url`.
+ *
+ * @returns {string} Allowlisted URL or `'#'`.
+ */
+const safeSiteUrl = () => allowlistUrl( window.bbRlOnboarding?.readylaunch?.site_url );
 
 export const FinishScreen = ({ stepData, onFinish, onViewSite }) => {
     const { title, description } = stepData;

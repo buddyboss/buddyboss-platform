@@ -84,14 +84,44 @@ export function MediaPickerField( { value, onChange, disabled, config } ) {
 	var configRef = useRef( { libraryType: libraryType, allowMultiple: allowMultiple, frameTitle: frameTitle, frameButton: frameButton } );
 	configRef.current = { libraryType: libraryType, allowMultiple: allowMultiple, frameTitle: frameTitle, frameButton: frameButton };
 
-	// Tear down the wp.media frame on unmount to avoid leaking event handlers.
+	// Remember the structural config of the LAST built frame so we can detect
+	// prop changes without reading wp.media internals (`frame.options.*` is
+	// undocumented and can drift between WP versions). When structural config
+	// changes the frame is torn down and rebuilt on the next open.
+	var lastStructuralRef = useRef( null );
+
+	/**
+	 * Tear down the current wp.media frame instance.
+	 *
+	 * `off()` alone leaves the modal DOM attached; `close()` + `dispose()` are
+	 * the documented APIs that release DOM + internal listeners. Cleared
+	 * `frameRef` / `lastStructuralRef` so the next `openMediaLibrary()` call
+	 * builds a fresh frame.
+	 */
+	function teardownFrame() {
+		var frame = frameRef.current;
+		if ( ! frame ) {
+			return;
+		}
+		if ( typeof frame.off === 'function' ) {
+			frame.off();
+		}
+		if ( typeof frame.close === 'function' ) {
+			try { frame.close(); } catch ( e ) { /* already closed */ }
+		}
+		if ( typeof frame.dispose === 'function' ) {
+			try { frame.dispose(); } catch ( e ) { /* already disposed */ }
+		}
+		frameRef.current         = null;
+		lastStructuralRef.current = null;
+	}
+
+	// Tear down the wp.media frame on unmount to avoid leaking event handlers
+	// AND the modal DOM (see teardownFrame — .off() alone kept the `.media-modal`
+	// node around on repeated mount/unmount).
 	useEffect( function () {
-		return function () {
-			if ( frameRef.current && typeof frameRef.current.off === 'function' ) {
-				frameRef.current.off();
-				frameRef.current = null;
-			}
-		};
+		return teardownFrame;
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [] );
 
 	function openMediaLibrary() {
@@ -100,14 +130,32 @@ export function MediaPickerField( { value, onChange, disabled, config } ) {
 			return;
 		}
 
-		// Reuse a single frame instance across opens for performance.
+		// wp.media frames bake `multiple` and `library.type` at construction
+		// time — they can't be reconfigured afterwards. If structural config
+		// changed since the last open, rebuild. `title` and `button.text` are
+		// updated in place below so the reuse path stays cheap in the common
+		// (unchanged-config) case.
+		if ( frameRef.current && lastStructuralRef.current ) {
+			var prev = lastStructuralRef.current;
+			if ( prev.allowMultiple !== configRef.current.allowMultiple || prev.libraryType !== configRef.current.libraryType ) {
+				teardownFrame();
+			}
+		}
+
+		// Reuse a single frame instance across opens when structural config is
+		// stable. Read all values from `configRef.current` so the frame reflects
+		// the latest props, not the first-render closure snapshot.
 		if ( ! frameRef.current ) {
 			frameRef.current = window.wp.media( {
-				title:    frameTitle,
-				button:   { text: frameButton },
-				multiple: allowMultiple,
-				library:  { type: libraryType },
+				title:    configRef.current.frameTitle,
+				button:   { text: configRef.current.frameButton },
+				multiple: configRef.current.allowMultiple,
+				library:  { type: configRef.current.libraryType },
 			} );
+			lastStructuralRef.current = {
+				allowMultiple: configRef.current.allowMultiple,
+				libraryType:   configRef.current.libraryType,
+			};
 
 			frameRef.current.on( 'select', function () {
 				var selection = frameRef.current.state().get( 'selection' );
@@ -123,13 +171,22 @@ export function MediaPickerField( { value, onChange, disabled, config } ) {
 					onChangeRef.current( attachmentToObject( attachment ) );
 				}
 			} );
+		} else {
+			// Keep `title` / `button.text` in sync on reuse so a prop change
+			// mid-lifecycle reaches the modal UI on next open.
+			if ( frameRef.current.options ) {
+				frameRef.current.options.title = configRef.current.frameTitle;
+				if ( frameRef.current.options.button ) {
+					frameRef.current.options.button.text = configRef.current.frameButton;
+				}
+			}
 		}
 
 		frameRef.current.open();
 	}
 
 	function handleRemove() {
-		onChange( allowMultiple ? [] : null );
+		onChangeRef.current( configRef.current.allowMultiple ? [] : null );
 	}
 
 	// Some fields (e.g. `buddyboss_og_image`) persist the picked attachment as

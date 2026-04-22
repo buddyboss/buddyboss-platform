@@ -43,13 +43,20 @@ bb_register_feature(
 	)
 );
 
-// Load Settings 2.0 configuration (side panels, sections, fields).
-// Loaded here (not in loader.php) so settings register even when the feature has no
-// sub-feature activation state — matches the Reactions reference implementation.
-//
-// Gate on admin/AJAX/REST/CLI contexts — the 781-LOC registration block calls
-// `wp_get_nav_menus()` and primes 14 options, none of which frontend requests
-// need. Skipping on public requests trims startup work for every visitor.
+// Load stateless sanitizer / shape-normalizer helpers UNCONDITIONALLY. They are
+// used by three entry points: Settings 2.0 admin save, onboarding wizard save,
+// and the one-shot `bb_rl_migrate_settings()` version-update migration. The
+// migration runs on `bp_admin_init` today (satisfies `is_admin()`), but any
+// future non-admin caller (WP-CLI without `WP_CLI` defined, REST upgrader,
+// etc.) must be able to reach these helpers too.
+if ( file_exists( __DIR__ . '/includes/sanitizers.php' ) ) {
+	require_once __DIR__ . '/includes/sanitizers.php';
+}
+
+// Load Settings 2.0 configuration (side panels, sections, fields) + admin-only
+// callbacks. Gated on admin/AJAX/REST/CLI contexts — the registration block
+// calls `wp_get_nav_menus()` and primes 14 options, none of which frontend
+// requests need. Skipping on public requests trims startup work for visitors.
 if (
 	file_exists( __DIR__ . '/admin/settings.php' ) &&
 	(
