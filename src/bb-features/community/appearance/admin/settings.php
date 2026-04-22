@@ -63,7 +63,7 @@ function bb_admin_settings_register_appearance_settings() {
 			'title'      => __( 'General', 'buddyboss' ),
 			'icon'       => array(
 				'type'  => 'font',
-				'class' => 'bb-icons-rl bb-icons-rl-gear-six',
+				'class' => 'bb-icons-rl bb-icons-rl-toggle-right',
 			),
 			'order'      => 10,
 			'is_default' => true,
@@ -120,7 +120,7 @@ function bb_admin_settings_register_appearance_settings() {
 			'title'   => __( 'Site SEO', 'buddyboss' ),
 			'icon'    => array(
 				'type'  => 'font',
-				'class' => 'bb-icons-rl bb-icons-rl-magnifying-glass',
+				'class' => 'bb-icons-rl bb-icons-rl-list-magnifying-glass',
 			),
 			'order'   => 40,
 			// Visual separator in the left nav — Site SEO is a distinct
