@@ -4190,6 +4190,8 @@ function bb_update_to_3_0_0() {
  * through unchanged.
  *
  * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
  */
 function bb_rl_migrate_settings() {
 	if ( ! function_exists( 'bb_appearance_normalize_list_to_map' ) || ! function_exists( 'bb_appearance_normalize_side_menu_shape' ) ) {

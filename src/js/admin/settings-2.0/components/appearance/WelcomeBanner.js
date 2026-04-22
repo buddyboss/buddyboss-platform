@@ -36,8 +36,13 @@ export function WelcomeBanner() {
 		if ( ! window.location ) {
 			return;
 		}
-		var separator = -1 === window.location.search.indexOf( '?' ) ? '?' : '&';
-		window.location.href = window.location.origin + window.location.pathname + window.location.search + separator + WIZARD_PARAM;
+		// Use `URLSearchParams.set()` so re-clicks don't stack duplicate
+		// `bb_wizard_activation` keys. PHP $_GET is last-wins and would work
+		// either way, but this keeps the URL tidy.
+		var url    = new URL( window.location.href );
+		var parts  = WIZARD_PARAM.split( '=' );
+		url.searchParams.set( parts[0], parts[1] );
+		window.location.href = url.toString();
 	}
 
 	return (
@@ -78,6 +83,7 @@ export function WelcomeBanner() {
 					<iframe
 						title={ __( 'BuddyBoss ReadyLaunch tutorial', 'buddyboss' ) }
 						src={ VIDEO_EMBED }
+						loading="lazy"
 						frameBorder="0"
 						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 						referrerPolicy="strict-origin-when-cross-origin"
