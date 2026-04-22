@@ -55,6 +55,7 @@ import { SEOPreviewField } from './fields/SEOPreviewField';
 import { SocialPreviewField } from './fields/SocialPreviewField';
 import { TagsReferenceField } from './fields/TagsReferenceField';
 import { useFetchOnChange } from '../hooks/useFetchOnChange';
+import { evaluateConditional } from '../utils/conditional';
 
 /**
  * Settings Form Component (matching Figma settingsSection)
@@ -156,81 +157,13 @@ export function SettingsForm({ fields, values, onChange }) {
 	}, [ fields ] );
 
 	/**
-	 * Evaluate a single condition object against current values.
-	 *
-	 * Honors `cond.operator` ('==' default, '!=' inverts the match) so fields
-	 * can be hidden/shown via "not equal" conditionals (e.g., show Logo (Light
-	 * mode) when theme_mode != 'dark').
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {Object} cond Single condition: { field, value, operator? }.
-	 * @return {boolean} Whether the condition is met.
-	 */
-	const evaluateCondition = (cond) => {
-		const condValue = values[cond.field];
-		const expectedValue = cond.value;
-		const operator = cond.operator || '==';
-		let matched;
-
-		// When expected value is boolean, use truthy/falsy comparison
-		// because DB values can be 1, 0, "1", "0" while conditional uses true/false.
-		if (expectedValue === true || expectedValue === false) {
-			const isTruthy = !!condValue && condValue !== '0' && condValue !== 0;
-			matched = isTruthy === expectedValue;
-		} else if (Array.isArray(expectedValue)) {
-			// When expected value is an array, check if current value is in the array.
-			matched = expectedValue.indexOf(condValue) !== -1;
-		} else {
-			// For non-boolean values, use strict comparison.
-			matched = condValue === expectedValue;
-		}
-
-		return '!=' === operator ? ! matched : matched;
-	};
-
-	/**
-	 * Check if a field's conditional is met.
-	 *
-	 * Supports two formats:
-	 *   1. Single condition:   { field: 'name', value: expected }
-	 *   2. Multiple conditions: { conditions: [ {field, value}, ... ], operator: 'AND'|'OR' }
-	 *      operator defaults to 'AND'.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {Object} field Field config with optional conditional property.
-	 * @return {boolean} True when condition is met (or no conditional exists).
-	 */
-	const isConditionalMet = ( field ) => {
-		if ( ! field.conditional ) {
-			return true;
-		}
-
-		// Skip visibility check for disable-only conditionals — they stay visible.
-			if ( 'disable' === field.conditional.action ) {
-				return true;
-			}
-
-			// Multiple conditions with operator.
-		if ( Array.isArray( field.conditional.conditions ) ) {
-			var operator = ( field.conditional.operator || 'AND' ).toUpperCase();
-			var conditions = field.conditional.conditions;
-
-			if ( 'OR' === operator ) {
-				return conditions.some( evaluateCondition );
-			}
-			// Default: AND — all conditions must match.
-			return conditions.every( evaluateCondition );
-		}
-
-		// Single condition (backward-compatible).
-		return evaluateCondition( field.conditional );
-	};
-
-	/**
 	 * Check if a field should be visible based on its conditional logic.
-	 * Fields with action:'disable' stay visible but get disabled instead.
+	 *
+	 * Fields with `action: 'disable'` stay visible — they get disabled
+	 * instead, handled by `isFieldConditionallyDisabled`. Condition semantics
+	 * (single vs multi, AND/OR, loose scalar equality) live in the shared
+	 * `evaluateConditional` util so this component and the side-panel /
+	 * section filters can't drift.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -238,17 +171,13 @@ export function SettingsForm({ fields, values, onChange }) {
 	 * @return {boolean} True when the field should be rendered.
 	 */
 	const isFieldVisible = (field) => {
-		if ( field.conditional ) {
-			// When action is 'disable', keep visible (handled by isFieldConditionallyDisabled).
-			if ( 'disable' === field.conditional.action ) {
-				return true;
-			}
-			return isConditionalMet( field );
+		if ( ! field.conditional ) {
+			return true;
 		}
-
-		// For parent_field (nesting), always show the field but it may be disabled
-		// Fields with parent_field are rendered as children of their parent
-		return true;
+		if ( 'disable' === field.conditional.action ) {
+			return true;
+		}
+		return evaluateConditional( field.conditional, values );
 	};
 
 	/**
@@ -256,25 +185,15 @@ export function SettingsForm({ fields, values, onChange }) {
 	 * when action is 'disable' instead of 'hide'.
 	 *
 	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {Object} field Field config with optional conditional property.
+	 * @return {boolean} True when the field should be disabled.
 	 */
 	const isFieldConditionallyDisabled = (field) => {
 		if ( ! field.conditional || 'disable' !== field.conditional.action ) {
 			return false;
 		}
-
-		// Multiple conditions with operator.
-		if (Array.isArray(field.conditional.conditions)) {
-			var operator = (field.conditional.operator || 'AND').toUpperCase();
-			var conditions = field.conditional.conditions;
-
-			if ('OR' === operator) {
-				return ! conditions.some(evaluateCondition);
-			}
-			return ! conditions.every(evaluateCondition);
-		}
-
-		// Single condition.
-		return ! evaluateCondition(field.conditional);
+		return ! evaluateConditional( field.conditional, values );
 	};
 
 	/**
@@ -1468,24 +1387,39 @@ export function SettingsForm({ fields, values, onChange }) {
 	// Compute in a single pass which field is the FIRST and the LAST visible
 	// field in each group. Used so shared-label groups render the left-column
 	// label on the first row only (Figma) and apply the group-last CSS border
-	// modifier on the last row. Re-computed on every render because
-	// conditional visibility depends on current values.
+	// modifier on the last row.
+	//
+	// Uses the shared `evaluateConditional` helper (same util the side-panel
+	// and section filters use). Keeping visibility semantics in one place
+	// prevents drift between this memo, `isFieldVisible`, and the panel/section
+	// filters — in particular the loose-equality comparison needed when the DB
+	// stores booleans but React holds them as "1"/"0" strings (e.g.
+	// `bb_rl_enabled` after the Appearance normalization filter).
 	const { groupFirstNames, groupLastNames } = useMemo( function () {
 		var firstMap = {};
 		var lastMap  = {};
+
 		for ( var i = 0; i < topLevelFields.length; i++ ) {
 			var field = topLevelFields[ i ];
 			var key   = field.group?.key;
-			if ( ! key || ! isFieldVisible( field ) ) {
+			if ( ! key ) {
 				continue;
 			}
+
+			// Fields with action:'disable' stay visible (mirrors `isFieldVisible`).
+			var cond      = field.conditional;
+			var isVisible = ! cond || 'disable' === cond.action || evaluateConditional( cond, values );
+			if ( ! isVisible ) {
+				continue;
+			}
+
 			if ( ! firstMap[ key ] ) {
 				firstMap[ key ] = field.name;
 			}
 			lastMap[ key ] = field.name;
 		}
 		return { groupFirstNames: firstMap, groupLastNames: lastMap };
-	}, [ topLevelFields, values ] ); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [ topLevelFields, values ] );
 
 	return (
 		<>

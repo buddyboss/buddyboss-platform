@@ -2,10 +2,10 @@
  * BuddyBoss Admin Settings 2.0 — Conditional Evaluation Utility
  *
  * Shared helper for evaluating `conditional` arg shapes against a flat values
- * object. Used by side-panel + section visibility filters and (eventually) by
- * SettingsForm's field visibility check.
+ * object. Canonical evaluator — used by side-panel + section visibility
+ * filters and by `SettingsForm.isFieldVisible` / `isFieldConditionallyDisabled`.
  *
- * Conditional shape (mirrors SettingsForm.isConditionalMet):
+ * Conditional shape:
  *   - Single:   { field: 'name', value: expected, operator?: '==' | '!=' }
  *   - Multiple: { conditions: [ { field, value, operator? } ], operator: 'AND' | 'OR' }
  *
