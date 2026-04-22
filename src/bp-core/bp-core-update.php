@@ -544,7 +544,8 @@ function bp_version_updater() {
 			bb_update_to_2_16_1();
 		}
 
-		// Version 3.0.0 - Settings 2.0 feature migration.
+		// DB version 23584 — 3.0.0 release migration block (Settings 2.0
+		// feature activation + ReadyLaunch option-shape canonicalization).
 		if ( $raw_db_version < 23584 ) {
 			bb_update_to_3_0_0();
 			bb_rl_migrate_settings();
@@ -4165,8 +4166,9 @@ function bb_update_to_3_0_0() {
 }
 
 /**
- * Migration for BuddyBoss 3.0.1 — canonicalize ReadyLaunch sidebar/menu/pages
- * option shapes.
+ * Companion migration for DB version 23584 — canonicalize ReadyLaunch
+ * sidebar/menu/pages option shapes. Runs alongside bb_update_to_3_0_0() as
+ * part of the same 3.0.0 release migration block.
  *
  * The legacy ReadyLaunch onboarding wizard persisted these options as sequential
  * arrays:
