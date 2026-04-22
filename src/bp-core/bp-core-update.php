@@ -545,13 +545,9 @@ function bp_version_updater() {
 		}
 
 		// Version 3.0.0 - Settings 2.0 feature migration.
-		if ( $raw_db_version < 23583 ) {
-			bb_update_to_3_0_0();
-		}
-
-		// Version 3.0.1 — canonicalize ReadyLaunch sidebar/menu/pages shapes.
 		if ( $raw_db_version < 23584 ) {
-			bb_update_to_3_0_1();
+			bb_update_to_3_0_0();
+			bb_rl_migrate_settings();
 		}
 
 		if ( $raw_db_version !== $current_db ) {
@@ -4193,7 +4189,7 @@ function bb_update_to_3_0_0() {
  *
  * @since BuddyBoss [BBVERSION]
  */
-function bb_update_to_3_0_1() {
+function bb_rl_migrate_settings() {
 	if ( ! function_exists( 'bb_appearance_normalize_list_to_map' ) || ! function_exists( 'bb_appearance_normalize_side_menu_shape' ) ) {
 		return;
 	}
