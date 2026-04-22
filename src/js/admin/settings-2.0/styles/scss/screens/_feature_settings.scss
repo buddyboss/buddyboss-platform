@@ -3045,7 +3045,7 @@
 		width: 184px;
 		height: 56px;
 		border: 1px solid $bb-border-color;
-		border-radius: 6px;
+		border-radius: $bb-border-radius-lg;
 		overflow: hidden;
 		background-color: $bb-background-base-color;
 		display: flex;
@@ -3078,7 +3078,7 @@
 		width: 80px;
 		height: 80px;
 		border: 1px solid $bb-border-color;
-		border-radius: 6px;
+		border-radius: $bb-border-radius-md;
 		overflow: hidden;
 
 		img {
@@ -3101,32 +3101,33 @@
 		display: inline-flex;
 		align-items: center;
 		gap: 6px;
-		padding: 6px 12px;
+		padding: 3px 6px;
 		background: $bb-background-primary-color;
 		border: 1px solid $bb-border-color;
-		border-radius: 4px;
+		border-radius: $bb-border-radius-sm;
 		color: $bb-text-color;
 		font-size: 13px;
 		font-weight: 500;
 		line-height: 1.4;
 		cursor: pointer;
-		transition: background 0.15s ease, border-color 0.15s ease;
+
+        &--remove {
+            background-color: transparent;
+        }
 
 		i {
-			font-size: 14px;
+			font-size: 13px;
 			line-height: 1;
-		}
-
-		&:hover:not(:disabled),
-		&:focus:not(:disabled) {
-			background: $bb-background-secondary-color;
-			border-color: $bb-text-tertiary-color;
 		}
 
 		&:disabled {
 			opacity: 0.5;
 			cursor: not-allowed;
 		}
+
+        &:focus {
+            outline: 2px solid $bb-border-quinery;
+        }
 	}
 
 	&__placeholder-area {
@@ -3142,24 +3143,17 @@
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		width: 48px;
-		height: 48px;
+		width: 184px;
+		height: 56px;
 		background: $bb-background-primary-color;
-		border: 1px solid $bb-border-color;
-		border-radius: 4px;
-		color: $bb-text-tertiary-color;
+		border: 1px dashed $bb-border-secondary-color;
+		border-radius: $bb-border-radius-md;
+		color: $bb-icon-tertiary-color;
 		cursor: pointer;
-		transition: background 0.15s ease, border-color 0.15s ease;
 
 		i {
-			font-size: 20px;
+			font-size: 24px;
 			line-height: 1;
-		}
-
-		&:hover:not(:disabled),
-		&:focus:not(:disabled) {
-			background: $bb-background-secondary-color;
-			border-color: $bb-text-tertiary-color;
 		}
 
 		&:disabled {
@@ -3172,20 +3166,18 @@
 			height: 120px;
 			border: none;
 			background: $bb-background-secondary-color;
-			border-radius: 8px;
+			border-radius: $bb-border-radius-lg;
 			cursor: default;
 			color: $bb-text-tertiary-color;
 
 			i {
 				font-size: 32px;
 			}
-
-			&:hover,
-			&:focus {
-				background: $bb-background-secondary-color;
-				border-color: transparent;
-			}
 		}
+
+        &:focus {
+            outline: 2px solid $bb-border-quinery;
+        }
 	}
 
 	&__upload-btn {
@@ -3231,6 +3223,21 @@
 		height: 100%;
 		object-fit: cover;
 	}
+}
+
+.bb-admin-settings-form__field-content:has(.bb-admin-media-picker) {
+
+    .bb-admin-settings-form__field-group-label {
+        font-size: 13px;
+        margin-bottom: 10px;
+    }
+}
+
+.bb-admin-settings-form__field[data-field-name="bb_rl_dark_logo"] {
+
+    .bb-admin-media-picker__preview:has(img) {
+        background-color: $bb-background-inverse-color;
+    }
 }
 
 // =============================================================================
