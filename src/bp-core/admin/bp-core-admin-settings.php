@@ -159,30 +159,14 @@ function bp_core_admin_settings() {
 	<?php
 }
 
-/**
- * The main Integrations page
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_core_admin_integrations() {
-	$active_tab  = bp_core_get_admin_integration_active_tab();
-	$form_action = bp_core_admin_integrations_url( $active_tab );
-	?>
-
-	<div class="wrap">
-		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Integrations', 'buddyboss' ) ); ?></h2>
-		<div class="nav-settings-subsubsub">
-			<ul class="subsubsub">
-				<?php bp_core_admin_integration_tabs(); ?>
-			</ul>
-		</div>
-		<form action="<?php echo esc_url( $form_action ); ?>" method="post">
-			<?php bp_core_get_admin_integration_active_tab_object()->form_html(); ?>
-		</form>
-	</div>
-
-	<?php
-}
+// Legacy bp_core_admin_integrations() page renderer removed in Settings 2.0.
+// Integrations now live inside the Settings grid under the "Integrations" category.
+// The bp-integrations URL is redirected by bb_redirect_bp_integrations_*
+// in bp-core-admin-actions.php. Tab-infrastructure helpers
+// (bp_core_admin_integrations_url, bp_core_admin_integration_tabs,
+// bp_core_get_admin_integration_active_tab*) are intentionally preserved —
+// they are still referenced by the BP_Admin_Integration_tab base class
+// which Pro and third-party integration tabs extend.
 
 /**
  * Load the BuddyBoss App integration admin screen.
@@ -378,44 +362,10 @@ function bp_feed_settings_callback_platform( $args ) {
  *
  * @since 1.6.0
  */
-function bp_core_admin_settings_save() {
-	global $wp_settings_fields;
-
-	if (
-		isset( $_GET['page'] )
-		&& 'bp-integrations' == $_GET['page']
-		&& isset( $_GET['tab'] )
-		&& 'bp-compatibility' == $_GET['tab']
-		&& ! empty( $_POST['submit'] ) ) {
-
-		check_admin_referer( 'buddypress-options' );
-
-		// Because many settings are saved with checkboxes, and thus will have no values
-		// in the $_POST array when unchecked, we loop through the registered settings.
-		if ( isset( $wp_settings_fields['buddypress'] ) ) {
-			foreach ( (array) $wp_settings_fields['buddypress'] as $section => $settings ) {
-				foreach ( $settings as $setting_name => $setting ) {
-					$value = isset( $_POST[ $setting_name ] ) ? $_POST[ $setting_name ] : '';
-
-					bp_update_option( $setting_name, $value );
-				}
-			}
-		}
-
-		bp_core_redirect(
-			add_query_arg(
-				array(
-					'page'    => 'bp-integrations',
-					'tab'     => 'bp-compatibility',
-					'updated' => 'true',
-				),
-				bp_get_admin_url( 'admin.php' )
-			)
-		);
-	}
-}
-
-add_action( 'bp_admin_init', 'bp_core_admin_settings_save', 100 );
+// Legacy BuddyPress-compatibility save handler removed — it persisted settings
+// from the `bp-integrations&tab=bp-compatibility` tab form, which no longer
+// exists. Compatibility settings live in Settings 2.0 and use the Settings 2.0
+// AJAX save path (class-bb-admin-settings-ajax.php).
 
 /**
  * Link to Moderation Block tutorial

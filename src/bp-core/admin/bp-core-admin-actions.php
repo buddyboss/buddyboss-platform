@@ -98,7 +98,7 @@ function bb_force_redirect_bare_bp_settings() {
 add_action( 'admin_init', 'bb_force_redirect_bare_bp_settings', 0 );
 
 /**
- * Redirect `?page=bp-settings` before WordPress's permission gate fires.
+ * Redirect legacy admin slugs to Settings 2.0 before WordPress's permission gate.
  *
  * WordPress calls `user_can_access_admin_page()` in `wp-admin/includes/menu.php`
  * at line ~371, which runs via `require wp-admin/menu.php` at line 163 of
@@ -107,10 +107,16 @@ add_action( 'admin_init', 'bb_force_redirect_bare_bp_settings', 0 );
  * slug; WP has already called `wp_die()` by then.
  *
  * Hooking `admin_menu` priority MAX catches the request after all menu
- * registrations but BEFORE `user_can_access_admin_page()` runs (the action
+ * registrations but BEFORE `user_can_access_admin_page()` runs — the action
  * is dispatched at `includes/menu.php:161`, the permission check runs at
  * line 371 of the same file, so any hook attached to `admin_menu` sees the
- * request first).
+ * request first.
+ *
+ * Covers two legacy slugs that were removed in Settings 2.0:
+ *  - `bp-settings`     → `bb-settings` (tab query arg preserved).
+ *  - `bp-integrations` → `bb-settings` with best-effort tab mapping via
+ *    the `bb_legacy_integration_tabs_mapping` filter (Pro populates it
+ *    with Zoom/OneSignal/etc. tab redirects).
  *
  * This is the only hook point that reliably catches the "slug doesn't
  * exist" case before WP's 403 fires.
@@ -121,18 +127,42 @@ function bb_redirect_bp_settings_before_permission_check() {
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
 	$page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
 
-	if ( 'bp-settings' !== $page ) {
+	if ( 'bp-settings' !== $page && 'bp-integrations' !== $page ) {
 		return;
 	}
 
-	// Preserve tab/panel query args so old URLs with tabs still land somewhere
-	// reasonable; the tab-mapping logic in bb_redirect_legacy_settings_to_settings_2
-	// will pick up from there once the redirect target processes.
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
 	$tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : '';
 
 	$target = bp_get_admin_url( 'admin.php?page=bb-settings' );
-	if ( ! empty( $tab ) ) {
+
+	if ( 'bp-integrations' === $page && ! empty( $tab ) ) {
+		/**
+		 * Filter the legacy integration tabs mapping.
+		 *
+		 * Pro hooks this to add Zoom, OneSignal, and other integration tab redirects.
+		 * Values can be a string (feature ID only) or array with 'tab' and 'panel'.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $legacy_integration_tabs Array of old integration tab name => new Settings 2.0 route.
+		 */
+		$legacy_integration_tabs = apply_filters( 'bb_legacy_integration_tabs_mapping', array() );
+
+		if ( isset( $legacy_integration_tabs[ $tab ] ) ) {
+			$mapping = $legacy_integration_tabs[ $tab ];
+			if ( is_array( $mapping ) ) {
+				$target = add_query_arg( 'tab', $mapping['tab'], $target );
+				if ( ! empty( $mapping['panel'] ) ) {
+					$target = add_query_arg( 'panel', $mapping['panel'], $target );
+				}
+			} else {
+				$target = add_query_arg( 'tab', $mapping, $target );
+			}
+		}
+	} elseif ( ! empty( $tab ) ) {
+		// bp-settings: preserve the tab query arg; the tab-mapping logic in
+		// bb_redirect_legacy_settings_to_settings_2 will normalize bp-activity etc.
 		$target = add_query_arg( 'tab', $tab, $target );
 	}
 

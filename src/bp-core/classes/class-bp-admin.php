@@ -320,14 +320,10 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				function_exists( 'bb_admin_settings_page' ) ? 'bb_admin_settings_page' : 'bp_core_admin_settings'
 			);
 
-			$hooks[] = add_submenu_page(
-				$this->settings_page,
-				__( 'Plugin Integrations', 'buddyboss' ),
-				__( 'Integrations', 'buddyboss' ),
-				$this->capability,
-				'bp-integrations',
-				'bp_core_admin_integrations'
-			);
+			// Legacy "Plugin Integrations" submenu removed in Settings 2.0. Integrations
+			// now live inside the Settings grid under the "Integrations" category.
+			// The bp-integrations URL is redirected by bb_redirect_bp_integrations_*
+			// in bp-core-admin-actions.php.
 
 			$hooks[] = add_submenu_page(
 				$this->settings_page,
@@ -450,7 +446,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				__( 'BuddyPress Settings', 'buddyboss' ),
 				__( 'BuddyPress', 'buddyboss' ),
 				$this->capability,
-				'admin.php?page=bp-integrations&tab=bp-compatibility'
+				'admin.php?page=bb-settings&tab=compatibility'
 			);
 
 			// Add the option pages.
@@ -484,14 +480,10 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				function_exists( 'bb_admin_settings_page' ) ? 'bb_admin_settings_page' : 'bp_core_admin_settings'
 			);
 
-			$hooks[] = add_submenu_page(
-				$this->settings_page,
-				__( 'Plugin Integrations', 'buddyboss' ),
-				__( 'Integrations', 'buddyboss' ),
-				$this->capability,
-				'bp-integrations',
-				'bp_core_admin_integrations'
-			);
+			// Legacy "Plugin Integrations" submenu removed in Settings 2.0. Integrations
+			// now live inside the Settings grid under the "Integrations" category.
+			// The bp-integrations URL is redirected by bb_redirect_bp_integrations_*
+			// in bp-core-admin-actions.php.
 
 			$hooks[] = add_submenu_page(
 				$this->settings_page,

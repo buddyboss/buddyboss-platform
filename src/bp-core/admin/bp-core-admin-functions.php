@@ -664,6 +664,18 @@ function bp_core_admin_tabs( $active_tab = '' ) {
  */
 function bp_core_get_admin_tabs( $active_tab = '' ) {
 
+	// Legacy top-level tab bar shown on bp-credits / bp-tools / bp-help /
+	// bp-components / bp-pages pages. The "Integrations" tab was removed
+	// along with the bp-integrations submenu in Settings 2.0. Key positions
+	// of the remaining tabs are preserved (Components='0', Pages='1',
+	// Settings='2', Upgrade='4', Tools='5', Help='6', Credits='7') so any
+	// third-party code that references these filter-array keys continues
+	// to work — key '3' (previously Integrations) is now intentionally
+	// absent rather than holding a renumbered entry.
+	//
+	// The "Settings" tab points directly at bb-settings; the bp-settings
+	// slug is forwarded by bb_redirect_bp_settings_before_permission_check,
+	// but pointing at the destination avoids an unnecessary redirect hop.
 	$tabs = array(
 		'0' => array(
 			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components' ), 'admin.php' ) ),
@@ -676,15 +688,11 @@ function bp_core_get_admin_tabs( $active_tab = '' ) {
 			'class' => 'bp-pages',
 		),
 		'2' => array(
-			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings' ), 'admin.php' ) ),
+			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bb-settings' ), 'admin.php' ) ),
 			'name'  => __( 'Settings', 'buddyboss' ),
-			'class' => 'bp-settings',
+			'class' => 'bb-settings',
 		),
-		'3' => array(
-			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-integrations' ), 'admin.php' ) ),
-			'name'  => __( 'Integrations', 'buddyboss' ),
-			'class' => 'bp-integrations',
-		),
+		// '3' was the Integrations tab — intentionally left absent.
 		'4' => array(
 			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bb-upgrade' ), 'admin.php' ) ),
 			'name'  => __( 'Upgrade', 'buddyboss' ),
