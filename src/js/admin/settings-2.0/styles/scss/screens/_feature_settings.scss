@@ -3314,7 +3314,7 @@
 	&__item {
 		display: flex;
 		align-items: center;
-		gap: 12px;
+		gap: 8px;
 		padding: 4px 0;
 		background: transparent;
 		border: none;
@@ -3333,9 +3333,10 @@
 		color: $bb-text-tertiary-color;
 		display: inline-flex;
 		align-items: center;
-		font-size: 16px;
+		font-size: 20px;
 		line-height: 1;
 		flex-shrink: 0;
+        margin-right: 6px;
 
 		&:active {
 			cursor: grabbing;
