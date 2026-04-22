@@ -730,9 +730,9 @@ class BB_Admin_Settings_Ajax {
 				// SSO providers array (for sso_providers field type).
 				'providers'            => ! empty( $field['providers'] ) && is_array( $field['providers'] ) ? $field['providers'] : null,
 				// Generic media-picker config (for media_picker field type — library_type, multiple, frame_title, etc.).
-				'media_picker_config'      => ! empty( $field['media_picker_config'] ) && is_array( $field['media_picker_config'] ) ? $field['media_picker_config'] : null,
+				'media_picker_config'  => ! empty( $field['media_picker_config'] ) && is_array( $field['media_picker_config'] ) ? $field['media_picker_config'] : null,
 				// Predefined items for sortable_toggle_list (e.g. side menu items, footer menu items).
-				'available_items'          => ! empty( $field['available_items'] ) && is_array( $field['available_items'] ) ? array_values( $field['available_items'] ) : null,
+				'available_items'      => ! empty( $field['available_items'] ) && is_array( $field['available_items'] ) ? array_values( $field['available_items'] ) : null,
 				// Generic editable-link-list config (add_label, modal_title_add, modal_title_edit).
 				'editable_link_list_config' => ! empty( $field['editable_link_list_config'] ) && is_array( $field['editable_link_list_config'] ) ? $field['editable_link_list_config'] : null,
 				// Optional secondary description rendered under the field label (Figma "left-column help").

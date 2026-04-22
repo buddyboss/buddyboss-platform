@@ -845,18 +845,14 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 			$this->save_readylaunch_option( 'dark_logo', $final_settings['bb_rl_dark_logo'] );
 		}
 
-		// Component activation / registration force-enable / schema upgrade / the
-		// `bb_rl_configuration_applied` action all live in the shared
-		// `bb_appearance_apply_configuration()` function so Settings 2.0 auto-save
-		// and the onboarding wizard run the same side-effect pipeline.
-		if ( function_exists( 'bb_appearance_apply_configuration' ) ) {
-			bb_appearance_apply_configuration( $final_settings );
-		} else {
-			// Fallback for environments where Appearance callbacks haven't loaded
-			// (should never happen — Appearance feature is always registered).
-			// Kept for one release, removed in Phase 9 cleanup.
-			do_action( 'bb_rl_configuration_applied', $final_settings );
-		}
+		// Component activation / registration force-enable / schema upgrade /
+		// the `bb_rl_configuration_applied` action all live in the shared
+		// `bb_appearance_apply_configuration()` function so Settings 2.0
+		// auto-save and the onboarding wizard run the same side-effect
+		// pipeline. The Appearance feature is always registered (required =>
+		// true, is_active_callback => __return_true), so the function is
+		// guaranteed loaded by the time this method runs.
+		bb_appearance_apply_configuration( $final_settings );
 
 		// Apply remaining step settings dynamically — onboarding-specific path
 		// that reads dynamic step_options config to cover fields not handled

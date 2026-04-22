@@ -83,9 +83,21 @@ function bb_appearance_sanitize_color( $value, $default = '#3E34FF' ) {
  */
 function bb_appearance_sanitize_media( $value ) {
 	if ( is_array( $value ) && isset( $value['id'] ) ) {
+		$id = intval( $value['id'] );
+
+		// Verify the submitted URL actually belongs to the attachment ID — guards
+		// against an admin crafting a payload with an arbitrary off-site URL
+		// attached to a legitimate attachment ID. On mismatch, trust the ID and
+		// re-derive the URL via WordPress's own resolver.
+		$submitted_url = isset( $value['url'] ) ? esc_url_raw( $value['url'] ) : '';
+		$canonical_url = $id > 0 ? wp_get_attachment_url( $id ) : '';
+		if ( $canonical_url && $submitted_url !== $canonical_url ) {
+			$submitted_url = $canonical_url;
+		}
+
 		return array(
-			'id'    => intval( $value['id'] ),
-			'url'   => isset( $value['url'] ) ? esc_url_raw( $value['url'] ) : '',
+			'id'    => $id,
+			'url'   => $submitted_url,
 			'alt'   => isset( $value['alt'] ) ? sanitize_text_field( $value['alt'] ) : '',
 			'title' => isset( $value['title'] ) ? sanitize_text_field( $value['title'] ) : '',
 		);
@@ -459,6 +471,166 @@ function bb_appearance_on_settings_saved( $feature_id, $settings, $saved ) {
 	if ( 'appearance' !== $feature_id ) {
 		return;
 	}
+
+	// `blogname` is the WordPress site title. Our Settings 2.0 save handler
+	// blocks it via `bb_get_options_denylist()` (it's there to prevent
+	// third-party extensions writing to protected WP options). The Appearance
+	// feature legitimately needs to write blogname — save it directly here
+	// after a capability re-check.
+	if ( isset( $settings['blogname'] ) && current_user_can( 'manage_options' ) ) {
+		$new_blogname = sanitize_text_field( (string) $settings['blogname'] );
+		if ( '' !== $new_blogname ) {
+			update_option( 'blogname', $new_blogname );
+		}
+	}
+
 	bb_appearance_apply_configuration( is_array( $saved ) ? $saved : array() );
 }
 add_action( 'bb_admin_save_feature_settings_after', 'bb_appearance_on_settings_saved', 10, 3 );
+
+/**
+ * Normalize Appearance field values read from legacy shapes on their way to React.
+ *
+ * Three persisted options have drift between the shape the onboarding wizard
+ * produced and the shape Settings 2.0 expects:
+ *
+ *   1. `bb_rl_enabled` — stored as boolean, but the Site Layout `select` field
+ *      compares against string options `'1'`/`'0'`. Without coercion React
+ *      renders the dropdown blank on sites where the option is already set.
+ *   2. `bb_rl_activity_sidebars` / `bb_rl_member_profile_sidebars` /
+ *      `bb_rl_groups_sidebars` — legacy onboarding stored these as sequential
+ *      arrays (`['complete_profile', 'latest_updates']`), Settings 2.0
+ *      expects associative maps (`['complete_profile' => 1, ...]`). React's
+ *      `toggle_list` does `listValue[option.value]` which returns undefined
+ *      on sequential arrays → every toggle renders unchecked.
+ *   3. `bb_rl_enabled_pages` — same shape drift as the sidebars.
+ *
+ * The filter normalizes on read only — it does not mutate the stored option.
+ * Save-side sanitize callbacks already accept both shapes and canonicalize
+ * the map form, so once a user saves, the stored option becomes map-shaped.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array  $field_data Formatted field data being sent to React.
+ * @param array  $field      Raw field registration args.
+ * @param string $feature_id The feature ID being formatted.
+ * @return array Field data with normalized `value` / `default`.
+ */
+function bb_appearance_normalize_field_data( $field_data, $field, $feature_id ) {
+	if ( 'appearance' !== $feature_id ) {
+		return $field_data;
+	}
+
+	$name = $field['name'] ?? '';
+
+	switch ( $name ) {
+		case 'bb_rl_enabled':
+			// Coerce any truthy value (bool/int/string) to '1' or '0' so the
+			// `select` field's options match. Mirrors the legacy `(bool)` cast
+			// at `class-bb-readylaunch.php:3042`, adapted to the string shape
+			// Settings 2.0's select field requires.
+			$field_data['value']   = ! empty( $field_data['value'] ) && '0' !== $field_data['value'] ? '1' : '0';
+			$field_data['default'] = ! empty( $field_data['default'] ) && '0' !== $field_data['default'] ? '1' : '0';
+			break;
+
+		case 'bb_rl_activity_sidebars':
+		case 'bb_rl_member_profile_sidebars':
+		case 'bb_rl_groups_sidebars':
+		case 'bb_rl_enabled_pages':
+			// Sequential-list → map normalization. Mirrors the
+			// `isset( $saved[0] )` + `in_array()` conversion at
+			// `class-bb-readylaunch.php:3102-3108` and siblings.
+			$field_data['value']   = bb_appearance_normalize_list_to_map( $field_data['value'] );
+			$field_data['default'] = bb_appearance_normalize_list_to_map( $field_data['default'] );
+			break;
+
+		case 'bb_rl_side_menu':
+			// Sequential-list-of-items → map-of-items normalization, matching
+			// the `wp_parse_args($raw, $defaults)` + `array_map` normalizer at
+			// `class-bb-readylaunch.php:3242-3256`. Required because the
+			// onboarding wizard's draggable control persists sequential
+			// `[{id, enabled, order, icon}, ...]` and `SortableToggleList`
+			// indexes stored data via `stored[item.id]` (returns undefined on
+			// sequential arrays → toggles all render enabled).
+			$field_data['value']   = bb_appearance_normalize_side_menu_shape( $field_data['value'] );
+			$field_data['default'] = bb_appearance_normalize_side_menu_shape( $field_data['default'] );
+			break;
+	}
+
+	return $field_data;
+}
+add_filter( 'bb_admin_settings_format_field_data', 'bb_appearance_normalize_field_data', 10, 3 );
+
+/**
+ * Convert a sequential list of enabled keys (legacy onboarding shape) to an
+ * associative `{key: 1}` map (Settings 2.0 shape). Pass-through for values
+ * that are already map-shaped.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed $value Value to normalize.
+ * @return array|mixed Associative map, or the original value if not an array.
+ */
+function bb_appearance_normalize_list_to_map( $value ) {
+	if ( ! is_array( $value ) || empty( $value ) ) {
+		return is_array( $value ) ? $value : array();
+	}
+
+	// Already associative — pass through unchanged.
+	if ( array_keys( $value ) !== range( 0, count( $value ) - 1 ) ) {
+		return $value;
+	}
+
+	// Sequential list of enabled keys — flatten to { key => 1 } map.
+	$map = array();
+	foreach ( $value as $enabled_key ) {
+		if ( is_string( $enabled_key ) || is_numeric( $enabled_key ) ) {
+			$map[ (string) $enabled_key ] = 1;
+		}
+	}
+	return $map;
+}
+
+/**
+ * Normalize `bb_rl_side_menu` to the canonical map-of-items shape.
+ *
+ * Legacy onboarding stored this as a sequential list of items —
+ * `[ { id: 'activity_feed', enabled: true, order: 0, icon: 'pulse' }, ... ]`.
+ * Settings 2.0's `SortableToggleList` component expects a map keyed by id —
+ * `{ activity_feed: { enabled, order, icon }, ... }`. Pass-through when the
+ * value is already map-shaped.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed $value Stored value (either shape).
+ * @return array Map-of-items shape.
+ */
+function bb_appearance_normalize_side_menu_shape( $value ) {
+	if ( ! is_array( $value ) || empty( $value ) ) {
+		return is_array( $value ) ? $value : array();
+	}
+
+	// Sequential list of item objects — each row has an `id` key. Flip to map.
+	if (
+		array_keys( $value ) === range( 0, count( $value ) - 1 ) &&
+		isset( $value[0] ) &&
+		is_array( $value[0] ) &&
+		isset( $value[0]['id'] )
+	) {
+		$map = array();
+		foreach ( $value as $index => $item ) {
+			if ( ! is_array( $item ) || empty( $item['id'] ) ) {
+				continue;
+			}
+			$map[ (string) $item['id'] ] = array(
+				'enabled' => isset( $item['enabled'] ) ? (bool) $item['enabled'] : true,
+				'order'   => isset( $item['order'] ) ? (int) $item['order'] : (int) $index,
+				'icon'    => isset( $item['icon'] ) ? (string) $item['icon'] : '',
+			);
+		}
+		return $map;
+	}
+
+	// Already map-shaped — pass through unchanged.
+	return $value;
+}

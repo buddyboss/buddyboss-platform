@@ -126,7 +126,9 @@ export function EditableLinkList( { value, onChange, disabled, config } ) {
 		onChange( reordered );
 	}
 
-	var canSubmit = modal && ( modal.title || '' ).trim() && ( modal.url || '' ).trim();
+	// Boolean-coerce so `disabled={ ! canSubmit }` never receives the raw
+	// string that String.prototype.trim() returns on mixed content.
+	var canSubmit = !! ( modal && ( modal.title || '' ).trim() && ( modal.url || '' ).trim() );
 
 	return (
 		<div className="bb-admin-editable-link-list">

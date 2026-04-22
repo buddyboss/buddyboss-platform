@@ -28,6 +28,31 @@ require_once __DIR__ . '/callbacks.php';
  */
 function bb_admin_settings_register_appearance_settings() {
 
+	// Batch-prime the WP object cache for every bb_rl_* option this function
+	// reads below — one IN-list query beats 13 individual SELECT cache-miss
+	// round-trips. Guarded on `function_exists()` because `wp_prime_option_caches()`
+	// ships in WP 6.4 and BuddyBoss supports 6.0+.
+	if ( function_exists( 'wp_prime_option_caches' ) ) {
+		wp_prime_option_caches(
+			array(
+				'blogname',
+				'bb_rl_enabled',
+				'bb_rl_enabled_pages',
+				'bb_rl_activity_sidebars',
+				'bb_rl_member_profile_sidebars',
+				'bb_rl_groups_sidebars',
+				'bb_rl_theme_mode',
+				'bb_rl_light_logo',
+				'bb_rl_dark_logo',
+				'bb_rl_color_light',
+				'bb_rl_color_dark',
+				'bb_rl_header_menu',
+				'bb_rl_side_menu',
+				'bb_rl_custom_links',
+			)
+		);
+	}
+
 	// =========================================================================
 	// SIDE PANEL: GENERAL (always visible)
 	// =========================================================================
@@ -113,14 +138,18 @@ function bb_admin_settings_register_appearance_settings() {
 	// merge-mode section override while still showing an upgrade prompt to
 	// free-tier admins who never installed Sharing.
 	if ( ! class_exists( 'BuddyBoss_Sharing' ) ) {
-		$site_seo_pro_notice = function_exists( 'bb_admin_settings_get_pro_notice' )
-			? bb_admin_settings_get_pro_notice( 'appearance' )
-			: array(
-				'show'       => true,
-				'badge_text' => __( 'UPGRADE PRO', 'buddyboss' ),
-				'badge_icon' => 'bb-icons-rl-crown-simple',
-				'link_url'   => 'https://www.buddyboss.com/pricing/',
-			);
+		// Always force `show => true` here: Sharing is ABSENT, so the section
+		// has no fields to render. A licensed Pro user without the Sharing
+		// plugin installed would otherwise see an empty card because
+		// `bb_admin_settings_get_pro_notice()` returns `show => false` for
+		// licensed installs. The badge is the only visible content in this
+		// branch, so hiding it produces a blank Site SEO panel.
+		$site_seo_pro_notice = array(
+			'show'       => true,
+			'badge_text' => __( 'UPGRADE PRO', 'buddyboss' ),
+			'badge_icon' => 'bb-icons-rl-crown-simple',
+			'link_url'   => 'https://www.buddyboss.com/pricing/',
+		);
 
 		bb_register_feature_section(
 			'appearance',

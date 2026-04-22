@@ -561,8 +561,10 @@ function bb_render_admin_header() {
 			(
 				! empty( $screen->id ) &&
 				(
+					// `buddyboss_page_bb-readylaunch` retired in [BBVERSION] —
+					// submenu deleted, URL redirects to Settings 2.0. Screen ID
+					// no longer reachable so the check is dead weight.
 					'buddyboss_page_bb-upgrade' !== $screen->id &&
-					'buddyboss_page_bb-readylaunch' !== $screen->id &&
 					'buddyboss_page_bb-settings' !== $screen->id
 				)
 			)

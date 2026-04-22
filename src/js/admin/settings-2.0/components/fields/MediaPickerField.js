@@ -58,6 +58,15 @@ function attachmentToObject( attachment ) {
  */
 export function MediaPickerField( { value, onChange, disabled, config } ) {
 	var frameRef       = useRef( null );
+	// Latest `onChange` per render. The wp.media frame's `select` handler is
+	// bound ONCE (frame is reused across opens), so without this ref the
+	// handler would close over the first-render onChange and write selections
+	// to whichever field the `MediaPickerField` first mounted for. Updating
+	// `.current` on every render keeps the handler pointing at the current
+	// field's onChange.
+	var onChangeRef    = useRef( onChange );
+	onChangeRef.current = onChange;
+
 	var mergedConfig   = config || {};
 	var libraryType    = mergedConfig.library_type || 'image';
 	var allowMultiple  = !! mergedConfig.multiple;
@@ -101,10 +110,10 @@ export function MediaPickerField( { value, onChange, disabled, config } ) {
 					selection.each( function ( model ) {
 						values.push( attachmentToObject( model.toJSON() ) );
 					} );
-					onChange( values );
+					onChangeRef.current( values );
 				} else {
 					var attachment = selection.first().toJSON();
-					onChange( attachmentToObject( attachment ) );
+					onChangeRef.current( attachmentToObject( attachment ) );
 				}
 			} );
 		}

@@ -1153,7 +1153,7 @@ export function SettingsForm({ fields, values, onChange }) {
 												disabled={ cbControlDisabled }
 											>
 												{ ( control.options || [] ).map( function ( opt ) {
-													return <option key={ opt.value } value={ opt.value }>{ opt.label }</option>;
+													return <option key={ opt.value } value={ opt.value }>{ decodeEntities( String( opt.label ) ) }</option>;
 												} ) }
 											</select>
 										) }
@@ -1374,7 +1374,7 @@ export function SettingsForm({ fields, values, onChange }) {
 														disabled={ controlDisabled }
 													>
 														{ ( controlOptions || [] ).map( ( opt ) => (
-															<option key={ opt.value } value={ opt.value }>{ opt.label }</option>
+															<option key={ opt.value } value={ opt.value }>{ decodeEntities( String( opt.label ) ) }</option>
 														) ) }
 													</select>
 												) }
@@ -1465,33 +1465,26 @@ export function SettingsForm({ fields, values, onChange }) {
 	// Filter out child fields from top level (they'll be rendered inside their parents).
 	const topLevelFields = fields.filter(field => !field.parent_field);
 
-	// Compute which fields are the last visible field in their group (for CSS border).
-	// Re-computed on every render since conditional visibility depends on current values.
-	const groupLastNames = useMemo( function () {
-		var visible = topLevelFields.filter( isFieldVisible );
-		var lastMap = {};
-		for ( var gi = visible.length - 1; gi >= 0; gi-- ) {
-			var gf = visible[ gi ];
-			if ( gf.group?.key && ! lastMap[ gf.group.key ] ) {
-				lastMap[ gf.group.key ] = gf.name;
-			}
-		}
-		return lastMap;
-	}, [ topLevelFields, values ] ); // eslint-disable-line react-hooks/exhaustive-deps
-
-	// Compute which fields are the FIRST visible field in their group, so only the
-	// first row in a shared-label group renders the left-column label (Figma: one
-	// "Logo" / "Heading" label per group even when multiple rows are visible).
-	const groupFirstNames = useMemo( function () {
-		var visible = topLevelFields.filter( isFieldVisible );
+	// Compute in a single pass which field is the FIRST and the LAST visible
+	// field in each group. Used so shared-label groups render the left-column
+	// label on the first row only (Figma) and apply the group-last CSS border
+	// modifier on the last row. Re-computed on every render because
+	// conditional visibility depends on current values.
+	const { groupFirstNames, groupLastNames } = useMemo( function () {
 		var firstMap = {};
-		for ( var gi = 0; gi < visible.length; gi++ ) {
-			var gf = visible[ gi ];
-			if ( gf.group?.key && ! firstMap[ gf.group.key ] ) {
-				firstMap[ gf.group.key ] = gf.name;
+		var lastMap  = {};
+		for ( var i = 0; i < topLevelFields.length; i++ ) {
+			var field = topLevelFields[ i ];
+			var key   = field.group?.key;
+			if ( ! key || ! isFieldVisible( field ) ) {
+				continue;
 			}
+			if ( ! firstMap[ key ] ) {
+				firstMap[ key ] = field.name;
+			}
+			lastMap[ key ] = field.name;
 		}
-		return firstMap;
+		return { groupFirstNames: firstMap, groupLastNames: lastMap };
 	}, [ topLevelFields, values ] ); // eslint-disable-line react-hooks/exhaustive-deps
 
 	return (
