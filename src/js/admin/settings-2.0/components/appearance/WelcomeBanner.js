@@ -19,7 +19,11 @@ import { __ } from '@wordpress/i18n';
 import { Button } from '@wordpress/components';
 
 const FEEDBACK_URL  = 'https://roadmap.buddyboss.com/p/new-ready-launch-buddyboss-platform-templates-Y8mV6D';
-const VIDEO_EMBED   = 'https://www.youtube.com/embed/3-JhzDr1gLc';
+// `youtube-nocookie.com` is YouTube's enhanced-privacy embed domain — no
+// tracking cookies are set until the viewer actually plays the video. Pairs
+// with `loading="lazy"` on the iframe below to keep EU/GDPR admins from
+// pinging YouTube before they interact.
+const VIDEO_EMBED   = 'https://www.youtube-nocookie.com/embed/3-JhzDr1gLc';
 const WIZARD_PARAM  = 'bb_wizard_activation=rl_onboarding';
 
 /**
