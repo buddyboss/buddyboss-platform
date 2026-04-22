@@ -17,26 +17,102 @@ defined( 'ABSPATH' ) || exit;
 
 
 /**
- * Fetch and cache the placeholder features catalog from S3.
+ * Transient key for the cached placeholder features catalog.
  *
- * Returns the decoded JSON data array on success, or false on failure.
- * Uses a WordPress transient for caching to avoid hitting S3 on every request.
+ * Versioned with the Platform version so upgrades automatically invalidate
+ * stale catalogs.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @return array|false Decoded catalog data with 'items' key, or false on failure.
+ * @return string Transient key.
+ */
+function bb_placeholder_features_transient_key() {
+	$version = defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : '0';
+	return 'bb_placeholder_features_data_v_' . md5( $version );
+}
+
+/**
+ * Get the placeholder features catalog from the cache.
+ *
+ * Hot path — called from the `bb_admin_get_features` AJAX response. Never
+ * performs a synchronous remote fetch; missing data just means no placeholder
+ * cards render. The catalog is populated asynchronously by a daily cron event
+ * and refreshed opportunistically via `bb_refresh_placeholder_features_data()`.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array|false Decoded catalog data with 'items' key, or false when unavailable.
  */
 function bb_get_placeholder_features_data() {
-	$data = get_transient( 'bb_placeholder_features_data' );
+	$data = get_transient( bb_placeholder_features_transient_key() );
 
-	if ( false !== $data ) {
-		return $data;
+	if ( false === $data ) {
+		// Serve stale cache on miss while scheduling a background refresh.
+		$stale = get_option( 'bb_placeholder_features_data_stale', false );
+		bb_schedule_placeholder_features_refresh();
+		return is_array( $stale ) && ! empty( $stale['items'] ) ? $stale : false;
 	}
 
+	return $data;
+}
+
+/**
+ * Schedule a single-event background refresh of the placeholder features catalog.
+ *
+ * Uses a short-lived lock transient to prevent thundering-herd scheduling when
+ * many admin requests arrive simultaneously after a cache expiry.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_schedule_placeholder_features_refresh() {
+	// Skip scheduling during WP-CLI, cron itself, or when cron is disabled globally.
+	if ( ( defined( 'DOING_CRON' ) && DOING_CRON ) || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
+		return;
+	}
+
+	// Fetching lock: only one request per minute gets to queue the refresh.
+	if ( false !== get_transient( 'bb_placeholder_features_fetching' ) ) {
+		return;
+	}
+	set_transient( 'bb_placeholder_features_fetching', 1, MINUTE_IN_SECONDS );
+
+	if ( ! wp_next_scheduled( 'bb_refresh_placeholder_features_cron' ) ) {
+		wp_schedule_single_event( time() + 5, 'bb_refresh_placeholder_features_cron' );
+	}
+}
+
+/**
+ * Perform the actual remote fetch and populate the catalog cache.
+ *
+ * Runs from WP-Cron — never in the critical AJAX path. Timeout kept tight;
+ * on any failure the previous stale catalog in `bb_placeholder_features_data_stale`
+ * continues to serve read requests.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array|false Fetched data on success, false on any failure.
+ */
+function bb_refresh_placeholder_features_data() {
+	delete_transient( 'bb_placeholder_features_fetching' );
+
+	/**
+	 * Filter the remote endpoint used to fetch the placeholder features catalog.
+	 *
+	 * Allows self-hosting, staging overrides, and test injection.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $url Default S3 endpoint URL.
+	 */
+	$url = apply_filters(
+		'bb_placeholder_features_endpoint',
+		'https://bb-features-marketing.s3.amazonaws.com/bb-features.json'
+	);
+
 	$response = wp_remote_get(
-		'https://bb-features-marketing.s3.amazonaws.com/bb-features.json',
+		$url,
 		array(
-			'timeout' => 10,
+			'timeout' => 4,
 		)
 	);
 
@@ -56,10 +132,28 @@ function bb_get_placeholder_features_data() {
 		return false;
 	}
 
-	set_transient( 'bb_placeholder_features_data', $data, 6 * HOUR_IN_SECONDS );
+	set_transient( bb_placeholder_features_transient_key(), $data, 6 * HOUR_IN_SECONDS );
+	// Persist a copy that survives transient expiry so stale-while-revalidate works.
+	update_option( 'bb_placeholder_features_data_stale', $data, false );
 
 	return $data;
 }
+
+// Cron handlers — single-event (on-demand refresh) and recurring (daily safety net).
+add_action( 'bb_refresh_placeholder_features_cron', 'bb_refresh_placeholder_features_data' );
+add_action( 'bb_placeholder_features_daily_refresh', 'bb_refresh_placeholder_features_data' );
+
+/**
+ * Ensure the daily refresh event is scheduled.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_schedule_placeholder_features_daily_refresh() {
+	if ( ! wp_next_scheduled( 'bb_placeholder_features_daily_refresh' ) ) {
+		wp_schedule_event( time() + HOUR_IN_SECONDS, 'daily', 'bb_placeholder_features_daily_refresh' );
+	}
+}
+add_action( 'admin_init', 'bb_schedule_placeholder_features_daily_refresh' );
 
 /**
  * Determine the plugin status for a placeholder feature.
@@ -71,7 +165,7 @@ function bb_get_placeholder_features_data() {
  * @param array $item Catalog item with 'id' and optional 'plugin_file'.
  * @return string One of: 'not_in_plan', 'not_installed', 'installed_inactive'.
  */
-function bb_get_placeholder_plugin_status( $item ) {
+function bb_get_placeholder_plugin_status( $item, $active_plugins = null ) {
 	$plugin_file = isset( $item['plugin_file'] ) ? $item['plugin_file'] : '';
 
 	if ( empty( $plugin_file ) ) {
@@ -92,11 +186,7 @@ function bb_get_placeholder_plugin_status( $item ) {
 		return 'not_in_plan';
 	}
 
-	// Step 2: Product is in plan — check install/active status.
-	if ( ! function_exists( 'is_plugin_active' ) ) {
-		require_once ABSPATH . 'wp-admin/includes/plugin.php';
-	}
-
+	// Step 2: Product is in plan — check install status via filesystem.
 	$plugin_path  = WP_PLUGIN_DIR . '/' . $plugin_file;
 	$is_installed = file_exists( $plugin_path );
 
@@ -104,7 +194,17 @@ function bb_get_placeholder_plugin_status( $item ) {
 		return 'not_installed';
 	}
 
-	return 'installed_inactive';
+	// Step 3: Check active status against a shared active_plugins list when supplied,
+	// otherwise fall back to the WordPress helper (requires plugin.php include).
+	if ( is_array( $active_plugins ) ) {
+		return in_array( $plugin_file, $active_plugins, true ) ? 'active' : 'installed_inactive';
+	}
+
+	if ( ! function_exists( 'is_plugin_active' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/plugin.php';
+	}
+
+	return is_plugin_active( $plugin_file ) ? 'active' : 'installed_inactive';
 }
 
 /**
@@ -139,6 +239,9 @@ function bb_admin_inject_placeholder_features( $features ) {
 
 	$registry = bb_feature_registry();
 
+	// Read active_plugins once per request rather than calling is_plugin_active() per item.
+	$active_plugins = (array) get_option( 'active_plugins', array() );
+
 	foreach ( $data['items'] as $item ) {
 		if ( empty( $item['id'] ) ) {
 			continue;
@@ -150,7 +253,7 @@ function bb_admin_inject_placeholder_features( $features ) {
 			continue;
 		}
 
-		$plugin_status = bb_get_placeholder_plugin_status( $item );
+		$plugin_status = bb_get_placeholder_plugin_status( $item, $active_plugins );
 		$plugin_file   = isset( $item['plugin_file'] ) ? $item['plugin_file'] : '';
 
 		$plugin_slug = ! empty( $plugin_file ) ? dirname( $plugin_file ) : '';
@@ -288,7 +391,10 @@ add_filter( 'bb_admin_features_response', 'bb_admin_mark_drm_locked_features', 2
 function bb_maybe_clear_placeholder_features_cache() {
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only cache clear, admin-only.
 	if ( ! empty( $_GET['bb_clear_placeholder_cache'] ) && current_user_can( 'manage_options' ) ) {
-		delete_transient( 'bb_placeholder_features_data' );
+		delete_transient( bb_placeholder_features_transient_key() );
+		delete_option( 'bb_placeholder_features_data_stale' );
+		// Trigger an immediate background refresh so the next AJAX call has data.
+		bb_schedule_placeholder_features_refresh();
 	}
 }
 add_action( 'admin_init', 'bb_maybe_clear_placeholder_features_cache' );
@@ -305,7 +411,8 @@ add_action( 'admin_init', 'bb_maybe_clear_placeholder_features_cache' );
  * @since BuddyBoss [BBVERSION]
  */
 function bb_clear_placeholder_cache_on_license_change() {
-	delete_transient( 'bb_placeholder_features_data' );
+	delete_transient( bb_placeholder_features_transient_key() );
+	bb_schedule_placeholder_features_refresh();
 }
 
 /**

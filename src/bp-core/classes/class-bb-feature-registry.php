@@ -1613,4 +1613,22 @@ class BB_Feature_Registry {
 		$this->sorted_cache       = array();
 		$this->sorted_cache_dirty = true;
 	}
+
+	/**
+	 * Get reverse dependencies for a feature (features that depend on it).
+	 *
+	 * Returns the list of feature IDs that declare `$feature_id` in their
+	 * `depends_on` array. O(1) lookup — backed by the `reverse_deps` index
+	 * built during feature registration.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $feature_id Feature ID to look up.
+	 * @return array List of dependent feature IDs (empty if none).
+	 */
+	public function bb_get_reverse_deps( $feature_id ) {
+		return ! empty( $this->reverse_deps[ $feature_id ] )
+			? $this->reverse_deps[ $feature_id ]
+			: array();
+	}
 }
