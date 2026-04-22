@@ -143,30 +143,68 @@ function bb_admin_settings_register_appearance_settings() {
 	// otherwise see a blank Site SEO panel (Platform skips the placeholder, old
 	// Sharing doesn't register). Key on `Site_SEO_Settings` so the placeholder
 	// renders whenever Sharing can't actually fill the panel.
-	if ( ! class_exists( '\\BuddyBoss\\Sharing\\Admin\\Site_SEO_Settings' ) ) {
-		// Always force `show => true` here: Sharing is ABSENT, so the section
-		// has no fields to render. A licensed Pro user without the Sharing
-		// plugin installed would otherwise see an empty card because
-		// `bb_admin_settings_get_pro_notice()` returns `show => false` for
-		// licensed installs. The badge is the only visible content in this
-		// branch, so hiding it produces a blank Site SEO panel.
-		$site_seo_pro_notice = array(
-			'show'       => true,
-			'badge_text' => __( 'UPGRADE PRO', 'buddyboss' ),
-			'badge_icon' => 'bb-icons-rl-crown-simple',
-			'link_url'   => 'https://www.buddyboss.com/pricing/',
-		);
+	// Three possible states for the Site SEO panel:
+	//   1. NEW Sharing installed — `Site_SEO_Settings` class exists and
+	//      registers its own fields. Platform skips the fallback.
+	//   2. OLD Sharing installed — `BuddyBoss_Sharing` main class exists but
+	//      predates Settings 2.0 (`Site_SEO_Settings` missing). Show an
+	//      Update-Required empty state with a "Update Now" CTA. No "UPGRADE
+	//      PRO" badge — the plugin is already present, just out of date.
+	//   3. Sharing NOT installed — show the upgrade-to-get-Sharing empty
+	//      state with the "UPGRADE PRO" badge and a pricing link.
+	$has_new_sharing = class_exists( '\\BuddyBoss\\Sharing\\Admin\\Site_SEO_Settings' );
+	$has_old_sharing = ! $has_new_sharing && class_exists( 'BuddyBoss_Sharing' );
 
-		bb_register_feature_section(
-			'appearance',
-			'site_seo',
-			'seo',
-			array(
-				'title'      => __( 'Site SEO', 'buddyboss' ),
-				'order'      => 10,
-				'pro_notice' => $site_seo_pro_notice,
-			)
+	if ( ! $has_new_sharing ) {
+		// Register the section. Only attach the UPGRADE PRO badge when the
+		// plugin is entirely absent — showing it when the admin already has
+		// the plugin installed is misleading.
+		$section_args = array(
+			'title' => __( 'Site SEO', 'buddyboss' ),
+			'order' => 10,
 		);
+		if ( ! $has_old_sharing ) {
+			$section_args['pro_notice'] = array(
+				'show'       => true,
+				'badge_text' => __( 'UPGRADE PRO', 'buddyboss' ),
+				'badge_icon' => 'bb-icons-rl-crown-simple',
+				'link_url'   => 'https://www.buddyboss.com/pricing/',
+			);
+		}
+		bb_register_feature_section( 'appearance', 'site_seo', 'seo', $section_args );
+
+		// Empty-state card — centered icon + title + description + CTA, same
+		// pattern as the OneSignal "Pro Update Required" state. Rendered via
+		// the `empty_state` field type (see SettingsForm.js:691).
+		if ( $has_old_sharing ) {
+			$empty_state_args = array(
+				'name'                    => 'bb_appearance_site_seo_update_notice',
+				'label'                   => '',
+				'type'                    => 'empty_state',
+				'icon'                    => 'bb-icons-rl bb-icons-rl-warning-circle',
+				'empty_state_title'       => __( 'BuddyBoss Sharing Update Required', 'buddyboss' ),
+				'empty_state_description' => __( 'Please update to the latest version of BuddyBoss Sharing to manage your site SEO and Open Graph settings here.', 'buddyboss' ),
+				'button_label'            => __( 'Update Now', 'buddyboss' ),
+				'button_url'              => admin_url( 'update-core.php' ),
+				'sanitize_callback'       => '__return_empty_string',
+				'order'                   => 10,
+			);
+		} else {
+			$empty_state_args = array(
+				'name'                    => 'bb_appearance_site_seo_install_notice',
+				'label'                   => '',
+				'type'                    => 'empty_state',
+				'icon'                    => 'bb-icons-rl bb-icons-rl-magnifying-glass',
+				'empty_state_title'       => __( 'BuddyBoss Sharing Required', 'buddyboss' ),
+				'empty_state_description' => __( 'Install BuddyBoss Sharing to configure SEO metadata, Open Graph tags and search-engine indexing for your community pages. Comes with the Pro license.', 'buddyboss' ),
+				'button_label'            => __( 'Upgrade to Pro', 'buddyboss' ),
+				'button_url'              => 'https://www.buddyboss.com/pricing/',
+				'button_target'           => '_blank',
+				'sanitize_callback'       => '__return_empty_string',
+				'order'                   => 10,
+			);
+		}
+		bb_register_feature_field( 'appearance', 'site_seo', 'seo', $empty_state_args );
 	}
 
 	// =========================================================================
