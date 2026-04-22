@@ -501,8 +501,8 @@ add_action( 'bb_admin_save_feature_settings_after', 'bb_appearance_on_settings_s
  * Sidebar / side-menu / enabled_pages shape normalization used to live here
  * too, but those shapes are now canonicalized at write time in
  * `BB_ReadyLaunch_Onboarding::sanitize_final_settings()` and a one-shot
- * migration (`bb_update_to_3_0_1`) cleans any legacy sequential data in the
- * DB, so read-side normalization is no longer needed.
+ * migration (`bb_rl_migrate_settings()`) cleans any legacy sequential data in
+ * the DB, so read-side normalization is no longer needed.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -574,13 +574,12 @@ function bb_appearance_normalize_side_menu_shape( $value ) {
 		return is_array( $value ) ? $value : array();
 	}
 
-	// Sequential list of item objects — each row has an `id` key. Flip to map.
-	if (
-		array_keys( $value ) === range( 0, count( $value ) - 1 ) &&
-		isset( $value[0] ) &&
-		is_array( $value[0] ) &&
-		isset( $value[0]['id'] )
-	) {
+	// Sequential list of item objects — flip to a map keyed by `id`. Detect a
+	// sequential list by the numeric keys alone; don't require the *first*
+	// element to have an `id` (legacy data might start with a malformed row,
+	// in which case we'd otherwise fall through to pass-through and leak the
+	// sequential shape to the frontend).
+	if ( array_keys( $value ) === range( 0, count( $value ) - 1 ) ) {
 		$map = array();
 		foreach ( $value as $index => $item ) {
 			if ( ! is_array( $item ) || empty( $item['id'] ) ) {

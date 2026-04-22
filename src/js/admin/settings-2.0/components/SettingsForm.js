@@ -1382,7 +1382,14 @@ export function SettingsForm({ fields, values, onChange }) {
 	};
 
 	// Filter out child fields from top level (they'll be rendered inside their parents).
-	const topLevelFields = fields.filter(field => !field.parent_field);
+	// Memoized so the group first/last memo below has a stable dep — otherwise
+	// `fields.filter()` would produce a fresh array every render and the memo
+	// would recompute on every keystroke.
+	const topLevelFields = useMemo( function () {
+		return fields.filter( function ( field ) {
+			return ! field.parent_field;
+		} );
+	}, [ fields ] );
 
 	// Compute in a single pass which field is the FIRST and the LAST visible
 	// field in each group. Used so shared-label groups render the left-column

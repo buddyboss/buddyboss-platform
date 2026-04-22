@@ -1,5 +1,3 @@
-import apiFetch from '@wordpress/api-fetch';
-
 const CACHE_DURATION_DAYS = 3;
 const CACHE_DURATION_IN_MILLIS = CACHE_DURATION_DAYS * 24 * 60 * 60 * 1000;
 
@@ -75,23 +73,6 @@ export const debounce = (func, wait) => {
 		timeout = setTimeout(later, wait);
 	};
 };
-
-export const fetchMenus = async () => {
-	try {
-	  // Try the most common endpoint for menus
-	  const menus = await apiFetch({ path: '/wp/v2/menus?per_page=99', method: 'GET' });
-	  return menus;
-	} catch (e) {
-	  // Try fallback endpoint if needed
-	  try {
-		const menus = await apiFetch({ path: '/menus/v1/menus?per_page=99', method: 'GET' });
-		return menus;
-	  } catch (err) {
-		console.error('Error fetching menus:', err);
-		return [];
-	  }
-	}
-  };
 
 /**
  * Resolve help content ID from a URL or raw ID.
@@ -169,36 +150,3 @@ export const fetchHelpContent = async (contentId) => {
 	}
 };
 
-/**
- * Fetch help categories from the BuddyBoss knowledge base API.
- * Implements localStorage caching to avoid unnecessary API calls.
- *
- * @param {string} parentId - The parent category ID to fetch children for.
- * @returns {Promise} Promise that resolves to an array of category objects.
- */
-export const fetchHelpCategories = async (parentId = null) => {
-	const cacheKey = `bb_rl_help_categories_${parentId || 'root'}`;
-	const cached = getFromCache(cacheKey);
-	if (cached) {
-		return cached;
-	}
-
-	let apiUrl = 'https://www.buddyboss.com/wp-json/wp/v2/ht-kb-category?orderby=term_order&per_page=99';
-	if (parentId) {
-		apiUrl += `&parent=${parentId}`;
-	}
-
-	try {
-		const response = await fetch(apiUrl);
-		if (!response.ok) {
-			throw new Error('Failed to fetch help categories');
-		}
-		const categories = await response.json();
-
-		saveToCache(cacheKey, categories);
-		return categories;
-	} catch (error) {
-		console.error('Error fetching help categories:', error);
-		throw error;
-	}
-};
