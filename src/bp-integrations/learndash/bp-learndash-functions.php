@@ -277,11 +277,7 @@ function bp_learndash_get_users_certificates( $user_id = '' ) {
 
 		if ( ! empty( $certificate_id ) ) {
 			$certificate_data = get_post( $certificate_id );
-			if ( ! empty( $certificate_data ) && ! empty( $certificate_data->post_title ) ) {
-				$filename = sanitize_file_name( $course_title ) . "-" . sanitize_file_name( $certificate_data->post_title ) . ".pdf";
-			} else {
-				$filename = sanitize_file_name( $course_title ) . "-certificate.pdf";
-			}
+			$filename = ( ! empty( $certificate_data ) && $certificate_data instanceof WP_Post && 'publish' === get_post_status( $certificate_id ) && ! empty( $certificate_data->post_title ) ) ? sanitize_file_name( $course_title ) . '-' . sanitize_file_name( $certificate_data->post_title ) . '.pdf' : $image;
 			$image = wp_get_attachment_url( get_post_thumbnail_id( $certificate_id ) );
 		}
 
