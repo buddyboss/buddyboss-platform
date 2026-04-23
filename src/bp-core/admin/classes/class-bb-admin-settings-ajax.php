@@ -977,13 +977,36 @@ class BB_Admin_Settings_Ajax {
 			if ( array_key_exists( $name, $settings ) ) {
 				$value = $settings[ $name ];
 
-				// Apply registered sanitize callback if present (fallback to type-based sanitization).
+				// Apply registered sanitize callback if present.
+				//
+				// Fallback to type-aware sanitization when the field author did
+				// not supply one. `sanitize_text_field()` alone is not enough
+				// for URL-shaped types — it strips tags but leaves
+				// `javascript:` / `data:` schemes intact, so a value saved here
+				// and later rendered as an `href`/`src` without `esc_url()`
+				// becomes a stored-XSS sink. Narrow the type dispatch to cases
+				// where the value shape is semantically URL-like; everything
+				// else (including already-stringified primitives) keeps the
+				// historical `sanitize_text_field()` behaviour so field
+				// authors who relied on it don't see a silent data change.
 				if ( ! empty( $field['sanitize_callback'] ) && is_callable( $field['sanitize_callback'] ) ) {
 					$value = call_user_func( $field['sanitize_callback'], $value );
-				} elseif ( is_string( $value ) ) {
-					$value = sanitize_text_field( $value );
-				} elseif ( is_array( $value ) ) {
-					$value = map_deep( $value, 'sanitize_text_field' );
+				} else {
+					$field_type = isset( $field['type'] ) ? (string) $field['type'] : '';
+
+					if ( is_string( $value ) && in_array( $field_type, array( 'url', 'permalink' ), true ) ) {
+						// esc_url_raw strips disallowed schemes (default whitelist:
+						// http, https, ftp, ftps, mailto, news, irc*, gopher,
+						// nntp, feed, telnet, mms, rtsp, sms, svn, tel, fax,
+						// xmpp, webcal, urn) so `javascript:alert(1)` becomes
+						// empty. Storing an empty value is preferable to
+						// round-tripping a hostile scheme.
+						$value = esc_url_raw( $value );
+					} elseif ( is_string( $value ) ) {
+						$value = sanitize_text_field( $value );
+					} elseif ( is_array( $value ) ) {
+						$value = map_deep( $value, 'sanitize_text_field' );
+					}
 				}
 
 				// toggle_list with option_prefix: persist each key to option_prefix + key (e.g. bp-feed-platform-{key}).
