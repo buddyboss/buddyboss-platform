@@ -196,12 +196,12 @@ export function WelcomeBanner() {
 					<div className="bb-admin-welcome-banner__actions">
 						<Button
 							className="bb-admin-welcome-banner__btn bb-admin-welcome-banner__btn--primary"
-							variant="primary"
 							href={ FEEDBACK_URL }
 							target="_blank"
 							rel="noopener noreferrer"
+							icon={<i className="bb-icons-rl-rocket-launch" />}
 						>
-							{ __( 'Leave Feedback', 'buddyboss' ) }
+							{ __( 'Leave Feedback', 'buddyboss' ) } <i className="bb-icons-rl-arrow-right" />
 						</Button>
 						{ ! completed && (
 							<Button
