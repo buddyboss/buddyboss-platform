@@ -360,18 +360,12 @@ function bb_admin_settings_register_appearance_settings() {
 
 	// Activity Feed widgets — only register when the Activity component is active
 	// (matches legacy `ReadyLaunchSettings.js` BP_ADMIN.components.activity guard).
+	//
+	// The plain unlinked copy is registered here; the inline anchor tag is
+	// injected at AJAX format time in `bb_appearance_build_sidebar_description()`
+	// because BP component globals (members slug, groups table_name, loggedin
+	// user) aren't populated yet at `bb_register_features` (`bp_loaded@5`).
 	if ( bp_is_active( 'activity' ) ) {
-		if ( function_exists( 'bp_get_activity_root_slug' ) ) {
-			$activity_feed_link = sprintf(
-				/* translators: %1$s: opening anchor tag, %2$s: closing anchor tag. */
-				__( 'Enable or disable widgets to appear on the %1$sactivity feed%2$s.', 'buddyboss' ),
-				'<a href="' . esc_url( home_url( '/' . bp_get_activity_root_slug() . '/' ) ) . '">',
-				'</a>'
-			);
-		} else {
-			$activity_feed_link = __( 'Enable or disable widgets to appear on the activity feed.', 'buddyboss' );
-		}
-
 		bb_register_feature_field(
 			'appearance',
 			'general',
@@ -380,7 +374,7 @@ function bb_admin_settings_register_appearance_settings() {
 				'name'              => 'bb_rl_activity_sidebars',
 				'label'             => __( 'Activity Feed', 'buddyboss' ),
 				'type'              => 'toggle_list',
-				'label_description' => $activity_feed_link,
+				'label_description' => bb_appearance_render_sidebar_description( 'bb_rl_activity_sidebars' ),
 				'options'           => array(
 					array(
 						'label' => __( 'Complete Profile', 'buddyboss' ),
@@ -414,21 +408,11 @@ function bb_admin_settings_register_appearance_settings() {
 		);
 	}
 
-	if ( function_exists( 'bp_get_members_directory_permalink' ) ) {
-		$member_profile_link = sprintf(
-			/* translators: %1$s: opening anchor tag, %2$s: closing anchor tag. */
-			__( 'Enable or disable widgets to appear on the %1$smember profile%2$s.', 'buddyboss' ),
-			'<a href="' . esc_url( bp_get_members_directory_permalink() ) . '">',
-			'</a>'
-		);
-	} else {
-		$member_profile_link = __( 'Enable or disable widgets to appear on the member profile.', 'buddyboss' );
-	}
-
 	// Member Profile widgets — build option list dynamically so Connections / My
 	// Network only appear when their underlying components/features are active
 	// (matches legacy `ReadyLaunchSettings.js` BP_ADMIN.components.friends and
-	// bp_enable_activity_follow guards).
+	// bp_enable_activity_follow guards). Inline link injected at AJAX format
+	// time — see the Activity Feed block above.
 	$member_profile_options = array(
 		array(
 			'label' => __( 'Complete Profile', 'buddyboss' ),
@@ -458,7 +442,7 @@ function bb_admin_settings_register_appearance_settings() {
 			'name'              => 'bb_rl_member_profile_sidebars',
 			'label'             => __( 'Member Profile', 'buddyboss' ),
 			'type'              => 'toggle_list',
-			'label_description' => $member_profile_link,
+			'label_description' => bb_appearance_render_sidebar_description( 'bb_rl_member_profile_sidebars' ),
 			'options'           => $member_profile_options,
 			'default'           => bp_get_option(
 				'bb_rl_member_profile_sidebars',
@@ -473,17 +457,10 @@ function bb_admin_settings_register_appearance_settings() {
 		)
 	);
 
-	if ( bp_is_active( 'groups' ) && function_exists( 'bp_get_groups_directory_permalink' ) ) {
-		$group_single_link = sprintf(
-			/* translators: %1$s: opening anchor tag, %2$s: closing anchor tag. */
-			__( 'Enable or disable widgets to appear on the %1$sgroup single%2$s page.', 'buddyboss' ),
-			'<a href="' . esc_url( bp_get_groups_directory_permalink() ) . '">',
-			'</a>'
-		);
-	} else {
-		$group_single_link = __( 'Enable or disable widgets to appear on the group single page.', 'buddyboss' );
-	}
-
+	// Inline "group single" link injected at AJAX format time. Do NOT call
+	// `groups_get_groups()` here — the Groups component's `table_name` global
+	// is undefined at `bb_register_features` (`bp_loaded@5`), so any DB query
+	// against it emits a WP DB error.
 	bb_register_feature_field(
 		'appearance',
 		'general',
@@ -492,7 +469,7 @@ function bb_admin_settings_register_appearance_settings() {
 			'name'              => 'bb_rl_groups_sidebars',
 			'label'             => __( 'Group', 'buddyboss' ),
 			'type'              => 'toggle_list',
-			'label_description' => $group_single_link,
+			'label_description' => bb_appearance_render_sidebar_description( 'bb_rl_groups_sidebars' ),
 			'options'           => array(
 				array(
 					'label' => __( 'About Group', 'buddyboss' ),

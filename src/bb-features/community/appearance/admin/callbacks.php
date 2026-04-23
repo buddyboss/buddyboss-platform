@@ -290,14 +290,168 @@ function bb_appearance_normalize_field_data( $field_data, $field, $feature_id ) 
 		return $field_data;
 	}
 
-	if ( 'bb_rl_enabled' === ( $field['name'] ?? '' ) ) {
+	$name = $field['name'] ?? '';
+
+	if ( 'bb_rl_enabled' === $name ) {
 		$field_data['value']   = ! empty( $field_data['value'] ) && '0' !== $field_data['value'] ? '1' : '0';
 		$field_data['default'] = ! empty( $field_data['default'] ) && '0' !== $field_data['default'] ? '1' : '0';
+	}
+
+	// Inject inline frontend links into the Template Sidebar Widgets copy at
+	// AJAX format time. At field-registration time (`bb_register_features` →
+	// `bp_loaded@5`) the BP component globals that compute these URLs —
+	// `$bp->members->slug`, `$bp->groups->table_name`, `$bp->loggedin_user->id`
+	// — are not yet populated, so a URL built there would be malformed (e.g.
+	// `https://site//user/`) or trigger a DB error. This filter runs inside the
+	// AJAX handler where every component has finished `setup_globals()`.
+	$sidebar_fields = array( 'bb_rl_activity_sidebars', 'bb_rl_member_profile_sidebars', 'bb_rl_groups_sidebars' );
+	if ( in_array( $name, $sidebar_fields, true ) ) {
+		$rebuilt = bb_appearance_build_sidebar_description( $name );
+		if ( '' !== $rebuilt ) {
+			$field_data['label_description'] = $rebuilt;
+		}
 	}
 
 	return $field_data;
 }
 add_filter( 'bb_admin_settings_format_field_data', 'bb_appearance_normalize_field_data', 10, 3 );
+
+/**
+ * Resolve a frontend permalink for one of the three sidebar-widget fields.
+ *
+ * Split out so `bb_appearance_build_sidebar_description()` reads as pure
+ * templating. Returns '' when the component is inactive or the viewer has
+ * nothing to link to — caller treats that as "keep the unlinked copy".
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $field_name      Sidebar-widget field slug.
+ * @param int    $current_user_id Logged-in user ID (WP-core value — BP's
+ *                                `loggedin_user` global may not be set yet).
+ * @return string Frontend URL, or '' when one couldn't be resolved.
+ */
+function bb_appearance_resolve_sidebar_url( $field_name, $current_user_id ) {
+	switch ( $field_name ) {
+		case 'bb_rl_activity_sidebars':
+			if ( ! bp_is_active( 'activity' ) ) {
+				return '';
+			}
+			// Prefer the canonical page permalink — avoids a 301 hop when the
+			// activity directory page is also the site's `page_on_front`.
+			$page_id = function_exists( 'bp_core_get_directory_page_id' ) ? bp_core_get_directory_page_id( 'activity' ) : 0;
+			$url     = $page_id ? get_permalink( $page_id ) : '';
+			return $url ? $url : ( function_exists( 'bp_get_activity_directory_permalink' ) ? bp_get_activity_directory_permalink() : '' );
+
+		case 'bb_rl_member_profile_sidebars':
+			if ( $current_user_id && function_exists( 'bp_core_get_user_domain' ) ) {
+				$url = bp_core_get_user_domain( $current_user_id );
+				if ( ! empty( $url ) ) {
+					return $url;
+				}
+			}
+			return function_exists( 'bp_get_members_directory_permalink' ) ? bp_get_members_directory_permalink() : '';
+
+		case 'bb_rl_groups_sidebars':
+			if ( ! bp_is_active( 'groups' ) ) {
+				return '';
+			}
+			if ( $current_user_id && function_exists( 'groups_get_groups' ) && function_exists( 'bp_get_group_permalink' ) ) {
+				$found = groups_get_groups(
+					array(
+						'user_id'  => $current_user_id,
+						'type'     => 'active',
+						'per_page' => 1,
+					)
+				);
+				if ( ! empty( $found['groups'][0] ) ) {
+					return bp_get_group_permalink( $found['groups'][0] );
+				}
+			}
+			return function_exists( 'bp_get_groups_directory_permalink' ) ? bp_get_groups_directory_permalink() : '';
+	}
+
+	return '';
+}
+
+/**
+ * Get the translatable sprintf template for one of the three sidebar-widget
+ * fields.
+ *
+ * Single source of truth for the copy — used by both the field registration
+ * (with empty anchor placeholders → plain text) and the AJAX-time linked
+ * rendering (with real `<a>` tags). Keeping the template in one place stops
+ * the .pot extractor from collecting two near-identical strings per field.
+ *
+ * The `%1$s` / `%2$s` placeholders wrap the inline link text. Passing empty
+ * strings for them yields `'Enable or disable widgets to appear on the
+ * activity feed.'`; passing `<a href="...">` / `</a>` yields the linked form.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $field_name One of `bb_rl_activity_sidebars`,
+ *                           `bb_rl_member_profile_sidebars`,
+ *                           `bb_rl_groups_sidebars`.
+ * @return string Sprintf template, or '' for an unknown field name.
+ */
+function bb_appearance_get_sidebar_description_template( $field_name ) {
+	switch ( $field_name ) {
+		case 'bb_rl_activity_sidebars':
+			/* translators: %1$s: opening anchor tag, %2$s: closing anchor tag. */
+			return __( 'Enable or disable widgets to appear on the %1$sactivity feed%2$s.', 'buddyboss' );
+
+		case 'bb_rl_member_profile_sidebars':
+			/* translators: %1$s: opening anchor tag, %2$s: closing anchor tag. */
+			return __( 'Enable or disable widgets to appear on the %1$smember profile%2$s.', 'buddyboss' );
+
+		case 'bb_rl_groups_sidebars':
+			/* translators: %1$s: opening anchor tag, %2$s: closing anchor tag. */
+			return __( 'Enable or disable widgets to appear on the %1$sgroup single%2$s page.', 'buddyboss' );
+	}
+
+	return '';
+}
+
+/**
+ * Render the sidebar-widget description with optional inline link.
+ *
+ * Passing empty strings for `$open` / `$close` produces the plain unlinked
+ * copy used at field-registration time. Passing real `<a>` tags produces the
+ * linked copy injected at AJAX format time. Returns '' when `$field_name` is
+ * unknown so callers can fall through cleanly.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $field_name Sidebar-widget field slug.
+ * @param string $open       Opening anchor tag (or '' for plain copy).
+ * @param string $close      Closing anchor tag (or '' for plain copy).
+ * @return string Finished description HTML / plain copy, or ''.
+ */
+function bb_appearance_render_sidebar_description( $field_name, $open = '', $close = '' ) {
+	$template = bb_appearance_get_sidebar_description_template( $field_name );
+	return '' === $template ? '' : sprintf( $template, $open, $close );
+}
+
+/**
+ * Build the linked `label_description` for a sidebar-widget field, or '' to
+ * keep the registration-time plain copy.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $field_name Sidebar-widget field slug.
+ * @return string Sprintf'd HTML with `<a>` link, or ''.
+ */
+function bb_appearance_build_sidebar_description( $field_name ) {
+	$url = bb_appearance_resolve_sidebar_url( $field_name, get_current_user_id() );
+	if ( '' === $url ) {
+		return '';
+	}
+
+	return bb_appearance_render_sidebar_description(
+		$field_name,
+		'<a href="' . esc_url( $url ) . '" target="_blank" rel="noopener noreferrer">',
+		'</a>'
+	);
+}
 
 /**
  * Coerce `bb_rl_enabled` in the save-response payload to the dropdown string shape.
