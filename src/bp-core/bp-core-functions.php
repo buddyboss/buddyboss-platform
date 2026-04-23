@@ -9619,7 +9619,6 @@ function bb_generate_default_avatar( $args ) {
 	$wp_filesystem->mkdir( $file_path, FS_CHMOD_DIR );
 
 	$file           = $file_path . $filename;
-	$chose_editor   = _wp_image_editor_choose();
 	$default_avatar = '';
 
 	// Set up image editor object.
@@ -9630,8 +9629,8 @@ function bb_generate_default_avatar( $args ) {
 		$text_dimensions = imagettfbbox( $font_size, 0, $font_family, $item_name );
 
 		// Extract width and height from the bounding box.
-		$text_width  = abs( $text_dimensions[2] - $text_dimensions[0] ); // Width (right - left).
-		$text_height = abs( $text_dimensions[5] - $text_dimensions[3] ); // Height (bottom - top).
+		$text_width  = abs( $text_dimensions[2] - $text_dimensions[0] );
+		$text_height = abs( $text_dimensions[5] - $text_dimensions[3] );
 
 		$image_size   = $image_editor->get_size();
 		$image_width  = $image_size['width'];
@@ -9640,48 +9639,53 @@ function bb_generate_default_avatar( $args ) {
 		$text_x = ( ( $image_width - $text_width ) / 2 ) - $text_dimensions[0];
 		$text_y = ( ( $image_height + $text_height ) / 2 ) - 3;
 
-		$rf_image_editor = new ReflectionClass( $image_editor );
-		$property        = $rf_image_editor->getProperty( 'image' );
-		$property->setAccessible( true );
-		$image = $property->getValue( $image_editor );
+		// CRITICAL FIX - ONLY USE REFLECTION FOR GD
+		if ( $image_editor instanceof WP_Image_Editor_GD ) {
+			try {
+				$rf_image_editor = new ReflectionClass( $image_editor );
+				$property = $rf_image_editor->getProperty( 'image' );
+				$property->setAccessible( true );
+				$image = $property->getValue( $image_editor );
 
-		if ( strpos( $chose_editor, 'WP_Image_Editor_GD' ) !== false ) {
-			// Define the background color.
-			$filtered_bg_color = imagecolorallocate( $image, hexdec( substr( $bg_color, 1, 2 ) ), hexdec( substr( $bg_color, 3, 2 ) ), hexdec( substr( $bg_color, 5, 2 ) ) );
-			$text_color        = imagecolorallocate( $image, hexdec( substr( $png_text_color, 1, 2 ) ), hexdec( substr( $png_text_color, 3, 2 ) ), hexdec( substr( $png_text_color, 5, 2 ) ) );
+				// GD-specific operations
+				$filtered_bg_color = imagecolorallocate( $image, hexdec( substr( $bg_color, 1, 2 ) ), hexdec( substr( $bg_color, 3, 2 ) ), hexdec( substr( $bg_color, 5, 2 ) ) );
+				$text_color = imagecolorallocate( $image, hexdec( substr( $png_text_color, 1, 2 ) ), hexdec( substr( $png_text_color, 3, 2 ) ), hexdec( substr( $png_text_color, 5, 2 ) ) );
 
-			imagefill( $image, 0, 0, $filtered_bg_color );
-			imagettftext( $image, $font_size, 0, $text_x, $text_y, $text_color, $font_family, $item_name );
+				imagefill( $image, 0, 0, $filtered_bg_color );
+				imagettftext( $image, $font_size, 0, $text_x, $text_y, $text_color, $font_family, $item_name );
 
+				// Update GD image
+				$property->setValue( $image_editor, $image );
+				$result = $image_editor->save( $file, 'image/png' );
+
+			} catch ( ReflectionException $e ) {
+				// Log error here if needed
+				return $prepare_response;
+			}
 		} else {
+			// Handle Imagick/other editors WITHOUT REFLECTION
 			$image = new Imagick();
 			$image->setAntiAlias( true );
 			$image->setResolution( 300, 300 );
 			$image->newImage( $image_width, $image_height, new ImagickPixel( $bg_color ) );
 
-			// Set up the text properties.
 			$draw = new ImagickDraw();
-			$draw->setFont( $font_family ); // Path to your TrueType font file.
-			$draw->setResolution( 95, 95 ); // text resolution.
-			$draw->setFontSize( $font_size ); // Font size.
-			$draw->setFillColor( new ImagickPixel( $png_text_color ) ); // Text color.
-			$draw->setGravity( Imagick::GRAVITY_CENTER ); // Set the text to be centered.
-
-			// Add text to the image.
+			$draw->setFont( $font_family );
+			$draw->setResolution( 95, 95 );
+			$draw->setFontSize( $font_size );
+			$draw->setFillColor( new ImagickPixel( $png_text_color ) );
+			$draw->setGravity( Imagick::GRAVITY_CENTER );
+			
 			$image->annotateImage( $draw, 0, 0, 0, $item_name );
 			$image->setImageFormat( 'png' );
+			$image->writeImage( $file );  // Save directly for Imagick
 		}
 
-		$property->setValue( $image_editor, $image );
-
-		// Save the image with the text as a PNG.
-		$result = $image_editor->save( $file, 'image/png' );
-
-		if ( ! is_wp_error( $result ) ) {
+		// Check if file was created successfully
+		if ( file_exists( $file ) ) {
 			$default_avatar = $file_url;
 		}
 	}
-
 	if ( ! empty( $default_avatar ) ) {
 
 		if ( 'user' === $r['object'] ) {
