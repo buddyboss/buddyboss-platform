@@ -9,24 +9,12 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-/**
- * Register admin menu pages for Settings.
- *
- * @since BuddyBoss [BBVERSION]
- */
-function bb_admin_settings_register_menu() {
-	// Add "Settings" as a separate submenu item under BuddyBoss.
-	// This keeps the old bp-components intact for comparison.
-	add_submenu_page(
-		'buddyboss-platform',
-		__( 'Settings 2.0', 'buddyboss' ),
-		__( 'Settings 2.0', 'buddyboss' ),
-		'manage_options',
-		'bb-settings',
-		'bb_admin_settings_page'
-	);
-}
-add_action( 'admin_menu', 'bb_admin_settings_register_menu', 999 ); // Late priority.
+// NOTE: The Settings submenu is registered by BP_Admin in class-bp-admin.php
+// at the legacy bp-settings menu position (now using the bb-settings slug).
+// The standalone add_submenu_page() call that used to live here is removed
+// so Settings appears once in the correct position with label "Settings".
+// `bb_admin_settings_page()` below remains the render callback and is
+// invoked from BP_Admin's submenu registration.
 
 
 /**

@@ -50,7 +50,7 @@ export const FinishScreen = ({ stepData, onFinish, onViewSite }) => {
                                 <h2>{__('Platform Settings', 'buddyboss')}</h2>
                                 <p>{__('Fine-tune features, permissions, and community rules.', 'buddyboss')}</p>
                             </div>
-                            <a href={window.bbRlOnboarding?.readylaunch?.admin_url + 'admin.php?page=bp-settings'} className="bb-rl-finish-action-button" variant="primary">
+                            <a href={window.bbRlOnboarding?.readylaunch?.admin_url + 'admin.php?page=bb-settings'} className="bb-rl-finish-action-button" variant="primary">
                                 {__('Open Settings', 'buddyboss')}
                             </a>
                         </div>

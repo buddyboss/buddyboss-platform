@@ -119,6 +119,11 @@ class BB_Admin_Settings_Ajax {
 					'available'      => $is_available,
 					'required'       => ! empty( $feature['required'] ),
 					'settings_route' => $settings_route,
+					// Carry the registration-time order into the response so
+					// the placeholder merger (bb_admin_sort_features_response)
+					// can interleave real cards with catalog placeholders by
+					// a single comparable key. Default matches bb_register_feature().
+					'order'          => isset( $feature['order'] ) ? (int) $feature['order'] : 100,
 				);
 
 				// Format icon like REST API.
@@ -203,30 +208,17 @@ class BB_Admin_Settings_Ajax {
 			),
 		);
 
-		// Include ALL dependents that are now unavailable so React can grey out their cards.
-		// This covers both dependents that were just cascade-deactivated AND those already inactive.
-		if ( ! $activate ) {
-			$unavailable_dependents = array();
-			foreach ( $registry->bb_get_features() as $fid => $f ) {
-				if ( ! empty( $f['depends_on'] ) && in_array( $feature_id, $f['depends_on'], true ) ) {
-					$unavailable_dependents[] = $fid;
-				}
-			}
-			if ( ! empty( $unavailable_dependents ) ) {
-				$response['deactivated_dependents'] = $unavailable_dependents;
-			}
-		}
+		// Dependents are resolved in O(1) via the registry's reverse_deps index
+		// (populated at registration time) — no per-request scan of every feature.
+		$dependents = $registry->bb_get_reverse_deps( $feature_id );
 
-		// When activating a feature, notify React about dependents that become available again.
-		if ( $activate ) {
-			$reactivatable = array();
-			foreach ( $registry->bb_get_features() as $fid => $f ) {
-				if ( ! empty( $f['depends_on'] ) && in_array( $feature_id, $f['depends_on'], true ) ) {
-					$reactivatable[] = $fid;
-				}
-			}
-			if ( ! empty( $reactivatable ) ) {
-				$response['reactivatable_dependents'] = $reactivatable;
+		if ( ! empty( $dependents ) ) {
+			if ( ! $activate ) {
+				// Dependents are now unavailable — React greys out their cards.
+				$response['deactivated_dependents'] = $dependents;
+			} else {
+				// Dependents become available again alongside this feature.
+				$response['reactivatable_dependents'] = $dependents;
 			}
 		}
 
@@ -670,6 +662,12 @@ class BB_Admin_Settings_Ajax {
 				'placeholder'          => $field['placeholder'] ?? null,
 				'button_label'         => $field['button_label'] ?? null,
 				'button_only'          => ! empty( $field['button_only'] ),
+				// Icon-only input button variant: renders the button as an icon control (no text).
+				// 'icon' is an icon font class (e.g. "bb-icons-rl bb-icons-rl-arrow-clockwise").
+				// 'icon_label' is used for aria-label / title on icon-only buttons.
+				'icon_only'            => ! empty( $field['icon_only'] ),
+				'icon'                 => ! empty( $field['icon'] ) ? sanitize_text_field( $field['icon'] ) : null,
+				'icon_label'           => ! empty( $field['icon_label'] ) ? sanitize_text_field( $field['icon_label'] ) : null,
 				'button_url'           => ! empty( $field['button_url'] ) ? esc_url_raw( $field['button_url'] ) : null,
 				'button_target'        => $field['button_target'] ?? null,
 				// Empty state fields (centered card with icon + title + description + button).
@@ -1635,13 +1633,32 @@ class BB_Admin_Settings_Ajax {
 	 * @return array Flattened toggle values keyed by extension ID.
 	 */
 	private function bb_extract_extension_toggle_values( $field_value ) {
+		// Defensive: a third-party extension might register a field with
+		// malformed extension_data. Guard against non-iterable values before
+		// the foreach and skip individual entries that aren't scalar or array.
+		if ( ! is_array( $field_value ) ) {
+			return array();
+		}
+
 		$toggle_values = array();
 		foreach ( $field_value as $key => $ext ) {
-			if ( is_array( $ext ) && isset( $ext['is_active'] ) ) {
-				$toggle_values[ $key ] = absint( $ext['is_active'] );
-			} else {
+			// Keys must be strings/ints — objects or arrays as keys are invalid.
+			if ( ! is_string( $key ) && ! is_int( $key ) ) {
+				continue;
+			}
+
+			if ( is_array( $ext ) ) {
+				// Expected shape: [ 'is_active' => 0|1, 'extension' => ..., 'mime_type' => ... ].
+				if ( array_key_exists( 'is_active', $ext ) ) {
+					$toggle_values[ $key ] = absint( $ext['is_active'] );
+				} else {
+					// Malformed nested shape — default to disabled rather than erroring.
+					$toggle_values[ $key ] = 0;
+				}
+			} elseif ( is_scalar( $ext ) ) {
 				$toggle_values[ $key ] = absint( $ext );
 			}
+			// Objects/resources are silently skipped.
 		}
 		return $toggle_values;
 	}

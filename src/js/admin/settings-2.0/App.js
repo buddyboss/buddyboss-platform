@@ -198,7 +198,6 @@ export function App() {
 				'bp-performance': 'performance',
 				'bp-general': 'general',
 				'bp-credit': 'credit',
-				'bp-labs': 'labs',
 			};
 
 			const featureId = tabMap[tab] || tab.replace('bp-', '');

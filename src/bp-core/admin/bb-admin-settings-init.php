@@ -232,10 +232,89 @@ function bb_integration_bridge_early_init() {
 
 add_action( 'bp_loaded', 'bb_integration_bridge_early_init', 2 );
 
-// Clear feature discovery cache when plugins are activated, deactivated, or upgraded.
-add_action( 'activated_plugin', array( 'BB_Feature_Autoloader', 'bb_clear_feature_discovery_cache' ) );
-add_action( 'deactivated_plugin', array( 'BB_Feature_Autoloader', 'bb_clear_feature_discovery_cache' ) );
-add_action( 'upgrader_process_complete', array( 'BB_Feature_Autoloader', 'bb_clear_feature_discovery_cache' ) );
+/**
+ * Flush every Settings 2.0 cache layer in response to a plugin-lifecycle event.
+ *
+ * When a plugin is activated, deactivated, or upgraded, any of these caches
+ * may silently hold stale data:
+ *
+ *  1. **Feature discovery paths** — `bb_feature_config_paths_*` transient.
+ *     A newly-active plugin may ship `bb-features/*` configs that the cache
+ *     has not seen; a deactivated plugin's configs must be dropped.
+ *  2. **Feature registry** — in-memory sorted caches, per-feature transients
+ *     (`bb_feature_{id}`), and the static option-cache dirty flag consulted
+ *     by `bb_is_feature_active()`.
+ *  3. **Settings search index** — `bb_settings_search_index` transient.
+ *     Built from the registered feature/panel/section/field graph; a plugin
+ *     that registers or removes features invalidates the index.
+ *  4. **Placeholder features catalog** — `bb_placeholder_features_data_v_*`
+ *     transient plus the `bb_placeholder_features_data_stale` option. A
+ *     plugin install/activate/deactivate changes the `plugin_status` of
+ *     catalog entries, so cached upgrade cards become wrong.
+ *
+ * The registry getters rebuild lazily, so clearing here simply forces the
+ * next admin AJAX / page load to re-read fresh state. No request-time cost.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_flush_feature_caches_on_plugin_change() {
+	// 1. Feature discovery paths (filesystem scan cache).
+	if ( class_exists( 'BB_Feature_Autoloader' ) ) {
+		BB_Feature_Autoloader::bb_clear_feature_discovery_cache();
+	}
+
+	// 2. Feature registry (sorted caches, per-feature transients, active-state flag).
+	if ( function_exists( 'bb_feature_registry' ) ) {
+		bb_feature_registry()->bb_clear_feature_caches();
+	}
+
+	// 3. Settings search index — cleared by bb_clear_feature_caches() above,
+	//    but deleted here too so this function is safe to call standalone
+	//    (e.g. from a CLI command that doesn't boot the registry).
+	delete_transient( 'bb_settings_search_index' );
+
+	// 4. Placeholder features catalog — plugin_status fields depend on
+	//    is_plugin_active() results which just changed.
+	if ( function_exists( 'bb_placeholder_features_transient_key' ) ) {
+		delete_transient( bb_placeholder_features_transient_key() );
+	}
+	// Always delete the legacy unversioned key too, for clean upgrades.
+	delete_transient( 'bb_placeholder_features_data' );
+
+	// Schedule a background refresh so the next admin AJAX call returns data.
+	if ( function_exists( 'bb_schedule_placeholder_features_refresh' ) ) {
+		bb_schedule_placeholder_features_refresh();
+	}
+
+	/**
+	 * Fires after Settings 2.0 caches are flushed in response to a plugin
+	 * lifecycle event. Extensions that maintain their own Settings 2.0 caches
+	 * (e.g. Pro's per-feature memoizations) can hook here to invalidate.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	do_action( 'bb_feature_caches_flushed' );
+}
+
+// Plugin lifecycle: activate / deactivate / install / update / delete all
+// reshape the set of features and placeholder states. Each hook runs a full
+// flush — the cost is one `delete_transient` per cache layer plus a light
+// in-memory reset, cheap relative to a plugin install.
+add_action( 'activated_plugin', 'bb_flush_feature_caches_on_plugin_change' );
+add_action( 'deactivated_plugin', 'bb_flush_feature_caches_on_plugin_change' );
+add_action( 'upgrader_process_complete', 'bb_flush_feature_caches_on_plugin_change' );
+add_action( 'deleted_plugin', 'bb_flush_feature_caches_on_plugin_change' );
+
+// Network-admin (multisite) plugin lifecycle hooks.
+add_action( 'network_admin_activated_plugin', 'bb_flush_feature_caches_on_plugin_change' );
+add_action( 'network_admin_deactivated_plugin', 'bb_flush_feature_caches_on_plugin_change' );
+
+// Also flush when a user flips the "active_plugins" option directly — covers
+// WP-CLI `wp plugin activate/deactivate` which bypasses activated_plugin on
+// some paths, and programmatic `update_option( 'active_plugins', ... )` calls.
+add_action( 'update_option_active_plugins', 'bb_flush_feature_caches_on_plugin_change' );
+add_action( 'add_option_active_plugins', 'bb_flush_feature_caches_on_plugin_change' );
+add_action( 'update_site_option_active_sitewide_plugins', 'bb_flush_feature_caches_on_plugin_change' );
 
 /**
  * Reverse-sync legacy Components page saves to bb-active-features.
@@ -356,5 +435,26 @@ function bb_sanitize_access_control_fallback( $value ) {
 		return array();
 	}
 
-	return map_deep( $value, 'sanitize_text_field' );
+	// Whitelist only the keys expected by the Pro sanitizer so a malicious
+	// client cannot persist arbitrary nested data into the option — even
+	// though the option is inert without Pro, we avoid storing junk.
+	$allowed_keys = array( 'type', 'sub_type', 'allowed_roles', 'options' );
+
+	$sanitized = array();
+	foreach ( $allowed_keys as $key ) {
+		if ( ! array_key_exists( $key, $value ) ) {
+			continue;
+		}
+
+		$entry = $value[ $key ];
+
+		if ( is_array( $entry ) ) {
+			$sanitized[ $key ] = map_deep( $entry, 'sanitize_text_field' );
+		} elseif ( is_scalar( $entry ) ) {
+			$sanitized[ $key ] = sanitize_text_field( (string) $entry );
+		}
+		// Non-array, non-scalar entries are dropped.
+	}
+
+	return $sanitized;
 }

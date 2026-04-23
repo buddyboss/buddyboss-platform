@@ -58,6 +58,120 @@ add_action( 'bp_admin_init', 'bp_do_activation_redirect', 1 );
 add_action( 'bp_admin_init', 'bp_check_for_legacy_theme' );
 add_action( 'bp_admin_init', 'bb_redirect_legacy_settings_to_settings_2', 1 );
 
+/**
+ * Forward any request that still targets the legacy ?page=bp-settings URL
+ * to the Settings 2.0 home at ?page=bb-settings.
+ *
+ * Two layers of coverage:
+ *
+ *  1. An `admin_init` priority-0 hook catches requests even when the user's
+ *     permissions would pass the submenu check — fastest path, no page render.
+ *
+ *  2. A hidden registered submenu (`bb_register_legacy_bp_settings_redirect`)
+ *     reserves the `bp-settings` slug and supplies a render callback that
+ *     performs the redirect. This is what guarantees the redirect even if
+ *     WordPress's submenu-access gate rejects the request before
+ *     `admin_init` finishes (e.g., when user caps don't include our
+ *     registered submenu's capability in some custom-role configurations,
+ *     or when another plugin short-circuits `admin_init`).
+ *
+ * Together they ensure ?page=bp-settings NEVER lands on the "Sorry, you
+ * are not allowed..." error page.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_force_redirect_bare_bp_settings() {
+	if ( ! is_admin() ) {
+		return;
+	}
+
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
+	$page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
+	$tab  = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : '';
+
+	if ( 'bp-settings' === $page && empty( $tab ) ) {
+		wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings' ) );
+		exit;
+	}
+}
+add_action( 'admin_init', 'bb_force_redirect_bare_bp_settings', 0 );
+
+/**
+ * Redirect legacy admin slugs to Settings 2.0 before WordPress's permission gate.
+ *
+ * WordPress calls `user_can_access_admin_page()` in `wp-admin/includes/menu.php`
+ * at line ~371, which runs via `require wp-admin/menu.php` at line 163 of
+ * `wp-admin/admin.php` — BEFORE `do_action('admin_init')` at line 180. So an
+ * `admin_init`-priority redirect never fires for an unregistered submenu
+ * slug; WP has already called `wp_die()` by then.
+ *
+ * Hooking `admin_menu` priority MAX catches the request after all menu
+ * registrations but BEFORE `user_can_access_admin_page()` runs — the action
+ * is dispatched at `includes/menu.php:161`, the permission check runs at
+ * line 371 of the same file, so any hook attached to `admin_menu` sees the
+ * request first.
+ *
+ * Covers two legacy slugs that were removed in Settings 2.0:
+ *  - `bp-settings`     → `bb-settings` (tab query arg preserved).
+ *  - `bp-integrations` → `bb-settings` with best-effort tab mapping via
+ *    the `bb_legacy_integration_tabs_mapping` filter (Pro populates it
+ *    with Zoom/OneSignal/etc. tab redirects).
+ *
+ * This is the only hook point that reliably catches the "slug doesn't
+ * exist" case before WP's 403 fires.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_redirect_bp_settings_before_permission_check() {
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
+	$page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
+
+	if ( 'bp-settings' !== $page && 'bp-integrations' !== $page ) {
+		return;
+	}
+
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
+	$tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : '';
+
+	$target = bp_get_admin_url( 'admin.php?page=bb-settings' );
+
+	if ( 'bp-integrations' === $page && ! empty( $tab ) ) {
+		/**
+		 * Filter the legacy integration tabs mapping.
+		 *
+		 * Pro hooks this to add Zoom, OneSignal, and other integration tab redirects.
+		 * Values can be a string (feature ID only) or array with 'tab' and 'panel'.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $legacy_integration_tabs Array of old integration tab name => new Settings 2.0 route.
+		 */
+		$legacy_integration_tabs = apply_filters( 'bb_legacy_integration_tabs_mapping', array() );
+
+		if ( isset( $legacy_integration_tabs[ $tab ] ) ) {
+			$mapping = $legacy_integration_tabs[ $tab ];
+			if ( is_array( $mapping ) ) {
+				$target = add_query_arg( 'tab', $mapping['tab'], $target );
+				if ( ! empty( $mapping['panel'] ) ) {
+					$target = add_query_arg( 'panel', $mapping['panel'], $target );
+				}
+			} else {
+				$target = add_query_arg( 'tab', $mapping, $target );
+			}
+		}
+	} elseif ( ! empty( $tab ) ) {
+		// bp-settings: preserve the tab query arg; the tab-mapping logic in
+		// bb_redirect_legacy_settings_to_settings_2 will normalize bp-activity etc.
+		$target = add_query_arg( 'tab', $tab, $target );
+	}
+
+	wp_safe_redirect( $target );
+	exit;
+}
+add_action( 'admin_menu', 'bb_redirect_bp_settings_before_permission_check', PHP_INT_MAX );
+add_action( 'network_admin_menu', 'bb_redirect_bp_settings_before_permission_check', PHP_INT_MAX );
+
 // Show notice when Profile Avatars is BuddyBoss.
 add_action( 'bp_admin_head', 'bb_discussion_page_show_notice_in_avatar_section' );
 
@@ -602,15 +716,29 @@ add_action( 'in_admin_header', 'bb_render_admin_header', 999 );
  * @since BuddyBoss [BBVERSION]
  */
 function bb_redirect_legacy_settings_to_settings_2() {
-	// Only redirect if Settings 2.0 is active.
-	if ( ! function_exists( 'bb_register_feature' ) ) {
-		return;
-	}
-
 	// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Redirect only, no data modification.
 	$page      = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
 	$tab       = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : '';
 	$post_type = isset( $_GET['post_type'] ) ? sanitize_key( wp_unslash( $_GET['post_type'] ) ) : '';
+
+	// Always forward bp-settings → bb-settings (even before Settings 2.0 loads).
+	// This runs unconditionally because the bp-settings submenu is no longer
+	// registered; without this forward the user hits "you are not allowed"
+	// when clicking an old bookmark. The tab-mapping logic further down
+	// handles ?page=bp-settings&tab=... cases; here we only handle the bare
+	// ?page=bp-settings hit with no tab.
+	if ( 'bp-settings' === $page && empty( $tab ) ) {
+		wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings' ) );
+		exit;
+	}
+
+	// Everything below is Settings 2.0-aware redirect logic (tab mappings,
+	// CPT redirects, etc.). Skip when Settings 2.0 is not loaded so we don't
+	// redirect into a non-existent page.
+	if ( ! function_exists( 'bb_register_feature' ) ) {
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+		return;
+	}
 
 	// Redirect legacy CPT single edit screens (post.php?post=ID&action=edit) to Settings 2.0.
 	// These post types are now managed via React admin — the classic editor should not be accessible.
@@ -760,7 +888,9 @@ function bb_redirect_legacy_settings_to_settings_2() {
 		}
 	}
 
-	// Check if we're on the old settings page.
+	// Bare ?page=bp-settings (no tab) was already forwarded at the top of
+	// this function, so by the time we reach here we only handle the
+	// tab-mapping path.
 	if ( 'bp-settings' !== $page || empty( $tab ) ) {
 		return;
 	}

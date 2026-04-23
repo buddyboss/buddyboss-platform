@@ -39,6 +39,9 @@ export function InputButtonField( props ) {
 	var isConnected = field.is_connected || false;
 	var initialButtonLabel = field.button_label || __( 'Connect', 'buddyboss' );
 	var isButtonOnly = field.button_only || false;
+	var isIconOnly = !! field.icon_only;
+	var iconClass = field.icon || '';
+	var iconAriaLabel = field.icon_label || field.button_label || __( 'Action', 'buddyboss' );
 
 	var inputRef = useRef( null );
 	var abortRef = useRef( null );
@@ -178,11 +181,13 @@ export function InputButtonField( props ) {
 					}
 
 					// Dispatch event to update related notice fields (e.g. connection_status).
-					if ( data.updated_fields ) {
+					// Also support field_options for dynamically refreshing select field options.
+					if ( data.updated_fields || data.field_options ) {
 						var updateEvent = new CustomEvent( BB_EVENTS.FIELD_VALUE_UPDATE, {
 							detail: {
-								fields: data.updated_fields,
-								is_connected: data.is_connected,
+								fields:        data.updated_fields || {},
+								field_options: data.field_options || null,
+								is_connected:  data.is_connected,
 							},
 						} );
 						window.dispatchEvent( updateEvent );
@@ -232,14 +237,30 @@ export function InputButtonField( props ) {
 						/>
 					</div>
 				) }
-				<button
-					type="button"
-					className={ 'bb-admin-settings-field__input-button-btn' + ( connected ? ' bb-admin-settings-field__input-button-btn--connected' : '' ) }
-					onClick={ handleButtonClick }
-					disabled={ isButtonDisabled }
-				>
-					{ isLoading ? __( 'Saving...', 'buddyboss' ) : buttonLabel }
-				</button>
+				{ isIconOnly ? (
+					<button
+						type="button"
+						className={ 'bb-admin-settings-field__input-button-btn bb-admin-settings-field__input-button-btn--icon-only' + ( isLoading ? ' is-loading' : '' ) }
+						onClick={ handleButtonClick }
+						disabled={ isButtonDisabled }
+						aria-label={ iconAriaLabel }
+						title={ iconAriaLabel }
+					>
+						<i
+							className={ 'bb-admin-settings-field__input-button-icon ' + iconClass + ( isLoading ? ' is-spinning' : '' ) }
+							aria-hidden="true"
+						/>
+					</button>
+				) : (
+					<button
+						type="button"
+						className={ 'bb-admin-settings-field__input-button-btn' + ( connected ? ' bb-admin-settings-field__input-button-btn--connected' : '' ) }
+						onClick={ handleButtonClick }
+						disabled={ isButtonDisabled }
+					>
+						{ isLoading ? __( 'Saving...', 'buddyboss' ) : buttonLabel }
+					</button>
+				) }
 			</div>
 			{ errorMessage && (
 				<p className="bb-admin-settings-field__input-button-error" role="alert">{ errorMessage }</p>

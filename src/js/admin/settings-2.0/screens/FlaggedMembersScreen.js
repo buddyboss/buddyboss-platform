@@ -21,6 +21,7 @@ import {
 import { __ } from '@wordpress/i18n';
 import { getFlaggedMembers, suspendMember, unsuspendMember, flaggedMembersBulkAction } from '../utils/ajax';
 import { ViewReportModal } from '../components/modals/ViewReportModal';
+import { safeUrl } from '../utils/sanitize';
 
 /**
  * Flagged Members Screen Component
@@ -407,12 +408,12 @@ export function FlaggedMembersScreen() {
 												<td className="bb-admin-flagged-members__td--member">
 													<div className="bb-admin-flagged-members__member">
 														<img
-															src={ member.avatar }
+															src={ safeUrl( member.avatar ) }
 															alt={ member.display_name }
 															className="bb-admin-flagged-members__avatar"
 														/>
 														<a
-															href={ member.profile_url }
+															href={ safeUrl( member.profile_url ) }
 															target="_blank"
 															rel="noopener noreferrer"
 															className="bb-admin-flagged-members__name"

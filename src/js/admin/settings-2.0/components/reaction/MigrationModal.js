@@ -26,12 +26,6 @@ export function MigrationModal({ isOpen, onClose, migrationData }) {
 	const migrationDataRef = useRef(migrationData);
 	migrationDataRef.current = migrationData;
 
-	useEffect(() => {
-		if (isOpen) {
-			loadWizardData();
-		}
-	}, [isOpen, loadWizardData]);
-
 	// ---------------------------------------------------------------------------
 	// Wizard event handlers — defined with useCallback so their identity is stable
 	// across renders. The listener effect therefore only re-runs when wizardContent
@@ -310,6 +304,14 @@ export function MigrationModal({ isOpen, onClose, migrationData }) {
 		});
 	// eslint-disable-next-line react-hooks/exhaustive-deps -- migrationDataRef is a stable ref object; its .current is always up-to-date without needing to be a dep.
 	}, []);
+
+	// Trigger wizard load when modal opens. Declared after loadWizardData to avoid
+	// temporal dead zone error when the useCallback is referenced as a dependency.
+	useEffect(() => {
+		if (isOpen) {
+			loadWizardData();
+		}
+	}, [isOpen, loadWizardData]);
 
 	if (!isOpen) {
 		return null;

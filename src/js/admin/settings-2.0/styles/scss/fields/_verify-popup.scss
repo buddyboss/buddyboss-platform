@@ -117,14 +117,6 @@
 		}
 	}
 
-	&__status {
-		i {
-			&.bb-icon-cloud {
-				animation: spin 1s linear infinite;
-			}
-		}
-	}
-
 	&__footer {
 		display: flex;
 		align-items: center;

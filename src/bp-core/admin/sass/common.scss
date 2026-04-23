@@ -543,15 +543,6 @@ tr.bp-search-parent-field label {
 */
 
 
-/* Labs */
-
-/*
-.bp-admin-card.section-bp_labs_settings_notifications h2:before {
-
-	background-image: url(../../images/admin/icons/fontawesome/solid/flask.svg);
-}
-*/
-
 .bp-admin-card.section-bp_search_settings_community table,
 .bp-admin-card.section-bp_search_settings_post_types table {
 	margin-bottom: 20px;
@@ -3444,28 +3435,6 @@ table.moderations .column-member {
 
 .taxonomy-bpm_category .form-field.term-slug-wrap {
 	display: none;
-}
-
-#bp_labs_settings {
-
-	table.form-table {
-
-		.notes-hidden-header {
-
-			> th {
-				display: none;
-
-				+ td {
-					padding-left: 0;
-					padding-right: 0;
-				}
-			}
-		}
-
-		.no-padding {
-			padding: 0;
-		}
-	}
 }
 
 .no-field-notice {

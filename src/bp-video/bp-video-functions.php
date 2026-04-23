@@ -102,7 +102,7 @@ function bp_video_upload() {
 	/**
 	 * Filter the attachment URL.
 	 *
-	 * @since BuddyBoss [BBOMVERSION]
+	 * @since BuddyBoss 2.15.0
 	 *
 	 * @param string $attachment_url Attachment URL.
 	 * @param int    $attachment_id Attachment ID.
@@ -112,7 +112,7 @@ function bp_video_upload() {
 	/**
 	 * Filter the video message URL.
 	 *
-	 * @since BuddyBoss [BBOMVERSION]
+	 * @since BuddyBoss 2.15.0
 	 *
 	 * @param string $video_message_url Video message URL.
 	 * @param int    $attachment_id Attachment ID.

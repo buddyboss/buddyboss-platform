@@ -7878,9 +7878,6 @@ function bb_admin_icons( $id ) {
 		case 'bp_zoom_gutenberg_section';
 			$meta_icon = $bb_icon_bf . ' bb-icon-brand-zoom';
 			break;
-		case 'bp_labs_settings_notifications';
-			$meta_icon = $bb_icon_bf . ' bb-icon-flask';
-			break;
 		case 'bp_notification_settings_automatic':
 			$meta_icon = $bb_icon_bf . ' bb-icon-bell';
 			break;
@@ -10023,6 +10020,21 @@ function bb_get_feature_settings_url( $feature_id, $panel_id = '' ) {
 	}
 
 	return $url;
+}
+
+/**
+ * Whether the Settings 2.0 framework supports custom field types via wp.hooks.
+ *
+ * External plugins check this function to decide between embedding custom
+ * field components inside Settings 2.0 panels (when available) or falling
+ * back to a standalone admin page.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool Always true when this function exists.
+ */
+function bb_settings_supports_custom_field_types() {
+	return true;
 }
 
 /**

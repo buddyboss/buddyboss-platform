@@ -86,7 +86,11 @@ class BB_Admin_Groups_Ajax {
 				 * @since BuddyPress 1.7.0
 				 * @deprecated BuddyBoss [BBVERSION] No direct replacement. Use AJAX-based hooks instead.
 				 */
-				do_action_deprecated( 'bp_groups_admin_load', array( '' ), 'BuddyBoss [BBVERSION]' );
+				// Pass the real $doaction so legacy handlers that branch
+				// on it keep working instead of silently no-op'ing on an
+				// empty string.
+				$doaction = isset( $_GET['action'] ) ? sanitize_key( wp_unslash( $_GET['action'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				do_action_deprecated( 'bp_groups_admin_load', array( $doaction ), 'BuddyBoss [BBVERSION]' );
 			}
 		}
 	}

@@ -11,6 +11,7 @@ import { useState, useEffect } from '@wordpress/element';
 import { Button, Modal, Spinner } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { getContentReport } from '../../utils/ajax';
+import { safeUrl } from '../../utils/sanitize';
 
 /**
  * View Content Report Modal Component
@@ -101,7 +102,7 @@ export function ViewContentReportModal( { isOpen, onClose, item } ) {
 							<div className="bb-admin-view-content-report-modal__owner-info">
 								{ report.owner && report.owner.avatar && (
 									<img
-										src={ report.owner.avatar }
+										src={ safeUrl( report.owner.avatar ) }
 										alt={ report.owner.display_name }
 										className="bb-admin-view-content-report-modal__avatar"
 									/>
@@ -109,7 +110,7 @@ export function ViewContentReportModal( { isOpen, onClose, item } ) {
 								{ report.owner && report.owner.display_name && (
 									<span>
 										<a
-											href={ report.owner.profile_url }
+											href={ safeUrl( report.owner.profile_url ) }
 											target="_blank"
 											rel="noopener noreferrer"
 											className="bb-admin-view-content-report-modal__owner-name"
@@ -128,7 +129,7 @@ export function ViewContentReportModal( { isOpen, onClose, item } ) {
 							</span>
 							{ report.content_url && (
 								<a
-									href={ report.content_url }
+									href={ safeUrl( report.content_url ) }
 									target="_blank"
 									rel="noopener noreferrer"
 									className="bb-admin-view-content-report-modal__content-link"
@@ -160,12 +161,12 @@ export function ViewContentReportModal( { isOpen, onClose, item } ) {
 											<div key={ index } className="bb-admin-view-content-report-modal__list-item">
 												<div className="bb-admin-view-content-report-modal__list-item-user">
 													<img
-														src={ reporter.avatar }
+														src={ safeUrl( reporter.avatar ) }
 														alt={ reporter.display_name }
 														className="bb-admin-view-content-report-modal__list-avatar"
 													/>
 													<a
-														href={ reporter.profile_url }
+														href={ safeUrl( reporter.profile_url ) }
 														target="_blank"
 														rel="noopener noreferrer"
 														className="bb-admin-view-content-report-modal__list-name"

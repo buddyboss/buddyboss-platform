@@ -34,9 +34,22 @@ class BB_Feature_Autoloader {
 	/**
 	 * Register autoloader gate.
 	 *
+	 * IMPORTANT: registered with `$prepend = false` intentionally — this
+	 * autoloader must run AFTER Composer and any other registered autoloaders
+	 * so non-feature classes continue to load normally. The gate only
+	 * participates in the chain to short-circuit (return false) for classes
+	 * that belong to an inactive feature.
+	 *
+	 * Changing the prepend flag to true will cause every `BP_*` class lookup
+	 * to hit this autoloader first, and any class that doesn't match a
+	 * feature pattern will still return false — fine today, but relies on
+	 * subsequent autoloaders running. Leave as append unless every code path
+	 * is audited.
+	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public static function bb_register() {
+		// Signature: spl_autoload_register( $callback, $throw = true, $prepend = false ).
 		spl_autoload_register( array( __CLASS__, 'bb_autoload' ), true, false );
 	}
 
@@ -186,8 +199,12 @@ class BB_Feature_Autoloader {
 			self::bb_clear_feature_discovery_cache();
 		}
 
-		// Try to use cached config file paths to avoid glob() on every page load.
-		$config_files = get_transient( 'bb_feature_config_paths' );
+		// Version the transient key with BP_PLATFORM_VERSION so plugin upgrades
+		// automatically invalidate the cache without relying on the
+		// activated_plugin / upgrader_process_complete hooks (which don't fire
+		// on direct filesystem deploys).
+		$cache_key    = self::bb_get_discovery_cache_key();
+		$config_files = get_transient( $cache_key );
 
 		if ( false === $config_files ) {
 			$config_files = array();
@@ -222,8 +239,9 @@ class BB_Feature_Autoloader {
 				}
 			}
 
-			// Cache for 1 week; busted by plugin activation/upgrade via bb_clear_feature_discovery_cache().
-			set_transient( 'bb_feature_config_paths', $config_files, WEEK_IN_SECONDS );
+			// Cache for 1 week; busted by plugin activation/upgrade via bb_clear_feature_discovery_cache()
+			// and automatically invalidated by version bumps via the version-keyed transient name.
+			set_transient( $cache_key, $config_files, WEEK_IN_SECONDS );
 		}
 
 		// Load each discovered config file.
@@ -266,6 +284,21 @@ class BB_Feature_Autoloader {
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	public static function bb_clear_feature_discovery_cache() {
+		delete_transient( self::bb_get_discovery_cache_key() );
+		// Also delete the legacy unversioned key so sites upgrading from older
+		// builds don't leave stale entries behind.
 		delete_transient( 'bb_feature_config_paths' );
+	}
+
+	/**
+	 * Build the versioned cache key for feature-config discovery.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return string Transient key.
+	 */
+	private static function bb_get_discovery_cache_key() {
+		$version = defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : '0';
+		return 'bb_feature_config_paths_v_' . md5( $version );
 	}
 }

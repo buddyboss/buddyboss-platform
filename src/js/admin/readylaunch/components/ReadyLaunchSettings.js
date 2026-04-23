@@ -714,21 +714,21 @@ export const ReadyLaunchSettings = () => {
 											icon: 'bb-icons-rl-pulse',
 											title: __('Activity', 'buddyboss'),
 											description: __('Control activity streams and user engagement settings.', 'buddyboss'),
-											actionLink: 'admin.php?page=bp-settings&tab=bp-activity'
+											actionLink: 'admin.php?page=bb-settings&tab=activity'
 										},
 										{
 											id: 'xprofile',
 											icon: 'bb-icons-rl-user-square',
 											title: __('Profiles', 'buddyboss'),
 											description: __('Manage profile fields, visibility, and user profile options.', 'buddyboss'),
-											actionLink: 'admin.php?page=bp-settings&tab=bp-xprofile'
+											actionLink: 'admin.php?page=bb-settings&tab=members'
 										},
 										{
 											id: 'groups',
 											icon: 'bb-icons-rl-users-three',
 											title: __('Groups', 'buddyboss'),
 											description: __('Configure group creation, privacy, and member roles.', 'buddyboss'),
-											actionLink: 'admin.php?page=bp-settings&tab=bp-groups'
+											actionLink: 'admin.php?page=bb-settings&tab=groups'
 										},
 										{
 											id: 'media',
@@ -742,7 +742,7 @@ export const ReadyLaunchSettings = () => {
 											icon: 'bb-icons-rl-flag',
 											title: __('Moderation', 'buddyboss'),
 											description: __('Set rules and tools for reporting and content moderation.', 'buddyboss'),
-											actionLink: 'admin.php?page=bp-settings&tab=bp-moderation'
+											actionLink: 'admin.php?page=bb-settings&tab=moderation'
 										}
 									].map(item => (
 										window?.BP_ADMIN?.components &&
