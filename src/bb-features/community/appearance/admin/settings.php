@@ -132,15 +132,15 @@ function bb_admin_settings_register_appearance_settings() {
 
 	// Three possible states for the Site SEO panel (mirrors the Web Push
 	// Notifications panel pattern in `settings-web-push.php`):
-	//   1. NEW Sharing installed — `Site_SEO_Settings` class exists and
-	//      registers its own fields. Platform skips the fallback.
-	//   2. OLD Sharing installed — `BuddyBoss_Sharing` main class exists but
-	//      predates Settings 2.0. Show an Update-Required empty state card
-	//      (mirrors Web Push "Pro OLD" branch). No "UPGRADE PRO" badge —
-	//      plugin is already present, just out of date.
-	//   3. Sharing NOT installed / deactivated — show the full Figma fields
-	//      as PRO-gated disabled placeholders with an "UPGRADE PRO" badge
-	//      on the section (mirrors OneSignal `bb_notifications_register_web_push_pro_placeholder_fields()`).
+	// 1. NEW Sharing installed — `Site_SEO_Settings` class exists and
+	// registers its own fields. Platform skips the fallback.
+	// 2. OLD Sharing installed — `BuddyBoss_Sharing` main class exists but
+	// predates Settings 2.0. Show an Update-Required empty state card
+	// (mirrors Web Push "Pro OLD" branch). No "UPGRADE PRO" badge —
+	// plugin is already present, just out of date.
+	// 3. Sharing NOT installed / deactivated — show the full Figma fields
+	// as PRO-gated disabled placeholders with an "UPGRADE PRO" badge
+	// on the section (mirrors OneSignal `bb_notifications_register_web_push_pro_placeholder_fields()`).
 	$has_new_sharing = class_exists( '\\BuddyBoss\\Sharing\\Admin\\Site_SEO_Settings' );
 	$has_old_sharing = ! $has_new_sharing && class_exists( 'BuddyBoss_Sharing' );
 
@@ -974,10 +974,22 @@ function bb_appearance_register_site_seo_pro_placeholder_fields() {
 			'label'             => '',
 			'type'              => 'tags_reference',
 			'tags'              => array(
-				array( 'tag' => '{activity_title}',   'description' => __( 'Activity post title (falls back to activity_action if empty)', 'buddyboss' ) ),
-				array( 'tag' => '{activity_action}',  'description' => __( 'Activity action text (e.g., "John posted an update")', 'buddyboss' ) ),
-				array( 'tag' => '{activity_content}', 'description' => __( 'Activity content (limited to 60 characters)', 'buddyboss' ) ),
-				array( 'tag' => '{author_name}',      'description' => __( 'Activity author display name', 'buddyboss' ) ),
+				array(
+					'tag' => '{activity_title}',
+					'description' => __( 'Activity post title (falls back to activity_action if empty)', 'buddyboss' ),
+				),
+				array(
+					'tag' => '{activity_action}',
+					'description' => __( 'Activity action text (e.g., "John posted an update")', 'buddyboss' ),
+				),
+				array(
+					'tag' => '{activity_content}',
+					'description' => __( 'Activity content (limited to 60 characters)', 'buddyboss' ),
+				),
+				array(
+					'tag' => '{author_name}',
+					'description' => __( 'Activity author display name', 'buddyboss' ),
+				),
 			),
 			'default'           => '',
 			'pro_only'          => true,

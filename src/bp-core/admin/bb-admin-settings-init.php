@@ -269,12 +269,12 @@ function bb_flush_feature_caches_on_plugin_change() {
 	}
 
 	// 3. Settings search index — cleared by bb_clear_feature_caches() above,
-	//    but deleted here too so this function is safe to call standalone
-	//    (e.g. from a CLI command that doesn't boot the registry).
+	// but deleted here too so this function is safe to call standalone
+	// (e.g. from a CLI command that doesn't boot the registry).
 	delete_transient( 'bb_settings_search_index' );
 
 	// 4. Placeholder features catalog — plugin_status fields depend on
-	//    is_plugin_active() results which just changed.
+	// is_plugin_active() results which just changed.
 	if ( function_exists( 'bb_placeholder_features_transient_key' ) ) {
 		delete_transient( bb_placeholder_features_transient_key() );
 	}

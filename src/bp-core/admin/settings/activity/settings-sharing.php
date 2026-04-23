@@ -25,14 +25,14 @@ function bb_activity_register_sharing_panel_fields() {
 
 	// Three possible states (mirrors the Web Push Notifications pattern +
 	// the Site SEO panel):
-	//   1. NEW Sharing — registers its own Activity Sharing fields via
-	//      `bb_admin_settings_before_get_feature`. Platform skips.
-	//   2. OLD Sharing — main plugin class exists but predates Settings 2.0.
-	//      Show `empty_state` Update Required card, NO UPGRADE PRO badge.
-	//   3. Sharing NOT installed / deactivated — render the full Figma field
-	//      surface as `pro_only` disabled placeholders with an UPGRADE PRO
-	//      badge on the section. Mirrors OneSignal's
-	//      `bb_notifications_register_web_push_pro_placeholder_fields()`.
+	// 1. NEW Sharing — registers its own Activity Sharing fields via
+	// `bb_admin_settings_before_get_feature`. Platform skips.
+	// 2. OLD Sharing — main plugin class exists but predates Settings 2.0.
+	// Show `empty_state` Update Required card, NO UPGRADE PRO badge.
+	// 3. Sharing NOT installed / deactivated — render the full Figma field
+	// surface as `pro_only` disabled placeholders with an UPGRADE PRO
+	// badge on the section. Mirrors OneSignal's
+	// `bb_notifications_register_web_push_pro_placeholder_fields()`.
 	//
 	// Detection key: `Activity_Settings::bb_sh_register_sharing_settings()`
 	// only ships in Sharing versions with the Settings 2.0 path. The class
@@ -221,11 +221,31 @@ function bb_activity_register_sharing_pro_placeholder_fields() {
 			'type'              => 'share_platforms',
 			'default'           => array(),
 			'options'           => array(
-				array( 'label' => __( 'Messenger', 'buddyboss' ), 'value' => 'messenger', 'icon' => 'bb-icons-rl bb-icons-rl-messenger-logo' ),
-				array( 'label' => __( 'Facebook', 'buddyboss' ), 'value' => 'facebook',  'icon' => 'bb-icons-rl bb-icons-rl-facebook-logo' ),
-				array( 'label' => __( 'X', 'buddyboss' ),        'value' => 'twitter',   'icon' => 'bb-icons-rl bb-icons-rl-x-logo' ),
-				array( 'label' => __( 'Linkedin', 'buddyboss' ), 'value' => 'linkedin',  'icon' => 'bb-icons-rl bb-icons-rl-linkedin-logo' ),
-				array( 'label' => __( 'Whatsapp', 'buddyboss' ), 'value' => 'whatsapp',  'icon' => 'bb-icons-rl bb-icons-rl-whatsapp-logo' ),
+				array(
+					'label' => __( 'Messenger', 'buddyboss' ),
+					'value' => 'messenger',
+					'icon' => 'bb-icons-rl bb-icons-rl-messenger-logo',
+				),
+				array(
+					'label' => __( 'Facebook', 'buddyboss' ),
+					'value' => 'facebook',
+					'icon' => 'bb-icons-rl bb-icons-rl-facebook-logo',
+				),
+				array(
+					'label' => __( 'X', 'buddyboss' ),
+					'value' => 'twitter',
+					'icon' => 'bb-icons-rl bb-icons-rl-x-logo',
+				),
+				array(
+					'label' => __( 'Linkedin', 'buddyboss' ),
+					'value' => 'linkedin',
+					'icon' => 'bb-icons-rl bb-icons-rl-linkedin-logo',
+				),
+				array(
+					'label' => __( 'Whatsapp', 'buddyboss' ),
+					'value' => 'whatsapp',
+					'icon' => 'bb-icons-rl bb-icons-rl-whatsapp-logo',
+				),
 			),
 			'pro_only'          => true,
 			'sanitize_callback' => '__return_empty_string',
