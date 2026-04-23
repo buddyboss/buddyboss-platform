@@ -3375,153 +3375,48 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		}
 
 		/**
+		 * Check whether the current request is a page owned by an integration.
+		 *
+		 * Integrations (LearnDash, etc.) subscribe to the
+		 * `bb_rl_is_integration_page` filter to claim pages by key. Platform
+		 * holds no integration-specific detection — all post-type, URL,
+		 * taxonomy, and shortcode knowledge lives in the integration addon.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $key Detection key, e.g. 'learndash',
+		 *                    'learndash_registration', 'learndash_reset_password'.
+		 * @return bool True when a subscriber claims the current page for $key.
+		 */
+		public function bb_rl_is_integration_page( $key ) {
+			/**
+			 * Filters whether the current request is an integration-owned page.
+			 *
+			 * Integration addons subscribe here with their own post-type / URL
+			 * / shortcode detection. Return true to claim the page; return
+			 * $is_page (the incoming value) to stay neutral.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param bool   $is_page Whether the current page is integration-owned.
+			 * @param string $key     Detection key.
+			 */
+			return (bool) apply_filters( 'bb_rl_is_integration_page', false, $key );
+		}
+
+		/**
 		 * Check if the current page is a LearnDash page.
+		 *
+		 * Thin wrapper over the generic `bb_rl_is_integration_page` filter.
+		 * Kept public so themes and third-party plugins can keep calling it.
+		 * Detection logic lives in the `buddyboss-learndash` addon.
 		 *
 		 * @since BuddyBoss 2.9.00
 		 *
 		 * @return bool True if the current page is a LearnDash page, false otherwise.
 		 */
 		public function bb_rl_is_learndash_page() {
-			if ( ! class_exists( 'SFWD_LMS' ) ) {
-				return false;
-			}
-
-			$courses_integration = bp_get_option( 'bb_rl_enabled_pages' )['courses'] ?? false;
-			if ( ! $courses_integration ) {
-				return false;
-			}
-
-			global $post, $wp_query;
-
-			// Multiple ways to get the post type.
-			$post_type = '';
-
-			// Get post type.
-			if ( function_exists( 'get_post_type' ) ) {
-				$post_type = get_post_type();
-			}
-
-			// Check global $post.
-			if ( empty( $post_type ) && isset( $post->post_type ) ) {
-				$post_type = $post->post_type;
-			}
-
-			// Check queried object.
-			if ( empty( $post_type ) && is_object( $wp_query ) ) {
-				$queried_object = get_queried_object();
-				if ( $queried_object && isset( $queried_object->post_type ) ) {
-					$post_type = $queried_object->post_type;
-				}
-			}
-
-			// Check query vars.
-			if ( empty( $post_type ) && is_object( $wp_query ) && isset( $wp_query->query_vars['post_type'] ) ) {
-				$post_type = $wp_query->query_vars['post_type'];
-			}
-
-			// LearnDash post types.
-			$ld_post_types = array(
-				learndash_get_post_type_slug( 'course' ),
-				learndash_get_post_type_slug( 'lesson' ),
-				learndash_get_post_type_slug( 'topic' ),
-				learndash_get_post_type_slug( 'quiz' ),
-				learndash_get_post_type_slug( 'assignment' ),
-				learndash_get_post_type_slug( 'essays' ),
-				learndash_get_post_type_slug( 'group' ),
-				learndash_get_post_type_slug( 'exam' ),
-			);
-
-			// Check for course archive using multiple methods.
-			if ( is_post_type_archive( $ld_post_types ) || is_singular( $ld_post_types ) ) {
-				return true;
-			}
-
-			// Check if post type matches LearnDash types.
-			if ( ! empty( $post_type ) && in_array( $post_type, $ld_post_types, true ) ) {
-				return true;
-			}
-
-			// Check REQUEST_URI for LearnDash patterns.
-			if (
-				(
-					! bp_is_user() &&
-					! bp_is_group() &&
-					! bp_is_groups_directory() &&
-					! bp_is_group_single() &&
-					! bp_is_group_create()
-				) &&
-				isset( $_SERVER['REQUEST_URI'] )
-			) {
-				$request_uri = sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) );
-
-				// Check for any LearnDash post type in the URL.
-				foreach ( $ld_post_types as $ld_post_type ) {
-					if ( ! empty( $ld_post_type ) && strpos( $request_uri, $ld_post_type ) !== false ) {
-						return true;
-					}
-				}
-
-				// Additional patterns to check for LearnDash URLs (excluding BuddyPress patterns).
-				$ld_patterns = array(
-					'/lesson/',
-					'/lessons/',
-					'/course/',
-					'/courses/',
-					'/topic/',
-					'/topics/',
-					'/quiz/',
-					'/quizzes/',
-					'/assignment/',
-					'/assignments/',
-					'/essays/',
-					'sfwd-lessons',
-					'sfwd-courses',
-					'sfwd-topic',
-					'sfwd-quiz',
-					'sfwd-assignment',
-					'sfwd-essays',
-					'sfwd-groups', // Use specific LearnDash group slug.
-				);
-
-				foreach ( $ld_patterns as $pattern ) {
-					if ( strpos( $request_uri, $pattern ) !== false ) {
-						return true;
-					}
-				}
-
-				// Legacy check for courses.
-				if ( defined( 'LDLMS_Post_Types::COURSE' ) && strpos( $request_uri, LDLMS_Post_Types::COURSE ) !== false ) {
-					return true;
-				}
-			}
-
-			$ld_taxonomies = array(
-				'ld_course_category',
-				'ld_course_tag',
-				'ld_lesson_category',
-				'ld_lesson_tag',
-			);
-
-			foreach ( $ld_taxonomies as $tax ) {
-				if ( is_tax( $tax ) ) {
-					return true;
-				}
-			}
-
-			// Group leader pages.
-			if ( function_exists( 'learndash_is_group_leader_user' ) && learndash_is_group_leader_user() ) {
-				return true;
-			}
-
-			// Check if current page is a LearnDash registration or reset password page.
-			if (
-				$this->bb_rl_is_learndash_registration_page() ||
-				$this->bb_rl_is_learndash_reset_password_page()
-			) {
-				return true;
-			}
-
-			return false;
+			return $this->bb_rl_is_integration_page( 'learndash' );
 		}
 
 		/**
@@ -3570,84 +3465,33 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		}
 
 		/**
-		 * Check if current page is a LearnDash registration page
+		 * Check if current page is a LearnDash registration page.
+		 *
+		 * Thin wrapper over the generic `bb_rl_is_integration_page` filter.
+		 * Kept public for theme / third-party callers. Detection logic lives
+		 * in the `buddyboss-learndash` addon.
 		 *
 		 * @since BuddyBoss 2.9.30
 		 *
-		 * @return bool True if current page is a LearnDash registration page
+		 * @return bool True if current page is a LearnDash registration page.
 		 */
 		public function bb_rl_is_learndash_registration_page() {
-			// Check if LearnDash is active.
-			if ( ! function_exists( 'learndash_registration_page_get_id' ) ) {
-				return false;
-			}
-
-			// Check for URL parameters that indicate registration.
-			if ( isset( $_GET['ld_register_id'] ) || isset( $_GET['course_id'] ) || isset( $_GET['group_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-				return true;
-			}
-
-			// Check if current page has registration shortcode.
-			global $post;
-			if ( $post && has_shortcode( $post->post_content, 'ld_registration' ) ) {
-				return true;
-			}
-
-			// Get the registration page ID.
-			$registration_page_id = learndash_registration_page_get_id();
-
-			// Only check page ID if a registration page is actually set.
-			if ( ! empty( $registration_page_id ) ) {
-				// Check if current page matches the registration page.
-				$current_page_id = get_queried_object_id();
-				if ( $current_page_id && (int) $current_page_id === (int) $registration_page_id ) {
-					return true;
-				}
-			}
-
-			return false;
+			return $this->bb_rl_is_integration_page( 'learndash_registration' );
 		}
 
 		/**
 		 * Check if the current page is a LearnDash reset password page.
+		 *
+		 * Thin wrapper over the generic `bb_rl_is_integration_page` filter.
+		 * Kept public for theme / third-party callers. Detection logic lives
+		 * in the `buddyboss-learndash` addon.
 		 *
 		 * @since BuddyBoss 2.9.30
 		 *
 		 * @return bool True if the current page is a LearnDash reset password page, false otherwise.
 		 */
 		public function bb_rl_is_learndash_reset_password_page() {
-			// Check if LearnDash is active and integration is enabled.
-			// For reset password pages, we'll bypass this check to ensure it works.
-			$integration_enabled = $this->bb_rl_is_page_enabled_for_integration( 'learndash' );
-			if ( ! $integration_enabled ) {
-				// Don't return false here - continue with detection.
-			}
-
-			// Check for URL parameters that indicate password reset.
-			// LearnDash password reset URLs should have both 'key' and 'action=rp' parameters.
-			// This prevents false positives from other plugins using 'key' parameter.
-			if ( isset( $_GET['ld-resetpw'] ) || isset( $_GET['password_reset'] ) || ( isset( $_GET['key'] ) && 'rp' === $_GET['action'] ) || isset( $_GET['login'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-				return true;
-			}
-
-			// Check if the current page template is being used for password reset.
-			global $post;
-			if ( $post && has_shortcode( $post->post_content, 'ld_reset_password' ) ) {
-				return true;
-			}
-
-			// Check if this is the LearnDash reset password page.
-			if ( function_exists( 'learndash_get_reset_password_page_id' ) ) {
-				$reset_password_page_id = learndash_get_reset_password_page_id();
-				if ( ! empty( $reset_password_page_id ) ) {
-					$current_page_id = get_queried_object_id();
-					if ( $current_page_id && (int) $current_page_id === (int) $reset_password_page_id ) {
-						return true;
-					}
-				}
-			}
-
-			return false;
+			return $this->bb_rl_is_integration_page( 'learndash_reset_password' );
 		}
 
 		/**
