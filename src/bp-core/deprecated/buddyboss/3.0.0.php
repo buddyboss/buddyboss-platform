@@ -2841,3 +2841,68 @@ if ( ! function_exists( 'bb_labs_no_settings_callback' ) ) {
  * @since      BuddyBoss 1.9.3
  * @deprecated BuddyBoss [BBVERSION] The Labs tab has been removed.
  */
+
+/* ----------------------------------------------------------------------------
+ * Legacy "Components" admin page — removed in Settings 2.0.
+ *
+ * The classic BuddyBoss > Components screen and its POST handlers were
+ * replaced by the React-based Settings 2.0 feature grid. The four stubs below
+ * preserve the public function names so that third-party callers receive a
+ * clear `_deprecated_function` notice instead of a fatal error.
+ *
+ * The two data helpers that lived alongside these — `bp_core_admin_get_components()`
+ * and `bp_core_admin_get_active_components_from_submitted_settings()` — were
+ * relocated to `src/bp-core/admin/bp-core-admin-functions.php` because they are
+ * pure data utilities still consumed by the test suite and may be hooked by
+ * third-party code via the `bp_core_admin_get_components` filter.
+ * ------------------------------------------------------------------------- */
+
+if ( ! function_exists( 'bp_core_admin_components_settings' ) ) {
+	/**
+	 * Renders the legacy Component Setup admin panel.
+	 *
+	 * @since      BuddyPress 1.6.0
+	 * @deprecated BuddyBoss [BBVERSION] The legacy Components admin page has been removed in Settings 2.0.
+	 *                                   Components are now managed as feature cards in the Settings grid.
+	 */
+	function bp_core_admin_components_settings() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]' );
+	}
+}
+
+if ( ! function_exists( 'bp_core_admin_components_options' ) ) {
+	/**
+	 * Renders the legacy Component Setup option markup.
+	 *
+	 * @since      BuddyPress 1.6.0
+	 * @deprecated BuddyBoss [BBVERSION] The legacy Components admin page has been removed in Settings 2.0.
+	 */
+	function bp_core_admin_components_options() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]' );
+	}
+}
+
+if ( ! function_exists( 'bp_core_admin_components_settings_handler' ) ) {
+	/**
+	 * Handles legacy Component Setup form submissions.
+	 *
+	 * @since      BuddyPress 1.6.0
+	 * @deprecated BuddyBoss [BBVERSION] The legacy Components admin page has been removed in Settings 2.0.
+	 *                                   Feature toggles are saved via the bb_admin_toggle_feature AJAX endpoint.
+	 */
+	function bp_core_admin_components_settings_handler() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]' );
+	}
+}
+
+if ( ! function_exists( 'bp_core_admin_components_activation_handler' ) ) {
+	/**
+	 * Handles individual component activation requests from the legacy admin page.
+	 *
+	 * @since      BuddyPress 2.0.0
+	 * @deprecated BuddyBoss [BBVERSION] The legacy Components admin page has been removed in Settings 2.0.
+	 */
+	function bp_core_admin_components_activation_handler() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]' );
+	}
+}

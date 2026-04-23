@@ -77,7 +77,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 
 		// Build configuration array with ReadyLaunch-specific settings.
 		$config = array(
-			'admin_page'            => 'bp-components',
+			'admin_page'            => 'bb-settings',
 			'option_prefix'         => 'bb_rl',
 			'completion_option'     => 'bb_rl_onboarding_completed',
 			'wizard_title'          => __( 'BuddyBoss ReadyLaunch Setup', 'buddyboss' ),

@@ -127,7 +127,7 @@ function bb_redirect_bp_settings_before_permission_check() {
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
 	$page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
 
-	if ( 'bp-settings' !== $page && 'bp-integrations' !== $page ) {
+	if ( 'bp-settings' !== $page && 'bp-integrations' !== $page && 'bp-components' !== $page ) {
 		return;
 	}
 
