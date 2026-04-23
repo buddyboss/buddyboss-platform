@@ -16,6 +16,7 @@ defined( 'ABSPATH' ) || exit;
  */
 function bp_admin() {
 	buddypress()->admin = new BP_Admin();
+	
 	return;
 
 	// These are strings we may use to describe maintenance/security releases, where we aim for no new strings.

@@ -85,20 +85,30 @@ class BP_Integration {
 
 	public function is_activated() {
 		if ( ! $this->required_plugin ) {
-			return false;
+			$is_activated = false;
+		} else {
+			$plugins = get_option( 'active_plugins' ) ?: array();
+			if ( in_array( $this->required_plugin, $plugins ) ) {
+				$is_activated = true;
+			} elseif ( is_multisite() ) {
+				$plugins      = get_site_option( 'active_sitewide_plugins' ) ?: array();
+				$is_activated = isset( $plugins[ $this->required_plugin ] );
+			} else {
+				$is_activated = false;
+			}
 		}
 
-		$plugins = get_option( 'active_plugins' ) ?: array();
-		if ( in_array( $this->required_plugin, $plugins ) ) {
-			return true;
-		}
-
-		if ( ! is_multisite() ) {
-			return false;
-		}
-
-		$plugins = get_site_option( 'active_sitewide_plugins' ) ?: array();
-		return isset( $plugins[ $this->required_plugin ] );
+		/**
+		 * Filter whether an integration is activated.
+		 *
+		 * Allows the feature system to control integration activation.
+		 *
+		 * @since BuddyBoss 3.0.0
+		 *
+		 * @param bool   $is_activated  Whether the integration is activated.
+		 * @param string $integration_id The integration ID.
+		 */
+		return apply_filters( 'bb_integration_is_activated', $is_activated, $this->id );
 	}
 
 	public function activation() {

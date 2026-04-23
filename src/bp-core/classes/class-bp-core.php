@@ -144,17 +144,64 @@ class BP_Core extends BP_Component {
 			$bp->active_components = apply_filters( 'bp_active_components', $bp->active_components );
 		}
 
+		/**
+		 * Fires before loading optional and required components.
+		 *
+		 * @since BuddyBoss 3.0.0
+		 *
+		 * @param array $optional_components Array of optional component IDs.
+		 * @param array $required_components Array of required component IDs.
+		 */
+		do_action( 'bb_before_load_components', $bp->optional_components, $bp->required_components );
+
 		// Loop through optional components.
 		foreach ( $bp->optional_components as $component ) {
+			/**
+			 * Filters whether to skip loading a component via the legacy loader.
+			 *
+			 * This allows the Feature Loader to handle component loading instead.
+			 *
+			 * @since BuddyBoss 3.0.0
+			 *
+			 * @param bool   $skip      Whether to skip legacy loading. Default false.
+			 * @param string $component Component ID.
+			 * @param string $type      Component type: 'optional' or 'required'.
+			 */
+			$skip_legacy_load = apply_filters( 'bb_skip_legacy_component_load', false, $component, 'optional' );
+
+			if ( $skip_legacy_load ) {
+				continue;
+			}
+
 			if ( bp_is_active( $component ) && file_exists( $bp->plugin_dir . 'bp-' . $component . '/bp-' . $component . '-loader.php' ) ) {
 				include $bp->plugin_dir . 'bp-' . $component . '/bp-' . $component . '-loader.php';
+
+				/**
+				 * Fires after a component is loaded via the legacy loader.
+				 *
+				 * @since BuddyBoss 3.0.0
+				 *
+				 * @param string $component Component ID.
+				 * @param string $type      Component type: 'optional' or 'required'.
+				 */
+				do_action( 'bb_component_loaded_legacy', $component, 'optional' );
 			}
 		}
 
 		// Loop through required components.
 		foreach ( $bp->required_components as $component ) {
+			/** This filter is documented above. */
+			$skip_legacy_load = apply_filters( 'bb_skip_legacy_component_load', false, $component, 'required' );
+
+			if ( $skip_legacy_load ) {
+				continue;
+			}
+
 			if ( file_exists( $bp->plugin_dir . 'bp-' . $component . '/bp-' . $component . '-loader.php' ) ) {
 				include $bp->plugin_dir . 'bp-' . $component . '/bp-' . $component . '-loader.php';
+
+				/** This action is documented above. */
+				do_action( 'bb_component_loaded_legacy', $component, 'required' );
 			}
 		}
 
@@ -173,6 +220,11 @@ class BP_Core extends BP_Component {
 	 * Load integrations files
 	 *
 	 * @since BuddyBoss 1.0.0
+	 *
+	 * @deprecated Integrations now loaded via feature auto-discovery system.
+	 *             Integrations moved to src/features/integrations/ and loaded via
+	 *             BB_Feature_Autoloader::discover_features() in bb-admin-settings-2.0-init.php
+	 *             This method kept for backward compatibility with third-party code.
 	 */
 	private function load_integrations() {
 		$bp = buddypress();
@@ -195,6 +247,8 @@ class BP_Core extends BP_Component {
 			)
 		);
 
+		// Legacy integration loading - integrations migrated to src/features/integrations/
+		// and loaded via auto-discovery system. This code kept for backward compatibility.
 		$integration_dir = $bp->plugin_dir . '/bp-integrations/';
 
 		foreach ( $bp->available_integrations as $integration ) {
