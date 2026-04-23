@@ -34,7 +34,11 @@ bb_register_integration(
 			return (bool) apply_filters( 'bb_recaptcha_integration_is_active', true );
 		},
 		'settings_route'     => '/settings/recaptcha',
-		'order'              => 210,
+		// First slot in the Integrations category. reCAPTCHA is not in the
+		// S3 placeholder catalog (it's a free, built-in integration), so
+		// picking a low order puts it at the top of the category regardless
+		// of what the catalog does with other integrations.
+		'order'              => 10,
 	)
 );
 
