@@ -3024,8 +3024,7 @@
 	}
 }
 
-/* MediaPickerField — generic wp.media library picker (Appearance logos, OG image).
-   Figma layout: preview on the left (184×56), action buttons stacked on the right. */
+/* MediaPickerField — generic wp.media library picker (Appearance logos, OG image) */
 .bb-admin-media-picker {
 	display: flex;
 	flex-direction: column;
@@ -3146,12 +3145,12 @@
 		width: 184px;
 		height: 56px;
 		background: $bb-background-primary-color;
-		border: 1px dashed $bb-border-secondary-color;
+		border: 1px dashed $bb-border-primary-color;
 		border-radius: $bb-border-radius-md;
 		color: $bb-icon-tertiary-color;
-		cursor: pointer;
 
 		i {
+            color: $bb-icon-tertiary-color;
 			font-size: 24px;
 			line-height: 1;
 		}
@@ -3162,16 +3161,13 @@
 		}
 
 		&--large {
-			width: 120px;
-			height: 120px;
-			border: none;
-			background: $bb-background-secondary-color;
-			border-radius: $bb-border-radius-lg;
-			cursor: default;
+			width: 160px;
+			height: 160px;
+			border-radius: $bb-border-radius-xl;
 			color: $bb-text-tertiary-color;
 
 			i {
-				font-size: 32px;
+				font-size: 40px;
 			}
 		}
 
@@ -3181,34 +3177,7 @@
 	}
 
 	&__upload-btn {
-		display: inline-flex;
-		align-items: center;
-		gap: 6px;
-		padding: 8px 18px;
-		background: transparent;
-		border: 1px solid $bb-background-brand-primary-color;
-		border-radius: $bb-border-radius-md;
-		color: $bb-background-brand-primary-color;
-		font-size: 14px;
-		font-weight: 500;
-		line-height: 1.4;
-		cursor: pointer;
-		transition: background 0.15s ease, color 0.15s ease;
-
-		i {
-			font-size: 16px;
-			line-height: 1;
-		}
-
-		&:hover:not(:disabled),
-		&:focus:not(:disabled) {
-			background: rgba($bb-background-brand-primary-color, 0.08);
-		}
-
-		&:disabled {
-			opacity: 0.5;
-			cursor: not-allowed;
-		}
+		@include bb-button-primary-outline;
 	}
 
 	&--large &__preview {
@@ -3237,6 +3206,19 @@
 
     .bb-admin-media-picker__preview:has(img) {
         background-color: $bb-background-inverse-color;
+    }
+}
+
+.bb-admin-settings-form__field[data-field-name="buddyboss_og_image"] {
+
+    .bb-admin-settings-form__field-group-label {
+        margin-bottom: 12px;
+    }
+
+    .bb-admin-settings-form__field-help-text {
+        padding-bottom: 24px;
+        margin-bottom: 6px;
+        border-bottom: 1px solid $bb-border-secondary-color;
     }
 }
 
@@ -3593,22 +3575,19 @@
 
 // =============================================================================
 // Appearance -> Site SEO -> per-template Available Tags reference card
-// (tags_reference field type). Renders inside the right-column field content
-// under the template input, mirroring the Figma "Available Tags" help block.
 // =============================================================================
 .bb-admin-tags-reference {
 	display: block;
 	width: 100%;
-	padding: 16px 20px;
-	background: $bb-background-primary-color;
+	padding: 16px;
 	border: 1px solid $bb-border-color;
-	border-radius: $bb-border-radius-md;
+	border-radius: $bb-border-radius-lg;
 	box-sizing: border-box;
 
 	&__heading {
 		margin: 0 0 12px;
 		color: $bb-text-tertiary-color;
-		font-size: 13px;
+		font-size: 14px;
 		font-weight: 500;
 		line-height: 1.3;
 	}
@@ -3619,27 +3598,26 @@
 		margin: 0;
 		display: flex;
 		flex-direction: column;
-		gap: 10px;
+		gap: 8px;
 	}
 
 	&__item {
 		color: $bb-text-color;
 		font-size: 13px;
 		line-height: 1.5;
-		padding-left: 4px;
+        margin-bottom: 0;
 	}
 
 	&__tag {
+        font-family: inherit;
 		display: inline-block;
-		background: #eceef1;
-		border-radius: 4px;
-		padding: 2px 6px;
-		font-family: Menlo, Consolas, monospace;
-		font-size: 12px;
+		background: $bb-background-primary-hover-color;
+		border-radius: $bb-border-radius-md;
+		padding: 3px 8px;
 		color: $bb-text-color;
 	}
 
 	&__description {
-		color: $bb-text-color;
+		color: $bb-text-secondary-color;
 	}
 }
