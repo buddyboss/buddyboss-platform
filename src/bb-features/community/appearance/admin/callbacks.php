@@ -298,3 +298,40 @@ function bb_appearance_normalize_field_data( $field_data, $field, $feature_id ) 
 	return $field_data;
 }
 add_filter( 'bb_admin_settings_format_field_data', 'bb_appearance_normalize_field_data', 10, 3 );
+
+/**
+ * Coerce `bb_rl_enabled` in the save-response payload to the dropdown string shape.
+ *
+ * `bb_appearance_sanitize_layout()` deliberately stores `bb_rl_enabled` as a PHP
+ * boolean so legacy `bb_is_readylaunch_enabled()` consumers keep working. The
+ * generic save handler echoes the sanitized value back in `response.saved`,
+ * which the React form then merges into its state. A raw boolean `false` never
+ * matches the SelectControl's string options (`'1'` / `'0'`) under strict
+ * equality, so the dropdown silently falls back to the first option
+ * (ReadyLaunch) — the user sees their WordPress-Theme choice revert visually
+ * even though the database is correct.
+ *
+ * This mirrors the display-side `bb_appearance_normalize_field_data()` filter
+ * but runs on the save-response path, keeping the stored shape (bool) and the
+ * wire shape (string) consistent on both read and write.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array  $response_data Response payload returned by the save AJAX handler.
+ * @param string $feature_id    Feature being saved.
+ * @param array  $settings      Raw submitted settings (unused).
+ * @param array  $saved         Sanitized values written to options (unused — we read from $response_data).
+ * @return array Response with `saved.bb_rl_enabled` coerced to `'1'` / `'0'`.
+ */
+function bb_appearance_normalize_save_response( $response_data, $feature_id, $settings, $saved ) {
+	if ( 'appearance' !== $feature_id ) {
+		return $response_data;
+	}
+
+	if ( isset( $response_data['saved'] ) && is_array( $response_data['saved'] ) && array_key_exists( 'bb_rl_enabled', $response_data['saved'] ) ) {
+		$response_data['saved']['bb_rl_enabled'] = ! empty( $response_data['saved']['bb_rl_enabled'] ) ? '1' : '0';
+	}
+
+	return $response_data;
+}
+add_filter( 'bb_admin_save_feature_settings_response', 'bb_appearance_normalize_save_response', 10, 4 );
