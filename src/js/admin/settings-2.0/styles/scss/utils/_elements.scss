@@ -516,7 +516,7 @@ select.bb-admin-settings__select {
 	}
 
 	/* Make text inputs stretch to fill the input wrapper like password fields do. */
-	.bb-admin-settings-form__field-input-wrapper > div {
+	&.bb-admin-settings-form__field--input-full .bb-admin-settings-form__field-input-wrapper > div {
 		width: 100%;
 
 		.components-base-control {
