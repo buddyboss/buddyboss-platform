@@ -76,8 +76,10 @@ function bp_core_modify_admin_menu_highlight() {
 	global $plugin_page, $submenu_file;
 
 	// This tweaks the Settings subnav menu to show only one BuddyPress menu item.
+	// bp-components submenu was removed in Settings 2.0 — point at bb-settings so
+	// the left-nav highlight lands on the Settings entry instead of nothing.
 	if ( ! in_array( $plugin_page, array( 'bp-activity', 'bp-general-settings' ) ) ) {
-		$submenu_file = 'bp-components';
+		$submenu_file = 'bb-settings';
 	}
 
 	// Network Admin > Tools.
@@ -677,11 +679,7 @@ function bp_core_get_admin_tabs( $active_tab = '' ) {
 	// slug is forwarded by bb_redirect_bp_settings_before_permission_check,
 	// but pointing at the destination avoids an unnecessary redirect hop.
 	$tabs = array(
-		'0' => array(
-			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components' ), 'admin.php' ) ),
-			'name'  => __( 'Components', 'buddyboss' ),
-			'class' => 'bp-components',
-		),
+		// '0' was the Components tab — intentionally left absent.
 		'1' => array(
 			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-pages' ), 'admin.php' ) ),
 			'name'  => __( 'Pages', 'buddyboss' ),
@@ -2978,4 +2976,78 @@ function bb_admin_verify_ajax_request( $nonce_action ) {
 			403
 		);
 	}
+}
+
+/**
+ * Calculates the components that should be active after save, based on submitted settings.
+ *
+ * The way that active components must be set after saving your settings must
+ * be calculated differently depending on which of the Components subtabs you
+ * are coming from:
+ * - When coming from All or Active, the submitted checkboxes accurately
+ *   reflect the desired active components, so we simply pass them through
+ * - When coming from Inactive, components can only be activated - already
+ *   active components will not be passed in the $_POST global. Thus, we must
+ *   parse the newly activated components with the already active components
+ *   saved in the $bp global
+ *
+ * @since BuddyPress 1.7.0
+ * @since BuddyBoss [BBVERSION] Moved from bp-core-admin-components.php during Settings 2.0 cleanup.
+ *
+ * @param array  $submitted Array of component settings from the POST global.
+ *                          Caller should stripslashes_deep() before passing.
+ * @param string $action    Optional. Submission context: 'all', 'active', or 'inactive'. Default 'all'.
+ * @return array The calculated list of component settings.
+ */
+function bp_core_admin_get_active_components_from_submitted_settings( $submitted, $action = 'all' ) {
+	$current_action = $action;
+
+	if ( isset( $_GET['action'] ) && in_array( $_GET['action'], array( 'active', 'inactive' ), true ) ) {
+		$current_action = $_GET['action'];
+	}
+
+	$current_components = buddypress()->active_components;
+
+	switch ( $current_action ) {
+		case 'inactive':
+			$components = array_merge( $submitted, $current_components );
+			break;
+
+		case 'all':
+		case 'active':
+		default:
+			$components = $submitted;
+			break;
+	}
+
+	return $components;
+}
+
+/**
+ * Return a list of component information.
+ *
+ * Used to do processing on settings data submitted from the legacy components
+ * screen. The screen itself was removed in Settings 2.0, but this helper and
+ * its `bp_core_admin_get_components` filter remain part of the public API.
+ *
+ * @since BuddyPress 1.7.0
+ * @since BuddyBoss [BBVERSION] Moved from bp-core-admin-components.php during Settings 2.0 cleanup.
+ *
+ * @param string $type Optional. Component type to fetch: 'all', 'optional', or 'required'. Default 'all'.
+ * @return array Requested components' data.
+ */
+function bp_core_admin_get_components( $type = 'all' ) {
+	$components = bp_core_get_components( $type );
+
+	/**
+	 * Filters the list of component information.
+	 *
+	 * @since BuddyPress 2.0.0
+	 *
+	 * @param array  $components Array of component information.
+	 * @param string $type       Type of component list requested.
+	 *                           Possible values include 'all', 'optional',
+	 *                           'required'.
+	 */
+	return apply_filters( 'bp_core_admin_get_components', $components, $type );
 }

@@ -317,7 +317,7 @@ function bb_members_sync_connection_component( $feature_id, $settings, $saved ) 
 		}
 
 		// Replicate legacy component toggle: install pages, update option, uninstall removed.
-		// Load schema file (not auto-loaded in AJAX context) — matches legacy bp-core-admin-components.php.
+		// Schema file is not auto-loaded in AJAX context, so require it explicitly.
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		require_once buddypress()->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php';
 

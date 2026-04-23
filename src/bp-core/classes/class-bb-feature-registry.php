@@ -1265,9 +1265,8 @@ class BB_Feature_Registry {
 		bp_update_option( 'bp-active-components', $active_components );
 
 		// Run core install to create DB tables for newly activated components
-		// and create directory pages. This mirrors the legacy component toggle
-		// at bp_core_admin_components_settings_handler() which calls these
-		// after every component activation.
+		// and create directory pages. This mirrors the behavior of the legacy
+		// component-toggle screen, which always called these after activation.
 		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bp-core-admin-schema.php' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 			require_once buddypress()->plugin_dir . 'bp-core/admin/bp-core-admin-schema.php';

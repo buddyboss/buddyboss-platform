@@ -1255,7 +1255,7 @@ export const ReadyLaunchSettings = () => {
 								onClick={() => {
 									// Open the onboarding wizard.
 									if (window.location) {
-										window.location.href = window.location.origin + window.location.pathname + '?page=bp-components&bb_wizard_activation=rl_onboarding';
+										window.location.href = window.location.origin + window.location.pathname + '?page=bb-settings&bb_wizard_activation=rl_onboarding';
 									}
 								}}
 								icon=""
