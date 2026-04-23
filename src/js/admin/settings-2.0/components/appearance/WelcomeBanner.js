@@ -199,9 +199,8 @@ export function WelcomeBanner() {
 							href={ FEEDBACK_URL }
 							target="_blank"
 							rel="noopener noreferrer"
-							icon={<i className="bb-icons-rl-rocket-launch" />}
 						>
-							{ __( 'Leave Feedback', 'buddyboss' ) } <i className="bb-icons-rl-arrow-right" />
+							{ __( 'Leave Feedback', 'buddyboss' ) }
 						</Button>
 						{ ! completed && (
 							<Button
