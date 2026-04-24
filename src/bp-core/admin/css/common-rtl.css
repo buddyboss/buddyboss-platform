@@ -11,7 +11,6 @@ TABLE OF CONTENTS:
 --------------------------------------------------------------------------------
 1.0 Welcome Screen
 	1.1 Version Badge
-	1.2 Credits Panel
 2.0 Dashicons
 	2.1 Top level menus
 	2.2 Settings - Components
@@ -391,85 +390,6 @@ button[data-balloon] {
 
 .bp-badge:before {
   content: "\f448";
-}
-
-.settings_page_bp-credits code,
-.index_page_bp-about code {
-  background-color: #e0e0e0;
-  color: #636363;
-  font-size: 1em;
-}
-
-/*
- * 1.2 Credits Panel
- */
-.bp-about-wrap {
-  position: relative;
-  font-size: 15px;
-  max-width: 1150px;
-  margin-top: 25px;
-}
-
-.bp-about-wrap .bp-admin-card {
-  margin: 20px 0 0;
-}
-
-.bp-about-wrap .bp-admin-card h2 {
-  font-weight: 600;
-}
-
-.bp-about-wrap .bp-admin-card h2:before {
-  content: none;
-}
-
-.bp-about-wrap .bp-admin-card img {
-  margin: 0;
-  max-width: 100%;
-  height: auto;
-  vertical-align: middle;
-}
-
-.bp-about-wrap .bp-admin-card ul {
-  margin: 0;
-}
-
-.bp-about-wrap .bp-admin-card p {
-  line-height: 1.5;
-  font-size: 14px;
-  margin: 0;
-}
-
-.bp-about-wrap .bp-admin-card .wp-person {
-  display: inline-block;
-  vertical-align: top;
-  margin: 0 0 0 10px;
-  height: 70px;
-  width: 280px;
-}
-
-.bp-about-wrap .bp-admin-card .wp-person .gravatar {
-  float: right;
-  margin: 0 0 10px 10px;
-  border-radius: 100%;
-  width: 60px;
-  height: 60px;
-}
-
-.bp-about-wrap .bp-admin-card .wp-person .web {
-  margin: 6px 0 2px;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 2;
-  text-decoration: none;
-}
-
-.bp-about-wrap .bp-admin-card .wp-person .title {
-  display: block;
-  font-weight: 300;
-}
-
-.bp-about-wrap .bp-admin-card p.wp-credits-list a {
-  white-space: nowrap;
 }
 
 /*------------------------------------------------------------------------------

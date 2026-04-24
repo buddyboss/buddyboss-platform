@@ -666,14 +666,14 @@ function bp_core_admin_tabs( $active_tab = '' ) {
  */
 function bp_core_get_admin_tabs( $active_tab = '' ) {
 
-	// Legacy top-level tab bar shown on bp-credits / bp-tools / bp-help /
-	// bp-components / bp-pages pages. The "Integrations" tab was removed
-	// along with the bp-integrations submenu in Settings 2.0. The "Upgrade"
-	// tab was also removed along with the bb-upgrade submenu. Key positions
-	// of the remaining tabs are preserved (Components='0', Pages='1',
-	// Settings='2', Tools='5', Help='6', Credits='7') so any third-party
-	// code that references these filter-array keys continues to work —
-	// keys '3' (Integrations) and '4' (Upgrade) are now intentionally
+	// Legacy top-level tab bar shown on bp-tools / bp-help / bp-components /
+	// bp-pages pages. The "Integrations" tab was removed along with the
+	// bp-integrations submenu in Settings 2.0. The "Upgrade" and "Credits"
+	// tabs were also removed along with their submenus. Key positions of
+	// the remaining tabs are preserved (Components='0', Pages='1',
+	// Settings='2', Tools='5', Help='6') so any third-party code that
+	// references these filter-array keys continues to work — keys '3'
+	// (Integrations), '4' (Upgrade), and '7' (Credits) are now intentionally
 	// absent rather than holding renumbered entries.
 	//
 	// The "Settings" tab points directly at bb-settings; the bp-settings
@@ -703,11 +703,7 @@ function bp_core_get_admin_tabs( $active_tab = '' ) {
 			'name'  => __( 'Help', 'buddyboss' ),
 			'class' => 'bp-help',
 		),
-		'7' => array(
-			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-credits' ), 'admin.php' ) ),
-			'name'  => __( 'Credits', 'buddyboss' ),
-			'class' => 'bp-credits',
-		),
+		// '7' was the Credits tab — intentionally left absent.
 	);
 
 	/**

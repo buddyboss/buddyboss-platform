@@ -318,16 +318,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			// now live inside the Settings grid under the "Integrations" category.
 			// The bp-integrations URL is redirected by bb_redirect_bp_integrations_*
 			// in bp-core-admin-actions.php.
-
-			// Credits.
-			$hooks[] = add_submenu_page(
-				$this->settings_page,
-				__( 'Credits', 'buddyboss' ),
-				__( 'Credits', 'buddyboss' ),
-				$this->capability,
-				'bp-credits',
-				array( $this, 'bp_credits_screen' )
-			);
 		}
 
 		/**
@@ -461,16 +451,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			// The bp-integrations URL is redirected by bb_redirect_bp_integrations_*
 			// in bp-core-admin-actions.php.
 
-			// Credits.
-			$hooks[] = add_submenu_page(
-				$this->settings_page,
-				__( 'Credits', 'buddyboss' ),
-				__( 'Credits', 'buddyboss' ),
-				$this->capability,
-				'bp-credits',
-				array( $this, 'bp_credits_screen' )
-			);
-
 			// ReadyLaunch.
 			$hooks[] = add_submenu_page(
 				$this->settings_page,
@@ -537,23 +517,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			);
 
 			// Network admin email menu removed — migrated to Settings 2.0.
-		}
-
-		/**
-		 * Output the credits screen.
-		 *
-		 * @since BuddyBoss 1.0.0
-		 */
-		public function bp_credits_screen() {
-			?>
-
-		<div class="wrap">
-			<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Credits', 'buddyboss' ) ); ?></h2>
-			<?php include $this->admin_dir . 'templates/credit-screen.php'; ?>
-		</div>
-
-			<?php
-
 		}
 
 		public function adjust_buddyboss_menus() {
@@ -670,7 +633,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			require_once trailingslashit( $bp->plugin_dir . 'bp-core/classes' ) . '/class-bp-admin-setting-tab.php';
 			require_once trailingslashit( $bp->plugin_dir . 'bp-core/classes' ) . '/class-bb-admin-setting-fields.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-general.php';
-			require_once $this->admin_dir . '/settings/bp-admin-setting-credit.php';
 		}
 
 		/**
@@ -727,9 +689,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 
 			// Network Admin Tools.
 			remove_submenu_page( 'network-tools', 'network-tools' );
-
-			// Credits page.
-			remove_submenu_page( 'index.php', 'bp-credits' );
 		}
 
 		/**
