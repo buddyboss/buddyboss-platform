@@ -40,6 +40,10 @@
     right: 0;
 	z-index: 100;
 
+	body.folded & {
+		left: 56px;
+	}
+
 	&__container {
 		display: flex;
 		align-items: center;
