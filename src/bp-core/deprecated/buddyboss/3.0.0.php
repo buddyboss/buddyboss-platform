@@ -1589,7 +1589,7 @@ function bb_deprecated_xprofile_admin_rendering_hooks() {
 		'xprofile_field_submitbox_start'         => __( 'XProfile field submitbox start', 'buddyboss' ),
 		'xprofile_field_after_submitbox'         => __( 'XProfile field after submitbox', 'buddyboss' ),
 		'xprofile_field_after_sidebarbox'        => __( 'XProfile field after sidebarbox', 'buddyboss' ),
-		'xprofile_field_additional_options'       => __( 'XProfile field additional options', 'buddyboss' ),
+		'xprofile_field_additional_options'      => __( 'XProfile field additional options', 'buddyboss' ),
 		'xprofile_admin_field_name_legend'       => __( 'XProfile admin field name legend', 'buddyboss' ),
 		'xprofile_admin_field_action'            => __( 'XProfile admin field action', 'buddyboss' ),
 		'xprofile_admin_group_action'            => __( 'XProfile admin group action', 'buddyboss' ),
@@ -2959,3 +2959,187 @@ add_action(
 	}
 );
 
+// ──────────────────────────────────────────────────────────────────────────────
+// Legacy bp-pages admin screen deprecated functions.
+// The standalone `admin.php?page=bp-pages` page was retired in BuddyBoss
+// [BBVERSION] in favour of Appearance → Pages inside the Settings 2.0 React
+// admin. The `?page=bp-pages` URL now redirects via
+// `bb_redirect_bp_settings_before_permission_check()`. Each function below
+// replaces its original counterpart from the deleted
+// `src/bp-core/admin/bp-core-admin-pages.php` — third parties that did
+// `require_once` against that absolute path will see a file-not-found
+// warning, which is the intended migration signal. Data helpers
+// `bp_core_admin_get_directory_pages()` and `bp_core_admin_get_static_pages()`
+// were deliberately NOT deprecated — the new React panel reads them from
+// `src/bp-core/admin/bp-core-admin-slugs.php` which stays live.
+// ──────────────────────────────────────────────────────────────────────────────
+
+if ( ! function_exists( 'bp_core_admin_pages_settings' ) ) {
+	/**
+	 * Render the legacy Pages Setup admin panel.
+	 *
+	 * @since      BuddyBoss 1.0.0
+	 * @deprecated BuddyBoss [BBVERSION] Moved to Settings 2.0 Appearance → Pages.
+	 */
+	function bp_core_admin_pages_settings() {
+		_deprecated_function(
+			__FUNCTION__,
+			'BuddyBoss [BBVERSION]',
+			'Settings 2.0 Appearance → Pages (admin.php?page=bb-settings&tab=appearance&panel=pages)'
+		);
+	}
+}
+
+if ( ! function_exists( 'bp_custom_pages_do_settings_sections' ) ) {
+	/**
+	 * Output the legacy Pages settings sections.
+	 *
+	 * @since      BuddyBoss 1.0.0
+	 * @deprecated BuddyBoss [BBVERSION] Replaced by React rendering in SettingsForm.js.
+	 *
+	 * @param string $page Legacy settings page slug (unused).
+	 */
+	function bp_custom_pages_do_settings_sections( $page ) {
+		_deprecated_function(
+			__FUNCTION__,
+			'BuddyBoss [BBVERSION]',
+			'Settings 2.0 React admin (SettingsForm.js)'
+		);
+	}
+}
+
+if ( ! function_exists( 'bp_custom_pages_do_settings_fields' ) ) {
+	/**
+	 * Output the legacy Pages settings fields for a section.
+	 *
+	 * @since      BuddyBoss 1.0.0
+	 * @deprecated BuddyBoss [BBVERSION] Replaced by React rendering in SettingsForm.js.
+	 *
+	 * @param string $page    Legacy settings page slug (unused).
+	 * @param string $section Legacy section slug (unused).
+	 */
+	function bp_custom_pages_do_settings_fields( $page, $section ) {
+		_deprecated_function(
+			__FUNCTION__,
+			'BuddyBoss [BBVERSION]',
+			'Settings 2.0 React admin (SettingsForm.js)'
+		);
+	}
+}
+
+if ( ! function_exists( 'bp_core_admin_register_page_fields' ) ) {
+	/**
+	 * Register the legacy Component Pages settings fields.
+	 *
+	 * @since      BuddyBoss 1.0.0
+	 * @deprecated BuddyBoss [BBVERSION] Fields now registered via bb_register_feature_field in pages-panel.php.
+	 */
+	function bp_core_admin_register_page_fields() {
+		_deprecated_function(
+			__FUNCTION__,
+			'BuddyBoss [BBVERSION]',
+			'bb_appearance_register_pages_fields (Settings 2.0 Appearance → Pages panel)'
+		);
+	}
+}
+
+if ( ! function_exists( 'bp_core_admin_register_registration_page_fields' ) ) {
+	/**
+	 * Register the legacy Registration Pages settings fields.
+	 *
+	 * @since      BuddyBoss 1.0.0
+	 * @deprecated BuddyBoss [BBVERSION] Fields now registered via bb_register_feature_field in pages-panel.php.
+	 */
+	function bp_core_admin_register_registration_page_fields() {
+		_deprecated_function(
+			__FUNCTION__,
+			'BuddyBoss [BBVERSION]',
+			'bb_appearance_register_pages_fields (Settings 2.0 Appearance → Pages panel)'
+		);
+	}
+}
+
+if ( ! function_exists( 'bp_core_admin_directory_pages_description' ) ) {
+	/**
+	 * Print the legacy Component Pages section description.
+	 *
+	 * @since      BuddyBoss 1.0.0
+	 * @deprecated BuddyBoss [BBVERSION] Description is now a plain `description` arg on the component_pages section.
+	 */
+	function bp_core_admin_directory_pages_description() {
+		_deprecated_function(
+			__FUNCTION__,
+			'BuddyBoss [BBVERSION]',
+			'Settings 2.0 section description arg'
+		);
+	}
+}
+
+if ( ! function_exists( 'bp_core_admin_registration_pages_description' ) ) {
+	/**
+	 * Print the legacy Registration Pages section description.
+	 *
+	 * @since      BuddyBoss 1.0.0
+	 * @deprecated BuddyBoss [BBVERSION] Description logic moved to bb_appearance_get_registration_section_meta().
+	 */
+	function bp_core_admin_registration_pages_description() {
+		_deprecated_function(
+			__FUNCTION__,
+			'BuddyBoss [BBVERSION]',
+			'bb_appearance_get_registration_section_meta'
+		);
+	}
+}
+
+if ( ! function_exists( 'bp_admin_setting_callback_page_directory_dropdown' ) ) {
+	/**
+	 * Render the legacy page-directory dropdown control.
+	 *
+	 * @since      BuddyBoss 1.0.0
+	 * @deprecated BuddyBoss [BBVERSION] Dropdown is now the `async_select` field type driven by bb_admin_search_pages_list.
+	 *
+	 * @param array $args Legacy callback args (unused).
+	 */
+	function bp_admin_setting_callback_page_directory_dropdown( $args ) {
+		_deprecated_function(
+			__FUNCTION__,
+			'BuddyBoss [BBVERSION]',
+			'async_select field type + bb_admin_search_pages_list AJAX handler'
+		);
+	}
+}
+
+if ( ! function_exists( 'bp_core_admin_maybe_save_pages_settings' ) ) {
+	/**
+	 * Save handler for the retired Pages admin screen.
+	 *
+	 * @since      BuddyBoss 1.0.0
+	 * @deprecated BuddyBoss [BBVERSION] Save path moved to bb_appearance_pages_save_side_effects().
+	 *
+	 * @return false Always returns false — legacy signature preserved.
+	 */
+	function bp_core_admin_maybe_save_pages_settings() {
+		_deprecated_function(
+			__FUNCTION__,
+			'BuddyBoss [BBVERSION]',
+			'bb_appearance_pages_save_side_effects'
+		);
+		return false;
+	}
+}
+
+if ( ! function_exists( 'bb_registration_page_tutorial' ) ) {
+	/**
+	 * Render the legacy "View Tutorial" button on the Registration section.
+	 *
+	 * @since      BuddyBoss 1.5.8
+	 * @deprecated BuddyBoss [BBVERSION] Tutorial link removed — help_url args on section/panel replace the inline button.
+	 */
+	function bb_registration_page_tutorial() {
+		_deprecated_function(
+			__FUNCTION__,
+			'BuddyBoss [BBVERSION]',
+			'help_url arg on bb_register_feature_section'
+		);
+	}
+}

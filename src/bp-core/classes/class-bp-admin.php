@@ -123,7 +123,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			require $this->admin_dir . 'bp-core-admin-settings.php';
 			require $this->admin_dir . 'bp-core-admin-functions.php';
 			require $this->admin_dir . 'bp-core-admin-components.php';
-			require $this->admin_dir . 'bp-core-admin-pages.php';
 			require $this->admin_dir . 'bp-core-admin-slugs.php';
 			require $this->admin_dir . 'bp-core-admin-tools.php';
 			require $this->admin_dir . 'bp-core-admin-help.php';
@@ -299,14 +298,14 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				'bp_core_admin_components_settings'
 			);
 
-			$hooks[] = add_submenu_page(
-				$this->settings_page,
-				__( 'Pages', 'buddyboss' ),
-				__( 'Pages', 'buddyboss' ),
-				$this->capability,
-				'bp-pages',
-				'bp_core_admin_pages_settings'
-			);
+			// Legacy "Pages" submenu retired in Settings 2.0 — the page-directory
+			// mapping now lives under Appearance → Pages inside the React admin.
+			// Bookmarks and third-party links targeting `admin.php?page=bp-pages`
+			// are forwarded by the `bp-pages` branch inside
+			// `bb_redirect_bp_settings_before_permission_check()`
+			// (`src/bp-core/admin/bp-core-admin-actions.php`), which runs on
+			// `admin_menu` at PHP_INT_MAX so it fires before WP's permission
+			// gate — required because the submenu slug no longer exists here.
 
 			// Settings 2.0 replaces the legacy bp-settings submenu at the same menu position.
 			// The 'bb-settings' slug points to the React admin registered in bb-admin-settings-page.php;
@@ -356,7 +355,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 *
 		 * @since BuddyBoss 1.2.3
 		 */
-
 		public function bp_add_main_menu_page_admin_menu() {
 
 			global $menu;
@@ -383,7 +381,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 					3
 				);
 			}
-
 		}
 
 		/**
@@ -459,14 +456,14 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				'bp_core_admin_components_settings'
 			);
 
-			$hooks[] = add_submenu_page(
-				$this->settings_page,
-				__( 'Pages', 'buddyboss' ),
-				__( 'Pages', 'buddyboss' ),
-				$this->capability,
-				'bp-pages',
-				'bp_core_admin_pages_settings'
-			);
+			// Legacy "Pages" submenu retired in Settings 2.0 — the page-directory
+			// mapping now lives under Appearance → Pages inside the React admin.
+			// Bookmarks and third-party links targeting `admin.php?page=bp-pages`
+			// are forwarded by the `bp-pages` branch inside
+			// `bb_redirect_bp_settings_before_permission_check()`
+			// (`src/bp-core/admin/bp-core-admin-actions.php`), which runs on
+			// `admin_menu` at PHP_INT_MAX so it fires before WP's permission
+			// gate — required because the submenu slug no longer exists here.
 
 			// Settings 2.0 replaces the legacy bp-settings submenu at the same menu position.
 			// The 'bb-settings' slug points to the React admin registered in bb-admin-settings-page.php;
@@ -583,7 +580,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		</div>
 
 			<?php
-
 		}
 
 		/**
@@ -832,7 +828,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 					'bb_display_auto_popup' => get_option( '_bb_is_update' ),
 				)
 			);
-
 		}
 
 		/** About BuddyBoss and BuddyBoss App ********************************************/
@@ -1053,13 +1048,13 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			if ( 0 !== strpos( get_current_screen()->id, 'plugins' ) ) {
 				return;
 			}
-			
+
 			// Output the modal HTML template.
 			// This is needed for the Release Notes link to work.
 			// Use output buffering and error handling to prevent breaking WordPress scripts.
 			global $bp;
 			$template_path = trailingslashit( $bp->plugin_dir . 'bp-core/admin' ) . 'templates/update-buddyboss.php';
-			
+
 			if ( file_exists( $template_path ) ) {
 				// Use output buffering to catch any errors.
 				ob_start();
@@ -1067,7 +1062,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 					// Suppress any errors from the template to prevent breaking the page.
 					@include $template_path;
 					$output = ob_get_clean();
-					
+
 					// Only output if we got valid HTML (not an error).
 					if ( ! empty( $output ) && false === strpos( $output, 'Fatal error' ) ) {
 						echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -1077,7 +1072,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 					// Silently fail to prevent breaking WordPress admin.
 				}
 			}
-			
+
 			// Clean up the update flag to prevent database bloat.
 			delete_option( '_bb_is_update' );
 		}

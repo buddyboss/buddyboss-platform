@@ -20,6 +20,7 @@
 defined( 'ABSPATH' ) || exit;
 
 require_once __DIR__ . '/callbacks.php';
+require_once __DIR__ . '/pages-panel.php';
 
 /**
  * Register Appearance feature settings in the Feature Registry.
@@ -111,22 +112,38 @@ function bb_admin_settings_register_appearance_settings() {
 	);
 
 	// =========================================================================
+	// SIDE PANEL: PAGES (always visible — directory & registration page mapping)
+	// =========================================================================
+	// Divider lives on this panel (not on Site SEO) to visually separate the
+	// page-mapping / SEO group from the ReadyLaunch-scoped panels above
+	// (General / Branding / Menus) per Figma.
+	bb_register_side_panel(
+		'appearance',
+		'pages',
+		array(
+			'title'   => __( 'Pages', 'buddyboss' ),
+			'icon'    => array(
+				'type'  => 'font',
+				'class' => 'bb-icons-rl bb-icons-rl-file-text',
+			),
+			'order'   => 40,
+			'divider' => true,
+		)
+	);
+
+	// =========================================================================
 	// SIDE PANEL: SITE SEO (always visible — Platform owns the shell, Sharing fills fields)
 	// =========================================================================
 	bb_register_side_panel(
 		'appearance',
 		'site_seo',
 		array(
-			'title'   => __( 'Site SEO', 'buddyboss' ),
-			'icon'    => array(
+			'title' => __( 'Site SEO', 'buddyboss' ),
+			'icon'  => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-list-magnifying-glass',
 			),
-			'order'   => 40,
-			// Visual separator in the left nav — Site SEO is a distinct
-			// category from the ReadyLaunch-scoped panels above (General /
-			// Branding / Menus) per Figma.
-			'divider' => true,
+			'order' => 50,
 		)
 	);
 
@@ -952,19 +969,19 @@ function bb_appearance_register_site_seo_pro_placeholder_fields() {
 			'type'              => 'tags_reference',
 			'tags'              => array(
 				array(
-					'tag' => '{activity_title}',
+					'tag'         => '{activity_title}',
 					'description' => __( 'Activity post title (falls back to activity_action if empty)', 'buddyboss' ),
 				),
 				array(
-					'tag' => '{activity_action}',
+					'tag'         => '{activity_action}',
 					'description' => __( 'Activity action text (e.g., "John posted an update")', 'buddyboss' ),
 				),
 				array(
-					'tag' => '{activity_content}',
+					'tag'         => '{activity_content}',
 					'description' => __( 'Activity content (limited to 60 characters)', 'buddyboss' ),
 				),
 				array(
-					'tag' => '{author_name}',
+					'tag'         => '{author_name}',
 					'description' => __( 'Activity author display name', 'buddyboss' ),
 				),
 			),
@@ -992,11 +1009,11 @@ function bb_appearance_register_site_seo_pro_placeholder_fields() {
 		'buddyboss_seo_index_groups'   => __( 'Groups', 'buddyboss' ),
 		'buddyboss_seo_index_forums'   => __( 'Forums', 'buddyboss' ),
 	);
-	$indexing_order = 60;
-	$indexing_total = count( $indexing_toggles );
-	$indexing_cur   = 0;
+	$indexing_order   = 60;
+	$indexing_total   = count( $indexing_toggles );
+	$indexing_cur     = 0;
 	foreach ( $indexing_toggles as $toggle_name => $toggle_label ) {
-		$indexing_cur++;
+		++$indexing_cur;
 		$is_last_toggle = ( $indexing_cur === $indexing_total );
 		bb_register_feature_field(
 			$feature_id,

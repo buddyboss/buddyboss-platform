@@ -1,0 +1,56 @@
+/**
+ * Page-dropdown field (Appearance → Pages).
+ *
+ * Layout = dropdown on the left, compact View/Create secondary button pinned
+ * immediately to the right with a small gap. Mirrors the legacy
+ * `admin.php?page=bp-pages` row where the `<select>` and the secondary
+ * button sit inline.
+ *
+ * The wrapper is applied by `SettingsForm.js`'s async_select page-dropdown
+ * variant; without these styles the button falls to a new line below the
+ * dropdown at full width because the `components-button` utility class
+ * stretches inside flex children by default.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+
+.bb-admin-settings-form__page-dropdown {
+	display: flex;
+	align-items: flex-start;
+	flex-wrap: nowrap;
+	gap: 8px;
+
+	// The async-select itself must keep its natural flex-grow so that the
+	// action button can never squeeze it below a legible width. Mirrors the
+	// legacy <select>'s sizing behaviour.
+	> .bb-async-select {
+		flex: 1 1 auto;
+		min-width: 0;
+	}
+
+	// Compact secondary action button — same visual weight as legacy's
+	// `.button-secondary`. Disable the `components-button` flex-stretch so
+	// the button sizes to its label, not the column.
+	.bb-admin-settings-form__page-dropdown-view,
+	.bb-admin-settings-form__page-dropdown-create {
+		flex: 0 0 auto;
+		align-self: flex-start;
+		height: 40px; // Matches the async-select input height.
+		line-height: 1;
+		padding: 0 12px;
+		white-space: nowrap;
+		text-decoration: none;
+
+		// Keyboard focus ring via `:focus-visible` only — `:focus` alone
+		// would also paint the ring on mouse click, which is the modern
+		// anti-pattern we want to avoid. Keyboard users still get a visible
+		// indicator consistent with the rest of the admin (see
+		// `screens/features/_color-picker-field.scss` for the same
+		// convention). Mouse users get nothing because `:focus-visible`
+		// heuristics suppress the ring after pointer interactions.
+		&:focus-visible:not(:disabled) {
+			outline: 2px solid $bb-border-quinery;
+			outline-offset: 1px;
+		}
+	}
+}

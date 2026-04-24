@@ -50,6 +50,8 @@ class BB_Admin_Settings_Ajax {
 
 		add_action( 'wp_ajax_bb_admin_search_settings', array( $this, 'bb_admin_search_settings' ) );
 		add_action( 'wp_ajax_bb_admin_search_published_pages', array( $this, 'bb_admin_search_published_pages' ) );
+		add_action( 'wp_ajax_bb_admin_search_pages_list', array( $this, 'bb_admin_search_pages_list' ) );
+		add_action( 'wp_ajax_bb_admin_create_directory_page', array( $this, 'bb_admin_create_directory_page' ) );
 
 		add_action( 'bb_admin_save_feature_settings_after', array( $this, 'bb_invalidate_search_index_after_save' ), 10, 3 );
 	}
@@ -1866,6 +1868,253 @@ class BB_Admin_Settings_Ajax {
 			array(
 				'results'  => $paged,
 				'has_more' => ( $offset + $per_page ) < $total,
+			)
+		);
+	}
+
+	/**
+	 * AJAX handler: search published pages for the Appearance → Pages directory
+	 * dropdowns.
+	 *
+	 * Sibling of `bb_admin_search_published_pages()` but scoped to the
+	 * page-directory-picker use case. The difference is the empty first option:
+	 * this endpoint prepends a single `{ value: '', label: '— Select a page —' }`
+	 * entry (mirrors legacy `wp_dropdown_pages( 'show_option_none' )`). The
+	 * other endpoint prepends "Default" + "Custom URL" which are wrong shapes
+	 * for the directory-page fields.
+	 *
+	 * Multisite: switches to the BP root blog before the page query so that on
+	 * a sub-site admin screen the results still come from the community's root
+	 * blog, matching what `bp_core_admin_get_directory_pages()` / the save
+	 * handler operate on.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_admin_search_pages_list() {
+		$this->bb_verify_request();
+
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_verify_request().
+		$term        = isset( $_POST['term'] ) ? sanitize_text_field( wp_unslash( $_POST['term'] ) ) : '';
+		$page        = isset( $_POST['page'] ) ? absint( $_POST['page'] ) : 1;
+		$selected_id = isset( $_POST['selected_id'] ) ? absint( wp_unslash( $_POST['selected_id'] ) ) : 0;
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
+
+		$per_page = 20;
+		$switched = false;
+		if ( is_multisite() && function_exists( 'bp_get_root_blog_id' ) ) {
+			$root_blog_id = bp_get_root_blog_id();
+			if ( $root_blog_id && get_current_blog_id() !== $root_blog_id ) {
+				switch_to_blog( $root_blog_id );
+				$switched = true;
+			}
+		}
+
+		// Re-check the cap POST-switch using the same `bp_moderate` cap that
+		// `bb_verify_request()` → `bb_admin_verify_ajax_request()` validated
+		// against the request's origin blog. A sub-site admin who passed
+		// there may not have equivalent rights on the root blog — and the
+		// page list we're about to return is authored there. Using
+		// `bp_current_user_can` keeps the cap check consistent with every
+		// other endpoint on this class and honours BP's cap-mapping filters.
+		if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+			if ( $switched ) {
+				restore_current_blog();
+			}
+			wp_send_json_error( array( 'message' => __( 'Insufficient permissions on the target site.', 'buddyboss' ) ) );
+		}
+
+		$empty_option = array(
+			'value' => '',
+			'label' => __( '— Select a page —', 'buddyboss' ),
+		);
+
+		// Selected-ID resolve path: bypass pagination + search so the dropdown
+		// can render its initial label without a wildcard query. Used by the
+		// async_select field on mount with the currently-stored page ID.
+		if ( $selected_id > 0 ) {
+			$post   = get_post( $selected_id );
+			$result = $empty_option;
+			if ( $post && 'page' === $post->post_type && 'publish' === $post->post_status ) {
+				$result = array(
+					'value' => (string) $post->ID,
+					/* translators: %d: WordPress page ID, used as a fallback when a page has no title. */
+					'label' => $post->post_title ? $post->post_title : sprintf( __( '(no title) #%d', 'buddyboss' ), $post->ID ),
+				);
+			}
+			if ( $switched ) {
+				restore_current_blog();
+			}
+			wp_send_json_success(
+				array(
+					'results'  => array( $result ),
+					'has_more' => false,
+				)
+			);
+		}
+
+		// Fetch $per_page + 1 rows with no_found_rows=true so WP_Query skips
+		// SQL_CALC_FOUND_ROWS. On sites with many pages plus a LIKE '%term%'
+		// match, SQL_CALC is expensive and the picker doesn't need the exact
+		// total — just "is there a next page?". We derive has_more from the
+		// overflow row.
+		$query_args = array(
+			'post_type'      => 'page',
+			'post_status'    => 'publish',
+			'posts_per_page' => $per_page + 1,
+			'paged'          => $page,
+			'orderby'        => 'title',
+			'order'          => 'ASC',
+			'fields'         => 'ids',
+			'no_found_rows'  => true,
+		);
+		if ( '' !== $term ) {
+			$query_args['s'] = $term;
+		}
+
+		$query    = new WP_Query( $query_args );
+		$results  = array();
+		$is_first = ( 1 === $page && '' === $term );
+
+		if ( $is_first ) {
+			$results[] = $empty_option;
+		}
+
+		$has_more = false;
+		if ( $query->have_posts() ) {
+			$page_ids = $query->posts;
+			// If we got the extra overflow row, there IS a next page. Trim it
+			// from the returned set so the picker shows exactly $per_page rows.
+			if ( count( $page_ids ) > $per_page ) {
+				$has_more = true;
+				$page_ids = array_slice( $page_ids, 0, $per_page );
+			}
+			foreach ( $page_ids as $page_id ) {
+				$title     = get_the_title( $page_id );
+				$results[] = array(
+					'value' => (string) $page_id,
+					/* translators: %d: WordPress page ID, used as a fallback when a page has no title. */
+					'label' => $title ? $title : sprintf( __( '(no title) #%d', 'buddyboss' ), $page_id ),
+				);
+			}
+		}
+
+		if ( $switched ) {
+			restore_current_blog();
+		}
+
+		wp_send_json_success(
+			array(
+				'results'  => $results,
+				'has_more' => $has_more,
+			)
+		);
+	}
+
+	/**
+	 * AJAX handler: create a blank WordPress page and return its ID + title.
+	 *
+	 * Used by the "Create Page" button on the Appearance → Pages dropdowns.
+	 * Creates a minimal `publish` page titled after the directory slug so the
+	 * user doesn't have to leave the admin to set up a directory page.
+	 *
+	 * The legacy jQuery flow (`.create-background-page` click handler in
+	 * `settings-page.js`) did the same thing — this endpoint replaces that
+	 * request with a nonce-verified, cap-gated version callable from the
+	 * React admin.
+	 *
+	 * Mirrors the multisite switching pattern used by the sibling search
+	 * endpoint so the new page is created on the community's root blog even
+	 * when a network admin is editing from a sub-site.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_admin_create_directory_page() {
+		$this->bb_verify_request();
+
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_verify_request().
+		$slug  = isset( $_POST['slug'] ) ? sanitize_key( wp_unslash( $_POST['slug'] ) ) : '';
+		$label = isset( $_POST['label'] ) ? sanitize_text_field( wp_unslash( $_POST['label'] ) ) : '';
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
+
+		if ( '' === $slug ) {
+			wp_send_json_error( array( 'message' => __( 'Missing page slug.', 'buddyboss' ) ) );
+		}
+
+		// Allow-list the slug against the set of directory keys that the
+		// Pages panel actually renders a Create-Page button for. The button
+		// is only ever clicked from one of those registered dropdowns; any
+		// other `slug` value is a hand-crafted request and should be
+		// rejected. Both helpers pass their returns through filters, so the
+		// (array) cast keeps this defensive against third-party filters
+		// returning non-arrays (PHP 8+ iterator contract).
+		$allowed_slugs = array();
+		if ( function_exists( 'bp_core_admin_get_directory_pages' ) ) {
+			$allowed_slugs = array_merge( $allowed_slugs, array_keys( (array) bp_core_admin_get_directory_pages() ) );
+		}
+		if ( function_exists( 'bp_core_admin_get_static_pages' ) ) {
+			$allowed_slugs = array_merge( $allowed_slugs, array_keys( (array) bp_core_admin_get_static_pages() ) );
+		}
+		if ( ! in_array( $slug, $allowed_slugs, true ) ) {
+			wp_send_json_error( array( 'message' => __( 'Unknown directory slug.', 'buddyboss' ) ) );
+		}
+
+		$switched = false;
+		if ( is_multisite() && function_exists( 'bp_get_root_blog_id' ) ) {
+			$root_blog_id = bp_get_root_blog_id();
+			if ( $root_blog_id && get_current_blog_id() !== $root_blog_id ) {
+				switch_to_blog( $root_blog_id );
+				$switched = true;
+			}
+		}
+
+		// Re-check the cap POST-switch using the same `bp_moderate` cap that
+		// `bb_verify_request()` validated on the origin blog. Network admins
+		// pass on both; a sub-site admin who could manage their own blog is
+		// blocked here on the root blog, which is correct — only the
+		// community owner should create directory pages. Using
+		// `bp_current_user_can` honours BP's cap-mapping filters (e.g. role
+		// plugins that remap `bp_moderate` for a custom role).
+		if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+			if ( $switched ) {
+				restore_current_blog();
+			}
+			wp_send_json_error( array( 'message' => __( 'Insufficient permissions on the target site.', 'buddyboss' ) ) );
+		}
+
+		$title = '' !== $label ? $label : ucfirst( str_replace( array( '-', '_' ), ' ', $slug ) );
+
+		$post_id = wp_insert_post(
+			array(
+				'post_type'      => 'page',
+				'post_status'    => 'publish',
+				'post_title'     => $title,
+				'post_content'   => '',
+				'comment_status' => 'closed',
+				'ping_status'    => 'closed',
+			),
+			true
+		);
+
+		if ( is_wp_error( $post_id ) ) {
+			if ( $switched ) {
+				restore_current_blog();
+			}
+			wp_send_json_error( array( 'message' => $post_id->get_error_message() ) );
+		}
+
+		// `esc_url_raw` before serialising to JSON — defence in depth since the
+		// URL is echoed back to an admin-origin React client.
+		$permalink = esc_url_raw( get_permalink( $post_id ) );
+
+		if ( $switched ) {
+			restore_current_blog();
+		}
+
+		wp_send_json_success(
+			array(
+				'id'        => (int) $post_id,
+				'title'     => $title,
+				'permalink' => $permalink,
 			)
 		);
 	}

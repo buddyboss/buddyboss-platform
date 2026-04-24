@@ -88,7 +88,7 @@ function bb_force_redirect_bare_bp_settings() {
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
 	$page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
-	$tab  = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : '';
+	$tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : '';
 
 	if ( 'bp-settings' === $page && empty( $tab ) ) {
 		wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings' ) );
@@ -200,6 +200,37 @@ function bb_redirect_bp_settings_before_permission_check() {
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
 	$page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
 
+	// Retired Settings 2.0 standalone admin pages whose submenu registrations
+	// were removed. Forwarded here (admin_menu @ PHP_INT_MAX) because their
+	// slugs no longer exist at the `user_can_access_admin_page()` check — any
+	// redirect on `bp_admin_init` would be too late and the request would 403.
+	// Extend this list when retiring further standalone admin screens.
+	if ( 'bp-pages' === $page ) {
+		$bp_pages_target = bp_get_admin_url( 'admin.php?page=bb-settings&tab=appearance&panel=pages' );
+
+		// Preserve any non-routing query args (e.g. `download_mu_file`,
+		// Pro / third-party deep-link flags). Same treatment as the
+		// bp-settings / bp-integrations branches below — this one just
+		// exits early because the page/tab/panel shape is fixed.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
+		$reserved = array( 'page', 'tab', 'panel' );
+		$extra_qs = array();
+		foreach ( $_GET as $key => $value ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
+			if ( in_array( $key, $reserved, true ) ) {
+				continue;
+			}
+			if ( is_scalar( $value ) ) {
+				$extra_qs[ sanitize_key( $key ) ] = sanitize_text_field( wp_unslash( $value ) );
+			}
+		}
+		if ( ! empty( $extra_qs ) ) {
+			$bp_pages_target = add_query_arg( $extra_qs, $bp_pages_target );
+		}
+
+		wp_safe_redirect( $bp_pages_target );
+		exit;
+	}
+
 	if ( 'bp-settings' !== $page && 'bp-integrations' !== $page ) {
 		return;
 	}
@@ -247,8 +278,8 @@ function bb_redirect_bp_settings_before_permission_check() {
 	// we already routed above — `page`, `tab`, and `panel` are owned by the
 	// target URL.
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
-	$reserved  = array( 'page', 'tab', 'panel' );
-	$extra_qs  = array();
+	$reserved = array( 'page', 'tab', 'panel' );
+	$extra_qs = array();
 	foreach ( $_GET as $key => $value ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
 		if ( in_array( $key, $reserved, true ) ) {
 			continue;
@@ -639,8 +670,8 @@ function bb_core_settings_saved_notice() {
 
 	// Check if settings were updated.
 	if ( isset( $_GET['updated'] ) || isset( $_GET['edited'] ) || isset( $_GET['added'] ) ) {
-		$setting_message = __( 'Settings saved successfully.', 'buddyboss' );
-		$setting_updated = isset( $_GET['updated'] ) ? sanitize_text_field( wp_unslash( $_GET['updated'] ) ) : '';
+		$setting_message       = __( 'Settings saved successfully.', 'buddyboss' );
+		$setting_updated       = isset( $_GET['updated'] ) ? sanitize_text_field( wp_unslash( $_GET['updated'] ) ) : '';
 		$updated_transient_key = isset( $_GET['updated'] ) ? sanitize_key( wp_unslash( $_GET['updated'] ) ) : '';
 
 		if ( 'emotion_deleted' === $setting_updated && ! empty( $updated_transient_key ) ) {
@@ -853,10 +884,10 @@ function bb_redirect_legacy_settings_to_settings_2() {
 		 * @param array $cpt_redirects Post type slug => Settings 2.0 URL path.
 		 */
 		$cpt_redirects = array(
-			bp_get_email_post_type()              => 'admin.php?page=bb-settings&tab=emails&panel=all_emails',
-			bp_get_invite_post_type()             => 'admin.php?page=bb-settings&tab=invites&panel=invites_list',
-			bp_groups_get_group_type_post_type()  => 'admin.php?page=bb-settings&tab=groups&panel=group_types',
-			bp_get_member_type_post_type()        => 'admin.php?page=bb-settings&tab=members&panel=profile_types',
+			bp_get_email_post_type()             => 'admin.php?page=bb-settings&tab=emails&panel=all_emails',
+			bp_get_invite_post_type()            => 'admin.php?page=bb-settings&tab=invites&panel=invites_list',
+			bp_groups_get_group_type_post_type() => 'admin.php?page=bb-settings&tab=groups&panel=group_types',
+			bp_get_member_type_post_type()       => 'admin.php?page=bb-settings&tab=members&panel=profile_types',
 		);
 
 		// Forum CPTs (only when forums component is active).
