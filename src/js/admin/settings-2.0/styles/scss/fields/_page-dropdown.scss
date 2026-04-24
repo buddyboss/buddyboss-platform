@@ -16,7 +16,13 @@
 
 .bb-admin-settings-form__page-dropdown {
 	display: flex;
-	align-items: flex-start;
+	// Center on the cross-axis so a ±1–2px residual drift between the
+	// async-select control and the action button never manifests as the
+	// button overhanging the dropdown vertically. The dropdown input is
+	// locked to 32px by the `bb-input-text` mixin (`_mixings.scss`), the
+	// button matches that height exactly below, and `center` is the
+	// forgiving default for any future component swap.
+	align-items: center;
 	flex-wrap: nowrap;
 	gap: 8px;
 
@@ -30,12 +36,16 @@
 
 	// Compact secondary action button — same visual weight as legacy's
 	// `.button-secondary`. Disable the `components-button` flex-stretch so
-	// the button sizes to its label, not the column.
+	// the button sizes to its label, not the column. Height is matched to
+	// the async-select input's `bb-input-text` mixin (32px) — the previous
+	// 40px was an unverified value that left the button visibly overhanging
+	// the dropdown, most noticeably in the empty ("— Select a page —")
+	// state where no selected-value pill masks the drift.
 	.bb-admin-settings-form__page-dropdown-view,
 	.bb-admin-settings-form__page-dropdown-create {
 		flex: 0 0 auto;
-		align-self: flex-start;
-		height: 40px; // Matches the async-select input height.
+		align-self: center;
+		height: 32px;
 		line-height: 1;
 		padding: 0 12px;
 		white-space: nowrap;
