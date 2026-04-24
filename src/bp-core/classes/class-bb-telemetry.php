@@ -537,22 +537,31 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 				'bp-learndash' => false,
 				'bb-recaptcha' => false,
 			);
-			if ( is_plugin_active( 'sfwd-lms/sfwd_lms.php' ) ) {
-				$options = bp_get_option( 'bp_ld_sync_settings', array() );
-				if (
-					! empty( $options['buddypress']['enabled'] ) ||
-					! empty( $options['learndash']['enabled'] )
-				) {
-					$active_integrations['bp-learndash'] = true;
-				}
-			}
+
 			if ( function_exists( 'bb_recaptcha_site_key' ) && ! empty( bb_recaptcha_site_key() ) ) {
 				$active_integrations['bb-recaptcha'] = true;
 			}
 
+			// Legacy Pro integration function — runs before the filter for
+			// backwards compat with existing Pro versions. Pro can migrate
+			// to the filter at its own pace.
 			if ( function_exists( 'bb_pro_active_integrations' ) ) {
 				$active_integrations = bb_pro_active_integrations( $active_integrations );
 			}
+
+			/**
+			 * Filter the telemetry active-integrations map. Addons set their
+			 * own status here instead of Platform knowing how to detect them.
+			 *
+			 * The pre-[BBVERSION] inline LearnDash detection
+			 * (sfwd-lms + bp_ld_sync_settings) moved to buddyboss-learndash
+			 * as a subscriber to this filter.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param array $active_integrations Map of integration_id => bool.
+			 */
+			$active_integrations = apply_filters( 'bb_telemetry_active_integrations', $active_integrations );
 
 			return $active_integrations;
 		}

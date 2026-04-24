@@ -279,7 +279,17 @@ module.exports = function (grunt) {
 					'**/bp-notifications/**',
 					'**/bp-settings/**',
 					'**/bp-xprofile/**',
-					'**/bp-integrations/**'
+					'**/bp-integrations/**',
+					// Do NOT re-import any LearnDash REST files. The LD
+					// integration was extracted from Platform in PROD-9792
+					// and now lives in the buddyboss-learndash addon plugin.
+					// The platform-api repo still ships its own copy of the
+					// LD REST controller at
+					// buddyboss-platform-api/includes/bp-integrations/learndash/
+					// — without this exclusion `grunt bp_rest` would sweep
+					// that file back into src/bp-integrations/learndash/
+					// and silently recreate the directory we deleted.
+					'!**/bp-integrations/learndash/**'
 					],
 					options: {
 						process : function( content ) {

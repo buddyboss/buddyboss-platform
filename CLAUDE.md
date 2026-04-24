@@ -42,11 +42,13 @@ npm run watch:readylaunch-header
 # PHP unit tests
 composer test
 
-# LearnDash integration tests
-composer test-ld
-
 # Run specific test file
 vendor/bin/phpunit tests/phpunit/testcases/path/to/test.php
+
+# NOTE: composer test-ld is retained in composer.json for historical
+# reasons but is a no-op as of PROD-9792 — the LearnDash testsuite was
+# removed from phpunit.xml.dist and tests/phpunit/testcases/integrations/
+# when the integration moved to the buddyboss-learndash addon plugin.
 
 # JavaScript tests (Jest)
 npm test
@@ -1426,11 +1428,49 @@ BuddyBoss supports integration with third-party plugins using a consistent patte
 
 **Base Class:** `BP_Integration` (extends `BP_Component`)
 
-**Available Integrations:**
-- **LearnDash** - LMS integration for courses in groups
+**Bundled Integrations (live in `src/bp-integrations/`):**
 - **Pusher** - Real-time notifications
 - **reCAPTCHA** - Spam protection
 - **BuddyBoss App** - Mobile app connectivity
+
+**Addon-plugin Integrations (separate repos, register via `bp_setup_integrations`):**
+- **LearnDash** - `buddyboss-learndash` addon — courses in groups, profile courses tab, group reports. Extracted from Platform in PROD-9792. Platform exposes extension filters/actions the addon subscribes to (see *LearnDash Extension Points* below).
+
+### LearnDash Extension Points
+
+After PROD-9792, Platform ships no LearnDash-specific code. The hooks listed below exist so the `buddyboss-learndash` addon (and other LMS addons) can plug in:
+
+| Hook | Type | Fires from | Purpose |
+|------|------|------------|---------|
+| `bb_integration_readylaunch_loaded` | action | `BB_Readylaunch::bb_rl_init()` | ReadyLaunch is booted — addons attach their RL-specific helpers/enqueues here. |
+| `bb_readylaunch_primary_nav_courses_info` | filter | `BB_Readylaunch::get_primary_nav_menu()` | Claim the "Courses" primary nav item; return `{ is_active, url }`. |
+| `bb_readylaunch_courses_sidebar_is_active` | filter | `BB_Readylaunch::bb_is_sidebar_enabled_for_courses()` | Activate the RL courses sidebar. |
+| `bb_telemetry_active_integrations` | filter | `BB_Telemetry::get_active_integrations()` | Report addon-managed integration status to telemetry. |
+| `bb_integration_rest_init` | action | `BP_REST_Groups_Details_Endpoint::bp_rest_group_details_init()` | Boot addon sync/hook classes inside REST context. Replaces the deprecated `bp_ld_sync/init` action (still bridged for one release). |
+| `bb_integration_rest_group_settings_nav_items` | filter | `BP_REST_Group_Settings_Endpoint::register_routes()` | Add nav slugs (e.g. `courses`) to the group-settings REST nav. |
+| `bb_integration_rest_group_courses_fields` | filter | `BP_REST_Group_Settings_Endpoint::get_courses_fields()` | Provide the fields array for the group "Courses" settings tab. |
+| `bb_integration_rest_update_group_courses_fields` | filter | `BP_REST_Group_Settings_Endpoint::update_courses_fields()` | Handle the save of the group "Courses" settings tab. |
+| `bb_integration_rest_profile_menu_items` | filter | `BP_REST_Members_Details_Endpoint::get_profile_menu_items()` | Add profile nav entries (e.g. "My Courses"). |
+| `bb_search_post_thumbnail_defaults` | filter | `bp_search_get_post_thumbnail_default()` | Register post-type → icon URL map entries for search thumbnails. |
+| `bb_search_cpt_pre_query_context` | filter | `BP_Search_CPT::sql()` | Gate a CPT search query (e.g. enrolled-courses-only mode). |
+| `bb_nav_sub_item_course_label` | filter | `bp_nav_menu_get_loggedin_pages()` | Resolve the singular "Course" label used by the `my-courses` nav sub-item. |
+
+All of these were added in PROD-9792. Do not remove them without migrating every consumer — the `buddyboss-learndash` addon subscribes to 11 of the 12.
+
+### Removed LearnDash Code
+
+PROD-9792 deleted the following from Platform. Anything that previously depended on these now lives in the `buddyboss-learndash` addon:
+
+- `src/bp-integrations/learndash/` (entire directory)
+- `src/bp-core/bp-core-learndash-emails.php`
+- `src/bp-core/compatibility/class-bb-readylaunch-learndash-helper.php`
+- 3 LD search SVG icons (`course.svg`, `course-content.svg`, `quiz.svg`) under `bp-core/images/search/`
+- 3 role-sync functions from `src/bp-core/compatibility/bp-incompatible-plugins-helper.php` (`bb_learndash_delete_group`, `bb_learndash_untrash_group`, `bb_learndash_role_add`) — moved to `buddyboss-learndash/includes/group-leader-role-sync.php`
+- 26 ReadyLaunch LD template files under `src/bp-templates/bp-nouveau/readylaunch/learndash/` and `readylaunch/groups/single/*courses*`, `*reports*`
+- 17 LD SCSS partials + compiled CSS under `src/bp-templates/bp-nouveau/readylaunch/css/` (courses bundle)
+- `tests/phpunit/testcases/integrations/learndash/` (testsuite)
+
+A deprecation stub for `bp_register_learndash_integration()` lives in `src/bp-core/deprecated/buddyboss/3.0.0.php`.
 
 ### Creating Integration
 

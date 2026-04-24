@@ -231,7 +231,7 @@ function bb_redirect_bp_settings_before_permission_check() {
 		exit;
 	}
 
-	if ( 'bp-settings' !== $page && 'bp-integrations' !== $page ) {
+	if ( 'bp-settings' !== $page && 'bp-integrations' !== $page && 'bp-components' !== $page ) {
 		return;
 	}
 

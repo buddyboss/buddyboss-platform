@@ -122,7 +122,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			require $this->admin_dir . 'bp-core-admin-actions.php';
 			require $this->admin_dir . 'bp-core-admin-settings.php';
 			require $this->admin_dir . 'bp-core-admin-functions.php';
-			require $this->admin_dir . 'bp-core-admin-components.php';
 			require $this->admin_dir . 'bp-core-admin-slugs.php';
 			require $this->admin_dir . 'bp-core-admin-tools.php';
 			require $this->admin_dir . 'bp-core-admin-help.php';
@@ -288,15 +287,10 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				''
 			);
 
-			// Add the option pages.
-			$hooks[] = add_submenu_page(
-				$this->settings_page,
-				__( 'BuddyBoss Components', 'buddyboss' ),
-				__( 'Components', 'buddyboss' ),
-				$this->capability,
-				'bp-components',
-				'bp_core_admin_components_settings'
-			);
+			// Legacy "Components" submenu removed in Settings 2.0. Components now live
+			// inside the Settings grid as feature cards. The bp-components URL is
+			// redirected to bb-settings by bb_redirect_bp_settings_before_permission_check()
+			// in bp-core-admin-actions.php.
 
 			// Legacy "Pages" submenu retired in Settings 2.0 — the page-directory
 			// mapping now lives under Appearance → Pages inside the React admin.
@@ -443,18 +437,13 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				__( 'BuddyPress Settings', 'buddyboss' ),
 				__( 'BuddyPress', 'buddyboss' ),
 				$this->capability,
-				'admin.php?page=bb-settings&tab=compatibility'
+				'admin.php?page=bb-settings'
 			);
 
-			// Add the option pages.
-			$hooks[] = add_submenu_page(
-				$this->settings_page,
-				__( 'BuddyBoss Components', 'buddyboss' ),
-				__( 'Components', 'buddyboss' ),
-				$this->capability,
-				'bp-components',
-				'bp_core_admin_components_settings'
-			);
+			// Legacy "Components" submenu removed in Settings 2.0. Components now live
+			// inside the Settings grid as feature cards. The bp-components URL is
+			// redirected to bb-settings by bb_redirect_bp_settings_before_permission_check()
+			// in bp-core-admin-actions.php.
 
 			// Legacy "Pages" submenu retired in Settings 2.0 — the page-directory
 			// mapping now lives under Appearance → Pages inside the React admin.
@@ -637,6 +626,24 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			if ( isset( $app_menu ) ) {
 				$submenu['buddyboss-platform'][] = $app_menu;
 			}
+
+			// Make Settings 2.0 the default landing page for the BuddyBoss top-level menu.
+			//
+			// WordPress builds the parent menu's <a href> from $submenu[$parent_slug][0][2]
+			// (the slug of the first submenu row). To send users to bb-settings without
+			// reordering the visible submenu list (Pages, Settings, Upgrade, …), we prepend
+			// a hidden pseudo-row whose only job is to drive that parent link. The 5th
+			// element ("hidden" class) keeps the row out of view; the page_title is set to
+			// match the real Settings row so get_admin_page_title() returns the right value
+			// regardless of which row matches first.
+			$bb_default_row = array(
+				'',                                                // menu_title (empty so screen readers skip it).
+				$this->capability,                                  // capability.
+				'bb-settings',                                       // menu_slug — drives the parent's href.
+				__( 'BuddyBoss Settings', 'buddyboss' ),            // page_title — keeps <title> intact when this row matches first.
+				'bb-default-page-link hidden',                      // 5th element: classes on the rendered <li>.
+			);
+			array_unshift( $submenu['buddyboss-platform'], $bb_default_row );
 
 			// if there's no buddyboss plugin, don't do anything
 			if ( ! array_key_exists( 'buddyboss-settings', $submenu ) ) {

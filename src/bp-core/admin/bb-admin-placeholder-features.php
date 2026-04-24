@@ -46,14 +46,26 @@ function bb_placeholder_features_transient_key() {
 function bb_get_placeholder_features_data() {
 	$data = get_transient( bb_placeholder_features_transient_key() );
 
-	if ( false === $data ) {
-		// Serve stale cache on miss while scheduling a background refresh.
-		$stale = get_option( 'bb_placeholder_features_data_stale', false );
-		bb_schedule_placeholder_features_refresh();
-		return is_array( $stale ) && ! empty( $stale['items'] ) ? $stale : false;
+	if ( false !== $data ) {
+		return $data;
 	}
 
-	return $data;
+	// Cache miss. Prefer the stale catalog (keeps the AJAX path non-blocking);
+	// meanwhile schedule an async refresh for the next request.
+	$stale = get_option( 'bb_placeholder_features_data_stale', false );
+	bb_schedule_placeholder_features_refresh();
+
+	if ( is_array( $stale ) && ! empty( $stale['items'] ) ) {
+		return $stale;
+	}
+
+	// No stale data either — this is the first-load-after-deploy /
+	// first-load-after-manual-clear case. Without a synchronous fetch here
+	// the admin sees an empty catalog until WP-Cron happens to fire, which
+	// on sites without heavy traffic can take hours. Do one blocking fetch
+	// so placeholders render immediately; subsequent requests stay fast via
+	// the transient + stale-while-revalidate path above.
+	return bb_refresh_placeholder_features_data();
 }
 
 /**
@@ -247,16 +259,26 @@ function bb_admin_inject_placeholder_features( $features ) {
 			continue;
 		}
 
-		// Skip if already registered — deduplication.
-		// bb_get_feature() returns null for IDs not in the registry.
+		// Dedup: when a feature with this id is already registered, the
+		// registry entry becomes the real card (with Settings button,
+		// toggle, etc.) and no placeholder is needed.
+		//
+		// The decision is deliberately id-only — NOT plugin-active-based.
+		// Scenario: customer has Pro installed & active but on an older
+		// Pro release that predates a given feature's Settings 2.0
+		// registration. The catalog item id (e.g. "zoom") has no matching
+		// registered feature, so we fall through and inject the placeholder.
+		// The placeholder's plugin_status will correctly report "active"
+		// (via bb_get_placeholder_plugin_status() below), giving the UI
+		// enough info to prompt an update rather than an install/upgrade.
 		if ( null !== $registry->bb_get_feature( $item['id'] ) ) {
 			continue;
 		}
 
-		$plugin_status = bb_get_placeholder_plugin_status( $item, $active_plugins );
-		$plugin_file   = isset( $item['plugin_file'] ) ? $item['plugin_file'] : '';
-
+		$plugin_file = isset( $item['plugin_file'] ) ? $item['plugin_file'] : '';
 		$plugin_slug = ! empty( $plugin_file ) ? dirname( $plugin_file ) : '';
+
+		$plugin_status = bb_get_placeholder_plugin_status( $item, $active_plugins );
 
 		$features[] = array(
 			'id'                => sanitize_key( $item['id'] ),
@@ -288,6 +310,60 @@ function bb_admin_inject_placeholder_features( $features ) {
  * @since BuddyBoss [BBVERSION]
  */
 add_filter( 'bb_admin_features_response', 'bb_admin_inject_placeholder_features' );
+
+/**
+ * Sort the merged feature response by order so registered features and
+ * placeholders interleave by their declared position within each category.
+ *
+ * Runs at priority 30 — after placeholder injection (10) and DRM marking (20),
+ * so every card (registered or placeholder, locked or unlocked) is included in
+ * the sort. Uses `category` as the primary key so existing section headers
+ * (Community, Add-ons, Integrations) stay grouped; `order` is the secondary
+ * key and determines position inside each category. Stable tie-break on label
+ * avoids the unsorted-tail wobble you otherwise get with PHP's quicksort.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $features Full features list after placeholder + DRM filters.
+ * @return array Sorted list.
+ */
+function bb_admin_sort_features_response( $features ) {
+	if ( ! is_array( $features ) || count( $features ) < 2 ) {
+		return $features;
+	}
+
+	// Stable sort: keep original relative order for equal keys.
+	// usort() is not guaranteed stable across PHP versions, so decorate-sort-undecorate.
+	$indexed = array();
+	foreach ( $features as $i => $feature ) {
+		$indexed[] = array(
+			'category' => isset( $feature['category'] ) ? (string) $feature['category'] : 'community',
+			'order'    => isset( $feature['order'] ) ? (int) $feature['order'] : 100,
+			'label'    => isset( $feature['label'] ) ? (string) $feature['label'] : '',
+			'seq'      => $i,
+			'data'     => $feature,
+		);
+	}
+
+	usort(
+		$indexed,
+		function ( $a, $b ) {
+			if ( $a['category'] !== $b['category'] ) {
+				return strcmp( $a['category'], $b['category'] );
+			}
+			if ( $a['order'] !== $b['order'] ) {
+				return $a['order'] - $b['order'];
+			}
+			if ( $a['label'] !== $b['label'] ) {
+				return strcmp( $a['label'], $b['label'] );
+			}
+			return $a['seq'] - $b['seq'];
+		}
+	);
+
+	return array_column( $indexed, 'data' );
+}
+add_filter( 'bb_admin_features_response', 'bb_admin_sort_features_response', 30 );
 
 /**
  * Mark DRM-locked features in the AJAX features response.

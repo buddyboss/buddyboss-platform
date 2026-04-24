@@ -2951,7 +2951,29 @@ function bp_nav_menu_get_loggedin_pages() {
 				}
 
 				if ( 'my-courses' === $s_nav['slug'] ) {
-					$course_label = is_plugin_active( 'sfwd-lms/sfwd_lms.php' ) ? LearnDash_Custom_Label::get_label( 'courses' ) : __( 'Course', 'buddyboss' );
+					/**
+					 * Resolve the label used for the "my-courses" nav sub-item.
+					 *
+					 * Integrations that own the courses nav (e.g. the
+					 * buddyboss-learndash addon, Tutor LMS, MemberPress Courses)
+					 * filter this to return their LMS-specific "Course(s)"
+					 * label. Pre-BuddyBoss [BBVERSION], Platform called
+					 * `LearnDash_Custom_Label::get_label( 'courses' )` inline —
+					 * that inline call moved into the addon subscriber.
+					 *
+					 * Subscribers should return an already-singular string
+					 * (e.g. "Course"); this call site wraps the result with
+					 * the "My %s" translation itself.
+					 *
+					 * @since BuddyBoss [BBVERSION]
+					 *
+					 * @param string $course_label Current label. Defaults to "Course".
+					 */
+					$course_label = apply_filters(
+						'bb_nav_sub_item_course_label',
+						__( 'Course', 'buddyboss' )
+					);
+
 					/* translators: My Course, e.g. "My Course". */
 					$sub_name = sprintf( __( 'My %s', 'buddyboss' ), $course_label );
 				}

@@ -121,6 +121,11 @@ class BB_Admin_Settings_Ajax {
 					'available'      => $is_available,
 					'required'       => ! empty( $feature['required'] ),
 					'settings_route' => $settings_route,
+					// Carry the registration-time order into the response so
+					// the placeholder merger (bb_admin_sort_features_response)
+					// can interleave real cards with catalog placeholders by
+					// a single comparable key. Default matches bb_register_feature().
+					'order'          => isset( $feature['order'] ) ? (int) $feature['order'] : 100,
 				);
 
 				// Format icon like REST API.

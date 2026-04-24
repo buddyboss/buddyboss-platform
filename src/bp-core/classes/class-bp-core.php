@@ -102,7 +102,13 @@ class BP_Core extends BP_Component {
 		// Get a list of activated components.
 		if ( $active_components = bp_get_option( 'bp-active-components' ) ) {
 
-			/** This filter is documented in bp-core/admin/bp-core-admin-components.php */
+			/**
+			 * Filters the list of active components.
+			 *
+			 * @since BuddyPress 1.5.0
+			 *
+			 * @param array $value Array of active components.
+			 */
 			$bp->active_components = apply_filters( 'bp_active_components', $active_components );
 
 			/**
@@ -128,7 +134,7 @@ class BP_Core extends BP_Component {
 			// Setup the active components.
 			$active_components = array_fill_keys( array_diff( array_values( array_merge( $bp->optional_components, $bp->required_components ) ), array_values( $bp->deactivated_components ) ), '1' );
 
-			/** This filter is documented in bp-core/admin/bp-core-admin-components.php */
+			/** This filter is documented in bp-core/classes/class-bp-core.php */
 			$bp->active_components = apply_filters( 'bp_active_components', $bp->active_components );
 
 			// Default to all components active.
@@ -140,7 +146,7 @@ class BP_Core extends BP_Component {
 			// Setup the active components.
 			$active_components = array_fill_keys( array_values( array_merge( $bp->optional_components, $bp->required_components ) ), '1' );
 
-			/** This filter is documented in bp-core/admin/bp-core-admin-components.php */
+			/** This filter is documented in bp-core/classes/class-bp-core.php */
 			$bp->active_components = apply_filters( 'bp_active_components', $bp->active_components );
 		}
 
@@ -184,11 +190,17 @@ class BP_Core extends BP_Component {
 		 *
 		 * @param array $value Array of included and optional integrations.
 		 */
+		/*
+		 * LearnDash was removed from this whitelist in BuddyBoss [BBVERSION]
+		 * when the integration was extracted into the buddyboss-learndash
+		 * addon plugin. Addons register themselves via `bp_setup_integrations`
+		 * / `bb_after_register_features`; Platform no longer needs to list
+		 * their slugs here.
+		 */
 		$bp->available_integrations = apply_filters(
 			'bp_integrations',
 			array(
 				'buddyboss-app',
-				'learndash',
 				'pusher',
 				'recaptcha',
 				'compatibility',
