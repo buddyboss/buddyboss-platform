@@ -117,16 +117,6 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				true
 			);
 
-			if ( 'buddyboss_page_bb-upgrade' === $screen_id ) {
-				wp_enqueue_script(
-					'bb-upgrade',
-					buddypress()->plugin_url . 'bp-core/admin/js/bb-upgrade'. $min . '.js',
-					array( 'jquery', 'underscore' ),
-					buddypress()->version,
-					true
-				);
-			}
-
 			$email_template = '';
 
 			if ( 'edit-bp-email' === $screen_id ) {
