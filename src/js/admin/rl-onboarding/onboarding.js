@@ -1,4 +1,4 @@
-import { render, useState, useEffect } from '@wordpress/element';
+import { createRoot, useState, useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { OnboardingModal } from './components/OnboardingModal';
 
@@ -157,9 +157,21 @@ const OnboardingApp = () => {
  *
  * @since BuddyBoss [BBVERSION]
  */
+// Module-scoped root reference. `createRoot()` returns an object we must
+// call `.unmount()` on before discarding the container — dropping only
+// the DOM node orphans the React fiber tree, leaving effect cleanups
+// unrun and synthetic event handlers still bound to `document`.
+let onboardingRoot = null;
+
 function mountOnboarding() {
     if ( ! window.bbRlOnboarding ) {
         return;
+    }
+    // Tear down any previous mount *before* removing its container so
+    // React runs unmount lifecycles against a still-attached node.
+    if ( onboardingRoot ) {
+        onboardingRoot.unmount();
+        onboardingRoot = null;
     }
     const existing = document.getElementById( 'bb-rl-onboarding-root' );
     if ( existing ) {
@@ -168,7 +180,8 @@ function mountOnboarding() {
     const container = document.createElement( 'div' );
     container.id = 'bb-rl-onboarding-root';
     document.body.appendChild( container );
-    render( <OnboardingApp />, container );
+    onboardingRoot = createRoot( container );
+    onboardingRoot.render( <OnboardingApp /> );
 }
 
 /**
@@ -180,6 +193,12 @@ function mountOnboarding() {
  * @since BuddyBoss [BBVERSION]
  */
 function unmountOnboarding() {
+    // Unmount React *before* DOM removal so effect cleanups (fetch
+    // aborts, timers, document-level listeners) get the chance to run.
+    if ( onboardingRoot ) {
+        onboardingRoot.unmount();
+        onboardingRoot = null;
+    }
     const container = document.getElementById( 'bb-rl-onboarding-root' );
     if ( container ) {
         container.remove();
