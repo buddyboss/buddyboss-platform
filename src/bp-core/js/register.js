@@ -340,22 +340,24 @@ jQuery( document ).ready( function() {
 
 	function bp_register_validate_email() {
 		var email1 				 = emailSelector.val().toLowerCase(),
-        	email2               = confirmEmailSelector && confirmEmailSelector.length ? confirmEmailSelector.val().toLowerCase() : null,
-		    regex 				 = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/,
+			email2               = ( confirmEmailSelector && confirmEmailSelector.length )
+										? confirmEmailSelector.val().toLowerCase()
+										: '',
+		    regex 				 = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 			errorMessageSelector = jQuery( '#email-strength-result' );
 
 		// Reset classes and result text
 		errorMessageSelector.removeClass( 'show mismatch bad' );
-		if (( '' === email1 && (email2 === null || '' === email2)) && regex.test(email1)) {
+		if( ( '' === email1 && '' === email2 ) && regex.test( email1 ) ) {
 			errorMessageSelector.html( '' );
 			return;
 		}else{
 			errorMessageSelector.html( '' );
-			if ((email1 !== '' || (email2 !== null && email2 !== '')) && !regex.test(email1)) {
+			if ( ( email1 !== '' || email2 !== '' ) && !regex.test( email1 ) ) {
 				errorMessageSelector.addClass( 'show bad' ).html( BP_Register.valid_email );
 				return;
 			}
-			if ((email2 !== null && email2 !== '') && (email1 !== email2) && confirmEmailSelector.length) {
+			if ( ( email2 !== '' ) && ( email1 !== email2 ) && confirmEmailSelector.length ) {
 				errorMessageSelector.addClass( 'show mismatch' ).html( BP_Register.mismatch_email );
 				return;
 			}
