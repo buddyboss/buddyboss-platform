@@ -43,6 +43,29 @@ bb_register_feature(
 	)
 );
 
+/**
+ * Seed `bb_rl_enabled` to `true` on fresh installs so the site boots on
+ * ReadyLaunch instead of the legacy WordPress-theme layout.
+ *
+ * `bb_is_readylaunch_enabled()` reads `bp_get_option( 'bb_rl_enabled', false )`,
+ * so when the option key is genuinely missing (new install before the
+ * onboarding wizard has run) the fallback was false and the user saw the
+ * legacy theme on their very first page load. ReadyLaunch is now the
+ * intended first-run experience, so we write the option explicitly at
+ * install time.
+ *
+ * Hook fires exactly once, inside the `bp_is_install()` branch of
+ * `bp_version_updater()` in `bp-core-update.php`. Upgrades and re-activations
+ * never hit that branch, so existing admins who intentionally stayed on the
+ * WordPress theme are unaffected.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+add_action( 'bb_core_after_install', 'bb_appearance_set_readylaunch_default_on_install' );
+function bb_appearance_set_readylaunch_default_on_install() {
+	bp_update_option( 'bb_rl_enabled', true );
+}
+
 // Load stateless sanitizer / shape-normalizer helpers UNCONDITIONALLY. They are
 // used by three entry points: Settings 2.0 admin save, onboarding wizard save,
 // and the one-shot `bb_rl_migrate_settings()` version-update migration. The
