@@ -98,6 +98,35 @@
             background-color: $bb-border-secondary-color;
             margin: 8px;
         }
+
+        // Link-out variant: anchor to another feature's settings (e.g. the
+        // Offload Media entry under Media). The underlying `<a>` inherits
+        // the shared `__link` styling above (flex row, hover background,
+        // icon colouring), so the rules here are purely additive —
+        // suppressing the default anchor decoration and pinning the
+        // trailing up-right indicator to the right edge.
+        &__link--external {
+            text-decoration: none;
+
+            &:hover,
+            &:focus {
+                text-decoration: none;
+            }
+        }
+
+        &__external-indicator {
+            display: inline-flex;
+            align-items: center;
+            margin-left: auto; // Pushes the ↗ glyph to the trailing edge.
+            flex-shrink: 0;
+
+            [class*="bb-icons-"] {
+                // Slightly smaller than the leading icon so it reads as an
+                // affordance ("this opens elsewhere") rather than a second
+                // primary icon. 16px matches the Figma spec.
+                font-size: 16px;
+            }
+        }
     }
 
     &__main {

@@ -63,35 +63,62 @@ export function SideNavigation({ featureId, sidePanels, navItems, currentPanel, 
 
 			{/* Menu list - Side Panels */}
 			<ul className="bb-admin-side-nav__list">
-				{visibleSidePanels.map((panel) => (
-					<li key={panel.id} className="bb-admin-side-nav__item">
-						{ panel.divider && (
-							<div className="bb-admin-side-nav__divider"></div>
-						) }
-						<button
-							className={`bb-admin-side-nav__link ${
-								currentPanel === panel.id ? 'bb-admin-side-nav__link--active' : ''
-							}`}
-							onClick={() => handlePanelClick(panel.id)}
-							aria-current={currentPanel === panel.id ? 'page' : undefined}
-						>
-							{panel.icon && (
-								<span className="bb-admin-side-nav__icon">
-									{ 'dashicon' === panel.icon.type && (
-										<span className={`dashicons ${panel.icon.slug || 'dashicons-admin-generic'}`}></span>
-									)}
-									{ 'font' === panel.icon.type && panel.icon.class && (
-										<span className={panel.icon.class}></span>
-									)}
-									{( 'svg' === panel.icon.type || 'image' === panel.icon.type ) && panel.icon.url && (
-										<img src={safeUrl( panel.icon.url )} alt={panel.title} className="bb-admin-side-nav__icon-img" />
-									)}
-								</span>
+				{visibleSidePanels.map((panel) => {
+					// Link-out variant: a panel with `external_url` is not an
+					// internal SPA route — it's a standalone link to another
+					// admin page (or another feature's settings URL). Render
+					// as an anchor so middle-click / ctrl-click still work,
+					// and flag it visually with an up-right arrow icon on the
+					// trailing edge so the user knows they're leaving this
+					// feature's context. Clicking an `<a>` is inherently a
+					// navigation — no JS handler needed, no active state.
+					const isExternal = !! panel.external_url;
+
+					const iconEl = panel.icon && (
+						<span className="bb-admin-side-nav__icon">
+							{ 'dashicon' === panel.icon.type && (
+								<span className={`dashicons ${panel.icon.slug || 'dashicons-admin-generic'}`}></span>
 							)}
-							<span className="bb-admin-side-nav__text">{panel.title}</span>
-						</button>
-					</li>
-				))}
+							{ 'font' === panel.icon.type && panel.icon.class && (
+								<span className={panel.icon.class}></span>
+							)}
+							{( 'svg' === panel.icon.type || 'image' === panel.icon.type ) && panel.icon.url && (
+								<img src={safeUrl( panel.icon.url )} alt={panel.title} className="bb-admin-side-nav__icon-img" />
+							)}
+						</span>
+					);
+
+					return (
+						<li key={panel.id} className="bb-admin-side-nav__item">
+							{ panel.divider && (
+								<div className="bb-admin-side-nav__divider"></div>
+							) }
+							{ isExternal ? (
+								<a
+									className="bb-admin-side-nav__link bb-admin-side-nav__link--external"
+									href={ safeUrl( panel.external_url ) }
+								>
+									{ iconEl }
+									<span className="bb-admin-side-nav__text">{panel.title}</span>
+									<span className="bb-admin-side-nav__external-indicator" aria-hidden="true">
+										<span className="bb-icons-rl bb-icons-rl-arrow-up-right"></span>
+									</span>
+								</a>
+							) : (
+								<button
+									className={`bb-admin-side-nav__link ${
+										currentPanel === panel.id ? 'bb-admin-side-nav__link--active' : ''
+									}`}
+									onClick={() => handlePanelClick(panel.id)}
+									aria-current={currentPanel === panel.id ? 'page' : undefined}
+								>
+									{ iconEl }
+									<span className="bb-admin-side-nav__text">{panel.title}</span>
+								</button>
+							) }
+						</li>
+					);
+				})}
 			</ul>
 
 			{/* Navigation Items (e.g., "All Activities", "All Groups") */}

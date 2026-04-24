@@ -389,17 +389,24 @@ class BB_Admin_Settings_Ajax {
 			usort( $formatted_sections, 'bb_sort_by_order' );
 
 			$formatted_side_panels[] = array(
-				'id'          => $side_panel_id,
-				'title'       => $side_panel['title'],
-				'icon'        => $side_panel['icon'] ?? null,
-				'help_url'    => $side_panel['help_url'] ?? '',
-				'order'       => $side_panel['order'] ?? 100,
-				'is_default'  => $side_panel['is_default'] ?? false,
-				'divider'     => ! empty( $side_panel['divider'] ),
+				'id'           => $side_panel_id,
+				'title'        => $side_panel['title'],
+				'icon'         => $side_panel['icon'] ?? null,
+				'help_url'     => $side_panel['help_url'] ?? '',
+				'order'        => $side_panel['order'] ?? 100,
+				'is_default'   => $side_panel['is_default'] ?? false,
+				'divider'      => ! empty( $side_panel['divider'] ),
 				// Optional conditional visibility based on a field value (Phase 5).
 				// Shape: array( 'field' => 'fieldname', 'value' => mixed, 'operator' => '==' (default) | '!=' ).
-				'conditional' => ! empty( $side_panel['conditional'] ) && is_array( $side_panel['conditional'] ) ? $side_panel['conditional'] : null,
-				'sections'    => $formatted_sections,
+				'conditional'  => ! empty( $side_panel['conditional'] ) && is_array( $side_panel['conditional'] ) ? $side_panel['conditional'] : null,
+				// Link-out panels point at another feature's settings (e.g.
+				// the Offload Media entry inside Media). `SideNavigation.js`
+				// renders these as an `<a>` with a trailing up-right arrow
+				// instead of the normal internal-nav button. Scrubbed through
+				// `esc_url_raw` so a stored absolute URL can never smuggle a
+				// non-allowlisted scheme into the rendered `href`.
+				'external_url' => ! empty( $side_panel['external_url'] ) ? esc_url_raw( $side_panel['external_url'] ) : '',
+				'sections'     => $formatted_sections,
 			);
 		}
 
