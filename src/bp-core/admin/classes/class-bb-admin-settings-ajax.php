@@ -1395,7 +1395,7 @@ class BB_Admin_Settings_Ajax {
 		global $wpdb;
 
 		$placeholders = implode( ',', array_fill( 0, count( $uncached ), '%s' ) );
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Placeholders are dynamically generated.
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $placeholders is built from count() only; values are bound via $uncached in prepare() on next line.
 		$results = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT option_name, option_value FROM {$wpdb->options} WHERE option_name IN ({$placeholders})",
@@ -1403,6 +1403,7 @@ class BB_Admin_Settings_Ajax {
 			),
 			OBJECT_K
 		);
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 		// Prime cache for found options with raw (serialized) values.
 		// WP core expects raw values in the options cache; get_option() handles unserializing.
@@ -1458,7 +1459,7 @@ class BB_Admin_Settings_Ajax {
 		// (e.g., OneSignal '/settings/notifications/onesignal' → Notifications > OneSignal panel).
 		if (
 			! empty( $feature['settings_route'] ) &&
-			$feature['settings_route'] !== '/settings/' . $feature_id
+			'/settings/' . $feature_id !== $feature['settings_route']
 		) {
 			$parts          = array_values( array_filter( explode( '/', $feature['settings_route'] ) ) );
 			$route_tab      = isset( $parts[1] ) ? $parts[1] : $feature_id;

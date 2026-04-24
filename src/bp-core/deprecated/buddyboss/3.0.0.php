@@ -3095,7 +3095,7 @@ if ( ! function_exists( 'bp_custom_pages_do_settings_sections' ) ) {
 	 *
 	 * @param string $page Legacy settings page slug (unused).
 	 */
-	function bp_custom_pages_do_settings_sections( $page ) {
+	function bp_custom_pages_do_settings_sections( $page ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- Deprecation stub preserves original signature.
 		_deprecated_function(
 			__FUNCTION__,
 			'BuddyBoss [BBVERSION]',
@@ -3114,7 +3114,7 @@ if ( ! function_exists( 'bp_custom_pages_do_settings_fields' ) ) {
 	 * @param string $page    Legacy settings page slug (unused).
 	 * @param string $section Legacy section slug (unused).
 	 */
-	function bp_custom_pages_do_settings_fields( $page, $section ) {
+	function bp_custom_pages_do_settings_fields( $page, $section ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter -- Deprecation stub preserves original signature.
 		_deprecated_function(
 			__FUNCTION__,
 			'BuddyBoss [BBVERSION]',
@@ -3196,7 +3196,7 @@ if ( ! function_exists( 'bp_admin_setting_callback_page_directory_dropdown' ) ) 
 	 *
 	 * @param array $args Legacy callback args (unused).
 	 */
-	function bp_admin_setting_callback_page_directory_dropdown( $args ) {
+	function bp_admin_setting_callback_page_directory_dropdown( $args ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- Deprecation stub preserves original signature.
 		_deprecated_function(
 			__FUNCTION__,
 			'BuddyBoss [BBVERSION]',

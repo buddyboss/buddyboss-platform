@@ -6,7 +6,8 @@
  * using a 6-hour transient, and injects unregistered placeholder objects
  * into the bb_admin_get_features AJAX response.
  *
- * Cache can be cleared by visiting any admin page with ?bb_clear_placeholder_cache=1
+ * All Settings 2.0 caches (including this one) can be cleared by visiting any
+ * admin page with ?bb_clear_placeholder_cache=1
  *
  * @package BuddyBoss\Core\Administration
  * @since   BuddyBoss [BBVERSION]
@@ -457,21 +458,38 @@ function bb_admin_mark_drm_locked_features( $features ) {
 add_filter( 'bb_admin_features_response', 'bb_admin_mark_drm_locked_features', 20 );
 
 /**
- * Clear the placeholder features transient cache via query parameter.
+ * Clear Settings 2.0 caches via query parameter.
  *
- * Visit any admin page with ?bb_clear_placeholder_cache=1 to force a fresh
- * fetch from S3 on the next AJAX request.
+ * Visit any admin page with ?bb_clear_placeholder_cache=1 to flush every
+ * Settings 2.0 cache layer (feature discovery paths, feature registry,
+ * settings search index, placeholder features catalog + stale fallback)
+ * and force a fresh remote fetch on the next AJAX request.
  *
  * @since BuddyBoss [BBVERSION]
  */
 function bb_maybe_clear_placeholder_features_cache() {
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only cache clear, admin-only.
-	if ( ! empty( $_GET['bb_clear_placeholder_cache'] ) && current_user_can( 'manage_options' ) ) {
-		delete_transient( bb_placeholder_features_transient_key() );
-		delete_option( 'bb_placeholder_features_data_stale' );
-		// Trigger an immediate background refresh so the next AJAX call has data.
-		bb_schedule_placeholder_features_refresh();
+	if ( empty( $_GET['bb_clear_placeholder_cache'] ) || ! current_user_can( 'manage_options' ) ) {
+		return;
 	}
+
+	// Delegate to the canonical flusher used by plugin lifecycle hooks so every
+	// Settings 2.0 cache layer drops together. It handles discovery paths,
+	// the feature registry, the search index, and the placeholder transient.
+	if ( function_exists( 'bb_flush_feature_caches_on_plugin_change' ) ) {
+		bb_flush_feature_caches_on_plugin_change();
+	} else {
+		// Defensive fallback for the unlikely case the init file hasn't loaded.
+		delete_transient( bb_placeholder_features_transient_key() );
+	}
+
+	// The canonical flusher doesn't touch the stale-while-revalidate fallback
+	// option — drop it here so the next read genuinely hits the remote endpoint
+	// instead of serving last-known-good data.
+	delete_option( 'bb_placeholder_features_data_stale' );
+
+	// Trigger an immediate background refresh so the next AJAX call has data.
+	bb_schedule_placeholder_features_refresh();
 }
 add_action( 'admin_init', 'bb_maybe_clear_placeholder_features_cache' );
 

@@ -942,6 +942,7 @@ function bb_appearance_register_site_seo_pro_placeholder_fields() {
 			'help_text'         => __( 'Open Graph support improves how your content appears when shared on social platforms such as Facebook, LinkedIn, and X.', 'buddyboss' ),
 			'default'           => 0,
 			'pro_only'          => true,
+			// __return_empty_string drops any value a client tries to submit to this Pro-locked placeholder field.
 			'sanitize_callback' => '__return_empty_string',
 			'order'             => 40,
 		)
@@ -1033,6 +1034,7 @@ function bb_appearance_register_site_seo_pro_placeholder_fields() {
 				'help_text'         => $is_last_toggle ? __( 'Choose whether search engines should index this content. Turning it off will hide it from search results.', 'buddyboss' ) : '',
 				'default'           => 0,
 				'pro_only'          => true,
+				// __return_empty_string drops any value a client tries to submit to this Pro-locked placeholder field.
 				'sanitize_callback' => '__return_empty_string',
 				'group'             => array(
 					'key' => 'indexing',
