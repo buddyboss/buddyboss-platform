@@ -1023,7 +1023,12 @@ class BB_Admin_Settings_Ajax {
 						$opt_name = $prefix . $opt_key;
 						bp_update_option( $opt_name, absint( $opt_val ) );
 					}
-					$saved[ $name ] = $value;
+					// Cast to object so `json_encode()` always emits a map (`{}`) — even when
+					// empty (all platforms toggled off). An empty PHP array encodes as `[]`,
+					// which `SharePlatformsField.js` rejects via its
+					// `typeof value === 'object' && !Array.isArray(value)` guard, causing the
+					// UI to desync from the saved state until reload.
+					$saved[ $name ] = (object) $value;
 				} else {
 					// BuddyBoss stores options via bp_update_option (same storage as legacy).
 					bp_update_option( $name, $value );

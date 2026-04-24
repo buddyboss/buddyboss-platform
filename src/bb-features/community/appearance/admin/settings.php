@@ -158,7 +158,13 @@ function bb_admin_settings_register_appearance_settings() {
 	// 3. Sharing NOT installed / deactivated — show the full Figma fields
 	// as PRO-gated disabled placeholders with an "UPGRADE PRO" badge
 	// on the section (mirrors OneSignal `bb_notifications_register_web_push_pro_placeholder_fields()`).
-	$has_new_sharing = class_exists( '\\BuddyBoss\\Sharing\\Admin\\Site_SEO_Settings' );
+	// Require both the class AND the Settings 2.0 registration method so a
+	// partial Sharing build that ships the class namespace without the 2.0
+	// hook still falls through to the "Update Required" card instead of
+	// silently no-oping. Mirrors the Activity Sharing panel's detection
+	// (`bb_sharing_has_new_sharing_plugin()`).
+	$has_new_sharing = class_exists( '\\BuddyBoss\\Sharing\\Admin\\Site_SEO_Settings' )
+		&& method_exists( '\\BuddyBoss\\Sharing\\Admin\\Site_SEO_Settings', 'register_site_seo' );
 	$has_old_sharing = ! $has_new_sharing && class_exists( 'BuddyBoss_Sharing' );
 
 	if ( $has_old_sharing ) {
