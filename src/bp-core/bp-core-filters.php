@@ -2464,7 +2464,6 @@ function buddyboss_menu_order( $menu_order ) {
 	$buddyboss_updater_menu       = array();
 	$buddyboss_license_menu       = array();
 	$buddyboss_addon_menu         = array();
-	$buddyboss_readylaunch_menu   = array();
 	$buddyboss_gamification_menu  = array();
 	$sep_position                 = null; // Use null to detect if found.
 
@@ -2502,12 +2501,6 @@ function buddyboss_menu_order( $menu_order ) {
 					continue;
 				}
 
-				if ( 'bb-readylaunch' === $val[2] ) {
-					$buddyboss_readylaunch_menu = $submenu['buddyboss-platform'][ $key ];
-					unset( $submenu['buddyboss-platform'][ $key ] );
-					continue;
-				}
-
 				if ( 'bb-gamification-settings' === $val[2] ) {
 					$buddyboss_gamification_menu = $submenu['buddyboss-platform'][ $key ];
 					unset( $submenu['buddyboss-platform'][ $key ] );
@@ -2524,12 +2517,12 @@ function buddyboss_menu_order( $menu_order ) {
 			}
 		}
 
-		// If separator was found, insert after it; otherwise, insert just above ReadyLaunch.
+		// If separator was found, insert after it; otherwise, insert just above the
+		// special bottom menus. ReadyLaunch used to slot in here but was retired
+		// in [BBVERSION] — the redirect in bp-core-admin-actions.php handles
+		// legacy bookmarks.
 		if ( $sep_position !== null ) {
 			$insert_pos = $sep_position;
-			if ( ! empty( $buddyboss_readylaunch_menu ) ) {
-				$submenu['buddyboss-platform'][ ++ $insert_pos ] = $buddyboss_readylaunch_menu;
-			}
 			if ( ! empty( $buddyboss_gamification_menu ) ) {
 				$submenu['buddyboss-platform'][ ++ $insert_pos ] = $buddyboss_gamification_menu;
 			}
@@ -2554,21 +2547,19 @@ function buddyboss_menu_order( $menu_order ) {
 				$submenu['buddyboss-platform'][ ++ $insert_pos ] = $buddyboss_addon_menu;
 			}
 		} else {
-			// No separator found, so insert separator just above ReadyLaunch if ReadyLaunch exists.
+			// No separator found — append the saved special menus after the
+			// existing items and introduce the separator before them when any
+			// special menu exists. ReadyLaunch used to anchor the separator;
+			// Gamification now plays that role.
 			$new_submenu                   = array_values( $submenu['buddyboss-platform'] );
 			$submenu['buddyboss-platform'] = array(); // reset.
 
-			// Add all items except ReadyLaunch.
 			foreach ( $new_submenu as $item ) {
 				$submenu['buddyboss-platform'][] = $item;
 			}
 
-			// Now insert separator and ReadyLaunch at the end if ReadyLaunch exists
-			if ( ! empty( $buddyboss_readylaunch_menu ) ) {
-				$submenu['buddyboss-platform'][] = $separator_menu;
-				$submenu['buddyboss-platform'][] = $buddyboss_readylaunch_menu;
-			}
 			if ( ! empty( $buddyboss_gamification_menu ) ) {
+				$submenu['buddyboss-platform'][] = $separator_menu;
 				$submenu['buddyboss-platform'][] = $buddyboss_gamification_menu;
 			}
 

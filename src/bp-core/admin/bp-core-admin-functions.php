@@ -681,11 +681,7 @@ function bp_core_get_admin_tabs( $active_tab = '' ) {
 	// but pointing at the destination avoids an unnecessary redirect hop.
 	$tabs = array(
 		// '0' was the Components tab — intentionally left absent.
-		'1' => array(
-			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-pages' ), 'admin.php' ) ),
-			'name'  => __( 'Pages', 'buddyboss' ),
-			'class' => 'bp-pages',
-		),
+		// '1' was Pages tab - Remove as migrated to setting2.0
 		'2' => array(
 			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bb-settings' ), 'admin.php' ) ),
 			'name'  => __( 'Settings', 'buddyboss' ),

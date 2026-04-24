@@ -88,7 +88,7 @@ function bb_force_redirect_bare_bp_settings() {
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
 	$page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
-	$tab  = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : '';
+	$tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : '';
 
 	if ( 'bp-settings' === $page && empty( $tab ) ) {
 		wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings' ) );
@@ -96,6 +96,73 @@ function bb_force_redirect_bare_bp_settings() {
 	}
 }
 add_action( 'admin_init', 'bb_force_redirect_bare_bp_settings', 0 );
+
+/**
+ * Get the legacy Settings 1.0 tab → Settings 2.0 URL mapping.
+ *
+ * Shared between the `admin_menu`-priority redirect and the later
+ * `bp_admin_init` redirect so both entry points normalize tabs consistently.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array Map of old tab slug => feature ID string OR array( 'tab' => ..., 'panel' => ... ).
+ */
+function bb_get_legacy_settings_tabs_mapping() {
+	$legacy_tabs_mapping = array(
+		'bp-reactions'     => 'reactions',
+		'bp-activity'      => 'activity',
+		'bp-groups'        => 'groups',
+		'bp-xprofile'      => 'members',
+		'bp-forums'        => 'forums',
+		'bp-friends'       => array(
+			'tab'   => 'members',
+			'panel' => 'member_connection',
+		),
+		'bp-notifications' => 'notifications',
+		'bp-media'         => 'media',
+		'bp-video'         => array(
+			'tab'   => 'media',
+			'panel' => 'videos',
+		),
+		'bp-document'      => array(
+			'tab'   => 'media',
+			'panel' => 'documents',
+		),
+		'bp-messages'      => 'messages',
+		'bp-search'        => 'search',
+		'bp-invites'       => 'invites',
+		'bp-registration'  => 'registration',
+		'bp-general'       => 'advanced',
+		'bp-advanced'      => 'advanced',
+		'bp-moderation'    => 'moderation',
+	);
+
+	/** This filter is documented in src/bp-core/admin/bp-core-admin-actions.php */
+	return apply_filters( 'bb_legacy_settings_tabs_mapping', $legacy_tabs_mapping );
+}
+
+/**
+ * Apply a legacy tab mapping entry to a Settings 2.0 URL.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string       $target  Base admin URL to add tab/panel onto.
+ * @param string|array $mapping Mapping entry: feature-id string or [ 'tab' => ..., 'panel' => ... ].
+ * @return string URL with tab (and panel) query args applied.
+ */
+function bb_apply_legacy_tab_mapping_to_url( $target, $mapping ) {
+	if ( is_array( $mapping ) ) {
+		if ( ! empty( $mapping['tab'] ) ) {
+			$target = add_query_arg( 'tab', $mapping['tab'], $target );
+		}
+		if ( ! empty( $mapping['panel'] ) ) {
+			$target = add_query_arg( 'panel', $mapping['panel'], $target );
+		}
+	} else {
+		$target = add_query_arg( 'tab', $mapping, $target );
+	}
+	return $target;
+}
 
 /**
  * Redirect legacy admin slugs to Settings 2.0 before WordPress's permission gate.
@@ -113,10 +180,16 @@ add_action( 'admin_init', 'bb_force_redirect_bare_bp_settings', 0 );
  * request first.
  *
  * Covers two legacy slugs that were removed in Settings 2.0:
- *  - `bp-settings`     → `bb-settings` (tab query arg preserved).
+ *  - `bp-settings`     → `bb-settings`, with tab normalization via
+ *    `bb_get_legacy_settings_tabs_mapping()` (e.g. `bp-activity` → `activity`).
  *  - `bp-integrations` → `bb-settings` with best-effort tab mapping via
  *    the `bb_legacy_integration_tabs_mapping` filter (Pro populates it
  *    with Zoom/OneSignal/etc. tab redirects).
+ *
+ * Extra query args (`download_mu_file`, plugin-specific flags, etc.) are
+ * preserved on the target URL so deep-link flows — like BB App's MU-installer
+ * download nonce — survive the redirect. Only `page` / `tab` / `panel` are
+ * replaced; everything else passes through.
  *
  * This is the only hook point that reliably catches the "slug doesn't
  * exist" case before WP's 403 fires.
@@ -126,6 +199,37 @@ add_action( 'admin_init', 'bb_force_redirect_bare_bp_settings', 0 );
 function bb_redirect_bp_settings_before_permission_check() {
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
 	$page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
+
+	// Retired Settings 2.0 standalone admin pages whose submenu registrations
+	// were removed. Forwarded here (admin_menu @ PHP_INT_MAX) because their
+	// slugs no longer exist at the `user_can_access_admin_page()` check — any
+	// redirect on `bp_admin_init` would be too late and the request would 403.
+	// Extend this list when retiring further standalone admin screens.
+	if ( 'bp-pages' === $page ) {
+		$bp_pages_target = bp_get_admin_url( 'admin.php?page=bb-settings&tab=appearance&panel=pages' );
+
+		// Preserve any non-routing query args (e.g. `download_mu_file`,
+		// Pro / third-party deep-link flags). Same treatment as the
+		// bp-settings / bp-integrations branches below — this one just
+		// exits early because the page/tab/panel shape is fixed.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
+		$reserved = array( 'page', 'tab', 'panel' );
+		$extra_qs = array();
+		foreach ( $_GET as $key => $value ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
+			if ( in_array( $key, $reserved, true ) ) {
+				continue;
+			}
+			if ( is_scalar( $value ) ) {
+				$extra_qs[ sanitize_key( $key ) ] = sanitize_text_field( wp_unslash( $value ) );
+			}
+		}
+		if ( ! empty( $extra_qs ) ) {
+			$bp_pages_target = add_query_arg( $extra_qs, $bp_pages_target );
+		}
+
+		wp_safe_redirect( $bp_pages_target );
+		exit;
+	}
 
 	if ( 'bp-settings' !== $page && 'bp-integrations' !== $page && 'bp-components' !== $page ) {
 		return;
@@ -150,20 +254,42 @@ function bb_redirect_bp_settings_before_permission_check() {
 		$legacy_integration_tabs = apply_filters( 'bb_legacy_integration_tabs_mapping', array() );
 
 		if ( isset( $legacy_integration_tabs[ $tab ] ) ) {
-			$mapping = $legacy_integration_tabs[ $tab ];
-			if ( is_array( $mapping ) ) {
-				$target = add_query_arg( 'tab', $mapping['tab'], $target );
-				if ( ! empty( $mapping['panel'] ) ) {
-					$target = add_query_arg( 'panel', $mapping['panel'], $target );
-				}
-			} else {
-				$target = add_query_arg( 'tab', $mapping, $target );
-			}
+			$target = bb_apply_legacy_tab_mapping_to_url( $target, $legacy_integration_tabs[ $tab ] );
 		}
-	} elseif ( ! empty( $tab ) ) {
-		// bp-settings: preserve the tab query arg; the tab-mapping logic in
-		// bb_redirect_legacy_settings_to_settings_2 will normalize bp-activity etc.
-		$target = add_query_arg( 'tab', $tab, $target );
+	} elseif ( 'bp-settings' === $page && ! empty( $tab ) ) {
+		// Normalize legacy Settings 1.0 tab slugs (bp-activity → activity, etc.)
+		// here so this single redirect lands the user directly on a valid
+		// Settings 2.0 route. The post-redirect handler can't do it: once the
+		// URL is already ?page=bb-settings it no longer matches its own guard.
+		$legacy_tabs_mapping = bb_get_legacy_settings_tabs_mapping();
+
+		if ( isset( $legacy_tabs_mapping[ $tab ] ) ) {
+			$target = bb_apply_legacy_tab_mapping_to_url( $target, $legacy_tabs_mapping[ $tab ] );
+		} else {
+			// Unknown tab — preserve as-is so Pro / third-party add-ons that
+			// registered custom tabs via the `bb_legacy_settings_tabs_mapping`
+			// filter (but weren't loaded this request) aren't silently dropped.
+			$target = add_query_arg( 'tab', $tab, $target );
+		}
+	}
+
+	// Preserve any extra query args (e.g. download_mu_file, plugin-specific
+	// flags) so deep-link flows survive the redirect. We only consume the keys
+	// we already routed above — `page`, `tab`, and `panel` are owned by the
+	// target URL.
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
+	$reserved = array( 'page', 'tab', 'panel' );
+	$extra_qs = array();
+	foreach ( $_GET as $key => $value ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
+		if ( in_array( $key, $reserved, true ) ) {
+			continue;
+		}
+		if ( is_scalar( $value ) ) {
+			$extra_qs[ sanitize_key( $key ) ] = sanitize_text_field( wp_unslash( $value ) );
+		}
+	}
+	if ( ! empty( $extra_qs ) ) {
+		$target = add_query_arg( $extra_qs, $target );
 	}
 
 	wp_safe_redirect( $target );
@@ -440,7 +566,7 @@ function bb_admin_check_valid_giphy_key() {
 		wp_send_json_error( $response );
 	}
 
-	if ( ! bp_is_active( 'media' )  ) {
+	if ( ! bp_is_active( 'media' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -464,7 +590,6 @@ function bb_admin_check_valid_giphy_key() {
 	}
 
 	wp_send_json_error( $response );
-
 }
 add_action( 'wp_ajax_bb_admin_check_valid_giphy_key', 'bb_admin_check_valid_giphy_key' );
 
@@ -532,41 +657,41 @@ function bb_validate_restricted_email_on_profile_update( $user_id ) {
  */
 function bb_core_settings_saved_notice() {
 
-    // Only handle notices on BuddyBoss pages.
-    if ( ! isset( $_GET['page'] ) ) {
-        return;
-    }
+	// Only handle notices on BuddyBoss pages.
+	if ( ! isset( $_GET['page'] ) ) {
+		return;
+	}
 
-    $page = sanitize_key( wp_unslash( $_GET['page'] ) );
+	$page = sanitize_key( wp_unslash( $_GET['page'] ) );
 
-    if ( ! in_array( $page, array( 'bp-settings', 'bp-pages', 'bp-integrations' ), true ) ) {
-        return;
-    }
+	if ( ! in_array( $page, array( 'bp-settings', 'bp-pages', 'bp-integrations' ), true ) ) {
+		return;
+	}
 
-    // Check if settings were updated.
-    if ( isset( $_GET['updated'] ) || isset( $_GET['edited'] ) || isset( $_GET['added'] ) ) {
-        $setting_message = __( 'Settings saved successfully.', 'buddyboss' );
-        $setting_updated = isset( $_GET['updated'] ) ? sanitize_text_field( wp_unslash( $_GET['updated'] ) ) : '';
-        $updated_transient_key = isset( $_GET['updated'] ) ? sanitize_key( wp_unslash( $_GET['updated'] ) ) : '';
+	// Check if settings were updated.
+	if ( isset( $_GET['updated'] ) || isset( $_GET['edited'] ) || isset( $_GET['added'] ) ) {
+		$setting_message       = __( 'Settings saved successfully.', 'buddyboss' );
+		$setting_updated       = isset( $_GET['updated'] ) ? sanitize_text_field( wp_unslash( $_GET['updated'] ) ) : '';
+		$updated_transient_key = isset( $_GET['updated'] ) ? sanitize_key( wp_unslash( $_GET['updated'] ) ) : '';
 
-        if ( 'emotion_deleted' === $setting_updated && ! empty( $updated_transient_key ) ) {
-            $setting_message = get_transient( $updated_transient_key );
-            delete_transient( $updated_transient_key );
-        } elseif ( 'no_message' === $setting_updated ) {
-            $setting_message = '';
-        }
+		if ( 'emotion_deleted' === $setting_updated && ! empty( $updated_transient_key ) ) {
+			$setting_message = get_transient( $updated_transient_key );
+			delete_transient( $updated_transient_key );
+		} elseif ( 'no_message' === $setting_updated ) {
+			$setting_message = '';
+		}
 
-        if ( ! empty( $setting_message ) ) {
-            add_settings_error(
-                'general',
-                'settings_updated',
-                $setting_message,
-                'updated'
-            );
-        }
+		if ( ! empty( $setting_message ) ) {
+			add_settings_error(
+				'general',
+				'settings_updated',
+				$setting_message,
+				'updated'
+			);
+		}
 
-        settings_errors( '' );
-    }
+		settings_errors( '' );
+	}
 }
 
 add_action( 'bp_admin_notices', 'bb_core_settings_saved_notice', 1010 );
@@ -592,7 +717,10 @@ function bb_render_admin_header() {
 			(
 				! empty( $screen->id ) &&
 				(
-					'buddyboss_page_bb-readylaunch' !== $screen->id &&
+					// `buddyboss_page_bb-readylaunch` retired in [BBVERSION] —
+					// submenu deleted, URL redirects to Settings 2.0. Screen ID
+					// no longer reachable so the check is dead weight.
+					'buddyboss_page_bb-upgrade' !== $screen->id &&
 					'buddyboss_page_bb-settings' !== $screen->id
 				)
 			)
@@ -673,10 +801,10 @@ function bb_redirect_legacy_settings_to_settings_2() {
 		 * @param array $cpt_redirects Post type slug => Settings 2.0 URL path.
 		 */
 		$cpt_redirects = array(
-			bp_get_email_post_type()              => 'admin.php?page=bb-settings&tab=emails&panel=all_emails',
-			bp_get_invite_post_type()             => 'admin.php?page=bb-settings&tab=invites&panel=invites_list',
-			bp_groups_get_group_type_post_type()  => 'admin.php?page=bb-settings&tab=groups&panel=group_types',
-			bp_get_member_type_post_type()        => 'admin.php?page=bb-settings&tab=members&panel=profile_types',
+			bp_get_email_post_type()             => 'admin.php?page=bb-settings&tab=emails&panel=all_emails',
+			bp_get_invite_post_type()            => 'admin.php?page=bb-settings&tab=invites&panel=invites_list',
+			bp_groups_get_group_type_post_type() => 'admin.php?page=bb-settings&tab=groups&panel=group_types',
+			bp_get_member_type_post_type()       => 'admin.php?page=bb-settings&tab=members&panel=profile_types',
 		);
 
 		// Forum CPTs (only when forums component is active).
@@ -771,6 +899,14 @@ function bb_redirect_legacy_settings_to_settings_2() {
 		exit;
 	}
 
+	// Redirect legacy ReadyLaunch admin page (admin.php?page=bb-readylaunch) to
+	// the Appearance feature in Settings 2.0. Anyone bookmarked to the old URL
+	// lands on General → Site Layout with zero data loss.
+	if ( 'bb-readylaunch' === $page ) {
+		wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=appearance&panel=general' ) );
+		exit;
+	}
+
 	// Redirect legacy integration tabs (bp-integrations page).
 	if ( 'bp-integrations' === $page && ! empty( $tab ) ) {
 
@@ -806,63 +942,22 @@ function bb_redirect_legacy_settings_to_settings_2() {
 
 	// Bare ?page=bp-settings (no tab) was already forwarded at the top of
 	// this function, so by the time we reach here we only handle the
-	// tab-mapping path.
+	// tab-mapping path. Note: in the usual request flow the earlier
+	// `admin_menu`-priority redirect (`bb_redirect_bp_settings_before_permission_check`)
+	// already normalized the tab before this point, so this branch is mainly
+	// a safety net for callers that reach `bp_admin_init` with an unredirected
+	// `?page=bp-settings&tab=...` URL (e.g., REST / WP-CLI admin-init callers).
 	if ( 'bp-settings' !== $page || empty( $tab ) ) {
 		return;
 	}
 
-	// Mapping of old Settings 1.0 tab names to new Settings 2.0 URLs.
-	// Values can be a string (feature ID only) or array with 'tab' and 'panel'.
-	$legacy_tabs_mapping = array(
-		'bp-reactions'     => 'reactions',
-		'bp-activity'      => 'activity',
-		'bp-groups'        => 'groups',
-		'bp-xprofile'      => 'members',
-		'bp-forums'        => 'forums',
-		'bp-friends'       => array(
-			'tab'   => 'members',
-			'panel' => 'member_connection',
-		),
-		'bp-notifications' => 'notifications',
-		'bp-media'         => 'media',
-		'bp-video'         => array(
-			'tab'   => 'media',
-			'panel' => 'videos',
-		),
-		'bp-document'      => array(
-			'tab'   => 'media',
-			'panel' => 'documents',
-		),
-		'bp-messages'      => 'messages',
-		'bp-search'        => 'search',
-		'bp-invites'       => 'invites',
-		'bp-registration'  => 'registration',
-		'bp-general'       => 'advanced',
-		'bp-advanced'      => 'advanced',
-		'bp-moderation'    => 'moderation',
-	);
-
-	/**
-	 * Filter the legacy settings tabs mapping.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param array $legacy_tabs_mapping Array of old tab name => new feature ID or array with tab/panel.
-	 */
-	$legacy_tabs_mapping = apply_filters( 'bb_legacy_settings_tabs_mapping', $legacy_tabs_mapping );
+	$legacy_tabs_mapping = bb_get_legacy_settings_tabs_mapping();
 
 	if ( isset( $legacy_tabs_mapping[ $tab ] ) ) {
-		$mapping  = $legacy_tabs_mapping[ $tab ];
-		$redirect = bp_get_admin_url( 'admin.php?page=bb-settings' );
-
-		if ( is_array( $mapping ) ) {
-			$redirect = add_query_arg( 'tab', $mapping['tab'], $redirect );
-			if ( ! empty( $mapping['panel'] ) ) {
-				$redirect = add_query_arg( 'panel', $mapping['panel'], $redirect );
-			}
-		} else {
-			$redirect = add_query_arg( 'tab', $mapping, $redirect );
-		}
+		$redirect = bb_apply_legacy_tab_mapping_to_url(
+			bp_get_admin_url( 'admin.php?page=bb-settings' ),
+			$legacy_tabs_mapping[ $tab ]
+		);
 
 		wp_safe_redirect( $redirect );
 		exit;

@@ -50,6 +50,8 @@ class BB_Admin_Settings_Ajax {
 
 		add_action( 'wp_ajax_bb_admin_search_settings', array( $this, 'bb_admin_search_settings' ) );
 		add_action( 'wp_ajax_bb_admin_search_published_pages', array( $this, 'bb_admin_search_published_pages' ) );
+		add_action( 'wp_ajax_bb_admin_search_pages_list', array( $this, 'bb_admin_search_pages_list' ) );
+		add_action( 'wp_ajax_bb_admin_create_directory_page', array( $this, 'bb_admin_create_directory_page' ) );
 
 		add_action( 'bb_admin_save_feature_settings_after', array( $this, 'bb_invalidate_search_index_after_save' ), 10, 3 );
 	}
@@ -375,6 +377,11 @@ class BB_Admin_Settings_Ajax {
 					);
 				}
 
+				// Section-level help URL (renders a (?) icon in the section header).
+				if ( ! empty( $section['help_url'] ) ) {
+					$formatted_section['help_url'] = esc_url_raw( $section['help_url'] );
+				}
+
 				$formatted_sections[] = $formatted_section;
 			}
 
@@ -382,14 +389,24 @@ class BB_Admin_Settings_Ajax {
 			usort( $formatted_sections, 'bb_sort_by_order' );
 
 			$formatted_side_panels[] = array(
-				'id'         => $side_panel_id,
-				'title'      => $side_panel['title'],
-				'icon'       => $side_panel['icon'] ?? null,
-				'help_url'   => $side_panel['help_url'] ?? '',
-				'order'      => $side_panel['order'] ?? 100,
-				'is_default' => $side_panel['is_default'] ?? false,
-				'divider'    => ! empty( $side_panel['divider'] ),
-				'sections'   => $formatted_sections,
+				'id'           => $side_panel_id,
+				'title'        => $side_panel['title'],
+				'icon'         => $side_panel['icon'] ?? null,
+				'help_url'     => $side_panel['help_url'] ?? '',
+				'order'        => $side_panel['order'] ?? 100,
+				'is_default'   => $side_panel['is_default'] ?? false,
+				'divider'      => ! empty( $side_panel['divider'] ),
+				// Optional conditional visibility based on a field value (Phase 5).
+				// Shape: array( 'field' => 'fieldname', 'value' => mixed, 'operator' => '==' (default) | '!=' ).
+				'conditional'  => ! empty( $side_panel['conditional'] ) && is_array( $side_panel['conditional'] ) ? $side_panel['conditional'] : null,
+				// Link-out panels point at another feature's settings (e.g.
+				// the Offload Media entry inside Media). `SideNavigation.js`
+				// renders these as an `<a>` with a trailing up-right arrow
+				// instead of the normal internal-nav button. Scrubbed through
+				// `esc_url_raw` so a stored absolute URL can never smuggle a
+				// non-allowlisted scheme into the rendered `href`.
+				'external_url' => ! empty( $side_panel['external_url'] ) ? esc_url_raw( $side_panel['external_url'] ) : '',
+				'sections'     => $formatted_sections,
 			);
 		}
 
@@ -604,96 +621,96 @@ class BB_Admin_Settings_Ajax {
 			}
 
 			$field_data = array(
-				'name'                 => $field['name'],
-				'label'                => $field['label'],
-				'type'                 => $field['type'] ?? 'text',
-				'description'          => $field['description'] ?? '',
-				'default'              => $field['default'] ?? '',
-				'options'              => $field['options'] ?? array(),
-				'conditional'          => $field['conditional'] ?? null,
-				'pro_only'             => $field['pro_only'] ?? false,
-				'license_tier'         => $field['license_tier'] ?? 'free',
-				'order'                => $field['order'] ?? 100,
-				'value'                => $field_value,
+				'name'                      => $field['name'],
+				'label'                     => $field['label'],
+				'type'                      => $field['type'] ?? 'text',
+				'description'               => $field['description'] ?? '',
+				'default'                   => $field['default'] ?? '',
+				'options'                   => $field['options'] ?? array(),
+				'conditional'               => $field['conditional'] ?? null,
+				'pro_only'                  => $field['pro_only'] ?? false,
+				'license_tier'              => $field['license_tier'] ?? 'free',
+				'order'                     => $field['order'] ?? 100,
+				'value'                     => $field_value,
 				// Nested field support.
-				'parent_field'         => $field['parent_field'] ?? null,
-				'parent_value'         => $field['parent_value'] ?? null,
+				'parent_field'              => $field['parent_field'] ?? null,
+				'parent_value'              => $field['parent_value'] ?? null,
 				// Prefix/suffix text support.
-				'prefix'               => $field['prefix'] ?? null,
-				'suffix'               => $field['suffix'] ?? null,
+				'prefix'                    => $field['prefix'] ?? null,
+				'suffix'                    => $field['suffix'] ?? null,
 				// Min/max for number fields.
-				'min'                  => $field['min'] ?? null,
-				'max'                  => $field['max'] ?? null,
+				'min'                       => $field['min'] ?? null,
+				'max'                       => $field['max'] ?? null,
 				// Invert value for "disable" toggles shown as "enable".
-				'invert_value'         => $field['invert_value'] ?? false,
+				'invert_value'              => $field['invert_value'] ?? false,
 				// PRO notice badge data (for pro_only fields).
-				'pro_notice'           => $field['pro_notice'] ?? null,
+				'pro_notice'                => $field['pro_notice'] ?? null,
 				// Notice type for notice fields (info, warning, error, success).
-				'notice_type'          => $field['notice_type'] ?? null,
+				'notice_type'               => $field['notice_type'] ?? null,
 				// Inline controls embedded in description (replaces %s placeholders).
-				'description_controls' => $field['description_controls'] ?? null,
+				'description_controls'      => $field['description_controls'] ?? null,
 				// Help text displayed below description in lighter style.
-				'help_text'            => $field['help_text'] ?? null,
+				'help_text'                 => $field['help_text'] ?? null,
 				// Disabled flag to prevent user interaction.
-				'disabled'             => ! empty( $field['disabled'] ),
+				'disabled'                  => ! empty( $field['disabled'] ),
 				// Group for visual grouping of related fields.
 				// Supports string (key only) or array with 'key' and optional 'label'.
 				// Normalized to array format: { key: string, label: string|null }.
-				'group'                => $this->bb_normalize_field_group( $field['group'] ?? null ),
+				'group'                     => $this->bb_normalize_field_group( $field['group'] ?? null ),
 				// Confirmation message shown in a modal before toggling ON.
-				'confirm_message'      => $field['confirm_message'] ?? null,
+				'confirm_message'           => $field['confirm_message'] ?? null,
 				// Optional overrides for confirm modal customization.
-				'confirm_title'        => $field['confirm_title'] ?? null,
-				'confirm_ok'           => $field['confirm_ok'] ?? null,
-				'confirm_cancel'       => $field['confirm_cancel'] ?? null,
-				'confirm_destructive'  => ! empty( $field['confirm_destructive'] ),
+				'confirm_title'             => $field['confirm_title'] ?? null,
+				'confirm_ok'                => $field['confirm_ok'] ?? null,
+				'confirm_cancel'            => $field['confirm_cancel'] ?? null,
+				'confirm_destructive'       => ! empty( $field['confirm_destructive'] ),
 				// Allow adding new items (e.g., custom extensions).
-				'allow_add'            => ! empty( $field['allow_add'] ),
-				'add_button_label'     => $field['add_button_label'] ?? null,
+				'allow_add'                 => ! empty( $field['allow_add'] ),
+				'add_button_label'          => $field['add_button_label'] ?? null,
 				// Full extension data for extension list fields.
-				'extension_data'       => $field['extension_data'] ?? null,
+				'extension_data'            => $field['extension_data'] ?? null,
 				// Icon options for extension icon dropdown.
-				'icon_options'         => $field['icon_options'] ?? null,
+				'icon_options'              => $field['icon_options'] ?? null,
 				// Manage link fields.
-				'manage_url'           => ! empty( $field['manage_url'] ) ? esc_url_raw( $field['manage_url'] ) : null,
-				'manage_label'         => $field['manage_label'] ?? null,
-				'manage_icon'          => $field['manage_icon'] ?? null,
+				'manage_url'                => ! empty( $field['manage_url'] ) ? esc_url_raw( $field['manage_url'] ) : null,
+				'manage_label'              => $field['manage_label'] ?? null,
+				'manage_icon'               => $field['manage_icon'] ?? null,
 				// Input button fields (text input + action button, e.g. API key connect/disconnect).
-				'placeholder'          => $field['placeholder'] ?? null,
-				'button_label'         => $field['button_label'] ?? null,
-				'button_only'          => ! empty( $field['button_only'] ),
+				'placeholder'               => $field['placeholder'] ?? null,
+				'button_label'              => $field['button_label'] ?? null,
+				'button_only'               => ! empty( $field['button_only'] ),
 				// Icon-only input button variant: renders the button as an icon control (no text).
 				// 'icon' is an icon font class (e.g. "bb-icons-rl bb-icons-rl-arrow-clockwise").
 				// 'icon_label' is used for aria-label / title on icon-only buttons.
-				'icon_only'            => ! empty( $field['icon_only'] ),
-				'icon'                 => ! empty( $field['icon'] ) ? sanitize_text_field( $field['icon'] ) : null,
-				'icon_label'           => ! empty( $field['icon_label'] ) ? sanitize_text_field( $field['icon_label'] ) : null,
-				'button_url'           => ! empty( $field['button_url'] ) ? esc_url_raw( $field['button_url'] ) : null,
-				'button_target'        => $field['button_target'] ?? null,
+				'icon_only'                 => ! empty( $field['icon_only'] ),
+				'icon'                      => ! empty( $field['icon'] ) ? sanitize_text_field( $field['icon'] ) : null,
+				'icon_label'                => ! empty( $field['icon_label'] ) ? sanitize_text_field( $field['icon_label'] ) : null,
+				'button_url'                => ! empty( $field['button_url'] ) ? esc_url_raw( $field['button_url'] ) : null,
+				'button_target'             => $field['button_target'] ?? null,
 				// Empty state fields (centered card with icon + title + description + button).
-				'empty_state_title'       => $field['empty_state_title'] ?? null,
-				'empty_state_description' => $field['empty_state_description'] ?? null,
-				'related_fields'       => ! empty( $field['related_fields'] ) && is_array( $field['related_fields'] ) ? array_map( 'sanitize_key', $field['related_fields'] ) : null,
+				'empty_state_title'         => $field['empty_state_title'] ?? null,
+				'empty_state_description'   => $field['empty_state_description'] ?? null,
+				'related_fields'            => ! empty( $field['related_fields'] ) && is_array( $field['related_fields'] ) ? array_map( 'sanitize_key', $field['related_fields'] ) : null,
 				// Per-option descriptions for select fields (description swaps on value change).
 				// map_deep handles nested structures safely; each leaf string is kses-filtered.
-				'option_descriptions'  => ! empty( $field['option_descriptions'] ) && is_array( $field['option_descriptions'] )
+				'option_descriptions'       => ! empty( $field['option_descriptions'] ) && is_array( $field['option_descriptions'] )
 					? map_deep( $field['option_descriptions'], 'wp_kses_post' )
 					: null,
-				'is_connected'         => ! empty( $field['is_connected'] ),
+				'is_connected'              => ! empty( $field['is_connected'] ),
 				// Verify field configuration (modal title, icons, messages).
 				// map_deep so nested config structures (e.g. button arrays) do not trip sanitize_text_field.
-				'verify_config'        => ! empty( $field['verify_config'] ) && is_array( $field['verify_config'] )
+				'verify_config'             => ! empty( $field['verify_config'] ) && is_array( $field['verify_config'] )
 					? map_deep( $field['verify_config'], 'sanitize_text_field' )
 					: null,
 				// Max length for text inputs.
-				'maxlength'            => $field['maxlength'] ?? null,
+				'maxlength'                 => $field['maxlength'] ?? null,
 				// Status check fields (AJAX-triggered server-side checks, e.g. Direct Access).
-				'ajax_action'          => ! empty( $field['ajax_action'] ) ? sanitize_key( $field['ajax_action'] ) : null,
+				'ajax_action'               => ! empty( $field['ajax_action'] ) ? sanitize_key( $field['ajax_action'] ) : null,
 				// Async select fields (searchable server-side select with AJAX loading).
-				'async_action'         => ! empty( $field['async_action'] ) ? sanitize_key( $field['async_action'] ) : null,
-				'watch_field'          => $field['watch_field'] ?? null,
+				'async_action'              => ! empty( $field['async_action'] ) ? sanitize_key( $field['async_action'] ) : null,
+				'watch_field'               => $field['watch_field'] ?? null,
 				// Fetch fresh data via AJAX when specified fields change (e.g. refresh select options after credentials entered).
-				'fetch_on_change'      => ! empty( $field['fetch_on_change'] ) && is_array( $field['fetch_on_change'] )
+				'fetch_on_change'           => ! empty( $field['fetch_on_change'] ) && is_array( $field['fetch_on_change'] )
 					? array(
 						'fields'         => ! empty( $field['fetch_on_change']['fields'] ) ? array_map( 'sanitize_key', $field['fetch_on_change']['fields'] ) : array(),
 						'require_all'    => ! empty( $field['fetch_on_change']['require_all'] ),
@@ -704,15 +721,54 @@ class BB_Admin_Settings_Ajax {
 					)
 					: null,
 				// Layout: full-width fields render without the label column.
-				'full_width'           => ! empty( $field['full_width'] ),
+				'full_width'                => ! empty( $field['full_width'] ),
 				// Custom CSS class(es) appended to the field wrapper div (space-separated).
-				'field_class'          => ! empty( $field['field_class'] ) ? implode( ' ', array_map( 'sanitize_html_class', explode( ' ', $field['field_class'] ) ) ) : null,
+				'field_class'               => ! empty( $field['field_class'] ) ? implode( ' ', array_map( 'sanitize_html_class', explode( ' ', $field['field_class'] ) ) ) : null,
 				// Group label for child fields (e.g., xProfile group names under Members).
-				'child_group_label'    => $field['child_group_label'] ?? null,
+				'child_group_label'         => $field['child_group_label'] ?? null,
 				// When true, saving this field triggers a full feature refetch to update side panels.
-				'refresh_panels'       => ! empty( $field['refresh_panels'] ),
+				'refresh_panels'            => ! empty( $field['refresh_panels'] ),
 				// SSO providers array (for sso_providers field type).
-				'providers'            => ! empty( $field['providers'] ) && is_array( $field['providers'] ) ? $field['providers'] : null,
+				'providers'                 => ! empty( $field['providers'] ) && is_array( $field['providers'] ) ? $field['providers'] : null,
+				// Generic media-picker config (for media_picker field type — library_type, multiple, frame_title, etc.).
+				'media_picker_config'       => ! empty( $field['media_picker_config'] ) && is_array( $field['media_picker_config'] ) ? $field['media_picker_config'] : null,
+				// Predefined items for sortable_toggle_list (e.g. side menu items, footer menu items).
+				'available_items'           => ! empty( $field['available_items'] ) && is_array( $field['available_items'] ) ? array_values( $field['available_items'] ) : null,
+				// Generic editable-link-list config (add_label, modal_title_add, modal_title_edit).
+				'editable_link_list_config' => ! empty( $field['editable_link_list_config'] ) && is_array( $field['editable_link_list_config'] ) ? $field['editable_link_list_config'] : null,
+				// Optional secondary description rendered under the field label (Figma "left-column help").
+				'label_description'         => isset( $field['label_description'] ) ? wp_kses_post( $field['label_description'] ) : null,
+				// SEO/Social preview-card config (site_name, site_url, site_icon,
+				// title_key, description_key, etc.). URL-shaped keys go through
+				// esc_url_raw; other string keys get sanitize_text_field. Applying
+				// sanitize_text_field to URLs would strip the protocol colon on
+				// some WP sanitize versions.
+				'preview_config'            => ! empty( $field['preview_config'] ) && is_array( $field['preview_config'] )
+					? $this->bb_sanitize_preview_config( $field['preview_config'] )
+					: null,
+				// Available-tag reference list consumed by the `tags_reference` display-only field type.
+				// Each row is { tag: string, description: string }. The tag is a plain
+				// slug/token — wp_kses_post on it adds no value and could accept partial HTML;
+				// sanitize_text_field is the right tool. The description is authored copy and
+				// may legitimately contain `<code>` / `<strong>` etc., so it gets wp_kses_post.
+				'tags'                      => ! empty( $field['tags'] ) && is_array( $field['tags'] )
+					? array_map(
+						static function ( $row ) {
+							if ( ! is_array( $row ) ) {
+								return $row;
+							}
+							$out = $row;
+							if ( isset( $row['tag'] ) && is_string( $row['tag'] ) ) {
+								$out['tag'] = sanitize_text_field( $row['tag'] );
+							}
+							if ( isset( $row['description'] ) && is_string( $row['description'] ) ) {
+								$out['description'] = wp_kses_post( $row['description'] );
+							}
+							return $out;
+						},
+						$field['tags']
+					)
+					: null,
 			);
 
 			// access_control: populate access-control data via filter so Pro can inject types/options.
@@ -935,13 +991,36 @@ class BB_Admin_Settings_Ajax {
 			if ( array_key_exists( $name, $settings ) ) {
 				$value = $settings[ $name ];
 
-				// Apply registered sanitize callback if present (fallback to type-based sanitization).
+				// Apply registered sanitize callback if present.
+				//
+				// Fallback to type-aware sanitization when the field author did
+				// not supply one. `sanitize_text_field()` alone is not enough
+				// for URL-shaped types — it strips tags but leaves
+				// `javascript:` / `data:` schemes intact, so a value saved here
+				// and later rendered as an `href`/`src` without `esc_url()`
+				// becomes a stored-XSS sink. Narrow the type dispatch to cases
+				// where the value shape is semantically URL-like; everything
+				// else (including already-stringified primitives) keeps the
+				// historical `sanitize_text_field()` behaviour so field
+				// authors who relied on it don't see a silent data change.
 				if ( ! empty( $field['sanitize_callback'] ) && is_callable( $field['sanitize_callback'] ) ) {
 					$value = call_user_func( $field['sanitize_callback'], $value );
-				} elseif ( is_string( $value ) ) {
-					$value = sanitize_text_field( $value );
-				} elseif ( is_array( $value ) ) {
-					$value = map_deep( $value, 'sanitize_text_field' );
+				} else {
+					$field_type = isset( $field['type'] ) ? (string) $field['type'] : '';
+
+					if ( is_string( $value ) && in_array( $field_type, array( 'url', 'permalink' ), true ) ) {
+						// esc_url_raw strips disallowed schemes (default whitelist:
+						// http, https, ftp, ftps, mailto, news, irc*, gopher,
+						// nntp, feed, telnet, mms, rtsp, sms, svn, tel, fax,
+						// xmpp, webcal, urn) so `javascript:alert(1)` becomes
+						// empty. Storing an empty value is preferable to
+						// round-tripping a hostile scheme.
+						$value = esc_url_raw( $value );
+					} elseif ( is_string( $value ) ) {
+						$value = sanitize_text_field( $value );
+					} elseif ( is_array( $value ) ) {
+						$value = map_deep( $value, 'sanitize_text_field' );
+					}
 				}
 
 				// toggle_list with option_prefix: persist each key to option_prefix + key (e.g. bp-feed-platform-{key}).
@@ -951,7 +1030,12 @@ class BB_Admin_Settings_Ajax {
 						$opt_name = $prefix . $opt_key;
 						bp_update_option( $opt_name, absint( $opt_val ) );
 					}
-					$saved[ $name ] = $value;
+					// Cast to object so `json_encode()` always emits a map (`{}`) — even when
+					// empty (all platforms toggled off). An empty PHP array encodes as `[]`,
+					// which `SharePlatformsField.js` rejects via its
+					// `typeof value === 'object' && !Array.isArray(value)` guard, causing the
+					// UI to desync from the saved state until reload.
+					$saved[ $name ] = (object) $value;
 				} else {
 					// BuddyBoss stores options via bp_update_option (same storage as legacy).
 					bp_update_option( $name, $value );
@@ -1311,7 +1395,7 @@ class BB_Admin_Settings_Ajax {
 		global $wpdb;
 
 		$placeholders = implode( ',', array_fill( 0, count( $uncached ), '%s' ) );
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Placeholders are dynamically generated.
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $placeholders is built from count() only; values are bound via $uncached in prepare() on next line.
 		$results = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT option_name, option_value FROM {$wpdb->options} WHERE option_name IN ({$placeholders})",
@@ -1319,6 +1403,7 @@ class BB_Admin_Settings_Ajax {
 			),
 			OBJECT_K
 		);
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 		// Prime cache for found options with raw (serialized) values.
 		// WP core expects raw values in the options cache; get_option() handles unserializing.
@@ -1374,15 +1459,74 @@ class BB_Admin_Settings_Ajax {
 		// (e.g., OneSignal '/settings/notifications/onesignal' → Notifications > OneSignal panel).
 		if (
 			! empty( $feature['settings_route'] ) &&
-			$feature['settings_route'] !== '/settings/' . $feature_id
+			'/settings/' . $feature_id !== $feature['settings_route']
 		) {
-			$parts     = array_values( array_filter( explode( '/', $feature['settings_route'] ) ) );
-			$route_tab = isset( $parts[1] ) ? $parts[1] : $feature_id;
-			$route_pan = isset( $parts[2] ) ? $parts[2] : '';
+			$parts          = array_values( array_filter( explode( '/', $feature['settings_route'] ) ) );
+			$route_tab      = isset( $parts[1] ) ? $parts[1] : $feature_id;
+			$route_pan      = isset( $parts[2] ) ? $parts[2] : '';
 			$settings_route = bb_get_feature_settings_url( $route_tab, $route_pan );
 		}
 
 		return $settings_route;
+	}
+
+	/**
+	 * Sanitize a `preview_config` array per-leaf.
+	 *
+	 * URL-looking string values go through `esc_url_raw`; other strings get
+	 * `sanitize_text_field`; non-strings pass through. Detection is
+	 * value-shape based (FILTER_VALIDATE_URL + protocol-relative `//` prefix)
+	 * rather than key-suffix based so new URL-shaped keys (`_src`, `_href`,
+	 * `_link`, `_path`, etc.) don't need to be whitelisted as they're added.
+	 *
+	 * Nested arrays get the same per-leaf treatment via recursion —
+	 * `map_deep( ..., 'sanitize_text_field' )` would flatten nested URLs and
+	 * strip the `://` protocol separator.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $config Raw preview_config array from field registration.
+	 * @return array Sanitized config.
+	 */
+	private function bb_sanitize_preview_config( $config ) {
+		$sanitized = array();
+		foreach ( $config as $key => $value ) {
+			if ( is_array( $value ) ) {
+				$sanitized[ $key ] = $this->bb_sanitize_preview_config( $value );
+			} elseif ( is_string( $value ) ) {
+				$sanitized[ $key ] = $this->bb_sanitize_preview_value( $value );
+			} else {
+				$sanitized[ $key ] = $value;
+			}
+		}
+		return $sanitized;
+	}
+
+	/**
+	 * Decide between `esc_url_raw` and `sanitize_text_field` for a single
+	 * preview-config string.
+	 *
+	 * Detection is an explicit scheme regex — `http(s)://` or protocol-relative
+	 * `//` — instead of `FILTER_VALIDATE_URL`, which accepts obscure inputs
+	 * like `javascript://comment%0Aalert(1)`. `esc_url_raw` downstream would
+	 * neutralize that payload anyway, but a strict allowlist is defense in
+	 * depth and keeps the intent obvious.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $value Raw string value.
+	 * @return string Sanitized string.
+	 */
+	private function bb_sanitize_preview_value( $value ) {
+		$trimmed = trim( $value );
+		if ( '' === $trimmed ) {
+			return sanitize_text_field( $value );
+		}
+		// Allowlist http/https/protocol-relative only.
+		if ( preg_match( '#^(https?:)?//#i', $trimmed ) ) {
+			return esc_url_raw( $trimmed );
+		}
+		return sanitize_text_field( $value );
 	}
 
 	/**
@@ -1395,7 +1539,6 @@ class BB_Admin_Settings_Ajax {
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param string|array|null $group Raw group value from field registration.
-	 *
 	 * @return array|null Normalized group array or null.
 	 */
 	private function bb_normalize_field_group( $group ) {
@@ -1493,7 +1636,7 @@ class BB_Admin_Settings_Ajax {
 							'terms'    => array_keys( $slug_term_ids ),
 						),
 					),
-					'fields'         => 'ids',
+					'fields'                 => 'ids',
 				)
 			);
 
@@ -1743,6 +1886,253 @@ class BB_Admin_Settings_Ajax {
 			array(
 				'results'  => $paged,
 				'has_more' => ( $offset + $per_page ) < $total,
+			)
+		);
+	}
+
+	/**
+	 * AJAX handler: search published pages for the Appearance → Pages directory
+	 * dropdowns.
+	 *
+	 * Sibling of `bb_admin_search_published_pages()` but scoped to the
+	 * page-directory-picker use case. The difference is the empty first option:
+	 * this endpoint prepends a single `{ value: '', label: '— Select a page —' }`
+	 * entry (mirrors legacy `wp_dropdown_pages( 'show_option_none' )`). The
+	 * other endpoint prepends "Default" + "Custom URL" which are wrong shapes
+	 * for the directory-page fields.
+	 *
+	 * Multisite: switches to the BP root blog before the page query so that on
+	 * a sub-site admin screen the results still come from the community's root
+	 * blog, matching what `bp_core_admin_get_directory_pages()` / the save
+	 * handler operate on.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_admin_search_pages_list() {
+		$this->bb_verify_request();
+
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_verify_request().
+		$term        = isset( $_POST['term'] ) ? sanitize_text_field( wp_unslash( $_POST['term'] ) ) : '';
+		$page        = isset( $_POST['page'] ) ? absint( $_POST['page'] ) : 1;
+		$selected_id = isset( $_POST['selected_id'] ) ? absint( wp_unslash( $_POST['selected_id'] ) ) : 0;
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
+
+		$per_page = 20;
+		$switched = false;
+		if ( is_multisite() && function_exists( 'bp_get_root_blog_id' ) ) {
+			$root_blog_id = bp_get_root_blog_id();
+			if ( $root_blog_id && get_current_blog_id() !== $root_blog_id ) {
+				switch_to_blog( $root_blog_id );
+				$switched = true;
+			}
+		}
+
+		// Re-check the cap POST-switch using the same `bp_moderate` cap that
+		// `bb_verify_request()` → `bb_admin_verify_ajax_request()` validated
+		// against the request's origin blog. A sub-site admin who passed
+		// there may not have equivalent rights on the root blog — and the
+		// page list we're about to return is authored there. Using
+		// `bp_current_user_can` keeps the cap check consistent with every
+		// other endpoint on this class and honours BP's cap-mapping filters.
+		if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+			if ( $switched ) {
+				restore_current_blog();
+			}
+			wp_send_json_error( array( 'message' => __( 'Insufficient permissions on the target site.', 'buddyboss' ) ) );
+		}
+
+		$empty_option = array(
+			'value' => '',
+			'label' => __( '— Select a page —', 'buddyboss' ),
+		);
+
+		// Selected-ID resolve path: bypass pagination + search so the dropdown
+		// can render its initial label without a wildcard query. Used by the
+		// async_select field on mount with the currently-stored page ID.
+		if ( $selected_id > 0 ) {
+			$post   = get_post( $selected_id );
+			$result = $empty_option;
+			if ( $post && 'page' === $post->post_type && 'publish' === $post->post_status ) {
+				$result = array(
+					'value' => (string) $post->ID,
+					/* translators: %d: WordPress page ID, used as a fallback when a page has no title. */
+					'label' => $post->post_title ? $post->post_title : sprintf( __( '(no title) #%d', 'buddyboss' ), $post->ID ),
+				);
+			}
+			if ( $switched ) {
+				restore_current_blog();
+			}
+			wp_send_json_success(
+				array(
+					'results'  => array( $result ),
+					'has_more' => false,
+				)
+			);
+		}
+
+		// Fetch $per_page + 1 rows with no_found_rows=true so WP_Query skips
+		// SQL_CALC_FOUND_ROWS. On sites with many pages plus a LIKE '%term%'
+		// match, SQL_CALC is expensive and the picker doesn't need the exact
+		// total — just "is there a next page?". We derive has_more from the
+		// overflow row.
+		$query_args = array(
+			'post_type'      => 'page',
+			'post_status'    => 'publish',
+			'posts_per_page' => $per_page + 1,
+			'paged'          => $page,
+			'orderby'        => 'title',
+			'order'          => 'ASC',
+			'fields'         => 'ids',
+			'no_found_rows'  => true,
+		);
+		if ( '' !== $term ) {
+			$query_args['s'] = $term;
+		}
+
+		$query    = new WP_Query( $query_args );
+		$results  = array();
+		$is_first = ( 1 === $page && '' === $term );
+
+		if ( $is_first ) {
+			$results[] = $empty_option;
+		}
+
+		$has_more = false;
+		if ( $query->have_posts() ) {
+			$page_ids = $query->posts;
+			// If we got the extra overflow row, there IS a next page. Trim it
+			// from the returned set so the picker shows exactly $per_page rows.
+			if ( count( $page_ids ) > $per_page ) {
+				$has_more = true;
+				$page_ids = array_slice( $page_ids, 0, $per_page );
+			}
+			foreach ( $page_ids as $page_id ) {
+				$title     = get_the_title( $page_id );
+				$results[] = array(
+					'value' => (string) $page_id,
+					/* translators: %d: WordPress page ID, used as a fallback when a page has no title. */
+					'label' => $title ? $title : sprintf( __( '(no title) #%d', 'buddyboss' ), $page_id ),
+				);
+			}
+		}
+
+		if ( $switched ) {
+			restore_current_blog();
+		}
+
+		wp_send_json_success(
+			array(
+				'results'  => $results,
+				'has_more' => $has_more,
+			)
+		);
+	}
+
+	/**
+	 * AJAX handler: create a blank WordPress page and return its ID + title.
+	 *
+	 * Used by the "Create Page" button on the Appearance → Pages dropdowns.
+	 * Creates a minimal `publish` page titled after the directory slug so the
+	 * user doesn't have to leave the admin to set up a directory page.
+	 *
+	 * The legacy jQuery flow (`.create-background-page` click handler in
+	 * `settings-page.js`) did the same thing — this endpoint replaces that
+	 * request with a nonce-verified, cap-gated version callable from the
+	 * React admin.
+	 *
+	 * Mirrors the multisite switching pattern used by the sibling search
+	 * endpoint so the new page is created on the community's root blog even
+	 * when a network admin is editing from a sub-site.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function bb_admin_create_directory_page() {
+		$this->bb_verify_request();
+
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by bb_verify_request().
+		$slug  = isset( $_POST['slug'] ) ? sanitize_key( wp_unslash( $_POST['slug'] ) ) : '';
+		$label = isset( $_POST['label'] ) ? sanitize_text_field( wp_unslash( $_POST['label'] ) ) : '';
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
+
+		if ( '' === $slug ) {
+			wp_send_json_error( array( 'message' => __( 'Missing page slug.', 'buddyboss' ) ) );
+		}
+
+		// Allow-list the slug against the set of directory keys that the
+		// Pages panel actually renders a Create-Page button for. The button
+		// is only ever clicked from one of those registered dropdowns; any
+		// other `slug` value is a hand-crafted request and should be
+		// rejected. Both helpers pass their returns through filters, so the
+		// (array) cast keeps this defensive against third-party filters
+		// returning non-arrays (PHP 8+ iterator contract).
+		$allowed_slugs = array();
+		if ( function_exists( 'bp_core_admin_get_directory_pages' ) ) {
+			$allowed_slugs = array_merge( $allowed_slugs, array_keys( (array) bp_core_admin_get_directory_pages() ) );
+		}
+		if ( function_exists( 'bp_core_admin_get_static_pages' ) ) {
+			$allowed_slugs = array_merge( $allowed_slugs, array_keys( (array) bp_core_admin_get_static_pages() ) );
+		}
+		if ( ! in_array( $slug, $allowed_slugs, true ) ) {
+			wp_send_json_error( array( 'message' => __( 'Unknown directory slug.', 'buddyboss' ) ) );
+		}
+
+		$switched = false;
+		if ( is_multisite() && function_exists( 'bp_get_root_blog_id' ) ) {
+			$root_blog_id = bp_get_root_blog_id();
+			if ( $root_blog_id && get_current_blog_id() !== $root_blog_id ) {
+				switch_to_blog( $root_blog_id );
+				$switched = true;
+			}
+		}
+
+		// Re-check the cap POST-switch using the same `bp_moderate` cap that
+		// `bb_verify_request()` validated on the origin blog. Network admins
+		// pass on both; a sub-site admin who could manage their own blog is
+		// blocked here on the root blog, which is correct — only the
+		// community owner should create directory pages. Using
+		// `bp_current_user_can` honours BP's cap-mapping filters (e.g. role
+		// plugins that remap `bp_moderate` for a custom role).
+		if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+			if ( $switched ) {
+				restore_current_blog();
+			}
+			wp_send_json_error( array( 'message' => __( 'Insufficient permissions on the target site.', 'buddyboss' ) ) );
+		}
+
+		$title = '' !== $label ? $label : ucfirst( str_replace( array( '-', '_' ), ' ', $slug ) );
+
+		$post_id = wp_insert_post(
+			array(
+				'post_type'      => 'page',
+				'post_status'    => 'publish',
+				'post_title'     => $title,
+				'post_content'   => '',
+				'comment_status' => 'closed',
+				'ping_status'    => 'closed',
+			),
+			true
+		);
+
+		if ( is_wp_error( $post_id ) ) {
+			if ( $switched ) {
+				restore_current_blog();
+			}
+			wp_send_json_error( array( 'message' => $post_id->get_error_message() ) );
+		}
+
+		// `esc_url_raw` before serialising to JSON — defence in depth since the
+		// URL is echoed back to an admin-origin React client.
+		$permalink = esc_url_raw( get_permalink( $post_id ) );
+
+		if ( $switched ) {
+			restore_current_blog();
+		}
+
+		wp_send_json_success(
+			array(
+				'id'        => (int) $post_id,
+				'title'     => $title,
+				'permalink' => $permalink,
 			)
 		);
 	}

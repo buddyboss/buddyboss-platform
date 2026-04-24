@@ -26,6 +26,7 @@ import {
 } from './reaction';
 import { decodeEntities } from '@wordpress/html-entities';
 import { sanitizeHtml, safeUrl } from '../utils/sanitize';
+import { ajaxFetch } from '../utils/ajax';
 import { TopicListField } from './activity/topics/topic-list';
 import { SharePlatformsField } from './activity/sharing';
 import { SsoProvidersField } from './fields/SsoProvidersField';
@@ -45,10 +46,103 @@ import { EmailRestrictionsField } from './fields/EmailRestrictionsField';
 import { PasswordField } from './fields/PasswordField';
 import { StatusCheckField } from './fields/StatusCheckField';
 import { ImageUploadField } from './fields/ImageUploadField';
+import { MediaPickerField } from './fields/MediaPickerField';
+import { SortableToggleList } from './fields/SortableToggleList';
+import { EditableLinkList } from './fields/EditableLinkList';
 import { RecaptchaVerifyField } from './recaptcha/RecaptchaVerifyField';
 import { RecaptchaBypassField } from './recaptcha/RecaptchaBypassField';
 import { VerifyPopupField } from './fields/VerifyPopupField';
+import { SEOPreviewField } from './fields/SEOPreviewField';
+import { SocialPreviewField } from './fields/SocialPreviewField';
+import { TagsReferenceField } from './fields/TagsReferenceField';
+import { ColorPickerField } from './fields/ColorPickerField';
 import { useFetchOnChange } from '../hooks/useFetchOnChange';
+import { evaluateConditional } from '../utils/conditional';
+
+/**
+ * Create-Page button used inside the page-dropdown field variant.
+ *
+ * Pulled into its own component so it can hold in-flight state without
+ * breaking the rules of hooks inside SettingsForm's field iterator.
+ * Blocks double-submits and surfaces AJAX errors to the console instead of
+ * silently swallowing them.
+ *
+ * @param {Object}   props
+ * @param {Object}   props.field      Field descriptor (needs page_create_args).
+ * @param {boolean}  props.disabled   Whether the parent field is disabled.
+ * @param {Function} props.onCreated  Invoked as `onCreated(id, title)` with
+ *                                    the created page ID (string) and its
+ *                                    title — so callers can seed the dropdown
+ *                                    label without a follow-up resolve AJAX.
+ * @returns {JSX.Element} Create Page button.
+ */
+function PageCreateButton( { field, disabled, onCreated } ) {
+	const [ isCreating, setIsCreating ] = useState( false );
+
+	// Tracks whether the component is still mounted when the create AJAX
+	// resolves. Without it, clicking Create Page and then navigating away
+	// before the request returns leaves React with a setState call against
+	// an unmounted instance — React 18 silences the warning but the work
+	// is still wasted and can hide real bugs.
+	const isMountedRef = useRef( true );
+	useEffect( function () {
+		return function () {
+			isMountedRef.current = false;
+		};
+	}, [] );
+
+	const handleClick = function () {
+		if ( isCreating ) {
+			return;
+		}
+		setIsCreating( true );
+		ajaxFetch( field.page_create_args.action, {
+			slug:  field.page_create_args.slug,
+			label: field.page_create_args.label || '',
+		} )
+			.then( function ( response ) {
+				if ( response && response.success && response.data && response.data.id ) {
+					// Pass BOTH id and title up so the caller can seed the
+					// dropdown's label without firing a separate label-resolve
+					// AJAX — the create endpoint already returned the title.
+					onCreated( String( response.data.id ), response.data.title || '' );
+				}
+			} )
+			.catch( function ( err ) {
+				// Log without throwing so the UI stays responsive — the
+				// finally() block below re-enables the button regardless.
+				if ( window && window.console && typeof window.console.warn === 'function' ) {
+					window.console.warn( 'Create Page failed:', err );
+				}
+			} )
+			.finally( function () {
+				if ( isMountedRef.current ) {
+					setIsCreating( false );
+				}
+			} );
+	};
+
+	return (
+		<button
+			type="button"
+			className="bb-admin-settings-form__page-dropdown-create components-button is-secondary"
+			disabled={ disabled || isCreating }
+			onClick={ handleClick }
+			// `aria-busy` signals the in-flight state to assistive tech.
+			// `aria-disabled` is set explicitly because `disabled={true}` on
+			// its own removes the button from the tab order on some AT
+			// configurations — setting the ARIA attribute too makes the
+			// "unavailable right now" state discoverable while keeping the
+			// DOM node itself navigable if a keyboard user tabs onto it
+			// mid-request. Paired with the visual "Creating…" label, this
+			// is the standard WAI-ARIA busy-button affordance.
+			aria-busy={ isCreating }
+			aria-disabled={ disabled || isCreating }
+		>
+			{ isCreating ? __( 'Creating…', 'buddyboss' ) : __( 'Create Page', 'buddyboss' ) }
+		</button>
+	);
+}
 
 /**
  * Settings Form Component (matching Figma settingsSection)
@@ -71,6 +165,20 @@ export function SettingsForm({ fields, values, onChange }) {
 	// would re-apply the default whenever the user cleared the field, fighting
 	// the user's input.
 	const appliedFetchDefaultsRef = useRef( {} );
+
+	// Labels for pages created via PageCreateButton in the current session,
+	// keyed by field.name → `{ id: <created-page-id>, label: <title> }`.
+	// Merged into `initialLabel` when rendering the field's AsyncSelectField
+	// so the newly created page's title appears immediately — without firing
+	// a separate `bb_admin_search_pages_list` resolve round-trip (the create
+	// endpoint already returned the title).
+	//
+	// The entry is invalidated whenever the current field value no longer
+	// matches the stored id. Without that guard, a user who clicks Create
+	// Page and then picks a different page from the dropdown would see the
+	// just-created title flash back in place of the actual selection because
+	// the cached label would shadow the fresh server-provided one.
+	const createdPageLabelsRef = useRef( {} );
 
 	// Auto-apply defaultValue returned by fetch_on_change when the current value is empty.
 	// Runs in an effect (not during render) to avoid "setState during render" warnings/loops.
@@ -136,6 +244,9 @@ export function SettingsForm({ fields, values, onChange }) {
 			if ( field.help_text ) {
 				cache[ field.name + '__help' ] = sanitizeHtml( field.help_text );
 			}
+			if ( field.label_description && 'string' === typeof field.label_description ) {
+				cache[ field.name + '__label_desc' ] = sanitizeHtml( field.label_description );
+			}
 			if ( field.empty_state_title && 'string' === typeof field.empty_state_title ) {
 				cache[ field.name + '__empty_title' ] = sanitizeHtml( field.empty_state_title );
 			}
@@ -150,75 +261,13 @@ export function SettingsForm({ fields, values, onChange }) {
 	}, [ fields ] );
 
 	/**
-	 * Evaluate a single condition object against current values.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {Object} cond Single condition: { field, value }.
-	 * @return {boolean} Whether the condition is met.
-	 */
-	const evaluateCondition = (cond) => {
-		const condValue = values[cond.field];
-		const expectedValue = cond.value;
-
-		// When expected value is boolean, use truthy/falsy comparison
-		// because DB values can be 1, 0, "1", "0" while conditional uses true/false.
-		if (expectedValue === true || expectedValue === false) {
-			const isTruthy = !!condValue && condValue !== '0' && condValue !== 0;
-			return isTruthy === expectedValue;
-		}
-
-		// When expected value is an array, check if current value is in the array.
-		if (Array.isArray(expectedValue)) {
-			return expectedValue.indexOf(condValue) !== -1;
-		}
-
-		// For non-boolean values, use strict comparison.
-		return condValue === expectedValue;
-	};
-
-	/**
-	 * Check if a field's conditional is met.
-	 *
-	 * Supports two formats:
-	 *   1. Single condition:   { field: 'name', value: expected }
-	 *   2. Multiple conditions: { conditions: [ {field, value}, ... ], operator: 'AND'|'OR' }
-	 *      operator defaults to 'AND'.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {Object} field Field config with optional conditional property.
-	 * @return {boolean} True when condition is met (or no conditional exists).
-	 */
-	const isConditionalMet = ( field ) => {
-		if ( ! field.conditional ) {
-			return true;
-		}
-
-		// Skip visibility check for disable-only conditionals — they stay visible.
-			if ( 'disable' === field.conditional.action ) {
-				return true;
-			}
-
-			// Multiple conditions with operator.
-		if ( Array.isArray( field.conditional.conditions ) ) {
-			var operator = ( field.conditional.operator || 'AND' ).toUpperCase();
-			var conditions = field.conditional.conditions;
-
-			if ( 'OR' === operator ) {
-				return conditions.some( evaluateCondition );
-			}
-			// Default: AND — all conditions must match.
-			return conditions.every( evaluateCondition );
-		}
-
-		// Single condition (backward-compatible).
-		return evaluateCondition( field.conditional );
-	};
-
-	/**
 	 * Check if a field should be visible based on its conditional logic.
-	 * Fields with action:'disable' stay visible but get disabled instead.
+	 *
+	 * Fields with `action: 'disable'` stay visible — they get disabled
+	 * instead, handled by `isFieldConditionallyDisabled`. Condition semantics
+	 * (single vs multi, AND/OR, loose scalar equality) live in the shared
+	 * `evaluateConditional` util so this component and the side-panel /
+	 * section filters can't drift.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -226,17 +275,13 @@ export function SettingsForm({ fields, values, onChange }) {
 	 * @return {boolean} True when the field should be rendered.
 	 */
 	const isFieldVisible = (field) => {
-		if ( field.conditional ) {
-			// When action is 'disable', keep visible (handled by isFieldConditionallyDisabled).
-			if ( 'disable' === field.conditional.action ) {
-				return true;
-			}
-			return isConditionalMet( field );
+		if ( ! field.conditional ) {
+			return true;
 		}
-
-		// For parent_field (nesting), always show the field but it may be disabled
-		// Fields with parent_field are rendered as children of their parent
-		return true;
+		if ( 'disable' === field.conditional.action ) {
+			return true;
+		}
+		return evaluateConditional( field.conditional, values );
 	};
 
 	/**
@@ -244,25 +289,15 @@ export function SettingsForm({ fields, values, onChange }) {
 	 * when action is 'disable' instead of 'hide'.
 	 *
 	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {Object} field Field config with optional conditional property.
+	 * @return {boolean} True when the field should be disabled.
 	 */
 	const isFieldConditionallyDisabled = (field) => {
 		if ( ! field.conditional || 'disable' !== field.conditional.action ) {
 			return false;
 		}
-
-		// Multiple conditions with operator.
-		if (Array.isArray(field.conditional.conditions)) {
-			var operator = (field.conditional.operator || 'AND').toUpperCase();
-			var conditions = field.conditional.conditions;
-
-			if ('OR' === operator) {
-				return ! conditions.some(evaluateCondition);
-			}
-			return ! conditions.every(evaluateCondition);
-		}
-
-		// Single condition.
-		return ! evaluateCondition(field.conditional);
+		return ! evaluateConditional( field.conditional, values );
 	};
 
 	/**
@@ -578,8 +613,36 @@ export function SettingsForm({ fields, values, onChange }) {
 				);
 			}
 
-			case 'async_select':
-				return (
+			case 'async_select': {
+				// Appearance → Pages dropdowns enrich their field data with
+				// `page_view_url` (when a page is already selected) and
+				// `page_create_args` (AJAX action + directory slug for the
+				// "Create Page" button when empty). Rendered alongside the
+				// async_select so admins don't have to leave the screen to
+				// create or preview a directory page — matches what the
+				// legacy bp-pages screen offered via jQuery.
+				var hasPageViewUrl    = !! field.page_view_url;
+				var hasPageCreateArgs = !! ( field.page_create_args && field.page_create_args.action && field.page_create_args.slug );
+				var isPageDropdown    = hasPageViewUrl || hasPageCreateArgs;
+
+				// Prefer an in-session created label over the server-provided one
+				// so the dropdown reflects a just-created page without a follow-up
+				// resolve AJAX. The cache entry is id-keyed so that picking a
+				// different page from the dropdown (which changes `value`)
+				// correctly invalidates the cached title and falls through to
+				// the fresh `initial_label` shipped on the next feature GET.
+				var cachedCreated       = createdPageLabelsRef.current[ field.name ];
+				var currentValueStr     = value != null ? String( value ) : '';
+				var cachedStillMatches  = cachedCreated && cachedCreated.id === currentValueStr;
+				if ( cachedCreated && ! cachedStillMatches ) {
+					// Drop stale entry so subsequent renders don't keep checking.
+					delete createdPageLabelsRef.current[ field.name ];
+				}
+				var effectiveInitialLabel = cachedStillMatches
+					? cachedCreated.label
+					: ( field.initial_label || '' );
+
+				var selectEl = (
 					<AsyncSelectField
 						key={field.name}
 						value={value != null ? String(value) : ''}
@@ -587,8 +650,54 @@ export function SettingsForm({ fields, values, onChange }) {
 						asyncAction={field.async_action || ''}
 						placeholder={field.placeholder || ''}
 						disabled={disabled}
+						initialLabel={effectiveInitialLabel}
 					/>
 				);
+
+				if ( ! isPageDropdown ) {
+					return selectEl;
+				}
+
+				// Show View when a page is set; Create when not. Mutually
+				// exclusive — mirrors legacy's per-row button placement.
+				return (
+					<div key={field.name} className="bb-admin-settings-form__page-dropdown">
+						{ selectEl }
+						{ hasPageViewUrl && (
+							<a
+								className="bb-admin-settings-form__page-dropdown-view components-button is-secondary"
+								href={ safeUrl( field.page_view_url ) }
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								{ __( 'View', 'buddyboss' ) }
+							</a>
+						) }
+						{ ! hasPageViewUrl && hasPageCreateArgs && (
+							<PageCreateButton
+								field={ field }
+								disabled={ disabled }
+								onCreated={ function ( id, title ) {
+									// Cache BEFORE onChange so the next render picks
+									// up the effective label on the same pass.
+									// AsyncSelectField's value-change effect sees a
+									// fresh initialLabel and skips the resolve AJAX.
+									// Store as { id, label } so the cache can be
+									// invalidated on the read side when the user
+									// later picks a different page.
+									if ( title ) {
+										createdPageLabelsRef.current[ field.name ] = {
+											id:    String( id ),
+											label: title,
+										};
+									}
+									onChange( field.name, id );
+								} }
+							/>
+						) }
+					</div>
+				);
+			}
 
 			case 'radio': {
 				var radioOptions = field.options || [];
@@ -651,11 +760,11 @@ export function SettingsForm({ fields, values, onChange }) {
 
 			case 'color':
 				return (
-					<input
-						type="color"
-						value={value || '#000000'}
-						onChange={(e) => onChange(field.name, e.target.value)}
-						className="bb-admin-settings-field__color-input"
+					<ColorPickerField
+						value={ value }
+						onChange={ ( newColor ) => onChange( field.name, newColor ) }
+						fallback={ field.default || '#3E34FF' }
+						disabled={ disabled }
 					/>
 				);
 
@@ -928,6 +1037,57 @@ export function SettingsForm({ fields, values, onChange }) {
 					/>
 				);
 
+			case 'media_picker':
+				return (
+					<MediaPickerField
+						value={ value }
+						onChange={ function ( newValue ) {
+							onChange( field.name, newValue );
+						} }
+						disabled={ disabled }
+						config={ field.media_picker_config || {} }
+					/>
+				);
+
+			case 'sortable_toggle_list':
+				return (
+					<SortableToggleList
+						value={ value }
+						onChange={ function ( newValue ) {
+							onChange( field.name, newValue );
+						} }
+						availableItems={ field.available_items || [] }
+						disabled={ disabled }
+					/>
+				);
+
+			case 'editable_link_list':
+				return (
+					<EditableLinkList
+						value={ value }
+						onChange={ function ( newValue ) {
+							onChange( field.name, newValue );
+						} }
+						disabled={ disabled }
+						config={ field.editable_link_list_config || {} }
+					/>
+				);
+
+			case 'seo_preview':
+				return (
+					<SEOPreviewField field={ field } values={ values } />
+				);
+
+			case 'social_preview':
+				return (
+					<SocialPreviewField field={ field } values={ values } />
+				);
+
+			case 'tags_reference':
+				return (
+					<TagsReferenceField field={ field } />
+				);
+
 			case 'manage_link':
 				return (
 					<button
@@ -1090,7 +1250,7 @@ export function SettingsForm({ fields, values, onChange }) {
 												disabled={ cbControlDisabled }
 											>
 												{ ( control.options || [] ).map( function ( opt ) {
-													return <option key={ opt.value } value={ opt.value }>{ opt.label }</option>;
+													return <option key={ opt.value } value={ opt.value }>{ decodeEntities( String( opt.label ) ) }</option>;
 												} ) }
 											</select>
 										) }
@@ -1215,7 +1375,10 @@ export function SettingsForm({ fields, values, onChange }) {
 			field.field_class || '',
 		].filter(Boolean).join(' ');
 
-		const hasLabel = field.label && field.label.trim() !== '';
+		// For grouped fields, only the first visible field in the group renders
+		// the left-column label (shared label across the group per Figma spec).
+		const isNonFirstInGroup = field.group?.key && groupFirstNames[ field.group.key ] && groupFirstNames[ field.group.key ] !== field.name;
+		const hasLabel = field.label && field.label.trim() !== '' && ! isNonFirstInGroup;
 
 		return (
 			<div key={field.name} className={fieldClasses + ( ! hasLabel ? ' bb-admin-settings-form__field--no-label' : '' ) + ( 'reaction_mode' !== field.type && field.pro_notice?.show ? ' bb-admin-settings-form__field--pro-locked' : '' )} data-field-name={field.name} data-group={field.group?.key || undefined} data-group-inline={ field.group && field.group.inline ? 'true' : undefined }>
@@ -1243,6 +1406,11 @@ export function SettingsForm({ fields, values, onChange }) {
 								</>
 							)}
 						</label>
+						{ field.label_description && (
+							<p className="bb-admin-settings-form__field-label-description">
+								<span dangerouslySetInnerHTML={{ __html: sanitizedHtml[ field.name + '__label_desc' ] || '' }} />
+							</p>
+						)}
 					</div>
 				)}
 				<div className={ 'bb-admin-settings-form__field-content' + ( ( 'toggle' === field.type || 'checkbox' === field.type ) && field.description && ! isToggleWithChildren ? ' bb-admin-settings-form__field-content--inline' : '' ) }>
@@ -1303,7 +1471,7 @@ export function SettingsForm({ fields, values, onChange }) {
 														disabled={ controlDisabled }
 													>
 														{ ( controlOptions || [] ).map( ( opt ) => (
-															<option key={ opt.value } value={ opt.value }>{ opt.label }</option>
+															<option key={ opt.value } value={ opt.value }>{ decodeEntities( String( opt.label ) ) }</option>
 														) ) }
 													</select>
 												) }
@@ -1392,21 +1560,51 @@ export function SettingsForm({ fields, values, onChange }) {
 	};
 
 	// Filter out child fields from top level (they'll be rendered inside their parents).
-	const topLevelFields = fields.filter(field => !field.parent_field);
+	// Memoized so the group first/last memo below has a stable dep — otherwise
+	// `fields.filter()` would produce a fresh array every render and the memo
+	// would recompute on every keystroke.
+	const topLevelFields = useMemo( function () {
+		return fields.filter( function ( field ) {
+			return ! field.parent_field;
+		} );
+	}, [ fields ] );
 
-	// Compute which fields are the last visible field in their group (for CSS border).
-	// Re-computed on every render since conditional visibility depends on current values.
-	const groupLastNames = useMemo( function () {
-		var visible = topLevelFields.filter( isFieldVisible );
-		var lastMap = {};
-		for ( var gi = visible.length - 1; gi >= 0; gi-- ) {
-			var gf = visible[ gi ];
-			if ( gf.group?.key && ! lastMap[ gf.group.key ] ) {
-				lastMap[ gf.group.key ] = gf.name;
+	// Compute in a single pass which field is the FIRST and the LAST visible
+	// field in each group. Used so shared-label groups render the left-column
+	// label on the first row only (Figma) and apply the group-last CSS border
+	// modifier on the last row.
+	//
+	// Uses the shared `evaluateConditional` helper (same util the side-panel
+	// and section filters use). Keeping visibility semantics in one place
+	// prevents drift between this memo, `isFieldVisible`, and the panel/section
+	// filters — in particular the loose-equality comparison needed when the DB
+	// stores booleans but React holds them as "1"/"0" strings (e.g.
+	// `bb_rl_enabled` after the Appearance normalization filter).
+	const { groupFirstNames, groupLastNames } = useMemo( function () {
+		var firstMap = {};
+		var lastMap  = {};
+
+		for ( var i = 0; i < topLevelFields.length; i++ ) {
+			var field = topLevelFields[ i ];
+			var key   = field.group?.key;
+			if ( ! key ) {
+				continue;
 			}
+
+			// Fields with action:'disable' stay visible (mirrors `isFieldVisible`).
+			var cond      = field.conditional;
+			var isVisible = ! cond || 'disable' === cond.action || evaluateConditional( cond, values );
+			if ( ! isVisible ) {
+				continue;
+			}
+
+			if ( ! firstMap[ key ] ) {
+				firstMap[ key ] = field.name;
+			}
+			lastMap[ key ] = field.name;
 		}
-		return lastMap;
-	}, [ topLevelFields, values ] ); // eslint-disable-line react-hooks/exhaustive-deps
+		return { groupFirstNames: firstMap, groupLastNames: lastMap };
+	}, [ topLevelFields, values ] );
 
 	return (
 		<>

@@ -23,6 +23,8 @@ import { HelpSliderModal } from '../components/HelpSliderModal';
 import { sanitizeHtml, safeUrl } from '../utils/sanitize';
 import { useGroupNavSync } from '../components/groups/GroupNavSync';
 import { useProfileNavSync } from '../components/members/ProfileNavSync';
+import { WelcomeBanner } from '../components/appearance/WelcomeBanner';
+import { evaluateConditional } from '../utils/conditional';
 
 // Lazy load custom panel screens.
 const ActivityListScreen = lazy(() => import('./ActivityListScreen'));
@@ -616,6 +618,56 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 		setHelpError(null);
 	};
 
+	// Hidden-panel fallback redirect — if the requested panel is hidden (e.g.,
+	// bb_rl_enabled flipped off while the user was on Branding), fall back to
+	// the first visible panel so the right pane never renders orphan content.
+	//
+	// Declared BEFORE the early returns below because React enforces a stable
+	// hook order across renders. When `isLoading` flips from true to false the
+	// component would otherwise call one more hook on the second render and
+	// crash with "Rendered more hooks than during the previous render."
+	// Data-gate happens inside the effect body.
+	useEffect( function () {
+		if ( isLoading || ! feature || ! sidePanels || ! sidePanels.length ) {
+			return;
+		}
+
+		var currentPanel = sidePanels.find( function ( p ) {
+			if ( p.id !== activePanelId ) {
+				return false;
+			}
+			if ( p.conditional && 'disable' !== p.conditional.action ) {
+				return evaluateConditional( p.conditional, settings );
+			}
+			return true;
+		} );
+
+		if ( currentPanel ) {
+			return;
+		}
+
+		var firstVisible = sidePanels.find( function ( p ) {
+			if ( p.conditional && 'disable' !== p.conditional.action ) {
+				return evaluateConditional( p.conditional, settings );
+			}
+			return true;
+		} );
+
+		// Re-entry guard — also check `sidePanelId` (the URL-param panel) so
+		// we don't ping-pong with the URL-sync effect at line ~213 when the
+		// URL still points at the hidden panel.
+		if ( firstVisible && firstVisible.id !== activePanelId && firstVisible.id !== sidePanelId ) {
+			setActivePanelId( firstVisible.id );
+			// Keep the URL in sync with the redirected panel — without this,
+			// `?sidepanel=branding` stays stale in the address bar, and the
+			// URL-sync effect would re-target the hidden panel and bounce
+			// back here, visually flickering.
+			if ( 'function' === typeof onNavigate ) {
+				onNavigate( `/settings/${featureId}/${firstVisible.id}` );
+			}
+		}
+	}, [ isLoading, feature, sidePanels, activePanelId, sidePanelId, settings, featureId, onNavigate ] );
+
 	if (isLoading) {
 		return (
 			<div className="bb-admin-feature-settings bb-admin-loading">
@@ -633,8 +685,20 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 		);
 	}
 
-	// Get the active side panel
-	const activePanel = sidePanels.find(p => p.id === activePanelId);
+	// Get the active side panel — filtered to only panels whose `conditional`
+	// currently evaluates true. Without this gate, toggling Site Layout off
+	// while a user is parked on Branding/Menus would leave those panels'
+	// sections rendering on the right pane even though the left nav hides
+	// them.
+	const activePanel = sidePanels.find( function ( p ) {
+		if ( p.id !== activePanelId ) {
+			return false;
+		}
+		if ( p.conditional && 'disable' !== p.conditional.action ) {
+			return evaluateConditional( p.conditional, settings );
+		}
+		return true;
+	} );
 
 	// Check if this panel has a custom screen (e.g., ActivityListScreen).
 	const customScreenKey = featureId + ':' + activePanelId;
@@ -652,6 +716,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 						currentPanel={activePanelId}
 						onNavigate={onNavigate}
 						onBack={handleBack}
+						formValues={settings}
 					/>
 				</aside>
 
@@ -669,24 +734,26 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 
 						{/* Settings Form - Show sections for active side panel */}
 						<div className="bb-admin-feature-settings__content">
+							{/* Appearance → General welcome banner (intro card above Site Name).
+							    Gated on the Site Layout toggle so admins running the WordPress
+							    Theme layout don't see the "Welcome to ReadyLaunch" copy +
+							    tutorial video. Matches legacy behavior where the banner only
+							    existed on the RL-specific admin page. */}
+							{ 'appearance' === featureId && 'general' === activePanelId && !! settings.bb_rl_enabled && '0' !== settings.bb_rl_enabled && (
+								<WelcomeBanner />
+							) }
 							{activePanel ? (
 								<>
 									{/* Render all sections within the active side panel */}
 									{(activePanel.sections || []).map((section) => {
-										// Check section-level conditional (hide or disable).
+										// Check section-level conditional (hide or disable) via the
+										// shared `evaluateConditional` util — same evaluator the
+										// side-panel filter, field visibility, and group-first/last
+										// memo use. Keeps conditional semantics in one place.
 										var isSectionDisabled = false;
 										var isSectionHidden = false;
 										if ( section.conditional ) {
-											var condVal = settings[section.conditional.field];
-											var expected = section.conditional.value;
-											var condOperator = section.conditional.operator || '==';
-											var isTruthy = !!condVal && condVal !== '0' && condVal !== 0;
-											var condMet;
-											if ( '!=' === condOperator ) {
-												condMet = ( expected === true || expected === false ) ? isTruthy !== expected : condVal !== expected;
-											} else {
-												condMet = ( expected === true || expected === false ) ? isTruthy === expected : condVal === expected;
-											}
+											var condMet = evaluateConditional( section.conditional, settings );
 											if ( ! condMet ) {
 												if ( 'disable' === section.conditional.action ) {
 													isSectionDisabled = true;
@@ -766,11 +833,11 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 															)}
 														</span>
 													)}
-													{/* Help icon - opens help slider modal */}
-													{activePanel.help_url && (
+													{/* Help icon — section-level overrides panel-level when both are set. */}
+													{( section.help_url || activePanel.help_url ) && (
 														<HelpIcon
 															onClick={handleHelpClick}
-															contentId={activePanel.help_url}
+															contentId={section.help_url || activePanel.help_url}
 														/>
 													)}
 													{/* Section toggle - enables/disables all fields in this section */}

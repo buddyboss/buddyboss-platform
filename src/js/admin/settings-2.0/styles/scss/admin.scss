@@ -40,6 +40,10 @@
     right: 0;
 	z-index: 100;
 
+	body.folded & {
+		left: 56px;
+	}
+
 	&__container {
 		display: flex;
 		align-items: center;
@@ -348,8 +352,12 @@
 /* Registration Profile Type Redirects */
 @import 'screens/features/registration-redirects';
 
+/* Appearance → General Welcome Banner */
+@import 'screens/features/appearance-welcome';
+
 /* Help Modal */
 @import 'utils/help-modal';
 
 /* Field Components */
 @import 'fields/verify-popup';
+@import 'fields/page-dropdown';

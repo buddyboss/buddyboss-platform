@@ -8,7 +8,7 @@
 import { lazy, Suspense, useState, useEffect, useRef } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import { Button } from '@wordpress/components';
-import { getCachedFeatures, invalidateFeaturesCache, updateFeatureInCache } from './utils/ajax';
+import { getCachedFeatures } from './utils/ajax';
 import { SettingsScreen } from './screens/SettingsScreen';
 import { FeatureSettingsScreen } from './screens/FeatureSettingsScreen';
 
@@ -16,9 +16,6 @@ import { FeatureSettingsScreen } from './screens/FeatureSettingsScreen';
 const ActivityListScreen = lazy(() => import('./screens/ActivityListScreen'));
 const GroupsListScreen = lazy(() => import('./screens/GroupsListScreen'));
 const ForumsListScreen = lazy(() => import('./screens/ForumsListScreen'));
-
-// Re-export for consumers that import from Router
-export { invalidateFeaturesCache, updateFeatureInCache };
 
 /**
  * Check if a feature is enabled

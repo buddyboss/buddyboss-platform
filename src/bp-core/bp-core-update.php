@@ -544,9 +544,11 @@ function bp_version_updater() {
 			bb_update_to_2_16_1();
 		}
 
-		// Version 3.0.0 - Settings 2.0 feature migration.
-		if ( $raw_db_version < 23583 ) {
+		// DB version 23584 — 3.0.0 release migration block (Settings 2.0
+		// feature activation + ReadyLaunch option-shape canonicalization).
+		if ( $raw_db_version < 23584 ) {
 			bb_update_to_3_0_0();
+			bb_rl_migrate_settings();
 		}
 
 		if ( $raw_db_version !== $current_db ) {
@@ -4161,6 +4163,85 @@ function bb_update_to_3_0_0() {
 	}
 
 	bb_migrate_email_type_groups();
+}
+
+/**
+ * Companion migration for DB version 23584 — canonicalize ReadyLaunch
+ * sidebar/menu/pages option shapes. Runs alongside bb_update_to_3_0_0() as
+ * part of the same 3.0.0 release migration block.
+ *
+ * The legacy ReadyLaunch onboarding wizard persisted these options as sequential
+ * arrays:
+ *   bb_rl_activity_sidebars        [ 'complete_profile', 'latest_updates', ... ]
+ *   bb_rl_member_profile_sidebars  [ 'complete_profile', 'connections', ... ]
+ *   bb_rl_groups_sidebars          [ 'about_group', 'group_members' ]
+ *   bb_rl_enabled_pages            [ 'registration', 'courses' ]
+ *   bb_rl_side_menu                [ { id, enabled, order, icon }, ... ]
+ *
+ * Settings 2.0 expects the associative-map shape:
+ *   { complete_profile: 1, latest_updates: 1, ... }
+ *   { activity_feed: { enabled, order, icon }, ... }
+ *
+ * Reading the legacy shape into the Settings 2.0 React admin renders every
+ * toggle as unchecked because the AJAX layer's `array_map( 'absint', ... )`
+ * coerces the string members to `0`. This one-shot migration reads each
+ * option, normalizes via the same helpers the save-side sanitize callbacks
+ * use, and writes back. Idempotent — values already in canonical shape pass
+ * through unchanged.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_rl_migrate_settings() {
+	// Independent idempotency flag — the outer DB-version gate is shared with
+	// `bb_update_to_3_0_0()`. If that partially fails, the gate stays open and
+	// the version updater re-enters on every request until it succeeds. This
+	// migration is self-idempotent (list-to-map conversions no-op on already
+	// canonical data), but an explicit flag still saves five option reads +
+	// two helper calls per request during an incident window.
+	if ( bp_get_option( 'bb_rl_shapes_migrated' ) ) {
+		return;
+	}
+
+	if ( ! function_exists( 'bb_appearance_normalize_list_to_map' ) || ! function_exists( 'bb_appearance_normalize_side_menu_shape' ) ) {
+		return;
+	}
+
+	// Sequential list → associative `{ key => 1 }` map.
+	$list_options = array(
+		'bb_rl_activity_sidebars',
+		'bb_rl_member_profile_sidebars',
+		'bb_rl_groups_sidebars',
+		'bb_rl_enabled_pages',
+	);
+	foreach ( $list_options as $option_name ) {
+		$stored = bp_get_option( $option_name, null );
+		if ( null === $stored || ! is_array( $stored ) ) {
+			continue;
+		}
+		$normalized = bb_appearance_normalize_list_to_map( $stored );
+		if ( $normalized !== $stored ) {
+			bp_update_option( $option_name, $normalized );
+		}
+	}
+
+	// Sequential list of item objects → associative map keyed by id.
+	$side_menu = bp_get_option( 'bb_rl_side_menu', null );
+	if ( null !== $side_menu && is_array( $side_menu ) ) {
+		$normalized_menu = bb_appearance_normalize_side_menu_shape( $side_menu );
+		if ( $normalized_menu !== $side_menu ) {
+			bp_update_option( 'bb_rl_side_menu', $normalized_menu );
+		}
+	}
+
+	// Mark as complete so future `bp_version_updater` runs short-circuit even
+	// if the outer DB version bump happens to fail mid-flight.
+	//
+	// @todo: Remove after 3 release. Once every active site has run this
+	// migration the flag and the entire `bb_rl_migrate_settings()` function
+	// can be deleted along with its idempotency short-circuit at the top.
+	bp_update_option( 'bb_rl_shapes_migrated', 1 );
 }
 
 /**

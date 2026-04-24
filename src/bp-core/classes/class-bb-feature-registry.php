@@ -537,9 +537,18 @@ class BB_Feature_Registry {
 			);
 		}
 
-		// Check for conflicts.
-		if ( isset( $this->sections[ $feature_id ][ $side_panel_id ][ $section_id ] ) ) {
-			// Auto-append unique suffix.
+		// Detect duplicate registration.
+		$already_registered = isset( $this->sections[ $feature_id ][ $side_panel_id ][ $section_id ] );
+
+		// Merge mode: caller opts in by passing 'merge' => true. Used by Pro/add-on plugins
+		// that need to override specific keys (e.g. clear pro_notice when license is valid)
+		// without re-declaring the full section. Existing args are kept; null values in $args
+		// remove the corresponding key from the stored args.
+		$merge_mode = $already_registered && ! empty( $args['merge'] );
+		unset( $args['merge'] );
+
+		// Conflict (no merge opt-in) — auto-suffix to preserve original and warn.
+		if ( $already_registered && ! $merge_mode ) {
 			$suffix      = 1;
 			$original_id = $section_id;
 			while ( isset( $this->sections[ $feature_id ][ $side_panel_id ][ $section_id ] ) ) {
@@ -558,8 +567,8 @@ class BB_Feature_Registry {
 			);
 		}
 
-		// Validate required args.
-		if ( empty( $args['title'] ) ) {
+		// Validate required args (skipped on merge — original registration already provided them).
+		if ( ! $merge_mode && empty( $args['title'] ) ) {
 			return new WP_Error(
 				'missing_section_title',
 				sprintf(
@@ -568,6 +577,21 @@ class BB_Feature_Registry {
 					$section_id
 				)
 			);
+		}
+
+		// Merge mode: layer overrides on top of existing args. Null values explicitly remove keys.
+		if ( $merge_mode ) {
+			$existing = $this->sections[ $feature_id ][ $side_panel_id ][ $section_id ];
+			foreach ( $args as $key => $value ) {
+				if ( null === $value ) {
+					unset( $existing[ $key ] );
+				} else {
+					$existing[ $key ] = $value;
+				}
+			}
+			$this->sections[ $feature_id ][ $side_panel_id ][ $section_id ] = $existing;
+			$this->sorted_cache_dirty                                       = true;
+			return true;
 		}
 
 		// Set defaults.

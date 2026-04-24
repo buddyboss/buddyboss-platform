@@ -215,6 +215,38 @@ function bb_admin_settings_register_media_feature() {
 		)
 	);
 
+	// Side Panel 8: Offload Media link-out (optional).
+	//
+	// Only registered when the Offload Media plugin is active. We detect the
+	// plugin via its `BB_OM_FEATURE_ID` constant, defined at plugin bootstrap
+	// (`buddyboss-offload-media.php`) before any hooks fire — so by the time
+	// this function runs on `bb_register_features`, the constant is present
+	// iff the plugin is loaded. No need to consult the feature registry, and
+	// no extra `add_action` required.
+	//
+	// Rendered by `SideNavigation.js`'s external-link variant (anchor + trailing
+	// up-right arrow icon) because the target lives under a separate feature
+	// (`offload-media`), not a panel inside Media. The link resolves to the
+	// Settings 2.0 URL via `bb_get_feature_settings_url()`, so legacy
+	// ?page=bp-integrations&tab=bb-om bookmarks are also handled by that
+	// helper's fallback logic on older Platform builds.
+	if ( defined( 'BB_OM_FEATURE_ID' ) ) {
+		bb_register_side_panel(
+			'media',
+			'offload_media_link',
+			array(
+				'title'        => __( 'Offload Media', 'buddyboss' ),
+				'icon'         => array(
+					'type'  => 'font',
+					'class' => 'bb-icons-rl bb-icons-rl-cloud',
+				),
+				'order'        => 100, // After Access Controls (order 70); divider gives visual separation above.
+				'divider'      => true,
+				'external_url' => bb_get_feature_settings_url( BB_OM_FEATURE_ID ),
+			)
+		);
+	}
+
 	// =========================================================================
 	// PANEL FIELDS
 	// =========================================================================

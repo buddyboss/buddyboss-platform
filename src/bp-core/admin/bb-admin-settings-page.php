@@ -104,6 +104,30 @@ function bb_admin_settings_page() {
 		wp_enqueue_editor();
 	}
 
+	// Conditionally enqueue the WordPress media library (~200-400ms TTI) only
+	// when a feature actually exposes a media-picking field. Mirrors the
+	// richtext gate above. Scans for the three field types that open
+	// `wp.media()`: `media_picker` (logos, OG image), `image_upload` (cover
+	// uploads), `image_radio` (grouped-options with upload).
+	$has_media_field = false;
+	if ( function_exists( 'bb_feature_registry' ) ) {
+		$media_types  = array( 'media_picker', 'image_upload', 'image_radio' );
+		$all_features = bb_feature_registry()->bb_get_features();
+		foreach ( $all_features as $fid => $f ) {
+			$all_fields = bb_feature_registry()->bb_get_all_fields( $fid );
+			foreach ( $all_fields as $field ) {
+				if ( ! empty( $field['type'] ) && in_array( $field['type'], $media_types, true ) ) {
+					$has_media_field = true;
+					break 2;
+				}
+			}
+		}
+	}
+
+	if ( $has_media_field ) {
+		wp_enqueue_media();
+	}
+
 	// Enqueue scripts and styles.
 	wp_enqueue_script(
 		'bb-admin-settings-2-0',
@@ -191,6 +215,20 @@ function bb_admin_settings_page() {
 	// Repair tools nonce — used by Email Missing modal to call existing
 	// bp_admin_repair_tools_wrapper_function AJAX action.
 	$localize_data['repairNonce'] = wp_create_nonce( 'bp-do-counts' );
+
+	// ReadyLaunch onboarding completion flag — used by the Appearance → General
+	// welcome banner to hide the Setup Wizard button once the wizard has been
+	// completed at least once. Mirrors the legacy `BP_ADMIN.rl_onboarding_completed`
+	// gate from the retired admin page.
+	$localize_data['rlOnboardingCompleted'] = (bool) bp_get_option( 'bb_rl_onboarding_completed', false );
+
+	// Bootstrap payload for the Appearance → General "Setup Wizard" button.
+	// Allows the rl-onboarding React bundle to be lazy-loaded and mounted on
+	// click without navigating away from Settings 2.0. Skipped once the wizard
+	// has been completed (the button is hidden in that state anyway).
+	if ( ! $localize_data['rlOnboardingCompleted'] && class_exists( 'BB_ReadyLaunch_Onboarding' ) ) {
+		$localize_data['rlOnboardingBootstrap'] = BB_ReadyLaunch_Onboarding::instance()->get_bootstrap_data();
+	}
 
 	// Only expose debug data when WP_DEBUG is enabled.
 	if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
