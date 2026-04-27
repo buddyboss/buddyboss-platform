@@ -2830,18 +2830,6 @@ if ( ! function_exists( 'bb_labs_no_settings_callback' ) ) {
 	}
 }
 
-/**
- * Stub out the `bb_admin_setting_labs_register_fields` action so callers
- * (typically third-party plugins) can still `add_action` against it without
- * errors; the action will never fire because the tab is gone.
- *
- * No active hook needed here — `add_action`/`do_action` are always available
- * on non-existent action names. Documented as a no-op for clarity.
- *
- * @since      BuddyBoss 1.9.3
- * @deprecated BuddyBoss [BBVERSION] The Labs tab has been removed.
- */
-
 /* ----------------------------------------------------------------------------
  * Legacy "Components" admin page — removed in Settings 2.0.
  *
@@ -3239,3 +3227,144 @@ if ( ! function_exists( 'bb_registration_page_tutorial' ) ) {
 		);
 	}
 }
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Settings 1.0 register-fields hook compatibility — remaining 3 hooks.
+// Most legacy `*_register_fields` action hooks already have per-panel
+// `do_action_deprecated()` shims earlier in this file (search, activity,
+// messages, registration, media, video, document, groups, forums,
+// notifications, moderation, general, friends, xprofile, and the bp_ prefix
+// performance variant — each fires from its own
+// `bb_{panel}_after_register_settings_fields` listener).
+//
+// The three hooks below were not covered by any existing shim:
+//   - bb_admin_setting_reactions_register_fields  — fired from the reactions
+//     feature settings file via the new bb_reactions_after_register_settings_fields hook.
+//   - bb_admin_setting_performance_register_fields — bb_ prefix variant; the bp_
+//     prefix variant is already shimmed in the bb_advanced listener block above.
+//   - bb_admin_setting_labs_register_fields       — Labs panel was retired; no
+//     specific bb_*_after_register_settings_fields hook exists, so we fire on
+//     bb_register_features priority 99 as a fallback so any third-party
+//     callbacks at least see the deprecation notice.
+// ──────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Fire the legacy `bb_admin_setting_reactions_register_fields` hook after
+ * Settings 2.0 finishes registering reactions fields.
+ *
+ * The original hook passed a `BB_Admin_Setting_Reactions` instance. Settings 2.0
+ * no longer uses that class, so a no-op stub is passed to satisfy callbacks
+ * that call add_section()/add_field() on the argument.
+ *
+ * @since BuddyBoss 1.7.0
+ * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_reactions_after_register_settings_fields'} instead.
+ */
+add_action(
+	'bb_reactions_after_register_settings_fields',
+	static function () {
+		do_action_deprecated(
+			'bb_admin_setting_reactions_register_fields',
+			array(
+				new class() {
+					/**
+					 * No-op stub for BP_Admin_Setting_tab::add_section().
+					 *
+					 * @param mixed ...$args Ignored.
+					 */
+					public function add_section( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+
+					/**
+					 * No-op stub for BP_Admin_Setting_tab::add_field().
+					 *
+					 * @param mixed ...$args Ignored.
+					 */
+					public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+				},
+			),
+			'BuddyBoss [BBVERSION]',
+			'bb_reactions_after_register_settings_fields'
+		);
+	}
+);
+
+/**
+ * Fire the legacy `bb_admin_setting_performance_register_fields` hook (bb_ prefix
+ * variant) after Settings 2.0 features register. The bp_ prefix variant is shimmed
+ * in the bb_advanced listener above; this covers third-party code that hooked the
+ * bb_ variant introduced for the Performance tab in 1.5.x.
+ *
+ * @since BuddyBoss 1.5.0
+ * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_advanced_after_register_settings_fields'} instead.
+ */
+add_action(
+	'bb_register_features',
+	static function () {
+		if ( ! is_admin() ) {
+			return;
+		}
+		do_action_deprecated(
+			'bb_admin_setting_performance_register_fields',
+			array(
+				new class() {
+					/**
+					 * No-op stub.
+					 *
+					 * @param mixed ...$args Ignored.
+					 */
+					public function add_section( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+
+					/**
+					 * No-op stub.
+					 *
+					 * @param mixed ...$args Ignored.
+					 */
+					public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+				},
+			),
+			'BuddyBoss [BBVERSION]',
+			'bb_advanced_after_register_settings_fields'
+		);
+	},
+	99
+);
+
+/**
+ * Fire the legacy `bb_admin_setting_labs_register_fields` hook for backward
+ * compatibility. The Labs panel was retired; no replacement hook exists, so we
+ * fall back to bb_register_features priority 99 so third-party callbacks at
+ * least see the deprecation notice.
+ *
+ * @since BuddyBoss 2.3.6
+ * @deprecated BuddyBoss [BBVERSION] Labs panel removed; no replacement.
+ */
+add_action(
+	'bb_register_features',
+	static function () {
+		if ( ! is_admin() ) {
+			return;
+		}
+		do_action_deprecated(
+			'bb_admin_setting_labs_register_fields',
+			array(
+				new class() {
+					/**
+					 * No-op stub.
+					 *
+					 * @param mixed ...$args Ignored.
+					 */
+					public function add_section( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+
+					/**
+					 * No-op stub.
+					 *
+					 * @param mixed ...$args Ignored.
+					 */
+					public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+				},
+			),
+			'BuddyBoss [BBVERSION]',
+			''
+		);
+	},
+	99
+);
