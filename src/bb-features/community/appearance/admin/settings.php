@@ -837,6 +837,27 @@ function bb_appearance_register_site_seo_pro_placeholder_fields() {
 	$panel_id   = 'site_seo';
 	$section_id = 'seo';
 
+	// Per-field PRO badge data. Site SEO is gated by the Sharing plugin, not
+	// by Platform Pro — so when Sharing is inactive we always want the
+	// row-level "PRO" badge to show, regardless of whether Pro is active.
+	//
+	// `bb_admin_settings_format_field_data` (in `class-bb-admin-settings-ajax.php`)
+	// auto-computes `pro_notice` for any `pro_only` field that doesn't already
+	// have one set, and that auto-compute (`bb_admin_settings_get_pro_notice`)
+	// only returns `show => true` when Pro is inactive or its license is
+	// invalid. The OneSignal placeholder relies on that auto-compute because
+	// its placeholder only runs when Pro is inactive — so the assumption holds.
+	// Site SEO is asymmetric: Sharing inactive can coexist with Pro active, so
+	// we set `pro_notice` explicitly here to bypass the auto-compute and keep
+	// the badge visible in that combination.
+	$pro_notice_field = array(
+		'show'       => true,
+		'badge_text' => __( 'PRO', 'buddyboss' ),
+		'badge_icon' => 'bb-icons-rl-crown-simple',
+		'link_url'   => 'https://www.buddyboss.com/platform/',
+		'link_icon'  => 'bb-icons-rl-play',
+	);
+
 	// -------------------------------------------------------------------------
 	// SECTION: Site SEO (pro-gated placeholder, UPGRADE PRO badge).
 	// -------------------------------------------------------------------------
@@ -869,6 +890,7 @@ function bb_appearance_register_site_seo_pro_placeholder_fields() {
 			'description'       => __( 'Set the main title of your website that Google will index. The optimal length is about 55 characters.', 'buddyboss' ),
 			'default'           => '',
 			'pro_only'          => true,
+			'pro_notice'        => $pro_notice_field,
 			'sanitize_callback' => '__return_empty_string',
 			'group'             => array(
 				'key'   => 'seo',
@@ -890,6 +912,7 @@ function bb_appearance_register_site_seo_pro_placeholder_fields() {
 			'description'       => __( 'Set the default description that will accompany your SEO title in search engine results. The optimal description length is 155 to 300 characters.', 'buddyboss' ),
 			'default'           => '',
 			'pro_only'          => true,
+			'pro_notice'        => $pro_notice_field,
 			'sanitize_callback' => '__return_empty_string',
 			'group'             => array(
 				'key'   => 'seo',
@@ -920,6 +943,7 @@ function bb_appearance_register_site_seo_pro_placeholder_fields() {
 				'description_key' => 'buddyboss_seo_description',
 			),
 			'pro_only'          => true,
+			'pro_notice'        => $pro_notice_field,
 			'sanitize_callback' => '__return_empty_string',
 			'order'             => 30,
 		)
@@ -942,6 +966,7 @@ function bb_appearance_register_site_seo_pro_placeholder_fields() {
 			'help_text'         => __( 'Open Graph support improves how your content appears when shared on social platforms such as Facebook, LinkedIn, and X.', 'buddyboss' ),
 			'default'           => 0,
 			'pro_only'          => true,
+			'pro_notice'        => $pro_notice_field,
 			// __return_empty_string drops any value a client tries to submit to this Pro-locked placeholder field.
 			'sanitize_callback' => '__return_empty_string',
 			'order'             => 40,
@@ -961,6 +986,7 @@ function bb_appearance_register_site_seo_pro_placeholder_fields() {
 			'description'       => __( 'Template for activity Open Graph titles. Use the tags below to dynamically insert activity data.', 'buddyboss' ),
 			'default'           => '',
 			'pro_only'          => true,
+			'pro_notice'        => $pro_notice_field,
 			'sanitize_callback' => '__return_empty_string',
 			'order'             => 50,
 		)
@@ -994,6 +1020,7 @@ function bb_appearance_register_site_seo_pro_placeholder_fields() {
 			),
 			'default'           => '',
 			'pro_only'          => true,
+			'pro_notice'        => $pro_notice_field,
 			'sanitize_callback' => '__return_empty_string',
 			'order'             => 55,
 		)
@@ -1034,6 +1061,7 @@ function bb_appearance_register_site_seo_pro_placeholder_fields() {
 				'help_text'         => $is_last_toggle ? __( 'Choose whether search engines should index this content. Turning it off will hide it from search results.', 'buddyboss' ) : '',
 				'default'           => 0,
 				'pro_only'          => true,
+				'pro_notice'        => $pro_notice_field,
 				// __return_empty_string drops any value a client tries to submit to this Pro-locked placeholder field.
 				'sanitize_callback' => '__return_empty_string',
 				'group'             => array(

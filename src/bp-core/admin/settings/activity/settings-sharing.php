@@ -114,6 +114,28 @@ function bb_activity_register_sharing_pro_placeholder_fields() {
 	$panel_id   = 'activity_sharing';
 	$section_id = 'activity_sharing';
 
+	// Per-field PRO badge data. Activity Sharing is gated by the Sharing
+	// plugin, not by Platform Pro — so when Sharing is inactive we always
+	// want the row-level "PRO" badge to show, regardless of whether Pro is
+	// active.
+	//
+	// `bb_admin_settings_format_field_data` (in `class-bb-admin-settings-ajax.php`)
+	// auto-computes `pro_notice` for any `pro_only` field that doesn't already
+	// have one set, and that auto-compute (`bb_admin_settings_get_pro_notice`)
+	// only returns `show => true` when Pro is inactive or its license is
+	// invalid. The OneSignal placeholder relies on that auto-compute because
+	// its placeholder only runs when Pro is inactive — so the assumption holds.
+	// Activity Sharing is asymmetric: Sharing inactive can coexist with Pro
+	// active, so we set `pro_notice` explicitly here to bypass the auto-compute
+	// and keep the badge visible in that combination.
+	$pro_notice_field = array(
+		'show'       => true,
+		'badge_text' => __( 'PRO', 'buddyboss' ),
+		'badge_icon' => 'bb-icons-rl-crown-simple',
+		'link_url'   => 'https://www.buddyboss.com/platform/',
+		'link_icon'  => 'bb-icons-rl-play',
+	);
+
 	// -------------------------------------------------------------------------
 	// SECTION: Activity Sharing (pro-gated placeholder, UPGRADE PRO badge).
 	// -------------------------------------------------------------------------
@@ -181,6 +203,7 @@ function bb_activity_register_sharing_pro_placeholder_fields() {
 				'description'       => $toggle['description'],
 				'default'           => 0,
 				'pro_only'          => true,
+				'pro_notice'        => $pro_notice_field,
 				'sanitize_callback' => '__return_empty_string',
 				'order'             => $toggle['order'],
 			)
@@ -202,6 +225,7 @@ function bb_activity_register_sharing_pro_placeholder_fields() {
 			'description'       => __( 'Allow members to share public posts as link', 'buddyboss' ),
 			'default'           => 0,
 			'pro_only'          => true,
+			'pro_notice'        => $pro_notice_field,
 			'sanitize_callback' => '__return_empty_string',
 			'group'             => array(
 				'key' => 'share_as_link',
@@ -248,6 +272,7 @@ function bb_activity_register_sharing_pro_placeholder_fields() {
 				),
 			),
 			'pro_only'          => true,
+			'pro_notice'        => $pro_notice_field,
 			'sanitize_callback' => '__return_empty_string',
 			'conditional'       => array(
 				'field' => 'buddyboss_activity_sharing_as_link',
