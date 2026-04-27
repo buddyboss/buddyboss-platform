@@ -81,7 +81,7 @@ function bb_activity_register_topics_panel_fields() {
 			'name'              => 'bb_activity_topics',
 			'label'             => __( 'Topics', 'buddyboss' ),
 			'type'              => 'topic_list',
-			'description'       => __( 'You can add up to a maximum of 20 topics', 'buddyboss' ),
+			'description'       => __( 'Maximum of 20 topics can be added.', 'buddyboss' ),
 			'default'           => array(),
 			'sanitize_callback' => 'bb_sanitize_topic_list_noop',
 			'order'             => 30,
