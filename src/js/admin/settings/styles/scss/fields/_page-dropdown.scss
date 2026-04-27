@@ -43,24 +43,10 @@
 	// state where no selected-value pill masks the drift.
 	.bb-admin-settings-form__page-dropdown-view,
 	.bb-admin-settings-form__page-dropdown-create {
-		flex: 0 0 auto;
-		align-self: center;
-		height: 32px;
-		line-height: 1;
-		padding: 0 12px;
-		white-space: nowrap;
-		text-decoration: none;
+		@include bb-button-primary-outline;
 
-		// Keyboard focus ring via `:focus-visible` only — `:focus` alone
-		// would also paint the ring on mouse click, which is the modern
-		// anti-pattern we want to avoid. Keyboard users still get a visible
-		// indicator consistent with the rest of the admin (see
-		// `screens/features/_color-picker-field.scss` for the same
-		// convention). Mouse users get nothing because `:focus-visible`
-		// heuristics suppress the ring after pointer interactions.
-		&:focus-visible:not(:disabled) {
-			outline: 2px solid $bb-border-quinery;
-			outline-offset: 1px;
+		> [class*="bb-icon"] {
+			margin: 0 0 0 6px;
 		}
 	}
 }

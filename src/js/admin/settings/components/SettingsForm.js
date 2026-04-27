@@ -140,6 +140,7 @@ function PageCreateButton( { field, disabled, onCreated } ) {
 			aria-disabled={ disabled || isCreating }
 		>
 			{ isCreating ? __( 'Creating…', 'buddyboss' ) : __( 'Create Page', 'buddyboss' ) }
+			<i className="bb-icons-rl-plus"></i>
 		</button>
 	);
 }
@@ -671,6 +672,7 @@ export function SettingsForm({ fields, values, onChange }) {
 								rel="noopener noreferrer"
 							>
 								{ __( 'View', 'buddyboss' ) }
+								<i className="bb-icons-rl-arrow-up-right"></i>
 							</a>
 						) }
 						{ ! hasPageViewUrl && hasPageCreateArgs && (
