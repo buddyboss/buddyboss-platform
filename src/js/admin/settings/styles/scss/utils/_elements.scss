@@ -467,6 +467,10 @@ select.bb-admin-settings__select {
 		flex-direction: column;
 		gap: 12px;
 	}
+
+    [data-field-name="bb-group-activity-topics-options"] .components-radio-control__group-wrapper {
+        flex-direction: column;
+    }
 }
 
 /* Full control width — forces the field input to use full available width.
