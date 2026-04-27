@@ -50,15 +50,15 @@ const rlOnboardingConfig = {
     },
 };
 
-// Settings 2.0 configuration
-const settings20Config = {
+// Settings configuration
+const settingsConfig = {
     ...defaultConfig,
-    name: 'settings-2.0',
+    name: 'settings',
     entry: {
-        'index': path.resolve(__dirname, 'settings-2.0/index.js'),
+        'index': path.resolve(__dirname, 'settings/index.js'),
     },
     output: {
-        path: path.resolve(__dirname, '../../bp-core/admin/bb-settings/settings-2.0/build'),
+        path: path.resolve(__dirname, '../../bp-core/admin/bb-settings/settings/build'),
         filename: '[name].js',
         clean: {
             keep: /styles/, // Keep the styles directory (SCSS output)
@@ -75,12 +75,12 @@ const settings20Config = {
 
 // Export configuration based on build target.
 // `readylaunch` target retired in BuddyBoss [BBVERSION] — legacy admin page
-// folded into Settings 2.0 Appearance feature.
+// folded into Settings Appearance feature.
 if (buildTarget === 'rl-onboarding') {
     module.exports = rlOnboardingConfig;
-} else if (buildTarget === 'settings-2.0') {
-    module.exports = settings20Config;
+} else if (buildTarget === 'settings') {
+    module.exports = settingsConfig;
 } else {
     // Default: export all configurations for combined builds.
-    module.exports = [rlOnboardingConfig, settings20Config];
-} 
+    module.exports = [rlOnboardingConfig, settingsConfig];
+}

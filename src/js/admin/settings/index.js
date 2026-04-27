@@ -10,7 +10,7 @@ import { App } from './App';
 import { ErrorBoundary } from './components/ErrorBoundary';
 
 // Initialize the React app.
-const container = document.getElementById( 'bb-admin-settings-2-0' );
+const container = document.getElementById( 'bb-admin-settings' );
 if ( container ) {
 	const root = createRoot( container );
 	root.render(

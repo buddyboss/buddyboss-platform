@@ -24,8 +24,8 @@ defined( 'ABSPATH' ) || exit;
  */
 function bb_admin_settings_page() {
 	// Get build directory.
-	$build_dir = buddypress()->plugin_dir . 'bp-core/admin/bb-settings/settings-2.0/build';
-	$build_url = buddypress()->plugin_url . 'bp-core/admin/bb-settings/settings-2.0/build';
+	$build_dir = buddypress()->plugin_dir . 'bp-core/admin/bb-settings/settings/build';
+	$build_url = buddypress()->plugin_url . 'bp-core/admin/bb-settings/settings/build';
 
 	// Load asset file.
 	$asset_file = $build_dir . '/index.asset.php';
@@ -36,7 +36,7 @@ function bb_admin_settings_page() {
 				<p>
 					<?php
 					esc_html_e(
-						'BuddyBoss Admin Settings 2.0 assets not found. Please run: npm run build:admin:settings-2.0',
+						'BuddyBoss Admin Settings assets not found. Please run: npm run build:admin:settings',
 						'buddyboss'
 					);
 					?>
@@ -130,7 +130,7 @@ function bb_admin_settings_page() {
 
 	// Enqueue scripts and styles.
 	wp_enqueue_script(
-		'bb-admin-settings-2-0',
+		'bb-admin-settings',
 		$build_url . '/index.js',
 		$asset['dependencies'],
 		$asset['version'],
@@ -147,7 +147,7 @@ function bb_admin_settings_page() {
 		if ( file_exists( $css_file ) ) {
 			$css_url = str_replace( buddypress()->plugin_dir, buddypress()->plugin_url, $css_file );
 			wp_enqueue_style(
-				'bb-admin-settings-2-0',
+				'bb-admin-settings',
 				$css_url,
 				array( 'wp-components' ), // Add wp-components as dependency.
 				$asset['version']
@@ -240,7 +240,7 @@ function bb_admin_settings_page() {
 		);
 	}
 
-	wp_localize_script( 'bb-admin-settings-2-0', 'bbAdminData', $localize_data );
+	wp_localize_script( 'bb-admin-settings', 'bbAdminData', $localize_data );
 
 	/**
 	 * Deprecated: bp_activity_admin_enqueue_scripts.
@@ -264,8 +264,8 @@ function bb_admin_settings_page() {
 
 	// Render mount point.
 	?>
-	<div class="wrap bb-admin-settings-2-0-wrap">
-		<div id="bb-admin-settings-2-0"></div>
+	<div class="wrap bb-admin-settings-wrap">
+		<div id="bb-admin-settings"></div>
 		<noscript>
 			<p style="padding: 20px; font-size: 14px;">
 				<?php esc_html_e( 'JavaScript is required for BuddyBoss Settings. Please enable JavaScript in your browser.', 'buddyboss' ); ?>
