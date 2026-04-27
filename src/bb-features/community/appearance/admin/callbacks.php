@@ -22,6 +22,68 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Seed default widget shapes for the three ReadyLaunch right-sidebar options.
+ *
+ * Writes `bb_rl_activity_sidebars`, `bb_rl_member_profile_sidebars`, and
+ * `bb_rl_groups_sidebars` to `wp_options` only when each is missing. Existing
+ * admin choices are preserved.
+ *
+ * Defaults and condition logic match the legacy
+ * `bb_rest_readylaunch_platform_settings()` seed exactly. That legacy seed
+ * fired on the `bp_rest_platform_settings` filter — i.e. when the legacy
+ * admin React app fetched its settings via REST. The new-code analog is the
+ * `bb_admin_settings_format_field_data` filter (see
+ * `bb_appearance_normalize_field_data()` below), which fires when the
+ * Settings 2.0 React app fetches per-field settings via the
+ * `bb_admin_get_feature_settings` AJAX handler. Both fire only on admin
+ * settings load — not on the frontend, not on every request — preserving
+ * the legacy "seed once when the admin first opens settings" behaviour.
+ *
+ * Member-profile defaults are conditional on the friends and activity-follow
+ * features being active, mirroring the legacy seed (no point seeding
+ * `connections` if the friends component is disabled — the widget would
+ * short-circuit at render time anyway).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_appearance_seed_default_sidebars() {
+	if ( false === bp_get_option( 'bb_rl_activity_sidebars', false ) ) {
+		bp_update_option(
+			'bb_rl_activity_sidebars',
+			array(
+				'complete_profile'  => true,
+				'latest_updates'    => true,
+				'recent_blog_posts' => true,
+				'active_members'    => true,
+			)
+		);
+	}
+
+	if ( false === bp_get_option( 'bb_rl_member_profile_sidebars', false ) ) {
+		$member_sidebar = array( 'complete_profile' => true );
+		if ( bp_is_active( 'friends' ) ) {
+			$member_sidebar['connections'] = true;
+		}
+		if ( bp_is_active( 'activity' ) && function_exists( 'bp_is_activity_follow_active' ) && bp_is_activity_follow_active() ) {
+			$member_sidebar['my_network'] = true;
+		}
+		bp_update_option( 'bb_rl_member_profile_sidebars', $member_sidebar );
+	}
+
+	if ( false === bp_get_option( 'bb_rl_groups_sidebars', false ) ) {
+		bp_update_option(
+			'bb_rl_groups_sidebars',
+			array(
+				'about_group'   => true,
+				'group_members' => true,
+			)
+		);
+	}
+}
+
+/**
  * Apply ReadyLaunch configuration side-effects.
  *
  * Mirrors the component activation, registration-page enablement, follow-feature
@@ -47,6 +109,39 @@ defined( 'ABSPATH' ) || exit;
 function bb_appearance_apply_configuration( $settings ) {
 	if ( empty( $settings ) || ! is_array( $settings ) ) {
 		return;
+	}
+
+	// Seed default widget shapes for the three RL sidebar options when
+	// ReadyLaunch is enabled and the option does not yet exist in `wp_options`.
+	//
+	// Why this is needed: the React Settings 2.0 Appearance panel renders the
+	// per-widget toggles as visually-on by default when the user flips
+	// Layout → ReadyLaunch, but the auto-save payload only includes fields the
+	// user actually interacts with. So flipping just the layout switch persists
+	// `bb_rl_enabled = true` without ever writing the three sidebar option
+	// arrays. The frontend `right-sidebar.php` template then reads each option
+	// as `array()` (the `bp_get_option` default), every `! empty()` widget
+	// guard fails, and the right sidebar renders nothing.
+	//
+	// Legacy parity: `bb_rest_readylaunch_platform_settings()` performed the
+	// same `false === bp_get_option(...)` seed on first read of the legacy
+	// admin REST endpoint. That endpoint and its seed were removed in the
+	// Settings 2.0 migration; this restores the behaviour at save time where
+	// the React UI now drives ReadyLaunch enablement.
+	//
+	// Idempotent: each option is written exactly once, only when it is missing.
+	// Existing per-widget choices made by the admin are never clobbered because
+	// the `false === bp_get_option(...)` guard fails the moment the option
+	// exists at all (even if all widgets are toggled off and the array is
+	// empty — that is still an explicit user choice and we leave it alone).
+	//
+	// We read `bb_is_readylaunch_enabled()` from the DB rather than relying on
+	// `$settings['bb_rl_enabled']` because partial saves (e.g., toggling only a
+	// side-menu item) don't include the layout flag in their payload. Existing
+	// sites that flipped layouts before this seed shipped will self-heal on
+	// the next Appearance save without requiring the admin to re-flip layouts.
+	if ( function_exists( 'bb_is_readylaunch_enabled' ) && bb_is_readylaunch_enabled() ) {
+		bb_appearance_seed_default_sidebars();
 	}
 
 	// Force-enable registration when the registration template page is on.
@@ -306,6 +401,23 @@ function bb_appearance_normalize_field_data( $field_data, $field, $feature_id ) 
 	// AJAX handler where every component has finished `setup_globals()`.
 	$sidebar_fields = array( 'bb_rl_activity_sidebars', 'bb_rl_member_profile_sidebars', 'bb_rl_groups_sidebars' );
 	if ( in_array( $name, $sidebar_fields, true ) ) {
+		// Legacy parity seed (`bb_rest_readylaunch_platform_settings`): when
+		// the admin first opens the Appearance settings panel and any of the
+		// three sidebar options is missing from `wp_options`, write its default
+		// shape and refresh the `$field_data['value']` so the React UI shows
+		// the freshly-seeded toggles as enabled instead of empty. Mirrors the
+		// legacy behaviour where `bp_rest_platform_settings` did both the seed
+		// and the $settings mutation in a single pass; new code uses the
+		// per-field `bb_admin_settings_format_field_data` filter as the
+		// symmetric hook.
+		if ( false === bp_get_option( $name, false ) ) {
+			bb_appearance_seed_default_sidebars();
+			$seeded_value = bp_get_option( $name, array() );
+			if ( ! empty( $seeded_value ) ) {
+				$field_data['value'] = $seeded_value;
+			}
+		}
+
 		$rebuilt = bb_appearance_build_sidebar_description( $name );
 		if ( '' !== $rebuilt ) {
 			$field_data['label_description'] = $rebuilt;
