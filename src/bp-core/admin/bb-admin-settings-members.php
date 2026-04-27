@@ -79,7 +79,7 @@ function bb_admin_settings_register_members_feature() {
 			'title'      => __( 'Profile Name', 'buddyboss' ),
 			'icon'       => array(
 				'type'  => 'font',
-				'class' => 'bb-icons-rl bb-icons-rl-user',
+				'class' => 'bb-icons-rl bb-icons-rl-identification-card',
 			),
 			'help_url'   => bp_get_admin_url(
 				add_query_arg(
@@ -202,7 +202,7 @@ function bb_admin_settings_register_members_feature() {
 			'title'      => __( 'Profile Fields', 'buddyboss' ),
 			'icon'       => array(
 				'type'  => 'font',
-				'class' => 'bb-icons-rl bb-icons-rl-list-dashes',
+				'class' => 'bb-icons-rl bb-icons-rl-user-list',
 			),
 			'help_url'   => bp_get_admin_url(
 				add_query_arg(
@@ -250,7 +250,7 @@ function bb_admin_settings_register_members_feature() {
 			'title'      => __( 'Profile Search', 'buddyboss' ),
 			'icon'       => array(
 				'type'  => 'font',
-				'class' => 'bb-icons-rl bb-icons-rl-magnifying-glass',
+				'class' => 'bb-icons-rl bb-icons-rl-magnifying-glass-plus',
 			),
 			'help_url'   => bp_get_admin_url(
 				add_query_arg(
