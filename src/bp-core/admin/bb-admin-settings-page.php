@@ -162,6 +162,27 @@ function bb_admin_settings_page() {
 	if ( 0 === $groups_per_page ) {
 		$groups_per_page = 20;
 	}
+	// Resolve the Mothership IPN root element ID. The prefix is derived from
+	// the active plugin_id (free / plus / pro / per-site editions all produce
+	// different IDs), so we ask the IPN View service for the actual ID it
+	// will render. The React Header reads this via bbAdminData.ipnRootId to
+	// locate and relocate the live IPN node.
+	$ipn_root_id = '';
+	if (
+		class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader' ) &&
+		class_exists( '\BuddyBossPlatform\GroundLevel\InProductNotifications\Services\View' )
+	) {
+		try {
+			$container   = \BuddyBoss\Core\Admin\Mothership\BB_Mothership_Loader::instance()->get_container();
+			$ipn_view    = $container->get( \BuddyBossPlatform\GroundLevel\InProductNotifications\Services\View::class );
+			$ipn_root_id = $ipn_view->getRootElementId();
+		} catch ( Throwable $e ) {
+			// IPN service not loaded for some reason — leave $ipn_root_id empty,
+			// JS will fall back to a structural [id$="_ipn_root"] selector.
+			unset( $e );
+		}
+	}
+
 	$localize_data = array(
 		'apiUrl'        => rest_url( bp_rest_namespace() . '/' . bp_rest_version() . '/' ),
 		'nonce'         => wp_create_nonce( 'wp_rest' ),
@@ -178,6 +199,8 @@ function bb_admin_settings_page() {
 		// Pass the user's legacy groups-per-page screen option so GroupsListScreen
 		// can honour the preference set in the old WP admin list table.
 		'groupsPerPage' => $groups_per_page,
+		// Mothership IPN root element ID — prefix is dynamic per plugin_id.
+		'ipnRootId'     => $ipn_root_id,
 	);
 
 	// Component active status for conditional UI in React.
@@ -263,6 +286,25 @@ function bb_admin_settings_page() {
 	?>
 	<div class="wrap bb-admin-settings-wrap">
 		<div id="bb-admin-settings"></div>
+		<!-- test -->
+		<?php
+		/*
+		 * Mothership IPN inbox — render outside the React tree.
+		 *
+		 * The IPN service (Caseproof GroundLevel) attaches a Shadow DOM to
+		 * its root <div> synchronously when ipn-inbox.js loads. If we render
+		 * the root inside the React Header tree, React mounts asynchronously
+		 * AFTER the bundle runs, so getElementById() returns null and the
+		 * IPN throws "Cannot read properties of null (reading 'attachShadow')".
+		 *
+		 * Instead, fire bb_admin_header_actions outside the React tree (here,
+		 * inside .wrap but next to the React mount). This emits the standard
+		 * IPN <div id="bb-web-plus_ipn_root"> + <script>. The IPN attaches
+		 * cleanly. Then the React Header relocates the live IPN node into
+		 * its bell slot via appendChild — preserving the Shadow DOM.
+		 */
+		do_action( 'bb_admin_header_actions' );
+		?>
 		<noscript>
 			<p style="padding: 20px; font-size: 14px;">
 				<?php esc_html_e( 'JavaScript is required for BuddyBoss Settings. Please enable JavaScript in your browser.', 'buddyboss' ); ?>

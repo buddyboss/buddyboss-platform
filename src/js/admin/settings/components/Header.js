@@ -24,6 +24,39 @@ export function Header({ onNavigate }) {
 	const [isSearching, setIsSearching] = useState(false);
 	const searchTimeoutRef = useRef(null);
 	const searchRef = useRef(null);
+	const ipnSlotRef = useRef(null);
+
+	// Relocate the live Mothership IPN inbox into our header slot.
+	//
+	// The IPN React app (Caseproof GroundLevel) attaches a Shadow DOM to
+	// the IPN root <div> synchronously when ipn-inbox.js runs, so it must
+	// exist in DOM before the bundle fires. We render it outside the React
+	// tree (in bb-admin-settings-page.php via do_action('bb_admin_header_actions')),
+	// then move the live node into our slot here. appendChild() detaches
+	// and re-attaches without unmounting, so the Shadow DOM stays intact.
+	//
+	// The IPN root ID is dynamic — derived from the active plugin_id
+	// (e.g. "bb-web-plus_ipn_root", "bb-platform-pro-1-site_ipn_root"). We
+	// read the resolved ID from PHP's wp_localize_script (bbAdminData.ipnRootId)
+	// and fall back to a structural [id$="_ipn_root"] query if missing.
+	useEffect(() => {
+		if (!ipnSlotRef.current) {
+			return;
+		}
+		const ipnRootId = (typeof bbAdminData !== 'undefined' && bbAdminData?.ipnRootId) || '';
+		const ipnNode = ipnRootId
+			? document.getElementById(ipnRootId)
+			: document.querySelector('[id$="_ipn_root"]');
+		if (ipnNode && ipnNode.parentElement !== ipnSlotRef.current) {
+			// Inherit our visual classes so it aligns with sibling icons.
+			ipnNode.classList.add(
+				'bb-admin-header__icon-button',
+				'bb-admin-header__icon-button--notifications',
+				'bb-admin-header__ipn-root'
+			);
+			ipnSlotRef.current.appendChild(ipnNode);
+		}
+	}, []);
 
 	// Debounced search (300ms) with AbortController to cancel stale requests.
 	useEffect(() => {
@@ -158,14 +191,6 @@ export function Header({ onNavigate }) {
 				</div>
 
 				<div className="bb-admin-header__right">
-					{/* Notifications Icon */}
-					<button
-						className="bb-admin-header__icon-button bb-admin-header__icon-button--notifications"
-						aria-label={__('Notifications', 'buddyboss')}
-					>
-						<i className="bb-icons-rl-bell"></i>
-					</button>
-
 					{/* Documentation/Help Icon */}
 					<a
 						href="https://www.buddyboss.com/resources/docs/"
@@ -176,6 +201,22 @@ export function Header({ onNavigate }) {
 					>
 						<i className="bb-icons-rl-graduation-cap"></i>
 					</a>
+
+					{/*
+					 * Notifications — slot for the live Mothership IPN inbox.
+					 *
+					 * The actual <div id="bb-web-plus_ipn_root"> is rendered
+					 * outside the React tree by PHP (do_action('bb_admin_header_actions')
+					 * in bb-admin-settings-page.php) so the IPN bundle can attach
+					 * its Shadow DOM synchronously without a race against React
+					 * mount. The useEffect above relocates that live node into
+					 * this slot via appendChild — preserving the Shadow DOM.
+					 */}
+					<span
+						ref={ipnSlotRef}
+						className="bb-admin-header__ipn-slot"
+						aria-label={__('Notifications', 'buddyboss')}
+					/>
 				</div>
 			</div>
 		</header>

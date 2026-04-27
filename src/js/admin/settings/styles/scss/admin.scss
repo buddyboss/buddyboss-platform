@@ -236,6 +236,21 @@
 		}
 	}
 
+	// Mothership IPN inbox mount point. The IPN React app renders its own
+	// <button> inside Shadow DOM here, so we reset host-level button styles
+	// (padding, hover bg) to avoid double-padding and conflicting hover states.
+	// Width/height match sibling __icon-button (24px icon + 8px padding ≈ 32×32).
+	&__ipn-root {
+		padding: 0;
+		background: transparent;
+		width: 32px;
+		height: 32px;
+
+		&:hover {
+			background: transparent;
+		}
+	}
+
 	&__notification-badge {
 		position: absolute;
 		top: 2px;
