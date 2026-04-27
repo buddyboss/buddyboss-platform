@@ -181,7 +181,7 @@ export function EditableLinkList( { value, onChange, disabled, config } ) {
 																			disabled={ disabled }
 																			aria-label={ __( 'Edit link', 'buddyboss' ) }
 																		>
-																			<i className="bb-icons-rl bb-icons-rl-pencil-simple" aria-hidden="true"></i>
+																			<i className="bb-icons-rl bb-icons-rl-note-pencil" aria-hidden="true"></i>
 																		</button>
 																		<button
 																			type="button"
