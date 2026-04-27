@@ -245,6 +245,9 @@ function bb_activity_register_visibility_post_type_fields( $feature_id ) {
 
 		// Help text for Custom Post Types section.
 		// Use the last CPT's group_id so the notice is visually inside the CPT section.
+		// notice_type 'plain' renders as standalone helper text (no boxed background,
+		// no icon) per Figma — used for section-level help where a full notice card
+		// would be too heavy.
 		bb_register_feature_field(
 			'activity',
 			'posts_visibility',
@@ -253,7 +256,7 @@ function bb_activity_register_visibility_post_type_fields( $feature_id ) {
 				'name'        => 'bb_custom_post_types_info',
 				'label'       => '',
 				'type'        => 'notice',
-				'notice_type' => 'info',
+				'notice_type' => 'plain',
 				'description' => __( 'Select the custom post types to display in the activity feed when members publish them. For each type, you can also choose whether to include comments in the activity posts (if comments are supported).', 'buddyboss' ),
 				'order'       => $field_order,
 				'group'       => $group_id,

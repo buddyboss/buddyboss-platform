@@ -755,3 +755,18 @@
 		border-top: 1px solid $bb-border-secondary-color;
 	}
 }
+
+// Custom Post Types section (Activity → Posts Visibility panel):
+// Each CPT (toggle + Enable-comments checkbox / not-supported notice) is registered
+// as its OWN group (`cpt_feed_<post_type>`), so by default the --group-last
+// modifier draws a divider after every CPT. Per Figma the section reads as a
+// single visual block — no dividers between consecutive CPTs. Strip the
+// border restoration that --group-last would otherwise add for any field
+// belonging to a `cpt_feed_*` group.
+.bb-admin-settings-form__field[data-group^="cpt_feed_"] {
+
+	&.bb-admin-settings-form__field--group-last {
+		border-bottom: none;
+		padding-bottom: 18px;
+	}
+}
