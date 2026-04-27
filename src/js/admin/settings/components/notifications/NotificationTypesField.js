@@ -213,7 +213,7 @@ const NotificationTypesField = ( props ) => {
 													className="bb-notification-types__tooltip"
 													title={ decodeEntities( fieldData.tooltip ) }
 												>
-													<i className="bb-icons-rl bb-icons-rl-info-circle"></i>
+													<i className="bb-icons-rl bb-icons-rl-info"></i>
 												</span>
 											) }
 										</div>
