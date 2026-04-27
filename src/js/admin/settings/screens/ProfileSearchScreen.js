@@ -299,11 +299,27 @@ export default function ProfileSearchScreen( { onNavigate, helpUrl, onHelpClick,
 		}
 		reorderAbortRef.current = new AbortController();
 
+		// Show "Saving..." toast immediately so the admin gets visual feedback
+		// during the in-flight AJAX. Replaced by the success / error toast
+		// below when the request resolves. Matches the auto-save UX in
+		// `FeatureSettingsScreen` (`setToast({ status: 'saving', ... })`
+		// before each save).
+		setToast( { status: 'saving', message: __( 'Saving order…', 'buddyboss' ) } );
+
 		reorderProfileSearchFields( { field_order: fieldOrder }, { signal: reorderAbortRef.current.signal } )
 			.then( function ( response ) {
 				if ( response.success ) {
 					setToast( { status: 'success', message: __( 'Order updated.', 'buddyboss' ) } );
 					// Reload from server so field indices (id) stay in sync with the new order.
+					loadSearchFields();
+				} else {
+					// Server-validated failure (e.g. `Invalid field order — field
+					// count mismatch.`). Surface the server's own message so the
+					// admin can act on it instead of seeing a generic "Failed".
+					var serverMessage = response && response.data && response.data.message
+						? response.data.message
+						: __( 'Failed to save order.', 'buddyboss' );
+					setToast( { status: 'error', message: serverMessage } );
 					loadSearchFields();
 				}
 			} )
@@ -311,7 +327,11 @@ export default function ProfileSearchScreen( { onNavigate, helpUrl, onHelpClick,
 				if ( error && 'AbortError' === error.name ) {
 					return;
 				}
-				setToast( { status: 'error', message: __( 'Failed to save order.', 'buddyboss' ) } );
+				// Transport-level failure (network/timeout/JSON parse). Prefer the
+				// thrown error's `message` when present so the toast shows the
+				// real cause instead of a generic copy.
+				var message = error && error.message ? error.message : __( 'Failed to save order.', 'buddyboss' );
+				setToast( { status: 'error', message: message } );
 				loadSearchFields();
 			} );
 

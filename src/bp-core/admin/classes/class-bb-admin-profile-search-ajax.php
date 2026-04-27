@@ -346,6 +346,16 @@ class BB_Admin_Profile_Search_Ajax {
 		$descs  = isset( $meta['field_desc'] ) ? $meta['field_desc'] : array();
 		$modes  = isset( $meta['field_mode'] ) ? $meta['field_mode'] : array();
 
+		// Resolve the live profile-field map so we can distinguish orphan codes
+		// (codes whose underlying xprofile field has been deleted) from live
+		// ones. `get_search_fields()` already filters orphans before sending
+		// the list to the React UI, so the client's `field_order` payload only
+		// contains the live indices — without this resolution the count check
+		// below would compare 2 client IDs against 3 stored codes and reject
+		// the reorder with a "field count mismatch" error even though the
+		// client sent every index it could see.
+		list( , $live_fields ) = bp_ps_get_fields();
+
 		$new_codes  = array();
 		$new_labels = array();
 		$new_descs  = array();
@@ -360,8 +370,21 @@ class BB_Admin_Profile_Search_Ajax {
 			}
 		}
 
-		// Validate that no fields were lost during reorder.
-		if ( count( $new_codes ) !== count( $codes ) ) {
+		// Count live codes — those whose underlying xprofile field still
+		// resolves. Mirrors the orphan filter in `get_search_fields()` so the
+		// validation check uses the same denominator the client used when it
+		// built `$field_order`.
+		$live_count = 0;
+		foreach ( $codes as $code ) {
+			if ( isset( $live_fields[ $code ] ) ) {
+				++$live_count;
+			}
+		}
+
+		// Validate that no live fields were lost during reorder. Orphans are
+		// allowed to drop off — they were never visible in the UI and storing
+		// them indefinitely just bloats the meta.
+		if ( count( $new_codes ) !== $live_count ) {
 			wp_send_json_error( array( 'message' => __( 'Invalid field order — field count mismatch.', 'buddyboss' ) ) );
 		}
 
