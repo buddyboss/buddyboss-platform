@@ -648,6 +648,45 @@ function bp_pre_schema_upgrade() {
 			}
 		}
 	}
+
+	// [BBVERSION]: Drop any malformed `post_title` index on bp_activity that lacks
+	// a prefix length. Some installs upgraded through an intermediate version that
+	// created `KEY post_title (post_title)` without the (191) length specifier
+	// against a TEXT column. When dbDelta later tries to re-spec the column, MySQL
+	// rejects the ALTER with: "BLOB/TEXT column 'post_title' used in key
+	// specification without a key length". Dropping the bad index here lets dbDelta
+	// recreate it correctly via the canonical schema in bp_core_install_activity_streams().
+	$activity_table = $bp_prefix . 'bp_activity';
+	$table_exists   = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', bp_esc_like( $activity_table ) ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+	if ( $table_exists ) {
+		// SUB_PART is NULL when an index has no prefix length. For indexes on a
+		// TEXT column, SUB_PART must be a positive integer (e.g. 191). The query
+		// also ignores FULLTEXT indexes (INDEX_TYPE = 'FULLTEXT') because those
+		// legitimately store no SUB_PART value but are valid on TEXT columns.
+		$bad_indexes = $wpdb->get_col( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+			$wpdb->prepare(
+				"SELECT DISTINCT INDEX_NAME
+				 FROM INFORMATION_SCHEMA.STATISTICS
+				 WHERE TABLE_SCHEMA = DATABASE()
+				   AND TABLE_NAME = %s
+				   AND COLUMN_NAME = 'post_title'
+				   AND SUB_PART IS NULL
+				   AND INDEX_TYPE != 'FULLTEXT'",
+				$activity_table
+			)
+		);
+
+		if ( ! empty( $bad_indexes ) ) {
+			foreach ( $bad_indexes as $index_name ) {
+				// Index name comes from INFORMATION_SCHEMA, not user input — safe to interpolate
+				// inside backticks. Cannot use prepare() for identifiers.
+				$index_name = preg_replace( '/[^A-Za-z0-9_]/', '', $index_name );
+				if ( '' !== $index_name ) {
+					$wpdb->query( "ALTER TABLE `{$activity_table}` DROP INDEX `{$index_name}`" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				}
+			}
+		}
+	}
 }
 
 /** Upgrade Routines **********************************************************/
