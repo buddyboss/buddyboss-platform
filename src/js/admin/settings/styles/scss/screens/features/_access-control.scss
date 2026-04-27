@@ -7,8 +7,47 @@
  * @since BuddyBoss [BBVERSION]
  */
 
+// For every access_control field row (matched by data-field-name prefix —
+// covers all 9 access_control fields across Activity / Groups / Members /
+// Messages / Media), force the input-wrapper to behave as a plain block.
+// The default `display: flex; align-items: center` on the wrapper makes
+// flex-sizing of our child unpredictable: during the loading state with
+// only a small spinner, the block visually centered — only when toggles
+// loaded did `width: 100%` start working as expected. `display: block`
+// removes that ambiguity entirely.
+//
+// Using `[data-field-name^="bb-access-control"]` instead of `:has()` for
+// broader browser compat — `:has()` may silently fail in older browsers
+// or in browsers where the cached stylesheet doesn't include support yet.
+.bb-admin-settings-form__field[data-field-name^="bb-access-control"] {
+
+	.bb-admin-settings-form__field-input-wrapper {
+		display: block;
+		width: 100%;
+	}
+}
+
 .bb-access-control-field {
+	// Plain block layout — children (description, selects, toggle-list)
+	// stack vertically by default since they're all block-level divs.
+	// Avoid flex on this container; flex-sizing was causing the description
+	// and dropdown to render at unexpected horizontal positions.
+	display: block;
 	width: 100%;
+
+	// Description text rendered above the type select (Figma: helper text
+	// appears at the top of the right column, not under the dropdown).
+	// Typography matches Figma `body/medium` spec: weight 500, secondary text
+	// color (#2f2f2f) — overrides the lighter tertiary defaults inherited
+	// from .bb-admin-settings-form__field-description.
+	&__description {
+		display: block;
+		width: 100%;
+		margin: 0 0 8px 0;
+		color: $bb-text-secondary-color;
+		font-weight: 500;
+		text-align: left;
+	}
 
 	// Selects row (type + sub-type side by side).
 	&__selects {
@@ -118,14 +157,15 @@
 		}
 	}
 
-	&:has(> .components-spinner) {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-	}
-
+	// Spinner shown during option fetch — render in normal block flow on its
+	// own line below the dropdown. Earlier this had a `:has(> .components-spinner)`
+	// flex rule that turned the whole .bb-access-control-field into a flex row,
+	// which since we added a description child caused description + dropdown
+	// to render side-by-side during the loading state. Block flow is what we
+	// want: description on top, dropdown below, spinner below dropdown.
 	.components-spinner {
-		margin: 0;
+		display: block;
+		margin: 8px 0 0 0;
 	}
 
 	[data-field-name="bb-access-control-create-activity"] & {

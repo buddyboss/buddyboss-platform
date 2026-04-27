@@ -514,6 +514,18 @@
         line-height: 1.5;
         margin: 12px 0 0 0;
 
+        // Inline links inside helper-text descriptions match the no-underline
+        // convention used in the field-head/section-description blocks above.
+        a {
+            color: $bb-link-color;
+            text-decoration: none;
+
+            &:hover {
+                color: $bb-link-color;
+                text-decoration: underline;
+            }
+        }
+
         &--has-controls {
             color: $bb-text-color;
             font-size: 14px;

@@ -1434,9 +1434,11 @@ export function SettingsForm({ fields, values, onChange }) {
 					) }
 
 					{/* Description: skip for notice type (rendered by notice component itself).
+				    Also skip for access_control — that component renders the description
+				    above its own controls per Figma (see AccessControlField.js).
 				    When description contains %s and field has description_controls,
 				    render inline controls (select, text, number) in place of each %s placeholder. */}
-					{ field.description && -1 === [ 'notice', 'checkbox_list', 'share_platforms', 'topic_list', 'image_radio' ].indexOf( field.type ) && ! ( field.allow_add && field.extension_data ) && ( 'toggle' !== field.type || ( field.description_controls && field.description_controls.length > 0 ) ) && ( () => {
+					{ field.description && -1 === [ 'notice', 'checkbox_list', 'share_platforms', 'topic_list', 'image_radio', 'access_control' ].indexOf( field.type ) && ! ( field.allow_add && field.extension_data ) && ( 'toggle' !== field.type || ( field.description_controls && field.description_controls.length > 0 ) ) && ( () => {
 						const desc = field.description;
 						const controls = field.description_controls;
 						// Accept both `%s` and positional `%1$s` / `%2$s` placeholders.

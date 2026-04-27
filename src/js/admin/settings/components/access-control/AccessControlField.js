@@ -16,11 +16,12 @@
  * @since   BuddyBoss [BBVERSION]
  */
 
-import { useState, useRef } from '@wordpress/element';
+import { useState, useRef, RawHTML } from '@wordpress/element';
 import { SelectControl, ToggleControl, Spinner } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { ajaxFetch } from '../../utils/ajax';
+import { sanitizeHtml } from '../../utils/sanitize';
 
 /**
  * Initialize per-option settings from saved value and server data.
@@ -424,6 +425,14 @@ export function AccessControlField( { field, value, onChange } ) {
 
 	return (
 		<div className="bb-access-control-field">
+			{ /* Description: rendered ABOVE the type select per Figma — the
+			     standard SettingsForm description renderer is suppressed for
+			     access_control fields (see SettingsForm.js exclusion list). */ }
+			{ field.description && (
+				<RawHTML className="bb-admin-settings-form__field-description bb-access-control-field__description">
+					{ sanitizeHtml( field.description ) }
+				</RawHTML>
+			) }
 			{ /* Type select */ }
 			<div className="bb-access-control-field__selects">
 				<SelectControl
