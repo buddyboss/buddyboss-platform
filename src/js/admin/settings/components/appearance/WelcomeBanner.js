@@ -12,9 +12,11 @@
  * redirect with `bb_wizard_activation=rl_onboarding` when the bootstrap
  * payload isn't available.
  *
- * The Setup Wizard button is hidden once the wizard has been completed
- * (either via `window.bbAdminData.rlOnboardingCompleted` on first render
- * or via the `bb_rl_onboarding_completed` / `_skipped` events afterwards).
+ * The Setup Wizard button is always visible — the wizard's first step is a
+ * choice between "Continue with BuddyBoss Theme" and "Switch to ReadyLaunch",
+ * so admins may want to revisit it to switch layouts even after completing it
+ * once. Matches the legacy ReadyLaunch admin behaviour where the button stays
+ * available regardless of layout state.
  *
  * @package BuddyBoss\Core\Administration
  * @since BuddyBoss [BBVERSION]
@@ -22,7 +24,7 @@
 
 import { __ } from '@wordpress/i18n';
 import { Button } from '@wordpress/components';
-import { useEffect, useState } from '@wordpress/element';
+import { useEffect } from '@wordpress/element';
 
 const FEEDBACK_URL  = 'https://roadmap.buddyboss.com/p/new-ready-launch-buddyboss-platform-templates-Y8mV6D';
 // `youtube-nocookie.com` is YouTube's enhanced-privacy embed domain — no
@@ -61,7 +63,6 @@ function redirectToWizard() {
  */
 export function WelcomeBanner() {
 	var bbAdminData = window.bbAdminData || {};
-	var [ completed, setCompleted ] = useState( !! bbAdminData.rlOnboardingCompleted );
 
 	useEffect( function () {
 		function stripWizardParam() {
@@ -74,15 +75,6 @@ export function WelcomeBanner() {
 			}
 			url.searchParams.delete( WIZARD_PARAM );
 			window.history.replaceState( {}, '', url.toString() );
-		}
-
-		function handleCompleted() {
-			setCompleted( true );
-			stripWizardParam();
-		}
-
-		function handleClosed() {
-			stripWizardParam();
 		}
 
 		function handlePopstate() {
@@ -98,19 +90,18 @@ export function WelcomeBanner() {
 			}
 		}
 
-		// The wizard fires these DOM events from its complete/skip AJAX
-		// flow — hide the Setup Wizard button in-place without waiting for
-		// the next full page load. `_closed` fires when the admin dismisses
-		// via the X/Cancel affordance, so we strip the URL param there too.
-		document.addEventListener( 'bb_rl_onboarding_completed', handleCompleted );
-		document.addEventListener( 'bb_rl_onboarding_skipped', handleCompleted );
-		document.addEventListener( 'bb_rl_onboarding_closed', handleClosed );
+		// The wizard fires these DOM events from its complete/skip/close AJAX
+		// flow — strip the URL param so a back-button navigation past the
+		// wizard URL doesn't reopen the modal on the next admin load.
+		document.addEventListener( 'bb_rl_onboarding_completed', stripWizardParam );
+		document.addEventListener( 'bb_rl_onboarding_skipped', stripWizardParam );
+		document.addEventListener( 'bb_rl_onboarding_closed', stripWizardParam );
 		window.addEventListener( 'popstate', handlePopstate );
 
 		return function () {
-			document.removeEventListener( 'bb_rl_onboarding_completed', handleCompleted );
-			document.removeEventListener( 'bb_rl_onboarding_skipped', handleCompleted );
-			document.removeEventListener( 'bb_rl_onboarding_closed', handleClosed );
+			document.removeEventListener( 'bb_rl_onboarding_completed', stripWizardParam );
+			document.removeEventListener( 'bb_rl_onboarding_skipped', stripWizardParam );
+			document.removeEventListener( 'bb_rl_onboarding_closed', stripWizardParam );
 			window.removeEventListener( 'popstate', handlePopstate );
 		};
 	}, [] );
@@ -202,15 +193,13 @@ export function WelcomeBanner() {
 						>
 							{ __( 'Leave Feedback', 'buddyboss' ) }
 						</Button>
-						{ ! completed && (
-							<Button
-								className="bb-admin-welcome-banner__btn bb-admin-welcome-banner__btn--secondary"
-								variant="secondary"
-								onClick={ handleSetupWizardClick }
-							>
-								{ __( 'Setup Wizard', 'buddyboss' ) }
-							</Button>
-						) }
+						<Button
+							className="bb-admin-welcome-banner__btn bb-admin-welcome-banner__btn--secondary"
+							variant="secondary"
+							onClick={ handleSetupWizardClick }
+						>
+							{ __( 'Setup Wizard', 'buddyboss' ) }
+						</Button>
 					</div>
 				</div>
 				<div className="bb-admin-welcome-banner__video">

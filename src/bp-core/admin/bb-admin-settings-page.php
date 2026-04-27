@@ -216,17 +216,14 @@ function bb_admin_settings_page() {
 	// bp_admin_repair_tools_wrapper_function AJAX action.
 	$localize_data['repairNonce'] = wp_create_nonce( 'bp-do-counts' );
 
-	// ReadyLaunch onboarding completion flag — used by the Appearance → General
-	// welcome banner to hide the Setup Wizard button once the wizard has been
-	// completed at least once. Mirrors the legacy `BP_ADMIN.rl_onboarding_completed`
-	// gate from the retired admin page.
-	$localize_data['rlOnboardingCompleted'] = (bool) bp_get_option( 'bb_rl_onboarding_completed', false );
-
 	// Bootstrap payload for the Appearance → General "Setup Wizard" button.
 	// Allows the rl-onboarding React bundle to be lazy-loaded and mounted on
-	// click without navigating away from Settings 2.0. Skipped once the wizard
-	// has been completed (the button is hidden in that state anyway).
-	if ( ! $localize_data['rlOnboardingCompleted'] && class_exists( 'BB_ReadyLaunch_Onboarding' ) ) {
+	// click without navigating away from Settings 2.0. Always localized — the
+	// Setup Wizard button is always visible (its first step is the BuddyBoss
+	// Theme vs ReadyLaunch layout choice, so admins may revisit it after
+	// completion to switch). Without this payload the click handler falls
+	// back to a full-page redirect, which still works but is slower.
+	if ( class_exists( 'BB_ReadyLaunch_Onboarding' ) ) {
 		$localize_data['rlOnboardingBootstrap'] = BB_ReadyLaunch_Onboarding::instance()->get_bootstrap_data();
 	}
 
