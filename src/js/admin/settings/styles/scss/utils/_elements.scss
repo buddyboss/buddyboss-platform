@@ -906,6 +906,10 @@ select.bb-admin-settings__select {
             color: $bb-icon-color;
         }
     }
+
+    [data-group="social_login_additional_data"] & {
+        margin-bottom: 0;
+    }
 }
 
 /* Status Check Field */
