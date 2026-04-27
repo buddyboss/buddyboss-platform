@@ -127,4 +127,12 @@
 	.components-spinner {
 		margin: 0;
 	}
+
+	[data-field-name="bb-access-control-create-activity"] & {
+
+		&__toggle-item {
+			padding: 0;
+			border: 0;
+		}
+	}
 }
