@@ -669,24 +669,20 @@ function bp_core_get_admin_tabs( $active_tab = '' ) {
 	// Legacy top-level tab bar shown on bp-tools / bp-help / bp-components /
 	// bp-pages pages. The "Integrations" tab was removed along with the
 	// bp-integrations submenu in Settings 2.0. The "Upgrade" and "Credits"
-	// tabs were also removed along with their submenus. Key positions of
-	// the remaining tabs are preserved (Components='0', Pages='1',
-	// Settings='2', Tools='5', Help='6') so any third-party code that
-	// references these filter-array keys continues to work — keys '3'
-	// (Integrations), '4' (Upgrade), and '7' (Credits) are now intentionally
-	// absent rather than holding renumbered entries.
-	//
-	// The "Settings" tab points directly at bb-settings; the bp-settings
-	// slug is forwarded by bb_redirect_bp_settings_before_permission_check,
-	// but pointing at the destination avoids an unnecessary redirect hop.
+	// tabs were also removed along with their submenus. The "Settings" tab
+	// was removed because Settings 2.0 (bb-settings) is now the canonical
+	// settings entry point — exposed via the BuddyBoss admin sidebar — and
+	// linking to it from the legacy tab bar created a redundant entry. Key
+	// positions of the remaining tabs are preserved (Components='0',
+	// Pages='1', Settings='2', Tools='5', Help='6') so any third-party
+	// code that references these filter-array keys continues to work —
+	// keys '2' (Settings), '3' (Integrations), '4' (Upgrade), and '7'
+	// (Credits) are now intentionally absent rather than holding renumbered
+	// entries.
 	$tabs = array(
 		// '0' was the Components tab — intentionally left absent.
 		// '1' was Pages tab - Remove as migrated to setting2.0
-		'2' => array(
-			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bb-settings' ), 'admin.php' ) ),
-			'name'  => __( 'Settings', 'buddyboss' ),
-			'class' => 'bb-settings',
-		),
+		// '2' was the Settings tab — intentionally left absent (Settings 2.0 is canonical).
 		// '3' was the Integrations tab — intentionally left absent.
 		// '4' was the Upgrade tab — intentionally left absent.
 		'5' => array(
