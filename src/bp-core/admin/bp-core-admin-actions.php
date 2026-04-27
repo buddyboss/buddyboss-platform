@@ -231,6 +231,35 @@ function bb_redirect_bp_settings_before_permission_check() {
 		exit;
 	}
 
+	// Redirect legacy ReadyLaunch standalone admin page
+	// (`admin.php?page=bb-readylaunch`) to the Appearance feature in
+	// Settings 2.0. Must be handled here on `admin_menu @ PHP_INT_MAX`
+	// (not `bp_admin_init`) because the submenu was removed during the
+	// Settings 2.0 migration — without this early redirect WP's
+	// `user_can_access_admin_page()` check fires `wp_die()` before any
+	// `admin_init`-priority hook can intercept.
+	if ( 'bb-readylaunch' === $page ) {
+		$rl_target = bp_get_admin_url( 'admin.php?page=bb-settings&tab=appearance' );
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
+		$reserved = array( 'page', 'tab', 'panel' );
+		$extra_qs = array();
+		foreach ( $_GET as $key => $value ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
+			if ( in_array( $key, $reserved, true ) ) {
+				continue;
+			}
+			if ( is_scalar( $value ) ) {
+				$extra_qs[ sanitize_key( $key ) ] = sanitize_text_field( wp_unslash( $value ) );
+			}
+		}
+		if ( ! empty( $extra_qs ) ) {
+			$rl_target = add_query_arg( $extra_qs, $rl_target );
+		}
+
+		wp_safe_redirect( $rl_target );
+		exit;
+	}
+
 	if ( 'bp-settings' !== $page && 'bp-integrations' !== $page && 'bp-components' !== $page ) {
 		return;
 	}
@@ -899,13 +928,12 @@ function bb_redirect_legacy_settings_to_settings_2() {
 		exit;
 	}
 
-	// Redirect legacy ReadyLaunch admin page (admin.php?page=bb-readylaunch) to
-	// the Appearance feature in Settings 2.0. Anyone bookmarked to the old URL
-	// lands on General → Site Layout with zero data loss.
-	if ( 'bb-readylaunch' === $page ) {
-		wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=appearance&panel=general' ) );
-		exit;
-	}
+	// Note: legacy `?page=bb-readylaunch` redirect is handled earlier in
+	// `bb_redirect_bp_settings_before_permission_check()` on
+	// `admin_menu @ PHP_INT_MAX`, which fires before WP's permission check
+	// — required because the standalone submenu was unregistered during the
+	// Settings 2.0 migration. Any redirect at `bp_admin_init` priority would
+	// be too late and the request would 403 before reaching this hook.
 
 	// Redirect legacy integration tabs (bp-integrations page).
 	if ( 'bp-integrations' === $page && ! empty( $tab ) ) {
