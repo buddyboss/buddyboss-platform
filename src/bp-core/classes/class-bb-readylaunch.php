@@ -428,7 +428,15 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			// Apply pagination filter to all pages except BuddyBoss user profile's (courses tab or any of its sub-tabs) when Tutor LMS is active.
-			if ( ! ( function_exists( 'tutor_utils' ) && bp_is_user() && preg_match( '/courses/i', bp_current_action() ) ) ) {
+			$is_tutor_lms_active = defined( 'TUTOR_VERSION' ) && function_exists( 'tutor_lms' );
+			$current_action      = bp_current_action();
+			$current_component   = bp_current_component();
+			$is_courses_context  = (
+				'courses' === $current_component ||
+				( ! empty( $current_action ) && 'courses' === $current_action )
+			);
+
+			if ( ! ( $is_tutor_lms_active && bp_is_user() && $is_courses_context ) ) {
 				add_filter( 'paginate_links_output', array( $this, 'bb_rl_filter_paginate_links_output' ), 10, 2 );
 			}
 
