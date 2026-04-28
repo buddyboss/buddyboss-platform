@@ -493,6 +493,10 @@
             flex-direction: column;
             align-items: flex-start;
         }
+
+        > div:not([class]) {
+            width: 100%;
+        }
     }
 
     &-text-wrapper {
