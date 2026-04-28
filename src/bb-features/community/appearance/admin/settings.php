@@ -174,8 +174,9 @@ function bb_admin_settings_register_appearance_settings() {
 			'site_seo',
 			'seo',
 			array(
-				'title' => __( 'Site SEO', 'buddyboss' ),
-				'order' => 10,
+				'title'    => __( 'Site SEO', 'buddyboss' ),
+				'order'    => 10,
+				'help_url' => '62793',
 			)
 		);
 		bb_register_feature_field(
@@ -868,6 +869,7 @@ function bb_appearance_register_site_seo_pro_placeholder_fields() {
 		array(
 			'title'      => __( 'Site SEO', 'buddyboss' ),
 			'order'      => 10,
+			'help_url'   => '62793',
 			'pro_notice' => array(
 				'show'       => true,
 				'badge_text' => __( 'UPGRADE PRO', 'buddyboss' ),

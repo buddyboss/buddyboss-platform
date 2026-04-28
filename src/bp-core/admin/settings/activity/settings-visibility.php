@@ -42,6 +42,7 @@ function bb_activity_register_visibility_panel_fields() {
 			'title'       => __( 'Posts Visibility in Activity Feed', 'buddyboss' ),
 			'description' => '',
 			'order'       => 10,
+			'help_url'    => '62793',
 		)
 	);
 

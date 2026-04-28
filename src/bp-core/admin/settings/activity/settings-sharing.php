@@ -49,8 +49,9 @@ function bb_activity_register_sharing_panel_fields() {
 			'activity_sharing',
 			'activity_sharing',
 			array(
-				'title' => __( 'Activity Sharing', 'buddyboss' ),
-				'order' => 10,
+				'title'    => __( 'Activity Sharing', 'buddyboss' ),
+				'order'    => 10,
+				'help_url' => '62793',
 			)
 		);
 		return;
@@ -64,8 +65,9 @@ function bb_activity_register_sharing_panel_fields() {
 			'activity_sharing',
 			'activity_sharing',
 			array(
-				'title' => __( 'Activity Sharing', 'buddyboss' ),
-				'order' => 10,
+				'title'    => __( 'Activity Sharing', 'buddyboss' ),
+				'order'    => 10,
+				'help_url' => '62793',
 			)
 		);
 		bb_register_feature_field(
@@ -146,6 +148,7 @@ function bb_activity_register_sharing_pro_placeholder_fields() {
 		array(
 			'title'      => __( 'Activity Sharing', 'buddyboss' ),
 			'order'      => 10,
+			'help_url'   => '62793',
 			'pro_notice' => array(
 				'show'       => true,
 				'badge_text' => __( 'UPGRADE PRO', 'buddyboss' ),
