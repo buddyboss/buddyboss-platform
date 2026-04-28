@@ -676,13 +676,27 @@ function GroupTopicModal( { isOpen, onClose, onSave, topic, isSaving, permission
 		} );
 	}
 
-	// Reset form when topic changes.
+	// Reset form when topic changes. When editing, seed searchText/selectedSlug
+	// so the searchable-dropdown modes ('only_from_activity_topics' and
+	// 'allow_both') display the current topic name instead of the placeholder.
 	useEffect( function () {
 		if ( isOpen ) {
-			setName( isEditing ? ( topic.name || '' ) : '' );
+			var topicName = isEditing ? ( topic.name || '' ) : '';
+			setName( topicName );
 			setPermission( isEditing ? ( topic.permission_type || defaultPermission ) : defaultPermission );
-			setSelectedSlug( '' );
-			setSearchText( '' );
+			setSearchText( topicName );
+
+			var initialSlug = '';
+			if ( isEditing && 'only_from_activity_topics' === topicMode && globalTopics && globalTopics.length > 0 ) {
+				var match = globalTopics.filter( function ( gt ) {
+					return gt.name === topicName;
+				} );
+				if ( match.length > 0 ) {
+					initialSlug = match[ 0 ].slug;
+				}
+			}
+			setSelectedSlug( initialSlug );
+
 			setIsDropdownOpen( false );
 			setModalError( '' );
 		}
