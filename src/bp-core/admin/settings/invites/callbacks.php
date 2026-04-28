@@ -46,6 +46,15 @@ function bb_invites_register_profile_type_fields( $feature_id ) {
 	// Prime post meta cache to avoid N+1 queries in the loop.
 	update_postmeta_cache( $member_types );
 
+	// Identify the last member type that will produce a field so the help
+	// text can be attached to the last field instead of the first.
+	$last_member_type_id = null;
+	foreach ( $member_types as $maybe_id ) {
+		if ( ! empty( bp_get_member_type_key( $maybe_id ) ) ) {
+			$last_member_type_id = $maybe_id;
+		}
+	}
+
 	foreach ( $member_types as $member_type_id ) {
 		$type_name = bp_get_member_type_key( $member_type_id );
 
@@ -59,12 +68,14 @@ function bb_invites_register_profile_type_fields( $feature_id ) {
 			$member_type_label = $type_name;
 		}
 
+		$is_last = ( $member_type_id === $last_member_type_id );
+
 		$field_args = array(
 			'name'              => 'bp-enable-send-invite-member-type-' . $type_name,
 			'label'             => $is_first ? __( 'Allowed Profile Types', 'buddyboss' ) : '',
 			'type'              => 'toggle',
 			'description'       => $member_type_label,
-			'help_text'         => $is_first ? __( 'Only allow the selected profile types to send invites.', 'buddyboss' ) : '',
+			'help_text'         => $is_last ? __( 'Only allow the selected profile types to send invites.', 'buddyboss' ) : '',
 			'default'           => absint( bp_get_option( 'bp-enable-send-invite-member-type-' . $type_name, 0 ) ),
 			'sanitize_callback' => 'absint',
 			'conditional'       => array(

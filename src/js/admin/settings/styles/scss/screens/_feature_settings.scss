@@ -3269,6 +3269,10 @@
     }
 }
 
+[data-group="allowed_profile_types"] .bb-admin-settings-form__field-help-text {
+    margin-top: 16px;
+}
+
 // =============================================================================
 // Appearance -> Site SEO -> Social (social_preview field)
 // Mirrors a Facebook/X/LinkedIn share card: optional image, URL, title, desc.
