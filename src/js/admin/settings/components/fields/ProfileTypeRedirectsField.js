@@ -17,6 +17,7 @@ import { getMemberTypes, updateMemberType } from '../../utils/ajax';
 import { AsyncSelectField } from './AsyncSelectField';
 import { getPageNumbers } from '../../utils/pagination';
 import { BB_EVENTS } from '../../utils/constants';
+import { safeUrl } from '../../utils/sanitize';
 
 var PER_PAGE = 5;
 
@@ -167,9 +168,30 @@ export function ProfileTypeRedirectsField() {
 	}
 
 	if ( ! memberTypes.length ) {
+		// Intercept the click so we navigate via the SPA router instead of a
+		// full page reload. We update the URL with history.pushState (so the
+		// back button works correctly), then dispatch a synthetic popstate
+		// event — App.js already listens for popstate and converts the new
+		// query params into a route change via setCurrentRoute().
+		var profileTypesHref = safeUrl( 'admin.php?page=bb-settings&tab=members&panel=profile_types' );
+		var handleProfileTypesClick = function ( e ) {
+			// Honour modifier keys (cmd/ctrl/shift) so users can still open in
+			// a new tab if they want, and right-click "Open in new tab" works.
+			if ( e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || 0 !== e.button ) {
+				return;
+			}
+			e.preventDefault();
+			window.history.pushState( {}, '', profileTypesHref );
+			window.dispatchEvent( new window.PopStateEvent( 'popstate' ) );
+		};
 		return (
 			<p className="bb-profile-type-redirects__empty">
-				{ __( 'No profile types found. Create profile types under Members > Profile Types.', 'buddyboss' ) }
+				{ __( 'No profile types found. Create profile types under', 'buddyboss' ) }
+				{ ' ' }
+				<a href={ profileTypesHref } onClick={ handleProfileTypesClick }>
+					{ __( 'Members Profile > Profile Types', 'buddyboss' ) }
+				</a>
+				{ '.' }
 			</p>
 		);
 	}
