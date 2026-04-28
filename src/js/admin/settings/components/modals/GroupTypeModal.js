@@ -19,6 +19,7 @@ import {
 import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { createGroupType, updateGroupType } from '../../utils/ajax';
+import { sanitizeHtml } from '../../utils/sanitize';
 
 /**
  * Strip leading '#' from a hex color value.
@@ -480,9 +481,10 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 								] }
 								onChange={ function ( val ) { updateField( 'member_type_invites_mode', val ); } }
 							/>
-							<p className="bb-admin-group-type-modal__section-description">
-								{ __( 'Select which profile types are allowed to send a request to join this group. Members restricted by Group Access settings cannot send a request, even if their profile type is allowed above.', 'buddyboss' ) }
-							</p>
+							<p
+								className="bb-admin-group-type-modal__section-description"
+								dangerouslySetInnerHTML={ { __html: sanitizeHtml( __( 'Select which profile types are allowed to send a request to join this group. Members restricted by <a href="admin.php?page=bb-settings&tab=groups&panel=access_controls">Group Access</a> settings cannot send a request, even if their profile type is allowed above.', 'buddyboss' ) ) } }
+							/>
 							{ 'selected' === formData.member_type_invites_mode && (
 								<div className="bb-admin-group-type-modal__member-types-grid">
 									{ availableMemberTypes.map( function ( mt ) {
@@ -518,9 +520,10 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 								] }
 								onChange={ function ( val ) { updateField( 'member_type_join_mode', val ); } }
 							/>
-							<p className="bb-admin-group-type-modal__section-description">
-								{ __( 'Select which profile types can join private groups with this group type without approval. Members restricted by Group Access settings cannot join, even if their profile type is allowed above.', 'buddyboss' ) }
-							</p>
+							<p
+								className="bb-admin-group-type-modal__section-description"
+								dangerouslySetInnerHTML={ { __html: sanitizeHtml( __( 'Select which profile types can join private groups with this group type without approval. Members restricted by <a href="admin.php?page=bb-settings&tab=groups&panel=access_controls">Group Access</a> settings cannot join, even if their profile type is allowed above.', 'buddyboss' ) ) } }
+							/>
 							{ 'selected' === formData.member_type_join_mode && (
 								<div className="bb-admin-group-type-modal__member-types-grid">
 									{ availableMemberTypes.map( function ( mt ) {

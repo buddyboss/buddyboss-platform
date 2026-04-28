@@ -191,6 +191,17 @@
 		white-space: nowrap;
 	}
 
+	&__list-item-count-link {
+		font-size: 13px;
+		color: $bb-link-color;
+		text-decoration: none;
+		white-space: nowrap;
+
+		&:hover {
+			color: $bb-link-color;
+		}
+	}
+
 	/* Visibility badge */
 	&__list-item-visibility-badge {
 		display: inline-flex;
@@ -405,6 +416,10 @@
 		margin: 8px 0 0;
 		line-height: 18px;
 		max-width: 632px;
+
+		a {
+			text-decoration: none;
+		}
 	}
 
 	&__row {

@@ -16,7 +16,7 @@ import { Toast } from '../components/Toast';
 import { HelpIcon } from '../components/HelpIcon';
 import { GroupTypeModal } from '../components/modals/GroupTypeModal';
 import { getSectionTitle, getFieldLabel, getFieldDescription, getFieldHelpText } from '../utils/feature';
-import { sanitizeHtml } from '../utils/sanitize';
+import { sanitizeHtml, safeUrl } from '../utils/sanitize';
 import { ConfirmToggleModal } from '../components/modals/ConfirmToggleModal';
 
 /**
@@ -376,9 +376,18 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 										</div>
 										<div className="bb-admin-group-types__list-item-count-col">
 											<span className="bb-admin-group-types__list-item-count-icon bb-icons-rl bb-icons-rl-users"></span>
-											<span className="bb-admin-group-types__list-item-count">
-												{ countText }
-											</span>
+											{ type.groups_count > 0 ? (
+												<a
+													href={ safeUrl( window.location.pathname + '?page=bb-settings&tab=groups&panel=all_groups&group_type=' + encodeURIComponent( type.name ) ) }
+													className="bb-admin-group-types__list-item-count-link"
+												>
+													{ countText }
+												</a>
+											) : (
+												<span className="bb-admin-group-types__list-item-count">
+													{ countText }
+												</span>
+											) }
 										</div>
 										<div className="bb-admin-group-types__list-item-visibility-col">
 											<span className={ 'bb-admin-group-types__list-item-visibility-badge' + ( isPublic ? '' : ' bb-admin-group-types__list-item-visibility-badge--private' ) }>

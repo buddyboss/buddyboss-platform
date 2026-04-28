@@ -140,7 +140,11 @@ export function GroupsListScreen( { onNavigate } ) {
 	var sortBy = sortByState[ 0 ];
 	var setSortBy = sortByState[ 1 ];
 
-	var groupTypeFilterState = useState( '' );
+	// Read `group_type` from URL params (e.g. linked from Group Types count).
+	var groupTypeFilterState = useState( function () {
+		var params = new URLSearchParams( window.location.search );
+		return params.get( 'group_type' ) || '';
+	} );
 	var groupTypeFilter = groupTypeFilterState[ 0 ];
 	var setGroupTypeFilter = groupTypeFilterState[ 1 ];
 
