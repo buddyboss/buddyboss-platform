@@ -335,7 +335,7 @@ export function GroupEditModal( { isOpen, group, onClose, onSave, isSaving } ) {
 		}
 
 		return (
-			<div className="bb-group-edit-modal__tab-content">
+			<div className={ 'bb-group-edit-modal__tab-content bb-group-edit-modal__tab-content--' + tab.name }>
 				{ renderTabFields( tab.name ) }
 			</div>
 		);

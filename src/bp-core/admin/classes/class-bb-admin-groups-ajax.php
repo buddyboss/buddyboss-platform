@@ -896,16 +896,25 @@ class BB_Admin_Groups_Ajax {
 				)
 			);
 
-			// Prefix with 'bulk_' to match Settings 2.0 convention.
+			// Order per Figma: Change Group Type → Remove Group Type →
+			// (other third-party actions) → Delete (always last).
 			$bulk_actions = array();
-			foreach ( $legacy_bulk_actions as $action_key => $action_label ) {
-				$bulk_actions[ 'bulk_' . $action_key ] = $action_label;
-			}
 
-			// Add group type bulk actions when types exist.
+			// Group type actions first (when types exist).
 			if ( ! empty( $type_objects ) ) {
 				$bulk_actions['bulk_change_group_type'] = __( 'Change Group Type to', 'buddyboss' );
 				$bulk_actions['bulk_remove_group_type'] = __( 'Remove Group Type', 'buddyboss' );
+			}
+
+			// Append legacy + third-party actions, with Delete pulled out so
+			// it can be appended last regardless of third-party additions.
+			$delete_label = isset( $legacy_bulk_actions['delete'] ) ? $legacy_bulk_actions['delete'] : null;
+			unset( $legacy_bulk_actions['delete'] );
+			foreach ( $legacy_bulk_actions as $action_key => $action_label ) {
+				$bulk_actions[ 'bulk_' . $action_key ] = $action_label;
+			}
+			if ( null !== $delete_label ) {
+				$bulk_actions['bulk_delete'] = $delete_label;
 			}
 
 			$response['bulk_actions'] = $bulk_actions;

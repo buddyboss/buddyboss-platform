@@ -612,7 +612,7 @@ export function GroupsListScreen( { onNavigate } ) {
 
 			{ /* Header */ }
 			<div className="bb-groups-list__header">
-				<h2 className="bb-groups-list__title">{ __( 'All Groups', 'buddyboss' ) }</h2>
+				<h2 className="bb-groups-list__title">{ __( 'Groups', 'buddyboss' ) }</h2>
 				<Button
 					variant="primary"
 					className="bb-groups-list__create-btn"

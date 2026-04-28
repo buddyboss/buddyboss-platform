@@ -464,6 +464,13 @@
 	gap: 4px 24px;
 }
 
+// Group Edit modal → Integrations tab (Zoom etc.) — radios stack vertically per Figma.
+// Permissions tab keeps the default horizontal layout.
+.bb-group-edit-modal__tab-content--integrations .bb-admin-meta-field__radio-options {
+	flex-direction: column;
+	gap: 12px;
+}
+
 .bb-admin-meta-field__radio-option {
 	display: grid;
 	grid-template-columns: 18px 1fr;
