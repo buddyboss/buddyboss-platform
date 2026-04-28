@@ -55,6 +55,7 @@ function bb_admin_settings_register_groups_feature() {
 	// Load sanitize callbacks and panel field registrations only when groups is active.
 	require_once __DIR__ . '/settings/groups/callbacks.php';
 	require_once __DIR__ . '/settings/groups/meta-fields.php';
+	require_once __DIR__ . '/settings/groups/legacy-meta-bridge.php';
 	require_once __DIR__ . '/settings/groups/settings-group-settings.php';
 	require_once __DIR__ . '/settings/groups/settings-group-images.php';
 	require_once __DIR__ . '/settings/groups/settings-group-headers.php';

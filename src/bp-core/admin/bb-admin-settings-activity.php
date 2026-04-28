@@ -62,6 +62,7 @@ function bb_admin_settings_register_activity_feature() {
 	require_once __DIR__ . '/settings/activity/settings-sharing.php';
 	require_once __DIR__ . '/settings/activity/settings-access-control.php';
 	require_once __DIR__ . '/settings/activity/meta-fields.php';
+	require_once __DIR__ . '/settings/activity/legacy-meta-bridge.php';
 
 	// =========================================================================
 	// SIDE PANELS
