@@ -375,7 +375,7 @@
 		.components-tab-panel__tabs {
 			border-bottom: none;
 			margin: 0;
-			padding: 16px 0;
+			padding: 16px 0 24px;
 			gap: 8px;
 		}
 
@@ -715,6 +715,13 @@ input.bb-admin-meta-field__search-input {
 		&:last-child {
 			border-bottom: none;
 			padding-bottom: 0;
+		}
+	}
+
+	.bb-admin-meta-field__checkbox-field:first-child {
+
+		> .components-base-control {
+			margin-bottom: 0;
 		}
 	}
 }
