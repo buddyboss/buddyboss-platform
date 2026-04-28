@@ -6,19 +6,49 @@
  * filters and by `SettingsForm.isFieldVisible` / `isFieldConditionallyDisabled`.
  *
  * Conditional shape:
- *   - Single:   { field: 'name', value: expected, operator?: '==' | '!=' }
- *   - Multiple: { conditions: [ { field, value, operator? } ], operator: 'AND' | 'OR' }
+ *   - Single:   { field: 'name', value: expected, operator?: '==' | '!=', source?: 'bbAdminData' }
+ *   - Multiple: { conditions: [ { field, value, operator?, source? } ], operator: 'AND' | 'OR' }
+ *
+ * `source` defaults to the per-feature settings map. Pass `'bbAdminData'` to
+ * read from `window.bbAdminData` instead — useful for cross-feature flags
+ * that are mirrored from PHP (`wp_localize_script`) and refreshed from save
+ * responses (`response.data.bbAdminDataUpdates`).
  *
  * @package BuddyBoss\Core\Administration
  * @since BuddyBoss [BBVERSION]
  */
 
 /**
+ * Resolve the values map a single condition should read from.
+ *
+ * Defaults to the per-feature settings map (the `values` argument). When a
+ * condition opts into a different source via `cond.source`, look it up on the
+ * appropriate global instead. Today the only non-default source is
+ * `'bbAdminData'`, used to evaluate cross-feature flags (e.g. Profile Type
+ * Redirects hides based on `window.bbAdminData.isProfileTypesEnabled` even
+ * though the controlling toggle lives in the Members feature). Falls back to
+ * an empty object if the requested global is missing — the condition then
+ * reads `undefined` and behaves as "not met".
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} cond   Single condition (may carry an optional `source`).
+ * @param {Object} values Default per-feature values map.
+ * @returns {Object} The map to read the field value from.
+ */
+function resolveConditionSource( cond, values ) {
+	if ( cond && 'bbAdminData' === cond.source ) {
+		return ( typeof window !== 'undefined' && window.bbAdminData ) ? window.bbAdminData : {};
+	}
+	return values || {};
+}
+
+/**
  * Evaluate a single condition against a values map.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param {Object} cond   Single condition: { field, value, operator? }.
+ * @param {Object} cond   Single condition: { field, value, operator?, source? }.
  * @param {Object} values Flat values map (field name → current value).
  * @returns {boolean} Whether the condition is met.
  */
@@ -27,7 +57,8 @@ function evaluateSingleCondition( cond, values ) {
 		return true;
 	}
 
-	var condValue   = values ? values[ cond.field ] : undefined;
+	var sourceMap   = resolveConditionSource( cond, values );
+	var condValue   = sourceMap[ cond.field ];
 	var expected    = cond.value;
 	var operator    = cond.operator || '==';
 	var matched;

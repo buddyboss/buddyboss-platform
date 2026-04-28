@@ -860,3 +860,43 @@ function bb_members_enrich_profile_type_options( $field_data, $field, $feature_i
 }
 
 add_filter( 'bb_admin_settings_format_field_data', 'bb_members_enrich_profile_type_options', 10, 3 );
+
+/**
+ * Push updated profile-types-enabled flag back to the React layer after save.
+ *
+ * The Profile Type Redirects section on the Login Redirects panel hides via a
+ * section-level conditional that reads `window.bbAdminData.isProfileTypesEnabled`.
+ * That flag is set on page load via wp_localize_script, but it must also stay
+ * fresh whenever the `bp-member-type-enable-disable` toggle is saved — from
+ * any feature page in the SPA. We attach the current value to every save
+ * response that touched the toggle so the React layer can merge it into
+ * window.bbAdminData and re-evaluate section conditionals without a reload.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array  $response_data Response data being returned to the React app.
+ * @param string $feature_id    Feature ID that initiated the save.
+ * @param array  $settings      Full submitted settings.
+ * @param array  $saved         Keys and values saved to options by core.
+ *
+ * @return array Filtered response data, possibly with bbAdminDataUpdates appended.
+ */
+function bb_members_push_profile_types_flag_after_save( $response_data, $feature_id, $settings, $saved ) {
+	if ( ! is_array( $saved ) || ! array_key_exists( 'bp-member-type-enable-disable', $saved ) ) {
+		return $response_data;
+	}
+
+	if ( ! isset( $response_data['bbAdminDataUpdates'] ) || ! is_array( $response_data['bbAdminDataUpdates'] ) ) {
+		$response_data['bbAdminDataUpdates'] = array();
+	}
+
+	$response_data['bbAdminDataUpdates']['isProfileTypesEnabled'] = (
+		bp_is_active( 'xprofile' )
+		&& function_exists( 'bp_member_type_enable_disable' )
+		&& bp_member_type_enable_disable()
+	);
+
+	return $response_data;
+}
+
+add_filter( 'bb_admin_save_feature_settings_response', 'bb_members_push_profile_types_flag_after_save', 10, 4 );

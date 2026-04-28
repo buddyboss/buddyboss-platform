@@ -136,6 +136,20 @@ function bb_registration_register_login_redirects_panel_fields() {
 				'title'       => __( 'Profile Type Redirects', 'buddyboss' ),
 				'description' => __( 'Choose a page or external link where each profile type will be redirected after login or logout.', 'buddyboss' ),
 				'order'       => 20,
+				// The controlling toggle (bp-member-type-enable-disable) lives in the
+				// Members feature, not Registration. Its live value is mirrored to
+				// window.bbAdminData.isProfileTypesEnabled at page load and refreshed
+				// from save responses, so the React layer can hide this whole section
+				// (header + field) the moment Profile Types is toggled off — without a
+				// reload and without leaking cross-feature settings into Registration's
+				// settings map. The `source: 'bbAdminData'` shape is read by
+				// evaluateConditional() in src/js/admin/settings/utils/conditional.js.
+				'conditional' => array(
+					'source' => 'bbAdminData',
+					'field'  => 'isProfileTypesEnabled',
+					'value'  => true,
+					'action' => 'hide',
+				),
 			)
 		);
 

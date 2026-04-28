@@ -396,6 +396,22 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 						});
 						setChangedFields({});
 
+						// Merge any cross-feature flags pushed by the server back into
+						// window.bbAdminData so section-level conditionals reading from
+						// the `bbAdminData` source re-evaluate against fresh values
+						// without a page reload (e.g. Login Redirects → Profile Type
+						// Redirects section reacts to the `bp-member-type-enable-disable`
+						// toggle that lives in the Members feature).
+						if (
+							response.data
+							&& response.data.bbAdminDataUpdates
+							&& 'object' === typeof response.data.bbAdminDataUpdates
+							&& 'undefined' !== typeof window
+							&& window.bbAdminData
+						) {
+							Object.assign( window.bbAdminData, response.data.bbAdminDataUpdates );
+						}
+
 						// Reactions: refetch when reaction_items saved, or inject migration data (handled in reaction module).
 						if ( 'reactions' === featureId ) {
 							applyReactionPostSave( response, fieldsToSave, featureId, {
