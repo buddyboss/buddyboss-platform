@@ -371,6 +371,14 @@
 		}
 	}
 
+	// Per Figma: checkbox help text should start at the left edge of the row,
+	// not indented under the label. WP defaults to `margin-inline-start:
+	// calc(--checkbox-input-size + --checkbox-input-margin)` on the help span.
+	// Scoped to this modal so other admin checkboxes keep the WP default.
+	.components-checkbox-control__help {
+		margin-inline-start: 0;
+	}
+
 	&__tabs {
 		.components-tab-panel__tabs {
 			border-bottom: none;
@@ -464,11 +472,35 @@
 	gap: 4px 24px;
 }
 
-// Group Edit modal → Integrations tab (Zoom etc.) — radios stack vertically per Figma.
-// Permissions tab keeps the default horizontal layout.
-.bb-group-edit-modal__tab-content--integrations .bb-admin-meta-field__radio-options {
-	flex-direction: column;
-	gap: 12px;
+// Group Edit modal → Integrations tab.
+// Per Figma: each "section" (Zoom block, Group Parent, Forum block, LearnDash block)
+// gets one divider at its end — not after every internal field.
+.bb-group-edit-modal__tab-content--integrations {
+
+	// Radios stack vertically (Permissions tab keeps default horizontal layout).
+	.bb-admin-meta-field__radio-options {
+		flex-direction: column;
+		gap: 12px;
+	}
+
+	// Drop the checkbox divider ONLY when its conditional partner is rendered
+	// right after it (Zoom checkbox + Zoom radios; Forum/LearnDash checkbox +
+	// their respective selects). When the partner is hidden by the conditional
+	// (Zoom unchecked, Forum unchecked, etc.), the default checkbox divider
+	// stays and closes the section.
+	.bb-admin-meta-field__checkbox-field:has(+ .bb-admin-meta-field__radio-field),
+	.bb-admin-meta-field__checkbox-field:has(+ .bb-admin-meta-field__async-select-field) {
+		border-bottom: 0;
+		padding-bottom: 0;
+	}
+
+	// Last radio in a block (a radio followed by anything that isn't another
+	// radio) closes the Zoom section.
+	.bb-admin-meta-field__radio-field:has(+ :not(.bb-admin-meta-field__radio-field)) {
+		padding-bottom: 16px;
+		margin-bottom: 16px;
+		border-bottom: 1px solid $bb-border-secondary-color;
+	}
 }
 
 .bb-admin-meta-field__radio-option {
