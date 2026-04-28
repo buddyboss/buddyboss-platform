@@ -15,14 +15,14 @@
 	&__rows {
 		display: flex;
 		flex-direction: column;
-		gap: 8px;
+		gap: 16px;
 		margin-bottom: 12px;
 	}
 
 	&__row {
 		display: flex;
 		align-items: center;
-		gap: 8px;
+		gap: 16px;
 		border: 1px solid transparent;
 		border-radius: $bb-border-radius-lg;
 		padding: 4px;
@@ -112,7 +112,7 @@
 		height: 4px;
 		width: 4px;
 		align-self: flex-end;
-		margin-bottom: 4px;
+		margin: 0 -6px 4px;
 		background-color: $bb-background-tertiary-color;
 		border-radius: $bb-border-radius-full;
 	}
@@ -136,6 +136,17 @@
 
 		.components-text-control__input {
 			margin: 0;
+		}
+	}
+}
+
+.bb-admin-settings-form__field-input-wrapper {
+
+	&:has(> .bb-domain-restrictions),
+	&:has(> .bb-email-restrictions) {
+
+		+ .bb-admin-settings-form__field-description {
+			margin-top: 16px;
 		}
 	}
 }

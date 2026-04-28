@@ -6,6 +6,7 @@
  */
 
 .bb-admin-sso-providers {
+	margin: 6px 0;
 
 	&__grid {
 		display: flex;
@@ -407,4 +408,8 @@
 			}
 		}
 	}
+}
+
+[data-group="social_login"] .bb-admin-notice {
+	margin-bottom: 0;
 }
