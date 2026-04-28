@@ -168,7 +168,8 @@
 		margin: 8px 0 0 0;
 	}
 
-	[data-field-name="bb-access-control-create-activity"] & {
+	[data-field-name="bb-access-control-create-activity"] &,
+	[data-field-name="bb-access-control-create-groups"] & {
 
 		&__toggle-item {
 			padding: 0;
