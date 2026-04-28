@@ -49,14 +49,7 @@ function bb_forums_register_directories_panel_fields() {
 	);
 
 	// Build Forums page link for help text.
-	$forums_page_url = esc_url(
-		bp_get_admin_url(
-			add_query_arg(
-				array( 'page' => 'bp-pages' ),
-				'admin.php'
-			)
-		)
-	);
+	$forums_page_url = esc_url( bb_get_feature_settings_url( 'appearance', 'pages' ) );
 
 	// FIELD: Forums Prefix.
 	bb_register_feature_field(

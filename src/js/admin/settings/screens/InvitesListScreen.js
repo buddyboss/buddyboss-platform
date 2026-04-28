@@ -640,6 +640,7 @@ export default function InvitesListScreen( props ) {
 					setRevokeConfirmChecked( false );
 					performRevoke( revokeConfirmIds );
 				} }
+				confirmText={ __( 'Revoke', 'buddyboss' ) }
 				onClose={ function () { setRevokeConfirmOpen( false ); setRevokeConfirmChecked( false ); } }
 				isProcessing={ bulkProcessing }
 				className="bb-invites-revoke-modal"
@@ -671,6 +672,7 @@ export default function InvitesListScreen( props ) {
 					setRevokeConfirmChecked( false );
 					performRevoke( revokeConfirmIds );
 				} }
+				confirmText={ __( 'Revoke', 'buddyboss' ) }
 				onClose={ function () { setRevokeConfirmOpen( false ); setRevokeConfirmChecked( false ); } }
 				isProcessing={ bulkProcessing }
 				className="bb-invites-revoke-modal"
