@@ -52,6 +52,7 @@ export function DeleteConfirmModal( {
 	onConfirmChange,
 	onConfirm,
 	onClose,
+	confirmText = __( 'Delete', 'buddyboss' ),
 	isProcessing,
 	className,
 } ) {
@@ -130,7 +131,7 @@ export function DeleteConfirmModal( {
 					isBusy={ isProcessing }
 					disabled={ ! confirmChecked || isProcessing }
 				>
-					{ __( 'Delete', 'buddyboss' ) }
+					{ confirmText }
 				</Button>
 			</div>
 		</Modal>
