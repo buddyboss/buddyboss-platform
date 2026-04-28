@@ -35,6 +35,7 @@ import { decodeEntities } from '@wordpress/html-entities';
  * @param {Function} props.onConfirmChange Confirm checkbox change handler.
  * @param {Function} props.onConfirm      Delete button click handler.
  * @param {Function} props.onClose        Close/cancel handler.
+ * @param {string}   props.confirmText    Confirm button label. Default "Delete".
  * @param {boolean}  props.isProcessing   Whether delete is in progress.
  * @param {string}   props.className      CSS class for the modal (e.g., "bb-forum-delete-modal").
  * @returns {JSX.Element|null} Modal or null.
