@@ -33,7 +33,15 @@
 		display: flex;
 		align-items: flex-start;
 		gap: 24px;
-		padding: 16px 0;
+		padding: 24px 0;
+
+		&:first-child {
+			padding-top: 0;
+		}
+		
+		&:last-child {
+			padding-bottom: 0;
+		}
 
 		&:not(:last-child) {
 			border-bottom: 1px solid $bb-border-primary-color;
@@ -111,7 +119,7 @@
 		display: flex;
 		align-items: center;
 		gap: 8px;
-		min-width: 22%;
+		width: 28%;
 		flex-shrink: 0;
 	}
 
