@@ -604,6 +604,10 @@ select.bb-admin-settings__select {
 		max-width: 85px;
 		width: auto;
 	}
+
+    [data-field-name="bb_recaptcha_score_threshold"] .components-text-control__input {
+        min-width: 270px;
+    }
 }
 
 /* Buttons */
