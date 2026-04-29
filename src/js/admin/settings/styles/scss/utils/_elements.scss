@@ -892,6 +892,15 @@ select.bb-admin-settings__select {
             border-radius: 50%;
             object-fit: cover;
         }
+
+        a {
+            text-decoration: none;
+
+            &:hover,
+            &:focus {
+                text-decoration: underline;
+            }
+        }
     }
 
     // Ensure links stay inline so they don't become separate flex items.

@@ -644,9 +644,18 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 									className="bb-admin-group-type-modal__shortcode-copy"
 									onClick={ function () {
 										var shortcode = '[group type="' + groupType.id + '"]';
-										if ( navigator.clipboard ) {
-											navigator.clipboard.writeText( shortcode ).catch( function () {} );
+										if ( ! navigator.clipboard ) {
+											return;
 										}
+										navigator.clipboard.writeText( shortcode ).then( function () {
+											window.dispatchEvent( new CustomEvent( 'bb-settings-toast', {
+												detail: { status: 'success', message: __( 'Copied to clipboard.', 'buddyboss' ) },
+											} ) );
+										} ).catch( function () {
+											window.dispatchEvent( new CustomEvent( 'bb-settings-toast', {
+												detail: { status: 'error', message: __( 'Failed to copy to clipboard.', 'buddyboss' ) },
+											} ) );
+										} );
 									} }
 									aria-label={ __( 'Copy shortcode', 'buddyboss' ) }
 								>
