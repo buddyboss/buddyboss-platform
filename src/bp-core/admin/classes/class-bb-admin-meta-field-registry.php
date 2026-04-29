@@ -310,7 +310,49 @@ class BB_Admin_Meta_Field_Registry {
 				continue;
 			}
 
+			// Honor `conditional` on save (in addition to render). The contract
+			// of a `conditional` field is: "render this field only when the
+			// parent field's current value matches". Without this guard the
+			// registry would still call save_value for every dependent whose
+			// POST key is present — even when the user just toggled the parent
+			// off — re-applying the dependent's stale React state and undoing
+			// the parent's intent. Concrete example: unchecking
+			// `ld_group_enable` runs that field's save_value (desync from
+			// LearnDash), but `ld_group_id` still sits in the POST with its
+			// previous value; without this guard the next iteration would
+			// immediately re-associate the BP group to that LD group.
+			//
+			// Backward-compat note: when the parent's POST key is NOT present
+			// (e.g. parent is read-only or the React form chose to omit it),
+			// fall through to the historical behavior. This avoids surprising
+			// fields whose conditional points at something the registry never
+			// receives.
 			// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by the calling AJAX handler before invoking save_fields_data().
+			if ( ! empty( $args['conditional'] ) && is_array( $args['conditional'] ) ) {
+				$cond_field = isset( $args['conditional']['field'] ) ? (string) $args['conditional']['field'] : '';
+				$cond_value = isset( $args['conditional']['value'] ) ? $args['conditional']['value'] : null;
+
+				if ( '' !== $cond_field ) {
+					$cond_post_key = 'registered_field_' . $cond_field;
+					if ( isset( $_POST[ $cond_post_key ] ) ) {
+						$cond_actual = is_array( $_POST[ $cond_post_key ] )
+							? array_map( 'strval', wp_unslash( $_POST[ $cond_post_key ] ) ) // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+							: (string) wp_unslash( $_POST[ $cond_post_key ] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+						$allowed     = is_array( $cond_value )
+							? array_map( 'strval', $cond_value )
+							: array( (string) $cond_value );
+
+						$matched = is_array( $cond_actual )
+							? (bool) array_intersect( $cond_actual, $allowed )
+							: in_array( $cond_actual, $allowed, true );
+
+						if ( ! $matched ) {
+							continue;
+						}
+					}
+				}
+			}
+
 			$post_key = 'registered_field_' . $field_id;
 			if ( ! isset( $_POST[ $post_key ] ) ) {
 				continue;
