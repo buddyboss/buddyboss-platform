@@ -592,6 +592,14 @@ class BB_Admin_Replies_Ajax {
 			'topic_id' => $topic_id,
 		);
 
+		// Run "before" phase fields so legacy meta-bridge save_value callbacks
+		// populate $_POST with third-party metabox values before bbp_insert_reply
+		// fires save_post_reply (where third-party plugins read $_POST and persist
+		// their post meta). Pass an empty stub object — native fields' save_value
+		// callbacks would fatal on null in PHP 8+; mutations on the stub are
+		// harmless because $reply_data is built directly from $_POST below.
+		bb_admin_meta_field_registry()->save_fields_data( 'replies', new \stdClass(), 'before' );
+
 		$reply_id = bbp_insert_reply( $reply_data, $reply_meta );
 
 		if ( ! $reply_id || is_wp_error( $reply_id ) ) {
@@ -809,6 +817,12 @@ class BB_Admin_Replies_Ajax {
 				wp_send_json_error( array( 'message' => __( 'Invalid forum.', 'buddyboss' ) ) );
 			}
 		}
+
+		// Run "before" phase fields so legacy meta-bridge save_value callbacks
+		// populate $_POST with third-party metabox values before wp_update_post
+		// fires save_post_reply (where third-party plugins read $_POST and persist
+		// their post meta).
+		bb_admin_meta_field_registry()->save_fields_data( 'replies', $reply, 'before' );
 
 		$result = wp_update_post( $update_args, true );
 		if ( is_wp_error( $result ) ) {

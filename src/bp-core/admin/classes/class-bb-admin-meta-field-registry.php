@@ -294,6 +294,20 @@ class BB_Admin_Meta_Field_Registry {
 	public function save_fields_data( $component, $item, $phase = 'all' ) {
 		$fields = $this->get_fields( $component );
 
+		/**
+		 * Fires before the registry iterates fields to save. Used by the
+		 * legacy meta-bridge to replay hidden inputs (nonces, CSRF tokens,
+		 * stable hidden state) from third-party metaboxes into $_POST so
+		 * their save_post_<post_type> handlers can verify and persist data.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $component Component identifier.
+		 * @param object $item      Item being saved (may be null on create).
+		 * @param string $phase     Save phase: 'before', 'after', or 'all'.
+		 */
+		do_action( 'bb_admin_meta_field_registry_before_save', $component, $item, $phase );
+
 		foreach ( $fields as $field_id => $args ) {
 			// Filter by phase.
 			if ( 'all' !== $phase && $args['save_phase'] !== $phase ) {

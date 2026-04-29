@@ -64,6 +64,9 @@ function bb_admin_settings_register_forums_feature() {
 	require_once __DIR__ . '/settings/forums/meta-fields.php';
 	require_once __DIR__ . '/settings/forums/meta-fields-topics.php';
 	require_once __DIR__ . '/settings/forums/meta-fields-replies.php';
+	require_once __DIR__ . '/settings/forums/legacy-meta-bridge.php';
+	require_once __DIR__ . '/settings/forums/legacy-meta-bridge-topics.php';
+	require_once __DIR__ . '/settings/forums/legacy-meta-bridge-replies.php';
 
 	// =========================================================================
 	// SIDE PANELS

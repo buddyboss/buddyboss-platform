@@ -514,6 +514,15 @@ class BB_Admin_Forums_Ajax {
 			'menu_order'   => $order,
 		);
 
+		// Run "before" phase fields so legacy meta-bridge save_value callbacks
+		// populate $_POST with third-party metabox values before bbp_insert_forum
+		// fires save_post_forum (where third-party plugins read $_POST and persist
+		// their post meta). Pass an empty stub object — native fields' save_value
+		// callbacks ($forum->post_title = $value, etc.) would fatal on null in
+		// PHP 8+; mutations on the stub are harmless because $forum_data is
+		// built directly from $_POST below.
+		bb_admin_meta_field_registry()->save_fields_data( 'forums', new \stdClass(), 'before' );
+
 		$forum_id = bbp_insert_forum( $forum_data );
 
 		if ( ! $forum_id ) {
@@ -694,6 +703,12 @@ class BB_Admin_Forums_Ajax {
 		if ( null !== $order ) {
 			$update_args['menu_order'] = $order;
 		}
+
+		// Run "before" phase fields so legacy meta-bridge save_value callbacks
+		// populate $_POST with third-party metabox values before wp_update_post
+		// fires save_post_forum (where third-party plugins read $_POST and persist
+		// their post meta).
+		bb_admin_meta_field_registry()->save_fields_data( 'forums', $forum, 'before' );
 
 		$result = wp_update_post( $update_args, true );
 		if ( is_wp_error( $result ) ) {

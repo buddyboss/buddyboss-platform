@@ -73,15 +73,23 @@
 
 defined( 'ABSPATH' ) || exit;
 
+// Shared parser, capture-safety, and sanitize-resolver helpers used by every
+// component bridge. require_once is idempotent across require sites.
+require_once dirname( __DIR__ ) . '/legacy-meta-bridge-utils.php';
+
 /**
  * Per-request state container.
  *
  * Holds:
- *   - bridged_slugs[]:  metabox IDs the bridge surfaced fields for, used to
- *                       avoid double-saving in the extension save loop.
- *   - html_cache[]:     captured metabox HTML keyed by box_id+group_id
- *                       (avoids re-running third-party callbacks N+1 times).
- *   - xpath_cache[]:    parsed DOMXPath instances keyed by HTML hash.
+ *   - bridged_slugs[]: metabox IDs the bridge surfaced fields for, used to
+ *                      avoid double-saving in the extension save loop.
+ *   - html_cache[]:    captured metabox HTML keyed by box_id+group_id
+ *                      (avoids re-running third-party callbacks N+1 times).
+ *
+ * Note: parsed-DOMXPath caching used to live here too — it now lives inside
+ * `bb_legacy_get_xpath()` (in the shared utils file) as a module-level
+ * static, so all component bridges share one parse per HTML hash without
+ * having to coordinate state.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -93,17 +101,10 @@ function &bb_legacy_groups_bridge_state() {
 		$state = array(
 			'bridged_slugs' => array(),
 			'html_cache'    => array(),
-			'xpath_cache'   => array(),
 		);
 	}
 	return $state;
 }
-
-/**
- * Maximum HTML size we'll attempt to parse, defends against billion-laughs /
- * quadratic-blowup payloads from malicious metabox callbacks.
- */
-defined( 'BB_LEGACY_BRIDGE_MAX_HTML' ) || define( 'BB_LEGACY_BRIDGE_MAX_HTML', 1024 * 1024 ); // 1 MB.
 
 /**
  * Register bridge fields late, after core/Pro fields have registered.
@@ -332,28 +333,7 @@ function bb_legacy_groups_bridge_box( $registry, $component, $box, &$order ) {
 		$raw_label       = $input['label'] ? $input['label'] : $box['title'];
 		$raw_description = isset( $input['description'] ) ? $input['description'] : '';
 
-		// Type-aware sanitize callback. Without this the registry falls back
-		// to sanitize_text_field() which strips ALL HTML — fine for plain
-		// inputs but it silently drops <strong>, <a>, lists, etc. from a
-		// richtext / textarea value typed by the user. Match the types the
-		// parser detects in bb_legacy_detect_input_type().
-		switch ( $input['type'] ) {
-			case 'richtext':
-			case 'textarea':
-				$sanitize_cb = 'wp_kses_post';
-				break;
-			case 'email':
-				$sanitize_cb = 'sanitize_email';
-				break;
-			case 'url':
-				$sanitize_cb = 'esc_url_raw';
-				break;
-			case 'number':
-				$sanitize_cb = 'intval';
-				break;
-			default:
-				$sanitize_cb = 'sanitize_text_field';
-		}
+		$sanitize_cb = bb_legacy_resolve_sanitize_callback( $input['type'] );
 
 		$args = array(
 			// Labels are surfaced as plain-text in the React modal, descriptions
@@ -623,299 +603,6 @@ function bb_legacy_capture_box_html( $box, $group ) {
 }
 
 /**
- * Run a callable while wp_die() / die() / exit() inside it throws an
- * Exception instead of terminating the request. Restores filters on exit.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param callable $callback Callable to run.
- * @return mixed Return value of $callback.
- */
-function bb_legacy_with_wp_die_safety( callable $callback ) {
-	$throwing_handler = function ( $message = '' ) {
-		// Sanitize before interpolating into the exception message — wp_die()
-		// may be called with HTML, and the exception trace can be logged.
-		$safe = is_string( $message ) ? wp_strip_all_tags( $message ) : '';
-		throw new RuntimeException( 'Legacy bridge: wp_die intercepted (' . esc_html( $safe ) . ')' );
-	};
-	$installer        = function () use ( $throwing_handler ) {
-		return $throwing_handler;
-	};
-
-	add_filter( 'wp_die_ajax_handler', $installer, 9999 );
-	add_filter( 'wp_die_handler', $installer, 9999 );
-	add_filter( 'wp_die_json_handler', $installer, 9999 );
-	add_filter( 'wp_die_jsonp_handler', $installer, 9999 );
-	add_filter( 'wp_die_xmlrpc_handler', $installer, 9999 );
-
-	try {
-		return $callback();
-	} finally {
-		remove_filter( 'wp_die_ajax_handler', $installer, 9999 );
-		remove_filter( 'wp_die_handler', $installer, 9999 );
-		remove_filter( 'wp_die_json_handler', $installer, 9999 );
-		remove_filter( 'wp_die_jsonp_handler', $installer, 9999 );
-		remove_filter( 'wp_die_xmlrpc_handler', $installer, 9999 );
-	}
-}
-
-/**
- * Build a memoized DOMXPath for an HTML string.
- *
- * Hardened: LIBXML_NONET disables network access; LIBXML_NOENT disables
- * external entity expansion; libxml internal errors are buffered to keep
- * malformed third-party HTML from polluting WordPress's error stream.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param string $html HTML to parse.
- * @return DOMXPath|null XPath instance, or null if parsing failed.
- */
-function bb_legacy_get_xpath( $html ) {
-	if ( '' === (string) $html ) {
-		return null;
-	}
-	if ( strlen( $html ) > BB_LEGACY_BRIDGE_MAX_HTML ) {
-		return null;
-	}
-
-	$state = &bb_legacy_groups_bridge_state();
-	$key   = md5( $html );
-	if ( isset( $state['xpath_cache'][ $key ] ) ) {
-		return $state['xpath_cache'][ $key ];
-	}
-
-	$doc = new DOMDocument();
-	libxml_use_internal_errors( true );
-
-	// PHP 7.x defense: explicitly disable external entity loading. On PHP 8.0+
-	// this function is a deprecated no-op (the default became safer), so we
-	// suppress any deprecation notice with @ and gate the restore on null.
-	$prev_entity_loader = null;
-	if ( function_exists( 'libxml_disable_entity_loader' ) ) {
-		$prev_entity_loader = @libxml_disable_entity_loader( true ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged,Generic.PHP.DeprecatedFunctions.Deprecated,PHPCompatibility.FunctionUse.RemovedFunctions,WordPress.PHP.NoSilencedErrors.Discouraged
-	}
-
-	$loaded = $doc->loadHTML(
-		'<?xml encoding="UTF-8"?>' . $html,
-		LIBXML_NONET | LIBXML_NOENT
-	);
-	libxml_clear_errors();
-
-	if ( null !== $prev_entity_loader && function_exists( 'libxml_disable_entity_loader' ) ) {
-		@libxml_disable_entity_loader( $prev_entity_loader ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged,Generic.PHP.DeprecatedFunctions.Deprecated,PHPCompatibility.FunctionUse.RemovedFunctions,WordPress.PHP.NoSilencedErrors.Discouraged
-	}
-
-	if ( ! $loaded ) {
-		$state['xpath_cache'][ $key ] = null;
-		return null;
-	}
-
-	$xpath                        = new DOMXPath( $doc );
-	$state['xpath_cache'][ $key ] = $xpath;
-	return $xpath;
-}
-
-/**
- * Sanitize a string for safe interpolation into an XPath single-quoted
- * literal. Strips characters outside the allowed identifier set.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param string $value Untrusted value.
- * @return string Safe-to-interpolate identifier.
- */
-function bb_legacy_xpath_safe( $value ) {
-	return preg_replace( '/[^A-Za-z0-9_\-:.]/', '', (string) $value );
-}
-
-/**
- * Parse <input>/<select>/<textarea> tags out of captured HTML.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param string $html Captured metabox HTML.
- * @return array List of input descriptors.
- */
-function bb_legacy_parse_box_inputs( $html ) {
-	$xpath = bb_legacy_get_xpath( $html );
-	if ( ! $xpath ) {
-		return array();
-	}
-
-	$inputs       = array();
-	$radio_groups = array();
-
-	foreach ( $xpath->query( '//input | //select | //textarea' ) as $node ) {
-		// @var DOMElement $node — type hint for DOMNodeList iteration.
-		$name = $node->getAttribute( 'name' );
-		if ( ! $name ) {
-			continue;
-		}
-		// Skip well-known structural inputs at parse time too (defense in depth
-		// — bb_legacy_is_safe_post_key() also rejects these).
-		if ( in_array( $name, array( '_wpnonce', '_wp_http_referer', 'action' ), true ) ) {
-			continue;
-		}
-		if ( 0 === strpos( $name, '_bp_group_' ) ) {
-			continue;
-		}
-
-		$type = bb_legacy_detect_input_type( $node );
-		if ( in_array( $type, array( 'submit', 'button' ), true ) ) {
-			continue;
-		}
-
-		/**
-		 * Filter the detected field type for a bridged legacy input. Plugin
-		 * authors can override the auto-detected type when the parser's
-		 * heuristic guesses wrong (e.g., a custom widget rendered as a hidden
-		 * input that should surface as a textarea).
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param string     $type Auto-detected field type.
-		 * @param string     $name Input name attribute / $_POST key.
-		 * @param DOMElement $node Parsed DOM node for the input.
-		 */
-		$type = (string) apply_filters( 'bb_legacy_meta_field_type', $type, $name, $node );
-
-		if ( 'radio' === $type ) {
-			if ( isset( $radio_groups[ $name ] ) ) {
-				continue;
-			}
-			$radio_groups[ $name ] = true;
-		}
-
-		$inputs[] = array(
-			'name'        => $name,
-			'type'        => $type,
-			'label'       => bb_legacy_find_label( $node, $xpath ),
-			'description' => bb_legacy_find_description( $node, $xpath ),
-		);
-	}
-
-	return $inputs;
-}
-
-/**
- * Detect a registry-compatible field type from a DOM input/select/textarea.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param DOMElement $node DOM node.
- * @return string Field type for BB_Admin_Meta_Field_Registry.
- */
-function bb_legacy_detect_input_type( DOMElement $node ) {
-	// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- DOM API property.
-	$tag = strtolower( $node->tagName );
-
-	if ( 'select' === $tag ) {
-		return $node->getAttribute( 'multiple' ) ? 'toggle_list' : 'select';
-	}
-	if ( 'textarea' === $tag ) {
-		$class = $node->getAttribute( 'class' );
-		if ( false !== stripos( $class, 'tinymce' ) || false !== stripos( $class, 'wp-editor-area' ) ) {
-			return 'richtext';
-		}
-		return 'textarea';
-	}
-
-	$type_attr = $node->getAttribute( 'type' );
-	$html_type = strtolower( '' !== $type_attr ? $type_attr : 'text' );
-	$map       = array(
-		'text'     => 'text',
-		'number'   => 'number',
-		'url'      => 'url',
-		'email'    => 'text',
-		'date'     => 'date',
-		'time'     => 'time',
-		'checkbox' => 'checkbox',
-		'radio'    => 'radio',
-		'file'     => 'file',
-		'hidden'   => 'hidden',
-		'submit'   => 'submit',
-		'button'   => 'button',
-	);
-	return isset( $map[ $html_type ] ) ? $map[ $html_type ] : 'text';
-}
-
-/**
- * Find the label text for an input node.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param DOMElement $node  DOM node.
- * @param DOMXPath   $xpath XPath instance.
- * @return string Label text or empty.
- */
-function bb_legacy_find_label( DOMElement $node, DOMXPath $xpath ) {
-	$id = bb_legacy_xpath_safe( $node->getAttribute( 'id' ) );
-	if ( $id ) {
-		$labels = $xpath->query( "//label[@for='{$id}']" );
-		if ( $labels->length ) {
-			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- DOM API property.
-			return trim( $labels->item( 0 )->textContent );
-		}
-	}
-
-	// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- DOM API property.
-	$parent = $node->parentNode;
-	// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase,WordPress.PHP.YodaConditions.NotYoda -- DOM API property.
-	while ( $parent && $parent->nodeType === XML_ELEMENT_NODE ) {
-		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- DOM API property.
-		if ( 'label' === strtolower( $parent->tagName ) ) {
-			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- DOM API property.
-			return trim( $parent->textContent );
-		}
-		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- DOM API property.
-		$parent = $parent->parentNode;
-	}
-
-	$th = $xpath->query( 'ancestor::tr/th[1]', $node );
-	if ( $th->length ) {
-		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- DOM API property.
-		return trim( $th->item( 0 )->textContent );
-	}
-
-	return '';
-}
-
-/**
- * Find the description text for an input node.
- *
- * Walks the DOM looking for a sibling/nearby <p class="description">
- * (WordPress admin convention) or <span class="description">.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param DOMElement $node  Input node.
- * @param DOMXPath   $xpath XPath instance.
- * @return string Description text or empty.
- */
-function bb_legacy_find_description( DOMElement $node, DOMXPath $xpath ) {
-	$desc = $xpath->query( "following-sibling::p[contains(concat(' ', normalize-space(@class), ' '), ' description ')][1]", $node );
-	if ( $desc->length ) {
-		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- DOM API property.
-		return trim( $desc->item( 0 )->textContent );
-	}
-
-	$desc = $xpath->query( "following-sibling::span[contains(concat(' ', normalize-space(@class), ' '), ' description ')][1]", $node );
-	if ( $desc->length ) {
-		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- DOM API property.
-		return trim( $desc->item( 0 )->textContent );
-	}
-
-	$desc = $xpath->query( "ancestor::*[1]//p[contains(concat(' ', normalize-space(@class), ' '), ' description ')][1]", $node );
-	if ( $desc->length ) {
-		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- DOM API property.
-		return trim( $desc->item( 0 )->textContent );
-	}
-
-	return '';
-}
-
-/**
  * Build a get_value closure that re-renders the metabox with the real group
  * (cached) and extracts THIS input's current value.
  *
@@ -934,124 +621,6 @@ function bb_legacy_make_get_value( $box, $name, $type ) {
 		}
 		return bb_legacy_extract_input_value( $html, $name, $type );
 	};
-}
-
-/**
- * Extract a single input's current value from re-rendered HTML.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param string $html Captured HTML.
- * @param string $name Input name.
- * @param string $type Field type.
- * @return string Current value.
- */
-function bb_legacy_extract_input_value( $html, $name, $type ) {
-	$xpath = bb_legacy_get_xpath( $html );
-	if ( ! $xpath ) {
-		return '';
-	}
-	$safe_name = bb_legacy_xpath_safe( $name );
-	if ( '' === $safe_name ) {
-		return '';
-	}
-
-	if ( 'textarea' === $type || 'richtext' === $type ) {
-		$node = $xpath->query( "(//textarea[@name='{$safe_name}'])[1]" );
-		if ( $node->length ) {
-			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- DOM API property.
-			return $node->item( 0 )->textContent;
-		}
-	} elseif ( 'select' === $type ) {
-		$node = $xpath->query( "(//select[@name='{$safe_name}']/option[@selected])[1]" );
-		if ( $node->length ) {
-			return $node->item( 0 )->getAttribute( 'value' );
-		}
-	} elseif ( 'checkbox' === $type ) {
-		$node = $xpath->query( "(//input[@name='{$safe_name}' and @type='checkbox'])[1]" );
-		return ( $node->length && $node->item( 0 )->hasAttribute( 'checked' ) ) ? '1' : '0';
-	} elseif ( 'radio' === $type ) {
-		$node = $xpath->query( "//input[@name='{$safe_name}' and @type='radio' and @checked]" );
-		if ( $node->length ) {
-			return $node->item( 0 )->getAttribute( 'value' );
-		}
-	} else {
-		$node = $xpath->query( "(//input[@name='{$safe_name}'])[1]" );
-		if ( $node->length ) {
-			return $node->item( 0 )->getAttribute( 'value' );
-		}
-	}
-
-	return '';
-}
-
-/**
- * Extract <option> list from a select.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param string $html Captured HTML.
- * @param string $name Select name.
- * @return array List of [ 'label', 'value' ] entries.
- */
-function bb_legacy_extract_select_options( $html, $name ) {
-	$xpath = bb_legacy_get_xpath( $html );
-	if ( ! $xpath ) {
-		return array();
-	}
-	$safe_name = bb_legacy_xpath_safe( $name );
-	if ( '' === $safe_name ) {
-		return array();
-	}
-
-	$out = array();
-	foreach ( $xpath->query( "//select[@name='{$safe_name}']/option" ) as $opt ) {
-		$out[] = array(
-			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- DOM API property.
-			'label' => trim( $opt->textContent ),
-			'value' => $opt->getAttribute( 'value' ),
-		);
-	}
-	return $out;
-}
-
-/**
- * Extract radio button options from a name group.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param string $html Captured HTML.
- * @param string $name Radio group name.
- * @return array List of [ 'label', 'value' ] entries.
- */
-function bb_legacy_extract_radio_options( $html, $name ) {
-	$xpath = bb_legacy_get_xpath( $html );
-	if ( ! $xpath ) {
-		return array();
-	}
-	$safe_name = bb_legacy_xpath_safe( $name );
-	if ( '' === $safe_name ) {
-		return array();
-	}
-
-	$out = array();
-	foreach ( $xpath->query( "//input[@name='{$safe_name}' and @type='radio']" ) as $radio ) {
-		$value = $radio->getAttribute( 'value' );
-		$label = '';
-		$id    = bb_legacy_xpath_safe( $radio->getAttribute( 'id' ) );
-		if ( $id ) {
-			$lbl = $xpath->query( "//label[@for='{$id}']" );
-			if ( $lbl->length ) {
-				// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- DOM API property.
-				$label = trim( $lbl->item( 0 )->textContent );
-			}
-		}
-		$out[] = array(
-			'label' => '' !== $label ? $label : $value,
-			'value' => $value,
-		);
-	}
-	return $out;
 }
 
 /**

@@ -44,10 +44,9 @@
 
 defined( 'ABSPATH' ) || exit;
 
-// Reuse the parser/capture/safety utilities defined by the groups bridge.
-// require_once is idempotent — its body runs at most once per request, so
-// the groups bridge's add_action() side effects are not duplicated.
-require_once dirname( __DIR__ ) . '/groups/legacy-meta-bridge.php';
+// Shared parser, capture-safety, and sanitize-resolver helpers used by every
+// component bridge. require_once is idempotent across require sites.
+require_once dirname( __DIR__ ) . '/legacy-meta-bridge-utils.php';
 
 /**
  * Per-request state container for the activity bridge.
@@ -274,27 +273,7 @@ function bb_legacy_activity_bridge_box( $registry, $component, $box, &$order, $e
 		$raw_label       = $input['label'] ? $input['label'] : $box['title'];
 		$raw_description = isset( $input['description'] ) ? $input['description'] : '';
 
-		// Type-aware sanitize callback. Without this the registry falls back
-		// to sanitize_text_field() which strips ALL HTML — fine for plain
-		// inputs but it silently drops <strong>, <a>, lists, etc. from a
-		// richtext / textarea value typed by the user.
-		switch ( $input['type'] ) {
-			case 'richtext':
-			case 'textarea':
-				$sanitize_cb = 'wp_kses_post';
-				break;
-			case 'email':
-				$sanitize_cb = 'sanitize_email';
-				break;
-			case 'url':
-				$sanitize_cb = 'esc_url_raw';
-				break;
-			case 'number':
-				$sanitize_cb = 'intval';
-				break;
-			default:
-				$sanitize_cb = 'sanitize_text_field';
-		}
+		$sanitize_cb = bb_legacy_resolve_sanitize_callback( $input['type'] );
 
 		$args = array(
 			'label'             => sanitize_text_field( $raw_label ),

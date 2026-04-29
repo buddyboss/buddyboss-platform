@@ -612,6 +612,14 @@ class BB_Admin_Topics_Ajax {
 			'forum_id' => $forum_id,
 		);
 
+		// Run "before" phase fields so legacy meta-bridge save_value callbacks
+		// populate $_POST with third-party metabox values before bbp_insert_topic
+		// fires save_post_topic (where third-party plugins read $_POST and persist
+		// their post meta). Pass an empty stub object — native fields' save_value
+		// callbacks would fatal on null in PHP 8+; mutations on the stub are
+		// harmless because $topic_data is built directly from $_POST below.
+		bb_admin_meta_field_registry()->save_fields_data( 'discussions', new \stdClass(), 'before' );
+
 		$topic_id = bbp_insert_topic( $topic_data, $topic_meta );
 
 		if ( ! $topic_id || is_wp_error( $topic_id ) ) {
@@ -839,6 +847,12 @@ class BB_Admin_Topics_Ajax {
 			$update_args['post_parent'] = $forum_id;
 			update_post_meta( $topic_id, '_bbp_forum_id', $forum_id );
 		}
+
+		// Run "before" phase fields so legacy meta-bridge save_value callbacks
+		// populate $_POST with third-party metabox values before wp_update_post
+		// fires save_post_topic (where third-party plugins read $_POST and persist
+		// their post meta).
+		bb_admin_meta_field_registry()->save_fields_data( 'discussions', $topic, 'before' );
 
 		$result = wp_update_post( $update_args, true );
 		if ( is_wp_error( $result ) ) {
