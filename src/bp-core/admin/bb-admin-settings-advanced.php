@@ -110,7 +110,7 @@ function bb_admin_settings_register_advanced_feature() {
 				'title'    => __( 'Telemetry', 'buddyboss' ),
 				'icon'     => array(
 					'type'  => 'font',
-					'class' => 'bb-icons-rl bb-icons-rl-chart-bar',
+					'class' => 'bb-icons-rl bb-icons-rl-cylinder',
 				),
 				'help_url' => 'https://www.buddyboss.com/usage-tracking/?utm_source=product&utm_medium=platform&utm_campaign=telemetry',
 				'order'    => 30,
