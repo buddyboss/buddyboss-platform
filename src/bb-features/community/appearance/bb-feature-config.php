@@ -28,7 +28,7 @@ bb_register_feature(
 	'appearance',
 	array(
 		'label'              => __( 'Appearance', 'buddyboss' ),
-		'description'        => __( 'Configure site branding, navigation, template pages and SEO.', 'buddyboss' ),
+		'description'        => __( 'Configure ReadyLaunch layout, community pages, and site SEO settings to control your site\'s appearance and visibility.', 'buddyboss' ),
 		'icon'               => array(
 			'type'  => 'font',
 			'class' => 'bb-icons-rl bb-icons-rl-palette',

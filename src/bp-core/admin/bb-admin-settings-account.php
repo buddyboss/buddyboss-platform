@@ -31,7 +31,7 @@ function bb_admin_settings_register_account_settings_feature() {
 		'settings',
 		array(
 			'label'              => __( 'Account Settings', 'buddyboss' ),
-			'description'        => __( 'Allow members to update their account and notification settings directly from their profiles.', 'buddyboss' ),
+			'description'        => __( 'Allow members to update their account and notification settings directly from their profiles with this account settings page.', 'buddyboss' ),
 			'icon'               => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-user-gear',
