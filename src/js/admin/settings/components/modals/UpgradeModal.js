@@ -10,7 +10,7 @@
 
 import { Modal } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import { safeUrl } from '../../utils/sanitize';
+import { safeUrl, sanitizeHtml } from '../../utils/sanitize';
 
 /**
  * Upgrade Modal Component
@@ -19,6 +19,12 @@ import { safeUrl } from '../../utils/sanitize';
  *
  * @param {Object}   props           Component props.
  * @param {Object}   props.feature   Placeholder feature object with upgrade data.
+ *                                   Reads `upgrade_title` (single-line headline)
+ *                                   and `upgrade_description` (paragraph body)
+ *                                   from the S3 catalog. Both are optional —
+ *                                   when absent the modal falls back to the
+ *                                   card-level `description` so older catalog
+ *                                   entries keep rendering.
  * @param {Function} props.onClose   Close handler.
  * @returns {JSX.Element} Modal component.
  */
@@ -30,6 +36,14 @@ export function UpgradeModal( { feature, onClose } ) {
 	var tierLabel = 'plus' === feature.upgrade_tier
 		? __( 'UPGRADE PLUS', 'buddyboss' )
 		: __( 'UPGRADE PRO', 'buddyboss' );
+
+	// PHP wraps upgrade_description with wp_kses_post so marketing can use
+	// modest emphasis (<strong>, <em>, <a>). DOMPurify (via sanitizeHtml)
+	// is the belt-and-braces second pass — same project convention used by
+	// FeatureSettingsScreen, ProfileTypeScreen, EmailTemplatesListScreen,
+	// and ConfirmToggleModal. Never render server-supplied admin HTML
+	// without this double-sanitisation layer.
+	var bodyText = feature.upgrade_description || feature.description || '';
 
 	return (
 		<Modal
@@ -50,9 +64,16 @@ export function UpgradeModal( { feature, onClose } ) {
 				)}
 
 				<div className="bb-upgrade-modal__content">
-					<p className="bb-upgrade-modal__description">
-						{feature.description}
-					</p>
+					{feature.upgrade_title && (
+						<h3 className="bb-upgrade-modal__title">
+							{feature.upgrade_title}
+						</h3>
+					)}
+
+					<p
+						className="bb-upgrade-modal__description"
+						dangerouslySetInnerHTML={ { __html: sanitizeHtml( bodyText ) } }
+					/>
 
 					<a
 						href={ safeUrl( feature.upgrade_url ) || 'https://www.buddyboss.com/pricing/' }

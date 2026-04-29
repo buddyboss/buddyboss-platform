@@ -140,12 +140,46 @@
 		max-width: 768px;
 	}
 
+	// Headline rendered above the body copy (e.g. "Transform Your Community
+	// Engagement"). Optional — only present when the catalog item provides
+	// `upgrade_title`. Sits between the hero image and the description with
+	// a tighter gap so the title + paragraph read as one block.
+	&__title {
+		font-size: 16px;
+		font-weight: 600;
+		line-height: 22px;
+		color: $bb-text-color;
+		margin: 0;
+
+		// Pull the description closer when the title is present so the two
+		// read as a single content block instead of two equally-spaced rows.
+		& + .bb-upgrade-modal__description {
+			margin-top: -16px; // counteracts the parent's gap: 24px → effective 8px gap.
+		}
+	}
+
 	&__description {
 		font-size: 14px;
 		line-height: 20px;
 		font-weight: 400;
 		color: $bb-text-secondary-color;
 		margin: 0;
+
+		// Marketing-supplied inline emphasis (wp_kses_post() allows these on
+		// the PHP side; sanitizeHtml() lets them through on the React side).
+		strong {
+			font-weight: 600;
+			color: $bb-text-color;
+		}
+
+		em {
+			font-style: italic;
+		}
+
+		a {
+			color: $bb-link-color;
+			text-decoration: underline;
+		}
 	}
 
 	// CTA button — inline within content, not in a footer.

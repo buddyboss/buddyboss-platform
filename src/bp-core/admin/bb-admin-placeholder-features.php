@@ -295,10 +295,21 @@ function bb_admin_inject_placeholder_features( $features ) {
 			'is_placeholder'    => true,
 			'plugin_status'     => $plugin_status,
 			'plugin_slug'       => $plugin_slug,
-			'upgrade_tier'      => isset( $item['upgrade_tier'] ) ? sanitize_key( $item['upgrade_tier'] ) : 'plus',
-			'upgrade_url'       => isset( $item['upgrade_url'] ) ? esc_url_raw( $item['upgrade_url'] ) : '',
-			'upgrade_image_url' => isset( $item['upgrade_image_url'] ) ? esc_url_raw( $item['upgrade_image_url'] ) : '',
-			'order'             => isset( $item['order'] ) ? (int) $item['order'] : 999,
+			'upgrade_tier'        => isset( $item['upgrade_tier'] ) ? sanitize_key( $item['upgrade_tier'] ) : 'plus',
+			'upgrade_url'         => isset( $item['upgrade_url'] ) ? esc_url_raw( $item['upgrade_url'] ) : '',
+			'upgrade_image_url'   => isset( $item['upgrade_image_url'] ) ? esc_url_raw( $item['upgrade_image_url'] ) : '',
+			// New marketing copy fields surfaced inside the upgrade modal.
+			// `upgrade_title` is a single-line headline rendered above the body
+			// copy (e.g. "Transform Your Community Engagement"); a single-line
+			// sanitiser is enough. `upgrade_description` is the paragraph body
+			// — wp_kses_post() lets marketing add modest emphasis (<strong>,
+			// <em>, <a>) without opening up arbitrary HTML. Both keys are
+			// optional in the catalog; UpgradeModal falls back to the card
+			// `description` when they're absent so older catalog entries keep
+			// rendering.
+			'upgrade_title'       => isset( $item['upgrade_title'] ) ? sanitize_text_field( $item['upgrade_title'] ) : '',
+			'upgrade_description' => isset( $item['upgrade_description'] ) ? wp_kses_post( $item['upgrade_description'] ) : '',
+			'order'               => isset( $item['order'] ) ? (int) $item['order'] : 999,
 		);
 	}
 
@@ -431,16 +442,24 @@ function bb_admin_mark_drm_locked_features( $features ) {
 		$feature['is_drm_locked'] = true;
 
 		// Pull upgrade data from the S3 catalog if available, fallback to feature's own data.
+		// upgrade_title / upgrade_description (added with the upgrade-modal redesign)
+		// are forwarded only when present so legacy catalog entries don't ship
+		// empty strings into the React modal — UpgradeModal falls back to the
+		// card description automatically when these are absent.
 		if ( isset( $catalog_lookup[ $feature_id ] ) ) {
-			$catalog_item                 = $catalog_lookup[ $feature_id ];
-			$feature['upgrade_tier']      = isset( $catalog_item['upgrade_tier'] ) ? $catalog_item['upgrade_tier'] : $feature['license_tier'];
-			$feature['upgrade_url']       = isset( $catalog_item['upgrade_url'] ) ? $catalog_item['upgrade_url'] : 'https://www.buddyboss.com/pricing/';
-			$feature['upgrade_image_url'] = isset( $catalog_item['upgrade_image_url'] ) ? $catalog_item['upgrade_image_url'] : '';
+			$catalog_item                   = $catalog_lookup[ $feature_id ];
+			$feature['upgrade_tier']        = isset( $catalog_item['upgrade_tier'] ) ? $catalog_item['upgrade_tier'] : $feature['license_tier'];
+			$feature['upgrade_url']         = isset( $catalog_item['upgrade_url'] ) ? $catalog_item['upgrade_url'] : 'https://www.buddyboss.com/pricing/';
+			$feature['upgrade_image_url']   = isset( $catalog_item['upgrade_image_url'] ) ? $catalog_item['upgrade_image_url'] : '';
+			$feature['upgrade_title']       = isset( $catalog_item['upgrade_title'] ) ? sanitize_text_field( $catalog_item['upgrade_title'] ) : '';
+			$feature['upgrade_description'] = isset( $catalog_item['upgrade_description'] ) ? wp_kses_post( $catalog_item['upgrade_description'] ) : '';
 		} else {
 			// No S3 catalog entry — use feature's own license_tier.
-			$feature['upgrade_tier']      = isset( $feature['license_tier'] ) ? $feature['license_tier'] : 'pro';
-			$feature['upgrade_url']       = 'https://www.buddyboss.com/pricing/';
-			$feature['upgrade_image_url'] = '';
+			$feature['upgrade_tier']        = isset( $feature['license_tier'] ) ? $feature['license_tier'] : 'pro';
+			$feature['upgrade_url']         = 'https://www.buddyboss.com/pricing/';
+			$feature['upgrade_image_url']   = '';
+			$feature['upgrade_title']       = '';
+			$feature['upgrade_description'] = '';
 		}
 	}
 
