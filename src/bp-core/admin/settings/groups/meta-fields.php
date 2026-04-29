@@ -323,13 +323,19 @@ function bb_groups_register_core_meta_fields( $registry, $component ) {
 	// TAB: Integrations (order 450–470).
 	// =========================================================================
 
-	// Parent Group (hierarchies).
+	// Parent Group (hierarchies) — async searchable select with load-more
+	// pagination. The legacy `select` type loaded every possible parent up
+	// front via bp_get_possible_parent_groups(); on sites with thousands of
+	// groups that's an O(n) blocking query on every modal open. Async drops
+	// the cost to one search-paged query per keystroke (debounced).
 	$registry->register(
 		$component,
 		'parent_id',
 		array(
 			'label'             => __( 'Group Parent (Optional)', 'buddyboss' ),
-			'type'              => 'select',
+			'type'              => 'async_select',
+			'async_action'      => 'bb_admin_group_parent_autocomplete',
+			'placeholder'       => __( 'Select Parent', 'buddyboss' ),
 			'tab'               => 'integrations',
 			'order'             => 450,
 			'save_phase'        => 'before',
@@ -338,28 +344,6 @@ function bb_groups_register_core_meta_fields( $registry, $component ) {
 			},
 			'get_value'         => function ( $group ) {
 				return (int) $group->parent_id;
-			},
-			'get_options'       => function ( $group ) {
-				$options = array(
-					array(
-						'value' => '0',
-						'label' => __( 'Select Parent', 'buddyboss' ),
-					),
-				);
-
-				// bp_get_possible_parent_groups() requires a user_id to check membership.
-				// Using the logged-in admin is intentional: admins can see all groups,
-				// so this returns the full set of possible parents for the dropdown.
-				$possible_parents = bp_get_possible_parent_groups( $group->id, bp_loggedin_user_id() );
-				if ( ! empty( $possible_parents ) ) {
-					foreach ( $possible_parents as $possible_parent ) {
-						$options[] = array(
-							'value' => (string) $possible_parent->id,
-							'label' => $possible_parent->name,
-						);
-					}
-				}
-				return $options;
 			},
 			'save_value'        => function ( $group, $value ) {
 				$group->parent_id = absint( $value );

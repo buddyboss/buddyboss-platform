@@ -484,12 +484,13 @@
 	}
 
 	// Drop the checkbox divider ONLY when its conditional partner is rendered
-	// right after it (Zoom checkbox + Zoom radios; Forum/LearnDash checkbox +
-	// their respective selects). When the partner is hidden by the conditional
-	// (Zoom unchecked, Forum unchecked, etc.), the default checkbox divider
-	// stays and closes the section.
+	// right after it (Zoom checkbox + Zoom radios; Forum checkbox + async
+	// forum select; LearnDash checkbox + plain select). When the partner is
+	// hidden by the conditional (Zoom unchecked, Forum unchecked, etc.) the
+	// default checkbox divider stays and closes the section.
 	.bb-admin-meta-field__checkbox-field:has(+ .bb-admin-meta-field__radio-field),
-	.bb-admin-meta-field__checkbox-field:has(+ .bb-admin-meta-field__async-select-field) {
+	.bb-admin-meta-field__checkbox-field:has(+ .bb-admin-meta-field__async-select-field),
+	.bb-admin-meta-field__checkbox-field:has(+ .bb-admin-meta-field__select-field) {
 		border-bottom: 0;
 		padding-bottom: 0;
 	}

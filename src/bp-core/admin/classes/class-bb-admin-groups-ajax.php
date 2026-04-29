@@ -117,6 +117,7 @@ class BB_Admin_Groups_Ajax {
 		add_action( 'wp_ajax_bb_admin_update_group_member', array( $this, 'update_group_member' ) );
 		add_action( 'wp_ajax_bb_admin_member_autocomplete', array( $this, 'member_autocomplete' ) );
 		add_action( 'wp_ajax_bb_admin_forum_autocomplete', array( $this, 'forum_autocomplete' ) );
+		add_action( 'wp_ajax_bb_admin_group_parent_autocomplete', array( $this, 'group_parent_autocomplete' ) );
 		add_action( 'wp_ajax_bb_admin_get_group_topics', array( $this, 'get_group_topics' ) );
 	}
 
@@ -2010,6 +2011,130 @@ class BB_Admin_Groups_Ajax {
 			$results[] = array(
 				'value' => (string) $forum->ID,
 				'label' => $forum->post_title,
+			);
+		}
+
+		wp_send_json_success(
+			array(
+				'results'  => $results,
+				'has_more' => $has_more,
+			)
+		);
+	}
+
+	/**
+	 * AJAX handler — autocomplete possible parent groups for the React group
+	 * edit modal's `parent_id` field.
+	 *
+	 * Returns groups matching the search term, paginated, excluding the group
+	 * being edited and any of its descendants (selecting one would create a
+	 * cycle in the hierarchy). Mirrors `forum_autocomplete()` shape so the
+	 * shared AsyncSelectField component can consume the response unchanged.
+	 *
+	 * Expected POST params:
+	 *   - term        Search query.
+	 *   - page        1-based page index.
+	 *   - selected_id Optional — when present and term/page are at defaults,
+	 *                 returns just that single group so the field can resolve
+	 *                 a label for the saved value on first paint.
+	 *   - item_id     The ID of the group being edited (forwarded by
+	 *                 RegisteredMetaField.js). 0 on the create flow.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return void
+	 */
+	public function group_parent_autocomplete() {
+		$this->bb_verify_request();
+
+		if ( ! function_exists( 'bp_enable_group_hierarchies' ) || ! bp_enable_group_hierarchies() ) {
+			wp_send_json_error( array( 'message' => __( 'Group hierarchies are disabled.', 'buddyboss' ) ) );
+		}
+
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
+		$term        = isset( $_POST['term'] ) ? sanitize_text_field( wp_unslash( $_POST['term'] ) ) : '';
+		$page        = isset( $_POST['page'] ) ? absint( wp_unslash( $_POST['page'] ) ) : 1;
+		$selected_id = isset( $_POST['selected_id'] ) ? absint( wp_unslash( $_POST['selected_id'] ) ) : 0;
+		$item_id     = isset( $_POST['item_id'] ) ? absint( wp_unslash( $_POST['item_id'] ) ) : 0;
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
+
+		$page     = max( 1, $page );
+		$per_page = 20;
+
+		// Label-resolution path. The React side asks "what's the label for this
+		// saved id?" by sending { selected_id, term: '', page: 1 }. We treat
+		// any request whose term is empty AND page is 1 AND no search context
+		// is present as the resolve path — this includes the selected_id=0
+		// "no selection" case, which must NOT fall through to the search query
+		// (otherwise the field paints the first alphabetical match as the
+		// saved value).
+		if ( '' === $term && 1 === $page && isset( $_POST['selected_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			if ( $selected_id ) {
+				$parent = groups_get_group( $selected_id );
+				if ( ! empty( $parent->id ) ) {
+					wp_send_json_success(
+						array(
+							'results'  => array(
+								array(
+									'value' => (string) $parent->id,
+									'label' => $parent->name,
+								),
+							),
+							'has_more' => false,
+						)
+					);
+				}
+			}
+			wp_send_json_success(
+				array(
+					'results'  => array(),
+					'has_more' => false,
+				)
+			);
+		}
+
+		// Build exclude list — current group + all its descendants — to
+		// prevent the user from picking a parent that would loop the tree.
+		$exclude_ids = array();
+		if ( $item_id ) {
+			$exclude_ids[] = $item_id;
+			if ( function_exists( 'bp_get_descendent_groups' ) ) {
+				$descendants = bp_get_descendent_groups( $item_id );
+				if ( ! empty( $descendants ) && is_array( $descendants ) ) {
+					$exclude_ids = array_merge( $exclude_ids, wp_list_pluck( $descendants, 'id' ) );
+				}
+			}
+		}
+
+		$args = array(
+			'orderby'         => 'name',
+			'order'           => 'ASC',
+			'populate_extras' => false,
+			'show_hidden'     => true,
+			'per_page'        => $per_page + 1, // +1 to detect has_more without a COUNT(*) round-trip.
+			'page'            => $page,
+		);
+
+		if ( ! empty( $exclude_ids ) ) {
+			$args['exclude'] = array_values( array_unique( array_map( 'absint', $exclude_ids ) ) );
+		}
+		if ( '' !== $term ) {
+			$args['search_terms'] = $term;
+		}
+
+		$query  = groups_get_groups( $args );
+		$groups = isset( $query['groups'] ) && is_array( $query['groups'] ) ? $query['groups'] : array();
+
+		$has_more = count( $groups ) > $per_page;
+		if ( $has_more ) {
+			array_pop( $groups );
+		}
+
+		$results = array();
+		foreach ( $groups as $group ) {
+			$results[] = array(
+				'value' => (string) $group->id,
+				'label' => $group->name,
 			);
 		}
 

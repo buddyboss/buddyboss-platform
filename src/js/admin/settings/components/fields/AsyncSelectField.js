@@ -238,7 +238,14 @@ export function AsyncSelectField( { id, value, onChange, asyncAction, asyncExtra
 		function () {
 			var valueStr = String( value || '' );
 
-			if ( '' === valueStr ) {
+			// Treat both '' and '0' as "no selection" — every entity this
+			// component resolves (forums, parent groups, LD groups, etc.)
+			// uses 0 as the "none" sentinel per WordPress convention. Without
+			// this, the resolve fetch fires with selected_id=0; the PHP
+			// handlers fall through to a regular search and return the
+			// alphabetical first page, which the line below would then pick
+			// up as response.data.results[0] and paint as the "saved" label.
+			if ( '' === valueStr || '0' === valueStr ) {
 				setSelectedLabel( '' );
 				setIsResolvingLabel( false );
 				lastAppliedRef.current = { value: '', label: '' };

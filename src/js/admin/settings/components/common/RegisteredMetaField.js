@@ -554,6 +554,16 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 
 	// Async select field (searchable, server-side, load-more).
 	if ( 'async_select' === field.type ) {
+		// Merge the item being edited into the per-request params so the
+		// AJAX handler can scope its query (e.g. exclude descendants of the
+		// current group, exclude already-associated LD groups, etc.). Static
+		// `field.asyncExtraParams` still wins for any explicit overrides.
+		var asyncParams = Object.assign(
+			{},
+			field.asyncExtraParams || {},
+			{ item_id: itemId || 0 }
+		);
+
 		return (
 			<div className={ 'bb-admin-meta-field__async-select-field' + ( isDisabled ? ' bb-admin-meta-field--disabled' : '' ) }>
 				{ field.label && (
@@ -563,7 +573,7 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 					value={ null != value ? String( value ) : '0' }
 					onChange={ onChange }
 					asyncAction={ field.async_action || '' }
-					asyncExtraParams={ field.asyncExtraParams || {} }
+					asyncExtraParams={ asyncParams }
 					placeholder={ field.placeholder || '' }
 					disabled={ isDisabled }
 				/>

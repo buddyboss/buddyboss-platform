@@ -205,10 +205,15 @@ function bb_legacy_groups_meta_bridge_register_inner( $registry, $component ) {
 	$state = &bb_legacy_groups_bridge_state();
 	$order = 5000;
 
-	foreach ( $wp_meta_boxes[ $screen ] as $context => $priorities ) {
+	// Cast to array — `$wp_meta_boxes[ $screen ]` is normally a nested-array
+	// structure populated by core's add_meta_box(), but defensive against a
+	// third-party plugin that directly assigns a non-array to the screen key
+	// (would TypeError on PHP 8.0+ otherwise). Mirrors the activity bridge
+	// pattern at `bb_legacy_activity_meta_bridge_register_inner()`.
+	foreach ( (array) $wp_meta_boxes[ $screen ] as $context => $priorities ) {
 		foreach ( (array) $priorities as $boxes ) {
 			foreach ( (array) $boxes as $box_id => $box ) {
-				if ( in_array( $box_id, $skip_box_ids, true ) || empty( $box['callback'] ) ) {
+				if ( ! is_array( $box ) || in_array( $box_id, $skip_box_ids, true ) || empty( $box['callback'] ) ) {
 					continue;
 				}
 				if ( isset( $existing_tabs[ $box_id ] ) ) {
@@ -1220,10 +1225,10 @@ function bb_legacy_groups_auto_enqueue_widget_scripts() {
 	}
 
 	$combined_html = '';
-	foreach ( $wp_meta_boxes[ $screen_match ] as $context => $priorities ) {
+	foreach ( (array) $wp_meta_boxes[ $screen_match ] as $context => $priorities ) {
 		foreach ( (array) $priorities as $boxes ) {
 			foreach ( (array) $boxes as $box ) {
-				if ( empty( $box['callback'] ) ) {
+				if ( ! is_array( $box ) || empty( $box['callback'] ) ) {
 					continue;
 				}
 				$combined_html .= bb_legacy_capture_box_html( $box, null );
