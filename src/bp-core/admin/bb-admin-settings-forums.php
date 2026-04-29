@@ -44,7 +44,7 @@ function bb_admin_settings_register_forums_feature() {
 				return bp_is_active( 'forums' );
 			},
 			'settings_route'     => '/settings/forums',
-			'order'              => 60,
+			'order'              => 80,
 			'components'         => array( 'forums' ),
 		)
 	);

@@ -42,7 +42,7 @@ function bb_admin_settings_register_groups_feature() {
 				return bp_is_active( 'groups' );
 			},
 			'settings_route'     => '/settings/groups',
-			'order'              => 50,
+			'order'              => 90,
 		)
 	);
 

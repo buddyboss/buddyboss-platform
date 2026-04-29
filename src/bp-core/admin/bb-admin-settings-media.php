@@ -47,7 +47,7 @@ function bb_admin_settings_register_media_feature() {
 			},
 			'components'         => array( 'media', 'video', 'document' ),
 			'settings_route'     => '/settings/media',
-			'order'              => 70,
+			'order'              => 110,
 		)
 	);
 

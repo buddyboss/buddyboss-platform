@@ -42,7 +42,7 @@ function bb_admin_settings_register_activity_feature() {
 				return bp_is_active( 'activity' );
 			},
 			'settings_route'     => '/settings/activity',
-			'order'              => 40,
+			'order'              => 70,
 		)
 	);
 

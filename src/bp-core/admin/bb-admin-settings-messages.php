@@ -42,7 +42,7 @@ function bb_admin_settings_register_messages_feature() {
 				return bp_is_active( 'messages' );
 			},
 			'settings_route'     => '/settings/messages',
-			'order'              => 55,
+			'order'              => 120,
 		)
 	);
 

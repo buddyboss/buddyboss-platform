@@ -41,7 +41,7 @@ function bb_admin_settings_register_invites_feature() {
 				return bp_is_active( 'invites' );
 			},
 			'settings_route'     => '/settings/invites',
-			'order'              => 60,
+			'order'              => 140,
 		)
 	);
 

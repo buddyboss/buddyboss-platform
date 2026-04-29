@@ -44,7 +44,7 @@ function bb_admin_settings_register_notifications_feature() {
 				return bp_is_active( 'notifications' );
 			},
 			'settings_route'     => '/settings/notifications',
-			'order'              => 50,
+			'order'              => 130,
 		)
 	);
 

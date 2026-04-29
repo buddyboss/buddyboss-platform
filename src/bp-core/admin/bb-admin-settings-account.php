@@ -43,7 +43,7 @@ function bb_admin_settings_register_account_settings_feature() {
 				return bp_is_active( 'settings' );
 			},
 			'settings_route'     => '',
-			'order'              => 90,
+			'order'              => 30,
 		)
 	);
 }

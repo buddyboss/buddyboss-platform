@@ -142,7 +142,7 @@ function bb_admin_settings_register_moderation_feature() {
 				return bp_is_active( 'moderation' );
 			},
 			'settings_route'     => '/settings/moderation',
-			'order'              => 120,
+			'order'              => 40,
 		)
 	);
 
