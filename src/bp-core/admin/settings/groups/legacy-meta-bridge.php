@@ -331,17 +331,42 @@ function bb_legacy_groups_bridge_box( $registry, $component, $box, &$order ) {
 
 		$raw_label       = $input['label'] ? $input['label'] : $box['title'];
 		$raw_description = isset( $input['description'] ) ? $input['description'] : '';
-		$args            = array(
+
+		// Type-aware sanitize callback. Without this the registry falls back
+		// to sanitize_text_field() which strips ALL HTML — fine for plain
+		// inputs but it silently drops <strong>, <a>, lists, etc. from a
+		// richtext / textarea value typed by the user. Match the types the
+		// parser detects in bb_legacy_detect_input_type().
+		switch ( $input['type'] ) {
+			case 'richtext':
+			case 'textarea':
+				$sanitize_cb = 'wp_kses_post';
+				break;
+			case 'email':
+				$sanitize_cb = 'sanitize_email';
+				break;
+			case 'url':
+				$sanitize_cb = 'esc_url_raw';
+				break;
+			case 'number':
+				$sanitize_cb = 'intval';
+				break;
+			default:
+				$sanitize_cb = 'sanitize_text_field';
+		}
+
+		$args = array(
 			// Labels are surfaced as plain-text in the React modal, descriptions
 			// allow the same inline HTML wp_kses_post() permits (links, em, etc.).
-			'label'       => sanitize_text_field( $raw_label ),
-			'description' => wp_kses_post( $raw_description ),
-			'type'        => $input['type'],
-			'order'       => $order++,
-			'tab'         => $tab,
-			'context'     => 'after',
-			'get_value'   => bb_legacy_make_get_value( $box, $input['name'], $input['type'] ),
-			'save_value'  => function ( $group, $value ) use ( $input ) {
+			'label'             => sanitize_text_field( $raw_label ),
+			'description'       => wp_kses_post( $raw_description ),
+			'type'              => $input['type'],
+			'order'             => $order++,
+			'tab'               => $tab,
+			'context'           => 'after',
+			'sanitize_callback' => $sanitize_cb,
+			'get_value'         => bb_legacy_make_get_value( $box, $input['name'], $input['type'] ),
+			'save_value'        => function ( $group, $value ) use ( $input ) {
 				// Defense in depth: verify safety again at save time in case
 				// the registration-time check was bypassed.
 				if ( ! bb_legacy_is_safe_post_key( $input['name'] ) ) {

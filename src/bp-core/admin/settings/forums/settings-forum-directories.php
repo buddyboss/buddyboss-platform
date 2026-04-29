@@ -60,7 +60,7 @@ function bb_forums_register_directories_panel_fields() {
 			'name'              => '_bbp_include_root',
 			'label'             => __( 'Forums Prefix', 'buddyboss' ),
 			'type'              => 'toggle',
-			'description'       => __( 'Prefix all forum content with the Forums page slug (Recommended)', 'buddyboss' ),
+			'description'       => __( 'Prefix forum content with the Forums page slug (Recommended)', 'buddyboss' ),
 			'default'           => bbp_include_root_slug(),
 			'sanitize_callback' => 'absint',
 			/* translators: %s: Forums page link. */
