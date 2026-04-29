@@ -147,6 +147,22 @@ export function App() {
 		fixAdminMenuHighlight( currentRoute );
 	}, [currentRoute]);
 
+	// Scroll to top on every route change. The Settings 2.0 router is
+	// homegrown (string-based currentRoute + history.replaceState) and has
+	// no built-in scroll restoration the way React Router does, so a user
+	// scrolled halfway down the features grid would keep that scroll
+	// position when clicking a Settings button — landing them in the
+	// middle of the feature settings page instead of at its top. Reset
+	// scroll on every transition so each panel starts from its first
+	// section. We scroll the window because the WP admin shell
+	// (#wpbody-content) owns the scrollbar; the React tree is mounted
+	// inside it, not in its own scroll container.
+	useEffect(() => {
+		if ( 'undefined' !== typeof window && 'function' === typeof window.scrollTo ) {
+			window.scrollTo( 0, 0 );
+		}
+	}, [currentRoute]);
+
 	useEffect(() => {
 		// Handle legacy URL mapping on mount
 		const urlParams = new URLSearchParams(window.location.search);
