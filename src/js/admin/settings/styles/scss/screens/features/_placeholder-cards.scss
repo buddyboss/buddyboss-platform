@@ -87,6 +87,9 @@
 // Upgrade Modal.
 .bb-upgrade-modal {
 	&.bb-admin-settings-modal {
+		max-width: 650px;
+		max-height: 90%;
+
 		// Remove default WP Modal padding, let content control spacing.
 		.components-modal__content {
 			padding: 0;
@@ -109,14 +112,14 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		padding: 24px;
+		padding: 16px 24px 24px;
 		gap: 24px;
 	}
 
 	&__image-wrapper {
 		width: 100%;
 		border: 0.5px solid $bb-border-secondary-color;
-		border-radius: 16px;
+		border-radius: $bb-border-radius-2xl;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -145,16 +148,16 @@
 	// `upgrade_title`. Sits between the hero image and the description with
 	// a tighter gap so the title + paragraph read as one block.
 	&__title {
-		font-size: 16px;
+		font-size: 18px;
 		font-weight: 600;
-		line-height: 22px;
+		line-height: 26px;
 		color: $bb-text-color;
 		margin: 0;
 
 		// Pull the description closer when the title is present so the two
 		// read as a single content block instead of two equally-spaced rows.
 		& + .bb-upgrade-modal__description {
-			margin-top: -16px; // counteracts the parent's gap: 24px → effective 8px gap.
+			margin-top: -14px; // counteracts the parent's gap: 24px → effective 8px gap.
 		}
 	}
 
@@ -162,7 +165,7 @@
 		font-size: 14px;
 		line-height: 20px;
 		font-weight: 400;
-		color: $bb-text-secondary-color;
+		color: $bb-text-tertiary-color;
 		margin: 0;
 
 		// Marketing-supplied inline emphasis (wp_kses_post() allows these on
@@ -188,7 +191,7 @@
 		align-items: center;
 		gap: 8px;
 		padding: 8px 16px;
-		border-radius: 99px;
+		border-radius: $bb-border-radius-full;
 		border: 0.5px solid #e0623d;
 		font-size: 14px;
 		font-weight: 500;
@@ -217,23 +220,23 @@
 
 		// UPGRADE PLUS — solid gradient, white text.
 		&--plus {
-			background: linear-gradient(128.38deg, #E0623D 4.86%, #3E34FF 91.52%);
-			color: #fff;
+			background: linear-gradient(100deg, #E0623D 4.86%, #3E34FF 91.52%);
+			color: $bb-text-inverse-color;
 
 			&:hover,
 			&:focus {
-				color: #fff;
+				color: $bb-text-inverse-color;
 			}
 		}
 
 		// UPGRADE PRO — 10% opacity gradient, dark text.
 		&--pro {
-			background: linear-gradient(127.06deg, rgba(224, 98, 61, 0.1) 4.86%, rgba(62, 52, 255, 0.1) 91.52%);
-			color: #2f2f2f;
+			background: linear-gradient(100deg, #F7DFDB 4.86%, #D8D6FF 91.52%);
+			color: $bb-text-secondary-color;
 
 			&:hover,
 			&:focus {
-				color: #2f2f2f;
+				color: $bb-text-secondary-color;
 			}
 		}
 	}
