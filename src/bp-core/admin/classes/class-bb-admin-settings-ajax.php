@@ -1444,6 +1444,19 @@ class BB_Admin_Settings_Ajax {
 			return '';
 		}
 
+		// Toggle-only feature cards (e.g. Account Settings) intentionally
+		// register `settings_route => ''` to declare they have no admin page.
+		// Without this early return the resolver falls through to the default
+		// `bb_get_feature_settings_url()` builder below, which would always
+		// hand back a non-empty URL and force the React feature card to
+		// render a "Settings" button that navigates to a blank panel.
+		if (
+			array_key_exists( 'settings_route', (array) $feature )
+			&& '' === $feature['settings_route']
+		) {
+			return '';
+		}
+
 		// External settings route — add-on plugins with their own admin page.
 		// These contain full URLs (http/https) or non-Settings-2.0 page params.
 		if (
