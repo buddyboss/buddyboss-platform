@@ -557,7 +557,7 @@ export function AsyncSelectField( { id, value, onChange, asyncAction, asyncExtra
 						: undefined
 					}
 				/>
-				{ null !== value && undefined !== value && '' !== String( value ) && (
+				{ null !== value && undefined !== value && '' !== String( value ) && '0' !== String( value ) && (
 					isResolvingLabel ? (
 						// Spinner replaces the clear button while the label is
 						// being fetched so the user isn't prompted to clear a
