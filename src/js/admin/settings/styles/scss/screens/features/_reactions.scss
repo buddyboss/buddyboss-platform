@@ -821,7 +821,8 @@
         [class*="bb-icon"] {
             font-size: 32px;
             line-height: 1;
-            color: $bb-text-color;
+            color: $bb-icon-tertiary-color;
+            font-weight: 400;
         }
 
         &:hover i {
