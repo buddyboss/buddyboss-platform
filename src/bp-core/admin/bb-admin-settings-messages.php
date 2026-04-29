@@ -30,7 +30,7 @@ function bb_admin_settings_register_messages_feature() {
 		'messages',
 		array(
 			'label'              => __( 'Private Messaging', 'buddyboss' ),
-			'description'        => __( 'Allow members to send private messages to an individual or to a group.', 'buddyboss' ),
+			'description'        => __( 'Allow members to send private messages to other users or within social groups.', 'buddyboss' ),
 			'icon'               => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-chats-circle',

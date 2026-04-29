@@ -22,7 +22,7 @@ bb_register_integration(
 	'recaptcha',
 	array(
 		'label'              => __( 'reCAPTCHA', 'buddyboss' ),
-		'description'        => __( 'Connect Google reCAPTCHA to protect your website from fraud, spam, and abuse.', 'buddyboss' ),
+		'description'        => __( 'Protect your community from spam and bot registrations with Google\'s invisible and checkbox verification.', 'buddyboss' ),
 		'icon'               => array(
 			'type'  => 'font',
 			'class' => 'bb-icons-rl bb-icons-rl-shield-check',

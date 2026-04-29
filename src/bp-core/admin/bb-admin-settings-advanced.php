@@ -29,7 +29,7 @@ function bb_admin_settings_register_advanced_feature() {
 		'advanced',
 		array(
 			'label'              => __( 'Advanced', 'buddyboss' ),
-			'description'        => __( 'Easily manage your community\'s general and privacy settings.', 'buddyboss' ),
+			'description'        => __( 'Find your site extended performance and privacy settings.', 'buddyboss' ),
 			'icon'               => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-gear-six',

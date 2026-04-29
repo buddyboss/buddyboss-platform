@@ -50,7 +50,7 @@ function bb_admin_settings_register_search_feature() {
 		'search',
 		array(
 			'label'              => __( 'Network Search', 'buddyboss' ),
-			'description'        => __( 'Allow members to search the network for various content types.', 'buddyboss' ),
+			'description'        => __( 'Allow members to search the entire site, and manage what media and post types can be found in the sites network search.', 'buddyboss' ),
 			'icon'               => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-magnifying-glass',

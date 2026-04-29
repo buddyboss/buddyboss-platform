@@ -29,7 +29,7 @@ function bb_admin_settings_register_invites_feature() {
 		'invites',
 		array(
 			'label'              => __( 'Email Invites', 'buddyboss' ),
-			'description'        => __( 'Allow your members to send email invitations to non-members.', 'buddyboss' ),
+			'description'        => __( 'Allow members to send email invitations to help encourage others to register and join your community.', 'buddyboss' ),
 			'icon'               => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-paper-plane-tilt',
