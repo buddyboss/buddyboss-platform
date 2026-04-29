@@ -142,6 +142,18 @@
 	}
 }
 
+// Specificity bump: the bypass field is registered with `'group' => …` (to
+// drop the divider above it) and `'label' => ''` (no-label). That combo
+// matches the generic `--grouped.--no-label … input[type="text"] { width: 100% }`
+// rule in `_feature_settings.scss`, which would otherwise stretch the bypass
+// code input to full row width. Re-pin to 120px with matching specificity so
+// the compact inline look survives the grouping.
+.bb-admin-settings-form__field--grouped.bb-admin-settings-form__field--no-label {
+	.bb-admin-settings-form__field-input-wrapper input.bb-admin-settings-field__recaptcha-bypass-text {
+		width: 120px;
+	}
+}
+
 .bb-admin-settings-field__recaptcha-verify {
 
 	&-row {

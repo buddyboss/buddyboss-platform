@@ -169,8 +169,23 @@ bb_register_feature_field(
 	array(
 		'name'              => 'bb_recaptcha_verify',
 		'label'             => '',
-		'type'              => 'recaptcha_verify',
+		'type'              => 'bb_verify_popup',
+		'button_label'      => __( 'Verify', 'buddyboss' ),
+		'ajax_action'       => 'bb_recaptcha_verify_settings_2',
+		// API Keys are credential fields — persisted by the verify AJAX
+		// handler, never by per-field auto-save. Version is intentionally
+		// NOT a related field: it auto-saves on its own (legacy parity)
+		// and is forwarded to the verify request via the
+		// bb_admin_verify_field_before_ajax hook in recaptcha-verify-hooks.js.
+		'related_fields'    => array(
+			'bb_recaptcha_site_key',
+			'bb_recaptcha_secret_key',
+		),
 		'is_connected'      => ( 'connected' === $verified ),
+		'verify_config'     => array(
+			'modal_title'     => __( 'Verify reCAPTCHA', 'buddyboss' ),
+			'loading_message' => __( 'Verifying reCAPTCHA token', 'buddyboss' ),
+		),
 		'default'           => '',
 		'sanitize_callback' => '__return_empty_string',
 		'order'             => 23,
@@ -210,6 +225,31 @@ bb_register_feature_section(
 		'title'       => __( 'reCAPTCHA Settings', 'buddyboss' ),
 		'description' => '',
 		'order'       => 20,
+		// Disable the entire section while reCAPTCHA is not connected.
+		// Driven by the hidden tracking field below; the verify AJAX flips
+		// its value on connect/disconnect via the updated_fields response.
+		'conditional' => array(
+			'field'  => '_bb_recaptcha_is_connected',
+			'value'  => '1',
+			'action' => 'disable',
+		),
+	)
+);
+
+// Virtual field that tracks the connection state. Cannot key off
+// site_key/secret_key alone because typing into those fields would flip
+// the conditional before verification actually completes.
+bb_register_feature_field(
+	'recaptcha',
+	'recaptcha_settings',
+	'recaptcha_general',
+	array(
+		'name'              => '_bb_recaptcha_is_connected',
+		'label'             => '',
+		'type'              => 'hidden',
+		'default'           => ( 'connected' === $verified ) ? '1' : '0',
+		'sanitize_callback' => '__return_empty_string',
+		'order'             => 1,
 	)
 );
 
@@ -262,10 +302,15 @@ bb_register_feature_field(
 		'description'       => sprintf(
 			/* translators: %s: Enable Registration link. */
 			__( 'Select the pages to include in the reCAPTCHA submission. Make sure to %s if both registration and account activation are disabled.', 'buddyboss' ),
-			'<a href="' . esc_url( admin_url( 'admin.php?page=bp-pages' ) ) . '">' . esc_html__( 'Enable Registration', 'buddyboss' ) . '</a>'
+			'<a href="' . esc_url( admin_url( 'admin.php?page=bb-settings&tab=appearance&panel=pages' ) ) . '">' . esc_html__( 'Enable Registration', 'buddyboss' ) . '</a>'
 		),
 		'sanitize_callback' => 'bb_recaptcha_sanitize_enabled_for',
 		'order'             => 20,
+		// Group with bb_recaptcha_allow_bypass below so the divider between
+		// them disappears (matches Figma — they read as one block).
+		'group'             => array(
+			'key' => 'recaptcha_enabled_group',
+		),
 	)
 );
 
@@ -285,6 +330,20 @@ bb_register_feature_field(
 		'sanitize_callback' => 'absint',
 		'order'             => 30,
 		'bypass_text'       => $bypass_text,
+		// Bypass URL is meaningful only when reCAPTCHA protects the Login
+		// flow. Matches legacy: the row was rendered with 'bp-hide' when
+		// bb_login was not in `enabled_for`, and bb_recaptcha_allow_bypass_enable()
+		// returns false in the same case. Reads the toggle_list item via
+		// dot-notation in the shared conditional util.
+		'conditional'       => array(
+			'field' => 'bb_recaptcha_enabled_for.bb_login',
+			'value' => '1',
+		),
+		// Group with bb_recaptcha_enabled_for above so the divider between
+		// them disappears (matches Figma — they read as one block).
+		'group'             => array(
+			'key' => 'recaptcha_enabled_group',
+		),
 	)
 );
 
@@ -363,26 +422,6 @@ bb_register_feature_field(
 	)
 );
 
-// Admin Console notice for settings section (plain description text per Figma).
-bb_register_feature_field(
-	'recaptcha',
-	'recaptcha_settings',
-	'recaptcha_general',
-	array(
-		'name'              => 'bb_recaptcha_settings_console_notice',
-		'label'             => '',
-		'type'              => 'notice',
-		'notice_type'       => 'plain',
-		'description'       => sprintf(
-			/* translators: %s: Admin Console link. */
-			__( 'Check reCAPTCHA %s for usage statistics and monitor its performance. Adjust settings if necessary to maintain security.', 'buddyboss' ),
-			'<a href="https://www.google.com/recaptcha/admin" target="_blank">' . esc_html__( 'Admin Console', 'buddyboss' ) . '</a>'
-		),
-		'sanitize_callback' => '__return_empty_string',
-		'order'             => 70,
-	)
-);
-
 // =========================================================================
 // SECTION 3: reCAPTCHA Design (v2 only)
 // =========================================================================
@@ -395,10 +434,27 @@ bb_register_feature_section(
 		'title'       => __( 'reCAPTCHA Design', 'buddyboss' ),
 		'description' => '',
 		'order'       => 30,
+		// Section is enabled only when (a) version is v2 (any flavor) AND
+		// (b) reCAPTCHA is connected. The conditional system supports a
+		// single action per rule, so hide-when-v3 + disable-when-not-
+		// connected can't be expressed independently — both are folded
+		// into a single 'disable' rule. Field-level conditionals on the
+		// individual design fields keep them hidden when their specific v2
+		// flavor isn't selected, so for v3 only the section header shows.
 		'conditional' => array(
-			'field'    => 'bb_recaptcha_version',
-			'value'    => 'recaptcha_v3',
-			'operator' => '!=',
+			'action'     => 'disable',
+			'operator'   => 'AND',
+			'conditions' => array(
+				array(
+					'field'    => 'bb_recaptcha_version',
+					'value'    => 'recaptcha_v3',
+					'operator' => '!=',
+				),
+				array(
+					'field' => '_bb_recaptcha_is_connected',
+					'value' => '1',
+				),
+			),
 		),
 	)
 );

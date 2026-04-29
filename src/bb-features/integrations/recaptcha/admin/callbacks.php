@@ -353,18 +353,43 @@ function bb_recaptcha_verify_settings_2() {
 	$secret_key = isset( $_POST['bb_recaptcha_secret_key'] ) ? sanitize_text_field( wp_unslash( $_POST['bb_recaptcha_secret_key'] ) ) : '';
 	$version    = isset( $_POST['bb_recaptcha_version'] ) ? sanitize_text_field( wp_unslash( $_POST['bb_recaptcha_version'] ) ) : 'recaptcha_v3';
 
+	$settings = bb_recaptcha_options();
+	if ( ! is_array( $settings ) ) {
+		$settings = array();
+	}
+
+	// Disconnect: both keys empty means the user clicked Disconnect. Clear
+	// stored credentials + connection status, no Google round-trip needed.
+	if ( empty( $site_key ) && empty( $secret_key ) ) {
+		$settings['site_key']          = '';
+		$settings['secret_key']        = '';
+		$settings['connection_status'] = 'not_connected';
+		bp_update_option( 'bb_recaptcha', $settings );
+
+		wp_send_json_success(
+			array(
+				'is_connected'   => false,
+				'button_label'   => __( 'Verify', 'buddyboss' ),
+				'message'        => __( 'reCAPTCHA disconnected.', 'buddyboss' ),
+				'status'         => array(
+					'type' => 'warning',
+					'text' => __( 'Not Connected', 'buddyboss' ),
+				),
+				'updated_fields' => array(
+					'bb_recaptcha_site_key'      => '',
+					'bb_recaptcha_secret_key'    => '',
+					'_bb_recaptcha_is_connected' => '0',
+				),
+			)
+		);
+	}
+
 	if ( empty( $site_key ) || empty( $secret_key ) ) {
 		wp_send_json_error(
 			array(
 				'message' => esc_html__( 'Please enter both Site Key and Secret Key.', 'buddyboss' ),
 			)
 		);
-	}
-
-	// Save keys to the serialized option first.
-	$settings = bb_recaptcha_options();
-	if ( ! is_array( $settings ) ) {
-		$settings = array();
 	}
 
 	$split = bb_recaptcha_split_combined_version( $version );
@@ -399,7 +424,8 @@ function bb_recaptcha_verify_settings_2() {
 					'text' => __( 'Connected', 'buddyboss' ),
 				),
 				'updated_fields' => array(
-					'bb_recaptcha_site_key' => $site_key,
+					'bb_recaptcha_site_key'      => $site_key,
+					'_bb_recaptcha_is_connected' => '1',
 				),
 			)
 		);

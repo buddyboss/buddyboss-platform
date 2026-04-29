@@ -10,6 +10,11 @@ import { __ } from '@wordpress/i18n';
 import { Header } from './components/Header';
 import { Router } from './Router';
 
+// Register integration-specific hooks that extend the shared bb_verify_popup
+// field. Side-effect import — the file calls wp.hooks.addFilter/addAction at
+// load time. Keep imports here, not inside components, so they register once.
+import './components/recaptcha/recaptcha-verify-hooks';
+
 /**
  * Main App Component
  *

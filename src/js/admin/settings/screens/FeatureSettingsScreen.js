@@ -785,6 +785,35 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 											return null;
 										}
 
+										// When a section is conditionally disabled, also skip it
+										// if every one of its fields is hidden — either hidden-type
+										// (form-state only) or hidden by its own conditional. This
+										// is scoped to disabled sections so it can't surprise any
+										// feature that intentionally renders a section header with
+										// no fields. Covers the case where an admin can't act on a
+										// section anyway and every field has hidden itself for
+										// other reasons (e.g. reCAPTCHA Design when version is v3 —
+										// each design field hides itself by version, leaving an
+										// empty greyed header that looks broken).
+										if ( isSectionDisabled ) {
+											var hasVisibleField = ( section.fields || [] ).some( function ( f ) {
+												if ( 'hidden' === f.type ) {
+													return false;
+												}
+												if ( ! f.conditional ) {
+													return true;
+												}
+												if ( 'disable' === f.conditional.action ) {
+													return true;
+												}
+												return evaluateConditional( f.conditional, settings );
+											} );
+
+											if ( ! hasVisibleField ) {
+												return null;
+											}
+										}
+
 										// Section toggle: when present, controls whether all fields in this section are enabled.
 									var sectionToggleKey = section.section_toggle || null;
 									var isSectionToggleOff = false;

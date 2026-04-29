@@ -49,7 +49,6 @@ import { ImageUploadField } from './fields/ImageUploadField';
 import { MediaPickerField } from './fields/MediaPickerField';
 import { SortableToggleList } from './fields/SortableToggleList';
 import { EditableLinkList } from './fields/EditableLinkList';
-import { RecaptchaVerifyField } from './recaptcha/RecaptchaVerifyField';
 import { RecaptchaBypassField } from './recaptcha/RecaptchaBypassField';
 import { VerifyPopupField } from './fields/VerifyPopupField';
 import { SEOPreviewField } from './fields/SEOPreviewField';
@@ -457,15 +456,6 @@ export function SettingsForm({ fields, values, onChange }) {
 					/>
 				);
 
-			case 'recaptcha_verify':
-				return (
-					<RecaptchaVerifyField
-						field={field}
-						values={values}
-						disabled={disabled}
-					/>
-				);
-
 			case 'recaptcha_bypass':
 				return (
 					<RecaptchaBypassField
@@ -812,7 +802,7 @@ export function SettingsForm({ fields, values, onChange }) {
 										const newValue = { ...listValue, [option.value]: checked ? 1 : 0 };
 										onChange(field.name, newValue);
 									}}
-									disabled={disabled}
+									disabled={disabled || !!option.disabled}
 									__nextHasNoMarginBottom
 								/>
 							</div>

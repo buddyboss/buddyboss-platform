@@ -57,9 +57,23 @@ function evaluateSingleCondition( cond, values ) {
 		return true;
 	}
 
-	var sourceMap   = resolveConditionSource( cond, values );
-	var condValue   = sourceMap[ cond.field ];
-	var expected    = cond.value;
+	var sourceMap = resolveConditionSource( cond, values );
+
+	// Support dot-notation field paths so conditionals can read nested
+	// values (e.g. a toggle_list item — `bb_recaptcha_enabled_for.bb_login`).
+	// Plain field names without dots resolve to a single key as before.
+	var fieldPath = String( cond.field ).split( '.' );
+	var condValue = sourceMap;
+	for ( var pi = 0; pi < fieldPath.length; pi++ ) {
+		if ( condValue && 'object' === typeof condValue ) {
+			condValue = condValue[ fieldPath[ pi ] ];
+		} else {
+			condValue = undefined;
+			break;
+		}
+	}
+
+	var expected = cond.value;
 	var operator    = cond.operator || '==';
 	var matched;
 
