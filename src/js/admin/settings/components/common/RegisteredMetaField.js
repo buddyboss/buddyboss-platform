@@ -406,6 +406,12 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 	// Permalink field (slug with URL preview below input).
 	if ( 'permalink' === field.type ) {
 		var baseUrl = ( field.extra_data && field.extra_data.base_url ) ? field.extra_data.base_url : '';
+		// Collapse stray double-slashes that translation plugins (e.g. WPML)
+		// introduce when injecting a language segment in front of the
+		// rewrite base — `http://host/en//groups/`. The negative-lookbehind
+		// preserves protocol slashes (`http://`, `https://`) and only
+		// rewrites duplicate slashes that follow a non-colon character.
+		baseUrl = baseUrl.replace( /([^:])\/{2,}/g, '$1/' );
 		var isChildForum = field.extra_data && field.extra_data.is_child_forum;
 		var slugValue = null != value ? String( value ) : '';
 
