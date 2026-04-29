@@ -49,7 +49,7 @@ function bb_admin_settings_register_registration_feature() {
 				return true;
 			},
 			'settings_route'     => '/settings/registration',
-			'order'              => 25,
+			'order'              => 20,
 		)
 	);
 

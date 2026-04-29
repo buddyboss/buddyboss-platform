@@ -34,7 +34,7 @@ bb_register_feature(
 			require_once __DIR__ . '/loader.php';
 		},
 		'settings_route'     => '/settings/reactions',
-		'order'              => 120,
+		'order'              => 100,
 		'is_active_callback' => function () {
 			static $result = null;
 			if ( null !== $result ) {

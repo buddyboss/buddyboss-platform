@@ -40,7 +40,7 @@ function bb_admin_settings_register_advanced_feature() {
 			'required'           => true,
 			'is_active_callback' => '__return_true',
 			'settings_route'     => '/settings/advanced',
-			'order'              => 200,
+			'order'              => 150,
 		)
 	);
 

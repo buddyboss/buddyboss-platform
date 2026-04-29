@@ -44,7 +44,7 @@ function bb_admin_settings_register_members_feature() {
 				return bp_is_active( 'xprofile' );
 			},
 			'settings_route'     => '/settings/members',
-			'order'              => 20,
+			'order'              => 60,
 		)
 	);
 

@@ -62,7 +62,7 @@ function bb_admin_settings_register_search_feature() {
 				return bp_is_active( 'search' );
 			},
 			'settings_route'     => '/settings/search',
-			'order'              => 80,
+			'order'              => 50,
 		)
 	);
 
