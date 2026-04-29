@@ -157,14 +157,14 @@ function bb_admin_settings_register_moderation_feature() {
 			// markup safe through the JSON trip; ConfirmToggleModal then
 			// double-sanitises via DOMPurify before rendering when
 			// confirm_off_message_is_html is true.
-			'confirm_off_message'         => '<p>' . __( 'Please confirm you want to deactivate the Moderation component.', 'buddyboss' ) . '</p>'
+			'confirm_off_message'         => '<p>' . __( 'Please confirm you want to deactivate the Moderation feature.', 'buddyboss' ) . '</p>'
 				. '<h4>' . __( 'On Deactivation:', 'buddyboss' ) . '</h4>'
 				. '<ul>'
 				. '<li>' . __( 'All suspended members will regain permission to login and their content will be unhidden', 'buddyboss' ) . '</li>'
 				. '<li>' . __( 'Members on the network will no longer be able to block other members. Any members they have blocked will be unblocked.', 'buddyboss' ) . '</li>'
 				. '<li>' . __( 'All hidden content will be unhidden', 'buddyboss' ) . '</li>'
 				. '</ul>'
-				. '<p>' . __( 'Please note: Data will not be deleted when you deactivate the Moderation component. On reactivation, members who have previously been suspended or blocked will once again have their access removed or limited. Content that was previously unhidden will be hidden again.', 'buddyboss' ) . '</p>',
+				. '<p>' . __( 'Please note: Data will not be deleted when you deactivate the Moderation feature. On reactivation, members who have previously been suspended or blocked will once again have their access removed or limited. Content that was previously unhidden will be hidden again.', 'buddyboss' ) . '</p>',
 			'confirm_off_message_is_html' => true,
 			'confirm_off_title'           => __( 'Disable Moderation?', 'buddyboss' ),
 			'confirm_off_ok'              => __( 'Disable', 'buddyboss' ),
