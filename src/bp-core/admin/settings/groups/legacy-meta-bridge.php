@@ -157,6 +157,30 @@ add_action( 'bb_register_groups_meta_fields', 'bb_legacy_groups_meta_bridge_regi
 function bb_legacy_groups_meta_bridge_register_inner( $registry, $component ) {
 	global $wp_meta_boxes;
 
+	// Self-bootstrap. The React group GET handler (bb_admin_get_group) fires
+	// bp_groups_admin_meta_boxes itself, so by the time this hook runs in
+	// the GET path $wp_meta_boxes is already populated. The SAVE handler
+	// (bb_admin_save_group) does NOT — without this guard the bridge would
+	// silently bail on every save and third-party metabox values would
+	// never flow through the bb_admin_after_save_group → settings_screen_save
+	// pipeline. Fire the action here on first miss so registration is
+	// idempotent across both AJAX paths. Output is buffered because some
+	// legacy metaboxes echo CSS/JS at registration time.
+	if ( did_action( 'bp_groups_admin_meta_boxes' ) === 0 ) {
+		$had_screen = ( function_exists( 'get_current_screen' ) && null !== get_current_screen() );
+		if ( ! $had_screen && function_exists( 'set_current_screen' ) ) {
+			set_current_screen( 'toplevel_page_bp-groups' );
+		}
+		ob_start();
+		try {
+			do_action( 'bp_groups_admin_meta_boxes' );
+		} catch ( Throwable $e ) {
+			// Old extensions may fatal in AJAX context — swallow so save can continue.
+			unset( $e );
+		}
+		ob_end_clean();
+	}
+
 	// Multi-candidate screen ID detection — the BP groups admin screen is
 	// keyed by the menu hook name, which can vary if Platform / Pro / a
 	// customer plugin reorganizes the admin menu.

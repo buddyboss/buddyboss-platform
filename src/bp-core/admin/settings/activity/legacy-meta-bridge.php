@@ -123,10 +123,30 @@ add_action( 'bb_register_activity_meta_fields', 'bb_legacy_activity_meta_bridge_
 function bb_legacy_activity_meta_bridge_register_inner( $registry, $component ) {
 	global $wp_meta_boxes;
 
+	// Self-bootstrap. The activity GET handler (bb_admin_get_activity) fires
+	// bp_activity_admin_meta_boxes itself, so by the time this hook runs in
+	// the GET path $wp_meta_boxes is already populated. The SAVE handler
+	// (bb_admin_save_activity) does NOT — without this guard the bridge
+	// would silently bail on every save and third-party metabox values
+	// would never flow through bp_activity_admin_edit_after to the
+	// plugin's own save handler. Fire the action here on first miss so
+	// registration is idempotent across both AJAX paths.
+	if ( did_action( 'bp_activity_admin_meta_boxes' ) === 0 ) {
+		$had_screen = ( function_exists( 'get_current_screen' ) && null !== get_current_screen() );
+		if ( ! $had_screen && function_exists( 'set_current_screen' ) ) {
+			set_current_screen( 'buddyboss_page_bp-activity' );
+		}
+		ob_start();
+		try {
+			do_action( 'bp_activity_admin_meta_boxes' );
+		} catch ( Throwable $e ) {
+			unset( $e );
+		}
+		ob_end_clean();
+	}
+
 	// Detect screen — `bp-activity` matches both `buddyboss_page_bp-activity`
-	// and any network-admin variant. The bridge runs from inside an AJAX
-	// handler that already fired `bp_activity_admin_meta_boxes` before
-	// invoking us, so $wp_meta_boxes should be populated.
+	// and any network-admin variant.
 	$screen = null;
 	foreach ( (array) $wp_meta_boxes as $screen_id => $_ignored ) {
 		if ( is_string( $screen_id ) && false !== stripos( $screen_id, 'bp-activity' ) ) {
