@@ -76,6 +76,36 @@ class BB_Admin_Flagged_Members_Ajax {
 	}
 
 	/**
+	 * Build an admin-side profile URL with the moderation bypass flag.
+	 *
+	 * Every profile link rendered inside the Flagged Members panel (the
+	 * flagged user's avatar/name, plus reporter and blocker rows in the
+	 * report-detail modal) needs `?modbypass=1` so the admin can review
+	 * the profile even when the user is suspended or has been blocked by
+	 * the current admin. Without it, clicking through from the admin lands
+	 * on the same suspension/block UI a regular member would see, defeating
+	 * the purpose of the panel. The bypass is honoured by
+	 * `bp-moderation-filters.php` and `BP_Moderation_Abstract`, which both
+	 * read `modbypass` from `INPUT_GET`.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $user_id User ID.
+	 *
+	 * @return string Profile URL with modbypass=1 query arg, or empty
+	 *                string when the user has no resolvable domain.
+	 */
+	private function bb_get_admin_profile_url( $user_id ) {
+		$domain = bp_core_get_user_domain( (int) $user_id );
+
+		if ( empty( $domain ) ) {
+			return '';
+		}
+
+		return add_query_arg( array( 'modbypass' => 1 ), $domain );
+	}
+
+	/**
 	 * Get flagged members list.
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -157,7 +187,7 @@ class BB_Admin_Flagged_Members_Ajax {
 							'html'    => false,
 						)
 					),
-					'profile_url'         => bp_core_get_user_domain( $user_id ),
+					'profile_url'         => $this->bb_get_admin_profile_url( $user_id ),
 					'blocks'              => $block_count,
 					'reports'             => $report_count,
 					'is_suspended'        => $is_suspended,
@@ -284,7 +314,7 @@ class BB_Admin_Flagged_Members_Ajax {
 							'html'    => false,
 						)
 					),
-					'profile_url'   => bp_core_get_user_domain( $reporter->user_id ),
+					'profile_url'   => $this->bb_get_admin_profile_url( $reporter->user_id ),
 					'category_name' => ( ! is_wp_error( $term_data ) && ! empty( $term_data->name ) )
 						? wp_specialchars_decode( $term_data->name, ENT_QUOTES )
 						: __( 'Other', 'buddyboss' ),
@@ -325,7 +355,7 @@ class BB_Admin_Flagged_Members_Ajax {
 							'html'    => false,
 						)
 					),
-					'profile_url'  => bp_core_get_user_domain( $blocker->user_id ),
+					'profile_url'  => $this->bb_get_admin_profile_url( $blocker->user_id ),
 					'date'         => ! empty( $blocker->date_created )
 						? date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $blocker->date_created ) )
 						: '',
@@ -345,7 +375,7 @@ class BB_Admin_Flagged_Members_Ajax {
 					'html'    => false,
 				)
 			),
-			'profile_url'   => bp_core_get_user_domain( $user_id ),
+			'profile_url'   => $this->bb_get_admin_profile_url( $user_id ),
 			'blocks'        => $block_count,
 			'reports'       => $report_count,
 			'is_suspended'  => $is_suspended,

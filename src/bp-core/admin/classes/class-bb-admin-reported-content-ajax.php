@@ -78,6 +78,34 @@ class BB_Admin_Reported_Content_Ajax {
 	}
 
 	/**
+	 * Build an admin-side profile URL with the moderation bypass flag.
+	 *
+	 * Reported Content rows render the content owner's avatar/name and the
+	 * reporter list as profile links. When the owner is suspended (or when
+	 * the admin has personally blocked one of the reporters), clicking the
+	 * link without `modbypass=1` lands on the same suspension/block UI a
+	 * regular member would see, hiding the user from the very admin trying
+	 * to review the report. The bypass flag is honoured by
+	 * `bp-moderation-filters.php` and `BP_Moderation_Abstract`.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $user_id User ID.
+	 *
+	 * @return string Profile URL with modbypass=1 query arg, or empty
+	 *                string when the user has no resolvable domain.
+	 */
+	private function bb_get_admin_profile_url( $user_id ) {
+		$domain = bp_core_get_user_domain( (int) $user_id );
+
+		if ( empty( $domain ) ) {
+			return '';
+		}
+
+		return add_query_arg( array( 'modbypass' => 1 ), $domain );
+	}
+
+	/**
 	 * Map content type slugs to icon classes for the React frontend.
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -218,7 +246,7 @@ class BB_Admin_Reported_Content_Ajax {
 							'html'    => false,
 						)
 					);
-					$owner_data['profile_url'] = bp_core_get_user_domain( $owner_id );
+					$owner_data['profile_url'] = $this->bb_get_admin_profile_url( $owner_id );
 				}
 
 				$is_owner_suspended = ( $owner_id > 0 ) ? bp_moderation_is_user_suspended( $owner_id ) : false;
@@ -363,7 +391,7 @@ class BB_Admin_Reported_Content_Ajax {
 					'html'    => false,
 				)
 			);
-			$owner_data['profile_url'] = bp_core_get_user_domain( $owner_id );
+			$owner_data['profile_url'] = $this->bb_get_admin_profile_url( $owner_id );
 		}
 
 		$is_owner_suspended = ( $owner_id > 0 ) ? bp_moderation_is_user_suspended( $owner_id ) : false;
@@ -404,7 +432,7 @@ class BB_Admin_Reported_Content_Ajax {
 							'html'    => false,
 						)
 					),
-					'profile_url'   => bp_core_get_user_domain( $reporter->user_id ),
+					'profile_url'   => $this->bb_get_admin_profile_url( $reporter->user_id ),
 					'category_name' => ( ! is_wp_error( $term_data ) && ! empty( $term_data->name ) )
 						? wp_specialchars_decode( $term_data->name, ENT_QUOTES )
 						: __( 'Other', 'buddyboss' ),
