@@ -961,6 +961,19 @@ select.bb-admin-settings__select {
 }
 
 /* Modal */
+// Backdrop overlay for every Settings 2.0 modal. WordPress's <Modal>
+// component renders the frame inside `.components-modal__screen-overlay`,
+// which ships with no background color of its own — that's why dialogs
+// like the Moderation deactivate confirm previously appeared with the
+// admin shell still fully visible behind them. `:has()` lets us scope the
+// rule to overlays whose frame carries our `.bb-admin-settings-modal`
+// class, so we don't accidentally restyle every WP modal in the admin.
+// Reference design: Figma 2704-47995 (dark, semi-transparent backdrop
+// covering both the WP left nav and the page content).
+.components-modal__screen-overlay:has(> .components-modal__frame.bb-admin-settings-modal) {
+	background-color: rgba(0, 0, 0, 0.5);
+}
+
 .bb-admin-settings-modal {
 
 	&.components-modal__frame {
@@ -1147,6 +1160,57 @@ select.bb-admin-settings__select {
 
         > p {
             margin: 0;
+        }
+    }
+
+    // Structured HTML body — used when a feature opts in via
+    // `confirm_off_message_is_html` (e.g. Moderation deactivation warning).
+    // The WP admin shell zeroes margins/padding on ul/li and strips list
+    // bullets, and `#wpbody-content` typography wins over our scoped resets,
+    // so we restore the basics here. Scope sits inside the modal body, so
+    // these overrides only apply to opt-in HTML messages.
+    &__html-message {
+        color: $bb-text-color;
+        font-size: 14px;
+        line-height: 1.5;
+
+        > p {
+            margin: 0 0 12px;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+
+        h4 {
+            margin: 16px 0 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: $bb-text-color;
+        }
+
+        ul {
+            list-style: disc;
+            margin: 0 0 12px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin: 0 0 4px;
+            list-style: disc;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+
+        strong {
+            font-weight: 600;
+        }
+
+        a {
+            color: $bb-link-color;
+            text-decoration: underline;
         }
     }
 }

@@ -133,6 +133,15 @@ class BB_Admin_Settings_Ajax {
 					$formatted['icon'] = $icon_registry->bb_get_icon_for_rest( $feature['icon'] );
 				}
 
+				// Optional confirmation modal payload for "turn the feature OFF"
+				// — mirrors the field-level confirm_* convention used by
+				// ConfirmToggleModal but at the feature card level. SettingsScreen
+				// reads these to intercept the toggle handler when the admin
+				// tries to disable the feature. All keys are passthrough; absent
+				// keys mean "no confirmation required" (preserving the original
+				// instant-toggle behavior for every feature that hasn't opted in).
+				$this->bb_format_confirm_off_payload( $feature, $formatted );
+
 				$features[] = $formatted;
 			}
 		}
@@ -471,7 +480,62 @@ class BB_Admin_Settings_Ajax {
 			$formatted['icon'] = $icon_registry->bb_get_icon_for_rest( $feature['icon'] );
 		}
 
+		// Forward any opt-in confirm-on-disable payload to the React layer.
+		// See SettingsScreen.js handleFeatureToggle for the consumer side.
+		$this->bb_format_confirm_off_payload( $feature, $formatted );
+
 		return $formatted;
+	}
+
+	/**
+	 * Append the optional confirm-on-disable payload to a formatted feature
+	 * response so the React feature card can show a confirmation modal
+	 * before turning the feature off.
+	 *
+	 * Mirrors the field-level confirm_* convention used by
+	 * `ConfirmToggleModal` (see SettingsForm.js), but uses a `confirm_off_*`
+	 * prefix at the feature level so:
+	 *   1. the feature card stays independent of any per-field confirms,
+	 *   2. a future feature could add a separate `confirm_on_*` flow
+	 *      without colliding with the disable confirmation, and
+	 *   3. features that don't opt in (the default) keep their original
+	 *      instant-toggle behavior — only `confirm_off_message` is required
+	 *      to enable the modal; the rest fall back to sensible defaults
+	 *      on the React side.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $feature   Raw feature registration data.
+	 * @param array $formatted Formatted response array (modified in place).
+	 *
+	 * @return void
+	 */
+	private function bb_format_confirm_off_payload( $feature, &$formatted ) {
+		if ( empty( $feature['confirm_off_message'] ) ) {
+			return;
+		}
+
+		$formatted['confirm_off_message'] = wp_kses_post( $feature['confirm_off_message'] );
+
+		// Opt-in flag: when true, ConfirmToggleModal renders the message as
+		// DOMPurify-sanitised HTML instead of plain text. Defaults to false
+		// so single-line callers stay text-only.
+		if ( ! empty( $feature['confirm_off_message_is_html'] ) ) {
+			$formatted['confirm_off_message_is_html'] = true;
+		}
+
+		if ( ! empty( $feature['confirm_off_title'] ) ) {
+			$formatted['confirm_off_title'] = sanitize_text_field( $feature['confirm_off_title'] );
+		}
+		if ( ! empty( $feature['confirm_off_ok'] ) ) {
+			$formatted['confirm_off_ok'] = sanitize_text_field( $feature['confirm_off_ok'] );
+		}
+		if ( ! empty( $feature['confirm_off_cancel'] ) ) {
+			$formatted['confirm_off_cancel'] = sanitize_text_field( $feature['confirm_off_cancel'] );
+		}
+		if ( isset( $feature['confirm_off_destructive'] ) ) {
+			$formatted['confirm_off_destructive'] = (bool) $feature['confirm_off_destructive'];
+		}
 	}
 
 	/**

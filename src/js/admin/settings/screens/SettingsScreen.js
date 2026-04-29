@@ -14,6 +14,7 @@ import { urlToRoute } from '../utils/url';
 import { safeUrl } from '../utils/sanitize';
 import { Toast } from '../components/Toast';
 import { UpgradeModal } from '../components/modals/UpgradeModal';
+import { ConfirmToggleModal } from '../components/modals/ConfirmToggleModal';
 
 /**
  * Settings Screen Component
@@ -31,6 +32,12 @@ export function SettingsScreen({ onNavigate }) {
 	const [searchQuery, setSearchQuery] = useState('');
 	const [toast, setToast] = useState(null);
 	const [upgradeModal, setUpgradeModal] = useState(null); // { feature } or null
+	// Pending feature toggle awaiting confirmation. Populated when the admin
+	// tries to disable a feature whose registration includes
+	// confirm_off_message; cleared on either confirm (after the real toggle
+	// runs) or cancel. Holding { feature, checked } lets the same modal
+	// pattern accommodate a future confirm_on_* flow without restructuring.
+	const [pendingToggle, setPendingToggle] = useState(null);
 
 	useEffect(() => {
 		// Load features via shared cache (prevents duplicate AJAX calls with Router)
@@ -168,6 +175,27 @@ export function SettingsScreen({ onNavigate }) {
 			return;
 		}
 
+		// Confirm-on-disable intercept. Any feature can opt in by registering
+		// `confirm_off_message` (and optional confirm_off_title / _ok / _cancel
+		// / _destructive) on its bb_register_feature() call. When the admin
+		// flips the toggle off we stash the intent in pendingToggle and let
+		// the ConfirmToggleModal render below; the actual optimistic update +
+		// AJAX runs from runFeatureToggle once the admin confirms.
+		if ( ! checked ) {
+			var featureForConfirm = features.find( function ( item ) { return item.id === featureId; } );
+			if ( featureForConfirm && featureForConfirm.confirm_off_message ) {
+				setPendingToggle( { feature: featureForConfirm, checked: checked } );
+				return;
+			}
+		}
+
+		runFeatureToggle( featureId, checked );
+	};
+
+	// Real toggle work — extracted from handleFeatureToggle so the
+	// ConfirmToggleModal "Disable" button can re-enter the same flow without
+	// re-running the placeholder/DRM guards or the confirm-intercept above.
+	const runFeatureToggle = (featureId, checked) => {
 		const newStatus = checked ? 'active' : 'inactive';
 		const prevStatus = checked ? 'inactive' : 'active';
 
@@ -604,6 +632,29 @@ export function SettingsScreen({ onNavigate }) {
 				<UpgradeModal
 					feature={upgradeModal.feature}
 					onClose={() => setUpgradeModal(null)}
+				/>
+			)}
+
+			{/* Confirm-on-disable modal for features that registered confirm_off_message */}
+			{pendingToggle && pendingToggle.feature && (
+				<ConfirmToggleModal
+					isOpen={true}
+					title={pendingToggle.feature.confirm_off_title}
+					message={pendingToggle.feature.confirm_off_message}
+					messageIsHtml={!!pendingToggle.feature.confirm_off_message_is_html}
+					confirmLabel={pendingToggle.feature.confirm_off_ok}
+					cancelLabel={pendingToggle.feature.confirm_off_cancel}
+					isDestructive={
+						undefined === pendingToggle.feature.confirm_off_destructive
+							? true
+							: !!pendingToggle.feature.confirm_off_destructive
+					}
+					onConfirm={() => {
+						const pending = pendingToggle;
+						setPendingToggle(null);
+						runFeatureToggle(pending.feature.id, pending.checked);
+					}}
+					onCancel={() => setPendingToggle(null)}
 				/>
 			)}
 		</div>

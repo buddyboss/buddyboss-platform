@@ -35,21 +35,30 @@
 
 import { Modal, Button } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
+import { sanitizeHtml } from '../../utils/sanitize';
 
 /**
  * Confirm Toggle Modal
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param {Object}   props                Component props.
- * @param {boolean}  props.isOpen         Whether the modal is open.
- * @param {string}   props.message        Confirmation message to display.
- * @param {Function} props.onConfirm      Confirm handler.
- * @param {Function} props.onCancel       Cancel handler.
- * @param {string}   [props.title]        Modal title. Defaults to "Are you sure?".
- * @param {string}   [props.confirmLabel] Confirm button label. Defaults to "OK".
- * @param {string}   [props.cancelLabel]  Cancel button label. Defaults to "Cancel".
- * @param {boolean}  [props.isDestructive] Whether confirm button is destructive (red).
+ * @param {Object}   props                  Component props.
+ * @param {boolean}  props.isOpen           Whether the modal is open.
+ * @param {string}   props.message          Confirmation message to display.
+ * @param {Function} props.onConfirm        Confirm handler.
+ * @param {Function} props.onCancel         Cancel handler.
+ * @param {string}   [props.title]          Modal title. Defaults to "Are you sure?".
+ * @param {string}   [props.confirmLabel]   Confirm button label. Defaults to "OK".
+ * @param {string}   [props.cancelLabel]    Cancel button label. Defaults to "Cancel".
+ * @param {boolean}  [props.isDestructive]  Whether confirm button is destructive (red).
+ * @param {boolean}  [props.messageIsHtml]  Render the message as DOMPurify-sanitised
+ *                                          HTML instead of plain text. Use when the
+ *                                          caller has structured copy with paragraphs,
+ *                                          lists, or headings (e.g. the legacy
+ *                                          Moderation deactivation warning). Defaults
+ *                                          to false so existing single-line callers
+ *                                          (Group Type, Profile Fields, etc.) stay
+ *                                          unchanged.
  * @returns {JSX.Element|null} Modal component or null.
  */
 export function ConfirmToggleModal( {
@@ -61,6 +70,7 @@ export function ConfirmToggleModal( {
 	confirmLabel,
 	cancelLabel,
 	isDestructive,
+	messageIsHtml,
 } ) {
 	if ( ! isOpen ) {
 		return null;
@@ -74,7 +84,20 @@ export function ConfirmToggleModal( {
 			shouldCloseOnClickOutside={ false }
 		>
 			<div className="bb-admin-settings-modal__body bb-confirm-toggle-modal__body">
-				<p>{ message }</p>
+				{ messageIsHtml ? (
+					// PHP already gates the source via wp_kses_post() — we
+					// double-sanitise via DOMPurify here to match the project's
+					// established defence-in-depth pattern (see FeatureSettingsScreen
+					// help drawer, ProfileTypeScreen help text, EmailTemplatesListScreen
+					// custom columns, etc.). This is the only sanctioned way to
+					// render server-supplied admin HTML in Settings 2.0.
+					<div
+						className="bb-confirm-toggle-modal__html-message"
+						dangerouslySetInnerHTML={ { __html: sanitizeHtml( message ) } }
+					/>
+				) : (
+					<p>{ message }</p>
+				) }
 			</div>
 
 			<div className="bb-admin-settings-modal__footer bb-confirm-toggle-modal__footer">
