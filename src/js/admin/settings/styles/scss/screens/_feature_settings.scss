@@ -747,6 +747,16 @@
         }
     }
 
+    &[data-field-name="bp_search_post_type_post"][class],
+    &[data-field-name="bp_search_post_type_page"][class] {
+
+        .bb-admin-settings-form__child-fields[class] {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid $bb-border-secondary-color;
+        }
+    }
+
     .bb-admin-settings-form__child-group-label {
         font-size: 13px;
         font-weight: 500;
