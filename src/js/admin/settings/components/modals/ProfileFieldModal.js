@@ -730,7 +730,6 @@ export function ProfileFieldModal( {
 								setType( val );
 							}
 						} }
-						disabled={ isEditing && field && ! field.can_delete }
 						help={ __( 'Select the input field type members will use to enter information.', 'buddyboss' ) }
 					/>
 
