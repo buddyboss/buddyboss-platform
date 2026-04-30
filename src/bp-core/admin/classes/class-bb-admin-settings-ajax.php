@@ -53,7 +53,139 @@ class BB_Admin_Settings_Ajax {
 		add_action( 'wp_ajax_bb_admin_search_pages_list', array( $this, 'bb_admin_search_pages_list' ) );
 		add_action( 'wp_ajax_bb_admin_create_directory_page', array( $this, 'bb_admin_create_directory_page' ) );
 
+		// Generic platform-setting read/write used by custom panel screens
+		// (Profile Types, Profile Search, Group Types, etc.). Registered here
+		// — not in BB_Admin_Groups_Ajax — because the consumers span features
+		// beyond Groups and BB_Admin_Settings_Ajax is always loaded.
+		add_action( 'wp_ajax_bb_admin_get_platform_settings', array( $this, 'bb_admin_get_platform_settings' ) );
+		add_action( 'wp_ajax_bb_admin_save_platform_setting', array( $this, 'bb_admin_save_platform_setting' ) );
+
 		add_action( 'bb_admin_save_feature_settings_after', array( $this, 'bb_invalidate_search_index_after_save' ), 10, 3 );
+	}
+
+	/**
+	 * Get platform settings (WordPress options) by allowlisted names.
+	 *
+	 * Generic helper for custom Settings 2.0 panels that persist a small set
+	 * of WordPress options outside the standard feature-settings pipeline
+	 * (Profile Types, Profile Search, Group Types). Each consumer must add
+	 * its option keys (and a sanitize callback) to the allowlist via the
+	 * `bb_admin_allowed_platform_settings` filter or by editing
+	 * bb_admin_get_allowed_platform_options() below.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return void
+	 */
+	public function bb_admin_get_platform_settings() {
+		$this->bb_verify_request();
+
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
+		$options = isset( $_POST['options'] ) ? sanitize_text_field( wp_unslash( $_POST['options'] ) ) : '';
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
+
+		if ( empty( $options ) ) {
+			wp_send_json_error( array( 'message' => __( 'Options parameter is required.', 'buddyboss' ) ) );
+		}
+
+		$requested = array_map( 'sanitize_text_field', explode( ',', $options ) );
+		$allowed   = $this->bb_admin_get_allowed_platform_options();
+		$settings  = array();
+
+		foreach ( $requested as $option_name ) {
+			if ( array_key_exists( $option_name, $allowed ) ) {
+				$settings[ $option_name ] = bp_get_option( $option_name, '' );
+			}
+		}
+
+		wp_send_json_success( $settings );
+	}
+
+	/**
+	 * Save a single platform setting (WordPress option).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return void
+	 */
+	public function bb_admin_save_platform_setting() {
+		$this->bb_verify_request();
+
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
+		$option_name = isset( $_POST['option_name'] ) ? sanitize_text_field( wp_unslash( $_POST['option_name'] ) ) : '';
+		$raw_value   = isset( $_POST['option_value'] ) ? wp_unslash( $_POST['option_value'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitized below per-option.
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
+
+		if ( empty( $option_name ) ) {
+			wp_send_json_error( array( 'message' => __( 'Option name is required.', 'buddyboss' ) ) );
+		}
+
+		$allowed = $this->bb_admin_get_allowed_platform_options();
+
+		if ( ! array_key_exists( $option_name, $allowed ) ) {
+			wp_send_json_error( array( 'message' => __( 'Option not allowed.', 'buddyboss' ) ) );
+		}
+
+		// Apply per-option sanitize callback (defined in bb_admin_get_allowed_platform_options).
+		$sanitize_fn  = $allowed[ $option_name ];
+		$option_value = is_callable( $sanitize_fn ) ? call_user_func( $sanitize_fn, $raw_value ) : sanitize_text_field( $raw_value );
+
+		bp_update_option( $option_name, $option_value );
+
+		// Component-specific cache invalidation. Only fires when the relevant
+		// component is active so the handler stays usable when, say, Groups
+		// is deactivated but a Members option is being saved.
+		if ( 'bp-disable-group-type-creation' === $option_name && bp_is_active( 'groups' ) ) {
+			wp_cache_delete( 'bp_group_types', 'bp_groups' );
+			wp_cache_delete( 'bb-group-type-label-css', 'bp_groups_group_type' );
+		}
+
+		wp_send_json_success(
+			array( 'message' => __( 'Setting saved successfully.', 'buddyboss' ) )
+		);
+	}
+
+	/**
+	 * Get allowed platform settings options map.
+	 *
+	 * Returns an associative array of option_name => sanitize_callback. The
+	 * default list covers the options consumed by Settings 2.0 custom panel
+	 * screens; third parties can extend via the
+	 * `bb_admin_allowed_platform_settings` filter.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return array
+	 */
+	private function bb_admin_get_allowed_platform_options() {
+		/**
+		 * Filters the allowed platform settings options for AJAX read/write.
+		 *
+		 * Keys are option names; values are the sanitize callback to use when saving.
+		 * Use 'absint' for toggle/integer options, 'sanitize_text_field' for strings,
+		 * 'sanitize_key' for slug-shaped values, etc.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $allowed_options Associative array of option_name => sanitize_callback.
+		 */
+		$options = apply_filters(
+			'bb_admin_allowed_platform_settings',
+			array(
+				// Group Types panel.
+				'bp-disable-group-type-creation'         => 'absint',
+				'bp-enable-group-auto-join'              => 'absint',
+				// Profile Types panel.
+				'bp-member-type-enable-disable'          => 'absint',
+				'bp-member-type-display-on-profile'      => 'absint',
+				'bp-member-type-default-on-registration' => 'sanitize_key',
+				// Profile Search panel.
+				'bp-enable-profile-search'               => 'absint',
+			)
+		);
+
+		// Strip any dangerous WordPress core options that a careless extension might add.
+		return bb_filter_allowed_options( $options );
 	}
 
 	/**

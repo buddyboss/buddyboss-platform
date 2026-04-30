@@ -105,8 +105,6 @@ class BB_Admin_Groups_Ajax {
 		add_action( 'wp_ajax_bb_admin_create_group_type', array( $this, 'create_group_type' ) );
 		add_action( 'wp_ajax_bb_admin_update_group_type', array( $this, 'update_group_type' ) );
 		add_action( 'wp_ajax_bb_admin_delete_group_type', array( $this, 'delete_group_type' ) );
-		add_action( 'wp_ajax_bb_admin_get_platform_settings', array( $this, 'get_platform_settings' ) );
-		add_action( 'wp_ajax_bb_admin_save_platform_setting', array( $this, 'save_platform_setting' ) );
 		add_action( 'wp_ajax_bb_admin_get_groups', array( $this, 'get_groups' ) );
 		add_action( 'wp_ajax_bb_admin_delete_group', array( $this, 'delete_group' ) );
 		add_action( 'wp_ajax_bb_admin_group_bulk_action', array( $this, 'group_bulk_action' ) );
@@ -154,38 +152,6 @@ class BB_Admin_Groups_Ajax {
 			}
 		}
 		return false;
-	}
-
-	/**
-	 * Get allowed platform settings options map.
-	 *
-	 * Returns an associative array of option_name => sanitize_callback.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @return array
-	 */
-	private function bb_get_allowed_platform_options() {
-		/**
-		 * Filters the allowed platform settings options for AJAX read/write.
-		 *
-		 * Keys are option names; values are the sanitize callback to use when saving.
-		 * Use 'absint' for toggle/integer options, 'sanitize_text_field' for strings, etc.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param array $allowed_options Associative array of option_name => sanitize_callback.
-		 */
-		$options = apply_filters(
-			'bb_admin_allowed_platform_settings',
-			array(
-				'bp-disable-group-type-creation' => 'absint',
-				'bp-enable-group-auto-join'      => 'absint',
-			)
-		);
-
-		// Strip any dangerous WordPress core options that a careless extension might add.
-		return bb_filter_allowed_options( $options );
 	}
 
 	/**
@@ -452,79 +418,6 @@ class BB_Admin_Groups_Ajax {
 
 		wp_send_json_success(
 			array( 'message' => __( 'Group type deleted successfully.', 'buddyboss' ) )
-		);
-	}
-
-	/**
-	 * Get platform settings (WordPress options) by allowlisted names.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @return void
-	 */
-	public function get_platform_settings() {
-		$this->bb_verify_request();
-
-		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
-		$options = isset( $_POST['options'] ) ? sanitize_text_field( wp_unslash( $_POST['options'] ) ) : '';
-		// phpcs:enable WordPress.Security.NonceVerification.Missing
-
-		if ( empty( $options ) ) {
-			wp_send_json_error( array( 'message' => __( 'Options parameter is required.', 'buddyboss' ) ) );
-		}
-
-		$requested = array_map( 'sanitize_text_field', explode( ',', $options ) );
-		$allowed   = $this->bb_get_allowed_platform_options();
-		$settings  = array();
-
-		foreach ( $requested as $option_name ) {
-			if ( array_key_exists( $option_name, $allowed ) ) {
-				$settings[ $option_name ] = bp_get_option( $option_name, '' );
-			}
-		}
-
-		wp_send_json_success( $settings );
-	}
-
-	/**
-	 * Save a single platform setting (WordPress option).
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @return void
-	 */
-	public function save_platform_setting() {
-		$this->bb_verify_request();
-
-		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
-		$option_name = isset( $_POST['option_name'] ) ? sanitize_text_field( wp_unslash( $_POST['option_name'] ) ) : '';
-		$raw_value   = isset( $_POST['option_value'] ) ? wp_unslash( $_POST['option_value'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitized below per-option.
-		// phpcs:enable WordPress.Security.NonceVerification.Missing
-
-		if ( empty( $option_name ) ) {
-			wp_send_json_error( array( 'message' => __( 'Option name is required.', 'buddyboss' ) ) );
-		}
-
-		$allowed = $this->bb_get_allowed_platform_options();
-
-		if ( ! array_key_exists( $option_name, $allowed ) ) {
-			wp_send_json_error( array( 'message' => __( 'Option not allowed.', 'buddyboss' ) ) );
-		}
-
-		// Apply per-option sanitize callback (defined in bb_get_allowed_platform_options).
-		$sanitize_fn  = $allowed[ $option_name ];
-		$option_value = is_callable( $sanitize_fn ) ? call_user_func( $sanitize_fn, $raw_value ) : sanitize_text_field( $raw_value );
-
-		bp_update_option( $option_name, $option_value );
-
-		// Clear group type registry cache when the creation toggle changes.
-		if ( 'bp-disable-group-type-creation' === $option_name ) {
-			wp_cache_delete( 'bp_group_types', 'bp_groups' );
-			wp_cache_delete( 'bb-group-type-label-css', 'bp_groups_group_type' );
-		}
-
-		wp_send_json_success(
-			array( 'message' => __( 'Setting saved successfully.', 'buddyboss' ) )
 		);
 	}
 
