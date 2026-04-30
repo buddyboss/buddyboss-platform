@@ -12,7 +12,7 @@
  * @since   BuddyBoss [BBVERSION]
  */
 
-import { useState, useEffect, useRef, useCallback } from '@wordpress/element';
+import { useState, useEffect, useRef, useCallback, useMemo } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { ajaxFetch } from '../../utils/ajax';
 import { Spinner } from '@wordpress/components';
@@ -58,14 +58,60 @@ var bbAsyncSelectIdCounter = 0;
  *                                           already knows the label (e.g. page
  *                                           directory dropdowns that ship their title
  *                                           in the initial feature payload).
+ * @param {Array}    props.staticOptions     Optional pinned `{ value, label }` options
+ *                                           that always render at the top of the dropdown
+ *                                           regardless of search term, take precedence
+ *                                           over the server resolve, and are used to
+ *                                           dedupe identically-valued items returned by
+ *                                           the server. Pass a referentially stable
+ *                                           array (e.g. module-scoped const) so the
+ *                                           memoised dependencies below don't churn.
  * @return {WPElement} Rendered component.
  */
-export function AsyncSelectField( { id, value, onChange, asyncAction, asyncExtraParams, placeholder, disabled, initialLabel } ) {
-	// Display label for the currently selected value. Seeded from `initialLabel`
-	// so the component renders correctly on first paint without having to fire
-	// a resolve AJAX. Falls back to '' (empty) when no hint is provided, in
-	// which case the mount effect below does the resolve.
-	var selectedLabelState = useState( initialLabel || '' );
+export function AsyncSelectField( { id, value, onChange, asyncAction, asyncExtraParams, placeholder, disabled, initialLabel, staticOptions } ) {
+	// Normalise once so we can read .length / map without guarding everywhere.
+	// Memoised so `findStaticMatch` and `displayResults` below have stable
+	// references when the parent passes a stable `staticOptions` prop.
+	var pinnedOptions = useMemo(
+		function () {
+			return Array.isArray( staticOptions ) ? staticOptions : [];
+		},
+		[ staticOptions ]
+	);
+
+	// Resolve the current value against pinned static options (e.g. "Custom URL"
+	// at value '0'). When matched, we use the static option's label and bypass
+	// the server resolve below — including the '0' === "none" short-circuit.
+	var findStaticMatch = useCallback(
+		function ( v ) {
+			var s = String( v || '' );
+			for ( var i = 0; i < pinnedOptions.length; i++ ) {
+				if ( String( pinnedOptions[ i ].value ) === s ) {
+					return pinnedOptions[ i ];
+				}
+			}
+			return null;
+		},
+		[ pinnedOptions ]
+	);
+
+	// Re-resolved every render so the JSX `currentStaticMatch` test below
+	// reflects the latest value/staticOptions combination, not the mount-time
+	// seed. Naming is deliberate — earlier code used `initialStaticMatch` for
+	// both the useState seed and the per-render JSX check, which read as if the
+	// JSX was using the seed (it isn't).
+	var currentStaticMatch = findStaticMatch( value );
+
+	// Display label for the currently selected value. Seeded from a matching
+	// static option first, then `initialLabel`, then '' (in which case the
+	// mount effect below does the resolve). Lazy initializer because useState
+	// only keeps the first call's return value — passing the function form is
+	// the canonical React pattern even though the saved cycles here are tiny
+	// (the ternary itself is sub-microsecond, and currentStaticMatch is still
+	// computed every render for the JSX clear-button check below).
+	var selectedLabelState = useState( function () {
+		return currentStaticMatch ? currentStaticMatch.label : ( initialLabel || '' );
+	} );
 	var selectedLabel = selectedLabelState[ 0 ];
 	var setSelectedLabel = selectedLabelState[ 1 ];
 
@@ -238,6 +284,18 @@ export function AsyncSelectField( { id, value, onChange, asyncAction, asyncExtra
 		function () {
 			var valueStr = String( value || '' );
 
+			// Static options (e.g. "Custom URL" at value '0') win first — they
+			// already carry their label so we skip the server resolve, and we
+			// also bypass the '0' → "no selection" short-circuit below since
+			// '0' is now a real, picked option.
+			var staticMatch = findStaticMatch( value );
+			if ( staticMatch ) {
+				setSelectedLabel( staticMatch.label );
+				setIsResolvingLabel( false );
+				lastAppliedRef.current = { value: valueStr, label: staticMatch.label };
+				return;
+			}
+
 			// Treat both '' and '0' as "no selection" — every entity this
 			// component resolves (forums, parent groups, LD groups, etc.)
 			// uses 0 as the "none" sentinel per WordPress convention. Without
@@ -330,8 +388,10 @@ export function AsyncSelectField( { id, value, onChange, asyncAction, asyncExtra
 		},
 		// Re-run when the value OR the seed label changes externally so the
 		// display label stays in sync with whatever the parent now knows.
+		// `findStaticMatch` is memoised on `pinnedOptions`, so this also
+		// re-resolves correctly when a caller swaps in a different pin set.
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[ value, initialLabel ]
+		[ value, initialLabel, findStaticMatch ]
 	);
 
 	// Close dropdown on click outside.
@@ -352,7 +412,38 @@ export function AsyncSelectField( { id, value, onChange, asyncAction, asyncExtra
 		[]
 	);
 
-	// Reset the keyboard-active index when the results list changes or the
+	// The list shown in the dropdown is the static (pinned) options first,
+	// then the server-fetched results. Pinned options stay visible regardless
+	// of search term — matching the legacy <select> behaviour where Default /
+	// Custom URL were always present alongside dynamic page entries.
+	//
+	// Server responses may already contain options matching pinned values
+	// (e.g. `bb_admin_search_published_pages` ships its own Default / Custom
+	// URL rows). Filter those out before concatenating so we don't render a
+	// duplicate "Custom URL" row, trip React's duplicate-key warning, or
+	// announce the same option twice to assistive tech.
+	var displayResults = useMemo(
+		function () {
+			if ( ! pinnedOptions.length ) {
+				return results;
+			}
+			// Object.create(null) avoids the Object.prototype chain so a
+			// future caller pinning a value like 'constructor', 'toString',
+			// '__proto__' or 'hasOwnProperty' can't trigger a false-positive
+			// hit when we test for membership below.
+			var pinnedValues = Object.create( null );
+			for ( var i = 0; i < pinnedOptions.length; i++ ) {
+				pinnedValues[ String( pinnedOptions[ i ].value ) ] = true;
+			}
+			var deduped = results.filter( function ( r ) {
+				return ! pinnedValues[ String( r.value ) ];
+			} );
+			return pinnedOptions.concat( deduped );
+		},
+		[ pinnedOptions, results ]
+	);
+
+	// Reset the keyboard-active index when the displayed list changes or the
 	// dropdown closes. Without this an out-of-range activeIndex could point
 	// into the prior result set after a new search or after opening/closing.
 	useEffect(
@@ -361,12 +452,12 @@ export function AsyncSelectField( { id, value, onChange, asyncAction, asyncExtra
 				setActiveIndex( -1 );
 				return;
 			}
-			if ( activeIndex >= results.length ) {
-				setActiveIndex( results.length > 0 ? results.length - 1 : -1 );
+			if ( activeIndex >= displayResults.length ) {
+				setActiveIndex( displayResults.length > 0 ? displayResults.length - 1 : -1 );
 			}
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[ results, isOpen ]
+		[ displayResults, isOpen ]
 	);
 
 	/**
@@ -398,9 +489,9 @@ export function AsyncSelectField( { id, value, onChange, asyncAction, asyncExtra
 				fetchResults( '', 1, false );
 				return;
 			}
-			if ( results.length > 0 ) {
+			if ( displayResults.length > 0 ) {
 				setActiveIndex( function ( prev ) {
-					return prev + 1 < results.length ? prev + 1 : prev;
+					return prev + 1 < displayResults.length ? prev + 1 : prev;
 				} );
 			}
 			return;
@@ -408,7 +499,7 @@ export function AsyncSelectField( { id, value, onChange, asyncAction, asyncExtra
 
 		if ( 'ArrowUp' === e.key ) {
 			e.preventDefault();
-			if ( isOpen && results.length > 0 ) {
+			if ( isOpen && displayResults.length > 0 ) {
 				setActiveIndex( function ( prev ) {
 					return prev > 0 ? prev - 1 : 0;
 				} );
@@ -416,22 +507,22 @@ export function AsyncSelectField( { id, value, onChange, asyncAction, asyncExtra
 			return;
 		}
 
-		if ( 'Home' === e.key && isOpen && results.length > 0 ) {
+		if ( 'Home' === e.key && isOpen && displayResults.length > 0 ) {
 			e.preventDefault();
 			setActiveIndex( 0 );
 			return;
 		}
 
-		if ( 'End' === e.key && isOpen && results.length > 0 ) {
+		if ( 'End' === e.key && isOpen && displayResults.length > 0 ) {
 			e.preventDefault();
-			setActiveIndex( results.length - 1 );
+			setActiveIndex( displayResults.length - 1 );
 			return;
 		}
 
 		if ( 'Enter' === e.key ) {
-			if ( isOpen && activeIndex >= 0 && activeIndex < results.length ) {
+			if ( isOpen && activeIndex >= 0 && activeIndex < displayResults.length ) {
 				e.preventDefault();
-				handleSelect( results[ activeIndex ] );
+				handleSelect( displayResults[ activeIndex ] );
 			}
 			return;
 		}
@@ -552,12 +643,12 @@ export function AsyncSelectField( { id, value, onChange, asyncAction, asyncExtra
 					aria-autocomplete="list"
 					aria-expanded={ isOpen }
 					aria-controls={ idsRef.current.listbox }
-					aria-activedescendant={ isOpen && activeIndex >= 0 && activeIndex < results.length
+					aria-activedescendant={ isOpen && activeIndex >= 0 && activeIndex < displayResults.length
 						? idsRef.current.option( activeIndex )
 						: undefined
 					}
 				/>
-				{ null !== value && undefined !== value && '' !== String( value ) && '0' !== String( value ) && (
+				{ null !== value && undefined !== value && '' !== String( value ) && ( '0' !== String( value ) || !! currentStaticMatch ) && (
 					isResolvingLabel ? (
 						// Spinner replaces the clear button while the label is
 						// being fetched so the user isn't prompted to clear a
@@ -602,7 +693,7 @@ export function AsyncSelectField( { id, value, onChange, asyncAction, asyncExtra
 						</div>
 					) }
 
-					{ ! isLoading && results.length === 0 && (
+					{ ! isLoading && displayResults.length === 0 && (
 						<div
 							className="bb-async-select__status"
 							role="status"
@@ -615,13 +706,13 @@ export function AsyncSelectField( { id, value, onChange, asyncAction, asyncExtra
 						</div>
 					) }
 
-					{ ! isLoading && results.length > 0 && (
+					{ ! isLoading && displayResults.length > 0 && (
 						<ul
 							className="bb-async-select__list"
 							role="listbox"
 							id={ idsRef.current.listbox }
 						>
-							{ results.map( function ( option, idx ) {
+							{ displayResults.map( function ( option, idx ) {
 								var isSelected = option.value === String( value );
 								var isActive   = idx === activeIndex;
 								return (

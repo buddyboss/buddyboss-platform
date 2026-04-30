@@ -23,6 +23,19 @@ import { createMemberType, updateMemberType } from '../../utils/ajax';
 import { safeUrl } from '../../utils/sanitize';
 import { AsyncSelectField } from '../fields/AsyncSelectField';
 
+// Pinned options for the After Login / After Logout async selects. Listed in
+// the same order as the legacy <select> (Default → Custom URL → ...pages) so
+// the dedupe in AsyncSelectField produces a render order that matches the
+// legacy admin pixel-for-pixel. Defined at module scope so the array reference
+// is stable across renders — AsyncSelectField's mount-time resolve effect
+// depends on it, and a fresh array each render would re-trigger the resolve.
+// `var` to match the surrounding file's ES5-style declarations (DEFAULT_FORM_DATA
+// etc.) per the project's WP JS coding-standards convention.
+var REDIRECT_STATIC_OPTIONS = [
+	{ value: '', label: __( 'Default', 'buddyboss' ) },
+	{ value: '0', label: __( 'Custom URL', 'buddyboss' ) },
+];
+
 /**
  * Strip leading '#' from a hex color value.
  *
@@ -558,13 +571,27 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, allMemb
 						onChange={ function ( val ) { updateField( 'login_redirection', val ); } }
 						asyncAction="bb_admin_search_published_pages"
 						placeholder={ __( 'Select a page', 'buddyboss' ) }
+						// Pin "Custom URL" (legacy value '0') at the top of the
+						// dropdown so users can switch into custom-URL mode the
+						// same way the legacy <select> allowed. The component
+						// also uses this list to resolve '0' to its label, so we
+						// no longer need a separate initialLabel hint.
+						staticOptions={ REDIRECT_STATIC_OPTIONS }
 					/>
 					{ '0' === formData.login_redirection && (
 						<TextControl
+							// hideLabelFromVision keeps the visual layout legacy-flat
+							// (no sub-label between dropdown and input) while still
+							// announcing "Custom URL" to assistive tech — the parent
+							// <label> has no htmlFor binding so screen readers would
+							// otherwise read this input as just "url".
 							label={ __( 'Custom URL', 'buddyboss' ) }
+							hideLabelFromVision
 							value={ formData.custom_login_redirection }
 							onChange={ function ( val ) { updateField( 'custom_login_redirection', val ); } }
+							placeholder={ __( 'Paste URL', 'buddyboss' ) }
 							type="url"
+							__nextHasNoMarginBottom
 						/>
 					) }
 				</div>
@@ -580,13 +607,22 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, allMemb
 						onChange={ function ( val ) { updateField( 'logout_redirection', val ); } }
 						asyncAction="bb_admin_search_published_pages"
 						placeholder={ __( 'Select a page', 'buddyboss' ) }
+						staticOptions={ REDIRECT_STATIC_OPTIONS }
 					/>
 					{ '0' === formData.logout_redirection && (
 						<TextControl
+							// hideLabelFromVision keeps the visual layout legacy-flat
+							// (no sub-label between dropdown and input) while still
+							// announcing "Custom URL" to assistive tech — the parent
+							// <label> has no htmlFor binding so screen readers would
+							// otherwise read this input as just "url".
 							label={ __( 'Custom URL', 'buddyboss' ) }
+							hideLabelFromVision
 							value={ formData.custom_logout_redirection }
 							onChange={ function ( val ) { updateField( 'custom_logout_redirection', val ); } }
+							placeholder={ __( 'Paste URL', 'buddyboss' ) }
 							type="url"
+							__nextHasNoMarginBottom
 						/>
 					) }
 					<p className="bb-admin-profile-type-modal__section-description">

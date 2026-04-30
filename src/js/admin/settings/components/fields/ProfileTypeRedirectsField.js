@@ -21,6 +21,16 @@ import { safeUrl } from '../../utils/sanitize';
 
 var PER_PAGE = 5;
 
+// Pinned options for the per-row After Login / After Logout async selects.
+// Listed in the same order as the legacy <select> (Default → Custom URL →
+// ...pages) so the dedupe in AsyncSelectField produces a render order that
+// matches the legacy admin pixel-for-pixel. Module-scoped so the reference is
+// stable across renders.
+var REDIRECT_STATIC_OPTIONS = [
+	{ value: '', label: __( 'Default', 'buddyboss' ) },
+	{ value: '0', label: __( 'Custom URL', 'buddyboss' ) },
+];
+
 /**
  * Profile Type Redirects Field Component
  *
@@ -227,9 +237,16 @@ export function ProfileTypeRedirectsField() {
 									} }
 									asyncAction="bb_admin_search_published_pages"
 									placeholder={ __( 'Default', 'buddyboss' ) }
+									staticOptions={ REDIRECT_STATIC_OPTIONS }
 								/>
 								{ '0' === mt.login_redirection && (
 									<TextControl
+										// Hidden visible label so the row stays
+										// compact while screen readers still
+										// announce "Custom URL" — the per-row
+										// "After Login" <label> has no htmlFor.
+										label={ __( 'Custom URL', 'buddyboss' ) }
+										hideLabelFromVision
 										value={ mt.custom_login_redirection || '' }
 										onChange={ function ( val ) {
 											handleFieldChange( mt.id, 'custom_login_redirection', val );
@@ -253,9 +270,16 @@ export function ProfileTypeRedirectsField() {
 									} }
 									asyncAction="bb_admin_search_published_pages"
 									placeholder={ __( 'Default', 'buddyboss' ) }
+									staticOptions={ REDIRECT_STATIC_OPTIONS }
 								/>
 								{ '0' === mt.logout_redirection && (
 									<TextControl
+										// Hidden visible label so the row stays
+										// compact while screen readers still
+										// announce "Custom URL" — the per-row
+										// "After Logout" <label> has no htmlFor.
+										label={ __( 'Custom URL', 'buddyboss' ) }
+										hideLabelFromVision
 										value={ mt.custom_logout_redirection || '' }
 										onChange={ function ( val ) {
 											handleFieldChange( mt.id, 'custom_logout_redirection', val );

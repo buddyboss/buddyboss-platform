@@ -424,6 +424,15 @@
 			margin-bottom: 0;
 		}
 
+		// Custom URL TextControl rendered conditionally below the After Login /
+		// After Logout async select. Give it a small top gap so it doesn't
+		// touch the dropdown above. Bottom margin is suppressed by the
+		// component's __nextHasNoMarginBottom prop so the section description
+		// keeps its 8px top margin without doubling the gap.
+		.bb-async-select + .components-base-control {
+			margin-top: 8px;
+		}
+
 		&--no-border {
 			border-bottom: none;
 			padding-bottom: 0;
