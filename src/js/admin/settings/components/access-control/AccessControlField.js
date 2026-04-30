@@ -355,70 +355,70 @@ export function AccessControlField( { field, value, onChange } ) {
 	}
 
 	/**
-	 * Render threaded sub-controls for a toggled option.
+	 * Render the inline All/Specific radio group on the right side of a
+	 * threaded toggle row. Disabled when the parent toggle is off.
 	 *
-	 * @param {Object} opt       The option object (label, value).
-	 * @param {string} optKey    The option key (stringified value).
-	 * @return {JSX.Element|null} Sub-controls or null if not enabled.
+	 * @param {string}  optKey   Stringified option value.
+	 * @param {Object}  subSettings Per-option { mode, specific } record.
+	 * @param {boolean} isActive Whether the parent toggle is on.
+	 * @return {JSX.Element} Radio group.
 	 */
-	var renderThreadedSubControls = function( opt, optKey ) {
-		if ( ! isThreaded || selectedOptions.indexOf( optKey ) === -1 ) {
-			return null;
-		}
-
-		var subSettings = perOptionSettings[ optKey ] || { mode: 'all', specific: [] };
-		var subLabel    = field.threaded_sub_label || '';
-
+	var renderThreadedRadios = function( optKey, subSettings, isActive ) {
 		return (
-			<div className="bb-access-control-field__threaded-sub">
-				{ subLabel && (
-					<span className="bb-access-control-field__threaded-sub-label">
-						{ decodeEntities( subLabel ) }
-					</span>
-				) }
-				<div className="bb-access-control-field__threaded-radio">
-					<label className="bb-access-control-field__threaded-radio-option">
-						<input
-							type="radio"
-							name={ 'ac-mode-' + field.name + '-' + optKey }
-							value="all"
-							checked={ 'all' === subSettings.mode }
-							onChange={ function() { handleModeChange( optKey, 'all' ); } }
-						/>
-						{ __( 'All', 'buddyboss' ) }
-					</label>
-					<label className="bb-access-control-field__threaded-radio-option">
-						<input
-							type="radio"
-							name={ 'ac-mode-' + field.name + '-' + optKey }
-							value="specific"
-							checked={ 'specific' === subSettings.mode }
-							onChange={ function() { handleModeChange( optKey, 'specific' ); } }
-						/>
-						{ __( 'Specific', 'buddyboss' ) }
-					</label>
-				</div>
-				{ 'specific' === subSettings.mode && (
-					<div className="bb-access-control-field__threaded-checkboxes">
-						{ options.filter( function( o ) {
-							return String( o.value ) !== optKey;
-						} ).map( function( o ) {
-							var specKey = String( o.value );
-							return (
-								<label key={ specKey } className="bb-access-control-field__threaded-checkbox">
-									<input
-										type="checkbox"
-										checked={ subSettings.specific.indexOf( specKey ) !== -1 }
-										onChange={ function( e ) {
-											handleSpecificChange( optKey, specKey, e.target.checked );
-										} }
-									/>
-									{ decodeEntities( o.label ) }
-								</label>
-							);
-						} ) }
-					</div>
-				) }
+			<div className="bb-access-control-field__threaded-radio">
+				<label className="bb-access-control-field__threaded-radio-option">
+					<input
+						type="radio"
+						name={ 'ac-mode-' + field.name + '-' + optKey }
+						value="all"
+						checked={ 'all' === subSettings.mode }
+						disabled={ ! isActive }
+						onChange={ function() { handleModeChange( optKey, 'all' ); } }
+					/>
+					{ __( 'All', 'buddyboss' ) }
+				</label>
+				<label className="bb-access-control-field__threaded-radio-option">
+					<input
+						type="radio"
+						name={ 'ac-mode-' + field.name + '-' + optKey }
+						value="specific"
+						checked={ 'specific' === subSettings.mode }
+						disabled={ ! isActive }
+						onChange={ function() { handleModeChange( optKey, 'specific' ); } }
+					/>
+					{ __( 'Specific', 'buddyboss' ) }
+				</label>
+			</div>
+		);
+	};
+
+	/**
+	 * Render the Specific-mode checkbox list below a threaded toggle row.
+	 *
+	 * @param {string} optKey      Stringified option value.
+	 * @param {Object} subSettings Per-option { mode, specific } record.
+	 * @return {JSX.Element} Checkbox list.
+	 */
+	var renderThreadedCheckboxes = function( optKey, subSettings ) {
+		return (
+			<div className="bb-access-control-field__threaded-checkboxes">
+				{ options.filter( function( o ) {
+					return String( o.value ) !== optKey;
+				} ).map( function( o ) {
+					var specKey = String( o.value );
+					return (
+						<label key={ specKey } className="bb-access-control-field__threaded-checkbox">
+							<input
+								type="checkbox"
+								checked={ subSettings.specific.indexOf( specKey ) !== -1 }
+								onChange={ function( e ) {
+									handleSpecificChange( optKey, specKey, e.target.checked );
+								} }
+							/>
+							{ decodeEntities( o.label ) }
+						</label>
+					);
+				} ) }
 			</div>
 		);
 	};
@@ -480,18 +480,50 @@ export function AccessControlField( { field, value, onChange } ) {
 			{ ! loading && options.length > 0 && (
 				<div className={ 'bb-access-control-field__toggle-list' + ( isThreaded ? ' bb-access-control-field__toggle-list--threaded' : '' ) }>
 					{ options.map( function( opt ) {
-						var optKey = String( opt.value );
+						var optKey      = String( opt.value );
+						var isActive    = selectedOptions.indexOf( optKey ) !== -1;
+						var subSettings = isThreaded
+							? ( perOptionSettings[ optKey ] || { mode: 'all', specific: [] } )
+							: null;
+
+						// Threaded toggle label = bold role name + per-feature
+						// suffix supplied by PHP via `threaded_sub_label`
+						// (e.g. "can send message to" / "can send connection
+						// request to"). Inline-composed inside ToggleControl's
+						// label so the switch sits on the same baseline as the
+						// text per Figma.
+						var threadedSuffix = field.threaded_sub_label
+							? decodeEntities( field.threaded_sub_label )
+							: '';
+						var threadedLabel = (
+							<>
+								<span className="bb-access-control-field__option-label">
+									{ decodeEntities( opt.label ) }
+								</span>
+								{ threadedSuffix && (
+									<span className="bb-access-control-field__option-suffix">
+										{ ' ' + threadedSuffix }
+									</span>
+								) }
+							</>
+						);
+
 						return (
-							<div key={ optKey } className={ 'bb-access-control-field__toggle-item' + ( isThreaded && selectedOptions.indexOf( optKey ) !== -1 ? ' bb-access-control-field__toggle-item--active' : '' ) }>
-								<ToggleControl
-									label={ decodeEntities( opt.label ) }
-									checked={ selectedOptions.indexOf( optKey ) !== -1 }
-									onChange={ function( checked ) {
-										handleToggle( optKey, checked );
-									} }
-									__nextHasNoMarginBottom
-								/>
-								{ renderThreadedSubControls( opt, optKey ) }
+							<div key={ optKey } className={ 'bb-access-control-field__toggle-item' + ( isThreaded && isActive ? ' bb-access-control-field__toggle-item--active' : '' ) }>
+								<div className="bb-access-control-field__toggle-row">
+									<ToggleControl
+										label={ isThreaded ? threadedLabel : decodeEntities( opt.label ) }
+										checked={ isActive }
+										onChange={ function( checked ) {
+											handleToggle( optKey, checked );
+										} }
+										__nextHasNoMarginBottom
+									/>
+									{ isThreaded && renderThreadedRadios( optKey, subSettings, isActive ) }
+								</div>
+								{ isThreaded && isActive && 'specific' === subSettings.mode && (
+									renderThreadedCheckboxes( optKey, subSettings )
+								) }
 							</div>
 						);
 					} ) }

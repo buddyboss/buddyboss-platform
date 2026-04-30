@@ -53,7 +53,12 @@ function bb_messages_register_access_control_fields() {
 			'default'            => '',
 			'pro_only'           => true,
 			'threaded'           => true,
-			'threaded_sub_label' => __( 'Members with the {{option_value}} {{select_value}} can send messages to members with - Any Member / With Specific {{select_value}}(s)', 'buddyboss' ),
+			// Suffix copy that follows the bold role name on the threaded
+			// toggle row (e.g. "Editor can send message to"). Per the Figma
+			// layout, the All/Specific radios carry the rest of the meaning,
+			// so the long "Members with the … can send messages to members
+			// with - Any Member / With Specific …" sentence is no longer needed.
+			'threaded_sub_label' => __( 'can send message to', 'buddyboss' ),
 			'order'              => 10,
 			'sanitize_callback'  => function_exists( 'bb_sanitize_access_control_field' ) ? 'bb_sanitize_access_control_field' : 'bb_sanitize_access_control_fallback',
 		)
@@ -68,7 +73,7 @@ function bb_messages_register_access_control_fields() {
 			'name'        => 'bb-messages-access-control-notice',
 			'label'       => '',
 			'type'        => 'notice',
-			'description' => __( 'Note: These settings do not apply to administrators or group messages.', 'buddyboss' ),
+			'description' => __( 'These settings do not apply to administrators or group messages.', 'buddyboss' ),
 			'notice_type' => 'info',
 			'order'       => 100,
 		)
