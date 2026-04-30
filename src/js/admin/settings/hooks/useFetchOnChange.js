@@ -142,6 +142,15 @@ export function useFetchOnChange( fields, values ) {
 		const config    = field.fetch_on_change;
 		const fieldName = field.name;
 
+		// Record the in-flight values immediately. Without this, concurrent
+		// re-renders during the request (e.g. setSidePanels triggered by the
+		// disable_fields event) would re-evaluate the watcher with an empty
+		// lastFetchedRef and schedule another timer, which fires before the
+		// in-flight request resolves and aborts it — producing an infinite
+		// abort cascade. Recording here means the next render's hasChanged
+		// check returns false while the fetch is in flight.
+		lastFetchedRef.current[ fieldName ] = Object.assign( {}, currentValues );
+
 		// Abort previous in-flight request for this field.
 		if ( abortRefs.current[ fieldName ] ) {
 			abortRefs.current[ fieldName ].abort();
@@ -208,10 +217,13 @@ export function useFetchOnChange( fields, values ) {
 						return next;
 					} );
 				} else {
-					// Error response — show error option and do NOT mark as fetched,
-					// so a subsequent retry (e.g. after the user fixes credentials) fires.
+					// Error response — show the error in the dropdown. Keep the
+					// in-flight snapshot recorded at fetch start (lastFetchedRef
+					// already holds these values) so we do NOT auto-retry the
+					// same failing payload on every subsequent render. A retry
+					// fires only when the user actually changes one of the
+					// watched fields — which is the documented intent.
 					const errorMsg = ( result.data && result.data.message ) || __( 'Failed to fetch data.', 'buddyboss' );
-					delete lastFetchedRef.current[ fieldName ];
 
 					setOverrides( function ( prev ) {
 						const next = Object.assign( {}, prev );
@@ -238,8 +250,10 @@ export function useFetchOnChange( fields, values ) {
 					return;
 				}
 
-				// Network / fetch error — do NOT mark as fetched so retries work.
-				delete lastFetchedRef.current[ fieldName ];
+				// Network/fetch error — keep the in-flight snapshot recorded at
+				// fetch start (already in lastFetchedRef) so we do not retry the
+				// same failing payload on every render. The user can retry by
+				// changing one of the watched fields.
 
 				setOverrides( function ( prev ) {
 					const next = Object.assign( {}, prev );
@@ -315,8 +329,10 @@ export function useFetchOnChange( fields, values ) {
 				clearTimeout( timerRefs.current[ fieldName ] );
 			}
 
-			// Debounce the fetch. lastFetchedRef is updated on AJAX success, not here,
-			// so failed fetches can be retried on the next value change.
+			// Debounce the fetch. lastFetchedRef is recorded at fetch start
+			// (inside doFetch) to prevent in-flight retries; on AJAX failure
+			// we keep the failing snapshot so a retry only fires when the
+			// user actually changes one of the watched values.
 			timerRefs.current[ fieldName ] = setTimeout( function () {
 				doFetch( field, currentValues );
 			}, debounceMs );
