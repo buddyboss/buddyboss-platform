@@ -110,8 +110,10 @@ function bb_legacy_get_xpath( $html ) {
 	libxml_use_internal_errors( true );
 
 	// PHP 7.x defense: explicitly disable external entity loading. On PHP 8.0+
-	// this function is a deprecated no-op (the default became safer), so we
-	// suppress any deprecation notice with @ and gate the restore on null.
+	// this function is deprecated (it still flips the flag, but emits
+	// E_DEPRECATED), so we suppress the notice with @ and gate the restore
+	// on null. PHP 8.0's default became safer, but calling it remains
+	// harmless and keeps the 7.x defense intact.
 	$prev_entity_loader = null;
 	if ( function_exists( 'libxml_disable_entity_loader' ) ) {
 		$prev_entity_loader = @libxml_disable_entity_loader( true ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged,Generic.PHP.DeprecatedFunctions.Deprecated,PHPCompatibility.FunctionUse.RemovedFunctions,WordPress.PHP.NoSilencedErrors.Discouraged
@@ -1076,6 +1078,81 @@ function bb_legacy_capture_post_box_html( $box, $post, $request_param = 'post' )
 }
 
 /**
+ * Allowlist-by-denylist for $_POST keys the CPT bridge is permitted to
+ * write on behalf of third-party metaboxes.
+ *
+ * Mirrors `bb_legacy_is_safe_post_key()` (groups bridge) but allows the
+ * leading-underscore prefix so hidden post-meta names from established
+ * admin plugins (e.g., `_yoast_*`, `_acf_*`, `_mepr_*`) can be bridged.
+ * The remaining denials (sensitive WP user keys, Platform/BP/WP reserved
+ * prefixes, array-notation keys) are kept identical so a metabox cannot
+ * smuggle `<input name="role">` or `<input name="user_pass">` into a
+ * Settings 2.0 save.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $name           HTML input name attribute.
+ * @param array  $canonical_keys Optional. Lowercase canonical post-form keys
+ *                               that must never be shadowed (post_title,
+ *                               post_status, _wpnonce, etc.). Caller-supplied
+ *                               so the same helper works for any CPT.
+ * @return bool True if the key is safe to write to $_POST.
+ */
+function bb_legacy_is_safe_cpt_post_key( $name, $canonical_keys = array() ) {
+	$name = (string) $name;
+	if ( '' === $name ) {
+		return false;
+	}
+
+	// Reject array notation (`things[]`) — sanitize_key() can't represent
+	// these losslessly and they corrupt $_POST when reassembled.
+	if ( false !== strpos( $name, '[' ) || false !== strpos( $name, ']' ) ) {
+		return false;
+	}
+
+	// Allow leading underscore (hidden post-meta convention used by Yoast,
+	// ACF, MemberPress, etc.) but otherwise require pure ASCII identifiers.
+	if ( ! preg_match( '/^[A-Za-z_][A-Za-z0-9_\-]*$/', $name ) ) {
+		return false;
+	}
+
+	$deny_prefixes = array(
+		'bb_admin_', // BuddyBoss admin internal.
+		'bp_admin_', // BuddyPress admin internal.
+		'wp_',       // WordPress core.
+	);
+	foreach ( $deny_prefixes as $prefix ) {
+		if ( 0 === strncmp( $name, $prefix, strlen( $prefix ) ) ) {
+			return false;
+		}
+	}
+
+	$deny_exact = array(
+		'action',
+		'role',
+		'roles',
+		'user_login',
+		'user_pass',
+		'user_email',
+		'user_registered',
+		'pass1',
+		'pass2',
+		'password',
+		'nonce',
+	);
+	$lower      = strtolower( $name );
+	if ( in_array( $lower, $deny_exact, true ) ) {
+		return false;
+	}
+
+	if ( ! empty( $canonical_keys ) && in_array( $lower, array_map( 'strtolower', (array) $canonical_keys ), true ) ) {
+		return false;
+	}
+
+	return true;
+}
+
+/**
  * Register a legacy meta-box bridge for a custom post type.
  *
  * Single entry point that surfaces every third-party metabox registered on
@@ -1139,6 +1216,20 @@ function bb_legacy_register_cpt_meta_bridge( $args ) {
 	if ( '' === $args['component'] || '' === $args['post_type'] ) {
 		return;
 	}
+
+	// Dedup defense: each call below adds three listeners (one for field
+	// registration, two on `bb_admin_meta_field_registry_before_save` for
+	// replay + persist). WordPress doesn't dedup anonymous closures —
+	// `_wp_filter_build_unique_id()` hashes each closure to a unique id —
+	// so a second registration of the same component would silently
+	// double-register every listener. No current Platform code does this,
+	// but a third-party plugin re-using this factory could; the guard is
+	// cheap insurance.
+	static $registered = array();
+	if ( isset( $registered[ $args['component'] ] ) ) {
+		return;
+	}
+	$registered[ $args['component'] ] = true;
 
 	if ( '' === $args['meta_box_action'] ) {
 		$args['meta_box_action'] = 'add_meta_boxes_' . $args['post_type'];
@@ -1363,7 +1454,47 @@ function bb_legacy_replay_cpt_hidden_inputs( $args, $item ) {
 					if ( ! $html ) {
 						continue;
 					}
+					// Note on the security model: re-rendering the metabox here
+					// emits freshly-minted nonces, so a third-party metabox's
+					// per-form CSRF token is effectively bypassed when its
+					// save_post handler validates against the replayed value.
+					// That trade-off is intentional — by the time we reach this
+					// code the request has already cleared the outer Settings
+					// 2.0 nonce + capability check (`bb_admin_settings` /
+					// `bp_moderate`), which is the real auth boundary. The inner
+					// metabox nonce is decorative once the outer auth has
+					// passed; the replay exists so legacy save_post handlers
+					// don't bail before persisting their meta.
+					// Replay-time canonical keys: same as $args['canonical_keys']
+					// minus the nonce/referer/action keys we WANT to replay.
+					// Lets `_wpnonce` and `_wp_http_referer` flow through to
+					// satisfy the third-party save_post handler, while still
+					// blocking a malicious metabox from smuggling
+					// `<input type="hidden" name="post_password" value="...">`
+					// or similar canonical post-property shadows.
+					$replay_canonical = array_values(
+						array_diff(
+							$args['canonical_keys'],
+							array(
+								'_wpnonce',
+								'_wp_http_referer',
+								'action',
+								'meta-box-order-nonce',
+								'closedpostboxesnonce',
+							)
+						)
+					);
 					foreach ( bb_legacy_extract_hidden_inputs( $html ) as $name => $value ) {
+						// Block sensitive WP user-management keys, reserved
+						// Platform/BP/WP prefixes, and canonical post
+						// properties — a malicious metabox could otherwise
+						// smuggle `<input type="hidden" name="role"
+						// value="administrator">` or
+						// `<input type="hidden" name="post_password" ...>`
+						// into $_POST.
+						if ( ! bb_legacy_is_safe_cpt_post_key( $name, $replay_canonical ) ) {
+							continue;
+						}
 						// Don't clobber a value React already populated.
 						// phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.NonceVerification.Recommended
 						if ( isset( $_POST[ $name ] ) ) {
@@ -1448,7 +1579,12 @@ function bb_legacy_persist_cpt_post_meta( $args, $item ) {
 						if ( '' === (string) $name ) {
 							continue;
 						}
-						if ( in_array( strtolower( $name ), array_map( 'strtolower', $canonical_keys ), true ) ) {
+						// Defense in depth: same safe-key denylist as the
+						// 'before' phase. Prevents update_post_meta() from
+						// writing sensitive WP user keys (`role`, `user_pass`)
+						// or reserved Platform/BP/WP prefixes if they happen
+						// to be present in $_POST from elsewhere.
+						if ( ! bb_legacy_is_safe_cpt_post_key( $name, $canonical_keys ) ) {
 							continue;
 						}
 						// phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.NonceVerification.Recommended
@@ -1669,17 +1805,12 @@ function bb_legacy_run_cpt_bridge_box( $registry, $component, $box, &$order, $ex
 			continue;
 		}
 
-		// Reject names that aren't simple identifiers — array-notation
-		// (`name="meta[foo]"`) and non-ASCII names are silently dropped.
-		// Leading underscore is allowed because it's the WP convention for
-		// hidden post meta (e.g. `_mepr_unauth_excerpt_type` from MemberPress,
-		// `_yoast_*` from Yoast SEO, `_acf_*` from ACF).
-		if ( ! preg_match( '/^[A-Za-z_][A-Za-z0-9_\-]*$/', (string) $input['name'] ) ) {
-			continue;
-		}
-
-		// Don't shadow canonical post-form keys.
-		if ( in_array( strtolower( $input['name'] ), $canonical_keys, true ) ) {
+		// Reject unsafe key shapes (array notation, non-identifiers) and
+		// sensitive WP user/Platform/BP/WP reserved keys, while allowing
+		// the leading-underscore convention for hidden post meta (Yoast,
+		// ACF, MemberPress, etc.). Also blocks shadowing of canonical
+		// post-form keys.
+		if ( ! bb_legacy_is_safe_cpt_post_key( $input['name'], $canonical_keys ) ) {
 			continue;
 		}
 
@@ -1712,7 +1843,12 @@ function bb_legacy_run_cpt_bridge_box( $registry, $component, $box, &$order, $ex
 				if ( ! is_string( $input['name'] ) || '' === $input['name'] ) {
 					return;
 				}
-				if ( in_array( strtolower( $input['name'] ), $canonical_keys, true ) ) {
+				// Defense in depth: re-check the safe-key denylist on every
+				// save. Registration was already filtered via
+				// bb_legacy_is_safe_cpt_post_key(), but the closure may run
+				// long after registration, after which the metabox HTML
+				// (and thus $input['name']) was determined.
+				if ( ! bb_legacy_is_safe_cpt_post_key( $input['name'], $canonical_keys ) ) {
 					return;
 				}
 				// Don't clobber a key React already populated.

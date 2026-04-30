@@ -60,10 +60,9 @@ require_once dirname( __DIR__ ) . '/legacy-meta-bridge-utils.php';
  * persist via `bp_activity_admin_edit_after`, fired automatically by the
  * activity AJAX save handler — so the slot would be dead state.
  *
- * `xpath_cache` also lives in the groups bridge's state container; the
- * shared `bb_legacy_get_xpath()` utility (loaded via require_once) reads
- * from `bb_legacy_groups_bridge_state()` regardless of caller, so the
- * activity bridge transparently shares the parsed-XPath cache.
+ * The parsed-XPath cache is module-level (a `static $cache` inside
+ * `bb_legacy_get_xpath()` in legacy-meta-bridge-utils.php), so every
+ * component bridge transparently shares it within a single request.
  *
  * @since BuddyBoss [BBVERSION]
  *

@@ -300,6 +300,12 @@ class BB_Admin_Meta_Field_Registry {
 		 * stable hidden state) from third-party metaboxes into $_POST so
 		 * their save_post_<post_type> handlers can verify and persist data.
 		 *
+		 * Listeners must filter by `$component` (e.g.
+		 * `if ( 'forums' !== $component ) { return; }`) — this action fires
+		 * once per save_fields_data() call regardless of which component is
+		 * being saved, so unscoped listeners would run against unrelated
+		 * components and either no-op or perform redundant work.
+		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param string $component Component identifier.
