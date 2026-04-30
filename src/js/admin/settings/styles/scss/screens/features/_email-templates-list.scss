@@ -316,4 +316,10 @@
 		padding: 16px 24px;
 		border-top: 1px solid $bb-border-secondary-color;
 	}
+
+	&__loading {
+		display: flex;
+		justify-content: center;
+		padding: 24px;
+	}
 }
