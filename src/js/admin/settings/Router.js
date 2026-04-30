@@ -101,6 +101,13 @@ export function Router({ currentRoute, onNavigate }) {
 	// route changes do not flash a loading spinner (which unmounts children).
 	const featuresLoadedRef = useRef(false);
 
+	// Track whether the URL-sync effect has run before. The first run reflects
+	// the route the page was loaded with — that URL is already in the address
+	// bar, so we replace (not push) to avoid creating a synthetic history
+	// entry. Subsequent runs are user-driven navigation and need pushState so
+	// the browser Back button can traverse them.
+	const hasSyncedUrlRef = useRef(false);
+
 	// Parse route
 	const routeParts = currentRoute.split('/').filter(Boolean);
 	const mainRoute = routeParts[0] || 'dashboard';
@@ -143,6 +150,27 @@ export function Router({ currentRoute, onNavigate }) {
 		const currentTab = urlParams.get('tab');
 		const currentPanel = urlParams.get('panel');
 
+		// First run reflects the URL the page was loaded with, so any URL
+		// rewrite here is a normalization (e.g. stripping an empty hash) and
+		// must use replaceState. Subsequent runs are user-driven navigation
+		// and must use pushState so the browser Back button can traverse the
+		// in-app history. The popstate listener in App.js maps those entries
+		// back to currentRoute.
+		//
+		// Exception: when the feature (tab) hasn't changed and only the panel
+		// is being filled in, this is the FeatureSettingsScreen auto-selecting
+		// its first side panel after data loads. That's a redirect, not a
+		// navigation — pushing a history entry for it would trap the user in
+		// a Back-button loop (Back → /settings/reactions → auto-redirects
+		// forward to /settings/reactions/general again).
+		const writeUrl = ( url, isAutoRedirect ) => {
+			if ( hasSyncedUrlRef.current && ! isAutoRedirect ) {
+				window.history.pushState({}, '', url);
+			} else {
+				window.history.replaceState({}, '', url);
+			}
+		};
+
 		if ( '/settings' === currentRoute ) {
 			// Remove tab and panel params when on main settings page.
 			if (currentTab || currentPanel || window.location.hash) {
@@ -150,7 +178,7 @@ export function Router({ currentRoute, onNavigate }) {
 				urlParams.delete('panel');
 				const paramString = urlParams.toString();
 				const cleanUrl = window.location.pathname + (paramString ? '?' + paramString : '');
-				window.history.replaceState({}, '', cleanUrl);
+				writeUrl(cleanUrl, false);
 			}
 		} else if ( 'settings' === main && parts[1] ) {
 			// Update URL with tab parameter for feature settings.
@@ -158,6 +186,8 @@ export function Router({ currentRoute, onNavigate }) {
 			const newPanel = parts[2] || null;
 
 			if (currentTab !== newTab || currentPanel !== newPanel || window.location.hash) {
+				const isPanelAutoSelect = currentTab === newTab && ! currentPanel && !! newPanel;
+
 				urlParams.set('tab', newTab);
 				if (newPanel) {
 					urlParams.set('panel', newPanel);
@@ -166,9 +196,11 @@ export function Router({ currentRoute, onNavigate }) {
 				}
 				// Use query params (no hash).
 				const newUrl = window.location.pathname + '?' + urlParams.toString();
-				window.history.replaceState({}, '', newUrl);
+				writeUrl(newUrl, isPanelAutoSelect);
 			}
 		}
+
+		hasSyncedUrlRef.current = true;
 	}, [currentRoute]);
 
 	// Helper to get feature label
