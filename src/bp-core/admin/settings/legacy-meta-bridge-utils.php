@@ -1919,3 +1919,144 @@ add_action( 'activated_plugin', 'bb_legacy_cpt_clear_bridge_cache' );
 add_action( 'deactivated_plugin', 'bb_legacy_cpt_clear_bridge_cache' );
 add_action( 'upgrader_process_complete', 'bb_legacy_cpt_clear_bridge_cache' );
 add_action( 'switch_theme', 'bb_legacy_cpt_clear_bridge_cache' );
+
+/**
+ * Allowlist-by-denylist for $_POST keys we'll let third-party plugins drive.
+ *
+ * Lives in shared utils because both the groups and activity bridges call it
+ * (activity layers its own canonical-keys check on top via
+ * bb_legacy_is_safe_activity_post_key). Loading order between bridge files
+ * is not guaranteed — keeping this in utils prevents fatals when any single
+ * bridge runs without the others having required their files yet.
+ *
+ * Blocks:
+ *   - Reserved Platform/BP/WP/leading-underscore prefixes
+ *   - Sensitive WP user-management keys (role, user_login, password, etc.)
+ *   - Array-notation keys (`name="foo[]"`) — sanitize_key() can't represent
+ *     these losslessly and they corrupt $_POST when reassembled
+ *   - Canonical BP_Groups_Group property names
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $name HTML input name attribute.
+ * @return bool True if the key is safe to write to $_POST.
+ */
+function bb_legacy_is_safe_post_key( $name ) {
+	$name = (string) $name;
+	if ( '' === $name ) {
+		return false;
+	}
+
+	// Reject array notation (`things[]`) — handled separately if at all.
+	if ( false !== strpos( $name, '[' ) || false !== strpos( $name, ']' ) ) {
+		return false;
+	}
+
+	// Reject names that aren't pure ASCII identifier-ish characters.
+	if ( ! preg_match( '/^[A-Za-z][A-Za-z0-9_\-]*$/', $name ) ) {
+		return false;
+	}
+
+	$deny_prefixes = array(
+		'_',          // WordPress private (e.g., _wpnonce, _wp_http_referer).
+		'bb_admin_',  // BuddyBoss admin internal.
+		'bp_admin_',  // BuddyPress admin internal.
+		'wp_',        // WordPress core.
+	);
+	foreach ( $deny_prefixes as $prefix ) {
+		if ( 0 === strncmp( $name, $prefix, strlen( $prefix ) ) ) {
+			return false;
+		}
+	}
+
+	$deny_exact = array(
+		'action',
+		'role',
+		'roles',
+		'user_login',
+		'user_pass',
+		'user_email',
+		'user_registered',
+		'pass1',
+		'pass2',
+		'password',
+		'nonce',
+	);
+	if ( in_array( strtolower( $name ), $deny_exact, true ) ) {
+		return false;
+	}
+
+	// Block any key that maps to a canonical BP_Groups_Group property or to a
+	// well-known Platform group-save POST key. Derived dynamically so future
+	// Platform additions don't require updating this file.
+	if ( in_array( strtolower( $name ), bb_legacy_canonical_group_keys(), true ) ) {
+		return false;
+	}
+
+	return true;
+}
+
+/**
+ * Build the list of $_POST keys Platform's canonical group save handler
+ * owns. The bridge will refuse to write to any of these to prevent a
+ * third-party metabox from clobbering React's form values.
+ *
+ * Lives in shared utils alongside bb_legacy_is_safe_post_key (its only
+ * caller) so the two stay loadable independently of the groups bridge.
+ *
+ * Most keys are auto-discovered from BP_Groups_Group's public properties via
+ * Reflection; a small set of additional keys (forum_id, etc.) used by
+ * Platform's save handler but not stored as group properties is listed
+ * explicitly. Plugin authors can extend the list via the
+ * `bb_legacy_canonical_group_post_keys` filter.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string[] Lowercase canonical key names.
+ */
+function bb_legacy_canonical_group_keys() {
+	static $keys = null;
+	if ( null !== $keys ) {
+		return $keys;
+	}
+
+	$keys = array();
+
+	if ( class_exists( 'BP_Groups_Group' ) ) {
+		try {
+			$reflection = new ReflectionClass( 'BP_Groups_Group' );
+			foreach ( $reflection->getProperties( ReflectionProperty::IS_PUBLIC ) as $prop ) {
+				$keys[] = strtolower( $prop->getName() );
+			}
+		} catch ( ReflectionException $e ) {
+			unset( $e ); // Fall through to extras below.
+		}
+	}
+
+	// Extras — POST keys used by Platform's canonical groups save handler
+	// (and listeners on bb_admin_after_save_group / bp_group_admin_edit_after)
+	// that aren't BP_Groups_Group public properties.
+	$extras = array(
+		'forum_id',     // Forum association (saved separately to forum meta).
+		'enable_forum', // Forum toggle on the React form.
+		'group_id',     // Used in URL params and some internal hooks.
+	);
+	foreach ( $extras as $extra ) {
+		if ( ! in_array( $extra, $keys, true ) ) {
+			$keys[] = $extra;
+		}
+	}
+
+	/**
+	 * Filter the list of canonical group $_POST keys the legacy bridge will
+	 * never overwrite. Plugin authors can add custom keys here if their save
+	 * handler reads $_POST values that should be reserved for the React form.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string[] $keys Lowercase canonical key names.
+	 */
+	$keys = (array) apply_filters( 'bb_legacy_canonical_group_post_keys', $keys );
+
+	return $keys;
+}
