@@ -866,6 +866,10 @@
 			font-weight: 500;
 		}
 
+        .components-input-control__container[disabled] {
+            background-color: transparent
+        }
+
 		.components-select-control__input {
 			@include bb-admin-settings-select;
 			max-width: 272px;
