@@ -105,6 +105,28 @@ export function SettingsScreen({ onNavigate }) {
 			filtered = filtered.concat( filteredPlaceholders );
 		}
 
+		// Re-sort the merged list by (order, label) so placeholders interleave
+		// with registered features by their declared `order` value within
+		// each category. Without this, the concat above would leave every
+		// placeholder at the end of its category — making, for example,
+		// Offload Media (registered, order 20) appear before Gamification
+		// (placeholder, order 10) inside the Add-ons section. PHP already
+		// runs an identical sort in bb_admin_sort_features_response, but
+		// splitting the response into real-vs-placeholder buckets on the
+		// client (so we can hide placeholders on Active/Inactive/Search
+		// tabs) clobbers that order. We sort by `order` only; category
+		// grouping happens just below in groupedFeatures.
+		filtered.sort( function ( a, b ) {
+			var aOrder = ( 'number' === typeof a.order ) ? a.order : 100;
+			var bOrder = ( 'number' === typeof b.order ) ? b.order : 100;
+			if ( aOrder !== bOrder ) {
+				return aOrder - bOrder;
+			}
+			var aLabel = a.label || '';
+			var bLabel = b.label || '';
+			return aLabel.localeCompare( bLabel );
+		} );
+
 		return filtered;
 	}, [ features, placeholderFeatures, activeFilter, selectedCategory, searchQuery ] );
 
