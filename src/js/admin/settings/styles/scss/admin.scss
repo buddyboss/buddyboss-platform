@@ -236,6 +236,14 @@
 		}
 	}
 
+	&__ipn-slot {
+		border-radius: $bb-border-radius-md;
+
+		&:hover {
+			background-color: $bb-background-color;
+		}
+	}
+
 	// Mothership IPN inbox mount point. The IPN React app renders its own
 	// <button> inside Shadow DOM here, so we reset host-level button styles
 	// (padding, hover bg) to avoid double-padding and conflicting hover states.
