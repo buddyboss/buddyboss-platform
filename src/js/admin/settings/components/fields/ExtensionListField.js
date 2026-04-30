@@ -350,7 +350,6 @@ export function ExtensionListField( { field, value, onChange, disabled, sanitize
 						<div className="bb-extension-modal__field">
 							<label className="bb-extension-modal__label">
 								{ __( 'MIME Type', 'buddyboss' ) }
-								<span className="bb-extension-modal__required">*</span>
 							</label>
 							<div className="bb-extension-modal__mime-row">
 								<TextControl
