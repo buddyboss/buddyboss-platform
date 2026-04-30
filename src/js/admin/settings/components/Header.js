@@ -129,13 +129,11 @@ export function Header({ onNavigate }) {
 				<div className="bb-admin-header__left">
 					{/* BuddyBoss Logo */}
 					<div className="bb-admin-header__logo">
-						<a href="#/dashboard" onClick={(e) => { e.preventDefault(); onNavigate('/dashboard'); }}>
-							<img
-								src={bbAdminData?.logoUrl || ''}
-								alt={__('BuddyBoss', 'buddyboss')}
-								className="bb-admin-header__logo-img"
-							/>
-						</a>
+						<img
+							src={bbAdminData?.logoUrl || ''}
+							alt={__('BuddyBoss', 'buddyboss')}
+							className="bb-admin-header__logo-img"
+						/>
 					</div>
 				</div>
 
