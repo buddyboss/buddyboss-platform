@@ -35,6 +35,7 @@ function bb_registration_register_panel_fields() {
 			'title'       => __( 'Registration', 'buddyboss' ),
 			'description' => '',
 			'order'       => 10,
+			'help_url'    => '636020',
 		)
 	);
 
@@ -232,6 +233,7 @@ function bb_registration_register_panel_fields() {
 			'description' => __( 'Domain restrictions can be configured to limit new user registrations to specific domains or extensions. This setting is only available when using the BuddyBoss Registration Form.', 'buddyboss' ),
 			'order'       => 20,
 			'conditional' => $restrictions_section_conditional,
+			'help_url'    => '636023',
 		)
 	);
 
