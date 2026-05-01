@@ -15,6 +15,7 @@ import { getCachedFeatureData, setCachedFeatureData, invalidateFeatureCache } fr
 import { BB_EVENTS } from '../utils/constants';
 import { applyReactionPostSave } from '../components/reaction/applyReactionPostSave';
 import { SettingsForm } from '../components/SettingsForm';
+import { UpgradeModal } from '../components/modals/UpgradeModal';
 import { SideNavigation } from './SideNavigation';
 import { Toast } from '../components/Toast';
 import { debounce, fetchHelpContent, clearHelpContentCache } from '../../utils/api';
@@ -93,6 +94,81 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 
 	// Section status overrides (updated via custom events from input_button fields).
 	const [sectionStatusOverrides, setSectionStatusOverrides] = useState({});
+
+	// Upgrade modal state for `pro_only` fields and `pro_notice` sections.
+	// Reuses the same UpgradeModal component used by placeholder feature
+	// cards on the Settings home screen — payload is shaped to match that
+	// component's expected `feature` prop so no rendering code is duplicated.
+	const [proUpgradeModalPayload, setProUpgradeModalPayload] = useState(null);
+
+	/**
+	 * Map a `pro_notice.modal` payload into the shape UpgradeModal expects.
+	 *
+	 * UpgradeModal was originally designed for placeholder feature cards and
+	 * reads `feature.label`, `feature.upgrade_title`, `feature.upgrade_description`,
+	 * `feature.upgrade_image_url`, `feature.upgrade_url`, `feature.upgrade_tier`.
+	 * The catalog already uses the same field names, so this is mostly a
+	 * passthrough with a couple of fallbacks for older catalog entries that
+	 * might omit the title/description.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {Object} modal           Modal payload from pro_notice.modal.
+	 * @param {string} fallbackLabel   Field or section label to use when the
+	 *                                 catalog doesn't provide a label.
+	 * @param {string} fallbackBody    Field/section description to use when
+	 *                                 upgrade_description is empty.
+	 * @returns {Object} Shaped payload accepted by UpgradeModal.
+	 */
+	const buildProModalPayload = useCallback((modal, fallbackLabel, fallbackBody) => {
+		if (!modal) {
+			return null;
+		}
+		return {
+			label: modal.label || fallbackLabel || '',
+			upgrade_title: modal.title || '',
+			upgrade_description: modal.description || fallbackBody || '',
+			upgrade_image_url: modal.image_url || '',
+			upgrade_url: modal.url || 'https://www.buddyboss.com/pricing/',
+			upgrade_tier: modal.tier || 'pro',
+		};
+	}, []);
+
+	/**
+	 * Handle a click on a field-level pro badge play button.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {Object} field Field object with pro_notice.modal payload.
+	 */
+	const handleFieldProClick = useCallback((field) => {
+		const payload = buildProModalPayload(
+			field?.pro_notice?.modal,
+			field?.label,
+			field?.description
+		);
+		if (payload) {
+			setProUpgradeModalPayload(payload);
+		}
+	}, [buildProModalPayload]);
+
+	/**
+	 * Handle a click on a section-level pro badge.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {Object} section Section object with pro_notice.modal payload.
+	 */
+	const handleSectionProClick = useCallback((section) => {
+		const payload = buildProModalPayload(
+			section?.pro_notice?.modal,
+			section?.title,
+			section?.description
+		);
+		if (payload) {
+			setProUpgradeModalPayload(payload);
+		}
+	}, [buildProModalPayload]);
 
 	// Auto-save state.
 	const [toast, setToast] = useState(null);
@@ -859,10 +935,23 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 													} )()}
 												</div>
 												<div className="bb-admin-feature-settings__section-header-right">
-													{/* Section-level PRO badge (e.g. UPGRADE PRO) */}
+													{/* Section-level PRO badge (e.g. UPGRADE PRO).
+													    Modal payload (delivered by the field-upgrades
+													    catalog) takes precedence over link_url —
+													    clicking the badge opens UpgradeModal in-page
+													    rather than jumping out to a docs URL. */}
 													{section.pro_notice && section.pro_notice.show && (
 														<span className="bb-admin-feature-settings__section-pro-notice">
-															{section.pro_notice.link_url ? (
+															{section.pro_notice.modal ? (
+																<button
+																	type="button"
+																	onClick={() => handleSectionProClick(section)}
+																	className="bb-admin-feature-settings__section-pro-badge"
+																>
+																	<i className={section.pro_notice.badge_icon || 'bb-icons-rl-crown-simple'} />
+																	<span>{section.pro_notice.badge_text || 'UPGRADE PRO'}</span>
+																</button>
+															) : section.pro_notice.link_url ? (
 																<a
 																	href={safeUrl(section.pro_notice.link_url)}
 																	target="_blank"
@@ -912,6 +1001,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 													fields={section.fields || []}
 													values={settings}
 													onChange={handleSettingChange}
+													onProBadgeClick={handleFieldProClick}
 												/>
 											</div>
 										</div>
@@ -987,6 +1077,15 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 					<p>{__('No help content available.', 'buddyboss')}</p>
 				)}
 			</HelpSliderModal>
+
+			{/* Upgrade modal — opened by field- and section-level pro badges
+			    when the field-upgrades catalog provides modal copy. */}
+			{proUpgradeModalPayload && (
+				<UpgradeModal
+					feature={proUpgradeModalPayload}
+					onClose={() => setProUpgradeModalPayload(null)}
+				/>
+			)}
 		</div>
 	);
 }

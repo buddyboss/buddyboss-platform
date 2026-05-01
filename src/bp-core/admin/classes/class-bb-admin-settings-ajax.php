@@ -482,7 +482,7 @@ class BB_Admin_Settings_Ajax {
 					'title'       => $section['title'],
 					'description' => wp_kses_post( $section['description'] ?? '' ),
 					'order'       => $section['order'] ?? 100,
-					'fields'      => $this->bb_format_fields_for_response( $section_fields, $settings, $feature_id ),
+					'fields'      => $this->bb_format_fields_for_response( $section_fields, $settings, $feature_id, $side_panel_id, $section_id ),
 				);
 
 				// Include conditional if set.
@@ -516,6 +516,18 @@ class BB_Admin_Settings_Ajax {
 						'badge_icon' => sanitize_text_field( $section['pro_notice']['badge_icon'] ?? 'bb-icons-rl-crown-simple' ),
 						'link_url'   => esc_url_raw( $section['pro_notice']['link_url'] ?? '' ),
 					);
+
+					// Enrich with modal payload from the field-upgrades catalog.
+					// Match → in-page UpgradeModal. No match → pricing URL in
+					// new tab (consistent fallback across all pro_notice surfaces).
+					if ( $formatted_section['pro_notice']['show'] && function_exists( 'bb_get_field_upgrade_for' ) ) {
+						$entry = bb_get_field_upgrade_for( $feature_id, $side_panel_id, $section_id );
+						if ( $entry ) {
+							$formatted_section['pro_notice']['modal'] = bb_field_upgrade_to_modal_payload( $entry, $section['title'] ?? '' );
+						} else {
+							$formatted_section['pro_notice']['link_url'] = 'https://www.buddyboss.com/pricing/';
+						}
+					}
 				}
 
 				// Section-level help URL (renders a (?) icon in the section header).
@@ -678,10 +690,12 @@ class BB_Admin_Settings_Ajax {
 	 * @param array  $fields     Fields data.
 	 * @param array  $values     Current field values.
 	 * @param string $feature_id Feature ID (used for pro_notice computation).
+	 * @param string $panel_id   Side panel ID (used for field-upgrades catalog lookup).
+	 * @param string $section_id Section ID (used for field-upgrades catalog lookup).
 	 *
 	 * @return array Formatted fields data.
 	 */
-	private function bb_format_fields_for_response( $fields, $values = array(), $feature_id = '' ) {
+	private function bb_format_fields_for_response( $fields, $values = array(), $feature_id = '', $panel_id = '', $section_id = '' ) {
 		$formatted = array();
 
 		foreach ( $fields as $field_name => $field ) {
@@ -994,6 +1008,32 @@ class BB_Admin_Settings_Ajax {
 			) {
 				$pro_notice               = bb_admin_settings_get_pro_notice( $feature_id );
 				$field_data['pro_notice'] = ! empty( $pro_notice['show'] ) ? $pro_notice : null;
+			}
+
+			// Enrich pro_notice with modal payload from the field-upgrades catalog.
+			// Looked up most-specific-first: exact (feature, panel, section, field)
+			// beats a section wildcard, which beats a panel wildcard, etc.
+			//
+			// Behavior on the React side:
+			//   - catalog match     → play button opens UpgradeModal in-page
+			//   - no catalog match  → play button opens pricing URL in a new tab
+			// To make the no-match path consistent, we force `link_url` to the
+			// generic pricing page whenever a `pro_only` field falls through
+			// without a catalog hit. This replaces the older per-feature docs
+			// URLs (e.g. reactions docs) for fields that don't yet have catalog
+			// copy — marketing wants one consistent fallback across the admin.
+			if (
+				! empty( $field_data['pro_notice']['show'] ) &&
+				function_exists( 'bb_get_field_upgrade_for' )
+			) {
+				$entry = bb_get_field_upgrade_for( $feature_id, $panel_id, $section_id, $field['name'] );
+				if ( $entry ) {
+					$field_data['pro_notice']['modal'] = bb_field_upgrade_to_modal_payload( $entry, $field['label'] ?? '' );
+				} else {
+					// No catalog entry — point the play button at the pricing page so
+					// every pro_only field has a consistent upsell destination.
+					$field_data['pro_notice']['link_url'] = 'https://www.buddyboss.com/pricing/';
+				}
 			}
 
 			// Inject upload_config and resolved upload_url for image_radio/image_upload fields with upload support.

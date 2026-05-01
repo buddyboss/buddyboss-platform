@@ -2046,6 +2046,16 @@
         display: inline-flex;
         vertical-align: middle;
         text-decoration: none;
+        // Button reset — `__play-link` is rendered as a <button> when the
+        // field-upgrades catalog provides modal copy, and as an <a> when
+        // pro_notice falls back to a docs link. Both variants must look
+        // identical, so strip native button chrome here.
+        background: transparent;
+        border: 0;
+        padding: 0;
+        margin: 0;
+        cursor: pointer;
+        line-height: 0;
 
         [class*="bb-icon"] {
             color: $bb-icon-secondary-color;
@@ -2056,10 +2066,19 @@
             border: 1px solid $bb-border-secondary-color;
             border-radius: $bb-border-radius-full;
         }
+
+        &:focus {
+            outline: none;
+            box-shadow: none;
+        }
     }
 }
 
 // Section-level PRO badge (e.g. UPGRADE PRO in section header).
+// Rendered as <button>, <a>, or <span> depending on whether the catalog
+// provides a modal payload, a fallback link_url, or neither — the visual
+// must stay identical across all three element types, so a button reset
+// is bundled here.
 .bb-admin-feature-settings__section-pro-badge {
     display: inline-flex;
     align-items: center;
@@ -2069,6 +2088,15 @@
     background: linear-gradient(100deg, rgba(224, 98, 61, 0.10) 4.86%, rgba(62, 52, 255, 0.10) 91.52%);
     text-decoration: none;
     cursor: pointer;
+    margin: 0;
+    font-family: inherit;
+
+    // Button reset — applies only when the badge is rendered as a <button>.
+    &:is(button) {
+        // Neutralize default button chrome so the <button> variant looks
+        // identical to the <a> and <span> variants.
+        appearance: none;
+    }
 
     span {
         font-size: 11px;
@@ -2082,6 +2110,11 @@
         line-height: 1;
         font-weight: 400;
         margin-right: 4px;
+    }
+
+    &:focus {
+        outline: none;
+        box-shadow: none;
     }
 }
 

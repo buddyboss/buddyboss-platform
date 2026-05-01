@@ -23,7 +23,7 @@ import { safeUrl, sanitizeHtml } from '../../utils/sanitize';
  * @param {Object} props.defaultEmotionsRef Ref to store server emotions
  * @returns {JSX.Element} Reaction mode field
  */
-export function ReactionModeField({ field, value, values, onChange, defaultEmotionsRef }) {
+export function ReactionModeField({ field, value, values, onChange, defaultEmotionsRef, onProBadgeClick }) {
 	const reactionMode = value || 'likes';
 	const reactionsData = field.reactions || {};
 	const serverEmotions = reactionsData.emotions || [];
@@ -188,7 +188,21 @@ export function ReactionModeField({ field, value, values, onChange, defaultEmoti
 									<i className={field.pro_notice.badge_icon || ''} />
 									<span>{field.pro_notice.badge_text || 'PRO'}</span>
 								</span>
-								{field.pro_notice.link_url && (
+								{/* When a catalog modal payload is present, the
+								    play button opens UpgradeModal in-page (same
+								    behavior as every other pro_only field). With
+								    no payload we fall back to opening pro_notice
+								    link_url (now forced to /pricing/) in a new tab. */}
+								{ field.pro_notice.modal && onProBadgeClick ? (
+									<button
+										type="button"
+										onClick={ () => onProBadgeClick( field ) }
+										className="bb-pro-badge__play-link"
+										aria-label={ __( 'Learn more', 'buddyboss' ) }
+									>
+										<i className={ field.pro_notice.link_icon || 'bb-icons-rl bb-icons-rl-play' } />
+									</button>
+								) : field.pro_notice.link_url && (
 									<a
 										href={safeUrl(field.pro_notice.link_url)}
 										target="_blank"

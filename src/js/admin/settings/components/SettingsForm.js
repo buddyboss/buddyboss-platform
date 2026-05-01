@@ -153,7 +153,7 @@ function PageCreateButton( { field, disabled, onCreated } ) {
  * @param {Function} props.onChange Change handler
  * @returns {JSX.Element} Settings form component
  */
-export function SettingsForm({ fields, values, onChange }) {
+export function SettingsForm({ fields, values, onChange, onProBadgeClick }) {
 	// Use reaction callbacks hook for jQuery emotion picker integration
 	const { defaultEmotionsRef } = useReactionCallbacks(onChange, values);
 
@@ -820,7 +820,10 @@ export function SettingsForm({ fields, values, onChange }) {
 				);
 
 			case 'reaction_mode':
-				// Delegate to ReactionModeField component
+				// Delegate to ReactionModeField component. The pro-badge click
+				// handler is plumbed through so the per-option PRO play button
+				// can open UpgradeModal in-page when a catalog match exists,
+				// matching the behavior of the generic field-level badge.
 				return (
 					<ReactionModeField
 						field={field}
@@ -828,6 +831,7 @@ export function SettingsForm({ fields, values, onChange }) {
 						values={values}
 						onChange={onChange}
 						defaultEmotionsRef={defaultEmotionsRef}
+						onProBadgeClick={onProBadgeClick}
 					/>
 				);
 
@@ -1384,7 +1388,23 @@ export function SettingsForm({ fields, values, onChange }) {
 										<i className={field.pro_notice.badge_icon || ''} />
 										<span>{field.pro_notice.badge_text || 'PRO'}</span>
 									</span>
-									{field.pro_notice.link_url && (
+									{/* When a modal payload is present (delivered by the
+									    field-upgrades catalog), the play icon opens
+									    UpgradeModal in-page. Without a modal payload
+									    we fall back to the original behavior of opening
+									    pro_notice.link_url in a new tab so existing
+									    pro_notice consumers (Reactions docs, etc.) keep
+									    working unchanged. */}
+									{ field.pro_notice.modal && onProBadgeClick ? (
+										<button
+											type="button"
+											onClick={ () => onProBadgeClick( field ) }
+											className="bb-pro-badge__play-link"
+											aria-label={ __( 'Learn more', 'buddyboss' ) }
+										>
+											<i className={field.pro_notice.link_icon || 'bb-icons-rl bb-icons-rl-play'} />
+										</button>
+									) : field.pro_notice.link_url && (
 										<a
 											href={safeUrl(field.pro_notice.link_url)}
 											target="_blank"

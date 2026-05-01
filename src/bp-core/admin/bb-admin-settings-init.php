@@ -197,6 +197,14 @@ function bb_admin_settings_init() {
 		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-placeholder-features.php' ) ) {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-placeholder-features.php';
 		}
+
+		// Field & section upgrade modal catalog (Settings 2.0 marketing copy
+		// for `pro_only` fields and `pro_notice` sections). Hosted on S3 like
+		// the placeholder features catalog and shares its cache-flush plumbing
+		// via the `bb_feature_caches_flushed` action.
+		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-field-upgrades.php' ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-field-upgrades.php';
+		}
 	}
 }
 
