@@ -43,6 +43,12 @@ function bb_members_register_access_control_fields() {
 				'field' => 'bb_enable_member_connections',
 				'value' => true,
 			),
+			'pro_notice'  => array(
+				'show'       => true,
+				'badge_text' => __( 'UPGRADE PRO', 'buddyboss' ),
+				'badge_icon' => 'bb-icons-rl-crown-simple',
+				'link_url'   => 'https://www.buddyboss.com/pricing/',
+			),
 		)
 	);
 

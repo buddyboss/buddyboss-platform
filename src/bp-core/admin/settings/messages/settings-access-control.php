@@ -35,9 +35,15 @@ function bb_messages_register_access_control_fields() {
 		'access_controls',
 		'message_access',
 		array(
-			'title'    => __( 'Message Access', 'buddyboss' ),
-			'order'    => 10,
-			'help_url' => '636154',
+			'title'      => __( 'Message Access', 'buddyboss' ),
+			'order'      => 10,
+			'help_url'   => '636154',
+			'pro_notice' => array(
+				'show'       => true,
+				'badge_text' => __( 'UPGRADE PRO', 'buddyboss' ),
+				'badge_icon' => 'bb-icons-rl-crown-simple',
+				'link_url'   => 'https://www.buddyboss.com/pricing/',
+			),
 		)
 	);
 

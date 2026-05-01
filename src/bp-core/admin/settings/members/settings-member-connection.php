@@ -34,7 +34,7 @@ function bb_members_register_member_connection_panel_fields() {
 			'title'       => __( 'Connection Settings', 'buddyboss' ),
 			'description' => '',
 			'order'       => 10,
-			'help_url'   => '636000',
+			'help_url'    => '636000',
 		)
 	);
 
