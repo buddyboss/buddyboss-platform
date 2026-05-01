@@ -1010,6 +1010,31 @@ class BB_Admin_Settings_Ajax {
 				$field_data['pro_notice'] = ! empty( $pro_notice['show'] ) ? $pro_notice : null;
 			}
 
+			// Force-OFF visual for gated pro_only fields. When pro_only is true AND
+			// the gate is currently active (pro_notice.show === true — Pro inactive,
+			// license invalid, Sharing not installed, etc.), override the rendered
+			// value so the field appears in its default/off state regardless of what
+			// is stored in the DB. The stored option is NEVER touched here — when
+			// the gate lifts, the real value is read again on the next AJAX response.
+			//
+			// Visual treatment:
+			//   - toggle:           rendered as 0 (slider OFF)
+			//   - everything else:  rendered as the field's `default` arg
+			//
+			// Without this override an admin who had Pro previously enabled and is
+			// now on a gated panel would see the "ON" toggle next to a "PRO" badge,
+			// which misleads — the feature is not actually functional.
+			if (
+				! empty( $field_data['pro_only'] ) &&
+				! empty( $field_data['pro_notice']['show'] )
+			) {
+				if ( 'toggle' === ( $field_data['type'] ?? '' ) ) {
+					$field_data['value'] = 0;
+				} else {
+					$field_data['value'] = $field_data['default'] ?? '';
+				}
+			}
+
 			// Enrich pro_notice with modal payload from the field-upgrades catalog.
 			// Looked up most-specific-first: exact (feature, panel, section, field)
 			// beats a section wildcard, which beats a panel wildcard, etc.

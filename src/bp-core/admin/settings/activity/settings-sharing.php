@@ -351,23 +351,31 @@ function bb_activity_register_sharing_pro_placeholder_fields() {
 		),
 	);
 
+	// All toggles except Enable Sharing itself are dependents of Enable Sharing
+	// — they hide when the master toggle is OFF. Mirrors the "real" Sharing
+	// add-on path in `Activity_Settings::bb_sh_register_activity_sharing_settings()`
+	// where the same dependents carry the same conditional.
 	foreach ( $toggle_fields as $toggle ) {
-		bb_register_feature_field(
-			$feature_id,
-			$panel_id,
-			$section_id,
-			array(
-				'name'              => $toggle['name'],
-				'label'             => $toggle['label'],
-				'type'              => 'toggle',
-				'description'       => $toggle['description'],
-				'default'           => 0,
-				'pro_only'          => true,
-				'pro_notice'        => $pro_notice_field,
-				'sanitize_callback' => '__return_empty_string',
-				'order'             => $toggle['order'],
-			)
+		$args = array(
+			'name'              => $toggle['name'],
+			'label'             => $toggle['label'],
+			'type'              => 'toggle',
+			'description'       => $toggle['description'],
+			'default'           => 0,
+			'pro_only'          => true,
+			'pro_notice'        => $pro_notice_field,
+			'sanitize_callback' => '__return_empty_string',
+			'order'             => $toggle['order'],
 		);
+
+		if ( 'buddyboss_enable_activity_sharing' !== $toggle['name'] ) {
+			$args['conditional'] = array(
+				'field' => 'buddyboss_enable_activity_sharing',
+				'value' => true,
+			);
+		}
+
+		bb_register_feature_field( $feature_id, $panel_id, $section_id, $args );
 	}
 
 	// Share as Link toggle + its share-platforms picker share the same
@@ -391,6 +399,10 @@ function bb_activity_register_sharing_pro_placeholder_fields() {
 				'key' => 'share_as_link',
 			),
 			'order'             => 60,
+			'conditional'       => array(
+				'field' => 'buddyboss_enable_activity_sharing',
+				'value' => true,
+			),
 		)
 	);
 
@@ -434,9 +446,23 @@ function bb_activity_register_sharing_pro_placeholder_fields() {
 			'pro_only'          => true,
 			'pro_notice'        => $pro_notice_field,
 			'sanitize_callback' => '__return_empty_string',
+			// Visible only when both the master toggle (Enable Sharing) and
+			// the parent toggle (Share as Link) are ON. AND-ing both is
+			// required because the conditional system reads stored values,
+			// not the visible-state cascade — so hiding Share as Link via
+			// the master toggle does not implicitly hide this picker.
 			'conditional'       => array(
-				'field' => 'buddyboss_activity_sharing_as_link',
-				'value' => true,
+				'operator'   => 'AND',
+				'conditions' => array(
+					array(
+						'field' => 'buddyboss_enable_activity_sharing',
+						'value' => true,
+					),
+					array(
+						'field' => 'buddyboss_activity_sharing_as_link',
+						'value' => true,
+					),
+				),
 			),
 			'group'             => array(
 				'key' => 'share_as_link',
