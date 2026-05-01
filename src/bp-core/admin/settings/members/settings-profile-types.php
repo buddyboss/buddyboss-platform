@@ -30,6 +30,7 @@ function bb_members_register_profile_types_panel_fields() {
 			'title'       => __( 'Profile Type Settings', 'buddyboss' ),
 			'description' => '',
 			'order'       => 10,
+			'help_url'    => '636004',
 		)
 	);
 

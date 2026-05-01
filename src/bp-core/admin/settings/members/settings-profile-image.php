@@ -29,6 +29,7 @@ function bb_members_register_profile_image_panel_fields() {
 			'title'       => __( 'Profile Avatar', 'buddyboss' ),
 			'description' => '',
 			'order'       => 10,
+			'help_url'   => '635992',
 		)
 	);
 
@@ -192,6 +193,7 @@ function bb_members_register_profile_image_panel_fields() {
 			'title'       => __( 'Profile Covers', 'buddyboss' ),
 			'description' => '',
 			'order'       => 20,
+			'help_url'    => '635994',
 		)
 	);
 

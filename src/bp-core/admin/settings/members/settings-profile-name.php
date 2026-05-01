@@ -306,6 +306,7 @@ function bb_members_register_profile_name_panel_fields() {
 			'title'       => __( 'Profile Link', 'buddyboss' ),
 			'description' => '',
 			'order'       => 20,
+			'help_url'    => '635988',
 		)
 	);
 
@@ -353,6 +354,7 @@ function bb_members_register_profile_name_panel_fields() {
 		array(
 			'title' => __( 'User Settings', 'buddyboss' ),
 			'order' => 30,
+			'help_url'   => '635990',
 		)
 	);
 

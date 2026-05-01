@@ -38,6 +38,7 @@ function bb_members_register_access_control_fields() {
 			'title'       => __( 'Connection Access', 'buddyboss' ),
 			'description' => '',
 			'order'       => 20,
+			'help_url'    => '636002',
 			'conditional' => array(
 				'field' => 'bb_enable_member_connections',
 				'value' => true,

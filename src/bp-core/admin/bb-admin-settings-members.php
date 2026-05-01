@@ -81,15 +81,7 @@ function bb_admin_settings_register_members_feature() {
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-identification-card',
 			),
-			'help_url'   => bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page'    => 'bp-help',
-						'article' => 62793,
-					),
-					'admin.php'
-				)
-			),
+			'help_url'   => '635986',
 			'order'      => 10,
 			'is_default' => true,
 		)
@@ -129,15 +121,7 @@ function bb_admin_settings_register_members_feature() {
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-arrows-out-simple',
 			),
-			'help_url'   => bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page'    => 'bp-help',
-						'article' => 125305,
-					),
-					'admin.php'
-				)
-			),
+			'help_url'   => '635996',
 			'order'      => 30,
 			'is_default' => false,
 		)
@@ -153,15 +137,7 @@ function bb_admin_settings_register_members_feature() {
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-grid-nine',
 			),
-			'help_url'   => bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page'    => 'bp-help',
-						'article' => 125311,
-					),
-					'admin.php'
-				)
-			),
+			'help_url'   => '635998',
 			'order'      => 40,
 			'is_default' => false,
 		)
@@ -252,15 +228,7 @@ function bb_admin_settings_register_members_feature() {
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-magnifying-glass-plus',
 			),
-			'help_url'   => bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page'    => 'bp-help',
-						'article' => 62803,
-					),
-					'admin.php'
-				)
-			),
+			'help_url'   => '636006',
 			'order'      => 80,
 			'is_default' => false,
 		)
@@ -276,15 +244,7 @@ function bb_admin_settings_register_members_feature() {
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-tabs',
 			),
-			'help_url'   => bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page'    => 'bp-help',
-						'article' => 62851,
-					),
-					'admin.php'
-				)
-			),
+			'help_url'   => '636013',
 			'order'      => 90,
 			'is_default' => false,
 		)
