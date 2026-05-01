@@ -23,6 +23,117 @@ require_once __DIR__ . '/callbacks.php';
 require_once __DIR__ . '/pages-panel.php';
 
 /**
+ * Site SEO section title.
+ *
+ * Single source of truth for the section title used across the three section
+ * registration branches in this file (new Sharing, old Sharing, no Sharing
+ * placeholder). The side-panel title is intentionally NOT routed through this
+ * helper — panel and section titles are conceptually distinct and a future
+ * customization might want them to differ.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string Translated section title.
+ */
+function bb_appearance_site_seo_section_title() {
+	return __( 'Site SEO', 'buddyboss' );
+}
+
+/**
+ * Site SEO help article ID.
+ *
+ * Single source of truth for the SEO section's `help_url`. Mirrors the
+ * Activity Sharing pattern (`bb_activity_sharing_section_help_article()`).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string Help article ID.
+ */
+function bb_appearance_site_seo_section_help_article() {
+	return '62793';
+}
+
+/**
+ * Base args for the Site SEO section, shared across registration paths.
+ *
+ * State-specific extensions (e.g. UPGRADE PRO badge when Sharing is not
+ * installed) are layered on top via the `bb_appearance_site_seo_section_args`
+ * filter — see `bb_appearance_site_seo_get_section_args()` and
+ * `bb_appearance_site_seo_add_pro_badge_when_no_sharing()` below.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array Section args (title, order, help_url).
+ */
+function bb_appearance_site_seo_section_base_args() {
+	return array(
+		'title'    => bb_appearance_site_seo_section_title(),
+		'order'    => 10,
+		'help_url' => bb_appearance_site_seo_section_help_article(),
+	);
+}
+
+/**
+ * Build the final section args for `seo`, after extensions filter.
+ *
+ * Plugins that need to mutate the Site SEO section attributes (add a
+ * `pro_notice` badge, change `status`, override `description`, etc.) should
+ * hook the `bb_appearance_site_seo_section_args` filter rather than calling
+ * `bb_register_feature_section()` a second time. Re-registering the same
+ * section ID without `merge => true` would trigger the registry's
+ * duplicate-detection auto-suffix path (`seo_1`) and render two sections.
+ *
+ * The filter is the canonical extension point for boot-time state. For
+ * runtime state changes that only resolve at AJAX time (Sharing's license
+ * lock — see the same constraint documented in the Activity Sharing panel),
+ * use `merge => true` on a follow-up `bb_register_feature_section()` call —
+ * see `bb_appearance_register_site_seo_pro_placeholder_fields()`.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array Section args after filter.
+ */
+function bb_appearance_site_seo_get_section_args() {
+	/**
+	 * Filter the Site SEO section args.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $args Default section args (title, order, help_url).
+	 */
+	return apply_filters( 'bb_appearance_site_seo_section_args', bb_appearance_site_seo_section_base_args() );
+}
+
+/**
+ * Filter callback: add UPGRADE PRO badge when the BuddyBoss Sharing plugin
+ * is not installed at all (state 4).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $args Default section args.
+ * @return array Possibly-modified section args.
+ */
+function bb_appearance_site_seo_add_pro_badge_when_no_sharing( $args ) {
+	$has_new_sharing = class_exists( '\\BuddyBoss\\Sharing\\Admin\\Site_SEO_Settings' )
+		&& method_exists( '\\BuddyBoss\\Sharing\\Admin\\Site_SEO_Settings', 'register_site_seo' );
+	$has_old_sharing = ! $has_new_sharing && class_exists( 'BuddyBoss_Sharing' );
+
+	if ( $has_new_sharing || $has_old_sharing ) {
+		return $args;
+	}
+
+	$args['pro_notice'] = array(
+		'show'       => true,
+		'badge_text' => __( 'UPGRADE PRO', 'buddyboss' ),
+		'badge_icon' => 'bb-icons-rl-crown-simple',
+		'link_url'   => 'https://www.buddyboss.com/pricing/',
+	);
+
+	return $args;
+}
+add_filter( 'bb_appearance_site_seo_section_args', 'bb_appearance_site_seo_add_pro_badge_when_no_sharing' );
+
+/**
  * Register Appearance feature settings in the Feature Registry.
  *
  * @since BuddyBoss [BBVERSION]
@@ -147,38 +258,44 @@ function bb_admin_settings_register_appearance_settings() {
 		)
 	);
 
-	// Three possible states for the Site SEO panel (mirrors the Web Push
-	// Notifications panel pattern in `settings-web-push.php`):
-	// 1. NEW Sharing installed — `Site_SEO_Settings` class exists and
-	// registers its own fields. Platform skips the fallback.
-	// 2. OLD Sharing installed — `BuddyBoss_Sharing` main class exists but
-	// predates Settings 2.0. Show an Update-Required empty state card
-	// (mirrors Web Push "Pro OLD" branch). No "UPGRADE PRO" badge —
-	// plugin is already present, just out of date.
-	// 3. Sharing NOT installed / deactivated — show the full Figma fields
-	// as PRO-gated disabled placeholders with an "UPGRADE PRO" badge
-	// on the section (mirrors OneSignal `bb_notifications_register_web_push_pro_placeholder_fields()`).
-	// Require both the class AND the Settings 2.0 registration method so a
-	// partial Sharing build that ships the class namespace without the 2.0
-	// hook still falls through to the "Update Required" card instead of
-	// silently no-oping. Mirrors the Activity Sharing panel's detection
-	// (`bb_sharing_has_new_sharing_plugin()`).
+	// Single section registration — args go through the
+	// `bb_appearance_site_seo_section_args` filter, which is the canonical
+	// extension point for mutating section attributes from this or any
+	// other plugin. State-appropriate badges (e.g. UPGRADE PRO when Sharing
+	// is absent) are added via filter callbacks, not by re-registering.
+	bb_register_feature_section(
+		'appearance',
+		'site_seo',
+		'seo',
+		bb_appearance_site_seo_get_section_args()
+	);
+
+	// Four possible states for the Site SEO panel (mirrors Activity Sharing):
+	// 1. NEW Sharing + license valid — `Site_SEO_Settings` registers real
+	//    fields via its lazy AJAX hook. Platform registers nothing here.
+	// 2. NEW Sharing + license locked — same as state 1 at boot. Sharing's
+	//    lazy hook calls `bb_appearance_register_site_seo_pro_placeholder_fields()`
+	//    at AJAX time, which adds the UPGRADE PRO badge via merge mode and
+	//    registers placeholder fields.
+	// 3. OLD Sharing — `BuddyBoss_Sharing` exists but predates Settings 2.0.
+	//    Show an Update-Required empty state card. No UPGRADE PRO badge.
+	// 4. Sharing NOT installed — the `bb_appearance_site_seo_section_args`
+	//    filter has already added the UPGRADE PRO badge to the section.
+	//    Register the placeholder fields.
+	//
+	// Detection: require both the class AND the Settings 2.0 registration
+	// method so a partial Sharing build that ships the class namespace
+	// without the 2.0 hook still falls through to the "Update Required"
+	// card instead of silently no-oping.
 	$has_new_sharing = class_exists( '\\BuddyBoss\\Sharing\\Admin\\Site_SEO_Settings' )
 		&& method_exists( '\\BuddyBoss\\Sharing\\Admin\\Site_SEO_Settings', 'register_site_seo' );
 	$has_old_sharing = ! $has_new_sharing && class_exists( 'BuddyBoss_Sharing' );
 
-	if ( $has_old_sharing ) {
-		// OLD Sharing — Update Required empty state, no UPGRADE PRO badge.
-		bb_register_feature_section(
-			'appearance',
-			'site_seo',
-			'seo',
-			array(
-				'title'    => __( 'Site SEO', 'buddyboss' ),
-				'order'    => 10,
-				'help_url' => '62793',
-			)
-		);
+	if ( $has_new_sharing ) {
+		// States 1 and 2 — Sharing's lazy AJAX hook handles fields.
+		// (State 2 also runs the merge to add the badge at AJAX time.)
+	} elseif ( $has_old_sharing ) {
+		// State 3 — OLD Sharing: show Update Required notice.
 		bb_register_feature_field(
 			'appearance',
 			'site_seo',
@@ -196,9 +313,10 @@ function bb_admin_settings_register_appearance_settings() {
 				'order'                   => 10,
 			)
 		);
-	} elseif ( ! $has_new_sharing ) {
-		// Sharing NOT installed — render the full Figma as PRO-gated
-		// disabled placeholders so admins see what they'd get after install.
+	} else {
+		// State 4 — Sharing NOT installed: section already carries the
+		// UPGRADE PRO badge from the filter callback above. Register
+		// placeholder fields.
 		bb_appearance_register_site_seo_pro_placeholder_fields();
 	}
 
@@ -859,17 +977,25 @@ function bb_appearance_register_site_seo_pro_placeholder_fields() {
 		'link_icon'  => 'bb-icons-rl-play',
 	);
 
-	// -------------------------------------------------------------------------
-	// SECTION: Site SEO (pro-gated placeholder, UPGRADE PRO badge).
-	// -------------------------------------------------------------------------
+	// Idempotently ensure the section carries the UPGRADE PRO badge.
+	//
+	// State 4 (no Sharing): the boot-time filter
+	// `bb_appearance_site_seo_add_pro_badge_when_no_sharing()` already added
+	// the badge. This merge overlays the same value — no-op.
+	//
+	// State 2 (Sharing license locked at AJAX time): the boot-time filter
+	// did NOT add the badge because the DRM-vs-panel-hook race on
+	// `plugins_loaded@10` makes license-lock state unreliable at boot
+	// (Sharing's `register_with_drm()` runs after Platform's panel hook
+	// inside the same `plugins_loaded@10` dispatch). This merge adds the
+	// badge at AJAX time, where license state is settled. Same canonical
+	// pattern used by Activity Sharing.
 	bb_register_feature_section(
 		$feature_id,
 		$panel_id,
 		$section_id,
 		array(
-			'title'      => __( 'Site SEO', 'buddyboss' ),
-			'order'      => 10,
-			'help_url'   => '62793',
+			'merge'      => true,
 			'pro_notice' => array(
 				'show'       => true,
 				'badge_text' => __( 'UPGRADE PRO', 'buddyboss' ),
