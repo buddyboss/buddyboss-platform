@@ -42,7 +42,7 @@ function bb_activity_sharing_section_title() {
  * @return string Help article ID.
  */
 function bb_activity_sharing_section_help_article() {
-	return '62793';
+	return '637448';
 }
 
 /**
