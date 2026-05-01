@@ -217,7 +217,7 @@ function bb_admin_settings_register_appearance_settings() {
 		array(
 			'title'    => __( 'Site Name', 'buddyboss' ),
 			'order'    => 10,
-			'help_url' => '459612',
+			'help_url' => '637134',
 		)
 	);
 
@@ -248,7 +248,7 @@ function bb_admin_settings_register_appearance_settings() {
 		array(
 			'title'    => __( 'Site Layout', 'buddyboss' ),
 			'order'    => 20,
-			'help_url' => '459617',
+			'help_url' => '637133',
 		)
 	);
 
@@ -304,7 +304,7 @@ function bb_admin_settings_register_appearance_settings() {
 		array(
 			'title'       => __( 'Template Pages', 'buddyboss' ),
 			'order'       => 30,
-			'help_url'    => '459627',
+			'help_url'    => '637139',
 			'conditional' => array(
 				'field' => 'bb_rl_enabled',
 				'value' => true,
@@ -374,7 +374,7 @@ function bb_admin_settings_register_appearance_settings() {
 		array(
 			'title'       => __( 'Template Sidebar Widgets', 'buddyboss' ),
 			'order'       => 40,
-			'help_url'    => '459623',
+			'help_url'    => '637141',
 			'conditional' => array(
 				'field' => 'bb_rl_enabled',
 				'value' => true,
@@ -526,7 +526,7 @@ function bb_admin_settings_register_appearance_settings() {
 		array(
 			'title'    => __( 'Branding', 'buddyboss' ),
 			'order'    => 10,
-			'help_url' => '459621',
+			'help_url' => '637143',
 		)
 	);
 
@@ -686,7 +686,7 @@ function bb_admin_settings_register_appearance_settings() {
 		array(
 			'title'    => __( 'Menus', 'buddyboss' ),
 			'order'    => 10,
-			'help_url' => '459625',
+			'help_url' => '637144',
 		)
 	);
 

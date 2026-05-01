@@ -241,10 +241,10 @@ function bb_appearance_register_pages_fields( $feature_id ) {
 			'title'       => __( 'Component Pages', 'buddyboss' ),
 			'description' => __( 'Associate a WordPress page with each of the following components.', 'buddyboss' ),
 			'order'       => 10,
-			// Reuses the legacy Pages-screen KB article ID (62795) until the
+			// Reuses the legacy Pages-screen KB article ID (637148) until the
 			// docs team delivers a dedicated Component-Pages article. Swap to
 			// the new ID when available without touching anything else here.
-			'help_url'    => '62795',
+			'help_url'    => '637148',
 		)
 	);
 
