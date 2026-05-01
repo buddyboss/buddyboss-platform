@@ -109,8 +109,9 @@ function bb_admin_settings_register_invites_feature() {
 		'email_invite_settings',
 		'email_invite_general',
 		array(
-			'title' => __( 'Email Invite Settings', 'buddyboss' ),
-			'order' => 10,
+			'title'    => __( 'Email Invite Settings', 'buddyboss' ),
+			'order'    => 10,
+			'help_url' => '636156',
 		)
 	);
 

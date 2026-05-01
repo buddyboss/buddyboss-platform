@@ -32,8 +32,9 @@ function bb_notifications_register_types_panel_fields() {
 			'notification_types',
 			'notification_types_legacy',
 			array(
-				'title' => __( 'Notification Types', 'buddyboss' ),
-				'order' => 10,
+				'title'    => __( 'Notification Types', 'buddyboss' ),
+				'order'    => 10,
+				'help_url' => '636146',
 			)
 		);
 
@@ -65,6 +66,7 @@ function bb_notifications_register_types_panel_fields() {
 			'title'       => __( 'Notification Types', 'buddyboss' ),
 			'description' => __( 'Choose which notifications are sent for site actions. Disabled notifications won\'t be generated. Members can manage them in Notification Preferences (email, web, app).', 'buddyboss' ),
 			'order'       => 10,
+			'help_url'    => '636146',
 		)
 	);
 

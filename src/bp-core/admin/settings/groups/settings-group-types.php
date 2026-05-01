@@ -32,6 +32,7 @@ function bb_groups_register_group_types_panel_fields() {
 			'title'       => __( 'Group Type Settings', 'buddyboss' ),
 			'description' => '',
 			'order'       => 10,
+			'help_url'    => '636143',
 		)
 	);
 

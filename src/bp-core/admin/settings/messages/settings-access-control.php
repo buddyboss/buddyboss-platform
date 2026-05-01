@@ -35,8 +35,9 @@ function bb_messages_register_access_control_fields() {
 		'access_controls',
 		'message_access',
 		array(
-			'title' => __( 'Message Access', 'buddyboss' ),
-			'order' => 10,
+			'title'    => __( 'Message Access', 'buddyboss' ),
+			'order'    => 10,
+			'help_url' => '636154',
 		)
 	);
 

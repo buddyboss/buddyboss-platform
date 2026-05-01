@@ -29,6 +29,7 @@ function bb_groups_register_images_panel_fields() {
 			'title'       => __( 'Group Avatar', 'buddyboss' ),
 			'description' => '',
 			'order'       => 10,
+			'help_url'    => '636128',
 		)
 	);
 
@@ -126,6 +127,7 @@ function bb_groups_register_images_panel_fields() {
 			'title'       => __( 'Group Cover Image', 'buddyboss' ),
 			'description' => '',
 			'order'       => 20,
+			'help_url'    => '636133',
 		)
 	);
 

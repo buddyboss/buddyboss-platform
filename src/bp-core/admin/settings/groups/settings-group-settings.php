@@ -29,6 +29,7 @@ function bb_groups_register_settings_panel_fields() {
 			'title'       => __( 'Group Settings', 'buddyboss' ),
 			'description' => '',
 			'order'       => 10,
+			'help_url'    => '636124',
 		)
 	);
 
@@ -115,6 +116,7 @@ function bb_groups_register_settings_panel_fields() {
 			'title'       => __( 'Subgroups', 'buddyboss' ),
 			'description' => '',
 			'order'       => 20,
+			'help_url'    => '636126',
 		)
 	);
 

@@ -68,6 +68,7 @@ function bb_notifications_register_web_push_panel_fields() {
 			'title'       => $show_web_push_title ? __( 'Web Push Notifications', 'buddyboss' ) : '',
 			'description' => '',
 			'order'       => 10,
+			'help_url'    => '636150',
 		)
 	);
 

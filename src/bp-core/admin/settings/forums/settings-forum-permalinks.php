@@ -31,6 +31,7 @@ function bb_forums_register_permalinks_panel_fields() {
 			'title'       => __( 'Forum Permalinks', 'buddyboss' ),
 			'description' => __( 'Custom URL slugs for Forum content. Slugs should be all lowercase and contain only letters, numbers, and hyphens.', 'buddyboss' ),
 			'order'       => 10,
+			'help_url'    => '636172',
 		)
 	);
 
@@ -135,6 +136,7 @@ function bb_forums_register_permalinks_panel_fields() {
 			'title'       => __( 'Forum Profile Permalinks', 'buddyboss' ),
 			'description' => __( 'Custom URL slugs for the Forums tab in member profiles. Slugs should be all lowercase and contain only letters, numbers, and hyphens.', 'buddyboss' ),
 			'order'       => 20,
+			'help_url'    => '636174',
 		)
 	);
 

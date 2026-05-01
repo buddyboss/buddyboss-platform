@@ -29,6 +29,7 @@ function bb_groups_register_directory_panel_fields() {
 			'title'       => __( 'Group Directory', 'buddyboss' ),
 			'description' => '',
 			'order'       => 10,
+			'help_url'    => '636140',
 		)
 	);
 

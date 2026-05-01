@@ -29,6 +29,7 @@ function bb_groups_register_headers_panel_fields() {
 			'title'       => __( 'Group Headers', 'buddyboss' ),
 			'description' => '',
 			'order'       => 10,
+			'help_url'    => '636138',
 		)
 	);
 

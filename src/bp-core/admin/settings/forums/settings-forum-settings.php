@@ -31,6 +31,7 @@ function bb_forums_register_settings_panel_fields() {
 			'title'       => __( 'Forum Settings', 'buddyboss' ),
 			'description' => '',
 			'order'       => 10,
+			'help_url'    => '636159',
 		)
 	);
 
@@ -117,6 +118,7 @@ function bb_forums_register_settings_panel_fields() {
 			'title'       => __( 'Discussions and Replies Per Page', 'buddyboss' ),
 			'description' => '',
 			'order'       => 20,
+			'help_url'    => '636161',
 		)
 	);
 
@@ -185,6 +187,7 @@ function bb_forums_register_settings_panel_fields() {
 			'title'       => __( 'Discussions and Replies Per RSS Page', 'buddyboss' ),
 			'description' => '',
 			'order'       => 30,
+			'help_url'    => '636163',
 		)
 	);
 

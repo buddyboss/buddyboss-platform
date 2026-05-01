@@ -119,6 +119,7 @@ function bb_admin_settings_register_messages_feature() {
 				'title'       => __( 'Messaging Notifications', 'buddyboss' ),
 				'description' => '',
 				'order'       => 10,
+				'help_url'    => '636152',
 			)
 		);
 

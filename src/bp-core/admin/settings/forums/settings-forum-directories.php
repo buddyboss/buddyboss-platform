@@ -45,6 +45,7 @@ function bb_forums_register_directories_panel_fields() {
 			/* translators: %s: Shortcodes link. */
 			'description' => sprintf( __( 'Customize your Forums directory. Use <a href="%s" target="_blank">Shortcodes</a> for more flexibility.', 'buddyboss' ), $shortcodes_url ),
 			'order'       => 10,
+			'help_url'    => '636170',
 		)
 	);
 

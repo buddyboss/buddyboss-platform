@@ -31,6 +31,7 @@ function bb_notifications_register_on_screen_panel_fields() {
 			'title'       => __( 'On-screen Notifications', 'buddyboss' ),
 			'description' => '',
 			'order'       => 10,
+			'help_url'    => '636147',
 		)
 	);
 

@@ -208,7 +208,7 @@ function bb_admin_settings_register_groups_feature() {
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
-						'article' => 62816,
+						'article' => 636143,
 					),
 					'admin.php'
 				)

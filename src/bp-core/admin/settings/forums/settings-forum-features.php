@@ -31,6 +31,7 @@ function bb_forums_register_features_panel_fields() {
 			'title'       => __( 'Forum Features', 'buddyboss' ),
 			'description' => '',
 			'order'       => 10,
+			'help_url'    => '636166',
 		)
 	);
 
@@ -206,6 +207,7 @@ function bb_forums_register_features_panel_fields() {
 				'title'       => __( 'Group Forums', 'buddyboss' ),
 				'description' => '',
 				'order'       => 20,
+				'help_url'    => '636168',
 			)
 		);
 
