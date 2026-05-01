@@ -152,24 +152,6 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 		}
 	}, [buildProModalPayload]);
 
-	/**
-	 * Handle a click on a section-level pro badge.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {Object} section Section object with pro_notice.modal payload.
-	 */
-	const handleSectionProClick = useCallback((section) => {
-		const payload = buildProModalPayload(
-			section?.pro_notice?.modal,
-			section?.title,
-			section?.description
-		);
-		if (payload) {
-			setProUpgradeModalPayload(payload);
-		}
-	}, [buildProModalPayload]);
-
 	// Auto-save state.
 	const [toast, setToast] = useState(null);
 	const [changedFields, setChangedFields] = useState({});
@@ -936,37 +918,21 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 												</div>
 												<div className="bb-admin-feature-settings__section-header-right">
 													{/* Section-level PRO badge (e.g. UPGRADE PRO).
-													    Modal payload (delivered by the field-upgrades
-													    catalog) takes precedence over link_url —
-													    clicking the badge opens UpgradeModal in-page
-													    rather than jumping out to a docs URL. */}
+													    Section badges always open the BuddyBoss pricing
+													    page in a new tab — they do not trigger the
+													    field-upgrades modal. Only field-level pro badges
+													    open UpgradeModal in-page. */}
 													{section.pro_notice && section.pro_notice.show && (
 														<span className="bb-admin-feature-settings__section-pro-notice">
-															{section.pro_notice.modal ? (
-																<button
-																	type="button"
-																	onClick={() => handleSectionProClick(section)}
-																	className="bb-admin-feature-settings__section-pro-badge"
-																>
-																	<i className={section.pro_notice.badge_icon || 'bb-icons-rl-crown-simple'} />
-																	<span>{section.pro_notice.badge_text || 'UPGRADE PRO'}</span>
-																</button>
-															) : section.pro_notice.link_url ? (
-																<a
-																	href={safeUrl(section.pro_notice.link_url)}
-																	target="_blank"
-																	rel="noopener noreferrer"
-																	className="bb-admin-feature-settings__section-pro-badge"
-																>
-																	<i className={section.pro_notice.badge_icon || 'bb-icons-rl-crown-simple'} />
-																	<span>{section.pro_notice.badge_text || 'UPGRADE PRO'}</span>
-																</a>
-															) : (
-																<span className="bb-admin-feature-settings__section-pro-badge">
-																	<i className={section.pro_notice.badge_icon || 'bb-icons-rl-crown-simple'} />
-																	<span>{section.pro_notice.badge_text || 'UPGRADE PRO'}</span>
-																</span>
-															)}
+															<a
+																href="https://www.buddyboss.com/pricing/"
+																target="_blank"
+																rel="noopener noreferrer"
+																className="bb-admin-feature-settings__section-pro-badge"
+															>
+																<i className={section.pro_notice.badge_icon || 'bb-icons-rl-crown-simple'} />
+																<span>{section.pro_notice.badge_text || 'UPGRADE PRO'}</span>
+															</a>
 														</span>
 													)}
 													{/* Help icon — section-level overrides panel-level when both are set. */}

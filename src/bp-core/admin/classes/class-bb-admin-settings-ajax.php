@@ -509,6 +509,10 @@ class BB_Admin_Settings_Ajax {
 				}
 
 				// Include pro_notice if set (e.g. UPGRADE PRO badge in section header).
+				// Section-level badges intentionally do NOT trigger the field-upgrades
+				// modal — only field-level pro badges open UpgradeModal in-page.
+				// Section badges keep their original behavior: open `link_url` in a new
+				// tab when set, otherwise render as a static label.
 				if ( ! empty( $section['pro_notice'] ) && is_array( $section['pro_notice'] ) ) {
 					$formatted_section['pro_notice'] = array(
 						'show'       => ! empty( $section['pro_notice']['show'] ),
@@ -516,18 +520,6 @@ class BB_Admin_Settings_Ajax {
 						'badge_icon' => sanitize_text_field( $section['pro_notice']['badge_icon'] ?? 'bb-icons-rl-crown-simple' ),
 						'link_url'   => esc_url_raw( $section['pro_notice']['link_url'] ?? '' ),
 					);
-
-					// Enrich with modal payload from the field-upgrades catalog.
-					// Match → in-page UpgradeModal. No match → pricing URL in
-					// new tab (consistent fallback across all pro_notice surfaces).
-					if ( $formatted_section['pro_notice']['show'] && function_exists( 'bb_get_field_upgrade_for' ) ) {
-						$entry = bb_get_field_upgrade_for( $feature_id, $side_panel_id, $section_id );
-						if ( $entry ) {
-							$formatted_section['pro_notice']['modal'] = bb_field_upgrade_to_modal_payload( $entry, $section['title'] ?? '' );
-						} else {
-							$formatted_section['pro_notice']['link_url'] = 'https://www.buddyboss.com/pricing/';
-						}
-					}
 				}
 
 				// Section-level help URL (renders a (?) icon in the section header).
