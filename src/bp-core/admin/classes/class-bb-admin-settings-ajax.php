@@ -1010,18 +1010,39 @@ class BB_Admin_Settings_Ajax {
 			// the gate lifts, the real value is read again on the next AJAX response.
 			//
 			// Visual treatment:
-			//   - toggle:           rendered as 0 (slider OFF)
-			//   - everything else:  rendered as the field's `default` arg
+			//   - toggle:                       rendered as 0 (slider OFF)
+			//   - select / radio / image_radio: rendered as the FIRST option's
+			//                                   `value`. We deliberately ignore the
+			//                                   registered `default` arg here because
+			//                                   most callers populate it via a
+			//                                   DB-reading helper (e.g.
+			//                                   bb_get_member_directory_primary_action()
+			//                                   or bb_get_group_cover_image_width()),
+			//                                   which returns the user's previously-
+			//                                   saved value rather than a true reset.
+			//                                   First option = predictable "default
+			//                                   option" UX for the gated state.
+			//   - everything else:              rendered as the field's `default` arg
 			//
 			// Without this override an admin who had Pro previously enabled and is
 			// now on a gated panel would see the "ON" toggle next to a "PRO" badge,
-			// which misleads — the feature is not actually functional.
+			// or a select dropdown showing their previously-chosen option — which
+			// misleads since the feature is not actually functional.
 			if (
 				! empty( $field_data['pro_only'] ) &&
 				! empty( $field_data['pro_notice']['show'] )
 			) {
-				if ( 'toggle' === ( $field_data['type'] ?? '' ) ) {
+				$gated_type = $field_data['type'] ?? '';
+				if ( 'toggle' === $gated_type ) {
 					$field_data['value'] = 0;
+				} elseif (
+					in_array( $gated_type, array( 'select', 'radio', 'image_radio' ), true )
+					&& ! empty( $field_data['options'] )
+				) {
+					$first_option        = reset( $field_data['options'] );
+					$field_data['value'] = is_array( $first_option ) && isset( $first_option['value'] )
+						? $first_option['value']
+						: ( $field_data['default'] ?? '' );
 				} else {
 					$field_data['value'] = $field_data['default'] ?? '';
 				}

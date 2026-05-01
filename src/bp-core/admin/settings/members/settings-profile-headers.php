@@ -20,6 +20,12 @@ function bb_members_register_profile_headers_panel_fields() {
 
 	// -------------------------------------------------------------------------
 	// SECTION: Profile Headers
+	//
+	// All fields in this section are pro_only (Header Style image_radio +
+	// Elements toggle_list). Mirror the Member Access Controls pattern
+	// (`groups/settings-access-control.php`) and surface a section-level
+	// "UPGRADE PRO" badge in the section header so the gated state is
+	// visible at the section level, not only per-row.
 	// -------------------------------------------------------------------------
 	bb_register_feature_section(
 		'members',
@@ -29,6 +35,12 @@ function bb_members_register_profile_headers_panel_fields() {
 			'title'       => __( 'Profile Headers', 'buddyboss' ),
 			'description' => '',
 			'order'       => 10,
+			'pro_notice'  => array(
+				'show'       => true,
+				'badge_text' => __( 'UPGRADE PRO', 'buddyboss' ),
+				'badge_icon' => 'bb-icons-rl-crown-simple',
+				'link_url'   => 'https://www.buddyboss.com/pricing/',
+			),
 		)
 	);
 
