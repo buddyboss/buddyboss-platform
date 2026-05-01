@@ -39,8 +39,9 @@ function bb_media_register_access_controls_panel_fields() {
 		'access_controls',
 		'media_access_controls',
 		array(
-			'title' => __( 'Media Access', 'buddyboss' ),
-			'order' => 10,
+			'title'    => __( 'Media Access', 'buddyboss' ),
+			'order'    => 10,
+			'help_url' => '121813',
 		)
 	);
 
