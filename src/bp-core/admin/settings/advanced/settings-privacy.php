@@ -36,8 +36,9 @@ function bb_advanced_register_privacy_fields() {
 		$panel_id,
 		'advanced_privacy',
 		array(
-			'title' => __( 'Privacy', 'buddyboss' ),
-			'order' => 10,
+			'title'    => __( 'Privacy', 'buddyboss' ),
+			'order'    => 10,
+			'help_url' => '636201',
 		)
 	);
 

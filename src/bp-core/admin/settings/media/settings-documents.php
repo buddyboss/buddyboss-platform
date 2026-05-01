@@ -28,6 +28,7 @@ function bb_media_register_documents_panel_fields() {
 		array(
 			'title'          => __( 'Documents', 'buddyboss' ),
 			'order'          => 10,
+			'help_url'       => '636180',
 			'section_toggle' => 'bb_media_documents_support',
 		)
 	);

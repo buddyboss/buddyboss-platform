@@ -91,6 +91,7 @@ function bb_admin_settings_register_reactions_settings() {
 			'title'       => __( 'Display Settings', 'buddyboss' ),
 			'description' => '',
 			'order'       => 10,
+			'help_url'    => '636189',
 		)
 	);
 

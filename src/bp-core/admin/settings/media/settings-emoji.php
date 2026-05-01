@@ -28,6 +28,7 @@ function bb_media_register_emoji_panel_fields() {
 		array(
 			'title'          => __( 'Emoji', 'buddyboss' ),
 			'order'          => 10,
+			'help_url'       => '636182',
 			'section_toggle' => 'bb_media_emoji_support',
 		)
 	);

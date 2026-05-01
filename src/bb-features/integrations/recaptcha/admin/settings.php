@@ -67,6 +67,7 @@ bb_register_feature_section(
 			'<a href="https://www.google.com/recaptcha/admin" target="_blank">' . esc_html__( 'reCAPTCHA API keys', 'buddyboss' ) . '</a>'
 		),
 		'order'       => 10,
+		'help_url'    => '636204',
 		'status'      => array(
 			'type' => $status,
 			'text' => $status_text,
@@ -225,6 +226,7 @@ bb_register_feature_section(
 		'title'       => __( 'reCAPTCHA Settings', 'buddyboss' ),
 		'description' => '',
 		'order'       => 20,
+		'help_url'    => '636206',
 		// Disable the entire section while reCAPTCHA is not connected.
 		// Driven by the hidden tracking field below; the verify AJAX flips
 		// its value on connect/disconnect via the updated_fields response.
@@ -434,6 +436,7 @@ bb_register_feature_section(
 		'title'       => __( 'reCAPTCHA Design', 'buddyboss' ),
 		'description' => '',
 		'order'       => 30,
+		'help_url'    => '636208',
 		// Section is enabled only when (a) version is v2 (any flavor) AND
 		// (b) reCAPTCHA is connected. The conditional system supports a
 		// single action per rule, so hide-when-v3 + disable-when-not-

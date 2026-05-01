@@ -28,6 +28,7 @@ function bb_media_register_photos_panel_fields() {
 		array(
 			'title'          => __( 'Photos', 'buddyboss' ),
 			'order'          => 10,
+			'help_url'       => '636176',
 			'section_toggle' => 'bb_media_photos_support',
 		)
 	);

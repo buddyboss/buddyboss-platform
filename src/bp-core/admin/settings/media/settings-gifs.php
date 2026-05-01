@@ -31,6 +31,7 @@ function bb_media_register_gifs_panel_fields() {
 		array(
 			'title'          => __( 'Animated GIFs', 'buddyboss' ),
 			'order'          => 10,
+			'help_url'       => '636184',
 			'section_toggle' => 'bb_media_gif_support',
 			'status'         => array(
 				'type' => $is_giphy_connected ? 'success' : 'warning',

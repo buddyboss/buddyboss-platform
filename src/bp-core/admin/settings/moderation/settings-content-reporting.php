@@ -39,8 +39,9 @@ function bb_moderation_register_content_reporting_fields() {
 		'content_reporting',
 		'content_reporting',
 		array(
-			'title' => __( 'Content Reporting', 'buddyboss' ),
-			'order' => 10,
+			'title'    => __( 'Content Reporting', 'buddyboss' ),
+			'order'    => 10,
+			'help_url' => '636193',
 		)
 	);
 

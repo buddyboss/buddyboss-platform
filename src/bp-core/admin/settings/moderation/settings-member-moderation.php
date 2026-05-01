@@ -27,8 +27,9 @@ function bb_moderation_register_member_moderation_fields() {
 		'member_moderation',
 		'member_moderation_settings',
 		array(
-			'title' => __( 'Member Moderation', 'buddyboss' ),
-			'order' => 10,
+			'title'    => __( 'Member Moderation', 'buddyboss' ),
+			'order'    => 10,
+			'help_url' => '636191',
 		)
 	);
 

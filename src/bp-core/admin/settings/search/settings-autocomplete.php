@@ -29,8 +29,9 @@ function bb_search_register_autocomplete_fields() {
 		'autocomplete',
 		'autocomplete_settings',
 		array(
-			'title' => __( 'Autocomplete Settings', 'buddyboss' ),
-			'order' => 10,
+			'title'    => __( 'Autocomplete Settings', 'buddyboss' ),
+			'order'    => 10,
+			'help_url' => '636186',
 		)
 	);
 

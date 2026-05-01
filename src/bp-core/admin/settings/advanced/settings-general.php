@@ -32,8 +32,9 @@ function bb_advanced_register_general_fields() {
 		$panel_id,
 		'advanced_general',
 		array(
-			'title' => __( 'General', 'buddyboss' ),
-			'order' => 10,
+			'title'    => __( 'General', 'buddyboss' ),
+			'order'    => 10,
+			'help_url' => '636194',
 		)
 	);
 
@@ -120,8 +121,9 @@ function bb_advanced_register_general_fields() {
 			$panel_id,
 			'advanced_activity',
 			array(
-				'title' => __( 'Activity', 'buddyboss' ),
-				'order' => 20,
+				'title'    => __( 'Activity', 'buddyboss' ),
+				'order'    => 20,
+				'help_url' => '636197',
 			)
 		);
 
@@ -200,8 +202,9 @@ function bb_advanced_register_general_fields() {
 		$panel_id,
 		'advanced_toolbar',
 		array(
-			'title' => __( 'Toolbar Settings', 'buddyboss' ),
-			'order' => 30,
+			'title'    => __( 'Toolbar Settings', 'buddyboss' ),
+			'order'    => 30,
+			'help_url' => '636199',
 		)
 	);
 
