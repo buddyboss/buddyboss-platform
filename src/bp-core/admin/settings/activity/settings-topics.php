@@ -29,6 +29,7 @@ function bb_activity_register_topics_panel_fields() {
 			'title'       => __( 'Activity Topics', 'buddyboss' ),
 			'description' => '',
 			'order'       => 10,
+			'help_url'    => '636120',
 		)
 	);
 
@@ -100,6 +101,7 @@ function bb_activity_register_topics_panel_fields() {
 			'title'       => __( 'Group Topics', 'buddyboss' ),
 			'description' => '',
 			'order'       => 20,
+			'help_url'    => '636122',
 		);
 
 		// When PRO is active, hide section when Activity Topics is disabled.

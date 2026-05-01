@@ -166,7 +166,7 @@ function bb_admin_settings_register_activity_feature() {
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-share-fat',
 			),
-			'help_url'   => '',
+			'help_url'   => '637448',
 			'order'      => 50,
 			'is_default' => false,
 		)

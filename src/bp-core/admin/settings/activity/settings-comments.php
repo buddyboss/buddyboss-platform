@@ -31,6 +31,7 @@ function bb_activity_register_comments_panel_fields( $edit_time_options ) {
 			'title'       => __( 'Activity Comments', 'buddyboss' ),
 			'description' => '',
 			'order'       => 10,
+			'help_url'    => '636115',
 		)
 	);
 

@@ -31,6 +31,7 @@ function bb_activity_register_settings_panel_fields( $edit_time_options = array(
 			'title'       => __( 'Activity Settings', 'buddyboss' ),
 			'description' => '',
 			'order'       => 10,
+			'help_url'    => '636101',
 		)
 	);
 
@@ -234,6 +235,7 @@ function bb_activity_register_settings_panel_fields( $edit_time_options = array(
 			'title'       => __( 'Activity Feed', 'buddyboss' ),
 			'description' => '',
 			'order'       => 20,
+			'help_url'    => '636104',
 		)
 	);
 
