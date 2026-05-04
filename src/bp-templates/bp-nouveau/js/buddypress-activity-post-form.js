@@ -151,7 +151,7 @@ window.bp = window.bp || {};
 			// Dropzone is undefined and the unguarded assignment throws TypeError,
 			// halting `start()` so the post form composer never renders. Mirrors
 			// the same guard pattern used at buddypress-activity.js:76.
-			if ( typeof window.Dropzone !== 'undefined' ) {
+			if ( 'undefined' !== typeof window.Dropzone ) {
 				window.Dropzone.autoDiscover = false;
 			}
 
