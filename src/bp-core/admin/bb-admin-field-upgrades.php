@@ -491,25 +491,51 @@ function bb_reset_field_upgrades_index() {
 }
 
 /**
- * Clear the field upgrades cache via query parameter.
+ * Clear the field upgrades cache (transient only).
  *
- * Reuses the same `?bb_clear_placeholder_cache=1` admin URL that already
- * flushes the placeholder catalog — see `bb_maybe_clear_placeholder_features_cache()`
- * which calls `bb_flush_feature_caches_on_plugin_change()`. This file
- * piggybacks on the canonical flusher via the `bb_feature_caches_flushed`
- * action so there is exactly one cache-flush entry point.
+ * Drops the live transient and schedules an async refresh — but keeps the
+ * `bb_field_upgrades_data_stale` option so the next AJAX request can serve
+ * the last-known-good catalog while the cron fetch runs in the background.
+ *
+ * Why we keep the stale option here even though the placeholder version
+ * mirrors `bb_flush_field_upgrades_cache` semantics (transient + stale):
+ * The catalog content does NOT change in response to plugin lifecycle
+ * events — only the resolved badge state on the consumer side does. So
+ * deleting the stale option on every plugin activate/deactivate would
+ * force a synchronous S3 fetch in the AJAX path on the very next request
+ * after a plugin install. That made the post-`mosh_addon_activate` page
+ * refresh visibly slow (3-4s blocking S3 round-trip on the WP-Admin path).
+ *
+ * The manual `?bb_clear_placeholder_cache=1` trigger does NOT call this
+ * function for stale-deletion — see `bb_flush_field_upgrades_cache_full()`
+ * below for the truly-need-fresh-now case (license change, manual flush).
  *
  * @since BuddyBoss [BBVERSION]
  */
 function bb_flush_field_upgrades_cache() {
 	delete_transient( bb_field_upgrades_transient_key() );
-	delete_option( 'bb_field_upgrades_data_stale' );
 	bb_schedule_field_upgrades_refresh();
 }
 // Hook into the canonical Settings 2.0 cache flusher so every existing
 // trigger (plugin activation, manual `?bb_clear_placeholder_cache=1`,
-// license status change) drops this catalog along with the others.
+// license status change) drops the live transient.
 add_action( 'bb_feature_caches_flushed', 'bb_flush_field_upgrades_cache' );
+
+/**
+ * Force a full flush including the stale-while-revalidate fallback.
+ *
+ * Use this when the catalog content itself may have changed semantically
+ * (license tier change, manual admin trigger). For plugin lifecycle
+ * events use the lighter `bb_flush_field_upgrades_cache()` which keeps
+ * the stale option around for instant AJAX serving.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_flush_field_upgrades_cache_full() {
+	delete_transient( bb_field_upgrades_transient_key() );
+	delete_option( 'bb_field_upgrades_data_stale' );
+	bb_schedule_field_upgrades_refresh();
+}
 
 /**
  * Clear the field upgrades cache when the license status changes.
@@ -531,7 +557,11 @@ function bb_register_field_upgrades_license_hooks() {
 	}
 
 	if ( ! empty( $plugin_id ) ) {
-		add_action( $plugin_id . '_license_status_changed', 'bb_flush_field_upgrades_cache' );
+		// License change is one of the few events where we want to force a
+		// fresh remote fetch (drop stale option too) — Pro vs free changes
+		// what badges users should see, and we'd rather pay the synchronous
+		// S3 hit on the rare license-change request than serve stale data.
+		add_action( $plugin_id . '_license_status_changed', 'bb_flush_field_upgrades_cache_full' );
 	}
 }
 add_action( 'admin_init', 'bb_register_field_upgrades_license_hooks' );

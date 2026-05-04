@@ -8,7 +8,7 @@
 import { useState, useEffect, useRef, useMemo } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import { Button, Spinner, ToggleControl } from '@wordpress/components';
-import { getCachedFeatures, toggleFeature, updateFeatureInCache } from '../utils/ajax';
+import { getCachedFeatures, getFeatures, invalidateFeaturesCache, toggleFeature, updateFeatureInCache } from '../utils/ajax';
 import { invalidateFeatureCache } from '../utils/featureCache';
 import { urlToRoute } from '../utils/url';
 import { safeUrl } from '../utils/sanitize';
@@ -394,6 +394,16 @@ export function SettingsScreen({ onNavigate }) {
 	/**
 	 * Handle addon install/activate via mothership AJAX.
 	 *
+	 * After a successful install/activate, swap the placeholder card for the
+	 * real feature card without doing a full `window.location.reload()` —
+	 * a full reload re-runs the entire WP admin lifecycle (every plugin
+	 * boot, the React bundle, both catalog rebuilds), which made the
+	 * post-action wait visibly slow for users. Instead, invalidate the
+	 * module-level features cache and re-fetch the features list via the
+	 * same AJAX endpoint the screen uses on initial mount, then swap state.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
 	 * @param {Object} feature  Placeholder feature object with plugin_slug.
 	 * @param {string} action   'mosh_addon_install' or 'mosh_addon_activate'.
 	 */
@@ -428,8 +438,25 @@ export function SettingsScreen({ onNavigate }) {
 							? sprintf( __( '%s has been installed and activated.', 'buddyboss' ), label )
 							: sprintf( __( '%s has been activated.', 'buddyboss' ), label ),
 					});
-					// Reload to show the real feature card.
-					setTimeout(function() { window.location.reload(); }, 1500);
+
+					// Refresh the features grid in-place. The placeholder
+					// catalog (`bb-features.json`) and field-upgrades catalog
+					// (`bb-field-upgrades.json`) both share the
+					// `bb_feature_caches_flushed` action, so PHP transients
+					// will already have been invalidated by the activation
+					// hook. We just need to: (1) drop the JS cache so the
+					// next fetch hits the network; (2) issue one AJAX
+					// request to repopulate; (3) re-split into real vs.
+					// placeholder and update component state.
+					invalidateFeaturesCache();
+					return getFeatures().then(function ( resp ) {
+						if ( resp && resp.success && Array.isArray( resp.data ) ) {
+							var realFeatures = resp.data.filter( function ( item ) { return ! item.is_placeholder; } );
+							var placeholders = resp.data.filter( function ( item ) { return !! item.is_placeholder; } );
+							setFeatures( realFeatures );
+							setPlaceholderFeatures( placeholders );
+						}
+					} );
 				} else {
 					var errorMsg = ( response && response.data && response.data.message )
 						? response.data.message
