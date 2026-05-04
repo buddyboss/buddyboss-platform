@@ -286,6 +286,20 @@
 	margin: 10px 0 0 !important;
 }
 
+/* Inline links inside meta-field descriptions (e.g. "Learn about email tokens"
+   in the Email template modal). Scoped under `.bb-admin-settings-modal` —
+   the shared wrapper class for every BB_Admin_Meta_Field_Registry modal in
+   Settings 2.0 (forums, discussions, replies, emails, groups, activity) —
+   so the rule cannot leak into any unrelated context that might also use
+   `.bb-admin-meta-field__description` outside a modal. No underline at any
+   state; matches the project convention used in _feature_settings.scss,
+   _email-templates-list.scss, _help-modal.scss, and _flagged-members.scss
+   where descriptive links are styled with `text-decoration: none` without
+   a hover override. */
+.bb-admin-settings-modal .bb-admin-meta-field__description a {
+	text-decoration: none;
+}
+
 @media screen and (max-width: 960px) {
 
 	.bb-admin-header {
