@@ -350,6 +350,10 @@
 		line-height: 1.6;
 		color: $bb-text-color;
 		margin: 0 0 16px;
+
+		a {
+			color: $bb-link-color;
+		}
 	}
 
 	.components-checkbox-control {

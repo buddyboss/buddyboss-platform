@@ -284,6 +284,10 @@
 	color: #666;
 	font-size: 13px;
 	margin: 10px 0 0 !important;
+
+	a {
+		color: $bb-link-color;
+	}
 }
 
 /* Inline links inside meta-field descriptions (e.g. "Learn about email tokens"
