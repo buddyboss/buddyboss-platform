@@ -87,21 +87,23 @@ export function TopicModal( { isOpen, onClose, onSave, topic, isSaving } ) {
 			shouldCloseOnClickOutside={ false }
 		>
 			<div className="bb-topic-modal__body">
-				<TextControl
-					label={ __( 'Topic Name', 'buddyboss' ) }
-					value={ name }
-					onChange={ function ( val ) {
-						setName( val );
-						if ( error ) {
-							setError( '' );
-						}
-					} }
-					placeholder={ __( 'Enter topic name', 'buddyboss' ) }
-					__nextHasNoMarginBottom
-				/>
-				{ error && (
-					<p className="bb-topic-modal__error">{ error }</p>
-				) }
+				<div className='bb-admin-settings-modal__row--separator'>
+					<TextControl
+						label={ __( 'Topic Name', 'buddyboss' ) }
+						value={ name }
+						onChange={ function ( val ) {
+							setName( val );
+							if ( error ) {
+								setError( '' );
+							}
+						} }
+						placeholder={ __( 'Enter topic name', 'buddyboss' ) }
+						__nextHasNoMarginBottom
+					/>
+					{ error && (
+						<p className="bb-topic-modal__error">{ error }</p>
+					) }
+				</div>
 
 				<div className="bb-topic-modal__permission">
 					<label className="bb-topic-modal__permission-label">
