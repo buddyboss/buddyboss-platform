@@ -328,9 +328,21 @@ function bp_core_activation_notice() {
 	}
 
 	if ( ! empty( $orphaned_components ) ) {
-		$admin_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-pages' ), 'admin.php' ) );
+		// Settings 2.0: Pages live under Appearance → Pages. The legacy
+		// `?page=bp-pages` slug now redirects via
+		// bb_redirect_bp_settings_before_permission_check() but we link
+		// directly to the canonical URL to avoid the redirect hop.
+		$admin_url = function_exists( 'bb_get_feature_settings_url' )
+			? bb_get_feature_settings_url( 'appearance', 'pages' )
+			: bp_get_admin_url( add_query_arg( array( 'page' => 'bp-pages' ), 'admin.php' ) );
 
-		if ( isset( $_GET['page'] ) && 'bp-pages' === $_GET['page'] ) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection to suppress the "Repair" link when the user is already on the Pages panel.
+		$on_pages_panel = isset( $_GET['page'], $_GET['tab'], $_GET['panel'] )
+			&& 'bb-settings' === $_GET['page']
+			&& 'appearance' === $_GET['tab']
+			&& 'pages' === $_GET['panel'];
+
+		if ( $on_pages_panel ) {
 			$notice = sprintf(
 				'%1$s',
 				sprintf(
@@ -382,8 +394,19 @@ function bp_core_activation_notice() {
 
 	// If there are duplicates, post a message about them.
 	if ( ! empty( $dupe_names ) ) {
-		$admin_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-pages' ), 'admin.php' ) );
-		if ( isset( $_GET['page'] ) && 'bp-pages' === $_GET['page'] ) {
+		// Settings 2.0: Pages live under Appearance → Pages. Same canonical
+		// URL as the orphaned-components branch above; see comment there.
+		$admin_url = function_exists( 'bb_get_feature_settings_url' )
+			? bb_get_feature_settings_url( 'appearance', 'pages' )
+			: bp_get_admin_url( add_query_arg( array( 'page' => 'bp-pages' ), 'admin.php' ) );
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection to suppress the "Repair" link when the user is already on the Pages panel.
+		$on_pages_panel = isset( $_GET['page'], $_GET['tab'], $_GET['panel'] )
+			&& 'bb-settings' === $_GET['page']
+			&& 'appearance' === $_GET['tab']
+			&& 'pages' === $_GET['panel'];
+
+		if ( $on_pages_panel ) {
 			$notice = sprintf(
 				'%1$s',
 				sprintf(

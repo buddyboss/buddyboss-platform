@@ -79,14 +79,9 @@ function bb_registration_register_panel_fields() {
 		'name'              => 'allow-custom-registration',
 		'label'             => __( 'Registration Form', 'buddyboss' ),
 		'description'       => sprintf(
-			/* translators: %s: URL to BuddyBoss Pages settings */
+			/* translators: %s: URL to BuddyBoss Settings 2.0 → Appearance → Pages panel */
 			__( 'Use the default BuddyBoss registration form. Make sure to configure the <a href="%s">registration pages</a>.', 'buddyboss' ),
-			esc_url(
-				add_query_arg(
-					array( 'page' => 'bp-pages' ),
-					admin_url( 'admin.php' )
-				)
-			)
+			esc_url( bb_get_feature_settings_url( 'appearance', 'pages' ) )
 		),
 		'type'              => 'radio',
 		'default'           => 0,
