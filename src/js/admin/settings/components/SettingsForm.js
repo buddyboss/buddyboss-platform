@@ -58,6 +58,18 @@ import { ColorPickerField } from './fields/ColorPickerField';
 import { useFetchOnChange } from '../hooks/useFetchOnChange';
 import { evaluateConditional } from '../utils/conditional';
 
+// Pinned options for the After Login / After Logout async selects on the
+// Login Redirects panel. Listed in the same order as the legacy <select>
+// (Default → Custom URL → ...pages) so the React render order matches the
+// legacy admin pixel-for-pixel. Mirrors the per-row REDIRECT_STATIC_OPTIONS
+// in components/fields/ProfileTypeRedirectsField.js:29 — kept inline rather
+// than shared so the two surfaces (global redirects vs profile-type rows)
+// can evolve independently.
+var REDIRECT_STATIC_OPTIONS = [
+	{ value: '', label: __( 'Default', 'buddyboss' ) },
+	{ value: '0', label: __( 'Custom URL', 'buddyboss' ) },
+];
+
 /**
  * Create-Page button used inside the page-dropdown field variant.
  *
@@ -633,6 +645,23 @@ export function SettingsForm({ fields, values, onChange, onProBadgeClick }) {
 					? cachedCreated.label
 					: ( field.initial_label || '' );
 
+				// Pinned options for the Login/Logout redirect dropdowns. Without
+				// these, AsyncSelectField treats value '0' as the "no selection"
+				// sentinel and short-circuits to the placeholder — see the
+				// `'' === valueStr || '0' === valueStr` branch in
+				// AsyncSelectField.js. Same shape and intent as the per-row
+				// REDIRECT_STATIC_OPTIONS const at
+				// components/fields/ProfileTypeRedirectsField.js:29; kept inline
+				// here to match how the Profile Types panel hardcodes its
+				// pinned options rather than driving them from PHP.
+				var staticOptions;
+				if (
+					'bb-login-redirection' === field.name ||
+					'bb-logout-redirection' === field.name
+				) {
+					staticOptions = REDIRECT_STATIC_OPTIONS;
+				}
+
 				var selectEl = (
 					<AsyncSelectField
 						key={field.name}
@@ -642,6 +671,7 @@ export function SettingsForm({ fields, values, onChange, onProBadgeClick }) {
 						placeholder={field.placeholder || ''}
 						disabled={disabled}
 						initialLabel={effectiveInitialLabel}
+						staticOptions={staticOptions}
 					/>
 				);
 
