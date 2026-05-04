@@ -291,8 +291,14 @@ function bb_appearance_register_pages_fields( $feature_id ) {
 			$current_id = (int) bp_get_option( '_bbp_root_slug_custom_slug' );
 			// Only surface the ID when the target post is published — otherwise
 			// the dropdown would render a stale/trashed page as "selected".
-			if ( $current_id && 'publish' !== get_post_status( $current_id ) ) {
-				$current_id = 0;
+			// Prime the single post first so get_post_status() is a cache hit
+			// instead of a DB query (this fires on every admin request via
+			// Settings 2.0 registration on bp_loaded:4).
+			if ( $current_id ) {
+				_prime_post_caches( array( $current_id ), false, false );
+				if ( 'publish' !== get_post_status( $current_id ) ) {
+					$current_id = 0;
+				}
 			}
 		} else {
 			$current_id = ! empty( $existing_pages[ $name ] ) ? (int) $existing_pages[ $name ] : 0;

@@ -93,9 +93,11 @@ class BB_Admin_Replies_Ajax {
 		wp_cache_delete( 'bb_admin_forums_status_counts', 'bbpress' );
 		wp_cache_delete( 'bb_admin_discussions_forum_counts', 'bbpress' );
 
-		// Clear the per-user "Mine" count cache for the forums list screen,
-		// since reply changes affect forum reply counts.
-		wp_cache_delete( 'bb_admin_forums_mine_count_' . get_current_user_id(), 'bbpress' );
+		// Bump the forums mine-count version so every user's per-user mine-count
+		// cache is invalidated transparently. Keys are
+		// `bb_admin_forums_mine_count_{user}_v{version}` — bumping the version
+		// makes all old keys unreachable. Mirrors BB_Admin_Forums_Ajax::bb_clear_status_counts_cache().
+		bp_update_option( 'bb_admin_forums_mine_count_version', (int) bp_get_option( 'bb_admin_forums_mine_count_version', 0 ) + 1 );
 	}
 
 	/**

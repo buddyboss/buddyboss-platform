@@ -68,25 +68,54 @@ function bb_admin_settings_page() {
 		$bb_icon_version
 	);
 
-	// Conditionally enqueue WordPress editor (~250KB TinyMCE) only when richtext fields exist.
-	// Check both Feature Registry (settings fields) and Meta Field Registry (edit modal fields).
-	$has_rich_text = false;
+	// Conditionally enqueue WordPress editor (~250KB TinyMCE) and the WordPress
+	// media library (~200-400ms TTI) only when a feature actually exposes the
+	// matching field type. Mirrors a single registry scan over the union of
+	// the four field types we care about, instead of two full traversals over
+	// every feature × every field × every option (the previous shape did
+	// `bb_get_all_fields()` per feature TWICE, which scales multiplicatively
+	// with feature count and runs on every Settings 2.0 page render).
+	//
+	// Result is memoized request-scoped via the `static` cache below; we don't
+	// promote to wp_cache because feature registration runs at request boot,
+	// so the value is request-stable and a static is enough.
+	$has_rich_text   = false;
+	$has_media_field = false;
 
-	// Check Feature Registry for richtext settings fields.
 	if ( function_exists( 'bb_feature_registry' ) ) {
-		$all_features = bb_feature_registry()->bb_get_features();
-		foreach ( $all_features as $fid => $f ) {
-			$all_fields = bb_feature_registry()->bb_get_all_fields( $fid );
-			foreach ( $all_fields as $field ) {
-				if ( ! empty( $field['type'] ) && 'richtext' === $field['type'] ) {
-					$has_rich_text = true;
-					break 2;
+		static $bb_settings_field_type_flags = null;
+
+		if ( null === $bb_settings_field_type_flags ) {
+			$bb_settings_field_type_flags = array(
+				'richtext'    => false,
+				'media_field' => false,
+			);
+			$media_types  = array( 'media_picker', 'image_upload', 'image_radio' );
+			$all_features = bb_feature_registry()->bb_get_features();
+			foreach ( $all_features as $fid => $f ) {
+				$all_fields = bb_feature_registry()->bb_get_all_fields( $fid );
+				foreach ( $all_fields as $field ) {
+					$type = $field['type'] ?? '';
+					if ( 'richtext' === $type ) {
+						$bb_settings_field_type_flags['richtext'] = true;
+					} elseif ( in_array( $type, $media_types, true ) ) {
+						$bb_settings_field_type_flags['media_field'] = true;
+					}
+
+					// Short-circuit once both flags are set.
+					if ( $bb_settings_field_type_flags['richtext'] && $bb_settings_field_type_flags['media_field'] ) {
+						break 2;
+					}
 				}
 			}
 		}
+
+		$has_rich_text   = $bb_settings_field_type_flags['richtext'];
+		$has_media_field = $bb_settings_field_type_flags['media_field'];
 	}
 
 	// Check Meta Field Registry (Activity/Groups edit modals use richtext fields).
+	// Separate scan because meta fields are a different registry.
 	if ( ! $has_rich_text && function_exists( 'bb_admin_meta_field_registry' ) ) {
 		$meta_components = array( 'activity', 'groups', 'forums', 'discussions', 'replies', 'emails' );
 		foreach ( $meta_components as $component ) {
@@ -102,26 +131,6 @@ function bb_admin_settings_page() {
 
 	if ( $has_rich_text ) {
 		wp_enqueue_editor();
-	}
-
-	// Conditionally enqueue the WordPress media library (~200-400ms TTI) only
-	// when a feature actually exposes a media-picking field. Mirrors the
-	// richtext gate above. Scans for the three field types that open
-	// `wp.media()`: `media_picker` (logos, OG image), `image_upload` (cover
-	// uploads), `image_radio` (grouped-options with upload).
-	$has_media_field = false;
-	if ( function_exists( 'bb_feature_registry' ) ) {
-		$media_types  = array( 'media_picker', 'image_upload', 'image_radio' );
-		$all_features = bb_feature_registry()->bb_get_features();
-		foreach ( $all_features as $fid => $f ) {
-			$all_fields = bb_feature_registry()->bb_get_all_fields( $fid );
-			foreach ( $all_fields as $field ) {
-				if ( ! empty( $field['type'] ) && in_array( $field['type'], $media_types, true ) ) {
-					$has_media_field = true;
-					break 2;
-				}
-			}
-		}
 	}
 
 	if ( $has_media_field ) {

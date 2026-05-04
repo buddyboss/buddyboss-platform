@@ -118,7 +118,21 @@ function bb_recaptcha_lost_password() {
  *                  by using invalid credentials.
  */
 function bb_recaptcha_validate_lost_password( $errors ) {
-	// Bypass recaptcha for rest api.
+	/**
+	 * Filters whether reCAPTCHA validation should be bypassed for the
+	 * current request. Default: true on REST requests, false otherwise.
+	 *
+	 * Documented here; also fires in:
+	 *   - bb-recaptcha-actions.php (registration validator)
+	 *   - bb-recaptcha-filters.php (login + activate validators)
+	 *
+	 * Each validator dispatches the filter independently so subscribers
+	 * can return per-validator decisions if they want.
+	 *
+	 * @since BuddyBoss 2.5.60
+	 *
+	 * @param bool $bypass Default: bb_is_rest().
+	 */
 	if ( apply_filters( 'bb_recaptcha_rest_api_bypass', bb_is_rest() ) ) {
 		return $errors;
 	}

@@ -231,8 +231,43 @@ function bb_appearance_apply_configuration( $settings ) {
 		}
 
 		if ( ! empty( $newly_activated ) ) {
-			bp_update_option( 'bp-active-components', $active_components );
-			bp_update_option( 'bb-active-features', $active_features );
+			// Without rollback, a half-written state leaves Settings 2.0 React
+			// (reads bb-active-features) and legacy bp_is_active() (reads
+			// bp-active-components) permanently disagreeing until the next save.
+			$components_before = $active_components;
+			foreach ( $newly_activated as $component_key ) {
+				unset( $components_before[ $component_key ] );
+			}
+			$features_before = bp_get_option( 'bb-active-features', array() );
+			$features_before = is_array( $features_before ) ? $features_before : array();
+
+			// Treat each write independently. bp_update_option returns false in
+			// two distinct cases: real write failure, or value-unchanged no-op.
+			// Distinguish via a follow-up read against the intended value.
+			// !== is safe here — both arrays are built from the same iteration
+			// path with the same key order, so PHP's strict comparison matches
+			// the serialized-comparison update_option performs internally.
+			$components_changed = ( $components_before !== $active_components );
+			$features_changed   = ( $features_before !== $active_features );
+
+			$components_ok = ! $components_changed
+				|| bp_update_option( 'bp-active-components', $active_components )
+				|| bp_get_option( 'bp-active-components', array() ) === $active_components;
+			$features_ok   = ! $features_changed
+				|| bp_update_option( 'bb-active-features', $active_features )
+				|| bp_get_option( 'bb-active-features', array() ) === $active_features;
+
+			if ( $components_ok && ! $features_ok ) {
+				// Features write failed — roll back the components write so the
+				// two options stay in sync.
+				bp_update_option( 'bp-active-components', $components_before );
+			} elseif ( ! $components_ok && $features_ok ) {
+				// Components write failed but features wrote — roll back the
+				// features write to match. (Both options share the alloptions
+				// backend so single-side failure is rare in practice, but the
+				// symmetry keeps invariants honest.)
+				bp_update_option( 'bb-active-features', $features_before );
+			}
 		}
 	}
 

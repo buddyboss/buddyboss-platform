@@ -89,7 +89,11 @@ class BB_Admin_Forums_Ajax {
 	 */
 	public function bb_clear_status_counts_cache() {
 		wp_cache_delete( 'bb_admin_forums_status_counts', 'bbpress' );
-		wp_cache_delete( 'bb_admin_forums_mine_count_' . get_current_user_id(), 'bbpress' );
+		// Bump a version key so every user's mine-count cache is invalidated
+		// transparently (the read path keys on this version). Avoids the prior
+		// behavior where only the saving user's mine-count was busted, leaving
+		// other users' counts stale until their own next save.
+		bp_update_option( 'bb_admin_forums_mine_count_version', (int) bp_get_option( 'bb_admin_forums_mine_count_version', 0 ) + 1 );
 	}
 
 	/**
@@ -239,6 +243,22 @@ class BB_Admin_Forums_Ajax {
 			'private' => __( 'Private', 'buddyboss' ),
 			'hidden'  => __( 'Hidden', 'buddyboss' ),
 		);
+
+		// Prime attachment posts referenced by _thumbnail_id so the per-row
+		// wp_get_attachment_url() inside the loop is a cache hit. Authors are
+		// already primed above; WP_Query primed forum-post meta.
+		if ( ! empty( $posts ) ) {
+			$thumbnail_ids = array();
+			foreach ( $posts as $forum ) {
+				$tid = (int) get_post_thumbnail_id( $forum->ID );
+				if ( $tid ) {
+					$thumbnail_ids[] = $tid;
+				}
+			}
+			if ( ! empty( $thumbnail_ids ) ) {
+				_prime_post_caches( array_values( array_unique( $thumbnail_ids ) ), false, false );
+			}
+		}
 
 		// Buffer output to capture stray HTML from legacy filters.
 		ob_start();
@@ -1095,11 +1115,21 @@ class BB_Admin_Forums_Ajax {
 			wp_send_json_error( array( 'message' => __( 'No file uploaded.', 'buddyboss' ) ) );
 		}
 
-		// Validate MIME type using server-side file extension check (not client-supplied type).
-		$allowed_types = array( 'image/jpeg', 'image/png', 'image/gif', 'image/webp' );
+		// Validate MIME by both extension AND file content. wp_check_filetype()
+		// alone trusts the file name; wp_check_filetype_and_ext() additionally
+		// inspects the bytes via finfo_file so a renamed payload is rejected
+		// here, not just downstream in media_handle_upload().
+		$mime_allowlist = array(
+			'jpg|jpeg|jpe' => 'image/jpeg',
+			'png'          => 'image/png',
+			'gif'          => 'image/gif',
+			'webp'         => 'image/webp',
+		);
+		$allowed_types = array_values( $mime_allowlist );
 		$file_name     = ! empty( $_FILES['file']['name'] ) ? sanitize_file_name( wp_unslash( $_FILES['file']['name'] ) ) : '';
+		$tmp_path      = ! empty( $_FILES['file']['tmp_name'] ) ? sanitize_text_field( wp_unslash( $_FILES['file']['tmp_name'] ) ) : '';
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
-		$file_type = wp_check_filetype( $file_name );
+		$file_type = wp_check_filetype_and_ext( $tmp_path, $file_name, $mime_allowlist );
 
 		if ( empty( $file_type['type'] ) || ! in_array( $file_type['type'], $allowed_types, true ) ) {
 			wp_send_json_error( array( 'message' => __( 'Invalid file type. Only JPEG, PNG, GIF, and WebP images are allowed.', 'buddyboss' ) ) );
@@ -1180,7 +1210,8 @@ class BB_Admin_Forums_Ajax {
 	 */
 	private function bb_get_mine_count() {
 		$user_id   = get_current_user_id();
-		$cache_key = 'bb_admin_forums_mine_count_' . $user_id;
+		$version   = (int) bp_get_option( 'bb_admin_forums_mine_count_version', 0 );
+		$cache_key = 'bb_admin_forums_mine_count_' . $user_id . '_v' . $version;
 		$cached    = wp_cache_get( $cache_key, 'bbpress' );
 
 		if ( false !== $cached ) {

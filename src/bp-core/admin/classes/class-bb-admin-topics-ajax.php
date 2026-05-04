@@ -89,9 +89,11 @@ class BB_Admin_Topics_Ajax {
 		// affect forum-level aggregate counts (_bbp_total_topic_count).
 		wp_cache_delete( 'bb_admin_forums_status_counts', 'bbpress' );
 
-		// Clear the per-user "Mine" count cache for the forums list screen,
-		// since topic changes affect forum topic counts.
-		wp_cache_delete( 'bb_admin_forums_mine_count_' . get_current_user_id(), 'bbpress' );
+		// Bump the forums mine-count version so every user's per-user mine-count
+		// cache is invalidated transparently. Keys are
+		// `bb_admin_forums_mine_count_{user}_v{version}` — bumping the version
+		// makes all old keys unreachable. Mirrors BB_Admin_Forums_Ajax::bb_clear_status_counts_cache().
+		bp_update_option( 'bb_admin_forums_mine_count_version', (int) bp_get_option( 'bb_admin_forums_mine_count_version', 0 ) + 1 );
 	}
 
 	/**
@@ -266,6 +268,13 @@ class BB_Admin_Topics_Ajax {
 			if ( ! in_array( $col_key, $core_columns, true ) ) {
 				$custom_columns[ $col_key ] = $col_label;
 			}
+		}
+
+		// Prime topic-tag term cache to avoid get_the_terms() N+1 inside the
+		// loop. Author and forum primes are already done above.
+		$tag_tax_id = bbp_get_topic_tag_tax_id();
+		if ( ! empty( $tag_tax_id ) && ! empty( $posts ) ) {
+			update_object_term_cache( wp_list_pluck( $posts, 'ID' ), bbp_get_topic_post_type() );
 		}
 
 		// Buffer output to capture stray HTML from legacy filters.

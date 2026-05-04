@@ -360,13 +360,18 @@ class BB_Activity_Admin_Ajax {
 				$item = array(
 					'id'                => (int) $activity_obj->id,
 					'user_id'           => $user_id,
-					'action'            => $activity_obj->action,
+					// Defense-in-depth: kses the action HTML on the server even though
+					// React already sanitizes via DOMPurify. Filter-injected HTML in
+					// activity_obj->action could otherwise reach the client unsanitized.
+					'action'            => wp_kses_post( (string) $activity_obj->action ),
 					'content'           => $activity_obj->content,
 					'display_content'   => wp_kses_post( $display_content ),
 					'type'              => $activity_obj->type,
 					'date_recorded'     => $activity_obj->date_recorded,
 					'is_spam'           => (int) $activity_obj->is_spam,
-					'primary_link'      => $activity_obj->primary_link,
+					// esc_url_raw drops any disallowed scheme (e.g. javascript:) before
+					// the URL hits the client, even if a consumer interpolates it without esc_url.
+					'primary_link'      => esc_url_raw( (string) $activity_obj->primary_link ),
 					'permalink'         => bp_activity_get_permalink( $activity_obj->id, $activity_obj ),
 					'item_id'           => (int) $activity_obj->item_id,
 					'secondary_item_id' => (int) $activity_obj->secondary_item_id,

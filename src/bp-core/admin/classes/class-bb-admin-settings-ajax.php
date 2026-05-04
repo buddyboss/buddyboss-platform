@@ -1202,7 +1202,14 @@ class BB_Admin_Settings_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Feature registry not available.', 'buddyboss' ) ) );
 		}
 
-		$settings = json_decode( $raw_json, true );
+		// Cap nesting depth at 8 — Settings 2.0 payloads never exceed
+		// option => field => array-of-options shape (depth ~3). The default
+		// 512 leaves room for parser-DoS payloads against this admin endpoint.
+		try {
+			$settings = json_decode( $raw_json, true, 8, JSON_THROW_ON_ERROR );
+		} catch ( \JsonException $e ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid settings data.', 'buddyboss' ) ) );
+		}
 		if ( ! is_array( $settings ) ) {
 			wp_send_json_error( array( 'message' => __( 'Invalid settings data.', 'buddyboss' ) ) );
 		}
@@ -1264,6 +1271,24 @@ class BB_Admin_Settings_Ajax {
 			// Save the main field if it was submitted.
 			if ( array_key_exists( $name, $settings ) ) {
 				$value = $settings[ $name ];
+
+				// Skip persistence for display-only fields that explicitly opt out
+				// via `'sanitize_callback' => '__return_empty_string'`. These are
+				// virtual fields the React change-tracker may include in the save
+				// payload (notice / hidden / bb_verify_popup / static_text /
+				// empty_state / reaction_notice / reaction_info / etc.), but they
+				// hold no user data. Writing the empty string back creates zombie
+				// autoloaded `_bb_*` / `_bb_om_*` rows in wp_options that bloat
+				// `alloptions` and trigger downstream conditional bugs (e.g.
+				// Offload Media hidden-flag conditionals flipping when the React
+				// auto-save merges `response.data.saved` into UI state).
+				if (
+					! empty( $field['sanitize_callback'] ) &&
+					is_string( $field['sanitize_callback'] ) &&
+					'__return_empty_string' === $field['sanitize_callback']
+				) {
+					continue;
+				}
 
 				// Apply registered sanitize callback if present.
 				//
@@ -1930,11 +1955,15 @@ class BB_Admin_Settings_Ajax {
 			// Prime the term cache for all email posts to avoid N+1 queries.
 			update_object_term_cache( $email_posts, bp_get_email_post_type() );
 
-			// Map each post to its email type slug(s).
+			// Map each post to its email type slug(s). get_the_terms() reads the
+			// primed object cache directly; wp_get_object_terms() with custom
+			// fields bypasses that fast path and re-queries per post.
+			$tax = bp_get_email_tax_type();
 			foreach ( $email_posts as $post_id ) {
-				$post_terms = wp_get_object_terms( $post_id, bp_get_email_tax_type(), array( 'fields' => 'slugs' ) );
-				if ( ! is_wp_error( $post_terms ) ) {
-					foreach ( $post_terms as $slug ) {
+				$post_terms = get_the_terms( $post_id, $tax );
+				if ( ! empty( $post_terms ) && ! is_wp_error( $post_terms ) ) {
+					foreach ( $post_terms as $term ) {
+						$slug = $term->slug;
 						if ( ! isset( $slug_post_map[ $slug ] ) ) {
 							$slug_post_map[ $slug ] = array();
 						}
@@ -2293,6 +2322,9 @@ class BB_Admin_Settings_Ajax {
 				$has_more = true;
 				$page_ids = array_slice( $page_ids, 0, $per_page );
 			}
+			// fields=ids skips post-object hydration; prime once so get_the_title()
+			// is a cache hit instead of one get_post() per page-row in the loop.
+			_prime_post_caches( $page_ids, false, false );
 			foreach ( $page_ids as $page_id ) {
 				$title     = get_the_title( $page_id );
 				$results[] = array(
