@@ -838,7 +838,8 @@ function bb_members_enrich_profile_type_options( $field_data, $field, $feature_i
 	$member_types = bp_get_active_member_types();
 
 	// Prime post caches to avoid N+1 get_post_meta() calls in the loop.
-	if ( ! empty( $member_types ) ) {
+	// _prime_post_caches() is public since WP 6.1; guard for WP 6.0 compat.
+	if ( ! empty( $member_types ) && function_exists( '_prime_post_caches' ) ) {
 		_prime_post_caches( $member_types, false, true );
 	}
 

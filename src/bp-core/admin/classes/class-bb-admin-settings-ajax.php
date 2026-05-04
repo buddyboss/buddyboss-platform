@@ -2324,7 +2324,10 @@ class BB_Admin_Settings_Ajax {
 			}
 			// fields=ids skips post-object hydration; prime once so get_the_title()
 			// is a cache hit instead of one get_post() per page-row in the loop.
-			_prime_post_caches( $page_ids, false, false );
+			// _prime_post_caches() is public since WP 6.1; guard for WP 6.0 compat.
+			if ( function_exists( '_prime_post_caches' ) ) {
+				_prime_post_caches( $page_ids, false, false );
+			}
 			foreach ( $page_ids as $page_id ) {
 				$title     = get_the_title( $page_id );
 				$results[] = array(

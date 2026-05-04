@@ -255,7 +255,8 @@ class BB_Admin_Forums_Ajax {
 					$thumbnail_ids[] = $tid;
 				}
 			}
-			if ( ! empty( $thumbnail_ids ) ) {
+			// _prime_post_caches() is public since WP 6.1; guard for WP 6.0 compat.
+			if ( ! empty( $thumbnail_ids ) && function_exists( '_prime_post_caches' ) ) {
 				_prime_post_caches( array_values( array_unique( $thumbnail_ids ) ), false, false );
 			}
 		}

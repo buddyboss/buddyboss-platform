@@ -295,7 +295,10 @@ function bb_appearance_register_pages_fields( $feature_id ) {
 			// instead of a DB query (this fires on every admin request via
 			// Settings 2.0 registration on bp_loaded:4).
 			if ( $current_id ) {
-				_prime_post_caches( array( $current_id ), false, false );
+				// _prime_post_caches() is public since WP 6.1; guard for WP 6.0 compat.
+				if ( function_exists( '_prime_post_caches' ) ) {
+					_prime_post_caches( array( $current_id ), false, false );
+				}
 				if ( 'publish' !== get_post_status( $current_id ) ) {
 					$current_id = 0;
 				}
