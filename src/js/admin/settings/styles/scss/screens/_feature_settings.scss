@@ -3721,3 +3721,29 @@
 		color: $bb-text-secondary-color;
 	}
 }
+
+// Empty-state slot used when the feature loaded successfully but no side
+// panels have been registered yet — typical race when the admin enables a
+// feature and clicks Settings before BB_Feature_Loader has included the
+// admin settings file. Auto-retries are firing in the background; this
+// shows a centered spinner + "Activating…" message instead of the
+// misleading "Please select a panel from the sidebar." fallback.
+.bb-admin-feature-settings__no-section--activating {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 12px;
+	padding: 60px 20px;
+	color: $bb-text-tertiary-color;
+	text-align: center;
+
+	p {
+		margin: 0;
+		font-size: 14px;
+	}
+
+	.components-spinner {
+		margin: 0;
+	}
+}

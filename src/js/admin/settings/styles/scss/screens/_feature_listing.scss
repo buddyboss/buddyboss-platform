@@ -256,6 +256,18 @@
 			background: $bb-background-secondary-color;
 			box-shadow: none;
 		}
+
+		// Activating state — spinner + "Activating…" replaces icon + "Settings"
+		// while the toggle AJAX is in flight. Tames the WP Spinner default
+		// margin so it doesn't push the label off-center inside the button.
+		&--activating {
+
+			.components-spinner {
+				margin: 0 4px 0 0;
+				width: 14px;
+				height: 14px;
+			}
+		}
 	}
 
 	&__feature-right {

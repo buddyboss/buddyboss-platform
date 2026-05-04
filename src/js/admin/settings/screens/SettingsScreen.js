@@ -39,6 +39,16 @@ export function SettingsScreen({ onNavigate }) {
 	// pattern accommodate a future confirm_on_* flow without restructuring.
 	const [pendingToggle, setPendingToggle] = useState(null);
 
+	// Set of feature IDs whose toggle AJAX is currently in flight. Surfaced to
+	// the feature card so the "Settings" button is disabled (with a spinner)
+	// while activation is still propagating server-side. Without this, an
+	// admin who clicks Settings immediately after enabling a feature can land
+	// on the feature page before its BB_Feature_Loader has registered any
+	// admin panels — leaving an empty sidebar and the misleading
+	// "Please select a panel from the sidebar." message. Tracked as a Set so
+	// concurrent toggles on different features don't trample each other.
+	const [togglingFeatureIds, setTogglingFeatureIds] = useState(() => new Set());
+
 	useEffect(() => {
 		// Load features via shared cache (prevents duplicate AJAX calls with Router)
 		getCachedFeatures()
@@ -241,6 +251,25 @@ export function SettingsScreen({ onNavigate }) {
 		const controller = new AbortController();
 		toggleControllers.current[featureId] = controller;
 
+		// Mark this feature as toggling so the card's "Settings" button is
+		// disabled until the AJAX settles. Removed in every completion path
+		// below — success, error, and abort.
+		setTogglingFeatureIds((prev) => {
+			const next = new Set(prev);
+			next.add(featureId);
+			return next;
+		});
+		const clearToggling = () => {
+			setTogglingFeatureIds((prev) => {
+				if ( ! prev.has(featureId) ) {
+					return prev;
+				}
+				const next = new Set(prev);
+				next.delete(featureId);
+				return next;
+			});
+		};
+
 		// 3. Fire AJAX in the background.
 		toggleFeature(featureId, checked, { signal: controller.signal })
 			.then((response) => {
@@ -248,6 +277,7 @@ export function SettingsScreen({ onNavigate }) {
 				if (toggleControllers.current[featureId] === controller) {
 					delete toggleControllers.current[featureId];
 				}
+				clearToggling();
 
 				if (response.success) {
 					// Confirm with server data.
@@ -332,7 +362,9 @@ export function SettingsScreen({ onNavigate }) {
 				}
 			})
 			.catch((error) => {
-				// Aborted by a newer click — do nothing, the newer request owns the UI.
+				// Aborted by a newer click — the newer request still owns the
+				// "toggling" state (it added itself before this catch fires),
+				// so we don't clear it here. The other completion paths handle it.
 				if ( 'AbortError' === error.name ) {
 					return;
 				}
@@ -341,6 +373,7 @@ export function SettingsScreen({ onNavigate }) {
 				if (toggleControllers.current[featureId] === controller) {
 					delete toggleControllers.current[featureId];
 				}
+				clearToggling();
 
 				// Network/other error — revert.
 				setFeatures((prev) =>
@@ -586,25 +619,54 @@ export function SettingsScreen({ onNavigate }) {
 														{__('Settings', 'buddyboss')}
 													</Button>
 												) : feature.settings_route ? (
-													<Button
-														variant="secondary"
-														className={`bb-admin-settings__feature-settings-btn ${feature.status !== 'active' || feature.is_drm_locked ? 'bb-admin-settings__feature-settings-btn--disabled' : ''}`}
-														onClick={() => {
-															if ( feature.is_drm_locked ) {
-																return;
-															}
-															// External URL (add-on plugins with own settings page, not bb-settings).
-															if ( feature.settings_route && feature.settings_route.startsWith( 'http' ) && ! feature.settings_route.includes( 'page=bb-settings' ) ) {
-																window.location.href = feature.settings_route;
-															} else {
-																onNavigate( urlToRoute( feature.settings_route ) );
-															}
-														}}
-														disabled={feature.status !== 'active' || !!feature.is_drm_locked}
-													>
-														<i className="bb-icon-settings"></i>
-														{__('Settings', 'buddyboss')}
-													</Button>
+													( () => {
+														// While the toggle AJAX is in flight, disable the
+														// Settings button — clicking through too early
+														// races BB_Feature_Loader and lands the admin on a
+														// feature page with no registered side panels.
+														var isTogglingThis = togglingFeatureIds.has(feature.id);
+														var isDisabled = feature.status !== 'active' || !!feature.is_drm_locked || isTogglingThis;
+														// Direction is read from the optimistically-updated
+														// `feature.status` — by the time this renders the
+														// optimistic flip has already applied, so 'active'
+														// means we're transitioning ON and 'inactive' means
+														// we're transitioning OFF.
+														var isDeactivating = isTogglingThis && 'active' !== feature.status;
+														return (
+															<Button
+																variant="secondary"
+																className={`bb-admin-settings__feature-settings-btn${isDisabled ? ' bb-admin-settings__feature-settings-btn--disabled' : ''}${isTogglingThis ? ' bb-admin-settings__feature-settings-btn--activating' : ''}`}
+																onClick={() => {
+																	if ( feature.is_drm_locked || isTogglingThis ) {
+																		return;
+																	}
+																	// External URL (add-on plugins with own settings page, not bb-settings).
+																	if ( feature.settings_route && feature.settings_route.startsWith( 'http' ) && ! feature.settings_route.includes( 'page=bb-settings' ) ) {
+																		window.location.href = feature.settings_route;
+																	} else {
+																		onNavigate( urlToRoute( feature.settings_route ) );
+																	}
+																}}
+																disabled={isDisabled}
+																aria-busy={isTogglingThis ? 'true' : undefined}
+															>
+																{ isTogglingThis ? (
+																	<>
+																		<Spinner />
+																		{ isDeactivating
+																			? __('Deactivating…', 'buddyboss')
+																			: __('Activating…', 'buddyboss')
+																		}
+																	</>
+																) : (
+																	<>
+																		<i className="bb-icon-settings"></i>
+																		{__('Settings', 'buddyboss')}
+																	</>
+																) }
+															</Button>
+														);
+													} )()
 												) : null }
 											</div>
 											<div className="bb-admin-settings__feature-right">

@@ -8,8 +8,8 @@
  */
 
 import { useState, useEffect, useRef, useCallback, useMemo, lazy, Suspense, RawHTML } from '@wordpress/element';
-import { __ } from '@wordpress/i18n';
-import { Spinner, ToggleControl } from '@wordpress/components';
+import { __, sprintf } from '@wordpress/i18n';
+import { Button, Spinner, ToggleControl } from '@wordpress/components';
 import { ajaxFetch } from '../utils/ajax';
 import { getCachedFeatureData, setCachedFeatureData, invalidateFeatureCache } from '../utils/featureCache';
 import { BB_EVENTS } from '../utils/constants';
@@ -94,6 +94,17 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 
 	// Section status overrides (updated via custom events from input_button fields).
 	const [sectionStatusOverrides, setSectionStatusOverrides] = useState({});
+
+	// Empty-panels recovery: when the AJAX returns success but `side_panels`
+	// is empty, the feature was likely just activated and BB_Feature_Loader
+	// hasn't yet included its admin settings file. Auto-retry up to
+	// EMPTY_PANELS_MAX_RETRIES with a small delay; on the final failure the
+	// empty-state message exposes a manual "Retry" button. State (not ref)
+	// because the JSX needs to read the count to decide which empty-state
+	// variant to render.
+	const EMPTY_PANELS_MAX_RETRIES = 3;
+	const EMPTY_PANELS_RETRY_DELAY_MS = 1500;
+	const [emptyPanelsRetryCount, setEmptyPanelsRetryCount] = useState(0);
 
 	// Upgrade modal state for `pro_only` fields and `pro_notice` sections.
 	// Reuses the same UpgradeModal component used by placeholder feature
@@ -276,6 +287,82 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 			setActivePanelId(sidePanelId);
 		}
 	}, [sidePanelId, sidePanels]);
+
+	// Reset the empty-panels retry counter whenever the feature changes — a
+	// fresh feature page starts the recovery sequence over from zero.
+	useEffect(() => {
+		setEmptyPanelsRetryCount(0);
+	}, [featureId]);
+
+	// Auto-retry the get_feature_settings AJAX when we have a successfully
+	// loaded feature object but no panels — recovers from the race where the
+	// admin enables a feature on the grid and immediately clicks Settings
+	// before BB_Feature_Loader has registered the feature's admin settings
+	// file. Stops after EMPTY_PANELS_MAX_RETRIES; the empty-state JSX below
+	// then surfaces a manual "Retry" button.
+	useEffect(() => {
+		if ( isLoading || ! feature || sidePanels.length > 0 ) {
+			return;
+		}
+		if ( emptyPanelsRetryCount >= EMPTY_PANELS_MAX_RETRIES ) {
+			return;
+		}
+
+		var cancelled = false;
+		var controller = new AbortController();
+		var timer = setTimeout(function () {
+			ajaxFetch(
+				'bb_admin_get_feature_settings',
+				{ feature_id: featureId },
+				{ signal: controller.signal }
+			)
+				.then(function (response) {
+					if ( cancelled ) {
+						return;
+					}
+					if ( response && response.success && response.data ) {
+						var loadedPanels = response.data.side_panels || [];
+						if ( loadedPanels.length > 0 ) {
+							// Feature loader caught up — hydrate fully.
+							setCachedFeatureData(featureId, response.data);
+							setFeature(response.data);
+							setSidePanels(loadedPanels);
+							setNavItems(response.data.navigation || []);
+							var loadedSettings = response.data.settings || {};
+							setSettings(loadedSettings);
+							setOriginalSettings(JSON.parse(JSON.stringify(loadedSettings)));
+							var matchedPanel = sidePanelId && loadedPanels.some(function (p) { return p.id === sidePanelId; })
+								? sidePanelId
+								: ( ( loadedPanels.find(function (p) { return p.is_default; }) || loadedPanels[0] ).id );
+							setActivePanelId(matchedPanel);
+							setEmptyPanelsRetryCount(0);
+							return;
+						}
+					}
+					// Still empty — bump the counter to schedule the next attempt
+					// (or surface the manual retry button when the cap is reached).
+					setEmptyPanelsRetryCount(function (n) { return n + 1; });
+				})
+				.catch(function (err) {
+					if ( err && 'AbortError' === err.name ) {
+						return;
+					}
+					setEmptyPanelsRetryCount(function (n) { return n + 1; });
+				});
+		}, EMPTY_PANELS_RETRY_DELAY_MS);
+
+		return function () {
+			cancelled = true;
+			controller.abort();
+			clearTimeout(timer);
+		};
+	}, [ isLoading, feature, sidePanels.length, featureId, sidePanelId, emptyPanelsRetryCount ]);
+
+	// Manual retry handler — resets the counter so the auto-retry effect runs
+	// a fresh batch of attempts. Used by the empty-state "Try again" button.
+	const handleEmptyPanelsManualRetry = () => {
+		setEmptyPanelsRetryCount(0);
+	};
 
 	// Generic event listener for refetching feature data.
 	// Refetch is used after dismiss/complete to refresh migration state (panels). For reactions,
@@ -979,9 +1066,56 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 									})}
 								</>
 							) : (
-								<div className="bb-admin-feature-settings__no-section">
-									<p>{__('Please select a panel from the sidebar.', 'buddyboss')}</p>
-								</div>
+								// Two distinct empty states share this slot:
+								//
+								// 1. sidePanels.length === 0 — feature loaded but the
+								//    server returned no panels. Most common cause is the
+								//    enable→click-Settings race where BB_Feature_Loader
+								//    hasn't yet included the admin settings file. While
+								//    we're under the retry cap the auto-retry effect
+								//    above is silently re-fetching, so we show an
+								//    "Activating…" spinner. After the cap, we surface a
+								//    manual retry button.
+								//
+								// 2. sidePanels.length > 0 but no activePanelId selected
+								//    — extremely rare in the current router (the load
+								//    code always picks a default panel) but kept as a
+								//    safety net so the slot is never blank.
+								sidePanels.length === 0 ? (
+									<div className="bb-admin-feature-settings__no-section bb-admin-feature-settings__no-section--activating">
+										{ emptyPanelsRetryCount < EMPTY_PANELS_MAX_RETRIES ? (
+											<>
+												<Spinner />
+												<p>
+													{ feature && feature.label
+														? sprintf(
+															/* translators: %s: feature label being activated. */
+															__( 'Activating %s… this should only take a moment.', 'buddyboss' ),
+															feature.label
+														)
+														: __( 'Activating feature… this should only take a moment.', 'buddyboss' )
+													}
+												</p>
+											</>
+										) : (
+											<>
+												<p>
+													{ __( 'Couldn\'t load settings. The feature may not be fully active yet.', 'buddyboss' ) }
+												</p>
+												<Button
+													variant="secondary"
+													onClick={handleEmptyPanelsManualRetry}
+												>
+													{ __( 'Try again', 'buddyboss' ) }
+												</Button>
+											</>
+										) }
+									</div>
+								) : (
+									<div className="bb-admin-feature-settings__no-section">
+										<p>{__('Please select a panel from the sidebar.', 'buddyboss')}</p>
+									</div>
+								)
 							)}
 
 						</div>
