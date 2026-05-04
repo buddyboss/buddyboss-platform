@@ -454,6 +454,17 @@
 		margin: 8px 0 0;
 		line-height: 18px;
 		max-width: 632px;
+
+		// Inline links inside the description (e.g. the "Settings - Login &
+		// Registration - Login Redirects" deep link in the Add New Profile
+		// Type modal). No underline at any state — matches the project
+		// convention used in _feature_settings.scss, _email-templates-list.scss,
+		// _help-modal.scss, and _flagged-members.scss where descriptive
+		// links are styled with `text-decoration: none` without a hover
+		// underline override.
+		a {
+			text-decoration: none;
+		}
 	}
 
 	&__row {
