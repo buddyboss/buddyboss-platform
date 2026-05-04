@@ -295,13 +295,152 @@ function bb_get_field_upgrade_for( $feature_id, $panel_id = '', $section_id = ''
 }
 
 /**
+ * Detect the media provider for a given URL and return a normalized embed payload.
+ *
+ * Marketing supplies `upgrade_video_url` as a regular share URL (e.g.
+ * `https://youtu.be/abc`, `https://vimeo.com/123`, or a direct `.mp4` link).
+ * The React modal needs a provider type + a ready-to-embed URL — sniffing
+ * the URL on the client is fragile, so we do it once here.
+ *
+ * Supported shapes:
+ *  - YouTube:  youtube.com/watch?v=ID, youtu.be/ID, youtube.com/embed/ID
+ *  - Vimeo:    vimeo.com/ID, player.vimeo.com/video/ID
+ *  - MP4:      any URL ending in .mp4 (case-insensitive, ignoring query string)
+ *
+ * Returns null when the URL doesn't match any supported provider — callers
+ * should treat that as "no video, fall back to image".
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $url Raw video URL from the catalog.
+ * @return array|null { type: 'youtube'|'vimeo'|'mp4', url: string } or null on no match.
+ */
+function bb_detect_upgrade_video_provider( $url ) {
+	if ( empty( $url ) || ! is_string( $url ) ) {
+		return null;
+	}
+
+	$url = trim( $url );
+
+	// YouTube — match watch?v=, youtu.be/, /embed/, /shorts/.
+	// Marketing wants minimal chrome on the upsell modal. With `controls=0`
+	// the embed has no manual play button, so we autoplay muted + loop —
+	// the video plays the moment the modal opens, with no UI to interact with.
+	// Browsers require `muted=1` for autoplay to succeed (since 2018).
+	// Param breakdown:
+	//   autoplay=1       — start playing on load (requires muted)
+	//   mute=1           — start muted; mandatory for autoplay
+	//   loop=1           — restart at end (needs `playlist=ID` to actually loop)
+	//   playlist=ID      — workaround required for loop=1 to work on single videos
+	//   controls=0       — hide the playback control bar
+	//   modestbranding=1 — drop the YouTube logo overlay
+	//   rel=0            — only same-channel related videos
+	//   showinfo=0       — suppress info overlay (legacy)
+	//   iv_load_policy=3 — disable annotations/cards
+	//   disablekb=1      — disable keyboard shortcuts
+	//   fs=0             — hide fullscreen button
+	//   playsinline=1    — inline playback on iOS
+	// Use `youtube-nocookie.com` for privacy-enhanced mode (same player).
+	if ( preg_match( '#(?:youtube\.com/(?:watch\?v=|embed/|shorts/)|youtu\.be/)([A-Za-z0-9_\-]{6,})#i', $url, $m ) ) {
+		$video_id = $m[1];
+		return array(
+			'type' => 'youtube',
+			'url'  => 'https://www.youtube-nocookie.com/embed/' . $video_id . '?autoplay=1&mute=1&loop=1&playlist=' . $video_id . '&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1&fs=0&playsinline=1',
+		);
+	}
+
+	// Vimeo — match vimeo.com/ID or player.vimeo.com/video/ID.
+	// Vimeo gets its own behavior (different from YouTube/MP4 which autoplay
+	// muted+loop): the user wants a visible play button on the poster frame
+	// so visitors actively choose to play. Vimeo's `controls=0` hides not
+	// only the playback bar but also the initial play button, so we keep
+	// controls enabled here. `title=0&byline=0&portrait=0` still suppresses
+	// the author/channel branding — that's the typical clean embed look.
+	// Param breakdown:
+	//   title=0       — hide video title overlay
+	//   byline=0      — hide author byline
+	//   portrait=0    — hide author avatar
+	//   pip=0         — hide picture-in-picture button
+	//   playsinline=1 — inline playback on iOS
+	if ( preg_match( '#(?:player\.)?vimeo\.com/(?:video/)?(\d+)#i', $url, $m ) ) {
+		return array(
+			'type' => 'vimeo',
+			'url'  => 'https://player.vimeo.com/video/' . $m[1] . '?title=0&byline=0&portrait=0&pip=0&playsinline=1',
+		);
+	}
+
+	// MP4 — strip query/fragment before checking extension.
+	$path = wp_parse_url( $url, PHP_URL_PATH );
+	if ( is_string( $path ) && preg_match( '#\.mp4$#i', $path ) ) {
+		return array(
+			'type' => 'mp4',
+			'url'  => $url,
+		);
+	}
+
+	return null;
+}
+
+/**
+ * Build a normalized media payload for an upgrade modal.
+ *
+ * Resolution order:
+ *  - Video URL set + matches a known provider → media is the video. If an
+ *    image URL is also present, it becomes a `poster` (only used by `<video>`
+ *    on mp4; harmless on iframe embeds).
+ *  - No video, image present → media is the image.
+ *  - Neither → empty media (caller should hide the wrapper).
+ *
+ * Shared between field-level (bb-field-upgrades.json) and feature-level
+ * (bb-features.json) modals so React has a single rendering contract.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $video_url Raw video URL from the catalog (may be empty).
+ * @param string $image_url Raw image URL from the catalog (may be empty).
+ * @return array { type: '', url: '', poster: '' } shape; type is one of
+ *               'youtube'|'vimeo'|'mp4'|'image'|'' (empty when nothing set).
+ */
+function bb_admin_build_upgrade_media( $video_url, $image_url ) {
+	$image_url = esc_url_raw( $image_url );
+	$video     = bb_detect_upgrade_video_provider( $video_url );
+
+	if ( null !== $video ) {
+		return array(
+			'type'   => $video['type'],
+			'url'    => esc_url_raw( $video['url'] ),
+			'poster' => $image_url,
+		);
+	}
+
+	if ( ! empty( $image_url ) ) {
+		return array(
+			'type'   => 'image',
+			'url'    => $image_url,
+			'poster' => '',
+		);
+	}
+
+	return array(
+		'type'   => '',
+		'url'    => '',
+		'poster' => '',
+	);
+}
+
+/**
  * Build a serializable `pro_notice.modal` payload from a catalog entry.
  *
  * Centralizes the catalog-shape → React-modal-shape mapping so both the
  * field formatter and the section formatter produce identical payloads.
  * `UpgradeModal` reads `label`, `upgrade_title`, `upgrade_description`,
- * `upgrade_image_url`, `upgrade_url`, `upgrade_tier` — those keys come
- * straight through without renaming.
+ * `upgrade_url`, `upgrade_tier`, and a normalized `media` object — the
+ * media object is built here so React doesn't have to sniff URLs.
+ *
+ * Media resolution order:
+ *  1. `upgrade_video_url` set + matches a known provider → media is the video.
+ *     (`upgrade_image_url`, when present, becomes a poster on `<video>` for mp4.)
+ *  2. Otherwise → media is the image (or empty when no image either).
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -315,12 +454,19 @@ function bb_field_upgrade_to_modal_payload( $entry, $fallback_label = '' ) {
 		return array();
 	}
 
+	$media = bb_admin_build_upgrade_media(
+		$entry['upgrade_video_url'] ?? '',
+		$entry['upgrade_image_url'] ?? ''
+	);
+
 	return array(
 		'tier'        => sanitize_key( $entry['upgrade_tier']        ?? 'pro' ),
 		'label'       => sanitize_text_field( $entry['label']        ?? $fallback_label ),
 		'title'       => sanitize_text_field( $entry['upgrade_title'] ?? '' ),
 		'description' => wp_kses_post( $entry['upgrade_description'] ?? '' ),
-		'image_url'   => esc_url_raw( $entry['upgrade_image_url']    ?? '' ),
+		// Kept for backward-compat with any consumer that still reads `image_url`.
+		'image_url'   => 'image' === $media['type'] ? $media['url'] : ( $media['poster'] ?? '' ),
+		'media'       => $media,
 		'url'         => esc_url_raw( $entry['upgrade_url']          ?? 'https://www.buddyboss.com/pricing/' ),
 	);
 }

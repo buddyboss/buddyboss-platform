@@ -125,6 +125,14 @@
 		justify-content: center;
 		overflow: hidden;
 		min-height: 200px;
+
+		// Video variant — sized by aspect-ratio rather than the image's intrinsic
+		// height. 16/9 matches every supported provider (YouTube, Vimeo, mp4)
+		// and removes the static min-height so the iframe fills the wrapper.
+		&--video {
+			aspect-ratio: 16 / 9;
+			min-height: 0;
+		}
 	}
 
 	&__image {
@@ -133,6 +141,19 @@
 		display: block;
 		object-fit: cover;
 	}
+
+	// YouTube/Vimeo iframe and HTML5 <video> share the same fill behavior:
+	// stretch to the wrapper, no border, cover-fit so letterboxing is hidden
+	// inside the rounded wrapper (which has overflow: hidden).
+	&__video {
+		width: 100%;
+		height: 100%;
+		display: block;
+		border: 0;
+		object-fit: cover;
+		background: #000;
+	}
+
 
 	&__content {
 		display: flex;

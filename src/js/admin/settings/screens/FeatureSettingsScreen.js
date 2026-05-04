@@ -129,6 +129,10 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 			upgrade_title: modal.title || '',
 			upgrade_description: modal.description || fallbackBody || '',
 			upgrade_image_url: modal.image_url || '',
+			// PHP-built media payload: { type: 'youtube'|'vimeo'|'mp4'|'image'|'',
+			// url, poster }. UpgradeModal switches on media.type to pick the
+			// renderer (iframe / video / img). No URL sniffing on the client.
+			upgrade_media: modal.media || null,
 			upgrade_url: modal.url || 'https://www.buddyboss.com/pricing/',
 			upgrade_tier: modal.tier || 'pro',
 		};

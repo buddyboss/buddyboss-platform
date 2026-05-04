@@ -309,6 +309,13 @@ function bb_admin_inject_placeholder_features( $features ) {
 			// rendering.
 			'upgrade_title'       => isset( $item['upgrade_title'] ) ? sanitize_text_field( $item['upgrade_title'] ) : '',
 			'upgrade_description' => isset( $item['upgrade_description'] ) ? wp_kses_post( $item['upgrade_description'] ) : '',
+			'upgrade_video_url'   => isset( $item['upgrade_video_url'] ) ? esc_url_raw( $item['upgrade_video_url'] ) : '',
+			// Pre-computed media payload — same shape as field upgrades modal.
+			// React renders {type, url, poster} without sniffing URLs.
+			'upgrade_media'       => bb_admin_build_upgrade_media(
+				isset( $item['upgrade_video_url'] ) ? $item['upgrade_video_url'] : '',
+				isset( $item['upgrade_image_url'] ) ? $item['upgrade_image_url'] : ''
+			),
 			'order'               => isset( $item['order'] ) ? (int) $item['order'] : 999,
 		);
 	}
