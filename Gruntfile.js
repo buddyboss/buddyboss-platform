@@ -1,6 +1,30 @@
 /* jshint node:true */
 /* global module */
 module.exports = function (grunt) {
+	// Build a GitHub clone URL for the buddyboss org, choosing between SSH
+	// (`git@github.com:...`) and HTTPS (`https://github.com/...`) at runtime.
+	//
+	// Order of precedence:
+	//   1. `GIT_PROTOCOL` env var, if set to "ssh" or "https" (explicit override).
+	//   2. Default: SSH — `buddyboss-platform-api` is a private repo and the
+	//      typical contributor has an SSH key registered with GitHub. HTTPS to
+	//      a private repo only works when the shell has credentials configured
+	//      (GH_TOKEN env, credential helper, or a token in the URL), so it's
+	//      not a safe default for a fresh clone.
+	//
+	// Use cases:
+	//   Default (SSH):                    grunt bp_rest
+	//   CI runner with token, no key:     GIT_PROTOCOL=https grunt bp_rest
+	//                                     (caller is responsible for ensuring
+	//                                      git credential auth is set up)
+	function bbGithubCloneUrl( repo ) {
+		var proto = ( process.env.GIT_PROTOCOL || '' ).toLowerCase();
+		if ( 'https' === proto ) {
+			return 'https://github.com/buddyboss/' + repo + '.git';
+		}
+		return 'git@github.com:buddyboss/' + repo + '.git';
+	}
+
 	var sass       = require( 'node-sass' ),
 		SOURCE_DIR = 'src/',
 		BUILD_DIR  = 'buddyboss-platform/',
@@ -532,17 +556,17 @@ module.exports = function (grunt) {
 				},
 
 				rest_api: {
-					command: 'git clone https://github.com/buddyboss/buddyboss-platform-api.git',
+					command: 'git clone ' + bbGithubCloneUrl( 'buddyboss-platform-api' ),
 					cwd: SOURCE_DIR,
 					stdout: false
 				},
 				rest_performance: {
-					command: 'git clone https://github.com/buddyboss/buddyboss-platform-api.git',
+					command: 'git clone ' + bbGithubCloneUrl( 'buddyboss-platform-api' ),
 					cwd: SOURCE_DIR,
 					stdout: false
 				},
 				fetch_bb_icons: {
-					command: 'git clone https://github.com/buddyboss/bb-icons.git',
+					command: 'git clone ' + bbGithubCloneUrl( 'bb-icons' ),
 					cwd: SOURCE_DIR + 'bp-templates/bp-nouveau/icons/',
 					stdout: false,
 				},
