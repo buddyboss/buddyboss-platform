@@ -15,9 +15,12 @@ import { ajaxFetch } from '../utils/ajax';
  *
  * @param {Object} props Component props
  * @param {Function} props.onNavigate Navigation callback
+ * @param {Object} [props.kbTriggerRef] Ref forwarded to the Knowledge Base trigger button
+ *                                       so the modal can restore focus on close.
+ * @param {Function} [props.openKb] Callback that opens the Knowledge Base modal.
  * @returns {JSX.Element} Header component
  */
-export function Header({ onNavigate }) {
+export function Header({ onNavigate, kbTriggerRef, openKb }) {
 	const [searchQuery, setSearchQuery] = useState('');
 	const [searchResults, setSearchResults] = useState([]);
 	const [showSearchResults, setShowSearchResults] = useState(false);
@@ -204,16 +207,16 @@ export function Header({ onNavigate }) {
 						className="bb-admin-header__ipn-slot"
 						aria-label={__('Notifications', 'buddyboss')}
 					/>
-					{/* Documentation/Help Icon */}
-					<a
-						href="https://www.buddyboss.com/resources/docs/"
-						target="_blank"
-						rel="noopener noreferrer"
+					{/* Documentation/Help Icon — opens the Knowledge Base modal. */}
+					<button
+						ref={kbTriggerRef}
+						type="button"
 						className="bb-admin-header__icon-button"
 						aria-label={__('Documentation', 'buddyboss')}
+						onClick={openKb}
 					>
-						<i className="bb-icons-rl-graduation-cap"></i>
-					</a>
+						<i className="bb-icons-rl-graduation-cap" aria-hidden="true"></i>
+					</button>
 				</div>
 			</div>
 		</header>

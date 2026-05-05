@@ -5,15 +5,23 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useEffect } from '@wordpress/element';
+import { useState, useEffect, useRef, lazy, Suspense } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { Header } from './components/Header';
 import { Router } from './Router';
+import { KbProvider, useKb } from './context/KbContext';
 
 // Register integration-specific hooks that extend the shared bb_verify_popup
 // field. Side-effect import — the file calls wp.hooks.addFilter/addAction at
 // load time. Keep imports here, not inside components, so they register once.
 import './components/recaptcha/recaptcha-verify-hooks';
+
+// Lazy-load the Knowledge Base modal so admins who never open it don't pay
+// the bundle cost. The dynamic import resolves only after the user clicks the
+// graduation-cap trigger and `kbState.isOpen` flips to true.
+const KnowledgeBaseModal = lazy( () =>
+	import( './components/knowledge-base/KnowledgeBaseModal' )
+);
 
 /**
  * Main App Component
@@ -143,7 +151,24 @@ function fixAdminMenuHighlight( route ) {
 	}
 }
 
+/**
+ * Outer App component — kept intentionally thin so the entire admin shell
+ * sits inside the `KbProvider` context. `AppInner` does the real work and
+ * can therefore call `useKb()` to wire the Header trigger and modal mount.
+ *
+ * @returns {JSX.Element}
+ */
 export function App() {
+	return (
+		<KbProvider>
+			<AppInner />
+		</KbProvider>
+	);
+}
+
+function AppInner() {
+	const kbTriggerRef = useRef( null );
+	const { open: openKb, state: kbState } = useKb();
 	const [currentRoute, setCurrentRoute] = useState('/settings');
 	const [isLoading, setIsLoading] = useState(true);
 
@@ -320,10 +345,19 @@ export function App() {
 			<a href="#bb-admin-settings-main" className="screen-reader-shortcut">
 				{ __( 'Skip to settings content', 'buddyboss' ) }
 			</a>
-			<Header onNavigate={setCurrentRoute} />
+			<Header
+				onNavigate={setCurrentRoute}
+				kbTriggerRef={kbTriggerRef}
+				openKb={openKb}
+			/>
 			<div id="bb-admin-settings-main" tabIndex="-1">
 				<Router currentRoute={currentRoute} onNavigate={setCurrentRoute} />
 			</div>
+			{ kbState.isOpen && (
+				<Suspense fallback={null}>
+					<KnowledgeBaseModal triggerRef={kbTriggerRef} />
+				</Suspense>
+			) }
 		</div>
 	);
 }

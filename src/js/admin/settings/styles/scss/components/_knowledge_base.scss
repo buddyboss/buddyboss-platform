@@ -1,0 +1,342 @@
+// Knowledge Base modal — scoped under .bb-admin-app to prevent admin-style bleed.
+// Mobile breakpoints: 768px (single column), 1024px (full layout).
+// RTL handled by Grunt rtlcss task — no hand-written .rtl overrides.
+
+.bb-admin-app {
+	.bb-kb-modal-overlay {
+		position: fixed;
+		inset: 0;
+		z-index: 9999;
+		background: rgba(0, 0, 0, 0.4);
+		display: flex;
+		align-items: stretch;
+		justify-content: stretch;
+		animation: bb-kb-fade-in 200ms ease;
+
+		@media (prefers-reduced-motion: reduce) {
+			animation: none;
+		}
+	}
+
+	.bb-kb-modal {
+		flex: 1 1 auto;
+		background: #fff;
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+		animation: bb-kb-slide-up 220ms ease;
+
+		@media (prefers-reduced-motion: reduce) {
+			animation: none;
+		}
+	}
+
+	.bb-kb-modal__header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 16px 24px;
+		border-bottom: 1px solid #e5e5e5;
+		flex: 0 0 auto;
+	}
+
+	.bb-kb-modal__brand {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		font-weight: 600;
+		font-size: 14px;
+		color: #1e1e1e;
+	}
+
+	.bb-kb-modal__close {
+		background: none;
+		border: 0;
+		cursor: pointer;
+		font-size: 20px;
+		color: #2f2f2f;
+		padding: 4px;
+
+		&:focus-visible {
+			outline: 2px solid #2271b1;
+			outline-offset: 2px;
+		}
+	}
+
+	.bb-kb-modal__body {
+		flex: 1 1 auto;
+		overflow-y: auto;
+	}
+
+	.bb-kb-landing {
+		max-width: 1100px;
+		margin: 0 auto;
+		padding: 32px 24px;
+	}
+
+	.bb-kb-landing__title {
+		font-size: 18px;
+		font-weight: 600;
+		color: #1e1e1e;
+		margin: 0 0 24px;
+	}
+
+	.bb-kb-landing__grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 16px;
+		// Reset <ul> defaults — explicit role="list" preserves a11y semantics.
+		list-style: none;
+		padding: 0;
+		margin: 0;
+
+		@media (max-width: 1024px) {
+			grid-template-columns: repeat(2, 1fr);
+		}
+
+		@media (max-width: 768px) {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	.bb-kb-landing__grid-item {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		// The <li> is the grid cell; the <button> inside must fill its width
+		// so cards line up regardless of content length (e.g. uncurated cards
+		// without descriptions don't shrink narrower than their peers).
+		display: flex;
+	}
+
+	.bb-kb-card {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		padding: 24px;
+		background: #fff;
+		border: 1px solid #e5e5e5;
+		border-radius: 12px;
+		text-align: left;
+		width: 100%;
+		cursor: pointer;
+		transition: background 150ms ease, border-color 150ms ease;
+
+		&:hover { background: #f6f6f6; }
+		&:focus-visible { outline: 2px solid #2271b1; outline-offset: 2px; }
+
+		@media (prefers-reduced-motion: reduce) { transition: none; }
+	}
+
+	.bb-kb-card--skeleton {
+		min-height: 180px;
+		background: linear-gradient(90deg, #f0f0f0 25%, #fafafa 50%, #f0f0f0 75%);
+		background-size: 200% 100%;
+		animation: bb-kb-shimmer 1.4s infinite;
+
+		@media (prefers-reduced-motion: reduce) { animation: none; }
+	}
+
+	.bb-kb-card__icon { font-size: 24px; color: #2f2f2f; }
+	.bb-kb-card__title { font-size: 14px; font-weight: 600; color: #1e1e1e; margin: 4px 0 0; }
+	.bb-kb-card__description { font-size: 13px; color: #666; line-height: 1.5; margin: 0; }
+	.bb-kb-card__count { font-size: 13px; color: #2271b1; margin-top: 8px; }
+
+	.bb-kb-category {
+		max-width: 1100px;
+		margin: 0 auto;
+		padding: 24px;
+	}
+
+	.bb-kb-breadcrumb {
+		font-size: 13px;
+		color: #666;
+		margin-bottom: 16px;
+	}
+
+	.bb-kb-breadcrumb__link {
+		background: none;
+		border: 0;
+		color: #2271b1;
+		cursor: pointer;
+		padding: 0;
+		font-size: inherit;
+		&:hover { text-decoration: underline; }
+	}
+
+	.bb-kb-breadcrumb__separator { margin: 0 6px; }
+
+	.bb-kb-category__columns {
+		display: grid;
+		grid-template-columns: 280px 1fr;
+		gap: 32px;
+
+		@media (max-width: 1024px) { grid-template-columns: 240px 1fr; }
+		@media (max-width: 768px)  { grid-template-columns: 1fr; }
+	}
+
+	.bb-kb-sidebar { font-size: 13px; }
+	.bb-kb-sidebar__list { list-style: none; padding: 0; margin: 0; }
+
+	.bb-kb-sidebar__group-toggle {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+		padding: 10px 12px;
+		background: none;
+		border: 0;
+		cursor: pointer;
+		text-align: left;
+		font-size: 13px;
+		color: #1e1e1e;
+		border-radius: 8px;
+
+		&:hover { background: #f6f6f6; }
+		&:focus-visible { outline: 2px solid #2271b1; outline-offset: -2px; }
+	}
+
+	.bb-kb-sidebar__chevron {
+		transition: transform 150ms ease;
+		&.is-expanded { transform: rotate(180deg); }
+		@media (prefers-reduced-motion: reduce) { transition: none; }
+	}
+
+	.bb-kb-sidebar__articles { list-style: none; padding: 0 0 0 16px; margin: 4px 0 8px; }
+
+	// Nested children indent more than the level above. Slugs are unique so
+	// React keys are safe at every depth; these rules just visually nest the
+	// recursive tree returned by the proxy.
+	.bb-kb-sidebar__group--depth-1 .bb-kb-sidebar__group-toggle { padding-left: 28px; }
+	.bb-kb-sidebar__group--depth-2 .bb-kb-sidebar__group-toggle { padding-left: 44px; }
+	.bb-kb-sidebar__group--depth-3 .bb-kb-sidebar__group-toggle { padding-left: 60px; }
+	.bb-kb-sidebar__articles--depth-1 { padding-left: 28px; }
+	.bb-kb-sidebar__articles--depth-2 { padding-left: 44px; }
+	.bb-kb-sidebar__articles--depth-3 { padding-left: 60px; }
+
+	.bb-kb-sidebar__article {
+		display: block;
+		width: 100%;
+		padding: 6px 12px;
+		background: none;
+		border: 0;
+		cursor: pointer;
+		text-align: left;
+		font-size: 13px;
+		color: #2f2f2f;
+		border-radius: 6px;
+
+		&:hover { background: #f6f6f6; }
+		&.is-active { background: #e8f3ff; color: #1e1e1e; font-weight: 500; }
+		&:focus-visible { outline: 2px solid #2271b1; outline-offset: -2px; }
+	}
+
+	.bb-kb-sidebar__truncated {
+		display: block;
+		padding: 12px;
+		font-size: 13px;
+		color: #2271b1;
+		text-decoration: none;
+		&:hover { text-decoration: underline; }
+	}
+
+	.bb-kb-article { max-width: 720px; }
+	.bb-kb-article__title { font-size: 18px; font-weight: 600; margin: 0 0 16px; color: #1e1e1e; }
+	.bb-kb-article__image { max-width: 100%; height: auto; border-radius: 8px; margin-bottom: 16px; }
+
+	.bb-kb-article__body {
+		font-size: 14px;
+		line-height: 1.7;
+		color: #2f2f2f;
+
+		h2 { font-size: 16px; margin: 24px 0 8px; }
+		h3 { font-size: 14px; margin: 18px 0 6px; }
+		p, li { margin: 0 0 12px; }
+		img { max-width: 100%; height: auto; border-radius: 8px; }
+		iframe { max-width: 100%; border-radius: 8px; }
+
+		// Tables: KB articles use rowspan-grouped feature tables. To match the
+		// public buddyboss.com docs rendering: distinct header row, equal-width
+		// columns, alternating row backgrounds for readability, vertical-centered
+		// rowspan cells (so the merged "Feature Category" label sits beside its
+		// description rather than at the top), and clear cell borders.
+		table {
+			border-collapse: collapse;
+			width: 100%;
+			margin: 16px 0;
+			border: 1px solid #e0e0e0;
+			border-radius: 6px;
+			overflow: hidden;
+			table-layout: fixed; // equal-width columns regardless of cell content length
+		}
+		thead th {
+			background: #f6f6f6;
+			color: #1e1e1e;
+			font-weight: 600;
+			text-align: left;
+		}
+		td, th {
+			border: 1px solid #e5e5e5;
+			padding: 12px 14px;
+			text-align: left;
+			vertical-align: top;
+			line-height: 1.5;
+			word-wrap: break-word; // long inline content shouldn't blow the column out
+		}
+		// Rowspan cells in the first column carry a category label that should
+		// sit visually centered beside its run of description rows.
+		tbody td[rowspan],
+		tbody th[rowspan] {
+			vertical-align: middle;
+			background: #fafafa;
+		}
+		// First column (typically the rowspan'd "Feature Category" label cell)
+		// needs slightly stronger emphasis to read as a section header.
+		tbody td:first-child,
+		tbody th:first-child {
+			font-weight: 600;
+			color: #1e1e1e;
+		}
+		// Alternating row backgrounds inside the body — improves scannability for
+		// the long item lists under each merged label.
+		tbody tr:nth-child(odd) td:not(:first-child),
+		tbody tr:nth-child(odd) th:not(:first-child) {
+			background: #fcfcfc;
+		}
+	}
+
+	.bb-kb-article__skeleton {
+		min-height: 240px;
+		background: linear-gradient(90deg, #f0f0f0 25%, #fafafa 50%, #f0f0f0 75%);
+		background-size: 200% 100%;
+		animation: bb-kb-shimmer 1.4s infinite;
+		border-radius: 8px;
+		@media (prefers-reduced-motion: reduce) { animation: none; }
+	}
+
+	.bb-kb-article__error,
+	.bb-kb-landing__error,
+	.bb-kb-category--error {
+		padding: 16px;
+		background: #fff8e7;
+		border: 1px solid #f0d28a;
+		border-radius: 8px;
+		font-size: 13px;
+		color: #1e1e1e;
+	}
+}
+
+@keyframes bb-kb-fade-in {
+	from { opacity: 0; }
+	to   { opacity: 1; }
+}
+
+@keyframes bb-kb-slide-up {
+	from { transform: translateY(8px); opacity: 0; }
+	to   { transform: translateY(0);    opacity: 1; }
+}
+
+@keyframes bb-kb-shimmer {
+	0%   { background-position: 200% 0; }
+	100% { background-position: -200% 0; }
+}
