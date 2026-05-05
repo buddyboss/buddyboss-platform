@@ -189,17 +189,6 @@ export function Header({ onNavigate }) {
 				</div>
 
 				<div className="bb-admin-header__right">
-					{/* Documentation/Help Icon */}
-					<a
-						href="https://www.buddyboss.com/resources/docs/"
-						target="_blank"
-						rel="noopener noreferrer"
-						className="bb-admin-header__icon-button"
-						aria-label={__('Documentation', 'buddyboss')}
-					>
-						<i className="bb-icons-rl-graduation-cap"></i>
-					</a>
-
 					{/*
 					 * Notifications — slot for the live Mothership IPN inbox.
 					 *
@@ -215,6 +204,16 @@ export function Header({ onNavigate }) {
 						className="bb-admin-header__ipn-slot"
 						aria-label={__('Notifications', 'buddyboss')}
 					/>
+					{/* Documentation/Help Icon */}
+					<a
+						href="https://www.buddyboss.com/resources/docs/"
+						target="_blank"
+						rel="noopener noreferrer"
+						className="bb-admin-header__icon-button"
+						aria-label={__('Documentation', 'buddyboss')}
+					>
+						<i className="bb-icons-rl-graduation-cap"></i>
+					</a>
 				</div>
 			</div>
 		</header>
