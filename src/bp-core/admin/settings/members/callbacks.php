@@ -686,7 +686,10 @@ add_action( 'bb_admin_save_feature_settings_after', 'bb_members_handle_slug_form
  * API for Pro and third-party plugins that need to transform element arrays
  * into Settings 2.0 option format.
  *
- * @api
+ * NOTE: Do not add an `@api` tag here. `grunt-apidoc` (used by `grunt bp_rest`)
+ * parses `@api` as the route-header tag `@api {method} path [title]` and aborts
+ * the build with "Empty parser result" when it sees a bare `@api` with no
+ * arguments. The "public API" intent is captured by the prose above.
  *
  * @since BuddyBoss [BBVERSION]
  *

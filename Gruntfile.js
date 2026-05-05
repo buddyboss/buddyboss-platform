@@ -324,8 +324,34 @@ module.exports = function (grunt) {
 					'!**/bp-notifications/**',
 					'!**/bp-settings/**',
 					'!**/bp-xprofile/**',
-					'!**/bp-integrations/**'
+					'!**/bp-integrations/**',
+					// Reactions REST endpoint lives under the new feature
+					// directory layout (`src/bb-features/community/reactions/classes/`).
+					// Excluded here so the flatten-to-bp-core sweep doesn't
+					// recreate a stale duplicate at `bp-core/classes/`. See
+					// the dedicated `bp_rest_reactions` task below.
+					'!**/class-bb-rest-reactions-endpoint.php'
 					],
+					options: {
+						process : function( content ) {
+							return content.replace( /\, 'buddypress'/g, ', \'buddyboss\'' ); // update text-domain.
+						}
+					}
+				},
+				bp_rest_reactions: {
+					// The reactions feature is the first one fully migrated to the
+					// feature-based architecture (`src/bb-features/community/reactions/`).
+					// Its REST controller belongs alongside the rest of the feature's
+					// classes, not in the legacy `bp-core/classes/` flat namespace.
+					// Source path mirrors where buddyboss-platform-api stores it
+					// today: `bp-components/classes/`. If the API repo moves the file,
+					// update `cwd`/`src` here and the matching exclusion in `bp_rest_core`.
+					cwd: SOURCE_DIR + 'buddyboss-platform-api/includes/bp-components/classes/',
+					dest: SOURCE_DIR + 'bb-features/community/reactions/classes/',
+					expand: true,
+					flatten: true,
+					filter: 'isFile',
+					src: ['class-bb-rest-reactions-endpoint.php'],
 					options: {
 						process : function( content ) {
 							return content.replace( /\, 'buddypress'/g, ', \'buddyboss\'' ); // update text-domain.
@@ -649,7 +675,7 @@ module.exports = function (grunt) {
 	grunt.registerTask('pre-commit', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint']);
 	grunt.registerTask('webpack', ['exec:build_blocks', 'exec:build_admin']);
 	grunt.registerTask('src', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint', 'webpack', 'sass', 'rtlcss', 'checktextdomain', /*'imagemin',*/ 'uglify', 'cssmin:minify', 'cssmin:rtl', 'makepot']);
-	grunt.registerTask('bp_rest', ['clean:bp_rest', 'exec:rest_api', 'copy:bp_rest_components', 'copy:bp_rest_core', 'clean:bp_rest', 'apidoc' ]);
+	grunt.registerTask('bp_rest', ['clean:bp_rest', 'exec:rest_api', 'copy:bp_rest_components', 'copy:bp_rest_core', 'copy:bp_rest_reactions', 'clean:bp_rest', 'apidoc' ]);
 	grunt.registerTask('bp_performance', ['clean:bp_rest', 'exec:rest_performance', 'copy:bp_rest_performance', 'copy:bp_rest_mu', 'clean:bp_rest']);
 
 	// Build task: Creates production build in BUILD_DIR, initializes git, performs build operations, then commits to production
