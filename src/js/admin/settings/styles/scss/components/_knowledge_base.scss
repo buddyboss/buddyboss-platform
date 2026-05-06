@@ -105,6 +105,12 @@
 		max-width: 1190px;
 		margin: 40px auto 0;
 		padding: 26px 32px;
+
+		&__skeleton {
+			display: flex;
+			gap: 24px;
+			flex-wrap: wrap;
+		}
 	}
 
 	.bb-kb-landing__title {
@@ -172,8 +178,11 @@
 		background: linear-gradient(90deg, #f0f0f0 25%, #fafafa 50%, #f0f0f0 75%);
 		background-size: 200% 100%;
 		animation: bb-kb-shimmer 1.4s infinite;
+		width: calc(33.33% - 66px);
 
-		@media (prefers-reduced-motion: reduce) { animation: none; }
+		@media (prefers-reduced-motion: reduce) {
+			animation: none;
+		}
 	}
 
 	.bb-kb-card__icon {
@@ -397,6 +406,6 @@
 }
 
 @keyframes bb-kb-shimmer {
-	0%   { background-position: 200% 0; }
-	100% { background-position: -200% 0; }
+	0%   { background-position: 100% 0; }
+	100% { background-position: -100% 0; }
 }
