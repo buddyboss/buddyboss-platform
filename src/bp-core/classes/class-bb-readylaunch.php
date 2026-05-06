@@ -429,7 +429,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 
 			add_filter( 'paginate_links_output', array( $this, 'bb_rl_filter_paginate_links_output' ), 10, 2 );
 
-			if ( class_exists( 'SFWD_LMS' ) ) {
+			if ( class_exists( 'SFWD_LMS' ) && $this->bb_rl_is_page_enabled_for_integration( 'courses' ) ) {
 				require_once buddypress()->compatibility_dir . '/class-bb-readylaunch-learndash-helper.php';
 			}
 		}
