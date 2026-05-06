@@ -96,6 +96,7 @@
 		background-color: $bb-background-primary-color;
 		flex: 1 1 auto;
 		overflow-y: auto;
+		overscroll-behavior: contain;
 	}
 
 	.bb-kb-landing {
