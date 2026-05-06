@@ -116,7 +116,7 @@
 	.bb-kb-landing__title {
 		font-size: 18px;
 		font-weight: 600;
-		color: #1e1e1e;
+		color: $bb-text-color;
 		margin: 0 0 24px;
 	}
 
@@ -218,34 +218,59 @@
 	}
 
 	.bb-kb-breadcrumb {
+		display: flex;
+		align-items: center;
 		font-size: 13px;
-		color: #666;
+		color: $bb-text-tertiary-color;
 		margin-bottom: 16px;
 	}
 
 	.bb-kb-breadcrumb__link {
 		background: none;
 		border: 0;
-		color: #2271b1;
+		color: $bb-link-color;
 		cursor: pointer;
 		padding: 0;
 		font-size: inherit;
-		&:hover { text-decoration: underline; }
 	}
 
-	.bb-kb-breadcrumb__separator { margin: 0 6px; }
+	.bb-kb-breadcrumb__separator {
+		display: flex;
+		color: $bb-icon-tertiary-color;
+		font-size: 16px;
+		margin: 0 6px;
+	}
 
 	.bb-kb-category__columns {
 		display: grid;
-		grid-template-columns: 280px 1fr;
+		grid-template-columns: 300px 1fr;
 		gap: 32px;
+		background-color: $bb-background-base-color;
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-2xl;
 
-		@media (max-width: 1024px) { grid-template-columns: 240px 1fr; }
-		@media (max-width: 768px)  { grid-template-columns: 1fr; }
+		@media (max-width: 1024px) {
+			grid-template-columns: 240px 1fr;
+		}
+
+		@media (max-width: 768px)  {
+			grid-template-columns: 1fr;
+		}
 	}
 
-	.bb-kb-sidebar { font-size: 13px; }
-	.bb-kb-sidebar__list { list-style: none; padding: 0; margin: 0; }
+	.bb-kb-sidebar {
+		font-size: 13px;
+		background-color: $bb-background-primary-hover-color;
+		border-right: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-2xl 0 0 $bb-border-radius-2xl;
+		padding: 24px 16px;
+	}
+
+	.bb-kb-sidebar__list {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
 
 	.bb-kb-sidebar__group-toggle {
 		display: flex;
@@ -258,11 +283,20 @@
 		cursor: pointer;
 		text-align: left;
 		font-size: 13px;
-		color: #1e1e1e;
-		border-radius: 8px;
+		color: $bb-text-color;
+		border-radius: $bb-border-radius-lg;
 
-		&:hover { background: #f6f6f6; }
-		&:focus-visible { outline: 2px solid #2271b1; outline-offset: -2px; }
+		&[aria-expanded="true"] {
+			background-color: $bb-background-base-color;
+		}
+
+		&:hover {
+			background-color: $bb-background-base-color;
+		}
+
+		&:focus-visible {
+			outline: 2px solid #2271b1;
+		}
 	}
 
 	.bb-kb-sidebar__chevron {
@@ -271,17 +305,12 @@
 		@media (prefers-reduced-motion: reduce) { transition: none; }
 	}
 
-	.bb-kb-sidebar__articles { list-style: none; padding: 0 0 0 16px; margin: 4px 0 8px; }
-
-	// Nested children indent more than the level above. Slugs are unique so
-	// React keys are safe at every depth; these rules just visually nest the
-	// recursive tree returned by the proxy.
-	.bb-kb-sidebar__group--depth-1 .bb-kb-sidebar__group-toggle { padding-left: 28px; }
-	.bb-kb-sidebar__group--depth-2 .bb-kb-sidebar__group-toggle { padding-left: 44px; }
-	.bb-kb-sidebar__group--depth-3 .bb-kb-sidebar__group-toggle { padding-left: 60px; }
-	.bb-kb-sidebar__articles--depth-1 { padding-left: 28px; }
-	.bb-kb-sidebar__articles--depth-2 { padding-left: 44px; }
-	.bb-kb-sidebar__articles--depth-3 { padding-left: 60px; }
+	.bb-kb-sidebar__articles {
+		border-left: 1px solid $bb-border-tertiary-color;
+		list-style: none;
+		padding: 0 0 0 0;
+		margin: 8px 0;
+	}
 
 	.bb-kb-sidebar__article {
 		display: block;
@@ -292,12 +321,24 @@
 		cursor: pointer;
 		text-align: left;
 		font-size: 13px;
-		color: #2f2f2f;
-		border-radius: 6px;
+		color: $bb-text-tertiary-color;
 
-		&:hover { background: #f6f6f6; }
-		&.is-active { background: #e8f3ff; color: #1e1e1e; font-weight: 500; }
-		&:focus-visible { outline: 2px solid #2271b1; outline-offset: -2px; }
+		&:hover {
+			color: $bb-text-color;
+		}
+
+		&.is-active {
+			color: $bb-text-color;
+			font-weight: 500;
+		}
+
+		&:focus-visible {
+			outline: 2px solid #2271b1;
+		}
+	}
+
+	.bb-kb-category__main {
+		padding: 28px 0;
 	}
 
 	.bb-kb-sidebar__truncated {
@@ -306,71 +347,112 @@
 		font-size: 13px;
 		color: #2271b1;
 		text-decoration: none;
-		&:hover { text-decoration: underline; }
 	}
 
-	.bb-kb-article { max-width: 720px; }
-	.bb-kb-article__title { font-size: 18px; font-weight: 600; margin: 0 0 16px; color: #1e1e1e; }
-	.bb-kb-article__image { max-width: 100%; height: auto; border-radius: 8px; margin-bottom: 16px; }
+	.bb-kb-article {
+		max-width: 720px;
+	}
+
+	.bb-kb-article__title {
+		font-size: 18px;
+		font-weight: 500;
+		margin: 0 0 18px;
+		color: $bb-text-color;
+	}
+
+	.bb-kb-article__image {
+		max-width: 100%;
+		height: auto;
+		border-radius: 8px;
+		margin-bottom: 16px;
+	}
 
 	.bb-kb-article__body {
 		font-size: 14px;
 		line-height: 1.7;
-		color: #2f2f2f;
+		color: $bb-text-secondary-color;
 
-		h2 { font-size: 16px; margin: 24px 0 8px; }
-		h3 { font-size: 14px; margin: 18px 0 6px; }
-		p, li { margin: 0 0 12px; }
-		img { max-width: 100%; height: auto; border-radius: 8px; }
-		iframe { max-width: 100%; border-radius: 8px; }
+		h2 {
+			color: $bb-text-color;
+			font-size: 16px;
+			font-weight: 500;
+			margin: 0 0 12px;
+		}
 
-		// Tables: KB articles use rowspan-grouped feature tables. To match the
-		// public buddyboss.com docs rendering: distinct header row, equal-width
-		// columns, alternating row backgrounds for readability, vertical-centered
-		// rowspan cells (so the merged "Feature Category" label sits beside its
-		// description rather than at the top), and clear cell borders.
+		h3 {
+			color: $bb-text-color;
+			font-size: 14px;
+			margin: 0 0 12px;
+		}
+
+		li {
+			margin: 0 0 12px;
+		}
+
+		p {
+			color: $bb-text-secondary-color;
+			font-size: 14px;
+			margin-bottom: 16px;
+		}
+
+		a {
+			color: $bb-link-color;
+			text-decoration: none;
+		}
+
+		img {
+			max-width: 100%;
+			height: auto;
+			border-radius: 8px;
+		}
+
+		iframe {
+			max-width: 100%;
+			border-radius: 8px;
+		}
+
+		figure:has(>table) {
+			margin: 0;
+		}
+
 		table {
 			border-collapse: collapse;
 			width: 100%;
 			margin: 16px 0;
-			border: 1px solid #e0e0e0;
-			border-radius: 6px;
+			border: 1px $bb-border-secondary-color;
 			overflow: hidden;
-			table-layout: fixed; // equal-width columns regardless of cell content length
 		}
 		thead th {
-			background: #f6f6f6;
-			color: #1e1e1e;
+			background: $bb-background-color;
+			color: $bb-text-color;
 			font-weight: 600;
 			text-align: left;
 		}
 		td, th {
-			border: 1px solid #e5e5e5;
+			font-size: 13px;
+			border: 1px solid $bb-border-secondary-color;
 			padding: 12px 14px;
 			text-align: left;
 			vertical-align: top;
 			line-height: 1.5;
-			word-wrap: break-word; // long inline content shouldn't blow the column out
+			word-wrap: break-word;
 		}
-		// Rowspan cells in the first column carry a category label that should
-		// sit visually centered beside its run of description rows.
+
 		tbody td[rowspan],
 		tbody th[rowspan] {
 			vertical-align: middle;
-			background: #fafafa;
+			background: $bb-background-secondary-color;
 		}
-		// First column (typically the rowspan'd "Feature Category" label cell)
-		// needs slightly stronger emphasis to read as a section header.
+
 		tbody td:first-child,
 		tbody th:first-child {
 			font-weight: 600;
-			color: #1e1e1e;
+			color: $bb-text-color;
 		}
-		// Alternating row backgrounds inside the body — improves scannability for
-		// the long item lists under each merged label.
+
 		tbody tr:nth-child(odd) td:not(:first-child),
 		tbody tr:nth-child(odd) th:not(:first-child) {
-			background: #fcfcfc;
+			background: $bb-background-secondary-color;
 		}
 	}
 
@@ -380,18 +462,21 @@
 		background-size: 200% 100%;
 		animation: bb-kb-shimmer 1.4s infinite;
 		border-radius: 8px;
-		@media (prefers-reduced-motion: reduce) { animation: none; }
+
+		@media (prefers-reduced-motion: reduce) {
+			animation: none;
+		}
 	}
 
 	.bb-kb-article__error,
 	.bb-kb-landing__error,
 	.bb-kb-category--error {
 		padding: 16px;
-		background: #fff8e7;
-		border: 1px solid #f0d28a;
-		border-radius: 8px;
+		background: $bb-background-warning-primary-color;
+		border: 1px solid $bb-border-warning-secondary-color;
+		border-radius: $bb-border-radius-lg;
 		font-size: 13px;
-		color: #1e1e1e;
+		color: $bb-text-color;
 	}
 }
 

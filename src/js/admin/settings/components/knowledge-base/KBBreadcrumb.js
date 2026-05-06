@@ -40,7 +40,7 @@ export default function KBBreadcrumb( { categoryName } ) {
 			>
 				{ __( 'Documentation', 'buddyboss' ) }
 			</button>
-			<span className="bb-kb-breadcrumb__separator" aria-hidden="true">{ ' › ' }</span>
+			<span className="bb-kb-breadcrumb__separator" aria-hidden="true"><i className="bb-icons-rl-caret-right"></i></span>
 			<span className="bb-kb-breadcrumb__current">{ categoryName }</span>
 		</nav>
 	);
