@@ -20,7 +20,7 @@
 
 	.bb-kb-modal {
 		flex: 1 1 auto;
-		background: #fff;
+		background: $bb-background-base-color;
 		display: flex;
 		flex-direction: column;
 		overflow: hidden;
@@ -29,6 +29,10 @@
 
 		@media (prefers-reduced-motion: reduce) {
 			animation: none;
+		}
+
+		@media screen and (max-width: 782px) {
+			padding-top: 102px;
 		}
 	}
 
@@ -113,7 +117,7 @@
 	.bb-kb-landing__grid {
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
-		gap: 16px;
+		gap: 24px;
 		// Reset <ul> defaults — explicit role="list" preserves a11y semantics.
 		list-style: none;
 		padding: 0;
@@ -141,20 +145,26 @@
 	.bb-kb-card {
 		display: flex;
 		flex-direction: column;
-		gap: 8px;
 		padding: 24px;
-		background: #fff;
-		border: 1px solid #e5e5e5;
-		border-radius: 12px;
+		background-color: $bb-background-base-color;
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-xl;
 		text-align: left;
 		width: 100%;
 		cursor: pointer;
 		transition: background 150ms ease, border-color 150ms ease;
 
-		&:hover { background: #f6f6f6; }
-		&:focus-visible { outline: 2px solid #2271b1; outline-offset: 2px; }
+		&:hover {
+			background: $bb-background-primary-color; 
+		}
 
-		@media (prefers-reduced-motion: reduce) { transition: none; }
+		&:focus-visible {
+			outline: 2px solid #2271b1;
+		}
+
+		@media (prefers-reduced-motion: reduce) {
+			transition: none;
+		}
 	}
 
 	.bb-kb-card--skeleton {
@@ -166,10 +176,31 @@
 		@media (prefers-reduced-motion: reduce) { animation: none; }
 	}
 
-	.bb-kb-card__icon { font-size: 24px; color: #2f2f2f; }
-	.bb-kb-card__title { font-size: 14px; font-weight: 600; color: #1e1e1e; margin: 4px 0 0; }
-	.bb-kb-card__description { font-size: 13px; color: #666; line-height: 1.5; margin: 0; }
-	.bb-kb-card__count { font-size: 13px; color: #2271b1; margin-top: 8px; }
+	.bb-kb-card__icon {
+		font-size: 32px;
+		color: $bb-icon-secondary-color;
+		margin-bottom: 16px;
+	}
+
+	.bb-kb-card__title {
+		font-size: 16px;
+		font-weight: 600;
+		color: $bb-text-color;
+		margin: 0 0 8px; 
+	}
+
+	.bb-kb-card__description {
+		font-size: 13px;
+		color: $bb-text-secondary-color;
+		line-height: 1.5;
+		margin: 0 0 16px;
+	}
+
+	.bb-kb-card__count {
+		font-size: 13px;
+		font-weight: 500;
+		color: $bb-link-color;
+	}
 
 	.bb-kb-category {
 		max-width: 1100px;
