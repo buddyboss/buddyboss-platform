@@ -279,6 +279,16 @@
 
 		@media (max-width: 768px)  {
 			grid-template-columns: 1fr;
+			gap: 0;
+
+			.bb-kb-sidebar {
+				border-right: 0;
+				border-radius: $bb-border-radius-2xl $bb-border-radius-2xl 0 0;
+			}
+
+			.bb-kb-category__main {
+				padding: 28px;
+			}
 		}
 	}
 
