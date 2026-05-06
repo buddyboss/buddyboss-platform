@@ -25,6 +25,7 @@
 		flex-direction: column;
 		overflow: hidden;
 		animation: bb-kb-slide-up 220ms ease;
+		padding-top: 88px;
 
 		@media (prefers-reduced-motion: reduce) {
 			animation: none;
@@ -35,43 +36,71 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		padding: 16px 24px;
-		border-bottom: 1px solid #e5e5e5;
+		padding: 11px 24px;
+		border-bottom: 1px solid $bb-border-secondary-color;
 		flex: 0 0 auto;
+		position: fixed;
+		top: 32px;
+		left: 0;
+		right: 0;
+		z-index: 100;
+
+		@media screen and (max-width: 782px) {
+			top: 46px;
+		}
+
+		@media screen and (max-width: 600px) {
+			position: absolute;
+		}
 	}
 
 	.bb-kb-modal__brand {
 		display: inline-flex;
 		align-items: center;
-		gap: 8px;
-		font-weight: 600;
+		font-weight: 500;
 		font-size: 14px;
-		color: #1e1e1e;
+		color: 	$bb-text-tertiary-color;
+
+		img {
+			max-width: 136px;
+			height: auto;
+		}
+
+		&-separator {
+			height: 16px;
+			width: 1px;
+			background-color: $bb-border-tertiary-color;
+			margin: 0 8px;
+		}
 	}
 
 	.bb-kb-modal__close {
+		display: flex;
 		background: none;
 		border: 0;
 		cursor: pointer;
-		font-size: 20px;
-		color: #2f2f2f;
+		font-size: 24px;
+		color: $bb-icon-secondary-color;
 		padding: 4px;
 
 		&:focus-visible {
-			outline: 2px solid #2271b1;
-			outline-offset: 2px;
+			outline: 2px solid $bb-link-color;
 		}
 	}
 
 	.bb-kb-modal__body {
+		background-color: $bb-background-primary-color;
 		flex: 1 1 auto;
 		overflow-y: auto;
 	}
 
 	.bb-kb-landing {
-		max-width: 1100px;
-		margin: 0 auto;
-		padding: 32px 24px;
+		background-color: $bb-background-base-color;
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-2xl;
+		max-width: 1190px;
+		margin: 40px auto 0;
+		padding: 26px 32px;
 	}
 
 	.bb-kb-landing__title {

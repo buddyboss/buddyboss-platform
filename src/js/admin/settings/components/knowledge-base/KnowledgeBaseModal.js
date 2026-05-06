@@ -131,7 +131,10 @@ export default function KnowledgeBaseModal( { triggerRef } ) {
 				<header className="bb-kb-modal__header">
 					<span id="bb-kb-modal-title" className="bb-kb-modal__brand">
 						{ window.bbAdminData && window.bbAdminData.logoUrl ? (
-							<img className="bb-kb-modal__brand-logo" src={ window.bbAdminData.logoUrl } alt="BuddyBoss" />
+							<>
+								<img className="bb-kb-modal__brand-logo" src={ window.bbAdminData.logoUrl } alt="BuddyBoss" />
+								<span className="bb-kb-modal__brand-separator"></span>
+							</>
 						) : null }
 						{ __( 'Documentation', 'buddyboss' ) }
 					</span>
