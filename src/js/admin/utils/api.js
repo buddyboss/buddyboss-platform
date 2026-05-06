@@ -86,6 +86,18 @@ const resolveHelpContentId = (contentId) => {
 		return '';
 	}
 	const trimmed = contentId.trim();
+
+	// Defense in depth: PHP's esc_url_raw() prepends 'http://' to bare numeric
+	// strings, so a help_url registered as the bare KB article ID '636101' can
+	// arrive here as 'http://636101'. The PHP layer guards against this in
+	// bb_sanitize_help_url(), but we strip the synthetic scheme here too so a
+	// regression in any caller surfaces as a working article load instead of a
+	// 404 to wp/v2/ht-kb/http://<id>.
+	const bareIdFromBadScheme = trimmed.match(/^https?:\/\/(\d+)\/?$/i);
+	if (bareIdFromBadScheme) {
+		return bareIdFromBadScheme[1];
+	}
+
 	// Full URL: extract article query param.
 	if (trimmed.startsWith('http') || trimmed.includes('?')) {
 		try {

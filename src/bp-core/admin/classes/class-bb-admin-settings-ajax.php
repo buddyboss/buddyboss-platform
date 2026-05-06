@@ -523,8 +523,9 @@ class BB_Admin_Settings_Ajax {
 				}
 
 				// Section-level help URL (renders a (?) icon in the section header).
+				// May be either a full URL or a bare KB article ID like "636101".
 				if ( ! empty( $section['help_url'] ) ) {
-					$formatted_section['help_url'] = esc_url_raw( $section['help_url'] );
+					$formatted_section['help_url'] = $this->bb_sanitize_help_url( $section['help_url'] );
 				}
 
 				$formatted_sections[] = $formatted_section;
@@ -537,7 +538,9 @@ class BB_Admin_Settings_Ajax {
 				'id'           => $side_panel_id,
 				'title'        => $side_panel['title'],
 				'icon'         => $side_panel['icon'] ?? null,
-				'help_url'     => $side_panel['help_url'] ?? '',
+				// Same dual-format handling as section help_url — may be a full
+				// URL or a bare KB article ID. See bb_sanitize_help_url().
+				'help_url'     => ! empty( $side_panel['help_url'] ) ? $this->bb_sanitize_help_url( $side_panel['help_url'] ) : '',
 				'order'        => $side_panel['order'] ?? 100,
 				'is_default'   => $side_panel['is_default'] ?? false,
 				'divider'      => ! empty( $side_panel['divider'] ),
@@ -1839,6 +1842,43 @@ class BB_Admin_Settings_Ajax {
 			return esc_url_raw( $trimmed );
 		}
 		return sanitize_text_field( $value );
+	}
+
+	/**
+	 * Sanitize a help_url value that may be either a full URL or a bare KB article ID.
+	 *
+	 * The Settings 2.0 React side accepts two `help_url` shapes from PHP feature
+	 * registration: a full URL (e.g. `bp_get_admin_url( 'admin.php?page=bp-help&article=127197' )`)
+	 * or a bare KB article ID (e.g. `'636101'`). Running `esc_url_raw()` on a
+	 * bare numeric ID is wrong: WordPress's URL fixer prepends `http://`,
+	 * producing `http://636101`. The React `fetchHelpContent()` resolver then
+	 * passes that through unchanged, building the broken endpoint
+	 * `https://buddyboss.com/wp-json/wp/v2/ht-kb/http://636101`.
+	 *
+	 * Routing: bare numeric IDs (digits only, optional surrounding whitespace)
+	 * are passed through `sanitize_text_field()`. Anything else is treated as a
+	 * URL and run through `esc_url_raw()`. The numeric branch covers today's
+	 * registrations (`'636101'`, `'636152'`, `'636156'`, `'637448'`); slug-style
+	 * IDs would need a separate branch and aren't used today.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param mixed $value Raw `help_url` value from feature/section registration.
+	 * @return string Sanitized URL or bare ID, suitable for the React layer.
+	 */
+	private function bb_sanitize_help_url( $value ) {
+		if ( ! is_string( $value ) && ! is_numeric( $value ) ) {
+			return '';
+		}
+		$trimmed = trim( (string) $value );
+		if ( '' === $trimmed ) {
+			return '';
+		}
+		// Bare numeric KB article ID — never treat as URL.
+		if ( ctype_digit( $trimmed ) ) {
+			return sanitize_text_field( $trimmed );
+		}
+		return esc_url_raw( $trimmed );
 	}
 
 	/**
