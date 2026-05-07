@@ -38,7 +38,8 @@
 		white-space: nowrap;
 
 		&:hover {
-			background: $bb-background-secondary-color;
+			border-color: $bb-border-tertiary-color;
+			box-shadow: inset 0 0 0 0.5px $bb-border-tertiary-color;
 		}
 
 		&:focus-visible {
