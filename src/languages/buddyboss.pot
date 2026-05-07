@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 2.21.1\n"
+"Project-Id-Version: BuddyBoss Platform 3.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-05-07 07:42:12+00:00\n"
+"POT-Creation-Date: 2026-05-07 11:17:48+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -5724,6 +5724,45 @@ msgstr ""
 msgid "Autocomplete Settings"
 msgstr ""
 
+#: bp-core/admin/bb-admin-version-compatibility-notices.php:47
+#: bp-core/admin/bp-core-admin-functions.php:2509
+#: bp-core/admin/bp-core-admin-functions.php:2516
+#: bp-core/admin/settings/notifications/settings-web-push.php:134
+#: bp-integrations/pusher/bb-pusher-admin-tab.php:251
+#: bp-integrations/pusher/bb-pusher-admin-tab.php:268
+msgid "BuddyBoss Platform Pro"
+msgstr ""
+
+#: bp-core/admin/bb-admin-version-compatibility-notices.php:51
+msgid "BuddyBoss Gamification"
+msgstr ""
+
+#: bp-core/admin/bb-admin-version-compatibility-notices.php:55
+msgid "BuddyBoss LearnDash"
+msgstr ""
+
+#: bp-core/admin/bb-admin-version-compatibility-notices.php:59
+msgid "BuddyBoss Offload Media"
+msgstr ""
+
+#: bp-core/admin/bb-admin-version-compatibility-notices.php:63
+msgid "BuddyBoss Sharing"
+msgstr ""
+
+#. translators: %s: Platform version
+#: bp-core/admin/bb-admin-version-compatibility-notices.php:189
+msgid "BuddyBoss Platform %s requires updates to the following plugins:"
+msgstr ""
+
+#. translators: 1: Plugin name. 2: Required version. 3: Currently installed version.
+#: bp-core/admin/bb-admin-version-compatibility-notices.php:201
+msgid "%1$s (%2$s or higher) — currently %3$s"
+msgstr ""
+
+#: bp-core/admin/bb-admin-version-compatibility-notices.php:212
+msgid "Update plugins now"
+msgstr ""
+
 #: bp-core/admin/bb-settings/rl-onboarding/class-bb-readylaunch-onboarding.php:83
 msgid "BuddyBoss ReadyLaunch Setup"
 msgstr ""
@@ -6203,14 +6242,6 @@ msgstr ""
 #: bp-core/admin/bb-settings/settings/build/801.js:1
 #: bp-core/admin/bb-settings/settings/build/966.js:1
 msgid "Update"
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-functions.php:2509
-#: bp-core/admin/bp-core-admin-functions.php:2516
-#: bp-core/admin/settings/notifications/settings-web-push.php:134
-#: bp-integrations/pusher/bb-pusher-admin-tab.php:251
-#: bp-integrations/pusher/bb-pusher-admin-tab.php:268
-msgid "BuddyBoss Platform Pro"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:2515

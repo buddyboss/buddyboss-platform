@@ -1469,6 +1469,49 @@ select.bb-admin-settings__select {
 	}
 }
 
+// Bridged metabox group — renders contiguous fields from one third-party
+// metabox under one heading with a hairline border, matching the visual
+// treatment of WordPress core's classic post-edit metaboxes. Top margin
+// + border-top separates the group from the preceding core field run; the
+// heading is bold and slightly larger than field labels so it reads as
+// the section it represents, not as another field label.
+.bb-admin-meta-field__group {
+	margin-top: 24px;
+	padding-top: 16px;
+	border-top: 1px solid $bb-border-tertiary-color;
+
+	// Ensure the last group never butts up against the modal footer/edge.
+	// Without this, the last bridged metabox renders flush against the
+	// scrollable body bottom, which reads as cropped content. 16px matches
+	// the breathing room WordPress core gives its post-edit metaboxes.
+	&:last-child {
+		padding-bottom: 16px;
+	}
+
+	// Always keep at least the same gap between consecutive groups so two
+	// metaboxes in a row are visually separated by their border-top alone,
+	// without needing the calling code to inject explicit spacers.
+	+ .bb-admin-meta-field__group {
+		margin-top: 24px;
+	}
+
+	.bb-admin-meta-field__group-title {
+		font-size: 14px;
+		font-weight: 600;
+		line-height: 1.4;
+		margin: 0 0 12px 0;
+		padding: 0;
+		color: $bb-text-color;
+	}
+
+	.bb-admin-meta-field__group-fields {
+		// Inherits the same row + separator treatment used outside the
+		// group container. No additional padding so field rhythm matches
+		// the ungrouped fields above.
+		display: block;
+	}
+}
+
 // Status badge displayed below title in list views (Scheduled, Pending Review, Draft).
 .bb-admin-list__status-badge {
 	display: inline-flex;

@@ -160,6 +160,14 @@ class BB_Admin_Meta_Field_Registry {
 			'async_action'      => '',
 			'async_depends_on'  => '',
 			'conditional'       => null,
+			// Visual grouping: when a contiguous run of fields shares the same
+			// `field_group` identifier (typically a third-party metabox id),
+			// the React modal renders them inside one bordered section with
+			// the `field_group_label` as a heading. Empty values mean the
+			// field is ungrouped — preserves the historical flat layout for
+			// every existing core registration.
+			'field_group'       => '',
+			'field_group_label' => '',
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -236,21 +244,31 @@ class BB_Admin_Meta_Field_Registry {
 			}
 
 			$field_data = array(
-				'id'               => $field_id,
-				'label'            => $args['label'],
-				'description'      => $args['description'],
-				'placeholder'      => $args['placeholder'],
-				'type'             => $args['type'],
-				'context'          => $args['context'],
-				'layout'           => $args['layout'],
-				'tab'              => $args['tab'],
-				'visible'          => $visible,
-				'value'            => null,
-				'options'          => array(),
-				'readonly'         => ( null === $args['save_value'] ),
-				'conditional'      => $args['conditional'],
-				'async_action'     => $args['async_action'],
-				'async_depends_on' => $args['async_depends_on'],
+				'id'                => $field_id,
+				'label'             => $args['label'],
+				'description'       => $args['description'],
+				'placeholder'       => $args['placeholder'],
+				'type'              => $args['type'],
+				'context'           => $args['context'],
+				'layout'            => $args['layout'],
+				'tab'               => $args['tab'],
+				'visible'           => $visible,
+				'value'             => null,
+				'options'           => array(),
+				'readonly'          => ( null === $args['save_value'] ),
+				'conditional'       => $args['conditional'],
+				'async_action'      => $args['async_action'],
+				'async_depends_on'  => $args['async_depends_on'],
+				// Visual grouping data — empty string when ungrouped. The
+				// label is sanitized through `wp_kses` here so the React
+				// side can render `<strong>`/`<em>` runs that some legacy
+				// metaboxes ship in their titles, while filtering script
+				// vectors. React then re-sanitizes via `sanitizeHtml()`
+				// before injection (defense in depth).
+				'field_group'       => is_string( $args['field_group'] ) ? $args['field_group'] : '',
+				'field_group_label' => is_string( $args['field_group_label'] )
+					? wp_kses( $args['field_group_label'], array( 'strong' => array(), 'em' => array(), 'b' => array(), 'i' => array() ) )
+					: '',
 			);
 
 			// Skip fetching value, options, and extra data for invisible fields

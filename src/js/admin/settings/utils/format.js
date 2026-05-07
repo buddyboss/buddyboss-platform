@@ -171,6 +171,55 @@ export function needsSeparator( item, nextItem, separatorFieldIds ) {
 }
 
 /**
+ * Split a field list into ordered runs separated by `field_group` boundaries.
+ *
+ * Fields with an empty `field_group` belong to the implicit "core" run that
+ * always renders flat (no heading, no border). Fields whose `field_group` is
+ * set form a contiguous bordered section headed by their `field_group_label`
+ * — typically a third-party metabox bridged via `bb_legacy_register_cpt_meta_bridge`.
+ *
+ * Caller renders each returned segment in order: ungrouped segments render
+ * fields directly; grouped segments render a heading + bordered container
+ * with the fields inside.
+ *
+ * Backward compatibility: when no field on the input list carries a
+ * non-empty `field_group`, the function returns a single ungrouped segment
+ * — visually identical to the pre-grouping behavior. So existing modals
+ * (Activity, Groups, Emails) that have not yet adopted this helper keep
+ * rendering exactly as before.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Array} fields Filtered, visible field list (already passed through
+ *                       `getVisibleFields()` / conditional checks).
+ * @returns {Array<{group: string, label: string, fields: Array}>} Ordered segments.
+ */
+export function splitFieldsByMetaboxGroup( fields ) {
+	var segments = [];
+	var current = null;
+
+	fields.forEach( function ( field ) {
+		var groupId = field.field_group ? String( field.field_group ) : '';
+		var groupLabel = field.field_group_label ? String( field.field_group_label ) : '';
+
+		if ( ! current || current.group !== groupId ) {
+			current = { group: groupId, label: groupLabel, fields: [] };
+			segments.push( current );
+		}
+
+		// First field's label wins for a group — later fields in the same
+		// group can omit `field_group_label` to inherit it.
+		if ( '' === current.label && '' !== groupLabel ) {
+			current.label = groupLabel;
+		}
+
+		current.fields.push( field );
+	} );
+
+	return segments;
+}
+
+/**
  * Build registered field payload for AJAX save.
  *
  * Iterates registered fields, pulls TinyMCE content for richtext fields,

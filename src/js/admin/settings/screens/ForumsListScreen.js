@@ -5,7 +5,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useEffect, useCallback, useRef, useMemo } from '@wordpress/element';
+import { useState, useEffect, useCallback, useRef, useMemo, Fragment } from '@wordpress/element';
 import {
 	Button,
 	CheckboxControl,
@@ -28,7 +28,7 @@ import { DeleteConfirmModal } from '../components/common/DeleteConfirmModal';
 import { BulkEditModal } from '../components/common/BulkEditModal';
 import { useListScreenHandlers } from '../hooks/useListScreenHandlers';
 import { useListScreenState } from '../hooks/useListScreenState';
-import { toSlug, groupFieldsWithLayout as groupForumFieldsWithLayout, buildRegisteredFieldPayload, getVisibleFields, isFieldConditionalMet, needsSeparator } from '../utils/format';
+import { toSlug, groupFieldsWithLayout as groupForumFieldsWithLayout, buildRegisteredFieldPayload, getVisibleFields, isFieldConditionalMet, needsSeparator, splitFieldsByMetaboxGroup } from '../utils/format';
 import { ForumCreateModal } from '../components/forums/ForumCreateModal';
 import { RegisteredMetaField } from '../components/common/RegisteredMetaField';
 import { forceRemoveEditor } from '../components/common/RichTextEditor';
@@ -1200,7 +1200,9 @@ function ForumEditModal( props ) {
 	 * @param {string} tabName Tab name to render fields for.
 	 * @returns {Array|null} Rendered field elements or null.
 	 */
-	var renderTabFields = function ( tabName ) {
+	var renderTabFields = function ( tabName, mode ) {
+		mode = mode || 'all';
+
 		if ( ! forum.registered_fields ) {
 			return null;
 		}
@@ -1213,10 +1215,11 @@ function ForumEditModal( props ) {
 			return null;
 		}
 
-		var grouped = groupForumFieldsWithLayout( tabFields );
-
-		return grouped.map( function ( item, idx ) {
-			var hasSeparator = needsSeparator( item, grouped[ idx + 1 ] );
+		// Renders one grouped item (single field or row) — extracted so both
+		// the ungrouped (flat core fields) and grouped (third-party metabox)
+		// branches reuse the same JSX without duplication.
+		var renderGroupedItem = function ( item, idx, allItems ) {
+			var hasSeparator = needsSeparator( item, allItems[ idx + 1 ] );
 
 			if ( 'row' === item.type ) {
 				return (
@@ -1249,6 +1252,60 @@ function ForumEditModal( props ) {
 						itemId={ forum.id }
 						disabled={ isForumFieldDisabled( item.field.id, isGroupForum, isGroupForumChild ) }
 					/>
+				</div>
+			);
+		};
+
+		// Split visible fields into runs by their source metabox. Fields
+		// without a `field_group` form the implicit "core" run; fields
+		// bridged from a legacy WP metabox (e.g. SEO, ACF) form a bordered
+		// run with the metabox title rendered as a heading above. When no
+		// bridged fields are present, this collapses to a single ungrouped
+		// run and the layout is identical to the pre-grouping behavior.
+		//
+		// `mode` controls which segments get rendered:
+		//   - 'all'        : both ungrouped + grouped (default)
+		//   - 'ungrouped'  : only fields without a `field_group` (core)
+		//   - 'grouped'    : only fields with a `field_group` (bridged)
+		// Splitting lets the modal interleave a non-registry section
+		// (e.g., the Feature Image upload) BETWEEN the core fields and
+		// the bridged metaboxes — so metaboxes always sit at the very end
+		// of the form and appear visually distinct from custom sections.
+		var segments = splitFieldsByMetaboxGroup( tabFields );
+		if ( 'ungrouped' === mode ) {
+			segments = segments.filter( function ( s ) { return ! s.group; } );
+		} else if ( 'grouped' === mode ) {
+			segments = segments.filter( function ( s ) { return !! s.group; } );
+		}
+		if ( 0 === segments.length ) {
+			return null;
+		}
+
+		return segments.map( function ( segment, segIdx ) {
+			var grouped = groupForumFieldsWithLayout( segment.fields );
+
+			if ( ! segment.group ) {
+				// Ungrouped run — render flat, no heading.
+				return (
+					<Fragment key={ 'seg-flat-' + segIdx }>
+						{ grouped.map( function ( item, idx ) {
+							return renderGroupedItem( item, idx, grouped );
+						} ) }
+					</Fragment>
+				);
+			}
+
+			// Grouped run — bordered section with metabox title heading.
+			return (
+				<div key={ 'seg-group-' + segIdx } className="bb-admin-meta-field__group" data-group-id={ segment.group }>
+					{ segment.label && (
+						<h3 className="bb-admin-meta-field__group-title">{ segment.label }</h3>
+					) }
+					<div className="bb-admin-meta-field__group-fields">
+						{ grouped.map( function ( item, idx ) {
+							return renderGroupedItem( item, idx, grouped );
+						} ) }
+					</div>
 				</div>
 			);
 		} );
@@ -1328,10 +1385,18 @@ function ForumEditModal( props ) {
 	 */
 	var renderTabContent = function ( tab ) {
 		if ( 'details' === tab.name ) {
+			// Order on the Details tab:
+			//   1. Core registered fields (ungrouped — Forum Name, Permalink, ...).
+			//   2. Feature Image (custom section — not in the registry).
+			//   3. Bridged metabox groups (any third-party `add_meta_box`).
+			// This keeps the visual hierarchy intuitive: native form first,
+			// the in-house custom section second, and any third-party
+			// extension content last with its own heading + border.
 			return (
 				<div className="bb-forum-edit-modal__tab-content">
-					{ renderTabFields( tab.name ) }
+					{ renderTabFields( tab.name, 'ungrouped' ) }
 					{ renderFeaturedImage() }
+					{ renderTabFields( tab.name, 'grouped' ) }
 				</div>
 			);
 		}
@@ -1368,8 +1433,9 @@ function ForumEditModal( props ) {
 					</TabPanel>
 				) : (
 					<div className="bb-forum-edit-modal__tab-content">
-						{ renderTabFields( 'details' ) }
+						{ renderTabFields( 'details', 'ungrouped' ) }
 						{ renderFeaturedImage() }
+						{ renderTabFields( 'details', 'grouped' ) }
 					</div>
 				) }
 			</div>

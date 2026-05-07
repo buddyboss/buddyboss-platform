@@ -1832,6 +1832,16 @@ function bb_legacy_run_cpt_bridge_box( $registry, $component, $box, &$order, $ex
 			'context'           => 'after',
 			'save_phase'        => 'before',
 			'sanitize_callback' => $sanitize_cb,
+			// Stamp every bridged field with its source metabox so the React
+			// modal renders the box's contents under one bordered section
+			// with the metabox title as a heading. Falls back to the metabox
+			// id when the title is missing — well-behaved plugins always set
+			// a title via `add_meta_box($id, $title, ...)` but the fallback
+			// keeps the heading present rather than blank.
+			'field_group'       => isset( $box['id'] ) ? (string) $box['id'] : '',
+			'field_group_label' => isset( $box['title'] ) && '' !== (string) $box['title']
+				? (string) $box['title']
+				: ( isset( $box['id'] ) ? (string) $box['id'] : '' ),
 			'get_value'         => function ( $post ) use ( $box, $input, $request_param ) {
 				$html = bb_legacy_capture_post_box_html( $box, $post, $request_param );
 				if ( ! $html ) {
