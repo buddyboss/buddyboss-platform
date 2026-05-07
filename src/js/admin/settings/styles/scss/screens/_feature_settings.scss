@@ -191,7 +191,7 @@
             color: $bb-text-tertiary-color;
             font-size: 13px;
             padding-bottom: 18px;
-            border-bottom: 1px solid $bb-border-secondary-color;
+            border-bottom: 0.5px solid $bb-border-secondary-color;
             margin: 0 0 18px;
 
             a {
@@ -308,7 +308,7 @@
             line-height: 18px;
             margin: 0 0 24px;
             padding-bottom: 24px;
-            border-bottom: 1px solid $bb-border-secondary-color;
+            border-bottom: 0.5px solid $bb-border-secondary-color;
         }
 
         &--disabled {
@@ -731,7 +731,7 @@
     .bb-admin-settings-form__child-fields {
         margin-top: 16px;
         padding-top: 16px;
-        border-top: 1px solid $bb-border-secondary-color;
+        border-top: 0.5px solid $bb-border-secondary-color;
 
         // When child-fields is the first child in the content area (hidden parent field
         // with no input wrapper), remove the separator border and top spacing.
@@ -755,7 +755,7 @@
         .bb-admin-settings-form__child-fields[class] {
             margin-top: 16px;
             padding-top: 16px;
-            border-top: 1px solid $bb-border-secondary-color;
+            border-top: 0.5px solid $bb-border-secondary-color;
         }
     }
 
@@ -1967,7 +1967,7 @@
     align-items: center;
     gap: 12px;
     padding: 12px 0;
-    border-bottom: 1px solid $bb-border-secondary-color;
+    border-bottom: 0.5px solid $bb-border-secondary-color;
 
     &:last-child {
         border-bottom: none;
