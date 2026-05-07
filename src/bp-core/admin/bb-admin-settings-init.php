@@ -211,6 +211,37 @@ function bb_admin_settings_init() {
 add_action( 'bp_loaded', 'bb_admin_settings_init', 4 );
 
 /**
+ * Register the Help Content REST proxy on `rest_api_init`.
+ *
+ * Hook registration is unconditional because REST requests do NOT set
+ * `is_admin()` — they run on `/wp-json/`, not `/wp-admin/` — so the
+ * admin-only init block above runs in a different request context. The
+ * controller class is required lazily inside the callback so the file is
+ * only loaded when the REST router actually fires; the route's own
+ * `permission_callback` then enforces `manage_options` so non-admin
+ * callers get 401 / 403.
+ *
+ * Lives outside `bb_admin_settings_init()` because that function is
+ * gated on `is_admin() || wp_doing_ajax()` — both false during a REST
+ * request. The route would never register otherwise, even though the
+ * file exists and the class is correct.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function bb_register_help_content_rest_route() {
+	$controller_file = buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-rest-help-content-endpoint.php';
+	if ( ! file_exists( $controller_file ) ) {
+		return;
+	}
+	require_once $controller_file;
+	if ( ! class_exists( 'BB_REST_Help_Content_Endpoint' ) ) {
+		return;
+	}
+	( new BB_REST_Help_Content_Endpoint() )->register_routes();
+}
+add_action( 'rest_api_init', 'bb_register_help_content_rest_route' );
+
+/**
  * Initialize the Integration Bridge early.
  *
  * Must run at priority 2 (before bp_setup_integrations at priority 3)

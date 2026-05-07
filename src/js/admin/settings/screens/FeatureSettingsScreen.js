@@ -22,6 +22,18 @@ import { debounce, fetchHelpContent, clearHelpContentCache } from '../../utils/a
 import { HelpIcon } from '../components/HelpIcon';
 import { HelpSliderModal } from '../components/HelpSliderModal';
 import { sanitizeHtml, safeUrl } from '../utils/sanitize';
+// KB-article-specific sanitizer for the Help slider body. The generic
+// `sanitizeHtml` allowlist excludes `<figure>` and several Gutenberg
+// block wrappers, and its handler nukes unknown tags whole-subtree —
+// so a `<figure class="wp-block-image"><img></figure>` from the KB
+// REST proxy lost its image entirely. `sanitizeKbArticle` allows the
+// full Gutenberg media vocabulary (figure/figcaption/picture/source,
+// `<img srcset sizes loading decoding fetchpriority>`, host-gated
+// iframes for YouTube/Wistia/Vimeo, full table markup) and unwraps
+// unknown tags instead of removing them, so future KB blocks degrade
+// gracefully. `safeImageUrl` mirrors the same scheme/HTTPS-coercion
+// rules used inside the body for the standalone hero image.
+import { sanitizeKbArticle, safeImageUrl } from '../utils/sanitizeKbArticle';
 import { useGroupNavSync } from '../components/groups/GroupNavSync';
 import { useProfileNavSync } from '../components/members/ProfileNavSync';
 import { WelcomeBanner } from '../components/appearance/WelcomeBanner';
@@ -1167,15 +1179,23 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 						)}
 						<div
 							className="help-content"
-							dangerouslySetInnerHTML={{ __html: sanitizeHtml( helpContent.content ) }}
+							dangerouslySetInnerHTML={{ __html: sanitizeKbArticle( helpContent.content ) }}
 						/>
-						{helpContent.imageUrl && '#' !== safeUrl( helpContent.imageUrl ) && (
-							<img
-								src={ safeUrl( helpContent.imageUrl ) }
-								alt={__('Help content illustration', 'buddyboss')}
-								style={{ width: '100%', borderRadius: 8, marginBottom: 16 }}
-							/>
-						)}
+						{ ( () => {
+							// `safeImageUrl()` returns null for any URL that fails the
+							// scheme/HTTPS guard — falsy short-circuits the render. Using
+							// the KB-aware validator (not the generic `safeUrl()` which
+							// returns `'#'` on reject) keeps this hero image consistent
+							// with the inline images inside the article body above.
+							const heroSrc = helpContent.imageUrl ? safeImageUrl( helpContent.imageUrl ) : null;
+							return heroSrc ? (
+								<img
+									src={ heroSrc }
+									alt={__('Help content illustration', 'buddyboss')}
+									style={{ width: '100%', borderRadius: 8, marginBottom: 16 }}
+								/>
+							) : null;
+						} )() }
 					</>
 				) : (
 					<p>{__('No help content available.', 'buddyboss')}</p>

@@ -488,8 +488,12 @@ add_filter( 'bb_admin_features_response', 'bb_admin_mark_drm_locked_features', 2
  *
  * Visit any admin page with ?bb_clear_placeholder_cache=1 to flush every
  * Settings 2.0 cache layer (feature discovery paths, feature registry,
- * settings search index, placeholder features catalog + stale fallback)
- * and force a fresh remote fetch on the next AJAX request.
+ * settings search index, placeholder features catalog + stale fallback,
+ * help-content REST proxy transients) and force a fresh remote fetch on
+ * the next AJAX request. Also raises a one-shot signal that the React
+ * admin app reads on its next mount to clear matching localStorage
+ * entries — without it the help slider would keep serving the in-browser
+ * 3-day cache even after the server transients are gone.
  *
  * @since BuddyBoss [BBVERSION]
  */
@@ -516,8 +520,88 @@ function bb_maybe_clear_placeholder_features_cache() {
 
 	// Trigger an immediate background refresh so the next AJAX call has data.
 	bb_schedule_placeholder_features_refresh();
+
+	// Flush the help-content REST proxy's per-article transients. The
+	// BB_REST_Help_Content_Endpoint controller uses keys of the form
+	// `bb_help_content_<id>` with a 12h TTL; clearing here forces the next
+	// help-slider open to re-fetch from buddyboss.com.
+	bb_clear_help_content_transients();
+
+	// Raise a one-shot signal for the React admin app to clear matching
+	// localStorage entries on its next mount. Stored as a transient so it
+	// survives the redirect-to-clean-URL pattern; deleted server-side after
+	// the localized payload is read so it fires exactly once per trigger.
+	set_transient( 'bb_help_content_cache_flush_signal', time(), 5 * MINUTE_IN_SECONDS );
 }
 add_action( 'admin_init', 'bb_maybe_clear_placeholder_features_cache' );
+
+/**
+ * Delete every help-content REST proxy transient.
+ *
+ * The BB_REST_Help_Content_Endpoint controller writes one transient per
+ * article ID via `set_transient( 'bb_help_content_<id>', ... )`. Without
+ * a registry of fetched IDs we can't iterate `delete_transient()` per
+ * key, so we collect every matching key from the storage layer and call
+ * `delete_transient()` per key — that one function correctly routes the
+ * delete to the options table OR the external object cache depending on
+ * which one `set_transient()` originally wrote to.
+ *
+ * Why we collect-then-delete instead of bulk-DELETE-LIKE on the options
+ * table: when an external object cache is active (Redis, Memcached),
+ * `set_transient()` skips the options table entirely. A LIKE-DELETE on
+ * options would silently miss every transient on those installs.
+ * Conversely, `wp_cache_flush_group( 'transient' )` would purge every
+ * other plugin's transients on the same group — unacceptable side
+ * effect for a per-feature debug tool.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_clear_help_content_transients() {
+	global $wpdb;
+
+	$prefix = 'bb_help_content_';
+
+	// Collect every help-content transient key from the options table.
+	// Even when an external object cache is in front, `set_transient()`
+	// still writes a `_transient_timeout_*` row to options when no
+	// external cache is active — and writes nothing to options when one
+	// IS active. So this query is exhaustive on no-ext-cache installs and
+	// a no-op (correctly) on ext-cache installs.
+	$option_like = '_transient_' . $wpdb->esc_like( $prefix ) . '%';
+
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Per-row delete_transient() loop below; no per-key API to enumerate transients.
+	$option_names = $wpdb->get_col(
+		$wpdb->prepare(
+			"SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s",
+			$option_like
+		)
+	);
+
+	$keys = array();
+	if ( is_array( $option_names ) ) {
+		foreach ( $option_names as $option_name ) {
+			// Strip the `_transient_` / `_transient_timeout_` prefix to recover
+			// the original transient key, then de-dupe (each transient appears
+			// twice in the options table — value row + timeout row).
+			if ( 0 === strpos( $option_name, '_transient_timeout_' ) ) {
+				$keys[ substr( $option_name, strlen( '_transient_timeout_' ) ) ] = true;
+			} elseif ( 0 === strpos( $option_name, '_transient_' ) ) {
+				$keys[ substr( $option_name, strlen( '_transient_' ) ) ] = true;
+			}
+		}
+	}
+
+	foreach ( array_keys( $keys ) as $transient_key ) {
+		// `delete_transient()` is the only API that correctly removes BOTH
+		// the value and timeout rows AND the matching object-cache entry
+		// (when an external cache is active) for a single key. Calling it
+		// per-key avoids the cross-plugin blast radius of
+		// `wp_cache_flush_group( 'transient' )`.
+		delete_transient( $transient_key );
+	}
+}
 
 /**
  * Clear the placeholder features cache when the license status changes.

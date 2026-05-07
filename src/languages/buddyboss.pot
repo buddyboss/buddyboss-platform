@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.21.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-05-06 12:34:20+00:00\n"
+"POT-Creation-Date: 2026-05-07 07:05:58+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -30,7 +30,7 @@ msgstr ""
 #: bp-core/admin/settings/activity/settings-visibility.php:68
 #: bp-performance/bp-performance-includes.php:71
 #: bp-templates/bp-nouveau/includes/customizer.php:29
-#: bp-core/admin/bb-settings/settings/build/334.js:1
+#: bp-core/admin/bb-settings/settings/build/484.js:1
 msgid "BuddyBoss Platform"
 msgstr ""
 
@@ -5692,7 +5692,7 @@ msgstr ""
 msgid "BuddyBoss Admin Settings assets not found. Please run: npm run build:admin:settings"
 msgstr ""
 
-#: bp-core/admin/bb-admin-settings-page.php:320
+#: bp-core/admin/bb-admin-settings-page.php:333
 msgid "JavaScript is required for BuddyBoss Settings. Please enable JavaScript in your browser."
 msgstr ""
 
@@ -6238,8 +6238,8 @@ msgid "Articles"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-help.php:57
-#: bp-core/admin/bb-settings/settings/build/334.js:1
-#: bp-core/admin/bb-settings/settings/build/334.js:3
+#: bp-core/admin/bb-settings/settings/build/484.js:1
+#: bp-core/admin/bb-settings/settings/build/484.js:3
 #: bp-core/admin/bb-settings/settings/build/index.js:1
 msgid "Documentation"
 msgstr ""
@@ -6314,7 +6314,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:179
 #: bp-integrations/buddyboss-app/templates/admin/integration-tab-intro.php:10
 #: bp-integrations/buddyboss-app/templates/admin/integration-tab-intro.php:20
-#: bp-core/admin/bb-settings/settings/build/334.js:1
+#: bp-core/admin/bb-settings/settings/build/484.js:1
 msgid "BuddyBoss App"
 msgstr ""
 
@@ -8437,6 +8437,56 @@ msgstr[1] ""
 msgid "Failed to load email situations."
 msgstr ""
 
+#: bp-core/admin/classes/class-bb-rest-help-content-endpoint.php:116
+msgid "BuddyBoss KB article ID."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-rest-help-content-endpoint.php:149
+msgid "Sorry, you are not allowed to access help content."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-rest-help-content-endpoint.php:174
+msgid "Invalid help article ID."
+msgstr ""
+
+#. translators: %s: error message from wp_remote_get
+#: bp-core/admin/classes/class-bb-rest-help-content-endpoint.php:253
+msgid "Failed to load help content: %s"
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-rest-help-content-endpoint.php:262
+msgid "Help content not found."
+msgstr ""
+
+#. translators: %d: HTTP status code returned by upstream
+#: bp-core/admin/classes/class-bb-rest-help-content-endpoint.php:270
+msgid "Help content service returned an unexpected status (%d)."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-rest-help-content-endpoint.php:280
+msgid "Help content service returned an unexpected payload."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-rest-help-content-endpoint.php:351
+msgid "Upstream KB article ID."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-rest-help-content-endpoint.php:357
+msgid "Article title (HTML-rendered)."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-rest-help-content-endpoint.php:363
+msgid "Article body HTML — sanitize before rendering."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-rest-help-content-endpoint.php:369
+msgid "Optional YouTube video ID associated with the article."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-rest-help-content-endpoint.php:375
+msgid "Optional featured image URL."
+msgstr ""
+
 #: bp-core/admin/drm/class-bb-base-drm.php:283
 #: bp-core/admin/drm/class-bb-drm-addon.php:212
 #: bp-core/admin/drm/class-bb-drm-controller.php:364
@@ -9100,7 +9150,7 @@ msgid "Get help with any questions"
 msgstr ""
 
 #: bp-core/admin/mothership/views/admin.php:86
-#: bp-core/admin/bb-settings/settings/build/334.js:1
+#: bp-core/admin/bb-settings/settings/build/484.js:1
 msgid "Troubleshooting"
 msgstr ""
 
@@ -38112,7 +38162,7 @@ msgid "Select color"
 msgstr ""
 
 #: bp-core/admin/bb-settings/rl-onboarding/build/rl-onboarding.js:1
-#: bp-core/admin/bb-settings/settings/build/334.js:1
+#: bp-core/admin/bb-settings/settings/build/484.js:1
 msgid "BuddyBoss Theme"
 msgstr ""
 
@@ -38646,7 +38696,7 @@ msgid "Search replies"
 msgstr ""
 
 #: bp-core/admin/bb-settings/settings/build/285.js:2
-#: bp-core/admin/bb-settings/settings/build/334.js:1
+#: bp-core/admin/bb-settings/settings/build/484.js:1
 #: bp-core/admin/bb-settings/settings/build/944.js:1
 msgid "Retry"
 msgstr ""
@@ -38689,100 +38739,6 @@ msgstr ""
 
 #: bp-core/admin/bb-settings/settings/build/285.js:2
 msgid "I understand that this deletes the reply."
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings/build/334.js:1
-msgid "Learn how to enable and configure the BuddyBoss Platform – including profiles, groups, activity, forums and more."
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings/build/334.js:1
-msgid "Learn how to setup and customize our premium BuddyBoss Theme to make everything look beautiful."
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings/build/334.js:1
-msgid "Learn how to set up the BuddyBoss App from scratch, including initial setup, branding, generating builds and publishing."
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings/build/334.js:1
-#: bp-core/admin/bb-settings/settings/build/483.js:4
-#: bp-core/admin/bb-settings/settings/build/index.js:1
-msgid "Integrations"
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings/build/334.js:1
-msgid "LearnDash, Zoom, WooCommerce, Events, Jobs and more. Learn how BuddyBoss integrates with your favorite plugins and services."
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings/build/334.js:1
-msgid "Advanced Setup"
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings/build/334.js:1
-msgid "Articles for experienced developers and site administrators to optimize and extend their BuddyBoss sites."
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings/build/334.js:1
-msgid "Running into issues? Learn how to resolve the most common issues with BuddyBoss."
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings/build/334.js:1
-msgid "Couldn’t load documentation."
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings/build/334.js:1
-msgid "BuddyBoss Knowledge Base"
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings/build/334.js:1
-msgid "%d article"
-msgid_plural "%d articles"
-msgstr[0] ""
-msgstr[1] ""
-
-#: bp-core/admin/bb-settings/settings/build/334.js:1
-msgid "Breadcrumb"
-msgstr ""
-
-#. translators: 1: subcategory name, 2: article count.
-#: bp-core/admin/bb-settings/settings/build/334.js:2
-msgid "%1$s (%2$d)"
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings/build/334.js:2
-msgid "Documentation navigation"
-msgstr ""
-
-#. translators: %d is the count of articles not shown.
-#: bp-core/admin/bb-settings/settings/build/334.js:3
-msgid "+%d more on docs →"
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings/build/334.js:3
-msgid "Couldn’t load this article."
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings/build/334.js:3
-msgid "Open on BuddyBoss.com →"
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings/build/334.js:3
-msgid "This article was moved or removed."
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings/build/334.js:3
-msgid "Browse all docs →"
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings/build/334.js:3
-msgid "This article is empty."
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings/build/334.js:3
-msgid "Couldn’t load this category."
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings/build/334.js:3
-msgid "Close documentation"
 msgstr ""
 
 #: bp-core/admin/bb-settings/settings/build/362.js:1
@@ -38990,6 +38946,12 @@ msgid "Permissions"
 msgstr ""
 
 #: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/484.js:1
+#: bp-core/admin/bb-settings/settings/build/index.js:1
+msgid "Integrations"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/483.js:4
 msgid "No settings available for this tab."
 msgstr ""
 
@@ -39047,6 +39009,94 @@ msgstr ""
 
 #: bp-core/admin/bb-settings/settings/build/483.js:4
 msgid "Select group type"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/484.js:1
+msgid "Learn how to enable and configure the BuddyBoss Platform – including profiles, groups, activity, forums and more."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/484.js:1
+msgid "Learn how to setup and customize our premium BuddyBoss Theme to make everything look beautiful."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/484.js:1
+msgid "Learn how to set up the BuddyBoss App from scratch, including initial setup, branding, generating builds and publishing."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/484.js:1
+msgid "LearnDash, Zoom, WooCommerce, Events, Jobs and more. Learn how BuddyBoss integrates with your favorite plugins and services."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/484.js:1
+msgid "Advanced Setup"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/484.js:1
+msgid "Articles for experienced developers and site administrators to optimize and extend their BuddyBoss sites."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/484.js:1
+msgid "Running into issues? Learn how to resolve the most common issues with BuddyBoss."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/484.js:1
+msgid "Couldn’t load documentation."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/484.js:1
+msgid "BuddyBoss Knowledge Base"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/484.js:1
+msgid "%d article"
+msgid_plural "%d articles"
+msgstr[0] ""
+msgstr[1] ""
+
+#: bp-core/admin/bb-settings/settings/build/484.js:1
+msgid "Breadcrumb"
+msgstr ""
+
+#. translators: 1: subcategory name, 2: article count.
+#: bp-core/admin/bb-settings/settings/build/484.js:2
+msgid "%1$s (%2$d)"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/484.js:2
+msgid "Documentation navigation"
+msgstr ""
+
+#. translators: %d is the count of articles not shown.
+#: bp-core/admin/bb-settings/settings/build/484.js:3
+msgid "+%d more on docs →"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/484.js:3
+msgid "Couldn’t load this article."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/484.js:3
+msgid "Open on BuddyBoss.com →"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/484.js:3
+msgid "This article was moved or removed."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/484.js:3
+msgid "Browse all docs →"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/484.js:3
+msgid "This article is empty."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/484.js:3
+msgid "Couldn’t load this category."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/484.js:3
+msgid "Close documentation"
 msgstr ""
 
 #: bp-core/admin/bb-settings/settings/build/499.js:1

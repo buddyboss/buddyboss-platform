@@ -10,6 +10,7 @@ import { __ } from '@wordpress/i18n';
 import { Header } from './components/Header';
 import { Router } from './Router';
 import { KbProvider, useKb } from './context/KbContext';
+import { clearHelpContentCache } from '../utils/api';
 
 // Register integration-specific hooks that extend the shared bb_verify_popup
 // field. Side-effect import — the file calls wp.hooks.addFilter/addAction at
@@ -171,6 +172,26 @@ function AppInner() {
 	const { open: openKb, state: kbState } = useKb();
 	const [currentRoute, setCurrentRoute] = useState('/settings');
 	const [isLoading, setIsLoading] = useState(true);
+
+	// One-shot localStorage flush for the help-content cache.
+	//
+	// Pairs with `bb_maybe_clear_placeholder_features_cache()` on the PHP
+	// side: when an admin hits `?bb_clear_placeholder_cache=1`, that handler
+	// drops every `bb_help_content_*` server transient AND raises a one-shot
+	// transient that `bb-admin-settings-page.php` reads-and-deletes into
+	// `bbAdminData.helpContentCacheFlushSignal`. Without this effect the
+	// 3-day localStorage entries written by `fetchHelpContent()` would keep
+	// shadowing the freshly-cleared server cache on the very next help
+	// slider open.
+	//
+	// Empty deps + no cleanup is intentional: the signal is already
+	// one-shot at the source (deleted server-side after read), so this
+	// fires exactly once per page load when the signal is present.
+	useEffect(() => {
+		if ( typeof window !== 'undefined' && window.bbAdminData && window.bbAdminData.helpContentCacheFlushSignal ) {
+			clearHelpContentCache();
+		}
+	}, []);
 
 	// Fix admin sidebar menu highlighting on mount and route changes.
 	useEffect(() => {

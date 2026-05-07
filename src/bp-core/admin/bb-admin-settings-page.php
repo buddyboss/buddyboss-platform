@@ -249,6 +249,19 @@ function bb_admin_settings_page() {
 	// bp_admin_repair_tools_wrapper_function AJAX action.
 	$localize_data['repairNonce'] = wp_create_nonce( 'bp-do-counts' );
 
+	// One-shot help-content cache flush signal.
+	//
+	// `bb_maybe_clear_placeholder_features_cache()` (admin_init handler in
+	// bb-admin-placeholder-features.php) raises this transient when an admin
+	// hits `?bb_clear_placeholder_cache=1`. Reading + deleting it here means
+	// the React app sees the signal exactly once on its next mount and then
+	// the flag is gone — even if the page reloads, the localStorage flush
+	// fires only for the trigger that set it, not on every subsequent visit.
+	if ( get_transient( 'bb_help_content_cache_flush_signal' ) ) {
+		$localize_data['helpContentCacheFlushSignal'] = true;
+		delete_transient( 'bb_help_content_cache_flush_signal' );
+	}
+
 	// Bootstrap payload for the Appearance → General "Setup Wizard" button.
 	// Allows the rl-onboarding React bundle to be lazy-loaded and mounted on
 	// click without navigating away from Settings 2.0. Always localized — the

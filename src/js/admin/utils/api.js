@@ -42,13 +42,19 @@ export const clearHelpContentCache = (contentId = null) => {
 			localStorage.removeItem(`bb_help_content_${kbId}`);
 		}
 	} else {
-		// Clear all help content cache entries
+		// Collect-then-delete in two passes. `localStorage.removeItem()`
+		// reindexes the storage on the spot, so removing during a
+		// `localStorage.key(i)` walk silently skips every key that lands
+		// in the freshly-vacated slot — leaving stale entries behind on
+		// any flush that touches more than one matching key in a row.
+		const keysToRemove = [];
 		for (let i = 0; i < localStorage.length; i++) {
 			const key = localStorage.key(i);
 			if (key && key.startsWith('bb_help_content_')) {
-				localStorage.removeItem(key);
+				keysToRemove.push(key);
 			}
 		}
+		keysToRemove.forEach((key) => localStorage.removeItem(key));
 	}
 };
 
@@ -115,10 +121,67 @@ const resolveHelpContentId = (contentId) => {
 };
 
 /**
- * Fetch help content from the BuddyBoss knowledge base API.
- * Implements caching to avoid unnecessary API calls.
+ * Resolve the same-origin help-content proxy URL for an article ID.
  *
- * @param {string} contentId - The ID of the help content to fetch, or a URL containing article=.
+ * The proxy lives in this plugin (BB_REST_Help_Content_Endpoint) and
+ * fetches `https://buddyboss.com/wp-json/wp/v2/ht-kb/<id>` server-side
+ * via `wp_remote_get()`. This avoids the CORS-blocked path the previous
+ * direct cross-origin fetch hit when buddyboss.com's LiteSpeed cache
+ * served cached responses without an `Access-Control-Allow-Origin`
+ * header (the header is added at the PHP layer but stripped on cache
+ * replay; see commit message for full diagnosis).
+ *
+ * Reads `window.bbAdminData.apiUrl` which is set by
+ * `bb-admin-settings-page.php` via `wp_localize_script` to
+ * `rest_url( 'buddyboss/v1/' )`. Falls back to the WP-Admin REST root
+ * if for some reason the localized data is missing — the controller
+ * registers the route under both `buddyboss/v1` (with platform-api)
+ * and `bb/v1` (without), so the fallback URL still resolves.
+ *
+ * @param {string} kbId Validated KB article ID (digits only).
+ * @returns {string} Same-origin proxy URL.
+ */
+const buildHelpProxyUrl = (kbId) => {
+	const root = (typeof window !== 'undefined' && window.bbAdminData && window.bbAdminData.apiUrl)
+		? window.bbAdminData.apiUrl
+		: '/wp-json/buddyboss/v1/';
+	const base = root.endsWith('/') ? root : root + '/';
+	return base + 'help-content/' + encodeURIComponent(kbId);
+};
+
+/**
+ * Read the WP REST nonce from the localized admin data.
+ *
+ * Required for authenticated REST calls — without it, WP treats the
+ * request as unauthenticated and the controller's `manage_options` check
+ * fails with HTTP 401 even when the admin is logged in.
+ *
+ * @returns {string} REST nonce, or empty string if not localized.
+ */
+const getRestNonce = () => {
+	if (typeof window === 'undefined' || !window.bbAdminData) {
+		return '';
+	}
+	return window.bbAdminData.nonce || '';
+};
+
+/**
+ * Fetch help content via the same-origin REST proxy.
+ *
+ * Two-tier cache: localStorage for instant repeat reads in the same
+ * browser session, plus the server-side transient cache in the proxy
+ * controller (12h, shared across all admins on the site). The
+ * localStorage cache is keyed by article ID so a render-loop calling
+ * `fetchHelpContent` repeatedly for the same article only hits the
+ * network once per `CACHE_DURATION_DAYS`.
+ *
+ * Error handling preserves the previous contract: on any failure the
+ * promise rejects with an `Error` whose `message` includes the upstream
+ * status / payload context. The `FeatureSettingsScreen` consumer reads
+ * `error.message` and shows a generic "couldn't load" notice — no
+ * change required there.
+ *
+ * @param {string} contentId The ID of the help content to fetch, or a URL containing article=.
  * @returns {Promise} Promise that resolves to help content object.
  */
 export const fetchHelpContent = async (contentId) => {
@@ -127,7 +190,7 @@ export const fetchHelpContent = async (contentId) => {
 	}
 
 	const kbId = resolveHelpContentId(contentId);
-	if (!kbId) {
+	if (!kbId || !/^\d+$/.test(kbId)) {
 		throw new Error('Could not determine help article ID');
 	}
 
@@ -138,25 +201,47 @@ export const fetchHelpContent = async (contentId) => {
 	}
 
 	try {
-		const response = await fetch(`https://buddyboss.com/wp-json/wp/v2/ht-kb/${kbId}`);
-		if (!response.ok) {
-			const message = `Failed to fetch help content (${response.status})`;
-			throw new Error(message);
-		}
-		const data = await response.json();
+		const response = await fetch(buildHelpProxyUrl(kbId), {
+			credentials: 'same-origin',
+			headers: {
+				Accept: 'application/json',
+				'X-WP-Nonce': getRestNonce(),
+			},
+		});
 
-		// Prepare content object
+		if (!response.ok) {
+			// Try to surface the upstream error code from the WP REST
+			// envelope (`{ code, message, data: { status } }`) so the
+			// caller's toast can show something meaningful, then fall
+			// back to the HTTP status if the body isn't parseable.
+			let detail = `HTTP ${response.status}`;
+			try {
+				const errBody = await response.json();
+				if (errBody && typeof errBody.message === 'string' && errBody.message) {
+					detail = errBody.message;
+				}
+			} catch (e) {
+				// Ignore — body wasn't JSON.
+			}
+			throw new Error(`Failed to fetch help content (${detail})`);
+		}
+
+		// The proxy already normalizes the upstream `wp/v2/ht-kb` envelope
+		// into our wire shape `{ id, title, content, videoId, imageUrl }`
+		// — no further reshaping needed here.
+		const data = await response.json();
 		const contentObject = {
-			title: data.title?.rendered ?? '',
-			content: data.content?.rendered ?? '',
-			videoId: data.acf?.video_id || null,
-			imageUrl: data.acf?.featured_image || null,
+			title: data && typeof data.title === 'string' ? data.title : '',
+			content: data && typeof data.content === 'string' ? data.content : '',
+			videoId: data && typeof data.videoId === 'string' && data.videoId ? data.videoId : null,
+			imageUrl: data && typeof data.imageUrl === 'string' && data.imageUrl ? data.imageUrl : null,
 		};
 
 		saveToCache(cacheKey, contentObject);
 		return contentObject;
 	} catch (error) {
 		// Log with context; rethrow so caller can show user message.
+		// eslint-disable-next-line no-console
 		console.error('Error fetching help content:', error.message || error);
 		throw error;
 	}
