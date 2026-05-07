@@ -1509,6 +1509,11 @@ select.bb-admin-settings__select {
 		// group container. No additional padding so field rhythm matches
 		// the ungrouped fields above.
 		display: block;
+
+        // Fallback spacing for all type of fields
+        > .components-base-control > div {
+            margin-bottom: 16px;
+        }
 	}
 }
 
