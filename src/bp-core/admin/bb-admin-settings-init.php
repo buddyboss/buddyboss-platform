@@ -205,6 +205,15 @@ function bb_admin_settings_init() {
 		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-field-upgrades.php' ) ) {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-field-upgrades.php';
 		}
+
+		// Platform 3.0 addon-compatibility admin notice. Loads
+		// unconditionally so the warning fires regardless of which
+		// admin screen the user is on — version mismatches break
+		// Settings 2.0 specifically but the symptom can manifest on
+		// any admin page through extension hooks.
+		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-version-compatibility-notices.php' ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-version-compatibility-notices.php';
+		}
 	}
 }
 
