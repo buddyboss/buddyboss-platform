@@ -24,6 +24,14 @@ import { sanitizeHtml } from '../../../utils/sanitize';
 export function SharePlatformsField({ field, value, onChange }) {
 	const platformsValue = value && typeof value === 'object' && !Array.isArray(value) ? value : {};
 
+	// Resolve the current checked state of an option from any persisted shape.
+	// The server may return either an indexed list (legacy format from the
+	// buddyboss-sharing addon's `bb_sanitize_sharing_platforms`, e.g.
+	// ['messenger','facebook']) or an associative map ({messenger:1,...}). The
+	// onChange below relies on this same function so a click rebuilds the next
+	// dict from the *displayed* state, not from `platformsValue` alone — which
+	// is empty whenever value is an array and would otherwise zero out every
+	// other option (the cause of payloads like {m:0,f:0,t:0,linkedin:1,...}).
 	const isPlatformChecked = (optionKey) => {
 		if ( typeof value === 'object' && !Array.isArray(value) ) {
 			return !!platformsValue[optionKey] && platformsValue[optionKey] !== '0' && platformsValue[optionKey] !== 0;
@@ -56,9 +64,7 @@ export function SharePlatformsField({ field, value, onChange }) {
 										if ( opt.value === option.value ) {
 											newValue[opt.value] = checked ? 1 : 0;
 										} else {
-											newValue[opt.value] = platformsValue[opt.value] !== undefined
-												? ( typeof platformsValue[opt.value] === 'string' ? parseInt(platformsValue[opt.value], 10) : platformsValue[opt.value] )
-												: 0;
+											newValue[opt.value] = isPlatformChecked(opt.value) ? 1 : 0;
 										}
 									});
 									onChange(field.name, newValue);
