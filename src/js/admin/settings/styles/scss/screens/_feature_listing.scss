@@ -41,7 +41,7 @@
 			background: $bb-background-secondary-color;
 		}
 
-		&:focus {
+		&:focus-visible {
 			border-color: transparent;
 			box-shadow: none;
 			outline: 2px solid $bb-border-quaternary-color;
@@ -50,7 +50,7 @@
 		&--active {
 			background: $bb-background-secondary-color;
 			border-color: $bb-border-quaternary-color;
-			border-width: 1px;
+			box-shadow: inset 0 0 0 0.5px $bb-border-quaternary-color;
 			color: $bb-text-color;
 		}
 	}
