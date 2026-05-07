@@ -1094,6 +1094,9 @@ class BP_Messages_Thread {
 				 * @param int $batch_size Default batch size. Default 500.
 				 */
 				$batch_size = (int) apply_filters( 'bb_messages_thread_search_batch_size', 500 );
+				// Safety guard against misconfigured filter values that would
+				// cause an infinite loop in the do-while termination check.
+				$batch_size = max( 1, $batch_size );
 				$batch_page = 1;
 				do {
 					$batch_query = self::get(

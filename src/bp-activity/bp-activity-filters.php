@@ -1715,26 +1715,37 @@ function bp_activity_media_fix_data() {
 		),
 	);
 
-	$result = BP_Activity_Activity::get(
-		array(
-			'per_page'    => 10000,
-			'privacy'     => $privacy,
-			'meta_query'  => $meta_query,
-			'show_hidden' => true,
-		)
-	);
+	// Paginated iteration to safely update all matching activities without
+	// loading the entire result set into memory at once.
+	$batch_size = 200;
+	$page       = 1;
+	do {
+		$result = BP_Activity_Activity::get(
+			array(
+				'per_page'    => $batch_size,
+				'page'        => $page,
+				'privacy'     => $privacy,
+				'meta_query'  => $meta_query,
+				'show_hidden' => true,
+			)
+		);
 
-	if ( ! empty( $result['activities'] ) ) {
-		foreach ( $result['activities'] as $activity ) {
-			$activity = new BP_Activity_Activity( $activity->id );
+		$activities = ! empty( $result['activities'] ) ? $result['activities'] : array();
 
-			if ( ! empty( $activity ) ) {
-				$activity->privacy        = 'media';
-				$activity->title_required = false;
-				$activity->save();
+		if ( ! empty( $activities ) ) {
+			foreach ( $activities as $activity ) {
+				$activity = new BP_Activity_Activity( $activity->id );
+
+				if ( ! empty( $activity ) ) {
+					$activity->privacy        = 'media';
+					$activity->title_required = false;
+					$activity->save();
+				}
 			}
 		}
-	}
+
+		$page++;
+	} while ( count( $activities ) === $batch_size );
 }
 
 /**

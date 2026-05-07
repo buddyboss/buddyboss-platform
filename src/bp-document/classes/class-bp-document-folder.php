@@ -648,15 +648,31 @@ class BP_Document_Folder {
 			// recursive GROUP_CONCAT/FIND_IN_SET/session variable approach.
 			$descendant_ids = array();
 			$queue          = array( absint( $r['id'] ) );
+			$visited        = array( absint( $r['id'] ) => true );
 
 			while ( ! empty( $queue ) ) {
 				$ids_sql  = implode( ',', array_map( 'absint', $queue ) );
 				$children = $wpdb->get_results( "SELECT * FROM {$bp->document->table_name_folder} WHERE parent IN ({$ids_sql})" ); // db call ok; no-cache ok;
 
 				if ( ! empty( $children ) ) {
-					$folders        = array_merge( $folders, $children );
-					$descendant_ids = array_merge( $descendant_ids, wp_list_pluck( $children, 'id' ) );
-					$queue          = wp_list_pluck( $children, 'id' );
+					// Skip any children already visited to guard against data
+					// corruption that could create a circular parent reference.
+					$new_children = array();
+					foreach ( $children as $child ) {
+						$child_id = (int) $child->id;
+						if ( ! isset( $visited[ $child_id ] ) ) {
+							$visited[ $child_id ] = true;
+							$new_children[]       = $child;
+						}
+					}
+
+					if ( empty( $new_children ) ) {
+						$queue = array();
+					} else {
+						$folders        = array_merge( $folders, $new_children );
+						$descendant_ids = array_merge( $descendant_ids, wp_list_pluck( $new_children, 'id' ) );
+						$queue          = wp_list_pluck( $new_children, 'id' );
+					}
 				} else {
 					$queue = array();
 				}
