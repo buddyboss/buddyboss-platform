@@ -821,13 +821,13 @@ select.bb-admin-settings__select {
     // Status variants
     &--success {
         .bb-toast__icon i {
-            color: $bb-success-color;
+            color: $bb-icon-positive-secondary-color;
         }
     }
 
     &--error {
         .bb-toast__icon i {
-            color: $bb-error-color;
+            color: $bb-icon-danger-secondary-color;
         }
     }
 }
