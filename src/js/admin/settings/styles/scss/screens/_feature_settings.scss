@@ -64,7 +64,7 @@
             padding: 8px 16px;
             cursor: pointer;
             border-radius: $bb-border-radius-lg;
-            border: 1px solid transparent;
+            border: 0;
             width: 100%;
             box-sizing: border-box;
 
@@ -79,14 +79,17 @@
 			&--active {
 				color: $bb-text-color;
 				background-color: $bb-background-base-color;
-				border-color: $bb-border-primary-color;
 				outline: none;
-				box-shadow: none;
+				box-shadow: inset 0 0 0 0.5px $bb-border-secondary-color;
 
 				[class*="bb-icons-"] {
 					color: $bb-icon-color;
 				}
 			}
+
+            &:hover:not(.bb-admin-side-nav__link--active) {
+                background-color: $bb-background-primary-color;
+            }
 		}
 
         &__icon {
