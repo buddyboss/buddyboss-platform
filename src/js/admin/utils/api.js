@@ -141,13 +141,25 @@ const resolveHelpContentId = (contentId) => {
  * @param {string} kbId Validated KB article ID (digits only).
  * @returns {string} Same-origin proxy URL.
  */
-const buildHelpProxyUrl = (kbId) => {
+const buildHelpProxyUrl = () => {
 	const root = (typeof window !== 'undefined' && window.bbAdminData && window.bbAdminData.apiUrl)
 		? window.bbAdminData.apiUrl
 		: '/wp-json/buddyboss/v1/';
 	const base = root.endsWith('/') ? root : root + '/';
-	return base + 'help-content/' + encodeURIComponent(kbId);
+	return base + 'help-content/proxy';
 };
+
+/**
+ * Build the upstream KB article path that the PHP proxy will fetch.
+ *
+ * The proxy validates and prepends `https://buddyboss.com` server-side
+ * (see BB_REST_Help_Content_Endpoint::build_proxy_target). Clients send
+ * a path-only fragment so they can never influence the egress host.
+ *
+ * @param {string} kbId Validated KB article ID (digits only).
+ * @returns {string} Path fragment under buddyboss.com.
+ */
+const buildHelpArticlePath = (kbId) => '/wp-json/wp/v2/ht-kb/' + encodeURIComponent(kbId);
 
 /**
  * Read the WP REST nonce from the localized admin data.
@@ -201,12 +213,22 @@ export const fetchHelpContent = async (contentId) => {
 	}
 
 	try {
-		const response = await fetch(buildHelpProxyUrl(kbId), {
+		// POST to the universal proxy with a path-only URL body. The
+		// server prepends `https://buddyboss.com` so this client can
+		// never influence the egress host. The response envelope is
+		// `{ body: <upstream JSON>, headers: {...}, status: <int> }` —
+		// `body` is the raw `wp/v2/ht-kb/<id>` payload (title.rendered,
+		// content.rendered, acf.video_id, acf.featured_image), so we
+		// flatten it here on the client.
+		const response = await fetch(buildHelpProxyUrl(), {
+			method: 'POST',
 			credentials: 'same-origin',
 			headers: {
 				Accept: 'application/json',
+				'Content-Type': 'application/json',
 				'X-WP-Nonce': getRestNonce(),
 			},
+			body: JSON.stringify({ url: buildHelpArticlePath(kbId) }),
 		});
 
 		if (!response.ok) {
@@ -226,15 +248,20 @@ export const fetchHelpContent = async (contentId) => {
 			throw new Error(`Failed to fetch help content (${detail})`);
 		}
 
-		// The proxy already normalizes the upstream `wp/v2/ht-kb` envelope
-		// into our wire shape `{ id, title, content, videoId, imageUrl }`
-		// — no further reshaping needed here.
-		const data = await response.json();
+		const envelope = await response.json();
+		const upstream = envelope && typeof envelope === 'object' && envelope.body && typeof envelope.body === 'object'
+			? envelope.body
+			: {};
+		const titleStr = upstream.title && typeof upstream.title.rendered === 'string' ? upstream.title.rendered : '';
+		const contentStr = upstream.content && typeof upstream.content.rendered === 'string' ? upstream.content.rendered : '';
+		const videoIdStr = upstream.acf && typeof upstream.acf.video_id === 'string' ? upstream.acf.video_id : '';
+		const imageUrlStr = upstream.acf && typeof upstream.acf.featured_image === 'string' ? upstream.acf.featured_image : '';
+
 		const contentObject = {
-			title: data && typeof data.title === 'string' ? data.title : '',
-			content: data && typeof data.content === 'string' ? data.content : '',
-			videoId: data && typeof data.videoId === 'string' && data.videoId ? data.videoId : null,
-			imageUrl: data && typeof data.imageUrl === 'string' && data.imageUrl ? data.imageUrl : null,
+			title: titleStr,
+			content: contentStr,
+			videoId: videoIdStr || null,
+			imageUrl: imageUrlStr || null,
 		};
 
 		saveToCache(cacheKey, contentObject);

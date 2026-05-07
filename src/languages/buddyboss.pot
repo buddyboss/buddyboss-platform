@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 2.21.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-05-07 07:05:58+00:00\n"
+"POT-Creation-Date: 2026-05-07 07:42:12+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -8437,54 +8437,42 @@ msgstr[1] ""
 msgid "Failed to load email situations."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-rest-help-content-endpoint.php:116
-msgid "BuddyBoss KB article ID."
+#: bp-core/admin/classes/class-bb-rest-help-content-endpoint.php:162
+msgid "Path-only URL fragment under buddyboss.com (e.g. /wp-json/wp/v2/ht-kb/123)."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-rest-help-content-endpoint.php:149
+#: bp-core/admin/classes/class-bb-rest-help-content-endpoint.php:201
 msgid "Sorry, you are not allowed to access help content."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-rest-help-content-endpoint.php:174
-msgid "Invalid help article ID."
+#: bp-core/admin/classes/class-bb-rest-help-content-endpoint.php:365
+msgid "The requested help content URL is not allowed."
 msgstr ""
 
 #. translators: %s: error message from wp_remote_get
-#: bp-core/admin/classes/class-bb-rest-help-content-endpoint.php:253
+#: bp-core/admin/classes/class-bb-rest-help-content-endpoint.php:413
 msgid "Failed to load help content: %s"
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-rest-help-content-endpoint.php:262
+#: bp-core/admin/classes/class-bb-rest-help-content-endpoint.php:422
 msgid "Help content not found."
 msgstr ""
 
 #. translators: %d: HTTP status code returned by upstream
-#: bp-core/admin/classes/class-bb-rest-help-content-endpoint.php:270
+#: bp-core/admin/classes/class-bb-rest-help-content-endpoint.php:430
 msgid "Help content service returned an unexpected status (%d)."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-rest-help-content-endpoint.php:280
-msgid "Help content service returned an unexpected payload."
+#: bp-core/admin/classes/class-bb-rest-help-content-endpoint.php:479
+msgid "Upstream response body, JSON-decoded when possible."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-rest-help-content-endpoint.php:351
-msgid "Upstream KB article ID."
+#: bp-core/admin/classes/class-bb-rest-help-content-endpoint.php:485
+msgid "Selected pagination headers from the upstream response."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-rest-help-content-endpoint.php:357
-msgid "Article title (HTML-rendered)."
-msgstr ""
-
-#: bp-core/admin/classes/class-bb-rest-help-content-endpoint.php:363
-msgid "Article body HTML — sanitize before rendering."
-msgstr ""
-
-#: bp-core/admin/classes/class-bb-rest-help-content-endpoint.php:369
-msgid "Optional YouTube video ID associated with the article."
-msgstr ""
-
-#: bp-core/admin/classes/class-bb-rest-help-content-endpoint.php:375
-msgid "Optional featured image URL."
+#: bp-core/admin/classes/class-bb-rest-help-content-endpoint.php:491
+msgid "Upstream HTTP status code."
 msgstr ""
 
 #: bp-core/admin/drm/class-bb-base-drm.php:283
