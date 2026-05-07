@@ -358,11 +358,11 @@
     }
 
     &:not(.bb-admin-settings-form__field--full-width) {
-        border-bottom: 1px solid $bb-border-secondary-color;
+        border-bottom: 0.5px solid $bb-border-secondary-color;
     }
 
     &--full-width {
-        border-bottom: 1px solid $bb-border-secondary-color;
+        border-bottom: 0.5px solid $bb-border-secondary-color;
     }
 
     // Full-width status check notices (e.g., FFmpeg): block layout for HTML content.
