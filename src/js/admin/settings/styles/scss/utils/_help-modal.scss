@@ -153,6 +153,10 @@ body.bb-rl-help-modal-open {
 	overflow: hidden;
 }
 
+body.buddyboss_page_bb-settings:has(.bb-admin-feature-settings > .bb-rl-help-modal-overlay) {
+	overflow: hidden;
+}
+
 .bb-rl-help-modal-overlay {
 	position: fixed;
 	z-index: 9999;
@@ -181,8 +185,18 @@ body.bb-rl-help-modal-open {
 		padding-top: 60px;
 		height: calc(100vh - 32px); // Calculated height to fit the modal content
 
+		.admin-bar & {
+			top: 32px;
+			height: calc(100vh - 92px);
+		}
+
 		@media screen and (max-width: 782px) {
 			height: calc(100vh - 46px);
+
+			.admin-bar & {
+				top: 46px;
+				height: calc(100vh - 106px);
+			}
 		}
 	}
 
@@ -257,6 +271,7 @@ body.bb-rl-help-modal-open {
 		overflow-y: auto;
 		height: 100%;
 		color: $bb-text-secondary-color;
+		box-sizing: border-box;
 
 		p {
 
@@ -284,7 +299,6 @@ body.bb-rl-help-modal-open {
 		}
 
 		.wp-block-heading {
-
 			font-size: 16px;
 			font-weight: 600;
 			line-height: 22px;
@@ -305,6 +319,8 @@ body.bb-rl-help-modal-open {
 
 			img {
 				border-radius: 8px;
+				height: auto;
+				max-width: 100%;
 			}
 		}
 	}
