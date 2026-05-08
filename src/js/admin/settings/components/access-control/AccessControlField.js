@@ -17,7 +17,7 @@
  */
 
 import { useState, useRef, RawHTML } from '@wordpress/element';
-import { SelectControl, ToggleControl, Spinner } from '@wordpress/components';
+import { CheckboxControl, SelectControl, ToggleControl, Spinner } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { ajaxFetch } from '../../utils/ajax';
@@ -407,16 +407,15 @@ export function AccessControlField( { field, value, onChange } ) {
 				} ).map( function( o ) {
 					var specKey = String( o.value );
 					return (
-						<label key={ specKey } className="bb-access-control-field__threaded-checkbox">
-							<input
-								type="checkbox"
-								checked={ subSettings.specific.indexOf( specKey ) !== -1 }
-								onChange={ function( e ) {
-									handleSpecificChange( optKey, specKey, e.target.checked );
-								} }
-							/>
-							{ decodeEntities( o.label ) }
-						</label>
+						<CheckboxControl
+							key={ specKey }
+							className="bb-access-control-field__threaded-checkbox"
+							label={ decodeEntities( o.label ) }
+							checked={ subSettings.specific.indexOf( specKey ) !== -1 }
+							onChange={ function( checked ) {
+								handleSpecificChange( optKey, specKey, checked );
+							} }
+						/>
 					);
 				} ) }
 			</div>
