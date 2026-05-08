@@ -502,7 +502,7 @@ export function SettingsScreen({ onNavigate }) {
 							value={selectedCategory}
 							onChange={(e) => setSelectedCategory(e.target.value)}
 						>
-							<option value="">{__('Category', 'buddyboss')}</option>
+							<option value="">{__('All', 'buddyboss')}</option>
 							{Object.keys(categoryCounts).map((category) => (
 								<option key={category} value={category}>
 									{ 'community' === category
