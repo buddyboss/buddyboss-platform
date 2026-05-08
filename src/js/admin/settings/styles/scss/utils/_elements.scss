@@ -835,7 +835,7 @@ select.bb-admin-settings__select {
     color: $bb-text-color;
     border-radius: $bb-border-radius-lg;
     background-color: $bb-background-primary-hover-color;
-    border: 1px solid $bb-border-tertiary-color;
+    border: 0.5px solid $bb-border-tertiary-color;
     border-radius: $bb-border-radius-lg;
     margin-bottom: 16px;
     width: 100%;
@@ -859,6 +859,19 @@ select.bb-admin-settings__select {
             color: $bb-icon-positive-primary-color;
         }
     }
+
+    &.bb-admin-notice--error {
+        color: $bb-text-color;
+        background-color: $bb-background-danger-primary-color;
+        border-color: $bb-border-danger-color;
+
+        &:before {
+            content: "\e4e0";
+            font-weight: 500;
+            color: $bb-icon-danger-secondary-color;
+        }
+    }
+
 
     &.bb-admin-notice--warning {
         color: $bb-text-warning-primary-color;
