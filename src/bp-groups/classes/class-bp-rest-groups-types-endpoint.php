@@ -46,7 +46,6 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 				'schema' => array( $this, 'get_item_schema' ),
 			)
 		);
-
 	}
 
 	/**
@@ -389,7 +388,7 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 			);
 
 			$schema['properties']['label_colors'] = array(
-				'description' => __( 'Label\'s text and background colors for group types.' , 'buddyboss' ),
+				'description' => __( 'Label\'s text and background colors for group types.', 'buddyboss' ),
 				'type'        => 'array',
 				'context'     => array( 'embed', 'view', 'edit' ),
 				'readonly'    => true,
@@ -425,5 +424,4 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 		 */
 		return apply_filters( 'bp_rest_groups_types_collection_params', $params );
 	}
-
 }

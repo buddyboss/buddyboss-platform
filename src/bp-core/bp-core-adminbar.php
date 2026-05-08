@@ -181,7 +181,7 @@ function bp_wp_admin_bar_my_account_menu( $wp_admin_bar ) {
 		if ( 'nickname' !== $current_value ) {
 
 			$username = bp_activity_get_user_mentionname( $current_user->ID );
-			$at = __( '@', 'buddyboss' );
+			$at       = __( '@', 'buddyboss' );
 			if ( '' !== $username ) {
 				$user_info .= "<span class='username'>{$at}{$username}</span>";
 			} else {

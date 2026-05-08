@@ -152,7 +152,7 @@ function bp_nouveau_ajax_messages_send_message() {
 	);
 
 	// Verify nonce.
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'messages_send_message' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'messages_send_message' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -196,9 +196,9 @@ function bp_nouveau_ajax_messages_send_message() {
 		'bp_messages_recipients',
 		array_map(
 			function ( $username ) {
-				return trim( $username, '@' );
+				return trim( sanitize_text_field( wp_unslash( $username ) ), '@' );
 			},
-			$_POST['send_to']
+			isset( $_POST['send_to'] ) ? (array) $_POST['send_to'] : array() // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- Sanitized inside array_map above.
 		)
 	);
 
@@ -220,8 +220,8 @@ function bp_nouveau_ajax_messages_send_message() {
 	$send = messages_new_message(
 		array(
 			'recipients'   => $recipients,
-			'subject'      => wp_trim_words( $_POST['subject'], messages_get_default_subject_length() ),
-			'content'      => $_POST['message_content'],
+			'subject'      => wp_trim_words( isset( $_POST['subject'] ) ? sanitize_text_field( wp_unslash( $_POST['subject'] ) ) : '', messages_get_default_subject_length() ),
+			'content'      => isset( $_POST['message_content'] ) ? wp_kses_post( wp_unslash( $_POST['message_content'] ) ) : '',
 			'error_type'   => 'wp_error',
 			'mark_visible' => true,
 		)
@@ -449,7 +449,7 @@ function bp_nouveau_ajax_messages_send_message() {
  */
 function bp_nouveau_ajax_messages_send_reply() {
 
-	$hash    = ! empty( $_POST['hash'] ) ? wp_unslash( $_POST['hash'] ) : '';
+	$hash    = ! empty( $_POST['hash'] ) ? sanitize_text_field( wp_unslash( $_POST['hash'] ) ) : '';
 	$content = filter_input( INPUT_POST, 'content', FILTER_DEFAULT );
 
 	$response = array(
@@ -459,7 +459,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 	);
 
 	// Verify nonce.
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'messages_send_message' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'messages_send_message' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -550,8 +550,8 @@ function bp_nouveau_ajax_messages_send_reply() {
 		$new_reply = messages_new_message(
 			array(
 				'thread_id'    => $thread_id,
-				'subject'      => ! empty( $_POST['subject'] ) ? $_POST['subject'] : false,
-				'content'      => $_POST['content'],
+				'subject'      => ! empty( $_POST['subject'] ) ? sanitize_text_field( wp_unslash( $_POST['subject'] ) ) : false,
+				'content'      => isset( $_POST['content'] ) ? wp_kses_post( wp_unslash( $_POST['content'] ) ) : '',
 				'date_sent'    => $date_sent,
 				'mark_visible' => false,
 				'error_type'   => 'wp_error',
@@ -564,7 +564,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 			array(
 				'thread_id'    => $thread_id,
 				'subject'      => false,
-				'content'      => $_POST['content'],
+				'content'      => isset( $_POST['content'] ) ? wp_kses_post( wp_unslash( $_POST['content'] ) ) : '',
 				'date_sent'    => $date_sent,
 				'mark_visible' => false,
 				'error_type'   => 'wp_error',
@@ -649,7 +649,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 function bp_nouveau_ajax_get_user_message_threads() {
 	global $messages_template, $wpdb;
 
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_messages' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_messages' ) ) {
 		wp_send_json_error(
 			array(
 				'feedback' => __( 'Unauthorized request.', 'buddyboss' ),
@@ -663,7 +663,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 
 	// Override bp_current_action().
 	if ( isset( $_POST['box'] ) ) {
-		$bp->current_action = $_POST['box'];
+		$bp->current_action = sanitize_key( wp_unslash( $_POST['box'] ) );
 	}
 
 	// Add the message thread filter.
@@ -1123,7 +1123,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			$threads->threads[ $i ] = array_merge( $threads->threads[ $i ], $thread_extra_content );
 		}
 
-		$threads->threads[ $i ]['is_search'] = ( isset( $_POST ) && isset( $_POST['search_terms'] ) && '' !== trim( $_POST['search_terms'] ) ) ? true : false;
+		$threads->threads[ $i ]['is_search'] = ( isset( $_POST ) && isset( $_POST['search_terms'] ) && '' !== trim( sanitize_text_field( wp_unslash( $_POST['search_terms'] ) ) ) ) ? true : false;
 		$threads->threads[ $i ]['avatars']   = bp_messages_get_avatars( $bp_get_message_thread_id, bp_loggedin_user_id() );
 
 		$i += 1;
@@ -1155,7 +1155,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_messages_thread_read() {
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_messages' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_messages' ) ) {
 		wp_send_json_error();
 	}
 
@@ -1191,7 +1191,7 @@ function bp_nouveau_ajax_messages_thread_read() {
 function bp_nouveau_ajax_get_thread_messages() {
 	global $thread_template, $media_template, $document_template, $wpdb, $bp;
 
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_messages' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_messages' ) ) {
 		wp_send_json_error(
 			array(
 				'feedback' => __( 'Unauthorized request.', 'buddyboss' ),
@@ -1238,7 +1238,7 @@ function bp_nouveau_ajax_delete_thread_messages() {
 		'type'     => 'error',
 	);
 
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_messages' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_messages' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -1246,7 +1246,7 @@ function bp_nouveau_ajax_delete_thread_messages() {
 		wp_send_json_error( $response );
 	}
 
-	$thread_ids = wp_parse_id_list( $_POST['id'] );
+	$thread_ids = wp_parse_id_list( isset( $_POST['id'] ) ? wp_unslash( $_POST['id'] ) : array() ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- wp_parse_id_list sanitizes to integers.
 
 	foreach ( $thread_ids as $thread_id ) {
 		if ( ! messages_check_thread_access( $thread_id ) && ! bp_current_user_can( 'bp_moderate' ) ) {
@@ -1290,7 +1290,7 @@ function bp_nouveau_ajax_delete_thread() {
 		'type'     => 'error',
 	);
 
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_messages' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_messages' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -1298,7 +1298,7 @@ function bp_nouveau_ajax_delete_thread() {
 		wp_send_json_error( $response );
 	}
 
-	$thread_ids = wp_parse_id_list( $_POST['id'] );
+	$thread_ids = wp_parse_id_list( isset( $_POST['id'] ) ? wp_unslash( $_POST['id'] ) : array() ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- wp_parse_id_list sanitizes to integers.
 
 	foreach ( $thread_ids as $thread_id ) {
 		if ( ! messages_check_thread_access( $thread_id ) && ! bp_current_user_can( 'bp_moderate' ) ) {
@@ -1404,7 +1404,7 @@ function bp_nouveau_ajax_star_thread_messages() {
 		wp_send_json_error();
 	}
 
-	$action = str_replace( 'messages_', '', $_POST['action'] );
+	$action = str_replace( 'messages_', '', sanitize_key( wp_unslash( $_POST['action'] ) ) );
 
 	if ( 'star' === $action ) {
 		$error_message = __( 'There was a problem starring your messages. Please try again.', 'buddyboss' );
@@ -1426,12 +1426,12 @@ function bp_nouveau_ajax_star_thread_messages() {
 		wp_send_json_error( $response );
 	}
 
-	$ids      = wp_parse_id_list( $_POST['id'] );
+	$ids      = wp_parse_id_list( isset( $_POST['id'] ) ? wp_unslash( $_POST['id'] ) : array() ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- wp_parse_id_list sanitizes to integers.
 	$messages = array();
 
 	// Use global nonce for bulk actions involving more than one id.
 	if ( 1 !== count( $ids ) ) {
-		if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_messages' ) ) {
+		if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_messages' ) ) {
 			wp_send_json_error( $response );
 		}
 
@@ -1470,7 +1470,7 @@ function bp_nouveau_ajax_star_thread_messages() {
 	} else {
 		$id = reset( $ids );
 
-		if ( empty( $_POST['star_nonce'] ) || ! wp_verify_nonce( $_POST['star_nonce'], 'bp-messages-star-' . $id ) ) {
+		if ( empty( $_POST['star_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['star_nonce'] ) ), 'bp-messages-star-' . $id ) ) {
 			wp_send_json_error( $response );
 		}
 
@@ -1517,7 +1517,7 @@ function bp_nouveau_ajax_readunread_thread_messages() {
 		wp_send_json_error();
 	}
 
-	$action = str_replace( 'messages_', '', $_POST['action'] );
+	$action = str_replace( 'messages_', '', sanitize_key( wp_unslash( $_POST['action'] ) ) );
 
 	$response = array(
 		'feedback' => __( 'There was a problem marking your messages as read. Please try again.', 'buddyboss' ),
@@ -1531,7 +1531,7 @@ function bp_nouveau_ajax_readunread_thread_messages() {
 		);
 	}
 
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_messages' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_messages' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -1539,7 +1539,7 @@ function bp_nouveau_ajax_readunread_thread_messages() {
 		wp_send_json_error( $response );
 	}
 
-	$thread_ids = wp_parse_id_list( $_POST['id'] );
+	$thread_ids = wp_parse_id_list( isset( $_POST['id'] ) ? wp_unslash( $_POST['id'] ) : array() ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- wp_parse_id_list sanitizes to integers.
 
 	$response['messages'] = array();
 
@@ -1595,7 +1595,7 @@ function bp_nouveau_ajax_dismiss_sitewide_notice() {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_messages' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_messages' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -1655,13 +1655,13 @@ function bp_nouveau_ajax_dsearch_recipients() {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( $_GET['nonce'] ) || ! wp_verify_nonce( $_GET['nonce'], 'messages_load_recipient' ) ) {
+	if ( empty( $_GET['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['nonce'] ) ), 'messages_load_recipient' ) ) {
 		wp_send_json_error( $response );
 	}
 
 	$exclude_user_ids = array();
 	if ( isset( $_GET['except'] ) && ! empty( $_GET['except'] ) ) {
-		$exclude          = array_map( 'sanitize_text_field', $_GET['except'] );
+		$exclude          = array_map( 'sanitize_text_field', wp_unslash( (array) $_GET['except'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- Unslashed via wp_unslash before array_map sanitization.
 		$exclude_user_ids = bb_get_user_id_by_activity_mentionname( $exclude );
 	}
 
@@ -1677,11 +1677,11 @@ function bp_nouveau_ajax_dsearch_recipients() {
 
 	$results = bp_core_get_suggestions(
 		array(
-			'term'            => sanitize_text_field( $_GET['term'] ),
+			'term'            => sanitize_text_field( wp_unslash( isset( $_GET['term'] ) ? $_GET['term'] : '' ) ),
 			'type'            => 'members',
 			'only_friends'    => false,
 			'count_total'     => 'count_query',
-			'page'            => $_GET['page'],
+			'page'            => isset( $_GET['page'] ) ? absint( $_GET['page'] ) : 1,
 			'limit'           => 10,
 			'populate_extras' => true,
 			'exclude'         => $exclude_user_ids,
@@ -2887,7 +2887,7 @@ function bp_nouveau_ajax_hide_thread() {
 		'type'     => 'error',
 	);
 
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_messages' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_messages' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -2895,7 +2895,7 @@ function bp_nouveau_ajax_hide_thread() {
 		wp_send_json_error( $response );
 	}
 
-	$thread_ids = wp_parse_id_list( $_POST['id'] );
+	$thread_ids = wp_parse_id_list( isset( $_POST['id'] ) ? wp_unslash( $_POST['id'] ) : array() ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- wp_parse_id_list sanitizes to integers.
 
 	$is_group_message_thread = bb_messages_is_group_thread( (int) current( $thread_ids ) );
 	if ( $is_group_message_thread ) {
@@ -3405,7 +3405,7 @@ function bp_nouveau_ajax_unhide_thread() {
 		'type'     => 'error',
 	);
 
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_messages' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_messages' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -3413,7 +3413,7 @@ function bp_nouveau_ajax_unhide_thread() {
 		wp_send_json_error( $response );
 	}
 
-	$thread_ids = wp_parse_id_list( $_POST['id'] );
+	$thread_ids = wp_parse_id_list( isset( $_POST['id'] ) ? wp_unslash( $_POST['id'] ) : array() ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- wp_parse_id_list sanitizes to integers.
 
 	$is_group_message_thread = bb_messages_is_group_thread( (int) current( $thread_ids ) );
 	if ( $is_group_message_thread ) {

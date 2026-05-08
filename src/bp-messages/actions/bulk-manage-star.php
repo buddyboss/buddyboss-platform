@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 /**
  * Messages: Bulk-manage star action handler
  *
@@ -17,7 +18,7 @@ function bp_messages_star_bulk_manage_handler() {
 	}
 
 	// Check the nonce.
-	if ( ! wp_verify_nonce( $_POST['messages_bulk_nonce'], 'messages_bulk_nonce' ) ) {
+	if ( ! wp_verify_nonce( wp_unslash( $_POST['messages_bulk_nonce'] ), 'messages_bulk_nonce' ) ) {
 		return;
 	}
 

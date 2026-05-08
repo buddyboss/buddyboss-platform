@@ -144,15 +144,14 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 				}
 
 				// Only filter if group forums are active.
-			   if ( ! bbp_is_group_forums_active() ) {
+				if ( ! bbp_is_group_forums_active() ) {
 					return false;
-			   }
+				}
 
-			   // Only filter for single group forum topics.
-			   if ( ! bp_is_group_single() && ! bp_is_group_forum_topic() && ! bp_is_group_forum_topic_edit() && ! bbp_is_reply_edit() ) {
+				// Only filter for single group forum topics.
+				if ( ! bp_is_group_single() && ! bp_is_group_forum_topic() && ! bp_is_group_forum_topic_edit() && ! bbp_is_reply_edit() ) {
 					return false;
-			   }
-
+				}
 			}
 
 			// Setup scripts array.
@@ -378,7 +377,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 								'size'          => $size,
 								'menu_order'    => $index,
 							);
-							$index ++;
+							++$index;
 						}
 					}
 
@@ -417,7 +416,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 								'size'          => $size,
 								'menu_order'    => $index,
 							);
-							$index ++;
+							++$index;
 						}
 					}
 
@@ -444,7 +443,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 								'url'           => bp_get_media_attachment_image(),
 								'menu_order'    => $index,
 							);
-							$index ++;
+							++$index;
 						}
 					}
 
@@ -492,7 +491,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 								'url'           => wp_get_attachment_url( bp_get_document_attachment_id() ),
 								'menu_order'    => $index,
 							);
-							$index ++;
+							++$index;
 						}
 					}
 
@@ -531,7 +530,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 								'url'           => wp_get_attachment_url( bp_get_video_attachment_id() ),
 								'menu_order'    => $index,
 							);
-							$index ++;
+							++$index;
 						}
 					}
 
@@ -558,7 +557,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 								'url'           => bp_get_media_attachment_image(),
 								'menu_order'    => $index,
 							);
-							$index ++;
+							++$index;
 						}
 					}
 
@@ -606,7 +605,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 								'url'           => wp_get_attachment_url( bp_get_document_attachment_id() ),
 								'menu_order'    => $index,
 							);
-							$index ++;
+							++$index;
 						}
 					}
 
@@ -645,7 +644,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 								'url'           => wp_get_attachment_url( bp_get_video_attachment_id() ),
 								'menu_order'    => $index,
 							);
-							$index ++;
+							++$index;
 						}
 					}
 
@@ -672,7 +671,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 								'url'           => bp_get_media_attachment_image(),
 								'menu_order'    => $index,
 							);
-							$index ++;
+							++$index;
 						}
 					}
 
@@ -800,7 +799,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 			}
 
 			// Bail if user did not take this action.
-			if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'toggle-subscription_' . $forum->ID ) ) {
+			if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( wp_unslash( $_POST['nonce'] ), 'toggle-subscription_' . $forum->ID ) ) {
 				bbp_ajax_response( false, __( 'Are you sure you meant to do that?', 'buddyboss' ), 304 );
 			}
 
@@ -868,7 +867,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 			}
 
 			// Bail if user did not take this action.
-			if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'toggle-favorite_' . $topic->ID ) ) {
+			if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( wp_unslash( $_POST['nonce'] ), 'toggle-favorite_' . $topic->ID ) ) {
 				bbp_ajax_response( false, __( 'Are you sure you meant to do that?', 'buddyboss' ), 304 );
 			}
 
@@ -936,7 +935,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 			}
 
 			// Bail if user did not take this action.
-			if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'toggle-subscription_' . $topic->ID ) ) {
+			if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( wp_unslash( $_POST['nonce'] ), 'toggle-subscription_' . $topic->ID ) ) {
 				bbp_ajax_response( false, __( 'Are you sure you meant to do that?', 'buddyboss' ), 304 );
 			}
 

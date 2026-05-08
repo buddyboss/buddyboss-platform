@@ -200,7 +200,6 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 		<label for="bb_enable_sso"><?php esc_html_e( 'Allow users to sign in with social login', 'buddyboss' ); ?></label>
 		<?php
 	}
-
 }
 
 return new BP_Admin_Setting_General();

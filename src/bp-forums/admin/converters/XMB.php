@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Implementation of XMB Forum converter.
@@ -587,7 +588,6 @@ class XMB extends BBP_Converter_Base {
 			'to_type'        => 'user',
 			'to_fieldname'   => '_bbp_xmb_user_mood',
 		);
-
 	}
 
 	/**
@@ -604,11 +604,11 @@ class XMB extends BBP_Converter_Base {
 	 * as one value. Array values are auto sanitized by WordPress.
 	 */
 	public function callback_savepass( $field, $row ) {
-		 $pass_array = array(
-			 'hash' => $field,
-			 'salt' => $row['salt'],
-		 );
-		 return $pass_array;
+		$pass_array = array(
+			'hash' => $field,
+			'salt' => $row['salt'],
+		);
+		return $pass_array;
 	}
 
 	/**
@@ -705,5 +705,4 @@ class XMB extends BBP_Converter_Base {
 		$title = ! empty( $title ) ? __( 'Re: ', 'buddyboss' ) . html_entity_decode( $title, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) : '';
 		return $title;
 	}
-
 }

@@ -203,7 +203,7 @@ function bbp_has_forums( $args = '' ) {
 				$base = bbp_get_forum_permalink( $default_post_parent );
 			}
 
-			$base = add_query_arg( 'forum-paged', '%#%',  $base ); // If a forum has subforums, this is the URL to their first page
+			$base = add_query_arg( 'forum-paged', '%#%', $base ); // If a forum has subforums, this is the URL to their first page
 		} else {
 			$base = add_query_arg( 'paged', '%#%', bbp_get_forums_url() );
 		}
@@ -899,7 +899,7 @@ function bbp_list_forums( $args = '' ) {
 		// Total count (for separator)
 		$total_subs = count( $sub_forums );
 		foreach ( $sub_forums as $sub_forum ) {
-			$i ++; // Separator count
+			++$i; // Separator count
 
 			// Get forum details
 			$count     = array();
@@ -985,7 +985,7 @@ function bb_get_list_forums_recursively( $args = array() ) {
 		$i          = 0;
 
 		foreach ( $sub_forums as $sub_forum ) {
-			$i ++; // Separator count
+			++$i; // Separator count
 
 			$count    = array();
 			$show_sep = $total_subs > $i ? $r['separator'] : '';
@@ -1032,7 +1032,6 @@ function bb_get_list_forums_recursively( $args = array() ) {
 }
 
 /** Forum Pagination **********************************************************/
-
 function bbp_forum_index_pagination_count() {
 	echo bbp_get_forum_index_pagination_count();
 }
@@ -1183,7 +1182,8 @@ function bbp_get_forum_report_link( $args = array() ) {
 		return false;
 	}
 
-	$retval = bp_moderation_get_report_button( array(
+	$retval = bp_moderation_get_report_button(
+		array(
 			'id'                => 'forum_report',
 			'component'         => 'moderation',
 			'must_be_logged_in' => true,
@@ -1651,7 +1651,7 @@ function bbp_get_forum_topics_link( $forum_id = 0 ) {
 
 		// Hidden link.
 		$retval .= ! bbp_get_view_all( 'edit_others_topics' )
-			? " <a href='" . esc_url( bbp_add_view_all( $link, true ) ) . "'>" . esc_html( $extra ) . "</a>"
+			? " <a href='" . esc_url( bbp_add_view_all( $link, true ) ) . "'>" . esc_html( $extra ) . '</a>'
 			: " {$extra}";
 	}
 
@@ -2237,7 +2237,6 @@ function bbp_suppress_private_forum_meta( $retval, $forum_id ) {
  * @uses  bbp_get_topic_forum_id()
  * @uses  bbp_get_reply_post_type()
  * @uses  bbp_get_reply_forum_id()
- *
  */
 function bbp_suppress_private_author_link( $author_link, $args ) {
 
@@ -2286,7 +2285,7 @@ function bbp_suppress_private_author_link( $author_link, $args ) {
  *
  * @since bbPress (r2667)
  *
- * @param int $forum_id Optional. Forum ID.
+ * @param int                                                         $forum_id Optional. Forum ID.
  * @param array Extra classes you can pass when calling this function
  *
  * @uses  bbp_get_forum_class() To get the row class of the forum
@@ -2300,7 +2299,7 @@ function bbp_forum_class( $forum_id = 0, $classes = array() ) {
  *
  * @since bbPress (r2667)
  *
- * @param int $forum_id Optional. Forum ID
+ * @param int                                                         $forum_id Optional. Forum ID
  * @param array Extra classes you can pass when calling this function
  *
  * @return string Row class of the forum
@@ -2892,7 +2891,6 @@ function bbp_forum_topics_feed_link( $forum_id = 0 ) {
  * @uses  bbp_get_forum_post_type()
  * @uses  get_post_field()
  * @uses  apply_filters()
- *
  */
 function bbp_get_forum_topics_feed_link( $forum_id = 0 ) {
 
@@ -2959,7 +2957,6 @@ function bbp_forum_replies_feed_link( $forum_id = 0 ) {
  * @uses  bbp_get_forum_post_type()
  * @uses  get_post_field()
  * @uses  apply_filters()
- *
  */
 function bbp_get_forum_replies_feed_link( $forum_id = 0 ) {
 

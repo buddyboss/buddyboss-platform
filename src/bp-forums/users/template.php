@@ -463,7 +463,6 @@ function bbp_get_user_profile_edit_url( $user_id = 0, $user_nicename = '' ) {
 	}
 
 	return apply_filters( 'bbp_get_user_edit_profile_url', $url, $user_id, $user_nicename );
-
 }
 
 /**
@@ -1457,7 +1456,7 @@ function bbp_get_user_replies_created_url( $user_id = 0 ) {
 
 	// Pretty permalinks
 	if ( bbp_use_pretty_urls() ) {
-		$url = trailingslashit( bbp_get_user_profile_url( $user_id ) ). bbp_get_reply_archive_slug();
+		$url = trailingslashit( bbp_get_user_profile_url( $user_id ) ) . bbp_get_reply_archive_slug();
 		$url = user_trailingslashit( $url );
 
 		// Unpretty permalinks
@@ -1786,8 +1785,8 @@ function bbp_user_can_view_forum( $args = '' ) {
 	$group_id  = 0;
 	$is_member = 0;
 	if ( bp_is_active( 'groups' ) ) {
-		$group_id   = bbp_forum_recursive_group_id( $forum_id );
-		$is_member  = groups_is_user_member( $user_id, $group_id );
+		$group_id  = bbp_forum_recursive_group_id( $forum_id );
+		$is_member = groups_is_user_member( $user_id, $group_id );
 	}
 
 	$retval = ( $group_id && ! $is_member ) ? false : true;
@@ -1796,15 +1795,15 @@ function bbp_user_can_view_forum( $args = '' ) {
 	if ( ! empty( $user_id ) && bbp_is_user_keymaster( $user_id ) ) {
 		$retval = true;
 
-	// Forum is public, and user can read forums or is not logged in
+		// Forum is public, and user can read forums or is not logged in
 	} elseif ( bbp_is_forum_public( $forum_id, $r['check_ancestors'] ) ) {
 		$retval = true;
 
-	// Forum is private, and user can see it
+		// Forum is private, and user can see it
 	} elseif ( bbp_is_forum_private( $forum_id, $r['check_ancestors'] ) && user_can( $user_id, 'read_private_forums' ) && empty( $group_id ) ) {
 		$retval = true;
 
-	// Forum is hidden, and user can see it
+		// Forum is hidden, and user can see it
 	} elseif ( bbp_is_forum_hidden( $forum_id, $r['check_ancestors'] ) && user_can( $user_id, 'read_hidden_forums' ) && empty( $group_id ) ) {
 		$retval = true;
 

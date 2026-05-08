@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 /**
  * Settings: export data action handler
  *
@@ -19,7 +20,7 @@ function bp_settings_action_export() {
 
 	if ( isset( $_POST['member-data-export-submit'] ) ) {
 
-		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'buddyboss_data_export_request' ) ) {
+		if ( ! wp_verify_nonce( wp_unslash( $_POST['_wpnonce'] ), 'buddyboss_data_export_request' ) ) {
 			wp_die( __( 'Sorry something went wrong, please try again.', 'buddyboss' ) );
 		}
 

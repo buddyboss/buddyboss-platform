@@ -372,7 +372,7 @@ function bbp_fix_post_author( $data = array(), $postarr = array() ) {
 
 	// Is the post by an anonymous user?
 	if ( ( bbp_get_topic_post_type() === $data['post_type'] && ! bbp_is_topic_anonymous( $postarr['ID'] ) ) ||
-		 ( bbp_get_reply_post_type() === $data['post_type'] && ! bbp_is_reply_anonymous( $postarr['ID'] ) ) ) {
+		( bbp_get_reply_post_type() === $data['post_type'] && ! bbp_is_reply_anonymous( $postarr['ID'] ) ) ) {
 		return $data;
 	}
 
@@ -446,7 +446,7 @@ function bbp_past_edit_lock( $post_date_gmt ) {
 		$lockable = '+' . get_option( '_bbp_edit_lock', '5' ) . ' minutes';
 
 		// Now
-		$cur_time = current_time( 'timestamp', true );
+		$cur_time = time();
 
 		// Add lockable time to post time
 		$lock_time = strtotime( $lockable, strtotime( $post_date_gmt ) );
@@ -1969,7 +1969,7 @@ function bbp_verify_nonce_request( $action = '', $query_arg = '_wpnonce' ) {
 	$matched_url = apply_filters( 'bbp_verify_nonce_request_url', $requested_url );
 
 	// Check the nonce
-	$result = isset( $_REQUEST[ $query_arg ] ) ? wp_verify_nonce( $_REQUEST[ $query_arg ], $action ) : false;
+	$result = isset( $_REQUEST[ $query_arg ] ) ? wp_verify_nonce( wp_unslash( $_REQUEST[ $query_arg ] ), $action ) : false;
 
 	// Nonce check failed
 	if ( empty( $result ) || empty( $action ) || ( strpos( $matched_url, $home_url ) !== 0 ) ) {

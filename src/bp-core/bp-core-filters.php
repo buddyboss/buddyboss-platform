@@ -96,7 +96,6 @@ function bp_enable_gravatar_callback() {
 		 */
 		add_filter( 'bp_core_fetch_avatar_no_grav', '__return_true' );
 	}
-
 }
 
 
@@ -817,10 +816,9 @@ function bp_setup_nav_menu_item( $menu_item ) {
 		if ( untrailingslashit( $current ) === untrailingslashit( $menu_item->url ) ) {
 			$menu_item->classes[] = 'current_page_item';
 			$menu_item->classes[] = 'current-menu-item';
-		} else {
+		} elseif ( bp_loggedin_user_domain() && strpos( $current, bp_loggedin_user_domain() ) !== false ) {
 
-			if ( bp_loggedin_user_domain() && strpos( $current, bp_loggedin_user_domain() ) !== false ) {
-				if (
+			if (
 					(
 						! in_array( 'settings', $url_parts, true ) &&
 						(
@@ -931,10 +929,10 @@ function bp_setup_nav_menu_item( $menu_item ) {
 						in_array( 'bp-forums-nav', $menu_item->classes, true )
 					)
 				) {
-					$menu_item->classes[] = 'current_page_item';
-					$menu_item->classes[] = 'current-menu-item';
-				}
-			} elseif (
+				$menu_item->classes[] = 'current_page_item';
+				$menu_item->classes[] = 'current-menu-item';
+			}
+		} elseif (
 				bp_is_groups_component() &&
 				bp_is_group_create() &&
 				(
@@ -942,12 +940,11 @@ function bp_setup_nav_menu_item( $menu_item ) {
 					in_array( 'bp-groups-nav', $menu_item->classes, true )
 				)
 			) {
-				$menu_item->classes[] = 'current_page_item';
-				$menu_item->classes[] = 'current-menu-item';
-			} elseif ( strpos( $current, $menu_item->url ) !== false ) {
-				$menu_item->classes[] = 'current_page_item';
-				$menu_item->classes[] = 'current-menu-item';
-			}
+			$menu_item->classes[] = 'current_page_item';
+			$menu_item->classes[] = 'current-menu-item';
+		} elseif ( strpos( $current, $menu_item->url ) !== false ) {
+			$menu_item->classes[] = 'current_page_item';
+			$menu_item->classes[] = 'current-menu-item';
 		}
 	}
 
@@ -1954,7 +1951,6 @@ function bb_default_custom_profile_group_cover_image_upload_dir( $upload_dir = a
 		),
 		$upload_dir
 	);
-
 }
 
 /**
@@ -2388,7 +2384,6 @@ function bb_update_digest_schedule_event_on_change_component_status( $active_com
 	if ( $is_moderation_disabled || $is_moderation_enabled ) {
 		bb_create_background_member_friends_count();
 	}
-
 }
 add_action( 'bp_core_install', 'bb_update_digest_schedule_event_on_change_component_status', 10, 1 );
 
@@ -2518,30 +2513,30 @@ function buddyboss_menu_order( $menu_order ) {
 		if ( $sep_position !== null ) {
 			$insert_pos = $sep_position;
 			if ( ! empty( $buddyboss_readylaunch_menu ) ) {
-				$submenu['buddyboss-platform'][ ++ $insert_pos ] = $buddyboss_readylaunch_menu;
+				$submenu['buddyboss-platform'][ ++$insert_pos ] = $buddyboss_readylaunch_menu;
 			}
 			if ( ! empty( $buddyboss_gamification_menu ) ) {
-				$submenu['buddyboss-platform'][ ++ $insert_pos ] = $buddyboss_gamification_menu;
+				$submenu['buddyboss-platform'][ ++$insert_pos ] = $buddyboss_gamification_menu;
 			}
 			if ( ! empty( $buddyboss_theme_options_menu ) ) {
-				$submenu['buddyboss-platform'][ ++ $insert_pos ] = $buddyboss_theme_options_menu;
+				$submenu['buddyboss-platform'][ ++$insert_pos ] = $buddyboss_theme_options_menu;
 			}
 			if ( ! empty( $buddyboss_theme_font_menu ) ) {
-				$submenu['buddyboss-platform'][ ++ $insert_pos ] = $buddyboss_theme_font_menu;
+				$submenu['buddyboss-platform'][ ++$insert_pos ] = $buddyboss_theme_font_menu;
 			}
 			if ( ! empty( $after_sep ) ) {
 				foreach ( $after_sep as $menu ) {
-					$submenu['buddyboss-platform'][ ++ $insert_pos ] = $menu;
+					$submenu['buddyboss-platform'][ ++$insert_pos ] = $menu;
 				}
 			}
 			if ( ! empty( $buddyboss_updater_menu ) ) {
-				$submenu['buddyboss-platform'][ ++ $insert_pos ] = $buddyboss_updater_menu;
+				$submenu['buddyboss-platform'][ ++$insert_pos ] = $buddyboss_updater_menu;
 			}
 			if ( ! empty( $buddyboss_license_menu ) ) {
-				$submenu['buddyboss-platform'][ ++ $insert_pos ] = $buddyboss_license_menu;
+				$submenu['buddyboss-platform'][ ++$insert_pos ] = $buddyboss_license_menu;
 			}
 			if ( ! empty( $buddyboss_addon_menu ) ) {
-				$submenu['buddyboss-platform'][ ++ $insert_pos ] = $buddyboss_addon_menu;
+				$submenu['buddyboss-platform'][ ++$insert_pos ] = $buddyboss_addon_menu;
 			}
 		} else {
 			// No separator found, so insert separator just above ReadyLaunch if ReadyLaunch exists.

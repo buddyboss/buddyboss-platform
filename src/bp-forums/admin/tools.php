@@ -166,7 +166,7 @@ function bbp_admin_tools_feedback( $message, $class = false ) {
 		$message = '<p>' . $message . '</p>';
 		$class   = $class ? $class : 'updated';
 
-	// Messages as objects.
+		// Messages as objects.
 	} elseif ( is_wp_error( $message ) ) {
 		$errors = $message->get_error_messages();
 
@@ -2113,7 +2113,7 @@ function bb_admin_upgrade_user_favorites( $is_background, $blog_id ) {
 			$bp_background_updater->dispatch();
 		} else {
 			bb_migrate_users_topic_favorites( $results, $blog_id );
-			$offset ++;
+			++$offset;
 		}
 
 		// Update the offset.

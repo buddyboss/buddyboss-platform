@@ -300,7 +300,7 @@ class BP_Groups_Member {
 				return false;
 			}
 
-			$sql = $wpdb->prepare( "INSERT INTO {$bp->groups->table_name_members} ( user_id, group_id, inviter_id, is_admin, is_mod, is_banned, user_title, date_modified, is_confirmed, comments, invite_sent ) VALUES ( %d, %d, %d, %d, %d, %d, %s, %s, %d, %s, %d )", $this->user_id, $this->group_id, $this->inviter_id, $this->is_admin, $this->is_mod, $this->is_banned, $this->user_title, $this->date_modified, $this->is_confirmed, $this->comments, $this->invite_sent );
+			$sql           = $wpdb->prepare( "INSERT INTO {$bp->groups->table_name_members} ( user_id, group_id, inviter_id, is_admin, is_mod, is_banned, user_title, date_modified, is_confirmed, comments, invite_sent ) VALUES ( %d, %d, %d, %d, %d, %d, %s, %s, %d, %s, %d )", $this->user_id, $this->group_id, $this->inviter_id, $this->is_admin, $this->is_mod, $this->is_banned, $this->user_title, $this->date_modified, $this->is_confirmed, $this->comments, $this->invite_sent );
 			$is_member_add = true;
 		}
 
@@ -583,7 +583,7 @@ class BP_Groups_Member {
 
 		$pag_sql = '';
 		if ( ! empty( $limit ) && ! empty( $page ) ) {
-			$pag_sql   = $wpdb->prepare( ' LIMIT %d, %d', intval( ( $page - 1 ) * $limit ), intval( $limit ) );
+			$pag_sql = $wpdb->prepare( ' LIMIT %d, %d', intval( ( $page - 1 ) * $limit ), intval( $limit ) );
 		}
 
 		// If the user is logged in and viewing their own groups, we can show hidden and private groups.
@@ -596,7 +596,7 @@ class BP_Groups_Member {
 			$group_sql        = "SELECT DISTINCT m.group_id FROM {$bp->groups->table_name_members} m, {$bp->groups->table_name} g WHERE {$where_sql}{$pag_sql}";
 			$total_groups_sql = "SELECT COUNT(DISTINCT m.group_id) FROM {$bp->groups->table_name_members} m, {$bp->groups->table_name} g WHERE {$where_sql}";
 		} else {
-			$group_sql    = $wpdb->prepare( "SELECT DISTINCT group_id FROM {$bp->groups->table_name_members} WHERE user_id = %d AND is_confirmed = 1 AND is_banned = 0{$pag_sql}", $user_id );
+			$group_sql        = $wpdb->prepare( "SELECT DISTINCT group_id FROM {$bp->groups->table_name_members} WHERE user_id = %d AND is_confirmed = 1 AND is_banned = 0{$pag_sql}", $user_id );
 			$total_groups_sql = $wpdb->prepare( "SELECT COUNT(DISTINCT group_id) FROM {$bp->groups->table_name_members} WHERE user_id = %d AND is_confirmed = 1 AND is_banned = 0", $user_id );
 		}
 
@@ -833,13 +833,13 @@ class BP_Groups_Member {
 		$bp = buddypress();
 
 		$sql['select'] = 'SELECT COUNT(DISTINCT m.group_id) ';
-		$sql['from'] = "FROM {$bp->groups->table_name_members} m, {$bp->groups->table_name} g";
-		$sql['where'] = array( '1=1' );
+		$sql['from']   = "FROM {$bp->groups->table_name_members} m, {$bp->groups->table_name} g";
+		$sql['where']  = array( '1=1' );
 
 		if ( $user_id != bp_loggedin_user_id() && ! bp_current_user_can( 'bp_moderate' ) ) {
 			$sql['where'][] = "m.group_id = g.id AND g.status != 'hidden' AND m.user_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0";
 		} else {
-			$sql['where'][] = "m.group_id = g.id AND m.user_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0";
+			$sql['where'][] = 'm.group_id = g.id AND m.user_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0';
 		}
 
 		/**
@@ -851,7 +851,7 @@ class BP_Groups_Member {
 		 * @param array $where_conditions Where conditions SQL statement.
 		 */
 		$sql['where'] = apply_filters( 'bp_groups_get_where_count_conditions', $sql['where'], array() );
-		$sql['where'] = "WHERE " . implode( ' AND ', $sql['where'] );
+		$sql['where'] = 'WHERE ' . implode( ' AND ', $sql['where'] );
 
 		/**
 		 * Filters the From SQL statement.
@@ -907,7 +907,7 @@ class BP_Groups_Member {
 	 * @since BuddyBoss 1.3.5
 	 * @since BuddyPress 4.0.0
 	 *
-	 * @param int $user_id ID of the user.
+	 * @param int   $user_id ID of the user.
 	 * @param array $args {
 	 *    Array of optional arguments.
 	 *    @type int    $page     Page of memberships being requested. Default 1.
@@ -924,11 +924,14 @@ class BP_Groups_Member {
 
 		$bp = buddypress();
 
-		$r = array_merge( array(
-			'page'     => 1,
-			'per_page' => 20,
-			'type'     => 'membership',
-		), $args );
+		$r = array_merge(
+			array(
+				'page'     => 1,
+				'per_page' => 20,
+				'type'     => 'membership',
+			),
+			$args
+		);
 
 		$sql = array(
 			'select' => 'SELECT *',
@@ -938,38 +941,44 @@ class BP_Groups_Member {
 		);
 
 		switch ( $r['type'] ) {
-			case 'pending_request' :
-				return groups_get_requests( array(
-					'user_id'  => $user_id,
-					'page'     => $r['page'],
-					'per_page' => $r['per_page'],
-				) );
+			case 'pending_request':
+				return groups_get_requests(
+					array(
+						'user_id'  => $user_id,
+						'page'     => $r['page'],
+						'per_page' => $r['per_page'],
+					)
+				);
 				break;
 
-			case 'pending_received_invitation' :
-				return groups_get_invites( array(
-					'user_id'  => $user_id,
-					'page'     => $r['page'],
-					'per_page' => $r['per_page'],
-				) );
+			case 'pending_received_invitation':
+				return groups_get_invites(
+					array(
+						'user_id'  => $user_id,
+						'page'     => $r['page'],
+						'per_page' => $r['per_page'],
+					)
+				);
 				break;
 
-			case 'pending_sent_invitation' :
-				return groups_get_invites( array(
-					'inviter_id'  => $user_id,
-					'page'        => $r['page'],
-					'per_page'    => $r['per_page'],
-				) );
+			case 'pending_sent_invitation':
+				return groups_get_invites(
+					array(
+						'inviter_id' => $user_id,
+						'page'       => $r['page'],
+						'per_page'   => $r['per_page'],
+					)
+				);
 				break;
 
-			case 'membership' :
-			default :
-				$sql['where'] = $wpdb->prepare( "user_id = %d AND is_confirmed = 1", $user_id );
+			case 'membership':
+			default:
+				$sql['where'] = $wpdb->prepare( 'user_id = %d AND is_confirmed = 1', $user_id );
 				break;
 		}
 
 		if ( $r['page'] && $r['per_page'] ) {
-			$sql['limits'] = $wpdb->prepare( "LIMIT %d, %d", ( $r['page'] - 1 ) * $r['per_page'], $r['per_page'] );
+			$sql['limits'] = $wpdb->prepare( 'LIMIT %d, %d', ( $r['page'] - 1 ) * $r['per_page'], $r['per_page'] );
 		}
 
 		$memberships = $wpdb->get_results( "{$sql['select']} {$sql['from']} WHERE {$sql['where']} {$sql['limits']}" );
@@ -1530,20 +1539,22 @@ class BP_Groups_Member {
 	 * @return bool
 	 */
 	public static function delete_all_for_user( $user_id ) {
-		$group_ids = BP_Groups_Member::get_group_ids( $user_id, false, false, true );
+		$group_ids = self::get_group_ids( $user_id, false, false, true );
 
 		foreach ( $group_ids['groups'] as $group_id ) {
 			if ( groups_is_user_admin( $user_id, $group_id ) ) {
 				// If the user is a sole group admin, install a site admin as their replacement.
 				if ( count( groups_get_group_admins( $group_id ) ) < 2 ) {
-					$admin = get_users( array(
-						'blog_id' => bp_get_root_blog_id(),
-						'fields'  => 'id',
-						'number'  => 1,
-						'orderby' => 'ID',
-						'role'    => 'administrator',
-						'exclude' => array( $user_id ),
-					) );
+					$admin = get_users(
+						array(
+							'blog_id' => bp_get_root_blog_id(),
+							'fields'  => 'id',
+							'number'  => 1,
+							'orderby' => 'ID',
+							'role'    => 'administrator',
+							'exclude' => array( $user_id ),
+						)
+					);
 
 					if ( ! empty( $admin ) ) {
 						groups_join_group( $group_id, $admin[0] );
@@ -1554,7 +1565,7 @@ class BP_Groups_Member {
 				}
 			}
 
-			BP_Groups_Member::delete( $user_id, $group_id );
+			self::delete( $user_id, $group_id );
 		}
 
 		return true;

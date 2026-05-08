@@ -147,5 +147,4 @@ class BP_Document_Privacy {
 
 		return apply_filters( 'bp_document_is_document_visible', $visible, $visibility, $document_id );
 	}
-
 }

@@ -278,7 +278,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 			$request->set_param( 'context', 'view' );
 		}
 		$comments = $this->prepare_activity_comments( array( $activity_comment ), $request );
-		$retval  = ! empty( $comments[0] ) ? $comments[0] : $comments;
+		$retval   = ! empty( $comments[0] ) ? $comments[0] : $comments;
 
 		$response = rest_ensure_response( $retval );
 
@@ -1043,7 +1043,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 				$this->activity_endpoint->prepare_item_for_response( $comment, $request )
 			);
 
-			$comment_loaded_count++;
+			++$comment_loaded_count;
 		}
 
 		/**

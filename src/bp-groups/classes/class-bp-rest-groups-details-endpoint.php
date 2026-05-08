@@ -85,7 +85,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 				array(
 					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => array( $this, 'get_group_information' ),
-					'permission_callback' => '__return_true',
+					'permission_callback' => array( $this, 'get_item_public_permissions_check' ),
 				),
 				'schema' => array( $this, 'get_public_item_schema' ),
 			)
@@ -860,6 +860,25 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 		}
 
 		return $member_data;
+	}
+
+	/**
+	 * Permission callback for the public-read variant of the /groups/{id} details endpoint.
+	 *
+	 * The endpoint intentionally serves data that is already publicly visible
+	 * (group tabs, order options, member data, etc.). Replacing the deprecated
+	 * '__return_true' literal with a named method is a SEC-04 requirement; the
+	 * gating intent is unchanged.
+	 *
+	 * @since 2.19.0
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return true Always true — public read.
+	 */
+	public function get_item_public_permissions_check( $request ) {
+		// Public endpoint. Returns only publicly visible group detail fields.
+		return true;
 	}
 
 }

@@ -79,8 +79,6 @@ class BP_Integration {
 				add_action( 'bp_rest_api_init', array( $this, 'rest_api_init' ), 10 );
 			}
 		}
-
-
 	}
 
 	public function is_activated() {
@@ -169,12 +167,12 @@ class BP_Integration {
 			 */
 			$controllers = (array) apply_filters( 'bp_' . $this->id . '_rest_api_controllers', $controllers );
 
-			foreach( $controllers as $controller ) {
+			foreach ( $controllers as $controller ) {
 				if ( ! in_array( $controller, $_controllers, true ) || ! class_exists( $controller ) ) {
 					continue;
 				}
 
-				$component_controller = new $controller;
+				$component_controller = new $controller();
 				$component_controller->register_routes();
 			}
 		}

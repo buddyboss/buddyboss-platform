@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 /**
  * BuddyBoss Performance Tester Admin Screen.
  *

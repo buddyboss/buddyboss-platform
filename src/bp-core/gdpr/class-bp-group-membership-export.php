@@ -137,7 +137,6 @@ final class BP_Group_Membership_Export extends BP_Export {
 		$done = $data_items['total'] < $data_items['offset'];
 
 		return $this->response( $export_items, $done );
-
 	}
 
 	/**
@@ -178,7 +177,5 @@ final class BP_Group_Membership_Export extends BP_Export {
 			'offset' => $offset,
 			'items'  => $items,
 		);
-
 	}
-
 }

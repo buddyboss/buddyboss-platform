@@ -752,7 +752,6 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 			}
 
 			return $user_id;
-
 		}
 
 		/**
@@ -906,7 +905,6 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 
 				exit;
 			}
-
 		}
 
 		/**
@@ -1066,7 +1064,7 @@ if ( ! class_exists( 'BB_Presence' ) ) {
 						trailingslashit( WP_LANG_DIR . '/plugins' ),
 						trailingslashit( $buddyboss_lang ),
 					);
-			
+
 					// Try to load the translations from locations.
 					foreach ( $locations as $location ) {
 						if ( load_textdomain( $domain, $location . $mofile_custom ) ) {

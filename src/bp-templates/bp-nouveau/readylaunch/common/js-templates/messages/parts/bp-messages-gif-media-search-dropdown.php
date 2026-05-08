@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 /**
  * Readylaunch - Messages gif media search dropdown template.
  *

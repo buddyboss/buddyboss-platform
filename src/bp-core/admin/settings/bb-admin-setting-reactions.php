@@ -115,7 +115,6 @@ class BB_Admin_Setting_Reactions extends BP_Admin_Setting_tab {
 		 */
 		do_action( 'bb_admin_setting_reactions_register_fields', $this );
 	}
-
 }
 
 return new BB_Admin_Setting_Reactions();

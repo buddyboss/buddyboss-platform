@@ -255,7 +255,9 @@ function bb_registration_page_tutorial() {
 	?>
 
 	<p>
-		<a class="button" target="_blank" href="<?php echo bp_get_admin_url(
+		<a class="button" target="_blank" href="
+		<?php
+		echo bp_get_admin_url(
 			add_query_arg(
 				array(
 					'page'    => 'bp-help',
@@ -263,7 +265,9 @@ function bb_registration_page_tutorial() {
 				),
 				'admin.php'
 			)
-		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+		);
+		?>
+		"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
 
 	<?php
@@ -428,7 +432,7 @@ function bp_core_admin_maybe_save_pages_settings() {
 
 	if ( ! check_admin_referer( 'bp-pages-options' ) ) {
 		return false;
-	};
+	}
 
 	if ( isset( $_POST['bp_pages'] ) ) {
 		$valid_pages = array_merge( bp_core_admin_get_directory_pages(), bp_core_admin_get_static_pages() );

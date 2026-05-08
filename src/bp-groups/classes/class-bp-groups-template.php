@@ -136,7 +136,7 @@ class BP_Groups_Template {
 	 *     @type int $page Default: 1.
 	 * }
 	 */
-	function __construct( ...$args ){
+	function __construct( ...$args ) {
 
 		$function_args = func_get_args();
 
@@ -346,7 +346,7 @@ class BP_Groups_Template {
 	 * @return object The next group to iterate over.
 	 */
 	function next_group() {
-		$this->current_group++;
+		++$this->current_group;
 		$this->group = $this->groups[ $this->current_group ];
 
 		return $this->group;

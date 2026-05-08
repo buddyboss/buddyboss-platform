@@ -236,6 +236,4 @@ class BP_REST_Activity_Link_Preview_Endpoint extends WP_REST_Controller {
 		 */
 		return apply_filters( 'bp_rest_activity_link_preview_schema', $this->add_additional_fields_schema( $schema ) );
 	}
-
-
 }

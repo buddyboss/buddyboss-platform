@@ -200,7 +200,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		 */
 		public function register_activity_actions() {
 			$activity_actions = array(
-				$this->component => array( 'activity', 'member' )
+				$this->component => array( 'activity', 'member' ),
 			);
 
 			// Grouped forums.
@@ -647,7 +647,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				update_post_meta( $topic_id, '_bbp_activity_id', $activity_id );
 				bp_activity_update_meta( $activity_id, 'post_title', $topic_title );
 
-				// Check if the medias are there in the topic then add them to the activity when status changes from trash to publish. 
+				// Check if the medias are there in the topic then add them to the activity when status changes from trash to publish.
 				if ( empty( $existing_activity_id ) && doing_action( 'edit_post' ) ) {
 					$old_bp_media_ids = get_post_meta( $topic_id, 'bp_media_ids', true );
 					if ( ! empty( $old_bp_media_ids ) ) {
@@ -717,7 +717,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				$topic_author_id = bbp_get_topic_author_id( $topic_id );
 
 				$this->topic_create( $topic_id, $forum_id, array(), $topic_author_id );
-			} elseif( bbp_get_spam_status_id() === $post->post_status ) {
+			} elseif ( bbp_get_spam_status_id() === $post->post_status ) {
 
 				// Mark related activity as spam if topic marked as spam.
 				if ( $activity_id = $this->get_activity_id( $topic_id ) ) {
@@ -792,7 +792,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			$reply_content = get_post_field( 'post_content', $reply_id, 'raw' );
 
 			// Topic
-			$topic_title     = get_post_field( 'post_title', $topic_id, 'raw' );
+			$topic_title = get_post_field( 'post_title', $topic_id, 'raw' );
 
 			// Activity action & text
 			$activity_action  = apply_filters( 'bbp_activity_reply_create', '', $user_id, $reply_id, $topic_id );
@@ -826,7 +826,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				update_post_meta( $reply_id, '_bbp_activity_id', $activity_id );
 				bp_activity_update_meta( $activity_id, 'post_title', $topic_title );
 
-				// Check if the medias are there in the reply then add them to the activity when status changes from trash to publish. 
+				// Check if the medias are there in the reply then add them to the activity when status changes from trash to publish.
 				if ( empty( $existing_activity_id ) && doing_action( 'edit_post' ) ) {
 					$old_bp_media_ids = get_post_meta( $reply_id, 'bp_media_ids', true );
 					if ( ! empty( $old_bp_media_ids ) ) {
@@ -900,7 +900,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				$reply_author_id = bbp_get_reply_author_id( $reply_id );
 
 				$this->reply_create( $reply_id, $topic_id, $forum_id, array(), $reply_author_id );
-			} elseif( bbp_get_spam_status_id() === $post->post_status ) {
+			} elseif ( bbp_get_spam_status_id() === $post->post_status ) {
 
 				// Mark related activity as spam if reply marked as spam.
 				if ( $activity_id = $this->get_activity_id( $reply_id ) ) {
@@ -1130,16 +1130,16 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		}
 
 		/**
-		* Formats the dynamic activity action for new replies.
-		*
-		* @since bbPress 2.6.0 (r6370)
-		* @since BuddyBoss 2.4.00
-		*
-		* @param string $action   The current action string.
-		* @param object $activity The activity object.
-		*
-		* @return string The formatted activity action.
-		*/
+		 * Formats the dynamic activity action for new replies.
+		 *
+		 * @since bbPress 2.6.0 (r6370)
+		 * @since BuddyBoss 2.4.00
+		 *
+		 * @param string $action   The current action string.
+		 * @param object $activity The activity object.
+		 *
+		 * @return string The formatted activity action.
+		 */
 		function bbp_format_activity_action_new_reply( $action, $activity ) {
 			$action = $this->bbp_format_activity_action_new_post( bbp_get_reply_post_type(), $action, $activity );
 
@@ -1147,7 +1147,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			* Filters the formatted activity action new reply string.
 			*
 			* @since bbPress 2.6.0 (r6370)
-		 	* @since BuddyBoss 2.4.00
+			* @since BuddyBoss 2.4.00
 			*
 			* @param string               $action   Activity action string value.
 			* @param BP_Activity_Activity $activity Activity item object.
@@ -1195,15 +1195,13 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 					$forum_id = bbp_get_topic_forum_id( $topic_id );
 				}
 
-			// General component (bbpress/forums/other).
-			} else {
-				if ( 'topic' === $type ) {
+				// General component (bbpress/forums/other).
+			} elseif ( 'topic' === $type ) {
 					$topic_id = bbp_get_topic_id( $activity->item_id );
 					$forum_id = bbp_get_forum_id( $activity->secondary_item_id );
-				} else {
-					$topic_id = bbp_get_topic_id( $activity->secondary_item_id );
-					$forum_id = bbp_get_topic_forum_id( $topic_id );
-				}
+			} else {
+				$topic_id = bbp_get_topic_id( $activity->secondary_item_id );
+				$forum_id = bbp_get_topic_forum_id( $topic_id );
 			}
 
 			// User link for topic author
@@ -1247,10 +1245,13 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		function bbp_get_activity_actions() {
 
 			// Filter & return.
-			return (array) apply_filters( 'bbp_get_activity_actions', array(
-				'topic' => esc_html__( '%1$s started the discussion %2$s in the forum %3$s', 'buddyboss' ),
-				'reply' => esc_html__( '%1$s replied to the discussion %2$s in the forum %3$s', 'buddyboss' )
-			) );
+			return (array) apply_filters(
+				'bbp_get_activity_actions',
+				array(
+					'topic' => esc_html__( '%1$s started the discussion %2$s in the forum %3$s', 'buddyboss' ),
+					'reply' => esc_html__( '%1$s replied to the discussion %2$s in the forum %3$s', 'buddyboss' ),
+				)
+			);
 		}
 	}
 endif;

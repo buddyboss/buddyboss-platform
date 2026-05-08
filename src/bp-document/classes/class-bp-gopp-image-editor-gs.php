@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 /**
  * BP GOPP Ghostscript Image Editor
  *
@@ -293,12 +294,10 @@ class BP_GOPP_Image_Editor_GS extends WP_Image_Editor {
 			} else {
 				if ( $shortcircuit_path && self::test_gs_cmd( $shortcircuit_path ) ) {
 					self::$gs_cmd_path = $shortcircuit_path;
-				} else {
-					if ( self::is_win() ) {
+				} elseif ( self::is_win() ) {
 						self::$gs_cmd_path = self::gs_cmd_win();
-					} else {
-						self::$gs_cmd_path = self::gs_cmd_nix();
-					}
+				} else {
+					self::$gs_cmd_path = self::gs_cmd_nix();
 				}
 				if ( self::$gs_cmd_path ) {
 					set_transient( 'gopp_image_gs_cmd_path', self::$gs_cmd_path, BP_GOPP_IMAGE_EDITOR_GS_TRANSIENT_EXPIRATION );

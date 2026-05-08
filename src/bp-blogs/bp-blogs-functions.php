@@ -1318,7 +1318,7 @@ function bp_blogs_get_random_blogs( $limit = null, $page = null ) {
 		array(
 			'type'  => 'random',
 			'limit' => $limit,
-			'page'  => $page
+			'page'  => $page,
 		)
 	);
 }

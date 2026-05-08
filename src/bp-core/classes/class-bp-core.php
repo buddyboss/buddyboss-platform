@@ -442,7 +442,7 @@ class BP_Core extends BP_Component {
 			 * As the core component is always loaded,
 			 * let's register the Components endpoint here.
 			 */
-			'BB_REST_Topics_Endpoint'
+			'BB_REST_Topics_Endpoint',
 		);
 
 		parent::rest_api_init( $controllers );

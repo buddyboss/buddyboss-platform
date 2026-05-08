@@ -159,7 +159,7 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 							<tr>
 								<td valign="middle" width="65px" style="vertical-align: middle;">
 									<a style="display: block; width: 47px;" href="<?php echo esc_attr( bp_core_get_user_domain( $comment->user_id ) ); ?>"
-									   target="_blank" rel="nofollow">
+										target="_blank" rel="nofollow">
 										<?php
 										$avatar_url = bp_core_fetch_avatar(
 											array(
@@ -172,8 +172,8 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 										);
 										?>
 										<img src="<?php echo esc_attr( $avatar_url ); ?>" width="47" height="47"
-											 style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;"
-											 border="0">
+											style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;"
+											border="0">
 									</a>
 								</td>
 								<td width="88%" style="vertical-align: middle;">
@@ -195,7 +195,7 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 			<tr>
 				<td>
 					<table cellspacing="0" cellpadding="0" border="0" width="100%"
-						   style="background: <?php echo esc_attr( $settings['quote_bg'] ); ?>; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
+							style="background: <?php echo esc_attr( $settings['quote_bg'] ); ?>; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
 						<tbody>
 						<tr>
 							<td height="5px" style="font-size: 5px; line-height: 5px;">&nbsp;</td>
@@ -230,7 +230,7 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 			<tr>
 				<td>
 					<a href="<?php echo esc_url( get_comment_link( $comment ) ); ?>" target="_blank" rel="nofollow"
-					   style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px;  min-width: 64px; text-align: center; height: 16px; line-height: 16px; padding:8px; "><?php esc_html_e( 'Reply', 'buddyboss' ); ?></a>
+						style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px;  min-width: 64px; text-align: center; height: 16px; line-height: 16px; padding:8px; "><?php esc_html_e( 'Reply', 'buddyboss' ); ?></a>
 				</td>
 			</tr>
 
@@ -296,7 +296,7 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 		}
 
 		$message_headers = "$from\n"
-						   . 'Content-Type: text/plain; charset="' . get_option( 'blog_charset' ) . "\"\n";
+							. 'Content-Type: text/plain; charset="' . get_option( 'blog_charset' ) . "\"\n";
 
 		if ( isset( $reply_to ) ) {
 			$message_headers .= $reply_to . "\n";
@@ -450,7 +450,7 @@ if ( ! function_exists( 'wp_notify_moderator' ) ) :
 							<tr>
 								<td valign="middle" width="65px" style="vertical-align: middle;">
 									<a style="display: block; width: 47px;" href="<?php echo esc_attr( bp_core_get_user_domain( $comment->user_id ) ); ?>"
-									   target="_blank" rel="nofollow">
+										target="_blank" rel="nofollow">
 										<?php
 										$avatar_url = bp_core_fetch_avatar(
 											array(
@@ -463,8 +463,8 @@ if ( ! function_exists( 'wp_notify_moderator' ) ) :
 										);
 										?>
 										<img src="<?php echo esc_attr( $avatar_url ); ?>" width="47" height="47"
-											 style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;"
-											 border="0">
+											style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;"
+											border="0">
 									</a>
 								</td>
 								<td width="88%" style="vertical-align: middle;">
@@ -486,7 +486,7 @@ if ( ! function_exists( 'wp_notify_moderator' ) ) :
 			<tr>
 				<td>
 					<table cellspacing="0" cellpadding="0" border="0" width="100%"
-						   style="background: <?php echo esc_attr( $settings['quote_bg'] ); ?>; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
+							style="background: <?php echo esc_attr( $settings['quote_bg'] ); ?>; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
 						<tbody>
 						<tr>
 							<td height="5px" style="font-size: 5px; line-height: 5px;">&nbsp;</td>
@@ -521,7 +521,7 @@ if ( ! function_exists( 'wp_notify_moderator' ) ) :
 			<tr>
 				<td>
 					<a href="<?php echo get_comment_link( $comment ); ?>" target="_blank" rel="nofollow"
-					   style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: inline-block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px; min-width: 64px; text-align: center; height: 16px; line-height: 16px; padding: 8px;"><?php esc_html_e( 'Reply', 'buddyboss' ); ?></a>
+						style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: inline-block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px; min-width: 64px; text-align: center; height: 16px; line-height: 16px; padding: 8px;"><?php esc_html_e( 'Reply', 'buddyboss' ); ?></a>
 				</td>
 			</tr>
 

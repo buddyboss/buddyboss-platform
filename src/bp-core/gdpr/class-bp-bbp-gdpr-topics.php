@@ -65,7 +65,7 @@ class BP_Bbp_Gdpr_Topics {
 	 * Export member created forum topics.
 	 *
 	 * @param $email_address
-	 * @param int           $page
+	 * @param int $page
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
@@ -186,7 +186,7 @@ class BP_Bbp_Gdpr_Topics {
 	 * Delete forum topics created by member.
 	 *
 	 * @param $email_address
-	 * @param int           $page
+	 * @param int $page
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *

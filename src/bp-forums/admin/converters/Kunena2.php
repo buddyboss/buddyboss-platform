@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Implementation of Kunena v2.x Forums for Joomla Forum converter.
@@ -479,7 +480,6 @@ class Kunena2 extends BBP_Converter_Base {
 			'to_type'        => 'user',
 			'to_fieldname'   => 'display_name',
 		);
-
 	}
 
 	/**

@@ -272,21 +272,21 @@ function bp_core_admin_components_options() {
 								if ( isset( $active_components[ esc_attr( $name ) ] ) ) {
 									?>
 									<input class="<?php echo esc_attr( ( true === $deactivate_confirm ) ? 'mass-check-deactivate' : '' ); ?>"
-										   type="checkbox"
-										   id="<?php echo esc_attr( "bp_components[$name]" ); ?>"
-										   name="<?php echo esc_attr( "bp_components[$name]" ); ?>"
-										   value="1"<?php checked( isset( $active_components[ esc_attr( $name ) ] ) ); ?> />
+											type="checkbox"
+											id="<?php echo esc_attr( "bp_components[$name]" ); ?>"
+											name="<?php echo esc_attr( "bp_components[$name]" ); ?>"
+											value="1"<?php checked( isset( $active_components[ esc_attr( $name ) ] ) ); ?> />
 									<?php
 								} else {
 									?>
 									<input type="checkbox" id="<?php echo esc_attr( "bp_components[$name]" ); ?>"
-										   name="<?php echo esc_attr( "bp_components[$name]" ); ?>"
-										   value="1"<?php checked( isset( $active_components[ esc_attr( $name ) ] ) ); ?> />
+											name="<?php echo esc_attr( "bp_components[$name]" ); ?>"
+											value="1"<?php checked( isset( $active_components[ esc_attr( $name ) ] ) ); ?> />
 									<?php
 								}
 								?>
 								<label for="<?php echo esc_attr( "bp_components[$name]" ); ?>"
-									   class="screen-reader-text">
+										class="screen-reader-text">
 									<?php
 									/* translators: accessibility text */
 									printf( __( 'Select %s', 'buddyboss' ), esc_html( $labels['title'] ) );
@@ -314,7 +314,7 @@ function bp_core_admin_components_options() {
 								<?php elseif ( ! in_array( $name, array( 'core', 'members', 'xprofile' ) ) ) : ?>
 									<?php if ( isset( $active_components[ esc_attr( $name ) ] ) ) : ?>
 										<span class="deactivate <?php echo esc_attr( ( true === $deactivate_confirm ) ? 'bp-show-deactivate-popup' : '' ); ?>"
-											  data-confirm="<?php echo esc_attr( $deactivate_confirm ); ?>">
+												data-confirm="<?php echo esc_attr( $deactivate_confirm ); ?>">
 											<a href="
 											<?php
 											echo wp_nonce_url(
@@ -539,7 +539,7 @@ function bp_core_admin_components_settings_handler() {
 			$page_id = wp_insert_post( $new_page );
 
 			bp_update_option( '_bbp_root_slug_custom_slug', $page_id );
-			$slug    = get_page_uri( $page_id );
+			$slug = get_page_uri( $page_id );
 			bp_update_option( '_bbp_root_slug', urldecode( $slug ) );
 		}
 	}
@@ -649,7 +649,7 @@ function bp_core_admin_components_activation_handler() {
 			$page_id = wp_insert_post( $new_page );
 
 			bp_update_option( '_bbp_root_slug_custom_slug', $page_id );
-			$slug    = get_page_uri( $page_id );
+			$slug = get_page_uri( $page_id );
 			bp_update_option( '_bbp_root_slug', urldecode( $slug ) );
 		}
 	}

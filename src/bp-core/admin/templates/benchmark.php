@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 
 /**
  * PHP Script to benchmark PHP and MySQL-Server
@@ -211,4 +212,3 @@ function bb_test_wordpress() {
 function bb_timer_diff( $time_start ) {
 	return number_format( microtime( true ) - $time_start, 3 );
 }
-

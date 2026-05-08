@@ -337,9 +337,11 @@ class BP_Friends_Component extends BP_Component {
 	 * @since BuddyBoss 1.3.5
 	 */
 	public function rest_api_init( $controllers = array() ) {
-		parent::rest_api_init( array(
-			'BP_REST_Friends_Endpoint',
-		) );
+		parent::rest_api_init(
+			array(
+				'BP_REST_Friends_Endpoint',
+			)
+		);
 	}
 
 	/**

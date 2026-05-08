@@ -966,7 +966,6 @@ function bb_update_to_1_7_5() {
 		)
 	);
 	$bp_background_updater->save()->schedule_event();
-
 }
 
 /**
@@ -2027,7 +2026,6 @@ function bb_core_update_email_situation_labels() {
 			);
 		}
 	}
-
 }
 
 /**
@@ -2155,7 +2153,6 @@ function bb_update_to_2_1_4() {
 
 	// Update the messages email templates.
 	bb_migrate_messages_email_templates();
-
 }
 
 /**
@@ -2711,7 +2708,7 @@ function bb_migrate_member_friends_count_callback( $user_ids, $paged ) {
 	}
 
 	// Call recursive to finish update for all users.
-	$paged++;
+	++$paged;
 	bb_create_background_member_friends_count( $paged );
 }
 
@@ -3116,7 +3113,7 @@ function bb_migrate_message_media_document( $table_exists, $results, $paged ) {
 	}
 
 	// Call recursive to finish update for all records.
-	$paged++;
+	++$paged;
 	bb_create_background_message_media_document_update( $table_exists, $paged );
 }
 
@@ -3196,7 +3193,7 @@ function bb_update_to_2_4_10() {
 	$groups     = $wpdb->base_prefix . 'bp_groups';
 	$group_meta = $wpdb->base_prefix . 'bp_groups_groupmeta';
 
-	$sql = "SELECT g.id FROM {$groups} g";
+	$sql  = "SELECT g.id FROM {$groups} g";
 	$sql .= " INNER JOIN {$group_meta} gm ON gm.group_id = g.id";
 	$sql .= ' WHERE gm.meta_key = %s AND gm.meta_value = %d';
 
@@ -3489,7 +3486,7 @@ function bb_update_to_2_4_75() {
 		$log_table_name = bp_core_get_table_prefix() . 'bb_background_process_logs';
 
 		// Check the index keys.
-		$indices_columns = $wpdb->get_col( $wpdb->prepare( "SELECT COLUMN_NAME FROM information_schema.statistics WHERE table_schema = %s AND table_name = %s", $wpdb->__get( 'dbname' ), $log_table_name ) );
+		$indices_columns = $wpdb->get_col( $wpdb->prepare( 'SELECT COLUMN_NAME FROM information_schema.statistics WHERE table_schema = %s AND table_name = %s', $wpdb->__get( 'dbname' ), $log_table_name ) );
 
 		if ( empty( $indices_columns ) ) {
 			return;
@@ -3538,7 +3535,7 @@ function bb_update_to_2_5_80() {
 	}
 	bp_update_option( '_bb_activity_comment_threading_depth', $thread_comments_depth );
 
-	$is_autoload = (bool) bp_get_option( '_bp_enable_activity_autoload', true );
+	$is_autoload          = (bool) bp_get_option( '_bp_enable_activity_autoload', true );
 	$autoload_new_setting = ( $is_autoload ) ? 'infinite' : 'load_more';
 
 	bp_update_option( 'bb_activity_load_type', $autoload_new_setting );
@@ -3713,7 +3710,6 @@ function bb_update_to_2_6_20() {
 		bb_migrate_xprofile_visibility( true );
 		set_transient( 'bb_migrate_xprofile_visibility', 'yes', HOUR_IN_SECONDS );
 	}
-
 }
 
 /**

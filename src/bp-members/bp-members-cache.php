@@ -117,7 +117,7 @@ function bb_members_clear_member_type_cache_on_update( $post_id ) {
 	}
 
 	// verify nonce.
-	if ( ! wp_verify_nonce( $_POST['_bp-member-type-nonce'], 'bp-member-type-edit-member-type' ) ) {
+	if ( ! wp_verify_nonce( wp_unslash( $_POST['_bp-member-type-nonce'] ), 'bp-member-type-edit-member-type' ) ) {
 		return;
 	}
 

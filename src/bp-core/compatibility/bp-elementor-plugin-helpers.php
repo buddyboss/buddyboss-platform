@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'BB_Elementor_Plugin_Compatibility') ) {
+if ( ! class_exists( 'BB_Elementor_Plugin_Compatibility' ) ) {
 	/**
 	 * BB_Elementor_Plugin_Compatibility Class
 	 *
@@ -27,7 +27,6 @@ if ( ! class_exists( 'BB_Elementor_Plugin_Compatibility') ) {
 		 *
 		 * @since BuddyBoss 2.1.2
 		 * @var self
-		 *
 		 */
 		private static $instance = null;
 
@@ -74,7 +73,6 @@ if ( ! class_exists( 'BB_Elementor_Plugin_Compatibility') ) {
 			add_action( 'admin_menu', array( $this, 'remove_page_attributes_metabox_for_forum' ) );
 
 			add_filter( 'bp_core_set_uri_show_on_front', array( $this, 'set_uri_elementor_show_on_front' ), 10, 3 );
-
 		}
 
 		/**
@@ -93,7 +91,6 @@ if ( ! class_exists( 'BB_Elementor_Plugin_Compatibility') ) {
 				$bp->current_component = '';
 				$bp->current_action    = '';
 			}
-
 		}
 
 		/**

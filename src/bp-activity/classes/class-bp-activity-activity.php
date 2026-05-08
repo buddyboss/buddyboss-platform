@@ -1905,7 +1905,7 @@ class BP_Activity_Activity {
 						$limit = bb_get_activity_comment_loading();
 					} else {
 						$limit = ! empty( $args['limit'] ) ? $args['limit'] : bb_get_activity_comment_visibility();
-						$limit++;
+						++$limit;
 					}
 
 					if ( bb_is_rest() && ! isset( $_GET['apply_limit'] ) ) {
@@ -1972,7 +1972,7 @@ class BP_Activity_Activity {
 				$parent_id = $r->secondary_item_id;
 
 				while ( $parent_id !== $r->item_id ) {
-					$depth++;
+					++$depth;
 
 					// When display_comments=stream, the parent comment may not be part of the
 					// returned results, so we manually fetch it.
@@ -2264,7 +2264,7 @@ class BP_Activity_Activity {
 
 		// Show unanswered activities only where clause.
 		if ( ! empty( $filter_array['unanswered_only'] ) && ! apply_filters( 'bb_activity_unanswered_only_remove_sql', false ) ) {
-			$filter_sql[] = "uac.item_id IS NULL";
+			$filter_sql[] = 'uac.item_id IS NULL';
 		}
 
 		if ( empty( $filter_sql ) ) {

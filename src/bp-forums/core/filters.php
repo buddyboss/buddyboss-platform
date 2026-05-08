@@ -198,34 +198,34 @@ add_filter( 'bbp_get_forum_topic_count_hidden', 'bbp_number_format', 10 );
 add_filter( 'bbp_get_topic_reply_count_hidden', 'bbp_number_format', 10 );
 
 // Add number-not-negative filter to values that can never be negative numbers.
-add_filter( 'bbp_get_user_topic_count',             'bbp_number_not_negative', 8 );
-add_filter( 'bbp_get_user_reply_count',             'bbp_number_not_negative', 8 );
-add_filter( 'bbp_get_user_post_count',              'bbp_number_not_negative', 8 );
-add_filter( 'bbp_get_forum_subforum_count',         'bbp_number_not_negative', 8 );
-add_filter( 'bbp_get_forum_topic_count',            'bbp_number_not_negative', 8 );
-add_filter( 'bbp_get_forum_reply_count',            'bbp_number_not_negative', 8 );
-add_filter( 'bbp_get_forum_post_count',             'bbp_number_not_negative', 8 );
-add_filter( 'bbp_get_topic_voice_count',            'bbp_number_not_negative', 8 );
-add_filter( 'bbp_get_topic_reply_count',            'bbp_number_not_negative', 8 );
-add_filter( 'bbp_get_topic_post_count',             'bbp_number_not_negative', 8 );
-add_filter( 'bbp_get_forum_topic_count_hidden',     'bbp_number_not_negative', 8 );
-add_filter( 'bbp_get_topic_reply_count_hidden',     'bbp_number_not_negative', 8 );
-add_filter( 'bbp_get_topic_revision_count',         'bbp_number_not_negative', 8 );
-add_filter( 'bbp_get_reply_revision_count',         'bbp_number_not_negative', 8 );
-add_filter( 'bbp_get_user_topic_count_int',         'bbp_number_not_negative', 8 );
-add_filter( 'bbp_get_user_reply_count_int',         'bbp_number_not_negative', 8 );
-add_filter( 'bbp_get_user_post_count_int',          'bbp_number_not_negative', 8 );
-add_filter( 'bbp_get_forum_subforum_count_int',     'bbp_number_not_negative', 8 );
-add_filter( 'bbp_get_forum_topic_count_int',        'bbp_number_not_negative', 8 );
-add_filter( 'bbp_get_forum_reply_count_int',        'bbp_number_not_negative', 8 );
-add_filter( 'bbp_get_forum_post_count_int',         'bbp_number_not_negative', 8 );
-add_filter( 'bbp_get_topic_voice_count_int',        'bbp_number_not_negative', 8 );
-add_filter( 'bbp_get_topic_reply_count_int',        'bbp_number_not_negative', 8 );
-add_filter( 'bbp_get_topic_post_count_int',         'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_user_topic_count', 'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_user_reply_count', 'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_user_post_count', 'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_forum_subforum_count', 'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_forum_topic_count', 'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_forum_reply_count', 'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_forum_post_count', 'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_topic_voice_count', 'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_topic_reply_count', 'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_topic_post_count', 'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_forum_topic_count_hidden', 'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_topic_reply_count_hidden', 'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_topic_revision_count', 'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_reply_revision_count', 'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_user_topic_count_int', 'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_user_reply_count_int', 'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_user_post_count_int', 'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_forum_subforum_count_int', 'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_forum_topic_count_int', 'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_forum_reply_count_int', 'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_forum_post_count_int', 'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_topic_voice_count_int', 'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_topic_reply_count_int', 'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_topic_post_count_int', 'bbp_number_not_negative', 8 );
 add_filter( 'bbp_get_forum_topic_count_hidden_int', 'bbp_number_not_negative', 8 );
 add_filter( 'bbp_get_topic_reply_count_hidden_int', 'bbp_number_not_negative', 8 );
-add_filter( 'bbp_get_topic_revision_count_int',     'bbp_number_not_negative', 8 );
-add_filter( 'bbp_get_reply_revision_count_int',     'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_topic_revision_count_int', 'bbp_number_not_negative', 8 );
+add_filter( 'bbp_get_reply_revision_count_int', 'bbp_number_not_negative', 8 );
 
 // Sanitize displayed user data
 add_filter( 'bbp_get_displayed_user_field', 'bbp_sanitize_displayed_user_field', 10, 3 );
@@ -630,11 +630,11 @@ function bb_forums_hide_single_url( $content ) {
 	}
 
 	if ( preg_match_all( '/<p[^>]*>.*?<\/p>/', $content, $matches ) && ! empty( $matches[0] ) ) {
-		$topic_content	= implode( '', $matches[0]  );	// Extract only post content. '$content' also contains author, edit and other details.
-		$raw_content	= preg_replace( array( '/<a[^>]*>/', '/<\/a>/', '/<p[^>]*>/', '/<\/p>/', '/<iframe[^>]*>.*?<\/iframe>/', '/\n/', '/\r/' ), array( '', '', '', '', '' ), $topic_content );
-		$content_length	= strlen( $raw_content );
-		$prefixes		= '/^(http\:\/\/|https\:\/\/|www\.)/';
-		$url			= '';
+		$topic_content  = implode( '', $matches[0] );  // Extract only post content. '$content' also contains author, edit and other details.
+		$raw_content    = preg_replace( array( '/<a[^>]*>/', '/<\/a>/', '/<p[^>]*>/', '/<\/p>/', '/<iframe[^>]*>.*?<\/iframe>/', '/\n/', '/\r/' ), array( '', '', '', '', '' ), $topic_content );
+		$content_length = strlen( $raw_content );
+		$prefixes       = '/^(http\:\/\/|https\:\/\/|www\.)/';
+		$url            = '';
 
 		if ( preg_match( $prefixes, $raw_content ) ) {
 			for ( $i = 0; $i < $content_length; $i++ ) {
@@ -646,7 +646,7 @@ function bb_forums_hide_single_url( $content ) {
 			}
 
 			if ( ! empty( $url ) && empty( trim( str_replace( $url, '', $raw_content ) ) ) ) {
-				$content	= preg_replace( '/^<p/', '<p style="display: none;"', $content, 1 );
+				$content = preg_replace( '/^<p/', '<p style="display: none;"', $content, 1 );
 			}
 		}
 	}

@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 /**
  * BuddyBoss - Moderation Blocked Member entry
  *

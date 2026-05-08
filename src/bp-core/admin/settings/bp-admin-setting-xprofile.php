@@ -177,7 +177,6 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 				BuddyBoss\Performance\Cache::instance()->purge_all();
 			}
 		}
-
 	}
 
 	/**
@@ -335,9 +334,12 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$has_visible_actions = false;
 
 		// Filter elements with "bp-hide" class.
-		$hidden_actions = array_filter( $profile_actions, function ( $element ) {
-			return isset( $element['element_class'] ) && strpos( $element['element_class'], 'bp-hide' ) !== false;
-		} );
+		$hidden_actions = array_filter(
+			$profile_actions,
+			function ( $element ) {
+				return isset( $element['element_class'] ) && strpos( $element['element_class'], 'bp-hide' ) !== false;
+			}
+		);
 
 		if ( count( $profile_actions ) > count( $hidden_actions ) ) {
 			$has_visible_actions = true;
@@ -555,7 +557,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 									$type_name
 								);
 								?>
-							 value="<?php echo $type_name; ?>">
+							value="<?php echo $type_name; ?>">
 								<?php printf( esc_html__( '%s', 'buddyboss' ), $member_type_name ); ?>
 							</option>
 						<?php
@@ -832,7 +834,6 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			esc_html__( 'Select the format of your member’s profile links (i.e. /members/username). Both formats will open the member’s profile, so you can safely change without breaking previously shared links.', 'buddyboss' )
 		);
 	}
-
 }
 
 return new BP_Admin_Setting_Xprofile();

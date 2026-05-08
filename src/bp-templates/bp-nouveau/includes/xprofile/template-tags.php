@@ -64,7 +64,7 @@ function bp_nouveau_xprofile_edit_visibilty() {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_base_account_has_xprofile() {
-	$fields = $_POST['signup_profile_field_ids'] ?? array();
+	$fields = isset( $_POST['signup_profile_field_ids'] ) ? wp_parse_id_list( wp_unslash( $_POST['signup_profile_field_ids'] ) ) : array(); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- wp_parse_id_list sanitizes to integers.
 	$args   = array(
 		'profile_group_id' => bp_xprofile_base_group_id(),
 		'fetch_field_data' => false,

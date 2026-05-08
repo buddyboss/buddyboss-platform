@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 /**
  * Explicitly include BuddyPress functions for ReadyLaunch theme.
  */

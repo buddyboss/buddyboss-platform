@@ -44,7 +44,17 @@ $F = bp_ps_escaped_form_data( $version = '4.9' );
 if ( ! empty( $options['theme'] ) ) {
 	$accordion = 'bp_ps_accordion_' . $F->unique_id;
 	wp_enqueue_script( 'jquery-ui-accordion' );
-	wp_enqueue_style( 'jquery-ui-theme', 'https://code.jquery.com/ui/1.12.1/themes/' . $options['theme'] . '/jquery-ui.min.css' );
+	// DEPS-01: replaced remote CDN enqueue with locally-bundled smoothness theme (MIT).
+	// The user-configurable $options['theme'] is no longer honored; only the smoothness
+	// theme ships locally. Visual regression manual-verification item: BP Profile Search
+	// admin accordion should render; gradient background images will not be present
+	// (the theme sprite images are not bundled) but layout and functionality are intact.
+	wp_enqueue_style(
+		'jquery-ui-theme',
+		plugins_url( 'css/jquery-ui-smoothness.css', __FILE__ ),
+		array(),
+		'1.12.1'
+	);
 	?>
 <script>
 	jQuery(function($) {
@@ -165,7 +175,7 @@ foreach ( $F->fields as $f ) {
 				if ( $key == $value ) {
 					echo 'selected="selected"';}
 				?>
-				 value="<?php echo $key; ?>"><?php echo $label; ?> </option>
+				value="<?php echo $key; ?>"><?php echo $label; ?> </option>
 			<?php } ?>
 			</select><br>
 			<?php
@@ -180,7 +190,7 @@ foreach ( $F->fields as $f ) {
 				if ( in_array( $key, $f->values ) ) {
 					echo 'selected="selected"';}
 				?>
-				 value="<?php echo $key; ?>"><?php echo $label; ?></option>
+				value="<?php echo $key; ?>"><?php echo $label; ?></option>
 			<?php } ?>
 			</select><br>
 			<?php

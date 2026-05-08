@@ -228,7 +228,7 @@ function bp_core_check_for_blacklist( $user_id = 0, $title = '', $content = '', 
 	$disallowed_keys_option_name = 'blacklist_keys';
 	if ( function_exists( 'wp_check_comment_disallowed_list' ) ) {
 		$disallowed_keys_option_name = 'disallowed_keys';
- 	}
+	}
 
 	// Get the moderation keys.
 	$blacklist = trim( get_option( $disallowed_keys_option_name ) );

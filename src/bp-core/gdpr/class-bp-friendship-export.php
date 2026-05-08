@@ -111,7 +111,6 @@ final class BP_Friendship_Export extends BP_Export {
 		$done = $data_items['total'] < $data_items['offset'];
 
 		return $this->response( $export_items, $done );
-
 	}
 
 	/**
@@ -139,7 +138,6 @@ final class BP_Friendship_Export extends BP_Export {
 		$done = true;
 
 		return $this->response_erase( $items_removed, $done, array(), $items_retained );
-
 	}
 
 	/**
@@ -180,7 +178,5 @@ final class BP_Friendship_Export extends BP_Export {
 			'offset' => $offset,
 			'items'  => $items,
 		);
-
 	}
-
 }

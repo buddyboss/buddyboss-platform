@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 
 if ( empty( get_query_var( 'bb-document-preview' ) ) && empty( get_query_var( 'id1' ) ) ) {
 	echo '// Silence is golden.';

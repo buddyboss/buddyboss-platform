@@ -50,11 +50,11 @@ class BP_Customizer_Control_Range extends WP_Customize_Control {
 			<?php endif; ?>
 
 			<input type="range" id="<?php echo esc_attr( "{$id}-range" ); ?>" 
-											   <?php
+												<?php
 												$this->link();
 												$this->input_attrs();
 												?>
-			 value="<?php echo esc_attr( $this->value() ); ?>" />
+			value="<?php echo esc_attr( $this->value() ); ?>" />
 			<output for="<?php echo esc_attr( "{$id}-range" ); ?>"><?php echo esc_html( $this->value() ); ?></output>
 		</li>
 		<?php

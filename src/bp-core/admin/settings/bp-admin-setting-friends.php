@@ -102,7 +102,9 @@ class BP_Admin_Setting_Friends extends BP_Admin_Setting_tab {
 		?>
 
 		<p>
-			<a class="button" target="_blank" href="<?php echo bp_get_admin_url(
+			<a class="button" target="_blank" href="
+			<?php
+			echo bp_get_admin_url(
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
@@ -110,7 +112,9 @@ class BP_Admin_Setting_Friends extends BP_Admin_Setting_tab {
 					),
 					'admin.php'
 				)
-			); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+			);
+			?>
+			"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
 		</p>
 
 		<?php

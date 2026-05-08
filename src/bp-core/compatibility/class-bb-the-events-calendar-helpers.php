@@ -143,7 +143,6 @@ class BB_The_Event_Calendar_Helpers {
 
 		return $is_public;
 	}
-
 }
 
 BB_The_Event_Calendar_Helpers::instance();

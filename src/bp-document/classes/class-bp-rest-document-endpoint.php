@@ -209,7 +209,6 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		do_action( 'bp_rest_document_upload_item', $response, $request );
 
 		return $response;
-
 	}
 
 	/**
@@ -1240,16 +1239,14 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			return bp_document_get_specific( $args );
 
 			// Fetch all activity items.
-		} else {
-			if ( ! empty( $args['type'] ) && 'both' !== $args['type'] ) {
-				if ( 'document' === $args['type'] ) {
-					return bp_document_get( $args );
-				} elseif ( 'folder' === $args['type'] ) {
-					return bp_folder_get( $args );
-				}
-			} else {
+		} elseif ( ! empty( $args['type'] ) && 'both' !== $args['type'] ) {
+			if ( 'document' === $args['type'] ) {
 				return bp_document_get( $args );
+			} elseif ( 'folder' === $args['type'] ) {
+				return bp_folder_get( $args );
 			}
+		} else {
+			return bp_document_get( $args );
 		}
 	}
 
@@ -2556,7 +2553,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 					continue;
 				}
 
-				$order_count ++;
+				++$order_count;
 
 				if ( in_array( $id, $old_documents, true ) ) {
 					$new_documents[] = array(
@@ -2999,7 +2996,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 					continue;
 				}
 
-				$menu_order_count ++;
+				++$menu_order_count;
 
 				$attachment_id = ! empty( $document ) ? $document : 0;
 				$menu_order    = $menu_order_count;
@@ -3081,7 +3078,6 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 				bp_document_delete( array( 'id' => $document_id ) );
 			}
 		}
-
 	}
 
 	/**
@@ -3282,7 +3278,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 					} else {
 						$retval = new WP_Error(
 							'bp_rest_authorization_required',
-							 __( 'Sorry, you are not allowed to delete this document attachment.', 'buddyboss' ),
+							__( 'Sorry, you are not allowed to delete this document attachment.', 'buddyboss' ),
 							array(
 								'status' => rest_authorization_required_code(),
 							)

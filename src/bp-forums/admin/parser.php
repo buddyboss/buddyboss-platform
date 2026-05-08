@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 
 /**
  * bbPress BBCode Parser
@@ -18,12 +19,12 @@ modification, are permitted provided that the following conditions
 are met:
 
 * Redistributions of source code must retain the above copyright
-  notice, this list of conditions and the following disclaimer.
+	notice, this list of conditions and the following disclaimer.
 
 * Redistributions in binary form must reproduce the above copyright
-  notice, this list of conditions and the following disclaimer in
-  the documentation and/or other materials provided with the
-  distribution.
+	notice, this list of conditions and the following disclaimer in
+	the documentation and/or other materials provided with the
+	distribution.
 
 THIS SOFTWARE IS PROVIDED BY THE PHANTOM INKER "AS IS" AND ANY EXPRESS
 OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -70,7 +71,7 @@ if ( ! function_exists( 'str_split' ) ) {
 		return $array;
 	}
 }
-$BBCode_SourceDir = dirname( __FILE__ );
+$BBCode_SourceDir = __DIR__;
 
 class BBCodeLexer {
 	var $token;
@@ -156,7 +157,7 @@ class BBCodeLexer {
 					case 10:
 					case 13:
 						$state = BBCODE_LEXSTATE_TEXT;
-						$length++;
+						++$length;
 						break;
 					default:
 						$state   = BBCODE_LEXSTATE_TEXT;
@@ -372,7 +373,7 @@ class BBCodeLexer {
 			$result['_end']  = false;
 		}
 		while ( ( $type = $this->Internal_ClassifyPiece( $ptr, $pieces ) ) == ' ' ) {
-			$ptr++;
+			++$ptr;
 		}
 		$params = array();
 		if ( $type != '=' ) {
@@ -382,9 +383,9 @@ class BBCodeLexer {
 				'value' => '',
 			);
 		} else {
-			$ptr++;
+			++$ptr;
 			while ( ( $type = $this->Internal_ClassifyPiece( $ptr, $pieces ) ) == ' ' ) {
-				$ptr++;
+				++$ptr;
 			}
 			if ( $type == '"' ) {
 				$value = $this->Internal_StripQuotes( $pieces[ $ptr++ ] );
@@ -398,18 +399,18 @@ class BBCodeLexer {
 					if ( $type == '=' && $after_space ) {
 						break;
 					}
-					$ptr++;
+					++$ptr;
 				}
 				if ( $type == -1 ) {
-					$ptr--;
+					--$ptr;
 				}
 				if ( $type == '=' ) {
-					$ptr--;
+					--$ptr;
 					while ( $ptr > $start && $this->Internal_ClassifyPiece( $ptr, $pieces ) == ' ' ) {
-						$ptr--;
+						--$ptr;
 					}
 					while ( $ptr > $start && $this->Internal_ClassifyPiece( $ptr, $pieces ) != ' ' ) {
-						$ptr--;
+						--$ptr;
 					}
 				}
 				$value = '';
@@ -421,7 +422,7 @@ class BBCodeLexer {
 					}
 				}
 				$value = trim( $value );
-				$ptr++;
+				++$ptr;
 			}
 			$result['_default'] = $value;
 			$params[]           = array(
@@ -431,26 +432,26 @@ class BBCodeLexer {
 		}
 		while ( ( $type = $this->Internal_ClassifyPiece( $ptr, $pieces ) ) != -1 ) {
 			while ( $type == ' ' ) {
-				$ptr++;
+				++$ptr;
 				$type = $this->Internal_ClassifyPiece( $ptr, $pieces );
 			}
 			if ( $type == 'A' || $type == '"' ) {
 				$key = strtolower( $this->Internal_StripQuotes( @$pieces[ $ptr++ ] ) );
 			} elseif ( $type == '=' ) {
-				$ptr++;
+				++$ptr;
 				continue;
 			} elseif ( $type == -1 ) {
 				break;
 			}
 			while ( ( $type = $this->Internal_ClassifyPiece( $ptr, $pieces ) ) == ' ' ) {
-				$ptr++;
+				++$ptr;
 			}
 			if ( $type != '=' ) {
 				$value = $this->Internal_StripQuotes( $key );
 			} else {
-				$ptr++;
+				++$ptr;
 				while ( ( $type = $this->Internal_ClassifyPiece( $ptr, $pieces ) ) == ' ' ) {
-					$ptr++;
+					++$ptr;
 				}
 				if ( $type == '"' ) {
 					$value = $this->Internal_StripQuotes( $pieces[ $ptr++ ] );
@@ -1204,7 +1205,7 @@ class BBCode {
 
 
 	/*
-	 ADDED */
+	ADDED */
 	// singleton instance
 	private static $instance;
 
@@ -1823,7 +1824,7 @@ $/Dx",
 	function Internal_RewindToClass( $class_list ) {
 		$pos = count( $this->stack ) - 1;
 		while ( $pos >= 0 && ! in_array( $this->stack[ $pos ][ BBCODE_STACK_CLASS ], $class_list ) ) {
-			$pos--;
+			--$pos;
 		}
 		if ( $pos < 0 ) {
 			if ( ! in_array( $this->root_class, $class_list ) ) {
@@ -1977,18 +1978,18 @@ $/Dx",
 			switch ( $char ) {
 				case 's':
 					while ( $pos < count( $array ) && $array[ $pos ][ BBCODE_STACK_TOKEN ] == BBCODE_WS ) {
-						$pos++;
+						++$pos;
 					}
 					break;
 				case 'n':
 					if ( $pos < count( $array ) && $array[ $pos ][ BBCODE_STACK_TOKEN ] == BBCODE_NL ) {
-						$pos++;
+						++$pos;
 					}
 					break;
 				case 'a':
 					while ( $pos < count( $array )
 					&& ( ( $token = $array[ $pos ][ BBCODE_STACK_TOKEN ] ) == BBCODE_WS || $token == BBCODE_NL ) ) {
-						$pos++;
+						++$pos;
 					}
 					break;
 			}
@@ -2033,12 +2034,10 @@ $/Dx",
 							} else {
 								$value = $contents;
 							}
-						} else {
-							if ( isset( $params[ $param ] ) ) {
+						} elseif ( isset( $params[ $param ] ) ) {
 								$value = $params[ $param ];
-							} else {
-								$value = @$tag_rule['default'][ $param ];
-							}
+						} else {
+							$value = @$tag_rule['default'][ $param ];
 						}
 						if ( ! preg_match( $pattern, $value ) ) {
 								return false;
@@ -2281,7 +2280,7 @@ $/Dx",
 		array_splice( $this->stack, $start );
 		$this->Internal_ComputeCurrentClass();
 		$this->Internal_CleanupWSByPoppingStack( @$tag_rule['before_tag'], $this->stack );
-		$tag_params['_endtag'] = isset( $end_tag_params['_tag'] ) ? $end_tag_params['_tag'] : "";
+		$tag_params['_endtag'] = isset( $end_tag_params['_tag'] ) ? $end_tag_params['_tag'] : '';
 		$tag_params['_hasend'] = true;
 		$output                = $this->DoTag(
 			BBCODE_OUTPUT,
@@ -2364,7 +2363,7 @@ $/Dx",
 		$contents   = $this->Internal_FinishTag( $tag_name );
 		if ( $contents === false ) {
 			if ( @$this->lost_start_tags[ $tag_name ] > 0 ) {
-				$this->lost_start_tags[ $tag_name ]--;
+				--$this->lost_start_tags[ $tag_name ];
 			} else {
 				$this->stack[] = array(
 					BBCODE_STACK_TOKEN => BBCODE_TEXT,

@@ -363,9 +363,7 @@ if ( ! class_exists( 'BB_Admin_Setting_Fields' ) ) :
 
 			<?php
 			$this->field_description();
-
 		}
-
 	}
 
 endif;

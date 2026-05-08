@@ -163,30 +163,26 @@ class BB_Post_Notification extends BP_Core_Notification_Abstract {
 				} else {
 					$text = __( 'Replied to your comment', 'buddyboss' );
 				}
-			} else {
-				if ( (int) $total_items > 1 ) {
-					$text   = sprintf(
+			} elseif ( (int) $total_items > 1 ) {
+					$text = sprintf(
 					/* translators: %s: Total new comment reply count. */
 						__( 'You have %1$d new comment reply', 'buddyboss' ),
 						(int) $total_items
 					);
 					$amount = 'multiple';
-				} else {
-					if ( ! empty( $excerpt ) ) {
-						$text = sprintf(
-						/* translators: 1: Commenter name, 2: Excerpt. */
-							esc_html__( '%1$s replied to your comment: %2$s', 'buddyboss' ),
-							$commenter_name,
-							$excerpt
-						);
-					} else {
-						$text = sprintf(
-						/* translators: %s: Commenter name. */
-							esc_html__( '%1$s replied to your comment', 'buddyboss' ),
-							$commenter_name
-						);
-					}
-				}
+			} elseif ( ! empty( $excerpt ) ) {
+					$text = sprintf(
+					/* translators: 1: Commenter name, 2: Excerpt. */
+						esc_html__( '%1$s replied to your comment: %2$s', 'buddyboss' ),
+						$commenter_name,
+						$excerpt
+					);
+			} else {
+				$text = sprintf(
+				/* translators: %s: Commenter name. */
+					esc_html__( '%1$s replied to your comment', 'buddyboss' ),
+					$commenter_name
+				);
 			}
 
 			$content = apply_filters(

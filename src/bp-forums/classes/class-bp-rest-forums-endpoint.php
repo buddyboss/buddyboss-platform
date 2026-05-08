@@ -1408,7 +1408,6 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 		}
 
 		return '';
-
 	}
 
 	/**

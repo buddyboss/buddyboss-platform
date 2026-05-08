@@ -321,7 +321,6 @@ function bbp_add_forums_roles( $wp_roles = null ) {
  * @since bbPress (r4363)
  *
  * @see _bbp_reinit_dynamic_roles()
- *
  */
 function bbp_filter_user_roles_option() {
 

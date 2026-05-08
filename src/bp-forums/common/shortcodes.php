@@ -370,7 +370,6 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 				bbp_get_template_part( 'feedback', 'no-access-topic' );
 			}
 
-
 			// Return contents of output buffer.
 			return $this->end();
 		}

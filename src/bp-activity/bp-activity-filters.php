@@ -510,7 +510,7 @@ function bp_activity_at_name_filter( $content, $activity_id = 0 ) {
 				$unique_index                  = '#BPAN' . $replace_count . '#';
 				$replacements[ $unique_index ] = str_replace( "\xef\xbb\xbf", '', $replacement );
 				$content                       = str_replace( $replacement, $unique_index, $content );
-				$replace_count++;
+				++$replace_count;
 			}
 		}
 	}
@@ -673,7 +673,6 @@ function bp_activity_make_nofollow_filter_callback( $matches ) {
 	} else {
 		return "<a target='_blank' $text rel=\"nofollow\">";
 	}
-
 }
 
 /**
@@ -956,7 +955,10 @@ function bp_activity_heartbeat_last_recorded( $response = array(), $data = array
 	// filters), but force the offset to get only new items.
 	$activity_latest_args = bp_parse_args(
 		bp_ajax_querystring( 'activity' ),
-		array( 'pin_type' => 'none', 'since' => date_i18n( 'Y-m-d H:i:s', $data['bp_activity_last_recorded'] ) ),
+		array(
+			'pin_type' => 'none',
+			'since'    => date_i18n( 'Y-m-d H:i:s', $data['bp_activity_last_recorded'] ),
+		),
 		'activity_latest_args'
 	);
 
@@ -1983,15 +1985,13 @@ function bp_activity_media_add( $media ) {
 					update_post_meta( $media->attachment_id, 'bp_media_parent_activity_id', $parent_activity_id );
 				}
 			}
-		} else {
-
-			if ( $parent_activity_id ) {
+		} elseif ( $parent_activity_id ) {
 
 				// If the media posted in activity comment then set the activity id to comment id.- 2121.
-				if ( ! empty( $bp_new_activity_comment ) ) {
-					$parent_activity_id = $bp_new_activity_comment;
-					$media->privacy     = 'comment';
-				}
+			if ( ! empty( $bp_new_activity_comment ) ) {
+				$parent_activity_id = $bp_new_activity_comment;
+				$media->privacy     = 'comment';
+			}
 
 				// save media activity id in media.
 				$media->activity_id = $parent_activity_id;
@@ -2002,7 +2002,6 @@ function bp_activity_media_add( $media ) {
 
 				// save parent activity id in attachment meta.
 				update_post_meta( $media->attachment_id, 'bp_media_parent_activity_id', $parent_activity_id );
-			}
 		}
 	}
 }
@@ -2412,15 +2411,13 @@ function bp_activity_document_add( $document ) {
 					update_post_meta( $document->attachment_id, 'bp_document_parent_activity_id', $parent_activity_id );
 				}
 			}
-		} else {
-
-			if ( $parent_activity_id ) {
+		} elseif ( $parent_activity_id ) {
 
 				// If the document posted in activity comment then set the activity id to comment id.- 2121.
-				if ( ! empty( $bp_new_activity_comment ) ) {
-					$parent_activity_id = $bp_new_activity_comment;
-					$document->privacy  = 'comment';
-				}
+			if ( ! empty( $bp_new_activity_comment ) ) {
+				$parent_activity_id = $bp_new_activity_comment;
+				$document->privacy  = 'comment';
+			}
 
 				// save document activity id in document.
 				$document->activity_id = $parent_activity_id;
@@ -2431,7 +2428,6 @@ function bp_activity_document_add( $document ) {
 
 				// save parent activity id in attachment meta.
 				update_post_meta( $document->attachment_id, 'bp_document_parent_activity_id', $parent_activity_id );
-			}
 		}
 	}
 }
@@ -2704,7 +2700,6 @@ function bp_nouveau_remove_edit_activity_entry_buttons( $buttons, $activity_id )
 	}
 
 	return $buttons;
-
 }
 
 add_action( 'bp_before_activity_activity_content', 'bp_blogs_activity_content_set_temp_content' );
@@ -2728,7 +2723,6 @@ function bp_blogs_activity_content_set_temp_content() {
 	} elseif ( 'blogs' === $activity->component && 'new_blog_comment' === $activity->type && $activity->secondary_item_id && $activity->secondary_item_id > 0 ) {
 		$activities_template->activity->content = '&#8203;';
 	}
-
 }
 
 add_filter( 'bp_get_activity_content_body', 'bp_blogs_activity_content_with_read_more', 9999, 2 );
@@ -2812,16 +2806,16 @@ function bp_blogs_activity_comment_content_with_read_more( $content, $activity )
 			$get_post_type     = get_post_type( $comment_post_type );
 			$activity_metas    = bb_activity_get_metadata( $activity->id );
 
-			$comment_id = $activity_metas['bp_blogs_' . $get_post_type . '_comment_id'][0] ?? '';
+			$comment_id = $activity_metas[ 'bp_blogs_' . $get_post_type . '_comment_id' ][0] ?? '';
 			if ( $comment_id ) {
 				$comment = get_comment( $comment_id );
 				if ( ! empty( $comment->comment_content ) ) {
 					if ( apply_filters( 'bp_blogs_activity_comment_content_with_read_more', true ) ) {
 						$content = bp_create_excerpt( make_clickable( html_entity_decode( $comment->comment_content, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) );
 						if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
-							$content = str_replace( ' [&hellip;]', '&hellip;', $content );
+							$content     = str_replace( ' [&hellip;]', '&hellip;', $content );
 							$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
-							$content = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $content, get_comment_link( $comment_id ), $append_text );
+							$content     = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $content, get_comment_link( $comment_id ), $append_text );
 						}
 					} else {
 						$content = make_clickable( html_entity_decode( $comment->comment_content, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) );
@@ -3171,15 +3165,13 @@ function bp_activity_video_add( $video ) {
 					update_post_meta( $video->attachment_id, 'bp_video_parent_activity_id', $parent_activity_id );
 				}
 			}
-		} else {
-
-			if ( $parent_activity_id ) {
+		} elseif ( $parent_activity_id ) {
 
 				// If the video posted in activity comment then set the activity id to comment id.- 2121.
-				if ( ! empty( $bp_new_activity_comment ) ) {
-					$parent_activity_id = $bp_new_activity_comment;
-					$video->privacy     = 'comment';
-				}
+			if ( ! empty( $bp_new_activity_comment ) ) {
+				$parent_activity_id = $bp_new_activity_comment;
+				$video->privacy     = 'comment';
+			}
 
 				// save video activity id in video.
 				$video->activity_id = $parent_activity_id;
@@ -3190,7 +3182,6 @@ function bp_activity_video_add( $video ) {
 
 				// save parent activity id in attachment meta.
 				update_post_meta( $video->attachment_id, 'bp_video_parent_activity_id', $parent_activity_id );
-			}
 		}
 	}
 }
@@ -3541,14 +3532,14 @@ function bp_activity_screen_notification_settings() {
 				<td class="yes">
 					<div class="bp-radio-wrap">
 						<input type="radio" name="notifications[notification_activity_new_mention]" id="notification-activity-new-mention-yes" class="bs-styled-radio"
-							   value="yes" <?php checked( $mention, 'yes', true ); ?> />
+								value="yes" <?php checked( $mention, 'yes', true ); ?> />
 						<label for="notification-activity-new-mention-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss' ); ?></span></label>
 					</div>
 				</td>
 				<td class="no">
 					<div class="bp-radio-wrap">
 						<input type="radio" name="notifications[notification_activity_new_mention]" id="notification-activity-new-mention-no" class="bs-styled-radio"
-							   value="no" <?php checked( $mention, 'no', true ); ?> />
+								value="no" <?php checked( $mention, 'no', true ); ?> />
 						<label for="notification-activity-new-mention-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss' ); ?></span></label>
 					</div>
 				</td>
@@ -3561,14 +3552,14 @@ function bp_activity_screen_notification_settings() {
 			<td class="yes">
 				<div class="bp-radio-wrap">
 					<input type="radio" name="notifications[notification_activity_new_reply]" id="notification-activity-new-reply-yes" class="bs-styled-radio"
-						   value="yes" <?php checked( $reply, 'yes', true ); ?> />
+							value="yes" <?php checked( $reply, 'yes', true ); ?> />
 					<label for="notification-activity-new-reply-yes"><span class="bp-screen-reader-text"><?php esc_html_e( 'Yes, send email', 'buddyboss' ); ?></span></label>
 				</div>
 			</td>
 			<td class="no">
 				<div class="bp-radio-wrap">
 					<input type="radio" name="notifications[notification_activity_new_reply]" id="notification-activity-new-reply-no" class="bs-styled-radio"
-						   value="no" <?php checked( $reply, 'no', true ); ?> />
+							value="no" <?php checked( $reply, 'no', true ); ?> />
 					<label for="notification-activity-new-reply-no"><span class="bp-screen-reader-text"><?php esc_html_e( 'No, do not send email', 'buddyboss' ); ?></span></label>
 				</div>
 			</td>
@@ -3587,7 +3578,6 @@ function bp_activity_screen_notification_settings() {
 	</table>
 
 	<?php
-
 }
 add_action( 'bp_notification_settings', 'bp_activity_screen_notification_settings', 1 );
 
@@ -3610,7 +3600,6 @@ function bb_rest_mention_post_type_comment( $comment ) {
 	}
 
 	bb_mention_post_type_comment( $comment->comment_ID, $comment->comment_approved );
-
 }
 
 add_action( 'rest_after_insert_comment', 'bb_rest_mention_post_type_comment', 10, 1 );
@@ -4103,7 +4092,7 @@ function bb_clear_activity_all_comment_parent_caches( $activities ) {
 				)
 			);
 
-			if ( ! empty( $comment_ids )) {
+			if ( ! empty( $comment_ids ) ) {
 
 				// Clear cache for each comment.
 				foreach ( $comment_ids as $comment_id ) {

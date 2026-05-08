@@ -290,7 +290,5 @@ final class BP_Message_Export extends BP_Export {
 			'offset' => $offset,
 			'items'  => $items,
 		);
-
 	}
-
 }

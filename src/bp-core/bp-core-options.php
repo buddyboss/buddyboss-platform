@@ -1135,7 +1135,8 @@ function bp_get_activity_edit_time( $default = false ) {
  */
 function bp_is_activity_tabs_active( $default = false ) {
 
-	/* Update for the backward compatibility since setting is removed. */
+	/*
+	Update for the backward compatibility since setting is removed. */
 	// Retrieve the saved options.
 	$filters = bb_get_enabled_activity_filter_options();
 

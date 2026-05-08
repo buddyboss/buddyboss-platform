@@ -229,7 +229,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				wp_deregister_style( 'jquery-ui-style' );
 
 			}
-
 		}
 
 		/**
@@ -382,7 +381,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 *
 		 * @since BuddyBoss 1.2.3
 		 */
-
 		public function bp_add_main_menu_page_admin_menu() {
 
 			global $menu;
@@ -409,7 +407,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 					3
 				);
 			}
-
 		}
 
 		/**
@@ -638,7 +635,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		</div>
 
 			<?php
-
 		}
 
 		/**
@@ -1202,13 +1198,13 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			if ( 0 !== strpos( get_current_screen()->id, 'plugins' ) ) {
 				return;
 			}
-			
+
 			// Output the modal HTML template.
 			// This is needed for the Release Notes link to work.
 			// Use output buffering and error handling to prevent breaking WordPress scripts.
 			global $bp;
 			$template_path = trailingslashit( $bp->plugin_dir . 'bp-core/admin' ) . 'templates/update-buddyboss.php';
-			
+
 			if ( file_exists( $template_path ) ) {
 				// Use output buffering to catch any errors.
 				ob_start();
@@ -1216,7 +1212,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 					// Suppress any errors from the template to prevent breaking the page.
 					@include $template_path;
 					$output = ob_get_clean();
-					
+
 					// Only output if we got valid HTML (not an error).
 					if ( ! empty( $output ) && false === strpos( $output, 'Fatal error' ) ) {
 						echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -1226,7 +1222,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 					// Silently fail to prevent breaking WordPress admin.
 				}
 			}
-			
+
 			// Clean up the update flag to prevent database bloat.
 			delete_option( '_bb_is_update' );
 		}

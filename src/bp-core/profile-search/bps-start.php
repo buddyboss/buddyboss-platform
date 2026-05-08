@@ -237,7 +237,7 @@ function bp_profile_search_add_main_form() {
  * @since BuddyBoss 1.0.0
  */
 function bp_users_admin_profile_search_listing_add_users_tab() {
-	global $pagenow ,$post;
+	global $pagenow, $post;
 
 	// Check profile search enabled.
 	$is_profile_search_enabled = bp_disable_advanced_profile_search();

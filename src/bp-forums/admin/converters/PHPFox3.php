@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Implementation of PHPFox v3.x Forum converter.
@@ -515,7 +516,6 @@ class PHPFox3 extends BBP_Converter_Base {
 			'to_type'        => 'user',
 			'to_fieldname'   => 'display_name',
 		);
-
 	}
 
 	/**
@@ -532,11 +532,11 @@ class PHPFox3 extends BBP_Converter_Base {
 	 * as one value. Array values are auto sanitized by WordPress.
 	 */
 	public function callback_savepass( $field, $row ) {
-		 $pass_array = array(
-			 'hash' => $field,
-			 'salt' => $row['salt'],
-		 );
-		 return $pass_array;
+		$pass_array = array(
+			'hash' => $field,
+			'salt' => $row['salt'],
+		);
+		return $pass_array;
 	}
 
 	/**

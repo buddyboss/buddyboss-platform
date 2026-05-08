@@ -360,7 +360,6 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 			$upload_dir
 		);
 	}
-
 }
 
 return new BP_Admin_Setting_Groups();

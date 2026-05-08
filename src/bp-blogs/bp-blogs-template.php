@@ -1361,17 +1361,17 @@ function bp_blogs_blog_tabs() {
 		<?php
 		if ( bp_is_current_action( 'my-blogs' ) || ! bp_current_action() ) :
 			?>
-			 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/my-blogs' ); ?>"><?php printf( __( "%s's Sites", 'buddyboss' ), bp_get_displayed_user_fullname() ); ?></a></li>
+			class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/my-blogs' ); ?>"><?php printf( __( "%s's Sites", 'buddyboss' ), bp_get_displayed_user_fullname() ); ?></a></li>
 		<li
 		<?php
 		if ( bp_is_current_action( 'recent-posts' ) ) :
 			?>
-			 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/recent-posts' ); ?>"><?php printf( __( "%s's Recent Posts", 'buddyboss' ), bp_get_displayed_user_fullname() ); ?></a></li>
+			class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/recent-posts' ); ?>"><?php printf( __( "%s's Recent Posts", 'buddyboss' ), bp_get_displayed_user_fullname() ); ?></a></li>
 		<li
 		<?php
 		if ( bp_is_current_action( 'recent-comments' ) ) :
 			?>
-			 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/recent-comments' ); ?>"><?php printf( __( "%s's Recent Comments", 'buddyboss' ), bp_get_displayed_user_fullname() ); ?></a></li>
+			class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/recent-comments' ); ?>"><?php printf( __( "%s's Recent Comments", 'buddyboss' ), bp_get_displayed_user_fullname() ); ?></a></li>
 	</ul>
 
 	<?php

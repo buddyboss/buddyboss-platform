@@ -417,7 +417,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 
 				// Build safe query with proper placeholders.
 				$amount_col = esc_sql( $config['amount_col'] );
-				$query = self::$wpdb->prepare(
+				$query      = self::$wpdb->prepare(
 					"SELECT COUNT(*) as order_count, SUM(CAST($amount_col AS DECIMAL(10,2))) as total_revenue
 					FROM %i
 					WHERE status IN (" . $status_placeholders . ")
@@ -476,14 +476,14 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 			try {
 				// Check if WooCommerce is using HPOS (High Performance Order Storage).
 				$using_hpos = false;
-				if ( class_exists( 'Automattic\WooCommerce\Utilities\OrderUtil' ) && 
-				     method_exists( 'Automattic\WooCommerce\Utilities\OrderUtil', 'custom_orders_table_usage_is_enabled' ) ) {
+				if ( class_exists( 'Automattic\WooCommerce\Utilities\OrderUtil' ) &&
+					method_exists( 'Automattic\WooCommerce\Utilities\OrderUtil', 'custom_orders_table_usage_is_enabled' ) ) {
 					$using_hpos = \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled();
 				}
 
 				// Get order statuses.
 				$order_statuses = array( 'wc-completed', 'wc-processing' );
-				$config = self::$supported_plugins['woocommerce'];
+				$config         = self::$supported_plugins['woocommerce'];
 				if ( isset( $config['status_func'] ) && function_exists( $config['status_func'] ) ) {
 					$all_statuses = call_user_func( $config['status_func'] );
 					// Filter to completed and processing only.
@@ -494,7 +494,7 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 					// Use HPOS tables directly for better performance.
 					$order_table      = self::$wpdb->prefix . 'wc_orders';
 					$order_meta_table = self::$wpdb->prefix . 'wc_order_meta';
-					
+
 					// Check if HPOS tables exist.
 					$table_exists = self::$wpdb->get_var( self::$wpdb->prepare( 'SHOW TABLES LIKE %s', $order_table ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 					if ( ! $table_exists ) {
@@ -771,9 +771,9 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 					       SUM(CAST(pm_total.meta_value AS DECIMAL(10,2))) as total_revenue
 					FROM ' . self::$wpdb->posts . ' p
 					INNER JOIN ' . self::$wpdb->postmeta . ' pm_tutor ON p.ID = pm_tutor.post_id
-					INNER JOIN ' . self::$wpdb->postmeta . " pm_total ON p.ID = pm_total.post_id
+					INNER JOIN ' . self::$wpdb->postmeta . ' pm_total ON p.ID = pm_total.post_id
 					WHERE p.post_type = %s
-					AND p.post_status IN (" . $status_placeholders . ")
+					AND p.post_status IN (' . $status_placeholders . ")
 					AND pm_tutor.meta_key = '_is_tutor_order_for_course'
 					AND pm_tutor.meta_value = 'yes'
 					AND pm_total.meta_key = %s
@@ -821,10 +821,10 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 				// Use direct query.
 				$results = self::$wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 					self::$wpdb->prepare(
-						"SELECT COUNT(*) as order_count, SUM(total) as total_revenue
+						'SELECT COUNT(*) as order_count, SUM(total) as total_revenue
 						FROM %i
 						WHERE status = %s
-						AND total > 0",
+						AND total > 0',
 						$table,
 						'success'
 					)
@@ -867,10 +867,10 @@ if ( ! class_exists( 'BB_Report_Metrics' ) ) {
 
 				$results = self::$wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 					self::$wpdb->prepare(
-						"SELECT COUNT(*) as order_count, SUM(amount) as total_revenue
+						'SELECT COUNT(*) as order_count, SUM(amount) as total_revenue
 						FROM %i
 						WHERE status = %s
-						AND amount > 0",
+						AND amount > 0',
 						$table,
 						'unpaid'
 					)

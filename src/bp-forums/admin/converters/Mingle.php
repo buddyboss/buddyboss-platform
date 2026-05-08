@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Implementation of Mingle Forums converter.
@@ -479,5 +480,4 @@ class Mingle extends BBP_Converter_Base {
 		$bbcode->smiley_regex   = false;
 		return html_entity_decode( $bbcode->Parse( $field ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 	}
-
 }

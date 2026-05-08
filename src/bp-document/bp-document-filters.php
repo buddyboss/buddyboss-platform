@@ -772,7 +772,7 @@ function bp_document_attach_document_to_message( &$message ) {
 
 		if ( ! empty( $_POST['document'] ) ) {
 			$documents = $_POST['document'];
-		} else if ( ! empty( $_POST['bp_document_ids'] ) ) {
+		} elseif ( ! empty( $_POST['bp_document_ids'] ) ) {
 			$documents = $_POST['bp_document_ids'];
 		}
 
@@ -1657,7 +1657,7 @@ function bp_document_admin_repair_document() {
 					}
 				}
 			}
-			$offset ++;
+			++$offset;
 		}
 		$records_updated = sprintf( __( '%s documents updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
@@ -1952,7 +1952,6 @@ function bp_document_activity_entry_css_class( $class ) {
 	}
 
 	return $class;
-
 }
 
 /**
@@ -2008,7 +2007,6 @@ function bb_document_update_video_symlink( $response, $post_data ) {
 	}
 
 	return $response;
-
 }
 
 

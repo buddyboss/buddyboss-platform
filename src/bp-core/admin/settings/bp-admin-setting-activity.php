@@ -60,7 +60,6 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 				bp_update_option( $cpt_comment_key, $cpt_comment_val );
 			}
 		}
-
 	}
 
 	public function register_fields() {
@@ -72,9 +71,15 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 
 		$this->add_field( 'bb_activity_post_title_enabled', __( 'Post title', 'buddyboss' ), array( $this, 'bb_admin_setting_callback_enable_activity_post_title' ), 'intval' );
 
-		$this->add_field( '_bp_activity_edit_time', __( 'Edit Activity Time Limit', 'buddyboss' ), '__return_true', 'intval', array(
-			'class' => 'hidden',
-		) );
+		$this->add_field(
+			'_bp_activity_edit_time',
+			__( 'Edit Activity Time Limit', 'buddyboss' ),
+			'__return_true',
+			'intval',
+			array(
+				'class' => 'hidden',
+			)
+		);
 
 		$post_feature_image_pro_class      = bb_get_pro_fields_class( 'post_feature_image' );
 		$post_feature_image_notice         = bb_get_pro_label_notice( 'post_feature_image' );
@@ -158,9 +163,15 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 
 		// Allow Activity comment edit setting.
 		$this->add_field( '_bb_enable_activity_comment_edit', __( 'Edit Activity comments', 'buddyboss' ), 'bb_admin_setting_callback_enable_activity_comment_edit', 'intval' );
-		$this->add_field( '_bb_activity_comment_edit_time', __( 'Edit Comment Time Limit', 'buddyboss' ), '__return_true', 'intval', array(
-			'class' => 'hidden',
-		) );
+		$this->add_field(
+			'_bb_activity_comment_edit_time',
+			__( 'Edit Comment Time Limit', 'buddyboss' ),
+			'__return_true',
+			'intval',
+			array(
+				'class' => 'hidden',
+			)
+		);
 
 		// Activity Topics.
 		$this->add_section(
@@ -279,7 +290,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 					$fields['args']['class'] = 'child-no-padding bp-display-none child-custom-post-type';
 					$this->add_field( $comment_option_name, '', 'bb_feed_settings_callback_post_type_comments', 'intval', $fields['args'] );
 				}
-				$count ++;
+				++$count;
 			}
 		}
 

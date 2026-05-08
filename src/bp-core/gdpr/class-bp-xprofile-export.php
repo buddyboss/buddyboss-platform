@@ -229,7 +229,5 @@ final class BP_Xprofile_Export extends BP_Export {
 			'offset' => 0,
 			'items'  => $items,
 		);
-
 	}
-
 }

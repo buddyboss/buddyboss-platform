@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 /**
  * Filters related to the Blogs component.
  *
@@ -6,7 +7,7 @@
  * @since BuddyPress 1.6.0
  */
 
-/** Display Filters **********************************************************/
+/** Display Filters */
 
 add_filter( 'bp_get_blog_latest_post_title', 'wptexturize' );
 add_filter( 'bp_get_blog_latest_post_title', 'convert_chars' );

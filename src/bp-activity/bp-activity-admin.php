@@ -412,7 +412,7 @@ function bp_activity_admin_load() {
 						bp_activity_delete( array( 'id' => $activity->id ) );
 					}
 
-					$deleted++;
+					++$deleted;
 					break;
 
 				case 'ham':
@@ -430,7 +430,7 @@ function bp_activity_admin_load() {
 					if ( ! $result ) {
 						$errors[] = $activity->id;
 					} else {
-						$unspammed++;
+						++$unspammed;
 					}
 					break;
 
@@ -442,7 +442,7 @@ function bp_activity_admin_load() {
 					if ( ! $result ) {
 						$errors[] = $activity->id;
 					} else {
-						$spammed++;
+						++$spammed;
 					}
 					break;
 
@@ -540,13 +540,12 @@ function bp_activity_admin_load() {
 		if ( isset( $_POST['bp-activities-content'] ) ) {
 			$activity->content = $_POST['bp-activities-content'];
 
-			//For embed URL if content have
+			// For embed URL if content have
 			$urls = wp_extract_urls( $activity->content );
 			if ( is_array( $urls ) && count( $urls ) > 0 ) {
 				$_POST['link_url']   = ! empty( $urls[0] ) ? filter_var( $urls[0], FILTER_VALIDATE_URL ) : '';
 				$_POST['link_embed'] = true;
 			}
-
 		}
 
 		// Activity primary link.

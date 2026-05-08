@@ -2535,6 +2535,7 @@ function bp_get_document_link( $document_id ) {
 
 	/**
 	 * Filters the document link
+	 *
 	 * @since BuddyBoss 1.4.0
 	 *
 	 * @param string $url         The document folder description.

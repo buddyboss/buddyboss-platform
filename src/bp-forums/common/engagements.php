@@ -62,7 +62,6 @@ class BBP_User_Engagements_Base {
 	 * @param bool   $unique    Whether meta key should be unique to the object.
 	 */
 	public function add_user_to_object( $object_id = 0, $user_id = 0, $meta_key = '', $meta_type = 'post', $unique = false ) {
-
 	}
 
 	/**
@@ -77,7 +76,6 @@ class BBP_User_Engagements_Base {
 	 * @param string $meta_type The relationship type (usually 'post').
 	 */
 	public function remove_user_from_object( $object_id = 0, $user_id = 0, $meta_key = '', $meta_type = 'post' ) {
-
 	}
 
 	/**
@@ -91,7 +89,6 @@ class BBP_User_Engagements_Base {
 	 * @param string $meta_type The relationship type (usually 'post').
 	 */
 	public function remove_user_from_all_objects( $user_id = 0, $meta_key = '', $meta_type = 'post' ) {
-
 	}
 
 	/**
@@ -105,7 +102,6 @@ class BBP_User_Engagements_Base {
 	 * @param string $meta_type The relationship type (usually 'post').
 	 */
 	public function remove_object_from_all_users( $object_id = 0, $meta_key = '', $meta_type = 'post' ) {
-
 	}
 
 	/**
@@ -118,7 +114,6 @@ class BBP_User_Engagements_Base {
 	 * @param string $meta_type The relationship type (usually 'post').
 	 */
 	public function remove_all_users_from_all_objects( $meta_key = '', $meta_type = 'post' ) {
-
 	}
 
 	/**
@@ -132,7 +127,6 @@ class BBP_User_Engagements_Base {
 	 * @param string $meta_type The type of meta to look in.
 	 */
 	public function get_users_for_object( $object_id = 0, $meta_key = '', $meta_type = 'post' ) {
-
 	}
 
 	/**
@@ -147,7 +141,6 @@ class BBP_User_Engagements_Base {
 	 * @param string $meta_type   The relationship type (usually 'post').
 	 */
 	public function get_query( $args = array(), $context_key = '', $meta_key = '', $meta_type = 'post' ) {
-
 	}
 }
 

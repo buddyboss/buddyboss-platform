@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Save dummy data value when dummy data add button is pressed
@@ -838,14 +839,14 @@ function bp_dd_import_users_profile() {
 				case 'selectbox':
 				case 'radio':
 					if ( xprofile_set_field_data( $field_id, $user_id, $xprofile_data[ $field_data['type'] ][ array_rand( $xprofile_data[ $field_data['type'] ] ) ] ) ) {
-						$count ++;
+						++$count;
 					}
 					break;
 
 				case 'checkbox':
 				case 'multiselectbox':
 					if ( xprofile_set_field_data( $field_id, $user_id, explode( ',', $xprofile_data[ $field_data['type'] ][ array_rand( $xprofile_data[ $field_data['type'] ] ) ] ) ) ) {
-						$count ++;
+						++$count;
 					}
 					break;
 			}
@@ -905,7 +906,7 @@ function bp_dd_import_users_messages() {
 		$all_recipients = array_merge( $recipients, (array) $user_id );
 
 		// first level messages
-		for ( $i = 0; $i <= $thread_reply; $i ++ ) {
+		for ( $i = 0; $i <= $thread_reply; $i++ ) {
 			$replying_sender_id     = $all_recipients[ array_rand( $all_recipients ) ];
 			$replying_recipients_id = array_diff( $all_recipients, (array) $replying_sender_id );
 
@@ -949,7 +950,7 @@ function bp_dd_import_users_activity() {
 	/** @var $activity array */
 	require BP_DEFAULT_DATA_DIR . 'data/activity.php';
 
-	for ( $i = 0; $i < 75; $i ++ ) {
+	for ( $i = 0; $i < 75; $i++ ) {
 		$user    = $users[ array_rand( $users ) ];
 		$content = $activity[ array_rand( $activity ) ];
 
@@ -965,7 +966,7 @@ function bp_dd_import_users_activity() {
 			$bp_activity->date_recorded  = bp_dd_get_random_date( 44 );
 			$bp_activity->title_required = false;
 			if ( $bp_activity->save() ) {
-				$count ++;
+				++$count;
 			}
 		}
 	}
@@ -991,13 +992,13 @@ function bp_dd_import_users_friends() {
 
 	add_filter( 'bp_core_current_time', 'bp_dd_friends_add_friend_date_fix' );
 
-	for ( $i = 0; $i < 100; $i ++ ) {
+	for ( $i = 0; $i < 100; $i++ ) {
 		$user_one = $users[ array_rand( $users ) ];
 		$user_two = $users[ array_rand( $users ) ];
 
 		// Make them friends if possible.
 		if ( friends_add_friend( $user_one, $user_two, true ) ) {
-			$count ++;
+			++$count;
 		}
 	}
 
@@ -1096,7 +1097,7 @@ function bp_dd_import_groups_activity() {
 	/** @var $activity array */
 	require BP_DEFAULT_DATA_DIR . 'data/activity.php';
 
-	for ( $i = 0; $i < 150; $i ++ ) {
+	for ( $i = 0; $i < 150; $i++ ) {
 		$user_id  = $users[ array_rand( $users ) ];
 		$group_id = $groups[ array_rand( $groups ) ];
 		$content  = $activity[ array_rand( $activity ) ];
@@ -1118,7 +1119,7 @@ function bp_dd_import_groups_activity() {
 			$bp_activity->date_recorded  = bp_dd_get_random_date( 29 );
 			$bp_activity->title_required = false;
 			if ( $bp_activity->save() ) {
-				$count ++;
+				++$count;
 			}
 		}
 	}
@@ -1244,7 +1245,7 @@ function bp_dd_import_forums( $users = false ) {
  *
  * @param $topic_data
  * @param $forum_id
- * @param array      $users
+ * @param array $users
  *
  * @return bool|int|WP_Error
  */
@@ -1324,7 +1325,7 @@ function bp_dd_import_forums_topics( $forums = false ) {
  *
  * @param $reply_data
  * @param $topic_id
- * @param array      $users
+ * @param array $users
  *
  * @return bool|int|WP_Error
  */

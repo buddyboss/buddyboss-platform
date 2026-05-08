@@ -71,7 +71,6 @@ class BP_Admin_Setting_Document extends BP_Admin_Setting_tab {
 		 */
 		do_action( 'bp_admin_setting_document_register_fields', $this );
 	}
-
 }
 
 return new BP_Admin_Setting_Document();

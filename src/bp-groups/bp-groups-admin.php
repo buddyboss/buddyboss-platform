@@ -2504,7 +2504,7 @@ function bp_save_group_type_post_meta_box_data( $post_id ) {
 	}
 
 	// verify nonce
-	if ( ! wp_verify_nonce( $_POST['_bp-group-type-nonce'], 'bp-group-type-edit-group-type' ) ) {
+	if ( ! wp_verify_nonce( wp_unslash( $_POST['_bp-group-type-nonce'] ), 'bp-group-type-edit-group-type' ) ) {
 		return;
 	}
 
@@ -2575,7 +2575,7 @@ function bp_save_group_type_role_labels_post_meta_box_data( $post_id ) {
 	}
 
 	// verify nonce
-	if ( ! wp_verify_nonce( $_POST['_bp-group-type-nonce'], 'bp-group-type-edit-group-type' ) ) {
+	if ( ! wp_verify_nonce( wp_unslash( $_POST['_bp-group-type-nonce'] ), 'bp-group-type-edit-group-type' ) ) {
 		return;
 	}
 

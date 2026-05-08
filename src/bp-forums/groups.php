@@ -1213,7 +1213,6 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		}
 
 		/** Form Helpers **********************************************************/
-
 		public function forum_parent() {
 			?>
 
@@ -1470,8 +1469,8 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		/**
 		 * Map a custom post type link to its group forum
 		 *
-		 * @param string    $url
-		 * @param obj       $post
+		 * @param string $url
+		 * @param obj    $post
 		 * @param $leavename
 		 * @param $sample
 		 * @uses maybe_map_permalink_to_group()

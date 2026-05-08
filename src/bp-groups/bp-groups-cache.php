@@ -458,7 +458,7 @@ function bb_groups_clear_group_type_cache_on_update( $post_id ) {
 	}
 
 	// verify nonce.
-	if ( ! wp_verify_nonce( $_POST['_bp-group-type-nonce'], 'bp-group-type-edit-group-type' ) ) {
+	if ( ! wp_verify_nonce( wp_unslash( $_POST['_bp-group-type-nonce'] ), 'bp-group-type-edit-group-type' ) ) {
 		return;
 	}
 

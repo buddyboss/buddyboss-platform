@@ -18,7 +18,7 @@ class BP_Blogs_Recent_Posts_Widget extends WP_Widget {
 	 * Constructor method.
 	 */
 	public function __construct() {
-		$widget_ops                       = array(
+		$widget_ops = array(
 			'description'                 => __( 'A list of recently published posts from across your network.', 'buddyboss' ),
 			'classname'                   => 'widget_bp_blogs_widget buddypress widget',
 			'customize_selective_refresh' => true,

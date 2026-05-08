@@ -194,7 +194,7 @@ function bbp_urlize_enqueueable( $file = '' ) {
 	// IIS (Windows) here.
 	// Replace back slashes with forward slash.
 	if ( false !== strpos( $file, '\\' ) ) {
-		$file        = str_replace( '\\', '/', $file        );
+		$file        = str_replace( '\\', '/', $file );
 		$content_dir = str_replace( '\\', '/', $content_dir );
 	}
 
@@ -568,9 +568,9 @@ function bbp_parse_query( $posts_query ) {
 	}
 
 	// Get query variables (default to null if not set).
-	$bbp_view  = $posts_query->get( bbp_get_view_rewrite_id(),   null );
-	$bbp_user  = $posts_query->get( bbp_get_user_rewrite_id(),   null );
-	$is_edit   = $posts_query->get( bbp_get_edit_rewrite_id(),   null );
+	$bbp_view  = $posts_query->get( bbp_get_view_rewrite_id(), null );
+	$bbp_user  = $posts_query->get( bbp_get_user_rewrite_id(), null );
+	$is_edit   = $posts_query->get( bbp_get_edit_rewrite_id(), null );
 	$is_search = $posts_query->get( bbp_get_search_rewrite_id(), null );
 
 	// It is a user page - We'll also check if it is user edit

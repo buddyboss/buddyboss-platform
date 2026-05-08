@@ -90,7 +90,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 		 * @since BuddyBoss 1.0.0
 		 */
 		public function register_tab() {
-			$GLOBALS[$this->global_tabs_var][ $this->tab_name ] = $this;
+			$GLOBALS[ $this->global_tabs_var ][ $this->tab_name ] = $this;
 		}
 
 		public function register_hook() {
@@ -114,7 +114,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 
 			wp_enqueue_script(
 				'bp-admin',
-				buddypress()->plugin_url . 'bp-core/admin/js/settings-page'. $min . '.js',
+				buddypress()->plugin_url . 'bp-core/admin/js/settings-page' . $min . '.js',
 				array( 'jquery', 'jquery-ui-sortable' ),
 				buddypress()->version,
 				true
@@ -123,7 +123,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 			if ( 'buddyboss_page_bb-upgrade' === $screen_id ) {
 				wp_enqueue_script(
 					'bb-upgrade',
-					buddypress()->plugin_url . 'bp-core/admin/js/bb-upgrade'. $min . '.js',
+					buddypress()->plugin_url . 'bp-core/admin/js/bb-upgrade' . $min . '.js',
 					array( 'jquery', 'underscore' ),
 					buddypress()->version,
 					true
@@ -162,7 +162,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 					}
 
 					if ( array_key_exists( $id, $descriptions ) ) {
-						$total_missing_count ++;
+						++$total_missing_count;
 						$missing_email_label[] = $descriptions[ $id ];
 					}
 				}
@@ -492,10 +492,9 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 
 						if ( 'bb-domain-restrictions' === $setting_name ) {
 
-							//Re-index as per priority.
+							// Re-index as per priority.
 							$value = array_values( $value );
 						}
-
 					} else {
 						$value = isset( $_POST[ $setting_name ] ) ? ( is_array( $_POST[ $setting_name ] ) ? map_deep( wp_unslash( $_POST[ $setting_name ] ), 'sanitize_text_field' ) : sanitize_text_field( wp_unslash( $_POST[ $setting_name ] ) ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 					}
@@ -812,13 +811,13 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 					echo '<h2 class=' . esc_attr( $has_tutorial_btn ) . '>' . $has_icon .
 						wp_kses_post( $section['title'] );
 
-						if ( isset( $section['tutorial_callback'] ) && ! empty( $section['tutorial_callback'] ) ) {
+					if ( isset( $section['tutorial_callback'] ) && ! empty( $section['tutorial_callback'] ) ) {
 						?>
 							<div class="bbapp-tutorial-btn">
-								<?php call_user_func( $section['tutorial_callback'], $section ); ?>
+							<?php call_user_func( $section['tutorial_callback'], $section ); ?>
 							</div>
-							<?php
-						}
+						<?php
+					}
 
 					echo "</h2>\n";
 				}

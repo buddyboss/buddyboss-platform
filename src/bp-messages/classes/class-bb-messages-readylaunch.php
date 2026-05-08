@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 /**
  * BuddyBoss Messages ReadyLaunch Class
  *

@@ -5034,7 +5034,19 @@ function bb_resumable_upload( $tmp_file_path, $filename ) {
 
 	$chunk_file = $file_chunks_folder . '/' . $filename . '.part' . $chunk_index;
 
-	// Move uploaded chunk to destination.
+	// Validate this is a genuine uploaded file before moving the chunk.
+	if ( ! is_uploaded_file( $tmp_file_path ) ) {
+		$errors[] = __( 'Invalid upload source.', 'buddyboss' );
+
+		return array(
+			'final'     => false,
+			'successes' => $successes,
+			'errors'    => $errors,
+			'warnings'  => $warnings,
+		);
+	}
+
+	// phpcs:ignore WordPress.PHP.DiscouragedFunctions.move_uploaded_file -- Intermediate chunk assembly only; is_uploaded_file() validated above. Final assembled file is processed via wp_handle_upload() after all chunks arrive.
 	if ( ! move_uploaded_file( $tmp_file_path, $chunk_file ) ) {
 		$errors[] = sprintf(
 		/* translators: %d: chunk index */

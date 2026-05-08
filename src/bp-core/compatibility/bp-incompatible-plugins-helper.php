@@ -89,7 +89,7 @@ function bp_helper_plugins_loaded_callback() {
 
 	/**
 	 * Fix email subject, content and link
-     *
+	 *
 	 * @since BuddyBoss 1.5.4
 	 */
 	if ( class_exists( 'WishListMember' ) ) {
@@ -214,13 +214,14 @@ function bp_helper_plugins_loaded_callback() {
 	if ( class_exists( 'ET_Builder_Plugin' ) ) {
 		add_filter(
 			'et_builder_load_requests',
-			function( $builder_load_requests ) {
+			function ( $builder_load_requests ) {
 				$builder_load_requests['action'][] = 'bp_search_ajax';
 				return $builder_load_requests;
 			}
 		);
 
-		add_filter( 'et_builder_load_actions',
+		add_filter(
+			'et_builder_load_actions',
 			function ( $actions ) {
 				$actions[] = 'bp_search_ajax';
 
@@ -235,13 +236,16 @@ function bp_helper_plugins_loaded_callback() {
 	 * Support Memberpress
 	 */
 	if ( class_exists( 'MeprAppCtrl' ) ) {
-		add_filter( 'mepr_design_style_handle_prefixes', function ( $allowed_handle_prefixes ) {
-			$allowed_handle_prefixes[] = 'admin-bar';
-			$allowed_handle_prefixes[] = 'bp-';
-			$allowed_handle_prefixes[] = 'bb-';
+		add_filter(
+			'mepr_design_style_handle_prefixes',
+			function ( $allowed_handle_prefixes ) {
+				$allowed_handle_prefixes[] = 'admin-bar';
+				$allowed_handle_prefixes[] = 'bp-';
+				$allowed_handle_prefixes[] = 'bb-';
 
-			return $allowed_handle_prefixes;
-		} );
+				return $allowed_handle_prefixes;
+			}
+		);
 	}
 
 	/**
@@ -251,27 +255,32 @@ function bp_helper_plugins_loaded_callback() {
 	 * @since BuddyBoss 2.5.60
 	 */
 	if ( class_exists( '\InstructorRole\Includes\Instructor_Role' ) ) {
-		add_filter( 'ir_filter_remove_private_protected_from_titles', function ( $is_prepend, $prepend, $post ) {
-			$post_types = array();
+		add_filter(
+			'ir_filter_remove_private_protected_from_titles',
+			function ( $is_prepend, $prepend, $post ) {
+				$post_types = array();
 
-			if ( function_exists( 'bbp_get_forum_post_type' ) ) {
-				$post_types[] = bbp_get_forum_post_type();
-			}
+				if ( function_exists( 'bbp_get_forum_post_type' ) ) {
+					$post_types[] = bbp_get_forum_post_type();
+				}
 
-			if ( function_exists( 'bbp_get_topic_post_type' ) ) {
-				$post_types[] = bbp_get_topic_post_type();
-			}
+				if ( function_exists( 'bbp_get_topic_post_type' ) ) {
+					$post_types[] = bbp_get_topic_post_type();
+				}
 
-			if ( function_exists( 'bbp_get_reply_post_type' ) ) {
-				$post_types[] = bbp_get_reply_post_type();
-			}
+				if ( function_exists( 'bbp_get_reply_post_type' ) ) {
+					$post_types[] = bbp_get_reply_post_type();
+				}
 
-			if ( ! empty( $post_types ) && in_array( $post->post_type, $post_types, true ) ) {
-				return true;
-			}
+				if ( ! empty( $post_types ) && in_array( $post->post_type, $post_types, true ) ) {
+					return true;
+				}
 
-			return $is_prepend;
-		}, 10, 3 );
+				return $is_prepend;
+			},
+			10,
+			3
+		);
 	}
 
 	/**
@@ -319,7 +328,6 @@ function bb_wp_offload_media_compatibility_helper() {
 	if ( class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
 		require buddypress()->compatibility_dir . '/bp-wp-offload-media-helpers.php';
 	}
-
 }
 add_action( 'init', 'bb_wp_offload_media_compatibility_helper', 10 );
 
@@ -348,7 +356,6 @@ function bb_seo_press_compatibility_helper() {
 			remove_action( 'template_redirect', 'seopress_redirections_hook', 1 );
 		}
 	}
-
 }
 
 add_action( 'wp', 'bb_seo_press_compatibility_helper', 9999 );
@@ -362,10 +369,9 @@ add_action( 'wp', 'bb_seo_press_compatibility_helper', 9999 );
  */
 function bb_core_allow_activity_page_content_restriction_memberpress() {
 
-	if ( bp_is_active( 'activity' ) && bp_is_activity_component() && function_exists('is_bbpress') && is_bbpress() ) {
+	if ( bp_is_active( 'activity' ) && bp_is_activity_component() && function_exists( 'is_bbpress' ) && is_bbpress() ) {
 		remove_filter( 'mepr-pre-run-rule-content', 'MeprBbPressIntegration::dont_block_the_content', 11, 3 );
 	}
-
 }
 add_action( 'bp_init', 'bb_core_allow_activity_page_content_restriction_memberpress' );
 
@@ -439,7 +445,6 @@ function bp_core_add_admin_menu_for_memberpress_buddypress( $menus ) {
 			'href'   => $bp->loggedin_user->domain . $main_slug . '/mp-payments/',
 		)
 	);
-
 }
 
 /**
@@ -465,7 +470,7 @@ function bp_core_update_group_fields_id_in_db() {
 					$id = absint( $result->id );
 					if ( empty( $count ) && ! empty( $id ) ) {
 						update_site_option( 'bp-xprofile-firstname-field-id', $id );
-						$count ++;
+						++$count;
 					} else {
 						$wpdb->delete( $table_name, array( 'id' => $id ) );
 					}
@@ -483,7 +488,7 @@ function bp_core_update_group_fields_id_in_db() {
 					$id = absint( $result->id );
 					if ( empty( $count ) && ! empty( $id ) ) {
 						update_site_option( 'bp-xprofile-lastname-field-id', $id );
-						$count ++;
+						++$count;
 					} else {
 						$wpdb->delete( $table_name, array( 'id' => $id ) );
 					}
@@ -501,7 +506,7 @@ function bp_core_update_group_fields_id_in_db() {
 					$id = absint( $result->id );
 					if ( empty( $count ) && ! empty( $id ) ) {
 						update_site_option( 'bp-xprofile-nickname-field-id', $id );
-						$count ++;
+						++$count;
 					} else {
 						$wpdb->delete( $table_name, array( 'id' => $id ) );
 					}
@@ -559,7 +564,6 @@ function bp_core_add_support_for_google_captcha_pro( $section_notice, $section_s
 	}
 
 	return $section_notice;
-
 }
 add_filter( 'gglcptch_section_notice', 'bp_core_add_support_for_google_captcha_pro', 100, 2 );
 
@@ -820,7 +824,7 @@ add_action( 'bp_template_redirect', 'set_yoast_meta_tags' );
 function bb_rest_compatibility_loader() {
 	// BuddyPress Groups Tabs creator pro plugin support.
 	if ( class_exists( 'BPGTC_Group_Tabs_Pro' ) ) {
-		require_once dirname( __FILE__ ) . '/bp-rest-groups-tabs-creator-pro.php';
+		require_once __DIR__ . '/bp-rest-groups-tabs-creator-pro.php';
 	}
 }
 add_action( 'bp_rest_api_init', 'bb_rest_compatibility_loader', 5 );
@@ -1122,12 +1126,11 @@ function bbp_remove_page_attributes_metabox_for_forum() {
 	// Check if elementor is exists.
 	if ( class_exists( '\Elementor\Plugin' ) ) {
 		// Remove the page attribute meta box for forum screen.
-		remove_meta_box( 'pageparentdiv' , 'forum' , 'side' );
+		remove_meta_box( 'pageparentdiv', 'forum', 'side' );
 	}
-
 }
 
-add_action( 'admin_menu' , 'bbp_remove_page_attributes_metabox_for_forum' );
+add_action( 'admin_menu', 'bbp_remove_page_attributes_metabox_for_forum' );
 
 /**
  * Function will remove template_redirect action when we view individual saved template
@@ -1156,7 +1159,6 @@ function bb_wp_gravity_forms_compatibility_helper() {
 	if ( class_exists( 'GFForms' ) ) {
 		require buddypress()->compatibility_dir . '/bp-wp-gravity-forms-helpers.php';
 	}
-
 }
 add_action( 'init', 'bb_wp_gravity_forms_compatibility_helper', 999 );
 
@@ -1175,7 +1177,6 @@ function mpcs_add_buddyboss_style( $allow_handle ) {
 	}
 
 	return $allow_handle;
-
 }
 
 add_filter( 'mpcs_classroom_style_handles', 'mpcs_add_buddyboss_style' );

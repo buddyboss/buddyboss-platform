@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 /**
  * Create hierarchical list of bbPress replies.
  *
@@ -123,7 +124,7 @@ class Rest_BBP_Walker_Reply extends Walker {
 		global $buddyboss_thread_reply;
 
 		// Set up reply.
-		$depth++;
+		++$depth;
 		$object->depth                         = $depth;
 		$buddyboss_thread_reply[ $object->ID ] = $object;
 	}
@@ -141,4 +142,3 @@ class Rest_BBP_Walker_Reply extends Walker {
 	public function end_el( &$output = '', $object = false, $depth = 0, $args = array() ) {
 	}
 }
-

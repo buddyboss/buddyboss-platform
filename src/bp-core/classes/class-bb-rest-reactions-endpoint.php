@@ -749,7 +749,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
-			'enum'              => array_column( bb_load_reaction()->bb_get_reactions( bb_get_reaction_mode() ), 'id' )
+			'enum'              => array_column( bb_load_reaction()->bb_get_reactions( bb_get_reaction_mode() ), 'id' ),
 		);
 
 		$params['item_type'] = array(
@@ -757,7 +757,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 			'type'              => 'string',
 			'sanitize_callback' => 'sanitize_key',
 			'validate_callback' => 'rest_validate_request_arg',
-			'enum'              => array_keys( bb_load_reaction()->bb_get_registered_reaction_item_types() )
+			'enum'              => array_keys( bb_load_reaction()->bb_get_registered_reaction_item_types() ),
 		);
 
 		$params['item_id'] = array(
@@ -905,5 +905,4 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 		 */
 		return apply_filters( 'bb_rest_user_reactions_schema', $this->add_additional_fields_schema( $schema ) );
 	}
-
 }

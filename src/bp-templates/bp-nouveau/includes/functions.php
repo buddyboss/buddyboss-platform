@@ -145,19 +145,19 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 	}
 
 	if ( isset( $_POST['member_type_id'] ) && '' !== $_POST['member_type_id'] && 'all' !== $_POST['member_type_id'] && 'undefined' !== $_POST['member_type_id'] ) {
-		$member_type_id  = $_POST['member_type_id'];
+		$member_type_id  = absint( wp_unslash( $_POST['member_type_id'] ) );
 		$member_type_key = get_post_meta( $member_type_id, '_bp_member_type_key', true );
 		$qs[]            = 'member_type=' . $member_type_key;
 	}
 
 	if ( isset( $_POST['group_type'] ) && '' !== $_POST['group_type'] && 'all' !== $_POST['group_type'] && 'undefined' !== $_POST['group_type'] ) {
-		$group_type = $_POST['group_type'];
+		$group_type = sanitize_text_field( wp_unslash( $_POST['group_type'] ) );
 		$qs[]       = 'group_type=' . $group_type;
 	}
 
 	$object_search_text = bp_get_search_default_text( $object );
 	if ( ! empty( $post_query['search_terms'] ) && $object_search_text != $post_query['search_terms'] && 'false' != $post_query['search_terms'] && 'undefined' != $post_query['search_terms'] ) {
-		$qs[] = 'search_terms=' . urlencode( $_POST['search_terms'] );
+		$qs[] = 'search_terms=' . urlencode( sanitize_text_field( wp_unslash( isset( $_POST['search_terms'] ) ? $_POST['search_terms'] : '' ) ) );
 	}
 
 	if (
@@ -593,7 +593,7 @@ function bp_nouveau_get_temporary_setting( $option = '', $retval = false ) {
 		return $retval;
 	}
 
-	$temporary_setting = wp_unslash( $_POST['customized'] );
+	$temporary_setting = wp_unslash( $_POST['customized'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- JSON-decoded below; individual settings sanitized on use.
 	if ( ! is_array( $temporary_setting ) ) {
 		$temporary_setting = json_decode( $temporary_setting, true );
 	}
@@ -617,7 +617,7 @@ function bp_nouveau_get_temporary_setting( $option = '', $retval = false ) {
 
 		// Used when it's an ajax request
 	} elseif ( isset( $_POST['customized'][ 'bp_nouveau_appearance_' . $option ] ) ) {
-		$retval = $_POST['customized'][ 'bp_nouveau_appearance_' . $option ];
+		$retval = wp_unslash( $_POST['customized'][ 'bp_nouveau_appearance_' . $option ] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Customizer setting; sanitized by WordPress customizer pipeline.
 	}
 
 	return $retval;

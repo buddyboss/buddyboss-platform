@@ -2305,7 +2305,6 @@ function bbp_get_view_id( $view = '' ) {
 
 	// Filter & return.
 	return apply_filters( 'bbp_get_view_id', $view_id, $view );
-
 }
 
 /**

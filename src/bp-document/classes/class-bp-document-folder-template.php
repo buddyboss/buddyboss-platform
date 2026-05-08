@@ -322,7 +322,7 @@ class BP_Document_Folder_Template {
 	 * @since BuddyBoss 1.4.0
 	 */
 	public function next_folder() {
-		$this->current_folder ++;
+		++$this->current_folder;
 		$this->folder = $this->folders[ $this->current_folder ];
 
 		return $this->folder;

@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 /**
  * ReadyLaunch - The template for displaying activity target item.
  *

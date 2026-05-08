@@ -152,7 +152,7 @@ if ( ! class_exists( 'BB_Background_Process' ) ) {
 		 * @return void
 		 */
 		public static function create_table() {
-			static $checked_tables = [];
+			static $checked_tables = array();
 
 			$sql             = array();
 			$wpdb            = $GLOBALS['wpdb'];
@@ -502,7 +502,7 @@ if ( ! class_exists( 'BB_Background_Process' ) ) {
 		 * @return bool
 		 */
 		public function is_processing() {
-			$running = false;
+			$running        = false;
 			$lock_timestamp = get_site_option( $this->identifier . '_process_lock' );
 			if ( $lock_timestamp ) {
 
@@ -1217,7 +1217,7 @@ if ( ! class_exists( 'BB_Background_Process' ) ) {
 			$table = self::$table_name;
 
 			$where_conditions = array(
-				'blog_id' => "`blog_id` = {$r['blog_id']}"
+				'blog_id' => "`blog_id` = {$r['blog_id']}",
 			);
 
 			if ( ! empty( $r['id'] ) ) {

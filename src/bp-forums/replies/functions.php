@@ -289,15 +289,15 @@ function bbp_new_reply_handler( $action = '' ) {
 	// Filter and sanitize.
 	$reply_content = apply_filters( 'bbp_new_reply_pre_content', $reply_content );
 
-	$link_preview_post_data = ! empty( $_POST['link_preview_data'] ) ? get_object_vars( json_decode( stripslashes( $_POST['link_preview_data'] ) ) ) : [];
+	$link_preview_post_data = ! empty( $_POST['link_preview_data'] ) ? get_object_vars( json_decode( stripslashes( $_POST['link_preview_data'] ) ) ) : array();
 
 	// No reply content.
 	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $reply_content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) )
-		 && empty( $_POST['bbp_media'] )
-		 && empty( $_POST['bbp_video'] )
-		 && empty( $_POST['bbp_media_gif'] )
-		 && empty( $_POST['bbp_document'] )
-		 && ( false === bbp_use_autoembed() || ( false !== bbp_use_autoembed() && empty( $link_preview_post_data['link_url'] ) ) )
+		&& empty( $_POST['bbp_media'] )
+		&& empty( $_POST['bbp_video'] )
+		&& empty( $_POST['bbp_media_gif'] )
+		&& empty( $_POST['bbp_document'] )
+		&& ( false === bbp_use_autoembed() || ( false !== bbp_use_autoembed() && empty( $link_preview_post_data['link_url'] ) ) )
 	) {
 		bbp_add_error( 'bbp_reply_content', __( '<strong>ERROR</strong>: Your reply cannot be empty.', 'buddyboss' ) );
 	}
@@ -556,7 +556,6 @@ function bbp_new_reply_handler( $action = '' ) {
 	} else {
 		bbp_add_error( 'bbp_reply_error', __( '<strong>Error</strong>: The reply was not created.', 'buddyboss' ) );
 	}
-
 }
 
 /**
@@ -714,7 +713,7 @@ function bbp_edit_reply_handler( $action = '' ) {
 	// Filter and sanitize.
 	$reply_content = apply_filters( 'bbp_edit_reply_pre_content', $reply_content, $reply_id );
 
-	$link_preview_post_data = ! empty( $_POST['link_preview_data'] ) ? get_object_vars( json_decode( stripslashes( $_POST['link_preview_data'] ) ) ) : [];
+	$link_preview_post_data = ! empty( $_POST['link_preview_data'] ) ? get_object_vars( json_decode( stripslashes( $_POST['link_preview_data'] ) ) ) : array();
 
 	// No reply content.
 	if (
@@ -975,10 +974,8 @@ function bbp_update_reply( $reply_id = 0, $topic_id = 0, $forum_id = 0, $anonymo
 		if ( empty( $is_edit ) ) {
 			set_transient( '_bbp_' . bbp_current_author_ip() . '_last_posted', time() );
 		}
-	} else {
-		if ( empty( $is_edit ) && ! current_user_can( 'throttle' ) ) {
+	} elseif ( empty( $is_edit ) && ! current_user_can( 'throttle' ) ) {
 			bbp_update_user_last_posted( $author_id );
-		}
 	}
 
 	// Get the post type.
@@ -1707,7 +1704,10 @@ function bbp_toggle_reply_handler( $action = '' ) {
 		if ( 'bbp_toggle_reply_trash' === $action && bp_is_active( 'groups' ) ) {
 			$author_id    = bbp_get_reply_author_id( $reply->ID );
 			$forum_id     = bbp_get_reply_forum_id( $reply->ID );
-			$args         = array( 'author_id' => $author_id, 'forum_id' => $forum_id );
+			$args         = array(
+				'author_id' => $author_id,
+				'forum_id'  => $forum_id,
+			);
 			$allow_delete = bb_moderator_can_delete_topic_reply( $reply, $args );
 			if ( ! $allow_delete ) {
 				bbp_add_error( 'bbp_toggle_reply_permission', __( '<strong>ERROR:</strong> You do not have the permission to do that!', 'buddyboss' ) );
@@ -2260,14 +2260,14 @@ function _bbp_has_replies_where( $where = '', $query = false ) {
 	$search = array(
 		"FROM {$table_name} ",
 		"WHERE 1=1  AND {$table_name}.post_parent = {$topic_id}",
-		") AND {$table_name}.post_parent = {$topic_id}"
+		") AND {$table_name}.post_parent = {$topic_id}",
 	);
 
 	// The texts to replace them with.
 	$replace = array(
 		$search[0] . 'FORCE INDEX (PRIMARY, post_parent) ',
 		"WHERE 1=1 AND ({$table_name}.ID = {$topic_id} OR {$table_name}.post_parent = {$topic_id})",
-		") AND ({$table_name}.ID = {$topic_id} OR {$table_name}.post_parent = {$topic_id})"
+		") AND ({$table_name}.ID = {$topic_id} OR {$table_name}.post_parent = {$topic_id})",
 	);
 
 	// Try to replace the search text with the replacement.
@@ -2545,7 +2545,7 @@ function bbp_get_reply_position_raw( $reply_id = 0, $topic_id = 0 ) {
 				$reply_position = array_search( (string) $reply_id, $topic_replies );
 
 				// Bump the position to compensate for the lead topic post
-				$reply_position++;
+				++$reply_position;
 			}
 		}
 	}
@@ -2597,7 +2597,7 @@ function bbp_list_replies( $args = array() ) {
 		// Get top level replies.
 		$top_level_replies = array_filter(
 			bbpress()->reply_query->posts,
-			function( $post ) {
+			function ( $post ) {
 				return empty( $post->reply_to );
 			}
 		);
@@ -2605,7 +2605,7 @@ function bbp_list_replies( $args = array() ) {
 		// Get all child level replies.
 		$child_level_replies = array_filter(
 			bbpress()->reply_query->posts,
-			function( $post ) {
+			function ( $post ) {
 				return ! empty( $post->reply_to );
 			}
 		);
@@ -2624,7 +2624,6 @@ function bbp_list_replies( $args = array() ) {
 	bbpress()->max_num_pages                     = $walker->max_pages;
 	bbpress()->reply_query->in_the_loop          = false;
 	bbpress()->reply_query->total_items_per_page = $walker->total_items_per_page;
-
 }
 
 /**
@@ -2681,24 +2680,20 @@ function bbp_adjust_forum_role_labels( $author_role, $args ) {
 		if ( bp_is_active( 'groups' ) && groups_is_user_admin( $author_id, $current_group ) ) {
 			$display_role = get_group_role_label( $current_group, 'organizer_singular_label_name' );
 		}
-	} else {
-		if ( ! $author_id ) {
+	} elseif ( ! $author_id ) {
 			$display_role = __( 'Guest', 'buddyboss' );
-		} else {
+	} elseif ( empty( get_userdata( $author_id ) ) ) {
 
-			if ( empty( get_userdata( $author_id ) ) ) {
-				$display_role = __( 'Deleted User', 'buddyboss' );
-			} else {
-				$user_roles = array_values( get_userdata( $author_id )->roles );
+			$display_role = __( 'Deleted User', 'buddyboss' );
+	} else {
+		$user_roles = array_values( get_userdata( $author_id )->roles );
 
-				if ( array_intersect( $user_roles, array( bbp_get_keymaster_role(), 'administrator' ) ) ) {
-					$display_role = __( 'Administrator', 'buddyboss' );
-				}
+		if ( array_intersect( $user_roles, array( bbp_get_keymaster_role(), 'administrator' ) ) ) {
+			$display_role = __( 'Administrator', 'buddyboss' );
+		}
 
-				if ( array_intersect( $user_roles, array( bbp_get_moderator_role(), 'editor' ) ) ) {
-					$display_role = __( 'Moderator', 'buddyboss' );
-				}
-			}
+		if ( array_intersect( $user_roles, array( bbp_get_moderator_role(), 'editor' ) ) ) {
+			$display_role = __( 'Moderator', 'buddyboss' );
 		}
 	}
 
@@ -2832,7 +2827,7 @@ function bbp_replies_count_walk( $posts, $top_reply_ids, $count ) {
  */
 function bbp_get_public_reply_statuses() {
 	$statuses = array(
-		bbp_get_public_status_id()
+		bbp_get_public_status_id(),
 	);
 
 	// Filter & return.
@@ -2851,7 +2846,7 @@ function bbp_get_non_public_reply_statuses() {
 	$statuses = array(
 		bbp_get_trash_status_id(),
 		bbp_get_spam_status_id(),
-		bbp_get_pending_status_id()
+		bbp_get_pending_status_id(),
 	);
 
 	// Filter & return.

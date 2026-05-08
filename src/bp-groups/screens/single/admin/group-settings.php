@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 /**
  * Groups: Single group "Manage > Settings" screen handler
  *

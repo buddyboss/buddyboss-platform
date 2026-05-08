@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Implementation of Kunena v3.x Forums for Joomla Forum converter.
@@ -720,11 +721,11 @@ class Kunena3 extends BBP_Converter_Base {
 	 * as one value. Array values are auto sanitized by WordPress.
 	 */
 	public function callback_savepass( $field, $row ) {
-		 $pass_array = array(
-			 'hash' => $field,
-			 'salt' => $row['salt'],
-		 );
-		 return $pass_array;
+		$pass_array = array(
+			'hash' => $field,
+			'salt' => $row['salt'],
+		);
+		return $pass_array;
 	}
 
 	/**

@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 /**
  * Messages: Bulk-manage action handler
  *
@@ -21,7 +22,7 @@ function bp_messages_action_bulk_manage() {
 	}
 
 	$action   = ! empty( $_POST['messages_bulk_action'] ) ? $_POST['messages_bulk_action'] : '';
-	$nonce    = ! empty( $_POST['messages_bulk_nonce'] ) ? $_POST['messages_bulk_nonce'] : '';
+	$nonce    = ! empty( $_POST['messages_bulk_nonce'] ) ? wp_unslash( $_POST['messages_bulk_nonce'] ) : '';
 	$messages = ! empty( $_POST['message_ids'] ) ? $_POST['message_ids'] : '';
 
 	$messages = wp_parse_id_list( $messages );

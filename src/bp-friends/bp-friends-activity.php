@@ -331,7 +331,7 @@ function bp_friends_filter_activity_scope( $retval = array(), $filter = array() 
 
 		// Overrides.
 		'override' => array(
-			'filter'      => array( 'user_id' => 0 ),
+			'filter' => array( 'user_id' => 0 ),
 		),
 	);
 
@@ -503,7 +503,6 @@ function bp_friends_activity_at_name_do_notifications( $send, $usernames, $user_
 	}
 
 	$friends = friends_get_friend_user_ids( $activity->user_id );
-
 
 	if ( ! empty( $friends ) && in_array( $user_id, $friends ) ) {
 		return $send;

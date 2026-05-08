@@ -123,7 +123,7 @@ if ( class_exists( 'WP_Date_Query' ) ) :
 		 * @param  array  $date_query  Date query arguments.
 		 * @param  string $column      DB column to query against date.
 		 * @param  bool   $prepend_and Whether to prepend the 'AND' operator to the WHERE clause.
-		 * 
+		 *
 		 * @return string
 		 */
 		public static function get_where_sql( $date_query = array(), $column = '', $prepend_and = false ) {
@@ -132,7 +132,7 @@ if ( class_exists( 'WP_Date_Query' ) ) :
 			// Generate and fetch the WHERE clause for a date query.
 			if ( ! empty( $date_query ) && is_array( $date_query ) && ! empty( $column ) ) {
 				$date_query = new self( $date_query, $column, $prepend_and );
-				$sql = $date_query->get_sql();
+				$sql        = $date_query->get_sql();
 			}
 
 			return $sql;

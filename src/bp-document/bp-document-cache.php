@@ -126,7 +126,7 @@ add_action( 'bp_document_remove_all_user_data', 'bp_document_remove_all_user_obj
  * @param object $document Document object item.
  */
 function bp_document_clear_document_group_object_cache( $document ) {
-	$group_id = ! empty( $document->group_id ) ? $document->group_id : false;
+	$group_id  = ! empty( $document->group_id ) ? $document->group_id : false;
 	$folder_id = ! empty( $document->folder_id ) ? $document->folder_id : false;
 
 	if ( $group_id ) {

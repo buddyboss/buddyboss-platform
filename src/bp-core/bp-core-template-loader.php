@@ -703,17 +703,12 @@ function bp_show_hide_toolbar() {
 			} else {
 				add_filter( 'show_admin_bar', '__return_false' );
 			}
-		} else {
-			if ( true === bp_show_login_adminbar() ) {
+		} elseif ( true === bp_show_login_adminbar() ) {
 				add_filter( 'show_admin_bar', '__return_true' );
-			} else {
-				add_filter( 'show_admin_bar', '__return_false' );
-			}
+		} else {
+			add_filter( 'show_admin_bar', '__return_false' );
 		}
-	} else {
-		if ( false === bp_hide_loggedout_adminbar() ) {
+	} elseif ( false === bp_hide_loggedout_adminbar() ) {
 			add_filter( 'show_admin_bar', '__return_true' );
-		}
 	}
-
 }

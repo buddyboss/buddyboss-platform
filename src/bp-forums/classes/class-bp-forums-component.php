@@ -428,10 +428,8 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 					return;
 				}
 				$forum_id = isset( $forum[0] ) && isset( $forum[0]->ID ) ? $forum[0]->ID : '';
-			} else {
-				if ( is_single() && bbp_is_single_forum() ) {
+			} elseif ( is_single() && bbp_is_single_forum() ) {
 					$forum_id = bbp_get_forum_id();
-				}
 			}
 			if ( bp_is_single_item() && bp_is_group() && get_option( '_bbp_forum_slug', 'forum' ) === bp_current_action() && bp_is_group_forum_topic() ) {
 				$args  = array(
@@ -445,10 +443,8 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 					return;
 				}
 				$topic_id = isset( $topic[0] ) && isset( $topic[0]->ID ) ? $topic[0]->ID : '';
-			} else {
-				if ( is_single() && bbp_is_single_topic() ) {
+			} elseif ( is_single() && bbp_is_single_topic() ) {
 					$topic_id = bbp_get_topic_id();
-				}
 			}
 			if ( ! empty( $forum_id ) ) {
 				$wp_admin_bar->add_menu(
@@ -566,7 +562,6 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 		 *
 		 * @since BuddyBoss 1.9.0
 		 */
-
 		public function setup_cache_groups() {
 			// Global groups.
 			wp_cache_add_global_groups(
@@ -591,4 +586,3 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 		}
 	}
 endif;
-

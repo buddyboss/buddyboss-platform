@@ -1301,7 +1301,7 @@ function bp_admin_do_wp_nav_menu_meta_box() {
 					wp_nav_menu_disabled_check( $nav_menu_selected_id );
 				endif;
 				?>
-				 class="button-secondary submit-add-to-menu right" value="<?php esc_attr_e( 'Add to Menu', 'buddyboss' ); ?>" name="add-custom-menu-item" id="submit-buddypress-menu"/>
+				class="button-secondary submit-add-to-menu right" value="<?php esc_attr_e( 'Add to Menu', 'buddyboss' ); ?>" name="add-custom-menu-item" id="submit-buddypress-menu"/>
 				<span class="spinner"></span>
 			</span>
 		</p>
@@ -1458,7 +1458,7 @@ function bp_email_plaintext_metabox( $post ) {
 		?>
 	</label>
 	<textarea rows="5" cols="40" name="excerpt"
-					  id="excerpt"><?php echo $post->post_excerpt; // textarea_escaped ?></textarea>
+						id="excerpt"><?php echo $post->post_excerpt; // textarea_escaped ?></textarea>
 
 	<p><?php _e( 'Most email clients support HTML email. However, some people prefer to receive plain text email. Enter a plain text alternative version of your email here.', 'buddyboss' ); ?></p>
 	<!-- accesslint:endignore -->
@@ -1693,7 +1693,7 @@ function bp_core_admin_notice_dismiss_callback() {
 
 	$notice_id = wp_unslash( $_POST['notice_id'] );
 
-	if ( ! wp_verify_nonce( $_POST['nonce'], 'bp-dismissible-notice-' . $notice_id ) ) {
+	if ( ! wp_verify_nonce( wp_unslash( $_POST['nonce'] ), 'bp-dismissible-notice-' . $notice_id ) ) {
 		wp_send_json_error();
 	}
 
@@ -1770,8 +1770,8 @@ function bp_member_type_labels_metabox( $post ) {
 			</th>
 			<td>
 				<input type="text" class="bp-member-type-label-name" name="bp-member-type[label_name]"
-					   placeholder="<?php _e( 'e.g. Students', 'buddyboss' ); ?>"
-					   value="<?php echo esc_attr( $label_name ); ?>" style="width: 100%;"/>
+						placeholder="<?php _e( 'e.g. Students', 'buddyboss' ); ?>"
+						value="<?php echo esc_attr( $label_name ); ?>" style="width: 100%;"/>
 			</td>
 		</tr>
 		<tr>
@@ -1780,8 +1780,8 @@ function bp_member_type_labels_metabox( $post ) {
 			</th>
 			<td>
 				<input type="text" class="bp-member-type-singular-name" name="bp-member-type[label_singular_name]"
-					   placeholder="<?php _e( 'e.g. Student', 'buddyboss' ); ?>"
-					   value="<?php echo esc_attr( $label_singular_name ); ?>" style="width: 100%;"/>
+						placeholder="<?php _e( 'e.g. Student', 'buddyboss' ); ?>"
+						value="<?php echo esc_attr( $label_singular_name ); ?>" style="width: 100%;"/>
 			</td>
 		</tr>
 		</tbody>
@@ -1849,14 +1849,14 @@ function bp_member_type_permissions_metabox( $post ) {
 		<?php
 		if ( bp_is_active( 'search' ) ) {
 			?>
-			 <!-- Condition to show only if network search component is enabled -->
+			<!-- Condition to show only if network search component is enabled -->
 			<tr>
 				<td colspan="2">
 					<?php
 					$enable_search_remove = isset( $meta['_bp_member_type_enable_search_remove'] ) ? $meta['_bp_member_type_enable_search_remove'][0] : 0; // disabled by default.
 					?>
 					<input type='checkbox' name='bp-member-type[enable_search_remove]'
-						   value='1' <?php checked( $enable_search_remove, 1 ); ?> />
+							value='1' <?php checked( $enable_search_remove, 1 ); ?> />
 					<?php esc_html_e( 'Hide all members of this type from Network Search results', 'buddyboss' ); ?>
 					<p class="bb-description"><?php _e( 'Enabling this option hides all members with this profile type from network search results.', 'buddyboss' ); ?></p>
 				</td>
@@ -1879,7 +1879,7 @@ function bp_member_type_permissions_metabox( $post ) {
 		<tr>
 			<td colspan="2">
 				<input type='checkbox' name='bp-member-type[enable_profile_field]'
-					   value='1' <?php checked( $enable_profile_field, 1 ); ?> />
+						value='1' <?php checked( $enable_profile_field, 1 ); ?> />
 				<?php _e( 'Allow users to self-select as this profile type from the "Profile Type" profile field dropdown.', 'buddyboss' ); ?>
 			</td>
 		</tr>
@@ -1887,13 +1887,13 @@ function bp_member_type_permissions_metabox( $post ) {
 	</table>
 	<?php
 
-		if ( bp_is_active( 'messages' ) && bp_is_active( 'friends' ) && true === (bool) bp_get_option( 'bp-force-friendship-to-message', false ) ) {
-	?>
+	if ( bp_is_active( 'messages' ) && bp_is_active( 'friends' ) && true === (bool) bp_get_option( 'bp-force-friendship-to-message', false ) ) {
+		?>
 		<table class="widefat bp-postbox-table">
 			<thead>
 			<tr>
 				<th scope="col" colspan="2">
-					<?php _e( 'Messaging', 'buddyboss' ); ?>
+				<?php _e( 'Messaging', 'buddyboss' ); ?>
 				</th>
 			</tr>
 			</thead>
@@ -1902,13 +1902,13 @@ function bp_member_type_permissions_metabox( $post ) {
 				<td colspan="2">
 					<input type='checkbox' name='bp-member-type[allow_messaging_without_connection]'
 						value='1' <?php checked( $allow_messaging_without_connection, 1 ); ?> />
-					<?php _e( 'Allow this profile type to send and receive messages without being connected', 'buddyboss' ); ?>
+				<?php _e( 'Allow this profile type to send and receive messages without being connected', 'buddyboss' ); ?>
 				</td>
 			</tr>
 			</tbody>
 		</table>
-	<?php
-		}
+		<?php
+	}
 	?>
 	<!-- accesslint:endignore -->
 	<?php
@@ -1954,7 +1954,7 @@ function bp_member_type_permissions_metabox( $post ) {
 				<tr>
 					<td colspan="2">
 						<input class="group-type-checkboxes" type='checkbox' name='bp-group-type[]'
-							   value='<?php echo esc_attr( 'none' ); ?>'
+								value='<?php echo esc_attr( 'none' ); ?>'
 							<?php
 							checked(
 								in_array(
@@ -1978,7 +1978,7 @@ function bp_member_type_permissions_metabox( $post ) {
 					<tr>
 						<td colspan="2">
 							<input class="group-type-checkboxes" type='checkbox' name='bp-group-type[]'
-								   value='<?php echo esc_attr( $group_type_key ); ?>'
+									value='<?php echo esc_attr( $group_type_key ); ?>'
 								<?php
 								checked(
 									in_array(
@@ -2065,7 +2065,7 @@ function bp_member_type_permissions_metabox( $post ) {
 					<tr>
 						<td colspan="2">
 							<input type='checkbox' name='bp-group-type-auto-join[]'
-								   value='<?php echo esc_attr( $group_type_key ); ?>' <?php checked( in_array( $group_type_key, $get_selected_group_types ) ); ?> /> <?php echo $group_type_label; ?>
+									value='<?php echo esc_attr( $group_type_key ); ?>' <?php checked( in_array( $group_type_key, $get_selected_group_types ) ); ?> /> <?php echo $group_type_label; ?>
 						</td>
 					</tr>
 
@@ -2097,7 +2097,7 @@ function bp_member_type_permissions_metabox( $post ) {
 			<tr>
 				<td colspan="2">
 					<input type='checkbox' name='bp-member-type-enabled-invite'
-						   value='1' <?php checked( $enable_invite, 1 ); ?> /> <?php _e( 'Allow members to select the profile type that the invited recipient will be automatically assigned to on registration. If checked, select which of the below profile types can be assigned to the recipient:', 'buddyboss' ); ?>
+							value='1' <?php checked( $enable_invite, 1 ); ?> /> <?php _e( 'Allow members to select the profile type that the invited recipient will be automatically assigned to on registration. If checked, select which of the below profile types can be assigned to the recipient:', 'buddyboss' ); ?>
 				</td>
 			</tr>
 
@@ -2115,7 +2115,7 @@ function bp_member_type_permissions_metabox( $post ) {
 				<tr>
 					<td colspan="2">
 						<input type='checkbox' name='bp-member-type-invite[]'
-							   value='<?php echo esc_attr( $member_type_id ); ?>' <?php checked( in_array( $member_type_id, $get_selected_profile_types ) ); ?> /> <?php echo $member_type_name; ?>
+								value='<?php echo esc_attr( $member_type_id ); ?>' <?php checked( in_array( $member_type_id, $get_selected_profile_types ) ); ?> /> <?php echo $member_type_name; ?>
 					</td>
 				</tr>
 
@@ -2233,7 +2233,7 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 	}
 
 	// verify nonce.
-	if ( ! wp_verify_nonce( sanitize_text_field( $_POST['_bp-member-type-nonce'] ), 'bp-member-type-edit-member-type' ) ) {
+	if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_bp-member-type-nonce'] ) ), 'bp-member-type-edit-member-type' ) ) {
 		return;
 	}
 
@@ -2398,7 +2398,6 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 			}
 		}
 	}
-
 }
 
 add_action( 'save_post', 'bp_save_member_type_post_metabox_data' );
@@ -2428,7 +2427,6 @@ function bp_member_type_invalid_role_error_callback() {
 	// Clear and the transient and unhook any other notices so we don't see duplicate messages.
 	delete_transient( 'bp_invalid_role_selection' );
 	remove_action( 'admin_notices', 'bp_member_type_invalid_role_error_callback' );
-
 }
 
 // Hook for displaying error message on edit profile type page.
@@ -2553,7 +2551,8 @@ function bp_member_type_import_submenu_page() {
 								<i class="<?php echo esc_attr( $meta_icon ); ?>"></i>
 								<?php
 							}
-							esc_html_e( 'Import Profile Types', 'buddyboss' ); ?>
+							esc_html_e( 'Import Profile Types', 'buddyboss' );
+							?>
 						</h2>
 						<p>
 							<?php
@@ -2569,8 +2568,8 @@ function bp_member_type_import_submenu_page() {
 							?>
 						</p><br/>
 						<input type="submit" value="<?php esc_attr_e( 'Run Migration', 'buddyboss' ); ?>"
-							   id="bp-member-type-import-submit" name="bp-member-type-import-submit"
-							   class="button-primary">
+								id="bp-member-type-import-submit" name="bp-member-type-import-submit"
+								class="button-primary">
 					</div>
 				</form>
 			</div>
@@ -2641,7 +2640,6 @@ function bp_member_type_import_submenu_page() {
 			restore_current_blog();
 		}
 	}
-
 }
 
 /**
@@ -2667,7 +2665,6 @@ function bp_member_type_invalid_role_extended_profile_error_callback() {
 	// Clear and the transient and unhook any other notices so we don't see duplicate messages.
 	delete_transient( 'bp_invalid_role_selection_extended_profile' );
 	remove_action( 'admin_notices', 'bp_member_type_invalid_role_extended_profile_error_callback' );
-
 }
 
 // Hook for display error message on extended profile page in admin.
@@ -2693,7 +2690,7 @@ function bp_core_admin_create_background_page() {
 	if ( isset( $valid_pages[ $_POST['page'] ] ) ) {
 
 		$default_title = bp_core_get_directory_page_default_titles();
-		$title = ( isset( $default_title[ $_POST['page'] ] ) ) ? $default_title[ $_POST['page'] ] : $valid_pages[ $_POST['page'] ];
+		$title         = ( isset( $default_title[ $_POST['page'] ] ) ) ? $default_title[ $_POST['page'] ] : $valid_pages[ $_POST['page'] ];
 
 		$new_page = array(
 			'post_title'     => $title,
@@ -2798,7 +2795,6 @@ function bp_emails_admin_email_listing_add_tab() {
 		</div>
 		<?php
 	}
-
 }
 
 add_action( 'admin_notices', 'bp_emails_admin_email_listing_add_tab' );
@@ -3161,7 +3157,6 @@ function bp_import_profile_types_admin_menu() {
 			'bbp_converter_settings'
 		);
 	}
-
 }
 
 add_action( bp_core_admin_hook(), 'bp_import_profile_types_admin_menu' );
@@ -3750,7 +3745,7 @@ function bb_cpt_feed_enabled_disabled() {
 	}
 
 	foreach ( $post_types as $cpt ) {
-		$enable_blog_feeds = apply_filters( 'bb_enable_blog_feed', isset( $_POST["bp-feed-custom-post-type-$cpt"] ), $cpt );
+		$enable_blog_feeds = apply_filters( 'bb_enable_blog_feed', isset( $_POST[ "bp-feed-custom-post-type-$cpt" ] ), $cpt );
 
 		if ( $enable_blog_feeds ) {
 			$is_blog_component_active = true;

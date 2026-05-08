@@ -94,7 +94,6 @@ class BB_Tutor_Plugin_Compatibility {
 
 		return $user;
 	}
-
 }
 
 BB_Tutor_Plugin_Compatibility::instance();

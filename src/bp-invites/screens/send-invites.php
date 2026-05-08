@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 /**
  * Sent Invites: User's "Sent Invites" screen handler
  *

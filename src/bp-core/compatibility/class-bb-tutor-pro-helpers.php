@@ -82,7 +82,6 @@ class BB_Tutor_Pro_Plugin_Compatibility {
 		wp_deregister_style( 'tutor_zoom_timepicker_css' );
 		wp_dequeue_style( 'tutor_zoom_timepicker_css' );
 	}
-
 }
 
 BB_Tutor_Pro_Plugin_Compatibility::instance();

@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 /**
  * Walker class to output an unordered list of category checkbox input elements.
  *

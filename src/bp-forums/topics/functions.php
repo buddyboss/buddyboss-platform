@@ -194,7 +194,7 @@ function bbp_new_topic_handler( $action = '' ) {
 	// Filter and sanitize.
 	$topic_content = apply_filters( 'bbp_new_topic_pre_content', $topic_content );
 
-	$link_preview_post_data = ! empty( $_POST['link_preview_data'] ) ? get_object_vars( json_decode( stripslashes( $_POST['link_preview_data'] ) ) ) : [];
+	$link_preview_post_data = ! empty( $_POST['link_preview_data'] ) ? get_object_vars( json_decode( stripslashes( $_POST['link_preview_data'] ) ) ) : array();
 
 	// No topic content.
 	if (
@@ -515,7 +515,7 @@ function bbp_new_topic_handler( $action = '' ) {
 	} elseif ( is_wp_error( $topic_id ) && $topic_id->get_error_message() ) {
 		bbp_add_error( 'bbp_topic_error', sprintf( __( '<strong>Error</strong>: The following problem(s) occurred: %s', 'buddyboss' ), $topic_id->get_error_message() ) );
 
-	// Generic error.
+		// Generic error.
 	} else {
 		bbp_add_error( 'bbp_topic_error', __( '<strong>Error</strong>: The topic was not created.', 'buddyboss' ) );
 	}
@@ -689,7 +689,7 @@ function bbp_edit_topic_handler( $action = '' ) {
 	// Filter and sanitize.
 	$topic_content = apply_filters( 'bbp_edit_topic_pre_content', $topic_content, $topic_id );
 
-	$link_preview_post_data = ! empty( $_POST['link_preview_data'] ) ? get_object_vars( json_decode( stripslashes( $_POST['link_preview_data'] ) ) ) : [];
+	$link_preview_post_data = ! empty( $_POST['link_preview_data'] ) ? get_object_vars( json_decode( stripslashes( $_POST['link_preview_data'] ) ) ) : array();
 
 	if (
 		empty( trim( html_entity_decode( wp_strip_all_tags( $topic_content ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) )
@@ -990,10 +990,8 @@ function bbp_update_topic( $topic_id = 0, $forum_id = 0, $anonymous_data = false
 		if ( empty( $is_edit ) ) {
 			set_transient( '_bbp_' . bbp_current_author_ip() . '_last_posted', time() );
 		}
-	} else {
-		if ( empty( $is_edit ) && ! current_user_can( 'throttle' ) ) {
+	} elseif ( empty( $is_edit ) && ! current_user_can( 'throttle' ) ) {
 			bbp_update_user_last_posted( $author_id );
-		}
 	}
 
 	// Get the post type.
@@ -1493,7 +1491,7 @@ function bbp_merge_topic_handler( $action = '' ) {
 			do_action( 'bbp_merged_topic_reply', $reply->ID, $destination_topic->ID );
 
 			if ( ! empty( $destination_topic->ID ) && empty( get_post_meta( $reply->ID, '_bbp_reply_to', true ) ) ) {
-				$parent_replies++;
+				++$parent_replies;
 			}
 		}
 	}
@@ -1833,7 +1831,7 @@ function bbp_split_topic_handler( $action = '' ) {
 		foreach ( $replies as $reply ) {
 
 			if ( ! empty( $source_topic->ID ) && empty( get_post_meta( $reply->ID, '_bbp_reply_to', true ) ) ) {
-				$source_parent_replies++;
+				++$source_parent_replies;
 			}
 
 			// Update the reply.
@@ -1874,7 +1872,7 @@ function bbp_split_topic_handler( $action = '' ) {
 			do_action( 'bbp_split_topic_reply', $reply->ID, $destination_topic->ID );
 
 			if ( ! empty( $destination_topic->ID ) && empty( get_post_meta( $reply->ID, '_bbp_reply_to', true ) ) ) {
-				$destination_parent_replies++;
+				++$destination_parent_replies;
 			}
 		}
 
@@ -2343,7 +2341,10 @@ function bbp_toggle_topic_handler( $action = '' ) {
 		if ( 'bbp_toggle_topic_trash' === $action && bp_is_active( 'groups' ) ) {
 			$author_id    = bbp_get_topic_author_id( $topic->ID );
 			$forum_id     = bbp_get_topic_forum_id( $topic->ID );
-			$args         = array( 'author_id' => $author_id, 'forum_id' => $forum_id );
+			$args         = array(
+				'author_id' => $author_id,
+				'forum_id'  => $forum_id,
+			);
 			$allow_delete = bb_moderator_can_delete_topic_reply( $topic, $args );
 			if ( ! $allow_delete ) {
 				bbp_add_error( 'bbp_toggle_topic_permission', __( '<strong>ERROR:</strong> You do not have the permission to do that!', 'buddyboss' ) );
@@ -3992,7 +3993,7 @@ function bb_is_group_forum_topic( $topic_id ) {
 function bbp_get_public_topic_statuses() {
 	$statuses = array(
 		bbp_get_public_status_id(),
-		bbp_get_closed_status_id()
+		bbp_get_closed_status_id(),
 	);
 
 	// Filter & return.

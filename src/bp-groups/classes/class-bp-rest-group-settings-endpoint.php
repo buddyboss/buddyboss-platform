@@ -995,7 +995,6 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		}
 
 		return apply_filters( 'bp_rest_group_settings', $fields, $group_id );
-
 	}
 
 	/**
@@ -1051,7 +1050,6 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			'error'  => $error,
 			'notice' => $notice,
 		);
-
 	}
 
 	/**
@@ -1189,7 +1187,6 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			'error'  => $error,
 			'notice' => $notice,
 		);
-
 	}
 
 	/**
@@ -1242,7 +1239,6 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		);
 
 		return apply_filters( 'bp_rest_group_settings_forum', $fields, $group_id );
-
 	}
 
 	/**
@@ -1537,6 +1533,4 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 
 		return false;
 	}
-
 }
-

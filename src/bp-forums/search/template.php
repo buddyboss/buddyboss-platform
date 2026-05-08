@@ -54,7 +54,7 @@ function bbp_has_search_results( $args = '' ) {
 		'update_post_family_cache' => true,                       // Conditionally prime the cache for related posts
 
 		// Conditionally prime the cache for last active posts.
-		'update_post_family_cache' => true
+		'update_post_family_cache' => true,
 	);
 
 	// Only set 's' if search terms exist
@@ -263,7 +263,6 @@ function bbp_get_search_url( $default = true ) {
 	} else {
 		return apply_filters( 'bbp_get_search_url', $url );
 	}
-
 }
 
 /**

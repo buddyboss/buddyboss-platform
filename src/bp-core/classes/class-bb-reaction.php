@@ -329,7 +329,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			}
 
 			$existing_reaction = get_posts( $args );
-			if( ! empty( $existing_reaction ) ) {
+			if ( ! empty( $existing_reaction ) ) {
 				$existing_reaction = current( $existing_reaction );
 				if ( is_a( $existing_reaction, 'WP_Post' ) ) {
 					return $existing_reaction->ID;
@@ -723,7 +723,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 					'validate_action' => 'reaction',
 				)
 			);
-		
+
 			// Bail if activity privacy restrict.
 			if ( is_wp_error( $privacy_check ) ) {
 				return ( 'wp_error' === $r['error_type'] ) ? $privacy_check : false;
@@ -1602,9 +1602,9 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 
 			$reactions_data = $this->bb_get_reactions_data( $r );
 			if ( ! empty( $reactions_data['reaction_data'] ) ) {
-				$reaction_data = current( $reactions_data['reaction_data'] );
+				$reaction_data    = current( $reactions_data['reaction_data'] );
 				$reaction_data_id = $reaction_data->id;
-				$sql = $wpdb->prepare(
+				$sql              = $wpdb->prepare(
 					// phpcs:ignore
 					'UPDATE ' . self::$reaction_data_table . ' SET
                         value = %s,
@@ -2023,7 +2023,7 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 				'text_color'        => '',
 				'notification_text' => 'Likes',
 				'icon_path'         => '',
-				'mode'              => 'likes'
+				'mode'              => 'likes',
 			);
 
 			if ( empty( $reaction_id ) ) {
@@ -2092,8 +2092,8 @@ if ( ! class_exists( 'BB_Reaction' ) ) {
 			}
 
 			if ( bb_is_reaction_emotions_enabled() ) {
-				$reactions   = $this->bb_get_reactions( 'emotions' );
-				$reaction    = current( $reactions );
+				$reactions                     = $this->bb_get_reactions( 'emotions' );
+				$reaction                      = current( $reactions );
 				$reaction_id[ $reaction_mode ] = $reaction['id'];
 			} else {
 				$reaction_id[ $reaction_mode ] = $this->bb_reactions_get_like_reaction_id();

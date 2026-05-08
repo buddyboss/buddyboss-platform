@@ -45,7 +45,7 @@ if ( false === $bb_changelog_data ) {
 						$version_content = '';
 
 						// Convert markdown-style list items to HTML.
-					} else if ( preg_match( '/^\*\s*(.+)$/', $line, $item_match ) ) {
+					} elseif ( preg_match( '/^\*\s*(.+)$/', $line, $item_match ) ) {
 						$version_content .= '<li>' . esc_html( $item_match[1] ) . '</li>';
 					}
 

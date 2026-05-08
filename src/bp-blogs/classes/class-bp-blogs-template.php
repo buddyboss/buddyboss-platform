@@ -220,7 +220,7 @@ class BP_Blogs_Template {
 	 * @return object The next blog to iterate over.
 	 */
 	public function next_blog() {
-		$this->current_blog++;
+		++$this->current_blog;
 		$this->blog = $this->blogs[ $this->current_blog ];
 
 		return $this->blog;

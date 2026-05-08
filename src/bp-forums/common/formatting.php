@@ -144,7 +144,7 @@ function bbp_code_trick( $content = '' ) {
 	/**
 	 * Added for convert &nbsp; to space fron content
 	 */
-	$content = str_replace( '&nbsp;', " ", $content );
+	$content = str_replace( '&nbsp;', ' ', $content );
 	$content = preg_replace_callback( '|(`)(.*?)`|', 'bbp_encode_callback', $content );
 	$content = preg_replace_callback( "!(^|\n)`(.*?)`!s", 'bbp_encode_callback', $content );
 
@@ -379,9 +379,9 @@ function bbp_make_clickable( $text ) {
 	foreach ( $textarr as $piece ) {
 
 		if ( preg_match( '|^<code[\s>]|i', $piece ) || preg_match( '|^<pre[\s>]|i', $piece ) || preg_match( '|^<script[\s>]|i', $piece ) || preg_match( '|^<style[\s>]|i', $piece ) ) {
-			$nested_code_pre++;
+			++$nested_code_pre;
 		} elseif ( $nested_code_pre && ( '</code>' === strtolower( $piece ) || '</pre>' === strtolower( $piece ) || '</script>' === strtolower( $piece ) || '</style>' === strtolower( $piece ) ) ) {
-			$nested_code_pre--;
+			--$nested_code_pre;
 		}
 
 		if ( $nested_code_pre || empty( $piece ) || ( $piece[0] === '<' && ! preg_match( '|^<\s*[\w]{1,20}+://|', $piece ) ) ) {

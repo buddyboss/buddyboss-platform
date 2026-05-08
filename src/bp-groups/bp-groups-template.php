@@ -386,10 +386,10 @@ function bp_has_groups( $args = '' ) {
 	}
 
 	$status = array();
- 	if ( ! empty( $_GET['status'] ) ) {
- 		if ( is_array( $_GET['status'] ) ) {
- 			$status = $_GET['status'];
- 		} else {
+	if ( ! empty( $_GET['status'] ) ) {
+		if ( is_array( $_GET['status'] ) ) {
+			$status = $_GET['status'];
+		} else {
 			// Can be a comma-separated list.
 			$status = explode( ',', $_GET['status'] );
 		}
@@ -781,17 +781,15 @@ function bp_get_group_type( $group = false ) {
 		} else {
 			$type = ucwords( $group->status ) . ' ' . esc_html__( 'Group', 'buddyboss' );
 		}
-	} else {
+	} elseif ( 'public' == $group->status ) {
 
-		if ( 'public' == $group->status ) {
 			$type = '<span class="group-visibility public">' . esc_html__( 'Public', 'buddyboss' ) . '</span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss' ) . '</span>';
-		} elseif ( 'hidden' == $group->status ) {
-			$type = '<span class="group-visibility hidden">' . esc_html__( 'Hidden', 'buddyboss' ) . '</span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss' ) . '</span>';
-		} elseif ( 'private' == $group->status ) {
-			$type = '<span class="group-visibility private">' . esc_html__( 'Private', 'buddyboss' ) . '</span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss' ) . '</span>';
-		} else {
-			$type = ucwords( $group->status ) . ' ' . esc_html__( 'Group', 'buddyboss' );
-		}
+	} elseif ( 'hidden' == $group->status ) {
+		$type = '<span class="group-visibility hidden">' . esc_html__( 'Hidden', 'buddyboss' ) . '</span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss' ) . '</span>';
+	} elseif ( 'private' == $group->status ) {
+		$type = '<span class="group-visibility private">' . esc_html__( 'Private', 'buddyboss' ) . '</span> <span class="group-type">' . esc_html__( 'Group', 'buddyboss' ) . '</span>';
+	} else {
+		$type = ucwords( $group->status ) . ' ' . esc_html__( 'Group', 'buddyboss' );
 	}
 
 	/**
@@ -1934,7 +1932,7 @@ function bp_group_list_admins( $group = false ) {
 			<?php
 			$i = 0;
 			foreach ( (array) $group->admins as $admin ) {
-				$i++;
+				++$i;
 				if ( $i > 3 ) {
 					break;
 				}
@@ -2084,7 +2082,6 @@ function bp_group_list_mods( $group = false ) {
 
 		<?php
 	endif;
-
 }
 
 /**
@@ -3214,7 +3211,7 @@ function bp_group_admin_memberlist( $admin_list = false, $group = false ) {
 		<?php
 		if ( ! empty( $admin_list ) ) :
 			?>
-			 single-line<?php endif; ?>">
+			single-line<?php endif; ?>">
 
 		<?php foreach ( (array) $admins as $admin ) { ?>
 
@@ -3328,7 +3325,7 @@ function bp_group_mod_memberlist( $admin_list = false, $group = false ) {
 		<?php
 		if ( $admin_list ) {
 			?>
-			 single-line<?php } ?>">
+			single-line<?php } ?>">
 
 		<?php foreach ( (array) $group_mods as $mod ) { ?>
 
@@ -4415,9 +4412,7 @@ function bp_get_group_join_button( $group = false ) {
 
 					// Member has not requested membership yet -
 					// show a "Request Membership" button.
-				} else {
-
-					if ( true === bp_member_type_enable_disable() && true === bp_disable_group_type_creation() ) {
+				} elseif ( true === bp_member_type_enable_disable() && true === bp_disable_group_type_creation() ) {
 
 						$group_type = bp_groups_get_group_type( $group->id );
 
@@ -4427,31 +4422,18 @@ function bp_get_group_join_button( $group = false ) {
 						$get_selected_member_type_join   = ( isset( $get_selected_member_type_join ) && ! empty( $get_selected_member_type_join ) ) ? $get_selected_member_type_join : array();
 						$get_requesting_user_member_type = bp_get_member_type( bp_loggedin_user_id() );
 
-						if ( in_array( $get_requesting_user_member_type, $get_selected_member_type_join, true ) ) {
-							$button = array(
-								'id'                => 'request_membership',
-								'component'         => 'groups',
-								'must_be_logged_in' => true,
-								'block_self'        => false,
-								'wrapper_class'     => 'group-button ' . $group->status,
-								'wrapper_id'        => 'groupbutton-' . $group->id,
-								'link_href'         => wp_nonce_url( trailingslashit( bp_get_group_permalink( $group ) . 'request-membership' ), 'groups_request_membership' ),
-								'link_text'         => esc_html__( 'Join Group', 'buddyboss' ),
-								'link_class'        => 'group-button request-membership',
-							);
-						} else {
-							$button = array(
-								'id'                => 'request_membership',
-								'component'         => 'groups',
-								'must_be_logged_in' => true,
-								'block_self'        => false,
-								'wrapper_class'     => 'group-button ' . $group->status,
-								'wrapper_id'        => 'groupbutton-' . $group->id,
-								'link_href'         => wp_nonce_url( trailingslashit( bp_get_group_permalink( $group ) . 'request-membership' ), 'groups_request_membership' ),
-								'link_text'         => esc_html__( 'Request Access', 'buddyboss' ),
-								'link_class'        => 'group-button request-membership',
-							);
-						}
+					if ( in_array( $get_requesting_user_member_type, $get_selected_member_type_join, true ) ) {
+						$button = array(
+							'id'                => 'request_membership',
+							'component'         => 'groups',
+							'must_be_logged_in' => true,
+							'block_self'        => false,
+							'wrapper_class'     => 'group-button ' . $group->status,
+							'wrapper_id'        => 'groupbutton-' . $group->id,
+							'link_href'         => wp_nonce_url( trailingslashit( bp_get_group_permalink( $group ) . 'request-membership' ), 'groups_request_membership' ),
+							'link_text'         => esc_html__( 'Join Group', 'buddyboss' ),
+							'link_class'        => 'group-button request-membership',
+						);
 					} else {
 						$button = array(
 							'id'                => 'request_membership',
@@ -4465,6 +4447,18 @@ function bp_get_group_join_button( $group = false ) {
 							'link_class'        => 'group-button request-membership',
 						);
 					}
+				} else {
+					$button = array(
+						'id'                => 'request_membership',
+						'component'         => 'groups',
+						'must_be_logged_in' => true,
+						'block_self'        => false,
+						'wrapper_class'     => 'group-button ' . $group->status,
+						'wrapper_id'        => 'groupbutton-' . $group->id,
+						'link_href'         => wp_nonce_url( trailingslashit( bp_get_group_permalink( $group ) . 'request-membership' ), 'groups_request_membership' ),
+						'link_text'         => esc_html__( 'Request Access', 'buddyboss' ),
+						'link_class'        => 'group-button request-membership',
+					);
 				}
 
 				break;
@@ -5724,7 +5718,7 @@ function bp_group_creation_tabs() {
 			<?php } ?>
 		</li>
 		<?php
-		$counter++;
+		++$counter;
 	}
 
 	unset( $is_enabled );
@@ -6404,7 +6398,6 @@ function bp_directory_groups_search_form() {
 	 * @param string $search_form_html HTML markup for the search form.
 	 */
 	echo apply_filters( 'bp_directory_groups_search_form', $search_form_html );
-
 }
 
 /**
@@ -7746,7 +7739,6 @@ function bp_get_article_prefix( $string ) {
 	$prefix      = in_array( strtolower( substr( $string, 0, 1 ) ), $vowel_array ) ? __( 'an', 'buddyboss' ) : __( 'a', 'buddyboss' );
 
 	return apply_filters( 'bp_get_article_prefix', $prefix . ' ' . $string, $string );
-
 }
 
 /**

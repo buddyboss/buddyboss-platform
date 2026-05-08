@@ -109,5 +109,4 @@ function bb_core_default_install_emails( $default_components ) {
 
 		BB_Post_Notification::instance();
 	}
-
 }

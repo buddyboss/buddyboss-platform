@@ -1744,7 +1744,6 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		$object->set_param( 'context', 'view' );
 
 		return $this->get_item( $object );
-
 	}
 
 	/**
@@ -2373,7 +2372,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
-				'link_embed_url'    => array(
+				'link_embed_url'           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'WordPress Embed URL.', 'buddyboss' ),
 					'type'        => 'string',
@@ -2516,7 +2515,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 					'modified',
 					'parent',
 					'rand',
-					'include'
+					'include',
 				),
 			),
 			'sanitize_callback' => 'bp_rest_sanitize_string_list',
@@ -2631,7 +2630,6 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			'spam'  => ( ! empty( bbp_is_reply_spam( $reply_id ) ) ? bbp_is_reply_spam( $reply_id ) : false ),
 			'trash' => ( ! empty( bbp_is_reply_trash( $reply_id ) ) ? bbp_is_reply_trash( $reply_id ) : false ),
 		);
-
 	}
 
 	/**

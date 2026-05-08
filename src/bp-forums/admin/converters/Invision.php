@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Implementation of Invision Power Board v3.x converter.
@@ -131,7 +132,7 @@ class Invision extends BBP_Converter_Base {
 		$this->field_map[] = array(
 			'to_type'      => 'forum',
 			'to_fieldname' => '_bbp_status',
-			'default'      => 'open'
+			'default'      => 'open',
 		);
 
 		// Forum dates.
@@ -577,13 +578,13 @@ class Invision extends BBP_Converter_Base {
 	private function to_char( $input ) {
 		$output = '';
 		for ( $i = 0; $i < strlen( $input ); $i++ ) {
-			$j = ord( $input[$i] );
+			$j = ord( $input[ $i ] );
 			if ( ( $j >= 65 && $j <= 90 )
 				|| ( $j >= 97 && $j <= 122 )
 				|| ( $j >= 48 && $j <= 57 ) ) {
-				$output .= $input[$i];
+				$output .= $input[ $i ];
 			} else {
-				$output .= '&#' . ord( $input[$i] ) . ';';
+				$output .= '&#' . ord( $input[ $i ] ) . ';';
 			}
 		}
 		return $output;

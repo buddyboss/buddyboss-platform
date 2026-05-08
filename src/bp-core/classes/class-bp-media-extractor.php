@@ -283,13 +283,11 @@ class BP_Media_Extractor {
 			}
 
 			// If the Activity component is disabled, instead do a basic parse.
-		} else {
-			if ( strpos( $plaintext, '@' ) !== false ) {
+		} elseif ( strpos( $plaintext, '@' ) !== false ) {
 				preg_match_all( '/[@]+([A-Za-z0-9-_\.@]+)\b/', $plaintext, $matches );
 
-				if ( ! empty( $matches[1] ) ) {
-					$mentions = array_unique( array_map( 'strtolower', $matches[1] ) );
-				}
+			if ( ! empty( $matches[1] ) ) {
+				$mentions = array_unique( array_map( 'strtolower', $matches[1] ) );
 			}
 		}
 
@@ -839,11 +837,11 @@ class BP_Media_Extractor {
 
 				// Extract the data we need from each image in this gallery.
 				foreach ( $images as $image_id ) {
-					$image  = wp_get_attachment_image_src( $image_id, $image_size );
+					$image = wp_get_attachment_image_src( $image_id, $image_size );
 
 					$image_url    = isset( $image[0] ) ? $image[0] : '';
 					$image_width  = isset( $image[1] ) ? $image[1] : '';
-				    $image_height = isset( $image[2] ) ? $image[2] : '';
+					$image_height = isset( $image[2] ) ? $image[2] : '';
 
 					$data[] = array(
 						'url'        => $image_url,

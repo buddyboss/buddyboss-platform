@@ -25,7 +25,7 @@ function bp_nouveau_ajax_object_template_loader() {
 		wp_send_json_error();
 	}
 
-	$object = sanitize_title( $_POST['object'] );
+	$object = sanitize_title( wp_unslash( $_POST['object'] ) );
 
 	// Bail if object is not an active component to prevent arbitrary file inclusion.
 	if ( ! bp_is_active( $object ) ) {
@@ -33,7 +33,7 @@ function bp_nouveau_ajax_object_template_loader() {
 	}
 
 	// Nonce check!
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_' . $object ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_' . $object ) ) {
 		wp_send_json_error();
 	}
 
@@ -42,7 +42,7 @@ function bp_nouveau_ajax_object_template_loader() {
 	if ( 'activity' === $object ) {
 		$scope = '';
 		if ( ! empty( $_POST['scope'] ) ) {
-			$scope = sanitize_text_field( $_POST['scope'] );
+			$scope = sanitize_text_field( wp_unslash( $_POST['scope'] ) );
 		}
 
 		// We need to calculate and return the feed URL for each scope.
@@ -98,7 +98,7 @@ function bp_nouveau_ajax_object_template_loader() {
 	}
 
 	// Get the template path based on the 'template' variable via the AJAX request.
-	$template = isset( $_POST['template'] ) ? wp_unslash( $_POST['template'] ) : '';
+	$template = isset( $_POST['template'] ) ? sanitize_text_field( wp_unslash( $_POST['template'] ) ) : '';
 
 	switch ( $template ) {
 		case 'group_members':

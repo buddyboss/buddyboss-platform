@@ -325,7 +325,7 @@ function bb_admin_check_valid_giphy_key() {
 		wp_send_json_error( $response );
 	}
 
-	if ( ! bp_is_active( 'media' )  ) {
+	if ( ! bp_is_active( 'media' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -349,7 +349,6 @@ function bb_admin_check_valid_giphy_key() {
 	}
 
 	wp_send_json_error( $response );
-
 }
 add_action( 'wp_ajax_bb_admin_check_valid_giphy_key', 'bb_admin_check_valid_giphy_key' );
 
@@ -417,41 +416,41 @@ function bb_validate_restricted_email_on_profile_update( $user_id ) {
  */
 function bb_core_settings_saved_notice() {
 
-    // Only handle notices on BuddyBoss pages.
-    if ( ! isset( $_GET['page'] ) ) {
-        return;
-    }
+	// Only handle notices on BuddyBoss pages.
+	if ( ! isset( $_GET['page'] ) ) {
+		return;
+	}
 
-    $page = sanitize_key( wp_unslash( $_GET['page'] ) );
+	$page = sanitize_key( wp_unslash( $_GET['page'] ) );
 
-    if ( ! in_array( $page, array( 'bp-settings', 'bp-pages', 'bp-integrations' ), true ) ) {
-        return;
-    }
+	if ( ! in_array( $page, array( 'bp-settings', 'bp-pages', 'bp-integrations' ), true ) ) {
+		return;
+	}
 
-    // Check if settings were updated.
-    if ( isset( $_GET['updated'] ) || isset( $_GET['edited'] ) || isset( $_GET['added'] ) ) {
-        $setting_message = __( 'Settings saved successfully.', 'buddyboss' );
-        $setting_updated = isset( $_GET['updated'] ) ? sanitize_text_field( wp_unslash( $_GET['updated'] ) ) : '';
-        $updated_transient_key = isset( $_GET['updated'] ) ? sanitize_key( wp_unslash( $_GET['updated'] ) ) : '';
+	// Check if settings were updated.
+	if ( isset( $_GET['updated'] ) || isset( $_GET['edited'] ) || isset( $_GET['added'] ) ) {
+		$setting_message       = __( 'Settings saved successfully.', 'buddyboss' );
+		$setting_updated       = isset( $_GET['updated'] ) ? sanitize_text_field( wp_unslash( $_GET['updated'] ) ) : '';
+		$updated_transient_key = isset( $_GET['updated'] ) ? sanitize_key( wp_unslash( $_GET['updated'] ) ) : '';
 
-        if ( 'emotion_deleted' === $setting_updated && ! empty( $updated_transient_key ) ) {
-            $setting_message = get_transient( $updated_transient_key );
-            delete_transient( $updated_transient_key );
-        } elseif ( 'no_message' === $setting_updated ) {
-            $setting_message = '';
-        }
+		if ( 'emotion_deleted' === $setting_updated && ! empty( $updated_transient_key ) ) {
+			$setting_message = get_transient( $updated_transient_key );
+			delete_transient( $updated_transient_key );
+		} elseif ( 'no_message' === $setting_updated ) {
+			$setting_message = '';
+		}
 
-        if ( ! empty( $setting_message ) ) {
-            add_settings_error(
-                'general',
-                'settings_updated',
-                $setting_message,
-                'updated'
-            );
-        }
+		if ( ! empty( $setting_message ) ) {
+			add_settings_error(
+				'general',
+				'settings_updated',
+				$setting_message,
+				'updated'
+			);
+		}
 
-        settings_errors( '' );
-    }
+		settings_errors( '' );
+	}
 }
 
 add_action( 'bp_admin_notices', 'bb_core_settings_saved_notice', 1010 );
@@ -494,7 +493,7 @@ function bb_pro_upgrade_notice() {
 		<span class="bb-upgrade-point">
 			<i class="bb-icon-f bb-icon-brand-buddyboss"></i>
 			<?php
-			echo sprintf(
+			printf(
 					/* translators: %1$s is the main text, %2$s is the URL, %3$s is the link text */
 				'%1$s <a href="%2$s" class="bb-upgrade-notice__link" target="_blank">%3$s</a>',
 				__( 'Upgrade to pro and unlock more exciting community features!', 'buddyboss' ),
@@ -504,9 +503,9 @@ function bb_pro_upgrade_notice() {
 			?>
 		</span>
 		<button type="button" class="bb-dismiss-upgrade-notice">
-                <span class="screen-reader-text">
-                    <?php esc_html_e( 'Dismiss this notice.', 'buddyboss' ); ?>
-                </span>
+				<span class="screen-reader-text">
+					<?php esc_html_e( 'Dismiss this notice.', 'buddyboss' ); ?>
+				</span>
 		</button>
 	</div>
 	<?php
@@ -531,7 +530,7 @@ function bb_upgrade_dismiss_notice() {
 
 	}
 
-	set_transient( "bb_pro_upgrade_notice_dismissed", true, DAY_IN_SECONDS );
+	set_transient( 'bb_pro_upgrade_notice_dismissed', true, DAY_IN_SECONDS );
 
 	wp_send_json_success();
 	unset( $bb_upgrade_nonce );

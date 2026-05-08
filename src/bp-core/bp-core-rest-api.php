@@ -15,7 +15,6 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return boolean True if the BP REST plugin is active. False otherwise.
  * @since BuddyBoss 1.3.5
- *
  */
 function bp_rest_is_plugin_active() {
 	return (bool) has_action( 'bp_rest_api_init', 'bp_rest', 5 );
@@ -125,7 +124,6 @@ function bp_rest_version() {
 	 * @param string $version BuddyBoss core version.
 	 *
 	 * @since BuddyBoss 1.3.5
-	 *
 	 */
 	return apply_filters( 'bp_rest_version', 'v1' );
 }

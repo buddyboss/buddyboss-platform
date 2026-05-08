@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 /**
  * LearnDash Single Lesson?Topic/Quiz Navigation
  *

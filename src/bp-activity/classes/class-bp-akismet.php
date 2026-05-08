@@ -45,8 +45,8 @@ class BP_Akismet {
 		add_action( 'bp_activity_entry_comments', array( $this, 'add_activity_stream_nonce' ) );
 
 		// Add a "mark as spam" button to individual activity items.
-		//add_action( 'bp_activity_entry_meta',      array( $this, 'add_activity_spam_button' ) );
-		//add_action( 'bp_activity_comment_options', array( $this, 'add_activity_comment_spam_button' ) );
+		// add_action( 'bp_activity_entry_meta',      array( $this, 'add_activity_spam_button' ) );
+		// add_action( 'bp_activity_comment_options', array( $this, 'add_activity_comment_spam_button' ) );
 
 		// Check activity for spam.
 		add_action( 'bp_activity_before_save', array( $this, 'check_activity' ), 4, 1 );
@@ -354,7 +354,7 @@ class BP_Akismet {
 		 * This helps Akismet ensure that the update was a valid form submission.
 		 */
 		if ( ! empty( $_POST['_bp_as_nonce'] ) ) {
-			$activity_data['akismet_comment_nonce'] = wp_verify_nonce( $_POST['_bp_as_nonce'], "_bp_as_nonce_{$userdata->ID}" ) ? 'passed' : 'failed';
+			$activity_data['akismet_comment_nonce'] = wp_verify_nonce( wp_unslash( $_POST['_bp_as_nonce'] ), "_bp_as_nonce_{$userdata->ID}" ) ? 'passed' : 'failed';
 		}
 
 		/**
@@ -362,7 +362,7 @@ class BP_Akismet {
 		 * This helps Akismet ensure that the update was a valid form submission.
 		 */
 		elseif ( ! empty( $activity->secondary_item_id ) && ! empty( $_POST[ '_bp_as_nonce_' . $activity->secondary_item_id ] ) ) {
-			$activity_data['akismet_comment_nonce'] = wp_verify_nonce( $_POST[ "_bp_as_nonce_{$activity->secondary_item_id}" ], "_bp_as_nonce_{$userdata->ID}_{$activity->secondary_item_id}" ) ? 'passed' : 'failed';
+			$activity_data['akismet_comment_nonce'] = wp_verify_nonce( wp_unslash( $_POST[ "_bp_as_nonce_{$activity->secondary_item_id}" ] ), "_bp_as_nonce_{$userdata->ID}_{$activity->secondary_item_id}" ) ? 'passed' : 'failed';
 		}
 
 		/**
@@ -693,7 +693,7 @@ class BP_Akismet {
 		}
 
 		// This is a single event, wrap it in an array.
-		if ( isset( $history['event'] ) ) {			
+		if ( isset( $history['event'] ) ) {
 			$history = array( $history );
 		}
 

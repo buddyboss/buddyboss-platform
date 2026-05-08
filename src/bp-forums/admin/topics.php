@@ -133,7 +133,7 @@ if ( ! class_exists( 'BBP_Topics_Admin' ) ) :
 					'id'      => 'overview',
 					'title'   => __( 'Overview', 'buddyboss' ),
 					'content' =>
-						  '<p>' . __( 'This screen displays the individual discussions on your site. You can customize the display of this screen to suit your workflow.', 'buddyboss' ) . '</p>',
+							'<p>' . __( 'This screen displays the individual discussions on your site. You can customize the display of this screen to suit your workflow.', 'buddyboss' ) . '</p>',
 				)
 			);
 
@@ -143,12 +143,12 @@ if ( ! class_exists( 'BBP_Topics_Admin' ) ) :
 					'id'      => 'screen-content',
 					'title'   => __( 'Screen Content', 'buddyboss' ),
 					'content' =>
-						  '<p>' . __( 'You can customize the display of this screen\'s contents in a number of ways:', 'buddyboss' ) . '</p>' .
-						  '<ul>' .
-							  '<li>' . __( 'You can hide/display columns based on your needs and decide how many discussions to list per screen using the Screen Options tab.', 'buddyboss' ) . '</li>' .
-							  '<li>' . __( 'You can filter the list of discussions by discussion status using the text links in the upper left to show All, Published, or Trashed discussions. The default view is to show all discussions.', 'buddyboss' ) . '</li>' .
-							  '<li>' . __( 'You can refine the list to show only discussions from a specific month by using the dropdown menus above the discussions list. Click the Filter button after making your selection. You also can refine the list by clicking on the discussion creator in the discussions list.', 'buddyboss' ) . '</li>' .
-						  '</ul>',
+							'<p>' . __( 'You can customize the display of this screen\'s contents in a number of ways:', 'buddyboss' ) . '</p>' .
+							'<ul>' .
+								'<li>' . __( 'You can hide/display columns based on your needs and decide how many discussions to list per screen using the Screen Options tab.', 'buddyboss' ) . '</li>' .
+								'<li>' . __( 'You can filter the list of discussions by discussion status using the text links in the upper left to show All, Published, or Trashed discussions. The default view is to show all discussions.', 'buddyboss' ) . '</li>' .
+								'<li>' . __( 'You can refine the list to show only discussions from a specific month by using the dropdown menus above the discussions list. Click the Filter button after making your selection. You also can refine the list by clicking on the discussion creator in the discussions list.', 'buddyboss' ) . '</li>' .
+							'</ul>',
 				)
 			);
 
@@ -158,16 +158,16 @@ if ( ! class_exists( 'BBP_Topics_Admin' ) ) :
 					'id'      => 'action-links',
 					'title'   => __( 'Available Actions', 'buddyboss' ),
 					'content' =>
-						  '<p>' . __( 'Hovering over a row in the discussions list will display action links that allow you to manage your discussion. You can perform the following actions:', 'buddyboss' ) . '</p>' .
-						  '<ul>' .
-							  '<li>' . __( '<strong>Edit</strong> takes you to the editing screen for that discussion. You can also reach that screen by clicking on the discussion title.', 'buddyboss' ) . '</li>' .
-							  '<li>' . __( '<strong>Trash</strong> removes your discussion from this list and places it in the trash, from which you can permanently delete it.', 'buddyboss' ) . '</li>' .
-							  '<li>' . __( '<strong>Spam</strong> removes your discussion from this list and places it in the spam queue, from which you can permanently delete it.', 'buddyboss' ) . '</li>' .
-							  '<li>' . __( '<strong>Preview</strong> will show you what your draft discussion will look like if you publish it. View will take you to your live site to view the discussion. Which link is available depends on your discussion\'s status.', 'buddyboss' ) . '</li>' .
-							  '<li>' . __( '<strong>Close</strong> will mark the selected discussion as "closed" and disable the option to post new replies to the discussion.', 'buddyboss' ) . '</li>' .
-							  '<li>' . __( '<strong>Stick</strong> will keep the selected discussion "pinned" to the top the parent forum discussion list.', 'buddyboss' ) . '</li>' .
-							  '<li>' . __( '<strong>Stick <em>(to front)</em></strong> will keep the selected discussion "pinned" to the top of ALL forums and be visable in any forums discussions list.', 'buddyboss' ) . '</li>' .
-						  '</ul>',
+							'<p>' . __( 'Hovering over a row in the discussions list will display action links that allow you to manage your discussion. You can perform the following actions:', 'buddyboss' ) . '</p>' .
+							'<ul>' .
+								'<li>' . __( '<strong>Edit</strong> takes you to the editing screen for that discussion. You can also reach that screen by clicking on the discussion title.', 'buddyboss' ) . '</li>' .
+								'<li>' . __( '<strong>Trash</strong> removes your discussion from this list and places it in the trash, from which you can permanently delete it.', 'buddyboss' ) . '</li>' .
+								'<li>' . __( '<strong>Spam</strong> removes your discussion from this list and places it in the spam queue, from which you can permanently delete it.', 'buddyboss' ) . '</li>' .
+								'<li>' . __( '<strong>Preview</strong> will show you what your draft discussion will look like if you publish it. View will take you to your live site to view the discussion. Which link is available depends on your discussion\'s status.', 'buddyboss' ) . '</li>' .
+								'<li>' . __( '<strong>Close</strong> will mark the selected discussion as "closed" and disable the option to post new replies to the discussion.', 'buddyboss' ) . '</li>' .
+								'<li>' . __( '<strong>Stick</strong> will keep the selected discussion "pinned" to the top the parent forum discussion list.', 'buddyboss' ) . '</li>' .
+								'<li>' . __( '<strong>Stick <em>(to front)</em></strong> will keep the selected discussion "pinned" to the top of ALL forums and be visable in any forums discussions list.', 'buddyboss' ) . '</li>' .
+							'</ul>',
 				)
 			);
 
@@ -177,8 +177,8 @@ if ( ! class_exists( 'BBP_Topics_Admin' ) ) :
 					'id'      => 'bulk-actions',
 					'title'   => __( 'Bulk Actions', 'buddyboss' ),
 					'content' =>
-						  '<p>' . __( 'You can also edit or move multiple discussions to the trash at once. Select the discussions you want to act on using the checkboxes, then select the action you want to take from the Bulk Actions menu and click Apply.', 'buddyboss' ) . '</p>' .
-						  '<p>' . __( 'When using Bulk Edit, you can change the status (Published, Private, etc.) and add discussion tags for all selected discussions at once. To remove a discussion from the grouping, just click the x next to its name in the Bulk Edit area that appears.', 'buddyboss' ) . '</p>',
+							'<p>' . __( 'You can also edit or move multiple discussions to the trash at once. Select the discussions you want to act on using the checkboxes, then select the action you want to take from the Bulk Actions menu and click Apply.', 'buddyboss' ) . '</p>' .
+							'<p>' . __( 'When using Bulk Edit, you can change the status (Published, Private, etc.) and add discussion tags for all selected discussions at once. To remove a discussion from the grouping, just click the x next to its name in the Bulk Edit area that appears.', 'buddyboss' ) . '</p>',
 				)
 			);
 
@@ -216,8 +216,8 @@ if ( ! class_exists( 'BBP_Topics_Admin' ) ) :
 					'id'      => 'title-topic-editor',
 					'title'   => __( 'Title and Discussion Editor', 'buddyboss' ),
 					'content' =>
-						  '<p>' . __( '<strong>Title</strong> - Enter a title for your discussion. After you enter a title, you\'ll see the permalink below, which you can edit.', 'buddyboss' ) . '</p>' .
-						  '<p>' . __( '<strong>Discussion Editor</strong> - Enter the text for your discussion. There are two modes of editing: Visual and HTML. Choose the mode by clicking on the appropriate tab. Visual mode gives you a WYSIWYG editor. Click the last icon in the row to get a second row of controls. The HTML mode allows you to enter raw HTML along with your discussion text. You can insert media files by clicking the icons above the discussion editor and following the directions. You can go to the distraction-free writing screen via the Fullscreen icon in Visual mode (second to last in the top row) or the Fullscreen button in HTML mode (last in the row). Once there, you can make buttons visible by hovering over the top area. Exit Fullscreen back to the regular discussion editor.', 'buddyboss' ) . '</p>',
+							'<p>' . __( '<strong>Title</strong> - Enter a title for your discussion. After you enter a title, you\'ll see the permalink below, which you can edit.', 'buddyboss' ) . '</p>' .
+							'<p>' . __( '<strong>Discussion Editor</strong> - Enter the text for your discussion. There are two modes of editing: Visual and HTML. Choose the mode by clicking on the appropriate tab. Visual mode gives you a WYSIWYG editor. Click the last icon in the row to get a second row of controls. The HTML mode allows you to enter raw HTML along with your discussion text. You can insert media files by clicking the icons above the discussion editor and following the directions. You can go to the distraction-free writing screen via the Fullscreen icon in Visual mode (second to last in the top row) or the Fullscreen button in HTML mode (last in the row). Once there, you can make buttons visible by hovering over the top area. Exit Fullscreen back to the regular discussion editor.', 'buddyboss' ) . '</p>',
 				)
 			);
 
@@ -232,11 +232,11 @@ if ( ! class_exists( 'BBP_Topics_Admin' ) ) :
 					'id'      => 'topic-attributes',
 					'title'   => __( 'Discussion Attributes', 'buddyboss' ),
 					'content' =>
-						  '<p>' . __( 'Select the attributes that your discussion should have:', 'buddyboss' ) . '</p>' .
-						  '<ul>' .
-							  '<li>' . __( '<strong>Forum</strong> dropdown determines the parent forum that the discussion belongs to. Select the forum or category from the dropdown, or leave the default (No Forum) to post the discussion without an assigned forum.', 'buddyboss' ) . '</li>' .
-							  '<li>' . __( '<strong>Discussion Type</strong> dropdown indicates the sticky status of the discussion. Selecting the super sticky option would stick the discussion to the front of your forums, i.e. the discussion index, sticky option would stick the discussion to its respective forum. Selecting normal would not stick the discussion anywhere.', 'buddyboss' ) . '</li>' .
-						  '</ul>',
+							'<p>' . __( 'Select the attributes that your discussion should have:', 'buddyboss' ) . '</p>' .
+							'<ul>' .
+								'<li>' . __( '<strong>Forum</strong> dropdown determines the parent forum that the discussion belongs to. Select the forum or category from the dropdown, or leave the default (No Forum) to post the discussion without an assigned forum.', 'buddyboss' ) . '</li>' .
+								'<li>' . __( '<strong>Discussion Type</strong> dropdown indicates the sticky status of the discussion. Selecting the super sticky option would stick the discussion to the front of your forums, i.e. the discussion index, sticky option would stick the discussion to its respective forum. Selecting normal would not stick the discussion anywhere.', 'buddyboss' ) . '</li>' .
+							'</ul>',
 				)
 			);
 
@@ -310,7 +310,7 @@ if ( ! class_exists( 'BBP_Topics_Admin' ) ) :
 			}
 
 			// Nonce check
-			if ( empty( $_POST['bbp_topic_metabox'] ) || ! wp_verify_nonce( $_POST['bbp_topic_metabox'], 'bbp_topic_metabox_save' ) ) {
+			if ( empty( $_POST['bbp_topic_metabox'] ) || ! wp_verify_nonce( wp_unslash( $_POST['bbp_topic_metabox'] ), 'bbp_topic_metabox_save' ) ) {
 				return $topic_id;
 			}
 

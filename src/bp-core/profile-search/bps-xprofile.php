@@ -30,15 +30,15 @@ function bp_ps_xprofile_setup( $fields ) {
 				bp_the_profile_field();
 				$f = new stdClass();
 
-				$f->group       = $group_name;
-				$f->group_id	= $group->id;
-				$f->id          = $field->id;
-				$f->code        = 'field_' . $field->id;
-				$f->name        = str_replace( '&amp;', '&', stripslashes( $field->name ) );
-				$f->name        = $f->name;
-				$f->description = str_replace( '&amp;', '&', stripslashes( $field->description ) );
-				$f->description = $f->description;
-				$f->type        = $field->type;
+				$f->group          = $group_name;
+				$f->group_id       = $group->id;
+				$f->id             = $field->id;
+				$f->code           = 'field_' . $field->id;
+				$f->name           = str_replace( '&amp;', '&', stripslashes( $field->name ) );
+				$f->name           = $f->name;
+				$f->description    = str_replace( '&amp;', '&', stripslashes( $field->description ) );
+				$f->description    = $f->description;
+				$f->type           = $field->type;
 				$f->format         = bp_ps_xprofile_format( $field->type, $field->id );
 				$f->search         = 'bp_ps_xprofile_search';
 				$f->sort_directory = 'bp_ps_xprofile_sort_directory';
@@ -111,7 +111,9 @@ function bp_ps_xprofile_search( $f ) {
 		                	FROM ' . $bp->friends->table_name . '
 		                	WHERE is_confirmed = 1
 		                	AND ( initiator_user_id = %d OR friend_user_id = %d )',
-					$loggin_user_id, $loggin_user_id, $loggin_user_id
+					$loggin_user_id,
+					$loggin_user_id,
+					$loggin_user_id
 				);
 			}
 		}
@@ -661,7 +663,9 @@ function bp_ps_anyfield_search( $f ) {
 		                	FROM ' . $bp->friends->table_name . '
 		                	WHERE is_confirmed = 1
 		                	AND ( initiator_user_id = %d OR friend_user_id = %d )',
-					$loggin_user_id, $loggin_user_id, $loggin_user_id
+					$loggin_user_id,
+					$loggin_user_id,
+					$loggin_user_id
 				);
 			}
 		}
@@ -691,7 +695,7 @@ function bp_ps_anyfield_search( $f ) {
 				$every_word_clauses = array();
 				$query_placeholder  = array();
 				foreach ( $search_term_array as $term ) {
-					$every_word_clauses[] = "( xpd.value LIKE %s )";
+					$every_word_clauses[] = '( xpd.value LIKE %s )';
 					if ( 'like' === $filter ) {
 						$term                = str_replace( '\\\\%', '\\%', $term );
 						$term                = str_replace( '\\\\_', '\\_', $term );

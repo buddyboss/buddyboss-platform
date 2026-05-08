@@ -18,7 +18,7 @@ function bp_blogs_register_widgets() {
 	if ( bp_is_active( 'activity' ) && bp_is_root_blog( $wpdb->blogid ) ) {
 		add_action(
 			'widgets_init',
-			function() {
+			function () {
 				register_widget( 'BP_Blogs_Recent_Posts_Widget' );
 			}
 		);

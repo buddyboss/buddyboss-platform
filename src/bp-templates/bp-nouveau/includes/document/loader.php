@@ -56,7 +56,8 @@ class BP_Nouveau_Document {
 			add_action(
 				'admin_init',
 				function() {
-					if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX && isset(  $_REQUEST['action'] ) && 0 === strpos( $_REQUEST['action'], 'document_' ) ) {
+					$ajax_action = isset( $_REQUEST['action'] ) ? sanitize_key( wp_unslash( $_REQUEST['action'] ) ) : '';
+					if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX && 0 === strpos( $ajax_action, 'document_' ) ) {
 						require $this->dir . 'ajax.php';
 					}
 				}

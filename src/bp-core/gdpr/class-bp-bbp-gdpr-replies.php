@@ -65,7 +65,7 @@ class BP_Bbp_Gdpr_Replies {
 	 * Export member created forum replies.
 	 *
 	 * @param $email_address
-	 * @param int           $page
+	 * @param int $page
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
@@ -187,7 +187,7 @@ class BP_Bbp_Gdpr_Replies {
 	 * Delete member created forum replies.
 	 *
 	 * @param $email_address
-	 * @param int           $page
+	 * @param int $page
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *

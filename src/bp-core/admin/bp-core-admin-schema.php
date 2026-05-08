@@ -1417,7 +1417,7 @@ function bb_core_install_xprofile_visibility() {
 	global $wpdb;
 
 	$bp_prefix = bp_core_get_table_prefix();
-	
+
 	// Install bb_xprofile_visibility table if already not exists.
 	$table_exists = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $bp_prefix . 'bb_xprofile_visibility' ) );
 	if ( ! $table_exists ) {

@@ -328,42 +328,39 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 							$notification_type_html
 						);
 					}
-				} else {
-					if ( ! empty( $activity_excerpt ) ) {
+				} elseif ( ! empty( $activity_excerpt ) ) {
 						$text = sprintf(
 						/* translators: Activity content. */
 							__( 'Replied: %s', 'buddyboss' ),
 							$activity_excerpt
 						);
-					} elseif ( $media_ids ) {
-						$media_ids = array_filter( ! is_array( $media_ids ) ? explode( ',', $media_ids ) : $media_ids );
-						if ( count( $media_ids ) > 1 ) {
-							$text = __( 'Replied: some photos', 'buddyboss' );
-						} else {
-							$text = __( 'Replied: a photo', 'buddyboss' );
-						}
-					} elseif ( $document_ids ) {
-						$document_ids = array_filter( ! is_array( $document_ids ) ? explode( ',', $document_ids ) : $document_ids );
-						if ( count( $document_ids ) > 1 ) {
-							$text = __( 'Replied: some documents', 'buddyboss' );
-						} else {
-							$text = __( 'Replied: a document', 'buddyboss' );
-						}
-					} elseif ( $video_ids ) {
-						$video_ids = array_filter( ! is_array( $video_ids ) ? explode( ',', $video_ids ) : $video_ids );
-						if ( count( $video_ids ) > 1 ) {
-							$text = __( 'Replied: some videos', 'buddyboss' );
-						} else {
-							$text = __( 'Replied: a video', 'buddyboss' );
-						}
-					} elseif ( ! empty( $gif_data ) ) {
-						$text = __( 'Replied: a gif', 'buddyboss' );
+				} elseif ( $media_ids ) {
+					$media_ids = array_filter( ! is_array( $media_ids ) ? explode( ',', $media_ids ) : $media_ids );
+					if ( count( $media_ids ) > 1 ) {
+						$text = __( 'Replied: some photos', 'buddyboss' );
 					} else {
-						$text = __( 'Replied', 'buddyboss' );
+						$text = __( 'Replied: a photo', 'buddyboss' );
 					}
+				} elseif ( $document_ids ) {
+					$document_ids = array_filter( ! is_array( $document_ids ) ? explode( ',', $document_ids ) : $document_ids );
+					if ( count( $document_ids ) > 1 ) {
+						$text = __( 'Replied: some documents', 'buddyboss' );
+					} else {
+						$text = __( 'Replied: a document', 'buddyboss' );
+					}
+				} elseif ( $video_ids ) {
+					$video_ids = array_filter( ! is_array( $video_ids ) ? explode( ',', $video_ids ) : $video_ids );
+					if ( count( $video_ids ) > 1 ) {
+						$text = __( 'Replied: some videos', 'buddyboss' );
+					} else {
+						$text = __( 'Replied: a video', 'buddyboss' );
+					}
+				} elseif ( ! empty( $gif_data ) ) {
+					$text = __( 'Replied: a gif', 'buddyboss' );
+				} else {
+					$text = __( 'Replied', 'buddyboss' );
 				}
-			} else {
-				if ( (int) $total_items > 1 ) {
+			} elseif ( (int) $total_items > 1 ) {
 					$notification_link = add_query_arg( 'type', $notification->component_action, $notification_link );
 					$text              = sprintf(
 					/* translators: %s: Total reply count. */
@@ -371,151 +368,148 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 						(int) $total_items
 					);
 					$amount = 'multiple';
-				} else {
-					$notification_link = add_query_arg( 'rid', (int) $notification_id, bp_activity_get_permalink( $item_id ) );
+			} else {
+				$notification_link = add_query_arg( 'rid', (int) $notification_id, bp_activity_get_permalink( $item_id ) );
 
-					if ( ! empty( $notification_type_html ) ) {
-						if ( ! empty( $activity_excerpt ) ) {
-							$text = sprintf(
-							/* translators: 1: User full name, 2: Activity type, 3: Activity content. */
-								__( '%1$s replied to your %2$s: %3$s', 'buddyboss' ),
-								$user_fullname,
-								$notification_type_html,
-								$activity_excerpt
-							);
-						} elseif ( ! empty( $media_ids ) ) {
-							$media_ids = array_filter( ! is_array( $media_ids ) ? explode( ',', $media_ids ) : $media_ids );
-							if ( count( $media_ids ) > 1 ) {
-								$text = sprintf(
-								/* translators: 1: User full name, 2: Activity type. */
-									__( '%1$s replied to your %2$s: some photos', 'buddyboss' ),
-									$user_fullname,
-									$notification_type_html
-								);
-							} else {
-								$text = sprintf(
-								/* translators: 1: User full name, 2: Activity type. */
-									__( '%1$s replied to your %2$s: a photo', 'buddyboss' ),
-									$user_fullname,
-									$notification_type_html
-								);
-							}
-						} elseif ( ! empty( $document_ids ) ) {
-							$document_ids = array_filter( ! is_array( $document_ids ) ? explode( ',', $document_ids ) : $document_ids );
-							if ( count( $document_ids ) > 1 ) {
-								$text = sprintf(
-								/* translators: 1: User full name, 2: Activity type. */
-									__( '%1$s replied to your %2$s: some documents', 'buddyboss' ),
-									$user_fullname,
-									$notification_type_html
-								);
-							} else {
-								$text = sprintf(
-								/* translators: 1: User full name, 2: Activity type. */
-									__( '%1$s replied to your %2$s: a document', 'buddyboss' ),
-									$user_fullname,
-									$notification_type_html
-								);
-							}
-						} elseif ( ! empty( $video_ids ) ) {
-							$video_ids = array_filter( ! is_array( $video_ids ) ? explode( ',', $video_ids ) : $video_ids );
-							if ( count( $video_ids ) > 1 ) {
-								$text = sprintf(
-								/* translators: 1: User full name, 2: Activity type. */
-									__( '%1$s replied to your %2$s: some videos', 'buddyboss' ),
-									$user_fullname,
-									$notification_type_html
-								);
-							} else {
-								$text = sprintf(
-								/* translators: 1: User full name, 2: Activity type. */
-									__( '%1$s replied to your %2$s: a video', 'buddyboss' ),
-									$user_fullname,
-									$notification_type_html
-								);
-							}
-						} elseif ( ! empty( $gif_data ) ) {
+				if ( ! empty( $notification_type_html ) ) {
+					if ( ! empty( $activity_excerpt ) ) {
+						$text = sprintf(
+						/* translators: 1: User full name, 2: Activity type, 3: Activity content. */
+							__( '%1$s replied to your %2$s: %3$s', 'buddyboss' ),
+							$user_fullname,
+							$notification_type_html,
+							$activity_excerpt
+						);
+					} elseif ( ! empty( $media_ids ) ) {
+						$media_ids = array_filter( ! is_array( $media_ids ) ? explode( ',', $media_ids ) : $media_ids );
+						if ( count( $media_ids ) > 1 ) {
 							$text = sprintf(
 							/* translators: 1: User full name, 2: Activity type. */
-								__( '%1$s replied to your %2$s: a gif', 'buddyboss' ),
+								__( '%1$s replied to your %2$s: some photos', 'buddyboss' ),
 								$user_fullname,
 								$notification_type_html
 							);
 						} else {
 							$text = sprintf(
 							/* translators: 1: User full name, 2: Activity type. */
-								__( '%1$s replied to your %2$s', 'buddyboss' ),
+								__( '%1$s replied to your %2$s: a photo', 'buddyboss' ),
 								$user_fullname,
 								$notification_type_html
 							);
 						}
+					} elseif ( ! empty( $document_ids ) ) {
+						$document_ids = array_filter( ! is_array( $document_ids ) ? explode( ',', $document_ids ) : $document_ids );
+						if ( count( $document_ids ) > 1 ) {
+							$text = sprintf(
+							/* translators: 1: User full name, 2: Activity type. */
+								__( '%1$s replied to your %2$s: some documents', 'buddyboss' ),
+								$user_fullname,
+								$notification_type_html
+							);
+						} else {
+							$text = sprintf(
+							/* translators: 1: User full name, 2: Activity type. */
+								__( '%1$s replied to your %2$s: a document', 'buddyboss' ),
+								$user_fullname,
+								$notification_type_html
+							);
+						}
+					} elseif ( ! empty( $video_ids ) ) {
+						$video_ids = array_filter( ! is_array( $video_ids ) ? explode( ',', $video_ids ) : $video_ids );
+						if ( count( $video_ids ) > 1 ) {
+							$text = sprintf(
+							/* translators: 1: User full name, 2: Activity type. */
+								__( '%1$s replied to your %2$s: some videos', 'buddyboss' ),
+								$user_fullname,
+								$notification_type_html
+							);
+						} else {
+							$text = sprintf(
+							/* translators: 1: User full name, 2: Activity type. */
+								__( '%1$s replied to your %2$s: a video', 'buddyboss' ),
+								$user_fullname,
+								$notification_type_html
+							);
+						}
+					} elseif ( ! empty( $gif_data ) ) {
+						$text = sprintf(
+						/* translators: 1: User full name, 2: Activity type. */
+							__( '%1$s replied to your %2$s: a gif', 'buddyboss' ),
+							$user_fullname,
+							$notification_type_html
+						);
 					} else {
-						if ( ! empty( $activity_excerpt ) ) {
+						$text = sprintf(
+						/* translators: 1: User full name, 2: Activity type. */
+							__( '%1$s replied to your %2$s', 'buddyboss' ),
+							$user_fullname,
+							$notification_type_html
+						);
+					}
+				} elseif ( ! empty( $activity_excerpt ) ) {
 							$text = sprintf(
 							/* translators: 1: User full name, 2: Activity content. */
 								__( '%1$s replied: %2$s', 'buddyboss' ),
 								$user_fullname,
 								$activity_excerpt
 							);
-						} elseif ( $media_ids ) {
-							$media_ids = array_filter( ! is_array( $media_ids ) ? explode( ',', $media_ids ) : $media_ids );
-							if ( count( $media_ids ) > 1 ) {
-								$text = sprintf(
-								/* translators: User full name. */
-									__( '%1$s replied: some photos', 'buddyboss' ),
-									$user_fullname
-								);
-							} else {
-								$text = sprintf(
-								/* translators: User full name. */
-									__( '%1$s replied: a photo', 'buddyboss' ),
-									$user_fullname
-								);
-							}
-						} elseif ( $document_ids ) {
-							$document_ids = array_filter( ! is_array( $document_ids ) ? explode( ',', $document_ids ) : $document_ids );
-							if ( count( $document_ids ) > 1 ) {
-								$text = sprintf(
-								/* translators: User full name. */
-									__( '%1$s replied: some documents', 'buddyboss' ),
-									$user_fullname
-								);
-							} else {
-								$text = sprintf(
-								/* translators: User full name. */
-									__( '%1$s replied: a document', 'buddyboss' ),
-									$user_fullname
-								);
-							}
-						} elseif ( $video_ids ) {
-							$video_ids = array_filter( ! is_array( $video_ids ) ? explode( ',', $video_ids ) : $video_ids );
-							if ( count( $video_ids ) > 1 ) {
-								$text = sprintf(
-								/* translators: User full name. */
-									__( '%1$s replied: some videos', 'buddyboss' ),
-									$user_fullname
-								);
-							} else {
-								$text = sprintf(
-								/* translators: User full name. */
-									__( '%1$s replied: a video', 'buddyboss' ),
-									$user_fullname
-								);
-							}
-						} elseif ( ! empty( $gif_data ) ) {
-							$text = sprintf(
-							/* translators: User full name. */
-								__( '%1$s replied: a gif', 'buddyboss' ),
-								$user_fullname
-							);
-						} else {
-							$text = sprintf(
-							/* translators: %s: User full name. */
-								__( '%1$s replied', 'buddyboss' ),
-								$user_fullname
-							);
-						}
+				} elseif ( $media_ids ) {
+					$media_ids = array_filter( ! is_array( $media_ids ) ? explode( ',', $media_ids ) : $media_ids );
+					if ( count( $media_ids ) > 1 ) {
+						$text = sprintf(
+						/* translators: User full name. */
+							__( '%1$s replied: some photos', 'buddyboss' ),
+							$user_fullname
+						);
+					} else {
+						$text = sprintf(
+						/* translators: User full name. */
+							__( '%1$s replied: a photo', 'buddyboss' ),
+							$user_fullname
+						);
 					}
+				} elseif ( $document_ids ) {
+					$document_ids = array_filter( ! is_array( $document_ids ) ? explode( ',', $document_ids ) : $document_ids );
+					if ( count( $document_ids ) > 1 ) {
+						$text = sprintf(
+						/* translators: User full name. */
+							__( '%1$s replied: some documents', 'buddyboss' ),
+							$user_fullname
+						);
+					} else {
+						$text = sprintf(
+						/* translators: User full name. */
+							__( '%1$s replied: a document', 'buddyboss' ),
+							$user_fullname
+						);
+					}
+				} elseif ( $video_ids ) {
+					$video_ids = array_filter( ! is_array( $video_ids ) ? explode( ',', $video_ids ) : $video_ids );
+					if ( count( $video_ids ) > 1 ) {
+						$text = sprintf(
+						/* translators: User full name. */
+							__( '%1$s replied: some videos', 'buddyboss' ),
+							$user_fullname
+						);
+					} else {
+						$text = sprintf(
+						/* translators: User full name. */
+							__( '%1$s replied: a video', 'buddyboss' ),
+							$user_fullname
+						);
+					}
+				} elseif ( ! empty( $gif_data ) ) {
+					$text = sprintf(
+					/* translators: User full name. */
+						__( '%1$s replied: a gif', 'buddyboss' ),
+						$user_fullname
+					);
+				} else {
+					$text = sprintf(
+					/* translators: %s: User full name. */
+						__( '%1$s replied', 'buddyboss' ),
+						$user_fullname
+					);
 				}
 			}
 
@@ -704,8 +698,7 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 				} else {
 					$text = __( 'Posted an update', 'buddyboss' );
 				}
-			} else {
-				if ( (int) $total_items > 1 ) {
+			} elseif ( (int) $total_items > 1 ) {
 					$notification_link = add_query_arg( 'type', $notification->component_action, $notification_link );
 					$text              = sprintf(
 						/* translators: %s: Total reply count. */
@@ -713,80 +706,79 @@ class BP_Activity_Notification extends BP_Core_Notification_Abstract {
 						(int) $total_items
 					);
 					$amount = 'multiple';
-				} else {
-					$notification_link = add_query_arg( 'rid', (int) $notification_id, bp_activity_get_permalink( $item_id ) );
-					if ( ! empty( $activity_excerpt ) ) {
-						$text = sprintf(
-						/* translators: 1: User full name, 2: Activity content. */
-							__( '%1$s posted an update: %2$s', 'buddyboss' ),
-							$user_fullname,
-							$activity_excerpt
-						);
-					} elseif ( $media_ids ) {
-						$media_ids = array_filter( ! is_array( $media_ids ) ? explode( ',', $media_ids ) : $media_ids );
-						if ( count( $media_ids ) > 1 ) {
-							$text = sprintf(
-							/* translators: User full name. */
-								__( '%1$s posted some photos', 'buddyboss' ),
-								$user_fullname
-							);
-						} else {
-							$text = sprintf(
-							/* translators: User full name. */
-								__( '%1$s posted a photo', 'buddyboss' ),
-								$user_fullname
-							);
-						}
-					} elseif ( $document_ids ) {
-						$document_ids = array_filter( ! is_array( $document_ids ) ? explode( ',', $document_ids ) : $document_ids );
-						if ( count( $document_ids ) > 1 ) {
-							$text = sprintf(
-							/* translators: User full name. */
-								__( '%1$s posted some documents', 'buddyboss' ),
-								$user_fullname
-							);
-						} else {
-							$text = sprintf(
-							/* translators: User full name. */
-								__( '%1$s posted a document', 'buddyboss' ),
-								$user_fullname
-							);
-						}
-					} elseif ( $video_ids ) {
-						$video_ids = array_filter( ! is_array( $video_ids ) ? explode( ',', $video_ids ) : $video_ids );
-						if ( count( $video_ids ) > 1 ) {
-							$text = sprintf(
-							/* translators: User full name. */
-								__( '%1$s posted some videos', 'buddyboss' ),
-								$user_fullname
-							);
-						} else {
-							$text = sprintf(
-							/* translators: User full name. */
-								__( '%1$s posted a video', 'buddyboss' ),
-								$user_fullname
-							);
-						}
-					} elseif ( ! empty( $gif_data ) ) {
+			} else {
+				$notification_link = add_query_arg( 'rid', (int) $notification_id, bp_activity_get_permalink( $item_id ) );
+				if ( ! empty( $activity_excerpt ) ) {
+					$text = sprintf(
+					/* translators: 1: User full name, 2: Activity content. */
+						__( '%1$s posted an update: %2$s', 'buddyboss' ),
+						$user_fullname,
+						$activity_excerpt
+					);
+				} elseif ( $media_ids ) {
+					$media_ids = array_filter( ! is_array( $media_ids ) ? explode( ',', $media_ids ) : $media_ids );
+					if ( count( $media_ids ) > 1 ) {
 						$text = sprintf(
 						/* translators: User full name. */
-							__( '%1$s posted an update', 'buddyboss' ),
+							__( '%1$s posted some photos', 'buddyboss' ),
 							$user_fullname
-						);
-					} elseif ( ! empty( $question ) ) {
-						$text = sprintf(
-						/* translators: %1$s: User full name, %2$s: question. */
-							__( '%1$s posted a poll "%2$s"', 'buddyboss' ),
-							$user_fullname,
-							$question
 						);
 					} else {
 						$text = sprintf(
-						/* translators: %s: User full name. */
-							__( '%1$s posted an update', 'buddyboss' ),
+						/* translators: User full name. */
+							__( '%1$s posted a photo', 'buddyboss' ),
 							$user_fullname
 						);
 					}
+				} elseif ( $document_ids ) {
+					$document_ids = array_filter( ! is_array( $document_ids ) ? explode( ',', $document_ids ) : $document_ids );
+					if ( count( $document_ids ) > 1 ) {
+						$text = sprintf(
+						/* translators: User full name. */
+							__( '%1$s posted some documents', 'buddyboss' ),
+							$user_fullname
+						);
+					} else {
+						$text = sprintf(
+						/* translators: User full name. */
+							__( '%1$s posted a document', 'buddyboss' ),
+							$user_fullname
+						);
+					}
+				} elseif ( $video_ids ) {
+					$video_ids = array_filter( ! is_array( $video_ids ) ? explode( ',', $video_ids ) : $video_ids );
+					if ( count( $video_ids ) > 1 ) {
+						$text = sprintf(
+						/* translators: User full name. */
+							__( '%1$s posted some videos', 'buddyboss' ),
+							$user_fullname
+						);
+					} else {
+						$text = sprintf(
+						/* translators: User full name. */
+							__( '%1$s posted a video', 'buddyboss' ),
+							$user_fullname
+						);
+					}
+				} elseif ( ! empty( $gif_data ) ) {
+					$text = sprintf(
+					/* translators: User full name. */
+						__( '%1$s posted an update', 'buddyboss' ),
+						$user_fullname
+					);
+				} elseif ( ! empty( $question ) ) {
+					$text = sprintf(
+					/* translators: %1$s: User full name, %2$s: question. */
+						__( '%1$s posted a poll "%2$s"', 'buddyboss' ),
+						$user_fullname,
+						$question
+					);
+				} else {
+					$text = sprintf(
+					/* translators: %s: User full name. */
+						__( '%1$s posted an update', 'buddyboss' ),
+						$user_fullname
+					);
 				}
 			}
 

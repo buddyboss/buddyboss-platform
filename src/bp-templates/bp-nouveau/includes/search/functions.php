@@ -64,7 +64,7 @@ function bp_nouveau_search_enqueue_scripts() {
 	);
 
 	if ( isset( $_GET['s'] ) ) {
-		$data['search_term'] = $_GET['s'];
+		$data['search_term'] = sanitize_text_field( wp_unslash( $_GET['s'] ) );
 	}
 
 	if ( bp_is_active( 'forums' ) ) {
@@ -217,7 +217,7 @@ function bb_rl_search_enqueue_scripts() {
 	);
 
 	if ( isset( $_GET['s'] ) ) {
-		$data['search_term'] = $_GET['s'];
+		$data['search_term'] = sanitize_text_field( wp_unslash( $_GET['s'] ) );
 	}
 
 	$min = bp_core_get_minified_asset_suffix();

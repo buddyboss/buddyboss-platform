@@ -67,7 +67,7 @@ function bb_subscriptions_migrate_users_forum_topic( $is_background = false, $is
 
 		$offset = filter_input( INPUT_POST, 'offset', FILTER_SANITIZE_NUMBER_INT );
 		if ( ! empty( $offset ) ) {
-			$offset = -- $offset;
+			$offset = --$offset;
 		} else {
 			$offset = 0;
 		}
@@ -127,7 +127,7 @@ function bb_migrate_users_forum_topic_subscriptions( $subscription_users, $offse
 	if ( ! empty( $subscription_users ) ) {
 		foreach ( $subscription_users as $user_id ) {
 			// Increment the current offset.
-			$offset ++;
+			++$offset;
 
 			$place_holder_queries = array();
 
@@ -361,7 +361,7 @@ function bb_subscriptions_migrating_bbpress_users_subscriptions( $is_background 
 
 		$offset = filter_input( INPUT_POST, 'offset', FILTER_SANITIZE_NUMBER_INT );
 		if ( ! empty( $offset ) ) {
-			$offset = -- $offset;
+			$offset = --$offset;
 		} else {
 			$offset = 0;
 		}
@@ -370,9 +370,8 @@ function bb_subscriptions_migrating_bbpress_users_subscriptions( $is_background 
 
 		if ( ! empty( $results ) ) {
 			return bb_migrate_bbpress_users_post_subscriptions( $results, $blog_id, $offset, $is_background );
-		} else {
+		} elseif ( ! $is_background ) {
 
-			if ( ! $is_background ) {
 				/* translators: Status of current action. */
 				$statement = __( 'Migrating BBPress (v2.6+) forum and discussion subscriptions to BuddyBoss&hellip; %s', 'buddyboss' );
 				$result    = __( 'Complete!', 'buddyboss' );
@@ -382,10 +381,8 @@ function bb_subscriptions_migrating_bbpress_users_subscriptions( $is_background 
 					'status'  => 1,
 					'message' => sprintf( $statement, $result ),
 				);
-			}
 		}
 	}
-
 }
 
 /**
@@ -427,7 +424,7 @@ function bb_migrate_bbpress_users_post_subscriptions( $subscription_posts, $blog
 		foreach ( $subscription_posts as $post_id ) {
 
 			// Increment the current offset.
-			$offset ++;
+			++$offset;
 
 			// Get the forum.
 			$post = get_post( $post_id );
@@ -594,11 +591,9 @@ function bb_get_subscriptions_types( $singular = false ) {
 				}
 			}
 		}
-	} else {
-		if ( function_exists( 'bbp_is_subscriptions_active' ) && bbp_is_subscriptions_active() ) {
+	} elseif ( function_exists( 'bbp_is_subscriptions_active' ) && bbp_is_subscriptions_active() ) {
 			$types['forum'] = ( $singular ? __( 'Forum', 'buddyboss' ) : __( 'Forums', 'buddyboss' ) );
 			$types['topic'] = ( $singular ? __( 'Discussion', 'buddyboss' ) : __( 'Discussions', 'buddyboss' ) );
-		}
 	}
 
 	return $types;
@@ -1171,7 +1166,6 @@ function bb_send_notifications_to_subscribers( $args ) {
 			$parse_args
 		);
 	}
-
 }
 
 /**

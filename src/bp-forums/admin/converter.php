@@ -1638,7 +1638,7 @@ abstract class BBP_Converter_Base {
 		}
 
 		// Create main query.
-		$query = $this->wpdb->prepare( $query . " LIMIT %d, %d", $start, $this->max_rows );
+		$query = $this->wpdb->prepare( $query . ' LIMIT %d, %d', $start, $this->max_rows );
 
 		foreach ( $this->get_results( $query ) as $row ) {
 			$parent_id = $this->callback_forumid( $row->meta_value );
@@ -1666,7 +1666,7 @@ abstract class BBP_Converter_Base {
 		}
 
 		// Create main query.
-		$query = $this->wpdb->prepare( $query . " LIMIT %d, %d", $start, $this->max_rows );
+		$query = $this->wpdb->prepare( $query . ' LIMIT %d, %d', $start, $this->max_rows );
 
 		foreach ( $this->get_results( $query ) as $row ) {
 			bbp_stick_topic( $row->value_id );
@@ -1693,7 +1693,7 @@ abstract class BBP_Converter_Base {
 		}
 
 		// Create main query.
-		$query = $this->wpdb->prepare( $query . " LIMIT %d, %d", $start, $this->max_rows );
+		$query = $this->wpdb->prepare( $query . ' LIMIT %d, %d', $start, $this->max_rows );
 
 		foreach ( $this->get_results( $query ) as $row ) {
 			bbp_stick_topic( $row->value_id, true );
@@ -1720,7 +1720,7 @@ abstract class BBP_Converter_Base {
 		}
 
 		// Create main query.
-		$query = $this->wpdb->prepare( $query . " LIMIT %d, %d", $start, $this->max_rows );
+		$query = $this->wpdb->prepare( $query . ' LIMIT %d, %d', $start, $this->max_rows );
 
 		foreach ( $this->get_results( $query ) as $row ) {
 			bbp_close_topic( $row->value_id );
@@ -1747,7 +1747,7 @@ abstract class BBP_Converter_Base {
 		}
 
 		// Create main query.
-		$query = $this->wpdb->prepare( $query . " LIMIT %d, %d", $start, $this->max_rows );
+		$query = $this->wpdb->prepare( $query . ' LIMIT %d, %d', $start, $this->max_rows );
 
 		foreach ( $this->get_results( $query ) as $row ) {
 			$reply_to = $this->callback_reply_to( $row->meta_value );
@@ -1796,7 +1796,7 @@ abstract class BBP_Converter_Base {
 		}
 
 		// Create main query.
-		$query = $this->wpdb->prepare( $query . " LIMIT %d, %d", $start, $this->max_rows );
+		$query = $this->wpdb->prepare( $query . ' LIMIT %d, %d', $start, $this->max_rows );
 
 		foreach ( $this->get_results( $query ) as $row ) {
 			$anonymous_topic_author_id = 0;
@@ -1848,7 +1848,7 @@ abstract class BBP_Converter_Base {
 		}
 
 		// Create main query.
-		$query = $this->wpdb->prepare( $query . " LIMIT %d, %d", $start, $this->max_rows );
+		$query = $this->wpdb->prepare( $query . ' LIMIT %d, %d', $start, $this->max_rows );
 
 		foreach ( $this->get_results( $query ) as $row ) {
 			$anonymous_reply_author_id = 0;

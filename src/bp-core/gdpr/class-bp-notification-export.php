@@ -168,7 +168,6 @@ final class BP_Notification_Export extends BP_Export {
 			'offset' => $offset,
 			'items'  => $items,
 		);
-
 	}
 
 	/**
@@ -224,5 +223,4 @@ final class BP_Notification_Export extends BP_Export {
 		 */
 		return apply_filters( 'bp_get_the_notification_description', $description, $notification );
 	}
-
 }

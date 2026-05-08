@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Implementation of SMF Forum converter.
@@ -579,11 +580,11 @@ class SMF extends BBP_Converter_Base {
 	 * as one value. Array values are auto sanitized by WordPress.
 	 */
 	public function callback_savepass( $field, $row ) {
-		 $pass_array = array(
-			 'hash'     => $field,
-			 'username' => $row['member_name'],
-		 );
-		 return $pass_array;
+		$pass_array = array(
+			'hash'     => $field,
+			'username' => $row['member_name'],
+		);
+		return $pass_array;
 	}
 
 	/**

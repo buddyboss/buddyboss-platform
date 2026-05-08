@@ -162,11 +162,11 @@ class BP_Activity_Follow {
 		$sql['select'] = "SELECT u.follower_id FROM {$bp->activity->table_name_follow} u ";
 		$sql['select'] = apply_filters( 'bp_user_query_join_sql', $sql['select'], 'follower_id' );
 
-		$sql['where'][] = $wpdb->prepare( "leader_id = %d", $user_id );
+		$sql['where'][] = $wpdb->prepare( 'leader_id = %d', $user_id );
 		$sql['where']   = apply_filters( 'bp_user_query_where_sql', $sql['where'], 'follower_id' );
 
-		$where_sql      = 'WHERE ' . join( ' AND ', $sql['where'] );
-		$followers_sql  = "{$sql['select']} {$where_sql}";
+		$where_sql     = 'WHERE ' . join( ' AND ', $sql['where'] );
+		$followers_sql = "{$sql['select']} {$where_sql}";
 
 		if ( ! empty( $query_args['page'] ) && ! empty( $query_args['per_page'] ) ) {
 			$followers_sql .= $wpdb->prepare( ' LIMIT %d, %d', intval( ( $query_args['page'] - 1 ) * $query_args['per_page'] ), intval( $query_args['per_page'] ) );
@@ -207,11 +207,11 @@ class BP_Activity_Follow {
 		$sql['select'] = "SELECT u.leader_id FROM {$bp->activity->table_name_follow} u ";
 		$sql['select'] = apply_filters( 'bp_user_query_join_sql', $sql['select'], 'leader_id' );
 
-		$sql['where'][] = $wpdb->prepare( "follower_id = %d", $user_id );
+		$sql['where'][] = $wpdb->prepare( 'follower_id = %d', $user_id );
 		$sql['where']   = apply_filters( 'bp_user_query_where_sql', $sql['where'], 'leader_id' );
 
-		$where_sql      = 'WHERE ' . join( ' AND ', $sql['where'] );
-		$following_sql  = "{$sql['select']} {$where_sql}";
+		$where_sql     = 'WHERE ' . join( ' AND ', $sql['where'] );
+		$following_sql = "{$sql['select']} {$where_sql}";
 
 		if ( ! empty( $query_args['page'] ) && ! empty( $query_args['per_page'] ) ) {
 			$following_sql .= $wpdb->prepare( ' LIMIT %d, %d', intval( ( $query_args['page'] - 1 ) * $query_args['per_page'] ), intval( $query_args['per_page'] ) );
@@ -265,7 +265,7 @@ class BP_Activity_Follow {
 			 */
 			$sql['select'] = apply_filters( 'bp_user_query_join_sql', $sql['select'], 'follower_id' );
 
-			$sql['where'][] = $wpdb->prepare( "u.leader_id = %d", $user_id );
+			$sql['where'][] = $wpdb->prepare( 'u.leader_id = %d', $user_id );
 
 			/**
 			 * Filters the WHERE clause for retrieving the follower count.
@@ -310,7 +310,7 @@ class BP_Activity_Follow {
 			 */
 			$sql['select'] = apply_filters( 'bp_user_query_join_sql', $sql['select'], 'leader_id' );
 
-			$sql['where'][] = $wpdb->prepare( "u.follower_id = %d", $user_id );
+			$sql['where'][] = $wpdb->prepare( 'u.follower_id = %d', $user_id );
 
 			/**
 			 * Filters the WHERE clause for retrieving the follow count.

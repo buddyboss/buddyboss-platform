@@ -54,6 +54,5 @@ class BP_Core_Gdpr {
 			new BP_Bbp_Gdpr_Replies();
 			new BP_Bbp_Gdpr_Topics();
 		}
-
 	}
 }

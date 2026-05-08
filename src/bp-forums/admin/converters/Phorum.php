@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Implementation of Phorum Forum converter.
@@ -458,7 +459,6 @@ class Phorum extends BBP_Converter_Base {
 			'to_fieldname'    => '_bbp_phorum_user_sig',
 			'callback_method' => 'callback_html',
 		);
-
 	}
 
 	/**
@@ -475,11 +475,11 @@ class Phorum extends BBP_Converter_Base {
 	 * as one value. Array values are auto sanitized by WordPress.
 	 */
 	public function callback_savepass( $field, $row ) {
-		 $pass_array = array(
-			 'hash' => $field,
-			 'salt' => $row['salt'],
-		 );
-		 return $pass_array;
+		$pass_array = array(
+			'hash' => $field,
+			'salt' => $row['salt'],
+		);
+		return $pass_array;
 	}
 
 	/**
@@ -541,5 +541,4 @@ class Phorum extends BBP_Converter_Base {
 		$count = absint( (int) $count - 1 );
 		return $count;
 	}
-
 }

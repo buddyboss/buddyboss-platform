@@ -128,13 +128,13 @@ function bp_nouveau_ajax_joinleave_group() {
 	}
 
 	// Use default nonce
-	$nonce = $_POST['nonce'];
+	$nonce = sanitize_text_field( wp_unslash( $_POST['nonce'] ) );
 	$check = 'bp_nouveau_groups';
 
 	// Use a specific one for actions needed it
 	if ( ! empty( $_POST['_wpnonce'] ) && ! empty( $_POST['action'] ) ) {
-		$nonce = $_POST['_wpnonce'];
-		$check = $_POST['action'];
+		$nonce = sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) );
+		$check = sanitize_text_field( wp_unslash( $_POST['action'] ) );
 	}
 
 	// Nonce check!
@@ -346,13 +346,13 @@ function bp_nouveau_ajax_get_users_to_invite() {
 	}
 
 	// Use default nonce
-	$nonce = $_POST['nonce'];
+	$nonce = sanitize_text_field( wp_unslash( $_POST['nonce'] ) );
 	$check = 'bp_nouveau_groups';
 
 	// Use a specific one for actions needed it
 	if ( ! empty( $_POST['_wpnonce'] ) && ! empty( $_POST['action'] ) ) {
-		$nonce = $_POST['_wpnonce'];
-		$check = $_POST['action'];
+		$nonce = sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) );
+		$check = sanitize_text_field( wp_unslash( $_POST['action'] ) );
 	}
 
 	// Nonce check!
@@ -550,7 +550,7 @@ function bp_nouveau_ajax_get_users_to_invite() {
 	$potential_invites->users = array_filter( $potential_invites->users );
 
 	$total_page = (int) $potential_invites->meta['total_page'];
-	$page       = ( isset( $_POST ) && '' !== $_POST['page'] && ! is_null( $_POST['page'] ) ) ? (int) $_POST['page'] : 1;
+	$page       = ( isset( $_POST ) && isset( $_POST['page'] ) && '' !== $_POST['page'] && ! is_null( $_POST['page'] ) ) ? absint( $_POST['page'] ) : 1;
 	$html       = '';
 	ob_start();
 
@@ -650,7 +650,7 @@ function bp_nouveau_ajax_get_users_to_invite() {
 		<?php
 	}
 
-	if ( $total_page !== (int) $_POST['page'] ) {
+	if ( $total_page !== ( isset( $_POST['page'] ) ? absint( $_POST['page'] ) : 0 ) ) {
 		?>
 		<li class="load-more">
 			<div class="center">
@@ -718,14 +718,14 @@ function bp_nouveau_ajax_send_group_invites() {
 	);
 
 	// Verify nonce.
-	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'groups_send_invites' ) ) {
+	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'groups_send_invites' ) ) {
 		wp_send_json_error( $response );
 	}
 
-	$group_id = bp_get_current_group_id() ?: $_POST['group_id'];
+	$group_id = bp_get_current_group_id() ?: ( isset( $_POST['group_id'] ) ? absint( $_POST['group_id'] ) : 0 );
 
 	if ( bp_is_group_create() && ! empty( $_POST['group_id'] ) ) {
-		$group_id = (int) $_POST['group_id'];
+		$group_id = isset( $_POST['group_id'] ) ? absint( $_POST['group_id'] ) : 0;
 	}
 
 	if ( ! bp_groups_user_can_send_invites( $group_id ) ) {
@@ -741,7 +741,7 @@ function bp_nouveau_ajax_send_group_invites() {
 	// For feedback.
 	$invited = array();
 
-	foreach ( (array) $_POST['users'] as $user_id ) {
+	foreach ( wp_parse_id_list( isset( $_POST['users'] ) ? wp_unslash( $_POST['users'] ) : array() ) as $user_id ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- wp_parse_id_list sanitizes to integers.
 		$user_id = (int) $user_id;
 
 		// Check friends & settings component is active and all members can be invited.
@@ -753,7 +753,7 @@ function bp_nouveau_ajax_send_group_invites() {
 			array(
 				'user_id'  => $user_id,
 				'group_id' => $group_id,
-				'content'  => $_POST['message'],
+				'content'  => isset( $_POST['message'] ) ? sanitize_textarea_field( wp_unslash( $_POST['message'] ) ) : '',
 			)
 		);
 	}
@@ -806,7 +806,7 @@ function bp_nouveau_ajax_send_group_invites() {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_remove_group_invite() {
-	$user_id  = (int) $_POST['user'];
+	$user_id  = isset( $_POST['user'] ) ? absint( $_POST['user'] ) : 0;
 	$group_id = bp_get_current_group_id();
 
 	$response = array(
@@ -815,7 +815,7 @@ function bp_nouveau_ajax_remove_group_invite() {
 	);
 
 	// Verify nonce.
-	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'groups_invite_uninvite_user' ) ) {
+	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'groups_invite_uninvite_user' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -895,19 +895,19 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( wp_unslash( $_POST['nonce'] ) ) || ! wp_verify_nonce( wp_unslash( $_POST['nonce'] ), 'retrieve_group_members' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'retrieve_group_members' ) ) {
 		wp_send_json_error( $response );
 	}
 
 	$per_page        = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_per_page', 10 );
 	$search_per_page = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_search_per_page', 99999999999999 );
-	$page            = (int) $_POST['page'];
+	$page            = isset( $_POST['page'] ) ? absint( $_POST['page'] ) : 1;
 
 	if ( isset( $_POST['term'] ) && '' !== $_POST['term'] ) {
 		$args = array(
 			'per_page'            => $search_per_page,
-			'group_id'            => $_POST['group'],
-			'search_terms'        => $_POST['term'],
+			'group_id'            => isset( $_POST['group'] ) ? absint( $_POST['group'] ) : 0,
+			'search_terms'        => sanitize_text_field( wp_unslash( $_POST['term'] ) ),
 			'exclude'             => array( bp_loggedin_user_id() ),
 			'exclude_admins_mods' => false,
 		);
@@ -915,7 +915,7 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 		$args = array(
 			'page'                => $page,
 			'per_page'            => $per_page,
-			'group_id'            => $_POST['group'],
+			'group_id'            => isset( $_POST['group'] ) ? absint( $_POST['group'] ) : 0,
 			'exclude'             => array( bp_loggedin_user_id() ),
 			'exclude_admins_mods' => false,
 		);
@@ -1008,7 +1008,7 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 			<?php
 		}
 
-		if ( $total_page !== (int) $_POST['page'] ) {
+		if ( $total_page !== $page ) {
 			?>
 			<li class="load-more">
 				<div class="center">
@@ -1025,7 +1025,7 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 
 			ob_start();
 
-			if ( 1 !== (int) $_POST['page'] ) {
+			if ( 1 !== $page ) {
 				?>
 				<a href="javascript:void(0);" id="bp-group-messages-prev-page"
 				   class="button group-message-button bp-tooltip" data-bp-tooltip-pos="up"
@@ -1035,7 +1035,7 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 				<?php
 			}
 
-			if ( $total_page !== (int) $_POST['page'] ) {
+			if ( $total_page !== $page ) {
 				$page = $page + 1;
 				?>
 				<a href="javascript:void(0);" id="bp-group-messages-next-page"

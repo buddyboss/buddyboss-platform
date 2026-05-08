@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 /**
  * Activity: User's "Activity > Groups" screen handler
  *

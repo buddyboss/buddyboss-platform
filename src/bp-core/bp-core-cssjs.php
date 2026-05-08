@@ -21,76 +21,76 @@ function bp_core_register_common_scripts() {
 	// Set up default scripts to register.
 	$scripts = array(
 		// Legacy.
-		'bp-confirm'          => array(
+		'bp-confirm'                    => array(
 			'file'         => "{$url}confirm{$min}.js",
 			'dependencies' => array( 'jquery' ),
 			'footer'       => false,
 		),
-		'bp-widget-members'   => array(
+		'bp-widget-members'             => array(
 			'file'         => "{$url}widget-members{$min}.js",
 			'dependencies' => array( 'jquery' ),
 			'footer'       => false,
 		),
-		'bp-jquery-query'     => array(
+		'bp-jquery-query'               => array(
 			'file'         => "{$url}jquery-query{$min}.js",
 			'dependencies' => array( 'jquery' ),
 			'footer'       => false,
 		),
-		'bp-jquery-cookie'    => array(
+		'bp-jquery-cookie'              => array(
 			'file'         => "{$url}vendor/jquery-cookie{$min}.js",
 			'dependencies' => array( 'jquery' ),
 			'footer'       => false,
 		),
-		'bp-jquery-scroll-to' => array(
+		'bp-jquery-scroll-to'           => array(
 			'file'         => "{$url}vendor/jquery-scroll-to{$min}.js",
 			'dependencies' => array( 'jquery' ),
 			'footer'       => false,
 		),
 
 		// Version 2.1.
-		'jquery-caret'        => array(
+		'jquery-caret'                  => array(
 			'file'         => "{$url}vendor/jquery.caret{$min}.js",
 			'dependencies' => array( 'jquery' ),
 			'footer'       => true,
 		),
-		'jquery-atwho'        => array(
+		'jquery-atwho'                  => array(
 			'file'         => "{$url}jquery.atwho{$min}.js",
 			'dependencies' => array( 'jquery', 'jquery-caret' ),
 			'footer'       => true,
 		),
 
 		// Version 2.3.
-		'bp-plupload'         => array(
+		'bp-plupload'                   => array(
 			'file'         => "{$url}bp-plupload{$min}.js",
 			'dependencies' => array( 'plupload', 'jquery', 'json2', 'wp-backbone' ),
 			'footer'       => true,
 		),
-		'bp-avatar'           => array(
+		'bp-avatar'                     => array(
 			'file'         => "{$url}avatar{$min}.js",
 			'dependencies' => array( 'jcrop' ),
 			'footer'       => true,
 		),
-		'bp-webcam'           => array(
+		'bp-webcam'                     => array(
 			'file'         => "{$url}webcam{$min}.js",
 			'dependencies' => array( 'bp-avatar' ),
 			'footer'       => true,
 		),
 
 		// Version 2.4.
-		'bp-cover-image'      => array(
+		'bp-cover-image'                => array(
 			'file'         => "{$url}cover-image{$min}.js",
 			'dependencies' => array(),
 			'footer'       => true,
 		),
 
 		// Version 2.7.
-		'bp-livestamp'        => array(
+		'bp-livestamp'                  => array(
 			'file'         => "{$url}livestamp{$min}.js",
 			'dependencies' => array( 'jquery', 'moment' ),
 			'footer'       => true,
 		),
 
-		'jquery-mask'         => array(
+		'jquery-mask'                   => array(
 			'file'         => "{$url}vendor/jquery.mask{$min}.js",
 			'dependencies' => array( 'jquery' ),
 			'footer'       => true,
@@ -253,17 +253,17 @@ function bp_core_register_common_scripts() {
 		'bp-media-dropzone',
 		'bp_media_dropzone',
 		array(
-			'dictDefaultMessage'           => __( "Drop files here to upload", 'buddyboss' ),
+			'dictDefaultMessage'           => __( 'Drop files here to upload', 'buddyboss' ),
 			'dictFallbackMessage'          => __( "Your browser does not support drag'n'drop file uploads.", 'buddyboss' ),
-			'dictFallbackText'             => __( "Please use the fallback form below to upload your files like in the olden days.", 'buddyboss' ),
-			'dictFileTooBig'               => __( "Sorry, file size is too big ({{filesize}} MB). Max file size limit: {{maxFilesize}} MB.", 'buddyboss' ),
+			'dictFallbackText'             => __( 'Please use the fallback form below to upload your files like in the olden days.', 'buddyboss' ),
+			'dictFileTooBig'               => __( 'Sorry, file size is too big ({{filesize}} MB). Max file size limit: {{maxFilesize}} MB.', 'buddyboss' ),
 			'dictInvalidFileType'          => __( "You can't upload files of this type.", 'buddyboss' ),
-			'dictResponseError'            => __( "Server responded with {{statusCode}} code.", 'buddyboss' ),
-			'dictCancelUpload'             => __( "Cancel upload", 'buddyboss' ),
-			'dictUploadCanceled'           => __( "Upload canceled.", 'buddyboss' ),
-			'dictCancelUploadConfirmation' => __( "Are you sure you want to cancel this upload?", 'buddyboss' ),
-			'dictRemoveFile'               => __( "Remove file", 'buddyboss' ),
-			'dictMaxFilesExceeded'         => __( "You cannot upload more than 10 files at a time.", 'buddyboss' ),
+			'dictResponseError'            => __( 'Server responded with {{statusCode}} code.', 'buddyboss' ),
+			'dictCancelUpload'             => __( 'Cancel upload', 'buddyboss' ),
+			'dictUploadCanceled'           => __( 'Upload canceled.', 'buddyboss' ),
+			'dictCancelUploadConfirmation' => __( 'Are you sure you want to cancel this upload?', 'buddyboss' ),
+			'dictRemoveFile'               => __( 'Remove file', 'buddyboss' ),
+			'dictMaxFilesExceeded'         => __( 'You cannot upload more than 10 files at a time.', 'buddyboss' ),
 		)
 	);
 }
@@ -368,7 +368,6 @@ function bp_core_confirmation_js() {
 			'are_you_sure' => __( 'Are you sure?', 'buddyboss' ),
 		)
 	);
-
 }
 add_action( 'bp_enqueue_scripts', 'bp_core_confirmation_js' );
 add_action( 'bp_admin_enqueue_scripts', 'bp_core_confirmation_js' );
@@ -902,7 +901,6 @@ function bp_core_register_page_js() {
 
 		wp_localize_script( 'bp-register-page', 'BP_Register', apply_filters( 'bp_core_register_js_settings', $data ) );
 	}
-
 }
 
 add_action( 'bp_enqueue_scripts', 'bp_core_register_page_js' );

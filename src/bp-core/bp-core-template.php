@@ -981,7 +981,7 @@ function bp_create_excerpt( $text, $length = 225, $options = array() ) {
 				if ( preg_match_all( '/&[0-9a-z]{2,8};|&#[0-9]{1,7};|&#x[0-9a-f]{1,6};/i', $tag[3], $entities, PREG_OFFSET_CAPTURE ) ) {
 					foreach ( $entities[0] as $entity ) {
 						if ( $entity[1] + 1 - $entitiesLength <= $left ) {
-							$left--;
+							--$left;
 							$entitiesLength += mb_strlen( $entity[0] );
 						} else {
 							break;
@@ -3737,10 +3737,8 @@ function bp_get_the_body_class( $wp_classes = array(), $custom_classes = false )
 		if ( bp_is_user_activity() ) {
 			$bp_classes[] = 'my-activity';
 		}
-	} else {
-		if ( bp_get_current_member_type() || ( bp_is_groups_directory() && bp_get_current_group_directory_type() ) ) {
+	} elseif ( bp_get_current_member_type() || ( bp_is_groups_directory() && bp_get_current_group_directory_type() ) ) {
 			$bp_classes[] = 'type';
-		}
 	}
 
 	if ( bp_is_my_profile() ) {
@@ -4402,7 +4400,6 @@ function bb_user_has_access_upload_document( $group_id = 0, $user_id = 0, $forum
 	}
 
 	return false;
-
 }
 
 /**
@@ -4451,7 +4448,6 @@ function bb_user_has_access_upload_media( $group_id = 0, $user_id = 0, $forum_id
 	}
 
 	return false;
-
 }
 
 /**
@@ -4500,7 +4496,6 @@ function bb_user_has_access_upload_gif( $group_id = 0, $user_id = 0, $forum_id =
 	}
 
 	return false;
-
 }
 
 /**
@@ -4549,7 +4544,6 @@ function bb_user_has_access_upload_emoji( $group_id = 0, $user_id = 0, $forum_id
 	}
 
 	return false;
-
 }
 
 /**
@@ -4625,5 +4619,4 @@ function bb_user_has_access_upload_video( $group_id = 0, $user_id = 0, $forum_id
 	}
 
 	return false;
-
 }

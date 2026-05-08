@@ -974,7 +974,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		remove_action( 'bbp_new_topic', 'bbp_notify_forum_subscribers', 9999, 4 );
 		remove_action( 'bbp_new_topic', 'bbp_buddypress_add_topic_notification', 9999, 2 );
 
- 		/** Update counts, etc... */
+		/** Update counts, etc... */
 		do_action( 'bbp_new_topic', $topic_id, $forum_id, $anonymous_data, $topic_author );
 
 		/** Stickies */
@@ -2316,7 +2316,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
-				'link_embed_url'    => array(
+				'link_embed_url'           => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'WordPress Embed URL.', 'buddyboss' ),
 					'type'        => 'string',
@@ -2497,7 +2497,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 					'rand',
 					'popular',
 					'activity',
-					'include'
+					'include',
 				),
 			),
 			'sanitize_callback' => 'bp_rest_sanitize_string_list',

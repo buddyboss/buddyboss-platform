@@ -232,10 +232,10 @@ abstract class BP_Core_oEmbed_Extension {
 			"/embed/{$this->slug_endpoint}",
 			array(
 				array(
-					'methods'               => WP_REST_Server::READABLE,
-					'callback'              => array( $this, 'get_item' ),
-					'permission_callback'   => '__return_true',
-					'args'                  => $args,
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_item' ),
+					'permission_callback' => array( $this, 'get_item_public_permissions_check' ),
+					'args'                => $args,
 				),
 			)
 		);
@@ -630,5 +630,24 @@ abstract class BP_Core_oEmbed_Extension {
 		}
 
 		$this->content();
+	}
+
+	/**
+	 * Permission callback for the public-read oEmbed endpoint.
+	 *
+	 * The oEmbed embed endpoint (oembed/1.0/embed/{slug}) intentionally serves
+	 * publicly viewable embed data. Replacing the deprecated '__return_true'
+	 * literal with a named method is a SEC-04 requirement; the public-read
+	 * intent is unchanged.
+	 *
+	 * @since 2.19.0
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return true Always true — public oEmbed read.
+	 */
+	public function get_item_public_permissions_check( $request ) {
+		// Public oEmbed endpoint. Serves only embed-safe public data.
+		return true;
 	}
 }

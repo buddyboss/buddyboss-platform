@@ -915,12 +915,12 @@ if ( ! class_exists( 'BP_Component' ) ) :
 				 */
 				$controllers = (array) apply_filters( 'bp_' . $this->id . '_rest_api_controllers', $controllers );
 
-				foreach( $controllers as $controller ) {
+				foreach ( $controllers as $controller ) {
 					if ( ! in_array( $controller, $_controllers, true ) || ! class_exists( $controller ) ) {
 						continue;
 					}
 
-					$component_controller = new $controller;
+					$component_controller = new $controller();
 					$component_controller->register_routes();
 				}
 			}

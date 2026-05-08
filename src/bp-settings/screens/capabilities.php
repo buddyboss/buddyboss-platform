@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 /**
  * Settings: User's "Settings > Capabilities" screen handler
  *

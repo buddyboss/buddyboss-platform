@@ -41,7 +41,7 @@ class BB_CDN_Helpers {
 	 * Get the instance of this class.
 	 *
 	 * @since BuddyBoss 2.6.10
-	 * 
+	 *
 	 * @return Controller|null
 	 */
 	public static function instance() {

@@ -127,7 +127,7 @@ class bp_ps_Fields {
 	}
 
 	public static function set_display( $f, $filter ) {
-		 $format  = isset( $f->format ) ? $f->format : 'none';
+		$format   = isset( $f->format ) ? $f->format : 'none';
 		$enum     = ( isset( $f->options ) && is_array( $f->options ) ) ? count( $f->options ) : 0;
 		$selector = $format . ( $enum ? '/e' : '' );
 		if ( ! isset( self::$display[ $selector ][ $filter ] ) ) {
@@ -342,7 +342,7 @@ function bp_ps_is_filter( $filter, $f ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_ps_escaped_form_data( $version = '' ) {
-	 return bp_ps_escaped_form_data47( $version );
+	return bp_ps_escaped_form_data47( $version );
 }
 
 /**

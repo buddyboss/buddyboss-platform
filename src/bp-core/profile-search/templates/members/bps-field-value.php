@@ -5,7 +5,7 @@
  * @since BuddyBoss 1.0.0
  */
 
- // Exit if accessed directly.
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 list ($name, $value) = bp_ps_template_args();

@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 /**
  * The template for BP Nouveau Activity Comment form.
  *

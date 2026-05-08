@@ -75,7 +75,6 @@ class BB_QM_Helpers {
 		<?php
 		echo ob_get_clean();
 	}
-
 }
 
 BB_QM_Helpers::instance();

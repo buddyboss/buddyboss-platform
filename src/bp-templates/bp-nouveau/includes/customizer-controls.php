@@ -57,7 +57,7 @@ class BP_Nouveau_Nav_Customize_Control extends WP_Customize_Control {
 			$type = 'group';
 
 			if ( isset( $_GET['url'] ) && ! empty( $_GET['url'] ) ) {
-				$parse_url = parse_url( $_GET['url'] );
+				$parse_url = parse_url( esc_url_raw( wp_unslash( $_GET['url'] ) ) );
 				$path_arr  = explode( '/', $parse_url['path'] );
 				if ( 'groups' === $path_arr[1] && '' !== $path_arr[2] ) {
 					$slug = array( $path_arr[2] );

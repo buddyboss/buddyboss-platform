@@ -217,7 +217,6 @@ abstract class BP_Core_Notification_Abstract {
 		$notifications = array_merge( $notifications, $this->notifications );
 
 		return $notifications;
-
 	}
 
 	/**
@@ -755,5 +754,4 @@ abstract class BP_Core_Notification_Abstract {
 
 		return $response;
 	}
-
 }

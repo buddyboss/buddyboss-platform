@@ -360,7 +360,7 @@ if ( class_exists( 'Walker' ) ) :
 				return;
 			}
 
-			$this->total_items_per_page++;
+			++$this->total_items_per_page;
 
 			// Get element's id.
 			$id_field = $this->db_fields['id'];
@@ -387,7 +387,7 @@ if ( class_exists( 'Walker' ) ) :
 		public function start_el( &$output, $object, $depth = 0, $args = array(), $current_object_id = 0 ) {
 
 			// Set up reply.
-			$depth++;
+			++$depth;
 			bbpress()->reply_query->reply_depth = $depth;
 			bbpress()->reply_query->post        = $object;
 			bbpress()->current_reply_id         = $object->ID;

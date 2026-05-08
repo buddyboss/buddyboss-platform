@@ -900,7 +900,7 @@ function bbp_forum_topic_reply_ajax_form_search_tags() {
 	}
 
 	// Use default nonce.
-	$nonce = $_GET['_wpnonce'];
+	$nonce = wp_unslash( $_GET['_wpnonce'] );
 	$check = 'search_tag';
 
 	// Nonce check!.

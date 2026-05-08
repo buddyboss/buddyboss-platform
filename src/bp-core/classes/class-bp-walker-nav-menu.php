@@ -137,7 +137,7 @@ class BP_Walker_Nav_Menu extends Walker_Nav_Menu {
 			}
 		}
 
-		 return $output;
+		return $output;
 	}
 
 	/**

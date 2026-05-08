@@ -37,7 +37,7 @@ class BP_Admin_Setting_Forums extends BP_Admin_Setting_tab {
 				$value = isset( $_POST[ $field_id ] ) ? $_POST[ $field_id ] : '';
 
 				if ( is_callable( $field['sanitize_callback'] ) ) {
-					$value = $field['sanitize_callback']($value);
+					$value = $field['sanitize_callback']( $value );
 				}
 
 				bp_update_option( $field_id, $value );
@@ -51,7 +51,6 @@ class BP_Admin_Setting_Forums extends BP_Admin_Setting_tab {
 
 		$url = bp_core_admin_setting_url( $this->tab_name, array( 'edited' => 'true' ) );
 		bp_core_redirect( $url );
-
 	}
 
 	public function register_fields() {

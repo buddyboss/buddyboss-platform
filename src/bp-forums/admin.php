@@ -31,8 +31,6 @@ function bp_forums_add_admin_menu() {
 			$forum_url
 		);
 	}
-
-
 }
 add_action( bp_core_admin_hook(), 'bp_forums_add_admin_menu', 61 );
 
@@ -41,12 +39,14 @@ function bp_forums_add_sub_menu_page_admin_menu() {
 	if ( is_multisite() && bp_is_network_activated() ) {
 		$forum_url = 'edit.php?post_type=' . bbp_get_forum_post_type(); // buddyboss-settings
 		// Add our screen.
-		$hook = add_submenu_page( 'buddyboss-platform',
+		$hook = add_submenu_page(
+			'buddyboss-platform',
 			__( 'Forums', 'buddyboss' ),
 			__( 'Forums', 'buddyboss' ),
 			'bbp_forums_admin',
 			$forum_url,
-			'' );
+			''
+		);
 	}
 }
 add_action( 'admin_menu', 'bp_forums_add_sub_menu_page_admin_menu', 10 );
@@ -239,7 +239,24 @@ function bp_core_get_forums_admin_tabs( $active_tab = '' ) {
 	);
 
 	$tabs[] = array(
-		'href'  => ( is_multisite() ) ? get_admin_url( get_current_blog_id(), add_query_arg( array( 'taxonomy' =>  bbp_get_topic_tag_tax_id(), 'post_type' => bbp_get_topic_post_type() ), 'edit-tags.php' ) ) : bp_get_admin_url( add_query_arg( array( 'taxonomy' =>  bbp_get_topic_tag_tax_id(), 'post_type' => bbp_get_topic_post_type() ), 'edit-tags.php' ) ),
+		'href'  => ( is_multisite() ) ? get_admin_url(
+			get_current_blog_id(),
+			add_query_arg(
+				array(
+					'taxonomy'  => bbp_get_topic_tag_tax_id(),
+					'post_type' => bbp_get_topic_post_type(),
+				),
+				'edit-tags.php'
+			)
+		) : bp_get_admin_url(
+			add_query_arg(
+				array(
+					'taxonomy'  => bbp_get_topic_tag_tax_id(),
+					'post_type' => bbp_get_topic_post_type(),
+				),
+				'edit-tags.php'
+			)
+		),
 		'name'  => __( 'Discussion Tags', 'buddyboss' ),
 		'class' => 'bp-tags',
 	);
@@ -275,7 +292,6 @@ function bp_forums_admin_forums_listing_add_tab() {
 		</div>
 		<?php
 	}
-
 }
 add_action( 'admin_notices', 'bp_forums_admin_forums_listing_add_tab' );
 
@@ -294,7 +310,6 @@ function bp_discussions_admin_discussions_listing_add_tab() {
 		</div>
 		<?php
 	}
-
 }
 add_action( 'admin_notices', 'bp_discussions_admin_discussions_listing_add_tab' );
 
@@ -313,7 +328,6 @@ function bp_replies_admin_replies_listing_add_tab() {
 		</div>
 		<?php
 	}
-
 }
 add_action( 'admin_notices', 'bp_replies_admin_replies_listing_add_tab' );
 
@@ -323,7 +337,7 @@ add_action( 'admin_notices', 'bp_replies_admin_replies_listing_add_tab' );
  * @since BuddyBoss 1.0.0
  */
 function bp_tags_admin_tags_listing_add_tab() {
-	global $pagenow ,$current_screen;
+	global $pagenow, $current_screen;
 
 	if ( ( $current_screen->taxonomy == bbp_get_topic_tag_tax_id() && $pagenow == 'edit-tags.php' ) || ( $current_screen->taxonomy == bbp_get_topic_tag_tax_id() && $pagenow == 'term.php' ) ) {
 		?>
@@ -332,7 +346,6 @@ function bp_tags_admin_tags_listing_add_tab() {
 		</div>
 		<?php
 	}
-
 }
 add_action( 'admin_notices', 'bp_tags_admin_tags_listing_add_tab' );
 

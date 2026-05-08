@@ -216,9 +216,9 @@ class BP_Blogs_Component extends BP_Component {
 		$parent_url = trailingslashit( $user_domain . $slug );
 
 		// Add 'Sites' to the main navigation.
-		$count    = (int) bp_get_total_blog_count_for_user();
-		$class    = ( 0 === $count ) ? 'no-count' : 'count';
-		$nav_text = __( 'Sites', 'buddyboss' );
+		$count     = (int) bp_get_total_blog_count_for_user();
+		$class     = ( 0 === $count ) ? 'no-count' : 'count';
+		$nav_text  = __( 'Sites', 'buddyboss' );
 		$nav_text .= sprintf(
 			' <span class="%s">%s</span>',
 			esc_attr( $class ),

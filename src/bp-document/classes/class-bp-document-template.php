@@ -351,7 +351,7 @@ class BP_Document_Template {
 	 * @since BuddyBoss 1.4.0
 	 */
 	public function next_document() {
-		$this->current_document ++;
+		++$this->current_document;
 		$this->document = $this->documents[ $this->current_document ];
 
 		return $this->document;

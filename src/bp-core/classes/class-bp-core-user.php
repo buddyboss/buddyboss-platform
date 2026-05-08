@@ -338,21 +338,19 @@ class BP_Core_User {
 		// returned. The default value of false will hit the 'else' clause.
 		if ( 0 === $include || '0' === $include ) {
 			$sql['where_users'] = 'AND 0 = 1';
-		} else {
-			if ( ! empty( $include ) ) {
+		} elseif ( ! empty( $include ) ) {
 				$include            = implode( ',', wp_parse_id_list( $include ) );
 				$sql['where_users'] = "AND u.ID IN ({$include})";
-			} elseif ( ! empty( $user_id ) && bp_is_active( 'friends' ) ) {
-				$friend_ids = friends_get_friend_user_ids( $user_id );
+		} elseif ( ! empty( $user_id ) && bp_is_active( 'friends' ) ) {
+			$friend_ids = friends_get_friend_user_ids( $user_id );
 
-				if ( ! empty( $friend_ids ) ) {
-					$friend_ids           = implode( ',', wp_parse_id_list( $friend_ids ) );
-					$sql['where_friends'] = "AND u.ID IN ({$friend_ids})";
+			if ( ! empty( $friend_ids ) ) {
+				$friend_ids           = implode( ',', wp_parse_id_list( $friend_ids ) );
+				$sql['where_friends'] = "AND u.ID IN ({$friend_ids})";
 
-					// User has no friends, return false since there will be no users to fetch.
-				} else {
-					return false;
-				}
+				// User has no friends, return false since there will be no users to fetch.
+			} else {
+				return false;
 			}
 		}
 
@@ -486,10 +484,8 @@ class BP_Core_User {
 			if ( mb_strlen( $letter, 'UTF-8' ) > 1 || is_numeric( $letter ) || ! $letter ) {
 				return false;
 			}
-		} else {
-			if ( strlen( $letter ) > 1 || is_numeric( $letter ) || ! $letter ) {
+		} elseif ( strlen( $letter ) > 1 || is_numeric( $letter ) || ! $letter ) {
 				return false;
-			}
 		}
 
 		$bp = buddypress();

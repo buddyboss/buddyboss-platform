@@ -94,7 +94,6 @@ function bp_activity_format_notifications( $action, $item_id, $secondary_item_id
 			break;
 
 		default:
-
 			/**
 			 * Filters plugin-added activity-related custom component_actions.
 			 *
@@ -225,7 +224,6 @@ function bp_activity_at_mention_add_notification( $activity, $subject, $message,
 	);
 
 	remove_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
-
 }
 add_action( 'bp_activity_sent_mention_email', 'bp_activity_at_mention_add_notification', 10, 5 );
 
@@ -294,7 +292,6 @@ function bp_activity_update_reply_add_notification( $activity, $comment_id, $com
 	);
 	remove_action( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 	remove_action( 'bp_notification_after_save', 'bb_activity_add_notification_metas', 5 );
-
 }
 add_action( 'bp_activity_sent_reply_to_update_notification', 'bp_activity_update_reply_add_notification', 10, 4 );
 

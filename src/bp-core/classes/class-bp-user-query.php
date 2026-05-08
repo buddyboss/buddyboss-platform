@@ -645,15 +645,19 @@ class BP_User_Query {
 			 * @param array         $value Array of arguments for the user query.
 			 * @param BP_User_Query $this  Current BP_User_Query instance.
 			 */
-			$args = apply_filters( 'bp_wp_user_query_args', array(
-				// Relevant.
-				'fields'      => $fields,
-				'include'     => $uncached_ids,
+			$args = apply_filters(
+				'bp_wp_user_query_args',
+				array(
+					// Relevant.
+					'fields'      => $fields,
+					'include'     => $uncached_ids,
 
-				// Overrides
-				'blog_id'     => 0,    // BP does not require blog roles.
-				'count_total' => false, // We already have a count.
-			), $this );
+					// Overrides
+					'blog_id'     => 0,    // BP does not require blog roles.
+					'count_total' => false, // We already have a count.
+				),
+				$this
+			);
 
 			$wp_user_query = new WP_User_Query( $args );
 

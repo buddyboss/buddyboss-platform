@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Plugin Dependency
@@ -371,7 +372,7 @@ function bbp_post_request() {
 	do_action( 'bbp_post_request_' . $action );
 
 	// Use this static action if you don't mind checking the 'action' yourself.
-	do_action( 'bbp_post_request',   $action );
+	do_action( 'bbp_post_request', $action );
 }
 
 /**
@@ -405,7 +406,7 @@ function bbp_get_request() {
 	do_action( 'bbp_get_request_' . $action );
 
 	// Use this static action if you don't mind checking the 'action' yourself.
-	do_action( 'bbp_get_request',   $action );
+	do_action( 'bbp_get_request', $action );
 }
 
 /** Filters *******************************************************************/
@@ -491,4 +492,3 @@ function bbp_map_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args = ar
 function bbp_setup_engagements() {
 	do_action( 'bbp_setup_engagements' );
 }
-

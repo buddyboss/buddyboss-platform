@@ -186,5 +186,4 @@ class BP_REST_Document_Details_Endpoint extends WP_REST_Controller {
 
 		return $retval;
 	}
-
 }

@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 /**
  * Connections: User's "Connections > Requests" screen handler
  *

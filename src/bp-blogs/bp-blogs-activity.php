@@ -652,8 +652,8 @@ function bp_blogs_comments_open( $activity ) {
 		}
 
 		/*
-		   Commenting out for now - needs some more thought...
-		   should we add the post type to activity meta?
+			Commenting out for now - needs some more thought...
+			should we add the post type to activity meta?
 
 		$post = get_post($post_id);
 

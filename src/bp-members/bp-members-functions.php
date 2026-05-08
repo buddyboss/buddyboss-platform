@@ -2487,7 +2487,7 @@ function bp_members_login_resend_activation_email() {
 	}
 
 	// Verify nonce.
-	if ( ! wp_verify_nonce( $_GET['_wpnonce'], 'bp-resend-activation' ) ) {
+	if ( ! wp_verify_nonce( wp_unslash( $_GET['_wpnonce'] ), 'bp-resend-activation' ) ) {
 		die( 'Security check' );
 	}
 

@@ -84,52 +84,52 @@ if ( ! function_exists( 'array_msort' ) ) {
 	/**
 	 * Sort data based on order.
 	 *
-	 * @param array $array Multidimentional array.
-	 * @param array $cols Array of sorted column.
+	 * Sorts a multidimensional array by one or more columns. Each entry in $cols
+	 * maps a column key to a direction string: 'SORT_ASC' or 'SORT_DESC'.
+	 * Comparison is case-insensitive; numeric values are compared numerically.
 	 *
-	 * @return array|mixed
+	 * DEPS-02: refactored from dynamic-execution to usort() closure.
+	 *
+	 * @param array $array Multidimensional array.
+	 * @param array $cols  Map of column name => direction ('SORT_ASC'|'SORT_DESC').
+	 *
+	 * @return array
 	 *
 	 * @since BuddyBoss 1.6.0
 	 */
 	function array_msort( $array, $cols ) {
 
-		$array = json_decode( json_encode( $array ), true );
+		$array = json_decode( wp_json_encode( $array ), true );
 
-		$colarr = array();
-		foreach ( $cols as $col => $order ) {
-			$colarr[ $col ] = array();
-			foreach ( $array as $k => $row ) {
-				$colarr[ $col ][ '_' . $k ] = strtolower( $row[ $col ] );
-			}
+		if ( empty( $array ) ) {
+			return array();
 		}
-		$eval = 'array_multisort(';
-		foreach ( $cols as $col => $order ) {
-			$eval .= '$colarr[\'' . $col . '\'],' . $order . ',';
-		}
-		$eval = substr( $eval, 0, - 1 ) . ');';
-		eval( $eval );
-		$ret = array();
-		foreach ( $colarr as $col => $arr ) {
-			foreach ( $arr as $k => $v ) {
-				$k = substr( $k, 1 );
-				if ( ! isset( $ret[ $k ] ) ) {
-					$ret[ $k ] = $array[ $k ];
+
+		// DEPS-02: refactored from dynamic-execution (array_multisort via eval) to
+		// usort() with a closure. Behavior preserved: multi-key sort, per-column
+		// ascending/descending, case-insensitive string comparison via strnatcmp.
+		usort(
+			$array,
+			static function ( $a, $b ) use ( $cols ) {
+				foreach ( $cols as $col => $direction ) {
+					if ( ! array_key_exists( $col, $a ) || ! array_key_exists( $col, $b ) ) {
+						continue;
+					}
+					$val_a = strtolower( (string) $a[ $col ] );
+					$val_b = strtolower( (string) $b[ $col ] );
+					if ( is_numeric( $a[ $col ] ) && is_numeric( $b[ $col ] ) ) {
+						$cmp = ( (float) $a[ $col ] <=> (float) $b[ $col ] );
+					} else {
+						$cmp = strnatcmp( $val_a, $val_b );
+					}
+					if ( 0 !== $cmp ) {
+						return ( 'SORT_DESC' === $direction ) ? -$cmp : $cmp;
+					}
 				}
-				$ret[ $k ][ $col ] = $array[ $k ][ $col ];
+				return 0;
 			}
-		}
+		);
 
-		if ( ! empty( $ret ) ) {
-			$i   = 0;
-			$arr = array();
-			foreach ( $ret as $k => $v ) {
-				$ret[ $i ] = $v;
-				$arr[ $i ] = $v;
-				$i ++;
-			}
-		}
-
-		return $arr;
-
+		return array_values( $array );
 	}
 }

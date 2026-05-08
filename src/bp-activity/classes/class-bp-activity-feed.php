@@ -206,7 +206,6 @@ class BP_Activity_Feed {
 				'display_comments' => 'stream',
 			)
 		);
-
 	}
 
 	/**
@@ -376,8 +375,8 @@ class BP_Activity_Feed {
 
 		// Set 304 status if feed hasn't been updated since last fetch.
 		if ( ( $client_last_modified && $client_etag ) ?
-				 ( ( $client_modified_timestamp >= $modified_timestamp ) && ( $client_etag == $etag ) ) :
-				 ( ( $client_modified_timestamp >= $modified_timestamp ) || ( $client_etag == $etag ) ) ) {
+				( ( $client_modified_timestamp >= $modified_timestamp ) && ( $client_etag == $etag ) ) :
+				( ( $client_modified_timestamp >= $modified_timestamp ) || ( $client_etag == $etag ) ) ) {
 			$status = 304;
 		} else {
 			$status = false;

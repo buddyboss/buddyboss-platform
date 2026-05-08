@@ -321,12 +321,12 @@ class BP_Friends_Friendship {
 
 				foreach ( $filters as $filter_name => $filter_value ) {
 					if ( isset( $friendship->{$filter_name} ) && $filter_value == $friendship->{$filter_name} ) {
-						$matched++;
+						++$matched;
 					}
 				}
 
 				if ( ( 'OR' == $operator && $matched > 0 )
-				  || ( 'NOT' == $operator && 0 == $matched ) ) {
+					|| ( 'NOT' == $operator && 0 == $matched ) ) {
 					$friendships[ $friendship->id ] = $friendship;
 				}
 			} else {
@@ -406,7 +406,7 @@ class BP_Friends_Friendship {
 			$sql['join'] = apply_filters( 'bb_get_friendship_ids_for_user_join_sql', $sql['join'], $user_id );
 
 			// Prepare the WHERE clause.
-			$sql['where'][] = $wpdb->prepare( "(f.initiator_user_id = %d OR f.friend_user_id = %d)", $user_id, $user_id );
+			$sql['where'][] = $wpdb->prepare( '(f.initiator_user_id = %d OR f.friend_user_id = %d)', $user_id, $user_id );
 
 			/**
 			 * Filters the WHERE clause for retrieving friendship IDs.
@@ -751,7 +751,7 @@ class BP_Friends_Friendship {
 		// Sort and structure as expected in legacy function.
 		usort(
 			$last_activities,
-			function( $a, $b ) {
+			function ( $a, $b ) {
 				if ( $a['date_recorded'] == $b['date_recorded'] ) {
 					return 0;
 				}
@@ -956,7 +956,7 @@ class BP_Friends_Friendship {
 		$sql     = $wpdb->prepare( "SELECT friend_user_id, initiator_user_id FROM {$bp->friends->table_name} WHERE (friend_user_id = %d || initiator_user_id = %d) && is_confirmed = 1 ORDER BY rand() LIMIT %d", $user_id, $user_id, $total_friends );
 		$results = $wpdb->get_results( $sql ); // phpcs:ignore
 
-		for ( $i = 0, $count = count( $results ); $i < $count; ++ $i ) {
+		for ( $i = 0, $count = count( $results ); $i < $count; ++$i ) {
 			$fids[] = ( (int) $results[ $i ]->friend_user_id === (int) $user_id ) ? $results[ $i ]->initiator_user_id : $results[ $i ]->friend_user_id;
 		}
 
@@ -1010,7 +1010,7 @@ class BP_Friends_Friendship {
 				continue;
 			}
 
-			$invitable_count++;
+			++$invitable_count;
 		}
 
 		return $invitable_count;

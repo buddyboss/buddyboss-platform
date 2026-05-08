@@ -241,7 +241,7 @@ function bp_ps_hidden_filters() {
  * @since BuddyBoss 1.0.0
  */
 function bp_ps_current_page() {
-	 $current = defined( 'DOING_AJAX' ) ?
+	$current = defined( 'DOING_AJAX' ) ?
 		parse_url( $_SERVER['HTTP_REFERER'], PHP_URL_PATH ) :
 		parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
 
@@ -338,7 +338,7 @@ function bp_ps_search( $request, $users = null ) {
 			$has_non_empty_value = false;
 			array_walk_recursive(
 				$f->value,
-				function( $v ) use ( &$has_non_empty_value ) {
+				function ( $v ) use ( &$has_non_empty_value ) {
 					if ( $has_non_empty_value ) {
 						return;
 					}

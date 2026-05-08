@@ -1271,7 +1271,7 @@ function bp_document_delete_orphaned_attachments() {
 	global $wpdb;
 	$post_table              = $wpdb->posts;
 	$postmeta_table          = $wpdb->postmeta;
-	$six_hours_ago_timestamp = strtotime( '-6 hours', current_time( 'timestamp', 1 ) );
+	$six_hours_ago_timestamp = strtotime( '-6 hours', time() );
 	$six_hours_ago           = date( 'Y-m-d H:i:s', $six_hours_ago_timestamp );
 
 	$query = "SELECT {$post_table}.ID
@@ -1476,7 +1476,6 @@ function bp_document_upload() {
 		if ( empty( $attachment_url ) ) {
 			$attachment_url = bp_document_get_preview_url( $document_id, $attachment->ID );
 		}
-
 	}
 
 	if ( 0 === $attachment_size ) {
@@ -1589,7 +1588,6 @@ function bp_document_upload_handler( $file_id = 'file' ) {
 	}
 
 	return new WP_Error( 'error_uploading', __( 'Error while uploading document.', 'buddyboss' ), array( 'status' => 500 ) );
-
 }
 
 /**
@@ -1636,7 +1634,6 @@ function bp_document_extension( $attachment_id ) {
 	}
 
 	return strtok( $extension, '?' );
-
 }
 
 /**
@@ -1652,7 +1649,6 @@ function bp_document_mime_type( $attachment_id ) {
 	$type = get_post_mime_type( $attachment_id );
 
 	return $type;
-
 }
 
 function bp_document_multi_array_search( $array, $search ) {
@@ -1679,7 +1675,6 @@ function bp_document_multi_array_search( $array, $search ) {
 
 	// Return the result array.
 	return $result;
-
 }
 
 /**
@@ -2192,14 +2187,13 @@ function bp_document_user_document_folder_tree_view_li_html( $user_id = 0, $grou
 	}
 
 	return bp_document_folder_recursive_li_list( $data, false );
-
 }
 
 /**
  * This function will give the breadcrumbs ul li html.
  *
  * @param      $array
- * @param bool  $first
+ * @param bool $first
  *
  * @return string
  * @since BuddyBoss 1.4.0
@@ -2316,7 +2310,6 @@ function bp_document_folder_bradcrumb( $folder_id ) {
 	}
 
 	return $html;
-
 }
 
 /**
@@ -2712,7 +2705,7 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 
 	// Change attachment post metas & rename files.
 	foreach ( get_intermediate_image_sizes() as $size ) {
-		$size_data = image_get_intermediate_size( $attachment_document_id, $size );
+		$size_data       = image_get_intermediate_size( $attachment_document_id, $size );
 		$attachment_path = ! empty( $size_data['path'] ) ? $uploads_path . DIRECTORY_SEPARATOR . $size_data['path'] : '';
 		if ( ! empty( $attachment_path ) && file_exists( $attachment_path ) ) {
 			@unlink( $attachment_path );
@@ -2795,7 +2788,7 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 			}
 		}
 
-		$i++;
+		++$i;
 	}
 
 	// Updating options if necessary.
@@ -3197,7 +3190,6 @@ function bp_document_download_link( $attachment_id, $document_id ) {
 	$link = site_url() . '/?attachment=' . $attachment_id . '&document_type=document&download_document_file=1' . '&document_file=' . $document_id;
 
 	return apply_filters( 'bp_document_download_link', $link, $attachment_id );
-
 }
 
 /**
@@ -3217,7 +3209,6 @@ function bp_document_folder_download_link( $folder_id ) {
 	$link = site_url() . '/?attachment=' . $folder_id . '&document_type=folder&download_document_file=1&document_file=' . $folder_id;
 
 	return apply_filters( 'bp_document_folder_download_link', $link, $folder_id );
-
 }
 
 
@@ -3265,7 +3256,6 @@ function bp_document_get_folder_attachment_ids( $folder_id ) {
 	}
 
 	return $data;
-
 }
 
 /**
@@ -3516,7 +3506,6 @@ function bp_document_default_scope( $scope = 'all' ) {
 	$new_scope = apply_filters( 'bp_document_default_scope', $new_scope );
 
 	return implode( ',', $new_scope );
-
 }
 
 /**
@@ -3629,7 +3618,6 @@ function bp_document_is_activity_comment_document( $document ) {
 	}
 
 	return $is_comment_document;
-
 }
 
 /**
@@ -4006,7 +3994,7 @@ function bp_document_create_symlinks( $document, $size = '' ) {
 				}
 
 				if ( ! empty( $file_path ) ) {
-					$preview_file_extension  = pathinfo( $file_path, PATHINFO_EXTENSION );
+					$preview_file_extension = pathinfo( $file_path, PATHINFO_EXTENSION );
 					if ( ! empty( $preview_file_extension ) ) {
 						$attachment_path = $attachment_path . '.' . $preview_file_extension;
 					}
@@ -4027,7 +4015,7 @@ function bp_document_create_symlinks( $document, $size = '' ) {
 							$file = image_get_intermediate_size( $attachment_id, $size );
 						}
 
-						$preview_file_extension  = pathinfo( $output_file_src, PATHINFO_EXTENSION );
+						$preview_file_extension = pathinfo( $output_file_src, PATHINFO_EXTENSION );
 						if ( ! empty( $preview_file_extension ) ) {
 							$attachment_path = $attachment_path . '.' . $preview_file_extension;
 						}
@@ -4177,7 +4165,7 @@ function bp_document_include_wp_image_editors( $image_editors ) {
 			if ( ! class_exists( 'WP_Image_Editor' ) ) {
 				require ABSPATH . WPINC . '/class-wp-image-editor.php';
 			}
-			require trailingslashit( dirname( __FILE__ ) ) . '/classes/class-bp-gopp-image-editor-gs.php';
+			require trailingslashit( __DIR__ ) . '/classes/class-bp-gopp-image-editor-gs.php';
 		}
 		array_unshift( $image_editors, 'BP_GOPP_Image_Editor_GS' );
 	}
@@ -4303,7 +4291,7 @@ function bp_document_pdf_previews( $ids, $check_mime_type = false ) {
 			$file = get_attached_file( $id );
 
 			if ( false === $file || '' === $file ) {
-				$num_fails++;
+				++$num_fails;
 			} else {
 				// Get current metadata if any.
 				$old_value = get_metadata( 'post', $id, '_wp_attachment_metadata' );
@@ -4332,13 +4320,13 @@ function bp_document_pdf_previews( $ids, $check_mime_type = false ) {
 				$meta = wp_generate_attachment_metadata( $id, $file );
 
 				if ( ! $meta ) {
-					$num_fails++;
+					++$num_fails;
 				} else {
 					// wp_update_attachment_metadata() returns false if nothing to update so check first.
 					if ( ( $old_value && $old_value[0] === $meta ) || false !== wp_update_attachment_metadata( $id, $meta ) ) {
-						$num_updates++;
+						++$num_updates;
 					} else {
-						$num_fails++;
+						++$num_fails;
 					}
 				}
 			}
@@ -4388,7 +4376,6 @@ function bp_document_generate_code_previews( $attachment_id ) {
 			if ( file_exists( $absolute_path ) ) {
 				copy( $absolute_path, $preview_folder . '/' . $thumb );
 			}
-
 		}
 
 		$files = scandir( $preview_folder );
@@ -4681,13 +4668,11 @@ function bp_document_mirror_text( $attachment_id ) {
 		$text  = get_post_meta( $attachment_id, 'document_preview_mirror_text', true );
 		if ( $text ) {
 			$mirror_text = strlen( $text ) > $words ? substr( $text, 0, $words ) . '...' : $text;
-		} else {
-			if ( file_exists( get_attached_file( $attachment_id ) ) ) {
+		} elseif ( file_exists( get_attached_file( $attachment_id ) ) ) {
 				$image_data  = file_get_contents( get_attached_file( $attachment_id ) );
 				$words       = 10000;
 				$mirror_text = strlen( $image_data ) > $words ? substr( $image_data, 0, $words ) . '...' : $image_data;
 				update_post_meta( $attachment_id, 'document_preview_mirror_text', $mirror_text );
-			}
 		}
 	}
 
@@ -4749,7 +4734,7 @@ function bp_document_load_gopp_image_editor_gs() {
 		if ( ! class_exists( 'WP_Image_Editor' ) ) {
 			require ABSPATH . WPINC . '/class-wp-image-editor.php';
 		}
-		require trailingslashit( dirname( __FILE__ ) ) . 'classes/class-bp-gopp-image-editor-gs.php';
+		require trailingslashit( __DIR__ ) . 'classes/class-bp-gopp-image-editor-gs.php';
 	}
 }
 

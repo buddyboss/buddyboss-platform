@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Filter registered notifications components, and add 'forums' to the queried
@@ -858,7 +859,6 @@ function bb_forums_remove_screen_notifications() {
 			}
 		}
 	}
-
 }
 add_action( 'template_redirect', 'bb_forums_remove_screen_notifications' );
 

@@ -467,7 +467,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 				do_action( 'bbp_merged_topic_reply', $reply->ID, $destination_topic->ID );
 
 				if ( ! empty( $destination_topic->ID ) && empty( get_post_meta( $reply->ID, '_bbp_reply_to', true ) ) ) {
-					$parent_replies++;
+					++$parent_replies;
 				}
 			}
 		}
@@ -836,7 +836,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 			foreach ( $replies as $reply ) {
 
 				if ( ! empty( $source_topic->ID ) && empty( get_post_meta( $reply->ID, '_bbp_reply_to', true ) ) ) {
-					$source_parent_replies++;
+					++$source_parent_replies;
 				}
 
 				// Update the reply.
@@ -881,7 +881,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 				do_action( 'bbp_split_topic_reply', $reply->ID, $destination_topic->ID );
 
 				if ( ! empty( $destination_topic->ID ) && empty( get_post_meta( $reply->ID, '_bbp_reply_to', true ) ) ) {
-					$destination_parent_replies++;
+					++$destination_parent_replies;
 				}
 			}
 

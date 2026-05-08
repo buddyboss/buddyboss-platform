@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 
 
 if ( empty( get_query_var( 'bb-document-player' ) ) && empty( get_query_var( 'id1' ) ) ) {

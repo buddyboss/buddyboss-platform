@@ -62,7 +62,6 @@ class BP_Admin_Setting_Search extends BP_Admin_Setting_tab {
 		 */
 		do_action( 'bp_admin_setting_search_register_fields', $this );
 	}
-
 }
 
 return new BP_Admin_Setting_Search();

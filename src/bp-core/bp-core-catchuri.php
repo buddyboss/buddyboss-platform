@@ -62,7 +62,7 @@ function bp_core_set_uri_globals() {
 	$bp->pages = apply_filters( 'bp_pages', $bp->pages );
 
 	// Exclude site page from bp pages as we removed component to visible publicly.
-	if ( isset( $bp->blogs ) && isset( $bp->pages->{$bp->blogs->id} ) ){
+	if ( isset( $bp->blogs ) && isset( $bp->pages->{$bp->blogs->id} ) ) {
 		unset( $bp->pages->{$bp->blogs->id} );
 	}
 
@@ -222,7 +222,7 @@ function bp_core_set_uri_globals() {
 					$match      = $bp_page;
 					$match->key = $page_key;
 					break;
-				};
+				}
 
 				// Unset matches.
 				unset( $matches );
@@ -382,7 +382,7 @@ function bp_core_set_uri_globals() {
 					bp_core_add_message( __( 'This user\'s profile is not yet activated. Only site admins can view this profile.', 'buddyboss' ), 'warning' );
 				} else {
 					$bp->displayed_user->id = 0;
-					$bp->current_component = '';
+					$bp->current_component  = '';
 					bp_do_404();
 					return;
 				}
@@ -1387,27 +1387,43 @@ function bp_private_network_template_redirect() {
 						bp_core_no_access( $defaults );
 						exit();
 					}
-				} else {
-					if ( class_exists( 'woocommerce' ) ) {
+				} elseif ( class_exists( 'woocommerce' ) ) {
 
-						if ( wc_lostpassword_url() !== $actual_link ) {
-							if ( $is_enable_custom_registration ) {
+					if ( wc_lostpassword_url() !== $actual_link ) {
+						if ( $is_enable_custom_registration ) {
 
-								$redirect_url = ( is_ssl() ? 'https://' : 'http://' ) . $server_http_host . $server_request_uri;
+							$redirect_url = ( is_ssl() ? 'https://' : 'http://' ) . $server_http_host . $server_request_uri;
 
-								$defaults = array(
-									'mode'     => 2,
-									'redirect' => $redirect_url,
-									'root'     => bp_get_root_domain(),
-									'message'  => __( 'You must log in to access the page you requested.', 'buddyboss' ),
-								);
+							$defaults = array(
+								'mode'     => 2,
+								'redirect' => $redirect_url,
+								'root'     => bp_get_root_domain(),
+								'message'  => __( 'You must log in to access the page you requested.', 'buddyboss' ),
+							);
 
-								bp_core_no_access( $defaults );
-								exit();
+							bp_core_no_access( $defaults );
+							exit();
 
-							}
 						}
-					} else {
+					}
+				} else {
+					$redirect_url = ( is_ssl() ? 'https://' : 'http://' ) . $server_http_host . $server_request_uri;
+
+					$defaults = array(
+						'mode'     => 2,
+						'redirect' => $redirect_url,
+						'root'     => bp_get_root_domain(),
+						'message'  => __( 'You must log in to access the page you requested.', 'buddyboss' ),
+					);
+
+					bp_core_no_access( $defaults );
+					exit();
+				}
+			} elseif ( class_exists( 'woocommerce' ) ) {
+
+				if ( wc_lostpassword_url() !== $actual_link && ! bp_is_activation_page() ) {
+					if ( $is_enable_custom_registration ) {
+
 						$redirect_url = ( is_ssl() ? 'https://' : 'http://' ) . $server_http_host . $server_request_uri;
 
 						$defaults = array(
@@ -1423,42 +1439,20 @@ function bp_private_network_template_redirect() {
 				}
 			} else {
 
-				if ( class_exists( 'woocommerce' ) ) {
+				$redirect_url = ( is_ssl() ? 'https://' : 'http://' ) . $server_http_host . $server_request_uri;
 
-					if ( wc_lostpassword_url() !== $actual_link && ! bp_is_activation_page() ) {
-						if ( $is_enable_custom_registration ) {
+				$defaults = array(
+					'mode'     => 2,
+					// 1 = $root, 2 = wp-login.php.
+					'redirect' => $redirect_url,
+					// the URL you get redirected to when a user successfully logs in.
+					'root'     => bp_get_root_domain(),
+					// the landing page you get redirected to when a user doesn't have access.
+					'message'  => __( 'You must log in to access the page you requested.', 'buddyboss' ),
+				);
 
-							$redirect_url = ( is_ssl() ? 'https://' : 'http://' ) . $server_http_host . $server_request_uri;
-
-							$defaults = array(
-								'mode'     => 2,
-								'redirect' => $redirect_url,
-								'root'     => bp_get_root_domain(),
-								'message'  => __( 'You must log in to access the page you requested.', 'buddyboss' ),
-							);
-
-							bp_core_no_access( $defaults );
-							exit();
-						}
-					}
-				} else {
-
-					$redirect_url = ( is_ssl() ? 'https://' : 'http://' ) . $server_http_host . $server_request_uri;
-
-					$defaults = array(
-						'mode'     => 2,
-						// 1 = $root, 2 = wp-login.php.
-						'redirect' => $redirect_url,
-						// the URL you get redirected to when a user successfully logs in.
-						'root'     => bp_get_root_domain(),
-						// the landing page you get redirected to when a user doesn't have access.
-						'message'  => __( 'You must log in to access the page you requested.', 'buddyboss' ),
-					);
-
-					bp_core_no_access( $defaults );
-					exit();
-
-				}
+				bp_core_no_access( $defaults );
+				exit();
 			}
 		}
 	}
@@ -1517,7 +1511,6 @@ function bp_core_profile_dashboard_non_logged_redirect() {
 			}
 		}
 	}
-
 }
 add_filter( 'bp_template_redirect', 'bp_core_profile_dashboard_non_logged_redirect', 10 );
 

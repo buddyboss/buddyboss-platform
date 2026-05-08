@@ -43,7 +43,7 @@ class BP_Core_Follow_Following_Widget extends WP_Widget {
 			return;
 		}
 
-		$id = bp_displayed_user_id();
+		$id     = bp_displayed_user_id();
 		$filter = $show_more = false;
 
 		if ( ! $id ) {
@@ -75,7 +75,7 @@ class BP_Core_Follow_Following_Widget extends WP_Widget {
 		$instance['title'] = (
 			bp_loggedin_user_id() === bp_displayed_user_id()
 			? __( "I'm Following", 'buddyboss' )
-			: sprintf( __( "%s is Following", 'buddyboss' ), $this->get_user_display_name( $id ) )
+			: sprintf( __( '%s is Following', 'buddyboss' ), $this->get_user_display_name( $id ) )
 		);
 
 		if ( bp_loggedin_user_id() === bp_displayed_user_id() ) {
@@ -104,16 +104,16 @@ class BP_Core_Follow_Following_Widget extends WP_Widget {
 				'include'             => $following,
 				'per_page'            => $instance['max_users'],
 				'populate_extras'     => false,
-				'member_type__not_in' => false
+				'member_type__not_in' => false,
 			)
 		) ) {
 			do_action( 'bp_before_following_widget' );
 
 			echo $args['before_widget'];
 			echo $args['before_title']
-			   . $title
-			   . $following_count
-			   . $args['after_title'];
+				. $title
+				. $following_count
+				. $args['after_title'];
 			?>
 
 			<div class="avatar-block">
@@ -122,7 +122,7 @@ class BP_Core_Follow_Following_Widget extends WP_Widget {
 					bp_the_member();
 					?>
 					<div class="item-avatar">
-						<a href="<?php bp_member_permalink() ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_core_get_user_displayname( bp_get_member_user_id() ) ); ?>"><?php bp_member_avatar() ?></a>
+						<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_attr( bp_core_get_user_displayname( bp_get_member_user_id() ) ); ?>"><?php bp_member_avatar(); ?></a>
 					</div>
 				<?php endwhile; ?>
 			</div>
@@ -196,7 +196,7 @@ class BP_Core_Follow_Following_Widget extends WP_Widget {
 			|| 'first_last_name' === $format
 		) {
 			$first_name_id = (int) bp_get_option( 'bp-xprofile-firstname-field-id' );
-			$display_name = xprofile_get_field_data( $first_name_id, $user_id );
+			$display_name  = xprofile_get_field_data( $first_name_id, $user_id );
 		} else {
 			$display_name = bp_core_get_user_displayname( $user_id );
 		}

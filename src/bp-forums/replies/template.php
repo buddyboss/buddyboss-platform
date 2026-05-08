@@ -1938,7 +1938,7 @@ function bbp_get_reply_position( $reply_id = 0, $topic_id = 0 ) {
 
 	// Bump the position by one if the lead topic is in the replies loop
 	if ( ! bbp_show_lead_topic() ) {
-		$reply_position ++;
+		++$reply_position;
 	}
 
 	return (int) apply_filters( 'bbp_get_reply_position', $reply_position, $reply_id, $topic_id );
@@ -2178,7 +2178,7 @@ function bbp_get_reply_edit_url( $reply_id = 0 ) {
 		$url = add_query_arg(
 			array(
 				bbp_get_reply_post_type() => $reply->post_name,
-				bbp_get_edit_rewrite_id() => '1'
+				bbp_get_edit_rewrite_id() => '1',
 			),
 			$reply_link
 		);
@@ -2259,7 +2259,10 @@ function bbp_get_reply_trash_link( $args = '' ) {
 		if ( bp_is_active( 'groups' ) ) {
 			$author_id    = bbp_get_reply_author_id( $reply->ID );
 			$forum_id     = bbp_get_reply_forum_id( $reply->ID );
-			$args         = array( 'author_id' => $author_id, 'forum_id' => $forum_id );
+			$args         = array(
+				'author_id' => $author_id,
+				'forum_id'  => $forum_id,
+			);
 			$allow_delete = bb_moderator_can_delete_topic_reply( $reply, $args );
 			if ( ! $allow_delete ) {
 				return;
@@ -2549,7 +2552,7 @@ function bbp_get_topic_split_link( $args = '' ) {
  *
  * @since bbPress (r2678)
  *
- * @param int   $reply_id Optional. Reply ID
+ * @param int                                                         $reply_id Optional. Reply ID
  * @param array Extra classes you can pass when calling this function
  *
  * @uses  bbp_get_reply_class() To get the reply class
@@ -2563,7 +2566,7 @@ function bbp_reply_class( $reply_id = 0, $classes = array() ) {
  *
  * @since bbPress (r2678)
  *
- * @param int   $reply_id Optional. Reply ID
+ * @param int                                                         $reply_id Optional. Reply ID
  * @param array Extra classes you can pass when calling this function
  *
  * @return string Row class of the reply
@@ -2622,7 +2625,7 @@ function bbp_get_topic_pagination_count() {
 	$curr_page   = $bbp->reply_query->paged; // thread_reply
 	$total_pages = $bbp->reply_query->total_pages; // total_pages
 
-	if( (int) $total_pages > 1 ) {
+	if ( (int) $total_pages > 1 ) {
 		$retstr = sprintf( __( 'Page %1$s of %2$s', 'buddyboss' ), $curr_page, $total_pages );
 	}
 
@@ -2689,7 +2692,7 @@ function bbp_get_form_reply_content() {
 		$reply_content = stripslashes( $_POST['bbp_reply_content'] );
 
 		// Remove unintentional empty paragraph coming from the medium editor when only link preview.
-		if ( preg_match('/^(<p><br><\/p>|<p><br \/><\/p>|<p><\/p>|<p><br\/><\/p>)$/i', $reply_content ) ) {
+		if ( preg_match( '/^(<p><br><\/p>|<p><br \/><\/p>|<p><\/p>|<p><br\/><\/p>)$/i', $reply_content ) ) {
 			$reply_content = '';
 		}
 
@@ -2850,13 +2853,11 @@ function bbp_update_total_parent_reply( $reply_id, $topic_id, $new_topic_reply_c
 			} else {
 				update_post_meta( $topic_id, '_bbp_parent_reply_count', (int) $parent_reply_count + 1 );
 			}
-		} else {
-			if ( ! empty( $reply_id ) ) {
+		} elseif ( ! empty( $reply_id ) ) {
 				$reply_to = get_post_meta( $reply_id, '_bbp_reply_to', true );
-				if ( empty( $reply_to ) ) {
-					$parent_reply_count = (int) $parent_reply_count - 1;
-					update_post_meta( $topic_id, '_bbp_parent_reply_count', $parent_reply_count );
-				}
+			if ( empty( $reply_to ) ) {
+				$parent_reply_count = (int) $parent_reply_count - 1;
+				update_post_meta( $topic_id, '_bbp_parent_reply_count', $parent_reply_count );
 			}
 		}
 	}
@@ -2901,7 +2902,7 @@ function bb_get_parent_reply_position( $reply_id = 0, $topic_id = 0 ) {
 
 	$topic_id = ! empty( $topic_id ) ? bbp_get_topic_id( $topic_id ) : bbp_get_reply_topic_id( $reply_id );
 
-	$reply_position     = get_post_field( 'menu_order', $reply_id );
+	$reply_position = get_post_field( 'menu_order', $reply_id );
 	// Fetch top level reply id if current reply id is the child reply.
 	$top_level_reply_id = bbp_get_reply_ancestor_id( $reply_id );
 	$parent_replies_ids = bb_get_parent_replies_ids( $topic_id, bbp_get_reply_post_type() );
@@ -2910,7 +2911,7 @@ function bb_get_parent_reply_position( $reply_id = 0, $topic_id = 0 ) {
 		// Reverse replies array and search for current reply position.
 		$reply_position = array_search( (string) $top_level_reply_id, $topic_replies );
 		// Bump the position to compensate for the lead topic post.
-		$reply_position ++;
+		++$reply_position;
 	}
 
 	return (int) apply_filters( 'bb_get_parent_reply_position', $reply_position, $reply_id, $topic_id );

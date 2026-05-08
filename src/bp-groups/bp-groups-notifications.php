@@ -1459,7 +1459,6 @@ function groups_screen_notification_settings() {
 	</table>
 
 	<?php
-
 }
 
 add_action( 'bp_notification_settings', 'groups_screen_notification_settings' );

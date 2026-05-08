@@ -1587,7 +1587,7 @@ function bp_avatar_ajax_set() {
 			/** This action is documented in bp-groups/bp-groups-screens.php */
 			do_action( 'groups_avatar_uploaded', (int) $avatar_data['item_id'], $avatar_data['type'], $r );
 		} else {
-			/** action to used for other component. **/
+			/** action to used for other component. */
 			do_action( sanitize_title( $avatar_data['object'] ) . '_avatar_uploaded', (int) $avatar_data['item_id'], $avatar_data['type'], $r );
 		}
 
@@ -2216,8 +2216,8 @@ function bp_avatar_is_front_edit() {
  */
 function bp_avatar_use_webcam() {
 	global $is_safari, $is_IE, $is_chrome;
-	$browser	= bb_core_get_browser();
-	$is_firefox	= isset( $browser['name'] ) ? 'Firefox' === $browser['b_name'] : false;
+	$browser    = bb_core_get_browser();
+	$is_firefox = isset( $browser['name'] ) ? 'Firefox' === $browser['b_name'] : false;
 
 	/**
 	 * Do not use the webcam feature for mobile devices

@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 /**
  * This file contains the necessary code for the BuddyBoss Performance Tester.
  *

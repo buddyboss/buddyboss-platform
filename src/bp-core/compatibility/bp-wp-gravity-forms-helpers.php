@@ -54,7 +54,6 @@ class BB_GFForms_Plugin_Compatibility {
 	public function compatibility_init() {
 
 		$this->bb_fix_gfforms_gfur_email_activation_conflict();
-
 	}
 
 	/**
@@ -67,9 +66,7 @@ class BB_GFForms_Plugin_Compatibility {
 		if ( class_exists( 'GF_User_Registration' ) && 1 === (int) gf_user_registration()->get_plugin_setting( 'custom_registration_page_enable' ) ) {
 			remove_filter( 'wpmu_signup_user_notification_email', 'bp_email_wpmu_signup_user_notification_email', 999, 5 );
 		}
-		
 	}
-
 }
 
 BB_GFForms_Plugin_Compatibility::instance();

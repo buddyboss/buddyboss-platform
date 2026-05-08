@@ -55,9 +55,10 @@ class BP_Nouveau_Activity {
 		} else {
 			add_action( 'admin_init', function() {
 				// AJAX condtion.
+				$ajax_action = isset( $_REQUEST['action'] ) ? sanitize_key( wp_unslash( $_REQUEST['action'] ) ) : '';
 				if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX &&
 					// Check to see if action is activity-specific.
-					( false !== strpos( $_REQUEST['action'], 'activity' ) || ( 'post_update' === $_REQUEST['action'] ) )
+					( false !== strpos( $ajax_action, 'activity' ) || ( 'post_update' === $ajax_action ) )
 				) {
 					require $this->dir . 'ajax.php';
 				}

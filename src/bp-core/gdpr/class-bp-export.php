@@ -37,7 +37,6 @@ abstract class BP_Export {
 		$this->items_per_batch = apply_filters( 'buddyboss_bp_gdpr_item_per_batch_{$name}', $this->items_per_batch );
 
 		$this->hooks();
-
 	}
 
 	/**
@@ -92,7 +91,7 @@ abstract class BP_Export {
 	 * Process export callback.
 	 *
 	 * @param     $email_address
-	 * @param int           $page
+	 * @param int $page
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
@@ -116,7 +115,7 @@ abstract class BP_Export {
 	 * Process delete callback
 	 *
 	 * @param     $email_address
-	 * @param int           $page
+	 * @param int $page
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
@@ -134,7 +133,6 @@ abstract class BP_Export {
 		do_action( 'buddyboss_bp_gdpr_pre_eraser_callback', $email_address, $page, $user );
 
 		return $this->process_erase( $user, $page, $email_address );
-
 	}
 
 	/**
@@ -223,7 +221,5 @@ abstract class BP_Export {
 		$value = maybe_serialize( $value );
 
 		return wp_json_encode( $value, JSON_PRETTY_PRINT );
-
 	}
-
 }

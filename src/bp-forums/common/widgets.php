@@ -954,7 +954,7 @@ class BBP_Topics_Widget extends WP_Widget {
 
 				// Maybe get the topic author.
 				if ( ! empty( $settings['show_user'] ) ) :
-					$author_link = bbp_get_topic_author_link(
+					$author_link          = bbp_get_topic_author_link(
 						array(
 							'post_id' => $topic_id,
 							'type'    => 'both',
@@ -1414,7 +1414,8 @@ class BBP_Replies_Widget extends WP_Widget {
 
 						echo $reply_link;
 
-						if ( ! empty( $settings['show_date'] ) ) : ?>
+						if ( ! empty( $settings['show_date'] ) ) :
+							?>
 
 							<div class="time-since"><?php bbp_topic_last_active_time( $reply_id ); ?></div>
 

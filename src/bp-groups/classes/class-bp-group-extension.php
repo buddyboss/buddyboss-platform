@@ -764,13 +764,13 @@ class BP_Group_Extension {
 				$extension_name = $this->name;
 				add_action(
 					'bp_template_content_header',
-					function() use ( $extension_name ) {
+					function () use ( $extension_name ) {
 						echo esc_attr( $extension_name );
 					}
 				);
 				add_action(
 					'bp_template_title',
-					function() use ( $extension_name ) {
+					function () use ( $extension_name ) {
 						echo esc_attr( $extension_name );
 					}
 				);
@@ -1011,7 +1011,7 @@ class BP_Group_Extension {
 			} else {
 				add_action(
 					'bp_template_content_header',
-					function() {
+					function () {
 						echo '<ul class="content-header-nav">';
 						bp_group_admin_tabs();
 						echo '</ul>';
@@ -1228,7 +1228,7 @@ class BP_Group_Extension {
 		$screen   = $this->screens['admin'];
 
 		$extension_slug = $this->slug;
-		$callback       = function() use ( $extension_slug, $group_id ) {
+		$callback       = function () use ( $extension_slug, $group_id ) {
 			do_action( 'bp_groups_admin_meta_box_content_' . $extension_slug, $group_id );
 		};
 
@@ -1739,7 +1739,7 @@ function bp_register_group_extension( $group_extension_class = '' ) {
 	// to all plugins.
 	add_action(
 		'bp_init',
-		function() use ( $group_extension_class ) {
+		function () use ( $group_extension_class ) {
 			$extension = new $group_extension_class();
 			add_action( 'bp_actions', array( &$extension, '_register' ), 8 );
 			add_action( 'admin_init', array( &$extension, '_register' ) );

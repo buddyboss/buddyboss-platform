@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Do not put custom themes here. They will be deleted on Forums updates.

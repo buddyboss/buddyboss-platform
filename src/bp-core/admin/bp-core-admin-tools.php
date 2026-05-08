@@ -49,7 +49,8 @@ function bp_core_admin_tools() {
 					<i class="<?php echo esc_attr( $meta_icon ); ?>"></i>
 					<?php
 				}
-				esc_html_e( 'Default Data', 'buddyboss' ); ?>
+				esc_html_e( 'Default Data', 'buddyboss' );
+				?>
 			</h2>
 
 			<form action="" method="post" id="bp-admin-form" class="bp-admin-form">
@@ -59,7 +60,7 @@ function bp_core_admin_tools() {
 						<li class="users main">
 							<label for="import-users">
 								<input type="checkbox" class="main-header" name="bp[import-users]" id="import-users"
-									   value="1" <?php bp_dd_imported_disabled( 'users', 'users' ); ?>/>
+										value="1" <?php bp_dd_imported_disabled( 'users', 'users' ); ?>/>
 								<strong><?php _e( 'Members', 'buddyboss' ); ?></strong>
 							</label>
 							<ul>
@@ -68,8 +69,8 @@ function bp_core_admin_tools() {
 									<li>
 										<label for="import-profile">
 											<input type="checkbox" class="checkbox" name="bp[import-profile]"
-												   id="import-profile"
-												   value="1" <?php bp_dd_imported_disabled( 'users', 'xprofile' ); ?>/>
+													id="import-profile"
+													value="1" <?php bp_dd_imported_disabled( 'users', 'xprofile' ); ?>/>
 											<?php _e( 'Profile fields (with data)', 'buddyboss' ); ?>
 										</label>
 									</li>
@@ -79,8 +80,8 @@ function bp_core_admin_tools() {
 									<li>
 										<label for="import-friends">
 											<input type="checkbox" class="checkbox" name="bp[import-friends]"
-												   id="import-friends"
-												   value="1" <?php bp_dd_imported_disabled( 'users', 'friends' ); ?>/>
+													id="import-friends"
+													value="1" <?php bp_dd_imported_disabled( 'users', 'friends' ); ?>/>
 											<?php _e( 'Connections', 'buddyboss' ); ?>
 										</label>
 									</li>
@@ -90,8 +91,8 @@ function bp_core_admin_tools() {
 									<li>
 										<label for="import-activity">
 											<input type="checkbox" class="checkbox" name="bp[import-activity]"
-												   id="import-activity"
-												   value="1" <?php bp_dd_imported_disabled( 'users', 'activity' ); ?>/>
+													id="import-activity"
+													value="1" <?php bp_dd_imported_disabled( 'users', 'activity' ); ?>/>
 											<?php _e( 'Activity posts', 'buddyboss' ); ?>
 										</label>
 									</li>
@@ -101,8 +102,8 @@ function bp_core_admin_tools() {
 									<li>
 										<label for="import-messages">
 											<input type="checkbox" class="checkbox" name="bp[import-messages]"
-												   id="import-messages"
-												   value="1" <?php bp_dd_imported_disabled( 'users', 'messages' ); ?>/>
+													id="import-messages"
+													value="1" <?php bp_dd_imported_disabled( 'users', 'messages' ); ?>/>
 											<?php _e( 'Private messages', 'buddyboss' ); ?>
 										</label>
 									</li>
@@ -115,8 +116,8 @@ function bp_core_admin_tools() {
 							<li class="groups main">
 								<label for="import-groups">
 									<input type="checkbox" class="main-header" name="bp[import-groups]"
-										   id="import-groups"
-										   value="1" <?php bp_dd_imported_disabled( 'groups', 'groups' ); ?>/>
+											id="import-groups"
+											value="1" <?php bp_dd_imported_disabled( 'groups', 'groups' ); ?>/>
 									<strong><?php _e( 'Groups', 'buddyboss' ); ?></strong>
 								</label>
 								<ul>
@@ -124,8 +125,8 @@ function bp_core_admin_tools() {
 									<li>
 										<label for="import-g-members">
 											<input type="checkbox" class="checkbox" name="bp[import-g-members]"
-												   id="import-g-members"
-												   value="1" <?php bp_dd_imported_disabled( 'groups', 'members' ); ?>/>
+													id="import-g-members"
+													value="1" <?php bp_dd_imported_disabled( 'groups', 'members' ); ?>/>
 											<?php _e( 'Members', 'buddyboss' ); ?>
 										</label>
 									</li>
@@ -137,8 +138,8 @@ function bp_core_admin_tools() {
 											<label for="import-g-activity">
 
 												<input type="checkbox" class="checkbox" name="bp[import-g-activity]"
-													   id="import-g-activity"
-													   value="1" <?php bp_dd_imported_disabled( 'groups', 'activity' ); ?>/>
+														id="import-g-activity"
+														value="1" <?php bp_dd_imported_disabled( 'groups', 'activity' ); ?>/>
 												<?php _e( 'Activity posts', 'buddyboss' ); ?>
 											</label>
 										</li>
@@ -151,8 +152,8 @@ function bp_core_admin_tools() {
 											<label for="import-g-forums">
 
 												<input type="checkbox" class="checkbox" name="bp[import-g-forums]"
-													   id="import-g-forums"
-													   value="1" <?php bp_dd_imported_disabled( 'groups', 'forums' ); ?>/>
+														id="import-g-forums"
+														value="1" <?php bp_dd_imported_disabled( 'groups', 'forums' ); ?>/>
 												<?php _e( 'Forums in Groups (with data)', 'buddyboss' ); ?>
 											</label>
 										</li>
@@ -170,8 +171,8 @@ function bp_core_admin_tools() {
 							<li class="forums main">
 								<label for="import-forums">
 									<input type="checkbox" class="main-header" name="bp[import-forums]"
-										   id="import-forums"
-										   value="1" <?php bp_dd_imported_disabled( 'forums', 'forums' ); ?>/>
+											id="import-forums"
+											value="1" <?php bp_dd_imported_disabled( 'forums', 'forums' ); ?>/>
 									<strong><?php _e( 'Forums', 'buddyboss' ); ?></strong>
 								</label>
 								<ul>
@@ -179,8 +180,8 @@ function bp_core_admin_tools() {
 										<label for="import-f-topics">
 
 											<input type="checkbox" class="checkbox" name="bp[import-f-topics]"
-												   id="import-f-topics"
-												   value="1" <?php bp_dd_imported_disabled( 'forums', 'topics' ); ?>/>
+													id="import-f-topics"
+													value="1" <?php bp_dd_imported_disabled( 'forums', 'topics' ); ?>/>
 											<?php _e( 'Discussions', 'buddyboss' ); ?>
 										</label>
 									</li>
@@ -188,8 +189,8 @@ function bp_core_admin_tools() {
 										<label for="import-f-replies">
 
 											<input type="checkbox" class="checkbox" name="bp[import-f-replies]"
-												   id="import-f-replies"
-												   value="1" <?php bp_dd_imported_disabled( 'forums', 'replies' ); ?>/>
+													id="import-f-replies"
+													value="1" <?php bp_dd_imported_disabled( 'forums', 'replies' ); ?>/>
 											<?php _e( 'Replies', 'buddyboss' ); ?>
 										</label>
 									</li>
@@ -204,9 +205,9 @@ function bp_core_admin_tools() {
 
 					<p class="submit">
 						<input class="button-primary" type="submit" name="bp-admin-submit" id="bp-admin-submit"
-							   value="<?php esc_attr_e( 'Import Selected Data', 'buddyboss' ); ?>"/>
+								value="<?php esc_attr_e( 'Import Selected Data', 'buddyboss' ); ?>"/>
 						<input class="button" type="submit" name="bp-admin-clear" id="bp-admin-clear"
-							   value="<?php esc_attr_e( 'Clear Default Data', 'buddyboss' ); ?>"/>
+								value="<?php esc_attr_e( 'Clear Default Data', 'buddyboss' ); ?>"/>
 					</p>
 				</fieldset>
 
@@ -739,7 +740,7 @@ function resync_xprofile_wordpress_fields() {
 	if ( ! empty( $users ) ) {
 		array_map( 'xprofile_sync_wp_profile', wp_list_pluck( $users, 'ID' ) );
 		foreach ( $users as $user ) {
-			$offset++;
+			++$offset;
 		}
 
 		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
@@ -791,7 +792,7 @@ function resync_wordpress_xprofile_fields() {
 
 			bp_update_user_meta( $user->ID, 'nickname', $nickname );
 			xprofile_set_field_data( bp_xprofile_nickname_field_id(), $user->ID, $nickname );
-			$offset++;
+			++$offset;
 		}
 		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 		return array(
@@ -836,7 +837,7 @@ function xprofile_update_display_names() {
 					'display_name' => $display_name,
 				)
 			);
-			$offset++;
+			++$offset;
 		}
 		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 		return array(
@@ -1020,7 +1021,7 @@ function bp_admin_install_emails() {
 			);
 		}
 
-		$installed_email ++;
+		++$installed_email;
 	}
 
 	if ( $switched ) {
@@ -1171,7 +1172,7 @@ function bp_admin_assign_member_type() {
 					bp_set_member_type( $user->ID, $existing_selected );
 				}
 			}
-			$offset++;
+			++$offset;
 		}
 		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 		return array(
@@ -1189,7 +1190,6 @@ function bp_admin_assign_member_type() {
 			'message' => sprintf( $statement, $result ),
 		);
 	}
-
 }
 
 function bp_admin_repair_nickname_value() {
@@ -1214,7 +1214,7 @@ function bp_admin_repair_nickname_value() {
 					strtolower( $nickname )
 				);
 			}
-			$offset++;
+			++$offset;
 		}
 		$records_updated = sprintf( __( '%s members updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 		return array(
@@ -1233,7 +1233,6 @@ function bp_admin_repair_nickname_value() {
 			'message' => sprintf( $statement, $result ),
 		);
 	}
-
 }
 
 /**
@@ -1265,7 +1264,7 @@ function bp_admin_repair_tools_wrapper_function() {
 	}
 
 	// Use default nonce
-	$nonce = $_POST['nonce'];
+	$nonce = wp_unslash( $_POST['nonce'] );
 	$check = 'bp-do-counts';
 
 	// Nonce check!
@@ -1467,8 +1466,8 @@ function bb_admin_tool_migration_reaction( $item_id, $user_ids = array() ) {
 function bp_admin_invitations_table() {
 	global $wpdb;
 
-	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-	require_once( buddypress()->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php' );
+	require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+	require_once buddypress()->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php';
 
 	/* translators: %s: the result of the action performed by the repair tool */
 	$statement = __( 'Creating the database table for Invitations if it does not exist &hellip; %s', 'buddyboss' );
@@ -1556,8 +1555,8 @@ function bb_sync_profile_completion_widget() {
 					$is_profile_photo_uploaded = ( bp_get_user_has_avatar( $user->ID ) ) ? 1 : 0;
 
 					if ( ! $is_profile_photo_uploaded &&
-					     bp_enable_profile_gravatar() &&
-					     'blank' !== get_option( 'avatar_default', 'mystery' )
+						bp_enable_profile_gravatar() &&
+						'blank' !== get_option( 'avatar_default', 'mystery' )
 					) {
 						/**
 						 * There is not any direct way to check gravatar set for user.
@@ -1574,9 +1573,9 @@ function bb_sync_profile_completion_widget() {
 					if ( (int) $get_user_data['photo_type']['profile_photo']['is_uploaded'] !== (int) $is_profile_photo_uploaded ) {
 						$get_user_data['photo_type']['profile_photo']['is_uploaded'] = $is_profile_photo_uploaded;
 						if ( 1 === (int) $is_profile_photo_uploaded ) {
-							$total_completed_count = ++ $total_completed_count;
+							$total_completed_count = ++$total_completed_count;
 						} else {
-							$total_completed_count = -- $total_completed_count;
+							$total_completed_count = --$total_completed_count;
 						}
 					}
 				}
@@ -1587,7 +1586,7 @@ function bb_sync_profile_completion_widget() {
 				bp_update_user_meta( $user->ID, 'bp_profile_completion_widgets', $get_user_data );
 			}
 
-			$offset++;
+			++$offset;
 		}
 
 		$records_updated = sprintf( __( 'Profile completion widget, profile photo status updated successfully for %s members.', 'buddyboss' ), bp_core_number_format( $offset ) );
@@ -1681,7 +1680,7 @@ function bp_admin_repair_group_member_count() {
 			groups_update_groupmeta( $group_id, 'total_member_count', absint( $member_count ) );
 			wp_cache_set( $cache_key, absint( $member_count ), 'bp_groups' );
 
-			$offset++;
+			++$offset;
 		}
 
 		return array(

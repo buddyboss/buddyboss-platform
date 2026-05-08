@@ -1097,12 +1097,10 @@ function bp_attachments_current_user_can( $capability, $args = array() ) {
 			 * No avatar arguments, fallback to bp_user_can_create_groups()
 			 * or bp_is_item_admin()
 			 */
-		} else {
-			if ( bp_is_group_create() ) {
+		} elseif ( bp_is_group_create() ) {
 				$can = bp_user_can_create_groups();
-			} else {
-				$can = bp_is_item_admin();
-			}
+		} else {
+			$can = bp_is_item_admin();
 		}
 	}
 
@@ -1406,7 +1404,7 @@ function bp_attachments_cover_image_generate_file( $args = array(), $cover_image
 	}
 
 	// Resize the image so that it fit with the cover photo dimensions.
-	$cover_image  = $cover_image_class->fit( $args['file'], $dimensions );
+	$cover_image = $cover_image_class->fit( $args['file'], $dimensions );
 	if ( is_wp_error( $cover_image ) ) {
 		return false;
 	}

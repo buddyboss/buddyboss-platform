@@ -19,8 +19,8 @@ class BP_Admin_Setting_Moderation extends BP_Admin_Setting_tab {
 
 	/**
 	 * Moderation setting initialize.
-     *
-     * @since BuddyBoss 1.5.6
+	 *
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function initialize() {
 
@@ -29,11 +29,11 @@ class BP_Admin_Setting_Moderation extends BP_Admin_Setting_tab {
 		$this->tab_order = 80;
 	}
 
-    /**
-     * Function to save moderation settings
-     *
-     * @since BuddyBoss 1.5.6
-     */
+	/**
+	 * Function to save moderation settings
+	 *
+	 * @since BuddyBoss 1.5.6
+	 */
 	public function settings_save() {
 		$sections = bp_moderation_get_settings_sections();
 
@@ -53,8 +53,8 @@ class BP_Admin_Setting_Moderation extends BP_Admin_Setting_tab {
 
 	/**
 	 * Moderation component is active or not.
-     *
-     * @since BuddyBoss 1.5.6
+	 *
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @return bool
 	 */
@@ -64,8 +64,8 @@ class BP_Admin_Setting_Moderation extends BP_Admin_Setting_tab {
 
 	/**
 	 * Register setting Fields.
-     *
-     * @since BuddyBoss 1.5.6
+	 *
+	 * @since BuddyBoss 1.5.6
 	 */
 	public function register_fields() {
 		$sections = bp_moderation_get_settings_sections();
@@ -79,8 +79,8 @@ class BP_Admin_Setting_Moderation extends BP_Admin_Setting_tab {
 				continue;
 			}
 
-			$section_title    = ! empty( $section['title'] ) ? $section['title'] : '';
-			$section_callback = ! empty( $section['callback'] ) ? $section['callback'] : false;
+			$section_title     = ! empty( $section['title'] ) ? $section['title'] : '';
+			$section_callback  = ! empty( $section['callback'] ) ? $section['callback'] : false;
 			$tutorial_callback = ! empty( $section['tutorial_callback'] ) ? $section['tutorial_callback'] : false;
 
 			// Add the section.
@@ -96,19 +96,17 @@ class BP_Admin_Setting_Moderation extends BP_Admin_Setting_tab {
 					$this->add_field( $field_id, $field['title'], $field['callback'], $sanitize_callback, $field['args'] );
 				}
 			}
-			
 		}
 
 		/**
 		 * Fires to register Moderation tab settings fields and section.
 		 *
-         * @since BuddyBoss 1.5.6
+		 * @since BuddyBoss 1.5.6
 		 *
 		 * @param Object $this BP_Admin_Setting_Moderation.
 		 */
 		do_action( 'bp_admin_setting_moderation_register_fields', $this );
 	}
-
 }
 
 return new BP_Admin_Setting_Moderation();

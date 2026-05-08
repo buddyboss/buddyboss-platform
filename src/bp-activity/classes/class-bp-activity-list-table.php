@@ -182,7 +182,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 			// Sort the array by the activity object's date_recorded value.
 			usort(
 				$activities['activities'],
-				function( $a, $b ) {
+				function ( $a, $b ) {
 					return $a->date_recorded > $b->date_recorded;
 				}
 			);
@@ -346,10 +346,10 @@ class BP_Activity_List_Table extends WP_List_Table {
 												?>
 			"><?php _e( 'All', 'buddyboss' ); ?></a> |</li>
 			<li class="spam"><a href="<?php echo esc_url( add_query_arg( array( 'activity_status' => 'spam' ), $url_base ) ); ?>" class="
-												 <?php
-													if ( 'spam' == $this->view ) {
-														echo 'current';}
-													?>
+												<?php
+												if ( 'spam' == $this->view ) {
+													echo 'current';}
+												?>
 			"><?php printf( __( 'Spam <span class="count">(%s)</span>', 'buddyboss' ), bp_core_number_format( $this->spam_count ) ); ?></a></li>
 
 			<?php
@@ -594,30 +594,28 @@ class BP_Activity_List_Table extends WP_List_Table {
 
 		if ( isset( $actions[ $item['type'] ] ) ) {
 			echo $actions[ $item['type'] ];
-		} else {
-			if ( strpos( $item['type'], 'new_blog_' ) !== false ) {
+		} elseif ( strpos( $item['type'], 'new_blog_' ) !== false ) {
 				$get_action = bp_activity_get_meta( $item['id'], 'admin_filters' );
-				if ( '' !== $get_action ) {
-					echo $get_action;
-				} else {
-					$split_cpt = explode( 'new_blog_', $item['type'] );
-
-					$args = array(
-						'name' => $split_cpt[1],
-					);
-
-					$output = 'objects'; // names or objects
-
-					$cu_post_types = get_post_types( $args, $output );
-
-					foreach ( $cu_post_types as $cu ) {
-						$singular_label_name = strtolower( $cu->labels->singular_name );
-					}
-					printf( __( 'New %s published', 'buddyboss' ), $singular_label_name );
-				}
+			if ( '' !== $get_action ) {
+				echo $get_action;
 			} else {
-				printf( __( 'Unregistered action - %s', 'buddyboss' ), $item['type'] );
+				$split_cpt = explode( 'new_blog_', $item['type'] );
+
+				$args = array(
+					'name' => $split_cpt[1],
+				);
+
+				$output = 'objects'; // names or objects
+
+				$cu_post_types = get_post_types( $args, $output );
+
+				foreach ( $cu_post_types as $cu ) {
+					$singular_label_name = strtolower( $cu->labels->singular_name );
+				}
+				printf( __( 'New %s published', 'buddyboss' ), $singular_label_name );
 			}
+		} else {
+			printf( __( 'Unregistered action - %s', 'buddyboss' ), $item['type'] );
 		}
 	}
 

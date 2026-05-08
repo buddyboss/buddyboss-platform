@@ -157,7 +157,7 @@ function bp_ps_set_sort_options( $options ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_ps_display_sort_options() {
-	 global $bp_ps_sort_options;
+	global $bp_ps_sort_options;
 
 	$version = bp_get_version();
 	echo "\n<!-- BP Profile Search $version -->\n";

@@ -297,4 +297,3 @@ function bp_friends_remove_notifications_data( $user_id = 0 ) {
 	bp_notifications_delete_notifications_from_user( $user_id, buddypress()->friends->id, 'bb_connections_new_request' );
 }
 add_action( 'friends_remove_data', 'bp_friends_remove_notifications_data', 10, 1 );
-

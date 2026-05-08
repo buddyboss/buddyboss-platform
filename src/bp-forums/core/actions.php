@@ -82,7 +82,7 @@ add_action( 'bbp_init', 'bbp_register', 0 );
 add_action( 'bbp_init', 'bbp_add_rewrite_tags', 20 );
 add_action( 'bbp_init', 'bbp_add_rewrite_rules', 30 );
 add_action( 'bbp_init', 'bbp_add_permastructs', 40 );
-add_action( 'bbp_init', 'bbp_setup_engagements', 50  );
+add_action( 'bbp_init', 'bbp_setup_engagements', 50 );
 add_action( 'bbp_init', 'bbp_ready', 999 );
 
 /**
@@ -419,7 +419,7 @@ add_action( 'bp_notification_settings', 'forums_notification_settings', 11 );
  * @since BuddyBoss 2.0.4
  */
 function bb_post_topic_reply_draft() {
-	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_topic_reply_draft'] ) || ! wp_verify_nonce( $_POST['_wpnonce_post_topic_reply_draft'], 'post_topic_reply_draft_data' ) ) {
+	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_topic_reply_draft'] ) || ! wp_verify_nonce( wp_unslash( $_POST['_wpnonce_post_topic_reply_draft'] ), 'post_topic_reply_draft_data' ) ) {
 		wp_send_json_error();
 	}
 
@@ -584,7 +584,7 @@ function bb_forum_add_content_popup() {
 
 	// Output the extracted IDs.
 	foreach ( $template_forum_ids as $forum_id ) {
-	?>
+		?>
 		<!-- Forum description popup -->
 		<div class="bb-action-popup" id="single-forum-description-popup-<?php echo esc_attr( $forum_id ); ?>" style="display: none">
 			<transition name="modal">
@@ -598,14 +598,14 @@ function bb_forum_add_content_popup() {
 								</a>
 							</header>
 							<div class="bb-action-popup-content">
-								<?php echo wp_kses_post( bbp_get_forum_content( $forum_id ) ) ; ?>
+								<?php echo wp_kses_post( bbp_get_forum_content( $forum_id ) ); ?>
 							</div>
 						</div>
 					</div>
 				</div>
 			</transition>
 		</div> <!-- .bb-action-popup -->
-	<?php
+		<?php
 	}
 
 	unset( $template_forum_ids );
@@ -671,13 +671,17 @@ function bb_forums_save_link_preview_data( $post_id ) {
 			'link_title',
 			'link_description',
 			'link_image',
-			'link_image_index_save'
+			'link_image_index_save',
 		);
 
 		// Filter the $_POST array to only include allowed keys.
-		$link_preview_data = array_filter( $_POST, function( $key ) use ( $allowed_keys ) {
-			return in_array( $key, $allowed_keys );
-		}, ARRAY_FILTER_USE_KEY );
+		$link_preview_data = array_filter(
+			$_POST,
+			function ( $key ) use ( $allowed_keys ) {
+				return in_array( $key, $allowed_keys );
+			},
+			ARRAY_FILTER_USE_KEY
+		);
 	}
 
 	$link_url = '';

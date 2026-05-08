@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Implementation of PHPWind Forum converter.
@@ -438,7 +439,7 @@ class PHPWind extends BBP_Converter_Base {
 
 		// Store old User Salt (This is only used for the SELECT row info for the above password save)
 		/*
-			  $this->field_map[] = array(
+				$this->field_map[] = array(
 			'from_tablename' => 'user',
 			'from_fieldname' => 'pass',
 			'to_type'        => 'user',
@@ -508,11 +509,11 @@ class PHPWind extends BBP_Converter_Base {
 	 * as one value. Array values are auto sanitized by WordPress.
 	 */
 	public function callback_savepass( $field, $row ) {
-		 $pass_array = array(
-			 'hash' => $field,
-			 'salt' => $row['salt'],
-		 );
-		 return $pass_array;
+		$pass_array = array(
+			'hash' => $field,
+			'salt' => $row['salt'],
+		);
+		return $pass_array;
 	}
 
 	/**
@@ -582,5 +583,4 @@ class PHPWind extends BBP_Converter_Base {
 		$count = absint( (int) $count - 1 );
 		return $count;
 	}
-
 }

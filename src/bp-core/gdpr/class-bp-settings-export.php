@@ -179,5 +179,4 @@ final class BP_Settings_Export extends BP_Export {
 
 		return $notification_settings;
 	}
-
 }

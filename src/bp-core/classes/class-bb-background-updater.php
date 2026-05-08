@@ -62,6 +62,5 @@ if ( ! class_exists( 'BB_Background_Updater' ) ) {
 
 			return $result ? $callback : false;
 		}
-
 	}
 }

@@ -323,55 +323,55 @@ class BB_BG_Process_Log {
 			case 'bb_pro_migrate_reactions_callback':
 				$component = 'activity';
 				break;
-			case 'bb_remove_duplicate_member_slug' :
-			case 'bb_set_bulk_user_profile_slug' :
-			case 'bb_core_update_repair_member_slug' :
-			case 'bb_core_removed_orphaned_member_slug' :
+			case 'bb_remove_duplicate_member_slug':
+			case 'bb_set_bulk_user_profile_slug':
+			case 'bb_core_update_repair_member_slug':
+			case 'bb_core_removed_orphaned_member_slug':
 				$component = 'member';
 				break;
-			case 'bb_migrate_member_friends_count_callback' :
+			case 'bb_migrate_member_friends_count_callback':
 				$component = 'friends';
 				break;
 			case 'bb_update_group_member_count':
-			case 'bb_create_group_member_subscriptions' :
-			case 'bb_update_groups_discussion_subscriptions_background_process' :
-			case 'bb_update_groups_subgroup_membership_background_process' :
-			case 'bb_update_groups_invitation_background_process' :
-			case 'bb_update_groups_members_background_process' :
+			case 'bb_create_group_member_subscriptions':
+			case 'bb_update_groups_discussion_subscriptions_background_process':
+			case 'bb_update_groups_subgroup_membership_background_process':
+			case 'bb_update_groups_invitation_background_process':
+			case 'bb_update_groups_members_background_process':
 				$component = 'groups';
 				break;
-			case 'bb_migrate_users_forum_topic_subscriptions' :
-			case 'bb_migrate_bbpress_users_post_subscriptions' :
-			case 'bb_migrate_users_topic_favorites' :
+			case 'bb_migrate_users_forum_topic_subscriptions':
+			case 'bb_migrate_bbpress_users_post_subscriptions':
+			case 'bb_migrate_users_topic_favorites':
 				$component = 'forums';
 				break;
-			case 'bb_moderation_bg_update_moderation_data' :
-			case 'hide_related_content' :
-			case 'unhide_related_content' :
+			case 'bb_moderation_bg_update_moderation_data':
+			case 'hide_related_content':
+			case 'unhide_related_content':
 				$component = 'moderation';
 				break;
-			case 'migrate_notification_preferences' :
-			case 'bb_add_background_notifications' :
-			case 'send_notifications_to_subscribers' :
-			case 'bb_activity_following_post_notification' :
-			case 'bb_email_queue_cron_cb' :
+			case 'migrate_notification_preferences':
+			case 'bb_add_background_notifications':
+			case 'send_notifications_to_subscribers':
+			case 'bb_activity_following_post_notification':
+			case 'bb_email_queue_cron_cb':
 				$component = 'notifications';
 				break;
-			case 'bb_migrate_message_media_document' :
-			case 'bb_render_digest_messages_template' :
-			case 'bb_render_messages_recipients' :
-			case 'bb_send_group_message_background' :
+			case 'bb_migrate_message_media_document':
+			case 'bb_render_digest_messages_template':
+			case 'bb_render_messages_recipients':
+			case 'bb_send_group_message_background':
 				$component = 'messages';
 				break;
-			case 'bp_video_background_create_thumbnail' :
+			case 'bp_video_background_create_thumbnail':
 				$component = 'video';
 				break;
-			case 'bb_xprofile_mapping_simple_to_repeater_fields_data' :
-			case 'bb_remove_google_plus_fields' :
+			case 'bb_xprofile_mapping_simple_to_repeater_fields_data':
+			case 'bb_remove_google_plus_fields':
 				$component = 'xprofile';
 				break;
-			case 'zoom_groups_meeting_details' :
-			case 'zoom_groups_webinar_details' :
+			case 'zoom_groups_meeting_details':
+			case 'zoom_groups_webinar_details':
 				$component = 'zoom';
 				break;
 			default:
@@ -404,9 +404,9 @@ class BB_BG_Process_Log {
 		}
 
 		switch ( $callback_function ) {
-			case 'zoom_groups_meeting_details' :
-			case 'zoom_groups_webinar_details' :
-			case 'bb_pro_migrate_reactions_callback' :
+			case 'zoom_groups_meeting_details':
+			case 'zoom_groups_webinar_details':
+			case 'bb_pro_migrate_reactions_callback':
 				$platform = 'pro';
 				break;
 			default:
@@ -482,7 +482,7 @@ class BB_BG_Process_Log {
 
 		if ( ! $is_scheduled ) {
 			wp_schedule_event( $schedule_timestamp, 'daily', 'bb_bg_log_clear' );
-		} else if ( $is_scheduled !== $schedule_timestamp ) {
+		} elseif ( $is_scheduled !== $schedule_timestamp ) {
 			wp_clear_scheduled_hook( 'bb_bg_log_clear' );
 			wp_schedule_event( $schedule_timestamp, 'daily', 'bb_bg_log_clear' );
 		}
@@ -563,11 +563,11 @@ class BB_BG_Process_Log {
 		$this->start_memory_log = 0;
 
 		if ( $mem_usage < 1024 ) {
-			return $mem_usage . " Bytes";
+			return $mem_usage . ' Bytes';
 		} elseif ( $mem_usage < 1048576 ) {
-			return round( $mem_usage / 1024, 2 ) . " KB";
+			return round( $mem_usage / 1024, 2 ) . ' KB';
 		} else {
-			return round( $mem_usage / 1048576, 2 ) . " MB";
+			return round( $mem_usage / 1048576, 2 ) . ' MB';
 		}
 	}
 
@@ -628,7 +628,7 @@ class BB_BG_Process_Log {
 
 		$table_size_bytes = $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT data_length + index_length AS table_size_bytes FROM information_schema.TABLES WHERE table_schema = %s AND table_name = %s",
+				'SELECT data_length + index_length AS table_size_bytes FROM information_schema.TABLES WHERE table_schema = %s AND table_name = %s',
 				$wpdb->dbname,
 				$this->table_name
 			)

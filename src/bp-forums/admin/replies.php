@@ -132,7 +132,7 @@ if ( ! class_exists( 'BBP_Replies_Admin' ) ) :
 					'id'      => 'overview',
 					'title'   => __( 'Overview', 'buddyboss' ),
 					'content' =>
-						  '<p>' . __( 'This screen provides access to all of your replies. You can customize the display of this screen to suit your workflow.', 'buddyboss' ) . '</p>',
+							'<p>' . __( 'This screen provides access to all of your replies. You can customize the display of this screen to suit your workflow.', 'buddyboss' ) . '</p>',
 				)
 			);
 
@@ -142,13 +142,13 @@ if ( ! class_exists( 'BBP_Replies_Admin' ) ) :
 					'id'      => 'screen-content',
 					'title'   => __( 'Screen Content', 'buddyboss' ),
 					'content' =>
-						  '<p>' . __( 'You can customize the display of this screen\'s contents in a number of ways:', 'buddyboss' ) . '</p>' .
-						  '<ul>' .
-							  '<li>' . __( 'You can hide/display columns based on your needs and decide how many replies to list per screen using the Screen Options tab.', 'buddyboss' ) . '</li>' .
-							  '<li>' . __( 'You can filter the list of replies by reply status using the text links in the upper left to show All, Published, Draft, or Trashed replies. The default view is to show all replies.', 'buddyboss' ) . '</li>' .
-							  '<li>' . __( 'You can view replies in a simple title list or with an excerpt. Choose the view you prefer by clicking on the icons at the top of the list on the right.', 'buddyboss' ) . '</li>' .
-							  '<li>' . __( 'You can refine the list to show only replies in a specific category or from a specific month by using the dropdown menus above the replies list. Click the Filter button after making your selection. You also can refine the list by clicking on the reply author, category or tag in the replies list.', 'buddyboss' ) . '</li>' .
-						  '</ul>',
+							'<p>' . __( 'You can customize the display of this screen\'s contents in a number of ways:', 'buddyboss' ) . '</p>' .
+							'<ul>' .
+								'<li>' . __( 'You can hide/display columns based on your needs and decide how many replies to list per screen using the Screen Options tab.', 'buddyboss' ) . '</li>' .
+								'<li>' . __( 'You can filter the list of replies by reply status using the text links in the upper left to show All, Published, Draft, or Trashed replies. The default view is to show all replies.', 'buddyboss' ) . '</li>' .
+								'<li>' . __( 'You can view replies in a simple title list or with an excerpt. Choose the view you prefer by clicking on the icons at the top of the list on the right.', 'buddyboss' ) . '</li>' .
+								'<li>' . __( 'You can refine the list to show only replies in a specific category or from a specific month by using the dropdown menus above the replies list. Click the Filter button after making your selection. You also can refine the list by clicking on the reply author, category or tag in the replies list.', 'buddyboss' ) . '</li>' .
+							'</ul>',
 				)
 			);
 
@@ -158,14 +158,14 @@ if ( ! class_exists( 'BBP_Replies_Admin' ) ) :
 					'id'      => 'action-links',
 					'title'   => __( 'Available Actions', 'buddyboss' ),
 					'content' =>
-						  '<p>' . __( 'Hovering over a row in the replies list will display action links that allow you to manage your reply. You can perform the following actions:', 'buddyboss' ) . '</p>' .
-						  '<ul>' .
-							  '<li>' . __( '<strong>Edit</strong> takes you to the editing screen for that reply. You can also reach that screen by clicking on the reply title.', 'buddyboss' ) . '</li>' .
-							  // '<li>' . __( '<strong>Quick Edit</strong> provides inline access to the metadata of your reply, allowing you to update reply details without leaving this screen.',                                                                  'buddyboss' ) . '</li>' .
-							  '<li>' . __( '<strong>Trash</strong> removes your reply from this list and places it in the trash, from which you can permanently delete it.', 'buddyboss' ) . '</li>' .
-							  '<li>' . __( '<strong>Spam</strong> removes your reply from this list and places it in the spam queue, from which you can permanently delete it.', 'buddyboss' ) . '</li>' .
-							  '<li>' . __( '<strong>Preview</strong> will show you what your draft reply will look like if you publish it. View will take you to your live site to view the reply. Which link is available depends on your reply\'s status.', 'buddyboss' ) . '</li>' .
-						  '</ul>',
+							'<p>' . __( 'Hovering over a row in the replies list will display action links that allow you to manage your reply. You can perform the following actions:', 'buddyboss' ) . '</p>' .
+							'<ul>' .
+								'<li>' . __( '<strong>Edit</strong> takes you to the editing screen for that reply. You can also reach that screen by clicking on the reply title.', 'buddyboss' ) . '</li>' .
+								// '<li>' . __( '<strong>Quick Edit</strong> provides inline access to the metadata of your reply, allowing you to update reply details without leaving this screen.',                                                                  'buddyboss' ) . '</li>' .
+								'<li>' . __( '<strong>Trash</strong> removes your reply from this list and places it in the trash, from which you can permanently delete it.', 'buddyboss' ) . '</li>' .
+								'<li>' . __( '<strong>Spam</strong> removes your reply from this list and places it in the spam queue, from which you can permanently delete it.', 'buddyboss' ) . '</li>' .
+								'<li>' . __( '<strong>Preview</strong> will show you what your draft reply will look like if you publish it. View will take you to your live site to view the reply. Which link is available depends on your reply\'s status.', 'buddyboss' ) . '</li>' .
+							'</ul>',
 				)
 			);
 
@@ -175,8 +175,8 @@ if ( ! class_exists( 'BBP_Replies_Admin' ) ) :
 					'id'      => 'bulk-actions',
 					'title'   => __( 'Bulk Actions', 'buddyboss' ),
 					'content' =>
-						  '<p>' . __( 'You can also edit or move multiple replies to the trash at once. Select the replies you want to act on using the checkboxes, then select the action you want to take from the Bulk Actions menu and click Apply.', 'buddyboss' ) . '</p>' .
-						  '<p>' . __( 'When using Bulk Edit, you can change the status (Published, Private, etc.) for all selected replies at once. To remove a reply from the grouping, just click the x next to its name in the Bulk Edit area that appears.', 'buddyboss' ) . '</p>',
+							'<p>' . __( 'You can also edit or move multiple replies to the trash at once. Select the replies you want to act on using the checkboxes, then select the action you want to take from the Bulk Actions menu and click Apply.', 'buddyboss' ) . '</p>' .
+							'<p>' . __( 'When using Bulk Edit, you can change the status (Published, Private, etc.) for all selected replies at once. To remove a reply from the grouping, just click the x next to its name in the Bulk Edit area that appears.', 'buddyboss' ) . '</p>',
 				)
 			);
 
@@ -214,8 +214,8 @@ if ( ! class_exists( 'BBP_Replies_Admin' ) ) :
 					'id'      => 'title-reply-editor',
 					'title'   => __( 'Title and Reply Editor', 'buddyboss' ),
 					'content' =>
-						  '<p>' . __( '<strong>Title</strong> - Enter a title for your reply. After you enter a title, you\'ll see the permalink below, which you can edit.', 'buddyboss' ) . '</p>' .
-						  '<p>' . __( '<strong>Reply Editor</strong> - Enter the text for your reply. There are two modes of editing: Visual and HTML. Choose the mode by clicking on the appropriate tab. Visual mode gives you a WYSIWYG editor. Click the last icon in the row to get a second row of controls. The HTML mode allows you to enter raw HTML along with your reply text. You can insert media files by clicking the icons above the reply editor and following the directions. You can go to the distraction-free writing screen via the Fullscreen icon in Visual mode (second to last in the top row) or the Fullscreen button in HTML mode (last in the row). Once there, you can make buttons visible by hovering over the top area. Exit Fullscreen back to the regular reply editor.', 'buddyboss' ) . '</p>',
+							'<p>' . __( '<strong>Title</strong> - Enter a title for your reply. After you enter a title, you\'ll see the permalink below, which you can edit.', 'buddyboss' ) . '</p>' .
+							'<p>' . __( '<strong>Reply Editor</strong> - Enter the text for your reply. There are two modes of editing: Visual and HTML. Choose the mode by clicking on the appropriate tab. Visual mode gives you a WYSIWYG editor. Click the last icon in the row to get a second row of controls. The HTML mode allows you to enter raw HTML along with your reply text. You can insert media files by clicking the icons above the reply editor and following the directions. You can go to the distraction-free writing screen via the Fullscreen icon in Visual mode (second to last in the top row) or the Fullscreen button in HTML mode (last in the row). Once there, you can make buttons visible by hovering over the top area. Exit Fullscreen back to the regular reply editor.', 'buddyboss' ) . '</p>',
 				)
 			);
 
@@ -230,12 +230,12 @@ if ( ! class_exists( 'BBP_Replies_Admin' ) ) :
 					'id'      => 'reply-attributes',
 					'title'   => __( 'Reply Attributes', 'buddyboss' ),
 					'content' =>
-						  '<p>' . __( 'Select the attributes that your reply should have:', 'buddyboss' ) . '</p>' .
-						  '<ul>' .
-							  '<li>' . __( '<strong>Forum</strong> dropdown determines the parent forum that the reply belongs to. Select the forum, or leave the default (Use Forum of Discussion) to post the reply in forum of the discussion.', 'buddyboss' ) . '</li>' .
-							  '<li>' . __( '<strong>Discussion</strong> determines the parent discussion that the reply belongs to.', 'buddyboss' ) . '</li>' .
-							  '<li>' . __( '<strong>Reply To</strong> determines the threading of the reply.', 'buddyboss' ) . '</li>' .
-						  '</ul>',
+							'<p>' . __( 'Select the attributes that your reply should have:', 'buddyboss' ) . '</p>' .
+							'<ul>' .
+								'<li>' . __( '<strong>Forum</strong> dropdown determines the parent forum that the reply belongs to. Select the forum, or leave the default (Use Forum of Discussion) to post the reply in forum of the discussion.', 'buddyboss' ) . '</li>' .
+								'<li>' . __( '<strong>Discussion</strong> determines the parent discussion that the reply belongs to.', 'buddyboss' ) . '</li>' .
+								'<li>' . __( '<strong>Reply To</strong> determines the threading of the reply.', 'buddyboss' ) . '</li>' .
+							'</ul>',
 				)
 			);
 
@@ -315,7 +315,7 @@ if ( ! class_exists( 'BBP_Replies_Admin' ) ) :
 			}
 
 			// Nonce check
-			if ( empty( $_POST['bbp_reply_metabox'] ) || ! wp_verify_nonce( $_POST['bbp_reply_metabox'], 'bbp_reply_metabox_save' ) ) {
+			if ( empty( $_POST['bbp_reply_metabox'] ) || ! wp_verify_nonce( wp_unslash( $_POST['bbp_reply_metabox'] ), 'bbp_reply_metabox_save' ) ) {
 				return $reply_id;
 			}
 

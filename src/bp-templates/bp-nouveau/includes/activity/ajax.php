@@ -152,12 +152,12 @@ function bp_nouveau_ajax_mark_activity_favorite() {
 	}
 
 	// Nonce check!
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_activity' ) ) {
 		wp_send_json_error( $error_message );
 	}
 
-	$item_id   = sanitize_text_field( $_POST['item_id'] );
-	$item_type = sanitize_text_field( $_POST['item_type'] );
+	$item_id   = isset( $_POST['item_id'] ) ? sanitize_text_field( wp_unslash( $_POST['item_id'] ) ) : '';
+	$item_type = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : '';
 	$user_id   = bp_loggedin_user_id();
 
 	if ( ! bb_all_enabled_reactions( $item_type ) ) {
@@ -165,7 +165,7 @@ function bp_nouveau_ajax_mark_activity_favorite() {
 	}
 
 	if ( ! empty( $_POST['reaction_id'] ) ) {
-		$reaction_id = sanitize_text_field( $_POST['reaction_id'] );
+		$reaction_id = sanitize_text_field( wp_unslash( $_POST['reaction_id'] ) );
 	} else {
 		$reaction_id = bb_load_reaction()->bb_reactions_reaction_id();
 	}
@@ -221,7 +221,7 @@ function bp_nouveau_ajax_unmark_activity_favorite() {
 	}
 
 	// Nonce check!
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_activity' ) ) {
 		wp_send_json_error( $error_message );
 	}
 
@@ -229,8 +229,8 @@ function bp_nouveau_ajax_unmark_activity_favorite() {
 		wp_send_json_error( esc_html__( 'No item id', 'buddyboss' ) );
 	}
 
-	$item_id   = sanitize_text_field( $_POST['item_id'] );
-	$item_type = sanitize_text_field( $_POST['item_type'] );
+	$item_id   = isset( $_POST['item_id'] ) ? sanitize_text_field( wp_unslash( $_POST['item_id'] ) ) : '';
+	$item_type = isset( $_POST['item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['item_type'] ) ) : '';
 	$user_id   = bp_loggedin_user_id();
 
 	if ( ! bb_all_enabled_reactions( $item_type ) ) {
@@ -282,7 +282,7 @@ function bp_nouveau_ajax_clear_new_mentions() {
 	}
 
 	// Nonce check!
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_activity' ) ) {
 		wp_send_json_error();
 	}
 
@@ -311,7 +311,7 @@ function bp_nouveau_ajax_delete_activity() {
 	}
 
 	// Nonce check!
-	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'bp_activity_delete_link' ) ) {
+	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'bp_activity_delete_link' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -408,12 +408,12 @@ function bp_nouveau_ajax_get_single_activity_content() {
 	}
 
 	// Nonce check!
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_activity' ) ) {
 		wp_send_json_error( $response );
 	}
 
 	$args = array(
-		'activity_ids'     => $_POST['id'],
+		'activity_ids'     => isset( $_POST['id'] ) ? absint( $_POST['id'] ) : 0,
 		'display_comments' => 'stream',
 	);
 
@@ -482,7 +482,7 @@ function bp_nouveau_ajax_new_activity_comment() {
 	}
 
 	// Nonce check!
-	if ( empty( $_POST['_wpnonce_new_activity_comment'] ) || ! wp_verify_nonce( $_POST['_wpnonce_new_activity_comment'], 'new_activity_comment' ) ) {
+	if ( empty( $_POST['_wpnonce_new_activity_comment'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce_new_activity_comment'] ) ), 'new_activity_comment' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -518,9 +518,9 @@ function bp_nouveau_ajax_new_activity_comment() {
 	$comment_id = bp_activity_new_comment(
 		array(
 			'id'          => $edit_comment_id,
-			'activity_id' => $_POST['form_id'],
-			'content'     => $_POST['content'],
-			'parent_id'   => $_POST['comment_id'],
+			'activity_id' => isset( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : 0,
+			'content'     => isset( $_POST['content'] ) ? wp_kses_post( wp_unslash( $_POST['content'] ) ) : '',
+			'parent_id'   => isset( $_POST['comment_id'] ) ? absint( $_POST['comment_id'] ) : 0,
 			'skip_error'  => false === $content ? false : true, // Pass true when $content will be not empty.
 		)
 	);
@@ -622,11 +622,12 @@ function bp_nouveau_ajax_new_activity_comment() {
 function bp_nouveau_ajax_get_activity_objects() {
 	$response = array();
 
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_activity' ) ) {
 		wp_send_json_error( $response );
 	}
 
-	if ( 'group' === $_POST['type'] ) {
+	$post_type = isset( $_POST['type'] ) ? sanitize_key( wp_unslash( $_POST['type'] ) ) : '';
+	if ( 'group' === $post_type ) {
 		$exclude_groups                     = array();
 		$exclude_groups_args                = array();
 		$exclude_groups_args['user_id']     = bp_loggedin_user_id();
@@ -634,7 +635,7 @@ function bp_nouveau_ajax_get_activity_objects() {
 		$exclude_groups_args['fields']      = 'ids';
 		$exclude_groups_args['per_page']    = - 1;
 		if ( isset( $_POST['search'] ) ) {
-			$exclude_groups_args['search_terms'] = $_POST['search'];
+			$exclude_groups_args['search_terms'] = sanitize_text_field( wp_unslash( $_POST['search'] ) );
 		}
 
 		$exclude_groups_query = groups_get_groups( $exclude_groups_args );
@@ -653,10 +654,10 @@ function bp_nouveau_ajax_get_activity_objects() {
 		$args['orderby']     = 'name';
 		$args['order']       = 'ASC';
 		if ( isset( $_POST['page'] ) ) {
-			$args['page'] = $_POST['page'];
+			$args['page'] = absint( $_POST['page'] );
 		}
 		if ( isset( $_POST['search'] ) ) {
-			$args['search_terms'] = $_POST['search'];
+			$args['search_terms'] = sanitize_text_field( wp_unslash( $_POST['search'] ) );
 		}
 		if ( ! empty( $exclude_groups ) ) {
 			$args['exclude'] = $exclude_groups;
@@ -675,7 +676,7 @@ function bp_nouveau_ajax_get_activity_objects() {
 		 * @param array $response Array of custom response objects to send to AJAX return.
 		 * @param array $value    Activity object type from $_POST global.
 		 */
-		$response = apply_filters( 'bp_nouveau_get_activity_custom_objects', $response, $_POST['type'] );
+		$response = apply_filters( 'bp_nouveau_get_activity_custom_objects', $response, $post_type );
 	}
 
 	if ( empty( $response ) ) {
@@ -695,7 +696,7 @@ function bp_nouveau_ajax_get_activity_objects() {
 function bp_nouveau_ajax_post_update() {
 	$bp = buddypress();
 
-	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_update'] ) || ! wp_verify_nonce( $_POST['_wpnonce_post_update'], 'post_update' ) ) {
+	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_update'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce_post_update'] ) ), 'post_update' ) ) {
 		wp_send_json_error();
 	}
 
@@ -794,7 +795,7 @@ function bp_nouveau_ajax_post_update() {
 		);
 	}
 
-	if ( ! strlen( trim( html_entity_decode( wp_strip_all_tags( $_POST['content'] ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) ) ) {
+	if ( ! strlen( trim( html_entity_decode( wp_strip_all_tags( wp_unslash( isset( $_POST['content'] ) ? $_POST['content'] : '' ) ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ) ) ) {
 
 		// check activity toolbar options if one of them is set, activity can be empty.
 		$toolbar_option = false;
@@ -863,7 +864,7 @@ function bp_nouveau_ajax_post_update() {
 
 		$media_ids      = $activity_metas['bp_media_ids'][0] ?? '';
 		$existing_media = ( ! empty( $media_ids ) ) ? explode( ',', $media_ids ) : array();
-		$posted_media   = array_column( $_POST['media'], 'media_id' );
+		$posted_media   = array_column( $_POST['media'], 'media_id' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- Array of IDs; sanitized via wp_parse_id_list below.
 		$posted_media   = wp_parse_id_list( $posted_media );
 		$is_same_media  = ( count( $existing_media ) === count( $posted_media ) && ! array_diff( $existing_media, $posted_media ) );
 
@@ -871,7 +872,7 @@ function bp_nouveau_ajax_post_update() {
 			$message = sprintf(
 			/* translators: 1: string or media and medias. 2: group text. */
 				__( 'You don\'t have access to upload %1$s%2$s.', 'buddyboss' ),
-				_n( 'media', 'medias', count( $_POST['media'] ), 'buddyboss' ),
+				_n( 'media', 'medias', count( $_POST['media'] ), 'buddyboss' ), // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Count only; IDs sanitized above.
 				( ! empty( $group_id ) ? __( ' inside group', 'buddyboss' ) : '' )
 			);
 			wp_send_json_error( array( 'message' => $message ) );
@@ -886,7 +887,7 @@ function bp_nouveau_ajax_post_update() {
 
 		$document_ids      = $activity_metas['bp_document_ids'][0] ?? '';
 		$existing_document = ( ! empty( $document_ids ) ) ? explode( ',', $document_ids ) : array();
-		$posted_document   = array_column( $_POST['document'], 'document_id' );
+		$posted_document   = array_column( $_POST['document'], 'document_id' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- Array of IDs; sanitized via wp_parse_id_list below.
 		$posted_document   = wp_parse_id_list( $posted_document );
 		$is_same_document  = ( count( $existing_document ) === count( $posted_document ) && ! array_diff( $existing_document, $posted_document ) );
 
@@ -1006,7 +1007,7 @@ function bp_nouveau_ajax_post_update() {
 			);
 		}
 
-		$content = $_POST['content'];
+		$content = isset( $_POST['content'] ) ? wp_kses_post( wp_unslash( $_POST['content'] ) ) : '';
 
 		if ( ! empty( $_POST['user_id'] ) && bp_get_displayed_user() && $_POST['user_id'] != bp_get_displayed_user()->id ) {
 			$content = sprintf( '@%s %s', bp_get_displayed_user_mentionname(), $content );
@@ -1056,7 +1057,7 @@ function bp_nouveau_ajax_post_update() {
 			$post_array = array(
 				'id'         => $activity_id,
 				'post_title' => $post_title,
-				'content'    => $_POST['content'],
+				'content'    => isset( $_POST['content'] ) ? wp_kses_post( wp_unslash( $_POST['content'] ) ) : '',
 				'group_id'   => $item_id,
 			);
 
@@ -1084,7 +1085,7 @@ function bp_nouveau_ajax_post_update() {
 		}
 	} else {
 		/** This filter is documented in bp-activity/bp-activity-actions.php */
-		$activity_id = apply_filters( 'bp_activity_custom_update', false, $object, $item_id, $_POST['content'] );
+		$activity_id = apply_filters( 'bp_activity_custom_update', false, $object, $item_id, isset( $_POST['content'] ) ? wp_kses_post( wp_unslash( $_POST['content'] ) ) : '' );
 	}
 
 	if ( empty( $activity_id ) ) {
@@ -1147,14 +1148,14 @@ function bp_nouveau_ajax_post_update() {
  * @since BuddyBoss 2.0.4
  */
 function bb_nouveau_ajax_post_draft_activity() {
-	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_draft'] ) || ! wp_verify_nonce( $_POST['_wpnonce_post_draft'], 'post_draft_activity' ) ) {
+	if ( ! is_user_logged_in() || empty( $_POST['_wpnonce_post_draft'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce_post_draft'] ) ), 'post_draft_activity' ) ) {
 		wp_send_json_error();
 	}
 
-	$draft_activity = $_REQUEST['draft_activity'] ?? '';
+	$draft_activity = isset( $_REQUEST['draft_activity'] ) ? wp_unslash( $_REQUEST['draft_activity'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- JSON-decoded below; individual fields sanitized on use.
 
 	if ( ! empty( $_REQUEST['draft_activity'] ) && ! is_array( $_REQUEST['draft_activity'] ) ) {
-		$draft_activity = json_decode( stripslashes( $draft_activity ), true );
+		$draft_activity = json_decode( $draft_activity, true );
 	}
 
 	if ( is_array( $draft_activity ) && isset( $draft_activity['data_key'], $draft_activity['object'] ) ) {
@@ -1324,7 +1325,7 @@ function bp_nouveau_ajax_spam_activity() {
 	}
 
 	// Nonce check!
-	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'bp_activity_akismet_spam_' . $activity->id ) ) {
+	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'bp_activity_akismet_spam_' . $activity->id ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -1365,7 +1366,7 @@ function bp_nouveau_ajax_activity_update_privacy() {
 	}
 
 	// Nonce check!
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_activity' ) ) {
 		wp_send_json_error();
 	}
 
@@ -1433,7 +1434,7 @@ function bb_nouveau_ajax_activity_update_pinned_post() {
 	}
 
 	// Nonce check!
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_activity' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -1450,8 +1451,8 @@ function bb_nouveau_ajax_activity_update_pinned_post() {
 	}
 
 	$args = array(
-		'action'      => $_POST['pin_action'],
-		'activity_id' => (int) $_POST['id'],
+		'action'      => isset( $_POST['pin_action'] ) ? sanitize_key( wp_unslash( $_POST['pin_action'] ) ) : '',
+		'activity_id' => isset( $_POST['id'] ) ? absint( $_POST['id'] ) : 0,
 		'retval'      => 'string',
 	);
 
@@ -1502,7 +1503,7 @@ function bb_nouveau_ajax_activity_update_close_comments() {
 		! bp_is_post_request() ||
 		! is_user_logged_in() ||
 		empty( $_POST['nonce'] ) ||
-		! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' )
+		! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_activity' )
 	) {
 		wp_send_json_error( $response );
 	}
@@ -1516,8 +1517,8 @@ function bb_nouveau_ajax_activity_update_close_comments() {
 	}
 
 	$args = array(
-		'action'      => $_POST['close_comments_action'],
-		'activity_id' => (int) $_POST['id'],
+		'action'      => isset( $_POST['close_comments_action'] ) ? sanitize_key( wp_unslash( $_POST['close_comments_action'] ) ) : '',
+		'activity_id' => isset( $_POST['id'] ) ? absint( $_POST['id'] ) : 0,
 		'user_id'     => bp_loggedin_user_id(),
 		'retval'      => 'string',
 	);
@@ -1569,7 +1570,7 @@ function bb_nouveau_ajax_activity_load_more_comments() {
 	}
 
 	// Nonce check!
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_activity' ) ) {
 		wp_send_json_error(
 			array(
 				'message' => __( 'Invalid request.', 'buddyboss' ),
@@ -1629,7 +1630,7 @@ function bb_nouveau_ajax_activity_load_more_comments() {
 		array(
 			'limit'                  => bb_get_activity_comment_loading(),
 			'offset'                 => ! empty( $_POST['offset'] ) ? (int) $_POST['offset'] : 0,
-			'last_comment_timestamp' => ! empty( $_POST['last_comment_timestamp'] ) ? sanitize_text_field( $_POST['last_comment_timestamp'] ) : '',
+			'last_comment_timestamp' => ! empty( $_POST['last_comment_timestamp'] ) ? sanitize_text_field( wp_unslash( $_POST['last_comment_timestamp'] ) ) : '',
 			'last_comment_id'        => ! empty( $_POST['last_comment_id'] ) ? (int) $_POST['last_comment_id'] : 0,
 			'comment_order_by'       => apply_filters( 'bb_activity_recurse_comments_order_by', 'ASC' ),
 		)
@@ -1653,7 +1654,7 @@ function bb_nouveau_ajax_activity_load_more_comments() {
 		'parent_comment_id'      => $parent_comment_id,
 		'main_activity_id'       => $activity_id,
 		'is_ajax_load_more'      => true,
-		'last_comment_timestamp' => ! empty( $_POST['last_comment_timestamp'] ) ? sanitize_text_field( $_POST['last_comment_timestamp'] ) : '',
+		'last_comment_timestamp' => ! empty( $_POST['last_comment_timestamp'] ) ? sanitize_text_field( wp_unslash( $_POST['last_comment_timestamp'] ) ) : '',
 		'last_comment_id'        => ! empty( $_POST['last_comment_id'] ) ? (int) $_POST['last_comment_id'] : 0,
 	);
 
@@ -1693,7 +1694,7 @@ function bb_nouveau_ajax_activity_sync_from_modal() {
 	}
 
 	// Nonce verification.
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_activity' ) ) {
 		wp_send_json_error(
 			array(
 				'message' => __( 'Invalid request.', 'buddyboss' ),
@@ -1760,7 +1761,7 @@ function bb_nouveau_ajax_toggle_activity_notification_status() {
 	}
 
 	// Nonce check!
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'bp_nouveau_activity' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -1773,8 +1774,8 @@ function bb_nouveau_ajax_toggle_activity_notification_status() {
 	}
 
 	$args = array(
-		'action'      => $_POST['notification_toggle_action'],
-		'activity_id' => (int) $_POST['id'],
+		'action'      => isset( $_POST['notification_toggle_action'] ) ? sanitize_key( wp_unslash( $_POST['notification_toggle_action'] ) ) : '',
+		'activity_id' => isset( $_POST['id'] ) ? absint( $_POST['id'] ) : 0,
 		'user_id'     => bp_loggedin_user_id(),
 	);
 

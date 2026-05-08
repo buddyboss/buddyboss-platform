@@ -269,7 +269,6 @@ function bbp_get_topic_subscribers( $topic_id = 0 ) {
  * @return array|bool Results if user has subscriptions, otherwise false
  * @uses       bbp_get_user_topic_subscriptions() To get the user's subscriptions
  * @deprecated since Forums (r5156)
- *
  */
 function bbp_get_user_subscriptions( $user_id = 0 ) {
 	_deprecated_function( __FUNCTION__, 2.5, 'bbp_get_user_topic_subscriptions()' );
@@ -1102,13 +1101,13 @@ function bbp_get_user_topics_started( $args = array() ) {
 	// Backwards compat for pre-2.6.0
 	if ( is_numeric( $args ) ) {
 		$args = array(
-			'author' => bbp_get_user_id( $args, false, false )
+			'author' => bbp_get_user_id( $args, false, false ),
 		);
 	}
 
 	// Default arguments
 	$defaults = array(
-		'author' => bbp_get_displayed_user_id()
+		'author' => bbp_get_displayed_user_id(),
 	);
 
 	// Parse arguments

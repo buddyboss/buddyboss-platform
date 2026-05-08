@@ -86,7 +86,6 @@ class BP_Admin_Setting_Video extends BP_Admin_Setting_tab {
 		 */
 		do_action( 'bp_admin_setting_video_register_fields', $this );
 	}
-
 }
 
 return new BP_Admin_Setting_Video();

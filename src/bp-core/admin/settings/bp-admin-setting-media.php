@@ -72,7 +72,6 @@ class BP_Admin_Setting_Media extends BP_Admin_Setting_tab {
 		 */
 		do_action( 'bp_admin_setting_media_register_fields', $this );
 	}
-
 }
 
 return new BP_Admin_Setting_Media();

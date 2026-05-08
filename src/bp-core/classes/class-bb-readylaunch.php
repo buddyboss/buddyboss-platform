@@ -63,7 +63,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			add_filter( 'bp_rest_platform_settings', array( $this, 'bb_rest_readylaunch_platform_settings' ), 10, 1 );
 			add_filter( 'bb_telemetry_platform_options', array( $this, 'bb_rl_telemetry_platform_options' ), 10, 1 );
 
-			//Localise the script for admin.
+			// Localise the script for admin.
 			add_filter( 'bb_admin_localize_script', array( $this, 'bb_rl_admin_localize_script' ), 10, 2 );
 
 			if ( ! $enabled ) {
@@ -2459,8 +2459,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$min = bp_core_get_minified_asset_suffix();
 			$url = buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/';
 
-
-
 			if ( isset( $scripts['bp-avatar'] ) ) {
 				$scripts['bp-avatar']['file'] = "{$url}bb-readylaunch-avatar{$min}.js";
 			}
@@ -2488,8 +2486,6 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		public function bb_rl_register_common_styles( $styles ) {
 			$min = bp_core_get_minified_asset_suffix();
 			$url = buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/css/';
-
-
 
 			return $styles;
 		}
@@ -2754,15 +2750,51 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			$shades = array();
 
 			$adjustments = array(
-				100 => array( 'h' => 4, 's' => - 0.35, 'l' => 0.42 ),
-				200 => array( 'h' => 2, 's' => - 0.20, 'l' => 0.32 ),
-				300 => array( 'h' => 1, 's' => - 0.10, 'l' => 0.22 ),
-				400 => array( 'h' => 0, 's' => - 0.02, 'l' => 0.12 ),
-				500 => array( 'h' => 0, 's' => 0, 'l' => 0 ),
-				600 => array( 'h' => - 1, 's' => 0.03, 'l' => - 0.08 ),
-				700 => array( 'h' => - 3, 's' => 0.08, 'l' => - 0.18 ),
-				800 => array( 'h' => - 6, 's' => 0.12, 'l' => - 0.32 ),
-				900 => array( 'h' => - 8, 's' => 0.18, 'l' => - 0.45 ),
+				100 => array(
+					'h' => 4,
+					's' => - 0.35,
+					'l' => 0.42,
+				),
+				200 => array(
+					'h' => 2,
+					's' => - 0.20,
+					'l' => 0.32,
+				),
+				300 => array(
+					'h' => 1,
+					's' => - 0.10,
+					'l' => 0.22,
+				),
+				400 => array(
+					'h' => 0,
+					's' => - 0.02,
+					'l' => 0.12,
+				),
+				500 => array(
+					'h' => 0,
+					's' => 0,
+					'l' => 0,
+				),
+				600 => array(
+					'h' => - 1,
+					's' => 0.03,
+					'l' => - 0.08,
+				),
+				700 => array(
+					'h' => - 3,
+					's' => 0.08,
+					'l' => - 0.18,
+				),
+				800 => array(
+					'h' => - 6,
+					's' => 0.12,
+					'l' => - 0.32,
+				),
+				900 => array(
+					'h' => - 8,
+					's' => 0.18,
+					'l' => - 0.45,
+				),
 			);
 
 			foreach ( $adjustments as $level => $adj ) {
@@ -2824,7 +2856,11 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				$h /= 6;
 			}
 
-			return array( 'h' => $h * 360, 's' => $s, 'l' => $l );
+			return array(
+				'h' => $h * 360,
+				's' => $s,
+				'l' => $l,
+			);
 		}
 
 		/**
@@ -2876,7 +2912,8 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 				$b = $hue2rgb( $p, $q, $h - 1 / 3 );
 			}
 
-			return sprintf( '#%02x%02x%02x',
+			return sprintf(
+				'#%02x%02x%02x',
 				round( $r * 255 ),
 				round( $g * 255 ),
 				round( $b * 255 )

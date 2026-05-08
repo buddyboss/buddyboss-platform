@@ -43,7 +43,6 @@ function bp_friends_filter_user_query_populate_extras( BP_User_Query $user_query
 			$user_query->results[ $friend_id ]->is_friend = 1;
 		}
 	}
-
 }
 add_filter( 'bp_user_query_populate_extras', 'bp_friends_filter_user_query_populate_extras', 4, 2 );
 
@@ -116,7 +115,7 @@ function bp_friends_filter_media_scope( $retval = array(), $filter = array() ) {
 				'column'  => 'description',
 				'compare' => 'LIKE',
 				'value'   => $filter['search_terms'],
-			)
+			),
 		);
 	}
 
@@ -193,7 +192,7 @@ function bp_friends_filter_video_scope( $retval = array(), $filter = array() ) {
 				'column'  => 'description',
 				'compare' => 'LIKE',
 				'value'   => $filter['search_terms'],
-			)
+			),
 		);
 	}
 
@@ -455,7 +454,6 @@ function friends_screen_notification_settings() {
 	</table>
 
 	<?php
-
 }
 
 add_action( 'bp_notification_settings', 'friends_screen_notification_settings', 15 );

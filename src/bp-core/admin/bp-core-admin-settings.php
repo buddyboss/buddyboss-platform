@@ -398,7 +398,7 @@ function bp_admin_setting_callback_profile_avatar_type() {
 	<p class="description">
 		<?php
 		$link = '<a href="' . esc_url( admin_url( 'options-discussion.php' ) ) . '">' . esc_html__( 'Discussion', 'buddyboss' ) . '</a>';
-		echo sprintf(
+		printf(
 			/* translators: %s: Admin discussion link */
 			__( 'Select whether to use the BuddyBoss or WordPress avatar systems. You can manage WordPress avatars in the %s settings.', 'buddyboss' ),
 			wp_kses_post( $link )
@@ -410,7 +410,7 @@ function bp_admin_setting_callback_profile_avatar_type() {
 		<p id="bb-wordpress-profile-gravatar-feedback" class="updated warning">
 			<?php
 			$link = '<a href="' . esc_url( admin_url( 'options-discussion.php' ) ) . '">' . esc_html__( 'Discussion', 'buddyboss' ) . '</a>';
-			echo sprintf(
+			printf(
 				/* translators: %s: Admin discussion link */
 				__( 'Please enable "Avatar display" in your WordPress %s settings.', 'buddyboss' ),
 				wp_kses_post( $link )
@@ -470,7 +470,7 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
 
 	<p class="no-field-notice bp-default-profile-avatar-display-name-notice <?php echo ( 'display-name' !== bb_get_default_profile_avatar_type() || ! empty( _wp_image_editor_choose() ) ) ? 'bp-hide' : ''; ?>">
 		<?php
-		echo sprintf(
+		printf(
 		/* translators: Imagick text with link. */
 			__( 'Your Server needs %s installed to enable initials avatar. Ask your web host.', 'buddyboss' ),
 			sprintf(
@@ -484,7 +484,7 @@ function bp_admin_setting_callback_default_profile_avatar_type() {
 
 	<p class="description bp-default-profile-avatar-display-name-description <?php echo ( 'display-name' !== bb_get_default_profile_avatar_type() ) ? 'bp-hide' : ''; ?>">
 		<?php
-		echo sprintf(
+		printf(
 		/* translators: Profile text with link. */
 			__( 'Display name will show either as a single initial or as double initials depending on your display name option in %s.', 'buddyboss' ),
 			sprintf(
@@ -539,7 +539,7 @@ function bp_admin_setting_callback_default_profile_custom_avatar() {
 	</div>
 	<p class="description">
 		<?php
-		echo sprintf(
+		printf(
 		/* translators: 1: Profile avatar width. 2: Profile avatar height */
 			esc_html__( 'Upload an image to be used as the default profile avatar. Recommended size is %1$spx by %2$spx.', 'buddyboss' ),
 			(int) bp_core_avatar_full_width(),
@@ -631,7 +631,7 @@ function bp_admin_setting_callback_default_profile_custom_cover() {
 	</div>
 	<p class="description">
 		<?php
-		echo sprintf(
+		printf(
 			/* translators: 1: Profile cover width. 2: Profile cover height */
 			esc_html__( 'Upload an image to be used as the default profile cover image. Recommended size is %1$spx by %2$spx.', 'buddyboss' ),
 			(int) $cover_dimensions['width'],
@@ -897,7 +897,7 @@ function bp_admin_setting_callback_default_group_avatar_type() {
 
 	<p class="no-field-notice bp-default-group-avatar-group-name-notice <?php echo ( 'group-name' !== bb_get_default_group_avatar_type() || ! empty( _wp_image_editor_choose() ) ) ? 'bp-hide' : ''; ?>">
 		<?php
-		echo sprintf(
+		printf(
 		/* translators: Imagick text with link. */
 			__( 'Your Server needs %s installed to enable initials avatar. Ask your web host.', 'buddyboss' ),
 			sprintf(
@@ -948,7 +948,7 @@ function bp_admin_setting_callback_default_group_custom_avatar() {
 	</div>
 	<p class="description">
 		<?php
-		echo sprintf(
+		printf(
 			/* translators: 1: Full avatar width in pixels. 2: Full avatar height in pixels */
 			esc_html__( 'Upload an image to be used as the default group avatar. Recommended size is %1$spx by %2$spx.', 'buddyboss' ),
 			absint( bp_core_avatar_full_width() ),
@@ -1036,7 +1036,7 @@ function bp_admin_setting_callback_default_group_custom_cover() {
 	</div>
 	<p class="description">
 		<?php
-		echo sprintf(
+		printf(
 			/* translators: 1: Cover image width in pixels. 2: Cover image height in pixels */
 			esc_html__( 'Upload an image to be used as the default group cover image. Recommended size is %1$spx by %2$spx.', 'buddyboss' ),
 			(int) $cover_dimensions['width'],
@@ -1453,7 +1453,6 @@ function bp_admin_setting_callback_group_type_creation() {
 		<label for="bp-disable-group-type-creation"><?php esc_html_e( 'Enable group types to better organize groups', 'buddyboss' ); ?></label>
 		<?php
 	}
-
 }
 
 /**
@@ -1864,7 +1863,6 @@ function bp_feed_settings_callback_platform( $args ) {
 		<input name="<?php echo esc_attr( 'bp-feed-platform-' . $option_name ); ?>" id="<?php echo esc_attr( $option_name ); ?>" type="checkbox" value="1" <?php checked( bp_platform_is_feed_enable( 'bp-feed-platform-' . $option_name, true ) ); ?>/>
 		<label for="<?php echo esc_attr( $option_name ); ?>"><?php echo esc_html( $args['activity_label'] ); ?></label>
 	<?php
-
 }
 
 /**
@@ -1922,7 +1920,6 @@ function bp_admin_setting_callback_enable_send_invite_member_type( $args ) {
 	<input name="<?php echo esc_attr( 'bp-enable-send-invite-member-type-' . $option_name ); ?>" id="<?php echo esc_attr( $option_name ); ?>" type="checkbox" value="1" <?php checked( bp_enable_send_invite_member_type( 'bp-enable-send-invite-member-type-' . $option_name, false ) ); ?>/>
 	<label for="<?php echo esc_attr( $option_name ); ?>"><?php echo esc_html( $args['member_type_name'] ); ?></label>
 	<?php
-
 }
 
 /**
@@ -2227,7 +2224,6 @@ function bp_admin_setting_group_layout_default_option() {
 		);
 	}
 	printf( '</select>' );
-
 }
 
 /**
@@ -2300,7 +2296,6 @@ function bb_admin_setting_group_headers_elements( $args ) {
 	'<p class="description">' .
 		esc_html__( 'Select which elements to show in your group headers.', 'buddyboss' ) .
 	'</p>';
-
 }
 
 /**
@@ -2740,7 +2735,12 @@ function bb_admin_setting_callback_private_rest_apis() {
 	}
 	?>
 
-	<input id="bb-enable-private-rest-apis" name="bb-enable-private-rest-apis" type="checkbox" value="1" <?php checked( $checked_checkbox ); disabled( $disable_field ); ?>/>
+	<input id="bb-enable-private-rest-apis" name="bb-enable-private-rest-apis" type="checkbox" value="1" 
+	<?php
+	checked( $checked_checkbox );
+	disabled( $disable_field );
+	?>
+	/>
 	<label for="bb-enable-private-rest-apis"><?php esc_html_e( 'Restrict REST API access to only logged-in members', 'buddyboss' ); ?></label>
 	<p class="description">
 		<?php
@@ -2851,7 +2851,6 @@ function bb_labs_get_settings_sections() {
 	);
 
 	return (array) apply_filters( 'bb_labs_get_settings_sections', $settings );
-
 }
 
 /**
@@ -3048,9 +3047,12 @@ function bb_admin_setting_callback_domain_restrictions() {
 	?>
 	<label for="bb-domain-restrictions-setting">
 		<?php
-		esc_html_e( 'Add domain(s) to restrict new users from being able to register, you can use a wildcard (*) symbol to apply restrictions to an entire extension.
+		esc_html_e(
+			'Add domain(s) to restrict new users from being able to register, you can use a wildcard (*) symbol to apply restrictions to an entire extension.
 		When multiple restrictions are in place, a domain will always take priority over an extension.
-		', 'buddyboss' );
+		',
+			'buddyboss'
+		);
 		?>
 	</label>
 
@@ -3723,7 +3725,7 @@ function bb_admin_performance_setting_activity_callback() {
 	asort( $activity_per_page );
 
 	$activity_autoload_options = apply_filters( 'bb_performance_activity_autoload', array() );
-	$activity_autoload_options        = bp_parse_args(
+	$activity_autoload_options = bp_parse_args(
 		$activity_autoload_options,
 		array(
 			'infinite'  => __( 'Infinite scrolling', 'buddyboss' ),

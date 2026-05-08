@@ -236,7 +236,6 @@ final class BP_Group_Export extends BP_Export {
 				'object'  => 'group',
 			)
 		);
-
 	}
 
 	/**
@@ -281,7 +280,6 @@ final class BP_Group_Export extends BP_Export {
 			'offset' => $offset,
 			'items'  => $items,
 		);
-
 	}
 
 	/**
@@ -329,5 +327,4 @@ final class BP_Group_Export extends BP_Export {
 
 		return $items;
 	}
-
 }

@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 /**
  * XProfile: User's "Profile > Change Avatar" screen handler
  *

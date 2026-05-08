@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 /**
  * The template for displaying the activity loop in the ajaxified search result.
  *

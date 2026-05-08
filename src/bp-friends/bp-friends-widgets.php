@@ -28,7 +28,7 @@ function bp_friends_register_widgets() {
 
 	add_action(
 		'widgets_init',
-		function() {
+		function () {
 			register_widget( 'BP_Core_Friends_Widget' );
 		}
 	);

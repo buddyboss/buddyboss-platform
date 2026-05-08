@@ -74,7 +74,6 @@ class BP_Document_Component extends BP_Component {
 				'search_query_arg'         => 'document_search',
 			)
 		);
-
 	}
 
 	/**
@@ -213,7 +212,6 @@ class BP_Document_Component extends BP_Component {
 		} else {
 			$this->current_folder = 0;
 		}
-
 	}
 
 	/**
@@ -225,7 +223,7 @@ class BP_Document_Component extends BP_Component {
 
 		// Perform a daily tidy up.
 		if ( ! wp_next_scheduled( 'bp_document_delete_orphaned_attachments_hook' ) ) {
-			wp_schedule_event( strtotime('tomorrow midnight'), 'daily', 'bp_document_delete_orphaned_attachments_hook' );
+			wp_schedule_event( strtotime( 'tomorrow midnight' ), 'daily', 'bp_document_delete_orphaned_attachments_hook' );
 		}
 
 		add_action( 'bp_document_delete_orphaned_attachments_hook', 'bp_document_delete_orphaned_attachments' );
@@ -289,7 +287,6 @@ class BP_Document_Component extends BP_Component {
 		}
 
 		parent::setup_nav( $main_nav, $sub_nav );
-
 	}
 
 	/**
@@ -387,11 +384,13 @@ class BP_Document_Component extends BP_Component {
 	 * @since BuddyBoss 1.5.1
 	 */
 	public function rest_api_init( $controllers = array() ) {
-		parent::rest_api_init( array(
-			'BP_REST_Document_Endpoint',
-			'BP_REST_Document_Folder_Endpoint',
-			'BP_REST_Document_Details_Endpoint',
-		) );
+		parent::rest_api_init(
+			array(
+				'BP_REST_Document_Endpoint',
+				'BP_REST_Document_Folder_Endpoint',
+				'BP_REST_Document_Details_Endpoint',
+			)
+		);
 	}
 
 	/**

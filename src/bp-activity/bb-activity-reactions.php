@@ -231,7 +231,7 @@ function bb_get_activity_most_reactions( $item_id = 0, $item_type = 'activity', 
 			'count' => $reaction_count,
 		);
 
-		$no_of_reactions --;
+		--$no_of_reactions;
 	}
 
 	return apply_filters( 'bb_get_activity_most_reactions', $reactions );
@@ -284,7 +284,8 @@ function bb_get_activity_post_reaction_button_html( $item_id, $item_type = 'acti
 		'has_reacted'           => $has_reacted,
 	);
 
-	return apply_filters( 'bb_get_activity_reaction_button_html',
+	return apply_filters(
+		'bb_get_activity_reaction_button_html',
 		sprintf(
 			'<a href="%1$s" class="button bp-like-button bp-secondary-action %5$s" data-pressed="false" data-reacted-id="%6$s">
 			<span class="bp-screen-reader-text">%2$s</span>
@@ -469,11 +470,11 @@ function bb_get_activity_reaction_ajax_callback() {
 	}
 
 	// Nonce check!
-	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'bp_nouveau_activity' ) ) {
+	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( wp_unslash( $_POST['_wpnonce'] ), 'bp_nouveau_activity' ) ) {
 		wp_send_json_error(
 			array(
 				'message' => __( 'Nonce verification failed.', 'buddyboss' ),
-				'type'    => 'error'
+				'type'    => 'error',
 			)
 		);
 	}
@@ -482,7 +483,7 @@ function bb_get_activity_reaction_ajax_callback() {
 		wp_send_json_error(
 			array(
 				'message' => __( 'Item ID is required.', 'buddyboss' ),
-				'type'    => 'error'
+				'type'    => 'error',
 			)
 		);
 	}
@@ -500,7 +501,7 @@ function bb_get_activity_reaction_ajax_callback() {
 			wp_send_json_error(
 				array(
 					'message' => __( 'No reactions found!', 'buddyboss' ),
-					'type'    => 'info'
+					'type'    => 'info',
 				)
 			);
 		}
@@ -513,7 +514,7 @@ function bb_get_activity_reaction_ajax_callback() {
 			$popup_heading = __( 'Likes', 'buddyboss' );
 		}
 
-		$all_emotions  = bb_active_reactions();
+		$all_emotions = bb_active_reactions();
 
 		foreach ( $most_reacted as $reaction ) {
 			$tab                     = ! empty( $all_emotions[ $reaction['id'] ] ) ? $all_emotions[ $reaction['id'] ] : array();
@@ -557,7 +558,7 @@ function bb_get_activity_reaction_ajax_callback() {
 					'item_type' => $item_type,
 					'paged'     => $paged,
 					'per_page'  => $per_page,
-					'before'      => $before,
+					'before'    => $before,
 				)
 			);
 			$tab_content = $all_reacted['reactions'];
@@ -725,19 +726,19 @@ function bb_activity_reaction_names_and_count( $activity_id, $activity_type = 'a
 	$display_names = array();
 	if ( true === $is_current_user_reacted ) {
 		$display_names[] = esc_html__( 'You', 'buddyboss' );
-		$name_count--;
+		--$name_count;
 	}
 
 	if ( ! empty( $reacted_users ) ) {
-		$user_keys = [];
+		$user_keys = array();
 		foreach ( $reacted_users as $k => $user_id ) {
 			if ( 0 === $name_count ) {
 				break;
 			}
 
-			$user_keys[] = $k;
+			$user_keys[]     = $k;
 			$display_names[] = bp_core_get_user_displayname( $user_id );
-			$name_count --;
+			--$name_count;
 		}
 
 		$reacted_users = array_diff_key( $reacted_users, array_flip( $user_keys ) );
@@ -954,7 +955,8 @@ function bb_activity_prepare_emotion_icon( $reaction_id ) {
 	} else {
 		$settings  = bb_get_reaction_button_settings();
 		$icon_html = ! empty( $settings['icon'] ) ?
-			sprintf( '<i class="bb-icon-%s"></i>',
+			sprintf(
+				'<i class="bb-icon-%s"></i>',
 				esc_attr( $settings['icon'] )
 			) :
 			'<i class="bb-icon-thumbs-up"></i>';

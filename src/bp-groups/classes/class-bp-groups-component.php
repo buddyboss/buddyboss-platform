@@ -1111,7 +1111,14 @@ class BP_Groups_Component extends BP_Component {
 				);
 
 				if ( empty( $bp->bp_options_avatar ) ) {
-					$bp->bp_options_avatar = '<img src="' . esc_url( bb_attachments_get_default_profile_group_avatar_image( array( 'object' => 'group', 'type' => 'thumb' ) ) ) . '" alt="' . esc_attr__( 'No Group Profile Photo', 'buddyboss' ) . '" class="avatar" />';
+					$bp->bp_options_avatar = '<img src="' . esc_url(
+						bb_attachments_get_default_profile_group_avatar_image(
+							array(
+								'object' => 'group',
+								'type'   => 'thumb',
+							)
+						)
+					) . '" alt="' . esc_attr__( 'No Group Profile Photo', 'buddyboss' ) . '" class="avatar" />';
 				}
 			}
 		}

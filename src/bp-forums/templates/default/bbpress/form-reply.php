@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 
 /**
  * New/Edit Reply
@@ -126,8 +127,7 @@
 										<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify the author of follow-up replies', 'buddyboss' ); ?></label>
 										<?php
 									}
-								else :
-									if (
+								elseif (
 										(
 											function_exists( 'bb_enabled_legacy_email_preference' ) && bb_enabled_legacy_email_preference()
 										) ||
@@ -135,17 +135,18 @@
 											function_exists( 'bp_is_active' ) &&
 											! bp_is_active( 'notifications' )
 										)
-									) {
-										?>
+									) :
+
+									?>
 										<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify me of new replies by email', 'buddyboss' ); ?></label>
 										<?php
-									} else {
+									else :
 										?>
 										<label for="bbp_topic_subscription"><?php esc_html_e( 'Notify me of new replies', 'buddyboss' ); ?></label>
 										<?php
-									}
+
 								endif;
-								?>
+									?>
 
 							</p>
 

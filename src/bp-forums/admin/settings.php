@@ -22,16 +22,16 @@ function bbp_admin_get_settings_sections() {
 		'bbp_admin_get_settings_sections',
 		array(
 			'bbp_settings_users'        => array(
-				'title'    => esc_html__( 'Forum Settings', 'buddyboss' ),
-				'page'     => 'discussion',
+				'title' => esc_html__( 'Forum Settings', 'buddyboss' ),
+				'page'  => 'discussion',
 			),
 			'bbp_settings_features'     => array(
-				'title'    => esc_html__( 'Forum Features', 'buddyboss' ),
-				'page'     => 'discussion',
+				'title' => esc_html__( 'Forum Features', 'buddyboss' ),
+				'page'  => 'discussion',
 			),
 			'bbp_settings_buddypress'   => array(
-				'title'    => esc_html__( 'Group Forums', 'buddyboss' ),
-				'page'     => 'buddypress',
+				'title' => esc_html__( 'Group Forums', 'buddyboss' ),
+				'page'  => 'buddypress',
 			),
 			'bbp_settings_root_slugs'   => array(
 				'title'    => esc_html__( 'Forums Directory', 'buddyboss' ),
@@ -44,26 +44,26 @@ function bbp_admin_get_settings_sections() {
 				'page'     => 'general',
 			),
 			'bbp_settings_per_page'     => array(
-				'title'    => esc_html__( 'Discussions and Replies Per Page', 'buddyboss' ),
-				'page'     => 'reading',
+				'title' => esc_html__( 'Discussions and Replies Per Page', 'buddyboss' ),
+				'page'  => 'reading',
 			),
 			'bbp_settings_per_rss_page' => array(
-				'title'    => esc_html__( 'Discussions and Replies Per RSS Page', 'buddyboss' ),
-				'page'     => 'reading',
+				'title' => esc_html__( 'Discussions and Replies Per RSS Page', 'buddyboss' ),
+				'page'  => 'reading',
 			),
 			'bbp_settings_single_slugs' => array(
 				'title'    => esc_html__( 'Forum Permalinks', 'buddyboss' ),
 				'callback' => 'bbp_admin_setting_callback_single_slug_section',
 				'page'     => 'permalink',
 			),
-			 'bbp_settings_user_slugs' => array(
-				 'title'    => esc_html__( 'Forum Profile Permalinks', 'buddyboss' ),
-				 'callback' => 'bbp_admin_setting_callback_user_slug_section',
-				 'page'     => 'permalink',
-			 ),
+			'bbp_settings_user_slugs'   => array(
+				'title'    => esc_html__( 'Forum Profile Permalinks', 'buddyboss' ),
+				'callback' => 'bbp_admin_setting_callback_user_slug_section',
+				'page'     => 'permalink',
+			),
 			'bbp_settings_akismet'      => array(
-				'title'    => esc_html__( 'Akismet Integration', 'buddyboss' ),
-				'page'     => 'discussion',
+				'title' => esc_html__( 'Akismet Integration', 'buddyboss' ),
+				'page'  => 'discussion',
 			),
 		)
 	);
@@ -80,7 +80,7 @@ function bbp_admin_get_settings_fields() {
 		'bbp_admin_get_settings_fields',
 		array(
 
-			/** Forum Settings Section **/
+			/** Forum Settings Section */
 
 			'bbp_settings_users'        => array(
 
@@ -115,7 +115,7 @@ function bbp_admin_get_settings_fields() {
 				),
 			),
 
-			/** Forum Features Section **/
+			/** Forum Features Section */
 
 			'bbp_settings_features'     => array(
 
@@ -190,7 +190,7 @@ function bbp_admin_get_settings_fields() {
 				),
 			),
 
-			/** Theme Packages **/
+			/** Theme Packages */
 
 			'bbp_settings_theme_compat' => array(
 
@@ -203,12 +203,12 @@ function bbp_admin_get_settings_fields() {
 				),
 			),
 
-			/** Group Forums Settings **/
+			/** Group Forums Settings */
 
 			'bbp_settings_buddypress'   => array(
 
 				// Are group forums enabled?
-				'_bbp_enable_group_forums'  => array(
+				'_bbp_enable_group_forums' => array(
 					'title'             => esc_html__( 'Group Forums', 'buddyboss' ),
 					'callback'          => 'bbp_admin_setting_callback_group_forums',
 					'sanitize_callback' => 'intval',
@@ -216,7 +216,7 @@ function bbp_admin_get_settings_fields() {
 				),
 			),
 
-			/** Forums Directory Settings **/
+			/** Forums Directory Settings */
 
 			'bbp_settings_root_slugs'   => array(
 
@@ -228,16 +228,16 @@ function bbp_admin_get_settings_fields() {
 				// 'args'              => array()
 				// ),
 
-				   // Include root setting
-				   '_bbp_include_root' => array(
-					   'title'             => esc_html__( 'Forums Prefix', 'buddyboss' ),
-					   'callback'          => 'bbp_admin_setting_callback_include_root',
-					   'sanitize_callback' => 'intval',
-					   'args'              => array(),
-				   ),
+					// Include root setting
+					'_bbp_include_root' => array(
+						'title'             => esc_html__( 'Forums Prefix', 'buddyboss' ),
+						'callback'          => 'bbp_admin_setting_callback_include_root',
+						'sanitize_callback' => 'intval',
+						'args'              => array(),
+					),
 
 				// What to show on Forum Root
-				'_bbp_show_on_root'    => array(
+				'_bbp_show_on_root'     => array(
 					'title'             => esc_html__( 'Forums Directory shows', 'buddyboss' ),
 					'callback'          => 'bbp_admin_setting_callback_show_on_root',
 					'sanitize_callback' => 'sanitize_text_field',
@@ -245,7 +245,7 @@ function bbp_admin_get_settings_fields() {
 				),
 			),
 
-			/** Discussions and Replies Per Page Section **/
+			/** Discussions and Replies Per Page Section */
 
 			'bbp_settings_per_page'     => array(
 
@@ -274,7 +274,7 @@ function bbp_admin_get_settings_fields() {
 				),
 			),
 
-			/** Discussions and Replies Per Page Section **/
+			/** Discussions and Replies Per Page Section */
 
 			'bbp_settings_per_rss_page' => array(
 
@@ -295,7 +295,7 @@ function bbp_admin_get_settings_fields() {
 				),
 			),
 
-			/** Forum Permalink Slugs **/
+			/** Forum Permalink Slugs */
 
 			'bbp_settings_single_slugs' => array(
 
@@ -348,44 +348,44 @@ function bbp_admin_get_settings_fields() {
 				),
 			),
 
-			/** Forum Profile Permalinks **/
+			/** Forum Profile Permalinks */
 
-			'bbp_settings_user_slugs' => array(
+			'bbp_settings_user_slugs'   => array(
 
 				// Topics slug setting
-//				'_bbp_topic_archive_slug' => array(
-//					'title'             => esc_html__( 'Discussions Started', 'buddyboss' ),
-//					'callback'          => 'bbp_admin_setting_callback_topic_archive_slug',
-//					'sanitize_callback' => 'bbp_sanitize_slug',
-//					'args'              => array( 'label_for'=>'_bbp_topic_archive_slug' )
-//				),
+				// '_bbp_topic_archive_slug' => array(
+				// 'title'             => esc_html__( 'Discussions Started', 'buddyboss' ),
+				// 'callback'          => 'bbp_admin_setting_callback_topic_archive_slug',
+				// 'sanitize_callback' => 'bbp_sanitize_slug',
+				// 'args'              => array( 'label_for'=>'_bbp_topic_archive_slug' )
+				// ),
 
-				// Replies slug setting
-				'_bbp_reply_archive_slug' => array(
-					'title'             => esc_html__( 'Replies Created', 'buddyboss' ),
-					'callback'          => 'bbp_admin_setting_callback_reply_archive_slug',
-					'sanitize_callback' => 'bbp_sanitize_slug',
-					'args'              => array( 'label_for'=>'_bbp_reply_archive_slug' )
-				),
+						// Replies slug setting
+						'_bbp_reply_archive_slug' => array(
+							'title'             => esc_html__( 'Replies Created', 'buddyboss' ),
+							'callback'          => 'bbp_admin_setting_callback_reply_archive_slug',
+							'sanitize_callback' => 'bbp_sanitize_slug',
+							'args'              => array( 'label_for' => '_bbp_reply_archive_slug' ),
+						),
 
 				// Favorites slug setting
-				'_bbp_user_favs_slug' => array(
+				'_bbp_user_favs_slug'             => array(
 					'title'             => esc_html__( 'Favorite Discussions', 'buddyboss' ),
 					'callback'          => 'bbp_admin_setting_callback_user_favs_slug',
 					'sanitize_callback' => 'bbp_sanitize_slug',
-					'args'              => array( 'label_for'=>'_bbp_user_favs_slug' )
+					'args'              => array( 'label_for' => '_bbp_user_favs_slug' ),
 				),
 
 				// Subscriptions slug setting
-				'_bbp_user_subs_slug' => array(
+				'_bbp_user_subs_slug'             => array(
 					'title'             => esc_html__( 'Subscriptions', 'buddyboss' ),
 					'callback'          => 'bbp_admin_setting_callback_user_subs_slug',
 					'sanitize_callback' => 'bbp_sanitize_slug',
-					'args'              => array( 'label_for'=>'_bbp_user_subs_slug' )
-				)
+					'args'              => array( 'label_for' => '_bbp_user_subs_slug' ),
+				),
 			),
 
-			/** Akismet Settings **/
+			/** Akismet Settings */
 
 			'bbp_settings_akismet'      => array(
 
@@ -472,7 +472,7 @@ function bbp_admin_setting_callback_anonymous() {
 	checked( bbp_allow_anonymous( false ) );
 	bbp_maybe_admin_setting_disabled( '_bbp_allow_anonymous' );
 	?>
-	 />
+	/>
 	<label for="_bbp_allow_anonymous"><?php esc_html_e( 'Allow guest users without accounts to create discussions and replies', 'buddyboss' ); ?></label>
 
 	<?php
@@ -495,7 +495,7 @@ function bbp_admin_setting_callback_favorites() {
 	checked( bbp_is_favorites_active( true ) );
 	bbp_maybe_admin_setting_disabled( '_bbp_enable_favorites' );
 	?>
-	 />
+	/>
 	<label for="_bbp_enable_favorites"><?php esc_html_e( 'Allow members to mark discussions as favorites', 'buddyboss' ); ?></label>
 
 	<?php
@@ -516,7 +516,7 @@ function bbp_admin_setting_callback_subscriptions() {
 	checked( bbp_is_subscriptions_active( true ) );
 	bbp_maybe_admin_setting_disabled( '_bbp_enable_subscriptions' );
 	?>
-	 />
+	/>
 	<label for="_bbp_enable_subscriptions"><?php esc_html_e( 'Allow members to subscribe to discussions and standalone forums', 'buddyboss' ); ?></label>
 
 	<?php
@@ -537,7 +537,7 @@ function bbp_admin_setting_callback_topic_tags() {
 	checked( bbp_allow_topic_tags( true ) );
 	bbp_maybe_admin_setting_disabled( '_bbp_allow_topic_tags' );
 	?>
-	 />
+	/>
 	<label for="_bbp_allow_topic_tags"><?php esc_html_e( 'Allow discussions to have tags', 'buddyboss' ); ?></label>
 
 	<?php
@@ -558,7 +558,7 @@ function bbp_admin_setting_callback_search() {
 	checked( bbp_allow_search( true ) );
 	bbp_maybe_admin_setting_disabled( '_bbp_allow_search' );
 	?>
-	 />
+	/>
 	<label for="_bbp_allow_search"><?php esc_html_e( 'Allow forum wide search', 'buddyboss' ); ?></label>
 
 	<?php
@@ -602,7 +602,7 @@ function bbp_admin_setting_callback_thread_replies_depth() {
 		checked( '1', bbp_allow_threaded_replies( true ) );
 		bbp_maybe_admin_setting_disabled( '_bbp_allow_threaded_replies' );
 		?>
-		 />
+		/>
 		<?php printf( esc_html__( 'Enable threaded (nested) replies %s levels deep', 'buddyboss' ), $select ); ?>
 	</label>
 
@@ -624,7 +624,7 @@ function bbp_admin_setting_callback_revisions() {
 	checked( bbp_allow_revisions( true ) );
 	bbp_maybe_admin_setting_disabled( '_bbp_allow_revisions' );
 	?>
-	 />
+	/>
 	<label for="_bbp_allow_revisions"><?php esc_html_e( 'Allow discussion and reply revision logging', 'buddyboss' ); ?></label>
 
 	<?php
@@ -645,7 +645,7 @@ function bbp_admin_setting_callback_use_wp_editor() {
 	checked( bbp_use_wp_editor( true ) );
 	bbp_maybe_admin_setting_disabled( '_bbp_use_wp_editor' );
 	?>
-	 />
+	/>
 	<label for="_bbp_use_wp_editor"><?php esc_html_e( 'Add toolbar & buttons to textareas to help with HTML formatting', 'buddyboss' ); ?></label>
 
 	<?php
@@ -715,7 +715,7 @@ function bbp_admin_setting_callback_use_autoembed() {
 	checked( bbp_use_autoembed( true ) );
 	bbp_maybe_admin_setting_disabled( '_bbp_use_autoembed' );
 	?>
-	 />
+	/>
 	<label for="_bbp_use_autoembed"><?php esc_html_e( 'Embed media (YouTube, Twitter, Vimeo, etc&hellip;) directly into discussions and replies', 'buddyboss' ); ?></label>
 
 	<?php
@@ -828,15 +828,17 @@ function bbp_admin_setting_callback_root_slug_section() {
 			sprintf(
 			/* translators: 1: Link, 2: Text. */
 				'<a href="%1$s" target="_blank">%2$s</a>',
-				esc_url( bp_get_admin_url(
-					add_query_arg(
-						array(
-							'page'    => 'bp-help',
-							'article' => 83108,
-						),
-						'admin.php'
+				esc_url(
+					bp_get_admin_url(
+						add_query_arg(
+							array(
+								'page'    => 'bp-help',
+								'article' => 83108,
+							),
+							'admin.php'
+						)
 					)
-				) ),
+				),
 				esc_html__( 'Shortcodes', 'buddyboss' )
 			)
 		)
@@ -875,7 +877,7 @@ function bbp_admin_setting_callback_include_root() {
 	checked( bbp_include_root_slug() );
 	bbp_maybe_admin_setting_disabled( '_bbp_include_root' );
 	?>
-	 />
+	/>
 	<?php
 	printf(
 		'<label for="_bbp_include_root">%s</label>',
@@ -889,7 +891,6 @@ function bbp_admin_setting_callback_include_root() {
 			)
 		)
 	);
-
 }
 
 /**
@@ -1062,7 +1063,7 @@ function bbp_admin_setting_callback_group_forums() {
 	checked( bbp_is_group_forums_active( true ) );
 	bbp_maybe_admin_setting_disabled( '_bbp_enable_group_forums' );
 	?>
-	 />
+	/>
 	<label for="_bbp_enable_group_forums"><?php esc_html_e( 'Allow social groups to have their own forums', 'buddyboss' ); ?></label>
 	<?php
 }
@@ -1113,7 +1114,7 @@ function bbp_admin_setting_callback_akismet() {
 	checked( bbp_is_akismet_active( true ) );
 	bbp_maybe_admin_setting_disabled( '_bbp_enable_akismet' );
 	?>
-	 />
+	/>
 	<?php
 	printf(
 	/* translators: Description. */
@@ -1497,7 +1498,7 @@ function bbp_admin_settings_help() {
 			'id'      => 'overview',
 			'title'   => __( 'Overview', 'buddyboss' ),
 			'content' => '<p>' . __( 'This screen provides access to all of the Forums settings.', 'buddyboss' ) . '</p>' .
-						 '<p>' . __( 'Please see the additional help tabs for more information on each indiviual section.', 'buddyboss' ) . '</p>',
+						'<p>' . __( 'Please see the additional help tabs for more information on each indiviual section.', 'buddyboss' ) . '</p>',
 		)
 	);
 
@@ -1507,7 +1508,7 @@ function bbp_admin_settings_help() {
 			'id'      => 'main_settings',
 			'title'   => __( 'Main Settings', 'buddyboss' ),
 			'content' => '<p>' . __( 'In the Main Settings you have a number of options:', 'buddyboss' ) . '</p>' .
-						 '<p>' .
+						'<p>' .
 							'<ul>' .
 								'<li>' . __( 'You can choose to lock a post after a certain number of minutes. "Locking post editing" will prevent the author from editing some amount of time after saving a post.', 'buddyboss' ) . '</li>' .
 								'<li>' . __( '"Throttle time" is the amount of time required between posts from a single author. The higher the throttle time, the longer a user will need to wait between posting to the forum.', 'buddyboss' ) . '</li>' .
@@ -1529,8 +1530,8 @@ function bbp_admin_settings_help() {
 			'id'      => 'per_page',
 			'title'   => __( 'Per Page', 'buddyboss' ),
 			'content' => '<p>' . __( 'Per Page settings allow you to control the number of discussions and replies to appear on each page.', 'buddyboss' ) . '</p>' .
-						 '<p>' . __( 'This is comparable to the WordPress "Reading Settings" page, where you can set the number of posts that should show on blog pages and in feeds.', 'buddyboss' ) . '</p>' .
-						 '<p>' . __( 'These are broken up into two separate groups: one for what appears in your theme, another for RSS feeds.', 'buddyboss' ) . '</p>',
+						'<p>' . __( 'This is comparable to the WordPress "Reading Settings" page, where you can set the number of posts that should show on blog pages and in feeds.', 'buddyboss' ) . '</p>' .
+						'<p>' . __( 'These are broken up into two separate groups: one for what appears in your theme, another for RSS feeds.', 'buddyboss' ) . '</p>',
 		)
 	);
 
@@ -1540,9 +1541,9 @@ function bbp_admin_settings_help() {
 			'id'      => 'slus',
 			'title'   => __( 'Slugs', 'buddyboss' ),
 			'content' => '<p>' . __( 'The Slugs section allows you to control the permalink structure for your forums.', 'buddyboss' ) . '</p>' .
-						 '<p>' . __( '"Archive Slugs" are used as the "root" for your forums and discussions. If you combine these values with existing page slugs, Forums will attempt to output the most correct title and content.', 'buddyboss' ) . '</p>' .
-						 '<p>' . __( '"Single Slugs" are used as a prefix when viewing an individual forum, discussion, reply, user, or view.', 'buddyboss' ) . '</p>' .
-						 '<p>' . __( 'In the event of a slug collision with WordPress or BuddyBoss, a warning will appear next to the problem slug(s).', 'buddyboss' ) . '</p>',
+						'<p>' . __( '"Archive Slugs" are used as the "root" for your forums and discussions. If you combine these values with existing page slugs, Forums will attempt to output the most correct title and content.', 'buddyboss' ) . '</p>' .
+						'<p>' . __( '"Single Slugs" are used as a prefix when viewing an individual forum, discussion, reply, user, or view.', 'buddyboss' ) . '</p>' .
+						'<p>' . __( 'In the event of a slug collision with WordPress or BuddyBoss, a warning will appear next to the problem slug(s).', 'buddyboss' ) . '</p>',
 		)
 	);
 

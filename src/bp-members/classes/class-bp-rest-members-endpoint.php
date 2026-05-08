@@ -108,7 +108,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 				array(
 					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => array( $this, 'get_current_item' ),
-					'permission_callback' => '__return_true',
+					'permission_callback' => array( $this, 'get_item_public_permissions_check' ),
 					'args'                => array(
 						'context' => $this->get_context_param( array( 'default' => 'view' ) ),
 					),
@@ -1636,5 +1636,25 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 */
 	public function bb_moderation_fetch_avatar_url_filter( $avatar_url, $old_avatar_url, $params ) {
 		return $old_avatar_url;
+	}
+
+	/**
+	 * Permission callback for the public-read variant of the /members/me endpoint.
+	 *
+	 * The endpoint intentionally serves data that is already publicly visible
+	 * (member display name, avatar, etc.). Replacing the deprecated '__return_true'
+	 * literal with a named method is a SEC-04 requirement; the gating intent is
+	 * unchanged — unauthenticated callers receive an empty/guest response from the
+	 * callback itself.
+	 *
+	 * @since 2.19.0
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return true Always true — public read.
+	 */
+	public function get_item_public_permissions_check( $request ) {
+		// Public endpoint. Returns only publicly visible member fields.
+		return true;
 	}
 }

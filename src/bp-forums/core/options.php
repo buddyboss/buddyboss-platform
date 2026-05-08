@@ -20,85 +20,88 @@ defined( 'ABSPATH' ) || exit;
 function bbp_get_default_options() {
 
 	// Default options
-	return apply_filters( 'bbp_get_default_options', array(
+	return apply_filters(
+		'bbp_get_default_options',
+		array(
 
-		/** DB Version ********************************************************/
+			/** DB Version */
 
-		'_bbp_db_version'           => bbpress()->db_version,
+			'_bbp_db_version'             => bbpress()->db_version,
 
-		/** Settings **********************************************************/
+			/** Settings */
 
-		'_bbp_edit_lock'              => 5,                          // Lock post editing after 5 minutes
-		'_bbp_throttle_time'          => 10,                         // Throttle post time to 10 seconds
-		'_bbp_enable_favorites'       => 1,                          // Favorites
-		'_bbp_enable_subscriptions'   => 1,                          // Subscriptions
-		'_bbp_allow_anonymous'        => 0,                          // Allow anonymous posting
-		'_bbp_allow_global_access'    => 1,                          // Users from all sites can post
-		'_bbp_allow_revisions'        => 1,                          // Allow revisions
-		'_bbp_allow_topic_tags'       => 1,                          // Allow topic tagging
-		'_bbp_allow_threaded_replies' => 1,                          // Allow threaded replies
-		'_bbp_allow_search'           => 1,                          // Allow forum-wide search
-		'_bbp_thread_replies_depth'   => 6,                          // Thread replies depth
-		'_bbp_use_wp_editor'          => 1,                          // Use the WordPress editor if available
-		'_bbp_use_autoembed'          => 0,                          // Allow oEmbed in topics and replies
-		'_bbp_theme_package_id'       => 'default',                  // The ID for the current theme package
-		'_bbp_default_role'           => bbp_get_participant_role(), // Default forums role
-		'_bbp_settings_integration'   => 0,                          // Put settings into existing admin pages
+			'_bbp_edit_lock'              => 5,                          // Lock post editing after 5 minutes
+			'_bbp_throttle_time'          => 10,                         // Throttle post time to 10 seconds
+			'_bbp_enable_favorites'       => 1,                          // Favorites
+			'_bbp_enable_subscriptions'   => 1,                          // Subscriptions
+			'_bbp_allow_anonymous'        => 0,                          // Allow anonymous posting
+			'_bbp_allow_global_access'    => 1,                          // Users from all sites can post
+			'_bbp_allow_revisions'        => 1,                          // Allow revisions
+			'_bbp_allow_topic_tags'       => 1,                          // Allow topic tagging
+			'_bbp_allow_threaded_replies' => 1,                          // Allow threaded replies
+			'_bbp_allow_search'           => 1,                          // Allow forum-wide search
+			'_bbp_thread_replies_depth'   => 6,                          // Thread replies depth
+			'_bbp_use_wp_editor'          => 1,                          // Use the WordPress editor if available
+			'_bbp_use_autoembed'          => 0,                          // Allow oEmbed in topics and replies
+			'_bbp_theme_package_id'       => 'default',                  // The ID for the current theme package
+			'_bbp_default_role'           => bbp_get_participant_role(), // Default forums role
+			'_bbp_settings_integration'   => 0,                          // Put settings into existing admin pages
 
-		/** Per Page **********************************************************/
+			/** Per Page */
 
-		'_bbp_topics_per_page'      => 15,          // Topics per page
-		'_bbp_replies_per_page'     => 15,          // Replies per page
-		'_bbp_forums_per_page'      => 15,          // Forums per page
-		'_bbp_topics_per_rss_page'  => 25,          // Topics per RSS page
-		'_bbp_replies_per_rss_page' => 25,          // Replies per RSS page
+			'_bbp_topics_per_page'        => 15,          // Topics per page
+			'_bbp_replies_per_page'       => 15,          // Replies per page
+			'_bbp_forums_per_page'        => 15,          // Forums per page
+			'_bbp_topics_per_rss_page'    => 25,          // Topics per RSS page
+			'_bbp_replies_per_rss_page'   => 25,          // Replies per RSS page
 
-		/** Page For **********************************************************/
+			/** Page For */
 
-		'_bbp_page_for_forums'      => 0,           // Page for forums
-		'_bbp_page_for_topics'      => 0,           // Page for forums
-		'_bbp_page_for_login'       => 0,           // Page for login
-		'_bbp_page_for_register'    => 0,           // Page for register
-		'_bbp_page_for_lost_pass'   => 0,           // Page for lost-pass
+			'_bbp_page_for_forums'        => 0,           // Page for forums
+			'_bbp_page_for_topics'        => 0,           // Page for forums
+			'_bbp_page_for_login'         => 0,           // Page for login
+			'_bbp_page_for_register'      => 0,           // Page for register
+			'_bbp_page_for_lost_pass'     => 0,           // Page for lost-pass
 
-		/** Forum Root ********************************************************/
+			/** Forum Root */
 
-		'_bbp_root_slug'            => 'forums',    // Forum archive slug
-		'_bbp_show_on_root'         => 'forums',    // What to show on root (forums|topics)
-		'_bbp_include_root'         => 1,           // Include forum-archive before single slugs
+			'_bbp_root_slug'              => 'forums',    // Forum archive slug
+			'_bbp_show_on_root'           => 'forums',    // What to show on root (forums|topics)
+			'_bbp_include_root'           => 1,           // Include forum-archive before single slugs
 
-		/** Single Slugs ******************************************************/
+			/** Single Slugs */
 
-		'_bbp_forum_slug'           => 'forum',     // Forum slug
-		'_bbp_topic_slug'           => 'topic',     // Topic slug
-		'_bbp_reply_slug'           => 'reply',     // Reply slug
-		'_bbp_topic_tag_slug'       => 'topic-tag', // Topic tag slug
+			'_bbp_forum_slug'             => 'forum',     // Forum slug
+			'_bbp_topic_slug'             => 'topic',     // Topic slug
+			'_bbp_reply_slug'             => 'reply',     // Reply slug
+			'_bbp_topic_tag_slug'         => 'topic-tag', // Topic tag slug
 
-		/** Other Slugs *******************************************************/
+			/** Other Slugs */
 
-		'_bbp_view_slug'            => 'view',      // View slug
-		'_bbp_search_slug'          => 'search',    // Search slug
+			'_bbp_view_slug'              => 'view',      // View slug
+			'_bbp_search_slug'            => 'search',    // Search slug
 
-		/** Topics ************************************************************/
+			/** Topics */
 
-		'_bbp_title_max_length'     => 80,          // Title Max Length
-		'_bbp_super_sticky_topics'  => '',          // Super stickies
+			'_bbp_title_max_length'       => 80,          // Title Max Length
+			'_bbp_super_sticky_topics'    => '',          // Super stickies
 
-		/** Forums ************************************************************/
+			/** Forums */
 
-		'_bbp_private_forums'       => '',          // Private forums
-		'_bbp_hidden_forums'        => '',          // Hidden forums
+			'_bbp_private_forums'         => '',          // Private forums
+			'_bbp_hidden_forums'          => '',          // Hidden forums
 
-		/** BuddyBoss ********************************************************/
+			/** BuddyBoss */
 
-		'_bbp_enable_group_forums'  => 1,           // Enable BuddyBoss Group Extension
-		'_bbp_group_forums_root_id' => 0,           // Group Forums parent forum id
+			'_bbp_enable_group_forums'    => 1,           // Enable BuddyBoss Group Extension
+			'_bbp_group_forums_root_id'   => 0,           // Group Forums parent forum id
 
-		/** Akismet ***********************************************************/
+			/** Akismet */
 
-		'_bbp_enable_akismet'       => 1            // Users from all sites can post
+			'_bbp_enable_akismet'         => 1,            // Users from all sites can post
 
-	) );
+		)
+	);
 }
 
 /**
@@ -115,8 +118,9 @@ function bbp_get_default_options() {
 function bbp_add_options() {
 
 	// Add default options
-	foreach ( bbp_get_default_options() as $key => $value )
+	foreach ( bbp_get_default_options() as $key => $value ) {
 		add_option( $key, $value );
+	}
 
 	// Allow previously activated plugins to append their own options.
 	do_action( 'bbp_add_options' );
@@ -136,8 +140,9 @@ function bbp_add_options() {
 function bbp_delete_options() {
 
 	// Add default options
-	foreach ( array_keys( bbp_get_default_options() ) as $key )
+	foreach ( array_keys( bbp_get_default_options() ) as $key ) {
 		delete_option( $key );
+	}
 
 	// Allow previously activated plugins to append their own options.
 	do_action( 'bbp_delete_options' );
@@ -155,8 +160,9 @@ function bbp_delete_options() {
 function bbp_setup_option_filters() {
 
 	// Add filters to each Forums option
-	foreach ( array_keys( bbp_get_default_options() ) as $key )
+	foreach ( array_keys( bbp_get_default_options() ) as $key ) {
 		add_filter( 'pre_option_' . $key, 'bbp_pre_get_option' );
+	}
 
 	// Allow previously activated plugins to append their own options.
 	do_action( 'bbp_setup_option_filters' );
@@ -176,8 +182,9 @@ function bbp_pre_get_option( $value = '' ) {
 	$option = str_replace( 'pre_option_', '', current_filter() );
 
 	// Check the options global for preset value
-	if ( isset( bbpress()->options[$option] ) )
-		$value = bbpress()->options[$option];
+	if ( isset( bbpress()->options[ $option ] ) ) {
+		$value = bbpress()->options[ $option ];
+	}
 
 	// Always return a value, even if false
 	return $value;
@@ -380,9 +387,9 @@ function bbp_title_max_length( $default = 80 ) {
 	 * @uses get_option() To get the maximum title length
 	 * @return int Is anonymous posting allowed?
 	 */
-	function bbp_get_title_max_length( $default = 80 ) {
-		return (int) apply_filters( 'bbp_get_title_max_length', (int) get_option( '_bbp_title_max_length', $default ) );
-	}
+function bbp_get_title_max_length( $default = 80 ) {
+	return (int) apply_filters( 'bbp_get_title_max_length', (int) get_option( '_bbp_title_max_length', $default ) );
+}
 
 /**
  * Output the grop forums root parent forum id
@@ -401,9 +408,9 @@ function bbp_group_forums_root_id( $default = 0 ) {
 	 * @uses get_option() To get the root group forum ID
 	 * @return int The post ID for the root forum
 	 */
-	function bbp_get_group_forums_root_id( $default = 0 ) {
-		return (int) apply_filters( 'bbp_get_group_forums_root_id', (int) get_option( '_bbp_group_forums_root_id', $default ) );
-	}
+function bbp_get_group_forums_root_id( $default = 0 ) {
+	return (int) apply_filters( 'bbp_get_group_forums_root_id', (int) get_option( '_bbp_group_forums_root_id', $default ) );
+}
 
 /**
  * Checks if BuddyBoss Group Forums are enabled
@@ -483,8 +490,9 @@ function bbp_show_on_root( $default = 'forums' ) {
 function bbp_maybe_get_root_slug() {
 	$retval = '';
 
-	if ( bbp_get_root_slug() && bbp_include_root_slug() )
+	if ( bbp_get_root_slug() && bbp_include_root_slug() ) {
 		$retval = trailingslashit( bbp_get_root_slug() );
+	}
 
 	return apply_filters( 'bbp_maybe_get_root_slug', $retval );
 }
@@ -495,7 +503,8 @@ function bbp_maybe_get_root_slug() {
  * @since bbPress (r3759)
  * @return string
  */
-function bbp_get_forum_slug( $default = 'forum' ) {;
+function bbp_get_forum_slug( $default = 'forum' ) {
+
 	return apply_filters( 'bbp_get_forum_slug', bbp_maybe_get_root_slug() . get_option( '_bbp_forum_slug', $default ) );
 }
 

@@ -145,7 +145,7 @@ add_action( 'bp_get_request_unsubscribe', 'bp_email_unsubscribe_handler' );
 
 add_action(
 	'bp_init',
-	function() {
+	function () {
 		if ( false === bb_enabled_legacy_email_preference() ) {
 			// Render notifications on frontend.
 			add_action( 'bp_notification_settings', 'bb_render_notification_settings', 1 );
@@ -155,7 +155,7 @@ add_action(
 
 add_action(
 	'bp_init',
-	function() {
+	function () {
 		$component = bp_get_option( 'bp-active-components' );
 
 		// Set the "Document" component active/inactive based on the media components.
@@ -1005,7 +1005,6 @@ function bb_mention_post_type_comment( $comment_id = 0, $is_approved = true ) {
 			remove_filter( 'bp_notification_after_save', 'bb_notification_after_save_meta', 5, 1 );
 		}
 	}
-
 }
 
 add_action( 'comment_post', 'bb_mention_post_type_comment', 10, 2 );
@@ -1107,31 +1106,39 @@ add_action( 'bb_async_request_batch_process', 'bb_background_remove_duplicate_as
 function buddyboss_directory_save_layout() {
 	$object = bb_filter_input_string( INPUT_POST, 'object' );
 	if ( empty( $object ) ) {
-		wp_send_json_error( array(
-			'message' => __( 'Invalid object.', 'buddyboss' ),
-		) );
+		wp_send_json_error(
+			array(
+				'message' => __( 'Invalid object.', 'buddyboss' ),
+			)
+		);
 	}
 
 	$nonce = bb_filter_input_string( INPUT_POST, 'nonce' );
 	if ( ! wp_verify_nonce( $nonce, 'bp_nouveau_' . $object ) ) {
-		wp_send_json_error( array(
-			'message' => __( 'Invalid request.', 'buddyboss' ),
-		) );
+		wp_send_json_error(
+			array(
+				'message' => __( 'Invalid request.', 'buddyboss' ),
+			)
+		);
 	}
 
 	$option_name = bb_filter_input_string( INPUT_POST, 'option' );
 	if ( empty( $option_name ) || 'bb_layout_view' !== $option_name ) {
-		wp_send_json_error( array(
-			'message' => __( 'Not a valid option', 'buddyboss' ),
-		) );
+		wp_send_json_error(
+			array(
+				'message' => __( 'Not a valid option', 'buddyboss' ),
+			)
+		);
 		wp_die();
 	}
 
 	$option_value = bb_filter_input_string( INPUT_POST, 'type' );
 	if ( ! in_array( $option_value, array( 'grid', 'list' ), true ) ) {
-		wp_send_json_error( array(
-			'message' => __( 'Not a valid value', 'buddyboss' ),
-		) );
+		wp_send_json_error(
+			array(
+				'message' => __( 'Not a valid value', 'buddyboss' ),
+			)
+		);
 		wp_die();
 	}
 

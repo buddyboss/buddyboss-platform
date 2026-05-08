@@ -342,11 +342,11 @@ function bbp_new_forum_handler( $action = '' ) {
 		// Redirect back to new forum.
 		bbp_redirect( $redirect_url );
 
-	// WP_Error.
+		// WP_Error.
 	} elseif ( is_wp_error( $forum_id ) && $forum_id->get_error_message() ) {
 		bbp_add_error( 'bbp_forum_error', sprintf( __( '<strong>Error</strong>: The following problem(s) occurred: %s', 'buddyboss' ), $forum_id->get_error_message() ) );
 
-	// Generic error.
+		// Generic error.
 	} else {
 		bbp_add_error( 'bbp_forum_error', __( '<strong>Error</strong>: The forum was not created.', 'buddyboss' ) );
 	}
@@ -1564,21 +1564,23 @@ function bbp_update_forum_topic_count_hidden( $forum_id = 0, $topic_count = 0 ) 
 		// Get topics of forum
 
 		if ( ! is_int( $topic_count ) ) {
-			$query = new WP_Query( array(
-				'fields'         => 'ids',
-				'post_parent'    => $forum_id,
-				'post_status'    => bbp_get_non_public_topic_statuses(),
-				'post_type'      => bbp_get_topic_post_type(),
-				'posts_per_page' => -1,
+			$query       = new WP_Query(
+				array(
+					'fields'                 => 'ids',
+					'post_parent'            => $forum_id,
+					'post_status'            => bbp_get_non_public_topic_statuses(),
+					'post_type'              => bbp_get_topic_post_type(),
+					'posts_per_page'         => -1,
 
-				// Performance.
-				'nopaging'               => true,
-				'suppress_filters'       => true,
-				'update_post_term_cache' => false,
-				'update_post_meta_cache' => false,
-				'ignore_sticky_posts'    => true,
-				'no_found_rows'          => true
-			) );
+					// Performance.
+					'nopaging'               => true,
+					'suppress_filters'       => true,
+					'update_post_term_cache' => false,
+					'update_post_meta_cache' => false,
+					'ignore_sticky_posts'    => true,
+					'no_found_rows'          => true,
+				)
+			);
 			$topic_count = $query->post_count;
 			unset( $query );
 		}
@@ -1790,7 +1792,7 @@ function bbp_get_forum_visibilities( $forum_id = 0 ) {
  * @since BuddyBoss 1.0.0
  */
 function bbp_has_forum_thumbnail( $forum_id = null ) {
-	return ! ! bbp_get_forum_thumbnail_src( $forum_id );
+	return (bool) bbp_get_forum_thumbnail_src( $forum_id );
 }
 
 /**
@@ -2736,7 +2738,7 @@ function bb_get_all_nested_subforums( $forum_id ) {
  */
 function bbp_get_public_forum_statuses() {
 	$statuses = array(
-		bbp_get_public_status_id()
+		bbp_get_public_status_id(),
 	);
 
 	// Filter & return.
@@ -2754,7 +2756,7 @@ function bbp_get_public_forum_statuses() {
 function bbp_get_non_public_forum_statuses() {
 	$statuses = array(
 		bbp_get_private_status_id(),
-		bbp_get_hidden_status_id()
+		bbp_get_hidden_status_id(),
 	);
 
 	// Filter & return.

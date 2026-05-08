@@ -50,7 +50,8 @@ class BP_Nouveau_Follow {
 		// Load AJAX code only on AJAX requests.
 		} else {
 			add_action( 'admin_init', function() {
-				if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX && 0 === strpos( $_REQUEST['action'], 'follow_' ) ) {
+				$ajax_action = isset( $_REQUEST['action'] ) ? sanitize_key( wp_unslash( $_REQUEST['action'] ) ) : '';
+				if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX && 0 === strpos( $ajax_action, 'follow_' ) ) {
 					require $this->dir . 'ajax.php';
 				}
 			} );

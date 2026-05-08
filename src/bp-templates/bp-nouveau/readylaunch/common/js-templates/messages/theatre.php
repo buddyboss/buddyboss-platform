@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit;
 /**
  * ReadyLaunch - The template for media and video theater.
  *

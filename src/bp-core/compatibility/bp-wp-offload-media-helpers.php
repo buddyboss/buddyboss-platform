@@ -72,7 +72,6 @@ class BB_AS3CF_Plugin_Compatibility {
 		add_filter( 'bb_media_offload_delivered', array( $this, 'bb_media_offload_delivered' ) );
 		add_filter( 'bb_media_offload_delivery_provider', array( $this, 'bb_media_offload_delivery_provider' ) );
 		add_filter( 'bp_core_get_js_strings', array( $this, 'bb_offload_localize_scripts' ) );
-
 	}
 
 	/**
