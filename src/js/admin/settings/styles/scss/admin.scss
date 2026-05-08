@@ -88,29 +88,7 @@
 		}
 
 		input.bb-admin-header__search-input {
-			width: 100%;
-			height: 32px;
-			background-color: $bb-background-color;
-			border: 1px solid #e5e5e5;
-			border-radius: $bb-border-radius-md;
-			padding: 0 36px 0 8px;
-			font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif;
-			font-size: 13px;
-			line-height: 32px;
-			font-weight: 400;
-			color: $bb-text-tertiary-color;
-			outline: none;
-
-			&::placeholder {
-				color: #999;
-				font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif;
-				font-size: 13px;
-			}
-
-			&:focus {
-				outline: none;
-				border-color: #d9d9d9;
-			}
+			@include bb-input-text;
 		}
 
 		&-icon {
