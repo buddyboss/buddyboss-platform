@@ -1474,6 +1474,10 @@ class BB_Admin_Groups_Ajax {
 	/**
 	 * Get group members with pagination.
 	 *
+	 * Supports two request shapes:
+	 *  - Legacy single-role: `role` + `page` (returns `{members, total}`).
+	 *  - Unified multi-role: `roles[]` + `pages{}` + optional `search` (returns `{sections}`).
+	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @return void
@@ -1492,6 +1496,8 @@ class BB_Admin_Groups_Ajax {
 		$page     = isset( $_POST['page'] ) ? absint( wp_unslash( $_POST['page'] ) ) : 1;
 		$per_page = isset( $_POST['per_page'] ) ? absint( wp_unslash( $_POST['per_page'] ) ) : 10;
 		$role     = isset( $_POST['role'] ) ? sanitize_key( wp_unslash( $_POST['role'] ) ) : '';
+		$search   = isset( $_POST['search'] ) ? sanitize_text_field( wp_unslash( $_POST['search'] ) ) : '';
+		$search   = trim( $search );
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $group_id ) ) {
@@ -1528,33 +1534,19 @@ class BB_Admin_Groups_Ajax {
 		$per_page = (int) apply_filters( 'bp_groups_admin_members_type_per_page', $per_page, $filter_role );
 		$per_page = max( 1, min( self::PER_PAGE_CAP, $per_page ) ); // Re-clamp after filter.
 
-		// Build query args based on whether a specific role is requested.
-		$query_args = array(
-			'group_id' => $group_id,
-			'per_page' => $per_page,
-			'page'     => $page,
-		);
-
+		// Build query args via shared helper. Empty $role falls through to a
+		// no-role-filter query (backward compat).
 		if ( ! empty( $role ) ) {
-			if ( 'member' === $role ) {
-				// For regular members, exclude admins/mods and banned.
-				$query_args['exclude_admins_mods'] = true;
-				$query_args['exclude_banned']      = true;
-			} elseif ( 'banned' === $role ) {
-				// For banned, use the group_role filter.
-				$query_args['group_role']          = array( 'banned' );
-				$query_args['exclude_admins_mods'] = false;
-				$query_args['exclude_banned']      = false;
-			} else {
-				// For admin/mod roles, filter by group_role.
-				$query_args['group_role']          = array( $role );
-				$query_args['exclude_admins_mods'] = false;
-				$query_args['exclude_banned']      = false;
-			}
+			$query_args = $this->bb_build_member_query_args( $group_id, $role, $page, $per_page, $search );
 		} else {
-			// No role filter — fetch all roles (backward compat).
-			$query_args['exclude_admins_mods'] = false;
-			$query_args['exclude_banned']      = false;
+			$query_args = array(
+				'group_id'            => $group_id,
+				'per_page'            => $per_page,
+				'page'                => $page,
+				'search_terms'        => '' !== $search ? $search : false,
+				'exclude_admins_mods' => false,
+				'exclude_banned'      => false,
+			);
 		}
 
 		$members_data = groups_get_group_members( $query_args );
@@ -1566,50 +1558,12 @@ class BB_Admin_Groups_Ajax {
 		}
 
 		// Count group admins once to flag sole-admin members (prevents role change in React UI).
-		$group_admins   = groups_get_group_admins( $group_id );
-		$admin_count    = count( $group_admins );
+		$group_admins = groups_get_group_admins( $group_id );
+		$admin_count  = count( $group_admins );
 
 		$members = array();
 		foreach ( $members_data['members'] as $member ) {
-			// Determine role.
-			$member_role = 'member';
-			if ( $member->is_admin ) {
-				$member_role = 'admin';
-			} elseif ( $member->is_mod ) {
-				$member_role = 'mod';
-			} elseif ( $member->is_banned ) {
-				$member_role = 'banned';
-			}
-
-			/**
-			 * Fires for each row in the group members management table. Deprecated in Settings 2.0.
-			 *
-			 * Legacy signature: do_action( 'bp_groups_admin_manage_member_row', $user_id, $group ).
-			 *
-			 * @since BuddyPress 1.7.0
-			 * @deprecated BuddyBoss [BBVERSION] Use the {@see 'bb_admin_get_group_members_response'} filter instead.
-			 *
-			 * @param int             $user_id The user ID for the current member row.
-			 * @param BP_Groups_Group $group   The group object.
-			 */
-			do_action_deprecated( 'bp_groups_admin_manage_member_row', array( (int) $member->user_id, $group ), 'BuddyBoss [BBVERSION]', 'bb_admin_get_group_members_response' );
-
-			$members[] = array(
-				'user_id'       => (int) $member->user_id,
-				'name'          => bp_core_get_user_displayname( $member->user_id ),
-				'avatar_url'    => bp_core_fetch_avatar(
-					array(
-						'item_id' => $member->user_id,
-						'object'  => 'user',
-						'type'    => 'thumb',
-						'html'    => false,
-					)
-				),
-				'profile_url'   => bp_core_get_user_domain( $member->user_id ),
-				'role'          => $member_role,
-				'is_creator'    => ( (int) $member->user_id === (int) $group->creator_id ),
-				'is_sole_admin' => ( 'admin' === $member_role && 1 === $admin_count ),
-			);
+			$members[] = $this->bb_format_member_row( $member, $group, $admin_count );
 		}
 
 		$response = array(
@@ -1626,6 +1580,106 @@ class BB_Admin_Groups_Ajax {
 		 * @param int   $group_id The group ID.
 		 */
 		wp_send_json_success( apply_filters( 'bb_admin_get_group_members_response', $response, $group_id ) );
+	}
+
+	/**
+	 * Build the query args for a given role.
+	 *
+	 * Centralises the role-to-query-arg mapping used by both the single-role
+	 * and unified multi-role code paths so the two cannot drift.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int    $group_id Group ID.
+	 * @param string $role     One of 'admin', 'mod', 'member', 'banned'.
+	 * @param int    $page     Page number (1-based).
+	 * @param int    $per_page Per-page count (already clamped).
+	 * @param string $search   Search term (optional).
+	 * @return array
+	 */
+	protected function bb_build_member_query_args( $group_id, $role, $page, $per_page, $search = '' ) {
+		$query_args = array(
+			'group_id'     => $group_id,
+			'per_page'     => $per_page,
+			'page'         => $page,
+			'search_terms' => '' !== $search ? $search : false,
+		);
+
+		if ( 'member' === $role ) {
+			$query_args['exclude_admins_mods'] = true;
+			$query_args['exclude_banned']      = true;
+		} elseif ( 'banned' === $role ) {
+			$query_args['group_role']          = array( 'banned' );
+			$query_args['exclude_admins_mods'] = false;
+			$query_args['exclude_banned']      = false;
+		} else {
+			$query_args['group_role']          = array( $role );
+			$query_args['exclude_admins_mods'] = false;
+			$query_args['exclude_banned']      = false;
+		}
+
+		return $query_args;
+	}
+
+	/**
+	 * Format a single member row for the React UI.
+	 *
+	 * Centralises the member-row shape used by both the single-role and
+	 * unified multi-role code paths so the two cannot drift. Also fires the
+	 * legacy `bp_groups_admin_manage_member_row` action (deprecated) for
+	 * third-party compatibility, exactly as in the legacy single-role path.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param object $member      Raw BP_Groups_Member-style object.
+	 * @param object $group       The group object.
+	 * @param int    $admin_count Total group admins (for sole-admin flag).
+	 * @return array
+	 */
+	protected function bb_format_member_row( $member, $group, $admin_count ) {
+		$member_role = 'member';
+		if ( $member->is_admin ) {
+			$member_role = 'admin';
+		} elseif ( $member->is_mod ) {
+			$member_role = 'mod';
+		} elseif ( $member->is_banned ) {
+			$member_role = 'banned';
+		}
+
+		/**
+		 * Fires for each row in the group members management table. Deprecated in Settings 2.0.
+		 *
+		 * Legacy signature: do_action( 'bp_groups_admin_manage_member_row', $user_id, $group ).
+		 *
+		 * @since BuddyPress 1.7.0
+		 * @deprecated BuddyBoss [BBVERSION] Use the {@see 'bb_admin_get_group_members_response'} filter instead.
+		 *
+		 * @param int             $user_id The user ID for the current member row.
+		 * @param BP_Groups_Group $group   The group object.
+		 */
+		do_action_deprecated(
+			'bp_groups_admin_manage_member_row',
+			array( (int) $member->user_id, $group ),
+			'BuddyBoss [BBVERSION]',
+			'bb_admin_get_group_members_response'
+		);
+
+		return array(
+			'user_id'       => (int) $member->user_id,
+			'name'          => bp_core_get_user_displayname( $member->user_id ),
+			'avatar_url'    => bp_core_fetch_avatar(
+				array(
+					'item_id' => $member->user_id,
+					'object'  => 'user',
+					'type'    => 'thumb',
+					'html'    => false,
+				)
+			),
+			'profile_url'   => bp_core_get_user_domain( $member->user_id ),
+			'role'          => $member_role,
+			'is_creator'    => ( (int) $member->user_id === (int) $group->creator_id ),
+			'is_sole_admin' => ( 'admin' === $member_role && 1 === $admin_count ),
+		);
 	}
 
 	/**

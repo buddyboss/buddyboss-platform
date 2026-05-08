@@ -364,13 +364,24 @@ export function saveGroup( data, options ) {
 }
 
 /**
- * Get group members with pagination.
+ * Get group members.
+ *
+ * Supports two request shapes (the server endpoint detects which is in use):
+ *
+ *  - Legacy single-role (fast pagination path):
+ *      { role: 'admin'|'mod'|'member'|'banned', page, per_page }
+ *      Returns: { success, data: { members: [...], total } }
+ *
+ *  - Unified multi-role / search (initial load + live search):
+ *      { roles: ['admin','mod','member','banned'], pages: { admin:1, ... },
+ *        per_page, search }
+ *      Returns: { success, data: { sections: { admin: { members, total, page }, ... } } }
  *
  * @since BuddyBoss [BBVERSION]
  *
  * @param {number} groupId - Group ID.
- * @param {Object} params  - Optional params (page, per_page).
- * @param {Object} options - Optional fetch options.
+ * @param {Object} params  - Request params (see shapes above).
+ * @param {Object} options - Optional fetch options (e.g., AbortSignal).
  * @return {Promise} Promise resolving to response.
  */
 export function getGroupMembers( groupId, params, options ) {

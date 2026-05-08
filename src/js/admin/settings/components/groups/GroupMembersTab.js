@@ -18,7 +18,7 @@ import {
 	SelectControl,
 	Spinner,
 } from '@wordpress/components';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 
 import { getGroupMembers, updateGroupMember, ajaxFetch } from '../../utils/ajax';
 import { safeUrl } from '../../utils/sanitize';
@@ -128,9 +128,34 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 	var selectedUser = selectedUserState[ 0 ];
 	var setSelectedUser = selectedUserState[ 1 ];
 
+	// Role filter dropdown (Figma 2026-05-08): 'all' | 'admin' | 'mod' | 'member' | 'banned'.
+	// Drives which role section(s) are rendered in the member list.
+	var roleFilterState = useState( 'all' );
+	var roleFilter = roleFilterState[ 0 ];
+	var setRoleFilter = roleFilterState[ 1 ];
+
+	// Server-side text filter for the member list (Figma 2026-05-08). Distinct
+	// from `searchInput` above which is the autocomplete for ADDING new members.
+	// Debounced + dispatched by the effect below; the term is forwarded to BP's
+	// `groups_get_group_members()` `search_terms` arg so all per-role filter
+	// chains (moderation, privacy, third-party hooks) apply unchanged.
+	var memberFilterQueryState = useState( '' );
+	var memberFilterQuery = memberFilterQueryState[ 0 ];
+	var setMemberFilterQuery = memberFilterQueryState[ 1 ];
+
 	var searchTimerRef = useRef( null );
 	var searchAbortRef = useRef( null );
 	var blurTimerRef = useRef( null );
+
+	// Debounce timer for the member-list server-side filter (Figma 2026-05-08).
+	// Distinct from `searchTimerRef` above which debounces the autocomplete used
+	// to ADD new members.
+	var searchDebounceRef = useRef( null );
+
+	// Tracks the search term that produced the currently-loaded members so we
+	// only re-query the server when the term actually changes (a role-filter
+	// change alone should not refetch).
+	var lastFiredSearchRef = useRef( '' );
 
 	// One AbortController per role.
 	var abortRefs = useRef( { admin: null, mod: null, member: null, banned: null } );
@@ -148,10 +173,13 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param {string} role Role key ('admin', 'mod', 'member', 'banned').
-	 * @param {number} page Page number.
+	 * @param {string} role   Role key ('admin', 'mod', 'member', 'banned').
+	 * @param {number} page   Page number.
+	 * @param {string} search Optional search term — passed straight to BP's
+	 *                        `groups_get_group_members()` `search_terms` arg
+	 *                        on the server. Empty string means no filter.
 	 */
-	var fetchRoleMembers = useCallback( function ( role, page ) {
+	var fetchRoleMembers = useCallback( function ( role, page, search ) {
 		// Cancel any in-flight request for this role.
 		if ( abortRefs.current[ role ] ) {
 			abortRefs.current[ role ].abort();
@@ -166,7 +194,7 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 
 		getGroupMembers(
 			groupId,
-			{ role: role, page: page, per_page: PER_PAGE },
+			{ role: role, page: page, per_page: PER_PAGE, search: search || '' },
 			{ signal: abortRefs.current[ role ].signal }
 		).then( function ( response ) {
 			if ( response.success && response.data ) {
@@ -626,6 +654,104 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 	}, [ roleMembers, pendingRemoves, pendingRoleChanges, pendingAdds ] );
 
 	/**
+	 * Server-side counts per role (used in the role-filter dropdown labels:
+	 * "All (23)", "Organizer (1)", etc.). Sourced from `roleTotals` so the
+	 * counts reflect every member of the group, not just the currently-loaded
+	 * page within each section.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @type {Object}
+	 */
+	var roleCounts = useMemo( function () {
+		var totalAll = 0;
+		roleSections.forEach( function ( s ) {
+			totalAll += roleTotals[ s.key ] || 0;
+		} );
+		return {
+			all:    totalAll,
+			admin:  roleTotals.admin || 0,
+			mod:    roleTotals.mod || 0,
+			member: roleTotals.member || 0,
+			banned: roleTotals.banned || 0,
+		};
+	}, [ roleTotals ] );
+
+	/**
+	 * Trimmed/lowercased query for the server-side member-list search.
+	 * Empty when no filter is active.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @type {string}
+	 */
+	var normalizedMemberFilter = useMemo( function () {
+		return ( memberFilterQuery || '' ).trim().toLowerCase();
+	}, [ memberFilterQuery ] );
+
+	/**
+	 * Debounced server-side member search.
+	 *
+	 * When the user types in the filter input, fire 1–4 parallel role fetches
+	 * (one per visible role section) with the search term, after a 300ms idle
+	 * window. The server applies the term via BP's `groups_get_group_members()`
+	 * `search_terms` arg, so all moderation/privacy/third-party filters keep
+	 * firing per role exactly as on initial load.
+	 *
+	 * Per-role AbortController in `fetchRoleMembers` cancels any in-flight
+	 * request for the same role on each new fetch, so rapid typing never
+	 * stacks pending requests.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	useEffect( function () {
+		// Cancel any pending debounce.
+		if ( searchDebounceRef.current ) {
+			clearTimeout( searchDebounceRef.current );
+			searchDebounceRef.current = null;
+		}
+
+		// Decide which roles to (re)query. With role-filter narrowed to a
+		// specific role, only that one needs to refetch; with 'all' selected
+		// we requery every section so search hits across the whole group.
+		var rolesToFetch = 'all' === roleFilter
+			? [ 'admin', 'mod', 'member', 'banned' ]
+			: [ roleFilter ];
+
+		// If the search query is identical to the last fired one, skip — the
+		// role filter changing alone shouldn't refire if we already have data.
+		var queryChanged = lastFiredSearchRef.current !== normalizedMemberFilter;
+
+		if ( ! queryChanged ) {
+			return undefined;
+		}
+
+		searchDebounceRef.current = setTimeout( function () {
+			lastFiredSearchRef.current = normalizedMemberFilter;
+			rolesToFetch.forEach( function ( role ) {
+				fetchRoleMembers( role, 1, normalizedMemberFilter );
+			} );
+			// Reset every visible role's page state to 1 since the result set
+			// is replaced by the search hits (or restored to page 1 when search
+			// is cleared).
+			setRolePages( function ( prev ) {
+				var next = Object.assign( {}, prev );
+				rolesToFetch.forEach( function ( r ) {
+					next[ r ] = 1;
+				} );
+				return next;
+			} );
+		}, 300 );
+
+		return function () {
+			if ( searchDebounceRef.current ) {
+				clearTimeout( searchDebounceRef.current );
+				searchDebounceRef.current = null;
+			}
+		};
+	}, [ normalizedMemberFilter, roleFilter, fetchRoleMembers ] );
+
+	/**
 	 * Check if all role sections are done loading (initial load).
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -633,6 +759,28 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 	 * @type {boolean}
 	 */
 	var isInitialLoading = roleLoading.admin && roleLoading.mod && roleLoading.member && roleLoading.banned;
+
+	/**
+	 * Whether the tab has completed its first load. Once true, stays true
+	 * for the lifetime of the component. Used to gate the filter row and
+	 * top-level spinner so subsequent refetches (search, role-filter,
+	 * pagination) keep the filter UI mounted instead of remounting it on
+	 * every AJAX round-trip — which was causing the search/filter row to
+	 * flicker out of view between keystrokes.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @type {boolean}
+	 */
+	var hasLoadedOnceState = useState( false );
+	var hasLoadedOnce = hasLoadedOnceState[ 0 ];
+	var setHasLoadedOnce = hasLoadedOnceState[ 1 ];
+
+	useEffect( function () {
+		if ( ! hasLoadedOnce && ! isInitialLoading ) {
+			setHasLoadedOnce( true );
+		}
+	}, [ isInitialLoading, hasLoadedOnce ] );
 
 	/**
 	 * Build an array of page numbers to display with ellipsis.
@@ -914,37 +1062,167 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 				</div>
 			</div>
 
-			{ /* Members List — Per-Role Sections */ }
-			{ isInitialLoading ? (
+			{ /* Filter Row — search + role-filter dropdown (Figma 2026-05-08).
+			     Gated on `hasLoadedOnce` (not `isInitialLoading`) so the row
+			     stays mounted across subsequent search/filter refetches —
+			     otherwise the row would flicker out and back on every keystroke. */ }
+			{ hasLoadedOnce && (
+				<div className="bb-group-members-tab__filters">
+					<div className="bb-group-members-tab__filter-search">
+						<i
+							className="bb-icons-rl-magnifying-glass bb-group-members-tab__filter-search-icon"
+							aria-hidden="true"
+						/>
+						<input
+							type="search"
+							className="bb-group-members-tab__filter-search-input"
+							placeholder={ __( 'Search member', 'buddyboss' ) }
+							aria-label={ __( 'Search member', 'buddyboss' ) }
+							value={ memberFilterQuery }
+							onChange={ function ( e ) {
+								setMemberFilterQuery( e.target.value );
+							} }
+						/>
+					</div>
+					<div className="bb-group-members-tab__filter-role">
+						<SelectControl
+							hideLabelFromVision
+							label={ __( 'Filter by role', 'buddyboss' ) }
+							value={ roleFilter }
+							onChange={ setRoleFilter }
+							options={ [
+								{ value: 'all',    label: sprintf( __( 'All (%d)', 'buddyboss' ),       roleCounts.all ) },
+								{ value: 'admin',  label: sprintf( __( 'Organizer (%d)', 'buddyboss' ), roleCounts.admin ) },
+								{ value: 'mod',    label: sprintf( __( 'Moderator (%d)', 'buddyboss' ), roleCounts.mod ) },
+								{ value: 'member', label: sprintf( __( 'Member (%d)', 'buddyboss' ),    roleCounts.member ) },
+								{ value: 'banned', label: sprintf( __( 'Banned (%d)', 'buddyboss' ),    roleCounts.banned ) },
+							] }
+						/>
+					</div>
+				</div>
+			) }
+
+			{ /* Members List — Per-Role Sections.
+			     Top-level spinner only shows BEFORE the first load completes.
+			     After that, refetches (search/role-filter/pagination) keep
+			     the list mounted and let each section render its own
+			     section-scoped spinner via `sectionIsLoading`. */ }
+			{ ! hasLoadedOnce ? (
 				<div className="bb-group-members-tab__loading">
 					<Spinner />
 				</div>
 			) : (
 				<div className="bb-group-members-tab__list">
-					{ roleSections.map( function ( section ) {
-						var displayMembers = displayMembersByRole[ section.key ] || [];
-						var sectionTotal = roleTotals[ section.key ] || 0;
-						var sectionIsLoading = roleLoading[ section.key ];
+					{ ( function () {
+						// Sections to render. Role filter narrows to one section
+						// when a specific role is selected; 'all' renders every
+						// non-empty section as before.
+						var visibleSections = 'all' === roleFilter
+							? roleSections
+							: roleSections.filter( function ( s ) { return s.key === roleFilter; } );
 
-						// Hide empty sections entirely.
-						if ( 0 === displayMembers.length && 0 === sectionTotal && ! sectionIsLoading ) {
-							return null;
+						// Track whether any role section returned hits for the
+						// active server search, so we can render a single "no
+						// results" hint when nothing matched (instead of an
+						// empty silent panel).
+						var anyVisible = false;
+
+						var rendered = visibleSections.map( function ( section ) {
+							var displayMembers = displayMembersByRole[ section.key ] || [];
+							var sectionTotal = roleTotals[ section.key ] || 0;
+							var sectionIsLoading = roleLoading[ section.key ];
+
+							// Server returned only matching members when a search was active;
+							// client-side re-filtering would just re-do the work and risk
+							// hiding valid hits whose user_login matched (e.g. login "mike"
+							// vs display_name "Michael" — server search includes both).
+							var filteredMembers = displayMembers;
+
+							if ( filteredMembers.length > 0 ) {
+								anyVisible = true;
+							}
+
+							// Hide empty sections — but only when no search is
+							// active. Under an active search we silently omit
+							// zero-match sections so the matched section sits
+							// flush at the top.
+							if ( 0 === filteredMembers.length && 0 === sectionTotal && ! sectionIsLoading ) {
+								return null;
+							}
+							if ( 0 === filteredMembers.length && normalizedMemberFilter ) {
+								return null;
+							}
+
+							return (
+								<div key={ section.key } className="bb-group-members-tab__role-group">
+									{ sectionIsLoading ? (
+										<div className="bb-group-members-tab__section-loading">
+											<Spinner />
+										</div>
+									) : filteredMembers.length > 0 ? (
+										filteredMembers.map( renderMemberRow )
+									) : null }
+
+									{ /* Pagination is hidden while a search is active — A1 fires
+									     a single page-1 fetch per role with the search term, so
+									     we only surface that first page of hits. Pagination across
+									     search results would need an explicit "show more matching"
+									     UI which isn't part of this iteration. */ }
+									{ ! sectionIsLoading && ! normalizedMemberFilter && renderPagination( section.key, sectionTotal ) }
+								</div>
+							);
+						} );
+
+						// Empty-state messaging — render exactly one of these
+						// when the visible sections produced no rows AND no
+						// section is mid-load (so we don't race the spinner).
+						var anyLoading = visibleSections.some( function ( s ) {
+							return roleLoading[ s.key ];
+						} );
+
+						if ( ! anyVisible && ! anyLoading ) {
+							// 1) Search active → "no members match X".
+							if ( normalizedMemberFilter ) {
+								return (
+									<div className="bb-group-members-tab__filter-empty" role="status">
+										{ sprintf(
+											/* translators: %s is the current search query. */
+											__( 'No members match “%s”.', 'buddyboss' ),
+											memberFilterQuery
+										) }
+									</div>
+								);
+							}
+
+							// 2) Role filter narrowed to a 0-member role → role-specific
+							//    notice ("No moderators in this group" etc.). Surfaces a
+							//    blank pane that would otherwise look broken when
+							//    e.g. an admin selects "Moderator (0)".
+							if ( 'all' !== roleFilter ) {
+								var emptyRoleLabels = {
+									admin:  __( 'No organizers in this group yet.', 'buddyboss' ),
+									mod:    __( 'No moderators in this group yet.', 'buddyboss' ),
+									member: __( 'No members in this group yet.', 'buddyboss' ),
+									banned: __( 'No banned members in this group.', 'buddyboss' ),
+								};
+								return (
+									<div className="bb-group-members-tab__filter-empty" role="status">
+										{ emptyRoleLabels[ roleFilter ] || __( 'No members found.', 'buddyboss' ) }
+									</div>
+								);
+							}
+
+							// 3) All-roles view + group truly empty (no add/remove
+							//    happened) → fall back to a generic notice.
+							return (
+								<div className="bb-group-members-tab__filter-empty" role="status">
+									{ __( 'This group has no members yet.', 'buddyboss' ) }
+								</div>
+							);
 						}
 
-						return (
-							<div key={ section.key } className="bb-group-members-tab__role-group">
-								{ sectionIsLoading ? (
-									<div className="bb-group-members-tab__section-loading">
-										<Spinner />
-									</div>
-								) : displayMembers.length > 0 ? (
-									displayMembers.map( renderMemberRow )
-								) : null }
-
-								{ ! sectionIsLoading && renderPagination( section.key, sectionTotal ) }
-							</div>
-						);
-					} ) }
+						return rendered;
+					} )() }
 				</div>
 			) }
 		</div>
