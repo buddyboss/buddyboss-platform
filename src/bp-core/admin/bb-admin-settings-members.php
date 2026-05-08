@@ -152,7 +152,7 @@ function bb_admin_settings_register_members_feature() {
 			'title'      => __( 'Member Connection', 'buddyboss' ),
 			'icon'       => array(
 				'type'  => 'font',
-				'class' => 'bb-icons-rl bb-icons-rl-handshake',
+				'class' => 'bb-icons-rl bb-icons-rl-user-plus',
 			),
 			'help_url'   => bp_get_admin_url(
 				add_query_arg(
