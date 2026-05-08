@@ -77,6 +77,13 @@ function bb_moderation_register_member_moderation_fields() {
 
 	// FIELD: Auto Suspend after X blocks (Toggle with inline number).
 	// Depends on Member Blocking being enabled.
+	//
+	// NOTE: Both auto-suspend toggles share the same `group.key` so the
+	// React renderer treats them as one logical "Auto Suspend" field — the
+	// "Auto Suspend" label only renders on the first row, and the SCSS rule
+	// `&--grouped:not(--full-width) { border-bottom: none }` suppresses the
+	// horizontal divider between the two rows so they read as one field
+	// group (matches Figma).
 	bb_register_feature_field(
 		'moderation',
 		'member_moderation',
@@ -103,6 +110,9 @@ function bb_moderation_register_member_moderation_fields() {
 				'field'  => 'bpm_blocking_member_blocking',
 				'value'  => true,
 				'action' => 'disable',
+			),
+			'group'                => array(
+				'key' => 'auto_suspend',
 			),
 			'order'                => 30,
 		)
@@ -136,6 +146,9 @@ function bb_moderation_register_member_moderation_fields() {
 				'field'  => 'bb_blocking_member_reporting',
 				'value'  => true,
 				'action' => 'disable',
+			),
+			'group'                => array(
+				'key' => 'auto_suspend',
 			),
 			'order'                => 40,
 		)
