@@ -24,7 +24,7 @@ import { __, sprintf } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { getInvites, invitesBulkAction } from '../utils/ajax';
 import { safeUrl } from '../utils/sanitize';
-import { Toast } from '../components/Toast';
+import { Toast, useAutoDismissToast } from '../components/Toast';
 import { ListPagination } from '../components/common/ListPagination';
 import { DeleteConfirmModal } from '../components/common/DeleteConfirmModal';
 import { useListScreenState } from '../hooks/useListScreenState';
@@ -214,20 +214,7 @@ export default function InvitesListScreen( props ) {
 		};
 	}, [] );
 
-	// Auto-dismiss success toast after 3 seconds.
-	useEffect( function() {
-		if ( ! toast ) {
-			return;
-		}
-		if ( 'success' === toast.status ) {
-			var timer = setTimeout( function() {
-				setToast( null );
-			}, 3000 );
-			return function() {
-				clearTimeout( timer );
-			};
-		}
-	}, [ toast ] );
+	useAutoDismissToast( toast, setToast );
 
 	/**
 	 * Handle search input change with 500ms debounce.

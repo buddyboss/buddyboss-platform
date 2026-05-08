@@ -20,7 +20,7 @@ import {
 	savePlatformSetting,
 } from '../utils/ajax';
 import { sanitizeHtml } from '../utils/sanitize';
-import { Toast } from '../components/Toast';
+import { Toast, useAutoDismissToast } from '../components/Toast';
 import { HelpIcon } from '../components/HelpIcon';
 import { ProfileSearchFieldModal } from '../components/modals/ProfileSearchFieldModal';
 import { ConfirmToggleModal } from '../components/modals/ConfirmToggleModal';
@@ -65,6 +65,7 @@ export default function ProfileSearchScreen( { onNavigate, helpUrl, onHelpClick,
 	var toastState = useState( null );
 	var toast = toastState[ 0 ];
 	var setToast = toastState[ 1 ];
+	useAutoDismissToast( toast, setToast );
 
 	// Modal state: null = closed, { field: null } = add new, { field: obj } = edit.
 	var editFieldState = useState( null );

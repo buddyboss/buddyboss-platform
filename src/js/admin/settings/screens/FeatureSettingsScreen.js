@@ -17,7 +17,7 @@ import { applyReactionPostSave } from '../components/reaction/applyReactionPostS
 import { SettingsForm } from '../components/SettingsForm';
 import { UpgradeModal } from '../components/modals/UpgradeModal';
 import { SideNavigation } from './SideNavigation';
-import { Toast } from '../components/Toast';
+import { Toast, useAutoDismissToast } from '../components/Toast';
 import { debounce, fetchHelpContent, clearHelpContentCache } from '../../utils/api';
 import { HelpIcon } from '../components/HelpIcon';
 import { HelpSliderModal } from '../components/HelpSliderModal';
@@ -642,17 +642,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 		}
 	}, [changedFields, initialLoad]);
 
-	// Auto-dismiss success toast after 3 seconds
-	useEffect(() => {
-		if (!toast) return;
-
-		if ( 'success' === toast.status ) {
-			const timer = setTimeout(() => {
-				setToast(null);
-			}, 3000);
-			return () => clearTimeout(timer);
-		}
-	}, [toast]);
+	useAutoDismissToast( toast, setToast );
 
 	// Pre-build lookup maps to avoid triple-nested loops in handleSettingChange.
 	var buttonManagedFields = useMemo( function () {

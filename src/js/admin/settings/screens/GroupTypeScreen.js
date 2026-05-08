@@ -12,7 +12,7 @@ import { ToggleControl, Spinner } from '@wordpress/components';
 import { __, _n, sprintf } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { getGroupTypes, deleteGroupType, getPlatformSettings, savePlatformSetting } from '../utils/ajax';
-import { Toast } from '../components/Toast';
+import { Toast, useAutoDismissToast } from '../components/Toast';
 import { HelpIcon } from '../components/HelpIcon';
 import { GroupTypeModal } from '../components/modals/GroupTypeModal';
 import { getSectionTitle, getFieldLabel, getFieldDescription, getFieldHelpText } from '../utils/feature';
@@ -72,6 +72,7 @@ export function GroupTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, ac
 	var toastState = useState( null );
 	var toast = toastState[ 0 ];
 	var setToast = toastState[ 1 ];
+	useAutoDismissToast( toast, setToast );
 
 	var deleteConfirmState = useState( null );
 	var deleteConfirmId = deleteConfirmState[ 0 ];

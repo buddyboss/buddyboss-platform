@@ -17,7 +17,7 @@ import {
 	deleteProfileField,
 	reorderProfileFields,
 } from '../utils/ajax';
-import { Toast } from '../components/Toast';
+import { Toast, useAutoDismissToast } from '../components/Toast';
 import { FieldSetModal } from '../components/modals/FieldSetModal';
 import { DeleteFieldSetModal } from '../components/modals/DeleteFieldSetModal';
 import { ProfileFieldModal } from '../components/modals/ProfileFieldModal';
@@ -66,6 +66,7 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 	var toastState = useState( null );
 	var toast = toastState[ 0 ];
 	var setToast = toastState[ 1 ];
+	useAutoDismissToast( toast, setToast );
 
 	// Modal states.
 	var editFieldSetState = useState( null );

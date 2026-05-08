@@ -12,7 +12,7 @@ import { getCachedFeatures, getFeatures, invalidateFeaturesCache, toggleFeature,
 import { invalidateFeatureCache } from '../utils/featureCache';
 import { urlToRoute } from '../utils/url';
 import { safeUrl } from '../utils/sanitize';
-import { Toast } from '../components/Toast';
+import { Toast, useAutoDismissToast } from '../components/Toast';
 import { UpgradeModal } from '../components/modals/UpgradeModal';
 import { ConfirmToggleModal } from '../components/modals/ConfirmToggleModal';
 
@@ -181,17 +181,7 @@ export function SettingsScreen({ onNavigate }) {
 		return acc;
 	}, {});
 
-	// Auto-dismiss success toast after 3 seconds.
-	useEffect(() => {
-		if (!toast) return;
-
-		if ('success' === toast.status) {
-			const timer = setTimeout(() => {
-				setToast(null);
-			}, 3000);
-			return () => clearTimeout(timer);
-		}
-	}, [toast]);
+	useAutoDismissToast( toast, setToast );
 
 	// Track in-flight toggle requests per feature for abort on rapid clicks.
 	const toggleControllers = useRef({});

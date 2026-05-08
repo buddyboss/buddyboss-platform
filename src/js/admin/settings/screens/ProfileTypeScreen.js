@@ -13,7 +13,7 @@ import { __, _n, sprintf } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { getMemberTypes, deleteMemberType, getPlatformSettings, savePlatformSetting } from '../utils/ajax';
 import { sanitizeHtml } from '../utils/sanitize';
-import { Toast } from '../components/Toast';
+import { Toast, useAutoDismissToast } from '../components/Toast';
 import { HelpIcon } from '../components/HelpIcon';
 import { ProfileTypeModal } from '../components/modals/ProfileTypeModal';
 import { ConfirmToggleModal } from '../components/modals/ConfirmToggleModal';
@@ -85,6 +85,7 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 	var toastState = useState( null );
 	var toast = toastState[ 0 ];
 	var setToast = toastState[ 1 ];
+	useAutoDismissToast( toast, setToast );
 
 	var deleteConfirmState = useState( null );
 	var deleteConfirmId = deleteConfirmState[ 0 ];

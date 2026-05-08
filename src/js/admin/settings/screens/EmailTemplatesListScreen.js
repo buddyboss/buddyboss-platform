@@ -24,7 +24,7 @@ import { decodeEntities } from '@wordpress/html-entities';
 import { getEmailTemplates, emailTemplateBulkAction } from '../utils/ajax';
 import { sanitizeHtml, safeUrl } from '../utils/sanitize';
 import { ListPagination } from '../components/common/ListPagination';
-import { Toast } from '../components/Toast';
+import { Toast, useAutoDismissToast } from '../components/Toast';
 import { useListScreenState } from '../hooks/useListScreenState';
 import { useListScreenHandlers } from '../hooks/useListScreenHandlers';
 import { EmailTemplateModal } from '../components/emails/EmailTemplateModal';
@@ -295,20 +295,7 @@ export default function EmailTemplatesListScreen( props ) {
 		};
 	}, [] );
 
-	// Auto-dismiss success toast after 3 seconds.
-	useEffect( function() {
-		if ( ! toast ) {
-			return;
-		}
-		if ( 'success' === toast.status ) {
-			var timer = setTimeout( function() {
-				setToast( null );
-			}, 3000 );
-			return function() {
-				clearTimeout( timer );
-			};
-		}
-	}, [ toast ] );
+	useAutoDismissToast( toast, setToast );
 
 	/**
 	 * Handle search input change with 500ms debounce.

@@ -5,8 +5,35 @@
  * @since BuddyBoss [BBVERSION]
  */
 
+import { useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { Button, Spinner } from '@wordpress/components';
+
+/**
+ * Auto-dismiss a success toast after a delay.
+ *
+ * Errors are intentionally left sticky — the Toast component renders a dismiss
+ * button only for `error` status, so users close those manually.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object|null} toast    Current toast state (or null when no toast).
+ * @param {Function}    setToast State setter from useState.
+ * @param {number}      [delay]  Optional delay in ms (default 3000).
+ */
+export function useAutoDismissToast( toast, setToast, delay ) {
+	useEffect( function () {
+		if ( ! toast || 'success' !== toast.status ) {
+			return;
+		}
+		var timer = setTimeout( function () {
+			setToast( null );
+		}, delay || 3000 );
+		return function () {
+			clearTimeout( timer );
+		};
+	}, [ toast ] );
+}
 
 export const Toast = ({ status, message, onDismiss, showIcon = true }) => {
 	const getIcon = () => {

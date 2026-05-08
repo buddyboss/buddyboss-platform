@@ -12,7 +12,7 @@ import { Spinner } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { getReportingCategories, deleteReportingCategory } from '../utils/ajax';
-import { Toast } from '../components/Toast';
+import { Toast, useAutoDismissToast } from '../components/Toast';
 import { HelpIcon } from '../components/HelpIcon';
 import { ReportingCategoryModal } from '../components/modals/ReportingCategoryModal';
 import { ConfirmToggleModal } from '../components/modals/ConfirmToggleModal';
@@ -58,6 +58,7 @@ export function ReportingCategoriesScreen( { onNavigate, helpUrl, onHelpClick, f
 	var toastState = useState( null );
 	var toast = toastState[ 0 ];
 	var setToast = toastState[ 1 ];
+	useAutoDismissToast( toast, setToast );
 
 	var deleteConfirmState = useState( null );
 	var deleteConfirmId = deleteConfirmState[ 0 ];
