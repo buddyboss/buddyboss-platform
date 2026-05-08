@@ -16,6 +16,7 @@ import { clearHelpContentCache } from '../utils/api';
 // field. Side-effect import — the file calls wp.hooks.addFilter/addAction at
 // load time. Keep imports here, not inside components, so they register once.
 import './components/recaptcha/recaptcha-verify-hooks';
+import './components/pusher/pusher-verify-hooks';
 
 // Lazy-load the Knowledge Base modal so admins who never open it don't pay
 // the bundle cost. The dynamic import resolves only after the user clicks the
