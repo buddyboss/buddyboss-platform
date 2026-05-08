@@ -92,6 +92,14 @@ addFilter(
 			return isDisabled;
 		}
 
+		// Only relax disablement; never add it. Upstream sends isDisabled=false
+		// for the Disconnect button (documented "never disabled" invariant) and
+		// for an already-fillable Connect button. Either way, we have nothing
+		// to override and must pass the value through unchanged.
+		if ( ! isDisabled ) {
+			return isDisabled;
+		}
+
 		var cluster = readFieldValue( CLUSTER_FIELD, values );
 		if ( 'custom' === cluster ) {
 			return isDisabled;
