@@ -216,14 +216,6 @@
 	}
 }
 
-.bb-admin-list-table__row {
-	transition: background-color 0.15s ease;
-
-	&--selected {
-		background-color: $bb-background-positive-primary-color;
-	}
-}
-
 .bb-admin-list-table__checkbox {
 	width: 30px;
 
