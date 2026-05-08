@@ -287,6 +287,23 @@ export function ProfileFieldModal( {
 	var isSaving = isSavingState[ 0 ];
 	var setIsSaving = isSavingState[ 1 ];
 
+	var errorState = useState( '' );
+	var error = errorState[ 0 ];
+	var setError = errorState[ 1 ];
+
+	// Ref on the modal body so we can scroll its WP scroll container
+	// (.components-modal__content) to top when an error appears.
+	var bodyRef = useRef( null );
+	useEffect( function () {
+		if ( ! error || ! bodyRef.current ) {
+			return;
+		}
+		var scrollContainer = bodyRef.current.closest( '.components-modal__content' );
+		if ( scrollContainer ) {
+			scrollContainer.scrollTop = 0;
+		}
+	}, [ error ] );
+
 	// Reset options when type changes to a type that needs options.
 	useEffect( function () {
 		if ( isEditing ) {
@@ -558,7 +575,7 @@ export function ProfileFieldModal( {
 	 */
 	function handleSave() {
 		if ( ! name.trim() ) {
-			setToast( { status: 'error', message: __( 'Field name is required.', 'buddyboss' ) } );
+			setError( __( 'Field name is required.', 'buddyboss' ) );
 			return;
 		}
 
@@ -569,10 +586,11 @@ export function ProfileFieldModal( {
 				socialnetworks: __( 'You can only have one instance of the "Social Network" profile field.', 'buddyboss' ),
 				membertypes: __( 'You can only have one instance of the "Profile Type" profile field.', 'buddyboss' ),
 			};
-			setToast( { status: 'error', message: singletonMessages[ type ] || __( 'This field type can only have one instance.', 'buddyboss' ) } );
+			setError( singletonMessages[ type ] || __( 'This field type can only have one instance.', 'buddyboss' ) );
 			return;
 		}
 
+		setError( '' );
 		setIsSaving( true );
 
 		var data = {
@@ -676,15 +694,12 @@ export function ProfileFieldModal( {
 					} );
 					onSave();
 				} else {
-					setToast( {
-						status: 'error',
-						message: ( response.data && response.data.message ) || __( 'Failed to save field.', 'buddyboss' ),
-					} );
+					setError( ( response.data && response.data.message ) || __( 'Failed to save field.', 'buddyboss' ) );
 				}
 			} )
-			.catch( function ( error ) {
+			.catch( function ( err ) {
 				setIsSaving( false );
-				setToast( { status: 'error', message: error.message || __( 'Failed to save field.', 'buddyboss' ) } );
+				setError( err.message || __( 'Failed to save field.', 'buddyboss' ) );
 			} );
 	}
 
@@ -707,7 +722,13 @@ export function ProfileFieldModal( {
 			className="bb-pf-field-modal bb-admin-settings-modal"
 			shouldCloseOnClickOutside={ false }
 		>
-			<div className="bb-admin-settings-modal__body">
+			<div className="bb-admin-settings-modal__body" ref={ bodyRef }>
+				{ error && (
+					<div className="bb-admin-notice bb-admin-notice--error" role="alert" aria-live="assertive">
+						<span>{ error }</span>
+					</div>
+				) }
+
 				<div className="bb-admin-settings--divided-section">
 					{ /* Name */ }
 					<TextControl
