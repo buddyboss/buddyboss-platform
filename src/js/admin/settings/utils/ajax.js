@@ -364,23 +364,24 @@ export function saveGroup( data, options ) {
 }
 
 /**
- * Get group members.
+ * Get group members for a single role.
  *
- * Supports two request shapes (the server endpoint detects which is in use):
+ * Initial mount fires this 4× in parallel (once per role); pagination clicks
+ * fire it for the affected role; debounced search fires it once per visible
+ * role with the active search term. The server passes `search` through to
+ * BP's `groups_get_group_members()` `search_terms` arg so per-role filter
+ * chains (moderation, privacy, suspension, third-party hooks) apply
+ * unchanged.
  *
- *  - Legacy single-role (fast pagination path):
- *      { role: 'admin'|'mod'|'member'|'banned', page, per_page }
- *      Returns: { success, data: { members: [...], total } }
- *
- *  - Unified multi-role / search (initial load + live search):
- *      { roles: ['admin','mod','member','banned'], pages: { admin:1, ... },
- *        per_page, search }
- *      Returns: { success, data: { sections: { admin: { members, total, page }, ... } } }
+ * Request:
+ *   { role: 'admin'|'mod'|'member'|'banned', page, per_page, search }
+ * Response:
+ *   { success, data: { members: [...], total } }
  *
  * @since BuddyBoss [BBVERSION]
  *
  * @param {number} groupId - Group ID.
- * @param {Object} params  - Request params (see shapes above).
+ * @param {Object} params  - Request params (`role`, `page`, `per_page`, `search`).
  * @param {Object} options - Optional fetch options (e.g., AbortSignal).
  * @return {Promise} Promise resolving to response.
  */

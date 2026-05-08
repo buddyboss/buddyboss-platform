@@ -152,10 +152,16 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 	// to ADD new members.
 	var searchDebounceRef = useRef( null );
 
-	// Tracks the search term that produced the currently-loaded members so we
-	// only re-query the server when the term actually changes (a role-filter
-	// change alone should not refetch).
-	var lastFiredSearchRef = useRef( '' );
+	// Per-role tracker of the search term that produced each section's
+	// currently-loaded members. A role whose entry differs from the current
+	// `normalizedMemberFilter` is "stale" and needs a refetch. Per-role
+	// tracking (rather than a single string) closes this race:
+	//   1. role-filter='admin', user types 'mike'  → only admin refetched
+	//   2. role-filter='all'                       → mod/member/banned still
+	//      hold their pre-search data unless we know they're stale
+	// With per-role tracking, widening the role-filter refetches only the
+	// roles that haven't yet seen the active search term.
+	var lastFiredSearchByRoleRef = useRef( { admin: '', mod: '', member: '', banned: '' } );
 
 	// One AbortController per role.
 	var abortRefs = useRef( { admin: null, mod: null, member: null, banned: null } );
@@ -713,30 +719,36 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 
 		// Decide which roles to (re)query. With role-filter narrowed to a
 		// specific role, only that one needs to refetch; with 'all' selected
-		// we requery every section so search hits across the whole group.
+		// we cover every section so search hits across the whole group.
 		var rolesToFetch = 'all' === roleFilter
 			? [ 'admin', 'mod', 'member', 'banned' ]
 			: [ roleFilter ];
 
-		// If the search query is identical to the last fired one, skip — the
-		// role filter changing alone shouldn't refire if we already have data.
-		var queryChanged = lastFiredSearchRef.current !== normalizedMemberFilter;
+		// Within rolesToFetch, only refetch the roles whose currently-loaded
+		// data was produced by a different search term than the active one.
+		// This handles two scenarios with the same logic:
+		//   - User typed in the search box → all visible roles are stale.
+		//   - User widened the role filter → only the roles that didn't
+		//     receive the active search are stale; already-up-to-date roles
+		//     skip the refetch.
+		var staleRoles = rolesToFetch.filter( function ( r ) {
+			return lastFiredSearchByRoleRef.current[ r ] !== normalizedMemberFilter;
+		} );
 
-		if ( ! queryChanged ) {
+		if ( 0 === staleRoles.length ) {
 			return undefined;
 		}
 
 		searchDebounceRef.current = setTimeout( function () {
-			lastFiredSearchRef.current = normalizedMemberFilter;
-			rolesToFetch.forEach( function ( role ) {
+			staleRoles.forEach( function ( role ) {
+				lastFiredSearchByRoleRef.current[ role ] = normalizedMemberFilter;
 				fetchRoleMembers( role, 1, normalizedMemberFilter );
 			} );
-			// Reset every visible role's page state to 1 since the result set
-			// is replaced by the search hits (or restored to page 1 when search
-			// is cleared).
+			// Reset stale roles' page state to 1 — search replaces the result
+			// set (or restores page 1 when the search clears).
 			setRolePages( function ( prev ) {
 				var next = Object.assign( {}, prev );
-				rolesToFetch.forEach( function ( r ) {
+				staleRoles.forEach( function ( r ) {
 					next[ r ] = 1;
 				} );
 				return next;
@@ -1063,44 +1075,45 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 			</div>
 
 			{ /* Filter Row — search + role-filter dropdown (Figma 2026-05-08).
-			     Gated on `hasLoadedOnce` (not `isInitialLoading`) so the row
-			     stays mounted across subsequent search/filter refetches —
-			     otherwise the row would flicker out and back on every keystroke. */ }
-			{ hasLoadedOnce && (
-				<div className="bb-group-members-tab__filters">
-					<div className="bb-group-members-tab__filter-search">
-						<i
-							className="bb-icons-rl-magnifying-glass bb-group-members-tab__filter-search-icon"
-							aria-hidden="true"
-						/>
-						<input
-							type="search"
-							className="bb-group-members-tab__filter-search-input"
-							placeholder={ __( 'Search member', 'buddyboss' ) }
-							aria-label={ __( 'Search member', 'buddyboss' ) }
-							value={ memberFilterQuery }
-							onChange={ function ( e ) {
-								setMemberFilterQuery( e.target.value );
-							} }
-						/>
-					</div>
-					<div className="bb-group-members-tab__filter-role">
-						<SelectControl
-							hideLabelFromVision
-							label={ __( 'Filter by role', 'buddyboss' ) }
-							value={ roleFilter }
-							onChange={ setRoleFilter }
-							options={ [
-								{ value: 'all',    label: sprintf( __( 'All (%d)', 'buddyboss' ),       roleCounts.all ) },
-								{ value: 'admin',  label: sprintf( __( 'Organizer (%d)', 'buddyboss' ), roleCounts.admin ) },
-								{ value: 'mod',    label: sprintf( __( 'Moderator (%d)', 'buddyboss' ), roleCounts.mod ) },
-								{ value: 'member', label: sprintf( __( 'Member (%d)', 'buddyboss' ),    roleCounts.member ) },
-								{ value: 'banned', label: sprintf( __( 'Banned (%d)', 'buddyboss' ),    roleCounts.banned ) },
-							] }
-						/>
-					</div>
+			     Mounted from first paint (matches the "Add New Members" row
+			     above) so the admin sees the search affordance immediately
+			     instead of having to wait for the initial member fetch. The
+			     dropdown counts append themselves only after `hasLoadedOnce`
+			     so we don't briefly show "All (0)" / "Organizer (0)" while
+			     the first fetch is in flight. */ }
+			<div className="bb-group-members-tab__filters">
+				<div className="bb-group-members-tab__filter-search">
+					<i
+						className="bb-icons-rl-magnifying-glass bb-group-members-tab__filter-search-icon"
+						aria-hidden="true"
+					/>
+					<input
+						type="search"
+						className="bb-group-members-tab__filter-search-input"
+						placeholder={ __( 'Search member', 'buddyboss' ) }
+						aria-label={ __( 'Search member', 'buddyboss' ) }
+						value={ memberFilterQuery }
+						onChange={ function ( e ) {
+							setMemberFilterQuery( e.target.value );
+						} }
+					/>
 				</div>
-			) }
+				<div className="bb-group-members-tab__filter-role">
+					<SelectControl
+						hideLabelFromVision
+						label={ __( 'Filter by role', 'buddyboss' ) }
+						value={ roleFilter }
+						onChange={ setRoleFilter }
+						options={ [
+							{ value: 'all',    label: hasLoadedOnce ? sprintf( __( 'All (%d)', 'buddyboss' ),       roleCounts.all )    : __( 'All', 'buddyboss' ) },
+							{ value: 'admin',  label: hasLoadedOnce ? sprintf( __( 'Organizer (%d)', 'buddyboss' ), roleCounts.admin )  : __( 'Organizer', 'buddyboss' ) },
+							{ value: 'mod',    label: hasLoadedOnce ? sprintf( __( 'Moderator (%d)', 'buddyboss' ), roleCounts.mod )    : __( 'Moderator', 'buddyboss' ) },
+							{ value: 'member', label: hasLoadedOnce ? sprintf( __( 'Member (%d)', 'buddyboss' ),    roleCounts.member ) : __( 'Member', 'buddyboss' ) },
+							{ value: 'banned', label: hasLoadedOnce ? sprintf( __( 'Banned (%d)', 'buddyboss' ),    roleCounts.banned ) : __( 'Banned', 'buddyboss' ) },
+						] }
+					/>
+				</div>
+			</div>
 
 			{ /* Members List — Per-Role Sections.
 			     Top-level spinner only shows BEFORE the first load completes.
