@@ -355,6 +355,10 @@
    ---------------------------------------------------------------- */
 .bb-group-edit-modal {
 
+	&.components-modal__frame {
+		max-height: 72%;
+	}
+
 	&__body {
 		padding: 0 24px 24px;
 
@@ -424,8 +428,8 @@
 		}
 	}
 
-	&__tab-content {
-		min-height: 200px;
+	.components-tab-panel__tab-content {
+		min-height: 400px;
 	}
 
 	&__empty-tab {
