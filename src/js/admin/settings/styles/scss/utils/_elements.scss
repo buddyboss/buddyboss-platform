@@ -1205,6 +1205,10 @@ select.bb-admin-settings__select {
 			&.is-primary {
 				@include bb-button-primary;
 			}
+
+            &.is-destructive {
+                @include bb-button-danger;
+            }
 		}
 	}
 }
