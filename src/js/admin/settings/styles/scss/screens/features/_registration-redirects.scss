@@ -47,6 +47,21 @@
 }
 
 // Profile Type Redirects — paginated list with per-type login/logout dropdowns.
+//
+// The shared `.bb-admin-feature-settings__section-description` carries 24px
+// padding-bottom + 24px margin-bottom (~48px total) below it by default. In
+// Figma, that empty band is replaced by a thin horizontal divider (matching
+// the row-to-row separators) between the description and the first row.
+//
+// Override the spacing AND add the divider, scoped to this section only via
+// the id selector so no other section's description picks up a stray border.
+#section-profile_type_redirects > .bb-admin-feature-settings__section-body
+	> .bb-admin-feature-settings__section-description {
+	padding-bottom: 24px;
+	margin-bottom: 0;
+	border-bottom: 1px solid $bb-border-secondary-color;
+}
+
 .bb-profile-type-redirects {
 	width: 100%;
 

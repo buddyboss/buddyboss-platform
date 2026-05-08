@@ -256,7 +256,7 @@ function bb_registration_register_panel_fields() {
 		array(
 			'name'              => 'bb-email-restrictions',
 			'label'             => __( 'Email Restrictions', 'buddyboss' ),
-			'description'       => __( 'Enter specific email addresses which you want to allow for user registrations. Enter one address per line.', 'buddyboss' ),
+			'description'       => __( 'Enter the email addresses you want to allow for user registrations. Add one address per field.', 'buddyboss' ),
 			'type'              => 'email_restrictions',
 			'default'           => array(),
 			'sanitize_callback' => 'bb_registration_sanitize_email_restrictions',

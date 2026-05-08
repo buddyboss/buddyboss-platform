@@ -11,12 +11,22 @@
 .bb-domain-restrictions,
 .bb-email-restrictions {
 	width: 100%;
+	border: 1px solid $bb-border-secondary-color;
+	border-radius: $bb-border-radius-lg;
+	padding: 20px;
 
 	&__rows {
 		display: flex;
 		flex-direction: column;
 		gap: 16px;
-		margin-bottom: 12px;
+		margin-bottom: 16px;
+	}
+
+	// Hide the rows wrapper when empty so the bordered card doesn't
+	// reserve a phantom 16px margin-bottom slot above "Add Domain/Email".
+	&__rows:empty {
+		display: none;
+		margin-bottom: 0;
 	}
 
 	&__row {
