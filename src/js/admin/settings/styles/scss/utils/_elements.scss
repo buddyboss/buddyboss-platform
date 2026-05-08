@@ -564,6 +564,13 @@ select.bb-admin-settings__select {
 .buddyboss_page_bb-settings .components-checkbox-control__input {
 	border-color: $bb-border-quaternary-color;
 	border-radius: $bb-border-radius-sm;
+    height: 18px;
+    width: 18px;
+
+    + svg.components-checkbox-control__checked {
+        height: 22px;
+        width: 22px;
+    }
 
 	&:checked {
 		background-color: $bb-background-brand-primary-color;
