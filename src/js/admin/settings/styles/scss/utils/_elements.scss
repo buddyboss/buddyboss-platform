@@ -598,10 +598,35 @@ select.bb-admin-settings__select {
 
 	.bb-admin-settings-form__inline-number {
 		margin: 0 8px;
-		height: 26px;
+		// Figma: 88×24 small inputField with 8px horizontal padding so the
+		// digit sits visually centered between input edges. Forcing the box
+		// model to content-box keeps the rendered width at 88px regardless
+		// of theme/browser-applied padding overrides.
+		box-sizing: border-box;
+		width: 88px;
+		max-width: 88px;
+		height: 24px;
 		min-height: auto;
-		max-width: 85px;
-		width: auto;
+		padding: 0 8px;
+		// Match Figma's enabled inputField: "background/default/primary"
+		// #F6F6F6 fill + "stroke/default/secondary" #D9D9D9 1px border +
+		// radius/md (6px). Figma's 0.5px stroke renders as 1px in browsers
+		// (rounded up), which preserves the design intent on Hi-DPI screens.
+		background-color: $bb-background-primary-color;
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-md;
+
+		// Disabled state — reactivated when the sibling checkbox/toggle is
+		// unchecked (cbControlDisabled in SettingsForm passes the React
+		// `disabled` prop through to this input). Drop the gray fill so
+		// the control reads as inactive against the white card background,
+		// then mute the digit + cursor to reinforce the non-interactive
+		// state. Matches Figma's "state: disabled" inputField variant.
+		&:disabled {
+			background-color: transparent;
+			color: $bb-text-tertiary-color;
+			cursor: not-allowed;
+		}
 	}
 
     [data-field-name="bb_recaptcha_score_threshold"] .components-text-control__input {
