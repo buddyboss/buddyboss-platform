@@ -640,19 +640,15 @@ export function SettingsScreen({ onNavigate }) {
 														// While the toggle AJAX is in flight, disable the
 														// Settings button — clicking through too early
 														// races BB_Feature_Loader and lands the admin on a
-														// feature page with no registered side panels.
+														// feature page with no registered side panels. Per
+														// design: no Activating/Deactivating affordance,
+														// just the disabled state.
 														var isTogglingThis = togglingFeatureIds.has(feature.id);
 														var isDisabled = feature.status !== 'active' || !!feature.is_drm_locked || isTogglingThis;
-														// Direction is read from the optimistically-updated
-														// `feature.status` — by the time this renders the
-														// optimistic flip has already applied, so 'active'
-														// means we're transitioning ON and 'inactive' means
-														// we're transitioning OFF.
-														var isDeactivating = isTogglingThis && 'active' !== feature.status;
 														return (
 															<Button
 																variant="secondary"
-																className={`bb-admin-settings__feature-settings-btn${isDisabled ? ' bb-admin-settings__feature-settings-btn--disabled' : ''}${isTogglingThis ? ' bb-admin-settings__feature-settings-btn--activating' : ''}`}
+																className={`bb-admin-settings__feature-settings-btn${isDisabled ? ' bb-admin-settings__feature-settings-btn--disabled' : ''}`}
 																onClick={() => {
 																	if ( feature.is_drm_locked || isTogglingThis ) {
 																		return;
@@ -667,20 +663,8 @@ export function SettingsScreen({ onNavigate }) {
 																disabled={isDisabled}
 																aria-busy={isTogglingThis ? 'true' : undefined}
 															>
-																{ isTogglingThis ? (
-																	<>
-																		<Spinner />
-																		{ isDeactivating
-																			? __('Deactivating…', 'buddyboss')
-																			: __('Activating…', 'buddyboss')
-																		}
-																	</>
-																) : (
-																	<>
-																		<i className="bb-icon-settings"></i>
-																		{__('Settings', 'buddyboss')}
-																	</>
-																) }
+																<i className="bb-icon-settings"></i>
+																{__('Settings', 'buddyboss')}
 															</Button>
 														);
 													} )()
