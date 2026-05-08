@@ -2923,7 +2923,7 @@
         gap: 4px;
         box-sizing: border-box;
 
-        span {
+        > span {
             font-size: 12px;
             font-weight: 400;
             line-height: 18px;
@@ -2933,6 +2933,10 @@
             white-space: nowrap;
             flex: 1;
             margin: 0;
+        }
+
+        .components-checkbox-control__input-container {
+            margin: 0 4px 0 0;
         }
     }
 
