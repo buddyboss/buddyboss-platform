@@ -521,6 +521,20 @@ function bb_maybe_clear_placeholder_features_cache() {
 	// Trigger an immediate background refresh so the next AJAX call has data.
 	bb_schedule_placeholder_features_refresh();
 
+	// Field-upgrades catalog (per-field upgrade modal copy + UTM URLs) lives
+	// in a parallel S3 file with its own stale-while-revalidate option. The
+	// canonical flusher (`bb_feature_caches_flushed`) calls the lighter
+	// `bb_flush_field_upgrades_cache()` which only drops the live transient
+	// and intentionally KEEPS the stale option to avoid blocking S3 fetches
+	// on plugin-install requests. That's the right trade-off for plugin
+	// lifecycle events but the wrong one for this manual debug trigger —
+	// the admin who hits `?bb_clear_placeholder_cache=1` wants fresh data
+	// NOW, not last-known-good. Call the heavier `*_full()` variant which
+	// also drops the stale option, mirroring the placeholder catalog above.
+	if ( function_exists( 'bb_flush_field_upgrades_cache_full' ) ) {
+		bb_flush_field_upgrades_cache_full();
+	}
+
 	// Flush the help-content REST proxy's per-article transients. The
 	// BB_REST_Help_Content_Endpoint controller uses keys of the form
 	// `bb_help_content_<id>` with a 12h TTL; clearing here forces the next
