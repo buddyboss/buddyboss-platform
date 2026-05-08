@@ -10049,6 +10049,169 @@ function bb_get_settings_url() {
 }
 
 /**
+ * Get structured PRO notice data for the React admin settings UI.
+ *
+ * Returns an array with badge and video link data that the React UI renders
+ * as a visual PRO pill badge + play icon button. This is the Settings 2.0
+ * equivalent of `bb_get_pro_label_notice()` which returns HTML strings.
+ *
+ * Lives in bp-core-functions.php (loaded early in core boot) rather than in
+ * bp-core-admin-functions.php so Settings 2.0 panel-registration code, which
+ * runs at `bp_loaded` priority 5, can call it before the admin layer (which
+ * boots `bp_admin()` at `bp_loaded` priority 10) has loaded the admin
+ * functions file.
+ *
+ * Two visual contexts:
+ *
+ *   - 'field'   — badge sits next to a per-field label (e.g. "Reactions Mode",
+ *                 "Create Groups"). Default text "PRO". link_url is per-feature
+ *                 (tutorial doc URL or empty), so the play icon takes admins to
+ *                 feature-specific reading material.
+ *
+ *   - 'section' — badge sits in the section header (e.g. "Group Headers",
+ *                 "Member Access Controls", "Group Topics"). Default text
+ *                 "UPGRADE PRO". link_url defaults to the BuddyBoss pricing
+ *                 page since the section-level CTA is a straightforward upsell.
+ *
+ * Both contexts share the same "is Pro locked?" computation — Pro missing,
+ * Pro too old for this feature, or Pro license invalid/expired all result in
+ * `show: true`. Only the badge text + default link change between contexts.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $type    Feature type (e.g. 'reaction', 'schedule_posts',
+ *                        'polls', 'sso', 'group_activity_topics',
+ *                        'post_feature_image', or arbitrary section keys
+ *                        like 'group_headers'). Per-feature minimum-version
+ *                        gating only fires for the keys it knows about; any
+ *                        other key falls through to the generic Pro-installed
+ *                        + license-valid check.
+ * @param string $context Either 'field' or 'section'. Defaults to 'field'
+ *                        for backward compatibility — every existing caller
+ *                        (the AJAX-time field auto-compute in
+ *                        class-bb-admin-settings-ajax.php) gets the unchanged
+ *                        "PRO" badge text by default.
+ *
+ * @return array {
+ *     PRO notice data for React rendering.
+ *
+ *     @type bool   $show       Whether the notice should be shown.
+ *     @type string $badge_text Badge label text ("PRO" for field, "UPGRADE PRO" for section).
+ *     @type string $badge_icon BuddyBoss icon CSS class for the badge.
+ *     @type string $link_url   URL for the play/video button (per-feature for field, pricing for section).
+ *     @type string $link_icon  BuddyBoss icon CSS class for the play button.
+ * }
+ */
+function bb_admin_settings_get_pro_notice( $type = 'default', $context = 'field' ) {
+	static $retval = array();
+
+	$is_section = ( 'section' === $context );
+
+	// Cache key incorporates both args so 'field' vs 'section' for the same
+	// $type don't collide and serve each other's stale defaults.
+	$cache_key = $type . '|' . $context;
+	if ( isset( $retval[ $cache_key ] ) ) {
+		return $retval[ $cache_key ];
+	}
+
+	$data = array(
+		'show'       => false,
+		'badge_text' => $is_section
+			? __( 'UPGRADE PRO', 'buddyboss' )
+			: __( 'PRO', 'buddyboss' ),
+		'badge_icon' => 'bb-icons-rl-crown-simple',
+		'link_url'   => $is_section ? 'https://www.buddyboss.com/pricing/' : '',
+		'link_icon'  => 'bb-icons-rl-play',
+	);
+
+	$is_pro_locked = false;
+
+	if ( function_exists( 'bb_platform_pro' ) && version_compare( bb_platform_pro()->version, '1.1.9.1', '<=' ) ) {
+		$is_pro_locked = true;
+	} elseif (
+		function_exists( 'bb_platform_pro' ) &&
+		! empty( $type ) &&
+		(
+			(
+				'reaction' === $type &&
+				version_compare( bb_platform_pro()->version, '2.4.50', '<' )
+			) ||
+			(
+				'schedule_posts' === $type &&
+				function_exists( 'bb_pro_schedule_posts_version' ) &&
+				version_compare( bb_platform_pro()->version, bb_pro_schedule_posts_version(), '<' )
+			) ||
+			(
+				'polls' === $type &&
+				function_exists( 'bb_pro_poll_version' ) &&
+				version_compare( bb_platform_pro()->version, bb_pro_poll_version(), '<' )
+			) ||
+			(
+				'sso' === $type &&
+				function_exists( 'bb_pro_sso_version' ) &&
+				version_compare( bb_platform_pro()->version, bb_pro_sso_version(), '<' )
+			) ||
+			(
+				'group_activity_topics' === $type &&
+				function_exists( 'bb_pro_group_activity_topics_version' ) &&
+				version_compare( bb_platform_pro()->version, bb_pro_group_activity_topics_version(), '<' )
+			) ||
+			(
+				'post_feature_image' === $type &&
+				function_exists( 'bb_pro_post_feature_image_version' ) &&
+				version_compare( bb_platform_pro()->version, bb_pro_post_feature_image_version(), '<' )
+			)
+		)
+	) {
+		$is_pro_locked = true;
+	} elseif (
+		! function_exists( 'bb_platform_pro' ) ||
+		(
+			function_exists( 'bb_pro_should_lock_features' )
+				? bb_pro_should_lock_features()
+				: ( function_exists( 'bbp_pro_is_license_valid' ) && ! bbp_pro_is_license_valid() )
+		)
+	) {
+		$is_pro_locked = true;
+	}
+
+	if ( $is_pro_locked ) {
+		$data['show'] = true;
+
+		// Field-level badges link to per-feature docs/tutorials. Section-level
+		// badges keep the pricing-page default already set above — the section
+		// CTA is a top-level upsell, not a feature-specific tutorial.
+		if ( ! $is_section ) {
+			$feature_urls = array(
+				'reaction'              => 'https://www.buddyboss.com/resources/docs/components/reactions/',
+				'schedule_posts'        => '',
+				'polls'                 => '',
+				'sso'                   => '',
+				'group_activity_topics' => '',
+				'post_feature_image'    => '',
+			);
+
+			$data['link_url'] = isset( $feature_urls[ $type ] ) ? $feature_urls[ $type ] : 'https://www.buddyboss.com/platform/';
+		}
+	}
+
+	/**
+	 * Filters the PRO notice data for the React admin settings UI.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array  $data    PRO notice data.
+	 * @param string $type    Feature type.
+	 * @param string $context Render context — 'field' or 'section'.
+	 */
+	$data = apply_filters( 'bb_admin_settings_pro_notice_data', $data, $type, $context );
+
+	$retval[ $cache_key ] = $data;
+
+	return $data;
+}
+
+/**
  * Get the denylist of WordPress core options that must never be written
  * through BuddyBoss admin AJAX handlers.
  *

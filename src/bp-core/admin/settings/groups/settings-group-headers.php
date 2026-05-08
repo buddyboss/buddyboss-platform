@@ -35,12 +35,7 @@ function bb_groups_register_headers_panel_fields() {
 			'description' => '',
 			'order'       => 10,
 			'help_url'    => '636138',
-			'pro_notice'  => array(
-				'show'       => true,
-				'badge_text' => __( 'UPGRADE PRO', 'buddyboss' ),
-				'badge_icon' => 'bb-icons-rl-crown-simple',
-				'link_url'   => 'https://www.buddyboss.com/pricing/',
-			),
+			'pro_notice'  => bb_admin_settings_get_pro_notice( 'group_headers', 'section' ),
 		)
 	);
 

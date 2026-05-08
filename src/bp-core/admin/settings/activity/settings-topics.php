@@ -102,12 +102,7 @@ function bb_activity_register_topics_panel_fields() {
 			'description' => '',
 			'order'       => 20,
 			'help_url'    => '636122',
-			'pro_notice'  => array(
-				'show'       => true,
-				'badge_text' => __( 'UPGRADE PRO', 'buddyboss' ),
-				'badge_icon' => 'bb-icons-rl-crown-simple',
-				'link_url'   => 'https://www.buddyboss.com/pricing/',
-			),
+			'pro_notice'  => bb_admin_settings_get_pro_notice( 'group_activity_topics', 'section' ),
 		);
 
 		// When PRO is active, hide section when Activity Topics is disabled.

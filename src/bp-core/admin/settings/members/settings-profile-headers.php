@@ -35,12 +35,7 @@ function bb_members_register_profile_headers_panel_fields() {
 			'title'       => __( 'Profile Headers', 'buddyboss' ),
 			'description' => '',
 			'order'       => 10,
-			'pro_notice'  => array(
-				'show'       => true,
-				'badge_text' => __( 'UPGRADE PRO', 'buddyboss' ),
-				'badge_icon' => 'bb-icons-rl-crown-simple',
-				'link_url'   => 'https://www.buddyboss.com/pricing/',
-			),
+			'pro_notice'  => bb_admin_settings_get_pro_notice( 'profile_headers', 'section' ),
 		)
 	);
 

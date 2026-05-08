@@ -38,12 +38,7 @@ function bb_activity_register_access_control_fields() {
 			'title'      => __( 'Member Access Controls', 'buddyboss' ),
 			'order'      => 10,
 			'help_url'   => '62793',
-			'pro_notice' => array(
-				'show'       => true,
-				'badge_text' => __( 'UPGRADE PRO', 'buddyboss' ),
-				'badge_icon' => 'bb-icons-rl-crown-simple',
-				'link_url'   => 'https://www.buddyboss.com/pricing/',
-			),
+			'pro_notice' => bb_admin_settings_get_pro_notice( 'access_controls', 'section' ),
 		)
 	);
 
