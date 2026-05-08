@@ -3754,3 +3754,40 @@
 		margin: 0;
 	}
 }
+
+/* ----------------------------------------------------------------
+   Network Search panel — scoped overrides
+   ----------------------------------------------------------------
+   The Network Search panel (registered in
+   src/bp-core/admin/settings/search/settings-network-search.php as
+   the section ID `network_search_components`) is the only consumer
+   of `child_group_label`, and its toggles always pair with one or
+   more child checkboxes (Albums under Photos, Folders under
+   Documents, Discussion/Tags/Replies under Forums, Activity
+   comments under Activity, Account/Details/Default Data under
+   Members). Figma puts a divider between the toggle row and that
+   children block in every case.
+
+   Scope this rule to `#section-network_search_components` so no
+   other panel that happens to have parent-with-children fields
+   picks up a stray border. */
+#section-network_search_components {
+
+	// Divider between the parent toggle row and its child-fields block.
+	// Provides the visual separation Figma shows between, e.g.,
+	// "Allow photo searching" and "Albums".
+	.bb-admin-settings-form__child-fields {
+		border-top: 1px solid $bb-border-secondary-color;
+		margin-top: 16px;
+		padding-top: 16px;
+	}
+
+	// Restore the divider above the FIRST sub-group label (Account)
+	// inside Members. The shared rule above strips it via &:first-child;
+	// Figma shows the divider between "Allow member searching" and
+	// "Account" exactly like the dividers between Account/Details/
+	// Default Data. Since `__child-fields` already provides a border-top
+	// on the children block, the first-child label can stay
+	// border-less — it now sits flush below the children-block border.
+}
+
