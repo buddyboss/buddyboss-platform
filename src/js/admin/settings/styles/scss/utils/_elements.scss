@@ -372,7 +372,7 @@ select.bb-admin-settings__select {
         height: 18px;
 
         .components-form-toggle__track {
-            width: 28px;
+            width: 30px;
             height: 18px;
             border: 1px solid transparent;
             background-color: $bb-background-tertiary-hover-color;
@@ -394,7 +394,7 @@ select.bb-admin-settings__select {
                 border: 1px solid $bb-background-brand-primary-color;
             }
             .components-form-toggle__thumb {
-                transform: translateX(9px);
+                transform: translateX(11px);
                 background-color: $bb-background-brand-primary-color;
             }
         }
