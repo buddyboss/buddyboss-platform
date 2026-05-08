@@ -1083,10 +1083,6 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 			     the first fetch is in flight. */ }
 			<div className="bb-group-members-tab__filters">
 				<div className="bb-group-members-tab__filter-search">
-					<i
-						className="bb-icons-rl-magnifying-glass bb-group-members-tab__filter-search-icon"
-						aria-hidden="true"
-					/>
 					<input
 						type="search"
 						className="bb-group-members-tab__filter-search-input"
@@ -1096,6 +1092,10 @@ export function GroupMembersTab( { groupId, setNotice, saveRef } ) {
 						onChange={ function ( e ) {
 							setMemberFilterQuery( e.target.value );
 						} }
+					/>
+					<i
+						className="bb-icons-rl-magnifying-glass bb-group-members-tab__filter-search-icon"
+						aria-hidden="true"
 					/>
 				</div>
 				<div className="bb-group-members-tab__filter-role">

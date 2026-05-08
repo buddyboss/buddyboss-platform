@@ -159,12 +159,13 @@
 @mixin bb-input-text {
     width: 100%;
     height: 32px;
-    border: 1px solid $bb-border-secondary-color;
+    border: 0.5px solid $bb-border-secondary-color;
     border-radius: $bb-border-radius-md;
     padding: 0 8px;
     font-size: 13px;
     color: $bb-text-color;
     background-color: $bb-background-primary-color;
+    min-height: auto;
 
     &:focus {
         box-shadow: none;

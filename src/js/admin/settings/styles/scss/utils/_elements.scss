@@ -1066,6 +1066,7 @@ select.bb-admin-settings__select {
 
 			&:has(> .components-select-control__input) {
 				padding: 0 !important;
+                background-color: transparent;
 
 				.components-input-control__suffix,
 				.components-input-control__backdrop {
