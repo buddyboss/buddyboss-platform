@@ -205,7 +205,7 @@
 	}
 
 	// SSO modal override — ensure fixed positioning works inside React app.
-	.bb-modal-backdrop.bb-hello-backdrop-sso {
+	#bb-hello-backdrop.bb-hello-backdrop-sso {
 		position: fixed;
 		top: 0;
 		left: 0;

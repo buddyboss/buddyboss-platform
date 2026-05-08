@@ -488,10 +488,15 @@ export function SsoProvidersField( { field, value, onChange, disabled } ) {
 			} ) }
 
 			{ /* Modal backdrop + container — legacy jQuery renders content here */ }
+			{ /* onClickCapture stops the click in the capture phase before hello.js's
+			     bubble-phase handler on this ID can run and close the modal. */ }
 			<div
 				id="bb-hello-backdrop"
 				className="bb-hello-backdrop-sso bb-modal-backdrop"
 				style={ { display: 'none' } }
+				onClickCapture={ function ( e ) {
+					e.stopPropagation();
+				} }
 			></div>
 			<div
 				id="bb-hello-container"
