@@ -102,7 +102,12 @@ function bb_activity_register_topics_panel_fields() {
 			'description' => '',
 			'order'       => 20,
 			'help_url'    => '636122',
-			'pro_notice'  => bb_admin_settings_get_pro_notice( 'group_activity_topics', 'section' ),
+			'pro_notice'  => bb_admin_settings_get_pro_notice(
+				array(
+					'type'    => 'group_activity_topics',
+					'context' => 'section',
+				)
+			),
 		);
 
 		// When PRO is active, hide section when Activity Topics is disabled.

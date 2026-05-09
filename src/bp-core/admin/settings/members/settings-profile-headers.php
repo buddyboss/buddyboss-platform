@@ -35,7 +35,12 @@ function bb_members_register_profile_headers_panel_fields() {
 			'title'       => __( 'Profile Headers', 'buddyboss' ),
 			'description' => '',
 			'order'       => 10,
-			'pro_notice'  => bb_admin_settings_get_pro_notice( 'profile_headers', 'section' ),
+			'pro_notice'  => bb_admin_settings_get_pro_notice(
+				array(
+					'type'    => 'profile_headers',
+					'context' => 'section',
+				)
+			),
 		)
 	);
 

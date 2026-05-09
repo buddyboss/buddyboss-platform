@@ -1001,7 +1001,7 @@ class BB_Admin_Settings_Ajax {
 				empty( $field_data['pro_notice'] ) &&
 				function_exists( 'bb_admin_settings_get_pro_notice' )
 			) {
-				$pro_notice               = bb_admin_settings_get_pro_notice( $feature_id );
+				$pro_notice               = bb_admin_settings_get_pro_notice( array( 'type' => $feature_id ) );
 				$field_data['pro_notice'] = ! empty( $pro_notice['show'] ) ? $pro_notice : null;
 			}
 

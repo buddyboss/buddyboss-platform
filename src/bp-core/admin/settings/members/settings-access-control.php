@@ -43,7 +43,12 @@ function bb_members_register_access_control_fields() {
 				'field' => 'bb_enable_member_connections',
 				'value' => true,
 			),
-			'pro_notice'  => bb_admin_settings_get_pro_notice( 'access_controls', 'section' ),
+			'pro_notice'  => bb_admin_settings_get_pro_notice(
+				array(
+					'type'    => 'access_controls',
+					'context' => 'section',
+				)
+			),
 		)
 	);
 

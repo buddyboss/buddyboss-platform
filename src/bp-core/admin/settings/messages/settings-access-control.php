@@ -38,7 +38,12 @@ function bb_messages_register_access_control_fields() {
 			'title'      => __( 'Message Access', 'buddyboss' ),
 			'order'      => 10,
 			'help_url'   => '636154',
-			'pro_notice' => bb_admin_settings_get_pro_notice( 'access_controls', 'section' ),
+			'pro_notice' => bb_admin_settings_get_pro_notice(
+				array(
+					'type'    => 'access_controls',
+					'context' => 'section',
+				)
+			),
 		)
 	);
 

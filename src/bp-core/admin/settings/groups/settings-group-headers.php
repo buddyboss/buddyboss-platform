@@ -35,7 +35,12 @@ function bb_groups_register_headers_panel_fields() {
 			'description' => '',
 			'order'       => 10,
 			'help_url'    => '636138',
-			'pro_notice'  => bb_admin_settings_get_pro_notice( 'group_headers', 'section' ),
+			'pro_notice'  => bb_admin_settings_get_pro_notice(
+				array(
+					'type'    => 'group_headers',
+					'context' => 'section',
+				)
+			),
 		)
 	);
 

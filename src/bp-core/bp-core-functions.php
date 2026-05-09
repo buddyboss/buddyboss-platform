@@ -10077,20 +10077,28 @@ function bb_get_settings_url() {
  * Pro too old for this feature, or Pro license invalid/expired all result in
  * `show: true`. Only the badge text + default link change between contexts.
  *
+ * Args are passed as a single associative array so future additions
+ * (per-feature link override, badge variant, custom check callback, etc.)
+ * land without breaking existing callers' positional expectations.
+ *
  * @since BuddyBoss [BBVERSION]
  *
- * @param string $type    Feature type (e.g. 'reaction', 'schedule_posts',
- *                        'polls', 'sso', 'group_activity_topics',
- *                        'post_feature_image', or arbitrary section keys
- *                        like 'group_headers'). Per-feature minimum-version
- *                        gating only fires for the keys it knows about; any
- *                        other key falls through to the generic Pro-installed
- *                        + license-valid check.
- * @param string $context Either 'field' or 'section'. Defaults to 'field'
- *                        for backward compatibility — every existing caller
- *                        (the AJAX-time field auto-compute in
- *                        class-bb-admin-settings-ajax.php) gets the unchanged
- *                        "PRO" badge text by default.
+ * @param array $args {
+ *     Optional. Configuration array.
+ *
+ *     @type string $type    Feature type (e.g. 'reaction', 'schedule_posts',
+ *                           'polls', 'sso', 'group_activity_topics',
+ *                           'post_feature_image', or arbitrary section keys
+ *                           like 'group_headers'). Per-feature minimum-version
+ *                           gating only fires for the keys it knows about; any
+ *                           other key falls through to the generic
+ *                           Pro-installed + license-valid check.
+ *                           Default 'default'.
+ *     @type string $context Either 'field' or 'section'. The AJAX-time field
+ *                           auto-compute in class-bb-admin-settings-ajax.php
+ *                           omits this and gets the 'field' default.
+ *                           Default 'field'.
+ * }
  *
  * @return array {
  *     PRO notice data for React rendering.
@@ -10102,13 +10110,24 @@ function bb_get_settings_url() {
  *     @type string $link_icon  BuddyBoss icon CSS class for the play button.
  * }
  */
-function bb_admin_settings_get_pro_notice( $type = 'default', $context = 'field' ) {
+function bb_admin_settings_get_pro_notice( $args = array() ) {
 	static $retval = array();
 
+	$args = wp_parse_args(
+		$args,
+		array(
+			'type'    => 'default',
+			'context' => 'field',
+		)
+	);
+
+	$type       = $args['type'];
+	$context    = $args['context'];
 	$is_section = ( 'section' === $context );
 
-	// Cache key incorporates both args so 'field' vs 'section' for the same
-	// $type don't collide and serve each other's stale defaults.
+	// Cache key incorporates type + context so 'field' vs 'section' for the
+	// same $type don't collide and serve each other's stale defaults. If
+	// future args influence the output, fold them into this key too.
 	$cache_key = $type . '|' . $context;
 	if ( isset( $retval[ $cache_key ] ) ) {
 		return $retval[ $cache_key ];
@@ -10198,13 +10217,16 @@ function bb_admin_settings_get_pro_notice( $type = 'default', $context = 'field'
 	/**
 	 * Filters the PRO notice data for the React admin settings UI.
 	 *
+	 * Receives the resolved $args array (post wp_parse_args) so future args
+	 * additions are automatically visible to filter consumers without needing
+	 * a signature change here.
+	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param array  $data    PRO notice data.
-	 * @param string $type    Feature type.
-	 * @param string $context Render context — 'field' or 'section'.
+	 * @param array $data PRO notice data.
+	 * @param array $args Resolved args: 'type', 'context', plus any future keys.
 	 */
-	$data = apply_filters( 'bb_admin_settings_pro_notice_data', $data, $type, $context );
+	$data = apply_filters( 'bb_admin_settings_pro_notice_data', $data, $args );
 
 	$retval[ $cache_key ] = $data;
 

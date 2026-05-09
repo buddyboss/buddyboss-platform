@@ -42,7 +42,12 @@ function bb_media_register_access_controls_panel_fields() {
 			'title'      => __( 'Media Access', 'buddyboss' ),
 			'order'      => 10,
 			'help_url'   => '121813',
-			'pro_notice' => bb_admin_settings_get_pro_notice( 'access_controls', 'section' ),
+			'pro_notice' => bb_admin_settings_get_pro_notice(
+				array(
+					'type'    => 'access_controls',
+					'context' => 'section',
+				)
+			),
 		)
 	);
 
