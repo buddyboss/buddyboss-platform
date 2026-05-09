@@ -200,6 +200,13 @@ function bb_admin_settings_page() {
 		'addonNonce'                => wp_create_nonce( 'mosh_addons' ),
 		'logoUrl'                   => buddypress()->plugin_url . 'bp-core/images/admin/BBLogo.png',
 		'isReadyLaunch'             => function_exists( 'bb_is_readylaunch_enabled' ) && bb_is_readylaunch_enabled(),
+		// Mirrors the legacy ReadyLaunchSettings.js gate at line 1252 —
+		// once the wizard has been completed, the Setup Wizard button on
+		// the welcome banner hides. Returning admins keep tweaking via
+		// the form fields directly; the layout flip + Theme banner
+		// "Use ReadyLaunch" button cover the re-entry paths the wizard
+		// itself used to.
+		'isRlOnboardingCompleted'   => (bool) bp_get_option( 'bb_rl_onboarding_completed', false ),
 		// BuddyBoss Theme state for the Appearance welcome banner CTA logic.
 		// `get_template()` over `get_stylesheet()` so child themes of
 		// buddyboss-theme count as active. `canSwitchThemes` lets the

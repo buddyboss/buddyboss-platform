@@ -10,7 +10,10 @@
  *
  *   - ReadyLaunch (`bb_rl_enabled === '1'`): ReadyLaunch preview image
  *     and a single Setup Wizard button that re-opens the in-place
- *     onboarding flow.
+ *     onboarding flow. The button hides once the wizard has been
+ *     completed (`bbAdminData.isRlOnboardingCompleted`) — matches the
+ *     legacy ReadyLaunchSettings.js gate so returning admins get a
+ *     cleaner banner. Tweaks happen via the form fields directly.
  *
  *   - BuddyBoss Theme (`bb_rl_enabled === '0'`): Theme preview and a
  *     Use ReadyLaunch outline button. The primary CTA depends on
@@ -113,9 +116,12 @@ export function WelcomeBanner( props ) {
 		isReadyLaunch = !! bbAdminData.isReadyLaunch;
 	}
 
-	var isThemeInstalled  = !! bbAdminData.isBuddyBossThemeInstalled;
-	var canSwitchThemes   = !! bbAdminData.canSwitchThemes;
-	var themeOptionsUrl   = bbAdminData.themeOptionsUrl || '';
+	var isThemeInstalled       = !! bbAdminData.isBuddyBossThemeInstalled;
+	var canSwitchThemes        = !! bbAdminData.canSwitchThemes;
+	var themeOptionsUrl        = bbAdminData.themeOptionsUrl || '';
+	// Hide the Setup Wizard button after the wizard has been completed —
+	// matches the legacy ReadyLaunchSettings.js:1252 gate.
+	var isRlOnboardingCompleted = !! bbAdminData.isRlOnboardingCompleted;
 
 	// `themeActiveOverride` is the in-session winner — once the AJAX
 	// activation succeeds, `bbAdminData.isBuddyBossThemeActive` (set at
@@ -321,15 +327,17 @@ export function WelcomeBanner( props ) {
 								</ul>
 							</div>
 						</div>
-						<div className="bb-admin-welcome-banner__actions">
-							<Button
-								className="bb-admin-welcome-banner__btn bb-admin-welcome-banner__btn--secondary"
-								variant="secondary"
-								onClick={ handleSetupWizardClick }
-							>
-								{ __( 'Setup Wizard', 'buddyboss' ) }
-							</Button>
-						</div>
+						{ ! isRlOnboardingCompleted && (
+							<div className="bb-admin-welcome-banner__actions">
+								<Button
+									className="bb-admin-welcome-banner__btn bb-admin-welcome-banner__btn--secondary"
+									variant="secondary"
+									onClick={ handleSetupWizardClick }
+								>
+									{ __( 'Setup Wizard', 'buddyboss' ) }
+								</Button>
+							</div>
+						) }
 					</div>
 					<div className="bb-admin-welcome-banner__preview">
 						<img
