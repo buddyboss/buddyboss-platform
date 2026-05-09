@@ -208,6 +208,12 @@ function bb_admin_settings_page() {
 		'isBuddyBossThemeActive'    => 'buddyboss-theme' === get_template(),
 		'isBuddyBossThemeInstalled' => wp_get_theme( 'buddyboss-theme' )->exists(),
 		'canSwitchThemes'           => current_user_can( 'switch_themes' ),
+		// Same URL the rl-onboarding splash popup's "Configure BuddyBoss
+		// Theme" button uses — points at the theme's own options page,
+		// which only routes when buddyboss-theme is active. Localized
+		// unconditionally because the React side already gates the button
+		// on `isBuddyBossThemeActive`.
+		'themeOptionsUrl'           => esc_url( bp_get_admin_url( add_query_arg( array( 'page' => 'buddyboss_theme_options' ), 'admin.php' ) ) ),
 		'currentUser'               => array(
 			'id'   => get_current_user_id(),
 			'name' => wp_get_current_user()->display_name,

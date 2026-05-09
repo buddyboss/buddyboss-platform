@@ -11,24 +11,33 @@
  *   - ReadyLaunch (`bb_rl_enabled === '1'`): ReadyLaunch preview image
  *     and a single Setup Wizard button that re-opens the in-place
  *     onboarding flow.
+ *
  *   - BuddyBoss Theme (`bb_rl_enabled === '0'`): Theme preview and a
  *     Use ReadyLaunch outline button. The primary CTA depends on
  *     install/active state of the BuddyBoss Theme:
  *       * Theme not installed → "Buy Theme" → marketing pricing page.
- *       * Theme installed, not active → "Activate Theme" → one-click
- *         pre-signed nonce URL that activates the theme on click,
- *         identical to the wp-admin themes.php "Activate" link.
- *         Hidden when the current user lacks `switch_themes` (the
- *         server returns an empty `themeActivateUrl` in that case).
- *       * Theme already active → primary CTA hidden (nothing to buy or
- *         activate); only "Use ReadyLaunch" remains.
+ *       * Theme installed, not active → "Activate Theme" → AJAX call to
+ *         `bb_admin_activate_buddyboss_theme` which delegates to core
+ *         `switch_theme()`. Disabled with tooltip when the current user
+ *         lacks `switch_themes`.
+ *       * Theme already active → "Customize Theme" → links to the
+ *         theme's own options page (admin.php?page=buddyboss_theme_options),
+ *         same URL the rl-onboarding splash popup uses for its
+ *         "Configure BuddyBoss Theme" button.
  *
- * The Setup Wizard / Use ReadyLaunch click opens in-place: the rl-onboarding
- * JS/CSS bundle is lazy-loaded on first click, and subsequent clicks
- * re-mount the already parsed bundle via `window.bbRlOnboarding.mount()`.
- * Keeps the Settings 2.0 React tree alive, so form edits aren't lost. Falls
- * back to a full-page redirect with `bb_wizard_activation=rl_onboarding` when
- * the bootstrap payload isn't available.
+ * The Setup Wizard click (ReadyLaunch variant only) opens the wizard
+ * in-place: the rl-onboarding JS/CSS bundle is lazy-loaded on first
+ * click, and subsequent clicks re-mount the already parsed bundle via
+ * `window.bbRlOnboarding.mount()`. Keeps the Settings 2.0 React tree
+ * alive, so form edits aren't lost. Falls back to a full-page redirect
+ * with `bb_wizard_activation=rl_onboarding` when the bootstrap payload
+ * isn't available.
+ *
+ * The Theme variant's "Use ReadyLaunch" button is **not** the wizard —
+ * it's a 1-click layout flip via `props.onFieldChange('bb_rl_enabled',
+ * '1')`. Per the design call: when an admin already on Theme decides to
+ * switch to ReadyLaunch they shouldn't have to walk through the choose-
+ * layout wizard step they've effectively just answered.
  *
  * @package BuddyBoss\Core\Administration
  * @since BuddyBoss [BBVERSION]
@@ -71,12 +80,23 @@ function redirectToWizard() {
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param {Object} props          Component props.
- * @param {Object} [props.settings] Live form state from FeatureSettingsScreen.
- *                                  Used to read the draft `bb_rl_enabled`
- *                                  value so the banner swaps variants the
- *                                  moment the Site Layout radio changes,
- *                                  before the auto-save round-trip lands.
+ * @param {Object}   props                 Component props.
+ * @param {Object}   [props.settings]      Live form state from
+ *                                         FeatureSettingsScreen. Used to read
+ *                                         the draft `bb_rl_enabled` value so
+ *                                         the banner swaps variants the moment
+ *                                         the Site Layout radio changes,
+ *                                         before the auto-save round-trip
+ *                                         lands.
+ * @param {Function} [props.onFieldChange] Same `handleSettingChange` used by
+ *                                         every other field — `(name, value)`.
+ *                                         The Theme banner's "Use ReadyLaunch"
+ *                                         button calls this with
+ *                                         `('bb_rl_enabled', '1')` to flip
+ *                                         the layout in one click (the
+ *                                         banner + side panels then react to
+ *                                         the form state change; auto-save
+ *                                         persists).
  * @returns {JSX.Element} Welcome banner markup.
  */
 export function WelcomeBanner( props ) {
@@ -95,6 +115,7 @@ export function WelcomeBanner( props ) {
 
 	var isThemeInstalled  = !! bbAdminData.isBuddyBossThemeInstalled;
 	var canSwitchThemes   = !! bbAdminData.canSwitchThemes;
+	var themeOptionsUrl   = bbAdminData.themeOptionsUrl || '';
 
 	// `themeActiveOverride` is the in-session winner — once the AJAX
 	// activation succeeds, `bbAdminData.isBuddyBossThemeActive` (set at
@@ -210,6 +231,20 @@ export function WelcomeBanner( props ) {
 				redirectToWizard();
 			};
 			document.body.appendChild( script );
+		}
+	}
+
+	function handleUseReadyLaunch() {
+		// 1-click flip from Theme variant back to ReadyLaunch — same
+		// `handleSettingChange` path as the Site Layout radio itself, so
+		// auto-save + side-panel re-render fire identically. We do NOT
+		// open the wizard here: per the design call, the wizard is for
+		// users who haven't decided yet, but a Theme-banner admin who
+		// clicks this button has already decided ("encourage them to
+		// use ready launch again"). One click → layout flips → banner
+		// swaps to ReadyLaunch variant → side panels reload.
+		if ( typeof props.onFieldChange === 'function' ) {
+			props.onFieldChange( 'bb_rl_enabled', '1' );
 		}
 	}
 
@@ -371,10 +406,19 @@ export function WelcomeBanner( props ) {
 								{ __( 'Buy Theme', 'buddyboss' ) }
 							</Button>
 						) }
+						{ isThemeActive && themeOptionsUrl && (
+							<Button
+								className="bb-admin-welcome-banner__btn bb-admin-welcome-banner__btn--primary"
+								variant="primary"
+								href={ themeOptionsUrl }
+							>
+								{ __( 'Customize Theme', 'buddyboss' ) }
+							</Button>
+						) }
 						<Button
 							className="bb-admin-welcome-banner__btn bb-admin-welcome-banner__btn--secondary"
 							variant="secondary"
-							onClick={ handleSetupWizardClick }
+							onClick={ handleUseReadyLaunch }
 						>
 							{ __( 'Use ReadyLaunch', 'buddyboss' ) }
 						</Button>

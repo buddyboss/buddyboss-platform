@@ -911,7 +911,10 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 							    admins running the WordPress theme layout still need access
 							    to the Setup Wizard button to switch. */}
 							{ 'appearance' === featureId && 'general' === activePanelId && (
-								<WelcomeBanner settings={ settings } />
+								<WelcomeBanner
+									settings={ settings }
+									onFieldChange={ handleSettingChange }
+								/>
 							) }
 							{activePanel ? (
 								<>
