@@ -1,22 +1,34 @@
 /**
- * BuddyBoss Admin Settings 2.0 — Appearance Welcome Banner
+ * BuddyBoss Admin Settings 2.0 — Appearance Welcome Banner.
  *
  * Renders above the Site Name section on the Appearance → General panel.
- * Provides a link to leave feedback on the public roadmap and a Setup Wizard
- * button that re-launches the ReadyLaunch onboarding flow.
+ * Variant is driven by the **draft** value of the Site Layout field
+ * (`settings.bb_rl_enabled`) so flipping the radio in the form swaps the
+ * banner live, before the auto-save round-trip completes. Falls back to
+ * `bbAdminData.isReadyLaunch` (server-persisted state) on first render
+ * before the form has populated.
  *
- * The Setup Wizard opens in-place: the rl-onboarding JS/CSS bundle is
- * lazy-loaded on first click, and subsequent clicks re-mount the already
- * parsed bundle via `window.bbRlOnboarding.mount()`. Keeps the Settings 2.0
- * React tree alive, so form edits aren't lost. Falls back to a full-page
- * redirect with `bb_wizard_activation=rl_onboarding` when the bootstrap
- * payload isn't available.
+ *   - ReadyLaunch (`bb_rl_enabled === '1'`): ReadyLaunch preview image
+ *     and a single Setup Wizard button that re-opens the in-place
+ *     onboarding flow.
+ *   - BuddyBoss Theme (`bb_rl_enabled === '0'`): Theme preview and a
+ *     Use ReadyLaunch outline button. The primary CTA depends on
+ *     install/active state of the BuddyBoss Theme:
+ *       * Theme not installed → "Buy Theme" → marketing pricing page.
+ *       * Theme installed, not active → "Activate Theme" → one-click
+ *         pre-signed nonce URL that activates the theme on click,
+ *         identical to the wp-admin themes.php "Activate" link.
+ *         Hidden when the current user lacks `switch_themes` (the
+ *         server returns an empty `themeActivateUrl` in that case).
+ *       * Theme already active → primary CTA hidden (nothing to buy or
+ *         activate); only "Use ReadyLaunch" remains.
  *
- * The Setup Wizard button is always visible — the wizard's first step is a
- * choice between "Continue with BuddyBoss Theme" and "Switch to ReadyLaunch",
- * so admins may want to revisit it to switch layouts even after completing it
- * once. Matches the legacy ReadyLaunch admin behaviour where the button stays
- * available regardless of layout state.
+ * The Setup Wizard / Use ReadyLaunch click opens in-place: the rl-onboarding
+ * JS/CSS bundle is lazy-loaded on first click, and subsequent clicks
+ * re-mount the already parsed bundle via `window.bbRlOnboarding.mount()`.
+ * Keeps the Settings 2.0 React tree alive, so form edits aren't lost. Falls
+ * back to a full-page redirect with `bb_wizard_activation=rl_onboarding` when
+ * the bootstrap payload isn't available.
  *
  * @package BuddyBoss\Core\Administration
  * @since BuddyBoss [BBVERSION]
@@ -24,18 +36,18 @@
 
 import { __ } from '@wordpress/i18n';
 import { Button } from '@wordpress/components';
-import { useEffect } from '@wordpress/element';
+import { useEffect, useState } from '@wordpress/element';
+import readylaunchPreview from '../../images/appearance/readylaunch.jpg';
+import themePreview from '../../images/appearance/theme.jpg';
+import { ajaxFetch } from '../../utils/ajax';
+import { BB_EVENTS } from '../../utils/constants';
 
-const FEEDBACK_URL  = 'https://roadmap.buddyboss.com/p/new-ready-launch-buddyboss-platform-templates-Y8mV6D';
-// `youtube-nocookie.com` is YouTube's enhanced-privacy embed domain — no
-// tracking cookies are set until the viewer actually plays the video. Pairs
-// with `loading="lazy"` on the iframe below to keep EU/GDPR admins from
-// pinging YouTube before they interact.
-const VIDEO_EMBED   = 'https://www.youtube-nocookie.com/embed/3-JhzDr1gLc';
-const WIZARD_PARAM  = 'bb_wizard_activation';
-const WIZARD_VALUE  = 'rl_onboarding';
-const CSS_LINK_ID   = 'bb-rl-onboarding-css';
-const JS_SCRIPT_ID  = 'bb-rl-onboarding-js';
+const WIZARD_PARAM   = 'bb_wizard_activation';
+const WIZARD_VALUE   = 'rl_onboarding';
+const CSS_LINK_ID    = 'bb-rl-onboarding-css';
+const JS_SCRIPT_ID   = 'bb-rl-onboarding-js';
+const BUY_THEME_URL  = 'https://buddyboss.com/pricing/';
+const ACTIVATE_THEME_ACTION = 'bb_admin_activate_buddyboss_theme';
 
 /**
  * Fallback to a full-page redirect when the bootstrap payload is missing
@@ -59,10 +71,40 @@ function redirectToWizard() {
  *
  * @since BuddyBoss [BBVERSION]
  *
+ * @param {Object} props          Component props.
+ * @param {Object} [props.settings] Live form state from FeatureSettingsScreen.
+ *                                  Used to read the draft `bb_rl_enabled`
+ *                                  value so the banner swaps variants the
+ *                                  moment the Site Layout radio changes,
+ *                                  before the auto-save round-trip lands.
  * @returns {JSX.Element} Welcome banner markup.
  */
-export function WelcomeBanner() {
+export function WelcomeBanner( props ) {
 	var bbAdminData = window.bbAdminData || {};
+	var settings    = ( props && props.settings ) || {};
+
+	// Draft value wins over the server-persisted `isReadyLaunch` so flipping
+	// the Site Layout radio swaps the banner immediately. Coerce to string
+	// because the form stores radio values as '0' / '1'.
+	var isReadyLaunch;
+	if ( Object.prototype.hasOwnProperty.call( settings, 'bb_rl_enabled' ) ) {
+		isReadyLaunch = '1' === String( settings.bb_rl_enabled );
+	} else {
+		isReadyLaunch = !! bbAdminData.isReadyLaunch;
+	}
+
+	var isThemeInstalled  = !! bbAdminData.isBuddyBossThemeInstalled;
+	var canSwitchThemes   = !! bbAdminData.canSwitchThemes;
+
+	// `themeActiveOverride` is the in-session winner — once the AJAX
+	// activation succeeds, `bbAdminData.isBuddyBossThemeActive` (set at
+	// PHP localize time) is stale, so we mirror the new state in React
+	// state AND mutate the global so a panel re-mount inside the same
+	// page session still sees the post-activation state.
+	var [ themeActiveOverride, setThemeActiveOverride ] = useState( false );
+	var [ activating, setActivating ]                   = useState( false );
+
+	var isThemeActive = themeActiveOverride || !! bbAdminData.isBuddyBossThemeActive;
 
 	useEffect( function () {
 		function stripWizardParam() {
@@ -171,58 +213,179 @@ export function WelcomeBanner() {
 		}
 	}
 
+	function dispatchToast( status, message ) {
+		if ( typeof window.CustomEvent !== 'function' ) {
+			return;
+		}
+		window.dispatchEvent( new window.CustomEvent( BB_EVENTS.TOAST, {
+			detail: { status: status, message: message },
+		} ) );
+	}
+
+	function handleActivateTheme() {
+		if ( activating ) {
+			return;
+		}
+		setActivating( true );
+
+		ajaxFetch( ACTIVATE_THEME_ACTION ).then( function ( response ) {
+			if ( response && response.success ) {
+				// Mirror the post-activation state both in React state and
+				// on `window.bbAdminData` so a re-mount of this component
+				// (e.g. user navigates to another panel and back) still
+				// sees the theme as active without a page reload.
+				if ( window.bbAdminData ) {
+					window.bbAdminData.isBuddyBossThemeActive = true;
+				}
+				setThemeActiveOverride( true );
+				dispatchToast(
+					'success',
+					( response.data && response.data.message ) || __( 'BuddyBoss Theme activated.', 'buddyboss' )
+				);
+			} else {
+				var errMsg = ( response && response.data && response.data.message )
+					|| __( 'Activation failed. Please try again.', 'buddyboss' );
+				dispatchToast( 'error', errMsg );
+			}
+		} ).catch( function ( err ) {
+			dispatchToast(
+				'error',
+				( err && err.message ) || __( 'Activation failed. Please try again.', 'buddyboss' )
+			);
+		} ).then( function () {
+			setActivating( false );
+		} );
+	}
+
+	if ( isReadyLaunch ) {
+		return (
+			<div className="bb-admin-welcome-banner bb-admin-welcome-banner--readylaunch">
+				<div className="bb-admin-welcome-banner__content">
+					<div className="bb-admin-welcome-banner__text">
+						<h2 className="bb-admin-welcome-banner__title">
+							{ __( 'Welcome to ReadyLaunch', 'buddyboss' ) }
+						</h2>
+						<div className="bb-admin-welcome-banner__intro">
+							<h3 className="bb-admin-welcome-banner__subtitle">
+								{ __( 'Theme-free community interface', 'buddyboss' ) }
+							</h3>
+							<div className="bb-admin-welcome-banner__intro-body">
+								<p className="bb-admin-welcome-banner__description">
+									{ __(
+										'ReadyLaunch provides a complete, ready-to-use UI for your community, directly connected to the BuddyBoss Platform backend.',
+										'buddyboss'
+									) }
+								</p>
+								<ul className="bb-admin-welcome-banner__checks">
+									<li className="bb-admin-welcome-banner__check">
+										{ __( 'Simple management', 'buddyboss' ) }
+									</li>
+									<li className="bb-admin-welcome-banner__check">
+										{ __( 'No theme required', 'buddyboss' ) }
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div className="bb-admin-welcome-banner__actions">
+							<Button
+								className="bb-admin-welcome-banner__btn bb-admin-welcome-banner__btn--secondary"
+								variant="secondary"
+								onClick={ handleSetupWizardClick }
+							>
+								{ __( 'Setup Wizard', 'buddyboss' ) }
+							</Button>
+						</div>
+					</div>
+					<div className="bb-admin-welcome-banner__preview">
+						<img
+							src={ readylaunchPreview }
+							alt={ __( 'ReadyLaunch interface preview', 'buddyboss' ) }
+							loading="lazy"
+						/>
+					</div>
+				</div>
+			</div>
+		);
+	}
+
 	return (
-		<div className="bb-admin-welcome-banner">
+		<div className="bb-admin-welcome-banner bb-admin-welcome-banner--theme">
 			<div className="bb-admin-welcome-banner__content">
 				<div className="bb-admin-welcome-banner__text">
 					<h2 className="bb-admin-welcome-banner__title">
-						{ __( 'Welcome to ReadyLaunch', 'buddyboss' ) }
+						{ __( 'Welcome to BuddyBoss Theme', 'buddyboss' ) }
 					</h2>
-					<p className="bb-admin-welcome-banner__description">
-						{ __(
-							'Build powerful online communities, courses, and memberships — all on WordPress. BuddyBoss helps you launch your own branded platform where members can connect, learn, and grow. Whether you\'re an educator, coach, or community leader, our tools are designed to give you full control, flexibility, and scalability.',
-							'buddyboss'
-						) }
-					</p>
+					<div className="bb-admin-welcome-banner__intro">
+						<h3 className="bb-admin-welcome-banner__subtitle">
+							{ __( 'Customizable WordPress theme', 'buddyboss' ) }
+						</h3>
+						<div className="bb-admin-welcome-banner__intro-body">
+							<p className="bb-admin-welcome-banner__description">
+								{ __(
+									'A premium theme designed to work with BuddyBoss Platform, offering deep design control for courses and communities.',
+									'buddyboss'
+								) }
+							</p>
+							<ul className="bb-admin-welcome-banner__checks">
+								<li className="bb-admin-welcome-banner__check">
+									{ __( 'Advanced customization', 'buddyboss' ) }
+								</li>
+								<li className="bb-admin-welcome-banner__check">
+									{ __( 'BuddyBoss theme required', 'buddyboss' ) }
+								</li>
+							</ul>
+						</div>
+					</div>
 					<div className="bb-admin-welcome-banner__actions">
-						<Button
-							className="bb-admin-welcome-banner__btn bb-admin-welcome-banner__btn--primary"
-							href={ FEEDBACK_URL }
-							target="_blank"
-							rel="noopener noreferrer"
-						>
-							{ __( 'Leave Feedback', 'buddyboss' ) }
-						</Button>
+						{ ! isThemeActive && isThemeInstalled && (
+							<Button
+								className="bb-admin-welcome-banner__btn bb-admin-welcome-banner__btn--primary"
+								variant="primary"
+								onClick={ canSwitchThemes ? handleActivateTheme : undefined }
+								isBusy={ activating }
+								disabled={ ! canSwitchThemes || activating }
+								// Native title attribute surfaces the reason on
+								// disabled buttons (multisite case where the
+								// admin has manage_options but not
+								// switch_themes — without this the button
+								// would just look broken).
+								title={ ! canSwitchThemes
+									? __( 'Theme activation requires the switch_themes capability — contact your network administrator.', 'buddyboss' )
+									: undefined
+								}
+							>
+								{ activating
+									? __( 'Activating…', 'buddyboss' )
+									: __( 'Activate Theme', 'buddyboss' )
+								}
+							</Button>
+						) }
+						{ ! isThemeActive && ! isThemeInstalled && (
+							<Button
+								className="bb-admin-welcome-banner__btn bb-admin-welcome-banner__btn--primary"
+								variant="primary"
+								href={ BUY_THEME_URL }
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								{ __( 'Buy Theme', 'buddyboss' ) }
+							</Button>
+						) }
 						<Button
 							className="bb-admin-welcome-banner__btn bb-admin-welcome-banner__btn--secondary"
 							variant="secondary"
 							onClick={ handleSetupWizardClick }
 						>
-							{ __( 'Setup Wizard', 'buddyboss' ) }
+							{ __( 'Use ReadyLaunch', 'buddyboss' ) }
 						</Button>
 					</div>
 				</div>
-				<div className="bb-admin-welcome-banner__video">
-					{/*
-					  * Sandbox restricts the YouTube embed to only what the
-					  * player needs:
-					  *  - allow-scripts + allow-same-origin: player runtime
-					  *  - allow-presentation: fullscreen support
-					  *  - allow-popups + allow-popups-to-escape-sandbox:
-					  *    "Watch on YouTube" button opens in a new tab
-					  * Omits allow-top-navigation / allow-forms / allow-modals
-					  * — none of which a passive tutorial embed should need.
-					  */}
-					<iframe
-						title={ __( 'BuddyBoss ReadyLaunch tutorial', 'buddyboss' ) }
-						src={ VIDEO_EMBED }
+				<div className="bb-admin-welcome-banner__preview">
+					<img
+						src={ themePreview }
+						alt={ __( 'BuddyBoss Theme interface preview', 'buddyboss' ) }
 						loading="lazy"
-						sandbox="allow-scripts allow-same-origin allow-presentation allow-popups allow-popups-to-escape-sandbox"
-						frameBorder="0"
-						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-						referrerPolicy="strict-origin-when-cross-origin"
-						allowFullScreen
-					></iframe>
+					/>
 				</div>
 			</div>
 		</div>

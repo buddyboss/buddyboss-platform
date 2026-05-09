@@ -1,100 +1,175 @@
 /**
  * Appearance → General — Welcome Banner.
  *
- * Ported from legacy `bb-rl-welcome-section` styles in
- * `src/js/admin/readylaunch/styles/scss/settings.scss` (lines 679–810 of the
- * `bb-backend-setting` branch), re-namespaced to the Settings 2.0 class
- * prefix. Visual shape per Figma: orange-bordered card, text on the left,
- * 16:9 YouTube embed on the right, two-column at ≥900px, stacked below.
+ * Spacing/typography tokens transcribed verbatim from the Figma CSS export.
+ * Layout shape: white card (radius 16, border 0.5 #F7AE99), two-column row
+ * with the text column on the left and a 464×256 preview image on the
+ * right. Stacks vertically below 900px.
  */
 
 .bb-admin-welcome-banner {
 	box-sizing: border-box;
 	max-width: 100%;
 	margin: 0 0 24px 0;
-	padding: 32px 24px;
+	// Frame 7 — outer card padding 24/32.
+	padding: 24px 32px;
 	background: $bb-background-base-color;
-	border: 1px solid $bb-background-brand-primary-color;
+	border: 0.5px solid $bb-border-brand-tertiary-color;
 	border-radius: $bb-border-radius-2xl;
 
 	&__content {
 		display: flex;
 		align-items: flex-start;
 		justify-content: space-between;
-		gap: 40px;
+		// "texts" row — gap 24 between text column and preview image.
+		gap: 24px;
 		flex-wrap: nowrap;
 	}
 
 	&__text {
-		width: 65%;
+		flex: 1 1 auto;
+		min-width: 0;
 		display: flex;
 		flex-direction: column;
-		justify-content: center;
 		align-items: flex-start;
+		// Frame 37109 — gap 24 between title, intro group, and actions row.
+		gap: 24px;
 	}
 
 	&__title {
+		// title/md-medium — 22/30 weight 500.
 		font-size: 22px;
 		font-weight: 500;
-		margin: 0 0 15px 0;
+		line-height: 30px;
+		margin: 0;
+		color: $bb-text-color;
+	}
+
+	&__intro {
+		// Frame 37110 — wraps subtitle and the description+checks group.
+		// Gap 16 between subtitle and the body wrapper.
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+		margin: 0;
+		width: 100%;
+	}
+
+	&__intro-body {
+		// "texts" inside Frame 37110 — gap 8 between description and checks.
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		width: 100%;
+	}
+
+	&__subtitle {
+		// heading/lg-medium — 16/22 weight 500.
+		font-size: 16px;
+		font-weight: 500;
+		line-height: 22px;
+		margin: 0;
 		color: $bb-text-color;
 	}
 
 	&__description {
-		font-size: 14px;
-		line-height: 20px;
+		// body/regular — 13/18 weight 400 #666666.
+		font-size: 13px;
+		line-height: 18px;
 		color: $bb-text-tertiary-color;
-		margin: 0 0 16px 0;
+		margin: 0;
+	}
+
+	&__checks {
+		// Frame 5 — row of checks, gap 24.
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px 24px;
+	}
+
+	&__check {
+		// Frame 4 — inline icon + label, padding 3 0, gap 8.
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 3px 0;
+		// body/medium — 13/18 weight 500 #2F2F2F.
+		font-size: 13px;
+		line-height: 18px;
+		font-weight: 500;
+		color: $bb-text-color;
+
+		&::before {
+			content: '';
+			flex: 0 0 auto;
+			width: 16px;
+			height: 16px;
+			// Checkmark — stroke #2F2F2F per Figma (was orange in V1).
+			background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'><path d='M3.33334 8.66667L6.66668 12L13 5' stroke='%232F2F2F' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+			background-repeat: no-repeat;
+			background-position: center;
+		}
 	}
 
 	&__actions {
+		// Frame 37111 — row of buttons, gap 12.
 		display: flex;
 		gap: 12px;
-		margin-top: 8px;
 		flex-wrap: wrap;
 	}
 
 	&__btn {
 
-		&--primary.components-button {
+		// Chain `.is-primary` / `.is-secondary` (added by WP `<Button variant>`)
+		// so the selector specificity (0,3,0) beats the global
+		// `.components-button.is-primary` override in `_elements.scss`
+		// which forces `padding: 8px 16px`. Without this chain the buttons
+		// render ~36px tall instead of the Figma 32px hug.
+		&--primary.components-button.is-primary {
 			@include bb-button-primary;
+			height: 32px;
+			min-height: 32px;
+			padding: 6px 16px;
+			gap: 4px;
+			border-radius: $bb-border-radius-lg;
+			font-size: 14px;
+			font-weight: 400;
+			line-height: 20px;
 		}
 
-		&--secondary.components-button {
+		&--secondary.components-button.is-secondary {
 			@include bb-button-primary-outline;
+			height: 32px;
+			min-height: 32px;
+			padding: 6px 16px;
+			gap: 4px;
+			border-radius: $bb-border-radius-lg;
+			font-size: 14px;
+			font-weight: 400;
+			line-height: 20px;
 		}
 	}
 
-	&__video {
-		position: relative;
-		display: flex;
-		flex-direction: column;
-		align-items: flex-end;
-		justify-content: flex-start;
-		width: 46%;
-		aspect-ratio: 16 / 9;
+	&__preview {
+		// Rectangle 2 — 464×256, border 0.5 #D9D9D9, radius 8, dropdown shadow.
+		flex: 0 0 auto;
+		width: 464px;
+		max-width: 50%;
+		aspect-ratio: 464 / 256;
+		border: 0.5px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-lg;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+		overflow: hidden;
 
-		// Fallback for browsers that don't support aspect-ratio.
-		&::before {
-			content: '';
+		img {
 			display: block;
-			padding-top: 56.25%;
-			height: 0;
-			width: 100%;
-		}
-
-		iframe {
-			position: absolute;
-			top: 0;
-			left: 0;
 			width: 100%;
 			height: 100%;
-			border-radius: 16px;
-			border: none;
-			box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
-			background: #f6f6f6;
 			object-fit: cover;
-			display: block;
+			object-position: center top;
 		}
 	}
 
@@ -102,16 +177,12 @@
 		&__content {
 			flex-direction: column;
 			align-items: stretch;
-			gap: 24px;
+			gap: 16px;
 		}
 
-		&__text,
-		&__video {
+		&__preview {
 			width: 100%;
-		}
-
-		&__video {
-			align-items: flex-start;
+			max-width: 100%;
 			order: -1;
 		}
 	}

@@ -903,13 +903,15 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 						<div className="bb-admin-feature-settings__content">
 							{/* Appearance → General welcome banner (intro card above Site Name).
 							    Always rendered on the General panel regardless of Site Layout —
-							    the wizard's first step lets the admin choose between BuddyBoss
-							    Theme and ReadyLaunch, so admins running the WordPress theme
-							    layout still need access to the Setup Wizard button to switch.
-							    Matches the legacy ReadyLaunch admin page where the welcome
-							    banner stayed visible whether or not RL was enabled. */}
+							    the banner picks ReadyLaunch vs BuddyBoss Theme variant by
+							    reading the live draft value of `settings.bb_rl_enabled`, so
+							    flipping the Site Layout radio swaps the banner before the
+							    auto-save round-trip completes. The wizard's first step lets
+							    the admin choose between BuddyBoss Theme and ReadyLaunch, so
+							    admins running the WordPress theme layout still need access
+							    to the Setup Wizard button to switch. */}
 							{ 'appearance' === featureId && 'general' === activePanelId && (
-								<WelcomeBanner />
+								<WelcomeBanner settings={ settings } />
 							) }
 							{activePanel ? (
 								<>

@@ -90,8 +90,8 @@ function bb_admin_settings_page() {
 				'richtext'    => false,
 				'media_field' => false,
 			);
-			$media_types  = array( 'media_picker', 'image_upload', 'image_radio' );
-			$all_features = bb_feature_registry()->bb_get_features();
+			$media_types                  = array( 'media_picker', 'image_upload', 'image_radio' );
+			$all_features                 = bb_feature_registry()->bb_get_features();
 			foreach ( $all_features as $fid => $f ) {
 				$all_fields = bb_feature_registry()->bb_get_all_fields( $fid );
 				foreach ( $all_fields as $field ) {
@@ -193,23 +193,31 @@ function bb_admin_settings_page() {
 	}
 
 	$localize_data = array(
-		'apiUrl'        => rest_url( bp_rest_namespace() . '/' . bp_rest_version() . '/' ),
-		'nonce'         => wp_create_nonce( 'wp_rest' ),
-		'ajaxUrl'       => esc_url( admin_url( 'admin-ajax.php' ) ),
-		'ajaxNonce'     => wp_create_nonce( 'bb_admin_settings' ),
-		'addonNonce'    => wp_create_nonce( 'mosh_addons' ),
-		'logoUrl'       => buddypress()->plugin_url . 'bp-core/images/admin/BBLogo.png',
-		'isReadyLaunch' => function_exists( 'bb_is_readylaunch_enabled' ) && bb_is_readylaunch_enabled(),
-		'currentUser'   => array(
+		'apiUrl'                    => rest_url( bp_rest_namespace() . '/' . bp_rest_version() . '/' ),
+		'nonce'                     => wp_create_nonce( 'wp_rest' ),
+		'ajaxUrl'                   => esc_url( admin_url( 'admin-ajax.php' ) ),
+		'ajaxNonce'                 => wp_create_nonce( 'bb_admin_settings' ),
+		'addonNonce'                => wp_create_nonce( 'mosh_addons' ),
+		'logoUrl'                   => buddypress()->plugin_url . 'bp-core/images/admin/BBLogo.png',
+		'isReadyLaunch'             => function_exists( 'bb_is_readylaunch_enabled' ) && bb_is_readylaunch_enabled(),
+		// BuddyBoss Theme state for the Appearance welcome banner CTA logic.
+		// `get_template()` over `get_stylesheet()` so child themes of
+		// buddyboss-theme count as active. `canSwitchThemes` lets the
+		// React side disable the Activate button on multisite where site
+		// admins lack the cap.
+		'isBuddyBossThemeActive'    => 'buddyboss-theme' === get_template(),
+		'isBuddyBossThemeInstalled' => wp_get_theme( 'buddyboss-theme' )->exists(),
+		'canSwitchThemes'           => current_user_can( 'switch_themes' ),
+		'currentUser'               => array(
 			'id'   => get_current_user_id(),
 			'name' => wp_get_current_user()->display_name,
 		),
-		'siteUrl'       => untrailingslashit( home_url() ),
+		'siteUrl'                   => untrailingslashit( home_url() ),
 		// Pass the user's legacy groups-per-page screen option so GroupsListScreen
 		// can honour the preference set in the old WP admin list table.
-		'groupsPerPage' => $groups_per_page,
+		'groupsPerPage'             => $groups_per_page,
 		// Mothership IPN root element ID — prefix is dynamic per plugin_id.
-		'ipnRootId'     => $ipn_root_id,
+		'ipnRootId'                 => $ipn_root_id,
 	);
 
 	// Component active status for conditional UI in React.

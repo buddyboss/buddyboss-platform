@@ -392,6 +392,110 @@ function bb_appearance_on_settings_saved( $feature_id, $settings, $saved ) {
 add_action( 'bb_admin_save_feature_settings_after', 'bb_appearance_on_settings_saved', 10, 3 );
 
 /**
+ * AJAX handler — activate the BuddyBoss Theme from the Appearance welcome
+ * banner's "Activate Theme" button.
+ *
+ * Standard WP theme-switch flow without a page navigation: verifies the
+ * settings nonce, the `switch_themes` capability, and the theme's
+ * install/health state, then delegates to core `switch_theme()` which fires
+ * the canonical `switch_theme` / `after_switch_theme` actions plus updates
+ * the `template` and `stylesheet` options.
+ *
+ * Output is buffered around the core call because hooks on `switch_theme`
+ * (older plugins, custom theme setup callbacks) occasionally echo, which
+ * would corrupt the JSON response. The buffer cleanup runs in a `finally`
+ * so a `Throwable` from a hook still leaves the buffer balanced — note
+ * this only catches stray echo, not hook fatals (a real fatal still kills
+ * the request before the JSON body is written; `wp_send_json_*` does its
+ * own buffering for that case).
+ *
+ * Error responses use HTTP 200 + `success: false` (not `wp_send_json_error`
+ * with explicit 4xx/5xx status codes) so the structured payload —
+ * including the stable `error_code` — flows through `ajaxFetch`'s `.then`
+ * branch on the React side. Sending 403/404/500 would route the same data
+ * through the shared `ajaxFetch` error wrapper which only re-throws
+ * `body.data.message`, dropping `error_code`. Nonce failure still
+ * auto-403s via `check_ajax_referer`'s internal `wp_die`, but that's a
+ * WP-contract case the caller already handles in its `.catch`.
+ *
+ * Returns `success: true` even when the theme is already active so the
+ * React side can converge on the same end-state regardless of which
+ * admin tab activated the theme.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void Sends JSON and exits.
+ */
+function bb_appearance_ajax_activate_buddyboss_theme() {
+	// Same nonce the rest of the Settings 2.0 AJAX surface uses.
+	check_ajax_referer( 'bb_admin_settings', 'nonce' );
+
+	if ( ! current_user_can( 'switch_themes' ) ) {
+		wp_send_json_error(
+			array(
+				'error_code' => 'cannot_switch_themes',
+				'message'    => __( 'You do not have permission to switch themes.', 'buddyboss' ),
+			)
+		);
+	}
+
+	$stylesheet = 'buddyboss-theme';
+	$theme      = wp_get_theme( $stylesheet );
+
+	if ( ! $theme->exists() ) {
+		wp_send_json_error(
+			array(
+				'error_code' => 'not_installed',
+				'message'    => __( 'BuddyBoss Theme is not installed.', 'buddyboss' ),
+			)
+		);
+	}
+
+	// `errors()` catches missing style.css, broken parent reference, etc. —
+	// cases where the theme directory exists but switch_theme() would land
+	// the site on a broken front-end.
+	$theme_errors = $theme->errors();
+	if ( $theme_errors ) {
+		wp_send_json_error(
+			array(
+				'error_code' => 'theme_errors',
+				'message'    => sprintf(
+					/* translators: %s: theme error message. */
+					__( 'BuddyBoss Theme cannot be activated: %s', 'buddyboss' ),
+					$theme_errors->get_error_message()
+				),
+			)
+		);
+	}
+
+	if ( $stylesheet === get_template() ) {
+		wp_send_json_success(
+			array(
+				'active_theme'   => $stylesheet,
+				'already_active' => true,
+				'message'        => __( 'BuddyBoss Theme is already active.', 'buddyboss' ),
+			)
+		);
+	}
+
+	ob_start();
+	try {
+		switch_theme( $stylesheet );
+	} finally {
+		ob_end_clean();
+	}
+
+	wp_send_json_success(
+		array(
+			'active_theme'   => $stylesheet,
+			'already_active' => false,
+			'message'        => __( 'BuddyBoss Theme activated.', 'buddyboss' ),
+		)
+	);
+}
+add_action( 'wp_ajax_bb_admin_activate_buddyboss_theme', 'bb_appearance_ajax_activate_buddyboss_theme' );
+
+/**
  * Coerce `bb_rl_enabled` for the Site Layout SelectControl.
  *
  * The option is stored as a boolean (all legacy consumers use truthy checks),
