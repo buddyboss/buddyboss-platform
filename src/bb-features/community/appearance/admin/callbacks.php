@@ -468,7 +468,7 @@ function bb_appearance_ajax_activate_buddyboss_theme() {
 		);
 	}
 
-	if ( $stylesheet === get_template() ) {
+	if ( get_template() === $stylesheet ) {
 		wp_send_json_success(
 			array(
 				'active_theme'   => $stylesheet,
