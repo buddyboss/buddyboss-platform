@@ -392,26 +392,96 @@
 		z-index: 100050;
 	}
 
+	// Modal shell — preserves the pre-refactor visible width. Before the
+	// header/body/footer split the modal was `max-width: 480px` + the outer
+	// `padding: 24px` (48px horizontal total), so the rendered width was
+	// 528px. The split moved padding into the sub-sections, so we add the
+	// 48px back to max-width to keep the same outer footprint.
+	//
+	// Chrome (1px secondary border, 16px radius, soft drop shadow) follows
+	// Figma. Body padding is handled by the __crop-header / __crop-body /
+	// __crop-footer sections so each can carry its own border without
+	// double-padding.
 	&__crop-modal {
 		background: $bb-background-base-color;
+		border: 1px solid $bb-border-secondary-color;
 		border-radius: $bb-border-radius-2xl;
-		padding: 24px;
-		max-width: 480px;
+		padding: 0;
+		max-width: 528px;
 		width: 90%;
-		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+		max-height: 95vh;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+	}
+
+	// Header — title left, X close right, with a 1px bottom rule.
+	&__crop-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 16px 16px 16px 24px;
+		border-bottom: 1px solid $bb-border-secondary-color;
+		flex: none;
 	}
 
 	&__crop-title {
-		font-size: 16px;
-		font-weight: 600;
+		// Figma: title/sm-medium — 18px / 500 / 26px line-height.
+		font-size: 18px;
+		font-weight: 500;
+		line-height: 26px;
 		color: $bb-text-color;
-		margin: 0 0 16px;
+		margin: 0;
+	}
+
+	// X close button — 32×32 button frame, 24×24 icon, 4px inner padding.
+	&__crop-close {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 32px;
+		height: 32px;
+		padding: 4px;
+		background: transparent;
+		border: none;
+		border-radius: $bb-border-radius-md;
+		cursor: pointer;
+		color: $bb-text-color;
+
+		i {
+			font-size: 24px;
+			line-height: 1;
+		}
+
+		&:hover:not(:disabled) {
+			background: $bb-background-primary-hover-color;
+		}
+
+		&:focus {
+			outline: 2px solid $bb-border-quaternary-color;
+		}
+
+		&:disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+		}
+	}
+
+	// Body — scrolls if content exceeds modal height; sits between the
+	// header and footer with no border (those are on the header/footer).
+	&__crop-body {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+		padding: 16px 24px;
+		overflow-y: auto;
+		flex: 1 1 auto;
 	}
 
 	&__crop-canvas-wrap {
 		display: flex;
 		justify-content: center;
-		margin-bottom: 16px;
 	}
 
 	&__crop-canvas {
@@ -426,7 +496,6 @@
 		display: flex;
 		align-items: center;
 		gap: 12px;
-		margin-bottom: 16px;
 
 		i {
 			font-size: 16px;
@@ -465,10 +534,47 @@
 		}
 	}
 
-	&__crop-actions {
+	// Footer — right-aligned button group with a 1px top rule.
+	// Overrides the broader `&__btn` base + `&__btn--cancel` / `&__btn--upload`
+	// modifiers (defined further up this file) so the crop modal's two
+	// buttons match Figma's filled-orange primary + neutral-grey cancel
+	// without disturbing the same modifiers used elsewhere on the
+	// .bb-admin-image-upload toolbar.
+	&__crop-footer {
 		display: flex;
 		justify-content: flex-end;
+		align-items: center;
 		gap: 8px;
+		padding: 8px 24px;
+		border-top: 1px solid $bb-border-secondary-color;
+		flex: none;
+
+		.bb-admin-image-upload__btn {
+			min-height: 32px;
+			border-radius: $bb-border-radius-lg;
+
+			&--cancel {
+				background: $bb-background-secondary-color;
+				border: 0.5px solid $bb-border-secondary-color;
+				color: $bb-text-color;
+
+				&:hover:not(:disabled) {
+					background: $bb-background-secondary-hover-color;
+				}
+			}
+
+			&--upload {
+				background: $bb-background-brand-primary-color;
+				border: 1px solid $bb-background-brand-primary-color;
+				color: $bb-text-inverse-color;
+
+				&:hover:not(:disabled) {
+					background: $bb-background-brand-primary-hover-color;
+					border-color: $bb-background-brand-primary-hover-color;
+					color: $bb-text-inverse-color;
+				}
+			}
+		}
 	}
 }
 

@@ -356,52 +356,65 @@ export function AvatarCropModal( { imageUrl, originalFile, nonces, uploadConfig,
 			className="bb-admin-image-upload__crop-overlay"
 			role="dialog"
 			aria-modal="true"
-			aria-label={ __( 'Crop Avatar', 'buddyboss' ) }
+			aria-label={ __( 'Upload Custom Avatar', 'buddyboss' ) }
 		>
 			<div className="bb-admin-image-upload__crop-modal">
-				<h3 className="bb-admin-image-upload__crop-title">
-					{ __( 'Crop Avatar', 'buddyboss' ) }
-				</h3>
-
-				<div className="bb-admin-image-upload__crop-canvas-wrap">
-					{ /* Hidden image for loading — crossOrigin for same-origin canvas access */ }
-					<img
-						ref={ imageRef }
-						src={ imageUrl }
-						crossOrigin="anonymous"
-						style={ { display: 'none' } }
-						onLoad={ handleImageLoad }
-						alt=""
-					/>
-					<canvas
-						ref={ canvasRef }
-						width={ canvasSize }
-						height={ canvasSize }
-						className="bb-admin-image-upload__crop-canvas"
-						onMouseDown={ handleMouseDown }
-					/>
+				<div className="bb-admin-image-upload__crop-header">
+					<h3 className="bb-admin-image-upload__crop-title">
+						{ __( 'Upload Custom Avatar', 'buddyboss' ) }
+					</h3>
+					<button
+						type="button"
+						className="bb-admin-image-upload__crop-close"
+						onClick={ onCancel }
+						disabled={ saving }
+						aria-label={ __( 'Close', 'buddyboss' ) }
+					>
+						<i className="bb-icons-rl bb-icons-rl-x" aria-hidden="true"></i>
+					</button>
 				</div>
 
-				{ imgLoaded && (
-					<div className="bb-admin-image-upload__crop-resize">
-						<i className="bb-icons-rl bb-icons-rl-minus"></i>
-						<input
-							type="range"
-							className="bb-admin-image-upload__crop-slider"
-							min={ sizeRange.min }
-							max={ sizeRange.max }
-							value={ cropBox.size }
-							onChange={ handleResize }
+				<div className="bb-admin-image-upload__crop-body">
+					<div className="bb-admin-image-upload__crop-canvas-wrap">
+						{ /* Hidden image for loading — crossOrigin for same-origin canvas access */ }
+						<img
+							ref={ imageRef }
+							src={ imageUrl }
+							crossOrigin="anonymous"
+							style={ { display: 'none' } }
+							onLoad={ handleImageLoad }
+							alt=""
 						/>
-						<i className="bb-icons-rl bb-icons-rl-plus"></i>
+						<canvas
+							ref={ canvasRef }
+							width={ canvasSize }
+							height={ canvasSize }
+							className="bb-admin-image-upload__crop-canvas"
+							onMouseDown={ handleMouseDown }
+						/>
 					</div>
-				) }
 
-				{ error && (
-					<p className="bb-admin-image-upload__error" role="alert">{ error }</p>
-				) }
+					{ imgLoaded && (
+						<div className="bb-admin-image-upload__crop-resize">
+							<i className="bb-icons-rl bb-icons-rl-minus"></i>
+							<input
+								type="range"
+								className="bb-admin-image-upload__crop-slider"
+								min={ sizeRange.min }
+								max={ sizeRange.max }
+								value={ cropBox.size }
+								onChange={ handleResize }
+							/>
+							<i className="bb-icons-rl bb-icons-rl-plus"></i>
+						</div>
+					) }
 
-				<div className="bb-admin-image-upload__crop-actions">
+					{ error && (
+						<p className="bb-admin-image-upload__error" role="alert">{ error }</p>
+					) }
+				</div>
+
+				<div className="bb-admin-image-upload__crop-footer">
 					<button
 						type="button"
 						className="bb-admin-image-upload__btn bb-admin-image-upload__btn--cancel"
@@ -416,7 +429,7 @@ export function AvatarCropModal( { imageUrl, originalFile, nonces, uploadConfig,
 						onClick={ handleCropSave }
 						disabled={ saving || ! imgLoaded }
 					>
-						{ saving ? __( 'Saving...', 'buddyboss' ) : __( 'Crop & Save', 'buddyboss' ) }
+						{ saving ? __( 'Uploading...', 'buddyboss' ) : __( 'Crop & Upload', 'buddyboss' ) }
 					</button>
 				</div>
 			</div>
