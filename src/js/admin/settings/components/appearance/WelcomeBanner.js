@@ -194,11 +194,26 @@ export function WelcomeBanner( props ) {
 		//    first click) or before we re-mount (on subsequent clicks).
 		//    The wizard entry does `window.bbRlOnboarding = window.bbRlOnboarding || {}`
 		//    so these fields survive the bundle's own initialisation.
+		//
+		//    Skip the SplashScreen step (index 0) when launched from the
+		//    banner — admins reaching this code path have already chosen
+		//    "ReadyLaunch" via the Site Layout dropdown, so re-asking them
+		//    is friction. Lift `progress.current_step` to at least 1 (the
+		//    Site Name step). If the user already has higher progress
+		//    (paused mid-wizard), keep their place. The activation-popup
+		//    auto-mount path doesn't go through this handler, so the
+		//    splash still shows there exactly as before.
+		var bootstrapProgress = ( bootstrap.wizardData && bootstrap.wizardData.progress ) || {};
+		var existingStep      = Number( bootstrapProgress.current_step ) || 0;
+		var bannerProgress    = Object.assign( {}, bootstrapProgress, {
+			current_step: Math.max( existingStep, 1 ),
+		} );
+
 		window.bbRlOnboarding = Object.assign(
 			{},
 			window.bbRlOnboarding || {},
 			bootstrap.wizardData || {},
-			{ shouldShow: true }
+			{ shouldShow: true, progress: bannerProgress }
 		);
 
 		// 3. If the bundle is already parsed, just remount.

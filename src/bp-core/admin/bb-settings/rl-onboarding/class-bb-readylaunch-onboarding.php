@@ -77,29 +77,20 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 
 		// Build configuration array with ReadyLaunch-specific settings.
 		$config = array(
-			'admin_page'                 => 'bb-settings',
-			'option_prefix'              => 'bb_rl',
-			'completion_option'          => 'bb_rl_onboarding_completed',
-			'wizard_title'               => __( 'BuddyBoss ReadyLaunch Setup', 'buddyboss' ),
-			'wizard_description'         => __( 'Get started with BuddyBoss in minutes', 'buddyboss' ),
-			'skip_on_multisite'          => false,
-			// Splash modal no longer auto-pops on plugin activation — the
-			// "choose ReadyLaunch vs BuddyBoss Theme" content was lifted into
-			// the Appearance → General welcome banner so admins make the
-			// choice in-context instead of via a forced modal on first
-			// landing. The wizard itself is still accessible via the Setup
-			// Wizard button on the banner; only the
-			// `bb_do_activation_redirect → admin URL with
-			// bb_wizard_activation=rl_onboarding` hook is disabled here.
-			'enable_activation_redirect' => false,
-			'enable_react_frontend'      => true,
-			'react_directory'            => __DIR__,
-			'react_script_handle'        => 'bb-rl-onboarding-script',
-			'react_style_handle'         => 'bb-rl-onboarding-style',
-			'react_script_name'          => 'rl-onboarding',
-			'react_style_name'           => 'onboarding',
-			'react_localize_object'      => 'bbRlOnboarding',
-			'steps'                      => array(
+			'admin_page'            => 'bb-settings',
+			'option_prefix'         => 'bb_rl',
+			'completion_option'     => 'bb_rl_onboarding_completed',
+			'wizard_title'          => __( 'BuddyBoss ReadyLaunch Setup', 'buddyboss' ),
+			'wizard_description'    => __( 'Get started with BuddyBoss in minutes', 'buddyboss' ),
+			'skip_on_multisite'     => false,
+			'enable_react_frontend' => true,
+			'react_directory'       => __DIR__,
+			'react_script_handle'   => 'bb-rl-onboarding-script',
+			'react_style_handle'    => 'bb-rl-onboarding-style',
+			'react_script_name'     => 'rl-onboarding',
+			'react_style_name'      => 'onboarding',
+			'react_localize_object' => 'bbRlOnboarding',
+			'steps'                 => array(
 				0 => array(
 					'key'           => 'splash',
 					'title'         => __( 'Welcome to BuddyBoss', 'buddyboss' ),
@@ -158,7 +149,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 					'image'       => 'onboardingModal-finish.png',
 				),
 			),
-			'step_options'               => array(
+			'step_options'          => array(
 				'community_setup' => array(
 					'blogname' => array(
 						'type'        => 'text',
@@ -343,14 +334,14 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 					),
 				),
 			),
-			'react_assets'               => array(
+			'react_assets'          => array(
 				'logo'                  => buddypress()->plugin_url . 'bp-core/admin/bb-settings/rl-onboarding/assets/bb-logo.png',
 				'assetsBaseUrl'         => buddypress()->plugin_url . 'bp-core/admin/bb-settings/rl-onboarding/assets/',
 				'buddybossThemePreview' => buddypress()->plugin_url . 'bp-core/admin/bb-settings/rl-onboarding/assets/buddyboss-theme-preview.svg',
 				'currentThemePreview'   => buddypress()->plugin_url . 'bp-core/admin/bb-settings/rl-onboarding/assets/current-theme-preview.svg',
 			),
-			'react_dependencies'         => array( 'react', 'wp-components', 'wp-element', 'wp-i18n' ),
-			'custom_hooks'               => array(
+			'react_dependencies'    => array( 'react', 'wp-components', 'wp-element', 'wp-i18n' ),
+			'custom_hooks'          => array(
 				'completion'      => array(),
 				'step_completion' => array(
 					'bb_rl_step_completed',
