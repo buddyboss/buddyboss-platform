@@ -13,6 +13,7 @@
 
     &:focus,
     &:hover {
+        color: $bb-text-color;
         border-color: $bb-border-quaternary-color;
         box-shadow: none;
     }
