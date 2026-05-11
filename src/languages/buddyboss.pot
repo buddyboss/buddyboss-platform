@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 3.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-05-07 11:17:48+00:00\n"
+"POT-Creation-Date: 2026-05-11 05:21:04+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -61,18 +61,40 @@ msgstr ""
 msgid "BuddyBoss"
 msgstr ""
 
+#: bb-features/community/appearance/admin/callbacks.php:437
+msgid "You do not have permission to switch themes."
+msgstr ""
+
+#: bb-features/community/appearance/admin/callbacks.php:449
+msgid "BuddyBoss Theme is not installed."
+msgstr ""
+
+#. translators: %s: theme error message.
+#: bb-features/community/appearance/admin/callbacks.php:464
+msgid "BuddyBoss Theme cannot be activated: %s"
+msgstr ""
+
+#: bb-features/community/appearance/admin/callbacks.php:476
+msgid "BuddyBoss Theme is already active."
+msgstr ""
+
+#: bb-features/community/appearance/admin/callbacks.php:492
+#: bp-core/admin/bb-settings/settings/build/index.js:3
+msgid "BuddyBoss Theme activated."
+msgstr ""
+
 #. translators: %1$s: opening anchor tag, %2$s: closing anchor tag.
-#: bb-features/community/appearance/admin/callbacks.php:547
+#: bb-features/community/appearance/admin/callbacks.php:651
 msgid "Enable or disable widgets to appear on the %1$sactivity feed%2$s."
 msgstr ""
 
 #. translators: %1$s: opening anchor tag, %2$s: closing anchor tag.
-#: bb-features/community/appearance/admin/callbacks.php:551
+#: bb-features/community/appearance/admin/callbacks.php:655
 msgid "Enable or disable widgets to appear on the %1$smember profile%2$s."
 msgstr ""
 
 #. translators: %1$s: opening anchor tag, %2$s: closing anchor tag.
-#: bb-features/community/appearance/admin/callbacks.php:555
+#: bb-features/community/appearance/admin/callbacks.php:659
 msgid "Enable or disable widgets to appear on the %1$sgroup single%2$s page."
 msgstr ""
 
@@ -194,17 +216,10 @@ msgstr ""
 #: bb-features/community/appearance/admin/settings.php:127
 #: bb-features/community/appearance/admin/settings.php:1001
 #: bp-core/admin/classes/class-bb-admin-settings-ajax.php:519
-#: bp-core/admin/settings/activity/settings-access-control.php:43
 #: bp-core/admin/settings/activity/settings-sharing.php:143
 #: bp-core/admin/settings/activity/settings-sharing.php:311
-#: bp-core/admin/settings/activity/settings-topics.php:107
-#: bp-core/admin/settings/groups/settings-access-control.php:43
-#: bp-core/admin/settings/groups/settings-group-headers.php:40
-#: bp-core/admin/settings/media/settings-access-controls.php:47
-#: bp-core/admin/settings/members/settings-access-control.php:48
-#: bp-core/admin/settings/members/settings-profile-headers.php:40
-#: bp-core/admin/settings/messages/settings-access-control.php:43
 #: bp-core/admin/settings/notifications/settings-web-push.php:205
+#: bp-core/bp-core-functions.php:10139
 #: bp-core/admin/bb-settings/settings/build/index.js:1
 msgid "UPGRADE PRO"
 msgstr ""
@@ -372,7 +387,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-tools.php:84
 #: bp-core/admin/settings/members/settings-profile-navigation.php:138
 #: bp-core/admin/settings/members/settings-profile-navigation.php:218
-#: bp-core/bp-core-functions.php:10365
+#: bp-core/bp-core-functions.php:10550
 #: bp-core/classes/class-bb-core-connections-widget.php:27
 #: bp-core/classes/class-bb-core-connections-widget.php:67
 #: bp-core/gdpr/class-bp-friendship-export.php:58
@@ -576,7 +591,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/groups/classes.php:269
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/messages/parts/bp-messages-single-header.php:346
 #: bp-templates/bp-nouveau/readylaunch/members/index.php:30
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 #: bp-core/admin/bb-settings/settings/build/510.js:1
 #: bp-core/admin/bb-settings/settings/build/801.js:1
 #: bp-core/admin/bb-settings/settings/build/966.js:1
@@ -615,7 +630,7 @@ msgstr ""
 #: bp-search/bp-search-functions.php:375
 #: bp-templates/bp-nouveau/includes/groups/functions.php:123
 #: bp-templates/bp-nouveau/readylaunch/groups/index.php:25
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 msgid "Groups"
 msgstr ""
 
@@ -680,7 +695,7 @@ msgstr ""
 #: bp-core/admin/settings/media/settings-videos.php:101
 #: bp-core/admin/settings/members/settings-profile-navigation.php:226
 #: bp-core/bb-core-blocks.php:321
-#: bp-core/bp-core-functions.php:10364
+#: bp-core/bp-core-functions.php:10549
 #: bp-core/classes/class-bb-readylaunch.php:715
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1075
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1081
@@ -761,8 +776,8 @@ msgid "Edit Link"
 msgstr ""
 
 #: bb-features/community/appearance/admin/settings.php:974
-#: bp-core/admin/bp-core-admin-functions.php:2669
 #: bp-core/admin/settings/activity/settings-sharing.php:289
+#: bp-core/bp-core-functions.php:10140
 msgid "PRO"
 msgstr ""
 
@@ -1001,7 +1016,8 @@ msgstr ""
 #: bp-core/admin/bb-settings/settings/build/190.js:1
 #: bp-core/admin/bb-settings/settings/build/231.js:1
 #: bp-core/admin/bb-settings/settings/build/362.js:2
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:2
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 #: bp-core/admin/bb-settings/settings/build/794.js:1
 #: bp-core/admin/bb-settings/settings/build/index.js:1
 #: bp-core/admin/bb-settings/settings/build/index.js:3
@@ -2055,7 +2071,7 @@ msgstr ""
 #: bp-core/admin/settings/advanced/settings-general.php:124
 #: bp-core/admin/settings/search/settings-network-search.php:285
 #: bp-core/bp-core-cssjs.php:238
-#: bp-core/bp-core-functions.php:10362
+#: bp-core/bp-core-functions.php:10547
 #: bp-moderation/classes/class-bp-moderation-activity.php:120
 #: bp-search/bp-search-functions.php:376
 #: bp-core/admin/bb-settings/settings/build/794.js:1
@@ -2764,8 +2780,8 @@ msgstr ""
 #: bp-core/admin/bb-settings/settings/build/223.js:1
 #: bp-core/admin/bb-settings/settings/build/285.js:2
 #: bp-core/admin/bb-settings/settings/build/362.js:3
-#: bp-core/admin/bb-settings/settings/build/483.js:2
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:3
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 #: bp-core/admin/bb-settings/settings/build/499.js:1
 #: bp-core/admin/bb-settings/settings/build/510.js:1
 #: bp-core/admin/bb-settings/settings/build/510.js:2
@@ -2805,7 +2821,7 @@ msgstr ""
 #: bp-core/admin/bb-settings/settings/build/190.js:1
 #: bp-core/admin/bb-settings/settings/build/285.js:2
 #: bp-core/admin/bb-settings/settings/build/362.js:2
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 #: bp-core/admin/bb-settings/settings/build/510.js:1
 #: bp-core/admin/bb-settings/settings/build/944.js:1
 #: bp-core/admin/bb-settings/settings/build/index.js:3
@@ -3122,7 +3138,7 @@ msgstr ""
 
 #: bp-activity/classes/class-bb-activity-topics-manager.php:1035
 #: bp-core/admin/settings/activity/settings-topics.php:83
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 msgid "Topics"
 msgstr ""
 
@@ -3184,7 +3200,7 @@ msgstr ""
 #: bp-core/admin/bb-settings/settings/build/190.js:1
 #: bp-core/admin/bb-settings/settings/build/285.js:2
 #: bp-core/admin/bb-settings/settings/build/483.js:2
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 #: bp-core/admin/bb-settings/settings/build/499.js:1
 #: bp-core/admin/bb-settings/settings/build/510.js:1
 #: bp-core/admin/bb-settings/settings/build/966.js:1
@@ -4750,7 +4766,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/readylaunch/search/search-form.php:35
 #: bp-core/admin/bb-settings/settings/build/190.js:2
 #: bp-core/admin/bb-settings/settings/build/285.js:2
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 #: bp-core/admin/bb-settings/settings/build/510.js:2
 #: bp-core/admin/bb-settings/settings/build/794.js:2
 #: bp-core/admin/bb-settings/settings/build/926.js:2
@@ -5022,7 +5038,7 @@ msgstr ""
 #: bp-xprofile/classes/class-bp-xprofile-component.php:345
 #: bp-xprofile/classes/class-bp-xprofile-component.php:498
 #: bp-core/admin/bb-settings/settings/build/190.js:1
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 msgid "Privacy"
 msgstr ""
 
@@ -5210,7 +5226,7 @@ msgstr ""
 #: bp-core/deprecated/buddyboss/1.1.8.php:236
 #: bp-groups/bp-groups-functions.php:3827
 #: bp-groups/bp-groups-functions.php:3830
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 #: bp-core/admin/bb-settings/settings/build/966.js:1
 msgid "Group Types"
 msgstr ""
@@ -5621,8 +5637,8 @@ msgstr ""
 #: bp-core/admin/bb-settings/settings/build/285.js:2
 #: bp-core/admin/bb-settings/settings/build/362.js:3
 #: bp-core/admin/bb-settings/settings/build/483.js:2
-#: bp-core/admin/bb-settings/settings/build/483.js:3
 #: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 #: bp-core/admin/bb-settings/settings/build/499.js:1
 #: bp-core/admin/bb-settings/settings/build/510.js:1
 #: bp-core/admin/bb-settings/settings/build/510.js:2
@@ -5692,7 +5708,7 @@ msgstr ""
 msgid "BuddyBoss Admin Settings assets not found. Please run: npm run build:admin:settings"
 msgstr ""
 
-#: bp-core/admin/bb-admin-settings-page.php:333
+#: bp-core/admin/bb-admin-settings-page.php:354
 msgid "JavaScript is required for BuddyBoss Settings. Please enable JavaScript in your browser."
 msgstr ""
 
@@ -6248,7 +6264,7 @@ msgstr ""
 msgid "Install"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2846
+#: bp-core/admin/bp-core-admin-functions.php:2728
 #: bp-core/admin/settings/media/callbacks.php:277
 #: bp-core/admin/settings/media/callbacks.php:401
 #: bp-core/admin/settings/media/callbacks.php:494
@@ -6256,7 +6272,7 @@ msgstr ""
 msgid "Permission denied."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2853
+#: bp-core/admin/bp-core-admin-functions.php:2735
 #: bp-core/admin/settings/media/callbacks.php:285
 #: bp-core/admin/settings/media/callbacks.php:409
 #: bp-core/admin/settings/media/callbacks.php:502
@@ -6800,8 +6816,8 @@ msgstr ""
 #: bp-core/admin/bb-settings/settings/build/223.js:1
 #: bp-core/admin/bb-settings/settings/build/285.js:2
 #: bp-core/admin/bb-settings/settings/build/362.js:2
-#: bp-core/admin/bb-settings/settings/build/483.js:2
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:3
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 #: bp-core/admin/bb-settings/settings/build/499.js:1
 #: bp-core/admin/bb-settings/settings/build/510.js:1
 #: bp-core/admin/bb-settings/settings/build/517.js:1
@@ -6929,7 +6945,7 @@ msgstr ""
 #: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:438
 #: bp-core/admin/settings/media/callbacks.php:431
 #: bp-core/admin/settings/media/callbacks.php:595
-#: bp-core/bp-core-functions.php:10367
+#: bp-core/bp-core-functions.php:10552
 #: bp-core/classes/class-bp-core-notification-abstract.php:184
 #: bp-core/profile-search/bps-xprofile.php:363
 #: bp-core/profile-search/bps-xprofile.php:631
@@ -6983,7 +6999,7 @@ msgstr ""
 #: bp-core/admin/classes/class-bb-admin-forums-ajax.php:871
 #: bp-core/admin/classes/class-bb-admin-forums-ajax.php:913
 #: bp-core/admin/classes/class-bb-admin-forums-ajax.php:1254
-#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1843
+#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1897
 #: bp-core/admin/classes/class-bb-admin-replies-ajax.php:114
 #: bp-core/admin/classes/class-bb-admin-replies-ajax.php:445
 #: bp-core/admin/classes/class-bb-admin-replies-ajax.php:500
@@ -7074,7 +7090,7 @@ msgstr ""
 #: bp-core/admin/bb-settings/settings/build/190.js:1
 #: bp-core/admin/bb-settings/settings/build/285.js:2
 #: bp-core/admin/bb-settings/settings/build/483.js:2
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 #: bp-core/admin/bb-settings/settings/build/499.js:1
 #: bp-core/admin/bb-settings/settings/build/510.js:1
 #: bp-core/admin/bb-settings/settings/build/966.js:1
@@ -7100,7 +7116,7 @@ msgstr ""
 #: bp-core/admin/bb-settings/settings/build/190.js:1
 #: bp-core/admin/bb-settings/settings/build/285.js:2
 #: bp-core/admin/bb-settings/settings/build/483.js:2
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 #: bp-core/admin/bb-settings/settings/build/510.js:1
 msgid "Hidden"
 msgstr ""
@@ -7216,9 +7232,9 @@ msgstr ""
 #: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1109
 #: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1167
 #: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1296
-#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1485
-#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1642
-#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:2057
+#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1489
+#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1696
+#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:2111
 msgid "Groups component is not active."
 msgstr ""
 
@@ -7269,7 +7285,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/readylaunch/members/index.php:174
 #: bp-templates/bp-nouveau/readylaunch/members/single/invites/sent-invites.php:109
 #: bp-core/admin/bb-settings/settings/build/483.js:2
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 #: bp-core/admin/bb-settings/settings/build/499.js:1
 #: bp-core/admin/bb-settings/settings/build/517.js:1
 #: bp-core/admin/bb-settings/settings/build/801.js:1
@@ -7318,34 +7334,34 @@ msgstr ""
 #: bp-members/bp-members-admin.php:48
 #: bp-members/bp-members-admin.php:110
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:859
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 msgid "Last Active"
 msgstr ""
 
 #: bp-core/admin/classes/class-bb-admin-groups-ajax.php:799
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 msgid "Change Group Type to"
 msgstr ""
 
 #: bp-core/admin/classes/class-bb-admin-groups-ajax.php:800
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 msgid "Remove Group Type"
 msgstr ""
 
 #: bp-core/admin/classes/class-bb-admin-groups-ajax.php:912
 #: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1174
 #: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1303
-#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1498
-#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:2064
+#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1504
+#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:2118
 msgid "Group ID is required."
 msgstr ""
 
 #: bp-core/admin/classes/class-bb-admin-groups-ajax.php:917
 #: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1179
 #: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1308
-#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1503
-#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1658
-#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:2069
+#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1509
+#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1712
+#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:2123
 msgid "Group not found."
 msgstr ""
 
@@ -7408,7 +7424,7 @@ msgid "Failed to create group."
 msgstr ""
 
 #: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1150
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 msgid "Group created successfully."
 msgstr ""
 
@@ -7416,70 +7432,70 @@ msgstr ""
 msgid "Group updated successfully."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1508
-#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1688
+#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1514
+#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1742
 msgid "Invalid role."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1653
+#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1707
 msgid "Group ID and User ID are required."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1663
+#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1717
 msgid "User not found."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1678
+#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1732
 msgid "Member added successfully."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1680
+#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1734
 msgid "Failed to add member."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1698
+#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1752
 msgid "You cannot remove the only group administrator."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1703
+#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1757
 msgid "Member removed successfully."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1705
+#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1759
 msgid "Failed to remove member."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1723
-#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1730
+#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1777
+#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1784
 msgid "You cannot demote the only group administrator."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1737
+#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1791
 msgid "You cannot ban the only group administrator."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1744
+#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1798
 msgid "Member role updated successfully."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1746
+#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1800
 msgid "Failed to update member role."
 msgstr ""
 
 #. translators: 1: user display name, 2: user ID.
-#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1792
+#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1846
 msgid "%1$s (%2$s)"
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1839
+#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1893
 msgid "Forums are not available."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1944
+#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:1998
 msgid "Group hierarchies are disabled."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:2074
+#: bp-core/admin/classes/class-bb-admin-groups-ajax.php:2128
 msgid "Group activity topics feature is not enabled."
 msgstr ""
 
@@ -8655,7 +8671,7 @@ msgstr ""
 #: bp-core/admin/bb-settings/settings/build/190.js:2
 #: bp-core/admin/bb-settings/settings/build/285.js:2
 #: bp-core/admin/bb-settings/settings/build/362.js:3
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 #: bp-core/admin/bb-settings/settings/build/510.js:2
 #: bp-core/admin/bb-settings/settings/build/517.js:1
 #: bp-core/admin/bb-settings/settings/build/926.js:2
@@ -9940,7 +9956,6 @@ msgstr ""
 #: bp-forums/forums/functions.php:1760
 #: bp-moderation/classes/class-bp-moderation-report-list-table.php:208
 #: bp-moderation/classes/class-bp-moderation-report-list-table.php:220
-#: bp-core/admin/bb-settings/settings/build/index.js:1
 msgid "Category"
 msgstr ""
 
@@ -10365,7 +10380,7 @@ msgstr ""
 #: bp-groups/classes/class-bp-rest-group-settings-endpoint.php:889
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:260
 #: bp-templates/bp-nouveau/readylaunch/groups/single/admin/group-settings.php:201
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 msgid "Group Type"
 msgstr ""
 
@@ -10459,6 +10474,7 @@ msgstr ""
 
 #: bp-core/admin/settings/groups/settings-group-images.php:97
 #: bp-core/admin/settings/members/settings-profile-image.php:159
+#: bp-core/admin/bb-settings/settings/build/index.js:3
 msgid "Upload Custom Avatar"
 msgstr ""
 
@@ -11475,7 +11491,7 @@ msgid "can send message to"
 msgstr ""
 
 #: bp-core/admin/settings/moderation/settings-content-reporting.php:55
-#: bp-core/admin/settings/moderation/settings-member-moderation.php:152
+#: bp-core/admin/settings/moderation/settings-member-moderation.php:165
 msgid "Email Notification"
 msgstr ""
 
@@ -11522,21 +11538,21 @@ msgstr ""
 msgid "reporting categories"
 msgstr ""
 
-#: bp-core/admin/settings/moderation/settings-member-moderation.php:86
+#: bp-core/admin/settings/moderation/settings-member-moderation.php:93
 msgid "Auto Suspend"
 msgstr ""
 
 #. translators: %s: threshold number input placeholder.
-#: bp-core/admin/settings/moderation/settings-member-moderation.php:89
+#: bp-core/admin/settings/moderation/settings-member-moderation.php:96
 msgid "Auto suspend members after %s blocks"
 msgstr ""
 
 #. translators: %s: threshold number input placeholder.
-#: bp-core/admin/settings/moderation/settings-member-moderation.php:122
+#: bp-core/admin/settings/moderation/settings-member-moderation.php:132
 msgid "Auto suspend members after %s reports"
 msgstr ""
 
-#: bp-core/admin/settings/moderation/settings-member-moderation.php:154
+#: bp-core/admin/settings/moderation/settings-member-moderation.php:167
 msgid "Notify administrators when members have been automatically suspended"
 msgstr ""
 
@@ -11792,7 +11808,7 @@ msgid "Email Restrictions"
 msgstr ""
 
 #: bp-core/admin/settings/registration/settings-registration.php:259
-msgid "Enter specific email addresses which you want to allow for user registrations. Enter one address per line."
+msgid "Enter the email addresses you want to allow for user registrations. Add one address per field."
 msgstr ""
 
 #: bp-core/admin/settings/registration/settings-registration.php:283
@@ -11851,7 +11867,7 @@ msgid "User Email"
 msgstr ""
 
 #: bp-core/admin/settings/search/settings-network-search.php:88
-#: bp-core/bp-core-functions.php:10366
+#: bp-core/bp-core-functions.php:10551
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:961
 #: bp-search/classes/class-bp-search-members.php:470
 #: bp-settings/classes/class-bp-settings-component.php:145
@@ -13653,7 +13669,7 @@ msgstr ""
 msgid "A manual notification from a site admin"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:10363
+#: bp-core/bp-core-functions.php:10548
 msgid "Groups & Discussions"
 msgstr ""
 
@@ -15170,6 +15186,7 @@ msgid "Group Subscriptions"
 msgstr ""
 
 #: bp-core/classes/class-bb-readylaunch.php:4073
+#: bp-core/admin/bb-settings/settings/build/483.js:2
 msgid "Search member"
 msgstr ""
 
@@ -15452,7 +15469,7 @@ msgstr ""
 #: bp-core/classes/class-bb-rest-topics-endpoint.php:711
 #: bp-core/classes/class-bb-topics-manager.php:312
 #: bp-core/classes/class-bb-topics-manager.php:437
-#: bp-core/admin/bb-settings/settings/build/483.js:3
+#: bp-core/admin/bb-settings/settings/build/483.js:4
 #: bp-core/admin/bb-settings/settings/build/index.js:2
 msgid "Topic name is required."
 msgstr ""
@@ -15730,7 +15747,7 @@ msgid "Create Topic"
 msgstr ""
 
 #: bp-core/classes/class-bb-topics-manager.php:167
-#: bp-core/admin/bb-settings/settings/build/483.js:3
+#: bp-core/admin/bb-settings/settings/build/483.js:4
 #: bp-core/admin/bb-settings/settings/build/index.js:2
 msgid "Edit Topic"
 msgstr ""
@@ -15740,7 +15757,7 @@ msgstr ""
 #. translators: %s: Topic name.
 #: bp-core/classes/class-bb-topics-manager.php:169
 #: bp-core/classes/class-bb-topics-manager.php:1592
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 #: bp-core/admin/bb-settings/settings/build/index.js:3
 msgid "Deleting \"%s\"?"
 msgstr ""
@@ -15788,7 +15805,7 @@ msgid "Migrate topic ID is required."
 msgstr ""
 
 #: bp-core/classes/class-bb-topics-manager.php:1813
-#: bp-core/admin/bb-settings/settings/build/483.js:2
+#: bp-core/admin/bb-settings/settings/build/483.js:3
 #: bp-core/admin/bb-settings/settings/build/index.js:3
 msgid "Failed to delete topic."
 msgstr ""
@@ -17119,7 +17136,7 @@ msgstr ""
 #: bp-core/admin/bb-settings/settings/build/190.js:1
 #: bp-core/admin/bb-settings/settings/build/285.js:2
 #: bp-core/admin/bb-settings/settings/build/362.js:1
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 #: bp-core/admin/bb-settings/settings/build/510.js:1
 #: bp-core/admin/bb-settings/settings/build/926.js:2
 msgid "Newest"
@@ -22179,8 +22196,8 @@ msgstr ""
 #: bp-core/admin/bb-settings/settings/build/190.js:1
 #: bp-core/admin/bb-settings/settings/build/231.js:1
 #: bp-core/admin/bb-settings/settings/build/362.js:2
-#: bp-core/admin/bb-settings/settings/build/483.js:2
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:3
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 #: bp-core/admin/bb-settings/settings/build/510.js:1
 #: bp-core/admin/bb-settings/settings/build/794.js:1
 #: bp-core/admin/bb-settings/settings/build/926.js:3
@@ -24052,7 +24069,7 @@ msgid "%1$s changed the permalink of the group %2$s."
 msgstr ""
 
 #: bp-groups/bp-groups-adminbar.php:45
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 msgid "Edit Group"
 msgstr ""
 
@@ -24389,7 +24406,7 @@ msgstr ""
 #: bp-core/admin/bb-settings/settings/build/190.js:1
 #: bp-core/admin/bb-settings/settings/build/285.js:2
 #: bp-core/admin/bb-settings/settings/build/362.js:1
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 #: bp-core/admin/bb-settings/settings/build/510.js:1
 #: bp-core/admin/bb-settings/settings/build/926.js:2
 msgid "Oldest"
@@ -24592,7 +24609,7 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-component.php:422
 #: bp-groups/classes/class-bp-groups-component.php:926
 #: bp-core/admin/bb-settings/settings/build/190.js:1
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 msgid "Details"
 msgstr ""
 
@@ -29250,7 +29267,7 @@ msgstr ""
 #: bp-core/admin/bb-settings/settings/build/231.js:1
 #: bp-core/admin/bb-settings/settings/build/285.js:2
 #: bp-core/admin/bb-settings/settings/build/362.js:2
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 #: bp-core/admin/bb-settings/settings/build/510.js:2
 #: bp-core/admin/bb-settings/settings/build/794.js:2
 #: bp-core/admin/bb-settings/settings/build/926.js:3
@@ -31664,8 +31681,8 @@ msgstr ""
 #: bp-core/admin/bb-settings/settings/build/285.js:1
 #: bp-core/admin/bb-settings/settings/build/285.js:2
 #: bp-core/admin/bb-settings/settings/build/483.js:2
-#: bp-core/admin/bb-settings/settings/build/483.js:3
 #: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 #: bp-core/admin/bb-settings/settings/build/499.js:1
 #: bp-core/admin/bb-settings/settings/build/510.js:1
 #: bp-core/admin/bb-settings/settings/build/517.js:1
@@ -31808,7 +31825,7 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/common/filters/group-filters.php:53
 #: bp-templates/bp-nouveau/buddypress/common/filters/member-filters.php:46
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 msgid "All Types"
 msgstr ""
 
@@ -31947,7 +31964,7 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/bb-topic-lists.php:43
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/bb-topic-lists.php:43
-#: bp-core/admin/bb-settings/settings/build/483.js:2
+#: bp-core/admin/bb-settings/settings/build/483.js:3
 msgid "Global"
 msgstr ""
 
@@ -33947,7 +33964,7 @@ msgid "Please enter a title"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/functions.php:204
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 msgid "Search groups"
 msgstr ""
 
@@ -33960,7 +33977,7 @@ msgid "Finding groups..."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/functions.php:208
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 msgid "No groups found."
 msgstr ""
 
@@ -34996,6 +35013,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:507
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:519
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:529
+#: bp-core/admin/bb-settings/settings/build/483.js:3
 msgid "No members found."
 msgstr ""
 
@@ -38147,7 +38165,7 @@ msgstr ""
 #: bp-core/admin/bb-settings/settings/build/223.js:1
 #: bp-core/admin/bb-settings/settings/build/285.js:1
 #: bp-core/admin/bb-settings/settings/build/483.js:1
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 #: bp-core/admin/bb-settings/settings/build/510.js:1
 #: bp-core/admin/bb-settings/settings/build/794.js:1
 #: bp-core/admin/bb-settings/settings/build/926.js:1
@@ -38186,6 +38204,7 @@ msgid "BuddyBoss Theme"
 msgstr ""
 
 #: bp-core/admin/bb-settings/rl-onboarding/build/rl-onboarding.js:1
+#: bp-core/admin/bb-settings/settings/build/index.js:3
 msgid "Customizable WordPress theme"
 msgstr ""
 
@@ -38194,6 +38213,7 @@ msgid "Our crafted theme made just for the BuddyBoss Platform giving you full co
 msgstr ""
 
 #: bp-core/admin/bb-settings/rl-onboarding/build/rl-onboarding.js:1
+#: bp-core/admin/bb-settings/settings/build/index.js:3
 msgid "Advanced customization"
 msgstr ""
 
@@ -38210,6 +38230,7 @@ msgid "Activate BuddyBoss Theme"
 msgstr ""
 
 #: bp-core/admin/bb-settings/rl-onboarding/build/rl-onboarding.js:1
+#: bp-core/admin/bb-settings/settings/build/index.js:3
 msgid "Buy Theme"
 msgstr ""
 
@@ -38344,7 +38365,7 @@ msgstr ""
 #: bp-core/admin/bb-settings/settings/build/231.js:1
 #: bp-core/admin/bb-settings/settings/build/285.js:2
 #: bp-core/admin/bb-settings/settings/build/362.js:1
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 #: bp-core/admin/bb-settings/settings/build/510.js:2
 #: bp-core/admin/bb-settings/settings/build/794.js:2
 #: bp-core/admin/bb-settings/settings/build/926.js:2
@@ -38454,14 +38475,14 @@ msgid "Failed to load forums. Please try again."
 msgstr ""
 
 #: bp-core/admin/bb-settings/settings/build/190.js:1
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 #: bp-core/admin/bb-settings/settings/build/510.js:1
 #: bp-core/admin/bb-settings/settings/build/794.js:1
 msgid "Action failed."
 msgstr ""
 
 #: bp-core/admin/bb-settings/settings/build/190.js:1
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 #: bp-core/admin/bb-settings/settings/build/510.js:1
 #: bp-core/admin/bb-settings/settings/build/794.js:1
 #: bp-core/admin/bb-settings/settings/build/926.js:2
@@ -38795,7 +38816,7 @@ msgid "Bulk Revoke Invitations"
 msgstr ""
 
 #: bp-core/admin/bb-settings/settings/build/483.js:2
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 msgid "Create New Group"
 msgstr ""
 
@@ -38832,201 +38853,251 @@ msgid "Add"
 msgstr ""
 
 #: bp-core/admin/bb-settings/settings/build/483.js:2
+msgid "Filter by role"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/483.js:2
+#: bp-core/admin/bb-settings/settings/build/926.js:3
+msgid "All (%d)"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/483.js:2
+msgid "Organizer (%d)"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/483.js:2
+msgid "Moderator (%d)"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/483.js:2
+msgid "Member (%d)"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/483.js:2
+msgid "Banned (%d)"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/483.js:2
 msgid "Pagination"
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/483.js:2
+#. translators: %s is the current search query.
+#: bp-core/admin/bb-settings/settings/build/483.js:3
+msgid "No members match “%s”."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/483.js:3
+msgid "No organizers in this group yet."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/483.js:3
+msgid "No moderators in this group yet."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/483.js:3
+msgid "No members in this group yet."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/483.js:3
+msgid "No banned members in this group."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/483.js:3
+msgid "This group has no members yet."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/483.js:3
 msgid "Topic created successfully."
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/483.js:2
+#: bp-core/admin/bb-settings/settings/build/483.js:3
 #: bp-core/admin/bb-settings/settings/build/index.js:3
 msgid "Failed to add topic."
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/483.js:2
+#: bp-core/admin/bb-settings/settings/build/483.js:3
 #: bp-core/admin/bb-settings/settings/build/index.js:3
 msgid "An error occurred while adding the topic."
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/483.js:2
+#: bp-core/admin/bb-settings/settings/build/483.js:3
 msgid "Topic updated successfully."
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/483.js:2
+#: bp-core/admin/bb-settings/settings/build/483.js:3
 #: bp-core/admin/bb-settings/settings/build/index.js:3
 msgid "Failed to update topic."
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/483.js:2
+#: bp-core/admin/bb-settings/settings/build/483.js:3
 #: bp-core/admin/bb-settings/settings/build/index.js:3
 msgid "An error occurred while updating the topic."
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/483.js:2
+#: bp-core/admin/bb-settings/settings/build/483.js:3
 #: bp-core/admin/bb-settings/settings/build/index.js:3
 msgid "Failed to initiate topic deletion."
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/483.js:2
+#: bp-core/admin/bb-settings/settings/build/483.js:3
 #: bp-core/admin/bb-settings/settings/build/index.js:3
 msgid "An error occurred while initiating topic deletion."
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/483.js:2
+#: bp-core/admin/bb-settings/settings/build/483.js:3
 msgid "Topic deleted successfully."
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/483.js:2
+#: bp-core/admin/bb-settings/settings/build/483.js:3
 #: bp-core/admin/bb-settings/settings/build/index.js:3
 msgid "An error occurred while deleting the topic."
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/483.js:2
+#: bp-core/admin/bb-settings/settings/build/483.js:3
 #: bp-core/admin/bb-settings/settings/build/index.js:3
 msgid "Failed to save topic order."
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/483.js:2
 #: bp-core/admin/bb-settings/settings/build/483.js:3
+#: bp-core/admin/bb-settings/settings/build/483.js:4
 #: bp-core/admin/bb-settings/settings/build/index.js:2
 #: bp-core/admin/bb-settings/settings/build/index.js:3
 msgid "Add New Topic"
 msgstr ""
 
 #. translators: %d: maximum number of topics allowed.
-#: bp-core/admin/bb-settings/settings/build/483.js:3
+#: bp-core/admin/bb-settings/settings/build/483.js:4
 msgid "Maximum of %d topics can be added."
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/483.js:3
+#: bp-core/admin/bb-settings/settings/build/483.js:4
 msgid "Select a topic"
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/483.js:3
+#: bp-core/admin/bb-settings/settings/build/483.js:4
 #: bp-core/admin/bb-settings/settings/build/index.js:2
 msgid "Topic Name"
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/483.js:3
+#: bp-core/admin/bb-settings/settings/build/483.js:4
 msgid "No topics found"
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/483.js:3
+#: bp-core/admin/bb-settings/settings/build/483.js:4
 msgid "Create \"%s\" New Topic"
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/483.js:3
+#: bp-core/admin/bb-settings/settings/build/483.js:4
 #: bp-core/admin/bb-settings/settings/build/index.js:2
 msgid "Enter topic name"
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/483.js:3
+#: bp-core/admin/bb-settings/settings/build/483.js:4
 #: bp-core/admin/bb-settings/settings/build/index.js:2
 msgid "Posting Permissions"
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/483.js:3
+#: bp-core/admin/bb-settings/settings/build/483.js:4
 msgid "Please select a topic."
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/483.js:3
+#: bp-core/admin/bb-settings/settings/build/483.js:4
 #: bp-core/admin/bb-settings/settings/build/index.js:2
 msgid "Add Topic"
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/483.js:3
+#: bp-core/admin/bb-settings/settings/build/483.js:4
 #: bp-core/admin/bb-settings/settings/build/index.js:2
 msgid "Select topic"
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 #: bp-core/admin/bb-settings/settings/build/index.js:3
 msgid "Deleting this topic will remove it from all posts it is assigned to and cannot be undone. Those posts will have no topic unless you assign a new one using the options below."
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 #: bp-core/admin/bb-settings/settings/build/index.js:3
 msgid "Move posts to another topic"
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 #: bp-core/admin/bb-settings/settings/build/index.js:3
 msgid "Delete the topic"
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 #: bp-core/admin/bb-settings/settings/build/index.js:3
 msgid "Confirm & Delete"
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 msgid "Permissions"
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 #: bp-core/admin/bb-settings/settings/build/484.js:1
 #: bp-core/admin/bb-settings/settings/build/index.js:1
 msgid "Integrations"
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 msgid "No settings available for this tab."
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 msgid "Highest Users"
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 msgid "Lowest Users"
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 msgid "Failed to load groups. Please try again."
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 msgid "Failed to load group data."
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 msgid "An error occurred loading group data."
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 msgid "Delete Group?"
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 msgid "This permanently deletes selected groups from the community and cannot be undone."
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 msgid "Deleting groups will remove them from the community and the WordPress backend listings. They will no longer appear in the group directory, and all associated data and posts will be permanently deleted."
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 msgid "I understand this will permanently delete the group."
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 msgid "Failed to save group."
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 msgid "An error occurred saving the group."
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 msgid "Are you sure you want to remove the group type from the selected groups?"
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 msgid "Bulk Action"
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/483.js:4
+#: bp-core/admin/bb-settings/settings/build/483.js:5
 msgid "Select group type"
 msgstr ""
 
@@ -39826,10 +39897,6 @@ msgid "Add Missing Email"
 msgstr ""
 
 #: bp-core/admin/bb-settings/settings/build/926.js:3
-msgid "All (%d)"
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings/build/926.js:3
 msgid "Published (%d)"
 msgstr ""
 
@@ -40149,14 +40216,6 @@ msgstr ""
 msgid "Install & Activate"
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/index.js:1
-msgid "Deactivating…"
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings/build/index.js:1
-msgid "Activating…"
-msgstr ""
-
 #. translators: %s: feature label
 #: bp-core/admin/bb-settings/settings/build/index.js:2
 msgid "Toggle %s"
@@ -40316,19 +40375,15 @@ msgid "No notification types registered."
 msgstr ""
 
 #: bp-core/admin/bb-settings/settings/build/index.js:3
-msgid "Crop Avatar"
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings/build/index.js:3
 msgid "Crop failed."
 msgstr ""
 
 #: bp-core/admin/bb-settings/settings/build/index.js:3
-msgid "Crop & Save"
+msgid "Uploading..."
 msgstr ""
 
 #: bp-core/admin/bb-settings/settings/build/index.js:3
-msgid "Uploading..."
+msgid "Crop & Upload"
 msgstr ""
 
 #: bp-core/admin/bb-settings/settings/build/index.js:3
@@ -40640,11 +40695,19 @@ msgid "Welcome to ReadyLaunch"
 msgstr ""
 
 #: bp-core/admin/bb-settings/settings/build/index.js:3
-msgid "Build powerful online communities, courses, and memberships — all on WordPress. BuddyBoss helps you launch your own branded platform where members can connect, learn, and grow. Whether you're an educator, coach, or community leader, our tools are designed to give you full control, flexibility, and scalability."
+msgid "Theme-free community interface"
 msgstr ""
 
 #: bp-core/admin/bb-settings/settings/build/index.js:3
-msgid "Leave Feedback"
+msgid "ReadyLaunch provides a complete, ready-to-use UI for your community, directly connected to the BuddyBoss Platform backend."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:3
+msgid "Simple management"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:3
+msgid "No theme required"
 msgstr ""
 
 #: bp-core/admin/bb-settings/settings/build/index.js:3
@@ -40652,7 +40715,47 @@ msgid "Setup Wizard"
 msgstr ""
 
 #: bp-core/admin/bb-settings/settings/build/index.js:3
-msgid "BuddyBoss ReadyLaunch tutorial"
+msgid "ReadyLaunch interface preview"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:3
+msgid "Welcome to BuddyBoss Theme"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:3
+msgid "A premium theme designed to work with BuddyBoss Platform, offering deep design control for courses and communities."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:3
+msgid "BuddyBoss theme required"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:3
+msgid "Activation failed. Please try again."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:3
+msgid "Theme activation requires the switch_themes capability — contact your network administrator."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:3
+msgid "Activating…"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:3
+msgid "Activate Theme"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:3
+msgid "Customize Theme"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:3
+msgid "Use ReadyLaunch"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:3
+msgid "BuddyBoss Theme interface preview"
 msgstr ""
 
 #: bp-core/admin/bb-settings/settings/build/index.js:3
