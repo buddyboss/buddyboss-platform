@@ -442,10 +442,17 @@ select.bb-admin-settings__select {
 		padding: 0;
 		border: none;
 		min-inline-size: auto;
+	}
 
-		> legend {
-			display: none;
-		}
+	// SettingsForm renders the field's label externally
+	// (.bb-admin-settings-form__field-label) and passes `label=""` to its
+	// RadioControl. WordPress still emits an empty <legend> inside the
+	// fieldset, which is invisible but takes block-level vertical space and
+	// pushes the radios away from the form's label. Collapse it here, scoped
+	// to .bb-admin-settings-form so RadioControls used directly in modals
+	// (e.g. FieldSetModal "Repeater Set") keep their visible legend.
+	.bb-admin-settings-form .components-radio-control > legend {
+		display: none;
 	}
 
 	.components-radio-control__group-wrapper {

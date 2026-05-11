@@ -449,14 +449,6 @@
 			padding-top: 24px;
 			border-top: 1px solid $bb-border-secondary-color;
 		}
-
-		// Restore the RadioControl <legend> label that the global form-level
-		// rule (utils/_elements.scss) hides. In SettingsForm fields the form
-		// renders its own label outside the control, so the legend is
-		// redundant — but in this modal the legend IS the visible group title.
-		.components-radio-control > legend {
-			display: block;
-		}
 	}
 
 	.bb-pf-modal-footer {
