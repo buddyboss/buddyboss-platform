@@ -648,6 +648,17 @@
 			white-space: nowrap;
 		}
 
+		// Fixed underlying value label shown on Gender option rows
+		// (Male / Female / Other). Picks up the same typography as the
+		// Default Value label so the row alignment matches other types.
+		&__gender-value {
+			font-size: 14px;
+			font-weight: 400;
+			line-height: 20px;
+			color: $bb-text-color;
+			white-space: nowrap;
+		}
+
 		&__remove {
 			display: flex;
 			align-items: center;

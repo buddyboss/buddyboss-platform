@@ -806,17 +806,30 @@ export function ProfileFieldModal( {
 																			/>
 																		</div>
 																		<div className="bb-pf-option-item__right">
-																			<button
-																				type="button"
-																				className={ 'bb-pf-option-item__default' + ( option.is_default ? ' bb-pf-option-item__default--selected' : '' ) }
-																				onClick={ function () { toggleDefaultOption( index, allowMultiDefault ); } }
-																				aria-label={ __( 'Set as default value', 'buddyboss' ) }
-																			>
-																				<span className={ allowMultiDefault ? "bb-pf-option-item__checkbox" : "bb-pf-option-item__radio" }></span>
-																				<span className="bb-pf-option-item__default-label">
-																					{ __( 'Default Value', 'buddyboss' ) }
+																			{ 'gender' === type ? (
+																				// Gender option carries a fixed underlying value
+																				// derived from position (0=Male, 1=Female, 2=Other) —
+																				// matches legacy. The admin may rename the visible
+																				// label but the underlying value never changes. Extra
+																				// admin-added options past index 2 have no fixed value.
+																				<span className="bb-pf-option-item__gender-value">
+																					{ 0 === index && __( 'Male', 'buddyboss' ) }
+																					{ 1 === index && __( 'Female', 'buddyboss' ) }
+																					{ 2 === index && __( 'Other', 'buddyboss' ) }
 																				</span>
-																			</button>
+																			) : (
+																				<button
+																					type="button"
+																					className={ 'bb-pf-option-item__default' + ( option.is_default ? ' bb-pf-option-item__default--selected' : '' ) }
+																					onClick={ function () { toggleDefaultOption( index, allowMultiDefault ); } }
+																					aria-label={ __( 'Set as default value', 'buddyboss' ) }
+																				>
+																					<span className={ allowMultiDefault ? "bb-pf-option-item__checkbox" : "bb-pf-option-item__radio" }></span>
+																					<span className="bb-pf-option-item__default-label">
+																						{ __( 'Default Value', 'buddyboss' ) }
+																					</span>
+																				</button>
+																			) }
 																			<button
 																				type="button"
 																				className="bb-pf-option-item__remove"
