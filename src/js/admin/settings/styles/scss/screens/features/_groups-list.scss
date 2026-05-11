@@ -484,7 +484,7 @@
 	// Radios stack vertically (Permissions tab keeps default horizontal layout).
 	.bb-admin-meta-field__radio-options {
 		flex-direction: column;
-		gap: 12px;
+		gap: 10px;
 	}
 
 	// Drop the checkbox divider ONLY when its conditional partner is rendered
@@ -506,9 +506,13 @@
 	// Last radio in a block (a radio followed by anything that isn't another
 	// radio) closes the Zoom section.
 	.bb-admin-meta-field__radio-field:has(+ :not(.bb-admin-meta-field__radio-field)) {
-		padding-bottom: 16px;
-		margin-bottom: 16px;
+		padding-bottom: 20px;
+		margin-bottom: 20px;
 		border-bottom: 1px solid $bb-border-secondary-color;
+	}
+
+	> [class*="bb-admin-meta-field"] {
+		margin-bottom: 24px;
 	}
 }
 
