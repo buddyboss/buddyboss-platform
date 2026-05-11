@@ -459,12 +459,18 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 	/**
 	 * Render badge pills for a field.
 	 *
+	 * Profile-type assignments render one pill per type. When the list
+	 * exceeds MAX_VISIBLE_MEMBER_TYPE_PILLS the remainder collapses into
+	 * a `+N` overflow pill whose title attribute lists the hidden names
+	 * so the full set is still discoverable on hover.
+	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param {Object} field Field data.
 	 * @returns {Array|null} Badge elements or null.
 	 */
 	function renderFieldBadgePills( field ) {
+		var MAX_VISIBLE_MEMBER_TYPE_PILLS = 3;
 		var badges = [];
 		if ( field.is_signup ) {
 			badges.push(
@@ -473,7 +479,7 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 		}
 		if ( 'none' === field.member_type_mode ) {
 			badges.push(
-				<span key="member-types" className="bb-pf-badge bb-pf-badge--member-type">{ __( 'No Profile Type', 'buddyboss' ) }</span>
+				<span key="member-types-none" className="bb-pf-badge bb-pf-badge--member-type">{ __( 'No Profile Type', 'buddyboss' ) }</span>
 			);
 		} else if ( field.member_types && field.member_types.length > 0 ) {
 			var typeLabels = field.member_types.map( function ( typeKey ) {
@@ -482,9 +488,33 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 				} );
 				return found ? decodeEntities( found.name ) : typeKey;
 			} );
-			badges.push(
-				<span key="member-types" className="bb-pf-badge bb-pf-badge--member-type">{ typeLabels.join( ', ' ) }</span>
-			);
+
+			var visibleLabels = typeLabels.slice( 0, MAX_VISIBLE_MEMBER_TYPE_PILLS );
+			var overflowLabels = typeLabels.slice( MAX_VISIBLE_MEMBER_TYPE_PILLS );
+
+			visibleLabels.forEach( function ( label, idx ) {
+				badges.push(
+					<span
+						key={ 'member-type-' + idx }
+						className="bb-pf-badge bb-pf-badge--member-type"
+						title={ label }
+					>
+						{ label }
+					</span>
+				);
+			} );
+
+			if ( overflowLabels.length > 0 ) {
+				badges.push(
+					<span
+						key="member-type-overflow"
+						className="bb-pf-badge bb-pf-badge--member-type bb-pf-badge--overflow"
+						title={ overflowLabels.join( ', ' ) }
+					>
+						{ sprintf( '+%d', overflowLabels.length ) }
+					</span>
+				);
+			}
 		}
 		return badges.length > 0 ? badges : null;
 	}

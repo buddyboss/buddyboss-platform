@@ -222,9 +222,20 @@
 		color: $bb-text-color;
 		background: $bb-background-secondary-color;
 		border: 0.5px solid $bb-border-tertiary-color;
-		max-width: 200px;
+		max-width: 140px;
 		overflow: hidden;
 		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	// Overflow chip (e.g. "+2") rendered when more profile types are
+	// assigned than fit in the row layout. Tighter min-width so the
+	// short count label stays compact.
+	&--overflow {
+		max-width: none;
+		min-width: 28px;
+		justify-content: center;
+		cursor: default;
 	}
 }
 
