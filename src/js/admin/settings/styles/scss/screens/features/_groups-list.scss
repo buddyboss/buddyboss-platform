@@ -516,7 +516,7 @@
 	display: grid;
 	grid-template-columns: 18px 1fr;
 	gap: 4px 8px;
-	align-items: start;
+	align-items: center;
 	cursor: pointer;
 	padding: 4px 0;
 
@@ -528,7 +528,7 @@
 
 	.bb-admin-meta-field__radio-label {
 		font-size: 13px;
-		font-weight: 500;
+		font-weight: 400;
 		color: $bb-text-color;
 		grid-row: 1;
 		grid-column: 2;
