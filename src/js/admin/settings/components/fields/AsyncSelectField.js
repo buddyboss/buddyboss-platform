@@ -115,14 +115,6 @@ export function AsyncSelectField( { id, value, onChange, asyncAction, asyncExtra
 	var selectedLabel = selectedLabelState[ 0 ];
 	var setSelectedLabel = selectedLabelState[ 1 ];
 
-	// True while the mount-time label resolve AJAX is in flight. Used to swap
-	// the clear (✕) button for a spinner so the user gets a loading affordance
-	// instead of staring at a clickable close icon that wipes a value it
-	// doesn't yet know how to render.
-	var resolvingState = useState( false );
-	var isResolvingLabel = resolvingState[ 0 ];
-	var setIsResolvingLabel = resolvingState[ 1 ];
-
 	// Index of the currently ARIA-active option for keyboard navigation.
 	// -1 = nothing active (browse mode, no arrow key pressed yet). Drives
 	// aria-activedescendant on the input and the visual highlight class on
@@ -187,6 +179,15 @@ export function AsyncSelectField( { id, value, onChange, asyncAction, asyncExtra
 
 	// Wrapper ref for click-outside detection.
 	var wrapperRef = useRef( null );
+
+	// Refs for the trigger button (focus restore on close) and the in-dropdown
+	// search input (auto-focus on open). Required by the "select with internal
+	// search" pattern — the trigger no longer accepts typing, so opening the
+	// dropdown must move focus into the search input, and Escape/Enter/Clear
+	// must return focus to the trigger so keyboard users don't lose their
+	// position in the tab order.
+	var triggerRef     = useRef( null );
+	var searchInputRef = useRef( null );
 
 	/**
 	 * Fetch a page of results from the server.
@@ -291,7 +292,6 @@ export function AsyncSelectField( { id, value, onChange, asyncAction, asyncExtra
 			var staticMatch = findStaticMatch( value );
 			if ( staticMatch ) {
 				setSelectedLabel( staticMatch.label );
-				setIsResolvingLabel( false );
 				lastAppliedRef.current = { value: valueStr, label: staticMatch.label };
 				return;
 			}
@@ -305,7 +305,6 @@ export function AsyncSelectField( { id, value, onChange, asyncAction, asyncExtra
 			// up as response.data.results[0] and paint as the "saved" label.
 			if ( '' === valueStr || '0' === valueStr ) {
 				setSelectedLabel( '' );
-				setIsResolvingLabel( false );
 				lastAppliedRef.current = { value: '', label: '' };
 				return;
 			}
@@ -329,7 +328,6 @@ export function AsyncSelectField( { id, value, onChange, asyncAction, asyncExtra
 			// keeps the freshly-picked label intact.
 			if ( initialLabel && initialLabel !== lastApplied.label && valueStr !== lastApplied.value ) {
 				setSelectedLabel( initialLabel );
-				setIsResolvingLabel( false );
 				lastAppliedRef.current = { value: valueStr, label: initialLabel };
 				return;
 			}
@@ -337,12 +335,10 @@ export function AsyncSelectField( { id, value, onChange, asyncAction, asyncExtra
 			// Label is already current for this value (handleSelect just ran,
 			// or the mount-time seed still matches). Keep it.
 			if ( selectedLabel && valueStr === lastApplied.value ) {
-				setIsResolvingLabel( false );
 				return;
 			}
 
 			var controller = new AbortController();
-			setIsResolvingLabel( true );
 
 			ajaxFetch(
 				asyncAction,
@@ -371,14 +367,6 @@ export function AsyncSelectField( { id, value, onChange, asyncAction, asyncExtra
 					}
 					if ( window && window.console && 'function' === typeof window.console.warn ) {
 						window.console.warn( 'AsyncSelectField resolve failed:', err );
-					}
-				} )
-				.finally( function () {
-					// Only flip the spinner off when OUR request is the one
-					// that finished. A later request aborted this one and owns
-					// the resolving state now.
-					if ( ! controller.signal.aborted ) {
-						setIsResolvingLabel( false );
 					}
 				} );
 
@@ -427,20 +415,45 @@ export function AsyncSelectField( { id, value, onChange, asyncAction, asyncExtra
 			if ( ! pinnedOptions.length ) {
 				return results;
 			}
+
+			// Filter pinned options against the active search term so they
+			// don't pollute the dropdown when the user is searching for
+			// something else. Without this, typing "Account" on Login
+			// Redirects still surfaced "Default" and "Custom URL" at the
+			// top of the list — confusing because those entries don't
+			// match the term. An empty search term means "browsing", in
+			// which case every pinned option is shown as before.
+			//
+			// Matching is case-insensitive on the option label, mirroring
+			// the server-side search behavior (the AJAX handler does a
+			// LIKE on post_title without case folding either way).
+			var term = ( search || '' ).trim().toLowerCase();
+			var visiblePinned = '' === term
+				? pinnedOptions
+				: pinnedOptions.filter( function ( opt ) {
+					return String( opt.label || '' ).toLowerCase().indexOf( term ) !== -1;
+				} );
+
+			if ( ! visiblePinned.length ) {
+				// Nothing pinned matches the term — skip the dedupe pass
+				// and return the server results unchanged.
+				return results;
+			}
+
 			// Object.create(null) avoids the Object.prototype chain so a
 			// future caller pinning a value like 'constructor', 'toString',
 			// '__proto__' or 'hasOwnProperty' can't trigger a false-positive
 			// hit when we test for membership below.
 			var pinnedValues = Object.create( null );
-			for ( var i = 0; i < pinnedOptions.length; i++ ) {
-				pinnedValues[ String( pinnedOptions[ i ].value ) ] = true;
+			for ( var i = 0; i < visiblePinned.length; i++ ) {
+				pinnedValues[ String( visiblePinned[ i ].value ) ] = true;
 			}
 			var deduped = results.filter( function ( r ) {
 				return ! pinnedValues[ String( r.value ) ];
 			} );
-			return pinnedOptions.concat( deduped );
+			return visiblePinned.concat( deduped );
 		},
-		[ pinnedOptions, results ]
+		[ pinnedOptions, results, search ]
 	);
 
 	// Reset the keyboard-active index when the displayed list changes or the
@@ -533,9 +546,67 @@ export function AsyncSelectField( { id, value, onChange, asyncAction, asyncExtra
 				setIsOpen( false );
 				setSearch( '' );
 				setActiveIndex( -1 );
+				// Return focus to the trigger so the keyboard user doesn't
+				// lose their place in the tab order. Click-outside close
+				// intentionally skips this so focus follows where the user
+				// clicked.
+				if ( triggerRef.current ) {
+					triggerRef.current.focus();
+				}
 			}
 		}
 	}
+
+	/**
+	 * Trigger button click — toggle the dropdown open/closed.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	function handleTriggerClick() {
+		if ( disabled ) {
+			return;
+		}
+		if ( isOpen ) {
+			setIsOpen( false );
+			return;
+		}
+		setIsOpen( true );
+		setSearch( '' );
+		setPage( 1 );
+		fetchResults( '', 1, false );
+	}
+
+	/**
+	 * Trigger button keyboard handler. The trigger doesn't accept typing
+	 * (search lives inside the dropdown), so only the keys that *open* the
+	 * dropdown matter here — actual list navigation runs on the in-dropdown
+	 * search input via handleKeyDown above.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {KeyboardEvent} e Trigger button keydown event.
+	 */
+	function handleTriggerKeyDown( e ) {
+		if ( disabled || isOpen ) {
+			return;
+		}
+		if ( 'ArrowDown' === e.key || 'Enter' === e.key || ' ' === e.key ) {
+			e.preventDefault();
+			setIsOpen( true );
+			setSearch( '' );
+			setPage( 1 );
+			fetchResults( '', 1, false );
+		}
+	}
+
+	// Auto-focus the in-dropdown search input when the dropdown opens.
+	// Runs on every `isOpen` transition; the early-return guards against
+	// the closed→closed re-render path where the ref is intentionally null.
+	useEffect( function () {
+		if ( isOpen && searchInputRef.current ) {
+			searchInputRef.current.focus();
+		}
+	}, [ isOpen ] );
 
 	// Cleanup abort controller on unmount.
 	useEffect(
@@ -551,21 +622,6 @@ export function AsyncSelectField( { id, value, onChange, asyncAction, asyncExtra
 		},
 		[]
 	);
-
-	/**
-	 * Handle input focus — open dropdown and load first page.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	function handleFocus() {
-		if ( disabled ) {
-			return;
-		}
-		setIsOpen( true );
-		setSearch( '' );
-		setPage( 1 );
-		fetchResults( '', 1, false );
-	}
 
 	/**
 	 * Handle search input change — debounced search.
@@ -618,64 +674,70 @@ export function AsyncSelectField( { id, value, onChange, asyncAction, asyncExtra
 		fetchResults( search, nextPage, true );
 	}
 
-	// Display value: show search term while typing, otherwise selected label.
-	var displayValue = isOpen ? search : ( selectedLabel || '' );
+	// Display label for the trigger button — selected value or placeholder.
+	// The trigger no longer accepts typing (search lives inside the dropdown
+	// per the design contract), so we render the current selection verbatim
+	// and fall back to the placeholder when nothing is selected.
+	var triggerLabel = selectedLabel || placeholder || __( 'Select…', 'buddyboss' );
 
 	return (
 		<div
 			className="bb-async-select"
 			ref={ wrapperRef }
 		>
-			<div className="bb-async-select__input-wrapper">
-				<input
+			<div className="bb-async-select__trigger-wrapper">
+				<button
+					type="button"
+					ref={ triggerRef }
 					id={ id || undefined }
-					type="text"
-					className="bb-async-select__input"
-					value={ displayValue }
-					placeholder={ selectedLabel || placeholder || __( 'Search…', 'buddyboss' ) }
-					onFocus={ handleFocus }
-					onChange={ handleSearchChange }
-					onKeyDown={ handleKeyDown }
+					className={ 'bb-async-select__trigger' + ( isOpen ? ' is-open' : '' ) + ( ! selectedLabel ? ' is-placeholder' : '' ) }
 					disabled={ disabled }
-					autoComplete="off"
-					role="combobox"
 					aria-haspopup="listbox"
-					aria-autocomplete="list"
 					aria-expanded={ isOpen }
 					aria-controls={ idsRef.current.listbox }
-					aria-activedescendant={ isOpen && activeIndex >= 0 && activeIndex < displayResults.length
-						? idsRef.current.option( activeIndex )
-						: undefined
-					}
-				/>
-				{ null !== value && undefined !== value && '' !== String( value ) && ( '0' !== String( value ) || !! currentStaticMatch ) && (
-					isResolvingLabel ? (
-						// Spinner replaces the clear button while the label is
-						// being fetched so the user isn't prompted to clear a
-						// value whose title hasn't rendered yet.
-						<span className="bb-async-select__resolving" aria-hidden="true">
-							<Spinner />
-						</span>
-					) : (
-						<button
-							type="button"
-							className="bb-async-select__clear"
-							onClick={ function () {
-								onChange( '' );
-								setSelectedLabel( '' );
-								setSearch( '' );
-								setIsOpen( false );
-							} }
-							aria-label={ __( 'Clear selection', 'buddyboss' ) }
-						>
-							&#x2715;
-						</button>
-					)
-				) }
+					onClick={ handleTriggerClick }
+					onKeyDown={ handleTriggerKeyDown }
+				>
+					<span className="bb-async-select__trigger-label">
+						{ triggerLabel }
+					</span>
+					<i className="bb-async-select__trigger-chevron bb-icons-rl bb-icons-rl-caret-down" aria-hidden="true" />
+				</button>
 			</div>
 
 			{ isOpen && (
 				<div className="bb-async-select__dropdown">
+					{ /*
+					 * In-dropdown search input. Auto-focused on open via the
+					 * useEffect above. Owns keyboard navigation
+					 * (ArrowDown/Up/Home/End/Enter/Escape) through the shared
+					 * `handleKeyDown` — same handler the old combobox-style
+					 * trigger input used, just relocated. Not a combobox in the
+					 * ARIA sense (no `role="combobox"`, no `aria-autocomplete`)
+					 * — the dropdown is already open, so the input is just a
+					 * filter over an already-visible listbox, identical to the
+					 * GitHub / Linear / Material UI "select with search"
+					 * pattern that the design team's Figma reference shows.
+					 */ }
+					<div className="bb-async-select__search-wrapper">
+						<i className="bb-async-select__search-icon bb-icons-rl bb-icons-rl-magnifying-glass" aria-hidden="true" />
+						<input
+							ref={ searchInputRef }
+							type="search"
+							className="bb-async-select__search-input"
+							value={ search }
+							onChange={ handleSearchChange }
+							onKeyDown={ handleKeyDown }
+							placeholder={ __( 'Search…', 'buddyboss' ) }
+							autoComplete="off"
+							aria-controls={ idsRef.current.listbox }
+							aria-activedescendant={ activeIndex >= 0 && activeIndex < displayResults.length
+								? idsRef.current.option( activeIndex )
+								: undefined
+							}
+						/>
+					</div>
+
 					{ /*
 					 * `role="status"` + `aria-live="polite"` on the status region
 					 * so assistive tech announces "Loading" / "No results found"

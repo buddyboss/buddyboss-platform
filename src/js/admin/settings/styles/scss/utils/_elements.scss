@@ -1306,34 +1306,69 @@ select.bb-admin-settings__select {
     position: relative;
     width: 100%;
 
-    &__input-wrapper {
+    // Trigger button — read-only, clicking opens the dropdown. Replaces
+    // the previous `<input role="combobox">` per the design directive:
+    // searchable selects must not allow inline searching; search lives
+    // inside the dropdown. Styled to match the project TextControl so
+    // existing layouts (label column widths, row heights) don't shift.
+    &__trigger-wrapper {
         position: relative;
         display: flex;
         align-items: center;
     }
 
-    &__input[type="text"] {
+    &__trigger {
         @include bb-input-text;
+        display: flex;
+        align-items: center;
+        gap: 8px;
         width: 100%;
-        padding-right: 28px; // Room for clear button.
-    }
-
-    &__clear {
-        position: absolute;
-        right: 8px;
-        background: none;
-        border: none;
+        text-align: left;
         cursor: pointer;
-        color: $bb-text-tertiary-color;
-        font-size: 12px;
-        line-height: 1;
-        padding: 0;
+        background: $bb-background-base-color;
 
-        &:hover {
-            color: $bb-text-color;
+        &:disabled {
+            cursor: not-allowed;
+            background: $bb-background-secondary-color;
+        }
+
+        &.is-placeholder .bb-async-select__trigger-label {
+            color: $bb-text-tertiary-color;
+        }
+
+        &.is-open .bb-async-select__trigger-chevron {
+            transform: rotate(180deg);
         }
     }
 
+    &__trigger-label {
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: $bb-text-color;
+        font-size: 13px;
+    }
+
+    // `margin-left: auto` pins the chevron to the right edge of the
+    // button's content area regardless of label width — survives if a
+    // future caller swaps the label for something other than
+    // `__trigger-label`.
+    &__trigger-chevron {
+        margin-left: auto;
+        flex-shrink: 0;
+        font-size: 16px;
+        line-height: 1;
+        color: $bb-icon-tertiary-color;
+        transition: transform 0.15s ease;
+    }
+
+    // Dropdown panel. Visual styling matches the Email Template Custom
+    // Fields → Name dropdown (`.bb-email-template-modal__meta-key-dropdown`)
+    // so the two "searchable select" surfaces in Settings 2.0 read as one
+    // pattern: bordered TextControl-style search input at the top, options
+    // below with hover backgrounds, large radius, soft shadow.
     &__dropdown {
         position: absolute;
         top: calc(100% + 2px);
@@ -1341,11 +1376,41 @@ select.bb-admin-settings__select {
         right: 0;
         background: $bb-background-base-color;
         border: 1px solid $bb-border-secondary-color;
-        border-radius: $bb-border-radius-md;
+        border-radius: $bb-border-radius-lg;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        max-height: 240px;
+        max-height: 280px;
         overflow-y: auto;
         z-index: 100;
+        padding: 8px 0;
+        display: flex;
+        flex-direction: column;
+    }
+
+    // In-dropdown search input. Sticky at the top of the popover so the
+    // filter input stays visible while the user scrolls a long option
+    // list. Auto-focused by the JS-side `useEffect` on `isOpen`.
+    &__search-wrapper {
+        position: sticky;
+        top: 0;
+        background: $bb-background-base-color;
+        padding: 8px 16px;
+        z-index: 1;
+    }
+
+    // Hidden by default — the Email Template pattern doesn't include a
+    // magnifier glyph inside the search input. Kept in the JSX so any
+    // consumer that wants the magnifier can re-enable it via override.
+    &__search-icon {
+        display: none;
+    }
+
+    &__search-input[type="search"] {
+        @include bb-input-text;
+        width: 100%;
+
+        &::-webkit-search-cancel-button {
+            display: none;
+        }
     }
 
     &__status {
@@ -1364,24 +1429,27 @@ select.bb-admin-settings__select {
     &__option {
         margin: 0;
 
+        // Padding + colors match the Email Template Custom Fields
+        // option row (`.bb-email-template-modal__meta-key-option`) so
+        // the two searchable selects render with identical option rows.
         button {
             display: block;
             width: 100%;
-            padding: 8px 16px;
+            padding: 12px 16px;
             border: none;
             background: none;
             cursor: pointer;
             text-align: left;
             font-size: 13px;
-            color: $bb-text-color;
+            color: $bb-text-tertiary-color;
 
             &:hover {
-                background-color: $bb-background-secondary-color;
+                background-color: $bb-background-primary-color;
             }
         }
 
         &.is-selected button {
-            background-color: $bb-background-secondary-color;
+            background-color: $bb-background-primary-color;
         }
     }
 
