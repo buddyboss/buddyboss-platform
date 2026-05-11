@@ -32,12 +32,11 @@
 		display: flex;
 		flex-direction: column;
 		align-items: flex-start;
-		// Frame 37109 — gap 24 between title, intro group, and actions row.
 		gap: 24px;
+		align-self: center;
 	}
 
 	&__title {
-		// title/md-medium — 22/30 weight 500.
 		font-size: 22px;
 		font-weight: 500;
 		line-height: 30px;
@@ -56,15 +55,13 @@
 	}
 
 	&__intro-body {
-		// "texts" inside Frame 37110 — gap 8 between description and checks.
 		display: flex;
 		flex-direction: column;
-		gap: 8px;
+		gap: 10px;
 		width: 100%;
 	}
 
 	&__subtitle {
-		// heading/lg-medium — 16/22 weight 500.
 		font-size: 16px;
 		font-weight: 500;
 		line-height: 22px;
@@ -73,7 +70,6 @@
 	}
 
 	&__description {
-		// body/regular — 13/18 weight 400 #666666.
 		font-size: 13px;
 		line-height: 18px;
 		color: $bb-text-tertiary-color;
@@ -91,16 +87,14 @@
 	}
 
 	&__check {
-		// Frame 4 — inline icon + label, padding 3 0, gap 8.
 		display: inline-flex;
 		align-items: center;
 		gap: 8px;
 		padding: 3px 0;
-		// body/medium — 13/18 weight 500 #2F2F2F.
 		font-size: 13px;
 		line-height: 18px;
 		font-weight: 500;
-		color: $bb-text-color;
+		color: $bb-text-secondary-color;
 
 		&::before {
 			content: '';
@@ -154,7 +148,6 @@
 	}
 
 	&__preview {
-		// Rectangle 2 — 464×256, border 0.5 #D9D9D9, radius 8, dropdown shadow.
 		flex: 0 0 auto;
 		width: 464px;
 		max-width: 50%;
@@ -184,6 +177,7 @@
 			width: 100%;
 			max-width: 100%;
 			order: -1;
+			margin-bottom: 12px;
 		}
 	}
 }
