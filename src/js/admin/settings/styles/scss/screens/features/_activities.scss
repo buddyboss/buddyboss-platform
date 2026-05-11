@@ -310,6 +310,10 @@
 
 	&__editor-wrapper {
 		overflow: hidden;
+		
+		.bb-admin-meta-field__label + & {
+			margin-top: -26px;
+		}
 
 		.wp-editor-container {
 			display: flex;
@@ -361,6 +365,10 @@
 					&:hover {
 						background-color: $bb-background-color;
 						border-color: $bb-border-quaternary-color;
+					}
+
+					&.mce-first {
+						margin-left: 0;
 					}
 				}
 
@@ -474,6 +482,7 @@
 		.mce-container-body {
 			display: flex;
 			flex-direction: column;
+			padding: 0;
 		}
 
 		.mce-edit-area.mce-panel {
@@ -492,6 +501,7 @@
 
 		.mce-top-part {
 			order: 3;
+			margin-top: 8px;
 
 			&:before {
 				box-shadow: none;
