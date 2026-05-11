@@ -435,6 +435,30 @@
 
 .bb-pf-fieldset-modal {
 
+	&.components-modal__frame {
+		max-width: 680px;
+	}
+
+	.bb-admin-settings-modal__body {
+
+		// The body has two logical sections (Name, Repeater Set) split by a
+		// 1px rule per Figma 6265-114490. The selector matches the second
+		// .components-base-control sibling regardless of which one renders.
+		> .components-base-control + .components-base-control {
+			margin-top: 24px;
+			padding-top: 24px;
+			border-top: 1px solid $bb-border-secondary-color;
+		}
+
+		// Restore the RadioControl <legend> label that the global form-level
+		// rule (utils/_elements.scss) hides. In SettingsForm fields the form
+		// renders its own label outside the control, so the legend is
+		// redundant — but in this modal the legend IS the visible group title.
+		.components-radio-control > legend {
+			display: block;
+		}
+	}
+
 	.bb-pf-modal-footer {
 		justify-content: space-between;
 
