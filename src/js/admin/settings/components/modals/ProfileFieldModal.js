@@ -758,6 +758,7 @@ export function ProfileFieldModal( {
 				<div className="bb-admin-settings--divided-section">
 					{ /* Type */ }
 					<CustomSelectControl
+					className="bb-custom-select__type"
 						label={ __( 'Type', 'buddyboss' ) }
 						value={ type }
 						groups={ typeGroups }

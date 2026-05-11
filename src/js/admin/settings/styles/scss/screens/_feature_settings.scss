@@ -2999,7 +2999,7 @@
 	&__trigger-content {
 		display: flex;
 		align-items: center;
-		gap: 8px;
+		gap: 6px;
 		flex: 1;
 		min-width: 0;
 
@@ -3011,8 +3011,12 @@
 		.bb-icon-l {
 			font-size: 16px;
 			line-height: 1;
-			color: $bb-icon-tertiary-color;
+			color: $bb-icon-secondary-color;
 			flex-shrink: 0;
+
+            &:before {
+                margin: 0;
+            }
 		}
 
 		// Inline-SVG icon fallback (CustomSelectControl renders this when
@@ -3057,7 +3061,7 @@
 
 	&__dropdown {
 		position: absolute;
-		top: calc(100% - 20px);
+		top: calc(100% + 4px);
 		left: 0;
 		width: 100%;
 		min-width: 192px;
@@ -3184,6 +3188,13 @@
 		line-height: 1.5;
 		margin: 8px 0 0 0;
 	}
+
+    &__type {
+
+        .bb-custom-select__dropdown {
+            top: calc(100% - 20px);
+        }
+    }
 }
 
 /* MediaPickerField — generic wp.media library picker (Appearance logos, OG image) */
