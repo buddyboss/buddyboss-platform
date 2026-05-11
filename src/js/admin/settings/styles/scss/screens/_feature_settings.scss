@@ -3057,11 +3057,12 @@
 
 	&__dropdown {
 		position: absolute;
-		top: calc(100% + 4px);
+		top: calc(100% - 20px);
 		left: 0;
 		width: 100%;
 		min-width: 192px;
 		max-height: 320px;
+        max-width: 225px;
 		overflow-y: auto;
 		background-color: $bb-background-base-color;
 		border: 1px solid $bb-border-secondary-color;
