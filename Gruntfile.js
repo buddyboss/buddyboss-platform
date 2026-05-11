@@ -544,6 +544,20 @@ module.exports = function (grunt) {
 					cwd: '.',
 					stdout: true
 				},
+				// Local-only counterpart to `init_build_dir_git`. Used by
+				// the `build_test` task — creates the buddyboss-platform/
+				// directory the rest of the build flow expects to exist,
+				// WITHOUT any git initialisation, remote fetch, or branch
+				// checkout. The empty build dir + copy:files + compress
+				// steps that follow are purely filesystem operations, so
+				// they work fine on a plain directory. No `.git` means
+				// `empty_build_dir`'s find pattern has nothing to skip —
+				// files just get removed cleanly.
+				init_build_dir_clean: {
+					command: 'mkdir -p buddyboss-platform',
+					cwd: '.',
+					stdout: true
+				},
 				empty_build_dir: {
 					command: 'cd buddyboss-platform && find . -not -path "./.git*" -not -name "." -not -name ".." -delete && cd ..',
 					cwd: '.',
@@ -704,6 +718,24 @@ module.exports = function (grunt) {
 
 	// Build task: Creates production build in BUILD_DIR, initializes git, performs build operations, then commits to production
 	grunt.registerTask('build', ['string-replace:dist', 'exec:composer', 'clean:all', 'exec:init_build_dir_git', 'exec:empty_build_dir', 'copy:files', 'clean:composer', 'exec:commit_build_to_mothership_release', 'compress', 'clean:all']);
+
+	// Build-test task: identical to `build` except it never touches the
+	// production branch — no git init, no fetch, no checkout, no commit,
+	// no push. Produces the same `buddyboss-platform-plugin.zip` as
+	// `build` so QA can ship the artefact to staging without altering
+	// the canonical release branch. Use this for ad-hoc test builds,
+	// CI dry-runs, or local "what would the next release look like"
+	// inspection. Steps:
+	//   1. string-replace:dist             — substitute [BBVERSION] etc.
+	//   2. exec:composer                   — install prod composer deps
+	//   3. clean:all                       — wipe any prior build artefact
+	//   4. exec:init_build_dir_clean       — `mkdir -p buddyboss-platform/` (NO git)
+	//   5. exec:empty_build_dir            — clear any leftover files (no .git to skip — fine)
+	//   6. copy:files                      — stage built sources
+	//   7. clean:composer                  — drop dev composer state from the staged dir
+	//   8. compress                        — zip → buddyboss-platform-plugin.zip
+	//   9. clean:all                       — final tidy
+	grunt.registerTask('build_test', ['string-replace:dist', 'exec:composer', 'clean:all', 'exec:init_build_dir_clean', 'exec:empty_build_dir', 'copy:files', 'clean:composer', 'compress', 'clean:all']);
 
 	grunt.registerTask('release', ['src', 'build']);
 
