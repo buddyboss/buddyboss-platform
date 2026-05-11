@@ -488,9 +488,34 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 										</div>
 										<div className="bb-admin-profile-types__list-item-count-col">
 											<span className="bb-admin-profile-types__list-item-count-icon bb-icons-rl bb-icons-rl-users"></span>
-											<span className="bb-admin-profile-types__list-item-count">
-												{ countText }
-											</span>
+											{ /*
+											 * Clicking the member count jumps to the WP
+											 * Users list-table filtered by this member
+											 * type — matches the legacy admin behavior
+											 * where the "Users" column on the
+											 * `edit.php?post_type=bp-member-type` screen
+											 * links to `users.php?bp-member-type=<key>`.
+											 *
+											 * Falls back to a non-interactive <span> when
+											 * the type has no key yet (shouldn't happen
+											 * for saved types, but guards drafts that
+											 * never finished registering a slug) or when
+											 * `bbAdminData.adminUrl` is missing (defensive
+											 * — older bundles served against an updated
+											 * Platform).
+											 */ }
+											{ type.key && window.bbAdminData && window.bbAdminData.adminUrl ? (
+												<a
+													className="bb-admin-profile-types__list-item-count"
+													href={ window.bbAdminData.adminUrl + 'users.php?bp-member-type=' + encodeURIComponent( type.key ) }
+												>
+													{ countText }
+												</a>
+											) : (
+												<span className="bb-admin-profile-types__list-item-count">
+													{ countText }
+												</span>
+											) }
 										</div>
 										<div className="bb-admin-profile-types__list-item-visibility-col">
 											<span className={ 'bb-admin-profile-types__list-item-visibility-badge' + badge.modifier }>

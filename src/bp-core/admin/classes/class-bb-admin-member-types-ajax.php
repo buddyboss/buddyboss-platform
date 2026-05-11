@@ -93,13 +93,22 @@ class BB_Admin_Member_Types_Ajax {
 			wp_send_json_error( array( 'message' => __( 'Profile component is not active.', 'buddyboss' ) ) );
 		}
 
-		// Include all visibility statuses so Private/Draft types appear in admin listing.
-		// The default 'publish' filter is correct for frontend but too restrictive for admin.
+		// Admin listing order (per design spec): private items first,
+		// then oldest → newest within each visibility group so newly
+		// added types fall to the END of their group. The callback is
+		// defined as a named function in `bp-members-filters.php`
+		// (`bb_admin_member_types_listing_orderby`) so it's
+		// `remove_filter()`-able by string reference. See that function's
+		// docblock for the full rationale.
+		add_filter( 'posts_orderby', 'bb_admin_member_types_listing_orderby', 10, 2 );
+
 		$member_type_ids = bp_get_active_member_types(
 			array(
 				'post_status' => array( 'publish', 'private', 'draft' ),
 			)
 		);
+
+		remove_filter( 'posts_orderby', 'bb_admin_member_types_listing_orderby', 10 );
 
 		if ( empty( $member_type_ids ) ) {
 			$response = array(

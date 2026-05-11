@@ -196,6 +196,11 @@ function bb_admin_settings_page() {
 		'apiUrl'                    => rest_url( bp_rest_namespace() . '/' . bp_rest_version() . '/' ),
 		'nonce'                     => wp_create_nonce( 'wp_rest' ),
 		'ajaxUrl'                   => esc_url( admin_url( 'admin-ajax.php' ) ),
+		// Base WP admin URL — needed for React-side deep links into legacy
+		// admin pages (e.g. Profile Types → "10 members" jumps to
+		// `users.php?bp-member-type=<key>` to match the legacy admin
+		// list-table behavior).
+		'adminUrl'                  => esc_url( admin_url() ),
 		'ajaxNonce'                 => wp_create_nonce( 'bb_admin_settings' ),
 		'addonNonce'                => wp_create_nonce( 'mosh_addons' ),
 		'logoUrl'                   => buddypress()->plugin_url . 'bp-core/images/admin/BBLogo.png',
