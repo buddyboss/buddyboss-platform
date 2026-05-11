@@ -516,7 +516,7 @@
 	display: grid;
 	grid-template-columns: 18px 1fr;
 	gap: 4px 8px;
-	align-items: start;
+	align-items: center;
 	cursor: pointer;
 	padding: 4px 0;
 
@@ -528,7 +528,7 @@
 
 	.bb-admin-meta-field__radio-label {
 		font-size: 13px;
-		font-weight: 500;
+		font-weight: 400;
 		color: $bb-text-color;
 		grid-row: 1;
 		grid-column: 2;
@@ -702,7 +702,7 @@ input.bb-admin-meta-field__search-input {
 	font-size: 13px;
 	font-weight: 500;
 	color: $bb-text-color;
-	margin-bottom: 6px;
+	margin-bottom: 10px;
 }
 
 .bb-admin-meta-field__permalink-field {
@@ -777,7 +777,7 @@ input.bb-admin-meta-field__search-input {
 .bb-group-members-tab {
 
 	&__add-member {
-		margin-bottom: 24px;
+		margin-bottom: 16px;
 	}
 
 	// Filter row (Figma 2026-05-08): full-width search input on the left,
@@ -788,7 +788,9 @@ input.bb-admin-meta-field__search-input {
 		display: flex;
 		align-items: center;
 		gap: 12px;
-		margin-bottom: 16px;
+		margin-bottom: 24px;
+		padding: 16px 0;
+		border-top: 0.5px solid $bb-border-secondary-color;
 	}
 
 	&__filter-search {
@@ -949,7 +951,7 @@ input.bb-admin-meta-field__search-input {
 	&__list {
 		display: flex;
 		flex-direction: column;
-		gap: 16px;
+		gap: 24px;
 	}
 
 	&__role-group {
@@ -957,7 +959,7 @@ input.bb-admin-meta-field__search-input {
 		flex-direction: column;
 		gap: 8px;
 		border: 0.5px solid $bb-border-secondary-color;
-		border-radius: $bb-border-radius-lg;
+		border-radius: $bb-border-radius-xl;
 		padding: 16px;
 	}
 
