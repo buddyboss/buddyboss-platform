@@ -439,18 +439,6 @@
 		max-width: 680px;
 	}
 
-	.bb-admin-settings-modal__body {
-
-		// The body has two logical sections (Name, Repeater Set) split by a
-		// 1px rule per Figma 6265-114490. The selector matches the second
-		// .components-base-control sibling regardless of which one renders.
-		> .components-base-control + .components-base-control {
-			margin-top: 24px;
-			padding-top: 24px;
-			border-top: 1px solid $bb-border-secondary-color;
-		}
-	}
-
 	.bb-pf-modal-footer {
 		justify-content: space-between;
 

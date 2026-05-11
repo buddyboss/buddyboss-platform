@@ -404,6 +404,21 @@ export function ProfileFieldModal( {
 		return result;
 	}, [ fieldTypes ] );
 
+	// Flat lookup of per-type descriptions sourced from PHP (each registered
+	// field type ships its own description; Pro/3rd-party types extend via the
+	// `bb_admin_profile_field_type_description` filter).
+	var typeDescriptions = useMemo( function () {
+		var map = {};
+		[ 'multi_fields', 'single_fields' ].forEach( function ( bucket ) {
+			( fieldTypes[ bucket ] || [] ).forEach( function ( ft ) {
+				if ( ft && ft.value && ft.description ) {
+					map[ ft.value ] = ft.description;
+				}
+			} );
+		} );
+		return map;
+	}, [ fieldTypes ] );
+
 	/**
 	 * Add an option to the options list.
 	 *
@@ -751,7 +766,7 @@ export function ProfileFieldModal( {
 								setType( val );
 							}
 						} }
-						help={ __( 'Select the input field type members will use to enter information.', 'buddyboss' ) }
+						help={ typeDescriptions[ type ] || __( 'Select the input field type members will use to enter information.', 'buddyboss' ) }
 					/>
 
 					{ /* Options (for multi-option types) */ }

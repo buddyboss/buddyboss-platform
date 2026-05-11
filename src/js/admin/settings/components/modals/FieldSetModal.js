@@ -103,13 +103,15 @@ export function FieldSetModal( { fieldSet, onClose, onSave, onDelete, setToast }
 			shouldCloseOnClickOutside={ false }
 		>
 			<div className="bb-admin-settings-modal__body">
-				<TextControl
-					label={ __( 'Name', 'buddyboss' ) }
-					value={ name }
-					onChange={ setName }
-					placeholder={ __( 'Enter field set name', 'buddyboss' ) }
-					required
-				/>
+				<div className="bb-admin-settings-modal__row--separator">
+					<TextControl
+						label={ __( 'Name', 'buddyboss' ) }
+						value={ name }
+						onChange={ setName }
+						placeholder={ __( 'Enter field set name', 'buddyboss' ) }
+						required
+					/>
+				</div>
 				{ /* Repeater toggle: not available for base group (can_delete=false). */ }
 				{ ( ! isEditing || fieldSet.can_delete ) && (
 					<RadioControl

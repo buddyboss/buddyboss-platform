@@ -1061,11 +1061,21 @@ select.bb-admin-settings__select {
 	}
 
 	.components-modal__header {
-		padding: 10px 24px;
+		// Figma backend-settings spec: 16px top / 16px right / 16px bottom /
+		// 24px left. The asymmetric left padding aligns the title to the
+		// content area; the symmetric vertical padding gives the title room
+		// to breathe. The shared body padding (24px) lines up with the 24px
+		// left value to keep the title flush with form controls below.
+		padding: 16px 16px 16px 24px;
 		height: auto;
 		border-bottom: 1px solid $bb-border-secondary-color;
 
         .components-button {
+			// Figma close button: 32×32 hit area.
+			width: 32px;
+			height: 32px;
+			min-width: 32px;
+			padding: 0;
 
             svg {
                 fill: $bb-icon-secondary-color;
@@ -1086,7 +1096,9 @@ select.bb-admin-settings__select {
 
 	.components-modal__content {
 		padding: 0;
-		margin-top: 52px;
+		// Header is sticky/absolute; offset content by its full Figma height
+		// (16px top + 32px close button + 16px bottom = 64px).
+		margin-top: 64px;
 	}
 
     &__body {

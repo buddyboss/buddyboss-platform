@@ -745,8 +745,9 @@ class BB_Admin_Profile_Fields_Ajax {
 		foreach ( $all_types as $type_key => $class_name ) {
 			$label = $this->bb_get_field_type_label( $type_key );
 			$item  = array(
-				'value' => $type_key,
-				'label' => $label,
+				'value'       => $type_key,
+				'label'       => $label,
+				'description' => $this->bb_get_field_type_description( $type_key ),
 			);
 
 			if ( in_array( $type_key, $multi_types, true ) ) {
@@ -798,6 +799,49 @@ class BB_Admin_Profile_Fields_Ajax {
 		}
 
 		return ucfirst( str_replace( array( '_', '-' ), ' ', $type_key ) );
+	}
+
+	/**
+	 * Get a short description for a profile field type, shown below the Type
+	 * dropdown in the Add/Edit Field modal.
+	 *
+	 * Pro and third-party plugins that register custom field types can hook
+	 * `bb_admin_profile_field_type_description` to provide their own copy.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $type_key Field type key.
+	 * @return string Description, or empty string if none registered.
+	 */
+	private function bb_get_field_type_description( $type_key ) {
+		$descriptions = array(
+			'textbox'        => __( 'Displays a single-line text field where users can enter short text.', 'buddyboss' ),
+			'textarea'       => __( 'Displays a multi-line text field where users can enter longer text.', 'buddyboss' ),
+			'selectbox'      => __( 'Displays a dropdown list where users can select one option from multiple predefined choices.', 'buddyboss' ),
+			'multiselectbox' => __( 'Displays a list where users can select multiple options.', 'buddyboss' ),
+			'checkbox'       => __( 'Displays multiple options where users can select one or more choices.', 'buddyboss' ),
+			'radio'          => __( 'Displays multiple options where users can select one choice.', 'buddyboss' ),
+			'datebox'        => __( 'Displays a date picker for selecting a specific date.', 'buddyboss' ),
+			'number'         => __( 'Displays a field for entering a numeric value.', 'buddyboss' ),
+			'telephone'      => __( 'Displays a field for entering a phone number.', 'buddyboss' ),
+			'url'            => __( 'Displays a field for entering a website address (URL).', 'buddyboss' ),
+			'gender'         => __( 'Allows users to select their gender from the options: Male, Female, or Other.', 'buddyboss' ),
+			'socialnetworks' => __( 'Select one or more social networks to display as icons in the user\'s profile.', 'buddyboss' ),
+			'membertypes'    => __( 'Allows users to select their profile type.', 'buddyboss' ),
+		);
+
+		$description = isset( $descriptions[ $type_key ] ) ? $descriptions[ $type_key ] : '';
+
+		/**
+		 * Filter the description shown below the Type dropdown in the
+		 * Add/Edit Profile Field modal.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $description Description copy for the field type.
+		 * @param string $type_key    Field type key (e.g. 'textbox', 'datebox').
+		 */
+		return apply_filters( 'bb_admin_profile_field_type_description', $description, $type_key );
 	}
 
 	/**
