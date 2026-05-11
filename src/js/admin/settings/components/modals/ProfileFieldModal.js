@@ -864,18 +864,13 @@ export function ProfileFieldModal( {
 							/>
 						</div>
 					) }
-				</div>
 
-				{ /* Social Track (for socialnetworks type) */ }
-				{ showSocialTrack && (
-					<div className="bb-pf-field-social-track bb-admin-settings--divided-section">
-						<h4 className="bb-pf-field-social-track__label">
-							{ __( 'Social Type', 'buddyboss' ) }
-						</h4>
-						<p className="bb-pf-field-social-track__description">
-							{ __( 'Please select the social networks to allow. If entered, they will display as icons in the user\'s profile.', 'buddyboss' ) }
-						</p>
-						<div className="bb-pf-field-options">
+					{ /* Social Track (for socialnetworks type) — rendered inside the
+					     Type wrapper so the section's bottom border falls after the
+					     provider rows, not between the Type description and Facebook. */ }
+					{ showSocialTrack && (
+						<div className="bb-pf-field-social-track">
+							<div className="bb-pf-field-options">
 							<DragDropContext onDragEnd={ handleSocialDragEnd }>
 								<Droppable droppableId="social-options">
 									{ function ( provided ) {
@@ -956,7 +951,8 @@ export function ProfileFieldModal( {
 							) }
 						</div>
 					</div>
-				) }
+					) }
+				</div>
 
 				{ /* Date Selector Settings (datebox type) */ }
 				{ 'datebox' === type && (

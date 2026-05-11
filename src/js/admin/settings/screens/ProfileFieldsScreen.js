@@ -480,7 +480,7 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 				var found = memberTypes.find( function ( mt ) {
 					return mt.id === typeKey;
 				} );
-				return found ? found.name : typeKey;
+				return found ? decodeEntities( found.name ) : typeKey;
 			} );
 			badges.push(
 				<span key="member-types" className="bb-pf-badge bb-pf-badge--member-type">{ typeLabels.join( ', ' ) }</span>
