@@ -34,7 +34,7 @@
 		flex-direction: column;
 		padding: 16px;
 		gap: 24px;
-		border: 1px solid $bb-border-secondary-color;
+		border: 0.5px solid $bb-border-secondary-color;
 		border-radius: $bb-border-radius-lg;
 		margin-bottom: 24px;
 	}
@@ -137,8 +137,16 @@
 		color: $bb-text-secondary-color;
 
 		&--disabled {
-			opacity: 0.5;
 			cursor: default;
+
+			.components-checkbox-control__input-container {
+				opacity: 0.5;
+				cursor: default;
+			}
+
+			.components-checkbox-control__label {
+				pointer-events: none;
+			}
 		}
 	}
 
@@ -159,12 +167,18 @@
 		color: $bb-text-color;
 		text-align: center;
 		background-color: $bb-background-secondary-color;
-		border: 1px solid $bb-border-secondary-color;
+		border: 0.5px solid $bb-border-secondary-color;
 		border-radius: $bb-border-radius-md;
 		text-decoration: none;
 		white-space: nowrap;
 		padding: 4px 8px;
 		min-width: 100px;
+
+		&:hover {
+			color: $bb-text-color;
+			border-color: $bb-border-tertiary-color;
+			background-color: $bb-background-primary-color;
+		}
 
 		&--missing {
 			color: $bb-text-brand-primary-color;
