@@ -566,10 +566,16 @@
 			width: 100%;
 		}
 
+		// Wrapper around the CustomSelectControl used for Social Networks
+		// provider rows. Pure layout container — the visible "field" (border,
+		// padding, background, caret) is rendered by the inner
+		// `.bb-custom-select__trigger` button (see _feature_settings.scss).
+		// The previous `@include bb-admin-settings-select` here painted a
+		// second styled box around the trigger, producing the
+		// "two dropdowns" visual seen in screenshots.
 		&__select {
-			@include bb-admin-settings-select;
-			width: auto;
-			min-width: 200px;
+			flex: 1;
+			min-width: 0;
 		}
 
 		&__right {

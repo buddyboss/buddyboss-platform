@@ -48,6 +48,38 @@ const ALLOWED_TAGS = {
 	thead: ['class'],
 	tr: ['class'],
 	ul: ['class'],
+	// SVG support — used for inline brand glyphs (e.g. social network
+	// provider icons) where no BB icon font glyph is available. The
+	// allowed attribute list excludes anything event-bearing or scriptable.
+	// `xmlnsXlink` is reserved for `<use href>`-style references and is
+	// not included; URL-bearing attrs aren't whitelisted to keep this path
+	// purely visual.
+	svg: ['xmlns', 'viewBox', 'width', 'height', 'fill', 'class', 'aria-hidden', 'role', 'preserveAspectRatio'],
+	path: ['d', 'fill', 'stroke', 'stroke-width', 'stroke-linecap', 'stroke-linejoin', 'fill-rule', 'clip-rule', 'transform', 'opacity'],
+	g: ['fill', 'stroke', 'transform', 'opacity', 'class', 'clip-path', 'mask'],
+	circle: ['cx', 'cy', 'r', 'fill', 'stroke', 'stroke-width', 'transform', 'opacity'],
+	rect: ['x', 'y', 'width', 'height', 'rx', 'ry', 'fill', 'stroke', 'stroke-width', 'transform', 'opacity'],
+	polygon: ['points', 'fill', 'stroke', 'stroke-width', 'transform', 'opacity'],
+	polyline: ['points', 'fill', 'stroke', 'stroke-width', 'transform', 'opacity'],
+	line: ['x1', 'y1', 'x2', 'y2', 'stroke', 'stroke-width', 'transform', 'opacity'],
+	ellipse: ['cx', 'cy', 'rx', 'ry', 'fill', 'stroke', 'stroke-width', 'transform', 'opacity'],
+	// Gradient and clipping support so SVGs with `<defs>` (e.g. Instagram's
+	// multi-stop brand gradient when it's used as a fallback) render fully
+	// instead of collapsing to a flat fill.
+	//
+	// Keys are lowercase because sanitizeNode looks them up via
+	// `child.tagName.toLowerCase()`. The DOM preserves the camelCase form
+	// (`linearGradient`, `clipPath`) on the element itself, so attribute
+	// lookups using the camelCase form continue to work. The values are
+	// the SVG-spec attribute names with their canonical case.
+	defs: [],
+	lineargradient: ['id', 'x1', 'y1', 'x2', 'y2', 'gradientUnits', 'gradientTransform'],
+	radialgradient: ['id', 'cx', 'cy', 'r', 'fx', 'fy', 'gradientUnits', 'gradientTransform'],
+	stop: ['offset', 'stop-color', 'stop-opacity'],
+	clippath: ['id', 'clipPathUnits'],
+	mask: ['id', 'maskUnits', 'maskContentUnits', 'x', 'y', 'width', 'height'],
+	title: [],
+	desc: [],
 };
 
 /**

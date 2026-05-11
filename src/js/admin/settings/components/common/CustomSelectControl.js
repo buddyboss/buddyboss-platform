@@ -10,6 +10,49 @@
 
 import { useState, useEffect, useRef, useCallback } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+import { sanitizeHtml } from '../../utils/sanitize';
+
+/**
+ * Render an option's icon — either as a BB icon font glyph (`opt.icon`) or
+ * an inline SVG fallback (`opt.iconSvg`, used when the BB font has no
+ * matching glyph, e.g. Flickr / Meetup / Quora / VK social providers).
+ *
+ * SVG path is whitelist-sanitized via sanitizeHtml() (svg/path/g/circle/rect
+ * etc. only, no event handlers, no foreign markup) before being injected.
+ * The SVG source itself is hardcoded server-side data from
+ * bp_xprofile_social_network_provider(), not user input.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} opt        Option object: { icon, iconSvg, ... }.
+ * @param {string} className  Extra class for layout positioning.
+ * @returns {JSX.Element|null}
+ */
+function renderOptionIcon( opt, className ) {
+	if ( opt && opt.icon ) {
+		// Short name like `facebook-logo` resolves through the ReadyLaunch
+		// font (`bb-icons-rl-*`). A space in the value indicates the caller
+		// supplied a full class string (e.g. `bb-icon-l bb-icon-brand-flickr`
+		// from the legacy bb-icons font for providers that don't have a
+		// ReadyLaunch glyph) — use it verbatim.
+		var iconClass = opt.icon.indexOf( ' ' ) >= 0
+			? opt.icon
+			: 'bb-icons-rl bb-icons-rl-' + opt.icon;
+		return (
+			<i className={ iconClass + ( className ? ' ' + className : '' ) } aria-hidden="true"></i>
+		);
+	}
+	if ( opt && opt.iconSvg ) {
+		return (
+			<span
+				className={ 'bb-custom-select__option-svg' + ( className ? ' ' + className : '' ) }
+				aria-hidden="true"
+				dangerouslySetInnerHTML={ { __html: sanitizeHtml( opt.iconSvg ) } }
+			></span>
+		);
+	}
+	return null;
+}
 
 /**
  * CustomSelectControl component.
@@ -54,14 +97,18 @@ export function CustomSelectControl( {
 	var listRef = useRef( null );
 	var buttonRef = useRef( null );
 
-	// Build flat list of selectable options (for keyboard nav).
+	// Build flat list of selectable options (for keyboard nav). Disabled
+	// options are excluded from both shapes (grouped + flat) so arrow keys
+	// never land on a row that can't be selected.
 	var flatOptions = useCallback( function () {
 		if ( groups ) {
 			var flat = [];
 			groups.forEach( function ( group ) {
 				if ( group.options ) {
 					group.options.forEach( function ( opt ) {
-						flat.push( opt );
+						if ( ! opt.disabled ) {
+							flat.push( opt );
+						}
 					} );
 				}
 			} );
@@ -228,9 +275,7 @@ export function CustomSelectControl( {
 				disabled={ disabled }
 			>
 				<span className="bb-custom-select__trigger-content">
-					{ selectedOpt && selectedOpt.icon && (
-						<i className={ 'bb-icons-rl bb-icons-rl-' + selectedOpt.icon } aria-hidden="true"></i>
-					) }
+					{ renderOptionIcon( selectedOpt ) }
 					<span className="bb-custom-select__trigger-text">
 						{ selectedOpt ? selectedOpt.label : ( placeholder || __( 'Select…', 'buddyboss' ) ) }
 					</span>
@@ -251,24 +296,36 @@ export function CustomSelectControl( {
 								{ group.options && group.options.map( function ( opt ) {
 									var optIndex = flatOptions().indexOf( opt );
 									var isSelected = opt.value === value;
-									var isActive = optIndex === activeIndex;
+									// Disabled options are excluded from flatOptions, so
+									// `optIndex` is -1 for them — guard prevents the
+									// `--active` class flashing on first open.
+									var isActive = optIndex !== -1 && optIndex === activeIndex;
 									return (
 										<button
 											key={ opt.value }
 											type="button"
 											role="option"
 											aria-selected={ isSelected }
+											aria-disabled={ !! opt.disabled }
+											disabled={ !! opt.disabled }
 											className={
 												'bb-custom-select__option' +
 												( isSelected ? ' bb-custom-select__option--selected' : '' ) +
-												( isActive ? ' bb-custom-select__option--active' : '' )
+												( isActive ? ' bb-custom-select__option--active' : '' ) +
+												( opt.disabled ? ' bb-custom-select__option--disabled' : '' )
 											}
-											onClick={ function () { handleSelect( opt.value ); } }
-											onMouseEnter={ function () { setActiveIndex( optIndex ); } }
+											onClick={ function () {
+												if ( ! opt.disabled ) {
+													handleSelect( opt.value );
+												}
+											} }
+											onMouseEnter={ function () {
+												if ( ! opt.disabled ) {
+													setActiveIndex( optIndex );
+												}
+											} }
 										>
-											{ opt.icon && (
-												<i className={ 'bb-icons-rl bb-icons-rl-' + opt.icon } aria-hidden="true"></i>
-											) }
+											{ renderOptionIcon( opt ) }
 											<span className="bb-custom-select__option-label">{ opt.label }</span>
 										</button>
 									);
@@ -278,33 +335,39 @@ export function CustomSelectControl( {
 					} ) }
 
 					{ ! groups && options && options.map( function ( opt, oIdx ) {
-						if ( opt.disabled ) {
-							return (
-								<div key={ oIdx } className="bb-custom-select__group-title" role="presentation">
-									{ opt.label }
-								</div>
-							);
-						}
 						var isSelected = opt.value === value;
 						var selIdx = flatOptions().indexOf( opt );
-						var isActive = selIdx === activeIndex;
+						// Disabled options are excluded from flatOptions, so their
+						// `selIdx` is -1. Guarding against -1 prevents every disabled
+						// option from being flagged active on first open (when
+						// `activeIndex` is also -1 by default).
+						var isActive = selIdx !== -1 && selIdx === activeIndex;
 						return (
 							<button
 								key={ opt.value || oIdx }
 								type="button"
 								role="option"
 								aria-selected={ isSelected }
+								aria-disabled={ !! opt.disabled }
+								disabled={ !! opt.disabled }
 								className={
 									'bb-custom-select__option' +
 									( isSelected ? ' bb-custom-select__option--selected' : '' ) +
-									( isActive ? ' bb-custom-select__option--active' : '' )
+									( isActive ? ' bb-custom-select__option--active' : '' ) +
+									( opt.disabled ? ' bb-custom-select__option--disabled' : '' )
 								}
-								onClick={ function () { handleSelect( opt.value ); } }
-								onMouseEnter={ function () { setActiveIndex( selIdx ); } }
+								onClick={ function () {
+									if ( ! opt.disabled ) {
+										handleSelect( opt.value );
+									}
+								} }
+								onMouseEnter={ function () {
+									if ( ! opt.disabled ) {
+										setActiveIndex( selIdx );
+									}
+								} }
 							>
-								{ opt.icon && (
-									<i className={ 'bb-icons-rl bb-icons-rl-' + opt.icon } aria-hidden="true"></i>
-								) }
+								{ renderOptionIcon( opt ) }
 								<span className="bb-custom-select__option-label">{ opt.label }</span>
 							</button>
 						);

@@ -909,25 +909,21 @@ export function ProfileFieldModal( {
 																				{ ...providedDrag.dragHandleProps }
 																				aria-label={ __( 'Reorder option', 'buddyboss' ) }
 																			></i>
-																			<select
+																			<CustomSelectControl
 																				className="bb-pf-option-item__select"
 																				value={ networkValue }
-																				onChange={ function ( e ) { changeSocialNetwork( index, e.target.value ); } }
-																				aria-label={ __( 'Social network provider', 'buddyboss' ) }
-																			>
-																				{ socialProviders.map( function ( provider ) {
+																				onChange={ function ( val ) { changeSocialNetwork( index, val ); } }
+																				options={ socialProviders.map( function ( provider ) {
 																					var isUsedElsewhere = provider.value !== networkValue && selectedSocialNetworks.indexOf( provider.value ) >= 0;
-																					return (
-																						<option
-																							key={ provider.value }
-																							value={ provider.value }
-																							disabled={ isUsedElsewhere }
-																						>
-																							{ decodeEntities( provider.name ) }
-																						</option>
-																					);
+																					return {
+																						value: provider.value,
+																						label: decodeEntities( provider.name ),
+																						icon: provider.icon || '',
+																						iconSvg: provider.icon_svg || '',
+																						disabled: isUsedElsewhere,
+																					};
 																				} ) }
-																			</select>
+																			/>
 																		</div>
 																		<div className="bb-pf-option-item__right">
 																			<button

@@ -29,6 +29,45 @@ class BB_Admin_Profile_Fields_Ajax {
 	const NONCE_ACTION = 'bb_admin_settings';
 
 	/**
+	 * BB icon font class strings for each xprofile social provider.
+	 *
+	 * Maps the provider's `value` slug (returned by
+	 * bp_xprofile_social_network_provider()) to a full CSS class string
+	 * — the base weight class (`bb-icon-l` = lined) plus the brand
+	 * modifier. CustomSelectControl uses the value verbatim when it
+	 * contains a space, so each entry is two classes.
+	 *
+	 * Hoisted to a class constant so the array literal isn't re-allocated
+	 * on every AJAX call.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var array<string, string>
+	 */
+	const SOCIAL_PROVIDER_ICONS = array(
+		'facebook'  => 'bb-icon-l bb-icon-brand-facebook',
+		'flickr'    => 'bb-icon-l bb-icon-brand-flickr',
+		'instagram' => 'bb-icon-l bb-icon-brand-instagram',
+		'linkedIn'  => 'bb-icon-l bb-icon-brand-linkedin',
+		'medium'    => 'bb-icon-l bb-icon-brand-medium',
+		'meetup'    => 'bb-icon-l bb-icon-brand-meetup',
+		'pinterest' => 'bb-icon-l bb-icon-brand-pinterest',
+		'quora'     => 'bb-icon-l bb-icon-brand-quora',
+		'reddit'    => 'bb-icon-l bb-icon-brand-reddit',
+		'snapchat'  => 'bb-icon-l bb-icon-brand-snapchat',
+		'telegram'  => 'bb-icon-l bb-icon-brand-telegram',
+		'tumblr'    => 'bb-icon-l bb-icon-brand-tumblr',
+		'twitch'    => 'bb-icon-l bb-icon-brand-twitch',
+		'twitter'   => 'bb-icon-l bb-icon-brand-twitter',
+		'vk'        => 'bb-icon-l bb-icon-brand-vk',
+		'whatsapp'  => 'bb-icon-l bb-icon-brand-whatsapp',
+		'x'         => 'bb-icon-l bb-icon-brand-x',
+		'youTube'   => 'bb-icon-l bb-icon-brand-youtube',
+		'tiktok'    => 'bb-icon-l bb-icon-brand-tiktok',
+		'github'    => 'bb-icon-l bb-icon-brand-github',
+	);
+
+	/**
 	 * Verify AJAX request (capability + nonce).
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -148,12 +187,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		if ( function_exists( 'bp_xprofile_social_network_provider' ) ) {
 			$providers                    = bp_xprofile_social_network_provider();
 			$response['social_providers'] = array_map(
-				function ( $provider ) {
-					return array(
-						'value' => $provider->value,
-						'name'  => $provider->name,
-					);
-				},
+				array( $this, 'bb_format_social_provider' ),
 				$providers
 			);
 		}
@@ -842,6 +876,55 @@ class BB_Admin_Profile_Fields_Ajax {
 		 * @param string $type_key    Field type key (e.g. 'textbox', 'datebox').
 		 */
 		return apply_filters( 'bb_admin_profile_field_type_description', $description, $type_key );
+	}
+
+	/**
+	 * Format a social network provider for the React payload.
+	 *
+	 * Exposes `value`, `name`, and the BB icon font class to use for the
+	 * provider's brand icon. Pro and third-party plugins that register
+	 * additional providers can hook
+	 * `bb_admin_profile_field_social_provider_icon` to supply their own
+	 * icon mapping.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param object $provider Provider object from
+	 *                         bp_xprofile_social_network_provider().
+	 * @return array Provider data ready to send to React.
+	 */
+	private function bb_format_social_provider( $provider ) {
+		$value = isset( $provider->value ) ? $provider->value : '';
+		$icon  = isset( self::SOCIAL_PROVIDER_ICONS[ $value ] ) ? self::SOCIAL_PROVIDER_ICONS[ $value ] : '';
+
+		/**
+		 * Filter the BB icon font class string used for a social-network
+		 * provider in the Profile Field modal.
+		 *
+		 * The value is a full CSS class string (base weight + brand
+		 * modifier) consumed verbatim by CustomSelectControl. Pass an
+		 * empty string to fall back to the legacy inline SVG provided by
+		 * bp_xprofile_social_network_provider().
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $icon  Full icon class string
+		 *                      (e.g. 'bb-icon-l bb-icon-brand-facebook').
+		 * @param string $value Provider value/slug.
+		 */
+		$icon = apply_filters( 'bb_admin_profile_field_social_provider_icon', $icon, $value );
+
+		// Pass through the legacy inline SVG so providers without a BB font
+		// icon (Flickr, Meetup, Quora, VK, …) can still render a brand glyph
+		// via React's inline-SVG fallback path.
+		$svg = isset( $provider->svg ) ? (string) $provider->svg : '';
+
+		return array(
+			'value'    => $value,
+			'name'     => isset( $provider->name ) ? $provider->name : '',
+			'icon'     => $icon,
+			'icon_svg' => $svg,
+		);
 	}
 
 	/**
