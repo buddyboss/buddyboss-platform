@@ -159,13 +159,24 @@ function PageCreateButton( { field, disabled, onCreated } ) {
 /**
  * Settings Form Component (matching Figma settingsSection)
  *
- * @param {Object} props Component props
- * @param {Array} props.fields Fields array
- * @param {Object} props.values Current field values
- * @param {Function} props.onChange Change handler
+ * @param {Object}   props                  Component props
+ * @param {Array}    props.fields           Fields array
+ * @param {Object}   props.values           Current field values
+ * @param {Function} props.onChange         Change handler
+ * @param {Function} props.onProBadgeClick  Pro badge click handler
+ * @param {boolean}  props.disabled         When true, every field control
+ *                                          rendered by the form is forced
+ *                                          into its disabled state. Used by
+ *                                          section-level `action: 'disable'`
+ *                                          conditionals (e.g. OneSignal /
+ *                                          reCAPTCHA "not connected") so
+ *                                          the controls dim while the
+ *                                          surrounding chrome (heading,
+ *                                          description, labels) stays at
+ *                                          full intensity.
  * @returns {JSX.Element} Settings form component
  */
-export function SettingsForm({ fields, values, onChange, onProBadgeClick }) {
+export function SettingsForm({ fields, values, onChange, onProBadgeClick, disabled: formDisabled = false }) {
 	// Use reaction callbacks hook for jQuery emotion picker integration
 	const { defaultEmotionsRef } = useReactionCallbacks(onChange, values);
 
@@ -558,6 +569,7 @@ export function SettingsForm({ fields, values, onChange, onProBadgeClick }) {
 								}
 								onChange( field.name, newValue );
 							}}
+							disabled={disabled}
 							placeholder={field.placeholder || ''}
 							__nextHasNoMarginBottom
 						/>
@@ -1208,7 +1220,7 @@ export function SettingsForm({ fields, values, onChange, onProBadgeClick }) {
 			return null;
 		}
 
-		const disabled = parentDisabled || !!field.disabled || isFieldDisabled(field) || isFieldConditionallyDisabled(field);
+		const disabled = formDisabled || parentDisabled || !!field.disabled || isFieldDisabled(field) || isFieldConditionallyDisabled(field);
 
 		// Checkbox children: render CheckboxControl with inline label (no separate label element).
 		// When description_controls are present (e.g., "Auto hide after %s reports"),
@@ -1355,7 +1367,8 @@ export function SettingsForm({ fields, values, onChange, onProBadgeClick }) {
 		}
 
 		// Check if field should be disabled (parent toggle is OFF, field-level disabled flag, or conditional disable).
-		const disabled = isFieldDisabled(field) || !!field.disabled || isFieldConditionallyDisabled(field);
+		// `formDisabled` propagates a section-level `action: 'disable'` conditional down to every control.
+		const disabled = formDisabled || isFieldDisabled(field) || !!field.disabled || isFieldConditionallyDisabled(field);
 
 		// Render the control first — if it returns null, skip the entire field row
 		// unless the field has child fields (e.g., hidden parent used as a label-only grouping).

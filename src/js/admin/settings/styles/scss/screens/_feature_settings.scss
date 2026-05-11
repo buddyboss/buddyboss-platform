@@ -152,13 +152,6 @@
         box-shadow: 0px 1.5px 1px 0px rgba(0, 0, 0, 0.16);
         margin-bottom: 24px;
 
-        // Entire section is disabled (section-level conditional action: disable).
-        // Fields inside are still individually disabled via their own conditionals,
-        // so this purely provides a visual cue (dimmed) for the disabled state.
-        &--disabled {
-            opacity: 0.55;
-        }
-
         &-header {
             display: flex;
             align-items: center;
@@ -314,9 +307,20 @@
             border-bottom: 0.5px solid $bb-border-secondary-color;
         }
 
+        // Section-level conditional action: 'disable' (e.g. OneSignal /
+        // reCAPTCHA "not connected"). The modifier class is retained as
+        // a hook for E2E / aria-disabled detection but intentionally
+        // carries no visual styling — per design, the section chrome
+        // (heading, description, dividers, field labels, helper text)
+        // renders at full intensity. Only the form controls inside dim,
+        // handled by each control's own `disabled` state, which the
+        // conditional cascade already propagates from the section down
+        // to every field. Note: `&-body--disabled` above is a separate
+        // case (user explicitly toggled the section's main switch off)
+        // and intentionally keeps the heavier dim to convey "you turned
+        // this off".
         &--disabled {
-            opacity: 0.5;
-            pointer-events: none;
+            // No-op by design — see comment above.
         }
     }
 
@@ -407,6 +411,38 @@
     &:has(.bb-admin-reaction-info-wrapper) {
         margin-top: 0;
         padding-bottom: 0;
+    }
+
+    // Disabled-field cursor affordance. The wrapper class is applied by
+    // SettingsForm whenever a field's computed `disabled` is true (section
+    // conditional, parent-toggle off, field-level conditional, or explicit
+    // field.disabled). `:disabled` on native form controls already gives
+    // the correct cursor in most browsers, but Components-library toggles
+    // render the visual track/thumb as a `<span>` and never inherit the
+    // pseudo-class. Explicitly target each interactive descendant so the
+    // affordance is consistent across native and WP-components controls.
+    //
+    // `!important` is used here because WP's own `.components-form-toggle.is-disabled`
+    // rule (loaded from wp-components style.css) sets `cursor: default` and
+    // beats us on specificity. Cursor is purely visual, so the override is
+    // safe — no behavior or layout depends on it.
+    &--disabled {
+        cursor: not-allowed !important;
+
+        input,
+        textarea,
+        select,
+        button,
+        label,
+        .components-form-toggle,
+        .components-form-toggle__track,
+        .components-form-toggle__thumb,
+        .components-toggle-control,
+        .components-toggle-control__label,
+        .components-checkbox-control__input,
+        .components-base-control__label {
+            cursor: not-allowed !important;
+        }
     }
 
     &-label {

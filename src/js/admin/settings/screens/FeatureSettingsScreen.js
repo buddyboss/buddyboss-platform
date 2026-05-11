@@ -1066,6 +1066,7 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 													values={settings}
 													onChange={handleSettingChange}
 													onProBadgeClick={handleFieldProClick}
+													disabled={isSectionDisabled}
 												/>
 											</div>
 										</div>
