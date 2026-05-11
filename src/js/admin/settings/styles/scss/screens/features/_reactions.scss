@@ -44,17 +44,15 @@
 	}
 
 	&__link {
-		color: #2c6bff;
+		color: $bb-link-color;
 		text-decoration: none;
-		transition: opacity 0.2s ease;
 
 		&:hover {
-			opacity: 0.8;
 			text-decoration: underline;
 		}
 
 		&:focus {
-			outline: 2px solid #2c6bff;
+			outline: 2px solid $bb-link-color;
 			outline-offset: 2px;
 		}
 	}

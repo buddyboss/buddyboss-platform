@@ -196,6 +196,7 @@
 
                 &:hover {
                     color: $bb-link-color;
+                    text-decoration: underline;
                 }
             }
         }
@@ -565,6 +566,7 @@
 
             &:hover {
                 color: $bb-link-color;
+                text-decoration: underline;
             }
         }
 
@@ -603,7 +605,9 @@
             color: $bb-link-color;
             text-decoration: none;
 
-            &:focus {
+            &:focus,
+            &:hover {
+                color: $bb-link-color;
                 text-decoration: underline;
             }
         }
@@ -892,6 +896,11 @@
         a {
             color: $bb-link-color;
             text-decoration: none;
+
+            &:hover {
+                color: $bb-link-color;
+                text-decoration: underline;
+            }
         }
     }
 

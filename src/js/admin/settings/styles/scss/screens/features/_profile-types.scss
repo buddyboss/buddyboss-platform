@@ -110,6 +110,11 @@
 		a {
 			color: $bb-link-color;
 			text-decoration: none;
+
+			&:hover {
+				color: $bb-link-color;
+				text-decoration: underline;
+			}
 		}
 
 	}
@@ -222,6 +227,12 @@
 		font-size: 13px;
 		color: $bb-link-color;
 		white-space: nowrap;
+		text-decoration: none;
+
+		&:hover {
+			color: $bb-link-color;
+			text-decoration: underline;
+		}
 	}
 
 	/* Visibility badge */

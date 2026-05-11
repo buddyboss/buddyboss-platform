@@ -211,6 +211,11 @@
 	&__reply-link {
 		color: $bb-link-color;
 		text-decoration: none;
+
+		&:hover {
+			color: $bb-link-color;
+			text-decoration: underline;
+		}
 	}
 
 	&__spam-badge {

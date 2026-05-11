@@ -195,7 +195,7 @@
 
 	&__list-item-count {
 		font-size: 13px;
-		color: $bb-link-color;
+		color: $bb-text-color;
 		white-space: nowrap;
 	}
 
@@ -207,6 +207,7 @@
 
 		&:hover {
 			color: $bb-link-color;
+			text-decoration: underline;
 		}
 	}
 

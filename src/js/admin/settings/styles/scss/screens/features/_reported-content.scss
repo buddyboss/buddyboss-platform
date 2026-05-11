@@ -387,6 +387,7 @@
 
 		&:hover {
 			color: $bb-link-color;
+			text-decoration: underline;
 		}
 	}
 
@@ -429,6 +430,10 @@
 
 		&:hover {
 			color: $bb-link-color;
+
+			.bb-admin-view-content-report-modal__content-link-text {
+				text-decoration: underline
+			}
 		}
 	}
 
@@ -515,6 +520,7 @@
 
 		&:hover {
 			color: $bb-link-color;
+			text-decoration: underline;
 		}
 	}
 

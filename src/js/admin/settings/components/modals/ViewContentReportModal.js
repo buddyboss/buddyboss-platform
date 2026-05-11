@@ -135,7 +135,7 @@ export function ViewContentReportModal( { isOpen, onClose, item } ) {
 									className="bb-admin-view-content-report-modal__content-link"
 								>
 									<i className={ report.content_icon }></i>
-									{ report.content_label + ' #' + report.item_id }
+									<span className="bb-admin-view-content-report-modal__content-link-text">{ report.content_label + ' #' + report.item_id }</span>
 									<span className="bb-admin-view-content-report-modal__content-link-external">
 										<i className="bb-icons-rl bb-icons-rl-arrow-up-right"></i>
 									</span>

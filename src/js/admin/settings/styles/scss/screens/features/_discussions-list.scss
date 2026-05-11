@@ -254,6 +254,11 @@
 		white-space: nowrap;
 		text-decoration: none;
 		max-width: 100%;
+
+		&:hover {
+			color: $bb-link-color;
+			text-decoration: underline;
+		}
 	}
 
 	// Count Column (Replies, Members)
