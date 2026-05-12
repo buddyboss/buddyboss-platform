@@ -266,14 +266,30 @@ function bb_groups_enrich_cover_upload_help_text( $field_data, $field, $feature_
 		return $field_data;
 	}
 
-	if ( ! empty( $field_data['upload_config'] ) && empty( $field_data['upload_config']['help_text'] ) ) {
-		$cover_dimensions                         = bb_attachments_get_default_custom_cover_image_dimensions( 'groups' );
-		$field_data['upload_config']['help_text'] = sprintf(
-			/* translators: 1: width in pixels, 2: height in pixels. */
-			__( 'Upload a default cover image (JPG or PNG, recommended size: %1$spx × %2$spx).', 'buddyboss' ),
-			(int) $cover_dimensions['width'],
-			(int) $cover_dimensions['height']
-		);
+	if ( ! empty( $field_data['upload_config'] ) ) {
+		// Cover dimensions drive both the help-text recommendation and the
+		// React `<CoverCropModal>` aspect ratio. Read AT FIELD-FORMAT TIME so
+		// theme compat (loaded later than registration) is available.
+		$cover_dimensions = bb_attachments_get_default_custom_cover_image_dimensions( 'groups' );
+
+		if ( empty( $field_data['upload_config']['help_text'] ) ) {
+			$field_data['upload_config']['help_text'] = sprintf(
+				/* translators: 1: width in pixels, 2: height in pixels. */
+				__( 'Upload a default cover image (JPG or PNG, recommended size: %1$spx × %2$spx).', 'buddyboss' ),
+				(int) $cover_dimensions['width'],
+				(int) $cover_dimensions['height']
+			);
+		}
+
+		// Inject dimensions for the React CoverCropModal aspect ratio. Same
+		// fallback contract as the members panel — modal defaults to 1950×450
+		// when this key is missing.
+		if ( empty( $field_data['upload_config']['dimensions'] ) && is_array( $cover_dimensions ) ) {
+			$field_data['upload_config']['dimensions'] = array(
+				'width'  => isset( $cover_dimensions['width'] ) ? (int) $cover_dimensions['width'] : 0,
+				'height' => isset( $cover_dimensions['height'] ) ? (int) $cover_dimensions['height'] : 0,
+			);
+		}
 	}
 
 	return $field_data;

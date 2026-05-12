@@ -1884,7 +1884,15 @@ function bb_admin_setting_profile_group_add_script_data( $script_data, $object =
 function bb_validate_custom_profile_group_avatar_ajax_reuqest() {
 	$bp_params           = array();
 	$profile_group_types = array( 'user', 'group' );
-	$request_actions     = array( 'bp_cover_image_upload' );
+	// Settings 2.0 admin cover-crop pipeline (`bb_admin_cover_image_set`) fires
+	// the same `*_cover_image_uploaded` action the legacy single-step uploader
+	// fires. Admit it here so the downstream option-saver
+	// (`bb_save_profile_group_cover_options_on_upload_custom_cover`) updates
+	// `bp-default-custom-{profile,group}-cover` to point at the new file —
+	// otherwise the cropped file lands on disk but the option keeps pointing
+	// at the previous URL, and the admin sees the OLD cover even after a
+	// successful crop save.
+	$request_actions     = array( 'bp_cover_image_upload', 'bb_admin_cover_image_set' );
 
 	if ( ! isset( $_POST['action'] ) || ( isset( $_POST['action'] ) && ! in_array( sanitize_text_field( $_POST['action'] ), $request_actions, true ) ) ) {
 		return false;

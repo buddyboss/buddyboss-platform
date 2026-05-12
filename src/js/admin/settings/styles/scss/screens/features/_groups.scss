@@ -265,11 +265,17 @@
 		}
 	}
 
-	// Cover images are wider.
+	// Cover images are wider. The preview/placeholder is sized to match the
+	// saved cover's aspect ratio (default 1950/450 ≈ 4.33:1) so what the
+	// admin sees here lines up 1:1 with what they cropped — without
+	// `aspect-ratio` we used a fixed 432×160 (≈2.7:1), and `object-fit: cover`
+	// would re-crop ~130px off each side of the saved file to fit the
+	// narrower box, making valid crops look mis-positioned.
 	&--cover &__placeholder,
 	&--cover &__preview {
 		width: 432px;
-		height: 160px;
+		aspect-ratio: 1950 / 450;
+		height: auto;
 		padding: 0;
 	}
 

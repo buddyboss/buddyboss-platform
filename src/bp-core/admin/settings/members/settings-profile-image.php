@@ -323,7 +323,13 @@ function bb_members_register_profile_image_panel_fields() {
 				'url_getter'  => 'bb_get_default_custom_upload_profile_cover',
 				'label'       => __( 'Upload Custom Cover', 'buddyboss' ),
 				'help_text'   => '',
-				// Injected at AJAX time via bb_members_enrich_cover_upload_help_text() — theme compat not available at registration.
+				// `help_text` AND `dimensions` are both injected at AJAX time
+				// via bb_members_enrich_cover_upload_help_text() — theme compat
+				// is not yet loaded at registration time (bp_loaded priority 5),
+				// so calling bb_attachments_get_default_custom_cover_image_dimensions()
+				// here fatals with "Call to a member function __get() on null"
+				// inside bp_get_theme_compat_feature(). Defer to the format-field
+				// filter so dimensions read after theme compat is up.
 				'conditional' => array(
 					'value' => 'custom',
 				),

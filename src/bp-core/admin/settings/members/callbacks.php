@@ -731,14 +731,32 @@ function bb_members_enrich_cover_upload_help_text( $field_data, $field, $feature
 		return $field_data;
 	}
 
-	if ( ! empty( $field_data['upload_config'] ) && empty( $field_data['upload_config']['help_text'] ) ) {
-		$cover_dimensions                         = bb_attachments_get_default_custom_cover_image_dimensions( 'members' );
-		$field_data['upload_config']['help_text'] = sprintf(
-			/* translators: 1: width in pixels, 2: height in pixels. */
-			__( 'Upload a default cover image (JPG or PNG, recommended size: %1$s×%2$s px).', 'buddyboss' ),
-			(int) $cover_dimensions['width'],
-			(int) $cover_dimensions['height']
-		);
+	if ( ! empty( $field_data['upload_config'] ) ) {
+		// Cover dimensions drive both the help-text recommendation and the
+		// React `<CoverCropModal>` aspect ratio. Component slug 'members' here
+		// is the public alias the theme-compat layer accepts; internally it
+		// maps to the `xprofile` cover settings just like the AJAX upload
+		// dispatch in `bp_attachments_cover_image_ajax_upload()` does.
+		$cover_dimensions = bb_attachments_get_default_custom_cover_image_dimensions( 'members' );
+
+		if ( empty( $field_data['upload_config']['help_text'] ) ) {
+			$field_data['upload_config']['help_text'] = sprintf(
+				/* translators: 1: width in pixels, 2: height in pixels. */
+				__( 'Upload a default cover image (JPG or PNG, recommended size: %1$s×%2$s px).', 'buddyboss' ),
+				(int) $cover_dimensions['width'],
+				(int) $cover_dimensions['height']
+			);
+		}
+
+		// Inject the dimensions so React's CoverCropModal can read the cover
+		// aspect ratio without hardcoding it. Falls back to the modal's own
+		// FALLBACK_RATIO (1950×450) if this key is missing on older builds.
+		if ( empty( $field_data['upload_config']['dimensions'] ) && is_array( $cover_dimensions ) ) {
+			$field_data['upload_config']['dimensions'] = array(
+				'width'  => isset( $cover_dimensions['width'] ) ? (int) $cover_dimensions['width'] : 0,
+				'height' => isset( $cover_dimensions['height'] ) ? (int) $cover_dimensions['height'] : 0,
+			);
+		}
 	}
 
 	return $field_data;

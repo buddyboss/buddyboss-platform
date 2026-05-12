@@ -1,11 +1,20 @@
 /**
  * BuddyBoss Admin Settings 2.0 - ImageUploadField Component
  *
- * Upload, crop (avatar), preview, and remove custom images for image_radio fields.
- * Uses existing AJAX handlers — no new PHP endpoints needed.
+ * Upload, crop (avatar AND cover), preview, and remove custom images for
+ * image_radio fields. Uses two-step pipelines: avatar uses
+ * `bp_avatar_upload` → `bp_avatar_set`, cover uses
+ * `bb_admin_cover_image_upload_temp` → `bb_admin_cover_image_set`. Cover
+ * cropping is admin-only (only fired by Settings 2.0); the public
+ * `bp_cover_image_upload` action is left untouched so frontend cover photo
+ * uploads keep their single-step behaviour.
  *
- * State machine: idle -> uploading -> (avatar: cropping -> saving | cover: done) -> preview
+ * State machine: idle -> uploading -> cropping -> preview
  *                preview -> removing -> idle
+ *
+ * Note: this component never sets `'saving'` itself — that state lives inside
+ * the AvatarCropModal / CoverCropModal subcomponents during their AJAX
+ * round-trip and is invisible to this parent.
  *
  * @package BuddyBoss\Core\Administration
  * @since BuddyBoss [BBVERSION]
@@ -15,6 +24,7 @@ import { useState, useRef, useEffect, useCallback } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { invalidateFeatureCache } from '../../utils/featureCache';
 import { AvatarCropModal } from './AvatarCropModal';
+import { CoverCropModal } from './CoverCropModal';
 import { safeUrl } from '../../utils/sanitize';
 
 // Maximum file size: 10 MB (matches WordPress default).
@@ -47,6 +57,15 @@ function sendAjax( ajaxUrl, action, formData, signal ) {
 	return fetch( ajaxUrl, fetchOptions ).then( function ( response ) {
 		if ( ! response.ok ) {
 			throw new Error( 'HTTP ' + response.status );
+		}
+		// Guard against 200-status non-JSON responses (security plugin
+		// challenge pages, a fatal in a downstream listener that flushed
+		// HTML before wp_send_json_* completed, etc.). Without this check
+		// `response.json()` throws a cryptic `Unexpected token '<' in JSON`
+		// that's hard for an admin to diagnose.
+		var contentType = response.headers.get( 'content-type' ) || '';
+		if ( -1 === contentType.indexOf( 'application/json' ) ) {
+			throw new Error( __( 'Unexpected server response.', 'buddyboss' ) );
 		}
 		return response.json();
 	} );
@@ -199,7 +218,19 @@ export function ImageUploadField( { uploadConfig, uploadUrl, onUpload, onRemove,
 	};
 
 	/**
-	 * Upload cover image (single step — no crop needed).
+	 * Upload cover image — step 1 of the two-step crop flow.
+	 *
+	 * Posts the file to `bb_admin_cover_image_upload_temp` (NEW admin-only
+	 * endpoint); server stages a `tmp-<rand>` copy at the default cover dir
+	 * without applying the auto-fit, and returns the URL + image dimensions
+	 * + basename. We then enter `cropping` state and render `<CoverCropModal>`,
+	 * which sends crop coords to `bb_admin_cover_image_set` for the final
+	 * fit/save step.
+	 *
+	 * The legacy `bp_cover_image_upload` action is intentionally NOT used here
+	 * — it's still in service for the frontend cover-photo upload pipeline,
+	 * which is single-step and crop-less. Splitting the admin path off keeps
+	 * the public action's behaviour unchanged.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -214,22 +245,22 @@ export function ImageUploadField( { uploadConfig, uploadUrl, onUpload, onRemove,
 
 		var formData = new FormData();
 		formData.append( 'file', file, file.name );
-		// check_admin_referer('bp-uploader') expects `_wpnonce`.
-		formData.append( '_wpnonce', nonces.uploader || '' );
-		// Handler reads params from $_POST['bp_params'] array.
-		formData.append( 'bp_params[object]', uploadConfig.object );
-		formData.append( 'bp_params[item_id]', uploadConfig.item_id );
-		formData.append( 'bp_params[item_type]', uploadConfig.item_type || '' );
+		formData.append( 'nonce', nonces.coverCropstore || '' );
+		formData.append( 'object', uploadConfig.object );
 
-		sendAjax( ajaxUrl, 'bp_cover_image_upload', formData, abortRef.current.signal ).then( function ( response ) {
-			if ( response.success && response.data ) {
-				var newUrl = response.data.url || response.data;
-				setPreviewUrl( newUrl );
-				setStatus( 'preview' );
-				invalidateFeatureCache( 'groups' );
-				if ( onUpload ) {
-					onUpload( newUrl );
-				}
+		sendAjax( ajaxUrl, 'bb_admin_cover_image_upload_temp', formData, abortRef.current.signal ).then( function ( response ) {
+			if ( response.success && response.data && response.data.url && response.data.basename ) {
+				setCropData( {
+					imageUrl:     response.data.url,
+					basename:     response.data.basename,
+					originalFile: response.data.url,
+					// Carry the original filename forward to phase 2 so the
+					// `*_cover_image_uploaded` action's `$name` arg holds
+					// the admin's actual filename rather than the random
+					// `tmp-XXXX` basename.
+					originalName: response.data.original_name || '',
+				} );
+				setStatus( 'cropping' );
 			} else {
 				var msg = ( response.data && response.data.message ) || __( 'Upload failed.', 'buddyboss' );
 				setError( msg );
@@ -279,7 +310,16 @@ export function ImageUploadField( { uploadConfig, uploadUrl, onUpload, onRemove,
 			if ( response.success ) {
 				setPreviewUrl( '' );
 				setStatus( 'idle' );
-				invalidateFeatureCache( 'groups' );
+				// Invalidate the feature cache for whichever feature owns this
+				// upload (members vs groups) so the next fetch of the feature
+				// settings reads the freshly-written cover URL from the server
+				// instead of serving the stale cached payload from before the
+				// upload. Was previously hardcoded to 'groups', so uploads to
+				// the members profile cover left the members feature cache
+				// stale — admins saw the OLD cover preview after upload and
+				// (depending on how they navigated next) could mistakenly
+				// believe the change wasn't saved.
+				invalidateFeatureCache( 'group' === uploadConfig.object ? 'groups' : 'members' );
 				if ( onRemove ) {
 					onRemove();
 				}
@@ -319,13 +359,17 @@ export function ImageUploadField( { uploadConfig, uploadUrl, onUpload, onRemove,
 		setCropData( null );
 		setPreviewUrl( newUrl );
 		setStatus( 'preview' );
-		invalidateFeatureCache( 'groups' );
+		// Invalidate the matching feature cache (members vs groups) so
+		// the next settings fetch reads the just-written cover URL from
+		// the server. Was previously hardcoded to 'groups', leaving the
+		// members feature cache stale on profile-cover crop uploads.
+		invalidateFeatureCache( 'group' === uploadConfig.object ? 'groups' : 'members' );
 		if ( onUpload ) {
 			onUpload( newUrl );
 		}
-	}, [ onUpload ] );
+	}, [ onUpload, uploadConfig.object ] );
 
-	var isLoading = 'uploading' === status || 'saving' === status || 'removing' === status;
+	var isLoading = 'uploading' === status || 'removing' === status;
 	var helpText = uploadConfig.help_text || '';
 	var uploadLabel = uploadConfig.label || '';
 
@@ -402,11 +446,26 @@ export function ImageUploadField( { uploadConfig, uploadUrl, onUpload, onRemove,
 				</div>
 			) }
 
-			{ /* Crop Modal (avatar only) */ }
-			{ 'cropping' === status && cropData && (
+			{ /* Crop Modal — branches on uploadConfig.type so avatars get the
+			     square crop modal and covers get the rectangular one. Both
+			     follow the same `cropData` contract; the cover variant also
+			     reads `cropData.basename` for the temp-file reference. */ }
+			{ 'cropping' === status && cropData && isAvatar && (
 				<AvatarCropModal
 					imageUrl={ cropData.imageUrl }
 					originalFile={ cropData.originalFile }
+					nonces={ nonces }
+					uploadConfig={ uploadConfig }
+					ajaxUrl={ ajaxUrl }
+					onSave={ handleCropSave }
+					onCancel={ handleCropCancel }
+				/>
+			) }
+			{ 'cropping' === status && cropData && ! isAvatar && (
+				<CoverCropModal
+					imageUrl={ cropData.imageUrl }
+					basename={ cropData.basename }
+					originalName={ cropData.originalName || '' }
 					nonces={ nonces }
 					uploadConfig={ uploadConfig }
 					ajaxUrl={ ajaxUrl }

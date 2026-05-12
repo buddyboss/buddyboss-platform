@@ -187,7 +187,7 @@ function bb_groups_register_images_panel_fields() {
 				'item_type'   => 'default',
 				'url_getter'  => 'bb_get_default_custom_upload_group_cover',
 				'label'       => __( 'Upload Custom Cover', 'buddyboss' ),
-				'help_text'   => '', // Injected at AJAX time via bb_groups_enrich_cover_upload_help_text() — theme compat not available at registration.
+				'help_text'   => '', // help_text + dimensions both injected at AJAX time via bb_groups_enrich_cover_upload_help_text() — theme compat is not loaded at registration time and bb_attachments_get_default_custom_cover_image_dimensions() would fatal.
 				'conditional' => array(
 					'value' => 'custom',
 				),

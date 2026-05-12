@@ -129,6 +129,17 @@ function bb_admin_settings_init() {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-page.php';
 		}
 
+		// Admin-only cover image upload + user crop AJAX handlers
+		// (`bb_admin_cover_image_upload_temp` + `bb_admin_cover_image_set`).
+		// Two-step pipeline that mirrors the avatar crop flow so the React
+		// `<CoverCropModal>` can let admins recompose the default profile /
+		// group cover before the server fits it to feature dimensions. The
+		// existing single-step `bp_cover_image_upload` action is left
+		// untouched — frontend cover uploads keep their current behaviour.
+		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-cover-crop-ajax.php' ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-cover-crop-ajax.php';
+		}
+
 		// Feature settings registration (panels, sections, fields).
 		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-activity.php' ) ) {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-activity.php';

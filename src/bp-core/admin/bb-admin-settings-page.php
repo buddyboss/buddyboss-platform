@@ -255,6 +255,11 @@ function bb_admin_settings_page() {
 			'avatarDelete'      => wp_create_nonce( 'bp_delete_avatar_link' ),
 			'avatarDeleteGroup' => wp_create_nonce( 'bp_group_avatar_delete' ),
 			'coverDelete'       => wp_create_nonce( 'bp_delete_cover_image' ),
+			// Two-step admin cover crop pipeline (bb_admin_cover_image_upload_temp
+			// + bb_admin_cover_image_set). Distinct from coverDelete and from
+			// the legacy bp-uploader nonce so a leak in either path doesn't
+			// also unlock cover-crop changes.
+			'coverCropstore'    => wp_create_nonce( 'bb_admin_cover_cropstore' ),
 		);
 	}
 
