@@ -1823,7 +1823,6 @@ select.bb-admin-settings__select {
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 24px 24px 16px;
     width: 100%;
 
     &__icon {
@@ -1852,11 +1851,12 @@ select.bb-admin-settings__select {
     &__description {
         font-size: 13px;
         color: $bb-text-secondary-color;
-        margin: 0 0 16px;
+        margin: 0;
         line-height: 1.5;
     }
 
     &__button {
         @include bb-button-primary;
+        margin-top: 16px;
     }
 }

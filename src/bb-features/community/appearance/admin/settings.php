@@ -463,7 +463,6 @@ function bb_admin_settings_register_appearance_settings() {
 		}
 	}
 
-	// Only register the field when at least one active integration offers a page.
 	if ( ! empty( $template_page_options ) ) {
 		bb_register_feature_field(
 			'appearance',
@@ -478,6 +477,24 @@ function bb_admin_settings_register_appearance_settings() {
 				'default'           => $enabled_pages_default,
 				'sanitize_callback' => 'bb_appearance_sanitize_enabled_pages',
 				'order'             => 10,
+			)
+		);
+	} else {
+		// No active integration offers a template page — render an empty-state
+		// card so the section never appears as a blank header/body.
+		bb_register_feature_field(
+			'appearance',
+			'general',
+			'template_pages',
+			array(
+				'name'                    => 'bb_rl_enabled_pages_empty',
+				'label'                   => '',
+				'type'                    => 'empty_state',
+				'icon'                    => 'bb-icons-rl bb-icons-rl-warning-circle',
+				'empty_state_title'       => __( 'No template pages available', 'buddyboss' ),
+				'empty_state_description' => __( 'Template pages appear here once features like Login & Registration, Courses, or other compatible modules are enabled.', 'buddyboss' ),
+				'sanitize_callback'       => '__return_empty_string',
+				'order'                   => 10,
 			)
 		);
 	}
