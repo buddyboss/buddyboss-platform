@@ -72,7 +72,13 @@ function bb_appearance_seed_default_sidebars() {
 		bp_update_option( 'bb_rl_member_profile_sidebars', $member_sidebar );
 	}
 
-	if ( false === bp_get_option( 'bb_rl_groups_sidebars', false ) ) {
+	// Only seed the Groups widget default when the Groups component is
+	// active — matches the Member Profile defaults pattern above and the
+	// `bp_is_active( 'groups' )` guard around the field registration in
+	// settings.php (mirrors legacy ReadyLaunchSettings.js:1046-1047). Without
+	// this guard, sites that never enable Groups still store a stale
+	// `bb_rl_groups_sidebars` option in wp_options.
+	if ( bp_is_active( 'groups' ) && false === bp_get_option( 'bb_rl_groups_sidebars', false ) ) {
 		bp_update_option(
 			'bb_rl_groups_sidebars',
 			array(

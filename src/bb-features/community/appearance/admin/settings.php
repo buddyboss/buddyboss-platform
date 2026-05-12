@@ -616,40 +616,49 @@ function bb_admin_settings_register_appearance_settings() {
 		)
 	);
 
-	// Inline "group single" link injected at AJAX format time. Do NOT call
-	// `groups_get_groups()` here — the Groups component's `table_name` global
-	// is undefined at `bb_register_features` (`bp_loaded@5`), so any DB query
-	// against it emits a WP DB error.
-	bb_register_feature_field(
-		'appearance',
-		'general',
-		'template_sidebars',
-		array(
-			'name'              => 'bb_rl_groups_sidebars',
-			'label'             => __( 'Group', 'buddyboss' ),
-			'type'              => 'toggle_list',
-			'label_description' => bb_appearance_render_sidebar_description( 'bb_rl_groups_sidebars' ),
-			'options'           => array(
-				array(
-					'label' => __( 'About Group', 'buddyboss' ),
-					'value' => 'about_group',
+	// Group widget block is gated on the Groups component being active —
+	// mirrors the legacy ReadyLaunchSettings.js:1046-1047 check
+	// (`BP_ADMIN.components.groups === 1`). When Groups is deactivated the
+	// "About Group" / "Group Members" toggles have no surface to attach to,
+	// so the field is omitted from the React payload entirely instead of
+	// rendered-but-disabled. Same reasoning the legacy admin used.
+	//
+	// Inline "group single" link is injected at AJAX format time. Do NOT
+	// call `groups_get_groups()` here — the Groups component's `table_name`
+	// global is undefined at `bb_register_features` (`bp_loaded@5`), so any
+	// DB query against it emits a WP DB error.
+	if ( bp_is_active( 'groups' ) ) {
+		bb_register_feature_field(
+			'appearance',
+			'general',
+			'template_sidebars',
+			array(
+				'name'              => 'bb_rl_groups_sidebars',
+				'label'             => __( 'Group', 'buddyboss' ),
+				'type'              => 'toggle_list',
+				'label_description' => bb_appearance_render_sidebar_description( 'bb_rl_groups_sidebars' ),
+				'options'           => array(
+					array(
+						'label' => __( 'About Group', 'buddyboss' ),
+						'value' => 'about_group',
+					),
+					array(
+						'label' => __( 'Group Members', 'buddyboss' ),
+						'value' => 'group_members',
+					),
 				),
-				array(
-					'label' => __( 'Group Members', 'buddyboss' ),
-					'value' => 'group_members',
+				'default'           => bp_get_option(
+					'bb_rl_groups_sidebars',
+					array(
+						'about_group'   => true,
+						'group_members' => true,
+					)
 				),
-			),
-			'default'           => bp_get_option(
-				'bb_rl_groups_sidebars',
-				array(
-					'about_group'   => true,
-					'group_members' => true,
-				)
-			),
-			'sanitize_callback' => 'bb_appearance_sanitize_sidebar_map',
-			'order'             => 30,
-		)
-	);
+				'sanitize_callback' => 'bb_appearance_sanitize_sidebar_map',
+				'order'             => 30,
+			)
+		);
+	}
 
 	// =========================================================================
 	// BRANDING → SECTION: Branding
