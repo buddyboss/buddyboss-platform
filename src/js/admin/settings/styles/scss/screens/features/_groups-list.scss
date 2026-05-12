@@ -85,7 +85,8 @@
 	}
 
 	&__th--checkbox {
-		width: 30px;
+		width: 24px;
+		box-sizing: border-box;
 	}
 
 	&__th--actions {

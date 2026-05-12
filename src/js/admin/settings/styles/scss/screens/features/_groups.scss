@@ -119,6 +119,10 @@
 	display: flex;
 	flex-direction: column;
 	gap: 16px;
+
+	&--bp-default-group-cover-type {
+		gap: 26px;
+	}
 }
 
 /* Layout preview mixin — shared by card and header style pickers */

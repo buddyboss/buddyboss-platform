@@ -812,6 +812,14 @@
         }
     }
 
+    &[data-field-name="bb-pro-cover-group-width"] {
+        padding-bottom: 22px;
+
+        .bb-admin-settings-form__field-group-label {
+            margin-bottom: 10px;
+        }
+    }
+
     .bb-admin-settings-form__child-group-label {
         font-size: 13px;
         font-weight: 500;
@@ -977,6 +985,7 @@
     flex-direction: column;
     gap: 12px;
 
+    [data-field-name="bb-group-headers-elements"] &,
     [data-field-name="bp_platform_activity_types"] & {
         gap: 16px;
     }
