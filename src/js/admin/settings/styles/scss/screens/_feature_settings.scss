@@ -802,6 +802,13 @@
         }
     }
 
+    &[data-field-name="bb-access-control-send-message"] {
+
+        .bb-access-control-field__selects .components-base-control {
+            width: 100%;
+        }
+    }
+
     .bb-admin-settings-form__child-group-label {
         font-size: 13px;
         font-weight: 500;
