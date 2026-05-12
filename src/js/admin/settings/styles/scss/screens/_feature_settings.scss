@@ -976,6 +976,10 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
+
+    [data-field-name="bp_platform_activity_types"] & {
+        gap: 16px;
+    }
 }
 
 .bb-admin-settings-field__manage-btn {
@@ -1998,7 +2002,7 @@
     flex-wrap: wrap;
     gap: 8px;
     max-width: 656px;
-    margin-top: 15px;
+    margin-top: 10px;
 }
 
 .bb-admin-settings-field__checkbox-list-item {

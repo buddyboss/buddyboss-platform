@@ -784,4 +784,20 @@
 		border-bottom: none;
 		padding-bottom: 18px;
 	}
+
+	&.bb-admin-settings-form__field--grouped:has(.bb-admin-settings-form__toggle-wrapper) {
+		padding-bottom: 0;
+	}
+
+	&.bb-admin-settings-form__field--no-label {
+		padding-top: 16px;
+
+		&:has(.bb-admin-notice) {
+			padding-top: 16px;
+		}
+
+		.bb-admin-notice {
+			margin-bottom: 0;
+		}
+	}
 }
