@@ -435,6 +435,10 @@
 
 		.components-base-control {
 			margin-bottom: 0;
+
+			&:not(:last-child):not(.components-checkbox-control):not(.components-toggle-control) {
+				margin-bottom: 16px;
+			}
 		}
 
 		// Custom URL TextControl rendered conditionally below the After Login /
@@ -670,7 +674,8 @@
 			font-size: 14px;
 		}
 
-		.components-base-control {
+		.components-base-control,
+		.components-base-control__field {
 			margin-bottom: 0;
 		}
 	}
