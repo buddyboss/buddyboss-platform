@@ -653,6 +653,10 @@
             border-bottom: none;
             padding-bottom: 12px;
         }
+
+        &[data-field-name="allow-custom-registration"] {
+            padding-bottom: 20px;
+        }
     }
 
     // Inline grouped fields rendered side-by-side.
