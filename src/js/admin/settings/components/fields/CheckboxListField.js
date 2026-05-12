@@ -130,7 +130,7 @@ export function CheckboxListField( { field, value, onChange, disabled, sanitized
 
 		return (
 			<span className="bb-admin-settings-field__checkbox-list-label">
-				{ option.label }
+				<span className="bb-admin-settings-field__checkbox-list-label-text">{ option.label }</span>
 				{ hasStaticBadge && (
 					<span className="bb-admin-settings-field__checkbox-list-badge">
 						{ option.badge_label }
