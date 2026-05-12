@@ -2058,6 +2058,25 @@
     white-space: nowrap;
 }
 
+// "Hidden" status tag rendered next to a navigation-order item's label when
+// its toggle is off (Group Navigation Order / Profile Navigation Order
+// screens). Matches Figma `statusTag` (state: normal, size: medium) from
+// Backend-Settings-2.0 node 2611-123377 — lighter pill, distinct from the
+// `__checkbox-list-badge` used for static "Pro" / "Coming Soon" badges.
+.bb-admin-settings-field__checkbox-list-status-tag {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    padding: 4px 8px;
+    background-color: $bb-background-secondary-color;
+    color: $bb-text-color;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 16px;
+    border-radius: $bb-border-radius-md;
+    white-space: nowrap;
+}
+
 .bb-pro-badge {
     display: inline-flex;
     align-items: center;

@@ -8,6 +8,7 @@
  */
 
 import { ToggleControl } from '@wordpress/components';
+import { __ } from '@wordpress/i18n';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 /**
@@ -80,26 +81,76 @@ export function CheckboxListField( { field, value, onChange, disabled, sanitized
 		onChange( field.name, newValue );
 	};
 
+	// Scope the "Hidden" inline status tag to the navigation-order fields
+	// only — `bb_group_nav_order` (Group Navigation Order) and
+	// `bb_user_nav_order` (Profile Navigation Order). Other `checkbox_list`
+	// consumers (Activity Feed Filters, etc.) keep the previous behaviour
+	// where disabled options just render with the toggle off and no inline
+	// indicator.
+	//
+	// A JS-side allowlist is intentional here vs. a per-field server flag:
+	// the alternative would add a new key to the AJAX payload of EVERY
+	// field on every panel just to opt-in two fields, which bloats the
+	// per-page localized data with no benefit to the other ~200 fields.
+	// If a third field later needs the same treatment, add its `name`
+	// to the array below — one line.
+	var NAV_ORDER_FIELD_NAMES = [ 'bb_group_nav_order', 'bb_user_nav_order' ];
+	var showHiddenTagForDisabled = NAV_ORDER_FIELD_NAMES.indexOf( field.name ) >= 0;
+
 	/**
-	 * Build label with optional badge for toggle items.
+	 * Build label with optional badge(s) for toggle items.
+	 *
+	 * Two badge sources can render next to the label, separately or together:
+	 *   - `option.badge_label` — static badge from PHP registration (e.g. "Pro",
+	 *     "Coming Soon"). Uses `__checkbox-list-badge` styling (darker pill).
+	 *   - `! checked && showHiddenTagForDisabled` — dynamic "Hidden" status tag
+	 *     rendered when the option's toggle is off, on the navigation-order
+	 *     fields allow-listed via `NAV_ORDER_FIELD_NAMES` above (no PHP flag —
+	 *     scoped client-side to avoid widening the AJAX payload across all
+	 *     `checkbox_list` fields). Matches Figma listItem `statusTag` slot
+	 *     (Backend-Settings-2.0 node 2611-123377) on the Group / Profile
+	 *     Navigation Order screens — surfaces the disabled state inline so
+	 *     admins can see at a glance which nav items won't render on the
+	 *     frontend. Uses `__checkbox-list-status-tag` (lighter pill, distinct
+	 *     from the static badge above).
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param {Object} option The option item.
+	 * @param {Object}  option  The option item.
+	 * @param {boolean} checked Whether the option's toggle is currently on.
 	 * @returns {JSX.Element|string} Label element or string.
 	 */
-	var buildOptionLabel = function ( option ) {
-		if ( option.badge_label ) {
-			return (
-				<span className="bb-admin-settings-field__checkbox-list-label">
-					{ option.label }
+	var buildOptionLabel = function ( option, checked ) {
+		var hasStaticBadge = !! option.badge_label;
+		var showHiddenTag  = showHiddenTagForDisabled && ! checked;
+
+		if ( ! hasStaticBadge && ! showHiddenTag ) {
+			return option.label;
+		}
+
+		return (
+			<span className="bb-admin-settings-field__checkbox-list-label">
+				{ option.label }
+				{ hasStaticBadge && (
 					<span className="bb-admin-settings-field__checkbox-list-badge">
 						{ option.badge_label }
 					</span>
-				</span>
-			);
-		}
-		return option.label;
+				) }
+				{ showHiddenTag && (
+					// aria-hidden: the underlying ToggleControl already
+					// announces the off state to screen readers, so the
+					// visual "Hidden" pill would just double-announce.
+					// Keep the text visible for sighted users, hide it
+					// from the a11y tree.
+					<span
+						className="bb-admin-settings-field__checkbox-list-status-tag"
+						aria-hidden="true"
+					>
+						{ __( 'Hidden', 'buddyboss' ) }
+					</span>
+				) }
+			</span>
+		);
 	};
 
 	return (
@@ -128,7 +179,7 @@ export function CheckboxListField( { field, value, onChange, disabled, sanitized
 									>
 										<i className="bb-icons-rl bb-icons-rl-list" />
 										<ToggleControl
-											label={ buildOptionLabel( option ) }
+											label={ buildOptionLabel( option, isOptionChecked( option.value ) ) }
 											checked={ isOptionChecked( option.value ) }
 											onChange={ ( checked ) => {
 												// Preserve key order by rebuilding the object.
