@@ -421,7 +421,7 @@ function ProfileTypeScreen( { onNavigate, helpUrl, onHelpClick, feature, activeP
 										</div>
 										<div className="bb-admin-settings-form__field-content">
 											<div className="bb-admin-settings-form__field-input-wrapper">
-												<div className="bb-admin-settings-form__toggle-wrapper">
+												<div className="bb-admin-settings-form__toggle-wrapper bb-admin-profile-types--selector">
 													<SelectControl
 														value={ defaultProfileType }
 														options={ defaultTypeOptions }

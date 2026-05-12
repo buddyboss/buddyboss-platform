@@ -5,7 +5,6 @@
 .bb-admin-profile-types {
 	display: flex;
 	flex-direction: column;
-	gap: 24px;
 	max-width: 985px;
 	margin: 0 auto;
 	width: 100%;
@@ -33,6 +32,10 @@
 		.components-select-control {
 			max-width: 275px;
 		}
+	}
+
+	&--selector {
+		width: 100%;
 	}
 
 	&__add-btn {
@@ -133,7 +136,6 @@
 		display: flex;
 		align-items: center;
 		gap: 32px;
-		min-height: 48px;
 		padding: 0 0 16px;
 		border-bottom: 0.5px solid $bb-border-secondary-color;
 
