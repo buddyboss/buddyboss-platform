@@ -31,8 +31,9 @@ function bb_groups_register_navigation_panel_fields() {
 		'group_navigation',
 		'group_navigation_settings',
 		array(
-			'title' => __( 'Group Navigation', 'buddyboss' ),
-			'order' => 10,
+			'title'    => __( 'Group Navigation', 'buddyboss' ),
+			'order'    => 10,
+			'help_url' => '638208',
 		)
 	);
 

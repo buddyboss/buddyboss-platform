@@ -50,7 +50,7 @@ function bb_appearance_site_seo_section_title() {
  * @return string Help article ID.
  */
 function bb_appearance_site_seo_section_help_article() {
-	return '62793';
+	return '638202';
 }
 
 /**

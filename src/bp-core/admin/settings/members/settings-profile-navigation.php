@@ -76,8 +76,9 @@ function bb_members_register_profile_navigation_panel_fields() {
 		'profile_navigation',
 		'profile_navigation_order',
 		array(
-			'title' => __( 'Navigation Order', 'buddyboss' ),
-			'order' => 20,
+			'title'    => __( 'Navigation Order', 'buddyboss' ),
+			'order'    => 20,
+			'help_url' => '638247',
 		)
 	);
 

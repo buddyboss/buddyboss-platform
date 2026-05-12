@@ -37,7 +37,7 @@ function bb_groups_register_access_control_fields() {
 		array(
 			'title'      => __( 'Member Access Controls', 'buddyboss' ),
 			'order'      => 10,
-			'help_url'   => '62793',
+			'help_url'   => '638206',
 			'pro_notice' => bb_admin_settings_get_pro_notice(
 				array(
 					'type'    => 'access_controls',
