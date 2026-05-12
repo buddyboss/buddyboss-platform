@@ -716,12 +716,17 @@
 	/* Member types section */
 	.bb-pf-member-types-grid {
 		display: grid;
-		grid-template-columns: 1fr 1fr;
+		grid-template-columns: 180px 180px;
 		gap: 8px;
 		margin-top: 8px;
 
 		.components-checkbox-control {
 			margin-bottom: 0;
+
+			.components-flex {
+				display: flex;
+				align-items: center;
+			}
 		}
 
 		.components-checkbox-control__label {
