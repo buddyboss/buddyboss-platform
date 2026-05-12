@@ -985,6 +985,7 @@
     flex-direction: column;
     gap: 12px;
 
+    [data-field-name="bb_all_reactions"] &,
     [data-field-name="bb-group-headers-elements"] &,
     [data-field-name="bp_platform_activity_types"] & {
         gap: 16px;
