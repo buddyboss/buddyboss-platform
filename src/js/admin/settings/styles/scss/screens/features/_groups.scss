@@ -407,7 +407,7 @@
 		border: 1px solid $bb-border-secondary-color;
 		border-radius: $bb-border-radius-2xl;
 		padding: 0;
-		max-width: 528px;
+		max-width: 680px;
 		width: 90%;
 		max-height: 95vh;
 		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
@@ -452,10 +452,6 @@
 		i {
 			font-size: 24px;
 			line-height: 1;
-		}
-
-		&:hover:not(:disabled) {
-			background: $bb-background-primary-hover-color;
 		}
 
 		&:focus {
