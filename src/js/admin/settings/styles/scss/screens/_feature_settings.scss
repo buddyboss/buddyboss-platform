@@ -801,7 +801,10 @@
         }
     }
 
-    &[data-field-name="bb-access-control-send-message"] {
+    &[data-field-name="bb-access-control-send-message"],
+    &[data-field-name="bb-access-control-upload-media"],
+    &[data-field-name="bb-access-control-upload-video"],
+    &[data-field-name="bb-access-control-upload-document"] {
 
         .bb-access-control-field__selects .components-base-control {
             width: 100%;
