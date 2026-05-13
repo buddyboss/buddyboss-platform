@@ -2524,20 +2524,12 @@ function bp_core_get_components( $type = 'all' ) {
 	$required_components = array(
 		'members'  => array(
 			'title'       => __( 'Member Profiles', 'buddyboss' ),
-			'settings'    => bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page' => 'bp-settings',
-						'tab'  => 'bp-xprofile',
-					),
-					'admin.php'
-				)
-			),
+			'settings'    => bp_get_admin_url( 'admin.php?page=bb-settings&tab=members' ),
 			'description' => __( 'Everything in a community website revolves around its members. All website users are given member profiles.', 'buddyboss' ),
 		),
 		'xprofile' => array(
 			'title'       => __( 'Profile Fields', 'buddyboss' ),
-			'settings'    => bp_get_admin_url( 'admin.php?page=bp-profile-setup' ),
+			'settings'    => bp_get_admin_url( 'admin.php?page=bb-settings&tab=members&panel=profile_fields' ),
 			'description' => __( 'Customize your community with fully editable profile fields that allow members to share details about themselves.', 'buddyboss' ),
 			'default'     => true,
 		),
@@ -2598,43 +2590,19 @@ function bp_core_get_components( $type = 'all' ) {
 		),
 		'media'         => array(
 			'title'       => __( 'Media Uploading', 'buddyboss' ),
-			'settings'    => bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page' => 'bp-settings',
-						'tab'  => 'bp-media',
-					),
-					'admin.php'
-				)
-			),
+			'settings'    => bb_get_feature_settings_url( 'media' ),
 			'description' => __( 'Allow members to upload photos, documents, videos, emojis and animated GIFs, and to organize photos and videos into albums and documents into folders.', 'buddyboss' ),
 			'default'     => false,
 		),
 		'document'      => array(
 			'title'       => __( 'Document Uploading', 'buddyboss' ),
-			'settings'    => bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page' => 'bp-settings',
-						'tab'  => 'bp-media',
-					),
-					'admin.php'
-				)
-			),
+			'settings'    => bb_get_feature_settings_url( 'media', 'documents' ),
 			'description' => __( 'Allow members to upload documents, and to organize documents into folders.', 'buddyboss' ),
 			'default'     => false,
 		),
 		'video'         => array(
 			'title'       => __( 'Video Uploading', 'buddyboss' ),
-			'settings'    => bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page' => 'bp-settings',
-						'tab'  => 'bp-media',
-					),
-					'admin.php'
-				)
-			),
+			'settings'    => bb_get_feature_settings_url( 'media', 'videos' ),
 			'description' => __( 'Allow members to upload videos, and to organize videos into albums.', 'buddyboss' ),
 			'default'     => false,
 		),
@@ -2645,15 +2613,7 @@ function bp_core_get_components( $type = 'all' ) {
 		),
 		'friends'       => array(
 			'title'       => __( 'Member Connections', 'buddyboss' ),
-			'settings'    => bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page' => 'bp-settings',
-						'tab'  => 'bp-friends',
-					),
-					'admin.php'
-				)
-			),
+			'settings'    => bp_get_admin_url( 'admin.php?page=bb-settings&tab=members&panel=member_connection' ),
 			'description' => __( 'Allow members to make connections with one another and focus on those they care about most.', 'buddyboss' ),
 			'default'     => false,
 		),
@@ -2674,15 +2634,7 @@ function bp_core_get_components( $type = 'all' ) {
 		'moderation'    => array(
 			'title'                => __( 'Moderation', 'buddyboss' ),
 			'description'          => __( 'Allow members to block each other, and report inappropriate content to be reviewed by the site admin.', 'buddyboss' ),
-			'settings'             => bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page' => 'bp-settings',
-						'tab'  => 'bp-moderation',
-					),
-					'admin.php'
-				)
-			),
+			'settings'             => bp_get_admin_url( 'admin.php?page=bb-settings&tab=moderation&panel=member_moderation' ),
 			'default'              => false,
 			'deactivation_confirm' => true,
 			'deactivation_message' => '<p>' . __( 'Please confirm you want to deactivate the Moderation component.', 'buddyboss' ) . '</p>' .
@@ -2999,7 +2951,29 @@ function bp_nav_menu_get_loggedin_pages() {
 				}
 
 				if ( 'my-courses' === $s_nav['slug'] ) {
-					$course_label = is_plugin_active( 'sfwd-lms/sfwd_lms.php' ) ? LearnDash_Custom_Label::get_label( 'courses' ) : __( 'Course', 'buddyboss' );
+					/**
+					 * Resolve the label used for the "my-courses" nav sub-item.
+					 *
+					 * Integrations that own the courses nav (e.g. the
+					 * buddyboss-learndash addon, Tutor LMS, MemberPress Courses)
+					 * filter this to return their LMS-specific "Course(s)"
+					 * label. Pre-BuddyBoss [BBVERSION], Platform called
+					 * `LearnDash_Custom_Label::get_label( 'courses' )` inline —
+					 * that inline call moved into the addon subscriber.
+					 *
+					 * Subscribers should return an already-singular string
+					 * (e.g. "Course"); this call site wraps the result with
+					 * the "My %s" translation itself.
+					 *
+					 * @since BuddyBoss [BBVERSION]
+					 *
+					 * @param string $course_label Current label. Defaults to "Course".
+					 */
+					$course_label = apply_filters(
+						'bb_nav_sub_item_course_label',
+						__( 'Course', 'buddyboss' )
+					);
+
 					/* translators: My Course, e.g. "My Course". */
 					$sub_name = sprintf( __( 'My %s', 'buddyboss' ), $course_label );
 				}
@@ -3983,11 +3957,13 @@ function bp_email_get_type_schema( $field = 'description' ) {
 	$core_user_registration = array(
 		'description' => esc_html__( 'Activate a new account', 'buddyboss' ),
 		'unsubscribe' => false,
+		'group'       => 'account',
 	);
 
 	$core_user_registration_with_blog = array(
 		'description' => esc_html__( 'Activate a new account and site', 'buddyboss' ),
 		'unsubscribe' => false,
+		'group'       => 'account',
 	);
 
 	$activity_at_message = array(
@@ -3996,6 +3972,7 @@ function bp_email_get_type_schema( $field = 'description' ) {
 			'meta_key' => 'notification_activity_new_mention',
 			'message'  => esc_html__( 'You will no longer receive emails when someone mentions you in an update.', 'buddyboss' ),
 		),
+		'group'       => 'activity',
 	);
 
 	$groups_at_message = array(
@@ -4004,26 +3981,31 @@ function bp_email_get_type_schema( $field = 'description' ) {
 			'meta_key' => 'notification_activity_new_mention',
 			'message'  => esc_html__( 'You will no longer receive emails when someone mentions you in an update.', 'buddyboss' ),
 		),
+		'group'       => 'groups_discussions',
 	);
 
 	$settings_verify_email_change = array(
 		'description' => esc_html__( 'A member\'s email is changed', 'buddyboss' ),
 		'unsubscribe' => false,
+		'group'       => 'account',
 	);
 
 	$invites_member_invite = array(
 		'description' => esc_html__( 'Recepient is invited to the site by a member', 'buddyboss' ),
 		'unsubscribe' => false,
+		'group'       => 'account',
 	);
 
 	$content_moderation_email = array(
 		'description' => esc_html__( 'Content is automatically hidden due to reaching the reporting threshold', 'buddyboss' ), // Todo: Add proper description of email.
 		'unsubscribe' => false,
+		'group'       => 'account',
 	);
 
 	$user_moderation_email = array(
 		'description' => esc_html__( 'A member is automatically suspended due to reaching the reporting threshold', 'buddyboss' ), // Todo: Add proper description of email.
 		'unsubscribe' => false,
+		'group'       => 'account',
 	);
 
 	$types = array(
@@ -4046,7 +4028,7 @@ function bp_email_get_type_schema( $field = 'description' ) {
 	 */
 	$types = apply_filters( 'bp_email_get_type_schema', $types );
 
-	if ( $field !== 'all' ) {
+	if ( 'all' !== $field ) {
 		return wp_list_pluck( $types, $field );
 	} else {
 		return $types;
@@ -6914,14 +6896,17 @@ function bb_register_notifications( $component = '' ) {
  * @param string $component component name.
  */
 function bb_register_notification_preferences( $component = '' ) {
+	static $cache = null;
 
-	$notifications = apply_filters( 'bb_register_notification_preferences', array() );
-
-	if ( ! empty( $component ) && isset( $notifications[ $component ] ) ) {
-		return $notifications[ $component ];
+	if ( null === $cache ) {
+		$cache = apply_filters( 'bb_register_notification_preferences', array() );
 	}
 
-	return $notifications;
+	if ( ! empty( $component ) && isset( $cache[ $component ] ) ) {
+		return $cache[ $component ];
+	}
+
+	return $cache;
 }
 
 /**
@@ -7016,7 +7001,11 @@ function bb_core_get_user_notifications_preferences_value( $user_id = 0, $pref_t
  */
 function bb_register_notification_email_templates( $notification_type = '' ) {
 
-	$notification_emails = apply_filters( 'bb_register_notification_emails', array() );
+	static $notification_emails = null;
+
+	if ( null === $notification_emails ) {
+		$notification_emails = apply_filters( 'bb_register_notification_emails', array() );
+	}
 
 	if ( ! empty( $notification_emails ) && ! empty( $notification_type ) ) {
 		return ( isset( $notification_emails[ $notification_type ] ) ? $notification_emails[ $notification_type ] : array() );
@@ -7772,20 +7761,16 @@ function bb_admin_icons( $id ) {
 			$meta_icon = $bb_icon_bf . ' bb-icon-link';
 			break;
 		case 'bp_member_avatar_settings':
-		case 'bp_groups_avatar_settings':
 			$meta_icon = $bb_icon_bf . ' bb-icon-image';
 			break;
 		case 'bp_profile_headers_settings':
-		case 'bp_groups_headers_settings':
 			$meta_icon = $bb_icon_bf . ' bb-icon-maximize';
 			break;
 		case 'bp_profile_list_settings':
-		case 'bp_group_list_settings':
 		case 'bbp_settings_root_slugs':
 			$meta_icon = $bb_icon_bf . ' bb-icon-grid-small';
 			break;
 		case 'bp_member_type_settings':
-		case 'bp_groups_types':
 			$meta_icon = $bb_icon_bf . ' bb-icon-tags';
 			break;
 		case 'bp_profile_search_settings':
@@ -7795,12 +7780,8 @@ function bb_admin_icons( $id ) {
 		case 'bp_search_settings_post_types':
 			$meta_icon = $bb_icon_bf . ' bb-icon-search';
 			break;
-		case 'bp_groups':
 		case 'bbp_settings_buddypress':
 			$meta_icon = $bb_icon_bf . ' bb-icon-users';
-			break;
-		case 'bp_groups_hierarchies':
-			$meta_icon = $bb_icon_bf . ' bb-icon-layers';
 			break;
 		case 'bbp_settings_users':
 		case 'bbp_settings_features':
@@ -7860,12 +7841,6 @@ function bb_admin_icons( $id ) {
 		case 'bp_invites':
 			$meta_icon = $bb_icon_bf . ' bb-icon-envelope';
 			break;
-		case 'bp_moderation_settings_blocking':
-			$meta_icon = $bb_icon_bf . ' bb-icon-user-slash';
-			break;
-		case 'bp_moderation_settings_reporting':
-			$meta_icon = $bb_icon_bf . ' bb-icon-flag';
-			break;
 		case 'bp_search_settings_general':
 			$meta_icon = $bb_icon_bf . ' bb-icon-caret-down';
 			break;
@@ -7893,7 +7868,6 @@ function bb_admin_icons( $id ) {
 		case 'bbpress_converter_main':
 			$meta_icon = $bb_icon_bf . ' bb-icon-upload';
 			break;
-		case 'group_access_control_block':
 		case 'activity_access_control_block':
 		case 'messages_access_control_block':
 		case 'media_access_control_block';
@@ -7904,14 +7878,10 @@ function bb_admin_icons( $id ) {
 		case 'bp_zoom_gutenberg_section';
 			$meta_icon = $bb_icon_bf . ' bb-icon-brand-zoom';
 			break;
-		case 'bp_labs_settings_notifications';
-			$meta_icon = $bb_icon_bf . ' bb-icon-flask';
-			break;
 		case 'bp_notification_settings_automatic':
 			$meta_icon = $bb_icon_bf . ' bb-icon-bell';
 			break;
 		case 'bb_registration_restrictions':
-		case 'bp_messaging_notification_settings':
 			$meta_icon = $bb_icon_bf . ' bb-icon-envelope';
 			break;
 		case 'bp_web_push_notification_settings':
@@ -9056,12 +9026,13 @@ function bb_is_allowed_register_email_address( $email = '' ) {
  *
  * @since BuddyBoss 2.4.30
  *
- * @return null|BB_Reaction|void
+ * @return BB_Reaction|null
  */
 function bb_load_reaction() {
 	if ( class_exists( 'BB_Reaction' ) ) {
 		return BB_Reaction::instance();
 	}
+	return null;
 }
 
 /**
@@ -9216,122 +9187,6 @@ function bb_get_directory_layout_preference( $action ) {
 	}
 
 	return ! empty( $existing_layouts ) && ! empty( $existing_layouts[ $action ] ) ? $existing_layouts[ $action ] : $default_value;
-}
-
-/**
- * Get the Reactions settings sections.
- *
- * @since BuddyBoss 2.5.20
- *
- * @return array
- */
-function bb_reactions_get_settings_sections() {
-
-	$settings = array(
-		'bp_reaction_settings_section' => array(
-			'page'              => 'reaction',
-			'title'             => esc_html__( 'Reactions', 'buddyboss' ),
-			'tutorial_callback' => 'bp_admin_reaction_setting_tutorial',
-		),
-	);
-
-	return (array) apply_filters( 'bb_reactions_get_settings_sections', $settings );
-}
-
-/**
- * Link to Reaction tutorial.
- *
- * @since BuddyBoss 2.5.20
- */
-function bp_admin_reaction_setting_tutorial() {
-	?>
-	<p>
-		<a class="button" target="_blank" href="
-		<?php
-		echo esc_url(
-			bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page'    => 'bp-help',
-						'article' => 127197,
-					),
-					'admin.php'
-				)
-			)
-		);
-		?>
-		"><?php esc_html_e( 'View Tutorial', 'buddyboss' ); ?></a>
-	</p>
-	<?php
-}
-
-/**
- * Get reaction settings fields by section.
- *
- * @since BuddyBoss 2.5.20
- *
- * @param string $section_id Section ID.
- *
- * @return mixed False if section is invalid, array of fields otherwise.
- */
-function bb_reactions_get_settings_fields_for_section( $section_id = '' ) {
-
-	// Bail if section is empty.
-	if ( empty( $section_id ) ) {
-		return false;
-	}
-
-	$fields = bb_reactions_get_settings_fields();
-	$retval = $fields[ $section_id ] ?? false;
-
-	return (array) apply_filters( 'bb_reactions_get_settings_fields_for_section', $retval, $section_id );
-}
-
-/**
- * Get all of the reactions settings fields.
- *
- * @since BuddyBoss 2.5.20
- *
- * @return array
- */
-function bb_reactions_get_settings_fields() {
-
-	$fields    = array();
-	$pro_class = bb_get_pro_fields_class( 'reaction' );
-
-	$reaction_btn_class = 'bb_reaction_button_row ' . $pro_class;
-	if ( function_exists( 'bb_get_reaction_mode' ) && 'emotions' !== bb_get_reaction_mode() ) {
-		$reaction_btn_class .= ' bp-hide';
-	}
-
-	$fields['bp_reaction_settings_section'] = array(
-		'bb_all_reactions' => array(
-			'title'    => esc_html__( 'Enable Reactions', 'buddyboss' ),
-			'callback' => 'bb_reactions_settings_callback_all_reactions',
-			'args'     => array(),
-		),
-
-		'bb_reaction_mode' => array(
-			'title'             => esc_html__( 'Reactions Mode', 'buddyboss' ) . bb_get_pro_label_notice( 'reaction' ),
-			'callback'          => 'bb_reactions_settings_callback_reaction_mode',
-			'sanitize_callback' => 'sanitize_text_field',
-			'args'              => array(
-				'class' => $pro_class
-			),
-		),
-
-		'bb_reaction_emotions' => array(),
-
-		'bb_reactions_button' => array(
-			'title'    => esc_html__( 'Reactions Button', 'buddyboss' ) . bb_get_pro_label_notice( 'reaction' ),
-			'callback' => 'bb_reactions_settings_callback_reactions_button',
-			'args'     => array(
-				'class' => $reaction_btn_class
-			),
-		),
-	);
-
-	return (array) apply_filters( 'bb_reactions_get_settings_fields', $fields );
 }
 
 /**
@@ -10103,4 +9958,659 @@ function bb_is_readylaunch_enabled() {
  */
 function bb_pro_post_feature_image_version() {
 	return '2.9.0';
+}
+
+/**
+ * Get the Feature Loader instance.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return BB_Feature_Loader
+ */
+function bb_feature_loader() {
+	return BB_Feature_Loader::instance();
+}
+
+/**
+ * Get the Feature Registry instance.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return BB_Feature_Registry
+ */
+function bb_feature_registry() {
+	return BB_Feature_Registry::instance();
+}
+
+/**
+ * Register a feature.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id Feature ID.
+ * @param array  $args       Feature arguments.
+ * @return bool|WP_Error True on success, WP_Error on failure.
+ */
+function bb_register_feature( $feature_id, $args = array() ) {
+	return bb_feature_registry()->bb_register_feature( $feature_id, $args );
+}
+
+/**
+ * Get the admin URL for a feature's settings page.
+ *
+ * Returns URL in format: admin.php?page=bb-settings&tab={feature_id}&panel={panel_id}
+ *
+ * Hierarchy: Feature (tab) → Side Panel (panel) → Sections → Fields
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id Feature ID (e.g., 'reactions', 'activity').
+ * @param string $panel_id   Optional side panel ID.
+ * @return string Admin URL for the feature settings.
+ */
+function bb_get_feature_settings_url( $feature_id, $panel_id = '' ) {
+	$url = bp_get_admin_url( 'admin.php?page=bb-settings' );
+
+	if ( ! empty( $feature_id ) ) {
+		$url = add_query_arg( 'tab', sanitize_key( $feature_id ), $url );
+	}
+
+	if ( ! empty( $panel_id ) ) {
+		$url = add_query_arg( 'panel', sanitize_key( $panel_id ), $url );
+	}
+
+	return $url;
+}
+
+/**
+ * Whether the Settings 2.0 framework supports custom field types via wp.hooks.
+ *
+ * External plugins check this function to decide between embedding custom
+ * field components inside Settings 2.0 panels (when available) or falling
+ * back to a standalone admin page.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool Always true when this function exists.
+ */
+function bb_settings_supports_custom_field_types() {
+	return true;
+}
+
+/**
+ * Get the admin URL for the main settings page (Features grid).
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return string Admin URL for the main settings page.
+ */
+function bb_get_settings_url() {
+	return bp_get_admin_url( 'admin.php?page=bb-settings' );
+}
+
+/**
+ * Get structured PRO notice data for the React admin settings UI.
+ *
+ * Returns an array with badge and video link data that the React UI renders
+ * as a visual PRO pill badge + play icon button. This is the Settings 2.0
+ * equivalent of `bb_get_pro_label_notice()` which returns HTML strings.
+ *
+ * Lives in bp-core-functions.php (loaded early in core boot) rather than in
+ * bp-core-admin-functions.php so Settings 2.0 panel-registration code, which
+ * runs at `bp_loaded` priority 5, can call it before the admin layer (which
+ * boots `bp_admin()` at `bp_loaded` priority 10) has loaded the admin
+ * functions file.
+ *
+ * Two visual contexts:
+ *
+ *   - 'field'   — badge sits next to a per-field label (e.g. "Reactions Mode",
+ *                 "Create Groups"). Default text "PRO". link_url is per-feature
+ *                 (tutorial doc URL or empty), so the play icon takes admins to
+ *                 feature-specific reading material.
+ *
+ *   - 'section' — badge sits in the section header (e.g. "Group Headers",
+ *                 "Member Access Controls", "Group Topics"). Default text
+ *                 "UPGRADE PRO". link_url defaults to the BuddyBoss pricing
+ *                 page since the section-level CTA is a straightforward upsell.
+ *
+ * Both contexts share the same "is Pro locked?" computation — Pro missing,
+ * Pro too old for this feature, or Pro license invalid/expired all result in
+ * `show: true`. Only the badge text + default link change between contexts.
+ *
+ * Args are passed as a single associative array so future additions
+ * (per-feature link override, badge variant, custom check callback, etc.)
+ * land without breaking existing callers' positional expectations.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $args {
+ *     Optional. Configuration array.
+ *
+ *     @type string $type    Feature type (e.g. 'reaction', 'schedule_posts',
+ *                           'polls', 'sso', 'group_activity_topics',
+ *                           'post_feature_image', or arbitrary section keys
+ *                           like 'group_headers'). Per-feature minimum-version
+ *                           gating only fires for the keys it knows about; any
+ *                           other key falls through to the generic
+ *                           Pro-installed + license-valid check.
+ *                           Default 'default'.
+ *     @type string $context Either 'field' or 'section'. The AJAX-time field
+ *                           auto-compute in class-bb-admin-settings-ajax.php
+ *                           omits this and gets the 'field' default.
+ *                           Default 'field'.
+ * }
+ *
+ * @return array {
+ *     PRO notice data for React rendering.
+ *
+ *     @type bool   $show       Whether the notice should be shown.
+ *     @type string $badge_text Badge label text ("PRO" for field, "UPGRADE PRO" for section).
+ *     @type string $badge_icon BuddyBoss icon CSS class for the badge.
+ *     @type string $link_url   URL for the play/video button (per-feature for field, pricing for section).
+ *     @type string $link_icon  BuddyBoss icon CSS class for the play button.
+ * }
+ */
+function bb_admin_settings_get_pro_notice( $args = array() ) {
+	static $retval = array();
+
+	$args = wp_parse_args(
+		$args,
+		array(
+			'type'    => 'default',
+			'context' => 'field',
+		)
+	);
+
+	$type       = $args['type'];
+	$context    = $args['context'];
+	$is_section = ( 'section' === $context );
+
+	// Cache key incorporates type + context so 'field' vs 'section' for the
+	// same $type don't collide and serve each other's stale defaults. If
+	// future args influence the output, fold them into this key too.
+	$cache_key = $type . '|' . $context;
+	if ( isset( $retval[ $cache_key ] ) ) {
+		return $retval[ $cache_key ];
+	}
+
+	$data = array(
+		'show'       => false,
+		'badge_text' => $is_section
+			? __( 'UPGRADE PRO', 'buddyboss' )
+			: __( 'PRO', 'buddyboss' ),
+		'badge_icon' => 'bb-icons-rl-crown-simple',
+		'link_url'   => $is_section ? 'https://www.buddyboss.com/pricing/' : '',
+		'link_icon'  => 'bb-icons-rl-play',
+	);
+
+	$is_pro_locked = false;
+
+	if ( function_exists( 'bb_platform_pro' ) && version_compare( bb_platform_pro()->version, '1.1.9.1', '<=' ) ) {
+		$is_pro_locked = true;
+	} elseif (
+		function_exists( 'bb_platform_pro' ) &&
+		! empty( $type ) &&
+		(
+			(
+				'reaction' === $type &&
+				version_compare( bb_platform_pro()->version, '2.4.50', '<' )
+			) ||
+			(
+				'schedule_posts' === $type &&
+				function_exists( 'bb_pro_schedule_posts_version' ) &&
+				version_compare( bb_platform_pro()->version, bb_pro_schedule_posts_version(), '<' )
+			) ||
+			(
+				'polls' === $type &&
+				function_exists( 'bb_pro_poll_version' ) &&
+				version_compare( bb_platform_pro()->version, bb_pro_poll_version(), '<' )
+			) ||
+			(
+				'sso' === $type &&
+				function_exists( 'bb_pro_sso_version' ) &&
+				version_compare( bb_platform_pro()->version, bb_pro_sso_version(), '<' )
+			) ||
+			(
+				'group_activity_topics' === $type &&
+				function_exists( 'bb_pro_group_activity_topics_version' ) &&
+				version_compare( bb_platform_pro()->version, bb_pro_group_activity_topics_version(), '<' )
+			) ||
+			(
+				'post_feature_image' === $type &&
+				function_exists( 'bb_pro_post_feature_image_version' ) &&
+				version_compare( bb_platform_pro()->version, bb_pro_post_feature_image_version(), '<' )
+			)
+		)
+	) {
+		$is_pro_locked = true;
+	} elseif (
+		! function_exists( 'bb_platform_pro' ) ||
+		(
+			function_exists( 'bb_pro_should_lock_features' )
+				? bb_pro_should_lock_features()
+				: ( function_exists( 'bbp_pro_is_license_valid' ) && ! bbp_pro_is_license_valid() )
+		)
+	) {
+		$is_pro_locked = true;
+	}
+
+	if ( $is_pro_locked ) {
+		$data['show'] = true;
+
+		// Field-level badges link to per-feature docs/tutorials. Section-level
+		// badges keep the pricing-page default already set above — the section
+		// CTA is a top-level upsell, not a feature-specific tutorial.
+		if ( ! $is_section ) {
+			$feature_urls = array(
+				'reaction'              => 'https://www.buddyboss.com/resources/docs/components/reactions/',
+				'schedule_posts'        => '',
+				'polls'                 => '',
+				'sso'                   => '',
+				'group_activity_topics' => '',
+				'post_feature_image'    => '',
+			);
+
+			$data['link_url'] = isset( $feature_urls[ $type ] ) ? $feature_urls[ $type ] : 'https://www.buddyboss.com/platform/';
+		}
+	}
+
+	/**
+	 * Filters the PRO notice data for the React admin settings UI.
+	 *
+	 * Receives the resolved $args array (post wp_parse_args) so future args
+	 * additions are automatically visible to filter consumers without needing
+	 * a signature change here.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $data PRO notice data.
+	 * @param array $args Resolved args: 'type', 'context', plus any future keys.
+	 */
+	$data = apply_filters( 'bb_admin_settings_pro_notice_data', $data, $args );
+
+	$retval[ $cache_key ] = $data;
+
+	return $data;
+}
+
+/**
+ * Get the denylist of WordPress core options that must never be written
+ * through BuddyBoss admin AJAX handlers.
+ *
+ * Use this to strip dangerous option names from any filterable allowlist
+ * before reading or saving. Prevents a compromised or careless extension
+ * from adding options like `siteurl`, `admin_email`, or `active_plugins`
+ * to an AJAX-writable allowlist.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array Flat array of option names that must be denied.
+ */
+function bb_get_options_denylist() {
+	$denylist = array(
+		// Site identity.
+		'siteurl',
+		'home',
+		'blogname',
+		'blogdescription',
+		'admin_email',
+
+		// User registration / roles.
+		'users_can_register',
+		'default_role',
+
+		// Active plugins and theme.
+		'active_plugins',
+		'template',
+		'stylesheet',
+
+		// Database / core internals.
+		'db_version',
+		'initial_db_version',
+		'wp_user_roles',
+
+		// Filesystem / uploads.
+		'upload_path',
+		'upload_url_path',
+
+		// Cron.
+		'cron',
+	);
+
+	/**
+	 * Filters the list of WordPress core options that BuddyBoss admin AJAX
+	 * handlers must never write.
+	 *
+	 * Extensions can add entries but must never remove existing ones.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $denylist Option names to deny.
+	 */
+	return apply_filters( 'bb_admin_options_denylist', $denylist );
+}
+
+/**
+ * Remove denylisted options from an allowlist array.
+ *
+ * Pass an associative array of `option_name => sanitize_callback` and this
+ * function returns it with any denylisted keys stripped out.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $options Associative array of option_name => sanitize_callback.
+ * @return array Filtered array with denylisted keys removed.
+ */
+function bb_filter_allowed_options( $options ) {
+	return array_diff_key( $options, array_flip( bb_get_options_denylist() ) );
+}
+
+/**
+ * Compare two registry items by their 'order' key (ascending).
+ *
+ * Shared sort callback used by BB_Feature_Registry and BB_Admin_Settings_Ajax
+ * to avoid duplicating the same anonymous function.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $a First item.
+ * @param array $b Second item.
+ * @return int Comparison result.
+ */
+function bb_sort_by_order( $a, $b ) {
+	$a_order = isset( $a['order'] ) ? (int) $a['order'] : 100;
+	$b_order = isset( $b['order'] ) ? (int) $b['order'] : 100;
+
+	return $a_order - $b_order;
+}
+
+/**
+ * Register a side panel for a feature.
+ *
+ * Side panels appear in the left sidebar navigation when viewing feature settings.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id    Feature ID.
+ * @param string $side_panel_id Side panel ID.
+ * @param array  $args          Side panel arguments.
+ * @return bool|WP_Error True on success, WP_Error on failure.
+ */
+function bb_register_side_panel( $feature_id, $side_panel_id, $args = array() ) {
+	return bb_feature_registry()->bb_register_side_panel( $feature_id, $side_panel_id, $args );
+}
+
+/**
+ * Register a feature section.
+ *
+ * Sections are the white boxes/cards that contain fields.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id    Feature ID.
+ * @param string $side_panel_id Side panel ID.
+ * @param string $section_id    Section ID.
+ * @param array  $args          Section arguments.
+ * @return bool|WP_Error True on success, WP_Error on failure.
+ */
+function bb_register_feature_section( $feature_id, $side_panel_id, $section_id, $args = array() ) {
+	return bb_feature_registry()->bb_register_section( $feature_id, $side_panel_id, $section_id, $args );
+}
+
+/**
+ * Register a feature field.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id    Feature ID.
+ * @param string $side_panel_id Side panel ID.
+ * @param string $section_id    Section ID.
+ * @param array  $args {
+ *     Field arguments.
+ *
+ *     @type string $name              Field name (option key).
+ *     @type string $label             Field label.
+ *     @type string $type              Field type (toggle, select, image_radio, etc.).
+ *     @type string $description       Field description.
+ *     @type mixed  $default           Default value.
+ *     @type callable $sanitize_callback Sanitize callback.
+ *     @type array  $options           Options for select/radio fields.
+ *     @type array  $conditional       Conditional display config.
+ *     @type int    $order             Display order.
+ *     @type bool   $invert_value      Whether to invert toggle value for display.
+ *     @type array  $upload_config {
+ *         Optional. Upload configuration for image_radio fields with custom upload support.
+ *
+ *         @since BuddyBoss [BBVERSION]
+ *
+ *         @type string $type        Upload type: 'avatar' or 'cover'.
+ *         @type string $object      Object type for BP handlers (e.g., 'group').
+ *         @type int    $item_id     Item ID (0 for defaults).
+ *         @type string $item_type   Item type identifier.
+ *         @type string $url_getter  PHP function name to resolve current uploaded URL.
+ *         @type string $label       Label shown above the upload area (e.g., 'Upload Custom Avatar').
+ *         @type string $help_text   Help text shown below the upload area.
+ *         @type array  $conditional Conditional display config with 'value' key.
+ *     }
+ * }
+ * @return bool|WP_Error True on success, WP_Error on failure.
+ */
+function bb_register_feature_field( $feature_id, $side_panel_id, $section_id, $args = array() ) {
+	return bb_feature_registry()->bb_register_field( $feature_id, $side_panel_id, $section_id, $args );
+}
+
+/**
+ * Register a meta field for admin edit modals (Activity, Groups, Forums, etc.).
+ *
+ * Fields registered via this API are fetched, rendered, and saved by the modal automatically.
+ * Same pattern as register_post_meta + show_in_rest.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $component Component identifier (e.g. 'activity', 'groups', 'forums').
+ * @param string $field_id  Unique field ID within the component.
+ * @param array  $args      Field arguments: label, type (text|number|url|select|richtext|readonly),
+ *                          order, context (normal|after), layout (default|half),
+ *                          save_phase (before|after), get_value, get_options (for select),
+ *                          save_value, sanitize_callback, is_visible.
+ * @return bool True on success.
+ */
+function bb_register_admin_meta_field( $component, $field_id, $args = array() ) {
+	return BB_Admin_Meta_Field_Registry::instance()->register( $component, $field_id, $args );
+}
+
+/**
+ * Get the Admin Meta Field Registry instance.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return BB_Admin_Meta_Field_Registry
+ */
+function bb_admin_meta_field_registry() {
+	return BB_Admin_Meta_Field_Registry::instance();
+}
+
+/**
+ * Register a feature navigation item.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id Feature ID.
+ * @param array  $args       Navigation item arguments.
+ * @return bool|WP_Error True on success, WP_Error on failure.
+ */
+function bb_register_feature_nav_item( $feature_id, $args = array() ) {
+	return bb_feature_registry()->bb_register_nav_item( $feature_id, $args );
+}
+
+/**
+ * Register an integration feature.
+ *
+ * Helper function to register a feature as an integration.
+ * Automatically sets the category to 'integrations' and
+ * integration_id if not provided.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $feature_id Feature ID (integration slug).
+ * @param array  $args       Feature arguments (same as bb_register_feature).
+ * @return bool|WP_Error True on success, WP_Error on failure.
+ */
+function bb_register_integration( $feature_id, $args = array() ) {
+	// Force category to 'integrations'.
+	$args['category'] = 'integrations';
+
+	// Set integration_id if not already set.
+	if ( empty( $args['integration_id'] ) ) {
+		$args['integration_id'] = $feature_id;
+	}
+
+	return bb_feature_registry()->bb_register_feature( $feature_id, $args );
+}
+
+/**
+ * Add action only if feature is active.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string   $feature_id Feature ID to check.
+ * @param string   $tag        Action hook tag.
+ * @param callable $function   Function to call.
+ * @param int      $priority   Priority.
+ * @param int      $accepted_args Number of arguments.
+ * @return bool True if action added, false if feature inactive.
+ */
+function bb_add_action_if_active( $feature_id, $tag, $function, $priority = 10, $accepted_args = 1 ) {
+	if ( ! bp_is_active( $feature_id ) ) {
+		return false;
+	}
+
+	return add_action( $tag, $function, $priority, $accepted_args );
+}
+
+/**
+ * Add filter only if feature is active.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string   $feature_id Feature ID to check.
+ * @param string   $tag        Filter hook tag.
+ * @param callable $function   Function to call.
+ * @param int      $priority   Priority.
+ * @param int      $accepted_args Number of arguments.
+ * @return bool True if filter added, false if feature inactive.
+ */
+function bb_add_filter_if_active( $feature_id, $tag, $function, $priority = 10, $accepted_args = 1 ) {
+	if ( ! bp_is_active( $feature_id ) ) {
+		return false;
+	}
+
+	return add_filter( $tag, $function, $priority, $accepted_args );
+}
+
+/**
+ * Get the Icon Registry instance.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return BB_Icon_Registry
+ */
+function bb_icon_registry() {
+	return BB_Icon_Registry::instance();
+}
+
+/**
+ * Register an icon.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $icon_id Icon ID.
+ * @param array  $args    Icon arguments.
+ * @return bool|WP_Error True on success, WP_Error on failure.
+ */
+function bb_register_icon( $icon_id, $args = array() ) {
+	return bb_icon_registry()->bb_register_icon( $icon_id, $args );
+}
+
+/**
+ * Get the available email type group definitions with labels.
+ *
+ * Groups are used to visually categorize email situations in the
+ * Settings 2.0 email template modal.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array Associative array of group_key => translated label.
+ */
+function bb_email_get_type_groups() {
+	$groups = array(
+		'activity'           => __( 'Activity', 'buddyboss' ),
+		'groups_discussions' => __( 'Groups & Discussions', 'buddyboss' ),
+		'messages'           => __( 'Messages', 'buddyboss' ),
+		'connections'        => __( 'Connections', 'buddyboss' ),
+		'account'            => __( 'Account', 'buddyboss' ),
+		'other'              => __( 'Other', 'buddyboss' ),
+	);
+
+	/**
+	 * Filters the email type group definitions.
+	 *
+	 * Third-party plugins can add custom groups so their email types
+	 * are grouped under a meaningful label instead of "Other".
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $groups Group key => translated label map.
+	 */
+	return apply_filters( 'bb_email_get_type_groups', $groups );
+}
+
+/**
+ * Get the group key for a given email type slug.
+ *
+ * Resolution order:
+ * 1. Schema 'group' key (from bp_email_get_type_schema — active components).
+ * 2. Term meta 'bb_email_group' (persisted — works when component is disabled).
+ * 3. Falls back to 'other'.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $type_slug The email type taxonomy term slug.
+ *
+ * @return string The group key (e.g., 'activity', 'account', 'other').
+ */
+function bb_email_get_type_group( $type_slug ) {
+	$schema = bp_email_get_type_schema( 'all' );
+	$group  = '';
+
+	// 1. Check schema 'group' key (set via register_email_type email_group or core schema).
+	if ( isset( $schema[ $type_slug ]['group'] ) ) {
+		$group = $schema[ $type_slug ]['group'];
+	}
+
+	// 2. Fallback to term meta (persisted when component was last active).
+	if ( empty( $group ) ) {
+		$term = get_term_by( 'slug', $type_slug, bp_get_email_tax_type() );
+		if ( $term && ! is_wp_error( $term ) ) {
+			$group = get_term_meta( $term->term_id, 'bb_email_group', true );
+		}
+	}
+
+	// 3. Default fallback.
+	if ( empty( $group ) ) {
+		$group = 'other';
+	}
+
+	/**
+	 * Filters the resolved group for an email type slug.
+	 *
+	 * Third-party plugins can override the group for their email types
+	 * without needing to hook into `bp_email_get_type_schema`.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $group     The resolved group key.
+	 * @param string $type_slug The email type taxonomy term slug.
+	 */
+	return apply_filters( 'bb_email_type_group', $group, $type_slug );
 }

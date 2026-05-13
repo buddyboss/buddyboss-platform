@@ -373,56 +373,12 @@ function bp_ps_anyfield_setup( $fields ) {
 	return $fields;
 }
 
-// Hook for registering a LearnDash course field in frontend and backend in advance search.
-add_filter( 'bp_ps_add_fields', 'bp_ps_learndash_course_setup' );
-
-/**
- * Registers a LearnDash course field in frontend and backend in advance search.
- *
- * @since BuddyBoss 1.0.0
- *
- * @param $fields
- *
- * @return array
- */
-function bp_ps_learndash_course_setup( $fields ) {
-
-	// check is LearnDash plugin is activated or not.
-	if ( in_array( 'sfwd-lms/sfwd_lms.php', apply_filters( 'active_plugins', (array) get_option( 'active_plugins', array() ) ), true ) ) {
-
-		global $wpdb;
-
-		$query = "SELECT DISTINCT ID FROM {$wpdb->posts} WHERE post_type = %s AND post_status = %s ORDER BY menu_order";
-
-		$courses_arr = $wpdb->get_col( $wpdb->prepare( $query, 'sfwd-courses', 'publish' ) );
-
-		$courses = array();
-
-		if ( $courses_arr ) :
-
-			foreach ( $courses_arr as $course ) {
-				$post                 = get_post( $course );
-				$courses[ $post->ID ] = get_the_title( $post->ID );
-			}
-
-		endif;
-
-		$f              = new stdClass();
-		$f->group       = __( 'LearnDash', 'buddyboss' );
-		$f->id          = 'learndash_courses';
-		$f->code        = 'field_learndash_courses';
-		$f->name        = __( 'Courses', 'buddyboss' );
-		$f->description = __( 'Courses', 'buddyboss' );
-		$f->type        = 'selectbox';
-		$f->format      = bp_ps_xprofile_format( 'selectbox', 'learndash_courses' );
-		$f->options     = $courses;
-		$f->search      = 'bp_ps_learndash_course_users_search';
-
-		$fields[] = $f;
-
-	}
-	return $fields;
-}
+// The LearnDash course field used to be registered here via
+// add_filter( 'bp_ps_add_fields', 'bp_ps_learndash_course_setup' ).
+// As of BuddyBoss [BBVERSION] that subscriber + its helpers live in the
+// buddyboss-learndash addon (includes/profile-search-ld.php), hooked to the
+// same public filter. Platform no longer hardcodes LD post-type awareness
+// in Profile Search.
 
 /**
  * Registers a Gender field in frontend and backend in advance search.
@@ -530,100 +486,9 @@ function bp_ps_xprofile_gender_users_search( $f ) {
 	return array();
 }
 
-/**
- * Fetch all the users from a selected course.
- *
- * @since BuddyBoss 1.0.0
- *
- * @param $f
- *
- * @return array
- */
-function bp_ps_learndash_course_users_search( $f ) {
-
-	// check for learndash plugin is activated or not.
-	if ( in_array( 'sfwd-lms/sfwd_lms.php', apply_filters( 'active_plugins', (array) get_option( 'active_plugins', array() ) ), true ) ) {
-
-		$course_id = $f->value;
-		if ( isset( $course_id ) && ! empty( $course_id ) ) {
-			$course_users = bp_ps_learndash_get_users_for_course( $course_id, '', false );
-
-			$course_users = $course_users->results;
-
-			if ( isset( $course_users ) && ! empty( $course_users ) ) {
-				return $course_users;
-			} else {
-				return array();
-			}
-		} else {
-			return array();
-		}
-	}
-}
-
-/**
- * Get all the users who are enrolled in the course.
- *
- * @since BuddyBoss 1.0.0
- *
- * @param int   $course_id
- * @param array $query_args
- * @param bool  $exclude_admin
- *
- * @return array|WP_User_Query
- */
-function bp_ps_learndash_get_users_for_course( $course_id = 0, $query_args = array(), $exclude_admin = true ) {
-	$course_user_ids = array();
-
-	if ( empty( $course_id ) ) {
-		return $course_user_ids;
-	}
-
-	$defaults = array(
-		// By default WP_User_Query will return ALL users. Strange.
-		'fields' => 'ID',
-	);
-
-	$query_args = bp_parse_args( $query_args, $defaults );
-
-	if ( $exclude_admin == true ) {
-		$query_args['role__not_in'] = array( 'administrator' );
-	}
-
-	if ( function_exists( 'learndash_use_legacy_course_access_list' ) && true === learndash_use_legacy_course_access_list() ) {
-		$course_access_list = function_exists( 'learndash_get_course_meta_setting' ) ? learndash_get_course_meta_setting( $course_id, 'course_access_list' ) : get_course_meta_setting( $course_id, 'course_access_list' );
-		$course_user_ids    = array_merge( $course_user_ids, $course_access_list );
-	}
-
-	$course_access_users = function_exists( 'learndash_get_course_users_access_from_meta' ) ? learndash_get_course_users_access_from_meta( $course_id ) : get_course_users_access_from_meta( $course_id );
-	$course_user_ids     = array_merge( $course_user_ids, $course_access_users );
-
-	if ( function_exists( 'learndash_get_course_groups_users_access' ) ) {
-		$course_groups_users = learndash_get_course_groups_users_access( $course_id );
-	} else {
-		$course_groups_users = get_course_groups_users_access( $course_id );
-	}
-
-	$course_user_ids = array_merge( $course_user_ids, $course_groups_users );
-
-	if ( ! empty( $course_user_ids ) ) {
-		$course_user_ids = array_unique( $course_user_ids );
-	}
-
-	$course_expired_access_users = function_exists( 'learndash_get_course_expired_access_from_meta' ) ? learndash_get_course_expired_access_from_meta( $course_id ) : get_course_expired_access_from_meta( $course_id );
-	if ( ! empty( $course_expired_access_users ) ) {
-		$course_user_ids = array_diff( $course_user_ids, $course_expired_access_users );
-	}
-
-	if ( ! empty( $course_user_ids ) ) {
-		$query_args['include'] = $course_user_ids;
-
-		$user_query = new WP_User_Query( $query_args );
-
-		// $course_user_ids = $user_query->get_results();
-		return $user_query;
-	}
-}
+// `bp_ps_learndash_course_users_search()` and
+// `bp_ps_learndash_get_users_for_course()` moved to buddyboss-learndash/
+// includes/profile-search-ld.php in BuddyBoss [BBVERSION].
 
 /**
  * Return results from BuddyBoss Profile Search all fields.

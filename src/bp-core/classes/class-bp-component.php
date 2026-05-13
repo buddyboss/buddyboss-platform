@@ -899,6 +899,11 @@ if ( ! class_exists( 'BP_Component' ) ) :
 		 * @param array $controllers The list of BP REST controllers to load.
 		 */
 		public function rest_api_init( $controllers = array() ) {
+			// Skip REST endpoint registration for inactive components.
+			if ( ! bp_is_active( $this->id ) ) {
+				return;
+			}
+
 			if ( is_array( $controllers ) && $controllers ) {
 				// Built-in controllers.
 				$_controllers = $controllers;
@@ -945,6 +950,10 @@ if ( ! class_exists( 'BP_Component' ) ) :
 		 * @param array $blocks The list of BB Blocks to register.
 		 */
 		public function blocks_init( $blocks = array() ) {
+			// Skip block registration for inactive components.
+			if ( ! bp_is_active( $this->id ) ) {
+				return;
+			}
 
 			/**
 			 * Filter here to add new BB Blocks, disable some or all BB Blocks for a component.

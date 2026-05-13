@@ -862,6 +862,8 @@ class BP_XProfile_Group {
 	 * @global string $message
 	 */
 	public function render_admin_form() {
+		_deprecated_function( __METHOD__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 FieldSetModal' );
+
 		global $message;
 
 		// Users Admin URL

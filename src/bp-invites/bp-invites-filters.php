@@ -11,6 +11,10 @@ defined( 'ABSPATH' ) || exit;
 
 add_filter( 'bp_sent_invite_email_avatar', 'bb_sent_invite_email_avatar_default_avatar', 10 );
 
+// Settings 2.0: Register invites nav item in profile navigation order.
+add_filter( 'bb_member_profile_nav_items', 'bb_invites_register_profile_nav_item' );
+add_filter( 'bb_member_inactive_nav_slugs', 'bb_invites_register_inactive_nav_slug' );
+
 // Add invites field in wp registration form.
 add_action( 'register_form', 'bb_invites_add_invite_fields_after_wp_registration_fields' );
 
@@ -151,4 +155,37 @@ function bb_invites_validate_invitation_before_wp_registration( $errors, $saniti
 	}
 
 	return $errors;
+}
+
+/**
+ * Register the Email Invites nav item for Settings 2.0 profile navigation order.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $items Associative array of slug => item data.
+ * @return array Modified items with invites added.
+ */
+function bb_invites_register_profile_nav_item( $items ) {
+	$items['invites'] = array(
+		'label'     => __( 'Email Invites', 'buddyboss' ),
+		'component' => 'invites',
+	);
+
+	return $items;
+}
+
+/**
+ * Mark the invites nav slug as inactive when the invites component is off.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $inactive Array of inactive nav slugs.
+ * @return array Modified array with invites slug if component is inactive.
+ */
+function bb_invites_register_inactive_nav_slug( $inactive ) {
+	if ( ! bp_is_active( 'invites' ) ) {
+		$inactive[] = 'invites';
+	}
+
+	return $inactive;
 }

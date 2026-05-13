@@ -1166,32 +1166,19 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 
 		}
 
-		if ( function_exists( 'bp_ld_sync' ) && bp_ld_sync()->settings->get( 'course.courses_visibility' ) ) {
-			$slug        = apply_filters( 'bp_learndash_profile_courses_slug', \LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Permalinks', 'courses' ) );
-			$course_link = trailingslashit( bp_loggedin_user_domain() . $slug );
-			$name        = \LearnDash_Custom_Label::get_label( 'courses' );
-
-			$item_courses = array(
-				'ID'       => $slug,
-				'title'    => $name,
-				'url'      => esc_url( $course_link ),
-				'count'    => '',
-				'children' => array(
-					array(
-						'ID'    => 'my-courses',
-						'title' => sprintf(
-							/* translators: My Courses */
-							__( 'My %s', 'buddyboss' ),
-							$name
-						),
-						'url'   => esc_url( $course_link ),
-						'count' => '',
-					),
-				),
-			);
-
-			$items[] = $item_courses;
-		}
+		/**
+		 * Filter the profile menu items to let integrations (e.g. LearnDash)
+		 * add their own course/learning nav entries.
+		 *
+		 * Replaced an inline LearnDash-specific block in BuddyBoss [BBVERSION];
+		 * the LearnDash integration (buddyboss-learndash) now registers its
+		 * courses nav entry via this filter.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param array $items Current array of profile menu items.
+		 */
+		$items = apply_filters( 'bb_integration_rest_profile_menu_items', $items );
 
 		// Memberpress courses.
 		if (

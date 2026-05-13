@@ -1,0 +1,579 @@
+/* ----------------------------------------------------------------
+   Reported Content Screen
+   ---------------------------------------------------------------- */
+
+.bb-admin-reported-content {
+	max-width: calc(100% - 64px);
+	padding: 0;
+	margin: 32px 32px 0;
+
+	/* Error notice */
+	&__error-notice {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 8px 12px;
+		background-color: rgba($bb-error-color, 0.08);
+		border: 1px solid rgba($bb-error-color, 0.3);
+		border-radius: $bb-border-radius-lg;
+		color: $bb-error-color;
+		font-size: 13px;
+		margin-bottom: 16px;
+
+		button {
+			background: none;
+			border: none;
+			color: $bb-error-color;
+			cursor: pointer;
+			padding: 0 4px;
+			line-height: 1;
+
+			i {
+				font-size: 16px;
+			}
+		}
+	}
+
+	&__confirm-modal {
+
+		&.bb-admin-settings-modal {
+			max-width: 650px;
+		}
+
+		.bb-admin-settings-modal__body > p {
+			margin: 0;
+		}
+	}
+
+	/* Card container */
+	&__card {
+		background: $bb-background-base-color;
+		border: 1px solid $bb-border-primary-color;
+		border-radius: $bb-border-radius-2xl;
+		box-shadow: 0px 1.5px 1px 0px rgba(0, 0, 0, 0.16);
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+	}
+
+	/* Title bar */
+	&__title-bar {
+		padding: 0 24px;
+		min-height: 64px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		border-bottom: 1px solid $bb-border-secondary-color;
+	}
+
+	&__title {
+		font-size: 18px;
+		font-weight: 500;
+		line-height: 26px;
+		color: $bb-text-color;
+		margin: 0;
+		padding: 16px 0;
+	}
+
+	/* Body */
+	&__body {
+		padding: 24px 24px 16px;
+	}
+
+	/* Action Bar */
+	// Action bar — layout styled via .bb-admin-list-toolbar
+
+	/* Bulk Actions */
+	&__bulk-actions {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+
+		select {
+			min-width: 140px;
+			height: 32px;
+			font-size: 13px;
+		}
+	}
+
+	&__bulk-apply.is-secondary {
+		@include bb-button-primary-outline;
+
+		.components-spinner {
+			margin: 0;
+			width: 16px;
+			height: 16px;
+		}
+	}
+
+	/* Status filter */
+	&__status-select {
+		.components-select-control {
+			margin-bottom: 0;
+		}
+
+		select {
+			min-width: 100px;
+			height: 32px;
+			font-size: 13px;
+		}
+	}
+
+	/* Content type filter */
+	&__filter-select {
+		.components-select-control {
+			margin-bottom: 0;
+		}
+
+		select {
+			min-width: 140px;
+			height: 32px;
+			font-size: 13px;
+		}
+	}
+
+	// Table — base styled via .bb-admin-list-table
+
+	&__table {
+		table-layout: fixed;
+	}
+
+	&__th--checkbox {
+		width: 15px;
+	}
+
+	&__th--content {
+		font-size: 14px;
+		color: $bb-text-color;
+		width: 30%;
+		min-width: 200px;
+	}
+
+	&__th--owner {
+		width: 20%;
+		min-width: 150px;
+	}
+
+	&__th--reports {
+		width: 120px;
+	}
+
+	&__th--status {
+		width: 100px;
+	}
+
+	&__th--actions {
+		width: 30px;
+	}
+
+	// Content Column
+	&__content {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	&__content-icon {
+		width: 32px;
+		height: 32px;
+		border-radius: 50%;
+		background: $bb-background-primary-color;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+
+		[class*="bb-icons-"] {
+			font-size: 20px;
+			color: $bb-icon-tertiary-color;
+		}
+	}
+
+	&__content-name {
+		font-size: 14px;
+		font-weight: 400;
+		color: $bb-link-color;
+		line-height: 20px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		text-decoration: none;
+
+		&:hover {
+			color: $bb-link-color;
+			text-decoration: underline;
+		}
+	}
+
+	// Owner Column
+	&__owner {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	&__avatar {
+		width: 40px;
+		height: 40px;
+		border-radius: $bb-border-radius-full;
+		flex-shrink: 0;
+		object-fit: cover;
+		border: 0.5px solid $bb-border-secondary-color;
+	}
+
+	&__owner-name {
+		font-size: 14px;
+		font-weight: 400;
+		color: $bb-link-color;
+		line-height: 20px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		text-decoration: none;
+
+		&:hover {
+			color: $bb-link-color;
+			text-decoration: underline;
+		}
+	}
+
+	// Reports Column
+	&__td--reports {
+		font-size: 13px;
+		font-weight: 400;
+		color: $bb-link-color;
+		line-height: 18px;
+
+		i {
+			font-size: 16px;
+			color: $bb-icon-tertiary-color;
+			margin-right: 8px;
+			vertical-align: middle;
+		}
+	}
+
+	// Hidden badge
+	&__hidden-badge {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0 4px;
+		font-size: 11px;
+		font-weight: 400;
+		color: $bb-text-warning-primary-color;
+		background: $bb-background-warning-primary-color;
+		border: 0.5px solid $bb-border-warning-secondary-color;
+		border-radius: $bb-border-radius-full;
+		line-height: 16px;
+		white-space: nowrap;
+	}
+
+	// Actions Column — toggle styled via .bb-admin-actions-toggle
+	&__td--actions {
+		text-align: center;
+	}
+
+	/* Footer */
+	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 16px;
+		padding: 16px 0;
+		margin-top: 8px;
+	}
+
+	&__item-count {
+		font-size: 13px;
+		color: $bb-text-secondary-color;
+	}
+
+	@media screen and (max-width: 960px) {
+
+		&__body {
+			overflow: auto;
+			width: 100%;
+			box-sizing: border-box;
+		}
+
+		&__th--checkbox {
+			width: 35px;
+		}
+
+		&__action-bar,
+		&__table-wrapper,
+		&__footer {
+			min-width: 820px;
+		}
+	}
+
+}
+
+// Custom panel main — Allow full width for custom screens.
+.bb-admin-feature-settings__main--custom-panel {
+	.bb-admin-reported-content {
+		max-width: 100%;
+	}
+}
+
+/* ----------------------------------------------------------------
+   View Content Report Modal
+   ---------------------------------------------------------------- */
+
+.bb-admin-view-content-report-modal {
+	background: $bb-background-base-color;
+	border-radius: $bb-border-radius-2xl;
+	width: 90%;
+	max-width: 700px;
+	max-height: 85vh;
+	display: flex;
+	flex-direction: column;
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+
+	&__body {
+		flex: 1;
+		overflow-y: auto;
+		display: flex;
+		flex-direction: column;
+		gap: 0;
+		padding: 24px;
+	}
+
+	&__loading {
+		display: flex;
+		justify-content: center;
+		padding: 40px 0;
+	}
+
+	&__error {
+		background: rgba($bb-error-color, 0.08);
+		color: $bb-error-color;
+		padding: 10px 16px;
+		border-radius: $bb-border-radius-lg;
+		font-size: 13px;
+	}
+
+	/* Summary bar */
+	&__summary {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 16px;
+		padding-bottom: 20px;
+		border-bottom: 1px solid $bb-border-primary-color;
+		margin-bottom: 20px;
+		flex-wrap: wrap;
+	}
+
+	&__owner-info {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		flex-shrink: 0;
+	}
+
+	&__avatar {
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		object-fit: cover;
+	}
+
+	&__owner-name {
+		font-size: 14px;
+		color: $bb-link-color;
+		text-decoration: none;
+
+		&:hover {
+			color: $bb-link-color;
+			text-decoration: underline;
+		}
+	}
+
+	&__owner-label {
+		font-size: 14px;
+		font-weight: 400;
+		color: $bb-text-secondary-color;
+	}
+
+	&__stat {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		font-size: 13px;
+		font-weight: 400;
+		color: $bb-text-color;
+
+		[class*="bb-icons-"] {
+			font-size: 16px;
+			color: $bb-icon-tertiary-color;
+		}
+	}
+
+	&__content-link {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		font-size: 13px;
+		font-weight: 400;
+		color: $bb-link-color;
+		text-decoration: none;
+
+		> [class*="bb-icons-"] {
+			color: $bb-icon-tertiary-color;
+			font-size: 20px;
+			background-color: $bb-background-primary-color;
+			border-radius: $bb-border-radius-full;
+			padding: 6px;
+		}
+
+		&:hover {
+			color: $bb-link-color;
+
+			.bb-admin-view-content-report-modal__content-link-text {
+				text-decoration: underline
+			}
+		}
+	}
+
+	&__content-link-external {
+		font-size: 16px;
+	}
+
+	&__hidden-badge {
+		display: inline-flex;
+		gap: 4px;
+		align-items: center;
+		padding: 0 4px;
+		font-size: 11px;
+		font-weight: 400;
+		color: $bb-text-warning-primary-color;
+		background: $bb-background-warning-primary-color;
+		border: 0.5px solid $bb-border-warning-secondary-color;
+		border-radius: $bb-border-radius-full;
+		line-height: 16px;
+
+		[class*="bb-icons-"] {
+			font-size: 12px;
+		}
+	}
+
+	/* Reporter section */
+	&__section {
+		margin-bottom: 20px;
+	}
+
+	&__section-title {
+		font-size: 13px;
+		font-weight: 500;
+		color: $bb-text-secondary-color;
+		margin: 0 0 12px 0;
+		line-height: 18px;
+	}
+
+	&__list {
+		display: flex;
+		flex-direction: column;
+		gap: 0;
+		background: $bb-background-primary-color;
+		border-radius: $bb-border-radius-lg;
+		padding: 4px 0;
+	}
+
+	&__list-item {
+		display: flex;
+		align-items: center;
+		gap: 16px;
+		padding: 16px 0;
+		margin: 0 16px;
+		border-bottom: 1px solid $bb-border-secondary-color;
+
+		&:last-child {
+			border-bottom: 0;
+		}
+	}
+
+	&__list-item-user {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		flex-shrink: 0;
+		width: 180px;
+	}
+
+	&__list-avatar {
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		object-fit: cover;
+	}
+
+	&__list-name {
+		font-size: 14px;
+		color: $bb-link-color;
+		text-decoration: none;
+		max-width: 100%;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+
+		&:hover {
+			color: $bb-link-color;
+			text-decoration: underline;
+		}
+	}
+
+	&__list-item-detail {
+		flex: 1;
+		min-width: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+	}
+
+	&__category-name {
+		font-size: 13px;
+		font-weight: 600;
+		color: $bb-text-color;
+		line-height: 18px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		max-width: 100%;
+	}
+
+	&__category-desc {
+		font-size: 12px;
+		font-weight: 400;
+		color: $bb-text-tertiary-color;
+		line-height: 16px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		max-width: 100%;
+	}
+
+	&__list-item-date {
+		font-size: 13px;
+		font-weight: 400;
+		color: $bb-text-color;
+		line-height: 16px;
+		white-space: nowrap;
+		flex-shrink: 0;
+		min-width: 168px;
+		text-align: right;
+	}
+
+	/* Footer */
+
+	&__close-btn {
+		background: $bb-background-brand-primary-color !important;
+		color: $bb-text-inverse-color !important;
+		border: none !important;
+
+		&:hover {
+			background: $bb-background-brand-primary-hover-color !important;
+		}
+	}
+}
