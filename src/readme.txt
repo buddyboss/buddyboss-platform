@@ -58,6 +58,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 3.0.0 =
+* New Feature! - Introduces the new React-based Backend Settings 3.0 interface with instant actions, reorganized navigation, and a unified design system for a cleaner, more user-friendly admin experience
 
 = 2.21.1 =
 * Bug: Profiles - Fixed an issue where users could not accept friend requests due to missing friendship ID in the markup
