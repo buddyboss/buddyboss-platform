@@ -241,17 +241,11 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 		do_action( 'bp_init' );
 
 		/**
-		 * Generic integration init action fired during REST request lifecycle.
-		 * Integrations subscribe here to boot their sync/init logic when
-		 * running inside a REST request context.
-		 *
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		do_action( 'bb_integration_rest_init' );
 
-		// Deprecated: bp_ld_sync/init. Fired via the bridge below for one
-		// release so older addon versions that still hook the legacy name
-		// continue to boot. Remove this bridge after [BBVERSION + 2].
+		// Deprecated: bp_ld_sync/init. Bridge for one release.
 		do_action_deprecated(
 			'bp_ld_sync/init',
 			array(),

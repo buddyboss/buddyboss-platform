@@ -1170,10 +1170,6 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		 * Filter the profile menu items to let integrations (e.g. LearnDash)
 		 * add their own course/learning nav entries.
 		 *
-		 * Replaced an inline LearnDash-specific block in BuddyBoss [BBVERSION];
-		 * the LearnDash integration (buddyboss-learndash) now registers its
-		 * courses nav entry via this filter.
-		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param array $items Current array of profile menu items.

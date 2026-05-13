@@ -2162,9 +2162,9 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			'link_embed_url'    => '',
 			'is_pinned'         => false,
 			'can_pin'           => false,
-			'reacted_names'     => function_exists( 'bb_activity_reaction_names_and_count' ) ? bb_activity_reaction_names_and_count( $activity->id, 'activity_comment' === $activity->type ? $activity->type : 'activity', 1 ) : array(),
+			'reacted_names'     => function_exists( 'bb_activity_reaction_names_and_count' ) ? bb_activity_reaction_names_and_count( $activity->id, 'activity_comment' === $activity->type ? $activity->type : 'activity', 1 ) : '',
 			'reacted_counts'    => function_exists( 'bb_get_activity_most_reactions' ) ? bb_get_activity_most_reactions( $activity->id, 'activity_comment' === $activity->type ? $activity->type : 'activity', 7 ) : array(),
-			'reacted_id'        => bb_load_reaction() ? bb_load_reaction()->bb_user_reacted_reaction_id(
+			'reacted_id'        => ( function_exists( 'bb_load_reaction' ) && bb_load_reaction() ) ? bb_load_reaction()->bb_user_reacted_reaction_id(
 				array(
 					'item_id'   => $activity->id,
 					'item_type' => 'activity_comment' === $activity->type ? $activity->type : 'activity',
@@ -2824,7 +2824,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	public function get_favorite_endpoint_schema() {
 		$args = array();
 
-		$reaction = bb_load_reaction();
+		$reaction = function_exists( 'bb_load_reaction' ) ? bb_load_reaction() : null;
 
 		$args['reaction_id'] = array(
 			'description'       => __( 'Reaction ID.', 'buddyboss' ),
@@ -3352,9 +3352,8 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			return 0;
 		}
 
-		$reaction = function_exists( 'bb_load_reaction' ) ? bb_load_reaction() : null;
-		if ( $reaction ) {
-			$fav_count = $reaction->bb_total_item_reactions_count(
+		if ( function_exists( 'bb_load_reaction' ) && bb_load_reaction() ) {
+			$fav_count = bb_load_reaction()->bb_total_item_reactions_count(
 				array(
 					'item_id'   => $activity->id,
 					'item_type' => 'activity_comment' === $activity->type ? 'activity_comment' : 'activity',

@@ -109,7 +109,11 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 	 * @apiVersion     1.0.0
 	 */
 	public function get_reactions( $request ) {
-		$reactions = bb_load_reaction()->bb_get_reactions( bb_get_reaction_mode() );
+		$reaction_instance = function_exists( 'bb_load_reaction' ) ? bb_load_reaction() : null;
+		if ( ! $reaction_instance ) {
+			return new WP_Error( 'bb_rest_reactions_not_available', __( 'Reactions are not available.', 'buddyboss' ), array( 'status' => 500 ) );
+		}
+		$reactions = $reaction_instance->bb_get_reactions( bb_get_reaction_mode() );
 
 		$context = $request->get_param( 'context' );
 		$context = ! empty( $context ) ? $context : 'view';
@@ -150,6 +154,11 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 					'status' => rest_authorization_required_code(),
 				)
 			);
+		}
+
+		$feature_error = $this->bb_get_reactions_feature_disabled_error();
+		if ( $feature_error ) {
+			return $feature_error;
 		}
 
 		/**
@@ -199,7 +208,11 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 			'count_total' => true,
 		);
 
-		$user_reactions = bb_load_reaction()->bb_get_user_reactions( $args );
+		$reaction_instance = function_exists( 'bb_load_reaction' ) ? bb_load_reaction() : null;
+		if ( ! $reaction_instance ) {
+			return new WP_Error( 'bb_rest_reactions_not_available', __( 'Reactions are not available.', 'buddyboss' ), array( 'status' => 500 ) );
+		}
+		$user_reactions = $reaction_instance->bb_get_user_reactions( $args );
 
 		$retval = array();
 		foreach ( $user_reactions['reactions'] as $user_reaction ) {
@@ -245,6 +258,11 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 			);
 		}
 
+		$feature_error = $this->bb_get_reactions_feature_disabled_error();
+		if ( $feature_error ) {
+			return $feature_error;
+		}
+
 		/**
 		 * Filter the reactions `get_items` permissions check.
 		 *
@@ -270,8 +288,12 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Number} id A unique numeric ID for the user reaction.
 	 */
 	public function get_item( $request ) {
+		$reaction_instance = function_exists( 'bb_load_reaction' ) ? bb_load_reaction() : null;
+		if ( ! $reaction_instance ) {
+			return new WP_Error( 'bb_rest_reactions_not_available', __( 'Reactions are not available.', 'buddyboss' ), array( 'status' => 500 ) );
+		}
 		$id            = (int) $request->get_param( 'id' );
-		$user_reaction = bb_load_reaction()->bb_get_user_reaction( $id );
+		$user_reaction = $reaction_instance->bb_get_user_reaction( $id );
 
 		if ( empty( $user_reaction->id ) ) {
 			return new WP_Error(
@@ -321,6 +343,11 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 			);
 		}
 
+		$feature_error = $this->bb_get_reactions_feature_disabled_error();
+		if ( $feature_error ) {
+			return $feature_error;
+		}
+
 		/**
 		 * Filter the user_reaction `get_item` permissions check.
 		 *
@@ -349,6 +376,11 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Number} [user_id] The ID for the author of the reaction.
 	 */
 	public function create_item( $request ) {
+		$reaction_instance = function_exists( 'bb_load_reaction' ) ? bb_load_reaction() : null;
+		if ( ! $reaction_instance ) {
+			return new WP_Error( 'bb_rest_reactions_not_available', __( 'Reactions are not available.', 'buddyboss' ), array( 'status' => 500 ) );
+		}
+
 		$args = array(
 			'reaction_id' => (int) $request->get_param( 'reaction_id' ),
 			'item_type'   => $request->get_param( 'item_type' ),
@@ -358,12 +390,12 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 		);
 
 		// Setup the backward compatibilty for the activity favorite.
-		bb_load_reaction()::$status = false;
+		$reaction_instance::$status = false;
 
-		$user_reaction = bb_load_reaction()->bb_add_user_item_reaction( $args );
+		$user_reaction = $reaction_instance->bb_add_user_item_reaction( $args );
 
 		// Setup the backward compatibilty for the activity favorite.
-		bb_load_reaction()::$status = true;
+		$reaction_instance::$status = true;
 
 		if ( is_wp_error( $user_reaction ) ) {
 			return $user_reaction;
@@ -412,6 +444,11 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 				)
 			);
 		} else {
+			$feature_error = $this->bb_get_reactions_feature_disabled_error();
+			if ( $feature_error ) {
+				return $feature_error;
+			}
+
 			$retval = $this->validate_request_item( $request );
 		}
 
@@ -441,9 +478,14 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Number} id A unique numeric ID for the user reaction.
 	 */
 	public function delete_item( $request ) {
+		$reaction_instance = function_exists( 'bb_load_reaction' ) ? bb_load_reaction() : null;
+		if ( ! $reaction_instance ) {
+			return new WP_Error( 'bb_rest_reactions_not_available', __( 'Reactions are not available.', 'buddyboss' ), array( 'status' => 500 ) );
+		}
+
 		// Get the user reaction before it's deleted.
 		$id            = (int) $request->get_param( 'id' );
-		$user_reaction = bb_load_reaction()->bb_get_user_reaction( $id );
+		$user_reaction = $reaction_instance->bb_get_user_reaction( $id );
 
 		if ( empty( $user_reaction->id ) ) {
 			return new WP_Error(
@@ -475,12 +517,12 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 		);
 
 		// Setup the backward compatibilty for the activity favorite.
-		bb_load_reaction()::$status = false;
+		$reaction_instance::$status = false;
 
-		$deleted = bb_load_reaction()->bb_remove_user_item_reaction( $user_reaction->id );
+		$deleted = $reaction_instance->bb_remove_user_item_reaction( $user_reaction->id );
 
 		// Setup the backward compatibilty for the activity favorite.
-		bb_load_reaction()::$status = true;
+		$reaction_instance::$status = true;
 
 		if ( ! $deleted ) {
 			return new WP_Error(
@@ -530,9 +572,15 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 		);
 
 		if ( is_user_logged_in() ) {
-			$retval        = true;
-			$id            = $request->get_param( 'id' );
-			$user_reaction = bb_load_reaction()->bb_get_user_reaction( $id );
+			$feature_error = $this->bb_get_reactions_feature_disabled_error();
+			if ( $feature_error ) {
+				return $feature_error;
+			}
+
+			$retval            = true;
+			$id                = $request->get_param( 'id' );
+			$reaction_instance = function_exists( 'bb_load_reaction' ) ? bb_load_reaction() : null;
+			$user_reaction     = $reaction_instance ? $reaction_instance->bb_get_user_reaction( $id ) : null;
 			if ( empty( $user_reaction->id ) ) {
 				$retval = new WP_Error(
 					'bp_rest_user_reaction_invalid_id',
@@ -562,15 +610,16 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 	 * @return array Endpoint arguments.
 	 */
 	public function get_endpoint_args_for_item_schema( $method = WP_REST_Server::CREATABLE ) {
-		$args = array();
-		$key  = 'create_item';
+		$args              = array();
+		$key               = 'create_item';
+		$reaction_instance = function_exists( 'bb_load_reaction' ) ? bb_load_reaction() : null;
 
 		if ( WP_REST_Server::CREATABLE === $method ) {
 			$args['reaction_id'] = array(
 				'description'       => __( 'Reaction ID.', 'buddyboss' ),
 				'type'              => 'integer',
 				'required'          => true,
-				'enum'              => array_column( bb_load_reaction()->bb_get_reactions( bb_get_reaction_mode() ), 'id' ),
+				'enum'              => $reaction_instance ? array_column( $reaction_instance->bb_get_reactions( bb_get_reaction_mode() ), 'id' ) : array(),
 				'sanitize_callback' => 'absint',
 				'validate_callback' => 'rest_validate_request_arg',
 			);
@@ -579,7 +628,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 				'description'       => __( 'Item type', 'buddyboss' ),
 				'type'              => 'string',
 				'required'          => true,
-				'enum'              => array_keys( bb_load_reaction()->bb_get_registered_reaction_item_types() ),
+				'enum'              => $reaction_instance ? array_keys( $reaction_instance->bb_get_registered_reaction_item_types() ) : array(),
 				'sanitize_callback' => 'sanitize_text_field',
 				'validate_callback' => 'rest_validate_request_arg',
 			);
@@ -751,6 +800,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 	public function get_collection_params() {
 		$params                       = parent::get_collection_params();
 		$params['context']['default'] = 'view';
+		$reaction_instance            = function_exists( 'bb_load_reaction' ) ? bb_load_reaction() : null;
 
 		if ( $params['search'] ) {
 			unset( $params['search'] );
@@ -761,7 +811,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 			'type'              => 'integer',
 			'sanitize_callback' => 'absint',
 			'validate_callback' => 'rest_validate_request_arg',
-			'enum'              => array_column( bb_load_reaction()->bb_get_reactions( bb_get_reaction_mode() ), 'id' ),
+			'enum'              => $reaction_instance ? array_column( $reaction_instance->bb_get_reactions( bb_get_reaction_mode() ), 'id' ) : array(),
 		);
 
 		$params['item_type'] = array(
@@ -769,7 +819,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 			'type'              => 'string',
 			'sanitize_callback' => 'sanitize_key',
 			'validate_callback' => 'rest_validate_request_arg',
-			'enum'              => array_keys( bb_load_reaction()->bb_get_registered_reaction_item_types() ),
+			'enum'              => $reaction_instance ? array_keys( $reaction_instance->bb_get_registered_reaction_item_types() ) : array(),
 		);
 
 		$params['item_id'] = array(
@@ -916,5 +966,25 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 		 * @param array $schema The endpoint schema.
 		 */
 		return apply_filters( 'bb_rest_user_reactions_schema', $this->add_additional_fields_schema( $schema ) );
+	}
+
+	/**
+	 * Return WP_Error if the reactions feature is disabled (Settings 2.0 toggle).
+	 * Ensures API respects the feature toggle for backward compatibility.
+	 *
+	 * @since [BBVERSION]
+	 *
+	 * @return bool|WP_Error Null if feature is enabled, WP_Error if disabled.
+	 */
+	private function bb_get_reactions_feature_disabled_error() {
+		if ( function_exists( 'bb_is_reactions_feature_enabled' ) && ! bb_is_reactions_feature_enabled() ) {
+			return new WP_Error(
+				'bb_rest_reactions_feature_disabled',
+				__( 'The reactions feature is currently disabled.', 'buddyboss' ),
+				array( 'status' => 403 )
+			);
+		}
+
+		return false;
 	}
 }

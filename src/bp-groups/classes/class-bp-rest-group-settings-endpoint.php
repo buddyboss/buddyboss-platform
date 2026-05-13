@@ -53,12 +53,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		}
 
 		/**
-		 * Filter the group settings nav slugs. Integrations (e.g. LearnDash
-		 * courses sync) add their own nav entries here.
-		 *
-		 * Replaced an inline LearnDash-specific check in BuddyBoss [BBVERSION];
-		 * the LearnDash integration (buddyboss-learndash) now adds 'courses'
-		 * to this nav via the filter.
+		 * Filter the group settings nav slugs.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
@@ -1422,12 +1417,6 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 	/**
 	 * Get Group course Settings.
 	 *
-	 * Platform intentionally ships no default courses fields. Integrations
-	 * (e.g. LearnDash) provide them via `bb_integration_rest_group_courses_fields`.
-	 * When no integration is active, the 'courses' nav item will not have
-	 * been registered either (see register_routes()), so this code path is
-	 * unreachable in that case.
-	 *
 	 * @param integer $group_id Group ID.
 	 *
 	 * @return mixed|void
@@ -1436,10 +1425,6 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		buddypress()->groups->current_group = groups_get_group( $group_id );
 
 		/**
-		 * Filter group courses settings fields. Integrations register their
-		 * course-sync UI fields here; an empty return means no integration
-		 * is active for this group.
-		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param array|WP_Error $fields   Array of fields, or WP_Error to short-circuit.
@@ -1447,8 +1432,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		 */
 		$fields = apply_filters( 'bb_integration_rest_group_courses_fields', array(), $group_id );
 
-		// Back-compat: retain the pre-[BBVERSION] filter for any third-party
-		// consumers that already subscribed to it.
+		// Back-compat with pre-[BBVERSION] filter name.
 		$fields = apply_filters( 'bp_rest_group_settings_courses', $fields, $group_id );
 
 		if ( is_wp_error( $fields ) ) {
@@ -1471,9 +1455,6 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 	/**
 	 * Update Group Courses settings.
 	 *
-	 * Platform dispatches the save to the `bb_integration_rest_update_group_courses_fields`
-	 * filter; integrations (e.g. LearnDash) subscribe and perform their sync.
-	 *
 	 * @param WP_REST_Request $request Request used to generate the response.
 	 *
 	 * @return array|WP_Error
@@ -1492,13 +1473,6 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		}
 
 		/**
-		 * Filter the result of updating group courses settings. Integrations
-		 * process the $post_fields and return either a success payload
-		 * ( array with 'error'/'notice' keys ) or a WP_Error to short-circuit.
-		 *
-		 * A `null` return from all subscribers means no integration handled
-		 * the request and Platform should reject it.
-		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
 		 * @param array|WP_Error|null $result      Return value. Null means unhandled.
@@ -1515,7 +1489,6 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			return $result;
 		}
 
-		// No integration handled it.
 		return new WP_Error(
 			'bp_rest_invalid_group_setting_nav',
 			__( 'Sorry, you are not allowed to update the courses group settings options.', 'buddyboss' ),
