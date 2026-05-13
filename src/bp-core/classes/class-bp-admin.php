@@ -448,7 +448,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			// The bp-integrations URL is redirected by bb_redirect_bp_integrations_*
 			// in bp-core-admin-actions.php.
 
-			// ReadyLaunch legacy admin page retired in BuddyBoss [BBVERSION] —
+			// ReadyLaunch legacy admin page retired in BuddyBoss 3.0.0 —
 			// the `bb-readylaunch` URL now redirects to Appearance in Settings 2.0
 			// via `bp_core_admin_backpat_menu()` (`bp-core-admin-actions.php`).
 

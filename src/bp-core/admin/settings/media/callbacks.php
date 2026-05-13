@@ -5,7 +5,7 @@
  * Sanitize callback functions for Media feature settings.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * Uses bp_media_format_size_units() when available, otherwise falls back
  * to wp_max_upload_size(). Result is always >= 1.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return int Server max upload size in MB.
  */
@@ -38,7 +38,7 @@ function bb_media_get_server_max_upload_size() {
  * Used by Photos, Videos, Documents, Emoji, and GIFs panels to dynamically
  * describe where uploading is enabled based on active components.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $prefix   The opening text (e.g., "Allow members to upload photos in").
  * @param array  $contexts List of context words (e.g., array( 'groups', 'activity posts' )).
@@ -70,7 +70,7 @@ function bb_media_build_context_description( $prefix, $contexts ) {
  * This is the single source of truth for the repeated group-context-building
  * logic used across Photos, Videos, Documents, Emoji, and GIFs panels.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $prefix The opening text (e.g., "Allow members to upload photos in").
  *
@@ -105,7 +105,7 @@ function bb_media_get_group_context_description( $prefix ) {
  *
  * Ensures the value is a positive integer that does not exceed the server's max upload size.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The value to sanitize.
  *
@@ -127,7 +127,7 @@ function bb_media_sanitize_upload_size( $value ) {
  *
  * Ensures the value is a positive integer with a reasonable maximum.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The value to sanitize.
  *
@@ -150,7 +150,7 @@ function bb_media_sanitize_upload_limit( $value ) {
  * 2. Full extension data: { bb_vid_0: { extension: '.mp4', ... }, ... }
  *    Full sanitization of each entry (used when adding new extensions).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed  $value       The value to sanitize.
  * @param string $option_name Optional. The DB option name for toggle-only updates.
@@ -223,7 +223,7 @@ function bb_media_sanitize_extensions( $value, $option_name = '' ) {
  * Wrapper around bb_media_sanitize_extensions that passes the video option name
  * explicitly, avoiding fragile key-prefix detection.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The value to sanitize.
  *
@@ -239,7 +239,7 @@ function bb_media_sanitize_video_extensions( $value ) {
  * Wrapper around bb_media_sanitize_extensions that passes the document option name
  * explicitly, avoiding fragile key-prefix detection.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The value to sanitize.
  *
@@ -252,7 +252,7 @@ function bb_media_sanitize_document_extensions( $value ) {
 /**
  * Sanitize GIPHY API key.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The value to sanitize.
  *
@@ -268,7 +268,7 @@ function bb_media_sanitize_gif_api_key( $value ) {
  * Validates the API key against the GIPHY API and saves or clears it.
  * Returns updated connection status for the React UI to update section badges.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_media_ajax_giphy_connect() {
 	// Capability check first (cheaper than nonce verification).
@@ -363,7 +363,7 @@ add_action( 'wp_ajax_bb_media_giphy_connect', 'bb_media_ajax_giphy_connect' );
  *
  * Forces the value to 0 if symlinks are disabled on the server or media is offloaded.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The value to sanitize.
  *
@@ -392,7 +392,7 @@ function bb_media_sanitize_symlink_support( $value ) {
  * by re-evaluating server state and the current option value.
  * Called on mount and whenever the Symbolic Links toggle changes.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_media_ajax_check_symlink_status() {
 	// Capability check first (cheaper than nonce verification).
@@ -485,7 +485,7 @@ add_action( 'wp_ajax_bb_media_check_symlink_status', 'bb_media_ajax_check_symlin
  * the FFmpeg binary is accessible on the server. Returns a warning
  * notice if FFmpeg is missing or misconfigured.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_media_ajax_check_ffmpeg_status() {
 	// Capability check first (cheaper than nonce verification).
@@ -570,7 +570,7 @@ add_action( 'wp_ajax_bb_media_check_ffmpeg_status', 'bb_media_ajax_check_ffmpeg_
  * Replicates the legacy `bb_media_settings_callback_symlink_direct_access()` behavior
  * as an on-demand AJAX call instead of running on every settings page load.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_media_ajax_check_direct_access() {
 	// Capability check first (cheaper than nonce verification).
@@ -689,7 +689,7 @@ add_action( 'wp_ajax_bb_media_check_direct_access', 'bb_media_ajax_check_direct_
  *
  * Uses the BuddyBoss core fallback image as a test file.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return array { attachment_id: int, url: string }
  */
@@ -743,7 +743,7 @@ function bb_media_create_test_upload() {
  * Reads extension data from the database and formats each entry as a
  * toggle list option with label, value, and is_default flag.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $option_name The option name storing extension data.
  * @param bool   $include_default Whether to include the is_default flag.
@@ -779,7 +779,7 @@ function bb_media_get_extension_options( $option_name, $include_default = false 
  * Returns the raw extension array so the React UI can display extension
  * details and support adding/removing custom extensions.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $option_name The option name storing extension data.
  *
@@ -812,7 +812,7 @@ function bb_media_get_extension_data( $option_name ) {
  * Applies the bb_document_icon_class filter and adds the appropriate
  * icon font prefix (ReadyLaunch or legacy).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $icon_value The raw icon identifier (e.g., 'bb-icon-file-pdf').
  *
@@ -832,7 +832,7 @@ function bb_media_format_icon_class( $icon_value ) {
  * Access control values are nested arrays of role/type/value mappings.
  * Each entry is sanitized to ensure only safe strings and integers are stored.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The access control data to sanitize.
  *

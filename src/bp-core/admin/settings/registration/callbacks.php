@@ -5,7 +5,7 @@
  * Sanitize callback functions for Login & Registration feature settings.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * Validates submitted domain restrictions array: removes placeholder index,
  * re-indexes by priority, sanitizes domain/tld/condition per row.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The submitted value.
  *
@@ -69,7 +69,7 @@ function bb_registration_sanitize_domain_restrictions( $value ) {
  * Validates submitted email restrictions array: removes placeholder index,
  * sanitizes address/condition per row.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The submitted value.
  *
@@ -115,7 +115,7 @@ function bb_registration_sanitize_email_restrictions( $value ) {
 /**
  * Sanitize registration form type (select: 0 or 1).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The submitted value.
  *
@@ -130,7 +130,7 @@ function bb_registration_sanitize_form_type( $value ) {
  *
  * Accepts empty string (Default), '0' (Custom URL), or a page ID string.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The submitted value.
  *
@@ -153,7 +153,7 @@ function bb_registration_sanitize_redirection( $value ) {
  * Validates the URL is safe for redirection — allows same-site URLs and
  * prevents open redirect to external domains.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $value The submitted URL.
  *

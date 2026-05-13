@@ -104,7 +104,7 @@ class BP_Integration {
 		 * Allows the feature system to control integration activation
 		 * via the Integration Bridge.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param bool   $is_activated  Whether the integration is activated.
 		 * @param string $integration_id The integration ID.

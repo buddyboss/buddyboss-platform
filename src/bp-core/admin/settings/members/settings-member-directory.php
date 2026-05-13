@@ -5,7 +5,7 @@
  * Registers sections and fields for the Member Directory side panel.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register Member Directory panel sections and fields.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_members_register_member_directory_panel_fields() {
 
@@ -206,7 +206,7 @@ function bb_members_register_member_directory_panel_fields() {
 	/**
 	 * Fires after Member Directory section fields are registered.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	do_action( 'bb_members_settings_after_directory_fields' );
 }

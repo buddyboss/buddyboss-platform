@@ -5,7 +5,7 @@
  * Registers sections and fields for the On-screen Notifications side panel.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register On-screen Notifications panel sections and fields.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return void
  */
@@ -209,7 +209,7 @@ function bb_notifications_register_on_screen_panel_fields() {
 	/**
 	 * Fires after On-screen Notifications section fields are registered.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	do_action( 'bb_notifications_on_screen_after_settings_fields' );
 }

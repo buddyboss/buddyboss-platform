@@ -6,7 +6,7 @@
  * all Email Invites settings (side panels, sections, fields).
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * Registers the feature, side panels, and all field registrations.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_admin_settings_register_invites_feature() {
 
@@ -182,7 +182,7 @@ function bb_admin_settings_register_invites_feature() {
 	 * Fires to register Email Invites tab settings fields and section.
 	 *
 	 * @since BuddyBoss 1.2.6
-	 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_register_feature_field'} instead.
+	 * @deprecated BuddyBoss 3.0.0 Use {@see 'bb_register_feature_field'} instead.
 	 *
 	 * @param object $deprecated No-op stub. Previously BP_Admin_Setting_Email_Invites instance.
 	 */
@@ -205,7 +205,7 @@ function bb_admin_settings_register_invites_feature() {
 				public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 			},
 		),
-		'BuddyBoss [BBVERSION]',
+		'BuddyBoss 3.0.0',
 		'bb_register_feature_field'
 	);
 
@@ -213,7 +213,7 @@ function bb_admin_settings_register_invites_feature() {
 	 * Fires after all Email Invites settings panels are registered.
 	 * Allows third-party extensions to add more panels or fields.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	do_action( 'bb_invites_after_register_settings_fields' );
 }

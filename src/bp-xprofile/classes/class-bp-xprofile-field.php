@@ -1290,7 +1290,7 @@ class BP_XProfile_Field {
 	 * @param string $message_type error or udpated
 	 */
 	public function render_admin_form( $message = '', $message_type = 'error' ) {
-		_deprecated_function( __METHOD__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 ProfileFieldModal' );
+		_deprecated_function( __METHOD__, 'BuddyBoss 3.0.0', 'Settings 2.0 ProfileFieldModal' );
 
 		// Users Admin URL
 		$users_url = bp_get_admin_url( 'admin.php' );

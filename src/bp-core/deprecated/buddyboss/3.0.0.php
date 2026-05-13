@@ -2,7 +2,7 @@
 /**
  * Deprecated functions.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  * @deprecated BuddyBoss 3.0.0
  */
 
@@ -17,12 +17,12 @@ if ( ! function_exists( 'bp_search_get_settings_sections' ) ) {
 	 * Get the Search settings sections.
 	 *
 	 * @since BuddyBoss 1.0.0
-	 * @deprecated BuddyBoss [BBVERSION] Search settings are now managed by Settings 2.0.
+	 * @deprecated BuddyBoss 3.0.0 Search settings are now managed by Settings 2.0.
 	 *
 	 * @return array Empty array.
 	 */
 	function bp_search_get_settings_sections() {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Search feature (bb_admin_settings_register_search_feature)' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Search feature (bb_admin_settings_register_search_feature)' );
 
 		$sections = array();
 
@@ -30,11 +30,11 @@ if ( ! function_exists( 'bp_search_get_settings_sections' ) ) {
 		 * Filter the Search settings sections.
 		 *
 		 * @since BuddyBoss 1.0.0
-		 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_search_after_register_settings_fields'} to register additional settings.
+		 * @deprecated BuddyBoss 3.0.0 Use {@see 'bb_search_after_register_settings_fields'} to register additional settings.
 		 *
 		 * @param array $sections Search settings sections.
 		 */
-		return (array) apply_filters_deprecated( 'bp_search_get_settings_sections', array( $sections ), 'BuddyBoss [BBVERSION]', 'bb_search_after_register_settings_fields' );
+		return (array) apply_filters_deprecated( 'bp_search_get_settings_sections', array( $sections ), 'BuddyBoss 3.0.0', 'bb_search_after_register_settings_fields' );
 	}
 }
 
@@ -43,12 +43,12 @@ if ( ! function_exists( 'bp_search_get_settings_fields' ) ) {
 	 * Get all of the settings fields.
 	 *
 	 * @since BuddyBoss 1.0.0
-	 * @deprecated BuddyBoss [BBVERSION] Search settings are now managed by Settings 2.0.
+	 * @deprecated BuddyBoss 3.0.0 Search settings are now managed by Settings 2.0.
 	 *
 	 * @return array Empty array.
 	 */
 	function bp_search_get_settings_fields() {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Search feature (bb_admin_settings_register_search_feature)' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Search feature (bb_admin_settings_register_search_feature)' );
 
 		$fields = array();
 
@@ -56,11 +56,11 @@ if ( ! function_exists( 'bp_search_get_settings_fields' ) ) {
 		 * Filter all Search settings fields.
 		 *
 		 * @since BuddyBoss 1.0.0
-		 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_search_after_register_settings_fields'} to register additional fields.
+		 * @deprecated BuddyBoss 3.0.0 Use {@see 'bb_search_after_register_settings_fields'} to register additional fields.
 		 *
 		 * @param array $fields Search settings fields grouped by section.
 		 */
-		return (array) apply_filters_deprecated( 'bp_search_get_settings_fields', array( $fields ), 'BuddyBoss [BBVERSION]', 'bb_search_after_register_settings_fields' );
+		return (array) apply_filters_deprecated( 'bp_search_get_settings_fields', array( $fields ), 'BuddyBoss 3.0.0', 'bb_search_after_register_settings_fields' );
 	}
 }
 
@@ -69,14 +69,14 @@ if ( ! function_exists( 'bp_search_get_settings_fields_for_section' ) ) {
 	 * Get settings fields for a section.
 	 *
 	 * @since BuddyBoss 1.0.0
-	 * @deprecated BuddyBoss [BBVERSION] Search settings are now managed by Settings 2.0.
+	 * @deprecated BuddyBoss 3.0.0 Search settings are now managed by Settings 2.0.
 	 *
 	 * @param string $section_id Section ID.
 	 *
 	 * @return array Empty array.
 	 */
 	function bp_search_get_settings_fields_for_section( $section_id = '' ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
-		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Search feature (bb_admin_settings_register_search_feature)' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Search feature (bb_admin_settings_register_search_feature)' );
 
 		$fields = array();
 
@@ -84,12 +84,12 @@ if ( ! function_exists( 'bp_search_get_settings_fields_for_section' ) ) {
 		 * Filter Search settings fields for a specific section.
 		 *
 		 * @since BuddyBoss 1.0.0
-		 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_search_after_register_settings_fields'} to register additional fields.
+		 * @deprecated BuddyBoss 3.0.0 Use {@see 'bb_search_after_register_settings_fields'} to register additional fields.
 		 *
 		 * @param array  $fields     Settings fields for the section.
 		 * @param string $section_id The section ID.
 		 */
-		return (array) apply_filters_deprecated( 'bp_search_get_settings_fields_for_section', array( $fields, $section_id ), 'BuddyBoss [BBVERSION]', 'bb_search_after_register_settings_fields' );
+		return (array) apply_filters_deprecated( 'bp_search_get_settings_fields_for_section', array( $fields, $section_id ), 'BuddyBoss 3.0.0', 'bb_search_after_register_settings_fields' );
 	}
 }
 
@@ -102,7 +102,7 @@ if ( ! function_exists( 'bp_search_get_settings_fields_for_section' ) ) {
  * that call add_section()/add_field() on the argument.
  *
  * @since BuddyBoss 1.2.6
- * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_search_after_register_settings_fields'} instead.
+ * @deprecated BuddyBoss 3.0.0 Use {@see 'bb_search_after_register_settings_fields'} instead.
  */
 add_action(
 	'bb_search_after_register_settings_fields',
@@ -126,7 +126,7 @@ add_action(
 					public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 				},
 			),
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'bb_search_after_register_settings_fields'
 		);
 	}
@@ -145,7 +145,7 @@ add_action(
  * (e.g. Pro access-control) that call add_section()/add_field() on the argument.
  *
  * @since BuddyBoss 1.0.0
- * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_activity_after_register_settings_fields'} instead.
+ * @deprecated BuddyBoss 3.0.0 Use {@see 'bb_activity_after_register_settings_fields'} instead.
  */
 add_action(
 	'bb_activity_after_register_settings_fields',
@@ -169,7 +169,7 @@ add_action(
 					public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 				},
 			),
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'bb_activity_after_register_settings_fields'
 		);
 	}
@@ -188,10 +188,10 @@ if ( ! function_exists( 'bb_admin_setting_callback_messaging_notification_warnin
 	 * notification settings are disabled.
 	 *
 	 * @since BuddyBoss 2.1.4
-	 * @deprecated BuddyBoss [BBVERSION] Replaced by a notice field in Settings 2.0 Messages feature.
+	 * @deprecated BuddyBoss 3.0.0 Replaced by a notice field in Settings 2.0 Messages feature.
 	 */
 	function bb_admin_setting_callback_messaging_notification_warning() {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Messages feature (bb-messages-live-messaging-notice field)' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Messages feature (bb-messages-live-messaging-notice field)' );
 	}
 }
 
@@ -200,10 +200,10 @@ if ( ! function_exists( 'bb_messaging_notifications_tutorial' ) ) {
 	 * Link to Messaging Notification tutorial.
 	 *
 	 * @since BuddyBoss 2.1.4
-	 * @deprecated BuddyBoss [BBVERSION] Tutorial link is now in the side panel help_url in Settings 2.0.
+	 * @deprecated BuddyBoss 3.0.0 Tutorial link is now in the side panel help_url in Settings 2.0.
 	 */
 	function bb_messaging_notifications_tutorial() {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Messages feature (messaging_notifications side panel help_url)' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Messages feature (messaging_notifications side panel help_url)' );
 	}
 }
 
@@ -212,10 +212,10 @@ if ( ! function_exists( 'bb_admin_setting_callback_messaging_notification_fields
 	 * Callback for rendering the hide/delay messaging notification fields.
 	 *
 	 * @since BuddyBoss 2.1.4
-	 * @deprecated BuddyBoss [BBVERSION] Replaced by Settings 2.0 fields in bb_admin_settings_register_messages_feature().
+	 * @deprecated BuddyBoss 3.0.0 Replaced by Settings 2.0 fields in bb_admin_settings_register_messages_feature().
 	 */
 	function bb_admin_setting_callback_messaging_notification_fields() {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Messages feature (messaging_notifications panel fields)' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Messages feature (messaging_notifications panel fields)' );
 	}
 }
 
@@ -232,7 +232,7 @@ if ( ! function_exists( 'bb_admin_setting_callback_messaging_notification_fields
  * (e.g. Pro access-control) that call add_section()/add_field() on the argument.
  *
  * @since BuddyBoss 1.0.0
- * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_messages_after_register_settings_fields'} instead.
+ * @deprecated BuddyBoss 3.0.0 Use {@see 'bb_messages_after_register_settings_fields'} instead.
  */
 add_action(
 	'bb_messages_after_register_settings_fields',
@@ -256,7 +256,7 @@ add_action(
 					public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 				},
 			),
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'bb_messages_after_register_settings_fields'
 		);
 	}
@@ -271,7 +271,7 @@ add_action(
  * Settings 2.0 finishes registering registration fields.
  *
  * @since BuddyBoss 2.6.30
- * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_registration_after_general_settings_fields'} instead.
+ * @deprecated BuddyBoss 3.0.0 Use {@see 'bb_registration_after_general_settings_fields'} instead.
  */
 add_action(
 	'bb_registration_after_register_settings_fields',
@@ -284,7 +284,7 @@ add_action(
 					public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 				},
 			),
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'bb_registration_after_general_settings_fields',
 			__( 'Registration fields are now registered via bb_register_feature_field() in Settings 2.0.', 'buddyboss' )
 		);
@@ -300,7 +300,7 @@ add_action(
  * that call add_section()/add_field() on the argument.
  *
  * @since BuddyPress 1.6.0
- * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_register_feature_field'} instead.
+ * @deprecated BuddyBoss 3.0.0 Use {@see 'bb_register_feature_field'} instead.
  */
 add_action(
 	'bb_registration_after_register_settings_fields',
@@ -325,7 +325,7 @@ add_action(
 					public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 				},
 			),
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'bb_register_feature_field'
 		);
 	}
@@ -345,7 +345,7 @@ add_action(
  * (e.g. Pro access-control) that call add_section()/add_field() on the argument.
  *
  * @since BuddyBoss 1.2.6
- * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_media_after_register_settings_fields'} instead.
+ * @deprecated BuddyBoss 3.0.0 Use {@see 'bb_media_after_register_settings_fields'} instead.
  */
 add_action(
 	'bb_media_after_register_settings_fields',
@@ -369,7 +369,7 @@ add_action(
 					public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 				},
 			),
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'bb_media_after_register_settings_fields'
 		);
 	}
@@ -384,7 +384,7 @@ add_action(
  * that call add_section()/add_field() on the argument.
  *
  * @since BuddyBoss 1.7.0
- * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_media_after_register_settings_fields'} instead.
+ * @deprecated BuddyBoss 3.0.0 Use {@see 'bb_media_after_register_settings_fields'} instead.
  */
 add_action(
 	'bb_media_after_register_settings_fields',
@@ -408,7 +408,7 @@ add_action(
 					public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 				},
 			),
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'bb_media_after_register_settings_fields'
 		);
 	}
@@ -423,7 +423,7 @@ add_action(
  * that call add_section()/add_field() on the argument.
  *
  * @since BuddyBoss 1.2.6
- * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_media_after_register_settings_fields'} instead.
+ * @deprecated BuddyBoss 3.0.0 Use {@see 'bb_media_after_register_settings_fields'} instead.
  */
 add_action(
 	'bb_media_after_register_settings_fields',
@@ -447,7 +447,7 @@ add_action(
 					public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 				},
 			),
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'bb_media_after_register_settings_fields'
 		);
 	}
@@ -463,7 +463,7 @@ add_action(
 /**
  * Fire deprecated media settings filter hooks after media fields are registered.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_deprecated_media_settings_filter_hooks() {
 
@@ -473,12 +473,12 @@ function bb_deprecated_media_settings_filter_hooks() {
 	 * Legacy filter on the array of media (photos) setting sections.
 	 *
 	 * @since      BuddyBoss 1.0.0
-	 * @deprecated BuddyBoss [BBVERSION] Use {@see bb_register_feature_section()} instead.
+	 * @deprecated BuddyBoss 3.0.0 Use {@see bb_register_feature_section()} instead.
 	 */
 	apply_filters_deprecated(
 		'bp_media_get_settings_sections',
 		array( array() ),
-		'BuddyBoss [BBVERSION]',
+		'BuddyBoss 3.0.0',
 		'bb_register_feature_section()'
 	);
 
@@ -488,12 +488,12 @@ function bb_deprecated_media_settings_filter_hooks() {
 	 * Legacy filter on the full array of all media (photos) settings fields.
 	 *
 	 * @since      BuddyBoss 1.0.0
-	 * @deprecated BuddyBoss [BBVERSION] Use {@see bb_register_feature_field()} instead.
+	 * @deprecated BuddyBoss 3.0.0 Use {@see bb_register_feature_field()} instead.
 	 */
 	apply_filters_deprecated(
 		'bp_media_get_settings_fields',
 		array( array() ),
-		'BuddyBoss [BBVERSION]',
+		'BuddyBoss 3.0.0',
 		'bb_register_feature_field()'
 	);
 
@@ -503,12 +503,12 @@ function bb_deprecated_media_settings_filter_hooks() {
 	 * Legacy filter on fields for a specific media section ID.
 	 *
 	 * @since      BuddyBoss 1.0.0
-	 * @deprecated BuddyBoss [BBVERSION] Use {@see bb_register_feature_field()} instead.
+	 * @deprecated BuddyBoss 3.0.0 Use {@see bb_register_feature_field()} instead.
 	 */
 	apply_filters_deprecated(
 		'bp_media_get_settings_fields_for_section',
 		array( array(), '' ),
-		'BuddyBoss [BBVERSION]',
+		'BuddyBoss 3.0.0',
 		'bb_register_feature_field()'
 	);
 
@@ -518,12 +518,12 @@ function bb_deprecated_media_settings_filter_hooks() {
 	 * Legacy filter on the array of document setting sections.
 	 *
 	 * @since      BuddyBoss 1.0.0
-	 * @deprecated BuddyBoss [BBVERSION] Use {@see bb_register_feature_section()} instead.
+	 * @deprecated BuddyBoss 3.0.0 Use {@see bb_register_feature_section()} instead.
 	 */
 	apply_filters_deprecated(
 		'bp_document_get_settings_sections',
 		array( array() ),
-		'BuddyBoss [BBVERSION]',
+		'BuddyBoss 3.0.0',
 		'bb_register_feature_section()'
 	);
 
@@ -533,12 +533,12 @@ function bb_deprecated_media_settings_filter_hooks() {
 	 * Legacy filter on the full array of document settings fields.
 	 *
 	 * @since      BuddyBoss 1.0.0
-	 * @deprecated BuddyBoss [BBVERSION] Use {@see bb_register_feature_field()} instead.
+	 * @deprecated BuddyBoss 3.0.0 Use {@see bb_register_feature_field()} instead.
 	 */
 	apply_filters_deprecated(
 		'bp_document_get_settings_fields',
 		array( array() ),
-		'BuddyBoss [BBVERSION]',
+		'BuddyBoss 3.0.0',
 		'bb_register_feature_field()'
 	);
 
@@ -548,12 +548,12 @@ function bb_deprecated_media_settings_filter_hooks() {
 	 * Legacy filter on fields for a specific document section ID.
 	 *
 	 * @since      BuddyBoss 1.0.0
-	 * @deprecated BuddyBoss [BBVERSION] Use {@see bb_register_feature_field()} instead.
+	 * @deprecated BuddyBoss 3.0.0 Use {@see bb_register_feature_field()} instead.
 	 */
 	apply_filters_deprecated(
 		'bp_document_get_settings_fields_for_section',
 		array( array(), '' ),
-		'BuddyBoss [BBVERSION]',
+		'BuddyBoss 3.0.0',
 		'bb_register_feature_field()'
 	);
 
@@ -563,12 +563,12 @@ function bb_deprecated_media_settings_filter_hooks() {
 	 * Legacy filter on the array of video setting sections.
 	 *
 	 * @since      BuddyBoss 1.7.0
-	 * @deprecated BuddyBoss [BBVERSION] Use {@see bb_register_feature_section()} instead.
+	 * @deprecated BuddyBoss 3.0.0 Use {@see bb_register_feature_section()} instead.
 	 */
 	apply_filters_deprecated(
 		'bp_video_get_settings_sections',
 		array( array() ),
-		'BuddyBoss [BBVERSION]',
+		'BuddyBoss 3.0.0',
 		'bb_register_feature_section()'
 	);
 
@@ -578,12 +578,12 @@ function bb_deprecated_media_settings_filter_hooks() {
 	 * Legacy filter on the full array of video settings fields.
 	 *
 	 * @since      BuddyBoss 1.7.0
-	 * @deprecated BuddyBoss [BBVERSION] Use {@see bb_register_feature_field()} instead.
+	 * @deprecated BuddyBoss 3.0.0 Use {@see bb_register_feature_field()} instead.
 	 */
 	apply_filters_deprecated(
 		'bp_video_get_settings_fields',
 		array( array() ),
-		'BuddyBoss [BBVERSION]',
+		'BuddyBoss 3.0.0',
 		'bb_register_feature_field()'
 	);
 
@@ -593,12 +593,12 @@ function bb_deprecated_media_settings_filter_hooks() {
 	 * Legacy filter on fields for a specific video section ID.
 	 *
 	 * @since      BuddyBoss 1.7.0
-	 * @deprecated BuddyBoss [BBVERSION] Use {@see bb_register_feature_field()} instead.
+	 * @deprecated BuddyBoss 3.0.0 Use {@see bb_register_feature_field()} instead.
 	 */
 	apply_filters_deprecated(
 		'bp_video_get_settings_fields_for_section',
 		array( array(), '' ),
-		'BuddyBoss [BBVERSION]',
+		'BuddyBoss 3.0.0',
 		'bb_register_feature_field()'
 	);
 }
@@ -617,7 +617,7 @@ add_action( 'bb_media_after_register_settings_fields', 'bb_deprecated_media_sett
  * is saved. This bridge ensures those hooks still fire when media settings
  * are saved via Settings 2.0.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $feature_id Feature ID.
  * @param array  $settings   Full submitted settings.
@@ -635,12 +635,12 @@ function bb_media_fire_deprecated_save_hooks( $feature_id, $settings, $saved ) {
 	 *
 	 * @param string $tab_name The tab name.
 	 *
-	 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_admin_save_feature_settings_after'} with feature_id='media'.
+	 * @deprecated BuddyBoss 3.0.0 Use {@see 'bb_admin_save_feature_settings_after'} with feature_id='media'.
 	 */
 	do_action_deprecated(
 		'bp_admin_tab_setting_save',
 		array( 'bp-media' ),
-		'BuddyBoss [BBVERSION]',
+		'BuddyBoss 3.0.0',
 		'bb_admin_save_feature_settings_after'
 	);
 
@@ -651,12 +651,12 @@ function bb_media_fire_deprecated_save_hooks( $feature_id, $settings, $saved ) {
 	 *
 	 * @param string $tab_name The tab name.
 	 *
-	 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_admin_save_feature_settings_after'} with feature_id='media'.
+	 * @deprecated BuddyBoss 3.0.0 Use {@see 'bb_admin_save_feature_settings_after'} with feature_id='media'.
 	 */
 	do_action_deprecated(
 		'bp_admin_tab_setting_saved',
 		array( 'bp-media' ),
-		'BuddyBoss [BBVERSION]',
+		'BuddyBoss 3.0.0',
 		'bb_admin_save_feature_settings_after'
 	);
 
@@ -667,7 +667,7 @@ function bb_media_fire_deprecated_save_hooks( $feature_id, $settings, $saved ) {
 		do_action_deprecated(
 			'bp_admin_tab_setting_save',
 			array( 'bp-video' ),
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'bb_admin_save_feature_settings_after'
 		);
 
@@ -675,7 +675,7 @@ function bb_media_fire_deprecated_save_hooks( $feature_id, $settings, $saved ) {
 		do_action_deprecated(
 			'bp_admin_tab_setting_saved',
 			array( 'bp-video' ),
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'bb_admin_save_feature_settings_after'
 		);
 	}
@@ -687,7 +687,7 @@ function bb_media_fire_deprecated_save_hooks( $feature_id, $settings, $saved ) {
 		do_action_deprecated(
 			'bp_admin_tab_setting_save',
 			array( 'bp-document' ),
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'bb_admin_save_feature_settings_after'
 		);
 
@@ -695,7 +695,7 @@ function bb_media_fire_deprecated_save_hooks( $feature_id, $settings, $saved ) {
 		do_action_deprecated(
 			'bp_admin_tab_setting_saved',
 			array( 'bp-document' ),
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'bb_admin_save_feature_settings_after'
 		);
 	}
@@ -716,7 +716,7 @@ add_action( 'bb_admin_save_feature_settings_after', 'bb_media_fire_deprecated_sa
  * that call add_section()/add_field() on the argument.
  *
  * @since BuddyBoss 1.2.6
- * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_groups_after_register_settings_fields'} and bb_register_feature_field() instead.
+ * @deprecated BuddyBoss 3.0.0 Use {@see 'bb_groups_after_register_settings_fields'} and bb_register_feature_field() instead.
  */
 add_action(
 	'bb_groups_after_register_settings_fields',
@@ -740,7 +740,7 @@ add_action(
 					public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 				},
 			),
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'bb_groups_after_register_settings_fields'
 		);
 	}
@@ -754,12 +754,12 @@ add_action(
  * Output the tabs in the Groups admin area.
  *
  * @since BuddyBoss 1.0.0
- * @deprecated BuddyBoss [BBVERSION] Use {@see bb_register_side_panel()} to register panels in Settings 2.0.
+ * @deprecated BuddyBoss 3.0.0 Use {@see bb_register_side_panel()} to register panels in Settings 2.0.
  *
  * @param string $active_tab Name of the tab that is active. Optional.
  */
 function bp_core_admin_groups_tabs( $active_tab = '' ) {
-	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_register_side_panel()' );
+	_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'bb_register_side_panel()' );
 
 	$tabs_html    = '';
 	$idle_class   = 'nav-tab';
@@ -787,23 +787,23 @@ function bp_core_admin_groups_tabs( $active_tab = '' ) {
 	 * Fires after the output of tabs for the admin area.
 	 *
 	 * @since BuddyBoss 1.0.0
-	 * @deprecated BuddyBoss [BBVERSION] No replacement in Settings 2.0. Use {@see bb_register_side_panel()}.
+	 * @deprecated BuddyBoss 3.0.0 No replacement in Settings 2.0. Use {@see bb_register_side_panel()}.
 	 */
-	do_action_deprecated( 'bp_admin_groups_tabs', array(), 'BuddyBoss [BBVERSION]', 'bb_register_side_panel()' );
+	do_action_deprecated( 'bp_admin_groups_tabs', array(), 'BuddyBoss 3.0.0', 'bb_register_side_panel()' );
 }
 
 /**
  * Register tabs for the BuddyBoss > Groups screens.
  *
  * @since BuddyBoss 1.0.0
- * @deprecated BuddyBoss [BBVERSION] Use {@see bb_register_side_panel()} to register panels in Settings 2.0.
+ * @deprecated BuddyBoss 3.0.0 Use {@see bb_register_side_panel()} to register panels in Settings 2.0.
  *
  * @param string $active_tab Name of the tab that is active. Optional.
  *
  * @return array
  */
 function bp_core_get_groups_admin_tabs( $active_tab = '' ) {
-	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_register_side_panel()' );
+	_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'bb_register_side_panel()' );
 
 	$tabs = array();
 
@@ -817,14 +817,14 @@ function bp_core_get_groups_admin_tabs( $active_tab = '' ) {
 	 * Filters the tab data used in our wp-admin screens.
 	 *
 	 * @since BuddyBoss 1.0.0
-	 * @deprecated BuddyBoss [BBVERSION] Use {@see bb_register_side_panel()} to register panels in Settings 2.0.
+	 * @deprecated BuddyBoss 3.0.0 Use {@see bb_register_side_panel()} to register panels in Settings 2.0.
 	 *
 	 * @param array $tabs Tab data.
 	 */
 	return apply_filters_deprecated(
 		'bp_core_get_groups_admin_tabs',
 		array( $tabs ),
-		'BuddyBoss [BBVERSION]',
+		'BuddyBoss 3.0.0',
 		'bb_register_side_panel()'
 	);
 }
@@ -839,17 +839,17 @@ function bp_core_get_groups_admin_tabs( $active_tab = '' ) {
  * Set up the Groups admin page.
  *
  * @since BuddyPress 1.7.0
- * @deprecated BuddyBoss [BBVERSION] Groups admin is now handled by Settings 2.0.
+ * @deprecated BuddyBoss 3.0.0 Groups admin is now handled by Settings 2.0.
  */
 function bp_groups_admin_load() {
-	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Groups admin' );
+	_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Groups admin' );
 }
 
 /**
  * Handle save/update of screen options for the Groups component admin screen.
  *
  * @since BuddyPress 1.7.0
- * @deprecated BuddyBoss [BBVERSION] Groups admin is now handled by Settings 2.0.
+ * @deprecated BuddyBoss 3.0.0 Groups admin is now handled by Settings 2.0.
  *
  * @param string $value     Will always be false unless another plugin filters it first.
  * @param string $option    Screen option name.
@@ -858,7 +858,7 @@ function bp_groups_admin_load() {
  * @return string|int Option value. False to abandon update.
  */
 function bp_groups_admin_screen_options( $value, $option, $new_value ) {
-	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Groups admin' );
+	_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Groups admin' );
 
 	if ( 'buddyboss_page_bp_groups_per_page' !== $option && 'buddyboss_page_bp_groups_network_per_page' !== $option ) {
 		return $value;
@@ -876,10 +876,10 @@ function bp_groups_admin_screen_options( $value, $option, $new_value ) {
  * Select the appropriate Groups admin screen, and output it.
  *
  * @since BuddyPress 1.7.0
- * @deprecated BuddyBoss [BBVERSION] Groups admin is now handled by Settings 2.0.
+ * @deprecated BuddyBoss 3.0.0 Groups admin is now handled by Settings 2.0.
  */
 function bp_groups_admin() {
-	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Groups admin' );
+	_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Groups admin' );
 
 	// Fallback: if the load- redirect didn't fire, show a link to Settings 2.0 instead of a blank page.
 	$settings_url = function_exists( 'bb_get_settings_url' ) ? add_query_arg( 'tab', 'groups', bb_get_settings_url() ) : '';
@@ -898,117 +898,117 @@ function bp_groups_admin() {
  * Display the single groups edit screen.
  *
  * @since BuddyPress 1.7.0
- * @deprecated BuddyBoss [BBVERSION] Use Settings 2.0 Group Edit Modal.
+ * @deprecated BuddyBoss 3.0.0 Use Settings 2.0 Group Edit Modal.
  */
 function bp_groups_admin_edit() {
-	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Group Edit Modal' );
+	_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Group Edit Modal' );
 }
 
 /**
  * Display the single groups create screen.
  *
  * @since BuddyBoss 1.0.0
- * @deprecated BuddyBoss [BBVERSION] Use Settings 2.0 Group Create Modal.
+ * @deprecated BuddyBoss 3.0.0 Use Settings 2.0 Group Create Modal.
  */
 function bp_groups_admin_create() {
-	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Group Create Modal' );
+	_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Group Create Modal' );
 }
 
 /**
  * Process the data of newly created group from the backend.
  *
  * @since BuddyBoss 1.0.0
- * @deprecated BuddyBoss [BBVERSION] Use Settings 2.0 {@see BB_Admin_Groups_Ajax::create_group()}.
+ * @deprecated BuddyBoss 3.0.0 Use Settings 2.0 {@see BB_Admin_Groups_Ajax::create_group()}.
  */
 function bp_process_create_group_admin() {
-	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'BB_Admin_Groups_Ajax::create_group()' );
+	_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'BB_Admin_Groups_Ajax::create_group()' );
 }
 
 /**
  * Display the Group delete confirmation screen.
  *
  * @since BuddyPress 1.7.0
- * @deprecated BuddyBoss [BBVERSION] Use Settings 2.0 Group Delete Modal.
+ * @deprecated BuddyBoss 3.0.0 Use Settings 2.0 Group Delete Modal.
  */
 function bp_groups_admin_delete() {
-	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Group Delete Modal' );
+	_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Group Delete Modal' );
 }
 
 /**
  * Display the Groups admin index screen.
  *
  * @since BuddyPress 1.7.0
- * @deprecated BuddyBoss [BBVERSION] Use Settings 2.0 {@see GroupsListScreen.js}.
+ * @deprecated BuddyBoss 3.0.0 Use Settings 2.0 {@see GroupsListScreen.js}.
  */
 function bp_groups_admin_index() {
-	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 GroupsListScreen' );
+	_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 GroupsListScreen' );
 }
 
 /**
  * Markup for the single group's Settings metabox.
  *
  * @since BuddyPress 1.7.0
- * @deprecated BuddyBoss [BBVERSION] Use Settings 2.0 Group Edit Modal (Permissions tab).
+ * @deprecated BuddyBoss 3.0.0 Use Settings 2.0 Group Edit Modal (Permissions tab).
  *
  * @param object $item Information about the current group.
  */
 function bp_groups_admin_edit_metabox_settings( $item ) {
-	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Group Edit Modal' );
+	_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Group Edit Modal' );
 }
 
 /**
  * Markup for the single group's Group Hierarchy metabox.
  *
  * @since BuddyPress 1.7.0
- * @deprecated BuddyBoss [BBVERSION] Use Settings 2.0 Group Edit Modal (Integrations tab).
+ * @deprecated BuddyBoss 3.0.0 Use Settings 2.0 Group Edit Modal (Integrations tab).
  *
  * @param object $item Information about the current group.
  */
 function bp_groups_admin_edit_metabox_group_parent( $item ) {
-	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Group Edit Modal' );
+	_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Group Edit Modal' );
 }
 
 /**
  * Output the markup for a single group's Add New Members metabox.
  *
  * @since BuddyPress 1.7.0
- * @deprecated BuddyBoss [BBVERSION] Use Settings 2.0 Group Edit Modal (Members tab).
+ * @deprecated BuddyBoss 3.0.0 Use Settings 2.0 Group Edit Modal (Members tab).
  *
  * @param BP_Groups_Group $item The BP_Groups_Group object for the current group.
  */
 function bp_groups_admin_edit_metabox_add_new_members( $item ) {
-	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Group Edit Modal' );
+	_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Group Edit Modal' );
 }
 
 /**
  * Renders the Members metabox on single group pages.
  *
  * @since BuddyPress 1.7.0
- * @deprecated BuddyBoss [BBVERSION] Use Settings 2.0 Group Edit Modal (Members tab).
+ * @deprecated BuddyBoss 3.0.0 Use Settings 2.0 Group Edit Modal (Members tab).
  *
  * @param BP_Groups_Group $item The BP_Groups_Group object for the current group.
  */
 function bp_groups_admin_edit_metabox_members( $item ) {
-	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Group Edit Modal' );
+	_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Group Edit Modal' );
 }
 
 /**
  * Renders the Status metabox for the Groups admin edit screen.
  *
  * @since BuddyPress 1.7.0
- * @deprecated BuddyBoss [BBVERSION] Use Settings 2.0 Group Edit Modal.
+ * @deprecated BuddyBoss 3.0.0 Use Settings 2.0 Group Edit Modal.
  *
  * @param object $item Information about the currently displayed group.
  */
 function bp_groups_admin_edit_metabox_status( $item ) {
-	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Group Edit Modal' );
+	_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Group Edit Modal' );
 }
 
 /**
  * Create pagination links out of a BP_Group_Member_Query.
  *
  * @since BuddyPress 1.8.0
- * @deprecated BuddyBoss [BBVERSION] Use Settings 2.0 Group Edit Modal (Members tab) with AJAX pagination.
+ * @deprecated BuddyBoss 3.0.0 Use Settings 2.0 Group Edit Modal (Members tab) with AJAX pagination.
  *
  * @param BP_Group_Member_Query $query       A BP_Group_Member_Query object.
  * @param string                $member_type member|mod|admin|banned.
@@ -1016,7 +1016,7 @@ function bp_groups_admin_edit_metabox_status( $item ) {
  * @return string Empty string.
  */
 function bp_groups_admin_create_pagination_links( $query, $member_type ) {
-	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Group Edit Modal' );
+	_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Group Edit Modal' );
 
 	return '';
 }
@@ -1025,14 +1025,14 @@ function bp_groups_admin_create_pagination_links( $query, $member_type ) {
  * Get a set of usernames corresponding to a set of user IDs.
  *
  * @since BuddyPress 1.7.0
- * @deprecated BuddyBoss [BBVERSION] Groups admin is now handled by Settings 2.0.
+ * @deprecated BuddyBoss 3.0.0 Groups admin is now handled by Settings 2.0.
  *
  * @param array $user_ids Array of user IDs.
  *
  * @return array Array of user_logins corresponding to $user_ids.
  */
 function bp_groups_admin_get_usernames_from_ids( $user_ids = array() ) {
-	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Groups admin' );
+	_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Groups admin' );
 
 	$usernames = array();
 	$users     = new WP_User_Query(
@@ -1053,10 +1053,10 @@ function bp_groups_admin_get_usernames_from_ids( $user_ids = array() ) {
  * AJAX handler for group member autocomplete requests.
  *
  * @since BuddyPress 1.7.0
- * @deprecated BuddyBoss [BBVERSION] Use Settings 2.0 {@see BB_Admin_Groups_Ajax::member_autocomplete()}.
+ * @deprecated BuddyBoss 3.0.0 Use Settings 2.0 {@see BB_Admin_Groups_Ajax::member_autocomplete()}.
  */
 function bp_groups_admin_autocomplete_handler() {
-	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'BB_Admin_Groups_Ajax::member_autocomplete()' );
+	_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'BB_Admin_Groups_Ajax::member_autocomplete()' );
 
 	wp_die( -1 );
 }
@@ -1085,12 +1085,12 @@ add_action( 'admin_post_bp_create_group_admin', 'bp_process_create_group_admin' 
  * Clear the group_type cache when group type post is updated.
  *
  * @since BuddyBoss 2.0.0
- * @deprecated BuddyBoss [BBVERSION] Use {@see BB_Admin_Groups_Ajax::bb_clear_group_type_cache()}.
+ * @deprecated BuddyBoss 3.0.0 Use {@see BB_Admin_Groups_Ajax::bb_clear_group_type_cache()}.
  *
  * @param int $post_id Post ID.
  */
 function bb_groups_clear_group_type_cache_on_update( $post_id ) {
-	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'BB_Admin_Groups_Ajax::bb_clear_group_type_cache()' );
+	_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'BB_Admin_Groups_Ajax::bb_clear_group_type_cache()' );
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -1101,70 +1101,70 @@ function bb_groups_clear_group_type_cache_on_update( $post_id ) {
  * Save group type post meta box data.
  *
  * @since BuddyBoss 1.0.0
- * @deprecated BuddyBoss [BBVERSION] Use Settings 2.0 {@see BB_Admin_Groups_Ajax::create_group_type()} / {@see BB_Admin_Groups_Ajax::update_group_type()}.
+ * @deprecated BuddyBoss 3.0.0 Use Settings 2.0 {@see BB_Admin_Groups_Ajax::create_group_type()} / {@see BB_Admin_Groups_Ajax::update_group_type()}.
  *
  * @param int $post_id Post ID of the group type.
  */
 function bp_save_group_type_post_meta_box_data( $post_id ) {
-	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'BB_Admin_Groups_Ajax::create_group_type() / BB_Admin_Groups_Ajax::update_group_type()' );
+	_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'BB_Admin_Groups_Ajax::create_group_type() / BB_Admin_Groups_Ajax::update_group_type()' );
 }
 
 /**
  * Save group type role labels post meta box data.
  *
  * @since BuddyBoss 1.0.0
- * @deprecated BuddyBoss [BBVERSION] Use Settings 2.0 {@see BB_Admin_Groups_Ajax::create_group_type()} / {@see BB_Admin_Groups_Ajax::update_group_type()}.
+ * @deprecated BuddyBoss 3.0.0 Use Settings 2.0 {@see BB_Admin_Groups_Ajax::create_group_type()} / {@see BB_Admin_Groups_Ajax::update_group_type()}.
  *
  * @param int $post_id Post ID of the group type.
  */
 function bp_save_group_type_role_labels_post_meta_box_data( $post_id ) {
-	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'BB_Admin_Groups_Ajax::create_group_type() / BB_Admin_Groups_Ajax::update_group_type()' );
+	_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'BB_Admin_Groups_Ajax::create_group_type() / BB_Admin_Groups_Ajax::update_group_type()' );
 }
 
 /**
  * Register actions and filters for group types admin.
  *
  * @since BuddyBoss 1.0.0
- * @deprecated BuddyBoss [BBVERSION] Group types are now managed via Settings 2.0.
+ * @deprecated BuddyBoss 3.0.0 Group types are now managed via Settings 2.0.
  */
 function bp_register_group_type_sections_filters_actions() {
-	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Group Types admin' );
+	_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Group Types admin' );
 }
 
 /**
  * Process bulk group type changes from admin dropdown.
  *
  * @since BuddyPress 2.7.0
- * @deprecated BuddyBoss [BBVERSION] Use Settings 2.0 {@see BB_Admin_Groups_Ajax::bulk_action()}.
+ * @deprecated BuddyBoss 3.0.0 Use Settings 2.0 {@see BB_Admin_Groups_Ajax::bulk_action()}.
  *
  * @param string $doaction Current bulk action being processed.
  */
 function bp_groups_admin_process_group_type_bulk_changes( $doaction ) {
-	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'BB_Admin_Groups_Ajax::bulk_action()' );
+	_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'BB_Admin_Groups_Ajax::bulk_action()' );
 }
 
 /**
  * Display admin notice upon group type bulk update.
  *
  * @since BuddyPress 2.7.0
- * @deprecated BuddyBoss [BBVERSION] Use Settings 2.0 toast notifications.
+ * @deprecated BuddyBoss 3.0.0 Use Settings 2.0 toast notifications.
  */
 function bp_groups_admin_groups_type_change_notice() {
-	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Groups admin' );
+	_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Groups admin' );
 }
 
 /**
  * Add custom columns to group type post list table.
  *
  * @since BuddyBoss 1.0.0
- * @deprecated BuddyBoss [BBVERSION] Group types are now listed via Settings 2.0.
+ * @deprecated BuddyBoss 3.0.0 Group types are now listed via Settings 2.0.
  *
  * @param array $columns Existing columns.
  *
  * @return array
  */
 function bp_group_type_add_column( $columns ) {
-	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Group Types admin' );
+	_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Group Types admin' );
 
 	return $columns;
 }
@@ -1173,27 +1173,27 @@ function bp_group_type_add_column( $columns ) {
  * Display data for group type columns in list table.
  *
  * @since BuddyBoss 1.0.0
- * @deprecated BuddyBoss [BBVERSION] Group types are now listed via Settings 2.0.
+ * @deprecated BuddyBoss 3.0.0 Group types are now listed via Settings 2.0.
  *
  * @param string $column  Column name.
  * @param int    $post_id Post ID.
  */
 function bp_group_type_show_data( $column, $post_id ) {
-	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Group Types admin' );
+	_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Group Types admin' );
 }
 
 /**
  * Make group type list table columns sortable.
  *
  * @since BuddyBoss 1.0.0
- * @deprecated BuddyBoss [BBVERSION] Group types are now listed via Settings 2.0.
+ * @deprecated BuddyBoss 3.0.0 Group types are now listed via Settings 2.0.
  *
  * @param array $columns Sortable columns.
  *
  * @return array
  */
 function bp_group_type_add_sortable_columns( $columns ) {
-	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Group Types admin' );
+	_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Group Types admin' );
 
 	return $columns;
 }
@@ -1202,7 +1202,7 @@ function bp_group_type_add_sortable_columns( $columns ) {
  * Hide quick edit link from group type post row actions.
  *
  * @since BuddyBoss 1.0.0
- * @deprecated BuddyBoss [BBVERSION] Group types are now managed via Settings 2.0 modals.
+ * @deprecated BuddyBoss 3.0.0 Group types are now managed via Settings 2.0 modals.
  *
  * @param array   $actions Row actions.
  * @param WP_Post $post    Post object.
@@ -1210,7 +1210,7 @@ function bp_group_type_add_sortable_columns( $columns ) {
  * @return array
  */
 function bp_group_type_hide_quick_edit( $actions, $post ) {
-	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Group Types admin' );
+	_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Group Types admin' );
 
 	return $actions;
 }
@@ -1219,70 +1219,70 @@ function bp_group_type_hide_quick_edit( $actions, $post ) {
  * Register meta boxes for group type post type.
  *
  * @since BuddyBoss 1.0.0
- * @deprecated BuddyBoss [BBVERSION] Group type editing is now handled by Settings 2.0 modals.
+ * @deprecated BuddyBoss 3.0.0 Group type editing is now handled by Settings 2.0 modals.
  */
 function bp_group_type_custom_meta_boxes() {
-	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Group Types admin' );
+	_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Group Types admin' );
 }
 
 /**
  * Generate group type label meta box.
  *
  * @since BuddyBoss 1.0.0
- * @deprecated BuddyBoss [BBVERSION] Use Settings 2.0 Group Type modal.
+ * @deprecated BuddyBoss 3.0.0 Use Settings 2.0 Group Type modal.
  *
  * @param WP_Post $post Post object.
  */
 function bp_group_type_labels_meta_box( $post ) {
-	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Group Types admin' );
+	_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Group Types admin' );
 }
 
 /**
  * Generate group type permissions meta box.
  *
  * @since BuddyBoss 1.0.0
- * @deprecated BuddyBoss [BBVERSION] Use Settings 2.0 Group Type modal.
+ * @deprecated BuddyBoss 3.0.0 Use Settings 2.0 Group Type modal.
  *
  * @param WP_Post $post Post object.
  */
 function bp_group_type_permissions_meta_box( $post ) {
-	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Group Types admin' );
+	_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Group Types admin' );
 }
 
 /**
  * Display label color selector metabox for group types.
  *
  * @since BuddyBoss 2.0.0
- * @deprecated BuddyBoss [BBVERSION] Use Settings 2.0 Group Type modal.
+ * @deprecated BuddyBoss 3.0.0 Use Settings 2.0 Group Type modal.
  *
  * @param WP_Post $post Post object.
  */
 function bb_group_type_labelcolor_metabox( $post ) {
-	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Group Types admin' );
+	_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Group Types admin' );
 }
 
 /**
  * Display shortcode metabox for group type admin edit.
  *
  * @since BuddyBoss 1.0.0
- * @deprecated BuddyBoss [BBVERSION] Use Settings 2.0 Group Type modal.
+ * @deprecated BuddyBoss 3.0.0 Use Settings 2.0 Group Type modal.
  *
  * @param WP_Post $post Post object.
  */
 function bp_group_shortcode_meta_box( $post ) {
-	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Group Types admin' );
+	_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Group Types admin' );
 }
 
 /**
  * Render Group Type metabox on the single group admin edit screen.
  *
  * @since BuddyBoss 1.0.0
- * @deprecated BuddyBoss [BBVERSION] Use Settings 2.0 Group Edit Modal.
+ * @deprecated BuddyBoss 3.0.0 Use Settings 2.0 Group Edit Modal.
  *
  * @param BP_Groups_Group|null $group Group object.
  */
 function bp_groups_admin_edit_metabox_group_type( ?BP_Groups_Group $group = null ) {
-	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Group Edit Modal' );
+	_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Group Edit Modal' );
 }
 
 /**
@@ -1291,36 +1291,36 @@ function bp_groups_admin_edit_metabox_group_type( ?BP_Groups_Group $group = null
  * Hooked to `bp_group_admin_edit_after`. Bails when legacy nonce is absent.
  *
  * @since BuddyBoss 1.0.0
- * @deprecated BuddyBoss [BBVERSION] Use Settings 2.0 {@see BB_Admin_Groups_Ajax::save_group()}.
+ * @deprecated BuddyBoss 3.0.0 Use Settings 2.0 {@see BB_Admin_Groups_Ajax::save_group()}.
  *
  * @param int $group_id Group ID.
  */
 function bp_groups_process_group_type_update( $group_id ) {
-	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'BB_Admin_Groups_Ajax::save_group()' );
+	_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'BB_Admin_Groups_Ajax::save_group()' );
 }
 
 /**
  * Output jQuery to highlight Groups menu when on Group Types CPT page.
  *
  * @since BuddyBoss 1.0.0
- * @deprecated BuddyBoss [BBVERSION] Group Types are now managed via Settings 2.0.
+ * @deprecated BuddyBoss 3.0.0 Group Types are now managed via Settings 2.0.
  */
 function bp_group_type_show_correct_current_menu() {
-	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Group Types admin' );
+	_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Group Types admin' );
 }
 
 /**
  * Set correct menu parent for Group Types CPT screens.
  *
  * @since BuddyBoss 1.0.0
- * @deprecated BuddyBoss [BBVERSION] Group Types are now managed via Settings 2.0.
+ * @deprecated BuddyBoss 3.0.0 Group Types are now managed via Settings 2.0.
  *
  * @param string $parent_file The parent file.
  *
  * @return string
  */
 function bp_group_type_set_platform_tab_submenu_active( $parent_file ) {
-	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Group Types admin' );
+	_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Group Types admin' );
 
 	return $parent_file;
 }
@@ -1329,34 +1329,34 @@ function bp_group_type_set_platform_tab_submenu_active( $parent_file ) {
  * Output Groups admin tabs on the Group Types listing page.
  *
  * @since BuddyBoss 1.0.0
- * @deprecated BuddyBoss [BBVERSION] Group Types are now managed via Settings 2.0.
+ * @deprecated BuddyBoss 3.0.0 Group Types are now managed via Settings 2.0.
  */
 function bp_groups_admin_group_type_listing_add_groups_tab() {
-	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Group Types admin' );
+	_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Group Types admin' );
 }
 
 /**
  * Add sorting filter for Group Types CPT list table.
  *
  * @since BuddyBoss 1.0.0
- * @deprecated BuddyBoss [BBVERSION] Group Types are now managed via Settings 2.0.
+ * @deprecated BuddyBoss 3.0.0 Group Types are now managed via Settings 2.0.
  */
 function bp_group_type_add_request_filter() {
-	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Group Types admin' );
+	_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Group Types admin' );
 }
 
 /**
  * Sort Group Types CPT list table.
  *
  * @since BuddyBoss 1.0.0
- * @deprecated BuddyBoss [BBVERSION] Group Types are now managed via Settings 2.0.
+ * @deprecated BuddyBoss 3.0.0 Group Types are now managed via Settings 2.0.
  *
  * @param array $qv Query vars.
  *
  * @return array
  */
 function bp_group_type_sort_items( $qv ) {
-	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Group Types admin' );
+	_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Group Types admin' );
 
 	return $qv;
 }
@@ -1374,7 +1374,7 @@ function bp_group_type_sort_items( $qv ) {
  * bb_register_feature_field() instead. Third-party/Pro plugins should hook into
  * 'bb_members_after_register_settings_fields'.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_deprecated_xprofile_register_fields_hook() {
 	if ( ! function_exists( 'bb_register_feature' ) || ! bp_is_active( 'xprofile' ) ) {
@@ -1389,7 +1389,7 @@ function bb_deprecated_xprofile_register_fields_hook() {
 	 * that call add_section()/add_field() on the argument.
 	 *
 	 * @since BuddyBoss 1.2.6
-	 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_members_after_register_settings_fields'} hook with bb_register_feature_field().
+	 * @deprecated BuddyBoss 3.0.0 Use {@see 'bb_members_after_register_settings_fields'} hook with bb_register_feature_field().
 	 *
 	 * @param object $deprecated No-op stub (was BP_Admin_Setting_tab instance).
 	 */
@@ -1412,7 +1412,7 @@ function bb_deprecated_xprofile_register_fields_hook() {
 				public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 			},
 		),
-		'BuddyBoss [BBVERSION]',
+		'BuddyBoss 3.0.0',
 		'bb_members_after_register_settings_fields'
 	);
 }
@@ -1422,7 +1422,7 @@ add_action( 'bb_members_after_register_settings_fields', 'bb_deprecated_xprofile
 /**
  * Fire deprecated friends register_fields hook for backward compatibility.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_deprecated_friends_register_fields_hook() {
 	if ( ! function_exists( 'bb_register_feature' ) || ! bp_is_active( 'friends' ) ) {
@@ -1437,7 +1437,7 @@ function bb_deprecated_friends_register_fields_hook() {
 	 * that call add_section()/add_field() on the argument.
 	 *
 	 * @since BuddyBoss 1.2.6
-	 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_members_after_register_settings_fields'} hook with bb_register_feature_field().
+	 * @deprecated BuddyBoss 3.0.0 Use {@see 'bb_members_after_register_settings_fields'} hook with bb_register_feature_field().
 	 *
 	 * @param object $deprecated No-op stub (was BP_Admin_Setting_tab instance).
 	 */
@@ -1460,7 +1460,7 @@ function bb_deprecated_friends_register_fields_hook() {
 				public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 			},
 		),
-		'BuddyBoss [BBVERSION]',
+		'BuddyBoss 3.0.0',
 		'bb_members_after_register_settings_fields'
 	);
 }
@@ -1479,7 +1479,7 @@ add_action( 'bb_members_after_register_settings_fields', 'bb_deprecated_friends_
  * 'bp-xprofile' or 'bp-friends' tab names. This bridge ensures those hooks
  * still fire when members settings are saved via Settings 2.0.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $feature_id Feature ID.
  * @param array  $settings   Full submitted settings.
@@ -1494,14 +1494,14 @@ function bb_members_fire_deprecated_save_hooks( $feature_id, $settings, $saved )
 	 * Fires when xprofile settings are saved.
 	 *
 	 * @since BuddyBoss 1.0.0
-	 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_admin_save_feature_settings_after'} with feature_id='members'.
+	 * @deprecated BuddyBoss 3.0.0 Use {@see 'bb_admin_save_feature_settings_after'} with feature_id='members'.
 	 *
 	 * @param string $tab_name The tab name.
 	 */
 	do_action_deprecated(
 		'bp_admin_tab_setting_save',
 		array( 'bp-xprofile' ),
-		'BuddyBoss [BBVERSION]',
+		'BuddyBoss 3.0.0',
 		'bb_admin_save_feature_settings_after'
 	);
 
@@ -1512,14 +1512,14 @@ function bb_members_fire_deprecated_save_hooks( $feature_id, $settings, $saved )
 		 * Fires when friends settings are saved.
 		 *
 		 * @since BuddyBoss 1.0.0
-		 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_admin_save_feature_settings_after'} with feature_id='members'.
+		 * @deprecated BuddyBoss 3.0.0 Use {@see 'bb_admin_save_feature_settings_after'} with feature_id='members'.
 		 *
 		 * @param string $tab_name The tab name.
 		 */
 		do_action_deprecated(
 			'bp_admin_tab_setting_save',
 			array( 'bp-friends' ),
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'bb_admin_save_feature_settings_after'
 		);
 	}
@@ -1528,14 +1528,14 @@ function bb_members_fire_deprecated_save_hooks( $feature_id, $settings, $saved )
 	 * Fires after xprofile settings have been saved.
 	 *
 	 * @since BuddyBoss 1.0.0
-	 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_admin_save_feature_settings_after'} with feature_id='members'.
+	 * @deprecated BuddyBoss 3.0.0 Use {@see 'bb_admin_save_feature_settings_after'} with feature_id='members'.
 	 *
 	 * @param string $tab_name The tab name.
 	 */
 	do_action_deprecated(
 		'bp_admin_tab_setting_saved',
 		array( 'bp-xprofile' ),
-		'BuddyBoss [BBVERSION]',
+		'BuddyBoss 3.0.0',
 		'bb_admin_save_feature_settings_after'
 	);
 
@@ -1545,14 +1545,14 @@ function bb_members_fire_deprecated_save_hooks( $feature_id, $settings, $saved )
 		 * Fires after friends settings have been saved.
 		 *
 		 * @since BuddyBoss 1.0.0
-		 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_admin_save_feature_settings_after'} with feature_id='members'.
+		 * @deprecated BuddyBoss 3.0.0 Use {@see 'bb_admin_save_feature_settings_after'} with feature_id='members'.
 		 *
 		 * @param string $tab_name The tab name.
 		 */
 		do_action_deprecated(
 			'bp_admin_tab_setting_saved',
 			array( 'bp-friends' ),
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'bb_admin_save_feature_settings_after'
 		);
 	}
@@ -1575,7 +1575,7 @@ add_action( 'bb_admin_save_feature_settings_after', 'bb_members_fire_deprecated_
  * admin page. Since Settings 2.0 uses a React interface, these rendering hooks
  * no longer fire. Third-party plugins should extend the React UI instead.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_deprecated_xprofile_admin_rendering_hooks() {
 	$deprecated_hooks = array(
@@ -1599,7 +1599,7 @@ function bb_deprecated_xprofile_admin_rendering_hooks() {
 		if ( has_action( $hook ) ) {
 			_deprecated_hook(
 				$hook,
-				'BuddyBoss [BBVERSION]',
+				'BuddyBoss 3.0.0',
 				'',
 				sprintf(
 					/* translators: %s: hook name */
@@ -1621,7 +1621,7 @@ add_action( 'admin_init', 'bb_deprecated_xprofile_admin_rendering_hooks' );
  * Settings 2.0, Profile Fields, Profile Types, Profile Search, and Profile
  * Navigation are managed via the React admin interface.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_deprecated_profile_admin_tab_hooks() {
 	$deprecated_filters = array(
@@ -1633,7 +1633,7 @@ function bb_deprecated_profile_admin_tab_hooks() {
 		if ( has_filter( $hook ) ) {
 			_deprecated_hook(
 				$hook,
-				'BuddyBoss [BBVERSION]',
+				'BuddyBoss 3.0.0',
 				'bb_register_side_panel()',
 				sprintf(
 					/* translators: %s: hook name */
@@ -1654,27 +1654,27 @@ add_action( 'admin_init', 'bb_deprecated_profile_admin_tab_hooks' );
  * This stub prevents fatal errors if third-party code or legacy model class
  * `render_admin_form()` methods call the function.
  *
- * @since BuddyBoss [BBVERSION]
- * @deprecated BuddyBoss [BBVERSION] Use Settings 2.0 side panels via bb_register_side_panel().
+ * @since BuddyBoss 3.0.0
+ * @deprecated BuddyBoss 3.0.0 Use Settings 2.0 side panels via bb_register_side_panel().
  *
  * @param string $active_tab Active tab slug (ignored).
  */
 function bp_core_admin_users_tabs( $active_tab = '' ) {
-	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_register_side_panel()' );
+	_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'bb_register_side_panel()' );
 }
 
 /**
  * Backward-compatible stub for legacy Profile admin tabs data.
  *
- * @since BuddyBoss [BBVERSION]
- * @deprecated BuddyBoss [BBVERSION] Use Settings 2.0 side panels via bb_register_side_panel().
+ * @since BuddyBoss 3.0.0
+ * @deprecated BuddyBoss 3.0.0 Use Settings 2.0 side panels via bb_register_side_panel().
  *
  * @param string $active_tab Active tab slug (ignored).
  *
  * @return array Empty array.
  */
 function bp_core_get_users_admin_tabs( $active_tab = '' ) {
-	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_register_side_panel()' );
+	_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'bb_register_side_panel()' );
 
 	return array();
 }
@@ -1685,13 +1685,13 @@ function bp_core_get_users_admin_tabs( $active_tab = '' ) {
  * Called from BP_XProfile_Field::render_admin_form(). No longer needed since
  * field type selection is handled by the Settings 2.0 React modal.
  *
- * @since BuddyBoss [BBVERSION]
- * @deprecated BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
+ * @deprecated BuddyBoss 3.0.0
  *
  * @param string $select_field_type Currently selected field type.
  */
 function bp_xprofile_admin_form_field_types( $select_field_type = '' ) {
-	_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]' );
+	_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0' );
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -1707,7 +1707,7 @@ function bp_xprofile_admin_form_field_types( $select_field_type = '' ) {
  * that call add_section()/add_field() on the argument.
  *
  * @since BuddyBoss 1.2.6
- * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_forums_after_register_settings_fields'} instead.
+ * @deprecated BuddyBoss 3.0.0 Use {@see 'bb_forums_after_register_settings_fields'} instead.
  */
 add_action(
 	'bb_forums_after_register_settings_fields',
@@ -1731,7 +1731,7 @@ add_action(
 					public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 				},
 			),
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'bb_forums_after_register_settings_fields'
 		);
 	}
@@ -1742,7 +1742,7 @@ add_action(
  * hooks when forums settings are saved via Settings 2.0.
  *
  * @since BuddyBoss 1.0.0
- * @deprecated BuddyBoss [BBVERSION] Use Settings 2.0 per-field sanitize/validate callbacks.
+ * @deprecated BuddyBoss 3.0.0 Use Settings 2.0 per-field sanitize/validate callbacks.
  */
 add_action(
 	'bb_forums_after_save_settings',
@@ -1750,14 +1750,14 @@ add_action(
 		do_action_deprecated(
 			'bp_admin_tab_setting_save',
 			array( 'bp-forums' ),
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'bb_forums_after_save_settings'
 		);
 
 		do_action_deprecated(
 			'bp_admin_tab_setting_saved',
 			array( 'bp-forums' ),
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'bb_forums_after_save_settings'
 		);
 	}
@@ -1773,7 +1773,7 @@ add_action(
  * wrapper notifies developers to use bb_register_feature_section() instead.
  *
  * @since bbPress (r4001)
- * @deprecated BuddyBoss [BBVERSION] Use {@see bb_register_feature_section()} to register forum settings sections.
+ * @deprecated BuddyBoss 3.0.0 Use {@see bb_register_feature_section()} to register forum settings sections.
  */
 add_action(
 	'bb_forums_after_register_settings_fields',
@@ -1781,7 +1781,7 @@ add_action(
 		apply_filters_deprecated(
 			'bbp_admin_get_settings_sections',
 			array( array() ),
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'bb_register_feature_section()'
 		);
 	}
@@ -1797,7 +1797,7 @@ add_action(
  * wrapper notifies developers to use bb_register_feature_field() instead.
  *
  * @since bbPress (r4001)
- * @deprecated BuddyBoss [BBVERSION] Use {@see bb_register_feature_field()} to register forum settings fields.
+ * @deprecated BuddyBoss 3.0.0 Use {@see bb_register_feature_field()} to register forum settings fields.
  */
 add_action(
 	'bb_forums_after_register_settings_fields',
@@ -1805,7 +1805,7 @@ add_action(
 		apply_filters_deprecated(
 			'bbp_admin_get_settings_fields',
 			array( array() ),
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'bb_register_feature_field()'
 		);
 	}
@@ -1822,7 +1822,7 @@ add_action(
  * use bb_register_feature_field() instead.
  *
  * @since bbPress (r4001)
- * @deprecated BuddyBoss [BBVERSION] Use {@see bb_register_feature_field()} to register forum settings fields.
+ * @deprecated BuddyBoss 3.0.0 Use {@see bb_register_feature_field()} to register forum settings fields.
  */
 add_action(
 	'bb_forums_after_register_settings_fields',
@@ -1830,7 +1830,7 @@ add_action(
 		apply_filters_deprecated(
 			'bbp_admin_get_settings_fields_for_section',
 			array( array(), '' ),
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'bb_register_feature_field()'
 		);
 	}
@@ -1847,12 +1847,12 @@ if ( ! function_exists( 'bbp_admin_get_settings_sections' ) ) {
 	 * Get the bbPress admin settings sections.
 	 *
 	 * @since bbPress (r4001)
-	 * @deprecated BuddyBoss [BBVERSION] Forum settings are now managed by Settings 2.0.
+	 * @deprecated BuddyBoss 3.0.0 Forum settings are now managed by Settings 2.0.
 	 *
 	 * @return array Empty array.
 	 */
 	function bbp_admin_get_settings_sections() {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Forums feature (bb_admin_settings_register_forums_feature)' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Forums feature (bb_admin_settings_register_forums_feature)' );
 
 		return array();
 	}
@@ -1863,12 +1863,12 @@ if ( ! function_exists( 'bbp_admin_get_settings_fields' ) ) {
 	 * Get the bbPress admin settings fields.
 	 *
 	 * @since bbPress (r4001)
-	 * @deprecated BuddyBoss [BBVERSION] Forum settings are now managed by Settings 2.0.
+	 * @deprecated BuddyBoss 3.0.0 Forum settings are now managed by Settings 2.0.
 	 *
 	 * @return array Empty array.
 	 */
 	function bbp_admin_get_settings_fields() {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Forums feature (bb_admin_settings_register_forums_feature)' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Forums feature (bb_admin_settings_register_forums_feature)' );
 
 		return array();
 	}
@@ -1879,14 +1879,14 @@ if ( ! function_exists( 'bbp_admin_get_settings_fields_for_section' ) ) {
 	 * Get the bbPress admin settings fields for a specific section.
 	 *
 	 * @since bbPress (r4001)
-	 * @deprecated BuddyBoss [BBVERSION] Forum settings are now managed by Settings 2.0.
+	 * @deprecated BuddyBoss 3.0.0 Forum settings are now managed by Settings 2.0.
 	 *
 	 * @param string $section_id Section ID.
 	 *
 	 * @return array Empty array.
 	 */
 	function bbp_admin_get_settings_fields_for_section( $section_id = '' ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
-		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Forums feature (bb_admin_settings_register_forums_feature)' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Forums feature (bb_admin_settings_register_forums_feature)' );
 
 		return array();
 	}
@@ -1902,12 +1902,12 @@ if ( ! function_exists( 'bbp_admin_get_settings_fields_for_section' ) ) {
  * Deprecated: Topic suggest AJAX handler.
  *
  * @since bbPress (r4261)
- * @deprecated BuddyBoss [BBVERSION] Use bb_admin_discussion_autocomplete instead.
+ * @deprecated BuddyBoss 3.0.0 Use bb_admin_discussion_autocomplete instead.
  */
 add_action(
 	'wp_ajax_bbp_suggest_topic',
 	static function () {
-		_deprecated_function( 'bbp_suggest_topic AJAX action', 'BuddyBoss [BBVERSION]', 'bb_admin_discussion_autocomplete' );
+		_deprecated_function( 'bbp_suggest_topic AJAX action', 'BuddyBoss 3.0.0', 'bb_admin_discussion_autocomplete' );
 		wp_send_json_error( array( 'message' => __( 'This endpoint has been deprecated. Use bb_admin_discussion_autocomplete instead.', 'buddyboss' ) ) );
 	}
 );
@@ -1916,12 +1916,12 @@ add_action(
  * Deprecated: Reply suggest AJAX handler.
  *
  * @since BuddyBoss 1.0.0
- * @deprecated BuddyBoss [BBVERSION] Use bb_admin_reply_autocomplete instead.
+ * @deprecated BuddyBoss 3.0.0 Use bb_admin_reply_autocomplete instead.
  */
 add_action(
 	'wp_ajax_bbp_suggest_reply',
 	static function () {
-		_deprecated_function( 'bbp_suggest_reply AJAX action', 'BuddyBoss [BBVERSION]', 'bb_admin_reply_autocomplete' );
+		_deprecated_function( 'bbp_suggest_reply AJAX action', 'BuddyBoss 3.0.0', 'bb_admin_reply_autocomplete' );
 		wp_send_json_error( array( 'message' => __( 'This endpoint has been deprecated. Use bb_admin_reply_autocomplete instead.', 'buddyboss' ) ) );
 	}
 );
@@ -1930,12 +1930,12 @@ add_action(
  * Deprecated: User suggest AJAX handler.
  *
  * @since bbPress (r5014)
- * @deprecated BuddyBoss [BBVERSION] Use standard WordPress user search instead.
+ * @deprecated BuddyBoss 3.0.0 Use standard WordPress user search instead.
  */
 add_action(
 	'wp_ajax_bbp_suggest_user',
 	static function () {
-		_deprecated_function( 'bbp_suggest_user AJAX action', 'BuddyBoss [BBVERSION]', 'WordPress user search' );
+		_deprecated_function( 'bbp_suggest_user AJAX action', 'BuddyBoss 3.0.0', 'WordPress user search' );
 		wp_send_json_error( array( 'message' => __( 'This endpoint has been deprecated.', 'buddyboss' ) ) );
 	}
 );
@@ -1952,8 +1952,8 @@ add_action(
  * no longer uses that class, so a no-op stub is passed to satisfy callbacks
  * (e.g. Pro extensions) that call add_section()/add_field() on the argument.
  *
- * @since BuddyBoss [BBVERSION]
- * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_notifications_after_register_settings_fields'} instead.
+ * @since BuddyBoss 3.0.0
+ * @deprecated BuddyBoss 3.0.0 Use {@see 'bb_notifications_after_register_settings_fields'} instead.
  */
 add_action(
 	'bb_notifications_after_register_settings_fields',
@@ -1977,7 +1977,7 @@ add_action(
 					public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 				},
 			),
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'bb_notifications_after_register_settings_fields'
 		);
 	}
@@ -1992,8 +1992,8 @@ add_action(
  * `bb_register_feature_field()` instead, so this fires with an empty array
  * solely to trigger deprecation notices for third-party code still filtering it.
  *
- * @since BuddyBoss [BBVERSION]
- * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_notifications_web_push_after_settings_fields'} instead.
+ * @since BuddyBoss 3.0.0
+ * @deprecated BuddyBoss 3.0.0 Use {@see 'bb_notifications_web_push_after_settings_fields'} instead.
  */
 add_action(
 	'bb_notifications_web_push_after_settings_fields',
@@ -2001,7 +2001,7 @@ add_action(
 		apply_filters_deprecated(
 			'bb_notification_web_push_notification_settings',
 			array( array() ),
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'bb_notifications_web_push_after_settings_fields'
 		);
 	}
@@ -2014,7 +2014,7 @@ add_action(
  * Follows the same pattern as `bb_media_fire_deprecated_save_hooks()` and
  * `bb_members_fire_deprecated_save_hooks()`.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $feature_id Feature ID.
  * @param array  $settings   Full submitted settings.
@@ -2029,14 +2029,14 @@ function bb_notifications_fire_deprecated_save_hooks( $feature_id, $settings, $s
 	 * Fires before the notification settings are saved.
 	 *
 	 * @since BuddyBoss 1.9.3
-	 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_admin_save_feature_settings_after'} with feature_id='notifications'.
+	 * @deprecated BuddyBoss 3.0.0 Use {@see 'bb_admin_save_feature_settings_after'} with feature_id='notifications'.
 	 *
 	 * @param string $tab_name The tab name.
 	 */
 	do_action_deprecated(
 		'bp_admin_tab_setting_save',
 		array( 'bp-notifications' ),
-		'BuddyBoss [BBVERSION]',
+		'BuddyBoss 3.0.0',
 		'bb_admin_save_feature_settings_after'
 	);
 
@@ -2044,14 +2044,14 @@ function bb_notifications_fire_deprecated_save_hooks( $feature_id, $settings, $s
 	 * Fires after the notification settings have been saved.
 	 *
 	 * @since BuddyBoss 1.9.3
-	 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_admin_save_feature_settings_after'} with feature_id='notifications'.
+	 * @deprecated BuddyBoss 3.0.0 Use {@see 'bb_admin_save_feature_settings_after'} with feature_id='notifications'.
 	 *
 	 * @param string $tab_name The tab name.
 	 */
 	do_action_deprecated(
 		'bp_admin_tab_setting_saved',
 		array( 'bp-notifications' ),
-		'BuddyBoss [BBVERSION]',
+		'BuddyBoss 3.0.0',
 		'bb_admin_save_feature_settings_after'
 	);
 }
@@ -2069,17 +2069,17 @@ if ( ! function_exists( 'bb_notification_get_settings_sections' ) ) {
 	 * Get the Notification settings sections.
 	 *
 	 * @since BuddyBoss 1.9.3
-	 * @deprecated BuddyBoss [BBVERSION] Notification settings migrated to Settings 2.0.
+	 * @deprecated BuddyBoss 3.0.0 Notification settings migrated to Settings 2.0.
 	 *
 	 * @return array Empty array.
 	 */
 	function bb_notification_get_settings_sections() {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 feature registration' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 feature registration' );
 
 		return apply_filters_deprecated(
 			'bb_notification_get_settings_sections',
 			array( array() ),
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'Settings 2.0 feature registration'
 		);
 	}
@@ -2090,17 +2090,17 @@ if ( ! function_exists( 'bb_notification_get_settings_fields' ) ) {
 	 * Get all the notification settings fields.
 	 *
 	 * @since BuddyBoss 1.9.3
-	 * @deprecated BuddyBoss [BBVERSION] Notification settings migrated to Settings 2.0.
+	 * @deprecated BuddyBoss 3.0.0 Notification settings migrated to Settings 2.0.
 	 *
 	 * @return array Empty array.
 	 */
 	function bb_notification_get_settings_fields() {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 feature registration' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 feature registration' );
 
 		return apply_filters_deprecated(
 			'bb_notification_get_settings_fields',
 			array( array() ),
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'Settings 2.0 feature registration'
 		);
 	}
@@ -2111,19 +2111,19 @@ if ( ! function_exists( 'bb_notification_get_settings_fields_for_section' ) ) {
 	 * Get settings fields by section.
 	 *
 	 * @since BuddyBoss 1.9.3
-	 * @deprecated BuddyBoss [BBVERSION] Notification settings migrated to Settings 2.0.
+	 * @deprecated BuddyBoss 3.0.0 Notification settings migrated to Settings 2.0.
 	 *
 	 * @param string $section_id Section id.
 	 *
 	 * @return array Empty array.
 	 */
 	function bb_notification_get_settings_fields_for_section( $section_id = '' ) {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 feature registration' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 feature registration' );
 
 		return apply_filters_deprecated(
 			'bb_notification_get_settings_fields_for_section',
 			array( array(), $section_id ),
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'Settings 2.0 feature registration'
 		);
 	}
@@ -2138,13 +2138,13 @@ if ( ! function_exists( 'bb_activate_notification' ) ) {
 	 * field type instead.
 	 *
 	 * @since BuddyBoss 1.9.3
-	 * @deprecated BuddyBoss [BBVERSION] Use Settings 2.0 notification_types field type.
+	 * @deprecated BuddyBoss 3.0.0 Use Settings 2.0 notification_types field type.
 	 *
 	 * @param array $field   Notification field definition.
 	 * @param bool  $checked Whether the checkbox is checked.
 	 */
 	function bb_activate_notification( $field, $checked ) {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 notification_types field type' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 notification_types field type' );
 	}
 }
 
@@ -2159,12 +2159,12 @@ if ( ! function_exists( 'bp_moderation_get_settings_sections' ) ) {
 	 * Get the Moderation settings sections.
 	 *
 	 * @since BuddyBoss 1.5.6
-	 * @deprecated BuddyBoss [BBVERSION] Moderation settings are now managed by Settings 2.0.
+	 * @deprecated BuddyBoss 3.0.0 Moderation settings are now managed by Settings 2.0.
 	 *
 	 * @return array Empty array.
 	 */
 	function bp_moderation_get_settings_sections() {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Moderation feature (bb_admin_settings_register_moderation_feature)' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Moderation feature (bb_admin_settings_register_moderation_feature)' );
 
 		$sections = array();
 
@@ -2172,11 +2172,11 @@ if ( ! function_exists( 'bp_moderation_get_settings_sections' ) ) {
 		 * Filter the Moderation settings sections.
 		 *
 		 * @since BuddyBoss 1.5.6
-		 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_moderation_after_register_settings_fields'} to register additional settings.
+		 * @deprecated BuddyBoss 3.0.0 Use {@see 'bb_moderation_after_register_settings_fields'} to register additional settings.
 		 *
 		 * @param array $sections Moderation settings sections.
 		 */
-		return (array) apply_filters_deprecated( 'bp_moderation_get_settings_sections', array( $sections ), 'BuddyBoss [BBVERSION]', 'bb_moderation_after_register_settings_fields' );
+		return (array) apply_filters_deprecated( 'bp_moderation_get_settings_sections', array( $sections ), 'BuddyBoss 3.0.0', 'bb_moderation_after_register_settings_fields' );
 	}
 }
 
@@ -2185,12 +2185,12 @@ if ( ! function_exists( 'bp_moderation_get_settings_fields' ) ) {
 	 * Get all of the Moderation settings fields.
 	 *
 	 * @since BuddyBoss 1.5.6
-	 * @deprecated BuddyBoss [BBVERSION] Moderation settings are now managed by Settings 2.0.
+	 * @deprecated BuddyBoss 3.0.0 Moderation settings are now managed by Settings 2.0.
 	 *
 	 * @return array Empty array.
 	 */
 	function bp_moderation_get_settings_fields() {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Moderation feature (bb_admin_settings_register_moderation_feature)' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Moderation feature (bb_admin_settings_register_moderation_feature)' );
 
 		$fields = array();
 
@@ -2198,11 +2198,11 @@ if ( ! function_exists( 'bp_moderation_get_settings_fields' ) ) {
 		 * Filter all Moderation settings fields.
 		 *
 		 * @since BuddyBoss 1.5.6
-		 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_moderation_after_register_settings_fields'} to register additional fields.
+		 * @deprecated BuddyBoss 3.0.0 Use {@see 'bb_moderation_after_register_settings_fields'} to register additional fields.
 		 *
 		 * @param array $fields Moderation settings fields grouped by section.
 		 */
-		return (array) apply_filters_deprecated( 'bp_moderation_get_settings_fields', array( $fields ), 'BuddyBoss [BBVERSION]', 'bb_moderation_after_register_settings_fields' );
+		return (array) apply_filters_deprecated( 'bp_moderation_get_settings_fields', array( $fields ), 'BuddyBoss 3.0.0', 'bb_moderation_after_register_settings_fields' );
 	}
 }
 
@@ -2211,14 +2211,14 @@ if ( ! function_exists( 'bp_moderation_get_settings_fields_for_section' ) ) {
 	 * Get Moderation settings fields for a section.
 	 *
 	 * @since BuddyBoss 1.5.6
-	 * @deprecated BuddyBoss [BBVERSION] Moderation settings are now managed by Settings 2.0.
+	 * @deprecated BuddyBoss 3.0.0 Moderation settings are now managed by Settings 2.0.
 	 *
 	 * @param string $section_id Section ID.
 	 *
 	 * @return array Empty array.
 	 */
 	function bp_moderation_get_settings_fields_for_section( $section_id = '' ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
-		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Moderation feature (bb_admin_settings_register_moderation_feature)' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Moderation feature (bb_admin_settings_register_moderation_feature)' );
 
 		$fields = array();
 
@@ -2226,12 +2226,12 @@ if ( ! function_exists( 'bp_moderation_get_settings_fields_for_section' ) ) {
 		 * Filter Moderation settings fields for a specific section.
 		 *
 		 * @since BuddyBoss 1.5.6
-		 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_moderation_after_register_settings_fields'} to register additional fields.
+		 * @deprecated BuddyBoss 3.0.0 Use {@see 'bb_moderation_after_register_settings_fields'} to register additional fields.
 		 *
 		 * @param array  $fields     Settings fields for the section.
 		 * @param string $section_id The section ID.
 		 */
-		return (array) apply_filters_deprecated( 'bp_moderation_get_settings_fields_for_section', array( $fields, $section_id ), 'BuddyBoss [BBVERSION]', 'bb_moderation_after_register_settings_fields' );
+		return (array) apply_filters_deprecated( 'bp_moderation_get_settings_fields_for_section', array( $fields, $section_id ), 'BuddyBoss 3.0.0', 'bb_moderation_after_register_settings_fields' );
 	}
 }
 
@@ -2244,7 +2244,7 @@ if ( ! function_exists( 'bp_moderation_get_settings_fields_for_section' ) ) {
  * that call add_section()/add_field() on the argument.
  *
  * @since BuddyBoss 1.5.6
- * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_moderation_after_register_settings_fields'} instead.
+ * @deprecated BuddyBoss 3.0.0 Use {@see 'bb_moderation_after_register_settings_fields'} instead.
  */
 add_action(
 	'bb_moderation_after_register_settings_fields',
@@ -2268,7 +2268,7 @@ add_action(
 					public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 				},
 			),
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'bb_moderation_after_register_settings_fields'
 		);
 	}
@@ -2279,10 +2279,10 @@ if ( ! function_exists( 'bp_moderation_admin_category_listing_add_tab' ) ) {
 	 * Legacy navigation tab for Moderation > Reporting Categories.
 	 *
 	 * @since BuddyBoss 1.5.6
-	 * @deprecated BuddyBoss [BBVERSION] Reporting Categories are now managed by Settings 2.0.
+	 * @deprecated BuddyBoss 3.0.0 Reporting Categories are now managed by Settings 2.0.
 	 */
 	function bp_moderation_admin_category_listing_add_tab() {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Moderation feature (bb-admin-settings-moderation.php)' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Moderation feature (bb-admin-settings-moderation.php)' );
 	}
 }
 
@@ -2297,10 +2297,10 @@ if ( ! function_exists( 'bp_admin_setting_callback_member_invite_email_subject' 
 	 * Legacy render callback for the Email Subject invite setting.
 	 *
 	 * @since BuddyBoss 1.0.0
-	 * @deprecated BuddyBoss [BBVERSION] Invites settings are now managed by Settings 2.0.
+	 * @deprecated BuddyBoss 3.0.0 Invites settings are now managed by Settings 2.0.
 	 */
 	function bp_admin_setting_callback_member_invite_email_subject() {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Invites feature (bb-admin-settings-invites.php)' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Invites feature (bb-admin-settings-invites.php)' );
 	}
 }
 
@@ -2309,10 +2309,10 @@ if ( ! function_exists( 'bp_admin_setting_callback_member_invite_email_content' 
 	 * Legacy render callback for the Email Content invite setting.
 	 *
 	 * @since BuddyBoss 1.0.0
-	 * @deprecated BuddyBoss [BBVERSION] Invites settings are now managed by Settings 2.0.
+	 * @deprecated BuddyBoss 3.0.0 Invites settings are now managed by Settings 2.0.
 	 */
 	function bp_admin_setting_callback_member_invite_email_content() {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Invites feature (bb-admin-settings-invites.php)' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Invites feature (bb-admin-settings-invites.php)' );
 	}
 }
 
@@ -2321,10 +2321,10 @@ if ( ! function_exists( 'bp_admin_setting_callback_member_invite_member_type' ) 
 	 * Legacy render callback for the Set Profile Type invite setting.
 	 *
 	 * @since BuddyBoss 1.0.0
-	 * @deprecated BuddyBoss [BBVERSION] Invites settings are now managed by Settings 2.0.
+	 * @deprecated BuddyBoss 3.0.0 Invites settings are now managed by Settings 2.0.
 	 */
 	function bp_admin_setting_callback_member_invite_member_type() {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Invites feature (bb-admin-settings-invites.php)' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Invites feature (bb-admin-settings-invites.php)' );
 	}
 }
 
@@ -2333,12 +2333,12 @@ if ( ! function_exists( 'bp_admin_setting_callback_enable_send_invite_member_typ
 	 * Legacy render callback for per-profile-type invite setting.
 	 *
 	 * @since BuddyBoss 1.0.0
-	 * @deprecated BuddyBoss [BBVERSION] Invites settings are now managed by Settings 2.0.
+	 * @deprecated BuddyBoss 3.0.0 Invites settings are now managed by Settings 2.0.
 	 *
 	 * @param array $args Field arguments.
 	 */
 	function bp_admin_setting_callback_enable_send_invite_member_type( $args = array() ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
-		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Invites feature (bb-admin-settings-invites.php)' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Invites feature (bb-admin-settings-invites.php)' );
 	}
 }
 
@@ -2347,10 +2347,10 @@ if ( ! function_exists( 'bp_email_invites_tutorial' ) ) {
 	 * Legacy tutorial link for Email Invites section.
 	 *
 	 * @since BuddyBoss 1.0.0
-	 * @deprecated BuddyBoss [BBVERSION] Invites settings are now managed by Settings 2.0.
+	 * @deprecated BuddyBoss 3.0.0 Invites settings are now managed by Settings 2.0.
 	 */
 	function bp_email_invites_tutorial() {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Invites feature (bb-admin-settings-invites.php)' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Invites feature (bb-admin-settings-invites.php)' );
 	}
 }
 
@@ -2366,7 +2366,7 @@ if ( ! function_exists( 'bp_email_invites_tutorial' ) ) {
  * is saved. This bridge ensures those hooks still fire when invites settings
  * are saved via Settings 2.0.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $feature_id Feature ID.
  * @param array  $settings   Full submitted settings.
@@ -2384,12 +2384,12 @@ function bb_invites_fire_deprecated_save_hooks( $feature_id, $settings, $saved )
 	 *
 	 * @param string $tab_name The tab name.
 	 *
-	 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_admin_save_feature_settings_after'} with feature_id='invites'.
+	 * @deprecated BuddyBoss 3.0.0 Use {@see 'bb_admin_save_feature_settings_after'} with feature_id='invites'.
 	 */
 	do_action_deprecated(
 		'bp_admin_tab_setting_save',
 		array( 'bp-invites' ),
-		'BuddyBoss [BBVERSION]',
+		'BuddyBoss 3.0.0',
 		'bb_admin_save_feature_settings_after'
 	);
 
@@ -2400,12 +2400,12 @@ function bb_invites_fire_deprecated_save_hooks( $feature_id, $settings, $saved )
 	 *
 	 * @param string $tab_name The tab name.
 	 *
-	 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_admin_save_feature_settings_after'} with feature_id='invites'.
+	 * @deprecated BuddyBoss 3.0.0 Use {@see 'bb_admin_save_feature_settings_after'} with feature_id='invites'.
 	 */
 	do_action_deprecated(
 		'bp_admin_tab_setting_saved',
 		array( 'bp-invites' ),
-		'BuddyBoss [BBVERSION]',
+		'BuddyBoss 3.0.0',
 		'bb_admin_save_feature_settings_after'
 	);
 }
@@ -2423,12 +2423,12 @@ if ( ! function_exists( 'bp_core_admin_emails_tabs' ) ) {
 	 * Legacy admin tab output for BuddyBoss > Emails screens.
 	 *
 	 * @since BuddyBoss 1.0.0
-	 * @deprecated BuddyBoss [BBVERSION] Email Templates are now managed by Settings 2.0.
+	 * @deprecated BuddyBoss 3.0.0 Email Templates are now managed by Settings 2.0.
 	 *
 	 * @param string $active_tab Name of the active tab.
 	 */
 	function bp_core_admin_emails_tabs( $active_tab = '' ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
-		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Emails feature (bb-admin-settings-emails.php)' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Emails feature (bb-admin-settings-emails.php)' );
 	}
 }
 
@@ -2437,13 +2437,13 @@ if ( ! function_exists( 'bp_core_get_emails_admin_tabs' ) ) {
 	 * Legacy tab data builder for BuddyBoss > Emails screens.
 	 *
 	 * @since BuddyBoss 1.0.0
-	 * @deprecated BuddyBoss [BBVERSION] Email Templates are now managed by Settings 2.0.
+	 * @deprecated BuddyBoss 3.0.0 Email Templates are now managed by Settings 2.0.
 	 *
 	 * @param string $active_tab Name of the active tab.
 	 * @return array Empty array (legacy data no longer applicable).
 	 */
 	function bp_core_get_emails_admin_tabs( $active_tab = '' ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
-		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Emails feature (bb-admin-settings-emails.php)' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Emails feature (bb-admin-settings-emails.php)' );
 		return array();
 	}
 }
@@ -2453,7 +2453,7 @@ if ( ! function_exists( 'bp_core_get_emails_admin_tabs' ) ) {
  *
  * Follows the same pattern as `bb_advanced_fire_deprecated_save_hooks()`.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $feature_id Feature ID.
  * @param array  $settings   Full submitted settings.
@@ -2468,21 +2468,21 @@ function bb_registration_fire_deprecated_save_hooks( $feature_id, $settings, $sa
 	 * Fires when registration settings are saved (legacy bridge).
 	 *
 	 * @since      BuddyBoss 1.0.0
-	 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_admin_save_feature_settings_after'} with feature_id='registration'.
+	 * @deprecated BuddyBoss 3.0.0 Use {@see 'bb_admin_save_feature_settings_after'} with feature_id='registration'.
 	 *
 	 * @param string $tab_name Tab name.
 	 */
-	do_action_deprecated( 'bp_admin_tab_setting_save', array( 'bp-registration' ), 'BuddyBoss [BBVERSION]', 'bb_admin_save_feature_settings_after' );
+	do_action_deprecated( 'bp_admin_tab_setting_save', array( 'bp-registration' ), 'BuddyBoss 3.0.0', 'bb_admin_save_feature_settings_after' );
 
 	/**
 	 * Fires after registration settings have been saved (legacy bridge).
 	 *
 	 * @since      BuddyBoss 1.0.0
-	 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_admin_save_feature_settings_after'} with feature_id='registration'.
+	 * @deprecated BuddyBoss 3.0.0 Use {@see 'bb_admin_save_feature_settings_after'} with feature_id='registration'.
 	 *
 	 * @param string $tab_name Tab name.
 	 */
-	do_action_deprecated( 'bp_admin_tab_setting_saved', array( 'bp-registration' ), 'BuddyBoss [BBVERSION]', 'bb_admin_save_feature_settings_after' );
+	do_action_deprecated( 'bp_admin_tab_setting_saved', array( 'bp-registration' ), 'BuddyBoss 3.0.0', 'bb_admin_save_feature_settings_after' );
 }
 add_action( 'bb_admin_save_feature_settings_after', 'bb_registration_fire_deprecated_save_hooks', 99, 3 );
 
@@ -2497,10 +2497,10 @@ if ( ! function_exists( 'bp_admin_setting_callback_register' ) ) {
 	 * Legacy render callback for the Enable Registration checkbox.
 	 *
 	 * @since BuddyPress 1.6.0
-	 * @deprecated BuddyBoss [BBVERSION] Registration settings are now managed by Settings 2.0.
+	 * @deprecated BuddyBoss 3.0.0 Registration settings are now managed by Settings 2.0.
 	 */
 	function bp_admin_setting_callback_register() {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Registration feature (bb-admin-settings-registration.php)' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Registration feature (bb-admin-settings-registration.php)' );
 	}
 }
 
@@ -2509,10 +2509,10 @@ if ( ! function_exists( 'bp_admin_setting_callback_register_show_confirm_email' 
 	 * Legacy render callback for the Confirm Email checkbox.
 	 *
 	 * @since BuddyBoss 1.1.6
-	 * @deprecated BuddyBoss [BBVERSION] Registration settings are now managed by Settings 2.0.
+	 * @deprecated BuddyBoss 3.0.0 Registration settings are now managed by Settings 2.0.
 	 */
 	function bp_admin_setting_callback_register_show_confirm_email() {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Registration feature (bb-admin-settings-registration.php)' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Registration feature (bb-admin-settings-registration.php)' );
 	}
 }
 
@@ -2521,10 +2521,10 @@ if ( ! function_exists( 'bb_admin_setting_callback_register_show_legal_agreement
 	 * Legacy render callback for the Legal Agreement checkbox.
 	 *
 	 * @since BuddyBoss 1.5.8.3
-	 * @deprecated BuddyBoss [BBVERSION] Registration settings are now managed by Settings 2.0.
+	 * @deprecated BuddyBoss 3.0.0 Registration settings are now managed by Settings 2.0.
 	 */
 	function bb_admin_setting_callback_register_show_legal_agreement() {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Registration feature (bb-admin-settings-registration.php)' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Registration feature (bb-admin-settings-registration.php)' );
 	}
 }
 
@@ -2533,10 +2533,10 @@ if ( ! function_exists( 'bp_admin_setting_callback_register_show_confirm_passwor
 	 * Legacy render callback for the Confirm Password checkbox.
 	 *
 	 * @since BuddyBoss 1.1.6
-	 * @deprecated BuddyBoss [BBVERSION] Registration settings are now managed by Settings 2.0.
+	 * @deprecated BuddyBoss 3.0.0 Registration settings are now managed by Settings 2.0.
 	 */
 	function bp_admin_setting_callback_register_show_confirm_password() {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Registration feature (bb-admin-settings-registration.php)' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Registration feature (bb-admin-settings-registration.php)' );
 	}
 }
 
@@ -2545,10 +2545,10 @@ if ( ! function_exists( 'bp_admin_setting_callback_register_allow_custom_registr
 	 * Legacy render callback for the Registration Form select.
 	 *
 	 * @since BuddyBoss 1.2.8
-	 * @deprecated BuddyBoss [BBVERSION] Registration settings are now managed by Settings 2.0.
+	 * @deprecated BuddyBoss 3.0.0 Registration settings are now managed by Settings 2.0.
 	 */
 	function bp_admin_setting_callback_register_allow_custom_registration() {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Registration feature (bb-admin-settings-registration.php)' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Registration feature (bb-admin-settings-registration.php)' );
 	}
 }
 
@@ -2557,10 +2557,10 @@ if ( ! function_exists( 'bp_admin_setting_callback_register_page_url' ) ) {
 	 * Legacy render callback for the Custom Registration Page URL input.
 	 *
 	 * @since BuddyBoss 1.2.8
-	 * @deprecated BuddyBoss [BBVERSION] Registration settings are now managed by Settings 2.0.
+	 * @deprecated BuddyBoss 3.0.0 Registration settings are now managed by Settings 2.0.
 	 */
 	function bp_admin_setting_callback_register_page_url() {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Registration feature (bb-admin-settings-registration.php)' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Registration feature (bb-admin-settings-registration.php)' );
 	}
 }
 
@@ -2569,10 +2569,10 @@ if ( ! function_exists( 'bp_admin_registration_setting_tutorial' ) ) {
 	 * Legacy tutorial link for the Registration settings section.
 	 *
 	 * @since BuddyBoss 1.2.8
-	 * @deprecated BuddyBoss [BBVERSION] Registration settings are now managed by Settings 2.0.
+	 * @deprecated BuddyBoss 3.0.0 Registration settings are now managed by Settings 2.0.
 	 */
 	function bp_admin_registration_setting_tutorial() {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Settings 2.0 Registration feature (bb-admin-settings-registration.php)' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0', 'Settings 2.0 Registration feature (bb-admin-settings-registration.php)' );
 	}
 }
 
@@ -2587,7 +2587,7 @@ if ( ! function_exists( 'bp_admin_registration_setting_tutorial' ) ) {
  * could add custom fields. Settings 2.0 fires `bb_advanced_after_register_settings_fields`
  * instead. This bridge ensures legacy listeners still fire (with a deprecation notice).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 add_action(
 	'bb_advanced_after_register_settings_fields',
@@ -2596,7 +2596,7 @@ add_action(
 		 * Fires after General tab settings fields are registered.
 		 *
 		 * @since BuddyBoss 1.2.6
-		 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_advanced_after_register_settings_fields'} instead.
+		 * @deprecated BuddyBoss 3.0.0 Use {@see 'bb_advanced_after_register_settings_fields'} instead.
 		 *
 		 * @param object $stub No-op stub (legacy passed BP_Admin_Setting_General instance).
 		 */
@@ -2618,7 +2618,7 @@ add_action(
 					public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 				},
 			),
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'bb_advanced_after_register_settings_fields'
 		);
 	}
@@ -2631,7 +2631,7 @@ add_action(
 /**
  * Fire deprecated `bp_admin_setting_performance_register_fields` hook.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 add_action(
 	'bb_advanced_after_register_settings_fields',
@@ -2640,7 +2640,7 @@ add_action(
 		 * Fires after Performance/Advanced tab settings fields are registered.
 		 *
 		 * @since BuddyBoss 2.5.80
-		 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_advanced_after_register_settings_fields'} instead.
+		 * @deprecated BuddyBoss 3.0.0 Use {@see 'bb_advanced_after_register_settings_fields'} instead.
 		 *
 		 * @param object $stub No-op stub (legacy passed BP_Admin_Setting_Performance instance).
 		 */
@@ -2662,7 +2662,7 @@ add_action(
 					public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 				},
 			),
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'bb_advanced_after_register_settings_fields'
 		);
 	}
@@ -2675,7 +2675,7 @@ add_action(
  * `bp-general` and `bp-advanced` tab names so third-party plugins that hooked
  * into these get proper deprecation notices.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $feature_id Feature ID.
  * @param array  $settings   Submitted settings.
@@ -2690,41 +2690,41 @@ function bb_advanced_fire_deprecated_save_hooks( $feature_id, $settings, $saved 
 	 * Fires before General tab settings are saved.
 	 *
 	 * @since BuddyBoss 1.0.0
-	 * @deprecated BuddyBoss [BBVERSION]
+	 * @deprecated BuddyBoss 3.0.0
 	 *
 	 * @param string $tab_name Tab name.
 	 */
-	do_action_deprecated( 'bp_admin_tab_setting_save', array( 'bp-general' ), 'BuddyBoss [BBVERSION]', 'bb_admin_save_feature_settings_after' );
+	do_action_deprecated( 'bp_admin_tab_setting_save', array( 'bp-general' ), 'BuddyBoss 3.0.0', 'bb_admin_save_feature_settings_after' );
 
 	/**
 	 * Fires after General tab settings are saved.
 	 *
 	 * @since BuddyBoss 1.0.0
-	 * @deprecated BuddyBoss [BBVERSION]
+	 * @deprecated BuddyBoss 3.0.0
 	 *
 	 * @param string $tab_name Tab name.
 	 */
-	do_action_deprecated( 'bp_admin_tab_setting_saved', array( 'bp-general' ), 'BuddyBoss [BBVERSION]', 'bb_admin_save_feature_settings_after' );
+	do_action_deprecated( 'bp_admin_tab_setting_saved', array( 'bp-general' ), 'BuddyBoss 3.0.0', 'bb_admin_save_feature_settings_after' );
 
 	/**
 	 * Fires before Advanced tab settings are saved.
 	 *
 	 * @since BuddyBoss 2.5.80
-	 * @deprecated BuddyBoss [BBVERSION]
+	 * @deprecated BuddyBoss 3.0.0
 	 *
 	 * @param string $tab_name Tab name.
 	 */
-	do_action_deprecated( 'bp_admin_tab_setting_save', array( 'bp-advanced' ), 'BuddyBoss [BBVERSION]', 'bb_admin_save_feature_settings_after' );
+	do_action_deprecated( 'bp_admin_tab_setting_save', array( 'bp-advanced' ), 'BuddyBoss 3.0.0', 'bb_admin_save_feature_settings_after' );
 
 	/**
 	 * Fires after Advanced tab settings are saved.
 	 *
 	 * @since BuddyBoss 2.5.80
-	 * @deprecated BuddyBoss [BBVERSION]
+	 * @deprecated BuddyBoss 3.0.0
 	 *
 	 * @param string $tab_name Tab name.
 	 */
-	do_action_deprecated( 'bp_admin_tab_setting_saved', array( 'bp-advanced' ), 'BuddyBoss [BBVERSION]', 'bb_admin_save_feature_settings_after' );
+	do_action_deprecated( 'bp_admin_tab_setting_saved', array( 'bp-advanced' ), 'BuddyBoss 3.0.0', 'bb_admin_save_feature_settings_after' );
 }
 add_action( 'bb_admin_save_feature_settings_after', 'bb_advanced_fire_deprecated_save_hooks', 99, 3 );
 
@@ -2741,25 +2741,25 @@ if ( ! function_exists( 'bb_labs_get_settings_sections' ) ) {
 	 * Register the labs settings section.
 	 *
 	 * @since      BuddyBoss 1.9.3
-	 * @deprecated BuddyBoss [BBVERSION] The Labs tab has been removed.
+	 * @deprecated BuddyBoss 3.0.0 The Labs tab has been removed.
 	 *
 	 * @return array Empty array.
 	 */
 	function bb_labs_get_settings_sections() {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0' );
 
 		/**
 		 * Filter the (now empty) Labs settings sections.
 		 *
 		 * @since      BuddyBoss 1.9.3
-		 * @deprecated BuddyBoss [BBVERSION] The Labs tab has been removed.
+		 * @deprecated BuddyBoss 3.0.0 The Labs tab has been removed.
 		 *
 		 * @param array $settings Labs sections.
 		 */
 		return (array) apply_filters_deprecated(
 			'bb_labs_get_settings_sections',
 			array( array() ),
-			'BuddyBoss [BBVERSION]'
+			'BuddyBoss 3.0.0'
 		);
 	}
 }
@@ -2769,19 +2769,19 @@ if ( ! function_exists( 'bb_labs_get_settings_fields_for_section' ) ) {
 	 * Get Labs settings fields by section.
 	 *
 	 * @since      BuddyBoss 1.9.3
-	 * @deprecated BuddyBoss [BBVERSION] The Labs tab has been removed.
+	 * @deprecated BuddyBoss 3.0.0 The Labs tab has been removed.
 	 *
 	 * @param string $section_id Section id.
 	 *
 	 * @return array Empty array.
 	 */
 	function bb_labs_get_settings_fields_for_section( $section_id = '' ) {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0' );
 
 		return (array) apply_filters_deprecated(
 			'bb_labs_get_settings_fields_for_section',
 			array( array(), $section_id ),
-			'BuddyBoss [BBVERSION]'
+			'BuddyBoss 3.0.0'
 		);
 	}
 }
@@ -2791,17 +2791,17 @@ if ( ! function_exists( 'bb_labs_get_settings_fields' ) ) {
 	 * Get all of the Labs settings fields.
 	 *
 	 * @since      BuddyBoss 1.9.3
-	 * @deprecated BuddyBoss [BBVERSION] The Labs tab has been removed.
+	 * @deprecated BuddyBoss 3.0.0 The Labs tab has been removed.
 	 *
 	 * @return array Empty array.
 	 */
 	function bb_labs_get_settings_fields() {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0' );
 
 		return (array) apply_filters_deprecated(
 			'bb_labs_get_settings_fields',
 			array( array() ),
-			'BuddyBoss [BBVERSION]'
+			'BuddyBoss 3.0.0'
 		);
 	}
 }
@@ -2811,10 +2811,10 @@ if ( ! function_exists( 'bb_labs_info_section_callback' ) ) {
 	 * Labs settings section info callback.
 	 *
 	 * @since      BuddyBoss 1.9.3
-	 * @deprecated BuddyBoss [BBVERSION] The Labs tab has been removed.
+	 * @deprecated BuddyBoss 3.0.0 The Labs tab has been removed.
 	 */
 	function bb_labs_info_section_callback() {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0' );
 	}
 }
 
@@ -2823,10 +2823,10 @@ if ( ! function_exists( 'bb_labs_no_settings_callback' ) ) {
 	 * Labs empty-state callback.
 	 *
 	 * @since      BuddyBoss 2.1.5.1
-	 * @deprecated BuddyBoss [BBVERSION] The Labs tab has been removed.
+	 * @deprecated BuddyBoss 3.0.0 The Labs tab has been removed.
 	 */
 	function bb_labs_no_settings_callback() {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0' );
 	}
 }
 
@@ -2850,11 +2850,11 @@ if ( ! function_exists( 'bp_core_admin_components_settings' ) ) {
 	 * Renders the legacy Component Setup admin panel.
 	 *
 	 * @since      BuddyPress 1.6.0
-	 * @deprecated BuddyBoss [BBVERSION] The legacy Components admin page has been removed in Settings 2.0.
+	 * @deprecated BuddyBoss 3.0.0 The legacy Components admin page has been removed in Settings 2.0.
 	 *                                   Components are now managed as feature cards in the Settings grid.
 	 */
 	function bp_core_admin_components_settings() {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0' );
 	}
 }
 
@@ -2863,10 +2863,10 @@ if ( ! function_exists( 'bp_core_admin_components_options' ) ) {
 	 * Renders the legacy Component Setup option markup.
 	 *
 	 * @since      BuddyPress 1.6.0
-	 * @deprecated BuddyBoss [BBVERSION] The legacy Components admin page has been removed in Settings 2.0.
+	 * @deprecated BuddyBoss 3.0.0 The legacy Components admin page has been removed in Settings 2.0.
 	 */
 	function bp_core_admin_components_options() {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0' );
 	}
 }
 
@@ -2875,11 +2875,11 @@ if ( ! function_exists( 'bp_core_admin_components_settings_handler' ) ) {
 	 * Handles legacy Component Setup form submissions.
 	 *
 	 * @since      BuddyPress 1.6.0
-	 * @deprecated BuddyBoss [BBVERSION] The legacy Components admin page has been removed in Settings 2.0.
+	 * @deprecated BuddyBoss 3.0.0 The legacy Components admin page has been removed in Settings 2.0.
 	 *                                   Feature toggles are saved via the bb_admin_toggle_feature AJAX endpoint.
 	 */
 	function bp_core_admin_components_settings_handler() {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0' );
 	}
 }
 
@@ -2888,10 +2888,10 @@ if ( ! function_exists( 'bp_core_admin_components_activation_handler' ) ) {
 	 * Handles individual component activation requests from the legacy admin page.
 	 *
 	 * @since      BuddyPress 2.0.0
-	 * @deprecated BuddyBoss [BBVERSION] The legacy Components admin page has been removed in Settings 2.0.
+	 * @deprecated BuddyBoss 3.0.0 The legacy Components admin page has been removed in Settings 2.0.
 	 */
 	function bp_core_admin_components_activation_handler() {
-		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]' );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss 3.0.0' );
 	}
 }
 
@@ -2900,7 +2900,7 @@ if ( ! function_exists( 'bp_core_admin_components_activation_handler' ) ) {
 // `bp_register_learndash_integration()` used to live in
 // `bp-integrations/learndash/bp-learndash-loader.php` and registered the
 // bundled integration on `bp_setup_integrations`. The bundled integration was
-// removed in BuddyBoss [BBVERSION]; the addon registers its own copy via
+// removed in BuddyBoss 3.0.0; the addon registers its own copy via
 // `bb_learndash_register_integration()`. Any third-party code that called
 // `bp_register_learndash_integration()` directly will hit this stub instead
 // of a fatal.
@@ -2911,7 +2911,7 @@ if ( ! function_exists( 'bp_register_learndash_integration' ) ) {
 	 * Deprecated: previously registered the bundled LearnDash integration.
 	 *
 	 * @since      BuddyBoss 1.0.0
-	 * @deprecated BuddyBoss [BBVERSION] The LearnDash integration moved to the
+	 * @deprecated BuddyBoss 3.0.0 The LearnDash integration moved to the
 	 *             standalone `buddyboss-learndash` addon, which registers
 	 *             itself via `bb_learndash_register_integration()`.
 	 *
@@ -2920,7 +2920,7 @@ if ( ! function_exists( 'bp_register_learndash_integration' ) ) {
 	function bp_register_learndash_integration() {
 		_deprecated_function(
 			__FUNCTION__,
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'bb_learndash_register_integration() in the buddyboss-learndash addon'
 		);
 	}
@@ -2929,7 +2929,7 @@ if ( ! function_exists( 'bp_register_learndash_integration' ) ) {
 // ──────────────────────────────────────────────────────────────────────────────
 // ReadyLaunch legacy admin page deprecated functions.
 // The standalone `admin.php?page=bb-readylaunch` page was retired in
-// BuddyBoss [BBVERSION]. Its URL now redirects to the Appearance feature in
+// BuddyBoss 3.0.0. Its URL now redirects to the Appearance feature in
 // Settings 2.0 (`admin.php?page=bb-settings&tab=appearance&panel=general`).
 // These stubs prevent fatals in third-party code that still calls the helpers.
 //
@@ -2949,14 +2949,14 @@ if ( ! function_exists( 'bb_readylaunch_settings_page_html' ) ) {
 	 * Render the legacy ReadyLaunch React Settings page.
 	 *
 	 * @since BuddyBoss 2.9.00
-	 * @deprecated BuddyBoss [BBVERSION] ReadyLaunch settings moved to Settings 2.0 Appearance feature.
+	 * @deprecated BuddyBoss 3.0.0 ReadyLaunch settings moved to Settings 2.0 Appearance feature.
 	 *
 	 * @return void
 	 */
 	function bb_readylaunch_settings_page_html() {
 		_deprecated_function(
 			__FUNCTION__,
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'Settings 2.0 Appearance feature (admin.php?page=bb-settings&tab=appearance)'
 		);
 	}
@@ -2967,14 +2967,14 @@ if ( ! function_exists( 'bb_readylaunch_register_enqueue_style_script' ) ) {
 	 * Register legacy ReadyLaunch React Settings page styles + scripts.
 	 *
 	 * @since BuddyBoss 2.9.00
-	 * @deprecated BuddyBoss [BBVERSION] ReadyLaunch admin page retired.
+	 * @deprecated BuddyBoss 3.0.0 ReadyLaunch admin page retired.
 	 *
 	 * @return void
 	 */
 	function bb_readylaunch_register_enqueue_style_script() {
 		_deprecated_function(
 			__FUNCTION__,
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'Settings 2.0 Appearance feature (admin.php?page=bb-settings&tab=appearance)'
 		);
 	}
@@ -2985,7 +2985,7 @@ if ( ! function_exists( 'bb_readylaunch_settings_page_enqueue_style_script' ) ) 
 	 * Enqueue legacy ReadyLaunch React Settings page styles + scripts.
 	 *
 	 * @since BuddyBoss 2.9.00
-	 * @deprecated BuddyBoss [BBVERSION] ReadyLaunch admin page retired.
+	 * @deprecated BuddyBoss 3.0.0 ReadyLaunch admin page retired.
 	 *
 	 * @param string $admin_page The admin page hook suffix (unused, kept for signature compat).
 	 * @return void
@@ -2993,7 +2993,7 @@ if ( ! function_exists( 'bb_readylaunch_settings_page_enqueue_style_script' ) ) 
 	function bb_readylaunch_settings_page_enqueue_style_script( $admin_page ) {
 		_deprecated_function(
 			__FUNCTION__,
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'Settings 2.0 Appearance feature (admin.php?page=bb-settings&tab=appearance)'
 		);
 		unset( $admin_page );
@@ -3013,7 +3013,7 @@ if ( ! function_exists( 'bb_readylaunch_settings_page_enqueue_style_script' ) ) 
  * that call add_section()/add_field() on the argument.
  *
  * @since BuddyBoss 1.0.0
- * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_invites_after_register_settings_fields'} instead.
+ * @deprecated BuddyBoss 3.0.0 Use {@see 'bb_invites_after_register_settings_fields'} instead.
  */
 add_action(
 	'bb_invites_after_register_settings_fields',
@@ -3037,7 +3037,7 @@ add_action(
 					public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 				},
 			),
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'bb_invites_after_register_settings_fields'
 		);
 	}
@@ -3046,7 +3046,7 @@ add_action(
 // ──────────────────────────────────────────────────────────────────────────────
 // Legacy bp-pages admin screen deprecated functions.
 // The standalone `admin.php?page=bp-pages` page was retired in BuddyBoss
-// [BBVERSION] in favour of Appearance → Pages inside the Settings 2.0 React
+// 3.0.0 in favour of Appearance → Pages inside the Settings 2.0 React
 // admin. The `?page=bp-pages` URL now redirects via
 // `bb_redirect_bp_settings_before_permission_check()`. Each function below
 // replaces its original counterpart from the deleted
@@ -3063,12 +3063,12 @@ if ( ! function_exists( 'bp_core_admin_pages_settings' ) ) {
 	 * Render the legacy Pages Setup admin panel.
 	 *
 	 * @since      BuddyBoss 1.0.0
-	 * @deprecated BuddyBoss [BBVERSION] Moved to Settings 2.0 Appearance → Pages.
+	 * @deprecated BuddyBoss 3.0.0 Moved to Settings 2.0 Appearance → Pages.
 	 */
 	function bp_core_admin_pages_settings() {
 		_deprecated_function(
 			__FUNCTION__,
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'Settings 2.0 Appearance → Pages (admin.php?page=bb-settings&tab=appearance&panel=pages)'
 		);
 	}
@@ -3079,14 +3079,14 @@ if ( ! function_exists( 'bp_custom_pages_do_settings_sections' ) ) {
 	 * Output the legacy Pages settings sections.
 	 *
 	 * @since      BuddyBoss 1.0.0
-	 * @deprecated BuddyBoss [BBVERSION] Replaced by React rendering in SettingsForm.js.
+	 * @deprecated BuddyBoss 3.0.0 Replaced by React rendering in SettingsForm.js.
 	 *
 	 * @param string $page Legacy settings page slug (unused).
 	 */
 	function bp_custom_pages_do_settings_sections( $page ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- Deprecation stub preserves original signature.
 		_deprecated_function(
 			__FUNCTION__,
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'Settings 2.0 React admin (SettingsForm.js)'
 		);
 	}
@@ -3097,7 +3097,7 @@ if ( ! function_exists( 'bp_custom_pages_do_settings_fields' ) ) {
 	 * Output the legacy Pages settings fields for a section.
 	 *
 	 * @since      BuddyBoss 1.0.0
-	 * @deprecated BuddyBoss [BBVERSION] Replaced by React rendering in SettingsForm.js.
+	 * @deprecated BuddyBoss 3.0.0 Replaced by React rendering in SettingsForm.js.
 	 *
 	 * @param string $page    Legacy settings page slug (unused).
 	 * @param string $section Legacy section slug (unused).
@@ -3105,7 +3105,7 @@ if ( ! function_exists( 'bp_custom_pages_do_settings_fields' ) ) {
 	function bp_custom_pages_do_settings_fields( $page, $section ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter -- Deprecation stub preserves original signature.
 		_deprecated_function(
 			__FUNCTION__,
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'Settings 2.0 React admin (SettingsForm.js)'
 		);
 	}
@@ -3116,12 +3116,12 @@ if ( ! function_exists( 'bp_core_admin_register_page_fields' ) ) {
 	 * Register the legacy Component Pages settings fields.
 	 *
 	 * @since      BuddyBoss 1.0.0
-	 * @deprecated BuddyBoss [BBVERSION] Fields now registered via bb_register_feature_field in pages-panel.php.
+	 * @deprecated BuddyBoss 3.0.0 Fields now registered via bb_register_feature_field in pages-panel.php.
 	 */
 	function bp_core_admin_register_page_fields() {
 		_deprecated_function(
 			__FUNCTION__,
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'bb_appearance_register_pages_fields (Settings 2.0 Appearance → Pages panel)'
 		);
 	}
@@ -3132,12 +3132,12 @@ if ( ! function_exists( 'bp_core_admin_register_registration_page_fields' ) ) {
 	 * Register the legacy Registration Pages settings fields.
 	 *
 	 * @since      BuddyBoss 1.0.0
-	 * @deprecated BuddyBoss [BBVERSION] Fields now registered via bb_register_feature_field in pages-panel.php.
+	 * @deprecated BuddyBoss 3.0.0 Fields now registered via bb_register_feature_field in pages-panel.php.
 	 */
 	function bp_core_admin_register_registration_page_fields() {
 		_deprecated_function(
 			__FUNCTION__,
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'bb_appearance_register_pages_fields (Settings 2.0 Appearance → Pages panel)'
 		);
 	}
@@ -3148,12 +3148,12 @@ if ( ! function_exists( 'bp_core_admin_directory_pages_description' ) ) {
 	 * Print the legacy Component Pages section description.
 	 *
 	 * @since      BuddyBoss 1.0.0
-	 * @deprecated BuddyBoss [BBVERSION] Description is now a plain `description` arg on the component_pages section.
+	 * @deprecated BuddyBoss 3.0.0 Description is now a plain `description` arg on the component_pages section.
 	 */
 	function bp_core_admin_directory_pages_description() {
 		_deprecated_function(
 			__FUNCTION__,
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'Settings 2.0 section description arg'
 		);
 	}
@@ -3164,12 +3164,12 @@ if ( ! function_exists( 'bp_core_admin_registration_pages_description' ) ) {
 	 * Print the legacy Registration Pages section description.
 	 *
 	 * @since      BuddyBoss 1.0.0
-	 * @deprecated BuddyBoss [BBVERSION] Description logic moved to bb_appearance_get_registration_section_meta().
+	 * @deprecated BuddyBoss 3.0.0 Description logic moved to bb_appearance_get_registration_section_meta().
 	 */
 	function bp_core_admin_registration_pages_description() {
 		_deprecated_function(
 			__FUNCTION__,
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'bb_appearance_get_registration_section_meta'
 		);
 	}
@@ -3180,14 +3180,14 @@ if ( ! function_exists( 'bp_admin_setting_callback_page_directory_dropdown' ) ) 
 	 * Render the legacy page-directory dropdown control.
 	 *
 	 * @since      BuddyBoss 1.0.0
-	 * @deprecated BuddyBoss [BBVERSION] Dropdown is now the `async_select` field type driven by bb_admin_search_pages_list.
+	 * @deprecated BuddyBoss 3.0.0 Dropdown is now the `async_select` field type driven by bb_admin_search_pages_list.
 	 *
 	 * @param array $args Legacy callback args (unused).
 	 */
 	function bp_admin_setting_callback_page_directory_dropdown( $args ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- Deprecation stub preserves original signature.
 		_deprecated_function(
 			__FUNCTION__,
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'async_select field type + bb_admin_search_pages_list AJAX handler'
 		);
 	}
@@ -3198,14 +3198,14 @@ if ( ! function_exists( 'bp_core_admin_maybe_save_pages_settings' ) ) {
 	 * Save handler for the retired Pages admin screen.
 	 *
 	 * @since      BuddyBoss 1.0.0
-	 * @deprecated BuddyBoss [BBVERSION] Save path moved to bb_appearance_pages_save_side_effects().
+	 * @deprecated BuddyBoss 3.0.0 Save path moved to bb_appearance_pages_save_side_effects().
 	 *
 	 * @return false Always returns false — legacy signature preserved.
 	 */
 	function bp_core_admin_maybe_save_pages_settings() {
 		_deprecated_function(
 			__FUNCTION__,
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'bb_appearance_pages_save_side_effects'
 		);
 		return false;
@@ -3217,12 +3217,12 @@ if ( ! function_exists( 'bb_registration_page_tutorial' ) ) {
 	 * Render the legacy "View Tutorial" button on the Registration section.
 	 *
 	 * @since      BuddyBoss 1.5.8
-	 * @deprecated BuddyBoss [BBVERSION] Tutorial link removed — help_url args on section/panel replace the inline button.
+	 * @deprecated BuddyBoss 3.0.0 Tutorial link removed — help_url args on section/panel replace the inline button.
 	 */
 	function bb_registration_page_tutorial() {
 		_deprecated_function(
 			__FUNCTION__,
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'help_url arg on bb_register_feature_section'
 		);
 	}
@@ -3257,7 +3257,7 @@ if ( ! function_exists( 'bb_registration_page_tutorial' ) ) {
  * that call add_section()/add_field() on the argument.
  *
  * @since BuddyBoss 1.7.0
- * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_reactions_after_register_settings_fields'} instead.
+ * @deprecated BuddyBoss 3.0.0 Use {@see 'bb_reactions_after_register_settings_fields'} instead.
  */
 add_action(
 	'bb_reactions_after_register_settings_fields',
@@ -3281,7 +3281,7 @@ add_action(
 					public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 				},
 			),
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'bb_reactions_after_register_settings_fields'
 		);
 	}
@@ -3294,7 +3294,7 @@ add_action(
  * bb_ variant introduced for the Performance tab in 1.5.x.
  *
  * @since BuddyBoss 1.5.0
- * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_advanced_after_register_settings_fields'} instead.
+ * @deprecated BuddyBoss 3.0.0 Use {@see 'bb_advanced_after_register_settings_fields'} instead.
  */
 add_action(
 	'bb_register_features',
@@ -3321,7 +3321,7 @@ add_action(
 					public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 				},
 			),
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'bb_advanced_after_register_settings_fields'
 		);
 	},
@@ -3335,7 +3335,7 @@ add_action(
  * least see the deprecation notice.
  *
  * @since BuddyBoss 2.3.6
- * @deprecated BuddyBoss [BBVERSION] Labs panel removed; no replacement.
+ * @deprecated BuddyBoss 3.0.0 Labs panel removed; no replacement.
  */
 add_action(
 	'bb_register_features',
@@ -3362,7 +3362,7 @@ add_action(
 					public function add_field( ...$args ) {} // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 				},
 			),
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			''
 		);
 	},

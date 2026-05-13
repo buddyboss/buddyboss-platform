@@ -5,7 +5,7 @@
  * Handles AJAX requests for Flagged Members list
  * in the Settings 2.0 admin interface.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  * @package BuddyBoss\Core\Administration
  */
 
@@ -15,14 +15,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class BB_Admin_Flagged_Members_Ajax
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 class BB_Admin_Flagged_Members_Ajax {
 
 	/**
 	 * Nonce action (shared with BB_Admin_Settings_Ajax).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @var string
 	 */
@@ -31,7 +31,7 @@ class BB_Admin_Flagged_Members_Ajax {
 	/**
 	 * Current status filter for WHERE conditions.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @var string
 	 */
@@ -40,7 +40,7 @@ class BB_Admin_Flagged_Members_Ajax {
 	/**
 	 * Constructor.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function __construct() {
 		$this->bb_register_ajax_handlers();
@@ -49,7 +49,7 @@ class BB_Admin_Flagged_Members_Ajax {
 	/**
 	 * Register AJAX handlers.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	private function bb_register_ajax_handlers() {
 		add_action( 'wp_ajax_bb_admin_get_flagged_members', array( $this, 'bb_get_flagged_members' ) );
@@ -62,7 +62,7 @@ class BB_Admin_Flagged_Members_Ajax {
 	/**
 	 * Verify AJAX request (nonce + capability).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	private function bb_verify_request() {
 		if ( ! bp_current_user_can( 'bp_moderate' ) ) {
@@ -88,7 +88,7 @@ class BB_Admin_Flagged_Members_Ajax {
 	 * `bp-moderation-filters.php` and `BP_Moderation_Abstract`, which both
 	 * read `modbypass` from `INPUT_GET`.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param int $user_id User ID.
 	 *
@@ -108,7 +108,7 @@ class BB_Admin_Flagged_Members_Ajax {
 	/**
 	 * Get flagged members list.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function bb_get_flagged_members() {
 		$this->bb_verify_request();
@@ -217,7 +217,7 @@ class BB_Admin_Flagged_Members_Ajax {
 	/**
 	 * Get counts for each status filter option using a single query.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return array Associative array with 'all', 'suspended', 'active' counts.
 	 */
@@ -248,7 +248,7 @@ class BB_Admin_Flagged_Members_Ajax {
 	/**
 	 * Get member report details (reporters + blockers).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function bb_get_member_report() {
 		$this->bb_verify_request();
@@ -391,7 +391,7 @@ class BB_Admin_Flagged_Members_Ajax {
 	/**
 	 * Suspend a member.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function bb_suspend_member() {
 		$this->bb_verify_request();
@@ -421,7 +421,7 @@ class BB_Admin_Flagged_Members_Ajax {
 	/**
 	 * Unsuspend a member.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function bb_unsuspend_member() {
 		$this->bb_verify_request();
@@ -448,7 +448,7 @@ class BB_Admin_Flagged_Members_Ajax {
 	 *
 	 * Supported actions: suspend, unsuspend.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function bb_bulk_action() {
 		$this->bb_verify_request();
@@ -504,7 +504,7 @@ class BB_Admin_Flagged_Members_Ajax {
 	 * Shows items with reported, user_report, or hide_sitewide set — replicates
 	 * the old BP_Moderation_List_Table logic.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param array $where_conditions Current conditions.
 	 * @param array $r                Parsed arguments.

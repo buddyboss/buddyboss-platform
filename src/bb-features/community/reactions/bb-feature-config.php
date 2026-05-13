@@ -5,7 +5,7 @@
  * Registers the Reactions feature in the BuddyBoss Feature Registry.
  *
  * @package BuddyBoss\Features\Community\Reactions
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.

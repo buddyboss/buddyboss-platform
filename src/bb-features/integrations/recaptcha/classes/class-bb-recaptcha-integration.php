@@ -37,7 +37,7 @@ class BB_Recaptcha_Integration extends BP_Integration {
 	/**
 	 * Check if the reCAPTCHA feature is enabled in New Settings.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return bool True if feature is enabled.
 	 */
@@ -56,7 +56,7 @@ class BB_Recaptcha_Integration extends BP_Integration {
 	/**
 	 * Get the base directory for this integration.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return string Integration base directory path.
 	 */
@@ -67,7 +67,7 @@ class BB_Recaptcha_Integration extends BP_Integration {
 	/**
 	 * Get the base URL for this integration.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return string Integration base URL.
 	 */
@@ -83,7 +83,7 @@ class BB_Recaptcha_Integration extends BP_Integration {
 	 * is enabled — they register the frontend hooks (login form, registration, etc.).
 	 *
 	 * @since BuddyBoss 2.5.60
-	 * @since BuddyBoss [BBVERSION] Simplified path resolution, added feature gate.
+	 * @since BuddyBoss 3.0.0 Simplified path resolution, added feature gate.
 	 *
 	 * @param array $includes Array of file paths to include.
 	 */
@@ -113,7 +113,7 @@ class BB_Recaptcha_Integration extends BP_Integration {
 	 * via New Settings at bb-settings&tab=recaptcha.
 	 *
 	 * @since BuddyBoss 2.5.60
-	 * @since BuddyBoss [BBVERSION] Removed legacy integration tab.
+	 * @since BuddyBoss 3.0.0 Removed legacy integration tab.
 	 */
 	public function setup_admin_integration_tab() {
 		// No-op: Settings managed via Settings 2.0.

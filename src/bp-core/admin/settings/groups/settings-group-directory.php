@@ -5,7 +5,7 @@
  * Registers sections and fields for the Group Directory side panel.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register Group Directory panel sections and fields.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_groups_register_directory_panel_fields() {
 
@@ -182,7 +182,7 @@ function bb_groups_register_directory_panel_fields() {
 	 * Fires after Group Directory section fields are registered.
 	 * Allows third-party extensions to add more fields.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	do_action( 'bb_groups_settings_after_directory_fields' );
 }

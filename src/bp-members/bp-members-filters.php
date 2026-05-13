@@ -1044,7 +1044,7 @@ function bb_profile_card_template() {
  * AJAX handler that needs this order still removes the filter immediately
  * after its single fetch as defense-in-depth.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string   $orderby The current ORDER BY clause produced by WP_Query.
  * @param WP_Query $query   The query object being filtered.

@@ -6,7 +6,7 @@
  * Feature → Side Panels → Sections → Fields
  *
  * @package BuddyBoss\Features\Community\Reactions
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -17,7 +17,7 @@ require_once __DIR__ . '/callbacks.php';
 /**
  * Register Reactions feature settings in Feature Registry.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_admin_settings_register_reactions_settings() {
 
@@ -155,7 +155,7 @@ function bb_admin_settings_register_reactions_settings() {
 	 * Fires to allow the Pro plugin to register conversion notice.
 	 * Pro plugin checks for unconverted likes and registers the notice if needed.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	do_action( 'bb_reactions_register_conversion_notice' );
 
@@ -191,7 +191,7 @@ function bb_admin_settings_register_reactions_settings() {
 	 * Reuse the same filter so third-party code that modifies the
 	 * legacy settings page also applies to the React UI.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param array $reactions_modes Reaction mode options.
 	 */
@@ -276,7 +276,7 @@ function bb_admin_settings_register_reactions_settings() {
 	 * Fires after reaction settings fields are registered.
 	 * Allows third-party extensions to add more fields.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	do_action( 'bb_reactions_after_register_settings_fields' );
 }

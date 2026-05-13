@@ -6,7 +6,7 @@
  * This includes the dynamic notification types table.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register Notification Types panel sections and fields.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return void
  */
@@ -116,7 +116,7 @@ function bb_notifications_register_types_panel_fields() {
 	/**
 	 * Fires after Notification Types section fields are registered.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	do_action( 'bb_notifications_types_after_settings_fields' );
 }

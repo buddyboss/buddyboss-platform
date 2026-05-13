@@ -5,7 +5,7 @@
  * Handles AJAX requests for the Email Invites list screen
  * in the Settings 2.0 admin interface.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.0.0
  * @package BuddyBoss\Core\Administration
  */
 
@@ -15,14 +15,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class BB_Admin_Invites_Ajax
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 class BB_Admin_Invites_Ajax {
 
 	/**
 	 * Nonce action (shared with BB_Admin_Settings_Ajax).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @var string
 	 */
@@ -31,7 +31,7 @@ class BB_Admin_Invites_Ajax {
 	/**
 	 * Maximum items per page for paginated endpoints.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @var int
 	 */
@@ -40,7 +40,7 @@ class BB_Admin_Invites_Ajax {
 	/**
 	 * Maximum IDs for bulk operations.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @var int
 	 */
@@ -49,7 +49,7 @@ class BB_Admin_Invites_Ajax {
 	/**
 	 * Constructor.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function __construct() {
 		$this->bb_register_ajax_handlers();
@@ -58,7 +58,7 @@ class BB_Admin_Invites_Ajax {
 	/**
 	 * Register AJAX handlers.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -70,7 +70,7 @@ class BB_Admin_Invites_Ajax {
 	/**
 	 * Verify AJAX request (nonce + capability).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -81,7 +81,7 @@ class BB_Admin_Invites_Ajax {
 	/**
 	 * Get paginated list of email invites.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -232,7 +232,7 @@ class BB_Admin_Invites_Ajax {
 		/**
 		 * Filters the invites list response before sending.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param array $response Response data.
 		 * @param array $query_args WP_Query arguments used.
@@ -245,7 +245,7 @@ class BB_Admin_Invites_Ajax {
 	/**
 	 * Handle bulk action on invites (revoke).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -333,7 +333,7 @@ class BB_Admin_Invites_Ajax {
 	/**
 	 * Get view counts for the filter dropdown.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return array View counts keyed by filter slug.
 	 */
@@ -373,7 +373,7 @@ class BB_Admin_Invites_Ajax {
 	/**
 	 * Add DISTINCT to invite search query.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string   $distinct The DISTINCT clause.
 	 * @param WP_Query $query    The WP_Query instance.
@@ -391,7 +391,7 @@ class BB_Admin_Invites_Ajax {
 	/**
 	 * Add JOIN for invite meta search.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string   $join  The JOIN clause.
 	 * @param WP_Query $query The WP_Query instance.
@@ -413,7 +413,7 @@ class BB_Admin_Invites_Ajax {
 	 *
 	 * Searches invitee name and email meta fields.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string   $where The WHERE clause.
 	 * @param WP_Query $query The WP_Query instance.

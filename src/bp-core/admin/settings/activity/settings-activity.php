@@ -5,7 +5,7 @@
  * Registers sections and fields for the Activity Settings side panel.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register Activity Settings panel sections and fields.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param array $edit_time_options Edit time options array built in bb-admin-settings-activity.php.
  */
@@ -220,7 +220,7 @@ function bb_activity_register_settings_panel_fields( $edit_time_options = array(
 	 * Fires after Activity Settings section fields are registered.
 	 * Allows third-party extensions to add more fields.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	do_action( 'bb_activity_settings_after_settings_fields' );
 

@@ -68,7 +68,7 @@
  *     in their registration callback.
  *
  * @package BuddyBoss\Core\Administration
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.0.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -91,7 +91,7 @@ require_once dirname( __DIR__ ) . '/legacy-meta-bridge-utils.php';
  * static, so all component bridges share one parse per HTML hash without
  * having to coordinate state.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return array Reference to mutable state array.
  */
@@ -115,7 +115,7 @@ function &bb_legacy_groups_bridge_state() {
  *   - Recursion guard (prevents infinite loop if a captured callback itself
  *     triggers bb_register_groups_meta_fields).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param BB_Admin_Meta_Field_Registry $registry  Registry instance.
  * @param string                       $component Component identifier ('groups').
@@ -150,7 +150,7 @@ add_action( 'bb_register_groups_meta_fields', 'bb_legacy_groups_meta_bridge_regi
 /**
  * Inner implementation, separated so the recursion guard wrapping is clean.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param BB_Admin_Meta_Field_Registry $registry  Registry instance.
  * @param string                       $component Component identifier.
@@ -202,7 +202,7 @@ function bb_legacy_groups_meta_bridge_register_inner( $registry, $component ) {
 	 * this list will not be surfaced as React fields — useful when Platform
 	 * or Pro already registers the same UI through the canonical registry.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string[] $skip_box_ids Metabox IDs to skip.
 	 */
@@ -264,7 +264,7 @@ function bb_legacy_groups_meta_bridge_register_inner( $registry, $component ) {
  * registered get_value/save_value callbacks — only the parse step is cached.
  * Plugin lifecycle hooks invalidate the cache.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param BB_Admin_Meta_Field_Registry $registry  Registry instance.
  * @param string                       $component Component identifier.
@@ -315,7 +315,7 @@ function bb_legacy_groups_bridge_box( $registry, $component, $box, &$order ) {
 		 * tabs (e.g. 'settings', 'members') based on the field name, owning box
 		 * ID, or parsed input descriptor.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param string $tab        Tab slug — defaults to 'details'.
 		 * @param string $input_name $_POST key the field writes to.
@@ -394,7 +394,7 @@ function bb_legacy_groups_bridge_box( $registry, $component, $box, &$order ) {
  * doesn't kill the whole AJAX response. Restores $_GET['gid'] on every
  * exit path.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param array                $box   Metabox descriptor.
  * @param BP_Groups_Group|null $group Group object for re-render, or null.
@@ -475,7 +475,7 @@ function bb_legacy_capture_box_html( $box, $group ) {
  * Build a get_value closure that re-renders the metabox with the real group
  * (cached) and extracts THIS input's current value.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param array  $box  Metabox descriptor.
  * @param string $name Input name attribute.
@@ -502,7 +502,7 @@ function bb_legacy_make_get_value( $box, $name, $type ) {
  * fallback) — avoids double-saving when an extension is also reachable via
  * the canonical registry path.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param int             $group_id Saved group ID.
  * @param BP_Groups_Group $group    Saved group object (unused — signature
@@ -573,7 +573,7 @@ add_action( 'bb_admin_after_save_group', 'bb_legacy_groups_run_extension_saves',
  * Discover registered BP_Group_Extension instances by scanning listeners on
  * the bp_groups_admin_meta_boxes action.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return BP_Group_Extension[] List of registered extension instances.
  */
@@ -616,7 +616,7 @@ function bb_legacy_get_registered_group_extensions() {
  * Fall back to enumerating known box IDs from $wp_meta_boxes and deleting
  * each transient individually, which routes through the object cache.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_legacy_groups_clear_bridge_cache() {
 	if ( wp_using_ext_object_cache() ) {
@@ -674,7 +674,7 @@ add_action( 'switch_theme', 'bb_legacy_groups_clear_bridge_cache' );
  * Plugin authors with custom JS deps can hook the bb_legacy_meta_box_extra_scripts
  * filter to register their own marker → enqueue mapping.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_legacy_groups_auto_enqueue_widget_scripts() {
 	static $did_enqueue = false;
@@ -737,7 +737,7 @@ function bb_legacy_groups_auto_enqueue_widget_scripts() {
 	 *   - 'styles'   optional list of style handles to wp_enqueue_style();
 	 *   - 'callback' optional callable run when at least one detect-string matches.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param array $markers Marker → enqueue mapping.
 	 */

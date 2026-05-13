@@ -1212,10 +1212,10 @@ class BP_Group_Extension {
 	 * Check the nonce, and call the admin_screen_save() method.
 	 *
 	 * @since      BuddyPress 1.8.0
-	 * @deprecated BuddyBoss [BBVERSION] Use BB_Admin_Meta_Field_Registry via bb_register_groups_meta_fields hook instead.
+	 * @deprecated BuddyBoss 3.0.0 Use BB_Admin_Meta_Field_Registry via bb_register_groups_meta_fields hook instead.
 	 */
 	public function call_admin_screen_save() {
-		_deprecated_function( __METHOD__, 'BuddyBoss [BBVERSION]', 'BB_Admin_Meta_Field_Registry::save_fields_data()' );
+		_deprecated_function( __METHOD__, 'BuddyBoss 3.0.0', 'BB_Admin_Meta_Field_Registry::save_fields_data()' );
 		$this->check_nonce( 'admin' );
 		call_user_func( $this->screens['admin']['screen_save_callback'], $this->group_id );
 	}

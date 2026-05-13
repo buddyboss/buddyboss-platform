@@ -7,7 +7,7 @@
  * into the Members feature.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  * Always registered regardless of friends component state.
  * The panel contains a toggle that controls friends component activation.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_members_register_member_connection_panel_fields() {
 
@@ -107,7 +107,7 @@ function bb_members_register_member_connection_panel_fields() {
 	/**
 	 * Fires after Connection Settings section fields are registered.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	do_action( 'bb_members_settings_after_connection_fields' );
 }

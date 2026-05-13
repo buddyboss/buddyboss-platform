@@ -972,7 +972,7 @@ class BB_REST_Reactions_Endpoint extends WP_REST_Controller {
 	 * Return WP_Error if the reactions feature is disabled (Settings 2.0 toggle).
 	 * Ensures API respects the feature toggle for backward compatibility.
 	 *
-	 * @since [BBVERSION]
+	 * @since 3.0.0
 	 *
 	 * @return bool|WP_Error Null if feature is enabled, WP_Error if disabled.
 	 */

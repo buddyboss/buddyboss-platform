@@ -7,7 +7,7 @@
  * full fields via the `bb_activity_after_register_settings_fields` hook.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
  * this helper — panel and section titles are conceptually distinct and a
  * future customization might want them to differ.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return string Translated section title.
  */
@@ -37,7 +37,7 @@ function bb_activity_sharing_section_title() {
  * `bb_activity_sharing_section_title()` so the help link can be updated
  * in one place.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return string Help article ID.
  */
@@ -55,7 +55,7 @@ function bb_activity_sharing_section_help_article() {
  * `bb_activity_sharing_get_section_args()` and
  * `bb_activity_sharing_add_pro_badge_when_no_sharing()` below.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return array Section args (title, order, help_url).
  */
@@ -86,7 +86,7 @@ function bb_activity_sharing_section_base_args() {
  * `bb_register_feature_section()` call with `merge => true`. See
  * `bb_activity_register_sharing_pro_placeholder_fields()`.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return array Section args after filter.
  */
@@ -99,7 +99,7 @@ function bb_activity_sharing_get_section_args() {
 	 * are fixed — this is the section args, not a "register a different
 	 * section" hook.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param array $args {
 	 *     Default section args.
@@ -122,7 +122,7 @@ function bb_activity_sharing_get_section_args() {
  * via a `merge => true` follow-up registration at AJAX time, when license
  * state is settled.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param array $args Default section args.
  * @return array Possibly-modified section args.
@@ -173,7 +173,7 @@ add_filter( 'bb_activity_sharing_section_args', 'bb_activity_sharing_add_pro_bad
  * ships in Sharing versions with the Settings 2.0 path. The class itself has
  * existed since 1.0.0, so `class_exists` alone is not enough.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_activity_register_sharing_panel_fields() {
 
@@ -260,7 +260,7 @@ function bb_activity_register_sharing_panel_fields() {
  * Field option keys match Sharing's own Settings 2.0 registration so values
  * hand over seamlessly once Sharing is active and licensed.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return void
  */

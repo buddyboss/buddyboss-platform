@@ -5,7 +5,7 @@
  * Registers sections and fields for the Registration side panel.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register Registration panel sections and fields.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return void
  */
@@ -267,7 +267,7 @@ function bb_registration_register_panel_fields() {
 	/**
 	 * Fires after registration restrictions section fields are registered.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	do_action( 'bb_registration_after_restrictions_settings_fields' );
 
@@ -364,7 +364,7 @@ function bb_registration_register_panel_fields() {
 	 * Fires after registration general section fields are registered.
 	 * Pro hooks here to enrich the SSO field and add provider cards.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	do_action( 'bb_registration_after_general_settings_fields' );
 }

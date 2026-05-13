@@ -5,7 +5,7 @@
  * Post-save callback functions for Forums feature settings.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * Legacy settings_save() always calls flush_rewrite_rules() because
  * permalink slugs may have changed. This preserves that behavior.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $feature_id Feature ID.
  * @param array  $settings   Full submitted settings.
@@ -56,7 +56,7 @@ function bb_forums_after_save_settings( $feature_id, $settings, $saved ) {
 	 * (`bp_admin_tab_setting_save`, `bp_admin_tab_setting_saved`)
 	 * via wrappers in the deprecation file.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	do_action( 'bb_forums_after_save_settings' );
 }

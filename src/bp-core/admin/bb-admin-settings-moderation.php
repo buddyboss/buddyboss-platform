@@ -6,7 +6,7 @@
  * all Moderation settings (side panels, sections, fields).
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * Avoids repeated get_users() calls within the same request.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return int[] Array of administrator user IDs.
  */
@@ -49,7 +49,7 @@ function bb_moderation_get_admin_user_ids() {
  *
  * Shared between BB_Admin_Flagged_Members_Ajax and BB_Admin_Reported_Content_Ajax.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_moderation_bypass_suspend_filters() {
 	global $moderation_suspend;
@@ -83,7 +83,7 @@ function bb_moderation_bypass_suspend_filters() {
  *
  * Shared between BB_Admin_Flagged_Members_Ajax and BB_Admin_Reported_Content_Ajax.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_moderation_restore_suspend_filters() {
 	global $moderation_suspend;
@@ -118,7 +118,7 @@ function bb_moderation_restore_suspend_filters() {
  * Registers the feature, side panels, and delegates field registration
  * to panel-specific functions.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_admin_settings_register_moderation_feature() {
 
@@ -309,7 +309,7 @@ function bb_admin_settings_register_moderation_feature() {
 	 * Fires after all Moderation settings panels are registered.
 	 * Allows third-party extensions to add more panels or fields.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	do_action( 'bb_moderation_after_register_settings_fields' );
 }

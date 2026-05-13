@@ -340,7 +340,7 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 		}
 
 		// LearnDash Courses and Reports group nav items used to be registered
-		// here inline. As of BuddyBoss [BBVERSION] the buddyboss-learndash
+		// here inline. As of BuddyBoss 3.0.0 the buddyboss-learndash
 		// addon adds them via the existing bp_nouveau_customizer_group_nav_items
 		// filter below — no Platform-side knowledge of LD slugs needed.
 

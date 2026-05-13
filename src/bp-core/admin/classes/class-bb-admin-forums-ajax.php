@@ -5,7 +5,7 @@
  * Handles AJAX requests for Forums CRUD operations
  * in the Settings 2.0 admin interface.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.0.0
  * @package BuddyBoss\Core\Administration
  */
 
@@ -15,14 +15,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class BB_Admin_Forums_Ajax
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 class BB_Admin_Forums_Ajax {
 
 	/**
 	 * Nonce action (shared with BB_Admin_Settings_Ajax).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @var string
 	 */
@@ -31,7 +31,7 @@ class BB_Admin_Forums_Ajax {
 	/**
 	 * Maximum items per page for paginated endpoints.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @var int
 	 */
@@ -40,7 +40,7 @@ class BB_Admin_Forums_Ajax {
 	/**
 	 * Maximum forums for bulk operations.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @var int
 	 */
@@ -49,7 +49,7 @@ class BB_Admin_Forums_Ajax {
 	/**
 	 * Constructor.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function __construct() {
 		$this->bb_register_ajax_handlers();
@@ -65,7 +65,7 @@ class BB_Admin_Forums_Ajax {
 	/**
 	 * Register AJAX handlers.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	private function bb_register_ajax_handlers() {
 		add_action( 'wp_ajax_bb_admin_get_forums', array( $this, 'get_forums' ) );
@@ -85,7 +85,7 @@ class BB_Admin_Forums_Ajax {
 	/**
 	 * Clear the admin forum status counts cache.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function bb_clear_status_counts_cache() {
 		wp_cache_delete( 'bb_admin_forums_status_counts', 'bbpress' );
@@ -106,7 +106,7 @@ class BB_Admin_Forums_Ajax {
 	 * - `bbp_admin_forums_column_headers` (column definitions)
 	 * - `bbp_admin_forums_column_data`    (custom column content)
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -307,7 +307,7 @@ class BB_Admin_Forums_Ajax {
 					 * Fires for custom column data rendering in the forums admin list.
 					 *
 					 * @since bbPress (r2485)
-					 * @since BuddyBoss [BBVERSION] Added to Settings 2.0 AJAX.
+					 * @since BuddyBoss 3.0.0 Added to Settings 2.0 AJAX.
 					 *
 					 * @param string $col_key  Column key.
 					 * @param int    $forum_id Forum ID.
@@ -399,7 +399,7 @@ class BB_Admin_Forums_Ajax {
 		/**
 		 * Filters the full response data for the admin forums list AJAX endpoint.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param array $response Response data array.
 		 */
@@ -411,7 +411,7 @@ class BB_Admin_Forums_Ajax {
 	/**
 	 * Get a single forum for the edit modal.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -457,7 +457,7 @@ class BB_Admin_Forums_Ajax {
 		/**
 		 * Filters the response data for the admin single forum endpoint.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param array   $data  Response data array.
 		 * @param WP_Post $forum The forum post object.
@@ -468,7 +468,7 @@ class BB_Admin_Forums_Ajax {
 	/**
 	 * Create a new forum.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -576,7 +576,7 @@ class BB_Admin_Forums_Ajax {
 		 * via bbp_update_forum() registered in bp-forums/core/actions.php.
 		 * Must fire before bbp_new_forum_post_extras for correct ordering.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param array $forum_args {
 		 *     Array of forum arguments matching legacy bbp_new_forum_handler() signature.
@@ -611,7 +611,7 @@ class BB_Admin_Forums_Ajax {
 		 * Mirrors the legacy bbp_new_forum_post_extras hook for third-party
 		 * plugin compatibility.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param int $forum_id Forum ID.
 		 */
@@ -642,7 +642,7 @@ class BB_Admin_Forums_Ajax {
 	/**
 	 * Update an existing forum.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -793,7 +793,7 @@ class BB_Admin_Forums_Ajax {
 		 * via bbp_update_forum() registered in bp-forums/core/actions.php.
 		 * Must fire before bbp_edit_forum_post_extras for correct ordering.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param array $forum_args {
 		 *     Array of forum arguments matching legacy bbp_edit_forum_handler() signature.
@@ -828,7 +828,7 @@ class BB_Admin_Forums_Ajax {
 		 * Mirrors the legacy bbp_edit_forum_post_extras hook for third-party
 		 * plugin compatibility.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param int $forum_id Forum ID.
 		 */
@@ -860,7 +860,7 @@ class BB_Admin_Forums_Ajax {
 	/**
 	 * Delete a single forum.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -902,7 +902,7 @@ class BB_Admin_Forums_Ajax {
 	/**
 	 * Perform bulk action on forums.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -1026,7 +1026,7 @@ class BB_Admin_Forums_Ajax {
 					 * Fires the primary lifecycle hook so that bbp_update_forum()
 					 * runs count recalculation (registered at core/actions.php:169).
 					 *
-					 * @since BuddyBoss [BBVERSION]
+					 * @since BuddyBoss 3.0.0
 					 *
 					 * @param int $forum_id Forum ID.
 					 */
@@ -1100,7 +1100,7 @@ class BB_Admin_Forums_Ajax {
 	 * Creates a WordPress attachment from the uploaded file and returns
 	 * the attachment ID and URL for use with set_post_thumbnail().
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -1172,7 +1172,7 @@ class BB_Admin_Forums_Ajax {
 	/**
 	 * Get forum status counts with caching.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return array Associative array of status => count.
 	 */
@@ -1205,7 +1205,7 @@ class BB_Admin_Forums_Ajax {
 	/**
 	 * Get count of forums authored by the current user.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return int Count of user's forums.
 	 */
@@ -1243,7 +1243,7 @@ class BB_Admin_Forums_Ajax {
 	 * create/edit modals. Registered here so it works independently of
 	 * the Groups component being active.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -1329,7 +1329,7 @@ class BB_Admin_Forums_Ajax {
 	/**
 	 * Propagate visibility changes to child forums for group forums.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param int $forum_id Forum ID.
 	 *

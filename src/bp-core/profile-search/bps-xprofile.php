@@ -375,7 +375,7 @@ function bp_ps_anyfield_setup( $fields ) {
 
 // The LearnDash course field used to be registered here via
 // add_filter( 'bp_ps_add_fields', 'bp_ps_learndash_course_setup' ).
-// As of BuddyBoss [BBVERSION] that subscriber + its helpers live in the
+// As of BuddyBoss 3.0.0 that subscriber + its helpers live in the
 // buddyboss-learndash addon (includes/profile-search-ld.php), hooked to the
 // same public filter. Platform no longer hardcodes LD post-type awareness
 // in Profile Search.
@@ -488,7 +488,7 @@ function bp_ps_xprofile_gender_users_search( $f ) {
 
 // `bp_ps_learndash_course_users_search()` and
 // `bp_ps_learndash_get_users_for_course()` moved to buddyboss-learndash/
-// includes/profile-search-ld.php in BuddyBoss [BBVERSION].
+// includes/profile-search-ld.php in BuddyBoss 3.0.0.
 
 /**
  * Return results from BuddyBoss Profile Search all fields.

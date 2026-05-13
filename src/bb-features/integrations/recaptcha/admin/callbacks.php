@@ -6,7 +6,7 @@
  * Handles the serialized bb_recaptcha option write-back from Settings 2.0.
  *
  * @package BuddyBoss\Features\Integrations\Recaptcha
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
  * - recaptcha_v2_checkbox
  * - recaptcha_v2_invisible
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param array $settings The reCAPTCHA settings array.
  *
@@ -47,7 +47,7 @@ function bb_recaptcha_admin_get_combined_version( $settings = array() ) {
 /**
  * Get the version description text based on selected version.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $version The combined version value.
  *
@@ -71,7 +71,7 @@ function bb_recaptcha_admin_get_version_description( $version = '' ) {
 /**
  * Split a combined version value into legacy recaptcha_version + v2_option.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $combined_version The combined version value.
  *
@@ -101,7 +101,7 @@ function bb_recaptcha_split_combined_version( $combined_version ) {
 /**
  * Sanitize the combined version field.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The value to sanitize.
  *
@@ -120,7 +120,7 @@ function bb_recaptcha_sanitize_version( $value ) {
 /**
  * Sanitize the score threshold value.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The value to sanitize.
  *
@@ -143,7 +143,7 @@ function bb_recaptcha_sanitize_score_threshold( $value ) {
 /**
  * Sanitize the enabled_for toggle list value.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The value to sanitize.
  *
@@ -169,7 +169,7 @@ function bb_recaptcha_sanitize_enabled_for( $value ) {
  *
  * Must be 6-10 characters. Returns empty string if invalid.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The value to sanitize.
  *
@@ -191,7 +191,7 @@ function bb_recaptcha_sanitize_bypass_text( $value ) {
 /**
  * Sanitize the theme value.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The value to sanitize.
  *
@@ -205,7 +205,7 @@ function bb_recaptcha_sanitize_theme( $value ) {
 /**
  * Sanitize the size value.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The value to sanitize.
  *
@@ -219,7 +219,7 @@ function bb_recaptcha_sanitize_size( $value ) {
 /**
  * Sanitize the badge position value.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The value to sanitize.
  *
@@ -238,7 +238,7 @@ function bb_recaptcha_sanitize_badge_position( $value ) {
  * collects them and writes back to the single serialized option that
  * all public API functions (bb_recaptcha_site_key(), etc.) read from.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $feature_id Feature ID.
  * @param array  $settings   Full submitted settings (JSON decoded).
@@ -333,7 +333,7 @@ add_action( 'bb_admin_save_feature_settings_after', 'bb_recaptcha_write_back_ser
  * It validates the reCAPTCHA token via Google API and updates
  * the connection status in the serialized option.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_recaptcha_verify_settings_2() {
 

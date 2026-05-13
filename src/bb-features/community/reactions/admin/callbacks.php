@@ -5,7 +5,7 @@
  * Sanitize and render callback functions for Reactions feature settings.
  *
  * @package BuddyBoss\Features\Community\Reactions
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * Handles the toggle_list field type for bb_all_reactions option.
  * Accepts associative array like: { activity: 1, activity_comment: 1, blogs: 0, private_message: 0 }
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The value to sanitize.
  *
@@ -34,7 +34,7 @@ function bb_reactions_sanitize_content_types( $value ) {
 	 * Allows Pro or third-party plugins to add support for additional
 	 * content types (e.g. 'blogs', 'private_message').
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param array $allowed_keys Allowed content type slugs.
 	 */
@@ -51,7 +51,7 @@ function bb_reactions_sanitize_content_types( $value ) {
 /**
  * Sanitize reactions button settings.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The value to sanitize.
  *
@@ -81,7 +81,7 @@ function bb_reactions_sanitize_button_settings( $value ) {
  *
  * Ensures value is one of the allowed modes ('likes' or 'emotions').
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The value to sanitize.
  *
@@ -102,7 +102,7 @@ function bb_reactions_sanitize_mode( $value ) {
  * Get all of the reactions settings fields.
  *
  * @since BuddyBoss 2.5.20
- * @since BuddyBoss [BBVERSION] Moved to Settings 2.0 location.
+ * @since BuddyBoss 3.0.0 Moved to Settings 2.0 location.
  *
  * @return array
  */
@@ -132,7 +132,7 @@ function bb_reactions_get_settings_fields() {
 	 *
 	 * Allows third-party plugins to add, modify, or remove reactions settings fields.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param array $fields Reactions settings fields array.
 	 */

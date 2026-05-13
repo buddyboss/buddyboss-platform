@@ -10,7 +10,7 @@
  * not admin-configurable options.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
  * No side panels, sections, or fields — the toggle directly controls
  * the bp-settings component active state.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_admin_settings_register_account_settings_feature() {
 

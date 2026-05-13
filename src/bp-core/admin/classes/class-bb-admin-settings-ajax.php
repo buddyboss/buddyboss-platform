@@ -4,7 +4,7 @@
  *
  * Handles AJAX requests for the new admin settings interface.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.0.0
  * @package BuddyBoss\Core\Administration
  */
 
@@ -14,14 +14,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class BB_Admin_Settings_Ajax
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 class BB_Admin_Settings_Ajax {
 
 	/**
 	 * Nonce action.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @var string
 	 */
@@ -30,7 +30,7 @@ class BB_Admin_Settings_Ajax {
 	/**
 	 * Constructor.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function __construct() {
 		$this->bb_register_ajax_handlers();
@@ -39,7 +39,7 @@ class BB_Admin_Settings_Ajax {
 	/**
 	 * Register AJAX handlers.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	private function bb_register_ajax_handlers() {
 		// Features.
@@ -73,7 +73,7 @@ class BB_Admin_Settings_Ajax {
 	 * `bb_admin_allowed_platform_settings` filter or by editing
 	 * bb_admin_get_allowed_platform_options() below.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -104,7 +104,7 @@ class BB_Admin_Settings_Ajax {
 	/**
 	 * Save a single platform setting (WordPress option).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -153,7 +153,7 @@ class BB_Admin_Settings_Ajax {
 	 * screens; third parties can extend via the
 	 * `bb_admin_allowed_platform_settings` filter.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return array
 	 */
@@ -165,7 +165,7 @@ class BB_Admin_Settings_Ajax {
 		 * Use 'absint' for toggle/integer options, 'sanitize_text_field' for strings,
 		 * 'sanitize_key' for slug-shaped values, etc.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param array $allowed_options Associative array of option_name => sanitize_callback.
 		 */
@@ -191,7 +191,7 @@ class BB_Admin_Settings_Ajax {
 	/**
 	 * Get features.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function bb_admin_get_features() {
 		$this->bb_verify_request();
@@ -284,7 +284,7 @@ class BB_Admin_Settings_Ajax {
 		 * Allows placeholder features and third-party extensions to append
 		 * feature objects to the Settings 2.0 feature list.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param array $features Array of formatted feature objects.
 		 */
@@ -298,7 +298,7 @@ class BB_Admin_Settings_Ajax {
 	 * - feature_id: The feature ID.
 	 * - status: Desired status ('active' or 'inactive').
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function bb_admin_toggle_feature() {
 		$this->bb_verify_request();
@@ -371,7 +371,7 @@ class BB_Admin_Settings_Ajax {
 	/**
 	 * Verify AJAX request.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return bool|void
 	 */
@@ -382,7 +382,7 @@ class BB_Admin_Settings_Ajax {
 	/**
 	 * Get feature settings.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function bb_admin_get_feature_settings() {
 		$this->bb_verify_request();
@@ -414,7 +414,7 @@ class BB_Admin_Settings_Ajax {
 		 * at the early `bb_register_features` hook (e.g., custom post types
 		 * from third-party plugins that register on `init`).
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param string $feature_id The feature being loaded.
 		 */
@@ -597,7 +597,7 @@ class BB_Admin_Settings_Ajax {
 	/**
 	 * Format feature for response (matches REST API format).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string              $feature_id    Feature ID.
 	 * @param array               $feature       Feature data.
@@ -648,7 +648,7 @@ class BB_Admin_Settings_Ajax {
 	 *      to enable the modal; the rest fall back to sensible defaults
 	 *      on the React side.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param array $feature   Raw feature registration data.
 	 * @param array $formatted Formatted response array (modified in place).
@@ -686,7 +686,7 @@ class BB_Admin_Settings_Ajax {
 	/**
 	 * Format fields for response.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param array  $fields     Fields data.
 	 * @param array  $values     Current field values.
@@ -705,7 +705,7 @@ class BB_Admin_Settings_Ajax {
 
 			/*
 			 * Handle checkbox_list (stored as associative array { "key": "1", "key2": "0" }).
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 3.0.0
 			 */
 			if ( 'checkbox_list' === ( $field['type'] ?? '' ) ) {
 				$blog_id      = function_exists( 'bp_get_root_blog_id' ) ? bp_get_root_blog_id() : get_current_blog_id();
@@ -739,7 +739,7 @@ class BB_Admin_Settings_Ajax {
 			 * Legacy format: ['messenger', 'facebook', 'twitter'] — only checked platforms.
 			 * Converts to { messenger: 1, facebook: 1, twitter: 1, linkedin: 0 } for React.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 3.0.0
 			 */
 			if ( 'share_platforms' === ( $field['type'] ?? '' ) ) {
 				$blog_id      = function_exists( 'bp_get_root_blog_id' ) ? bp_get_root_blog_id() : get_current_blog_id();
@@ -990,7 +990,7 @@ class BB_Admin_Settings_Ajax {
 				 * Pro populates this with type dropdowns, saved selections, and
 				 * initial toggle options so the component renders immediately.
 				 *
-				 * @since BuddyBoss [BBVERSION]
+				 * @since BuddyBoss 3.0.0
 				 *
 				 * @param array  $ac_data    Default empty access-control data.
 				 * @param string $field_name The field option name (e.g. 'bb-access-control-upload-media').
@@ -1099,7 +1099,7 @@ class BB_Admin_Settings_Ajax {
 				/**
 				 * Filters the allowed url_getter functions for image upload fields.
 				 *
-				 * @since BuddyBoss [BBVERSION]
+				 * @since BuddyBoss 3.0.0
 				 *
 				 * @param array $allowed_url_getters List of allowed function names.
 				 */
@@ -1126,7 +1126,7 @@ class BB_Admin_Settings_Ajax {
 			/**
 			 * Filters the field data before it is returned.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 3.0.0
 			 *
 			 * @param array  $field_data  Formatted field data.
 			 * @param array  $field       Original field data.
@@ -1189,7 +1189,7 @@ class BB_Admin_Settings_Ajax {
 	 * Receives all settings for a feature as JSON, applies registered
 	 * sanitize callbacks, and persists to wp_options.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function bb_admin_save_feature_settings() {
 		$this->bb_verify_request();
@@ -1235,7 +1235,7 @@ class BB_Admin_Settings_Ajax {
 		 * Note: This hook fires in both GET (read) and SAVE contexts. Use
 		 * `bb_admin_settings_before_save_feature` for save-only logic.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param string $feature_id The feature being loaded.
 		 */
@@ -1247,7 +1247,7 @@ class BB_Admin_Settings_Ajax {
 		 * Use this hook to capture pre-save state or perform any logic that
 		 * must run exactly once during a save request, before option writes occur.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param string $feature_id The feature being saved.
 		 * @param array  $settings   Full submitted settings (JSON decoded).
@@ -1398,7 +1398,7 @@ class BB_Admin_Settings_Ajax {
 		 * Fires after feature settings have been saved (same flow as Readylaunch: core save then feature-specific apply).
 		 * Use this to persist feature-specific data (e.g. reaction items, button config) that are not simple options.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param string $feature_id Feature ID (e.g. 'reactions').
 		 * @param array  $settings   Full submitted settings (JSON decoded).
@@ -1425,7 +1425,7 @@ class BB_Admin_Settings_Ajax {
 		 * Filters the response data before sending success response for feature settings save.
 		 * Allows plugins to add additional data to the response (e.g., migration_data for reactions).
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param array  $response_data Response data to be sent.
 		 * @param string $feature_id    Feature ID (e.g. 'reactions').
@@ -1440,7 +1440,7 @@ class BB_Admin_Settings_Ajax {
 	/**
 	 * Search settings.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function bb_admin_search_settings() {
 		$this->bb_verify_request();
@@ -1473,7 +1473,7 @@ class BB_Admin_Settings_Ajax {
 	/**
 	 * Perform search across settings.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $query Search query.
 	 *
@@ -1582,7 +1582,7 @@ class BB_Admin_Settings_Ajax {
 	/**
 	 * Build search index from Feature Registry.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return array Search index.
 	 */
@@ -1596,7 +1596,7 @@ class BB_Admin_Settings_Ajax {
 		/**
 		 * Filters the field types excluded from the settings search index.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param array $excluded_types Field types to exclude.
 		 */
@@ -1654,7 +1654,7 @@ class BB_Admin_Settings_Ajax {
 	 * Invalidate settings search index after feature settings are saved.
 	 * Hooked to bb_admin_save_feature_settings_after so the next search rebuilds the index.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $feature_id Feature ID.
 	 * @param array  $settings   Submitted settings.
@@ -1670,7 +1670,7 @@ class BB_Admin_Settings_Ajax {
 	 * This avoids N+1 get_option() queries by fetching all needed options at once
 	 * and populating the object cache so subsequent get_option() calls are served from memory.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param array $option_names Array of option names to prime.
 	 */
@@ -1740,7 +1740,7 @@ class BB_Admin_Settings_Ajax {
 	 * that point to a different feature's panel (e.g., '/settings/notifications/onesignal').
 	 * React's urlToRoute() converts the resulting query-param URL to a hash route.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $feature_id Feature ID.
 	 * @param array  $feature    Feature data array.
@@ -1804,7 +1804,7 @@ class BB_Admin_Settings_Ajax {
 	 * `map_deep( ..., 'sanitize_text_field' )` would flatten nested URLs and
 	 * strip the `://` protocol separator.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param array $config Raw preview_config array from field registration.
 	 * @return array Sanitized config.
@@ -1833,7 +1833,7 @@ class BB_Admin_Settings_Ajax {
 	 * neutralize that payload anyway, but a strict allowlist is defense in
 	 * depth and keeps the intent obvious.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $value Raw string value.
 	 * @return string Sanitized string.
@@ -1867,7 +1867,7 @@ class BB_Admin_Settings_Ajax {
 	 * registrations (`'636101'`, `'636152'`, `'636156'`, `'637448'`); slug-style
 	 * IDs would need a separate branch and aren't used today.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param mixed $value Raw `help_url` value from feature/section registration.
 	 * @return string Sanitized URL or bare ID, suitable for the React layer.
@@ -1894,7 +1894,7 @@ class BB_Admin_Settings_Ajax {
 	 * array with 'key' and optional 'label'. Always returns null or an
 	 * array with 'key' and 'label' keys.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string|array|null $group Raw group value from field registration.
 	 * @return array|null Normalized group array or null.
@@ -1930,7 +1930,7 @@ class BB_Admin_Settings_Ajax {
 	 * Called lazily at AJAX time because bb_register_notification_preferences()
 	 * depends on component hooks that haven't fired yet during bb_register_features.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return array Notification groups with fields, sub-types, and email template info.
 	 */
@@ -2131,7 +2131,7 @@ class BB_Admin_Settings_Ajax {
 	 * Normalizes nested extension arrays (which contain is_active, extension,
 	 * mime_type, etc.) into a flat key => 0|1 mapping for the React toggle list.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param array $field_value The extension data array.
 	 *
@@ -2174,7 +2174,7 @@ class BB_Admin_Settings_Ajax {
 	 * Returns paginated {value, label} results with optional search term.
 	 * Includes "Default" and "Custom URL" as the first two options.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function bb_admin_search_published_pages() {
 		$this->bb_verify_request();
@@ -2268,7 +2268,7 @@ class BB_Admin_Settings_Ajax {
 	 * blog, matching what `bp_core_admin_get_directory_pages()` / the save
 	 * handler operate on.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function bb_admin_search_pages_list() {
 		$this->bb_verify_request();
@@ -2412,7 +2412,7 @@ class BB_Admin_Settings_Ajax {
 	 * endpoint so the new page is created on the community's root blog even
 	 * when a network admin is editing from a sub-site.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function bb_admin_create_directory_page() {
 		$this->bb_verify_request();

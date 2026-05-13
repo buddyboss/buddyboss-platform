@@ -11,7 +11,7 @@
  * `bb_register_discussions_meta_fields` hook.
  *
  * @package BuddyBoss\Core\Administration
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.0.0
  */
 
 defined( 'ABSPATH' ) || exit;

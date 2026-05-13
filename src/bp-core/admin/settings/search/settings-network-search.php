@@ -6,7 +6,7 @@
  * Search feature in the Settings 2.0 registry.
  *
  * @package BuddyBoss\Core\Administration
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -25,7 +25,7 @@ defined( 'ABSPATH' ) || exit;
  * because bp_xprofile_get_groups() returns empty results at bb_register_features time
  * (the xProfile DB layer isn't fully initialized yet at bp_loaded priority 5).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_search_register_network_search_fields() {
 
@@ -320,7 +320,7 @@ function bb_search_register_network_search_fields() {
  * Uses a static flag to prevent duplicate registration across multiple
  * AJAX calls in the same request.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $feature_id The feature being loaded.
  */

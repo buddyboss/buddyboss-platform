@@ -5,7 +5,7 @@
  * Handles AJAX requests for Discussion Tag (topic-tag taxonomy)
  * CRUD operations in the Settings 2.0 admin interface.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.0.0
  * @package BuddyBoss\Core\Administration
  */
 
@@ -15,14 +15,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class BB_Admin_Topic_Tags_Ajax
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 class BB_Admin_Topic_Tags_Ajax {
 
 	/**
 	 * Nonce action (shared with BB_Admin_Settings_Ajax).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @var string
 	 */
@@ -31,7 +31,7 @@ class BB_Admin_Topic_Tags_Ajax {
 	/**
 	 * Maximum items per page for paginated endpoints.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @var int
 	 */
@@ -40,7 +40,7 @@ class BB_Admin_Topic_Tags_Ajax {
 	/**
 	 * Maximum tags for bulk operations.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @var int
 	 */
@@ -49,7 +49,7 @@ class BB_Admin_Topic_Tags_Ajax {
 	/**
 	 * Constructor.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function __construct() {
 		$this->bb_register_ajax_handlers();
@@ -58,7 +58,7 @@ class BB_Admin_Topic_Tags_Ajax {
 	/**
 	 * Register AJAX handlers.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	private function bb_register_ajax_handlers() {
 		add_action( 'wp_ajax_bb_admin_get_topic_tags', array( $this, 'get_topic_tags' ) );
@@ -72,7 +72,7 @@ class BB_Admin_Topic_Tags_Ajax {
 	/**
 	 * Get discussion tags listing with pagination and search.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -177,7 +177,7 @@ class BB_Admin_Topic_Tags_Ajax {
 		/**
 		 * Filters the full response data for the admin topic tags list AJAX endpoint.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param array $response Response data array.
 		 */
@@ -189,7 +189,7 @@ class BB_Admin_Topic_Tags_Ajax {
 	/**
 	 * Get a single discussion tag for the edit modal.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -228,7 +228,7 @@ class BB_Admin_Topic_Tags_Ajax {
 		/**
 		 * Filters the response data for the admin single topic tag endpoint.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param array   $data Response data array.
 		 * @param WP_Term $term The term object.
@@ -239,7 +239,7 @@ class BB_Admin_Topic_Tags_Ajax {
 	/**
 	 * Create a new discussion tag.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -287,7 +287,7 @@ class BB_Admin_Topic_Tags_Ajax {
 	/**
 	 * Update an existing discussion tag.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -346,7 +346,7 @@ class BB_Admin_Topic_Tags_Ajax {
 	/**
 	 * Delete a single discussion tag.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -389,7 +389,7 @@ class BB_Admin_Topic_Tags_Ajax {
 	/**
 	 * Perform bulk action on discussion tags.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */

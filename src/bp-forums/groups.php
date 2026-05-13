@@ -574,22 +574,22 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		 * Adds a metabox to BuddyBoss Group Admin UI.
 		 *
 		 * @since      bbPress (r4814)
-		 * @deprecated BuddyBoss [BBVERSION] No longer used. Settings 2.0 handles forum via BB_Admin_Meta_Field_Registry.
+		 * @deprecated BuddyBoss 3.0.0 No longer used. Settings 2.0 handles forum via BB_Admin_Meta_Field_Registry.
 		 */
 		public function group_admin_ui_edit_screen() {
-			_deprecated_function( __METHOD__, 'BuddyBoss [BBVERSION]', 'BB_Admin_Meta_Field_Registry' );
+			_deprecated_function( __METHOD__, 'BuddyBoss 3.0.0', 'BB_Admin_Meta_Field_Registry' );
 		}
 
 		/**
 		 * Displays the Forums metabox in BuddyBoss Group Admin UI.
 		 *
 		 * @since      bbPress (r4814)
-		 * @deprecated BuddyBoss [BBVERSION] No longer used. Settings 2.0 handles forum via BB_Admin_Meta_Field_Registry.
+		 * @deprecated BuddyBoss 3.0.0 No longer used. Settings 2.0 handles forum via BB_Admin_Meta_Field_Registry.
 		 *
 		 * @param object $item Group object.
 		 */
 		public function group_admin_ui_display_metabox( $item ) {
-			_deprecated_function( __METHOD__, 'BuddyBoss [BBVERSION]', 'BB_Admin_Meta_Field_Registry' );
+			_deprecated_function( __METHOD__, 'BuddyBoss 3.0.0', 'BB_Admin_Meta_Field_Registry' );
 		}
 
 		/** Create ****************************************************************/
@@ -1953,7 +1953,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		 *
 		 * Hooked to `bb_admin_after_save_group`.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param int    $group_id Group ID.
 		 * @param object $group    Group object after save.
@@ -2059,7 +2059,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			/**
 			 * Fires after forum lifecycle is handled during group save.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 3.0.0
 			 *
 			 * @param int $group_id The group ID.
 			 */

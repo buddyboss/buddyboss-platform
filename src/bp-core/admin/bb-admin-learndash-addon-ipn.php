@@ -25,7 +25,7 @@
  * on the next admin page load.
  *
  * @package BuddyBoss
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -40,7 +40,7 @@ defined( 'ABSPATH' ) || exit;
  * Kept stable so subsequent admin page loads idempotently replace the
  * existing record (Store::add() is keyed by id).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 const BB_LEARNDASH_ADDON_IPN_TYPE = 'bb-addon-promo-learndash';
 const BB_LEARNDASH_ADDON_IPN_ID   = 'install';
@@ -52,7 +52,7 @@ const BB_LEARNDASH_ADDON_IPN_ID   = 'install';
  * Uses WordPress's `is_plugin_active()` so a deactivated-but-installed
  * addon still triggers the notice (the user needs to actually run it).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return bool
  */
@@ -82,7 +82,7 @@ function bb_learndash_addon_is_active() {
  * pre-migration call-site semantics — the legacy LD loader read the
  * settings the same way.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return bool
  */
@@ -111,7 +111,7 @@ function bb_learndash_addon_site_uses_learndash() {
  * Reads through Mothership's plugin connector. Returns false when the
  * Mothership classes aren't loaded yet (very early boot or partial install).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return bool
  */
@@ -139,7 +139,7 @@ function bb_learndash_addon_has_active_license() {
  * equality so future Lite SKU variants (e.g. `bb-platform-lite-monthly`)
  * are also covered without code changes.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return bool
  */
@@ -166,7 +166,7 @@ function bb_learndash_addon_license_is_lite() {
  * conditions can change between sessions (license activated/deactivated,
  * addon installed/removed) and the notification state should always match.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_learndash_addon_sync_ipn() {
 	// Bail if the notifications wrapper isn't loaded — happens during very

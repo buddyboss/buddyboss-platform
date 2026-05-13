@@ -5,7 +5,7 @@
  * Sanitize and render callback functions for Moderation feature settings.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * Ensures the value is a positive integer (minimum 1).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The value to sanitize.
  *
@@ -33,7 +33,7 @@ function bb_moderation_sanitize_auto_suspend_threshold( $value ) {
  *
  * Ensures the value is a positive integer between 1 and 99.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The value to sanitize.
  *
@@ -53,7 +53,7 @@ function bb_moderation_sanitize_auto_hide_threshold( $value ) {
  * serialized arrays (bpm_reporting_content_reporting, bpm_reporting_auto_hide,
  * bpm_reporting_auto_hide_threshold). This hook keeps both in sync.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $feature_id Feature ID.
  * @param array  $settings   Submitted settings.

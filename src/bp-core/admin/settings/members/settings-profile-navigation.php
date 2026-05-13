@@ -9,7 +9,7 @@
  * to maintain backward compatibility with the legacy Customizer.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register Profile Navigation panel sections and fields.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_members_register_profile_navigation_panel_fields() {
 
@@ -101,7 +101,7 @@ function bb_members_register_profile_navigation_panel_fields() {
 	/**
 	 * Fires after the Profile Navigation panel fields are registered.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	do_action( 'bb_members_navigation_after_register_fields' );
 }
@@ -120,7 +120,7 @@ function bb_members_register_profile_navigation_panel_fields() {
  * to maintain backward compatibility with the stored bp_nouveau_appearance
  * option. The members component maps them to nav slugs at render time.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return array Array of [ 'value' => slug, 'label' => name ] items.
  */
@@ -164,7 +164,7 @@ function bb_get_member_default_tab_options() {
 	 *
 	 * Matches the legacy Customizer filter for Pro extensibility.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param array $options Associative array of slug => label.
 	 */
@@ -193,7 +193,7 @@ function bb_get_member_default_tab_options() {
  * Items whose parent feature is inactive get `disabled => true` and
  * `badge_label => 'Hidden'`.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return array Array of checkbox_list option items.
  */
@@ -261,7 +261,7 @@ function bb_get_member_profile_nav_items_for_settings() {
 	 *   - 'label'     (string) Display label.
 	 *   - 'component' (string) Component ID used for active/inactive checks.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param array $all_items Associative array of slug => item data.
 	 */
@@ -294,7 +294,7 @@ function bb_get_member_profile_nav_items_for_settings() {
  *
  * Used to mark items as "Hidden" in the Navigation Order list.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return array Array of nav item slugs that are inactive.
  */
@@ -348,7 +348,7 @@ function bb_get_inactive_member_nav_slugs() {
 	 * should also hook here to mark their slug inactive when their component
 	 * is disabled.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param array $inactive Array of nav item slugs whose component is inactive.
 	 */
@@ -366,7 +366,7 @@ function bb_get_inactive_member_nav_slugs() {
  * via bp_get_option(). Profile navigation values live inside the nested
  * `bp_nouveau_appearance` option, so we intercept and override here.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param array  $field_data Formatted field data.
  * @param array  $field      Original field registration data.
@@ -418,7 +418,7 @@ add_filter( 'bb_admin_settings_format_field_data', 'bb_member_navigation_enrich_
  * Reads saved order from bp_nouveau_appearance[user_nav_order]
  * and builds an ordered { slug: 1/0 } object for the React component.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param array $options    Optional. Pre-fetched nav item options.
  * @param array $appearance Optional. Pre-fetched appearance settings.
@@ -484,7 +484,7 @@ function bb_build_member_nav_order_value( $options = array(), $appearance = arra
  * We intercept after save to merge values back into the nested
  * `bp_nouveau_appearance` option and delete the temporary per-field options.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $feature_id Feature ID.
  * @param array  $settings   Full submitted settings (JSON decoded).
@@ -621,7 +621,7 @@ add_action( 'bb_admin_save_feature_settings_after', 'bb_member_navigation_save_s
  * Expects an associative array { slug: 0|1, ... }.
  * Sanitizes keys and normalizes values to 0 or 1.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The submitted value.
  *

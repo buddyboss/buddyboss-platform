@@ -519,7 +519,7 @@ abstract class BP_Core_Notification_Abstract {
 	 * Add email schema.
 	 *
 	 * @since BuddyBoss 1.9.3
-	 * @since BuddyBoss [BBVERSION] Added optional 'group' arg for situation tab grouping.
+	 * @since BuddyBoss 3.0.0 Added optional 'group' arg for situation tab grouping.
 	 *
 	 * @param string $email_type        Type of email being sent.
 	 * @param array  $args              Email arguments.

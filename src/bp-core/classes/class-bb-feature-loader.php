@@ -7,7 +7,7 @@
  * only when the corresponding feature is active.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -16,14 +16,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Feature Loader Class
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 class BB_Feature_Loader {
 
 	/**
 	 * Singleton instance.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 * @var BB_Feature_Loader
 	 */
 	private static $instance = null;
@@ -31,7 +31,7 @@ class BB_Feature_Loader {
 	/**
 	 * Registered PHP loaders by feature.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 * @var array
 	 */
 	private $php_loaders = array();
@@ -39,7 +39,7 @@ class BB_Feature_Loader {
 	/**
 	 * Registered admin loaders by feature.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 * @var array
 	 */
 	private $admin_loaders = array();
@@ -47,7 +47,7 @@ class BB_Feature_Loader {
 	/**
 	 * Registered REST API loaders by feature.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 * @var array
 	 */
 	private $rest_loaders = array();
@@ -55,7 +55,7 @@ class BB_Feature_Loader {
 	/**
 	 * Features that have been loaded.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 * @var array
 	 */
 	private $loaded_features = array();
@@ -63,7 +63,7 @@ class BB_Feature_Loader {
 	/**
 	 * Features that have had their admin code loaded.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 * @var array
 	 */
 	private $loaded_admin_features = array();
@@ -71,7 +71,7 @@ class BB_Feature_Loader {
 	/**
 	 * Deferred loaders to execute on specific hooks.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 * @var array
 	 */
 	private $deferred_loaders = array();
@@ -79,7 +79,7 @@ class BB_Feature_Loader {
 	/**
 	 * Get singleton instance.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 * @return BB_Feature_Loader
 	 */
 	public static function instance() {
@@ -92,7 +92,7 @@ class BB_Feature_Loader {
 	/**
 	 * Constructor.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	private function __construct() {
 		$this->setup_hooks();
@@ -101,7 +101,7 @@ class BB_Feature_Loader {
 	/**
 	 * Set up hooks.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	private function setup_hooks() {
 		// Load features after they are registered.
@@ -120,7 +120,7 @@ class BB_Feature_Loader {
 	/**
 	 * Register a PHP loader for a feature.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string   $feature_id The feature ID.
 	 * @param callable $loader     The loader callback.
@@ -163,7 +163,7 @@ class BB_Feature_Loader {
 	/**
 	 * Register an admin loader for a feature.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string   $feature_id The feature ID.
 	 * @param callable $loader     The loader callback.
@@ -181,7 +181,7 @@ class BB_Feature_Loader {
 	/**
 	 * Register a REST API loader for a feature.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string   $feature_id The feature ID.
 	 * @param callable $loader     The loader callback.
@@ -199,7 +199,7 @@ class BB_Feature_Loader {
 	/**
 	 * Load all active features.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function bb_load_active_features() {
 		$registry = bb_feature_registry();
@@ -217,7 +217,7 @@ class BB_Feature_Loader {
 		/**
 		 * Fires after all active features have been loaded.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param array $loaded_features Array of loaded feature IDs.
 		 */
@@ -227,7 +227,7 @@ class BB_Feature_Loader {
 	/**
 	 * Load admin-specific code for active features.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function bb_load_admin_features() {
 		if ( ! is_admin() ) {
@@ -249,7 +249,7 @@ class BB_Feature_Loader {
 		/**
 		 * Fires after all admin features have been loaded.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param array $loaded_admin_features Array of loaded admin feature IDs.
 		 */
@@ -259,7 +259,7 @@ class BB_Feature_Loader {
 	/**
 	 * Load REST API endpoints for active features.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function bb_load_rest_features() {
 		$registry = bb_feature_registry();
@@ -273,7 +273,7 @@ class BB_Feature_Loader {
 		/**
 		 * Fires after all REST features have been loaded.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 */
 		do_action( 'bb_rest_features_loaded' );
 	}
@@ -281,7 +281,7 @@ class BB_Feature_Loader {
 	/**
 	 * Process deferred loaders.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function bb_process_deferred_loaders() {
 		$registry = bb_feature_registry();
@@ -304,7 +304,7 @@ class BB_Feature_Loader {
 	/**
 	 * Load a specific feature.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string   $feature_id The feature ID.
 	 * @param callable $loader     The loader callback.
@@ -313,7 +313,7 @@ class BB_Feature_Loader {
 		/**
 		 * Fires before a feature is loaded.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param string $feature_id The feature ID.
 		 */
@@ -326,7 +326,7 @@ class BB_Feature_Loader {
 		/**
 		 * Fires after a feature is loaded.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param string $feature_id The feature ID.
 		 */
@@ -337,7 +337,7 @@ class BB_Feature_Loader {
 	/**
 	 * Load admin code for a specific feature.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string   $feature_id The feature ID.
 	 * @param callable $loader     The loader callback.
@@ -346,7 +346,7 @@ class BB_Feature_Loader {
 		/**
 		 * Fires before admin feature code is loaded.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param string $feature_id The feature ID.
 		 */
@@ -359,7 +359,7 @@ class BB_Feature_Loader {
 		/**
 		 * Fires after admin feature code is loaded.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param string $feature_id The feature ID.
 		 */
@@ -370,7 +370,7 @@ class BB_Feature_Loader {
 	/**
 	 * Check if a feature has been loaded.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $feature_id The feature ID.
 	 * @return bool True if loaded.
@@ -382,7 +382,7 @@ class BB_Feature_Loader {
 	/**
 	 * Check if admin code for a feature has been loaded.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $feature_id The feature ID.
 	 * @return bool True if loaded.
@@ -394,7 +394,7 @@ class BB_Feature_Loader {
 	/**
 	 * Get all loaded features.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return array Array of loaded feature IDs.
 	 */
@@ -407,7 +407,7 @@ class BB_Feature_Loader {
 	 *
 	 * Useful for forcing a feature to load outside the normal loading cycle.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $feature_id The feature ID.
 	 * @return bool True if loaded, false if already loaded or no loader exists.
@@ -428,7 +428,7 @@ class BB_Feature_Loader {
 	/**
 	 * Get registered loaders for debugging.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return array {
 	 *     @type array $php_loaders   Registered PHP loaders.

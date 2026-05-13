@@ -10,7 +10,7 @@
  * admin page with ?bb_clear_placeholder_cache=1
  *
  * @package BuddyBoss\Core\Administration
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
  * Versioned with the Platform version so upgrades automatically invalidate
  * stale catalogs.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return string Transient key.
  */
@@ -40,7 +40,7 @@ function bb_placeholder_features_transient_key() {
  * cards render. The catalog is populated asynchronously by a daily cron event
  * and refreshed opportunistically via `bb_refresh_placeholder_features_data()`.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return array|false Decoded catalog data with 'items' key, or false when unavailable.
  */
@@ -75,7 +75,7 @@ function bb_get_placeholder_features_data() {
  * Uses a short-lived lock transient to prevent thundering-herd scheduling when
  * many admin requests arrive simultaneously after a cache expiry.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_schedule_placeholder_features_refresh() {
 	// Skip scheduling during WP-CLI, cron itself, or when cron is disabled globally.
@@ -101,7 +101,7 @@ function bb_schedule_placeholder_features_refresh() {
  * on any failure the previous stale catalog in `bb_placeholder_features_data_stale`
  * continues to serve read requests.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return array|false Fetched data on success, false on any failure.
  */
@@ -113,7 +113,7 @@ function bb_refresh_placeholder_features_data() {
 	 *
 	 * Allows self-hosting, staging overrides, and test injection.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $url Default S3 endpoint URL.
 	 */
@@ -159,7 +159,7 @@ add_action( 'bb_placeholder_features_daily_refresh', 'bb_refresh_placeholder_fea
 /**
  * Ensure the daily refresh event is scheduled.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_schedule_placeholder_features_daily_refresh() {
 	if ( ! wp_next_scheduled( 'bb_placeholder_features_daily_refresh' ) ) {
@@ -173,7 +173,7 @@ add_action( 'admin_init', 'bb_schedule_placeholder_features_daily_refresh' );
  *
  * Checks whether the plugin is in the user's addon plan, installed, and/or active.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param array $item Catalog item with 'id' and optional 'plugin_file'.
  * @return string One of: 'not_in_plan', 'not_installed', 'installed_inactive'.
@@ -234,7 +234,7 @@ function bb_get_placeholder_plugin_status( $item, $active_plugins = null ) {
  * - 'not_installed': User has the plan but plugin not installed — show "Install & Activate".
  * - 'installed_inactive': Plugin installed but not activated — show "Activate".
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param array $features Existing formatted feature objects from AJAX handler.
  * @return array Features array with placeholder objects appended for unregistered products.
@@ -326,7 +326,7 @@ function bb_admin_inject_placeholder_features( $features ) {
 /**
  * Hook the placeholder feature provider into the features AJAX response filter.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 add_filter( 'bb_admin_features_response', 'bb_admin_inject_placeholder_features' );
 
@@ -341,7 +341,7 @@ add_filter( 'bb_admin_features_response', 'bb_admin_inject_placeholder_features'
  * key and determines position inside each category. Stable tie-break on label
  * avoids the unsorted-tail wobble you otherwise get with PHP's quicksort.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param array $features Full features list after placeholder + DRM filters.
  * @return array Sorted list.
@@ -395,7 +395,7 @@ add_filter( 'bb_admin_features_response', 'bb_admin_sort_features_response', 30 
  * `upgrade_tier`, and `upgrade_url` to the feature response. This disables
  * the feature in the admin UI only — the actual option value remains unchanged.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param array $features Formatted feature objects from the AJAX handler.
  * @return array Features array with DRM lock data added where applicable.
@@ -479,7 +479,7 @@ function bb_admin_mark_drm_locked_features( $features ) {
  * Hook DRM lock detection into the features AJAX response.
  * Runs after placeholder injection (priority 20) so placeholders are already in place.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 add_filter( 'bb_admin_features_response', 'bb_admin_mark_drm_locked_features', 20 );
 
@@ -495,7 +495,7 @@ add_filter( 'bb_admin_features_response', 'bb_admin_mark_drm_locked_features', 2
  * entries — without it the help slider would keep serving the in-browser
  * 3-day cache even after the server transients are gone.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_maybe_clear_placeholder_features_cache() {
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only cache clear, admin-only.
@@ -568,7 +568,7 @@ add_action( 'admin_init', 'bb_maybe_clear_placeholder_features_cache' );
  * other plugin's transients on the same group — unacceptable side
  * effect for a per-feature debug tool.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return void
  */
@@ -626,7 +626,7 @@ function bb_clear_help_content_transients() {
  * so the correct card state (upgrade badge vs install/activate button) is
  * shown immediately.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_clear_placeholder_cache_on_license_change() {
 	delete_transient( bb_placeholder_features_transient_key() );
@@ -638,7 +638,7 @@ function bb_clear_placeholder_cache_on_license_change() {
  *
  * Must run after the Mothership loader initializes so the plugin ID is available.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_register_placeholder_cache_clear_hooks() {
 	if ( ! class_exists( '\\BuddyBoss\\Core\\Admin\\Mothership\\BB_Plugin_Connector' ) ) {

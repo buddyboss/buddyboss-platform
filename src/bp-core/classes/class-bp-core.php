@@ -191,7 +191,7 @@ class BP_Core extends BP_Component {
 		 * @param array $value Array of included and optional integrations.
 		 */
 		/*
-		 * LearnDash was removed from this whitelist in BuddyBoss [BBVERSION]
+		 * LearnDash was removed from this whitelist in BuddyBoss 3.0.0
 		 * when the integration was extracted into the buddyboss-learndash
 		 * addon plugin. Addons register themselves via `bp_setup_integrations`
 		 * / `bb_after_register_features`; Platform no longer needs to list

@@ -6,7 +6,7 @@
  * Supports SVG, Images, Font Icons, and React Components.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -15,14 +15,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Icon Registry Class
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 class BB_Icon_Registry {
 
 	/**
 	 * Singleton instance.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 * @var BB_Icon_Registry
 	 */
 	private static $instance = null;
@@ -30,7 +30,7 @@ class BB_Icon_Registry {
 	/**
 	 * Registered icons.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 * @var array
 	 */
 	private $icons = array();
@@ -38,7 +38,7 @@ class BB_Icon_Registry {
 	/**
 	 * Get singleton instance.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 * @return BB_Icon_Registry
 	 */
 	public static function instance() {
@@ -51,7 +51,7 @@ class BB_Icon_Registry {
 	/**
 	 * Constructor.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	private function __construct() {
 		// Fire hook for icons to register.
@@ -61,13 +61,13 @@ class BB_Icon_Registry {
 	/**
 	 * Initialize the registry.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function bb_init() {
 		/**
 		 * Fired to register custom icons.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 */
 		do_action( 'bb_register_icons' );
 	}
@@ -75,7 +75,7 @@ class BB_Icon_Registry {
 	/**
 	 * Register an icon.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $icon_id Unique icon identifier (alphanumeric, underscore, hyphen).
 	 * @param array  $args {
@@ -194,7 +194,7 @@ class BB_Icon_Registry {
 		/**
 		 * Fired after an icon is registered.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param string $icon_id Icon ID.
 		 * @param array  $args    Icon arguments.
@@ -207,7 +207,7 @@ class BB_Icon_Registry {
 	/**
 	 * Validate icon arguments based on type.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $icon_id Icon ID.
 	 * @param string $type    Icon type.
@@ -288,7 +288,7 @@ class BB_Icon_Registry {
 	/**
 	 * Get an icon by ID.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $icon_id Icon ID.
 	 * @return array|null Icon data or null if not found.
@@ -300,7 +300,7 @@ class BB_Icon_Registry {
 	/**
 	 * Get all registered icons.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $type Optional. Filter by icon type.
 	 * @return array Array of icons.
@@ -323,7 +323,7 @@ class BB_Icon_Registry {
 	/**
 	 * Check if an icon is registered.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $icon_id Icon ID.
 	 * @return bool True if registered, false otherwise.
@@ -341,7 +341,7 @@ class BB_Icon_Registry {
 	 *
 	 * Formats icon data for consumption by React frontend.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string|array $icon_id Icon ID, Dashicon slug, or pre-formatted icon array.
 	 * @return array|null Icon data formatted for REST API or null if not found.
@@ -397,7 +397,7 @@ class BB_Icon_Registry {
 	/**
 	 * Check if identifier is a Dashicon slug.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $icon_id Icon identifier.
 	 * @return bool True if appears to be a Dashicon slug.
@@ -410,7 +410,7 @@ class BB_Icon_Registry {
 	/**
 	 * Check if identifier is a URL.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $icon_id Icon identifier.
 	 * @return bool True if appears to be a URL.

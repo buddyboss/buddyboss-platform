@@ -6,7 +6,7 @@
  * all Search settings (side panels, sections, fields).
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * These are always available at bb_register_features time.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 if ( ! defined( 'BB_SEARCH_STANDARD_POST_TYPES' ) ) {
 	define( 'BB_SEARCH_STANDARD_POST_TYPES', array( 'post', 'page', 'attachment' ) );
@@ -26,7 +26,7 @@ if ( ! defined( 'BB_SEARCH_STANDARD_POST_TYPES' ) ) {
 /**
  * Post types to skip entirely (handled by Network Search panel).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 if ( ! defined( 'BB_SEARCH_EXCLUDED_POST_TYPES' ) ) {
 	define( 'BB_SEARCH_EXCLUDED_POST_TYPES', array( 'forum', 'topic', 'reply' ) );
@@ -38,7 +38,7 @@ if ( ! defined( 'BB_SEARCH_EXCLUDED_POST_TYPES' ) ) {
  * Registers the feature, side panels, and delegates field registration
  * to panel-specific functions.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_admin_settings_register_search_feature() {
 
@@ -151,7 +151,7 @@ function bb_admin_settings_register_search_feature() {
 	 * Fires after all Search settings panels are registered.
 	 * Allows third-party extensions to add more panels or fields.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	do_action( 'bb_search_after_register_settings_fields' );
 }

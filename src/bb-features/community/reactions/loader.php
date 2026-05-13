@@ -15,7 +15,7 @@
  * We load classes directly here since bp_loaded:5 has already started.
  *
  * @package BuddyBoss\Features\Community\Reactions
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -60,7 +60,7 @@ if ( bp_is_active( 'activity' ) && bp_is_activity_like_active() ) {
  * Named function (not anonymous closure) so it can be removed via remove_action()
  * by Pro or third-party plugins when needed.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_reactions_init_load() {
 	if ( function_exists( 'bb_load_reaction' ) ) {
@@ -75,7 +75,7 @@ function bb_reactions_init_load() {
  * Named function (not anonymous closure) so it can be removed via remove_action()
  * by Pro or third-party plugins when needed.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_reactions_register_rest_routes() {
 	if ( function_exists( 'bp_rest_in_buddypress' ) && bp_rest_in_buddypress() && class_exists( 'BB_REST_Reactions_Endpoint' ) ) {

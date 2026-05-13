@@ -21,7 +21,7 @@
  *
  * @package BuddyBoss\Core\Administration
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -37,7 +37,7 @@ defined( 'ABSPATH' ) || exit;
  * alphabetical. Adding a new addon to the 3.0 family is a one-line
  * append here.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return array<string, array{name: string, version: string}>
  */
@@ -74,7 +74,7 @@ function bb_platform_3_required_addons() {
  * Returns an empty string when the plugin file is missing — the caller
  * uses that as the "not installed" signal and skips the row.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $plugin_file Plugin file relative to WP_PLUGIN_DIR.
  *
@@ -105,7 +105,7 @@ function bb_platform_3_get_addon_version( $plugin_file ) {
  * network, which is the right behaviour because the version mismatch
  * is global to the install, not per-site.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return array<int, array{name: string, current: string, required: string}>
  */
@@ -155,7 +155,7 @@ function bb_platform_3_get_lagging_addons() {
  * lagging addon hits its required version — the check runs on every
  * page load, so there's no stale-state window.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return void
  */

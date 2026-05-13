@@ -26,7 +26,7 @@
  *     `bb_appearance_pages_save_side_effects()` for the split logic).
  *
  * @package BuddyBoss\Features\Community\Appearance
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -41,7 +41,7 @@ defined( 'ABSPATH' ) || exit;
  *   - title flips to "Login Pages" when registration is off AND invites are off
  *   - otherwise titled "Registration Pages"
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return array{ render:bool, title:string, description:string, show_register:bool } Flags and copy.
  */
@@ -78,7 +78,7 @@ function bb_appearance_get_registration_section_meta() {
  * whitelist via `bp_core_admin_get_static_pages()` — we only diverge on the
  * description text here.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $name Static page key (register / terms / privacy / activate).
  * @return string Field help text, or '' when no help text applies.
@@ -116,7 +116,7 @@ function bb_appearance_get_static_page_description( $name ) {
  * currently selected. On non-WPML installs or when viewing in the default
  * language, returns false and the panel behaves normally.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return bool True if saves should be blocked because WPML is on a non-default language.
  */
@@ -159,7 +159,7 @@ function bb_appearance_pages_is_wpml_non_default_language() {
  * blog, or `bp_get_root_blog_id()` unavailable) — callers use that signal to
  * decide whether to `restore_current_blog()`.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return bool True if we switched (caller must restore), false otherwise.
  */
@@ -190,7 +190,7 @@ function bb_appearance_pages_switch_to_root_blog() {
  * fires under WP_DEBUG. This helper exists specifically to make that
  * mistake mechanically impossible.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param bool $switched Whatever `bb_appearance_pages_switch_to_root_blog()` returned.
  * @return void
@@ -210,7 +210,7 @@ function bb_appearance_pages_restore_root_blog( $switched ) {
  * globals which are only safe to read after `bp_setup_globals`. This mirrors
  * the sidebar-widget URL fix in `callbacks.php`.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $feature_id The feature being fetched / saved.
  * @return void
@@ -457,7 +457,7 @@ add_action( 'bb_admin_settings_before_get_feature', 'bb_appearance_register_page
  * translations are reused. Returns '' for any directory that doesn't ship a
  * description (legacy behaviour — no paragraph under the dropdown).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $name Directory key from `bp_core_admin_get_directory_pages()`.
  * @return string Localized description, or '' when none applies.
@@ -498,7 +498,7 @@ function bb_appearance_get_directory_page_description( $name ) {
  *   - rewrite rules flushed on `shutdown` via a static idempotency guard —
  *     same pattern as `bb_appearance_apply_configuration()`.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $feature_id Feature that was saved.
  * @param array  $settings   Raw submitted settings payload (unused).
@@ -673,7 +673,7 @@ add_action( 'bb_admin_save_feature_settings_after', 'bb_appearance_pages_save_si
  * Only signal when a Pages field was actually written — don't refetch on
  * unrelated Appearance saves (Site Layout, Branding, etc.).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param array  $response_data Response payload being sent to React.
  * @param string $feature_id    Feature that was saved.
@@ -733,7 +733,7 @@ add_filter( 'bb_admin_save_feature_settings_response', 'bb_appearance_pages_flag
  * renders its current selection immediately on page load without waiting for
  * the async search round-trip.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param array  $field_data  Formatted field data being sent to React.
  * @param array  $field       Raw registration args.

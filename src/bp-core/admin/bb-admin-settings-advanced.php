@@ -6,7 +6,7 @@
  * all Advanced settings (side panels, sections, fields).
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register the Advanced feature and its settings.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return void
  */
@@ -134,7 +134,7 @@ function bb_admin_settings_register_advanced_feature() {
 	 * Fires after all Advanced settings panels are registered.
 	 * Allows third-party extensions to add more panels or fields.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	do_action( 'bb_advanced_after_register_settings_fields' );
 }

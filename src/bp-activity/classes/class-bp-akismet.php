@@ -597,7 +597,7 @@ class BP_Akismet {
 	/**
 	 * Register the Activity History field in the Settings 2.0 Activity Edit Modal.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param BB_Admin_Meta_Field_Registry $registry  The registry instance.
 	 * @param string                       $component The component identifier.

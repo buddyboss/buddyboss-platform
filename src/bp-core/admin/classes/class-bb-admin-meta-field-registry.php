@@ -7,7 +7,7 @@
  * automatically handle fetching, rendering, and saving.
  *
  * @package BuddyBoss\Core\Administration
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -20,14 +20,14 @@ defined( 'ABSPATH' ) || exit;
  * helpers to collect field data for AJAX responses and to persist
  * submitted values back to the database.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 class BB_Admin_Meta_Field_Registry {
 
 	/**
 	 * Singleton instance.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 * @var BB_Admin_Meta_Field_Registry|null
 	 */
 	private static $instance = null;
@@ -36,7 +36,7 @@ class BB_Admin_Meta_Field_Registry {
 	 * Registered fields keyed by component.
 	 * Structure: $fields[ $component ][ $field_id ] = array( ... )
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 * @var array
 	 */
 	private $fields = array();
@@ -44,7 +44,7 @@ class BB_Admin_Meta_Field_Registry {
 	/**
 	 * Components whose registration action has already fired.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 * @var array
 	 */
 	private $did_register = array();
@@ -52,7 +52,7 @@ class BB_Admin_Meta_Field_Registry {
 	/**
 	 * Cached sorted fields per component.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 * @var array
 	 */
 	private $sorted_cache = array();
@@ -60,7 +60,7 @@ class BB_Admin_Meta_Field_Registry {
 	/**
 	 * Get singleton instance.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return BB_Admin_Meta_Field_Registry
 	 */
@@ -75,14 +75,14 @@ class BB_Admin_Meta_Field_Registry {
 	/**
 	 * Private constructor.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	private function __construct() {}
 
 	/**
 	 * Fire the registration action for a component (once per request per component).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $component Component identifier (e.g. 'activity', 'groups', 'forums').
 	 */
@@ -99,7 +99,7 @@ class BB_Admin_Meta_Field_Registry {
 		 * The dynamic portion of the hook name, `$component`, refers to the component
 		 * identifier (e.g. 'activity', 'groups', 'forums').
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param BB_Admin_Meta_Field_Registry $registry  The registry instance.
 		 * @param string                       $component The component identifier.
@@ -110,7 +110,7 @@ class BB_Admin_Meta_Field_Registry {
 	/**
 	 * Register a field for a component.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $component Component identifier (e.g. 'activity', 'groups').
 	 * @param string $field_id  Unique field identifier within the component.
@@ -192,7 +192,7 @@ class BB_Admin_Meta_Field_Registry {
 	/**
 	 * Get all registered fields for a component, sorted by order.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $component Component identifier.
 	 * @return array
@@ -226,7 +226,7 @@ class BB_Admin_Meta_Field_Registry {
 	/**
 	 * Get fields data for a specific item (used in AJAX response).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $component Component identifier.
 	 * @param object $item      The item being edited (e.g. BP_Activity_Activity, BP_Groups_Group).
@@ -303,7 +303,7 @@ class BB_Admin_Meta_Field_Registry {
 	 * (which set object properties) prior to $item->save(), then run "after"
 	 * fields (which persist meta) afterward.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $component Component identifier.
 	 * @param object $item      The item being saved.
@@ -324,7 +324,7 @@ class BB_Admin_Meta_Field_Registry {
 		 * being saved, so unscoped listeners would run against unrelated
 		 * components and either no-op or perform redundant work.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param string $component Component identifier.
 		 * @param object $item      Item being saved (may be null on create).

@@ -5,7 +5,7 @@
  * Handles AJAX requests for Profile Fields (XProfile) CRUD
  * in the Settings 2.0 admin interface.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.0.0
  * @package BuddyBoss\Core\Administration
  */
 
@@ -15,14 +15,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class BB_Admin_Profile_Fields_Ajax
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 class BB_Admin_Profile_Fields_Ajax {
 
 	/**
 	 * Nonce action (shared with BB_Admin_Settings_Ajax).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @var string
 	 */
@@ -40,7 +40,7 @@ class BB_Admin_Profile_Fields_Ajax {
 	 * Hoisted to a class constant so the array literal isn't re-allocated
 	 * on every AJAX call.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @var array<string, string>
 	 */
@@ -70,7 +70,7 @@ class BB_Admin_Profile_Fields_Ajax {
 	/**
 	 * Verify AJAX request (capability + nonce).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -81,7 +81,7 @@ class BB_Admin_Profile_Fields_Ajax {
 	/**
 	 * Constructor.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function __construct() {
 		$this->bb_register_ajax_handlers();
@@ -90,7 +90,7 @@ class BB_Admin_Profile_Fields_Ajax {
 	/**
 	 * Register AJAX handlers.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	private function bb_register_ajax_handlers() {
 		add_action( 'wp_ajax_bb_admin_get_profile_field_groups', array( $this, 'get_field_groups' ) );
@@ -107,7 +107,7 @@ class BB_Admin_Profile_Fields_Ajax {
 	 *
 	 * Returns field groups, available field types, member types, and visibility levels.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -198,7 +198,7 @@ class BB_Admin_Profile_Fields_Ajax {
 	/**
 	 * Create a new field group.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -238,7 +238,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		/**
 		 * Fires after a field group is saved via Settings 2.0.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param BP_XProfile_Group $group Field group object.
 		 */
@@ -258,7 +258,7 @@ class BB_Admin_Profile_Fields_Ajax {
 	/**
 	 * Update an existing field group.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -308,7 +308,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		/**
 		 * Fires after a field group is saved via Settings 2.0.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param BP_XProfile_Group $group Field group object.
 		 */
@@ -328,7 +328,7 @@ class BB_Admin_Profile_Fields_Ajax {
 	/**
 	 * Delete a field group and all its fields.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -365,7 +365,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		/**
 		 * Fires after a field group is deleted via Settings 2.0.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param BP_XProfile_Group $group Deleted field group object.
 		 */
@@ -379,7 +379,7 @@ class BB_Admin_Profile_Fields_Ajax {
 	/**
 	 * Create or update a profile field.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -510,7 +510,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		/**
 		 * Fires after a field is saved via Settings 2.0.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param BP_XProfile_Field $field Saved field object.
 		 */
@@ -527,7 +527,7 @@ class BB_Admin_Profile_Fields_Ajax {
 	/**
 	 * Delete a profile field.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -566,7 +566,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		/**
 		 * Fires after a field is deleted via Settings 2.0.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param BP_XProfile_Field $field Deleted field object.
 		 */
@@ -580,7 +580,7 @@ class BB_Admin_Profile_Fields_Ajax {
 	/**
 	 * Reorder field groups and fields within groups.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -661,7 +661,7 @@ class BB_Admin_Profile_Fields_Ajax {
 	/**
 	 * Format a field object for the JSON response.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param BP_XProfile_Field $field Field object.
 	 * @return array Formatted field data.
@@ -764,7 +764,7 @@ class BB_Admin_Profile_Fields_Ajax {
 	/**
 	 * Get available field types grouped for the UI.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return array Grouped field types.
 	 */
@@ -800,7 +800,7 @@ class BB_Admin_Profile_Fields_Ajax {
 	/**
 	 * Get a human-readable label for a field type key.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $type_key Field type key.
 	 * @return string Label.
@@ -842,7 +842,7 @@ class BB_Admin_Profile_Fields_Ajax {
 	 * Pro and third-party plugins that register custom field types can hook
 	 * `bb_admin_profile_field_type_description` to provide their own copy.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $type_key Field type key.
 	 * @return string Description, or empty string if none registered.
@@ -870,7 +870,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		 * Filter the description shown below the Type dropdown in the
 		 * Add/Edit Profile Field modal.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param string $description Description copy for the field type.
 		 * @param string $type_key    Field type key (e.g. 'textbox', 'datebox').
@@ -887,7 +887,7 @@ class BB_Admin_Profile_Fields_Ajax {
 	 * `bb_admin_profile_field_social_provider_icon` to supply their own
 	 * icon mapping.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param object $provider Provider object from
 	 *                         bp_xprofile_social_network_provider().
@@ -906,7 +906,7 @@ class BB_Admin_Profile_Fields_Ajax {
 		 * empty string to fall back to the legacy inline SVG provided by
 		 * bp_xprofile_social_network_provider().
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param string $icon  Full icon class string
 		 *                      (e.g. 'bb-icon-l bb-icon-brand-facebook').
@@ -930,7 +930,7 @@ class BB_Admin_Profile_Fields_Ajax {
 	/**
 	 * Get visibility levels.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return array Visibility levels with id and label.
 	 */
@@ -951,7 +951,7 @@ class BB_Admin_Profile_Fields_Ajax {
 	/**
 	 * Get active member types.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return array Member types with id and name.
 	 */
@@ -992,7 +992,7 @@ class BB_Admin_Profile_Fields_Ajax {
 	 *
 	 * Sets up POST data so that BP_XProfile_Field::save() picks up the options.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param int    $field_id Field ID (0 for new fields).
 	 * @param string $type     Field type.
@@ -1048,7 +1048,7 @@ class BB_Admin_Profile_Fields_Ajax {
 	/**
 	 * Save field metadata (visibility, alternate name, signup, placeholder).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param int $field_id Field ID.
 	 */
@@ -1102,7 +1102,7 @@ class BB_Admin_Profile_Fields_Ajax {
 	/**
 	 * Save member types association for a field.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param int $field_id Field ID.
 	 */

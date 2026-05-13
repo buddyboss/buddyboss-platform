@@ -5,7 +5,7 @@
  * Handles AJAX requests for Profile/Member Types CRUD
  * in the Settings 2.0 admin interface.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.0.0
  * @package BuddyBoss\Core\Administration
  */
 
@@ -15,14 +15,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class BB_Admin_Member_Types_Ajax
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 class BB_Admin_Member_Types_Ajax {
 
 	/**
 	 * Nonce action (shared with BB_Admin_Settings_Ajax).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @var string
 	 */
@@ -31,7 +31,7 @@ class BB_Admin_Member_Types_Ajax {
 	/**
 	 * Verify AJAX request (capability + nonce).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -42,7 +42,7 @@ class BB_Admin_Member_Types_Ajax {
 	/**
 	 * Constructor.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function __construct() {
 		$this->bb_register_ajax_handlers();
@@ -51,7 +51,7 @@ class BB_Admin_Member_Types_Ajax {
 	/**
 	 * Register AJAX handlers.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	private function bb_register_ajax_handlers() {
 		add_action( 'wp_ajax_bb_admin_get_member_types', array( $this, 'get_member_types' ) );
@@ -66,7 +66,7 @@ class BB_Admin_Member_Types_Ajax {
 	/**
 	 * Add profile type options to the platform settings allowlist.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param array $allowed Allowed option names.
 	 * @return array Extended allowed option names.
@@ -82,7 +82,7 @@ class BB_Admin_Member_Types_Ajax {
 	/**
 	 * Get all member/profile types with meta.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -254,7 +254,7 @@ class BB_Admin_Member_Types_Ajax {
 	 * Mirrors legacy bp_save_member_type_post_metabox_data() for key generation,
 	 * label defaults, and cache clearing.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -328,7 +328,7 @@ class BB_Admin_Member_Types_Ajax {
 		/**
 		 * Fires after a member type is created via Settings 2.0.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param int $post_id The member type post ID.
 		 */
@@ -345,7 +345,7 @@ class BB_Admin_Member_Types_Ajax {
 	/**
 	 * Update an existing member/profile type.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -440,7 +440,7 @@ class BB_Admin_Member_Types_Ajax {
 	/**
 	 * Delete a member/profile type.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -476,7 +476,7 @@ class BB_Admin_Member_Types_Ajax {
 		/**
 		 * Fires after a member/profile type is deleted via Settings 2.0.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param int $type_id The deleted member type post ID.
 		 */
@@ -492,7 +492,7 @@ class BB_Admin_Member_Types_Ajax {
 	 *
 	 * Mirrors legacy bp_save_member_type_post_metabox_data() save flow for all meta keys.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param int    $post_id    Post ID of the member type.
 	 * @param string $post_title Post title (used as default for labels).
@@ -756,7 +756,7 @@ class BB_Admin_Member_Types_Ajax {
 	/**
 	 * Get available group types for the Group Creation Permissions field.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return array Array of group types with id and name.
 	 */
@@ -791,7 +791,7 @@ class BB_Admin_Member_Types_Ajax {
 	/**
 	 * Get all WordPress roles.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return array Array of roles with value and label.
 	 */
@@ -816,7 +816,7 @@ class BB_Admin_Member_Types_Ajax {
 	 * checks for the legacy nonce $_POST['_bp-member-type-nonce'] which is not present
 	 * in Settings 2.0 AJAX requests. We replicate the same cache clearing here.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @see bb_members_clear_member_type_cache_on_update() Legacy cache clearing (save_post hook).
 	 * @see bb_members_clear_member_type_cache_before_delete() Delete cache clearing (before_delete_post hook) — works automatically.

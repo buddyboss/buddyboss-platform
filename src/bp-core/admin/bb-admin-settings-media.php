@@ -10,7 +10,7 @@
  * When Media is disabled, all three components are disabled.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
  * Registers the feature, side panels, and delegates field registration
  * to panel-specific functions.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_admin_settings_register_media_feature() {
 
@@ -276,7 +276,7 @@ function bb_admin_settings_register_media_feature() {
 	 * Fires after all Media settings panels are registered.
 	 * Allows third-party extensions to add more panels or fields.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	do_action( 'bb_media_after_register_settings_fields' );
 }

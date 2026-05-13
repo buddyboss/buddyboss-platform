@@ -5,7 +5,7 @@
  * Registers sections and fields for the Activity Topics side panel.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register Activity Topics panel sections and fields.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_activity_register_topics_panel_fields() {
 
@@ -161,7 +161,7 @@ function bb_activity_register_topics_panel_fields() {
 	 * Fires after Activity Topics section fields are registered.
 	 * Allows Pro plugin to register Group Topics options and other fields.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	do_action( 'bb_activity_settings_after_topics_fields' );
 
@@ -172,12 +172,12 @@ function bb_activity_register_topics_panel_fields() {
 	 * settings fields. Replaced by bb_activity_settings_after_topics_fields.
 	 *
 	 * @since BuddyBoss 1.7.0
-	 * @deprecated BuddyBoss [BBVERSION] Use bb_activity_settings_after_topics_fields instead.
+	 * @deprecated BuddyBoss 3.0.0 Use bb_activity_settings_after_topics_fields instead.
 	 */
 	do_action_deprecated(
 		'bb_admin_setting_activity_topic_register_fields',
 		array(),
-		'[BBVERSION]',
+		'3.0.0',
 		'bb_activity_settings_after_topics_fields'
 	);
 }

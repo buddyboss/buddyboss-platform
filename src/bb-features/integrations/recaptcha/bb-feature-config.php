@@ -6,7 +6,7 @@
  * Auto-discovered by BB_Feature_Autoloader from bb-features/integrations/recaptcha/.
  *
  * @package BuddyBoss\Features\Integrations\Recaptcha
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.

@@ -14,7 +14,7 @@
  * an empty array since the filter callbacks aren't registered yet.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -27,7 +27,7 @@ defined( 'ABSPATH' ) || exit;
  * Per-content-type fields are registered lazily via
  * bb_moderation_lazy_register_content_type_fields().
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_moderation_register_content_reporting_fields() {
 
@@ -69,7 +69,7 @@ function bb_moderation_register_content_reporting_fields() {
  * AJAX request to fetch feature settings. By this point `bp_init` has fired
  * and bp_moderation_content_types() returns the full list of content types.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $feature_id The feature being fetched.
  */

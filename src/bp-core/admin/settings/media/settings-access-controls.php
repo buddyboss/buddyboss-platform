@@ -9,7 +9,7 @@
  * via PHP filters.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -27,7 +27,7 @@ defined( 'ABSPATH' ) || exit;
  * - bb-access-control-upload-video
  * - bb-access-control-upload-document
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_media_register_access_controls_panel_fields() {
 
@@ -124,7 +124,7 @@ function bb_media_register_access_controls_panel_fields() {
 	 * Pro or third-party plugins can hook here to register additional
 	 * access-control fields in the same side panel.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	do_action( 'bb_media_access_control_after_register_fields' );
 }

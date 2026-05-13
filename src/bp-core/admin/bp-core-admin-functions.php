@@ -2643,7 +2643,7 @@ function bb_cpt_feed_enabled_disabled() {
  * deactivates the blogs component accordingly. Installs the blog tracking
  * table when activating, and updates active components option when state changes.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param callable $is_feed_enabled_cb Callback that receives a post type slug and
  *                                     returns bool whether its feed is enabled.
@@ -2716,7 +2716,7 @@ function bb_sync_blogs_component_state( $is_feed_enabled_cb ) {
  * Capability is checked first because it is cheaper and avoids
  * consuming a nonce check for unauthorized users.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $nonce_action The nonce action to verify against.
  *
@@ -2752,7 +2752,7 @@ function bb_admin_verify_ajax_request( $nonce_action ) {
  *   saved in the $bp global
  *
  * @since BuddyPress 1.7.0
- * @since BuddyBoss [BBVERSION] Moved from bp-core-admin-components.php during Settings 2.0 cleanup.
+ * @since BuddyBoss 3.0.0 Moved from bp-core-admin-components.php during Settings 2.0 cleanup.
  *
  * @param array  $submitted Array of component settings from the POST global.
  *                          Caller should stripslashes_deep() before passing.
@@ -2791,7 +2791,7 @@ function bp_core_admin_get_active_components_from_submitted_settings( $submitted
  * its `bp_core_admin_get_components` filter remain part of the public API.
  *
  * @since BuddyPress 1.7.0
- * @since BuddyBoss [BBVERSION] Moved from bp-core-admin-components.php during Settings 2.0 cleanup.
+ * @since BuddyBoss 3.0.0 Moved from bp-core-admin-components.php during Settings 2.0 cleanup.
  *
  * @param string $type Optional. Component type to fetch: 'all', 'optional', or 'required'. Default 'all'.
  * @return array Requested components' data.

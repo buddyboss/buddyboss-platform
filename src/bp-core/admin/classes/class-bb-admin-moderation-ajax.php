@@ -5,7 +5,7 @@
  * Handles AJAX requests for Reporting Categories CRUD
  * in the Settings 2.0 admin interface.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  * @package BuddyBoss\Core\Administration
  */
 
@@ -15,14 +15,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class BB_Admin_Moderation_Ajax
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 class BB_Admin_Moderation_Ajax {
 
 	/**
 	 * Nonce action (shared with BB_Admin_Settings_Ajax).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @var string
 	 */
@@ -31,7 +31,7 @@ class BB_Admin_Moderation_Ajax {
 	/**
 	 * Taxonomy name.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @var string
 	 */
@@ -40,7 +40,7 @@ class BB_Admin_Moderation_Ajax {
 	/**
 	 * Term meta key for "show when reporting".
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @var string
 	 */
@@ -49,7 +49,7 @@ class BB_Admin_Moderation_Ajax {
 	/**
 	 * Valid "show when reporting" values.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @var array
 	 */
@@ -58,7 +58,7 @@ class BB_Admin_Moderation_Ajax {
 	/**
 	 * Constructor.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function __construct() {
 		$this->bb_register_ajax_handlers();
@@ -67,7 +67,7 @@ class BB_Admin_Moderation_Ajax {
 	/**
 	 * Register AJAX handlers.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	private function bb_register_ajax_handlers() {
 		add_action( 'wp_ajax_bb_admin_get_reporting_categories', array( $this, 'bb_get_reporting_categories' ) );
@@ -79,7 +79,7 @@ class BB_Admin_Moderation_Ajax {
 	/**
 	 * Verify AJAX request (nonce + capability).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	private function bb_verify_request() {
 		if ( ! bp_current_user_can( 'bp_moderate' ) ) {
@@ -95,7 +95,7 @@ class BB_Admin_Moderation_Ajax {
 	/**
 	 * Get all reporting categories.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function bb_get_reporting_categories() {
 		$this->bb_verify_request();
@@ -149,7 +149,7 @@ class BB_Admin_Moderation_Ajax {
 	/**
 	 * Create a new reporting category.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function bb_create_reporting_category() {
 		$this->bb_verify_request();
@@ -195,7 +195,7 @@ class BB_Admin_Moderation_Ajax {
 	/**
 	 * Update an existing reporting category.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function bb_update_reporting_category() {
 		$this->bb_verify_request();
@@ -252,7 +252,7 @@ class BB_Admin_Moderation_Ajax {
 	/**
 	 * Delete a reporting category.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function bb_delete_reporting_category() {
 		$this->bb_verify_request();
@@ -279,7 +279,7 @@ class BB_Admin_Moderation_Ajax {
 	/**
 	 * Get human-readable label for show_when_reporting value.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $value Meta value.
 	 * @return string Label.
@@ -293,7 +293,7 @@ class BB_Admin_Moderation_Ajax {
 	/**
 	 * Format a category term into a response array.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param WP_Term $term      Term object.
 	 * @param string  $show_when Show-when-reporting meta value.

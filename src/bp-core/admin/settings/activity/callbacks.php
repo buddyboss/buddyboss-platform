@@ -5,7 +5,7 @@
  * Sanitize callback functions for Activity feature settings.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  * including -1 (Forever). Falls back to hardcoded defaults when
  * bp_activity_edit_times() is unavailable.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return array Allowed integer values.
  */
@@ -52,7 +52,7 @@ function bb_activity_get_allowed_edit_times() {
  * should not be overwritten by the auto-save pipeline. This callback
  * returns the existing stored value so it is never clobbered.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The submitted value (ignored).
  *
@@ -67,7 +67,7 @@ function bb_sanitize_topic_list_noop( $value ) {
  *
  * Handles the toggle + select combo for activity edit and comment edit fields.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The value to sanitize.
  *
@@ -89,7 +89,7 @@ function bb_activity_sanitize_edit_time( $value ) {
  * Delegates to bb_activity_sanitize_edit_time() since the validation
  * rules are identical for activity posts and comments.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The value to sanitize.
  *
@@ -104,7 +104,7 @@ function bb_activity_sanitize_comment_edit_time( $value ) {
  *
  * Expects an associative array where keys are platform slugs and values are 0/1.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The value to sanitize.
  *
@@ -132,7 +132,7 @@ function bb_sanitize_sharing_platforms( $value ) {
  *
  * Accepts values 0-5 for maximum comments per post.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The value to sanitize.
  *
@@ -153,7 +153,7 @@ function bb_activity_sanitize_comment_visibility( $value ) {
  *
  * Accepts values 1-4 for thread depth levels.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The value to sanitize.
  *
@@ -174,7 +174,7 @@ function bb_activity_sanitize_comment_threading_depth( $value ) {
  *
  * Accepts specific values for number of comments to load per request.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The value to sanitize.
  *
@@ -205,7 +205,7 @@ function bb_activity_sanitize_comment_loading( $value ) {
  *
  * Handles the toggle_list for BuddyBoss Platform activity types.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The value to sanitize.
  *
@@ -230,7 +230,7 @@ function bb_activity_sanitize_platform_activity_types( $value ) {
  * Uses the shared bb_sync_blogs_component_state() helper, reading saved option
  * values instead of $_POST (Settings 2.0 saves options before this hook fires).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $feature_id Feature ID being saved.
  * @param array  $settings   Full submitted settings.
@@ -268,7 +268,7 @@ add_action( 'bb_admin_save_feature_settings_after', 'bb_activity_sync_blogs_comp
  * Expects an associative array of key => 0|1 values.
  * Keys are sanitized via sanitize_key(), values cast to absint().
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value Raw value from the AJAX request.
  *

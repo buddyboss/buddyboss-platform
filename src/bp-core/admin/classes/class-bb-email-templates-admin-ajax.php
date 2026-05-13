@@ -5,7 +5,7 @@
  * Handles AJAX requests for Email Templates list operations
  * in the Settings 2.0 admin interface.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.0.0
  * @package BuddyBoss\Core\Administration
  */
 
@@ -15,14 +15,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class BB_Email_Templates_Admin_Ajax
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 class BB_Email_Templates_Admin_Ajax {
 
 	/**
 	 * Nonce action (shared with BB_Admin_Settings_Ajax).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @var string
 	 */
@@ -31,7 +31,7 @@ class BB_Email_Templates_Admin_Ajax {
 	/**
 	 * Maximum items per page for paginated endpoints.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @var int
 	 */
@@ -40,7 +40,7 @@ class BB_Email_Templates_Admin_Ajax {
 	/**
 	 * Constructor.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function __construct() {
 		$this->bb_register_ajax_handlers();
@@ -49,7 +49,7 @@ class BB_Email_Templates_Admin_Ajax {
 	/**
 	 * Maximum items for bulk operations.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @var int
 	 */
@@ -58,7 +58,7 @@ class BB_Email_Templates_Admin_Ajax {
 	/**
 	 * Register AJAX handlers.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	private function bb_register_ajax_handlers() {
 		add_action( 'wp_ajax_bb_admin_get_email_templates', array( $this, 'get_email_templates' ) );
@@ -77,7 +77,7 @@ class BB_Email_Templates_Admin_Ajax {
 	 * Uses WP_Query on the bp-email post type. Returns email templates
 	 * with title, description (from taxonomy term), status, and date.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -222,7 +222,7 @@ class BB_Email_Templates_Admin_Ajax {
 					 * Third-party plugins (WPML, Polylang, etc.) can use this to add
 					 * translation flags, status icons, or other column content.
 					 *
-					 * @since BuddyBoss [BBVERSION]
+					 * @since BuddyBoss 3.0.0
 					 *
 					 * @param string  $col_key    Column key.
 					 * @param int     $email_id   Email template post ID.
@@ -299,7 +299,7 @@ class BB_Email_Templates_Admin_Ajax {
 		/**
 		 * Filters the full response data for the admin email templates list AJAX endpoint.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param array $response Response data array.
 		 */
@@ -313,7 +313,7 @@ class BB_Email_Templates_Admin_Ajax {
 	 *
 	 * Supports 'trash' action matching the legacy WP list table behavior.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -400,7 +400,7 @@ class BB_Email_Templates_Admin_Ajax {
 	 * Uses BB_Admin_Meta_Field_Registry to provide registered_fields,
 	 * following the same pattern as Groups and Activity edit modals.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -441,7 +441,7 @@ class BB_Email_Templates_Admin_Ajax {
 		/**
 		 * Filters the single email template response.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param array   $response Response data.
 		 * @param WP_Post $post     Email template post object.
@@ -458,7 +458,7 @@ class BB_Email_Templates_Admin_Ajax {
 	 * the same pattern as Groups and Activity save handlers.
 	 * Uses wp_insert_post / wp_update_post to preserve save_post_bp-email hook.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -591,7 +591,7 @@ class BB_Email_Templates_Admin_Ajax {
 			 * to prevent them from being overwritten or deleted via the
 			 * email template edit modal.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 3.0.0
 			 *
 			 * @param array $protected_keys List of protected meta key names.
 			 */
@@ -629,7 +629,7 @@ class BB_Email_Templates_Admin_Ajax {
 		/**
 		 * Fires after an email template is saved via Settings 2.0.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param int      $saved_id  Saved post ID.
 		 * @param WP_Post  $saved_post Saved post object.
@@ -651,7 +651,7 @@ class BB_Email_Templates_Admin_Ajax {
 	/**
 	 * Permanently delete email templates.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -711,7 +711,7 @@ class BB_Email_Templates_Admin_Ajax {
 	/**
 	 * Bulk edit email templates (status and/or situation).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -810,7 +810,7 @@ class BB_Email_Templates_Admin_Ajax {
 	 * Categories are resolved from the 'group' key in bp_email_get_type_schema().
 	 * Terms not in the schema fall back to the 'other' group.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -897,7 +897,7 @@ class BB_Email_Templates_Admin_Ajax {
 		/**
 		 * Filters the email situations response.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param array $grouped Grouped situations by category.
 		 */
@@ -911,7 +911,7 @@ class BB_Email_Templates_Admin_Ajax {
 	 *
 	 * Returns a filtered, sorted list for the custom field name autocomplete.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -929,7 +929,7 @@ class BB_Email_Templates_Admin_Ajax {
 		 *
 		 * Matches WordPress core's postmeta_form_limit filter default of 30.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param int $limit Number of meta keys to retrieve. Default 30.
 		 */
@@ -963,7 +963,7 @@ class BB_Email_Templates_Admin_Ajax {
 	 * Compares registered email types from bp_email_get_schema() against
 	 * published bp-email posts to find which ones are missing.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return array Array of missing emails, each with 'slug' and 'description'.
 	 */

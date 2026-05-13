@@ -833,7 +833,7 @@ add_action( 'bp_rest_api_init', 'bb_rest_compatibility_loader', 5 );
 // Platform after the extraction caused a fatal on sites that upgraded
 // Platform without installing the buddyboss-learndash addon.
 //
-// As of BuddyBoss [BBVERSION] all three functions moved to the addon at
+// As of BuddyBoss 3.0.0 all three functions moved to the addon at
 // `buddyboss-learndash/includes/group-leader-role-sync.php` and are loaded
 // from `BP_Learndash_Integration::includes()` so the class reference can only
 // ever resolve when the addon itself is loaded.

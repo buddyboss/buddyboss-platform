@@ -13,7 +13,7 @@
  * arg. Until then the panels are always visible in the side nav.
  *
  * @package BuddyBoss\Features\Community\Appearance
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -31,7 +31,7 @@ require_once __DIR__ . '/pages-panel.php';
  * helper — panel and section titles are conceptually distinct and a future
  * customization might want them to differ.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return string Translated section title.
  */
@@ -45,7 +45,7 @@ function bb_appearance_site_seo_section_title() {
  * Single source of truth for the SEO section's `help_url`. Mirrors the
  * Activity Sharing pattern (`bb_activity_sharing_section_help_article()`).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return string Help article ID.
  */
@@ -61,7 +61,7 @@ function bb_appearance_site_seo_section_help_article() {
  * filter — see `bb_appearance_site_seo_get_section_args()` and
  * `bb_appearance_site_seo_add_pro_badge_when_no_sharing()` below.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return array Section args (title, order, help_url).
  */
@@ -89,7 +89,7 @@ function bb_appearance_site_seo_section_base_args() {
  * use `merge => true` on a follow-up `bb_register_feature_section()` call —
  * see `bb_appearance_register_site_seo_pro_placeholder_fields()`.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return array Section args after filter.
  */
@@ -97,7 +97,7 @@ function bb_appearance_site_seo_get_section_args() {
 	/**
 	 * Filter the Site SEO section args.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param array $args Default section args (title, order, help_url).
 	 */
@@ -108,7 +108,7 @@ function bb_appearance_site_seo_get_section_args() {
  * Filter callback: add UPGRADE PRO badge when the BuddyBoss Sharing plugin
  * is not installed at all (state 4).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param array $args Default section args.
  * @return array Possibly-modified section args.
@@ -136,7 +136,7 @@ add_filter( 'bb_appearance_site_seo_section_args', 'bb_appearance_site_seo_add_p
 /**
  * Register Appearance feature settings in the Feature Registry.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_admin_settings_register_appearance_settings() {
 
@@ -972,7 +972,7 @@ add_action( 'bb_register_features', 'bb_admin_settings_register_appearance_setti
  * the stored values (which Platform never actually persists here thanks to
  * `__return_empty_string`) seamlessly hand over to Sharing's real fields.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return void
  */

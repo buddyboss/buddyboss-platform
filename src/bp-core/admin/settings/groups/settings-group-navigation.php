@@ -10,7 +10,7 @@
  * to maintain backward compatibility with the legacy Customizer.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register Group Navigation panel section and fields.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_groups_register_navigation_panel_fields() {
 
@@ -102,7 +102,7 @@ function bb_groups_register_navigation_panel_fields() {
 	/**
 	 * Fires after the Group Navigation panel fields are registered.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	do_action( 'bb_groups_navigation_after_register_fields' );
 }
@@ -117,7 +117,7 @@ function bb_groups_register_navigation_panel_fields() {
  * Reuses the same logic as the removed legacy Customizer and
  * preserves the `group_default_tab_options_list` filter for Pro extensibility.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return array Array of [ 'value' => slug, 'label' => name ] items.
  */
@@ -184,7 +184,7 @@ function bb_get_group_default_tab_options() {
  * Note: The "Send Messages" nav item depends on the current admin user's
  * membership in the fetched group (inherited from BP_Nouveau_Customizer_Group_Nav).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return array Array of checkbox_list option items.
  */
@@ -278,7 +278,7 @@ function bb_get_group_nav_items_for_settings() {
  * Called when a feature is activated/deactivated (which changes the list of
  * available nav items) and when the first group is created on a fresh install.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_clear_group_nav_items_cache() {
 	delete_transient( 'bb_group_nav_items_for_settings' );
@@ -292,7 +292,7 @@ add_action( 'groups_group_create_complete', 'bb_clear_group_nav_items_cache' );
  *
  * Used to mark items as "Hidden" in the Navigation Order list.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return array Array of nav item slugs that are inactive.
  */
@@ -346,7 +346,7 @@ function bb_get_inactive_group_nav_slugs() {
  * via bp_get_option(). Group navigation values live inside the nested
  * `bp_nouveau_appearance` option, so we intercept and override here.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param array  $field_data Formatted field data.
  * @param array  $field      Original field registration data.
@@ -399,7 +399,7 @@ add_filter( 'bb_admin_settings_format_field_data', 'bb_group_navigation_enrich_f
  * Reads saved order from bp_nouveau_appearance[group_nav_order]
  * and builds an ordered { slug: 1/0 } object for the React component.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param array $options    Optional. Pre-fetched nav item options from bb_get_group_nav_items_for_settings().
  * @param array $appearance Optional. Pre-fetched appearance settings from bp_nouveau_get_appearance_settings().
@@ -465,7 +465,7 @@ function bb_build_group_nav_order_value( $options = array(), $appearance = array
  * We intercept after save to merge values back into the nested
  * `bp_nouveau_appearance` option and delete the temporary per-field options.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $feature_id Feature ID.
  * @param array  $settings   Full submitted settings (JSON decoded).

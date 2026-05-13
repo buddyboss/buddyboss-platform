@@ -5,7 +5,7 @@
  * Registers sections and fields for the Login Redirects side panel.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register Login Redirects panel sections and fields.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return void
  */
@@ -178,7 +178,7 @@ function bb_registration_register_login_redirects_panel_fields() {
 	 * Fires after Login Redirects panel fields are registered.
 	 * Allows third-party extensions to add more sections or fields.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	do_action( 'bb_registration_after_login_redirects_settings_fields' );
 }

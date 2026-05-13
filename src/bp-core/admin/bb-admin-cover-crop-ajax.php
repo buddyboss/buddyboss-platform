@@ -40,7 +40,7 @@
  * nonce (`bb_admin_cover_cropstore`).
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -50,7 +50,7 @@ defined( 'ABSPATH' ) || exit;
  * `bb_validate_custom_profile_group_avatar_ajax_reuqest()` in scope —
  * default profile cover is `user`, default group cover is `group`.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 const BB_ADMIN_COVER_CROP_ALLOWED_OBJECTS = array( 'user', 'group' );
 
@@ -64,7 +64,7 @@ const BB_ADMIN_COVER_CROP_ALLOWED_OBJECTS = array( 'user', 'group' );
  * single-step upload writes to, so anything reading the option after the fact
  * sees the same path layout.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $object Either 'user' or 'group'.
  * @return ?array{basedir:string, baseurl:string, subdir:string, dir:string, url:string}
@@ -110,7 +110,7 @@ function bb_admin_cover_crop_resolve_dir( $object ) {
  *   - missing or unauthorized capability
  *   - object outside allowed list
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return array{object:string} Sanitized params.
  */
@@ -146,7 +146,7 @@ function bb_admin_cover_crop_validate_request() {
  * Returns the staged URL plus image dimensions so the modal can compute the
  * canvas-to-image scale factor.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return void Always exits via wp_send_json_*.
  */
@@ -256,7 +256,7 @@ add_action( 'wp_ajax_bb_admin_cover_image_upload_temp', 'bb_admin_cover_image_up
  * (option storage in `bb_save_profile_group_cover_options_on_upload_custom_cover`,
  * any third-party listener) continues to fire unchanged.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return void Always exits via wp_send_json_*.
  */

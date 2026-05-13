@@ -6,7 +6,7 @@
  * all Messages settings (side panels, sections, fields).
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  * Registers the feature, side panels, and delegates field registration
  * to panel-specific functions.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_admin_settings_register_messages_feature() {
 
@@ -255,7 +255,7 @@ function bb_admin_settings_register_messages_feature() {
 	 * Fires after all Messages settings panels are registered.
 	 * Allows third-party extensions to add more panels or fields.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	do_action( 'bb_messages_after_register_settings_fields' );
 }

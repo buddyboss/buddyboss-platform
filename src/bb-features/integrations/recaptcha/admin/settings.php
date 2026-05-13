@@ -6,7 +6,7 @@
  * integration feature in the Feature Registry.
  *
  * @package BuddyBoss\Features\Integrations\Recaptcha
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -564,6 +564,6 @@ bb_register_feature_field(
  * Fires after all reCAPTCHA settings panels are registered.
  * Allows third-party extensions to add more panels or fields.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 do_action( 'bb_recaptcha_after_register_settings_fields' );

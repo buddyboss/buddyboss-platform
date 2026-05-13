@@ -10,7 +10,7 @@
  * (types, options) via PHP filters.
  *
  * @package BuddyBoss\Core\Administration
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
  * registered. Fires a hook so Pro (or third-party) can register
  * additional fields in the same panel.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_messages_register_access_control_fields() {
 
@@ -92,7 +92,7 @@ function bb_messages_register_access_control_fields() {
 	 * Pro or third-party plugins can hook here to register additional
 	 * access-control fields in the same side panel.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	do_action( 'bb_messages_access_control_after_register_fields' );
 }

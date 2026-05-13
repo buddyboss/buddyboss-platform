@@ -40,7 +40,7 @@ add_action( bp_core_admin_hook(), 'bp_moderation_add_admin_menu', 100 );
 /**
  * Redirect the old Moderation admin page to Settings 2.0.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bp_moderation_admin_redirect() {
 	wp_safe_redirect( admin_url( 'admin.php?page=bb-settings&tab=moderation&panel=flagged_members' ) );
@@ -75,7 +75,7 @@ add_filter( 'bp_admin_menu_order', 'bp_moderation_admin_menu_order' );
  * for tab=moderation and swaps the WordPress `current` class accordingly.
  * Also observes URL changes from SPA navigation (history.replaceState).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bp_moderation_highlight_admin_menu() {
 	// Only output on bb-settings pages (covers all SPA-navigated tabs).

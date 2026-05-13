@@ -78,7 +78,7 @@ add_action( 'bp_admin_init', 'bb_redirect_legacy_settings_to_settings_2', 1 );
  * Together they ensure ?page=bp-settings NEVER lands on the "Sorry, you
  * are not allowed..." error page.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_force_redirect_bare_bp_settings() {
 	if ( ! is_admin() ) {
@@ -103,7 +103,7 @@ add_action( 'admin_init', 'bb_force_redirect_bare_bp_settings', 0 );
  * Shared between the `admin_menu`-priority redirect and the later
  * `bp_admin_init` redirect so both entry points normalize tabs consistently.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return array Map of old tab slug => feature ID string OR array( 'tab' => ..., 'panel' => ... ).
  */
@@ -144,7 +144,7 @@ function bb_get_legacy_settings_tabs_mapping() {
 /**
  * Apply a legacy tab mapping entry to a Settings 2.0 URL.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string       $target  Base admin URL to add tab/panel onto.
  * @param string|array $mapping Mapping entry: feature-id string or [ 'tab' => ..., 'panel' => ... ].
@@ -194,7 +194,7 @@ function bb_apply_legacy_tab_mapping_to_url( $target, $mapping ) {
  * This is the only hook point that reliably catches the "slug doesn't
  * exist" case before WP's 403 fires.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_redirect_bp_settings_before_permission_check() {
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
@@ -276,7 +276,7 @@ function bb_redirect_bp_settings_before_permission_check() {
 		 * Pro hooks this to add Zoom, OneSignal, and other integration tab redirects.
 		 * Values can be a string (feature ID only) or array with 'tab' and 'panel'.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param array $legacy_integration_tabs Array of old integration tab name => new Settings 2.0 route.
 		 */
@@ -746,7 +746,7 @@ function bb_render_admin_header() {
 			(
 				! empty( $screen->id ) &&
 				(
-					// `buddyboss_page_bb-readylaunch` retired in [BBVERSION] —
+					// `buddyboss_page_bb-readylaunch` retired in 3.0.0 —
 					// submenu deleted, URL redirects to Settings 2.0. Screen ID
 					// no longer reachable so the check is dead weight.
 					'buddyboss_page_bb-upgrade' !== $screen->id &&
@@ -786,7 +786,7 @@ add_action( 'in_admin_header', 'bb_render_admin_header', 999 );
  * (e.g., edit.php?post_type=bp-group-type) to the corresponding
  * Settings 2.0 feature pages.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_redirect_legacy_settings_to_settings_2() {
 	// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Redirect only, no data modification.
@@ -825,7 +825,7 @@ function bb_redirect_legacy_settings_to_settings_2() {
 		/**
 		 * Map of migrated CPT slugs to their Settings 2.0 redirect URLs.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param array $cpt_redirects Post type slug => Settings 2.0 URL path.
 		 */
@@ -849,7 +849,7 @@ function bb_redirect_legacy_settings_to_settings_2() {
 		 * Third-party plugins can add their own CPT redirects when they
 		 * migrate admin screens to Settings 2.0.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param array $cpt_redirects Post type slug => Settings 2.0 URL path.
 		 */
@@ -944,7 +944,7 @@ function bb_redirect_legacy_settings_to_settings_2() {
 		 * Pro hooks this to add Zoom, OneSignal, and other integration tab redirects.
 		 * Values can be a string (feature ID only) or array with 'tab' and 'panel'.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param array $legacy_integration_tabs Array of old integration tab name => new Settings 2.0 route.
 		 */

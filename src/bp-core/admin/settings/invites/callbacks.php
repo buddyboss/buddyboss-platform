@@ -6,7 +6,7 @@
  * for Email Invites feature settings.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  * member types may change. This hook fires when Settings 2.0 fetches feature
  * settings via AJAX, ensuring the field list is always current.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $feature_id The feature being fetched.
  */

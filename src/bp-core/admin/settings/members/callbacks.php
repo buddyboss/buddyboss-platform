@@ -5,7 +5,7 @@
  * Sanitize callback functions for Members feature settings.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * Accepts only allowed display name format values.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The value to sanitize.
  *
@@ -38,7 +38,7 @@ function bb_members_sanitize_display_name_format( $value ) {
  *
  * Accepts only 'username' or 'unique_id'.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The value to sanitize.
  *
@@ -60,7 +60,7 @@ function bb_members_sanitize_slug_format( $value ) {
  *
  * Accepts only 'BuddyBoss' or 'WordPress'.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The value to sanitize.
  *
@@ -82,7 +82,7 @@ function bb_members_sanitize_avatar_type( $value ) {
  *
  * Accepts only allowed default avatar type values.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The value to sanitize.
  *
@@ -104,7 +104,7 @@ function bb_members_sanitize_default_avatar_type( $value ) {
  *
  * Accepts only allowed cover type values.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The value to sanitize.
  *
@@ -126,7 +126,7 @@ function bb_members_sanitize_default_cover_type( $value ) {
  *
  * Accepts only allowed layout format values.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The value to sanitize.
  *
@@ -148,7 +148,7 @@ function bb_members_sanitize_layout_format( $value ) {
  *
  * Accepts only 'grid' or 'list'.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The value to sanitize.
  *
@@ -170,7 +170,7 @@ function bb_members_sanitize_default_format( $value ) {
  *
  * Expects an associative array where keys are element slugs and values are 0/1.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The value to sanitize.
  *
@@ -194,7 +194,7 @@ function bb_members_sanitize_toggle_list( $value ) {
  *
  * Accepts only 'left' or 'centered'.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The value to sanitize.
  *
@@ -216,7 +216,7 @@ function bb_members_sanitize_header_style( $value ) {
  *
  * Accepts only 'default' or 'full'.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The value to sanitize.
  *
@@ -238,7 +238,7 @@ function bb_members_sanitize_cover_width( $value ) {
  *
  * Accepts only 'small' or 'large'.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The value to sanitize.
  *
@@ -282,7 +282,7 @@ function bb_members_sanitize_cover_height( $value ) {
  * bb_enable_member_connections toggle value. Runs at priority 2 so
  * component state is updated before other connection-related save hooks.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $feature_id Feature ID being saved.
  * @param array  $settings   Full submitted settings.
@@ -349,7 +349,7 @@ add_action( 'bb_admin_save_feature_settings_after', 'bb_members_sync_connection_
  * Uses a static variable instead of a PHP global for cross-hook state.
  * Call with no arguments to read, or pass an array to set.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param array|null $state Optional. Pass an array to set state. Omit or null to read.
  *
@@ -371,7 +371,7 @@ function bb_members_get_pre_save_state( $state = null ) {
  * Captures the current value of settings that need before/after comparison
  * (e.g., avatar type, cover type, slug format) before the save loop updates them.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $feature_id Feature ID being saved.
  *
@@ -404,7 +404,7 @@ add_action( 'bb_admin_settings_before_save_feature', 'bb_members_capture_pre_sav
  * for visibility and required status based on the selected format.
  * Replicates legacy BP_Admin_Setting_Xprofile::settings_save() logic.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $feature_id Feature ID.
  * @param array  $settings   Full submitted settings.
@@ -461,7 +461,7 @@ add_action( 'bb_admin_save_feature_settings_after', 'bb_members_handle_display_n
  * When avatar type is set to WordPress, force-disable Gravatar setting.
  * Replicates legacy BP_Admin_Setting_Xprofile::settings_save() logic.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $feature_id Feature ID.
  * @param array  $settings   Full submitted settings.
@@ -502,7 +502,7 @@ add_action( 'bb_admin_save_feature_settings_after', 'bb_members_handle_avatar_ty
  * - If avatar type is 'display-name' but no image editor available, revert to 'buddyboss'.
  * - Same for cover: revert only when prev was 'custom' and image is now empty.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $feature_id Feature ID.
  * @param array  $settings   Full submitted settings.
@@ -576,7 +576,7 @@ add_action( 'bb_admin_save_feature_settings_after', 'bb_members_validate_image_s
  * type values, this filter updates only the affected keys in the response so
  * React stays in sync.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param array  $response_data Response data being sent.
  * @param string $feature_id    Feature ID.
@@ -619,7 +619,7 @@ add_filter( 'bb_admin_save_feature_settings_response', 'bb_members_sync_reverted
  * When the profile slug format changes, flush all caches including
  * Performance API cache. Replicates legacy settings_save() logic.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $feature_id Feature ID.
  * @param array  $settings   Full submitted settings.
@@ -686,7 +686,7 @@ add_action( 'bb_admin_save_feature_settings_after', 'bb_members_handle_slug_form
  * API for Pro and third-party plugins that need to transform element arrays
  * into Settings 2.0 option format.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param array $elements Array of elements with 'element_label', 'element_name', 'element_class' keys.
  *
@@ -718,7 +718,7 @@ function bb_members_elements_to_options( $elements ) {
  * not yet available (they register at priority 12). This filter runs when the
  * admin fetches settings via AJAX, by which time theme compat is fully loaded.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param array  $field_data Formatted field data.
  * @param array  $field      Original field registration data.
@@ -771,7 +771,7 @@ add_filter( 'bb_admin_settings_format_field_data', 'bb_members_enrich_cover_uplo
  * security. This filter adds the two member-profile-specific getters so that
  * saved custom avatar and cover image URLs are resolved and returned to React.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param array $allowed_url_getters List of allowed url_getter function names.
  *
@@ -793,7 +793,7 @@ add_filter( 'bb_admin_settings_allowed_url_getters', 'bb_members_allow_image_url
  * priority 5) because avatar setup hasn't run yet. This filter runs during
  * the AJAX request when dimensions are fully available.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param array  $field_data Formatted field data.
  * @param array  $field      Original field registration data.
@@ -827,7 +827,7 @@ add_filter( 'bb_admin_settings_format_field_data', 'bb_members_enrich_avatar_upl
  * should not execute on every admin page load. This filter populates the
  * Default Profile Type select options only when the admin fetches settings.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param array  $field_data Formatted field data.
  * @param array  $field      Original field registration data.
@@ -889,7 +889,7 @@ add_filter( 'bb_admin_settings_format_field_data', 'bb_members_enrich_profile_ty
  * response that touched the toggle so the React layer can merge it into
  * window.bbAdminData and re-evaluate section conditionals without a reload.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param array  $response_data Response data being returned to the React app.
  * @param string $feature_id    Feature ID that initiated the save.

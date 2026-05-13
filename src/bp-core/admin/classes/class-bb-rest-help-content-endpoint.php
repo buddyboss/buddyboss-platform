@@ -47,7 +47,7 @@
  *
  * @package BuddyBoss\Core\Administration
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -58,7 +58,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * Read-only proxy for buddyboss.com Knowledge Base endpoints.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 class BB_REST_Help_Content_Endpoint extends WP_REST_Controller {
 
@@ -68,7 +68,7 @@ class BB_REST_Help_Content_Endpoint extends WP_REST_Controller {
 	 * Hard-coded so the host is never derived from client input. Filterable
 	 * via `bb_help_content_proxy_base` for staging/self-hosted KB mirrors.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @var string
 	 */
@@ -82,7 +82,7 @@ class BB_REST_Help_Content_Endpoint extends WP_REST_Controller {
 	 * and the upstream LiteSpeed cache is itself ~1h — TTLing longer than
 	 * upstream is fine because the body content doesn't change.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @var int Seconds.
 	 */
@@ -96,7 +96,7 @@ class BB_REST_Help_Content_Endpoint extends WP_REST_Controller {
 	 * so the existing `bb_clear_help_content_transients()` flush sweeps
 	 * both layouts in one query.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @var string
 	 */
@@ -109,7 +109,7 @@ class BB_REST_Help_Content_Endpoint extends WP_REST_Controller {
 	 * of IDs (the Documentation modal can pass entire descendant trees) but
 	 * tight enough that pathological inputs never reach `wp_remote_get()`.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @var int
 	 */
@@ -124,7 +124,7 @@ class BB_REST_Help_Content_Endpoint extends WP_REST_Controller {
 	 * when platform-api is not loaded so the admin Help slider still works
 	 * on platform-only installs.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function __construct() {
 		if ( function_exists( 'bp_rest_namespace' ) && function_exists( 'bp_rest_version' ) ) {
@@ -144,7 +144,7 @@ class BB_REST_Help_Content_Endpoint extends WP_REST_Controller {
 	 * server-controlled `https://buddyboss.com` base, fetches with a 12h
 	 * transient cache, and returns `{ body, headers, status }`.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -187,7 +187,7 @@ class BB_REST_Help_Content_Endpoint extends WP_REST_Controller {
 	 * `rest_authorization_required_code()` (401 if logged-out, 403 if
 	 * logged-in-but-not-admin).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param WP_REST_Request $request Current REST request.
 	 *
@@ -215,7 +215,7 @@ class BB_REST_Help_Content_Endpoint extends WP_REST_Controller {
 	 * `x-wp-total` and `x-wp-totalpages` so the React kbApi pagination
 	 * loop can read them without another network round-trip.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param WP_REST_Request $request Current REST request.
 	 *
@@ -269,7 +269,7 @@ class BB_REST_Help_Content_Endpoint extends WP_REST_Controller {
 	 *    have no meaning in `wp_remote_get()`, so accepting them would be
 	 *    a footgun (they're stripped by HTTP libraries anyway).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param mixed $raw Client-provided value.
 	 *
@@ -316,7 +316,7 @@ class BB_REST_Help_Content_Endpoint extends WP_REST_Controller {
 	 * trailing-slash-stripped before concat so the result is well-formed
 	 * regardless of how the filter caller wrote it.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $path Validated path fragment (starts with exactly one slash).
 	 *
@@ -331,7 +331,7 @@ class BB_REST_Help_Content_Endpoint extends WP_REST_Controller {
 		 * it is NEVER influenced by client input. Filter callers should
 		 * return an absolute https URL with no trailing slash.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param string $base Default upstream base URL.
 		 */
@@ -355,7 +355,7 @@ class BB_REST_Help_Content_Endpoint extends WP_REST_Controller {
 	 * — we don't help an attacker enumerate the rules. Logged-out admins
 	 * never reach this code path because the permission gate runs first.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return WP_Error
 	 */
@@ -377,7 +377,7 @@ class BB_REST_Help_Content_Endpoint extends WP_REST_Controller {
 	 * header set would leak server identification, cookies, and cache hints
 	 * with no consumer benefit.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $target Full upstream URL.
 	 *
@@ -397,7 +397,7 @@ class BB_REST_Help_Content_Endpoint extends WP_REST_Controller {
 		/**
 		 * Filter the wp_remote_get() args used to fetch a help-content URL.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param array  $args   Request args.
 		 * @param string $target Full upstream URL.
@@ -465,7 +465,7 @@ class BB_REST_Help_Content_Endpoint extends WP_REST_Controller {
 	/**
 	 * Schema for the proxy envelope response.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return array
 	 */

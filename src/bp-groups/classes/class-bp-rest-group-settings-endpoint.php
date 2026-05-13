@@ -55,7 +55,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		/**
 		 * Filter the group settings nav slugs.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param array $nav Array of nav slugs.
 		 */
@@ -1425,14 +1425,14 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		buddypress()->groups->current_group = groups_get_group( $group_id );
 
 		/**
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param array|WP_Error $fields   Array of fields, or WP_Error to short-circuit.
 		 * @param integer        $group_id Group ID.
 		 */
 		$fields = apply_filters( 'bb_integration_rest_group_courses_fields', array(), $group_id );
 
-		// Back-compat with pre-[BBVERSION] filter name.
+		// Back-compat with pre-3.0.0 filter name.
 		$fields = apply_filters( 'bp_rest_group_settings_courses', $fields, $group_id );
 
 		if ( is_wp_error( $fields ) ) {
@@ -1473,7 +1473,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		}
 
 		/**
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param array|WP_Error|null $result      Return value. Null means unhandled.
 		 * @param array               $post_fields Fields submitted by client.

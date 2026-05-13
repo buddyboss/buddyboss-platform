@@ -12,7 +12,7 @@
  * and Invites feature patterns in Settings 2.0.
  *
  * @package BuddyBoss\Features\Community\Appearance
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -59,7 +59,7 @@ bb_register_feature(
  * never hit that branch, so existing admins who intentionally stayed on the
  * WordPress theme are unaffected.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 add_action( 'bb_core_after_install', 'bb_appearance_set_readylaunch_default_on_install' );
 function bb_appearance_set_readylaunch_default_on_install() {

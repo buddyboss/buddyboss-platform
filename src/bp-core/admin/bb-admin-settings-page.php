@@ -3,7 +3,7 @@
  * BuddyBoss Admin Settings Page.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Render the New Settings page.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_admin_settings_page() {
 	// Get build directory.
@@ -341,13 +341,13 @@ function bb_admin_settings_page() {
 	 * so existing plugins that hook here can still enqueue their assets.
 	 *
 	 * @since BuddyPress 1.6.0
-	 * @deprecated BuddyBoss [BBVERSION] Use standard WordPress enqueue hooks instead.
+	 * @deprecated BuddyBoss 3.0.0 Use standard WordPress enqueue hooks instead.
 	 */
 	if ( bp_is_active( 'activity' ) ) {
 		do_action_deprecated(
 			'bp_activity_admin_enqueue_scripts',
 			array(),
-			'[BBVERSION]',
+			'3.0.0',
 			'',
 			'Enqueue scripts using standard WordPress admin_enqueue_scripts hooks instead.'
 		);

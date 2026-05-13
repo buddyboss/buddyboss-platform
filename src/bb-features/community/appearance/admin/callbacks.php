@@ -15,7 +15,7 @@
  * admin-context gate.
  *
  * @package BuddyBoss\Features\Community\Appearance
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -44,7 +44,7 @@ defined( 'ABSPATH' ) || exit;
  * `connections` if the friends component is disabled — the widget would
  * short-circuit at render time anyway).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return void
  */
@@ -107,7 +107,7 @@ function bb_appearance_seed_default_sidebars() {
  * Idempotent: re-running with the same `$settings` is a no-op because each branch
  * guards against the target state already existing (e.g., `empty( $active_components[...] )`).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param array $settings Sanitized bb_rl_* + blogname settings to apply.
  * @return void
@@ -330,7 +330,7 @@ function bb_appearance_apply_configuration( $settings ) {
 	/**
 	 * Fires after ReadyLaunch configuration has been applied.
 	 *
-	 * @since BuddyBoss 2.10.0 (moved from BB_ReadyLaunch_Onboarding in [BBVERSION])
+	 * @since BuddyBoss 2.10.0 (moved from BB_ReadyLaunch_Onboarding in 3.0.0)
 	 *
 	 * @param array $settings The final configuration settings.
 	 */
@@ -345,7 +345,7 @@ function bb_appearance_apply_configuration( $settings ) {
  * upgrade logic runs exactly once per save — keeping the Settings 2.0 and
  * onboarding code paths in lockstep.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $feature_id The feature that was saved.
  * @param array  $settings   Raw settings payload (unused — we prefer sanitized).
@@ -428,7 +428,7 @@ add_action( 'bb_admin_save_feature_settings_after', 'bb_appearance_on_settings_s
  * React side can converge on the same end-state regardless of which
  * admin tab activated the theme.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return void Sends JSON and exits.
  */
@@ -518,7 +518,7 @@ add_action( 'wp_ajax_bb_admin_activate_buddyboss_theme', 'bb_appearance_ajax_act
  * migration (`bb_rl_migrate_settings()`) cleans any legacy sequential data in
  * the DB, so read-side normalization is no longer needed.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param array  $field_data Formatted field data being sent to React.
  * @param array  $field      Raw field registration args.
@@ -580,7 +580,7 @@ add_filter( 'bb_admin_settings_format_field_data', 'bb_appearance_normalize_fiel
  * templating. Returns '' when the component is inactive or the viewer has
  * nothing to link to — caller treats that as "keep the unlinked copy".
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $field_name      Sidebar-widget field slug.
  * @param int    $current_user_id Logged-in user ID (WP-core value — BP's
@@ -643,7 +643,7 @@ function bb_appearance_resolve_sidebar_url( $field_name, $current_user_id ) {
  * strings for them yields `'Enable or disable widgets to appear on the
  * activity feed.'`; passing `<a href="...">` / `</a>` yields the linked form.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $field_name One of `bb_rl_activity_sidebars`,
  *                           `bb_rl_member_profile_sidebars`,
@@ -676,7 +676,7 @@ function bb_appearance_get_sidebar_description_template( $field_name ) {
  * linked copy injected at AJAX format time. Returns '' when `$field_name` is
  * unknown so callers can fall through cleanly.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $field_name Sidebar-widget field slug.
  * @param string $open       Opening anchor tag (or '' for plain copy).
@@ -692,7 +692,7 @@ function bb_appearance_render_sidebar_description( $field_name, $open = '', $clo
  * Build the linked `label_description` for a sidebar-widget field, or '' to
  * keep the registration-time plain copy.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $field_name Sidebar-widget field slug.
  * @return string Sprintf'd HTML with `<a>` link, or ''.
@@ -726,7 +726,7 @@ function bb_appearance_build_sidebar_description( $field_name ) {
  * but runs on the save-response path, keeping the stored shape (bool) and the
  * wire shape (string) consistent on both read and write.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param array  $response_data Response payload returned by the save AJAX handler.
  * @param string $feature_id    Feature being saved.

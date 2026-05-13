@@ -39,7 +39,7 @@
  * documentation of those caveats.
  *
  * @package BuddyBoss\Core\Administration
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.0.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -64,7 +64,7 @@ require_once dirname( __DIR__ ) . '/legacy-meta-bridge-utils.php';
  * `bb_legacy_get_xpath()` in legacy-meta-bridge-utils.php), so every
  * component bridge transparently shares it within a single request.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return array Reference to mutable state array.
  */
@@ -81,7 +81,7 @@ function &bb_legacy_activity_bridge_state() {
 /**
  * Register bridge fields late, after core/Pro fields have registered.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param BB_Admin_Meta_Field_Registry $registry  Registry instance.
  * @param string                       $component Component identifier ('activity').
@@ -113,7 +113,7 @@ add_action( 'bb_register_activity_meta_fields', 'bb_legacy_activity_meta_bridge_
 /**
  * Inner implementation, separated so the recursion guard wrapping is clean.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param BB_Admin_Meta_Field_Registry $registry  Registry instance.
  * @param string                       $component Component identifier.
@@ -160,7 +160,7 @@ function bb_legacy_activity_meta_bridge_register_inner( $registry, $component ) 
 	/**
 	 * Filter the list of activity metabox IDs the legacy bridge should skip.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string[] $skip_box_ids Metabox IDs to skip.
 	 */
@@ -208,7 +208,7 @@ function bb_legacy_activity_meta_bridge_register_inner( $registry, $component ) 
 /**
  * Capture, parse, and register a single activity metabox.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param BB_Admin_Meta_Field_Registry $registry     Registry instance.
  * @param string                       $component    Component identifier.
@@ -254,7 +254,7 @@ function bb_legacy_activity_bridge_box( $registry, $component, $box, &$order, $e
 		 * Filter the React modal tab a bridged legacy activity field should
 		 * appear under. Defaults to 'details'.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param string $tab        Tab slug — defaults to 'details'.
 		 * @param string $input_name $_POST key the field writes to.
@@ -323,7 +323,7 @@ function bb_legacy_activity_bridge_box( $registry, $component, $box, &$order, $e
  * by also rejecting BP_Activity_Activity property names so a malicious
  * metabox can't overwrite core activity columns through the bridge.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $name $_POST key.
  * @return bool True if the key is safe to write to $_POST via the bridge.
@@ -352,7 +352,7 @@ function bb_legacy_is_safe_activity_post_key( $name ) {
  * Uses Reflection on `BP_Activity_Activity` so the list stays in sync with
  * any new column added to the activity object. Cached per-request.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return string[] Lowercase activity property names.
  */
@@ -394,7 +394,7 @@ function bb_legacy_canonical_activity_keys() {
 	 * overwrite. Plugin authors can add custom keys here if their save handler
 	 * reads $_POST values that should be reserved for the React form.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string[] $keys Lowercase canonical key names.
 	 */
@@ -411,7 +411,7 @@ function bb_legacy_canonical_activity_keys() {
  * response. Swaps `$_GET['aid']` to the captured activity's ID so legacy
  * metabox callbacks reading the request param see the right activity.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param array                     $box      Metabox descriptor.
  * @param BP_Activity_Activity|null $activity Activity to capture against, or null.
@@ -478,7 +478,7 @@ function bb_legacy_activity_capture_box_html( $box, $activity ) {
  * Re-renders the metabox with the real activity (cached) and extracts the
  * specific input's current value.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param array  $box  Metabox descriptor.
  * @param string $name Input name.
@@ -496,7 +496,7 @@ function bb_legacy_activity_make_get_value( $box, $name, $type ) {
  * Clear all bb_legacy_activity_box_inputs_* transients on plugin lifecycle
  * events. Mirrors the groups bridge's cleanup helper. Object-cache aware.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_legacy_activity_clear_bridge_cache() {
 	if ( wp_using_ext_object_cache() ) {
@@ -546,7 +546,7 @@ add_action( 'switch_theme', 'bb_legacy_activity_clear_bridge_cache' );
  * (color picker, media uploader, datepicker, TinyMCE), so widgets work
  * inside the React activity edit modal.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_legacy_activity_auto_enqueue_widget_scripts() {
 	static $did_enqueue = false;
@@ -601,7 +601,7 @@ function bb_legacy_activity_auto_enqueue_widget_scripts() {
 	 * Re-uses the same marker→enqueue map as the groups bridge — share
 	 * one filter so plugin authors don't have to register twice.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param array $markers Marker → enqueue mapping.
 	 */

@@ -3165,7 +3165,7 @@ function bb_is_activity_search_enabled( $default = true ) {
 /**
  * Check whether the Reactions feature is enabled via Settings 2.0 feature toggle.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param bool $reset Optional. Pass true to clear the static cache. Default false.
  *
@@ -3207,7 +3207,7 @@ function bb_is_reactions_feature_enabled( $reset = false ) {
 /**
  * Reset static cache when a feature is toggled on/off.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $feature_id The feature ID that was toggled.
  */

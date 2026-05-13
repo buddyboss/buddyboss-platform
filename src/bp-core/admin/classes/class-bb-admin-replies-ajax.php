@@ -5,7 +5,7 @@
  * Handles AJAX requests for Reply CRUD operations, discussion autocomplete,
  * and reply autocomplete in the Settings 2.0 admin interface.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.0.0
  * @package BuddyBoss\Core\Administration
  */
 
@@ -15,14 +15,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class BB_Admin_Replies_Ajax
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 class BB_Admin_Replies_Ajax {
 
 	/**
 	 * Nonce action (shared with BB_Admin_Settings_Ajax).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @var string
 	 */
@@ -31,7 +31,7 @@ class BB_Admin_Replies_Ajax {
 	/**
 	 * Maximum items per page for paginated endpoints.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @var int
 	 */
@@ -40,7 +40,7 @@ class BB_Admin_Replies_Ajax {
 	/**
 	 * Maximum replies for bulk operations.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @var int
 	 */
@@ -49,7 +49,7 @@ class BB_Admin_Replies_Ajax {
 	/**
 	 * Constructor.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function __construct() {
 		$this->bb_register_ajax_handlers();
@@ -67,7 +67,7 @@ class BB_Admin_Replies_Ajax {
 	/**
 	 * Register AJAX handlers.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	private function bb_register_ajax_handlers() {
 		add_action( 'wp_ajax_bb_admin_get_replies', array( $this, 'get_replies' ) );
@@ -83,7 +83,7 @@ class BB_Admin_Replies_Ajax {
 	/**
 	 * Clear the admin replies forum counts cache.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function bb_clear_forum_counts_cache() {
 		wp_cache_delete( 'bb_admin_replies_forum_counts', 'bbpress' );
@@ -103,7 +103,7 @@ class BB_Admin_Replies_Ajax {
 	/**
 	 * Get replies listing with pagination, filters, and sorting.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -288,7 +288,7 @@ class BB_Admin_Replies_Ajax {
 					 * Fires for custom column data rendering in the replies admin list.
 					 *
 					 * @since bbPress (r2577)
-					 * @since BuddyBoss [BBVERSION] Added to Settings 2.0 AJAX.
+					 * @since BuddyBoss 3.0.0 Added to Settings 2.0 AJAX.
 					 *
 					 * @param string $col_key  Column key.
 					 * @param int    $reply_id Reply ID.
@@ -356,7 +356,7 @@ class BB_Admin_Replies_Ajax {
 		/**
 		 * Filters the full response data for the admin replies list AJAX endpoint.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param array $response Response data array.
 		 */
@@ -370,7 +370,7 @@ class BB_Admin_Replies_Ajax {
 	 *
 	 * Uses cached results with the same cache group as discussions.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return array Array of forum objects with id, name, count.
 	 */
@@ -434,7 +434,7 @@ class BB_Admin_Replies_Ajax {
 	/**
 	 * Get a single reply with full data for editing.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -478,7 +478,7 @@ class BB_Admin_Replies_Ajax {
 		/**
 		 * Filters the response data for the admin single reply endpoint.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param array   $data  Response data array.
 		 * @param WP_Post $reply The reply post object.
@@ -489,7 +489,7 @@ class BB_Admin_Replies_Ajax {
 	/**
 	 * Create a new reply.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -620,7 +620,7 @@ class BB_Admin_Replies_Ajax {
 		 * subscriber emails (same as frontend reply creation).
 		 *
 		 * @since bbPress (r2574)
-		 * @since BuddyBoss [BBVERSION] Added to Settings 2.0 AJAX.
+		 * @since BuddyBoss 3.0.0 Added to Settings 2.0 AJAX.
 		 *
 		 * @param int   $reply_id       Reply ID.
 		 * @param int   $topic_id       Topic ID.
@@ -638,7 +638,7 @@ class BB_Admin_Replies_Ajax {
 		 * Mirrors the legacy bbp_new_reply_post_extras hook for third-party
 		 * plugin compatibility.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param int $reply_id Reply ID.
 		 */
@@ -651,7 +651,7 @@ class BB_Admin_Replies_Ajax {
 		 * Ensures third-party plugins that set custom reply attributes on creation
 		 * continue to work.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param int $reply_id Reply ID.
 		 * @param int $topic_id Topic ID.
@@ -667,7 +667,7 @@ class BB_Admin_Replies_Ajax {
 		 * Ensures third-party plugins that set custom author data on creation
 		 * continue to work.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param int   $reply_id       Reply ID.
 		 * @param array $anonymous_data Empty array (admin users are not anonymous).
@@ -693,7 +693,7 @@ class BB_Admin_Replies_Ajax {
 	/**
 	 * Save (update) an existing reply.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -877,7 +877,7 @@ class BB_Admin_Replies_Ajax {
 		 * via bbp_update_reply() registered in bp-forums/core/actions.php.
 		 * Must fire before bbp_edit_reply_post_extras for correct ordering.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param int   $reply_id       Reply ID.
 		 * @param int   $topic_id       Topic ID.
@@ -895,7 +895,7 @@ class BB_Admin_Replies_Ajax {
 		 * Mirrors the legacy bbp_edit_reply_post_extras hook for third-party
 		 * plugin compatibility.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param int $reply_id Reply ID.
 		 */
@@ -906,7 +906,7 @@ class BB_Admin_Replies_Ajax {
 		 *
 		 * Mirrors the legacy bbp_reply_attributes_metabox_save hook.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param int $reply_id Reply ID.
 		 * @param int $topic_id Topic ID.
@@ -920,7 +920,7 @@ class BB_Admin_Replies_Ajax {
 		 *
 		 * Mirrors the legacy bbp_author_metabox_save hook.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param int   $reply_id       Reply ID.
 		 * @param array $anonymous_data Empty array (admin users are not anonymous).
@@ -946,7 +946,7 @@ class BB_Admin_Replies_Ajax {
 	/**
 	 * Delete a reply.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -990,7 +990,7 @@ class BB_Admin_Replies_Ajax {
 	 *
 	 * Supports 'delete', 'spam', and 'edit' actions.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -1095,7 +1095,7 @@ class BB_Admin_Replies_Ajax {
 					 * Fires the primary lifecycle hook so that bbp_update_reply()
 					 * runs count recalculation (registered at core/actions.php:178).
 					 *
-					 * @since BuddyBoss [BBVERSION]
+					 * @since BuddyBoss 3.0.0
 					 *
 					 * @param int $rid Reply ID.
 					 */
@@ -1160,7 +1160,7 @@ class BB_Admin_Replies_Ajax {
 	/**
 	 * Autocomplete endpoint for discussions (topics).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -1257,7 +1257,7 @@ class BB_Admin_Replies_Ajax {
 	/**
 	 * Autocomplete endpoint for replies.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */

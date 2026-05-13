@@ -10,7 +10,7 @@
  * "Enable Registration" is a field inside Panel 1 (not the card toggle).
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
  * Registers the feature, side panels, and delegates field registration
  * to panel-specific functions.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return void
  */
@@ -123,7 +123,7 @@ function bb_admin_settings_register_registration_feature() {
 	 * Fires after all Registration settings panels are registered.
 	 * Allows third-party extensions to add more panels or fields.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	do_action( 'bb_registration_after_register_settings_fields' );
 }

@@ -5,7 +5,7 @@
  * Handles AJAX requests for Group Types CRUD and platform settings
  * in the Settings 2.0 admin interface.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.0.0
  * @package BuddyBoss\Core\Administration
  */
 
@@ -15,14 +15,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class BB_Admin_Groups_Ajax
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 class BB_Admin_Groups_Ajax {
 
 	/**
 	 * Nonce action (shared with BB_Admin_Settings_Ajax).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @var string
 	 */
@@ -31,7 +31,7 @@ class BB_Admin_Groups_Ajax {
 	/**
 	 * Maximum items per page for paginated endpoints.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @var int
 	 */
@@ -40,7 +40,7 @@ class BB_Admin_Groups_Ajax {
 	/**
 	 * Maximum groups for bulk operations.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @var int
 	 */
@@ -49,7 +49,7 @@ class BB_Admin_Groups_Ajax {
 	/**
 	 * Maximum items for non-paginated list queries (group types, global topics, etc.).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @var int
 	 */
@@ -58,7 +58,7 @@ class BB_Admin_Groups_Ajax {
 	/**
 	 * Constructor.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function __construct() {
 		$this->bb_register_ajax_handlers();
@@ -84,13 +84,13 @@ class BB_Admin_Groups_Ajax {
 				 * should use {@see 'bp_groups_admin_meta_boxes'} instead.
 				 *
 				 * @since BuddyPress 1.7.0
-				 * @deprecated BuddyBoss [BBVERSION] No direct replacement. Use AJAX-based hooks instead.
+				 * @deprecated BuddyBoss 3.0.0 No direct replacement. Use AJAX-based hooks instead.
 				 */
 				// Pass the real $doaction so legacy handlers that branch
 				// on it keep working instead of silently no-op'ing on an
 				// empty string.
 				$doaction = isset( $_GET['action'] ) ? sanitize_key( wp_unslash( $_GET['action'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-				do_action_deprecated( 'bp_groups_admin_load', array( $doaction ), 'BuddyBoss [BBVERSION]' );
+				do_action_deprecated( 'bp_groups_admin_load', array( $doaction ), 'BuddyBoss 3.0.0' );
 			}
 		}
 	}
@@ -98,7 +98,7 @@ class BB_Admin_Groups_Ajax {
 	/**
 	 * Register AJAX handlers.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	private function bb_register_ajax_handlers() {
 		add_action( 'wp_ajax_bb_admin_get_group_types', array( $this, 'get_group_types' ) );
@@ -125,7 +125,7 @@ class BB_Admin_Groups_Ajax {
 	 * Capability is checked first because it is cheaper and avoids
 	 * consuming a nonce check for unauthorized users.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	private function bb_verify_request() {
 		bb_admin_verify_ajax_request( self::NONCE_ACTION );
@@ -137,7 +137,7 @@ class BB_Admin_Groups_Ajax {
 	 * Used to prevent removal or demotion of the last group administrator,
 	 * mirroring the legacy bp-groups-admin.php no_admins guard.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param int $group_id Group ID.
 	 * @param int $exclude_user_id User ID to exclude from the admin count.
@@ -157,7 +157,7 @@ class BB_Admin_Groups_Ajax {
 	/**
 	 * Get all group types with meta.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -237,7 +237,7 @@ class BB_Admin_Groups_Ajax {
 		/**
 		 * Filters the response data for the admin group types list endpoint.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param array $response Response data array.
 		 */
@@ -250,7 +250,7 @@ class BB_Admin_Groups_Ajax {
 	 * Mirrors legacy bp_save_group_type_post_meta_box_data() for key generation,
 	 * label defaults, and cache clearing.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -317,7 +317,7 @@ class BB_Admin_Groups_Ajax {
 	 * Mirrors legacy bp_save_group_type_post_meta_box_data() for label defaults
 	 * and cache clearing.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -385,7 +385,7 @@ class BB_Admin_Groups_Ajax {
 	/**
 	 * Delete a group type.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -438,7 +438,7 @@ class BB_Admin_Groups_Ajax {
 	 * - `bp_groups_admin_get_group_type_column`       (group type column filter)
 	 * - `bp_get_group_name`                           (group name filter)
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -453,11 +453,11 @@ class BB_Admin_Groups_Ajax {
 		 * Fires when the groups admin list is displayed. Deprecated in Settings 2.0.
 		 *
 		 * @since BuddyPress 1.7.0
-		 * @deprecated BuddyBoss [BBVERSION] Use the {@see 'bb_admin_get_groups_response'} filter instead.
+		 * @deprecated BuddyBoss 3.0.0 Use the {@see 'bb_admin_get_groups_response'} filter instead.
 		 *
 		 * @param array $args Empty array (legacy: request args; N/A in Settings 2.0).
 		 */
-		do_action_deprecated( 'bp_groups_admin_index', array( array() ), 'BuddyBoss [BBVERSION]', 'bb_admin_get_groups_response' );
+		do_action_deprecated( 'bp_groups_admin_index', array( array() ), 'BuddyBoss 3.0.0', 'bb_admin_get_groups_response' );
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by $this->bb_verify_request() above.
 		$page         = isset( $_POST['page'] ) ? absint( wp_unslash( $_POST['page'] ) ) : 1;
@@ -821,11 +821,11 @@ class BB_Admin_Groups_Ajax {
 			 * actions natively in the React UI.
 			 *
 			 * @since BuddyPress 2.7.0
-			 * @deprecated BuddyBoss [BBVERSION] Group type bulk actions are now part of the React UI.
+			 * @deprecated BuddyBoss 3.0.0 Group type bulk actions are now part of the React UI.
 			 *
 			 * @param string $which Empty string (legacy: 'top' or 'bottom'; N/A in Settings 2.0).
 			 */
-			do_action_deprecated( 'bp_groups_list_table_after_bulk_actions', array( '' ), 'BuddyBoss [BBVERSION]', 'bb_admin_get_groups_response' );
+			do_action_deprecated( 'bp_groups_list_table_after_bulk_actions', array( '' ), 'BuddyBoss 3.0.0', 'bb_admin_get_groups_response' );
 
 			// Return column definitions from the filtered list (excluding cb).
 			$columns_response = array();
@@ -857,7 +857,7 @@ class BB_Admin_Groups_Ajax {
 		/**
 		 * Filters the groups list views (tab filters like All, Public, Private, Hidden).
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param array  $views  Array of view_key => array( 'label' => string, 'count' => int ).
 		 * @param string $status Current active status filter.
@@ -869,12 +869,12 @@ class BB_Admin_Groups_Ajax {
 			 * Fires after the groups list views are filtered. Deprecated in Settings 2.0.
 			 *
 			 * @since BuddyBoss 1.0.0
-			 * @deprecated BuddyBoss [BBVERSION] Use the {@see 'bb_admin_groups_list_views'} filter instead.
+			 * @deprecated BuddyBoss 3.0.0 Use the {@see 'bb_admin_groups_list_views'} filter instead.
 			 *
 			 * @param string $url_base Empty string (legacy: URL base for view links; N/A in Settings 2.0).
 			 * @param string $status   Current active status filter.
 			 */
-			do_action_deprecated( 'bp_groups_list_table_get_views', array( '', $status ), 'BuddyBoss [BBVERSION]', 'bb_admin_groups_list_views' );
+			do_action_deprecated( 'bp_groups_list_table_get_views', array( '', $status ), 'BuddyBoss 3.0.0', 'bb_admin_groups_list_views' );
 		}
 
 		/**
@@ -882,7 +882,7 @@ class BB_Admin_Groups_Ajax {
 		 *
 		 * Allows third-party plugins to add extra data to the groups listing response.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param array $response Response data array.
 		 */
@@ -894,7 +894,7 @@ class BB_Admin_Groups_Ajax {
 	/**
 	 * Delete a single group.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -931,7 +931,7 @@ class BB_Admin_Groups_Ajax {
 	/**
 	 * Perform bulk action on groups.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -1026,7 +1026,7 @@ class BB_Admin_Groups_Ajax {
 				/**
 				 * Fires for custom bulk actions added via bp_groups_list_table_get_bulk_actions filter.
 				 *
-				 * @since BuddyBoss [BBVERSION]
+				 * @since BuddyBoss 3.0.0
 				 *
 				 * @param int    $group_id  The group ID being processed.
 				 * @param string $do_action The bulk action key.
@@ -1098,7 +1098,7 @@ class BB_Admin_Groups_Ajax {
 	/**
 	 * Create a new group.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -1122,7 +1122,7 @@ class BB_Admin_Groups_Ajax {
 		/**
 		 * Filters the allowed group statuses.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param array $allowed_statuses Array of allowed group statuses.
 		 */
@@ -1156,7 +1156,7 @@ class BB_Admin_Groups_Ajax {
 	/**
 	 * Get a single group with registered meta fields for editing.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -1188,7 +1188,7 @@ class BB_Admin_Groups_Ajax {
 		 * data through the `registered_fields` array via BB_Admin_Meta_Field_Registry instead.
 		 *
 		 * @since BuddyPress 1.7.0
-		 * @since BuddyBoss [BBVERSION] Added to Settings 2.0 AJAX get group.
+		 * @since BuddyBoss 3.0.0 Added to Settings 2.0 AJAX get group.
 		 */
 		// Synthetic $_GET['gid'] so legacy extensions (BP_Group_Extension, LearnDash)
 		// that read $_GET['gid'] inside their metabox callbacks get the correct group ID.
@@ -1231,7 +1231,7 @@ class BB_Admin_Groups_Ajax {
 		 * the data is returned to the React edit modal.
 		 *
 		 * @since BuddyPress 1.7.0
-		 * @since BuddyBoss [BBVERSION] Added to Settings 2.0 AJAX get group.
+		 * @since BuddyBoss 3.0.0 Added to Settings 2.0 AJAX get group.
 		 *
 		 * @param BP_Groups_Group $group The group object being edited, passed by reference.
 		 */
@@ -1265,7 +1265,7 @@ class BB_Admin_Groups_Ajax {
 		/**
 		 * Filters the response data for the admin single group endpoint.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param array  $data  Response data array.
 		 * @param object $group The group object.
@@ -1285,7 +1285,7 @@ class BB_Admin_Groups_Ajax {
 	 * 6. do_action('bb_admin_after_save_group') — post-save hook (forum lifecycle, etc.).
 	 * 7. do_action('bp_group_admin_edit_after') — backward compat.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -1321,7 +1321,7 @@ class BB_Admin_Groups_Ajax {
 		 *
 		 * Use this hook for any pre-save logic in the React admin context.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param int    $group_id Group ID.
 		 * @param object $group    Group object with updated field values (not yet persisted).
@@ -1415,7 +1415,7 @@ class BB_Admin_Groups_Ajax {
 		 * Use this hook for any post-save logic in the React admin context
 		 * (e.g., cache clearing, sync operations, third-party integrations).
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param int    $group_id Group ID.
 		 * @param object $group    Group object after save.
@@ -1431,7 +1431,7 @@ class BB_Admin_Groups_Ajax {
 		 * causing wp_die() → exit. We use ob_start() to capture any wp_die() output
 		 * and catch \Error for any other fatals (e.g. null->method calls).
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param int $group_id ID of the group being edited.
 		 */
@@ -1452,18 +1452,18 @@ class BB_Admin_Groups_Ajax {
 		 * is discarded, but the correct deprecation type is preserved for third-party compatibility.
 		 *
 		 * @since BuddyPress 1.7.0
-		 * @deprecated BuddyBoss [BBVERSION] Use the {@see 'bb_admin_save_group_response'} filter instead.
+		 * @deprecated BuddyBoss 3.0.0 Use the {@see 'bb_admin_save_group_response'} filter instead.
 		 *
 		 * @param string $redirect_to Empty string (legacy: URL to redirect to; N/A in Settings 2.0).
 		 */
-		apply_filters_deprecated( 'bp_group_admin_edit_redirect', array( '' ), 'BuddyBoss [BBVERSION]', 'bb_admin_save_group_response' );
+		apply_filters_deprecated( 'bp_group_admin_edit_redirect', array( '' ), 'BuddyBoss 3.0.0', 'bb_admin_save_group_response' );
 
 		$response = array( 'message' => __( 'Group updated successfully.', 'buddyboss' ) );
 
 		/**
 		 * Filters the response data after saving a group from the admin edit modal.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param array $response Response data array.
 		 * @param int   $group_id The group ID.
@@ -1478,7 +1478,7 @@ class BB_Admin_Groups_Ajax {
 	 *  - Legacy single-role: `role` + `page` (returns `{members, total}`).
 	 *  - Unified multi-role: `roles[]` + `pages{}` + optional `search` (returns `{sections}`).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -1526,7 +1526,7 @@ class BB_Admin_Groups_Ajax {
 		 * Mirrors the legacy `bp_groups_admin_members_type_per_page` filter used by
 		 * bp_groups_admin_edit_metabox_members().
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param int    $per_page    Number of members per page.
 		 * @param string $member_type Member type slug ('admin', 'mod', 'member', 'banned').
@@ -1574,7 +1574,7 @@ class BB_Admin_Groups_Ajax {
 		/**
 		 * Filters the response data for the admin group members endpoint.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param array $response Response data array.
 		 * @param int   $group_id The group ID.
@@ -1588,7 +1588,7 @@ class BB_Admin_Groups_Ajax {
 	 * Centralises the role-to-query-arg mapping used by both the single-role
 	 * and unified multi-role code paths so the two cannot drift.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param int    $group_id Group ID.
 	 * @param string $role     One of 'admin', 'mod', 'member', 'banned'.
@@ -1629,7 +1629,7 @@ class BB_Admin_Groups_Ajax {
 	 * legacy `bp_groups_admin_manage_member_row` action (deprecated) for
 	 * third-party compatibility, exactly as in the legacy single-role path.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param object $member      Raw BP_Groups_Member-style object.
 	 * @param object $group       The group object.
@@ -1652,7 +1652,7 @@ class BB_Admin_Groups_Ajax {
 		 * Legacy signature: do_action( 'bp_groups_admin_manage_member_row', $user_id, $group ).
 		 *
 		 * @since BuddyPress 1.7.0
-		 * @deprecated BuddyBoss [BBVERSION] Use the {@see 'bb_admin_get_group_members_response'} filter instead.
+		 * @deprecated BuddyBoss 3.0.0 Use the {@see 'bb_admin_get_group_members_response'} filter instead.
 		 *
 		 * @param int             $user_id The user ID for the current member row.
 		 * @param BP_Groups_Group $group   The group object.
@@ -1660,7 +1660,7 @@ class BB_Admin_Groups_Ajax {
 		do_action_deprecated(
 			'bp_groups_admin_manage_member_row',
 			array( (int) $member->user_id, $group ),
-			'BuddyBoss [BBVERSION]',
+			'BuddyBoss 3.0.0',
 			'bb_admin_get_group_members_response'
 		);
 
@@ -1685,7 +1685,7 @@ class BB_Admin_Groups_Ajax {
 	/**
 	 * Add, remove, or change role of a group member.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -1808,7 +1808,7 @@ class BB_Admin_Groups_Ajax {
 	 * bp_groups_admin_autocomplete_handler() which reads from $_GET.
 	 * Our AJAX requests send data via POST FormData.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -1875,7 +1875,7 @@ class BB_Admin_Groups_Ajax {
 	 * forums must be active, group forums enabled, and the current user must
 	 * be a keymaster.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -1987,7 +1987,7 @@ class BB_Admin_Groups_Ajax {
 	 *   - item_id     The ID of the group being edited (forwarded by
 	 *                 RegisteredMetaField.js). 0 on the create flow.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -2100,7 +2100,7 @@ class BB_Admin_Groups_Ajax {
 	 * (topic mode, permission types, max limit) and per-action nonces
 	 * for the existing topic CRUD AJAX handlers.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -2234,7 +2234,7 @@ class BB_Admin_Groups_Ajax {
 		/**
 		 * Filters the response data for the admin group topics endpoint.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param array $response Response data array.
 		 * @param int   $group_id The group ID.
@@ -2248,7 +2248,7 @@ class BB_Admin_Groups_Ajax {
 	 * Centralizes the $_POST extraction for create_group_type() and update_group_type()
 	 * to avoid duplication.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return array Group type meta fields.
 	 */
@@ -2279,7 +2279,7 @@ class BB_Admin_Groups_Ajax {
 	 * - Sanitization uses wp_kses() for labels (same as legacy).
 	 * - Boolean fields use absint() (same as legacy).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param int    $post_id    Post ID of the group type.
 	 * @param string $post_title Post title used as default for labels.
@@ -2371,7 +2371,7 @@ class BB_Admin_Groups_Ajax {
 	 * Legacy stores: { organizer_plural_label_name: '', organizer_singular_label_name: '', ... }
 	 * JS expects:    { organizer: { plural: '', singular: '' }, ... }
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param mixed $raw Role labels meta value.
 	 *
@@ -2423,7 +2423,7 @@ class BB_Admin_Groups_Ajax {
 	/**
 	 * Get available member/profile types for the group type modal.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return array Array of member types with id and name.
 	 */
@@ -2472,7 +2472,7 @@ class BB_Admin_Groups_Ajax {
 	 * Hooked to groups_delete_group, groups_create_group, groups_settings_updated
 	 * so the status tab counts stay accurate.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -2487,7 +2487,7 @@ class BB_Admin_Groups_Ajax {
 	 * checks for the legacy nonce $_POST['_bp-group-type-nonce'] which is not present
 	 * in Settings 2.0 AJAX requests. We replicate the same cache clearing here.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @see bb_groups_clear_group_type_cache_on_update() Legacy cache clearing (save_post hook).
 	 * @see bb_groups_clear_group_type_cache_before_delete() Delete cache clearing (before_delete_post hook) — works automatically.
@@ -2516,7 +2516,7 @@ class BB_Admin_Groups_Ajax {
 	 * Returns false when the field is not present in $_POST, which tells
 	 * groups_edit_group_settings() to skip updating that field.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $field_key    The POST field key suffix (e.g., 'perm_invite').
 	 * @param string $setting_type The setting type for bb_groups_get_settings_status() (e.g., 'invite').

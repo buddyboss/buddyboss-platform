@@ -540,7 +540,7 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 	 * `shouldShow` is forced to `false` — the Welcome Banner flips it
 	 * to `true` right before it mounts the wizard.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return array Bootstrap payload: { wizardData, assets }.
 	 */

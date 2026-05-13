@@ -43,9 +43,9 @@ if ( ! class_exists( 'BP_Search_CPT' ) ) :
 			 * `search_enrolled_only`/`search_login_only` toggles are on.
 			 *
 			 * Replaced an inline LearnDash-specific block in this method in
-			 * BuddyBoss [BBVERSION]; the addon now subscribes to this filter.
+			 * BuddyBoss 3.0.0; the addon now subscribes to this filter.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 3.0.0
 			 *
 			 * @param array  $context  { exclude_post_type: bool, enrolled_courses: int[] }.
 			 * @param string $cpt_name The post type being searched.

@@ -241,7 +241,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 		do_action( 'bp_init' );
 
 		/**
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 */
 		do_action( 'bb_integration_rest_init' );
 
@@ -249,7 +249,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 		do_action_deprecated(
 			'bp_ld_sync/init',
 			array(),
-			'[BBVERSION]',
+			'3.0.0',
 			'bb_integration_rest_init'
 		);
 

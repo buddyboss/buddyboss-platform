@@ -15,7 +15,7 @@
  * `bb_register_features` time.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -27,7 +27,7 @@ defined( 'ABSPATH' ) || exit;
  * Only registers the section and BuddyBoss Platform activity types field,
  * which are available at early registration time.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_activity_register_visibility_panel_fields() {
 
@@ -85,7 +85,7 @@ function bb_activity_register_visibility_panel_fields() {
  * AJAX request, when all custom post types from third-party plugins are
  * already registered.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $feature_id The feature being loaded.
  */

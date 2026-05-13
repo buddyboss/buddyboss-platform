@@ -5,7 +5,7 @@
  * Registers sections and fields for the Documents side panel.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register Documents panel sections and fields.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_media_register_documents_panel_fields() {
 
@@ -178,7 +178,7 @@ function bb_media_register_documents_panel_fields() {
  * Reads directly from the option to avoid calling template-layer functions
  * (bp_media_allowed_document_type) that may not be loaded yet during feature registration.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return array Toggle list options from stored or default document extensions.
  */
@@ -192,7 +192,7 @@ function bb_media_get_document_extension_options() {
  * Returns the raw extension array so the React UI can display extension
  * details and support adding/removing custom extensions.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return array Full extension data keyed by extension ID (e.g., bb_doc_1).
  */
@@ -208,7 +208,7 @@ function bb_media_get_document_extension_data() {
  * The filter is only hooked on the old document settings page by default, so this
  * function ensures it is also applied for Settings 2.0 by temporarily adding the hook.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return array Array of icon option objects { value, label, icon_class }.
  */

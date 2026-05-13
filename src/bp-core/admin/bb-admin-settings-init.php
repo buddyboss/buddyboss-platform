@@ -6,7 +6,7 @@
  * and Settings History for the new admin architecture.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Initialize BuddyBoss Admin Settings.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_admin_settings_init() {
 
@@ -255,7 +255,7 @@ add_action( 'bp_loaded', 'bb_admin_settings_init', 4 );
  * request. The route would never register otherwise, even though the
  * file exists and the class is correct.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_register_help_content_rest_route() {
 	$controller_file = buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-rest-help-content-endpoint.php';
@@ -277,7 +277,7 @@ add_action( 'rest_api_init', 'bb_register_help_content_rest_route' );
  * so the bb_integration_is_activated filter is registered before
  * BP_Integration::is_activated() is called during integration setup.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_integration_bridge_early_init() {
 	if ( ! class_exists( 'BB_Integration_Bridge' ) ) {
@@ -293,7 +293,7 @@ function bb_integration_bridge_early_init() {
 	 * Plugins can use this to register managed integrations via
 	 * bb_integration_bridge()->register_managed_integration().
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	do_action( 'bb_integration_bridge_init' );
 }
@@ -323,7 +323,7 @@ add_action( 'bp_loaded', 'bb_integration_bridge_early_init', 2 );
  * The registry getters rebuild lazily, so clearing here simply forces the
  * next admin AJAX / page load to re-read fresh state. No request-time cost.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_flush_feature_caches_on_plugin_change() {
 	// 1. Feature discovery paths (filesystem scan cache).
@@ -359,7 +359,7 @@ function bb_flush_feature_caches_on_plugin_change() {
 	 * lifecycle event. Extensions that maintain their own Settings 2.0 caches
 	 * (e.g. Pro's per-feature memoizations) can hook here to invalidate.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	do_action( 'bb_feature_caches_flushed' );
 }
@@ -391,7 +391,7 @@ add_action( 'update_site_option_active_sitewide_plugins', 'bb_flush_feature_cach
  * bp-active-components directly. This hook keeps bb-active-features in sync
  * so both options reflect the same activation state.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $old_value Previous option value.
  * @param mixed $new_value Updated option value.
@@ -486,7 +486,7 @@ add_action(
  * the value is safely sanitized as an array structure rather than being
  * passed through sanitize_text_field() which is inappropriate for arrays.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The raw input value (JSON string or array).
  *

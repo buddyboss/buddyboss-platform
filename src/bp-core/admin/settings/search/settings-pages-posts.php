@@ -15,7 +15,7 @@
  * CPTs on `init`, which fires after `bb_register_features`.
  *
  * @package BuddyBoss\Core\Administration
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -29,7 +29,7 @@ defined( 'ABSPATH' ) || exit;
  * so the React UI renders them in one continuous card — matching the Figma design.
  * Custom post types are deferred to bb_search_lazy_register_cpt_fields().
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_search_register_pages_posts_fields() {
 
@@ -104,7 +104,7 @@ function bb_search_register_pages_posts_fields() {
 /**
  * Register taxonomy child fields for a post type.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $post_type  Post type slug.
  * @param int    $base_order Base order of the parent toggle field.
@@ -159,7 +159,7 @@ function bb_search_register_taxonomy_fields( $post_type, $base_order = 10 ) {
 /**
  * Register Meta Data child field for a post type.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $post_type      Post type slug.
  * @param int    $base_order     Base order of the parent toggle field.
@@ -193,7 +193,7 @@ function bb_search_register_meta_field( $post_type, $base_order = 10, $taxonomy_
  * already registered. Registers CPT toggles within the same single section
  * so they appear in the same card as the standard post types.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $feature_id The feature being loaded.
  */

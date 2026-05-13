@@ -5590,7 +5590,7 @@ function bb_remove_orphaned_profile_slug( $user_id ) {
  *
  * Mirrors the group equivalent in bp-groups/actions/access.php.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_members_block_hidden_nav_access() {
 	if ( ! bp_is_user() ) {

@@ -20,7 +20,7 @@
  *     uses sanitize_email, etc.)
  *
  * @package BuddyBoss\Core\Administration
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.0.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -29,7 +29,7 @@ defined( 'ABSPATH' ) || exit;
  * Maximum HTML size we'll attempt to parse, defends against billion-laughs /
  * quadratic-blowup payloads from malicious metabox callbacks.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 defined( 'BB_LEGACY_BRIDGE_MAX_HTML' ) || define( 'BB_LEGACY_BRIDGE_MAX_HTML', 1024 * 1024 ); // 1 MB.
 
@@ -42,7 +42,7 @@ defined( 'BB_LEGACY_BRIDGE_MAX_HTML' ) || define( 'BB_LEGACY_BRIDGE_MAX_HTML', 1
  * up to the bridge's outer try/catch which logs the class + file:line
  * (gated behind WP_DEBUG) and returns an empty result.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param callable $callback Callable to run.
  * @return mixed Return value of $callback.
@@ -87,7 +87,7 @@ function bb_legacy_with_wp_die_safety( callable $callback ) {
  * components are vanishingly unlikely and harmless (the parsed XPath is
  * a function of the HTML alone — no component-specific state).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $html HTML to parse.
  * @return DOMXPath|null XPath instance, or null if parsing failed.
@@ -143,7 +143,7 @@ function bb_legacy_get_xpath( $html ) {
  * Sanitize a string for safe interpolation into an XPath single-quoted
  * literal. Strips characters outside the allowed identifier set.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $value Untrusted value.
  * @return string Safe-to-interpolate identifier.
@@ -159,7 +159,7 @@ function bb_legacy_xpath_safe( $value ) {
  * name (one entry represents the whole radio group; option enumeration
  * happens in `bb_legacy_extract_radio_options()`).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $html Captured metabox HTML.
  * @return array List of input descriptors: [ 'name', 'type', 'label', 'description' ].
@@ -196,7 +196,7 @@ function bb_legacy_parse_box_inputs( $html ) {
 		 * heuristic guesses wrong (e.g., a custom widget rendered as a hidden
 		 * input that should surface as a textarea).
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param string     $type Auto-detected field type.
 		 * @param string     $name Input name attribute / $_POST key.
@@ -246,7 +246,7 @@ function bb_legacy_parse_box_inputs( $html ) {
  *   - radio   → prefer "custom", else first non-default value across
  *               all radios sharing the same name attribute
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param DOMElement $node  Parsed input node.
  * @param DOMXPath   $xpath Document xpath. Used to resolve radio-group
@@ -309,7 +309,7 @@ function bb_legacy_detect_conditional( DOMElement $node, DOMXPath $xpath ) {
  * by `aria-hidden`. Centralised so the detection rule stays consistent
  * across helpers and is easy to extend.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param DOMElement $node Element to test.
  * @return bool True when the element is rendered hidden by default.
@@ -346,7 +346,7 @@ function bb_legacy_is_hidden_node( DOMElement $node ) {
  * checkbox, or radio at the wrapper's level (preceding siblings) and
  * climbs ancestors when nothing matches at the current level.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param DOMElement $wrapper Hidden ancestor wrapper.
  * @return array|null { kind: 'select'|'checkbox'|'radio', node: DOMElement }, or null.
@@ -405,7 +405,7 @@ function bb_legacy_find_trigger( DOMElement $wrapper ) {
 /**
  * Classify a single DOM node as a trigger candidate.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param DOMElement $node Candidate.
  * @return array|null { kind, node } when the node is a select/checkbox/radio, else null.
@@ -435,7 +435,7 @@ function bb_legacy_match_trigger_node( DOMElement $node ) {
  * Pick the value most likely to "unhide" a conditionally displayed
  * wrapper for a given trigger.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param array    $trigger { kind, node } returned by bb_legacy_find_trigger().
  * @param DOMXPath $xpath   Document xpath (used to gather radio siblings).
@@ -498,7 +498,7 @@ function bb_legacy_pick_conditional_value( array $trigger, DOMXPath $xpath ) {
 /**
  * Detect a registry-compatible field type from a DOM input/select/textarea.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param DOMElement $node DOM node.
  * @return string Field type for BB_Admin_Meta_Field_Registry.
@@ -540,7 +540,7 @@ function bb_legacy_detect_input_type( DOMElement $node ) {
 /**
  * Find the label text for an input node.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param DOMElement $node  DOM node.
  * @param DOMXPath   $xpath XPath instance.
@@ -644,7 +644,7 @@ function bb_legacy_find_label( DOMElement $node, DOMXPath $xpath ) {
  * custom unauthorized message here:" lives inside the hidden editor
  * wrapper and would otherwise bleed up to the parent select).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param DOMElement $node  Input node.
  * @param DOMXPath   $xpath XPath instance.
@@ -676,7 +676,7 @@ function bb_legacy_find_description( DOMElement $node, DOMXPath $xpath ) {
  * to keep conditional-child copy from bleeding into the parent field's
  * description.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param DOMElement $candidate Description/label candidate.
  * @param DOMElement $input     Input node we're describing.
@@ -709,7 +709,7 @@ function bb_legacy_node_has_hidden_ancestor( DOMElement $candidate, DOMElement $
  * Whether `$node` lives inside `$ancestor` (PHP DOM has no native
  * `contains()` helper — walk ancestors instead).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param DOMNode $node     Candidate descendant.
  * @param DOMNode $ancestor Suspected ancestor.
@@ -737,7 +737,7 @@ function bb_legacy_is_descendant_of( DOMNode $node, DOMNode $ancestor ) {
  * Skips system-level WordPress post-form keys that are owned by the
  * post-edit screen, never by the metabox itself.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $html Captured HTML.
  * @return array Map of name => value.
@@ -788,7 +788,7 @@ function bb_legacy_extract_hidden_inputs( $html ) {
 /**
  * Extract a single input's current value from re-rendered HTML.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $html Captured HTML.
  * @param string $name Input name.
@@ -837,7 +837,7 @@ function bb_legacy_extract_input_value( $html, $name, $type ) {
 /**
  * Extract <option> list from a select.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $html Captured HTML.
  * @param string $name Select name.
@@ -867,7 +867,7 @@ function bb_legacy_extract_select_options( $html, $name ) {
 /**
  * Extract radio button options from a name group.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $html Captured HTML.
  * @param string $name Radio group name.
@@ -937,7 +937,7 @@ function bb_legacy_extract_radio_options( $html, $name ) {
  * <strong>, <a>, lists, etc. from a richtext value typed by the user.
  * The mapping below preserves what each input type semantically allows.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $type Field type produced by `bb_legacy_detect_input_type()`.
  * @return string|callable Sanitize callback.
@@ -967,7 +967,7 @@ function bb_legacy_resolve_sanitize_callback( $type ) {
  * Swaps `$_GET[ $request_param ]` to the post ID so legacy callbacks that
  * read `$_GET['post']` see the right post during capture.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param array        $box           Metabox descriptor from $wp_meta_boxes.
  * @param WP_Post|null $post          Post being captured against, or null
@@ -1089,7 +1089,7 @@ function bb_legacy_capture_post_box_html( $box, $post, $request_param = 'post' )
  * smuggle `<input name="role">` or `<input name="user_pass">` into a
  * Settings 2.0 save.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $name           HTML input name attribute.
  * @param array  $canonical_keys Optional. Lowercase canonical post-form keys
@@ -1168,7 +1168,7 @@ function bb_legacy_is_safe_cpt_post_key( $name, $canonical_keys = array() ) {
  * `wp_update_post()`/`wp_insert_post()` (verified for forum, topic, reply,
  * bp-email, bp-group-type, bp-member-type).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param array $args {
  *     Bridge registration arguments.
@@ -1376,7 +1376,7 @@ function bb_legacy_register_cpt_meta_bridge( $args ) {
  * post type into $_POST. Runs at save time so third-party save_post
  * handlers see the metabox's nonces and hidden state.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param array       $args Resolved factory args.
  * @param object|null $item Item being saved (post object or null on create).
@@ -1520,7 +1520,7 @@ function bb_legacy_replay_cpt_hidden_inputs( $args, $item ) {
  * didn't match never landed in $_POST (registry's conditional-skip), so
  * their existing meta value is preserved.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param array       $args Resolved factory args.
  * @param object|null $item Saved post object.
@@ -1610,7 +1610,7 @@ function bb_legacy_persist_cpt_post_meta( $args, $item ) {
  * registration action, walks $wp_meta_boxes for the configured screen,
  * and registers each detected input as a Settings 2.0 meta field.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param BB_Admin_Meta_Field_Registry $registry  Registry instance.
  * @param string                       $component Component identifier.
@@ -1722,7 +1722,7 @@ function bb_legacy_run_cpt_bridge( $registry, $component, $args ) {
 	 * The dynamic portion of the hook name, `$post_type`, is the WP post type
 	 * slug (`forum`, `topic`, `bp-email`, etc.).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string[] $skip_box_ids Metabox IDs to skip.
 	 */
@@ -1761,7 +1761,7 @@ function bb_legacy_run_cpt_bridge( $registry, $component, $args ) {
 /**
  * Capture / parse / register one CPT metabox's inputs.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param BB_Admin_Meta_Field_Registry $registry     Registry instance.
  * @param string                       $component    Component identifier.
@@ -1905,7 +1905,7 @@ function bb_legacy_run_cpt_bridge_box( $registry, $component, $box, &$order, $ex
  * Mirrors the per-component cleanup helpers but covers every CPT bridge in
  * one pass.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_legacy_cpt_clear_bridge_cache() {
 	if ( wp_using_ext_object_cache() ) {
@@ -1946,7 +1946,7 @@ add_action( 'switch_theme', 'bb_legacy_cpt_clear_bridge_cache' );
  *     these losslessly and they corrupt $_POST when reassembled
  *   - Canonical BP_Groups_Group property names
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $name HTML input name attribute.
  * @return bool True if the key is safe to write to $_POST.
@@ -2020,7 +2020,7 @@ function bb_legacy_is_safe_post_key( $name ) {
  * explicitly. Plugin authors can extend the list via the
  * `bb_legacy_canonical_group_post_keys` filter.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return string[] Lowercase canonical key names.
  */
@@ -2062,7 +2062,7 @@ function bb_legacy_canonical_group_keys() {
 	 * never overwrite. Plugin authors can add custom keys here if their save
 	 * handler reads $_POST values that should be reserved for the React form.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string[] $keys Lowercase canonical key names.
 	 */

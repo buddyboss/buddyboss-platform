@@ -5,7 +5,7 @@
  * Registers sections and fields for the Videos side panel.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register Videos panel sections and fields.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_media_register_videos_panel_fields() {
 
@@ -194,7 +194,7 @@ function bb_media_register_videos_panel_fields() {
  * Reads directly from the option to avoid calling template-layer functions
  * (bp_video_allowed_video_type) that may not be loaded yet during feature registration.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return array Toggle list options from stored or default video extensions.
  */
@@ -208,7 +208,7 @@ function bb_media_get_video_extension_options() {
  * Returns the raw extension array so the React UI can display extension
  * details and support adding new custom extensions.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return array Full extension data keyed by extension ID (e.g., bb_vid_0).
  */

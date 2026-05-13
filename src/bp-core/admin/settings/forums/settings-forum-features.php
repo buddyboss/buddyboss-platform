@@ -5,7 +5,7 @@
  * Registers sections and fields for the Forum Features side panel.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register Forum Features panel sections and fields.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return void
  */
@@ -190,7 +190,7 @@ function bb_forums_register_features_panel_fields() {
 	/**
 	 * Fires after Forum Features section fields are registered.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	do_action( 'bb_forums_settings_after_features_fields' );
 
@@ -229,7 +229,7 @@ function bb_forums_register_features_panel_fields() {
 		/**
 		 * Fires after Group Forums section fields are registered.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 */
 		do_action( 'bb_forums_settings_after_group_forums_fields' );
 	}

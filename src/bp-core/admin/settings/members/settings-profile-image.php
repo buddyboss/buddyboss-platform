@@ -5,7 +5,7 @@
  * Registers sections and fields for the Profile Image side panel.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register Profile Image panel sections and fields.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_members_register_profile_image_panel_fields() {
 
@@ -173,7 +173,7 @@ function bb_members_register_profile_image_panel_fields() {
 	/**
 	 * Fires after Profile Avatar section fields are registered.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	do_action( 'bb_members_settings_after_avatar_fields' );
 
@@ -345,7 +345,7 @@ function bb_members_register_profile_image_panel_fields() {
 	/**
 	 * Fires after Profile Cover Image section fields are registered.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	do_action( 'bb_members_settings_after_image_fields' );
 }

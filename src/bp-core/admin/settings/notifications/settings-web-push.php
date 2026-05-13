@@ -7,7 +7,7 @@
  * to inject OneSignal fields.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register Web Push Notifications panel sections and fields.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return void
  */
@@ -165,7 +165,7 @@ function bb_notifications_register_web_push_panel_fields() {
 	 * Fires after Web Push Notifications section fields are registered.
 	 * Pro hooks here to add OneSignal API credentials and notification settings fields.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	do_action( 'bb_notifications_web_push_after_settings_fields' );
 }
@@ -177,7 +177,7 @@ function bb_notifications_register_web_push_panel_fields() {
  * connect button) in disabled/pro-gated state so users see the Figma
  * design rather than a plain "install Pro" notice.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return void
  */

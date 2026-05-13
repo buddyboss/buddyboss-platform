@@ -3,7 +3,7 @@
  * BuddyBoss Admin Settings - Advanced Sanitize Callbacks.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * Ensures only valid telemetry modes are saved.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The value to sanitize.
  *
@@ -32,7 +32,7 @@ function bb_advanced_sanitize_telemetry_reporting( $value ) {
  *
  * Ensures only valid autoload types are saved.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The value to sanitize.
  *
@@ -60,7 +60,7 @@ function bb_advanced_sanitize_activity_load_type( $value ) {
  * can compare old vs new (bp_get_option reads the already-saved value
  * in the after hook, making direct comparison impossible).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $feature_id Feature ID.
  * @param array  $settings   Submitted settings (required by hook signature, unused here).
@@ -91,7 +91,7 @@ add_action( 'bb_admin_settings_before_save_feature', 'bb_advanced_capture_teleme
  * same request never re-uses a stale value from the first save.
  * Call with no argument (or null) to retrieve.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string|false|null $set_value Value to store, false to clear, null to read.
  *
@@ -116,7 +116,7 @@ function bb_advanced_get_pre_save_telemetry( $set_value = null ) {
  * telemetry report. Matches legacy behavior in
  * BB_Admin_Setting_Performance::bb_admin_send_immediate_telemetry_on_complete().
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $feature_id Feature ID.
  * @param array  $settings   Submitted settings.
@@ -169,7 +169,7 @@ add_action( 'bb_admin_save_feature_settings_after', 'bb_advanced_handle_telemetr
  *
  * Strips HTML tags and slashes, preserving newlines.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The value to sanitize.
  *

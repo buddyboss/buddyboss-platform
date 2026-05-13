@@ -12,7 +12,7 @@
  *       - Field (individual setting)
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * BB_Feature_Registry class.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 #[\AllowDynamicProperties]
 class BB_Feature_Registry {
@@ -29,7 +29,7 @@ class BB_Feature_Registry {
 	/**
 	 * Singleton instance.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 * @var BB_Feature_Registry
 	 */
 	private static $instance = null;
@@ -37,7 +37,7 @@ class BB_Feature_Registry {
 	/**
 	 * Registered features.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 * @var array
 	 */
 	private $features = array();
@@ -46,7 +46,7 @@ class BB_Feature_Registry {
 	 * Registered side panels by feature.
 	 * Structure: $side_panels[ $feature_id ][ $side_panel_id ] = array( ... )
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 * @var array
 	 */
 	private $side_panels = array();
@@ -55,7 +55,7 @@ class BB_Feature_Registry {
 	 * Registered sections by feature and side panel.
 	 * Structure: $sections[ $feature_id ][ $side_panel_id ][ $section_id ] = array( ... )
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 * @var array
 	 */
 	private $sections = array();
@@ -64,7 +64,7 @@ class BB_Feature_Registry {
 	 * Registered fields by feature, side panel, and section.
 	 * Structure: $fields[ $feature_id ][ $side_panel_id ][ $section_id ][ $field_name ] = array( ... )
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 * @var array
 	 */
 	private $fields = array();
@@ -72,7 +72,7 @@ class BB_Feature_Registry {
 	/**
 	 * Registered navigation items by feature.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 * @var array
 	 */
 	private $nav_items = array();
@@ -81,7 +81,7 @@ class BB_Feature_Registry {
 	 * Field name index for O(1) conflict detection.
 	 * Maps field name => array( feature_id, side_panel_id, section_id ).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 * @var array
 	 */
 	private $field_name_index = array();
@@ -89,7 +89,7 @@ class BB_Feature_Registry {
 	/**
 	 * Feature dependency graph (for circular dependency detection).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 * @var array
 	 */
 	private $dependency_graph = array();
@@ -97,7 +97,7 @@ class BB_Feature_Registry {
 	/**
 	 * Flag to invalidate the static option cache in bb_is_feature_active().
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 * @var bool
 	 */
 	private $active_cache_dirty = false;
@@ -105,7 +105,7 @@ class BB_Feature_Registry {
 	/**
 	 * Cache for sorted getter results to avoid re-sorting on repeated calls.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 * @var array
 	 */
 	private $sorted_cache = array();
@@ -113,7 +113,7 @@ class BB_Feature_Registry {
 	/**
 	 * Flag indicating sorted cache needs rebuild after new registrations.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 * @var bool
 	 */
 	private $sorted_cache_dirty = true;
@@ -121,7 +121,7 @@ class BB_Feature_Registry {
 	/**
 	 * Reverse dependency index: maps feature_id => array of features that depend on it.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 * @var array
 	 */
 	private $reverse_deps = array();
@@ -129,7 +129,7 @@ class BB_Feature_Registry {
 	/**
 	 * IDs of features that were cascade-deactivated in the last deactivation call.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 * @var array
 	 */
 	public $last_deactivated_dependents = array();
@@ -137,7 +137,7 @@ class BB_Feature_Registry {
 	/**
 	 * Get singleton instance.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 * @return BB_Feature_Registry
 	 */
 	public static function instance() {
@@ -150,7 +150,7 @@ class BB_Feature_Registry {
 	/**
 	 * Constructor.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	private function __construct() {
 		// Fire hook for core features to register.
@@ -160,27 +160,27 @@ class BB_Feature_Registry {
 	/**
 	 * Initialize the registry.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function bb_init() {
 		/**
 		 * Fired before core features are registered.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 */
 		do_action( 'bb_before_register_features' );
 
 		/**
 		 * Fired to register core BuddyBoss features.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 */
 		do_action( 'bb_register_features' );
 
 		/**
 		 * Fired after all features are registered.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 */
 		do_action( 'bb_after_register_features' );
 	}
@@ -188,7 +188,7 @@ class BB_Feature_Registry {
 	/**
 	 * Register a feature.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $feature_id Unique feature identifier (alphanumeric, underscore, hyphen).
 	 * @param array  $args {
@@ -319,7 +319,7 @@ class BB_Feature_Registry {
 		/**
 		 * Fired after a feature is registered.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param string $feature_id Feature ID.
 		 * @param array  $args       Feature arguments.
@@ -332,7 +332,7 @@ class BB_Feature_Registry {
 	/**
 	 * Register feature loaders with the Feature Loader.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $feature_id Feature ID.
 	 * @param array  $args       Feature arguments.
@@ -366,7 +366,7 @@ class BB_Feature_Registry {
 	 *
 	 * Side panels appear in the left sidebar navigation when viewing feature settings.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $feature_id    Feature ID.
 	 * @param string $side_panel_id Side panel ID.
@@ -469,7 +469,7 @@ class BB_Feature_Registry {
 		/**
 		 * Fired after a side panel is registered.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param string $feature_id    Feature ID.
 		 * @param string $side_panel_id Side panel ID.
@@ -485,7 +485,7 @@ class BB_Feature_Registry {
 	 *
 	 * Sections are the white boxes/cards that contain fields.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $feature_id    Feature ID.
 	 * @param string $side_panel_id Side panel ID.
@@ -629,7 +629,7 @@ class BB_Feature_Registry {
 		/**
 		 * Fired after a section is registered.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param string $feature_id    Feature ID.
 		 * @param string $side_panel_id Side panel ID.
@@ -644,7 +644,7 @@ class BB_Feature_Registry {
 	/**
 	 * Register a feature field.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $feature_id    Feature ID.
 	 * @param string $side_panel_id Side panel ID.
@@ -777,7 +777,7 @@ class BB_Feature_Registry {
 		/**
 		 * Fired after a field is registered.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param string $feature_id    Feature ID.
 		 * @param string $side_panel_id Side panel ID.
@@ -795,7 +795,7 @@ class BB_Feature_Registry {
 	 *
 	 * Navigation items appear in the sidebar but link to non-settings screens (like "All Activity" list).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $feature_id Feature ID.
 	 * @param array  $args {
@@ -868,7 +868,7 @@ class BB_Feature_Registry {
 		/**
 		 * Fired after a navigation item is registered.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param string $feature_id Feature ID.
 		 * @param string $nav_id     Navigation item ID.
@@ -886,7 +886,7 @@ class BB_Feature_Registry {
 	/**
 	 * Get a single feature.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $feature_id Feature ID.
 	 * @return array|null Feature data or null if not found.
@@ -898,7 +898,7 @@ class BB_Feature_Registry {
 	/**
 	 * Get all features.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param array $args {
 	 *     Optional. Arguments to filter features.
@@ -970,7 +970,7 @@ class BB_Feature_Registry {
 	/**
 	 * Get side panels for a feature.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $feature_id Feature ID.
 	 * @return array Array of side panels.
@@ -994,7 +994,7 @@ class BB_Feature_Registry {
 	/**
 	 * Get sections for a side panel.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $feature_id    Feature ID.
 	 * @param string $side_panel_id Side panel ID.
@@ -1019,7 +1019,7 @@ class BB_Feature_Registry {
 	/**
 	 * Get all sections for a feature (across all side panels).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $feature_id Feature ID.
 	 * @return array Array of sections grouped by side panel.
@@ -1034,7 +1034,7 @@ class BB_Feature_Registry {
 	/**
 	 * Get fields for a section.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $feature_id    Feature ID.
 	 * @param string $side_panel_id Side panel ID.
@@ -1075,7 +1075,7 @@ class BB_Feature_Registry {
 	/**
 	 * Get all fields for a feature (across all side panels and sections).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $feature_id Feature ID.
 	 * @return array Array of fields.
@@ -1100,7 +1100,7 @@ class BB_Feature_Registry {
 	/**
 	 * Get navigation items for a feature.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $feature_id Feature ID.
 	 * @return array Array of navigation items.
@@ -1116,7 +1116,7 @@ class BB_Feature_Registry {
 	/**
 	 * Check if a feature is registered.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $feature_id Feature ID.
 	 * @return bool True if registered, false otherwise.
@@ -1128,7 +1128,7 @@ class BB_Feature_Registry {
 	/**
 	 * Check if a feature is active.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $feature_id Feature ID.
 	 * @return bool True if active, false otherwise.
@@ -1184,7 +1184,7 @@ class BB_Feature_Registry {
 	 * A feature is unavailable if its license callback returns false
 	 * OR if any of its `depends_on` features are inactive.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $feature_id Feature ID.
 	 * @return bool True if available, false otherwise.
@@ -1241,7 +1241,7 @@ class BB_Feature_Registry {
 	/**
 	 * Activate a feature.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $feature_id Feature ID.
 	 * @return bool|WP_Error True on success, WP_Error on failure.
@@ -1317,7 +1317,7 @@ class BB_Feature_Registry {
 		/**
 		 * Fired after a feature is activated.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param string $feature_id Feature ID.
 		 */
@@ -1329,7 +1329,7 @@ class BB_Feature_Registry {
 	/**
 	 * Deactivate a feature.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $feature_id Feature ID.
 	 * @return bool|WP_Error True on success, WP_Error on failure.
@@ -1418,7 +1418,7 @@ class BB_Feature_Registry {
 			/**
 			 * Fired after a feature is deactivated.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 3.0.0
 			 *
 			 * @param string $fid_to_deactivate Feature ID.
 			 */
@@ -1437,7 +1437,7 @@ class BB_Feature_Registry {
 	 *
 	 * Multiple feature toggles in one request only trigger one flush.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	private function bb_schedule_rewrite_flush() {
 		static $scheduled = false;
@@ -1456,7 +1456,7 @@ class BB_Feature_Registry {
 	/**
 	 * Check for circular dependencies using DFS.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $feature_id Feature ID to check.
 	 * @return bool True if circular dependency exists, false otherwise.
@@ -1471,7 +1471,7 @@ class BB_Feature_Registry {
 	/**
 	 * DFS helper for circular dependency detection.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $node            Current node.
 	 * @param array  $visited         Visited nodes.
@@ -1501,7 +1501,7 @@ class BB_Feature_Registry {
 	/**
 	 * Get default sanitize callback for a field type.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $type Field type.
 	 * @return string|callable Sanitize callback.
@@ -1539,7 +1539,7 @@ class BB_Feature_Registry {
 	/**
 	 * Sanitize checkbox list field.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param mixed $value The value to sanitize.
 	 * @return array Sanitized array of values.
@@ -1556,7 +1556,7 @@ class BB_Feature_Registry {
 	 *
 	 * Handles arrays of integer IDs from multi-select course pickers.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param mixed $value The value to sanitize.
 	 * @return array Sanitized array of positive integer values.
@@ -1573,7 +1573,7 @@ class BB_Feature_Registry {
 	 *
 	 * Handles associative arrays like: { key1: 1, key2: 0 }
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param mixed $value The value to sanitize.
 	 * @return array Sanitized array of integer values.
@@ -1594,7 +1594,7 @@ class BB_Feature_Registry {
 	/**
 	 * Sanitize reaction button field.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param mixed $value The value to sanitize.
 	 * @return array Sanitized button settings.
@@ -1621,7 +1621,7 @@ class BB_Feature_Registry {
 	/**
 	 * Clear feature caches.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $feature_id Feature ID. Optional. If not provided, clears all caches.
 	 */
@@ -1656,7 +1656,7 @@ class BB_Feature_Registry {
 	 * `depends_on` array. O(1) lookup — backed by the `reverse_deps` index
 	 * built during feature registration.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $feature_id Feature ID to look up.
 	 * @return array List of dependent feature IDs (empty if none).

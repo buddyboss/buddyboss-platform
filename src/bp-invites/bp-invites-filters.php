@@ -160,7 +160,7 @@ function bb_invites_validate_invitation_before_wp_registration( $errors, $saniti
 /**
  * Register the Email Invites nav item for Settings 2.0 profile navigation order.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param array $items Associative array of slug => item data.
  * @return array Modified items with invites added.
@@ -177,7 +177,7 @@ function bb_invites_register_profile_nav_item( $items ) {
 /**
  * Mark the invites nav slug as inactive when the invites component is off.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param array $inactive Array of inactive nav slugs.
  * @return array Modified array with invites slug if component is inactive.

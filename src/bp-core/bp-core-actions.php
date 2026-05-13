@@ -1177,7 +1177,7 @@ add_action( 'bp_init', 'bb_bg_process_log_load' );
  */
 function bb_remove_admin_notices() {
 	$screen = get_current_screen();
-	// `bb-readylaunch` screen retired in BuddyBoss [BBVERSION]; Settings 2.0
+	// `bb-readylaunch` screen retired in BuddyBoss 3.0.0; Settings 2.0
 	// (`buddyboss_page_bb-settings`) is now the home for appearance settings
 	// and doesn't need the notice suppression that the legacy page did.
 	if ( 'buddyboss_page_bb-upgrade' === $screen->id ) {

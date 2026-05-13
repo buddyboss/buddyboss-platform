@@ -1067,7 +1067,7 @@ class BB_Activity_Topics_Manager {
 	/**
 	 * Register the Topic field in the Settings 2.0 Activity Edit Modal.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param BB_Admin_Meta_Field_Registry $registry The registry instance.
 	 * @param string                       $component The component identifier.
@@ -1143,7 +1143,7 @@ class BB_Activity_Topics_Manager {
 					 * Same hook as legacy bb_save_activity_topic_metabox().
 					 *
 					 * @since BuddyBoss 2.8.80
-					 * @since BuddyBoss [BBVERSION] Added to Settings 2.0 field registry save.
+					 * @since BuddyBoss 3.0.0 Added to Settings 2.0 field registry save.
 					 *
 					 * @param BP_Activity_Activity $activity The activity object.
 					 */
@@ -1167,7 +1167,7 @@ class BB_Activity_Topics_Manager {
 					 * Same hook as legacy bb_save_activity_topic_metabox().
 					 *
 					 * @since BuddyBoss 2.8.80
-					 * @since BuddyBoss [BBVERSION] Added to Settings 2.0 field registry save.
+					 * @since BuddyBoss 3.0.0 Added to Settings 2.0 field registry save.
 					 *
 					 * @param int $activity_id The ID of the activity.
 					 * @param int $topic_id    The ID of the topic.

@@ -6,7 +6,7 @@
  * Third-party plugins can add fields via the `bb_register_emails_meta_fields` hook.
  *
  * @package BuddyBoss\Core\Administration
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  * Hooked to `bb_register_emails_meta_fields` at priority 1 so core
  * fields are registered before any third-party additions.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param BB_Admin_Meta_Field_Registry $registry  The registry instance.
  * @param string                       $component The component identifier.

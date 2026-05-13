@@ -5,7 +5,7 @@
  * Handles AJAX requests for Reported Content list
  * in the Settings 2.0 admin interface.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  * @package BuddyBoss\Core\Administration
  */
 
@@ -15,14 +15,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class BB_Admin_Reported_Content_Ajax
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 class BB_Admin_Reported_Content_Ajax {
 
 	/**
 	 * Nonce action (shared with BB_Admin_Settings_Ajax).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @var string
 	 */
@@ -31,7 +31,7 @@ class BB_Admin_Reported_Content_Ajax {
 	/**
 	 * Current status filter for WHERE conditions.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @var string
 	 */
@@ -40,7 +40,7 @@ class BB_Admin_Reported_Content_Ajax {
 	/**
 	 * Constructor.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function __construct() {
 		$this->bb_register_ajax_handlers();
@@ -49,7 +49,7 @@ class BB_Admin_Reported_Content_Ajax {
 	/**
 	 * Register AJAX handlers.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	private function bb_register_ajax_handlers() {
 		add_action( 'wp_ajax_bb_admin_get_reported_content', array( $this, 'bb_get_reported_content' ) );
@@ -64,7 +64,7 @@ class BB_Admin_Reported_Content_Ajax {
 	/**
 	 * Verify AJAX request (nonce + capability).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	private function bb_verify_request() {
 		if ( ! bp_current_user_can( 'bp_moderate' ) ) {
@@ -88,7 +88,7 @@ class BB_Admin_Reported_Content_Ajax {
 	 * to review the report. The bypass flag is honoured by
 	 * `bp-moderation-filters.php` and `BP_Moderation_Abstract`.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param int $user_id User ID.
 	 *
@@ -108,7 +108,7 @@ class BB_Admin_Reported_Content_Ajax {
 	/**
 	 * Map content type slugs to icon classes for the React frontend.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $content_type Content type slug.
 	 *
@@ -134,7 +134,7 @@ class BB_Admin_Reported_Content_Ajax {
 	/**
 	 * Get reported content list.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function bb_get_reported_content() {
 		$this->bb_verify_request();
@@ -300,7 +300,7 @@ class BB_Admin_Reported_Content_Ajax {
 	/**
 	 * Get counts for each status filter option using a single query.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return array Associative array with 'all', 'hidden', 'visible' counts.
 	 */
@@ -331,7 +331,7 @@ class BB_Admin_Reported_Content_Ajax {
 	/**
 	 * Get content report details (reporters).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function bb_get_content_report() {
 		$this->bb_verify_request();
@@ -468,7 +468,7 @@ class BB_Admin_Reported_Content_Ajax {
 	/**
 	 * Hide reported content.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function bb_hide_content() {
 		$this->bb_verify_request();
@@ -504,7 +504,7 @@ class BB_Admin_Reported_Content_Ajax {
 	/**
 	 * Unhide reported content.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function bb_unhide_content() {
 		$this->bb_verify_request();
@@ -540,7 +540,7 @@ class BB_Admin_Reported_Content_Ajax {
 	/**
 	 * Suspend the owner of reported content.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function bb_suspend_content_owner() {
 		$this->bb_verify_request();
@@ -570,7 +570,7 @@ class BB_Admin_Reported_Content_Ajax {
 	/**
 	 * Unsuspend the owner of reported content.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function bb_unsuspend_content_owner() {
 		$this->bb_verify_request();
@@ -597,7 +597,7 @@ class BB_Admin_Reported_Content_Ajax {
 	 *
 	 * Supported actions: hide, unhide.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function bb_bulk_action() {
 		$this->bb_verify_request();
@@ -666,7 +666,7 @@ class BB_Admin_Reported_Content_Ajax {
 	 * Shows items with reported, user_report, or hide_sitewide set — replicates
 	 * the old BP_Moderation_List_Table logic for the reported-content tab.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param array $where_conditions Current conditions.
 	 * @param array $r                Parsed arguments.

@@ -2957,7 +2957,7 @@ function bp_nav_menu_get_loggedin_pages() {
 					 * Integrations that own the courses nav (e.g. the
 					 * buddyboss-learndash addon, Tutor LMS, MemberPress Courses)
 					 * filter this to return their LMS-specific "Course(s)"
-					 * label. Pre-BuddyBoss [BBVERSION], Platform called
+					 * label. Pre-BuddyBoss 3.0.0, Platform called
 					 * `LearnDash_Custom_Label::get_label( 'courses' )` inline —
 					 * that inline call moved into the addon subscriber.
 					 *
@@ -2965,7 +2965,7 @@ function bp_nav_menu_get_loggedin_pages() {
 					 * (e.g. "Course"); this call site wraps the result with
 					 * the "My %s" translation itself.
 					 *
-					 * @since BuddyBoss [BBVERSION]
+					 * @since BuddyBoss 3.0.0
 					 *
 					 * @param string $course_label Current label. Defaults to "Course".
 					 */
@@ -9963,7 +9963,7 @@ function bb_pro_post_feature_image_version() {
 /**
  * Get the Feature Loader instance.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return BB_Feature_Loader
  */
@@ -9974,7 +9974,7 @@ function bb_feature_loader() {
 /**
  * Get the Feature Registry instance.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return BB_Feature_Registry
  */
@@ -9985,7 +9985,7 @@ function bb_feature_registry() {
 /**
  * Register a feature.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $feature_id Feature ID.
  * @param array  $args       Feature arguments.
@@ -10002,7 +10002,7 @@ function bb_register_feature( $feature_id, $args = array() ) {
  *
  * Hierarchy: Feature (tab) → Side Panel (panel) → Sections → Fields
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $feature_id Feature ID (e.g., 'reactions', 'activity').
  * @param string $panel_id   Optional side panel ID.
@@ -10029,7 +10029,7 @@ function bb_get_feature_settings_url( $feature_id, $panel_id = '' ) {
  * field components inside Settings 2.0 panels (when available) or falling
  * back to a standalone admin page.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return bool Always true when this function exists.
  */
@@ -10040,7 +10040,7 @@ function bb_settings_supports_custom_field_types() {
 /**
  * Get the admin URL for the main settings page (Features grid).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return string Admin URL for the main settings page.
  */
@@ -10081,7 +10081,7 @@ function bb_get_settings_url() {
  * (per-feature link override, badge variant, custom check callback, etc.)
  * land without breaking existing callers' positional expectations.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param array $args {
  *     Optional. Configuration array.
@@ -10221,7 +10221,7 @@ function bb_admin_settings_get_pro_notice( $args = array() ) {
 	 * additions are automatically visible to filter consumers without needing
 	 * a signature change here.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param array $data PRO notice data.
 	 * @param array $args Resolved args: 'type', 'context', plus any future keys.
@@ -10242,7 +10242,7 @@ function bb_admin_settings_get_pro_notice( $args = array() ) {
  * from adding options like `siteurl`, `admin_email`, or `active_plugins`
  * to an AJAX-writable allowlist.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return array Flat array of option names that must be denied.
  */
@@ -10283,7 +10283,7 @@ function bb_get_options_denylist() {
 	 *
 	 * Extensions can add entries but must never remove existing ones.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param array $denylist Option names to deny.
 	 */
@@ -10296,7 +10296,7 @@ function bb_get_options_denylist() {
  * Pass an associative array of `option_name => sanitize_callback` and this
  * function returns it with any denylisted keys stripped out.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param array $options Associative array of option_name => sanitize_callback.
  * @return array Filtered array with denylisted keys removed.
@@ -10311,7 +10311,7 @@ function bb_filter_allowed_options( $options ) {
  * Shared sort callback used by BB_Feature_Registry and BB_Admin_Settings_Ajax
  * to avoid duplicating the same anonymous function.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param array $a First item.
  * @param array $b Second item.
@@ -10329,7 +10329,7 @@ function bb_sort_by_order( $a, $b ) {
  *
  * Side panels appear in the left sidebar navigation when viewing feature settings.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $feature_id    Feature ID.
  * @param string $side_panel_id Side panel ID.
@@ -10345,7 +10345,7 @@ function bb_register_side_panel( $feature_id, $side_panel_id, $args = array() ) 
  *
  * Sections are the white boxes/cards that contain fields.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $feature_id    Feature ID.
  * @param string $side_panel_id Side panel ID.
@@ -10360,7 +10360,7 @@ function bb_register_feature_section( $feature_id, $side_panel_id, $section_id, 
 /**
  * Register a feature field.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $feature_id    Feature ID.
  * @param string $side_panel_id Side panel ID.
@@ -10381,7 +10381,7 @@ function bb_register_feature_section( $feature_id, $side_panel_id, $section_id, 
  *     @type array  $upload_config {
  *         Optional. Upload configuration for image_radio fields with custom upload support.
  *
- *         @since BuddyBoss [BBVERSION]
+ *         @since BuddyBoss 3.0.0
  *
  *         @type string $type        Upload type: 'avatar' or 'cover'.
  *         @type string $object      Object type for BP handlers (e.g., 'group').
@@ -10405,7 +10405,7 @@ function bb_register_feature_field( $feature_id, $side_panel_id, $section_id, $a
  * Fields registered via this API are fetched, rendered, and saved by the modal automatically.
  * Same pattern as register_post_meta + show_in_rest.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $component Component identifier (e.g. 'activity', 'groups', 'forums').
  * @param string $field_id  Unique field ID within the component.
@@ -10422,7 +10422,7 @@ function bb_register_admin_meta_field( $component, $field_id, $args = array() ) 
 /**
  * Get the Admin Meta Field Registry instance.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return BB_Admin_Meta_Field_Registry
  */
@@ -10433,7 +10433,7 @@ function bb_admin_meta_field_registry() {
 /**
  * Register a feature navigation item.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $feature_id Feature ID.
  * @param array  $args       Navigation item arguments.
@@ -10450,7 +10450,7 @@ function bb_register_feature_nav_item( $feature_id, $args = array() ) {
  * Automatically sets the category to 'integrations' and
  * integration_id if not provided.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $feature_id Feature ID (integration slug).
  * @param array  $args       Feature arguments (same as bb_register_feature).
@@ -10471,7 +10471,7 @@ function bb_register_integration( $feature_id, $args = array() ) {
 /**
  * Add action only if feature is active.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string   $feature_id Feature ID to check.
  * @param string   $tag        Action hook tag.
@@ -10491,7 +10491,7 @@ function bb_add_action_if_active( $feature_id, $tag, $function, $priority = 10, 
 /**
  * Add filter only if feature is active.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string   $feature_id Feature ID to check.
  * @param string   $tag        Filter hook tag.
@@ -10511,7 +10511,7 @@ function bb_add_filter_if_active( $feature_id, $tag, $function, $priority = 10, 
 /**
  * Get the Icon Registry instance.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return BB_Icon_Registry
  */
@@ -10522,7 +10522,7 @@ function bb_icon_registry() {
 /**
  * Register an icon.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $icon_id Icon ID.
  * @param array  $args    Icon arguments.
@@ -10538,7 +10538,7 @@ function bb_register_icon( $icon_id, $args = array() ) {
  * Groups are used to visually categorize email situations in the
  * Settings 2.0 email template modal.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return array Associative array of group_key => translated label.
  */
@@ -10558,7 +10558,7 @@ function bb_email_get_type_groups() {
 	 * Third-party plugins can add custom groups so their email types
 	 * are grouped under a meaningful label instead of "Other".
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param array $groups Group key => translated label map.
 	 */
@@ -10573,7 +10573,7 @@ function bb_email_get_type_groups() {
  * 2. Term meta 'bb_email_group' (persisted — works when component is disabled).
  * 3. Falls back to 'other'.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $type_slug The email type taxonomy term slug.
  *
@@ -10607,7 +10607,7 @@ function bb_email_get_type_group( $type_slug ) {
 	 * Third-party plugins can override the group for their email types
 	 * without needing to hook into `bp_email_get_type_schema`.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $group     The resolved group key.
 	 * @param string $type_slug The email type taxonomy term slug.

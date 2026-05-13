@@ -5,7 +5,7 @@
  * Sanitize callback functions for Notifications feature settings.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * Accepts 'left' or 'right' values only.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The value to sanitize.
  *
@@ -38,7 +38,7 @@ function bb_notifications_sanitize_position( $value ) {
  *
  * Accepts specific time values or 'never'.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The value to sanitize.
  *
@@ -62,7 +62,7 @@ function bb_notifications_sanitize_visibility( $value ) {
  * enforces yes/no values, whitelists against registered preferences,
  * and preserves read-only preference defaults.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value The submitted value.
  *

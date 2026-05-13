@@ -19,7 +19,7 @@
  * no admin-context assumptions.
  *
  * @package BuddyBoss\Features\Community\Appearance
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -32,7 +32,7 @@ defined( 'ABSPATH' ) || exit;
  * (which casts via `(bool)`) keeps working. String values ("1"/"0"/"true") all coerce
  * correctly via the (int) round-trip.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value Submitted value.
  * @return bool Sanitized boolean.
@@ -56,7 +56,7 @@ function bb_appearance_sanitize_layout( $value ) {
 /**
  * Sanitize the ReadyLaunch theme mode (light / dark / choice).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value Submitted value.
  * @return string Sanitized mode ('light' on invalid input).
@@ -69,7 +69,7 @@ function bb_appearance_sanitize_theme_mode( $value ) {
 /**
  * Sanitize a ReadyLaunch primary color with an optional fallback default.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed  $value         Submitted value.
  * @param string $default_value Default hex color if sanitization fails.
@@ -100,7 +100,7 @@ function bb_appearance_sanitize_color( $value, $default_value = '#3E34FF' ) {
  *     ONLY when it's same-host as `home_url()`. External URLs here are
  *     likely crafted payloads and get rejected.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value Submitted value.
  * @return array|int|null Sanitized media object, legacy integer ID, or null.
@@ -169,7 +169,7 @@ function bb_appearance_sanitize_media( $value ) {
  * (e.g. the sidebar renderer at `right-sidebar.php` and the page-enabled
  * check in `BB_Readylaunch::bb_rl_is_page_enabled_for_integration()`).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value Submitted value.
  * @return array{registration: bool, courses: bool} Sanitized map.
@@ -209,7 +209,7 @@ function bb_appearance_sanitize_enabled_pages( $value ) {
  * Returns the canonical object-map shape consumed by ReadyLaunch's
  * `right-sidebar.php` template (keyed by widget slug, value = bool).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value Submitted value.
  * @return array<string, bool> Sanitized map.
@@ -248,7 +248,7 @@ function bb_appearance_sanitize_sidebar_map( $value ) {
  *
  * Returns the canonical associative map consumed by ReadyLaunch templates.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value Submitted value.
  * @return array<string, array{enabled: bool, order: int, icon: string}> Sanitized map.
@@ -295,7 +295,7 @@ function bb_appearance_sanitize_side_menu( $value ) {
  * Always returns a sequential list of link objects with `id`, `title`, `url`, and
  * `isEditing => false` (matches legacy format).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value Submitted value.
  * @return array<int, array{id: string, title: string, url: string, isEditing: false}> Sanitized links.
@@ -327,7 +327,7 @@ function bb_appearance_sanitize_custom_links( $value ) {
  * associative `{key: 1}` map (Settings 2.0 shape). Pass-through for values
  * that are already map-shaped.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value Value to normalize.
  * @return array|mixed Associative map, or the original value if not an array.
@@ -361,7 +361,7 @@ function bb_appearance_normalize_list_to_map( $value ) {
  * `{ activity_feed: { enabled, order, icon }, ... }`. Pass-through when the
  * value is already map-shaped.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param mixed $value Stored value (either shape).
  * @return array Map-of-items shape.

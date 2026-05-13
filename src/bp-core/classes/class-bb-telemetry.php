@@ -73,7 +73,7 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			 *
 			 * Pro uses this to force 'complete' mode for paid users.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 3.0.0
 			 *
 			 * @param string $mode Telemetry mode: 'complete', 'anonymous', or 'disable'.
 			 */
@@ -553,11 +553,11 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 			 * Filter the telemetry active-integrations map. Addons set their
 			 * own status here instead of Platform knowing how to detect them.
 			 *
-			 * The pre-[BBVERSION] inline LearnDash detection
+			 * The pre-3.0.0 inline LearnDash detection
 			 * (sfwd-lms + bp_ld_sync_settings) moved to buddyboss-learndash
 			 * as a subscriber to this filter.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 3.0.0
 			 *
 			 * @param array $active_integrations Map of integration_id => bool.
 			 */

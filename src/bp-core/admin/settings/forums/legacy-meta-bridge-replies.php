@@ -7,7 +7,7 @@
  * as native React fields in the Settings 2.0 Reply edit modal.
  *
  * @package BuddyBoss\Core\Administration
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.0.0
  */
 
 defined( 'ABSPATH' ) || exit;

@@ -6,7 +6,7 @@
  * Allows integrations to be enabled/disabled via the admin Settings 2.0 interface.
  *
  * @package BuddyBoss\Core
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -15,14 +15,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Integration Bridge class.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 class BB_Integration_Bridge {
 
 	/**
 	 * Singleton instance.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @var BB_Integration_Bridge|null
 	 */
@@ -32,7 +32,7 @@ class BB_Integration_Bridge {
 	 * Array of integration IDs that are managed by the feature system.
 	 * Maps integration_id => feature_id.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @var array
 	 */
@@ -41,7 +41,7 @@ class BB_Integration_Bridge {
 	/**
 	 * Get the singleton instance.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return BB_Integration_Bridge
 	 */
@@ -55,7 +55,7 @@ class BB_Integration_Bridge {
 	/**
 	 * Constructor.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	private function __construct() {
 		// Hook early to filter integrations before they are loaded.
@@ -74,7 +74,7 @@ class BB_Integration_Bridge {
 	/**
 	 * Register an integration to be managed by the feature system.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $integration_id The integration ID (e.g., 'learndash').
 	 * @param string $feature_id     The feature ID in the registry.
@@ -86,7 +86,7 @@ class BB_Integration_Bridge {
 	/**
 	 * Check if an integration is managed by the feature system.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $integration_id The integration ID.
 	 * @return bool
@@ -98,7 +98,7 @@ class BB_Integration_Bridge {
 	/**
 	 * Get the feature ID for an integration.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $integration_id The integration ID.
 	 * @return string|null
@@ -115,7 +115,7 @@ class BB_Integration_Bridge {
 	 * Note: This doesn't prevent loading of integration loaders, but can be used
 	 * to modify the list. The actual loading control happens in check_feature_status().
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param array $integrations List of integration slugs.
 	 * @return array Filtered list of integrations.
@@ -131,7 +131,7 @@ class BB_Integration_Bridge {
 	 *
 	 * This filter is called from BP_Integration::is_activated().
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param bool   $is_activated   Whether the integration is activated.
 	 * @param string $integration_id The integration ID.
@@ -163,7 +163,7 @@ class BB_Integration_Bridge {
 	 *
 	 * Uses the unified bb-active-features storage (single source of truth).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $feature_id The feature ID.
 	 * @return bool
@@ -193,7 +193,7 @@ class BB_Integration_Bridge {
 	 * Note: This is typically called via bb_feature_activated action.
 	 * Direct calls should go through BB_Feature_Registry::bb_activate_feature().
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $feature_id The feature ID.
 	 * @return bool
@@ -216,7 +216,7 @@ class BB_Integration_Bridge {
 	 * Note: This is typically called via bb_feature_deactivated action.
 	 * Direct calls should go through BB_Feature_Registry::bb_deactivate_feature().
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $feature_id The feature ID.
 	 * @return bool
@@ -236,7 +236,7 @@ class BB_Integration_Bridge {
 	/**
 	 * Handle feature activation.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $feature_id The feature ID.
 	 */
@@ -251,7 +251,7 @@ class BB_Integration_Bridge {
 	/**
 	 * Handle feature deactivation.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $feature_id The feature ID.
 	 */
@@ -266,7 +266,7 @@ class BB_Integration_Bridge {
 	/**
 	 * Get all managed integrations.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return array
 	 */
@@ -278,7 +278,7 @@ class BB_Integration_Bridge {
 /**
  * Get the Integration Bridge instance.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return BB_Integration_Bridge
  */

@@ -10,7 +10,7 @@
  * delivery metadata, A/B-testing variants, plugin-specific headers).
  *
  * @package BuddyBoss\Core\Administration
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.0.0
  */
 
 defined( 'ABSPATH' ) || exit;

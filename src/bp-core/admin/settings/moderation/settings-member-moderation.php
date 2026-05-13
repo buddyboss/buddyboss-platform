@@ -5,7 +5,7 @@
  * Registers sections and fields for the Member Moderation side panel.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * All fields are registered in a single section so the React UI renders
  * them inside one card — matching the Figma design.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_moderation_register_member_moderation_fields() {
 

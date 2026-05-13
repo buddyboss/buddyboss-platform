@@ -23,7 +23,7 @@
  * by reordering entries.
  *
  * @package BuddyBoss\Core\Administration
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -35,7 +35,7 @@ defined( 'ABSPATH' ) || exit;
  * Versioned with the Platform version so plugin upgrades automatically
  * invalidate stale catalogs.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return string Transient key.
  */
@@ -52,7 +52,7 @@ function bb_field_upgrades_transient_key() {
  * cache hit. On a cache miss prefers the stale option so the AJAX path
  * stays non-blocking; the next request will populate fresh data via cron.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return array|false Decoded catalog data with 'items' key, or false when unavailable.
  */
@@ -85,7 +85,7 @@ function bb_get_field_upgrades_data() {
  * Uses a short-lived lock transient to prevent thundering-herd scheduling
  * when many admin requests arrive simultaneously after a cache expiry.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_schedule_field_upgrades_refresh() {
 	if ( ( defined( 'DOING_CRON' ) && DOING_CRON ) || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
@@ -109,7 +109,7 @@ function bb_schedule_field_upgrades_refresh() {
  * on any failure the previous stale catalog (option `bb_field_upgrades_data_stale`)
  * continues to serve read requests, so admins never see an empty state.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return array|false Fetched data on success, false on any failure.
  */
@@ -121,7 +121,7 @@ function bb_refresh_field_upgrades_data() {
 	 *
 	 * Allows self-hosting, staging overrides, and test injection.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param string $url Default S3 endpoint URL.
 	 */
@@ -153,7 +153,7 @@ add_action( 'bb_field_upgrades_daily_refresh', 'bb_refresh_field_upgrades_data' 
 /**
  * Ensure the daily refresh event is scheduled.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_schedule_field_upgrades_daily_refresh() {
 	if ( ! wp_next_scheduled( 'bb_field_upgrades_daily_refresh' ) ) {
@@ -177,7 +177,7 @@ add_action( 'admin_init', 'bb_schedule_field_upgrades_daily_refresh' );
  *
  * Ties at the same specificity are broken by JSON array order (first wins).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $feature_id Feature ID (required for any match).
  * @param string $panel_id   Side panel ID. Empty string is treated as no panel context.
@@ -310,7 +310,7 @@ function bb_get_field_upgrade_for( $feature_id, $panel_id = '', $section_id = ''
  * Returns null when the URL doesn't match any supported provider — callers
  * should treat that as "no video, fall back to image".
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $url Raw video URL from the catalog.
  * @return array|null { type: 'youtube'|'vimeo'|'mp4', url: string } or null on no match.
@@ -394,7 +394,7 @@ function bb_detect_upgrade_video_provider( $url ) {
  * Shared between field-level (bb-field-upgrades.json) and feature-level
  * (bb-features.json) modals so React has a single rendering contract.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $video_url Raw video URL from the catalog (may be empty).
  * @param string $image_url Raw image URL from the catalog (may be empty).
@@ -442,7 +442,7 @@ function bb_admin_build_upgrade_media( $video_url, $image_url ) {
  *     (`upgrade_image_url`, when present, becomes a poster on `<video>` for mp4.)
  *  2. Otherwise → media is the image (or empty when no image either).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param array  $entry         Resolved catalog entry from `bb_get_field_upgrade_for()`.
  * @param string $fallback_label Label to use when the catalog entry omits one
@@ -477,7 +477,7 @@ function bb_field_upgrade_to_modal_payload( $entry, $fallback_label = '' ) {
  * Called by the cache flusher so a long-running process (cron, CLI) sees
  * fresh data after a transient delete without restarting PHP.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_reset_field_upgrades_index() {
 	// Re-invoke the resolver with sentinel arguments to force a rebuild
@@ -510,7 +510,7 @@ function bb_reset_field_upgrades_index() {
  * function for stale-deletion — see `bb_flush_field_upgrades_cache_full()`
  * below for the truly-need-fresh-now case (license change, manual flush).
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_flush_field_upgrades_cache() {
 	delete_transient( bb_field_upgrades_transient_key() );
@@ -529,7 +529,7 @@ add_action( 'bb_feature_caches_flushed', 'bb_flush_field_upgrades_cache' );
  * events use the lighter `bb_flush_field_upgrades_cache()` which keeps
  * the stale option around for instant AJAX serving.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_flush_field_upgrades_cache_full() {
 	delete_transient( bb_field_upgrades_transient_key() );
@@ -544,7 +544,7 @@ function bb_flush_field_upgrades_cache_full() {
  * site moves from "no license" to "Pro" or back, every modal payload
  * needs a fresh resolution because pro_notice may stop firing.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_register_field_upgrades_license_hooks() {
 	if ( ! class_exists( '\\BuddyBoss\\Core\\Admin\\Mothership\\BB_Plugin_Connector' ) ) {

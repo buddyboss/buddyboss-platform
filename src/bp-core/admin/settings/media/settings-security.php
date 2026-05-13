@@ -5,7 +5,7 @@
  * Registers sections and fields for the Security & Performance side panel.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * Replicates the legacy Settings 1.0 behavior with server-side checks for
  * symbolic link support and direct access status.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_media_register_security_panel_fields() {
 

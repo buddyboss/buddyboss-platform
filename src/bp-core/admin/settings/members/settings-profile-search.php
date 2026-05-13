@@ -5,7 +5,7 @@
  * Registers sections and fields for the Profile Search side panel.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register Profile Search panel sections and fields.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_members_register_profile_search_panel_fields() {
 
@@ -54,7 +54,7 @@ function bb_members_register_profile_search_panel_fields() {
 	/**
 	 * Fires after Profile Search section fields are registered.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	do_action( 'bb_members_settings_after_profile_search_fields' );
 }

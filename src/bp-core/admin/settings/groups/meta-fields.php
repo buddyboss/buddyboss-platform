@@ -6,7 +6,7 @@
  * in the Settings 2.0 admin interface via BB_Admin_Meta_Field_Registry.
  *
  * @package BuddyBoss\Core\Administration
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  * Hooks into `bb_register_groups_meta_fields` at priority 1 so Platform fields
  * come first. Pro extensions register at priority 10+.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param BB_Admin_Meta_Field_Registry $registry  The registry instance.
  * @param string                       $component The component identifier.
@@ -132,7 +132,7 @@ function bb_groups_register_core_meta_fields( $registry, $component ) {
 				/**
 				 * Filters the allowed group statuses.
 				 *
-				 * @since BuddyBoss [BBVERSION]
+				 * @since BuddyBoss 3.0.0
 				 *
 				 * @param array $options Status options.
 				 * @param object $group  The group object.

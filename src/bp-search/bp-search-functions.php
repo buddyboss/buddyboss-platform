@@ -545,7 +545,7 @@ function bp_search_get_post_thumbnail_default( $post_type, $icon_type = 'svg' ) 
 	 * rows inline in Platform; those now live in the addon and are
 	 * registered via this filter.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param array  $default   Map of post_type => asset URL or icon class.
 	 * @param string $icon_type 'svg' or 'icon'.

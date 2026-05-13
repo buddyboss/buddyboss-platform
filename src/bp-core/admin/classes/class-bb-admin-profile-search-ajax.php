@@ -5,7 +5,7 @@
  * Handles AJAX requests for Profile Search form fields CRUD
  * in the Settings 2.0 admin interface.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.0.0
  * @package BuddyBoss\Core\Administration
  */
 
@@ -15,14 +15,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class BB_Admin_Profile_Search_Ajax
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 class BB_Admin_Profile_Search_Ajax {
 
 	/**
 	 * Nonce action (shared with BB_Admin_Settings_Ajax).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @var string
 	 */
@@ -31,7 +31,7 @@ class BB_Admin_Profile_Search_Ajax {
 	/**
 	 * Verify AJAX request (capability + nonce).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return void
 	 */
@@ -42,7 +42,7 @@ class BB_Admin_Profile_Search_Ajax {
 	/**
 	 * Constructor.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function __construct() {
 		$this->bb_register_ajax_handlers();
@@ -51,7 +51,7 @@ class BB_Admin_Profile_Search_Ajax {
 	/**
 	 * Register AJAX handlers.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	private function bb_register_ajax_handlers() {
 		add_action( 'wp_ajax_bb_admin_get_profile_search_fields', array( $this, 'get_search_fields' ) );
@@ -66,7 +66,7 @@ class BB_Admin_Profile_Search_Ajax {
 	/**
 	 * Register profile search options in the allowed platform settings whitelist.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param array $allowed Allowed options map.
 	 *
@@ -81,7 +81,7 @@ class BB_Admin_Profile_Search_Ajax {
 	/**
 	 * Get the main form ID, auto-creating if needed.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @return int Form post ID.
 	 */
@@ -99,7 +99,7 @@ class BB_Admin_Profile_Search_Ajax {
 	/**
 	 * Get all profile search fields (saved + available).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function get_search_fields() {
 		$this->bb_verify_request();
@@ -191,7 +191,7 @@ class BB_Admin_Profile_Search_Ajax {
 	/**
 	 * Save (add or update) a profile search field.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function save_search_field() {
 		$this->bb_verify_request();
@@ -258,7 +258,7 @@ class BB_Admin_Profile_Search_Ajax {
 		/**
 		 * Fires after a profile search field is saved (created or updated).
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param int    $form_id    Form post ID.
 		 * @param string $field_code Field code identifier.
@@ -272,7 +272,7 @@ class BB_Admin_Profile_Search_Ajax {
 	/**
 	 * Delete a profile search field by index.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function delete_search_field() {
 		$this->bb_verify_request();
@@ -310,7 +310,7 @@ class BB_Admin_Profile_Search_Ajax {
 		/**
 		 * Fires after a profile search field is deleted.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param int   $form_id     Form post ID.
 		 * @param int   $field_index Deleted field index.
@@ -324,7 +324,7 @@ class BB_Admin_Profile_Search_Ajax {
 	/**
 	 * Reorder profile search fields.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function reorder_search_fields() {
 		$this->bb_verify_request();
@@ -401,7 +401,7 @@ class BB_Admin_Profile_Search_Ajax {
 	/**
 	 * Check if a profile search field belongs to a repeater group.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param object|null $field_obj Profile search field object.
 	 *

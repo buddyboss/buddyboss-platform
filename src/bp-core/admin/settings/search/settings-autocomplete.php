@@ -6,7 +6,7 @@
  * Search feature in the Settings 2.0 registry.
  *
  * @package BuddyBoss\Core\Administration
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.0.0
  */
 
 // Exit if accessed directly.
@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * Called from bb-admin-settings-search.php after side panels are registered.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_search_register_autocomplete_fields() {
 

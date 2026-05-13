@@ -439,7 +439,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			 * inside Platform. It now hooks this action from inside the
 			 * addon instead.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 3.0.0
 			 *
 			 * @param BB_Readylaunch $readylaunch The current ReadyLaunch instance.
 			 */
@@ -680,7 +680,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 						 * Courses are still resolved inline below until
 						 * their own addon extractions land.
 						 *
-						 * @since BuddyBoss [BBVERSION]
+						 * @since BuddyBoss 3.0.0
 						 *
 						 * @param array $info { is_active: bool, url: string }.
 						 */
@@ -1490,7 +1490,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			 * Subscribers return true to claim is_active; false/null to
 			 * defer. First truthy wins by filter priority order.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 3.0.0
 			 *
 			 * @param bool $is_active Current active state (default false).
 			 */
@@ -3136,7 +3136,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * holds no integration-specific detection — all post-type, URL,
 		 * taxonomy, and shortcode knowledge lives in the integration addon.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param string $key Detection key, e.g. 'learndash',
 		 *                    'learndash_registration', 'learndash_reset_password'.
@@ -3150,7 +3150,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			 * / shortcode detection. Return true to claim the page; return
 			 * $is_page (the incoming value) to stay neutral.
 			 *
-			 * @since BuddyBoss [BBVERSION]
+			 * @since BuddyBoss 3.0.0
 			 *
 			 * @param bool   $is_page Whether the current page is integration-owned.
 			 * @param string $key     Detection key.

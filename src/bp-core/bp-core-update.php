@@ -649,7 +649,7 @@ function bp_pre_schema_upgrade() {
 		}
 	}
 
-	// [BBVERSION]: Drop any malformed `post_title` index on bp_activity that lacks
+	// 3.0.0: Drop any malformed `post_title` index on bp_activity that lacks
 	// a prefix length. Some installs upgraded through an intermediate version that
 	// created `KEY post_title (post_title)` without the (191) length specifier
 	// against a TEXT column. When dbDelta later tries to re-spec the column, MySQL
@@ -4148,7 +4148,7 @@ function bb_update_to_2_16_1() {
  * Seeds bb-active-features based on existing settings so the new
  * feature cards reflect the user's prior configuration.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_update_to_3_0_0() {
 
@@ -4228,7 +4228,7 @@ function bb_update_to_3_0_0() {
  * use, and writes back. Idempotent — values already in canonical shape pass
  * through unchanged.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @return void
  */
@@ -4290,7 +4290,7 @@ function bb_rl_migrate_settings() {
  * value of 1 (enabled) so that frontend/backend code reading them via
  * get_option() or bp_get_option() gets `1` instead of `false`.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_seed_media_section_toggle_defaults() {
 	$media_section_toggles = array(
@@ -4311,7 +4311,7 @@ function bb_seed_media_section_toggle_defaults() {
 /**
  * Seed media section toggle defaults when media feature is activated.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param string $feature_id The feature ID that was activated.
  */
@@ -4334,7 +4334,7 @@ add_action( 'bb_feature_activated', 'bb_on_media_feature_activated' );
  * Uses a hardcoded map of all known BB email types — safe because these slugs are controlled
  * by BuddyBoss and never change.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 function bb_migrate_email_type_groups() {
 
@@ -4412,7 +4412,7 @@ function bb_migrate_email_type_groups() {
 	 * Pro or third-party plugins can add their email types to the migration
 	 * so they get proper group assignment instead of falling to "Other".
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @param array $group_map Email type slug => group key map.
 	 */

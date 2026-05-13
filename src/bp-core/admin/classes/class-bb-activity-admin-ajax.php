@@ -5,7 +5,7 @@
  * Handles AJAX requests for the Activity listing, editing, and actions
  * in the Settings 2.0 admin interface.
  *
- * @since   BuddyBoss [BBVERSION]
+ * @since   BuddyBoss 3.0.0
  * @package BuddyBoss\Core\Administration
  */
 
@@ -15,14 +15,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class BB_Activity_Admin_Ajax
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  */
 class BB_Activity_Admin_Ajax {
 
 	/**
 	 * Nonce action (shared with BB_Admin_Settings_Ajax).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @var string
 	 */
@@ -31,7 +31,7 @@ class BB_Activity_Admin_Ajax {
 	/**
 	 * Maximum number of items per bulk operation.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 *
 	 * @var int
 	 */
@@ -40,7 +40,7 @@ class BB_Activity_Admin_Ajax {
 	/**
 	 * Constructor.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function __construct() {
 		$this->bb_register_ajax_handlers();
@@ -49,7 +49,7 @@ class BB_Activity_Admin_Ajax {
 	/**
 	 * Register AJAX handlers.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	private function bb_register_ajax_handlers() {
 		add_action( 'wp_ajax_bb_admin_get_activities', array( $this, 'bb_admin_get_activities' ) );
@@ -62,7 +62,7 @@ class BB_Activity_Admin_Ajax {
 	/**
 	 * Verify AJAX request (nonce + capability).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	private function bb_verify_request() {
 		bb_admin_verify_ajax_request( self::NONCE_ACTION );
@@ -78,7 +78,7 @@ class BB_Activity_Admin_Ajax {
 	 * - activity_type: Activity type filter (optional).
 	 * - spam: 'all', 'spam_only', or 'ham_only' (default 'ham_only').
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function bb_admin_get_activities() {
 		$this->bb_verify_request();
@@ -94,12 +94,12 @@ class BB_Activity_Admin_Ajax {
 		 * Not applicable in the AJAX context — deprecated in Settings 2.0.
 		 *
 		 * @since BuddyPress 1.6.0
-		 * @deprecated BuddyBoss [BBVERSION] No longer fired in Settings 2.0 AJAX context.
+		 * @deprecated BuddyBoss 3.0.0 No longer fired in Settings 2.0 AJAX context.
 		 */
 		do_action_deprecated(
 			'bp_activity_admin_load',
 			array( 'ajax' ),
-			'[BBVERSION]',
+			'3.0.0',
 			'',
 			'This hook is not applicable in the Settings 2.0 AJAX context.'
 		);
@@ -128,7 +128,7 @@ class BB_Activity_Admin_Ajax {
 			 * Filter to override the filter with a filter query (legacy compatibility).
 			 *
 			 * @since BuddyPress 2.5.0
-			 * @since BuddyBoss [BBVERSION] Added to Settings 2.0 AJAX activity listing.
+			 * @since BuddyBoss 3.0.0 Added to Settings 2.0 AJAX activity listing.
 			 *
 			 * @param array $filter Filter array.
 			 */
@@ -207,7 +207,7 @@ class BB_Activity_Admin_Ajax {
 		 * Same hook as legacy BP_Activity_List_Table::get_columns().
 		 *
 		 * @since BuddyPress 2.4.0
-		 * @since BuddyBoss [BBVERSION] Added to Settings 2.0 AJAX activity listing.
+		 * @since BuddyBoss 3.0.0 Added to Settings 2.0 AJAX activity listing.
 		 *
 		 * @param array $value Array of slugs and titles for the columns.
 		 */
@@ -279,7 +279,7 @@ class BB_Activity_Admin_Ajax {
 				 * Same hook as legacy column_comment().
 				 *
 				 * @since BuddyPress 2.4.0
-				 * @since BuddyBoss [BBVERSION] Added to Settings 2.0 AJAX activity listing.
+				 * @since BuddyBoss 3.0.0 Added to Settings 2.0 AJAX activity listing.
 				 *
 				 * @param string $display_content The activity content.
 				 * @param array  $item_data       The activity object converted into an array.
@@ -313,7 +313,7 @@ class BB_Activity_Admin_Ajax {
 				 *
 				 * @since BuddyPress 2.0.0
 				 * @since BuddyPress 2.5.0 Add a second parameter to include the activity item into the filter.
-				 * @since BuddyBoss [BBVERSION] Added to Settings 2.0 AJAX activity listing.
+				 * @since BuddyBoss 3.0.0 Added to Settings 2.0 AJAX activity listing.
 				 *
 				 * @param bool  $can_comment Whether an activity item can be commented on or not.
 				 * @param array $item_data   An array version of the BP_Activity_Activity object.
@@ -336,7 +336,7 @@ class BB_Activity_Admin_Ajax {
 				 * Filters available row actions (same as legacy BP_Activity_List_Table::column_comment()).
 				 *
 				 * @since BuddyPress 1.6.0
-				 * @since BuddyBoss [BBVERSION] Added to Settings 2.0 AJAX activity listing.
+				 * @since BuddyBoss 3.0.0 Added to Settings 2.0 AJAX activity listing.
 				 *
 				 * @param array $actions Array of action key => label.
 				 * @param array $item_data Current item (array version of activity object).
@@ -349,7 +349,7 @@ class BB_Activity_Admin_Ajax {
 				 * Used in the "In Response To" column to determine which activities
 				 * are top-level vs. replies (same logic as legacy column_response()).
 				 *
-				 * @since BuddyBoss [BBVERSION]
+				 * @since BuddyBoss 3.0.0
 				 *
 				 * @param array $root_activity_types Activity type slugs treated as root activities.
 				 * @param array $item_data           The current activity item data array.
@@ -406,7 +406,7 @@ class BB_Activity_Admin_Ajax {
 						 * Same hook as legacy BP_Activity_List_Table::column_default().
 						 *
 						 * @since BuddyPress 2.4.0
-						 * @since BuddyBoss [BBVERSION] Added to Settings 2.0 AJAX activity listing.
+						 * @since BuddyBoss 3.0.0 Added to Settings 2.0 AJAX activity listing.
 						 *
 						 * @param string $value       Empty string.
 						 * @param string $column_name Name of the column being rendered.
@@ -490,7 +490,7 @@ class BB_Activity_Admin_Ajax {
 			 * Same hook as legacy BP_Activity_List_Table::get_bulk_actions().
 			 *
 			 * @since BuddyPress 1.6.0
-			 * @since BuddyBoss [BBVERSION] Added to Settings 2.0 AJAX activity listing.
+			 * @since BuddyBoss 3.0.0 Added to Settings 2.0 AJAX activity listing.
 			 *
 			 * @param array $bulk_actions Default available actions for bulk operations.
 			 */
@@ -526,7 +526,7 @@ class BB_Activity_Admin_Ajax {
 		 *
 		 * Each view is an array with 'label' (string) and 'count' (int).
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param array  $views        Array of view_key => array( 'label' => string, 'count' => int ).
 		 * @param string $current_view Current active view ('all' or 'spam').
@@ -537,9 +537,9 @@ class BB_Activity_Admin_Ajax {
 		 * Fires inside listing of views so plugins can add their own.
 		 *
 		 * @since BuddyPress 1.6.0
-		 * @since BuddyBoss [BBVERSION] Added to Settings 2.0 AJAX activity listing.
+		 * @since BuddyBoss 3.0.0 Added to Settings 2.0 AJAX activity listing.
 		 *
-		 * @deprecated BuddyBoss [BBVERSION] Use {@see 'bb_admin_activity_list_views'} filter instead.
+		 * @deprecated BuddyBoss 3.0.0 Use {@see 'bb_admin_activity_list_views'} filter instead.
 		 *             This action outputs HTML which is not compatible with the React-based Settings 2.0 UI.
 		 *             It is fired here for backwards compatibility only.
 		 *
@@ -555,7 +555,7 @@ class BB_Activity_Admin_Ajax {
 		 * Same hook as legacy bp_activity_admin_index().
 		 *
 		 * @since BuddyPress 1.6.0
-		 * @since BuddyBoss [BBVERSION] Added to Settings 2.0 AJAX activity listing.
+		 * @since BuddyBoss 3.0.0 Added to Settings 2.0 AJAX activity listing.
 		 *
 		 * @param array $messages Array of messages to display at top of page (empty in AJAX context).
 		 */
@@ -584,7 +584,7 @@ class BB_Activity_Admin_Ajax {
 		 *
 		 * Allows third-party plugins to add extra data to the activities listing response.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param array $response_data Response data array.
 		 */
@@ -599,7 +599,7 @@ class BB_Activity_Admin_Ajax {
 	 * Expects POST parameters:
 	 * - activity_id: The activity ID.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function bb_admin_get_activity() {
 		$this->bb_verify_request();
@@ -638,7 +638,7 @@ class BB_Activity_Admin_Ajax {
 		 * Allows plugins to register additional data for the activity edit form.
 		 *
 		 * @since BuddyPress 2.4.0
-		 * @since BuddyBoss [BBVERSION] Added to Settings 2.0 AJAX get activity.
+		 * @since BuddyBoss 3.0.0 Added to Settings 2.0 AJAX get activity.
 		 */
 		ob_start();
 		do_action( 'bp_activity_admin_meta_boxes' );
@@ -649,7 +649,7 @@ class BB_Activity_Admin_Ajax {
 		 * Same hook as legacy bp_activity_admin_edit().
 		 *
 		 * @since BuddyPress 1.6.0
-		 * @since BuddyBoss [BBVERSION] Added to Settings 2.0 AJAX get activity.
+		 * @since BuddyBoss 3.0.0 Added to Settings 2.0 AJAX get activity.
 		 *
 		 * @param array $value Array holding single activity object that was passed by reference.
 		 */
@@ -678,7 +678,7 @@ class BB_Activity_Admin_Ajax {
 		 *
 		 * Allows third-party plugins to add or modify data in the activity edit response.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param array              $activity_data Activity data array.
 		 * @param BP_Activity_Activity $item         Activity object.
@@ -696,7 +696,7 @@ class BB_Activity_Admin_Ajax {
 		 *
 		 * Allows third-party plugins to add extra data to the response.
 		 *
-		 * @since BuddyBoss [BBVERSION]
+		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param array              $response_data Response data array.
 		 * @param BP_Activity_Activity $item         Activity object.
@@ -720,7 +720,7 @@ class BB_Activity_Admin_Ajax {
 	 * - item_id: Primary item ID.
 	 * - secondary_item_id: Secondary item ID.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function bb_admin_save_activity() {
 		$this->bb_verify_request();
@@ -773,7 +773,7 @@ class BB_Activity_Admin_Ajax {
 		 * Fires after activity admin save (same as legacy admin).
 		 *
 		 * @since BuddyPress 1.6.0
-		 * @since BuddyBoss [BBVERSION] Added to Settings 2.0 AJAX save activity.
+		 * @since BuddyBoss 3.0.0 Added to Settings 2.0 AJAX save activity.
 		 *
 		 * @param BP_Activity_Activity $activity Activity object.
 		 * @param int                  $error    Activity ID on failure, 0 on success.
@@ -787,12 +787,12 @@ class BB_Activity_Admin_Ajax {
 		 * in the AJAX context — deprecated in Settings 2.0.
 		 *
 		 * @since BuddyPress 1.6.0
-		 * @deprecated BuddyBoss [BBVERSION] No longer applicable in Settings 2.0 AJAX context.
+		 * @deprecated BuddyBoss 3.0.0 No longer applicable in Settings 2.0 AJAX context.
 		 */
 		apply_filters_deprecated(
 			'bp_activity_admin_edit_redirect',
 			array( '' ),
-			'[BBVERSION]',
+			'3.0.0',
 			'',
 			'This filter is not applicable in the Settings 2.0 AJAX context.'
 		);
@@ -818,7 +818,7 @@ class BB_Activity_Admin_Ajax {
 	 * - activity_ids: Comma-separated activity IDs or JSON array.
 	 * - do_action: The action to perform ('spam', 'ham', 'delete').
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function bb_admin_activity_action() {
 		$this->bb_verify_request();
@@ -855,7 +855,7 @@ class BB_Activity_Admin_Ajax {
 		 * Filters list of IDs being spammed/un-spammed/deleted (same as legacy admin).
 		 *
 		 * @since BuddyPress 1.6.0
-		 * @since BuddyBoss [BBVERSION] Added to Settings 2.0 AJAX activity action.
+		 * @since BuddyBoss 3.0.0 Added to Settings 2.0 AJAX activity action.
 		 *
 		 * @param array $activity_ids Activity IDs to spam/un-spam/delete.
 		 */
@@ -924,7 +924,7 @@ class BB_Activity_Admin_Ajax {
 		 * Fires after activity admin action (same as legacy admin).
 		 *
 		 * @since BuddyPress 1.6.0
-		 * @since BuddyBoss [BBVERSION] Added to Settings 2.0 AJAX activity action.
+		 * @since BuddyBoss 3.0.0 Added to Settings 2.0 AJAX activity action.
 		 *
 		 * @param array  $value        Array holding spam, not spam, deleted counts, error IDs.
 		 * @param string $redirect_to  URL to redirect to (empty for AJAX).
@@ -939,12 +939,12 @@ class BB_Activity_Admin_Ajax {
 		 * in the AJAX context — deprecated in Settings 2.0.
 		 *
 		 * @since BuddyPress 1.6.0
-		 * @deprecated BuddyBoss [BBVERSION] No longer applicable in Settings 2.0 AJAX context.
+		 * @deprecated BuddyBoss 3.0.0 No longer applicable in Settings 2.0 AJAX context.
 		 */
 		apply_filters_deprecated(
 			'bp_activity_admin_action_redirect',
 			array( '' ),
-			'[BBVERSION]',
+			'3.0.0',
 			'',
 			'This filter is not applicable in the Settings 2.0 AJAX context.'
 		);
@@ -987,7 +987,7 @@ class BB_Activity_Admin_Ajax {
 	 * - activity_id: The activity ID to comment on.
 	 * - content: Comment content (HTML).
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.0
 	 */
 	public function bb_admin_add_activity_comment() {
 		$this->bb_verify_request();

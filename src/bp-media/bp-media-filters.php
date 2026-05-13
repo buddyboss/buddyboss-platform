@@ -2814,14 +2814,14 @@ add_action( 'bb_media_upload', 'bb_messages_media_save' );
 // inside the Media component's normal filters file — guarantees they load on
 // every request where the Media component is active.
 //
-// @since BuddyBoss [BBVERSION]
+// @since BuddyBoss 3.0.0
 // =============================================================================
 
 /**
  * Force photo-related support functions to return false when the Photos
  * section toggle (bb_media_photos_support) is disabled.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param bool $enabled Current value.
  *
@@ -2845,7 +2845,7 @@ add_filter( 'bp_is_forums_media_support_enabled', 'bb_media_photos_force_disable
  * Force video-related support functions to return false when the Videos
  * section toggle (bb_media_videos_support) is disabled.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param bool $enabled Current value.
  *
@@ -2867,7 +2867,7 @@ add_filter( 'bp_is_forums_video_support_enabled', 'bb_media_videos_force_disable
  * Force document-related support functions to return false when the Documents
  * section toggle (bb_media_documents_support) is disabled.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param bool $enabled Current value.
  *
@@ -2889,7 +2889,7 @@ add_filter( 'bp_is_forums_document_support_enabled', 'bb_media_documents_force_d
  * Force emoji-related support functions to return false when the Emoji
  * section toggle (bb_media_emoji_support) is disabled.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param bool $enabled Current value.
  *
@@ -2911,7 +2911,7 @@ add_filter( 'bp_is_forums_emoji_support_enabled', 'bb_media_emoji_force_disable'
  * Force GIF-related support functions to return false when the Animated GIFs
  * section toggle (bb_media_gif_support) is disabled.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.0
  *
  * @param bool $enabled Current value.
  *

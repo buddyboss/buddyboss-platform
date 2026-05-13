@@ -2527,7 +2527,7 @@ function buddyboss_menu_order( $menu_order ) {
 
 		// If separator was found, insert after it; otherwise, insert just above the
 		// special bottom menus. ReadyLaunch used to slot in here but was retired
-		// in [BBVERSION] — the redirect in bp-core-admin-actions.php handles
+		// in 3.0.0 — the redirect in bp-core-admin-actions.php handles
 		// legacy bookmarks.
 		if ( $sep_position !== null ) {
 			$insert_pos = $sep_position;
