@@ -70,8 +70,6 @@ add_filter( 'bp_core_widget_user_display_name', 'stripslashes' );
 add_filter( 'bp_core_widget_user_display_name', 'strip_tags' );
 add_filter( 'bp_core_widget_user_display_name', 'esc_html' );
 
-add_action( 'bp_admin_init', 'bb_updated_component_emails' );
-
 // Redirects.
 add_filter( 'bp_login_redirect', 'bb_login_redirect', PHP_INT_MAX, 3 );
 add_filter( 'logout_redirect', 'bb_logout_redirect', PHP_INT_MAX, 3 );
@@ -1827,6 +1825,10 @@ add_filter( 'bp_core_fetch_avatar_url', 'bb_rest_decode_default_avatar_url' );
  */
 function bb_admin_setting_profile_group_add_script_data( $script_data, $object = '' ) {
 
+	if ( ! is_admin() || ! function_exists( 'bp_core_get_admin_active_tab' ) ) {
+		return $script_data;
+	}
+
 	if ( 'bp-xprofile' === bp_core_get_admin_active_tab() ) {
 		$script_data['bp_params'] = array(
 			'object'     => 'user',
@@ -1882,7 +1884,15 @@ function bb_admin_setting_profile_group_add_script_data( $script_data, $object =
 function bb_validate_custom_profile_group_avatar_ajax_reuqest() {
 	$bp_params           = array();
 	$profile_group_types = array( 'user', 'group' );
-	$request_actions     = array( 'bp_cover_image_upload' );
+	// Settings 2.0 admin cover-crop pipeline (`bb_admin_cover_image_set`) fires
+	// the same `*_cover_image_uploaded` action the legacy single-step uploader
+	// fires. Admit it here so the downstream option-saver
+	// (`bb_save_profile_group_cover_options_on_upload_custom_cover`) updates
+	// `bp-default-custom-{profile,group}-cover` to point at the new file —
+	// otherwise the cropped file lands on disk but the option keeps pointing
+	// at the previous URL, and the admin sees the OLD cover even after a
+	// successful crop save.
+	$request_actions     = array( 'bp_cover_image_upload', 'bb_admin_cover_image_set' );
 
 	if ( ! isset( $_POST['action'] ) || ( isset( $_POST['action'] ) && ! in_array( sanitize_text_field( $_POST['action'] ), $request_actions, true ) ) ) {
 		return false;
@@ -2012,6 +2022,14 @@ function bb_attachments_get_profile_group_attachment_sub_dir( $cover_sub_dir, $o
 
 	return $object_dir . '/0/' . $type;
 }
+
+// Hook default custom avatar/cover upload filters globally.
+// These self-guard via bb_validate_custom_profile_group_avatar_ajax_reuqest()
+// and are needed for both legacy settings and Settings 2.0 admin uploads.
+add_filter( 'bp_attachment_avatar_script_data', 'bb_admin_setting_profile_group_add_script_data', 10, 2 );
+add_filter( 'bp_attachments_cover_image_upload_dir', 'bb_default_custom_profile_group_cover_image_upload_dir', 10, 1 );
+add_filter( 'bb_attachments_get_attachment_dir', 'bb_attachments_get_profile_group_attachment_dir', 10, 4 );
+add_filter( 'bb_attachments_get_attachment_sub_dir', 'bb_attachments_get_profile_group_attachment_sub_dir', 10, 4 );
 
 /**
  * Save default profile and group avatar option on upload custom avatar.
@@ -2454,7 +2472,6 @@ function buddyboss_menu_order( $menu_order ) {
 	$buddyboss_updater_menu       = array();
 	$buddyboss_license_menu       = array();
 	$buddyboss_addon_menu         = array();
-	$buddyboss_readylaunch_menu   = array();
 	$buddyboss_gamification_menu  = array();
 	$sep_position                 = null; // Use null to detect if found.
 
@@ -2492,12 +2509,6 @@ function buddyboss_menu_order( $menu_order ) {
 					continue;
 				}
 
-				if ( 'bb-readylaunch' === $val[2] ) {
-					$buddyboss_readylaunch_menu = $submenu['buddyboss-platform'][ $key ];
-					unset( $submenu['buddyboss-platform'][ $key ] );
-					continue;
-				}
-
 				if ( 'bb-gamification-settings' === $val[2] ) {
 					$buddyboss_gamification_menu = $submenu['buddyboss-platform'][ $key ];
 					unset( $submenu['buddyboss-platform'][ $key ] );
@@ -2514,12 +2525,12 @@ function buddyboss_menu_order( $menu_order ) {
 			}
 		}
 
-		// If separator was found, insert after it; otherwise, insert just above ReadyLaunch.
+		// If separator was found, insert after it; otherwise, insert just above the
+		// special bottom menus. ReadyLaunch used to slot in here but was retired
+		// in 3.0.0 — the redirect in bp-core-admin-actions.php handles
+		// legacy bookmarks.
 		if ( $sep_position !== null ) {
 			$insert_pos = $sep_position;
-			if ( ! empty( $buddyboss_readylaunch_menu ) ) {
-				$submenu['buddyboss-platform'][ ++ $insert_pos ] = $buddyboss_readylaunch_menu;
-			}
 			if ( ! empty( $buddyboss_gamification_menu ) ) {
 				$submenu['buddyboss-platform'][ ++ $insert_pos ] = $buddyboss_gamification_menu;
 			}
@@ -2544,21 +2555,19 @@ function buddyboss_menu_order( $menu_order ) {
 				$submenu['buddyboss-platform'][ ++ $insert_pos ] = $buddyboss_addon_menu;
 			}
 		} else {
-			// No separator found, so insert separator just above ReadyLaunch if ReadyLaunch exists.
+			// No separator found — append the saved special menus after the
+			// existing items and introduce the separator before them when any
+			// special menu exists. ReadyLaunch used to anchor the separator;
+			// Gamification now plays that role.
 			$new_submenu                   = array_values( $submenu['buddyboss-platform'] );
 			$submenu['buddyboss-platform'] = array(); // reset.
 
-			// Add all items except ReadyLaunch.
 			foreach ( $new_submenu as $item ) {
 				$submenu['buddyboss-platform'][] = $item;
 			}
 
-			// Now insert separator and ReadyLaunch at the end if ReadyLaunch exists
-			if ( ! empty( $buddyboss_readylaunch_menu ) ) {
-				$submenu['buddyboss-platform'][] = $separator_menu;
-				$submenu['buddyboss-platform'][] = $buddyboss_readylaunch_menu;
-			}
 			if ( ! empty( $buddyboss_gamification_menu ) ) {
+				$submenu['buddyboss-platform'][] = $separator_menu;
 				$submenu['buddyboss-platform'][] = $buddyboss_gamification_menu;
 			}
 
@@ -2646,26 +2655,6 @@ function bb_loom_oembed_discover_support( $retval, $url ) {
 }
 
 add_filter( 'bb_oembed_discover_support', 'bb_loom_oembed_discover_support', 10, 2 );
-
-/**
- * Install emails on plugin activation.
- *
- * @since BuddyBoss 2.4.60
- *
- * @return void
- */
-function bb_updated_component_emails() {
-	global $plugin_page;
-
-	if (
-		'bp-components' === $plugin_page &&
-		! empty( $_GET['action'] ) && // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		! empty( $_GET['added'] ) && // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		'true' === $_GET['added'] // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-	) {
-		bp_admin_install_emails();
-	}
-}
 
 /**
  * Redirect after login.

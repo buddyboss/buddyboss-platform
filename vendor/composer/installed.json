@@ -26,7 +26,7 @@
             },
             "time": "2020-02-12T19:35:11+00:00",
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "BuddyBossPlatform\\Alchemy\\": "src\/Alchemy\/"
@@ -280,7 +280,7 @@
                     "dev-main": "1.x-dev"
                 }
             },
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "Composer\\Installers\\": "src\/Composer\/Installers"
@@ -433,7 +433,7 @@
             },
             "time": "2022-05-20T20:06:54+00:00",
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "BuddyBossPlatform\\Doctrine\\Common\\Cache\\": "lib\/Doctrine\/Common\/Cache"
@@ -522,7 +522,7 @@
             },
             "time": "2023-08-08T05:53:35+00:00",
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "BuddyBossPlatform\\Evenement\\": "src\/"
@@ -581,7 +581,7 @@
             },
             "time": "2022-11-25T18:57:19+00:00",
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "BuddyBossPlatform\\ZipStream\\": "src\/"
@@ -656,7 +656,7 @@
             },
             "time": "2025-01-14T11:49:03+00:00",
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "MyCLabs\\Enum\\": "src\/"
@@ -720,7 +720,7 @@
             },
             "time": "2020-02-17T15:27:36+00:00",
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "BuddyBossPlatform\\Neutron\\": "src\/Neutron\/"
@@ -780,7 +780,7 @@
                     "dev-master": "0.7-dev"
                 }
             },
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "BuddyBossPlatform\\FFMpeg\\": "src\/FFMpeg\/"
@@ -859,7 +859,7 @@
                     "dev-master": "2.0.x-dev"
                 }
             },
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "BuddyBossPlatform\\Psr\\Container\\": "src\/"
@@ -915,7 +915,7 @@
                     "dev-master": "1.1.x-dev"
                 }
             },
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "BuddyBossPlatform\\Psr\\Http\\Message\\": "src\/"
@@ -971,7 +971,7 @@
                     "dev-master": "1.1.x-dev"
                 }
             },
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "BuddyBossPlatform\\Psr\\Log\\": "Psr\/Log\/"
@@ -1025,7 +1025,7 @@
             },
             "time": "2024-10-22T13:05:35+00:00",
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "BuddyBossPlatform\\Symfony\\Component\\Filesystem\\": ""
@@ -1071,8 +1071,8 @@
         },
         {
             "name": "symfony\/polyfill-ctype",
-            "version": "v1.36.0",
-            "version_normalized": "1.36.0.0",
+            "version": "v1.37.0",
+            "version_normalized": "1.37.0.0",
             "source": {
                 "type": "git",
                 "url": "https:\/\/github.com\/symfony\/polyfill-ctype.git",
@@ -1101,7 +1101,7 @@
                     "name": "symfony\/polyfill"
                 }
             },
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "files": [
                     "bootstrap.php"
@@ -1133,7 +1133,7 @@
                 "portable"
             ],
             "support": {
-                "source": "https:\/\/github.com\/symfony\/polyfill-ctype\/tree\/v1.36.0"
+                "source": "https:\/\/github.com\/symfony\/polyfill-ctype\/tree\/v1.37.0"
             },
             "funding": [
                 {
@@ -1157,8 +1157,8 @@
         },
         {
             "name": "symfony\/polyfill-mbstring",
-            "version": "v1.36.0",
-            "version_normalized": "1.36.0.0",
+            "version": "v1.37.0",
+            "version_normalized": "1.37.0.0",
             "source": {
                 "type": "git",
                 "url": "https:\/\/github.com\/symfony\/polyfill-mbstring.git",
@@ -1188,7 +1188,7 @@
                     "name": "symfony\/polyfill"
                 }
             },
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "files": [
                     "bootstrap.php"
@@ -1221,7 +1221,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https:\/\/github.com\/symfony\/polyfill-mbstring\/tree\/v1.36.0"
+                "source": "https:\/\/github.com\/symfony\/polyfill-mbstring\/tree\/v1.37.0"
             },
             "funding": [
                 {
@@ -1245,8 +1245,8 @@
         },
         {
             "name": "symfony\/polyfill-php80",
-            "version": "v1.36.0",
-            "version_normalized": "1.36.0.0",
+            "version": "v1.37.0",
+            "version_normalized": "1.37.0.0",
             "source": {
                 "type": "git",
                 "url": "https:\/\/github.com\/symfony\/polyfill-php80.git",
@@ -1269,7 +1269,7 @@
                     "name": "symfony\/polyfill"
                 }
             },
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "files": [
                     "bootstrap.php"
@@ -1308,7 +1308,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https:\/\/github.com\/symfony\/polyfill-php80\/tree\/v1.36.0"
+                "source": "https:\/\/github.com\/symfony\/polyfill-php80\/tree\/v1.37.0"
             },
             "funding": [
                 {
@@ -1351,7 +1351,7 @@
             },
             "time": "2026-01-26T15:53:37+00:00",
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "BuddyBossPlatform\\Symfony\\Component\\Process\\": ""
