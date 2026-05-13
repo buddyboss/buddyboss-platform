@@ -1306,6 +1306,10 @@ select.bb-admin-settings__select {
     position: relative;
     width: 100%;
 
+    .bb-admin-settings-form__page-dropdown & {
+        max-width: 270px;
+    }   
+
     // Trigger button — read-only, clicking opens the dropdown. Replaces
     // the previous `<input role="combobox">` per the design directive:
     // searchable selects must not allow inline searching; search lives
@@ -1318,18 +1322,23 @@ select.bb-admin-settings__select {
     }
 
     &__trigger {
-        @include bb-input-text;
+        @include bb-admin-settings-select;
+        background-image: none;
+        padding-right: 8px;
         display: flex;
         align-items: center;
         gap: 8px;
         width: 100%;
         text-align: left;
         cursor: pointer;
-        background: $bb-background-base-color;
 
         &:disabled {
             cursor: not-allowed;
             background: $bb-background-secondary-color;
+        }
+
+        &:focus-visible {
+            outline: none;
         }
 
         &.is-placeholder .bb-async-select__trigger-label {
@@ -1476,6 +1485,10 @@ select.bb-admin-settings__select {
             cursor: default;
         }
     }
+}
+
+.bb-admin-settings-form__page-dropdown:has(>.bb-async-select) {
+    width: 100%;
 }
 
 /* Warning block */
