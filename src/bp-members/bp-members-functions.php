@@ -3065,7 +3065,7 @@ function bp_register_member_type_section() {
 				'show_in_menu'       => false,
 				'map_meta_cap'       => true,
 				'show_in_rest'       => true,
-				'show_ui'            => bp_current_user_can( 'bp_moderate' ),
+				'show_ui'            => false,
 				'supports'           => bp_get_member_type_post_type_supports(),
 			)
 		)
@@ -3077,29 +3077,11 @@ function bp_register_member_type_section() {
 	// action for remove profile type metabox.
 	add_action( 'bp_members_admin_user_metaboxes', 'bp_remove_member_type_metabox' );
 
-	// add column.
-	add_filter( 'manage_' . bp_get_member_type_post_type() . '_posts_columns', 'bp_member_type_add_column' );
-
-	// action for adding a sortable column name.
-	add_action( 'manage_' . bp_get_member_type_post_type() . '_posts_custom_column', 'bp_member_type_show_data', 10, 2 );
-
-	// sortable columns.
-	add_filter( 'manage_edit-' . bp_get_member_type_post_type() . '_sortable_columns', 'bp_member_type_add_sortable_columns' );
-
-	// request filter.
-	add_action( 'load-edit.php', 'bp_member_type_add_request_filter' );
-
-	// hide quick edit link on the custom post type list screen.
-	add_filter( 'post_row_actions', 'bp_member_type_hide_quickedit', 10, 2 );
-
 	// filter for adding body class where the shortcode added.
 	add_filter( 'body_class', 'bp_member_type_shortcode_add_body_class' );
 
 	// Hook for creating a profile type shortcode.
 	add_shortcode( 'profile', 'bp_member_type_shortcode_callback' );
-
-	// action for adding the js for the profile type post type.
-	add_action( 'admin_enqueue_scripts', 'bp_member_type_changing_listing_label' );
 
 }
 
@@ -3686,170 +3668,6 @@ function bp_remove_member_type_metabox_globally() {
 }
 
 /**
- * Add new columns to the post type list screen.
- *
- * @since BuddyBoss 1.0.0
- *
- * @param type $columns
- * @return type
- */
-function bp_member_type_add_column( $columns ) {
-
-	$columns['title']         = __( 'Profile Type', 'buddyboss' );
-	$columns['member_type']   = __( 'Label', 'buddyboss' );
-	$columns['enable_filter'] = __( 'Members Filter', 'buddyboss' );
-	$columns['enable_remove'] = __( 'Members Directory', 'buddyboss' );
-	$columns['total_users']   = __( 'Users', 'buddyboss' );
-
-	unset( $columns['date'] );
-
-	return $columns;
-}
-
-/**
- * Display data by column and post id.
- *
- * @since BuddyBoss 1.0.0
- *
- * @param $column
- * @param $post_id
- */
-function bp_member_type_show_data( $column, $post_id ) {
-
-	switch ( $column ) {
-
-		case 'member_type':
-			echo '<code>' . get_post_meta( $post_id, '_bp_member_type_label_singular_name', true ) . '</code>';
-			break;
-
-		case 'enable_filter':
-			if ( get_post_meta( $post_id, '_bp_member_type_enable_filter', true ) ) {
-				_e( 'Show', 'buddyboss' );
-			} else {
-				_e( 'Hide', 'buddyboss' );
-			}
-
-			break;
-
-		case 'enable_remove':
-			if ( get_post_meta( $post_id, '_bp_member_type_enable_remove', true ) ) {
-				_e( 'Hide', 'buddyboss' );
-			} else {
-				_e( 'Show', 'buddyboss' );
-			}
-
-			break;
-
-		case 'total_users':
-			$name    = bp_get_member_type_key( $post_id );
-			$type_id = bp_member_type_term_taxonomy_id( $name );
-
-			$member_type_url = admin_url() . 'users.php?bp-member-type=' . $name;
-			$count           = count( bp_member_type_by_type( $type_id ) );
-
-			if ( $count > 0 ) {
-				// @todo why text domain here and below?
-				printf( '<a href="%s">%s</a>', esc_url( $member_type_url ), $count );
-			} else {
-				echo '0';
-			}
-
-			break;
-
-	}
-
-}
-
-/**
- * Sets up a column on admin view on profile type post type.
- *
- * @since BuddyBoss 1.0.0
- *
- * @param $columns
- *
- * @return array
- */
-function bp_member_type_add_sortable_columns( $columns ) {
-
-	$columns['total_users']   = 'total_users';
-	$columns['enable_filter'] = 'enable_filter';
-	$columns['enable_remove'] = 'enable_remove';
-	$columns['member_type']   = 'member_type';
-
-	return $columns;
-}
-
-/**
- * Adds a filter to profile type sort items.
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_member_type_add_request_filter() {
-
-	add_filter( 'request', 'bp_member_type_sort_items' );
-
-}
-
-/**
- * Sort list of profile type post types.
- *
- * @since BuddyBoss 1.0.0
- *
- * @param type $qv
- * @return string
- */
-function bp_member_type_sort_items( $qv ) {
-
-	if ( ! isset( $qv['post_type'] ) || $qv['post_type'] != bp_get_member_type_post_type() ) {
-		return $qv;
-	}
-
-	if ( ! isset( $qv['orderby'] ) ) {
-		return $qv;
-	}
-
-	switch ( $qv['orderby'] ) {
-
-		case 'member_type':
-			$qv['meta_key'] = '_bp_member_type_name';
-			$qv['orderby']  = 'meta_value';
-
-			break;
-
-		case 'enable_filter':
-			$qv['meta_key'] = '_bp_member_type_enable_filter';
-			$qv['orderby']  = 'meta_value_num';
-
-			break;
-
-	}
-
-	return $qv;
-}
-
-/**
- * Hide quick edit link.
- *
- * @since BuddyBoss 1.0.0
- *
- * @param type $actions
- * @param type $post
- * @return type
- */
-function bp_member_type_hide_quickedit( $actions, $post ) {
-
-	if ( empty( $post ) ) {
-		global $post;
-	}
-
-	if ( bp_get_member_type_post_type() == $post->post_type ) {
-		unset( $actions['inline hide-if-no-js'] );
-	}
-
-	return $actions;
-}
-
-/**
  * Adds body class where the shortcode is added.
  *
  * @since BuddyBoss 1.0.0
@@ -3918,43 +3736,6 @@ function bp_member_type_shortcode_callback( $atts ) {
 
 	return ob_get_clean();
 
-}
-
-/**
- * Adds the JS on profile type post type.
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_member_type_changing_listing_label() {
-	global $current_screen;
-
-	$url_clip_board = buddypress()->plugin_url . 'bp-core/js/vendor/';
-	$url_member     = buddypress()->plugin_url . 'bp-core/js/';
-
-	$bp_member_type_pages = array(
-		'edit-bp-member-type',
-		'bp-member-type',
-		'bp-group-type',
-		'edit-bp-group-type',
-	);
-
-	// Check to make sure we're on a profile type's admin page.
-	if ( isset( $current_screen->id ) && in_array( $current_screen->id, $bp_member_type_pages ) ) {
-
-		wp_enqueue_script( 'bp-clipboard', $url_clip_board . 'clipboard.js', array(), bp_get_version() );
-		wp_enqueue_script( 'bp-member-type-admin-screen', $url_member . 'bp-member-type-admin-screen.js', array( 'jquery' ), bp_get_version() );
-
-		$strings = array(
-			'warnTrash'       => __( 'You have {total_users} members with this profile type, are you sure you would like to trash it?', 'buddyboss' ),
-			'warnDelete'      => __( 'You have {total_users} members with this profile type, are you sure you would like to delete it?', 'buddyboss' ),
-			'warnBulkTrash'   => __( 'You have members with these profile types, are you sure you would like to trash it?', 'buddyboss' ),
-			'warnBulkDelete'  => __( 'You have members with these profile types, are you sure you would like to delete it?', 'buddyboss' ),
-			'copied'          => __( 'Copied', 'buddyboss' ),
-			'copytoclipboard' => __( 'Copy to clipboard', 'buddyboss' ),
-		);
-
-		wp_localize_script( 'bp-member-type-admin-screen', '_bpmtAdminL10n', $strings );
-	}
 }
 
 /**
@@ -5799,3 +5580,36 @@ function bb_remove_orphaned_profile_slug( $user_id ) {
 		bb_remove_orphaned_profile_slug( $user_id );
 	}
 }
+
+/**
+ * Block direct URL access to hidden profile navigation items.
+ *
+ * When an admin hides a profile nav tab via Settings 2.0 Navigation Order,
+ * this redirects any direct URL access to the member's profile home.
+ * Only applies when viewing another user's profile (or your own).
+ *
+ * Mirrors the group equivalent in bp-groups/actions/access.php.
+ *
+ * @since BuddyBoss 3.0.0
+ */
+function bb_members_block_hidden_nav_access() {
+	if ( ! bp_is_user() ) {
+		return;
+	}
+
+	if ( ! function_exists( 'bp_nouveau_get_appearance_settings' ) ) {
+		return;
+	}
+
+	$current_component = bp_current_component();
+	if ( empty( $current_component ) ) {
+		return;
+	}
+
+	$hidden_tabs = bp_nouveau_get_appearance_settings( 'user_nav_hide' );
+
+	if ( is_array( $hidden_tabs ) && in_array( $current_component, $hidden_tabs, true ) ) {
+		bp_core_redirect( bp_displayed_user_domain() );
+	}
+}
+add_action( 'bp_actions', 'bb_members_block_hidden_nav_access' );

@@ -239,8 +239,20 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 		do_action( 'bp_rest_group_detail' );
 
 		do_action( 'bp_init' );
-		// phpcs:ignore
-		do_action( 'bp_ld_sync/init' ); // We should remove when platform load learndash extention on bp_init.
+
+		/**
+		 * @since BuddyBoss 3.0.0
+		 */
+		do_action( 'bb_integration_rest_init' );
+
+		// Deprecated: bp_ld_sync/init. Bridge for one release.
+		do_action_deprecated(
+			'bp_ld_sync/init',
+			array(),
+			'3.0.0',
+			'bb_integration_rest_init'
+		);
+
 		do_action( 'bp_actions' );
 
 		add_action( 'bp_init', 'bb_moderation_load', 1 );
