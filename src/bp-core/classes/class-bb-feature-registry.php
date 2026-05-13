@@ -493,9 +493,21 @@ class BB_Feature_Registry {
 	 * @param array  $args {
 	 *     Section arguments.
 	 *
-	 *     @type string $title       Section title (required).
-	 *     @type string $description Section description.
-	 *     @type int    $order       Display order (default: 100).
+	 *     @type string $title                Section title (required).
+	 *     @type string $description          Section description.
+	 *     @type int    $order                Display order (default: 100).
+	 *     @type string $section_toggle       Option name for the section-level master toggle.
+	 *                                        When set, a toggle switch renders in the section
+	 *                                        header. When the toggle is OFF, the section body
+	 *                                        receives `--disabled` modifier (opacity 0.5,
+	 *                                        pointer-events: none).
+	 *     @type bool   $hide_fields_when_off When `true` AND `section_toggle` is set AND the
+	 *                                        toggle is OFF, the section fields are not rendered
+	 *                                        at all (only the description remains). When `false`
+	 *                                        (default), fields render at 50% opacity per
+	 *                                        Platform's standard `--disabled` UX. Use this opt-in
+	 *                                        when the design calls for fully collapsing the
+	 *                                        section instead of dimming it.
 	 * }
 	 * @return bool|WP_Error True on success, WP_Error on failure.
 	 */

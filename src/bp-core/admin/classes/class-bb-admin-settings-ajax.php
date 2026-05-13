@@ -498,6 +498,12 @@ class BB_Admin_Settings_Ajax {
 					if ( ! isset( $settings[ $toggle_name ] ) ) {
 						$settings[ $toggle_name ] = bp_get_option( $toggle_name, 1 );
 					}
+
+					// Opt-in: when the section toggle is OFF, hide fields entirely instead
+					// of dimming them. Only meaningful when section_toggle is also set.
+					if ( ! empty( $section['hide_fields_when_off'] ) ) {
+						$formatted_section['hide_fields_when_off'] = true;
+					}
 				}
 
 				// Include status if set (e.g. Connected/Not Connected badges).

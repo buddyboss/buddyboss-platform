@@ -1061,13 +1061,18 @@ export function FeatureSettingsScreen({ featureId, sidePanelId, onNavigate }) {
 														{sanitizeHtml( section.description )}
 													</RawHTML>
 												)}
-												<SettingsForm
-													fields={section.fields || []}
-													values={settings}
-													onChange={handleSettingChange}
-													onProBadgeClick={handleFieldProClick}
-													disabled={isSectionDisabled}
-												/>
+												{/* Opt-in: skip rendering fields entirely when section toggle
+												    is OFF and `hide_fields_when_off` is set. Default UX (dim at
+												    50% + freeze) is preserved when this prop is absent. */}
+												{ ! ( isSectionToggleOff && section.hide_fields_when_off ) && (
+													<SettingsForm
+														fields={section.fields || []}
+														values={settings}
+														onChange={handleSettingChange}
+														onProBadgeClick={handleFieldProClick}
+														disabled={isSectionDisabled}
+													/>
+												) }
 											</div>
 										</div>
 									);
