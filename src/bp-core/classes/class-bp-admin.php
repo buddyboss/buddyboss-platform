@@ -149,6 +149,11 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			// add_action( bp_core_admin_hook(),       array( $this, 'admin_menus_components' ), 75 );
 			add_action( bp_core_admin_hook(), array( $this, 'adjust_buddyboss_menus' ), 100 );
 
+			// Redirect the legacy `?page=bp-help` admin URL to the new Settings 2.0
+			// Help tab. Runs at admin_init so we can `wp_safe_redirect()` before
+			// any output is sent.
+			add_action( 'admin_init', array( $this, 'bb_redirect_legacy_help_page' ) );
+
 			// Enqueue all admin JS and CSS.
 			add_action( 'bp_admin_enqueue_scripts', array( $this, 'admin_register_styles' ), 1 );
 			add_action( 'bp_admin_enqueue_scripts', array( $this, 'admin_register_scripts' ), 1 );
@@ -488,14 +493,20 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				'bp_core_admin_tools'
 			);
 
+			// Help submenu points at the Settings 2.0 Help tab. WordPress treats
+			// a `menu_slug` containing a URL (with `?`) as a direct link rather
+			// than registering a new page — same trick used by the Emails
+			// submenu below. Direct visits to the legacy `?page=bp-help` URL
+			// are redirected server-side by `bb_redirect_legacy_help_page()`.
 			$hooks[] = add_submenu_page(
 				$this->settings_page,
 				__( 'Help', 'buddyboss' ),
 				__( 'Help', 'buddyboss' ),
 				$this->capability,
-				'bp-help',
-				'bp_core_admin_help'
+				'admin.php?page=bb-settings&tab=help',
+				''
 			);
+
 
 			$hooks[] = add_submenu_page(
 				$this->settings_page,
@@ -507,6 +518,29 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			);
 
 			// Network admin email menu removed — migrated to Settings 2.0.
+		}
+
+		/**
+		 * Redirect legacy `?page=bp-help` URLs to the new Settings 2.0 Help tab.
+		 *
+		 * The Help submenu now points at `?page=bb-settings&tab=help` directly,
+		 * but bookmarks, plugin links and the old in-app links may still hit
+		 * `bp-help`. Send those visitors to the new URL so a single canonical
+		 * Help page exists.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		public function bb_redirect_legacy_help_page() {
+			if ( ! isset( $_GET['page'] ) || 'bp-help' !== $_GET['page'] ) {
+				return;
+			}
+
+			if ( ! current_user_can( $this->capability ) ) {
+				return;
+			}
+
+			wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=help' ) );
+			exit;
 		}
 
 		public function adjust_buddyboss_menus() {
