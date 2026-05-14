@@ -200,3 +200,85 @@
 	}
 }
 
+.bb-admin-help-resources {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	padding: 24px 24px 32px;
+	background-color: $bb-background-base-color;
+	border: 0.5px solid $bb-border-secondary-color;
+	border-radius: $bb-border-radius-2xl;
+
+	&__title {
+		margin: 0;
+		padding: 3px 8px;
+		color: $bb-text-color;
+		font-size: 18px;
+		font-weight: 500;
+		line-height: 26px;
+	}
+
+	&__grid {
+		display: grid;
+		grid-template-columns: repeat( auto-fill, minmax( 320px, 1fr ) );
+		gap: 24px;
+		width: 100%;
+	}
+}
+
+.bb-admin-help-resource-card {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	padding: 24px;
+	background-color: $bb-background-base-color;
+	border: 0.5px solid $bb-border-secondary-color;
+	border-radius: $bb-border-radius-xl;
+	color: $bb-text-color;
+	text-decoration: none;
+	transition: background-color 0.15s ease, border-color 0.15s ease;
+	box-sizing: border-box;
+
+	// Hover state — matches the "BuddyBoss Theme" card in the Figma export.
+	&:hover,
+	&:focus {
+		background-color: $bb-background-primary-color;
+		color: $bb-text-color;
+		text-decoration: none;
+		box-shadow: none;
+	}
+
+	&:focus-visible {
+		outline: 2px solid $bb-border-brand-primary-color;
+		outline-offset: 2px;
+	}
+
+	&__head {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 16px;
+		width: 100%;
+	}
+
+	&__icon {
+		font-size: 28px;
+		line-height: 1;
+		color: $bb-icon-secondary-color;
+	}
+
+	&__title {
+		padding: 2px 0;
+		color: $bb-text-color;
+		font-size: 16px;
+		font-weight: 500;
+		line-height: 22px;
+	}
+
+	&__count {
+		color: $bb-link-color;
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 18px;
+	}
+}

@@ -7,7 +7,7 @@
 
 import { useState } from '@wordpress/element';
 import { Button } from '@wordpress/components';
-import { __ } from '@wordpress/i18n';
+import { __, _n, sprintf } from '@wordpress/i18n';
 
 /**
  * Help Screen Component
@@ -106,6 +106,53 @@ export function HelpScreen() {
 						</Button>
 					</article>
 				</div>
+
+				<section
+					className="bb-admin-help-resources"
+					aria-labelledby="bb-admin-help-resources-title"
+				>
+					<h2
+						id="bb-admin-help-resources-title"
+						className="bb-admin-help-resources__title"
+					>
+						{ __( 'More Resources', 'buddyboss' ) }
+					</h2>
+					<div className="bb-admin-help-resources__grid">
+						{ [
+							{ key: 'platform',        icon: 'gear',          label: __( 'BuddyBoss Platform', 'buddyboss' ) },
+							{ key: 'theme',           icon: 'palette',       label: __( 'BuddyBoss Theme', 'buddyboss' ) },
+							{ key: 'integrations',    icon: 'plug',          label: __( 'Integrations', 'buddyboss' ) },
+							{ key: 'advanced-setup',  icon: 'wrench',        label: __( 'Advanced Setup', 'buddyboss' ) },
+							{ key: 'troubleshooting', icon: 'seal-question', label: __( 'Troubleshooting', 'buddyboss' ) },
+							{ key: 'customizations',  icon: 'sliders',       label: __( 'Customizations', 'buddyboss' ) },
+						].map( function ( item ) {
+							var count = 132;
+							return (
+								<a
+									key={ item.key }
+									href="#"
+									className="bb-admin-help-resource-card"
+								>
+									<div className="bb-admin-help-resource-card__head">
+										<i
+											className={ 'bb-icons-rl bb-icons-rl-' + item.icon + ' bb-admin-help-resource-card__icon' }
+											aria-hidden="true"
+										></i>
+										<span className="bb-admin-help-resource-card__title">
+											{ item.label }
+										</span>
+									</div>
+									<span className="bb-admin-help-resource-card__count">
+										{
+											/* translators: %d is the number of articles in this resource category. */
+											sprintf( _n( '%d article', '%d articles', count, 'buddyboss' ), count )
+										}
+									</span>
+								</a>
+							);
+						} ) }
+					</div>
+				</section>
 			</div>
 		</div>
 	);
