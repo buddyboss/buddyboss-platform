@@ -1464,6 +1464,15 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		public function bb_fetch_header_notifications() {
 			check_ajax_referer( 'bb-readylaunch', 'nonce' );
 
+			// The `header/unread-notifications` template calls
+			// `bp_notifications_get_unread_notification_count()` (and other
+			// notifications helpers) which are loaded by the notifications
+			// component. Mirrors the gating used by sibling handlers like
+			// `bb_mark_notification_read()` and `bb_heartbeat_unread_notifications()`.
+			if ( ! bp_is_active( 'notifications' ) ) {
+				wp_send_json_error();
+			}
+
 			$page = ! empty( $_POST['page'] ) ? intval( sanitize_text_field( wp_unslash( $_POST['page'] ) ) ) : 1;
 
 			ob_start();

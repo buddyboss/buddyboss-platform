@@ -747,7 +747,11 @@ function bp_video_add( $args = '' ) {
 		$video->privacy = $r['privacy'];
 	} elseif ( ! empty( $video->group_id ) ) {
 		$video->privacy = 'grouponly';
-		if ( ! empty( $video->activity_id ) ) {
+		// `BP_Activity_Activity` is loaded by the activity component and is
+		// NOT in the always-on autoload list. Guard against fatals when
+		// activity is deactivated but a group video upload still references
+		// an activity_id. Mirrors the gating in bp_media_add().
+		if ( ! empty( $video->activity_id ) && bp_is_active( 'activity' ) ) {
 			$activity = new BP_Activity_Activity( $video->activity_id );
 			if ( ! empty( $activity ) && 'activity_comment' === $activity->type ) {
 				$video->privacy = $r['privacy'];

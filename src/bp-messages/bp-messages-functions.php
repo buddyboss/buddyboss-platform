@@ -1092,7 +1092,14 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 	}
 
 	$group      = bp_messages_get_meta( $id, 'group_id', true );
-	$group_name = bp_get_group_name( groups_get_group( $group ) );
+	// `groups_get_group()` and `bp_get_group_name()` are loaded by the
+	// groups component. Group-flagged message threads can outlive a
+	// groups deactivation — fall back to an empty group name in that
+	// case rather than fatalling on the missing function.
+	$group_name = '';
+	if ( ! empty( $group ) && bp_is_active( 'groups' ) && function_exists( 'groups_get_group' ) ) {
+		$group_name = bp_get_group_name( groups_get_group( $group ) );
+	}
 
 	// check if it has enough recipients to use batch emails.
 	$min_count_recipients = function_exists( 'bb_email_queue_has_min_count' ) && bb_email_queue_has_min_count( $recipients );
