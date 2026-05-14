@@ -819,33 +819,58 @@ function bb_redirect_legacy_settings_to_settings_2() {
 	$action  = isset( $_GET['action'] ) ? sanitize_key( wp_unslash( $_GET['action'] ) ) : '';
 	// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
+	// Hoist component-active flags — read once at function entry rather than
+	// re-evaluating `bp_is_active( ... )` at each branch below. `bp_is_active()`
+	// is already cheap (in-memory hash lookup on `$bp->active_components`), but
+	// consolidating here makes the gating obvious to the reader and removes 5+
+	// duplicate calls (groups 3x, members 2x, forums 2x) within this ~230-line
+	// function. Same value within the request — no stale-read risk.
+	$groups_active   = bp_is_active( 'groups' );
+	$members_active  = bp_is_active( 'members' );
+	$forums_active   = bp_is_active( 'forums' );
+	$invites_active  = bp_is_active( 'invites' );
+	$xprofile_active = bp_is_active( 'xprofile' );
+
 	if ( $post_id > 0 && 'edit' === $action ) {
 		$edit_post_type = get_post_type( $post_id );
 
 		/**
 		 * Map of migrated CPT slugs to their Settings 2.0 redirect URLs.
 		 *
+		 * Each entry is gated on its component being active *and* the
+		 * CPT-getter function being defined, because the getter is loaded
+		 * by the component's loader file — deactivating the component
+		 * leaves the function undefined and an unguarded call here would
+		 * fatal during the admin redirect.
+		 *
 		 * @since BuddyBoss 3.0.0
 		 *
 		 * @param array $cpt_redirects Post type slug => Settings 2.0 URL path.
 		 */
-		$cpt_redirects = array(
-			bp_get_email_post_type()       => 'admin.php?page=bb-settings&tab=emails&panel=all_emails',
-			bp_get_member_type_post_type() => 'admin.php?page=bb-settings&tab=members&panel=profile_types',
-		);
+		$cpt_redirects = array();
 
-		// Group type CPT only available when groups component is active.
-		if ( function_exists( 'bp_groups_get_group_type_post_type' ) ) {
-			$cpt_redirects[ bp_groups_get_group_type_post_type() ] = 'admin.php?page=bb-settings&tab=groups&panel=group_types';
+		// Emails CPT — part of bp-core, always available alongside Settings 2.0.
+		if ( function_exists( 'bp_get_email_post_type' ) ) {
+			$cpt_redirects[ bp_get_email_post_type() ] = 'admin.php?page=bb-settings&tab=emails&panel=all_emails';
 		}
 
-		// Invite CPT only available when invites component is active.
-		if ( function_exists( 'bp_get_invite_post_type' ) ) {
+		// Invites CPT — requires the invites component.
+		if ( $invites_active && function_exists( 'bp_get_invite_post_type' ) ) {
 			$cpt_redirects[ bp_get_invite_post_type() ] = 'admin.php?page=bb-settings&tab=invites&panel=invites_list';
 		}
 
+		// Group Types CPT — requires the groups component.
+		if ( $groups_active && function_exists( 'bp_groups_get_group_type_post_type' ) ) {
+			$cpt_redirects[ bp_groups_get_group_type_post_type() ] = 'admin.php?page=bb-settings&tab=groups&panel=group_types';
+		}
+
+		// Profile (member) Types CPT — requires the members component.
+		if ( $members_active && function_exists( 'bp_get_member_type_post_type' ) ) {
+			$cpt_redirects[ bp_get_member_type_post_type() ] = 'admin.php?page=bb-settings&tab=members&panel=profile_types';
+		}
+
 		// Forum CPTs (only when forums component is active).
-		if ( bp_is_active( 'forums' ) ) {
+		if ( $forums_active ) {
 			$cpt_redirects['forum'] = 'admin.php?page=bb-settings&tab=forums&panel=all_forums';
 			$cpt_redirects['topic'] = 'admin.php?page=bb-settings&tab=forums&panel=discussions';
 			$cpt_redirects['reply'] = 'admin.php?page=bb-settings&tab=forums&panel=replies';
@@ -870,25 +895,29 @@ function bb_redirect_legacy_settings_to_settings_2() {
 	}
 
 	// Redirect legacy Group Types CPT page (edit.php?post_type=bp-group-type).
-	if ( 'bp-group-type' === $post_type ) {
+	// Only when groups component is active; otherwise the target panel is
+	// not registered and we'd redirect into a 404'd settings tab.
+	if ( 'bp-group-type' === $post_type && $groups_active ) {
 		wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=groups&panel=group_types' ) );
 		exit;
 	}
 
 	// Redirect legacy Groups admin page (admin.php?page=bp-groups).
-	if ( 'bp-groups' === $page ) {
+	if ( 'bp-groups' === $page && $groups_active ) {
 		wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=groups&panel=all_groups' ) );
 		exit;
 	}
 
 	// Redirect legacy Profile Fields admin page (admin.php?page=bp-profile-setup).
-	if ( 'bp-profile-setup' === $page ) {
+	if ( 'bp-profile-setup' === $page && $xprofile_active ) {
 		wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=members&panel=profile_fields' ) );
 		exit;
 	}
 
 	// Redirect legacy Member Types CPT page (edit.php?post_type=bp-member-type).
-	if ( bp_get_member_type_post_type() === $post_type ) {
+	// `bp_get_member_type_post_type()` is loaded by the members component;
+	// guard the call so a deactivated members component doesn't fatal here.
+	if ( $members_active && function_exists( 'bp_get_member_type_post_type' ) && bp_get_member_type_post_type() === $post_type ) {
 		wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=members&panel=profile_types' ) );
 		exit;
 	}
@@ -900,7 +929,7 @@ function bb_redirect_legacy_settings_to_settings_2() {
 	}
 
 	// Redirect legacy Forum CPT pages to Settings 2.0.
-	if ( bp_is_active( 'forums' ) ) {
+	if ( $forums_active ) {
 		// Check taxonomy first — edit-tags.php passes both taxonomy and post_type params.
 		$taxonomy = isset( $_GET['taxonomy'] ) ? sanitize_key( wp_unslash( $_GET['taxonomy'] ) ) : '';
 		if ( 'topic-tag' === $taxonomy ) {
