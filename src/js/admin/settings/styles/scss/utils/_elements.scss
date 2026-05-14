@@ -1,0 +1,1875 @@
+/* Shared Pagination */
+.bb-admin-pagination {
+	@include bb-admin-pagination;
+}
+
+/* Shared Actions Toggle — reusable dropdown-menu toggle for list action cells */
+.bb-admin-actions-toggle {
+	text-align: center;
+
+	.components-dropdown-menu__toggle,
+	.components-button {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: none;
+		border: none;
+		cursor: pointer;
+		padding: 4px;
+		min-width: 32px;
+		width: 32px;
+		height: 32px;
+		color: $bb-icon-tertiary-color;
+		border-radius: $bb-border-radius-sm;
+
+		i {
+			color: $bb-icon-secondary-color;
+			font-size: 24px;
+			line-height: 1;
+			font-weight: 700;
+		}
+
+		&:hover,
+		&:focus,
+		&.is-pressed,
+		&.is-opened {
+			color: $bb-text-color;
+			background: $bb-background-primary-hover-color;
+			box-shadow: none;
+		}
+
+		.dashicon,
+		svg:not(:first-child) {
+			display: none;
+		}
+	}
+}
+
+/* Shared List Toolbar — reusable toolbar layout for list screens */
+.bb-admin-list-toolbar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	padding-bottom: 16px;
+	border-bottom: 0.5px solid $bb-border-secondary-color;
+	flex-wrap: wrap;
+
+	.components-select-control {
+		margin-bottom: 0;
+
+		.components-input-control__label {
+			color: $bb-text-secondary-color;
+			text-transform: none;
+			font-size: 13px;
+			font-weight: 500;
+		}
+
+		.components-select-control__input {
+			@include bb-admin-settings-select;
+			min-width: 135px;
+		}
+
+		.components-input-control-suffix-wrapper,
+		.components-input-control__backdrop {
+			display: none;
+		}
+	}
+
+	select {
+		@include bb-admin-settings-select;
+	}
+
+	&__left {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		flex-wrap: wrap;
+	}
+
+	&__right {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+	}
+}
+
+/* Shared List Search — reusable search input with icon for list screens */
+.bb-admin-list-search {
+	position: relative;
+	min-width: 224px;
+
+	input {
+		@include bb-input-text;
+		padding-right: 30px;
+	}
+
+	&:after {
+		content: "\e30c";
+		font-family: "bb-icons-rl";
+		font-size: 20px;
+		color: $bb-icon-tertiary-color;
+		position: absolute;
+		right: 8px;
+		top: 50%;
+		transform: translateY(-50%);
+		pointer-events: none;
+	}
+
+	&:has(.bb-admin-list-search__clear):after {
+		display: none;
+	}
+}
+
+.bb-admin-list-search__input {
+	width: 100%;
+	height: 32px;
+	border: 1px solid $bb-border-secondary-color;
+	border-radius: $bb-border-radius-md;
+	padding: 0 32px 0 8px;
+	font-size: 13px;
+	color: $bb-text-color;
+	background-color: $bb-background-base-color;
+	outline: none;
+
+	&::placeholder {
+		color: $bb-text-disabled-color;
+	}
+
+	&:focus {
+		border-color: $bb-border-brand-primary-color;
+	}
+}
+
+.bb-admin-list-search__icon {
+	position: absolute;
+	right: 8px;
+	top: 50%;
+	transform: translateY(-50%);
+	color: $bb-icon-tertiary-color;
+	font-size: 16px;
+	pointer-events: none;
+}
+
+.bb-admin-list-search__clear {
+	position: absolute;
+	right: 8px;
+	top: 50%;
+	transform: translateY(-50%);
+	background: none;
+	border: none;
+	cursor: pointer;
+	font-size: 18px;
+	color: $bb-icon-tertiary-color;
+	padding: 0;
+	line-height: 1;
+	z-index: 1;
+
+	&:hover {
+		color: $bb-text-color;
+	}
+}
+
+/* Shared List Table — reusable table structure for list screens */
+.bb-admin-list-table {
+	width: 100%;
+	border-collapse: collapse;
+
+	thead {
+		border-bottom: 0.5px solid $bb-border-secondary-color;
+	}
+
+	th {
+		padding: 10px 16px 10px 0;
+		font-size: 13px;
+		font-weight: 400;
+		color: $bb-text-tertiary-color;
+		text-align: left;
+		white-space: nowrap;
+
+		&:first-child {
+			padding: 10px 0 10px 4px;
+		}
+
+		&:last-child {
+			padding: 10px 4px 10px 0;
+		}
+	}
+
+	tbody tr {
+		border-bottom: 0.5px solid $bb-border-primary-color;
+	}
+
+	td {
+		padding: 16px 10px 16px 0;
+		font-size: 13px;
+		color: $bb-text-secondary-color;
+		vertical-align: middle;
+
+		&:first-child {
+			padding-left: 4px;
+		}
+
+		&:last-child {
+			padding-right: 4px;
+		}
+	}
+}
+
+.bb-admin-list-table__checkbox {
+	width: 30px;
+
+	.components-checkbox-control {
+		margin-bottom: 0;
+	}
+
+	.components-base-control__field {
+		margin-bottom: 0;
+	}
+
+	.components-checkbox-control__input-container {
+		margin: 0;
+	}
+}
+
+.bb-admin-list-table__loading {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 60px 0;
+}
+
+.bb-admin-list-table__empty {
+	padding: 40px;
+	text-align: center;
+	color: $bb-text-tertiary-color;
+	font-size: 14px;
+}
+
+/* Loading Spinner */
+.bb-admin-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 130px);
+}
+
+select.bb-admin-settings__select {
+    @include bb-admin-settings-select;
+
+    &:hover {
+        color: $bb-text-color;
+    }
+}
+
+// Toggle Control Styling
+.bb-admin-settings-wrap {
+    margin-top: 0;
+
+    .components-toggle-control {
+		margin-bottom: 0;
+
+		.components-base-control__field {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			margin-bottom: 0;
+		}
+
+		.components-toggle-control__label {
+			font-size: 14px;
+			font-weight: 400;
+			line-height: 20px;
+			color: $bb-text-color;
+			order: 1;
+		}
+	}
+
+	.components-form-toggle {
+		width: 40px;
+		height: 24px;
+		min-width: 30px;
+		flex-shrink: 0;
+
+		.components-form-toggle__track {
+			width: 40px;
+			height: 24px;
+			border-radius: 99px;
+			background-color: $bb-background-tertiary-hover-color;
+			border: none;
+		}
+
+		.components-form-toggle__thumb {
+			width: 16px;
+			height: 16px;
+			background-color: $bb-background-base-color;
+			box-shadow: none;
+			top: 4px;
+			left: 4px;
+			transition: left 0.15s ease, right 0.15s ease;
+		}
+
+		.components-form-toggle__input:focus + .components-form-toggle__track {
+			box-shadow: none;
+			outline: 2px solid $bb-border-brand-primary-color;
+		}
+
+		&.is-checked {
+			.components-form-toggle__track {
+				background-color: $bb-background-brand-primary-color;
+				border: none;
+			}
+
+			.components-form-toggle__thumb {
+				background-color: $bb-background-base-color;
+                transform: translateX(14px);
+			}
+		}
+	}
+
+    .components-form-toggle--is-big .components-form-toggle {
+        width: 40px;
+        height: 24px;
+
+        .components-form-toggle__track {
+            width: 40px;
+            height: 24px;
+        }
+
+        .components-form-toggle__thumb {
+            height: 16px;
+            width: 16px;
+            top: 4px;
+            left: 4px;
+        }
+
+        &.is-checked {
+
+            .components-form-toggle__track {
+                background-color: $bb-background-brand-primary-color;
+            }
+
+            .components-form-toggle__thumb {
+                transform: translateX(15px);
+                background-color: $bb-background-base-color;
+            }
+        }
+    }
+}
+
+.buddyboss_page_bb-settings {
+
+    .components-form-toggle {
+        width: 30px;
+        height: 18px;
+
+        .components-form-toggle__track {
+            width: 30px;
+            height: 18px;
+            border: 1px solid transparent;
+            background-color: $bb-background-tertiary-hover-color;
+            border-radius: $bb-border-radius-full;
+        }
+
+        .components-form-toggle__thumb {
+            height: 12px;
+            width: 12px;
+            top: 3px;
+            left: 3px;
+            background-color: $bb-background-base-color;
+        }
+
+        &.is-checked {
+
+            .components-form-toggle__track {
+                background-color: transparent;
+                border: 1px solid $bb-background-brand-primary-color;
+            }
+            .components-form-toggle__thumb {
+                transform: translateX(11px);
+                background-color: $bb-background-brand-primary-color;
+            }
+        }
+    }
+}
+
+/* Divider */
+.bb-admin-settings--divided-section {
+    padding-bottom: 18px;
+    border-bottom: 1px solid $bb-border-secondary-color;
+    margin-bottom: 24px;
+
+    &:has(.components-base-control__help) {
+        padding-bottom: 8px;
+    }
+}
+
+/* Radio Buttons */
+.buddyboss_page_bb-settings {
+
+    input[type="radio"],
+	.components-radio-control__input {
+        border: 1px solid $bb-background-brand-primary-color !important;
+        height: 18px;
+        width: 18px;
+		max-width: initial;
+        min-width: initial;
+
+		&:focus {
+			box-shadow: none;
+			outline: 2px solid $bb-border-brand-primary-color;
+		}
+
+        &:checked {
+			background-color: transparent;
+			border: 1px solid $bb-background-brand-primary-color !important;
+
+			&::before {
+				height: 12px;
+				width: 12px;
+				background-color: $bb-background-brand-primary-color;
+				border-radius: 50%;
+				margin: 2px;
+				border: none;
+				position: static;
+				transform: none;
+			}
+		}
+    }
+
+	.components-radio-control {
+		margin: 0;
+		padding: 0;
+		border: none;
+		min-inline-size: auto;
+	}
+
+	// SettingsForm renders the field's label externally
+	// (.bb-admin-settings-form__field-label) and passes `label=""` to its
+	// RadioControl. WordPress still emits an empty <legend> inside the
+	// fieldset, which is invisible but takes block-level vertical space and
+	// pushes the radios away from the form's label. Collapse it here, scoped
+	// to .bb-admin-settings-form so RadioControls used directly in modals
+	// (e.g. FieldSetModal "Repeater Set") keep their visible legend.
+	.bb-admin-settings-form .components-radio-control > legend {
+		display: none;
+	}
+
+	.components-radio-control__group-wrapper {
+		flex-direction: row;
+		justify-content: flex-start;
+		gap: 20px;
+	}
+
+	/* Vertical radio layout — use 'field_class' => 'bb-admin-settings-field__radio--vertical'. */
+	.bb-admin-settings-field__radio--vertical .components-radio-control__group-wrapper {
+		flex-direction: column;
+		gap: 12px;
+	}
+
+    [data-field-name="bb-group-activity-topics-options"] .components-radio-control__group-wrapper {
+        flex-direction: column;
+    }
+}
+
+/* Full control width — forces the field input to use full available width.
+   Use 'field_class' => 'bb-admin-settings-field--full-control-width' in registration. */
+.bb-admin-settings-field--full-control-width {
+	.bb-admin-settings-form__field-content,
+	.bb-admin-settings-form__field-input-wrapper {
+		width: 100%;
+	}
+
+	.bb-admin-settings-form__field-input-wrapper {
+		> div,
+		.components-base-control,
+		.components-base-control__field {
+			width: 100%;
+		}
+
+		/* WordPress SelectControl wrapper chain */
+		.components-select-control,
+		.components-input-base,
+		.components-input-control__container,
+		.components-flex {
+			width: 100% !important;
+		}
+
+		.components-text-control__input,
+		.components-select-control__input,
+		select,
+		input[type="text"] {
+			width: 100% !important;
+			max-width: 100% !important;
+		}
+	}
+}
+
+/* Text and select fields inside grouped fields — match password field width */
+.bb-admin-settings-form__field--grouped,
+.bb-admin-settings-form__child-field {
+	.components-select-control {
+		.components-input-base {
+			width: 100%;
+		}
+
+		.components-select-control__input {
+			width: 100%;
+		}
+	}
+
+	/* Make text inputs stretch to fill the input wrapper like password fields do. */
+	&.bb-admin-settings-form__field--input-full .bb-admin-settings-form__field-input-wrapper > div {
+		width: 100%;
+
+		.components-base-control {
+			width: 100%;
+		}
+
+		.components-text-control__input {
+			width: 100%;
+		}
+	}
+}
+
+/* Text field with copy button */
+.bb-admin-settings-form__field-text-copy {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	width: 100%;
+
+	.components-base-control {
+		flex: 1;
+	}
+}
+
+.bb-admin-settings-form__copy-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 36px;
+	height: 36px;
+	padding: 0;
+	border: 1px solid $bb-border-secondary-color;
+	border-radius: $bb-border-radius-md;
+	background: $bb-background-base-color;
+	color: $bb-icon-color;
+	cursor: pointer;
+	flex-shrink: 0;
+
+	&:hover {
+		background: $bb-background-primary-hover-color;
+	}
+
+	i {
+		font-size: 16px;
+	}
+}
+
+/* Checkbox */
+.buddyboss_page_bb-settings .components-checkbox-control__input {
+	border-color: $bb-border-quaternary-color;
+	border-radius: $bb-border-radius-sm;
+    height: 18px;
+    width: 18px;
+
+    + svg.components-checkbox-control__checked {
+        height: 22px;
+        width: 22px;
+    }
+
+	&:checked {
+		background-color: $bb-background-brand-primary-color;
+		border-color: $bb-background-brand-primary-color;
+	}
+
+	&:focus {
+		box-shadow: none;
+		outline: 2px solid $bb-border-brand-primary-color;
+	}
+}
+
+/* Inputs */
+.buddyboss_page_bb-settings {
+
+    .components-textarea-control__input,
+    .components-text-control__input {
+	    @include bb-input-text;
+    }
+
+    .components-textarea-control__input {
+        min-height: 100px;
+        padding: 8px;
+    }
+
+	.bb-admin-settings-form__inline-number {
+		margin: 0 8px;
+		// Figma: 88×24 small inputField with 8px horizontal padding so the
+		// digit sits visually centered between input edges. Forcing the box
+		// model to content-box keeps the rendered width at 88px regardless
+		// of theme/browser-applied padding overrides.
+		box-sizing: border-box;
+		width: 88px;
+		max-width: 88px;
+		height: 24px;
+		min-height: auto;
+		padding: 0 8px;
+		// Match Figma's enabled inputField: "background/default/primary"
+		// #F6F6F6 fill + "stroke/default/secondary" #D9D9D9 1px border +
+		// radius/md (6px). Figma's 0.5px stroke renders as 1px in browsers
+		// (rounded up), which preserves the design intent on Hi-DPI screens.
+		background-color: $bb-background-primary-color;
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-md;
+
+		// Disabled state — reactivated when the sibling checkbox/toggle is
+		// unchecked (cbControlDisabled in SettingsForm passes the React
+		// `disabled` prop through to this input). Drop the gray fill so
+		// the control reads as inactive against the white card background,
+		// then mute the digit + cursor to reinforce the non-interactive
+		// state. Matches Figma's "state: disabled" inputField variant.
+		&:disabled {
+			background-color: transparent;
+			color: $bb-text-tertiary-color;
+			cursor: not-allowed;
+		}
+	}
+
+    [data-field-name="bb_recaptcha_score_threshold"] .components-text-control__input {
+        min-width: 270px;
+    }
+
+    [data-field-name="bb-zoom-webhook-url"] .bb-admin-settings-form__field-text-copy {
+
+        .components-text-control__input {
+            opacity: 0.7;
+        }
+    }
+}
+
+/* Buttons */
+.bb-admin-button-danger {
+    @include bb-button-danger;
+}
+
+/* WordPress DropdownMenu */
+.components-popover__content:has(.bb_dropdown_menu_group) {
+    box-shadow: none;
+}
+
+.bb_dropdown_menu_group {
+
+    // Menu group
+    &.components-menu-group {
+        padding: 8px 0;
+        margin: 0;
+        width: 190px;
+        border: 1px solid $bb-border-secondary-color;
+        border-radius: $bb-border-radius-lg;
+        box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
+
+        + .components-menu-group {
+            margin-top: 0;
+            border-top: 1px solid $bb-border-secondary-color;
+            padding-top: 8px;
+        }
+
+        // Menu item button
+        .components-menu-item__button,
+        .components-button.components-menu-item__button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            padding: 10px 8px 10px 16px;
+            background: none;
+            border: none;
+            border-radius: 0;
+            cursor: pointer;
+            transition: background-color 0.15s ease;
+
+            &:hover,
+            &:focus {
+                background-color: $bb-background-primary-color;
+                box-shadow: none;
+                outline: none;
+            }
+
+            &:active {
+                background-color: $bb-background-secondary-color;
+            }
+
+            [class*="bb-icons-"] {
+                color: $bb-icon-tertiary-color;
+                font-size: 20px !important;
+                line-height: 1;
+                font-weight: 400;
+                margin-right: 8px;
+            }
+
+            .bb-icons-external {
+                margin-left: auto;
+            }
+
+            .components-menu-item__item {
+                font-size: 13px;
+                font-weight: 500;
+                line-height: 18px;
+                color: $bb-text-tertiary-color;
+                min-width: auto;
+                width: 100%;
+            }
+        }
+    }
+}
+
+.buddyboss_page_bb-settings {
+
+    .components-dropdown__content .components-popover__content {
+        background-color: $bb-background-base-color;
+        border-radius: $bb-border-radius-lg;
+        box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
+        padding: 0;
+        min-width: 190px;
+
+        // Menu item button
+        .components-dropdown-menu__menu-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            padding: 10px 8px 10px 16px;
+            background: none;
+            border: none;
+            border-radius: 0;
+            cursor: pointer;
+            transition: background-color 0.15s ease;
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 18px;
+            color: $bb-text-tertiary-color;
+
+            &:hover,
+            &:focus {
+                color: $bb-text-tertiary-color;
+                background-color: $bb-background-primary-color;
+                box-shadow: none;
+                outline: none;
+            }
+
+            &:active {
+                background-color: $bb-background-secondary-color;
+            }
+
+            [class*="bb-icons-"] {
+                color: $bb-icon-tertiary-color;
+                font-size: 20px !important;
+                line-height: 1;
+                font-weight: 400;
+            }
+        }
+    }
+}
+
+/* Toast */
+
+.bb-toast-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.bb-toast {
+    display: flex;
+    align-items: center;
+    padding: 10px 16px;
+    border-radius: 999px;
+    border: 1px solid $bb-border-tertiary-color;
+    background-color: $bb-background-black-color;
+    color: $bb-text-inverse-color;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    min-width: 190px;
+    transition: all 0.3s ease-in-out;
+
+    &__icon {
+        margin-right: 10px;
+        display: flex;
+        align-items: center;
+
+        .components-spinner {
+            width: 26px;
+            height: 26px;
+            margin: 0;
+
+            path {
+                stroke: $bb-border-tertiary-color;
+            }
+
+            circle {
+                stroke: $bb-border-quaternary-color
+            }
+        }
+
+        i {
+            font-size: 32px;
+        }
+    }
+
+    &__message {
+        flex-grow: 1;
+        font-size: 16px;
+        line-height: 1.4;
+    }
+
+    &__dismiss {
+        background: transparent;
+        border: none;
+        color: $bb-text-inverse-color;
+        cursor: pointer;
+        padding: 0;
+        margin-left: 16px;
+        display: flex;
+        align-items: center;
+        width: auto;
+        min-width: auto;
+        min-height: auto;
+        height: auto;
+
+        i {
+            font-size: 20px;
+        }
+
+        &:hover {
+            color: $bb-text-tertiary-color;
+        }
+    }
+
+    // Status variants
+    &--success {
+        .bb-toast__icon i {
+            color: $bb-icon-positive-secondary-color;
+        }
+    }
+
+    &--error {
+        .bb-toast__icon i {
+            color: $bb-icon-danger-secondary-color;
+        }
+    }
+}
+
+/* Notice */
+.bb-admin-notice {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    font-size: 13px;
+    font-weight: 400;
+    color: $bb-text-color;
+    border-radius: $bb-border-radius-lg;
+    background-color: $bb-background-primary-hover-color;
+    border: 0.5px solid $bb-border-tertiary-color;
+    border-radius: $bb-border-radius-lg;
+    margin-bottom: 16px;
+    width: 100%;
+    word-break: break-word;
+    box-sizing: border-box;
+
+    &:not(:has(.bb-admin-notice__icon)):before {
+        content: "\e2ce";
+        color: $bb-icon-color;
+        font-size: 20px;
+        font-weight: 500;
+        font-family: bb-icons-rl;
+    }
+
+    &.bb-admin-notice--success {
+        color: $bb-text-positive-primary-color;
+        background-color: $bb-background-positive-primary-color;
+        border-color: $bb-border-positive-secondary-color;
+
+        &:before {
+            color: $bb-icon-positive-primary-color;
+        }
+    }
+
+    &.bb-admin-notice--error {
+        color: $bb-text-color;
+        background-color: $bb-background-danger-primary-color;
+        border-color: $bb-border-danger-color;
+
+        &:before {
+            content: "\e4e0";
+            font-weight: 500;
+            color: $bb-icon-danger-secondary-color;
+        }
+    }
+
+
+    &.bb-admin-notice--warning {
+        color: $bb-text-warning-primary-color;
+        background-color: $bb-background-warning-primary-color;
+        border-color: $bb-border-warning-secondary-color;
+
+        &:before {
+            color: $bb-icon-warning-primary-color;
+        }
+
+        a {
+            color: $bb-text-warning-primary-color;
+            text-decoration: underline;
+        }
+    }
+
+    &.bb-admin-notice--plain {
+        background: none;
+        border: none;
+        padding: 0;
+        color: $bb-text-tertiary-color;
+        flex-wrap: wrap;
+        gap: 8px;
+
+        &:before {
+            display: none;
+        }
+
+        img {
+            display: block;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        a {
+            text-decoration: none;
+
+            &:hover,
+            &:focus {
+                text-decoration: underline;
+            }
+        }
+    }
+
+    // Ensure links stay inline so they don't become separate flex items.
+    a {
+        display: inline;
+    }
+
+    &--dismiss {
+        margin-left: auto;
+        border: 0;
+        background: transparent;
+        padding: 0;
+
+        i {
+            font-size: 18px;
+            color: $bb-icon-color;
+        }
+    }
+
+    [data-group="social_login_additional_data"] & {
+        margin-bottom: 0;
+    }
+}
+
+/* Status Check Field */
+.bb-admin-status-check {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+
+    &__loading {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: $bb-text-tertiary-color;
+    }
+
+    &__spinner {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        border: 2px solid $bb-border-secondary-color;
+        border-top-color: $bb-text-color;
+        border-radius: 50%;
+        animation: bb-spin .6s linear infinite;
+    }
+
+    .bb-admin-notice {
+        margin-bottom: 0;
+
+        code {
+            background-color: $bb-background-secondary-color;
+            padding: 1px 6px;
+            border-radius: $bb-border-radius-sm;
+            font-size: 12px;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: underline;
+        }
+    }
+}
+
+@keyframes bb-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Modal */
+// Backdrop overlay for every Settings 2.0 modal. WordPress's <Modal>
+// component renders the frame inside `.components-modal__screen-overlay`,
+// which ships with no background color of its own — that's why dialogs
+// like the Moderation deactivate confirm previously appeared with the
+// admin shell still fully visible behind them. `:has()` lets us scope the
+// rule to overlays whose frame carries our `.bb-admin-settings-modal`
+// class, so we don't accidentally restyle every WP modal in the admin.
+// Reference design: Figma 2704-47995 (dark, semi-transparent backdrop
+// covering both the WP left nav and the page content).
+.components-modal__screen-overlay:has(> .components-modal__frame.bb-admin-settings-modal) {
+	background-color: rgba(0, 0, 0, 0.5);
+}
+
+.bb-admin-settings-modal {
+
+	&.components-modal__frame {
+		border-radius: $bb-border-radius-xl;
+		max-width: 680px;
+		width: 100%;
+
+        @media screen and (max-width: 960px) {
+            max-height: 90%;
+            margin: auto;
+        }
+	}
+
+	&.bb-topic-delete-modal {
+		max-width: 550px;
+	}
+
+	&.bb-topic-modal {
+		max-width: 680px;
+	}
+
+	.components-modal__header {
+		// Figma backend-settings spec: 16px top / 16px right / 16px bottom /
+		// 24px left. The asymmetric left padding aligns the title to the
+		// content area; the symmetric vertical padding gives the title room
+		// to breathe. The shared body padding (24px) lines up with the 24px
+		// left value to keep the title flush with form controls below.
+		padding: 16px 16px 16px 24px;
+		height: auto;
+		border-bottom: 1px solid $bb-border-secondary-color;
+
+        .components-button {
+			// Figma close button: 32×32 hit area.
+			width: 32px;
+			height: 32px;
+			min-width: 32px;
+			padding: 0;
+
+            svg {
+                fill: $bb-icon-secondary-color;
+            }
+
+            &:focus {
+                outline: 2px solid $bb-border-brand-primary-color;
+                box-shadow: none;
+            }
+        }
+    }
+
+	.components-modal__header-heading {
+		color: $bb-text-color;
+		font-size: 18px;
+		font-weight: 500;
+	}
+
+	.components-modal__content {
+		padding: 0;
+		// Header is sticky/absolute; offset content by its full Figma height
+		// (16px top + 32px close button + 16px bottom = 64px).
+		margin-top: 64px;
+	}
+
+    &__body {
+        padding: 24px;
+
+        .components-text-control__input,
+		.components-textarea-control__input {
+			@include bb-input-text;
+		}
+
+        textarea.components-textarea-control__input {
+			min-height: 72px;
+            padding: 8px;
+		}
+
+        .components-input-control__container {
+
+			.components-select-control__input {
+				@include bb-admin-settings-select;
+			}
+
+			&:has(> .components-select-control__input) {
+				padding: 0 !important;
+                background-color: transparent;
+
+				.components-input-control__suffix,
+				.components-input-control__backdrop {
+					display: none !important;
+				}
+			}
+		}
+
+        > .components-base-control {
+            margin-bottom: 16px;
+        }
+
+        .components-select-control {
+            gap: 0;
+            cursor: default;
+        }
+
+        .components-base-control__label,
+        .components-input-control__label.components-text {
+			@include bb-input-label;
+            display: table;
+            margin-bottom: 10px;
+        }
+    }
+
+	&__content {
+		padding: 24px 24px 0;
+
+		&:has(.bb-admin-migration-modal__loader) {
+			min-height: 250px;
+		}
+	}
+
+	&__loader {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 250px;
+		font-size: 32px;
+		color: $bb-primary-color;
+
+		.bb-icons-rl {
+			display: block;
+		}
+	}
+
+    &__row {
+		display: flex;
+		gap: 16px;
+		margin-bottom: 16px;
+
+		.components-base-control {
+			flex: 1;
+			margin-bottom: 0;
+		}
+	}
+
+    &__row--separator {
+		margin-bottom: 24px;
+		padding-bottom: 24px;
+		border-bottom: 1px solid $bb-border-tertiary-color;
+
+        > .components-base-control,
+		> .bb-admin-meta-field__editor-field {
+			margin-bottom: 0;
+		}
+	}
+
+    &__error {
+		color: $bb-error-color;
+		font-size: 13px;
+		margin: 0 0 16px;
+	}
+
+	// Custom section separator (e.g. Tags below registered fields).
+	&__custom-section {
+		padding-top: 24px;
+		border-top: 1px solid $bb-border-tertiary-color;
+	}
+
+	&__footer {
+        display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 8px;
+		padding: 16px 24px;
+		border-top: 1px solid $bb-border-secondary-color;
+		position: sticky;
+		bottom: 0;
+		background: $bb-background-base-color;
+		z-index: 1;
+
+		.components-button {
+
+			&.is-secondary {
+				@include bb-button-secondary;
+			}
+
+			&.is-primary {
+				@include bb-button-primary;
+			}
+
+            &.is-destructive {
+                @include bb-button-danger;
+            }
+		}
+	}
+}
+
+.bb-confirm-toggle-modal {
+
+    &.components-modal__frame {
+        max-width: 650px;
+    }
+
+    &__body {
+
+        > p {
+            margin: 0;
+        }
+    }
+
+    // Structured HTML body — used when a feature opts in via
+    // `confirm_off_message_is_html` (e.g. Moderation deactivation warning).
+    // The WP admin shell zeroes margins/padding on ul/li and strips list
+    // bullets, and `#wpbody-content` typography wins over our scoped resets,
+    // so we restore the basics here. Scope sits inside the modal body, so
+    // these overrides only apply to opt-in HTML messages.
+    &__html-message {
+        color: $bb-text-color;
+        font-size: 14px;
+        line-height: 1.5;
+
+        > p {
+            margin: 0 0 12px;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+
+        h4 {
+            margin: 16px 0 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: $bb-text-color;
+        }
+
+        ul {
+            list-style: disc;
+            margin: 0 0 12px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin: 0 0 4px;
+            list-style: disc;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+
+        strong {
+            font-weight: 600;
+        }
+
+        a {
+            color: $bb-link-color;
+            text-decoration: underline;
+        }
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Async Select Field (.bb-async-select)
+// Searchable select with server-side search and load-more pagination.
+// Used by AsyncSelectField.js for fields with type: 'async_select'.
+// ─────────────────────────────────────────────────────────────────────────────
+.bb-async-select {
+    position: relative;
+    width: 100%;
+
+    .bb-admin-settings-form__page-dropdown & {
+        max-width: 270px;
+    }   
+
+    // Trigger button — read-only, clicking opens the dropdown. Replaces
+    // the previous `<input role="combobox">` per the design directive:
+    // searchable selects must not allow inline searching; search lives
+    // inside the dropdown. Styled to match the project TextControl so
+    // existing layouts (label column widths, row heights) don't shift.
+    &__trigger-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    &__trigger {
+        @include bb-admin-settings-select;
+        background-image: none;
+        padding-right: 8px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+        text-align: left;
+        cursor: pointer;
+
+        &:disabled {
+            cursor: not-allowed;
+            background: $bb-background-secondary-color;
+        }
+
+        &:focus-visible {
+            outline: none;
+        }
+
+        &.is-placeholder .bb-async-select__trigger-label {
+            color: $bb-text-tertiary-color;
+        }
+
+        &.is-open .bb-async-select__trigger-chevron {
+            transform: rotate(180deg);
+        }
+    }
+
+    &__trigger-label {
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: $bb-text-color;
+        font-size: 13px;
+    }
+
+    // `margin-left: auto` pins the chevron to the right edge of the
+    // button's content area regardless of label width — survives if a
+    // future caller swaps the label for something other than
+    // `__trigger-label`.
+    &__trigger-chevron {
+        margin-left: auto;
+        flex-shrink: 0;
+        font-size: 16px;
+        line-height: 1;
+        color: $bb-icon-tertiary-color;
+        transition: transform 0.15s ease;
+    }
+
+    // Dropdown panel. Visual styling matches the Email Template Custom
+    // Fields → Name dropdown (`.bb-email-template-modal__meta-key-dropdown`)
+    // so the two "searchable select" surfaces in Settings 2.0 read as one
+    // pattern: bordered TextControl-style search input at the top, options
+    // below with hover backgrounds, large radius, soft shadow.
+    &__dropdown {
+        position: absolute;
+        top: calc(100% + 2px);
+        left: 0;
+        right: 0;
+        background: $bb-background-base-color;
+        border: 1px solid $bb-border-secondary-color;
+        border-radius: $bb-border-radius-lg;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        max-height: 280px;
+        overflow-y: auto;
+        z-index: 100;
+        padding: 8px 0;
+        display: flex;
+        flex-direction: column;
+    }
+
+    // In-dropdown search input. Sticky at the top of the popover so the
+    // filter input stays visible while the user scrolls a long option
+    // list. Auto-focused by the JS-side `useEffect` on `isOpen`.
+    &__search-wrapper {
+        position: sticky;
+        top: 0;
+        background: $bb-background-base-color;
+        padding: 8px 16px;
+        z-index: 1;
+    }
+
+    // Hidden by default — the Email Template pattern doesn't include a
+    // magnifier glyph inside the search input. Kept in the JSX so any
+    // consumer that wants the magnifier can re-enable it via override.
+    &__search-icon {
+        display: none;
+    }
+
+    &__search-input[type="search"] {
+        @include bb-input-text;
+        width: 100%;
+
+        &::-webkit-search-cancel-button {
+            display: none;
+        }
+    }
+
+    &__status {
+        padding: 12px 16px;
+        text-align: center;
+        font-size: 13px;
+        color: $bb-text-tertiary-color;
+    }
+
+    &__list {
+        list-style: none;
+        margin: 0;
+        padding: 4px 0;
+    }
+
+    &__option {
+        margin: 0;
+
+        // Padding + colors match the Email Template Custom Fields
+        // option row (`.bb-email-template-modal__meta-key-option`) so
+        // the two searchable selects render with identical option rows.
+        button {
+            display: block;
+            width: 100%;
+            padding: 12px 16px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            text-align: left;
+            font-size: 13px;
+            color: $bb-text-tertiary-color;
+
+            &:hover {
+                background-color: $bb-background-primary-color;
+            }
+        }
+
+        &.is-selected button {
+            background-color: $bb-background-primary-color;
+        }
+    }
+
+    &__load-more {
+        padding: 8px 16px;
+        text-align: center;
+        border-top: 1px solid $bb-border-secondary-color;
+    }
+
+    &__load-more-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 13px;
+        color: $bb-primary-color;
+        padding: 4px 8px;
+
+        &:hover {
+            text-decoration: none;
+        }
+
+        &:disabled {
+            color: $bb-text-tertiary-color;
+            cursor: default;
+        }
+    }
+}
+
+.bb-admin-settings-form__page-dropdown:has(>.bb-async-select) {
+    width: 100%;
+}
+
+/* Warning block */
+.bb-admin-delete {
+    &__warning {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px;
+        background-color: $bb-background-warning-primary-color;
+        border: 1px solid $bb-border-warning-secondary-color;
+        border-radius: $bb-border-radius-xl;
+        margin-bottom: 16px;
+
+        i {
+            font-size: 32px;
+            font-weight: 500;
+            color: $bb-icon-warning-primary-color;
+            flex-shrink: 0;
+            line-height: 1;
+
+            &:before {
+                opacity: 1;
+            }
+        }
+    }
+
+    &__warning-text {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        min-width: 0;
+    }
+
+    &__warning-title {
+        font-size: 13px;
+        font-weight: 500;
+        line-height: 18px;
+        color: $bb-text-color;
+        padding: 3px 0;
+    }
+
+    &__warning-desc {
+        font-size: 11px;
+        font-weight: 400;
+        line-height: 16px;
+        color: $bb-text-secondary-color;
+    }
+}
+
+/* Bulk modal selected items list (shared pattern for bulk edit/delete) */
+.bb-admin-bulk-modal {
+
+    &__selected-items {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-bottom: 16px;
+        max-height: 125px;
+        overflow: auto;
+    }
+
+    &__selected-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        > .components-checkbox-control {
+            margin-bottom: 0 !important;
+        }
+
+        .components-checkbox-control__input-container {
+            margin: 0;
+        }
+
+        .components-base-control__field {
+            margin-bottom: 0;
+        }
+
+        .components-checkbox-control__input[type="checkbox"]:checked {
+            background-color: $bb-background-brand-primary-color;
+            border-color: $bb-background-brand-primary-color;
+        }
+    }
+
+    &__selected-item-name {
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 20px;
+        color: $bb-text-secondary-color;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+// Author info display (avatar + name link) for meta field registry.
+.bb-admin-meta-field__author-info {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-top: 4px;
+
+	.bb-admin-meta-field__author-avatar {
+		border-radius: 50%;
+		flex-shrink: 0;
+        height: 40px;
+        width: 40px;
+        object-fit: cover;
+        border: 1px solid $bb-border-secondary-color;
+	}
+
+	.bb-admin-meta-field__author-name {
+		font-size: 14px;
+		color: $bb-link-color;
+		text-decoration: none;
+
+		&:hover {
+			color: $bb-link-color;
+		}
+	}
+}
+
+// Bridged metabox group — renders contiguous fields from one third-party
+// metabox under one heading with a hairline border, matching the visual
+// treatment of WordPress core's classic post-edit metaboxes. Top margin
+// + border-top separates the group from the preceding core field run; the
+// heading is bold and slightly larger than field labels so it reads as
+// the section it represents, not as another field label.
+.bb-admin-meta-field__group {
+	margin-top: 24px;
+	padding-top: 16px;
+	border-top: 1px solid $bb-border-tertiary-color;
+
+	// Ensure the last group never butts up against the modal footer/edge.
+	// Without this, the last bridged metabox renders flush against the
+	// scrollable body bottom, which reads as cropped content. 16px matches
+	// the breathing room WordPress core gives its post-edit metaboxes.
+	&:last-child {
+		padding-bottom: 16px;
+	}
+
+	// Always keep at least the same gap between consecutive groups so two
+	// metaboxes in a row are visually separated by their border-top alone,
+	// without needing the calling code to inject explicit spacers.
+	+ .bb-admin-meta-field__group {
+		margin-top: 24px;
+	}
+
+	.bb-admin-meta-field__group-title {
+		font-size: 14px;
+		font-weight: 600;
+		line-height: 1.4;
+		margin: 0 0 12px 0;
+		padding: 0;
+		color: $bb-text-color;
+	}
+
+	.bb-admin-meta-field__group-fields {
+		// Inherits the same row + separator treatment used outside the
+		// group container. No additional padding so field rhythm matches
+		// the ungrouped fields above.
+		display: block;
+
+        // Fallback spacing for all type of fields
+        > .components-base-control > div {
+            margin-bottom: 16px;
+        }
+	}
+}
+
+// Status badge displayed below title in list views (Scheduled, Pending Review, Draft).
+.bb-admin-list__status-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	margin: 0 0 0 8px;
+	padding: 2px 8px;
+	font-size: 12px;
+	font-weight: 500;
+	color: $bb-text-tertiary-color;
+	background: $bb-background-color;
+	border: 1px solid $bb-border-tertiary-color;
+	border-radius: $bb-border-radius-full;
+}
+
+// Spam badge for list views (matches reply spam badge pattern).
+.bb-admin-list__spam-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	margin: 0 0 0 8px;
+	padding: 2px 8px;
+	font-size: 12px;
+	font-weight: 500;
+	color: $bb-text-warning-primary-color;
+	background: $bb-background-warning-primary-color;
+	border: 1px solid $bb-border-warning-secondary-color;
+	border-radius: 99px;
+}
+
+// Disabled state for meta field registry fields.
+.bb-admin-meta-field--disabled {
+	opacity: 0.6;
+	pointer-events: none;
+}
+
+// Date Input component (calendar picker in Popover).
+.bb-admin-date-input,
+.bb-admin-time-input {
+
+	&__wrapper {
+		position: relative;
+	}
+
+	&__button {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+		min-height: 40px;
+		padding: 8px 12px;
+		background: $bb-background-color;
+		border: 1px solid $bb-border-tertiary-color;
+		border-radius: $bb-border-radius-md;
+		cursor: pointer;
+		font-size: 14px;
+		color: $bb-text-color;
+
+		&:hover,
+		&:focus {
+            border-color: $bb-border-quaternary-color;
+            box-shadow: none;
+		}
+	}
+
+	&__value--placeholder {
+		color: $bb-text-tertiary-color;
+	}
+
+	&__icon {
+		font-size: 18px;
+		color: $bb-icon-tertiary-color;
+	}
+
+	&__popover {
+		.components-popover__content {
+			padding: 0;
+		}
+
+        .components-popover__content {
+            background-color: $bb-background-base-color;
+            border-radius: $bb-border-radius-lg;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, .1);
+            border: 1px solid $bb-border-secondary-color;
+        }
+	}
+
+	&__picker {
+		padding: 12px;
+	}
+}
+
+// Time Input editable field + scrollable list inside Popover.
+.bb-admin-time-input {
+
+	&__button {
+		// Focus-within so the wrapper border highlights when the inner input is focused.
+		&:focus-within {
+			border-color: $bb-border-quaternary-color;
+		}
+	}
+
+	&__icon {
+		flex-shrink: 0;
+		pointer-events: none;
+	}
+
+	&__input,
+	&__input[type="text"] {
+		flex: 1;
+		border: none !important;
+		background: transparent !important;
+		font-size: 14px;
+		color: $bb-text-color;
+		padding: 0 !important;
+		margin: 0;
+		outline: none !important;
+		line-height: 1.4;
+		min-width: 0;
+		box-shadow: none !important;
+		min-height: auto;
+		height: auto;
+
+		&:focus,
+		&:active {
+			border: none !important;
+			box-shadow: none !important;
+			outline: none !important;
+		}
+
+		&::placeholder {
+			color: $bb-text-tertiary-color;
+		}
+	}
+
+	&__list {
+		min-width: 192px;
+		max-height: 296px;
+		overflow-y: auto;
+		padding: 4px 0;
+	}
+
+	&__item {
+		display: block;
+		width: 100%;
+		padding: 10px 16px;
+		background: none;
+		border: none;
+		border-radius: 0;
+		font-size: 14px;
+		line-height: 20px;
+		color: $bb-text-color;
+		text-align: left;
+		cursor: pointer;
+		outline: none;
+
+		&:hover,
+		&:focus {
+			background-color: $bb-background-primary-hover-color;
+		}
+
+		&--selected {
+			font-weight: 600;
+			color: $bb-background-brand-primary-color;
+			background-color: $bb-background-primary-color;
+		}
+	}
+}
+
+/* Empty state card (centered icon + title + description + button) */
+.bb-admin-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+
+    &__icon {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid $bb-border-secondary-color;
+        border-radius: $bb-border-radius-lg;
+        margin-bottom: 18px;
+
+        i {
+            font-size: 24px;
+            color: $bb-icon-tertiary-color;
+        }
+    }
+
+    &__title {
+        font-size: 16px;
+        font-weight: 500;
+        color: $bb-text-color;
+        margin: 0 0 8px;
+    }
+
+    &__description {
+        font-size: 13px;
+        color: $bb-text-secondary-color;
+        margin: 0;
+        line-height: 1.5;
+    }
+
+    &__button {
+        @include bb-button-primary;
+        margin-top: 16px;
+    }
+}
