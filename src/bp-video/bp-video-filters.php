@@ -12,8 +12,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 add_action( 'bp_video_album_after_save', 'bp_video_update_video_privacy' );
 add_action( 'delete_attachment', 'bp_video_delete_attachment_video', 0 );
 
-// Activity.
-
 // Theatre template.
 add_action( 'bp_after_directory_activity_list', 'bp_video_add_theatre_template' );
 add_action( 'bp_after_single_activity_content', 'bp_video_add_theatre_template' );

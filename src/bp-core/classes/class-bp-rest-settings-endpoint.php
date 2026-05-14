@@ -1292,30 +1292,10 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			if ( function_exists( 'bb_get_activity_sorting_options_labels' ) ) {
 				$sorting_options_labels = bb_get_activity_sorting_options_labels();
 
-				// Retrieve the saved options.
+				// Retrieve the saved options and reuse the shared helper so disabled keys are filtered out.
 				$sorting_options = bb_get_enabled_activity_sorting_options();
-				if ( ! empty( $sorting_options ) ) {
-					// Sort filter labels based on the order of $sorting_options.
-					$sorted_labels = array();
-					foreach ( $sorting_options as $key => $value ) {
-						if ( isset( $sorting_options_labels[ $key ] ) ) {
-							$sorted_labels[ $key ] = $sorting_options_labels[ $key ];
-						}
-					}
 
-					// Add the remaining labels that were not part of $sorting_options.
-					if ( count( $sorting_options_labels ) > count( $sorted_labels ) ) {
-						foreach ( $sorting_options_labels as $key => $label ) {
-							if ( ! isset( $sorted_labels[ $key ] ) ) {
-								$sorted_labels[ $key ] = $label;
-							}
-						}
-					}
-				} else {
-					$sorted_labels = $sorting_options_labels;
-				}
-
-				$results['bb_activity_sorting_options'] = $sorted_labels;
+				$results['bb_activity_sorting_options'] = $this->bb_get_sorted_filter_labels( $sorting_options, $sorting_options_labels );
 			}
 
 			// Activity Topics.
@@ -1705,20 +1685,22 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 	 */
 	protected function bb_get_sorted_filter_labels( $activity_filters, $filter_labels ) {
 		if ( ! empty( $activity_filters ) && ! empty( $filter_labels ) ) {
-			// Sort filter labels based on the order of $activity_filters.
+			// Sort filter labels based on the order of $activity_filters, keeping only enabled keys.
 			$sorted_filter_labels = array();
 			foreach ( $activity_filters as $key => $value ) {
+				if ( empty( $value ) ) {
+					continue;
+				}
 				if ( isset( $filter_labels[ $key ] ) ) {
 					$sorted_filter_labels[ $key ] = $filter_labels[ $key ];
 				}
 			}
 
-			// Add the remaining labels that were not part of $activity_filters.
-			if ( count( $filter_labels ) > count( $sorted_filter_labels ) ) {
-				foreach ( $filter_labels as $key => $label ) {
-					if ( ! isset( $sorted_filter_labels[ $key ] ) ) {
-						$sorted_filter_labels[ $key ] = $label;
-					}
+			// Add labels that were never saved in $activity_filters (e.g. newly-introduced options).
+			// Keys that exist in $activity_filters but are disabled must stay excluded.
+			foreach ( $filter_labels as $key => $label ) {
+				if ( ! array_key_exists( $key, $activity_filters ) && ! isset( $sorted_filter_labels[ $key ] ) ) {
+					$sorted_filter_labels[ $key ] = $label;
 				}
 			}
 		} else {
