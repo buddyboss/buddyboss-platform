@@ -6,6 +6,7 @@
  */
 
 import { useState } from '@wordpress/element';
+import { Button } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
 /**
@@ -52,6 +53,60 @@ export function HelpScreen() {
 					/>
 				</div>
 			</section>
+			<div className="bb-admin-help-wrapper">
+				<div className="bb-admin-help-cards">
+					<article className="bb-admin-help-card">
+						<i
+							className="bb-icons-rl bb-icons-rl-paper-plane-tilt bb-admin-help-card__icon"
+							aria-hidden="true"
+						></i>
+						<div className="bb-admin-help-card__body">
+							<h2 className="bb-admin-help-card__title">
+								{ __( 'Support Ticket', 'buddyboss' ) }
+							</h2>
+							<p className="bb-admin-help-card__description">
+								{ __( 'Send your request directly to our technical support team – we’re ready to help troubleshoot and guide you.', 'buddyboss' ) }
+							</p>
+						</div>
+						<Button
+							variant="secondary"
+							className="bb-admin-help-card__action"
+						>
+							{ __( 'Submit a Ticket', 'buddyboss' ) }
+						</Button>
+					</article>
+
+					<article className="bb-admin-help-card">
+						<i
+							className="bb-icons-rl bb-icons-rl-key bb-admin-help-card__icon"
+							aria-hidden="true"
+						></i>
+						<div className="bb-admin-help-card__body">
+							<div className="bb-admin-help-card__title-row">
+								<h2 className="bb-admin-help-card__title">
+									{ __( 'Support Access', 'buddyboss' ) }
+								</h2>
+								<span className="bb-admin-help-card__status bb-admin-help-card__status--positive">
+									<i
+										className="bb-icons-rl bb-icons-rl-check-circle"
+										aria-hidden="true"
+									></i>
+									{ __( 'Enabled', 'buddyboss' ) }
+								</span>
+							</div>
+							<p className="bb-admin-help-card__description">
+								{ __( 'Allow our support team to securely access your site using temporary credentials to troubleshoot issues.', 'buddyboss' ) }
+							</p>
+						</div>
+						<Button
+							variant="secondary"
+							className="bb-admin-help-card__action"
+						>
+							{ __( 'Open Access', 'buddyboss' ) }
+						</Button>
+					</article>
+				</div>
+			</div>
 		</div>
 	);
 }
