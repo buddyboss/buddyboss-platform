@@ -71,6 +71,10 @@
 			font-size: 14px;
 			border: 0;
 			outline: none;
+			flex: 1;
+			min-width: 0;
+			margin: 0;
+			padding-left: 0;
 			-webkit-appearance: none;
 			appearance: none;
 
@@ -97,30 +101,4 @@
 		color: $bb-icon-tertiary-color;
 	}
 
-	&__search-input {
-		flex: 1;
-		min-width: 0;
-		margin: 0;
-		padding: 0;
-		color: $bb-text-color;
-		font-size: 14px;
-		font-weight: 400;
-		line-height: 20px;
-		background: transparent;
-		border: 0;
-		box-shadow: none;
-		outline: none;
-
-		&:focus {
-			background: transparent;
-			border: 0;
-			box-shadow: none;
-			outline: none;
-		}
-
-		&::placeholder {
-			color: $bb-text-tertiary-color;
-			opacity: 1;
-		}
-	}
 }
