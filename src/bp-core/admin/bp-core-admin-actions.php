@@ -676,8 +676,12 @@ function bb_validate_restricted_email_on_registration( $errors, $update, $user )
 		if ( $update ) {
 			$old_user_data = get_userdata( $user->ID );
 
-			// Allow already saved emails.
-			if ( $old_user_data->user_email === $user->user_email ) {
+			// `get_userdata()` returns false for non-existent users
+			// (e.g. when the filter fires mid-creation before the user
+			// row is committed, or for stale IDs from custom flows).
+			// Treat that as "no previously-saved email to honour" and
+			// fall through to the blacklist error.
+			if ( $old_user_data && $old_user_data->user_email === $user->user_email ) {
 				return $errors;
 			}
 		}
@@ -701,9 +705,16 @@ function bb_validate_restricted_email_on_profile_update( $user_id ) {
 		! empty( $_REQUEST['action'] ) && // phpcs:ignore
 		'update' === $_REQUEST['action'] // phpcs:ignore
 	) {
-		$email = $_REQUEST['email']; // phpcs:ignore
+		$email         = $_REQUEST['email']; // phpcs:ignore
 		$old_user_data = get_userdata( $user_id );
+
+		// `get_userdata()` returns false for non-existent users — bail
+		// rather than fatal on `false->user_email`. The downstream
+		// "prevent confirmation email" tweak is only meaningful when we
+		// know there's a prior email to compare against, so falling
+		// through is the correct behaviour for missing users too.
 		if (
+			$old_user_data &&
 			$old_user_data->user_email !== $email &&
 			! bb_is_allowed_register_email_address( $email )
 		) {
