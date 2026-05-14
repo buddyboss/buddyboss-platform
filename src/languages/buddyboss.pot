@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 3.0.0\n"
+"Project-Id-Version: BuddyBoss Platform 3.0.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-05-13 11:18:01+00:00\n"
+"POT-Creation-Date: 2026-05-14 11:47:29+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -219,7 +219,7 @@ msgstr ""
 #: bp-core/admin/settings/activity/settings-sharing.php:143
 #: bp-core/admin/settings/activity/settings-sharing.php:311
 #: bp-core/admin/settings/notifications/settings-web-push.php:205
-#: bp-core/bp-core-functions.php:10139
+#: bp-core/bp-core-functions.php:10175
 #: bp-core/admin/bb-settings/settings/build/index.js:1
 msgid "UPGRADE PRO"
 msgstr ""
@@ -331,7 +331,7 @@ msgstr ""
 #: bp-core/admin/bb-settings/rl-onboarding/class-bb-readylaunch-onboarding.php:1057
 #: bp-core/admin/bb-settings/rl-onboarding/class-bb-readylaunch-onboarding.php:1104
 #: bp-core/classes/class-bb-readylaunch.php:665
-#: bp-core/classes/class-bb-readylaunch.php:1591
+#: bp-core/classes/class-bb-readylaunch.php:1600
 #: bp-core/compatibility/class-bb-readylaunch-memberpress-courses-helper.php:460
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1189
 msgid "Courses"
@@ -395,7 +395,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-tools.php:84
 #: bp-core/admin/settings/members/settings-profile-navigation.php:139
 #: bp-core/admin/settings/members/settings-profile-navigation.php:219
-#: bp-core/bp-core-functions.php:10550
+#: bp-core/bp-core-functions.php:10586
 #: bp-core/classes/class-bb-core-connections-widget.php:27
 #: bp-core/classes/class-bb-core-connections-widget.php:67
 #: bp-core/gdpr/class-bp-friendship-export.php:58
@@ -427,8 +427,8 @@ msgstr ""
 
 #: bb-features/community/appearance/admin/settings.php:637
 #: bp-core/admin/bb-settings/rl-onboarding/class-bb-readylaunch-onboarding.php:323
-#: bp-core/classes/class-bp-email-tokens.php:253
-#: bp-core/classes/class-bp-email-tokens.php:407
+#: bp-core/classes/class-bp-email-tokens.php:262
+#: bp-core/classes/class-bp-email-tokens.php:422
 #: bp-groups/bp-groups-template.php:769
 #: bp-groups/bp-groups-template.php:774
 #: bp-groups/bp-groups-template.php:779
@@ -581,7 +581,7 @@ msgstr ""
 #: bp-core/bp-core-template.php:561
 #: bp-core/bp-core-update.php:1172
 #: bp-core/classes/class-bb-readylaunch.php:655
-#: bp-core/classes/class-bp-email-tokens.php:457
+#: bp-core/classes/class-bp-email-tokens.php:472
 #: bp-groups/bp-groups-functions.php:4374
 #: bp-groups/bp-groups-functions.php:4393
 #: bp-groups/bp-groups-functions.php:4410
@@ -626,8 +626,7 @@ msgstr ""
 #: bp-core/deprecated/buddyboss/3.0.0.php:889
 #: bp-core/gdpr/class-bp-group-export.php:27
 #: bp-core/gdpr/class-bp-group-export.php:57
-#: bp-groups/bp-groups-admin.php:33
-#: bp-groups/bp-groups-admin.php:34
+#: bp-groups/bp-groups-admin.php:39
 #: bp-groups/classes/class-bp-groups-component.php:587
 #: bp-groups/classes/class-bp-groups-component.php:1036
 #: bp-groups/classes/class-bp-groups-notification.php:875
@@ -659,7 +658,7 @@ msgstr ""
 #: bp-core/admin/settings/members/settings-profile-navigation.php:147
 #: bp-core/admin/settings/members/settings-profile-navigation.php:235
 #: bp-core/admin/settings/search/settings-network-search.php:107
-#: bp-core/bb-core-subscriptions.php:599
+#: bp-core/bb-core-subscriptions.php:617
 #: bp-core/bp-core-functions.php:801
 #: bp-core/classes/class-bb-readylaunch.php:663
 #: bp-core/gdpr/class-bp-bbp-gdpr-forums.php:46
@@ -703,7 +702,7 @@ msgstr ""
 #: bp-core/admin/settings/media/settings-videos.php:101
 #: bp-core/admin/settings/members/settings-profile-navigation.php:227
 #: bp-core/bb-core-blocks.php:321
-#: bp-core/bp-core-functions.php:10549
+#: bp-core/bp-core-functions.php:10585
 #: bp-core/classes/class-bb-readylaunch.php:715
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1075
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1081
@@ -785,7 +784,7 @@ msgstr ""
 
 #: bb-features/community/appearance/admin/settings.php:1000
 #: bp-core/admin/settings/activity/settings-sharing.php:289
-#: bp-core/bp-core-functions.php:10140
+#: bp-core/bp-core-functions.php:10176
 msgid "PRO"
 msgstr ""
 
@@ -852,7 +851,7 @@ msgstr ""
 #: bp-core/bp-core-template.php:572
 #: bp-core/classes/class-bb-post-notification.php:64
 #: bp-core/classes/class-bb-post-notification.php:65
-#: bp-core/classes/class-bb-readylaunch.php:3729
+#: bp-core/classes/class-bb-readylaunch.php:3738
 #: bp-forums/templates/default/bbpress/loop-forums.php:20
 #: bp-forums/templates/default/bbpress/loop-replies.php:23
 #: bp-forums/templates/default/bbpress/loop-replies.php:68
@@ -866,8 +865,7 @@ msgstr ""
 #: bp-core/admin/settings/media/settings-gifs.php:78
 #: bp-core/admin/settings/media/settings-photos.php:43
 #: bp-core/admin/settings/media/settings-videos.php:60
-#: bp-xprofile/bp-xprofile-admin.php:35
-#: bp-xprofile/bp-xprofile-admin.php:36
+#: bp-xprofile/bp-xprofile-admin.php:43
 msgid "Profiles"
 msgstr ""
 
@@ -970,7 +968,7 @@ msgid "This label and icon indicate the default reaction before any reaction is 
 msgstr ""
 
 #: bb-features/community/reactions/bb-activity-reactions.php:476
-#: bp-core/classes/class-bb-readylaunch.php:2220
+#: bp-core/classes/class-bb-readylaunch.php:2229
 msgid "Nonce verification failed."
 msgstr ""
 
@@ -1003,9 +1001,9 @@ msgstr ""
 #: bp-core/admin/classes/class-bb-admin-forums-ajax.php:340
 #: bp-core/admin/classes/class-bb-admin-groups-ajax.php:767
 #: bp-core/admin/classes/class-bb-admin-invites-ajax.php:359
-#: bp-core/bp-core-functions.php:7438
+#: bp-core/bp-core-functions.php:7474
 #: bp-core/classes/class-bb-readylaunch.php:1281
-#: bp-core/classes/class-bb-readylaunch.php:3060
+#: bp-core/classes/class-bb-readylaunch.php:3069
 #: bp-core/compatibility/class-bb-readylaunch-memberpress-courses-helper.php:492
 #: bp-core/compatibility/class-bb-readylaunch-memberpress-courses-helper.php:521
 #: bp-messages/bp-messages-template.php:1022
@@ -1142,7 +1140,7 @@ msgstr ""
 #: bp-activity/classes/class-bb-activity-readylaunch.php:244
 #: bp-activity/classes/class-bb-activity-readylaunch.php:253
 #: bp-activity/classes/class-bb-activity-readylaunch.php:299
-#: bp-core/bp-core-actions.php:1116
+#: bp-core/bp-core-actions.php:1126
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:1567
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:1576
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:1622
@@ -1383,7 +1381,7 @@ msgstr ""
 #: bb-features/integrations/recaptcha/admin/callbacks.php:344
 #: bp-core/admin/bb-admin-cover-crop-ajax.php:119
 #: bp-core/admin/bb-admin-cover-crop-ajax.php:123
-#: bp-core/admin/bp-core-admin-functions.php:2352
+#: bp-core/admin/bp-core-admin-functions.php:2390
 msgid "Unauthorized."
 msgstr ""
 
@@ -1603,9 +1601,9 @@ msgid "Protect your community from spam and bot registrations with Google's invi
 msgstr ""
 
 #: bb-features/integrations/recaptcha/bb-recaptcha-actions.php:33
-#: bp-core/admin/bp-core-admin-actions.php:584
+#: bp-core/admin/bp-core-admin-actions.php:620
 #: bp-core/admin/bp-core-admin-tools.php:1248
-#: bp-core/classes/class-bb-readylaunch.php:4357
+#: bp-core/classes/class-bb-readylaunch.php:4366
 #: bp-forums/admin/tools.php:1985
 #: bp-forums/functions.php:889
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:148
@@ -2095,7 +2093,7 @@ msgstr ""
 #: bp-core/admin/settings/advanced/settings-general.php:124
 #: bp-core/admin/settings/search/settings-network-search.php:285
 #: bp-core/bp-core-cssjs.php:238
-#: bp-core/bp-core-functions.php:10547
+#: bp-core/bp-core-functions.php:10583
 #: bp-moderation/classes/class-bp-moderation-activity.php:120
 #: bp-search/bp-search-functions.php:376
 #: bp-core/admin/bb-settings/settings/build/794.js:1
@@ -2146,8 +2144,8 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-notification.php:1277
 #: bp-groups/classes/class-bp-groups-notification.php:1478
 #: bp-messages/classes/class-bp-messages-notification.php:218
-#: bp-notifications/bp-notifications-functions.php:1373
-#: bp-notifications/bp-notifications-functions.php:1415
+#: bp-notifications/bp-notifications-functions.php:1390
+#: bp-notifications/bp-notifications-functions.php:1439
 #: bp-templates/bp-nouveau/buddypress/search/loop/post.php:60
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:1897
 #: bp-templates/bp-nouveau/readylaunch/search/loop/post.php:64
@@ -2304,7 +2302,7 @@ msgstr ""
 
 #: bp-activity/bp-activity-functions.php:1184
 #: bp-core/admin/bp-core-admin-functions.php:713
-#: bp-core/admin/bp-core-admin-functions.php:1818
+#: bp-core/admin/bp-core-admin-functions.php:1856
 #: bp-core/admin/bp-core-admin-tools.php:34
 #: bp-core/admin/bp-core-admin-tools.php:231
 #: bp-core/admin/bp-core-admin-tools.php:913
@@ -2414,15 +2412,15 @@ msgstr ""
 
 #: bp-activity/bp-activity-functions.php:4268
 #: bp-blogs/bp-blogs-filters.php:266
-#: bp-core/bp-core-actions.php:978
-#: bp-core/classes/class-bp-email-tokens.php:2711
+#: bp-core/bp-core-actions.php:988
+#: bp-core/classes/class-bp-email-tokens.php:2755
 msgid "View Comment"
 msgstr ""
 
 #: bp-activity/bp-activity-functions.php:4271
 #: bp-activity/bp-activity-functions.php:4276
-#: bp-core/classes/class-bp-email-tokens.php:2266
-#: bp-core/classes/class-bp-email-tokens.php:2573
+#: bp-core/classes/class-bp-email-tokens.php:2303
+#: bp-core/classes/class-bp-email-tokens.php:2617
 msgid "View Post"
 msgstr ""
 
@@ -2699,7 +2697,7 @@ msgstr ""
 #. translators: %s: Group name
 #: bp-activity/bp-activity-template.php:1265
 #: bp-groups/bp-groups-template.php:945
-#: bp-messages/bp-messages-functions.php:1372
+#: bp-messages/bp-messages-functions.php:1379
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:749
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:809
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1934
@@ -2819,7 +2817,7 @@ msgstr ""
 
 #: bp-activity/bp-activity-template.php:3140
 #: bp-blogs/bp-blogs-filters.php:161
-#: bp-core/admin/bp-core-admin-functions.php:1606
+#: bp-core/admin/bp-core-admin-functions.php:1609
 #: bp-core/deprecated/buddyboss/1.0.php:75
 #: bp-document/bp-document-filters.php:288
 #: bp-members/classes/class-bp-members-component.php:403
@@ -2946,13 +2944,13 @@ msgstr ""
 #: bp-activity/classes/class-bb-activity-readylaunch.php:466
 #: bp-core/admin/classes/class-bb-admin-replies-ajax.php:212
 #: bp-core/admin/settings/forums/settings-forum-permalinks.php:105
-#: bp-core/bp-core-wp-emails.php:233
-#: bp-core/bp-core-wp-emails.php:524
-#: bp-core/classes/class-bb-readylaunch.php:3725
-#: bp-core/classes/class-bp-email-tokens.php:614
-#: bp-core/classes/class-bp-email-tokens.php:645
-#: bp-core/classes/class-bp-email-tokens.php:969
-#: bp-core/classes/class-bp-email-tokens.php:1181
+#: bp-core/bp-core-wp-emails.php:243
+#: bp-core/bp-core-wp-emails.php:550
+#: bp-core/classes/class-bb-readylaunch.php:3734
+#: bp-core/classes/class-bp-email-tokens.php:629
+#: bp-core/classes/class-bp-email-tokens.php:660
+#: bp-core/classes/class-bp-email-tokens.php:992
+#: bp-core/classes/class-bp-email-tokens.php:1204
 #: bp-core/compatibility/class-bb-readylaunch-memberpress-courses-helper.php:829
 #: bp-forums/replies/template.php:51
 #: bp-forums/replies/template.php:1788
@@ -3088,7 +3086,7 @@ msgstr ""
 
 #: bp-activity/classes/class-bb-activity-readylaunch.php:902
 #: bp-document/bp-document-filters.php:300
-#: bp-messages/bp-messages-functions.php:2537
+#: bp-messages/bp-messages-functions.php:2544
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-actions.php:37
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:270
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:2093
@@ -3199,7 +3197,7 @@ msgstr ""
 #: bp-core/admin/settings/forums/meta-fields-topics.php:234
 #: bp-core/admin/settings/forums/meta-fields.php:202
 #: bp-core/admin/settings/groups/meta-fields.php:120
-#: bp-core/classes/class-bp-email-tokens.php:203
+#: bp-core/classes/class-bp-email-tokens.php:212
 #: bp-document/classes/class-bp-document-component.php:156
 #: bp-forums/forums/functions.php:1779
 #: bp-groups/bp-groups-template.php:768
@@ -3243,7 +3241,7 @@ msgid "All Members"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-component.php:183
-#: bp-core/bp-core-functions.php:2938
+#: bp-core/bp-core-functions.php:2952
 #: bp-document/classes/class-bp-document-component.php:161
 #: bp-document/classes/class-bp-document-privacy.php:54
 #: bp-friends/bp-friends-template.php:81
@@ -3406,7 +3404,7 @@ msgstr ""
 
 #: bp-activity/classes/class-bp-activity-notification.php:216
 #: bp-blogs/bp-blogs-filters.php:254
-#: bp-core/bp-core-actions.php:966
+#: bp-core/bp-core-actions.php:976
 #: bp-members/classes/class-bp-members-mentions-notification.php:168
 #: bp-members/classes/class-bp-members-mentions-notification.php:267
 msgid "comment"
@@ -3836,7 +3834,7 @@ msgstr ""
 
 #: bp-activity/classes/class-bp-akismet.php:148
 #: bp-activity/classes/class-bp-akismet.php:179
-#: bp-core/admin/bp-core-admin-functions.php:1557
+#: bp-core/admin/bp-core-admin-functions.php:1560
 #: bp-core/admin/classes/class-bb-activity-admin-ajax.php:326
 #: bp-core/admin/classes/class-bb-activity-admin-ajax.php:516
 #: bp-core/admin/classes/class-bb-admin-replies-ajax.php:236
@@ -4985,7 +4983,7 @@ msgid "Limit result set to items with a specific type."
 msgstr ""
 
 #: bp-core/admin/bb-admin-cover-crop-ajax.php:131
-#: bp-core/bp-core-actions.php:1109
+#: bp-core/bp-core-actions.php:1119
 msgid "Invalid object."
 msgstr ""
 
@@ -5160,7 +5158,7 @@ msgstr ""
 
 #: bp-core/admin/bb-admin-settings-emails.php:30
 #: bp-core/admin/bb-admin-settings-emails.php:59
-#: bp-core/bp-core-functions.php:3307
+#: bp-core/bp-core-functions.php:3343
 #: bp-core/classes/class-bp-admin.php:574
 #: bp-core/classes/class-bp-admin.php:575
 #: bp-core/classes/class-bp-admin.php:585
@@ -5217,7 +5215,7 @@ msgstr ""
 #: bp-core/admin/classes/class-bb-admin-forums-ajax.php:223
 #: bp-core/admin/settings/forums/settings-forum-settings.php:150
 #: bp-core/admin/settings/forums/settings-forum-settings.php:201
-#: bp-core/bb-core-subscriptions.php:600
+#: bp-core/bb-core-subscriptions.php:618
 #: bp-forums/activity.php:218
 #: bp-forums/admin.php:237
 #: bp-forums/admin.php:293
@@ -5263,7 +5261,7 @@ msgstr ""
 #: bp-core/admin/settings/forums/settings-forum-settings.php:168
 #: bp-core/admin/settings/forums/settings-forum-settings.php:219
 #: bp-core/admin/settings/search/settings-network-search.php:155
-#: bp-core/classes/class-bb-readylaunch.php:3725
+#: bp-core/classes/class-bb-readylaunch.php:3734
 #: bp-forums/activity.php:227
 #: bp-forums/admin.php:249
 #: bp-forums/admin.php:312
@@ -5454,8 +5452,8 @@ msgstr ""
 #: bp-core/admin/settings/search/settings-network-search.php:249
 #: bp-core/bp-core-functions.php:797
 #: bp-document/bp-document-filters.php:126
-#: bp-document/bp-document-functions.php:2280
-#: bp-document/bp-document-functions.php:2283
+#: bp-document/bp-document-functions.php:2294
+#: bp-document/bp-document-functions.php:2297
 #: bp-document/classes/class-bp-document-component.php:263
 #: bp-document/classes/class-bp-document-component.php:265
 #: bp-document/classes/class-bp-document-component.php:316
@@ -5627,8 +5625,7 @@ msgstr ""
 
 #: bp-core/admin/bb-admin-settings-moderation.php:132
 #: bp-core/bp-core-functions.php:2635
-#: bp-moderation/bp-moderation-admin.php:27
-#: bp-moderation/bp-moderation-admin.php:28
+#: bp-moderation/bp-moderation-admin.php:35
 msgid "Moderation"
 msgstr ""
 
@@ -5783,13 +5780,13 @@ msgid "Reporting Categories"
 msgstr ""
 
 #: bp-core/admin/bb-admin-settings-moderation.php:257
-#: bp-core/admin/bp-core-admin-functions.php:2429
+#: bp-core/admin/bp-core-admin-functions.php:2467
 #: bp-core/admin/bb-settings/settings/build/231.js:1
 msgid "Flagged Members"
 msgstr ""
 
 #: bp-core/admin/bb-admin-settings-moderation.php:272
-#: bp-core/admin/bp-core-admin-functions.php:2436
+#: bp-core/admin/bp-core-admin-functions.php:2474
 #: bp-core/admin/bb-settings/settings/build/76.js:1
 msgid "Reported Content"
 msgstr ""
@@ -5851,8 +5848,8 @@ msgid "Autocomplete Settings"
 msgstr ""
 
 #: bp-core/admin/bb-admin-version-compatibility-notices.php:47
-#: bp-core/admin/bp-core-admin-functions.php:2509
-#: bp-core/admin/bp-core-admin-functions.php:2516
+#: bp-core/admin/bp-core-admin-functions.php:2547
+#: bp-core/admin/bp-core-admin-functions.php:2554
 #: bp-core/admin/settings/notifications/settings-web-push.php:134
 #: bp-integrations/pusher/bb-pusher-admin-tab.php:251
 #: bp-integrations/pusher/bb-pusher-admin-tab.php:268
@@ -6039,22 +6036,22 @@ msgstr ""
 msgid "Requires LearnDash or MemberPress courses to activate."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-actions.php:551
+#: bp-core/admin/bp-core-admin-actions.php:587
 msgid "Invalid Nickname"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-actions.php:572
+#: bp-core/admin/bp-core-admin-actions.php:608
 msgid "<strong>Error</strong>: Nickname already has been taken. Please try again."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-actions.php:648
+#: bp-core/admin/bp-core-admin-actions.php:688
 #: bp-members/bp-members-functions.php:1727
 #: bp-settings/actions/general.php:208
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1372
 msgid "This email address or domain has been blacklisted. If you think you are seeing this in error, please contact the site administrator."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-actions.php:702
+#: bp-core/admin/bp-core-admin-actions.php:749
 #: bp-core/admin/classes/class-bb-admin-settings-ajax.php:1419
 msgid "Settings saved successfully."
 msgstr ""
@@ -6230,7 +6227,7 @@ msgstr ""
 msgid "Most email clients support HTML email. However, some people prefer to receive plain text email. Enter a plain text alternative version of your email here."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1554
+#: bp-core/admin/bp-core-admin-functions.php:1557
 #: bp-core/admin/classes/class-bb-activity-admin-ajax.php:327
 #: bp-core/admin/classes/class-bb-activity-admin-ajax.php:484
 #: bp-core/admin/bb-settings/settings/build/285.js:2
@@ -6239,8 +6236,8 @@ msgstr ""
 msgid "Not Spam"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1575
-#: bp-core/admin/bp-core-admin-functions.php:1595
+#: bp-core/admin/bp-core-admin-functions.php:1578
+#: bp-core/admin/bp-core-admin-functions.php:1598
 #: bp-moderation/classes/class-bp-moderation-list-table.php:681
 #: bp-moderation/classes/class-bp-moderation-list-table.php:735
 #: bp-moderation/screens/single/admin/report-single.php:135
@@ -6248,7 +6245,7 @@ msgstr ""
 msgid "The background process is currently in the queue. Please refresh the page after a short while"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1576
+#: bp-core/admin/bp-core-admin-functions.php:1579
 #: bp-moderation/classes/class-bp-moderation-list-table.php:528
 #: bp-moderation/classes/class-bp-moderation-list-table.php:533
 #: bp-core/admin/bb-settings/settings/build/76.js:1
@@ -6256,7 +6253,7 @@ msgstr ""
 msgid "Unsuspend"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1596
+#: bp-core/admin/bp-core-admin-functions.php:1599
 #: bp-members/classes/class-bp-members-admin.php:1261
 #: bp-moderation/classes/class-bp-moderation-list-table.php:530
 #: bp-moderation/classes/class-bp-moderation-list-table.php:532
@@ -6265,61 +6262,61 @@ msgstr ""
 msgid "Suspend"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1661
+#: bp-core/admin/bp-core-admin-functions.php:1681
 msgid "Member suspended."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1663
+#: bp-core/admin/bp-core-admin-functions.php:1683
 msgid "Member unsuspended."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1793
-#: bp-core/admin/bp-core-admin-functions.php:1794
-#: bp-core/admin/bp-core-admin-functions.php:2202
-#: bp-core/admin/bp-core-admin-functions.php:2220
-#: bp-core/admin/bp-core-admin-functions.php:2221
+#: bp-core/admin/bp-core-admin-functions.php:1831
+#: bp-core/admin/bp-core-admin-functions.php:1832
+#: bp-core/admin/bp-core-admin-functions.php:2240
+#: bp-core/admin/bp-core-admin-functions.php:2258
+#: bp-core/admin/bp-core-admin-functions.php:2259
 #: bp-core/admin/bp-core-admin-tools.php:249
 msgid "Repair Community"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1838
-#: bp-core/admin/bp-core-admin-functions.php:2181
-#: bp-core/admin/bp-core-admin-functions.php:2229
-#: bp-core/admin/bp-core-admin-functions.php:2230
+#: bp-core/admin/bp-core-admin-functions.php:1876
+#: bp-core/admin/bp-core-admin-functions.php:2219
+#: bp-core/admin/bp-core-admin-functions.php:2267
+#: bp-core/admin/bp-core-admin-functions.php:2268
 msgid "Import Profile Types"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1843
+#: bp-core/admin/bp-core-admin-functions.php:1881
 msgid "Import your existing <a href=\"%s\">profile types</a> (or \"member types\" in BuddyPress). You may have created these types <strong>manually via code</strong> or by using a <strong>third party plugin</strong>. Click \"Run Migration\" below and all registered member types will be imported. Then you can remove the old code or plugin."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1853
+#: bp-core/admin/bp-core-admin-functions.php:1891
 #: bp-media/bp-media-filters.php:1462
 msgid "Run Migration"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1884
+#: bp-core/admin/bp-core-admin-functions.php:1922
 msgid "Nothing to import"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1916
+#: bp-core/admin/bp-core-admin-functions.php:1954
 msgid "Successfully Imported"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2009
+#: bp-core/admin/bp-core-admin-functions.php:2047
 msgid "Added successfully"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2036
+#: bp-core/admin/bp-core-admin-functions.php:2074
 msgid "Profile avatars are currently provided by the BuddyBoss Platform. To use the WordPress avatar system, change the <strong>Profile Avatars</strong> setting to \"WordPress\" in the <a href=\"%s\">Profile</a> settings."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2154
+#: bp-core/admin/bp-core-admin-functions.php:2192
 #: bp-core/admin/bp-core-admin-tools.php:52
 msgid "Default Data"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2239
+#: bp-core/admin/bp-core-admin-functions.php:2277
 #: bp-forums/admin/admin.php:205
 #: bp-forums/admin/functions.php:214
 #: bp-forums/admin/functions.php:246
@@ -6327,38 +6324,38 @@ msgstr ""
 msgid "Repair Forums"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2240
+#: bp-core/admin/bp-core-admin-functions.php:2278
 #: bp-forums/admin/admin.php:206
 msgid "Forum Repair"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2248
+#: bp-core/admin/bp-core-admin-functions.php:2286
 #: bp-forums/admin/admin.php:216
 #: bp-forums/admin/functions.php:218
 #: bp-forums/admin/functions.php:268
 msgid "Import Forums"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2249
+#: bp-core/admin/bp-core-admin-functions.php:2287
 #: bp-forums/admin/admin.php:217
 msgid "Forum Import"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2472
+#: bp-core/admin/bp-core-admin-functions.php:2510
 msgid "Update to"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2473
+#: bp-core/admin/bp-core-admin-functions.php:2511
 msgid "BuddyBoss Platform Pro 1.2.0"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2474
-#: bp-core/admin/bp-core-admin-functions.php:2510
-#: bp-core/admin/bp-core-admin-functions.php:2517
+#: bp-core/admin/bp-core-admin-functions.php:2512
+#: bp-core/admin/bp-core-admin-functions.php:2548
+#: bp-core/admin/bp-core-admin-functions.php:2555
 msgid "to unlock"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2508
+#: bp-core/admin/bp-core-admin-functions.php:2546
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:46
 #: bp-templates/bp-nouveau/readylaunch/forums/form-topic-tag.php:54
 #: bp-templates/bp-nouveau/readylaunch/forums/form-topic.php:278
@@ -6370,11 +6367,11 @@ msgstr ""
 msgid "Update"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2515
+#: bp-core/admin/bp-core-admin-functions.php:2553
 msgid "Install"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2728
+#: bp-core/admin/bp-core-admin-functions.php:2766
 #: bp-core/admin/settings/media/callbacks.php:277
 #: bp-core/admin/settings/media/callbacks.php:401
 #: bp-core/admin/settings/media/callbacks.php:494
@@ -6382,7 +6379,7 @@ msgstr ""
 msgid "Permission denied."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2735
+#: bp-core/admin/bp-core-admin-functions.php:2773
 #: bp-core/admin/settings/media/callbacks.php:285
 #: bp-core/admin/settings/media/callbacks.php:409
 #: bp-core/admin/settings/media/callbacks.php:502
@@ -6679,8 +6676,8 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-tools.php:1619
 #: bp-core/admin/bp-core-admin-tools.php:1718
 #: bp-core/bb-core-subscriptions.php:93
-#: bp-core/bb-core-subscriptions.php:378
-#: bp-core/bb-core-subscriptions.php:1307
+#: bp-core/bb-core-subscriptions.php:390
+#: bp-core/bb-core-subscriptions.php:1325
 #: bp-forums/admin/tools.php:314
 #: bp-forums/admin/tools.php:316
 #: bp-forums/admin/tools.php:374
@@ -7055,7 +7052,7 @@ msgstr ""
 #: bp-core/admin/classes/class-bb-admin-reported-content-ajax.php:438
 #: bp-core/admin/settings/media/callbacks.php:431
 #: bp-core/admin/settings/media/callbacks.php:595
-#: bp-core/bp-core-functions.php:10552
+#: bp-core/bp-core-functions.php:10588
 #: bp-core/classes/class-bp-core-notification-abstract.php:184
 #: bp-core/profile-search/bps-xprofile.php:363
 #: bp-core/profile-search/bps-xprofile.php:631
@@ -7143,7 +7140,7 @@ msgstr ""
 #: bp-core/admin/settings/forums/meta-fields.php:130
 #: bp-core/admin/settings/forums/settings-forum-permalinks.php:45
 #: bp-core/admin/settings/groups/meta-fields.php:385
-#: bp-core/bb-core-subscriptions.php:599
+#: bp-core/bb-core-subscriptions.php:617
 #: bp-forums/classes/class-bp-forums-notification.php:190
 #: bp-forums/forums/functions.php:1759
 #: bp-forums/forums/template.php:51
@@ -7189,7 +7186,7 @@ msgstr ""
 #: bp-core/admin/settings/forums/meta-fields-topics.php:238
 #: bp-core/admin/settings/forums/meta-fields.php:206
 #: bp-core/admin/settings/groups/meta-fields.php:124
-#: bp-core/classes/class-bp-email-tokens.php:207
+#: bp-core/classes/class-bp-email-tokens.php:216
 #: bp-forums/forums/functions.php:1780
 #: bp-forums/templates/default/bbpress/feedback-no-access.php:12
 #: bp-groups/bp-groups-template.php:778
@@ -7214,7 +7211,7 @@ msgstr ""
 #: bp-core/admin/classes/class-bb-admin-groups-ajax.php:779
 #: bp-core/admin/settings/forums/meta-fields.php:210
 #: bp-core/admin/settings/groups/meta-fields.php:128
-#: bp-core/classes/class-bp-email-tokens.php:205
+#: bp-core/classes/class-bp-email-tokens.php:214
 #: bp-forums/classes/class-bbpress.php:608
 #: bp-forums/forums/functions.php:1781
 #: bp-groups/bp-groups-template.php:773
@@ -8085,7 +8082,7 @@ msgstr ""
 #: bp-core/admin/settings/forums/meta-fields-replies.php:98
 #: bp-core/admin/settings/forums/settings-forum-permalinks.php:60
 #: bp-core/admin/settings/search/settings-network-search.php:123
-#: bp-core/bb-core-subscriptions.php:600
+#: bp-core/bb-core-subscriptions.php:618
 #: bp-forums/classes/class-bp-forums-notification.php:129
 #: bp-forums/templates/default/bbpress/content-single-topic-lead.php:21
 #: bp-forums/templates/default/bbpress/content-single-topic-lead.php:90
@@ -8350,8 +8347,8 @@ msgstr ""
 #: bp-core/admin/settings/members/settings-profile-image.php:233
 #: bp-core/admin/settings/registration/settings-login-redirects.php:55
 #: bp-core/admin/settings/registration/settings-login-redirects.php:96
-#: bp-document/bp-document-functions.php:2077
-#: bp-video/bp-video-functions.php:2720
+#: bp-document/bp-document-functions.php:2091
+#: bp-video/bp-video-functions.php:2724
 #: bp-core/admin/bb-settings/settings/build/499.js:1
 #: bp-core/admin/bb-settings/settings/build/966.js:1
 #: bp-core/admin/bb-settings/settings/build/index.js:3
@@ -8554,7 +8551,7 @@ msgid "Title"
 msgstr ""
 
 #: bp-core/admin/classes/class-bb-email-templates-admin-ajax.php:164
-#: bp-core/bp-core-functions.php:3402
+#: bp-core/bp-core-functions.php:3438
 #: bp-core/admin/bb-settings/settings/build/926.js:3
 msgid "Situations"
 msgstr ""
@@ -8967,8 +8964,8 @@ msgstr ""
 
 #. translators: Do not translate OLD_EMAIL, NEW_EMAIL, SITENAME, SITEURL: those are placeholders.
 #: bp-core/admin/drm/class-bb-drm-registry.php:1013
-#: bp-core/bp-core-wp-emails.php:1495
-#: bp-core/bp-core-wp-emails.php:1544
+#: bp-core/bp-core-wp-emails.php:1521
+#: bp-core/bp-core-wp-emails.php:1570
 msgid "Hi,"
 msgstr ""
 
@@ -9043,7 +9040,7 @@ msgid "All BuddyBoss Pro/Plus addon licenses are valid and active."
 msgstr ""
 
 #: bp-core/admin/drm/class-bb-notifications.php:67
-#: bp-notifications/bp-notifications-functions.php:1253
+#: bp-notifications/bp-notifications-functions.php:1262
 msgid "Notification Icon"
 msgstr ""
 
@@ -9602,7 +9599,7 @@ msgstr ""
 #: bp-core/admin/settings/groups/settings-group-images.php:173
 #: bp-core/admin/settings/members/settings-member-directory.php:185
 #: bp-core/admin/settings/members/settings-profile-image.php:308
-#: bp-core/bp-core-functions.php:7438
+#: bp-core/bp-core-functions.php:7474
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bb-activity-post-form-topic-selector.php:32
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/activity/parts/bb-activity-post-form-topic-selector.php:32
 #: bp-core/admin/bb-settings/settings/build/499.js:1
@@ -9989,7 +9986,7 @@ msgid "Plain Text Email Content (Optional)"
 msgstr ""
 
 #: bp-core/admin/settings/emails/meta-fields.php:131
-#: bp-core/bp-core-functions.php:3403
+#: bp-core/bp-core-functions.php:3439
 #: bp-core/admin/bb-settings/settings/build/926.js:2
 msgid "Situation"
 msgstr ""
@@ -10072,7 +10069,7 @@ msgid "Select Discussion"
 msgstr ""
 
 #: bp-core/admin/settings/forums/meta-fields-replies.php:123
-#: bp-core/classes/class-bb-readylaunch.php:3533
+#: bp-core/classes/class-bb-readylaunch.php:3542
 #: bp-forums/activity.php:436
 msgid "Reply to"
 msgstr ""
@@ -10845,7 +10842,7 @@ msgstr ""
 
 #. translators: Conjunction used between the last two items in a list (e.g., "groups, activity posts and forums").
 #: bp-core/admin/settings/media/callbacks.php:57
-#: bp-core/bp-core-catchuri.php:1610
+#: bp-core/bp-core-catchuri.php:1614
 msgid "and"
 msgstr ""
 
@@ -11084,12 +11081,12 @@ msgid "Txt"
 msgstr ""
 
 #: bp-core/admin/settings/media/settings-documents.php:238
-#: bp-document/bp-document-functions.php:2122
+#: bp-document/bp-document-functions.php:2136
 #: bp-moderation/classes/class-bp-moderation-activity.php:565
 #: bp-moderation/classes/class-bp-moderation-activity.php:572
 #: bp-moderation/classes/class-bp-moderation-video.php:220
 #: bp-templates/bp-nouveau/includes/media/functions.php:210
-#: bp-video/bp-video-functions.php:2765
+#: bp-video/bp-video-functions.php:2769
 msgid "Video"
 msgstr ""
 
@@ -12028,7 +12025,7 @@ msgid "User Email"
 msgstr ""
 
 #: bp-core/admin/settings/search/settings-network-search.php:88
-#: bp-core/bp-core-functions.php:10551
+#: bp-core/bp-core-functions.php:10587
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:961
 #: bp-search/classes/class-bp-search-members.php:470
 #: bp-settings/classes/class-bp-settings-component.php:145
@@ -12241,55 +12238,55 @@ msgid "Migrating BBPress (up to v2.5.14) forum and discussion subscriptions to B
 msgstr ""
 
 #. translators: total members
-#: bp-core/bb-core-subscriptions.php:244
+#: bp-core/bb-core-subscriptions.php:256
 msgid "The BBPress (up to v2.5.14) forum and discussion subscriptions successfully migrated to BuddyBoss for %s members."
 msgstr ""
 
 #. translators: Status of current action.
-#: bp-core/bb-core-subscriptions.php:377
+#: bp-core/bb-core-subscriptions.php:389
 msgid "Migrating BBPress (v2.6+) forum and discussion subscriptions to BuddyBoss&hellip; %s"
 msgstr ""
 
 #. translators: total members
-#: bp-core/bb-core-subscriptions.php:537
+#: bp-core/bb-core-subscriptions.php:555
 msgid "The total %s BBPress (v2.6+) forum and discussion subscriptions successfully migrated to BuddyBoss."
 msgstr ""
 
-#: bp-core/bb-core-subscriptions.php:658
+#: bp-core/bb-core-subscriptions.php:676
 msgid "The subscription is already exists."
 msgstr ""
 
-#: bp-core/bb-core-subscriptions.php:672
+#: bp-core/bb-core-subscriptions.php:690
 msgid "The subscription ID is not match."
 msgstr ""
 
-#: bp-core/bb-core-subscriptions.php:686
+#: bp-core/bb-core-subscriptions.php:704
 msgid "The subscription does't exists."
 msgstr ""
 
-#: bp-core/bb-core-subscriptions.php:710
+#: bp-core/bb-core-subscriptions.php:728
 #: bp-core/classes/class-bb-rest-subscriptions-endpoint.php:235
 #: bp-core/classes/class-bb-subscriptions.php:366
 msgid "There is an error while adding the subscription."
 msgstr ""
 
 #. translators: total topics
-#: bp-core/bb-core-subscriptions.php:1286
+#: bp-core/bb-core-subscriptions.php:1304
 msgid "%d group forum and discussion subscriptions migrated successfully"
 msgid_plural "%d groups forum and discussion subscriptions migrated successfully"
 msgstr[0] ""
 msgstr[1] ""
 
 #. translators: Status of current action.
-#: bp-core/bb-core-subscriptions.php:1302
+#: bp-core/bb-core-subscriptions.php:1320
 msgid "Migrating Group forum and discussion subscriptions data structure to the new subscription flow&hellip; %s"
 msgstr ""
 
-#: bp-core/bp-core-actions.php:1123
+#: bp-core/bp-core-actions.php:1133
 msgid "Not a valid option"
 msgstr ""
 
-#: bp-core/bp-core-actions.php:1131
+#: bp-core/bp-core-actions.php:1141
 msgid "Not a valid value"
 msgstr ""
 
@@ -12362,7 +12359,7 @@ msgid "Edit My Profile"
 msgstr ""
 
 #: bp-core/bp-core-adminbar.php:220
-#: bp-core/bp-core-functions.php:2776
+#: bp-core/bp-core-functions.php:2790
 #: bp-core/classes/class-bp-core-login-widget.php:84
 #: bp-core/deprecated/buddypress/1.5.php:325
 #: bp-core/deprecated/buddypress/2.1.php:257
@@ -12417,7 +12414,7 @@ msgid "HTTP error."
 msgstr ""
 
 #: bp-core/bp-core-attachments.php:801
-#: bp-core/bp-core-avatars.php:1232
+#: bp-core/bp-core-avatars.php:1243
 #: bp-core/admin/bb-settings/settings/build/index.js:3
 msgid "Upload failed."
 msgstr ""
@@ -12471,7 +12468,7 @@ msgstr ""
 #. translators: 1: Width in pixels, 2: Height in pixels.
 #: bp-core/bp-core-attachments.php:814
 #: bp-core/bp-core-attachments.php:1008
-#: bp-core/bp-core-avatars.php:1102
+#: bp-core/bp-core-avatars.php:1113
 #: bp-core/classes/class-bp-rest-settings-endpoint.php:1469
 #: bp-core/classes/class-bp-rest-settings-endpoint.php:1480
 msgid "For best results, upload an image that is %1$spx by %2$spx or larger."
@@ -12531,8 +12528,8 @@ msgstr ""
 #. translators: %s: the upload error message
 #: bp-core/bp-core-attachments.php:1582
 #: bp-core/bp-core-attachments.php:1667
-#: bp-core/bp-core-avatars.php:1080
-#: bp-core/bp-core-avatars.php:1096
+#: bp-core/bp-core-avatars.php:1091
+#: bp-core/bp-core-avatars.php:1107
 #: bp-core/classes/trait-bp-rest-attachments.php:123
 #: bp-core/classes/trait-bp-rest-attachments.php:317
 msgid "Upload Error: %s"
@@ -12565,7 +12562,7 @@ msgid "Profile Photo"
 msgstr ""
 
 #. translators: %s: the upload error message
-#: bp-core/bp-core-avatars.php:1063
+#: bp-core/bp-core-avatars.php:1074
 #: bp-core/classes/trait-bp-rest-attachments.php:51
 msgid "Upload Failed! Error was: %s"
 msgstr ""
@@ -12593,8 +12590,8 @@ msgstr ""
 
 #: bp-core/bp-core-catchuri.php:708
 #: bp-core/bp-core-catchuri.php:818
-#: bp-core/bp-core-catchuri.php:1356
-#: bp-core/bp-core-functions.php:6069
+#: bp-core/bp-core-catchuri.php:1360
+#: bp-core/bp-core-functions.php:6105
 msgid "Please login to access this website."
 msgstr ""
 
@@ -12602,12 +12599,12 @@ msgstr ""
 msgid "Please login to access this group."
 msgstr ""
 
-#: bp-core/bp-core-catchuri.php:1370
-#: bp-core/bp-core-catchuri.php:1384
-#: bp-core/bp-core-catchuri.php:1402
-#: bp-core/bp-core-catchuri.php:1417
-#: bp-core/bp-core-catchuri.php:1437
-#: bp-core/bp-core-catchuri.php:1455
+#: bp-core/bp-core-catchuri.php:1374
+#: bp-core/bp-core-catchuri.php:1388
+#: bp-core/bp-core-catchuri.php:1406
+#: bp-core/bp-core-catchuri.php:1421
+#: bp-core/bp-core-catchuri.php:1441
+#: bp-core/bp-core-catchuri.php:1459
 msgid "You must log in to access the page you requested."
 msgstr ""
 
@@ -12761,7 +12758,7 @@ msgstr ""
 #: bp-core/bp-core-cssjs.php:765
 #: bp-core/bp-core-cssjs.php:813
 #: bp-core/bp-core-functions.php:1259
-#: bp-core/classes/class-bb-readylaunch.php:3979
+#: bp-core/classes/class-bb-readylaunch.php:3988
 #: bp-forums/common/functions.php:115
 msgid "%s ago"
 msgstr ""
@@ -12795,9 +12792,9 @@ msgstr ""
 #. Translators: %d is the amount of hours.
 #. translators: %s: The admin setting field label.
 #: bp-core/bp-core-cssjs.php:773
-#: bp-messages/bp-messages-functions.php:2146
-#: bp-messages/bp-messages-functions.php:2155
-#: bp-messages/bp-messages-functions.php:2164
+#: bp-messages/bp-messages-functions.php:2153
+#: bp-messages/bp-messages-functions.php:2162
+#: bp-messages/bp-messages-functions.php:2171
 msgid "%d hours"
 msgstr ""
 
@@ -12906,7 +12903,7 @@ msgid "Customize the appearance of emails sent by BuddyBoss."
 msgstr ""
 
 #: bp-core/bp-core-customizer-email.php:28
-#: bp-core/bp-core-filters.php:1356
+#: bp-core/bp-core-filters.php:1359
 #: bp-templates/bp-nouveau/includes/customizer.php:49
 msgid "BuddyBoss Emails"
 msgstr ""
@@ -13000,100 +12997,100 @@ msgstr ""
 msgid "Footer Text Size"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:472
-#: bp-core/bp-core-filters.php:506
+#: bp-core/bp-core-filters.php:475
+#: bp-core/bp-core-filters.php:509
 msgid "[User Set]"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:651
+#: bp-core/bp-core-filters.php:654
 msgid "Page %s"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1006
+#: bp-core/bp-core-filters.php:1009
 msgid "BuddyBoss (logged-in)"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1011
+#: bp-core/bp-core-filters.php:1014
 msgid "BuddyBoss (logged-out)"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1615
+#: bp-core/bp-core-filters.php:1624
 msgid "Please update BuddyBoss Theme to v1.5.0 to maintain compatibility with BuddyBoss Platform. Some icons in your theme will look wrong until you update."
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1728
+#: bp-core/bp-core-filters.php:1737
 msgid "Every minute"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1732
+#: bp-core/bp-core-filters.php:1741
 msgid "Once in 5 minutes"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1736
+#: bp-core/bp-core-filters.php:1745
 msgid "Once in 10 minutes"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1740
+#: bp-core/bp-core-filters.php:1749
 msgid "Once in 15 minutes"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1744
+#: bp-core/bp-core-filters.php:1753
 msgid "Once in 30 minutes"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1748
+#: bp-core/bp-core-filters.php:1757
 msgid "Once Hourly"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1752
+#: bp-core/bp-core-filters.php:1761
 msgid "Once in 3 hours"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1756
+#: bp-core/bp-core-filters.php:1765
 msgid "Once in 12 hours"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1760
+#: bp-core/bp-core-filters.php:1769
 msgid "Once in 24 hours"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1764
+#: bp-core/bp-core-filters.php:1773
 msgid "Every 15 days"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1768
+#: bp-core/bp-core-filters.php:1777
 msgid "Every 30 days"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1846
+#: bp-core/bp-core-filters.php:1855
 msgid "There was a problem cropping custom profile avatar."
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1847
+#: bp-core/bp-core-filters.php:1856
 msgid "The custom profile avatar was uploaded successfully."
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1848
+#: bp-core/bp-core-filters.php:1857
 msgid "There was a problem deleting custom profile avatar. Please try again."
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1849
+#: bp-core/bp-core-filters.php:1858
 msgid "The custom profile avatar was deleted successfully!"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1867
+#: bp-core/bp-core-filters.php:1876
 msgid "There was a problem cropping custom group avatar."
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1868
+#: bp-core/bp-core-filters.php:1877
 msgid "The custom group avatar was uploaded successfully."
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1869
+#: bp-core/bp-core-filters.php:1878
 msgid "There was a problem deleting custom group avatar. Please try again."
 msgstr ""
 
-#: bp-core/bp-core-filters.php:1870
+#: bp-core/bp-core-filters.php:1879
 msgid "The custom group avatar was deleted successfully!"
 msgstr ""
 
@@ -13240,41 +13237,41 @@ msgstr ""
 msgid "Record activity for new sites, posts, and comments across your network."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:2818
+#: bp-core/bp-core-functions.php:2832
 msgid "New Messages"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:2833
+#: bp-core/bp-core-functions.php:2847
 #: bp-messages/classes/class-bp-messages-component.php:283
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-archived-nav.php:19
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/messages/parts/bp-messages-archived-nav.php:17
 msgid "Archived"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:2848
+#: bp-core/bp-core-functions.php:2862
 #: bp-messages/classes/class-bp-messages-component.php:374
 #: bp-messages/classes/class-bp-messages-notices-admin.php:190
 #: bp-messages/classes/class-bp-messages-notices-admin.php:195
 msgid "Site Notices"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:2865
+#: bp-core/bp-core-functions.php:2879
 #: bp-groups/classes/class-bp-groups-component.php:1084
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1159
 msgid "Create Group"
 msgstr ""
 
 #. translators: Navigation name
-#: bp-core/bp-core-functions.php:2907
+#: bp-core/bp-core-functions.php:2921
 msgid "Notification %s"
 msgstr ""
 
 #. translators: Navigation name
-#: bp-core/bp-core-functions.php:2910
+#: bp-core/bp-core-functions.php:2924
 msgid "Email %s"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:2942
+#: bp-core/bp-core-functions.php:2956
 #: bp-document/classes/class-bp-document-component.php:324
 #: bp-document/classes/class-bp-document-component.php:345
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1302
@@ -13282,7 +13279,7 @@ msgstr ""
 msgid "My Documents"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:2946
+#: bp-core/bp-core-functions.php:2960
 #: bp-media/classes/class-bp-media-component.php:334
 #: bp-media/classes/class-bp-media-component.php:365
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1271
@@ -13290,25 +13287,25 @@ msgstr ""
 msgid "My Photos"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:2950
+#: bp-core/bp-core-functions.php:2964
 #: bp-templates/bp-nouveau/includes/video/functions.php:201
 #: bp-video/classes/class-bp-video-component.php:278
 #: bp-video/classes/class-bp-video-component.php:298
 msgid "My Videos"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:2974
+#: bp-core/bp-core-functions.php:2988
 msgid "Course"
 msgstr ""
 
 #. translators: My Course, e.g. "My Course".
 #. translators: My Courses
-#: bp-core/bp-core-functions.php:2978
+#: bp-core/bp-core-functions.php:2992
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1201
 msgid "My %s"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3007
+#: bp-core/bp-core-functions.php:3021
 #: bp-members/bp-members-adminbar.php:185
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1014
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:1141
@@ -13321,7 +13318,7 @@ msgstr ""
 msgid "Delete Account"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3056
+#: bp-core/bp-core-functions.php:3070
 #: bp-core/classes/class-bp-core-login-widget.php:122
 #: bp-core/deprecated/buddypress/2.1.php:189
 #: bp-forums/common/widgets.php:93
@@ -13332,61 +13329,61 @@ msgstr ""
 msgid "Log In"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3300
-#: bp-core/bp-core-functions.php:3309
+#: bp-core/bp-core-functions.php:3336
+#: bp-core/bp-core-functions.php:3345
 msgid "New Email"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3301
+#: bp-core/bp-core-functions.php:3337
 #: bp-core/admin/bb-settings/settings/build/926.js:2
 msgid "Add New Email"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3302
+#: bp-core/bp-core-functions.php:3338
 msgid "All Emails"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3303
+#: bp-core/bp-core-functions.php:3339
 msgid "Edit Email"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3304
+#: bp-core/bp-core-functions.php:3340
 msgid "Filter email list"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3305
-#: bp-core/bp-core-functions.php:3400
+#: bp-core/bp-core-functions.php:3341
+#: bp-core/bp-core-functions.php:3436
 msgid "Email list"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3306
-#: bp-core/bp-core-functions.php:3401
+#: bp-core/bp-core-functions.php:3342
+#: bp-core/bp-core-functions.php:3437
 msgid "Email list navigation"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3308
+#: bp-core/bp-core-functions.php:3344
 #: bp-core/admin/bb-settings/settings/build/926.js:2
 #: bp-core/admin/bb-settings/settings/build/index.js:3
 msgid "Email Templates"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3310
+#: bp-core/bp-core-functions.php:3346
 msgid "No emails found"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3311
+#: bp-core/bp-core-functions.php:3347
 msgid "No emails found in trash"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3312
-#: bp-core/bp-core-functions.php:3408
+#: bp-core/bp-core-functions.php:3348
+#: bp-core/bp-core-functions.php:3444
 msgid "Search Emails"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3313
-#: bp-core/bp-core-functions.php:3409
-#: bp-core/bp-core-functions.php:7408
-#: bp-core/classes/class-bb-readylaunch.php:4104
+#: bp-core/bp-core-functions.php:3349
+#: bp-core/bp-core-functions.php:3445
+#: bp-core/bp-core-functions.php:7444
+#: bp-core/classes/class-bb-readylaunch.php:4113
 #: bp-members/classes/class-bp-members-admin.php:2474
 #: bp-members/classes/class-bp-members-list-table.php:157
 #: bp-members/classes/class-bp-members-list-table.php:173
@@ -13408,62 +13405,62 @@ msgstr ""
 msgid "Email"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3314
+#: bp-core/bp-core-functions.php:3350
 msgid "Uploaded to this email"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3315
+#: bp-core/bp-core-functions.php:3351
 msgid "View Email"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3397
+#: bp-core/bp-core-functions.php:3433
 msgid "New Email Situation"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3398
+#: bp-core/bp-core-functions.php:3434
 msgid "All Email Situations"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3399
+#: bp-core/bp-core-functions.php:3435
 msgid "Edit Email Situations"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3404
+#: bp-core/bp-core-functions.php:3440
 msgid "New email situation name"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3405
+#: bp-core/bp-core-functions.php:3441
 msgid "No email situations found"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3406
+#: bp-core/bp-core-functions.php:3442
 msgid "No email situations"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3407
+#: bp-core/bp-core-functions.php:3443
 msgid "Popular Email Situation"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3410
+#: bp-core/bp-core-functions.php:3446
 msgid "Update Email Situation"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3411
+#: bp-core/bp-core-functions.php:3447
 msgid "View Email Situation"
 msgstr ""
 
 #. translators: email disclaimer, e.g. "© 2016 Site Name".
-#: bp-core/bp-core-functions.php:3753
+#: bp-core/bp-core-functions.php:3789
 msgid "&copy; %1$s %2$s"
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
-#: bp-core/bp-core-functions.php:3859
+#: bp-core/bp-core-functions.php:3895
 msgid "[{{{site.name}}}] {{poster.name}} mentioned you in a status update"
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
-#: bp-core/bp-core-functions.php:3861
+#: bp-core/bp-core-functions.php:3897
 msgid ""
 "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> mentioned you in a status update:\n"
 "\n"
@@ -13471,7 +13468,7 @@ msgid ""
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
-#: bp-core/bp-core-functions.php:3863
+#: bp-core/bp-core-functions.php:3899
 msgid ""
 "{{poster.name}} mentioned you in a status update:\n"
 "\n"
@@ -13481,12 +13478,12 @@ msgid ""
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
-#: bp-core/bp-core-functions.php:3867
+#: bp-core/bp-core-functions.php:3903
 msgid "[{{{site.name}}}] {{poster.name}} mentioned you in a group update"
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
-#: bp-core/bp-core-functions.php:3869
+#: bp-core/bp-core-functions.php:3905
 msgid ""
 "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> mentioned you in the group \"<a href=\"{{{group.url}}}\">{{group.name}}</a>\":\n"
 "\n"
@@ -13494,7 +13491,7 @@ msgid ""
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
-#: bp-core/bp-core-functions.php:3871
+#: bp-core/bp-core-functions.php:3907
 msgid ""
 "{{poster.name}} mentioned you in the group \"{{group.name}}\":\n"
 "\n"
@@ -13504,12 +13501,12 @@ msgid ""
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
-#: bp-core/bp-core-functions.php:3875
+#: bp-core/bp-core-functions.php:3911
 msgid "[{{{site.name}}}] Activate your account"
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
-#: bp-core/bp-core-functions.php:3877
+#: bp-core/bp-core-functions.php:3913
 msgid ""
 "Thanks for registering!\n"
 "\n"
@@ -13517,7 +13514,7 @@ msgid ""
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
-#: bp-core/bp-core-functions.php:3879
+#: bp-core/bp-core-functions.php:3915
 msgid ""
 "Thanks for registering!\n"
 "\n"
@@ -13525,12 +13522,12 @@ msgid ""
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
-#: bp-core/bp-core-functions.php:3883
+#: bp-core/bp-core-functions.php:3919
 msgid "[{{{site.name}}}] Activate {{{user-site.url}}}"
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
-#: bp-core/bp-core-functions.php:3885
+#: bp-core/bp-core-functions.php:3921
 msgid ""
 "Thanks for registering!\n"
 "\n"
@@ -13540,7 +13537,7 @@ msgid ""
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
-#: bp-core/bp-core-functions.php:3887
+#: bp-core/bp-core-functions.php:3923
 msgid ""
 "Thanks for registering!\n"
 "\n"
@@ -13550,12 +13547,12 @@ msgid ""
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
-#: bp-core/bp-core-functions.php:3894
+#: bp-core/bp-core-functions.php:3930
 msgid "[{{{site.name}}}] Verify your new email address"
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
-#: bp-core/bp-core-functions.php:3896
+#: bp-core/bp-core-functions.php:3932
 msgid ""
 "You recently changed the email address associated with your account on {{site.name}} to {{user.email}}. If this is correct, <a href=\"{{{verify.url}}}\">click here</a> to confirm the change. \n"
 "\n"
@@ -13563,7 +13560,7 @@ msgid ""
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
-#: bp-core/bp-core-functions.php:3898
+#: bp-core/bp-core-functions.php:3934
 msgid ""
 "You recently changed the email address associated with your account on {{site.name}} to {{user.email}}. If this is correct, go to the following link to confirm the change: {{{verify.url}}}\n"
 "\n"
@@ -13571,27 +13568,27 @@ msgid ""
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
-#: bp-core/bp-core-functions.php:3902
+#: bp-core/bp-core-functions.php:3938
 msgid "An invitation from {{inviter.name}} to join [{{{site.name}}}]"
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
-#: bp-core/bp-core-functions.php:3904
+#: bp-core/bp-core-functions.php:3940
 msgid "You have been invited by {{inviter.name}} to join the <a href=\"{{{site.url}}}\">[{{{site.name}}}]</a> community."
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
-#: bp-core/bp-core-functions.php:3906
+#: bp-core/bp-core-functions.php:3942
 msgid "You have been invited by {{inviter.name}} to join the [{{{site.name}}}] community."
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
-#: bp-core/bp-core-functions.php:3910
+#: bp-core/bp-core-functions.php:3946
 msgid "[{{{site.name}}}] Content has been automatically hidden"
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
-#: bp-core/bp-core-functions.php:3912
+#: bp-core/bp-core-functions.php:3948
 msgid ""
 "<a href='{{{content.link}}}'>{{content.type}}</a> has been automatically hidden from your network as it has been reported {{timesreported}} time(s). \n"
 "\n"
@@ -13599,7 +13596,7 @@ msgid ""
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
-#: bp-core/bp-core-functions.php:3914
+#: bp-core/bp-core-functions.php:3950
 msgid ""
 "{{content.type}} [{{content.link}}] has been automatically hidden from your network as it has been reported {{timesreported}} time(s). \n"
 "\n"
@@ -13607,12 +13604,12 @@ msgid ""
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
-#: bp-core/bp-core-functions.php:3918
+#: bp-core/bp-core-functions.php:3954
 msgid "[{{{site.name}}}] {{user.name}} has been suspended"
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
-#: bp-core/bp-core-functions.php:3920
+#: bp-core/bp-core-functions.php:3956
 msgid ""
 "<a href='{{{user.link}}}'>{{user.name}}</a> has been automatically suspended from your network as they have been reported {{timesblocked}} time(s). \n"
 "\n"
@@ -13620,192 +13617,192 @@ msgid ""
 msgstr ""
 
 #. translators: do not remove {} brackets or translate its contents.
-#: bp-core/bp-core-functions.php:3922
+#: bp-core/bp-core-functions.php:3958
 msgid ""
 "{{user.name}} [{{user.link}}] has been automatically suspended from your network as they have been reported {{user.timesblocked}} time(s). \n"
 "\n"
 " View Reports: {{reportlink}}"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3958
+#: bp-core/bp-core-functions.php:3994
 msgid "Activate a new account"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3964
+#: bp-core/bp-core-functions.php:4000
 msgid "Activate a new account and site"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3970
+#: bp-core/bp-core-functions.php:4006
 #: bp-core/bp-core-update.php:2062
 msgid "A member is mentioned in an activity post"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3973
-#: bp-core/bp-core-functions.php:3982
+#: bp-core/bp-core-functions.php:4009
+#: bp-core/bp-core-functions.php:4018
 msgid "You will no longer receive emails when someone mentions you in an update."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3979
+#: bp-core/bp-core-functions.php:4015
 #: bp-core/bp-core-update.php:2063
 msgid "A member is mentioned in a group activity post"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3988
+#: bp-core/bp-core-functions.php:4024
 msgid "A member's email is changed"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3994
+#: bp-core/bp-core-functions.php:4030
 msgid "Recepient is invited to the site by a member"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:4000
+#: bp-core/bp-core-functions.php:4036
 msgid "Content is automatically hidden due to reaching the reporting threshold"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:4006
+#: bp-core/bp-core-functions.php:4042
 msgid "A member is automatically suspended due to reaching the reporting threshold"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:4054
-#: bp-core/bp-core-functions.php:4059
-#: bp-core/bp-core-functions.php:4074
+#: bp-core/bp-core-functions.php:4090
+#: bp-core/bp-core-functions.php:4095
+#: bp-core/bp-core-functions.php:4110
 msgid "Something has gone wrong."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:4055
-#: bp-core/bp-core-functions.php:4075
+#: bp-core/bp-core-functions.php:4091
+#: bp-core/bp-core-functions.php:4111
 msgid "Please log in and go to your settings to unsubscribe from notification emails."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:4060
+#: bp-core/bp-core-functions.php:4096
 msgid "Please go to your notifications settings to unsubscribe from emails."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:4092
+#: bp-core/bp-core-functions.php:4128
 msgid "You can change this or any other email notification preferences in your email settings."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:4382
+#: bp-core/bp-core-functions.php:4418
 msgid "Member changes their profile photo"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:4386
+#: bp-core/bp-core-functions.php:4422
 msgid "Member updates their profile details"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:4397
+#: bp-core/bp-core-functions.php:4433
 msgid "Member registers to the site"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:4401
+#: bp-core/bp-core-functions.php:4437
 msgid "Two members become connected"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:4414
+#: bp-core/bp-core-functions.php:4450
 msgid "Member creates a group"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:4418
+#: bp-core/bp-core-functions.php:4454
 msgid "Member joins a group"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:4422
+#: bp-core/bp-core-functions.php:4458
 msgid "Group details are updated"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:4435
+#: bp-core/bp-core-functions.php:4471
 msgid "Member creates a forum discussion"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:4439
+#: bp-core/bp-core-functions.php:4475
 msgid "Member replies to a forum discussion"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6125
+#: bp-core/bp-core-functions.php:6161
 msgid "Only authenticated users can access the REST API."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:6700
+#: bp-core/bp-core-functions.php:6736
 msgid "The <strong>Cover Image Background</strong> color can be changed with custom CSS."
 msgstr ""
 
 #. translators: 1: theme setting url 2: app plugin url
-#: bp-core/bp-core-functions.php:6719
+#: bp-core/bp-core-functions.php:6755
 msgid "In a browser, the <strong>Cover Image Background</strong> color can be changed in the <a href=\"%1$s\">Theme Options</a>. In the app, it can be changed in the <a href=\"%2$s\">Color</a> settings."
 msgstr ""
 
 #. translators: 1: theme setting url
-#: bp-core/bp-core-functions.php:6726
+#: bp-core/bp-core-functions.php:6762
 msgid "The <strong>Cover Image Background</strong> color can be changed in the <a href=\"%s\">Theme Options</a>."
 msgstr ""
 
 #. translators: 1: app plugin url
-#: bp-core/bp-core-functions.php:6732
+#: bp-core/bp-core-functions.php:6768
 msgid "In a browser, the <strong>Cover Image Background</strong> color can be changed with custom CSS. In the app, it can be changed in the <a href=\"%s\">Color</a> settings."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7073
+#: bp-core/bp-core-functions.php:7109
 msgctxt "Notification preference label"
 msgid "Email"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7086
+#: bp-core/bp-core-functions.php:7122
 msgctxt "Notification preference label"
 msgid "Web"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7100
+#: bp-core/bp-core-functions.php:7136
 msgctxt "Notification preference label"
 msgid "App"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7308
-#: bp-core/bp-core-functions.php:7528
-#: bp-core/bp-core-functions.php:7557
+#: bp-core/bp-core-functions.php:7344
+#: bp-core/bp-core-functions.php:7564
+#: bp-core/bp-core-functions.php:7593
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:204
 #: bp-templates/bp-nouveau/readylaunch/document/document-entry.php:210
 msgid "-"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7357
-#: bp-core/bp-core-functions.php:7358
+#: bp-core/bp-core-functions.php:7393
+#: bp-core/bp-core-functions.php:7394
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:975
 msgid "Email Preferences"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7360
-#: bp-core/bp-core-functions.php:7361
+#: bp-core/bp-core-functions.php:7396
+#: bp-core/bp-core-functions.php:7397
 msgid "Email Settings"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7367
+#: bp-core/bp-core-functions.php:7403
 msgid "Choose your email notification preferences."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7373
-#: bp-core/bp-core-functions.php:7374
+#: bp-core/bp-core-functions.php:7409
+#: bp-core/bp-core-functions.php:7410
 msgid "Notification Preferences"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7376
-#: bp-core/bp-core-functions.php:7377
+#: bp-core/bp-core-functions.php:7412
+#: bp-core/bp-core-functions.php:7413
 msgid "Notification Settings"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7380
+#: bp-core/bp-core-functions.php:7416
 msgid "Choose which notifications to receive across all your devices."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7385
+#: bp-core/bp-core-functions.php:7421
 msgid "Choose which notifications to receive by email."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7406
+#: bp-core/bp-core-functions.php:7442
 msgid "Enable Notifications"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7413
-#: bp-core/bp-core-functions.php:7493
+#: bp-core/bp-core-functions.php:7449
+#: bp-core/bp-core-functions.php:7529
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:662
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:58
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:63
@@ -13813,8 +13810,8 @@ msgstr ""
 msgid "Web"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7417
-#: bp-core/bp-core-functions.php:7499
+#: bp-core/bp-core-functions.php:7453
+#: bp-core/bp-core-functions.php:7535
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:664
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:71
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:76
@@ -13822,11 +13819,11 @@ msgstr ""
 msgid "App"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:7488
+#: bp-core/bp-core-functions.php:7524
 msgid "A manual notification from a site admin"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:10548
+#: bp-core/bp-core-functions.php:10584
 msgid "Groups & Discussions"
 msgstr ""
 
@@ -14280,400 +14277,400 @@ msgstr ""
 msgid "A member receives a reply to their WordPress post comment"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:113
+#: bp-core/bp-core-wp-emails.php:123
 msgid "added trackback on your post"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:114
-#: bp-core/bp-core-wp-emails.php:412
+#: bp-core/bp-core-wp-emails.php:124
+#: bp-core/bp-core-wp-emails.php:438
 msgid "<a href=\"%s\">Click here</a> to see all trackbacks on this post."
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:115
-#: bp-core/bp-core-wp-emails.php:413
+#: bp-core/bp-core-wp-emails.php:125
+#: bp-core/bp-core-wp-emails.php:439
 msgid "Moderate this trackback: "
 msgstr ""
 
 #. translators: 1: blog name, 2: post title
-#: bp-core/bp-core-wp-emails.php:118
+#: bp-core/bp-core-wp-emails.php:128
 msgid "[%1$s] Trackback: \"%2$s\""
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:121
+#: bp-core/bp-core-wp-emails.php:131
 msgid "added pingback on your post"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:122
-#: bp-core/bp-core-wp-emails.php:418
+#: bp-core/bp-core-wp-emails.php:132
+#: bp-core/bp-core-wp-emails.php:444
 msgid "<a href=\"%s\">Click here</a> to see all pingbacks on this post."
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:123
-#: bp-core/bp-core-wp-emails.php:419
+#: bp-core/bp-core-wp-emails.php:133
+#: bp-core/bp-core-wp-emails.php:445
 msgid "Moderate this pingback: "
 msgstr ""
 
 #. translators: 1: blog name, 2: post title
-#: bp-core/bp-core-wp-emails.php:126
+#: bp-core/bp-core-wp-emails.php:136
 msgid "[%1$s] Pingback: \"%2$s\""
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:129
+#: bp-core/bp-core-wp-emails.php:139
 msgid "added comment on your post"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:130
-#: bp-core/bp-core-wp-emails.php:424
+#: bp-core/bp-core-wp-emails.php:140
+#: bp-core/bp-core-wp-emails.php:450
 msgid "<a href=\"%s\">Click here</a> to see all comments on this post."
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:131
-#: bp-core/bp-core-wp-emails.php:425
+#: bp-core/bp-core-wp-emails.php:141
+#: bp-core/bp-core-wp-emails.php:451
 msgid "Moderate this comment: "
 msgstr ""
 
 #. translators: 1: blog name, 2: post title
-#: bp-core/bp-core-wp-emails.php:134
+#: bp-core/bp-core-wp-emails.php:144
 msgid "[%1$s] Comment: \"%2$s\""
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:242
-#: bp-core/bp-core-wp-emails.php:533
+#: bp-core/bp-core-wp-emails.php:252
+#: bp-core/bp-core-wp-emails.php:559
 msgid "<a href=\"%s\">Approve</a>"
 msgstr ""
 
 #. translators: Comment moderation. 1: Comment action URL
-#: bp-core/bp-core-wp-emails.php:250
-#: bp-core/bp-core-wp-emails.php:539
+#: bp-core/bp-core-wp-emails.php:260
+#: bp-core/bp-core-wp-emails.php:565
 msgid "<a href=\"%s\">Trash</a>"
 msgstr ""
 
 #. translators: Comment moderation. 1: Comment action URL
-#: bp-core/bp-core-wp-emails.php:253
-#: bp-core/bp-core-wp-emails.php:542
+#: bp-core/bp-core-wp-emails.php:263
+#: bp-core/bp-core-wp-emails.php:568
 msgid "<a href=\"%s\">Delete</a>"
 msgstr ""
 
 #. translators: Comment moderation. 1: Comment action URL
-#: bp-core/bp-core-wp-emails.php:257
-#: bp-core/bp-core-wp-emails.php:546
+#: bp-core/bp-core-wp-emails.php:267
+#: bp-core/bp-core-wp-emails.php:572
 msgid "<a href=\"%s\">Spam</a>"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:411
+#: bp-core/bp-core-wp-emails.php:437
 msgid "added new trackback on the post <a href=\"%1$s\">\"%2$s\"</a> is waiting for your approval."
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:417
+#: bp-core/bp-core-wp-emails.php:443
 msgid "added new pingback on the post <a href=\"%1$s\">\"%2$s\"</a> is waiting for your approval."
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:423
+#: bp-core/bp-core-wp-emails.php:449
 msgid "added new comment on the post <a href=\"%1$s\">\"%2$s\"</a> is waiting for your approval."
 msgstr ""
 
 #. translators: Comment moderation notification email subject. 1: Site name, 2: Post title
-#: bp-core/bp-core-wp-emails.php:572
+#: bp-core/bp-core-wp-emails.php:598
 msgid "[%1$s] Please moderate: \"%2$s\""
 msgstr ""
 
 #. translators: %s: user name
-#: bp-core/bp-core-wp-emails.php:645
+#: bp-core/bp-core-wp-emails.php:671
 msgid "Password changed for user: %s"
 msgstr ""
 
 #. translators: Password change notification email subject. %s: Site title
-#: bp-core/bp-core-wp-emails.php:653
+#: bp-core/bp-core-wp-emails.php:679
 msgid "[%s] Password Changed"
 msgstr ""
 
 #. translators: %s: site title
-#: bp-core/bp-core-wp-emails.php:727
+#: bp-core/bp-core-wp-emails.php:753
 msgid "New user registration on your site %s:"
 msgstr ""
 
 #. translators: %s: user login
-#: bp-core/bp-core-wp-emails.php:729
-#: bp-core/bp-core-wp-emails.php:883
+#: bp-core/bp-core-wp-emails.php:755
+#: bp-core/bp-core-wp-emails.php:909
 msgid "Username: <b>%s</b>"
 msgstr ""
 
 #. translators: %s: user email address
-#: bp-core/bp-core-wp-emails.php:731
+#: bp-core/bp-core-wp-emails.php:757
 msgid "Email: <b>%s</b>"
 msgstr ""
 
 #. translators: Password change notification email subject. %s: Site title
-#: bp-core/bp-core-wp-emails.php:736
+#: bp-core/bp-core-wp-emails.php:762
 msgid "[%s] New User Registration"
 msgstr ""
 
 #. translators: %s: user login
-#: bp-core/bp-core-wp-emails.php:805
+#: bp-core/bp-core-wp-emails.php:831
 msgid "Username: %s"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:806
+#: bp-core/bp-core-wp-emails.php:832
 msgid "To set your password <a href=\"%s\">Click here</a>."
 msgstr ""
 
 #. translators: Password change notification email subject. %s: Site title
-#: bp-core/bp-core-wp-emails.php:812
+#: bp-core/bp-core-wp-emails.php:838
 msgid "[%s] Your username and password info"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:879
+#: bp-core/bp-core-wp-emails.php:905
 msgid "Someone has requested a password reset for the following account:"
 msgstr ""
 
 #. translators: %s: site name
-#: bp-core/bp-core-wp-emails.php:881
+#: bp-core/bp-core-wp-emails.php:907
 msgid "Site Name: <b>%s</b>"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:884
+#: bp-core/bp-core-wp-emails.php:910
 msgid "If this was a mistake, just ignore this email and nothing will happen."
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:885
+#: bp-core/bp-core-wp-emails.php:911
 msgid "To reset your password <a href=\"%s\">Click here</a>."
 msgstr ""
 
 #. translators: Do not translate USERNAME, ADMIN_EMAIL, EMAIL, SITENAME, SITEURL: those are placeholders.
-#: bp-core/bp-core-wp-emails.php:930
-#: bp-core/bp-core-wp-emails.php:998
+#: bp-core/bp-core-wp-emails.php:956
+#: bp-core/bp-core-wp-emails.php:1024
 msgid "Hi ###USERNAME###,"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:931
+#: bp-core/bp-core-wp-emails.php:957
 msgid "This notice confirms that your password was changed on ###SITENAME###."
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:932
+#: bp-core/bp-core-wp-emails.php:958
 msgid "If you did not change your password, please contact the Site Administrator at <br />###ADMIN_EMAIL###"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:933
-#: bp-core/bp-core-wp-emails.php:1001
-#: bp-core/bp-core-wp-emails.php:1056
-#: bp-core/bp-core-wp-emails.php:1219
-#: bp-core/bp-core-wp-emails.php:1456
+#: bp-core/bp-core-wp-emails.php:959
+#: bp-core/bp-core-wp-emails.php:1027
+#: bp-core/bp-core-wp-emails.php:1082
+#: bp-core/bp-core-wp-emails.php:1245
+#: bp-core/bp-core-wp-emails.php:1482
 msgid "This email has been sent to ###EMAIL###"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:934
-#: bp-core/bp-core-wp-emails.php:1002
-#: bp-core/bp-core-wp-emails.php:1057
-#: bp-core/bp-core-wp-emails.php:1220
+#: bp-core/bp-core-wp-emails.php:960
+#: bp-core/bp-core-wp-emails.php:1028
+#: bp-core/bp-core-wp-emails.php:1083
+#: bp-core/bp-core-wp-emails.php:1246
 msgid "Regards, <br />All at ###SITENAME### <br />###SITEURL###"
 msgstr ""
 
 #. translators: User password change notification email subject. 1: Site name
-#: bp-core/bp-core-wp-emails.php:939
+#: bp-core/bp-core-wp-emails.php:965
 msgid "[%s] Notice of Password Change"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:999
+#: bp-core/bp-core-wp-emails.php:1025
 msgid "This notice confirms that your email address on ###SITENAME### was changed to ###NEW_EMAIL###."
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1000
+#: bp-core/bp-core-wp-emails.php:1026
 msgid "If you did not change your email, please contact the Site Administrator at <br/>###ADMIN_EMAIL###"
 msgstr ""
 
 #. translators: User email change notification email subject. 1: Site name
-#: bp-core/bp-core-wp-emails.php:1007
+#: bp-core/bp-core-wp-emails.php:1033
 msgid "[%s] Notice of Email Change"
 msgstr ""
 
 #. translators: Do not translate USERNAME, ADMIN_EMAIL, EMAIL, SITENAME, SITEURL: those are placeholders.
 #. translators: Do not translate USERNAME, ADMIN_URL, EMAIL, SITENAME, SITEURL: those are placeholders.
-#: bp-core/bp-core-wp-emails.php:1052
-#: bp-core/bp-core-wp-emails.php:1215
-#: bp-core/bp-core-wp-emails.php:1452
+#: bp-core/bp-core-wp-emails.php:1078
+#: bp-core/bp-core-wp-emails.php:1241
+#: bp-core/bp-core-wp-emails.php:1478
 msgid "Howdy ###USERNAME###,"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1053
+#: bp-core/bp-core-wp-emails.php:1079
 msgid "You recently requested to have the email address on your account changed."
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1054
-#: bp-core/bp-core-wp-emails.php:1217
+#: bp-core/bp-core-wp-emails.php:1080
+#: bp-core/bp-core-wp-emails.php:1243
 msgid "If this is correct, please <a href=\"###ADMIN_URL###\">click here</a> to change it."
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1055
-#: bp-core/bp-core-wp-emails.php:1172
-#: bp-core/bp-core-wp-emails.php:1218
-#: bp-core/bp-core-wp-emails.php:1455
+#: bp-core/bp-core-wp-emails.php:1081
+#: bp-core/bp-core-wp-emails.php:1198
+#: bp-core/bp-core-wp-emails.php:1244
+#: bp-core/bp-core-wp-emails.php:1481
 msgid "You can safely ignore and delete this email if you do not want to take this action."
 msgstr ""
 
 #. translators: Do not translate SITENAME, SITEURL; those are placeholders.
 #. translators: Do not translate SITENAME, SITEURL, PRIVACY_POLICY_URL; those are placeholders.
 #. translators: Do not translate DESCRIPTION, CONFIRM_URL, SITENAME, SITEURL: those are placeholders.
-#: bp-core/bp-core-wp-emails.php:1104
-#: bp-core/bp-core-wp-emails.php:1115
-#: bp-core/bp-core-wp-emails.php:1121
-#: bp-core/bp-core-wp-emails.php:1169
-#: bp-core/bp-core-wp-emails.php:1590
+#: bp-core/bp-core-wp-emails.php:1130
+#: bp-core/bp-core-wp-emails.php:1141
+#: bp-core/bp-core-wp-emails.php:1147
+#: bp-core/bp-core-wp-emails.php:1195
+#: bp-core/bp-core-wp-emails.php:1616
 msgid "Howdy,"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1105
+#: bp-core/bp-core-wp-emails.php:1131
 msgid "A user data privacy request has been confirmed on ###SITENAME###:"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1106
+#: bp-core/bp-core-wp-emails.php:1132
 msgid "User: ###USER_EMAIL###"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1107
+#: bp-core/bp-core-wp-emails.php:1133
 msgid "Request: ###DESCRIPTION###"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1108
+#: bp-core/bp-core-wp-emails.php:1134
 msgid "You can view and manage these data privacy requests here:"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1109
+#: bp-core/bp-core-wp-emails.php:1135
 msgid "###MANAGE_URL###"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1110
-#: bp-core/bp-core-wp-emails.php:1118
-#: bp-core/bp-core-wp-emails.php:1125
-#: bp-core/bp-core-wp-emails.php:1173
+#: bp-core/bp-core-wp-emails.php:1136
+#: bp-core/bp-core-wp-emails.php:1144
+#: bp-core/bp-core-wp-emails.php:1151
+#: bp-core/bp-core-wp-emails.php:1199
 msgid "Regards, <br />All at <a href=\"###SITEURL###\">###SITENAME###</a> <br /><a href=\"###SITEURL###\">###SITEURL###</a>"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1116
-#: bp-core/bp-core-wp-emails.php:1122
+#: bp-core/bp-core-wp-emails.php:1142
+#: bp-core/bp-core-wp-emails.php:1148
 msgid "Your request to erase your personal data on ###SITENAME### has been completed."
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1117
-#: bp-core/bp-core-wp-emails.php:1123
+#: bp-core/bp-core-wp-emails.php:1143
+#: bp-core/bp-core-wp-emails.php:1149
 msgid "If you have any follow-up questions or concerns, please contact the site administrator."
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1124
+#: bp-core/bp-core-wp-emails.php:1150
 msgid "For more information, you can also read our privacy policy: ###PRIVACY_POLICY_URL###"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1170
+#: bp-core/bp-core-wp-emails.php:1196
 msgid "A request has been made to perform the following action on your account: <br />###DESCRIPTION###"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1171
+#: bp-core/bp-core-wp-emails.php:1197
 msgid "To confirm this, please click on the following link: <br /><a href=\"###CONFIRM_URL###\">###CONFIRM_URL###</a>"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1216
+#: bp-core/bp-core-wp-emails.php:1242
 msgid "You recently requested to have the administration email address on your site changed."
 msgstr ""
 
 #. translators: New site notification email.
-#: bp-core/bp-core-wp-emails.php:1323
+#: bp-core/bp-core-wp-emails.php:1349
 msgid "New Site: %s"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1324
+#: bp-core/bp-core-wp-emails.php:1350
 msgid "URL: %s"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1325
+#: bp-core/bp-core-wp-emails.php:1351
 msgid "Remote IP address: %s"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1326
+#: bp-core/bp-core-wp-emails.php:1352
 msgid "Disable these notifications:%s"
 msgstr ""
 
 #. translators: Do not translate USERNAME, SITE_NAME, BLOG_URL, PASSWORD: those are placeholders.
-#: bp-core/bp-core-wp-emails.php:1379
+#: bp-core/bp-core-wp-emails.php:1405
 msgid "Howdy USERNAME,"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1380
+#: bp-core/bp-core-wp-emails.php:1406
 msgid "Your new SITE_NAME site has been successfully set up at: <br />BLOG_URL"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1381
+#: bp-core/bp-core-wp-emails.php:1407
 msgid "You can log in to the administrator account with the following information:"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1382
+#: bp-core/bp-core-wp-emails.php:1408
 msgid "Username: USERNAME"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1383
+#: bp-core/bp-core-wp-emails.php:1409
 msgid "Password: PASSWORD"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1384
+#: bp-core/bp-core-wp-emails.php:1410
 msgid "Log in here: BLOG_URLwp-login.php"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1385
+#: bp-core/bp-core-wp-emails.php:1411
 msgid "We hope you enjoy your new site. Thanks! <br />--The Team @ SITE_NAME"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1453
+#: bp-core/bp-core-wp-emails.php:1479
 msgid "You recently requested to have the network admin email address on your network changed."
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1454
+#: bp-core/bp-core-wp-emails.php:1480
 msgid "If this is correct, please click on the following link to change it: <br />###ADMIN_URL###"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1457
-#: bp-core/bp-core-wp-emails.php:1499
-#: bp-core/bp-core-wp-emails.php:1548
+#: bp-core/bp-core-wp-emails.php:1483
+#: bp-core/bp-core-wp-emails.php:1525
+#: bp-core/bp-core-wp-emails.php:1574
 msgid "Regards, <br /> All at ###SITENAME### <br /> ###SITEURL###"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1496
+#: bp-core/bp-core-wp-emails.php:1522
 msgid "This notice confirms that the network admin email address was changed on ###SITENAME###."
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1497
+#: bp-core/bp-core-wp-emails.php:1523
 msgid "The new network admin email address is ###NEW_EMAIL###."
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1498
-#: bp-core/bp-core-wp-emails.php:1547
+#: bp-core/bp-core-wp-emails.php:1524
+#: bp-core/bp-core-wp-emails.php:1573
 msgid "This email has been sent to ###OLD_EMAIL###"
 msgstr ""
 
 #. translators: Network admin email change notification email subject. %s: Network title
-#: bp-core/bp-core-wp-emails.php:1504
+#: bp-core/bp-core-wp-emails.php:1530
 msgid "[%s] Notice of Network Admin Email Change"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1545
+#: bp-core/bp-core-wp-emails.php:1571
 msgid "This notice confirms that the admin email address was changed on ###SITENAME###."
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1546
+#: bp-core/bp-core-wp-emails.php:1572
 msgid "The new admin email address is ###NEW_EMAIL###."
 msgstr ""
 
 #. translators: Site admin email change notification email subject. %s: Site title
-#: bp-core/bp-core-wp-emails.php:1553
+#: bp-core/bp-core-wp-emails.php:1579
 msgid "[%s] Notice of Admin Email Change"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1591
+#: bp-core/bp-core-wp-emails.php:1617
 msgid "Your request for an export of personal data has been completed. You may download your personal data by clicking on the link below. For privacy and security, we will automatically delete the file on ###EXPIRATION###, so please download it before then."
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1592
+#: bp-core/bp-core-wp-emails.php:1618
 msgid "###LINK###"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1593
+#: bp-core/bp-core-wp-emails.php:1619
 msgid "Regards, <br /> All at <a href=\"###SITEURL###\">###SITENAME###</a> <br /> <a href=\"###SITEURL###\">###SITEURL###</a>"
 msgstr ""
 
@@ -15099,16 +15096,16 @@ msgid "There was an error submitting the form. Please try again."
 msgstr ""
 
 #: bp-core/classes/class-bb-readylaunch.php:1280
-#: bp-core/classes/class-bb-readylaunch.php:3059
+#: bp-core/classes/class-bb-readylaunch.php:3068
 #: bp-templates/bp-nouveau/buddypress-functions.php:755
 msgid "More"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:1593
+#: bp-core/classes/class-bb-readylaunch.php:1602
 msgid "There are no courses to display."
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:1655
+#: bp-core/classes/class-bb-readylaunch.php:1664
 #: bp-templates/bp-nouveau/readylaunch/document/document-loop.php:69
 #: bp-templates/bp-nouveau/readylaunch/groups/single/admin/manage-members.php:310
 #: bp-templates/bp-nouveau/readylaunch/groups/single/admin/search-manage-members.php:121
@@ -15118,15 +15115,15 @@ msgstr ""
 msgid "Show More"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:2074
+#: bp-core/classes/class-bb-readylaunch.php:2083
 msgid "Sort by"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:2157
+#: bp-core/classes/class-bb-readylaunch.php:2166
 msgid "Prev"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:2158
+#: bp-core/classes/class-bb-readylaunch.php:2167
 #: bp-templates/bp-nouveau/buddypress/document/theatre.php:25
 #: bp-templates/bp-nouveau/buddypress/media/theatre.php:25
 #: bp-templates/bp-nouveau/buddypress/video/theatre.php:25
@@ -15138,44 +15135,44 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:2161
+#: bp-core/classes/class-bb-readylaunch.php:2170
 msgid "&larr; Prev"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:2162
+#: bp-core/classes/class-bb-readylaunch.php:2171
 msgid "Next &rarr;"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:2209
+#: bp-core/classes/class-bb-readylaunch.php:2218
 msgid "Unable to send invite."
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:2228
+#: bp-core/classes/class-bb-readylaunch.php:2237
 msgid "You should be logged in to send an invite."
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:2238
+#: bp-core/classes/class-bb-readylaunch.php:2247
 msgid "Email address already exists."
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:2241
+#: bp-core/classes/class-bb-readylaunch.php:2250
 msgid "The email has already been invited"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:2244
+#: bp-core/classes/class-bb-readylaunch.php:2253
 msgid "Email address restricted."
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:2247
+#: bp-core/classes/class-bb-readylaunch.php:2256
 #: bp-invites/classes/class-bp-rest-invites-endpoint.php:717
 msgid "Sorry, you don't have permission to view invites profile type."
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:2338
+#: bp-core/classes/class-bb-readylaunch.php:2347
 msgid "Invitation sent successfully"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:2392
+#: bp-core/classes/class-bb-readylaunch.php:2401
 #: bp-document/classes/class-bp-document.php:728
 #: bp-media/classes/class-bp-media.php:800
 #: bp-templates/bp-nouveau/buddypress/members/profile-card.php:62
@@ -15187,7 +15184,7 @@ msgstr ""
 msgid "Message"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:2591
+#: bp-core/classes/class-bb-readylaunch.php:2600
 #: bp-members/bp-members-adminbar.php:124
 #: bp-members/classes/class-bp-members-admin.php:565
 #: bp-members/classes/class-bp-members-admin.php:566
@@ -15197,24 +15194,24 @@ msgstr ""
 msgid "Edit Profile"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:2608
+#: bp-core/classes/class-bb-readylaunch.php:2617
 #: bp-templates/bp-nouveau/includes/groups/template-tags.php:802
 #: bp-templates/bp-nouveau/includes/groups/template-tags.php:857
 msgid "Reject"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:2613
+#: bp-core/classes/class-bb-readylaunch.php:2622
 #: bp-templates/bp-nouveau/includes/groups/template-tags.php:775
 #: bp-templates/bp-nouveau/includes/groups/template-tags.php:830
 #: bp-templates/bp-nouveau/includes/members/template-tags.php:372
 msgid "Accept"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:2630
+#: bp-core/classes/class-bb-readylaunch.php:2639
 msgid "'s post"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:2634
+#: bp-core/classes/class-bb-readylaunch.php:2643
 #: bp-templates/bp-nouveau/buddypress/media/media-move.php:26
 #: bp-templates/bp-nouveau/buddypress/media/uploader.php:133
 #: bp-templates/bp-nouveau/buddypress/video/uploader.php:119
@@ -15224,7 +15221,7 @@ msgstr ""
 msgid "Create new album"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:2635
+#: bp-core/classes/class-bb-readylaunch.php:2644
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-folder-move.php:28
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-move.php:29
 #: bp-templates/bp-nouveau/buddypress/document/create-child-folder.php:28
@@ -15237,15 +15234,15 @@ msgstr ""
 msgid "Create new folder"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:2636
+#: bp-core/classes/class-bb-readylaunch.php:2645
 msgid "Different types of media cannot be uploaded to a post"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:2640
+#: bp-core/classes/class-bb-readylaunch.php:2649
 msgid "Start typing a name"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:2644
+#: bp-core/classes/class-bb-readylaunch.php:2653
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:194
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:284
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-thread.php:118
@@ -15255,23 +15252,23 @@ msgstr ""
 msgid "Block member"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:2648
+#: bp-core/classes/class-bb-readylaunch.php:2657
 msgid "Sending request"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:2649
+#: bp-core/classes/class-bb-readylaunch.php:2658
 msgid "Canceling request"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:2746
+#: bp-core/classes/class-bb-readylaunch.php:2755
 msgid "Sign in to your account"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:2763
+#: bp-core/classes/class-bb-readylaunch.php:2772
 msgid "Forgot Password?"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:3497
+#: bp-core/classes/class-bb-readylaunch.php:3506
 #: bp-templates/bp-nouveau/readylaunch/document/document-uploader.php:38
 #: bp-templates/bp-nouveau/readylaunch/document/uploader.php:50
 #: bp-templates/bp-nouveau/readylaunch/media/uploader.php:51
@@ -15279,39 +15276,39 @@ msgstr ""
 msgid "Write a description"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:3498
-#: bp-core/classes/class-bb-readylaunch.php:3534
+#: bp-core/classes/class-bb-readylaunch.php:3507
+#: bp-core/classes/class-bb-readylaunch.php:3543
 #: bp-forums/templates/default/bbpress-functions.php:278
 msgid "Type your reply here"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:3499
+#: bp-core/classes/class-bb-readylaunch.php:3508
 #: bp-forums/templates/default/bbpress-functions.php:279
 msgid "Type your discussion content here"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:3509
+#: bp-core/classes/class-bb-readylaunch.php:3518
 #: bp-forums/templates/default/bbpress-functions.php:240
 msgid "Loading"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:3513
+#: bp-core/classes/class-bb-readylaunch.php:3522
 #: bp-forums/templates/default/bbpress-functions.php:244
 msgid "Add Tags:"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:3526
+#: bp-core/classes/class-bb-readylaunch.php:3535
 #: bp-forums/templates/default/bbpress-functions.php:735
 #: bp-forums/templates/default/bbpress-functions.php:748
 msgid "Something went wrong. Refresh your browser and try again."
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:3585
-#: bp-core/classes/class-bb-readylaunch.php:3586
+#: bp-core/classes/class-bb-readylaunch.php:3594
+#: bp-core/classes/class-bb-readylaunch.php:3595
 msgid "Quick Reply"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:3729
+#: bp-core/classes/class-bb-readylaunch.php:3738
 #: bp-forums/templates/default/bbpress/form-reply.php:188
 #: bp-forums/templates/default/bbpress/form-topic.php:244
 #: bp-moderation/bp-moderation-functions.php:1316
@@ -15328,63 +15325,63 @@ msgid "Post"
 msgstr ""
 
 #. translators: %s: forum freshness link
-#: bp-core/classes/class-bb-readylaunch.php:4009
+#: bp-core/classes/class-bb-readylaunch.php:4018
 msgid "<span>Active</span> %s"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:4031
+#: bp-core/classes/class-bb-readylaunch.php:4040
 #: bp-forums/topics/functions.php:2214
 #: bp-templates/bp-nouveau/readylaunch/forums/loop-single-topic.php:66
 msgid "Super Sticky"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:4049
+#: bp-core/classes/class-bb-readylaunch.php:4058
 msgid "Group Subscriptions"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:4073
+#: bp-core/classes/class-bb-readylaunch.php:4082
 #: bp-core/admin/bb-settings/settings/build/483.js:2
 msgid "Search member"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:4122
+#: bp-core/classes/class-bb-readylaunch.php:4131
 msgid "You are logged out"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:4159
-#: bp-core/classes/class-bb-readylaunch.php:4341
+#: bp-core/classes/class-bb-readylaunch.php:4168
+#: bp-core/classes/class-bb-readylaunch.php:4350
 msgid "All members"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:4161
-#: bp-core/classes/class-bb-readylaunch.php:4343
+#: bp-core/classes/class-bb-readylaunch.php:4170
+#: bp-core/classes/class-bb-readylaunch.php:4352
 msgid "My connections"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:4163
-#: bp-core/classes/class-bb-readylaunch.php:4345
+#: bp-core/classes/class-bb-readylaunch.php:4172
+#: bp-core/classes/class-bb-readylaunch.php:4354
 msgid "Only me"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:4184
+#: bp-core/classes/class-bb-readylaunch.php:4193
 msgid "Remove connection"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:4191
+#: bp-core/classes/class-bb-readylaunch.php:4200
 msgid "Cancel request"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:4198
+#: bp-core/classes/class-bb-readylaunch.php:4207
 msgid "Review request"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:4228
+#: bp-core/classes/class-bb-readylaunch.php:4237
 #: bp-templates/bp-nouveau/includes/functions.php:571
 #: bp-templates/bp-nouveau/includes/notifications/template-tags.php:53
 msgid "- View All -"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:4229
+#: bp-core/classes/class-bb-readylaunch.php:4238
 #: bp-templates/bp-nouveau/readylaunch/header/messages-dropdown.php:33
 msgid "View All"
 msgstr ""
@@ -15393,7 +15390,7 @@ msgstr ""
 #. translators: %s: Last joined date of member in the group.
 #. translators: %s: Member joined date.
 #. translators: 1: User registered date.
-#: bp-core/classes/class-bb-readylaunch.php:4251
+#: bp-core/classes/class-bb-readylaunch.php:4260
 #: bp-groups/bp-groups-template.php:5298
 #: bp-groups/classes/class-bb-group-readylaunch.php:719
 #: bp-templates/bp-nouveau/includes/members/template-tags.php:864
@@ -15401,7 +15398,7 @@ msgstr ""
 msgid "Joined %s"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:4272
+#: bp-core/classes/class-bb-readylaunch.php:4281
 #: bp-moderation/bp-moderation-filters.php:522
 #: bp-moderation/bp-moderation-functions.php:254
 #: bp-moderation/bp-moderation-functions.php:255
@@ -15411,7 +15408,7 @@ msgstr ""
 msgid "Report Member"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:4272
+#: bp-core/classes/class-bb-readylaunch.php:4281
 #: bp-moderation/bp-moderation-functions.php:1342
 #: bp-moderation/screens/content-report-form.php:16
 #: bp-moderation/screens/content-report-form.php:70
@@ -15421,7 +15418,7 @@ msgstr ""
 msgid "Report"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:4325
+#: bp-core/classes/class-bb-readylaunch.php:4334
 #: bp-groups/classes/class-bp-group-extension.php:524
 #: bp-templates/bp-nouveau/buddypress/groups/single/cover-image-header.php:66
 #: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:103
@@ -15433,31 +15430,31 @@ msgstr ""
 msgid "Save Changes"
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:4371
+#: bp-core/classes/class-bb-readylaunch.php:4380
 msgid "Please login to perform this action."
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:4402
+#: bp-core/classes/class-bb-readylaunch.php:4411
 msgid "You don't have permission to edit this document."
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:4413
+#: bp-core/classes/class-bb-readylaunch.php:4422
 msgid "Failed to rename document."
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:4422
-#: bp-core/classes/class-bb-readylaunch.php:4489
+#: bp-core/classes/class-bb-readylaunch.php:4431
+#: bp-core/classes/class-bb-readylaunch.php:4498
 #: bp-templates/bp-nouveau/includes/document/ajax.php:1709
 #: bp-templates/bp-nouveau/includes/media/ajax.php:887
 #: bp-templates/bp-nouveau/includes/video/ajax.php:983
 msgid "Invalid privacy status."
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:4469
+#: bp-core/classes/class-bb-readylaunch.php:4478
 msgid "You don't have permission to edit this folder."
 msgstr ""
 
-#: bp-core/classes/class-bb-readylaunch.php:4480
+#: bp-core/classes/class-bb-readylaunch.php:4489
 msgid "Failed to rename folder."
 msgstr ""
 
@@ -16058,7 +16055,7 @@ msgstr ""
 
 #: bp-core/classes/class-bp-admin-tab.php:286
 #: bp-core/classes/class-bp-attachment.php:162
-#: bp-document/bp-document-functions.php:1562
+#: bp-document/bp-document-functions.php:1576
 #: bp-media/bp-media-functions.php:210
 #: bp-video/bp-video-functions.php:181
 #: bp-video/bp-video-functions.php:397
@@ -16238,7 +16235,7 @@ msgid "The uploaded file exceeds the maximum allowed file size of: %s"
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:161
-#: bp-document/bp-document-functions.php:1561
+#: bp-document/bp-document-functions.php:1575
 #: bp-media/bp-media-functions.php:209
 #: bp-video/bp-video-functions.php:180
 #: bp-video/bp-video-functions.php:396
@@ -16246,7 +16243,7 @@ msgid "The uploaded file was only partially uploaded."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:164
-#: bp-document/bp-document-functions.php:1564
+#: bp-document/bp-document-functions.php:1578
 #: bp-media/bp-media-functions.php:212
 #: bp-video/bp-video-functions.php:183
 #: bp-video/bp-video-functions.php:399
@@ -16254,7 +16251,7 @@ msgid "Missing a temporary folder."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:165
-#: bp-document/bp-document-functions.php:1565
+#: bp-document/bp-document-functions.php:1579
 #: bp-media/bp-media-functions.php:213
 #: bp-video/bp-video-functions.php:184
 #: bp-video/bp-video-functions.php:400
@@ -16262,7 +16259,7 @@ msgid "Failed to write file to disk."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:166
-#: bp-document/bp-document-functions.php:1566
+#: bp-document/bp-document-functions.php:1580
 #: bp-media/bp-media-functions.php:214
 #: bp-video/bp-video-functions.php:185
 #: bp-video/bp-video-functions.php:401
@@ -16533,23 +16530,23 @@ msgstr ""
 msgid "Display the post comment reply content."
 msgstr ""
 
-#: bp-core/classes/class-bp-email-tokens.php:271
+#: bp-core/classes/class-bp-email-tokens.php:280
 #: bp-templates/bp-nouveau/buddypress-functions.php:687
 msgid "members"
 msgstr ""
 
-#: bp-core/classes/class-bp-email-tokens.php:271
+#: bp-core/classes/class-bp-email-tokens.php:280
 #: bp-templates/bp-nouveau/buddypress-functions.php:686
 msgid "member"
 msgstr ""
 
-#: bp-core/classes/class-bp-email-tokens.php:288
-#: bp-core/classes/class-bp-email-tokens.php:300
-#: bp-core/classes/class-bp-email-tokens.php:489
+#: bp-core/classes/class-bp-email-tokens.php:297
+#: bp-core/classes/class-bp-email-tokens.php:309
+#: bp-core/classes/class-bp-email-tokens.php:504
 msgid "Visit Group"
 msgstr ""
 
-#: bp-core/classes/class-bp-email-tokens.php:483
+#: bp-core/classes/class-bp-email-tokens.php:498
 #: bp-groups/bp-groups-template.php:4352
 #: bp-groups/classes/class-bb-group-readylaunch.php:173
 #: bp-templates/bp-nouveau/buddypress/groups/groups-loop.php:144
@@ -16561,21 +16558,21 @@ msgstr ""
 msgid "Leave Group"
 msgstr ""
 
-#: bp-core/classes/class-bp-email-tokens.php:486
+#: bp-core/classes/class-bp-email-tokens.php:501
 #: bp-groups/bp-groups-template.php:4380
 #: bp-groups/bp-groups-template.php:4439
 msgid "Join Group"
 msgstr ""
 
-#: bp-core/classes/class-bp-email-tokens.php:1296
+#: bp-core/classes/class-bp-email-tokens.php:1319
 msgid "connections"
 msgstr ""
 
-#: bp-core/classes/class-bp-email-tokens.php:1296
+#: bp-core/classes/class-bp-email-tokens.php:1319
 msgid "connection"
 msgstr ""
 
-#: bp-core/classes/class-bp-email-tokens.php:1310
+#: bp-core/classes/class-bp-email-tokens.php:1333
 #: bp-members/classes/class-bp-members-admin.php:1283
 #: bp-templates/bp-nouveau/buddypress/members/profile-card.php:82
 #: bp-templates/bp-nouveau/buddypress/members/single/profile/profile-loop.php:13
@@ -16583,7 +16580,7 @@ msgstr ""
 msgid "View Profile"
 msgstr ""
 
-#: bp-core/classes/class-bp-email-tokens.php:1927
+#: bp-core/classes/class-bp-email-tokens.php:1964
 #: bp-templates/bp-nouveau/buddypress/search/loop/message.php:31
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:631
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:636
@@ -16591,14 +16588,14 @@ msgstr ""
 msgid "View Conversation"
 msgstr ""
 
-#: bp-core/classes/class-bp-email-tokens.php:2384
+#: bp-core/classes/class-bp-email-tokens.php:2428
 #: bp-forums/notifications.php:634
 #: bp-forums/topics/template.php:58
 #: bp-forums/topics/template.php:59
 msgid "View Discussion"
 msgstr ""
 
-#: bp-core/classes/class-bp-email-tokens.php:2985
+#: bp-core/classes/class-bp-email-tokens.php:3029
 msgid "and %d more"
 msgstr ""
 
@@ -18102,21 +18099,21 @@ msgstr ""
 msgid "Repairing documents &hellip; Complete!"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1434
+#: bp-document/bp-document-functions.php:1448
 msgid "Please login in order to upload file document."
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1560
+#: bp-document/bp-document-functions.php:1574
 #: bp-video/bp-video-functions.php:179
 #: bp-video/bp-video-functions.php:395
 msgid "The uploaded file exceeds "
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1591
+#: bp-document/bp-document-functions.php:1605
 msgid "Error while uploading document."
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2082
+#: bp-document/bp-document-functions.php:2096
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:167
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:253
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-thread.php:96
@@ -18124,105 +18121,105 @@ msgstr ""
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/messages/parts/bp-messages-single-header.php:162
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/messages/parts/bp-messages-single-header.php:247
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/messages/parts/bp-messages-thread.php:94
-#: bp-video/bp-video-functions.php:2725
+#: bp-video/bp-video-functions.php:2729
 msgid "Archive"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2087
-#: bp-video/bp-video-functions.php:2730
+#: bp-document/bp-document-functions.php:2101
+#: bp-video/bp-video-functions.php:2734
 msgid "Audio"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2092
-#: bp-video/bp-video-functions.php:2735
+#: bp-document/bp-document-functions.php:2106
+#: bp-video/bp-video-functions.php:2739
 msgid "Code"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2097
-#: bp-video/bp-video-functions.php:2740
+#: bp-document/bp-document-functions.php:2111
+#: bp-video/bp-video-functions.php:2744
 msgid "Design"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2102
+#: bp-document/bp-document-functions.php:2116
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-link-preview.php:48
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/members/bb-link-preview.php:44
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/activity/parts/bp-activity-link-preview.php:51
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/members/bb-link-preview.php:49
-#: bp-video/bp-video-functions.php:2745
+#: bp-video/bp-video-functions.php:2749
 msgid "Image"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2107
-#: bp-video/bp-video-functions.php:2750
+#: bp-document/bp-document-functions.php:2121
+#: bp-video/bp-video-functions.php:2754
 msgid "Presentation"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2112
-#: bp-video/bp-video-functions.php:2755
+#: bp-document/bp-document-functions.php:2126
+#: bp-video/bp-video-functions.php:2759
 msgid "Spreadsheet"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2117
-#: bp-video/bp-video-functions.php:2760
+#: bp-document/bp-document-functions.php:2131
+#: bp-video/bp-video-functions.php:2764
 msgid "Text"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2287
+#: bp-document/bp-document-functions.php:2301
 msgid "..."
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2687
-#: bp-document/bp-document-functions.php:2690
+#: bp-document/bp-document-functions.php:2701
+#: bp-document/bp-document-functions.php:2704
 msgid "Post with ID "
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2693
+#: bp-document/bp-document-functions.php:2707
 msgid "The document name is empty!"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2696
+#: bp-document/bp-document-functions.php:2710
 msgid "Bad characters or invalid document name!"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2699
+#: bp-document/bp-document-functions.php:2713
 msgid "A file with that name already exists in the containing folder!"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2702
+#: bp-document/bp-document-functions.php:2716
 msgid "The document containing directory is not writable!"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2738
+#: bp-document/bp-document-functions.php:2752
 msgid "File renaming error!"
 msgstr ""
 
 #. translators: Memory unit for terabyte.
-#: bp-document/bp-document-functions.php:3545
+#: bp-document/bp-document-functions.php:3559
 msgctxt "memory unit"
 msgid "TB"
 msgstr ""
 
 #. translators: Memory unit for gigabyte.
-#: bp-document/bp-document-functions.php:3547
+#: bp-document/bp-document-functions.php:3561
 msgctxt "memory unit"
 msgid "GB"
 msgstr ""
 
 #. translators: Memory unit for megabyte.
-#: bp-document/bp-document-functions.php:3549
+#: bp-document/bp-document-functions.php:3563
 msgctxt "memory unit"
 msgid "MB"
 msgstr ""
 
 #. translators: Memory unit for kilobyte.
-#: bp-document/bp-document-functions.php:3551
+#: bp-document/bp-document-functions.php:3565
 msgctxt "memory unit"
 msgid "KB"
 msgstr ""
 
 #. translators: Memory unit for byte.
-#: bp-document/bp-document-functions.php:3553
-#: bp-document/bp-document-functions.php:3558
+#: bp-document/bp-document-functions.php:3567
+#: bp-document/bp-document-functions.php:3572
 msgctxt "memory unit"
 msgid "B"
 msgstr ""
@@ -18466,7 +18463,7 @@ msgid "Privacy of the document."
 msgstr ""
 
 #: bp-document/classes/class-bp-rest-document-endpoint.php:1429
-#: bp-messages/bp-messages-functions.php:2473
+#: bp-messages/bp-messages-functions.php:2480
 #: bp-templates/bp-nouveau/buddypress/document/audio-preview.php:26
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2726
 #: bp-templates/bp-nouveau/readylaunch/document/audio-preview.php:23
@@ -22102,7 +22099,7 @@ msgstr ""
 
 #: bp-forums/replies/functions.php:2690
 #: bp-members/bp-members-functions.php:574
-#: bp-messages/bp-messages-functions.php:2202
+#: bp-messages/bp-messages-functions.php:2209
 #: bp-messages/bp-messages-template.php:1824
 #: bp-messages/bp-messages-template.php:2089
 #: bp-messages/classes/class-bp-messages-thread.php:1638
@@ -22590,7 +22587,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/readylaunch/activity/activity-modal.php:53
 #: bp-templates/bp-nouveau/readylaunch/activity/comment-form.php:123
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/activity/parts/bp-whats-new-toolbar.php:34
-#: bp-templates/bp-nouveau/readylaunch/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:29
+#: bp-templates/bp-nouveau/readylaunch/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:34
 #: bp-templates/bp-nouveau/readylaunch/forums/form-attachments.php:146
 #: bp-templates/bp-nouveau/readylaunch/groups/single/messages/private-message.php:267
 #: bp-templates/bp-nouveau/readylaunch/groups/single/messages/public-message.php:178
@@ -22607,7 +22604,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/readylaunch/activity/activity-modal.php:59
 #: bp-templates/bp-nouveau/readylaunch/activity/comment-form.php:128
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/activity/parts/bp-whats-new-toolbar.php:44
-#: bp-templates/bp-nouveau/readylaunch/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:40
+#: bp-templates/bp-nouveau/readylaunch/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:45
 #: bp-templates/bp-nouveau/readylaunch/forums/form-attachments.php:157
 #: bp-templates/bp-nouveau/readylaunch/groups/single/messages/private-message.php:277
 #: bp-templates/bp-nouveau/readylaunch/groups/single/messages/public-message.php:188
@@ -22624,7 +22621,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/readylaunch/activity/activity-modal.php:66
 #: bp-templates/bp-nouveau/readylaunch/activity/comment-form.php:134
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/activity/parts/bp-whats-new-toolbar.php:53
-#: bp-templates/bp-nouveau/readylaunch/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:48
+#: bp-templates/bp-nouveau/readylaunch/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:53
 #: bp-templates/bp-nouveau/readylaunch/forums/form-attachments.php:169
 #: bp-templates/bp-nouveau/readylaunch/groups/single/messages/private-message.php:288
 #: bp-templates/bp-nouveau/readylaunch/groups/single/messages/public-message.php:199
@@ -26945,7 +26942,7 @@ msgid "Re-Run Migration"
 msgstr ""
 
 #: bp-media/bp-media-filters.php:1449
-#: bp-media/bp-media-functions.php:2406
+#: bp-media/bp-media-functions.php:2410
 msgid "BuddyBoss Media data update is complete! Any previously uploaded member photos should display in their profiles now."
 msgstr ""
 
@@ -27010,7 +27007,7 @@ msgstr ""
 msgid "Error while uploading media."
 msgstr ""
 
-#: bp-media/bp-media-functions.php:2407
+#: bp-media/bp-media-functions.php:2411
 msgid "BuddyBoss Media data update is failing!"
 msgstr ""
 
@@ -28986,7 +28983,7 @@ msgid "Message marked unread."
 msgstr ""
 
 #: bp-messages/actions/view.php:42
-#: bp-messages/bp-messages-functions.php:2591
+#: bp-messages/bp-messages-functions.php:2598
 msgid "Your reply was sent successfully"
 msgstr ""
 
@@ -29093,8 +29090,8 @@ msgstr ""
 msgid "There was a problem sending your message."
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:1418
-#: bp-messages/bp-messages-functions.php:1956
+#: bp-messages/bp-messages-functions.php:1425
+#: bp-messages/bp-messages-functions.php:1963
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:1546
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:1842
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:782
@@ -29108,24 +29105,24 @@ msgstr ""
 msgid "Deleted Group"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:1779
+#: bp-messages/bp-messages-functions.php:1786
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1823
 msgid "Send Connection Request"
 msgstr ""
 
 #. translators: %s: The admin setting field label.
-#: bp-messages/bp-messages-functions.php:2110
-#: bp-messages/bp-messages-functions.php:2119
-#: bp-messages/bp-messages-functions.php:2128
+#: bp-messages/bp-messages-functions.php:2117
+#: bp-messages/bp-messages-functions.php:2126
+#: bp-messages/bp-messages-functions.php:2135
 msgid "%d mins"
 msgstr ""
 
 #. translators: %s: The admin setting field label.
-#: bp-messages/bp-messages-functions.php:2137
+#: bp-messages/bp-messages-functions.php:2144
 msgid "%d hour"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2191
+#: bp-messages/bp-messages-functions.php:2198
 #: bp-messages/bp-messages-template.php:2207
 #: bp-messages/bp-messages-template.php:2242
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:1574
@@ -29134,57 +29131,57 @@ msgstr ""
 msgid "This message was deleted"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2221
+#: bp-messages/bp-messages-functions.php:2228
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1059
 #: bp-templates/bp-nouveau/includes/messages/functions.php:199
 #: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:432
 msgid "Sent a photo"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2223
+#: bp-messages/bp-messages-functions.php:2230
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1061
 #: bp-templates/bp-nouveau/includes/messages/functions.php:200
 #: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:435
 msgid "Sent some photos"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2235
+#: bp-messages/bp-messages-functions.php:2242
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1073
 #: bp-templates/bp-nouveau/includes/messages/functions.php:201
 #: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:448
 msgid "Sent a video"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2237
+#: bp-messages/bp-messages-functions.php:2244
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1075
 #: bp-templates/bp-nouveau/includes/messages/functions.php:202
 #: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:451
 msgid "Sent some videos"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2249
+#: bp-messages/bp-messages-functions.php:2256
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1087
 #: bp-templates/bp-nouveau/includes/messages/functions.php:203
 #: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:464
 msgid "Sent a document"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2251
+#: bp-messages/bp-messages-functions.php:2258
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1089
 #: bp-templates/bp-nouveau/includes/messages/functions.php:204
 #: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:467
 msgid "Sent some documents"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2261
+#: bp-messages/bp-messages-functions.php:2268
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1099
 #: bp-templates/bp-nouveau/includes/messages/functions.php:198
 #: bp-templates/bp-nouveau/readylaunch/header/unread-messages.php:477
 msgid "Sent a gif"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2502
-#: bp-messages/bp-messages-functions.php:2539
+#: bp-messages/bp-messages-functions.php:2509
+#: bp-messages/bp-messages-functions.php:2546
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-actions.php:36
 #: bp-templates/bp-nouveau/buddypress/document/code-preview.php:37
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2755
@@ -29193,19 +29190,19 @@ msgstr ""
 msgid "Expand"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2535
+#: bp-messages/bp-messages-functions.php:2542
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2788
 msgid "Click to view"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2538
+#: bp-messages/bp-messages-functions.php:2545
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-actions.php:36
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2791
 #: bp-templates/bp-nouveau/readylaunch/document/code-preview.php:43
 msgid "Collapse"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2540
+#: bp-messages/bp-messages-functions.php:2547
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-actions.php:51
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:273
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2793
@@ -29214,7 +29211,7 @@ msgstr ""
 msgid "Copy Download Link"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2541
+#: bp-messages/bp-messages-functions.php:2548
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:234
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-actions.php:41
 #: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:57
@@ -29238,42 +29235,42 @@ msgstr ""
 msgid "More actions"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2626
-#: bp-messages/bp-messages-functions.php:2666
-#: bp-messages/bp-messages-functions.php:2688
-#: bp-messages/bp-messages-functions.php:2694
+#: bp-messages/bp-messages-functions.php:2633
+#: bp-messages/bp-messages-functions.php:2673
+#: bp-messages/bp-messages-functions.php:2695
+#: bp-messages/bp-messages-functions.php:2701
 msgid "%1$s left the group."
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2626
-#: bp-messages/bp-messages-functions.php:2666
-#: bp-messages/bp-messages-functions.php:2688
-#: bp-messages/bp-messages-functions.php:2694
+#: bp-messages/bp-messages-functions.php:2633
+#: bp-messages/bp-messages-functions.php:2673
+#: bp-messages/bp-messages-functions.php:2695
+#: bp-messages/bp-messages-functions.php:2701
 msgid "%1$s joined the group."
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2656
+#: bp-messages/bp-messages-functions.php:2663
 msgid "Left group"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2681
+#: bp-messages/bp-messages-functions.php:2688
 msgid "%1$s and %2$s left the group."
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2681
+#: bp-messages/bp-messages-functions.php:2688
 msgid "%1$s and %2$s joined the group."
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2728
+#: bp-messages/bp-messages-functions.php:2735
 #: bp-templates/bp-nouveau/includes/messages/functions.php:186
 msgid "%d others"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2747
+#: bp-messages/bp-messages-functions.php:2754
 msgid "%1$s left the group, along with %2$s"
 msgstr ""
 
-#: bp-messages/bp-messages-functions.php:2747
+#: bp-messages/bp-messages-functions.php:2754
 msgid "%1$s joined the group, along with %2$s"
 msgstr ""
 
@@ -36750,116 +36747,116 @@ msgstr ""
 msgid "Error while uploading video."
 msgstr ""
 
-#: bp-video/bp-video-functions.php:4321
+#: bp-video/bp-video-functions.php:4325
 msgid "FFMpeg\\FFMpeg class not found"
 msgstr ""
 
-#: bp-video/bp-video-functions.php:4369
+#: bp-video/bp-video-functions.php:4373
 msgid "FFMpeg\\FFProbe class not found"
 msgstr ""
 
-#: bp-video/bp-video-functions.php:4905
+#: bp-video/bp-video-functions.php:4909
 msgid "Invalid upload identifier"
 msgstr ""
 
-#: bp-video/bp-video-functions.php:4920
+#: bp-video/bp-video-functions.php:4924
 msgid "Failed to create upload directory"
 msgstr ""
 
 #. translators: %s: file extension
-#: bp-video/bp-video-functions.php:4952
+#: bp-video/bp-video-functions.php:4956
 msgid "File type %s is not allowed"
 msgstr ""
 
-#: bp-video/bp-video-functions.php:4974
+#: bp-video/bp-video-functions.php:4978
 msgid "Invalid chunk parameters"
 msgstr ""
 
 #. translators: %s: file size
-#: bp-video/bp-video-functions.php:4989
+#: bp-video/bp-video-functions.php:4993
 msgid "File size exceeds maximum allowed size of %s"
 msgstr ""
 
-#: bp-video/bp-video-functions.php:5004
+#: bp-video/bp-video-functions.php:5008
 msgid "Uploaded chunk is empty"
 msgstr ""
 
-#: bp-video/bp-video-functions.php:5025
+#: bp-video/bp-video-functions.php:5029
 msgid "Total uploaded size exceeds declared file size"
 msgstr ""
 
 #. translators: %d: chunk index
-#: bp-video/bp-video-functions.php:5041
+#: bp-video/bp-video-functions.php:5045
 msgid "Failed to save chunk %d"
 msgstr ""
 
-#: bp-video/bp-video-functions.php:5126
+#: bp-video/bp-video-functions.php:5130
 msgid "Failed to create lock file"
 msgstr ""
 
-#: bp-video/bp-video-functions.php:5134
+#: bp-video/bp-video-functions.php:5138
 msgid "Failed to acquire lock"
 msgstr ""
 
 #. translators: %1$d: parts count, %2$d: total chunks
-#: bp-video/bp-video-functions.php:5157
+#: bp-video/bp-video-functions.php:5161
 msgid "%1$d of %2$d parts received"
 msgstr ""
 
 #. translators: %d: chunk index
-#: bp-video/bp-video-functions.php:5178
+#: bp-video/bp-video-functions.php:5182
 msgid "Missing chunk %d"
 msgstr ""
 
 #. translators: %1$s: expected size, %2$s: got size
-#: bp-video/bp-video-functions.php:5199
+#: bp-video/bp-video-functions.php:5203
 msgid "File size mismatch. Expected: %1$s, Got: %2$s"
 msgstr ""
 
-#: bp-video/bp-video-functions.php:5285
+#: bp-video/bp-video-functions.php:5289
 msgid "Cannot create destination directory"
 msgstr ""
 
-#: bp-video/bp-video-functions.php:5308
+#: bp-video/bp-video-functions.php:5312
 msgid "Cannot create the destination file"
 msgstr ""
 
 #. translators: %d: chunk index
-#: bp-video/bp-video-functions.php:5324
+#: bp-video/bp-video-functions.php:5328
 msgid "Chunk %d not found"
 msgstr ""
 
 #. translators: %d: chunk index
-#: bp-video/bp-video-functions.php:5335
+#: bp-video/bp-video-functions.php:5339
 msgid "Failed to open chunk %d"
 msgstr ""
 
 #. translators: %d: chunk index
-#: bp-video/bp-video-functions.php:5349
+#: bp-video/bp-video-functions.php:5353
 msgid "Failed to read chunk %d"
 msgstr ""
 
 #. translators: %d: chunk index
-#: bp-video/bp-video-functions.php:5361
+#: bp-video/bp-video-functions.php:5365
 msgid "Failed to write data from chunk %d"
 msgstr ""
 
 #. translators: %1$s: expected size, %2$s: got size
-#: bp-video/bp-video-functions.php:5400
+#: bp-video/bp-video-functions.php:5404
 msgid "Final file size mismatch. Expected: %1$s, Got: %2$s"
 msgstr ""
 
 #. translators: %s: file name
-#: bp-video/bp-video-functions.php:5413
+#: bp-video/bp-video-functions.php:5417
 msgid "File successfully created: %s"
 msgstr ""
 
-#: bp-video/bp-video-functions.php:5449
+#: bp-video/bp-video-functions.php:5453
 msgid "Invalid filename"
 msgstr ""
 
 #. translators: %1$s: file name, %2$s: file extension
-#: bp-video/bp-video-functions.php:5485
+#: bp-video/bp-video-functions.php:5489
 msgid "Cannot create unique name for saving file %1$s%2$s"
 msgstr ""
 
