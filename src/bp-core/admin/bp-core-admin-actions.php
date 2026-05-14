@@ -822,31 +822,23 @@ function bb_redirect_legacy_settings_to_settings_2() {
 	// Hoist component-active flags — read once at function entry rather than
 	// re-evaluating `bp_is_active( ... )` at each branch below. `bp_is_active()`
 	// is already cheap (in-memory hash lookup on `$bp->active_components`), but
-	// consolidating here makes the gating obvious to the reader and removes 5+
-	// duplicate calls (groups 3x, members 2x, forums 2x) within this ~230-line
-	// function. Same value within the request — no stale-read risk.
-	$groups_active   = bp_is_active( 'groups' );
-	$members_active  = bp_is_active( 'members' );
-	$forums_active   = bp_is_active( 'forums' );
-	$invites_active  = bp_is_active( 'invites' );
-	$xprofile_active = bp_is_active( 'xprofile' );
+	// consolidating here makes the gating obvious to the reader and removes
+	// duplicate calls within this ~230-line function: groups 3x, members 3x,
+	// forums 2x, invites 2x. Same value within the request — no stale-read risk.
+	$groups_active  = bp_is_active( 'groups' );
+	$members_active = bp_is_active( 'members' );
+	$forums_active  = bp_is_active( 'forums' );
+	$invites_active = bp_is_active( 'invites' );
 
 	if ( $post_id > 0 && 'edit' === $action ) {
 		$edit_post_type = get_post_type( $post_id );
 
-		/**
-		 * Map of migrated CPT slugs to their Settings 2.0 redirect URLs.
-		 *
-		 * Each entry is gated on its component being active *and* the
-		 * CPT-getter function being defined, because the getter is loaded
-		 * by the component's loader file — deactivating the component
-		 * leaves the function undefined and an unguarded call here would
-		 * fatal during the admin redirect.
-		 *
-		 * @since BuddyBoss 3.0.0
-		 *
-		 * @param array $cpt_redirects Post type slug => Settings 2.0 URL path.
-		 */
+		// Map of migrated CPT slugs to their Settings 2.0 redirect URLs.
+		// Each entry is gated on its component being active *and* the
+		// CPT-getter function being defined, because the getter is loaded
+		// by the component's loader file — deactivating the component
+		// leaves the function undefined and an unguarded call here would
+		// fatal during the admin redirect.
 		$cpt_redirects = array();
 
 		// Emails CPT — part of bp-core, always available alongside Settings 2.0.
@@ -909,7 +901,7 @@ function bb_redirect_legacy_settings_to_settings_2() {
 	}
 
 	// Redirect legacy Profile Fields admin page (admin.php?page=bp-profile-setup).
-	if ( 'bp-profile-setup' === $page && $xprofile_active ) {
+	if ( 'bp-profile-setup' === $page && bp_is_active( 'xprofile' ) ) {
 		wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=members&panel=profile_fields' ) );
 		exit;
 	}
@@ -954,7 +946,10 @@ function bb_redirect_legacy_settings_to_settings_2() {
 	}
 
 	// Redirect legacy Email Invites CPT page (edit.php?post_type=bp-invite).
-	if ( function_exists( 'bp_get_invite_post_type' ) && bp_get_invite_post_type() === $post_type ) {
+	// Mirrors the gating used in the `?action=edit` CPT map above: deactivating
+	// the invites component removes the target Settings 2.0 panel, so without
+	// the active check we'd redirect into a 404'd settings tab.
+	if ( $invites_active && function_exists( 'bp_get_invite_post_type' ) && bp_get_invite_post_type() === $post_type ) {
 		wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=invites&panel=invites_list' ) );
 		exit;
 	}
