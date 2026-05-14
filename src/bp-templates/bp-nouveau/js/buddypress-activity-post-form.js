@@ -179,7 +179,16 @@ window.bp = window.bp || {};
 			this.dropzone = null;
 
 			// set up dropzones auto discover to false so it does not automatically set dropzones.
-			window.Dropzone.autoDiscover = false;
+			// Guarded — `bp-media-dropzone` (which loads the Dropzone library) is only
+			// enqueued when at least one media feature is active (see
+			// bp-templates/bp-nouveau/includes/media/functions.php). When all of
+			// profile/group/messages media + group docs/albums + GIF + emoji are off,
+			// Dropzone is undefined and the unguarded assignment throws TypeError,
+			// halting `start()` so the post form composer never renders. Mirrors
+			// the same guard pattern used at buddypress-activity.js:76.
+			if ( 'undefined' !== typeof window.Dropzone ) {
+				window.Dropzone.autoDiscover = false;
+			}
 
 			if ( ! _.isUndefined( bbRlMedia ) ) {
 				this.dropzone_options = {

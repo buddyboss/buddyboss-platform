@@ -1027,6 +1027,43 @@ function bb_profile_card_template() {
 }
 
 /**
+ * Inject a custom ORDER BY for the Settings 2.0 admin Profile Types listing.
+ *
+ * Restores two design rules that `WP_Query::parse_orderby()` cannot express
+ * with its built-in `orderby` keys:
+ *   1. Private items first — toggling a type to private bubbles it to the
+ *      top of the list on the next fetch.
+ *   2. Within each visibility group, oldest → newest so newly added types
+ *      fall to the END of their group instead of the top (the upstream
+ *      `bp_get_active_member_types()` default of `menu_order ASC, post_date
+ *      DESC` does the opposite).
+ *
+ * `FIELD( post_status, 'private' )` returns 1 for private rows and 0 for
+ * everything else; `DESC` surfaces the 1s first. The secondary `post_date
+ * ASC` orders within each group. Scoped to the member-type post type so it
+ * is safe even if registered globally — any other WP_Query that runs while
+ * this filter is registered returns its original `$orderby` unchanged. The
+ * AJAX handler that needs this order still removes the filter immediately
+ * after its single fetch as defense-in-depth.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @param string   $orderby The current ORDER BY clause produced by WP_Query.
+ * @param WP_Query $query   The query object being filtered.
+ *
+ * @return string Filtered ORDER BY clause.
+ */
+function bb_admin_member_types_listing_orderby( $orderby, $query ) {
+	global $wpdb;
+
+	if ( bp_get_member_type_post_type() !== $query->get( 'post_type' ) ) {
+		return $orderby;
+	}
+
+	return "FIELD({$wpdb->posts}.post_status, 'private') DESC, {$wpdb->posts}.post_date ASC";
+}
+
+/**
  * Send activation email on user signup.
  *
  * @since BuddyBoss [BBVERSION]

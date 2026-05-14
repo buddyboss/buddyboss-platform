@@ -241,6 +241,11 @@ function bp_version_updater() {
 		bp_core_install_emails();
 		bp_core_install_invitations();
 
+		// Seed media section toggle defaults when media component is active.
+		if ( isset( $default_components['media'] ) ) {
+			bb_seed_media_section_toggle_defaults();
+		}
+
 		do_action( 'bb_core_after_install', $default_components );
 
 		// Upgrades.
@@ -539,6 +544,13 @@ function bp_version_updater() {
 			bb_update_to_2_16_1();
 		}
 
+		// DB version 23584 — 3.0.0 release migration block (Settings 2.0
+		// feature activation + ReadyLaunch option-shape canonicalization).
+		if ( $raw_db_version < 23584 ) {
+			bb_update_to_3_0_0();
+			bb_rl_migrate_settings();
+		}
+
 		if ( $raw_db_version !== $current_db ) {
 			// @todo - Write only data manipulate migration here. ( This is not for DB structure change ).
 
@@ -632,6 +644,45 @@ function bp_pre_schema_upgrade() {
 			foreach ( $indexes as $index ) {
 				if ( $wpdb->query( $wpdb->prepare( 'SHOW TABLES LIKE %s', bp_esc_like( $table_name ) ) ) ) {
 					$wpdb->query( "ALTER TABLE {$table_name} DROP INDEX {$index}" );
+				}
+			}
+		}
+	}
+
+	// 3.0.0: Drop any malformed `post_title` index on bp_activity that lacks
+	// a prefix length. Some installs upgraded through an intermediate version that
+	// created `KEY post_title (post_title)` without the (191) length specifier
+	// against a TEXT column. When dbDelta later tries to re-spec the column, MySQL
+	// rejects the ALTER with: "BLOB/TEXT column 'post_title' used in key
+	// specification without a key length". Dropping the bad index here lets dbDelta
+	// recreate it correctly via the canonical schema in bp_core_install_activity_streams().
+	$activity_table = $bp_prefix . 'bp_activity';
+	$table_exists   = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', bp_esc_like( $activity_table ) ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+	if ( $table_exists ) {
+		// SUB_PART is NULL when an index has no prefix length. For indexes on a
+		// TEXT column, SUB_PART must be a positive integer (e.g. 191). The query
+		// also ignores FULLTEXT indexes (INDEX_TYPE = 'FULLTEXT') because those
+		// legitimately store no SUB_PART value but are valid on TEXT columns.
+		$bad_indexes = $wpdb->get_col( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+			$wpdb->prepare(
+				"SELECT DISTINCT INDEX_NAME
+				 FROM INFORMATION_SCHEMA.STATISTICS
+				 WHERE TABLE_SCHEMA = DATABASE()
+				   AND TABLE_NAME = %s
+				   AND COLUMN_NAME = 'post_title'
+				   AND SUB_PART IS NULL
+				   AND INDEX_TYPE != 'FULLTEXT'",
+				$activity_table
+			)
+		);
+
+		if ( ! empty( $bad_indexes ) ) {
+			foreach ( $bad_indexes as $index_name ) {
+				// Index name comes from INFORMATION_SCHEMA, not user input — safe to interpolate
+				// inside backticks. Cannot use prepare() for identifiers.
+				$index_name = preg_replace( '/[^A-Za-z0-9_]/', '', $index_name );
+				if ( '' !== $index_name ) {
+					$wpdb->query( "ALTER TABLE `{$activity_table}` DROP INDEX `{$index_name}`" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				}
 			}
 		}
@@ -4089,4 +4140,297 @@ function bb_update_to_2_16_1() {
 		// Clear activity API cache.
 		BuddyBoss\Performance\Cache::instance()->purge_by_component( 'bp_activity' );
 	}
+}
+
+/**
+ * Migration for BuddyBoss 3.0.0 - Settings 2.0 feature activation.
+ *
+ * Seeds bb-active-features based on existing settings so the new
+ * feature cards reflect the user's prior configuration.
+ *
+ * @since BuddyBoss 3.0.0
+ */
+function bb_update_to_3_0_0() {
+
+	// Seed media section toggle defaults when media component is active.
+	// This runs regardless of reactions migration state.
+	$active_components = bp_get_option( 'bp-active-components', array() );
+	if ( isset( $active_components['media'] ) ) {
+		bb_seed_media_section_toggle_defaults();
+	}
+
+	$active_features = bp_get_option( 'bb-active-features', array() );
+
+	// Reactions migration: only run if not yet migrated.
+	if ( ! isset( $active_features['reactions'] ) ) {
+		// Check the legacy bb_all_reactions option.
+		// Default: array( 'activity' => true, 'activity_comment' => true ).
+		$all_reactions = (array) bp_get_option( 'bb_all_reactions', array() );
+
+		// If ANY reaction type was enabled, enable the reactions feature.
+		$any_enabled = false;
+		foreach ( $all_reactions as $value ) {
+			if ( ! empty( $value ) ) {
+				$any_enabled = true;
+				break;
+			}
+		}
+
+		$active_features['reactions'] = $any_enabled ? 1 : 0;
+	}
+
+	// reCAPTCHA migration: auto-enable if already connected.
+	if ( ! isset( $active_features['recaptcha'] ) ) {
+		$recaptcha_settings = bp_get_option( 'bb_recaptcha', array() );
+		$is_connected       = ! empty( $recaptcha_settings['connection_status'] ) && 'connected' === $recaptcha_settings['connection_status'];
+
+		$active_features['recaptcha'] = $is_connected ? 1 : 0;
+	}
+
+	bp_update_option( 'bb-active-features', $active_features );
+
+	// Migrate legacy group avatar type: 'legacy' option removed from Settings 2.0.
+	$avatar_type = bp_get_option( 'bp-default-group-avatar-type', 'buddyboss' );
+	if ( 'legacy' === $avatar_type ) {
+		bp_update_option( 'bp-default-group-avatar-type', 'buddyboss' );
+	}
+
+	// Migrate legacy profile avatar type: 'legacy' option removed from Settings 2.0.
+	$profile_avatar_type = bp_get_option( 'bp-default-profile-avatar-type', 'buddyboss' );
+	if ( 'legacy' === $profile_avatar_type ) {
+		bp_update_option( 'bp-default-profile-avatar-type', 'buddyboss' );
+	}
+
+	bb_migrate_email_type_groups();
+}
+
+/**
+ * Companion migration for DB version 23584 — canonicalize ReadyLaunch
+ * sidebar/menu/pages option shapes. Runs alongside bb_update_to_3_0_0() as
+ * part of the same 3.0.0 release migration block.
+ *
+ * The legacy ReadyLaunch onboarding wizard persisted these options as sequential
+ * arrays:
+ *   bb_rl_activity_sidebars        [ 'complete_profile', 'latest_updates', ... ]
+ *   bb_rl_member_profile_sidebars  [ 'complete_profile', 'connections', ... ]
+ *   bb_rl_groups_sidebars          [ 'about_group', 'group_members' ]
+ *   bb_rl_enabled_pages            [ 'registration', 'courses' ]
+ *   bb_rl_side_menu                [ { id, enabled, order, icon }, ... ]
+ *
+ * Settings 2.0 expects the associative-map shape:
+ *   { complete_profile: 1, latest_updates: 1, ... }
+ *   { activity_feed: { enabled, order, icon }, ... }
+ *
+ * Reading the legacy shape into the Settings 2.0 React admin renders every
+ * toggle as unchecked because the AJAX layer's `array_map( 'absint', ... )`
+ * coerces the string members to `0`. This one-shot migration reads each
+ * option, normalizes via the same helpers the save-side sanitize callbacks
+ * use, and writes back. Idempotent — values already in canonical shape pass
+ * through unchanged.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @return void
+ */
+function bb_rl_migrate_settings() {
+	// Independent idempotency flag — the outer DB-version gate is shared with
+	// `bb_update_to_3_0_0()`. If that partially fails, the gate stays open and
+	// the version updater re-enters on every request until it succeeds. This
+	// migration is self-idempotent (list-to-map conversions no-op on already
+	// canonical data), but an explicit flag still saves five option reads +
+	// two helper calls per request during an incident window.
+	if ( bp_get_option( 'bb_rl_shapes_migrated' ) ) {
+		return;
+	}
+
+	if ( ! function_exists( 'bb_appearance_normalize_list_to_map' ) || ! function_exists( 'bb_appearance_normalize_side_menu_shape' ) ) {
+		return;
+	}
+
+	// Sequential list → associative `{ key => 1 }` map.
+	$list_options = array(
+		'bb_rl_activity_sidebars',
+		'bb_rl_member_profile_sidebars',
+		'bb_rl_groups_sidebars',
+		'bb_rl_enabled_pages',
+	);
+	foreach ( $list_options as $option_name ) {
+		$stored = bp_get_option( $option_name, null );
+		if ( null === $stored || ! is_array( $stored ) ) {
+			continue;
+		}
+		$normalized = bb_appearance_normalize_list_to_map( $stored );
+		if ( $normalized !== $stored ) {
+			bp_update_option( $option_name, $normalized );
+		}
+	}
+
+	// Sequential list of item objects → associative map keyed by id.
+	$side_menu = bp_get_option( 'bb_rl_side_menu', null );
+	if ( null !== $side_menu && is_array( $side_menu ) ) {
+		$normalized_menu = bb_appearance_normalize_side_menu_shape( $side_menu );
+		if ( $normalized_menu !== $side_menu ) {
+			bp_update_option( 'bb_rl_side_menu', $normalized_menu );
+		}
+	}
+
+	// Mark as complete so future `bp_version_updater` runs short-circuit even
+	// if the outer DB version bump happens to fail mid-flight.
+	//
+	// @todo: Remove after 3 release. Once every active site has run this
+	// migration the flag and the entire `bb_rl_migrate_settings()` function
+	// can be deleted along with its idempotency short-circuit at the top.
+	bp_update_option( 'bb_rl_shapes_migrated', 1 );
+}
+
+/**
+ * Seed media section toggle defaults into the database.
+ *
+ * Ensures that bb_media_*_support options exist in the DB with a default
+ * value of 1 (enabled) so that frontend/backend code reading them via
+ * get_option() or bp_get_option() gets `1` instead of `false`.
+ *
+ * @since BuddyBoss 3.0.0
+ */
+function bb_seed_media_section_toggle_defaults() {
+	$media_section_toggles = array(
+		'bb_media_photos_support',
+		'bb_media_videos_support',
+		'bb_media_documents_support',
+		'bb_media_emoji_support',
+		'bb_media_gif_support',
+	);
+
+	foreach ( $media_section_toggles as $toggle ) {
+		if ( false === bp_get_option( $toggle, false ) ) {
+			bp_update_option( $toggle, 1 );
+		}
+	}
+}
+
+/**
+ * Seed media section toggle defaults when media feature is activated.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @param string $feature_id The feature ID that was activated.
+ */
+function bb_on_media_feature_activated( $feature_id ) {
+	if ( 'media' === $feature_id ) {
+		bb_seed_media_section_toggle_defaults();
+	}
+}
+add_action( 'bb_feature_activated', 'bb_on_media_feature_activated' );
+
+/**
+ * Backfill bb_email_group term meta for all bp_email_type taxonomy terms.
+ *
+ * Email situations in Settings 2.0 are grouped by category (Activity, Groups, etc.).
+ * The group is resolved from the schema 'group' key at runtime, but the schema only
+ * includes email types from ACTIVE components. When a component is disabled, its email
+ * types disappear from the schema and would fall to "Other" group.
+ *
+ * This migration writes the group as term meta so it persists regardless of component state.
+ * Uses a hardcoded map of all known BB email types — safe because these slugs are controlled
+ * by BuddyBoss and never change.
+ *
+ * @since BuddyBoss 3.0.0
+ */
+function bb_migrate_email_type_groups() {
+
+	// One-time migration guard — skip if already completed.
+	if ( bp_get_option( 'bb_email_type_groups_migrated' ) ) {
+		return;
+	}
+
+	$taxonomy = function_exists( 'bp_get_email_tax_type' ) ? bp_get_email_tax_type() : 'bp_email_type';
+	$terms    = get_terms(
+		array(
+			'taxonomy'   => $taxonomy,
+			'hide_empty' => false,
+		)
+	);
+
+	if ( empty( $terms ) || is_wp_error( $terms ) ) {
+		return;
+	}
+
+	// Complete map of all known BB Platform + Pro email type slugs to group keys.
+	// This covers all 34 email types: 8 from core schema, 24 from notification classes, 2 from Pro Zoom.
+	$group_map = array(
+		// Account.
+		'core-user-registration'              => 'account',
+		'core-user-registration-with-blog'    => 'account',
+		'settings-verify-email-change'        => 'account',
+		'invites-member-invite'               => 'account',
+		'content-moderation-email'            => 'account',
+		'user-moderation-email'               => 'account',
+		'settings-password-changed'           => 'account',
+		'zoom-scheduled-meeting-email'        => 'account',
+		'zoom-scheduled-webinar-email'        => 'account',
+
+		// Activity.
+		'activity-at-message'                 => 'activity',
+		'activity-comment'                    => 'activity',
+		'activity-comment-author'             => 'activity',
+		'new-activity-following'              => 'activity',
+		'new-activity-following-poll'         => 'activity',
+		'new-comment-reply'                   => 'activity',
+		'new-mention'                         => 'activity',
+
+		// Groups & Discussions.
+		'groups-at-message'                   => 'groups_discussions',
+		'groups-details-updated'              => 'groups_discussions',
+		'groups-member-promoted'              => 'groups_discussions',
+		'groups-invitation'                   => 'groups_discussions',
+		'groups-membership-request'           => 'groups_discussions',
+		'groups-membership-request-accepted'  => 'groups_discussions',
+		'groups-membership-request-rejected'  => 'groups_discussions',
+		'groups-new-activity'                 => 'groups_discussions',
+		'groups-new-discussion'               => 'groups_discussions',
+		'new-mention-group'                   => 'groups_discussions',
+
+		// Forums (under Groups & Discussions).
+		'bbp-new-forum-reply'                 => 'groups_discussions',
+		'bbp-new-forum-topic'                 => 'groups_discussions',
+
+		// Connections.
+		'new-follower'                        => 'connections',
+		'friends-request'                     => 'connections',
+		'friends-request-accepted'            => 'connections',
+
+		// Messages.
+		'messages-unread'                     => 'messages',
+		'messages-unread-digest'              => 'messages',
+		'group-message-email'                 => 'messages',
+		'group-message-digest'                => 'messages',
+	);
+
+	/**
+	 * Filters the email type group map used during migration.
+	 *
+	 * Pro or third-party plugins can add their email types to the migration
+	 * so they get proper group assignment instead of falling to "Other".
+	 *
+	 * @since BuddyBoss 3.0.0
+	 *
+	 * @param array $group_map Email type slug => group key map.
+	 */
+	$group_map = apply_filters( 'bb_email_type_group_migration_map', $group_map );
+
+	foreach ( $terms as $term ) {
+		if ( isset( $group_map[ $term->slug ] ) ) {
+			// Known BB/Pro term — always set the correct group (overwrites stale values).
+			update_term_meta( $term->term_id, 'bb_email_group', sanitize_key( $group_map[ $term->slug ] ) );
+		} else {
+			// Unknown/third-party term — only set if no meta exists (don't overwrite).
+			$existing = get_term_meta( $term->term_id, 'bb_email_group', true );
+			if ( empty( $existing ) ) {
+				update_term_meta( $term->term_id, 'bb_email_group', 'other' );
+			}
+		}
+	}
+
+	// Mark migration as completed so it doesn't run again.
+	bp_update_option( 'bb_email_type_groups_migrated', true );
 }
