@@ -1,8 +1,5 @@
 /**
- * Help Screen — "Need Help?" hero.
- *
- * Full-width grey band introducing the in-app help. Spacing, typography, and
- * colour tokens transcribed from the Figma export at node 2808:9839.
+ * Help Screen
  *
  * @since BuddyBoss [BBVERSION]
  */
@@ -111,6 +108,7 @@
 	flex-wrap: wrap;
 	gap: 32px;
 	align-items: stretch;
+	margin-bottom: 56px;
 }
 
 .bb-admin-help-card {
@@ -125,7 +123,6 @@
 	border: 0.5px solid $bb-border-secondary-color;
 	border-radius: $bb-border-radius-2xl;
 	box-sizing: border-box;
-	margin-bottom: 56px;
 
 	&__icon {
 		flex-shrink: 0;
@@ -208,6 +205,7 @@
 	background-color: $bb-background-base-color;
 	border: 0.5px solid $bb-border-secondary-color;
 	border-radius: $bb-border-radius-2xl;
+	margin-bottom: 56px;
 
 	&__title {
 		margin: 0;
@@ -239,7 +237,6 @@
 	transition: background-color 0.15s ease, border-color 0.15s ease;
 	box-sizing: border-box;
 
-	// Hover state — matches the "BuddyBoss Theme" card in the Figma export.
 	&:hover,
 	&:focus {
 		background-color: $bb-background-primary-color;
@@ -249,8 +246,7 @@
 	}
 
 	&:focus-visible {
-		outline: 2px solid $bb-border-brand-primary-color;
-		outline-offset: 2px;
+		outline: 2px solid $bb-border-quinery;
 	}
 
 	&__head {
@@ -280,5 +276,285 @@
 		font-size: 13px;
 		font-weight: 500;
 		line-height: 18px;
+	}
+}
+
+.bb-admin-help-cta {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+	gap: 24px;
+	padding: 40px 24px;
+	background-color: $bb-background-secondary-hover-color;
+	border: 0.5px solid $bb-border-secondary-color;
+	border-radius: $bb-border-radius-2xl;
+	margin-bottom: 56px;
+
+	&__title {
+		margin: 0;
+		padding: 1px 8px;
+		color: $bb-text-color;
+		font-size: 22px;
+		font-weight: 600;
+		line-height: 30px;
+	}
+
+	&__action.is-primary {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		height: auto;
+		padding: 10px 16px;
+		color: $bb-text-inverse-color !important;
+		background-color: $bb-background-brand-primary-color !important;
+		border: 0;
+		border-radius: $bb-border-radius-lg;
+		box-shadow: none;
+		text-decoration: none;
+
+		&:hover,
+		&:focus {
+			color: $bb-text-inverse-color !important;
+			background-color: $bb-background-brand-primary-hover-color !important;
+			box-shadow: none !important;
+		}
+
+		&:focus-visible {
+			outline: 2px solid $bb-border-quinery;
+		}
+	}
+
+	&__action-icon {
+		font-size: 20px;
+		line-height: 1;
+		color: $bb-text-inverse-color;
+	}
+
+	&__action-label {
+		font-size: 14px;
+		font-weight: 500;
+		line-height: 20px;
+	}
+}
+
+.bb-admin-help-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 32px;
+	align-items: flex-start;
+	margin-top: 24px;
+
+	> * {
+		flex: 1 1 480px;
+		min-width: 0;
+	}
+}
+
+.bb-admin-help-getting-started {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+	padding: 24px 24px 32px;
+	background-color: $bb-background-base-color;
+	border: 0.5px solid $bb-border-secondary-color;
+	border-radius: $bb-border-radius-2xl;
+	box-sizing: border-box;
+
+	&__title {
+		margin: 0;
+		padding: 3px 8px;
+		color: $bb-text-color;
+		font-size: 18px;
+		font-weight: 500;
+		line-height: 26px;
+	}
+
+	&__list {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	&__item {
+		margin: 0;
+	}
+
+	&__link {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 2px 0;
+		min-height: 32px;
+		color: $bb-text-color;
+		text-decoration: none;
+
+		&:hover,
+		&:focus {
+			color: $bb-text-brand-primary-color;
+			text-decoration: none;
+			box-shadow: none;
+		}
+
+		&:focus-visible {
+			outline: 2px solid $bb-border-brand-primary-color;
+			outline-offset: 2px;
+		}
+	}
+
+	&__icon {
+		flex-shrink: 0;
+		font-size: 24px;
+		line-height: 1;
+		color: $bb-icon-brand-secondary-color;
+	}
+
+	&__label {
+		font-size: 14px;
+		font-weight: 500;
+		line-height: 20px;
+	}
+}
+
+.bb-admin-help-promo {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+	padding: 24px 32px;
+	background-color: $bb-background-base-color;
+	border: 0.5px solid $bb-border-brand-primary-color;
+	border-radius: $bb-border-radius-2xl;
+	box-sizing: border-box;
+
+	&__media {
+		width: 100%;
+		overflow: hidden;
+		border-radius: $bb-border-radius-2xl;
+	}
+
+	&__image {
+		display: block;
+		width: 100%;
+		height: auto;
+		max-height: 210px;
+		object-fit: cover;
+		border-radius: $bb-border-radius-2xl;
+	}
+
+	&__body {
+		display: flex;
+		flex-direction: column;
+		gap: 24px;
+	}
+
+	&__text {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+
+	&__eyebrow {
+		margin: 0;
+		color: $bb-text-brand-primary-color;
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 18px;
+	}
+
+	&__title {
+		margin: 0;
+		color: $bb-text-color;
+		font-size: 16px;
+		font-weight: 500;
+		line-height: 22px;
+	}
+
+	&__description {
+		margin: 0;
+		color: $bb-text-tertiary-color;
+		font-size: 13px;
+		font-weight: 400;
+		line-height: 18px;
+	}
+
+	&__action.is-primary {
+		display: inline-flex;
+		align-self: flex-start;
+		align-items: center;
+		gap: 4px;
+		height: auto;
+		padding: 10px 16px;
+		color: $bb-text-inverse-color !important;
+		background-color: $bb-background-brand-primary-color !important;
+		border: 0;
+		border-radius: $bb-border-radius-lg;
+		box-shadow: none;
+		text-decoration: none;
+
+		&:hover,
+		&:focus {
+			color: $bb-text-inverse-color !important;
+			background-color: $bb-background-brand-primary-hover-color !important;
+			box-shadow: none !important;
+		}
+
+		&:focus-visible {
+			outline: 2px solid $bb-border-quinery;
+		}
+	}
+
+	&__action-label {
+		font-size: 14px;
+		font-weight: 500;
+		line-height: 20px;
+	}
+}
+
+.bb-admin-help-footer {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	padding: 24px;
+	background-color: $bb-background-base-color;
+	border-top: 1px solid $bb-border-primary-color;
+
+	&__action.is-primary {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		height: auto;
+		padding: 10px 16px;
+		color: $bb-text-inverse-color !important;
+		background-color: $bb-background-brand-primary-color !important;
+		border: 0;
+		border-radius: $bb-border-radius-lg;
+		box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
+		text-decoration: none;
+
+		&:hover,
+		&:focus {
+			color: $bb-text-inverse-color !important;
+			background-color: $bb-background-brand-primary-hover-color !important;
+			box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.18) !important;
+		}
+
+		&:focus-visible {
+			outline: 2px solid $bb-border-quinery;
+		}
+	}
+
+	&__action-icon {
+		font-size: 20px;
+		line-height: 1;
+		color: $bb-text-inverse-color;
+	}
+
+	&__action-label {
+		font-size: 14px;
+		font-weight: 500;
+		line-height: 20px;
 	}
 }
