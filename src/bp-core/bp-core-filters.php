@@ -241,7 +241,10 @@ function bp_core_menu_highlight_parent_page( $retval, $page ) {
 	if ( ! empty( $page_id ) ) {
 		$_bp_page = get_post( $page_id );
 
-		if ( isset( $page->ID ) && in_array( $page->ID, $_bp_page->ancestors, true ) ) {
+		// `get_post()` returns null when the directory page ID stored in
+		// `bp-pages` references a trashed/deleted post. Skip the ancestor
+		// check rather than fatal on `null->ancestors` (PHP 8+).
+		if ( $_bp_page instanceof WP_Post && isset( $page->ID ) && in_array( $page->ID, $_bp_page->ancestors, true ) ) {
 			$retval[] = 'current_page_ancestor';
 		}
 
@@ -1388,7 +1391,11 @@ function bp_dd_update_group_cover_images_url( $attachment_data, $param ) {
 	if ( ! empty( $group_id ) && isset( $param['type'] ) && 'cover-image' == $param['type'] ) {
 
 		// check in group
-		if ( isset( $param['object_dir'] ) && 'groups' == $param['object_dir'] ) {
+		// `groups_get_groupmeta()` is loaded by the groups component; when
+		// groups is deactivated via Settings 2.0 the function is undefined.
+		// This filter is fired by S3-Offload-Media and similar plugins for
+		// every attachment URL lookup, regardless of BP component state.
+		if ( isset( $param['object_dir'] ) && 'groups' == $param['object_dir'] && bp_is_active( 'groups' ) ) {
 			$cover_image = trim( groups_get_groupmeta( $group_id, 'cover-image' ) );
 			if ( ! empty( $cover_image ) ) {
 				$attachment_data = $cover_image;
@@ -1489,7 +1496,9 @@ function bp_dd_fetch_dummy_avatar_url( $avatar_url, $params ) {
 	if ( ! empty( $item_id ) && isset( $params['avatar_dir'] ) ) {
 
 		// check for groups avatar
-		if ( 'group-avatars' == $params['avatar_dir'] ) {
+		// Same gating rationale as `bp_dd_update_group_cover_images_url()`
+		// above — `groups_get_groupmeta()` requires the groups component.
+		if ( 'group-avatars' == $params['avatar_dir'] && bp_is_active( 'groups' ) ) {
 			$cover_image = trim( groups_get_groupmeta( $item_id, 'avatars' ) );
 			if ( ! empty( $cover_image ) ) {
 				$avatar_url = $cover_image;
