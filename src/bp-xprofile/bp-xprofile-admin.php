@@ -24,21 +24,26 @@ defined( 'ABSPATH' ) || exit;
  * @return bool
  */
 function xprofile_add_admin_menu() {
+	global $submenu;
 
 	// Bail if current user cannot moderate community.
 	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
 		return false;
 	}
 
-	add_submenu_page(
-		'buddyboss-platform',
-		__( 'Profiles', 'buddyboss' ),
+	// Register the menu item pointing directly to the React Settings 2.0 page.
+	// Direct visits to the legacy `?page=bp-profile-setup` are caught upstream
+	// by `bb_redirect_bp_settings_before_permission_check()` at
+	// `admin_menu @ PHP_INT_MAX` so they don't 403.
+	$settings_url = function_exists( 'bb_get_feature_settings_url' )
+		? bb_get_feature_settings_url( 'members', 'profile_fields' )
+		: admin_url( 'admin.php?page=bb-settings&tab=members&panel=profile_fields' );
+
+	$submenu['buddyboss-platform'][] = array(
 		__( 'Profiles', 'buddyboss' ),
 		'bp_moderate',
-		'bp-profile-setup',
-		'__return_null'
+		$settings_url,
 	);
-
 }
 add_action( bp_core_admin_hook(), 'xprofile_add_admin_menu' );
 
