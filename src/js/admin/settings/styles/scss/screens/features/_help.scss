@@ -1,0 +1,126 @@
+/**
+ * Help Screen — "Need Help?" hero.
+ *
+ * Full-width grey band introducing the in-app help. Spacing, typography, and
+ * colour tokens transcribed from the Figma export at node 2808:9839.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+
+.bb-admin-help-screen {
+	// Match the Header's left-edge handling so the hero band reaches the
+	// admin content edges (WP's `.wrap` has built-in 20px right padding via
+	// `#wpbody-content`, and the BB admin shell already negates -20px on the
+	// header).
+	margin: 0 -20px;
+}
+
+.bb-admin-help-hero {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 24px;
+	padding: 32px 16px 40px;
+	background-color: $bb-background-secondary-hover-color;
+
+	&__intro {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 8px;
+		max-width: 413px;
+		text-align: center;
+	}
+
+	&__title {
+		margin: 0;
+		padding: 3px 0;
+		color: $bb-text-color;
+		font-size: 18px;
+		font-weight: 600;
+		line-height: 26px;
+	}
+
+	&__subtitle {
+		margin: 0;
+		padding: 2px 8px;
+		color: $bb-text-tertiary-color;
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 20px;
+	}
+
+	&__search {
+		position: relative;
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		width: 600px;
+		max-width: 90%;
+		padding: 8px 16px;
+		background-color: $bb-background-base-color;
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-full;
+
+		&:focus-within {
+			border-color: $bb-border-quaternary-color;
+		}
+
+		input {
+			color: $bb-text-color;
+			font-size: 14px;
+			border: 0;
+			outline: none;
+			-webkit-appearance: none;
+			appearance: none;
+
+			&:focus {
+				outline: none;
+				box-shadow: none;
+			}
+
+			&::-webkit-search-cancel-button,
+			&::-webkit-search-decoration,
+			&::-webkit-search-results-button,
+			&::-webkit-search-results-decoration {
+				display: none;
+				-webkit-appearance: none;
+				appearance: none;
+			}
+		}
+	}
+
+	&__search-icon {
+		flex-shrink: 0;
+		font-size: 24px;
+		line-height: 1;
+		color: $bb-icon-tertiary-color;
+	}
+
+	&__search-input {
+		flex: 1;
+		min-width: 0;
+		margin: 0;
+		padding: 0;
+		color: $bb-text-color;
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 20px;
+		background: transparent;
+		border: 0;
+		box-shadow: none;
+		outline: none;
+
+		&:focus {
+			background: transparent;
+			border: 0;
+			box-shadow: none;
+			outline: none;
+		}
+
+		&::placeholder {
+			color: $bb-text-tertiary-color;
+			opacity: 1;
+		}
+	}
+}
