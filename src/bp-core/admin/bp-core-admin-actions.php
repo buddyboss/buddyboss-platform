@@ -830,11 +830,19 @@ function bb_redirect_legacy_settings_to_settings_2() {
 		 * @param array $cpt_redirects Post type slug => Settings 2.0 URL path.
 		 */
 		$cpt_redirects = array(
-			bp_get_email_post_type()             => 'admin.php?page=bb-settings&tab=emails&panel=all_emails',
-			bp_get_invite_post_type()            => 'admin.php?page=bb-settings&tab=invites&panel=invites_list',
-			bp_groups_get_group_type_post_type() => 'admin.php?page=bb-settings&tab=groups&panel=group_types',
-			bp_get_member_type_post_type()       => 'admin.php?page=bb-settings&tab=members&panel=profile_types',
+			bp_get_email_post_type()       => 'admin.php?page=bb-settings&tab=emails&panel=all_emails',
+			bp_get_member_type_post_type() => 'admin.php?page=bb-settings&tab=members&panel=profile_types',
 		);
+
+		// Group type CPT only available when groups component is active.
+		if ( function_exists( 'bp_groups_get_group_type_post_type' ) ) {
+			$cpt_redirects[ bp_groups_get_group_type_post_type() ] = 'admin.php?page=bb-settings&tab=groups&panel=group_types';
+		}
+
+		// Invite CPT only available when invites component is active.
+		if ( function_exists( 'bp_get_invite_post_type' ) ) {
+			$cpt_redirects[ bp_get_invite_post_type() ] = 'admin.php?page=bb-settings&tab=invites&panel=invites_list';
+		}
 
 		// Forum CPTs (only when forums component is active).
 		if ( bp_is_active( 'forums' ) ) {
