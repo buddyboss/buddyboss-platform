@@ -200,11 +200,47 @@ function bb_redirect_bp_settings_before_permission_check() {
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
 	$page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
 
-	// Retired Settings 2.0 standalone admin pages whose submenu registrations
-	// were removed. Forwarded here (admin_menu @ PHP_INT_MAX) because their
-	// slugs no longer exist at the `user_can_access_admin_page()` check — any
-	// redirect on `bp_admin_init` would be too late and the request would 403.
-	// Extend this list when retiring further standalone admin screens.
+	// Retired Settings 2.0 standalone admin pages whose submenu items now
+	// register a Settings 2.0 URL as their slug (Groups / Moderation / Profile
+	// Fields). The legacy slug `?page=bp-groups` etc. is no longer registered
+	// with WP, so a direct visit would 403 at `user_can_access_admin_page()`
+	// without this early forward. Sidebar link clicks land on the new URL
+	// directly — this map only matters for direct old-URL hits
+	// (LearnDash, bookmarks, third-party links).
+	//
+	// Extend this map when retiring further standalone admin screens whose
+	// `add_submenu_page` registration has been switched to a URL slug.
+	$retired_pages = array(
+		'bp-groups'        => 'admin.php?page=bb-settings&tab=groups&panel=all_groups',
+		'bp-moderation'    => 'admin.php?page=bb-settings&tab=moderation&panel=flagged_members',
+		'bp-profile-setup' => 'admin.php?page=bb-settings&tab=members&panel=profile_fields',
+	);
+	if ( isset( $retired_pages[ $page ] ) ) {
+		$target = bp_get_admin_url( $retired_pages[ $page ] );
+
+		// Preserve any non-routing query args (deep-link flags, etc.).
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
+		$reserved = array( 'page', 'tab', 'panel' );
+		$extra_qs = array();
+		foreach ( $_GET as $key => $value ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
+			if ( in_array( $key, $reserved, true ) ) {
+				continue;
+			}
+			if ( is_scalar( $value ) ) {
+				$extra_qs[ sanitize_key( $key ) ] = sanitize_text_field( wp_unslash( $value ) );
+			}
+		}
+		if ( ! empty( $extra_qs ) ) {
+			$target = add_query_arg( $extra_qs, $target );
+		}
+
+		wp_safe_redirect( $target );
+		exit;
+	}
+
+	// Other retired Settings 2.0 standalone admin pages whose submenu
+	// registrations were removed entirely (no replacement add_submenu_page
+	// call). Same 403-prevention rationale as the map above.
 	if ( 'bp-pages' === $page ) {
 		$bp_pages_target = bp_get_admin_url( 'admin.php?page=bb-settings&tab=appearance&panel=pages' );
 
