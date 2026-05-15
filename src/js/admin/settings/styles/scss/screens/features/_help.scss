@@ -10,9 +10,15 @@
 }
 
 .bb-admin-help-wrapper {
-	max-width: 865px;
+	max-width: 1248px;
 	margin: 0 auto;
-	padding: 32px 24px;
+	padding: 64px 24px 56px;
+
+	.bb-admin-support-access & {
+		max-width: 865px;
+		margin: 0 auto;
+		padding: 32px 24px;
+	}
 }
 
 .bb-admin-help-hero {
