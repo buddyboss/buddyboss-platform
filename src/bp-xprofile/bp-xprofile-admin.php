@@ -47,6 +47,11 @@ function xprofile_add_admin_menu() {
 }
 add_action( bp_core_admin_hook(), 'xprofile_add_admin_menu' );
 
+// Bootstrap the per-user xprofile metabox UI on the Users -> Edit User -> Extended Profile
+// screen (`users.php?page=bp-profile-edit`). This is unrelated to the legacy field-editor
+// admin removed in PROD-9699 and must remain registered.
+add_action( 'bp_init', array( 'BP_XProfile_User_Admin', 'register_xprofile_user_admin' ), 11 );
+
 /**
  * Save repeater option temporary before save group details.
  *
