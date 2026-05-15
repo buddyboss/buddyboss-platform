@@ -13,6 +13,7 @@
 import { useState, useEffect } from '@wordpress/element';
 import { Button, ToggleControl, TextareaControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
+import { ModifyDurationModal } from '../components/modals/ModifyDurationModal';
 
 /**
  * Initial mock countdown for the design — wired here as local state so the
@@ -77,6 +78,14 @@ export function SupportAccessScreen( { onNavigate } ) {
 	var countdown = countdownState[ 0 ];
 	var setCountdown = countdownState[ 1 ];
 
+	var durationState = useState( '5' );
+	var duration = durationState[ 0 ];
+	var setDuration = durationState[ 1 ];
+
+	var modalOpenState = useState( false );
+	var isModalOpen = modalOpenState[ 0 ];
+	var setIsModalOpen = modalOpenState[ 1 ];
+
 	useEffect( function () {
 		if ( ! enabled ) {
 			return;
@@ -126,7 +135,7 @@ export function SupportAccessScreen( { onNavigate } ) {
 					</span>
 				</button>
 
-				<section className="bb-admin-support-access__enable-card">
+				<section className={ 'bb-admin-support-access__enable-card ' + (!enabled ? 'bb-admin-support-access__enable-card--disabled' : '')}>
 					<div className="bb-admin-support-access__enable-text">
 						<h2 className="bb-admin-support-access__enable-title">
 							{ __( 'Enable Support Access', 'buddyboss' ) }
@@ -167,6 +176,7 @@ export function SupportAccessScreen( { onNavigate } ) {
 							<Button
 								variant="secondary"
 								className="bb-admin-support-access__modify"
+								onClick={ function () { setIsModalOpen( true ); } }
 							>
 								{ __( 'Modify Duration', 'buddyboss' ) }
 							</Button>
@@ -237,6 +247,29 @@ export function SupportAccessScreen( { onNavigate } ) {
 					</section>
 				) }
 			</div>
+
+			<ModifyDurationModal
+				isOpen={ isModalOpen }
+				value={ duration }
+				onClose={ function () { setIsModalOpen( false ); } }
+				onSave={ function ( value ) {
+					// "Extend support access by" — add the selected days to the
+					// live countdown. Client-side placeholder; once the AJAX
+					// endpoint exists, persist there and re-seed the countdown
+					// from the server-returned expiry instead.
+					var addDays = parseInt( value, 10 ) || 0;
+					setDuration( value );
+					setCountdown( function ( prev ) {
+						return {
+							days: prev.days + addDays,
+							hours: prev.hours,
+							minutes: prev.minutes,
+							seconds: prev.seconds,
+						};
+					} );
+					setIsModalOpen( false );
+				} }
+			/>
 		</div>
 	);
 }

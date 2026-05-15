@@ -10,9 +10,9 @@
 }
 
 .bb-admin-help-wrapper {
-	max-width: 1248px;
+	max-width: 865px;
 	margin: 0 auto;
-	padding: 64px 24px 56px;
+	padding: 32px 24px;
 }
 
 .bb-admin-help-hero {
@@ -616,6 +616,10 @@
 		border: 0.5px solid $bb-border-brand-primary-color;
 		border-radius: $bb-border-radius-2xl;
 		box-shadow: 0 1px 0.5px 0 rgba(0, 0, 0, 0.15);
+
+		&--disabled {
+			border-color: $bb-border-quaternary-color;
+		}
 	}
 
 	&__enable-text {
@@ -859,11 +863,6 @@
 		}
 	}
 
-	// Empty-state shown when the toggle is OFF. Spec from Figma 2871:38171 —
-	// outer panel keeps its standard 0.5px secondary border + 16px radius,
-	// inner empty-state wrapper has px-40 py-24 (total visual padding from
-	// the card edge is 48px vertical / 64px horizontal — the panel's own
-	// 24px plus the inner wrapper's 24/40). gap-16 between icon and texts.
 	&__panel--disabled {
 		flex-direction: column;
 		align-items: center;
@@ -872,8 +871,6 @@
 		text-align: center;
 	}
 
-	// Icon wrap — 8px padding around a 24px icon, 0.5px secondary border,
-	// radius-lg. No fixed dimensions, so the wrap hugs the icon.
 	&__disabled-icon {
 		display: inline-flex;
 		align-items: center;
@@ -890,7 +887,6 @@
 		}
 	}
 
-	// Texts column — 4px gap between title and description, center-aligned.
 	&__disabled-text {
 		display: flex;
 		flex-direction: column;
@@ -899,7 +895,6 @@
 		width: 100%;
 	}
 
-	// heading/lg-medium — 16 / 500 / 22.
 	&__disabled-title {
 		margin: 0;
 		padding: 0 8px 1px;
@@ -909,7 +904,6 @@
 		line-height: 22px;
 	}
 
-	// body/regular — 13 / 400 / 18, tertiary.
 	&__disabled-desc {
 		margin: 0;
 		padding: 3px 8px;
@@ -917,5 +911,16 @@
 		font-size: 13px;
 		font-weight: 400;
 		line-height: 18px;
+	}
+}
+
+.bb-admin-modify-duration-modal {
+
+	&.components-modal__frame {
+		max-width: 480px;
+	}
+
+	.bb-admin-settings-modal__body {
+		padding: 16px 24px;
 	}
 }
