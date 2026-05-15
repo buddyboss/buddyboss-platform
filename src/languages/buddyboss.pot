@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 3.0.1\n"
+"Project-Id-Version: BuddyBoss Platform 3.0.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-05-14 11:47:29+00:00\n"
+"POT-Creation-Date: 2026-05-15 14:24:32+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -17207,29 +17207,25 @@ msgstr ""
 msgid "XProfile admin field action"
 msgstr ""
 
-#: bp-core/deprecated/buddyboss/3.0.0.php:1595
-msgid "XProfile admin group action"
-msgstr ""
-
 #. translators: %s: hook name
-#: bp-core/deprecated/buddyboss/3.0.0.php:1606
+#: bp-core/deprecated/buddyboss/3.0.0.php:1605
 msgid "The %s hook is no longer fired in the Settings 2.0 React admin interface. Extend the React UI via custom JavaScript instead."
 msgstr ""
 
 #. translators: %s: hook name
-#: bp-core/deprecated/buddyboss/3.0.0.php:1640
+#: bp-core/deprecated/buddyboss/3.0.0.php:1639
 msgid "The %s filter is no longer used. Profile admin tabs are now managed via Settings 2.0 side panels."
 msgstr ""
 
-#: bp-core/deprecated/buddyboss/3.0.0.php:1911
+#: bp-core/deprecated/buddyboss/3.0.0.php:1910
 msgid "This endpoint has been deprecated. Use bb_admin_discussion_autocomplete instead."
 msgstr ""
 
-#: bp-core/deprecated/buddyboss/3.0.0.php:1925
+#: bp-core/deprecated/buddyboss/3.0.0.php:1924
 msgid "This endpoint has been deprecated. Use bb_admin_reply_autocomplete instead."
 msgstr ""
 
-#: bp-core/deprecated/buddyboss/3.0.0.php:1939
+#: bp-core/deprecated/buddyboss/3.0.0.php:1938
 msgid "This endpoint has been deprecated."
 msgstr ""
 
