@@ -47,6 +47,9 @@ function xprofile_add_admin_menu() {
 }
 add_action( bp_core_admin_hook(), 'xprofile_add_admin_menu' );
 
+// Load the xprofile user admin.
+add_action( 'bp_init', array( 'BP_XProfile_User_Admin', 'register_xprofile_user_admin' ), 11 );
+
 /**
  * Save repeater option temporary before save group details.
  *

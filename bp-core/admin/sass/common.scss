@@ -4602,3 +4602,15 @@ table.users {
 		}
 	}
 }
+
+#your-profile[id] {
+
+	.bp-profile-field > fieldset > legend {
+		min-height: auto;
+	}
+
+	.field-visibility-settings .bp-radio-wrap {
+		display: flex;
+		align-items: center;
+	}
+}
