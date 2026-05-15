@@ -22,8 +22,6 @@ var DURATION_OPTIONS = [
 	{ label: __( '3 days', 'buddyboss' ), value: '3' },
 	{ label: __( '5 days', 'buddyboss' ), value: '5' },
 	{ label: __( '7 days', 'buddyboss' ), value: '7' },
-	{ label: __( '14 days', 'buddyboss' ), value: '14' },
-	{ label: __( '30 days', 'buddyboss' ), value: '30' },
 ];
 
 /**
