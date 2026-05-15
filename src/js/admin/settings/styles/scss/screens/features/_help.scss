@@ -570,3 +570,352 @@
 		line-height: 20px;
 	}
 }
+
+.bb-admin-support-access {
+
+	&__back {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		padding: 6px 8px;
+		margin-bottom: 16px;
+		background: transparent;
+		border: 0;
+		cursor: pointer;
+		color: $bb-text-color;
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 20px;
+		border-radius: $bb-border-radius-md;
+
+		&:hover,
+		&:focus {
+			color: $bb-text-brand-primary-color;
+			background: transparent;
+		}
+
+		&:focus-visible {
+			outline: 2px solid $bb-border-quinery;
+			outline-offset: 2px;
+		}
+	}
+
+	&__back-icon {
+		font-size: 16px;
+		line-height: 1;
+	}
+
+	&__enable-card {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 24px;
+		padding: 16px 24px;
+		margin-bottom: 16px;
+		background-color: $bb-background-base-color;
+		border: 0.5px solid $bb-border-brand-primary-color;
+		border-radius: $bb-border-radius-2xl;
+		box-shadow: 0 1px 0.5px 0 rgba(0, 0, 0, 0.15);
+	}
+
+	&__enable-text {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+		padding: 7px 0;
+		min-width: 0;
+	}
+
+	&__enable-title {
+		margin: 0;
+		color: $bb-text-color;
+		font-size: 16px;
+		font-weight: 500;
+		line-height: 22px;
+	}
+
+	&__enable-desc {
+		margin: 0;
+		max-width: 736px;
+		color: $bb-text-tertiary-color;
+		font-size: 13px;
+		font-weight: 400;
+		line-height: 18px;
+	}
+
+	&__enable-toggle {
+		flex-shrink: 0;
+
+		.components-toggle-control {
+			margin: 0;
+
+			.components-base-control__field {
+				margin: 0;
+			}
+		}
+	}
+
+	&__panel {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+		padding: 24px;
+		background-color: $bb-background-base-color;
+		border: 0.5px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-xl;
+	}
+
+	&__row {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 24px;
+		flex-wrap: wrap;
+	}
+
+	&__countdown {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		min-width: 0;
+	}
+
+	&__countdown-label {
+		margin: 0;
+		padding: 3px 0;
+		color: $bb-text-secondary-color;
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 18px;
+	}
+
+	&__countdown-tiles {
+		display: flex;
+		gap: 8px;
+		flex-wrap: wrap;
+	}
+
+	&__tile {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 8px;
+	}
+
+	&__tile-value {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 3px 16px;
+		color: $bb-text-color;
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 18px;
+		background-color: $bb-background-base-color;
+		border: 0.5px solid $bb-border-tertiary-color;
+		border-radius: $bb-border-radius-md;
+		font-variant-numeric: tabular-nums;
+	}
+
+	&__tile-label {
+		color: $bb-text-tertiary-color;
+		font-size: 11px;
+		font-weight: 400;
+		line-height: 16px;
+	}
+
+	&__modify.is-secondary {
+		@include bb-button-primary-outline;
+		font-size: 14px;
+		flex-shrink: 0;
+	}
+
+	&__divider {
+		height: 0.5px;
+		background-color: $bb-border-primary-color;
+	}
+
+	&__note {
+
+		.components-base-control__label {
+			display: block;
+			margin-bottom: 8px;
+			padding: 3px 0;
+			color: $bb-text-secondary-color;
+			font-size: 13px;
+			font-weight: 500;
+			line-height: 18px;
+			text-transform: none;
+		}
+
+		textarea.components-textarea-control__input {
+			width: 100%;
+			min-height: 72px;
+			padding: 8px;
+			color: $bb-text-color;
+			font-size: 14px;
+			line-height: 20px;
+			background-color: $bb-background-primary-color;
+			border: 0.5px solid $bb-border-secondary-color;
+			border-radius: $bb-border-radius-lg;
+			box-shadow: none;
+			resize: vertical;
+
+			&::placeholder {
+				color: $bb-text-tertiary-color;
+				opacity: 1;
+			}
+
+			&:focus {
+				border-color: $bb-border-quaternary-color;
+				box-shadow: none;
+				outline: none;
+			}
+		}
+	}
+
+	&__sessions {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+
+	&__sessions-label {
+		margin: 0;
+		padding: 3px 0;
+		color: $bb-text-secondary-color;
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 18px;
+	}
+
+	&__sessions-list {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	&__session {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		min-height: 32px;
+		padding: 4px 8px;
+		background-color: $bb-background-positive-primary-color;
+		border: 0.5px solid $bb-border-positive-secondary-color;
+		border-radius: $bb-border-radius-lg;
+		color: $bb-text-color;
+		font-size: 13px;
+		font-weight: 400;
+		line-height: 18px;
+	}
+
+	&__session-icon {
+		flex-shrink: 0;
+		font-size: 20px;
+		font-weight: 500;
+		line-height: 1;
+		color: $bb-text-positive-primary-color;
+	}
+
+	&__session-label {
+		flex: 1;
+		min-width: 0;
+	}
+
+	&__actions {
+		display: flex;
+		justify-content: flex-end;
+	}
+
+	&__ticket.is-primary {
+		display: inline-flex;
+		align-items: center;
+		height: auto;
+		padding: 6px 16px;
+		color: $bb-text-inverse-color !important;
+		background-color: $bb-background-brand-primary-color !important;
+		border: 0;
+		border-radius: $bb-border-radius-lg;
+		box-shadow: none;
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 20px;
+
+		&:hover,
+		&:focus {
+			color: $bb-text-inverse-color !important;
+			background-color: $bb-background-brand-primary-hover-color !important;
+			box-shadow: none !important;
+		}
+
+		&:focus-visible {
+			outline: 2px solid $bb-border-quinery;
+		}
+	}
+
+	// Empty-state shown when the toggle is OFF. Spec from Figma 2871:38171 —
+	// outer panel keeps its standard 0.5px secondary border + 16px radius,
+	// inner empty-state wrapper has px-40 py-24 (total visual padding from
+	// the card edge is 48px vertical / 64px horizontal — the panel's own
+	// 24px plus the inner wrapper's 24/40). gap-16 between icon and texts.
+	&__panel--disabled {
+		flex-direction: column;
+		align-items: center;
+		gap: 16px;
+		padding: 48px 64px;
+		text-align: center;
+	}
+
+	// Icon wrap — 8px padding around a 24px icon, 0.5px secondary border,
+	// radius-lg. No fixed dimensions, so the wrap hugs the icon.
+	&__disabled-icon {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 8px;
+		background-color: $bb-background-base-color;
+		border: 0.5px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-lg;
+
+		i {
+			font-size: 24px;
+			line-height: 1;
+			color: $bb-icon-secondary-color;
+		}
+	}
+
+	// Texts column — 4px gap between title and description, center-aligned.
+	&__disabled-text {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 4px;
+		width: 100%;
+	}
+
+	// heading/lg-medium — 16 / 500 / 22.
+	&__disabled-title {
+		margin: 0;
+		padding: 0 8px 1px;
+		color: $bb-text-color;
+		font-size: 16px;
+		font-weight: 500;
+		line-height: 22px;
+	}
+
+	// body/regular — 13 / 400 / 18, tertiary.
+	&__disabled-desc {
+		margin: 0;
+		padding: 3px 8px;
+		color: $bb-text-tertiary-color;
+		font-size: 13px;
+		font-weight: 400;
+		line-height: 18px;
+	}
+}

@@ -17,7 +17,7 @@ import doneForYouImage from '../images/help-done-for-you.png';
  *
  * @returns {JSX.Element} Help screen.
  */
-export function HelpScreen() {
+export function HelpScreen( { onNavigate } ) {
 	var searchState = useState( '' );
 	var searchQuery = searchState[ 0 ];
 	var setSearchQuery = searchState[ 1 ];
@@ -102,6 +102,11 @@ export function HelpScreen() {
 						<Button
 							variant="secondary"
 							className="bb-admin-help-card__action"
+							onClick={ function () {
+								if ( 'function' === typeof onNavigate ) {
+									onNavigate( '/settings/help/support-access' );
+								}
+							} }
 						>
 							{ __( 'Open Access', 'buddyboss' ) }
 						</Button>

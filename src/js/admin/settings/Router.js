@@ -12,6 +12,7 @@ import { getCachedFeatures } from './utils/ajax';
 import { SettingsScreen } from './screens/SettingsScreen';
 import { FeatureSettingsScreen } from './screens/FeatureSettingsScreen';
 import { HelpScreen } from './screens/HelpScreen';
+import { SupportAccessScreen } from './screens/SupportAccessScreen';
 
 // Lazy load feature-specific screens (code splitting)
 const ActivityListScreen = lazy(() => import('./screens/ActivityListScreen'));
@@ -225,7 +226,12 @@ export function Router({ currentRoute, onNavigate }) {
 			// FeatureSettingsScreen (which would request bb_admin_get_feature_settings
 			// for an unknown feature ID).
 			if ( 'help' === featureId ) {
-				return <HelpScreen />;
+				// Sub-route: /settings/help/support-access opens the dedicated
+				// Support Access management page from the Open Access card.
+				if ( 'support-access' === sidePanelId ) {
+					return <SupportAccessScreen onNavigate={onNavigate} />;
+				}
+				return <HelpScreen onNavigate={onNavigate} />;
 			}
 
 			if (featureId) {
