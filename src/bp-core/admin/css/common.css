@@ -4607,3 +4607,12 @@ table.users .unsuspend a.disabled[data-bp-tooltip]:after {
     font-size: 13px;
   }
 }
+
+#your-profile[id] .bp-profile-field > fieldset > legend {
+  min-height: auto;
+}
+
+#your-profile[id] .field-visibility-settings .bp-radio-wrap {
+  display: flex;
+  align-items: center;
+}
