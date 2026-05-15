@@ -1592,7 +1592,6 @@ function bb_deprecated_xprofile_admin_rendering_hooks() {
 		'xprofile_field_additional_options'      => __( 'XProfile field additional options', 'buddyboss' ),
 		'xprofile_admin_field_name_legend'       => __( 'XProfile admin field name legend', 'buddyboss' ),
 		'xprofile_admin_field_action'            => __( 'XProfile admin field action', 'buddyboss' ),
-		'xprofile_admin_group_action'            => __( 'XProfile admin group action', 'buddyboss' ),
 	);
 
 	foreach ( $deprecated_hooks as $hook => $description ) {
