@@ -63,6 +63,11 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 			return;
 		}
 
+		// If no progress data available (e.g. no applicable fields), bail to avoid undefined key warnings.
+		if ( empty( $user_progress ) || ! isset( $user_progress['completion_percentage'] ) ) {
+			return;
+		}
+
 		// Hide the widget if "Hide widget once progress hits 100%" selected and progress is 100%
 		if ( 100 === (int) $user_progress['completion_percentage'] && ! empty( $instance['profile_hide_widget'] ) ) {
 			return;
