@@ -1169,6 +1169,15 @@ class BB_Admin_Profile_Fields_Ajax {
 			// the empty result fresh — no need (and not permitted, since the
 			// property is protected) to poke `$field->member_types`.
 			bp_xprofile_delete_meta( $field->id, 'field', 'member_type' );
+
+			// Mirror the action `set_member_types()` fires at
+			// `class-bp-xprofile-field.php:788` so listeners that piggy-back on
+			// member-type changes still run. The platform's own listener
+			// `bp_xprofile_clear_member_type_cache` (`bp-xprofile-cache.php:232`)
+			// flushes the global `field_member_types` cache key — without this
+			// fire, that cache stays stale and `get_member_types()` keeps
+			// returning the pre-delete value until the cache TTL/eviction.
+			do_action( 'bp_xprofile_field_set_member_type', $field );
 		}
 	}
 }
