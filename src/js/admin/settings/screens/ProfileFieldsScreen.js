@@ -478,8 +478,21 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 			);
 		}
 		if ( 'none' === field.member_type_mode ) {
+			// Match the dropdown option label verbatim so the list view
+			// reads the same string the modal does. The previous short
+			// "No Profile Type" was ambiguous — could be read as "no
+			// profile type assigned yet" instead of its actual meaning
+			// ("only users who don't have a profile type").
 			badges.push(
-				<span key="member-types-none" className="bb-pf-badge bb-pf-badge--member-type">{ __( 'No Profile Type', 'buddyboss' ) }</span>
+				<span key="member-types-none" className="bb-pf-badge bb-pf-badge--member-type">{ __( 'No Profile Type Users', 'buddyboss' ) }</span>
+			);
+		} else if ( 'all' === field.member_type_mode ) {
+			// Explicit "All Profile Types" badge so the list communicates
+			// the mode at a glance. Without it the row would look identical
+			// to a freshly-created field that's never had its visibility
+			// configured — the badge removes that ambiguity.
+			badges.push(
+				<span key="member-types-all" className="bb-pf-badge bb-pf-badge--member-type">{ __( 'All Profile Types', 'buddyboss' ) }</span>
 			);
 		} else if ( field.member_types && field.member_types.length > 0 ) {
 			var typeLabels = field.member_types.map( function ( typeKey ) {

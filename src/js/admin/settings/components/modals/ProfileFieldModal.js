@@ -178,7 +178,15 @@ export function ProfileFieldModal( {
 		if ( isEditing && field.member_types && field.member_types.length > 0 ) {
 			return 'selected';
 		}
-		return 'all';
+		// Editing an existing unrestricted field → preserve its current
+		// "All Profile Types" mode so the admin can see what's set.
+		if ( isEditing ) {
+			return 'all';
+		}
+		// New field → default to "No Profile Type Users" so admins
+		// have to explicitly opt-in to wider visibility (matches the
+		// most-restrictive-by-default UX principle).
+		return 'none';
 	} );
 	var memberTypeMode = memberTypeModeState[ 0 ];
 	var setMemberTypeMode = memberTypeModeState[ 1 ];
