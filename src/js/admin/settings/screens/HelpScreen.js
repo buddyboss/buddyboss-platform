@@ -9,6 +9,7 @@ import { useState, useEffect, useRef, useCallback } from '@wordpress/element';
 import { Button, Spinner } from '@wordpress/components';
 import { __, _n, sprintf } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
+import { useKb } from '../context/KbContext';
 import doneForYouImage from '../images/help-done-for-you.png';
 
 // BuddyBoss.com knowledge base REST endpoint used for Help search.
@@ -58,6 +59,10 @@ export function HelpScreen( { onNavigate } ) {
 	var searchRef = useRef( null );
 	var debounceRef = useRef( null );
 	var abortRef = useRef( null );
+
+	var kb = useKb();
+	var kbDispatch = kb.dispatch;
+	var openKb = kb.open;
 
 	// Debounced knowledge-base search against the BuddyBoss.com REST API.
 	useEffect( function () {
@@ -178,6 +183,18 @@ export function HelpScreen( { onNavigate } ) {
 
 		// Alternative (in-app): onNavigate( '/settings/help/article/' + result.id );
 	}, [] );
+
+	/**
+	 * Open the Knowledge Base modal at a specific top-level category.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {string} slug Knowledge base category slug.
+	 */
+	var openKbCategory = useCallback( function ( slug ) {
+		kbDispatch( { type: 'selectCategory', slug: slug } );
+		openKb();
+	}, [ kbDispatch, openKb ] );
 
 	var hasQuery = searchQuery.trim().length >= HELP_SEARCH_MIN_LENGTH;
 	var showResults = isOpen && hasQuery;
@@ -344,20 +361,16 @@ export function HelpScreen( { onNavigate } ) {
 					</h2>
 					<div className="bb-admin-help-resources__grid">
 						{ [
-							{ key: 'platform',        icon: 'browser',          label: __( 'BuddyBoss Platform', 'buddyboss' ), description: __( 'Learn how to enable and configure the BuddyBoss Platform – including profiles, groups, activity, forums and more.' ) },
-							{ key: 'theme',           icon: 'palette',       label: __( 'BuddyBoss Theme', 'buddyboss' ), description: __( 'Learn how to setup and customize our premium BuddyBoss Theme to make everything look beautiful.' ) },
-							{ key: 'app',           icon: 'device-mobile',       label: __( 'BuddyBoss App', 'buddyboss' ), description: __( 'Learn how to set up the BuddyBoss App from scratch, including initial setup, branding, generating builds and publishing.' ) },
-							{ key: 'integrations',    icon: 'plug',          label: __( 'Integrations', 'buddyboss' ), description: __( 'LearnDash, Zoom, WooCommerce, Events, Jobs and more. Learn how BuddyBoss integrates with your favorite plugins and services.' ) },
-							{ key: 'advanced-setup',  icon: 'gear',        label: __( 'Advanced Setup', 'buddyboss' ), description: __( 'Articles for experienced developers and site administrators to optimize and extend their BuddyBoss sites.' ) },
+							{ key: 'platform-settings', slug: 'buddyboss-platform', icon: 'browser', label: __( 'BuddyBoss Platform', 'buddyboss' ), description: __( 'Learn how to enable and configure the BuddyBoss Platform – including profiles, groups, activity, forums and more.' ) },
+							{ key: 'buddyboss-theme', slug: 'buddyboss-theme',           icon: 'palette',       label: __( 'BuddyBoss Theme', 'buddyboss' ), description: __( 'Learn how to setup and customize our premium BuddyBoss Theme to make everything look beautiful.' ) },
+							{ key: 'app', slug: 'buddyboss-app',           icon: 'device-mobile',       label: __( 'BuddyBoss App', 'buddyboss' ), description: __( 'Learn how to set up the BuddyBoss App from scratch, including initial setup, branding, generating builds and publishing.' ) },
+							{ key: 'integrations', slug: 'integrations',    icon: 'plug',          label: __( 'Integrations', 'buddyboss' ), description: __( 'LearnDash, Zoom, WooCommerce, Events, Jobs and more. Learn how BuddyBoss integrates with your favorite plugins and services.' ) },
+							{ key: 'advanced-setup', slug: 'advanced',  icon: 'gear',        label: __( 'Advanced Setup', 'buddyboss' ), description: __( 'Articles for experienced developers and site administrators to optimize and extend their BuddyBoss sites.' ) },
 							{ key: 'troubleshooting', icon: 'cloud-warning', label: __( 'Troubleshooting', 'buddyboss' ), description: __( 'Running into issues? Learn how to resolve the most common issues with BuddyBoss.' ) },
 						].map( function ( item ) {
 							var count = 132;
-							return (
-								<a
-									key={ item.key }
-									href="#"
-									className="bb-admin-help-resource-card"
-								>
+							var cardContent = (
+								<>
 									<div className="bb-admin-help-resource-card__head">
 										<i
 											className={ 'bb-icons-rl bb-icons-rl-' + item.icon + ' bb-admin-help-resource-card__icon' }
@@ -376,7 +389,33 @@ export function HelpScreen( { onNavigate } ) {
 											sprintf( _n( '%d article', '%d articles', count, 'buddyboss' ), count )
 										}
 									</span>
-								</a>
+								</>
+							);
+
+							// Cards without a mapped KB category slug stay as plain links.
+							if ( ! item.slug ) {
+								return (
+									<a
+										key={ item.key }
+										href="#"
+										className="bb-admin-help-resource-card"
+									>
+										{ cardContent }
+									</a>
+								);
+							}
+
+							return (
+								<button
+									type="button"
+									key={ item.key }
+									className="bb-admin-help-resource-card"
+									onClick={ function () {
+										openKbCategory( item.slug );
+									} }
+								>
+									{ cardContent }
+								</button>
 							);
 						} ) }
 					</div>
