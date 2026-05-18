@@ -559,7 +559,7 @@ function bp_version_updater() {
 		// `_none` is an explicit admin selection ("Users with no profile
 		// type") and must be preserved.
 		if ( $raw_db_version >= 23584 && $raw_db_version < 23601 ) {
-			bb_update_to_3_0_2();
+			bb_update_to_3_0_3();
 		}
 
 		if ( $raw_db_version !== $current_db ) {
@@ -4216,70 +4216,6 @@ function bb_update_to_3_0_0() {
 }
 
 /**
- * Migration for DB version 23601 — clean up `_none` member_type meta rows
- * the Settings 2.0 React profile-field modal saved by mistake on 3.0.0 / 3.0.1.
- *
- * The modal defaulted its "Profile Types" dropdown to "All Profile Types"
- * but the save handler routed the empty selection through
- * `$field->set_member_types( array() )` — which stores the `_none` sentinel
- * (see `class-bp-xprofile-field.php:753`) instead of clearing the meta.
- * Admins saw "No Profile Type Users" rendered next time they opened the
- * field, and the field was hidden from every profile type.
- *
- * This pass deletes every `member_type` meta row whose value is `_none`.
- * Trade-off: any field an admin intentionally configured for
- * "No Profile Type Users" only on 3.0.0 / 3.0.1 will also become
- * unrestricted. The intentional case is rare; the buggy case is the
- * common one. Caller already gates this on the 3.0.0–3.0.1 upgrade
- * window so legacy (pre-3.0.0) explicit `_none` selections are
- * preserved.
- *
- * Idempotent — re-running on already-clean data is a no-op.
- *
- * @since BuddyBoss 3.0.2
- *
- * @return void
- */
-function bb_update_to_3_0_2() {
-	global $wpdb;
-	$bp = buddypress();
-
-	if ( empty( $bp->profile->table_name_meta ) ) {
-		return;
-	}
-
-	$table = $bp->profile->table_name_meta;
-
-	// One query to find affected field IDs so we can clear per-field caches
-	// after deletion. `_none` is the exact sentinel `set_member_types()`
-	// writes when given an empty input array.
-	$field_ids = $wpdb->get_col(
-		$wpdb->prepare(
-			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $table from $bp->profile->table_name_meta is plugin-controlled.
-			"SELECT object_id FROM {$table} WHERE object_type = %s AND meta_key = %s AND meta_value = %s",
-			'field',
-			'member_type',
-			'_none'
-		)
-	);
-
-	if ( empty( $field_ids ) ) {
-		return;
-	}
-
-	foreach ( $field_ids as $field_id ) {
-		bp_xprofile_delete_meta( (int) $field_id, 'field', 'member_type' );
-	}
-
-	// Mirror the cache invalidation that
-	// `bp_xprofile_clear_member_type_cache` performs — the global
-	// `field_member_types` cache aggregates all fields' member-type
-	// associations, so a bulk delete invalidates it once at the end
-	// rather than per-field.
-	wp_cache_delete( 'field_member_types', 'bp_xprofile' );
-}
-
-/**
  * Companion migration for DB version 23584 — canonicalize ReadyLaunch
  * sidebar/menu/pages option shapes. Runs alongside bb_update_to_3_0_0() as
  * part of the same 3.0.0 release migration block.
@@ -4508,4 +4444,68 @@ function bb_migrate_email_type_groups() {
 
 	// Mark migration as completed so it doesn't run again.
 	bp_update_option( 'bb_email_type_groups_migrated', true );
+}
+
+/**
+ * Migration for DB version 23601 — clean up `_none` member_type meta rows
+ * the Settings 2.0 React profile-field modal saved by mistake on 3.0.0 / 3.0.1.
+ *
+ * The modal defaulted its "Profile Types" dropdown to "All Profile Types"
+ * but the save handler routed the empty selection through
+ * `$field->set_member_types( array() )` — which stores the `_none` sentinel
+ * (see `class-bp-xprofile-field.php:753`) instead of clearing the meta.
+ * Admins saw "No Profile Type Users" rendered next time they opened the
+ * field, and the field was hidden from every profile type.
+ *
+ * This pass deletes every `member_type` meta row whose value is `_none`.
+ * Trade-off: any field an admin intentionally configured for
+ * "No Profile Type Users" only on 3.0.0 / 3.0.1 will also become
+ * unrestricted. The intentional case is rare; the buggy case is the
+ * common one. Caller already gates this on the 3.0.0–3.0.1 upgrade
+ * window so legacy (pre-3.0.0) explicit `_none` selections are
+ * preserved.
+ *
+ * Idempotent — re-running on already-clean data is a no-op.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_update_to_3_0_3() {
+	global $wpdb;
+	$bp = buddypress();
+
+	if ( empty( $bp->profile->table_name_meta ) ) {
+		return;
+	}
+
+	$table = $bp->profile->table_name_meta;
+
+	// One query to find affected field IDs so we can clear per-field caches
+	// after deletion. `_none` is the exact sentinel `set_member_types()`
+	// writes when given an empty input array.
+	$field_ids = $wpdb->get_col(
+		$wpdb->prepare(
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $table from $bp->profile->table_name_meta is plugin-controlled.
+			"SELECT object_id FROM {$table} WHERE object_type = %s AND meta_key = %s AND meta_value = %s",
+			'field',
+			'member_type',
+			'_none'
+		)
+	);
+
+	if ( empty( $field_ids ) ) {
+		return;
+	}
+
+	foreach ( $field_ids as $field_id ) {
+		bp_xprofile_delete_meta( (int) $field_id, 'field', 'member_type' );
+	}
+
+	// Mirror the cache invalidation that
+	// `bp_xprofile_clear_member_type_cache` performs — the global
+	// `field_member_types` cache aggregates all fields' member-type
+	// associations, so a bulk delete invalidates it once at the end
+	// rather than per-field.
+	wp_cache_delete( 'field_member_types', 'bp_xprofile' );
 }
