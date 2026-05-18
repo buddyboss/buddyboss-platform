@@ -5,10 +5,31 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState } from '@wordpress/element';
-import { Button } from '@wordpress/components';
+import { useState, useEffect, useRef, useCallback } from '@wordpress/element';
+import { Button, Spinner } from '@wordpress/components';
 import { __, _n, sprintf } from '@wordpress/i18n';
+import { decodeEntities } from '@wordpress/html-entities';
 import doneForYouImage from '../images/help-done-for-you.png';
+
+// BuddyBoss.com knowledge base REST endpoint used for Help search.
+var HELP_SEARCH_ENDPOINT = 'https://buddyboss.com/wp-json/wp/v2/ht-kb/';
+var HELP_SEARCH_DEBOUNCE_MS = 300;
+var HELP_SEARCH_MIN_LENGTH = 2;
+
+/**
+ * Strip HTML tags from a string and collapse whitespace to plain text.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {string} html Raw HTML string.
+ *
+ * @returns {string} Plain text.
+ */
+function bbStripHtml( html ) {
+	var el = document.createElement( 'div' );
+	el.innerHTML = html || '';
+	return ( el.textContent || '' ).replace( /\s+/g, ' ' ).trim();
+}
 
 /**
  * Help Screen Component
@@ -22,6 +43,145 @@ export function HelpScreen( { onNavigate } ) {
 	var searchQuery = searchState[ 0 ];
 	var setSearchQuery = searchState[ 1 ];
 
+	var resultsState = useState( [] );
+	var results = resultsState[ 0 ];
+	var setResults = resultsState[ 1 ];
+
+	var loadingState = useState( false );
+	var isLoading = loadingState[ 0 ];
+	var setIsLoading = loadingState[ 1 ];
+
+	var openState = useState( false );
+	var isOpen = openState[ 0 ];
+	var setIsOpen = openState[ 1 ];
+
+	var searchRef = useRef( null );
+	var debounceRef = useRef( null );
+	var abortRef = useRef( null );
+
+	// Debounced knowledge-base search against the BuddyBoss.com REST API.
+	useEffect( function () {
+		var query = searchQuery.trim();
+
+		if ( debounceRef.current ) {
+			clearTimeout( debounceRef.current );
+		}
+
+		if ( query.length < HELP_SEARCH_MIN_LENGTH ) {
+			if ( abortRef.current ) {
+				abortRef.current.abort();
+			}
+			setResults( [] );
+			setIsLoading( false );
+		} else {
+			setIsLoading( true );
+			setIsOpen( true );
+
+			debounceRef.current = setTimeout( function () {
+				if ( abortRef.current ) {
+					abortRef.current.abort();
+				}
+
+				var controller = new AbortController();
+				abortRef.current = controller;
+
+				window.fetch(
+					HELP_SEARCH_ENDPOINT +
+						'?search=' + encodeURIComponent( query ) +
+						'&per_page=8&_fields=id,title,excerpt,link',
+					{ signal: controller.signal }
+				)
+					.then( function ( response ) {
+						if ( ! response.ok ) {
+							throw new Error( 'Help search request failed.' );
+						}
+						return response.json();
+					} )
+					.then( function ( data ) {
+						setResults( Array.isArray( data ) ? data : [] );
+						setIsLoading( false );
+					} )
+					.catch( function ( error ) {
+						if ( error && 'AbortError' === error.name ) {
+							return;
+						}
+						setResults( [] );
+						setIsLoading( false );
+					} );
+			}, HELP_SEARCH_DEBOUNCE_MS );
+		}
+
+		return function () {
+			if ( debounceRef.current ) {
+				clearTimeout( debounceRef.current );
+			}
+		};
+	}, [ searchQuery ] );
+
+	// Close the results dropdown on outside click or Escape.
+	useEffect( function () {
+		function handlePointerDown( event ) {
+			if ( searchRef.current && ! searchRef.current.contains( event.target ) ) {
+				setIsOpen( false );
+			}
+		}
+
+		function handleKeyDown( event ) {
+			if ( 'Escape' === event.key ) {
+				setIsOpen( false );
+			}
+		}
+
+		document.addEventListener( 'mousedown', handlePointerDown );
+		document.addEventListener( 'keydown', handleKeyDown );
+
+		return function () {
+			document.removeEventListener( 'mousedown', handlePointerDown );
+			document.removeEventListener( 'keydown', handleKeyDown );
+		};
+	}, [] );
+
+	// Abort any in-flight request and timer when the screen unmounts.
+	useEffect( function () {
+		return function () {
+			if ( abortRef.current ) {
+				abortRef.current.abort();
+			}
+			if ( debounceRef.current ) {
+				clearTimeout( debounceRef.current );
+			}
+		};
+	}, [] );
+
+	/**
+	 * Handle selection of a knowledge-base search result.
+	 *
+	 * This is the routing seam for follow-up work: the result can either be
+	 * opened as an external documentation page (current behavior) or used to
+	 * load an in-app component via `onNavigate()`.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {Object} result Knowledge base article object from the REST API.
+	 */
+	var handleResultClick = useCallback( function ( result ) {
+		if ( ! result ) {
+			return;
+		}
+
+		setIsOpen( false );
+
+		// Default: open the documentation article in a new browser tab.
+		if ( result.link ) {
+			window.open( result.link, '_blank', 'noopener,noreferrer' );
+		}
+
+		// Alternative (in-app): onNavigate( '/settings/help/article/' + result.id );
+	}, [] );
+
+	var hasQuery = searchQuery.trim().length >= HELP_SEARCH_MIN_LENGTH;
+	var showResults = isOpen && hasQuery;
+
 	return (
 		<div className="bb-admin-help-screen">
 			<section className="bb-admin-help-hero" aria-labelledby="bb-admin-help-hero-title">
@@ -34,7 +194,7 @@ export function HelpScreen( { onNavigate } ) {
 					</p>
 				</div>
 
-				<div className="bb-admin-help-hero__search" role="search">
+				<div className="bb-admin-help-hero__search" role="search" ref={ searchRef }>
 					<label htmlFor="bb-admin-help-hero-search" className="screen-reader-text">
 						{ __( 'Search help guides', 'buddyboss' ) }
 					</label>
@@ -48,10 +208,69 @@ export function HelpScreen( { onNavigate } ) {
 						className="bb-admin-help-hero__search-input"
 						placeholder={ __( 'Describe your issue', 'buddyboss' ) }
 						value={ searchQuery }
+						autoComplete="off"
+						role="combobox"
+						aria-expanded={ showResults }
+						aria-controls="bb-admin-help-hero-results"
 						onChange={ function ( e ) {
 							setSearchQuery( e.target.value );
 						} }
+						onFocus={ function () {
+							if ( hasQuery ) {
+								setIsOpen( true );
+							}
+						} }
 					/>
+
+					{ showResults && (
+						<div
+							id="bb-admin-help-hero-results"
+							className="bb-admin-help-hero__results"
+							role="listbox"
+						>
+							{ isLoading && (
+								<p className="bb-admin-help-hero__results-status">
+									<Spinner />
+								</p>
+							) }
+
+							{ ! isLoading && 0 === results.length && (
+								<p className="bb-admin-help-hero__results-status">
+									{ __( 'No results found.', 'buddyboss' ) }
+								</p>
+							) }
+
+							{ ! isLoading && results.map( function ( result ) {
+								return (
+									<button
+										type="button"
+										key={ result.id }
+										className="bb-admin-help-hero__result"
+										role="option"
+										aria-selected="false"
+										onClick={ function () {
+											handleResultClick( result );
+										} }
+									>
+										<span className="bb-admin-help-hero__result-title">
+											<i
+												className="bb-icons-rl bb-icons-rl-file-text bb-admin-help-hero__result-icon"
+												aria-hidden="true"
+											></i>
+											<span className="bb-admin-help-hero__result-title-text">
+												{ decodeEntities( ( result.title && result.title.rendered ) || '' ) }
+											</span>
+										</span>
+										{ result.excerpt && result.excerpt.rendered && (
+											<span className="bb-admin-help-hero__result-text">
+												{ bbStripHtml( result.excerpt.rendered ) }
+											</span>
+										) }
+									</button>
+								);
+							} ) }
+						</div>
+					) }
 				</div>
 			</section>
 			<div className="bb-admin-help-wrapper">

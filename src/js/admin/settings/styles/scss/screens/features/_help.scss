@@ -107,6 +107,106 @@
 		color: $bb-icon-tertiary-color;
 	}
 
+	&__results {
+		position: absolute;
+		top: calc( 100% + 8px );
+		left: 0;
+		right: 0;
+		z-index: 20;
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		max-height: 420px;
+		padding: 16px;
+		overflow-y: auto;
+		background-color: $bb-background-base-color;
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-2xl;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+		text-align: left;
+	}
+
+	&__results-status {
+		margin: 0;
+		padding: 8px;
+		color: $bb-text-tertiary-color;
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 20px;
+		text-align: center;
+	}
+
+	&__result {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+		width: 100%;
+		margin: 0;
+		padding: 8px;
+		background-color: transparent;
+		border: 0;
+		border-radius: $bb-border-radius-xl;
+		box-shadow: none;
+		text-align: left;
+		cursor: pointer;
+		font-family: inherit;
+		-webkit-appearance: none;
+		appearance: none;
+
+		&:hover,
+		&:focus {
+			background-color: $bb-background-primary-color;
+			box-shadow: none;
+
+			.bb-admin-help-hero__result-title-text {
+				text-decoration: underline;
+			}
+		}
+
+		&:focus-visible {
+			outline: 2px solid $bb-border-quinery;
+		}
+	}
+
+	&__result-title {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		width: 100%;
+	}
+
+	&__result-icon {
+		flex-shrink: 0;
+		font-size: 24px;
+		line-height: 1;
+		color: $bb-icon-brand-secondary-color;
+	}
+
+	&__result-title-text {
+		flex: 1;
+		min-width: 0;
+		color: $bb-text-color;
+		font-size: 14px;
+		font-weight: 500;
+		line-height: 20px;
+		word-break: break-word;
+	}
+
+	&__result-text {
+		padding-left: 32px;
+		color: $bb-text-tertiary-color;
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 20px;
+		word-break: break-word;
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		word-break: break-word;
+		-webkit-line-clamp: 3;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		}
+
 }
 
 .bb-admin-help-cards {
