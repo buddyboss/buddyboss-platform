@@ -356,6 +356,16 @@ function bb_admin_settings_page() {
 	// Render mount point.
 	?>
 	<div class="wrap bb-admin-settings-wrap">
+		<?php
+		/*
+		 * Anchor for WordPress core admin-notice relocation. Without this
+		 * marker, common.js falls back to the first <h1>/<h2> inside .wrap —
+		 * which is rendered by the React app (e.g. the Help hero <h1>) — and
+		 * injects third-party notices inside the React tree. The marker keeps
+		 * relocated notices at the top of .wrap, outside the React mount.
+		 */
+		?>
+		<hr class="wp-header-end">
 		<div id="bb-admin-settings"></div>
 		<!-- test -->
 		<?php
