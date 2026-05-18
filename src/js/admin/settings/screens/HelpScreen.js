@@ -340,16 +340,16 @@ export function HelpScreen( { onNavigate } ) {
 						id="bb-admin-help-resources-title"
 						className="bb-admin-help-resources__title"
 					>
-						{ __( 'More Resources', 'buddyboss' ) }
+						{ __( 'BuddyBoss Knowledge Base', 'buddyboss' ) }
 					</h2>
 					<div className="bb-admin-help-resources__grid">
 						{ [
-							{ key: 'platform',        icon: 'gear',          label: __( 'BuddyBoss Platform', 'buddyboss' ) },
-							{ key: 'theme',           icon: 'palette',       label: __( 'BuddyBoss Theme', 'buddyboss' ) },
-							{ key: 'integrations',    icon: 'plug',          label: __( 'Integrations', 'buddyboss' ) },
-							{ key: 'advanced-setup',  icon: 'wrench',        label: __( 'Advanced Setup', 'buddyboss' ) },
-							{ key: 'troubleshooting', icon: 'seal-question', label: __( 'Troubleshooting', 'buddyboss' ) },
-							{ key: 'customizations',  icon: 'sliders',       label: __( 'Customizations', 'buddyboss' ) },
+							{ key: 'platform',        icon: 'browser',          label: __( 'BuddyBoss Platform', 'buddyboss' ), description: __( 'Learn how to enable and configure the BuddyBoss Platform – including profiles, groups, activity, forums and more.' ) },
+							{ key: 'theme',           icon: 'palette',       label: __( 'BuddyBoss Theme', 'buddyboss' ), description: __( 'Learn how to setup and customize our premium BuddyBoss Theme to make everything look beautiful.' ) },
+							{ key: 'app',           icon: 'device-mobile',       label: __( 'BuddyBoss App', 'buddyboss' ), description: __( 'Learn how to set up the BuddyBoss App from scratch, including initial setup, branding, generating builds and publishing.' ) },
+							{ key: 'integrations',    icon: 'plug',          label: __( 'Integrations', 'buddyboss' ), description: __( 'LearnDash, Zoom, WooCommerce, Events, Jobs and more. Learn how BuddyBoss integrates with your favorite plugins and services.' ) },
+							{ key: 'advanced-setup',  icon: 'gear',        label: __( 'Advanced Setup', 'buddyboss' ), description: __( 'Articles for experienced developers and site administrators to optimize and extend their BuddyBoss sites.' ) },
+							{ key: 'troubleshooting', icon: 'cloud-warning', label: __( 'Troubleshooting', 'buddyboss' ), description: __( 'Running into issues? Learn how to resolve the most common issues with BuddyBoss.' ) },
 						].map( function ( item ) {
 							var count = 132;
 							return (
@@ -366,6 +366,9 @@ export function HelpScreen( { onNavigate } ) {
 										<span className="bb-admin-help-resource-card__title">
 											{ item.label }
 										</span>
+									</div>
+									<div className="bb-admin-help-resource-card__description">
+										{ item.description }
 									</div>
 									<span className="bb-admin-help-resource-card__count">
 										{
