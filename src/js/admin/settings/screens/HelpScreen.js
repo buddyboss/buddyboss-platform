@@ -10,6 +10,7 @@ import { Button, Spinner } from '@wordpress/components';
 import { __, _n, sprintf } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { useKb } from '../context/KbContext';
+import { getTaxonomy } from '../components/knowledge-base/taxonomyCache';
 import doneForYouImage from '../images/help-done-for-you.png';
 
 // BuddyBoss.com knowledge base REST endpoint used for Help search.
@@ -30,6 +31,40 @@ function bbStripHtml( html ) {
 	var el = document.createElement( 'div' );
 	el.innerHTML = html || '';
 	return ( el.textContent || '' ).replace( /\s+/g, ' ' ).trim();
+}
+
+/**
+ * Walk a flat taxonomy up the parent chain to the top-level category slug.
+ *
+ * The Knowledge Base modal renders a category view keyed by its top-level
+ * slug, so an article that lives in a nested sub-category must be resolved
+ * to its top-level ancestor before the modal can open to it.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Array}  taxonomy Flat array of ht-kb-category term objects.
+ * @param {number} termId   Term ID to resolve from.
+ *
+ * @returns {string} Top-level category slug, or '' when it cannot be resolved.
+ */
+function bbResolveTopLevelSlug( taxonomy, termId ) {
+	if ( ! Array.isArray( taxonomy ) || ! termId ) {
+		return '';
+	}
+
+	var byId = {};
+	taxonomy.forEach( function ( term ) {
+		byId[ term.id ] = term;
+	} );
+
+	var current = byId[ termId ];
+	var guard = 0;
+	while ( current && current.parent && byId[ current.parent ] && guard < 20 ) {
+		current = byId[ current.parent ];
+		guard++;
+	}
+
+	return current ? current.slug : '';
 }
 
 /**
@@ -63,6 +98,7 @@ export function HelpScreen( { onNavigate } ) {
 	var kb = useKb();
 	var kbDispatch = kb.dispatch;
 	var openKb = kb.open;
+	var closeKb = kb.close;
 
 	// Debounced knowledge-base search against the BuddyBoss.com REST API.
 	useEffect( function () {
@@ -93,7 +129,7 @@ export function HelpScreen( { onNavigate } ) {
 				window.fetch(
 					HELP_SEARCH_ENDPOINT +
 						'?search=' + encodeURIComponent( query ) +
-						'&per_page=8&_fields=id,title,excerpt,link',
+						'&per_page=8&_fields=id,slug,title,excerpt,link,ht-kb-category',
 					{ signal: controller.signal }
 				)
 					.then( function ( response ) {
@@ -158,31 +194,67 @@ export function HelpScreen( { onNavigate } ) {
 		};
 	}, [] );
 
+	// Warm the KB taxonomy cache on mount. The taxonomy is needed to resolve
+	// a clicked search result (or resource card) to its KB category; fetching
+	// it up-front means that resolution is a cache hit by click time instead
+	// of a cold cross-origin round trip.
+	useEffect( function () {
+		getTaxonomy().catch( function () {} );
+	}, [] );
+
 	/**
 	 * Handle selection of a knowledge-base search result.
 	 *
-	 * This is the routing seam for follow-up work: the result can either be
-	 * opened as an external documentation page (current behavior) or used to
-	 * load an in-app component via `onNavigate()`.
+	 * Opens the Knowledge Base modal immediately on the clicked article so the
+	 * modal + loader appear right away — without waiting on the taxonomy
+	 * request. The modal mounts into the category view's loading state (null
+	 * category slug); once the taxonomy resolves the article's top-level
+	 * category, the real slug + article are dispatched. If the category
+	 * cannot be resolved, the modal is closed and the documentation page is
+	 * opened in a new tab instead.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param {Object} result Knowledge base article object from the REST API.
 	 */
 	var handleResultClick = useCallback( function ( result ) {
-		if ( ! result ) {
+		if ( ! result || ! result.slug ) {
 			return;
 		}
 
+		// Close the search dropdown.
 		setIsOpen( false );
 
-		// Default: open the documentation article in a new browser tab.
-		if ( result.link ) {
-			window.open( result.link, '_blank', 'noopener,noreferrer' );
-		}
+		// Open the modal straight away. A null category slug keeps KBCategory
+		// in its loading state until the real slug is resolved below, so the
+		// user sees the modal + loader instantly instead of waiting for the
+		// cross-origin taxonomy fetch to complete.
+		kbDispatch( { type: 'selectCategory', slug: null } );
+		kbDispatch( { type: 'selectArticle', slug: result.slug } );
+		openKb();
 
-		// Alternative (in-app): onNavigate( '/settings/help/article/' + result.id );
-	}, [] );
+		var categoryIds = Array.isArray( result[ 'ht-kb-category' ] ) ? result[ 'ht-kb-category' ] : [];
+
+		getTaxonomy()
+			.then( function ( taxonomy ) {
+				var topSlug = bbResolveTopLevelSlug( taxonomy, categoryIds[ 0 ] );
+
+				if ( ! topSlug ) {
+					throw new Error( 'Unresolved knowledge base category.' );
+				}
+
+				kbDispatch( { type: 'selectCategory', slug: topSlug } );
+				kbDispatch( { type: 'selectArticle', slug: result.slug } );
+			} )
+			.catch( function () {
+				// Category could not be resolved — back out of the modal and
+				// fall back to the documentation page.
+				closeKb();
+				if ( result.link ) {
+					window.open( result.link, '_blank', 'noopener,noreferrer' );
+				}
+			} );
+	}, [ kbDispatch, openKb, closeKb ] );
 
 	/**
 	 * Open the Knowledge Base modal at a specific top-level category.
