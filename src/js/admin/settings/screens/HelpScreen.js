@@ -68,6 +68,55 @@ function bbResolveTopLevelSlug( taxonomy, termId ) {
 }
 
 /**
+ * Build a top-level-category-slug → aggregated article count map from the
+ * flat KB taxonomy.
+ *
+ * A top-level category's count is the recursive sum of its own articles plus
+ * every descendant sub-category's articles, matching the count shown on the
+ * Knowledge Base modal landing grid.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Array} taxonomy Flat array of ht-kb-category term objects.
+ *
+ * @returns {Object<string, number>} Map of top-level slug → aggregated count.
+ */
+function bbBuildKbCounts( taxonomy ) {
+	var bySlug = {};
+
+	if ( ! Array.isArray( taxonomy ) ) {
+		return bySlug;
+	}
+
+	var byId = {};
+	var childrenByParent = {};
+	taxonomy.forEach( function ( term ) {
+		byId[ term.id ] = term;
+		var list = childrenByParent[ term.parent ] || [];
+		list.push( term );
+		childrenByParent[ term.parent ] = list;
+	} );
+
+	function aggregate( termId ) {
+		var own = byId[ termId ];
+		var total = own && 'number' === typeof own.count ? own.count : 0;
+		var kids = childrenByParent[ termId ] || [];
+		kids.forEach( function ( child ) {
+			total += aggregate( child.id );
+		} );
+		return total;
+	}
+
+	taxonomy.forEach( function ( term ) {
+		if ( ! term.parent ) {
+			bySlug[ term.slug ] = aggregate( term.id );
+		}
+	} );
+
+	return bySlug;
+}
+
+/**
  * Help Screen Component
  *
  * @since BuddyBoss [BBVERSION]
@@ -90,6 +139,12 @@ export function HelpScreen( { onNavigate } ) {
 	var openState = useState( false );
 	var isOpen = openState[ 0 ];
 	var setIsOpen = openState[ 1 ];
+
+	// Per-category article counts for the "BuddyBoss Knowledge Base" grid,
+	// keyed by top-level category slug. Null until the taxonomy resolves.
+	var kbCountsState = useState( null );
+	var kbCounts = kbCountsState[ 0 ];
+	var setKbCounts = kbCountsState[ 1 ];
 
 	var searchRef = useRef( null );
 	var debounceRef = useRef( null );
@@ -194,12 +249,25 @@ export function HelpScreen( { onNavigate } ) {
 		};
 	}, [] );
 
-	// Warm the KB taxonomy cache on mount. The taxonomy is needed to resolve
-	// a clicked search result (or resource card) to its KB category; fetching
-	// it up-front means that resolution is a cache hit by click time instead
-	// of a cold cross-origin round trip.
+	// Load the KB taxonomy on mount. This serves two purposes: it warms the
+	// cache so resolving a clicked search result / resource card to its KB
+	// category is a cache hit instead of a cold cross-origin round trip, and
+	// it supplies the per-category article counts shown on the "BuddyBoss
+	// Knowledge Base" grid.
 	useEffect( function () {
-		getTaxonomy().catch( function () {} );
+		var isMounted = true;
+
+		getTaxonomy()
+			.then( function ( taxonomy ) {
+				if ( isMounted && Array.isArray( taxonomy ) ) {
+					setKbCounts( bbBuildKbCounts( taxonomy ) );
+				}
+			} )
+			.catch( function () {} );
+
+		return function () {
+			isMounted = false;
+		};
 	}, [] );
 
 	/**
@@ -440,7 +508,10 @@ export function HelpScreen( { onNavigate } ) {
 							{ key: 'advanced-setup', slug: 'advanced',  icon: 'gear',        label: __( 'Advanced Setup', 'buddyboss' ), description: __( 'Articles for experienced developers and site administrators to optimize and extend their BuddyBoss sites.' ) },
 							{ key: 'troubleshooting', icon: 'cloud-warning', label: __( 'Troubleshooting', 'buddyboss' ), description: __( 'Running into issues? Learn how to resolve the most common issues with BuddyBoss.' ) },
 						].map( function ( item ) {
-							var count = 132;
+							// Article count comes from the live KB taxonomy,
+							// keyed by category slug. Null while the taxonomy
+							// is still loading or when the card has no slug.
+							var count = item.slug && kbCounts ? kbCounts[ item.slug ] : null;
 							var cardContent = (
 								<>
 									<div className="bb-admin-help-resource-card__head">
@@ -455,12 +526,14 @@ export function HelpScreen( { onNavigate } ) {
 									<div className="bb-admin-help-resource-card__description">
 										{ item.description }
 									</div>
-									<span className="bb-admin-help-resource-card__count">
-										{
-											/* translators: %d is the number of articles in this resource category. */
-											sprintf( _n( '%d article', '%d articles', count, 'buddyboss' ), count )
-										}
-									</span>
+									{ 'number' === typeof count && (
+										<span className="bb-admin-help-resource-card__count">
+											{
+												/* translators: %d is the number of articles in this resource category. */
+												sprintf( _n( '%d article', '%d articles', count, 'buddyboss' ), count )
+											}
+										</span>
+									) }
 								</>
 							);
 
