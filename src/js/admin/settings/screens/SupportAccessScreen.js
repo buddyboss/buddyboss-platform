@@ -15,6 +15,7 @@ import { Button, ToggleControl, TextareaControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { ModifyDurationModal } from '../components/modals/ModifyDurationModal';
 import { AddTicketModal } from '../components/modals/AddTicketModal';
+import { Toast, useAutoDismissToast } from '../components/Toast';
 
 /**
  * Initial mock countdown for the design — wired here as local state so the
@@ -94,6 +95,12 @@ export function SupportAccessScreen( { onNavigate } ) {
 	var ticketModalOpenState = useState( false );
 	var isTicketModalOpen = ticketModalOpenState[ 0 ];
 	var setIsTicketModalOpen = ticketModalOpenState[ 1 ];
+
+	var toastState = useState( null );
+	var toast = toastState[ 0 ];
+	var setToast = toastState[ 1 ];
+
+	useAutoDismissToast( toast, setToast );
 
 	useEffect( function () {
 		if ( ! enabled ) {
@@ -257,8 +264,22 @@ export function SupportAccessScreen( { onNavigate } ) {
 					setTicket( value );
 					// Do the saving ticket logic here.
 					setIsTicketModalOpen( false );
+					setToast( {
+						status: 'success',
+						message: __( 'Ticket Added to Support Access', 'buddyboss' ),
+					} );
 				} }
 			/>
+
+			{ toast && (
+				<div className="bb-toast-container">
+					<Toast
+						status={ toast.status }
+						message={ toast.message }
+						onDismiss={ function () { setToast( null ); } }
+					/>
+				</div>
+			) }
 		</div>
 	);
 }

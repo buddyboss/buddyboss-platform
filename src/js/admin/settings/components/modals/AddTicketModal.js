@@ -41,7 +41,9 @@ export function AddTicketModal( { isOpen, value, onClose, onSave } ) {
 
 	var handleSave = function () {
 		if ( 'function' === typeof onSave ) {
-			onSave( ticket.trim() );
+			if( ticket.trim() !== '') {
+				onSave( ticket.trim() );
+			}	
 		}
 	};
 
