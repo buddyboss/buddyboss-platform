@@ -900,53 +900,6 @@
 		}
 	}
 
-	&__sessions {
-		display: flex;
-		flex-direction: column;
-		gap: 8px;
-	}
-
-	&__sessions-label {
-		margin: 0;
-		padding: 3px 0;
-		color: $bb-text-secondary-color;
-		font-size: 13px;
-		font-weight: 500;
-		line-height: 18px;
-	}
-
-	&__sessions-list {
-		display: flex;
-		flex-direction: column;
-		gap: 8px;
-		margin: 0;
-		padding: 0;
-		list-style: none;
-	}
-
-	&__session {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		min-height: 32px;
-		padding: 4px 8px;
-		background-color: $bb-background-positive-primary-color;
-		border: 0.5px solid $bb-border-positive-secondary-color;
-		border-radius: $bb-border-radius-lg;
-		color: $bb-text-color;
-		font-size: 13px;
-		font-weight: 400;
-		line-height: 18px;
-	}
-
-	&__session-icon {
-		flex-shrink: 0;
-		font-size: 20px;
-		font-weight: 500;
-		line-height: 1;
-		color: $bb-text-positive-primary-color;
-	}
-
 	&__session-label {
 		flex: 1;
 		min-width: 0;
@@ -954,33 +907,10 @@
 
 	&__actions {
 		display: flex;
-		justify-content: flex-end;
 	}
 
-	&__ticket.is-primary {
-		display: inline-flex;
-		align-items: center;
-		height: auto;
-		padding: 6px 16px;
-		color: $bb-text-inverse-color !important;
-		background-color: $bb-background-brand-primary-color !important;
-		border: 0;
-		border-radius: $bb-border-radius-lg;
-		box-shadow: none;
-		font-size: 14px;
-		font-weight: 400;
-		line-height: 20px;
-
-		&:hover,
-		&:focus {
-			color: $bb-text-inverse-color !important;
-			background-color: $bb-background-brand-primary-hover-color !important;
-			box-shadow: none !important;
-		}
-
-		&:focus-visible {
-			outline: 2px solid $bb-border-quinery;
-		}
+	&__ticket.is-secondary {
+		@include bb-button-primary-outline;
 	}
 
 	&__panel--disabled {
@@ -1042,5 +972,16 @@
 
 	.bb-admin-settings-modal__body {
 		padding: 16px 24px;
+	}
+}
+
+.bb-admin-add-ticket-modal {
+
+	&.components-modal__frame {
+		max-width: 480px;
+	}
+
+	.bb-admin-settings-modal__body {
+		padding: 20px 24px 8px;
 	}
 }

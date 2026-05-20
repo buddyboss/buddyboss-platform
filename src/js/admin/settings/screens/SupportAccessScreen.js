@@ -14,6 +14,7 @@ import { useState, useEffect } from '@wordpress/element';
 import { Button, ToggleControl, TextareaControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { ModifyDurationModal } from '../components/modals/ModifyDurationModal';
+import { AddTicketModal } from '../components/modals/AddTicketModal';
 
 /**
  * Initial mock countdown for the design — wired here as local state so the
@@ -85,6 +86,14 @@ export function SupportAccessScreen( { onNavigate } ) {
 	var modalOpenState = useState( false );
 	var isModalOpen = modalOpenState[ 0 ];
 	var setIsModalOpen = modalOpenState[ 1 ];
+
+	var ticketState = useState( '' );
+	var ticket = ticketState[ 0 ];
+	var setTicket = ticketState[ 1 ];
+
+	var ticketModalOpenState = useState( false );
+	var isTicketModalOpen = ticketModalOpenState[ 0 ];
+	var setIsTicketModalOpen = ticketModalOpenState[ 1 ];
 
 	useEffect( function () {
 		if ( ! enabled ) {
@@ -184,44 +193,13 @@ export function SupportAccessScreen( { onNavigate } ) {
 
 						<div className="bb-admin-support-access__divider" aria-hidden="true"></div>
 
-						<div className="bb-admin-support-access__note">
-							<TextareaControl
-								label={ __( 'Add a note', 'buddyboss' ) }
-								value={ note }
-								onChange={ function ( value ) { setNote( value ); } }
-								placeholder={ __( 'Describe the issue or areas needing attention', 'buddyboss' ) }
-								rows={ 4 }
-								__nextHasNoMarginBottom
-							/>
-						</div>
-
-						<div className="bb-admin-support-access__divider" aria-hidden="true"></div>
-
-						<div className="bb-admin-support-access__sessions">
-							<p className="bb-admin-support-access__sessions-label">
-								{ __( 'Recent sessions', 'buddyboss' ) }
-							</p>
-							<ul className="bb-admin-support-access__sessions-list">
-								{ sessions.map( function ( s ) {
-									return (
-										<li key={ s.id } className="bb-admin-support-access__session">
-											<i
-												className="bb-icons-rl bb-icons-rl-check-circle bb-admin-support-access__session-icon"
-												aria-hidden="true"
-											></i>
-											<span className="bb-admin-support-access__session-label">{ s.label }</span>
-										</li>
-									);
-								} ) }
-							</ul>
-						</div>
-
 						<div className="bb-admin-support-access__actions">
 							<Button
-								variant="primary"
+								variant="secondary"
 								className="bb-admin-support-access__ticket"
+								onClick={ function () { setIsTicketModalOpen( true ); } }
 							>
-								{ __( 'Create Support Ticket', 'buddyboss' ) }
+								{ __( 'Add Ticket Number', 'buddyboss' ) }
 							</Button>
 						</div>
 					</section>
@@ -268,6 +246,17 @@ export function SupportAccessScreen( { onNavigate } ) {
 						};
 					} );
 					setIsModalOpen( false );
+				} }
+			/>
+
+			<AddTicketModal
+				isOpen={ isTicketModalOpen }
+				value={ ticket }
+				onClose={ function () { setIsTicketModalOpen( false ); } }
+				onSave={ function ( value ) {
+					setTicket( value );
+					// Do the saving ticket logic here.
+					setIsTicketModalOpen( false );
 				} }
 			/>
 		</div>
