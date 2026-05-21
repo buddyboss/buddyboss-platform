@@ -38,6 +38,7 @@
 
     &:focus,
     &:active {
+        color: $bb-text-inverse-color;
         box-shadow: none !important;
         outline: 2px solid $bb-border-quinery;
     }
