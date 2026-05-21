@@ -744,12 +744,29 @@ class BB_Admin_Profile_Fields_Ajax {
 			}
 		}
 
+		// Mirror legacy `BP_XProfile_Field::is_default_field()` (see
+		// `class-bp-xprofile-field.php` ~line 1832) so the React modal can hide
+		// the same metaboxes legacy hides: Type, Required, Visibility (and
+		// Allow-members-override), Profile Types, Placeholder. The synced set is
+		// always the Nickname field, plus First/Last when fullname format needs
+		// them. WP object cache memoises the underlying lookups, so calling
+		// these per field in the loop has no extra DB cost.
+		$synced_field_ids = array( (int) bp_xprofile_nickname_field_id() );
+		$dn_format        = function_exists( 'bp_core_display_name_format' ) ? bp_core_display_name_format() : '';
+		if ( 'first_last_name' === $dn_format || 'first_name' === $dn_format ) {
+			$synced_field_ids[] = (int) bp_xprofile_firstname_field_id();
+		}
+		if ( 'first_last_name' === $dn_format ) {
+			$synced_field_ids[] = (int) bp_xprofile_lastname_field_id();
+		}
+
 		$data = array(
 			'id'                      => (int) $field->id,
 			'name'                    => $field->name,
 			'type'                    => $field->type,
 			'is_required'             => (bool) $field->is_required,
 			'can_delete'              => (bool) $field->can_delete,
+			'is_default_field'        => in_array( (int) $field->id, $synced_field_ids, true ),
 			'field_order'             => (int) $field->field_order,
 			'alternate_name'          => $alternate_name ? $alternate_name : '',
 			'description'             => $field->description,
