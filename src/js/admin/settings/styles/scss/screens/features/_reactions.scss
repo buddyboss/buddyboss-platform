@@ -433,6 +433,18 @@
 		}
 	}
 
+    &__content {
+
+        > .bb-admin-notice {
+            margin: 14px;
+            width: auto;
+            
+            p {
+                margin: 0;
+            }
+        }
+    }
+
 	// ─────────────────────────────────────────────────────────────────
 	// Settings 2.0 React Migration Modal (`MigrationModal.js`)
 	//
