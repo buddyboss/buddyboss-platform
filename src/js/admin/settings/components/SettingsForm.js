@@ -974,7 +974,10 @@ export function SettingsForm({ fields, values, onChange, onProBadgeClick, disabl
 						key={field.name}
 						field={field}
 						onStartConversion={(migrationData) => {
-							setCurrentMigrationData(migrationData);
+							// Notice-triggered open routes through the unified footer wizard.
+							// MigrationModal reads `action` + `total_reactions` from the
+							// spread payload to set the title, intro copy, and pre-selection.
+							setCurrentMigrationData({ ...migrationData, wizardType: 'footer' });
 							setIsMigrationModalOpen(true);
 						}}
 					/>
