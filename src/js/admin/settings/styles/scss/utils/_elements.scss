@@ -719,9 +719,10 @@ select.bb-admin-settings__select {
 
     .components-dropdown__content .components-popover__content {
         background-color: $bb-background-base-color;
+        border: 1px solid $bb-border-secondary-color;
         border-radius: $bb-border-radius-lg;
         box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
-        padding: 0;
+        padding: 4px 0;
         min-width: 190px;
 
         // Menu item button
