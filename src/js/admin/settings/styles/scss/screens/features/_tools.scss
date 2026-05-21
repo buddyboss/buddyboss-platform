@@ -1,13 +1,6 @@
-/* ----------------------------------------------------------------------------
- * Tools page — top-level menu reached via BuddyBoss → Tools.
- *
- * Tools reuses the standard `.bb-admin-feature-settings` chrome
- * (sidebar via `SideNavigation`, content wrap, section header/body) so
- * the visual frame matches every other panel-based screen in Settings
- * 2.0 (Reactions, Profile Fields, Notifications, etc.). The rules
- * below only add Default-Data-specific styling — the parent component
- * styles handle everything else.
- * ------------------------------------------------------------------------- */
+/* 
+ * Tools page
+ */
 
 .bb-admin-tools-default-data {
 
@@ -18,12 +11,6 @@
 		align-items: flex-start;
 		padding: 20px 0;
 
-		// Divider only between consecutive groups. Using the sibling
-		// combinator avoids the `:first-of-type` pitfall (matches the
-		// first tag, not the first class-matching element) so any
-		// non-group element injected before the list — section
-		// description, a future "Select All" — doesn't double up the
-		// divider against the first group's border-top.
 		& + & {
 			border-top: 1px solid $bb-border-secondary-color;
 		}
@@ -34,9 +21,6 @@
 		}
 	}
 
-	// Group labels in the Figma are plain text — no checkbox/parent
-	// toggle. Heavier weight than the per-item labels so the hierarchy
-	// reads at a glance.
 	&__group-label {
 		font-size: 14px;
 		font-weight: 500;
@@ -50,7 +34,7 @@
 		padding: 0;
 		display: flex;
 		flex-direction: column;
-		gap: 10px;
+		gap: 14px;
 
 		li {
 			margin: 0;
@@ -62,12 +46,6 @@
 		}
 	}
 
-	// Already-imported rows — visually faded so they read as locked /
-	// inert, matching the legacy admin tools form where
-	// `bp_dd_imported_disabled()` rendered the checkbox with WP's
-	// default-disabled greyed-out treatment. Without this rule the
-	// checkbox stays vivid orange even with `disabled` set, because
-	// the brand-color CheckboxControl override ignores the `:disabled`
 	// pseudo-class.
 	&__item--imported {
 		opacity: 0.5;
@@ -84,85 +62,14 @@
 		margin-top: 8px;
 		border-top: 1px solid $bb-border-secondary-color;
 
-		// Primary "Import Selected Data" — orange filled, matches the
-		// rest of Settings 2.0 primary-action treatment.
 		.components-button.is-primary {
-			background-color: $bb-background-brand-primary-color;
-			border: 1px solid $bb-background-brand-primary-color;
-			border-radius: $bb-border-radius-lg;
-			color: $bb-text-inverse-color;
-			font-size: 14px;
-			font-weight: 400;
-			line-height: 20px;
-			padding: 8px 16px;
-			box-shadow: none;
-			transition: opacity 0.2s ease;
-
-			&:hover:not( :disabled ),
-			&:focus:not( :disabled ) {
-				background-color: $bb-background-brand-primary-hover-color;
-				border-color: $bb-background-brand-primary-hover-color;
-				opacity: 1;
-			}
-
-			// Disabled state — neutral grey so the button reads as
-			// clearly inactive instead of a low-opacity brand colour
-			// (which still looks like a primary CTA).
-			&:disabled,
-			&[aria-disabled="true"] {
-				background-color: $bb-background-tertiary-color;
-				border-color: $bb-background-tertiary-color;
-				color: $bb-text-disabled-color;
-				cursor: not-allowed;
-				opacity: 1;
-			}
-
-			&:disabled:hover,
-			&[aria-disabled="true"]:hover {
-				background-color: $bb-background-tertiary-color;
-				border-color: $bb-background-tertiary-color;
-			}
+			@include bb-button-primary;
 		}
-
-		// Secondary "Clear Default Data" — outlined button (1px gray
-		// border, white background) per the Figma. Without this rule WP
-		// renders `variant="secondary"` as a flat link-style button in
-		// the admin context, which is invisible against the white card.
 		.components-button.is-secondary {
-			background-color: $bb-background-base-color;
-			border: 1px solid $bb-border-secondary-color;
-			border-radius: $bb-border-radius-lg;
-			color: $bb-text-color;
-			font-size: 14px;
-			font-weight: 400;
-			line-height: 20px;
-			padding: 8px 16px;
-			box-shadow: none;
-
-			&:hover:not( :disabled ),
-			&:focus:not( :disabled ) {
-				background-color: $bb-background-secondary-color;
-				border-color: $bb-border-secondary-color;
-				color: $bb-text-color;
-			}
-
-			&:disabled,
-			&[aria-disabled="true"] {
-				opacity: 0.5;
-				cursor: not-allowed;
-			}
+			@include bb-button-secondary;
 		}
 	}
 }
-
-/* ----------------------------------------------------------------------------
- * Repair Platform panel — categorized repair list (`bp_admin_repair_list()`).
- * Same two-column "label | items" grid Default Data uses, plus an extra
- * top "Select All" row and per-item progress chrome (spinner / check /
- * warning + message). Categories render as group labels; empty
- * categories aren't sent from PHP so the panel never shows an empty
- * "Forums & Discussions" header on a site without forum-repair items.
- * ------------------------------------------------------------------------- */
 
 .bb-admin-tools-repair-platform {
 
@@ -184,10 +91,6 @@
 		align-items: flex-start;
 		padding: 20px 0;
 
-		// Divider only between consecutive groups. The Select All row
-		// already provides its own bottom border, so the first group
-		// must not add a top border on top of it (which would render
-		// the double line the user reported).
 		& + & {
 			border-top: 1px solid $bb-border-secondary-color;
 		}
@@ -211,13 +114,9 @@
 		padding: 0;
 		display: flex;
 		flex-direction: column;
-		gap: 10px;
+		gap: 14px;
 	}
 
-	// Each repair row hosts the checkbox + (when running) a status
-	// chip on the right. Aligned in a single flex row so long labels
-	// wrap naturally and the status chip stays glued to the right
-	// edge of the row.
 	&__item {
 		display: flex;
 		align-items: flex-start;
