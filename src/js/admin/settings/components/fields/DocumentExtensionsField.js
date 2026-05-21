@@ -11,6 +11,15 @@
  */
 
 import { useState, useEffect, useRef, createPortal } from '@wordpress/element';
+
+// Module-level cache of the latest local extension_data per field name.
+// Survives component unmount/remount, which is what happens when the
+// admin navigates between Document/Video/Photo panels in Settings 2.0.
+// Without this, the field's `field.extension_data` prop — set once when
+// the feature definition is first fetched — reverts to the original
+// list on every remount, hiding newly-added entries and "resurrecting"
+// deleted ones until the user fully reloads the browser tab.
+var extensionDataCache = {};
 import { Modal, Button, TextControl, TextareaControl, DropdownMenu, CheckboxControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { useMimeChecker } from '../../utils/mimeChecker';
@@ -162,16 +171,56 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 	}
 
 	var [ isManageOpen, setIsManageOpen ] = useState( false );
+
+	// Initialise from the module-level cache when available (it persists
+	// across panel switches / remounts), else fall back to the prop. The
+	// parent's `field.extension_data` is computed from the feature
+	// definition at first fetch and never refreshed from save responses,
+	// so without this cache a newly-added extension disappears the moment
+	// the user navigates between Document/Video/Photo panels and comes
+	// back — the remount reads the stale prop and the new entry is lost.
 	var [ localExtensionData, setLocalExtensionData ] = useState( function() {
+		if ( field.name && extensionDataCache[ field.name ] ) {
+			return extensionDataCache[ field.name ];
+		}
 		return field.extension_data || {};
 	} );
 
-	// Sync local extension data when prop changes (e.g., after settings reload).
+	// Sync local extension data when the prop's CONTENT changes (e.g., a
+	// genuine settings reload). Skip when the prop reference flipped but
+	// content is identical — that's the parent's post-`onChange`
+	// re-render passing a stale-but-new reference, and adopting it would
+	// clobber a freshly-added/removed extension.
+	var lastSyncedJsonRef = useRef( null );
 	useEffect( function() {
-		if ( field.extension_data ) {
-			setLocalExtensionData( field.extension_data );
+		if ( ! field.extension_data ) {
+			return;
 		}
+		var nextJson = JSON.stringify( field.extension_data );
+		if ( lastSyncedJsonRef.current === nextJson ) {
+			return;
+		}
+		lastSyncedJsonRef.current = nextJson;
+		// Don't downgrade local state if the cache already has a newer
+		// (post-add/edit) snapshot for this field — happens on remount
+		// after a panel switch where the prop is still the original
+		// fetch's content.
+		if ( field.name && extensionDataCache[ field.name ] ) {
+			var cachedJson = JSON.stringify( extensionDataCache[ field.name ] );
+			if ( cachedJson !== nextJson ) {
+				return;
+			}
+		}
+		setLocalExtensionData( field.extension_data );
 	}, [ field.extension_data ] );
+
+	// Mirror every local update into the module-level cache so a later
+	// remount (after panel navigation) can restore the user's edits.
+	useEffect( function() {
+		if ( field.name ) {
+			extensionDataCache[ field.name ] = localExtensionData;
+		}
+	}, [ field.name, localExtensionData ] );
 
 	// Local working copy of toggle values inside manage modal.
 	var [ workingValues, setWorkingValues ] = useState( function() {
