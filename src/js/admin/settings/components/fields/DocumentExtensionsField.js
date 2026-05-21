@@ -19,7 +19,13 @@ import { useState, useEffect, useRef, createPortal } from '@wordpress/element';
 // the feature definition is first fetched — reverts to the original
 // list on every remount, hiding newly-added entries and "resurrecting"
 // deleted ones until the user fully reloads the browser tab.
-var extensionDataCache = {};
+//
+// @todo Pragmatic workaround. The proper fix is to refresh
+//       `field.extension_data` from save responses in
+//       `FeatureSettingsScreen` (today it only mirrors `settings`/
+//       `originalSettings` and the feature cache's `settings`, not the
+//       field definition). Once that ships, this cache can be removed.
+const extensionDataCache = {};
 import { Modal, Button, TextControl, TextareaControl, DropdownMenu, CheckboxControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { useMimeChecker } from '../../utils/mimeChecker';

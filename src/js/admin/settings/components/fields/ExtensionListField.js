@@ -22,8 +22,13 @@ import { MimeCheckerPanel } from './MimeCheckerPanel';
 // never refreshed from save responses, so without these caches a
 // newly-added extension disappears (and a deleted one resurrects) the
 // moment the user switches panels and comes back.
-var extensionDataCache = {};
-var optionsCache = {};
+//
+// @todo Pragmatic workaround. The proper fix is to refresh
+//       `field.extension_data` / `field.options` from save responses in
+//       `FeatureSettingsScreen` (today it only mirrors `settings`, not
+//       the field definition). Once that ships, both caches can be removed.
+const extensionDataCache = {};
+const optionsCache = {};
 
 /**
  * Extension List Field Component
