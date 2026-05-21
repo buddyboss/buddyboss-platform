@@ -29,6 +29,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from '@wordpress/el
 import { Modal, CheckboxControl, SelectControl } from '@wordpress/components';
 import { __, _n, sprintf } from '@wordpress/i18n';
 import { formatNumber } from '../../utils/format';
+import { sanitizeHtml } from '../../utils/sanitize';
 
 export function MigrationModal( { isOpen, onClose, migrationData } ) {
 	const [ loading, setLoading ]                 = useState( true );
@@ -39,6 +40,13 @@ export function MigrationModal( { isOpen, onClose, migrationData } ) {
 	const [ targetEmotion, setTargetEmotion ]     = useState( '' );
 	const [ submitting, setSubmitting ]           = useState( false );
 	const [ error, setError ]                     = useState( '' );
+	// Back-compat fallback for environments running an older Pro that only
+	// returns the legacy `content` HTML (no structured `data` payload). We
+	// render that HTML inside the React modal via sanitizeHtml() so admins
+	// running mismatched Platform/Pro branches still see *something* useful
+	// instead of a dead-end error — the form is read-only because the legacy
+	// jQuery handlers aren't enqueued on the Settings 2.0 page.
+	const [ legacyContent, setLegacyContent ]     = useState( '' );
 
 	// Refs so submit/close handlers always close over the latest prop values
 	// without forcing useCallback dependencies that would churn the effect.
@@ -96,6 +104,7 @@ export function MigrationModal( { isOpen, onClose, migrationData } ) {
 		setCurrentScreen( 1 );
 		setSelectedReactions( {} );
 		setTargetEmotion( '' );
+		setLegacyContent( '' );
 
 		// Derive the wizard title from the notice action when present so the
 		// modal opens with "Convert Likes" / "Convert Reactions" instead of the
@@ -199,6 +208,15 @@ export function MigrationModal( { isOpen, onClose, migrationData } ) {
 							// switch via the dropdown before clicking Continue.
 							setTargetEmotion( String( response.data.data.target_emotions[ 0 ].value ) );
 						}
+					} else if ( 'string' === typeof response.data.content && response.data.content.length > 0 ) {
+						// Older Pro versions return only the legacy `content` HTML
+						// (no structured `data` payload). Render that HTML so the
+						// admin sees the wizard form instead of an error — the
+						// legacy jQuery handlers aren't loaded on the Settings 2.0
+						// page so it's read-only, but it surfaces what Pro would
+						// have shown and lets the admin understand the state
+						// without forcing a Pro update first.
+						setLegacyContent( response.data.content );
 					} else if ( response.data.message ) {
 						setError( response.data.message );
 					} else {
@@ -416,9 +434,36 @@ export function MigrationModal( { isOpen, onClose, migrationData } ) {
 				) }
 
 				{ error && ! loading && (
-					<div className="bb-admin-notice bb-admin-notice--error">
-						<p>{ error }</p>
+					<div className="bb-admin-migration-modal__wizard bb-admin-migration-modal__wizard--no-data">
+						<div className="bb-admin-notice bb-admin-notice--error">
+							<p>{ error }</p>
+						</div>
+						<div className="bb-admin-migration-modal__footer">
+							<button
+								type="button"
+								className="components-button is-primary"
+								onClick={ onClose }
+							>
+								{ __( 'Close', 'buddyboss' ) }
+							</button>
+						</div>
 					</div>
+				) }
+
+				{ /* Legacy-content fallback — older Pro returns only `content`
+				     (raw HTML) without the structured `data` payload. Render
+				     the HTML as-is; it already contains its own Cancel /
+				     Continue buttons. Sanitized through sanitizeHtml() using
+				     the same allow-list other Settings 2.0 screens use
+				     (ProfileTypeScreen, ForumsListScreen, etc.). The legacy
+				     jQuery handlers aren't enqueued on the Settings 2.0 page
+				     so the form is visual-only — admins can still dismiss via
+				     the Modal X. */ }
+				{ ! loading && ! error && ! wizardData && legacyContent && (
+					<div
+						className="bb-admin-migration-modal__wizard bb-admin-migration-modal__wizard--legacy"
+						dangerouslySetInnerHTML={ { __html: sanitizeHtml( legacyContent ) } }
+					/>
 				) }
 
 				{ /* No-data state — admin opened a wizard variant with no
