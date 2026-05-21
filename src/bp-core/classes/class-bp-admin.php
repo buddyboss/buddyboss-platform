@@ -479,14 +479,32 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				$tools_parent = 'tools.php';
 			}
 
-			$hooks[] = add_submenu_page(
-				$this->settings_page,
-				__( 'Tools', 'buddyboss' ),
-				__( 'Tools', 'buddyboss' ),
-				$this->capability,
-				'bp-tools',
-				'bp_core_admin_tools'
-			);
+			// Settings 2.0 Tools page — when the feature registry is
+			// available the legacy `bp-tools` submenu is replaced by a
+			// shortcut that lands users on the React Tools tab at
+			// `?page=bb-settings&tab=tools&panel=default_data`. The
+			// legacy `bp_core_admin_tools()` callback is still
+			// registered as a fallback below for installs without
+			// Settings 2.0, so existing bookmarks keep working.
+			if ( function_exists( 'bb_register_feature' ) ) {
+				$hooks[] = add_submenu_page(
+					$this->settings_page,
+					__( 'Tools', 'buddyboss' ),
+					__( 'Tools', 'buddyboss' ),
+					$this->capability,
+					'admin.php?page=bb-settings&tab=tools&panel=default_data',
+					''
+				);
+			} else {
+				$hooks[] = add_submenu_page(
+					$this->settings_page,
+					__( 'Tools', 'buddyboss' ),
+					__( 'Tools', 'buddyboss' ),
+					$this->capability,
+					'bp-tools',
+					'bp_core_admin_tools'
+				);
+			}
 
 			$hooks[] = add_submenu_page(
 				$this->settings_page,

@@ -297,6 +297,17 @@ function bb_admin_settings_page() {
 	// bp_admin_repair_tools_wrapper_function AJAX action.
 	$localize_data['repairNonce'] = wp_create_nonce( 'bp-do-counts' );
 
+	// Tools page nonce — single nonce for every `bb_admin_tools_*` AJAX
+	// endpoint (Default Data, Repair Platform, Import Content). Matches
+	// the `BB_Admin_Tools_Ajax::NONCE_ACTION` constant.
+	$localize_data['toolsNonce'] = wp_create_nonce( 'bb_admin_tools' );
+
+	// Forums converter nonce — needed for the existing
+	// `wp_ajax_bbp_converter_process` AJAX action that drives the
+	// 17-step bbPress converter pipeline. React calls that endpoint
+	// directly to keep the legacy backend untouched.
+	$localize_data['converterNonce'] = wp_create_nonce( 'bbp_converter_process' );
+
 	// One-shot help-content cache flush signal.
 	//
 	// `bb_maybe_clear_placeholder_features_cache()` (admin_init handler in

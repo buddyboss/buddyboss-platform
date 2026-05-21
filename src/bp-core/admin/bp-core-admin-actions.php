@@ -1001,6 +1001,33 @@ function bb_redirect_legacy_settings_to_settings_2() {
 		exit;
 	}
 
+	// Redirect legacy Tools admin pages to the Settings 2.0 Tools tab.
+	// Covers the four legacy slugs that used to live under the BuddyBoss
+	// menu: `bp-tools` (Default Data), `bp-repair-community` (Repair
+	// Platform), `bp-member-type-import` and `bbp-converter` (Import
+	// Content). Existing bookmarks land users on the matching React panel
+	// instead of 404'ing.
+	$tools_page_redirects = array(
+		'bp-tools'              => 'default_data',
+		'bp-repair-community'   => 'repair_platform',
+		// bbPress's separate forum-repair page (`?page=bbp-repair`) is
+		// merged into the Repair Platform panel under the "Forums &
+		// Discussions" category — its items live alongside the
+		// `bp_admin_repair_list` items so admins don't have to switch
+		// between two repair tools.
+		'bbp-repair'            => 'repair_platform',
+		'bp-member-type-import' => 'import_content',
+		'bbp-converter'         => 'import_content',
+	);
+	if ( isset( $tools_page_redirects[ $page ] ) ) {
+		wp_safe_redirect(
+			bp_get_admin_url(
+				'admin.php?page=bb-settings&tab=tools&panel=' . $tools_page_redirects[ $page ]
+			)
+		);
+		exit;
+	}
+
 	// Redirect legacy Email Templates CPT page (edit.php?post_type=bp-email).
 	if ( function_exists( 'bp_get_email_post_type' ) && bp_get_email_post_type() === $post_type ) {
 		wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=emails&panel=all_emails' ) );

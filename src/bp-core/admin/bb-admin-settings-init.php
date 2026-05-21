@@ -55,6 +55,14 @@ function bb_admin_settings_init() {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-settings-ajax.php';
 		}
 
+		// Settings 2.0 Tools page AJAX endpoints (Default Data, Repair
+		// Platform, Import Content). Wraps legacy `bp_admin_tools_*` /
+		// `bp_dd_*` / `bp_admin_repair_*` flows so the React Tools UI is
+		// a pure adapter — no changes to the legacy backend.
+		if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-tools-ajax.php' ) ) {
+			require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-admin-tools-ajax.php';
+		}
+
 		if ( bp_is_active( 'activity' ) && file_exists( buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-activity-admin-ajax.php' ) ) {
 			require_once buddypress()->plugin_dir . 'bp-core/admin/classes/class-bb-activity-admin-ajax.php';
 		}

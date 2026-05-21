@@ -1,0 +1,626 @@
+/* ----------------------------------------------------------------------------
+ * Tools page — top-level menu reached via BuddyBoss → Tools.
+ *
+ * Tools reuses the standard `.bb-admin-feature-settings` chrome
+ * (sidebar via `SideNavigation`, content wrap, section header/body) so
+ * the visual frame matches every other panel-based screen in Settings
+ * 2.0 (Reactions, Profile Fields, Notifications, etc.). The rules
+ * below only add Default-Data-specific styling — the parent component
+ * styles handle everything else.
+ * ------------------------------------------------------------------------- */
+
+.bb-admin-tools-default-data {
+
+	&__group {
+		display: grid;
+		grid-template-columns: 200px 1fr;
+		gap: 24px;
+		align-items: flex-start;
+		padding: 20px 0;
+
+		// Divider only between consecutive groups. Using the sibling
+		// combinator avoids the `:first-of-type` pitfall (matches the
+		// first tag, not the first class-matching element) so any
+		// non-group element injected before the list — section
+		// description, a future "Select All" — doesn't double up the
+		// divider against the first group's border-top.
+		& + & {
+			border-top: 1px solid $bb-border-secondary-color;
+		}
+
+		@media (max-width: 768px) {
+			grid-template-columns: 1fr;
+			gap: 8px;
+		}
+	}
+
+	// Group labels in the Figma are plain text — no checkbox/parent
+	// toggle. Heavier weight than the per-item labels so the hierarchy
+	// reads at a glance.
+	&__group-label {
+		font-size: 14px;
+		font-weight: 500;
+		color: $bb-text-color;
+		padding-top: 4px;
+	}
+
+	&__group-items {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+
+		li {
+			margin: 0;
+
+			.components-checkbox-control__label {
+				font-size: 14px;
+				color: $bb-text-color;
+			}
+		}
+	}
+
+	// Already-imported rows — visually faded so they read as locked /
+	// inert, matching the legacy admin tools form where
+	// `bp_dd_imported_disabled()` rendered the checkbox with WP's
+	// default-disabled greyed-out treatment. Without this rule the
+	// checkbox stays vivid orange even with `disabled` set, because
+	// the brand-color CheckboxControl override ignores the `:disabled`
+	// pseudo-class.
+	&__item--imported {
+		opacity: 0.5;
+
+		.components-checkbox-control__label {
+			cursor: not-allowed;
+		}
+	}
+
+	&__actions {
+		display: flex;
+		gap: 12px;
+		padding-top: 24px;
+		margin-top: 8px;
+		border-top: 1px solid $bb-border-secondary-color;
+
+		// Primary "Import Selected Data" — orange filled, matches the
+		// rest of Settings 2.0 primary-action treatment.
+		.components-button.is-primary {
+			background-color: $bb-background-brand-primary-color;
+			border: 1px solid $bb-background-brand-primary-color;
+			border-radius: $bb-border-radius-lg;
+			color: $bb-text-inverse-color;
+			font-size: 14px;
+			font-weight: 400;
+			line-height: 20px;
+			padding: 8px 16px;
+			box-shadow: none;
+			transition: opacity 0.2s ease;
+
+			&:hover:not( :disabled ),
+			&:focus:not( :disabled ) {
+				background-color: $bb-background-brand-primary-hover-color;
+				border-color: $bb-background-brand-primary-hover-color;
+				opacity: 1;
+			}
+
+			// Disabled state — neutral grey so the button reads as
+			// clearly inactive instead of a low-opacity brand colour
+			// (which still looks like a primary CTA).
+			&:disabled,
+			&[aria-disabled="true"] {
+				background-color: $bb-background-tertiary-color;
+				border-color: $bb-background-tertiary-color;
+				color: $bb-text-disabled-color;
+				cursor: not-allowed;
+				opacity: 1;
+			}
+
+			&:disabled:hover,
+			&[aria-disabled="true"]:hover {
+				background-color: $bb-background-tertiary-color;
+				border-color: $bb-background-tertiary-color;
+			}
+		}
+
+		// Secondary "Clear Default Data" — outlined button (1px gray
+		// border, white background) per the Figma. Without this rule WP
+		// renders `variant="secondary"` as a flat link-style button in
+		// the admin context, which is invisible against the white card.
+		.components-button.is-secondary {
+			background-color: $bb-background-base-color;
+			border: 1px solid $bb-border-secondary-color;
+			border-radius: $bb-border-radius-lg;
+			color: $bb-text-color;
+			font-size: 14px;
+			font-weight: 400;
+			line-height: 20px;
+			padding: 8px 16px;
+			box-shadow: none;
+
+			&:hover:not( :disabled ),
+			&:focus:not( :disabled ) {
+				background-color: $bb-background-secondary-color;
+				border-color: $bb-border-secondary-color;
+				color: $bb-text-color;
+			}
+
+			&:disabled,
+			&[aria-disabled="true"] {
+				opacity: 0.5;
+				cursor: not-allowed;
+			}
+		}
+	}
+}
+
+/* ----------------------------------------------------------------------------
+ * Repair Platform panel — categorized repair list (`bp_admin_repair_list()`).
+ * Same two-column "label | items" grid Default Data uses, plus an extra
+ * top "Select All" row and per-item progress chrome (spinner / check /
+ * warning + message). Categories render as group labels; empty
+ * categories aren't sent from PHP so the panel never shows an empty
+ * "Forums & Discussions" header on a site without forum-repair items.
+ * ------------------------------------------------------------------------- */
+
+.bb-admin-tools-repair-platform {
+
+	&__select-all {
+		padding-bottom: 16px;
+		border-bottom: 1px solid $bb-border-secondary-color;
+		margin-bottom: 8px;
+
+		.components-checkbox-control__label {
+			font-weight: 600;
+			color: $bb-text-color;
+		}
+	}
+
+	&__group {
+		display: grid;
+		grid-template-columns: 200px 1fr;
+		gap: 24px;
+		align-items: flex-start;
+		padding: 20px 0;
+
+		// Divider only between consecutive groups. The Select All row
+		// already provides its own bottom border, so the first group
+		// must not add a top border on top of it (which would render
+		// the double line the user reported).
+		& + & {
+			border-top: 1px solid $bb-border-secondary-color;
+		}
+
+		@media (max-width: 768px) {
+			grid-template-columns: 1fr;
+			gap: 8px;
+		}
+	}
+
+	&__group-label {
+		font-size: 14px;
+		font-weight: 500;
+		color: $bb-text-color;
+		padding-top: 4px;
+	}
+
+	&__group-items {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+	}
+
+	// Each repair row hosts the checkbox + (when running) a status
+	// chip on the right. Aligned in a single flex row so long labels
+	// wrap naturally and the status chip stays glued to the right
+	// edge of the row.
+	&__item {
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+		gap: 12px;
+
+		.components-checkbox-control__label {
+			font-size: 14px;
+			color: $bb-text-color;
+			line-height: 1.5;
+		}
+	}
+
+	&__item-status {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		font-size: 12px;
+		line-height: 1.4;
+		color: $bb-text-tertiary-color;
+		flex-shrink: 0;
+
+		.components-spinner {
+			margin: 0;
+		}
+
+		i {
+			font-size: 16px;
+			line-height: 1;
+		}
+
+		.bb-icons-rl-check-circle {
+			color: $bb-text-positive-primary-color;
+		}
+
+		.bb-icons-rl-warning-circle {
+			color: $bb-icon-danger-color;
+		}
+	}
+
+	&__item-message {
+		max-width: 320px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	// Per-state row tinting — soft cue without being noisy. Done +
+	// error use slightly different left-border accents so a long
+	// repair queue is scannable at a glance.
+	&__item--done {
+
+		.components-checkbox-control__label {
+			color: $bb-text-tertiary-color;
+		}
+	}
+
+	&__item--error {
+
+		.bb-admin-tools-repair-platform__item-status {
+			color: $bb-icon-danger-color;
+		}
+	}
+
+	&__actions {
+		display: flex;
+		gap: 12px;
+		padding-top: 24px;
+		margin-top: 8px;
+		border-top: 1px solid $bb-border-secondary-color;
+
+		.components-button.is-primary {
+			background-color: $bb-background-brand-primary-color;
+			border: 1px solid $bb-background-brand-primary-color;
+			border-radius: $bb-border-radius-lg;
+			color: $bb-text-inverse-color;
+			font-size: 14px;
+			font-weight: 400;
+			line-height: 20px;
+			padding: 8px 16px;
+			box-shadow: none;
+
+			&:hover:not( :disabled ),
+			&:focus:not( :disabled ) {
+				background-color: $bb-background-brand-primary-hover-color;
+				border-color: $bb-background-brand-primary-hover-color;
+			}
+
+			&:disabled,
+			&[aria-disabled="true"] {
+				opacity: 0.5;
+				cursor: not-allowed;
+			}
+		}
+
+		.components-button.is-secondary {
+			background-color: $bb-background-base-color;
+			border: 1px solid $bb-border-secondary-color;
+			border-radius: $bb-border-radius-lg;
+			color: $bb-text-color;
+			font-size: 14px;
+			font-weight: 400;
+			line-height: 20px;
+			padding: 8px 16px;
+			box-shadow: none;
+
+			&:hover:not( :disabled ),
+			&:focus:not( :disabled ) {
+				background-color: $bb-background-secondary-color;
+				border-color: $bb-border-secondary-color;
+				color: $bb-text-color;
+			}
+		}
+	}
+}
+
+/* ----------------------------------------------------------------------------
+ * Import Content — Profile Types section
+ * ------------------------------------------------------------------------- */
+
+.bb-admin-tools-import-profile-types {
+
+	&__pending {
+		margin: 16px 0;
+		padding: 16px;
+		background-color: $bb-background-secondary-color;
+		border-radius: $bb-border-radius-lg;
+
+		p {
+			margin: 0 0 8px;
+			font-size: 13px;
+			color: $bb-text-color;
+		}
+	}
+
+	&__pending-list {
+		list-style: disc;
+		margin: 0;
+		padding-left: 24px;
+
+		li {
+			margin: 0;
+			font-size: 13px;
+			line-height: 1.6;
+			color: $bb-text-color;
+		}
+	}
+
+	&__empty {
+		margin: 16px 0;
+		padding: 16px;
+		background-color: $bb-background-secondary-color;
+		border-radius: $bb-border-radius-lg;
+		font-size: 13px;
+		color: $bb-text-tertiary-color;
+	}
+
+	&__actions {
+		display: flex;
+		gap: 12px;
+		padding-top: 24px;
+		margin-top: 8px;
+		border-top: 1px solid $bb-border-secondary-color;
+
+		.components-button.is-primary {
+			background-color: $bb-background-brand-primary-color;
+			border: 1px solid $bb-background-brand-primary-color;
+			border-radius: $bb-border-radius-lg;
+			color: $bb-text-inverse-color;
+			font-size: 14px;
+			font-weight: 400;
+			line-height: 20px;
+			padding: 8px 16px;
+			box-shadow: none;
+
+			&:hover:not( :disabled ),
+			&:focus:not( :disabled ) {
+				background-color: $bb-background-brand-primary-hover-color;
+				border-color: $bb-background-brand-primary-hover-color;
+			}
+
+			&:disabled,
+			&[aria-disabled="true"] {
+				background-color: $bb-background-tertiary-color;
+				border-color: $bb-background-tertiary-color;
+				color: $bb-text-disabled-color;
+				cursor: not-allowed;
+				opacity: 1;
+			}
+
+			&:disabled:hover,
+			&[aria-disabled="true"]:hover {
+				background-color: $bb-background-tertiary-color;
+				border-color: $bb-background-tertiary-color;
+			}
+		}
+	}
+}
+
+/* ----------------------------------------------------------------------------
+ * Import Content — Forums Converter section
+ * ------------------------------------------------------------------------- */
+
+.bb-admin-tools-import-forums {
+
+	&__notice {
+		display: flex;
+		gap: 12px;
+		align-items: flex-start;
+		padding: 12px 16px;
+		margin: 0 0 24px;
+		background-color: $bb-background-secondary-color;
+		border-radius: $bb-border-radius-lg;
+		border: 1px solid $bb-border-secondary-color;
+
+		i {
+			color: $bb-text-brand-primary-color;
+			font-size: 18px;
+			line-height: 1.5;
+			flex-shrink: 0;
+		}
+
+		p {
+			margin: 0;
+			font-size: 13px;
+			line-height: 1.5;
+			color: $bb-text-color;
+		}
+	}
+
+	// Form rows use the shared `.bb-admin-settings-form__field` two-
+	// column layout (label-left, control-right + per-row divider) via
+	// the `<FieldRow>` helper inside `ImportContentPanel.js`. No
+	// per-row SCSS needed — `_feature_settings.scss` already styles
+	// `.bb-admin-settings-form__field-label` / `__field-content` for
+	// every Settings 2.0 panel.
+	&__form {
+		display: flex;
+		flex-direction: column;
+
+		// The top-level shared rule puts a border-bottom on each field;
+		// hide the trailing border on the last row so it doesn't double
+		// up with the section's own footer divider.
+		.bb-admin-settings-form__field:last-child {
+			border-bottom: 0;
+		}
+	}
+
+	&__progress {
+		margin: 24px 0 0;
+		padding: 16px;
+		background-color: $bb-background-secondary-color;
+		border-radius: $bb-border-radius-lg;
+	}
+
+	&__progress-label {
+		font-size: 13px;
+		color: $bb-text-color;
+		margin-bottom: 8px;
+	}
+
+	&__progress-bar {
+		height: 6px;
+		background-color: $bb-background-tertiary-color;
+		border-radius: $bb-border-radius-full;
+		overflow: hidden;
+	}
+
+	&__progress-fill {
+		height: 100%;
+		background-color: $bb-background-brand-primary-color;
+		transition: width 0.4s ease;
+	}
+
+	&__actions {
+		display: flex;
+		gap: 12px;
+		padding-top: 24px;
+		margin-top: 16px;
+		border-top: 1px solid $bb-border-secondary-color;
+
+		.components-button.is-primary {
+			background-color: $bb-background-brand-primary-color;
+			border: 1px solid $bb-background-brand-primary-color;
+			border-radius: $bb-border-radius-lg;
+			color: $bb-text-inverse-color;
+			font-size: 14px;
+			font-weight: 400;
+			line-height: 20px;
+			padding: 8px 16px;
+			box-shadow: none;
+
+			&:hover:not( :disabled ),
+			&:focus:not( :disabled ) {
+				background-color: $bb-background-brand-primary-hover-color;
+				border-color: $bb-background-brand-primary-hover-color;
+			}
+
+			&:disabled,
+			&[aria-disabled="true"] {
+				background-color: $bb-background-tertiary-color;
+				border-color: $bb-background-tertiary-color;
+				color: $bb-text-disabled-color;
+				cursor: not-allowed;
+				opacity: 1;
+			}
+
+			&:disabled:hover,
+			&[aria-disabled="true"]:hover {
+				background-color: $bb-background-tertiary-color;
+				border-color: $bb-background-tertiary-color;
+			}
+		}
+
+		.components-button.is-secondary {
+			background-color: $bb-background-base-color;
+			border: 1px solid $bb-border-secondary-color;
+			border-radius: $bb-border-radius-lg;
+			color: $bb-text-color;
+			font-size: 14px;
+			font-weight: 400;
+			line-height: 20px;
+			padding: 8px 16px;
+			box-shadow: none;
+
+			&:hover:not( :disabled ),
+			&:focus:not( :disabled ) {
+				background-color: $bb-background-secondary-color;
+				border-color: $bb-border-secondary-color;
+				color: $bb-text-color;
+			}
+		}
+	}
+}
+
+/* ----------------------------------------------------------------------------
+ * Import Content — Import Media section
+ *
+ * Migration target for the discontinued standalone "BuddyBoss Media"
+ * plugin. The vast majority of sites hit the "no legacy tables" branch
+ * (renders the Figma's "BuddyBoss Media plugin database tables do not
+ * exist…" copy in the section body — no actions needed). Sites that
+ * do have the legacy tables see a primary-button link out to the
+ * existing `?page=bp-media-import` wizard which we don't reimplement
+ * in React (rare upgrade path, complex polling-based progress).
+ * ------------------------------------------------------------------------- */
+
+.bb-admin-tools-import-media {
+
+	&__actions {
+		display: flex;
+		gap: 12px;
+		padding-top: 24px;
+		margin-top: 16px;
+		border-top: 1px solid $bb-border-secondary-color;
+
+		.components-button.is-primary {
+			background-color: $bb-background-brand-primary-color;
+			border: 1px solid $bb-background-brand-primary-color;
+			border-radius: $bb-border-radius-lg;
+			color: $bb-text-inverse-color;
+			font-size: 14px;
+			font-weight: 400;
+			line-height: 20px;
+			padding: 8px 16px;
+			text-decoration: none;
+			box-shadow: none;
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+
+			&:hover,
+			&:focus {
+				background-color: $bb-background-brand-primary-hover-color;
+				border-color: $bb-background-brand-primary-hover-color;
+				color: $bb-text-inverse-color;
+			}
+		}
+	}
+}
+
+/* Tools confirmation dialog reuses the shared `ConfirmToggleModal`
+   component, which inherits the standard `.bb-admin-settings-modal__body`
+   and `.bb-admin-settings-modal__footer` chrome from `_elements.scss`
+   (header divider, body padding, sticky footer with top border, brand
+   button styling). No Tools-specific modal SCSS needed. */
+
+/* Placeholder panels (Repair Platform / Import Content) — temporary
+   shell rendered until Phase 2 / Phase 3 land. Removed once those
+   panels are implemented. */
+.bb-admin-tools__panel--placeholder {
+	padding: 24px;
+
+	.bb-admin-tools__panel-title {
+		margin: 0 0 8px;
+		font-size: 18px;
+		font-weight: 600;
+		color: $bb-text-color;
+	}
+
+	.bb-admin-tools__panel-body p {
+		margin: 0;
+		color: $bb-text-secondary-color;
+		font-size: 13px;
+	}
+}

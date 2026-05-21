@@ -16,6 +16,7 @@ import { FeatureSettingsScreen } from './screens/FeatureSettingsScreen';
 const ActivityListScreen = lazy(() => import('./screens/ActivityListScreen'));
 const GroupsListScreen = lazy(() => import('./screens/GroupsListScreen'));
 const ForumsListScreen = lazy(() => import('./screens/ForumsListScreen'));
+const ToolsScreen = lazy(() => import('./screens/ToolsScreen'));
 
 /**
  * Check if a feature is enabled
@@ -217,6 +218,20 @@ export function Router({ currentRoute, onNavigate }) {
 			// Hierarchy: Feature (tab) → Side Panel (sidepanel) → Sections → Fields
 			const featureId = routeParts[1];
 			const sidePanelId = routeParts[2];
+
+			// Tools is a top-level menu (not a feature card). It reuses
+			// the Settings 2.0 shell so the URL stays
+			// `?page=bb-settings&tab=tools&panel=<panel_id>`, but the
+			// React tree renders ToolsScreen instead of the generic
+			// FeatureSettingsScreen — Tools manages its own side-panel
+			// state and AJAX endpoints (`bb_admin_tools_*`).
+			if ('tools' === featureId) {
+				return (
+					<Suspense fallback={<LoadingSpinner />}>
+						<ToolsScreen panelId={sidePanelId} onNavigate={onNavigate} />
+					</Suspense>
+				);
+			}
 
 			if (featureId) {
 				// Check if feature is enabled (wait for features to load)
