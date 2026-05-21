@@ -43,7 +43,7 @@ var TOOLS_PANELS = [
 	{
 		id:    'import_content',
 		title: __( 'Import Content', 'buddyboss' ),
-		icon:  { type: 'font', class: 'bb-icons-rl bb-icons-rl-download-simple' },
+		icon:  { type: 'font', class: 'bb-icons-rl bb-icons-rl-upload-simple' },
 	},
 ];
 
