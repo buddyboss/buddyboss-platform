@@ -574,6 +574,11 @@ select.bb-admin-settings__select {
     height: 18px;
     width: 18px;
 
+    &-container {
+        height: 18px;
+        width: 18px;
+    }
+
     + svg.components-checkbox-control__checked {
         height: 22px;
         width: 22px;
