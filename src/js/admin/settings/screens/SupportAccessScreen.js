@@ -11,23 +11,31 @@
  */
 
 import { useState, useEffect } from '@wordpress/element';
-import { Button, ToggleControl, TextareaControl } from '@wordpress/components';
-import { __ } from '@wordpress/i18n';
+import { Button, ToggleControl } from '@wordpress/components';
+import { __, sprintf } from '@wordpress/i18n';
+import { ajaxFetch } from '../utils/ajax';
 import { ModifyDurationModal } from '../components/modals/ModifyDurationModal';
 import { AddTicketModal } from '../components/modals/AddTicketModal';
 import { Toast, useAutoDismissToast } from '../components/Toast';
 
 /**
- * Initial mock countdown for the design — wired here as local state so the
- * tiles tick. Replace with a real expiry timestamp from PHP once the AJAX
- * endpoint is in place.
+ * Convert a number of remaining seconds to a {days, hours, minutes, seconds}
+ * countdown object, clamped at zero.
+ *
+ * @param {number} totalSeconds Remaining seconds.
+ * @returns {Object} Countdown parts.
  */
-var INITIAL_COUNTDOWN = {
-	days: 9,
-	hours: 23,
-	minutes: 35,
-	seconds: 51,
-};
+function secondsToCountdown( totalSeconds ) {
+	var total = parseInt( totalSeconds, 10 ) || 0;
+	if ( total <= 0 ) {
+		return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+	}
+	var s = total % 60;
+	var m = Math.floor( total / 60 ) % 60;
+	var h = Math.floor( total / 3600 ) % 24;
+	var d = Math.floor( total / 86400 );
+	return { days: d, hours: h, minutes: m, seconds: s };
+}
 
 /**
  * Pad a number with leading zero.
@@ -48,14 +56,7 @@ function pad2( n ) {
  */
 function tick( t ) {
 	var total = ( ( t.days * 24 + t.hours ) * 60 + t.minutes ) * 60 + t.seconds - 1;
-	if ( total <= 0 ) {
-		return { days: 0, hours: 0, minutes: 0, seconds: 0 };
-	}
-	var s = total % 60;
-	var m = Math.floor( total / 60 ) % 60;
-	var h = Math.floor( total / 3600 ) % 24;
-	var d = Math.floor( total / 86400 );
-	return { days: d, hours: h, minutes: m, seconds: s };
+	return secondsToCountdown( total );
 }
 
 /**
@@ -68,33 +69,49 @@ function tick( t ) {
  * @returns {JSX.Element} Support Access screen.
  */
 export function SupportAccessScreen( { onNavigate } ) {
-	var enabledState = useState( true );
+	var enabledState = useState( false );
 	var enabled = enabledState[ 0 ];
 	var setEnabled = enabledState[ 1 ];
 
-	var noteState = useState( '' );
-	var note = noteState[ 0 ];
-	var setNote = noteState[ 1 ];
+	// Whether the initial state fetch is still in flight.
+	var loadingState = useState( true );
+	var isLoading = loadingState[ 0 ];
+	var setIsLoading = loadingState[ 1 ];
 
-	var countdownState = useState( INITIAL_COUNTDOWN );
+	// Whether a toggle/extend/ticket request is currently saving.
+	var savingState = useState( false );
+	var isSaving = savingState[ 0 ];
+	var setIsSaving = savingState[ 1 ];
+
+	var countdownState = useState( { days: 0, hours: 0, minutes: 0, seconds: 0 } );
 	var countdown = countdownState[ 0 ];
 	var setCountdown = countdownState[ 1 ];
 
-	var durationState = useState( '5' );
-	var duration = durationState[ 0 ];
-	var setDuration = durationState[ 1 ];
+	// Server-provided UTC expiry string + most recent login URL (shown once).
+	var expiresUtcState = useState( '' );
+	var expiresUtc = expiresUtcState[ 0 ];
+	var setExpiresUtc = expiresUtcState[ 1 ];
+
+	var loginUrlState = useState( '' );
+	var loginUrl = loginUrlState[ 0 ];
+	var setLoginUrl = loginUrlState[ 1 ];
 
 	var modalOpenState = useState( false );
 	var isModalOpen = modalOpenState[ 0 ];
 	var setIsModalOpen = modalOpenState[ 1 ];
 
-	var ticketState = useState( '' );
-	var ticket = ticketState[ 0 ];
-	var setTicket = ticketState[ 1 ];
+	// The same login URL can cover several support tickets, so this is a list.
+	var ticketsState = useState( [] );
+	var tickets = ticketsState[ 0 ];
+	var setTickets = ticketsState[ 1 ];
 
 	var ticketModalOpenState = useState( false );
 	var isTicketModalOpen = ticketModalOpenState[ 0 ];
 	var setIsTicketModalOpen = ticketModalOpenState[ 1 ];
+
+	var sessionsState = useState( [] );
+	var sessions = sessionsState[ 0 ];
+	var setSessions = sessionsState[ 1 ];
 
 	var toastState = useState( null );
 	var toast = toastState[ 0 ];
@@ -102,6 +119,69 @@ export function SupportAccessScreen( { onNavigate } ) {
 
 	useAutoDismissToast( toast, setToast );
 
+	/**
+	 * Apply a server response payload to local component state.
+	 *
+	 * @param {Object} data Response data from a support-access AJAX endpoint.
+	 */
+	var applyState = function ( data ) {
+		if ( ! data ) {
+			return;
+		}
+		setEnabled( !! data.enabled );
+		setCountdown( secondsToCountdown( data.remaining ) );
+		setExpiresUtc( data.expires_utc || '' );
+		setTickets( Array.isArray( data.ticket_numbers ) ? data.ticket_numbers : [] );
+
+		// login_url is only present right after a fresh token is minted.
+		if ( data.has_login_url && data.login_url ) {
+			setLoginUrl( data.login_url );
+		} else if ( ! data.enabled ) {
+			setLoginUrl( '' );
+		}
+
+		var log = Array.isArray( data.login_log ) ? data.login_log : [];
+		setSessions(
+			log.map( function ( entry, index ) {
+				return {
+					id: 's' + index,
+					label: sprintf(
+						/* translators: 1: UTC timestamp, 2: IP address. */
+						__( '%1$s UTC – Login from %2$s', 'buddyboss' ),
+						entry.time,
+						entry.ip || __( 'unknown IP', 'buddyboss' )
+					),
+				};
+			} )
+		);
+	};
+
+	// Load the real state from the server on mount.
+	useEffect( function () {
+		var cancelled = false;
+		ajaxFetch( 'bb_admin_support_access_get' )
+			.then( function ( res ) {
+				if ( cancelled ) {
+					return;
+				}
+				if ( res && res.success ) {
+					applyState( res.data );
+				}
+			} )
+			.catch( function () {
+				// Leave defaults (disabled) on error.
+			} )
+			.finally( function () {
+				if ( ! cancelled ) {
+					setIsLoading( false );
+				}
+			} );
+		return function () {
+			cancelled = true;
+		};
+	}, [] );
+
+	// Tick the countdown each second while access is enabled.
 	useEffect( function () {
 		if ( ! enabled ) {
 			return;
@@ -122,10 +202,40 @@ export function SupportAccessScreen( { onNavigate } ) {
 		}
 	};
 
-	var sessions = [
-		{ id: 's1', label: __( 'Yesterday, 9:34 PM – Support session for billing inquiry', 'buddyboss' ) },
-		{ id: 's2', label: __( 'June 17, 2025, 10:28 PM – Performance troubleshooting', 'buddyboss' ) },
-	];
+	/**
+	 * Toggle support access on/off via the server.
+	 *
+	 * @param {boolean} value Desired enabled state.
+	 */
+	var handleToggle = function ( value ) {
+		if ( isSaving ) {
+			return;
+		}
+		setIsSaving( true );
+		ajaxFetch( 'bb_admin_support_access_toggle', { enabled: value ? '1' : '0' } )
+			.then( function ( res ) {
+				if ( res && res.success ) {
+					applyState( res.data );
+					setToast( {
+						status: 'success',
+						message: value
+							? __( 'Support access enabled', 'buddyboss' )
+							: __( 'Support access disabled', 'buddyboss' ),
+					} );
+				} else {
+					setToast( {
+						status: 'error',
+						message: ( res && res.data && res.data.message ) || __( 'Something went wrong.', 'buddyboss' ),
+					} );
+				}
+			} )
+			.catch( function ( err ) {
+				setToast( { status: 'error', message: err.message || __( 'Something went wrong.', 'buddyboss' ) } );
+			} )
+			.finally( function () {
+				setIsSaving( false );
+			} );
+	};
 
 	var tiles = [
 		{ key: 'days',    value: pad2( countdown.days ),    label: __( 'Days', 'buddyboss' ) },
@@ -165,7 +275,8 @@ export function SupportAccessScreen( { onNavigate } ) {
 							className="components-form-toggle--is-big"
 							label=""
 							checked={ enabled }
-							onChange={ function ( value ) { setEnabled( value ); } }
+							disabled={ isLoading || isSaving }
+							onChange={ handleToggle }
 							__nextHasNoMarginBottom
 						/>
 					</div>
@@ -192,21 +303,86 @@ export function SupportAccessScreen( { onNavigate } ) {
 							<Button
 								variant="secondary"
 								className="bb-admin-support-access__modify"
+								disabled={ isSaving }
 								onClick={ function () { setIsModalOpen( true ); } }
 							>
 								{ __( 'Modify Duration', 'buddyboss' ) }
 							</Button>
 						</div>
 
+						{ expiresUtc && (
+							<p className="bb-admin-support-access__expiry-utc">
+								{ sprintf(
+									/* translators: %s: UTC expiry timestamp. */
+									__( 'Expires: %s UTC', 'buddyboss' ),
+									expiresUtc
+								) }
+							</p>
+						) }
+
+						{ loginUrl && (
+							<div className="bb-admin-support-access__login-url">
+								<p className="bb-admin-support-access__login-url-label">
+									{ __( 'Secure login URL (copy and share with support — shown once):', 'buddyboss' ) }
+								</p>
+								<code className="bb-admin-support-access__login-url-value">{ loginUrl }</code>
+							</div>
+						) }
+
+						{ sessions.length > 0 && (
+							<div className="bb-admin-support-access__sessions">
+								<p className="bb-admin-support-access__sessions-label">
+									{ __( 'Recent support logins:', 'buddyboss' ) }
+								</p>
+								<ul className="bb-admin-support-access__sessions-list">
+									{ sessions.map( function ( session ) {
+										return (
+											<li key={ session.id } className="bb-admin-support-access__sessions-item">
+												{ session.label }
+											</li>
+										);
+									} ) }
+								</ul>
+							</div>
+						) }
+
 						<div className="bb-admin-support-access__divider" aria-hidden="true"></div>
+
+						{ tickets.length > 0 && (
+							<div className="bb-admin-support-access__tickets">
+								<p className="bb-admin-support-access__tickets-label">
+									{ __( 'Attached tickets:', 'buddyboss' ) }
+								</p>
+								<ul className="bb-admin-support-access__tickets-list">
+									{ tickets.map( function ( ticket ) {
+										return (
+											<li key={ ticket } className="bb-admin-support-access__tickets-item">
+												{ sprintf(
+													/* translators: %s: ticket number. */
+													__( 'Ticket #%s', 'buddyboss' ),
+													ticket
+												) }
+											</li>
+										);
+									} ) }
+								</ul>
+							</div>
+						) }
 
 						<div className="bb-admin-support-access__actions">
 							<Button
 								variant="secondary"
 								className="bb-admin-support-access__ticket"
+								disabled={ isSaving }
 								onClick={ function () { setIsTicketModalOpen( true ); } }
 							>
-								{ __( 'Add Ticket Number', 'buddyboss' ) }
+								{ tickets.length > 0
+									? sprintf(
+										/* translators: %d: number of attached tickets. */
+										__( 'Add Another Ticket (%d)', 'buddyboss' ),
+										tickets.length
+									)
+									: __( 'Add Ticket Number', 'buddyboss' ) }
 							</Button>
 						</div>
 					</section>
@@ -235,39 +411,63 @@ export function SupportAccessScreen( { onNavigate } ) {
 
 			<ModifyDurationModal
 				isOpen={ isModalOpen }
-				value={ duration }
+				value="5"
 				onClose={ function () { setIsModalOpen( false ); } }
 				onSave={ function ( value ) {
-					// "Extend support access by" — add the selected days to the
-					// live countdown. Client-side placeholder; once the AJAX
-					// endpoint exists, persist there and re-seed the countdown
-					// from the server-returned expiry instead.
-					var addDays = parseInt( value, 10 ) || 0;
-					setDuration( value );
-					setCountdown( function ( prev ) {
-						return {
-							days: prev.days + addDays,
-							hours: prev.hours,
-							minutes: prev.minutes,
-							seconds: prev.seconds,
-						};
-					} );
+					// "Extend support access by" — persist on the server, then
+					// re-seed the countdown from the server-returned expiry so the
+					// timer always reflects the authoritative remaining window.
 					setIsModalOpen( false );
+					setIsSaving( true );
+					ajaxFetch( 'bb_admin_support_access_extend', { days: parseInt( value, 10 ) || 0 } )
+						.then( function ( res ) {
+							if ( res && res.success ) {
+								applyState( res.data );
+								setToast( { status: 'success', message: __( 'Access duration updated', 'buddyboss' ) } );
+							} else {
+								setToast( {
+									status: 'error',
+									message: ( res && res.data && res.data.message ) || __( 'Something went wrong.', 'buddyboss' ),
+								} );
+							}
+						} )
+						.catch( function ( err ) {
+							setToast( { status: 'error', message: err.message || __( 'Something went wrong.', 'buddyboss' ) } );
+						} )
+						.finally( function () {
+							setIsSaving( false );
+						} );
 				} }
 			/>
 
 			<AddTicketModal
 				isOpen={ isTicketModalOpen }
-				value={ ticket }
+				value=""
 				onClose={ function () { setIsTicketModalOpen( false ); } }
 				onSave={ function ( value ) {
-					setTicket( value );
-					// Do the saving ticket logic here.
+					// Append the ticket number; the server adds it to the grant's
+					// ticket list (deduped) and fires the FreeScout notification
+					// (currently a stub that writes to the error log).
 					setIsTicketModalOpen( false );
-					setToast( {
-						status: 'success',
-						message: __( 'Ticket Added to Support Access', 'buddyboss' ),
-					} );
+					setIsSaving( true );
+					ajaxFetch( 'bb_admin_support_access_set_ticket', { ticket_number: value } )
+						.then( function ( res ) {
+							if ( res && res.success ) {
+								applyState( res.data );
+								setToast( { status: 'success', message: __( 'Ticket Added to Support Access', 'buddyboss' ) } );
+							} else {
+								setToast( {
+									status: 'error',
+									message: ( res && res.data && res.data.message ) || __( 'Something went wrong.', 'buddyboss' ),
+								} );
+							}
+						} )
+						.catch( function ( err ) {
+							setToast( { status: 'error', message: err.message || __( 'Something went wrong.', 'buddyboss' ) } );
+						} )
+						.finally( function () {
+							setIsSaving( false );
+						} );
 				} }
 			/>
 

@@ -962,6 +962,111 @@
 		font-weight: 400;
 		line-height: 18px;
 	}
+
+	&__expiry-utc {
+		margin: 0;
+		color: $bb-text-tertiary-color;
+		font-size: 12px;
+		font-weight: 400;
+		line-height: 16px;
+		font-variant-numeric: tabular-nums;
+	}
+
+	&__login-url {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+
+	&__login-url-label {
+		margin: 0;
+		color: $bb-text-secondary-color;
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 18px;
+	}
+
+	&__login-url-value {
+		display: block;
+		width: 100%;
+		padding: 8px 12px;
+		color: $bb-text-color;
+		font-size: 13px;
+		line-height: 18px;
+		background-color: $bb-background-primary-color;
+		border: 0.5px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-lg;
+		word-break: break-all;
+	}
+
+	&__sessions {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+
+	&__sessions-label {
+		margin: 0;
+		color: $bb-text-secondary-color;
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 18px;
+	}
+
+	&__sessions-list {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+	}
+
+	&__sessions-item {
+		margin: 0;
+		color: $bb-text-tertiary-color;
+		font-size: 13px;
+		font-weight: 400;
+		line-height: 18px;
+		font-variant-numeric: tabular-nums;
+	}
+
+	&__tickets {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+
+	&__tickets-label {
+		margin: 0;
+		color: $bb-text-secondary-color;
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 18px;
+	}
+
+	&__tickets-list {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	&__tickets-item {
+		display: inline-flex;
+		align-items: center;
+		margin: 0;
+		padding: 2px 10px;
+		color: $bb-text-color;
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 18px;
+		background-color: $bb-background-primary-color;
+		border: 0.5px solid $bb-border-secondary-color;
+		border-radius: 99px;
+	}
 }
 
 .bb-admin-modify-duration-modal {
