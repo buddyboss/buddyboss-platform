@@ -130,6 +130,84 @@ class BB_Support_Access {
 	const LOCK_TTL = 5;
 
 	/**
+	 * Support system proxy base URL (AWS API Gateway).
+	 *
+	 * Hardcoded as an immutable class constant ON PURPOSE: it is intentionally
+	 * NOT filterable and NOT overridable via constant/option/env. Nothing in the
+	 * request can redirect where the note is sent — the only variable is the
+	 * conversation ID, which is cast through intval() into the path. The gateway
+	 * holds the support system API token server-side; this plugin ships no secret.
+	 *
+	 * Full URL: {base}/conversations/{conversation_id}/threads
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var string
+	 */
+	const SUPPORT_SYSTEM_API_BASE = 'https://oq8tjkh4kk.execute-api.us-east-2.amazonaws.com/v1';
+
+	/**
+	 * Outbound request timeout (seconds) for the support system proxy call. Kept
+	 * short so a slow/dead gateway can never noticeably delay the admin action.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var int
+	 */
+	const SUPPORT_SYSTEM_TIMEOUT = 8;
+
+	/**
+	 * Rate-limit window (seconds) per context+ticket. A repeat notification for
+	 * the same ticket inside this window is suppressed, so rapid clicks or a
+	 * retry loop cannot hammer the gateway / helpdesk.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var int
+	 */
+	const SUPPORT_SYSTEM_RATE_WINDOW = 60;
+
+	/**
+	 * Hard cap on the JSON-encoded payload size (bytes) sent to the gateway.
+	 * A defensive bound — the real payload is tiny; anything larger indicates
+	 * tampering and is rejected before the request leaves the site.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var int
+	 */
+	const SUPPORT_SYSTEM_MAX_PAYLOAD = 8192;
+
+	/**
+	 * HTTP header carrying the shared gateway gate-pass key.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var string
+	 */
+	const SUPPORT_SYSTEM_KEY_HEADER = 'X-BB-Support-Key';
+
+	/**
+	 * Shared gate-pass key sent to the API Gateway.
+	 *
+	 * Hardcoded as an immutable class constant ON PURPOSE: it is intentionally
+	 * NOT overridable via constant/option/env and NOT filterable, so nothing at
+	 * runtime can change it. The matching value is configured on the API Gateway
+	 * so it can reject requests that did not originate from a BuddyBoss site,
+	 * blocking unauthenticated bots from spending support system calls.
+	 *
+	 * IMPORTANT: this is NOT the support system API token (that lives only in AWS).
+	 * Because it ships in plugin source it is a low-value "gate pass", not a
+	 * secret — real bot defense leans on AWS WAF + throttling + Lambda checks.
+	 * It is sent only as an HTTP header (never in the note body, never logged).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var string
+	 */
+	const SUPPORT_SYSTEM_GATEWAY_KEY = '76b2e03e99ec74898f78ae098a9e41462637e60d7a01f6d8';
+
+	/**
 	 * Singleton instance.
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -272,7 +350,7 @@ class BB_Support_Access {
 	 *     @type int      $support_user_id The dedicated support user ID.
 	 *     @type string   $token_hash      SHA-256 hash of the active token (never the raw token).
 	 *     @type int      $expires         UTC unix timestamp of expiry.
-	 *     @type string[] $ticket_numbers  Associated FreeScout ticket numbers — one URL can cover several tickets.
+	 *     @type string[] $ticket_numbers  Associated support system ticket numbers — one URL can cover several tickets.
 	 *     @type int      $created         UTC unix timestamp of the last enable.
 	 *     @type array    $login_log       Bounded list of recent successful logins.
 	 * }
@@ -430,6 +508,49 @@ class BB_Support_Access {
 	}
 
 	/**
+	 * Whether a URL is a genuine support-access login URL for THIS site.
+	 *
+	 * The login URL is supplied by the browser when a ticket is added (it is
+	 * never persisted server-side). This guard ensures only a link to this
+	 * site's own login flow can be embedded in a helpdesk note — a tampered
+	 * request cannot smuggle an arbitrary/phishing link into support system. It
+	 * checks the host matches home_url() and that our query var is present; it
+	 * deliberately does NOT validate the token value (only the hash is stored).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $url Candidate login URL.
+	 *
+	 * @return bool True if the URL belongs to this site's login flow.
+	 */
+	private function is_own_login_url( $url ) {
+		$url = trim( (string) $url );
+		if ( '' === $url ) {
+			return false;
+		}
+
+		$parts = wp_parse_url( $url );
+		$home  = wp_parse_url( home_url( '/' ) );
+
+		if ( empty( $parts['host'] ) || empty( $home['host'] ) ) {
+			return false;
+		}
+
+		// Host must match this site exactly.
+		if ( strtolower( $parts['host'] ) !== strtolower( $home['host'] ) ) {
+			return false;
+		}
+
+		// Must carry our login query var.
+		if ( empty( $parts['query'] ) ) {
+			return false;
+		}
+		parse_str( $parts['query'], $query );
+
+		return ! empty( $query[ self::QUERY_VAR ] );
+	}
+
+	/**
 	 * Get (creating once if needed) the dedicated support user.
 	 *
 	 * The account is created a single time and kept forever — revoking access
@@ -573,11 +694,17 @@ class BB_Support_Access {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param int $days Days to add.
+	 * @param int    $days      Days to add.
+	 * @param string $login_url Optional. The existing login URL the caller
+	 *                          already holds (the token is unchanged by an
+	 *                          extend, so the same URL stays valid). It is
+	 *                          echoed back in the result; it is NOT rebuilt
+	 *                          here because only the token hash is stored.
+	 *                          The caller must validate it (is_own_login_url()).
 	 *
 	 * @return array|WP_Error Same shape as enable(), or WP_Error.
 	 */
-	public function extend( $days ) {
+	public function extend( $days, $login_url = '' ) {
 		$days = absint( $days );
 		if ( ! in_array( $days, $this->allowed_days(), true ) ) {
 			return new WP_Error( 'bb_support_access_invalid_days', __( 'Invalid duration.', 'buddyboss' ) );
@@ -609,12 +736,76 @@ class BB_Support_Access {
 		 */
 		do_action( 'bb_support_access_extended', $expires );
 
-		// Existing URL still works (token unchanged); rebuild is not possible
-		// because we only store the hash. Callers display the stored expiry.
+		// The token is unchanged by an extend, so the existing login URL still
+		// works. We can't rebuild it (hash-only storage), so we echo back the
+		// validated URL the caller supplied. `tickets` is returned so the caller
+		// can re-notify each attached conversation with the new expiry (the note
+		// dispatch happens in the caller, not here, to keep network I/O out of
+		// this state mutator).
 		return array(
-			'login_url'    => '',
+			'login_url'    => (string) $login_url,
 			'expires'      => $expires,
 			'support_user' => $data['support_user_id'],
+			'tickets'      => $data['ticket_numbers'],
+			'extended'     => true,
+		);
+	}
+
+	/**
+	 * Post an "expiry updated" note to every conversation attached to the grant.
+	 *
+	 * Called after a duration change so support sees the new expiry on each
+	 * ticket sharing this access. Bypasses the per-conversation rate limit
+	 * because a duration change is a deliberate, infrequent admin action — not
+	 * the rapid-repeat case the limiter guards against. Fail-soft per ticket.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string[] $tickets   support system conversation IDs to notify.
+	 * @param int      $expires   New expiry (UTC unix timestamp).
+	 * @param string   $login_url Optional login URL to include (browser-supplied, validated).
+	 *
+	 * @return array {
+	 *     @type int $sent   Count of conversations the note succeeded for.
+	 *     @type int $failed Count of conversations the note failed for.
+	 * }
+	 */
+	public function notify_expiry_update( $tickets, $expires, $login_url = '' ) {
+		$sent   = 0;
+		$failed = 0;
+
+		$expiry_utc = $expires ? gmdate( 'Y-m-d H:i:s', (int) $expires ) . ' UTC' : __( 'n/a', 'buddyboss' );
+
+		foreach ( (array) $tickets as $ticket ) {
+			$ticket = (int) $ticket;
+			if ( $ticket <= 0 ) {
+				continue;
+			}
+
+			$note = sprintf(
+				'<p><strong>BuddyBoss Support Access</strong> duration updated for %1$s.</p><p>New expiry: <strong>%2$s</strong></p>',
+				esc_html( home_url( '/' ) ),
+				esc_html( $expiry_utc )
+			);
+
+			if ( '' !== $login_url ) {
+				$note .= sprintf( '<p>Login URL: <a href="%1$s">%1$s</a></p>', esc_url( $login_url ) );
+			}
+
+			// Bypass the rate limit: this is a deliberate duration change, and we
+			// want every attached ticket to reflect the new expiry now.
+			$result = $this->notify_support_system( $ticket, $note, true );
+
+			if ( is_wp_error( $result ) ) {
+				++$failed;
+			} else {
+				++$sent;
+			}
+		}
+
+		return array(
+			'sent'   => $sent,
+			'failed' => $failed,
 		);
 	}
 
@@ -644,7 +835,7 @@ class BB_Support_Access {
 	}
 
 	/**
-	 * Append a FreeScout ticket number to the current grant and notify support.
+	 * Append a support system ticket number to the current grant and notify support.
 	 *
 	 * The same login URL can cover several support tickets, so tickets
 	 * accumulate: each call adds the number to the list (deduped) rather than
@@ -653,11 +844,19 @@ class BB_Support_Access {
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @param string $ticket_number Ticket number/identifier to add.
+	 * @param string $ticket_number Ticket number (support system conversation ID) to add.
+	 * @param string $login_url     Optional. The active login URL to embed in the
+	 *                              note. Supplied by the browser (never persisted)
+	 *                              and pre-validated by the caller. Omitted when
+	 *                              unavailable (e.g. after a page reload).
 	 *
-	 * @return string[] The full, deduped list of ticket numbers after the add.
+	 * @return array {
+	 *     @type string[]      $tickets The full, deduped ticket list after the add.
+	 *     @type bool          $added   Whether a new ticket was actually appended.
+	 *     @type array|WP_Error $notify The support system note result (or WP_Error), null if not notified.
+	 * }
 	 */
-	public function add_ticket( $ticket_number ) {
+	public function add_ticket( $ticket_number, $login_url = '' ) {
 		$ticket_number = sanitize_text_field( $ticket_number );
 
 		// The append + persist runs under the lock so a concurrent login-audit
@@ -686,74 +885,232 @@ class BB_Support_Access {
 			}
 		);
 
+		$notify = null;
+
 		// Only notify the helpdesk when a genuinely new ticket was attached.
 		if ( $result['added'] ) {
-			// Notify the support helpdesk (FreeScout). Currently a stub — see below.
-			$this->notify_freescout(
-				'ticket_note',
-				array(
-					'ticket_number'  => $ticket_number,
-					'ticket_numbers' => $result['tickets'],
-					'expires_utc'    => $result['expires'] ? gmdate( 'Y-m-d H:i:s', $result['expires'] ) : '',
-					'site_url'       => home_url( '/' ),
+			$expiry_utc = $result['expires'] ? gmdate( 'Y-m-d H:i:s', $result['expires'] ) . ' UTC' : __( 'n/a', 'buddyboss' );
+
+			$note = sprintf(
+				'<p><strong>BuddyBoss Support Access</strong> enabled for %1$s.</p><p>Expires: <strong>%2$s</strong></p>',
+				esc_html( home_url( '/' ) ),
+				esc_html( $expiry_utc )
+			);
+
+			// Embed the login URL when the browser supplied a valid one. Rendered
+			// as a plain anchor so support can click straight through.
+			if ( '' !== $login_url ) {
+				$note .= sprintf(
+					'<p>Login URL: <a href="%1$s">%1$s</a></p>',
+					esc_url( $login_url )
+				);
+			}
+
+			$note .= sprintf(
+				'<p>Tickets sharing this access: %s</p>',
+				esc_html( implode( ', ', $result['tickets'] ) )
+			);
+
+			$notify = $this->notify_support_system( $ticket_number, $note );
+		}
+
+		return array(
+			'tickets' => $result['tickets'],
+			'added'   => $result['added'],
+			'notify'  => $notify,
+		);
+	}
+
+	/**
+	 * Whether a notification for this conversation is allowed right now.
+	 *
+	 * Suppresses repeat notifications for the same conversation inside
+	 * SUPPORT_SYSTEM_RATE_WINDOW seconds, so rapid clicks or a retry loop cannot
+	 * hammer the gateway / helpdesk. Returns true (and arms the window) when the
+	 * call is allowed; false when it should be skipped.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $conversation_id support system conversation ID.
+	 *
+	 * @return bool True if the notification may proceed.
+	 */
+	private function notify_rate_ok( $conversation_id ) {
+		$key = 'bb_sa_notify_' . (int) $conversation_id;
+
+		if ( false !== get_transient( $key ) ) {
+			return false;
+		}
+
+		set_transient( $key, 1, self::SUPPORT_SYSTEM_RATE_WINDOW );
+
+		return true;
+	}
+
+	/**
+	 * Get the shared gateway gate-pass key.
+	 *
+	 * Returns the immutable class constant directly. There is intentionally NO
+	 * constant override and NO filter — the key cannot be changed at runtime by
+	 * wp-config, another plugin, or any hook. The matching value is configured
+	 * on the API Gateway. NOT the support system API token.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return string The gate-pass key.
+	 */
+	private function gateway_key() {
+		return self::SUPPORT_SYSTEM_GATEWAY_KEY;
+	}
+
+	/**
+	 * Add an internal note to a support system conversation via the AWS API Gateway.
+	 *
+	 * The gateway endpoint is built from the immutable SUPPORT_SYSTEM_API_BASE class
+	 * constant plus the integer conversation ID — it is intentionally NOT
+	 * filterable or overridable, so nothing in the request can redirect where
+	 * the note is sent. The gateway's Lambda holds the support system API token; this
+	 * plugin transmits no secret.
+	 *
+	 * Guardrails (all plugin-side, defensive):
+	 *  - Reject a non-positive conversation ID before any request.
+	 *  - Rate-limit per conversation so repeats inside the window are dropped.
+	 *  - Short timeout + fail-soft: a slow/failed gateway never blocks the admin
+	 *    action. This method runs AFTER the option lock is released, so a
+	 *    blocking call cannot hold the mutex either.
+	 *  - Payload size cap, TLS-only (the base URL is https), no redirects.
+	 *
+	 * Maps the gateway response to a result the AJAX layer surfaces as a toast:
+	 *  - HTTP 201            -> success, with thread_id.
+	 *  - HTTP 404            -> WP_Error 'conversation_not_found'.
+	 *  - anything else / err -> WP_Error 'support_system_api_error'.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int|string $conversation_id   support system conversation ID.
+	 * @param string     $text              Note text (may contain HTML).
+	 * @param bool       $bypass_rate_limit Optional. Skip the per-conversation
+	 *                                      rate limit for deliberate, infrequent
+	 *                                      actions (e.g. a duration change).
+	 *                                      Default false.
+	 *
+	 * @return array|WP_Error Success array on 201, WP_Error otherwise.
+	 */
+	public function notify_support_system( $conversation_id, $text, $bypass_rate_limit = false ) {
+		$conversation_id = (int) $conversation_id;
+		$text            = wp_kses_post( (string) $text );
+
+		if ( $conversation_id <= 0 ) {
+			return new WP_Error(
+				'invalid_conversation_id',
+				__( 'A valid ticket (conversation) ID is required.', 'buddyboss' )
+			);
+		}
+
+		// Rate-limit: drop repeats for the same conversation inside the window.
+		// Deliberate admin actions (duration changes) bypass this so support
+		// always sees the updated expiry, even right after a ticket-add note.
+		if ( ! $bypass_rate_limit && ! $this->notify_rate_ok( $conversation_id ) ) {
+			return new WP_Error(
+				'rate_limited',
+				__( 'A note for this ticket was just sent. Please wait a moment before trying again.', 'buddyboss' )
+			);
+		}
+
+		// Build the URL from the immutable base + integer ID only. No part of it
+		// is filterable or derived from arbitrary input, so the request can never
+		// be redirected elsewhere (no SSRF / no override).
+		$url = self::SUPPORT_SYSTEM_API_BASE . '/conversations/' . $conversation_id . '/threads';
+
+		$body = wp_json_encode(
+			array(
+				'conversation_id' => $conversation_id,
+				'text'            => $text,
+			)
+		);
+
+		// Defensive payload-size bound. The real payload is small; anything over
+		// the cap signals tampering — refuse rather than transmit it.
+		if ( ! is_string( $body ) || strlen( $body ) > self::SUPPORT_SYSTEM_MAX_PAYLOAD ) {
+			return new WP_Error( 'payload_error', __( 'Could not build the note request.', 'buddyboss' ) );
+		}
+
+		/**
+		 * Fires just before a support system note is dispatched. Read-only signal for
+		 * alternative integrations; it cannot alter the destination URL.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param int    $conversation_id support system conversation ID.
+		 * @param string $text            Note text.
+		 */
+		do_action( 'bb_support_access_notify_support_system', $conversation_id, $text );
+
+		$headers = array(
+			'Content-Type' => 'application/json',
+			'Accept'       => 'application/json',
+		);
+
+		// Attach the shared gate-pass key (header only, never in the body) so the
+		// gateway can reject requests that did not originate from a BuddyBoss
+		// site. Skipped when not yet provisioned. This is NOT the support system token.
+		$gateway_key = $this->gateway_key();
+		if ( '' !== $gateway_key ) {
+			$headers[ self::SUPPORT_SYSTEM_KEY_HEADER ] = $gateway_key;
+		}
+
+		$response = wp_remote_post(
+			$url,
+			array(
+				'timeout'            => self::SUPPORT_SYSTEM_TIMEOUT,
+				'redirection'        => 0,
+				'sslverify'          => true,
+				'reject_unsafe_urls' => true,
+				'blocking'           => true,
+				'headers'            => $headers,
+				'body'               => $body,
+			)
+		);
+
+		// Transport failure (timeout, DNS, TLS). Fail soft — the WP_Error is
+		// surfaced to the admin as a toast; the ticket itself is already saved.
+		if ( is_wp_error( $response ) ) {
+			return new WP_Error(
+				'support_system_request_failed',
+				__( 'Could not reach the support system. The ticket was saved; please retry the note shortly.', 'buddyboss' )
+			);
+		}
+
+		$code = (int) wp_remote_retrieve_response_code( $response );
+		$data = json_decode( wp_remote_retrieve_body( $response ), true );
+		$data = is_array( $data ) ? $data : array();
+
+		if ( 201 === $code ) {
+			return array(
+				'success'         => true,
+				'thread_id'       => isset( $data['thread_id'] ) ? sanitize_text_field( (string) $data['thread_id'] ) : '',
+				'conversation_id' => $conversation_id,
+			);
+		}
+
+		if ( 404 === $code ) {
+			return new WP_Error(
+				'conversation_not_found',
+				sprintf(
+					/* translators: %d: support system conversation/ticket ID. */
+					__( 'Ticket %d was not found in the support system.', 'buddyboss' ),
+					$conversation_id
 				)
 			);
 		}
 
-		return $result['tickets'];
-	}
+		$message = isset( $data['error'] ) ? sanitize_text_field( (string) $data['error'] ) : '';
 
-	/**
-	 * Notify FreeScout about a support-access event.
-	 *
-	 * The real FreeScout (freescout.net) API integration is not wired yet. Until
-	 * it is, this is the single isolated seam for the outbound call: it records
-	 * exactly what would be sent to the helpdesk so the end-to-end flow is
-	 * verifiable today (check wp-content/debug.log). When the API contract is
-	 * available, replace the error_log() body with the HTTP request — no caller
-	 * changes are needed.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param string $context Event context, e.g. 'ticket_note'.
-	 * @param array  $payload Event data (ticket number, expiry, login URL, etc.).
-	 *
-	 * @return void
-	 *
-	 * @todo Replace the error_log() stub with the FreeScout API request once the
-	 *       API credentials/endpoint are available.
-	 */
-	public function notify_freescout( $context, $payload ) {
-		/**
-		 * Filter the FreeScout notification payload before it is dispatched.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param array  $payload Event data.
-		 * @param string $context Event context.
-		 */
-		$payload = apply_filters( 'bb_support_access_freescout_payload', $payload, $context );
-
-		// @todo: Swap this stub for the real FreeScout API call when available.
-		error_log( // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Intentional stub until the FreeScout API is wired; this is the agreed integration seam.
-			sprintf(
-				'[BB Support Access] FreeScout notify (%s) — payload: %s',
-				$context,
-				wp_json_encode( $payload )
-			)
+		return new WP_Error(
+			'support_system_api_error',
+			'' !== $message ? $message : __( 'The support system rejected the note. Please try again.', 'buddyboss' ),
+			array( 'status' => $code )
 		);
-
-		/**
-		 * Fires when a FreeScout notification would be dispatched.
-		 *
-		 * Lets the eventual API integration hook in without changing callers.
-		 *
-		 * @since BuddyBoss [BBVERSION]
-		 *
-		 * @param string $context Event context.
-		 * @param array  $payload Event data.
-		 */
-		do_action( 'bb_support_access_notify_freescout', $context, $payload );
 	}
 
 	/**
@@ -989,21 +1346,54 @@ class BB_Support_Access {
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by verify_request().
 		$days = isset( $_POST['days'] ) ? absint( $_POST['days'] ) : 0;
+		// The browser-held login URL (shown once after enable) so the updated
+		// note can include it. Never persisted server-side; validated below.
+		$login_url = isset( $_POST['login_url'] ) ? esc_url_raw( wp_unslash( $_POST['login_url'] ), array( 'https', 'http' ) ) : '';
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
-		$result = $this->extend( $days );
+		// Only accept a login URL that points at THIS site's login flow.
+		if ( '' !== $login_url && ! $this->is_own_login_url( $login_url ) ) {
+			$login_url = '';
+		}
+
+		// The token is unchanged by an extend, so the existing URL stays valid;
+		// pass the validated URL through so it is echoed back in the response.
+		$result = $this->extend( $days, $login_url );
 
 		if ( is_wp_error( $result ) ) {
 			wp_send_json_error( array( 'message' => $result->get_error_message() ) );
 		}
 
-		// A fresh grant (no prior live token) returns a login URL; a pure
-		// extension does not (token unchanged, not recoverable from storage).
-		wp_send_json_success( $this->build_response( $result['login_url'] ) );
+		$response           = $this->build_response( $result['login_url'] );
+		$response['notice'] = array(
+			'status'  => 'success',
+			'message' => __( 'Support access duration updated.', 'buddyboss' ),
+		);
+
+		// On a pure extension (existing grant), re-notify every attached ticket
+		// with the new expiry so support sees the updated window. A fresh grant
+		// (no prior live token) has no tickets yet, so nothing is posted.
+		if ( ! empty( $result['extended'] ) && ! empty( $result['tickets'] ) ) {
+			$notify = $this->notify_expiry_update( $result['tickets'], $result['expires'], $login_url );
+
+			if ( $notify['sent'] > 0 && 0 === $notify['failed'] ) {
+				$response['notice'] = array(
+					'status'  => 'success',
+					'message' => __( 'Duration updated and support notified of the new expiry.', 'buddyboss' ),
+				);
+			} elseif ( $notify['failed'] > 0 ) {
+				$response['notice'] = array(
+					'status'  => 'error',
+					'message' => __( 'Duration updated, but the support system could not be notified for some tickets.', 'buddyboss' ),
+				);
+			}
+		}
+
+		wp_send_json_success( $response );
 	}
 
 	/**
-	 * AJAX: add a FreeScout ticket number to the current grant.
+	 * AJAX: add a support system ticket number to the current grant.
 	 *
 	 * Tickets accumulate — the same login URL can cover several tickets.
 	 *
@@ -1016,15 +1406,53 @@ class BB_Support_Access {
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by verify_request().
 		$ticket = isset( $_POST['ticket_number'] ) ? sanitize_text_field( wp_unslash( $_POST['ticket_number'] ) ) : '';
+		// The login URL is held by the browser (shown once after enable) and
+		// passed back here so the note can include it — the raw URL is never
+		// persisted server-side. Validated below; ignored if it isn't ours.
+		$login_url = isset( $_POST['login_url'] ) ? esc_url_raw( wp_unslash( $_POST['login_url'] ), array( 'https', 'http' ) ) : '';
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		if ( '' === $ticket ) {
 			wp_send_json_error( array( 'message' => __( 'Ticket number is required.', 'buddyboss' ) ) );
 		}
 
-		$this->add_ticket( $ticket );
+		// The ticket number is a support system conversation ID — must be numeric.
+		// Validate up front so a bad value gives an instant, clear error rather
+		// than a confusing network round-trip.
+		if ( ! ctype_digit( $ticket ) || (int) $ticket <= 0 ) {
+			wp_send_json_error( array( 'message' => __( 'Ticket number must be a valid numeric ID.', 'buddyboss' ) ) );
+		}
 
-		wp_send_json_success( $this->build_response() );
+		// Only accept a login URL that points at THIS site and carries our query
+		// var, so a tampered request can't inject an arbitrary link into the note.
+		if ( '' !== $login_url && ! $this->is_own_login_url( $login_url ) ) {
+			$login_url = '';
+		}
+
+		$result = $this->add_ticket( $ticket, $login_url );
+		$notify = $result['notify'];
+
+		// The ticket is saved locally regardless; the support system note is a side
+		// effect. Surface its outcome so the React toast can show success/error.
+		$response           = $this->build_response();
+		$response['notice'] = array(
+			'status'  => 'success',
+			'message' => __( 'Ticket added to Support Access.', 'buddyboss' ),
+		);
+
+		if ( is_wp_error( $notify ) ) {
+			$response['notice'] = array(
+				'status'  => 'error',
+				'message' => $notify->get_error_message(),
+			);
+		} elseif ( is_array( $notify ) && ! empty( $notify['success'] ) ) {
+			$response['notice'] = array(
+				'status'  => 'success',
+				'message' => __( 'Ticket added and note posted to support.', 'buddyboss' ),
+			);
+		}
+
+		wp_send_json_success( $response );
 	}
 }
 

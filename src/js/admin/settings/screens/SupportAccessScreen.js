@@ -87,11 +87,8 @@ export function SupportAccessScreen( { onNavigate } ) {
 	var countdown = countdownState[ 0 ];
 	var setCountdown = countdownState[ 1 ];
 
-	// Server-provided UTC expiry string + most recent login URL (shown once).
-	var expiresUtcState = useState( '' );
-	var expiresUtc = expiresUtcState[ 0 ];
-	var setExpiresUtc = expiresUtcState[ 1 ];
-
+	// The login URL is captured once (after enable) and forwarded to the
+	// support system note; it is intentionally not rendered in the admin UI.
 	var loginUrlState = useState( '' );
 	var loginUrl = loginUrlState[ 0 ];
 	var setLoginUrl = loginUrlState[ 1 ];
@@ -108,10 +105,6 @@ export function SupportAccessScreen( { onNavigate } ) {
 	var ticketModalOpenState = useState( false );
 	var isTicketModalOpen = ticketModalOpenState[ 0 ];
 	var setIsTicketModalOpen = ticketModalOpenState[ 1 ];
-
-	var sessionsState = useState( [] );
-	var sessions = sessionsState[ 0 ];
-	var setSessions = sessionsState[ 1 ];
 
 	var toastState = useState( null );
 	var toast = toastState[ 0 ];
@@ -130,30 +123,16 @@ export function SupportAccessScreen( { onNavigate } ) {
 		}
 		setEnabled( !! data.enabled );
 		setCountdown( secondsToCountdown( data.remaining ) );
-		setExpiresUtc( data.expires_utc || '' );
 		setTickets( Array.isArray( data.ticket_numbers ) ? data.ticket_numbers : [] );
 
-		// login_url is only present right after a fresh token is minted.
+		// login_url is only present right after a fresh token is minted. It is
+		// not displayed; it's held in state purely to forward to the support system
+		// note when a ticket is added or the duration is changed.
 		if ( data.has_login_url && data.login_url ) {
 			setLoginUrl( data.login_url );
 		} else if ( ! data.enabled ) {
 			setLoginUrl( '' );
 		}
-
-		var log = Array.isArray( data.login_log ) ? data.login_log : [];
-		setSessions(
-			log.map( function ( entry, index ) {
-				return {
-					id: 's' + index,
-					label: sprintf(
-						/* translators: 1: UTC timestamp, 2: IP address. */
-						__( '%1$s UTC – Login from %2$s', 'buddyboss' ),
-						entry.time,
-						entry.ip || __( 'unknown IP', 'buddyboss' )
-					),
-				};
-			} )
-		);
 	};
 
 	// Load the real state from the server on mount.
@@ -310,42 +289,6 @@ export function SupportAccessScreen( { onNavigate } ) {
 							</Button>
 						</div>
 
-						{ expiresUtc && (
-							<p className="bb-admin-support-access__expiry-utc">
-								{ sprintf(
-									/* translators: %s: UTC expiry timestamp. */
-									__( 'Expires: %s UTC', 'buddyboss' ),
-									expiresUtc
-								) }
-							</p>
-						) }
-
-						{ loginUrl && (
-							<div className="bb-admin-support-access__login-url">
-								<p className="bb-admin-support-access__login-url-label">
-									{ __( 'Secure login URL (copy and share with support — shown once):', 'buddyboss' ) }
-								</p>
-								<code className="bb-admin-support-access__login-url-value">{ loginUrl }</code>
-							</div>
-						) }
-
-						{ sessions.length > 0 && (
-							<div className="bb-admin-support-access__sessions">
-								<p className="bb-admin-support-access__sessions-label">
-									{ __( 'Recent support logins:', 'buddyboss' ) }
-								</p>
-								<ul className="bb-admin-support-access__sessions-list">
-									{ sessions.map( function ( session ) {
-										return (
-											<li key={ session.id } className="bb-admin-support-access__sessions-item">
-												{ session.label }
-											</li>
-										);
-									} ) }
-								</ul>
-							</div>
-						) }
-
 						<div className="bb-admin-support-access__divider" aria-hidden="true"></div>
 
 						{ tickets.length > 0 && (
@@ -416,14 +359,21 @@ export function SupportAccessScreen( { onNavigate } ) {
 				onSave={ function ( value ) {
 					// "Extend support access by" — persist on the server, then
 					// re-seed the countdown from the server-returned expiry so the
-					// timer always reflects the authoritative remaining window.
+					// timer always reflects the authoritative remaining window. The
+					// login URL is forwarded so the server can re-post an updated-
+					// expiry note to every attached ticket. The response `notice`
+					// reflects that outcome (shown as a bottom-right toast).
 					setIsModalOpen( false );
 					setIsSaving( true );
-					ajaxFetch( 'bb_admin_support_access_extend', { days: parseInt( value, 10 ) || 0 } )
+					ajaxFetch( 'bb_admin_support_access_extend', { days: parseInt( value, 10 ) || 0, login_url: loginUrl } )
 						.then( function ( res ) {
 							if ( res && res.success ) {
 								applyState( res.data );
-								setToast( { status: 'success', message: __( 'Access duration updated', 'buddyboss' ) } );
+								var notice = res.data && res.data.notice;
+								setToast( {
+									status: ( notice && notice.status ) || 'success',
+									message: ( notice && notice.message ) || __( 'Access duration updated.', 'buddyboss' ),
+								} );
 							} else {
 								setToast( {
 									status: 'error',
@@ -446,15 +396,26 @@ export function SupportAccessScreen( { onNavigate } ) {
 				onClose={ function () { setIsTicketModalOpen( false ); } }
 				onSave={ function ( value ) {
 					// Append the ticket number; the server adds it to the grant's
-					// ticket list (deduped) and fires the FreeScout notification
-					// (currently a stub that writes to the error log).
+					// ticket list (deduped) and posts an internal note to the
+					// support system conversation. The response carries a `notice`
+					// object reflecting the real support system outcome (success or a
+					// specific error such as "ticket not found"), shown as a
+					// bottom-right toast.
 					setIsTicketModalOpen( false );
 					setIsSaving( true );
-					ajaxFetch( 'bb_admin_support_access_set_ticket', { ticket_number: value } )
+					// Pass the login URL the browser is holding (shown once after
+					// enable) so the server can embed it in the support system note.
+					// It is never persisted server-side; if the page was reloaded
+					// and the URL is no longer in state, the note omits it.
+					ajaxFetch( 'bb_admin_support_access_set_ticket', { ticket_number: value, login_url: loginUrl } )
 						.then( function ( res ) {
 							if ( res && res.success ) {
 								applyState( res.data );
-								setToast( { status: 'success', message: __( 'Ticket Added to Support Access', 'buddyboss' ) } );
+								var notice = res.data && res.data.notice;
+								setToast( {
+									status: ( notice && notice.status ) || 'success',
+									message: ( notice && notice.message ) || __( 'Ticket added to Support Access.', 'buddyboss' ),
+								} );
 							} else {
 								setToast( {
 									status: 'error',
