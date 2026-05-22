@@ -22,6 +22,7 @@ import {
 	ReactionNotice,
 	ReactionInfo,
 	MigrationModal,
+	MigrationWizardModal,
 	ReactionButtonField,
 } from './reaction';
 import { decodeEntities } from '@wordpress/html-entities';
@@ -1672,11 +1673,27 @@ export function SettingsForm({ fields, values, onChange, onProBadgeClick, disabl
 				{topLevelFields.map((field) => renderField(field))}
 			</div>
 			{isMigrationModalOpen && (
-				<MigrationModal
-					isOpen={isMigrationModalOpen}
-					onClose={() => setIsMigrationModalOpen(false)}
-					migrationData={currentMigrationData}
-				/>
+				// Pro-side flag (localized via `bbReactionAdminVars.use_react_wizard`)
+				// decides which migration UI to mount. New Pro sets the flag to
+				// true and gets the React-driven `MigrationWizardModal`; older
+				// Pro versions (release branch without the flag) fall through
+				// to the legacy `MigrationModal` (sanitized via `sanitizeHtml`).
+				// @todo: Remove after 3 release — drop the legacy branch and
+				//        the conditional once the flag is everywhere.
+				( window.bbReactionAdminVars && window.bbReactionAdminVars.use_react_wizard )
+					? (
+						<MigrationWizardModal
+							isOpen={isMigrationModalOpen}
+							onClose={() => setIsMigrationModalOpen(false)}
+							migrationData={currentMigrationData}
+						/>
+					) : (
+						<MigrationModal
+							isOpen={isMigrationModalOpen}
+							onClose={() => setIsMigrationModalOpen(false)}
+							migrationData={currentMigrationData}
+						/>
+					)
 			)}
 			<ConfirmToggleModal
 				isOpen={confirmModalState.isOpen}
