@@ -60,8 +60,13 @@ export function MigrationWizardModal( { isOpen, onClose, migrationData } ) {
 	const migrationAction   = ( migrationData && migrationData.action ) || '';
 	const migrationCount    = ( migrationData && migrationData.total_reactions ) || 0;
 
-	const needsTargetSelect = isFooterWizard
-		&& wizardData
+	// Target select shows whenever the server payload includes a non-empty
+	// `target_emotions` list. That's true for both the footer wizard (`footer`
+	// variant) and the switch wizard's likes→emotion direction (`switch`
+	// variant with `like_to_emotions_action`). The switch wizard's
+	// emotions→likes direction omits `target_emotions` because the target is
+	// implicitly Likes, so the select stays hidden there — matching legacy.
+	const needsTargetSelect = wizardData
 		&& Array.isArray( wizardData.target_emotions )
 		&& wizardData.target_emotions.length > 0;
 

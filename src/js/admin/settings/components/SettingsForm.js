@@ -975,10 +975,14 @@ export function SettingsForm({ fields, values, onChange, onProBadgeClick, disabl
 						key={field.name}
 						field={field}
 						onStartConversion={(migrationData) => {
-							// Notice-triggered open routes through the unified footer wizard.
-							// MigrationModal reads `action` + `total_reactions` from the
-							// spread payload to set the title, intro copy, and pre-selection.
-							setCurrentMigrationData({ ...migrationData, wizardType: 'footer' });
+							// Notice "Start Conversion" goes through the switch wizard
+							// endpoint (`bb_pro_reaction_migration_start_conversion`),
+							// matching legacy Settings 1.0 behaviour where the notice
+							// fires the migration-specific AJAX (simple "Convert Likes"
+							// / "Convert Reactions" modal) rather than the broader
+							// footer wizard. The inline "migration wizard" link below
+							// keeps using `wizardType: 'footer'`.
+							setCurrentMigrationData({ ...migrationData, wizardType: 'switch' });
 							setIsMigrationModalOpen(true);
 						}}
 					/>
