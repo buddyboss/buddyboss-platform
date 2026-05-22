@@ -26,7 +26,7 @@ import { useState, useEffect, useRef, createPortal } from '@wordpress/element';
 //       `originalSettings` and the feature cache's `settings`, not the
 //       field definition). Once that ships, this cache can be removed.
 const extensionDataCache = {};
-import { Modal, Button, TextControl, TextareaControl, DropdownMenu, CheckboxControl } from '@wordpress/components';
+import { Modal, Button, TextControl, TextareaControl, DropdownMenu, MenuGroup, MenuItem, CheckboxControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { useMimeChecker } from '../../utils/mimeChecker';
 import { MimeCheckerPanel } from './MimeCheckerPanel';
@@ -704,26 +704,36 @@ export function DocumentExtensionsField( { field, value, onChange, disabled } ) 
 										{ ! isDefault && (
 											<div className="bb-doc-extensions-modal__ext-actions">
 												<DropdownMenu
-													className="bb-doc-extensions__dropdown"
-													icon={ <i className="bb-icons-rl-dots-three" /> }
+													icon={ <i className="bb-icons-rl-dots-three"></i> }
 													label={ __( 'More options', 'buddyboss' ) }
-													controls={ [
-														{
-															icon: <i className="bb-icons-rl-note-pencil"></i>,
-															title: __( 'Edit', 'buddyboss' ),
-															onClick: function() {
-																handleStartEdit( key );
-															},
-														},
-														{
-															icon: <i className="bb-icons-rl-trash"></i>,
-															title: __( 'Delete', 'buddyboss' ),
-															onClick: function() {
-																handleRemoveExtension( key );
-															},
-														},
-													] }
-												/>
+												>
+													{ function ( dropdownProps ) {
+														var onClose = dropdownProps.onClose;
+														return (
+															<MenuGroup className="bb_dropdown_menu_group">
+																<MenuItem
+																	onClick={ function () {
+																		handleStartEdit( key );
+																		onClose();
+																	} }
+																>
+																	<i className="bb-icons-rl bb-icons-rl-note-pencil"></i>
+																	{ __( 'Edit', 'buddyboss' ) }
+																</MenuItem>
+																<MenuItem
+																	isDestructive
+																	onClick={ function () {
+																		handleRemoveExtension( key );
+																		onClose();
+																	} }
+																>
+																	<i className="bb-icons-rl bb-icons-rl-trash"></i>
+																	{ __( 'Delete', 'buddyboss' ) }
+																</MenuItem>
+															</MenuGroup>
+														);
+													} }
+												</DropdownMenu>
 											</div>
 										) }
 									</div>
