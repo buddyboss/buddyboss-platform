@@ -1022,12 +1022,10 @@ class BB_Support_Access {
 		// be redirected elsewhere (no SSRF / no override).
 		$url = self::SUPPORT_SYSTEM_API_BASE . '/conversations/' . $conversation_id . '/threads';
 
-		$body = wp_json_encode(
-			array(
-				'conversation_id' => $conversation_id,
-				'text'            => $text,
-			)
-		);
+		// The conversation ID lives in the URL path; the gateway expects only
+		// `text` in the body and rejects unexpected fields. Do NOT add
+		// conversation_id here.
+		$body = wp_json_encode( array( 'text' => $text ) );
 
 		// Defensive payload-size bound. The real payload is small; anything over
 		// the cap signals tampering — refuse rather than transmit it.
@@ -1085,7 +1083,7 @@ class BB_Support_Access {
 		$data = json_decode( wp_remote_retrieve_body( $response ), true );
 		$data = is_array( $data ) ? $data : array();
 
-		if ( 201 === $code ) {
+		if ( 201 === $code && ! empty( $data['success'] ) ) {
 			return array(
 				'success'         => true,
 				'thread_id'       => isset( $data['thread_id'] ) ? sanitize_text_field( (string) $data['thread_id'] ) : '',
