@@ -226,13 +226,6 @@ export function SupportAccessScreen( { onNavigate } ) {
 	return (
 		<div className="bb-admin-help-screen bb-admin-support-access">
 			<div className="bb-admin-help-wrapper">
-				{
-					isLoading ? (
-						<div className="bb-admin-help--loading">
-							<Spinner />
-						</div>
-					) : ''
-				}
 				<button
 					type="button"
 					className="bb-admin-support-access__back"
@@ -246,6 +239,14 @@ export function SupportAccessScreen( { onNavigate } ) {
 						{ __( 'Back', 'buddyboss' ) }
 					</span>
 				</button>
+
+				{
+					isLoading ? (
+						<div className="bb-admin-help--loading">
+							<Spinner />
+						</div>
+					) : ''
+				}
 
 				<section className={ 'bb-admin-support-access__enable-card ' + (!enabled ? 'bb-admin-support-access__enable-card--disabled' : '')}>
 					<div className="bb-admin-support-access__enable-text">
