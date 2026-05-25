@@ -798,42 +798,6 @@ export function HelpScreen( { onNavigate } ) {
 
 				<div className="bb-admin-help-row">
 					<section
-						className="bb-admin-help-getting-started"
-						aria-labelledby="bb-admin-help-getting-started-title"
-					>
-						<h2
-							id="bb-admin-help-getting-started-title"
-							className="bb-admin-help-getting-started__title"
-						>
-							{ __( 'Get Started', 'buddyboss' ) }
-						</h2>
-						<ul className="bb-admin-help-getting-started__list">
-							{ [
-								{ key: 'install-theme',     label: __( 'How to install the BuddyBoss Theme', 'buddyboss' ) },
-								{ key: 'default-data',      label: __( 'How to Setup Default Data in BuddyBoss', 'buddyboss' ) },
-								{ key: 'login-register',    label: __( 'How to Customize the Login & Registration Page in BuddyBoss', 'buddyboss' ) },
-								{ key: 'install-theme-2',   label: __( 'How to install the BuddyBoss Theme', 'buddyboss' ) },
-								{ key: 'default-data-2',    label: __( 'How to Setup Default Data in BuddyBoss', 'buddyboss' ) },
-								{ key: 'login-register-2',  label: __( 'How to Customize the Login & Registration Page in BuddyBoss', 'buddyboss' ) },
-							].map( function ( item ) {
-								return (
-									<li key={ item.key } className="bb-admin-help-getting-started__item">
-										<a href="#" className="bb-admin-help-getting-started__link">
-											<i
-												className="bb-icons-rl bb-icons-rl-file-text bb-admin-help-getting-started__icon"
-												aria-hidden="true"
-											></i>
-											<span className="bb-admin-help-getting-started__label">
-												{ item.label }
-											</span>
-										</a>
-									</li>
-								);
-							} ) }
-						</ul>
-					</section>
-
-					<section
 						className="bb-admin-help-promo"
 						aria-labelledby="bb-admin-help-promo-title"
 					>
