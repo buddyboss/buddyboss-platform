@@ -120,6 +120,20 @@ class BB_Support_Access {
 	const LOCK_KEY = 'bb_support_access_lock';
 
 	/**
+	 * Authenticated cipher used to encrypt the token at rest.
+	 *
+	 * AES-256-GCM is an AEAD cipher: it produces an authentication tag so a
+	 * tampered ciphertext fails decryption (we then fall back to omitting the
+	 * URL rather than emitting a forged one). Available since PHP 7.1 via the
+	 * by-reference $tag parameter; the plugin floor is 7.4.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var string
+	 */
+	const TOKEN_CIPHER = 'aes-256-gcm';
+
+	/**
 	 * Lock time-to-live, in seconds. A crashed request can never hold the lock
 	 * longer than this — it self-expires.
 	 *
@@ -341,6 +355,58 @@ class BB_Support_Access {
 	}
 
 	/**
+	 * Persist the support-access state.
+	 *
+	 * Always writes with autoload disabled: the option carries the token hash
+	 * and encrypted token, and is only ever read by the front-end login handler
+	 * and the admin AJAX endpoints — never on a generic page load. Keeping it
+	 * out of the autoloaded option set shrinks the in-memory exposure surface
+	 * (the sensitive blob is loaded on demand, not into every request).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array $data State to store.
+	 *
+	 * @return void
+	 */
+	private function save( $data ) {
+		// The third argument forces autoload off. On WordPress this also flips
+		// the stored autoload flag for an option that previously autoloaded, so
+		// a grant created before this change is corrected on its next save.
+		update_option( self::OPTION, $data, false );
+	}
+
+	/**
+	 * Persist the support-access state under the advisory lock.
+	 *
+	 * Re-reads inside the lock and lets the caller mutate that fresh snapshot,
+	 * so a concurrent writer (login audit, ticket append, enable/disable) cannot
+	 * clobber the result. Use this for every read-modify-write and for the
+	 * full-state writes in enable()/disable() so all mutators serialize against
+	 * the same mutex.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param callable $mutator Receives the fresh state by value, returns the
+	 *                          state to persist, or null to skip the write.
+	 *
+	 * @return mixed The mutator's return value.
+	 */
+	private function save_locked( $mutator ) {
+		return $this->with_lock(
+			function () use ( $mutator ) {
+				$data = $this->get_data();
+				$next = call_user_func( $mutator, $data );
+				if ( is_array( $next ) ) {
+					$this->save( $next );
+				}
+
+				return $next;
+			}
+		);
+	}
+
+	/**
 	 * Get the support-access state, normalized to a known shape.
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -360,11 +426,11 @@ class BB_Support_Access {
 			'enabled'         => 0,
 			'support_user_id' => 0,
 			'token_hash'      => '',
+			'token_enc'       => '',
 			'expires'         => 0,
 			'ticket_numbers'  => array(),
 			'created'         => 0,
 			'login_log'       => array(),
-			'login_url'       => '',
 		);
 
 		$data = bp_get_option( self::OPTION, array() );
@@ -386,17 +452,26 @@ class BB_Support_Access {
 			unset( $data['ticket_number'] );
 		}
 
+		// Scrub a legacy `login_url` left by grants created before raw-token
+		// storage was removed. Earlier builds persisted the raw token (embedded
+		// in the login URL) here, which defeated the hash-at-rest model. Dropping
+		// it on read means the stale credential is removed from the option the
+		// next time it is saved — no separate migration step required.
+		if ( isset( $data['login_url'] ) ) {
+			unset( $data['login_url'] );
+		}
+
 		$data = wp_parse_args( $data, $defaults );
 
 		// Coerce types defensively — the option may have been touched by other code.
 		$data['enabled']         = absint( $data['enabled'] ) ? 1 : 0;
 		$data['support_user_id'] = absint( $data['support_user_id'] );
 		$data['token_hash']      = is_string( $data['token_hash'] ) ? $data['token_hash'] : '';
+		$data['token_enc']       = is_string( $data['token_enc'] ) ? $data['token_enc'] : '';
 		$data['expires']         = absint( $data['expires'] );
 		$data['ticket_numbers']  = $this->normalize_ticket_numbers( $data['ticket_numbers'] );
 		$data['created']         = absint( $data['created'] );
 		$data['login_log']       = is_array( $data['login_log'] ) ? $data['login_log'] : array();
-		$data['login_url']       = is_string( $data['login_url'] ) ? $data['login_url'] : '';
 
 		return $data;
 	}
@@ -455,7 +530,13 @@ class BB_Support_Access {
 		 *
 		 * @param string $ip The REMOTE_ADDR-derived client IP.
 		 */
-		return (string) apply_filters( 'bb_support_access_client_ip', $ip );
+		$filtered = (string) apply_filters( 'bb_support_access_client_ip', $ip );
+
+		// Re-validate after filtering. The audit log is a security record, so a
+		// filter (legitimate reverse-proxy setups, or a misbehaving/malicious
+		// plugin) can never write a non-IP value into it — an invalid result
+		// falls back to empty rather than being trusted verbatim.
+		return filter_var( $filtered, FILTER_VALIDATE_IP ) ? $filtered : '';
 	}
 
 	/**
@@ -468,10 +549,8 @@ class BB_Support_Access {
 	public function record_login() {
 		$ip = $this->get_client_ip();
 
-		$this->with_lock(
-			function () use ( $ip ) {
-				$data = $this->get_data();
-
+		$this->save_locked(
+			function ( $data ) use ( $ip ) {
 				$log   = $data['login_log'];
 				$log[] = array(
 					'time' => time(),
@@ -485,9 +564,45 @@ class BB_Support_Access {
 
 				$data['login_log'] = $log;
 
-				bp_update_option( self::OPTION, $data );
+				return $data;
 			}
 		);
+	}
+
+	/**
+	 * Record a failed token-login attempt (per-IP counter, for monitoring).
+	 *
+	 * Increments a short-lived per-IP counter in a transient and exposes the
+	 * running count via an action so monitoring can alert on guessing. It does
+	 * NOT lock anyone out: a hard lockout keyed on a spoofable-ish IP would let
+	 * an attacker deny the real support team access, and the token's entropy
+	 * already makes brute force infeasible. This is observability, not a gate.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return void
+	 */
+	private function record_failed_login() {
+		$ip = $this->get_client_ip();
+		if ( '' === $ip ) {
+			return;
+		}
+
+		$key   = 'bb_sa_failed_' . md5( $ip );
+		$count = (int) get_transient( $key ) + 1;
+
+		// Keep the window short; this is an alerting signal, not a durable log.
+		set_transient( $key, $count, HOUR_IN_SECONDS );
+
+		/**
+		 * Fires with the running per-IP failed-attempt count for support login.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param string $ip    Client IP.
+		 * @param int    $count Failed attempts from this IP within the window.
+		 */
+		do_action( 'bb_support_access_failed_login_count', $ip, $count );
 	}
 
 	/**
@@ -516,8 +631,9 @@ class BB_Support_Access {
 	 * never persisted server-side). This guard ensures only a link to this
 	 * site's own login flow can be embedded in a helpdesk note — a tampered
 	 * request cannot smuggle an arbitrary/phishing link into support system. It
-	 * checks the host matches home_url() and that our query var is present; it
-	 * deliberately does NOT validate the token value (only the hash is stored).
+	 * checks the full origin (scheme + host + port) matches home_url() and that
+	 * our query var is present; it deliberately does NOT validate the token
+	 * value (only the hash is stored).
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -538,8 +654,25 @@ class BB_Support_Access {
 			return false;
 		}
 
-		// Host must match this site exactly.
+		// Host must match this site exactly (case-insensitive per RFC 3986).
 		if ( strtolower( $parts['host'] ) !== strtolower( $home['host'] ) ) {
+			return false;
+		}
+
+		// Scheme must match (case-insensitive). Guards against an http link
+		// being passed off for an https site, or vice versa.
+		$url_scheme  = isset( $parts['scheme'] ) ? strtolower( $parts['scheme'] ) : '';
+		$home_scheme = isset( $home['scheme'] ) ? strtolower( $home['scheme'] ) : '';
+		if ( $url_scheme !== $home_scheme ) {
+			return false;
+		}
+
+		// Port must match. A default port is omitted by wp_parse_url(), so a
+		// missing port on both sides compares equal; a non-default port on one
+		// side only must match the other exactly.
+		$url_port  = isset( $parts['port'] ) ? (int) $parts['port'] : 0;
+		$home_port = isset( $home['port'] ) ? (int) $home['port'] : 0;
+		if ( $url_port !== $home_port ) {
 			return false;
 		}
 
@@ -620,6 +753,156 @@ class BB_Support_Access {
 	}
 
 	/**
+	 * Derive the symmetric key used to encrypt the token at rest.
+	 *
+	 * The key is derived from WordPress's own secret salts (which live in
+	 * wp-config.php, NOT the database) plus the option name. A database-only
+	 * compromise therefore cannot decrypt the token — the attacker also needs
+	 * the wp-config salts. Rotating the salts invalidates stored ciphertext,
+	 * which simply means notes stop including the URL until the next enable;
+	 * authentication is unaffected (it uses token_hash, not this).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return string 32-byte binary key.
+	 */
+	private function token_key() {
+		// Raw binary output (true) gives a 32-byte key, the exact size AES-256
+		// requires. Namespaced by the option so the key is specific to this use.
+		return hash( 'sha256', wp_salt( 'auth' ) . '|' . self::OPTION, true );
+	}
+
+	/**
+	 * Whether token-at-rest encryption is available on this host.
+	 *
+	 * PHP can be built without OpenSSL, and a given build may lack the GCM
+	 * cipher. When unavailable we simply do not persist the token (the URL then
+	 * relies on the browser round-trip), never falling back to plaintext.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return bool True if AES-256-GCM encryption can be used.
+	 */
+	private function can_encrypt_token() {
+		return function_exists( 'openssl_encrypt' )
+			&& function_exists( 'random_bytes' )
+			&& in_array( self::TOKEN_CIPHER, openssl_get_cipher_methods(), true );
+	}
+
+	/**
+	 * Encrypt the raw token for storage.
+	 *
+	 * Produces a self-describing, URL-safe string: base64( iv | tag | cipher ).
+	 * A fresh random IV is generated per call. AES-256-GCM authenticates the
+	 * ciphertext, so any tampering is detected on decrypt. Returns '' when
+	 * encryption is unavailable or fails, so the caller can degrade gracefully.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $token Raw (unhashed) token.
+	 *
+	 * @return string Encrypted blob (base64), or '' on failure/unavailability.
+	 */
+	private function encrypt_token( $token ) {
+		$token = (string) $token;
+		if ( '' === $token || ! $this->can_encrypt_token() ) {
+			return '';
+		}
+
+		$iv_len = openssl_cipher_iv_length( self::TOKEN_CIPHER );
+		if ( ! $iv_len ) {
+			return '';
+		}
+
+		try {
+			$iv = random_bytes( $iv_len );
+		} catch ( Exception $e ) {
+			return '';
+		}
+
+		$tag = '';
+		// phpcs:ignore PHPCompatibility.FunctionUse.NewFunctionParameters.openssl_encrypt_tagFound -- The $tag AEAD parameter is PHP 7.1+; the plugin floor is 7.4 (the phpcs.xml testVersion of 5.6 is stale). Guarded at runtime by can_encrypt_token().
+		$cipher = openssl_encrypt( $token, self::TOKEN_CIPHER, $this->token_key(), OPENSSL_RAW_DATA, $iv, $tag );
+
+		if ( false === $cipher || '' === $tag ) {
+			return '';
+		}
+
+		return base64_encode( $iv . $tag . $cipher ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode -- Encoding binary ciphertext for storage, not obfuscating code.
+	}
+
+	/**
+	 * Decrypt a stored token blob back to the raw token.
+	 *
+	 * Inverse of encrypt_token(). Returns '' on any failure — wrong/rotated
+	 * key, truncated data, or a failed authentication tag — so a corrupted or
+	 * tampered blob can never yield a usable (or forged) value.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $encrypted Encrypted blob produced by encrypt_token().
+	 *
+	 * @return string Raw token, or '' on failure.
+	 */
+	private function decrypt_token( $encrypted ) {
+		$encrypted = (string) $encrypted;
+		if ( '' === $encrypted || ! $this->can_encrypt_token() ) {
+			return '';
+		}
+
+		$raw = base64_decode( $encrypted, true ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode -- Decoding stored binary ciphertext, not obfuscated code.
+		if ( false === $raw ) {
+			return '';
+		}
+
+		$iv_len  = openssl_cipher_iv_length( self::TOKEN_CIPHER );
+		$tag_len = 16; // GCM authentication tag is 16 bytes.
+		if ( ! $iv_len || strlen( $raw ) <= ( $iv_len + $tag_len ) ) {
+			return '';
+		}
+
+		$iv     = substr( $raw, 0, $iv_len );
+		$tag    = substr( $raw, $iv_len, $tag_len );
+		$cipher = substr( $raw, $iv_len + $tag_len );
+
+		// phpcs:ignore PHPCompatibility.FunctionUse.NewFunctionParameters.openssl_decrypt_tagFound -- The $tag AEAD parameter is PHP 7.1+; the plugin floor is 7.4 (the phpcs.xml testVersion of 5.6 is stale). Guarded at runtime by can_encrypt_token().
+		$token = openssl_decrypt( $cipher, self::TOKEN_CIPHER, $this->token_key(), OPENSSL_RAW_DATA, $iv, $tag );
+
+		return ( false === $token ) ? '' : $token;
+	}
+
+	/**
+	 * Rebuild the login URL from the stored encrypted token, if possible.
+	 *
+	 * Decrypts the at-rest token and reconstructs the public login URL so notes
+	 * can always include it — even across page reloads and fresh sessions, when
+	 * the browser no longer holds the URL. Returns '' if nothing is stored or
+	 * decryption is unavailable/fails (the note then omits the URL).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array|null $data Optional pre-fetched state to avoid a re-read.
+	 *
+	 * @return string Login URL, or '' when it cannot be rebuilt.
+	 */
+	private function get_login_url( $data = null ) {
+		if ( null === $data ) {
+			$data = $this->get_data();
+		}
+
+		if ( empty( $data['token_enc'] ) ) {
+			return '';
+		}
+
+		$token = $this->decrypt_token( $data['token_enc'] );
+		if ( '' === $token ) {
+			return '';
+		}
+
+		return $this->build_login_url( $token );
+	}
+
+	/**
 	 * Enable support access: ensure the support user, mint a token, set expiry.
 	 *
 	 * Regenerates the token every time it is called, so re-enabling invalidates
@@ -656,23 +939,36 @@ class BB_Support_Access {
 		// re-enabled grant never inherits old tickets or login history (and the
 		// previously-issued URL is already dead because its hash is replaced).
 		//
-		// The raw login URL is persisted ONLY so support-system notes can include
-		// it on every ticket-add / duration-change without relying on the browser
-		// to round-trip it. It is wiped on disable (the whole option is deleted)
-		// and on expiry. Authentication still validates against `token_hash`
-		// only — the stored URL is never used to log anyone in.
+		// Token storage is two-fold, by design. `token_hash` (SHA-256) is the
+		// ONLY value used for authentication; a database read yields just this
+		// irreversible hash. `token_enc` is the token encrypted with a key
+		// derived from the wp-config secret salts (which are NOT in the DB). It
+		// exists solely so notes can always include the login URL — even after a
+		// page reload or in a fresh session — without the browser round-tripping
+		// it. A DB-only leak cannot decrypt it (the salts live outside the
+		// database), and it is never used to log anyone in. If encryption is
+		// unavailable on the host, `token_enc` is simply empty and the URL falls
+		// back to the browser round-trip. The raw token itself is never persisted.
 		$data = array(
 			'enabled'         => 1,
 			'support_user_id' => (int) $support_user_id,
 			'token_hash'      => hash( 'sha256', $token ),
+			'token_enc'       => $this->encrypt_token( $token ),
 			'expires'         => $expires,
 			'ticket_numbers'  => array(),
 			'created'         => time(),
 			'login_log'       => array(),
-			'login_url'       => $login_url,
 		);
 
-		bp_update_option( self::OPTION, $data );
+		// Write the fresh grant under the lock so a concurrent login-audit or
+		// ticket append cannot read an old snapshot and clobber the new token.
+		// enable() is a clean-slate replacement (not a read-modify-write), so we
+		// take the lock and write directly rather than re-reading first.
+		$this->with_lock(
+			function () use ( $data ) {
+				$this->save( $data );
+			}
+		);
 
 		$this->schedule_expiry( $expires );
 
@@ -727,11 +1023,22 @@ class BB_Support_Access {
 
 		// Add the selected days on top of the time already remaining. The guard
 		// above guarantees $data['expires'] is a valid future timestamp here.
-		$expires         = $data['expires'] + ( $days * DAY_IN_SECONDS );
-		$data['enabled'] = 1;
-		$data['expires'] = $expires;
+		$expires = $data['expires'] + ( $days * DAY_IN_SECONDS );
 
-		bp_update_option( self::OPTION, $data );
+		// Persist under the lock, re-reading the fresh snapshot so a concurrent
+		// login-audit or ticket append is preserved; we only bump enabled/expires.
+		$saved = $this->save_locked(
+			function ( $fresh ) use ( $expires ) {
+				$fresh['enabled'] = 1;
+				$fresh['expires'] = $expires;
+
+				return $fresh;
+			}
+		);
+
+		// Use the locked-and-saved snapshot for the return payload so tickets
+		// reflect anything a concurrent writer added.
+		$data = is_array( $saved ) ? $saved : $data;
 
 		$this->schedule_expiry( $expires );
 
@@ -825,14 +1132,42 @@ class BB_Support_Access {
 	 * the audit log are all cleared. The dedicated support user account is NOT
 	 * deleted; it lives in wp_users and is reused on the next enable.
 	 *
+	 * Crucially, this also destroys any live login sessions for the support
+	 * account. Deleting the token only kills the issued URL — it does NOT
+	 * invalidate an auth cookie support already obtained, which would otherwise
+	 * survive until it naturally lapsed (~2 days). Revoking must be immediate,
+	 * so we tear down the session tokens too. The next enable mints a fresh
+	 * token and support logs in anew.
+	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @return void
 	 */
 	public function disable() {
-		bp_delete_option( self::OPTION );
+		// Delete the option under the lock so a concurrent login-audit or ticket
+		// append cannot re-create it from a stale snapshot right after we remove
+		// it (which would resurrect a "revoked" grant). Capture the support user
+		// id inside the lock so the session teardown targets the right account.
+		$support_user_id = $this->with_lock(
+			function () {
+				$data = $this->get_data();
+				bp_delete_option( self::OPTION );
+
+				return (int) $data['support_user_id'];
+			}
+		);
 
 		$this->clear_scheduled_expiry();
+
+		// Destroy any active session for the support account so a revoke/expiry
+		// takes effect immediately rather than lingering until the auth cookie
+		// would have expired on its own. WP_Session_Tokens has existed since
+		// WordPress 4.0; the support account only ever signs in via the token
+		// flow, so destroying all of its sessions has no collateral impact.
+		if ( $support_user_id > 0 && class_exists( 'WP_Session_Tokens' ) ) {
+			$manager = WP_Session_Tokens::get_instance( $support_user_id );
+			$manager->destroy_all();
+		}
 
 		/**
 		 * Fires after support access is disabled / revoked.
@@ -880,11 +1215,14 @@ class BB_Support_Access {
 			);
 		}
 
-		// Prefer the server-stored login URL (set at enable, wiped on
-		// disable/expiry) so every note includes it regardless of page reloads;
-		// fall back to a caller-supplied URL for older grants without one.
-		if ( '' === $login_url && ! empty( $data['login_url'] ) ) {
-			$login_url = $data['login_url'];
+		// The login URL is supplied by the browser (validated by the caller via
+		// is_own_login_url()). If the browser no longer holds it — e.g. the page
+		// was reloaded after enabling, or this is a fresh session — rebuild it by
+		// decrypting the at-rest token, so every note can include the same URL.
+		// The raw token is never stored; only its encrypted form is decrypted
+		// here, behind the wp-config salts.
+		if ( '' === $login_url ) {
+			$login_url = $this->get_login_url( $data );
 		}
 
 		$expiry_utc = $data['expires'] ? gmdate( 'Y-m-d H:i:s', $data['expires'] ) . ' UTC' : __( 'n/a', 'buddyboss' );
@@ -895,8 +1233,8 @@ class BB_Support_Access {
 			esc_html( $expiry_utc )
 		);
 
-		// Embed the login URL (stored server-side, or caller-supplied). Rendered
-		// as a plain anchor so support can click straight through.
+		// Embed the caller-supplied login URL when present. Rendered as a plain
+		// anchor so support can click straight through.
 		if ( '' !== $login_url ) {
 			$note .= sprintf(
 				'<p>Login URL: <a href="%1$s">%1$s</a></p>',
@@ -920,17 +1258,22 @@ class BB_Support_Access {
 		// Note posted — now persist the ticket. The append runs under the lock
 		// so a concurrent login-audit write (or another add) can't clobber it,
 		// and it re-reads inside the lock to avoid acting on a stale snapshot.
-		$tickets = $this->with_lock(
-			function () use ( $ticket_number ) {
-				$data = $this->get_data();
-				if ( ! in_array( $ticket_number, $data['ticket_numbers'], true ) ) {
-					$data['ticket_numbers'][] = $ticket_number;
-					bp_update_option( self::OPTION, $data );
+		$saved = $this->save_locked(
+			function ( $data ) use ( $ticket_number ) {
+				if ( in_array( $ticket_number, $data['ticket_numbers'], true ) ) {
+					// Already present (a racing add beat us) — skip the write.
+					return null;
 				}
+				$data['ticket_numbers'][] = $ticket_number;
 
-				return $data['ticket_numbers'];
+				return $data;
 			}
 		);
+
+		// save_locked() returns the saved snapshot, or null when nothing changed
+		// (the ticket was already present). Either way, re-read the authoritative
+		// list for the response.
+		$tickets = is_array( $saved ) ? $saved['ticket_numbers'] : $this->get_data()['ticket_numbers'];
 
 		return array(
 			'tickets' => $tickets,
@@ -1217,6 +1560,26 @@ class BB_Support_Access {
 		// Timing-safe comparison of the hashed incoming token against the stored hash.
 		$incoming_hash = hash( 'sha256', $raw_token );
 		if ( ! hash_equals( $data['token_hash'], $incoming_hash ) ) {
+			// Failed attempt. Because this path authenticates directly (it does
+			// not run wp_signon / the `authenticate` filter chain), login-security
+			// plugins never observe these attempts. Fire a dedicated action and
+			// arm a lightweight per-IP failure counter so monitoring can alert and
+			// repeated guessing is at least recorded. The token's ~380-bit entropy
+			// already makes brute force infeasible; this is defence-in-depth.
+			$this->record_failed_login();
+
+			/**
+			 * Fires when a support-access login is attempted with an invalid token.
+			 *
+			 * Lets security/monitoring code observe failed attempts that bypass the
+			 * normal WordPress login pipeline.
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param string $ip Client IP (REMOTE_ADDR-derived), or '' if unknown.
+			 */
+			do_action( 'bb_support_access_login_failed', $this->get_client_ip() );
+
 			return;
 		}
 
@@ -1232,6 +1595,14 @@ class BB_Support_Access {
 		// Audit trail: record the successful login (UTC time + client IP).
 		$this->record_login();
 
+		// Announce the login through WordPress's standard `wp_login` action.
+		// This path authenticates directly (no wp_signon), so without this hook
+		// security/audit/SIEM plugins that watch `wp_login` would never see a
+		// support login. NOTE: this token flow deliberately bypasses the
+		// `authenticate` filter chain, so 2FA and login-throttling plugins do NOT
+		// gate it — the token URL is a 2FA-exempt administrator login by design.
+		do_action( 'wp_login', $support_user->user_login, $support_user );
+
 		/**
 		 * Fires after a successful support-access login.
 		 *
@@ -1240,6 +1611,14 @@ class BB_Support_Access {
 		 * @param int $support_user_id The authenticated support user ID.
 		 */
 		do_action( 'bb_support_access_logged_in', $support_user->ID );
+
+		// Suppress the Referer header on the redirect so the token-bearing URL is
+		// never leaked to any third-party resource the destination might load.
+		// Sent only on this authenticated redirect response, immediately before
+		// the redirect, so it cannot have been emitted earlier in the request.
+		if ( ! headers_sent() ) {
+			header( 'Referrer-Policy: no-referrer' );
+		}
 
 		// Redirect to a clean admin URL so the token never lingers in history/referrer.
 		wp_safe_redirect( admin_url() );
@@ -1388,16 +1767,14 @@ class BB_Support_Access {
 
 		// On a pure extension (existing grant), re-notify every attached ticket
 		// with the new expiry so support sees the updated window. A fresh grant
-		// (no prior live token) has no tickets yet, so nothing is posted.
+		// (no prior live token) has no tickets yet, so nothing is posted. Prefer
+		// the browser-supplied URL; if it is absent (page reloaded / fresh
+		// session), rebuild it by decrypting the at-rest token so the expiry note
+		// still carries the same login URL.
 		if ( ! empty( $result['extended'] ) && ! empty( $result['tickets'] ) ) {
-			// Prefer the server-stored login URL so the note includes it even
-			// when the browser no longer holds it (e.g. after a page reload).
-			if ( '' === $login_url ) {
-				$stored    = $this->get_data();
-				$login_url = $stored['login_url'];
-			}
+			$note_url = ( '' !== $login_url ) ? $login_url : $this->get_login_url();
 
-			$notify = $this->notify_expiry_update( $result['tickets'], $result['expires'], $login_url );
+			$notify = $this->notify_expiry_update( $result['tickets'], $result['expires'], $note_url );
 
 			if ( $notify['sent'] > 0 && 0 === $notify['failed'] ) {
 				$response['notice'] = array(
