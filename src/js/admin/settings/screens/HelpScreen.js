@@ -5,12 +5,13 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useEffect, useRef, useCallback } from '@wordpress/element';
+import { useState, useEffect, useRef, useCallback, useMemo } from '@wordpress/element';
 import { Button, Spinner } from '@wordpress/components';
 import { __, _n, sprintf } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { useKb } from '../context/KbContext';
-import { getTaxonomy } from '../components/knowledge-base/taxonomyCache';
+import { getTaxonomy, clearTaxonomy } from '../components/knowledge-base/taxonomyCache';
+import { getCuratedOverrides } from '../components/knowledge-base/curatedOverrides';
 import { ajaxFetch } from '../utils/ajax';
 import doneForYouImage from '../images/help-done-for-you.png';
 
@@ -224,9 +225,20 @@ export function HelpScreen( { onNavigate } ) {
 
 	// Per-category article counts for the "BuddyBoss Knowledge Base" grid,
 	// keyed by top-level category slug. Null until the taxonomy resolves.
-	var kbCountsState = useState( null );
-	var kbCounts = kbCountsState[ 0 ];
-	var setKbCounts = kbCountsState[ 1 ];
+	// Top-level KB categories for the "BuddyBoss Knowledge Base" grid, loaded
+	// live from the KB taxonomy (the same source the documentation modal uses)
+	// instead of a hardcoded list. `kbStatus` drives the loader / error / grid.
+	var kbTermsState = useState( [] );
+	var kbTerms = kbTermsState[ 0 ];
+	var setKbTerms = kbTermsState[ 1 ];
+
+	var kbStatusState = useState( 'loading' );
+	var kbStatus = kbStatusState[ 0 ];
+	var setKbStatus = kbStatusState[ 1 ];
+
+	var kbRetryState = useState( 0 );
+	var kbRetry = kbRetryState[ 0 ];
+	var setKbRetry = kbRetryState[ 1 ];
 
 	// Authoritative Support Access enabled state, mirrored from the same
 	// server endpoint the Support Access screen uses, so the card badge below
@@ -369,26 +381,82 @@ export function HelpScreen( { onNavigate } ) {
 		};
 	}, [] );
 
-	// Load the KB taxonomy on mount. This serves two purposes: it warms the
-	// cache so resolving a clicked search result / resource card to its KB
-	// category is a cache hit instead of a cold cross-origin round trip, and
-	// it supplies the per-category article counts shown on the "BuddyBoss
-	// Knowledge Base" grid.
+	// Load the KB taxonomy on mount (and on retry). This serves two purposes:
+	// it warms the cache so resolving a clicked search result / resource card
+	// to its KB category is a cache hit instead of a cold cross-origin round
+	// trip, and it supplies the live category cards + counts shown on the
+	// "BuddyBoss Knowledge Base" grid.
 	useEffect( function () {
-		var isMounted = true;
+		var controller = new AbortController();
+		setKbStatus( 'loading' );
 
-		getTaxonomy()
+		getTaxonomy( controller.signal )
 			.then( function ( taxonomy ) {
-				if ( isMounted && Array.isArray( taxonomy ) ) {
-					setKbCounts( bbBuildKbCounts( taxonomy ) );
+				if ( Array.isArray( taxonomy ) ) {
+					setKbTerms( taxonomy );
+					setKbStatus( 'ready' );
+				} else {
+					setKbStatus( 'error' );
 				}
 			} )
-			.catch( function () {} );
+			.catch( function ( err ) {
+				// Aborts fire on unmount mid-fetch — stay silent for those.
+				if ( err && 'AbortError' === err.name ) {
+					return;
+				}
+				setKbStatus( 'error' );
+			} );
 
 		return function () {
-			isMounted = false;
+			controller.abort();
 		};
-	}, [] );
+	}, [ kbRetry ] );
+
+	// Fold the flat taxonomy into the top-level category cards for the grid:
+	// curated icon/title/description/order applied by slug (matching the
+	// documentation modal), with recursive descendant article counts. Unknown
+	// top-levels fall back to the raw API name and a generic book icon.
+	var resourceCards = useMemo( function () {
+		if ( ! Array.isArray( kbTerms ) || 0 === kbTerms.length ) {
+			return [];
+		}
+
+		var byId             = {};
+		var childrenByParent = {};
+		kbTerms.forEach( function ( term ) {
+			byId[ term.id ] = term;
+			var list = childrenByParent[ term.parent ] || [];
+			list.push( term );
+			childrenByParent[ term.parent ] = list;
+		} );
+
+		var counts    = bbBuildKbCounts( kbTerms );
+		var overrides = getCuratedOverrides();
+		var topLevels = childrenByParent[ 0 ] || [];
+
+		var built = topLevels.map( function ( term ) {
+			var curated = overrides[ term.slug ] || null;
+			return {
+				id:          term.id,
+				slug:        term.slug,
+				name:        decodeEntities( curated ? curated.title : ( term.name || '' ) ),
+				description: decodeEntities( curated ? curated.description : ( term.description || '' ) ),
+				icon:        curated ? curated.icon : 'bb-icons-rl-book',
+				order:       curated ? curated.order : 999,
+				count:       'number' === typeof counts[ term.slug ] ? counts[ term.slug ] : 0,
+			};
+		} );
+
+		// Curated cards first by their order, then anything uncurated by name.
+		built.sort( function ( a, b ) {
+			if ( a.order !== b.order ) {
+				return a.order - b.order;
+			}
+			return a.name.localeCompare( b.name );
+		} );
+
+		return built;
+	}, [ kbTerms ] );
 
 	/**
 	 * Handle selection of a knowledge-base search result.
@@ -405,43 +473,6 @@ export function HelpScreen( { onNavigate } ) {
 	 *
 	 * @param {Object} result Knowledge base article object from the REST API.
 	 */
-	/**
-	 * Resolve a KB article's top-level category from its taxonomy IDs and
-	 * point the open modal at it. Shared by the search-result and "Get Started"
-	 * click flows: both open the modal on the article straight away (loading
-	 * state) and then call this to swap in the real category once the taxonomy
-	 * resolves. On failure the modal is backed out of and, when a canonical
-	 * link is known, the documentation page is opened in a new tab instead.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {Object} result Article object carrying `slug`, `ht-kb-category`
-	 *                        (term IDs) and optionally `link`.
-	 */
-	var resolveArticleCategory = useCallback( function ( result ) {
-		var categoryIds = Array.isArray( result[ 'ht-kb-category' ] ) ? result[ 'ht-kb-category' ] : [];
-
-		getTaxonomy()
-			.then( function ( taxonomy ) {
-				var topSlug = bbResolveTopLevelSlug( taxonomy, categoryIds[ 0 ] );
-
-				if ( ! topSlug ) {
-					throw new Error( 'Unresolved knowledge base category.' );
-				}
-
-				kbDispatch( { type: 'selectCategory', slug: topSlug } );
-				kbDispatch( { type: 'selectArticle', slug: result.slug } );
-			} )
-			.catch( function () {
-				// Category could not be resolved — back out of the modal and
-				// fall back to the documentation page when we have a link.
-				closeKb();
-				if ( result.link ) {
-					window.open( result.link, '_blank', 'noopener,noreferrer' );
-				}
-			} );
-	}, [ kbDispatch, closeKb ] );
-
 	var handleResultClick = useCallback( function ( result ) {
 		if ( ! result || ! result.slug ) {
 			return;
@@ -458,60 +489,28 @@ export function HelpScreen( { onNavigate } ) {
 		kbDispatch( { type: 'selectArticle', slug: result.slug } );
 		openKb();
 
-		resolveArticleCategory( result );
-	}, [ kbDispatch, openKb, resolveArticleCategory ] );
+		var categoryIds = Array.isArray( result[ 'ht-kb-category' ] ) ? result[ 'ht-kb-category' ] : [];
 
-	/**
-	 * Handle a "Get Started" link click.
-	 *
-	 * These items carry only an article slug, so — unlike search results — the
-	 * article's category isn't known up front. The modal is opened on the
-	 * article immediately (loading state) for instant feedback, then the
-	 * article record is looked up by slug from the same KB endpoint the search
-	 * uses to recover its `ht-kb-category` IDs (and canonical link), which are
-	 * handed to the shared category resolver. If the lookup fails the modal is
-	 * closed.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {string} slug Knowledge base article slug.
-	 */
-	var handleGettingStartedClick = useCallback( function ( slug ) {
-		if ( ! slug ) {
-			return;
-		}
+		getTaxonomy()
+			.then( function ( taxonomy ) {
+				var topSlug = bbResolveTopLevelSlug( taxonomy, categoryIds[ 0 ] );
 
-		// Open the modal on the article straight away, mirroring a search-result
-		// click, so the modal + loader appear instantly.
-		kbDispatch( { type: 'selectCategory', slug: null } );
-		kbDispatch( { type: 'selectArticle', slug: slug } );
-		openKb();
-
-		window.fetch(
-			HELP_SEARCH_ENDPOINT +
-				'?slug=' + encodeURIComponent( slug ) +
-				'&per_page=1&_fields=id,slug,title,link,ht-kb-category'
-		)
-			.then( function ( response ) {
-				if ( ! response.ok ) {
-					throw new Error( 'Help article lookup failed.' );
-				}
-				return response.json();
-			} )
-			.then( function ( data ) {
-				var article = Array.isArray( data ) ? data[ 0 ] : null;
-
-				if ( ! article || ! article.slug ) {
-					throw new Error( 'Knowledge base article not found.' );
+				if ( ! topSlug ) {
+					throw new Error( 'Unresolved knowledge base category.' );
 				}
 
-				resolveArticleCategory( article );
+				kbDispatch( { type: 'selectCategory', slug: topSlug } );
+				kbDispatch( { type: 'selectArticle', slug: result.slug } );
 			} )
 			.catch( function () {
-				// Article could not be located — back out of the modal.
+				// Category could not be resolved — back out of the modal and
+				// fall back to the documentation page.
 				closeKb();
+				if ( result.link ) {
+					window.open( result.link, '_blank', 'noopener,noreferrer' );
+				}
 			} );
-	}, [ kbDispatch, openKb, closeKb, resolveArticleCategory ] );
+	}, [ kbDispatch, openKb, closeKb ] );
 
 	/**
 	 * Open the Knowledge Base modal at a specific top-level category.
@@ -702,71 +701,70 @@ export function HelpScreen( { onNavigate } ) {
 					>
 						{ __( 'BuddyBoss Knowledge Base', 'buddyboss' ) }
 					</h2>
-					<div className="bb-admin-help-resources__grid">
-						{ [
-							{ key: 'platform-settings', slug: 'buddyboss-platform', icon: 'browser', label: __( 'BuddyBoss Platform', 'buddyboss' ), description: __( 'Learn how to enable and configure the BuddyBoss Platform – including profiles, groups, activity, forums and more.' ) },
-							{ key: 'buddyboss-theme', slug: 'buddyboss-theme',           icon: 'palette',       label: __( 'BuddyBoss Theme', 'buddyboss' ), description: __( 'Learn how to setup and customize our premium BuddyBoss Theme to make everything look beautiful.' ) },
-							{ key: 'app', slug: 'buddyboss-app',           icon: 'device-mobile',       label: __( 'BuddyBoss App', 'buddyboss' ), description: __( 'Learn how to set up the BuddyBoss App from scratch, including initial setup, branding, generating builds and publishing.' ) },
-							{ key: 'integrations', slug: 'integrations',    icon: 'plug',          label: __( 'Integrations', 'buddyboss' ), description: __( 'LearnDash, Zoom, WooCommerce, Events, Jobs and more. Learn how BuddyBoss integrates with your favorite plugins and services.' ) },
-							{ key: 'advanced-setup', slug: 'advanced',  icon: 'gear',        label: __( 'Advanced Setup', 'buddyboss' ), description: __( 'Articles for experienced developers and site administrators to optimize and extend their BuddyBoss sites.' ) },
-							{ key: 'troubleshooting', icon: 'cloud-warning', label: __( 'Troubleshooting', 'buddyboss' ), description: __( 'Running into issues? Learn how to resolve the most common issues with BuddyBoss.' ) },
-						].map( function ( item ) {
-							// Article count comes from the live KB taxonomy,
-							// keyed by category slug. Null while the taxonomy
-							// is still loading or when the card has no slug.
-							var count = item.slug && kbCounts ? kbCounts[ item.slug ] : null;
-							var cardContent = (
-								<>
-									<div className="bb-admin-help-resource-card__head">
-										<i
-											className={ 'bb-icons-rl bb-icons-rl-' + item.icon + ' bb-admin-help-resource-card__icon' }
-											aria-hidden="true"
-										></i>
-										<span className="bb-admin-help-resource-card__title">
-											{ item.label }
-										</span>
-									</div>
-									<div className="bb-admin-help-resource-card__description">
-										{ item.description }
-									</div>
-									{ 'number' === typeof count && (
-										<span className="bb-admin-help-resource-card__count">
-											{
-												/* translators: %d is the number of articles in this resource category. */
-												sprintf( _n( '%d article', '%d articles', count, 'buddyboss' ), count )
-											}
-										</span>
-									) }
-								</>
-							);
+					{ 'loading' === kbStatus && (
+						<div className="bb-admin-help-resources__loading" aria-busy="true" aria-live="polite">
+							<Spinner />
+						</div>
+					) }
 
-							// Cards without a mapped KB category slug stay as plain links.
-							if ( ! item.slug ) {
+					{ 'error' === kbStatus && (
+						<div className="bb-admin-help-resources__error" role="alert">
+							<p>{ __( 'Couldn’t load the knowledge base.', 'buddyboss' ) }</p>
+							<Button
+								variant="secondary"
+								onClick={ function () {
+									// Clear the module memo before retrying so a cached
+									// empty/failed response isn't re-served as success.
+									clearTaxonomy();
+									setKbRetry( function ( c ) {
+										return c + 1;
+									} );
+								} }
+							>
+								{ __( 'Retry', 'buddyboss' ) }
+							</Button>
+						</div>
+					) }
+
+					{ 'ready' === kbStatus && (
+						<div className="bb-admin-help-resources__grid">
+							{ resourceCards.map( function ( card ) {
 								return (
-									<a
-										key={ item.key }
-										href="#"
+									<button
+										type="button"
+										key={ card.slug }
 										className="bb-admin-help-resource-card"
+										onClick={ function () {
+											openKbCategory( card.slug );
+										} }
 									>
-										{ cardContent }
-									</a>
+										<div className="bb-admin-help-resource-card__head">
+											<i
+												className={ 'bb-icons-rl ' + card.icon + ' bb-admin-help-resource-card__icon' }
+												aria-hidden="true"
+											></i>
+											<span className="bb-admin-help-resource-card__title">
+												{ card.name }
+											</span>
+										</div>
+										{ card.description && (
+											<div className="bb-admin-help-resource-card__description">
+												{ card.description }
+											</div>
+										) }
+										{ 'number' === typeof card.count && (
+											<span className="bb-admin-help-resource-card__count">
+												{
+													/* translators: %d is the number of articles in this resource category. */
+													sprintf( _n( '%d article', '%d articles', card.count, 'buddyboss' ), card.count )
+												}
+											</span>
+										) }
+									</button>
 								);
-							}
-
-							return (
-								<button
-									type="button"
-									key={ item.key }
-									className="bb-admin-help-resource-card"
-									onClick={ function () {
-										openKbCategory( item.slug );
-									} }
-								>
-									{ cardContent }
-								</button>
-							);
-						} ) }
-					</div>
+							} ) }
+						</div>
+					) }
 				</section>
 
 				<section
@@ -811,7 +809,7 @@ export function HelpScreen( { onNavigate } ) {
 						</h2>
 						<ul className="bb-admin-help-getting-started__list">
 							{ [
-								{ key: 'install-theme',     label: __( 'How to install the BuddyBoss Theme', 'buddyboss' ), slug: 'installing-the-buddyboss-theme' },
+								{ key: 'install-theme',     label: __( 'How to install the BuddyBoss Theme', 'buddyboss' ) },
 								{ key: 'default-data',      label: __( 'How to Setup Default Data in BuddyBoss', 'buddyboss' ) },
 								{ key: 'login-register',    label: __( 'How to Customize the Login & Registration Page in BuddyBoss', 'buddyboss' ) },
 								{ key: 'install-theme-2',   label: __( 'How to install the BuddyBoss Theme', 'buddyboss' ) },
@@ -820,16 +818,7 @@ export function HelpScreen( { onNavigate } ) {
 							].map( function ( item ) {
 								return (
 									<li key={ item.key } className="bb-admin-help-getting-started__item">
-										<a
-											href="#"
-											className="bb-admin-help-getting-started__link"
-											onClick={ function ( e ) {
-												e.preventDefault();
-												if ( item.slug ) {
-													handleGettingStartedClick( item.slug );
-												}
-											} }
-										>
+										<a href="#" className="bb-admin-help-getting-started__link">
 											<i
 												className="bb-icons-rl bb-icons-rl-file-text bb-admin-help-getting-started__icon"
 												aria-hidden="true"
