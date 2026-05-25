@@ -722,6 +722,8 @@ class BB_Support_Access {
 				'user_email'   => self::USER_EMAIL,
 				'user_pass'    => wp_generate_password( 64, true, true ),
 				'display_name' => __( 'BuddyBoss Support', 'buddyboss' ),
+				'first_name'   => __( 'BuddyBoss', 'buddyboss' ),
+				'last_name'    => __( 'Support', 'buddyboss' ),
 				'role'         => 'administrator',
 			)
 		);
