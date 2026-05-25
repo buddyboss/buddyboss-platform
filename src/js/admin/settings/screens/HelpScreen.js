@@ -11,6 +11,7 @@ import { __, _n, sprintf } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { useKb } from '../context/KbContext';
 import { getTaxonomy } from '../components/knowledge-base/taxonomyCache';
+import { ajaxFetch } from '../utils/ajax';
 import doneForYouImage from '../images/help-done-for-you.png';
 
 // BuddyBoss.com knowledge base REST endpoint used for Help search.
@@ -146,6 +147,18 @@ export function HelpScreen( { onNavigate } ) {
 	var kbCounts = kbCountsState[ 0 ];
 	var setKbCounts = kbCountsState[ 1 ];
 
+	// Authoritative Support Access enabled state, mirrored from the same
+	// server endpoint the Support Access screen uses, so the card badge below
+	// reflects whether access is actually on. Held disabled until resolved so
+	// the badge never claims a status before the real value is known.
+	var supportAccessState = useState( false );
+	var supportAccessEnabled = supportAccessState[ 0 ];
+	var setSupportAccessEnabled = supportAccessState[ 1 ];
+
+	var supportAccessLoadedState = useState( false );
+	var supportAccessLoaded = supportAccessLoadedState[ 0 ];
+	var setSupportAccessLoaded = supportAccessLoadedState[ 1 ];
+
 	var searchRef = useRef( null );
 	var debounceRef = useRef( null );
 	var abortRef = useRef( null );
@@ -154,6 +167,32 @@ export function HelpScreen( { onNavigate } ) {
 	var kbDispatch = kb.dispatch;
 	var openKb = kb.open;
 	var closeKb = kb.close;
+
+	// Load the real Support Access state on mount so the "Support Access" card
+	// badge reflects the live toggle value from SupportAccessScreen.
+	useEffect( function () {
+		var cancelled = false;
+		ajaxFetch( 'bb_admin_support_access_get' )
+			.then( function ( res ) {
+				if ( cancelled ) {
+					return;
+				}
+				if ( res && res.success && res.data ) {
+					setSupportAccessEnabled( !! res.data.enabled );
+				}
+			} )
+			.catch( function () {
+				// Leave the default (disabled) on error.
+			} )
+			.finally( function () {
+				if ( ! cancelled ) {
+					setSupportAccessLoaded( true );
+				}
+			} );
+		return function () {
+			cancelled = true;
+		};
+	}, [] );
 
 	// Debounced knowledge-base search against the BuddyBoss.com REST API.
 	useEffect( function () {
@@ -463,13 +502,25 @@ export function HelpScreen( { onNavigate } ) {
 								<h2 className="bb-admin-help-card__title">
 									{ __( 'Support Access', 'buddyboss' ) }
 								</h2>
-								<span className="bb-admin-help-card__status bb-admin-help-card__status--positive">
-									<i
-										className="bb-icons-rl bb-icons-rl-check-circle"
-										aria-hidden="true"
-									></i>
-									{ __( 'Enabled', 'buddyboss' ) }
-								</span>
+								{ supportAccessLoaded && (
+									supportAccessEnabled ? (
+										<span className="bb-admin-help-card__status bb-admin-help-card__status--positive">
+											<i
+												className="bb-icons-rl bb-icons-rl-check-circle"
+												aria-hidden="true"
+											></i>
+											{ __( 'Enabled', 'buddyboss' ) }
+										</span>
+									) : (
+										<span className="bb-admin-help-card__status bb-admin-help-card__status--neutral">
+											<i
+												className="bb-icons-rl bb-icons-rl-x-circle"
+												aria-hidden="true"
+											></i>
+											{ __( 'Disabled', 'buddyboss' ) }
+										</span>
+									)
+								) }
 							</div>
 							<p className="bb-admin-help-card__description">
 								{ __( 'Allow our support team to securely access your site using temporary credentials to troubleshoot issues.', 'buddyboss' ) }

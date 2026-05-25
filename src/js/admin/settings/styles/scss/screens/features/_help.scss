@@ -296,6 +296,16 @@
 				color: $bb-text-positive-primary-color;
 			}
 		}
+
+		&--neutral {
+			color: $bb-text-tertiary-color;
+			background-color: $bb-background-secondary-color;
+			border: 0.5px solid $bb-border-secondary-color;
+
+			i {
+				color: $bb-icon-tertiary-color;
+			}
+		}
 	}
 
 	&__action.is-secondary {
