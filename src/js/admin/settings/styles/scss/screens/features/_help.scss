@@ -907,10 +907,12 @@
 
 	&__actions {
 		display: flex;
+		align-items: center;
+		gap: 8px;
 	}
 
-	&__ticket.is-secondary {
-		@include bb-button-primary-outline;
+	&__ticket.is-primary {
+		@include bb-button-primary;
 	}
 
 	&__panel--disabled {

@@ -279,14 +279,6 @@ export function SupportAccessScreen( { onNavigate } ) {
 									} ) }
 								</div>
 							</div>
-							<Button
-								variant="secondary"
-								className="bb-admin-support-access__modify"
-								disabled={ isSaving }
-								onClick={ function () { setIsModalOpen( true ); } }
-							>
-								{ __( 'Modify Duration', 'buddyboss' ) }
-							</Button>
 						</div>
 
 						<div className="bb-admin-support-access__divider" aria-hidden="true"></div>
@@ -314,7 +306,7 @@ export function SupportAccessScreen( { onNavigate } ) {
 
 						<div className="bb-admin-support-access__actions">
 							<Button
-								variant="secondary"
+								variant="primary"
 								className="bb-admin-support-access__ticket"
 								disabled={ isSaving }
 								onClick={ function () { setIsTicketModalOpen( true ); } }
@@ -326,6 +318,14 @@ export function SupportAccessScreen( { onNavigate } ) {
 										tickets.length
 									)
 									: __( 'Add Ticket Number', 'buddyboss' ) }
+							</Button>
+							<Button
+								variant="secondary"
+								className="bb-admin-support-access__modify"
+								disabled={ isSaving }
+								onClick={ function () { setIsModalOpen( true ); } }
+							>
+								{ __( 'Modify Duration', 'buddyboss' ) }
 							</Button>
 						</div>
 					</section>
@@ -354,7 +354,7 @@ export function SupportAccessScreen( { onNavigate } ) {
 
 			<ModifyDurationModal
 				isOpen={ isModalOpen }
-				value="5"
+				value="1"
 				onClose={ function () { setIsModalOpen( false ); } }
 				onSave={ function ( value ) {
 					// "Extend support access by" — persist on the server, then

@@ -37,13 +37,13 @@ var DURATION_OPTIONS = [
  * @returns {JSX.Element|null} Modal element or null.
  */
 export function ModifyDurationModal( { isOpen, value, onClose, onSave } ) {
-	var durationState = useState( value || '5' );
+	var durationState = useState( value || '1' );
 	var duration = durationState[ 0 ];
 	var setDuration = durationState[ 1 ];
 
 	useEffect( function () {
 		if ( isOpen ) {
-			setDuration( value || '5' );
+			setDuration( value || '1' );
 		}
 	}, [ isOpen, value ] );
 
