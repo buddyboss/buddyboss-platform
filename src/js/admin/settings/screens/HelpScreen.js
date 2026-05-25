@@ -324,6 +324,43 @@ export function HelpScreen( { onNavigate } ) {
 	 *
 	 * @param {Object} result Knowledge base article object from the REST API.
 	 */
+	/**
+	 * Resolve a KB article's top-level category from its taxonomy IDs and
+	 * point the open modal at it. Shared by the search-result and "Get Started"
+	 * click flows: both open the modal on the article straight away (loading
+	 * state) and then call this to swap in the real category once the taxonomy
+	 * resolves. On failure the modal is backed out of and, when a canonical
+	 * link is known, the documentation page is opened in a new tab instead.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {Object} result Article object carrying `slug`, `ht-kb-category`
+	 *                        (term IDs) and optionally `link`.
+	 */
+	var resolveArticleCategory = useCallback( function ( result ) {
+		var categoryIds = Array.isArray( result[ 'ht-kb-category' ] ) ? result[ 'ht-kb-category' ] : [];
+
+		getTaxonomy()
+			.then( function ( taxonomy ) {
+				var topSlug = bbResolveTopLevelSlug( taxonomy, categoryIds[ 0 ] );
+
+				if ( ! topSlug ) {
+					throw new Error( 'Unresolved knowledge base category.' );
+				}
+
+				kbDispatch( { type: 'selectCategory', slug: topSlug } );
+				kbDispatch( { type: 'selectArticle', slug: result.slug } );
+			} )
+			.catch( function () {
+				// Category could not be resolved — back out of the modal and
+				// fall back to the documentation page when we have a link.
+				closeKb();
+				if ( result.link ) {
+					window.open( result.link, '_blank', 'noopener,noreferrer' );
+				}
+			} );
+	}, [ kbDispatch, closeKb ] );
+
 	var handleResultClick = useCallback( function ( result ) {
 		if ( ! result || ! result.slug ) {
 			return;
@@ -340,28 +377,60 @@ export function HelpScreen( { onNavigate } ) {
 		kbDispatch( { type: 'selectArticle', slug: result.slug } );
 		openKb();
 
-		var categoryIds = Array.isArray( result[ 'ht-kb-category' ] ) ? result[ 'ht-kb-category' ] : [];
+		resolveArticleCategory( result );
+	}, [ kbDispatch, openKb, resolveArticleCategory ] );
 
-		getTaxonomy()
-			.then( function ( taxonomy ) {
-				var topSlug = bbResolveTopLevelSlug( taxonomy, categoryIds[ 0 ] );
+	/**
+	 * Handle a "Get Started" link click.
+	 *
+	 * These items carry only an article slug, so — unlike search results — the
+	 * article's category isn't known up front. The modal is opened on the
+	 * article immediately (loading state) for instant feedback, then the
+	 * article record is looked up by slug from the same KB endpoint the search
+	 * uses to recover its `ht-kb-category` IDs (and canonical link), which are
+	 * handed to the shared category resolver. If the lookup fails the modal is
+	 * closed.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param {string} slug Knowledge base article slug.
+	 */
+	var handleGettingStartedClick = useCallback( function ( slug ) {
+		if ( ! slug ) {
+			return;
+		}
 
-				if ( ! topSlug ) {
-					throw new Error( 'Unresolved knowledge base category.' );
+		// Open the modal on the article straight away, mirroring a search-result
+		// click, so the modal + loader appear instantly.
+		kbDispatch( { type: 'selectCategory', slug: null } );
+		kbDispatch( { type: 'selectArticle', slug: slug } );
+		openKb();
+
+		window.fetch(
+			HELP_SEARCH_ENDPOINT +
+				'?slug=' + encodeURIComponent( slug ) +
+				'&per_page=1&_fields=id,slug,title,link,ht-kb-category'
+		)
+			.then( function ( response ) {
+				if ( ! response.ok ) {
+					throw new Error( 'Help article lookup failed.' );
+				}
+				return response.json();
+			} )
+			.then( function ( data ) {
+				var article = Array.isArray( data ) ? data[ 0 ] : null;
+
+				if ( ! article || ! article.slug ) {
+					throw new Error( 'Knowledge base article not found.' );
 				}
 
-				kbDispatch( { type: 'selectCategory', slug: topSlug } );
-				kbDispatch( { type: 'selectArticle', slug: result.slug } );
+				resolveArticleCategory( article );
 			} )
 			.catch( function () {
-				// Category could not be resolved — back out of the modal and
-				// fall back to the documentation page.
+				// Article could not be located — back out of the modal.
 				closeKb();
-				if ( result.link ) {
-					window.open( result.link, '_blank', 'noopener,noreferrer' );
-				}
 			} );
-	}, [ kbDispatch, openKb, closeKb ] );
+	}, [ kbDispatch, openKb, closeKb, resolveArticleCategory ] );
 
 	/**
 	 * Open the Knowledge Base modal at a specific top-level category.
@@ -655,7 +724,7 @@ export function HelpScreen( { onNavigate } ) {
 						</h2>
 						<ul className="bb-admin-help-getting-started__list">
 							{ [
-								{ key: 'install-theme',     label: __( 'How to install the BuddyBoss Theme', 'buddyboss' ) },
+								{ key: 'install-theme',     label: __( 'How to install the BuddyBoss Theme', 'buddyboss' ), slug: 'installing-the-buddyboss-theme' },
 								{ key: 'default-data',      label: __( 'How to Setup Default Data in BuddyBoss', 'buddyboss' ) },
 								{ key: 'login-register',    label: __( 'How to Customize the Login & Registration Page in BuddyBoss', 'buddyboss' ) },
 								{ key: 'install-theme-2',   label: __( 'How to install the BuddyBoss Theme', 'buddyboss' ) },
@@ -664,7 +733,16 @@ export function HelpScreen( { onNavigate } ) {
 							].map( function ( item ) {
 								return (
 									<li key={ item.key } className="bb-admin-help-getting-started__item">
-										<a href="#" className="bb-admin-help-getting-started__link">
+										<a
+											href="#"
+											className="bb-admin-help-getting-started__link"
+											onClick={ function ( e ) {
+												e.preventDefault();
+												if ( item.slug ) {
+													handleGettingStartedClick( item.slug );
+												}
+											} }
+										>
 											<i
 												className="bb-icons-rl bb-icons-rl-file-text bb-admin-help-getting-started__icon"
 												aria-hidden="true"
