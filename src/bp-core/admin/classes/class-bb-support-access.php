@@ -364,6 +364,7 @@ class BB_Support_Access {
 			'ticket_numbers'  => array(),
 			'created'         => 0,
 			'login_log'       => array(),
+			'login_url'       => '',
 		);
 
 		$data = bp_get_option( self::OPTION, array() );
@@ -395,6 +396,7 @@ class BB_Support_Access {
 		$data['ticket_numbers']  = $this->normalize_ticket_numbers( $data['ticket_numbers'] );
 		$data['created']         = absint( $data['created'] );
 		$data['login_log']       = is_array( $data['login_log'] ) ? $data['login_log'] : array();
+		$data['login_url']       = is_string( $data['login_url'] ) ? $data['login_url'] : '';
 
 		return $data;
 	}
@@ -644,14 +646,21 @@ class BB_Support_Access {
 			return $support_user_id;
 		}
 
-		// Mint a fresh token. Store only its hash.
-		$token   = wp_generate_password( 64, false );
-		$expires = time() + ( $days * DAY_IN_SECONDS );
+		// Mint a fresh token. Store only its hash for authentication.
+		$token     = wp_generate_password( 64, false );
+		$expires   = time() + ( $days * DAY_IN_SECONDS );
+		$login_url = $this->build_login_url( $token );
 
 		// Every enable is a clean slate: a brand-new token plus an empty ticket
 		// list and audit log. Nothing from a prior session carries over, so a
 		// re-enabled grant never inherits old tickets or login history (and the
 		// previously-issued URL is already dead because its hash is replaced).
+		//
+		// The raw login URL is persisted ONLY so support-system notes can include
+		// it on every ticket-add / duration-change without relying on the browser
+		// to round-trip it. It is wiped on disable (the whole option is deleted)
+		// and on expiry. Authentication still validates against `token_hash`
+		// only — the stored URL is never used to log anyone in.
 		$data = array(
 			'enabled'         => 1,
 			'support_user_id' => (int) $support_user_id,
@@ -660,13 +669,12 @@ class BB_Support_Access {
 			'ticket_numbers'  => array(),
 			'created'         => time(),
 			'login_log'       => array(),
+			'login_url'       => $login_url,
 		);
 
 		bp_update_option( self::OPTION, $data );
 
 		$this->schedule_expiry( $expires );
-
-		$login_url = $this->build_login_url( $token );
 
 		/**
 		 * Fires after support access is enabled.
@@ -859,64 +867,74 @@ class BB_Support_Access {
 	public function add_ticket( $ticket_number, $login_url = '' ) {
 		$ticket_number = sanitize_text_field( $ticket_number );
 
-		// The append + persist runs under the lock so a concurrent login-audit
-		// write (or another ticket add) can't clobber the new ticket. The
-		// helpdesk notification is intentionally fired AFTER the lock is
-		// released so a slow/blocking HTTP call never holds the mutex.
-		$result = $this->with_lock(
-			function () use ( $ticket_number ) {
-				$data    = $this->get_data();
-				$tickets = $data['ticket_numbers'];
+		$data    = $this->get_data();
+		$tickets = $data['ticket_numbers'];
 
-				$added = false;
-				if ( '' !== $ticket_number && ! in_array( $ticket_number, $tickets, true ) ) {
-					$tickets[] = $ticket_number;
-					$added     = true;
+		// Already attached (or empty) — nothing to do. Return the current list
+		// without notifying or re-saving.
+		if ( '' === $ticket_number || in_array( $ticket_number, $tickets, true ) ) {
+			return array(
+				'tickets' => $tickets,
+				'added'   => false,
+				'notify'  => null,
+			);
+		}
+
+		// Prefer the server-stored login URL (set at enable, wiped on
+		// disable/expiry) so every note includes it regardless of page reloads;
+		// fall back to a caller-supplied URL for older grants without one.
+		if ( '' === $login_url && ! empty( $data['login_url'] ) ) {
+			$login_url = $data['login_url'];
+		}
+
+		$expiry_utc = $data['expires'] ? gmdate( 'Y-m-d H:i:s', $data['expires'] ) . ' UTC' : __( 'n/a', 'buddyboss' );
+
+		$note = sprintf(
+			'<p><strong>BuddyBoss Support Access</strong> enabled for %1$s.</p><p>Expires: <strong>%2$s</strong></p>',
+			esc_html( home_url( '/' ) ),
+			esc_html( $expiry_utc )
+		);
+
+		// Embed the login URL (stored server-side, or caller-supplied). Rendered
+		// as a plain anchor so support can click straight through.
+		if ( '' !== $login_url ) {
+			$note .= sprintf(
+				'<p>Login URL: <a href="%1$s">%1$s</a></p>',
+				esc_url( $login_url )
+			);
+		}
+
+		// Notify FIRST. The ticket is persisted ONLY if the note posts
+		// successfully — a failed note means the ticket is NOT saved, so the
+		// admin can retry without an orphaned, un-notified ticket lingering.
+		$notify = $this->notify_support_system( $ticket_number, $note );
+
+		if ( is_wp_error( $notify ) ) {
+			return array(
+				'tickets' => $tickets,
+				'added'   => false,
+				'notify'  => $notify,
+			);
+		}
+
+		// Note posted — now persist the ticket. The append runs under the lock
+		// so a concurrent login-audit write (or another add) can't clobber it,
+		// and it re-reads inside the lock to avoid acting on a stale snapshot.
+		$tickets = $this->with_lock(
+			function () use ( $ticket_number ) {
+				$data = $this->get_data();
+				if ( ! in_array( $ticket_number, $data['ticket_numbers'], true ) ) {
+					$data['ticket_numbers'][] = $ticket_number;
+					bp_update_option( self::OPTION, $data );
 				}
 
-				$data['ticket_numbers'] = $tickets;
-				bp_update_option( self::OPTION, $data );
-
-				return array(
-					'tickets' => $tickets,
-					'added'   => $added,
-					'expires' => $data['expires'],
-				);
+				return $data['ticket_numbers'];
 			}
 		);
 
-		$notify = null;
-
-		// Only notify the helpdesk when a genuinely new ticket was attached.
-		if ( $result['added'] ) {
-			$expiry_utc = $result['expires'] ? gmdate( 'Y-m-d H:i:s', $result['expires'] ) . ' UTC' : __( 'n/a', 'buddyboss' );
-
-			$note = sprintf(
-				'<p><strong>BuddyBoss Support Access</strong> enabled for %1$s.</p><p>Expires: <strong>%2$s</strong></p>',
-				esc_html( home_url( '/' ) ),
-				esc_html( $expiry_utc )
-			);
-
-			// Embed the login URL when the browser supplied a valid one. Rendered
-			// as a plain anchor so support can click straight through.
-			if ( '' !== $login_url ) {
-				$note .= sprintf(
-					'<p>Login URL: <a href="%1$s">%1$s</a></p>',
-					esc_url( $login_url )
-				);
-			}
-
-			$note .= sprintf(
-				'<p>Tickets sharing this access: %s</p>',
-				esc_html( implode( ', ', $result['tickets'] ) )
-			);
-
-			$notify = $this->notify_support_system( $ticket_number, $note );
-		}
-
 		return array(
-			'tickets' => $result['tickets'],
-			'added'   => $result['added'],
+			'tickets' => $tickets,
+			'added'   => true,
 			'notify'  => $notify,
 		);
 	}
@@ -1372,6 +1390,13 @@ class BB_Support_Access {
 		// with the new expiry so support sees the updated window. A fresh grant
 		// (no prior live token) has no tickets yet, so nothing is posted.
 		if ( ! empty( $result['extended'] ) && ! empty( $result['tickets'] ) ) {
+			// Prefer the server-stored login URL so the note includes it even
+			// when the browser no longer holds it (e.g. after a page reload).
+			if ( '' === $login_url ) {
+				$stored    = $this->get_data();
+				$login_url = $stored['login_url'];
+			}
+
 			$notify = $this->notify_expiry_update( $result['tickets'], $result['expires'], $login_url );
 
 			if ( $notify['sent'] > 0 && 0 === $notify['failed'] ) {
@@ -1430,25 +1455,19 @@ class BB_Support_Access {
 		$result = $this->add_ticket( $ticket, $login_url );
 		$notify = $result['notify'];
 
-		// The ticket is saved locally regardless; the support system note is a side
-		// effect. Surface its outcome so the React toast can show success/error.
+		// The note must post before the ticket is saved. If it failed, the
+		// ticket was NOT persisted — return an error so the admin can retry,
+		// and the UI does not show the ticket as added.
+		if ( is_wp_error( $notify ) ) {
+			wp_send_json_error( array( 'message' => $notify->get_error_message() ) );
+		}
+
+		// Note posted and ticket saved. Reflect current state + success toast.
 		$response           = $this->build_response();
 		$response['notice'] = array(
 			'status'  => 'success',
-			'message' => __( 'Ticket added to Support Access.', 'buddyboss' ),
+			'message' => __( 'Ticket added and note posted to support.', 'buddyboss' ),
 		);
-
-		if ( is_wp_error( $notify ) ) {
-			$response['notice'] = array(
-				'status'  => 'error',
-				'message' => $notify->get_error_message(),
-			);
-		} elseif ( is_array( $notify ) && ! empty( $notify['success'] ) ) {
-			$response['notice'] = array(
-				'status'  => 'success',
-				'message' => __( 'Ticket added and note posted to support.', 'buddyboss' ),
-			);
-		}
 
 		wp_send_json_success( $response );
 	}
