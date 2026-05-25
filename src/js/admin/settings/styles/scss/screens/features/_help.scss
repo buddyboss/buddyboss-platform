@@ -15,22 +15,25 @@
 	padding: 64px 24px 56px;
 	position: relative;
 
-	&:has(.bb-admin-help--loading) {
-		opacity: 0.7;
-		pointer-events: none;
-	}
-
 	.bb-admin-help--loading {
-		position: absolute;
-		inset: 0;
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		background-color: $bb-background-base-color;
+		border: 0.5px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-xl;
+		min-height: 150px;
 
 		svg {
 			height: 20px;
 			width: 20px;
 		}
+
+		~ button,
+		~ section {
+			display: none;
+		}
+		
 	}
 
 	.bb-admin-support-access & {
