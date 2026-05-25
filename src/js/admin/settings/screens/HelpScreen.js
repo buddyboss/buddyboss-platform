@@ -553,12 +553,14 @@ export function HelpScreen( { onNavigate } ) {
 								{ __( 'Send your request directly to our technical support team – we’re ready to help troubleshoot and guide you.', 'buddyboss' ) }
 							</p>
 						</div>
-						<Button
-							variant="secondary"
-							className="bb-admin-help-card__action"
+						<a
+							href="https://buddyboss.com/my-account/?tab=support"
+							className="bb-admin-help-card__action is-secondary"
+							target="_blank"
+							rel="nofollow"
 						>
 							{ __( 'Submit a Ticket', 'buddyboss' ) }
-						</Button>
+						</a>
 					</article>
 
 					<article className="bb-admin-help-card">
