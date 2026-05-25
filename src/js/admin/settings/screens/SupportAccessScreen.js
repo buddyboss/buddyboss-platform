@@ -11,7 +11,7 @@
  */
 
 import { useState, useEffect } from '@wordpress/element';
-import { Button, ToggleControl } from '@wordpress/components';
+import { Button, Spinner, ToggleControl } from '@wordpress/components';
 import { __, sprintf } from '@wordpress/i18n';
 import { ajaxFetch } from '../utils/ajax';
 import { ModifyDurationModal } from '../components/modals/ModifyDurationModal';
@@ -226,6 +226,13 @@ export function SupportAccessScreen( { onNavigate } ) {
 	return (
 		<div className="bb-admin-help-screen bb-admin-support-access">
 			<div className="bb-admin-help-wrapper">
+				{
+					isLoading ? (
+						<div className="bb-admin-help--loading">
+							<Spinner />
+						</div>
+					) : ''
+				}
 				<button
 					type="button"
 					className="bb-admin-support-access__back"

@@ -13,6 +13,25 @@
 	max-width: 1248px;
 	margin: 0 auto;
 	padding: 64px 24px 56px;
+	position: relative;
+
+	&:has(.bb-admin-help--loading) {
+		opacity: 0.7;
+		pointer-events: none;
+	}
+
+	.bb-admin-help--loading {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		svg {
+			height: 20px;
+			width: 20px;
+		}
+	}
 
 	.bb-admin-support-access & {
 		max-width: 865px;
