@@ -141,6 +141,87 @@ export function HelpScreen( { onNavigate } ) {
 	var isOpen = openState[ 0 ];
 	var setIsOpen = openState[ 1 ];
 
+	// Whether the DocsBot chat panel is currently open. Drives the footer
+	// button's icon + label (robot/"Chat with Buddy" when closed, ×/"Need Help"
+	// when open). Tracked separately from `isOpen` above, which controls the
+	// search-results dropdown.
+	var chatOpenState = useState( false );
+	var chatOpen = chatOpenState[ 0 ];
+	var setChatOpen = chatOpenState[ 1 ];
+
+	/**
+	 * Toggle the DocsBot chat widget open/closed.
+	 *
+	 * The widget is injected by the PHP loader (enqueued only on this Settings
+	 * screen, mounted only on the Help tab); its default floating launcher is
+	 * hidden so this footer button is the sole trigger. The loader exposes
+	 * window.DocsBotAI with a toggle() method once chat.js has loaded. Guarded
+	 * because the script loads asynchronously — a click before it is ready is a
+	 * harmless no-op. The button label/icon are driven by the polled open state
+	 * below, so they stay correct even when the chat is closed from inside the
+	 * panel's own close control.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @returns {void}
+	 */
+	var toggleChatbot = useCallback( function () {
+		if ( window.DocsBotAI && 'function' === typeof window.DocsBotAI.toggle ) {
+			window.DocsBotAI.toggle();
+		}
+	}, [] );
+
+	// Ref to the footer so "Ask Buddy" can scroll it into view.
+	var footerRef = useRef( null );
+
+	/**
+	 * Handle the "Ask Buddy" CTA: scroll down to the help footer, then open the
+	 * DocsBot chat.
+	 *
+	 * Unlike the footer button (which toggles), this always opens — it would be
+	 * confusing for an "Ask Buddy" call-to-action to close an already-open chat.
+	 * The open() call is guarded because the widget loads asynchronously.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @returns {void}
+	 */
+	var askBuddy = useCallback( function () {
+		var footer = footerRef.current;
+		if ( footer ) {
+			// Scroll the window to the footer, THEN open the chat. Two layout
+			// quirks here drove this approach: (1) the admin clamps the document
+			// element to the viewport height and content scrolls on the window,
+			// and smooth scrolling is unreliable in this context — so we compute
+			// the footer's absolute offset and scroll the window to it directly;
+			// (2) opening the DocsBot chat focuses its input, which can yank the
+			// page back to the top if it happens before the scroll lands, so the
+			// scroll is performed first.
+			var top = footer.getBoundingClientRect().top + window.pageYOffset;
+			window.scrollTo( 0, top );
+		}
+		if ( window.DocsBotAI && 'function' === typeof window.DocsBotAI.open ) {
+			window.DocsBotAI.open();
+		}
+	}, [] );
+
+	// Keep `chatOpen` in sync with the widget's actual state. DocsBot exposes
+	// `isChatbotOpen` as the source of truth; polling it (rather than relying on
+	// DocsBot's internal event names) keeps the button correct whether the chat
+	// is closed via this button or the panel's own × control, and is resilient
+	// to widget version changes. The interval is cleared on unmount.
+	useEffect( function () {
+		var id = window.setInterval( function () {
+			var open = !! ( window.DocsBotAI && window.DocsBotAI.isChatbotOpen );
+			setChatOpen( function ( prev ) {
+				return prev === open ? prev : open;
+			} );
+		}, 400 );
+		return function () {
+			window.clearInterval( id );
+		};
+	}, [] );
+
 	// Per-category article counts for the "BuddyBoss Knowledge Base" grid,
 	// keyed by top-level category slug. Null until the taxonomy resolves.
 	var kbCountsState = useState( null );
@@ -698,7 +779,11 @@ export function HelpScreen( { onNavigate } ) {
 					>
 						{ __( 'Can’t find the Answer?', 'buddyboss' ) }
 					</h2>
-					<Button variant="primary" className="bb-admin-help-cta__action">
+					<Button
+						variant="primary"
+						className="bb-admin-help-cta__action"
+						onClick={ askBuddy }
+					>
 						<i
 							className="bb-icons-rl bb-icons-rl-robot bb-admin-help-cta__action-icon"
 							aria-hidden="true"
@@ -796,16 +881,27 @@ export function HelpScreen( { onNavigate } ) {
 			</div>
 
 			<footer
+				ref={ footerRef }
 				className="bb-admin-help-footer"
 				aria-label={ __( 'Chat with Buddy', 'buddyboss' ) }
 			>
-				<Button variant="primary" className="bb-admin-help-footer__action">
+				<Button
+					variant="primary"
+					className="bb-admin-help-footer__action"
+					onClick={ toggleChatbot }
+					aria-expanded={ chatOpen }
+				>
 					<i
-						className="bb-icons-rl bb-icons-rl-robot bb-admin-help-footer__action-icon"
+						className={
+							'bb-icons-rl bb-admin-help-footer__action-icon ' +
+							( chatOpen ? 'bb-icons-rl-x' : 'bb-icons-rl-robot' )
+						}
 						aria-hidden="true"
 					></i>
 					<span className="bb-admin-help-footer__action-label">
-						{ __( 'Chat with Buddy', 'buddyboss' ) }
+						{ chatOpen
+							? __( 'Need Help', 'buddyboss' )
+							: __( 'Chat with Buddy', 'buddyboss' ) }
 					</span>
 				</Button>
 			</footer>
