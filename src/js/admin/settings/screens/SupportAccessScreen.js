@@ -403,6 +403,9 @@ export function SupportAccessScreen( { onNavigate } ) {
 					// bottom-right toast.
 					setIsTicketModalOpen( false );
 					setIsSaving( true );
+					// Surface a spinner toast while the request is in flight; the
+					// .then/.catch below replace it with the real outcome.
+					setToast( { status: 'saving', message: __( 'Saving ticket...', 'buddyboss' ) } );
 					// Pass the login URL the browser is holding (shown once after
 					// enable) so the server can embed it in the support system note.
 					// It is never persisted server-side; if the page was reloaded
