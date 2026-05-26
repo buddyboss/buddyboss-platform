@@ -18,7 +18,7 @@ import { applyFilters } from '@wordpress/hooks';
 export function getCuratedOverrides() {
 	const defaults = {
 		'buddyboss-platform': {
-			icon:        'bb-icons-rl-app-window',
+			icon:        'bb-icons-rl-browser',
 			title:       __( 'BuddyBoss Platform', 'buddyboss' ),
 			description: __( 'Learn how to enable and configure the BuddyBoss Platform – including profiles, groups, activity, forums and more.', 'buddyboss' ),
 			order:       1,
@@ -48,7 +48,7 @@ export function getCuratedOverrides() {
 			order:       5,
 		},
 		'troubleshooting': {
-			icon:        'bb-icons-rl-warning-circle',
+			icon:        'bb-icons-rl-cloud-warning',
 			title:       __( 'Troubleshooting', 'buddyboss' ),
 			description: __( 'Running into issues? Learn how to resolve the most common issues with BuddyBoss.', 'buddyboss' ),
 			order:       6,
