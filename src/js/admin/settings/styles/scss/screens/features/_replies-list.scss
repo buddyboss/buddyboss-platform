@@ -302,6 +302,14 @@
 		padding: 24px;
 		text-align: center;
 	}
+
+	.components-base-control {
+		margin-bottom: 16px;
+	}
+
+	.bb-admin-meta-field__select-field > .components-base-control {
+		margin-bottom: 0;
+	}
 }
 
 /* ----------------------------------------------------------------

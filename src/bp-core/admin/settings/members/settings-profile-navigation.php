@@ -203,55 +203,58 @@ function bb_get_member_profile_nav_items_for_settings() {
 		return $cached_options;
 	}
 
-	// Core primary nav items for user profiles, in display order.
-	// Mirrors the legacy Customizer's bp_nouveau_member_customizer_nav() output.
+	// Core primary nav items for user profiles, in display order. Mirrors the
+	// legacy Customizer's bp_nouveau_member_customizer_nav() output, which
+	// excludes account-context items (messages, notifications, settings) —
+	// those don't belong on a *visitor's view* of someone else's profile, see
+	// bp-templates/bp-nouveau/includes/customizer-controls.php:127-130.
 	// Other components (invites, etc.) add their items via the filter below.
 	$all_items = array(
-		'profile'       => array(
+		'profile'   => array(
 			'label'     => __( 'Profile', 'buddyboss' ),
 			'component' => 'xprofile',
 		),
-		'activity'      => array(
+		'activity'  => array(
 			'label'     => __( 'Timeline', 'buddyboss' ),
 			'component' => 'activity',
 		),
-		'friends'       => array(
+		'friends'   => array(
 			'label'     => __( 'Connections', 'buddyboss' ),
 			'component' => 'friends',
 		),
-		'groups'        => array(
+		'groups'    => array(
 			'label'     => __( 'Groups', 'buddyboss' ),
 			'component' => 'groups',
 		),
-		'messages'      => array(
-			'label'     => __( 'Messages', 'buddyboss' ),
-			'component' => 'messages',
-		),
-		'notifications' => array(
-			'label'     => __( 'Notifications', 'buddyboss' ),
-			'component' => 'notifications',
-		),
-		'forums'        => array(
+		'forums'    => array(
 			'label'     => __( 'Forums', 'buddyboss' ),
 			'component' => 'forums',
 		),
-		'photos'        => array(
+		'photos'    => array(
 			'label'     => __( 'Photos', 'buddyboss' ),
 			'component' => 'media',
 		),
-		'documents'     => array(
+		'documents' => array(
 			'label'     => __( 'Documents', 'buddyboss' ),
 			'component' => 'media',
 		),
-		'videos'        => array(
+		'videos'    => array(
 			'label'     => __( 'Videos', 'buddyboss' ),
 			'component' => 'video',
 		),
-		'settings'      => array(
-			'label'     => __( 'Settings', 'buddyboss' ),
-			'component' => 'settings',
-		),
 	);
+
+	// Merge in items registered by third-party plugins through the standard
+	// BP `bp_core_new_nav_item()` flow. The legacy Customizer picks these up
+	// automatically because its iframe loads the front-end (where `bp_setup_nav`
+	// runs for the displayed user); admin AJAX has no displayed user, so we
+	// bootstrap one and read the resulting nav registry. Account-context slugs
+	// are filtered out to match the legacy display.
+	foreach ( bb_get_third_party_profile_nav_items() as $slug => $item ) {
+		if ( ! isset( $all_items[ $slug ] ) ) {
+			$all_items[ $slug ] = $item;
+		}
+	}
 
 	/**
 	 * Filters the member profile nav items for Settings 2.0 Navigation Order.
@@ -327,18 +330,6 @@ function bb_get_inactive_member_nav_slugs() {
 
 	if ( ! bp_is_active( 'video' ) || ! function_exists( 'bp_is_profile_video_support_enabled' ) || ! bp_is_profile_video_support_enabled() ) {
 		$inactive[] = 'videos';
-	}
-
-	if ( ! bp_is_active( 'messages' ) ) {
-		$inactive[] = 'messages';
-	}
-
-	if ( ! bp_is_active( 'notifications' ) ) {
-		$inactive[] = 'notifications';
-	}
-
-	if ( ! bp_is_active( 'settings' ) ) {
-		$inactive[] = 'settings';
 	}
 
 	/**
@@ -633,4 +624,117 @@ function bb_sanitize_member_nav_order( $value ) {
 	}
 
 	return bb_members_sanitize_toggle_list( $value );
+}
+
+/**
+ * Read third-party-registered profile nav items from the live BP nav registry.
+ *
+ * The legacy Customizer at `customize.php?autofocus[section]=bp_nouveau_user_primary_nav`
+ * iterates `buddypress()->members->nav->get_primary()`, which is populated when
+ * `bp_setup_nav` fires for a displayed user — the customizer iframe loads the
+ * front-end, so that registration runs automatically. Admin AJAX has no
+ * displayed user, so plugins like "BuddyPress User Profile Tabs Creator Pro"
+ * (which call `bp_core_new_nav_item()` from a `bp_setup_nav` hook) never get
+ * a chance to register, and their tabs are silently missing from the React
+ * Settings 2.0 Navigation Order list.
+ *
+ * This helper temporarily sets `displayed_user->id` to the current admin user,
+ * fires `bp_setup_nav`, reads the resulting primary nav, then restores the
+ * previous state. Items whose slug already exists in our canonical hardcoded
+ * list are skipped; account-context slugs (`messages`, `notifications`,
+ * `settings`) are filtered out to match the legacy Customizer's display.
+ *
+ * State restoration runs through `try/finally` so a fatal in a third-party
+ * `bp_setup_nav` callback can't leave the admin request mid-impersonation.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return array Associative array keyed by nav slug, each entry containing
+ *               `label` and `component` keys (matching the shape of the
+ *               canonical hardcoded list).
+ */
+function bb_get_third_party_profile_nav_items() {
+	static $cached = null;
+	if ( null !== $cached ) {
+		return $cached;
+	}
+	$cached = array();
+
+	$bp = buddypress();
+	if ( empty( $bp->members ) || empty( $bp->members->nav ) ) {
+		return $cached;
+	}
+
+	// Account-context items legacy excludes from the *profile* primary nav.
+	// Filtering here also means an admin user who happens to have these set up
+	// via `bp_setup_nav` doesn't see Messages/Notifications/Settings leak into
+	// the Settings 2.0 list.
+	$excluded_slugs = array( 'messages', 'notifications', 'settings' );
+
+	$current_user_id = (int) get_current_user_id();
+	if ( ! $current_user_id ) {
+		return $cached;
+	}
+
+	// Snapshot pre-impersonation state so the finally block can fully restore
+	// it — including the "displayed_user property didn't exist" case (the
+	// default when admin AJAX runs without a profile context).
+	$prev_displayed_existed = isset( $bp->displayed_user );
+	$prev_displayed_id      = $prev_displayed_existed && isset( $bp->displayed_user->id )
+		? (int) $bp->displayed_user->id
+		: 0;
+
+	try {
+		// Bootstrap displayed_user so component setup_nav callbacks that gate on
+		// `bp_displayed_user_id()` register their items. The members component's
+		// guard at class-bp-members-component.php:setup_nav() requires
+		// `is_user_logged_in() || bp_is_user()` — we already satisfy the first.
+		if ( ! $prev_displayed_existed ) {
+			$bp->displayed_user = new stdClass();
+		}
+		$bp->displayed_user->id = $current_user_id;
+
+		/**
+		 * Standard BP nav-registration action. Components and third-party
+		 * plugins hook this and call `bp_core_new_nav_item()`. Firing it
+		 * here in admin AJAX populates `buddypress()->members->nav` so we
+		 * can read what plugins like BP User Profile Tabs Creator Pro
+		 * registered.
+		 */
+		do_action( 'bp_setup_nav' );
+
+		$primary = $bp->members->nav->get_primary();
+		if ( empty( $primary ) ) {
+			return $cached;
+		}
+
+		foreach ( $primary as $item ) {
+			$slug = is_object( $item ) ? $item->slug : ( isset( $item['slug'] ) ? $item['slug'] : '' );
+			$name = is_object( $item ) ? $item->name : ( isset( $item['name'] ) ? $item['name'] : '' );
+
+			if ( '' === $slug || '' === $name || in_array( $slug, $excluded_slugs, true ) ) {
+				continue;
+			}
+
+			$cached[ $slug ] = array(
+				'label'     => wp_strip_all_tags( (string) $name ),
+				// Use the slug as the component id when the nav object doesn't
+				// expose a component — best-effort, only used by
+				// bb_get_inactive_member_nav_slugs() which already short-circuits
+				// for unknown slugs.
+				'component' => $slug,
+			);
+		}
+	} finally {
+		// Always restore, even if a third-party callback fatal'd. Re-create
+		// vs. unset based on the pre-call snapshot so we don't leave behind
+		// an empty stdClass when the property was absent before.
+		if ( $prev_displayed_existed ) {
+			$bp->displayed_user->id = $prev_displayed_id;
+		} else {
+			unset( $bp->displayed_user );
+		}
+	}
+
+	return $cached;
 }

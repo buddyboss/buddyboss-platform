@@ -433,6 +433,238 @@
 		}
 	}
 
+    &__content {
+
+        > .bb-admin-notice {
+            margin: 14px;
+            width: auto;
+            
+            p {
+                margin: 0;
+            }
+        }
+    }
+
+	// ─────────────────────────────────────────────────────────────────
+	// Settings 2.0 React Migration Modal (`MigrationModal.js`)
+	//
+	// The legacy `&__wizard` block above targets the server-rendered HTML
+	// the Settings 1.0 admin tab consumes (`.bbpro_migration_wizard_*`,
+	// `.bbpro-modal-box__*`). Those classes never appear in the React
+	// JSX, so the legacy rules silently no-op for Settings 2.0 — both
+	// can safely coexist during the transition until the @todo: Remove
+	// after 3 release cleanup ships.
+	//
+	// The selectors below are the React-side replacements. JSX shape:
+	//   __wizard (one of __wizard--screen-1 | __wizard--screen-2)
+	//     ├── <p>  intro / "Which reactions" headings
+	//     ├── __reactions
+	//     │     ├── <CheckboxControl> for the Likes row
+	//     │     ├── __reactions-group-toggle (the "Emotions (N)" master)
+	//     │     └── __reactions-list — individual emotion rows
+	//     ├── __section-heading + __target-select  (footer_wizard only)
+	//     ├── __warnings (screen 2 only)
+	//     └── __footer (Cancel / Continue / Back / Start conversion)
+	// ─────────────────────────────────────────────────────────────────
+
+	&__wizard--screen-1,
+	&__wizard--screen-2 {
+		padding: 20px 24px;
+
+		// Intro paragraph + bold-question headings.
+		> p {
+			margin: 0 0 16px;
+			color: $bb-text-color;
+			font-size: 13px;
+			line-height: 1.5;
+		}
+	}
+
+	// Empty-state variant — admin opened the wizard but there's nothing to
+	// convert (e.g. footer wizard while site is in likes mode and no emotion
+	// reactions exist). Tighter heading/message spacing than the regular
+	// screens since there's no form below them, and centered layout so the
+	// short message doesn't read as orphaned copy left-aligned against the
+	// full modal width.
+	&__wizard--no-data {
+		padding: 24px 24px 20px;
+
+		> p {
+			margin: 0 0 8px;
+			color: $bb-text-color;
+			font-size: 13px;
+			line-height: 1.5;
+
+			&:last-of-type {
+				margin-bottom: 24px;
+			}
+		}
+	}
+
+	&__no-data-heading {
+		strong {
+			font-size: 14px;
+			font-weight: 600;
+			color: $bb-text-color;
+		}
+	}
+
+	&__section-heading {
+		margin: 20px 0 12px;
+		color: $bb-text-color;
+		font-size: 14px;
+		line-height: 1.4;
+
+		strong {
+			font-weight: 600;
+		}
+	}
+
+	// Reaction-row container — stacks the Likes checkbox (footer wizard
+	// only), the "Emotions (N)" group toggle, and the per-emotion list.
+	&__reactions {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		margin-bottom: 20px;
+
+		.components-checkbox-control {
+			margin-bottom: 0;
+
+			.components-base-control__field {
+				margin-bottom: 0;
+				display: flex;
+				align-items: center;
+				gap: 8px;
+			}
+
+			.components-checkbox-control__label {
+				font-size: 13px;
+				color: $bb-text-color;
+				line-height: 1.4;
+			}
+		}
+	}
+
+	// Group-toggle row ("Emotions (N)" or "All emotions (N)"). Slightly
+	// heavier weight so it reads as a parent of the indented list below.
+	&__reactions-group-toggle {
+
+		.components-checkbox-control__label {
+			font-weight: 500;
+		}
+	}
+
+	// Individual per-emotion rows — indented under the group toggle to
+	// signal hierarchy without using nested checkboxes (which break
+	// keyboard nav and assistive-tech grouping). Wrapping flex row mirrors
+	// the legacy `.migration_emotion_list ul` layout (multiple checkboxes
+	// per line, wrapping as the modal narrows) instead of one row per item.
+	&__reactions-list {
+		list-style: none;
+		margin: 0;
+		padding: 0 0 0 24px;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px 16px;
+
+		li {
+			margin: 0;
+		}
+	}
+
+	// Target-emotion <CustomSelectControl> wrapper. Constrained max-width
+	// so the dropdown doesn't span the full modal width on wide viewports
+	// — matches the legacy `select` width treatment.
+	&__target-select {
+		max-width: 280px;
+		margin-bottom: 20px;
+	}
+
+	// Confirmation-screen warning bullets.
+	&__warnings {
+		margin: 0 0 16px;
+		padding: 0 0 0 18px;
+		list-style: disc;
+
+		li {
+			margin: 0 0 6px;
+			font-size: 13px;
+			line-height: 1.5;
+			color: $bb-text-color;
+
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+	}
+
+	// Footer button row — right-aligned with the brand-primary "Start
+	// conversion" button next to a neutral Cancel/Back. Matches the
+	// CoverCropModal / AvatarCropModal footer treatment so all Settings
+	// 2.0 modals carry the same chrome.
+	&__footer {
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+		gap: 8px;
+		margin: 24px -24px -20px;
+		padding: 16px 24px;
+		border-top: 1px solid $bb-border-secondary-color;
+
+		.components-button {
+			min-height: 32px;
+			border-radius: $bb-border-radius-lg;
+			font-size: 13px;
+			font-weight: 400;
+			padding: 6px 16px;
+			line-height: 1.4;
+
+			&.is-secondary {
+				background: $bb-background-secondary-color;
+				border: 0.5px solid $bb-border-secondary-color;
+				color: $bb-text-color;
+				box-shadow: none;
+
+				&:hover:not( :disabled ) {
+					background: $bb-background-secondary-hover-color;
+				}
+			}
+
+			&.is-primary {
+				background: $bb-background-brand-primary-color;
+				border: 1px solid $bb-background-brand-primary-color;
+				color: $bb-text-inverse-color;
+				box-shadow: none;
+
+				&:hover:not( :disabled ) {
+					background: $bb-background-brand-primary-hover-color;
+					border-color: $bb-background-brand-primary-hover-color;
+				}
+
+				&:disabled {
+					opacity: 0.5;
+					cursor: not-allowed;
+				}
+			}
+		}
+	}
+
+    .components-input-control__container {
+
+        .components-select-control__input {
+            @include bb-admin-settings-select;
+        }
+
+        &:has(> .components-select-control__input) {
+            padding: 0 !important;
+
+            .components-input-control__suffix,
+            .components-input-control__backdrop {
+                display: none !important;
+            }
+        }
+    }
 
 }
 
