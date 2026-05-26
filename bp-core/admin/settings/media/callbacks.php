@@ -163,6 +163,20 @@ function bb_media_sanitize_extensions( $value, $option_name = '' ) {
 		return array();
 	}
 
+	// Explicit "delete all" intent: when the admin removes every extension
+	// in the React modal, the save payload arrives as an empty array.
+	// Without this short-circuit the toggle-only branch below sees no
+	// entries to apply against `$existing`, then returns `$existing`
+	// unchanged — so the deletion is silently ignored on reload and the
+	// old extensions resurrect. An empty payload is unambiguous because
+	// the toggle-only flow always sends every registered key with its
+	// 0/1 state, never an empty map.
+	//
+	// @since BuddyBoss 3.0.3
+	if ( empty( $value ) ) {
+		return array();
+	}
+
 	// Determine format: if the first value is scalar (int), it's a toggle-only update.
 	$first_value    = reset( $value );
 	$is_toggle_only = ! is_array( $first_value );
