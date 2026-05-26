@@ -4467,7 +4467,7 @@ function bb_migrate_email_type_groups() {
  *
  * Idempotent — re-running on already-clean data is a no-op.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.3
  *
  * @return void
  */

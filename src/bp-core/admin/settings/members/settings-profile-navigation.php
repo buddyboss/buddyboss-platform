@@ -647,7 +647,7 @@ function bb_sanitize_member_nav_order( $value ) {
  * State restoration runs through `try/finally` so a fatal in a third-party
  * `bp_setup_nav` callback can't leave the admin request mid-impersonation.
  *
- * @since BuddyBoss [BBVERSION]
+ * @since BuddyBoss 3.0.3
  *
  * @return array Associative array keyed by nav slug, each entry containing
  *               `label` and `component` keys (matching the shape of the

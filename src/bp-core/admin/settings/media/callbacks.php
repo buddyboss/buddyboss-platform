@@ -172,7 +172,7 @@ function bb_media_sanitize_extensions( $value, $option_name = '' ) {
 	// the toggle-only flow always sends every registered key with its
 	// 0/1 state, never an empty map.
 	//
-	// @since BuddyBoss [BBVERSION]
+	// @since BuddyBoss 3.0.3
 	if ( empty( $value ) ) {
 		return array();
 	}
