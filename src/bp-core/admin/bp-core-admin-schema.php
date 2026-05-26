@@ -26,7 +26,7 @@ function bp_core_install( $active_components = false ) {
 	// If no components passed, get all the active components from the main site.
 	if ( empty( $active_components ) ) {
 
-		/** This filter is documented in bp-core/admin/bp-core-admin-components.php */
+		/** This filter is documented in bp-core/classes/class-bp-core.php */
 		$active_components = apply_filters( 'bp_active_components', bp_get_option( 'bp-active-components' ) );
 
 		// check for xprofile is active component in db or not if not then update it.
@@ -43,9 +43,12 @@ function bp_core_install( $active_components = false ) {
 	}
 
 	if ( function_exists( 'bb_load_reaction' ) ) {
-		// Create table for the bb reactions.
-		bb_load_reaction()->create_table();
-		bb_load_reaction()->bb_register_activity_like();
+		$reaction = bb_load_reaction();
+		if ( $reaction ) {
+			// Create table for the bb reactions.
+			$reaction->create_table();
+			$reaction->bb_register_activity_like();
+		}
 	}
 
 	// Install Activity Feeds even when inactive (to store last_activity data).

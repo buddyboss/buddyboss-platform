@@ -178,10 +178,8 @@ function bbp_do_uninstall( $site_id = 0 ) {
 function bbp_tools_modify_menu_highlight() {
 	global $plugin_page, $submenu_file;
 
-	// This tweaks the Tools subnav menu to only show one Forums menu item
-	if ( ! in_array( $plugin_page, array( 'bbp-settings' ) ) ) {
-		$submenu_file = 'bbp-repair';
-	}
+	// This tweaks the Tools subnav menu to only show one Forums menu item.
+	$submenu_file = 'bbp-repair';
 }
 
 /**
