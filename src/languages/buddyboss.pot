@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 3.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-05-13 11:18:01+00:00\n"
+"POT-Creation-Date: 2026-05-26 06:10:08+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -30,7 +30,7 @@ msgstr ""
 #: bp-core/admin/settings/activity/settings-visibility.php:68
 #: bp-performance/bp-performance-includes.php:71
 #: bp-templates/bp-nouveau/includes/customizer.php:29
-#: bp-core/admin/bb-settings/settings/build/484.js:1
+#: bp-core/admin/bb-settings/settings/build/index.js:1
 msgid "BuddyBoss Platform"
 msgstr ""
 
@@ -44,6 +44,7 @@ msgid "The BuddyBoss Platform adds community features to WordPress. Member Profi
 msgstr ""
 
 #. Author of the plugin
+#: bp-core/admin/classes/class-bb-support-access.php:725
 #: bp-core/admin/drm/class-bb-drm-controller.php:318
 #: bp-core/admin/drm/class-bb-drm-controller.php:336
 #: bp-core/admin/drm/class-bb-drm-controller.php:353
@@ -141,7 +142,7 @@ msgstr ""
 
 #: bb-features/community/appearance/admin/pages-panel.php:319
 #: bb-features/community/appearance/admin/pages-panel.php:438
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:2308
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:2311
 msgid "— Select a page —"
 msgstr ""
 
@@ -203,8 +204,8 @@ msgstr ""
 
 #. translators: %d: WordPress page ID, used as a fallback when a page has no title.
 #: bb-features/community/appearance/admin/pages-panel.php:812
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:2321
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:2382
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:2324
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:2385
 msgid "(no title) #%d"
 msgstr ""
 
@@ -215,7 +216,7 @@ msgstr ""
 
 #: bb-features/community/appearance/admin/settings.php:127
 #: bb-features/community/appearance/admin/settings.php:1027
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:525
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:528
 #: bp-core/admin/settings/activity/settings-sharing.php:143
 #: bp-core/admin/settings/activity/settings-sharing.php:311
 #: bp-core/admin/settings/notifications/settings-web-push.php:205
@@ -2107,7 +2108,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1805
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1809
 #: bp-core/admin/bb-settings/settings/build/794.js:1
-#: bp-core/admin/bb-settings/settings/build/index.js:4
+#: bp-core/admin/bb-settings/settings/build/index.js:7
 msgid "Edit Activity"
 msgstr ""
 
@@ -2308,10 +2309,10 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-tools.php:34
 #: bp-core/admin/bp-core-admin-tools.php:231
 #: bp-core/admin/bp-core-admin-tools.php:913
-#: bp-core/classes/class-bp-admin.php:461
-#: bp-core/classes/class-bp-admin.php:462
-#: bp-core/classes/class-bp-admin.php:484
-#: bp-core/classes/class-bp-admin.php:485
+#: bp-core/classes/class-bp-admin.php:466
+#: bp-core/classes/class-bp-admin.php:467
+#: bp-core/classes/class-bp-admin.php:489
+#: bp-core/classes/class-bp-admin.php:490
 #: bp-forums/admin/tools.php:29
 #: bp-forums/admin/tools.php:1778
 #: bp-media/bp-media-filters.php:1354
@@ -5161,12 +5162,12 @@ msgstr ""
 #: bp-core/admin/bb-admin-settings-emails.php:30
 #: bp-core/admin/bb-admin-settings-emails.php:59
 #: bp-core/bp-core-functions.php:3307
-#: bp-core/classes/class-bp-admin.php:574
-#: bp-core/classes/class-bp-admin.php:575
-#: bp-core/classes/class-bp-admin.php:585
-#: bp-core/classes/class-bp-admin.php:586
-#: bp-core/classes/class-bp-admin.php:605
-#: bp-core/classes/class-bp-admin.php:606
+#: bp-core/classes/class-bp-admin.php:608
+#: bp-core/classes/class-bp-admin.php:609
+#: bp-core/classes/class-bp-admin.php:619
+#: bp-core/classes/class-bp-admin.php:620
+#: bp-core/classes/class-bp-admin.php:639
+#: bp-core/classes/class-bp-admin.php:640
 msgid "Emails"
 msgstr ""
 
@@ -5763,6 +5764,7 @@ msgstr ""
 #: bp-core/admin/bb-settings/settings/build/index.js:1
 #: bp-core/admin/bb-settings/settings/build/index.js:2
 #: bp-core/admin/bb-settings/settings/build/index.js:3
+#: bp-core/admin/bb-settings/settings/build/index.js:5
 msgid "Cancel"
 msgstr ""
 
@@ -5818,7 +5820,7 @@ msgstr ""
 msgid "BuddyBoss Admin Settings assets not found. Please run: npm run build:admin:settings"
 msgstr ""
 
-#: bp-core/admin/bb-admin-settings-page.php:381
+#: bp-core/admin/bb-admin-settings-page.php:524
 msgid "JavaScript is required for BuddyBoss Settings. Please enable JavaScript in your browser."
 msgstr ""
 
@@ -6055,7 +6057,7 @@ msgid "This email address or domain has been blacklisted. If you think you are s
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-actions.php:702
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:1419
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:1422
 msgid "Settings saved successfully."
 msgstr ""
 
@@ -6117,9 +6119,9 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:718
 #: bp-core/admin/bp-core-admin-help.php:52
-#: bp-core/classes/class-bp-admin.php:395
-#: bp-core/classes/class-bp-admin.php:493
-#: bp-core/classes/class-bp-admin.php:494
+#: bp-core/classes/class-bp-admin.php:400
+#: bp-core/classes/class-bp-admin.php:503
+#: bp-core/classes/class-bp-admin.php:504
 #: bp-core/admin/bb-settings/settings/build/index.js:1
 #: bp-core/admin/bb-settings/settings/build/index.js:4
 msgid "Help"
@@ -6395,8 +6397,8 @@ msgid "Articles"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-help.php:57
-#: bp-core/admin/bb-settings/settings/build/484.js:1
-#: bp-core/admin/bb-settings/settings/build/484.js:3
+#: bp-core/admin/bb-settings/settings/build/919.js:1
+#: bp-core/admin/bb-settings/settings/build/919.js:3
 #: bp-core/admin/bb-settings/settings/build/index.js:1
 msgid "Documentation"
 msgstr ""
@@ -6455,9 +6457,9 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:143
 #: bp-core/admin/settings/members/settings-profile-navigation.php:251
-#: bp-core/classes/class-bp-admin.php:310
-#: bp-core/classes/class-bp-admin.php:440
-#: bp-core/classes/class-bp-admin.php:662
+#: bp-core/classes/class-bp-admin.php:315
+#: bp-core/classes/class-bp-admin.php:445
+#: bp-core/classes/class-bp-admin.php:696
 #: bp-core/gdpr/class-bp-settings-export.php:29
 #: bp-core/gdpr/class-bp-settings-export.php:55
 #: bp-forums/admin/admin.php:414
@@ -6471,7 +6473,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:179
 #: bp-integrations/buddyboss-app/templates/admin/integration-tab-intro.php:10
 #: bp-integrations/buddyboss-app/templates/admin/integration-tab-intro.php:20
-#: bp-core/admin/bb-settings/settings/build/484.js:1
+#: bp-core/admin/bb-settings/settings/build/index.js:1
 msgid "BuddyBoss App"
 msgstr ""
 
@@ -8283,69 +8285,69 @@ msgstr ""
 msgid "%d item(s) updated successfully."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:88
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:91
 msgid "Options parameter is required."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:120
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:123
 msgid "Option name is required."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:126
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:129
 msgid "Option not allowed."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:144
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:147
 msgid "Setting saved successfully."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:312
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:395
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:1207
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:315
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:398
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:1210
 msgid "Feature ID is required."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:316
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:319
 msgid "Invalid status. Must be \"active\" or \"inactive\"."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:320
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:399
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:1211
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:323
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:402
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:1214
 msgid "Feature registry not available."
 msgstr ""
 
 #. translators: 1: feature label, 2: activated/deactivated
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:348
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:351
 msgid "Feature \"%1$s\" %2$s successfully."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:350
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:353
 msgid "activated"
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:350
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:353
 msgid "deactivated"
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:407
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:410
 msgid "Feature not found."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:1203
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:1206
 msgid "Invalid settings format."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:1220
 #: bp-core/admin/classes/class-bb-admin-settings-ajax.php:1223
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:1226
 msgid "Invalid settings data."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:1260
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:1263
 msgid "No fields registered for this feature."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:2194
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:2197
 #: bp-core/admin/settings/groups/settings-group-images.php:219
 #: bp-core/admin/settings/members/settings-profile-image.php:233
 #: bp-core/admin/settings/registration/settings-login-redirects.php:55
@@ -8358,23 +8360,23 @@ msgstr ""
 msgid "Default"
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:2198
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:2201
 #: bp-core/admin/settings/registration/settings-registration.php:96
 #: bp-core/admin/bb-settings/settings/build/499.js:1
 #: bp-core/admin/bb-settings/settings/build/index.js:3
 msgid "Custom URL"
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:2303
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:2467
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:2306
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:2470
 msgid "Insufficient permissions on the target site."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:2426
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:2429
 msgid "Missing page slug."
 msgstr ""
 
-#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:2444
+#: bp-core/admin/classes/class-bb-admin-settings-ajax.php:2447
 msgid "Unknown directory slug."
 msgstr ""
 
@@ -8680,6 +8682,72 @@ msgstr ""
 
 #: bp-core/admin/classes/class-bb-rest-help-content-endpoint.php:491
 msgid "Upstream HTTP status code."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-support-access.php:724
+msgid "BuddyBoss Support"
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-support-access.php:726
+msgid "Support"
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-support-access.php:1016
+msgid "Invalid duration."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-support-access.php:1094
+#: bp-core/admin/classes/class-bb-support-access.php:1230
+msgid "n/a"
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-support-access.php:1369
+msgid "A valid ticket (conversation) ID is required."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-support-access.php:1379
+msgid "A note for this ticket was just sent. Please wait a moment before trying again."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-support-access.php:1396
+msgid "Could not build the note request."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-support-access.php:1441
+msgid "Could not reach the support system. The ticket was saved; please retry the note shortly."
+msgstr ""
+
+#. translators: %d: support system conversation/ticket ID.
+#: bp-core/admin/classes/class-bb-support-access.php:1462
+msgid "Ticket %d was not found in the support system."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-support-access.php:1472
+msgid "The support system rejected the note. Please try again."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-support-access.php:1767
+msgid "Support access duration updated."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-support-access.php:1784
+msgid "Duration updated and support notified of the new expiry."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-support-access.php:1789
+msgid "Duration updated, but the support system could not be notified for some tickets."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-support-access.php:1818
+msgid "Ticket number is required."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-support-access.php:1825
+msgid "Ticket number must be a valid numeric ID."
+msgstr ""
+
+#: bp-core/admin/classes/class-bb-support-access.php:1848
+msgid "Ticket added and note posted to support."
 msgstr ""
 
 #: bp-core/admin/drm/class-bb-base-drm.php:283
@@ -9345,7 +9413,7 @@ msgid "Get help with any questions"
 msgstr ""
 
 #: bp-core/admin/mothership/views/admin.php:86
-#: bp-core/admin/bb-settings/settings/build/484.js:1
+#: bp-core/admin/bb-settings/settings/build/index.js:1
 msgid "Troubleshooting"
 msgstr ""
 
@@ -11827,9 +11895,9 @@ msgid "OneSignal integration for BuddyBoss is currently disabled. Enable it to c
 msgstr ""
 
 #: bp-core/admin/settings/notifications/settings-web-push.php:89
-#: bp-core/classes/class-bp-admin.php:309
-#: bp-core/classes/class-bp-admin.php:439
-#: bp-core/classes/class-bp-admin.php:539
+#: bp-core/classes/class-bp-admin.php:314
+#: bp-core/classes/class-bp-admin.php:444
+#: bp-core/classes/class-bp-admin.php:573
 msgid "BuddyBoss Settings"
 msgstr ""
 
@@ -12164,7 +12232,7 @@ msgid "Yes I understand, Deactivate"
 msgstr ""
 
 #: bp-core/admin/templates/update-buddyboss.php:87
-#: bp-core/classes/class-bp-admin.php:664
+#: bp-core/classes/class-bp-admin.php:698
 msgid "Release Notes"
 msgstr ""
 
@@ -16104,35 +16172,35 @@ msgstr ""
 msgid "Save Settings"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:394
+#: bp-core/classes/class-bp-admin.php:399
 msgid "BuddyBoss Help"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:414
+#: bp-core/classes/class-bp-admin.php:419
 msgid "BuddyPress Settings"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:415
+#: bp-core/classes/class-bp-admin.php:420
 #: bp-integrations/compatibility/templates/admin/integration-tab-intro.php:13
 msgid "BuddyPress"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:472
-#: bp-core/classes/class-bp-admin.php:473
+#: bp-core/classes/class-bp-admin.php:477
+#: bp-core/classes/class-bp-admin.php:478
 msgid "Available Tools"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:663
+#: bp-core/classes/class-bp-admin.php:697
 #: bp-forums/admin/admin.php:419
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/messages/parts/bp-messages-right-panel.php:21
 msgid "About"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:714
+#: bp-core/classes/class-bp-admin.php:748
 msgid "Docs"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:715
+#: bp-core/classes/class-bp-admin.php:749
 msgid "<strong>You are offline.</strong> Documentation requires internet access."
 msgstr ""
 
@@ -31502,6 +31570,7 @@ msgstr ""
 
 #: bp-search/classes/class-bp-search.php:387
 #: bp-core/admin/bb-settings/settings/build/index.js:1
+#: bp-core/admin/bb-settings/settings/build/index.js:4
 msgid "No results found."
 msgstr ""
 
@@ -31850,6 +31919,7 @@ msgstr ""
 #: bp-core/admin/bb-settings/settings/build/966.js:1
 #: bp-core/admin/bb-settings/settings/build/index.js:2
 #: bp-core/admin/bb-settings/settings/build/index.js:3
+#: bp-core/admin/bb-settings/settings/build/index.js:5
 msgid "Save"
 msgstr ""
 
@@ -32111,6 +32181,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/readylaunch/media/uploader.php:146
 #: bp-templates/bp-nouveau/readylaunch/video/uploader.php:124
 #: bp-core/admin/bb-settings/rl-onboarding/build/rl-onboarding.js:1
+#: bp-core/admin/bb-settings/settings/build/index.js:5
 msgid "Back"
 msgstr ""
 
@@ -38218,11 +38289,13 @@ msgstr ""
 
 #: bp-xprofile/classes/class-bp-xprofile-group.php:1037
 #: bp-core/admin/bb-settings/settings/build/517.js:1
+#: bp-core/admin/bb-settings/settings/build/index.js:4
 msgid "Disabled"
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-xprofile-group.php:1038
 #: bp-core/admin/bb-settings/settings/build/517.js:1
+#: bp-core/admin/bb-settings/settings/build/index.js:4
 msgid "Enabled"
 msgstr ""
 
@@ -38357,7 +38430,7 @@ msgid "Select color"
 msgstr ""
 
 #: bp-core/admin/bb-settings/rl-onboarding/build/rl-onboarding.js:1
-#: bp-core/admin/bb-settings/settings/build/484.js:1
+#: bp-core/admin/bb-settings/settings/build/index.js:1
 msgid "BuddyBoss Theme"
 msgstr ""
 
@@ -38894,8 +38967,9 @@ msgid "Search replies"
 msgstr ""
 
 #: bp-core/admin/bb-settings/settings/build/285.js:2
-#: bp-core/admin/bb-settings/settings/build/484.js:1
+#: bp-core/admin/bb-settings/settings/build/919.js:1
 #: bp-core/admin/bb-settings/settings/build/944.js:1
+#: bp-core/admin/bb-settings/settings/build/index.js:4
 msgid "Retry"
 msgstr ""
 
@@ -38942,6 +39016,8 @@ msgstr ""
 #: bp-core/admin/bb-settings/settings/build/362.js:1
 #: bp-core/admin/bb-settings/settings/build/926.js:2
 #: bp-core/admin/bb-settings/settings/build/926.js:3
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+#: bp-core/admin/bb-settings/settings/build/index.js:7
 msgid "Something went wrong."
 msgstr ""
 
@@ -39194,7 +39270,6 @@ msgid "Permissions"
 msgstr ""
 
 #: bp-core/admin/bb-settings/settings/build/483.js:5
-#: bp-core/admin/bb-settings/settings/build/484.js:1
 #: bp-core/admin/bb-settings/settings/build/index.js:1
 msgid "Integrations"
 msgstr ""
@@ -39257,94 +39332,6 @@ msgstr ""
 
 #: bp-core/admin/bb-settings/settings/build/483.js:5
 msgid "Select group type"
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings/build/484.js:1
-msgid "Learn how to enable and configure the BuddyBoss Platform – including profiles, groups, activity, forums and more."
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings/build/484.js:1
-msgid "Learn how to setup and customize our premium BuddyBoss Theme to make everything look beautiful."
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings/build/484.js:1
-msgid "Learn how to set up the BuddyBoss App from scratch, including initial setup, branding, generating builds and publishing."
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings/build/484.js:1
-msgid "LearnDash, Zoom, WooCommerce, Events, Jobs and more. Learn how BuddyBoss integrates with your favorite plugins and services."
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings/build/484.js:1
-msgid "Advanced Setup"
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings/build/484.js:1
-msgid "Articles for experienced developers and site administrators to optimize and extend their BuddyBoss sites."
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings/build/484.js:1
-msgid "Running into issues? Learn how to resolve the most common issues with BuddyBoss."
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings/build/484.js:1
-msgid "Couldn’t load documentation."
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings/build/484.js:1
-msgid "BuddyBoss Knowledge Base"
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings/build/484.js:1
-msgid "%d article"
-msgid_plural "%d articles"
-msgstr[0] ""
-msgstr[1] ""
-
-#: bp-core/admin/bb-settings/settings/build/484.js:1
-msgid "Breadcrumb"
-msgstr ""
-
-#. translators: 1: subcategory name, 2: article count.
-#: bp-core/admin/bb-settings/settings/build/484.js:2
-msgid "%1$s (%2$d)"
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings/build/484.js:2
-msgid "Documentation navigation"
-msgstr ""
-
-#. translators: %d is the count of articles not shown.
-#: bp-core/admin/bb-settings/settings/build/484.js:3
-msgid "+%d more on docs →"
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings/build/484.js:3
-msgid "Couldn’t load this article."
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings/build/484.js:3
-msgid "Open on BuddyBoss.com →"
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings/build/484.js:3
-msgid "This article was moved or removed."
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings/build/484.js:3
-msgid "Browse all docs →"
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings/build/484.js:3
-msgid "This article is empty."
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings/build/484.js:3
-msgid "Couldn’t load this category."
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings/build/484.js:3
-msgid "Close documentation"
 msgstr ""
 
 #: bp-core/admin/bb-settings/settings/build/499.js:1
@@ -39916,6 +39903,69 @@ msgstr ""
 msgid "Are you sure you want to delete this reporting category?"
 msgstr ""
 
+#: bp-core/admin/bb-settings/settings/build/919.js:1
+msgid "Couldn’t load documentation."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/919.js:1
+#: bp-core/admin/bb-settings/settings/build/index.js:4
+msgid "BuddyBoss Knowledge Base"
+msgstr ""
+
+#. translators: %d is the number of articles in this resource category.
+#: bp-core/admin/bb-settings/settings/build/919.js:1
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "%d article"
+msgid_plural "%d articles"
+msgstr[0] ""
+msgstr[1] ""
+
+#: bp-core/admin/bb-settings/settings/build/919.js:1
+msgid "Breadcrumb"
+msgstr ""
+
+#. translators: 1: subcategory name, 2: article count.
+#: bp-core/admin/bb-settings/settings/build/919.js:2
+msgid "%1$s (%2$d)"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/919.js:2
+msgid "Documentation navigation"
+msgstr ""
+
+#. translators: %d is the count of articles not shown.
+#: bp-core/admin/bb-settings/settings/build/919.js:3
+msgid "+%d more on docs →"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/919.js:3
+msgid "Couldn’t load this article."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/919.js:3
+msgid "Open on BuddyBoss.com →"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/919.js:3
+msgid "This article was moved or removed."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/919.js:3
+msgid "Browse all docs →"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/919.js:3
+msgid "This article is empty."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/919.js:3
+msgid "Couldn’t load this category."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/919.js:3
+msgid "Close documentation"
+msgstr ""
+
 #: bp-core/admin/bb-settings/settings/build/926.js:2
 msgid "Failed to load template."
 msgstr ""
@@ -40268,6 +40318,34 @@ msgstr ""
 #: bp-core/admin/bb-settings/settings/build/index.js:1
 #: bp-core/admin/bb-settings/settings/build/index.js:3
 msgid "OK"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:1
+msgid "Learn how to enable and configure the BuddyBoss Platform – including profiles, groups, activity, forums and more."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:1
+msgid "Learn how to setup and customize our premium BuddyBoss Theme to make everything look beautiful."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:1
+msgid "Learn how to set up the BuddyBoss App from scratch, including initial setup, branding, generating builds and publishing."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:1
+msgid "LearnDash, Zoom, WooCommerce, Events, Jobs and more. Learn how BuddyBoss integrates with your favorite plugins and services."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:1
+msgid "Advanced Setup"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:1
+msgid "Articles for experienced developers and site administrators to optimize and extend their BuddyBoss sites."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:1
+msgid "Running into issues? Learn how to resolve the most common issues with BuddyBoss."
 msgstr ""
 
 #: bp-core/admin/bb-settings/settings/build/index.js:1
@@ -40975,54 +41053,237 @@ msgid "No help content available."
 msgstr ""
 
 #: bp-core/admin/bb-settings/settings/build/index.js:4
+msgid "Need Help?"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:4
+msgid "Search our help guides, chat with us, or send us a message."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:4
+msgid "Search help guides"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:4
+msgid "Describe your issue"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:4
+msgid "Support Ticket"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:4
+msgid "Send your request directly to our technical support team – we’re ready to help troubleshoot and guide you."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:4
+msgid "Submit a Ticket"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:4
+msgid "Support Access"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:4
+msgid "Allow our support team to securely access your site using temporary credentials to troubleshoot issues."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:4
+msgid "Open Access"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:4
+msgid "Couldn’t load the knowledge base."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "Can’t find the Answer?"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "Ask Buddy"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "Done For You Service preview"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "Done For You Service"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "Get help launching your site"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "Get your own team that will help you launch your site. Let them know what your business is about, then provide them with your logo and brand colors, then sit back while we do all the heavy lifting."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "Get Done For You Web Service"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "Chat with Buddy"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "Need Help"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "1 day"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "3 days"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "5 days"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "7 days"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "Modify Access Duration"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "Extend support access by:"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+#: bp-core/admin/bb-settings/settings/build/index.js:7
+msgid "Add Ticket Number"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "Days"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "Hours"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "Minutes"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "Seconds"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "Enable Support Access"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "Allow our support team to securely access your site using temporary credentials to troubleshoot issues. All access is logged and automatically expires based on your settings."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "Support access enabled"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "Support access disabled"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "Support access expires in:"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "Attached tickets:"
+msgstr ""
+
+#. translators: %s: ticket number.
+#: bp-core/admin/bb-settings/settings/build/index.js:6
+msgid "Ticket #%s"
+msgstr ""
+
+#. translators: %d: number of attached tickets.
+#: bp-core/admin/bb-settings/settings/build/index.js:7
+msgid "Add Another Ticket (%d)"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:7
+msgid "Modify Duration"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:7
+msgid "Access is disabled"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:7
+msgid "Enable support access to set a time limit and track all support activity."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:7
+msgid "Access duration updated."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:7
+msgid "Saving ticket..."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:7
+msgid "Ticket added to Support Access."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:7
 msgid "Feature Not Enabled"
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/index.js:4
+#: bp-core/admin/bb-settings/settings/build/index.js:7
 msgid "The %s feature is currently disabled. Enable it to access these settings."
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/index.js:4
+#: bp-core/admin/bb-settings/settings/build/index.js:7
 msgid "Go to Features"
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/index.js:4
+#: bp-core/admin/bb-settings/settings/build/index.js:7
 msgid "Activity edit screen - ID:"
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/index.js:4
+#: bp-core/admin/bb-settings/settings/build/index.js:7
 msgid "Page not found"
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/index.js:4
+#: bp-core/admin/bb-settings/settings/build/index.js:7
 msgid "The requested page could not be found."
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/index.js:4
+#: bp-core/admin/bb-settings/settings/build/index.js:7
 msgid "Verifying reCAPTCHA token…"
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/index.js:4
+#: bp-core/admin/bb-settings/settings/build/index.js:7
 msgid "reCAPTCHA token is ready, click Submit to verify."
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/index.js:4
+#: bp-core/admin/bb-settings/settings/build/index.js:7
 msgid "Skip to settings content"
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/index.js:4
+#: bp-core/admin/bb-settings/settings/build/index.js:7
 msgid "Something went wrong"
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/index.js:4
+#: bp-core/admin/bb-settings/settings/build/index.js:7
 msgid "An error occurred while loading the settings. Please try refreshing the page."
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/index.js:4
+#: bp-core/admin/bb-settings/settings/build/index.js:7
 msgid "Try Again"
 msgstr ""
 
-#: bp-core/admin/bb-settings/settings/build/index.js:4
+#: bp-core/admin/bb-settings/settings/build/index.js:7
 msgid "Reload Page"
 msgstr ""
 
