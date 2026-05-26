@@ -13,7 +13,8 @@ import { useKb } from '../context/KbContext';
 import { getTaxonomy, clearTaxonomy } from '../components/knowledge-base/taxonomyCache';
 import { getCuratedOverrides } from '../components/knowledge-base/curatedOverrides';
 import { ajaxFetch } from '../utils/ajax';
-import doneForYouImage from '../images/help-done-for-you.png';
+
+var DONE_FOR_YOU_IMAGE = 'https://bb-features-marketing.s3.amazonaws.com/images/admin/help-done-for-you.png';
 
 // BuddyBoss.com knowledge base REST endpoint used for Help search.
 var HELP_SEARCH_ENDPOINT = 'https://buddyboss.com/wp-json/wp/v2/ht-kb/';
@@ -190,15 +191,26 @@ export function HelpScreen( { onNavigate } ) {
 	var askBuddy = useCallback( function () {
 		var footer = footerRef.current;
 		if ( footer ) {
-			// Scroll the window to the footer, THEN open the chat. Two layout
-			// quirks here drove this approach: (1) the admin clamps the document
-			// element to the viewport height and content scrolls on the window,
-			// and smooth scrolling is unreliable in this context — so we compute
-			// the footer's absolute offset and scroll the window to it directly;
-			// (2) opening the DocsBot chat focuses its input, which can yank the
-			// page back to the top if it happens before the scroll lands, so the
-			// scroll is performed first.
-			var top = footer.getBoundingClientRect().top + window.pageYOffset;
+			// Scroll the window so the footer comes into view from the bottom,
+			// THEN open the chat. Two layout quirks here drove this approach:
+			// (1) the admin clamps the document element to the viewport height
+			// and content scrolls on the window, and smooth scrolling is
+			// unreliable in this context — so we compute the target offset and
+			// scroll the window to it directly; (2) opening the DocsBot chat
+			// focuses its input, which can yank the page back to the top if it
+			// happens before the scroll lands, so the scroll is performed first.
+			//
+			// Align the footer's BOTTOM edge to the viewport bottom (less a small
+			// margin) rather than aligning its top edge to the viewport top. The
+			// footer is the last element on the page, so scrolling its top to the
+			// viewport top requests an offset beyond the maximum scroll position;
+			// the browser clamps that to the page end, dumping the user at the
+			// very bottom. Targeting the footer's bottom keeps the whole footer
+			// visible with consistent breathing room. Clamp to >= 0 so short
+			// pages (where the footer already fits) don't scroll upward.
+			var rect = footer.getBoundingClientRect();
+			var margin = 0;
+			var top = Math.max( 0, rect.bottom + window.pageYOffset - window.innerHeight + margin );
 			window.scrollTo( 0, top );
 		}
 		if ( window.DocsBotAI && 'function' === typeof window.DocsBotAI.open ) {
@@ -803,7 +815,7 @@ export function HelpScreen( { onNavigate } ) {
 					>
 						<div className="bb-admin-help-promo__media">
 							<img
-								src={ doneForYouImage }
+								src={ DONE_FOR_YOU_IMAGE }
 								alt={ __( 'Done For You Service preview', 'buddyboss' ) }
 								className="bb-admin-help-promo__image"
 							/>
