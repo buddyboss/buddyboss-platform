@@ -151,6 +151,16 @@ export function HelpScreen( { onNavigate } ) {
 	var chatOpen = chatOpenState[ 0 ];
 	var setChatOpen = chatOpenState[ 1 ];
 
+	function scrollToFooter(){
+		var footer = footerRef.current;
+		if ( footer ) {
+			var rect = footer.getBoundingClientRect();
+			var margin = 0;
+			var top = Math.max( 0, rect.bottom + window.pageYOffset - window.innerHeight + margin );
+			window.scrollTo( 0, top );
+		}
+	}
+
 	/**
 	 * Toggle the DocsBot chat widget open/closed.
 	 *
@@ -171,6 +181,7 @@ export function HelpScreen( { onNavigate } ) {
 		if ( window.DocsBotAI && 'function' === typeof window.DocsBotAI.toggle ) {
 			window.DocsBotAI.toggle();
 		}
+		scrollToFooter();
 	}, [] );
 
 	// Ref to the footer so "Ask Buddy" can scroll it into view.
@@ -189,32 +200,9 @@ export function HelpScreen( { onNavigate } ) {
 	 * @returns {void}
 	 */
 	var askBuddy = useCallback( function () {
-		var footer = footerRef.current;
-		if ( footer ) {
-			// Scroll the window so the footer comes into view from the bottom,
-			// THEN open the chat. Two layout quirks here drove this approach:
-			// (1) the admin clamps the document element to the viewport height
-			// and content scrolls on the window, and smooth scrolling is
-			// unreliable in this context — so we compute the target offset and
-			// scroll the window to it directly; (2) opening the DocsBot chat
-			// focuses its input, which can yank the page back to the top if it
-			// happens before the scroll lands, so the scroll is performed first.
-			//
-			// Align the footer's BOTTOM edge to the viewport bottom (less a small
-			// margin) rather than aligning its top edge to the viewport top. The
-			// footer is the last element on the page, so scrolling its top to the
-			// viewport top requests an offset beyond the maximum scroll position;
-			// the browser clamps that to the page end, dumping the user at the
-			// very bottom. Targeting the footer's bottom keeps the whole footer
-			// visible with consistent breathing room. Clamp to >= 0 so short
-			// pages (where the footer already fits) don't scroll upward.
-			var rect = footer.getBoundingClientRect();
-			var margin = 0;
-			var top = Math.max( 0, rect.bottom + window.pageYOffset - window.innerHeight + margin );
-			window.scrollTo( 0, top );
-		}
 		if ( window.DocsBotAI && 'function' === typeof window.DocsBotAI.open ) {
 			window.DocsBotAI.open();
+			scrollToFooter();
 		}
 	}, [] );
 
