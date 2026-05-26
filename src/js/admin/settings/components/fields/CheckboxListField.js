@@ -153,6 +153,26 @@ export function CheckboxListField( { field, value, onChange, disabled, sanitized
 		);
 	};
 
+	// Empty-state for the navigation-order fields (`bb_group_nav_order`,
+	// `bb_user_nav_order`): when their enriched options list is empty
+	// (e.g., the enrich filter hasn't populated nav items yet, or no
+	// items match the current configuration), render the shared empty-
+	// state card (`.bb-admin-empty-state`, defined in
+	// `styles/scss/utils/_elements.scss`) instead of a blank drag
+	// container. Scoped to the nav-order fields to avoid changing the
+	// look of other `checkbox_list` consumers.
+	//
+	// @since BuddyBoss [BBVERSION]
+	if ( showHiddenTagForDisabled && orderedOptions.length === 0 ) {
+		return (
+			<div className="bb-admin-empty-state">
+				<p className="bb-admin-empty-state__description">
+					{ __( 'There are no navigation items to order yet. Create a group first to populate this list.', 'buddyboss' ) }
+				</p>
+			</div>
+		);
+	}
+
 	return (
 		<DragDropContext onDragEnd={ handleCheckboxListDragEnd }>
 			{ field.description && (
