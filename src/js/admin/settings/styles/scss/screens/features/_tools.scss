@@ -106,26 +106,55 @@
 .bb-tools-repair-modal {
 	.bb-tools-repair-modal__body {
 		text-align: center;
-		padding: 24px 0;
+		padding: 30px 0;
 	}
 
 	&__icon {
-		font-size: 32px;
-		color: #666;
+		font-size: 48px;
+		color: $bb-icon-secondary-color;
 		display: block;
-		margin-bottom: 12px;
+		margin-bottom: 10px;
 	}
 
 	&.is-progress .bb-tools-repair-modal__body p {
-		margin: 12px 0 16px;
-		color: #666;
+		font-size: 14px;
+		color: $bb-text-secondary-color;
+		margin: 0;
+	}
+
+	&__status {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+
+		.components-spinner {
+			margin: 0;
+		}
 	}
 
 	&.is-complete {
+
+		.bb-tools-repair-modal__body {
+			padding: 30px 24px;
+		}
+
 		.bb-tools-repair-modal__checkmark {
-			color: #10b981;
+			color: $bb-icon-positive-primary-color;
 			font-size: 48px;
-			margin-bottom: 16px;
+			margin-bottom: 14px;
+
+			[class*="bb-icons"] {
+				font-weight: 500;
+			}
+		}
+
+		h3 {
+			color: $bb-text-secondary-color;
+			font-size: 16px;
+			font-weight: 500;
+			padding-bottom: 18px;
+			margin: 0 0 30px;
+			border-bottom: 1px solid $bb-border-secondary-color;
 		}
 
 		.bb-tools-repair-modal__results {
@@ -135,28 +164,21 @@
 			text-align: left;
 
 			li {
-				padding: 8px 12px;
-				border-radius: 6px;
-				margin-bottom: 6px;
+				margin-bottom: 8px;
 				display: flex;
 				gap: 8px;
 				align-items: center;
 				font-size: 14px;
 				line-height: 20px;
 
-				&.is-success {
-					background: #ecfdf5;
-					color: #047857;
+				&:before {
+					display: none;
 				}
 
-				&.is-warning {
-					background: #fffbeb;
-					color: #b45309;
-				}
-
-				&.is-error {
-					background: #fef2f2;
-					color: #b91c1c;
+				[class*="bb-icons"] {
+					color: $bb-text-color;
+					font-size: 20px;
+					font-weight: 500;
 				}
 			}
 		}
@@ -169,6 +191,9 @@
 	}
 
 	&__result-text {
+		color: $bb-text-color;
+		font-size: 13px;
+		font-weight: 400;
 		flex: 1;
 	}
 }

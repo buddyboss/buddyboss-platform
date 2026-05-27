@@ -101,15 +101,18 @@ export default function RepairPlatformModal( { variant, results, onCancel, onClo
 			<Modal
 				title={ __( 'Repair Community', 'buddyboss' ) }
 				onRequestClose={ onCancel }
-				className="bb-tools-repair-modal is-progress"
+				className="bb-tools-repair-modal is-progress bb-admin-settings-modal"
+				shouldCloseOnClickOutside={ false }
 			>
-				<div className="bb-tools-repair-modal__body">
+				<div className="bb-tools-repair-modal__body bb-admin-settings-modal__body">
 					<span className="bb-tools-repair-modal__icon bb-icons-rl bb-icons-rl-wrench"></span>
-					<p>{ __( 'Repairing Community…', 'buddyboss' ) }</p>
-					<Spinner />
+					<div className="bb-tools-repair-modal__status">
+						<p>{ __( 'Repairing Community', 'buddyboss' ) }</p>
+						<Spinner />
+					</div>
 				</div>
-				<div className="bb-tools-repair-modal__actions">
-					<Button variant="secondary" onClick={ onCancel }>
+				<div className="bb-tools-repair-modal__actions bb-admin-settings-modal__footer">
+					<Button variant="primary" onClick={ onCancel }>
 						{ __( 'Cancel', 'buddyboss' ) }
 					</Button>
 				</div>
@@ -121,7 +124,8 @@ export default function RepairPlatformModal( { variant, results, onCancel, onClo
 		<Modal
 			title={ __( 'Repair Community', 'buddyboss' ) }
 			onRequestClose={ onClose }
-			className="bb-tools-repair-modal is-complete"
+			className="bb-tools-repair-modal bb-admin-settings-modal is-complete"
+			shouldCloseOnClickOutside={ false }
 		>
 			<div className="bb-tools-repair-modal__body">
 				<div className="bb-tools-repair-modal__checkmark">
@@ -134,12 +138,12 @@ export default function RepairPlatformModal( { variant, results, onCancel, onClo
 						const iconClass = 'success' === state
 							? 'bb-icons-rl bb-icons-rl-check-circle'
 							: 'warning' === state
-							? 'bb-icons-rl bb-icons-rl-warning'
+							? 'bb-icons-rl bb-icons-rl-warning-circle'
 							: 'bb-icons-rl bb-icons-rl-warning';
 						return (
 							<li
 								key={ item.id }
-								className={ 'is-' + state }
+								className={ 'bb-admin-notice bb-admin-notice--' + state }
 							>
 								<span className={ iconClass }></span>
 								<span className="bb-tools-repair-modal__result-text">
@@ -150,7 +154,7 @@ export default function RepairPlatformModal( { variant, results, onCancel, onClo
 					} ) }
 				</ul>
 			</div>
-			<div className="bb-tools-repair-modal__actions">
+			<div className="bb-tools-repair-modal__actions bb-admin-settings-modal__footer">
 				<Button variant="primary" onClick={ onClose }>
 					{ __( 'Ok', 'buddyboss' ) }
 				</Button>
