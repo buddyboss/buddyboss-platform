@@ -15,20 +15,6 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 2.0.0
  */
 function bp_core_admin_tools() {
-	if ( ! defined( 'BP_DEFAULT_DATA_DIR' ) ) {
-		define( 'BP_DEFAULT_DATA_DIR', buddypress()->plugin_dir . 'bp-core/' );
-	}
-
-	// Define overrides - only applicable to those running trunk
-	if ( ! defined( 'BP_DEFAULT_DATA_URL' ) ) {
-		define( 'BP_DEFAULT_DATA_URL', buddypress()->plugin_url . 'bp-core/' );
-	}
-
-	require_once BP_DEFAULT_DATA_DIR . 'bp-core-tools-default-data.php';
-
-	bp_admin_tools_default_data_save();
-
-	$users_data = require_once BP_DEFAULT_DATA_DIR . 'data/users.php';
 	?>
 	<div class="wrap">
 		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Tools', 'buddyboss' ) ); ?></h2>
@@ -39,182 +25,16 @@ function bp_core_admin_tools() {
 		</div>
 	</div>
 	<div class="wrap">
-		<div class="bp-admin-card section-default_data">
-
-			<h2>
+		<div class="notice notice-info">
+			<p>
 				<?php
-				$meta_icon = bb_admin_icons( 'default_data' );
-				if ( ! empty( $meta_icon ) ) {
-					?>
-					<i class="<?php echo esc_attr( $meta_icon ); ?>"></i>
-					<?php
-				}
-				esc_html_e( 'Default Data', 'buddyboss' ); ?>
-			</h2>
-
-			<form action="" method="post" id="bp-admin-form" class="bp-admin-form">
-				<fieldset>
-					<legend><?php esc_html_e( 'What data do you want to import?', 'buddyboss' ); ?></legend>
-					<ul class="items">
-						<li class="users main">
-							<label for="import-users">
-								<input type="checkbox" class="main-header" name="bp[import-users]" id="import-users"
-									   value="1" <?php bp_dd_imported_disabled( 'users', 'users' ); ?>/>
-								<strong><?php _e( 'Members', 'buddyboss' ); ?></strong>
-							</label>
-							<ul>
-
-								<?php if ( bp_is_active( 'xprofile' ) ) : ?>
-									<li>
-										<label for="import-profile">
-											<input type="checkbox" class="checkbox" name="bp[import-profile]"
-												   id="import-profile"
-												   value="1" <?php bp_dd_imported_disabled( 'users', 'xprofile' ); ?>/>
-											<?php _e( 'Profile fields (with data)', 'buddyboss' ); ?>
-										</label>
-									</li>
-								<?php endif; ?>
-
-								<?php if ( bp_is_active( 'friends' ) ) : ?>
-									<li>
-										<label for="import-friends">
-											<input type="checkbox" class="checkbox" name="bp[import-friends]"
-												   id="import-friends"
-												   value="1" <?php bp_dd_imported_disabled( 'users', 'friends' ); ?>/>
-											<?php _e( 'Connections', 'buddyboss' ); ?>
-										</label>
-									</li>
-								<?php endif; ?>
-
-								<?php if ( bp_is_active( 'activity' ) ) : ?>
-									<li>
-										<label for="import-activity">
-											<input type="checkbox" class="checkbox" name="bp[import-activity]"
-												   id="import-activity"
-												   value="1" <?php bp_dd_imported_disabled( 'users', 'activity' ); ?>/>
-											<?php _e( 'Activity posts', 'buddyboss' ); ?>
-										</label>
-									</li>
-								<?php endif; ?>
-
-								<?php if ( bp_is_active( 'messages' ) ) : ?>
-									<li>
-										<label for="import-messages">
-											<input type="checkbox" class="checkbox" name="bp[import-messages]"
-												   id="import-messages"
-												   value="1" <?php bp_dd_imported_disabled( 'users', 'messages' ); ?>/>
-											<?php _e( 'Private messages', 'buddyboss' ); ?>
-										</label>
-									</li>
-								<?php endif; ?>
-
-							</ul>
-						</li>
-
-						<?php if ( bp_is_active( 'groups' ) ) : ?>
-							<li class="groups main">
-								<label for="import-groups">
-									<input type="checkbox" class="main-header" name="bp[import-groups]"
-										   id="import-groups"
-										   value="1" <?php bp_dd_imported_disabled( 'groups', 'groups' ); ?>/>
-									<strong><?php _e( 'Groups', 'buddyboss' ); ?></strong>
-								</label>
-								<ul>
-
-									<li>
-										<label for="import-g-members">
-											<input type="checkbox" class="checkbox" name="bp[import-g-members]"
-												   id="import-g-members"
-												   value="1" <?php bp_dd_imported_disabled( 'groups', 'members' ); ?>/>
-											<?php _e( 'Members', 'buddyboss' ); ?>
-										</label>
-									</li>
-
-									<?php
-									if ( bp_is_active( 'activity' ) ) :
-										?>
-										<li>
-											<label for="import-g-activity">
-
-												<input type="checkbox" class="checkbox" name="bp[import-g-activity]"
-													   id="import-g-activity"
-													   value="1" <?php bp_dd_imported_disabled( 'groups', 'activity' ); ?>/>
-												<?php _e( 'Activity posts', 'buddyboss' ); ?>
-											</label>
-										</li>
-									<?php endif; ?>
-
-									<?php
-									if ( bp_is_active( 'forums' ) ) {
-										?>
-										<li>
-											<label for="import-g-forums">
-
-												<input type="checkbox" class="checkbox" name="bp[import-g-forums]"
-													   id="import-g-forums"
-													   value="1" <?php bp_dd_imported_disabled( 'groups', 'forums' ); ?>/>
-												<?php _e( 'Forums in Groups (with data)', 'buddyboss' ); ?>
-											</label>
-										</li>
-										<?php
-									}
-									?>
-
-								</ul>
-							</li>
-						<?php endif; ?>
-
-						<?php
-						if ( bp_is_active( 'forums' ) ) {
-							?>
-							<li class="forums main">
-								<label for="import-forums">
-									<input type="checkbox" class="main-header" name="bp[import-forums]"
-										   id="import-forums"
-										   value="1" <?php bp_dd_imported_disabled( 'forums', 'forums' ); ?>/>
-									<strong><?php _e( 'Forums', 'buddyboss' ); ?></strong>
-								</label>
-								<ul>
-									<li>
-										<label for="import-f-topics">
-
-											<input type="checkbox" class="checkbox" name="bp[import-f-topics]"
-												   id="import-f-topics"
-												   value="1" <?php bp_dd_imported_disabled( 'forums', 'topics' ); ?>/>
-											<?php _e( 'Discussions', 'buddyboss' ); ?>
-										</label>
-									</li>
-									<li>
-										<label for="import-f-replies">
-
-											<input type="checkbox" class="checkbox" name="bp[import-f-replies]"
-												   id="import-f-replies"
-												   value="1" <?php bp_dd_imported_disabled( 'forums', 'replies' ); ?>/>
-											<?php _e( 'Replies', 'buddyboss' ); ?>
-										</label>
-									</li>
-								</ul>
-							</li>
-							<?php
-						}
-						?>
-
-					</ul>
-					<!-- .items -->
-
-					<p class="submit">
-						<input class="button-primary" type="submit" name="bp-admin-submit" id="bp-admin-submit"
-							   value="<?php esc_attr_e( 'Import Selected Data', 'buddyboss' ); ?>"/>
-						<input class="button" type="submit" name="bp-admin-clear" id="bp-admin-clear"
-							   value="<?php esc_attr_e( 'Clear Default Data', 'buddyboss' ); ?>"/>
-					</p>
-				</fieldset>
-
-				<?php wp_nonce_field( 'bp-admin-tools-default-data' ); ?>
-			</form>
-
-			<p class="description"><?php esc_html_e( 'Some of these tools utilize substantial database resources. Avoid running more than 1 import job at a time.', 'buddyboss' ); ?></p>
-
+				printf(
+					/* translators: %s: Settings 2.0 Tools → Sample Data link. */
+					esc_html__( 'Sample Data has moved. Use the new Tools panel here: %s', 'buddyboss' ),
+					'<a href="' . esc_url( bp_get_admin_url( 'admin.php?page=bb-settings&tab=tools&panel=sample_data' ) ) . '">' . esc_html__( 'Tools → Sample Data', 'buddyboss' ) . '</a>'
+				);
+				?>
+			</p>
 		</div>
 	</div>
 	<?php

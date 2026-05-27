@@ -296,13 +296,30 @@ function bb_redirect_bp_settings_before_permission_check() {
 		exit;
 	}
 
+	// `?page=bp-tools&tab=bp-tools-default-data` retired in BuddyBoss [BBVERSION]
+	// — Default Data sub-tab was extracted to the buddyboss-tools plugin and
+	// renders as a Settings 2.0 React panel. Redirect any deep links to the
+	// new URL. Other ?page=bp-tools tabs (e.g. forum import) still render
+	// the legacy page and migrate in Phase 3.
+	//
+	// @since BuddyBoss [BBVERSION]
+	if ( 'bp-tools' === $page ) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
+		$bp_tools_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : '';
+		if ( 'bp-tools-default-data' === $bp_tools_tab ) {
+			wp_safe_redirect(
+				bp_get_admin_url( 'admin.php?page=bb-settings&tab=tools&panel=sample_data' )
+			);
+			exit;
+		}
+	}
+
 	// Retired Repair Community + Repair Forums standalone admin pages:
 	//   ?page=bp-repair-community  (standalone Repair Community page)
 	//   ?page=bbp-repair           (standalone Forum Repair page)
 	// Both redirect to the new Settings 2.0 Tools → Repair Platform panel.
-	// NOTE: ?page=bp-tools is NOT redirected here — that page still hosts the
-	// legacy Default Data and Forum Import sub-tabs which migrate in Phases
-	// 2 and 3 respectively.
+	// NOTE: ?page=bp-tools (root) is NOT redirected here — that page still
+	// hosts the legacy Forum Import sub-tab which migrates in Phase 3.
 	//
 	// @since BuddyBoss [BBVERSION]
 	if ( in_array( $page, array( 'bp-repair-community', 'bbp-repair' ), true ) ) {
