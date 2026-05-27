@@ -68,6 +68,10 @@ function bb_tools_ajax_activate_plugin() {
 	$result = activate_plugin( 'buddyboss-tools/buddyboss-tools.php' );
 
 	if ( is_wp_error( $result ) ) {
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Gated on WP_DEBUG; surfaces activation failures.
+			error_log( sprintf( 'BB Tools: failed to activate buddyboss-tools plugin: %s', $result->get_error_message() ) );
+		}
 		wp_send_json_error( array( 'message' => $result->get_error_message() ) );
 	}
 
@@ -107,6 +111,10 @@ function bb_tools_ajax_install_plugin() {
 	);
 
 	if ( is_wp_error( $api ) ) {
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Gated on WP_DEBUG; surfaces plugin-api lookup failures.
+			error_log( sprintf( 'BB Tools: plugins_api(buddyboss-tools) failed: %s', $api->get_error_message() ) );
+		}
 		wp_send_json_error( array( 'message' => $api->get_error_message() ) );
 	}
 
@@ -115,11 +123,19 @@ function bb_tools_ajax_install_plugin() {
 	$result   = $upgrader->install( $api->download_link );
 
 	if ( is_wp_error( $result ) ) {
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Gated on WP_DEBUG; surfaces installer failures.
+			error_log( sprintf( 'BB Tools: Plugin_Upgrader->install(buddyboss-tools) failed: %s', $result->get_error_message() ) );
+		}
 		wp_send_json_error( array( 'message' => $result->get_error_message() ) );
 	}
 
 	$activate = activate_plugin( 'buddyboss-tools/buddyboss-tools.php' );
 	if ( is_wp_error( $activate ) ) {
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Gated on WP_DEBUG; surfaces post-install activation failures.
+			error_log( sprintf( 'BB Tools: activate_plugin(buddyboss-tools) failed after install: %s', $activate->get_error_message() ) );
+		}
 		wp_send_json_error( array( 'message' => $activate->get_error_message() ) );
 	}
 

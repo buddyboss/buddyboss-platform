@@ -363,6 +363,13 @@ add_action( 'admin_print_footer_scripts', 'bb_admin_settings_localize_tools_repa
  * @return string Category id matching the `item_categories` taxonomy above.
  */
 function bb_admin_repair_categorize_item( $item_id ) {
+	// 50 items total in the legacy lists (28 from bp_admin_repair_list,
+	// 22 from bbp_admin_repair_list) — every entry below should map to one
+	// of the nine Figma categories defined in $item_categories above. Pro
+	// plugin contributions land via the bp_repair_list filter and fall
+	// through to `connections` by default; update the maps below when those
+	// move to a more specific bucket. See LEGACY-INVENTORY.md for the full
+	// id → label catalog.
 	$members_profiles   = array(
 		'bp-last-activity',
 		'bp-total-member-count',
