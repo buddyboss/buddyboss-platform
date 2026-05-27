@@ -108,7 +108,7 @@ function bb_admin_settings_register_tools_feature() {
 			'title'      => __( 'Sample Data', 'buddyboss' ),
 			'icon'       => array(
 				'type'  => 'font',
-				'class' => 'bb-icons-rl bb-icons-rl-cylinder',
+				'class' => 'bb-icons-rl bb-icons-rl-database',
 			),
 			'order'      => 20,
 			'is_default' => false,
@@ -147,7 +147,7 @@ function bb_admin_settings_register_tools_feature() {
 			'title'      => __( 'Migration Tools', 'buddyboss' ),
 			'icon'       => array(
 				'type'  => 'font',
-				'class' => 'bb-icons-rl bb-icons-rl-arrows-out-simple',
+				'class' => 'bb-icons-rl bb-icons-rl-upload-simple',
 			),
 			'order'      => 30,
 			'is_default' => false,
