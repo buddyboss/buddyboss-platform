@@ -176,9 +176,17 @@
 				}
 
 				[class*="bb-icons"] {
-					color: $bb-text-color;
+					color: $bb-icon-positive-primary-color;
 					font-size: 20px;
 					font-weight: 500;
+				}
+
+				&.bb-admin-notice--warning [class*="bb-icons"] {
+					color: $bb-icon-warning-primary-color;
+				}
+
+				&.bb-admin-notice--error [class*="bb-icons"] {
+					color: $bb-icon-danger-secondary-color;
 				}
 			}
 		}
