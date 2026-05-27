@@ -1826,14 +1826,8 @@ add_action( 'admin_menu', 'bp_register_member_type_import_submenu_page' );
  */
 function bp_register_member_type_import_submenu_page() {
 
-	add_submenu_page(
-		'',
-		__( 'Repair Community', 'buddyboss' ),
-		__( 'Repair Community', 'buddyboss' ),
-		'manage_options',
-		'bp-repair-community',
-		'bp_repair_community_submenu_page'
-	);
+	// Repair Community submenu retired in BuddyBoss [BBVERSION] — bp-repair-community
+	// URL redirects to Settings 2.0 Tools tab.
 
 	add_submenu_page(
 		'',
@@ -2253,14 +2247,8 @@ add_filter( 'bp_core_get_tools_settings_admin_tabs', 'bp_core_get_tools_repair_c
  */
 function bp_import_profile_types_admin_menu() {
 
-	add_submenu_page(
-		'buddyboss-platform',
-		__( 'Repair Community', 'buddyboss' ),
-		__( 'Repair Community', 'buddyboss' ),
-		'manage_options',
-		'bp-repair-community',
-		'bp_repair_community_submenu_page'
-	);
+	// Repair Community submenu retired in BuddyBoss [BBVERSION] —
+	// ?page=bp-repair-community redirects to Settings 2.0 Tools tab.
 
 	add_submenu_page(
 		'buddyboss-platform',
@@ -2271,16 +2259,11 @@ function bp_import_profile_types_admin_menu() {
 		'bp_member_type_import_submenu_page'
 	);
 
-	if ( current_user_can( 'bbp_tools_page' ) && current_user_can( 'bbp_tools_repair_page' ) ) {
-		add_submenu_page(
-			'buddyboss-platform',
-			__( 'Repair Forums', 'buddyboss' ),
-			__( 'Forum Repair', 'buddyboss' ),
-			'manage_options',
-			'bbp-repair',
-			'bbp_admin_repair'
-		);
-
+	if ( current_user_can( 'bbp_tools_page' ) && current_user_can( 'bbp_tools_import_page' ) ) {
+		// Forum Repair submenu retired in BuddyBoss [BBVERSION] —
+		// ?page=bbp-repair redirects to Settings 2.0 Tools tab.
+		// Forum Import (?page=bbp-converter) stays — Phase 3 migrates it
+		// into the Migration Tools panel.
 		add_submenu_page(
 			'buddyboss-platform',
 			__( 'Import Forums', 'buddyboss' ),

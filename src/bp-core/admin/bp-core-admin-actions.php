@@ -296,6 +296,38 @@ function bb_redirect_bp_settings_before_permission_check() {
 		exit;
 	}
 
+	// Retired Repair Community + Repair Forums standalone admin pages:
+	//   ?page=bp-repair-community  (standalone Repair Community page)
+	//   ?page=bbp-repair           (standalone Forum Repair page)
+	// Both redirect to the new Settings 2.0 Tools → Repair Platform panel.
+	// NOTE: ?page=bp-tools is NOT redirected here — that page still hosts the
+	// legacy Default Data and Forum Import sub-tabs which migrate in Phases
+	// 2 and 3 respectively.
+	//
+	// @since BuddyBoss [BBVERSION]
+	if ( in_array( $page, array( 'bp-repair-community', 'bbp-repair' ), true ) ) {
+		$tools_target = bp_get_admin_url( 'admin.php?page=bb-settings&tab=tools&panel=repair_platform' );
+
+		// Preserve any non-routing query args (deep-link flags, etc.).
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
+		$reserved_qs = array( 'page', 'tab', 'panel' );
+		$extra_qs    = array();
+		foreach ( $_GET as $key => $value ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
+			if ( in_array( $key, $reserved_qs, true ) ) {
+				continue;
+			}
+			if ( is_scalar( $value ) ) {
+				$extra_qs[ sanitize_key( $key ) ] = sanitize_text_field( wp_unslash( $value ) );
+			}
+		}
+		if ( ! empty( $extra_qs ) ) {
+			$tools_target = add_query_arg( $extra_qs, $tools_target );
+		}
+
+		wp_safe_redirect( $tools_target );
+		exit;
+	}
+
 	if ( 'bp-settings' !== $page && 'bp-integrations' !== $page && 'bp-components' !== $page ) {
 		return;
 	}

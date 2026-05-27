@@ -11,107 +11,6 @@ defined( 'ABSPATH' ) || exit;
 
 /** Repair ********************************************************************/
 
-/**
- * Admin repair page
- *
- * @since bbPress (r2613)
- *
- * @uses bbp_admin_repair_list() To get the recount list
- * @uses check_admin_referer() To verify the nonce and the referer
- * @uses wp_cache_flush() To flush the cache
- * @uses do_action() Calls 'admin_notices' to display the notices
- * @uses wp_nonce_field() To add a hidden nonce field
- */
-function bbp_admin_repair() {
-	?>
-
-	<div class="wrap">
-		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Tools', 'buddyboss' ) ); ?></h2>
-		<div class="nav-settings-subsubsub">
-			<ul class="subsubsub">
-				<?php bp_core_tools_settings_admin_tabs(); ?>
-			</ul>
-		</div>
-	</div>
-	<div class="wrap">
-
-		<div class="bp-admin-card section-repair_forums">
-
-			<h2>
-				<?php
-				$meta_icon = bb_admin_icons( 'repair_forums' );
-				if ( ! empty( $meta_icon ) ) {
-					echo '<i class="' . esc_attr( $meta_icon ) . ' "></i>';
-				}
-				esc_html_e( 'Repair Forums', 'buddyboss' );
-				?>
-			</h2>
-
-			<p><?php esc_html_e( 'BuddyBoss keeps track of relationships between forums, discussions, replies, and discussion tags, and users. Occasionally these relationships become out of sync, most often after an import or migration. Use the tools below to manually recalculate these relationships.', 'buddyboss' ); ?></p>
-
-			<form class="settings" method="post" action="">
-
-				<?php
-				if ( is_multisite() && is_network_admin() ) {
-					$bbp_network_sites = bbp_get_network_sites();
-					?>
-					<fieldset>
-						<legend>
-							<?php
-							esc_html_e( 'Sites:', 'buddyboss' );
-							?>
-						</legend>
-						<label for="select-site">
-							<?php
-
-							if ( ! empty( $bbp_network_sites ) ) {
-								?>
-								<select name="bbp-network-site" id="bbp-network-site" required>
-									<option value="0">
-										<?php
-										esc_html_e( 'Select a site to repair forums', 'buddyboss' );
-										?>
-									</option>
-									<?php
-									foreach ( $bbp_network_sites as $bbp_network_site ) {
-										?>
-										<option value="<?php echo esc_attr( $bbp_network_site->blog_id ); ?>">
-											<?php
-											echo esc_html( $bbp_network_site->domain . '/' . $bbp_network_site->path );
-											?>
-										</option>
-										<?php
-									}
-									?>
-								</select>
-								<?php
-							}
-							?>
-						</label>
-					</fieldset>
-					<?php
-				}
-				?>
-
-				<fieldset>
-					<legend><?php esc_html_e( 'Relationships to Repair:', 'buddyboss' ); ?></legend>
-					<div class="checkbox">
-					<?php foreach ( bbp_admin_repair_list() as $item ) : ?>
-						<label for="<?php echo esc_html( $item[0] ); ?>"><input type="checkbox" class="checkbox" name="<?php echo esc_attr( $item[0] ) . '" id="' . esc_attr( str_replace( '_', '-', $item[0] ) ); ?>" value="<?php echo esc_attr( $item[0] ); ?>" /> <?php echo esc_html( $item[1] ); ?></label>
-					<?php endforeach; ?>
-					</div>
-					<p class="submit">
-						<?php wp_nonce_field( 'bbpress-do-counts' ); ?>
-						<a class="button-primary" id="bp-tools-forum-submit"><?php echo esc_html__( 'Repair Items', 'buddyboss' ); ?></a>
-					</p>
-				</fieldset>
-			</form>
-		</div>
-	</div>
-
-	<?php
-}
-
 /** Converter Helpers *********************************************************/
 
 /**
@@ -489,31 +388,6 @@ function bbp_converter_settings() {
  * @uses wp_cache_flush() To flush the cache
  * @uses do_action() Calls 'admin_notices' to display the notices
  */
-function bbp_admin_repair_handler() {
-
-	if ( ! bbp_is_post_request() ) {
-		return;
-	}
-
-	check_admin_referer( 'bbpress-do-counts' );
-
-	// Stores messages
-	$messages = array();
-
-	wp_cache_flush();
-
-	foreach ( (array) bbp_admin_repair_list() as $item ) {
-		if ( isset( $item[2] ) && isset( $_POST[ $item[0] ] ) && 1 === absint( $_POST[ $item[0] ] ) && is_callable( $item[2] ) ) {
-			$messages[] = call_user_func( $item[2] );
-		}
-	}
-
-	if ( count( $messages ) ) {
-		foreach ( $messages as $message ) {
-			bbp_admin_tools_feedback( $message[1] );
-		}
-	}
-}
 
 /**
  * Assemble the admin notices
@@ -526,46 +400,6 @@ function bbp_admin_repair_handler() {
  * @uses add_action() Adds the admin notice action with the message HTML
  * @return string The message HTML
  */
-function bbp_admin_tools_feedback( $message, $class = false ) {
-
-	// One message as string.
-	if ( is_string( $message ) ) {
-		$message = '<p>' . $message . '</p>';
-		$class   = $class ? $class : 'updated';
-
-	// Messages as objects.
-	} elseif ( is_wp_error( $message ) ) {
-		$errors = $message->get_error_messages();
-
-		switch ( count( $errors ) ) {
-			case 0:
-				return false;
-				break;
-
-			case 1:
-				$message = '<p>' . $errors[0] . '</p>';
-				break;
-
-			default:
-				$message = '<ul>' . "\n\t" . '<li>' . implode( '</li>' . "\n\t" . '<li>', $errors ) . '</li>' . "\n" . '</ul>';
-				break;
-		}
-
-		$class = $class ? $class : 'error';
-	} else {
-		return false;
-	}
-
-	$message = '<div id="message" class="' . esc_attr( $class ) . '">' . $message . '</div>';
-	$message = str_replace( "'", "\'", $message );
-	$lambda  = function () use ( $message ) {
-		echo $message;
-	};
-
-	add_action( 'admin_notices', $lambda );
-
-	return $lambda;
-}
 
 /**
  * Get the array of the repair list

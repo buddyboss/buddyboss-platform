@@ -220,74 +220,10 @@ function bp_core_admin_tools() {
 	<?php
 }
 
-/**
- * Render the BuddyBoss Repair Community page.
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_repair_community_submenu_page() {
-	?>
-	<div class="wrap">
-		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Tools', 'buddyboss' ) ); ?></h2>
-		<div class="nav-settings-subsubsub">
-			<ul class="subsubsub">
-				<?php bp_core_tools_settings_admin_tabs(); ?>
-			</ul>
-		</div>
-	</div>
-	<div class="wrap">
-		<div class="bp-admin-card section-repair_community">
-
-			<h2>
-				<?php
-				$meta_icon = bb_admin_icons( 'repair_community' );
-				if ( ! empty( $meta_icon ) ) {
-					?>
-					<i class="<?php echo esc_attr( $meta_icon ); ?>"></i>
-					<?php
-				}
-				esc_html_e( 'Repair Community', 'buddyboss' );
-				?>
-			</h2>
-
-			<p><?php esc_html_e( 'BuddyBoss keeps track of various relationships between members, groups, and activity items. Occasionally these relationships become out of sync, most often after an import, update, or migration. Use the tools below to manually recalculate these relationships.', 'buddyboss' ); ?></p>
-
-			<form class="settings" method="post" action="">
-				<fieldset>
-					<legend><?php esc_html_e( 'Data to Repair:', 'buddyboss' ); ?></legend>
-
-					<div class="checkbox">
-						<?php
-						foreach ( bp_admin_repair_list() as $item ) :
-							$disabled = (bool) ( isset( $item[3] ) ? $item[3] : false );
-							?>
-							<label for="<?php echo esc_attr( str_replace( '_', '-', $item[0] ) ); ?>" class="<?php echo esc_attr( 'label-' . $item[0] ) . ( true === $disabled ? esc_attr( ' disabled' ) : '' ); ?>">
-								<input
-										type="checkbox"
-										class="checkbox"
-										name="<?php echo esc_attr( $item[0] ) . '" id="' . esc_attr( str_replace( '_', '-', $item[0] ) ); ?>"
-										value="<?php echo esc_attr( $item[0] ); ?>"
-									<?php
-									if ( isset( $_GET['tool'] ) && $_GET['tool'] == esc_attr( str_replace( '_', '-', $item[0] ) ) ) {
-										echo 'checked'; }
-									disabled( $disabled );
-									?>
-								/> <?php echo esc_html( $item[1] ); ?></label>
-						<?php endforeach; ?>
-					</div>
-
-					<p class="submit">
-						<?php wp_nonce_field( 'bp-do-counts' ); ?>
-						<a class="button-primary" id="bp-tools-submit"><?php esc_attr_e( 'Repair Items', 'buddyboss' ); ?></a>
-					</p>
-
-				</fieldset>
-			</form>
-		</div>
-	</div>
-
-	<?php
-}
+// bp_repair_community_submenu_page() retired in BuddyBoss [BBVERSION] —
+// the ?page=bp-repair-community standalone page is replaced by the React
+// Repair Platform panel under ?page=bb-settings&tab=tools. Deprecation stub
+// in deprecated/buddyboss/3.0.0.php covers any direct PHP callers.
 
 /**
  * Handle the processing and feedback of the admin tools page.

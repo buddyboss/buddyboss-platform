@@ -3367,3 +3367,70 @@ add_action(
 	},
 	99
 );
+
+// ─────────────────────────────────────────────────────────────────────────
+// Tools page (?page=bp-tools), Repair Community (?page=bp-repair-community),
+// and Repair Forums (?page=bbp-repair) page renderers + form handlers
+// retired in BuddyBoss [BBVERSION]. All three URLs now redirect to
+// ?page=bb-settings&tab=tools&panel=repair_platform via
+// bb_redirect_bp_settings_before_permission_check(). The function stubs
+// below cover direct PHP callers (third-party code, legacy menu hooks).
+// ─────────────────────────────────────────────────────────────────────────
+
+if ( ! function_exists( 'bp_repair_community_submenu_page' ) ) {
+	/**
+	 * Render the legacy Repair Community standalone submenu page.
+	 *
+	 * @since BuddyBoss 1.5.6
+	 * @since BuddyBoss [BBVERSION] Deprecated.
+	 * @deprecated [BBVERSION] admin.php?page=bb-settings&tab=tools&panel=repair_platform
+	 */
+	function bp_repair_community_submenu_page() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'admin.php?page=bb-settings&tab=tools&panel=repair_platform' );
+	}
+}
+
+if ( ! function_exists( 'bbp_admin_repair' ) ) {
+	/**
+	 * Render the legacy Forums Repair admin page.
+	 *
+	 * @since bbPress (r2613)
+	 * @since BuddyBoss [BBVERSION] Deprecated. Replaced by Settings 2.0 Repair Platform.
+	 * @deprecated [BBVERSION] admin.php?page=bb-settings&tab=tools&panel=repair_platform
+	 */
+	function bbp_admin_repair() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'admin.php?page=bb-settings&tab=tools&panel=repair_platform' );
+	}
+}
+
+if ( ! function_exists( 'bbp_admin_repair_handler' ) ) {
+	/**
+	 * Process the legacy Forums Repair form POST submission.
+	 *
+	 * @since bbPress (r2613)
+	 * @since BuddyBoss [BBVERSION] Deprecated.
+	 * @deprecated [BBVERSION] wp_ajax_bp_admin_forum_repair_tools_wrapper_function
+	 */
+	function bbp_admin_repair_handler() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'wp_ajax_bp_admin_forum_repair_tools_wrapper_function' );
+	}
+}
+
+if ( ! function_exists( 'bbp_admin_tools_feedback' ) ) {
+	/**
+	 * Render the legacy admin notice for the Forums Repair page.
+	 *
+	 * @since bbPress (r2613)
+	 * @since BuddyBoss [BBVERSION] Deprecated.
+	 * @deprecated [BBVERSION] Legacy admin-page-only helper.
+	 *
+	 * @param string $message Ignored.
+	 * @param mixed  $class_name Ignored. Renamed from `$class` for PHP reserved-keyword compliance.
+	 * @return false
+	 */
+	function bbp_admin_tools_feedback( $message, $class_name = false ) {
+		unset( $message, $class_name );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]' );
+		return false;
+	}
+}

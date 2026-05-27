@@ -199,16 +199,8 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 			// These are later removed in admin_head
 			if ( ! is_network_admin() && ! bp_is_network_activated() ) {
 				if ( current_user_can( 'bbp_tools_page' ) ) {
-					if ( current_user_can( 'bbp_tools_repair_page' ) ) {
-						$hooks[] = add_submenu_page(
-							'buddyboss-platform',
-							__( 'Repair Forums', 'buddyboss' ),
-							__( 'Forum Repair', 'buddyboss' ),
-							$this->minimum_capability,
-							'bbp-repair',
-							'bbp_admin_repair'
-						);
-					}
+					// Forum Repair submenu retired in BuddyBoss [BBVERSION] —
+					// ?page=bbp-repair redirects to Settings 2.0 Tools tab.
 
 					if ( current_user_can( 'bbp_tools_import_page' ) ) {
 						$hooks[] = add_submenu_page(
