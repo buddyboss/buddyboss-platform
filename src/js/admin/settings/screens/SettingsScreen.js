@@ -141,7 +141,7 @@ export function SettingsScreen({ onNavigate }) {
 	}, [ features, placeholderFeatures, activeFilter, selectedCategory, searchQuery ] );
 
 	// Group features by category with defined display order.
-	const categoryOrder = [ 'community', 'add-ons', 'integrations' ];
+	const categoryOrder = [ 'community', 'add-ons', 'integrations', 'tools' ];
 	const groupedFeatures = filteredFeatures.reduce((acc, feature) => {
 		const category = feature.category || 'community';
 		if (!acc[category]) {
@@ -527,6 +527,10 @@ export function SettingsScreen({ onNavigate }) {
 										? __('BUDDYBOSS COMMUNITY SETTINGS', 'buddyboss')
 										: 'add-ons' === category
 										? __('BUDDYBOSS ADD-ONS', 'buddyboss')
+										: 'integrations' === category
+										? __('BUDDYBOSS INTEGRATIONS', 'buddyboss')
+										: 'tools' === category
+										? __('TOOLS', 'buddyboss')
 										: __('BUDDYBOSS INTEGRATIONS', 'buddyboss') }
 								</h2>
 							</div>

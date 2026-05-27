@@ -1,0 +1,213 @@
+/**
+ * Tools panel — Settings 2.0. Figma spec: two-column layout per section
+ * (heading 248px left, checkboxes 632px right, gap 56px, border-bottom 0.5px).
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+
+.bb-tools-repair-platform {
+	max-width: 984px;
+	padding: 32px 24px 8px;
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+
+	&__site-selector {
+		max-width: 360px;
+	}
+
+	&__select-all {
+		padding-bottom: 16px;
+		border-bottom: 0.5px solid #d9d9d9;
+
+		.components-checkbox-control__label {
+			font-family: 'Inter Variable', 'Inter', -apple-system, sans-serif;
+			font-size: 14px;
+			font-weight: 500;
+			color: #000;
+		}
+	}
+
+	&__section {
+		display: flex;
+		flex-direction: row;
+		align-items: flex-start;
+		gap: 56px;
+		padding-bottom: 24px;
+		border-bottom: 0.5px solid #d9d9d9;
+	}
+
+	&__section-heading {
+		flex: 0 0 248px;
+		padding: 8px 0;
+	}
+
+	&__section-title {
+		font-family: 'Inter Variable', 'Inter', -apple-system, sans-serif;
+		font-size: 14px;
+		font-weight: 500;
+		line-height: 20px;
+		color: #000;
+	}
+
+	&__section-items {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+
+		.components-checkbox-control {
+			margin: 0;
+		}
+
+		.components-checkbox-control__label {
+			font-family: 'Inter Variable', 'Inter', -apple-system, sans-serif;
+			font-size: 14px;
+			font-weight: 400;
+			line-height: 20px;
+			color: #000;
+		}
+	}
+
+	&__actions {
+		padding-top: 16px;
+
+		.components-button.is-primary {
+			background: #ef5d33;
+			border-radius: 8px;
+			padding: 6px 16px;
+			height: 32px;
+			font-family: 'Inter Variable', 'Inter', -apple-system, sans-serif;
+			font-size: 14px;
+			font-weight: 400;
+			line-height: 20px;
+			color: #fff;
+			box-shadow: none;
+			border: none;
+
+			&:hover:not( :disabled ),
+			&:focus:not( :disabled ) {
+				background: #d54e26;
+				color: #fff;
+			}
+
+			&:disabled {
+				background: #ef5d33;
+				opacity: 0.5;
+			}
+		}
+	}
+
+	@media ( max-width: 960px ) {
+		&__section {
+			flex-direction: column;
+			gap: 16px;
+		}
+
+		&__section-heading {
+			flex: 0 0 auto;
+		}
+	}
+}
+
+.bb-tools-repair-modal {
+	.bb-tools-repair-modal__body {
+		text-align: center;
+		padding: 24px 0;
+	}
+
+	&__icon {
+		font-size: 32px;
+		color: #666;
+		display: block;
+		margin-bottom: 12px;
+	}
+
+	&.is-progress .bb-tools-repair-modal__body p {
+		margin: 12px 0 16px;
+		color: #666;
+	}
+
+	&.is-complete {
+		.bb-tools-repair-modal__checkmark {
+			color: #10b981;
+			font-size: 48px;
+			margin-bottom: 16px;
+		}
+
+		.bb-tools-repair-modal__results {
+			list-style: none;
+			margin: 16px 0;
+			padding: 0;
+			text-align: left;
+
+			li {
+				padding: 8px 12px;
+				border-radius: 6px;
+				margin-bottom: 6px;
+				display: flex;
+				gap: 8px;
+				align-items: center;
+				font-size: 14px;
+				line-height: 20px;
+
+				&.is-success {
+					background: #ecfdf5;
+					color: #047857;
+				}
+
+				&.is-warning {
+					background: #fffbeb;
+					color: #b45309;
+				}
+
+				&.is-error {
+					background: #fef2f2;
+					color: #b91c1c;
+				}
+			}
+		}
+	}
+
+	&__actions {
+		text-align: right;
+		padding-top: 16px;
+		border-top: 0.5px solid #d9d9d9;
+	}
+
+	&__result-text {
+		flex: 1;
+	}
+}
+
+.bb-tools-activation-cta {
+	text-align: center;
+	padding: 64px 24px;
+
+	&__icon {
+		font-size: 48px;
+		color: #9ca3af;
+		display: inline-block;
+		margin-bottom: 16px;
+	}
+
+	&__title {
+		font-family: 'Inter Variable', 'Inter', -apple-system, sans-serif;
+		font-size: 18px;
+		font-weight: 600;
+		color: #000;
+		margin: 0 0 8px;
+	}
+
+	&__description {
+		font-family: 'Inter Variable', 'Inter', -apple-system, sans-serif;
+		font-size: 13px;
+		color: #666;
+		max-width: 480px;
+		margin: 0 auto 24px;
+	}
+
+	&.is-loading {
+		padding: 48px 0;
+	}
+}

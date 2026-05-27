@@ -10650,3 +10650,64 @@ function bb_email_get_type_group( $type_slug ) {
 	 */
 	return apply_filters( 'bb_email_type_group', $group, $type_slug );
 }
+
+/**
+ * Probe function exposed for the buddyboss-tools addon to detect that the
+ * current Platform release supports the Settings 2.0 Tools panel slots.
+ *
+ * This function is intentionally a no-op — its mere existence is the signal
+ * Tools checks via `function_exists()` in its requirements probe. Platforms
+ * older than the Settings 2.0 Tools release do not define it, and Tools
+ * stays silent on those installs.
+ *
+ * Do not call this function directly; it is a marker for compatibility.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $panel_slot_id Reserved for future use; ignored.
+ * @return void
+ */
+function bb_tools_register_panel_slot( $panel_slot_id = '' ) {
+	// Intentionally empty — this function is a presence-detection marker
+	// for the buddyboss-tools addon. The `$panel_slot_id` parameter exists
+	// so future revisions can extend the contract without breaking callers.
+	unset( $panel_slot_id );
+}
+
+/**
+ * Returns whether the buddyboss-tools addon is loaded and active.
+ *
+ * Resolves the `bb_tools_addon_active` filter (the addon subscribes with
+ * `__return_true`) and falls back to checking `is_plugin_active()` as a
+ * backstop for code paths that run before the addon has had a chance to
+ * register its filter.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return bool True if Tools is active and its panel React components are
+ *              expected to be registered; false otherwise.
+ */
+function bb_tools_addon_active() {
+	if ( ! function_exists( 'is_plugin_active' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/plugin.php';
+	}
+
+	/**
+	 * Filter whether the buddyboss-tools addon is active.
+	 *
+	 * The addon subscribes to this filter with `__return_true`. Platform
+	 * code reading this value falls through to `is_plugin_active()` as a
+	 * backstop if the filter has not been hooked yet (e.g. during very
+	 * early `plugins_loaded`).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param bool $active Default false.
+	 */
+	$filtered = (bool) apply_filters( 'bb_tools_addon_active', false );
+	if ( $filtered ) {
+		return true;
+	}
+
+	return is_plugin_active( 'buddyboss-tools/buddyboss-tools.php' );
+}

@@ -2425,6 +2425,17 @@ function bp_admin_forum_repair_tools_wrapper_function() {
 		restore_current_blog();
 	}
 
+	// Additive enrichment for the Settings 2.0 Repair Platform React UI —
+	// see bb_admin_repair_extract_count_summary() in bp-core-admin-tools.php.
+	// Pass the whole $status array so the helper can scan `message`, `records`,
+	// and `feedback` for a count. LOCKED-BC preserved (additive).
+	//
+	// @since BuddyBoss [BBVERSION]
+	if ( is_array( $status ) && function_exists( 'bb_admin_repair_extract_count_summary' ) ) {
+		$enrichment = bb_admin_repair_extract_count_summary( $status );
+		$status     = array_merge( $status, $enrichment );
+	}
+
 	if ( 0 === $status['status'] ) {
 		wp_send_json_error( $status );
 	} else {

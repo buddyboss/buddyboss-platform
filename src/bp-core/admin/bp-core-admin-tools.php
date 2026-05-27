@@ -1317,7 +1317,99 @@ function bp_admin_repair_tools_wrapper_function() {
 	// } elseif ( 'bp-media-forum-privacy-repair' === $type ) {
 	// $status = bp_media_forum_privacy_repair();
 	// }
+
+	// Additive enrichment for the Settings 2.0 Repair Platform React UI:
+	// extract a clean count + summary from the legacy feedback HTML so the
+	// React panel can render Figma-style result lines without client-side
+	// regex parsing. Existing third-party callers that only read the
+	// historical `message` field are unaffected.
+	//
+	// @since BuddyBoss [BBVERSION]
+	if ( is_array( $status ) ) {
+		$enrichment = bb_admin_repair_extract_count_summary( $status );
+		$status     = array_merge( $status, $enrichment );
+	}
+
 	wp_send_json_success( $status );
+}
+
+/**
+ * Parse a legacy `bp_admin_repair_*` result array into a `count` (int or
+ * fraction string like "23/26") and a clean `summary` text.
+ *
+ * Legacy repair handlers package result info in different fields:
+ *   - `message`  — verbose HTML feedback line (most handlers)
+ *   - `records`  — count-bearing sentence (e.g. emails: "5 missing emails have been installed.")
+ *   - `feedback` — sometimes the only field present
+ *
+ * Scans each candidate field, decodes HTML entities, strips tags, then
+ * extracts the first numeric count anywhere in the text. The summary is
+ * preferred from `records` when it carries the count, otherwise from the
+ * "Complete!" tail of `message`.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array|string $status_or_html Result array from a repair handler, OR a raw HTML string.
+ * @return array {
+ *     @type int|string|null $count   Numeric count when found ("23/26" or 42), null otherwise.
+ *     @type string          $summary Clean human-readable result text.
+ * }
+ */
+function bb_admin_repair_extract_count_summary( $status_or_html ) {
+	// Support both array (preferred) and string (BC).
+	if ( is_string( $status_or_html ) ) {
+		$status_or_html = array( 'message' => $status_or_html );
+	}
+	if ( ! is_array( $status_or_html ) ) {
+		return array(
+			'count'   => null,
+			'summary' => '',
+		);
+	}
+
+	$normalize = static function ( $raw ) {
+		$t = wp_strip_all_tags( (string) $raw );
+		$t = html_entity_decode( $t, ENT_QUOTES, 'UTF-8' );
+		return trim( preg_replace( '#\s+#', ' ', $t ) );
+	};
+
+	$message  = isset( $status_or_html['message'] ) ? $normalize( $status_or_html['message'] ) : '';
+	$records  = isset( $status_or_html['records'] ) ? $normalize( $status_or_html['records'] ) : '';
+	$feedback = isset( $status_or_html['feedback'] ) ? $normalize( $status_or_html['feedback'] ) : '';
+
+	$candidates = array_filter( array( $records, $message, $feedback ) );
+
+	$count = null;
+	foreach ( $candidates as $text ) {
+		if ( preg_match( '#\b(\d+\s*/\s*\d+)\b#', $text, $m ) ) {
+			$count = $m[1];
+			break;
+		}
+		if ( preg_match( '#\b(\d+)\b#', $text, $m ) ) {
+			$count = (int) $m[1];
+			break;
+		}
+	}
+
+	// Summary preference: records (usually a clean count sentence) →
+	// message tail after "Complete!" → message → feedback.
+	$summary = '';
+	if ( $records ) {
+		$summary = $records;
+	} elseif ( $message ) {
+		if ( preg_match( '#Complete[!.]\s*(.*)$#i', $message, $m ) && trim( $m[1] ) !== '' ) {
+			$summary = trim( $m[1] );
+		} else {
+			$summary = $message;
+		}
+	} elseif ( $feedback ) {
+		$summary = $feedback;
+	}
+
+	return array(
+		'count'   => $count,
+		'summary' => $summary,
+	);
 }
 add_action( 'wp_ajax_bp_admin_repair_tools_wrapper_function', 'bp_admin_repair_tools_wrapper_function' );
 
