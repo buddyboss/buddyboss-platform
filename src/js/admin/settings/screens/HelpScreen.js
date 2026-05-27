@@ -14,7 +14,8 @@ import { getTaxonomy, clearTaxonomy } from '../components/knowledge-base/taxonom
 import { getCuratedOverrides } from '../components/knowledge-base/curatedOverrides';
 import { ajaxFetch } from '../utils/ajax';
 
-var DONE_FOR_YOU_IMAGE = 'https://bb-features-marketing.s3.amazonaws.com/images/admin/help-done-for-you.png';
+import upgradePlus from '../images/upgrade-plus.jpg';
+import upgradePro from '../images/upgrade-pro.jpg';
 
 // BuddyBoss.com knowledge base REST endpoint used for Help search.
 var HELP_SEARCH_ENDPOINT = 'https://buddyboss.com/wp-json/wp/v2/ht-kb/';
@@ -803,7 +804,7 @@ export function HelpScreen( { onNavigate } ) {
 					>
 						<div className="bb-admin-help-promo__media">
 							<img
-								src={ DONE_FOR_YOU_IMAGE }
+								src={ upgradePlus }
 								alt={ __( 'Done For You Service preview', 'buddyboss' ) }
 								className="bb-admin-help-promo__image"
 							/>
@@ -811,23 +812,75 @@ export function HelpScreen( { onNavigate } ) {
 						<div className="bb-admin-help-promo__body">
 							<div className="bb-admin-help-promo__text">
 								<p className="bb-admin-help-promo__eyebrow">
-									{ __( 'Done For You Service', 'buddyboss' ) }
+									{ __( 'BuddyBoss Plus', 'buddyboss' ) }
 								</p>
 								<h2
 									id="bb-admin-help-promo-title"
 									className="bb-admin-help-promo__title"
 								>
-									{ __( 'Get help launching your site', 'buddyboss' ) }
+									{ __( 'Unlock Advanced Plus Features Without Paying More Than the Pro Plan', 'buddyboss' ) }
 								</h2>
-								<p className="bb-admin-help-promo__description">
-									{ __( 'Get your own team that will help you launch your site. Let them know what your business is about, then provide them with your logo and brand colors, then sit back while we do all the heavy lifting.', 'buddyboss' ) }
-								</p>
+								<ul className="bb-admin-help-promo__list">
+									<li><i className="bb-icons-rl-check"></i> { __( 'Gamification (Save $199/y)', 'buddyboss') }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'Point Types & Triggers', 'buddyboss') }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'Ranks & Leaderboards', 'buddyboss') }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'Achievements', 'buddyboss') }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'Competitions', 'buddyboss') }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'Offload Media (Save $199/y)', 'buddyboss') }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'Domain Restriction)', 'buddyboss') }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'Premium Top-Rated Support', 'buddyboss') }</li>
+								</ul>
 							</div>
-							<Button variant="primary" className="bb-admin-help-promo__action">
+							<a href="" className="bb-admin-help-promo__action bb-admin-help-promo__action-plus is-primary">
+								<i className="bb-icons-rl-crown-simple"></i>
 								<span className="bb-admin-help-promo__action-label">
-									{ __( 'Get Done For You Web Service', 'buddyboss' ) }
+									{ __( 'Upgrade Plus', 'buddyboss' ) }
 								</span>
-							</Button>
+							</a>
+						</div>
+					</section>
+				</div>
+
+				<div className="bb-admin-help-row">
+					<section
+						className="bb-admin-help-promo"
+						aria-labelledby="bb-admin-help-promo-title"
+					>
+						<div className="bb-admin-help-promo__media">
+							<img
+								src={ upgradePro }
+								alt={ __( 'Done For You Service preview', 'buddyboss' ) }
+								className="bb-admin-help-promo__image"
+							/>
+						</div>
+						<div className="bb-admin-help-promo__body">
+							<div className="bb-admin-help-promo__text">
+								<p className="bb-admin-help-promo__eyebrow">
+									{ __( 'BuddyBoss Pro', 'buddyboss' ) }
+								</p>
+								<h2
+									id="bb-admin-help-promo-title"
+									className="bb-admin-help-promo__title"
+								>
+									{ __( 'Take Your Community Beyond Basics with BuddyBoss Pro Features', 'buddyboss' ) }
+								</h2>
+								<ul className="bb-admin-help-promo__list">
+									<li><i className="bb-icons-rl-check"></i> { __( 'Premium BuddyBoss Theme', 'buddyboss') }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'Unlimited Members, Admins & Moderators', 'buddyboss') }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'LearnDash, MemberPress Courses, TutorLMS, LifterLMS Integration', 'buddyboss') }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'Zoom Integration for Meetings', 'buddyboss') }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'Image, Video & Document Uploads', 'buddyboss') }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'Social Login & Access Controls', 'buddyboss') }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'Polls, Custom Reactions & Topics', 'buddyboss') }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'Activity Sharing', 'buddyboss') }</li>
+								</ul>
+							</div>
+							<a href="#" className="bb-admin-help-promo__action bb-admin-help-promo__action-pro is-primary">
+								<i className="bb-icons-rl-crown-simple"></i>
+								<span className="bb-admin-help-promo__action-label">
+									{ __( 'Upgrade Pro', 'buddyboss' ) }
+								</span>
+							</a>
 						</div>
 					</section>
 				</div>
