@@ -49,11 +49,11 @@ function bb_admin_settings_register_tools_feature() {
 				'class' => 'bb-icons-rl bb-icons-rl-wrench',
 			),
 			'license_tier'       => 'free',
-			'category'           => 'tools',
+			'category'           => 'community',
 			'standalone'         => true,
 			'is_active_callback' => '__return_true',
 			'settings_route'     => '/settings/tools',
-			'order'              => 10,
+			'order'              => 160,
 		)
 	);
 
@@ -213,13 +213,11 @@ function bb_admin_settings_localize_tools_repair_config() {
 		return;
 	}
 
-	// Only run when actually on the Tools tab — avoids loading the legacy
-	// admin-tools files on every Settings 2.0 page load.
-	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
-	$current_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : '';
-	if ( 'tools' !== $current_tab ) {
-		return;
-	}
+	// Localize on every Settings 2.0 page load (not just `?tab=tools`) so the
+	// React Repair Platform panel still finds `window.bbToolsRepairConfig`
+	// after SPA navigation from the features grid — PHP only renders once
+	// per request, so gating by `tab=tools` left the config undefined when
+	// the user clicked into the Tools card without a hard reload.
 
 	// Force-load the legacy admin-tools files because they're normally only
 	// loaded when the user is on `?page=bp-tools` / `?page=bbp-repair`. The
