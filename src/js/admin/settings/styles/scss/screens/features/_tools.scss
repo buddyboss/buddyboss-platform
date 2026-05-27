@@ -7,7 +7,7 @@
 
 .bb-tools-repair-platform {
 	max-width: 984px;
-	padding: 32px 24px 8px;
+	padding: 14px 0 0;
 	display: flex;
 	flex-direction: column;
 	gap: 24px;
@@ -21,10 +21,13 @@
 		border-bottom: 0.5px solid #d9d9d9;
 
 		.components-checkbox-control__label {
-			font-family: 'Inter Variable', 'Inter', -apple-system, sans-serif;
 			font-size: 14px;
-			font-weight: 500;
-			color: #000;
+			font-weight: 400;
+			color: $bb-text-color;
+		}
+
+		.components-base-control__field {
+			margin-bottom: 0;
 		}
 	}
 
@@ -39,15 +42,13 @@
 
 	&__section-heading {
 		flex: 0 0 248px;
-		padding: 8px 0;
 	}
 
 	&__section-title {
-		font-family: 'Inter Variable', 'Inter', -apple-system, sans-serif;
 		font-size: 14px;
 		font-weight: 500;
 		line-height: 20px;
-		color: #000;
+		color: $bb-text-color;
 	}
 
 	&__section-items {
@@ -67,34 +68,17 @@
 			line-height: 20px;
 			color: #000;
 		}
+
+		.components-base-control__field {
+			margin-bottom: 0;
+		}
 	}
 
 	&__actions {
 		padding-top: 16px;
 
 		.components-button.is-primary {
-			background: #ef5d33;
-			border-radius: 8px;
-			padding: 6px 16px;
-			height: 32px;
-			font-family: 'Inter Variable', 'Inter', -apple-system, sans-serif;
-			font-size: 14px;
-			font-weight: 400;
-			line-height: 20px;
-			color: #fff;
-			box-shadow: none;
-			border: none;
-
-			&:hover:not( :disabled ),
-			&:focus:not( :disabled ) {
-				background: #d54e26;
-				color: #fff;
-			}
-
-			&:disabled {
-				background: #ef5d33;
-				opacity: 0.5;
-			}
+			@include bb-button-primary;
 		}
 	}
 
@@ -107,6 +91,15 @@
 		&__section-heading {
 			flex: 0 0 auto;
 		}
+	}
+}
+
+#section-repair_platform_section {
+
+	> .bb-admin-feature-settings__section-body .bb-admin-feature-settings__section-description {
+		margin: 0;
+		padding-bottom: 0;
+		border: 0;
 	}
 }
 
