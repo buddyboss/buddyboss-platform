@@ -65,15 +65,25 @@ export default function ActivationRequiredCTA() {
 		setIsWorking( true );
 		setError( null );
 
+		// Cancel any in-flight request from the initial state-probe useEffect
+		// (or from a prior handleAction call) and track the new controller so
+		// the unmount-cleanup can abort it.
+		if ( abortRef.current ) {
+			abortRef.current.abort();
+		}
+		const controller = new AbortController();
+		abortRef.current = controller;
+
 		const action = 'installed' === pluginState ? 'bb_tools_activate_plugin' : 'bb_tools_install_plugin';
 		const formData = new FormData();
 		formData.append( 'action', action );
 		formData.append( '_ajax_nonce', ( window.bbAdminData && window.bbAdminData.ajaxNonce ) || '' );
 
 		fetch( window.ajaxurl, {
-			method: 'POST',
-			body: formData,
+			method:      'POST',
+			body:        formData,
 			credentials: 'same-origin',
+			signal:      controller.signal,
 		} )
 			.then( function ( r ) {
 				return r.json();
@@ -89,7 +99,10 @@ export default function ActivationRequiredCTA() {
 					setIsWorking( false );
 				}
 			} )
-			.catch( function () {
+			.catch( function ( err ) {
+				if ( err && 'AbortError' === err.name ) {
+					return;
+				}
 				setError( __( 'Network error. Please try again.', 'buddyboss' ) );
 				setIsWorking( false );
 			} );
