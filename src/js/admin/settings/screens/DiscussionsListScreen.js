@@ -5,7 +5,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useEffect, useCallback, useRef, useMemo } from '@wordpress/element';
+import { useState, useEffect, useCallback, useRef, useMemo, Fragment } from '@wordpress/element';
 import {
 	Button,
 	CheckboxControl,
@@ -27,7 +27,7 @@ import { DeleteConfirmModal } from '../components/common/DeleteConfirmModal';
 import { BulkEditModal } from '../components/common/BulkEditModal';
 import { useListScreenHandlers } from '../hooks/useListScreenHandlers';
 import { useListScreenState } from '../hooks/useListScreenState';
-import { groupFieldsWithLayout, buildRegisteredFieldPayload, getVisibleFields, needsSeparator } from '../utils/format';
+import { groupFieldsWithLayout, buildRegisteredFieldPayload, getVisibleFields, needsSeparator, splitFieldsByMetaboxGroup } from '../utils/format';
 import { DiscussionCreateModal } from '../components/forums/DiscussionCreateModal';
 import { RegisteredMetaField } from '../components/common/RegisteredMetaField';
 import { forceRemoveEditor } from '../components/common/RichTextEditor';
@@ -1003,48 +1003,84 @@ function DiscussionEditModal( { discussion, onClose, onSave, isSaving } ) {
 		onSave( payload );
 	};
 
-	// Render registered fields.
+	// Render a single grouped item (row of half/third fields, or one single field).
+	// Shared by the ungrouped run and each bridged-metabox segment so the layout
+	// is identical whether or not a field belongs to a `field_group`.
+	var renderGroupedItem = function ( item, idx, groupedList ) {
+		var hasSeparator = needsSeparator( item, groupedList[ idx + 1 ] );
+
+		if ( 'row' === item.type ) {
+			return (
+				<div key={ 'row-' + idx } className={ 'bb-admin-meta-field__row bb-admin-settings-modal__row' + ( hasSeparator ? ' bb-admin-settings-modal__row--separator' : '' ) }>
+					{ item.fields.map( function ( field ) {
+						return (
+							<RegisteredMetaField
+								key={ field.id + '-' + discussion.id }
+								field={ field }
+								value={ registeredValues[ field.id ] }
+								onChange={ function ( val ) {
+									handleRegisteredFieldChange( field.id, val );
+								} }
+								itemId={ discussion.id }
+							/>
+						);
+					} ) }
+				</div>
+			);
+		}
+		return (
+			<div key={ item.field.id + '-' + discussion.id } className={ 'components-base-control ' + ( hasSeparator ? 'bb-admin-settings-modal__row--separator' : '' ) }>
+				<RegisteredMetaField
+					field={ item.field }
+					value={ registeredValues[ item.field.id ] }
+					onChange={ function ( val ) {
+						handleRegisteredFieldChange( item.field.id, val );
+					} }
+					itemId={ discussion.id }
+				/>
+			</div>
+		);
+	};
+
+	// Render registered fields, split into runs by source metabox so a bridged
+	// third-party metabox (e.g. WP Fusion) renders inside a bordered section
+	// with its title as a heading — matching the Forums modal. Fields without a
+	// `field_group` form the implicit "core" run that renders flat (no heading);
+	// grouped runs render last, visually distinct, mirroring how the legacy
+	// metaboxes sat at the end of the classic editor.
 	var renderFields = function () {
 		if ( ! discussion.registered_fields ) {
 			return null;
 		}
 
 		var visibleFields = getVisibleFields( discussion.registered_fields, registeredValues );
+		var segments      = splitFieldsByMetaboxGroup( visibleFields );
 
-		var grouped = groupFieldsWithLayout( visibleFields );
+		return segments.map( function ( segment, segIdx ) {
+			var grouped = groupFieldsWithLayout( segment.fields );
 
-		return grouped.map( function ( item, idx ) {
-			var hasSeparator = needsSeparator( item, grouped[ idx + 1 ] );
-
-			if ( 'row' === item.type ) {
+			if ( ! segment.group ) {
+				// Ungrouped run — render flat, no heading.
 				return (
-					<div key={ 'row-' + idx } className={ 'bb-admin-meta-field__row bb-admin-settings-modal__row' + ( hasSeparator ? ' bb-admin-settings-modal__row--separator' : '' ) }>
-						{ item.fields.map( function ( field ) {
-							return (
-								<RegisteredMetaField
-									key={ field.id + '-' + discussion.id }
-									field={ field }
-									value={ registeredValues[ field.id ] }
-									onChange={ function ( val ) {
-										handleRegisteredFieldChange( field.id, val );
-									} }
-									itemId={ discussion.id }
-								/>
-							);
+					<Fragment key={ 'seg-flat-' + segIdx }>
+						{ grouped.map( function ( item, idx ) {
+							return renderGroupedItem( item, idx, grouped );
 						} ) }
-					</div>
+					</Fragment>
 				);
 			}
+
+			// Grouped run — bordered section with the metabox title heading.
 			return (
-				<div key={ item.field.id + '-' + discussion.id } className={ 'components-base-control ' + ( hasSeparator ? 'bb-admin-settings-modal__row--separator' : '' ) }>
-					<RegisteredMetaField
-						field={ item.field }
-						value={ registeredValues[ item.field.id ] }
-						onChange={ function ( val ) {
-							handleRegisteredFieldChange( item.field.id, val );
-						} }
-						itemId={ discussion.id }
-					/>
+				<div key={ 'seg-group-' + segIdx } className="bb-admin-meta-field__group" data-group-id={ segment.group }>
+					{ segment.label && (
+						<h3 className="bb-admin-meta-field__group-title">{ segment.label }</h3>
+					) }
+					<div className="bb-admin-meta-field__group-fields">
+						{ grouped.map( function ( item, idx ) {
+							return renderGroupedItem( item, idx, grouped );
+						} ) }
+					</div>
 				</div>
 			);
 		} );

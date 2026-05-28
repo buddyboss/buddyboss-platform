@@ -8,7 +8,7 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useRef, useEffect, useCallback } from '@wordpress/element';
+import { useState, useRef, useEffect, useCallback, Fragment } from '@wordpress/element';
 import {
 	Modal,
 	Button,
@@ -16,7 +16,7 @@ import {
 import { __ } from '@wordpress/i18n';
 
 import { createReply } from '../../utils/ajax';
-import { groupFieldsWithLayout, buildRegisteredFieldPayload, getVisibleFields, needsSeparator } from '../../utils/format';
+import { groupFieldsWithLayout, buildRegisteredFieldPayload, getVisibleFields, needsSeparator, splitFieldsByMetaboxGroup } from '../../utils/format';
 import { RegisteredMetaField } from '../common/RegisteredMetaField';
 import { forceRemoveEditor } from '../common/RichTextEditor';
 
@@ -226,10 +226,77 @@ export function ReplyCreateModal( { isOpen, onClose, onCreated, createFields } )
 		return params;
 	};
 
-	// Render visible fields.
+	// Render visible fields, split into runs by source metabox so bridged
+	// third-party metaboxes (e.g. WP Fusion) render in a bordered section with
+	// their title heading at the end — matching the Forums screen.
 	var visibleFields = getVisibleFields( fields, registeredValues );
+	var segments      = splitFieldsByMetaboxGroup( visibleFields );
 
-	var grouped = groupFieldsWithLayout( visibleFields );
+	var renderGroupedItem = function ( item, idx, groupedList ) {
+		var hasSeparator = needsSeparator( item, groupedList[ idx + 1 ], [ 'reply_to', 'reply_status' ] );
+
+		if ( 'row' === item.type ) {
+			return (
+				<div key={ 'row-' + idx } className={ 'bb-admin-meta-field__row bb-admin-settings-modal__row' + ( hasSeparator ? ' bb-admin-settings-modal__row--separator' : '' ) }>
+					{ item.fields.map( function ( field ) {
+						return (
+							<RegisteredMetaField
+								key={ field.id + '-' + cascadeKey }
+								field={ Object.assign( {}, field, { asyncExtraParams: getAsyncExtraParams( field ) } ) }
+								value={ registeredValues[ field.id ] }
+								onChange={ function ( val ) {
+									handleFieldChange( field.id, val );
+								} }
+								itemId={ 0 }
+							/>
+						);
+					} ) }
+				</div>
+			);
+		}
+
+		return (
+			<div key={ item.field.id + '-' + cascadeKey } className={ hasSeparator ? 'bb-admin-settings-modal__row--separator' : '' }>
+				<RegisteredMetaField
+					field={ Object.assign( {}, item.field, { asyncExtraParams: getAsyncExtraParams( item.field ) } ) }
+					value={ registeredValues[ item.field.id ] }
+					onChange={ function ( val ) {
+						handleFieldChange( item.field.id, val );
+					} }
+					itemId={ 0 }
+				/>
+			</div>
+		);
+	};
+
+	var renderSegments = function () {
+		return segments.map( function ( segment, segIdx ) {
+			var grouped = groupFieldsWithLayout( segment.fields );
+
+			if ( ! segment.group ) {
+				return (
+					<Fragment key={ 'seg-flat-' + segIdx }>
+						{ grouped.map( function ( item, idx ) {
+							return renderGroupedItem( item, idx, grouped );
+						} ) }
+					</Fragment>
+				);
+			}
+
+			return (
+				<div key={ 'seg-group-' + segIdx } className="bb-admin-meta-field__group" data-group-id={ segment.group }>
+					{ segment.label && (
+						<h3 className="bb-admin-meta-field__group-title">{ segment.label }</h3>
+					) }
+					<div className="bb-admin-meta-field__group-fields">
+						{ grouped.map( function ( item, idx ) {
+							return renderGroupedItem( item, idx, grouped );
+						} ) }
+					</div>
+				</div>
+			);
+		} );
+	};
 
 	return (
 		<Modal
@@ -243,42 +310,7 @@ export function ReplyCreateModal( { isOpen, onClose, onCreated, createFields } )
 					<p className="bb-admin-settings-modal__error">{ error }</p>
 				) }
 
-				{ grouped.map( function ( item, idx ) {
-					var hasSeparator = needsSeparator( item, grouped[ idx + 1 ], [ 'reply_to', 'reply_status' ] );
-
-					if ( 'row' === item.type ) {
-						return (
-							<div key={ 'row-' + idx } className={ 'bb-admin-meta-field__row bb-admin-settings-modal__row' + ( hasSeparator ? ' bb-admin-settings-modal__row--separator' : '' ) }>
-								{ item.fields.map( function ( field ) {
-									return (
-										<RegisteredMetaField
-											key={ field.id + '-' + cascadeKey }
-											field={ Object.assign( {}, field, { asyncExtraParams: getAsyncExtraParams( field ) } ) }
-											value={ registeredValues[ field.id ] }
-											onChange={ function ( val ) {
-												handleFieldChange( field.id, val );
-											} }
-											itemId={ 0 }
-										/>
-									);
-								} ) }
-							</div>
-						);
-					}
-
-					return (
-						<div key={ item.field.id + '-' + cascadeKey } className={ hasSeparator ? 'bb-admin-settings-modal__row--separator' : '' }>
-							<RegisteredMetaField
-								field={ Object.assign( {}, item.field, { asyncExtraParams: getAsyncExtraParams( item.field ) } ) }
-								value={ registeredValues[ item.field.id ] }
-								onChange={ function ( val ) {
-									handleFieldChange( item.field.id, val );
-								} }
-								itemId={ 0 }
-							/>
-						</div>
-					);
-				} ) }
+				{ renderSegments() }
 			</div>
 
 			<div className="bb-reply-modal__footer bb-admin-settings-modal__footer">

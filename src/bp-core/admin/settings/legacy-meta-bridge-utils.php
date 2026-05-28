@@ -153,6 +153,26 @@ function bb_legacy_xpath_safe( $value ) {
 }
 
 /**
+ * Sanitize an HTML input `name` for safe interpolation into an XPath
+ * single-quoted literal, PRESERVING the `[` and `]` of grouped inputs.
+ *
+ * `bb_legacy_xpath_safe()` strips brackets, which is correct for ids/values
+ * but breaks name matching for grouped inputs like `wpf-settings[allow_tags][]`
+ * (it would collapse to `wpf-settingsallow_tags` and match nothing). Brackets
+ * are not metacharacters inside an XPath string literal, so keeping them is
+ * safe; the single quote (the only literal-breaking char) is excluded by the
+ * allow-list below.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $value Raw input name.
+ * @return string Bracket-preserving, XPath-literal-safe name.
+ */
+function bb_legacy_xpath_safe_name( $value ) {
+	return preg_replace( '/[^A-Za-z0-9_\-:.\[\]]/', '', (string) $value );
+}
+
+/**
  * Parse <input>/<select>/<textarea> tags out of captured HTML.
  *
  * Returns one descriptor per detected input. Radios are deduplicated by
@@ -217,6 +237,10 @@ function bb_legacy_parse_box_inputs( $html ) {
 			'label'       => bb_legacy_find_label( $node, $xpath ),
 			'description' => bb_legacy_find_description( $node, $xpath ),
 			'conditional' => bb_legacy_detect_conditional( $node, $xpath ),
+			// Raw class attribute — lets bridges recognise plugin-specific
+			// widgets (e.g. WP Fusion's `select4-select-page` AJAX page picker)
+			// and map them to a richer Settings 2.0 field type.
+			'class'       => $node->getAttribute( 'class' ),
 		);
 	}
 
@@ -476,7 +500,7 @@ function bb_legacy_pick_conditional_value( array $trigger, DOMXPath $xpath ) {
 		if ( '' === $name ) {
 			return null;
 		}
-		$safe_name    = bb_legacy_xpath_safe( $name );
+		$safe_name    = bb_legacy_xpath_safe_name( $name );
 		$first_active = null;
 		if ( '' !== $safe_name ) {
 			foreach ( $xpath->query( "//input[@name='{$safe_name}' and @type='radio']" ) as $radio ) {
@@ -538,6 +562,48 @@ function bb_legacy_detect_input_type( DOMElement $node ) {
 }
 
 /**
+ * Extract the visible text of a <label>, stripping any trailing help-tip
+ * markup. WP admin plugins frequently append a `dashicons-editor-help`
+ * tooltip span inside the label (`<label><small>Required tags
+ * (any):</small><span class="wpf-tip" data-tip="long help…"></span></label>`);
+ * the tip's `data-tip` copy is descriptive, not part of the field label, and
+ * its textContent is usually empty anyway. We drop any descendant element
+ * whose class marks it as a tooltip/help affordance, then return the
+ * remaining trimmed text.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param DOMElement $label Label element.
+ * @return string Cleaned label text.
+ */
+function bb_legacy_label_text_without_tip( DOMElement $label ) {
+	$clone = $label->cloneNode( true );
+	if ( $clone instanceof DOMElement ) {
+		// Remove tooltip/help spans by class marker. Iterate a static list of
+		// nodes first (live NodeList mutates as we remove).
+		$to_remove = array();
+		foreach ( $clone->getElementsByTagName( '*' ) as $el ) {
+			$class = strtolower( $el->getAttribute( 'class' ) );
+			if ( false !== strpos( $class, 'tip' )
+				|| false !== strpos( $class, 'dashicons-editor-help' )
+				|| false !== strpos( $class, 'help' )
+			) {
+				$to_remove[] = $el;
+			}
+		}
+		foreach ( $to_remove as $el ) {
+			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- DOM API property.
+			if ( $el->parentNode ) {
+				// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- DOM API property.
+				$el->parentNode->removeChild( $el );
+			}
+		}
+	}
+	// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- DOM API property.
+	return trim( $clone->textContent );
+}
+
+/**
  * Find the label text for an input node.
  *
  * @since BuddyBoss 3.0.0
@@ -565,6 +631,40 @@ function bb_legacy_find_label( DOMElement $node, DOMXPath $xpath ) {
 				// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- DOM API property.
 				return trim( $labels->item( 0 )->textContent );
 			}
+		}
+
+		// Immediately-preceding-sibling <label> (WP-standard "label then
+		// field" pattern). Catches the very common case where the <label>'s
+		// `for` attribute does NOT match the input's id — e.g. WP Fusion
+		// renders `<label for="wpf-allow-tags"><small>Required tags
+		// (any):</small><span class="wpf-tip"…></span></label><select
+		// id="wpf-settings-allow_tags">`. Without this, every such field
+		// falls through to the metabox-title fallback and the labels appear
+		// shifted by one. We strip the trailing help-tip text (a `<span
+		// class="…wpf-tip…">` / `dashicons-editor-help`) so the label reads
+		// "Required tags (any):" rather than dragging in the tooltip copy.
+		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- DOM API property.
+		$sibling = $node->previousSibling;
+		while ( $sibling ) {
+			if ( $sibling instanceof DOMElement ) {
+				// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- DOM API property.
+				if ( 'label' === strtolower( $sibling->tagName ) ) {
+					$text = bb_legacy_label_text_without_tip( $sibling );
+					if ( '' !== $text ) {
+						return $text;
+					}
+				}
+				// Stop at the first preceding element that is itself an input
+				// control — the label (if any) belongs to that control, not
+				// ours.
+				// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- DOM API property.
+				$sib_tag = strtolower( $sibling->tagName );
+				if ( in_array( $sib_tag, array( 'input', 'select', 'textarea' ), true ) ) {
+					break;
+				}
+			}
+			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- DOM API property.
+			$sibling = $sibling->previousSibling;
 		}
 
 		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- DOM API property.
@@ -800,7 +900,8 @@ function bb_legacy_extract_input_value( $html, $name, $type ) {
 	if ( ! $xpath ) {
 		return '';
 	}
-	$safe_name = bb_legacy_xpath_safe( $name );
+	// Bracket-preserving: grouped names (settings[key][]) must match literally.
+	$safe_name = bb_legacy_xpath_safe_name( $name );
 	if ( '' === $safe_name ) {
 		return '';
 	}
@@ -835,6 +936,141 @@ function bb_legacy_extract_input_value( $html, $name, $type ) {
 }
 
 /**
+ * Extract the SELECTED values of a multi-select (`<select multiple>`) by name.
+ *
+ * Used for grouped tag pickers bridged as `toggle_list` fields (WP Fusion's
+ * `wpf-settings[allow_tags][]` etc.). Returns the value attributes of every
+ * `<option selected>` so the React checkboxes can be pre-checked.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $html Captured metabox HTML.
+ * @param string $name Select name attribute (may be array notation).
+ * @return string[] Selected option values.
+ */
+function bb_legacy_extract_multiselect_values( $html, $name ) {
+	$xpath = bb_legacy_get_xpath( $html );
+	if ( ! $xpath ) {
+		return array();
+	}
+	$safe_name = bb_legacy_xpath_safe_name( $name );
+	if ( '' === $safe_name ) {
+		return array();
+	}
+
+	$out = array();
+	foreach ( $xpath->query( "//select[@name='{$safe_name}']/option[@selected]" ) as $opt ) {
+		$val = $opt->getAttribute( 'value' );
+		if ( '' !== $val ) {
+			$out[] = $val;
+		}
+	}
+	return $out;
+}
+
+/**
+ * Read a saved multi-select value straight from post meta by its input name.
+ *
+ * AJAX-backed multi-selects (e.g. WP Fusion tag pickers) only render their
+ * saved `<option selected>` markup when the option is present in the plugin's
+ * client-side list (for WP Fusion, `available_tags`). On a CRM that is out of
+ * sync — or simply has no tags synced yet — the captured metabox HTML contains
+ * no selected options, so HTML scraping returns nothing even though the values
+ * are safely stored in post meta. Reading the meta directly makes a saved
+ * selection always visible, independent of the plugin's render state.
+ *
+ * Resolves the name through `bb_legacy_parse_array_name()` so grouped names
+ * like `wpf-settings[allow_tags][]` map to
+ * `get_post_meta( $id, 'wpf-settings', true )['allow_tags']`. Only the named
+ * leaf is read; nothing is written.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @param int    $post_id Post being edited.
+ * @param string $name    Input name attribute (may use array notation).
+ * @return string[] Saved values as a flat list, or an empty array when absent.
+ */
+function bb_legacy_read_multiselect_meta( $post_id, $name ) {
+	$post_id = (int) $post_id;
+	if ( $post_id <= 0 ) {
+		return array();
+	}
+
+	$parsed = bb_legacy_parse_array_name( $name );
+	if ( null === $parsed || '' === $parsed['base'] ) {
+		return array();
+	}
+
+	$node = get_post_meta( $post_id, $parsed['base'], true );
+
+	// Walk the non-empty bracket segments (the trailing `[]` append marker is an
+	// empty segment and is skipped — it just denotes the leaf is a list).
+	foreach ( $parsed['segments'] as $segment ) {
+		if ( '' === $segment ) {
+			continue;
+		}
+		if ( ! is_array( $node ) || ! array_key_exists( $segment, $node ) ) {
+			return array();
+		}
+		$node = $node[ $segment ];
+	}
+
+	if ( ! is_array( $node ) ) {
+		return ( '' === $node || null === $node ) ? array() : array( (string) $node );
+	}
+
+	$out = array();
+	foreach ( $node as $val ) {
+		if ( is_scalar( $val ) && '' !== (string) $val ) {
+			$out[] = (string) $val;
+		}
+	}
+	return $out;
+}
+
+/**
+ * Normalize a React field value into the shape the bridged legacy input
+ * expects before it is written into $_POST.
+ *
+ * The only transform needed today: a `toggle_list` field's object value
+ * (`{ value: 0|1 }`) bridged onto an append-array input (`name="…[]"`) must
+ * become a flat indexed array of the CHECKED option values (`['a','c']`) —
+ * exactly what a browser submits for a `<select multiple>`. All other types
+ * pass through unchanged.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $type   Field type (from bb_legacy_detect_input_type()).
+ * @param array  $parsed Parsed name (bb_legacy_parse_array_name()).
+ * @param mixed  $value  Raw value from the registry save payload.
+ * @return mixed Normalized value.
+ */
+function bb_legacy_normalize_save_value( $type, $parsed, $value ) {
+	if ( 'toggle_list' !== $type ) {
+		return $value;
+	}
+	// Object/assoc value → flat array of checked keys.
+	if ( is_array( $value ) ) {
+		$checked = array();
+		foreach ( $value as $key => $on ) {
+			// Skip the indexed-array case (already flat) — those have integer
+			// keys and scalar values that are the selected values themselves.
+			if ( is_int( $key ) ) {
+				if ( '' !== (string) $on ) {
+					$checked[] = $on;
+				}
+				continue;
+			}
+			if ( $on && '0' !== (string) $on ) {
+				$checked[] = $key;
+			}
+		}
+		return $checked;
+	}
+	return $value;
+}
+
+/**
  * Extract <option> list from a select.
  *
  * @since BuddyBoss 3.0.0
@@ -848,7 +1084,8 @@ function bb_legacy_extract_select_options( $html, $name ) {
 	if ( ! $xpath ) {
 		return array();
 	}
-	$safe_name = bb_legacy_xpath_safe( $name );
+	// Bracket-preserving: grouped names (settings[key]) must match literally.
+	$safe_name = bb_legacy_xpath_safe_name( $name );
 	if ( '' === $safe_name ) {
 		return array();
 	}
@@ -878,7 +1115,8 @@ function bb_legacy_extract_radio_options( $html, $name ) {
 	if ( ! $xpath ) {
 		return array();
 	}
-	$safe_name = bb_legacy_xpath_safe( $name );
+	// Bracket-preserving: grouped radio names (settings[key]) must match literally.
+	$safe_name = bb_legacy_xpath_safe_name( $name );
 	if ( '' === $safe_name ) {
 		return array();
 	}
@@ -953,6 +1191,16 @@ function bb_legacy_resolve_sanitize_callback( $type ) {
 			return 'esc_url_raw';
 		case 'number':
 			return 'intval';
+		case 'toggle_list':
+			// toggle_list carries an array/object value (multi-select). A plain
+			// sanitize_text_field() would cast it to '' and wipe the selection;
+			// recurse into the structure instead, sanitizing each leaf.
+			return function ( $val ) {
+				if ( is_array( $val ) ) {
+					return map_deep( $val, 'sanitize_text_field' );
+				}
+				return sanitize_text_field( $val );
+			};
 		default:
 			return 'sanitize_text_field';
 	}
@@ -969,22 +1217,32 @@ function bb_legacy_resolve_sanitize_callback( $type ) {
  *
  * @since BuddyBoss 3.0.0
  *
- * @param array        $box           Metabox descriptor from $wp_meta_boxes.
- * @param WP_Post|null $post          Post being captured against, or null
- *                                    for registration-time structure scan.
- * @param string       $request_param $_GET key the legacy callback reads.
- *                                    Default 'post'.
+ * @param array        $box                Metabox descriptor from $wp_meta_boxes.
+ * @param WP_Post|null $post               Post being captured against, or null
+ *                                          for registration-time structure scan.
+ * @param string       $request_param      $_GET key the legacy callback reads.
+ *                                          Default 'post'.
+ * @param string       $fallback_post_type Post type to probe for when $post is
+ *                                          null and the box declares none of its
+ *                                          own — lets a box shared across post
+ *                                          types render with the right type's
+ *                                          labels. Default ''.
  * @return string Captured HTML, or '' on error / oversize / empty.
  */
-function bb_legacy_capture_post_box_html( $box, $post, $request_param = 'post' ) {
+function bb_legacy_capture_post_box_html( $box, $post, $request_param = 'post', $fallback_post_type = '' ) {
 	if ( empty( $box['callback'] ) || empty( $box['id'] ) ) {
 		return '';
 	}
 
 	static $cache = array();
 
-	$post_id   = ( is_object( $post ) && isset( $post->ID ) ) ? (int) $post->ID : 0;
-	$cache_key = $box['id'] . '|' . $request_param . '|' . $post_id;
+	$post_id = ( is_object( $post ) && isset( $post->ID ) ) ? (int) $post->ID : 0;
+	// Include the fallback post type in the cache key so a box shared across
+	// post types (e.g. WP Fusion's `wpf-meta`, registered on every public CPT)
+	// caches a DISTINCT structure per type. Without this, the first type scanned
+	// would poison the cache and every CPT would inherit its labels
+	// (e.g. "view this post" leaking onto the forum edit modal).
+	$cache_key = $box['id'] . '|' . $request_param . '|' . $post_id . '|' . (string) $fallback_post_type;
 	if ( isset( $cache[ $cache_key ] ) ) {
 		return $cache[ $cache_key ];
 	}
@@ -1002,6 +1260,13 @@ function bb_legacy_capture_post_box_html( $box, $post, $request_param = 'post' )
 			$probe_post_type = $box['args']['post_type'];
 		} elseif ( ! empty( $box['post_type'] ) ) {
 			$probe_post_type = $box['post_type'];
+		} elseif ( '' !== (string) $fallback_post_type ) {
+			// Box doesn't declare its own post type (common — WP Fusion's
+			// `wpf-meta` is registered identically on every public CPT). Use the
+			// bridge's configured post type so the probe fetches a real post of
+			// the RIGHT type, which makes post-type-aware labels (e.g. WP
+			// Fusion's "view this forum") resolve correctly during the scan.
+			$probe_post_type = $fallback_post_type;
 		}
 		if ( $probe_post_type ) {
 			$probes = get_posts(
@@ -1078,16 +1343,213 @@ function bb_legacy_capture_post_box_html( $box, $post, $request_param = 'post' )
 }
 
 /**
+ * Decompose an HTML input `name` into its base key and bracket path.
+ *
+ * Grouped inputs are the dominant WordPress admin convention — a metabox
+ * stores all its fields under one parent key, e.g. WP Fusion's
+ * `wpf-settings[lock_content]`, `wpf-settings[allow_tags][]`. The legacy
+ * bridge historically dropped every such input outright, which silently
+ * hid any metabox that used the pattern (WP Fusion, and many others).
+ *
+ * This parser turns a name into:
+ *   - base:        the leading identifier (`wpf-settings`)
+ *   - segments:    the bracket parts in order (`['allow_tags', '']`),
+ *                  where an empty string represents the append `[]` form
+ *   - is_array:    true when at least one bracket pair was present
+ *
+ * Returns null for names whose bracket syntax is malformed (unbalanced
+ * brackets, nested `[[`, characters outside the identifier set inside a
+ * non-empty segment) so callers can reject them just as before.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $name Raw HTML name attribute.
+ * @return array|null { base: string, segments: string[], is_array: bool }, or null when malformed.
+ */
+function bb_legacy_parse_array_name( $name ) {
+	$name = (string) $name;
+	if ( '' === $name ) {
+		return null;
+	}
+
+	// Fast path: no brackets — a plain scalar key.
+	if ( false === strpos( $name, '[' ) && false === strpos( $name, ']' ) ) {
+		return array(
+			'base'     => $name,
+			'segments' => array(),
+			'is_array' => false,
+		);
+	}
+
+	// Split base from the first bracket. The base must be a valid identifier
+	// (leading underscore allowed for the hidden post-meta convention).
+	$first = strpos( $name, '[' );
+	$base  = substr( $name, 0, $first );
+	if ( ! preg_match( '/^[A-Za-z_][A-Za-z0-9_\-]*$/', $base ) ) {
+		return null;
+	}
+
+	$rest = substr( $name, $first );
+
+	// Every remaining char must belong to a well-formed `[segment]` run.
+	// Segment bodies allow the identifier set (and may be empty for `[]`).
+	// `$matches[1]` holds the inner contents as plain strings (no
+	// PREG_OFFSET_CAPTURE — that wraps each capture in a [value, offset]
+	// array and corrupts the segment list downstream).
+	if ( ! preg_match_all( '/\[([A-Za-z0-9_\-]*)\]/', $rest, $matches ) ) {
+		return null;
+	}
+
+	// Reconstruct `[seg][seg]…` from the captured segments and compare to the
+	// original tail; a mismatch means malformed syntax (`a[b]c`, `a[[b]]`,
+	// unbalanced brackets) and we reject just as the old code did.
+	$consumed = '';
+	foreach ( $matches[1] as $segment ) {
+		$consumed .= '[' . $segment . ']';
+	}
+	if ( $consumed !== $rest ) {
+		return null;
+	}
+
+	return array(
+		'base'     => $base,
+		'segments' => $matches[1], // Inner contents; '' for the `[]` append form.
+		'is_array' => true,
+	);
+}
+
+/**
+ * Flatten a (possibly grouped) HTML input name into a stable id slug.
+ *
+ * `settings[allow_tags][]` → `settings_allow_tags_arr`,
+ * `settings[redirect]`     → `settings_redirect`. The trailing `[]` append
+ * form is mapped to a distinct `_arr` suffix so it never collapses onto a
+ * sibling scalar leaf of the same name. Used only for building registry
+ * field ids — the real $_POST key is always reconstructed from the parsed
+ * structure, never from this slug.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $name Raw input name.
+ * @return string Flattened, separator-joined slug (pre-sanitize_key()).
+ */
+function bb_legacy_flatten_input_name( $name ) {
+	$parsed = bb_legacy_parse_array_name( $name );
+	if ( null === $parsed ) {
+		return (string) $name;
+	}
+	if ( empty( $parsed['is_array'] ) ) {
+		return $parsed['base'];
+	}
+	$parts = array( $parsed['base'] );
+	foreach ( $parsed['segments'] as $segment ) {
+		$parts[] = ( '' === $segment ) ? 'arr' : $segment;
+	}
+	return implode( '_', $parts );
+}
+
+/**
+ * Inject a value into $_POST at the location described by an array-notation
+ * input name, mirroring how a browser serialises grouped form fields.
+ *
+ * `wpf-settings[allow_tags][]` with value ['1','2'] becomes
+ * `$_POST['wpf-settings']['allow_tags'] = ['1','2']`. A trailing `[]`
+ * appends; a named segment assigns. Scalars (no brackets) assign directly.
+ *
+ * Never clobbers a value React already populated at the same leaf — the
+ * caller's $_POST-isset guard handles the top level; here we merge deeper
+ * so a metabox's `settings[b]` doesn't wipe React's `settings[a]`.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $parsed Output of bb_legacy_parse_array_name().
+ * @param mixed $value  Sanitized value to assign at the leaf.
+ * @return void
+ */
+function bb_legacy_inject_post_value( $parsed, $value ) {
+	if ( empty( $parsed['base'] ) ) {
+		return;
+	}
+
+	$base = $parsed['base'];
+
+	// Scalar (no brackets): assign directly, preserving the existing
+	// don't-clobber contract enforced by callers before they reach here.
+	if ( empty( $parsed['is_array'] ) ) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.NonceVerification.Recommended
+		$_POST[ $base ] = $value;
+		return;
+	}
+
+	// Walk/create the nested structure under $_POST[$base]. The leaf $value
+	// was already run through the field's sanitize_callback by the caller,
+	// and the base key passed bb_legacy_is_safe_cpt_post_key(); the
+	// $cursor reference writes below therefore store pre-sanitized data, so
+	// the InputNotSanitized/MissingUnslash sniffs are suppressed on the
+	// reference assignments that PHPCS taints through the chain.
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.NonceVerification.Recommended,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+	if ( ! isset( $_POST[ $base ] ) || ! is_array( $_POST[ $base ] ) ) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.NonceVerification.Recommended,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+		$_POST[ $base ] = array();
+	}
+
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.NonceVerification.Recommended,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+	$cursor   = &$_POST[ $base ];
+	$segments = $parsed['segments'];
+	$last     = count( $segments ) - 1;
+
+	foreach ( $segments as $i => $segment ) {
+		$is_append = ( '' === $segment );
+
+		if ( $i === $last ) {
+			if ( $is_append ) {
+				// Trailing `[]` is the multi-value form. A browser submitting a
+				// `<select multiple>` sends each selected value as its own
+				// indexed element, i.e. the parent IS the value array. When the
+				// caller already handed us a flat array (toggle_list normalized
+				// to a list of checked values), assign it wholesale — appending
+				// it as a single element would double-nest
+				// (`allow_tags => [ [ 'tag_a' ] ]`) and corrupt the consumer's
+				// expected `allow_tags => [ 'tag_a' ]`. A scalar value keeps the
+				// append semantics (single-value `[]` field).
+				if ( is_array( $value ) ) {
+					$cursor = array_values( $value );
+				} else {
+					$cursor[] = $value;
+				}
+			} else {
+				$cursor[ $segment ] = $value;
+			}
+			return;
+		}
+
+		// Intermediate segment: descend, creating containers as needed.
+		if ( $is_append ) {
+			$cursor[] = array();
+			$keys     = array_keys( $cursor );
+			$next_key = end( $keys );
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+			$cursor = &$cursor[ $next_key ];
+		} else {
+			if ( ! isset( $cursor[ $segment ] ) || ! is_array( $cursor[ $segment ] ) ) {
+				$cursor[ $segment ] = array();
+			}
+			$cursor = &$cursor[ $segment ];
+		}
+	}
+}
+
+/**
  * Allowlist-by-denylist for $_POST keys the CPT bridge is permitted to
  * write on behalf of third-party metaboxes.
  *
  * Mirrors `bb_legacy_is_safe_post_key()` (groups bridge) but allows the
  * leading-underscore prefix so hidden post-meta names from established
  * admin plugins (e.g., `_yoast_*`, `_acf_*`, `_mepr_*`) can be bridged.
- * The remaining denials (sensitive WP user keys, Platform/BP/WP reserved
- * prefixes, array-notation keys) are kept identical so a metabox cannot
- * smuggle `<input name="role">` or `<input name="user_pass">` into a
- * Settings 2.0 save.
+ * Grouped array-notation names (`settings[key]`, `settings[key][]`) are now
+ * accepted too — their structure is validated and the denylist checks run
+ * against the BASE key so a metabox still cannot smuggle `role[]`,
+ * `wp_foo[bar]`, or `<input name="user_pass">` into a Settings 2.0 save.
  *
  * @since BuddyBoss 3.0.0
  *
@@ -1104,11 +1566,16 @@ function bb_legacy_is_safe_cpt_post_key( $name, $canonical_keys = array() ) {
 		return false;
 	}
 
-	// Reject array notation (`things[]`) — sanitize_key() can't represent
-	// these losslessly and they corrupt $_POST when reassembled.
-	if ( false !== strpos( $name, '[' ) || false !== strpos( $name, ']' ) ) {
+	// Grouped inputs (`settings[key]`, `settings[key][]`) are the dominant
+	// admin-metabox convention (WP Fusion, ACF, many settings boxes). Parse
+	// the structure; reject only when the bracket syntax is malformed. The
+	// denylist checks below run against the BASE key so a metabox still can't
+	// smuggle `role[]` or `wp_foo[bar]` past the reserved-name guards.
+	$parsed = bb_legacy_parse_array_name( $name );
+	if ( null === $parsed ) {
 		return false;
 	}
+	$name = $parsed['base'];
 
 	// Allow leading underscore (hidden post-meta convention used by Yoast,
 	// ACF, MemberPress, etc.) but otherwise require pure ASCII identifiers.
@@ -1450,7 +1917,7 @@ function bb_legacy_replay_cpt_hidden_inputs( $args, $item ) {
 					if ( in_array( $box_id, $skip_box_ids, true ) ) {
 						continue;
 					}
-					$html = bb_legacy_capture_post_box_html( $box, is_object( $item ) ? $item : null, $args['request_param'] );
+					$html = bb_legacy_capture_post_box_html( $box, is_object( $item ) ? $item : null, $args['request_param'], $args['post_type'] );
 					if ( ! $html ) {
 						continue;
 					}
@@ -1566,7 +2033,7 @@ function bb_legacy_persist_cpt_post_meta( $args, $item ) {
 					if ( in_array( $box_id, $skip_box_ids, true ) ) {
 						continue;
 					}
-					$html = bb_legacy_capture_post_box_html( $box, $item, $args['request_param'] );
+					$html = bb_legacy_capture_post_box_html( $box, $item, $args['request_param'], $args['post_type'] );
 					if ( ! $html ) {
 						continue;
 					}
@@ -1587,11 +2054,29 @@ function bb_legacy_persist_cpt_post_meta( $args, $item ) {
 						if ( ! bb_legacy_is_safe_cpt_post_key( $name, $canonical_keys ) ) {
 							continue;
 						}
+						$parsed = bb_legacy_parse_array_name( $name );
+						if ( null === $parsed ) {
+							continue;
+						}
+						// Grouped inputs (settings[key]...) are persisted by the
+						// owning plugin's own save_post handler, which reads the
+						// whole $_POST[base] array our 'before' phase injected and
+						// applies its own sanitization/structure (e.g. WP Fusion's
+						// save_meta_box_data writes the single `wpf-settings` meta
+						// row). Writing individual leaves here would create bogus
+						// per-leaf meta keys and fight that handler, so skip them —
+						// this generic fallback only owns flat scalar keys whose
+						// plugins bail under DOING_AJAX.
+						if ( ! empty( $parsed['is_array'] ) ) {
+							continue;
+						}
 						// phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.NonceVerification.Recommended
 						if ( ! isset( $_POST[ $name ] ) ) {
 							continue;
 						}
-						// phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.NonceVerification.Recommended
+						// Value is type-sanitized by $cb on the next lines; the
+						// raw read here is intentional so the sanitizer runs once.
+						// phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.NonceVerification.Recommended,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 						$value = wp_unslash( $_POST[ $name ] );
 						$cb    = bb_legacy_resolve_sanitize_callback( $input['type'] );
 						if ( is_callable( $cb ) ) {
@@ -1776,12 +2261,15 @@ function bb_legacy_run_cpt_bridge_box( $registry, $component, $box, &$order, $ex
 	$version = defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : '0';
 	// Bump this sentinel any time the parser shape changes (new fields on the
 	// $inputs array) so cached entries don't return stale data without keys.
-	$parser_rev = 'v4-radio-implicit-label';
+	$parser_rev = 'v12-multiselect-meta-read';
 	$cache_key  = 'bb_legacy_cpt_box_inputs_' . md5( $args['post_type'] . '|' . $box['id'] . '|' . $version . '|' . $parser_rev );
 	$inputs     = get_transient( $cache_key );
 
 	if ( ! is_array( $inputs ) ) {
-		$html = bb_legacy_capture_post_box_html( $box, null, $args['request_param'] );
+		// Pass the bridge's post type as the probe fallback so a box shared
+		// across post types (WP Fusion's `wpf-meta`) renders with THIS type's
+		// labels (e.g. "view this forum", not "view this post").
+		$html = bb_legacy_capture_post_box_html( $box, null, $args['request_param'], $args['post_type'] );
 		if ( ! $html ) {
 			set_transient( $cache_key, array(), 5 * MINUTE_IN_SECONDS );
 			return;
@@ -1814,7 +2302,11 @@ function bb_legacy_run_cpt_bridge_box( $registry, $component, $box, &$order, $ex
 			continue;
 		}
 
-		$field_id = sanitize_key( 'legacy_' . $box['id'] . '_' . $input['name'] );
+		// Build a collision-safe field id. sanitize_key() strips `[`/`]`, so
+		// grouped names like `settings[allow_tags]` and `settings[allow_tags][]`
+		// would otherwise both collapse to the same id. Flatten brackets to
+		// underscores first so each leaf keeps a distinct, stable id.
+		$field_id = sanitize_key( 'legacy_' . $box['id'] . '_' . bb_legacy_flatten_input_name( $input['name'] ) );
 		if ( isset( $existing_ids[ $field_id ] ) ) {
 			continue;
 		}
@@ -1823,10 +2315,36 @@ function bb_legacy_run_cpt_bridge_box( $registry, $component, $box, &$order, $ex
 		$raw_description = isset( $input['description'] ) ? $input['description'] : '';
 		$sanitize_cb     = bb_legacy_resolve_sanitize_callback( $input['type'] );
 
+		// Some plugins render select2/select4 AJAX widgets — a `<select>` whose
+		// option list is fetched client-side as the user searches, so its static
+		// markup is empty (or only the saved option). Captured as plain HTML the
+		// bridge sees an unusable `select`/`toggle_list` and React renders a dead
+		// "No options available yet" message. Detect such a widget generically by
+		// its registered class signature (see bb_legacy_ajax_select_resolvers())
+		// and route it to a searchable Settings 2.0 field that fetches options
+		// through a resolver-backed shim: a single `<select>` → `async_select`,
+		// a `<select multiple>` (captured as `toggle_list`) → `ajax_multiselect`.
+		// Restricted to those two input types so a class collision on another
+		// control can't hijack the field type.
+		$ajax_select_resolver = null;
+		if ( in_array( $input['type'], array( 'select', 'toggle_list' ), true ) && isset( $input['class'] ) ) {
+			$ajax_select_resolver = bb_legacy_match_ajax_select_resolver( (string) $input['class'] );
+		}
+		$is_ajax_single = ( null !== $ajax_select_resolver && 'select' === $input['type'] );
+		$is_ajax_multi  = ( null !== $ajax_select_resolver && 'toggle_list' === $input['type'] );
+
+		if ( $is_ajax_single ) {
+			$field_type = 'async_select';
+		} elseif ( $is_ajax_multi ) {
+			$field_type = 'ajax_multiselect';
+		} else {
+			$field_type = $input['type'];
+		}
+
 		$args_field = array(
 			'label'             => sanitize_text_field( $raw_label ),
 			'description'       => wp_kses_post( $raw_description ),
-			'type'              => $input['type'],
+			'type'              => $field_type,
 			'order'             => $order++,
 			'tab'               => $tab,
 			'context'           => 'after',
@@ -1842,10 +2360,39 @@ function bb_legacy_run_cpt_bridge_box( $registry, $component, $box, &$order, $ex
 			'field_group_label' => isset( $box['title'] ) && '' !== (string) $box['title']
 				? (string) $box['title']
 				: ( isset( $box['id'] ) ? (string) $box['id'] : '' ),
-			'get_value'         => function ( $post ) use ( $box, $input, $request_param ) {
+			'get_value'         => function ( $post ) use ( $box, $input, $request_param, $is_ajax_multi ) {
+				// AJAX multi-selects bridged as ajax_multiselect want a FLAT array
+				// of the saved (possibly non-numeric) ids — the value shape
+				// AjaxMultiSelectField renders as chips and round-trips on save.
+				// Read straight from post meta first so a saved selection always
+				// shows even when the source plugin can't re-render its
+				// <option selected> markup (e.g. an out-of-sync CRM tag list);
+				// fall back to scraping the captured HTML only if meta is empty.
+				if ( $is_ajax_multi ) {
+					$post_id = is_object( $post ) && isset( $post->ID ) ? (int) $post->ID : (int) $post;
+					$saved   = bb_legacy_read_multiselect_meta( $post_id, $input['name'] );
+					if ( ! empty( $saved ) ) {
+						return array_values( $saved );
+					}
+					$html = bb_legacy_capture_post_box_html( $box, $post, $request_param );
+					return $html ? array_values( bb_legacy_extract_multiselect_values( $html, $input['name'] ) ) : array();
+				}
+
 				$html = bb_legacy_capture_post_box_html( $box, $post, $request_param );
 				if ( ! $html ) {
 					return ( 'checkbox' === $input['type'] ) ? '0' : '';
+				}
+				// toggle_list (multi-select group) carries an OBJECT value keyed
+				// by option value: { tag_a: 1 }. Read the saved selections from
+				// the rendered <option selected> list and shape them so the React
+				// checkboxes reflect state.
+				if ( 'toggle_list' === $input['type'] ) {
+					$selected = bb_legacy_extract_multiselect_values( $html, $input['name'] );
+					$out      = array();
+					foreach ( $selected as $val ) {
+						$out[ $val ] = 1;
+					}
+					return $out;
 				}
 				return bb_legacy_extract_input_value( $html, $input['name'], $input['type'] );
 			},
@@ -1861,17 +2408,95 @@ function bb_legacy_run_cpt_bridge_box( $registry, $component, $box, &$order, $ex
 				if ( ! bb_legacy_is_safe_cpt_post_key( $input['name'], $canonical_keys ) ) {
 					return;
 				}
-				// Don't clobber a key React already populated.
-				// phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.NonceVerification.Recommended
-				if ( isset( $_POST[ $input['name'] ] ) ) {
+				$parsed = bb_legacy_parse_array_name( $input['name'] );
+				if ( null === $parsed ) {
 					return;
 				}
-				// phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.NonceVerification.Recommended
-				$_POST[ $input['name'] ] = $value;
+				// Normalize the React value to the shape the legacy input
+				// expects. A `toggle_list` field carries an object value
+				// (`{ tag_a: 1, tag_b: 0 }`), but the multi-select it bridges
+				// (`name="settings[allow_tags][]"`) is submitted by a browser as
+				// a flat indexed array of the CHECKED values (`['tag_a']`).
+				// Without this conversion WP Fusion's sanitizer receives
+				// `['tag_a' => 1]`, array_filters the 1/0, and stores garbage.
+				$value = bb_legacy_normalize_save_value( $input['type'], $parsed, $value );
+				// Scalar keys: keep the original don't-clobber contract — if
+				// React already populated this exact key, leave it alone.
+				// Grouped keys (settings[...]) merge into the nested structure
+				// via bb_legacy_inject_post_value(), which preserves sibling
+				// leaves React may have set, so we don't bail on the parent
+				// key merely existing.
+				if ( empty( $parsed['is_array'] ) ) {
+					// phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.NonceVerification.Recommended
+					if ( isset( $_POST[ $parsed['base'] ] ) ) {
+						return;
+					}
+				}
+				bb_legacy_inject_post_value( $parsed, $value );
 			},
 		);
 
-		if ( 'select' === $input['type'] || 'toggle_list' === $input['type'] ) {
+		if ( $is_ajax_single ) {
+			// Searchable single-select. Options come from the resolver-backed
+			// search shim, not from the captured (empty) <select>. The shim
+			// always runs `bb_legacy_ajax_select_search`; it looks up the
+			// concrete resolver at request time by the `resolver` key we forward
+			// here. We also pre-resolve the saved value's label so AsyncSelectField
+			// can render the current selection without a mount-time resolve fetch.
+			$resolver_key                 = $ajax_select_resolver['key'];
+			$args_field['async_action']   = 'bb_legacy_ajax_select_search';
+			$args_field['get_extra_data'] = function ( $post ) use ( $box, $input, $request_param, $ajax_select_resolver, $resolver_key ) {
+				// `resolver` tells the generic search shim which plugin behaviour
+				// to dispatch to; the renderer folds it into every async request.
+				$extra = array( 'resolver' => $resolver_key );
+
+				$html  = bb_legacy_capture_post_box_html( $box, $post, $request_param );
+				$saved = $html ? bb_legacy_extract_input_value( $html, $input['name'], 'select' ) : '';
+				if ( '' !== $saved && '0' !== (string) $saved ) {
+					$extra['initial_label'] = (string) bb_legacy_resolve_ajax_select_label( $ajax_select_resolver, $saved );
+				}
+
+				return $extra;
+			};
+		} elseif ( $is_ajax_multi ) {
+			// Searchable multi-select. AjaxMultiSelectField fetches matches from
+			// the resolver-backed shim and needs the saved values pre-resolved to
+			// {value,label} pairs so chips show names (not raw ids) on first
+			// render. `string_ids` opts the component out of its default Number()
+			// id coercion — third-party ids can be non-numeric (e.g. CRM tags).
+			$resolver_key                 = $ajax_select_resolver['key'];
+			$args_field['get_extra_data'] = function ( $post ) use ( $box, $input, $request_param, $ajax_select_resolver, $resolver_key ) {
+				$extra = array(
+					'ajax_action'        => 'bb_legacy_ajax_select_search',
+					'ajax_nonce'         => wp_create_nonce( 'bb_admin_settings' ),
+					'nonce_param'        => 'nonce',
+					'search_placeholder' => isset( $ajax_select_resolver['placeholder'] )
+						? $ajax_select_resolver['placeholder']
+						: __( 'Search', 'buddyboss' ),
+					'string_ids'         => true,
+					'resolver'           => $resolver_key,
+					'selected_items'     => array(),
+				);
+
+				// Seed the saved chips from post meta first (so they survive an
+				// out-of-sync source list), falling back to HTML scraping only
+				// when meta is empty — mirrors the get_value strategy above.
+				$post_id = is_object( $post ) && isset( $post->ID ) ? (int) $post->ID : (int) $post;
+				$saved   = bb_legacy_read_multiselect_meta( $post_id, $input['name'] );
+				if ( empty( $saved ) ) {
+					$html  = bb_legacy_capture_post_box_html( $box, $post, $request_param );
+					$saved = $html ? bb_legacy_extract_multiselect_values( $html, $input['name'] ) : array();
+				}
+				foreach ( $saved as $val ) {
+					$extra['selected_items'][] = array(
+						'value' => (string) $val,
+						'label' => (string) bb_legacy_resolve_ajax_select_label( $ajax_select_resolver, $val ),
+					);
+				}
+
+				return $extra;
+			};
+		} elseif ( 'select' === $input['type'] || 'toggle_list' === $input['type'] ) {
 			$args_field['get_options'] = function ( $post ) use ( $box, $input, $request_param ) {
 				$html = bb_legacy_capture_post_box_html( $box, $post, $request_param );
 				return bb_legacy_extract_select_options( $html, $input['name'] );
@@ -1887,7 +2512,9 @@ function bb_legacy_run_cpt_bridge_box( $registry, $component, $box, &$order, $ex
 		// id (legacy_<box>_<name>), not its raw $_POST name — that's what the
 		// registry's React shell looks up against sibling registered fields.
 		if ( ! empty( $input['conditional']['field'] ) ) {
-			$trigger_field_id = sanitize_key( 'legacy_' . $box['id'] . '_' . $input['conditional']['field'] );
+			// Flatten brackets the same way as the field id above so a grouped
+			// trigger name resolves to the matching sibling field id.
+			$trigger_field_id = sanitize_key( 'legacy_' . $box['id'] . '_' . bb_legacy_flatten_input_name( $input['conditional']['field'] ) );
 			if ( '' !== $trigger_field_id && $trigger_field_id !== $field_id ) {
 				$args_field['conditional'] = array(
 					'field' => $trigger_field_id,
@@ -1899,6 +2526,273 @@ function bb_legacy_run_cpt_bridge_box( $registry, $component, $box, &$order, $ex
 		$registry->register( $component, $field_id, $args_field );
 	}
 }
+
+/**
+ * Registry of AJAX-select resolvers for third-party metabox widgets.
+ *
+ * Some plugins render a `<select>` whose options are fetched client-side
+ * (select2/select4 AJAX). The bridge can't replay those endpoints generically —
+ * each plugin uses its own action, params, and response shape. Instead, a
+ * resolver describes, per widget, how to (a) recognise it, (b) search its
+ * options, and (c) resolve a saved value to a display label. The bridge detects
+ * a widget by its class (`match`) and routes it to a searchable Settings 2.0
+ * field; the generic search shim (`bb_legacy_ajax_select_search`) then calls the
+ * resolver's `search` callback at request time.
+ *
+ * Each resolver entry (keyed by a stable string id) is:
+ *   - `match`         string  Lowercase substring tested against the widget's
+ *                             class attribute. First match wins.
+ *   - `placeholder`   string  Search-box placeholder (multi-select only).
+ *   - `search`        callable function( string $query, int $page ): array of
+ *                             `array( 'value' => string, 'label' => string )`.
+ *                             $page is 1-based; return up to a page of matches.
+ *   - `has_more`      callable Optional. function( string $query, int $page,
+ *                             array $matches ): bool — whether more pages exist.
+ *                             Defaults to false (single page).
+ *   - `resolve_label` callable Optional. function( string $value ): string —
+ *                             a saved value's display label. Defaults to the
+ *                             value verbatim.
+ *
+ * Third parties add or override entries via the `bb_legacy_ajax_select_resolvers`
+ * filter. Platform ships resolvers for WP Fusion's tag and redirect pickers.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @return array Map of resolver id => resolver definition.
+ */
+function bb_legacy_get_ajax_select_resolvers() {
+	$resolvers = array(
+		// WP Fusion tag pickers: <select multiple class="select4-wpf-tags">.
+		'wpf_tags'     => array(
+			'match'         => 'select4-wpf-tags',
+			'placeholder'   => __( 'Select tags', 'buddyboss' ),
+			'search'        => function ( $query, $page ) {
+				unset( $page ); // Tag lists are small — returned unpaginated.
+				if ( ! function_exists( 'wp_fusion' ) || empty( wp_fusion()->settings ) ) {
+					return array();
+				}
+				$tags = wp_fusion()->settings->get_available_tags_flat();
+				if ( ! is_array( $tags ) ) {
+					return array();
+				}
+				$out = array();
+				foreach ( $tags as $id => $label ) {
+					if ( '' !== $query && false === stripos( (string) $label, $query ) ) {
+						continue;
+					}
+					$out[] = array(
+						'value' => (string) $id,
+						'label' => (string) $label,
+					);
+				}
+				return $out;
+			},
+			'resolve_label' => function ( $value ) {
+				return function_exists( 'wpf_get_tag_label' ) ? (string) wpf_get_tag_label( $value ) : (string) $value;
+			},
+		),
+		// WP Fusion redirect picker: <select class="select4-select-page">.
+		'wpf_redirect' => array(
+			'match'         => 'select4-select-page',
+			'placeholder'   => __( 'Select a page', 'buddyboss' ),
+			'search'        => function ( $query, $page ) {
+				$wp_query = new WP_Query(
+					array(
+						'post_type'              => 'any',
+						'post_status'            => 'publish',
+						'posts_per_page'         => 20,
+						'paged'                  => max( 1, (int) $page ),
+						's'                      => $query,
+						'orderby'                => 'title',
+						'order'                  => 'ASC',
+						'no_found_rows'          => false,
+						'update_post_meta_cache' => false,
+						'update_post_term_cache' => false,
+					)
+				);
+				$out = array();
+				foreach ( $wp_query->posts as $post ) {
+					$out[] = array(
+						'value' => (string) $post->ID,
+						'label' => $post->post_title,
+					);
+				}
+				// Stash the page count for has_more without a second query.
+				$GLOBALS['bb_legacy_ajax_select_max_pages'] = (int) $wp_query->max_num_pages;
+				return $out;
+			},
+			'has_more'      => function ( $query, $page, $matches ) {
+				unset( $query, $matches ); // Paging decided by WP_Query max pages.
+				$max = isset( $GLOBALS['bb_legacy_ajax_select_max_pages'] ) ? (int) $GLOBALS['bb_legacy_ajax_select_max_pages'] : 1;
+				return (int) $page < $max;
+			},
+			'resolve_label' => function ( $value ) {
+				// WP Fusion stores a post ID or a raw URL.
+				return is_numeric( $value ) ? (string) get_the_title( (int) $value ) : (string) $value;
+			},
+		),
+	);
+
+	/**
+	 * Filter the AJAX-select resolver registry.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 *
+	 * @param array $resolvers Map of resolver id => resolver definition.
+	 */
+	return (array) apply_filters( 'bb_legacy_ajax_select_resolvers', $resolvers );
+}
+
+/**
+ * Find the resolver whose `match` substring appears in a widget's class.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @param string $class_attr Widget class attribute.
+ * @return array|null Resolver definition with its `key` added, or null.
+ */
+function bb_legacy_match_ajax_select_resolver( $class_attr ) {
+	$class_attr = strtolower( (string) $class_attr );
+	if ( '' === $class_attr ) {
+		return null;
+	}
+	foreach ( bb_legacy_get_ajax_select_resolvers() as $key => $resolver ) {
+		if ( empty( $resolver['match'] ) || ! is_callable( $resolver['search'] ) ) {
+			continue;
+		}
+		if ( false !== strpos( $class_attr, strtolower( (string) $resolver['match'] ) ) ) {
+			$resolver['key'] = (string) $key;
+			return $resolver;
+		}
+	}
+	return null;
+}
+
+/**
+ * Resolve a saved value to its display label via a resolver's `resolve_label`.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @param array  $resolver Resolver definition.
+ * @param string $value    Saved value.
+ * @return string Display label (falls back to the value).
+ */
+function bb_legacy_resolve_ajax_select_label( $resolver, $value ) {
+	if ( ! empty( $resolver['resolve_label'] ) && is_callable( $resolver['resolve_label'] ) ) {
+		$label = (string) call_user_func( $resolver['resolve_label'], $value );
+		if ( '' !== $label ) {
+			return $label;
+		}
+	}
+	return (string) $value;
+}
+
+/**
+ * Generic AJAX search shim for resolver-backed bridged select widgets.
+ *
+ * Serves BOTH searchable Settings 2.0 field types from a single endpoint,
+ * dispatching to the concrete plugin behaviour via the `resolver` request param
+ * (the resolver id forwarded at field-registration time):
+ *
+ *   - `async_select` (AsyncSelectField) sends `term`, `page`, optional
+ *     `selected_id`, and expects `wp_send_json_success( { results, has_more } )`.
+ *   - `ajax_multiselect` (AjaxMultiSelectField) sends a GET with `q`, `page`,
+ *     and expects a BARE `{ matches: [ { value, label } ] }` (no success
+ *     envelope). It is detected here by the presence of `q`.
+ *
+ * Both shapes are produced from the same resolver `search()` output.
+ *
+ * Auth: the `bb_admin_settings` nonce (sent as `nonce`) plus `bp_moderate` —
+ * the same boundary as every other Settings 2.0 admin AJAX endpoint.
+ *
+ * @since BuddyBoss 3.0.0
+ *
+ * @return void
+ */
+function bb_legacy_ajax_select_search() {
+	// AjaxMultiSelectField uses `q` (GET); AsyncSelectField uses `term` (POST).
+	// The presence of `q` distinguishes the bare-`matches` response contract.
+	$is_multi = isset( $_REQUEST['q'] );
+
+	$fail = function () use ( $is_multi ) {
+		if ( $is_multi ) {
+			echo wp_json_encode( array( 'matches' => array() ) );
+			wp_die();
+		}
+		wp_send_json_error( array( 'message' => __( 'Unauthorized', 'buddyboss' ) ), 403 );
+	};
+
+	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+		$fail();
+	}
+
+	$nonce = isset( $_REQUEST['nonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['nonce'] ) ) : '';
+	if ( ! wp_verify_nonce( $nonce, 'bb_admin_settings' ) ) {
+		$fail();
+	}
+
+	$resolver_key = isset( $_REQUEST['resolver'] ) ? sanitize_key( wp_unslash( $_REQUEST['resolver'] ) ) : '';
+	$resolvers    = bb_legacy_get_ajax_select_resolvers();
+	if ( '' === $resolver_key || empty( $resolvers[ $resolver_key ] ) || ! is_callable( $resolvers[ $resolver_key ]['search'] ) ) {
+		$fail();
+	}
+	$resolver = $resolvers[ $resolver_key ];
+
+	// Single-select mount-time resolve: return just the saved value's label.
+	$selected_id = isset( $_REQUEST['selected_id'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['selected_id'] ) ) : '';
+	if ( ! $is_multi && '' !== $selected_id && '0' !== $selected_id ) {
+		wp_send_json_success(
+			array(
+				'results'  => array(
+					array(
+						'value' => (string) $selected_id,
+						'label' => bb_legacy_resolve_ajax_select_label( $resolver, $selected_id ),
+					),
+				),
+				'has_more' => false,
+			)
+		);
+	}
+
+	$query = $is_multi
+		? ( isset( $_REQUEST['q'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['q'] ) ) : '' )
+		: ( isset( $_REQUEST['term'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['term'] ) ) : '' );
+	$page  = isset( $_REQUEST['page'] ) ? max( 1, absint( $_REQUEST['page'] ) ) : 1;
+
+	$matches = (array) call_user_func( $resolver['search'], $query, $page );
+
+	// Normalise each match to { value:(string), label:(string) }, dropping
+	// anything malformed a third-party resolver might return.
+	$clean = array();
+	foreach ( $matches as $m ) {
+		if ( ! is_array( $m ) || ! isset( $m['value'] ) ) {
+			continue;
+		}
+		$clean[] = array(
+			'value' => (string) $m['value'],
+			'label' => isset( $m['label'] ) ? (string) $m['label'] : (string) $m['value'],
+		);
+	}
+
+	$has_more = false;
+	if ( ! empty( $resolver['has_more'] ) && is_callable( $resolver['has_more'] ) ) {
+		$has_more = (bool) call_user_func( $resolver['has_more'], $query, $page, $clean );
+	}
+
+	if ( $is_multi ) {
+		// Bare-object contract for AjaxMultiSelectField.
+		echo wp_json_encode( array( 'matches' => $clean ) );
+		wp_die();
+	}
+
+	wp_send_json_success(
+		array(
+			'results'  => $clean,
+			'has_more' => $has_more,
+		)
+	);
+}
+add_action( 'wp_ajax_bb_legacy_ajax_select_search', 'bb_legacy_ajax_select_search' );
 
 /**
  * Clear all bb_legacy_cpt_box_inputs_* transients on plugin lifecycle events.

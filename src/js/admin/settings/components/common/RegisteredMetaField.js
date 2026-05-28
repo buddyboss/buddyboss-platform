@@ -44,13 +44,23 @@ function AjaxMultiSelectField( { field, value, onChange, disabled } ) {
 	var nonceParam = extraData.nonce_param || 'security';
 	var placeholder = extraData.search_placeholder || '';
 
-	var selectedIds = Array.isArray( value ) ? value.map( Number ) : [];
+	// Item ids are numeric by default (most callers pass post/term ids). When a
+	// caller opts in via `extra_data.string_ids` (e.g. the WP Fusion tag bridge,
+	// whose CRM tag ids can be non-numeric like "tag_alpha"), normalise ids as
+	// strings instead so `Number()` doesn't turn them into NaN. `coerceId` is
+	// used everywhere an id is stored, compared, or keyed below.
+	var useStringIds = !! extraData.string_ids;
+	var coerceId = function ( id ) {
+		return useStringIds ? String( id ) : Number( id );
+	};
+
+	var selectedIds = Array.isArray( value ) ? value.map( coerceId ) : [];
 
 	// Track labels for selected items.
 	var itemLabelsState = useState( function () {
 		var labels = {};
 		initialItems.forEach( function ( item ) {
-			labels[ Number( item.value ) ] = item.label;
+			labels[ coerceId( item.value ) ] = item.label;
 		} );
 		return labels;
 	} );
@@ -132,6 +142,16 @@ function AjaxMultiSelectField( { field, value, onChange, disabled } ) {
 			params.append( nonceParam, ajaxNonce );
 			params.append( 'q', searchQuery );
 			params.append( 'page', '1' );
+			// Forward any caller-supplied extra params (e.g. the bridge's
+			// `resolver` key, which tells the generic search shim which
+			// plugin behaviour to dispatch to). Reserved keys consumed by
+			// this component are skipped so they don't leak into the query.
+			Object.keys( extraData ).forEach( function ( key ) {
+				if ( -1 !== [ 'selected_items', 'ajax_action', 'ajax_nonce', 'nonce_param', 'search_placeholder', 'string_ids' ].indexOf( key ) ) {
+					return;
+				}
+				params.append( key, extraData[ key ] );
+			} );
 
 			fetch( ajaxUrl + '?' + params.toString(), {
 				method: 'GET',
@@ -146,7 +166,7 @@ function AjaxMultiSelectField( { field, value, onChange, disabled } ) {
 					var currentIds = selectedIdsRef.current;
 					// Filter out already selected items.
 					var filtered = matches.filter( function ( item ) {
-						return -1 === currentIds.indexOf( Number( item.value ) );
+						return -1 === currentIds.indexOf( coerceId( item.value ) );
 					} );
 					setSuggestions( filtered );
 					setShowDropdown( true );
@@ -168,10 +188,10 @@ function AjaxMultiSelectField( { field, value, onChange, disabled } ) {
 	}, [ searchQuery ] ); // eslint-disable-line react-hooks/exhaustive-deps
 
 	function handleSelect( item ) {
-		var newIds = selectedIds.concat( [ Number( item.value ) ] );
+		var newIds = selectedIds.concat( [ coerceId( item.value ) ] );
 		setItemLabels( function ( prev ) {
 			var updated = Object.assign( {}, prev );
-			updated[ Number( item.value ) ] = item.label;
+			updated[ coerceId( item.value ) ] = item.label;
 			return updated;
 		} );
 		onChange( newIds );
@@ -471,7 +491,29 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 	if ( 'toggle_list' === field.type ) {
 		var toggleOptions = field.options && Array.isArray( field.options ) ? field.options : [];
 		if ( 0 === toggleOptions.length ) {
-			return null;
+			// A field bridged from a legacy third-party metabox (id prefixed
+			// `legacy_` or carrying a `field_group`) should still show its label
+			// + an empty-state when it has no options yet — e.g. a WP Fusion tag
+			// picker has zero options until the CRM tags are synced, and hiding
+			// it made the new UI look like it was missing fields the classic
+			// metabox displayed. Core registry fields keep the original
+			// "render nothing when empty" behavior so this change is zero-impact
+			// for non-bridged toggle lists.
+			var isBridged = ( field.id && 0 === String( field.id ).indexOf( 'legacy_' ) ) || !! field.field_group;
+			if ( ! isBridged ) {
+				return null;
+			}
+			return (
+				<div className={ 'bb-admin-meta-field__toggle-list-field' + ( isDisabled ? ' bb-admin-meta-field--disabled' : '' ) }>
+					<label className="bb-admin-meta-field__label">{ field.label }</label>
+					<p className="bb-admin-meta-field__empty">
+						{ field.placeholder || __( 'No options available yet.', 'buddyboss' ) }
+					</p>
+					{ field.description && (
+						<p className="bb-admin-meta-field__description">{ field.description }</p>
+					) }
+				</div>
+			);
 		}
 		var toggleValues = value && 'object' === typeof value ? value : {};
 
@@ -564,8 +606,13 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 		// AJAX handler can scope its query (e.g. exclude descendants of the
 		// current group, exclude already-associated LD groups, etc.). Static
 		// `field.asyncExtraParams` still wins for any explicit overrides.
+		// A `resolver` key in `extra_data` (set by the legacy-meta bridge) is
+		// also forwarded so the generic search shim can dispatch to the right
+		// plugin behaviour. `initial_label` is display-only and not forwarded.
+		var asyncResolver = ( field.extra_data && field.extra_data.resolver ) ? { resolver: field.extra_data.resolver } : {};
 		var asyncParams = Object.assign(
 			{},
+			asyncResolver,
 			field.asyncExtraParams || {},
 			{ item_id: itemId || 0 }
 		);
@@ -582,6 +629,7 @@ export function RegisteredMetaField( { field, value, onChange, activityId, itemI
 					asyncExtraParams={ asyncParams }
 					placeholder={ field.placeholder || '' }
 					disabled={ isDisabled }
+					initialLabel={ ( field.extra_data && field.extra_data.initial_label ) || '' }
 				/>
 				{ field.description && (
 					<p className="bb-admin-meta-field__description">{ field.description }</p>
