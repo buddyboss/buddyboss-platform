@@ -300,7 +300,7 @@ function bb_redirect_bp_settings_before_permission_check() {
 	// — Default Data sub-tab was extracted to the buddyboss-tools plugin and
 	// renders as a Settings 2.0 React panel. Redirect any deep links to the
 	// new URL. Other ?page=bp-tools tabs (e.g. forum import) still render
-	// the legacy page and migrate in Phase 3.
+	// the legacy page and migrate in Phase 4 (forum-converter migration).
 	//
 	// @since BuddyBoss [BBVERSION]
 	if ( 'bp-tools' === $page ) {
@@ -312,6 +312,19 @@ function bb_redirect_bp_settings_before_permission_check() {
 			);
 			exit;
 		}
+	}
+
+	// `?page=bp-member-type-import` retired in BuddyBoss [BBVERSION]
+	// — the Profile Types importer was extracted to the buddyboss-tools
+	// plugin's `migration/profile-types/` folder and now renders as a card
+	// inside the Settings 2.0 Migration Tools panel.
+	//
+	// @since BuddyBoss [BBVERSION]
+	if ( 'bp-member-type-import' === $page ) {
+		wp_safe_redirect(
+			bp_get_admin_url( 'admin.php?page=bb-settings&tab=tools&panel=migration_tools' )
+		);
+		exit;
 	}
 
 	// Retired Repair Community + Repair Forums standalone admin pages:

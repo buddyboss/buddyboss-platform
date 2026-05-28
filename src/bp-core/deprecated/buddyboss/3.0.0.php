@@ -4155,3 +4155,79 @@ if ( ! function_exists( 'bp_dd_friends_add_friend_date_fix' ) ) {
 		return $current_time;
 	}
 }
+
+// ─────────────────────────────────────────────────────────────────────────
+// Profile Types (bp_member_type_import_*, bp_import_profile_types_*,
+// bp_register_member_type_import_submenu_page,
+// bp_core_get_tools_import_profile_settings_admin_tabs) — moved to the
+// buddyboss-tools plugin's `migration/profile-types/` folder in BuddyBoss
+// [BBVERSION]. The legacy `?page=bp-member-type-import` admin page is
+// retired; 301 redirect lives in bp-core-admin-actions.php.
+//
+// Removal scheduled BBVERSION + 2 per project deprecation convention.
+// See PHASE-3-INVENTORY.md (gitignored) for the legacy code audit.
+// ─────────────────────────────────────────────────────────────────────────
+
+if ( ! function_exists( 'bp_register_member_type_import_submenu_page' ) ) {
+	/**
+	 * Deprecated stub for the hidden Profile Types submenu wrapper.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Hidden submenu wrapper retired alongside the Profile Types page.
+	 * @deprecated BuddyBoss [BBVERSION]
+	 *
+	 * @return void
+	 */
+	function bp_register_member_type_import_submenu_page() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Migration Tools panel in buddyboss-tools' );
+	}
+}
+
+if ( ! function_exists( 'bp_member_type_import_submenu_page' ) ) {
+	/**
+	 * Deprecated stub for the Profile Types admin page renderer + POST handler.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Moved to buddyboss-tools plugin (Migration Tools panel).
+	 * @deprecated BuddyBoss [BBVERSION] Use the Migration Tools panel at ?page=bb-settings&tab=tools&panel=migration_tools.
+	 *
+	 * @return void
+	 */
+	function bp_member_type_import_submenu_page() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Migration Tools panel in buddyboss-tools' );
+		// No delegation target — the legacy function rendered a full admin page
+		// and ran the import body inline. The new path is the React panel + AJAX.
+	}
+}
+
+if ( ! function_exists( 'bp_import_profile_types_admin_menu' ) ) {
+	/**
+	 * Deprecated stub for the Profile Types visible-submenu registrar.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. The submenu was retired in favor of the Settings 2.0 Migration Tools panel.
+	 * @deprecated BuddyBoss [BBVERSION] The Forum Import submenu was preserved via bb_register_legacy_bbp_converter_submenu() — Phase 4 will retire that too.
+	 *
+	 * @return void
+	 */
+	function bp_import_profile_types_admin_menu() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Migration Tools panel in buddyboss-tools' );
+	}
+}
+
+if ( ! function_exists( 'bp_core_get_tools_import_profile_settings_admin_tabs' ) ) {
+	/**
+	 * Deprecated stub for the Profile Types Tools-tab filter callback.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. The Tools-tab entry was removed in favor of the Settings 2.0 Migration Tools panel.
+	 * @deprecated BuddyBoss [BBVERSION]
+	 *
+	 * @param array $tabs Existing tab list.
+	 * @return array The tab list unchanged (the legacy entry is no longer appended).
+	 */
+	function bp_core_get_tools_import_profile_settings_admin_tabs( $tabs ) {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Migration Tools panel in buddyboss-tools' );
+		return is_array( $tabs ) ? $tabs : array();
+	}
+}

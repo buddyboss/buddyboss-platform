@@ -1816,148 +1816,6 @@ function bp_delete_member_type( $post_id ) {
 // delete post.
 add_action( 'before_delete_post', 'bp_delete_member_type' );
 
-// Register submenu page for profile type import.
-add_action( 'admin_menu', 'bp_register_member_type_import_submenu_page' );
-
-/**
- * Register submenu page for profile type import.
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_register_member_type_import_submenu_page() {
-
-	// Repair Community submenu retired in BuddyBoss [BBVERSION] — bp-repair-community
-	// URL redirects to Settings 2.0 Tools tab.
-
-	add_submenu_page(
-		'',
-		'Import Member Types',
-		'Import Member Types',
-		'manage_options',
-		'bp-member-type-import',
-		'bp_member_type_import_submenu_page'
-	);
-}
-
-/**
- * Import profile types.
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_member_type_import_submenu_page() {
-	?>
-	<div class="wrap">
-		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Tools', 'buddyboss' ) ); ?></h2>
-		<div class="nav-settings-subsubsub">
-			<ul class="subsubsub">
-				<?php bp_core_tools_settings_admin_tabs(); ?>
-			</ul>
-		</div>
-	</div>
-	<div class="wrap">
-		<div class="bp-admin-card section-bp-member-type-import">
-			<div class="boss-import-area">
-				<form id="bp-member-type-import-form" method="post" action="">
-					<div class="import-panel-content">
-						<h2>
-							<?php
-							$meta_icon = bb_admin_icons( 'bp-member-type-import' );
-							if ( ! empty( $meta_icon ) ) {
-								?>
-								<i class="<?php echo esc_attr( $meta_icon ); ?>"></i>
-								<?php
-							}
-							esc_html_e( 'Import Profile Types', 'buddyboss' ); ?>
-						</h2>
-						<p>
-							<?php
-							printf(
-								__( 'Import your existing <a href="%s">profile types</a> (or "member types" in BuddyPress). You may have created these types <strong>manually via code</strong> or by using a <strong>third party plugin</strong>. Click "Run Migration" below and all registered member types will be imported. Then you can remove the old code or plugin.', 'buddyboss' ),
-								add_query_arg(
-									array(
-										'post_type' => bp_get_member_type_post_type(),
-									),
-									admin_url( 'edit.php' )
-								)
-							);
-							?>
-						</p><br/>
-						<input type="submit" value="<?php esc_attr_e( 'Run Migration', 'buddyboss' ); ?>"
-							   id="bp-member-type-import-submit" name="bp-member-type-import-submit"
-							   class="button-primary">
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
-	<br/>
-
-	<?php
-	if ( isset( $_POST['bp-member-type-import-submit'] ) ) {
-
-		if ( is_multisite() && bp_is_network_activated() ) {
-			switch_to_blog( bp_get_root_blog_id() );
-		}
-
-		$registered_member_types = bp_get_member_types();
-		$created_member_types    = bp_get_active_member_types();
-		$active_member_types     = array();
-
-		foreach ( $created_member_types as $created_member_type ) {
-			$name = bp_get_member_type_key( $created_member_type );
-			array_push( $active_member_types, $name );
-		}
-
-		$registered_member_types = array_diff( $registered_member_types, $active_member_types );
-
-		if ( empty( $registered_member_types ) ) {
-			?>
-			<div class="wrap">
-				<div class="error notice " id="message"><p><?php esc_html_e( 'Nothing to import', 'buddyboss' ); ?></p></div>
-			</div>
-			<?php
-		}
-
-		foreach ( $registered_member_types as $key => $import_types_data ) {
-			$sing_name = ucfirst( $import_types_data );
-			// Create post object.
-			$my_post = array(
-				'post_type'   => bp_get_member_type_post_type(),
-				'post_title'  => $sing_name,
-				'post_status' => 'publish',
-				'post_author' => get_current_user_id(),
-			);
-
-			// Insert the post into the database.
-			$post_id = wp_insert_post( $my_post );
-
-			if ( $post_id ) {
-				$key  = get_post_field( 'post_name', $post_id );
-				$term = term_exists( sanitize_key( $key ), bp_get_member_type_tax_name() );
-				if ( 0 !== $term && null !== $term ) {
-
-					$digits = 3;
-					$unique = rand( pow( 10, $digits - 1 ), pow( 10, $digits ) - 1 );
-					$key    = $key . $unique;
-				}
-				update_post_meta( $post_id, '_bp_member_type_key', sanitize_key( $key ) );
-				update_post_meta( $post_id, '_bp_member_type_label_name', $sing_name );
-				update_post_meta( $post_id, '_bp_member_type_label_singular_name', $sing_name );
-
-				?>
-				<div class="updated notice " id="message"><p><?php esc_html_e( 'Successfully Imported', 'buddyboss' ); ?></p>
-				</div>
-				<?php
-			}
-		}
-
-		if ( is_multisite() && bp_is_network_activated() ) {
-			restore_current_blog();
-		}
-	}
-
-}
-
 /**
  * Display error message on extended profile page in admin.
  *
@@ -2198,27 +2056,6 @@ function bp_core_get_tools_settings_admin_tabs( $active_tab = '' ) {
 	return apply_filters( 'bp_core_get_tools_settings_admin_tabs', $tabs );
 }
 
-function bp_core_get_tools_import_profile_settings_admin_tabs( $tabs ) {
-
-	$tabs[] = array(
-		'href' => bp_get_admin_url(
-			add_query_arg(
-				array(
-					'page' => 'bp-member-type-import',
-					'tab'  => 'bp-member-type-import',
-				),
-				'admin.php'
-			)
-		),
-		'name' => __( 'Import Profile Types', 'buddyboss' ),
-		'slug' => 'bp-member-type-import',
-	);
-
-	return $tabs;
-}
-
-add_filter( 'bp_core_get_tools_settings_admin_tabs', 'bp_core_get_tools_import_profile_settings_admin_tabs', 15, 1 );
-
 function bp_core_get_tools_repair_community_settings_admin_tabs( $tabs ) {
 
 	$tabs[] = array(
@@ -2241,29 +2078,20 @@ function bp_core_get_tools_repair_community_settings_admin_tabs( $tabs ) {
 add_filter( 'bp_core_get_tools_settings_admin_tabs', 'bp_core_get_tools_repair_community_settings_admin_tabs', 1, 1 );
 
 /**
- * Add the 'Site Notices' admin menu item.
+ * Register the legacy ?page=bbp-converter Forum Import submenu.
  *
- * @since BuddyPress 3.0.0
+ * Phase 3 retired the Profile Types submenu (and the wrapper function
+ * `bp_import_profile_types_admin_menu` that registered both); this small
+ * helper preserves only the bbp-converter submenu registration so the
+ * legacy Forum Import page continues to render until Phase 4 retires it
+ * alongside the forum-converter migration.
+ *
+ * @since BuddyBoss [BBVERSION] Split out of bp_import_profile_types_admin_menu().
+ *
+ * @return void
  */
-function bp_import_profile_types_admin_menu() {
-
-	// Repair Community submenu retired in BuddyBoss [BBVERSION] —
-	// ?page=bp-repair-community redirects to Settings 2.0 Tools tab.
-
-	add_submenu_page(
-		'buddyboss-platform',
-		__( 'Import Profile Types', 'buddyboss' ),
-		__( 'Import Profile Types', 'buddyboss' ),
-		'manage_options',
-		'bp-member-type-import',
-		'bp_member_type_import_submenu_page'
-	);
-
+function bb_register_legacy_bbp_converter_submenu() {
 	if ( current_user_can( 'bbp_tools_page' ) && current_user_can( 'bbp_tools_import_page' ) ) {
-		// Forum Repair submenu retired in BuddyBoss [BBVERSION] —
-		// ?page=bbp-repair redirects to Settings 2.0 Tools tab.
-		// Forum Import (?page=bbp-converter) stays — Phase 3 migrates it
-		// into the Migration Tools panel.
 		add_submenu_page(
 			'buddyboss-platform',
 			__( 'Import Forums', 'buddyboss' ),
@@ -2273,10 +2101,9 @@ function bp_import_profile_types_admin_menu() {
 			'bbp_converter_settings'
 		);
 	}
-
 }
 
-add_action( bp_core_admin_hook(), 'bp_import_profile_types_admin_menu' );
+add_action( bp_core_admin_hook(), 'bb_register_legacy_bbp_converter_submenu' );
 
 /**
  * Set the forum slug on edit page from backend.
