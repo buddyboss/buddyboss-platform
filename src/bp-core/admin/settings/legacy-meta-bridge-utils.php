@@ -2288,6 +2288,38 @@ function bb_legacy_run_cpt_bridge_box( $registry, $component, $box, &$order, $ex
 	$post_type      = $args['post_type'];
 	$tab            = $args['tab'];
 
+	/**
+	 * Filter per-field overrides for a bridged metabox.
+	 *
+	 * Lets a plugin compatibility module (e.g. compat/wp-fusion.php) refine how
+	 * individual captured inputs are bridged — without the generic engine having
+	 * to know anything plugin-specific. Keyed by the input's raw `$_POST` name
+	 * (e.g. `wpf-settings[allow_tags][]`). Each entry is an array that may carry:
+	 *   - `conditional` array  { field: <raw $_POST name of the trigger input>,
+	 *                            value: mixed, action?: 'disable'|'hide' } — the
+	 *                            engine flattens the trigger name to its sibling
+	 *                            field id before registering, so supply the raw
+	 *                            name here (not the flattened id).
+	 *   - `type`        string Force the bridged field type (overrides detection).
+	 *   - `placeholder` string Input placeholder.
+	 *   - `description` string Replacement help text.
+	 *
+	 * Unknown keys are ignored. This runs once per metabox; the resulting map is
+	 * consulted per input inside the loop below.
+	 *
+	 * @since BuddyBoss 3.0.0
+	 *
+	 * @param array  $overrides Map of raw input name => override array. Default empty.
+	 * @param string $box_id    The metabox id being bridged.
+	 * @param string $post_type The post type being edited.
+	 */
+	$field_overrides = (array) apply_filters(
+		'bb_legacy_field_overrides',
+		array(),
+		isset( $box['id'] ) ? (string) $box['id'] : '',
+		(string) $post_type
+	);
+
 	foreach ( $inputs as $input ) {
 		if ( in_array( $input['type'], array( 'file', 'hidden', 'submit', 'button' ), true ) ) {
 			continue;
@@ -2315,6 +2347,13 @@ function bb_legacy_run_cpt_bridge_box( $registry, $component, $box, &$order, $ex
 		$raw_description = isset( $input['description'] ) ? $input['description'] : '';
 		$sanitize_cb     = bb_legacy_resolve_sanitize_callback( $input['type'] );
 
+		// Per-field override supplied by a plugin compat module (keyed by the
+		// raw $_POST name). Lets a module add conditional gating, a placeholder,
+		// or force a field type the generic detection wouldn't pick.
+		$override = isset( $field_overrides[ $input['name'] ] ) && is_array( $field_overrides[ $input['name'] ] )
+			? $field_overrides[ $input['name'] ]
+			: array();
+
 		// Some plugins render select2/select4 AJAX widgets — a `<select>` whose
 		// option list is fetched client-side as the user searches, so its static
 		// markup is empty (or only the saved option). Captured as plain HTML the
@@ -2337,6 +2376,11 @@ function bb_legacy_run_cpt_bridge_box( $registry, $component, $box, &$order, $ex
 			$field_type = 'async_select';
 		} elseif ( $is_ajax_multi ) {
 			$field_type = 'ajax_multiselect';
+		} elseif ( ! empty( $override['type'] ) && is_string( $override['type'] ) ) {
+			// A compat module can force a field type (e.g. a URL text input the
+			// generic parser saw as plain text). Does not apply to the resolver
+			// widgets above, whose type is structural.
+			$field_type = $override['type'];
 		} else {
 			$field_type = $input['type'];
 		}
@@ -2478,6 +2522,19 @@ function bb_legacy_run_cpt_bridge_box( $registry, $component, $box, &$order, $ex
 					'selected_items'     => array(),
 				);
 
+				// Opt-in "create new" support: a resolver may declare
+				// `allow_create` + `create_action` (+ optional `create_label`)
+				// to let the React field offer a "Create <term>" row. The engine
+				// just forwards the flags; the create endpoint itself is the
+				// plugin's own AJAX action (kept in its compat module).
+				if ( ! empty( $ajax_select_resolver['allow_create'] ) && ! empty( $ajax_select_resolver['create_action'] ) ) {
+					$extra['allow_create']  = true;
+					$extra['create_action'] = (string) $ajax_select_resolver['create_action'];
+					if ( ! empty( $ajax_select_resolver['create_label'] ) ) {
+						$extra['create_label'] = (string) $ajax_select_resolver['create_label'];
+					}
+				}
+
 				// Seed the saved chips from post meta first (so they survive an
 				// out-of-sync source list), falling back to HTML scraping only
 				// when meta is empty — mirrors the get_value strategy above.
@@ -2510,17 +2567,31 @@ function bb_legacy_run_cpt_bridge_box( $registry, $component, $box, &$order, $ex
 
 		// Forward the conditional declaration with the trigger's *bridge* field
 		// id (legacy_<box>_<name>), not its raw $_POST name — that's what the
-		// registry's React shell looks up against sibling registered fields.
-		if ( ! empty( $input['conditional']['field'] ) ) {
+		// registry's React shell looks up against sibling registered fields. A
+		// compat-module override wins over the auto-detected conditional (it can
+		// also set `action` => 'disable' to grey-out rather than hide).
+		$conditional = ! empty( $override['conditional']['field'] )
+			? $override['conditional']
+			: ( ! empty( $input['conditional']['field'] ) ? $input['conditional'] : null );
+
+		if ( ! empty( $conditional['field'] ) ) {
 			// Flatten brackets the same way as the field id above so a grouped
 			// trigger name resolves to the matching sibling field id.
-			$trigger_field_id = sanitize_key( 'legacy_' . $box['id'] . '_' . bb_legacy_flatten_input_name( $input['conditional']['field'] ) );
+			$trigger_field_id = sanitize_key( 'legacy_' . $box['id'] . '_' . bb_legacy_flatten_input_name( $conditional['field'] ) );
 			if ( '' !== $trigger_field_id && $trigger_field_id !== $field_id ) {
 				$args_field['conditional'] = array(
 					'field' => $trigger_field_id,
-					'value' => $input['conditional']['value'],
+					'value' => isset( $conditional['value'] ) ? $conditional['value'] : true,
 				);
+				if ( ! empty( $conditional['action'] ) && is_string( $conditional['action'] ) ) {
+					$args_field['conditional']['action'] = $conditional['action'];
+				}
 			}
+		}
+
+		// Compat-module placeholder override (e.g. a friendlier prompt).
+		if ( ! empty( $override['placeholder'] ) && is_string( $override['placeholder'] ) ) {
+			$args_field['placeholder'] = $override['placeholder'];
 		}
 
 		$registry->register( $component, $field_id, $args_field );
@@ -2553,86 +2624,16 @@ function bb_legacy_run_cpt_bridge_box( $registry, $component, $box, &$order, $ex
  *                             a saved value's display label. Defaults to the
  *                             value verbatim.
  *
- * Third parties add or override entries via the `bb_legacy_ajax_select_resolvers`
- * filter. Platform ships resolvers for WP Fusion's tag and redirect pickers.
+ * Third parties register entries via the `bb_legacy_ajax_select_resolvers`
+ * filter. The engine itself ships NO entries — per-plugin knowledge lives in
+ * compatibility modules under `compat/` (e.g. `compat/wp-fusion.php`), which
+ * proves the filter is the real, supported extension surface.
  *
  * @since BuddyBoss 3.0.0
  *
  * @return array Map of resolver id => resolver definition.
  */
 function bb_legacy_get_ajax_select_resolvers() {
-	$resolvers = array(
-		// WP Fusion tag pickers: <select multiple class="select4-wpf-tags">.
-		'wpf_tags'     => array(
-			'match'         => 'select4-wpf-tags',
-			'placeholder'   => __( 'Select tags', 'buddyboss' ),
-			'search'        => function ( $query, $page ) {
-				unset( $page ); // Tag lists are small — returned unpaginated.
-				if ( ! function_exists( 'wp_fusion' ) || empty( wp_fusion()->settings ) ) {
-					return array();
-				}
-				$tags = wp_fusion()->settings->get_available_tags_flat();
-				if ( ! is_array( $tags ) ) {
-					return array();
-				}
-				$out = array();
-				foreach ( $tags as $id => $label ) {
-					if ( '' !== $query && false === stripos( (string) $label, $query ) ) {
-						continue;
-					}
-					$out[] = array(
-						'value' => (string) $id,
-						'label' => (string) $label,
-					);
-				}
-				return $out;
-			},
-			'resolve_label' => function ( $value ) {
-				return function_exists( 'wpf_get_tag_label' ) ? (string) wpf_get_tag_label( $value ) : (string) $value;
-			},
-		),
-		// WP Fusion redirect picker: <select class="select4-select-page">.
-		'wpf_redirect' => array(
-			'match'         => 'select4-select-page',
-			'placeholder'   => __( 'Select a page', 'buddyboss' ),
-			'search'        => function ( $query, $page ) {
-				$wp_query = new WP_Query(
-					array(
-						'post_type'              => 'any',
-						'post_status'            => 'publish',
-						'posts_per_page'         => 20,
-						'paged'                  => max( 1, (int) $page ),
-						's'                      => $query,
-						'orderby'                => 'title',
-						'order'                  => 'ASC',
-						'no_found_rows'          => false,
-						'update_post_meta_cache' => false,
-						'update_post_term_cache' => false,
-					)
-				);
-				$out = array();
-				foreach ( $wp_query->posts as $post ) {
-					$out[] = array(
-						'value' => (string) $post->ID,
-						'label' => $post->post_title,
-					);
-				}
-				// Stash the page count for has_more without a second query.
-				$GLOBALS['bb_legacy_ajax_select_max_pages'] = (int) $wp_query->max_num_pages;
-				return $out;
-			},
-			'has_more'      => function ( $query, $page, $matches ) {
-				unset( $query, $matches ); // Paging decided by WP_Query max pages.
-				$max = isset( $GLOBALS['bb_legacy_ajax_select_max_pages'] ) ? (int) $GLOBALS['bb_legacy_ajax_select_max_pages'] : 1;
-				return (int) $page < $max;
-			},
-			'resolve_label' => function ( $value ) {
-				// WP Fusion stores a post ID or a raw URL.
-				return is_numeric( $value ) ? (string) get_the_title( (int) $value ) : (string) $value;
-			},
-		),
-	);
-
 	/**
 	 * Filter the AJAX-select resolver registry.
 	 *
@@ -2640,7 +2641,7 @@ function bb_legacy_get_ajax_select_resolvers() {
 	 *
 	 * @param array $resolvers Map of resolver id => resolver definition.
 	 */
-	return (array) apply_filters( 'bb_legacy_ajax_select_resolvers', $resolvers );
+	return (array) apply_filters( 'bb_legacy_ajax_select_resolvers', array() );
 }
 
 /**
@@ -2964,3 +2965,10 @@ function bb_legacy_canonical_group_keys() {
 
 	return $keys;
 }
+
+// Load per-plugin compatibility modules. Each registers its hooks via the
+// engine's filters (bb_legacy_ajax_select_resolvers, bb_legacy_field_overrides,
+// etc.) and is loaded exactly once — this utils file is itself require_once'd by
+// every CPT bridge, so the modules apply everywhere the bridge runs (forums,
+// topics, replies, activity, groups, emails, and any future bridged type).
+require_once __DIR__ . '/compat/wp-fusion.php';

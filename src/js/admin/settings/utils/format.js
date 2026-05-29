@@ -100,6 +100,13 @@ export function isFieldConditionalMet( field, values ) {
 		return true;
 	}
 
+	// A `disable`-action conditional never hides the field — it only greys it
+	// out (see isFieldConditionalDisabled). For visibility purposes such a
+	// field is always "met" so callers that filter by visibility keep it.
+	if ( 'disable' === field.conditional.action ) {
+		return true;
+	}
+
 	var currentVal = values[ field.conditional.field ];
 	var expectedVal = field.conditional.value;
 
@@ -110,6 +117,39 @@ export function isFieldConditionalMet( field, values ) {
 	}
 
 	return String( currentVal ) === String( expectedVal );
+}
+
+/**
+ * Check whether a field with a `disable`-action conditional should currently
+ * be disabled (greyed out but still rendered) given the form values.
+ *
+ * Returns false for fields without a conditional, or whose conditional is the
+ * default hide-style — those are handled by isFieldConditionalMet instead.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param {Object} field  Field definition with optional conditional property.
+ * @param {Object} values Current form values keyed by field ID.
+ * @returns {boolean} True when the field should render disabled.
+ */
+export function isFieldConditionalDisabled( field, values ) {
+	if ( ! field.conditional || 'disable' !== field.conditional.action ) {
+		return false;
+	}
+
+	var currentVal = values[ field.conditional.field ];
+	var expectedVal = field.conditional.value;
+
+	var met;
+	if ( true === expectedVal || false === expectedVal ) {
+		var isTruthy = !! currentVal && '0' !== currentVal && 0 !== currentVal;
+		met = isTruthy === expectedVal;
+	} else {
+		met = String( currentVal ) === String( expectedVal );
+	}
+
+	// Disabled when the gating condition is NOT met.
+	return ! met;
 }
 
 /**
