@@ -150,8 +150,13 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			add_action( bp_core_admin_hook(), array( $this, 'adjust_buddyboss_menus' ), 100 );
 
 			// Redirect the legacy `?page=bp-help` admin URL to the new Settings 2.0
-			// Help tab. Runs at admin_init so we can `wp_safe_redirect()` before
-			// any output is sent.
+			// Help tab. The `bp-help` submenu no longer exists, so WordPress denies
+			// access to that slug from wp-admin/includes/menu.php (via
+			// `admin_page_access_denied`) BEFORE `admin_init` fires. We hook the
+			// access-denied action so the redirect runs in that path, and keep the
+			// `admin_init` hook as a fallback for any context where the slug is
+			// still resolvable. Both run before output, so `wp_safe_redirect()` is safe.
+			add_action( 'admin_page_access_denied', array( $this, 'bb_redirect_legacy_help_page' ) );
 			add_action( 'admin_init', array( $this, 'bb_redirect_legacy_help_page' ) );
 
 			// Enqueue all admin JS and CSS.
@@ -523,10 +528,17 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		/**
 		 * Redirect legacy `?page=bp-help` URLs to the new Settings 2.0 Help tab.
 		 *
-		 * The Help submenu now points at `?page=bb-settings&tab=help` directly,
-		 * but bookmarks, plugin links and the old in-app links may still hit
-		 * `bp-help`. Send those visitors to the new URL so a single canonical
-		 * Help page exists.
+		 * The Help submenu now points at `?page=bb-settings&tab=help` directly and
+		 * the legacy `bp-help` submenu no longer exists, but bookmarks, plugin
+		 * links and old in-app links may still hit `bp-help`. Send those visitors
+		 * to the new URL so a single canonical Help page exists.
+		 *
+		 * Hooked on both `admin_page_access_denied` and `admin_init`. Because the
+		 * `bp-help` slug is no longer a registered submenu, WordPress denies access
+		 * to it in `wp-admin/includes/menu.php` (firing `admin_page_access_denied`)
+		 * before `admin_init` runs — so the access-denied hook is what actually
+		 * catches the redirect; `admin_init` is a fallback. The method is
+		 * idempotent: it no-ops unless `?page=bp-help` is the current request.
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 */
