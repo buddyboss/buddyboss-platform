@@ -208,29 +208,35 @@
 
 .bb-tools-activation-cta {
 	text-align: center;
-	padding: 64px 24px;
+	padding: 24px 36px;
+	width: 100%;
+	box-sizing: border-box;
 
 	&__icon {
-		font-size: 48px;
-		color: #9ca3af;
+		font-size: 24px;
+		color: $bb-icon-tertiary-color;
+		border: 1px solid $bb-border-secondary-color;
+		border-radius: $bb-border-radius-lg;
 		display: inline-block;
+		padding: 8px;
 		margin-bottom: 16px;
 	}
 
 	&__title {
-		font-family: 'Inter Variable', 'Inter', -apple-system, sans-serif;
-		font-size: 18px;
-		font-weight: 600;
-		color: #000;
+		font-size: 16px;
+		font-weight: 500;
+		color: $bb-text-color;
 		margin: 0 0 8px;
 	}
 
 	&__description {
-		font-family: 'Inter Variable', 'Inter', -apple-system, sans-serif;
 		font-size: 13px;
-		color: #666;
-		max-width: 480px;
-		margin: 0 auto 24px;
+		color: $bb-text-tertiary-color;
+		margin: 0 auto 20px;
+	}
+
+	.components-button.is-primary {
+		@include bb-button-primary;
 	}
 
 	&.is-loading {

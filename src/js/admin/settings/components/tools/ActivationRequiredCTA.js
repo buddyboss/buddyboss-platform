@@ -142,7 +142,7 @@ export default function ActivationRequiredCTA() {
 	return (
 		<div className="bb-tools-activation-cta">
 			<div className="bb-tools-activation-cta__icon">
-				<span className="bb-icons-rl bb-icons-rl-info"></span>
+				<span className="bb-icons-rl-info"></span>
 			</div>
 			<h2 className="bb-tools-activation-cta__title">
 				{ __( 'Activation Required', 'buddyboss' ) }
