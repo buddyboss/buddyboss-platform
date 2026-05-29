@@ -250,6 +250,11 @@
 		@include bb-button-primary;
 	}
 
+	.bb-admin-notice {
+		max-width: 450px;
+		margin: 0 auto 20px !important;
+	}
+
 	&.is-loading {
 		padding: 48px 0;
 	}

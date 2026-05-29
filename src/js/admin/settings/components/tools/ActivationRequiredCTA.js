@@ -151,14 +151,13 @@ export default function ActivationRequiredCTA() {
 				{ __( 'Please activate the migration addon to use the migration features.', 'buddyboss' ) }
 			</p>
 			{ error && (
-				<Notice status="error" isDismissible={ false }>
+				<div className="bb-admin-notice bb-admin-notice--error">
 					{ error }
-				</Notice>
+				</div>
 			) }
 			<Button
 				variant="primary"
 				onClick={ handleAction }
-				isBusy={ isWorking }
 				disabled={ isWorking }
 			>
 				{ buttonLabel }
