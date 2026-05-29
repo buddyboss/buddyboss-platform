@@ -17,6 +17,7 @@ import { ajaxFetch } from '../utils/ajax';
 // Promo images served from the BuddyBoss marketing S3 bucket (not bundled).
 var upgradePlus = 'https://bb-features-marketing.s3.amazonaws.com/images/admin/upgrade-plus.jpg';
 var upgradePro = 'https://bb-features-marketing.s3.amazonaws.com/images/admin/upgrade-pro.jpg';
+var app_3 = 'https://bb-features-marketing.s3.amazonaws.com/images/admin/app%203.0.png';
 
 // BuddyBoss.com knowledge base REST endpoint used for Help search.
 var HELP_SEARCH_ENDPOINT = 'https://buddyboss.com/wp-json/wp/v2/ht-kb/';
@@ -817,38 +818,28 @@ export function HelpScreen( { onNavigate } ) {
 							>
 								<div className="bb-admin-help-promo__media">
 									<img
-										src={ upgradePlus }
-										alt={ __( 'Done For You Service preview', 'buddyboss' ) }
+										src={ app_3 }
+										alt={ __( 'App 3.0', 'buddyboss' ) }
 										className="bb-admin-help-promo__image"
 									/>
 								</div>
 								<div className="bb-admin-help-promo__body">
 									<div className="bb-admin-help-promo__text">
 										<p className="bb-admin-help-promo__eyebrow">
-											{ __( 'Done For You Service', 'buddyboss' ) }
+											{ __( 'App 3.0', 'buddyboss' ) }
 										</p>
 										<h2
 											id="bb-admin-help-promo-title"
-											className="bb-admin-help-promo__title"
+											className="bb-admin-help-promo__title bb-admin-help-promo__title-app-3"
 										>
-											{ __( 'Unlock Advanced Plus Features Without Paying More Than the Pro Plan', 'buddyboss' ) }
+											{ __( 'New BuddyBoss App Next Gen Built on Flutter', 'buddyboss' ) }
 										</h2>
-										<ul className="bb-admin-help-promo__list">
-											<li><i className="bb-icons-rl-check"></i> { __( 'Gamification (Save $199/y)', 'buddyboss') }</li>
-											<li><i className="bb-icons-rl-check"></i> { __( 'Point Types & Triggers', 'buddyboss') }</li>
-											<li><i className="bb-icons-rl-check"></i> { __( 'Ranks & Leaderboards', 'buddyboss') }</li>
-											<li><i className="bb-icons-rl-check"></i> { __( 'Achievements', 'buddyboss') }</li>
-											<li><i className="bb-icons-rl-check"></i> { __( 'Competitions', 'buddyboss') }</li>
-											<li><i className="bb-icons-rl-check"></i> { __( 'Offload Media (Save $199/y)', 'buddyboss') }</li>
-											<li><i className="bb-icons-rl-check"></i> { __( 'Domain Restriction)', 'buddyboss') }</li>
-											<li><i className="bb-icons-rl-check"></i> { __( 'Premium Top-Rated Support', 'buddyboss') }</li>
-										</ul>
+										<p className="bb-admin-help-promo__description">{ __( 'Say goodbye to React Native. We have completely rebuilt the BuddyBoss App using Flutter for blazing-fast performance, smoother animations, and a truly unified experience.', 'buddyboss' ) }</p>
 									</div>
-									<a target="_blank" href="" className="bb-admin-help-promo__action bb-admin-help-promo__action-plus is-primary">
-										<i className="bb-icons-rl-crown-simple"></i>
+									<a target="_blank" href="" className="bb-admin-help-promo__action bb-admin-help-promo__action-app-3 is-primary">
 										<span className="bb-admin-help-promo__action-label">
-									{ __( 'Upgrade Plus', 'buddyboss' ) }
-								</span>
+											{ __( 'Get Next Gen App', 'buddyboss' ) }
+										</span>
 									</a>
 								</div>
 							</section>

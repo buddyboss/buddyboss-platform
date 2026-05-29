@@ -577,6 +577,10 @@
 		line-height: 1.33;
 		max-width: 390px;
 		margin-bottom: 8px;
+
+		&-app-3 {
+			max-width: 310px;
+		}
 	}
 
 	&__list {
@@ -600,6 +604,14 @@
 				font-weight: 700;
 			}
 		}
+	}
+
+	&__description {
+		color: $bb-icon-secondary-color;
+		font-size: 14px;
+		font-weight: 500;
+		margin: 0 0 24px;
+		max-width: 450px
 	}
 
 	&__action {
@@ -659,6 +671,16 @@
 
 			.bb-admin-help-promo__action-label {
 				color: $bb-text-secondary-color;
+			}
+		}
+
+		&-app-3.is-primary {
+			@include bb-button-primary;
+			display: inline-block;
+			padding: 10px 16px;
+
+			.bb-admin-help-promo__action-label {
+				text-transform: none;
 			}
 		}
 	}
