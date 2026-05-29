@@ -129,6 +129,16 @@ function bbBuildKbCounts( taxonomy ) {
  * @returns {JSX.Element} Help screen.
  */
 export function HelpScreen( { onNavigate } ) {
+	// License/tier state drives which upsell promo shows (set server-side in
+	// bb-admin-settings-page.php). No active license -> show the Pro promo;
+	// active license without the Plus tier -> show the Plus promo; full Plus
+	// plan -> show neither (the user already has everything promoted).
+	var hasActiveLicense = !! ( window.bbAdminData && window.bbAdminData.hasActiveLicense );
+	var hasPlusTier = !! ( window.bbAdminData && window.bbAdminData.hasPlusTier );
+	var showProPromo = ! hasActiveLicense;
+	var showPlusPromo = hasActiveLicense && ! hasPlusTier;
+	var showDFYPromo = hasActiveLicense && hasPlusTier;
+
 	var searchState = useState( '' );
 	var searchQuery = searchState[ 0 ];
 	var setSearchQuery = searchState[ 1 ];
@@ -798,6 +808,55 @@ export function HelpScreen( { onNavigate } ) {
 					</Button>
 				</section>
 
+				{
+					showDFYPromo && (
+						<div className="bb-admin-help-row">
+							<section
+								className="bb-admin-help-promo"
+								aria-labelledby="bb-admin-help-promo-title"
+							>
+								<div className="bb-admin-help-promo__media">
+									<img
+										src={ upgradePlus }
+										alt={ __( 'Done For You Service preview', 'buddyboss' ) }
+										className="bb-admin-help-promo__image"
+									/>
+								</div>
+								<div className="bb-admin-help-promo__body">
+									<div className="bb-admin-help-promo__text">
+										<p className="bb-admin-help-promo__eyebrow">
+											{ __( 'Done For You Service', 'buddyboss' ) }
+										</p>
+										<h2
+											id="bb-admin-help-promo-title"
+											className="bb-admin-help-promo__title"
+										>
+											{ __( 'Unlock Advanced Plus Features Without Paying More Than the Pro Plan', 'buddyboss' ) }
+										</h2>
+										<ul className="bb-admin-help-promo__list">
+											<li><i className="bb-icons-rl-check"></i> { __( 'Gamification (Save $199/y)', 'buddyboss') }</li>
+											<li><i className="bb-icons-rl-check"></i> { __( 'Point Types & Triggers', 'buddyboss') }</li>
+											<li><i className="bb-icons-rl-check"></i> { __( 'Ranks & Leaderboards', 'buddyboss') }</li>
+											<li><i className="bb-icons-rl-check"></i> { __( 'Achievements', 'buddyboss') }</li>
+											<li><i className="bb-icons-rl-check"></i> { __( 'Competitions', 'buddyboss') }</li>
+											<li><i className="bb-icons-rl-check"></i> { __( 'Offload Media (Save $199/y)', 'buddyboss') }</li>
+											<li><i className="bb-icons-rl-check"></i> { __( 'Domain Restriction)', 'buddyboss') }</li>
+											<li><i className="bb-icons-rl-check"></i> { __( 'Premium Top-Rated Support', 'buddyboss') }</li>
+										</ul>
+									</div>
+									<a target="_blank" href="" className="bb-admin-help-promo__action bb-admin-help-promo__action-plus is-primary">
+										<i className="bb-icons-rl-crown-simple"></i>
+										<span className="bb-admin-help-promo__action-label">
+									{ __( 'Upgrade Plus', 'buddyboss' ) }
+								</span>
+									</a>
+								</div>
+							</section>
+						</div>
+					)
+				}
+
+				{ showPlusPromo && (
 				<div className="bb-admin-help-row">
 					<section
 						className="bb-admin-help-promo"
@@ -806,7 +865,7 @@ export function HelpScreen( { onNavigate } ) {
 						<div className="bb-admin-help-promo__media">
 							<img
 								src={ upgradePlus }
-								alt={ __( 'Done For You Service preview', 'buddyboss' ) }
+								alt={ __( 'Upgrade to plus preview', 'buddyboss' ) }
 								className="bb-admin-help-promo__image"
 							/>
 						</div>
@@ -832,7 +891,7 @@ export function HelpScreen( { onNavigate } ) {
 									<li><i className="bb-icons-rl-check"></i> { __( 'Premium Top-Rated Support', 'buddyboss') }</li>
 								</ul>
 							</div>
-							<a href="" className="bb-admin-help-promo__action bb-admin-help-promo__action-plus is-primary">
+							<a target="_blank" href="https://www.buddyboss.com/pricing/?utm_source=product&utm_medium=platform-plugin&utm_campaign=help-plus-upgrade&utm_content=help-settings" className="bb-admin-help-promo__action bb-admin-help-promo__action-plus is-primary">
 								<i className="bb-icons-rl-crown-simple"></i>
 								<span className="bb-admin-help-promo__action-label">
 									{ __( 'Upgrade Plus', 'buddyboss' ) }
@@ -841,7 +900,9 @@ export function HelpScreen( { onNavigate } ) {
 						</div>
 					</section>
 				</div>
+				) }
 
+				{ showProPromo && (
 				<div className="bb-admin-help-row">
 					<section
 						className="bb-admin-help-promo"
@@ -850,7 +911,7 @@ export function HelpScreen( { onNavigate } ) {
 						<div className="bb-admin-help-promo__media">
 							<img
 								src={ upgradePro }
-								alt={ __( 'Done For You Service preview', 'buddyboss' ) }
+								alt={ __( 'Upgrade to pro preview', 'buddyboss' ) }
 								className="bb-admin-help-promo__image"
 							/>
 						</div>
@@ -876,7 +937,7 @@ export function HelpScreen( { onNavigate } ) {
 									<li><i className="bb-icons-rl-check"></i> { __( 'Activity Sharing', 'buddyboss') }</li>
 								</ul>
 							</div>
-							<a href="#" className="bb-admin-help-promo__action bb-admin-help-promo__action-pro is-primary">
+							<a target="_blank" href="https://www.buddyboss.com/pricing/?utm_source=product&utm_medium=platform-plugin&utm_campaign=help-pro-upgrade&utm_content=help-settings" className="bb-admin-help-promo__action bb-admin-help-promo__action-pro is-primary">
 								<i className="bb-icons-rl-crown-simple"></i>
 								<span className="bb-admin-help-promo__action-label">
 									{ __( 'Upgrade Pro', 'buddyboss' ) }
@@ -885,6 +946,7 @@ export function HelpScreen( { onNavigate } ) {
 						</div>
 					</section>
 				</div>
+				) }
 			</div>
 
 			<footer

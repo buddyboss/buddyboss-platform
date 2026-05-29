@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 3.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-05-29 05:37:01+00:00\n"
+"POT-Creation-Date: 2026-05-29 06:25:02+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -5821,7 +5821,7 @@ msgstr ""
 msgid "BuddyBoss Admin Settings assets not found. Please run: npm run build:admin:settings"
 msgstr ""
 
-#: bp-core/admin/bb-admin-settings-page.php:524
+#: bp-core/admin/bb-admin-settings-page.php:545
 msgid "JavaScript is required for BuddyBoss Settings. Please enable JavaScript in your browser."
 msgstr ""
 
@@ -41109,7 +41109,7 @@ msgid "Done For You Service preview"
 msgstr ""
 
 #: bp-core/admin/bb-settings/settings/build/index.js:5
-msgid "BuddyBoss Plus"
+msgid "Done For You Service"
 msgstr ""
 
 #: bp-core/admin/bb-settings/settings/build/index.js:5
@@ -41150,6 +41150,18 @@ msgstr ""
 
 #: bp-core/admin/bb-settings/settings/build/index.js:5
 msgid "Upgrade Plus"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "Upgrade to plus preview"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "BuddyBoss Plus"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "Upgrade to pro preview"
 msgstr ""
 
 #: bp-core/admin/bb-settings/settings/build/index.js:5
