@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 3.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-05-26 06:10:08+00:00\n"
+"POT-Creation-Date: 2026-05-29 05:37:01+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1384,7 +1384,7 @@ msgstr ""
 #: bb-features/integrations/recaptcha/admin/callbacks.php:344
 #: bp-core/admin/bb-admin-cover-crop-ajax.php:119
 #: bp-core/admin/bb-admin-cover-crop-ajax.php:123
-#: bp-core/admin/bp-core-admin-functions.php:2352
+#: bp-core/admin/bp-core-admin-functions.php:2351
 msgid "Unauthorized."
 msgstr ""
 
@@ -2304,15 +2304,15 @@ msgid "Due to the large size of your users table, you need to manually update us
 msgstr ""
 
 #: bp-activity/bp-activity-functions.php:1184
-#: bp-core/admin/bp-core-admin-functions.php:713
-#: bp-core/admin/bp-core-admin-functions.php:1818
+#: bp-core/admin/bp-core-admin-functions.php:716
+#: bp-core/admin/bp-core-admin-functions.php:1817
 #: bp-core/admin/bp-core-admin-tools.php:34
 #: bp-core/admin/bp-core-admin-tools.php:231
 #: bp-core/admin/bp-core-admin-tools.php:913
-#: bp-core/classes/class-bp-admin.php:466
-#: bp-core/classes/class-bp-admin.php:467
-#: bp-core/classes/class-bp-admin.php:489
-#: bp-core/classes/class-bp-admin.php:490
+#: bp-core/classes/class-bp-admin.php:471
+#: bp-core/classes/class-bp-admin.php:472
+#: bp-core/classes/class-bp-admin.php:494
+#: bp-core/classes/class-bp-admin.php:495
 #: bp-forums/admin/tools.php:29
 #: bp-forums/admin/tools.php:1778
 #: bp-media/bp-media-filters.php:1354
@@ -2820,7 +2820,7 @@ msgstr ""
 
 #: bp-activity/bp-activity-template.php:3140
 #: bp-blogs/bp-blogs-filters.php:161
-#: bp-core/admin/bp-core-admin-functions.php:1606
+#: bp-core/admin/bp-core-admin-functions.php:1605
 #: bp-core/deprecated/buddyboss/1.0.php:75
 #: bp-document/bp-document-filters.php:288
 #: bp-members/classes/class-bp-members-component.php:403
@@ -3837,7 +3837,7 @@ msgstr ""
 
 #: bp-activity/classes/class-bp-akismet.php:148
 #: bp-activity/classes/class-bp-akismet.php:179
-#: bp-core/admin/bp-core-admin-functions.php:1557
+#: bp-core/admin/bp-core-admin-functions.php:1556
 #: bp-core/admin/classes/class-bb-activity-admin-ajax.php:326
 #: bp-core/admin/classes/class-bb-activity-admin-ajax.php:516
 #: bp-core/admin/classes/class-bb-admin-replies-ajax.php:236
@@ -5108,6 +5108,7 @@ msgstr ""
 
 #: bp-core/admin/bb-admin-settings-activity.php:164
 #: bp-core/admin/settings/activity/settings-sharing.php:30
+#: bp-core/admin/bb-settings/settings/build/index.js:5
 msgid "Activity Sharing"
 msgstr ""
 
@@ -5162,12 +5163,12 @@ msgstr ""
 #: bp-core/admin/bb-admin-settings-emails.php:30
 #: bp-core/admin/bb-admin-settings-emails.php:59
 #: bp-core/bp-core-functions.php:3307
-#: bp-core/classes/class-bp-admin.php:608
-#: bp-core/classes/class-bp-admin.php:609
-#: bp-core/classes/class-bp-admin.php:619
 #: bp-core/classes/class-bp-admin.php:620
-#: bp-core/classes/class-bp-admin.php:639
-#: bp-core/classes/class-bp-admin.php:640
+#: bp-core/classes/class-bp-admin.php:621
+#: bp-core/classes/class-bp-admin.php:631
+#: bp-core/classes/class-bp-admin.php:632
+#: bp-core/classes/class-bp-admin.php:651
+#: bp-core/classes/class-bp-admin.php:652
 msgid "Emails"
 msgstr ""
 
@@ -5785,13 +5786,13 @@ msgid "Reporting Categories"
 msgstr ""
 
 #: bp-core/admin/bb-admin-settings-moderation.php:257
-#: bp-core/admin/bp-core-admin-functions.php:2429
+#: bp-core/admin/bp-core-admin-functions.php:2428
 #: bp-core/admin/bb-settings/settings/build/231.js:1
 msgid "Flagged Members"
 msgstr ""
 
 #: bp-core/admin/bb-admin-settings-moderation.php:272
-#: bp-core/admin/bp-core-admin-functions.php:2436
+#: bp-core/admin/bp-core-admin-functions.php:2435
 #: bp-core/admin/bb-settings/settings/build/76.js:1
 msgid "Reported Content"
 msgstr ""
@@ -5853,8 +5854,8 @@ msgid "Autocomplete Settings"
 msgstr ""
 
 #: bp-core/admin/bb-admin-version-compatibility-notices.php:47
-#: bp-core/admin/bp-core-admin-functions.php:2509
-#: bp-core/admin/bp-core-admin-functions.php:2516
+#: bp-core/admin/bp-core-admin-functions.php:2508
+#: bp-core/admin/bp-core-admin-functions.php:2515
 #: bp-core/admin/settings/notifications/settings-web-push.php:134
 #: bp-integrations/pusher/bb-pusher-admin-tab.php:251
 #: bp-integrations/pusher/bb-pusher-admin-tab.php:268
@@ -6117,80 +6118,70 @@ msgstr ""
 msgid "You are using an old theme and/or BuddyPress addon that relies on the older %1$s templates, and some things may not work properly. Consider switching to our %2$s and/or removing the BuddyPress addon that is using old methods."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:718
-#: bp-core/admin/bp-core-admin-help.php:52
-#: bp-core/classes/class-bp-admin.php:400
-#: bp-core/classes/class-bp-admin.php:503
-#: bp-core/classes/class-bp-admin.php:504
-#: bp-core/admin/bb-settings/settings/build/index.js:1
-#: bp-core/admin/bb-settings/settings/build/index.js:4
-msgid "Help"
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-functions.php:969
-#: bp-core/admin/bp-core-admin-functions.php:988
-#: bp-core/admin/bp-core-admin-functions.php:1007
+#: bp-core/admin/bp-core-admin-functions.php:968
+#: bp-core/admin/bp-core-admin-functions.php:987
+#: bp-core/admin/bp-core-admin-functions.php:1006
 #: bp-core/admin/templates/update-buddyboss.php:95
 #: bp-members/classes/class-bp-members-admin.php:936
 #: bp-members/classes/class-bp-members-admin.php:1829
 msgid "Overview"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:976
-#: bp-core/admin/bp-core-admin-functions.php:995
-#: bp-core/admin/bp-core-admin-functions.php:1014
+#: bp-core/admin/bp-core-admin-functions.php:975
+#: bp-core/admin/bp-core-admin-functions.php:994
+#: bp-core/admin/bp-core-admin-functions.php:1013
 #: bp-members/classes/class-bp-members-admin.php:946
 #: bp-members/classes/class-bp-members-admin.php:1853
 msgid "For more information:"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:977
-#: bp-core/admin/bp-core-admin-functions.php:996
-#: bp-core/admin/bp-core-admin-functions.php:1015
+#: bp-core/admin/bp-core-admin-functions.php:976
+#: bp-core/admin/bp-core-admin-functions.php:995
+#: bp-core/admin/bp-core-admin-functions.php:1014
 #: bp-members/classes/class-bp-members-admin.php:947
 #: bp-members/classes/class-bp-members-admin.php:1854
 msgid "<a href=\"https://www.buddyboss.com/resources/\">Documentation</a>"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1040
+#: bp-core/admin/bp-core-admin-functions.php:1039
 msgid "By default, several BuddyBoss components are enabled. You can selectively enable or disable any of the components by using the form below. Your BuddyBoss installation will continue to function. However, the features of the disabled components will no longer be accessible to anyone using the site."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1044
+#: bp-core/admin/bp-core-admin-functions.php:1043
 msgid "BuddyBoss Components use WordPress Pages for their root directory/archive pages. You can change the page associations for each active component by using the form below."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1048
+#: bp-core/admin/bp-core-admin-functions.php:1047
 msgid "Extra configuration settings are provided and activated. You can selectively enable or disable any setting by using the form on this screen."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1052
+#: bp-core/admin/bp-core-admin-functions.php:1051
 msgid "Your users will distinguish themselves through their profile page. Create relevant profile fields that will show on each users profile."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1052
+#: bp-core/admin/bp-core-admin-functions.php:1051
 msgid "Note: Any fields in the first group will appear on the signup page."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1250
-#: bp-core/admin/bp-core-admin-functions.php:1259
+#: bp-core/admin/bp-core-admin-functions.php:1249
+#: bp-core/admin/bp-core-admin-functions.php:1258
 msgid "Logged-In"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1253
-#: bp-core/admin/bp-core-admin-functions.php:1268
+#: bp-core/admin/bp-core-admin-functions.php:1252
+#: bp-core/admin/bp-core-admin-functions.php:1267
 msgid "Logged-Out"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1260
+#: bp-core/admin/bp-core-admin-functions.php:1259
 msgid "<em>Logged-In</em> links are relative to the current user, and are not visible to visitors who are not logged in."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1269
+#: bp-core/admin/bp-core-admin-functions.php:1268
 msgid "<em>Logged-Out</em> links are not visible to users who are logged in."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1302
+#: bp-core/admin/bp-core-admin-functions.php:1301
 #: bp-templates/bp-nouveau/buddypress/document/actions.php:17
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages/private-message.php:74
 #: bp-templates/bp-nouveau/buddypress/media/actions.php:42
@@ -6203,36 +6194,36 @@ msgstr ""
 msgid "Select All"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1311
+#: bp-core/admin/bp-core-admin-functions.php:1310
 msgid "Add to Menu"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1340
+#: bp-core/admin/bp-core-admin-functions.php:1339
 msgid "Are these emails not written in your site's language? Go to <a href=\"%s\">BuddyBoss Tools and try the \"reinstall emails\"</a> tool."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1370
+#: bp-core/admin/bp-core-admin-functions.php:1369
 msgid "Phrases wrapped in braces <code>{{ }}</code> are email tokens. <a href=\"%s\">Learn about email tokens</a>."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1431
+#: bp-core/admin/bp-core-admin-functions.php:1430
 #: bp-core/admin/settings/emails/meta-fields.php:132
 #: bp-core/admin/bb-settings/settings/build/926.js:2
 msgid "Choose when this email will be sent."
 msgstr ""
 
 #. translators: accessibility text
-#: bp-core/admin/bp-core-admin-functions.php:1444
-#: bp-core/admin/bp-core-admin-functions.php:1464
+#: bp-core/admin/bp-core-admin-functions.php:1443
+#: bp-core/admin/bp-core-admin-functions.php:1463
 msgid "Plain text email content"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1470
+#: bp-core/admin/bp-core-admin-functions.php:1469
 #: bp-core/admin/settings/emails/meta-fields.php:109
 msgid "Most email clients support HTML email. However, some people prefer to receive plain text email. Enter a plain text alternative version of your email here."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1554
+#: bp-core/admin/bp-core-admin-functions.php:1553
 #: bp-core/admin/classes/class-bb-activity-admin-ajax.php:327
 #: bp-core/admin/classes/class-bb-activity-admin-ajax.php:484
 #: bp-core/admin/bb-settings/settings/build/285.js:2
@@ -6241,8 +6232,8 @@ msgstr ""
 msgid "Not Spam"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1575
-#: bp-core/admin/bp-core-admin-functions.php:1595
+#: bp-core/admin/bp-core-admin-functions.php:1574
+#: bp-core/admin/bp-core-admin-functions.php:1594
 #: bp-moderation/classes/class-bp-moderation-list-table.php:681
 #: bp-moderation/classes/class-bp-moderation-list-table.php:735
 #: bp-moderation/screens/single/admin/report-single.php:135
@@ -6250,7 +6241,7 @@ msgstr ""
 msgid "The background process is currently in the queue. Please refresh the page after a short while"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1576
+#: bp-core/admin/bp-core-admin-functions.php:1575
 #: bp-moderation/classes/class-bp-moderation-list-table.php:528
 #: bp-moderation/classes/class-bp-moderation-list-table.php:533
 #: bp-core/admin/bb-settings/settings/build/76.js:1
@@ -6258,7 +6249,7 @@ msgstr ""
 msgid "Unsuspend"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1596
+#: bp-core/admin/bp-core-admin-functions.php:1595
 #: bp-members/classes/class-bp-members-admin.php:1261
 #: bp-moderation/classes/class-bp-moderation-list-table.php:530
 #: bp-moderation/classes/class-bp-moderation-list-table.php:532
@@ -6267,61 +6258,61 @@ msgstr ""
 msgid "Suspend"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1661
+#: bp-core/admin/bp-core-admin-functions.php:1660
 msgid "Member suspended."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1663
+#: bp-core/admin/bp-core-admin-functions.php:1662
 msgid "Member unsuspended."
 msgstr ""
 
+#: bp-core/admin/bp-core-admin-functions.php:1792
 #: bp-core/admin/bp-core-admin-functions.php:1793
-#: bp-core/admin/bp-core-admin-functions.php:1794
-#: bp-core/admin/bp-core-admin-functions.php:2202
+#: bp-core/admin/bp-core-admin-functions.php:2201
+#: bp-core/admin/bp-core-admin-functions.php:2219
 #: bp-core/admin/bp-core-admin-functions.php:2220
-#: bp-core/admin/bp-core-admin-functions.php:2221
 #: bp-core/admin/bp-core-admin-tools.php:249
 msgid "Repair Community"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1838
-#: bp-core/admin/bp-core-admin-functions.php:2181
+#: bp-core/admin/bp-core-admin-functions.php:1837
+#: bp-core/admin/bp-core-admin-functions.php:2180
+#: bp-core/admin/bp-core-admin-functions.php:2228
 #: bp-core/admin/bp-core-admin-functions.php:2229
-#: bp-core/admin/bp-core-admin-functions.php:2230
 msgid "Import Profile Types"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1843
+#: bp-core/admin/bp-core-admin-functions.php:1842
 msgid "Import your existing <a href=\"%s\">profile types</a> (or \"member types\" in BuddyPress). You may have created these types <strong>manually via code</strong> or by using a <strong>third party plugin</strong>. Click \"Run Migration\" below and all registered member types will be imported. Then you can remove the old code or plugin."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1853
+#: bp-core/admin/bp-core-admin-functions.php:1852
 #: bp-media/bp-media-filters.php:1462
 msgid "Run Migration"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1884
+#: bp-core/admin/bp-core-admin-functions.php:1883
 msgid "Nothing to import"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1916
+#: bp-core/admin/bp-core-admin-functions.php:1915
 msgid "Successfully Imported"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2009
+#: bp-core/admin/bp-core-admin-functions.php:2008
 msgid "Added successfully"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2036
+#: bp-core/admin/bp-core-admin-functions.php:2035
 msgid "Profile avatars are currently provided by the BuddyBoss Platform. To use the WordPress avatar system, change the <strong>Profile Avatars</strong> setting to \"WordPress\" in the <a href=\"%s\">Profile</a> settings."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2154
+#: bp-core/admin/bp-core-admin-functions.php:2153
 #: bp-core/admin/bp-core-admin-tools.php:52
 msgid "Default Data"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2239
+#: bp-core/admin/bp-core-admin-functions.php:2238
 #: bp-forums/admin/admin.php:205
 #: bp-forums/admin/functions.php:214
 #: bp-forums/admin/functions.php:246
@@ -6329,38 +6320,38 @@ msgstr ""
 msgid "Repair Forums"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2240
+#: bp-core/admin/bp-core-admin-functions.php:2239
 #: bp-forums/admin/admin.php:206
 msgid "Forum Repair"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2248
+#: bp-core/admin/bp-core-admin-functions.php:2247
 #: bp-forums/admin/admin.php:216
 #: bp-forums/admin/functions.php:218
 #: bp-forums/admin/functions.php:268
 msgid "Import Forums"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2249
+#: bp-core/admin/bp-core-admin-functions.php:2248
 #: bp-forums/admin/admin.php:217
 msgid "Forum Import"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2472
+#: bp-core/admin/bp-core-admin-functions.php:2471
 msgid "Update to"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2473
+#: bp-core/admin/bp-core-admin-functions.php:2472
 msgid "BuddyBoss Platform Pro 1.2.0"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2474
-#: bp-core/admin/bp-core-admin-functions.php:2510
-#: bp-core/admin/bp-core-admin-functions.php:2517
+#: bp-core/admin/bp-core-admin-functions.php:2473
+#: bp-core/admin/bp-core-admin-functions.php:2509
+#: bp-core/admin/bp-core-admin-functions.php:2516
 msgid "to unlock"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2508
+#: bp-core/admin/bp-core-admin-functions.php:2507
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:46
 #: bp-templates/bp-nouveau/readylaunch/forums/form-topic-tag.php:54
 #: bp-templates/bp-nouveau/readylaunch/forums/form-topic.php:278
@@ -6372,11 +6363,11 @@ msgstr ""
 msgid "Update"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2515
+#: bp-core/admin/bp-core-admin-functions.php:2514
 msgid "Install"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2728
+#: bp-core/admin/bp-core-admin-functions.php:2727
 #: bp-core/admin/settings/media/callbacks.php:277
 #: bp-core/admin/settings/media/callbacks.php:401
 #: bp-core/admin/settings/media/callbacks.php:494
@@ -6384,7 +6375,7 @@ msgstr ""
 msgid "Permission denied."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2735
+#: bp-core/admin/bp-core-admin-functions.php:2734
 #: bp-core/admin/settings/media/callbacks.php:285
 #: bp-core/admin/settings/media/callbacks.php:409
 #: bp-core/admin/settings/media/callbacks.php:502
@@ -6394,6 +6385,15 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-help.php:36
 msgid "Articles"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-help.php:52
+#: bp-core/classes/class-bp-admin.php:405
+#: bp-core/classes/class-bp-admin.php:508
+#: bp-core/classes/class-bp-admin.php:509
+#: bp-core/admin/bb-settings/settings/build/index.js:1
+#: bp-core/admin/bb-settings/settings/build/index.js:4
+msgid "Help"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-help.php:57
@@ -6457,9 +6457,9 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:143
 #: bp-core/admin/settings/members/settings-profile-navigation.php:251
-#: bp-core/classes/class-bp-admin.php:315
-#: bp-core/classes/class-bp-admin.php:445
-#: bp-core/classes/class-bp-admin.php:696
+#: bp-core/classes/class-bp-admin.php:320
+#: bp-core/classes/class-bp-admin.php:450
+#: bp-core/classes/class-bp-admin.php:708
 #: bp-core/gdpr/class-bp-settings-export.php:29
 #: bp-core/gdpr/class-bp-settings-export.php:55
 #: bp-forums/admin/admin.php:414
@@ -11895,9 +11895,9 @@ msgid "OneSignal integration for BuddyBoss is currently disabled. Enable it to c
 msgstr ""
 
 #: bp-core/admin/settings/notifications/settings-web-push.php:89
-#: bp-core/classes/class-bp-admin.php:314
-#: bp-core/classes/class-bp-admin.php:444
-#: bp-core/classes/class-bp-admin.php:573
+#: bp-core/classes/class-bp-admin.php:319
+#: bp-core/classes/class-bp-admin.php:449
+#: bp-core/classes/class-bp-admin.php:585
 msgid "BuddyBoss Settings"
 msgstr ""
 
@@ -12232,7 +12232,7 @@ msgid "Yes I understand, Deactivate"
 msgstr ""
 
 #: bp-core/admin/templates/update-buddyboss.php:87
-#: bp-core/classes/class-bp-admin.php:698
+#: bp-core/classes/class-bp-admin.php:710
 msgid "Release Notes"
 msgstr ""
 
@@ -16172,35 +16172,35 @@ msgstr ""
 msgid "Save Settings"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:399
+#: bp-core/classes/class-bp-admin.php:404
 msgid "BuddyBoss Help"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:419
+#: bp-core/classes/class-bp-admin.php:424
 msgid "BuddyPress Settings"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:420
+#: bp-core/classes/class-bp-admin.php:425
 #: bp-integrations/compatibility/templates/admin/integration-tab-intro.php:13
 msgid "BuddyPress"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:477
-#: bp-core/classes/class-bp-admin.php:478
+#: bp-core/classes/class-bp-admin.php:482
+#: bp-core/classes/class-bp-admin.php:483
 msgid "Available Tools"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:697
+#: bp-core/classes/class-bp-admin.php:709
 #: bp-forums/admin/admin.php:419
 #: bp-templates/bp-nouveau/readylaunch/common/js-templates/messages/parts/bp-messages-right-panel.php:21
 msgid "About"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:748
+#: bp-core/classes/class-bp-admin.php:760
 msgid "Docs"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:749
+#: bp-core/classes/class-bp-admin.php:761
 msgid "<strong>You are offline.</strong> Documentation requires internet access."
 msgstr ""
 
@@ -41109,19 +41109,87 @@ msgid "Done For You Service preview"
 msgstr ""
 
 #: bp-core/admin/bb-settings/settings/build/index.js:5
-msgid "Done For You Service"
+msgid "BuddyBoss Plus"
 msgstr ""
 
 #: bp-core/admin/bb-settings/settings/build/index.js:5
-msgid "Get help launching your site"
+msgid "Unlock Advanced Plus Features Without Paying More Than the Pro Plan"
 msgstr ""
 
 #: bp-core/admin/bb-settings/settings/build/index.js:5
-msgid "Get your own team that will help you launch your site. Let them know what your business is about, then provide them with your logo and brand colors, then sit back while we do all the heavy lifting."
+msgid "Gamification (Save $199/y)"
 msgstr ""
 
 #: bp-core/admin/bb-settings/settings/build/index.js:5
-msgid "Get Done For You Web Service"
+msgid "Point Types & Triggers"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "Ranks & Leaderboards"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "Achievements"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "Competitions"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "Offload Media (Save $199/y)"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "Domain Restriction)"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "Premium Top-Rated Support"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "Upgrade Plus"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "BuddyBoss Pro"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "Take Your Community Beyond Basics with BuddyBoss Pro Features"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "Premium BuddyBoss Theme"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "Unlimited Members, Admins & Moderators"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "LearnDash, MemberPress Courses, TutorLMS, LifterLMS Integration"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "Zoom Integration for Meetings"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "Image, Video & Document Uploads"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "Social Login & Access Controls"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "Polls, Custom Reactions & Topics"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/index.js:5
+msgid "Upgrade Pro"
 msgstr ""
 
 #: bp-core/admin/bb-settings/settings/build/index.js:5

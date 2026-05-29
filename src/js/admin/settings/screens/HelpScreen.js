@@ -14,8 +14,9 @@ import { getTaxonomy, clearTaxonomy } from '../components/knowledge-base/taxonom
 import { getCuratedOverrides } from '../components/knowledge-base/curatedOverrides';
 import { ajaxFetch } from '../utils/ajax';
 
-import upgradePlus from '../images/upgrade-plus.jpg';
-import upgradePro from '../images/upgrade-pro.jpg';
+// Promo images served from the BuddyBoss marketing S3 bucket (not bundled).
+var upgradePlus = 'https://bb-features-marketing.s3.amazonaws.com/images/admin/upgrade-plus.jpg';
+var upgradePro = 'https://bb-features-marketing.s3.amazonaws.com/images/admin/upgrade-pro.jpg';
 
 // BuddyBoss.com knowledge base REST endpoint used for Help search.
 var HELP_SEARCH_ENDPOINT = 'https://buddyboss.com/wp-json/wp/v2/ht-kb/';
