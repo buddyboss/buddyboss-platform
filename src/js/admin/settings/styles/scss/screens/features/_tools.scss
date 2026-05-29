@@ -206,6 +206,17 @@
 	}
 }
 
+#section-sample_data_section:has(.bb-admin-settings-form__field .bb-tools-activation-cta) {
+	background-color: transparent;
+	border: 0;
+	box-shadow: none;
+	
+	.bb-admin-feature-settings__section-description,
+	.bb-admin-feature-settings__section-header {
+		display: none;
+	}
+}
+
 .bb-tools-activation-cta {
 	text-align: center;
 	padding: 24px 36px;
