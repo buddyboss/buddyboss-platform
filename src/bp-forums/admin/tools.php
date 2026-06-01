@@ -1906,14 +1906,6 @@ function bbp_admin_reset() {
 	?>
 
 	<div class="wrap">
-		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Tools', 'buddyboss' ) ); ?></h2>
-		<div class="nav-settings-subsubsub">
-			<ul class="subsubsub">
-				<?php bp_core_tools_settings_admin_tabs(); ?>
-			</ul>
-		</div>
-	</div>
-	<div class="wrap">
 
 		<p><?php esc_html_e( 'Revert your forums back to a brand new installation. This process cannot be undone.', 'buddyboss' ); ?></p>
 		<p><strong><?php esc_html_e( 'Backup your database before proceeding.', 'buddyboss' ); ?></strong></p>

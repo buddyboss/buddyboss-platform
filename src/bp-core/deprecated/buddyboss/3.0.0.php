@@ -3435,6 +3435,152 @@ if ( ! function_exists( 'bbp_admin_tools_feedback' ) ) {
 	}
 }
 
+if ( ! function_exists( 'bp_core_admin_tools' ) ) {
+	/**
+	 * Render the legacy `?page=bp-tools` admin page (top-level Tools landing).
+	 *
+	 * @since BuddyPress 2.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Replaced by Settings 2.0 Tools panel.
+	 * @deprecated [BBVERSION] admin.php?page=bb-settings&tab=tools
+	 */
+	function bp_core_admin_tools() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'admin.php?page=bb-settings&tab=tools' );
+	}
+}
+
+if ( ! function_exists( 'bp_admin_repair_handler' ) ) {
+	/**
+	 * Process POST submissions from the legacy Tools page repair form.
+	 *
+	 * @since BuddyPress 2.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Form-driven flow replaced by
+	 *                              the React Repair Platform panel which calls
+	 *                              `wp_ajax_bp_admin_repair_tools_wrapper_function`.
+	 * @deprecated [BBVERSION] wp_ajax_bp_admin_repair_tools_wrapper_function
+	 */
+	function bp_admin_repair_handler() {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'wp_ajax_bp_admin_repair_tools_wrapper_function' );
+	}
+}
+
+if ( ! function_exists( 'bp_core_tools_settings_admin_tabs' ) ) {
+	/**
+	 * Render the legacy Tools sub-tab bar (Default Data | Repair Community | …).
+	 *
+	 * @since BuddyPress 1.5.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Tab bar has no remaining live page.
+	 * @deprecated [BBVERSION] admin.php?page=bb-settings&tab=tools
+	 *
+	 * @param string $active_tab Ignored.
+	 */
+	function bp_core_tools_settings_admin_tabs( $active_tab = '' ) {
+		unset( $active_tab );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'admin.php?page=bb-settings&tab=tools' );
+	}
+}
+
+if ( ! function_exists( 'bp_core_get_tools_settings_admin_tabs' ) ) {
+	/**
+	 * Return the legacy Tools sub-tab seed array.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated alongside the bp-tools tab bar.
+	 * @deprecated [BBVERSION] admin.php?page=bb-settings&tab=tools
+	 *
+	 * @param string $active_tab Ignored.
+	 * @return array Empty array — no tabs remain.
+	 */
+	function bp_core_get_tools_settings_admin_tabs( $active_tab = '' ) {
+		unset( $active_tab );
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'admin.php?page=bb-settings&tab=tools' );
+		return array();
+	}
+}
+
+if ( ! function_exists( 'bp_core_get_tools_repair_community_settings_admin_tabs' ) ) {
+	/**
+	 * Filter callback that appended the legacy "Repair Community" sub-tab.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Filter no longer fires anywhere.
+	 * @deprecated [BBVERSION] admin.php?page=bb-settings&tab=tools&panel=repair_platform
+	 *
+	 * @param array $tabs Existing tabs.
+	 * @return array Tabs unchanged.
+	 */
+	function bp_core_get_tools_repair_community_settings_admin_tabs( $tabs ) {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'admin.php?page=bb-settings&tab=tools&panel=repair_platform' );
+		return $tabs;
+	}
+}
+
+if ( ! function_exists( 'bbp_core_get_tools_settings_admin_tabs' ) ) {
+	/**
+	 * Filter callback that appended the legacy "Repair Forums" sub-tab.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Filter no longer fires anywhere.
+	 * @deprecated [BBVERSION] admin.php?page=bb-settings&tab=tools&panel=repair_platform
+	 *
+	 * @param array $tabs Existing tabs.
+	 * @return array Tabs unchanged.
+	 */
+	function bbp_core_get_tools_settings_admin_tabs( $tabs ) {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'admin.php?page=bb-settings&tab=tools&panel=repair_platform' );
+		return $tabs;
+	}
+}
+
+if ( ! function_exists( 'bp_media_get_tools_media_settings_admin_tabs' ) ) {
+	/**
+	 * Filter callback that appended the legacy "Import Media" sub-tab.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss [BBVERSION] Deprecated. Filter no longer fires anywhere.
+	 *                              Import Media remains reachable at its own
+	 *                              standalone admin page (`?page=bp-media-import`).
+	 * @deprecated [BBVERSION] admin.php?page=bp-media-import
+	 *
+	 * @param array $tabs Existing tabs.
+	 * @return array Tabs unchanged.
+	 */
+	function bp_media_get_tools_media_settings_admin_tabs( $tabs ) {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'admin.php?page=bp-media-import' );
+		return $tabs;
+	}
+}
+
+/**
+ * Fire `_deprecated_hook()` notices for the three retired Tools-page hooks
+ * (two filters + one action) when any third-party callback is registered.
+ *
+ * The calling functions (`bp_core_get_tools_settings_admin_tabs()` and
+ * `bp_core_tools_settings_admin_tabs()`) no longer fire these hooks because
+ * the legacy `?page=bp-tools` tab bar is gone. Third-party plugins that had
+ * `add_filter()` / `add_action()` callbacks on them would otherwise sit
+ * dormant with no signal that their integration broke. This hook-deprecation
+ * shim runs once per admin pageload (~3 µs when no callbacks are registered)
+ * and points the developer at the React feature-registry replacement.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @return void
+ */
+function bb_deprecated_tools_admin_tabs_hooks_notice() {
+	$retired = array(
+		'bp_core_get_tools_settings_admin_tabs' => "bb_register_side_panel( 'tools', \$panel_id, \$args ) on the bb_after_register_features action",
+		'bp_core_tools_settings_admin_tabs'     => "bb_register_side_panel( 'tools', \$panel_id, \$args ) on the bb_after_register_features action",
+		'bp_tools_settings_admin_tabs'          => 'bb_after_register_features',
+	);
+
+	foreach ( $retired as $hook => $replacement ) {
+		if ( has_filter( $hook ) || has_action( $hook ) ) {
+			_deprecated_hook( $hook, 'BuddyBoss [BBVERSION]', $replacement );
+		}
+	}
+}
+add_action( 'admin_init', 'bb_deprecated_tools_admin_tabs_hooks_notice' );
+
 // ─────────────────────────────────────────────────────────────────────────
 // Default Data (bp_dd_*) family — moved to the buddyboss-tools plugin in
 // BuddyBoss [BBVERSION]. Every legacy bp_dd_* function gets a wrapper here

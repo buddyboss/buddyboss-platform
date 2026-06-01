@@ -464,8 +464,6 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 		 * @uses remove_submenu_page() To remove menu items with alternat navigation
 		 */
 		public function admin_head() {
-			remove_submenu_page( 'admin.php', 'bbp-repair' );
-			// bbp-converter retired in BuddyBoss [BBVERSION] — Forum Import moved to buddyboss-tools.
 			remove_submenu_page( 'admin.php', 'bbp-reset' );
 			remove_submenu_page( 'index.php', 'bbp-about' );
 			remove_submenu_page( 'index.php', 'bbp-credits' );

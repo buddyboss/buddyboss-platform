@@ -232,31 +232,6 @@ function bbp_get_tools_admin_tabs( $active_tab = '' ) {
 	return $tabs_html;
 }
 
-function bbp_core_get_tools_settings_admin_tabs( $tabs ) {
-
-	$tabs[] = array(
-		'href' => bp_get_admin_url(
-			add_query_arg(
-				array(
-					'page' => 'bbp-repair',
-					'tab'  => 'bbp-repair',
-				),
-				'admin.php'
-			)
-		),
-		'name' => __( 'Repair Forums', 'buddyboss' ),
-		'slug' => 'bbp-repair',
-	);
-
-	// $tabs[] = array(
-	// 'href' => get_admin_url( '', add_query_arg( array( 'page' => 'bbp-reset', 'tab' => 'bbp-reset' ), 'admin.php' ) ),
-	// 'name' => __( 'Reset Forums', 'buddyboss' ),
-	// 'slug' => 'bbp-reset'
-	// );
-
-	return $tabs;
-}
-add_filter( 'bp_core_get_tools_settings_admin_tabs', 'bbp_core_get_tools_settings_admin_tabs', 11, 1 );
 
 // bbp_core_get_import_forum_tools_settings_admin_tabs() retired in BuddyBoss [BBVERSION] —
 // Forum Import moved to buddyboss-tools (Settings 2.0 Tools → Migration Tools panel).

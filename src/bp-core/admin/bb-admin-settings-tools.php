@@ -43,7 +43,7 @@ function bb_admin_settings_register_tools_feature() {
 		'tools',
 		array(
 			'label'              => __( 'Tools', 'buddyboss' ),
-			'description'        => __( 'Repair community data, import sample content, and migrate from other platforms.', 'buddyboss' ),
+			'description'        => __( 'Repair and re-sync specific site functions, migrations and import default data to help you build and maintain your site.', 'buddyboss' ),
 			'icon'               => array(
 				'type'  => 'font',
 				'class' => 'bb-icons-rl bb-icons-rl-wrench',

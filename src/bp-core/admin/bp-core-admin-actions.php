@@ -296,22 +296,53 @@ function bb_redirect_bp_settings_before_permission_check() {
 		exit;
 	}
 
-	// `?page=bp-tools&tab=bp-tools-default-data` retired in BuddyBoss [BBVERSION]
-	// — Default Data sub-tab was extracted to the buddyboss-tools plugin and
-	// renders as a Settings 2.0 React panel. Redirect any deep links to the
-	// new URL. Other ?page=bp-tools tabs (e.g. forum import) still render
-	// the legacy page and migrate in Phase 4 (forum-converter migration).
+	// `?page=bp-tools` (and every sub-tab) retired in BuddyBoss [BBVERSION].
+	// The whole legacy Tools page was replaced by the Settings 2.0 Tools
+	// feature (`?page=bb-settings&tab=tools`). Map every known sub-tab to its
+	// counterpart panel; fall back to the default Tools landing for anything
+	// unrecognized (own sub-tabs from third-party filters, etc.).
 	//
 	// @since BuddyBoss [BBVERSION]
 	if ( 'bp-tools' === $page ) {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
 		$bp_tools_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : '';
-		if ( 'bp-tools-default-data' === $bp_tools_tab ) {
-			wp_safe_redirect(
-				bp_get_admin_url( 'admin.php?page=bb-settings&tab=tools&panel=sample_data' )
-			);
-			exit;
+
+		$panel_for_tab = array(
+			'bp-tools-default-data' => 'sample_data',
+			'bp-repair-community'   => 'repair_platform',
+			'bbp-repair'            => 'repair_platform',
+			'bbp-converter'         => 'migration_tools',
+			'bp-tools-forum-import' => 'migration_tools',
+		);
+		$target_panel  = isset( $panel_for_tab[ $bp_tools_tab ] ) ? $panel_for_tab[ $bp_tools_tab ] : '';
+
+		$redirect_args = array(
+			'page' => 'bb-settings',
+			'tab'  => 'tools',
+		);
+		if ( '' !== $target_panel ) {
+			$redirect_args['panel'] = $target_panel;
 		}
+
+		// Preserve any extra query args (deep-link flags, etc.) — drop the
+		// ones we're rewriting.
+		$reserved_qs = array( 'page', 'tab', 'panel' );
+		foreach ( $_GET as $key => $value ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
+			if ( in_array( $key, $reserved_qs, true ) ) {
+				continue;
+			}
+			if ( is_scalar( $value ) ) {
+				$redirect_args[ sanitize_key( $key ) ] = sanitize_text_field( wp_unslash( $value ) );
+			}
+		}
+
+		wp_safe_redirect(
+			esc_url_raw(
+				add_query_arg( $redirect_args, admin_url( 'admin.php' ) )
+			),
+			301
+		);
+		exit;
 	}
 
 	// `?page=bp-member-type-import` retired in BuddyBoss [BBVERSION]
