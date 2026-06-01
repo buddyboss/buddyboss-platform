@@ -643,8 +643,18 @@ class BB_Admin_Profile_Fields_Ajax {
 				foreach ( $fields as $position => $field_id ) {
 					$sanitized_field_id = absint( $field_id );
 
-					// Validate field exists and belongs to this group before repositioning.
-					if ( ! isset( $field_group_map[ $sanitized_field_id ] ) || $field_group_map[ $sanitized_field_id ] !== $sanitized_group_id ) {
+					// Validate field exists before repositioning.
+					if ( ! isset( $field_group_map[ $sanitized_field_id ] ) ) {
+						continue;
+					}
+
+					$current_group_id = $field_group_map[ $sanitized_field_id ];
+
+					// Cross-field-set move — only proceed when the move is permitted.
+					if (
+						$current_group_id !== $sanitized_group_id &&
+						! $this->bb_can_move_field_to_group( $sanitized_field_id, $current_group_id, $sanitized_group_id )
+					) {
 						continue;
 					}
 
@@ -744,29 +754,13 @@ class BB_Admin_Profile_Fields_Ajax {
 			}
 		}
 
-		// Mirror legacy `BP_XProfile_Field::is_default_field()` (see
-		// `class-bp-xprofile-field.php` ~line 1832) so the React modal can hide
-		// the same metaboxes legacy hides: Type, Required, Visibility (and
-		// Allow-members-override), Profile Types, Placeholder. The synced set is
-		// always the Nickname field, plus First/Last when fullname format needs
-		// them. WP object cache memoises the underlying lookups, so calling
-		// these per field in the loop has no extra DB cost.
-		$synced_field_ids = array( (int) bp_xprofile_nickname_field_id() );
-		$dn_format        = function_exists( 'bp_core_display_name_format' ) ? bp_core_display_name_format() : '';
-		if ( 'first_last_name' === $dn_format || 'first_name' === $dn_format ) {
-			$synced_field_ids[] = (int) bp_xprofile_firstname_field_id();
-		}
-		if ( 'first_last_name' === $dn_format ) {
-			$synced_field_ids[] = (int) bp_xprofile_lastname_field_id();
-		}
-
 		$data = array(
 			'id'                      => (int) $field->id,
 			'name'                    => $field->name,
 			'type'                    => $field->type,
 			'is_required'             => (bool) $field->is_required,
 			'can_delete'              => (bool) $field->can_delete,
-			'is_default_field'        => in_array( (int) $field->id, $synced_field_ids, true ),
+			'is_default_field'        => $this->bb_is_default_field( $field->id ),
 			'field_order'             => (int) $field->field_order,
 			'alternate_name'          => $alternate_name ? $alternate_name : '',
 			'description'             => $field->description,
@@ -785,6 +779,72 @@ class BB_Admin_Profile_Fields_Ajax {
 		}
 
 		return $data;
+	}
+
+	/**
+	 * Determine whether a field is a platform "default"/synced field.
+	 *
+	 * Mirrors legacy `BP_XProfile_Field::is_default_field()` (see
+	 * `class-bp-xprofile-field.php` ~line 1832). The synced set is always the
+	 * Nickname field, plus First/Last when the display-name format needs them.
+	 * These fields back the display name and must stay in the base field set,
+	 * so they're excluded from cross-field-set moves. WP object cache memoises
+	 * the underlying lookups, so calling this per field has no extra DB cost.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $field_id Field ID.
+	 * @return bool True when the field is a platform default field.
+	 */
+	private function bb_is_default_field( $field_id ) {
+		$synced_field_ids = array( (int) bp_xprofile_nickname_field_id() );
+		$dn_format        = function_exists( 'bp_core_display_name_format' ) ? bp_core_display_name_format() : '';
+		if ( 'first_last_name' === $dn_format || 'first_name' === $dn_format ) {
+			$synced_field_ids[] = (int) bp_xprofile_firstname_field_id();
+		}
+		if ( 'first_last_name' === $dn_format ) {
+			$synced_field_ids[] = (int) bp_xprofile_lastname_field_id();
+		}
+
+		return in_array( (int) $field_id, $synced_field_ids, true );
+	}
+
+	/**
+	 * Determine whether a field may be moved from one field set to another.
+	 *
+	 * Cross-field-set moves are blocked for fields the platform depends on
+	 * staying put, and for any field entering or leaving a repeater field set
+	 * (repeater sets manage their own cloned child fields and would break if a
+	 * stray field were dropped in or pulled out).
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $field_id      Field ID being moved.
+	 * @param int $from_group_id Field set the field currently belongs to.
+	 * @param int $to_group_id   Field set the field is being moved into.
+	 * @return bool True when the move is allowed.
+	 */
+	private function bb_can_move_field_to_group( $field_id, $from_group_id, $to_group_id ) {
+		$field = BP_XProfile_Field::get_instance( (int) $field_id );
+		if ( ! $field || empty( $field->id ) ) {
+			return false;
+		}
+
+		// Required/primary fields and platform default (display-name) fields
+		// must remain in their field set.
+		if ( empty( $field->can_delete ) || $this->bb_is_default_field( $field_id ) ) {
+			return false;
+		}
+
+		// Block moves into or out of a repeater field set.
+		if (
+			'on' === bp_xprofile_get_meta( (int) $from_group_id, 'group', 'is_repeater_enabled' ) ||
+			'on' === bp_xprofile_get_meta( (int) $to_group_id, 'group', 'is_repeater_enabled' )
+		) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
