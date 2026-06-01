@@ -327,9 +327,35 @@ function bb_redirect_bp_settings_before_permission_check() {
 		exit;
 	}
 
+	// `?page=bbp-converter` retired in BuddyBoss [BBVERSION]
+	// — the Forum Converter (bbPress importer) was extracted to the
+	// buddyboss-tools plugin and now renders as a card inside the Settings 2.0
+	// Migration Tools panel. Redirect old bookmarks and browser-history links
+	// (Phase 4 forum-import migration). Preserves extra query args so
+	// `?page=bbp-converter&foo=bar` lands at `…panel=migration_tools&foo=bar`.
+	//
+	// @since BuddyBoss [BBVERSION]
+	if ( 'bbp-converter' === $page ) {
+		$args          = $_GET; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only $_GET inspection for redirect target construction.
+		$args['page']  = 'bb-settings';
+		$args['tab']   = 'tools';
+		$args['panel'] = 'migration_tools';
+
+		wp_safe_redirect(
+			esc_url_raw(
+				add_query_arg(
+					array_map( 'sanitize_text_field', $args ),
+					admin_url( 'admin.php' )
+				)
+			),
+			301
+		);
+		exit;
+	}
+
 	// Retired Repair Community + Repair Forums standalone admin pages:
-	//   ?page=bp-repair-community  (standalone Repair Community page)
-	//   ?page=bbp-repair           (standalone Forum Repair page)
+	// ?page=bp-repair-community  (standalone Repair Community page)
+	// ?page=bbp-repair           (standalone Forum Repair page)
 	// Both redirect to the new Settings 2.0 Tools → Repair Platform panel.
 	// NOTE: ?page=bp-tools (root) is NOT redirected here — that page still
 	// hosts the legacy Forum Import sub-tab which migrates in Phase 3.

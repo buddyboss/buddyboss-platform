@@ -213,10 +213,7 @@ function bbp_get_tools_admin_tabs( $active_tab = '' ) {
 				'href' => get_admin_url( '', add_query_arg( array( 'page' => 'bbp-repair' ), 'admin.php' ) ),
 				'name' => __( 'Repair Forums', 'buddyboss' ),
 			),
-			'1' => array(
-				'href' => get_admin_url( '', add_query_arg( array( 'page' => 'bbp-converter' ), 'admin.php' ) ),
-				'name' => __( 'Import Forums', 'buddyboss' ),
-			),
+			// '1' Import Forums tab retired in BuddyBoss [BBVERSION] — moved to buddyboss-tools.
 			'2' => array(
 				'href' => get_admin_url( '', add_query_arg( array( 'page' => 'bbp-reset' ), 'admin.php' ) ),
 				'name' => __( 'Reset Forums', 'buddyboss' ),
@@ -238,11 +235,15 @@ function bbp_get_tools_admin_tabs( $active_tab = '' ) {
 function bbp_core_get_tools_settings_admin_tabs( $tabs ) {
 
 	$tabs[] = array(
-		'href' => bp_get_admin_url( add_query_arg( array(
-			'page' => 'bbp-repair',
-			'tab'  => 'bbp-repair',
+		'href' => bp_get_admin_url(
+			add_query_arg(
+				array(
+					'page' => 'bbp-repair',
+					'tab'  => 'bbp-repair',
+				),
+				'admin.php'
+			)
 		),
-			'admin.php' ) ),
 		'name' => __( 'Repair Forums', 'buddyboss' ),
 		'slug' => 'bbp-repair',
 	);
@@ -257,21 +258,8 @@ function bbp_core_get_tools_settings_admin_tabs( $tabs ) {
 }
 add_filter( 'bp_core_get_tools_settings_admin_tabs', 'bbp_core_get_tools_settings_admin_tabs', 11, 1 );
 
-function bbp_core_get_import_forum_tools_settings_admin_tabs( $tabs ) {
-
-	$tabs[] = array(
-		'href' => bp_get_admin_url( add_query_arg( array(
-			'page' => 'bbp-converter',
-			'tab'  => 'bbp-converter',
-		),
-			'admin.php' ) ),
-		'name' => __( 'Import Forums', 'buddyboss' ),
-		'slug' => 'bbp-converter',
-	);
-
-	return $tabs;
-}
-add_filter( 'bp_core_get_tools_settings_admin_tabs', 'bbp_core_get_import_forum_tools_settings_admin_tabs', 16, 1 );
+// bbp_core_get_import_forum_tools_settings_admin_tabs() retired in BuddyBoss [BBVERSION] —
+// Forum Import moved to buddyboss-tools (Settings 2.0 Tools → Migration Tools panel).
 
 /**
  * Function to check table exists or not for converter.
@@ -288,7 +276,7 @@ function bb_check_table_exists( $opdb, $table_name ) {
 		return false;
 	}
 
-	$query          = $opdb->prepare( "SHOW TABLES LIKE %s", $table_name );
+	$query          = $opdb->prepare( 'SHOW TABLES LIKE %s', $table_name );
 	$existing_table = $opdb->get_var( $query );
 
 	if ( $existing_table === $table_name ) {

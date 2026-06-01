@@ -1308,7 +1308,7 @@ function bp_admin_do_wp_nav_menu_meta_box() {
 					wp_nav_menu_disabled_check( $nav_menu_selected_id );
 				endif;
 				?>
-				 class="button-secondary submit-add-to-menu right" value="<?php esc_attr_e( 'Add to Menu', 'buddyboss' ); ?>" name="add-custom-menu-item" id="submit-buddypress-menu"/>
+				class="button-secondary submit-add-to-menu right" value="<?php esc_attr_e( 'Add to Menu', 'buddyboss' ); ?>" name="add-custom-menu-item" id="submit-buddypress-menu"/>
 				<span class="spinner"></span>
 			</span>
 		</p>
@@ -1465,7 +1465,7 @@ function bp_email_plaintext_metabox( $post ) {
 		?>
 	</label>
 	<textarea rows="5" cols="40" name="excerpt"
-					  id="excerpt"><?php echo $post->post_excerpt; // textarea_escaped ?></textarea>
+						id="excerpt"><?php echo $post->post_excerpt; // textarea_escaped ?></textarea>
 
 	<p><?php _e( 'Most email clients support HTML email. However, some people prefer to receive plain text email. Enter a plain text alternative version of your email here.', 'buddyboss' ); ?></p>
 	<!-- accesslint:endignore -->
@@ -1637,10 +1637,10 @@ function bp_core_admin_user_manage_spammers() {
 		// Bail BEFORE consuming the nonce when moderation is deactivated.
 		// Both branches below depend on moderation infrastructure:
 		// - `BP_Suspend_Member::suspend_user()` writes to the suspend
-		//   table and fires `bp_suspend_hide_*` actions whose listeners
-		//   are only registered when the moderation component boots.
+		// table and fires `bp_suspend_hide_*` actions whose listeners
+		// are only registered when the moderation component boots.
 		// - `bp_moderation_is_user_suspended()` is loaded by the
-		//   moderation component and is undefined when it is off.
+		// moderation component and is undefined when it is off.
 		// Without this guard, a cached/bookmarked URL or stale redirect
 		// can re-enter the handler indefinitely (each call still issues
 		// a `wp_safe_redirect()` and carries `?updated=marked-*`, which
@@ -1839,7 +1839,6 @@ function bp_member_type_invalid_role_extended_profile_error_callback() {
 	// Clear and the transient and unhook any other notices so we don't see duplicate messages.
 	delete_transient( 'bp_invalid_role_selection_extended_profile' );
 	remove_action( 'admin_notices', 'bp_member_type_invalid_role_extended_profile_error_callback' );
-
 }
 
 // Hook for display error message on extended profile page in admin.
@@ -1865,7 +1864,7 @@ function bp_core_admin_create_background_page() {
 	if ( isset( $valid_pages[ $_POST['page'] ] ) ) {
 
 		$default_title = bp_core_get_directory_page_default_titles();
-		$title = ( isset( $default_title[ $_POST['page'] ] ) ) ? $default_title[ $_POST['page'] ] : $valid_pages[ $_POST['page'] ];
+		$title         = ( isset( $default_title[ $_POST['page'] ] ) ) ? $default_title[ $_POST['page'] ] : $valid_pages[ $_POST['page'] ];
 
 		$new_page = array(
 			'post_title'     => $title,
@@ -2076,34 +2075,6 @@ function bp_core_get_tools_repair_community_settings_admin_tabs( $tabs ) {
 }
 
 add_filter( 'bp_core_get_tools_settings_admin_tabs', 'bp_core_get_tools_repair_community_settings_admin_tabs', 1, 1 );
-
-/**
- * Register the legacy ?page=bbp-converter Forum Import submenu.
- *
- * Phase 3 retired the Profile Types submenu (and the wrapper function
- * `bp_import_profile_types_admin_menu` that registered both); this small
- * helper preserves only the bbp-converter submenu registration so the
- * legacy Forum Import page continues to render until Phase 4 retires it
- * alongside the forum-converter migration.
- *
- * @since BuddyBoss [BBVERSION] Split out of bp_import_profile_types_admin_menu().
- *
- * @return void
- */
-function bb_register_legacy_bbp_converter_submenu() {
-	if ( current_user_can( 'bbp_tools_page' ) && current_user_can( 'bbp_tools_import_page' ) ) {
-		add_submenu_page(
-			'buddyboss-platform',
-			__( 'Import Forums', 'buddyboss' ),
-			__( 'Forum Import', 'buddyboss' ),
-			'manage_options',
-			'bbp-converter',
-			'bbp_converter_settings'
-		);
-	}
-}
-
-add_action( bp_core_admin_hook(), 'bb_register_legacy_bbp_converter_submenu' );
 
 /**
  * Set the forum slug on edit page from backend.

@@ -306,76 +306,6 @@ function bbp_converter_setting_callback_convert_users() {
 	<?php
 }
 
-/** Converter Page ************************************************************/
-
-/**
- * The main settings page
- *
- * @uses settings_fields() To output the hidden fields for the form
- * @uses do_settings_sections() To output the settings sections
- */
-function bbp_converter_settings() {
-
-	// Status.
-	$step = (int) get_option( '_bbp_converter_step', 0 );
-	$max  = (int) bbpress()->admin->converter->max_steps;
-
-	// Starting or continuing?
-	$status_text = ! empty( $step )
-		? sprintf( esc_html__( 'Up next: step %s', 'buddyboss' ), $step )
-		: esc_html__( 'Ready', 'buddyboss' );
-
-	// Starting or continuing?
-	$start_text = ! empty( $step )
-		? esc_html__( 'Resume', 'buddyboss' )
-		: esc_html__( 'Start', 'buddyboss' );
-
-	// Starting or continuing?
-	$progress_text = ! empty( $step )
-		? sprintf( esc_html__( 'Previously stopped at step %1$d of %2$d', 'buddyboss' ), $step, $max )
-		: esc_html__( 'Ready to go.', 'buddyboss' );
-	?>
-
-	<div class="wrap">
-		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Tools', 'buddyboss' ) ); ?></h2>
-		<div class="nav-settings-subsubsub">
-			<ul class="subsubsub">
-				<?php bp_core_tools_settings_admin_tabs(); ?>
-			</ul>
-		</div>
-	</div>
-	<div class="wrap">
-		<div class="bp-admin-card">
-
-			<form action="#" method="post" id="bbp-converter-settings">
-
-				<?php settings_fields( 'bbpress_converter' ); ?>
-
-				<?php do_settings_sections( 'bbpress_converter' ); ?>
-
-				<p class="submit">
-					<input type="button" name="submit" class="button-primary" id="bbp-converter-start" value="<?php echo esc_attr( $start_text ); ?>" />
-					<input type="button" name="submit" class="button-primary" id="bbp-converter-stop" value="<?php esc_attr_e( 'Pause', 'buddyboss' ); ?>" />
-					<span class="spinner" id="bbp-converter-spinner"></span>
-				</p>
-
-				<div class="bbp-converter-states" id="bbp-converter-state-message" <?php echo ! empty( $step ) ? 'style="display:block;"' : ''; ?>>
-					<span id="bbp-converter-label"><?php esc_attr_e( 'Import Monitor', 'buddyboss' ); ?></span>
-					<span id="bbp-converter-status"><?php echo esc_html( $status_text ); ?></span>
-					<span id="bbp-converter-step-percentage" class="bbp-progress-bar"></span>
-					<span id="bbp-converter-total-percentage" class="bbp-progress-bar"></span>
-				</div>
-				<div class="bbp-converter-updated" id="bbp-converter-message" <?php echo ! empty( $step ) ? 'style="display:block;"' : ''; ?>>
-					<p><?php echo esc_html( $progress_text ); ?></p>
-				</div>
-			</form>
-
-		</div>
-	</div>
-
-	<?php
-}
-
 /** Repair Handler ************************************************************/
 
 /**
@@ -2325,7 +2255,7 @@ function bb_admin_upgrade_user_favorites( $is_background, $blog_id ) {
 			$bp_background_updater->dispatch();
 		} else {
 			bb_migrate_users_topic_favorites( $results, $blog_id );
-			$offset ++;
+			++$offset;
 		}
 
 		// Update the offset.

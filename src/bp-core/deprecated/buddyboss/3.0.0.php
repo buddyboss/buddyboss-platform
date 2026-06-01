@@ -4206,7 +4206,7 @@ if ( ! function_exists( 'bp_import_profile_types_admin_menu' ) ) {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 * @since BuddyBoss [BBVERSION] Deprecated. The submenu was retired in favor of the Settings 2.0 Migration Tools panel.
-	 * @deprecated BuddyBoss [BBVERSION] The Forum Import submenu was preserved via bb_register_legacy_bbp_converter_submenu() — Phase 4 will retire that too.
+	 * @deprecated BuddyBoss [BBVERSION] The Forum Import submenu was preserved via bb_register_legacy_bbp_converter_submenu() — Retired in Phase 4.
 	 *
 	 * @return void
 	 */
@@ -4229,5 +4229,152 @@ if ( ! function_exists( 'bp_core_get_tools_import_profile_settings_admin_tabs' )
 	function bp_core_get_tools_import_profile_settings_admin_tabs( $tabs ) {
 		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'Migration Tools panel in buddyboss-tools' );
 		return is_array( $tabs ) ? $tabs : array();
+	}
+}
+
+/* ============================================================================
+ * Phase 4 - Forum Import (PROD-9940 / PROD-9936)
+ * BBP_Converter, BBP_Converter_Base, 22 vendor classes, and bbp_new_converter()
+ * moved into the buddyboss-tools plugin.
+ *
+ * BC strategy:
+ *   - Tools active: spl_autoload registers class_alias on first lookup so
+ *     third-party `extends BBP_Converter` etc. work at parse time.
+ *   - Tools inactive: stub classes defined inline with magic-method dispatch
+ *     that emits _deprecated_function and otherwise no-ops.
+ *
+ * Known BC limitation when Tools is inactive: PHP's parent::method() uses
+ * compile-time static binding and bypasses __call() magic dispatch. Third-party
+ * `class MyImporter extends phpBB` whose methods call `parent::convert_topics()`
+ * will fatal because the stub `phpBB` has no real `convert_topics()` method.
+ * The _deprecated_function replacement message below surfaces this limitation
+ * so operators get an actionable hint. v1 accepts the hole; richer stubs are
+ * a follow-up if real-world fatal reports emerge.
+ *
+ * Removal schedule: BuddyBoss [BBVERSION + 2].
+ * ============================================================================ */
+
+if ( ! function_exists( 'bb_deprecated_forum_import_class_map' ) ) {
+	/**
+	 * Map legacy to moved class names for forum-import deprecation.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return array Map of legacy => moved class name.
+	 */
+	function bb_deprecated_forum_import_class_map() {
+		return array(
+			'BBP_Converter'      => 'BB_Tools_BBP_Converter',
+			'BBP_Converter_Base' => 'BB_Tools_BBP_Converter_Base',
+			// 22 vendor classes - names preserved across the move; alias is from the
+			// LEGACY scope (where the alias is registered) to the same name in TOOLS'
+			// global scope (where the moved class actually lives).
+			'AEF'          => 'AEF',
+			'bbPress1'     => 'bbPress1',
+			'Drupal7'      => 'Drupal7',
+			'FluxBB'       => 'FluxBB',
+			'Invision'     => 'Invision',
+			'Kunena1'      => 'Kunena1',
+			'Kunena2'      => 'Kunena2',
+			'Kunena3'      => 'Kunena3',
+			'Mingle'       => 'Mingle',
+			'MyBB'         => 'MyBB',
+			'PHPFox3'      => 'PHPFox3',
+			'PHPWind'      => 'PHPWind',
+			'Phorum'       => 'Phorum',
+			'PunBB'        => 'PunBB',
+			'SMF'          => 'SMF',
+			'SimplePress5' => 'SimplePress5',
+			'Vanilla'      => 'Vanilla',
+			'XMB'          => 'XMB',
+			'XenForo'      => 'XenForo',
+			'phpBB'        => 'phpBB',
+			'vBulletin'    => 'vBulletin',
+			'vBulletin3'   => 'vBulletin3',
+		);
+	}
+}
+
+if ( ! function_exists( 'bb_deprecated_forum_import_autoload' ) ) {
+	/**
+	 * Autoload-driven BC for moved forum-import classes.
+	 *
+	 * Fires before WP's autoloader runs for an unknown class name. If the name
+	 * matches a moved class:
+	 *   - Tools active (target class exists): alias legacy to target.
+	 *   - Tools inactive: define a stub with magic-method dispatch that emits a
+	 *     _deprecated_function notice and no-ops on method calls.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $class_name Class name PHP is attempting to autoload.
+	 * @return void
+	 */
+	function bb_deprecated_forum_import_autoload( $class_name ) {
+		$map = bb_deprecated_forum_import_class_map();
+		if ( ! isset( $map[ $class_name ] ) ) {
+			return;
+		}
+
+		$target = $map[ $class_name ];
+
+		// Same-name alias (vendor classes): Tools' class is already loaded with
+		// the same name in global scope, so we'd be aliasing to ourselves.
+		// Only alias when the legacy name differs from the target.
+		if ( $class_name !== $target ) {
+			if ( class_exists( $target, false ) ) {
+				class_alias( $target, $class_name );
+				return;
+			}
+		} elseif ( class_exists( $target, false ) ) {
+			// Vendor class already loaded by Tools - nothing to do.
+			return;
+		}
+
+		// Tools is inactive - define the stub inline using eval. The stub:
+		//   - emits _deprecated_function on construction
+		//   - dispatches all $this->method() calls to __call / __callStatic returning null
+		//   - declares no parent (the legacy parent class is itself stubbed)
+		$replacement = 'BB_Tools_BBP_Converter (install buddyboss-tools - third-party importers calling parent::* on these classes require Tools active)';
+		$code        = sprintf(
+			'class %1$s {
+				public function __construct() {
+					_deprecated_function( %2$s, "BuddyBoss [BBVERSION]", %3$s );
+				}
+				public function __call( $name, $args ) { return null; }
+				public static function __callStatic( $name, $args ) { return null; }
+			}',
+			$class_name,
+			var_export( $class_name, true ),
+			var_export( $replacement, true )
+		);
+		// phpcs:ignore Squiz.PHP.Eval.Discouraged -- Required: legacy class names must be defined dynamically so third-party `extends` declarations resolve without fataling. Input is constant (whitelisted via bb_deprecated_forum_import_class_map()).
+		eval( $code ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.eval_eval -- Same justification as above; whitelisted input only.
+	}
+
+	spl_autoload_register( 'bb_deprecated_forum_import_autoload' );
+}
+
+if ( ! function_exists( 'bbp_new_converter' ) ) {
+	/**
+	 * Deprecated factory wrapper for the moved bbp_new_converter().
+	 *
+	 * When Platform's own src/bp-forums/admin/converter.php is still present (Task 4.5
+	 * not yet run), that file defines bbp_new_converter() first and this wrapper is
+	 * silently skipped via the function_exists() guard - no redeclaration fatal occurs.
+	 * After Task 4.5 removes converter.php, this wrapper becomes the canonical stub.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 * @deprecated BuddyBoss [BBVERSION] Moved to buddyboss-tools as bb_tools_bbp_new_converter().
+	 *
+	 * @param string $platform Vendor class name (e.g. "phpBB").
+	 * @return object|null Vendor converter instance when Tools is active; null otherwise.
+	 */
+	function bbp_new_converter( $platform = '' ) {
+		_deprecated_function( __FUNCTION__, 'BuddyBoss [BBVERSION]', 'bb_tools_bbp_new_converter' );
+		if ( function_exists( 'bb_tools_bbp_new_converter' ) ) {
+			return bb_tools_bbp_new_converter( $platform );
+		}
+		return null;
 	}
 }
