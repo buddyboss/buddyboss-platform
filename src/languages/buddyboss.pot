@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 3.0.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-05-26 09:03:19+00:00\n"
+"POT-Creation-Date: 2026-06-01 05:22:13+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -4751,6 +4751,7 @@ msgstr ""
 #: bp-blogs/bp-blogs-template.php:1402
 #: bp-core/admin/settings/forums/settings-forum-features.php:110
 #: bp-core/admin/settings/forums/settings-forum-permalinks.php:120
+#: bp-core/admin/settings/legacy-meta-bridge-utils.php:2519
 #: bp-core/bb-core-blocks.php:284
 #: bp-core/bb-core-blocks.php:290
 #: bp-core/bp-core-cssjs.php:244
@@ -9978,6 +9979,33 @@ msgstr ""
 
 #: bp-core/admin/settings/advanced/settings-telemetry.php:76
 msgid "Disable telemetry"
+msgstr ""
+
+#: bp-core/admin/settings/compat/wp-fusion.php:59
+msgid "Select tags"
+msgstr ""
+
+#. translators: %s: the tag name the admin typed.
+#: bp-core/admin/settings/compat/wp-fusion.php:95
+msgid "Create \"%s\""
+msgstr ""
+
+#: bp-core/admin/settings/compat/wp-fusion.php:100
+#: bp-core/admin/bb-settings/settings/build/499.js:1
+msgid "Select a page"
+msgstr ""
+
+#: bp-core/admin/settings/compat/wp-fusion.php:250
+#: bp-core/admin/settings/legacy-meta-bridge-utils.php:2726
+msgid "Unauthorized"
+msgstr ""
+
+#: bp-core/admin/settings/compat/wp-fusion.php:256
+msgid "This CRM does not support creating tags."
+msgstr ""
+
+#: bp-core/admin/settings/compat/wp-fusion.php:262
+msgid "Tag name is empty."
 msgstr ""
 
 #: bp-core/admin/settings/emails/meta-fields.php:59
@@ -38699,6 +38727,24 @@ msgstr ""
 
 #: bp-core/admin/bb-settings/settings/build/190.js:1
 #: bp-core/admin/bb-settings/settings/build/285.js:1
+#: bp-core/admin/bb-settings/settings/build/483.js:1
+#: bp-core/admin/bb-settings/settings/build/510.js:1
+#: bp-core/admin/bb-settings/settings/build/794.js:1
+#: bp-core/admin/bb-settings/settings/build/926.js:1
+msgid "(Add new)"
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/190.js:1
+#: bp-core/admin/bb-settings/settings/build/285.js:1
+#: bp-core/admin/bb-settings/settings/build/483.js:1
+#: bp-core/admin/bb-settings/settings/build/510.js:1
+#: bp-core/admin/bb-settings/settings/build/794.js:1
+#: bp-core/admin/bb-settings/settings/build/926.js:1
+msgid "No options available yet."
+msgstr ""
+
+#: bp-core/admin/bb-settings/settings/build/190.js:1
+#: bp-core/admin/bb-settings/settings/build/285.js:1
 #: bp-core/admin/bb-settings/settings/build/510.js:1
 #: bp-core/admin/bb-settings/settings/build/926.js:2
 msgid "Bulk Edit"
@@ -39545,10 +39591,6 @@ msgstr ""
 
 #: bp-core/admin/bb-settings/settings/build/499.js:1
 msgid "After Login Redirection"
-msgstr ""
-
-#: bp-core/admin/bb-settings/settings/build/499.js:1
-msgid "Select a page"
 msgstr ""
 
 #: bp-core/admin/bb-settings/settings/build/499.js:1

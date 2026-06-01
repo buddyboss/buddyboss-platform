@@ -984,7 +984,7 @@ function bb_legacy_extract_multiselect_values( $html, $name ) {
  * `get_post_meta( $id, 'wpf-settings', true )['allow_tags']`. Only the named
  * leaf is read; nothing is written.
  *
- * @since BuddyBoss 3.0.0
+ * @since BuddyBoss [BBVERSION]
  *
  * @param int    $post_id Post being edited.
  * @param string $name    Input name attribute (may use array notation).
@@ -2307,7 +2307,7 @@ function bb_legacy_run_cpt_bridge_box( $registry, $component, $box, &$order, $ex
 	 * Unknown keys are ignored. This runs once per metabox; the resulting map is
 	 * consulted per input inside the loop below.
 	 *
-	 * @since BuddyBoss 3.0.0
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param array  $overrides Map of raw input name => override array. Default empty.
 	 * @param string $box_id    The metabox id being bridged.
@@ -2629,7 +2629,7 @@ function bb_legacy_run_cpt_bridge_box( $registry, $component, $box, &$order, $ex
  * compatibility modules under `compat/` (e.g. `compat/wp-fusion.php`), which
  * proves the filter is the real, supported extension surface.
  *
- * @since BuddyBoss 3.0.0
+ * @since BuddyBoss [BBVERSION]
  *
  * @return array Map of resolver id => resolver definition.
  */
@@ -2637,7 +2637,7 @@ function bb_legacy_get_ajax_select_resolvers() {
 	/**
 	 * Filter the AJAX-select resolver registry.
 	 *
-	 * @since BuddyBoss 3.0.0
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param array $resolvers Map of resolver id => resolver definition.
 	 */
@@ -2647,7 +2647,7 @@ function bb_legacy_get_ajax_select_resolvers() {
 /**
  * Find the resolver whose `match` substring appears in a widget's class.
  *
- * @since BuddyBoss 3.0.0
+ * @since BuddyBoss [BBVERSION]
  *
  * @param string $class_attr Widget class attribute.
  * @return array|null Resolver definition with its `key` added, or null.
@@ -2672,7 +2672,7 @@ function bb_legacy_match_ajax_select_resolver( $class_attr ) {
 /**
  * Resolve a saved value to its display label via a resolver's `resolve_label`.
  *
- * @since BuddyBoss 3.0.0
+ * @since BuddyBoss [BBVERSION]
  *
  * @param array  $resolver Resolver definition.
  * @param string $value    Saved value.
@@ -2706,14 +2706,17 @@ function bb_legacy_resolve_ajax_select_label( $resolver, $value ) {
  * Auth: the `bb_admin_settings` nonce (sent as `nonce`) plus `bp_moderate` —
  * the same boundary as every other Settings 2.0 admin AJAX endpoint.
  *
- * @since BuddyBoss 3.0.0
+ * @since BuddyBoss [BBVERSION]
  *
  * @return void
  */
 function bb_legacy_ajax_select_search() {
 	// AjaxMultiSelectField uses `q` (GET); AsyncSelectField uses `term` (POST).
-	// The presence of `q` distinguishes the bare-`matches` response contract.
-	$is_multi = isset( $_REQUEST['q'] );
+	// The presence of `q` in $_GET distinguishes the bare-`matches` response
+	// contract from the wrapped success envelope. Binding to $_GET / $_POST
+	// explicitly (instead of $_REQUEST) avoids reading from $_COOKIE and keeps
+	// each transport's contract auditable.
+	$is_multi = isset( $_GET['q'] );
 
 	$fail = function () use ( $is_multi ) {
 		if ( $is_multi ) {
@@ -2727,20 +2730,32 @@ function bb_legacy_ajax_select_search() {
 		$fail();
 	}
 
-	$nonce = isset( $_REQUEST['nonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['nonce'] ) ) : '';
+	// `nonce` and `resolver` arrive on the same transport as the rest of the
+	// payload — GET for multi-select, POST for single-select. Reading them
+	// from the matching superglobal mirrors how every other Settings 2.0 AJAX
+	// endpoint scopes its params.
+	if ( $is_multi ) {
+		$nonce        = isset( $_GET['nonce'] ) ? sanitize_text_field( wp_unslash( $_GET['nonce'] ) ) : '';
+		$resolver_key = isset( $_GET['resolver'] ) ? sanitize_key( wp_unslash( $_GET['resolver'] ) ) : '';
+	} else {
+		$nonce        = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
+		$resolver_key = isset( $_POST['resolver'] ) ? sanitize_key( wp_unslash( $_POST['resolver'] ) ) : '';
+	}
+
 	if ( ! wp_verify_nonce( $nonce, 'bb_admin_settings' ) ) {
 		$fail();
 	}
 
-	$resolver_key = isset( $_REQUEST['resolver'] ) ? sanitize_key( wp_unslash( $_REQUEST['resolver'] ) ) : '';
-	$resolvers    = bb_legacy_get_ajax_select_resolvers();
+	$resolvers = bb_legacy_get_ajax_select_resolvers();
 	if ( '' === $resolver_key || empty( $resolvers[ $resolver_key ] ) || ! is_callable( $resolvers[ $resolver_key ]['search'] ) ) {
 		$fail();
 	}
 	$resolver = $resolvers[ $resolver_key ];
 
 	// Single-select mount-time resolve: return just the saved value's label.
-	$selected_id = isset( $_REQUEST['selected_id'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['selected_id'] ) ) : '';
+	// `selected_id` is sent only by AsyncSelectField (POST), never by the
+	// multi-select path — read it strictly from $_POST.
+	$selected_id = isset( $_POST['selected_id'] ) ? sanitize_text_field( wp_unslash( $_POST['selected_id'] ) ) : '';
 	if ( ! $is_multi && '' !== $selected_id && '0' !== $selected_id ) {
 		wp_send_json_success(
 			array(
@@ -2755,10 +2770,15 @@ function bb_legacy_ajax_select_search() {
 		);
 	}
 
-	$query = $is_multi
-		? ( isset( $_REQUEST['q'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['q'] ) ) : '' )
-		: ( isset( $_REQUEST['term'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['term'] ) ) : '' );
-	$page  = isset( $_REQUEST['page'] ) ? max( 1, absint( $_REQUEST['page'] ) ) : 1;
+	// Query and pagination params live on the same transport as the rest:
+	// multi → $_GET[ q | page ], single → $_POST[ term | page ].
+	if ( $is_multi ) {
+		$query = isset( $_GET['q'] ) ? sanitize_text_field( wp_unslash( $_GET['q'] ) ) : '';
+		$page  = isset( $_GET['page'] ) ? max( 1, absint( $_GET['page'] ) ) : 1;
+	} else {
+		$query = isset( $_POST['term'] ) ? sanitize_text_field( wp_unslash( $_POST['term'] ) ) : '';
+		$page  = isset( $_POST['page'] ) ? max( 1, absint( $_POST['page'] ) ) : 1;
+	}
 
 	$matches = (array) call_user_func( $resolver['search'], $query, $page );
 

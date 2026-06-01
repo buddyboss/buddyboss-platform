@@ -31,7 +31,7 @@
  *   wpf-settings[message]           textarea (custom restricted message) — independent
  *
  * @package BuddyBoss\Core\Administration
- * @since   BuddyBoss 3.0.0
+ * @since   BuddyBoss [BBVERSION]
  */
 
 // Exit if accessed directly.
@@ -48,7 +48,7 @@ defined( 'ABSPATH' ) || exit;
  *                    a saved numeric value resolves to its title, a URL shows
  *                    verbatim.
  *
- * @since BuddyBoss 3.0.0
+ * @since BuddyBoss [BBVERSION]
  *
  * @param array $resolvers Existing resolver map.
  * @return array Resolver map with WP Fusion entries added.
@@ -156,7 +156,7 @@ add_filter( 'bb_legacy_ajax_select_resolvers', 'bb_legacy_wpf_register_ajax_reso
  * Only applies to the WP Fusion metabox (`wpf-meta`); other metaboxes pass
  * through untouched.
  *
- * @since BuddyBoss 3.0.0
+ * @since BuddyBoss [BBVERSION]
  *
  * @param array  $overrides Existing per-field overrides (keyed by raw $_POST name).
  * @param string $box_id    The metabox id being bridged.
@@ -215,7 +215,7 @@ add_filter( 'bb_legacy_field_overrides', 'bb_legacy_wpf_field_overrides', 10, 3 
  * created in the CRM lazily on first apply) or `add_tags_api` (the CRM mints an
  * id immediately via add_tag()). Anything else is search-only.
  *
- * @since BuddyBoss 3.0.0
+ * @since BuddyBoss [BBVERSION]
  *
  * @return bool True when tag creation is supported.
  */
@@ -241,7 +241,7 @@ function bb_legacy_wpf_crm_supports_tag_create() {
  * Auth: `bp_moderate` + the `bb_admin_settings` nonce — same boundary as the
  * search shim.
  *
- * @since BuddyBoss 3.0.0
+ * @since BuddyBoss [BBVERSION]
  *
  * @return void
  */
@@ -277,11 +277,17 @@ function bb_legacy_wpf_create_tag() {
 
 	// Register the name locally so it appears in future tag searches (matches
 	// WP Fusion's update_available_tags). Keyed by id for add_tags_api, or by
-	// the string itself for add_tags.
-	$available = (array) wpf_get_option( 'available_tags', array() );
-	if ( ! isset( $available[ $tag_id ] ) && ! in_array( $term, $available, true ) ) {
-		$available[ $tag_id ] = $term;
-		wpf_update_option( 'available_tags', $available );
+	// the string itself for add_tags. The wpf_get_option / wpf_update_option
+	// helpers are pluggable in WP Fusion — guard against them being missing
+	// (e.g. partial-load states, future refactors) so the endpoint degrades
+	// gracefully rather than fatally on PHP 8.x. The CRM-side write above has
+	// already succeeded at this point; only the local index update is skipped.
+	if ( function_exists( 'wpf_get_option' ) && function_exists( 'wpf_update_option' ) ) {
+		$available = (array) wpf_get_option( 'available_tags', array() );
+		if ( ! isset( $available[ $tag_id ] ) && ! in_array( $term, $available, true ) ) {
+			$available[ $tag_id ] = $term;
+			wpf_update_option( 'available_tags', $available );
+		}
 	}
 
 	wp_send_json_success(
