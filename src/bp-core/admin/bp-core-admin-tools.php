@@ -712,18 +712,44 @@ function bp_admin_install_emails() {
 		restore_current_blog();
 	}
 
+	$records_text = sprintf(
+		/* translators: %1$s for counts missing emails. */
+		__( '%1$s missing emails have been installed.', 'buddyboss' ),
+		$installed_email
+	);
+
+	// Only attach the "View Emails." link when at least one email was installed —
+	// otherwise the Settings 2.0 Repair Platform UI renders a stray link under
+	// the "0 missing emails have been installed." row, which reads as
+	// contradictory (nothing was installed but we're prompting to view it).
+	$view_emails_link = $installed_email > 0
+		? '<a href="' . esc_url(
+			add_query_arg(
+				array(
+					'page'  => 'bb-settings',
+					'tab'   => 'emails',
+					'panel' => 'all_emails',
+				),
+				get_admin_url( bp_get_root_blog_id(), 'admin.php' )
+			)
+		) . '">' . esc_html__( 'View Emails.', 'buddyboss' ) . '</a>'
+		: '';
+
 	return array(
 		'status'  => 1,
-		'records' => sprintf(
-		/* translators: %1$s for counts missing emails. */
-			__( '%1$s missing emails have been installed.', 'buddyboss' ),
-			$installed_email,
-		),
-		'message' => sprintf(
-		/* translators: %1$s for view emails url. */
-			__( 'Installing missing emails &hellip; Complete! %1$s', 'buddyboss' ),
-			'<a href="' . get_admin_url( bp_get_root_blog_id(), 'edit.php?post_type=' . bp_get_email_post_type() ) . '">' . esc_html__( 'View Emails.', 'buddyboss' ) . '</a>'
-		),
+		'records' => $records_text,
+		// Mirror of `records` with the View Emails link appended. Consumed by
+		// the Settings 2.0 Repair Platform UI which sanitizes via DOMPurify
+		// and renders as HTML so the link is clickable. Empty when zero
+		// emails were installed.
+		'summary_html' => $installed_email > 0 ? $records_text . ' ' . $view_emails_link : '',
+		'message' => $installed_email > 0
+			? sprintf(
+				/* translators: %1$s for view emails url. */
+				__( 'Installing missing emails &hellip; Complete! %1$s', 'buddyboss' ),
+				$view_emails_link
+			)
+			: __( 'Installing missing emails &hellip; Complete!', 'buddyboss' ),
 	);
 }
 
@@ -786,12 +812,40 @@ function bp_admin_reinstall_emails() {
 		restore_current_blog();
 	}
 
+	$reset_count = is_array( $emails ) ? count( $emails ) : 0;
+
+	$records_text = sprintf(
+		/* translators: %s: number of emails reset to defaults. */
+		__( '%s emails reset to defaults.', 'buddyboss' ),
+		bp_core_number_format( $reset_count )
+	);
+
+	$view_emails_link = '<a href="' . esc_url(
+		add_query_arg(
+			array(
+				'page'  => 'bb-settings',
+				'tab'   => 'emails',
+				'panel' => 'all_emails',
+			),
+			get_admin_url( bp_get_root_blog_id(), 'admin.php' )
+		)
+	) . '">' . esc_html__( 'View Emails.', 'buddyboss' ) . '</a>';
+
 	return array(
 		'status'  => 1,
+		// Provide a `records` field so the Settings 2.0 Repair Platform UI
+		// renders a meaningful row label. Without it the summary extractor
+		// pulls just "View Emails." from the message tail and the result
+		// reads as a stray link with no context.
+		'records' => $records_text,
+		// Mirror of `records` with the View Emails link appended. Consumed by
+		// the Settings 2.0 Repair Platform UI which sanitizes via DOMPurify
+		// and renders as HTML so the link is clickable.
+		'summary_html' => $records_text . ' ' . $view_emails_link,
 		'message' => sprintf(
 		/* translators: %1$s for view emails url. */
 			__( 'Reseting emails &hellip; Complete! %1$s', 'buddyboss' ),
-			'<a href="' . get_admin_url( bp_get_root_blog_id(), 'edit.php?post_type=' . bp_get_email_post_type() ) . '">' . esc_html__( 'View Emails.', 'buddyboss' ) . '</a>'
+			$view_emails_link
 		),
 	);
 }

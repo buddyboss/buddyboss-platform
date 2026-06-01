@@ -138,21 +138,53 @@ export default function RepairPlatform() {
 			const endpoint = item.endpoint || 'bp_admin_repair_tools_wrapper_function';
 
 			try {
-				const fd = new FormData();
-				fd.append( 'action', endpoint );
-				fd.append( 'nonce', nonce );
-				fd.append( 'type', itemId );
-				if ( isNetworkAdmin && selectedSiteId ) {
-					fd.append( 'site_id', selectedSiteId );
-				}
+				// Drive paginated repair handlers to completion: several legacy
+				// callbacks (xprofile resync, display-name update, profile-set
+				// repair, member-type assign) process users in batches of 50 and
+				// return `status: 'running'` + `offset: N` until done. The legacy
+				// admin page loops via jQuery; mirror that here so the React panel
+				// doesn't strand the user on the first batch ("50 members updated
+				// successfully" with no Complete state and no operation label).
+				// Hard cap iterations to defend against a misbehaving handler that
+				// never reports completion.
+				const MAX_PAGINATED_ITERATIONS = 10000;
+				let offset = 0;
+				let json = null;
 
-				const res = await fetch( ajaxUrl, {
-					method: 'POST',
-					body: fd,
-					credentials: 'same-origin',
-					signal: controller.signal,
-				} );
-				const json = await res.json();
+				for ( let i = 0; i < MAX_PAGINATED_ITERATIONS; i++ ) {
+					const fd = new FormData();
+					fd.append( 'action', endpoint );
+					fd.append( 'nonce', nonce );
+					fd.append( 'type', itemId );
+					if ( offset > 0 ) {
+						fd.append( 'offset', String( offset ) );
+					}
+					if ( isNetworkAdmin && selectedSiteId ) {
+						fd.append( 'site_id', selectedSiteId );
+					}
+
+					const res = await fetch( ajaxUrl, {
+						method: 'POST',
+						body: fd,
+						credentials: 'same-origin',
+						signal: controller.signal,
+					} );
+					json = await res.json();
+
+					if ( ! json || ! json.success ) {
+						break;
+					}
+					const data = json.data || {};
+					if ( 'running' !== data.status ) {
+						break;
+					}
+					const nextOffset = ( typeof data.offset === 'number' ) ? data.offset : Number( data.offset );
+					if ( ! ( nextOffset > offset ) ) {
+						// No forward progress — bail to avoid an infinite loop.
+						break;
+					}
+					offset = nextOffset;
+				}
 
 				collected.push( {
 					id: itemId,
@@ -166,6 +198,10 @@ export default function RepairPlatform() {
 					// — present on all responses since the Settings 2.0 Tools release.
 					count:   ( json && json.data && typeof json.data.count !== 'undefined' ) ? json.data.count : null,
 					summary: ( json && json.data && json.data.summary ) || '',
+					// Optional pre-rendered HTML row text (e.g. emails responses include
+					// a clickable "View Emails." link). The modal sanitizes via DOMPurify
+					// before injecting. Plain `summary` is used when this is absent.
+					summary_html: ( json && json.data && json.data.summary_html ) || '',
 				} );
 			} catch ( e ) {
 				if ( 'AbortError' === e.name ) {

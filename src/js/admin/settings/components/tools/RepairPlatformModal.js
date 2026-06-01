@@ -9,6 +9,7 @@
  */
 import { Modal, Button, Spinner } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
+import { sanitizeHtml } from '../../utils/sanitize';
 
 /**
  * Convert legacy AJAX HTML message → clean plain text.
@@ -146,9 +147,17 @@ export default function RepairPlatformModal( { variant, results, onCancel, onClo
 								className={ 'bb-admin-notice bb-admin-notice--' + state }
 							>
 								<span className={ iconClass }></span>
-								<span className="bb-tools-repair-modal__result-text">
-									{ formatResultText( item ) }
-								</span>
+								{ item.summary_html ? (
+									// Sanitized via DOMPurify (see ../../utils/sanitize) so legacy
+									// repair handlers can include a clickable "View Emails." anchor
+									// in the response. Matches the established pattern in
+									// SettingsForm.js line 1529.
+									<span className="bb-tools-repair-modal__result-text" dangerouslySetInnerHTML={{ __html: sanitizeHtml( item.summary_html ) }} />
+								) : (
+									<span className="bb-tools-repair-modal__result-text">
+										{ formatResultText( item ) }
+									</span>
+								) }
 							</li>
 						);
 					} ) }

@@ -590,12 +590,23 @@ function bbp_admin_repair_group_forum_relationship() {
 	);
 
 	// Bail if forum IDs returned an error
-	if ( is_wp_error( $forum_ids ) || empty( $bbp_db->last_result ) ) {
+	if ( is_wp_error( $forum_ids ) ) {
 		return array(
 			2,
 			sprintf( $statement, __( 'Failed!', 'buddyboss' ) ),
 			'status'  => 0,
 			'message' => sprintf( $statement, __( 'Failed!', 'buddyboss' ) ),
+		);
+	}
+
+	// Nothing to repair when there are no converted forums on the site.
+	if ( empty( $bbp_db->last_result ) ) {
+		$nothing = __( 'Nothing to repair!', 'buddyboss' );
+		return array(
+			0,
+			sprintf( $statement, $nothing ),
+			'status'  => 1,
+			'message' => sprintf( $statement, $nothing ),
 		);
 	}
 
@@ -752,10 +763,11 @@ function bbp_admin_repair_forum_topic_count() {
 			bbp_update_forum_topic_count( $forum->ID );
 		}
 	} else {
+		$result = __( 'No forums to count!', 'buddyboss' );
 		return array(
-			2,
+			0,
 			sprintf( $statement, $result ),
-			'status'  => 0,
+			'status'  => 1,
 			'message' => sprintf( $statement, $result ),
 		);
 	}
@@ -819,10 +831,11 @@ function bbp_admin_repair_forum_reply_count() {
 			bbp_update_forum_reply_count( $forum->ID );
 		}
 	} else {
+		$result = __( 'No forums to count!', 'buddyboss' );
 		return array(
-			2,
+			0,
 			sprintf( $statement, $result ),
-			'status'  => 0,
+			'status'  => 1,
 			'message' => sprintf( $statement, $result ),
 		);
 	}
@@ -869,10 +882,11 @@ function bbp_admin_repair_user_topic_count() {
 	}
 
 	if ( ! count( $insert_values ) ) {
+		$result = __( 'No discussions to count!', 'buddyboss' );
 		return array(
-			2,
+			0,
 			sprintf( $statement, $result ),
-			'status'  => 0,
+			'status'  => 1,
 			'message' => sprintf( $statement, $result ),
 		);
 	}
@@ -943,10 +957,11 @@ function bbp_admin_repair_user_reply_count() {
 	}
 
 	if ( ! count( $insert_values ) ) {
+		$result = __( 'No replies to count!', 'buddyboss' );
 		return array(
-			2,
+			0,
 			sprintf( $statement, $result ),
-			'status'  => 0,
+			'status'  => 1,
 			'message' => sprintf( $statement, $result ),
 		);
 	}
@@ -1560,10 +1575,21 @@ function bbp_admin_repair_sticky() {
 	$result    = __( 'Failed!', 'buddyboss' );
 	$forums    = $bbp_db->get_col( "SELECT ID FROM `{$bbp_db->posts}` WHERE `post_type` = 'forum';" );
 
-	// Bail if no forums found
-	if ( empty( $forums ) || is_wp_error( $forums ) ) {
+	// Bail if the query errored.
+	if ( is_wp_error( $forums ) ) {
 		return array(
 			1,
+			sprintf( $statement, $result ),
+			'status'  => 1,
+			'message' => sprintf( $statement, $result ),
+		);
+	}
+
+	// Nothing to recalculate when no forums exist on the site.
+	if ( empty( $forums ) ) {
+		$result = __( 'No stickies to recalculate!', 'buddyboss' );
+		return array(
+			0,
 			sprintf( $statement, $result ),
 			'status'  => 1,
 			'message' => sprintf( $statement, $result ),
