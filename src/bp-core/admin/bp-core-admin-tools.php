@@ -1009,7 +1009,7 @@ function bp_admin_repair_tools_wrapper_function() {
 	}
 
 	// Use default nonce
-	$nonce = $_POST['nonce'];
+	$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
 	$check = 'bp-do-counts';
 
 	// Nonce check!

@@ -509,6 +509,8 @@ export function SettingsScreen({ onNavigate }) {
 										? __('Community', 'buddyboss')
 										: 'add-ons' === category
 										? __('Add-ons', 'buddyboss')
+										: 'tools' === category
+										? __('Tools', 'buddyboss')
 										: __('Integrations', 'buddyboss') }
 								</option>
 							))}
