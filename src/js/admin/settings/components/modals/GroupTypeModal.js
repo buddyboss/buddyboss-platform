@@ -65,9 +65,9 @@ var DEFAULT_FORM_DATA = {
 	enable_filter: 0,
 	enable_remove: 0,
 	restrict_invites: 0,
-	member_type_invites_mode: 'all',
+	member_type_invites_mode: 'none',
 	member_type_invites: [],
-	member_type_join_mode: 'all',
+	member_type_join_mode: 'none',
 	member_type_join: [],
 	visibility: 'public',
 	label_color: {
@@ -78,21 +78,52 @@ var DEFAULT_FORM_DATA = {
 };
 
 /**
- * Determine the mode (all/selected) from a member type meta value.
+ * Determine the mode (all/selected/none) from a member type meta value.
+ *
+ * Storage shapes produced by the React save flow:
+ *   ''                          → "None" mode    (legacy "leave blank" — the
+ *                                                  restriction is NOT applied
+ *                                                  at the frontend; matches
+ *                                                  legacy "Leave blank for
+ *                                                  unrestricted invites")
+ *   array( every_available_id ) → "All" mode     (restriction IS applied and
+ *                                                  every registered profile
+ *                                                  type is listed; frontend
+ *                                                  filter passes for every
+ *                                                  type, including auto-join)
+ *   array( subset_of_ids )      → "Selected"     (restriction applied to a
+ *                                                  proper subset of types)
+ *
+ * Note: storing the full type list for "All" means existing profile types
+ * added AFTER the group type was saved won't be auto-included — admin
+ * must re-save the group type to refresh. This is the tradeoff for being
+ * able to express "auto-approve everyone" / "filter applied to all" as
+ * a stored state legacy can also read via `in_array()` semantics.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param {*} value Meta value from PHP.
- * @returns {string} 'all' or 'selected'.
+ * @param {*}     value          Meta value from PHP.
+ * @param {Array} availableTypes Available member-type objects (each with `id`).
+ * @returns {string} 'none', 'all', or 'selected'.
  */
-function getMemberTypeMode( value ) {
-	if ( 'none' === value ) {
+function getMemberTypeMode( value, availableTypes ) {
+	if ( ! Array.isArray( value ) || 0 === value.length ) {
 		return 'none';
 	}
-	if ( Array.isArray( value ) && value.length > 0 ) {
+	var availableIds = ( availableTypes || [] ).map( function ( t ) {
+		return String( t.id );
+	} );
+	if ( 0 === availableIds.length ) {
 		return 'selected';
 	}
-	return 'all';
+	var stored = value.map( String );
+	var allPresent = availableIds.every( function ( id ) {
+		return -1 !== stored.indexOf( id );
+	} );
+	if ( allPresent && stored.length === availableIds.length ) {
+		return 'all';
+	}
+	return 'selected';
 }
 
 /**
@@ -201,9 +232,9 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 				enable_filter: groupType.enable_filter || 0,
 				enable_remove: groupType.enable_remove || 0,
 				restrict_invites: groupType.restrict_invites || 0,
-				member_type_invites_mode: getMemberTypeMode( groupType.member_type_invites ),
+				member_type_invites_mode: getMemberTypeMode( groupType.member_type_invites, memberTypes ),
 				member_type_invites: normalizeMemberTypes( groupType.member_type_invites ),
-				member_type_join_mode: getMemberTypeMode( groupType.member_type_join ),
+				member_type_join_mode: getMemberTypeMode( groupType.member_type_join, memberTypes ),
 				member_type_join: normalizeMemberTypes( groupType.member_type_join ),
 				visibility: groupType.visibility || 'public',
 				label_color: {
@@ -309,24 +340,52 @@ export function GroupTypeModal( { isOpen, onClose, onSave, groupType, memberType
 			data[ 'label_color[text_color]' ] = formData.label_color.text_color;
 		}
 
-		// Profile Type Invites: send array only when "selected" mode, "none" sends special value.
-		if ( 'selected' === formData.member_type_invites_mode && formData.member_type_invites.length > 0 ) {
+		// Profile Type Invites — emit the storage shape that matches the
+		// legacy `_bp_group_type_enabled_member_type_group_invites` meta
+		// semantics so the frontend invite-picker filter and REST consumers
+		// behave correctly:
+		//   None     → '' (the restriction is NOT applied — same as legacy
+		//                 "Leave blank for unrestricted invites")
+		//   All      → array of every available member-type id (the
+		//                 restriction IS applied and matches every type —
+		//                 functionally equivalent to "all allowed," but
+		//                 stored explicitly so the round-trip preserves
+		//                 admin intent and so the auto-join consumer
+		//                 (`bp-groups-functions.php:2616`) can match every
+		//                 user type via `in_array()`)
+		//   Selected → array of the toggled ids
+		var availableMemberTypeIds = ( memberTypes || [] ).map( function ( mt ) {
+			return String( mt.id );
+		} );
+		if ( 'all' === formData.member_type_invites_mode && availableMemberTypeIds.length > 0 ) {
+			availableMemberTypeIds.forEach( function ( id, idx ) {
+				data[ 'member_type_invites[' + idx + ']' ] = id;
+			} );
+		} else if ( 'selected' === formData.member_type_invites_mode && formData.member_type_invites.length > 0 ) {
 			formData.member_type_invites.forEach( function ( id, idx ) {
 				data[ 'member_type_invites[' + idx + ']' ] = id;
 			} );
-		} else if ( 'none' === formData.member_type_invites_mode ) {
-			data.member_type_invites = 'none';
 		} else {
+			// 'none' or 'selected' with zero items → empty marker so PHP
+			// `isset( $_POST['member_type_invites'] )` fires and meta is
+			// overwritten with '' instead of being left untouched.
 			data.member_type_invites = '';
 		}
 
-		// Profile Type Joining: send array only when "selected" mode, "none" sends special value.
-		if ( 'selected' === formData.member_type_join_mode && formData.member_type_join.length > 0 ) {
+		// Profile Type Joining — same storage semantics as the invites field
+		// above; the `_bp_group_type_enabled_member_type_join` consumer at
+		// `bp-groups-functions.php:2616` uses `in_array($user_type, $meta)`
+		// to decide whether to auto-approve, so "All" needs the full type
+		// list listed explicitly to actually auto-approve every user; '' /
+		// "None" falls through to the normal admin-approval flow.
+		if ( 'all' === formData.member_type_join_mode && availableMemberTypeIds.length > 0 ) {
+			availableMemberTypeIds.forEach( function ( id, idx ) {
+				data[ 'member_type_join[' + idx + ']' ] = id;
+			} );
+		} else if ( 'selected' === formData.member_type_join_mode && formData.member_type_join.length > 0 ) {
 			formData.member_type_join.forEach( function ( id, idx ) {
 				data[ 'member_type_join[' + idx + ']' ] = id;
 			} );
-		} else if ( 'none' === formData.member_type_join_mode ) {
-			data.member_type_join = 'none';
 		} else {
 			data.member_type_join = '';
 		}

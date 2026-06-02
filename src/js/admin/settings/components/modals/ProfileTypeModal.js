@@ -77,7 +77,14 @@ var DEFAULT_FORM_DATA = {
 	enable_search_remove: 0,
 	allow_messaging_without_connection: 0,
 	enable_profile_field: 0,
-	group_type_create_mode: 'none',
+	// Match legacy default: an unsaved/empty `_bp_member_type_enabled_group_type_create`
+	// meta means "no restriction — all group types selectable" (see
+	// `bp-core-admin-functions.php:1934-1938` in PROD-8676). The 'all' mode
+	// in the save path writes an empty string back, which PHP stores as ''
+	// → reads as array() → matches legacy "leave all unchecked" semantic.
+	// Defaulting to 'none' here would silently hide the create-group type
+	// picker on the frontend for every new profile type — a regression.
+	group_type_create_mode: 'all',
 	group_type_create: [],
 	group_type_auto_join: [],
 	wp_roles: [],
@@ -104,14 +111,20 @@ var DEFAULT_FORM_DATA = {
  * @returns {string} 'none', 'all', or 'specific'.
  */
 function getGroupTypeCreateMode( value ) {
+	// Legacy storage shape (see legacy `bp-core-admin-functions.php` and
+	// the frontend gate in `groups/single/admin/group-settings.php`):
+	//   ''  / array()     → no restriction, all group types selectable
+	//   array( 'none' )   → hide the "What type of group is this?" picker
+	//                       on the frontend create-group form entirely
+	//   array( 'key1', … ) → restrict to those specific group types
+	// React's three radio modes map onto these states 1:1.
 	if ( Array.isArray( value ) && value.length > 0 ) {
-		// Check if "all" is in the array.
-		if ( -1 !== value.indexOf( 'all' ) ) {
-			return 'all';
+		if ( -1 !== value.indexOf( 'none' ) ) {
+			return 'none';
 		}
 		return 'specific';
 	}
-	return 'none';
+	return 'all';
 }
 
 /**
@@ -286,20 +299,39 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, allMemb
 			data[ 'label_color[text_color]' ] = formData.label_color.text_color;
 		}
 
-		// Group type create permissions.
-		if ( 'all' === formData.group_type_create_mode ) {
-			data[ 'group_type_create[0]' ] = 'all';
+		// Group type create permissions. Match the legacy storage shape:
+		//   'all'      → write empty so frontend sees "no restriction" and
+		//                the create-group picker shows every type.
+		//   'none'     → write array( 'none' ); frontend gate at
+		//                `groups/single/admin/group-settings.php` reads
+		//                this sentinel and hides the "What type of group
+		//                is this?" picker entirely.
+		//   'specific' → write the selected group-type keys; frontend
+		//                filters the picker options by membership.
+		// The empty-string marker (instead of omitting the key) is also
+		// what PHP needs to write the meta — `update_member_type` gates
+		// the write on `isset( $_POST['group_type_create'] )` and would
+		// otherwise leave a stale value behind.
+		if ( 'none' === formData.group_type_create_mode ) {
+			data[ 'group_type_create[0]' ] = 'none';
 		} else if ( 'specific' === formData.group_type_create_mode && formData.group_type_create.length > 0 ) {
 			formData.group_type_create.forEach( function ( id, idx ) {
 				data[ 'group_type_create[' + idx + ']' ] = id;
 			} );
+		} else {
+			data[ 'group_type_create' ] = '';
 		}
 
-		// Group type auto join.
+		// Group type auto join. Same empty-marker reason as group_type_create
+		// above — PHP gates the meta write on `isset( $_POST[...] )`, so
+		// unchecking every auto-join group type without this marker would
+		// silently keep the prior selection.
 		if ( formData.group_type_auto_join.length > 0 ) {
 			formData.group_type_auto_join.forEach( function ( id, idx ) {
 				data[ 'group_type_auto_join[' + idx + ']' ] = id;
 			} );
+		} else {
+			data[ 'group_type_auto_join' ] = '';
 		}
 
 		// Email Invites — allowed member types.
@@ -312,11 +344,17 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, allMemb
 			data[ 'invite_member_types' ] = '';
 		}
 
-		// WP roles.
+		// WP roles. Same empty-marker reason as group_type_create above —
+		// PHP gates the meta write on `isset( $_POST['wp_roles'] )` (see
+		// `class-bb-admin-member-types-ajax.php` ~line 669), so picking
+		// "None" without this marker would silently leave the prior role
+		// assigned because the wire payload wouldn't carry the key at all.
 		if ( formData.wp_roles.length > 0 ) {
 			formData.wp_roles.forEach( function ( role, idx ) {
 				data[ 'wp_roles[' + idx + ']' ] = role;
 			} );
+		} else {
+			data[ 'wp_roles' ] = '';
 		}
 
 		var savePromise;
@@ -539,7 +577,7 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, allMemb
 					</h4>
 					<div className="bb-admin-profile-type-modal__radio-grid">
 						<RadioControl
-							selected={ formData.wp_roles.length ? formData.wp_roles[ 0 ] : 'none' }
+							selected={ formData.wp_roles.length ? formData.wp_roles[ 0 ] : 'subscriber' }
 							options={ [ { value: 'none', label: __( 'None', 'buddyboss' ) } ].concat( availableWpRoles ).map( function ( role ) {
 								return {
 									value: role.value,
@@ -547,11 +585,16 @@ export function ProfileTypeModal( { isOpen, onClose, onSave, memberType, allMemb
 								};
 							} ) }
 							onChange={ function ( value ) {
-								if ( 'none' === value ) {
-									updateField( 'wp_roles', [] );
-								} else {
-									updateField( 'wp_roles', [ value ] );
-								}
+								// Store the selected radio value literally — including
+								// the 'none' sentinel — so the stored meta matches the
+								// legacy "(None)" save shape (array('none')). Earlier
+								// code converted "None" to an empty array, which legacy
+								// reads as "no value" and falls back to displaying
+								// Subscriber checked (see legacy
+								// `bp-core-admin-functions.php:2189`), causing a
+								// cross-UI mismatch where React showed "None" while
+								// legacy showed "Subscriber".
+								updateField( 'wp_roles', [ value ] );
 							} }
 						/>
 					</div>

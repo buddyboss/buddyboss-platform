@@ -20,32 +20,25 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyBoss 1.5.6
  */
 function bp_moderation_add_admin_menu() {
+	global $submenu;
 
-	// Add our screen — redirects to Settings 2.0 moderation page.
-	$hook = add_submenu_page(
-		'buddyboss-platform',
-		esc_html__( 'Moderation', 'buddyboss' ),
+	// Sidebar link points directly at the Settings 2.0 Moderation panel.
+	// Direct visits to the legacy `?page=bp-moderation` (bookmarks /
+	// third-party links) are caught upstream by
+	// `bb_redirect_bp_settings_before_permission_check()` at
+	// `admin_menu @ PHP_INT_MAX` so they don't 403.
+	$settings_url = function_exists( 'bb_get_feature_settings_url' )
+		? bb_get_feature_settings_url( 'moderation', 'flagged_members' )
+		: admin_url( 'admin.php?page=bb-settings&tab=moderation&panel=flagged_members' );
+
+	$submenu['buddyboss-platform'][] = array(
 		esc_html__( 'Moderation', 'buddyboss' ),
 		'bp_moderate',
-		'bp-moderation',
-		'__return_empty_string'
+		$settings_url,
 	);
-
-	// Redirect before headers are sent.
-	add_action( "load-$hook", 'bp_moderation_admin_redirect' );
 }
 
 add_action( bp_core_admin_hook(), 'bp_moderation_add_admin_menu', 100 );
-
-/**
- * Redirect the old Moderation admin page to Settings 2.0.
- *
- * @since BuddyBoss 3.0.0
- */
-function bp_moderation_admin_redirect() {
-	wp_safe_redirect( admin_url( 'admin.php?page=bb-settings&tab=moderation&panel=flagged_members' ) );
-	exit;
-}
 
 /**
  * Add moderation component to custom menus array.

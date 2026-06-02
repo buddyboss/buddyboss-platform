@@ -16,41 +16,30 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Register the Groups component in BuddyBoss admin menu.
+ * Register the Groups menu item — link points directly at Settings 2.0.
  *
- * Kept so that existing links (LearnDash, third-party plugins) to
- * admin.php?page=bp-groups still resolve. The page callback is empty
- * because all visits are redirected to Settings 2.0 by
- * {@see bb_redirect_legacy_settings_to_settings_2()}.
+ * Pushed onto `$submenu` directly (no `add_submenu_page` call) so the slug
+ * stays unregistered — WP's menu renderer uses the URL verbatim as the
+ * link's `href`. Direct visits to the legacy `?page=bp-groups` (LearnDash,
+ * bookmarks, third-party links) are caught upstream by
+ * `bb_redirect_bp_settings_before_permission_check()` at
+ * `admin_menu @ PHP_INT_MAX` — fires before WP's permission check, so
+ * unregistered slug visits don't 403.
  *
  * @since BuddyPress 1.7.0
  */
 function bp_groups_add_admin_menu() {
+	global $submenu;
 
-	// Add our screen.
-	$hook = add_submenu_page(
-		'buddyboss-platform',
-		__( 'Groups', 'buddyboss' ),
+	$settings_url = function_exists( 'bb_get_feature_settings_url' )
+		? bb_get_feature_settings_url( 'groups', 'all_groups' )
+		: admin_url( 'admin.php?page=bb-settings&tab=groups&panel=all_groups' );
+
+	$submenu['buddyboss-platform'][] = array(
 		__( 'Groups', 'buddyboss' ),
 		'bp_moderate',
-		'bp-groups',
-		'bp_groups_admin'
+		$settings_url,
 	);
-
-	// Redirect legacy page to Settings 2.0 on load, in case the redirect
-	// in bb_redirect_legacy_settings_to_settings_2() fires after headers.
-	if ( $hook ) {
-		add_action(
-			'load-' . $hook,
-			function () {
-				$settings_url = function_exists( 'bb_get_settings_url' ) ? bb_get_settings_url() : '';
-				if ( ! empty( $settings_url ) ) {
-					wp_safe_redirect( add_query_arg( 'tab', 'groups', $settings_url ) );
-					exit;
-				}
-			}
-		);
-	}
 }
 add_action( bp_core_admin_hook(), 'bp_groups_add_admin_menu', 60 );
 

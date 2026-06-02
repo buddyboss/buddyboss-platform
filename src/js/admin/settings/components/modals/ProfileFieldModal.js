@@ -170,6 +170,13 @@ export function ProfileFieldModal( {
 	var allowCustomVisibility = allowCustomVisibilityState[ 0 ];
 	var setAllowCustomVisibility = allowCustomVisibilityState[ 1 ];
 
+	// Mirrors legacy `BP_XProfile_Field::is_default_field()` — true when the
+	// field is the Nickname (or First/Last when fullname format needs them).
+	// Hides Type, Required, Visibility, Profile Types, and Placeholder to
+	// match the legacy editor; loaded state values are preserved so the save
+	// payload still carries the locked-in defaults the server expects.
+	var isDefaultField = isEditing && !! field.is_default_field;
+
 	// Member types.
 	var memberTypeModeState = useState( function () {
 		if ( isEditing && 'none' === field.member_type_mode ) {
@@ -178,7 +185,15 @@ export function ProfileFieldModal( {
 		if ( isEditing && field.member_types && field.member_types.length > 0 ) {
 			return 'selected';
 		}
-		return 'all';
+		// Editing an existing unrestricted field → preserve its current
+		// "All Profile Types" mode so the admin can see what's set.
+		if ( isEditing ) {
+			return 'all';
+		}
+		// New field → default to "No Profile Type Users" so admins
+		// have to explicitly opt-in to wider visibility (matches the
+		// most-restrictive-by-default UX principle).
+		return 'none';
 	} );
 	var memberTypeMode = memberTypeModeState[ 0 ];
 	var setMemberTypeMode = memberTypeModeState[ 1 ];
@@ -755,6 +770,7 @@ export function ProfileFieldModal( {
 					/>
 				</div>
 
+				{ ! isDefaultField && (
 				<div className="bb-admin-settings--divided-section">
 					{ /* Type */ }
 					<CustomSelectControl
@@ -963,6 +979,7 @@ export function ProfileFieldModal( {
 					</div>
 					) }
 				</div>
+				) }
 
 				{ /* Date Selector Settings (datebox type) */ }
 				{ 'datebox' === type && (
@@ -1126,7 +1143,7 @@ export function ProfileFieldModal( {
 				/>
 
 				{ /* Placeholder (for text-like types) */ }
-				{ showPlaceholder && (
+				{ showPlaceholder && ! isDefaultField && (
 					<TextControl
 						label={ __( 'Placeholder Text (Optional)', 'buddyboss' ) }
 						value={ placeholder }
@@ -1146,7 +1163,7 @@ export function ProfileFieldModal( {
 				/>
 
 				{ /* Member Types */ }
-				{ memberTypes.length > 0 && (
+				{ memberTypes.length > 0 && ! isDefaultField && (
 					<div className="bb-pf-field-member-types">
 						<SelectControl
 							label={ __( 'Profile Types', 'buddyboss' ) }
@@ -1177,7 +1194,7 @@ export function ProfileFieldModal( {
 				) }
 
 				{ /* Visibility */ }
-				{ visibilityLevels.length > 0 && (
+				{ visibilityLevels.length > 0 && ! isDefaultField && (
 					<div className="bb-pf-field-visibility bb-admin-settings--divided-section">
 						<SelectControl
 							label={ __( 'Visibility', 'buddyboss' ) }
@@ -1199,11 +1216,13 @@ export function ProfileFieldModal( {
 				) }
 
 				{ /* Required */ }
-				<CheckboxControl
-					label={ __( 'Make this field required', 'buddyboss' ) }
-					checked={ isRequired }
-					onChange={ setIsRequired }
-				/>
+				{ ! isDefaultField && (
+					<CheckboxControl
+						label={ __( 'Make this field required', 'buddyboss' ) }
+						checked={ isRequired }
+						onChange={ setIsRequired }
+					/>
+				) }
 			</div>
 
 			{ /* Footer */ }

@@ -181,6 +181,15 @@ class BP_Email_Tokens {
 	public function token__group_card_small( $bp_email, $formatted_tokens, $tokens ) {
 		$output = '';
 
+		// `groups_get_group()` is loaded by the groups component. A
+		// queued email referencing this token can dispatch after groups
+		// is deactivated — bail rather than fatal on the missing
+		// function. The empty `$output` matches the "no group found"
+		// fallback already used downstream.
+		if ( ! bp_is_active( 'groups' ) || ! function_exists( 'groups_get_group' ) ) {
+			return $output;
+		}
+
 		$settings = bp_email_get_appearance_settings();
 
 		$group = isset( $tokens['group'] ) ? $tokens['group'] : false;
@@ -349,6 +358,12 @@ class BP_Email_Tokens {
 	 */
 	public function token__group_card( $bp_email, $formatted_tokens, $tokens ) {
 		$output = '';
+
+		// See note on `token__group_card_small()` above — groups can be
+		// deactivated between when an email is queued and dispatched.
+		if ( ! bp_is_active( 'groups' ) || ! function_exists( 'groups_get_group' ) ) {
+			return $output;
+		}
 
 		$settings = bp_email_get_appearance_settings();
 
@@ -831,6 +846,14 @@ class BP_Email_Tokens {
 	 */
 	public function token__activity_reply( $bp_email, $formatted_tokens, $tokens ) {
 		$output = '';
+
+		// `BP_Activity_Activity` is loaded by the activity component and
+		// is NOT in the always-on autoload list. A queued activity-reply
+		// email can dispatch after activity is deactivated — bail rather
+		// than fatal on the missing class.
+		if ( ! bp_is_active( 'activity' ) || ! class_exists( 'BP_Activity_Activity' ) ) {
+			return $output;
+		}
 
 		$settings = bp_email_get_appearance_settings();
 
@@ -1531,6 +1554,14 @@ class BP_Email_Tokens {
 		$output           = '';
 		$receiver_user_id = isset( $tokens['receiver-user.id'] ) ? $tokens['receiver-user.id'] : 0;
 
+		// `bbp_*` reply/topic helpers are loaded by the forums component.
+		// A queued forums-reply notification email can dispatch after
+		// forums is deactivated — bail rather than fatal on the missing
+		// `bbp_get_reply_author_id()` call below.
+		if ( ! bp_is_active( 'forums' ) || ! function_exists( 'bbp_get_reply_author_id' ) ) {
+			return $output;
+		}
+
 		if ( empty( $formatted_tokens['reply.id'] ) ) {
 			return $output;
 		}
@@ -1626,6 +1657,12 @@ class BP_Email_Tokens {
 	 */
 	public function token__discussion_content( $bp_email, $formatted_tokens, $tokens ) {
 		$output = '';
+
+		// See note on `token__reply_content()` above — same gating applies
+		// to discussion (topic) helpers loaded by the forums component.
+		if ( ! bp_is_active( 'forums' ) || ! function_exists( 'bbp_get_topic_author_id' ) ) {
+			return $output;
+		}
 
 		if ( empty( $formatted_tokens['discussion.id'] ) ) {
 			return $output;
@@ -2287,6 +2324,13 @@ class BP_Email_Tokens {
 	 */
 	public function token__group_discussion_content( $bp_email, $formatted_tokens, $tokens ) {
 		$output   = '';
+
+		// Same gating as `token__discussion_content()` — the body uses
+		// `bbp_get_topic_author_id()` and related helpers from forums.
+		if ( ! bp_is_active( 'forums' ) || ! function_exists( 'bbp_get_topic_author_id' ) ) {
+			return $output;
+		}
+
 		$settings = bp_email_get_appearance_settings();
 
 		ob_start();
