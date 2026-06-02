@@ -2767,6 +2767,20 @@ function bp_nav_menu_get_loggedin_pages() {
 		return buddypress()->wp_nav_menu_items->loggedin;
 	}
 
+	// `->members->nav` is populated by `BP_Members_Component::setup_nav()`,
+	// which only runs when the members component is active. Although the
+	// `members` key is in the always-on autoload list (src/class-buddypress.php),
+	// the per-component `nav` property is unset when the component is
+	// deactivated via Settings 2.0 — and `null->get_primary()` would fatal
+	// on PHP 8+. Bail when the primary nav is not built.
+	if (
+		! bp_is_active( 'members' ) ||
+		! isset( buddypress()->members->nav ) ||
+		! is_object( buddypress()->members->nav )
+	) {
+		return false;
+	}
+
 	// Pull up a list of items registered in BP's primary nav for the member.
 	$bp_menu_items = buddypress()->members->nav->get_primary();
 
@@ -3063,12 +3077,19 @@ function bp_nav_menu_get_loggedout_pages() {
 	$bp_directory_page_ids = bp_core_get_directory_page_ids();
 
 	if ( ! empty( $bp_directory_page_ids['register'] ) ) {
-		$register_page   = get_post( $bp_directory_page_ids['register'] );
-		$bp_menu_items[] = array(
-			'name' => $register_page->post_title,
-			'slug' => 'register',
-			'link' => get_permalink( $register_page->ID ),
-		);
+		$register_page = get_post( $bp_directory_page_ids['register'] );
+
+		// `get_post()` returns null when the stored page ID is stale
+		// (page trashed or deleted from the DB while still referenced
+		// in the `bp-pages` option). Skip the menu item rather than
+		// fatal on `null->post_title`.
+		if ( $register_page instanceof WP_Post ) {
+			$bp_menu_items[] = array(
+				'name' => $register_page->post_title,
+				'slug' => 'register',
+				'link' => get_permalink( $register_page->ID ),
+			);
+		}
 	}
 
 	// If there's nothing to show, we're done.
@@ -3173,11 +3194,24 @@ function bp_core_get_suggestions( $args ) {
 		return new WP_Error( 'missing_parameter' );
 	}
 
-	// Remove action for remove search against xprofile fields.
-	remove_action( 'bp_user_query_uid_clauses', 'bp_xprofile_bp_user_query_search', 10, 2 );
+	// The xprofile hook swap is only meaningful when the xprofile
+	// component is active — both the default xprofile search callback
+	// AND our first/last/nickname override live in
+	// bp-xprofile-functions.php, which is not loaded when xprofile is
+	// deactivated via Settings 2.0. Calling `add_action()` with a
+	// missing handler name is itself safe, but the moment the hook
+	// fires inside `$suggestions->get_suggestions()` the override
+	// would call `bp_xprofile_firstname_field_id()` and friends — and
+	// those would fatal. Skip the swap entirely when xprofile is off.
+	$xprofile_active = bp_is_active( 'xprofile' );
 
-	// Add action only for xprofile fields First, last and nickname.
-	add_action( 'bp_user_query_uid_clauses', 'bb_xprofile_search_bp_user_query_search_first_last_nickname', 10, 2 );
+	if ( $xprofile_active ) {
+		// Remove action for remove search against xprofile fields.
+		remove_action( 'bp_user_query_uid_clauses', 'bp_xprofile_bp_user_query_search', 10, 2 );
+
+		// Add action only for xprofile fields First, last and nickname.
+		add_action( 'bp_user_query_uid_clauses', 'bb_xprofile_search_bp_user_query_search_first_last_nickname', 10, 2 );
+	}
 
 	$suggestions = new $class( $args );
 	$validation  = $suggestions->validate();
@@ -3188,11 +3222,13 @@ function bp_core_get_suggestions( $args ) {
 		$retval = $suggestions->get_suggestions();
 	}
 
-	// Add action again for search against xprofile fields.
-	add_action( 'bp_user_query_uid_clauses', 'bp_xprofile_bp_user_query_search', 10, 2 );
+	if ( $xprofile_active ) {
+		// Add action again for search against xprofile fields.
+		add_action( 'bp_user_query_uid_clauses', 'bp_xprofile_bp_user_query_search', 10, 2 );
 
-	// Removed action only for xprofile fields First, last and nickname.
-	remove_action( 'bp_user_query_uid_clauses', 'bb_xprofile_search_bp_user_query_search_first_last_nickname', 10, 2 );
+		// Removed action only for xprofile fields First, last and nickname.
+		remove_action( 'bp_user_query_uid_clauses', 'bb_xprofile_search_bp_user_query_search_first_last_nickname', 10, 2 );
+	}
 
 	/**
 	 * Filters the available type of at-mentions.

@@ -791,6 +791,16 @@ function bb_core_read_blog_comment_notification() {
 		return;
 	}
 
+	// The body of this function calls BP_Notifications_Notification::update()
+	// and bp_notifications_get_notification(), both owned by the notifications
+	// component. When notifications is deactivated via Settings 2.0, the class
+	// autoloader (src/class-buddypress.php) returns early for inactive
+	// components, and the function file (bp-notifications-functions.php) is
+	// not loaded — so calling either would fatal.
+	if ( ! bp_is_active( 'notifications' ) ) {
+		return;
+	}
+
 	$comment_id = 0;
 	// For replies to a parent update.
 	if ( ! empty( $_GET['cid'] ) ) {

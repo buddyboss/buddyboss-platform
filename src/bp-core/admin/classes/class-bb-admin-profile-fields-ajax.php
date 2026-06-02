@@ -673,9 +673,18 @@ class BB_Admin_Profile_Fields_Ajax {
 		$signup_position         = bp_xprofile_get_meta( $field->id, 'field', 'signup_position' );
 		$placeholder_text        = bp_xprofile_get_meta( $field->id, 'field', '_placeholder_text' );
 
-		// Get field options for multi-option types.
+		// Get field options for multi-option types. `socialnetworks` is
+		// kept in this list for the same reason it lives in the matching
+		// save-side allowlist (`bb_handle_field_options`): the field's
+		// children rows hold the picked providers, and the React modal
+		// reads them back from the `options` payload to seed
+		// `selectedSocialNetworks`. Without this entry, the response
+		// returns `options: []`, React falls back to the hard-coded
+		// default `['facebook', 'twitter', 'linkedIn']` (modal line
+		// 219), and any custom provider (instagram, medium, etc.) the
+		// admin saved is invisible on reopen.
 		$options      = array();
-		$option_types = array( 'selectbox', 'multiselectbox', 'checkbox', 'radio', 'gender' );
+		$option_types = array( 'selectbox', 'multiselectbox', 'checkbox', 'radio', 'gender', 'socialnetworks' );
 		if ( in_array( $field->type, $option_types, true ) ) {
 			// Note: get_children() is called per multi-option field. Object cache prevents
 			// duplicate DB hits after first call, and typical groups have few such fields,
@@ -735,12 +744,29 @@ class BB_Admin_Profile_Fields_Ajax {
 			}
 		}
 
+		// Mirror legacy `BP_XProfile_Field::is_default_field()` (see
+		// `class-bp-xprofile-field.php` ~line 1832) so the React modal can hide
+		// the same metaboxes legacy hides: Type, Required, Visibility (and
+		// Allow-members-override), Profile Types, Placeholder. The synced set is
+		// always the Nickname field, plus First/Last when fullname format needs
+		// them. WP object cache memoises the underlying lookups, so calling
+		// these per field in the loop has no extra DB cost.
+		$synced_field_ids = array( (int) bp_xprofile_nickname_field_id() );
+		$dn_format        = function_exists( 'bp_core_display_name_format' ) ? bp_core_display_name_format() : '';
+		if ( 'first_last_name' === $dn_format || 'first_name' === $dn_format ) {
+			$synced_field_ids[] = (int) bp_xprofile_firstname_field_id();
+		}
+		if ( 'first_last_name' === $dn_format ) {
+			$synced_field_ids[] = (int) bp_xprofile_lastname_field_id();
+		}
+
 		$data = array(
 			'id'                      => (int) $field->id,
 			'name'                    => $field->name,
 			'type'                    => $field->type,
 			'is_required'             => (bool) $field->is_required,
 			'can_delete'              => (bool) $field->can_delete,
+			'is_default_field'        => in_array( (int) $field->id, $synced_field_ids, true ),
 			'field_order'             => (int) $field->field_order,
 			'alternate_name'          => $alternate_name ? $alternate_name : '',
 			'description'             => $field->description,
@@ -998,7 +1024,17 @@ class BB_Admin_Profile_Fields_Ajax {
 	 * @param string $type     Field type.
 	 */
 	private function bb_handle_field_options( $field_id, $type ) {
-		$option_types = array( 'selectbox', 'multiselectbox', 'checkbox', 'radio', 'gender' );
+		// `socialnetworks` is a multi-option field type too: its picked
+		// providers (facebook/twitter/linkedin/...) are persisted via the
+		// same `$_POST[ "{$type}_option" ][ $i ]` array that
+		// `BP_XProfile_Field_Type_Social_Networks::admin_new_field_html()`
+		// reads back at field edit time (`class-bp-xprofile-field-type-
+		// social-networks.php:229`). Without it here, the React form's
+		// `options` array is silently dropped on save and the field
+		// keeps its previous providers (the symptom the user reported:
+		// edited Facebook/Twitter/LinkedIn but reopened modal still
+		// showed Facebook/Twitter/Medium).
+		$option_types = array( 'selectbox', 'multiselectbox', 'checkbox', 'radio', 'gender', 'socialnetworks' );
 
 		if ( ! in_array( $type, $option_types, true ) ) {
 			return;
@@ -1135,11 +1171,30 @@ class BB_Admin_Profile_Fields_Ajax {
 
 			$field->set_member_types( $member_types );
 		} else {
-			// Mode is 'all' — remove all member type restrictions so the field is
-			// available to every type, including types registered in the future.
-			// Passing an empty array to set_member_types() deletes all meta rows,
-			// which BuddyPress interprets as "unrestricted" (same as legacy behavior).
-			$field->set_member_types( array() );
+			// Mode is "All Profile Types" — the field must be unrestricted
+			// (available to every profile type, including future ones).
+			//
+			// We cannot route this through `$field->set_member_types( array() )`:
+			// that path interprets an empty array as "no types" and stores the
+			// `_none` flag (`class-bp-xprofile-field.php:753`), which makes
+			// `get_member_type_label()` render the "No Profile Type" badge in
+			// the admin list and hides the field from every member type. A
+			// truly unrestricted field has NO `member_type` meta row at all.
+			//
+			// Delete the meta directly. `bp_xprofile_delete_meta()` invalidates
+			// its own meta cache, so the next `get_member_types()` call reads
+			// the empty result fresh — no need (and not permitted, since the
+			// property is protected) to poke `$field->member_types`.
+			bp_xprofile_delete_meta( $field->id, 'field', 'member_type' );
+
+			// Mirror the action `set_member_types()` fires at
+			// `class-bp-xprofile-field.php:788` so listeners that piggy-back on
+			// member-type changes still run. The platform's own listener
+			// `bp_xprofile_clear_member_type_cache` (`bp-xprofile-cache.php:232`)
+			// flushes the global `field_member_types` cache key — without this
+			// fire, that cache stays stale and `get_member_types()` keeps
+			// returning the pre-delete value until the cache TTL/eviction.
+			do_action( 'bp_xprofile_field_set_member_type', $field );
 		}
 	}
 }
