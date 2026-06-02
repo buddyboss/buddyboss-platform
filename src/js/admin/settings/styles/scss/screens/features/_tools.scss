@@ -206,14 +206,18 @@
 	}
 }
 
-#section-sample_data_section:has(.bb-admin-settings-form__field .bb-tools-activation-cta) {
-	background-color: transparent;
-	border: 0;
-	box-shadow: none;
-	
-	.bb-admin-feature-settings__section-description,
-	.bb-admin-feature-settings__section-header {
-		display: none;
+#section-migration_tools_section,
+#section-sample_data_section {
+
+	&:has(.bb-admin-settings-form__field .bb-tools-activation-cta) {
+		background-color: transparent;
+		border: 0;
+		box-shadow: none;
+		
+		.bb-admin-feature-settings__section-description,
+		.bb-admin-feature-settings__section-header {
+			display: none;
+		}
 	}
 }
 
