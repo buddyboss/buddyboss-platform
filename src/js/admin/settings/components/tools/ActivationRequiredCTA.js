@@ -150,7 +150,7 @@ export default function ActivationRequiredCTA() {
 				{ __( 'Activation Required', 'buddyboss' ) }
 			</h2>
 			<p className="bb-tools-activation-cta__description">
-				{ __( 'Please activate the migration addon to use the migration features.', 'buddyboss' ) }
+				{ __( 'Please activate the BuddyBoss Tools addon to use this feature.', 'buddyboss' ) }
 			</p>
 			{ error && (
 				<div className="bb-admin-notice bb-admin-notice--error">
