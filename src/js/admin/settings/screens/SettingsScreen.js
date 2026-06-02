@@ -28,7 +28,7 @@ export function SettingsScreen({ onNavigate }) {
 	const [placeholderFeatures, setPlaceholderFeatures] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [activeFilter, setActiveFilter] = useState('all'); // 'all', 'active', 'inactive'
-	const [selectedCategory, setSelectedCategory] = useState(''); // 'community', 'add-ons', 'integrations'
+	const [selectedCategory, setSelectedCategory] = useState(''); // 'community', 'add-ons', 'integrations', 'tools'
 	const [searchQuery, setSearchQuery] = useState('');
 	const [toast, setToast] = useState(null);
 	const [upgradeModal, setUpgradeModal] = useState(null); // { feature } or null

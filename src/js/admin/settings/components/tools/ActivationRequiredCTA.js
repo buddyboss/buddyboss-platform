@@ -21,6 +21,8 @@ export default function ActivationRequiredCTA() {
 	const [ error, setError ] = useState( null );
 	const abortRef = useRef( null );
 
+	const ajaxUrl = ( window.bbAdminData && window.bbAdminData.ajaxUrl ) || window.ajaxurl;
+
 	useEffect( function () {
 		const controller = new AbortController();
 		abortRef.current = controller;
@@ -29,7 +31,7 @@ export default function ActivationRequiredCTA() {
 		formData.append( 'action', 'bb_tools_check_plugin_state' );
 		formData.append( '_ajax_nonce', ( window.bbAdminData && window.bbAdminData.ajaxNonce ) || '' );
 
-		fetch( window.ajaxurl, {
+		fetch( ajaxUrl, {
 			method: 'POST',
 			body: formData,
 			signal: controller.signal,
@@ -79,7 +81,7 @@ export default function ActivationRequiredCTA() {
 		formData.append( 'action', action );
 		formData.append( '_ajax_nonce', ( window.bbAdminData && window.bbAdminData.ajaxNonce ) || '' );
 
-		fetch( window.ajaxurl, {
+		fetch( ajaxUrl, {
 			method:      'POST',
 			body:        formData,
 			credentials: 'same-origin',
@@ -142,7 +144,7 @@ export default function ActivationRequiredCTA() {
 	return (
 		<div className="bb-tools-activation-cta">
 			<div className="bb-tools-activation-cta__icon">
-				<span className="bb-icons-rl-info"></span>
+				<span className="bb-icons-rl bb-icons-rl-info"></span>
 			</div>
 			<h2 className="bb-tools-activation-cta__title">
 				{ __( 'Activation Required', 'buddyboss' ) }

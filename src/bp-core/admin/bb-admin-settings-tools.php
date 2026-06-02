@@ -212,6 +212,17 @@ function bb_admin_settings_localize_tools_repair_config() {
 	if ( ! $screen || 'buddyboss_page_bb-settings' !== $screen->id ) {
 		return;
 	}
+	// Defense-in-depth — the bb-settings page itself already gates on
+	// `bp_moderate`, so a non-admin won't normally reach this hook. Guard
+	// anyway so a future menu-registration tweak (or a third-party
+	// `admin_print_footer_scripts` trigger on the same screen ID) can't
+	// surface the AJAX nonces to lower-privileged users. Using BuddyBoss's
+	// own `bp_current_user_can( 'bp_moderate' )` matches the adjacent
+	// admin code (this file's localize block above, `bb-admin-settings-page.php:268`,
+	// `bp_admin_repair_tools_wrapper_function()` at `bp-core-admin-tools.php:992`).
+	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+		return;
+	}
 
 	// Localize on every Settings 2.0 page load (not just `?tab=tools`) so the
 	// React Repair Platform panel still finds `window.bbToolsRepairConfig`

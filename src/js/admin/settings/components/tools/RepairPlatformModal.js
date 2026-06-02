@@ -3,7 +3,7 @@
  *
  * Two variants per Figma `repair-platform-modal.png`:
  *  - `progress`  — wrench icon + "Repairing Community…" label + spinner + Cancel button.
- *  - `complete`  — green checkmark + "Repair community complete" + per-item result list + Done button.
+ *  - `complete`  — green checkmark + "Repair community complete" + per-item result list + Ok button.
  *
  * @since BuddyBoss [BBVERSION]
  */
