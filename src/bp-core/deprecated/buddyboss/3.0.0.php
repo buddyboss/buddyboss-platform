@@ -4475,6 +4475,21 @@ if ( ! function_exists( 'bb_deprecated_forum_import_autoload' ) ) {
 		} elseif ( class_exists( $target, false ) ) {
 			// Vendor class already loaded by Tools - nothing to do.
 			return;
+		} elseif ( defined( 'BB_TOOLS_PLUGIN_DIR' ) ) {
+			// Same-name vendor case (e.g. SMF -> SMF) and Tools IS active,
+			// but its bb_tools_bbp_new_converter() lazy loader hasn't yet
+			// required the file. Third-party code that triggered this autoload
+			// (e.g. `class MySMFExt extends SMF` or `new SMF()` from a custom
+			// converter extension) would otherwise get the eval-stub below,
+			// which then blocks Tools' own require_once with
+			// "Cannot declare class SMF, because the name is already in use".
+			// Load Tools' real converter file so the proper class wins; Tools'
+			// subsequent require_once on the same path is a no-op.
+			$vendor_file = BB_TOOLS_PLUGIN_DIR . 'migration/buddyboss-forums/converters/' . $class_name . '.php';
+			if ( is_readable( $vendor_file ) ) {
+				require_once $vendor_file;
+				return;
+			}
 		}
 
 		// Tools is inactive - define the stub inline using eval. The stub:
