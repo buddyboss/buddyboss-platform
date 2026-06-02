@@ -149,6 +149,12 @@ export default function ActivationRequiredCTA() {
 			<h2 className="bb-tools-activation-cta__title">
 				{ __( 'Activation Required', 'buddyboss' ) }
 			</h2>
+			{ /*
+			 * Single panel-agnostic copy by design — same component renders the
+			 * fallback for the Sample Data, Migration Tools, and any future Tools
+			 * panel via `tools/index.js`. The wording stays generic so the message
+			 * reads correctly in every context without per-panel variants.
+			 */ }
 			<p className="bb-tools-activation-cta__description">
 				{ __( 'Please activate the BuddyBoss Tools addon to use this feature.', 'buddyboss' ) }
 			</p>
