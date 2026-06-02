@@ -1,7 +1,20 @@
 /**
- * BuddyBoss Admin Settings 2.0 - Migration Modal Component
+ * BuddyBoss Admin Settings 2.0 - Migration Modal Component (LEGACY).
  *
- * Modal for starting and displaying migration wizard.
+ * Renders Pro's server-rendered migration wizard HTML via
+ * `dangerouslySetInnerHTML` + document-level event delegation. Used when
+ * Pro returns the legacy `content` payload (no structured `data` payload).
+ *
+ * `SettingsForm.js` routes between this and the new
+ * `./MigrationWizardModal.js` based on `bbReactionAdminVars.use_react_wizard`.
+ * New Pro versions ship that flag set to true and get the React wizard;
+ * older Pro (release branch) leaves the flag undefined and gets this modal.
+ *
+ * @todo: Remove after 3 release. Once Pro on the fleet is past the
+ *        version that ships `use_react_wizard = true`, delete this file,
+ *        drop the export from `./index.js`, and remove the conditional
+ *        in `SettingsForm.js`. `MigrationWizardModal.js` then becomes
+ *        the only migration UI.
  *
  * @package BuddyBoss\Core\Administration
  * @since BuddyBoss [BBVERSION]
@@ -171,11 +184,11 @@ export function MigrationModal({ isOpen, onClose, migrationData }) {
 			body: formData,
 		})
 			.then((response) => {
-			if (!response.ok) {
-				throw new Error('HTTP ' + response.status + ': ' + response.statusText);
-			}
-			return response.json();
-		})
+				if (!response.ok) {
+					throw new Error('HTTP ' + response.status + ': ' + response.statusText);
+				}
+				return response.json();
+			})
 			.then((response) => {
 				if (response.success) {
 					e.target.textContent = __('Conversion started!', 'buddyboss');

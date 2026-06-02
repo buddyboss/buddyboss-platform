@@ -233,8 +233,11 @@
 	}
 
 	&__td--forum {
+		max-width: 200px;
 		min-width: 200px;
 		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 
 	&__td--actions {
