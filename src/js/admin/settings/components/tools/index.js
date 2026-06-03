@@ -12,7 +12,7 @@
  *
  * @since BuddyBoss [BBVERSION]
  */
-import { addFilter } from '@wordpress/hooks';
+import { addFilter, hasFilter } from '@wordpress/hooks';
 import RepairPlatform from './RepairPlatform';
 import ActivationRequiredCTA from './ActivationRequiredCTA';
 
@@ -35,7 +35,7 @@ addFilter(
 			if ( fallback ) {
 				return fallback;
 			}
-			if ( wp.hooks.hasFilter( 'bb_admin_settings_custom_field', 'buddyboss-tools/sample-data' ) ) {
+			if ( hasFilter( 'bb_admin_settings_custom_field', 'buddyboss-tools/sample-data' ) ) {
 				return fallback;
 			}
 			return <ActivationRequiredCTA />;
@@ -53,7 +53,7 @@ addFilter(
 			if ( fallback ) {
 				return fallback;
 			}
-			if ( wp.hooks.hasFilter( 'bb_admin_settings_custom_field', 'buddyboss-tools/migration-tools' ) ) {
+			if ( hasFilter( 'bb_admin_settings_custom_field', 'buddyboss-tools/migration-tools' ) ) {
 				return fallback;
 			}
 			return <ActivationRequiredCTA />;
