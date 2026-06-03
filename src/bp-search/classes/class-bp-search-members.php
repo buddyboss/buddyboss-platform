@@ -295,10 +295,36 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 						$user_ids  = array();
 
 						if ( ! isset( $selected_xprofile_fields_cache[ $cache_key ] ) ) {
+							// Escape MySQL REGEXP metacharacters so the user's input is matched
+							// literally and so it cannot escape the surrounding quoted regex
+							// literal. Each metacharacter is wrapped in `[...]` (a character
+							// class) which MySQL's regex engine interprets as the literal
+							// character — this form survives `$wpdb->prepare()` escaping
+							// unchanged, unlike backslash-escaping which prepare's quote
+							// handling can double-escape into a literal backslash. The result
+							// is then passed as its own `%s` placeholder below so prepare
+							// applies SQL-level quoting (closing the SQL injection vector
+							// disclosed in CVE-pending security report — REGEXP literal
+							// previously took $search_term via direct PHP interpolation,
+							// outside prepare's placeholder substitution).
+							//
+							// Backslash needs a paired form `[\\]` rather than `[\]` because
+							// MySQL 8.0.4+ uses ICU regex syntax, where `\` inside a char
+							// class introduces an escape sequence and a bare `[\]` is rejected
+							// as "unknown POSIX class name". `[\\]` is interpreted by ICU as
+							// "char class containing an escaped backslash" = literal `\`.
+							$regex_safe_term = preg_replace_callback(
+								'/[.\[\](){}*+?|^$\\\\]/',
+								static function ( $match ) {
+									return '\\' === $match[0] ? '[\\\\]' : '[' . $match[0] . ']';
+								},
+								$search_term
+							);
+
 							// Build the main search query with character and word search.
 							$data_clause_xprofile_table = "( SELECT field_id, user_id FROM {$bp->profile->table_name_data} WHERE ( ExtractValue(value, '//text()') LIKE %s AND field_id IN ( ";
 							$data_clause_xprofile_table .= implode( ',', $selected_xprofile_fields['char_search'] );
-							$data_clause_xprofile_table .= ") ) OR ( value REGEXP '[[:<:]]{$search_term}[[:>:]]' AND field_id IN ( ";
+							$data_clause_xprofile_table .= ") ) OR ( value REGEXP CONCAT('[[:<:]]', %s, '[[:>:]]') AND field_id IN ( ";
 							$data_clause_xprofile_table .= implode( ',', $selected_xprofile_fields['word_search'] );
 							$data_clause_xprofile_table .= ') ) ';
 
@@ -317,7 +343,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 							$data_clause_xprofile_table .= ' )';
 
-							$sql_xprofile        = $wpdb->prepare( $data_clause_xprofile_table, '%' . $search_term . '%' );
+							$sql_xprofile        = $wpdb->prepare( $data_clause_xprofile_table, '%' . $search_term . '%', $regex_safe_term );
 							$sql_xprofile_result = $wpdb->get_results( $sql_xprofile );
 
 							// check visiblity for field id with current user.
