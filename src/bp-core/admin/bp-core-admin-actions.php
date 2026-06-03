@@ -296,6 +296,125 @@ function bb_redirect_bp_settings_before_permission_check() {
 		exit;
 	}
 
+	// `?page=bp-tools` (and every sub-tab) retired in BuddyBoss [BBVERSION].
+	// The whole legacy Tools page was replaced by the Settings 2.0 Tools
+	// feature (`?page=bb-settings&tab=tools`). Map every known sub-tab to its
+	// counterpart panel; fall back to the default Tools landing for anything
+	// unrecognized (own sub-tabs from third-party filters, etc.).
+	//
+	// @since BuddyBoss [BBVERSION]
+	if ( 'bp-tools' === $page ) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
+		$bp_tools_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : '';
+
+		$panel_for_tab = array(
+			'bp-tools-default-data' => 'sample_data',
+			'bp-repair-community'   => 'repair_platform',
+			'bbp-repair'            => 'repair_platform',
+			'bbp-converter'         => 'migration_tools',
+			'bp-tools-forum-import' => 'migration_tools',
+		);
+		$target_panel  = isset( $panel_for_tab[ $bp_tools_tab ] ) ? $panel_for_tab[ $bp_tools_tab ] : '';
+
+		$redirect_args = array(
+			'page' => 'bb-settings',
+			'tab'  => 'tools',
+		);
+		if ( '' !== $target_panel ) {
+			$redirect_args['panel'] = $target_panel;
+		}
+
+		// Preserve any extra query args (deep-link flags, etc.) — drop the
+		// ones we're rewriting.
+		$reserved_qs = array( 'page', 'tab', 'panel' );
+		foreach ( $_GET as $key => $value ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
+			if ( in_array( $key, $reserved_qs, true ) ) {
+				continue;
+			}
+			if ( is_scalar( $value ) ) {
+				$redirect_args[ sanitize_key( $key ) ] = sanitize_text_field( wp_unslash( $value ) );
+			}
+		}
+
+		wp_safe_redirect(
+			esc_url_raw(
+				add_query_arg( $redirect_args, admin_url( 'admin.php' ) )
+			),
+			301
+		);
+		exit;
+	}
+
+	// `?page=bp-member-type-import` retired in BuddyBoss [BBVERSION]
+	// — the Profile Types importer was extracted to the buddyboss-tools
+	// plugin's `migration/profile-types/` folder and now renders as a card
+	// inside the Settings 2.0 Migration Tools panel.
+	//
+	// @since BuddyBoss [BBVERSION]
+	if ( 'bp-member-type-import' === $page ) {
+		wp_safe_redirect(
+			bp_get_admin_url( 'admin.php?page=bb-settings&tab=tools&panel=migration_tools' )
+		);
+		exit;
+	}
+
+	// `?page=bbp-converter` retired in BuddyBoss [BBVERSION]
+	// — the Forum Converter (bbPress importer) was extracted to the
+	// buddyboss-tools plugin and now renders as a card inside the Settings 2.0
+	// Migration Tools panel. Redirect old bookmarks and browser-history links
+	// (Phase 4 forum-import migration). Preserves extra query args so
+	// `?page=bbp-converter&foo=bar` lands at `…panel=migration_tools&foo=bar`.
+	//
+	// @since BuddyBoss [BBVERSION]
+	if ( 'bbp-converter' === $page ) {
+		$args          = $_GET; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only $_GET inspection for redirect target construction.
+		$args['page']  = 'bb-settings';
+		$args['tab']   = 'tools';
+		$args['panel'] = 'migration_tools';
+
+		wp_safe_redirect(
+			esc_url_raw(
+				add_query_arg(
+					array_map( 'sanitize_text_field', $args ),
+					admin_url( 'admin.php' )
+				)
+			),
+			301
+		);
+		exit;
+	}
+
+	// Retired Repair Community + Repair Forums standalone admin pages:
+	// ?page=bp-repair-community  (standalone Repair Community page)
+	// ?page=bbp-repair           (standalone Forum Repair page)
+	// Both redirect to the new Settings 2.0 Tools → Repair Platform panel.
+	// NOTE: ?page=bp-tools (root) is NOT redirected here — that page still
+	// hosts the legacy Forum Import sub-tab which migrates in Phase 3.
+	//
+	// @since BuddyBoss [BBVERSION]
+	if ( in_array( $page, array( 'bp-repair-community', 'bbp-repair' ), true ) ) {
+		$tools_target = bp_get_admin_url( 'admin.php?page=bb-settings&tab=tools&panel=repair_platform' );
+
+		// Preserve any non-routing query args (deep-link flags, etc.).
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
+		$reserved_qs = array( 'page', 'tab', 'panel' );
+		$extra_qs    = array();
+		foreach ( $_GET as $key => $value ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
+			if ( in_array( $key, $reserved_qs, true ) ) {
+				continue;
+			}
+			if ( is_scalar( $value ) ) {
+				$extra_qs[ sanitize_key( $key ) ] = sanitize_text_field( wp_unslash( $value ) );
+			}
+		}
+		if ( ! empty( $extra_qs ) ) {
+			$tools_target = add_query_arg( $extra_qs, $tools_target );
+		}
+
+		wp_safe_redirect( $tools_target );
+		exit;
+	}
+
 	if ( 'bp-settings' !== $page && 'bp-integrations' !== $page && 'bp-components' !== $page ) {
 		return;
 	}

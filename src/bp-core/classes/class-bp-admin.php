@@ -481,15 +481,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 
 			$hooks[] = add_submenu_page(
 				$this->settings_page,
-				__( 'Tools', 'buddyboss' ),
-				__( 'Tools', 'buddyboss' ),
-				$this->capability,
-				'bp-tools',
-				'bp_core_admin_tools'
-			);
-
-			$hooks[] = add_submenu_page(
-				$this->settings_page,
 				__( 'Help', 'buddyboss' ),
 				__( 'Help', 'buddyboss' ),
 				$this->capability,

@@ -252,15 +252,21 @@ export function savePlatformSetting( optionName, optionValue ) {
 }
 
 /**
- * Get all group types
+ * Get a page of group types.
+ *
+ * Server-side pagination — pass `page` (1-based) and `per_page` (clamped
+ * server-side via PER_PAGE_CAP). Pass `include_meta: 0` on subsequent
+ * paginated requests to skip the heavy `member_types` payload that only the
+ * first load needs.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @param {Object} options Optional fetch options (e.g. { signal }).
- * @return {Promise} Promise resolving to group types array
+ * @param {Object} params  Optional. { page, per_page, include_meta }.
+ * @param {Object} options Optional. Pass-through fetch options (e.g. signal).
+ * @return {Promise} Promise resolving to { group_types, total, ... }.
  */
-export function getGroupTypes( options ) {
-	return ajaxFetch( 'bb_admin_get_group_types', {}, options );
+export function getGroupTypes( params, options ) {
+	return ajaxFetch( 'bb_admin_get_group_types', params || {}, options );
 }
 
 /**
@@ -402,14 +408,21 @@ export function updateGroupMember( data ) {
 }
 
 /**
- * Get all member/profile types.
+ * Get a page of member/profile types.
+ *
+ * Server-side pagination — pass `page` (1-based) and `per_page` (clamped
+ * server-side to 100). Pass `include_meta: 0` on subsequent paginated
+ * requests to skip the heavy auxiliary payload (group_types, wp_roles,
+ * published_pages, member_types_summary) that only the first load needs.
  *
  * @since BuddyBoss [BBVERSION]
  *
- * @return {Promise} Promise resolving to member types array.
+ * @param {Object} params  Optional. { page, per_page, include_meta }.
+ * @param {Object} options Optional. Pass-through fetch options (e.g. signal).
+ * @return {Promise} Promise resolving to { member_types, total, ... }.
  */
-export function getMemberTypes( options ) {
-	return ajaxFetch( 'bb_admin_get_member_types', {}, options );
+export function getMemberTypes( params, options ) {
+	return ajaxFetch( 'bb_admin_get_member_types', params || {}, options );
 }
 
 /**

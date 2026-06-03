@@ -11,107 +11,6 @@ defined( 'ABSPATH' ) || exit;
 
 /** Repair ********************************************************************/
 
-/**
- * Admin repair page
- *
- * @since bbPress (r2613)
- *
- * @uses bbp_admin_repair_list() To get the recount list
- * @uses check_admin_referer() To verify the nonce and the referer
- * @uses wp_cache_flush() To flush the cache
- * @uses do_action() Calls 'admin_notices' to display the notices
- * @uses wp_nonce_field() To add a hidden nonce field
- */
-function bbp_admin_repair() {
-	?>
-
-	<div class="wrap">
-		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Tools', 'buddyboss' ) ); ?></h2>
-		<div class="nav-settings-subsubsub">
-			<ul class="subsubsub">
-				<?php bp_core_tools_settings_admin_tabs(); ?>
-			</ul>
-		</div>
-	</div>
-	<div class="wrap">
-
-		<div class="bp-admin-card section-repair_forums">
-
-			<h2>
-				<?php
-				$meta_icon = bb_admin_icons( 'repair_forums' );
-				if ( ! empty( $meta_icon ) ) {
-					echo '<i class="' . esc_attr( $meta_icon ) . ' "></i>';
-				}
-				esc_html_e( 'Repair Forums', 'buddyboss' );
-				?>
-			</h2>
-
-			<p><?php esc_html_e( 'BuddyBoss keeps track of relationships between forums, discussions, replies, and discussion tags, and users. Occasionally these relationships become out of sync, most often after an import or migration. Use the tools below to manually recalculate these relationships.', 'buddyboss' ); ?></p>
-
-			<form class="settings" method="post" action="">
-
-				<?php
-				if ( is_multisite() && is_network_admin() ) {
-					$bbp_network_sites = bbp_get_network_sites();
-					?>
-					<fieldset>
-						<legend>
-							<?php
-							esc_html_e( 'Sites:', 'buddyboss' );
-							?>
-						</legend>
-						<label for="select-site">
-							<?php
-
-							if ( ! empty( $bbp_network_sites ) ) {
-								?>
-								<select name="bbp-network-site" id="bbp-network-site" required>
-									<option value="0">
-										<?php
-										esc_html_e( 'Select a site to repair forums', 'buddyboss' );
-										?>
-									</option>
-									<?php
-									foreach ( $bbp_network_sites as $bbp_network_site ) {
-										?>
-										<option value="<?php echo esc_attr( $bbp_network_site->blog_id ); ?>">
-											<?php
-											echo esc_html( $bbp_network_site->domain . '/' . $bbp_network_site->path );
-											?>
-										</option>
-										<?php
-									}
-									?>
-								</select>
-								<?php
-							}
-							?>
-						</label>
-					</fieldset>
-					<?php
-				}
-				?>
-
-				<fieldset>
-					<legend><?php esc_html_e( 'Relationships to Repair:', 'buddyboss' ); ?></legend>
-					<div class="checkbox">
-					<?php foreach ( bbp_admin_repair_list() as $item ) : ?>
-						<label for="<?php echo esc_html( $item[0] ); ?>"><input type="checkbox" class="checkbox" name="<?php echo esc_attr( $item[0] ) . '" id="' . esc_attr( str_replace( '_', '-', $item[0] ) ); ?>" value="<?php echo esc_attr( $item[0] ); ?>" /> <?php echo esc_html( $item[1] ); ?></label>
-					<?php endforeach; ?>
-					</div>
-					<p class="submit">
-						<?php wp_nonce_field( 'bbpress-do-counts' ); ?>
-						<a class="button-primary" id="bp-tools-forum-submit"><?php echo esc_html__( 'Repair Items', 'buddyboss' ); ?></a>
-					</p>
-				</fieldset>
-			</form>
-		</div>
-	</div>
-
-	<?php
-}
-
 /** Converter Helpers *********************************************************/
 
 /**
@@ -407,76 +306,6 @@ function bbp_converter_setting_callback_convert_users() {
 	<?php
 }
 
-/** Converter Page ************************************************************/
-
-/**
- * The main settings page
- *
- * @uses settings_fields() To output the hidden fields for the form
- * @uses do_settings_sections() To output the settings sections
- */
-function bbp_converter_settings() {
-
-	// Status.
-	$step = (int) get_option( '_bbp_converter_step', 0 );
-	$max  = (int) bbpress()->admin->converter->max_steps;
-
-	// Starting or continuing?
-	$status_text = ! empty( $step )
-		? sprintf( esc_html__( 'Up next: step %s', 'buddyboss' ), $step )
-		: esc_html__( 'Ready', 'buddyboss' );
-
-	// Starting or continuing?
-	$start_text = ! empty( $step )
-		? esc_html__( 'Resume', 'buddyboss' )
-		: esc_html__( 'Start', 'buddyboss' );
-
-	// Starting or continuing?
-	$progress_text = ! empty( $step )
-		? sprintf( esc_html__( 'Previously stopped at step %1$d of %2$d', 'buddyboss' ), $step, $max )
-		: esc_html__( 'Ready to go.', 'buddyboss' );
-	?>
-
-	<div class="wrap">
-		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Tools', 'buddyboss' ) ); ?></h2>
-		<div class="nav-settings-subsubsub">
-			<ul class="subsubsub">
-				<?php bp_core_tools_settings_admin_tabs(); ?>
-			</ul>
-		</div>
-	</div>
-	<div class="wrap">
-		<div class="bp-admin-card">
-
-			<form action="#" method="post" id="bbp-converter-settings">
-
-				<?php settings_fields( 'bbpress_converter' ); ?>
-
-				<?php do_settings_sections( 'bbpress_converter' ); ?>
-
-				<p class="submit">
-					<input type="button" name="submit" class="button-primary" id="bbp-converter-start" value="<?php echo esc_attr( $start_text ); ?>" />
-					<input type="button" name="submit" class="button-primary" id="bbp-converter-stop" value="<?php esc_attr_e( 'Pause', 'buddyboss' ); ?>" />
-					<span class="spinner" id="bbp-converter-spinner"></span>
-				</p>
-
-				<div class="bbp-converter-states" id="bbp-converter-state-message" <?php echo ! empty( $step ) ? 'style="display:block;"' : ''; ?>>
-					<span id="bbp-converter-label"><?php esc_attr_e( 'Import Monitor', 'buddyboss' ); ?></span>
-					<span id="bbp-converter-status"><?php echo esc_html( $status_text ); ?></span>
-					<span id="bbp-converter-step-percentage" class="bbp-progress-bar"></span>
-					<span id="bbp-converter-total-percentage" class="bbp-progress-bar"></span>
-				</div>
-				<div class="bbp-converter-updated" id="bbp-converter-message" <?php echo ! empty( $step ) ? 'style="display:block;"' : ''; ?>>
-					<p><?php echo esc_html( $progress_text ); ?></p>
-				</div>
-			</form>
-
-		</div>
-	</div>
-
-	<?php
-}
-
 /** Repair Handler ************************************************************/
 
 /**
@@ -489,31 +318,6 @@ function bbp_converter_settings() {
  * @uses wp_cache_flush() To flush the cache
  * @uses do_action() Calls 'admin_notices' to display the notices
  */
-function bbp_admin_repair_handler() {
-
-	if ( ! bbp_is_post_request() ) {
-		return;
-	}
-
-	check_admin_referer( 'bbpress-do-counts' );
-
-	// Stores messages
-	$messages = array();
-
-	wp_cache_flush();
-
-	foreach ( (array) bbp_admin_repair_list() as $item ) {
-		if ( isset( $item[2] ) && isset( $_POST[ $item[0] ] ) && 1 === absint( $_POST[ $item[0] ] ) && is_callable( $item[2] ) ) {
-			$messages[] = call_user_func( $item[2] );
-		}
-	}
-
-	if ( count( $messages ) ) {
-		foreach ( $messages as $message ) {
-			bbp_admin_tools_feedback( $message[1] );
-		}
-	}
-}
 
 /**
  * Assemble the admin notices
@@ -526,46 +330,6 @@ function bbp_admin_repair_handler() {
  * @uses add_action() Adds the admin notice action with the message HTML
  * @return string The message HTML
  */
-function bbp_admin_tools_feedback( $message, $class = false ) {
-
-	// One message as string.
-	if ( is_string( $message ) ) {
-		$message = '<p>' . $message . '</p>';
-		$class   = $class ? $class : 'updated';
-
-	// Messages as objects.
-	} elseif ( is_wp_error( $message ) ) {
-		$errors = $message->get_error_messages();
-
-		switch ( count( $errors ) ) {
-			case 0:
-				return false;
-				break;
-
-			case 1:
-				$message = '<p>' . $errors[0] . '</p>';
-				break;
-
-			default:
-				$message = '<ul>' . "\n\t" . '<li>' . implode( '</li>' . "\n\t" . '<li>', $errors ) . '</li>' . "\n" . '</ul>';
-				break;
-		}
-
-		$class = $class ? $class : 'error';
-	} else {
-		return false;
-	}
-
-	$message = '<div id="message" class="' . esc_attr( $class ) . '">' . $message . '</div>';
-	$message = str_replace( "'", "\'", $message );
-	$lambda  = function () use ( $message ) {
-		echo $message;
-	};
-
-	add_action( 'admin_notices', $lambda );
-
-	return $lambda;
-}
 
 /**
  * Get the array of the repair list
@@ -826,12 +590,23 @@ function bbp_admin_repair_group_forum_relationship() {
 	);
 
 	// Bail if forum IDs returned an error
-	if ( is_wp_error( $forum_ids ) || empty( $bbp_db->last_result ) ) {
+	if ( is_wp_error( $forum_ids ) ) {
 		return array(
 			2,
 			sprintf( $statement, __( 'Failed!', 'buddyboss' ) ),
 			'status'  => 0,
 			'message' => sprintf( $statement, __( 'Failed!', 'buddyboss' ) ),
+		);
+	}
+
+	// Nothing to repair when there are no converted forums on the site.
+	if ( empty( $bbp_db->last_result ) ) {
+		$nothing = __( 'Nothing to repair!', 'buddyboss' );
+		return array(
+			0,
+			sprintf( $statement, $nothing ),
+			'status'  => 1,
+			'message' => sprintf( $statement, $nothing ),
 		);
 	}
 
@@ -988,10 +763,11 @@ function bbp_admin_repair_forum_topic_count() {
 			bbp_update_forum_topic_count( $forum->ID );
 		}
 	} else {
+		$result = __( 'No forums to count!', 'buddyboss' );
 		return array(
-			2,
+			0,
 			sprintf( $statement, $result ),
-			'status'  => 0,
+			'status'  => 1,
 			'message' => sprintf( $statement, $result ),
 		);
 	}
@@ -1055,10 +831,11 @@ function bbp_admin_repair_forum_reply_count() {
 			bbp_update_forum_reply_count( $forum->ID );
 		}
 	} else {
+		$result = __( 'No forums to count!', 'buddyboss' );
 		return array(
-			2,
+			0,
 			sprintf( $statement, $result ),
-			'status'  => 0,
+			'status'  => 1,
 			'message' => sprintf( $statement, $result ),
 		);
 	}
@@ -1105,10 +882,11 @@ function bbp_admin_repair_user_topic_count() {
 	}
 
 	if ( ! count( $insert_values ) ) {
+		$result = __( 'No discussions to count!', 'buddyboss' );
 		return array(
-			2,
+			0,
 			sprintf( $statement, $result ),
-			'status'  => 0,
+			'status'  => 1,
 			'message' => sprintf( $statement, $result ),
 		);
 	}
@@ -1179,10 +957,11 @@ function bbp_admin_repair_user_reply_count() {
 	}
 
 	if ( ! count( $insert_values ) ) {
+		$result = __( 'No replies to count!', 'buddyboss' );
 		return array(
-			2,
+			0,
 			sprintf( $statement, $result ),
-			'status'  => 0,
+			'status'  => 1,
 			'message' => sprintf( $statement, $result ),
 		);
 	}
@@ -1796,10 +1575,21 @@ function bbp_admin_repair_sticky() {
 	$result    = __( 'Failed!', 'buddyboss' );
 	$forums    = $bbp_db->get_col( "SELECT ID FROM `{$bbp_db->posts}` WHERE `post_type` = 'forum';" );
 
-	// Bail if no forums found
-	if ( empty( $forums ) || is_wp_error( $forums ) ) {
+	// Bail if the query errored.
+	if ( is_wp_error( $forums ) ) {
 		return array(
 			1,
+			sprintf( $statement, $result ),
+			'status'  => 1,
+			'message' => sprintf( $statement, $result ),
+		);
+	}
+
+	// Nothing to recalculate when no forums exist on the site.
+	if ( empty( $forums ) ) {
+		$result = __( 'No stickies to recalculate!', 'buddyboss' );
+		return array(
+			0,
 			sprintf( $statement, $result ),
 			'status'  => 1,
 			'message' => sprintf( $statement, $result ),
@@ -2142,14 +1932,6 @@ function bbp_admin_reset() {
 	?>
 
 	<div class="wrap">
-		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Tools', 'buddyboss' ) ); ?></h2>
-		<div class="nav-settings-subsubsub">
-			<ul class="subsubsub">
-				<?php bp_core_tools_settings_admin_tabs(); ?>
-			</ul>
-		</div>
-	</div>
-	<div class="wrap">
 
 		<p><?php esc_html_e( 'Revert your forums back to a brand new installation. This process cannot be undone.', 'buddyboss' ); ?></p>
 		<p><strong><?php esc_html_e( 'Backup your database before proceeding.', 'buddyboss' ); ?></strong></p>
@@ -2425,6 +2207,17 @@ function bp_admin_forum_repair_tools_wrapper_function() {
 		restore_current_blog();
 	}
 
+	// Additive enrichment for the Settings 2.0 Repair Platform React UI —
+	// see bb_admin_repair_extract_count_summary() in bp-core-admin-tools.php.
+	// Pass the whole $status array so the helper can scan `message`, `records`,
+	// and `feedback` for a count. LOCKED-BC preserved (additive).
+	//
+	// @since BuddyBoss [BBVERSION]
+	if ( is_array( $status ) && function_exists( 'bb_admin_repair_extract_count_summary' ) ) {
+		$enrichment = bb_admin_repair_extract_count_summary( $status );
+		$status     = array_merge( $status, $enrichment );
+	}
+
 	if ( 0 === $status['status'] ) {
 		wp_send_json_error( $status );
 	} else {
@@ -2480,7 +2273,7 @@ function bb_admin_upgrade_user_favorites( $is_background, $blog_id ) {
 			$bp_background_updater->dispatch();
 		} else {
 			bb_migrate_users_topic_favorites( $results, $blog_id );
-			$offset ++;
+			++$offset;
 		}
 
 		// Update the offset.

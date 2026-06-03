@@ -52,8 +52,6 @@ add_action( 'bp_messages_thread_messages_after_update', 'bp_media_user_messages_
 add_filter( 'bp_messages_message_validated_content', 'bp_media_message_validated_content', 20, 3 );
 add_filter( 'bp_messages_message_validated_content', 'bp_media_gif_message_validated_content', 20, 3 );
 
-// Core tools.
-add_filter( 'bp_core_get_tools_settings_admin_tabs', 'bp_media_get_tools_media_settings_admin_tabs', 20, 1 );
 add_action( 'bp_core_activation_notice', 'bp_media_activation_notice' );
 add_action( 'wp_ajax_bp_media_import_status_request', 'bp_media_import_status_request' );
 add_filter( 'bp_repair_list', 'bp_media_add_admin_repair_items' );
@@ -1268,25 +1266,6 @@ function bp_media_activity_save_gif_data( $activity ) {
 	}
 }
 
-function bp_media_get_tools_media_settings_admin_tabs( $tabs ) {
-
-	$tabs[] = array(
-		'href' => bp_get_admin_url(
-			add_query_arg(
-				array(
-					'page' => 'bp-media-import',
-					'tab'  => 'bp-media-import',
-				),
-				'admin.php'
-			)
-		),
-		'name' => __( 'Import Media', 'buddyboss' ),
-		'slug' => 'bp-media-import',
-	);
-
-	return $tabs;
-}
-
 /**
  * Add Import Media admin menu in tools
  *
@@ -1350,14 +1329,6 @@ function bp_media_import_submenu_page() {
 	}
 
 	?>
-	<div class="wrap">
-		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Tools', 'buddyboss' ) ); ?></h2>
-		<div class="nav-settings-subsubsub">
-			<ul class="subsubsub">
-				<?php bp_core_tools_settings_admin_tabs(); ?>
-			</ul>
-		</div>
-	</div>
 	<div class="wrap">
 		<div class="bp-admin-card section-bp-member-type-import">
 			<div class="boss-import-area">
