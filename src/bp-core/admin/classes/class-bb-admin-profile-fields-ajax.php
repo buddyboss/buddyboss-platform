@@ -436,6 +436,22 @@ class BB_Admin_Profile_Fields_Ajax {
 			$existing_field = xprofile_get_field( $field_id );
 			if ( $existing_field ) {
 				$args['field_order'] = (int) $existing_field->field_order;
+
+				// Guard cross-field-set reassignment on edit. Matches the drag
+				// guardrails enforced by `reorder_fields()` (which mirrors the
+				// legacy `accept: '.connectedSortable fieldset:not(.primary_field)'`
+				// drop rule from `bp-xprofile/admin/js/admin.js`). The React
+				// modal does not currently expose a group selector, so this is
+				// defense-in-depth against direct AJAX clients.
+				$existing_group_id = (int) $existing_field->group_id;
+				if (
+					$existing_group_id !== (int) $group_id &&
+					! $this->bb_can_move_field_to_group( $field_id, $existing_group_id, $group_id )
+				) {
+					wp_send_json_error(
+						array( 'message' => __( 'This field cannot be moved to that field set.', 'buddyboss' ) )
+					);
+				}
 			}
 		}
 

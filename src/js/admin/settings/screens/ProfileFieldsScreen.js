@@ -351,10 +351,14 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 			}
 
 			// Mirror the row-level behavior: block a disallowed cross-set drop
-			// with the not-allowed cursor and no drop indicator, so the card
-			// never looks droppable when the move would be rejected.
+			// with the not-allowed cursor and clear any stale drop target so a
+			// release on the blocked card bounces silently (legacy parity with
+			// the jQuery UI droppable refusing the drop without committing).
 			if ( getCrossGroupBlockReason( dragItem.groupId, dragItem.fieldIdx, group.id ) ) {
 				e.dataTransfer.dropEffect = 'none';
+				if ( null !== dragOverItem ) {
+					setDragOverItem( null );
+				}
 				return;
 			}
 
@@ -427,10 +431,16 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 			return;
 		}
 
-		// Signal a disallowed cross-set move with the not-allowed cursor and
-		// skip painting a drop indicator for it.
+		// Signal a disallowed cross-set move with the not-allowed cursor.
+		// Clear any stale drop target so a release in the blocked region
+		// can't accidentally commit a prior (in-source-group) hover position
+		// — matches legacy's jQuery UI droppable behaviour where a refused
+		// drop simply bounces with no commit.
 		if ( getCrossGroupBlockReason( dragItem.groupId, dragItem.fieldIdx, groupId ) ) {
 			e.dataTransfer.dropEffect = 'none';
+			if ( null !== dragOverItem ) {
+				setDragOverItem( null );
+			}
 			return;
 		}
 
@@ -444,7 +454,9 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 	 * Shared by both the field-row drop target and the field-set card drop
 	 * target (the latter handles drops into an empty set or at the end of a
 	 * set). Cross-set moves are validated against the same guardrails the
-	 * server enforces; a blocked move surfaces a toast and is discarded.
+	 * server enforces; a blocked move bounces silently (matches legacy
+	 * jQuery UI droppable behaviour, where a refused drop simply did not
+	 * commit and the field reverted to its source position).
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
@@ -463,11 +475,13 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 			return;
 		}
 
-		// Enforce cross-set guardrails (mirrors the server).
+		// Enforce cross-set guardrails (mirrors the server). With the dragOver
+		// handlers clearing dragOverItem on blocked hovers, a blocked target
+		// should already have been filtered out before we reach here — this is
+		// a belt-and-braces guard for programmatic drops. Silent bounce matches
+		// legacy: jQuery UI's droppable refused drops without notice.
 		if ( sourceGroupId !== targetGroupId ) {
-			var blockReason = getCrossGroupBlockReason( sourceGroupId, dragItem.fieldIdx, targetGroupId );
-			if ( blockReason ) {
-				setToast( { status: 'error', message: blockReason } );
+			if ( getCrossGroupBlockReason( sourceGroupId, dragItem.fieldIdx, targetGroupId ) ) {
 				resetDrag();
 				return;
 			}
