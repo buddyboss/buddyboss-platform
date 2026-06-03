@@ -51,6 +51,7 @@ function bb_admin_settings_register_tools_feature() {
 			'license_tier'       => 'free',
 			'category'           => 'community',
 			'standalone'         => true,
+			'required'           => true, // Cannot be deactivated.
 			'is_active_callback' => '__return_true',
 			'settings_route'     => '/settings/tools',
 			'order'              => 160,
