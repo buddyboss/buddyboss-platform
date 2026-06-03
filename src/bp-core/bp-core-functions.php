@@ -116,7 +116,7 @@ function bp_core_get_table_prefix() {
  * @return array $items The sorted array.
  */
 function bp_sort_by_key( $items, $key, $type = 'alpha', $preserve_keys = false ) {
-	$callback = function( $a, $b ) use ( $key, $type ) {
+	$callback = function ( $a, $b ) use ( $key, $type ) {
 		$values = array(
 			0 => false,
 			1 => false,
@@ -1004,9 +1004,9 @@ function bp_core_get_component_search_query_arg( $component = null ) {
  *
  * @since BuddyBoss 2.9.00
  *
- * @param array $args {
- *     Optional. An array of key => value arguments to match against the component objects.
- *     Default empty array.
+ * @param array  $args {
+ *      Optional. An array of key => value arguments to match against the component objects.
+ *      Default empty array.
  *
  *     @type string $name          Translatable name for the component.
  *     @type string $id            Unique ID for the component.
@@ -1681,7 +1681,6 @@ function bp_core_record_activity() {
 
 	// updated users last activity on each page refresh.
 	bp_update_user_last_activity( $user_id, date( 'Y-m-d H:i:s', $current_time ) );
-
 }
 add_action( 'wp_head', 'bp_core_record_activity' );
 
@@ -2509,6 +2508,87 @@ function _bp_strip_spans_from_title( $title_part = '' ) {
 function bp_core_get_minified_asset_suffix() {
 	$ext = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 	return $ext;
+}
+
+/**
+ * Resolve the public URL for a paired asset, honouring SCRIPT_DEBUG.
+ *
+ * Pair set = first-party assets that ship both `<name>.<ext>` and
+ * `<name>.min.<ext>`. The shipped zip only contains the minified files; the
+ * unminified counterparts live on the production branch and are fetched at
+ * runtime by {@see BB_Debug_Asset_Fetcher} when WP_DEBUG && SCRIPT_DEBUG.
+ *
+ * Resolution order:
+ *   1. SCRIPT_DEBUG off  → `.min.<ext>` under the plugin URL.
+ *   2. SCRIPT_DEBUG on  → uploads override if the fetcher has staged a
+ *                          verified unminified copy.
+ *   3. Fallback         → `.min.<ext>` (e.g. fetch in progress, network
+ *                          unreachable, fetcher disabled). The admin notice
+ *                          surface explains why the override is missing.
+ *
+ * Callers pass the extensionless basename so this helper can append either
+ * `.min.<ext>` or `.<ext>` depending on resolution. Example:
+ *
+ *     wp_enqueue_style(
+ *         'bp-foo',
+ *         bb_asset_url( 'bp-core/css/foo', 'css' ),
+ *         array(),
+ *         bp_get_version()
+ *     );
+ *
+ * @since BuddyBoss 3.0.3
+ *
+ * @param string $relative Plugin-root-relative asset path WITHOUT extension
+ *                         or `.min` suffix, e.g. `bp-core/css/foo`.
+ * @param string $ext      Extension without leading dot. Typically `js` or `css`.
+ * @return string Public URL ready to pass to wp_enqueue_script/style.
+ */
+function bb_asset_url( $relative, $ext ) {
+	$script_debug = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG;
+	$plugin_url   = trailingslashit( BP_PLUGIN_URL ) . $relative;
+
+	if ( ! $script_debug ) {
+		return $plugin_url . '.min.' . $ext;
+	}
+
+	if ( class_exists( 'BB_Debug_Asset_Fetcher' ) ) {
+		$override = BB_Debug_Asset_Fetcher::get_override_url( $relative . '.' . $ext );
+		if ( $override ) {
+			return $override;
+		}
+	}
+
+	return $plugin_url . '.min.' . $ext;
+}
+
+/**
+ * Filesystem-path counterpart to {@see bb_asset_url()}.
+ *
+ * Used by enqueue callers that pass `filemtime()` as the cache-busting
+ * version — they need the on-disk path that backs the resolved URL.
+ *
+ * @since BuddyBoss 3.0.3
+ *
+ * @param string $relative Plugin-root-relative asset path WITHOUT extension or `.min`.
+ * @param string $ext      Extension without leading dot.
+ * @return string Absolute filesystem path.
+ */
+function bb_asset_path( $relative, $ext ) {
+	$script_debug = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG;
+	$plugin_path  = trailingslashit( BP_PLUGIN_DIR ) . $relative;
+
+	if ( ! $script_debug ) {
+		return $plugin_path . '.min.' . $ext;
+	}
+
+	if ( class_exists( 'BB_Debug_Asset_Fetcher' ) ) {
+		$override = BB_Debug_Asset_Fetcher::get_override_path( $relative . '.' . $ext );
+		if ( $override ) {
+			return $override;
+		}
+	}
+
+	return $plugin_path . '.min.' . $ext;
 }
 
 /**
@@ -4136,7 +4216,7 @@ function bp_email_unsubscribe_handler() {
 		esc_html( $unsub_msg )
 	);
 
-	bp_core_add_message( $message , $message_type );
+	bp_core_add_message( $message, $message_type );
 	bp_core_redirect( bp_core_get_user_domain( $raw_user_id ) );
 
 	exit;
@@ -4558,9 +4638,9 @@ function bp_ajax_get_suggestions() {
 	}
 
 	$args = array(
-			'term'        => sanitize_text_field( $_GET['term'] ),
-			'type'        => sanitize_text_field( $_GET['type'] ),
-			'count_total' => 'count_query',
+		'term'        => sanitize_text_field( $_GET['term'] ),
+		'type'        => sanitize_text_field( $_GET['type'] ),
+		'count_total' => 'count_query',
 	);
 
 	if ( ! empty( $_GET['page'] ) ) {
@@ -4801,8 +4881,8 @@ function bp_core_parse_url( $url ) {
 		$response = wp_safe_remote_get(
 			$url,
 			array(
-				'stream'      => true,
-				'headers'     => array(
+				'stream'  => true,
+				'headers' => array(
 					'user-agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:71.0) Gecko/20100101 Firefox/71.0',
 				),
 			),
@@ -4936,7 +5016,7 @@ function bp_core_parse_url( $url ) {
 			// Parse DOM to get Meta Description.
 			if ( empty( $description ) ) {
 				$metas = $dom->getElementsByTagName( 'meta' );
-				for ( $i = 0; $i < $metas->length; $i ++ ) {
+				for ( $i = 0; $i < $metas->length; $i++ ) {
 					$meta = $metas->item( $i );
 					if ( 'description' === $meta->getAttribute( 'name' ) ) {
 						$description = $meta->getAttribute( 'content' );
@@ -4947,7 +5027,7 @@ function bp_core_parse_url( $url ) {
 
 			// Parse DOM to get Images.
 			$image_elements = $dom->getElementsByTagName( 'img' );
-			for ( $i = 0; $i < $image_elements->length; $i ++ ) {
+			for ( $i = 0; $i < $image_elements->length; $i++ ) {
 				$image = $image_elements->item( $i );
 				$src   = $image->getAttribute( 'src' );
 
@@ -5034,20 +5114,18 @@ function bp_core_format_size_units( $bytes, $unit_label = false, $type = '' ) {
 		} else {
 			$bytes = '0' . ' bytes';
 		}
-	} else {
-		if ( 'GB' === $type ) {
+	} elseif ( 'GB' === $type ) {
 			$bytes = number_format( ( $bytes / 1073741824 ), 2, '.', '' ) . ' GB';
-		} elseif ( 'MB' === $type ) {
-			$bytes = number_format( ( $bytes / 1048576 ), 2, '.', '' ) . ' MB';
-		} elseif ( 'KB' === $type ) {
-			$bytes = number_format( ( $bytes / 1024 ), 2, '.', '' ) . ' KB';
-		} elseif ( 'bytes' === $type ) {
-			$bytes = $bytes . ' bytes';
-		} elseif ( 1 === $bytes ) {
-			$bytes = $bytes . ' byte';
-		} else {
-			$bytes = '0' . ' bytes';
-		}
+	} elseif ( 'MB' === $type ) {
+		$bytes = number_format( ( $bytes / 1048576 ), 2, '.', '' ) . ' MB';
+	} elseif ( 'KB' === $type ) {
+		$bytes = number_format( ( $bytes / 1024 ), 2, '.', '' ) . ' KB';
+	} elseif ( 'bytes' === $type ) {
+		$bytes = $bytes . ' bytes';
+	} elseif ( 1 === $bytes ) {
+		$bytes = $bytes . ' byte';
+	} else {
+		$bytes = '0' . ' bytes';
 	}
 
 	return $bytes;
@@ -5152,7 +5230,6 @@ function bp_core_upload_max_size() {
 	 * @since BuddyBoss 1.4.8
 	 */
 	return apply_filters( 'bp_core_upload_max_size', $max_size );
-
 }
 
 /**
@@ -5204,7 +5281,6 @@ function bp_core_xprofile_update_profile_completion_user_progress( $user_id = ''
 	// Get logged in user Progress.
 	$user_progress_arr = bp_xprofile_get_user_progress( $profile_groups, $profile_photo_type );
 	bp_update_user_meta( $user_id, 'bp_profile_completion_widgets', $user_progress_arr );
-
 }
 
 /**
@@ -5249,15 +5325,15 @@ function bp_xprofile_get_selected_options_user_progress( $settings ) {
 		foreach ( $profile_photo_type as $option ) {
 			if ( 'profile_photo' === $option && isset( $get_user_data['photo_type'] ) && isset( $get_user_data['photo_type']['profile_photo'] ) ) {
 				$response['photo_type']['profile_photo'] = $get_user_data['photo_type']['profile_photo'];
-				$total_count                             = ++ $total_count;
+				$total_count                             = ++$total_count;
 				if ( isset( $get_user_data['photo_type']['profile_photo']['is_uploaded'] ) && 1 === (int) $get_user_data['photo_type']['profile_photo']['is_uploaded'] ) {
-					$total_completed_count = ++ $total_completed_count;
+					$total_completed_count = ++$total_completed_count;
 				}
 			} elseif ( 'cover_photo' === $option && isset( $get_user_data['photo_type'] ) && isset( $get_user_data['photo_type']['cover_photo'] ) ) {
 				$response['photo_type']['cover_photo'] = $get_user_data['photo_type']['cover_photo'];
-				$total_count                           = ++ $total_count;
+				$total_count                           = ++$total_count;
 				if ( isset( $get_user_data['photo_type']['cover_photo']['is_uploaded'] ) && 1 === (int) $get_user_data['photo_type']['cover_photo']['is_uploaded'] ) {
-					$total_completed_count = ++ $total_completed_count;
+					$total_completed_count = ++$total_completed_count;
 				}
 			}
 		}
@@ -5294,7 +5370,6 @@ function bp_xprofile_get_selected_options_user_progress( $settings ) {
 	 * @since BuddyBoss 1.5.4
 	 */
 	return apply_filters( 'bp_xprofile_get_selected_options_user_progress', $response, $profile_groups, $profile_photo_type, $get_user_data );
-
 }
 
 /**
@@ -5311,7 +5386,6 @@ function bp_core_xprofile_clear_all_user_progress_cache() {
 		'',            // this also doesn't actually matter in this call.
 		true           // tells the function "yes, please remove them all".
 	);
-
 }
 
 /**
@@ -5636,7 +5710,6 @@ function bb_core_symlink_generator( $type, $item, $size, $file, $output_file_src
 			}
 		}
 	}
-
 }
 
 function bb_core_symlink_absolute_path( $preview_attachment_path, $upload_directory ) {
@@ -5959,7 +6032,7 @@ function bb_moderation_update_suspend_data( $moderated_activities, $offset = 0 )
 					}
 				}
 			}
-			$offset ++;
+			++$offset;
 		}
 	}
 
@@ -6845,7 +6918,6 @@ function bb_is_notification_enabled( $user_id, $notification_type, $type = 'emai
 			) {
 				return $n;
 			}
-
 		},
 		$all_notifications
 	);
@@ -7139,7 +7211,6 @@ function bb_notification_preferences_types( $field, $user_id = 0 ) {
 	}
 
 	return apply_filters( 'bb_notifications_types', $options );
-
 }
 
 /**
@@ -7906,12 +7977,12 @@ function bb_admin_icons( $id ) {
 			break;
 		case 'activity_access_control_block':
 		case 'messages_access_control_block':
-		case 'media_access_control_block';
+		case 'media_access_control_block':
 		case 'connection_access_control_block':
 			$meta_icon = $bb_icon_bf . ' bb-icon-lock-alt-open';
 			break;
 		case 'bp_zoom_settings_section':
-		case 'bp_zoom_gutenberg_section';
+		case 'bp_zoom_gutenberg_section':
 			$meta_icon = $bb_icon_bf . ' bb-icon-brand-zoom';
 			break;
 		case 'bp_notification_settings_automatic':
@@ -8199,7 +8270,7 @@ function bb_autop( $pee, $br = true ) {
 			$pre_tags[ $name ] = substr( $pee_part, $start ) . '</pre>';
 
 			$pee .= substr( $pee_part, 0, $start ) . $name;
-			$i++;
+			++$i;
 		}
 
 		$pee .= $last_pee;
@@ -8531,7 +8602,7 @@ function bb_mention_remove_deleted_users_link( $content ) {
 
 	foreach ( (array) $usernames as $user_id => $username ) {
 		if ( bp_is_user_inactive( $user_id ) ) {
-			preg_match_all( "'<a\b[^>]*>@(.*?)<\/a>'si", $content, $content_matches, PREG_SET_ORDER );			/*preg_match_all( "'<a.*?>@(.*?)<\/a>'si", $content, $content_matches, PREG_SET_ORDER );*/
+			preg_match_all( "'<a\b[^>]*>@(.*?)<\/a>'si", $content, $content_matches, PREG_SET_ORDER );          /*preg_match_all( "'<a.*?>@(.*?)<\/a>'si", $content, $content_matches, PREG_SET_ORDER );*/
 			if ( ! empty( $content_matches ) ) {
 				foreach ( $content_matches as $match ) {
 					if ( false !== strpos( $match[0], '@' . $username ) ) {
@@ -8601,7 +8672,6 @@ if ( ! function_exists( 'bb_filter_input_string' ) ) {
 		}
 
 		return $string;
-
 	}
 }
 
@@ -8644,7 +8714,6 @@ if ( ! function_exists( 'bb_filter_var_string' ) ) {
 		}
 
 		return $string;
-
 	}
 }
 
@@ -9310,7 +9379,7 @@ function bb_get_predefined_palette() {
 			18 => '#008000',
 			19 => '#006400',
 			20 => '#8b4513',
-			21 => '#a0522d'
+			21 => '#a0522d',
 		)
 	);
 }
@@ -9329,7 +9398,7 @@ function bb_get_default_png_avatar( $params ) {
 	$item_id = $params['item_id'] ?? 0;
 
 	$user_fallback_avatar  = buddypress()->plugin_url . 'bp-core/images/profile-avatar-buddyboss.png';
-	$group_fallback_avatar  = buddypress()->plugin_url . 'bp-core/images/group-avatar-buddyboss.png';
+	$group_fallback_avatar = buddypress()->plugin_url . 'bp-core/images/group-avatar-buddyboss.png';
 
 	if ( empty( $item_id ) ) {
 		return ( 'user' === $object ) ? $user_fallback_avatar : $group_fallback_avatar;
@@ -9607,9 +9676,9 @@ function bb_generate_default_avatar( $args ) {
 function bb_delete_default_user_png_avatar( $item_ids = array(), $is_delete_dir = true ) {
 	global $wpdb;
 
-	$delete_query = $wpdb->prepare("DELETE FROM $wpdb->usermeta WHERE meta_key = %s", 'default-user-avatar-png' );
+	$delete_query = $wpdb->prepare( "DELETE FROM $wpdb->usermeta WHERE meta_key = %s", 'default-user-avatar-png' );
 	if ( ! empty( $item_ids ) ) {
-		$delete_query .= " AND user_id IN (" . implode( ',', $item_ids ) . ")";
+		$delete_query .= ' AND user_id IN (' . implode( ',', $item_ids ) . ')';
 	}
 
 	$wpdb->query( $delete_query );
@@ -9644,7 +9713,7 @@ function bb_delete_default_group_png_avatar( $item_ids = array(), $is_delete_dir
 
 	$delete_query = $wpdb->prepare( "DELETE FROM {$bp->groups->table_name_groupmeta} WHERE meta_key = %s", 'default-group-avatar-png' );
 	if ( ! empty( $item_ids ) ) {
-		$delete_query .= " AND group_id IN (" . implode( ',', $item_ids ) . ")";
+		$delete_query .= ' AND group_id IN (' . implode( ',', $item_ids ) . ')';
 	}
 
 	$wpdb->query( $delete_query );
@@ -9686,7 +9755,6 @@ function bb_mention_add_user_dynamic_link( $content ) {
 		$user_id = $matches[1];                     // Extract the user ID from the match.
 
 		return bp_core_get_user_domain( $user_id ); // Replace this with your actual BuddyPress URL format.
-
 	};
 
 	return preg_replace_callback( '/{{mention_user_id_(\d+)}}/', $replace_callback, $content );
@@ -9706,7 +9774,7 @@ function bb_pro_schedule_posts_version() {
 /**
  * Function for writing logs to debug.log
  *
- * @param [mixed] $log The log entry that needs to be written into the debug.log.
+ * @param [mixed]   $log The log entry that needs to be written into the debug.log.
  * @param [boolean] $always_print Optional. True then always print the log. Default false.
  *
  * @since BuddyBoss 2.6.40
@@ -9745,8 +9813,8 @@ function bb_is_gd_or_imagick_library_enabled() {
 		if ( function_exists( '_wp_image_editor_choose' ) ) {
 			$lib_loaded = _wp_image_editor_choose();
 			if (
-				! empty( $lib_loaded  ) &&
-				! is_wp_error( $lib_loaded  ) &&
+				! empty( $lib_loaded ) &&
+				! is_wp_error( $lib_loaded ) &&
 				(
 					strpos( $lib_loaded, 'WP_Image_Editor_GD' ) !== false ||
 					'WP_Image_Editor_Imagick' === $lib_loaded
@@ -9834,7 +9902,12 @@ function bb_pro_poll_version() {
  */
 function bb_create_jwt( $payload ) {
 	$secret_key        = wp_salt( 'nonce' );
-	$header            = json_encode( [ 'typ' => 'JWT', 'alg' => 'HS256' ] );
+	$header            = json_encode(
+		array(
+			'typ' => 'JWT',
+			'alg' => 'HS256',
+		)
+	);
 	$encoded_header    = base64_encode( $header );
 	$encoded_payload   = base64_encode( json_encode( $payload ) );
 	$signature         = hash_hmac( 'sha256', $encoded_header . '.' . $encoded_payload, $secret_key, true );
