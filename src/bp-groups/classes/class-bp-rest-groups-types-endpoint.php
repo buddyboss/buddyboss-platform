@@ -202,7 +202,8 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 
 		if ( isset( $schema['member_type_group_invites'] ) ) {
 			$member_types              = bp_get_member_types( array(), 'names' );
-			$get_selected_member_types = ( ! empty( $post_id ) && ! empty( get_post_meta( $post_id, '_bp_group_type_enabled_member_type_group_invites', true ) ) ) ? get_post_meta( $post_id, '_bp_group_type_enabled_member_type_group_invites', true ) : array();
+			$raw_invites               = ! empty( $post_id ) ? get_post_meta( $post_id, '_bp_group_type_enabled_member_type_group_invites', true ) : '';
+			$get_selected_member_types = is_array( $raw_invites ) ? $raw_invites : array();
 			$member_types_invite       = array();
 			if ( ! empty( $member_types ) ) {
 				foreach ( $member_types as $member_type ) {
@@ -217,7 +218,8 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 
 		if ( isset( $schema['member_type_join'] ) ) {
 			$member_types              = bp_get_member_types( array(), 'names' );
-			$get_selected_member_types = ( ! empty( $post_id ) && ! empty( get_post_meta( $post_id, '_bp_group_type_enabled_member_type_join', true ) ) ) ? get_post_meta( $post_id, '_bp_group_type_enabled_member_type_join', true ) : array();
+			$raw_join                  = ! empty( $post_id ) ? get_post_meta( $post_id, '_bp_group_type_enabled_member_type_join', true ) : '';
+			$get_selected_member_types = is_array( $raw_join ) ? $raw_join : array();
 			$member_types_join         = array();
 			if ( ! empty( $member_types ) ) {
 				foreach ( $member_types as $member_type ) {
