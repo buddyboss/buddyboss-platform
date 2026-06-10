@@ -57,6 +57,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 3.0.4 =
+* Enhancement: Activity - Added Activity Sharing REST API support
+
 = 3.0.3 =
 * Bug: Core - General bug fixes, performance & stability improvements
 * Bug: MemberPress - Fixed an error on MemberPress lesson pages caused by ReadyLaunch sidebar rendering
