@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 3.0.3\n"
+"Project-Id-Version: BuddyBoss Platform 3.0.4\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2026-06-01 05:22:13+00:00\n"
+"POT-Creation-Date: 2026-06-11 05:09:34+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2431,7 +2431,7 @@ msgid "URL is not valid."
 msgstr ""
 
 #: bp-activity/bp-activity-functions.php:5441
-#: bp-activity/classes/class-bp-rest-activity-link-preview-endpoint.php:106
+#: bp-activity/classes/class-bp-rest-activity-link-preview-endpoint.php:116
 #: bp-forums/classes/class-bb-rest-forums-link-preview-endpoint.php:106
 #: bp-forums/functions.php:1140
 msgid "There was a problem generating a link preview."
@@ -3895,7 +3895,7 @@ msgstr ""
 
 #: bp-activity/classes/class-bp-rest-activity-comment-endpoint.php:210
 #: bp-activity/classes/class-bp-rest-activity-details-endpoint.php:101
-#: bp-activity/classes/class-bp-rest-activity-link-preview-endpoint.php:142
+#: bp-activity/classes/class-bp-rest-activity-link-preview-endpoint.php:184
 msgid "Sorry, Activity component was not enabled."
 msgstr ""
 
@@ -4531,36 +4531,36 @@ msgstr ""
 msgid "Sorry, URL is not valid."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-link-preview-endpoint.php:155
+#: bp-activity/classes/class-bp-rest-activity-link-preview-endpoint.php:174
 msgid "Sorry, you are not allowed to generate link preview in the activity."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-link-preview-endpoint.php:165
+#: bp-activity/classes/class-bp-rest-activity-link-preview-endpoint.php:194
 #: bp-forums/classes/class-bb-rest-forums-link-preview-endpoint.php:165
 msgid "Sorry, Link Previews is disabled."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-link-preview-endpoint.php:198
+#: bp-activity/classes/class-bp-rest-activity-link-preview-endpoint.php:227
 #: bp-forums/classes/class-bb-rest-forums-link-preview-endpoint.php:198
 msgid "Title for the link preview."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-link-preview-endpoint.php:204
+#: bp-activity/classes/class-bp-rest-activity-link-preview-endpoint.php:233
 #: bp-forums/classes/class-bb-rest-forums-link-preview-endpoint.php:204
 msgid "Description or HTML to generate the link preview."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-link-preview-endpoint.php:210
+#: bp-activity/classes/class-bp-rest-activity-link-preview-endpoint.php:239
 #: bp-forums/classes/class-bb-rest-forums-link-preview-endpoint.php:210
 msgid "Image URLs for the preview."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-link-preview-endpoint.php:219
+#: bp-activity/classes/class-bp-rest-activity-link-preview-endpoint.php:248
 #: bp-forums/classes/class-bb-rest-forums-link-preview-endpoint.php:219
 msgid "If any errors to retrieving a the preview data."
 msgstr ""
 
-#: bp-activity/classes/class-bp-rest-activity-link-preview-endpoint.php:225
+#: bp-activity/classes/class-bp-rest-activity-link-preview-endpoint.php:254
 #: bp-forums/classes/class-bb-rest-forums-link-preview-endpoint.php:225
 msgid "Whether the URL is wp embed or not."
 msgstr ""
