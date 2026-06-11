@@ -275,6 +275,90 @@ class BB_Support_Access {
 		add_action( 'wp_ajax_bb_admin_support_access_toggle', array( $this, 'ajax_toggle' ) );
 		add_action( 'wp_ajax_bb_admin_support_access_extend', array( $this, 'ajax_extend' ) );
 		add_action( 'wp_ajax_bb_admin_support_access_set_ticket', array( $this, 'ajax_set_ticket' ) );
+
+		// Hide the support account from the BuddyBoss member directory and the
+		// `/buddyboss/v1/members` REST endpoint (both backed by BP_User_Query).
+		// The account stays visible in the wp-admin Users list for auditing.
+		add_filter( 'bp_user_query_uid_clauses', array( $this, 'exclude_from_user_query' ), 10, 2 );
+	}
+
+	/**
+	 * Resolve the support account's user ID without provisioning it.
+	 *
+	 * Unlike {@see get_support_user()}, this never creates the account — it only
+	 * looks up an account that already exists, identified by the
+	 * `_bb_support_access_user` meta flag (falling back to the canonical email /
+	 * login). This makes it safe to call from query filters that run on every
+	 * member listing: those must never have the side effect of provisioning the
+	 * support administrator. The result is cached for the request.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return int Support user ID, or 0 if the account does not exist yet.
+	 */
+	public function get_support_user_id() {
+		static $support_user_id = null;
+
+		if ( null !== $support_user_id ) {
+			return $support_user_id;
+		}
+
+		// Prefer the flagged account so a renamed login/email still matches.
+		$flagged = get_users(
+			array(
+				'meta_key'    => '_bb_support_access_user', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+				'meta_value'  => 1, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+				'fields'      => 'ID',
+				'number'      => 1,
+				'count_total' => false,
+			)
+		);
+
+		if ( ! empty( $flagged ) ) {
+			$support_user_id = (int) $flagged[0];
+
+			return $support_user_id;
+		}
+
+		// Fall back to the canonical email, then login.
+		$user = get_user_by( 'email', self::USER_EMAIL );
+		if ( ! $user ) {
+			$user = get_user_by( 'login', self::USER_LOGIN );
+		}
+
+		$support_user_id = $user ? (int) $user->ID : 0;
+
+		return $support_user_id;
+	}
+
+	/**
+	 * Exclude the support account from BP_User_Query result sets.
+	 *
+	 * Appends a `NOT IN` clause to the user-id query so the support
+	 * administrator is never disclosed through the member directory or the
+	 * `/buddyboss/v1/members` REST endpoint, even while a grant is active. The
+	 * account is identified lazily via {@see get_support_user_id()} so this
+	 * filter never provisions it.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array         $sql   Array of SQL clauses for the user query.
+	 * @param BP_User_Query $query Current BP_User_Query instance (by reference).
+	 *
+	 * @return array Filtered SQL clauses.
+	 */
+	public function exclude_from_user_query( $sql, $query ) {
+		$support_user_id = $this->get_support_user_id();
+
+		if ( empty( $support_user_id ) ) {
+			return $sql;
+		}
+
+		$uid_name = isset( $query->uid_name ) ? $query->uid_name : 'ID';
+
+		$sql['where'][] = "u.{$uid_name} NOT IN (" . (int) $support_user_id . ')';
+
+		return $sql;
 	}
 
 	/**
@@ -690,9 +774,10 @@ class BB_Support_Access {
 	 *
 	 * The account is created a single time and kept forever — revoking access
 	 * deletes only the token, never the user. The user is a standard
-	 * administrator so support can troubleshoot, but it carries a meta flag so
-	 * the account is identifiable and can be excluded from member directories by
-	 * other code if desired.
+	 * administrator so support can troubleshoot, but it carries a
+	 * `_bb_support_access_user` meta flag so the account is identifiable and is
+	 * excluded from the member directory and the members REST endpoint via
+	 * {@see exclude_from_user_query()}.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -1587,6 +1672,27 @@ class BB_Support_Access {
 
 		$support_user = get_user_by( 'id', $data['support_user_id'] );
 		if ( ! $support_user ) {
+			return;
+		}
+
+		/**
+		 * Allow a site to veto a support-access token login.
+		 *
+		 * This token flow authenticates directly (no `wp_signon` / `authenticate`
+		 * filter chain), so 2FA and login-throttling plugins do not gate it by
+		 * default. The token's ~380-bit CSPRNG entropy makes this safe as a
+		 * default, but sites that *mandate* a second factor for every admin can
+		 * return false here to re-impose their policy on this path. Returning a
+		 * non-true value aborts the login silently (no token oracle), exactly like
+		 * an invalid token.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 *
+		 * @param bool    $allow        Whether to allow the support login. Default true.
+		 * @param WP_User $support_user The support account about to be authenticated.
+		 * @param array   $data         The active grant data (token hash, expiry, etc.).
+		 */
+		if ( true !== apply_filters( 'bb_support_access_allow_login', true, $support_user, $data ) ) {
 			return;
 		}
 
