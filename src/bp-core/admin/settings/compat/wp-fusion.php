@@ -270,7 +270,15 @@ function bb_legacy_wpf_create_tag() {
 	if ( in_array( 'add_tags_api', $supports, true ) && method_exists( $crm, 'add_tag' ) ) {
 		$created = $crm->add_tag( $term );
 		if ( is_wp_error( $created ) ) {
-			wp_send_json_error( array( 'message' => $created->get_error_message() ), 400 );
+			// Never surface the raw WP_Error message — CRM drivers can leak
+			// API endpoint paths, tokens substrings, or debug data. Log the
+			// error code only, gated behind WP_DEBUG, and return a generic
+			// message to the React UI.
+			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Gated behind WP_DEBUG; intentional debug-only log.
+				error_log( 'bb_legacy_wpf_create_tag: ' . $created->get_error_code() );
+			}
+			wp_send_json_error( array( 'message' => __( 'Failed to create tag.', 'buddyboss' ) ), 400 );
 		}
 		$tag_id = (string) $created;
 	}

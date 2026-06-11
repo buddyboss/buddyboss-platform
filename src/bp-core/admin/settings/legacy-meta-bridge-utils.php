@@ -2991,4 +2991,16 @@ function bb_legacy_canonical_group_keys() {
 // etc.) and is loaded exactly once — this utils file is itself require_once'd by
 // every CPT bridge, so the modules apply everywhere the bridge runs (forums,
 // topics, replies, activity, groups, emails, and any future bridged type).
-require_once __DIR__ . '/compat/wp-fusion.php';
+//
+// Each module is gated by a detection constant defined by the host plugin on
+// load, so the compat file (and the filter registrations it makes) is paid for
+// only when its plugin is actually present.
+// WP Fusion ships two variants whose version constant differs (Lite defines
+// `WP_FUSION_VERSION`, full edition defines `WPF_VERSION`); both expose the
+// canonical `wp_fusion()` accessor, so check it last as the safety net.
+if ( defined( 'WP_FUSION_VERSION' ) || defined( 'WPF_VERSION' ) || function_exists( 'wp_fusion' ) ) {
+	require_once __DIR__ . '/compat/wp-fusion.php';
+}
+if ( defined( 'BP_AUTO_GROUP_JOIN_PLUGIN_VERSION' ) ) {
+	require_once __DIR__ . '/compat/bp-auto-group-join.php';
+}

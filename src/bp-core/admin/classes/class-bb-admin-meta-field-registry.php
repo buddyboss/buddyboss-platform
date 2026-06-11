@@ -260,22 +260,14 @@ class BB_Admin_Meta_Field_Registry {
 				'async_action'      => $args['async_action'],
 				'async_depends_on'  => $args['async_depends_on'],
 				// Visual grouping data — empty string when ungrouped. The
-				// label is sanitized through `wp_kses` here so the React
-				// side can render `<strong>`/`<em>` runs that some legacy
-				// metaboxes ship in their titles, while filtering script
-				// vectors. React then re-sanitizes via `sanitizeHtml()`
-				// before injection (defense in depth).
+				// label is rendered as a React text child (no HTML parsing),
+				// so we sanitize to plain text on the server. Any inline
+				// markup a legacy metabox embeds in its title (`<strong>` etc.)
+				// would display as literal characters in the modal, so strip
+				// it here for a clean heading.
 				'field_group'       => is_string( $args['field_group'] ) ? $args['field_group'] : '',
 				'field_group_label' => is_string( $args['field_group_label'] )
-					? wp_kses(
-						$args['field_group_label'],
-						array(
-							'strong' => array(),
-							'em'     => array(),
-							'b'      => array(),
-							'i'      => array(),
-						)
-					)
+					? sanitize_text_field( $args['field_group_label'] )
 					: '',
 			);
 
