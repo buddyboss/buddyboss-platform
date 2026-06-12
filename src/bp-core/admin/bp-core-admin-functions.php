@@ -1549,7 +1549,10 @@ function bp_core_admin_user_row_actions( $actions, $user_object ) {
 
 		// If spammed, create unspam link.
 		if ( ! bp_is_active( 'moderation' ) ) {
-			if ( bp_is_user_spammer( $user_id ) ) {
+			// `bp_is_user_spammer()` lives in bp-members-functions.php; when
+			// members is also deactivated the function is undefined. Gate the
+			// call so the row action degrades gracefully instead of fatalling.
+			if ( bp_is_active( 'members' ) && function_exists( 'bp_is_user_spammer' ) && bp_is_user_spammer( $user_id ) ) {
 				$actions['ham'] = sprintf( '<a class="bp-show-moderation-alert" href="javascript:void(0);" data-action="not-spam">%1$s</a>', esc_html__( 'Not Spam', 'buddyboss' ) );
 				// If not already spammed, create spam link.
 			} else {
@@ -1629,6 +1632,23 @@ function bp_core_admin_user_manage_spammers() {
 
 	// Process a spam/ham request.
 	if ( ! empty( $action ) && in_array( $action, array( 'suspend', 'unsuspend' ) ) ) {
+
+		// Bail BEFORE consuming the nonce when moderation is deactivated.
+		// Both branches below depend on moderation infrastructure:
+		// - `BP_Suspend_Member::suspend_user()` writes to the suspend
+		//   table and fires `bp_suspend_hide_*` actions whose listeners
+		//   are only registered when the moderation component boots.
+		// - `bp_moderation_is_user_suspended()` is loaded by the
+		//   moderation component and is undefined when it is off.
+		// Without this guard, a cached/bookmarked URL or stale redirect
+		// can re-enter the handler indefinitely (each call still issues
+		// a `wp_safe_redirect()` and carries `?updated=marked-*`, which
+		// shows a misleading "Member unsuspended." notice on the next
+		// page-load even though no state changed). Returning early lets
+		// the original screen render normally instead of looping.
+		if ( ! bp_is_active( 'moderation' ) ) {
+			return;
+		}
 
 		check_admin_referer( 'bp-suspend-user' );
 
@@ -1737,7 +1757,25 @@ add_filter( 'admin_body_class', 'bp_core_admin_body_classes' );
 function bp_delete_member_type( $post_id ) {
 	global $wpdb;
 
+	// `bp_get_member_type_post_type()` and `bp_get_member_type_key()` are
+	// loaded by the members component (bp-members-functions.php). When
+	// members is deactivated via Settings 2.0, those functions are
+	// undefined and the unguarded calls below would fatal on every post
+	// delete (this hook fires for *every* post type, not just member
+	// types).
+	if ( ! bp_is_active( 'members' ) || ! function_exists( 'bp_get_member_type_post_type' ) ) {
+		return;
+	}
+
 	$post = get_post( $post_id );
+
+	// Bail when the post no longer exists (already deleted, invalid ID,
+	// or a race between the before_delete_post hook and the underlying
+	// post row). Without this guard, `$post->post_type` would fatal on
+	// PHP 8+ with "Attempt to read property on null".
+	if ( ! $post ) {
+		return;
+	}
 
 	// Return if post is not 'bp-member-type' type.
 	if ( bp_get_member_type_post_type() !== $post->post_type ) {

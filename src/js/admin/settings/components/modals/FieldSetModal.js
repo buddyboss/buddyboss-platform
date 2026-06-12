@@ -103,7 +103,7 @@ export function FieldSetModal( { fieldSet, onClose, onSave, onDelete, setToast }
 			shouldCloseOnClickOutside={ false }
 		>
 			<div className="bb-admin-settings-modal__body">
-				<div className="bb-admin-settings-modal__row--separator">
+				<div className={(! isEditing || fieldSet.can_delete) ? 'bb-admin-settings-modal__row--separator' : ''}>
 					<TextControl
 						label={ __( 'Name', 'buddyboss' ) }
 						value={ name }

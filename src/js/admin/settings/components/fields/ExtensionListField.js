@@ -8,11 +8,27 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useState, useEffect } from '@wordpress/element';
+import { useState, useEffect, useRef } from '@wordpress/element';
 import { ToggleControl, Modal, Button, TextControl, TextareaControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { useMimeChecker } from '../../utils/mimeChecker';
 import { MimeCheckerPanel } from './MimeCheckerPanel';
+
+// Module-level caches of the latest local extension_data / options per
+// field name. They survive component unmount/remount, which is what
+// happens when the admin navigates between Document/Video/Photo panels
+// in Settings 2.0. The field's `field.extension_data` / `field.options`
+// props come from the feature definition fetched on first load and are
+// never refreshed from save responses, so without these caches a
+// newly-added extension disappears (and a deleted one resurrects) the
+// moment the user switches panels and comes back.
+//
+// @todo Pragmatic workaround. The proper fix is to refresh
+//       `field.extension_data` / `field.options` from save responses in
+//       `FeatureSettingsScreen` (today it only mirrors `settings`, not
+//       the field definition). Once that ships, both caches can be removed.
+const extensionDataCache = {};
+const optionsCache = {};
 
 /**
  * Extension List Field Component
@@ -45,26 +61,86 @@ export function ExtensionListField( { field, value, onChange, disabled, sanitize
 	var mimeChecker = useMimeChecker();
 
 	// Track local extension data so additions/removals render immediately.
+	// Initialize from the module-level cache (survives panel-switch
+	// remounts) when present, else fall back to the prop.
 	const [ localExtensionData, setLocalExtensionData ] = useState( function() {
+		if ( field.name && extensionDataCache[ field.name ] ) {
+			return extensionDataCache[ field.name ];
+		}
 		return field.extension_data || {};
 	} );
 
 	// Track local options list derived from extension data.
 	const [ localOptions, setLocalOptions ] = useState( function() {
+		if ( field.name && optionsCache[ field.name ] ) {
+			return optionsCache[ field.name ];
+		}
 		return field.options || [];
 	} );
 
-	// Sync local extension data when prop changes (e.g., after settings reload).
+	// Sync local extension data/options when the prop's CONTENT actually
+	// changes (e.g., a genuine settings reload after navigating panels).
+	//
+	// Compare JSON snapshots rather than relying on dependency-array
+	// reference checks alone, because the parent FeatureSettingsScreen
+	// re-renders synchronously after every `onChange` callback — well
+	// before the debounced auto-save round-trips back — and passes new
+	// prop references holding the *old* content. Without these guards,
+	// the post-onChange re-render would clobber a freshly-added/removed
+	// extension and the new row would disappear from the modal until a
+	// full page reload (or panel re-navigation). See DocumentExtensionsField
+	// for the matching fix on the document-extension variant.
+	const lastSyncedExtJsonRef = useRef( null );
 	useEffect( function() {
-		if ( field.extension_data ) {
-			setLocalExtensionData( field.extension_data );
+		if ( ! field.extension_data ) {
+			return;
 		}
+		var nextJson = JSON.stringify( field.extension_data );
+		if ( lastSyncedExtJsonRef.current === nextJson ) {
+			return;
+		}
+		lastSyncedExtJsonRef.current = nextJson;
+		// Don't overwrite local state when the module cache already has a
+		// newer (post-add/delete) snapshot — happens on remount after the
+		// admin switches between Document/Video/Photo panels.
+		if ( field.name && extensionDataCache[ field.name ] ) {
+			if ( JSON.stringify( extensionDataCache[ field.name ] ) !== nextJson ) {
+				return;
+			}
+		}
+		setLocalExtensionData( field.extension_data );
 	}, [ field.extension_data ] );
 
+	// Mirror every local update into the module-level caches so a later
+	// remount (after panel navigation) can restore the user's edits.
 	useEffect( function() {
-		if ( field.options ) {
-			setLocalOptions( field.options );
+		if ( field.name ) {
+			extensionDataCache[ field.name ] = localExtensionData;
 		}
+	}, [ field.name, localExtensionData ] );
+
+	useEffect( function() {
+		if ( field.name ) {
+			optionsCache[ field.name ] = localOptions;
+		}
+	}, [ field.name, localOptions ] );
+
+	const lastSyncedOptsJsonRef = useRef( null );
+	useEffect( function() {
+		if ( ! field.options ) {
+			return;
+		}
+		var nextJson = JSON.stringify( field.options );
+		if ( lastSyncedOptsJsonRef.current === nextJson ) {
+			return;
+		}
+		if ( field.name && optionsCache[ field.name ] ) {
+			if ( JSON.stringify( optionsCache[ field.name ] ) !== nextJson ) {
+				return;
+			}
+		}
+		lastSyncedOptsJsonRef.current = nextJson;
+		setLocalOptions( field.options );
 	}, [ field.options ] );
 
 	const listValue = typeof value === 'object' && value !== null ? value : {};

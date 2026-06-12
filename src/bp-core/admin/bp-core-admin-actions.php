@@ -200,11 +200,47 @@ function bb_redirect_bp_settings_before_permission_check() {
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
 	$page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
 
-	// Retired Settings 2.0 standalone admin pages whose submenu registrations
-	// were removed. Forwarded here (admin_menu @ PHP_INT_MAX) because their
-	// slugs no longer exist at the `user_can_access_admin_page()` check — any
-	// redirect on `bp_admin_init` would be too late and the request would 403.
-	// Extend this list when retiring further standalone admin screens.
+	// Retired Settings 2.0 standalone admin pages whose submenu items now
+	// register a Settings 2.0 URL as their slug (Groups / Moderation / Profile
+	// Fields). The legacy slug `?page=bp-groups` etc. is no longer registered
+	// with WP, so a direct visit would 403 at `user_can_access_admin_page()`
+	// without this early forward. Sidebar link clicks land on the new URL
+	// directly — this map only matters for direct old-URL hits
+	// (LearnDash, bookmarks, third-party links).
+	//
+	// Extend this map when retiring further standalone admin screens whose
+	// `add_submenu_page` registration has been switched to a URL slug.
+	$retired_pages = array(
+		'bp-groups'        => 'admin.php?page=bb-settings&tab=groups&panel=all_groups',
+		'bp-moderation'    => 'admin.php?page=bb-settings&tab=moderation&panel=flagged_members',
+		'bp-profile-setup' => 'admin.php?page=bb-settings&tab=members&panel=profile_fields',
+	);
+	if ( isset( $retired_pages[ $page ] ) ) {
+		$target = bp_get_admin_url( $retired_pages[ $page ] );
+
+		// Preserve any non-routing query args (deep-link flags, etc.).
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
+		$reserved = array( 'page', 'tab', 'panel' );
+		$extra_qs = array();
+		foreach ( $_GET as $key => $value ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only URL inspection.
+			if ( in_array( $key, $reserved, true ) ) {
+				continue;
+			}
+			if ( is_scalar( $value ) ) {
+				$extra_qs[ sanitize_key( $key ) ] = sanitize_text_field( wp_unslash( $value ) );
+			}
+		}
+		if ( ! empty( $extra_qs ) ) {
+			$target = add_query_arg( $extra_qs, $target );
+		}
+
+		wp_safe_redirect( $target );
+		exit;
+	}
+
+	// Other retired Settings 2.0 standalone admin pages whose submenu
+	// registrations were removed entirely (no replacement add_submenu_page
+	// call). Same 403-prevention rationale as the map above.
 	if ( 'bp-pages' === $page ) {
 		$bp_pages_target = bp_get_admin_url( 'admin.php?page=bb-settings&tab=appearance&panel=pages' );
 
@@ -640,8 +676,12 @@ function bb_validate_restricted_email_on_registration( $errors, $update, $user )
 		if ( $update ) {
 			$old_user_data = get_userdata( $user->ID );
 
-			// Allow already saved emails.
-			if ( $old_user_data->user_email === $user->user_email ) {
+			// `get_userdata()` returns false for non-existent users
+			// (e.g. when the filter fires mid-creation before the user
+			// row is committed, or for stale IDs from custom flows).
+			// Treat that as "no previously-saved email to honour" and
+			// fall through to the blacklist error.
+			if ( $old_user_data && $old_user_data->user_email === $user->user_email ) {
 				return $errors;
 			}
 		}
@@ -665,9 +705,16 @@ function bb_validate_restricted_email_on_profile_update( $user_id ) {
 		! empty( $_REQUEST['action'] ) && // phpcs:ignore
 		'update' === $_REQUEST['action'] // phpcs:ignore
 	) {
-		$email = $_REQUEST['email']; // phpcs:ignore
+		$email         = $_REQUEST['email']; // phpcs:ignore
 		$old_user_data = get_userdata( $user_id );
+
+		// `get_userdata()` returns false for non-existent users — bail
+		// rather than fatal on `false->user_email`. The downstream
+		// "prevent confirmation email" tweak is only meaningful when we
+		// know there's a prior email to compare against, so falling
+		// through is the correct behaviour for missing users too.
 		if (
+			$old_user_data &&
 			$old_user_data->user_email !== $email &&
 			! bb_is_allowed_register_email_address( $email )
 		) {
@@ -819,25 +866,50 @@ function bb_redirect_legacy_settings_to_settings_2() {
 	$action  = isset( $_GET['action'] ) ? sanitize_key( wp_unslash( $_GET['action'] ) ) : '';
 	// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
+	// Hoist component-active flags — read once at function entry rather than
+	// re-evaluating `bp_is_active( ... )` at each branch below. `bp_is_active()`
+	// is already cheap (in-memory hash lookup on `$bp->active_components`), but
+	// consolidating here makes the gating obvious to the reader and removes
+	// duplicate calls within this ~230-line function: groups 3x, members 3x,
+	// forums 2x, invites 2x. Same value within the request — no stale-read risk.
+	$groups_active  = bp_is_active( 'groups' );
+	$members_active = bp_is_active( 'members' );
+	$forums_active  = bp_is_active( 'forums' );
+	$invites_active = bp_is_active( 'invites' );
+
 	if ( $post_id > 0 && 'edit' === $action ) {
 		$edit_post_type = get_post_type( $post_id );
 
-		/**
-		 * Map of migrated CPT slugs to their Settings 2.0 redirect URLs.
-		 *
-		 * @since BuddyBoss 3.0.0
-		 *
-		 * @param array $cpt_redirects Post type slug => Settings 2.0 URL path.
-		 */
-		$cpt_redirects = array(
-			bp_get_email_post_type()             => 'admin.php?page=bb-settings&tab=emails&panel=all_emails',
-			bp_get_invite_post_type()            => 'admin.php?page=bb-settings&tab=invites&panel=invites_list',
-			bp_groups_get_group_type_post_type() => 'admin.php?page=bb-settings&tab=groups&panel=group_types',
-			bp_get_member_type_post_type()       => 'admin.php?page=bb-settings&tab=members&panel=profile_types',
-		);
+		// Map of migrated CPT slugs to their Settings 2.0 redirect URLs.
+		// Each entry is gated on its component being active *and* the
+		// CPT-getter function being defined, because the getter is loaded
+		// by the component's loader file — deactivating the component
+		// leaves the function undefined and an unguarded call here would
+		// fatal during the admin redirect.
+		$cpt_redirects = array();
+
+		// Emails CPT — part of bp-core, always available alongside Settings 2.0.
+		if ( function_exists( 'bp_get_email_post_type' ) ) {
+			$cpt_redirects[ bp_get_email_post_type() ] = 'admin.php?page=bb-settings&tab=emails&panel=all_emails';
+		}
+
+		// Invites CPT — requires the invites component.
+		if ( $invites_active && function_exists( 'bp_get_invite_post_type' ) ) {
+			$cpt_redirects[ bp_get_invite_post_type() ] = 'admin.php?page=bb-settings&tab=invites&panel=invites_list';
+		}
+
+		// Group Types CPT — requires the groups component.
+		if ( $groups_active && function_exists( 'bp_groups_get_group_type_post_type' ) ) {
+			$cpt_redirects[ bp_groups_get_group_type_post_type() ] = 'admin.php?page=bb-settings&tab=groups&panel=group_types';
+		}
+
+		// Profile (member) Types CPT — requires the members component.
+		if ( $members_active && function_exists( 'bp_get_member_type_post_type' ) ) {
+			$cpt_redirects[ bp_get_member_type_post_type() ] = 'admin.php?page=bb-settings&tab=members&panel=profile_types';
+		}
 
 		// Forum CPTs (only when forums component is active).
-		if ( bp_is_active( 'forums' ) ) {
+		if ( $forums_active ) {
 			$cpt_redirects['forum'] = 'admin.php?page=bb-settings&tab=forums&panel=all_forums';
 			$cpt_redirects['topic'] = 'admin.php?page=bb-settings&tab=forums&panel=discussions';
 			$cpt_redirects['reply'] = 'admin.php?page=bb-settings&tab=forums&panel=replies';
@@ -862,25 +934,29 @@ function bb_redirect_legacy_settings_to_settings_2() {
 	}
 
 	// Redirect legacy Group Types CPT page (edit.php?post_type=bp-group-type).
-	if ( 'bp-group-type' === $post_type ) {
+	// Only when groups component is active; otherwise the target panel is
+	// not registered and we'd redirect into a 404'd settings tab.
+	if ( 'bp-group-type' === $post_type && $groups_active ) {
 		wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=groups&panel=group_types' ) );
 		exit;
 	}
 
 	// Redirect legacy Groups admin page (admin.php?page=bp-groups).
-	if ( 'bp-groups' === $page ) {
+	if ( 'bp-groups' === $page && $groups_active ) {
 		wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=groups&panel=all_groups' ) );
 		exit;
 	}
 
 	// Redirect legacy Profile Fields admin page (admin.php?page=bp-profile-setup).
-	if ( 'bp-profile-setup' === $page ) {
+	if ( 'bp-profile-setup' === $page && bp_is_active( 'xprofile' ) ) {
 		wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=members&panel=profile_fields' ) );
 		exit;
 	}
 
 	// Redirect legacy Member Types CPT page (edit.php?post_type=bp-member-type).
-	if ( bp_get_member_type_post_type() === $post_type ) {
+	// `bp_get_member_type_post_type()` is loaded by the members component;
+	// guard the call so a deactivated members component doesn't fatal here.
+	if ( $members_active && function_exists( 'bp_get_member_type_post_type' ) && bp_get_member_type_post_type() === $post_type ) {
 		wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=members&panel=profile_types' ) );
 		exit;
 	}
@@ -892,7 +968,7 @@ function bb_redirect_legacy_settings_to_settings_2() {
 	}
 
 	// Redirect legacy Forum CPT pages to Settings 2.0.
-	if ( bp_is_active( 'forums' ) ) {
+	if ( $forums_active ) {
 		// Check taxonomy first — edit-tags.php passes both taxonomy and post_type params.
 		$taxonomy = isset( $_GET['taxonomy'] ) ? sanitize_key( wp_unslash( $_GET['taxonomy'] ) ) : '';
 		if ( 'topic-tag' === $taxonomy ) {
@@ -917,7 +993,10 @@ function bb_redirect_legacy_settings_to_settings_2() {
 	}
 
 	// Redirect legacy Email Invites CPT page (edit.php?post_type=bp-invite).
-	if ( function_exists( 'bp_get_invite_post_type' ) && bp_get_invite_post_type() === $post_type ) {
+	// Mirrors the gating used in the `?action=edit` CPT map above: deactivating
+	// the invites component removes the target Settings 2.0 panel, so without
+	// the active check we'd redirect into a 404'd settings tab.
+	if ( $invites_active && function_exists( 'bp_get_invite_post_type' ) && bp_get_invite_post_type() === $post_type ) {
 		wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bb-settings&tab=invites&panel=invites_list' ) );
 		exit;
 	}
