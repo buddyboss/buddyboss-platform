@@ -512,6 +512,9 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 
 			unset( $bp_prefix, $query, $results, $bb_platform_db_options );
 
+			// Repair Platform → which repair tools the admin has run (tool type => last-run timestamp).
+			$bb_telemetry_data['repair_platform'] = bp_get_option( 'bb_repair_platform_usage', array() );
+
 			/**
 			 * Filters the telemetry platform data.
 			 *

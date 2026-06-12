@@ -1019,12 +1019,23 @@ function bp_admin_repair_tools_wrapper_function() {
 
 	$repair_list = bp_admin_repair_list();
 
-	$status = array();
+	$status       = array();
+	$repair_ran   = false;
+	$repair_label = '';
 	foreach ( $repair_list as $repair_item ) {
 		if ( $repair_item[0] === $type && is_callable( $repair_item[2] ) ) {
-			$status = call_user_func( $repair_item[2] );
+			$status       = call_user_func( $repair_item[2] );
+			$repair_ran   = true;
+			$repair_label = isset( $repair_item[1] ) ? $repair_item[1] : $type;
 			break;
 		}
+	}
+
+	// Record the run once, outside the loop — a single option write per repair
+	// request so telemetry can report which repair tools the admin uses, with
+	// the tool's own human label so the report side needs no slug→label map.
+	if ( $repair_ran ) {
+		bb_admin_record_repair_run( $type, $repair_label );
 	}
 
 	// if ( 'bp-user-friends' === $type ) {
@@ -1548,4 +1559,42 @@ function bp_admin_repair_group_member_count() {
 		'status'  => 1,
 		'message' => sprintf( $statement, esc_html__( 'Complete!', 'buddyboss' ) ),
 	);
+}
+
+/**
+ * Record that a Repair Platform tool was run.
+ *
+ * Stores the repair tool's last-run timestamp keyed by tool type in the
+ * `bb_repair_platform_usage` option, so telemetry can report which repair tools
+ * the admin uses. Only the set of used tools and their last-run time is kept —
+ * no run counts.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $type  Repair tool type/slug (the first element of a
+ *                      `bp_admin_repair_list()` item).
+ * @param string $label Human-readable repair tool label (the second element);
+ *                      stored so the telemetry report needs no slug→label map.
+ *
+ * @return void
+ */
+function bb_admin_record_repair_run( $type, $label = '' ) {
+	$type = sanitize_key( $type );
+	if ( empty( $type ) ) {
+		return;
+	}
+
+	$usage = bp_get_option( 'bb_repair_platform_usage', array() );
+	if ( ! is_array( $usage ) ) {
+		$usage = array();
+	}
+
+	$usage[ $type ] = array(
+		'label'    => sanitize_text_field( wp_strip_all_tags( (string) $label ) ),
+		'last_run' => time(),
+	);
+
+	// autoload = false: only read during the telemetry cron, never on normal
+	// page loads, so it stays out of the autoloaded options cache.
+	update_option( 'bb_repair_platform_usage', $usage, false );
 }
