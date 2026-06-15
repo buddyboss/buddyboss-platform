@@ -1692,3 +1692,51 @@ function bp_nouveau_get_user_profile_actions() {
 
 	return apply_filters( 'bp_nouveau_get_user_profile_actions', $profile_header_btn_orders );
 }
+
+/**
+ * Provide safe fallbacks for the Video and Document localized script data when
+ * those components are not active (for example, removed from the build).
+ *
+ * The activity post form, media and messages scripts read `BP_Nouveau.video`
+ * and `BP_Nouveau.document` (exposed as the `bbRlVideo` and `bbRlDocument`
+ * globals). Those keys are only populated by the Video and Document component
+ * localizers (`bp_nouveau_video_localize_scripts()` /
+ * `bp_nouveau_document_localize_scripts()`), which never run when the component
+ * is inactive. Without these placeholders the globals are `undefined`, causing
+ * "Cannot read properties of undefined" errors in the shared scripts. The
+ * placeholders disable every feature flag so the related UI stays hidden.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param array $params Localized data passed to the BP_Nouveau script object.
+ *
+ * @return array Localized data with safe video/document fallbacks.
+ */
+function bb_nouveau_inactive_media_localize_fallback( $params = array() ) {
+	if ( ! bp_is_active( 'video' ) && ! isset( $params['video'] ) ) {
+		$params['video'] = array(
+			'profile_video'         => false,
+			'group_video'           => false,
+			'messages_video'        => false,
+			'messages_video_active' => false,
+			'video_type'            => '',
+			'max_upload_size'       => 0,
+			'maxFiles'              => 0,
+			'is_video_directory'    => 'no',
+		);
+	}
+
+	if ( ! bp_is_active( 'document' ) && ! isset( $params['document'] ) ) {
+		$params['document'] = array(
+			'profile_document'  => false,
+			'group_document'    => false,
+			'messages_document' => false,
+			'document_type'     => '',
+			'max_upload_size'   => 0,
+			'maxFiles'          => 0,
+		);
+	}
+
+	return $params;
+}
+add_filter( 'bp_core_get_js_strings', 'bb_nouveau_inactive_media_localize_fallback', 99, 1 );

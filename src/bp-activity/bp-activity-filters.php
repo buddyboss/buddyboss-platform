@@ -1808,7 +1808,7 @@ function bp_activity_has_media_activity_filter( $has_activities, $activities ) {
 					$attachment_id = BP_Media::get_activity_attachment_id( $activity->id );
 					if ( ! empty( $attachment_id ) ) {
 						$parent_activity_id = get_post_meta( $attachment_id, 'bp_media_parent_activity_id', true );
-					} else {
+					} elseif ( bp_is_active( 'video' ) ) {
 						$attachment_id = BP_Video::get_activity_attachment_id( $activity->id );
 						if ( ! empty( $attachment_id ) ) {
 							$parent_activity_id = get_post_meta( $attachment_id, 'bp_video_parent_activity_id', true );

@@ -19,7 +19,7 @@ $args                = array(
 $group_members   = groups_get_group_members( $args );
 $group_id        = 0;
 $is_media_active = bp_is_active( 'media' );
-$extensions      = $is_media_active ? bp_document_get_allowed_extension() : false;
+$extensions      = ( $is_media_active && bp_is_active( 'document' ) ) ? bp_document_get_allowed_extension() : false;
 if ( bp_is_active( 'groups' ) && bp_is_group_single() ) {
 	$group_id = bp_get_current_group_id();
 }
@@ -94,7 +94,7 @@ if ( bp_is_active( 'groups' ) && bp_is_group_single() ) {
 							</div>
 							<?php
 						endif;
-						if ( $is_media_active && bp_is_group_video_support_enabled() && ( bb_video_user_can_upload( $bp_loggedin_user_id, $group_id ) || bp_is_activity_directory() ) ) :
+						if ( $is_media_active && bp_is_active( 'video' ) && bp_is_group_video_support_enabled() && ( bb_video_user_can_upload( $bp_loggedin_user_id, $group_id ) || bp_is_activity_directory() ) ) :
 							?>
 							<div class="dropzone closed video-dropzone" id="bp-group-messages-post-video-uploader"></div>
 							<input name="bp_group_messages_video" id="bp_group_messages_video" type="hidden" value=""/>

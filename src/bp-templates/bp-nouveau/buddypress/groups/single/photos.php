@@ -41,7 +41,7 @@ if ( bb_enable_content_counts() && 'photos' === bp_current_action() ) {
 <div class="bb-media-container group-media">
 	<?php
 	bp_get_template_part( 'media/theatre' );
-	if ( bp_is_profile_video_support_enabled() ) {
+	if ( bp_is_active( 'video' ) && bp_is_profile_video_support_enabled() ) {
 		bp_get_template_part( 'video/theatre' );
 	}
 
