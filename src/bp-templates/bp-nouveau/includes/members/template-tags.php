@@ -933,9 +933,9 @@ function bp_nouveau_member_template_part() {
 			$template = 'invites';
 		} elseif ( bp_is_user_media() ) {
 			$template = 'media';
-		} elseif ( bp_is_active( 'document' ) && bp_is_user_document() ) {
+		} elseif ( bp_is_user_document() ) {
 			$template = 'document';
-		} elseif ( bp_is_active( 'video' ) && bp_is_user_video() ) {
+		} elseif ( bp_is_user_video() ) {
 			$template = 'video';
 		}
 

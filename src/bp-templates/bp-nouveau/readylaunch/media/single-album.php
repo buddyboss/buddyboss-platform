@@ -202,9 +202,7 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 				<?php
 				if ( ( $bp_is_my_profile || $bp_is_user_media ) || ( $bp_is_group ) ) :
 					bp_get_template_part( 'media/uploader' );
-					if ( bp_is_active( 'video' ) ) {
-						bp_get_template_part( 'video/uploader' );
-					}
+					bp_get_template_part( 'video/uploader' );
 					bp_get_template_part( 'media/edit-album' );
 				endif;
 				?>

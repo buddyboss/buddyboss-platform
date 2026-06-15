@@ -2922,7 +2922,7 @@ class BP_Email_Tokens {
 				}
 			}
 
-			if ( ! empty( $video_ids ) && bp_is_active( 'video' ) ) {
+			if ( ! empty( $video_ids ) ) {
 				$video_ids       = explode( ',', $video_ids );
 				$total_video_ids = count( $video_ids );
 				$video_ids       = implode( ',', array_slice( $video_ids, 0, 5 ) );
@@ -2984,7 +2984,7 @@ class BP_Email_Tokens {
 				}
 			}
 
-			if ( ! empty( $document_ids ) && bp_is_active( 'document' ) ) {
+			if ( ! empty( $document_ids ) ) {
 				$document_ids       = explode( ',', $document_ids );
 				$total_document_ids = count( $document_ids );
 				$document_ids       = implode( ',', array_slice( $document_ids, 0, 5 ) );

@@ -169,7 +169,7 @@ function bp_document_get_preview_image_url( $document_id, $extension, $preview_a
 
 	_deprecated_function( __FUNCTION__, '1.7.0', 'bp_document_get_preview_url' );
 
-	$attachment_url = function_exists( 'bp_document_get_preview_url' ) ? bp_document_get_preview_url( $document_id, $preview_attachment_id ) : '';
+	$attachment_url = bp_document_get_preview_url( $document_id, $preview_attachment_id );
 
 	return apply_filters( 'bp_document_get_preview_image_url', $attachment_url, $document_id, $extension );
 }

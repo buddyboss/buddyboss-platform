@@ -309,7 +309,7 @@ function bp_media_allowed_upload_media_size() {
  */
 function bp_media_allowed_upload_document_size() {
 	$max_size = bp_core_upload_max_size();
-	$default  = function_exists( 'bp_document_format_size_units' ) ? bp_document_format_size_units( $max_size, false, 'MB' ) : bp_media_format_size_units( $max_size, false, 'MB' );
+	$default  = bp_document_format_size_units( $max_size, false, 'MB' );
 	return (int) apply_filters( 'bp_media_allowed_upload_document_size', (int) get_option( 'bp_document_allowed_size', $default ) );
 }
 

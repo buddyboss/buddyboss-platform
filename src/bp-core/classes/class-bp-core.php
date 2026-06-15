@@ -150,36 +150,6 @@ class BP_Core extends BP_Component {
 			$bp->active_components = apply_filters( 'bp_active_components', $bp->active_components );
 		}
 
-		/*
-		 * Drop active components whose directories are not present in this build
-		 * (e.g. premium-only components stripped from the free package), so that
-		 * bp_is_active() reflects what is actually loadable. The stored option is
-		 * scrubbed too, so code reading `bp-active-components` directly (performance
-		 * must-use integrations, feature registry migration fallback) stays in sync.
-		 */
-		$unavailable_components = array();
-		foreach ( array_keys( (array) $bp->active_components ) as $component ) {
-			if (
-				in_array( $component, $bp->optional_components, true ) &&
-				! file_exists( $bp->plugin_dir . 'bp-' . $component . '/bp-' . $component . '-loader.php' )
-			) {
-				$unavailable_components[] = $component;
-				unset( $bp->active_components[ $component ] );
-			}
-		}
-
-		if ( ! empty( $unavailable_components ) ) {
-			$bp->deactivated_components = array_unique( array_merge( (array) $bp->deactivated_components, $unavailable_components ) );
-
-			// Scrub only the unavailable keys from the stored option, leaving
-			// runtime-filtered values out of the database write.
-			$stored_components   = (array) bp_get_option( 'bp-active-components', array() );
-			$scrubbed_components = array_diff_key( $stored_components, array_flip( $unavailable_components ) );
-			if ( $scrubbed_components !== $stored_components ) {
-				bp_update_option( 'bp-active-components', $scrubbed_components );
-			}
-		}
-
 		// Loop through optional components.
 		foreach ( $bp->optional_components as $component ) {
 			if ( bp_is_active( $component ) && file_exists( $bp->plugin_dir . 'bp-' . $component . '/bp-' . $component . '-loader.php' ) ) {

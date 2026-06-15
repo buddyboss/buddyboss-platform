@@ -1248,7 +1248,7 @@ function bp_nouveau_activity_privacy() {
 				}
 			}
 
-			if ( $document_activity && bp_is_active( 'document' ) ) {
+			if ( $document_activity ) {
 				$document_id = BP_Document::get_activity_document_id( bp_get_activity_id() );
 				$document    = new BP_Document( $document_id );
 				if ( ! empty( $document ) ) {
@@ -1268,7 +1268,7 @@ function bp_nouveau_activity_privacy() {
 				}
 			}
 
-			if ( $video_activity && bp_is_active( 'video' ) ) {
+			if ( $video_activity ) {
 				$video_id = BP_Video::get_activity_video_id( bp_get_activity_id() );
 				$video    = new BP_Video( $video_id );
 
@@ -1315,58 +1315,54 @@ function bp_nouveau_activity_privacy() {
 				}
 			}
 
-			if ( bp_is_active( 'video' ) ) {
-				$activity_video_album_id = $activity_metas['bp_video_album_activity'][0] ?? '';
-				if ( ! empty( $activity_video_album_id ) ) {
-					$album_id       = $activity_video_album_id;
-					$album          = new BP_Video_Album( $album_id );
-					$privacy        = $album->privacy;
-					$album_url      = trailingslashit( bp_core_get_user_domain( $album->user_id ) . bp_get_media_slug() . '/albums/' . $album_id );
-					$media_activity = true;
-				} else {
-					$video_ids = $activity_metas['bp_video_ids'][0] ?? '';
-					if ( ! empty( $video_ids ) ) {
-						$video_ids = explode( ',', $video_ids );
-						$video_id  = ! empty( $video_ids ) ? $video_ids[0] : false;
-						$video     = new BP_Video( $video_id );
+			$activity_video_album_id = $activity_metas['bp_video_album_activity'][0] ?? '';
+			if ( ! empty( $activity_video_album_id ) ) {
+				$album_id       = $activity_video_album_id;
+				$album          = new BP_Video_Album( $album_id );
+				$privacy        = $album->privacy;
+				$album_url      = trailingslashit( bp_core_get_user_domain( $album->user_id ) . bp_get_media_slug() . '/albums/' . $album_id );
+				$media_activity = true;
+			} else {
+				$video_ids = $activity_metas['bp_video_ids'][0] ?? '';
+				if ( ! empty( $video_ids ) ) {
+					$video_ids = explode( ',', $video_ids );
+					$video_id  = ! empty( $video_ids ) ? $video_ids[0] : false;
+					$video     = new BP_Video( $video_id );
 
-						if ( ! empty( $video->album_id ) ) {
-							$album_id       = $video->album_id;
-							$album          = new BP_Video_Album( $album_id );
-							$privacy        = $album->privacy;
-							$album_url      = trailingslashit( bp_core_get_user_domain( $album->user_id ) . bp_get_media_slug() . '/albums/' . $album_id );
-							$media_activity = true;
-							bp_activity_update_meta( bp_get_activity_id(), 'bp_video_album_activity', $album_id );
-						}
+					if ( ! empty( $video->album_id ) ) {
+						$album_id       = $video->album_id;
+						$album          = new BP_Video_Album( $album_id );
+						$privacy        = $album->privacy;
+						$album_url      = trailingslashit( bp_core_get_user_domain( $album->user_id ) . bp_get_media_slug() . '/albums/' . $album_id );
+						$media_activity = true;
+						bp_activity_update_meta( bp_get_activity_id(), 'bp_video_album_activity', $album_id );
 					}
 				}
 			}
 
-			if ( bp_is_active( 'document' ) ) {
-				$activity_folder_id = $activity_metas['bp_document_folder_activity'][0] ?? '';
-				if ( ! empty( $activity_folder_id ) ) {
-					$folder_id         = $activity_folder_id;
-					$folder_id         = bp_document_get_root_parent_id( $folder_id );
-					$folder            = new BP_Document_Folder( $folder_id );
-					$privacy           = $folder->privacy;
-					$folder_url        = trailingslashit( bp_core_get_user_domain( $folder->user_id ) . bp_get_document_slug() . '/folders/' . $folder_id );
-					$document_activity = true;
-				} else {
-					$document_ids = $activity_metas['bp_document_ids'][0] ?? '';
-					if ( ! empty( $document_ids ) ) {
-						$document_ids = explode( ',', $document_ids );
-						$document_id  = ! empty( $document_ids ) ? $document_ids[0] : false;
-						$document     = new BP_Document( $document_id );
+			$activity_folder_id = $activity_metas['bp_document_folder_activity'][0] ?? '';
+			if ( ! empty( $activity_folder_id ) ) {
+				$folder_id         = $activity_folder_id;
+				$folder_id         = bp_document_get_root_parent_id( $folder_id );
+				$folder            = new BP_Document_Folder( $folder_id );
+				$privacy           = $folder->privacy;
+				$folder_url        = trailingslashit( bp_core_get_user_domain( $folder->user_id ) . bp_get_document_slug() . '/folders/' . $folder_id );
+				$document_activity = true;
+			} else {
+				$document_ids = $activity_metas['bp_document_ids'][0] ?? '';
+				if ( ! empty( $document_ids ) ) {
+					$document_ids = explode( ',', $document_ids );
+					$document_id  = ! empty( $document_ids ) ? $document_ids[0] : false;
+					$document     = new BP_Document( $document_id );
 
-						if ( ! empty( $document->folder_id ) ) {
-							$folder_id         = $document->folder_id;
-							$folder_id         = bp_document_get_root_parent_id( $folder_id );
-							$folder            = new BP_Document_Folder( $folder_id );
-							$privacy           = $folder->privacy;
-							$folder_url        = trailingslashit( bp_core_get_user_domain( $folder->user_id ) . bp_get_document_slug() . '/folders/' . $folder_id );
-							$document_activity = true;
-							bp_activity_update_meta( bp_get_activity_id(), 'bp_document_folder_activity', $folder_id );
-						}
+					if ( ! empty( $document->folder_id ) ) {
+						$folder_id         = $document->folder_id;
+						$folder_id         = bp_document_get_root_parent_id( $folder_id );
+						$folder            = new BP_Document_Folder( $folder_id );
+						$privacy           = $folder->privacy;
+						$folder_url        = trailingslashit( bp_core_get_user_domain( $folder->user_id ) . bp_get_document_slug() . '/folders/' . $folder_id );
+						$document_activity = true;
+						bp_activity_update_meta( bp_get_activity_id(), 'bp_document_folder_activity', $folder_id );
 					}
 				}
 			}
@@ -1827,7 +1823,7 @@ function bb_nouveau_get_activity_entry_bubble_buttons( $args ) {
 		);
 	}
 
-	if ( bp_is_active( 'video' ) && $activity_type !== 'activity_comment' && ! empty( $_REQUEST['action'] ) && ( 'video_get_activity' === $_REQUEST['action'] ) ) {
+	if ( $activity_type !== 'activity_comment' && ! empty( $_REQUEST['action'] ) && ( 'video_get_activity' === $_REQUEST['action'] ) ) {
 		$video_id       = BP_Video::get_activity_video_id( $activity_id );
 		$video_group_id = bp_get_video_group_id();
 		if ( ! empty( $video_id ) ) {

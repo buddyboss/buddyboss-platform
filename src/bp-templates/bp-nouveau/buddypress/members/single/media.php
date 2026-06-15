@@ -67,7 +67,7 @@ if ( bp_is_user() && bb_enable_content_counts() ) {
 <div class="bb-media-container member-media">
 	<?php
 	bp_get_template_part( 'media/theatre' );
-	if ( bp_is_active( 'video' ) && bp_is_profile_video_support_enabled() ) {
+	if ( bp_is_profile_video_support_enabled() ) {
 		bp_get_template_part( 'video/theatre' );
 		bp_get_template_part( 'video/add-video-thumbnail' );
 	}

@@ -2423,7 +2423,7 @@ function bb_get_message_response_object( $message ) {
 		}
 	}
 
-	if ( bp_is_active( 'document' ) && $has_message_document_access ) {
+	if ( bp_is_active( 'media' ) && $has_message_document_access ) {
 		$document_ids = bp_messages_get_meta( $message_id, 'bp_document_ids', true );
 
 		if ( ! empty( $document_ids ) && bp_has_document(

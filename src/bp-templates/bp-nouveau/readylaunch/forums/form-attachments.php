@@ -26,8 +26,8 @@ if ( bbp_is_single_forum() ) {
 	$topic_id = bbp_get_reply_topic_id( bbp_get_reply_id() );
 	$forum_id = bbp_get_topic_forum_id( $topic_id );
 }
-$extensions       = bp_is_active( 'document' ) ? bp_document_get_allowed_extension() : false;
-$video_extensions = bp_is_active( 'video' ) ? bp_video_get_allowed_extension() : false;
+$extensions       = bp_is_active( 'media' ) ? bp_document_get_allowed_extension() : false;
+$video_extensions = bp_is_active( 'media' ) ? bp_video_get_allowed_extension() : false;
 ?>
 
 <?php do_action( 'bbp_theme_before_forums_form_attachments' ); ?>

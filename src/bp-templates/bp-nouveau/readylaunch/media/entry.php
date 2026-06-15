@@ -31,9 +31,6 @@ $media_parent_activity_id = bp_get_media_parent_activity_id();
 $bp_media_privacy         = bp_get_media_privacy();
 $bp_media_album_id        = bp_get_media_album_id();
 
-if ( 'video' === $media_template->media->type && ! bp_is_active( 'video' ) ) {
-	return;
-}
 
 if ( 'video' === $media_template->media->type ) {
 	$download_url  = bp_video_download_link( $attachment_id, $bp_media_id );
