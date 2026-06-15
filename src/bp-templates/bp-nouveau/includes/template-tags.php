@@ -1297,7 +1297,7 @@ function bp_nouveau_nav_has_count() {
 					} elseif ( 'groups' === $nav_item->slug ) {
 						$count = bp_media_get_user_total_group_media_count();
 					}
-				} elseif ( bp_is_video_directory() ) {
+				} elseif ( bp_is_active( 'video' ) && bp_is_video_directory() ) {
 					if ( 'all' === $nav_item->slug ) {
 						$count = bp_get_total_video_count();
 					} elseif ( 'personal' === $nav_item->slug ) {
@@ -1312,7 +1312,7 @@ function bp_nouveau_nav_has_count() {
 			$count = 0 !== (int) groups_get_current_group()->total_member_count;
 		} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_media_support_enabled() && 'photos' === $nav_item->slug ) {
 			$count = 0 !== (int) bp_media_get_total_group_media_count();
-		} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_video_support_enabled() && 'videos' === $nav_item->slug ) {
+		} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'video' ) && bp_is_group_video_support_enabled() && 'videos' === $nav_item->slug ) {
 			$count = 0 !== (int) bp_video_get_total_group_video_count();
 		} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_albums_support_enabled() && 'albums' === $nav_item->slug ) {
 			$count = 0 !== (int) bp_media_get_total_group_album_count();
@@ -1387,7 +1387,7 @@ function bp_nouveau_get_nav_count() {
 					} elseif ( 'groups' === $nav_item->slug ) {
 						$count = bp_media_get_user_total_group_media_count();
 					}
-				} elseif ( bp_is_video_directory() ) {
+				} elseif ( bp_is_active( 'video' ) && bp_is_video_directory() ) {
 					if ( 'all' === $nav_item->slug ) {
 						$count = bp_get_total_video_count();
 					} elseif ( 'personal' === $nav_item->slug ) {
