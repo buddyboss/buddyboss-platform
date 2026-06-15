@@ -3,7 +3,7 @@
  * Products view template for displaying available add-ons.
  *
  * @package BuddyBoss\Core\Admin\Mothership
- * @since 1.0.0
+ * @since BuddyBoss 2.14.0
  */
 
 // Exit if accessed directly.
@@ -13,6 +13,7 @@ defined( 'ABSPATH' ) || exit;
 <div id="mosh-admin-addons" class="wrap">
 	<h3>
 		<form method="post" action="">
+			<?php wp_nonce_field( 'bb_mosh_refresh_addons', 'bb_mosh_refresh_nonce' ); ?>
 			<input type="submit"
 				class="button button-secondary"
 				name="submit-button-mosh-refresh-addon"

@@ -17,9 +17,9 @@ use BuddyBossPlatform\GroundLevel\Container\Container;
 use BuddyBossPlatform\GroundLevel\Mothership\Api\Request\LicenseActivations;
 use BuddyBossPlatform\GroundLevel\Mothership\Api\Response;
 use BuddyBossPlatform\GroundLevel\Mothership\Credentials;
-use BuddyBossPlatform\GroundLevel\Mothership\Service as MothershipService;
+use BuddyBossPlatform\GroundLevel\Mothership\MothershipServiceProvider;
 use BuddyBossPlatform\GroundLevel\Mothership\AbstractPluginConnection;
-use BuddyBossPlatform\GroundLevel\InProductNotifications\Service as IPNService;
+use BuddyBossPlatform\GroundLevel\InProductNotifications\IPNServiceProvider;
 
 /**
  * Main loader class for BuddyBoss Mothership functionality.
@@ -79,71 +79,75 @@ class BB_Mothership_Loader {
 		// Create the plugin connector.
 		$this->pluginConnector = new \BuddyBoss\Core\Admin\Mothership\BB_Plugin_Connector(); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 
-		// Initialize the license manager to capture API headers.
-		BB_License_Manager::init();
+		// Register the BuddyBoss plugin connection so that every GroundLevel service
+		// (Credentials, View, AdminNotices, LicenseManager, ...) can resolve it.
+		$plugin_connector = $this->pluginConnector; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+		$this->container->singleton(
+			AbstractPluginConnection::class,
+			static function () use ( $plugin_connector ) {
+				return $plugin_connector;
+			}
+		);
 
-		// Initialize the mothership service.
-		$this->init_mothership_service();
-
-		$this->init_ipn_service();
+		// Register and boot the Mothership + In-Product Notifications service providers.
+		$this->register_services();
 
 		// Set up hooks.
 		$this->setup_hooks();
 	}
 
 	/**
-	 * Initialize the mothership service.
+	 * Register and boot the GroundLevel service providers.
+	 *
+	 * GroundLevel 7.3.1 replaced the old static-container `Service` classes with the
+	 * dependency-injection `ServiceProvider` pattern. Booting the providers wires the
+	 * vendor hooks (twice-daily license-status cron, `auto_update_plugin`, add-on AJAX,
+	 * plugin/theme update injection, and the In-Product Notifications UI). None of these
+	 * duplicate BuddyBoss's own hooks — BuddyBoss wires its own license controller and
+	 * admin pages separately in {@see self::setup_hooks()}.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 */
-	private function init_mothership_service(): void {
-		// Create the mothership service.
-		$mothership_service = new MothershipService( $this->container, $this->pluginConnector ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-
-		// Load the mothership service dependencies.
-		$mothership_service->load( $this->container );
-
-		// Register the mothership service in the container.
-		$this->container->addService(
-			MothershipService::class,
-			function () use ( $mothership_service ) {
-				return $mothership_service;
-			},
-			true // Singleton.
-		);
-	}
-
-	/**
-	 * Initialize the In-Product Notifications service.
-	 */
-	private function init_ipn_service(): void {
+	private function register_services(): void {
 		$plugin_id = $this->pluginConnector->getDynamicPluginId(); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 
-		// Set IPN Service parameters.
-		$this->container->addParameter( IPNService::PRODUCT_SLUG, $plugin_id );
-		$this->container->addParameter( IPNService::PREFIX, sanitize_title( $plugin_id ) );
-		$this->container->addParameter( IPNService::MENU_SLUG, 'buddyboss-platform' );
-
-		$this->container->addParameter(
-			IPNService::RENDER_HOOK,
-			'bb_admin_header_actions'
-		);
-		$this->container->addParameter(
-			IPNService::THEME,
+		// IPN parameter overrides MUST be set before provider() — ServiceProvider::register()
+		// only registers a default when the container does not already have the key.
+		$this->container->parameters(
 			array(
-				'primaryColor'       => '#2f2f2f',
-				'primaryColorDarker' => '#0a4b78',
-				'inboxBtnIcon'       => 'bell',
-				'inboxBtnVariant'    => 'icon',
-				'inboxBtnSize'       => '1.8rem',
+				IPNServiceProvider::PARAM_PRODUCT_SLUG => $plugin_id,
+				IPNServiceProvider::PARAM_PREFIX       => sanitize_title( $plugin_id ),
+				IPNServiceProvider::PARAM_MENU_SLUG    => 'buddyboss-platform',
+				IPNServiceProvider::PARAM_RENDER_HOOK  => 'bb_admin_header_actions',
+				IPNServiceProvider::PARAM_THEME        => array(
+					'primaryColor'       => '#2f2f2f',
+					'primaryColorDarker' => '#0a4b78',
+					'inboxBtnIcon'       => 'bell',
+					'inboxBtnVariant'    => 'icon',
+					'inboxBtnSize'       => '1.8rem',
+				),
 			)
 		);
 
-		$this->container->addService(
-			IPNService::class,
-			static function ( Container $container ): IPNService {
-				return new IPNService( $container );
-			},
-			true
-		);
+		try {
+			// MothershipServiceProvider is auto-registered as an IPN dependency; register
+			// it explicitly so intent and ordering are obvious.
+			$this->container->provider( MothershipServiceProvider::class );
+			$this->container->provider( IPNServiceProvider::class );
+
+			// Boot registers the vendor WordPress hooks.
+			$this->container->boot();
+		} catch ( \Throwable $e ) {
+			// A resolution/boot failure must never white-screen wp-admin. Log and degrade
+			// gracefully — license activation falls back to BuddyBoss's own controller.
+			// bb_error_log() may not be loaded this early in the boot sequence, so guard it.
+			$message = 'BuddyBoss Mothership bootstrap failed: ' . $e->getMessage();
+			if ( function_exists( 'bb_error_log' ) ) {
+				bb_error_log( $message, true );
+			} else {
+				error_log( $message ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			}
+		}
 	}
 
 	/**
@@ -157,9 +161,6 @@ class BB_Mothership_Loader {
 			// Register license controller using BuddyBoss custom manager.
 			add_action( 'admin_init', array( \BuddyBoss\Core\Admin\Mothership\BB_License_Manager::class, 'controller' ), 20 );
 
-			// Register addons functionality using BuddyBoss custom manager.
-			BB_Addons_Manager::loadHooks();
-
 			// Register AJAX handlers.
 			add_action( 'wp_ajax_bb_get_free_license', array( 'BuddyBoss\Core\Admin\Mothership\BB_License_Manager', 'ajax_get_free_license' ) );
 			add_action( 'wp_ajax_bb_reset_license_settings', array( 'BuddyBoss\Core\Admin\Mothership\BB_License_Manager', 'ajax_reset_license_settings' ) );
@@ -167,7 +168,12 @@ class BB_Mothership_Loader {
 
 		$plugin_id = $this->pluginConnector->getDynamicPluginId(); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 
-		// Handle license status changes.
+		// Handle license status changes. GroundLevel 7.3.1's periodic license check fires
+		// `{plugin_id}_active_license_invalidated` / `_active_license_expired` when the
+		// license is revoked or expired (the old `_license_status_changed` event no longer
+		// fires, but the hook is kept for backward compatibility with custom callers).
+		add_action( $plugin_id . '_active_license_invalidated', array( $this, 'handle_license_revoked' ) );
+		add_action( $plugin_id . '_active_license_expired', array( $this, 'handle_license_revoked' ) );
 		add_action( $plugin_id . '_license_status_changed', array( $this, 'handle_license_status_change' ), 10, 2 );
 
 		// For local development - disable SSL verification if needed.
@@ -193,26 +199,34 @@ class BB_Mothership_Loader {
 	}
 
 	/**
+	 * Handle a license revocation/expiry reported by GroundLevel's periodic check.
+	 *
+	 * Bridges the GroundLevel 7.3.1 `{plugin_id}_active_license_invalidated` /
+	 * `_active_license_expired` actions to BuddyBoss's existing deactivation handler.
+	 * Accepts no arguments so it is safe regardless of how many the action passes.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function handle_license_revoked(): void {
+		$this->handle_license_status_change( false, null );
+	}
+
+	/**
 	 * Handle license status changes.
 	 *
 	 * @param bool  $is_active License active status.
 	 * @param mixed $response API response.
 	 */
 	public function handle_license_status_change( bool $is_active, $response ): void {
-		$plugin_id = $this->pluginConnector->getDynamicPluginId(); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-
 		if ( ! $is_active ) {
-			// License is no longer active.
+			// License is no longer active. updateLicenseActivationStatus() also clears the
+			// add-ons cache via the plugin connector, so no explicit cache purge is needed here.
 			$this->pluginConnector->updateLicenseActivationStatus( false ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-
-			// Clear cached data.
-			delete_transient( $plugin_id . '-mosh-products' );
-			delete_transient( $plugin_id . '-mosh-addons-update-check' );
 
 			// Log the deactivation (sanitized - no sensitive data).
 			$log_message = 'BuddyBoss license deactivated';
-			if ( is_object( $response ) && method_exists( $response, '__get' ) ) {
-				$error_code = $response->__get( 'errorCode' );
+			if ( $response instanceof Response ) {
+				$error_code = $response->statusCode; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 				if ( $error_code ) {
 					$log_message .= sprintf( ' - Error code: %d', $error_code );
 				}
@@ -234,21 +248,17 @@ class BB_Mothership_Loader {
 	}
 
 	/**
-	 * Get the container (backward compatibility wrapper).
+	 * Get the container (backward-compatibility wrapper).
+	 *
+	 * Retained for any external/third-party code that may resolve services via the
+	 * camelCase accessor. New code should call {@see self::get_container()}.
 	 *
 	 * @deprecated Use get_container() instead.
+	 *
 	 * @return Container The container instance.
 	 */
-	public function getContainer(): Container {
+	public function getContainer(): Container { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
 		return $this->get_container();
-	}
-
-	/**
-	 * Refresh the plugin connector with updated plugin ID.
-	 * This should be called after the plugin ID changes.
-	 */
-	public function refresh_plugin_connector(): void {
-		// The plugin connector will automatically use the updated plugin ID from the database option on the next request.
 	}
 
 	/**
@@ -306,8 +316,11 @@ class BB_Mothership_Loader {
 			return;
 		}
 
-		$instance         = new self();
-		$plugin_connector = $instance->get_container()->get( AbstractPluginConnection::class );
+		// Reuse the already-booted singleton container — a fresh `new self()` would
+		// re-register and re-boot the service providers, duplicating their hooks.
+		$instance         = self::instance();
+		$container        = $instance->get_container();
+		$plugin_connector = $container->get( AbstractPluginConnection::class );
 		$plugin_id        = $plugin_connector->getDynamicPluginId();
 
 		$current_status = $plugin_connector->getLicenseActivationStatus();
@@ -336,7 +349,7 @@ class BB_Mothership_Loader {
 
 			if ( PLATFORM_EDITION !== $plugin_id ) {
 				$plugin_connector->setDynamicPluginId( $plugin_id );
-				$domain = Credentials::getActivationDomain();
+				$domain = $container->get( Credentials::class )->getDomain();
 
 				// Check if we're being rate limited before attempting migration activation.
 				if ( self::is_rate_limited_for_migration( $network_activated ) ) {
@@ -347,7 +360,7 @@ class BB_Mothership_Loader {
 				$error_html = esc_html__( 'Migrate License activation failed: %s', 'buddyboss' );
 
 				try {
-					$response = LicenseActivations::activate( $plugin_id, $license_data['license_key'], $domain );
+					$response = $container->get( LicenseActivations::class )->activate( $plugin_id, $license_data['license_key'], $domain );
 				} catch ( \Exception $e ) {
 					bb_error_log( sprintf( $error_html, $e->getMessage() ), true );
 					// Clear the dynamic plugin ID on exception to prevent orphaned state.
@@ -357,13 +370,10 @@ class BB_Mothership_Loader {
 
 				if ( $response instanceof Response && ! $response->isError() ) {
 					try {
-						Credentials::storeLicenseKey( $license_data['license_key'] );
+						$container->get( Credentials::class )->setLicenseKey( $license_data['license_key'] );
+						// updateLicenseActivationStatus() clears the add-ons cache via the connector.
 						$plugin_connector->updateLicenseActivationStatus( true );
 
-						// Clear add-ons cache to force refresh.
-						$plugin_id = $plugin_connector->pluginId; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-						delete_transient( $plugin_id . '-mosh-products' );
-						delete_transient( $plugin_id . '-mosh-addons-update-check' );
 						if ( $network_activated ) {
 							update_site_option( 'bb_mothership_licenses_migrated', true );
 						} else {
@@ -375,8 +385,8 @@ class BB_Mothership_Loader {
 					}
 				} else {
 					// Migration failed - clear the dynamic plugin ID to prevent orphaned state.
-					$error_code    = $response->__get( 'errorCode' );
-					$error_message = $response->__get( 'error' );
+					$error_code    = $response->statusCode; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+					$error_message = $response->getErrorMessage();
 
 					bb_error_log( sprintf( 'BuddyBoss License Migration Failed (Code: %d): %s', $error_code, $error_message ), true );
 

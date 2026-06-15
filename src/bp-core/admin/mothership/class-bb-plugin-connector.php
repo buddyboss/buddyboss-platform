@@ -20,6 +20,16 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	public function __construct() {
 		$this->pluginId     = $this->getDynamicPluginId();
 		$this->pluginPrefix = 'buddyboss';
+
+		// Plugin basename for GroundLevel update integration (per the package README's
+		// connection setup). This is inert until the main plugin file declares an
+		// `Update URI: <pluginId>` header — adding that header would opt BuddyBoss Platform
+		// into Mothership-driven plugin updates, which is a separate product decision.
+		// productId is intentionally left empty: GroundLevel's UpdateService falls back to
+		// the plugin slug (the dynamic plugin ID), which is exactly what BuddyBoss activates against.
+		if ( function_exists( 'buddypress' ) && isset( buddypress()->basename ) ) {
+			$this->pluginFile = buddypress()->basename;
+		}
 	}
 
 	/**
@@ -103,13 +113,21 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	}
 
 	/**
-	 * Updates the license activation status option.
+	 * Sets the license activation status option.
+	 *
+	 * Overrides {@see AbstractPluginConnection::setLicenseActivationStatus()} so the
+	 * BuddyBoss option name (`{pluginId}_license_activation_status`) is preserved —
+	 * the GroundLevel 7.3.1 base defaults to `{pluginId}_license_active`, which would
+	 * orphan every existing activation. Also clears BuddyBoss license/add-on caches.
+	 *
+	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @param boolean $status The status to update.
+	 * @return boolean Whether the option was updated successfully.
 	 */
-	public function updateLicenseActivationStatus( bool $status ): void {
+	public function setLicenseActivationStatus( bool $status ): bool {
 		$pluginId = $this->getCurrentPluginId();
-		update_option( $pluginId . '_license_activation_status', $status );
+		$updated  = update_option( $pluginId . '_license_activation_status', $status );
 
 		// Clear license details cache when activation status changes.
 		if ( class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_License_Manager' ) ) {
@@ -120,27 +138,77 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 		if ( class_exists( '\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager' ) ) {
 			\BuddyBoss\Core\Admin\Mothership\BB_Addons_Manager::clearProductAddOnsCache();
 		}
+
+		return (bool) $updated;
+	}
+
+	/**
+	 * Updates the license activation status option.
+	 *
+	 * Backward-compatible alias for {@see self::setLicenseActivationStatus()} retained
+	 * for existing BuddyBoss callers that expect a void return.
+	 *
+	 * @param boolean $status The status to update.
+	 */
+	public function updateLicenseActivationStatus( bool $status ): void {
+		$this->setLicenseActivationStatus( $status );
+	}
+
+	/**
+	 * Resolves the license key from storage.
+	 *
+	 * Overrides {@see AbstractPluginConnection::resolveLicenseKey()} so the
+	 * GroundLevel 7.3.1 {@see Credentials} reads the dynamic-plugin-id-scoped option.
+	 * The option name (`{pluginId}_license_key`) matches the base default; the
+	 * override exists only to honor the BuddyBoss dynamic plugin ID.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @return string The license key.
+	 */
+	public function resolveLicenseKey(): string {
+		$pluginId = $this->getCurrentPluginId();
+		return (string) get_option( $pluginId . '_license_key', '' );
+	}
+
+	/**
+	 * Stores the license key.
+	 *
+	 * Overrides {@see AbstractPluginConnection::storeLicenseKey()} so the GroundLevel
+	 * 7.3.1 {@see Credentials} writes the dynamic-plugin-id-scoped option.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param string $licenseKey The license key to store.
+	 * @return boolean Whether the option was updated successfully.
+	 */
+	public function storeLicenseKey( string $licenseKey ): bool {
+		$pluginId = $this->getCurrentPluginId();
+		return (bool) update_option( $pluginId . '_license_key', $licenseKey );
 	}
 
 	/**
 	 * Gets the license key option.
 	 *
+	 * Convenience accessor retained for BuddyBoss callers (e.g. the add-ons manager
+	 * license gate in {@see BB_Addons_Manager::render_addons_html()}).
+	 *
 	 * @return string The license key.
 	 */
 	public function getLicenseKey(): string {
-		$pluginId    = $this->getCurrentPluginId();
-		$license_key = get_option( $pluginId . '_license_key', '' );
-		return (string) $license_key;
+		return $this->resolveLicenseKey();
 	}
 
 	/**
 	 * Updates the license key option.
 	 *
+	 * Backward-compatible alias for {@see self::storeLicenseKey()} retained for
+	 * existing BuddyBoss callers that expect a void return.
+	 *
 	 * @param string $licenseKey The license key to update.
 	 */
 	public function updateLicenseKey( string $licenseKey ): void {
-		$pluginId = $this->getCurrentPluginId();
-		update_option( $pluginId . '_license_key', $licenseKey );
+		$this->storeLicenseKey( $licenseKey );
 	}
 
 	/**
@@ -150,24 +218,5 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 */
 	public function getDomain(): string {
 		return wp_parse_url( get_home_url(), PHP_URL_HOST );
-	}
-
-	/**
-	 * Debug method to get current status.
-	 *
-	 * @return array Debug information.
-	 */
-	public function getDebugInfo(): array {
-		return array(
-			'plugin_id'                => $this->getCurrentPluginId(),
-			'plugin_prefix'            => $this->pluginPrefix,
-			'license_key'              => $this->getLicenseKey(),
-			'license_activated'        => $this->getLicenseActivationStatus(),
-			'domain'                   => $this->getDomain(),
-			'api_base_url'             => defined( strtoupper( $this->getCurrentPluginId() . '_MOTHERSHIP_API_BASE_URL' ) )
-				? constant( strtoupper( $this->getCurrentPluginId() . '_MOTHERSHIP_API_BASE_URL' ) )
-				: 'https://licenses.caseproof.com/api/v1/',
-			'dynamic_plugin_id_stored' => get_option( 'buddyboss_dynamic_plugin_id', PLATFORM_EDITION ),
-		);
 	}
 }

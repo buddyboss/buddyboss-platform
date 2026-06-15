@@ -20,8 +20,8 @@
         "php": ">=5.6.0",
         "php-ffmpeg/php-ffmpeg": "^0.16.0",
         "maennchen/zipstream-php": "^2.1",
-		"caseproof/ground-level-mothership": "2.2.1",
-		"caseproof/ground-level-in-product-notifications": "*"
+		"caseproof/ground-level-mothership": "7.3.1",
+		"caseproof/ground-level-in-product-notifications": "7.3.1"
     },
 	"require-dev": {
 		"humbug/php-scoper": "^0.17.5"

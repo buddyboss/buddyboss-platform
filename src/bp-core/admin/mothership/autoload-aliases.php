@@ -7,7 +7,7 @@
  * PHP-Scoper was actually used or not.
  *
  * @package BuddyBoss\Core\Admin\Mothership
- * @since 1.0.0
+ * @since BuddyBoss 2.14.0
  */
 
 // Exit if accessed directly.
@@ -26,15 +26,17 @@ function buddyboss_setup_mothership_aliases() {
 	}
 
 	// Define the class mappings - creating BuddyBossPlatform aliases.
+	// Updated for GroundLevel 7.3.1: the static-container `Service` classes and the
+	// HasStaticContainer/StaticContainerAwareness concern+contract were removed in
+	// favor of the dependency-injection ServiceProvider pattern.
 	$class_mappings = array(
 		// Container classes.
 		'BuddyBossPlatform\GroundLevel\Container\Container' => 'GroundLevel\Container\Container',
-		'BuddyBossPlatform\GroundLevel\Container\Service'  => 'GroundLevel\Container\Service',
-		'BuddyBossPlatform\GroundLevel\Container\Concerns\HasStaticContainer' => 'GroundLevel\Container\Concerns\HasStaticContainer',
-		'BuddyBossPlatform\GroundLevel\Container\Contracts\StaticContainerAwareness' => 'GroundLevel\Container\Contracts\StaticContainerAwareness',
+		'BuddyBossPlatform\GroundLevel\Container\ServiceProvider' => 'GroundLevel\Container\ServiceProvider',
+		'BuddyBossPlatform\GroundLevel\Container\Resolver' => 'GroundLevel\Container\Resolver',
 
 		// Mothership classes.
-		'BuddyBossPlatform\GroundLevel\Mothership\Service' => 'GroundLevel\Mothership\Service',
+		'BuddyBossPlatform\GroundLevel\Mothership\MothershipServiceProvider' => 'GroundLevel\Mothership\MothershipServiceProvider',
 		'BuddyBossPlatform\GroundLevel\Mothership\AbstractPluginConnection' => 'GroundLevel\Mothership\AbstractPluginConnection',
 		'BuddyBossPlatform\GroundLevel\Mothership\Credentials' => 'GroundLevel\Mothership\Credentials',
 		'BuddyBossPlatform\GroundLevel\Mothership\Api\Request' => 'GroundLevel\Mothership\Api\Request',
@@ -45,26 +47,68 @@ function buddyboss_setup_mothership_aliases() {
 		'BuddyBossPlatform\GroundLevel\Mothership\Manager\AddonsManager' => 'GroundLevel\Mothership\Manager\AddonsManager',
 		'BuddyBossPlatform\GroundLevel\Mothership\Manager\AddonInstallSkin' => 'GroundLevel\Mothership\Manager\AddonInstallSkin',
 		'BuddyBossPlatform\GroundLevel\Mothership\ExtensionType' => 'GroundLevel\Mothership\ExtensionType',
-		'BuddyBossPlatform\GroundLevel\InProductNotifications\Service' => 'GroundLevel\InProductNotifications\Service',
+		'BuddyBossPlatform\GroundLevel\InProductNotifications\IPNServiceProvider' => 'GroundLevel\InProductNotifications\IPNServiceProvider',
 	);
 
 	// Create aliases from actual namespace to BuddyBossPlatform namespace.
 	foreach ( $class_mappings as $alias => $original ) {
-		// Skip if alias already exists.
+		// Skip if alias already exists. Do NOT autoload the alias here — the prefixed
+		// name has no file in a non-scoped build, so autoloading it would be wasted.
 		if ( class_exists( $alias, false ) || interface_exists( $alias, false ) || trait_exists( $alias, false ) ) {
 			continue;
 		}
 
-		// Check if the original class/interface/trait exists and create alias.
-		if ( class_exists( $original, false ) ) {
+		// Resolve the original class/interface/trait WITH autoloading. This function runs at
+		// mothership-init include time, before anything has referenced the vendor classes, so
+		// without autoloading every check would return false and no aliases would be created —
+		// which then fatals when BB_Plugin_Connector/BB_Addons_Manager extend the prefixed
+		// parent names. (The reverse-alias function already autoloads for the same reason.)
+		if ( class_exists( $original ) ) {
 			class_alias( $original, $alias );
-		} elseif ( interface_exists( $original, false ) ) {
+		} elseif ( interface_exists( $original ) ) {
 			class_alias( $original, $alias );
-		} elseif ( trait_exists( $original, false ) ) {
+		} elseif ( trait_exists( $original ) ) {
 			class_alias( $original, $alias );
 		}
 	}
 }
 
-// Call the function immediately since we need these aliases available.
+/**
+ * Create reverse aliases (prefixed -> un-prefixed) for service providers referenced by
+ * GroundLevel `@inject` docblock annotations.
+ *
+ * The GroundLevel 7.3.1 dependency resolver reads `@inject \GroundLevel\...::CONST`
+ * annotations and resolves them with PHP's `constant()`. Because the vendor packages are
+ * PHP-Scoper prefixed to `BuddyBossPlatform\GroundLevel\...`, but the scoper does NOT rewrite
+ * class names inside docblock comments, those annotations still reference the un-prefixed
+ * class names (e.g. `\GroundLevel\Mothership\MothershipServiceProvider::PARAM_API_BASE_URL`).
+ * Without these aliases the resolver throws "@inject references undefined constant" and the
+ * Mothership/IPN services fail to boot.
+ *
+ * @since BuddyBoss [BBVERSION]
+ */
+function buddyboss_setup_mothership_inject_aliases() {
+	$provider_mappings = array(
+		// Un-prefixed alias => actual prefixed class.
+		'GroundLevel\Mothership\MothershipServiceProvider'             => 'BuddyBossPlatform\GroundLevel\Mothership\MothershipServiceProvider',
+		'GroundLevel\InProductNotifications\IPNServiceProvider'        => 'BuddyBossPlatform\GroundLevel\InProductNotifications\IPNServiceProvider',
+		'GroundLevel\Component\ComponentServiceProvider'               => 'BuddyBossPlatform\GroundLevel\Component\ComponentServiceProvider',
+	);
+
+	foreach ( $provider_mappings as $alias => $original ) {
+		if ( class_exists( $alias, false ) ) {
+			continue;
+		}
+
+		// Allow autoloading here ($original may not be loaded yet this early in boot);
+		// class_alias() then makes the un-prefixed name resolve to the real prefixed class
+		// so the resolver's constant() lookups on @inject annotations succeed.
+		if ( class_exists( $original ) ) {
+			class_alias( $original, $alias );
+		}
+	}
+}
+
+// Call the functions immediately since we need these aliases available.
 buddyboss_setup_mothership_aliases();
+buddyboss_setup_mothership_inject_aliases();
