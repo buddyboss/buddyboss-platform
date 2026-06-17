@@ -137,6 +137,20 @@ class BB_Mothership_Loader {
 
 			// Boot registers the vendor WordPress hooks.
 			$this->container->boot();
+
+			// Register the Platform for NATIVE WordPress plugin updates.
+			//
+			// The vendor UpdateService self-registers `plugin( $pluginId, '' )` on `init`, which
+			// hooks `update_plugins_{$pluginId}`. That filter never fires: WordPress derives the
+			// suffix from the HOST of the plugin's `Update URI` header (a single fixed value),
+			// while $pluginId is the *dynamic* Mothership product id (e.g. `bb-web-plus`). We
+			// bridge the two by registering a FIXED slug — `buddyboss-platform`, matching the
+			// `Update URI: https://buddyboss-platform` header in bp-loader.php — against the
+			// dynamic product id as the Mothership productId. WordPress then fires
+			// `update_plugins_buddyboss-platform`, the vendor looks up the correct product, and
+			// both the native update and the `plugins_api` "View details" popup work without any
+			// site_transient_update_plugins injection.
+			$this->container->get( \BuddyBossPlatform\GroundLevel\Mothership\UpdateService::class )->plugin( 'buddyboss-platform', $plugin_id );
 		} catch ( \Throwable $e ) {
 			// A resolution/boot failure must never white-screen wp-admin. Log and degrade
 			// gracefully — license activation falls back to BuddyBoss's own controller.
@@ -165,6 +179,13 @@ class BB_Mothership_Loader {
 			add_action( 'wp_ajax_bb_get_free_license', array( 'BuddyBoss\Core\Admin\Mothership\BB_License_Manager', 'ajax_get_free_license' ) );
 			add_action( 'wp_ajax_bb_reset_license_settings', array( 'BuddyBoss\Core\Admin\Mothership\BB_License_Manager', 'ajax_reset_license_settings' ) );
 		}
+
+		// Header-independent fallback for plugin updates. The primary path is native: the
+		// `Update URI` header in bp-loader.php drives `update_plugins_buddyboss-platform`
+		// (registered in {@see self::register_services()}). This injector is the safety net for
+		// the case where that header is absent (stripped by a build/merge/packaging step) — its
+		// own guard returns early when the header is present, so the two paths never double-fire.
+		add_filter( 'site_transient_update_plugins', array( $this, 'inject_platform_update' ) );
 
 		$plugin_id = $this->pluginConnector->getDynamicPluginId(); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 
@@ -236,6 +257,124 @@ class BB_Mothership_Loader {
 			// License is active - ensure status is updated.
 			$this->pluginConnector->updateLicenseActivationStatus( true ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 		}
+	}
+
+	/**
+	 * Fallback: inject the Platform's own plugin update into the update_plugins transient.
+	 *
+	 * The PRIMARY update path is native — the `Update URI: https://buddyboss-platform` header
+	 * in bp-loader.php makes WordPress fire `update_plugins_buddyboss-platform`, which the vendor
+	 * UpdateService serves (registered in {@see self::register_services()}). That path also gives
+	 * the native `plugins_api` "View details" popup. This injector exists ONLY as a safety net
+	 * for the case where the header is absent (e.g. stripped by a build, merge, or packaging
+	 * step): when the header is present it returns early (see the UpdateURI guard below), so the
+	 * native path owns the update and the two never double-fire. It uses the same data source as
+	 * the vendor ({@see Products::getVersionCheck()}), runs only when licensed — leaving
+	 * wordpress.org updates intact for unlicensed installs — and keys the entry by plugin file so
+	 * the vendor's native auto-update / dev-block policy applies.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param mixed $transient The update_plugins transient (object) or false.
+	 * @return mixed The (possibly modified) transient.
+	 */
+	public function inject_platform_update( $transient ) {
+		if ( ! is_object( $transient ) ) {
+			return $transient;
+		}
+
+		$plugin_file = ( function_exists( 'buddypress' ) && isset( buddypress()->basename ) )
+			? buddypress()->basename
+			: 'buddyboss-platform/bp-loader.php';
+
+		try {
+			// Only offer updates when the license is active.
+			if ( ! $this->pluginConnector->getLicenseActivationStatus() ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+				return $transient;
+			}
+
+			if ( ! function_exists( 'get_plugins' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/plugin.php';
+			}
+			$plugins = get_plugins();
+
+			// If the main file declares an Update URI header, the native vendor UpdateService
+			// owns the update — defer to it so the two paths never double-fire.
+			if ( ! empty( $plugins[ $plugin_file ]['UpdateURI'] ) ) {
+				return $transient;
+			}
+
+			$installed = isset( $transient->checked[ $plugin_file ] )
+				? (string) $transient->checked[ $plugin_file ]
+				: (string) ( $plugins[ $plugin_file ]['Version'] ?? '' );
+
+			if ( '' === $installed ) {
+				return $transient;
+			}
+
+			$version_check = $this->container->get( \BuddyBossPlatform\GroundLevel\Mothership\Api\Request\Products::class )->getVersionCheck(
+				$this->pluginConnector->pluginId, // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+				array(
+					'prerelease' => $this->pluginConnector->allowPrereleaseVersions(), // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+					'_embed'     => 'version,product',
+				)
+			);
+
+			if ( $version_check->isError() ) {
+				return $transient;
+			}
+
+			$latest = (string) $version_check->getData( 'number', '' );
+			if ( '' === $latest ) {
+				return $transient;
+			}
+
+			$version_obj = $version_check->getEmbed( 'version' );
+
+			$item = array(
+				'id'          => $plugin_file,
+				'slug'        => dirname( $plugin_file ),
+				'plugin'      => $plugin_file,
+				'new_version' => $latest,
+				'url'         => $plugins[ $plugin_file ]['PluginURI'] ?? '',
+				'package'     => $version_obj->url ?? '',
+			);
+
+			// Match the native vendor UpdateService: surface the plugin icon so it renders on
+			// the Dashboard > Updates screen. The `product` embed (already requested above via
+			// `_embed=version,product`) exposes a single image URL, which WordPress accepts for
+			// both the 1x and 2x icon slots.
+			$product   = $version_check->getEmbed( 'product' );
+			$image_url = isset( $product->image ) ? (string) $product->image : '';
+			if ( '' !== $image_url ) {
+				$item['icons'] = array(
+					'2x' => $image_url,
+					'1x' => $image_url,
+				);
+			}
+
+			$item = (object) $item;
+
+			if ( ! isset( $transient->response ) || ! is_array( $transient->response ) ) {
+				$transient->response = array();
+			}
+			if ( ! isset( $transient->no_update ) || ! is_array( $transient->no_update ) ) {
+				$transient->no_update = array(); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase
+			}
+
+			if ( version_compare( $installed, $latest, '>=' ) ) {
+				$transient->no_update[ $plugin_file ] = $item; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase
+			} else {
+				$transient->response[ $plugin_file ] = $item;
+			}
+		} catch ( \Throwable $e ) {
+			// Never break the update transient — degrade silently.
+			if ( function_exists( 'bb_error_log' ) ) {
+				bb_error_log( 'BuddyBoss platform update injection failed: ' . $e->getMessage(), true );
+			}
+		}
+
+		return $transient;
 	}
 
 	/**
