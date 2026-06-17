@@ -1031,11 +1031,16 @@ function bp_admin_repair_tools_wrapper_function() {
 		}
 	}
 
-	// Record the run once, outside the loop — a single option write per repair
-	// request so telemetry can report which repair tools the admin uses, with
-	// the tool's own human label so the report side needs no slug→label map.
+	// Record one usage increment per repair RUN, not per paginated batch.
+	// Paginated repair tools re-call this handler with an incrementing offset
+	// until done; only the first request (no / zero offset) counts the run.
+	// The label is captured so the report can show third-party repair tools'
+	// human titles (registered via the bp_admin_repair_list filter).
 	if ( $repair_ran ) {
-		bb_admin_record_repair_run( $type, $repair_label );
+		$repair_offset = isset( $_POST['offset'] ) ? (int) $_POST['offset'] : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce verified above.
+		if ( $repair_offset <= 0 ) {
+			bb_record_tool_usage( 'repair', $type, $repair_label );
+		}
 	}
 
 	// if ( 'bp-user-friends' === $type ) {
@@ -1559,42 +1564,4 @@ function bp_admin_repair_group_member_count() {
 		'status'  => 1,
 		'message' => sprintf( $statement, esc_html__( 'Complete!', 'buddyboss' ) ),
 	);
-}
-
-/**
- * Record that a Repair Platform tool was run.
- *
- * Stores the repair tool's last-run timestamp keyed by tool type in the
- * `bb_repair_platform_usage` option, so telemetry can report which repair tools
- * the admin uses. Only the set of used tools and their last-run time is kept —
- * no run counts.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param string $type  Repair tool type/slug (the first element of a
- *                      `bp_admin_repair_list()` item).
- * @param string $label Human-readable repair tool label (the second element);
- *                      stored so the telemetry report needs no slug→label map.
- *
- * @return void
- */
-function bb_admin_record_repair_run( $type, $label = '' ) {
-	$type = sanitize_key( $type );
-	if ( empty( $type ) ) {
-		return;
-	}
-
-	$usage = bp_get_option( 'bb_repair_platform_usage', array() );
-	if ( ! is_array( $usage ) ) {
-		$usage = array();
-	}
-
-	$usage[ $type ] = array(
-		'label'    => sanitize_text_field( wp_strip_all_tags( (string) $label ) ),
-		'last_run' => time(),
-	);
-
-	// autoload = false: only read during the telemetry cron, never on normal
-	// page loads, so it stays out of the autoloaded options cache.
-	update_option( 'bb_repair_platform_usage', $usage, false );
 }

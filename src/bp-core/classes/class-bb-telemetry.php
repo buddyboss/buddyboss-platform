@@ -512,8 +512,8 @@ if ( ! class_exists( 'BB_Telemetry' ) ) {
 
 			unset( $bp_prefix, $query, $results, $bb_platform_db_options );
 
-			// Repair Platform → which repair tools the admin has run (tool type => last-run timestamp).
-			$bb_telemetry_data['repair_platform'] = bp_get_option( 'bb_repair_platform_usage', array() );
+			// Tools usage → cumulative per-action counts for Repair / Sample Data / Migration.
+			$bb_telemetry_data['tools_usage'] = bb_get_tool_usage();
 
 			/**
 			 * Filters the telemetry platform data.
