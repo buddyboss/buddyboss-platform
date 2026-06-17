@@ -30,6 +30,31 @@ use BuddyBossPlatform\GroundLevel\InProductNotifications\IPNServiceProvider;
 class BB_Mothership_Loader {
 
 	/**
+	 * Site-transient key caching the Platform's own update-check payload used by
+	 * {@see self::inject_platform_update()}.
+	 *
+	 * Stored as a site transient so it is shared network-wide (the `update_plugins`
+	 * transient it feeds is itself a site transient). Invalidated on a genuine WordPress
+	 * update fetch and on any license change — see {@see self::setup_hooks()}.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var string
+	 */
+	private const UPDATE_CACHE_KEY = 'bb_platform_update_check';
+
+	/**
+	 * TTL, in seconds, for the Platform update-check cache. A long ceiling is safe because
+	 * the cache is event-invalidated (update fetch + license change); the TTL is only a
+	 * backstop for sites where neither event fires.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @var int
+	 */
+	private const UPDATE_CACHE_TTL = 12 * HOUR_IN_SECONDS;
+
+	/**
 	 * Singleton instance.
 	 *
 	 * @var BB_Mothership_Loader|null
@@ -187,7 +212,32 @@ class BB_Mothership_Loader {
 		// own guard returns early when the header is present, so the two paths never double-fire.
 		add_filter( 'site_transient_update_plugins', array( $this, 'inject_platform_update' ) );
 
+		// Invalidate the Platform update-check cache whenever WordPress writes a fresh
+		// `update_plugins` transient. That set only happens after a genuine update fetch (cron,
+		// "Check again", or a completed install), so clearing here guarantees the next injector
+		// run re-derives the payload from a fresh version check rather than a stale 12h cache.
+		add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'flush_platform_update_cache' ) );
+
 		$plugin_id = $this->pluginConnector->getDynamicPluginId(); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+
+		// Invalidate the update-check cache on any license change. These fire from
+		// AbstractPluginConnection::updateLicenseActivationStatus()/updateLicenseKey() (and
+		// BuddyBoss's own license manager), covering activate, validate, deactivate and key
+		// entry regardless of which code path triggered it. Hooking the option writes keeps this
+		// decoupled from the vendor's event names.
+		$license_active_option = $plugin_id . '_license_active';
+		$license_key_option    = $plugin_id . '_license_key';
+		add_action( 'add_option_' . $license_active_option, array( $this, 'clear_platform_update_cache' ) );
+		add_action( 'update_option_' . $license_active_option, array( $this, 'clear_platform_update_cache' ) );
+		add_action( 'add_option_' . $license_key_option, array( $this, 'clear_platform_update_cache' ) );
+		add_action( 'update_option_' . $license_key_option, array( $this, 'clear_platform_update_cache' ) );
+
+		// A dynamic-plugin-ID change (edition/tier switch) repoints the version check at a
+		// different product, so the cached item is stale. This option name is fixed (not ID
+		// dependent), so it stays correct even though the license-option hooks above are bound
+		// to the ID resolved at init.
+		add_action( 'add_option_buddyboss_dynamic_plugin_id', array( $this, 'clear_platform_update_cache' ) );
+		add_action( 'update_option_buddyboss_dynamic_plugin_id', array( $this, 'clear_platform_update_cache' ) );
 
 		// Handle license status changes. GroundLevel 7.3.1's periodic license check fires
 		// `{plugin_id}_active_license_invalidated` / `_active_license_expired` when the
@@ -312,23 +362,77 @@ class BB_Mothership_Loader {
 				return $transient;
 			}
 
-			$version_check = $this->container->get( \BuddyBossPlatform\GroundLevel\Mothership\Api\Request\Products::class )->getVersionCheck(
-				$this->pluginConnector->pluginId, // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-				array(
-					'prerelease' => $this->pluginConnector->allowPrereleaseVersions(), // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-					'_embed'     => 'version,product',
-				)
-			);
-
-			if ( $version_check->isError() ) {
+			// Resolve the update item from the BuddyBoss-side cache (or fetch + cache on miss).
+			// Null means "no update info available" — leave the transient untouched.
+			$item = $this->get_platform_update_item( $plugins, $plugin_file );
+			if ( null === $item ) {
 				return $transient;
 			}
 
-			$latest = (string) $version_check->getData( 'number', '' );
-			if ( '' === $latest ) {
-				return $transient;
+			if ( ! isset( $transient->response ) || ! is_array( $transient->response ) ) {
+				$transient->response = array();
+			}
+			if ( ! isset( $transient->no_update ) || ! is_array( $transient->no_update ) ) {
+				$transient->no_update = array(); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase
 			}
 
+			if ( version_compare( $installed, (string) $item->new_version, '>=' ) ) {
+				$transient->no_update[ $plugin_file ] = $item; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase
+			} else {
+				$transient->response[ $plugin_file ] = $item;
+			}
+		} catch ( \Throwable $e ) {
+			// Never break the update transient — degrade silently.
+			if ( function_exists( 'bb_error_log' ) ) {
+				bb_error_log( 'BuddyBoss platform update injection failed: ' . $e->getMessage(), true );
+			}
+		}
+
+		return $transient;
+	}
+
+	/**
+	 * Resolve the Platform's update item, caching the result in a site transient.
+	 *
+	 * On a cache hit the stored payload is returned with zero API/HTTP work. On a miss the
+	 * Mothership version check runs once and the outcome is cached for {@see self::UPDATE_CACHE_TTL}
+	 * (or until invalidated by {@see self::flush_platform_update_cache()} /
+	 * {@see self::clear_platform_update_cache()}). Errors are intentionally NOT cached so a
+	 * transient API failure retries on the next request rather than suppressing updates for 12h.
+	 *
+	 * The cached payload shape is `array( 'item' => array|null )`: the prepared WordPress update
+	 * entry, or null meaning "checked, no update info". The two states are distinguished from a
+	 * cache miss by {@see get_site_transient()} returning `false` only when nothing is stored.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param array<string, array<string, mixed>> $plugins     Installed plugins ({@see get_plugins()}).
+	 * @param string                              $plugin_file The Platform plugin file (basename).
+	 * @return object|null The update item object, or null when no update info is available.
+	 */
+	private function get_platform_update_item( array $plugins, string $plugin_file ): ?object {
+		$cached = get_site_transient( self::UPDATE_CACHE_KEY );
+		if ( is_array( $cached ) && array_key_exists( 'item', $cached ) ) {
+			return is_array( $cached['item'] ) ? (object) $cached['item'] : null;
+		}
+
+		$version_check = $this->container->get( \BuddyBossPlatform\GroundLevel\Mothership\Api\Request\Products::class )->getVersionCheck(
+			$this->pluginConnector->pluginId, // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			array(
+				'prerelease' => $this->pluginConnector->allowPrereleaseVersions(), // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+				'_embed'     => 'version,product',
+			)
+		);
+
+		// Do not cache errors — let the next request retry.
+		if ( $version_check->isError() ) {
+			return null;
+		}
+
+		$latest = (string) $version_check->getData( 'number', '' );
+		$item   = null;
+
+		if ( '' !== $latest ) {
 			$version_obj = $version_check->getEmbed( 'version' );
 
 			$item = array(
@@ -352,29 +456,36 @@ class BB_Mothership_Loader {
 					'1x' => $image_url,
 				);
 			}
-
-			$item = (object) $item;
-
-			if ( ! isset( $transient->response ) || ! is_array( $transient->response ) ) {
-				$transient->response = array();
-			}
-			if ( ! isset( $transient->no_update ) || ! is_array( $transient->no_update ) ) {
-				$transient->no_update = array(); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase
-			}
-
-			if ( version_compare( $installed, $latest, '>=' ) ) {
-				$transient->no_update[ $plugin_file ] = $item; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase
-			} else {
-				$transient->response[ $plugin_file ] = $item;
-			}
-		} catch ( \Throwable $e ) {
-			// Never break the update transient — degrade silently.
-			if ( function_exists( 'bb_error_log' ) ) {
-				bb_error_log( 'BuddyBoss platform update injection failed: ' . $e->getMessage(), true );
-			}
 		}
 
-		return $transient;
+		// Cache the resolved outcome (item array or null) for the TTL backstop.
+		set_site_transient( self::UPDATE_CACHE_KEY, array( 'item' => $item ), self::UPDATE_CACHE_TTL );
+
+		return null !== $item ? (object) $item : null;
+	}
+
+	/**
+	 * Flush the Platform update-check cache when WordPress writes a fresh `update_plugins`
+	 * transient (a genuine update fetch). Passes the value through unchanged.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param mixed $value The value WordPress is about to store. Returned unmodified.
+	 * @return mixed The unmodified value.
+	 */
+	public function flush_platform_update_cache( $value ) {
+		delete_site_transient( self::UPDATE_CACHE_KEY );
+		return $value;
+	}
+
+	/**
+	 * Clear the Platform update-check cache. Used as an action callback on license changes, so
+	 * a newly activated/validated/revoked license is reflected on the next update check.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	public function clear_platform_update_cache(): void {
+		delete_site_transient( self::UPDATE_CACHE_KEY );
 	}
 
 	/**
