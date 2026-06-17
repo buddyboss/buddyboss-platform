@@ -1043,36 +1043,6 @@ function bp_admin_repair_tools_wrapper_function() {
 		}
 	}
 
-	// if ( 'bp-user-friends' === $type ) {
-	// $status = bp_admin_repair_friend_count();
-	// } elseif ( 'bp-group-count' === $type ) {
-	// $status = bp_admin_repair_group_count();
-	// } elseif ( 'bp-total-member-count' === $type ) {
-	// $status = bp_admin_repair_count_members();
-	// } elseif ( 'bp-last-activity' === $type ) {
-	// $status = bp_admin_repair_last_activity();
-	// } elseif ( 'bp-xprofile-fields' === $type ) {
-	// $status = repair_default_profiles_fields();
-	// } elseif ( 'bp-xprofile-wordpress-resync' === $type ) {
-	// $status = resync_xprofile_wordpress_fields();
-	// } elseif ( 'bp-wordpress-xprofile-resync' === $type ) {
-	// $status = resync_wordpress_xprofile_fields();
-	// } elseif ( 'bp-wordpress-update-display-name' === $type ) {
-	// $status = xprofile_update_display_names();
-	// } elseif ( 'bp-blog-records' === $type ) {
-	// $status = bp_admin_repair_blog_records();
-	// } elseif ( 'bp-reinstall-emails' === $type ) {
-	// $status = bp_admin_reinstall_emails();
-	// } elseif ( 'bp-assign-member-type' === $type ) {
-	// $status = bp_admin_assign_member_type();
-	// } elseif ( 'bp-sync-activity-favourite' === $type ) {
-	// $status = bp_admin_update_activity_favourite();
-	// } elseif ( 'bp-invitations-table' === $type ) {
-	// $status = bp_admin_invitations_table();
-	// } elseif ( 'bp-media-forum-privacy-repair' === $type ) {
-	// $status = bp_media_forum_privacy_repair();
-	// }
-
 	// Additive enrichment for the Settings 2.0 Repair Platform React UI:
 	// extract a clean count + summary from the legacy feedback HTML so the
 	// React panel can render Figma-style result lines without client-side
