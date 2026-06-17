@@ -26,7 +26,7 @@ function buddyboss_setup_mothership_aliases() {
 	}
 
 	// Define the class mappings - creating BuddyBossPlatform aliases.
-	// Updated for GroundLevel 7.3.1: the static-container `Service` classes and the
+	// Updated for GroundLevel 7.4.0: the static-container `Service` classes and the
 	// HasStaticContainer/StaticContainerAwareness concern+contract were removed in
 	// favor of the dependency-injection ServiceProvider pattern.
 	$class_mappings = array(
@@ -77,7 +77,7 @@ function buddyboss_setup_mothership_aliases() {
  * Create reverse aliases (prefixed -> un-prefixed) for service providers referenced by
  * GroundLevel `@inject` docblock annotations.
  *
- * The GroundLevel 7.3.1 dependency resolver reads `@inject \GroundLevel\...::CONST`
+ * The GroundLevel 7.4.0 dependency resolver reads `@inject \GroundLevel\...::CONST`
  * annotations and resolves them with PHP's `constant()`. Because the vendor packages are
  * PHP-Scoper prefixed to `BuddyBossPlatform\GroundLevel\...`, but the scoper does NOT rewrite
  * class names inside docblock comments, those annotations still reference the un-prefixed

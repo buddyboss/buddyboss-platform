@@ -11,7 +11,7 @@ use BuddyBossPlatform\GroundLevel\Mothership\AbstractPluginConnection;
 /**
  * BuddyBoss add-ons manager (static facade over the GroundLevel AddonsManager).
  *
- * GroundLevel 7.3.1 turned {@see AddonsManager} into an instance service with a five-argument
+ * GroundLevel 7.4.0 turned {@see AddonsManager} into an instance service with a five-argument
  * constructor, resolved from the container via auto-wiring. BuddyBoss calls its add-ons manager
  * statically throughout the codebase (admin page, DRM add-on gating, placeholder cards, and the
  * plugin connector's cache invalidation), so this class keeps a static facade and delegates to
@@ -148,7 +148,7 @@ class BB_Addons_Manager extends AddonsManager {
 	 * Every license state-change routes through here via the plugin connector. The transient is
 	 * deleted by key (rather than through the container) so it stays safe even if the service
 	 * container failed to boot. The legacy 2.2.1 keys (`-mosh-products` /
-	 * `-mosh-addons-update-check`) no longer exist in 7.3.1.
+	 * `-mosh-addons-update-check`) no longer exist in 7.4.0.
 	 *
 	 * @since BuddyBoss 2.14.0
 	 */

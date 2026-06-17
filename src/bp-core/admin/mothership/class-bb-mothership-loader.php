@@ -124,7 +124,7 @@ class BB_Mothership_Loader {
 	/**
 	 * Register and boot the GroundLevel service providers.
 	 *
-	 * GroundLevel 7.3.1 replaced the old static-container `Service` classes with the
+	 * GroundLevel 7.4.0 replaced the old static-container `Service` classes with the
 	 * dependency-injection `ServiceProvider` pattern. Booting the providers wires the
 	 * vendor hooks (twice-daily license-status cron, `auto_update_plugin`, add-on AJAX,
 	 * plugin/theme update injection, and the In-Product Notifications UI). None of these
@@ -221,11 +221,13 @@ class BB_Mothership_Loader {
 		$plugin_id = $this->pluginConnector->getDynamicPluginId(); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 
 		// Invalidate the update-check cache on any license change. These fire from
-		// AbstractPluginConnection::updateLicenseActivationStatus()/updateLicenseKey() (and
-		// BuddyBoss's own license manager), covering activate, validate, deactivate and key
-		// entry regardless of which code path triggered it. Hooking the option writes keeps this
-		// decoupled from the vendor's event names.
-		$license_active_option = $plugin_id . '_license_active';
+		// BB_Plugin_Connector::setLicenseActivationStatus()/storeLicenseKey() (and BuddyBoss's
+		// own license manager), covering activate, validate, deactivate and key entry regardless
+		// of which code path triggered it. Hooking the option writes keeps this decoupled from the
+		// vendor's event names. NOTE: BuddyBoss overrides the activation-status option name to
+		// `_license_activation_status` (not the GroundLevel base default `_license_active`), so the
+		// hook MUST bind to the overridden name or it would never fire — see BB_Plugin_Connector.
+		$license_active_option = $plugin_id . '_license_activation_status';
 		$license_key_option    = $plugin_id . '_license_key';
 		add_action( 'add_option_' . $license_active_option, array( $this, 'clear_platform_update_cache' ) );
 		add_action( 'update_option_' . $license_active_option, array( $this, 'clear_platform_update_cache' ) );
@@ -239,7 +241,7 @@ class BB_Mothership_Loader {
 		add_action( 'add_option_buddyboss_dynamic_plugin_id', array( $this, 'clear_platform_update_cache' ) );
 		add_action( 'update_option_buddyboss_dynamic_plugin_id', array( $this, 'clear_platform_update_cache' ) );
 
-		// Handle license status changes. GroundLevel 7.3.1's periodic license check fires
+		// Handle license status changes. GroundLevel 7.4.0's periodic license check fires
 		// `{plugin_id}_active_license_invalidated` / `_active_license_expired` when the
 		// license is revoked or expired (the old `_license_status_changed` event no longer
 		// fires, but the hook is kept for backward compatibility with custom callers).
@@ -272,7 +274,7 @@ class BB_Mothership_Loader {
 	/**
 	 * Handle a license revocation/expiry reported by GroundLevel's periodic check.
 	 *
-	 * Bridges the GroundLevel 7.3.1 `{plugin_id}_active_license_invalidated` /
+	 * Bridges the GroundLevel 7.4.0 `{plugin_id}_active_license_invalidated` /
 	 * `_active_license_expired` actions to BuddyBoss's existing deactivation handler.
 	 * Accepts no arguments so it is safe regardless of how many the action passes.
 	 *

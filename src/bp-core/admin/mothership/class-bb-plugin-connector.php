@@ -115,7 +115,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 *
 	 * Overrides {@see AbstractPluginConnection::setLicenseActivationStatus()} so the
 	 * BuddyBoss option name (`{pluginId}_license_activation_status`) is preserved —
-	 * the GroundLevel 7.3.1 base defaults to `{pluginId}_license_active`, which would
+	 * the GroundLevel 7.4.0 base defaults to `{pluginId}_license_active`, which would
 	 * orphan every existing activation. Also clears BuddyBoss license/add-on caches.
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -149,7 +149,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 * Resolves the license key from storage.
 	 *
 	 * Overrides {@see AbstractPluginConnection::resolveLicenseKey()} so the
-	 * GroundLevel 7.3.1 {@see Credentials} reads the dynamic-plugin-id-scoped option.
+	 * GroundLevel 7.4.0 {@see Credentials} reads the dynamic-plugin-id-scoped option.
 	 * The option name (`{pluginId}_license_key`) matches the base default; the
 	 * override exists only to honor the BuddyBoss dynamic plugin ID.
 	 *
@@ -166,7 +166,7 @@ class BB_Plugin_Connector extends AbstractPluginConnection {
 	 * Stores the license key.
 	 *
 	 * Overrides {@see AbstractPluginConnection::storeLicenseKey()} so the GroundLevel
-	 * 7.3.1 {@see Credentials} writes the dynamic-plugin-id-scoped option.
+	 * 7.4.0 {@see Credentials} writes the dynamic-plugin-id-scoped option.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *

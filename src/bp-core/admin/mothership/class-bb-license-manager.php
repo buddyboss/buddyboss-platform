@@ -24,7 +24,7 @@ use BuddyBossPlatform\GroundLevel\Mothership\Transients\ActivationTransient;
 /**
  * BuddyBoss License Manager.
  *
- * Standalone license controller layered over the GroundLevel 7.3.1 services. The vendor
+ * Standalone license controller layered over the GroundLevel 7.4.0 services. The vendor
  * {@see \BuddyBossPlatform\GroundLevel\Mothership\Manager\LicenseManager} became an
  * instance-based service resolved from the container (no static container, no static
  * helpers), so this class no longer extends it — it resolves the vendor API objects
@@ -303,24 +303,18 @@ class BB_License_Manager {
 	}
 
 	/**
-	 * The controller for handling the license activation/deactivation post requests.
-	 * Overrides the parent controller to add dynamic plugin ID support.
+	 * Handles the license activation/deactivation POST requests.
+	 *
+	 * The dynamic plugin ID embedded in a `KEY:PLUGIN_ID` license string is parsed inside
+	 * {@see self::activateLicense()} — AFTER its nonce + capability check — so this controller
+	 * performs NO state change (no setDynamicPluginId(), no cache clear) before authorization.
+	 * The raw posted key is passed straight through; activateLicense() cleans and parses it.
 	 *
 	 * @return void
 	 */
 	public static function controller(): void {
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce is verified in activateLicense() and deactivateLicense() methods
 		if ( isset( $_POST['buddyboss_platform_license_button'] ) ) {
-			$plugin_connector = self::container()->get( AbstractPluginConnection::class ); // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
-
-			// Setup dynamic plugin ID if present in license key.
-			if ( isset( $_POST['license_key'] ) ) {
-				$license_key          = sanitize_text_field( wp_unslash( $_POST['license_key'] ) );
-				$_POST['license_key'] = self::setup_dynamic_plugin_id( $license_key, $plugin_connector );
-			}
-
-			$plugin_id = $plugin_connector->pluginId; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-
 			if ( 'activate' === $_POST['buddyboss_platform_license_button'] ) {
 				try {
 					$license_key       = isset( $_POST['license_key'] ) ? sanitize_text_field( wp_unslash( $_POST['license_key'] ) ) : '';
@@ -797,8 +791,12 @@ class BB_License_Manager {
 					);
 
 					// Store/update rate limit data (don't overwrite if we have actual API data).
+					// Use the prefixed, multisite-aware helper so this write lands under the same
+					// `bb_license_rate_limit` key that check_rate_limit() reads — a raw
+					// set_transient( 'rate_limit', ... ) would be written under a different key and
+					// never honored (and could collide with other plugins).
 					if ( ! $rate_limit_data || ! isset( $rate_limit_data['reset'] ) ) {
-						set_transient(
+						self::set_rate_limit_transient(
 							'rate_limit',
 							array(
 								'remaining' => 0,
@@ -948,7 +946,7 @@ class BB_License_Manager {
 	 * Generates the license form HTML, choosing activation vs. disconnect by status.
 	 *
 	 * Restores the wrapper that was previously inherited from the GroundLevel
-	 * LicenseManager (removed in 7.3.1 / when this class stopped extending it). The
+	 * LicenseManager (removed in 7.4.0 / when this class stopped extending it). The
 	 * license admin view (views/admin.php) calls this single entry point: it renders the
 	 * disconnect form when a license is active, otherwise the activation form.
 	 *
@@ -968,7 +966,7 @@ class BB_License_Manager {
 
 	/**
 	 * Generates the HTML for the activation form.
-	 * Overrides parent to use BuddyBoss specific button naming.
+	 * Uses BuddyBoss-specific button naming (this class no longer extends the vendor LicenseManager).
 	 *
 	 * @return string The HTML for the activation form.
 	 */
@@ -1200,7 +1198,7 @@ class BB_License_Manager {
 
 	/**
 	 * Generates the HTML for the disconnect/deactivate form.
-	 * Overrides parent to use BuddyBoss specific button naming.
+	 * Uses BuddyBoss-specific button naming (this class no longer extends the vendor LicenseManager).
 	 *
 	 * @return string The HTML for the disconnect form.
 	 */
@@ -1506,7 +1504,7 @@ class BB_License_Manager {
 				delete_option( $plugin_id . '_license_activation_status' );
 
 				// Clear transients (both regular and site-wide for multisite). The add-ons
-				// response is cached under `-mosh-addons` in GroundLevel 7.3.1 (the legacy
+				// response is cached under `-mosh-addons` in GroundLevel 7.4.0 (the legacy
 				// `-mosh-products` / `-mosh-addons-update-check` keys no longer exist).
 				delete_transient( $plugin_id . '-mosh-addons' );
 				delete_transient( $plugin_id . '_license_details' );
