@@ -403,6 +403,19 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 				return $this->validate_associative_array( $key, $value, $current_value );
 
 			case 'boolean_map':
+				// Defensive: if the submitted value has integer keys (e.g. a JSON array sent
+				// by a client that received integer-keyed data) but the current stored value
+				// has string keys, re-key by position rather than failing with a 400.
+				if ( ! empty( $value ) && is_int( array_key_first( $value ) ) ) {
+					$current_keys = array_keys( $current_value );
+					if ( count( $value ) === count( $current_keys ) ) {
+						$rekeyed = array();
+						foreach ( array_values( $value ) as $i => $v ) {
+							$rekeyed[ $current_keys[ $i ] ] = $v;
+						}
+						$value = $rekeyed;
+					}
+				}
 				return $this->validate_boolean_map_array( $key, $value, $current_value );
 
 			case 'numeric_map':
