@@ -53,4 +53,5 @@ require_once __DIR__ . '/class-bb-drm-invalid.php';
 require_once __DIR__ . '/class-bb-drm-addon.php';
 require_once __DIR__ . '/class-bb-drm-registry.php';
 require_once __DIR__ . '/class-bb-drm-controller.php';
+require_once __DIR__ . '/class-bb-drm-update-router.php';
 require_once __DIR__ . '/class-bb-notifications.php';

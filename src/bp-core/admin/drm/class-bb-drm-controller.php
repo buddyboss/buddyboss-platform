@@ -80,6 +80,12 @@ class BB_DRM_Controller {
 
 		// Site Health integration.
 		add_filter( 'site_status_tests', array( $this, 'add_site_health_tests' ) );
+
+		// License-driven update routing + paid build delivery (video/document).
+		// Pass the already-resolved $plugin_id so the router hooks the identical
+		// `{plugin_id}_license_status_changed` event this controller listens to.
+		$update_router = new BB_DRM_Update_Router();
+		$update_router->setup_hooks( $plugin_id );
 	}
 
 	/**
