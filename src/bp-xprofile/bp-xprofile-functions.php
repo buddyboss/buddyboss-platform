@@ -389,7 +389,7 @@ function xprofile_get_field_data( $field, $user_id = 0, $multi_format = 'array' 
 		return false;
 	}
 
-	$values = maybe_unserialize( BP_XProfile_ProfileData::get_value_byid( $field_id, $user_id ) );
+	$values = bb_xprofile_safe_unserialize( BP_XProfile_ProfileData::get_value_byid( $field_id, $user_id ) ); // Object injection guard.
 
 	if ( is_array( $values ) ) {
 		$data = array();
@@ -1771,7 +1771,7 @@ function bp_get_user_social_networks_urls( $user_id = null ) {
 	if ( $social_networks_id > 0 ) {
 		$providers = bp_xprofile_social_network_provider();
 
-		$original_option_values = maybe_unserialize( BP_XProfile_ProfileData::get_value_byid( $social_networks_id, $user ) );
+		$original_option_values = bb_xprofile_safe_unserialize( BP_XProfile_ProfileData::get_value_byid( $social_networks_id, $user ) ); // Object injection guard.
 
 		$social_settings_field   = xprofile_get_field( $social_networks_id, $user_id );
 		$social_settings_options = $social_settings_field->get_children();
@@ -2323,7 +2323,7 @@ function bp_xprofile_get_user_progress( $group_ids, $photo_types ) {
 
 			// For Social networks field check child field is completed or not
 			if  ( 'socialnetworks' == $group_single_field->type ){
-				$field_data_value = maybe_unserialize( $group_single_field->data->value );
+				$field_data_value = bb_xprofile_safe_unserialize( $group_single_field->data->value ); // Object injection guard.
 				$children = $group_single_field->type_obj->field_obj->get_children();
 				foreach ( $children as $child ){
 					if ( isset( $field_data_value[$child->name] ) &&  ! empty( $field_data_value[$child->name] ) ) {
@@ -2332,7 +2332,7 @@ function bp_xprofile_get_user_progress( $group_ids, $photo_types ) {
 					++ $group_total_fields;
 				}
 			} else{
-				$field_data_value = maybe_unserialize( $group_single_field->data->value );
+				$field_data_value = bb_xprofile_safe_unserialize( $group_single_field->data->value ); // Object injection guard.
 
 				if ( ! empty( $field_data_value ) ) {
 					++ $group_completed_fields;
@@ -2544,7 +2544,7 @@ function bb_get_user_social_networks_field_value( $user_id = null ) {
 	$user = ( null !== $user_id && 0 < $user_id ) ? $user_id : bp_displayed_user_id();
 
 	if ( $social_networks_id > 0 ) {
-		$original_option_values = maybe_unserialize( BP_XProfile_ProfileData::get_value_byid( $social_networks_id, $user ) );
+		$original_option_values = bb_xprofile_safe_unserialize( BP_XProfile_ProfileData::get_value_byid( $social_networks_id, $user ) ); // Object injection guard.
 	}
 
 	return $original_option_values;
@@ -2643,7 +2643,7 @@ function bb_remove_google_plus_fields( $field_id, $field_name ) {
 	) {
 		foreach ( $user_ids as $user_id ) {
 			$field_data = new BP_XProfile_ProfileData( $field_id, $user_id );
-			$data_value = maybe_unserialize( $field_data->value );
+			$data_value = bb_xprofile_safe_unserialize( $field_data->value ); // Object injection guard.
 			if ( ! empty( $data_value ) && isset( $data_value[ $field_name ] ) ) {
 				$field_value = $data_value[ $field_name ];
 				unset( $data_value[ $field_name ] );
@@ -2923,4 +2923,67 @@ function bb_migrate_xprofile_visibility( $background = false, $page = 1 ) {
 			'records' => $records_updated,
 		);
 	}
+}
+
+/**
+ * Safely unserialize an xProfile field value that originates from, or may
+ * contain, untrusted input — without ever instantiating PHP objects.
+ *
+ * Profile values for checkbox, multiselectbox and socialnetworks fields may be
+ * submitted as a serialized array. Passing untrusted input straight to
+ * maybe_unserialize() (a bare unserialize()) enables PHP object injection: a
+ * crafted serialized object would be instantiated and its magic methods
+ * (__wakeup/__destruct) executed. This helper guarantees no objects are created
+ * from the input.
+ *
+ * On PHP 7.0+ it uses the native allowed_classes option. On older PHP (the
+ * plugin still supports down to PHP 5.3) it refuses to unserialize any payload
+ * containing a serialized object or Serializable token before unserializing.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param mixed $value Possibly-serialized value.
+ *
+ * @return mixed Unserialized value with objects disallowed, or the original value when not serialized.
+ */
+function bb_xprofile_safe_unserialize( $value ) {
+	if ( ! is_string( $value ) || ! is_serialized( $value ) ) {
+		return $value;
+	}
+
+	// PHP 7.0+ can disallow object instantiation natively.
+	if ( version_compare( PHP_VERSION, '7.0', '>=' ) ) {
+		// phpcs:ignore PHPCompatibility.FunctionUse.NewFunctionParameters.unserialize_optionsFound,WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize -- Object injection is mitigated by allowed_classes => false; options arg is guarded by the PHP 7.0+ runtime check above.
+		return unserialize( $value, array( 'allowed_classes' => false ) );
+	}
+
+	/*
+	 * PHP < 7 fallback: refuse to unserialize any payload that contains a serialized object.
+	 *
+	 * In PHP's serialization format an object is written as  O:<len>:"ClassName":...
+	 * and a class that implements Serializable as            C:<len>:"ClassName":...
+	 * Those "O:" / "C:" type tokens are what cause object instantiation on unserialize().
+	 *
+	 * Regex breakdown ( delimiter is '#' so we don't have to escape '/' ):
+	 *   (?:^|[;{])   A non-capturing group that anchors the token to a position where a
+	 *                *new* serialized value can legitimately begin: the very start of the
+	 *                string (^), or immediately after a ';' (end of the previous element)
+	 *                or a '{' (opening of an array/object body). This anchoring is the key
+	 *                bit: every real object token sits at one of these positions, so all of
+	 *                them are caught, while an "O:"/"C:" at the *start* of string content
+	 *                (preceded by a '"', e.g. s:4:"O:1:") is correctly ignored.
+	 *   [OC]         A literal 'O' (standard object) or 'C' (Serializable object).
+	 *   :[0-9]+:     A ':', the class-name length (one or more digits), then a ':'.
+	 *
+	 * If that pattern matches, the payload carries an object, so we reject it outright
+	 * (return '') instead of unserializing — on PHP < 7 there is no allowed_classes option.
+	 * Plain serialized scalars/arrays (a:, s:, i:, b:, d:, N) never match and fall through.
+	 * (A legitimate string whose contents literally contain ";O:5:" or "{O:5:" would also be
+	 * rejected — a rare, fail-safe false-positive that is preferable to risking instantiation.)
+	 */
+	if ( preg_match( '#(?:^|[;{])[OC]:[0-9]+:#', $value ) ) {
+		return '';
+	}
+
+	return maybe_unserialize( $value );
 }
