@@ -143,11 +143,19 @@
 			}
 		}
 
+		.bb-group-bbmslms-settings-container,
 		.bb-group-meprlms-settings-container {
 
 			.select2-container--default .select2-selection--multiple {
+				background-color: var(--bb-rl-background-color);
 				border-color: var(--bb-rl-border-secondary-color);
 				border-radius: var(--bb-rl-radius-md) !important;
+
+				.select2-selection__rendered .select2-selection__choice {
+					color: var(--bb-rl-text-color);
+					background-color: var(--bb-rl-background-secondary-color);
+					border-color: var(--bb-rl-border-secondary-color);
+				}
 			}
 
 			.select2-dropdown {

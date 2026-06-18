@@ -2933,15 +2933,26 @@ body.bb-readylaunch-template.groups.group-invites span.select2-dropdown.select2-
   line-height: 16px;
 }
 
+.bb-rl-create-group .bb-rl-create-screen-content .bb-group-bbmslms-settings-container .select2-container--default .select2-selection--multiple,
 .bb-rl-create-group .bb-rl-create-screen-content .bb-group-meprlms-settings-container .select2-container--default .select2-selection--multiple {
+  background-color: var(--bb-rl-background-color);
   border-color: var(--bb-rl-border-secondary-color);
   border-radius: var(--bb-rl-radius-md) !important;
 }
 
+.bb-rl-create-group .bb-rl-create-screen-content .bb-group-bbmslms-settings-container .select2-container--default .select2-selection--multiple .select2-selection__rendered .select2-selection__choice,
+.bb-rl-create-group .bb-rl-create-screen-content .bb-group-meprlms-settings-container .select2-container--default .select2-selection--multiple .select2-selection__rendered .select2-selection__choice {
+  color: var(--bb-rl-text-color);
+  background-color: var(--bb-rl-background-secondary-color);
+  border-color: var(--bb-rl-border-secondary-color);
+}
+
+.bb-rl-create-group .bb-rl-create-screen-content .bb-group-bbmslms-settings-container .select2-dropdown,
 .bb-rl-create-group .bb-rl-create-screen-content .bb-group-meprlms-settings-container .select2-dropdown {
   border-color: var(--bb-rl-border-secondary-color);
 }
 
+.bb-rl-create-group .bb-rl-create-screen-content .bb-group-bbmslms-settings-container .select2-container--default .select2-results__option--highlighted[aria-selected],
 .bb-rl-create-group .bb-rl-create-screen-content .bb-group-meprlms-settings-container .select2-container--default .select2-results__option--highlighted[aria-selected] {
   background-color: var(--bb-rl-background-secondary-color);
   color: var(--bb-rl-text-secondary-color);
