@@ -15,9 +15,10 @@ import {
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
-import { createForum, uploadForumImage } from '../../utils/ajax';
+import { createForum } from '../../utils/ajax';
 import { toSlug, groupFieldsWithLayout, buildRegisteredFieldPayload, getVisibleFields, needsSeparator } from '../../utils/format';
 import { safeUrl } from '../../utils/sanitize';
+import { useMediaFrame } from '../../hooks/useMediaFrame';
 import { RegisteredMetaField } from '../common/RegisteredMetaField';
 import { forceRemoveEditor } from '../common/RichTextEditor';
 
@@ -52,10 +53,6 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 	var imageUrl = imageUrlState[ 0 ];
 	var setImageUrl = imageUrlState[ 1 ];
 
-	var isUploadingState = useState( false );
-	var isUploading = isUploadingState[ 0 ];
-	var setIsUploading = isUploadingState[ 1 ];
-
 	var isSavingState = useState( false );
 	var isSaving = isSavingState[ 0 ];
 	var setIsSaving = isSavingState[ 1 ];
@@ -64,8 +61,8 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 	var error = errorState[ 0 ];
 	var setError = errorState[ 1 ];
 
-	var fileInputRef = useRef( null );
-	var uploadAbortRef = useRef( null );
+	// Shared WordPress media frame opener (handles frame reuse + unmount teardown).
+	var openMediaFrame = useMediaFrame();
 
 	// Track mounted state.
 	var isMountedRef = useRef( true );
@@ -73,9 +70,6 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 		isMountedRef.current = true;
 		return function () {
 			isMountedRef.current = false;
-			if ( uploadAbortRef.current ) {
-				uploadAbortRef.current.abort();
-			}
 		};
 	}, [] );
 
@@ -127,70 +121,26 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 	}
 
 	/**
-	 * Trigger hidden file input for image selection.
+	 * Open the WordPress Media Library to select or upload the feature image.
+	 *
+	 * Replaces the previous direct-upload flow: selecting an existing Library
+	 * item reuses its attachment (no duplicate), and uploads made inside the
+	 * media frame route through WordPress core. The chosen attachment ID is
+	 * stored for set_post_thumbnail() on save. Frame behaviour is centralized
+	 * in the shared useMediaFrame hook (mirrors WP's native "Featured image").
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
-	var triggerFileInput = function () {
-		if ( fileInputRef.current ) {
-			fileInputRef.current.value = '';
-			fileInputRef.current.click();
-		}
-	};
-
-	/**
-	 * Handle file selection and upload via AJAX.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 *
-	 * @param {Event} e File input change event.
-	 */
-	var handleFileSelect = function ( e ) {
-		var file = e.target.files && e.target.files[ 0 ];
-		if ( ! file ) {
-			return;
-		}
-
-		var allowedTypes = [ 'image/jpeg', 'image/png', 'image/gif', 'image/webp' ];
-		if ( -1 === allowedTypes.indexOf( file.type ) ) {
-			setError( __( 'Invalid file type. Only JPEG, PNG, GIF, and WebP images are allowed.', 'buddyboss' ) );
-			return;
-		}
-
-		// 10MB limit.
-		if ( file.size > 10 * 1024 * 1024 ) {
-			setError( __( 'File size exceeds the maximum allowed size of 10MB.', 'buddyboss' ) );
-			return;
-		}
-
-		if ( uploadAbortRef.current ) {
-			uploadAbortRef.current.abort();
-		}
-		uploadAbortRef.current = new AbortController();
-
-		setIsUploading( true );
-		setError( '' );
-
-		uploadForumImage( file, uploadAbortRef.current.signal ).then( function ( response ) {
-			if ( ! isMountedRef.current ) {
-				return;
-			}
-			setIsUploading( false );
-			if ( response.success && response.data ) {
-				setImageId( response.data.attachment_id );
-				setImageUrl( response.data.url );
-			} else {
-				setError( ( response.data && response.data.message ) || __( 'Failed to upload image.', 'buddyboss' ) );
-			}
-		} ).catch( function ( err ) {
-			if ( ! isMountedRef.current ) {
-				return;
-			}
-			setIsUploading( false );
-			if ( 'AbortError' !== err.name ) {
-				setError( __( 'An error occurred while uploading. Please try again.', 'buddyboss' ) );
-			}
+	var openMediaLibrary = function () {
+		var opened = openMediaFrame( function ( attachment ) {
+			setImageId( attachment.id );
+			setImageUrl( attachment.url );
+			setError( '' );
 		} );
+
+		if ( ! opened ) {
+			setError( __( 'The WordPress Media Library is not available.', 'buddyboss' ) );
+		}
 	};
 
 	/**
@@ -265,11 +215,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 		permalinkEditedRef.current = false;
 		setImageId( 0 );
 		setImageUrl( '' );
-		setIsUploading( false );
 		setError( '' );
-		if ( uploadAbortRef.current ) {
-			uploadAbortRef.current.abort();
-		}
 
 		// Reset TinyMCE editors for richtext fields.
 		if ( window.tinymce ) {
@@ -357,22 +303,14 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 					<label className="components-base-control__label" htmlFor="bb-forum-create-image">
 						{ __( 'Feature Image (Optional)', 'buddyboss' ) }
 					</label>
-					<input
-						type="file"
-						ref={ fileInputRef }
-						accept="image/jpeg,image/png,image/gif,image/webp"
-						onChange={ handleFileSelect }
-						style={ { display: 'none' } }
-					/>
 					{ imageUrl ? (
 						<div className="bb-forum-modal__image-preview">
 							<img src={ safeUrl( imageUrl ) } alt="" />
 							<div className="bb-forum-modal__image-actions">
 								<Button
 									variant="secondary"
-									onClick={ triggerFileInput }
+									onClick={ openMediaLibrary }
 									className="bb-forum-modal__replace-image"
-									disabled={ isUploading }
 								>
 									{ __( 'Replace', 'buddyboss' ) }
 								</Button>
@@ -381,7 +319,6 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 									isDestructive
 									onClick={ handleRemoveImage }
 									className="bb-forum-modal__remove-image"
-									disabled={ isUploading }
 								>
 									{ __( 'Reset', 'buddyboss' ) }
 								</Button>
@@ -390,15 +327,10 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 					) : (
 						<button
 							type="button"
-							onClick={ triggerFileInput }
-							className={ 'bb-forum-create-modal__upload-zone' + ( isUploading ? ' bb-forum-create-modal__upload-zone--uploading' : '' ) }
-							disabled={ isUploading }
+							onClick={ openMediaLibrary }
+							className="bb-forum-create-modal__upload-zone"
 						>
-							{ isUploading ? (
-								<span className="bb-forum-create-modal__upload-spinner"></span>
-							) : (
-								<span className="bb-forum-create-modal__upload-icon"><i className="bb-icons-rl-plus"></i></span>
-							) }
+							<span className="bb-forum-create-modal__upload-icon"><i className="bb-icons-rl-plus"></i></span>
 						</button>
 					) }
 					<p className="bb-forum-create-modal__image-help">
@@ -419,7 +351,7 @@ export function ForumCreateModal( { isOpen, onClose, onCreated, forumBaseSlug, c
 					variant="primary"
 					onClick={ handleCreate }
 					isBusy={ isSaving }
-					disabled={ isSaving || isUploading || ! ( registeredValues.name || '' ).trim() }
+					disabled={ isSaving || ! ( registeredValues.name || '' ).trim() }
 				>
 					{ __( 'Save', 'buddyboss' ) }
 				</Button>

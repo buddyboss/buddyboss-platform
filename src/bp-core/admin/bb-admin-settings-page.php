@@ -129,6 +129,18 @@ function bb_admin_settings_page() {
 		}
 	}
 
+	// The Forums admin (create/edit forum modals) renders a custom featured-image
+	// Media Library picker that is NOT a registered field, so the registry scan
+	// above does not flag it. Force the media library when the forums meta
+	// component is registered so the picker has wp.media available without
+	// relying on another feature (e.g. appearance) happening to enqueue it.
+	if ( ! $has_media_field && function_exists( 'bb_admin_meta_field_registry' ) ) {
+		$forum_meta_fields = bb_admin_meta_field_registry()->get_fields( 'forums' );
+		if ( ! empty( $forum_meta_fields ) ) {
+			$has_media_field = true;
+		}
+	}
+
 	if ( $has_rich_text ) {
 		wp_enqueue_editor();
 	}
