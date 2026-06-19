@@ -1147,7 +1147,8 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		$unserialized_value = maybe_unserialize( $value );
+		// Disallow object instantiation to prevent PHP object injection when reading stored field values.
+		$unserialized_value = bb_xprofile_safe_unserialize( $value );
 		if ( ! is_array( $unserialized_value ) ) {
 			if ( 'textarea' === $profile_field->type ) {
 				$unserialized_value = (array) $unserialized_value;

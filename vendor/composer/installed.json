@@ -93,7 +93,7 @@
             },
             "time": "2025-07-18T22:41:43+00:00",
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "BuddyBossPlatform\\GroundLevel\\Container\\": ""
@@ -137,7 +137,7 @@
             },
             "time": "2026-02-04T19:52:51+00:00",
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "BuddyBossPlatform\\GroundLevel\\InProductNotifications\\": ""
@@ -180,7 +180,7 @@
             },
             "time": "2026-02-04T19:52:51+00:00",
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "BuddyBossPlatform\\GroundLevel\\Mothership\\": ""
@@ -221,7 +221,7 @@
             },
             "time": "2026-01-27T21:29:41+00:00",
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "BuddyBossPlatform\\GroundLevel\\Support\\": ""
