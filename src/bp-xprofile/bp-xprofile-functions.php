@@ -2930,15 +2930,19 @@ function bb_migrate_xprofile_visibility( $background = false, $page = 1 ) {
  * contain, untrusted input — without ever instantiating PHP objects.
  *
  * Profile values for checkbox, multiselectbox and socialnetworks fields may be
- * submitted as a serialized array. Passing untrusted input straight to
- * maybe_unserialize() (a bare unserialize()) enables PHP object injection: a
+ * stored or submitted as a serialized array. Passing untrusted input straight
+ * to maybe_unserialize() (a bare unserialize()) enables PHP object injection: a
  * crafted serialized object would be instantiated and its magic methods
- * (__wakeup/__destruct) executed. This helper guarantees no objects are created
- * from the input.
+ * (__wakeup/__destruct) executed, potentially triggering a POP gadget chain.
  *
- * On PHP 7.0+ it uses the native allowed_classes option. On older PHP (the
- * plugin still supports down to PHP 5.3) it refuses to unserialize any payload
- * containing a serialized object or Serializable token before unserializing.
+ * This helper mirrors maybe_unserialize() for all legitimate data — it returns
+ * the value unchanged when it is not a serialized string, and returns the
+ * unserialized array/scalar otherwise — but uses the native allowed_classes
+ * option so any object in the payload is decoded as an inert
+ * __PHP_Incomplete_Class instead of a real instance. No magic methods run.
+ *
+ * The platform requires PHP 7.4+, where the allowed_classes option is always
+ * available, so no older-PHP fallback is needed.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -2951,39 +2955,6 @@ function bb_xprofile_safe_unserialize( $value ) {
 		return $value;
 	}
 
-	// PHP 7.0+ can disallow object instantiation natively.
-	if ( version_compare( PHP_VERSION, '7.0', '>=' ) ) {
-		// phpcs:ignore PHPCompatibility.FunctionUse.NewFunctionParameters.unserialize_optionsFound,WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize -- Object injection is mitigated by allowed_classes => false; options arg is guarded by the PHP 7.0+ runtime check above.
-		return unserialize( $value, array( 'allowed_classes' => false ) );
-	}
-
-	/*
-	 * PHP < 7 fallback: refuse to unserialize any payload that contains a serialized object.
-	 *
-	 * In PHP's serialization format an object is written as  O:<len>:"ClassName":...
-	 * and a class that implements Serializable as            C:<len>:"ClassName":...
-	 * Those "O:" / "C:" type tokens are what cause object instantiation on unserialize().
-	 *
-	 * Regex breakdown ( delimiter is '#' so we don't have to escape '/' ):
-	 *   (?:^|[;{])   A non-capturing group that anchors the token to a position where a
-	 *                *new* serialized value can legitimately begin: the very start of the
-	 *                string (^), or immediately after a ';' (end of the previous element)
-	 *                or a '{' (opening of an array/object body). This anchoring is the key
-	 *                bit: every real object token sits at one of these positions, so all of
-	 *                them are caught, while an "O:"/"C:" at the *start* of string content
-	 *                (preceded by a '"', e.g. s:4:"O:1:") is correctly ignored.
-	 *   [OC]         A literal 'O' (standard object) or 'C' (Serializable object).
-	 *   :[0-9]+:     A ':', the class-name length (one or more digits), then a ':'.
-	 *
-	 * If that pattern matches, the payload carries an object, so we reject it outright
-	 * (return '') instead of unserializing — on PHP < 7 there is no allowed_classes option.
-	 * Plain serialized scalars/arrays (a:, s:, i:, b:, d:, N) never match and fall through.
-	 * (A legitimate string whose contents literally contain ";O:5:" or "{O:5:" would also be
-	 * rejected — a rare, fail-safe false-positive that is preferable to risking instantiation.)
-	 */
-	if ( preg_match( '#(?:^|[;{])[OC]:[0-9]+:#', $value ) ) {
-		return '';
-	}
-
-	return maybe_unserialize( $value );
+	// phpcs:ignore PHPCompatibility.FunctionUse.NewFunctionParameters.unserialize_optionsFound,WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize -- The options arg is available on PHP 7+ (platform requires 7.4+); object injection is mitigated by allowed_classes => false, so no objects are ever instantiated from the input.
+	return unserialize( $value, array( 'allowed_classes' => false ) );
 }
