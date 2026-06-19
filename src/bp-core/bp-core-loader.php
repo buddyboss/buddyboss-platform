@@ -23,5 +23,14 @@ function bp_setup_core() {
 	if ( file_exists( buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-init.php' ) ) {
 		require_once buddypress()->plugin_dir . 'bp-core/admin/bb-admin-settings-init.php';
 	}
+
+	// Load the debug-asset fetcher: when WP_DEBUG && SCRIPT_DEBUG are both on,
+	// the unminified counterparts of paired `.min.{js,css}` assets are
+	// downloaded from the production branch at runtime so devs see readable
+	// source. The shipped zip carries only the minified pair files, keeping
+	// the customer download small.
+	if ( file_exists( buddypress()->plugin_dir . 'bp-core/bb-debug-asset-fetcher-loader.php' ) ) {
+		require_once buddypress()->plugin_dir . 'bp-core/bb-debug-asset-fetcher-loader.php';
+	}
 }
 add_action( 'bp_loaded', 'bp_setup_core', 0 );
