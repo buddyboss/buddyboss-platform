@@ -2925,36 +2925,39 @@ function bb_migrate_xprofile_visibility( $background = false, $page = 1 ) {
 	}
 }
 
-/**
- * Safely unserialize an xProfile field value that originates from, or may
- * contain, untrusted input — without ever instantiating PHP objects.
- *
- * Profile values for checkbox, multiselectbox and socialnetworks fields may be
- * stored or submitted as a serialized array. Passing untrusted input straight
- * to maybe_unserialize() (a bare unserialize()) enables PHP object injection: a
- * crafted serialized object would be instantiated and its magic methods
- * (__wakeup/__destruct) executed, potentially triggering a POP gadget chain.
- *
- * This helper mirrors maybe_unserialize() for all legitimate data — it returns
- * the value unchanged when it is not a serialized string, and returns the
- * unserialized array/scalar otherwise — but uses the native allowed_classes
- * option so any object in the payload is decoded as an inert
- * __PHP_Incomplete_Class instead of a real instance. No magic methods run.
- *
- * The platform requires PHP 7.4+, where the allowed_classes option is always
- * available, so no older-PHP fallback is needed.
- *
- * @since BuddyBoss [BBVERSION]
- *
- * @param mixed $value Possibly-serialized value.
- *
- * @return mixed Unserialized value with objects disallowed, or the original value when not serialized.
- */
-function bb_xprofile_safe_unserialize( $value ) {
-	if ( ! is_string( $value ) || ! is_serialized( $value ) ) {
-		return $value;
-	}
+if ( ! function_exists( 'bb_migrate_xprofile_visibility' ) ) {
 
-	// phpcs:ignore PHPCompatibility.FunctionUse.NewFunctionParameters.unserialize_optionsFound,WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize -- The options arg is available on PHP 7+ (platform requires 7.4+); object injection is mitigated by allowed_classes => false, so no objects are ever instantiated from the input.
-	return unserialize( $value, array( 'allowed_classes' => false ) );
+	/**
+	 * Safely unserialize an xProfile field value that originates from, or may
+	 * contain, untrusted input — without ever instantiating PHP objects.
+	 *
+	 * Profile values for checkbox, multiselectbox and socialnetworks fields may be
+	 * stored or submitted as a serialized array. Passing untrusted input straight
+	 * to maybe_unserialize() (a bare unserialize()) enables PHP object injection: a
+	 * crafted serialized object would be instantiated and its magic methods
+	 * (__wakeup/__destruct) executed, potentially triggering a POP gadget chain.
+	 *
+	 * This helper mirrors maybe_unserialize() for all legitimate data — it returns
+	 * the value unchanged when it is not a serialized string, and returns the
+	 * unserialized array/scalar otherwise — but uses the native allowed_classes
+	 * option so any object in the payload is decoded as an inert
+	 * __PHP_Incomplete_Class instead of a real instance. No magic methods run.
+	 *
+	 * The platform requires PHP 7.4+, where the allowed_classes option is always
+	 * available, so no older-PHP fallback is needed.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param mixed $value Possibly-serialized value.
+	 *
+	 * @return mixed Unserialized value with objects disallowed, or the original value when not serialized.
+	 */
+	function bb_xprofile_safe_unserialize( $value ) {
+		if ( ! is_string( $value ) || ! is_serialized( $value ) ) {
+			return $value;
+		}
+
+		// phpcs:ignore PHPCompatibility.FunctionUse.NewFunctionParameters.unserialize_optionsFound,WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize -- The options arg is available on PHP 7+ (platform requires 7.4+); object injection is mitigated by allowed_classes => false, so no objects are ever instantiated from the input.
+		return unserialize( $value, array( 'allowed_classes' => false ) );
+	}
 }
