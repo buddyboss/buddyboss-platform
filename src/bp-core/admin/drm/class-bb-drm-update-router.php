@@ -79,11 +79,13 @@ class BB_DRM_Update_Router {
 		// the wordpress.org payload untouched (the site keeps receiving updates).
 		add_filter( 'http_request_args', array( $this, 'suppress_wporg_update_check' ), 10, 2 );
 
-		// Req #3: deliver the paid build immediately on license add/update.
-		add_action( 'bb_drm_license_activated', array( $this, 'schedule_paid_build_install' ) );
+		// Req #3: deliver the paid build immediately (synchronously) on license add/update,
+		// mirroring WordPress's own "Update Now" so the swap happens at once rather than
+		// waiting for a request-triggered cron run.
+		add_action( 'bb_drm_license_activated', array( $this, 'install_paid_build' ) );
 		add_action( $this->plugin_id . '_license_status_changed', array( $this, 'on_license_status_changed' ), 10, 2 );
 
-		// Background install handler.
+		// Fallback: any queued background install event still resolves to the same handler.
 		add_action( self::INSTALL_HOOK, array( $this, 'install_paid_build' ) );
 	}
 
@@ -208,10 +210,11 @@ class BB_DRM_Update_Router {
 	/**
 	 * Handle the Mothership cron license-status change event.
 	 *
-	 * On a valid (paid) status we schedule delivery of the paid build. On an invalid/expired
-	 * status we intentionally do nothing here: `is_paid_active()` immediately returns false,
-	 * so `suppress_wporg_update_check()` stops suppressing and wordpress.org resumes serving
-	 * the (free) Platform build, which the normal update flow then installs. The currently
+	 * On a valid (paid) status we install the paid build (this event already fires inside the
+	 * vendor's background cron run, so the work is done directly). On an invalid/expired status
+	 * we intentionally do nothing here: `is_paid_active()` immediately returns false, so
+	 * `suppress_wporg_update_check()` stops suppressing and wordpress.org resumes serving the
+	 * (free) Platform build, which the normal update flow then installs. The currently
 	 * installed paid build keeps working until that update lands.
 	 *
 	 * @since BuddyBoss [BBVERSION]
@@ -221,33 +224,8 @@ class BB_DRM_Update_Router {
 	 */
 	public function on_license_status_changed( $is_valid, $status = null ) {
 		if ( $is_valid ) {
-			$this->schedule_paid_build_install();
+			$this->install_paid_build();
 		}
-	}
-
-	/**
-	 * Schedule a one-off background install of the paid Platform build.
-	 *
-	 * Keeps the license activation request fast by deferring the (potentially heavy)
-	 * download + replace to a single cron event.
-	 *
-	 * @since BuddyBoss [BBVERSION]
-	 */
-	public function schedule_paid_build_install() {
-		if ( ! $this->is_paid_active() ) {
-			return;
-		}
-
-		// Nothing to do when the paid components are already present in this build.
-		if ( $this->has_paid_components() ) {
-			return;
-		}
-
-		if ( wp_next_scheduled( self::INSTALL_HOOK ) ) {
-			return;
-		}
-
-		wp_schedule_single_event( time() + 5, self::INSTALL_HOOK );
 	}
 
 	/**
@@ -352,8 +330,10 @@ class BB_DRM_Update_Router {
 	/**
 	 * Download and install the paid Platform build, replacing the current plugin.
 	 *
-	 * Runs in a cron context so the active plugin files are never swapped mid page request.
-	 * Only fires when a paid license is active and the paid component folders are missing.
+	 * Runs synchronously on license activation (like WordPress's "Update Now") and also from
+	 * the vendor's background license-status cron. The transient lock prevents overlapping
+	 * runs across both paths. Only proceeds when a paid license is active and the paid
+	 * component folders are missing from the current build.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
