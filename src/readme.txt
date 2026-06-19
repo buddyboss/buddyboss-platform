@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.8.1
 Requires PHP: 7.4.0
-Stable tag: 3.0.3
+Stable tag: 3.0.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,10 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 3.0.5 =
+* Bug: Core - Enhanced xProfile REST API data handling to prevent object deserialization
+* Bug: ReadyLaunch - Resolved an issue where Activity Feed sidebar widget settings in ReadyLaunch could not be saved, resulting in a validation error and failed settings update
 
 = 3.0.4 =
 * Enhancement: Activity - Added Activity Sharing REST API support
