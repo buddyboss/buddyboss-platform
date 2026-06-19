@@ -22,13 +22,20 @@
  * @since BuddyBoss [BBVERSION]
  */
 
-import { useRef, useEffect } from '@wordpress/element';
+import { useRef, useEffect, useCallback } from '@wordpress/element';
 
 /**
  * Open a WordPress media frame and receive the selection.
  *
  * The frame is created lazily on first open, reused across subsequent opens,
  * and disposed on unmount (releases event handlers + the modal DOM).
+ *
+ * Note: `config` is evaluated only when the frame is first created (on the
+ * first open). The frame is then reused, so later `config` changes are ignored
+ * for the lifetime of the component. Pass a stable config; if it must change,
+ * remount the component (or extend this hook to rebuild on structural change,
+ * as `MediaPickerField` does). The returned opener has a stable identity
+ * (memoized) so it is safe to pass as a prop.
  *
  * @since BuddyBoss [BBVERSION]
  *
@@ -65,7 +72,11 @@ export function useMediaFrame( config ) {
 		};
 	}, [] );
 
-	return function openMediaFrame( onSelect ) {
+	// Stable identity across renders so the opener can be passed as a prop
+	// without forcing child re-renders. `config` is intentionally read once (on
+	// first open — see the note above), so empty deps are correct here.
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	return useCallback( function openMediaFrame( onSelect ) {
 		if ( typeof window.wp === 'undefined' || ! window.wp.media ) {
 			return false;
 		}
@@ -114,5 +125,5 @@ export function useMediaFrame( config ) {
 
 		frameRef.current.open();
 		return true;
-	};
+	}, [] );
 }

@@ -134,6 +134,13 @@ function bb_admin_settings_page() {
 	// above does not flag it. Force the media library when the forums meta
 	// component is registered so the picker has wp.media available without
 	// relying on another feature (e.g. appearance) happening to enqueue it.
+	//
+	// Note (tech debt): this proxies on "forums has any registered meta fields",
+	// not specifically on the feature-image picker. Today the picker always ships
+	// in the forum modals, so the proxy is accurate; but if forums ever registers
+	// non-image meta fields without an image picker, this becomes a harmless
+	// false positive (wp.media enqueued unnecessarily). If that happens, switch
+	// to a dedicated flag or check the field types here.
 	if ( ! $has_media_field && function_exists( 'bb_admin_meta_field_registry' ) ) {
 		$forum_meta_fields = bb_admin_meta_field_registry()->get_fields( 'forums' );
 		if ( ! empty( $forum_meta_fields ) ) {
