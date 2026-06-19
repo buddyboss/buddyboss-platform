@@ -118,7 +118,13 @@ export function useMediaFrame( config ) {
 					} );
 					onSelectRef.current( items );
 				} else {
-					onSelectRef.current( selection.first().toJSON() );
+					// `first()` is undefined on an empty selection. WP disables the
+					// select button when nothing is chosen, so this is defensive
+					// against custom frame states firing `select` while empty.
+					var first = selection.first();
+					if ( first ) {
+						onSelectRef.current( first.toJSON() );
+					}
 				}
 			} );
 		}
