@@ -526,7 +526,9 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 							array( 'status' => 400 )
 						);
 					}
-					$validated[] = (bool) $item;
+					// wp_validate_boolean() — not a bare (bool) cast — so the allow-listed
+					// string 'false' resolves to false. (bool) 'false' is true in PHP.
+					$validated[] = wp_validate_boolean( $item );
 					break;
 
 				case 'sequential_numeric':
@@ -659,9 +661,11 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 	 * The persisted shape for boolean-map settings (e.g. the ReadyLaunch sidebar
 	 * widgets) is a string-keyed map. Some clients instead submit the selection as
 	 * a sequential JSON array, which PHP decodes with integer keys and which
-	 * validate_boolean_map_array() would reject with a 400. Three input shapes are
+	 * validate_boolean_map_array() would reject with a 400. Four input shapes are
 	 * normalised here:
 	 *
+	 * - Empty array ( `array()` — "all widgets disabled" ) — expanded to a full
+	 *   false-map so downstream reads ( `$map['slug']` ) return false, not null.
 	 * - Canonical map ( `array( 'slug_a' => true, 'slug_b' => false )` ) — returned
 	 *   untouched.
 	 * - Enabled-slug list ( `array( 'slug_a', 'slug_c' )` ) — every known slug is set
@@ -681,9 +685,8 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 	 * @return mixed Normalised value.
 	 */
 	protected function normalize_boolean_map_value( $value, $current_value ) {
-		// Only sequential / integer-keyed input needs normalising; a string-keyed
-		// map is already canonical.
-		if ( empty( $value ) || ! is_array( $value ) || ! is_int( array_key_first( $value ) ) ) {
+		// Non-array input can't be normalised here — hand it to the validator.
+		if ( ! is_array( $value ) ) {
 			return $value;
 		}
 
@@ -693,7 +696,21 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			return $value;
 		}
 
-		$known_keys     = array_keys( $current_value );
+		$known_keys = array_keys( $current_value );
+
+		// An empty submission means "all widgets disabled". Expand to a full
+		// false-map so downstream reads ( $map['slug'] ) return false rather than
+		// null — matching the shape the onboarding sanitizer always builds.
+		if ( empty( $value ) ) {
+			return array_fill_keys( $known_keys, false );
+		}
+
+		// A string-keyed map is already canonical; only sequential / integer-keyed
+		// input needs normalising.
+		if ( ! is_int( array_key_first( $value ) ) ) {
+			return $value;
+		}
+
 		$submitted_vals = array_values( $value );
 
 		// Shape A: a list of enabled slugs. Order-independent and partial-selection
@@ -773,7 +790,9 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 				);
 			}
 
-			$validated[ $sanitized_key ] = (bool) $item;
+			// wp_validate_boolean() — not a bare (bool) cast — so the allow-listed
+			// string 'false' resolves to false. (bool) 'false' is true in PHP.
+			$validated[ $sanitized_key ] = wp_validate_boolean( $item );
 		}
 
 		return $validated;
