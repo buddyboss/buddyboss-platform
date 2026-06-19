@@ -678,7 +678,7 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 	 * downstream validator can reject it with a descriptive error rather than this
 	 * method guessing.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.5
 	 *
 	 * @param mixed $value         Submitted value.
 	 * @param mixed $current_value Current stored map (the source of the known slugs).

@@ -2946,7 +2946,7 @@ if ( ! function_exists( 'bb_xprofile_safe_unserialize' ) ) {
 	 * The platform requires PHP 7.4+, where the allowed_classes option is always
 	 * available, so no older-PHP fallback is needed.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * @since BuddyBoss 3.0.5
 	 *
 	 * @param mixed $value Possibly-serialized value.
 	 *
