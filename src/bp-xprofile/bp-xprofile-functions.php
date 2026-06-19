@@ -2925,7 +2925,7 @@ function bb_migrate_xprofile_visibility( $background = false, $page = 1 ) {
 	}
 }
 
-if ( ! function_exists( 'bb_migrate_xprofile_visibility' ) ) {
+if ( ! function_exists( 'bb_xprofile_safe_unserialize' ) ) {
 
 	/**
 	 * Safely unserialize an xProfile field value that originates from, or may
