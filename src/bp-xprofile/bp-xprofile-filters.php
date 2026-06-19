@@ -338,8 +338,8 @@ function xprofile_sanitize_data_value_before_save( $field_value, $field_id = 0, 
 		$reserialize = true;
 	}
 
-	// Value might be a serialized array of options.
-	$field_value = maybe_unserialize( $field_value );
+	// Value might be a serialized array of options. Disallow object instantiation (PHP object injection guard).
+	$field_value = bb_xprofile_safe_unserialize( $field_value );
 
 	// Sanitize single field value.
 	if ( ! is_array( $field_value ) ) {
