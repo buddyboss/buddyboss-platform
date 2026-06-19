@@ -5,9 +5,11 @@
  * Registers the Media feature in the Feature Registry and loads
  * all Media settings (side panels, sections, fields).
  *
- * Media is a "super-feature" that wraps three legacy components:
- * bp-media (photos), bp-video (videos), and bp-document (documents).
- * When Media is disabled, all three components are disabled.
+ * The Media feature maps to the bp-media (photos) component only. The
+ * bp-video (videos) and bp-document (documents) components are managed
+ * independently — they are not activated or deactivated by the Media
+ * toggle, and their settings panels are only registered when the
+ * corresponding component is active and present in the build.
  *
  * @package BuddyBoss\Core\Administration
  * @since BuddyBoss 3.0.0
@@ -45,7 +47,7 @@ function bb_admin_settings_register_media_feature() {
 			'is_active_callback' => function () {
 				return bp_is_active( 'media' );
 			},
-			'components'         => array( 'media', 'video', 'document' ),
+			'components'         => array( 'media' ),
 			'settings_route'     => '/settings/media',
 			'order'              => 110,
 		)
@@ -60,12 +62,19 @@ function bb_admin_settings_register_media_feature() {
 	// Load settings sub-files only when media is active.
 	require_once __DIR__ . '/settings/media/callbacks.php';
 	require_once __DIR__ . '/settings/media/settings-photos.php';
-	require_once __DIR__ . '/settings/media/settings-videos.php';
-	require_once __DIR__ . '/settings/media/settings-documents.php';
 	require_once __DIR__ . '/settings/media/settings-emoji.php';
 	require_once __DIR__ . '/settings/media/settings-gifs.php';
 	require_once __DIR__ . '/settings/media/settings-security.php';
 	require_once __DIR__ . '/settings/media/settings-access-controls.php';
+
+	// Videos and Documents are independent components (paid-only); only load
+	// their settings panels when the component is active in this build.
+	if ( bp_is_active( 'video' ) ) {
+		require_once __DIR__ . '/settings/media/settings-videos.php';
+	}
+	if ( bp_is_active( 'document' ) ) {
+		require_once __DIR__ . '/settings/media/settings-documents.php';
+	}
 
 	// =========================================================================
 	// SIDE PANELS
@@ -95,51 +104,55 @@ function bb_admin_settings_register_media_feature() {
 		)
 	);
 
-	// Side Panel 2: Videos.
-	bb_register_side_panel(
-		'media',
-		'videos',
-		array(
-			'title'    => __( 'Videos', 'buddyboss' ),
-			'icon'     => array(
-				'type'  => 'font',
-				'class' => 'bb-icons-rl bb-icons-rl-video-camera',
-			),
-			'help_url' => bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page'    => 'bp-help',
-						'article' => 124807,
-					),
-					'admin.php'
-				)
-			),
-			'order'    => 20,
-		)
-	);
+	// Side Panel 2: Videos (only when the video component is active).
+	if ( bp_is_active( 'video' ) ) {
+		bb_register_side_panel(
+			'media',
+			'videos',
+			array(
+				'title'    => __( 'Videos', 'buddyboss' ),
+				'icon'     => array(
+					'type'  => 'font',
+					'class' => 'bb-icons-rl bb-icons-rl-video-camera',
+				),
+				'help_url' => bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'bp-help',
+							'article' => 124807,
+						),
+						'admin.php'
+					)
+				),
+				'order'    => 20,
+			)
+		);
+	}
 
-	// Side Panel 3: Documents.
-	bb_register_side_panel(
-		'media',
-		'documents',
-		array(
-			'title'    => __( 'Documents', 'buddyboss' ),
-			'icon'     => array(
-				'type'  => 'font',
-				'class' => 'bb-icons-rl bb-icons-rl-file-text',
-			),
-			'help_url' => bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page'    => 'bp-help',
-						'article' => 87466,
-					),
-					'admin.php'
-				)
-			),
-			'order'    => 30,
-		)
-	);
+	// Side Panel 3: Documents (only when the document component is active).
+	if ( bp_is_active( 'document' ) ) {
+		bb_register_side_panel(
+			'media',
+			'documents',
+			array(
+				'title'    => __( 'Documents', 'buddyboss' ),
+				'icon'     => array(
+					'type'  => 'font',
+					'class' => 'bb-icons-rl bb-icons-rl-file-text',
+				),
+				'help_url' => bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'bp-help',
+							'article' => 87466,
+						),
+						'admin.php'
+					)
+				),
+				'order'    => 30,
+			)
+		);
+	}
 
 	// Side Panel 4: Emoji.
 	bb_register_side_panel(
@@ -254,11 +267,15 @@ function bb_admin_settings_register_media_feature() {
 	// Panel 1: Photos.
 	bb_media_register_photos_panel_fields();
 
-	// Panel 2: Videos.
-	bb_media_register_videos_panel_fields();
+	// Panel 2: Videos (only when the video component is active).
+	if ( bp_is_active( 'video' ) && function_exists( 'bb_media_register_videos_panel_fields' ) ) {
+		bb_media_register_videos_panel_fields();
+	}
 
-	// Panel 3: Documents.
-	bb_media_register_documents_panel_fields();
+	// Panel 3: Documents (only when the document component is active).
+	if ( bp_is_active( 'document' ) && function_exists( 'bb_media_register_documents_panel_fields' ) ) {
+		bb_media_register_documents_panel_fields();
+	}
 
 	// Panel 4: Emoji.
 	bb_media_register_emoji_panel_fields();

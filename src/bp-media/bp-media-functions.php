@@ -3807,6 +3807,26 @@ function bp_media_regenerate_attachment_thumbnails( $attachment_id ) {
  */
 function bb_media_user_can_access( $id, $type, $attachment_id = 0 ) {
 
+	// Bail with no access when the component for the requested type is not
+	// active (e.g. the video/document components are not present in this build),
+	// since their classes and functions are not loaded.
+	if (
+		( 'video' === $type && ! bp_is_active( 'video' ) ) ||
+		( in_array( $type, array( 'document', 'folder' ), true ) && ! bp_is_active( 'document' ) )
+	) {
+		$data = array(
+			'can_view'     => false,
+			'can_download' => false,
+			'can_add'      => false,
+			'can_edit'     => false,
+			'can_delete'   => false,
+			'can_move'     => false,
+		);
+
+		/** This filter is documented in bp-media/bp-media-functions.php */
+		return apply_filters( 'bb_media_user_can_access', $data, $id, $type, 0 );
+	}
+
 	$can_view        = false;
 	$can_download    = false;
 	$can_add         = false;

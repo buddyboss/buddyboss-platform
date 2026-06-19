@@ -1473,13 +1473,13 @@ function bp_nouveau_group_template_part() {
 			$template = 'photos';
 		} elseif ( bp_is_group_albums() ) {
 			$template = 'albums';
-		} elseif ( bp_is_group_folders() ) {
+		} elseif ( bp_is_active( 'document' ) && bp_is_group_folders() ) {
 			$template = 'documents';
-		} elseif ( bp_is_group_document() ) {
+		} elseif ( bp_is_active( 'document' ) && bp_is_group_document() ) {
 			$template = 'documents';
 		} elseif ( true === bp_disable_group_messages() && bp_is_group_messages() ) {
 			$template = 'messages';
-		} elseif ( bp_is_group_video() ) {
+		} elseif ( bp_is_active( 'video' ) && bp_is_group_video() ) {
 			$template = 'videos';
 		} elseif ( bp_is_group_video_albums() ) {
 			$template = 'albums';

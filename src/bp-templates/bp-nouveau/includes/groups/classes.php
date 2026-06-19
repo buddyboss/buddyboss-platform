@@ -293,7 +293,7 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 				'position'    => 21,
 			);
 
-			if ( bp_is_group_video_support_enabled() ) {
+			if ( bp_is_active( 'video' ) && bp_is_group_video_support_enabled() ) {
 				// Checked if order already set before, New menu(video) will be added at last
 				$video_menu_position = 22;
 				$orders              = get_option( 'bp_nouveau_appearance' );

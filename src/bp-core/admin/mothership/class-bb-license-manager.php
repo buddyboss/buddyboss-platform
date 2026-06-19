@@ -598,6 +598,19 @@ class BB_License_Manager extends LicenseManager {
 				),
 				true
 			);
+
+			/**
+			 * Fires after a BuddyBoss Platform license is successfully activated.
+			 *
+			 * Used by the DRM update router to route updates to the Mothership and to
+			 * deliver the paid build (which bundles the video/document components).
+			 *
+			 * @since BuddyBoss [BBVERSION]
+			 *
+			 * @param string $license_key The activated license key.
+			 * @param string $plugin_id   The resolved dynamic plugin ID (edition).
+			 */
+			do_action( 'bb_drm_license_activated', $license_key, $plugin_id );
 		} catch ( \Exception $e ) {
 			self::disable_header_capture();
 			bb_error_log( sprintf( 'Error storing license credentials: %s', $e->getMessage() ), true );

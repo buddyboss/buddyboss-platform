@@ -2592,6 +2592,28 @@ function bb_asset_path( $relative, $ext ) {
 }
 
 /**
+ * Check whether a component's directory is present in this build.
+ *
+ * Optional components can be stripped from a distribution (e.g. the video and
+ * document components removed from the free package). This checks for the
+ * component's loader file on disk.
+ *
+ * @since BuddyBoss [BBVERSION]
+ *
+ * @param string $component Component ID (e.g. 'video', 'document').
+ * @return bool True when the component's loader file exists.
+ */
+function bb_is_component_directory_available( $component ) {
+	static $available = array();
+
+	if ( ! isset( $available[ $component ] ) ) {
+		$available[ $component ] = file_exists( buddypress()->plugin_dir . 'bp-' . $component . '/bp-' . $component . '-loader.php' );
+	}
+
+	return $available[ $component ];
+}
+
+/**
  * Return a list of component information.
  *
  * @since BuddyPress 2.6.0
@@ -2783,6 +2805,14 @@ function bp_core_get_components( $type = 'all' ) {
 	// Add blogs tracking if multisite.
 	if ( is_multisite() ) {
 		$optional_components['blogs']['description'] = __( 'Record activity for new sites, posts, and comments across your network.', 'buddyboss' );
+	}
+
+	// Hide optional components whose directories are not present in this build
+	// (e.g. the video and document components stripped from the free package).
+	foreach ( array_keys( $optional_components ) as $component_key ) {
+		if ( ! bb_is_component_directory_available( $component_key ) ) {
+			unset( $optional_components[ $component_key ] );
+		}
 	}
 
 	$default_components = array();
