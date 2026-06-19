@@ -403,19 +403,12 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 				return $this->validate_associative_array( $key, $value, $current_value );
 
 			case 'boolean_map':
-				// Defensive: if the submitted value has integer keys (e.g. a JSON array sent
-				// by a client that received integer-keyed data) but the current stored value
-				// has string keys, re-key by position rather than failing with a 400.
-				if ( ! empty( $value ) && is_int( array_key_first( $value ) ) ) {
-					$current_keys = array_keys( $current_value );
-					if ( count( $value ) === count( $current_keys ) ) {
-						$rekeyed = array();
-						foreach ( array_values( $value ) as $i => $v ) {
-							$rekeyed[ $current_keys[ $i ] ] = $v;
-						}
-						$value = $rekeyed;
-					}
-				}
+				// Clients may submit a boolean map as a sequential JSON array (a list of
+				// enabled slugs, or a positional boolean list), which PHP decodes with
+				// integer keys. Normalise back to the canonical `slug => bool` map before
+				// validating, otherwise validate_boolean_map_array() rejects the integer
+				// keys with a 400 (PROD-9716).
+				$value = $this->normalize_boolean_map_value( $value, $current_value );
 				return $this->validate_boolean_map_array( $key, $value, $current_value );
 
 			case 'numeric_map':
@@ -658,6 +651,80 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 		}
 
 		return $validated;
+	}
+
+	/**
+	 * Normalise a submitted boolean-map value into the canonical `slug => bool` shape.
+	 *
+	 * The persisted shape for boolean-map settings (e.g. the ReadyLaunch sidebar
+	 * widgets) is a string-keyed map. Some clients instead submit the selection as
+	 * a sequential JSON array, which PHP decodes with integer keys and which
+	 * validate_boolean_map_array() would reject with a 400. Three input shapes are
+	 * normalised here:
+	 *
+	 * - Canonical map ( `array( 'slug_a' => true, 'slug_b' => false )` ) — returned
+	 *   untouched.
+	 * - Enabled-slug list ( `array( 'slug_a', 'slug_c' )` ) — every known slug is set
+	 *   to false, then the submitted slugs are flipped to true. Order-independent and
+	 *   supports partial selections.
+	 * - Positional boolean list ( `array( true, false, true )` ) aligned to the stored
+	 *   map's key order — re-keyed by position, but only when the counts match exactly.
+	 *
+	 * Any shape that can't be confidently normalised is returned untouched so the
+	 * downstream validator can reject it with a descriptive error rather than this
+	 * method guessing.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param mixed $value         Submitted value.
+	 * @param mixed $current_value Current stored map (the source of the known slugs).
+	 * @return mixed Normalised value.
+	 */
+	protected function normalize_boolean_map_value( $value, $current_value ) {
+		// Only sequential / integer-keyed input needs normalising; a string-keyed
+		// map is already canonical.
+		if ( empty( $value ) || ! is_array( $value ) || ! is_int( array_key_first( $value ) ) ) {
+			return $value;
+		}
+
+		// Without a reference map we can't resolve the slugs — leave it for the
+		// validator to handle.
+		if ( empty( $current_value ) || ! is_array( $current_value ) ) {
+			return $value;
+		}
+
+		$known_keys     = array_keys( $current_value );
+		$submitted_vals = array_values( $value );
+
+		// Shape A: a list of enabled slugs. Order-independent and partial-selection
+		// safe — start everything disabled, then enable the submitted slugs. Only
+		// applies when every submitted value is a known slug, otherwise fall through.
+		$all_strings = array_reduce(
+			$submitted_vals,
+			function ( $carry, $item ) {
+				return $carry && is_string( $item );
+			},
+			true
+		);
+		if ( $all_strings && empty( array_diff( $submitted_vals, $known_keys ) ) ) {
+			$map = array_fill_keys( $known_keys, false );
+			foreach ( $submitted_vals as $slug ) {
+				$map[ $slug ] = true;
+			}
+			return $map;
+		}
+
+		// Shape B: a positional boolean list aligned to the stored key order. Only
+		// safe when the counts line up one-to-one.
+		if ( count( $submitted_vals ) === count( $known_keys ) ) {
+			$map = array();
+			foreach ( $submitted_vals as $i => $v ) {
+				$map[ $known_keys[ $i ] ] = $v;
+			}
+			return $map;
+		}
+
+		return $value;
 	}
 
 	/**

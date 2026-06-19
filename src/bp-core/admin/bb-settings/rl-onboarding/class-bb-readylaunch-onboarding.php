@@ -684,10 +684,13 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 							// Build a string-keyed boolean map: option_key => (bool) enabled.
 							// array_intersect() preserves integer keys from the JS input, which
 							// causes REST validation failures. Use string keys from config instead.
-							$allowed_keys            = isset( $field_config['options'] ) ? array_keys( $field_config['options'] ) : array();
-							$boolean_map             = array();
+							// sanitize_key() keeps parity with bb_appearance_sanitize_sidebar_map()
+							// and guarantees the stored keys survive the REST validator's
+							// sanitize_key() equality check on a later save.
+							$allowed_keys = isset( $field_config['options'] ) ? array_keys( $field_config['options'] ) : array();
+							$boolean_map  = array();
 							foreach ( $allowed_keys as $option_key ) {
-								$boolean_map[ $option_key ] = in_array( $option_key, $field_value, true );
+								$boolean_map[ sanitize_key( $option_key ) ] = in_array( $option_key, $field_value, true );
 							}
 							$sanitized[ $field_key ] = $boolean_map;
 						} else {
