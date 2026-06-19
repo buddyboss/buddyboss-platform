@@ -681,28 +681,18 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 
 					case 'checkbox_group':
 						if ( is_array( $field_value ) ) {
-							// Ensure all values are sanitised and valid.
-							$allowed_values = isset( $field_config['options'] ) ? array_keys( $field_config['options'] ) : array();
-							$filtered       = array_intersect( $field_value, $allowed_values );
-
-							// Sidebar widget fields persist as `{widget_id => bool}` maps
-							// (the shape Settings 2.0 React and the frontend sidebar
-							// template both read). `array_intersect` on a sequential list
-							// of string IDs preserves numeric keys — pivot to a map with
-							// `array_fill_keys` BEFORE delegating, otherwise
-							// `bb_appearance_sanitize_sidebar_map`'s associative branch
-							// would write `{0=>true, 1=>true, ...}` and lose the IDs
-							// (PROD-9859).
-							$sidebar_map_keys = array(
-								'bb_rl_activity_sidebars',
-								'bb_rl_member_profile_sidebars',
-								'bb_rl_groups_sidebars',
-							);
-							if ( in_array( $field_key, $sidebar_map_keys, true ) && function_exists( 'bb_appearance_sanitize_sidebar_map' ) ) {
-								$sanitized[ $field_key ] = bb_appearance_sanitize_sidebar_map( array_fill_keys( $filtered, true ) );
-							} else {
-								$sanitized[ $field_key ] = $filtered;
+							// Build a string-keyed boolean map: option_key => (bool) enabled.
+							// array_intersect() preserves integer keys from the JS input, which
+							// causes REST validation failures. Use string keys from config instead.
+							// sanitize_key() keeps parity with bb_appearance_sanitize_sidebar_map()
+							// and guarantees the stored keys survive the REST validator's
+							// sanitize_key() equality check on a later save.
+							$allowed_keys = isset( $field_config['options'] ) ? array_keys( $field_config['options'] ) : array();
+							$boolean_map  = array();
+							foreach ( $allowed_keys as $option_key ) {
+								$boolean_map[ sanitize_key( $option_key ) ] = in_array( $option_key, $field_value, true );
 							}
+							$sanitized[ $field_key ] = $boolean_map;
 						} else {
 							// If not an array, default to an empty array.
 							$sanitized[ $field_key ] = array();
