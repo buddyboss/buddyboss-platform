@@ -519,12 +519,26 @@ abstract class BP_Core_Notification_Abstract {
 	 * Add email schema.
 	 *
 	 * @since BuddyBoss 1.9.3
+	 * @since BuddyBoss 3.0.0 Added optional 'group' arg for situation tab grouping.
 	 *
 	 * @param string $email_type        Type of email being sent.
 	 * @param array  $args              Email arguments.
 	 * @param string $notification_type Notification Type key.
 	 */
 	final public function register_email_type( string $email_type, array $args, string $notification_type ) {
+		$schema = array(
+			'description' => ( $args['situation_label'] ?? '' ),
+			'unsubscribe' => array(
+				'meta_key' => $notification_type,
+				'message'  => ( $args['unsubscribe_text'] ?? '' ),
+			),
+		);
+
+		// Optional situation group for Settings 2.0 tabbed UI.
+		if ( ! empty( $args['group'] ) ) {
+			$schema['group'] = sanitize_key( $args['group'] );
+		}
+
 		$this->email_types[ $email_type ] = array(
 			'email_type'        => $email_type,
 			'args'              => array(
@@ -533,13 +547,7 @@ abstract class BP_Core_Notification_Abstract {
 				'post_excerpt' => ( $args['email_plain_content'] ?? '' ),
 				'multisite'    => ( $args['multisite'] ?? '' ),
 			),
-			'schema'            => array(
-				'description' => ( $args['situation_label'] ?? '' ),
-				'unsubscribe' => array(
-					'meta_key' => $notification_type,
-					'message'  => ( $args['unsubscribe_text'] ?? '' ),
-				),
-			),
+			'schema'            => $schema,
 			'notification_type' => $notification_type,
 		);
 	}
