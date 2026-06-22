@@ -18,15 +18,17 @@
  * Path mapping: a relative ref is resolved against the CSS file's own
  * directory (the way a browser would), then expressed RELATIVE to BUILD_DIR.
  * Because BUILD_DIR mirrors the plugin source root, that relative path is the
- * source-relative path and maps 1:1 to the S3 object key — the caller passes
- * the S3 base already including any key prefix (e.g. `.../src/`).
+ * source-relative path and maps 1:1 to the S3 object key. The bucket mirrors
+ * the shipped (flattened) plugin tree at its root — no `src/` directory, since
+ * that exists only in the dev checkout. The caller passes the S3 base
+ * (optionally including a key prefix if the bucket nests under a sub-path).
  *
  * Usage:
  *   node bin/rewrite-css-image-refs-to-s3.js <build-dir> <s3-base-url> [ext-csv]
  *
  * Example:
  *   node bin/rewrite-css-image-refs-to-s3.js buddyboss-platform/ \
- *     "https://buddyboss-platform-assets.s3.us-east-1.amazonaws.com/src/"
+ *     "https://buddyboss-platform-assets.s3.us-east-1.amazonaws.com/"
  *
  * Design notes:
  *  - Only relative refs that resolve to a real image file UNDER BUILD_DIR are

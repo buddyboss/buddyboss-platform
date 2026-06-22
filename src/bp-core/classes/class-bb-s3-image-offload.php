@@ -15,9 +15,11 @@
  *   - dev/trunk : .../buddyboss-platform/src/bp-core/images/foo.png
  *   - shipped   : .../buddyboss-platform/bp-core/images/foo.png
  *
- * In both cases the source-relative path is `bp-core/images/foo.png`, and the
- * S3 object key is `{prefix}bp-core/images/foo.png` (prefix defaults to `src/`
- * to match the uploaded bucket layout).
+ * In both cases the source-relative path is `bp-core/images/foo.png`, which is
+ * the S3 object key. The bucket mirrors the *shipped* (flattened) plugin
+ * layout at its root — there is no `src/` directory, since that exists only in
+ * the dev/trunk checkout. An optional key prefix is available for buckets that
+ * nest the tree under a sub-path.
  *
  * @package BuddyBoss\Core
  * @since BuddyBoss [BBVERSION]
@@ -45,15 +47,16 @@ class BB_S3_Image_Offload {
 	/**
 	 * Default object-key prefix applied to source-relative paths.
 	 *
-	 * The bucket was populated from the plugin root (which includes the `src/`
-	 * directory), so keys carry a `src/` prefix. Filterable for buckets that
-	 * mirror the source tree directly at the root.
+	 * Empty by default: the bucket mirrors the shipped (flattened) plugin tree
+	 * at its root, e.g. `bp-core/images/foo.png` — no `src/` directory, since
+	 * that exists only in the dev checkout. Filterable for buckets that nest
+	 * the tree under a sub-path (e.g. `assets/`).
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @var string
 	 */
-	const DEFAULT_KEY_PREFIX = 'src/';
+	const DEFAULT_KEY_PREFIX = '';
 
 	/**
 	 * Image extensions eligible for offloading.
@@ -259,7 +262,7 @@ class BB_S3_Image_Offload {
 		 *
 		 * @since BuddyBoss [BBVERSION]
 		 *
-		 * @param string $prefix Key prefix. Default 'src/'.
+		 * @param string $prefix Key prefix. Default '' (bucket root).
 		 */
 		$prefix = apply_filters( 'bb_s3_image_offload_key_prefix', self::DEFAULT_KEY_PREFIX );
 

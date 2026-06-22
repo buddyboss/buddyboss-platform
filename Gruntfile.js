@@ -872,9 +872,10 @@ module.exports = function (grunt) {
 	var stripPaidComponents = false;
 
 	// Image assets are served from an external S3 bucket (see BB_S3_Image_Offload
-	// in bp-core). Every image is uploaded to the bucket mirroring the plugin
-	// source tree under a `src/` key prefix, so the shipped zip drops them all to
-	// stay small. Two things have to happen before they can be stripped:
+	// in bp-core). The bucket mirrors the SHIPPED (flattened) plugin tree at its
+	// root — e.g. `bp-core/images/foo.png`, no `src/` directory (that exists only
+	// in the dev checkout). The shipped zip drops all images to stay small. Two
+	// things have to happen before they can be stripped:
 	//   1. The runtime PHP rewriter handles image URLs emitted into the HTML.
 	//   2. `rewrite_css_image_refs_to_s3` (below) rewrites the relative
 	//      `url(...)` image refs baked into compiled CSS — those are served as
@@ -886,7 +887,7 @@ module.exports = function (grunt) {
 	// object keys.
 	//
 	// @since BuddyBoss [BBVERSION]
-	var S3_IMAGE_BASE_URL = 'https://buddyboss-platform-assets.s3.us-east-1.amazonaws.com/src/';
+	var S3_IMAGE_BASE_URL = 'https://buddyboss-platform-assets.s3.us-east-1.amazonaws.com/';
 
 	// Image file types to strip from the customer zip (offloaded to S3). Matches
 	// BB_S3_Image_Offload::EXTENSIONS. Root-relative globs evaluated against
