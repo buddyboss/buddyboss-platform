@@ -871,6 +871,40 @@ module.exports = function (grunt) {
 	// @since BuddyBoss [BBVERSION]
 	var stripPaidComponents = false;
 
+	// Image assets are served from an external S3 bucket (see BB_S3_Image_Offload
+	// in bp-core). Every image is uploaded to the bucket mirroring the plugin
+	// source tree under a `src/` key prefix, so the shipped zip drops them all to
+	// stay small. Two things have to happen before they can be stripped:
+	//   1. The runtime PHP rewriter handles image URLs emitted into the HTML.
+	//   2. `rewrite_css_image_refs_to_s3` (below) rewrites the relative
+	//      `url(...)` image refs baked into compiled CSS — those are served as
+	//      static files and the PHP rewriter can never reach them.
+	// Both must be in place or CSS background images / inline images would 404.
+	//
+	// Keep this base URL in lockstep with BB_S3_Image_Offload::DEFAULT_BASE_URL +
+	// DEFAULT_KEY_PREFIX so build-time and runtime rewrites resolve to the same
+	// object keys.
+	//
+	// @since BuddyBoss [BBVERSION]
+	var S3_IMAGE_BASE_URL = 'https://buddyboss-platform-assets.s3.us-east-1.amazonaws.com/src/';
+
+	// Image file types to strip from the customer zip (offloaded to S3). Matches
+	// BB_S3_Image_Offload::EXTENSIONS. Root-relative globs evaluated against
+	// BUILD_DIR. Files remain in src/ and on the production branch; only the
+	// customer zip drops them.
+	//
+	// @since BuddyBoss [BBVERSION]
+	var IMAGE_STRIP_GLOBS = [
+		'**/*.png',
+		'**/*.jpg',
+		'**/*.jpeg',
+		'**/*.gif',
+		'**/*.svg',
+		'**/*.webp',
+		'**/*.ico',
+		'**/*.bmp'
+	];
+
 	// Enable the paid-component strip for the current task run. Inserted into
 	// `build_test` before `configure_compress_exclusions` so only the test zip
 	// drops bp-video / bp-document.
@@ -916,6 +950,33 @@ module.exports = function (grunt) {
 			function ( err, result, code ) {
 				if ( err || code !== 0 ) {
 					grunt.fail.warn( 'strip-orphan-font-refs failed (exit ' + code + ')' );
+				}
+				done();
+			}
+		);
+	} );
+
+	// Rewrite relative `url(...)` image refs in BUILD_DIR CSS to absolute S3
+	// URLs, so the compiled CSS keeps working once the local image files are
+	// excluded from the customer zip. Runs AFTER copy:files (CSS + images are
+	// staged in BUILD_DIR, so the existence check resolves) and BEFORE
+	// configure_compress_exclusions/compress (which drop the images). The
+	// production branch keeps the original relative CSS — only the staged
+	// BUILD_DIR copy is mutated.
+	//
+	// @since BuddyBoss [BBVERSION]
+	grunt.registerTask( 'rewrite_css_image_refs_to_s3', 'Rewrite BUILD_DIR CSS image url() refs to the external S3 bucket.', function () {
+		var done = this.async();
+
+		grunt.util.spawn(
+			{
+				cmd:  'node',
+				args: [ 'bin/rewrite-css-image-refs-to-s3.js', BUILD_DIR, S3_IMAGE_BASE_URL ],
+				opts: { stdio: 'inherit' }
+			},
+			function ( err, result, code ) {
+				if ( err || code !== 0 ) {
+					grunt.fail.warn( 'rewrite-css-image-refs-to-s3 failed (exit ' + code + ')' );
 				}
 				done();
 			}
@@ -970,11 +1031,18 @@ module.exports = function (grunt) {
 			} )
 			: [];
 
+		// Image assets are offloaded to S3 (CSS refs already rewritten by
+		// rewrite_css_image_refs_to_s3, HTML refs rewritten at runtime).
+		var imageExclusions = IMAGE_STRIP_GLOBS.map( function ( g ) {
+			return '!' + BUILD_DIR + g;
+		} );
+
 		var allExclusions = pairExclusions
 			.concat( fontExclusions )
 			.concat( translationExclusions )
 			.concat( devSourceExclusions )
-			.concat( paidComponentExclusions );
+			.concat( paidComponentExclusions )
+			.concat( imageExclusions );
 
 		grunt.config.set( 'compress.main.files', [ {
 			src:  [ BUILD_DIR + '**' ].concat( allExclusions ),
@@ -986,7 +1054,8 @@ module.exports = function (grunt) {
 			+ FONT_STRIP_GLOBS.length + ' font-strip globs + '
 			+ TRANSLATION_STRIP_GLOBS.length + ' translation globs + '
 			+ DEV_SOURCE_STRIP_GLOBS.length + ' dev-source globs + '
-			+ paidComponentExclusions.length + ' paid-component globs from zip.'
+			+ paidComponentExclusions.length + ' paid-component globs + '
+			+ imageExclusions.length + ' image globs (offloaded to S3) from zip.'
 		);
 	} );
 
@@ -994,7 +1063,7 @@ module.exports = function (grunt) {
 	// `exec:generate_debug_manifest` runs AFTER the production push but BEFORE compress, so the manifest ships in the
 	// customer zip while production keeps the unminified files but not the per-version manifest pointer.
 	// `configure_compress_exclusions` rewrites compress.main.files from the manifest so the zip stays in lockstep.
-	grunt.registerTask('build', ['string-replace:dist', 'exec:composer', 'clean:all', 'exec:init_build_dir_git', 'exec:empty_build_dir', 'copy:files', 'clean:composer', 'exec:commit_build_to_mothership_release', 'exec:generate_debug_manifest', 'strip_orphan_font_refs', 'configure_compress_exclusions', 'compress', 'clean:all']);
+	grunt.registerTask('build', ['string-replace:dist', 'exec:composer', 'clean:all', 'exec:init_build_dir_git', 'exec:empty_build_dir', 'copy:files', 'clean:composer', 'exec:commit_build_to_mothership_release', 'exec:generate_debug_manifest', 'strip_orphan_font_refs', 'rewrite_css_image_refs_to_s3', 'configure_compress_exclusions', 'compress', 'clean:all']);
 
 	// Build-test task: identical to `build` except it never touches the
 	// production branch — no git init, no fetch, no checkout, no commit,
@@ -1012,7 +1081,7 @@ module.exports = function (grunt) {
 	//   7. clean:composer                  — drop dev composer state from the staged dir
 	//   8. compress                        — zip → buddyboss-platform-plugin.zip
 	//   9. clean:all                       — final tidy
-	grunt.registerTask('build_test', ['string-replace:dist', 'exec:composer', 'clean:all', 'exec:init_build_dir_clean', 'exec:empty_build_dir', 'copy:files', 'clean:composer', 'exec:generate_debug_manifest', 'strip_orphan_font_refs', 'enable_paid_component_strip', 'configure_compress_exclusions', 'compress', 'clean:all']);
+	grunt.registerTask('build_test', ['string-replace:dist', 'exec:composer', 'clean:all', 'exec:init_build_dir_clean', 'exec:empty_build_dir', 'copy:files', 'clean:composer', 'exec:generate_debug_manifest', 'strip_orphan_font_refs', 'rewrite_css_image_refs_to_s3', 'enable_paid_component_strip', 'configure_compress_exclusions', 'compress', 'clean:all']);
 
 	grunt.registerTask('release', ['src', 'build']);
 

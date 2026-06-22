@@ -104,6 +104,14 @@
   /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
 }
 
+/* Default icon variant weight — see bb-icons.css. Pin plain `.bb-icon-*` to the
+   lined (400) variant so they don't inherit a stray weight (e.g. WP 7.0's
+   `.components-button { font-weight: 499 }`). Variant classes below override. */
+[class^="bb-icon-"],
+[class*=" bb-icon-"] {
+  font-weight: 400;
+}
+
 .bb-icon-rl,
 .bb-icon-round-lined {
   font-family: 'bb-icons';
