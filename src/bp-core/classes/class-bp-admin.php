@@ -512,7 +512,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				''
 			);
 
-
 			$hooks[] = add_submenu_page(
 				$this->settings_page,
 				__( '', 'buddyboss' ),
@@ -543,7 +542,9 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * @since BuddyBoss [BBVERSION]
 		 */
 		public function bb_redirect_legacy_help_page() {
-			if ( ! isset( $_GET['page'] ) || 'bp-help' !== $_GET['page'] ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only navigation redirect, no state change.
+			$page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
+			if ( 'bp-help' !== $page ) {
 				return;
 			}
 

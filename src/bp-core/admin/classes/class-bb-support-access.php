@@ -743,11 +743,15 @@ class BB_Support_Access {
 			return false;
 		}
 
-		// Scheme must match (case-insensitive). Guards against an http link
-		// being passed off for an https site, or vice versa.
-		$url_scheme  = isset( $parts['scheme'] ) ? strtolower( $parts['scheme'] ) : '';
-		$home_scheme = isset( $home['scheme'] ) ? strtolower( $home['scheme'] ) : '';
-		if ( $url_scheme !== $home_scheme ) {
+		// Scheme must be http or https. We intentionally do NOT require it to
+		// match the home scheme exactly: a TLS-terminating proxy or load
+		// balancer can legitimately surface an http URL for an https site (or
+		// vice versa), and an exact match would silently drop a valid login
+		// link. The host + port match above and the login-token query var
+		// below are the real identity guard; this only rejects dangerous
+		// schemes (javascript:, data:, etc.).
+		$url_scheme = isset( $parts['scheme'] ) ? strtolower( $parts['scheme'] ) : '';
+		if ( 'http' !== $url_scheme && 'https' !== $url_scheme ) {
 			return false;
 		}
 

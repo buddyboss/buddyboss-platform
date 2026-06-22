@@ -267,11 +267,11 @@ function bb_admin_settings_page() {
 	// License/tier state for the Help tab upsell promos.
 	//
 	// - `hasActiveLicense`: true when the BuddyBoss license is activated
-	//   (the raw Mothership activation status, not the DRM `is_valid()` gate).
+	// (the raw Mothership activation status, not the DRM `is_valid()` gate).
 	// - `hasPlusTier`: true when the user's plan includes a Plus-tier product.
-	//   Gamification is Plus-only, so its presence in the addon plan is the
-	//   tier probe; `checkProductBySlug()` returns null when the license is
-	//   not activated, so this is always false without an active license.
+	// Gamification is Plus-only, so its presence in the addon plan is the
+	// tier probe; `checkProductBySlug()` returns null when the license is
+	// not activated, so this is always false without an active license.
 	//
 	// Help tab logic (HelpScreen.js): no active license -> show the "Pro"
 	// promo; active license without Plus -> show the "Plus" promo.

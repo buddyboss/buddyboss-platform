@@ -34,9 +34,10 @@ var HELP_SEARCH_MIN_LENGTH = 2;
  * @returns {string} Plain text.
  */
 function bbStripHtml( html ) {
-	var el = document.createElement( 'div' );
-	el.innerHTML = html || '';
-	return ( el.textContent || '' ).replace( /\s+/g, ' ' ).trim();
+	// Parse via DOMParser rather than assigning untrusted (cross-origin)
+	// markup to a live element's innerHTML; only the text content is needed.
+	var doc = new DOMParser().parseFromString( html || '', 'text/html' );
+	return ( doc.body.textContent || '' ).replace( /\s+/g, ' ' ).trim();
 }
 
 /**
@@ -517,11 +518,12 @@ export function HelpScreen( { onNavigate } ) {
 			} )
 			.catch( function () {
 				// Category could not be resolved — back out of the modal and
-				// fall back to the documentation page.
+				// fall back to the article's own URL. `link` is provided by the
+				// WP REST API for every article; the resources hub is a last
+				// resort so the user always lands somewhere instead of nothing.
 				closeKb();
-				if ( result.link ) {
-					window.open( result.link, '_blank', 'noopener,noreferrer' );
-				}
+				var fallbackUrl = result.link || 'https://www.buddyboss.com/resources/';
+				window.open( fallbackUrl, '_blank', 'noopener,noreferrer' );
 			} );
 	}, [ kbDispatch, openKb, closeKb ] );
 
@@ -650,7 +652,7 @@ export function HelpScreen( { onNavigate } ) {
 							href="https://buddyboss.com/my-account/?tab=support"
 							className="bb-admin-help-card__action is-secondary"
 							target="_blank"
-							rel="nofollow"
+							rel="nofollow noopener noreferrer"
 						>
 							{ __( 'Submit a Ticket', 'buddyboss' ) }
 						</a>
@@ -836,7 +838,7 @@ export function HelpScreen( { onNavigate } ) {
 										</h2>
 										<p className="bb-admin-help-promo__description">{ __( 'Say goodbye to React Native. We have completely rebuilt the BuddyBoss App using Flutter for blazing-fast performance, smoother animations, and a truly unified experience.', 'buddyboss' ) }</p>
 									</div>
-									<a target="_blank" href="https://buddyboss.com/pricing/?utm_source=product&utm_medium=platform-plugin&utm_campaign=Help-upgrade-plus-to-app&utm_content=help" className="bb-admin-help-promo__action bb-admin-help-promo__action-app-3 is-primary">
+									<a target="_blank" rel="noopener noreferrer" href="https://buddyboss.com/pricing/?utm_source=product&utm_medium=platform-plugin&utm_campaign=Help-upgrade-plus-to-app&utm_content=help" className="bb-admin-help-promo__action bb-admin-help-promo__action-app-3 is-primary">
 										<span className="bb-admin-help-promo__action-label">
 											{ __( 'Get Next Gen App', 'buddyboss' ) }
 										</span>
@@ -878,11 +880,11 @@ export function HelpScreen( { onNavigate } ) {
 									<li><i className="bb-icons-rl-check"></i> { __( 'Achievements', 'buddyboss') }</li>
 									<li><i className="bb-icons-rl-check"></i> { __( 'Competitions', 'buddyboss') }</li>
 									<li><i className="bb-icons-rl-check"></i> { __( 'Offload Media (Save $199/y)', 'buddyboss') }</li>
-									<li><i className="bb-icons-rl-check"></i> { __( 'Domain Restriction)', 'buddyboss') }</li>
+									<li><i className="bb-icons-rl-check"></i> { __( 'Domain Restriction', 'buddyboss') }</li>
 									<li><i className="bb-icons-rl-check"></i> { __( 'Premium Top-Rated Support', 'buddyboss') }</li>
 								</ul>
 							</div>
-							<a target="_blank" href="https://buddyboss.com/pricing/?utm_source=product&utm_medium=platform-plugin&utm_campaign=Help-upgrade-pro-to-plus&utm_content=help" className="bb-admin-help-promo__action bb-admin-help-promo__action-plus is-primary">
+							<a target="_blank" rel="noopener noreferrer" href="https://buddyboss.com/pricing/?utm_source=product&utm_medium=platform-plugin&utm_campaign=Help-upgrade-pro-to-plus&utm_content=help" className="bb-admin-help-promo__action bb-admin-help-promo__action-plus is-primary">
 								<i className="bb-icons-rl-crown-simple"></i>
 								<span className="bb-admin-help-promo__action-label">
 									{ __( 'Upgrade Plus', 'buddyboss' ) }
@@ -928,7 +930,7 @@ export function HelpScreen( { onNavigate } ) {
 									<li><i className="bb-icons-rl-check"></i> { __( 'Activity Sharing', 'buddyboss') }</li>
 								</ul>
 							</div>
-							<a target="_blank" href="https://buddyboss.com/pricing/?utm_source=product&utm_medium=platform-plugin&utm_campaign=Help-upgrade-free-to-pro&utm_content=help" className="bb-admin-help-promo__action bb-admin-help-promo__action-pro is-primary">
+							<a target="_blank" rel="noopener noreferrer" href="https://buddyboss.com/pricing/?utm_source=product&utm_medium=platform-plugin&utm_campaign=Help-upgrade-free-to-pro&utm_content=help" className="bb-admin-help-promo__action bb-admin-help-promo__action-pro is-primary">
 								<i className="bb-icons-rl-crown-simple"></i>
 								<span className="bb-admin-help-promo__action-label">
 									{ __( 'Upgrade Pro', 'buddyboss' ) }

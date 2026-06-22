@@ -40,10 +40,12 @@ export function AddTicketModal( { isOpen, value, onClose, onSave } ) {
 	}
 
 	var handleSave = function () {
+		var trimmed = ticket.trim();
+		if ( '' === trimmed ) {
+			return;
+		}
 		if ( 'function' === typeof onSave ) {
-			if( ticket.trim() !== '') {
-				onSave( ticket.trim() );
-			}	
+			onSave( trimmed );
 		}
 	};
 
@@ -68,7 +70,7 @@ export function AddTicketModal( { isOpen, value, onClose, onSave } ) {
 				<Button variant="secondary" onClick={ onClose }>
 					{ __( 'Cancel', 'buddyboss' ) }
 				</Button>
-				<Button variant="primary" onClick={ handleSave }>
+				<Button variant="primary" onClick={ handleSave } disabled={ '' === ticket.trim() }>
 					{ __( 'Save', 'buddyboss' ) }
 				</Button>
 			</div>
