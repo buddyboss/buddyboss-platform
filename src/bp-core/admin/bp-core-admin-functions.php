@@ -82,6 +82,17 @@ function bp_core_modify_admin_menu_highlight() {
 		$submenu_file = 'bb-settings';
 	}
 
+	// The Help submenu is registered with a URL menu_slug
+	// (`admin.php?page=bb-settings&tab=help`). When the admin is on that tab,
+	// highlight the Help item server-side instead of the generic Settings item
+	// — this avoids the brief Settings-highlighted flash before the React
+	// `fixAdminMenuHighlight()` corrects it on mount.
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only menu highlight, no state change.
+	$current_tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : '';
+	if ( 'bb-settings' === $plugin_page && 'help' === $current_tab ) {
+		$submenu_file = 'admin.php?page=bb-settings&tab=help';
+	}
+
 	// Network Admin > Tools.
 	if ( in_array( $plugin_page, array( 'bp-tools', 'available-tools' ) ) ) {
 		$submenu_file = $plugin_page;

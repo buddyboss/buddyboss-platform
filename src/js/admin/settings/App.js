@@ -63,6 +63,11 @@ function fixAdminMenuHighlight( route ) {
 		emails: [ 'all_emails' ],
 	};
 
+	// Settings tabs that have their own dedicated submenu item (e.g. "Help" at
+	// page=bb-settings&tab=help). These must highlight their own item, not the
+	// generic "Settings" item — matched below via the `tab={feature}` rule.
+	var standaloneSettingsTabs = [ 'help' ];
+
 	var isListing = false;
 	if ( listingPanels[ feature ] ) {
 		isListing = -1 !== listingPanels[ feature ].indexOf( panel );
@@ -72,8 +77,16 @@ function fixAdminMenuHighlight( route ) {
 		isListing = true;
 	}
 
-	// Determine which slug to target: component menu or Settings.
-	var targetSlug = isListing ? feature : 'settings';
+	// Determine which slug to target: component menu, a standalone settings
+	// tab (Help), or the generic Settings item.
+	var targetSlug;
+	if ( isListing ) {
+		targetSlug = feature;
+	} else if ( 'settings' === mainRoute && -1 !== standaloneSettingsTabs.indexOf( feature ) ) {
+		targetSlug = feature;
+	} else {
+		targetSlug = 'settings';
+	}
 
 	var submenuItems = bbMenu.querySelectorAll( 'ul.wp-submenu li' );
 	var targetItem = null;
