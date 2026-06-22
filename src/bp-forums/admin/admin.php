@@ -569,8 +569,9 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 		public function register_admin_scripts() {
 			// Get the version to use for JS.
 			$version = bp_get_version();
+			$min     = bp_core_get_minified_asset_suffix();
 
-			wp_register_script( 'bbp-converter', $this->js_url . 'converter.js', array( 'jquery', 'postbox', 'dashboard' ), $version );
+			wp_register_script( 'bbp-converter', $this->js_url . "converter{$min}.js", array( 'jquery', 'postbox', 'dashboard' ), $version );
 		}
 
 

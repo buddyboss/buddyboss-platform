@@ -1178,7 +1178,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			wp_enqueue_script( 'bb-cropper-js' );
 			wp_enqueue_style( 'bb-cropper-css' );
 
-			wp_enqueue_style( 'bb-readylaunch-font', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/assets/fonts/fonts.css', array(), bp_get_version() );
+			wp_enqueue_style( 'bb-readylaunch-font', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/assets/fonts/fonts{$min}.css", array(), bp_get_version() );
 			wp_enqueue_style( 'bb-readylaunch-style-main', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/main{$min}.css", array(), bp_get_version() );
 			wp_style_add_data( 'bb-readylaunch-style-main', 'rtl', 'replace' );
 			if ( $min ) {
@@ -2673,8 +2673,9 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 		 * @since BuddyBoss 2.9.00
 		 */
 		public function bb_rl_login_enqueue_scripts() {
-			wp_enqueue_style( 'bb-rl-login-fonts', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/assets/fonts/fonts.css', array(), bp_get_version() );
-			wp_enqueue_style( 'bb-rl-login-style', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/css/login.css', array(), bp_get_version() );
+			$min = bp_core_get_minified_asset_suffix();
+			wp_enqueue_style( 'bb-rl-login-fonts', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/assets/fonts/fonts{$min}.css", array(), bp_get_version() );
+			wp_enqueue_style( 'bb-rl-login-style', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/login{$min}.css", array(), bp_get_version() );
 			wp_style_add_data( 'bb-rl-login-style', 'rtl', 'replace' );
 			wp_enqueue_style( 'bb-rl-login-style-icons', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl.min.css', array(), bp_get_version() );
 			wp_style_add_data( 'bb-rl-login-style-icons', 'rtl', 'replace' );
@@ -3091,9 +3092,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			// Enqueue LearnDash ReadyLaunch styles.
+			$min = bp_core_get_minified_asset_suffix();
 			wp_enqueue_style(
 				'bb-readylaunch-lms',
-				buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/css/lms.css',
+				buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/lms{$min}.css",
 				array(),
 				bp_get_version()
 			);
@@ -3111,9 +3113,10 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			}
 
 			// Enqueue MemberPress Courses ReadyLaunch styles.
+			$min = bp_core_get_minified_asset_suffix();
 			wp_enqueue_style(
 				'bb-readylaunch-meprlms',
-				buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/css/meprlms.css',
+				buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/meprlms{$min}.css",
 				array(),
 				bp_get_version()
 			);
@@ -3122,7 +3125,7 @@ if ( ! class_exists( 'BB_Readylaunch' ) ) {
 			// Enqueue our MemberPress Courses helper JavaScript.
 			wp_enqueue_script(
 				'bb-readylaunch-meprlms-js',
-				buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-meprlms.js',
+				buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/js/bb-readylaunch-meprlms{$min}.js",
 				array( 'jquery' ),
 				bp_get_version(),
 				true

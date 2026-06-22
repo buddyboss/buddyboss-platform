@@ -843,6 +843,44 @@ module.exports = function (grunt) {
 		'**/*.map'
 	];
 
+	// Paid-only component directories. Video and Document are not part of the
+	// free Platform — they are delivered only with a paid license via the
+	// Mothership build (which ships them bundled). PROD-9826 made the Platform
+	// load cleanly when these folders are absent (component-availability scrub +
+	// per-component guards), so dropping them from a zip produces no fatals.
+	//
+	// IMPORTANT: this strip applies to `build_test` ONLY (the free-zip test
+	// build), gated by `stripPaidComponents` below. The production `build` keeps
+	// these folders so the paid Mothership build still bundles video/document.
+	//
+	// Root-anchored on purpose (e.g. `bp-video/**`, not `**/bp-video/**`) so the
+	// component directories are excluded without catching unrelated nested paths
+	// such as bp-templates assets. Files remain in src/ and on the production
+	// branch; only the build_test customer zip drops them.
+	//
+	// @since BuddyBoss [BBVERSION]
+	var PAID_COMPONENT_STRIP_GLOBS = [
+		'bp-video/**',
+		'bp-document/**'
+	];
+
+	// Toggled true only by the `enable_paid_component_strip` task, which is wired
+	// into the `build_test` chain. When false (the default, and the production
+	// `build` path) PAID_COMPONENT_STRIP_GLOBS is ignored and video/document ship.
+	//
+	// @since BuddyBoss [BBVERSION]
+	var stripPaidComponents = false;
+
+	// Enable the paid-component strip for the current task run. Inserted into
+	// `build_test` before `configure_compress_exclusions` so only the test zip
+	// drops bp-video / bp-document.
+	//
+	// @since BuddyBoss [BBVERSION]
+	grunt.registerTask( 'enable_paid_component_strip', 'Flag bp-video / bp-document for exclusion from this build_test zip.', function () {
+		stripPaidComponents = true;
+		grunt.log.writeln( '[build_test] paid-component strip enabled — bp-video / bp-document will be excluded from the zip.' );
+	} );
+
 	// Rewrite CSS inside BUILD_DIR to drop `url(...)` refs that would 404
 	// against fonts about to be excluded from the customer zip. Production
 	// branch keeps the original CSS (this runs AFTER the production push);
@@ -925,11 +963,18 @@ module.exports = function (grunt) {
 		var devSourceExclusions = DEV_SOURCE_STRIP_GLOBS.map( function ( g ) {
 			return '!' + BUILD_DIR + g;
 		} );
+		// Paid components are stripped only when the build_test flag is set.
+		var paidComponentExclusions = stripPaidComponents
+			? PAID_COMPONENT_STRIP_GLOBS.map( function ( g ) {
+				return '!' + BUILD_DIR + g;
+			} )
+			: [];
 
 		var allExclusions = pairExclusions
 			.concat( fontExclusions )
 			.concat( translationExclusions )
-			.concat( devSourceExclusions );
+			.concat( devSourceExclusions )
+			.concat( paidComponentExclusions );
 
 		grunt.config.set( 'compress.main.files', [ {
 			src:  [ BUILD_DIR + '**' ].concat( allExclusions ),
@@ -940,7 +985,8 @@ module.exports = function (grunt) {
 			'[compress] excluded ' + pairExclusions.length + ' paired-unminified files + '
 			+ FONT_STRIP_GLOBS.length + ' font-strip globs + '
 			+ TRANSLATION_STRIP_GLOBS.length + ' translation globs + '
-			+ DEV_SOURCE_STRIP_GLOBS.length + ' dev-source globs from zip.'
+			+ DEV_SOURCE_STRIP_GLOBS.length + ' dev-source globs + '
+			+ paidComponentExclusions.length + ' paid-component globs from zip.'
 		);
 	} );
 
@@ -966,7 +1012,7 @@ module.exports = function (grunt) {
 	//   7. clean:composer                  — drop dev composer state from the staged dir
 	//   8. compress                        — zip → buddyboss-platform-plugin.zip
 	//   9. clean:all                       — final tidy
-	grunt.registerTask('build_test', ['string-replace:dist', 'exec:composer', 'clean:all', 'exec:init_build_dir_clean', 'exec:empty_build_dir', 'copy:files', 'clean:composer', 'exec:generate_debug_manifest', 'strip_orphan_font_refs', 'configure_compress_exclusions', 'compress', 'clean:all']);
+	grunt.registerTask('build_test', ['string-replace:dist', 'exec:composer', 'clean:all', 'exec:init_build_dir_clean', 'exec:empty_build_dir', 'copy:files', 'clean:composer', 'exec:generate_debug_manifest', 'strip_orphan_font_refs', 'enable_paid_component_strip', 'configure_compress_exclusions', 'compress', 'clean:all']);
 
 	grunt.registerTask('release', ['src', 'build']);
 

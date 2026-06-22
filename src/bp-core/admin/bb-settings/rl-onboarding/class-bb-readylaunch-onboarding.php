@@ -448,10 +448,13 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 			true
 		);
 
-		// Enqueue the CSS.
+		// Enqueue the CSS. Use the minified build in production; the unminified
+		// `onboarding{$rtl}.css` is stripped from the shipped zip (debug-asset
+		// pair strip) and only present under SCRIPT_DEBUG, so loading it directly
+		// would 404 on a customer install.
 		wp_enqueue_style(
 			$this->get_config( 'react_style_handle' ),
-			buddypress()->plugin_url . "bp-core/admin/bb-settings/rl-onboarding/build/onboarding{$rtl}.css",
+			buddypress()->plugin_url . "bp-core/admin/bb-settings/rl-onboarding/build/onboarding{$rtl}{$min}.css",
 			array(),
 			$asset_data['version']
 		);
@@ -554,12 +557,15 @@ class BB_ReadyLaunch_Onboarding extends BB_Setup_Wizard_Manager {
 		);
 
 		$rtl = is_rtl() ? '-rtl' : '';
+		$min = bp_core_get_minified_asset_suffix();
 
 		return array(
 			'wizardData' => $wizard_data,
 			'assets'     => array(
 				'js'  => buddypress()->plugin_url . 'bp-core/admin/bb-settings/rl-onboarding/build/rl-onboarding.js',
-				'css' => buddypress()->plugin_url . "bp-core/admin/bb-settings/rl-onboarding/build/onboarding{$rtl}.css",
+				// Minified in production; the unminified `onboarding{$rtl}.css` is stripped
+				// from the shipped zip and only present under SCRIPT_DEBUG.
+				'css' => buddypress()->plugin_url . "bp-core/admin/bb-settings/rl-onboarding/build/onboarding{$rtl}{$min}.css",
 				'ver' => isset( $asset_data['version'] ) ? $asset_data['version'] : $this->wizard_version,
 			),
 		);

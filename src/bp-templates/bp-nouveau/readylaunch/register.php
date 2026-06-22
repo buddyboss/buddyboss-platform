@@ -18,10 +18,11 @@ wp_enqueue_script( 'bp-select2' );
 wp_enqueue_style( 'bp-select2' );
 wp_enqueue_script( 'jquery-magnific-popup' );
 wp_enqueue_style( 'jquery-magnific-popup' );
-wp_enqueue_style( 'bb-rl-login-fonts', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/assets/fonts/fonts.css', array(), bp_get_version() );
+$min = bp_core_get_minified_asset_suffix();
+wp_enqueue_style( 'bb-rl-login-fonts', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/assets/fonts/fonts{$min}.css", array(), bp_get_version() );
 wp_enqueue_style( 'bb-rl-login-style-icons', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/icons/css/bb-icons-rl.min.css', array(), bp_get_version() );
 wp_style_add_data( 'bb-rl-login-style-icons', 'rtl', 'replace' );
-wp_enqueue_style( 'bb-rl-login-style', buddypress()->plugin_url . 'bp-templates/bp-nouveau/readylaunch/css/login.css', array(), bp_get_version() );
+wp_enqueue_style( 'bb-rl-login-style', buddypress()->plugin_url . "bp-templates/bp-nouveau/readylaunch/css/login{$min}.css", array(), bp_get_version() );
 wp_style_add_data( 'bb-rl-login-style', 'rtl', 'replace' );
 ?>
 

@@ -18,9 +18,10 @@ function bp_ps_escaped_form_data47( $version ) {
 
 	$meta   = bp_ps_meta( $form );
 	$fields = bp_ps_parse_request( bp_ps_get_request( 'form', $form ) );
+	$min    = bp_core_get_minified_asset_suffix();
 	wp_register_script(
 		'bp-ps-template',
-		buddypress()->plugin_url . 'bp-core/profile-search/bp-ps-template.js',
+		buddypress()->plugin_url . "bp-core/profile-search/bp-ps-template{$min}.js",
 		array(),
 		bp_get_version()
 	);

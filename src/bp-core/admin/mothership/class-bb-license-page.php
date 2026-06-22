@@ -56,7 +56,8 @@ class BB_License_Page implements StaticContainerAwareness {
 	 * Renders the page.
 	 */
 	public static function render(): void {
-		wp_enqueue_style( 'bb-mothership-admin', buddypress()->plugin_url . 'bp-core/admin/css/mothership.css', array(), buddypress()->version );
+		$min = bp_core_get_minified_asset_suffix();
+		wp_enqueue_style( 'bb-mothership-admin', buddypress()->plugin_url . "bp-core/admin/css/mothership{$min}.css", array(), buddypress()->version );
 
 
 		include_once __DIR__ . '/views/admin.php';
