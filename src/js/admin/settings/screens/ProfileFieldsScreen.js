@@ -117,6 +117,13 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 	// AbortController ref for delete requests.
 	var deleteAbortRef = useRef( null );
 
+	// Reason the most recently hovered cross-set drop target is refused, or
+	// null when the current target is droppable. Captured during dragOver (the
+	// only point that knows both the dragged field and the hovered set) and
+	// consumed on drop so a refused release can explain itself instead of
+	// bouncing silently.
+	var dragBlockReasonRef = useRef( null );
+
 	/**
 	 * Load field groups data.
 	 *
@@ -247,6 +254,26 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 		setDragItem( null );
 		setDragOverItem( null );
 		setDragType( null );
+		dragBlockReasonRef.current = null;
+	}
+
+	/**
+	 * End-of-drag handler.
+	 *
+	 * `dragend` always fires, even when the browser suppresses the `drop`
+	 * event for a refused target (dropEffect 'none'). Surface any reason
+	 * captured during the hover here so a blocked release is explained, then
+	 * reset. Idempotent with the drop path: whichever runs first clears the
+	 * ref, so the user sees a single toast. During a group reorder the ref is
+	 * never set, so this is a plain reset.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 */
+	function handleDragEnd() {
+		if ( dragBlockReasonRef.current ) {
+			setToast( { status: 'error', message: dragBlockReasonRef.current } );
+		}
+		resetDrag();
 	}
 
 	/**
@@ -352,9 +379,11 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 
 			// Mirror the row-level behavior: block a disallowed cross-set drop
 			// with the not-allowed cursor and clear any stale drop target so a
-			// release on the blocked card bounces silently (legacy parity with
-			// the jQuery UI droppable refusing the drop without committing).
-			if ( getCrossGroupBlockReason( dragItem.groupId, dragItem.fieldIdx, group.id ) ) {
+			// release on the blocked card can't commit a prior hover position.
+			// The reason is stashed so the drop handler can surface it.
+			var cardBlockReason = getCrossGroupBlockReason( dragItem.groupId, dragItem.fieldIdx, group.id );
+			if ( cardBlockReason ) {
+				dragBlockReasonRef.current = cardBlockReason;
 				e.dataTransfer.dropEffect = 'none';
 				if ( null !== dragOverItem ) {
 					setDragOverItem( null );
@@ -362,6 +391,7 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 				return;
 			}
 
+			dragBlockReasonRef.current = null;
 			e.dataTransfer.dropEffect = 'move';
 			setDragOverItem( { groupId: group.id, fieldIdx: group.fields ? group.fields.length : 0 } );
 		}
@@ -431,12 +461,14 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 			return;
 		}
 
-		// Signal a disallowed cross-set move with the not-allowed cursor.
-		// Clear any stale drop target so a release in the blocked region
-		// can't accidentally commit a prior (in-source-group) hover position
-		// — matches legacy's jQuery UI droppable behaviour where a refused
-		// drop simply bounces with no commit.
-		if ( getCrossGroupBlockReason( dragItem.groupId, dragItem.fieldIdx, groupId ) ) {
+		// Signal a disallowed cross-set move with the not-allowed cursor and
+		// clear any stale drop target so a release in the blocked region can't
+		// commit a prior (in-source-group) hover position. The reason is
+		// stashed so the drop handler can surface it instead of bouncing
+		// silently.
+		var rowBlockReason = getCrossGroupBlockReason( dragItem.groupId, dragItem.fieldIdx, groupId );
+		if ( rowBlockReason ) {
+			dragBlockReasonRef.current = rowBlockReason;
 			e.dataTransfer.dropEffect = 'none';
 			if ( null !== dragOverItem ) {
 				setDragOverItem( null );
@@ -444,6 +476,7 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 			return;
 		}
 
+		dragBlockReasonRef.current = null;
 		e.dataTransfer.dropEffect = 'move';
 		setDragOverItem( { groupId: groupId, fieldIdx: fieldIdx } );
 	}
@@ -454,14 +487,21 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 	 * Shared by both the field-row drop target and the field-set card drop
 	 * target (the latter handles drops into an empty set or at the end of a
 	 * set). Cross-set moves are validated against the same guardrails the
-	 * server enforces; a blocked move bounces silently (matches legacy
-	 * jQuery UI droppable behaviour, where a refused drop simply did not
-	 * commit and the field reverted to its source position).
+	 * server enforces. A refused move never commits (and the field reverts to
+	 * its source position); when a reason was captured during the hover it is
+	 * surfaced as an error toast so the user understands why.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 */
 	function commitFieldMove() {
+		// A refused cross-set hover clears dragOverItem but stashes the reason.
+		// Read it before resetDrag() wipes the ref so the release can explain
+		// itself rather than bouncing silently.
+		var stashedBlockReason = dragBlockReasonRef.current;
 		if ( 'field' !== dragType || ! dragItem || ! dragOverItem ) {
+			if ( stashedBlockReason ) {
+				setToast( { status: 'error', message: stashedBlockReason } );
+			}
 			resetDrag();
 			return;
 		}
@@ -478,10 +518,12 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 		// Enforce cross-set guardrails (mirrors the server). With the dragOver
 		// handlers clearing dragOverItem on blocked hovers, a blocked target
 		// should already have been filtered out before we reach here — this is
-		// a belt-and-braces guard for programmatic drops. Silent bounce matches
-		// legacy: jQuery UI's droppable refused drops without notice.
+		// a belt-and-braces guard for programmatic drops. Surface the reason so
+		// the refused drop is explained rather than silently dropped.
 		if ( sourceGroupId !== targetGroupId ) {
-			if ( getCrossGroupBlockReason( sourceGroupId, dragItem.fieldIdx, targetGroupId ) ) {
+			var crossSetBlockReason = getCrossGroupBlockReason( sourceGroupId, dragItem.fieldIdx, targetGroupId );
+			if ( crossSetBlockReason ) {
+				setToast( { status: 'error', message: crossSetBlockReason } );
 				resetDrag();
 				return;
 			}
@@ -697,7 +739,7 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 						onDragStart={ function ( e ) { handleGroupDragStart( e, groupIndex ); } }
 						onDragOver={ function ( e ) { handleGroupDragOver( e, groupIndex ); } }
 						onDrop={ handleGroupDrop }
-						onDragEnd={ resetDrag }
+						onDragEnd={ handleDragEnd }
 					>
 
 						{/* Card header. */}
@@ -757,7 +799,7 @@ export default function ProfileFieldsScreen( { onNavigate, helpUrl, onHelpClick,
 													e.stopPropagation();
 													commitFieldMove();
 												} }
-												onDragEnd={ resetDrag }
+												onDragEnd={ handleDragEnd }
 											>
 												<div className="bb-pf-field-left">
 													<span
