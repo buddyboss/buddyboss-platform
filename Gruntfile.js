@@ -889,13 +889,19 @@ module.exports = function (grunt) {
 	// @since BuddyBoss [BBVERSION]
 	var S3_IMAGE_BASE_URL = 'https://buddyboss-platform-assets.s3.us-east-1.amazonaws.com/';
 
-	// Image file types to strip from the customer zip (offloaded to S3). Matches
-	// BB_S3_Image_Offload::EXTENSIONS. Root-relative globs evaluated against
+	// Asset file types offloaded to S3 and therefore stripped from the customer
+	// zip: images + woff2 fonts. Matches BB_S3_Image_Offload::EXTENSIONS and the
+	// CSS rewriter's DEFAULT_EXTENSIONS. Root-relative globs evaluated against
 	// BUILD_DIR. Files remain in src/ and on the production branch; only the
 	// customer zip drops them.
 	//
+	// NOTE: woff2 lives HERE (offload list), NOT in FONT_STRIP_GLOBS. The latter
+	// drives `strip_orphan_font_refs`, which DELETES the matching url() refs from
+	// CSS — we instead want `rewrite_css_image_refs_to_s3` to REWRITE the woff2
+	// refs to S3. The legacy fallback fonts (woff/eot/ttf) stay in FONT_STRIP_GLOBS.
+	//
 	// @since BuddyBoss [BBVERSION]
-	var IMAGE_STRIP_GLOBS = [
+	var S3_OFFLOAD_STRIP_GLOBS = [
 		'**/*.png',
 		'**/*.jpg',
 		'**/*.jpeg',
@@ -903,7 +909,8 @@ module.exports = function (grunt) {
 		'**/*.svg',
 		'**/*.webp',
 		'**/*.ico',
-		'**/*.bmp'
+		'**/*.bmp',
+		'**/*.woff2'
 	];
 
 	// Enable the paid-component strip for the current task run. Inserted into
@@ -1032,9 +1039,9 @@ module.exports = function (grunt) {
 			} )
 			: [];
 
-		// Image assets are offloaded to S3 (CSS refs already rewritten by
+		// Images + woff2 fonts are offloaded to S3 (CSS refs already rewritten by
 		// rewrite_css_image_refs_to_s3, HTML refs rewritten at runtime).
-		var imageExclusions = IMAGE_STRIP_GLOBS.map( function ( g ) {
+		var s3OffloadExclusions = S3_OFFLOAD_STRIP_GLOBS.map( function ( g ) {
 			return '!' + BUILD_DIR + g;
 		} );
 
@@ -1043,7 +1050,7 @@ module.exports = function (grunt) {
 			.concat( translationExclusions )
 			.concat( devSourceExclusions )
 			.concat( paidComponentExclusions )
-			.concat( imageExclusions );
+			.concat( s3OffloadExclusions );
 
 		grunt.config.set( 'compress.main.files', [ {
 			src:  [ BUILD_DIR + '**' ].concat( allExclusions ),
@@ -1056,7 +1063,7 @@ module.exports = function (grunt) {
 			+ TRANSLATION_STRIP_GLOBS.length + ' translation globs + '
 			+ DEV_SOURCE_STRIP_GLOBS.length + ' dev-source globs + '
 			+ paidComponentExclusions.length + ' paid-component globs + '
-			+ imageExclusions.length + ' image globs (offloaded to S3) from zip.'
+			+ s3OffloadExclusions.length + ' S3-offload globs (images + woff2) from zip.'
 		);
 	} );
 

@@ -47,7 +47,10 @@
 var fs   = require( 'fs' );
 var path = require( 'path' );
 
-var DEFAULT_EXTENSIONS = [ 'png', 'jpg', 'jpeg', 'gif', 'svg', 'webp', 'ico', 'bmp' ];
+// Images plus woff2 fonts. woff2 lives in CSS @font-face url() refs, which are
+// served as static files and can only be redirected by rewriting the CSS here.
+// Keep in lockstep with BB_S3_Image_Offload::EXTENSIONS.
+var DEFAULT_EXTENSIONS = [ 'png', 'jpg', 'jpeg', 'gif', 'svg', 'webp', 'ico', 'bmp', 'woff2' ];
 
 /**
  * Walk a directory recursively and return every regular file's absolute path.

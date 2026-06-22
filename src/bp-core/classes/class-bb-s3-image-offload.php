@@ -2,12 +2,14 @@
 /**
  * Serve BuddyBoss Platform image assets from an external S3 bucket.
  *
- * Platform image assets (png/jpg/gif/svg/webp/ico/bmp) are uploaded to an S3
- * bucket that mirrors the plugin's source tree. At runtime the final HTML
- * output is buffered and every local plugin image URL is rewritten to its S3
- * counterpart, so the bytes are served from S3/CloudFront instead of the
- * WordPress host. This pairs with the Grunt build excluding the offloaded
- * images from the shipped zip, keeping the customer download small.
+ * Platform image assets (png/jpg/jpeg/gif/svg/webp/ico/bmp) and woff2 fonts are
+ * uploaded to an S3 bucket that mirrors the plugin's source tree. At runtime the
+ * final HTML output is buffered and every local plugin asset URL is rewritten to
+ * its S3 counterpart, so the bytes are served from S3/CloudFront instead of the
+ * WordPress host. woff2 fonts are referenced from CSS `@font-face`, so they are
+ * rewritten primarily at build time by the Grunt CSS rewrite. This pairs with the
+ * Grunt build excluding the offloaded assets from the shipped zip, keeping the
+ * customer download small.
  *
  * Path mapping is anchored on {@see buddypress()->plugin_url} rather than the
  * plugin root so it works identically in both layouts:
@@ -59,13 +61,18 @@ class BB_S3_Image_Offload {
 	const DEFAULT_KEY_PREFIX = '';
 
 	/**
-	 * Image extensions eligible for offloading.
+	 * Asset extensions eligible for offloading.
 	 *
-	 * @since BuddyBoss [BBVERSION]
+	 * Images plus `woff2` fonts. woff2 is referenced from CSS `@font-face`
+	 * rather than HTML, so it is offloaded primarily by the Grunt build-time
+	 * CSS rewrite; it is included here too so any HTML-side reference (e.g. a
+	 * `<link rel="preload" as="font">`) is rewritten as well.
+	 *
+	 * @since BuddyBoss 3.0.5
 	 *
 	 * @var string[]
 	 */
-	const EXTENSIONS = array( 'png', 'jpg', 'jpeg', 'gif', 'svg', 'webp', 'ico', 'bmp' );
+	const EXTENSIONS = array( 'png', 'jpg', 'jpeg', 'gif', 'svg', 'webp', 'ico', 'bmp', 'woff2' );
 
 	/**
 	 * Singleton instance.
