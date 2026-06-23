@@ -175,6 +175,34 @@ export function SupportAccessScreen( { onNavigate } ) {
 		};
 	}, [ enabled ] );
 
+	// When the countdown reaches zero while the panel still shows enabled, the
+	// grant has expired client-side. Re-sync once with the server (which reads
+	// is_active() === false past expiry) so the UI reflects the real state
+	// instead of a frozen 00:00:00:00 with the access controls still active —
+	// otherwise only a page reload corrects the display. The guard makes every
+	// other tick a cheap no-op, so this is not a polling loop.
+	useEffect( function () {
+		if ( ! enabled ) {
+			return;
+		}
+		if ( countdown.days || countdown.hours || countdown.minutes || countdown.seconds ) {
+			return;
+		}
+
+		var cancelled = false;
+		ajaxFetch( 'bb_admin_support_access_get' )
+			.then( function ( res ) {
+				if ( ! cancelled && res && res.success ) {
+					applyState( res.data );
+				}
+			} )
+			.catch( function () {} );
+
+		return function () {
+			cancelled = true;
+		};
+	}, [ enabled, countdown ] );
+
 	var handleBack = function () {
 		if ( 'function' === typeof onNavigate ) {
 			onNavigate( '/settings/help' );

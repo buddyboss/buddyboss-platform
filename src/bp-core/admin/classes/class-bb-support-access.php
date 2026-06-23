@@ -1605,7 +1605,7 @@ class BB_Support_Access {
 			$this->notify_rate_release( $conversation_id );
 			return new WP_Error(
 				'support_system_request_failed',
-				__( 'Could not reach the support system. The ticket was saved; please retry the note shortly.', 'buddyboss' )
+				__( 'Could not reach the support system. Please try adding the ticket again.', 'buddyboss' )
 			);
 		}
 
@@ -1996,6 +1996,13 @@ class BB_Support_Access {
 	 */
 	public function ajax_set_ticket() {
 		$this->verify_request();
+
+		// Reject if there is no live grant. The UI only renders "Add Ticket"
+		// while enabled, but a direct AJAX call could otherwise dispatch a note
+		// for an expired-but-not-yet-cron-cleaned grant.
+		if ( ! $this->is_active() ) {
+			wp_send_json_error( array( 'message' => __( 'Support access is not currently active.', 'buddyboss' ) ) );
+		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce verified by verify_request().
 		$ticket = isset( $_POST['ticket_number'] ) ? sanitize_text_field( wp_unslash( $_POST['ticket_number'] ) ) : '';

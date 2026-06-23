@@ -829,7 +829,7 @@ export function HelpScreen( { onNavigate } ) {
 						<div className="bb-admin-help-row">
 							<section
 								className="bb-admin-help-promo"
-								aria-labelledby="bb-admin-help-promo-title"
+								aria-labelledby="bb-admin-help-app-promo-title"
 							>
 								<div className="bb-admin-help-promo__media">
 									<img
@@ -844,7 +844,7 @@ export function HelpScreen( { onNavigate } ) {
 											{ __( 'App 3.0', 'buddyboss' ) }
 										</p>
 										<h2
-											id="bb-admin-help-promo-title"
+											id="bb-admin-help-app-promo-title"
 											className="bb-admin-help-promo__title bb-admin-help-promo__title-app-3"
 										>
 											{ __( 'New BuddyBoss App Next Gen Built on Flutter', 'buddyboss' ) }
@@ -866,7 +866,7 @@ export function HelpScreen( { onNavigate } ) {
 				<div className="bb-admin-help-row">
 					<section
 						className="bb-admin-help-promo"
-						aria-labelledby="bb-admin-help-promo-title"
+						aria-labelledby="bb-admin-help-plus-promo-title"
 					>
 						<div className="bb-admin-help-promo__media">
 							<img
@@ -881,7 +881,7 @@ export function HelpScreen( { onNavigate } ) {
 									{ __( 'BuddyBoss Plus', 'buddyboss' ) }
 								</p>
 								<h2
-									id="bb-admin-help-promo-title"
+									id="bb-admin-help-plus-promo-title"
 									className="bb-admin-help-promo__title"
 								>
 									{ __( 'Unlock Advanced Plus Features Without Paying More Than the Pro Plan', 'buddyboss' ) }
@@ -912,7 +912,7 @@ export function HelpScreen( { onNavigate } ) {
 				<div className="bb-admin-help-row">
 					<section
 						className="bb-admin-help-promo"
-						aria-labelledby="bb-admin-help-promo-title"
+						aria-labelledby="bb-admin-help-pro-promo-title"
 					>
 						<div className="bb-admin-help-promo__media">
 							<img
@@ -927,7 +927,7 @@ export function HelpScreen( { onNavigate } ) {
 									{ __( 'BuddyBoss Pro', 'buddyboss' ) }
 								</p>
 								<h2
-									id="bb-admin-help-promo-title"
+									id="bb-admin-help-pro-promo-title"
 									className="bb-admin-help-promo__title"
 								>
 									{ __( 'Take Your Community Beyond Basics with BuddyBoss Pro Features', 'buddyboss' ) }
