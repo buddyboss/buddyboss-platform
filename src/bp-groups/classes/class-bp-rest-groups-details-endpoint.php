@@ -772,6 +772,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 			'name'              => bp_get_group_name( $group ),
 			'status'            => bp_get_group_status( $group ),
 			'group_type_label'  => $group_type_label,
+			/* translators: %s: human-readable time since the group was last active. */
 			'last_activity'     => sprintf( esc_html__( 'Active %s', 'buddyboss' ), wp_kses_post( bp_get_group_last_active( $group ) ) ),
 			'members_count'     => groups_get_total_member_count( $group->id ),
 			'avatar_urls'       => array(

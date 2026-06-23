@@ -904,6 +904,7 @@ function bbp_get_topic_post_date( $topic_id = 0, $humanize = false, $gmt = false
 	} else {
 		$date   = get_post_time( get_option( 'date_format' ), $gmt, $topic_id, true );
 		$time   = get_post_time( get_option( 'time_format' ), $gmt, $topic_id, true );
+		/* translators: 1: date, 2: time. */
 		$result = sprintf( _x( '%1$s at %2$s', 'date at time', 'buddyboss' ), $date, $time );
 	}
 
@@ -1104,8 +1105,10 @@ function bbp_get_topic_revision_log( $topic_id = 0 ) {
 
 		$r .= "\t" . '<li id="bbp-topic-revision-log-' . esc_attr( $topic_id ) . '-item-' . esc_attr( $revision->ID ) . '" class="bbp-topic-revision-log-item">' . "\n";
 		if ( ! empty( $reason ) ) {
+			/* translators: 1: time since modification, 2: author name, 3: reason for modification. */
 			$r .= "\t\t" . sprintf( __( 'This discussion was modified %1$s by %2$s. Reason: %3$s', 'buddyboss' ), esc_html( $since ), $author, esc_html( $reason ) ) . "\n";
 		} else {
+			/* translators: 1: time since modification, 2: author name. */
 			$r .= "\t\t" . sprintf( __( 'This discussion was modified %1$s by %2$s.', 'buddyboss' ), esc_html( $since ), $author ) . "\n";
 		}
 		$r .= "\t" . '</li>' . "\n";
@@ -1645,6 +1648,7 @@ function bbp_get_topic_author_link( $args = '' ) {
 
 		// Tweak link title if empty
 		if ( empty( $r['link_title'] ) ) {
+			/* translators: %s: topic author display name. */
 			$link_title = sprintf( empty( $anonymous ) ? __( 'View %s\'s profile', 'buddyboss' ) : __( 'Visit %s\'s website', 'buddyboss' ), bbp_get_topic_author_display_name( $topic_id ) );
 
 			// Use what was passed if not
@@ -2334,6 +2338,7 @@ function bbp_get_topic_replies_link( $topic_id = 0 ) {
 
 	$topic    = bbp_get_topic( bbp_get_topic_id( (int) $topic_id ) );
 	$topic_id = $topic->ID;
+	/* translators: %s: number of replies. */
 	$replies  = sprintf( _n( '%s reply', '%s replies', bbp_get_topic_reply_count( $topic_id, true ), 'buddyboss' ), bbp_get_topic_reply_count( $topic_id ) );
 	$retval   = '';
 	$link     = bbp_get_topic_permalink( $topic_id );
@@ -2353,6 +2358,7 @@ function bbp_get_topic_replies_link( $topic_id = 0 ) {
 
 		// Hidden replies.
 		$deleted_num = bbp_get_topic_reply_count_hidden( $topic_id, false );
+		/* translators: %s: number of hidden replies. */
 		$extra       = ' ' . sprintf( _n( '(+%s hidden)', '(+%s hidden)', $deleted_int, 'buddyboss' ), $deleted_num );
 
 		// Hidden link.
@@ -3458,10 +3464,12 @@ function bbp_get_forum_pagination_count() {
 
 	// Several topics in a forum with a single page
 	if ( empty( $to_num ) ) {
+		/* translators: %1$s: total number of discussions. */
 		$retstr = sprintf( _n( 'Viewing %1$s discussion', 'Viewing %1$s discussions', $total_int, 'buddyboss' ), $total );
 
 		// Several topics in a forum with several pages
 	} else {
+		/* translators: 2: number shown on this page, 3: last item number on this page, 4: total number of discussions. */
 		$retstr = sprintf( _n( 'Viewing %2$s of %4$s discussions', 'Viewing %2$s - %3$s of %4$s discussions', $total_int, 'buddyboss' ), $bbp->topic_query->post_count, $from_num, $to_num, $total );
 	}
 

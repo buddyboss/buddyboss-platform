@@ -162,10 +162,12 @@ class BP_Groups_Widget extends WP_Widget {
 								<span class="activity">
 								<?php
 								if ( 'newest' == $instance['group_default'] ) {
+									/* translators: %s: human-readable time since the group was created. */
 									printf( __( 'created %s', 'buddyboss' ), bp_get_group_date_created() );
 								} elseif ( 'popular' == $instance['group_default'] ) {
 									bp_group_member_count();
 								} else {
+									/* translators: %s: human-readable time since the group was last active. */
 									printf( __( 'active %s', 'buddyboss' ), bp_get_group_last_active() );
 								}
 								?>

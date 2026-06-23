@@ -245,6 +245,7 @@ function bp_invites_member_invite_filter_content( $content, $email ) {
 		$content .= '<br>' .
 		            bp_get_member_invites_wildcard_replace(
 			            wp_kses(
+				            /* translators: %s: invitation acceptance URL. */
 				            sprintf( __( 'To accept this invitation, please <a href="%s">click here</a>.', 'buddyboss' ), '{{invitee.url}}' ),
 				            bp_invites_kses_allowed_tags()
 			            )

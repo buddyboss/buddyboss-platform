@@ -255,6 +255,7 @@ function groups_edit_base_group_details( $args = array() ) {
 
 	// Backward compatibility with old method of passing arguments.
 	if ( ! is_array( $args ) || count( $function_args ) > 1 ) {
+		/* translators: 1: method name, 2: file path. */
 		_deprecated_argument( __METHOD__, '2.9.0', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 
 		$old_args_keys = array(
@@ -853,6 +854,7 @@ function groups_get_group_members( $args = array() ) {
 
 	// Backward compatibility with old method of passing arguments.
 	if ( ! is_array( $args ) || count( $function_args ) > 1 ) {
+		/* translators: 1: method name, 2: file path. */
 		_deprecated_argument( __METHOD__, '2.0.0', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 
 		$old_args_keys = array(
@@ -2186,6 +2188,7 @@ function groups_send_invites( $args = array() ) {
 
 	// Backward compatibility with old method of passing arguments.
 	if ( ! is_array( $args ) || count( $function_args ) > 1 ) {
+		/* translators: 1: method name, 2: file path. */
 		_deprecated_argument( __METHOD__, '1.3.5', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 
 		$old_args_keys = array(
@@ -2569,6 +2572,7 @@ function groups_send_membership_request( $args = array() ) {
 
 	// Backward compatibility with old method of passing arguments.
 	if ( ! is_array( $args ) || count( $function_args ) > 1 ) {
+		/* translators: 1: method name, 2: file path. */
 		_deprecated_argument( __METHOD__, '1.3.5', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 
 		$old_args_keys = array(
@@ -2667,6 +2671,7 @@ function groups_send_membership_request( $args = array() ) {
 function groups_accept_membership_request( $membership_id, $user_id = 0, $group_id = 0 ) {
 
 	if ( ! empty( $membership_id ) ) {
+		/* translators: 1: method name, 2: file path. */
 		_deprecated_argument( __METHOD__, '1.3.5', sprintf( __( 'Argument `membership_id` passed to %1$s  is deprecated. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 	}
 
@@ -2700,6 +2705,7 @@ function groups_accept_membership_request( $membership_id, $user_id = 0, $group_
 function groups_reject_membership_request( $membership_id, $user_id = 0, $group_id = 0 ) {
 
 	if ( ! empty( $membership_id ) ) {
+		/* translators: 1: method name, 2: file path. */
 		_deprecated_argument( __METHOD__, '1.3.5', sprintf( __( 'Argument `membership_id` passed to %1$s  is deprecated. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 	}
 
@@ -2737,6 +2743,7 @@ function groups_reject_membership_request( $membership_id, $user_id = 0, $group_
  */
 function groups_delete_membership_request( $membership_id, $user_id = 0, $group_id = 0 ) {
 	if ( ! empty( $membership_id ) ) {
+		/* translators: 1: method name, 2: file path. */
 		_deprecated_argument( __METHOD__, '1.3.5', sprintf( __( 'Argument `membership_id` passed to %1$s  is deprecated. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 	}
 

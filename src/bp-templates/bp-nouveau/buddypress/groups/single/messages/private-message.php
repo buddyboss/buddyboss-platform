@@ -40,6 +40,7 @@ if ( ! empty( $group_members ) && ! empty( $group_members['members'] ) ) {
 }
 
 if ( $total_count > 0 ) {
+	/* translators: %s: number of group members. */
 	$all_text = sprintf( _n( '%s Member', '%s Members', $total_count, 'buddyboss' ), $total_count );
 }
 

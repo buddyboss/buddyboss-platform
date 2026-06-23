@@ -249,6 +249,7 @@ function bp_group_messages_groups_membership_accepted( $user_id, $group_id, $acc
 		$message_users_ids = explode( ',', $message_users_ids );
 		array_push( $message_users_ids, $user_id );
 		$group_name = bp_get_group_name( groups_get_group( $group_id ) );
+		/* translators: %s: group name. */
 		$text       = sprintf( __( 'Joined "%s" ', 'buddyboss' ), $group_name );
 
 		bp_messages_update_meta( $first_message->id, 'message_users_ids', implode( ',', $message_users_ids ) );
@@ -579,6 +580,7 @@ function bp_group_messages_banned_member( $user_id, $group_id ) {
 		$message_users_ids = bp_messages_get_meta( $first_message->id, 'message_users_ids', true ); // users list.
 		$message_users_ids = explode( ',', $message_users_ids );
 		$group_name        = bp_get_group_name( groups_get_group( $group_id ) );
+		/* translators: %s: group name. */
 		$text              = sprintf( __( 'Left "%s" ', 'buddyboss' ), $group_name );
 		if ( ( $key = array_search( $user_id, $message_users_ids ) ) !== false ) {
 			unset( $message_users_ids[ $key ] );
@@ -796,6 +798,7 @@ function bp_messages_admin_repair_unread_messages_count() {
 			}
 			$offset ++;
 		}
+		/* translators: %s: number of message threads updated. */
 		$records_updated = sprintf( __( '%s message threads updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
 		return array(

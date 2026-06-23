@@ -76,10 +76,12 @@ function groups_ajax_widget_groups_list() {
 						<span class="activity">
 						<?php
 						if ( 'newest' == $type ) {
+							/* translators: %s: human-readable time since the group was created. */
 							printf( __( 'created %s', 'buddyboss' ), bp_get_group_date_created() );
 						} elseif ( 'popular' == $type ) {
 							bp_group_member_count();
 						} else {
+							/* translators: %s: human-readable time since the group was last active. */
 							printf( __( 'active %s', 'buddyboss' ), bp_get_group_last_active() );
 						}
 						?>

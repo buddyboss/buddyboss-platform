@@ -1109,6 +1109,7 @@ class BP_Groups_Component extends BP_Component {
 					array(
 						'item_id' => bp_displayed_user_id(),
 						'type'    => 'thumb',
+						/* translators: %s: member full name. */
 						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_get_displayed_user_fullname() ),
 					)
 				);

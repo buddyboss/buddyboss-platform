@@ -1376,6 +1376,7 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 							'object'     => 'group',
 							'type'       => 'full',
 							'avatar_dir' => 'group-avatars',
+							/* translators: %s: group name. */
 							'alt'        => sprintf( __( 'Group logo of %s', 'buddyboss' ), $group_name ),
 							'title'      => $group_name,
 							'html'       => false,
@@ -2732,6 +2733,7 @@ function bb_messages_get_group_join_leave_text( $args ) {
 				'<strong class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="%1$s">%2$s</strong>',
 				$member_names,
 				sprintf(
+					/* translators: %d: number of other members. */
 					__( '%d others', 'buddyboss' ),
 					( $total_user_ids - 1 )
 				)

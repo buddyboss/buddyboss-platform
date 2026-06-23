@@ -22,6 +22,7 @@ if ( groups_check_user_has_invite( $loggedin_user_id, $current_group_id ) ) {
 			$inviter = bp_groups_get_invited_by( $loggedin_user_id, $current_group_id );
 			if ( ! empty( $inviter ) ) :
 				$groups_link = trailingslashit( bp_loggedin_user_domain() . bp_get_groups_slug() );
+				/* translators: 1: inviter profile link, 2: time since the invitation, 3: link to view the invitation. */
 				printf(
 					__( 'You are already invited to this group by %1$s %2$s. %3$s', 'buddyboss' ),
 					sprintf(
@@ -83,7 +84,7 @@ if ( groups_check_user_has_invite( $loggedin_user_id, $current_group_id ) ) {
 		} else {
 			?>
 			<p>
-				<?php echo sprintf( __( 'You are requesting to become a member of the group "%s".', 'buddyboss' ), bp_get_group_name() ); ?>
+				<?php /* translators: %s: group name. */ echo sprintf( __( 'You are requesting to become a member of the group "%s".', 'buddyboss' ), bp_get_group_name() ); ?>
 			</p>
 
 			<form action="<?php bp_group_form_action( 'request-membership' ); ?>" method="post" name="request-membership-form" id="request-membership-form" class="standard-form">
@@ -106,6 +107,7 @@ if ( groups_check_user_has_invite( $loggedin_user_id, $current_group_id ) ) {
 		);
 
 		if ( ! empty( $parent_group_id ) ) {
+			/* translators: %s: parent group name link. */
 			printf( __( 'You must first be a member of the parent group "%s" before you can join this group.', 'buddyboss' ), $parent_group_name );
 		}
 	}

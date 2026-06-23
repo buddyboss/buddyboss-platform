@@ -645,6 +645,7 @@ function bp_get_message_thread_total_and_unread_count( $thread_id = false ) {
 		/* translators: 1: total number, 2: accessibility text: number of unread messages */
 		'<span class="thread-count">(%1$s)</span> <span class="bp-screen-reader-text">%2$s</span>',
 		bp_core_number_format( $total ),
+		/* translators: %d: number of unread messages. */
 		sprintf( _n( '%d unread', '%d unread', $unread, 'buddyboss' ), bp_core_number_format( $unread ) )
 	);
 }
@@ -729,6 +730,7 @@ function bp_get_message_thread_avatar( $args = '' ) {
 	global $messages_template;
 
 	$fullname = bp_core_get_user_displayname( $messages_template->thread->last_sender_id );
+	/* translators: %s: member display name. */
 	$alt      = sprintf( __( 'Profile photo of %s', 'buddyboss' ), $fullname );
 
 	$r = bp_parse_args(
@@ -837,6 +839,7 @@ function bp_messages_pagination_count() {
 	$to_num    = bp_core_number_format( ( $start_num + ( $messages_template->pag_num - 1 ) > $messages_template->total_thread_count ) ? $messages_template->total_thread_count : $start_num + ( $messages_template->pag_num - 1 ) );
 	$total     = bp_core_number_format( $messages_template->total_thread_count );
 
+	/* translators: 1: starting message number, 2: ending message number, 3: total number of messages. */
 	$message = sprintf( _n( 'Viewing 1 message', 'Viewing %1$s - %2$s of %3$s messages', $messages_template->total_thread_count, 'buddyboss' ), $from_num, $to_num, $total );
 
 	echo esc_html( $message );
@@ -1751,6 +1754,7 @@ function bp_get_the_thread_subject() {
  */
 function bp_get_the_thread_recipients() {
 	if ( 5 <= bp_get_thread_recipients_count() ) {
+		/* translators: %s: number of recipients. */
 		$recipients = sprintf( __( '%s recipients', 'buddyboss' ), bp_core_number_format( bp_get_thread_recipients_count() ) );
 	} else {
 		$recipients = bp_get_thread_recipients_list();

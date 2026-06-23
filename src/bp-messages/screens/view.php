@@ -69,6 +69,7 @@ function messages_screen_conversation() {
 	// Decrease the unread count in the nav before it's rendered.
 	$count    = bp_get_total_unread_messages_count();
 	$class    = ( 0 === $count ) ? 'no-count' : 'count';
+	/* translators: 1: CSS class for the count badge, 2: unread message count. */
 	$nav_name = sprintf( __( 'Messages <span class="%1$s">%2$s</span>', 'buddyboss' ), esc_attr( $class ), bp_core_number_format( $count ) );
 
 	// Edit the Navigation name.
