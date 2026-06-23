@@ -984,6 +984,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 				// User Stat metabox.
 				add_meta_box(
 					'bp_members_admin_user_stats',
+					/* translators: %s: member display name. */
 					sprintf( __( "%s's Stats", 'buddyboss' ), $display_name ),
 					array( $this, 'user_admin_stats_metabox' ),
 					get_current_screen()->id,
@@ -1270,7 +1271,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 							<?php
 							$date = bp_format_time( strtotime( $user->user_registered ), false, true );
 							?>
-						<span id="timestamp"><?php printf( __( 'Registered on: %s', 'buddyboss' ), '<strong>' . $date . '</strong>' ); ?></span>
+						<span id="timestamp"><?php /* translators: %s: registration date. */ printf( __( 'Registered on: %s', 'buddyboss' ), '<strong>' . $date . '</strong>' ); ?></span>
 					</div>
 				</div> <!-- #misc-publishing-actions -->
 
@@ -1300,7 +1301,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 		 */
 		public function user_admin_spammer_metabox( $user = null ) {
 			?>
-			<p><?php printf( __( '%s has been marked as a spammer. All BuddyBoss data associated with the user has been removed.', 'buddyboss' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ); ?></p>
+			<p><?php /* translators: %s: member display name. */ printf( __( '%s has been marked as a spammer. All BuddyBoss data associated with the user has been removed.', 'buddyboss' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ); ?></p>
 			<?php
 		}
 
@@ -1313,7 +1314,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 		 */
 		public function user_admin_suspended_metabox( $user = null ) {
 			?>
-			<p><?php printf( __( '%s has been marked as a suspended. All BuddyBoss data associated with the user has been removed.', 'buddyboss' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ); ?></p>
+			<p><?php /* translators: %s: member display name. */ printf( __( '%s has been marked as a suspended. All BuddyBoss data associated with the user has been removed.', 'buddyboss' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ); ?></p>
 			<?php
 		}
 
@@ -1344,7 +1345,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			?>
 
 		<ul>
-			<li class="bp-members-profile-stats"><?php printf( __( 'Last active: %1$s', 'buddyboss' ), '<strong>' . $date . '</strong>' ); ?></li>
+			<li class="bp-members-profile-stats"><?php /* translators: %s: last active date. */ printf( __( 'Last active: %1$s', 'buddyboss' ), '<strong>' . $date . '</strong>' ); ?></li>
 
 				<?php
 				// Loading other stats only if user has activated their account.
@@ -1745,6 +1746,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			}
 
 			$url  = add_query_arg( 'page', 'bp-signups', $base_url );
+			/* translators: %s: pending signup count markup. */
 			$text = sprintf( __( 'Pending %s', 'buddyboss' ), '<span class="count">(' . bp_core_number_format( $signups ) . ')</span>' );
 
 			$views['registered'] = sprintf( '<a href="%1$s" class="%2$s">%3$s</a>', esc_url( $url ), $class, $text );
@@ -2286,6 +2288,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 				endif;
 
 				if ( $usersearch ) {
+					/* translators: %s: user search query. */
 					printf( '<span class="subtitle">' . __( 'Search results for "%s"', 'buddyboss' ) . '</span>', esc_html( $usersearch ) );
 				}
 				?>
@@ -2308,6 +2311,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 					endif;
 
 					if ( $usersearch ) {
+						/* translators: %s: user search query. */
 						printf( '<span class="subtitle">' . __( 'Search results for "%s"', 'buddyboss' ) . '</span>', esc_html( $usersearch ) );
 					}
 
@@ -2514,7 +2518,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 					<?php if ( 'resend' == $action ) : ?>
 
 						<p class="description">
-							<?php printf( esc_html__( 'Last notified: %s', 'buddyboss' ), $last_notified ); ?>
+							<?php /* translators: %s: last notified date. */ printf( esc_html__( 'Last notified: %s', 'buddyboss' ), $last_notified ); ?>
 
 							<?php if ( ! empty( $signup->recently_sent ) ) : ?>
 

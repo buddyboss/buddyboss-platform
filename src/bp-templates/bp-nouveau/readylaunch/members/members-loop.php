@@ -399,6 +399,7 @@ bp_nouveau_after_loop();
 						<div class="notice notice--plain notice--warning">
 							<?php if ( bp_is_active( 'friends' ) ) : ?>
 								<?php
+								/* translators: 1: "Please note:" label, 2: notice message text. */
 								printf(
 									wp_kses( __( '<span>%1$s</span> %2$s', 'buddyboss' ), array( 'span' => array() ) ),
 									esc_html__( 'Please note:', 'buddyboss' ),

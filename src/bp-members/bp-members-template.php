@@ -511,12 +511,16 @@ function bp_get_members_pagination_count() {
 	$total     = bp_core_number_format( $members_template->total_member_count );
 
 	if ( 'active' == $members_template->type ) {
+		/* translators: 1: from number, 2: to number, 3: total member count. */
 		$pag = sprintf( _n( 'Viewing 1 member', 'Viewing %1$s - %2$s of %3$s members', $members_template->total_member_count, 'buddyboss' ), $from_num, $to_num, $total );
 	} elseif ( 'popular' == $members_template->type ) {
+		/* translators: 1: from number, 2: to number, 3: total member count. */
 		$pag = sprintf( _n( 'Viewing 1 member with connections', 'Viewing %1$s - %2$s of %3$s members with connections', $members_template->total_member_count, 'buddyboss' ), $from_num, $to_num, $total );
 	} elseif ( 'online' == $members_template->type ) {
+		/* translators: 1: from number, 2: to number, 3: total online member count. */
 		$pag = sprintf( _n( 'Viewing 1 online member', 'Viewing %1$s - %2$s of %3$s online members', $members_template->total_member_count, 'buddyboss' ), $from_num, $to_num, $total );
 	} else {
+		/* translators: 1: from number, 2: to number, 3: total member count. */
 		$pag = sprintf( _n( 'Viewing 1 member', 'Viewing %1$s - %2$s of %3$s members', $members_template->total_member_count, 'buddyboss' ), $from_num, $to_num, $total );
 
 	}
@@ -818,6 +822,7 @@ function bp_get_member_avatar( $args = '' ) {
 		'height' => false,
 		'class'  => 'avatar',
 		'id'     => false,
+		/* translators: %s: member full name. */
 		'alt'    => sprintf( __( 'Profile photo of %s', 'buddyboss' ), $fullname ),
 	);
 
@@ -1010,6 +1015,7 @@ function bp_get_member_last_active( $args = array() ) {
 
 	// Backwards compatibility for anyone forcing a 'true' active_format.
 	if ( true === $r['active_format'] ) {
+		/* translators: %s: human-readable time-since string (e.g. "5 minutes"). */
 		$r['active_format'] = __( 'active %s', 'buddyboss' );
 	}
 
@@ -1188,6 +1194,7 @@ function bp_get_member_registered( $args = array() ) {
 		return esc_attr( $members_template->member->user_registered );
 	}
 
+	/* translators: %s: human-readable time-since string (e.g. "5 minutes"). */
 	$registered = esc_attr( bp_core_get_last_activity( $members_template->member->user_registered, _x( 'registered %s', 'Records the timestamp that the user registered into the activity feed', 'buddyboss' ) ) );
 
 	/**
@@ -1541,6 +1548,7 @@ function bp_get_loggedin_user_avatar( $args = '' ) {
 			'width'   => false,
 			'height'  => false,
 			'html'    => true,
+			/* translators: %s: logged-in user full name. */
 			'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_get_loggedin_user_fullname() ),
 		)
 	);
@@ -1599,6 +1607,7 @@ function bp_get_displayed_user_avatar( $args = '' ) {
 			'width'   => false,
 			'height'  => false,
 			'html'    => true,
+			/* translators: %s: displayed user full name. */
 			'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_get_displayed_user_fullname() ),
 		)
 	);
@@ -2008,6 +2017,7 @@ function bp_current_member_type_message() {
 function bp_get_current_member_type_message() {
 	$type_object = bp_get_member_type_object( bp_get_current_member_type() );
 
+	/* translators: %s: member type label. */
 	$message = sprintf( __( 'Viewing all members who are %s', 'buddyboss' ), '<strong>' . $type_object->labels['name'] . '</strong>' );
 
 	/**

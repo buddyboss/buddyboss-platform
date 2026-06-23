@@ -205,6 +205,7 @@ function bp_media_upload_handler( $file_id = 'file' ) {
 			'test_form'            => false,
 			'upload_error_strings' => array(
 				false,
+				/* translators: %d: maximum allowed upload size in MB. */
 				sprintf( __( 'The uploaded file exceeds %d MB', 'buddyboss' ), bp_media_file_upload_max_size() ),
 				__( 'The uploaded file was only partially uploaded.', 'buddyboss' ),
 				__( 'No file was uploaded.', 'buddyboss' ),
@@ -2316,6 +2317,14 @@ function bp_media_import_reset_options() {
  * @since BuddyBoss 1.0.0
  */
 function bp_media_import_status_request() {
+
+	// This AJAX handler runs destructive site-wide media import/reset operations,
+	// so restrict it to administrators. Without this any logged-in user could
+	// trigger imports/resets (privilege escalation). Nonce verification is
+	// handled separately.
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_send_json_error( array( 'message' => __( 'Sorry, you are not allowed to do that.', 'buddyboss' ) ) );
+	}
 
 	$import_status = get_option( 'bp_media_import_status' );
 

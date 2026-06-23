@@ -1695,6 +1695,7 @@ function bp_media_message_privacy_repair() {
 			}
 			$offset ++;
 		}
+		/* translators: %s: number of messages updated. */
 		$records_updated = sprintf( __( '%s messages updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
 		return array(
@@ -1758,6 +1759,7 @@ function bp_media_admin_repair_media() {
 			}
 			$offset ++;
 		}
+		/* translators: %s: number of media items updated. */
 		$records_updated = sprintf( __( '%s media updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
 		return array(
@@ -1796,6 +1798,7 @@ function bp_media_forum_privacy_repair() {
 			}
 			$offset ++;
 		}
+		/* translators: %s: number of forums media items whose privacy was updated. */
 		$records_updated = sprintf( __( '%s forums media privacy updated successfully.', 'buddyboss' ), bp_core_number_format( $offset ) );
 
 		return array(
@@ -1804,6 +1807,7 @@ function bp_media_forum_privacy_repair() {
 			'records' => $records_updated,
 		);
 	} else {
+		/* translators: %s: completion status text. */
 		$statement = __( 'Repair forum media privacy &hellip; %s', 'buddyboss' );
 
 		return array(

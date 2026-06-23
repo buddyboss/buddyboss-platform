@@ -124,6 +124,7 @@ class BP_Core_Members_Template {
 	public function __construct( ...$args ) {
 		// Backward compatibility with old method of passing arguments.
 		if ( ! is_array( $args[0] ) || count( $args ) > 1 ) {
+			/* translators: 1: method name, 2: file path. */
 			_deprecated_argument( __METHOD__, '2.3.90', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 
 			$old_args_keys = array(

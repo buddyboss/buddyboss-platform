@@ -45,6 +45,7 @@ add_action( 'bp_register_activity_actions', 'bp_members_register_activity_action
  */
 function bp_members_format_activity_action_new_member( $action, $activity ) {
 	$userlink = bp_core_get_userlink( $activity->user_id );
+	/* translators: %s: member display name link. */
 	$action   = sprintf( __( '%s became a registered member', 'buddyboss' ), $userlink );
 
 	// Legacy filter - pass $user_id instead of $activity.

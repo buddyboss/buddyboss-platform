@@ -1776,6 +1776,7 @@ function bp_core_validate_user_signup( $user_name, $user_email ) {
 		// User name must pass WP's validity check.
 		if ( ! validate_username( $user_name ) ) {
 			$field_name = xprofile_get_field( bp_xprofile_nickname_field_id() )->name;
+			/* translators: %s: profile field name (e.g. nickname). */
 			$errors->add( 'user_name', sprintf( __( 'Invalid %s. Only "a-z", "0-9", "-", "_" and "." are allowed.', 'buddyboss' ), $field_name ) );
 		}
 
@@ -2466,6 +2467,7 @@ function bp_core_signup_disable_inactive( $user = null, $username = '', $passwor
 		'bp-resend-activation'
 	);
 
+	/* translators: %s: resend activation email URL. */
 	$resend_string = '<br /><br />' . sprintf( __( 'If you have not received an email yet, <a href="%s">click here to resend it</a>.', 'buddyboss' ), esc_url( $resend_url ) );
 
 	return new WP_Error( 'bp_account_not_activated', __( '<strong>ERROR</strong>: Your account has not been activated. Check your email for the activation link.', 'buddyboss' ) . $resend_string );
