@@ -286,11 +286,12 @@ class BB_Support_Access {
 	 * Resolve the support account's user ID without provisioning it.
 	 *
 	 * Unlike {@see get_support_user()}, this never creates the account — it only
-	 * looks up an account that already exists, identified by the
-	 * `_bb_support_access_user` meta flag (falling back to the canonical email /
-	 * login). This makes it safe to call from query filters that run on every
-	 * member listing: those must never have the side effect of provisioning the
-	 * support administrator. The result is cached for the request.
+	 * looks up an account that already exists, identified solely by the
+	 * `_bb_support_access_user` meta flag. This makes it safe to call from query
+	 * filters that run on every member listing: those must never have the side
+	 * effect of provisioning the support administrator, nor hide an unrelated
+	 * user who happens to share the canonical email/login. The result is cached
+	 * for the request.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
@@ -314,19 +315,11 @@ class BB_Support_Access {
 			)
 		);
 
-		if ( ! empty( $flagged ) ) {
-			$support_user_id = (int) $flagged[0];
-
-			return $support_user_id;
-		}
-
-		// Fall back to the canonical email, then login.
-		$user = get_user_by( 'email', self::USER_EMAIL );
-		if ( ! $user ) {
-			$user = get_user_by( 'login', self::USER_LOGIN );
-		}
-
-		$support_user_id = $user ? (int) $user->ID : 0;
+		// The flag is the sole authority: get_support_user() never adopts an
+		// unflagged account, so there is no canonical email/login fallback here.
+		// That guarantees a real user who merely shares the support email/login
+		// is never silently hidden from the directory or members REST endpoint.
+		$support_user_id = ! empty( $flagged ) ? (int) $flagged[0] : 0;
 
 		return $support_user_id;
 	}
@@ -365,15 +358,16 @@ class BB_Support_Access {
 	 * Allowed extension durations (in days) for enable / extend operations.
 	 *
 	 * Bounding the accepted values prevents a tampered AJAX payload from setting
-	 * an absurd or negative expiry. 1–30 days covers every realistic support
-	 * need.
+	 * an absurd or negative expiry. These must stay in sync with the options the
+	 * ModifyDurationModal UI offers (1–7 days); sites needing longer windows can
+	 * add them via the `bb_support_access_allowed_days` filter.
 	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
 	 * @return int[] Allowed day counts.
 	 */
 	public function allowed_days() {
-		$days = array( 1, 3, 5, 7, 10, 14, 30 );
+		$days = array( 1, 3, 5, 7 );
 
 		/**
 		 * Filter the allowed support-access durations (in days).
@@ -783,24 +777,43 @@ class BB_Support_Access {
 	 * excluded from the member directory and the members REST endpoint via
 	 * {@see exclude_from_user_query()}.
 	 *
+	 * Resolution is flag-first: only an account this plugin previously flagged is
+	 * reused. A pre-existing user that merely shares the canonical email/login is
+	 * never adopted — a conflict returns a WP_Error so the admin can resolve it.
+	 *
 	 * @since BuddyBoss [BBVERSION]
 	 *
-	 * @return int|WP_Error Support user ID on success, WP_Error on failure.
+	 * @return int|WP_Error Support user ID on success, WP_Error on failure or
+	 *                      when the canonical email/login is already taken.
 	 */
 	public function get_support_user() {
-		// Prefer an existing account by the canonical email, then by login.
-		$user = get_user_by( 'email', self::USER_EMAIL );
-		if ( ! $user ) {
-			$user = get_user_by( 'login', self::USER_LOGIN );
+		// Reuse ONLY an account this plugin previously provisioned, identified by
+		// the meta flag. We deliberately do not adopt a pre-existing user that
+		// merely shares the canonical email/login but was never flagged by us:
+		// silently flagging, hiding, and token-enabling a real admin account
+		// would be a security problem.
+		$flagged = get_users(
+			array(
+				'meta_key'    => '_bb_support_access_user', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+				'meta_value'  => 1, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+				'fields'      => 'ID',
+				'number'      => 1,
+				'count_total' => false,
+			)
+		);
+
+		if ( ! empty( $flagged ) ) {
+			return (int) $flagged[0];
 		}
 
-		if ( $user ) {
-			// Ensure the flag is present on a pre-existing match.
-			if ( ! get_user_meta( $user->ID, '_bb_support_access_user', true ) ) {
-				update_user_meta( $user->ID, '_bb_support_access_user', 1 );
-			}
-
-			return (int) $user->ID;
+		// No flagged account yet. Refuse to hijack an existing user that already
+		// owns the canonical email or login — surface an error so the admin can
+		// rename/remove it rather than have their account adopted by support.
+		if ( get_user_by( 'email', self::USER_EMAIL ) || get_user_by( 'login', self::USER_LOGIN ) ) {
+			return new WP_Error(
+				'bb_support_user_conflict',
+				__( 'A user already exists with the BuddyBoss support email or login. Please rename or remove that account before enabling Support Access.', 'buddyboss' )
+			);
 		}
 
 		// Create the account with a long random password the admin never needs —
@@ -1400,6 +1413,25 @@ class BB_Support_Access {
 	}
 
 	/**
+	 * Release the per-conversation notify rate-limit window.
+	 *
+	 * Called when a dispatch fails so a genuine failure (timeout, gateway
+	 * error, not-found) can be retried immediately, instead of the admin seeing
+	 * the misleading "a note was just sent" message for a note that never
+	 * arrived. The window only exists to dedupe successfully-sent notes and
+	 * rapid double-clicks while a request is in flight.
+	 *
+	 * @since BuddyBoss [BBVERSION]
+	 *
+	 * @param int $conversation_id Support system conversation ID.
+	 *
+	 * @return void
+	 */
+	private function notify_rate_release( $conversation_id ) {
+		delete_transient( 'bb_sa_notify_' . (int) $conversation_id );
+	}
+
+	/**
 	 * Get the shared gateway gate-pass key.
 	 *
 	 * Returns the immutable class constant directly. There is intentionally NO
@@ -1482,6 +1514,7 @@ class BB_Support_Access {
 		// Defensive payload-size bound. The real payload is small; anything over
 		// the cap signals tampering — refuse rather than transmit it.
 		if ( ! is_string( $body ) || strlen( $body ) > self::SUPPORT_SYSTEM_MAX_PAYLOAD ) {
+			$this->notify_rate_release( $conversation_id );
 			return new WP_Error( 'payload_error', __( 'Could not build the note request.', 'buddyboss' ) );
 		}
 
@@ -1525,6 +1558,7 @@ class BB_Support_Access {
 		// Transport failure (timeout, DNS, TLS). Fail soft — the WP_Error is
 		// surfaced to the admin as a toast; the ticket itself is already saved.
 		if ( is_wp_error( $response ) ) {
+			$this->notify_rate_release( $conversation_id );
 			return new WP_Error(
 				'support_system_request_failed',
 				__( 'Could not reach the support system. The ticket was saved; please retry the note shortly.', 'buddyboss' )
@@ -1544,6 +1578,7 @@ class BB_Support_Access {
 		}
 
 		if ( 404 === $code ) {
+			$this->notify_rate_release( $conversation_id );
 			return new WP_Error(
 				'conversation_not_found',
 				sprintf(
@@ -1555,6 +1590,8 @@ class BB_Support_Access {
 		}
 
 		$message = isset( $data['error'] ) ? sanitize_text_field( (string) $data['error'] ) : '';
+
+		$this->notify_rate_release( $conversation_id );
 
 		return new WP_Error(
 			'support_system_api_error',

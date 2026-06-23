@@ -212,6 +212,20 @@ function AppInner() {
 		fixAdminMenuHighlight( currentRoute );
 	}, [currentRoute]);
 
+	// Close the DocsBot chat whenever the Knowledge Base modal opens.
+	//
+	// The chat's only in-page toggle lives in the Help footer; once the
+	// full-screen KB modal opens it covers that footer, so a chat left open
+	// stays stuck on top of the modal with no way to dismiss it. Closing it as
+	// the modal opens keeps a single overlay in view. `window.DocsBotAI` is
+	// injected by the PHP loader and only carries `close()` once chat.js has
+	// initialized (Help tab only), so the guard makes this a no-op elsewhere.
+	useEffect(() => {
+		if ( kbState.isOpen && window.DocsBotAI && 'function' === typeof window.DocsBotAI.close ) {
+			window.DocsBotAI.close();
+		}
+	}, [kbState.isOpen]);
+
 	// Scroll to top on every route change. The Settings 2.0 router is
 	// homegrown (string-based currentRoute + history.replaceState) and has
 	// no built-in scroll restoration the way React Router does, so a user

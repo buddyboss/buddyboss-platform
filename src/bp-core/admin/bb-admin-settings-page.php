@@ -466,14 +466,20 @@ function bb_admin_settings_page() {
 			// The SPA navigates with history.replaceState/pushState (no full
 			// reload), so patch both to emit an event we can react to, alongside
 			// the native popstate. This keeps the widget in sync with the route.
-			[ "pushState", "replaceState" ].forEach( function ( type ) {
-				var orig = window.history[ type ];
-				window.history[ type ] = function () {
-					var ret = orig.apply( this, arguments );
-					window.dispatchEvent( new Event( "bb-docsbot-locationchange" ) );
-					return ret;
-				};
-			} );
+			// Guard so the wrappers are installed at most once per page — running
+			// this loader again (or wrapping an already-wrapped history) must not
+			// stack wrappers. The marker is also visible to other scripts.
+			if ( ! window.history.__bbDocsbotPatched ) {
+				window.history.__bbDocsbotPatched = true;
+				[ "pushState", "replaceState" ].forEach( function ( type ) {
+					var orig = window.history[ type ];
+					window.history[ type ] = function () {
+						var ret = orig.apply( this, arguments );
+						window.dispatchEvent( new Event( "bb-docsbot-locationchange" ) );
+						return ret;
+					};
+				} );
+			}
 			window.addEventListener( "popstate", sync );
 			window.addEventListener( "hashchange", sync );
 			window.addEventListener( "bb-docsbot-locationchange", sync );
@@ -521,7 +527,6 @@ function bb_admin_settings_page() {
 		?>
 		<hr class="wp-header-end">
 		<div id="bb-admin-settings"></div>
-		<!-- test -->
 		<?php
 		/*
 		 * Mothership IPN inbox — render outside the React tree.
