@@ -316,6 +316,7 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 
 					// Spammy
 					case 'spam':
+						/* translators: 1: reporter name, 2: post type (topic or reply). */
 						$this->update_post_history( $post_id, sprintf( esc_html__( '%1$s reported this %2$s as spam', 'buddyboss' ), $post_data['reporter'], $post_data['comment_type'] ), 'report-spam' );
 						update_post_meta( $post_id, '_bbp_akismet_user_result', 'true' );
 						update_post_meta( $post_id, '_bbp_akismet_user', $post_data['reporter'] );
@@ -323,6 +324,7 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 
 					// Hammy
 					case 'ham':
+						/* translators: 1: reporter name, 2: post type (topic or reply). */
 						$this->update_post_history( $post_id, sprintf( esc_html__( '%1$s reported this %2$s as not spam', 'buddyboss' ), $post_data['reporter'], $post_data['comment_type'] ), 'report-ham' );
 						update_post_meta( $post_id, '_bbp_akismet_user_result', 'false' );
 						update_post_meta( $post_id, '_bbp_akismet_user', $post_data['reporter'] );
@@ -480,6 +482,7 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 
 						// If post_status isn't the spam status, as expected, leave a note
 						if ( bbp_get_spam_status_id() !== $_post->post_status ) {
+							/* translators: %s: new post status. */
 							$this->update_post_history( $post_id, sprintf( esc_html__( 'Post status was changed to %s', 'buddyboss' ), $_post->post_status ), 'status-changed-' . $_post->post_status );
 						}
 
@@ -495,6 +498,7 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 
 							// @todo Use wp_blacklist_check()
 
+							/* translators: %s: new post status. */
 							$this->update_post_history( $post_id, sprintf( esc_html__( 'Post status was changed to %s', 'buddyboss' ), $_post->post_status ), 'status-changed-' . $_post->post_status );
 						}
 
@@ -502,6 +506,7 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 					} else {
 						// Leave a trail so other's know what we did
 						update_post_meta( $post_id, '_bbp_akismet_error', time() );
+						/* translators: %s: Akismet response. */
 						$this->update_post_history( $post_id, sprintf( esc_html__( 'Akismet was unable to check this post (response: %s), will automatically retry again later.', 'buddyboss' ), $this->last_post['bbp_akismet_result'] ), 'check-error' );
 					}
 

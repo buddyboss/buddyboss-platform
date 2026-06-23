@@ -614,6 +614,7 @@ function bbp_get_reply_title_fallback( $post_title = '', $post_id = 0 ) {
 	$topic_title = bbp_get_reply_topic_title( $post_id );
 
 	// Get empty reply title fallback.
+	/* translators: %s: topic title. */
 	$reply_title = sprintf( __( 'Reply To: %s', 'buddyboss' ), $topic_title );
 
 	return apply_filters( 'bbp_get_reply_title_fallback', $reply_title, $post_id, $topic_title );
@@ -759,6 +760,7 @@ function bbp_get_reply_post_date( $reply_id = 0, $humanize = false, $gmt = false
 	} else {
 		$date   = get_post_time( get_option( 'date_format' ), $gmt, $reply_id, true );
 		$time   = get_post_time( get_option( 'time_format' ), $gmt, $reply_id, true );
+		/* translators: 1: date, 2: time. */
 		$result = sprintf( _x( '%1$s at %2$s', 'date at time', 'buddyboss' ), $date, $time );
 	}
 
@@ -870,8 +872,10 @@ function bbp_get_reply_revision_log( $reply_id = 0 ) {
 
 		$r .= "\t" . '<li id="bbp-reply-revision-log-' . esc_attr( $reply_id ) . '-item-' . esc_attr( $revision->ID ) . '" class="bbp-reply-revision-log-item">' . "\n";
 		if ( ! empty( $reason ) ) {
+			/* translators: 1: time since modification, 2: author name, 3: reason for modification. */
 			$r .= "\t\t" . sprintf( esc_html__( 'This reply was modified %1$s by %2$s. Reason: %3$s', 'buddyboss' ), esc_html( $since ), $author, esc_html( $reason ) ) . "\n";
 		} else {
+			/* translators: 1: time since modification, 2: author name. */
 			$r .= "\t\t" . sprintf( esc_html__( 'This reply was modified %1$s by %2$s.', 'buddyboss' ), esc_html( $since ), $author ) . "\n";
 		}
 		$r .= "\t" . '</li>' . "\n";
@@ -1323,6 +1327,7 @@ function bbp_get_reply_author_link( $args = '' ) {
 
 		// Tweak link title if empty
 		if ( empty( $r['link_title'] ) ) {
+			/* translators: %s: reply author display name. */
 			$link_title = sprintf( empty( $anonymous ) ? __( 'View %s\'s profile', 'buddyboss' ) : __( 'Visit %s\'s website', 'buddyboss' ), bbp_get_reply_author_display_name( $reply_id ) );
 
 			// Use what was passed if not
@@ -2623,6 +2628,7 @@ function bbp_get_topic_pagination_count() {
 	$total_pages = $bbp->reply_query->total_pages; // total_pages
 
 	if( (int) $total_pages > 1 ) {
+		/* translators: 1: current page number, 2: total number of pages. */
 		$retstr = sprintf( __( 'Page %1$s of %2$s', 'buddyboss' ), $curr_page, $total_pages );
 	}
 

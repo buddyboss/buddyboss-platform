@@ -550,6 +550,7 @@ function bbp_new_reply_handler( $action = '' ) {
 
 		// WP_Error.
 	} elseif ( is_wp_error( $reply_id ) && $reply_id->get_error_message() ) {
+		/* translators: %s: error message. */
 		bbp_add_error( 'bbp_reply_error', sprintf( __( '<strong>Error</strong>: The following problem(s) occurred: %s', 'buddyboss' ), $reply_id->get_error_message() ) );
 
 		// Generic error.
@@ -1463,6 +1464,7 @@ function bbp_move_reply_handler( $action = '' ) {
 				wp_update_post(
 					array(
 						'ID'          => $move_reply->ID,
+						/* translators: %s: destination topic title. */
 						'post_title'  => sprintf( __( 'Reply To: %s', 'buddyboss' ), $destination_topic->post_title ),
 						'post_name'   => false, // will be automatically generated
 						'post_parent' => $destination_topic->ID,
@@ -2372,7 +2374,7 @@ function bbp_display_replies_feed_rss2( $replies_query = array() ) {
 
 						<description>
 							<![CDATA[
-							<p><?php printf( __( 'Replies: %s', 'buddyboss' ), bbp_get_topic_reply_count() ); ?></p>
+							<p><?php /* translators: %s: number of replies. */ printf( __( 'Replies: %s', 'buddyboss' ), bbp_get_topic_reply_count() ); ?></p>
 							<?php bbp_topic_content(); ?>
 							]]>
 						</description>

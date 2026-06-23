@@ -112,6 +112,7 @@ function bbp_get_time_since( $older_date, $newer_date = false, $gmt = false ) {
 	// Setup the strings
 	$unknown_text   = apply_filters( 'bbp_core_time_since_unknown_text', __( 'sometime', 'buddyboss' ) );
 	$right_now_text = apply_filters( 'bbp_core_time_since_right_now_text', __( 'right now', 'buddyboss' ) );
+	/* translators: %s: human-readable time difference. */
 	$ago_text       = apply_filters( 'bbp_core_time_since_ago_text', __( '%s ago', 'buddyboss' ) );
 
 	// array of time period chunks

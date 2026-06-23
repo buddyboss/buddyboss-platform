@@ -2590,6 +2590,7 @@ function bbp_get_breadcrumb( $args = array() ) {
 		}
 
 		// Implode the results of the tag data.
+		/* translators: %s: topic tag name. */
 		$pre_current_text = sprintf( __( 'Discussion Tag: %s', 'buddyboss' ), implode( ' ', $tag_data ) );
 
 		// Edit Topic Tag.
@@ -2709,6 +2710,7 @@ function bbp_get_breadcrumb( $args = array() ) {
 
 		// Edit topic tag.
 	} elseif ( bbp_is_topic_tag_edit() ) {
+		/* translators: %s: topic tag name. */
 		$crumbs[] = '<a href="' . esc_url( get_term_link( bbp_get_topic_tag_id(), bbp_get_topic_tag_tax_id() ) ) . '" class="bbp-breadcrumb-topic-tag">' . sprintf( __( 'Discussion Tag: %s', 'buddyboss' ), bbp_get_topic_tag_name() ) . '</a>';
 
 		// Search.
@@ -2946,21 +2948,25 @@ function bbp_title( $title = '', $sep = '&raquo;', $seplocation = '' ) {
 		// Forum edit page.
 	} elseif ( bbp_is_forum_edit() ) {
 		$new_title['text']   = bbp_get_forum_title();
+		/* translators: %s: forum title. */
 		$new_title['format'] = esc_attr__( 'Forum Edit: %s', 'buddyboss' );
 
 		// Topic edit page.
 	} elseif ( bbp_is_topic_edit() ) {
 		$new_title['text']   = bbp_get_topic_title();
+		/* translators: %s: discussion title. */
 		$new_title['format'] = esc_attr__( 'Discussion Edit: %s', 'buddyboss' );
 
 		// Reply edit page.
 	} elseif ( bbp_is_reply_edit() ) {
 		$new_title['text']   = bbp_get_reply_title();
+		/* translators: %s: reply title. */
 		$new_title['format'] = esc_attr__( 'Reply Edit: %s', 'buddyboss' );
 
 		// Topic tag edit page.
 	} elseif ( bbp_is_topic_tag_edit() ) {
 		$new_title['text']   = bbp_get_topic_tag_name();
+		/* translators: %s: topic tag name. */
 		$new_title['format'] = esc_attr__( 'Discussion Tag Edit: %s', 'buddyboss' );
 
 		/** Singles */
@@ -2968,11 +2974,13 @@ function bbp_title( $title = '', $sep = '&raquo;', $seplocation = '' ) {
 		// Forum page.
 	} elseif ( bbp_is_single_forum() ) {
 		$new_title['text']   = bbp_get_forum_title();
+		/* translators: %s: forum title. */
 		$new_title['format'] = esc_attr__( 'Forum: %s', 'buddyboss' );
 
 		// Topic page.
 	} elseif ( bbp_is_single_topic() ) {
 		$new_title['text']   = bbp_get_topic_title();
+		/* translators: %s: discussion title. */
 		$new_title['format'] = esc_attr__( 'Discussion: %s', 'buddyboss' );
 
 		// Replies.
@@ -2982,6 +2990,7 @@ function bbp_title( $title = '', $sep = '&raquo;', $seplocation = '' ) {
 		// Topic tag page.
 	} elseif ( bbp_is_topic_tag() || get_query_var( 'bbp_topic_tag' ) ) {
 		$new_title['text']   = bbp_get_topic_tag_name();
+		/* translators: %s: topic tag name. */
 		$new_title['format'] = esc_attr__( 'Discussion Tag: %s', 'buddyboss' );
 
 		/** Users */
@@ -2995,27 +3004,33 @@ function bbp_title( $title = '', $sep = '&raquo;', $seplocation = '' ) {
 
 			// User is viewing someone else's profile (so use their display name)
 		} else {
+			/* translators: %s: user display name. */
 			$new_title['text'] = sprintf( esc_attr_x( "%s's", 'User viewing another users profile', 'buddyboss' ), get_userdata( bbp_get_user_id() )->display_name );
 		}
 
 		// User topics created
 		if ( bbp_is_single_user_topics() ) {
+			/* translators: %s: user display name. */
 			$new_title['format'] = esc_attr__( '%s Discussions', 'buddyboss' );
 
 			// User rueplies created
 		} elseif ( bbp_is_single_user_replies() ) {
+			/* translators: %s: user display name. */
 			$new_title['format'] = esc_attr__( '%s Replies', 'buddyboss' );
 
 			// User favorites
 		} elseif ( bbp_is_favorites() ) {
+			/* translators: %s: user display name. */
 			$new_title['format'] = esc_attr__( '%s Saved', 'buddyboss' );
 
 			// User subscriptions
 		} elseif ( bbp_is_subscriptions() ) {
+			/* translators: %s: user display name. */
 			$new_title['format'] = esc_attr__( '%s Subscriptions', 'buddyboss' );
 
 			// User "home"
 		} else {
+			/* translators: %s: user display name. */
 			$new_title['format'] = esc_attr__( '%s Profile', 'buddyboss' );
 		}
 
@@ -3029,7 +3044,8 @@ function bbp_title( $title = '', $sep = '&raquo;', $seplocation = '' ) {
 			// Other user
 		} else {
 			$new_title['text']   = get_userdata( bbp_get_user_id() )->display_name;
-			$new_title['format'] = esc_attr__( "Edit %s's Profile", 'buddyboss' );
+			/* translators: %s: user display name. */
+		$new_title['format'] = esc_attr__( "Edit %s's Profile", 'buddyboss' );
 		}
 
 		/** Views */
@@ -3037,6 +3053,7 @@ function bbp_title( $title = '', $sep = '&raquo;', $seplocation = '' ) {
 		// Views
 	} elseif ( bbp_is_single_view() ) {
 		$new_title['text']   = bbp_get_view_title();
+		/* translators: %s: view title. */
 		$new_title['format'] = esc_attr__( 'View: %s', 'buddyboss' );
 
 		/** Search */

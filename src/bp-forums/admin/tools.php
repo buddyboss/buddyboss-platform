@@ -423,6 +423,7 @@ function bbp_converter_settings() {
 
 	// Starting or continuing?
 	$status_text = ! empty( $step )
+		/* translators: %s: step number. */
 		? sprintf( esc_html__( 'Up next: step %s', 'buddyboss' ), $step )
 		: esc_html__( 'Ready', 'buddyboss' );
 
@@ -433,6 +434,7 @@ function bbp_converter_settings() {
 
 	// Starting or continuing?
 	$progress_text = ! empty( $step )
+		/* translators: 1: current step number, 2: total number of steps. */
 		? sprintf( esc_html__( 'Previously stopped at step %1$d of %2$d', 'buddyboss' ), $step, $max )
 		: esc_html__( 'Ready to go.', 'buddyboss' );
 	?>
@@ -631,6 +633,7 @@ function bbp_get_network_sites() {
 function bbp_admin_repair_topic_reply_count() {
 
 	$bbp_db    = bbp_db();
+	/* translators: %s: result message. */
 	$statement = __( 'Counting the number of replies in each discussion &hellip; %s', 'buddyboss' );
 	$result    = __( 'Failed!', 'buddyboss' );
 
@@ -697,6 +700,7 @@ function bbp_admin_repair_topic_reply_count() {
 function bbp_admin_repair_topic_voice_count() {
 
 	$bbp_db    = bbp_db();
+	/* translators: %s: result message. */
 	$statement = __( 'Counting the number of members in each discussion &hellip; %s', 'buddyboss' );
 	$result    = __( 'Failed!', 'buddyboss' );
 
@@ -756,6 +760,7 @@ function bbp_admin_repair_topic_voice_count() {
 function bbp_admin_repair_topic_hidden_reply_count() {
 
 	$bbp_db    = bbp_db();
+	/* translators: %s: result message. */
 	$statement = __( 'Counting the number of spammed and trashed replies in each discussion &hellip; %s', 'buddyboss' );
 	$result    = __( 'Failed!', 'buddyboss' );
 
@@ -804,6 +809,7 @@ function bbp_admin_repair_topic_hidden_reply_count() {
 function bbp_admin_repair_group_forum_relationship() {
 
 	$bbp_db    = bbp_db();
+	/* translators: %s: result message. */
 	$statement = __( 'Repairing social group forum relationships &hellip; %s', 'buddyboss' );
 	$g_count   = 0;
 	$f_count   = 0;
@@ -938,6 +944,7 @@ function bbp_admin_repair_group_forum_relationship() {
 	remove_role( 'keymaster' );
 
 	// Complete results
+	/* translators: 1: number of groups updated, 2: number of forums updated, 3: number of forum statuses synced. */
 	$result = sprintf( __( 'Complete! %1$s groups updated; %2$s forums updated; %3$s forum statuses synced.', 'buddyboss' ), bbp_number_format( $g_count ), bbp_number_format( $f_count ), bbp_number_format( $s_count ) );
 	return array(
 		0,
@@ -962,6 +969,7 @@ function bbp_admin_repair_group_forum_relationship() {
 function bbp_admin_repair_forum_topic_count() {
 
 	$bbp_db    = bbp_db();
+	/* translators: %s: result message. */
 	$statement = __( 'Counting the number of discussions in each forum &hellip; %s', 'buddyboss' );
 	$result    = __( 'Failed!', 'buddyboss' );
 
@@ -1019,6 +1027,7 @@ function bbp_admin_repair_forum_topic_count() {
 function bbp_admin_repair_forum_reply_count() {
 
 	$bbp_db    = bbp_db();
+	/* translators: %s: result message. */
 	$statement = __( 'Counting the number of replies in each forum &hellip; %s', 'buddyboss' );
 	$result    = __( 'Failed!', 'buddyboss' );
 
@@ -1084,6 +1093,7 @@ function bbp_admin_repair_forum_reply_count() {
 function bbp_admin_repair_user_topic_count() {
 
 	$bbp_db      = bbp_db();
+	/* translators: %s: result message. */
 	$statement   = __( 'Counting the number of discussions for each user &hellip; %s', 'buddyboss' );
 	$result      = __( 'Failed!', 'buddyboss' );
 	$sql_select  = "SELECT `post_author`, COUNT(DISTINCT `ID`) as `_count` FROM `{$bbp_db->posts}` WHERE `post_type` = '" . bbp_get_topic_post_type() . "' AND `post_status` = '" . bbp_get_public_status_id() . "' GROUP BY `post_author`;";
@@ -1158,6 +1168,7 @@ function bbp_admin_repair_user_topic_count() {
 function bbp_admin_repair_user_reply_count() {
 
 	$bbp_db      = bbp_db();
+	/* translators: %s: result message. */
 	$statement   = __( 'Counting the number of replies for each user &hellip; %s', 'buddyboss' );
 	$result      = __( 'Failed!', 'buddyboss' );
 	$sql_select  = "SELECT `post_author`, COUNT(DISTINCT `ID`) as `_count` FROM `{$bbp_db->posts}` WHERE `post_type` = '" . bbp_get_reply_post_type() . "' AND `post_status` = '" . bbp_get_public_status_id() . "' GROUP BY `post_author`;";
@@ -1232,6 +1243,7 @@ function bbp_admin_repair_user_reply_count() {
 function bbp_admin_repair_user_favorites() {
 
 	$bbp_db    = bbp_db();
+	/* translators: %s: result message. */
 	$statement = __( 'Removing trashed discussions from user favorites &hellip; %s', 'buddyboss' );
 	$result    = __( 'Failed!', 'buddyboss' );
 	$key       = $bbp_db->prefix . '_bbp_favorites';
@@ -1329,6 +1341,7 @@ function bbp_admin_repair_user_favorites() {
 function bbp_admin_repair_user_topic_subscriptions() {
 
 	$bbp_db    = bbp_db();
+	/* translators: %s: result message. */
 	$statement = __( 'Removing trashed discussions from user subscriptions &hellip; %s', 'buddyboss' );
 	$result    = __( 'Failed!', 'buddyboss' );
 	$key       = $bbp_db->prefix . '_bbp_subscriptions';
@@ -1425,6 +1438,7 @@ function bbp_admin_repair_user_topic_subscriptions() {
 function bbp_admin_repair_user_forum_subscriptions() {
 
 	$bbp_db    = bbp_db();
+	/* translators: %s: result message. */
 	$statement = __( 'Removing trashed forums from user subscriptions &hellip; %s', 'buddyboss' );
 	$result    = __( 'Failed!', 'buddyboss' );
 	$key       = $bbp_db->prefix . '_bbp_forum_subscriptions';
@@ -1522,6 +1536,7 @@ function bbp_admin_repair_user_forum_subscriptions() {
  */
 function bbp_admin_repair_user_roles() {
 
+	/* translators: %s: result message. */
 	$statement    = __( 'Remapping existing users to default forum roles &hellip; %s', 'buddyboss' );
 	$changed      = 0;
 	$role_map     = bbp_get_user_role_map();
@@ -1568,6 +1583,7 @@ function bbp_admin_repair_user_roles() {
 		}
 	}
 
+	/* translators: %s: number of users updated. */
 	$result = sprintf( __( 'Complete! %s users updated.', 'buddyboss' ), bbp_number_format( $changed ) );
 	return array(
 		0,
@@ -1589,6 +1605,7 @@ function bbp_admin_repair_user_roles() {
 function bbp_admin_repair_freshness() {
 
 	$bbp_db    = bbp_db();
+	/* translators: %s: result message. */
 	$statement = __( 'Recalculating last activity in each discussion and forum &hellip; %s', 'buddyboss' );
 	$result    = __( 'Failed!', 'buddyboss' );
 
@@ -1792,6 +1809,7 @@ function bbp_admin_repair_freshness() {
 function bbp_admin_repair_sticky() {
 
 	$bbp_db    = bbp_db();
+	/* translators: %s: result message. */
 	$statement = __( 'Recalculating the sticky relationship of each discussion &hellip; %s', 'buddyboss' );
 	$result    = __( 'Failed!', 'buddyboss' );
 	$forums    = $bbp_db->get_col( "SELECT ID FROM `{$bbp_db->posts}` WHERE `post_type` = 'forum';" );
@@ -1860,6 +1878,7 @@ function bbp_admin_repair_sticky() {
  * @return array An array of the status code and the message
  */
 function bbp_admin_repair_forum_visibility() {
+	/* translators: %s: result message. */
 	$statement = __( 'Recalculating private and hidden forums &hellip; %s', 'buddyboss' );
 
 	// Bail if queries returned errors
@@ -1894,6 +1913,7 @@ function bbp_admin_repair_forum_visibility() {
 function bbp_admin_repair_forum_meta() {
 
 	$bbp_db    = bbp_db();
+	/* translators: %s: result message. */
 	$statement = __( 'Recalculating the parent forum for each post &hellip; %s', 'buddyboss' );
 	$result    = __( 'Failed!', 'buddyboss' );
 
@@ -1989,6 +2009,7 @@ function bbp_admin_repair_forum_meta() {
 function bbp_admin_repair_topic_meta() {
 
 	$bbp_db    = bbp_db();
+	/* translators: %s: result message. */
 	$statement = __( 'Recalculating the parent discussion for each post &hellip; %s', 'buddyboss' );
 	$result    = __( 'Failed!', 'buddyboss' );
 
@@ -2067,6 +2088,7 @@ function bbp_admin_repair_topic_meta() {
 function bbp_admin_repair_reply_menu_order() {
 
 	$bbp_db    = bbp_db();
+	/* translators: %s: result message. */
 	$statement = __( 'Recalculating the position of each reply &hellip; %s', 'buddyboss' );
 	$result    = __( 'No reply positions to recalculate!', 'buddyboss' );
 
@@ -2246,6 +2268,7 @@ function bbp_admin_reset_database() {
 
 	/** Posts */
 	$bbp_db     = bbp_db();
+	/* translators: %s: result message. */
 	$statement  = __( 'Deleting Posts&hellip; %s', 'buddyboss' );
 	$sql_posts  = $bbp_db->get_results( "SELECT `ID` FROM `{$bbp_db->posts}` WHERE `post_type` IN ('forum', 'topic', 'reply')", OBJECT_K );
 	$sql_delete = "DELETE FROM `{$bbp_db->posts}` WHERE `post_type` IN ('forum', 'topic', 'reply')";
@@ -2259,6 +2282,7 @@ function bbp_admin_reset_database() {
 		foreach ( $sql_posts as $key => $value ) {
 			$sql_meta[] = $key;
 		}
+		/* translators: %s: result message. */
 		$statement  = __( 'Deleting Post Meta&hellip; %s', 'buddyboss' );
 		$sql_meta   = implode( "', '", $sql_meta );
 		$sql_delete = "DELETE FROM `{$bbp_db->postmeta}` WHERE `post_id` IN ('{$sql_meta}');";
@@ -2268,6 +2292,7 @@ function bbp_admin_reset_database() {
 
 	/** Topic Tags */
 
+	/* translators: %s: result message. */
 	$statement  = __( 'Deleting Discussions Tags&hellip; %s', 'buddyboss' );
 	$sql_delete = "DELETE a,b,c FROM `{$bbp_db->terms}` AS a LEFT JOIN `{$bbp_db->term_taxonomy}` AS c ON a.term_id = c.term_id LEFT JOIN `{$bbp_db->term_relationships}` AS b ON b.term_taxonomy_id = c.term_taxonomy_id WHERE c.taxonomy = 'topic-tag';";
 	$result     = is_wp_error( $bbp_db->query( $sql_delete ) ) ? $failed : $success;
@@ -2283,11 +2308,13 @@ function bbp_admin_reset_database() {
 			foreach ( $sql_users as $key => $value ) {
 				$sql_meta[] = $key;
 			}
+			/* translators: %s: result message. */
 			$statement  = __( 'Deleting User&hellip; %s', 'buddyboss' );
 			$sql_meta   = implode( "', '", $sql_meta );
 			$sql_delete = "DELETE FROM `{$bbp_db->users}` WHERE `ID` IN ('{$sql_meta}');";
 			$result     = is_wp_error( $bbp_db->query( $sql_delete ) ) ? $failed : $success;
 			$messages[] = sprintf( $statement, $result );
+			/* translators: %s: result message. */
 			$statement  = __( 'Deleting User Meta&hellip; %s', 'buddyboss' );
 			$sql_delete = "DELETE FROM `{$bbp_db->usermeta}` WHERE `user_id` IN ('{$sql_meta}');";
 			$result     = is_wp_error( $bbp_db->query( $sql_delete ) ) ? $failed : $success;
@@ -2296,6 +2323,7 @@ function bbp_admin_reset_database() {
 
 		// Delete imported user metadata
 	} else {
+		/* translators: %s: result message. */
 		$statement  = __( 'Deleting User Meta&hellip; %s', 'buddyboss' );
 		$sql_delete = "DELETE FROM `{$bbp_db->usermeta}` WHERE `meta_key` LIKE '%%_bbp_%%';";
 		$result     = is_wp_error( $bbp_db->query( $sql_delete ) ) ? $failed : $success;
@@ -2304,6 +2332,7 @@ function bbp_admin_reset_database() {
 
 	/** Converter */
 
+	/* translators: %s: result message. */
 	$statement  = __( 'Deleting Conversion Table&hellip; %s', 'buddyboss' );
 	$table_name = $bbp_db->prefix . 'bbp_converter_translator';
 	if ( $bbp_db->get_var( "SHOW TABLES LIKE '{$table_name}'" ) === $table_name ) {
@@ -2316,12 +2345,14 @@ function bbp_admin_reset_database() {
 
 	/** Options */
 
+	/* translators: %s: result message. */
 	$statement = __( 'Deleting Settings&hellip; %s', 'buddyboss' );
 	bbp_delete_options();
 	$messages[] = sprintf( $statement, $success );
 
 	/** Roles */
 
+	/* translators: %s: result message. */
 	$statement = __( 'Deleting Roles and Capabilities&hellip; %s', 'buddyboss' );
 	bbp_remove_roles();
 	bbp_remove_caps();
@@ -2344,7 +2375,7 @@ function bbp_admin_reset_database() {
 function bp_admin_forum_repair_tools_wrapper_function() {
 
 	$type    = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
-	$site_id = isset( $_POST['site_id'] ) ? sanitize_text_field( wp_unslash( $_POST['site_id'] ) ) : 0;
+	$site_id = isset( $_POST['site_id'] ) ? absint( wp_unslash( $_POST['site_id'] ) ) : 0;
 
 	$response = array(
 		'feedback' => sprintf(
@@ -2355,6 +2386,14 @@ function bp_admin_forum_repair_tools_wrapper_function() {
 
 	// Bail if not a POST action.
 	if ( ! bp_is_post_request() ) {
+		wp_send_json_error( $response );
+	}
+
+	// Capability gate: these repair tools run destructive maintenance (role
+	// remapping, capability restore, subscription/favorite deletion, multisite
+	// switch_to_blog). Mirror the admin-page gate so a non-privileged user can't
+	// invoke them via admin-ajax with a guessable static nonce.
+	if ( ! current_user_can( 'bbp_tools_repair_page' ) ) {
 		wp_send_json_error( $response );
 	}
 

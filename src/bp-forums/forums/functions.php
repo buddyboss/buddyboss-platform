@@ -344,6 +344,7 @@ function bbp_new_forum_handler( $action = '' ) {
 
 	// WP_Error.
 	} elseif ( is_wp_error( $forum_id ) && $forum_id->get_error_message() ) {
+		/* translators: %s: error message. */
 		bbp_add_error( 'bbp_forum_error', sprintf( __( '<strong>Error</strong>: The following problem(s) occurred: %s', 'buddyboss' ), $forum_id->get_error_message() ) );
 
 	// Generic error.

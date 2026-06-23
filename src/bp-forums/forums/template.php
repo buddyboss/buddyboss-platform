@@ -1063,10 +1063,12 @@ function bbp_get_forum_index_pagination_count() {
 
 	// Several forums in a forum index with a single page
 	if ( empty( $to_num ) ) {
+		/* translators: %1$s: total number of forums. */
 		$retstr = sprintf( _n( 'Viewing %1$s forum', 'Viewing %1$s forums', $total_int, 'buddyboss' ), $total );
 
 		// Several forums in a forum index with several pages
 	} else {
+		/* translators: 2: number shown on this page, 3: last item number on this page, 4: total number of forums. */
 		$retstr = sprintf( _n( 'Viewing %2$s of %4$s forums', 'Viewing %2$s - %3$s of %4$s forums', $total_int, 'buddyboss' ), $bbp->forum_query->post_count, $from_num, $to_num, $total );
 	}
 
@@ -1628,6 +1630,7 @@ function bbp_forum_topics_link( $forum_id = 0 ) {
 function bbp_get_forum_topics_link( $forum_id = 0 ) {
 	$forum    = bbp_get_forum( $forum_id );
 	$forum_id = $forum->ID;
+	/* translators: %s: number of discussions. */
 	$topics   = sprintf( _n( '%s discussion', '%s discussions', bbp_get_forum_topic_count( $forum_id, true, false ), 'buddyboss' ), bbp_get_forum_topic_count( $forum_id ) );
 	$retval   = '';
 	$link     = bbp_get_forum_permalink( $forum_id );
@@ -1647,6 +1650,7 @@ function bbp_get_forum_topics_link( $forum_id = 0 ) {
 
 		// Hidden text.
 		$deleted_num = bbp_get_forum_topic_count_hidden( $forum_id, false, false );
+		/* translators: %s: number of hidden discussions. */
 		$extra       = ' ' . sprintf( _n( '(+%s hidden)', '(+%s hidden)', $deleted_int, 'buddyboss' ), $deleted_num );
 
 		// Hidden link.

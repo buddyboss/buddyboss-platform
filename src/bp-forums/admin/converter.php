@@ -251,7 +251,9 @@ class BBP_Converter {
 					'status_complete'     => esc_html__( 'Finished', 'buddyboss' ),
 					'status_stopped'      => esc_html__( 'Stopped', 'buddyboss' ),
 					'status_starting'     => esc_html__( 'Starting', 'buddyboss' ),
+					/* translators: %s: step number. */
 					'status_up_next'      => esc_html__( 'Doing step %s...', 'buddyboss' ),
+					/* translators: %s: number of seconds. */
 					'status_counting'     => esc_html__( 'Next in %s seconds...', 'buddyboss' ),
 				),
 			)
@@ -594,7 +596,8 @@ class BBP_Converter {
 					: $this->converter_response( esc_html__( 'Sync-table ready', 'buddyboss' ) );
 			} else {
 				$this->bump_start();
-				$this->converter_response( sprintf( esc_html__( 'Deleting previously converted data (%1$s through %2$s)', 'buddyboss' ), $this->start, $this->max ) );
+				/* translators: 1: start row number, 2: end row number. */
+			$this->converter_response( sprintf( esc_html__( 'Deleting previously converted data (%1$s through %2$s)', 'buddyboss' ), $this->start, $this->max ) );
 			}
 
 			$this->converter->clean = false;
@@ -620,7 +623,8 @@ class BBP_Converter {
 					: $this->converter_response( esc_html__( 'All users imported', 'buddyboss' ) );
 			} else {
 				$this->bump_start();
-				$this->converter_response( sprintf( esc_html__( 'Converting users (%1$s through %2$s of %3$s)', 'buddyboss' ), $this->start, $this->max, $this->rows_in_step ) );
+				/* translators: 1: start row number, 2: end row number, 3: total rows in step. */
+			$this->converter_response( sprintf( esc_html__( 'Converting users (%1$s through %2$s of %3$s)', 'buddyboss' ), $this->start, $this->max, $this->rows_in_step ) );
 			}
 		} else {
 			$this->bump_step();
@@ -643,7 +647,8 @@ class BBP_Converter {
 					: $this->converter_response( esc_html__( 'All passwords cleared', 'buddyboss' ) );
 			} else {
 				$this->bump_start();
-				$this->converter_response( sprintf( esc_html__( 'Delete default WordPress user passwords (%1$s through %2$s)', 'buddyboss' ), $this->start, $this->max ) );
+				/* translators: 1: start row number, 2: end row number. */
+			$this->converter_response( sprintf( esc_html__( 'Delete default WordPress user passwords (%1$s through %2$s)', 'buddyboss' ), $this->start, $this->max ) );
 			}
 		} else {
 			$this->bump_step();
@@ -665,7 +670,8 @@ class BBP_Converter {
 				: $this->converter_response( esc_html__( 'All forums imported', 'buddyboss' ) );
 		} else {
 			$this->bump_start();
-			$this->converter_response( sprintf( esc_html__( 'Converting forums (%1$s through %2$s of %3$s)', 'buddyboss' ), $this->start, $this->max, $this->rows_in_step ) );
+			/* translators: 1: start row number, 2: end row number, 3: total rows in step. */
+		$this->converter_response( sprintf( esc_html__( 'Converting forums (%1$s through %2$s of %3$s)', 'buddyboss' ), $this->start, $this->max, $this->rows_in_step ) );
 		}
 	}
 
@@ -683,7 +689,8 @@ class BBP_Converter {
 				: $this->converter_response( esc_html__( 'All forum parents imported', 'buddyboss' ) );
 		} else {
 			$this->bump_start();
-			$this->converter_response( sprintf( esc_html__( 'Calculating forum hierarchy (%1$s through %2$s of %3$s)', 'buddyboss' ), $this->start, $this->max, $this->rows_in_step ) );
+			/* translators: 1: start row number, 2: end row number, 3: total rows in step. */
+		$this->converter_response( sprintf( esc_html__( 'Calculating forum hierarchy (%1$s through %2$s of %3$s)', 'buddyboss' ), $this->start, $this->max, $this->rows_in_step ) );
 		}
 	}
 
@@ -701,7 +708,8 @@ class BBP_Converter {
 				: $this->converter_response( esc_html__( 'All forum subscriptions imported', 'buddyboss' ) );
 		} else {
 			$this->bump_start();
-			$this->converter_response( sprintf( esc_html__( 'Converting forum subscriptions (%1$s through %2$s of %3$s)', 'buddyboss' ), $this->start, $this->max, $this->rows_in_step ) );
+			/* translators: 1: start row number, 2: end row number, 3: total rows in step. */
+		$this->converter_response( sprintf( esc_html__( 'Converting forum subscriptions (%1$s through %2$s of %3$s)', 'buddyboss' ), $this->start, $this->max, $this->rows_in_step ) );
 		}
 	}
 
@@ -720,7 +728,8 @@ class BBP_Converter {
 				: $this->converter_response( esc_html__( 'All topics imported', 'buddyboss' ) );
 		} else {
 			$this->bump_start();
-			$this->converter_response( sprintf( esc_html__( 'Converting topics (%1$s through %2$s of %3$s)', 'buddyboss' ), $this->start, $this->max, $this->rows_in_step ) );
+			/* translators: 1: start row number, 2: end row number, 3: total rows in step. */
+		$this->converter_response( sprintf( esc_html__( 'Converting topics (%1$s through %2$s of %3$s)', 'buddyboss' ), $this->start, $this->max, $this->rows_in_step ) );
 		}
 	}
 
@@ -738,7 +747,8 @@ class BBP_Converter {
 				: $this->converter_response( esc_html__( 'All anonymous topic authors imported', 'buddyboss' ) );
 		} else {
 			$this->bump_start();
-			$this->converter_response( sprintf( esc_html__( 'Converting anonymous topic authors (%1$s through %2$s of %3$s)', 'buddyboss' ), $this->start, $this->max, $this->rows_in_step ) );
+			/* translators: 1: start row number, 2: end row number, 3: total rows in step. */
+		$this->converter_response( sprintf( esc_html__( 'Converting anonymous topic authors (%1$s through %2$s of %3$s)', 'buddyboss' ), $this->start, $this->max, $this->rows_in_step ) );
 		}
 	}
 
@@ -756,7 +766,8 @@ class BBP_Converter {
 				: $this->converter_response( esc_html__( 'All stickies imported', 'buddyboss' ) );
 		} else {
 			$this->bump_start();
-			$this->converter_response( sprintf( esc_html__( 'Calculating topic stickies (%1$s through %2$s of %3$s)', 'buddyboss' ), $this->start, $this->max, $this->rows_in_step ) );
+			/* translators: 1: start row number, 2: end row number, 3: total rows in step. */
+		$this->converter_response( sprintf( esc_html__( 'Calculating topic stickies (%1$s through %2$s of %3$s)', 'buddyboss' ), $this->start, $this->max, $this->rows_in_step ) );
 		}
 	}
 
@@ -774,7 +785,8 @@ class BBP_Converter {
 				: $this->converter_response( esc_html__( 'All super stickies imported', 'buddyboss' ) );
 		} else {
 			$this->bump_start();
-			$this->converter_response( sprintf( esc_html__( 'Calculating topic super stickies (%1$s through %2$s of %3$s)', 'buddyboss' ), $this->start, $this->max, $this->rows_in_step ) );
+			/* translators: 1: start row number, 2: end row number, 3: total rows in step. */
+		$this->converter_response( sprintf( esc_html__( 'Calculating topic super stickies (%1$s through %2$s of %3$s)', 'buddyboss' ), $this->start, $this->max, $this->rows_in_step ) );
 		}
 	}
 
@@ -792,7 +804,8 @@ class BBP_Converter {
 				: $this->converter_response( esc_html__( 'All closed topics imported', 'buddyboss' ) );
 		} else {
 			$this->bump_start();
-			$this->converter_response( sprintf( esc_html__( 'Calculating closed topics (%1$s through %2$s of %3$s)', 'buddyboss' ), $this->start, $this->max, $this->rows_in_step ) );
+			/* translators: 1: start row number, 2: end row number, 3: total rows in step. */
+		$this->converter_response( sprintf( esc_html__( 'Calculating closed topics (%1$s through %2$s of %3$s)', 'buddyboss' ), $this->start, $this->max, $this->rows_in_step ) );
 		}
 	}
 
@@ -810,7 +823,8 @@ class BBP_Converter {
 				: $this->converter_response( esc_html__( 'All topic tags imported', 'buddyboss' ) );
 		} else {
 			$this->bump_start();
-			$this->converter_response( sprintf( esc_html__( 'Converting topic tags (%1$s through %2$s of %3$s)', 'buddyboss' ), $this->start, $this->max, $this->rows_in_step ) );
+			/* translators: 1: start row number, 2: end row number, 3: total rows in step. */
+		$this->converter_response( sprintf( esc_html__( 'Converting topic tags (%1$s through %2$s of %3$s)', 'buddyboss' ), $this->start, $this->max, $this->rows_in_step ) );
 		}
 	}
 
@@ -828,7 +842,8 @@ class BBP_Converter {
 				: $this->converter_response( esc_html__( 'All topic subscriptions imported', 'buddyboss' ) );
 		} else {
 			$this->bump_start();
-			$this->converter_response( sprintf( esc_html__( 'Converting topic subscriptions (%1$s through %2$s of %3$s)', 'buddyboss' ), $this->start, $this->max, $this->rows_in_step ) );
+			/* translators: 1: start row number, 2: end row number, 3: total rows in step. */
+		$this->converter_response( sprintf( esc_html__( 'Converting topic subscriptions (%1$s through %2$s of %3$s)', 'buddyboss' ), $this->start, $this->max, $this->rows_in_step ) );
 		}
 	}
 
@@ -846,7 +861,8 @@ class BBP_Converter {
 				: $this->converter_response( esc_html__( 'All favorites imported', 'buddyboss' ) );
 		} else {
 			$this->bump_start();
-			$this->converter_response( sprintf( esc_html__( 'Converting favorites (%1$s through %2$s of %3$s)', 'buddyboss' ), $this->start, $this->max, $this->rows_in_step ) );
+			/* translators: 1: start row number, 2: end row number, 3: total rows in step. */
+		$this->converter_response( sprintf( esc_html__( 'Converting favorites (%1$s through %2$s of %3$s)', 'buddyboss' ), $this->start, $this->max, $this->rows_in_step ) );
 		}
 	}
 
@@ -864,7 +880,8 @@ class BBP_Converter {
 				: $this->converter_response( esc_html__( 'All replies imported', 'buddyboss' ) );
 		} else {
 			$this->bump_start();
-			$this->converter_response( sprintf( esc_html__( 'Converting replies (%1$s through %2$s of %3$s)', 'buddyboss' ), $this->start, $this->max, $this->rows_in_step ) );
+			/* translators: 1: start row number, 2: end row number, 3: total rows in step. */
+		$this->converter_response( sprintf( esc_html__( 'Converting replies (%1$s through %2$s of %3$s)', 'buddyboss' ), $this->start, $this->max, $this->rows_in_step ) );
 		}
 	}
 
@@ -882,7 +899,8 @@ class BBP_Converter {
 				: $this->converter_response( esc_html__( 'All anonymous reply authors imported', 'buddyboss' ) );
 		} else {
 			$this->bump_start();
-			$this->converter_response( sprintf( esc_html__( 'Converting anonymous reply authors (%1$s through %2$s of %3$s)', 'buddyboss' ), $this->start, $this->max, $this->rows_in_step ) );
+			/* translators: 1: start row number, 2: end row number, 3: total rows in step. */
+		$this->converter_response( sprintf( esc_html__( 'Converting anonymous reply authors (%1$s through %2$s of %3$s)', 'buddyboss' ), $this->start, $this->max, $this->rows_in_step ) );
 		}
 	}
 
@@ -900,7 +918,8 @@ class BBP_Converter {
 				: $this->converter_response( esc_html__( 'All threaded replies imported', 'buddyboss' ) );
 		} else {
 			$this->bump_start();
-			$this->converter_response( sprintf( esc_html__( 'Calculating threaded replies parents (%1$s through %2$s of %3$s)', 'buddyboss' ), $this->start, $this->max, $this->rows_in_step ) );
+			/* translators: 1: start row number, 2: end row number, 3: total rows in step. */
+		$this->converter_response( sprintf( esc_html__( 'Calculating threaded replies parents (%1$s through %2$s of %3$s)', 'buddyboss' ), $this->start, $this->max, $this->rows_in_step ) );
 		}
 	}
 

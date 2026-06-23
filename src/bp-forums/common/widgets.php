@@ -986,6 +986,7 @@ class BBP_Topics_Widget extends WP_Widget {
 
 						<?php
 						if ( ! empty( $author_link ) ) :
+							/* translators: %1$s: topic author link. */
 							printf( __( 'by %1$s', 'buddyboss' ), '<span class="topic-author"><a href="' . esc_url( $author_url ) . '">' . bbp_get_topic_author_display_name( $topic_id ) . '</a></span>' );
 						endif;
 						?>
@@ -1409,6 +1410,7 @@ class BBP_Replies_Widget extends WP_Widget {
 
 						<?php
 						if ( ! empty( $author_link ) ) :
+							/* translators: %1$s: reply author link. */
 							printf( __( '%1$s on ', 'buddyboss' ), '<span class="reply-author"><a href="' . esc_url( $reply_author_url ) . '">' . bbp_get_reply_author_display_name( $reply_id ) . '</a></span>' );
 						endif;
 

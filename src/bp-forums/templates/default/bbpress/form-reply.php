@@ -25,7 +25,7 @@
 			<?php do_action( 'bbp_theme_before_reply_form' ); ?>
 
 			<fieldset class="bbp-form">
-				<legend><?php printf( esc_html__( 'Reply To: %s', 'buddyboss' ), ( bbp_get_form_reply_to() ) ? sprintf( esc_html__( 'Reply #%1$s in %2$s', 'buddyboss' ), bbp_get_form_reply_to(), bbp_get_topic_title() ) : bbp_get_topic_title() ); ?></legend>
+				<legend><?php /* translators: %s: topic title or reply reference. */ printf( esc_html__( 'Reply To: %s', 'buddyboss' ), ( bbp_get_form_reply_to() ) ? /* translators: 1: reply ID, 2: topic title. */ sprintf( esc_html__( 'Reply #%1$s in %2$s', 'buddyboss' ), bbp_get_form_reply_to(), bbp_get_topic_title() ) : bbp_get_topic_title() ); ?></legend>
 
 				<?php do_action( 'bbp_theme_before_reply_form_notices' ); ?>
 
@@ -209,7 +209,7 @@
 	<div id="no-reply-<?php bbp_topic_id(); ?>" class="bbp-no-reply">
 		<div class="bp-feedback info">
 			<span class="bp-icon" aria-hidden="true"></span>
-			<p><?php printf( __( 'The discussion "%s" is closed to new replies.', 'buddyboss' ), bbp_get_topic_title() ); ?></p>
+			<p><?php /* translators: %s: discussion title. */ printf( __( 'The discussion "%s" is closed to new replies.', 'buddyboss' ), bbp_get_topic_title() ); ?></p>
 		</div>
 	</div>
 
@@ -218,7 +218,7 @@
 	<div id="no-reply-<?php bbp_topic_id(); ?>" class="bbp-no-reply">
 		<div class="bp-feedback info">
 			<span class="bp-icon" aria-hidden="true"></span>
-			<p><?php printf( __( 'The forum "%s" is closed to new discussions and replies.', 'buddyboss' ), bbp_get_forum_title( bbp_get_topic_forum_id() ) ); ?></p>
+			<p><?php /* translators: %s: forum title. */ printf( __( 'The forum "%s" is closed to new discussions and replies.', 'buddyboss' ), bbp_get_forum_title( bbp_get_topic_forum_id() ) ); ?></p>
 		</div>
 	</div>
 

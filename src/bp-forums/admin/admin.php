@@ -693,6 +693,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 
 							// Site errored out, no response?
 							if ( is_wp_error( $response ) ) {
+								/* translators: 1: site URL, 2: error message. */
 								wp_die( sprintf( __( 'Warning! Problem updating %1$s. Your server may not be able to connect to sites running on it. Error message: <em>%2$s</em>', 'buddyboss' ), $siteurl, $response->get_error_message() ) );
 							}
 

@@ -768,6 +768,7 @@ function bbp_template_include_theme_compat( $template = '' ) {
 				'post_date'      => 0,
 				'post_content'   => $new_content,
 				'post_type'      => '',
+				/* translators: %s: topic tag name. */
 				'post_title'     => sprintf( __( 'Discussion Tag: %s', 'buddyboss' ), '<span>' . bbp_get_topic_tag_name() . '</span>' ),
 				'post_status'    => bbp_get_public_status_id(),
 				'comment_status' => 'closed',

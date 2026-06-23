@@ -28,8 +28,10 @@
 				<h2 class="bbp-form-title entry-title">
 				<?php
 				if ( bbp_is_forum_edit() ) {
+					/* translators: %s: forum title. */
 					printf( __( 'Now Editing &ldquo;%s&rdquo;', 'buddyboss' ), bbp_get_forum_title() );
 				} else {
+					/* translators: %s: parent forum title. */
 					bbp_is_single_forum() ? printf( __( 'Create New Forum in &ldquo;%s&rdquo;', 'buddyboss' ), bbp_get_forum_title() ) : _e( 'Create New Forum', 'buddyboss' );
 				}
 				?>
@@ -53,7 +55,7 @@
 					<?php do_action( 'bbp_theme_before_forum_form_title' ); ?>
 
 					<p>
-						<label class="bbp-forum-title-label" for="bbp_forum_title"><?php printf( __( 'Forum Name <span>(Maximum Length: %d)</span>', 'buddyboss' ), bbp_get_title_max_length() ); ?></label><br />
+						<label class="bbp-forum-title-label" for="bbp_forum_title"><?php /* translators: %d: maximum forum name length. */ printf( __( 'Forum Name <span>(Maximum Length: %d)</span>', 'buddyboss' ), bbp_get_title_max_length() ); ?></label><br />
 						<input type="text" id="bbp_forum_title" value="<?php bbp_form_forum_title(); ?>" tabindex="<?php bbp_tab_index(); ?>" size="40" name="bbp_forum_title" maxlength="<?php bbp_title_max_length(); ?>" />
 					</p>
 
@@ -147,7 +149,7 @@
 	<div id="no-forum-<?php bbp_forum_id(); ?>" class="bbp-no-forum">
 		<div class="bp-feedback info">
 			<span class="bp-icon" aria-hidden="true"></span>
-			<p><?php printf( __( 'The forum "%s" is closed to new content.', 'buddyboss' ), bbp_get_forum_title() ); ?></p>
+			<p><?php /* translators: %s: forum title. */ printf( __( 'The forum "%s" is closed to new content.', 'buddyboss' ), bbp_get_forum_title() ); ?></p>
 		</div>
 	</div>
 
