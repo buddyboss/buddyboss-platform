@@ -1080,15 +1080,41 @@ class BP_Messages_Thread {
 			$value = '(deleted)|(group)|(Deleted)|(group)|(user)|(User)|(del)|(Del)|(dele)|(Dele)|(dele)|(Dele)|(delet)|(Delet)|(use)|(Use)';
 			if ( preg_match_all( '/\b' . $value . '\b/i', $r['search_terms'], $dest ) ) {
 
-				// For deleted users.
-				$current_user_participants_query = self::get(
-					array(
-						'exclude_active_users' => true,
-						'per_page'             => - 1,
-					)
-				);
+				// For deleted users - paginated iteration to safely fetch all records
+				// without loading the entire result set into memory at once.
+				$current_user_participants = array();
 
-				$current_user_participants = ( ! empty( $current_user_participants_query['recipients'] ) ) ? array_unique( array_map( 'intval', wp_list_pluck( $current_user_participants_query['recipients'], 'user_id' ) ) ) : array();
+				/**
+				 * Filters the batch size for paginated recipient/thread lookups.
+				 * Lower values use less memory per batch; higher values reduce
+				 * the number of DB round-trips.
+				 *
+				 * @since BuddyBoss [BBVERSION]
+				 *
+				 * @param int $batch_size Default batch size. Default 500.
+				 */
+				$batch_size = (int) apply_filters( 'bb_messages_thread_search_batch_size', 500 );
+				// Safety guard against misconfigured filter values that would
+				// cause an infinite loop in the do-while termination check.
+				$batch_size = max( 1, $batch_size );
+				$batch_page = 1;
+				do {
+					$batch_query = self::get(
+						array(
+							'exclude_active_users' => true,
+							'per_page'             => $batch_size,
+							'page'                 => $batch_page,
+						)
+					);
+
+					$batch = ! empty( $batch_query['recipients'] ) ? $batch_query['recipients'] : array();
+					if ( ! empty( $batch ) ) {
+						$current_user_participants = array_merge( $current_user_participants, $batch );
+					}
+					$batch_page++;
+				} while ( count( $batch ) === $batch_size );
+
+				$current_user_participants = ! empty( $current_user_participants ) ? array_unique( array_map( 'intval', wp_list_pluck( $current_user_participants, 'user_id' ) ) ) : array();
 
 				if ( ! empty( $current_user_participants ) ) {
 					$deleted_user_ids = $current_user_participants;
@@ -1099,13 +1125,25 @@ class BP_Messages_Thread {
 					}
 				}
 
-				// For deleted groups fetch all thread first.
-				$threads    = self::get(
-					array(
-						'per_page' => - 1,
-					)
-				);
-				$thread_ids = ( ! empty( $threads['recipients'] ) ) ? array_map( 'intval', wp_list_pluck( $threads['recipients'], 'thread_id' ) ) : array();
+				// For deleted groups - paginated iteration to safely fetch all thread IDs.
+				$thread_ids = array();
+				$batch_page = 1;
+				do {
+					$threads_query = self::get(
+						array(
+							'per_page' => $batch_size,
+							'page'     => $batch_page,
+						)
+					);
+
+					$batch = ! empty( $threads_query['recipients'] ) ? $threads_query['recipients'] : array();
+					if ( ! empty( $batch ) ) {
+						$thread_ids = array_merge( $thread_ids, array_map( 'intval', wp_list_pluck( $batch, 'thread_id' ) ) );
+					}
+					$batch_page++;
+				} while ( count( $batch ) === $batch_size );
+
+				$thread_ids = array_unique( $thread_ids );
 
 				// If Group Found.
 				if ( ! empty( $thread_ids ) ) {
@@ -1117,8 +1155,7 @@ class BP_Messages_Thread {
 							if ( bp_is_active( 'groups' ) ) {
 								$group_name = bp_get_group_name( groups_get_group( $message_group_id ) );
 							} else {
-								// phpcs:ignore ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-								$group_name = $wpdb->get_var( "SELECT name FROM {$groups_table} WHERE id = '{$message_group_id}';" ); // db call ok; no-cache ok.
+								$group_name = $wpdb->get_var( $wpdb->prepare( "SELECT name FROM {$groups_table} WHERE id = %d", $message_group_id ) ); // db call ok; no-cache ok.
 							}
 							if ( empty( $group_name ) ) {
 								$group_thread_in[] = $thread;

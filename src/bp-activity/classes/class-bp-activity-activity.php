@@ -765,6 +765,19 @@ class BP_Activity_Activity {
 		$page     = absint( $r['page'] );
 		$per_page = absint( $r['per_page'] );
 
+		/**
+		 * Enforce a hard cap on per_page to prevent unbounded queries.
+		 * A per_page of 0 (from absint of -1) falls back to the default.
+		 *
+		 * @since BuddyBoss [BBVERSION]
+		 */
+		$max_per_page = (int) apply_filters( 'bp_activity_get_max_per_page', 200 );
+		if ( empty( $per_page ) ) {
+			$per_page = 25;
+		} elseif ( $per_page > $max_per_page ) {
+			$per_page = $max_per_page;
+		}
+
 		$retval = array(
 			'activities'     => null,
 			'total'          => null,
